@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<roster id="dwarf.roster">
+
+<!--
+LRB 4.0
+
+0-12 Long Beards    70,000  4 3 2 9  Block, Tackle, Thick Skull
+0-2  Runners        80,000  6 3 3 8  Sure Hands, Thick Skull
+0-2  Blitzers       80,000  5 3 3 9  Block, Thick Skull
+0-2  Troll Slayers  90,000  5 3 2 8  Block, Dauntless, Frenzy, Thick Skull
+
+Re-roll counter: 40,000 gold pieces each
+-->
+
+  <name>Dwarf</name>
+  <type>Regular</type>
+  <reroll_cost>40000</reroll_cost>	
+  <max_rerolls>8</max_rerolls>	
+
+  <position id="dwarf.longbeard">
+  	<quantity>12</quantity>
+  	<name>Longbeard</name>
+  	<type>Regular</type>
+  	<cost>70000</cost>
+    <movement>4</movement>
+    <strength>3</strength>
+    <agility>2</agility>
+    <armour>9</armour>
+    <icon-list>
+      <portrait>players/dwarf/dwLongbeard.gif</portrait>
+      <home standing="players/dwarf/dlongbeard1.gif" moving="players/dwarf/dlongbeard1an.gif" />
+      <away standing="players/dwarf/dlongbeard1b.gif" moving="players/dwarf/dlongbeard1ban.gif" />
+      <home standing="players/dwarf/dlongbeard2.gif" moving="players/dwarf/dlongbeard2an.gif" />
+      <away standing="players/dwarf/dlongbeard2b.gif" moving="players/dwarf/dlongbeard2ban.gif" />
+    </icon-list>
+  	<skill-list>
+  	  <skill>Block</skill>
+  	  <skill>Tackle</skill>
+  	  <skill>Thick Skull</skill>
+  	</skill-list>
+  	<skillcategory-list>
+      <normal>General Skill</normal>
+      <normal>Strength Skill</normal>
+      <double>General Trait</double>
+      <double>Strength Trait</double>
+      <double>Agility Skill</double>
+      <double>Passing Skill</double>
+  	</skillcategory-list>
+  </position>
+
+  <position id="dwarf.blitzer">
+  	<quantity>2</quantity>
+  	<name>Blitzer</name>
+  	<type>Regular</type>
+  	<cost>80000</cost>
+    <movement>5</movement>
+    <strength>3</strength>
+    <agility>3</agility>
+    <armour>9</armour>
+    <icon-list>
+      <portrait>players/dwarf/dwBlitzer.gif</portrait>
+      <home standing="players/dwarf/dblitzer1.gif" moving="players/dwarf/dblitzer1an.gif" />
+      <away standing="players/dwarf/dblitzer1b.gif" moving="players/dwarf/dblitzer1ban.gif" />
+      <home standing="players/dwarf/dblitzer2.gif" moving="players/dwarf/dblitzer2an.gif" />
+      <away standing="players/dwarf/dblitzer2b.gif" moving="players/dwarf/dblitzer2ban.gif" />
+    </icon-list>
+  	<skill-list>
+  	  <skill>Block</skill>
+  	  <skill>Thick Skull</skill>
+  	</skill-list>
+  	<skillcategory-list>
+      <normal>General Skill</normal>
+      <normal>Strength Skill</normal>
+      <double>General Trait</double>
+      <double>Strength Trait</double>
+      <double>Agility Skill</double>
+      <double>Passing Skill</double>
+  	</skillcategory-list>
+  </position>
+
+  <position id="dwarf.runner">
+  	<quantity>2</quantity>
+  	<name>Runner</name>
+  	<type>Regular</type>
+  	<cost>80000</cost>
+    <movement>6</movement>
+    <strength>3</strength>
+    <agility>3</agility>
+    <armour>8</armour>
+    <icon-list>
+      <portrait>players/dwarf/dwRunner.gif</portrait>
+      <home standing="players/dwarf/drunner1.gif" moving="players/dwarf/drunner1an.gif" />
+      <away standing="players/dwarf/drunner1b.gif" moving="players/dwarf/drunner1ban.gif" />
+      <home standing="players/dwarf/drunner2.gif" moving="players/dwarf/drunner2an.gif" />
+      <away standing="players/dwarf/drunner2b.gif" moving="players/dwarf/drunner2ban.gif" />
+    </icon-list>
+  	<skill-list>
+  	  <skill>Sure Hands</skill>
+  	  <skill>Thick Skull</skill>
+  	</skill-list>
+  	<skillcategory-list>
+      <normal>General Skill</normal>
+      <normal>Passing Skill</normal>
+      <double>General Trait</double>
+      <double>Passing Trait</double>
+      <double>Agility Skill</double>
+      <double>Strength Skill</double>
+  	</skillcategory-list>
+  </position>
+	
+  <position id="dwarf.trollslayer">
+  	<quantity>2</quantity>
+  	<name>Troll Slayer</name>
+  	<type>Regular</type>
+  	<cost>90000</cost>
+    <movement>5</movement>
+    <strength>3</strength>
+    <agility>2</agility>
+    <armour>8</armour>
+    <icon-list>
+      <portrait>players/dwarf/dwSlayer.gif</portrait>
+      <home standing="players/dwarf/dslayer1.gif" moving="players/dwarf/dslayer1an.gif" />
+      <away standing="players/dwarf/dslayer1b.gif" moving="players/dwarf/dslayer1ban.gif" />
+      <home standing="players/dwarf/dslayer2.gif" moving="players/dwarf/dslayer2an.gif" />
+      <away standing="players/dwarf/dslayer2b.gif" moving="players/dwarf/dslayer2ban.gif" />
+    </icon-list>
+  	<skill-list>
+  	  <skill>Block</skill>
+  	  <skill>Dauntless</skill>
+  	  <skill>Frenzy</skill>
+  	  <skill>Thick Skull</skill>
+  	</skill-list>
+  	<skillcategory-list>
+      <normal>General Skill</normal>
+      <normal>Strength Skill</normal>
+      <double>General Trait</double>
+      <double>Strength Trait</double>
+      <double>Agility Skill</double>
+      <double>Passing Skill</double>
+  	</skillcategory-list>
+  </position>
+
+</roster>

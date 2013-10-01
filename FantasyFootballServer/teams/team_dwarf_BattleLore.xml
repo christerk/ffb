@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<team id="teamDwarfBattleLore">
+
+  <coach>BattleLore</coach>
+  <name>BattleLore's Dwarfs</name>
+  <race>Dwarf</race>
+  <rosterId>dwarf.lrb6</rosterId>
+  <reRolls>3</reRolls>
+  <fanFactor>8</fanFactor>
+  <apothecaries>1</apothecaries>
+  <teamRating>100</teamRating>
+  <teamStrength>105</teamStrength>
+  <division>[X]</division>
+
+  <player nr="1" id="teamDwarfBattleLore1">
+  	<name>Slayer1</name>
+  	<gender>male</gender>
+  	<positionId>dwarf.trollslayer</positionId>
+  	<skillList />
+  </player>
+
+  <player nr="2" id="teamDwarfBattleLore2">
+  	<name>Slayer2</name>
+  	<gender>male</gender>
+  	<positionId>dwarf.trollslayer</positionId>
+  	<skillList />
+  </player>
+
+  <player nr="3" id="teamDwarfBattleLore3">
+  	<name>Blitzer1</name>
+  	<gender>male</gender>
+  	<positionId>dwarf.blitzer</positionId>
+  	<skillList>
+  	  <skill>Mighty Blow</skill>
+  	</skillList>
+  </player>
+
+  <player nr="4" id="teamDwarfBattleLore4">
+  	<name>Blitzer2</name>
+  	<gender>male</gender>
+  	<positionId>dwarf.blitzer</positionId>
+  	<skillList>
+  	  <skill>Mighty Blow</skill>
+  	</skillList>
+  </player>
+
+  <player nr="5" id="teamDwarfBattleLore5">
+  	<name>Runner1</name>
+  	<gender>male</gender>
+  	<positionId>dwarf.runner</positionId>
+  	<skillList />
+  </player>
+
+  <player nr="6" id="teamDwarfBattleLore6">
+  	<name>Runner2</name>
+  	<gender>male</gender>
+  	<positionId>dwarf.runner</positionId>
+  	<skillList />
+  </player>
+
+  <player nr="7" id="teamDwarfBattleLore7">
+  	<name>Blocker1</name>
+  	<gender>male</gender>
+  	<positionId>dwarf.blocker</positionId>
+  	<skillList />
+  </player>
+
+  <player nr="8" id="teamDwarfBattleLore8">
+  	<name>Blocker2</name>
+  	<gender>male</gender>
+  	<positionId>dwarf.blocker</positionId>
+  	<skillList />
+  </player>
+
+  <player nr="9" id="teamDwarfBattleLore9">
+  	<name>Blocker3</name>
+  	<gender>male</gender>
+  	<positionId>dwarf.blocker</positionId>
+  	<skillList />
+  </player>
+
+  <player nr="10" id="teamDwarfBattleLore10">
+  	<name>Blocker4</name>
+  	<gender>male</gender>
+  	<positionId>dwarf.blocker</positionId>
+  	<skillList />
+  </player>
+
+  <player nr="11" id="teamDwarfBattleLore11">
+  	<name>Blocker5</name>
+  	<gender>male</gender>
+  	<positionId>dwarf.blocker</positionId>
+  	<skillList />
+  </player>
+
+  <player nr="12" id="teamDwarfBattleLore12">
+  	<name>Blocker6</name>
+  	<gender>male</gender>
+  	<positionId>dwarf.blocker</positionId>
+  	<skillList />
+  </player>
+
+  <player nr="13" id="teamDwarfBattleLore13">
+  	<name>Blocker7</name>
+  	<gender>male</gender>
+  	<positionId>dwarf.blocker</positionId>
+  	<serious_injury>Fractured Arm</serious_injury>
+  	<skillList />
+  </player>
+
+  <player nr="14" id="teamDwarfBattleLore14">
+  	<name>Deathroller</name>
+  	<gender>neutral</gender>
+  	<positionId>dwarf.deathroller</positionId>
+  	<skillList />
+  </player>
+
+</team>

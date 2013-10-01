@@ -1,0 +1,323 @@
+package com.balancedbytes.games.ffb.client.layer;
+
+import java.awt.AlphaComposite;
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.FontMetrics;
+import java.awt.Graphics2D;
+import java.awt.Rectangle;
+import java.awt.geom.Rectangle2D;
+import java.awt.image.BufferedImage;
+
+import com.balancedbytes.games.ffb.ClientMode;
+import com.balancedbytes.games.ffb.DiceDecoration;
+import com.balancedbytes.games.ffb.FieldCoordinate;
+import com.balancedbytes.games.ffb.FieldCoordinateBounds;
+import com.balancedbytes.games.ffb.FieldModelChangeEvent;
+import com.balancedbytes.games.ffb.MoveSquare;
+import com.balancedbytes.games.ffb.Player;
+import com.balancedbytes.games.ffb.PushbackSquare;
+import com.balancedbytes.games.ffb.client.FantasyFootballClient;
+import com.balancedbytes.games.ffb.client.IIconProperty;
+import com.balancedbytes.games.ffb.client.IconCache;
+import com.balancedbytes.games.ffb.client.PlayerIconFactory;
+import com.balancedbytes.games.ffb.model.FieldModel;
+import com.balancedbytes.games.ffb.model.Game;
+
+
+/**
+ * 
+ * @author Kalimar
+ */
+public class FieldLayerOverPlayers extends FieldLayer {
+  
+  public static final Color COLOR_MOVE_SQUARE = new Color(1.0f, 1.0f, 0.0f, 0.3f);
+  public static final Color COLOR_TARGET_NUMBER = new Color(0.0f, 0.0f, 0.0f, 1.0f);
+  public static final Color COLOR_FIREBALL_AREA = new Color(1.0f, 0.0f, 0.0f, 0.4f);
+  public static final Color COLOR_FIREBALL_AREA_FADED = new Color(1.0f, 0.0f, 0.0f, 0.2f);
+  
+  private FieldCoordinate fThrownPlayerCoordinate;
+  private FieldCoordinate fMarkerCoordinate;
+  
+  public FieldLayerOverPlayers(FantasyFootballClient pClient) {
+    super(pClient);
+  }
+  
+  public void removeThrownPlayer() {
+    if (fThrownPlayerCoordinate != null) {
+      clear(fThrownPlayerCoordinate, true);
+      fThrownPlayerCoordinate = null;
+    }
+  }
+  
+  public void drawThrownPlayer(Game pGame, Player pThrownPlayer, FieldCoordinate pCoordinate, boolean pWithBall) {
+    if ((pCoordinate != null) && (pThrownPlayer != null)) {
+      clear(pCoordinate, true);
+      fThrownPlayerCoordinate = pCoordinate;
+      Graphics2D g2d = getImage().createGraphics();
+      PlayerIconFactory playerIconFactory = getClient().getUserInterface().getPlayerIconFactory();
+      boolean homePlayer = pGame.getTeamHome().hasPlayer(pThrownPlayer);
+      BufferedImage icon = playerIconFactory.getBasicIcon(getClient(), pThrownPlayer, homePlayer, false, pWithBall, false);
+      if (icon != null) {
+        g2d.drawImage(icon, findCenteredIconUpperLeftX(icon, pCoordinate), findCenteredIconUpperLeftY(icon, pCoordinate), null);
+      }
+      g2d.dispose();
+    }
+  }
+
+  public void draw(PushbackSquare pPushbackSquare) {
+    if (pPushbackSquare != null) {
+      clear(pPushbackSquare.getCoordinate(), true);
+      IconCache iconCache = getClient().getUserInterface().getIconCache();
+      BufferedImage pushbackIcon = iconCache.getIcon(pPushbackSquare);
+      draw(pushbackIcon, pPushbackSquare.getCoordinate(), 1.0f);
+    }
+  }
+  
+  public void remove(PushbackSquare pPushbackSquare) {
+    if (pPushbackSquare != null) {
+      clear(pPushbackSquare.getCoordinate(), true);
+    }
+  }
+
+  public void draw(DiceDecoration pDiceDecoration, boolean pClearBeforeDraw) {
+    
+  	if (pDiceDecoration != null) {
+    	
+    	if (pClearBeforeDraw) {
+    		clear(pDiceDecoration.getCoordinate(), true);
+      	MoveSquare moveSquare = getClient().getGame().getFieldModel().getMoveSquare(pDiceDecoration.getCoordinate()); 
+      	if (moveSquare != null) {
+      		draw(moveSquare, false);
+      	}
+    	}
+      
+    	IconCache iconCache = getClient().getUserInterface().getIconCache();
+      BufferedImage decorationIcon = iconCache.getIcon(pDiceDecoration); 
+      draw(decorationIcon, pDiceDecoration.getCoordinate(), 1.0f);
+      
+    }
+  	
+  }
+
+  public void remove(DiceDecoration pDiceDecoration) {
+    if (pDiceDecoration != null) {
+      clear(pDiceDecoration.getCoordinate(), true);
+    }
+  }
+  
+  public void draw(MoveSquare pMoveSquare, boolean pClearBeforeDraw) {
+    
+    if ((pMoveSquare != null) && (ClientMode.PLAYER == getClient().getMode()) && getClient().getGame().isHomePlaying()) {
+      
+    	if (pClearBeforeDraw) {
+    		clear(pMoveSquare.getCoordinate(), true);
+    	}
+      
+      int x = pMoveSquare.getCoordinate().getX() * FIELD_SQUARE_SIZE + 2;
+      int y = pMoveSquare.getCoordinate().getY() * FIELD_SQUARE_SIZE + 2 ;
+      Graphics2D g2d = getImage().createGraphics();
+      
+      g2d.setPaint(COLOR_MOVE_SQUARE);
+      Rectangle bounds = new Rectangle(x, y, FIELD_SQUARE_SIZE - 4, FIELD_SQUARE_SIZE - 4);
+      g2d.fillRect(bounds.x, bounds.y, bounds.width, bounds.height);
+      
+      g2d.setColor(COLOR_TARGET_NUMBER);
+      if ((pMoveSquare.getMinimumRollGoForIt() > 0) && (pMoveSquare.getMinimumRollDodge() > 0)) {
+        
+        StringBuilder numberGoForIt = new StringBuilder();
+        if (pMoveSquare.getMinimumRollGoForIt() < 6) {
+          numberGoForIt.append(pMoveSquare.getMinimumRollGoForIt()).append("+");
+        } else {
+          numberGoForIt.append(6);
+        }
+        g2d.setFont(new Font("Sans Serif", Font.PLAIN, 10));
+        FontMetrics metrics = g2d.getFontMetrics();
+        Rectangle2D numberBounds = metrics.getStringBounds(numberGoForIt.toString(), g2d);
+        x = FIELD_IMAGE_OFFSET_CENTER_X + (pMoveSquare.getCoordinate().getX() * FIELD_SQUARE_SIZE) - (int) (numberBounds.getWidth() / 2) - 5;
+        y = FIELD_IMAGE_OFFSET_CENTER_Y + (pMoveSquare.getCoordinate().getY() * FIELD_SQUARE_SIZE) + (int) (numberBounds.getHeight() / 2) - 9;
+        g2d.drawString(numberGoForIt.toString(), x, y);
+        
+        x = FIELD_IMAGE_OFFSET_CENTER_X + (pMoveSquare.getCoordinate().getX() * FIELD_SQUARE_SIZE) - 10;
+        y = FIELD_IMAGE_OFFSET_CENTER_Y + (pMoveSquare.getCoordinate().getY() * FIELD_SQUARE_SIZE) + 10;
+        g2d.drawLine(x, y, x + 20, y - 20);
+        
+        StringBuilder numberDodge = new StringBuilder();
+        numberDodge.append(pMoveSquare.getMinimumRollDodge()).append("+");
+        g2d.setFont(new Font("Sans Serif", Font.PLAIN, 10));
+        metrics = g2d.getFontMetrics();
+        numberBounds = metrics.getStringBounds(numberDodge.toString(), g2d);
+        x = FIELD_IMAGE_OFFSET_CENTER_X + (pMoveSquare.getCoordinate().getX() * FIELD_SQUARE_SIZE) - (int) (numberBounds.getWidth() / 2) + 7;
+        y = FIELD_IMAGE_OFFSET_CENTER_Y + (pMoveSquare.getCoordinate().getY() * FIELD_SQUARE_SIZE) + (int) (numberBounds.getHeight() / 2) + 5;
+        g2d.drawString(numberDodge.toString(), x, y);
+        
+      } else {
+        
+        int minimumRoll = Math.max(pMoveSquare.getMinimumRollGoForIt(), pMoveSquare.getMinimumRollDodge());
+        if (minimumRoll > 0) {
+          StringBuilder number = new StringBuilder();
+          if (minimumRoll < 6) {
+            number.append(minimumRoll).append("+");
+          } else {
+            number.append(6);
+          }
+          g2d.setFont(new Font("Sans Serif", Font.PLAIN, 11));
+          FontMetrics metrics = g2d.getFontMetrics();
+          Rectangle2D numberBounds = metrics.getStringBounds(number.toString(), g2d);
+          x = FIELD_IMAGE_OFFSET_CENTER_X + (pMoveSquare.getCoordinate().getX() * FIELD_SQUARE_SIZE) - (int) (numberBounds.getWidth() / 2) + 1;
+          y = FIELD_IMAGE_OFFSET_CENTER_Y + (pMoveSquare.getCoordinate().getY() * FIELD_SQUARE_SIZE) + (int) (numberBounds.getHeight() / 2) - 2;
+          g2d.drawString(number.toString(), x, y);
+        }
+        
+      }
+      
+      g2d.dispose();
+
+      if (pClearBeforeDraw) {
+	      DiceDecoration diceDecoration = getClient().getGame().getFieldModel().getDiceDecoration(pMoveSquare.getCoordinate()); 
+	    	if (diceDecoration != null) {
+	    		draw(diceDecoration, false);
+	    	}
+      }
+      
+    }
+    
+  }
+  
+  public void remove(MoveSquare pMoveSquare) {
+    if (pMoveSquare != null) {
+      clear(pMoveSquare.getCoordinate(), true);
+    }
+  }
+  
+  public boolean drawLightningMarker(FieldCoordinate pMarkerCoordinate, boolean pFaded) {
+    if ((pMarkerCoordinate != null) && !pMarkerCoordinate.equals(fMarkerCoordinate)) {
+      fMarkerCoordinate = pMarkerCoordinate;
+      clear(fMarkerCoordinate, true);
+      int x = fMarkerCoordinate.getX() * FIELD_SQUARE_SIZE;
+      int y = fMarkerCoordinate.getY() * FIELD_SQUARE_SIZE;
+      Graphics2D g2d = getImage().createGraphics();
+      IconCache iconCache = getClient().getUserInterface().getIconCache();
+      BufferedImage lightningIcon = iconCache.getIconByProperty(IIconProperty.GAME_LIGHTNING_SMALL);
+      if (pFaded) {
+        g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.5f));
+      }
+      g2d.drawImage(lightningIcon, x, y, null);
+      g2d.dispose();
+    	return true;
+    } else {
+    	return false;
+    }
+  }
+  
+  public boolean clearLightningMarker() {
+  	if (fMarkerCoordinate != null) {
+  		clear(fMarkerCoordinate, true);
+  		fMarkerCoordinate = null;
+  		return true;
+  	} else {
+  		return false;
+  	}
+  }
+
+  public boolean drawFireballMarker(FieldCoordinate pMarkerCoordinate, boolean pFaded) {
+    if ((pMarkerCoordinate != null) && !pMarkerCoordinate.equals(fMarkerCoordinate)) {
+      fMarkerCoordinate = pMarkerCoordinate;
+      clear(fMarkerCoordinate, true);
+      int x = fMarkerCoordinate.getX() * FIELD_SQUARE_SIZE;
+      int y = fMarkerCoordinate.getY() * FIELD_SQUARE_SIZE;
+      Graphics2D g2d = getImage().createGraphics();
+      IconCache iconCache = getClient().getUserInterface().getIconCache();
+      BufferedImage lightningIcon = iconCache.getIconByProperty(IIconProperty.GAME_FIREBALL_SMALL);
+      if (pFaded) {
+        g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.6f));
+      }
+      g2d.drawImage(lightningIcon, x, y, null);
+      Game game = getClient().getGame();
+      FieldCoordinate[] markedSquares = game.getFieldModel().findAdjacentCoordinates(fMarkerCoordinate, FieldCoordinateBounds.FIELD, 1, false);
+      for (FieldCoordinate markedSquare : markedSquares) {
+      	if (pFaded) {
+      		markSquare(markedSquare, COLOR_FIREBALL_AREA_FADED);
+      	} else {
+      		markSquare(markedSquare, COLOR_FIREBALL_AREA);
+      	}
+      }
+      g2d.dispose();
+    	return true;
+    } else {
+    	return false;
+    }
+  }
+  
+  public boolean clearFireballMarker() {
+  	if (fMarkerCoordinate != null) {
+      Game game = getClient().getGame();
+      FieldCoordinate[] markedSquares = game.getFieldModel().findAdjacentCoordinates(fMarkerCoordinate, FieldCoordinateBounds.FIELD, 1, true);
+      for (FieldCoordinate markedSquare : markedSquares) {
+    		clear(markedSquare, true);
+      }
+  		fMarkerCoordinate = null;
+  		return true;
+  	} else {
+  		return false;
+  	}
+  }
+
+  private void markSquare(FieldCoordinate pCoordinate, Color pColor) {
+    if (pCoordinate != null) {
+      clear(pCoordinate, true);
+      int x = pCoordinate.getX() * FIELD_SQUARE_SIZE;
+      int y = pCoordinate.getY() * FIELD_SQUARE_SIZE;
+      Rectangle bounds = new Rectangle(x + 1, y + 1, FIELD_SQUARE_SIZE - 2, FIELD_SQUARE_SIZE - 2);
+      Graphics2D g2d = getImage().createGraphics();
+      g2d.setPaint(pColor);
+      g2d.fillRect(bounds.x, bounds.y, bounds.width, bounds.height);
+      g2d.dispose();
+    }
+  }
+  
+  public void fieldModelChanged(FieldModelChangeEvent pChangeEvent) {
+    switch (pChangeEvent.getType()) {
+      case FieldModelChangeEvent.TYPE_PUSHBACK_SQUARE:
+        if (pChangeEvent.isAdded()) {
+          draw((PushbackSquare) pChangeEvent.getNewValue());
+        } else {
+          remove((PushbackSquare) pChangeEvent.getOldValue());
+        }
+        break;
+      case FieldModelChangeEvent.TYPE_DICE_DECORATION:
+        if (pChangeEvent.isAdded()) {
+          draw((DiceDecoration) pChangeEvent.getNewValue(), true);
+        } else {
+          remove((DiceDecoration) pChangeEvent.getOldValue());
+        }
+        break;
+      case FieldModelChangeEvent.TYPE_MOVE_SQUARE:
+        if (pChangeEvent.isAdded()) {
+          draw((MoveSquare) pChangeEvent.getNewValue(), true);
+        } else {
+          remove((MoveSquare) pChangeEvent.getOldValue());
+        }
+        break;
+    }
+  }
+  
+  public void init() {
+    clear(true);
+    Game game = getClient().getGame();
+    FieldModel fieldModel = game.getFieldModel();
+    if (fieldModel != null) {
+      for (PushbackSquare pushbackSquare : fieldModel.getPushbackSquares()) {
+        draw(pushbackSquare);
+      }
+      for (DiceDecoration diceDecoration : fieldModel.getDiceDecorations()) {
+        draw(diceDecoration, true);
+      }
+      for (MoveSquare moveSquare : fieldModel.getMoveSquares()) {
+        draw(moveSquare, true);
+      }
+      fieldModel.addListener(this);
+    }
+  }
+  
+}

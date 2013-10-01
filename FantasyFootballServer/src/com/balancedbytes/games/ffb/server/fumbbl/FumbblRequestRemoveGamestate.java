@@ -1,0 +1,41 @@
+package com.balancedbytes.games.ffb.server.fumbbl;
+
+import com.balancedbytes.games.ffb.model.Game;
+import com.balancedbytes.games.ffb.server.DebugLog;
+import com.balancedbytes.games.ffb.server.FantasyFootballServer;
+import com.balancedbytes.games.ffb.server.GameState;
+import com.balancedbytes.games.ffb.server.IServerLogLevel;
+import com.balancedbytes.games.ffb.server.IServerProperty;
+import com.balancedbytes.games.ffb.util.StringTool;
+
+
+/**
+ * 
+ * @author Kalimar
+ */
+public class FumbblRequestRemoveGamestate extends FumbblRequest {
+  
+  private GameState fGameState;
+  
+  public FumbblRequestRemoveGamestate(GameState pGameState) {
+    fGameState = pGameState;
+  }
+
+  public GameState getGameState() {
+    return fGameState;
+  }
+  
+  @Override
+  public void process(FumbblRequestProcessor pRequestProcessor) {
+    FantasyFootballServer server = pRequestProcessor.getServer();
+    Game game = getGameState().getGame();
+    String challengeResponse = pRequestProcessor.getChallengeResponseForFumbblUser();
+    setRequestUrl(StringTool.bind(server.getProperty(IServerProperty.FUMBBL_GAMESTATE_REMOVE), new Object[] { challengeResponse, game.getId() }));
+    server.getDebugLog().log(IServerLogLevel.DEBUG, DebugLog.FUMBBL_REQUEST, getRequestUrl());
+    FumbblGameState fumbblGameState = pRequestProcessor.processGameStateRequest(getRequestUrl());
+    if ((fumbblGameState == null) || !fumbblGameState.isOk()) {
+      pRequestProcessor.reportFumbblError(getGameState(), fumbblGameState);
+    }
+  }
+  
+}

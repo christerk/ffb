@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<team id="teamNecromanticBattleLore">
+
+  <coach>BattleLore</coach>
+  <name>BattleLore's Necros</name>
+  <race>Necromantic</race>
+  <rosterId>necromantic.lrb6</rosterId>
+  <reRolls>5</reRolls>
+  <fanFactor>9</fanFactor>
+  <apothecaries>0</apothecaries>
+  <teamRating>100</teamRating>
+  <teamStrength>108</teamStrength>
+  <division>[X]</division>
+
+  <player nr="1" id="teamNecromanticBattleLore1">
+  	<name>Werewolf1</name>
+  	<gender>male</gender>
+  	<positionId>necromantic.werewolf</positionId>
+  	<skillList />
+  </player>
+
+  <player nr="2" id="teamNecromanticBattleLore2">
+  	<name>Werewolf2</name>
+  	<gender>male</gender>
+  	<positionId>necromantic.werewolf</positionId>
+  	<skillList />
+  </player>
+
+  <player nr="3" id="teamNecromanticBattleLore3">
+  	<name>FleshGolem1</name>
+  	<gender>male</gender>
+  	<positionId>necromantic.fleshgolem</positionId>
+  	<skillList />
+  </player>
+
+  <player nr="4" id="teamNecromanticBattleLore4">
+  	<name>FleshGolem2</name>
+  	<gender>male</gender>
+  	<positionId>necromantic.fleshgolem</positionId>
+  	<skillList />
+  </player>
+
+  <player nr="5" id="teamNecromanticBattleLore5">
+    <name>Wight1</name>
+  	<gender>male</gender>
+  	<positionId>necromantic.wight</positionId>
+  	<skillList />
+  </player>
+	
+  <player nr="6" id="teamNecromanticBattleLore6">
+    <name>Wight2</name>
+  	<gender>male</gender>
+  	<positionId>necromantic.wight</positionId>
+  	<skillList />
+  </player>
+
+  <player nr="7" id="teamNecromanticBattleLore7">
+    <name>Ghoul1</name>
+  	<gender>male</gender>
+  	<positionId>necromantic.ghoul</positionId>
+  	<skillList />
+  </player>
+
+  <player nr="8" id="teamNecromanticBattleLore8">
+    <name>Ghoul2</name>
+  	<gender>male</gender>
+  	<positionId>necromantic.ghoul</positionId>
+  	<skillList />
+  </player>
+
+  <player nr="9" id="teamNecromanticBattleLore9">
+    <name>Zombie1</name>
+  	<gender>male</gender>
+  	<positionId>necromantic.zombie</positionId>
+  	<skillList />
+  </player>
+
+  <player nr="10" id="teamNecromanticBattleLore10">
+    <name>Zombie2</name>
+  	<gender>male</gender>
+  	<positionId>necromantic.zombie</positionId>
+  	<skillList />
+  </player>
+
+  <player nr="11" id="teamNecromanticBattleLore11">
+    <name>Zombie3</name>
+  	<gender>male</gender>
+  	<positionId>necromantic.zombie</positionId>
+  	<skillList />
+  </player>
+
+  <player nr="12" id="teamNecromanticBattleLore12">
+    <name>Zombie4</name>
+  	<gender>male</gender>
+  	<positionId>necromantic.zombie</positionId>
+  	<skillList />
+  </player>
+
+  <player nr="13" id="teamNecromanticBattleLore13">
+    <name>Zombie5</name>
+  	<gender>male</gender>
+  	<positionId>necromantic.zombie</positionId>
+  	<skillList />
+  </player>
+
+</team>

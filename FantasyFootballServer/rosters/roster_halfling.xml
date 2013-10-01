@@ -1,0 +1,241 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<roster id="halfling.lrb6">
+
+<!--
+0-16 Halflings 30,000 5 2 3 6 Dodge, Right Stuff, Stunty A GSP
+0-2 Treemen 120,000 2 6 1 10 Loner, Mighty Blow, Stand Firm, Strong Arm, Take Root, Thick Skull, Throw Team-Mate S GAP
+
+0-8 Re-roll counters: 60,000 gold pieces each
+
+Star Players available for Inducement:
+Deeproot Strongbranch, Morg ‘n’ Thorg, Puggy Baconbreath
+-->
+
+  <name>Halfling</name>
+  <type>Regular</type>
+  <reRollCost>60000</reRollCost>	
+  <maxReRolls>8</maxReRolls>
+  <baseIconPath>http://localhost:2224/icons/players/halfling/</baseIconPath>	
+  
+  <position id="halfling.treeman">
+  	<quantity>2</quantity>
+  	<name>Treeman</name>
+  	<type>Big Guy</type>
+  	<cost>120000</cost>
+    <movement>2</movement>
+    <strength>6</strength>
+    <agility>1</agility>
+    <armour>10</armour>
+    <iconList>
+      <portrait>portrait_halfling_treeman.png</portrait>
+      <home standing="treeman1.gif" moving="treeman1an.gif" />
+      <away standing="treeman1b.gif" moving="treeman1ban.gif" />
+      <home standing="treeman2.gif" moving="treeman2an.gif" />
+      <away standing="treeman2b.gif" moving="treeman2ban.gif" />
+      <home standing="treeman3.gif" moving="treeman3an.gif" />
+      <away standing="treeman3b.gif" moving="treeman3ban.gif" />
+    </iconList>
+  	<skillList>
+  	  <skill>Loner</skill>
+  	  <skill>Mighty Blow</skill>
+  	  <skill>Stand Firm</skill>
+  	  <skill>Strong Arm</skill>
+  	  <skill>Take Root</skill>
+  	  <skill>Thick Skull</skill>
+  	  <skill>Throw Team-Mate</skill>
+  	</skillList>
+  	<skillCategoryList>
+      <normal>Strength</normal>
+      <double>General</double>
+      <double>Agility</double>
+      <double>Passing</double>
+  	</skillCategoryList>
+  </position> 
+ 
+  <position id="halfling.halfling">
+  	<quantity>16</quantity>
+  	<name>Halfling</name>
+  	<type>Regular</type>
+  	<cost>30000</cost>
+    <movement>5</movement>
+    <strength>2</strength>
+    <agility>3</agility>
+    <armour>6</armour>
+    <iconList>
+      <portrait>portrait_halfling.png</portrait>
+      <home standing="halfling1.gif" moving="halfling1an.gif" />
+      <away standing="halfling1b.gif" moving="halfling1ban.gif" />
+      <home standing="halfling2.gif" moving="halfling2an.gif" />
+      <away standing="halfling2b.gif" moving="halfling2ban.gif" />
+      <home standing="halfling3.gif" moving="halfling3an.gif" />
+      <away standing="halfling3b.gif" moving="halfling3ban.gif" />
+      <home standing="halfling4.gif" moving="halfling4an.gif" />
+      <away standing="halfling4b.gif" moving="halfling4ban.gif" />
+      <home standing="halfling5.gif" moving="halfling5an.gif" />
+      <away standing="halfling5b.gif" moving="halfling5ban.gif" />
+    </iconList>
+  	<skillList>
+  	  <skill>Dodge</skill>
+  	  <skill>Right Stuff</skill>
+  	  <skill>Stunty</skill>
+  	</skillList>
+  	<skillCategoryList>
+      <normal>Agility</normal>
+      <double>General</double>
+      <double>Strength</double>
+      <double>Passing</double>
+  	</skillCategoryList>
+  </position> 
+  
+  <position id="halfling.Puggy">
+		<quantity>1</quantity>
+		<name>Puggy Baconbreath</name>
+		<shorthand>PB</shorthand>
+		<type>Star</type>
+		<cost>140000</cost>
+		<movement>5</movement>
+		<strength>3</strength>
+		<agility>3</agility>
+		<armour>6</armour>
+    <iconList baseIconPath="../stars/">
+			<portrait/>
+			<home standing="Puggy_Baconbreath.gif" moving="Puggy_Baconbreath_an.gif"/>
+			<away standing="Puggy_Baconbreath_b.gif"  moving="Puggy_Baconbreath_ban.gif"/>
+		</iconList>
+		<skillList>
+			<skill>Loner</skill>
+			<skill>Block</skill>
+			<skill>Dodge</skill>
+			<skill>Nerves of Steel</skill>
+			<skill>Right Stuff</skill>
+			<skill>Stunty</skill>
+		</skillList>
+	</position>
+
+	<position id="halfling.Willow">
+		<quantity>1</quantity>
+		<name>Willow Rosebark</name>
+		<shorthand>WR</shorthand>
+		<type>Star</type>
+		<cost>150000</cost>
+		<movement>5</movement>
+		<strength>4</strength>
+		<agility>3</agility>
+		<armour>8</armour>
+    <iconList baseIconPath="../stars/">
+			<portrait/>
+			<home standing="Willow_Rosebark.gif" moving="Willow_Rosebark_an.gif"/>
+			<away standing="Willow_Rosebark_b.gif"  moving="Willow_Rosebark_ban.gif"/>
+		</iconList>
+		<skillList>
+			<skill>Loner</skill>
+			<skill>Dauntless</skill>
+			<skill>Side Step</skill>
+			<skill>Thick Skull</skill>
+		</skillList>
+	</position>
+
+	<position id="halfling.Zara">
+		<quantity>1</quantity>
+		<name>Zara the Slayer</name>
+		<shorthand>ZS</shorthand>
+		<type>Star</type>
+		<cost>270000</cost>
+		<movement>6</movement>
+		<strength>4</strength>
+		<agility>3</agility>
+		<armour>8</armour>
+    <iconList baseIconPath="../stars/">
+			<portrait/>
+			<home standing="Zara_the_Slayer.gif" moving="Zara_the_Slayer_an.gif"/>
+			<away standing="Zara_the_Slayer_b.gif"  moving="Zara_the_Slayer_ban.gif"/>
+		</iconList>
+		<skillList>
+			<skill>Loner</skill>
+			<skill>Block</skill>
+			<skill>Dauntless</skill>
+			<skill>Dodge</skill>
+			<skill>Jump Up</skill>
+			<skill>Stab</skill>
+			<skill>Stakes</skill>
+		</skillList>
+	</position>
+
+	<position id="halfling.Deeproot">
+		<quantity>1</quantity>
+		<name>Deeproot Strongbranch</name>
+		<shorthand>DS</shorthand>
+		<type>Star</type>
+		<cost>300000</cost>
+		<movement>2</movement>
+		<strength>7</strength>
+		<agility>1</agility>
+		<armour>10</armour>
+    <iconList baseIconPath="../stars/">
+			<portrait/>
+			<home standing="deeproot.gif" moving="deeproot_an.gif"/>
+			<away standing="deeproot_b.gif"  moving="deeproot_ban.gif"/>
+		</iconList>
+		<skillList>
+			<skill>Loner</skill>
+			<skill>Block</skill>
+			<skill>Mighty Blow</skill>
+			<skill>Stand Firm</skill>
+			<skill>Strong Arm</skill>
+			<skill>Thick Skull</skill>
+			<skill>Throw Team-Mate</skill>
+		</skillList>
+	</position>
+
+	<position id="halfling.Bigfist">
+		<quantity>1</quantity>
+		<name>Bertha Bigfist</name>
+		<shorthand>BB</shorthand>
+		<type>Star</type>
+		<cost>290000</cost>
+		<movement>6</movement>
+		<strength>5</strength>
+		<agility>2</agility>
+		<armour>9</armour>
+    <iconList baseIconPath="../stars/">
+			<portrait/>
+			<home standing="Bertha_Bigfist.gif" moving="Bertha_Bigfist_an.gif"/>
+			<away standing="Bertha_Bigfist_b.gif"  moving="Bertha_Bigfist_ban.gif"/>
+		</iconList>
+		<skillList>
+			<skill>Loner</skill>
+			<skill>Bone-Head</skill>
+			<skill>Break Tackle</skill>
+			<skill>Dodge</skill>
+			<skill>Mighty Blow</skill>
+			<skill>Thick Skull</skill>
+			<skill>Throw Team-Mate</skill>
+		</skillList>
+	</position>
+
+	<position id="halfling.Morg">
+		<quantity>1</quantity>
+		<name>Morg 'n' Thorg</name>
+		<shorthand>MT</shorthand>
+		<type>Star</type>
+		<cost>430000</cost>
+		<movement>6</movement>
+		<strength>6</strength>
+		<agility>3</agility>
+		<armour>10</armour>
+    <iconList baseIconPath="../stars/">
+			<portrait/>
+			<home standing="morgnthorg.gif" moving="morgnthorg_an.gif"/>
+			<away standing="morgnthorg_b.gif"  moving="morgnthorg_ban.gif"/>
+		</iconList>
+		<skillList>
+			<skill>Loner</skill>
+			<skill>Block</skill>
+			<skill>Mighty Blow</skill>
+			<skill>Thick Skull</skill>
+			<skill>Throw Team-Mate</skill>
+		</skillList>
+	</position>  
+
+</roster>

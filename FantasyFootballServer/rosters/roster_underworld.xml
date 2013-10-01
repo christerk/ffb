@@ -1,0 +1,311 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<roster id="underworld.lrb6">
+
+  <name>Underworld</name>
+  <type>Regular</type>
+  <reRollCost>70000</reRollCost>
+  <maxReRolls>8</maxReRolls>
+  <baseIconPath>http://localhost:2224/icons/players/underworld/</baseIconPath>
+  
+  <position id="underworld.goblin">
+    <quantity>12</quantity>
+    <name>Underworld Goblin</name>
+    <shorthand>G</shorthand>
+    <type>Regular</type>
+    <cost>40000</cost>
+    <movement>6</movement>
+    <strength>2</strength>
+    <agility>3</agility>
+    <armour>7</armour>
+    <race>Goblin</race>
+    <iconList>
+      <portrait>portrait_underworld_goblin.png</portrait>
+      <home standing="uwgoblin1.gif" moving="uwgoblin1an.gif"/>
+      <away standing="uwgoblin1b.gif" moving="uwgoblin1ban.gif"/>
+    </iconList>
+    <skillList>
+      <skill>Dodge</skill>
+      <skill>Right Stuff</skill>
+      <skill>Stunty</skill>
+    </skillList>
+    <skillCategoryList>
+      <normal>Agility</normal>
+      <normal>Mutation</normal>
+      <double>General</double>
+      <double>Strength</double>
+      <double>Passing</double>
+    </skillCategoryList>
+  </position>
+  
+  <position id="underworld.skaven.lineman">
+    <quantity>2</quantity>
+    <name>Skaven Lineman</name>
+    <shorthand>L</shorthand>
+    <type>Regular</type>
+    <cost>50000</cost>
+    <movement>7</movement>
+    <strength>3</strength>
+    <agility>3</agility>
+    <armour>7</armour>
+    <race>Skaven</race>
+    <iconList>
+      <portrait>portrait_underworld_lineman.png</portrait>
+      <home standing="sklineman1.gif" moving="sklineman1an.gif"/>
+      <away standing="sklineman1b.gif" moving="sklineman1ban.gif"/>
+      <home standing="sklineman2.gif" moving="sklineman2an.gif"/>
+      <away standing="sklineman2b.gif" moving="sklineman2ban.gif"/>
+    </iconList>
+    <skillList>
+      <skill>Animosity</skill>
+    </skillList>
+    <skillCategoryList>
+      <normal>General</normal>
+      <normal>Mutation</normal>
+      <double>Agility</double>
+      <double>Strength</double>
+      <double>Passing</double>
+    </skillCategoryList>
+  </position>
+  
+  <position id="underworld.skaven.thrower">
+    <quantity>2</quantity>
+    <name>Skaven Thrower</name>
+    <shorthand>T</shorthand>
+    <type>Regular</type>
+    <cost>70000</cost>
+    <movement>7</movement>
+    <strength>3</strength>
+    <agility>3</agility>
+    <armour>7</armour>
+    <race>Skaven</race>
+    <iconList>
+      <portrait>portrait_underworld_thrower.png</portrait>
+      <home standing="skthrower1.gif" moving="skthrower1an.gif"/>
+      <away standing="skthrower1b.gif" moving="skthrower1ban.gif"/>
+    </iconList>
+    <skillList>
+      <skill>Animosity</skill>
+      <skill>Pass</skill>
+      <skill>Sure Hands</skill>
+    </skillList>
+    <skillCategoryList>
+      <normal>General</normal>
+      <normal>Passing</normal>
+      <normal>Mutation</normal>
+      <double>Agility</double>
+      <double>Strength</double>
+    </skillCategoryList>
+  </position>
+  
+  <position id="underworld.skaven.blitzer">
+    <quantity>2</quantity>
+    <name>Skaven Blitzer</name>
+    <shorthand>B</shorthand>
+    <type>Regular</type>
+    <cost>90000</cost>
+    <movement>7</movement>
+    <strength>3</strength>
+    <agility>3</agility>
+    <armour>8</armour>
+    <race>Skaven</race>
+    <iconList>
+      <portrait>portrait_underworld_blitzer.png</portrait>
+      <home standing="skstorm1.gif" moving="skstorm1an.gif"/>
+      <away standing="skstorm1b.gif" moving="skstorm1ban.gif"/>
+      <home standing="skstorm2.gif" moving="skstorm2an.gif"/>
+      <away standing="skstorm2b.gif" moving="skstorm2ban.gif"/>
+    </iconList>
+    <skillList>
+      <skill>Animosity</skill>
+      <skill>Block</skill>
+    </skillList>
+    <skillCategoryList>
+      <normal>General</normal>
+      <normal>Strength</normal>
+      <normal>Mutation</normal>
+      <double>Agility</double>
+      <double>Passing</double>
+    </skillCategoryList>
+  </position>
+  
+  <position id="underworld.troll.warpstone">
+    <quantity>1</quantity>
+    <name>Warpstone Troll</name>
+    <shorthand>WT</shorthand>
+    <type>Big Guy</type>
+    <cost>110000</cost>
+    <movement>4</movement>
+    <strength>5</strength>
+    <agility>1</agility>
+    <armour>9</armour>
+    <iconList>
+      <portrait>portrait_underworld_troll.png</portrait>
+      <home standing="warptroll1.gif" moving="warptroll1an.gif"/>
+      <away standing="warptroll1b.gif" moving="warptroll1ban.gif"/>
+    </iconList>
+    <skillList>
+      <skill>Always Hungry</skill>
+      <skill>Loner</skill>
+      <skill>Mighty Blow</skill>
+      <skill>Really Stupid</skill>
+      <skill>Regeneration</skill>
+      <skill>Throw Team-Mate</skill>
+    </skillList>
+    <skillCategoryList>
+      <normal>Strength</normal>
+      <normal>Mutation</normal>
+      <double>General</double>
+      <double>Agility</double>
+      <double>Passing</double>
+    </skillCategoryList>
+  </position>
+  
+  <position id="underworld.Dribblesnot">
+		<quantity>1</quantity>
+		<name>Bomber Dribblesnot</name>
+		<shorthand>BD</shorthand>
+		<type>Star</type>
+		<cost>60000</cost>
+		<movement>6</movement>
+		<strength>2</strength>
+		<agility>3</agility>
+		<armour>7</armour>
+    	<iconList baseIconPath="../stars/">
+			<portrait/>
+			<home standing="Bomber_Dribblesnot.gif" moving="Bomber_Dribblesnot_an.gif"/>
+			<away standing="Bomber_Dribblesnot_b.gif"  moving="Bomber_Dribblesnot_ban.gif"/>
+		</iconList>
+		<skillList>
+			<skill>Loner</skill>
+			<skill>Accurate</skill>
+			<skill>Bombardier</skill>
+			<skill>Dodge</skill>
+			<skill>Right Stuff</skill>
+			<skill>Secret Weapon</skill>
+			<skill>Stunty</skill>
+		</skillList>
+	</position>
+
+	<position id="underworld.Fezglitch">
+		<quantity>1</quantity>
+		<name>Fezglitch</name>
+		<shorthand>FZ</shorthand>
+		<type>Star</type>
+		<cost>100000</cost>
+		<movement>4</movement>
+		<strength>7</strength>
+		<agility>3</agility>
+		<armour>7</armour>
+    	<iconList baseIconPath="../stars/">
+			<portrait/>
+			<home standing="Fezglitch.gif" moving="Fezglitch_an.gif"/>
+			<away standing="Fezglitch_b.gif"  moving="Fezglitch_ban.gif"/>
+		</iconList>
+		<skillList>
+			<skill>Loner</skill>
+			<skill>Ball and Chain</skill>
+			<skill>Disturbing Presence</skill>
+			<skill>Foul Appearance</skill>
+			<skill>No Hands</skill>
+			<skill>Secret Weapon</skill>
+		</skillList>
+	</position>
+
+	<position id="underworld.Glart">
+		<quantity>1</quantity>
+		<name>Glart Smashrip Jr.</name>
+		<shorthand>GS</shorthand>
+		<type>Star</type>
+		<cost>210000</cost>
+		<movement>7</movement>
+		<strength>4</strength>
+		<agility>3</agility>
+		<armour>8</armour>
+    	<iconList baseIconPath="../stars/">
+			<portrait/>
+			<home standing="Glart_Smashrip_Jr.gif" moving="Glart_Smashrip_Jr_an.gif"/>
+			<away standing="Glart_Smashrip_Jr_b.gif"  moving="Glart_Smashrip_Jr_ban.gif"/>
+		</iconList>
+		<skillList>
+			<skill>Loner</skill>
+			<skill>Block</skill>
+			<skill>Claw</skill>
+			<skill>Juggernaut</skill>
+		</skillList>
+	</position>
+
+	<position id="underworld.Nobbla">
+		<quantity>1</quantity>
+		<name>Nobbla Blackwart</name>
+		<shorthand>NB</shorthand>
+		<type>Star</type>
+		<cost>130000</cost>
+		<movement>6</movement>
+		<strength>2</strength>
+		<agility>3</agility>
+		<armour>7</armour>
+    	<iconList baseIconPath="../stars/">
+			<portrait/>
+			<home standing="Nobbla_Blackwart.gif" moving="Nobbla_Blackwart_an.gif"/>
+			<away standing="Nobbla_Blackwart_b.gif"  moving="Nobbla_Blackwart_ban.gif"/>
+		</iconList>
+		<skillList>
+			<skill>Loner</skill>
+			<skill>Block</skill>
+			<skill>Dodge</skill>
+			<skill>Chainsaw</skill>
+			<skill>Secret Weapon</skill>
+			<skill>Stunty</skill>
+		</skillList>
+	</position>
+
+	<position id="underworld.Skitter">
+		<quantity>1</quantity>
+		<name>Skitter Stab-Stab</name>
+		<shorthand>SK</shorthand>
+		<type>Star</type>
+		<cost>160000</cost>
+		<movement>9</movement>
+		<strength>2</strength>
+		<agility>4</agility>
+		<armour>7</armour>
+    	<iconList baseIconPath="../stars/">
+			<portrait/>
+			<home standing="Skitter_Stab-Stab.gif" moving="Skitter_Stab-Stab_an.gif"/>
+			<away standing="Skitter_Stab-Stab_b.gif"  moving="Skitter_Stab-Stab_ban.gif"/>
+		</iconList>
+		<skillList>
+			<skill>Loner</skill>
+			<skill>Dodge</skill>
+			<skill>Prehensile Tail</skill>
+			<skill>Shadowing</skill>
+			<skill>Stab</skill>
+		</skillList>
+	</position>
+
+	<position id="underworld.Morg">
+		<quantity>1</quantity>
+    	<name>Morg 'n' Thorg</name>
+		<shorthand>MT</shorthand>
+		<type>Star</type>
+		<cost>430000</cost>
+		<movement>6</movement>
+		<strength>6</strength>
+		<agility>3</agility>
+		<armour>10</armour>
+	    <iconList baseIconPath="../stars/">
+			<portrait/>
+			<home standing="morgnthorg.gif" moving="morgnthorg_an.gif"/>
+			<away standing="morgnthorg_b.gif"  moving="morgnthorg_ban.gif"/>
+		</iconList>
+		<skillList>
+			<skill>Loner</skill>
+			<skill>Block</skill>
+			<skill>Mighty Blow</skill>
+			<skill>Thick Skull</skill>
+			<skill>Throw Team-Mate</skill>
+		</skillList>
+	</position>
+  
+</roster>

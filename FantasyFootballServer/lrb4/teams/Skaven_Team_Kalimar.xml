@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<team id="team11">
+
+  <coach>Kalimar</coach>
+  <name>Kalimar's Skaven</name>
+  <roster-id>skaven.roster</roster-id>
+  <re-rolls>3</re-rolls>
+  <fanFactor>8</fanFactor>
+  <apothecaries>1</apothecaries>
+  <team-rating>100</team-rating>
+  <team-strength>109</team-strength>
+  <division>[X]</division>
+
+  <player nr="1">
+  	<name>Storm1</name>
+  	<position-id>skaven.stormvermin</position-id>
+  	<skill-list />
+  </player>
+
+  <player nr="2">
+  	<name>Storm2</name>
+  	<position-id>skaven.stormvermin</position-id>
+  	<skill-list />
+  </player>
+
+  <player nr="3">
+  	<name>Thrower1</name>
+  	<position-id>skaven.thrower</position-id>
+  	<skill-list />
+  </player>
+
+  <player nr="4">
+  	<name>Thrower2</name>
+  	<position-id>skaven.thrower</position-id>
+  	<skill-list />
+  </player>
+
+  <player nr="5">
+  	<name>Runner1</name>
+  	<position-id>skaven.gutterrunner</position-id>
+  	<skill-list />
+  </player>
+
+  <player nr="6">
+  	<name>Runner2</name>
+  	<position-id>skaven.gutterrunner</position-id>
+  	<skill-list />
+  </player>
+
+  <player nr="7">
+  	<name>Runner3</name>
+  	<position-id>skaven.gutterrunner</position-id>
+  	<skill-list />
+  </player>
+
+  <player nr="8">
+  	<name>Runner4</name>
+  	<position-id>skaven.gutterrunner</position-id>
+  	<skill-list />
+  </player>
+
+  <player nr="9">
+  	<name>Lineman1</name>
+  	<position-id>skaven.lineman</position-id>
+  	<skill-list />
+  </player>
+
+  <player nr="10">
+  	<name>Lineman2</name>
+  	<position-id>skaven.lineman</position-id>
+  	<skill-list />
+  </player>
+
+  <player nr="11">
+  	<name>Lineman3</name>
+  	<position-id>skaven.lineman</position-id>
+  	<skill-list />
+  </player>
+
+  <player nr="12">
+  	<name>Lineman4</name>
+  	<position-id>skaven.lineman</position-id>
+  	<skill-list />
+  </player>
+
+  <player nr="13">
+  	<name>Lineman5</name>
+  	<position-id>skaven.lineman</position-id>
+  	<skill-list />
+  </player>
+
+</team>

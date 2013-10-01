@@ -1,0 +1,276 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<roster id="highelf.lrb6">
+
+<!--
+0-16 Linemen 70,000 6 3 4 8 None GA SP
+0-2 Throwers 90,000 6 3 4 8 Pass, Safe Throw GAP S
+0-4 Catchers 90,000 8 3 4 7 Catch GA SP
+0-2 Blitzers 100,000 7 3 4 8 Block GA SP
+
+0-8 Re-roll counters: 50,000 gold pieces each
+
+Star Players available for Inducement:
+Eldril Sidewinder, Morg ‘n’ Thorg, Prince Moranion
+-->
+
+  <name>High Elf</name>
+  <type>Regular</type>
+  <reRollCost>50000</reRollCost>	
+  <maxReRolls>8</maxReRolls>	
+  <baseIconPath>http://localhost:2224/icons/players/high_elf/</baseIconPath>	
+
+  <position id="highelf.lineman">
+  	<quantity>16</quantity>
+  	<name>Lineman</name>
+  	<type>Regular</type>
+  	<cost>70000</cost>
+    <movement>6</movement>
+    <strength>3</strength>
+    <agility>4</agility>
+    <armour>8</armour>
+    <iconList>
+      <portrait>portrait_high_elf_lineman.png</portrait>
+      <home standing="helineman1.gif" moving="helineman1an.gif" />
+      <away standing="helineman1b.gif" moving="helineman1ban.gif" />
+      <home standing="helineman2.gif" moving="helineman2an.gif" />
+      <away standing="helineman2b.gif" moving="helineman2ban.gif" />
+    </iconList>
+  	<skillList />
+  	<skillCategoryList>
+      <normal>General</normal>
+      <normal>Agility</normal>
+      <double>Strength</double>
+      <double>Passing</double>
+  	</skillCategoryList>
+  </position>
+
+  <position id="highelf.thrower">
+  	<quantity>2</quantity>
+  	<name>Thrower</name>
+  	<type>Regular</type>
+  	<cost>90000</cost>
+    <movement>6</movement>
+    <strength>3</strength>
+    <agility>4</agility>
+    <armour>8</armour>
+    <iconList>
+      <portrait>portrait_high_elf_thrower.png</portrait>
+      <home standing="hethrower1.gif" moving="hethrower1an.gif" />
+      <away standing="hethrower1b.gif" moving="hethrower1ban.gif" />
+    </iconList>
+  	<skillList>
+  	  <skill>Pass</skill>
+  	  <skill>Safe Throw</skill>
+  	</skillList>
+  	<skillCategoryList>
+      <normal>General</normal>
+      <normal>Agility</normal>
+      <normal>Passing</normal>
+      <double>Strength</double>
+  	</skillCategoryList>
+  </position>
+
+  <position id="highelf.blitzer">
+  	<quantity>2</quantity>
+  	<name>Blitzer</name>
+  	<type>Regular</type>
+  	<cost>100000</cost>
+    <movement>7</movement>
+    <strength>3</strength>
+    <agility>4</agility>
+    <armour>8</armour>
+    <iconList>
+      <portrait>portrait_high_elf_blitzer.png</portrait>
+      <home standing="heblitzer1.gif" moving="heblitzer1an.gif" />
+      <away standing="heblitzer1b.gif" moving="heblitzer1ban.gif" />
+    </iconList>
+  	<skillList>
+  	  <skill>Block</skill>
+  	</skillList>
+  	<skillCategoryList>
+      <normal>General</normal>
+      <normal>Agility</normal>
+      <double>Strength</double>
+      <double>Passing</double>
+  	</skillCategoryList>
+  </position>
+
+  <position id="highelf.catcher">
+  	<quantity>4</quantity>
+  	<name>Catcher</name>
+  	<type>Regular</type>
+  	<cost>90000</cost>
+    <movement>8</movement>
+    <strength>3</strength>
+    <agility>4</agility>
+    <armour>7</armour>
+    <iconList>
+      <portrait>portrait_high_elf_catcher.png</portrait>
+      <home standing="hecatcher1.gif" moving="hecatcher1an.gif" />
+      <away standing="hecatcher1b.gif" moving="hecatcher1ban.gif" />
+      <home standing="hecatcher2.gif" moving="hecatcher2an.gif" />
+      <away standing="hecatcher2b.gif" moving="hecatcher2ban.gif" />
+    </iconList>
+  	<skillList>
+  	  <skill>Catch</skill>
+  	</skillList>
+  	<skillCategoryList>
+      <normal>General</normal>
+      <normal>Agility</normal>
+      <double>Strength</double>
+      <double>Passing</double>
+  	</skillCategoryList>
+  </position>
+  
+  <position id="highelf.Longstride">
+		<quantity>1</quantity>
+		<name>Dolfar Longstride</name>
+		<shorthand>DL</shorthand>
+		<type>Star</type>
+		<cost>150000</cost>
+		<movement>7</movement>
+		<strength>3</strength>
+		<agility>4</agility>
+		<armour>7</armour>
+    	<iconList baseIconPath="../stars/">
+			<portrait/>
+			<home standing="Dolfar_Longstride.gif" moving="Dolfar_Longstride_an.gif"/>
+			<away standing="Dolfar_Longstride_b.gif"  moving="Dolfar_Longstride_ban.gif"/>
+		</iconList>
+		<skillList>
+			<skill>Loner</skill>
+			<skill>Diving Catch</skill>
+			<skill>Hail Mary Pass</skill>
+			<skill>Kick</skill>
+			<skill>Kick-Off Return</skill>
+			<skill>Pass Block</skill>
+		</skillList>
+	</position>
+
+	<position id="highelf.Soaren">
+		<quantity>1</quantity>
+		<name>Soaren Hightower</name>
+		<shorthand>SH</shorthand>
+		<type>Star</type>
+		<cost>180000</cost>
+		<movement>6</movement>
+		<strength>3</strength>
+		<agility>4</agility>
+		<armour>8</armour>
+    	<iconList baseIconPath="../stars/">
+			<portrait/>
+			<home standing="Soaren_Hightower.gif" moving="Soaren_Hightower_an.gif"/>
+			<away standing="Soaren_Hightower_b.gif"  moving="Soaren_Hightower_ban.gif"/>
+		</iconList>
+		<skillList>
+			<skill>Loner</skill>
+			<skill>Fend</skill>
+			<skill>Kick-Off Return</skill>
+			<skill>Pass</skill>
+			<skill>Safe Throw</skill>
+			<skill>Sure Hands</skill>
+			<skill>Strong Arm</skill>
+		</skillList>
+	</position>
+
+	<position id="highelf.Sidewinder">
+		<quantity>1</quantity>
+		<name>Eldril Sidewinder</name>
+		<shorthand>ES</shorthand>
+		<type>Star</type>
+		<cost>200000</cost>
+		<movement>8</movement>
+		<strength>3</strength>
+		<agility>4</agility>
+		<armour>7</armour>
+    	<iconList baseIconPath="../stars/">
+			<portrait/>
+			<home standing="Eldril_Sidewinder.gif" moving="Eldril_Sidewinder_an.gif"/>
+			<away standing="Eldril_Sidewinder_b.gif"  moving="Eldril_Sidewinder_ban.gif"/>
+		</iconList>
+		<skillList>
+			<skill>Loner</skill>
+			<skill>Catch</skill>
+			<skill>Dodge</skill>
+			<skill>Hypnotic Gaze</skill>
+			<skill>Nerves of Steel</skill>
+			<skill>Pass Block</skill>
+		</skillList>
+	</position>
+
+	<position id="highelf.Prince">
+		<quantity>1</quantity>
+		<name>Prince Moranion</name>
+		<shorthand>PM</shorthand>
+		<type>Star</type>
+		<cost>230000</cost>
+		<movement>7</movement>
+		<strength>4</strength>
+		<agility>4</agility>
+		<armour>8</armour>
+    	<iconList baseIconPath="../stars/">
+			<portrait/>
+			<home standing="Prince_Moranion.gif" moving="Prince_Moranion_an.gif"/>
+			<away standing="Prince_Moranion_b.gif"  moving="Prince_Moranion_ban.gif"/>
+		</iconList>
+		<skillList>
+			<skill>Loner</skill>
+			<skill>Block</skill>
+			<skill>Dauntless</skill>
+			<skill>Tackle</skill>
+			<skill>Wrestle</skill>
+		</skillList>
+	</position>
+
+	<position id="highelf.Zara">
+		<quantity>1</quantity>
+		<name>Zara the Slayer</name>
+		<shorthand>ZS</shorthand>
+		<type>Star</type>
+		<cost>270000</cost>
+		<movement>6</movement>
+		<strength>4</strength>
+		<agility>3</agility>
+		<armour>8</armour>
+    	<iconList baseIconPath="../stars/">
+			<portrait/>
+			<home standing="Zara_the_Slayer.gif" moving="Zara_the_Slayer_an.gif"/>
+			<away standing="Zara_the_Slayer_b.gif"  moving="Zara_the_Slayer_ban.gif"/>
+		</iconList>
+		<skillList>
+			<skill>Loner</skill>
+			<skill>Block</skill>
+			<skill>Dauntless</skill>
+			<skill>Dodge</skill>
+			<skill>Jump Up</skill>
+			<skill>Stab</skill>
+			<skill>Stakes</skill>
+		</skillList>
+	</position>
+
+	<position id="highelf.Morg">
+		<quantity>1</quantity>
+		<name>Morg 'n' Thorg</name>
+		<shorthand>MT</shorthand>
+		<type>Star</type>
+		<cost>430000</cost>
+		<movement>6</movement>
+		<strength>6</strength>
+		<agility>3</agility>
+		<armour>10</armour>
+    	<iconList baseIconPath="../stars/">
+			<portrait/>
+			<home standing="morgnthorg.gif" moving="morgnthorg_an.gif"/>
+			<away standing="morgnthorg_b.gif"  moving="morgnthorg_ban.gif"/>
+		</iconList>
+		<skillList>
+			<skill>Loner</skill>
+			<skill>Block</skill>
+			<skill>Mighty Blow</skill>
+			<skill>Thick Skull</skill>
+			<skill>Throw Team-Mate</skill>
+		</skillList>
+	</position>
+
+</roster>

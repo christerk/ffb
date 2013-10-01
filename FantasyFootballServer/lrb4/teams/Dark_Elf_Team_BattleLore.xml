@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<team id="team13">
+
+  <coach>BattleLore</coach>
+  <name>BattleLore's Dark Elves</name>
+  <roster-id>darkelf.roster</roster-id>
+  <re-rolls>3</re-rolls>
+  <fanFactor>8</fanFactor>
+  <apothecaries>1</apothecaries>
+  <team-rating>100</team-rating>
+  <team-strength>111</team-strength>
+  <division>[X]</division>
+
+  <player nr="1">
+  	<name>Blitzer1</name>
+  	<position-id>darkelf.blitzer</position-id>
+  	<skill-list />
+  </player>
+
+  <player nr="2">
+  	<name>Blitzer2</name>
+  	<position-id>darkelf.blitzer</position-id>
+  	<skill-list />
+  </player>
+
+  <player nr="3">
+  	<name>Blitzer3</name>
+  	<position-id>darkelf.blitzer</position-id>
+  	<skill-list />
+  </player>
+
+  <player nr="4">
+  	<name>Blitzer4</name>
+  	<position-id>darkelf.blitzer</position-id>
+  	<skill-list />
+  </player>
+
+  <player nr="5">
+    <name>Witch1</name>
+  	<position-id>darkelf.witchelf</position-id>
+  	<skill-list />
+  </player>
+
+  <player nr="6">
+    <name>Witch2</name>
+  	<position-id>darkelf.witchelf</position-id>
+  	<skill-list />
+  </player>
+
+  <player nr="7">
+    <name>Thrower1</name>
+  	<position-id>darkelf.thrower</position-id>
+  	<skill-list />
+  </player>
+	
+  <player nr="8">
+    <name>Thrower2</name>
+  	<position-id>darkelf.thrower</position-id>
+  	<skill-list />
+  </player>
+
+  <player nr="9">
+    <name>Lineman1</name>
+  	<position-id>darkelf.lineman</position-id>
+  	<skill-list />
+  </player>
+
+  <player nr="10">
+    <name>Lineman2</name>
+  	<position-id>darkelf.lineman</position-id>
+  	<skill-list />
+  </player>
+
+  <player nr="11">
+    <name>Lineman3</name>
+  	<position-id>darkelf.lineman</position-id>
+  	<skill-list />
+  </player>
+
+  <player nr="12">
+    <name>Lineman4</name>
+  	<position-id>darkelf.lineman</position-id>
+  	<skill-list />
+  </player>
+
+</team>

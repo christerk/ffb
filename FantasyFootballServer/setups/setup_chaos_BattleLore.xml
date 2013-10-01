@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<teamSetup teamId="teamChaosBattleLore" name="Chaos Team Setup">
+
+  <player nr="1">
+    <coordinate x="11" y="1" />
+  </player>
+
+  <player nr="2">
+    <coordinate x="11" y="2" />
+  </player>
+
+  <player nr="3">
+    <coordinate x="11" y="13" />
+  </player>
+
+  <player nr="4">
+    <coordinate x="11" y="12" />
+  </player>
+
+  <player nr="5">
+    <coordinate x="10" y="10" />
+  </player>
+
+  <player nr="6">
+    <coordinate x="10" y="6" />
+  </player>
+
+  <player nr="7">
+    <coordinate x="10" y="8" />
+  </player>
+
+  <player nr="9">
+    <coordinate x="12" y="9" />
+  </player>
+
+  <player nr="10">
+    <coordinate x="12" y="5" />
+  </player>
+
+  <player nr="11">
+    <coordinate x="12" y="7" />
+  </player>
+
+  <player nr="12">
+    <coordinate x="10" y="4" />
+  </player>
+
+</teamSetup>

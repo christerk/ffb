@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<team id="teamAmazonKalimar">
+
+  <coach>Kalimar</coach>
+  <name>Kalimar's Underworld</name>
+  <race>Underworld</race>
+  <rosterId>underworld.lrb6</rosterId>
+  <reRolls>4</reRolls>
+  <fanFactor>10</fanFactor>
+  <apothecaries>2</apothecaries>
+  <teamRating>100</teamRating>
+  <teamStrength>106</teamStrength>
+  <division>[X]</division>
+
+  <player nr="1" id="teamUnderworldKalimar1">
+  	<name>Goblin1</name>
+  	<positionId>underworld.goblin</positionId>
+  	<skillList />
+  </player>
+
+  <player nr="2" id="teamUnderworldKalimar2">
+  	<name>Goblin2</name>
+  	<positionId>underworld.goblin</positionId>
+  	<skillList />
+  </player>
+  
+  <player nr="3" id="teamUnderworldKalimar3">
+  	<name>Goblin3</name>
+  	<positionId>underworld.goblin</positionId>
+  	<skillList />
+  </player>
+  
+  <player nr="4" id="teamUnderworldKalimar4">
+  	<name>Goblin4</name>
+  	<positionId>underworld.goblin</positionId>
+  	<skillList />
+  </player>
+
+  <player nr="5" id="teamUnderworldKalimar5">
+  	<name>Skaven1</name>
+  	<positionId>underworld.skaven.lineman</positionId>
+  	<skillList />
+  </player>
+
+  <player nr="6" id="teamUnderworldKalimar6">
+  	<name>Skaven2</name>
+  	<positionId>underworld.skaven.lineman</positionId>
+  	<skillList />
+  </player>
+  
+  <player nr="7" id="teamUnderworldKalimar7">
+  	<name>Thrower1</name>
+  	<positionId>underworld.skaven.thrower</positionId>
+  	<skillList />
+  </player>
+
+  <player nr="8" id="teamUnderworldKalimar8">
+  	<name>Thrower2</name>
+  	<positionId>underworld.skaven.thrower</positionId>
+  	<skillList />
+  </player>
+  
+  <player nr="9" id="teamUnderworldKalimar9">
+  	<name>Blitzer1</name>
+  	<positionId>underworld.skaven.blitzer</positionId>
+  	<skillList />
+  </player>
+
+  <player nr="10" id="teamUnderworldKalimar10">
+  	<name>Blitzer2</name>
+  	<positionId>underworld.skaven.blitzer</positionId>
+  	<skillList />
+  </player>
+  
+  <player nr="11" id="teamUnderworldKalimar11">
+  	<name>WarpstoneTroll</name>
+  	<positionId>underworld.troll.warpstone</positionId>
+  	<skillList />
+  </player>
+ 
+</team>

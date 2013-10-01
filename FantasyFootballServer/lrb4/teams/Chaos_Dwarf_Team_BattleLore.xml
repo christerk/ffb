@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<team id="team14">
+
+  <coach>BattleLore</coach>
+  <name>BattleLore's Chaos Dwarfs</name>
+  <roster-id>chaosdwarf.roster</roster-id>
+  <re-rolls>3</re-rolls>
+  <fanFactor>8</fanFactor>
+  <apothecaries>1</apothecaries>
+  <team-rating>100</team-rating>
+  <team-strength>112</team-strength>
+  <division>[X]</division>
+
+  <player nr="1">
+  	<name>Bull1</name>
+  	<position-id>chaosdwarf.bullcentaur</position-id>
+  	<skill-list />
+  </player>
+
+  <player nr="2">
+  	<name>Bull2</name>
+  	<position-id>chaosdwarf.bullcentaur</position-id>
+  	<skill-list />
+  </player>
+
+  <player nr="3">
+  	<name>Blocker1</name>
+  	<position-id>chaosdwarf.blocker</position-id>
+  	<skill-list />
+  </player>
+
+  <player nr="4">
+  	<name>Blocker2</name>
+  	<position-id>chaosdwarf.blocker</position-id>
+  	<skill-list />
+  </player>
+
+  <player nr="5">
+  	<name>Blocker3</name>
+  	<position-id>chaosdwarf.blocker</position-id>
+  	<skill-list />
+  </player>
+
+  <player nr="6">
+  	<name>Blocker4</name>
+  	<position-id>chaosdwarf.blocker</position-id>
+  	<skill-list />
+  </player>
+
+  <player nr="7">
+  	<name>Blocker5</name>
+  	<position-id>chaosdwarf.blocker</position-id>
+  	<skill-list />
+  </player>
+
+  <player nr="8">
+  	<name>Blocker6</name>
+  	<position-id>chaosdwarf.blocker</position-id>
+  	<skill-list />
+  </player>
+
+  <player nr="9">
+  	<name>Hobgob1</name>
+  	<position-id>chaosdwarf.hobgoblin</position-id>
+  	<skill-list />
+  </player>
+
+  <player nr="10">
+  	<name>Hobgob2</name>
+  	<position-id>chaosdwarf.hobgoblin</position-id>
+  	<skill-list />
+  </player>
+
+  <player nr="11">
+  	<name>Hobgob3</name>
+  	<position-id>chaosdwarf.hobgoblin</position-id>
+  	<skill-list />
+  </player>
+
+  <player nr="12">
+  	<name>Hobgob4</name>
+  	<position-id>chaosdwarf.hobgoblin</position-id>
+  	<skill-list />
+  </player>
+
+  <player nr="13">
+  	<name>Hobgob5</name>
+  	<position-id>chaosdwarf.hobgoblin</position-id>
+  	<skill-list />
+  </player>
+
+</team>

@@ -1,0 +1,265 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<roster id="lizardman.lrb6">
+
+<!--
+0-16 Skinks 60,000 8 2 3 7 Dodge, Stunty A GSP
+0-6 Saurus 80,000 6 4 1 9 None GS AP
+0-1 Kroxigor 140,000 6 5 1 9 Loner, Bone-head, Mighty Blow, Prehensile Tail, Thick Skull S GAP
+
+0-8 Re-roll counters: 60,000 gold pieces each
+
+Star Players available for Inducement:
+Helmut Wulf, Hemlock, Morg ‘n’ Thorg, Slibli
+-->
+
+  <name>Lizardman</name>
+  <type>Regular</type>
+  <reRollCost>60000</reRollCost>	
+  <maxReRolls>8</maxReRolls>
+  <baseIconPath>http://localhost:2224/icons/players/lizardman/</baseIconPath>	
+ 
+  <position id="lizardman.kroxigor">
+  	<quantity>1</quantity>
+  	<name>Kroxigor</name>
+  	<type>Big Guy</type>
+  	<cost>140000</cost>
+    <movement>6</movement>
+    <strength>5</strength>
+    <agility>1</agility>
+    <armour>9</armour>
+    <iconList>
+      <portrait>portrait_lizardman_kroxigor.png</portrait>
+      <home standing="kroxigor1.gif" moving="kroxigor1an.gif" />
+      <away standing="kroxigor1b.gif" moving="kroxigor1ban.gif" />
+    </iconList>
+  	<skillList>
+  	  <skill>Loner</skill>
+  	  <skill>Bone-Head</skill>
+  	  <skill>Mighty Blow</skill>
+  	  <skill>Prehensile Tail</skill>
+  	  <skill>Thick Skull</skill>
+  	</skillList>
+  	<skillCategoryList>
+      <normal>Strength</normal>
+      <double>General</double>
+      <double>Agility</double>
+      <double>Passing</double>
+  	</skillCategoryList>
+  </position> 
+  
+  <position id="lizardman.saurus">
+  	<quantity>6</quantity>
+  	<name>Saurus</name>
+  	<shorthand>S</shorthand>
+  	<type>Regular</type>
+  	<cost>80000</cost>
+    <movement>6</movement>
+    <strength>4</strength>
+    <agility>1</agility>
+    <armour>9</armour>
+    <iconList>
+      <portrait>portrait_lizardman_saurus.png</portrait>
+      <home standing="lmsaurus1.gif" moving="lmsaurus1an.gif" />
+      <away standing="lmsaurus1b.gif" moving="lmsaurus1ban.gif" />
+      <home standing="lmsaurus2.gif" moving="lmsaurus2an.gif" />
+      <away standing="lmsaurus2b.gif" moving="lmsaurus2ban.gif" />
+      <home standing="lmsaurus3.gif" moving="lmsaurus3an.gif" />
+      <away standing="lmsaurus3b.gif" moving="lmsaurus3ban.gif" />
+      <home standing="lmsaurus4.gif" moving="lmsaurus4an.gif" />
+      <away standing="lmsaurus4b.gif" moving="lmsaurus4ban.gif" />
+    </iconList>
+  	<skillList />
+  	<skillCategoryList>
+      <normal>General</normal>
+      <normal>Strength</normal>
+      <double>Agility</double>
+      <double>Passing</double>
+  	</skillCategoryList>
+  </position> 
+  
+  <position id="lizardman.skink">
+  	<quantity>16</quantity>
+  	<name>Skink</name>
+  	<shorthand>L</shorthand>
+  	<type>Regular</type>
+  	<cost>60000</cost>
+    <movement>8</movement>
+    <strength>2</strength>
+    <agility>3</agility>
+    <armour>7</armour>
+    <iconList>
+      <portrait>portrait_lizardman_skink.png</portrait>
+      <home standing="lmskink1.gif" moving="lmskink1an.gif" />
+      <away standing="lmskink1b.gif" moving="lmskink1ban.gif" />
+      <home standing="lmskink2.gif" moving="lmskink2an.gif" />
+      <away standing="lmskink2b.gif" moving="lmskink2ban.gif" />
+      <home standing="lmskink3.gif" moving="lmskink3an.gif" />
+      <away standing="lmskink3b.gif" moving="lmskink3ban.gif" />
+      <home standing="lmskink4.gif" moving="lmskink4an.gif" />
+      <away standing="lmskink4b.gif" moving="lmskink4ban.gif" />
+    </iconList>
+  	<skillList>
+  	  <skill>Dodge</skill>
+  	  <skill>Stunty</skill>
+  	</skillList>
+  	<skillCategoryList>
+      <normal>Agility</normal>
+      <double>General</double>
+      <double>Strength</double>
+      <double>Passing</double>
+  	</skillCategoryList>
+  </position>
+  
+  <position id="lizardman.Hemlock">
+		<quantity>1</quantity>
+		<name>Hemlock</name>
+		<shorthand>HL</shorthand>
+		<type>Star</type>
+		<cost>170000</cost>
+		<movement>8</movement>
+		<strength>2</strength>
+		<agility>3</agility>
+		<armour>7</armour>
+    <iconList baseIconPath="../stars/">
+			<portrait/>
+			<home standing="Hemlock.gif" moving="Hemlock_an.gif"/>
+			<away standing="Hemlock_b.gif"  moving="Hemlock_ban.gif"/>
+		</iconList>
+		<skillList>
+			<skill>Loner</skill>
+			<skill>Block</skill>
+			<skill>Dodge</skill>
+			<skill>Side Step</skill>
+			<skill>Jump Up</skill>
+			<skill>Stab</skill>
+			<skill>Stunty</skill>
+		</skillList>
+	</position>
+
+	<position id="lizardman.Lottabottal">
+		<quantity>1</quantity>
+		<name>Lottabottol</name>
+		<shorthand>LB</shorthand>
+		<type>Star</type>
+		<cost>220000</cost>
+		<movement>8</movement>
+		<strength>3</strength>
+		<agility>3</agility>
+		<armour>8</armour>
+    <iconList baseIconPath="../stars/">
+			<portrait/>
+			<home standing="Lottabottol.gif" moving="Lottabottol_an.gif"/>
+			<away standing="Lottabottol_b.gif"  moving="Lottabottol_ban.gif"/>
+		</iconList>
+		<skillList>
+			<skill>Loner</skill>
+			<skill>Catch</skill>
+			<skill>Diving Tackle</skill>
+			<skill>Jump Up</skill>
+			<skill>Leap</skill>
+			<skill>Pass Block</skill>
+			<skill>Shadowing</skill>
+			<skill>Very Long Legs</skill>
+		</skillList>
+	</position>
+
+	<position id="lizardman.Helmut">
+		<quantity>1</quantity>
+		<name>Helmut Wulf</name>
+		<shorthand>HW</shorthand>
+		<type>Star</type>
+		<cost>110000</cost>
+		<movement>6</movement>
+		<strength>3</strength>
+		<agility>3</agility>
+		<armour>8</armour>
+    <iconList baseIconPath="../stars/">
+			<portrait/>
+			<home standing="Helmut_Wulf.gif" moving="Helmut_Wulf_an.gif"/>
+			<away standing="Helmut_Wulf_b.gif"  moving="Helmut_Wulf_ban.gif"/>
+		</iconList>
+		<skillList>
+			<skill>Loner</skill>
+			<skill>Chainsaw</skill>
+			<skill>Secret Weapon</skill>
+			<skill>Stand Firm</skill>
+		</skillList>
+	</position>
+
+	<position id="lizardman.Quetzal">
+		<quantity>1</quantity>
+		<name>Quetzal Leap</name>
+		<shorthand>QL</shorthand>
+		<type>Star</type>
+		<cost>250000</cost>
+		<movement>8</movement>
+		<strength>2</strength>
+		<agility>4</agility>
+		<armour>7</armour>
+    <iconList baseIconPath="../stars/">
+			<portrait/>
+			<home standing="Quetzal_Leap.gif" moving="Quetzal_Leap_an.gif"/>
+			<away standing="Quetzal_Leap_b.gif"  moving="Quetzal_Leap_ban.gif"/>
+		</iconList>
+		<skillList>
+			<skill>Loner</skill>
+			<skill>Catch</skill>
+			<skill>Diving Catch</skill>
+			<skill>Fend</skill>
+			<skill>Kick-Off Return</skill>
+			<skill>Leap</skill>
+			<skill>Nerves of Steel</skill>
+			<skill>Very Long Legs</skill>
+		</skillList>
+	</position>
+
+	<position id="lizardman.Slibli">
+		<quantity>1</quantity>
+		<name>Slibli</name>
+		<shorthand>SL</shorthand>
+		<type>Star</type>
+		<cost>250000</cost>
+		<movement>7</movement>
+		<strength>4</strength>
+		<agility>1</agility>
+		<armour>9</armour>
+    <iconList baseIconPath="../stars/">
+			<portrait/>
+			<home standing="Slibli.gif" moving="Slibli_an.gif"/>
+			<away standing="Slibli_b.gif"  moving="Slibli_ban.gif"/>
+		</iconList>
+		<skillList>
+			<skill>Loner</skill>
+			<skill>Block</skill>
+			<skill>Grab</skill>
+			<skill>Guard</skill>
+			<skill>Stand Firm</skill>
+		</skillList>
+	</position>
+
+	<position id="lizardman.Morg">
+		<quantity>1</quantity>
+		<name>Morg 'n' Thorg</name>
+		<shorthand>MT</shorthand>
+		<type>Star</type>
+		<cost>430000</cost>
+		<movement>6</movement>
+		<strength>6</strength>
+		<agility>3</agility>
+		<armour>10</armour>
+    <iconList baseIconPath="../stars/">
+			<portrait/>
+			<home standing="morgnthorg.gif" moving="morgnthorg_an.gif"/>
+			<away standing="morgnthorg_b.gif"  moving="morgnthorg_ban.gif"/>
+		</iconList>
+		<skillList>
+			<skill>Loner</skill>
+			<skill>Block</skill>
+			<skill>Mighty Blow</skill>
+			<skill>Thick Skull</skill>
+			<skill>Throw Team-Mate</skill>
+		</skillList>
+	</position>
+  
+</roster>

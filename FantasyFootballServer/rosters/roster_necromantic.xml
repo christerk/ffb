@@ -1,0 +1,315 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<roster id="necromantic.lrb6">
+
+<!--
+0-16 Zombies 40,000 4 3 2 8 Regeneration G ASP
+0-2 Ghouls 70,000 7 3 3 7 Dodge GA SP
+0-2 Wights 90,000 6 3 3 8 Block, Regeneration GS AP
+0-2 Flesh Golems 110,000 4 4 2 9 Regeneration, Stand Firm, Thick Skull GS AP
+0-2 Werewolves 120,000 8 3 3 8 Claw, Frenzy, Regeneration GA SP
+
+0-8 Re-roll counters: 70,000 gold pieces each
+
+Star Players available for Inducement:
+Count Luthor von Drakenborg, Hack Enslash, Ramtut III, Setekh, Wilhelm Chaney
+-->
+
+  <name>Necromantic</name>
+  <type>Regular</type>
+  <reRollCost>70000</reRollCost>	
+  <maxReRolls>8</maxReRolls>
+  <baseIconPath>http://localhost:2224/icons/players/necromantic/</baseIconPath>
+  <raisedPositionId>necromantic.zombie</raisedPositionId>  
+  
+  <position id="necromantic.werewolf">
+  	<quantity>2</quantity>
+  	<name>Werewolf</name>
+  	<type>Regular</type>
+  	<cost>120000</cost>
+    <movement>8</movement>
+    <strength>3</strength>
+    <agility>3</agility>
+    <armour>8</armour>
+    <iconList>
+      <portrait>nkWerewolf.gif</portrait>
+      <home standing="nwerewolf1.gif" moving="nwerewolf1an.gif" />
+      <away standing="nwerewolf1b.gif" moving="nwerewolf1ban.gif" />
+      <home standing="nwerewolf2.gif" moving="nwerewolf2an.gif" />
+      <away standing="nwerewolf2b.gif" moving="nwerewolf2ban.gif" />
+    </iconList>
+  	<skillList>
+  	  <skill>Claw</skill>
+  	  <skill>Frenzy</skill>
+  	  <skill>Regeneration</skill>
+  	</skillList>
+  	<skillCategoryList>
+      <normal>General</normal>
+      <normal>Agility</normal>
+      <double>Strength</double>
+      <double>Passing</double>
+  	</skillCategoryList>
+  </position>	
+
+  <position id="necromantic.fleshgolem">
+  	<quantity>2</quantity>
+  	<name>Flesh Golem</name>
+  	<type>Regular</type>
+  	<cost>110000</cost>
+    <movement>4</movement>
+    <strength>4</strength>
+    <agility>2</agility>
+    <armour>9</armour>
+    <iconList>
+      <portrait>nkFleshGolem.gif</portrait>
+      <home standing="ngolem1.gif" moving="ngolem1an.gif" />
+      <away standing="ngolem1b.gif" moving="ngolem1ban.gif" />
+      <home standing="ngolem2.gif" moving="ngolem2an.gif" />
+      <away standing="ngolem2b.gif" moving="ngolem2ban.gif" />
+    </iconList>
+  	<skillList>
+  	  <skill>Regeneration</skill>
+  	  <skill>Stand Firm</skill>
+  	  <skill>Thick Skull</skill>
+  	</skillList>
+  	<skillCategoryList>
+      <normal>General</normal>
+      <normal>Strength</normal>
+      <double>Agility</double>
+      <double>Passing</double>
+  	</skillCategoryList>
+  </position>
+
+  <position id="necromantic.wight">
+  	<quantity>2</quantity>
+  	<name>Wight</name>
+  	<type>Regular</type>
+  	<cost>90000</cost>
+    <movement>6</movement>
+    <strength>3</strength>
+    <agility>3</agility>
+    <armour>8</armour>
+    <iconList>
+      <portrait>nkWight.gif</portrait>
+      <home standing="nwight1.gif" moving="nwight1an.gif" />
+      <away standing="nwight1b.gif" moving="nwight1ban.gif" />
+      <home standing="nwight2.gif" moving="nwight2an.gif" />
+      <away standing="nwight2b.gif" moving="nwight2ban.gif" />
+    </iconList>
+  	<skillList>
+  	  <skill>Block</skill>
+  	  <skill>Regeneration</skill>
+  	</skillList>
+  	<skillCategoryList>
+      <normal>General</normal>
+      <normal>Strength</normal>
+      <double>Agility</double>
+      <double>Passing</double>
+  	</skillCategoryList>
+  </position>
+
+  <position id="necromantic.ghoul">
+  	<quantity>2</quantity>
+  	<name>Ghoul</name>
+  	<type>Regular</type>
+  	<cost>70000</cost>
+    <movement>7</movement>
+    <strength>3</strength>
+    <agility>3</agility>
+    <armour>7</armour>
+    <iconList>
+      <portrait>nkGhoul.gif</portrait>
+      <home standing="nghoul1.gif" moving="nghoul1an.gif" />
+      <away standing="nghoul1b.gif" moving="nghoul1ban.gif" />
+      <home standing="nghoul2.gif" moving="nghoul2an.gif" />
+      <away standing="nghoul2b.gif" moving="nghoul2ban.gif" />
+    </iconList>
+  	<skillList>
+  	  <skill>Dodge</skill>
+  	</skillList>
+  	<skillCategoryList>
+      <normal>General</normal>
+      <normal>Agility</normal>
+      <double>Strength</double>
+      <double>Passing</double>
+  	</skillCategoryList>
+  </position>
+
+  <position id="necromantic.zombie">
+  	<quantity>16</quantity>
+  	<name>Zombie</name>
+  	<type>Regular</type>
+  	<cost>30000</cost>
+    <movement>4</movement>
+    <strength>3</strength>
+    <agility>2</agility>
+    <armour>8</armour>
+    <iconList>
+      <portrait>nkZombie.gif</portrait>
+      <home standing="nzombie1.gif" moving="nzombie1an.gif" />
+      <away standing="nzombie1b.gif" moving="nzombie1ban.gif" />
+      <home standing="nzombie2.gif" moving="nzombie2an.gif" />
+      <away standing="nzombie2b.gif" moving="nzombie2ban.gif" />
+      <home standing="nzombie3.gif" moving="nzombie3an.gif" />
+      <away standing="nzombie3b.gif" moving="nzombie3ban.gif" />
+      <home standing="nzombie4.gif" moving="nzombie4an.gif" />
+      <away standing="nzombie4b.gif" moving="nzombie4ban.gif" />
+    </iconList>
+  	<skillList>
+  	  <skill>Regeneration</skill>
+  	</skillList>
+  	<skillCategoryList>
+      <normal>General</normal>
+      <double>Agility</double>
+      <double>Strength</double>
+      <double>Passing</double>
+  	</skillCategoryList>
+  </position>
+  
+  <position id="necromantic.Hackenslash">
+		<quantity>1</quantity>
+		<name>Hack Enslash</name>
+		<shorthand>HE</shorthand>
+		<type>Star</type>
+		<cost>120000</cost>
+		<movement>6</movement>
+		<strength>3</strength>
+		<agility>2</agility>
+		<armour>7</armour>
+    <iconList baseIconPath="../stars/">
+			<portrait/>
+			<home standing="Hack_Enslash.gif" moving="Hack_Enslash_an.gif"/>
+			<away standing="Hack_Enslash_b.gif"  moving="Hack_Enslash_ban.gif"/>
+		</iconList>
+		<skillList>
+			<skill>Loner</skill>
+			<skill>Chainsaw</skill>
+			<skill>Regeneration</skill>
+			<skill>Secret Weapon</skill>
+			<skill>Side Step</skill>
+		</skillList>
+	</position>
+
+	<position id="necromantic.Earlice">
+		<quantity>1</quantity>
+		<name>J. Earlice</name>
+		<shorthand>JE</shorthand>
+		<type>Star</type>
+		<cost>180000</cost>
+		<movement>8</movement>
+		<strength>3</strength>
+		<agility>3</agility>
+		<armour>7</armour>
+    <iconList baseIconPath="../stars/">
+			<portrait/>
+			<home standing="J_Earlice.gif" moving="J_Earlice_an.gif"/>
+			<away standing="J_Earlice_b.gif"  moving="J_Earlice_ban.gif"/>
+		</iconList>
+		<skillList>
+			<skill>Loner</skill>
+			<skill>Catch</skill>
+			<skill>Diving Catch</skill>
+			<skill>Dodge</skill>
+			<skill>Sprint</skill>
+		</skillList>
+	</position>
+
+	<position id="necromantic.Setekh">
+		<quantity>1</quantity>
+		<name>Setekh</name>
+		<shorthand>ST</shorthand>
+		<type>Star</type>
+		<cost>220000</cost>
+		<movement>6</movement>
+		<strength>4</strength>
+		<agility>2</agility>
+		<armour>8</armour>
+    <iconList baseIconPath="../stars/">
+			<portrait/>
+			<home standing="Setekh.gif" moving="Setekh_an.gif"/>
+			<away standing="Setekh_b.gif"  moving="Setekh_ban.gif"/>
+		</iconList>
+		<skillList>
+			<skill>Loner</skill>
+			<skill>Block</skill>
+			<skill>Break Tackle</skill>
+			<skill>Juggernaut</skill>
+			<skill>Regeneration</skill>
+			<skill>Strip Ball</skill>
+		</skillList>
+	</position>
+
+	<position id="necromantic.Whilhelm">
+		<quantity>1</quantity>
+		<name>Wilhelm Chaney</name>
+		<shorthand>WC</shorthand>
+		<type>Star</type>
+		<cost>240000</cost>
+		<movement>8</movement>
+		<strength>4</strength>
+		<agility>3</agility>
+		<armour>8</armour>
+    <iconList baseIconPath="../stars/">
+			<portrait/>
+			<home standing="Wilhelm_Chaney.gif" moving="Wilhelm_Chaney_an.gif"/>
+			<away standing="Wilhelm_Chaney_b.gif"  moving="Wilhelm_Chaney_ban.gif"/>
+		</iconList>
+		<skillList>
+			<skill>Loner</skill>
+			<skill>Catch</skill>
+			<skill>Claws</skill>
+			<skill>Frenzy</skill>
+			<skill>Regeneration</skill>
+			<skill>Wrestle</skill>
+		</skillList>
+	</position>
+
+	<position id="necromantic.Ramtut">
+		<quantity>1</quantity>
+		<name>Ramtut III</name>
+		<shorthand>R3</shorthand>
+		<type>Star</type>
+		<cost>380000</cost>
+		<movement>5</movement>
+		<strength>6</strength>
+		<agility>1</agility>
+		<armour>9</armour>
+    <iconList baseIconPath="../stars/">
+			<portrait/>
+			<home standing="Ramtut_III.gif" moving="Ramtut_III_an.gif"/>
+			<away standing="Ramtut_III_b.gif"  moving="Ramtut_III_ban.gif"/>
+		</iconList>
+		<skillList>
+			<skill>Loner</skill>
+			<skill>Break Tackle</skill>
+			<skill>Mighty Blow</skill>
+			<skill>Regeneration</skill>
+			<skill>Wrestle</skill>
+		</skillList>
+	</position>
+
+	<position id="necromantic.Count">
+		<quantity>1</quantity>
+		<name>Count Luthor von Drakenborg</name>
+		<shorthand>CL</shorthand>
+		<type>Star</type>
+		<cost>390000</cost>
+		<movement>6</movement>
+		<strength>5</strength>
+		<agility>4</agility>
+		<armour>9</armour>
+    <iconList baseIconPath="../stars/">
+			<portrait/>
+			<home standing="Count_Luthor.gif" moving="Count_Luthor_an.gif"/>
+			<away standing="Count_Luthor_b.gif"  moving="Count_Luthor_ban.gif"/>
+		</iconList>
+		<skillList>
+			<skill>Loner</skill>
+			<skill>Block</skill>
+			<skill>Hypnotic Gaze</skill>
+			<skill>Side Step</skill>
+			<skill>Regeneration</skill>
+		</skillList>
+	</position>
+
+ </roster>

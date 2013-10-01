@@ -1,0 +1,308 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<roster id="skaven.lrb6">
+
+<!--
+0-16 Linemen 50,000 7 3 3 7 None G ASPM
+0-2 Throwers 70,000 7 3 3 7 Pass, Sure Hands GP ASM
+0-4 Gutter Runners 80,000 9 2 4 7 Dodge GA SPM
+0-2 Blitzers 90,000 7 3 3 8 Block GS APM
+0-1 Rat Ogre 160,000 6 5 2 8 Loner, Frenzy, Mighty Blow, Prehensile Tail, Wild Animal S GAPM
+
+0-8 Re-roll counters: 60,000 gold pieces each
+
+Star Players available for Inducement:
+Hakflem Skuttlespike, Headsplitter, Morg ‘n’ Thorg, Skitter Stab-Stab
+-->
+
+  <name>Skaven</name>
+  <type>Regular</type>
+  <reRollCost>60000</reRollCost>	
+  <maxReRolls>8</maxReRolls>	
+  <baseIconPath>http://localhost:2224/icons/players/skaven/</baseIconPath>	
+
+  <position id="skaven.ratogre">
+  	<quantity>1</quantity>
+  	<name>Rat Ogre</name>
+  	<type>Big Guy</type>
+  	<cost>160000</cost>
+    <movement>6</movement>
+    <strength>5</strength>
+    <agility>2</agility>
+    <armour>8</armour>
+    <iconList>
+      <portrait>portrait_skaven_rat_ogre.png</portrait>
+      <home standing="ratogre1.gif" moving="ratogre1an.gif" />
+      <away standing="ratogre1b.gif" moving="ratogre1ban.gif" />
+    </iconList>
+  	<skillList>
+  	  <skill>Loner</skill>
+  	  <skill>Frenzy</skill>
+  	  <skill>Mighty Blow</skill>
+  	  <skill>Prehensile Tail</skill>
+  	  <skill>Wild Animal</skill>
+  	</skillList>
+  	<skillCategoryList>
+      <normal>Strength</normal>
+      <double>General</double>
+      <double>Agility</double>
+      <double>Passing</double>
+      <double>Mutation</double>
+  	</skillCategoryList>
+  </position>
+
+  <position id="skaven.blitzer">
+  	<quantity>2</quantity>
+  	<name>Blitzer</name>
+  	<type>Regular</type>
+  	<cost>90000</cost>
+    <movement>7</movement>
+    <strength>3</strength>
+    <agility>3</agility>
+    <armour>8</armour>
+    <iconList>
+      <portrait>portrait_skaven_blitzer.png</portrait>
+      <home standing="skstorm1.gif" moving="skstorm1an.gif" />
+      <away standing="skstorm1b.gif" moving="skstorm1ban.gif" />
+      <home standing="skstorm2.gif" moving="skstorm2an.gif" />
+      <away standing="skstorm2b.gif" moving="skstorm2ban.gif" />
+    </iconList>
+  	<skillList>
+  	  <skill>Block</skill>
+  	</skillList>
+  	<skillCategoryList>
+      <normal>General</normal>
+      <normal>Strength</normal>
+      <double>Agility</double>
+      <double>Passing</double>
+      <double>Mutation</double>
+  	</skillCategoryList>
+  </position>
+
+  <position id="skaven.gutterrunner">
+  	<quantity>4</quantity>
+  	<name>Gutter Runner</name>
+  	<type>Regular</type>
+  	<cost>80000</cost>
+    <movement>9</movement>
+    <strength>2</strength>
+    <agility>4</agility>
+    <armour>7</armour>
+    <iconList>
+      <portrait>portrait_skaven_runner.png</portrait>
+      <home standing="skrunner1.gif" moving="skrunner1an.gif" />
+      <away standing="skrunner1b.gif" moving="skrunner1ban.gif" />
+      <home standing="skrunner2.gif" moving="skrunner2an.gif" />
+      <away standing="skrunner2b.gif" moving="skrunner2ban.gif" />
+    </iconList>
+  	<skillList>
+  	  <skill>Dodge</skill>
+  	</skillList>
+  	<skillCategoryList>
+      <normal>General</normal>
+      <normal>Agility</normal>
+      <double>Passing </double>
+      <double>Strength</double>
+      <double>Mutation</double>
+  	</skillCategoryList>
+  </position>
+
+  <position id="skaven.thrower">
+  	<quantity>2</quantity>
+  	<name>Thrower</name>
+  	<type>Regular</type>
+  	<cost>70000</cost>
+    <movement>7</movement>
+    <strength>3</strength>
+    <agility>3</agility>
+    <armour>7</armour>
+    <iconList>
+      <portrait>portrait_skaven_thrower.png</portrait>
+      <home standing="skthrower1.gif" moving="skthrower1an.gif" />
+      <away standing="skthrower1b.gif" moving="skthrower1ban.gif" />
+    </iconList>
+  	<skillList>
+  	  <skill>Pass</skill>
+  	  <skill>Sure Hands</skill>
+  	</skillList>
+  	<skillCategoryList>
+      <normal>General</normal>
+      <normal>Passing</normal>
+      <double>Agility</double>
+      <double>Strength</double>
+      <double>Mutation</double>
+  	</skillCategoryList>
+  </position>
+
+  <position id="skaven.lineman">
+  	<quantity>16</quantity>
+  	<name>Lineman</name>
+  	<type>Regular</type>
+  	<cost>50000</cost>
+    <movement>7</movement>
+    <strength>3</strength>
+    <agility>3</agility>
+    <armour>7</armour>
+    <iconList>
+      <portrait>portrait_skaven_lineman.png</portrait>
+      <home standing="sklineman1.gif" moving="sklineman1an.gif" />
+      <away standing="sklineman1b.gif" moving="sklineman1ban.gif" />
+      <home standing="sklineman2.gif" moving="sklineman2an.gif" />
+      <away standing="sklineman2b.gif" moving="sklineman2ban.gif" />
+      <home standing="sklineman3.gif" moving="sklineman3an.gif" />
+      <away standing="sklineman3b.gif" moving="sklineman3ban.gif" />
+    </iconList>
+  	<skillList />
+  	<skillCategoryList>
+      <normal>General</normal>
+      <double>Agility</double>
+      <double>Strength</double>
+      <double>Passing</double>
+      <double>Mutation</double>
+  	</skillCategoryList>
+  </position>
+  
+  <position id="skaven.Fezglitch">
+		<quantity>1</quantity>
+		<name>Fezglitch</name>
+		<shorthand>FZ</shorthand>
+		<type>Star</type>
+		<cost>100000</cost>
+		<movement>4</movement>
+		<strength>7</strength>
+		<agility>3</agility>
+		<armour>7</armour>
+    <iconList baseIconPath="../stars/">
+			<portrait/>
+			<home standing="Fezglitch.gif" moving="Fezglitch_an.gif"/>
+			<away standing="Fezglitch_b.gif"  moving="Fezglitch_ban.gif"/>
+		</iconList>
+		<skillList>
+			<skill>Loner</skill>
+			<skill>Ball and Chain</skill>
+			<skill>Disturbing Presence</skill>
+			<skill>Foul Appearance</skill>
+			<skill>No Hands</skill>
+			<skill>Secret Weapon</skill>
+		</skillList>
+	</position>
+
+	<position id="skaven.Glart">
+		<quantity>1</quantity>
+		<name>Glart Smashrip Jr.</name>
+		<shorthand>GS</shorthand>
+		<type>Star</type>
+		<cost>210000</cost>
+		<movement>7</movement>
+		<strength>4</strength>
+		<agility>3</agility>
+		<armour>8</armour>
+    <iconList baseIconPath="../stars/">
+			<portrait/>
+			<home standing="Glart_Smashrip_Jr.gif" moving="Glart_Smashrip_Jr_an.gif"/>
+			<away standing="Glart_Smashrip_Jr_b.gif"  moving="Glart_Smashrip_Jr_ban.gif"/>
+		</iconList>
+		<skillList>
+			<skill>Loner</skill>
+			<skill>Block</skill>
+			<skill>Claw</skill>
+			<skill>Juggernaut</skill>
+		</skillList>
+	</position>
+
+	<position id="skaven.Hackflem">
+		<quantity>1</quantity>
+		<name>Hakflem Skuttlespike</name>
+		<shorthand>HK</shorthand>
+		<type>Star</type>
+		<cost>200000</cost>
+		<movement>9</movement>
+		<strength>3</strength>
+		<agility>4</agility>
+		<armour>7</armour>
+    <iconList baseIconPath="../stars/">
+			<portrait/>
+			<home standing="hakflem.gif" moving="hakflem_an.gif"/>
+			<away standing="hakflem_b.gif"  moving="hakflem_ban.gif"/>
+		</iconList>
+		<skillList>
+			<skill>Loner</skill>
+			<skill>Dodge</skill>
+			<skill>Extra Arms</skill>
+			<skill>Prehensile Tail</skill>
+			<skill>Two Heads</skill>
+		</skillList>
+	</position>
+
+	<position id="skaven.Skitter">
+		<quantity>1</quantity>
+		<name>Skitter Stab-Stab</name>
+		<shorthand>SK</shorthand>
+		<type>Star</type>
+		<cost>160000</cost>
+		<movement>9</movement>
+		<strength>2</strength>
+		<agility>4</agility>
+		<armour>7</armour>
+    <iconList baseIconPath="../stars/">
+			<portrait/>
+			<home standing="Skitter_Stab-Stab.gif" moving="Skitter_Stab-Stab_an.gif"/>
+			<away standing="Skitter_Stab-Stab_b.gif"  moving="Skitter_Stab-Stab_ban.gif"/>
+		</iconList>
+		<skillList>
+			<skill>Loner</skill>
+			<skill>Dodge</skill>
+			<skill>Prehensile Tail</skill>
+			<skill>Shadowing</skill>
+			<skill>Stab</skill>
+		</skillList>
+	</position>
+
+	<position id="skaven.Headsplitter">
+		<quantity>1</quantity>
+		<name>Headsplitter</name>
+		<shorthand>HS</shorthand>
+		<type>Star</type>
+		<cost>340000</cost>
+		<movement>6</movement>
+		<strength>6</strength>
+		<agility>3</agility>
+		<armour>8</armour>
+    <iconList baseIconPath="../stars/">
+			<portrait/>
+			<home standing="headsplitter.gif" moving="headsplitter_an.gif"/>
+			<away standing="headsplitter_b.gif"  moving="headsplitter_ban.gif"/>
+		</iconList>
+		<skillList>
+			<skill>Loner</skill>
+			<skill>Frenzy</skill>
+			<skill>Mighty Blow</skill>
+			<skill>Prehensile Tail</skill>
+		</skillList>
+	</position>
+
+	<position id="skaven.Morg">
+		<quantity>1</quantity>
+    <name>Morg 'n' Thorg</name>
+		<shorthand>MT</shorthand>
+		<type>Star</type>
+		<cost>430000</cost>
+		<movement>6</movement>
+		<strength>6</strength>
+		<agility>3</agility>
+		<armour>10</armour>
+    <iconList baseIconPath="../stars/">
+			<portrait/>
+			<home standing="morgnthorg.gif" moving="morgnthorg_an.gif"/>
+			<away standing="morgnthorg_b.gif"  moving="morgnthorg_ban.gif"/>
+		</iconList>
+		<skillList>
+			<skill>Loner</skill>
+			<skill>Block</skill>
+			<skill>Mighty Blow</skill>
+			<skill>Thick Skull</skill>
+			<skill>Throw Team-Mate</skill>
+		</skillList>
+	</position>  
+
+</roster>

@@ -1,0 +1,316 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<roster id="undead.lrb6">
+
+<!--
+0-16 Skeletons 30,000 5 3 2 7 Regeneration G ASP
+0-16 Zombies 40,000 4 3 2 8 Regeneration G ASP
+0-4 Ghouls 70,000 7 3 3 7 Dodge GA SP
+0-2 Wights 90,000 6 3 3 8 Block, Regeneration GS AP
+0-2 Mummies 110,000 3 5 1 9 Mighty Blow, Regeneration S GAP
+
+0-8 Re-roll counters: 70,000 gold pieces each
+
+Star Players available for Inducement:
+Count Luthor von Drakenborg, Hack Enslash, Ramtut III, Setekh
+-->
+
+  <name>Undead</name>
+  <type>Regular</type>
+  <reRollCost>70000</reRollCost>	
+  <maxReRolls>8</maxReRolls>	
+  <baseIconPath>http://localhost:2224/icons/players/undead/</baseIconPath>
+  <raisedPositionId>undead.zombie</raisedPositionId>
+
+  <position id="undead.mummy">
+  	<quantity>2</quantity>
+  	<name>Mummy</name>
+  	<type>Regular</type>
+  	<cost>110000</cost>
+    <movement>3</movement>
+    <strength>5</strength>
+    <agility>1</agility>
+    <armour>9</armour>
+    <iconList>
+      <portrait>portrait_undead_mummy.png</portrait>
+      <home standing="umummy1.gif" moving="umummy1an.gif" />
+      <away standing="umummy1b.gif" moving="umummy1ban.gif" />
+      <home standing="umummy2.gif" moving="umummy2an.gif" />
+      <away standing="umummy2b.gif" moving="umummy2ban.gif" />
+    </iconList>
+  	<skillList>
+  	  <skill>Mighty Blow</skill>
+  	  <skill>Regeneration</skill>
+  	</skillList>
+  	<skillCategoryList>
+      <normal>Strength</normal>
+      <double>General</double>
+      <double>Agility</double>
+      <double>Passing</double>
+  	</skillCategoryList>
+  </position>
+
+  <position id="undead.wight">
+  	<quantity>2</quantity>
+  	<name>Wight</name>
+  	<type>Regular</type>
+  	<cost>90000</cost>
+    <movement>6</movement>
+    <strength>3</strength>
+    <agility>3</agility>
+    <armour>8</armour>
+    <iconList>
+      <portrait>portrait_undead_wight.png</portrait>
+      <home standing="uwight1.gif" moving="uwight1an.gif" />
+      <away standing="uwight1b.gif" moving="uwight1ban.gif" />
+      <home standing="uwight2.gif" moving="uwight2an.gif" />
+      <away standing="uwight2b.gif" moving="uwight2ban.gif" />
+    </iconList>
+  	<skillList>
+  	  <skill>Block</skill>
+  	  <skill>Regeneration</skill>
+  	</skillList>
+  	<skillCategoryList>
+      <normal>General</normal>
+      <normal>Strength</normal>
+      <double>Agility</double>
+      <double>Passing</double>
+  	</skillCategoryList>
+  </position>
+
+  <position id="undead.ghoul">
+  	<quantity>4</quantity>
+  	<name>Ghoul</name>
+  	<type>Regular</type>
+  	<cost>70000</cost>
+    <movement>7</movement>
+    <strength>3</strength>
+    <agility>3</agility>
+    <armour>7</armour>
+    <iconList>
+      <portrait>portrait_undead_ghoul.png</portrait>
+      <home standing="ughoul1.gif" moving="ughoul1an.gif" />
+      <away standing="ughoul1b.gif" moving="ughoul1ban.gif" />
+      <home standing="ughoul2.gif" moving="ughoul2an.gif" />
+      <away standing="ughoul2b.gif" moving="ughoul2ban.gif" />
+    </iconList>
+  	<skillList>
+  	  <skill>Dodge</skill>
+  	</skillList>
+  	<skillCategoryList>
+      <normal>General</normal>
+      <normal>Agility</normal>
+      <double>Strength</double>
+      <double>Passing</double>
+  	</skillCategoryList>
+  </position>
+
+  <position id="undead.zombie">
+  	<quantity>16</quantity>
+  	<name>Zombie</name>
+  	<type>Regular</type>
+  	<cost>40000</cost>
+    <movement>4</movement>
+    <strength>3</strength>
+    <agility>2</agility>
+    <armour>8</armour>
+    <iconList>
+      <portrait>portrait_undead_zombie.png</portrait>
+      <home standing="uzombie1.gif" moving="uzombie1an.gif" />
+      <away standing="uzombie1b.gif" moving="uzombie1ban.gif" />
+      <home standing="uzombie2.gif" moving="uzombie2an.gif" />
+      <away standing="uzombie2b.gif" moving="uzombie2ban.gif" />
+      <home standing="uzombie3.gif" moving="uzombie3an.gif" />
+      <away standing="uzombie3b.gif" moving="uzombie3ban.gif" />
+      <home standing="uzombie4.gif" moving="uzombie4an.gif" />
+      <away standing="uzombie4b.gif" moving="uzombie4ban.gif" />
+    </iconList>
+  	<skillList>
+  	  <skill>Regeneration</skill>
+  	</skillList>
+  	<skillCategoryList>
+      <normal>General</normal>
+      <double>Strength</double>
+      <double>Agility</double>
+      <double>Passing</double>
+  	</skillCategoryList>
+  </position>
+
+  <position id="undead.skeleton">
+  	<quantity>16</quantity>
+  	<name>Skeleton</name>
+  	<type>Regular</type>
+  	<cost>30000</cost>
+    <movement>5</movement>
+    <strength>3</strength>
+    <agility>2</agility>
+    <armour>7</armour>
+    <iconList>
+      <portrait>portrait_undead_skeleton.png</portrait>
+      <home standing="uskeleton1.gif" moving="uskeleton1an.gif" />
+      <away standing="uskeleton1b.gif" moving="uskeleton1ban.gif" />
+      <home standing="uskeleton2.gif" moving="uskeleton2an.gif" />
+      <away standing="uskeleton2b.gif" moving="uskeleton2ban.gif" />
+      <home standing="uskeleton3.gif" moving="uskeleton3an.gif" />
+      <away standing="uskeleton3b.gif" moving="uskeleton3ban.gif" />
+    </iconList>
+  	<skillList>
+  	  <skill>Regeneration</skill>
+  	</skillList>
+  	<skillCategoryList>
+      <normal>General</normal>
+      <double>Strength</double>
+      <double>Agility</double>
+      <double>Passing</double>
+  	</skillCategoryList>
+  </position>
+  
+  <position id="undead.Sinnedbad">
+		<quantity>1</quantity>
+		<name>Sinnedbad</name>
+		<shorthand>SB</shorthand>
+		<type>Star</type>
+		<cost>80000</cost>
+		<movement>6</movement>
+		<strength>3</strength>
+		<agility>2</agility>
+		<armour>7</armour>
+    <iconList baseIconPath="../stars/">
+			<portrait/>
+			<home standing="Sinnedbad.gif" moving="Sinnedbad_an.gif"/>
+			<away standing="Sinnedbad_b.gif"  moving="Sinnedbad_ban.gif"/>
+		</iconList>
+		<skillList>
+			<skill>Loner</skill>
+			<skill>Block</skill>
+			<skill>Jump Up</skill>
+			<skill>Pass Block</skill>
+			<skill>Regeneration</skill>
+			<skill>Secret Weapon</skill>
+			<skill>Side Step</skill>
+			<skill>Stab</skill>
+		</skillList>
+	</position>
+	
+	<position id="undead.Hackenslash">
+		<quantity>1</quantity>
+		<name>Hack Enslash</name>
+		<shorthand>HE</shorthand>
+		<type>Star</type>
+		<cost>120000</cost>
+		<movement>6</movement>
+		<strength>3</strength>
+		<agility>2</agility>
+		<armour>7</armour>
+    <iconList baseIconPath="../stars/">
+			<portrait/>
+			<home standing="Hack_Enslash.gif" moving="Hack_Enslash_an.gif"/>
+			<away standing="Hack_Enslash_b.gif"  moving="Hack_Enslash_ban.gif"/>
+		</iconList>
+		<skillList>
+			<skill>Loner</skill>
+			<skill>Chainsaw</skill>
+			<skill>Regeneration</skill>
+			<skill>Secret Weapon</skill>
+			<skill>Side Step</skill>
+		</skillList>
+	</position>
+
+	<position id="undead.Earlice">
+		<quantity>1</quantity>
+		<name>J. Earlice</name>
+		<shorthand>JE</shorthand>
+		<type>Star</type>
+		<cost>180000</cost>
+		<movement>8</movement>
+		<strength>3</strength>
+		<agility>3</agility>
+		<armour>7</armour>
+    <iconList baseIconPath="../stars/">
+			<portrait/>
+			<home standing="J_Earlice.gif" moving="J_Earlice_an.gif"/>
+			<away standing="J_Earlice_b.gif"  moving="J_Earlice_ban.gif"/>
+		</iconList>
+		<skillList>
+			<skill>Loner</skill>
+			<skill>Catch</skill>
+			<skill>Diving Catch</skill>
+			<skill>Dodge</skill>
+			<skill>Sprint</skill>
+		</skillList>
+	</position>
+
+	<position id="undead.Setekh">
+		<quantity>1</quantity>
+		<name>Setekh</name>
+		<shorthand>ST</shorthand>
+		<type>Star</type>
+		<cost>220000</cost>
+		<movement>6</movement>
+		<strength>4</strength>
+		<agility>2</agility>
+		<armour>8</armour>
+    <iconList baseIconPath="../stars/">
+			<portrait/>
+			<home standing="Setekh.gif" moving="Setekh_an.gif"/>
+			<away standing="Setekh_b.gif"  moving="Setekh_ban.gif"/>
+		</iconList>
+		<skillList>
+			<skill>Loner</skill>
+			<skill>Block</skill>
+			<skill>Break Tackle</skill>
+			<skill>Juggernaut</skill>
+			<skill>Regeneration</skill>
+			<skill>Strip Ball</skill>
+		</skillList>
+	</position>
+
+	<position id="undead.Ramtut">
+		<quantity>1</quantity>
+		<name>Ramtut III</name>
+		<shorthand>R3</shorthand>
+		<type>Star</type>
+		<cost>380000</cost>
+		<movement>5</movement>
+		<strength>6</strength>
+		<agility>1</agility>
+		<armour>9</armour>
+    <iconList baseIconPath="../stars/">
+			<portrait/>
+			<home standing="Ramtut_III.gif" moving="Ramtut_III_an.gif"/>
+			<away standing="Ramtut_III_b.gif"  moving="Ramtut_III_ban.gif"/>
+		</iconList>
+		<skillList>
+			<skill>Loner</skill>
+			<skill>Break Tackle</skill>
+			<skill>Mighty Blow</skill>
+			<skill>Regeneration</skill>
+			<skill>Wrestle</skill>
+		</skillList>
+	</position>
+
+	<position id="undead.Count">
+		<quantity>1</quantity>
+		<name>Count Luthor von Drakenborg</name>
+		<shorthand>CL</shorthand>
+		<type>Star</type>
+		<cost>390000</cost>
+		<movement>6</movement>
+		<strength>5</strength>
+		<agility>4</agility>
+		<armour>9</armour>
+    <iconList baseIconPath="../stars/">
+			<portrait/>
+			<home standing="Count_Luthor.gif" moving="Count_Luthor_an.gif"/>
+			<away standing="Count_Luthor_b.gif"  moving="Count_Luthor_ban.gif"/>
+		</iconList>
+		<skillList>
+			<skill>Loner</skill>
+			<skill>Block</skill>
+			<skill>Hypnotic Gaze</skill>
+			<skill>Side Step</skill>
+			<skill>Regeneration</skill>
+		</skillList>
+	</position>  
+
+</roster>

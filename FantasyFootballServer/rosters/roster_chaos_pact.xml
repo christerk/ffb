@@ -1,0 +1,374 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<roster id="chaospact.lrb6">
+  
+  <name>Chaos Pact</name>
+  <type>Regular</type>
+  <reRollCost>70000</reRollCost>
+  <maxReRolls>8</maxReRolls>
+  <baseIconPath>http://fumbbl.com/FUMBBL/Images/</baseIconPath>
+  
+  <position id="chaospact.marauder">
+    <quantity>12</quantity>
+    <name>Marauder</name>
+    <shorthand>Ma</shorthand>
+    <type>Regular</type>
+    <cost>50000</cost>
+    <movement>6</movement>
+    <strength>3</strength>
+    <agility>3</agility>
+    <armour>8</armour>
+    <iconList>
+      <portrait>portrait_chaos_pact_marauder.png</portrait>
+      <home standing="marauder1.gif" moving="marauder1an.gif"/>
+      <away standing="marauder1b.gif" moving="marauder1ban.gif"/>
+      <home standing="marauder2.gif" moving="marauder2an.gif"/>
+      <away standing="marauder2b.gif" moving="marauder2ban.gif"/>
+      <home standing="marauder3.gif" moving="marauder3an.gif"/>
+      <away standing="marauder3b.gif" moving="marauder3ban.gif"/>
+      <home standing="marauder4.gif" moving="marauder4an.gif"/>
+      <away standing="marauder4b.gif" moving="marauder4ban.gif"/>
+      <home standing="marauder5.gif" moving="marauder5an.gif"/>
+      <away standing="marauder5b.gif" moving="marauder5ban.gif"/>
+    </iconList>
+    <skillList/>
+    <skillCategoryList>
+      <normal>Strength</normal>
+      <normal>General</normal>
+      <normal>Passing</normal>
+      <normal>Mutation</normal>
+      <double>Agility</double>
+    </skillCategoryList>
+  </position>
+  
+  <position id="chaospact.goblin.renegade">
+    <quantity>1</quantity>
+    <name>Goblin Renegade</name>
+    <shorthand>G</shorthand>
+    <type>Regular</type>
+    <cost>40000</cost>
+    <movement>6</movement>
+    <strength>2</strength>
+    <agility>3</agility>
+    <armour>7</armour>
+    <race>Goblin</race>
+    <iconList>
+      <portrait>portrait_chaos_pact_goblin.png</portrait>
+      <home standing="gobrenegade1.gif" moving="gobrenegade1an.gif"/>
+      <away standing="gobrenegade1b.gif" moving="gobrenegade1ban.gif"/>
+    </iconList>
+    <skillList>
+      <skill>Animosity</skill>
+      <skill>Dodge</skill>
+      <skill>Right Stuff</skill>
+      <skill>Stunty</skill>
+    </skillList>
+    <skillCategoryList>
+      <normal>Agility</normal>
+      <normal>Mutation</normal>
+      <double>General</double>
+      <double>Strength</double>
+      <double>Passing</double>
+    </skillCategoryList>
+  </position>
+  
+  <position id="chaospact.skaven.renegade">
+    <quantity>1</quantity>
+    <name>Skaven Renegade</name>
+    <shorthand>S</shorthand>
+    <type>Regular</type>
+    <cost>50000</cost>
+    <movement>7</movement>
+    <strength>3</strength>
+    <agility>3</agility>
+    <armour>7</armour>
+    <race>Skaven</race>
+    <iconList>
+      <portrait>portrait_chaos_pact_skaven.png</portrait>
+      <home standing="skavenrenegadeskavenrenegade1.gif" moving="skavenrenegade1an.gif"/>
+      <away standing="skavenrenegade1b.gif" moving="skavenrenegade1ban.gif"/>
+    </iconList>
+    <skillList>
+      <skill>Animosity</skill>
+    </skillList>
+    <skillCategoryList>
+      <normal>General</normal>
+      <normal>Mutation</normal>
+      <double>Agility</double>
+      <double>Strength</double>
+      <double>Passing</double>
+    </skillCategoryList>
+  </position>
+  
+  <position id="chaospact.darkelf.renegade">
+    <quantity>1</quantity>
+    <name>Dark Elf Renegade</name>
+    <shorthand>D</shorthand>
+    <type>Regular</type>
+    <cost>70000</cost>
+    <movement>6</movement>
+    <strength>3</strength>
+    <agility>4</agility>
+    <armour>8</armour>
+    <race>Dark Elf</race>
+    <iconList>
+      <portrait>portrait_chaos_pact_dark_elf.png</portrait>
+      <home standing="delfrenegade1.gif" moving="delfrenegade1an.gif"/>
+      <away standing="delfrenegade1b.gif" moving="delfrenegade1ban.gif"/>
+    </iconList>
+    <skillList>
+      <skill>Animosity</skill>
+    </skillList>
+    <skillCategoryList>
+      <normal>General</normal>
+      <normal>Agility</normal>
+      <normal>Mutation</normal>
+      <double>Strength</double>
+      <double>Passing</double>
+    </skillCategoryList>
+  </position>
+  
+  <position id="chaospact.troll.chaos">
+    <quantity>1</quantity>
+    <name>Chaos Troll</name>
+    <shorthand>T</shorthand>
+    <type>Regular</type>
+    <cost>110000</cost>
+    <movement>4</movement>
+    <strength>5</strength>
+    <agility>1</agility>
+    <armour>9</armour>
+    <iconList>
+      <portrait>portrait_chaos_pact_troll.png</portrait>
+      <home standing="chaostroll1.gif" moving="chaostroll1an.gif"/>
+      <away standing="chaostroll1b.gif" moving="chaostroll1ban.gif"/>
+    </iconList>
+    <skillList>
+      <skill>Always Hungry</skill>
+      <skill>Loner</skill>
+      <skill>Mighty Blow</skill>
+      <skill>Really Stupid</skill>
+      <skill>Regeneration</skill>
+      <skill>Throw Team-Mate</skill>
+    </skillList>
+    <skillCategoryList>
+      <normal>Strength</normal>
+      <double>General</double>
+      <double>Agility</double>
+      <double>Passing</double>
+      <double>Mutation</double>
+    </skillCategoryList>
+  </position>
+  
+  <position id="chaospact.ogre.chaos">
+    <quantity>1</quantity>
+    <name>Chaos Ogre</name>
+    <shorthand>O</shorthand>
+    <type>Regular</type>
+    <cost>140000</cost>
+    <movement>5</movement>
+    <strength>5</strength>
+    <agility>2</agility>
+    <armour>9</armour>
+    <iconList>
+      <portrait>portrait_chaos_pact_ogre.png</portrait>
+      <home standing="pact_ogre1.gif" moving="pact_ogre1an.gif"/>
+      <away standing="pact_ogre1b.gif" moving="pact_ogre1ban.gif"/>
+    </iconList>
+    <skillList>
+      <skill>Bone-head</skill>
+      <skill>Loner</skill>
+      <skill>Mighty Blow</skill>
+      <skill>Thick Skull</skill>
+      <skill>Throw Team-Mate</skill>
+    </skillList>
+    <skillCategoryList>
+      <normal>Strength</normal>
+      <double>General</double>
+      <double>Agility</double>
+      <double>Passing</double>
+      <double>Mutation</double>
+    </skillCategoryList>
+  </position>
+  
+  <position id="chaospact.minotaur">
+    <quantity>1</quantity>
+    <name>Minotaur</name>
+    <shorthand>M</shorthand>
+    <type>Regular</type>
+    <cost>150000</cost>
+    <movement>5</movement>
+    <strength>5</strength>
+    <agility>2</agility>
+    <armour>8</armour>
+    <iconList>
+      <portrait>portrait_chaos_pact_minotaur.png</portrait>
+      <home standing="pact_minotaur1.gif" moving="pact_minotaur1an.gif"/>
+      <away standing="pact_minotaur1b.gif" moving="pact_minotaur1ban.gif"/>
+    </iconList>
+    <skillList>
+      <skill>Frenzy</skill>
+      <skill>Horns</skill>
+      <skill>Loner</skill>
+      <skill>Mighty Blow</skill>
+      <skill>Thick Skull</skill>
+      <skill>Wild Animal</skill>
+    </skillList>
+    <skillCategoryList>
+      <normal>Strength</normal>
+      <double>General</double>
+      <double>Agility</double>
+      <double>Passing</double>
+      <double>Mutation</double>
+    </skillCategoryList>
+  </position>
+
+	<position id="chaospact.Dribblesnot">
+		<quantity>1</quantity>
+		<name>Bomber Dribblesnot</name>
+		<shorthand>BD</shorthand>
+		<type>Star</type>
+		<cost>60000</cost>
+		<movement>6</movement>
+		<strength>2</strength>
+		<agility>3</agility>
+		<armour>7</armour>
+    <iconList baseIconPath="../stars/">
+			<portrait/>
+			<home standing="Bomber_Dribblesnot.gif" moving="Bomber_Dribblesnot_an.gif"/>
+			<away standing="Bomber_Dribblesnot_b.gif"  moving="Bomber_Dribblesnot_ban.gif"/>
+		</iconList>
+		<skillList>
+			<skill>Loner</skill>
+			<skill>Accurate</skill>
+			<skill>Bombardier</skill>
+			<skill>Dodge</skill>
+			<skill>Right Stuff</skill>
+			<skill>Secret Weapon</skill>
+			<skill>Stunty</skill>
+		</skillList>
+	</position>
+
+	<position id="chaospact.Igor">
+		<quantity>1</quantity>
+		<name>Crazy Igor</name>
+		<shorthand>CI</shorthand>
+		<type>Star</type>
+		<cost>120000</cost>
+		<movement>6</movement>
+		<strength>3</strength>
+		<agility>3</agility>
+		<armour>8</armour>
+    <iconList baseIconPath="../stars/">
+			<portrait/>
+			<home standing="Crazy_Igor.gif" moving="Crazy_Igor_an.gif"/>
+			<away standing="Crazy_Igor_b.gif"  moving="Crazy_Igor_ban.gif"/>
+		</iconList>
+		<skillList>
+			<skill>Loner</skill>
+			<skill>Dauntless</skill>
+			<skill>Regeneration</skill>
+			<skill>Thick Skull</skill>
+		</skillList>
+	</position>
+
+	<position id="chaospact.Ithica">
+		<quantity>1</quantity>
+		<name>Ithaca Benoin</name>
+		<shorthand>IB</shorthand>
+		<type>Star</type>
+		<cost>220000</cost>
+		<movement>7</movement>
+		<strength>3</strength>
+		<agility>3</agility>
+		<armour>7</armour>
+    <iconList baseIconPath="../stars/">
+			<portrait/>
+			<home standing="Ithaca_Benoin.gif" moving="Ithaca_Benoin_an.gif"/>
+			<away standing="Ithaca_Benoin_b.gif"  moving="Ithaca_Benoin_ban.gif"/>
+		</iconList>
+		<skillList>
+			<skill>Loner</skill>
+			<skill>Accurate</skill>
+			<skill>Dump Off</skill>
+			<skill>Nerves of Steel</skill>
+			<skill>Pass</skill>
+			<skill>Regeneration</skill>
+			<skill>Sure Hands</skill>
+		</skillList>
+	</position>
+
+	<position id="chaospact.Madeye">
+		<quantity>1</quantity>
+		<name>Zzharg Madeye</name>
+		<shorthand>ZZ</shorthand>
+		<type>Star</type>
+		<cost>90000</cost>
+		<movement>4</movement>
+		<strength>4</strength>
+		<agility>3</agility>
+		<armour>9</armour>
+    <iconList baseIconPath="../stars/">
+			<portrait/>
+			<home standing="Zzharg_Madeye.gif" moving="Zzharg_Madeye_an.gif"/>
+			<away standing="Zzharg_Madeye_b.gif"  moving="Zzharg_Madeye_ban.gif"/>
+		</iconList>
+		<skillList>
+			<skill>Loner</skill>
+			<skill>Hail Mary Pass</skill>
+			<skill>Pass</skill>
+			<skill>Secret Weapon</skill>
+			<skill>Strong Arm</skill>
+			<skill>Sure Hands</skill>
+			<skill>Tackle</skill>
+			<skill>Thick Skull</skill>
+		</skillList>
+	</position>
+
+	<position id="chaospact.Ugroth">
+		<quantity>1</quantity>
+		<name>Ugroth Bolgrot</name>
+		<shorthand>UB</shorthand>
+		<type>Star</type>
+		<cost>100000</cost>
+		<movement>5</movement>
+		<strength>3</strength>
+		<agility>3</agility>
+		<armour>9</armour>
+    <iconList baseIconPath="../stars/">
+			<portrait/>
+			<home standing="Ugroth_Bolgrot.gif" moving="Ugroth_Bolgrot_an.gif"/>
+			<away standing="Ugroth_Bolgrot_b.gif"  moving="Ugroth_Bolgrot_ban.gif"/>
+		</iconList>
+		<skillList>
+			<skill>Loner</skill>
+			<skill>Chainsaw</skill>
+			<skill>Secret Weapon</skill>
+		</skillList>
+	</position>
+
+	<position id="chaospact.Morg">
+		<quantity>1</quantity>
+		<name>Morg 'n' Thorg</name>
+		<shorthand>MT</shorthand>
+		<type>Star</type>
+		<cost>430000</cost>
+		<movement>6</movement>
+		<strength>6</strength>
+		<agility>3</agility>
+		<armour>10</armour>
+    <iconList baseIconPath="../stars/">
+			<portrait/>
+			<home standing="morgnthorg.gif" moving="morgnthorg_an.gif"/>
+			<away standing="morgnthorg_b.gif"  moving="morgnthorg_ban.gif"/>
+		</iconList>
+		<skillList>
+			<skill>Loner</skill>
+			<skill>Block</skill>
+			<skill>Mighty Blow</skill>
+			<skill>Thick Skull</skill>
+			<skill>Throw Team-Mate</skill>
+		</skillList>
+	</position>
+  
+</roster>

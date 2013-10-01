@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<team id="team01">
+
+  <coach>jUnit1</coach>
+  <name>jUnit Team1</name>
+  <roster-id>human.roster</roster-id>
+  <re-rolls>4</re-rolls>
+  <fanFactor>9</fanFactor>
+  <apothecaries>1</apothecaries>
+  <cheerleaders>0</cheerleaders>
+  <assistantCoaches>0</assistantCoaches>
+  <team-rating>100</team-rating>
+  <team-strength>102</team-strength>
+  <division>[X]</division>
+
+  <player nr="1">
+  	<name>Blitzer1</name>
+    <position-id>human.blitzer</position-id>
+  	<skill-list>
+  	  <skill>Guard</skill>
+  	</skill-list>
+  </player>
+
+  <player nr="2">
+  	<name>Blitzer2</name>
+    <position-id>human.blitzer</position-id>
+  	<skill-list>
+  	  <skill>Guard</skill>
+  	</skill-list>
+  </player>
+
+  <player nr="3">
+  	<name>Blitzer3</name>
+    <position-id>human.blitzer</position-id>
+  	<skill-list>
+  	  <skill>Tackle</skill>
+  	  <skill>Mighty Blow</skill>
+  	</skill-list>
+  </player>
+
+  <player nr="4">
+  	<name>Blitzer4</name>
+    <position-id>human.blitzer</position-id>
+  	<skill-list>
+  	  <skill>Tackle</skill>
+  	  <skill>Mighty Blow</skill>
+  	</skill-list>
+  </player>
+
+  <player nr="5">
+  	<name>Thrower1</name>
+    <position-id>human.thrower</position-id>
+  	<skill-list>
+  	  <skill>Strong Arm</skill>
+  	  <skill>Accurate</skill>
+  	</skill-list>
+  </player>
+	
+  <player nr="6">
+  	<name>Catcher1</name>
+    <position-id>human.catcher</position-id>
+  	<skill-list>
+  	  <skill>Sure Feet</skill>
+  	  <skill>Sprint</skill>
+  	</skill-list>
+  </player>
+	
+  <player nr="7">
+  	<name>Catcher2</name>
+    <position-id>human.catcher</position-id>
+  	<skill-list>
+  	  <skill>Sure Feet</skill>
+  	  <skill>Sprint</skill>
+  	</skill-list>
+  </player>
+	
+  <player nr="8">
+  	<name>Lineman1</name>
+    <position-id>human.lineman</position-id>
+  	<skill-list />
+  </player>
+
+  <player nr="9">
+  	<name>Ogre</name>
+    <position-id>human.ogre</position-id>
+  	<skill-list>
+	  <skill>Guard</skill>
+	  <skill>Break Tackle</skill>
+  	</skill-list>
+  </player>
+
+  <player nr="10">
+  	<name>Lineman2</name>
+    <position-id>human.lineman</position-id>
+  	<skill-list />
+  </player>
+
+  <player nr="11">
+  	<name>Lineman3</name>
+    <position-id>human.lineman</position-id>
+  	<skill-list />
+  </player>
+
+  <player nr="12">
+  	<name>Lineman4</name>
+    <position-id>human.lineman</position-id>
+  	<skill-list />
+  </player>
+  
+  <player nr="13">
+  	<name>Lineman5</name>
+    <position-id>human.lineman</position-id>
+  	<skill-list />
+  </player>
+
+  <player nr="14">
+  	<name>Lineman6</name>
+    <position-id>human.lineman</position-id>
+  	<skill-list />
+  </player>
+
+  <player nr="15">
+  	<name>Lineman7</name>
+    <position-id>human.lineman</position-id>
+  	<skill-list>
+  	  <skill>Kick</skill>
+  	</skill-list>
+  </player>
+
+  <player nr="16">
+  	<name>Lineman8</name>
+    <position-id>human.lineman</position-id>
+  	<skill-list />
+  </player>
+
+</team>

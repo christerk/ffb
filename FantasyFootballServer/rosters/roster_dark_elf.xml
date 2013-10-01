@@ -1,0 +1,292 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<roster id="darkelf.lrb6">
+  
+  <name>Dark Elf</name>
+  <type>Regular</type>
+  <reRollCost>50000</reRollCost>
+  <maxReRolls>8</maxReRolls>
+  <baseIconPath>http://localhost:2224/icons/players/dark_elf/</baseIconPath>
+  
+  <position id="darkelf.lineman">
+    <quantity>16</quantity>
+    <name>Lineman</name>
+    <shorthand>L</shorthand>
+    <type>Regular</type>
+    <cost>70000</cost>
+    <movement>6</movement>
+    <strength>3</strength>
+    <agility>4</agility>
+    <armour>8</armour>
+    <iconList>
+      <portrait>portrait_dark_elf_lineman.png</portrait>
+      <home standing="delineman1.gif" moving="delineman1an.gif"/>
+      <away standing="delineman1b.gif" moving="delineman1ban.gif"/>
+    </iconList>
+    <skillList/>
+    <skillCategoryList>
+      <normal>General</normal>
+      <normal>Agility</normal>
+      <double>Strength</double>
+      <double>Passing</double>
+    </skillCategoryList>
+  </position>
+  
+  <position id="darkelf.blitzer">
+    <quantity>4</quantity>
+    <name>Blitzer</name>
+    <shorthand>Z</shorthand>
+    <type>Regular</type>
+    <cost>100000</cost>
+    <movement>7</movement>
+    <strength>3</strength>
+    <agility>4</agility>
+    <armour>8</armour>
+    <iconList>
+      <portrait>portrait_dark_elf_blitzer.png</portrait>
+      <home standing="deblitzer1.gif" moving="deblitzer1an.gif"/>
+      <away standing="deblitzer1b.gif" moving="deblitzer1ban.gif"/>
+    </iconList>
+    <skillList>
+      <skill>Block</skill>
+    </skillList>
+    <skillCategoryList>
+      <normal>Agility</normal>
+      <normal>General</normal>
+      <double>Strength</double>
+      <double>Passing</double>
+    </skillCategoryList>
+  </position>
+  
+  <position id="darkelf.runner">
+    <quantity>2</quantity>
+    <name>Runner</name>
+    <shorthand>R</shorthand>
+    <type>Regular</type>
+    <cost>80000</cost>
+    <movement>7</movement>
+    <strength>3</strength>
+    <agility>4</agility>
+    <armour>7</armour>
+    <iconList>
+      <portrait>portrait_dark_elf_runner.png</portrait>
+      <home standing="derunner1.gif" moving="derunner1an.gif"/>
+      <away standing="derunner1b.gif" moving="derunner1ban.gif"/>
+    </iconList>
+    <skillList>
+      <skill>Dump-Off</skill>
+    </skillList>
+    <skillCategoryList>
+      <normal>General</normal>
+      <normal>Agility</normal>
+      <normal>Passing</normal>
+      <double>Strength</double>
+    </skillCategoryList>
+  </position>
+  
+  <position id="darkelf.assassin">
+    <quantity>2</quantity>
+    <name>Assassin</name>
+    <shorthand>A</shorthand>
+    <type>Regular</type>
+    <cost>90000</cost>
+    <movement>6</movement>
+    <strength>3</strength>
+    <agility>4</agility>
+    <armour>7</armour>
+    <iconList>
+      <portrait>portrait_dark_elf_assassin.png</portrait>
+      <home standing="deassassin1.gif" moving="deassassin1an.gif"/>
+      <away standing="deassassin1b.gif" moving="deassassin1ban.gif"/>
+    </iconList>
+    <skillList>
+      <skill>Shadowing</skill>
+      <skill>Stab</skill>
+    </skillList>
+    <skillCategoryList>
+      <normal>General</normal>
+      <normal>Agility</normal>
+      <double>Strength</double>
+      <double>Passing</double>
+    </skillCategoryList>
+  </position>
+  
+  <position id="darkelf.witchelf">
+    <quantity>2</quantity>
+    <name>Witch Elf</name>
+    <shorthand>W</shorthand>
+    <type>Regular</type>
+    <cost>110000</cost>
+    <movement>7</movement>
+    <strength>3</strength>
+    <agility>4</agility>
+    <armour>7</armour>
+    <iconList>
+      <portrait>portrait_dark_elf_witch.png</portrait>
+      <home standing="dewitchelf1.gif" moving="dewitchelf1an.gif"/>
+      <away standing="dewitchelf1b.gif" moving="dewitchelf1ban.gif"/>
+    </iconList>
+    <skillList>
+      <skill>Dodge</skill>
+      <skill>Frenzy</skill>
+      <skill>Jump Up</skill>
+    </skillList>
+    <skillCategoryList>
+      <normal>Agility</normal>
+      <normal>General</normal>
+      <double>Strength</double>
+      <double>Passing</double>
+    </skillCategoryList>
+  </position>
+  
+  <position id="darkelf.Sidewinder">
+		<quantity>1</quantity>
+		<name>Eldril Sidewinder</name>
+		<shorthand>ES</shorthand>
+		<type>Star</type>
+		<cost>200000</cost>
+		<movement>8</movement>
+		<strength>3</strength>
+		<agility>4</agility>
+		<armour>7</armour>
+    <iconList baseIconPath="../stars/">
+			<portrait/>
+			<home standing="Eldril_Sidewinder.gif" moving="Eldril_Sidewinder_an.gif"/>
+			<away standing="Eldril_Sidewinder_b.gif"  moving="Eldril_Sidewinder_ban.gif"/>
+		</iconList>
+		<skillList>
+			<skill>Loner</skill>
+			<skill>Catch</skill>
+			<skill>Dodge</skill>
+			<skill>Hypnotic Gaze</skill>
+			<skill>Nerves of Steel</skill>
+			<skill>Pass Block</skill>
+		</skillList>
+	</position>
+	
+	<position id="darkelf.Horkon">
+		<quantity>1</quantity>
+		<name>Horkon Heartripper</name>
+		<shorthand>HH</shorthand>
+		<type>Star</type>
+		<cost>210000</cost>
+		<movement>7</movement>
+		<strength>3</strength>
+		<agility>4</agility>
+		<armour>7</armour>
+    <iconList baseIconPath="../stars/">
+			<portrait/>
+			<home standing="Horkon.gif" moving="Horkon_an.gif"/>
+			<away standing="Horkon_b.gif"  moving="Horkon_ban.gif"/>
+		</iconList>
+		<skillList>
+			<skill>Loner</skill>
+			<skill>Dodge</skill>
+			<skill>Leap</skill>
+			<skill>Multiple Block</skill>
+			<skill>Shadowing</skill>
+			<skill>Stab</skill>
+		</skillList>
+	</position>
+
+	<position id="darkelf.Ithica">
+		<quantity>1</quantity>
+		<name>Ithaca Benoin</name>
+		<shorthand>IB</shorthand>
+		<type>Star</type>
+		<cost>220000</cost>
+		<movement>7</movement>
+		<strength>3</strength>
+		<agility>3</agility>
+		<armour>7</armour>
+    <iconList baseIconPath="../stars/">
+			<portrait/>
+			<home standing="Ithaca_Benoin.gif" moving="Ithaca_Benoin_an.gif"/>
+			<away standing="Ithaca_Benoin_b.gif"  moving="Ithaca_Benoin_ban.gif"/>
+		</iconList>
+		<skillList>
+			<skill>Loner</skill>
+			<skill>Accurate</skill>
+			<skill>Dump Off</skill>
+			<skill>Nerves of Steel</skill>
+			<skill>Pass</skill>
+			<skill>Regeneration</skill>
+			<skill>Sure Hands</skill>
+		</skillList>
+	</position>
+
+	<position id="darkelf.Roxanna">
+		<quantity>1</quantity>
+		<name>Roxanna Darknail</name>
+		<shorthand>RX</shorthand>
+		<type>Star</type>
+		<cost>250000</cost>
+		<movement>8</movement>
+		<strength>3</strength>
+		<agility>5</agility>
+		<armour>7</armour>
+    <iconList baseIconPath="../stars/">
+			<portrait/>
+			<home standing="Roxanna_Darknail.gif" moving="Roxanna_Darknail_an.gif"/>
+			<away standing="Roxanna_Darknail_b.gif"  moving="Roxanna_Darknail_ban.gif"/>
+		</iconList>
+		<skillList>
+			<skill>Loner</skill>
+			<skill>Dodge</skill>
+			<skill>Frenzy</skill>
+			<skill>Jump Up</skill>
+			<skill>Juggernaut</skill>
+			<skill>Leap</skill>
+		</skillList>
+	</position>
+
+	<position id="darkelf.Hubris">
+		<quantity>1</quantity>
+		<name>Hubris Rakarth</name>
+		<shorthand>HR</shorthand>
+		<type>Star</type>
+		<cost>260000</cost>
+		<movement>7</movement>
+		<strength>4</strength>
+		<agility>4</agility>
+		<armour>8</armour>
+    <iconList baseIconPath="../stars/">
+			<portrait/>
+			<home standing="Hubris_Rakarth.gif" moving="Hubris_Rakarth_an.gif"/>
+			<away standing="Hubris_Rakarth_b.gif"  moving="Hubris_Rakarth_ban.gif"/>
+		</iconList>
+		<skillList>
+			<skill>Loner</skill>
+			<skill>Block</skill>
+			<skill>Dirty Player</skill>
+			<skill>Jump Up</skill>
+			<skill>Mighty Blow</skill>
+			<skill>Strip Ball</skill>
+		</skillList>
+	</position>
+
+	<position id="darkelf.Morg">
+		<quantity>1</quantity>
+		<name>Morg 'n' Thorg</name>
+		<shorthand>MT</shorthand>
+		<type>Star</type>
+		<cost>430000</cost>
+		<movement>6</movement>
+		<strength>6</strength>
+		<agility>3</agility>
+		<armour>10</armour>
+    <iconList baseIconPath="../stars/">
+			<portrait/>
+			<home standing="morgnthorg.gif" moving="morgnthorg_an.gif"/>
+			<away standing="morgnthorg_b.gif"  moving="morgnthorg_ban.gif"/>
+		</iconList>
+		<skillList>
+			<skill>Loner</skill>
+			<skill>Block</skill>
+			<skill>Mighty Blow</skill>
+			<skill>Thick Skull</skill>
+			<skill>Throw Team-Mate</skill>
+		</skillList>
+	</position>
+  
+</roster>

@@ -1,0 +1,142 @@
+package com.balancedbytes.games.ffb.server.step.action.common;
+
+import com.balancedbytes.games.ffb.ReRolledAction;
+import com.balancedbytes.games.ffb.Skill;
+import com.balancedbytes.games.ffb.bytearray.ByteArray;
+import com.balancedbytes.games.ffb.bytearray.ByteList;
+import com.balancedbytes.games.ffb.model.ActingPlayer;
+import com.balancedbytes.games.ffb.model.Game;
+import com.balancedbytes.games.ffb.net.NetCommand;
+import com.balancedbytes.games.ffb.report.ReportId;
+import com.balancedbytes.games.ffb.report.ReportSkillRoll;
+import com.balancedbytes.games.ffb.server.ActionStatus;
+import com.balancedbytes.games.ffb.server.DiceInterpreter;
+import com.balancedbytes.games.ffb.server.GameState;
+import com.balancedbytes.games.ffb.server.step.AbstractStepWithReRoll;
+import com.balancedbytes.games.ffb.server.step.StepAction;
+import com.balancedbytes.games.ffb.server.step.StepCommandStatus;
+import com.balancedbytes.games.ffb.server.step.StepId;
+import com.balancedbytes.games.ffb.server.step.StepParameter;
+import com.balancedbytes.games.ffb.server.step.StepParameterKey;
+import com.balancedbytes.games.ffb.server.step.StepParameterSet;
+import com.balancedbytes.games.ffb.server.util.UtilReRoll;
+import com.balancedbytes.games.ffb.util.StringTool;
+import com.balancedbytes.games.ffb.util.UtilCards;
+
+/**
+ * Step in block sequence to handle blood lust.
+ * 
+ * Needs to be initialized with stepParameter GOTO_LABEL_ON_FAILURE.
+ * 
+ * Sets stepParameter MOVE_STACK for all steps on the stack.
+ * 
+ * @author Kalimar
+ */
+public class StepBloodLust extends AbstractStepWithReRoll {
+	
+	private String fGotoLabelOnFailure;
+	
+	public StepBloodLust(GameState pGameState) {
+		super(pGameState);
+	}
+	
+	public StepId getId() {
+		return StepId.BLOOD_LUST;
+	}
+	
+  @Override
+  public void init(StepParameterSet pParameterSet) {
+  	if (pParameterSet != null) {
+  		for (StepParameter parameter : pParameterSet.values()) {
+  			switch (parameter.getKey()) {
+  			  // optional
+  				case GOTO_LABEL_ON_FAILURE:
+  					fGotoLabelOnFailure = (String) parameter.getValue();
+  					break;
+					default:
+						break;
+  			}
+  		}
+  	}
+  }
+
+	@Override
+	public void start() {
+		super.start();
+		executeStep();
+	}
+	
+	@Override
+	public StepCommandStatus handleNetCommand(NetCommand pNetCommand) {
+		StepCommandStatus commandStatus = super.handleNetCommand(pNetCommand);
+		if (commandStatus == StepCommandStatus.EXECUTE_STEP) {
+			executeStep();
+		}
+		return commandStatus;
+	}
+	
+  private void executeStep() {
+    ActionStatus status = ActionStatus.SUCCESS;
+    Game game = getGameState().getGame();
+    if (!game.getTurnMode().checkNegatraits()) {
+    	getResult().setNextAction(StepAction.NEXT_STEP);
+    	return;
+    }
+    ActingPlayer actingPlayer = game.getActingPlayer();
+	  boolean doRoll = true;
+	  if (ReRolledAction.BLOOD_LUST == getReRolledAction()) {
+	    if ((getReRollSource() == null) || !UtilReRoll.useReRoll(this, getReRollSource(), actingPlayer.getPlayer())) {
+	      doRoll = false;
+	      status = ActionStatus.FAILURE;
+	      actingPlayer.setSufferingBloodLust(true);
+	    }
+	  } else {
+	    doRoll = UtilCards.hasUnusedSkill(game, actingPlayer, Skill.BLOOD_LUST);
+	  }
+    if (doRoll) {
+      int roll = getGameState().getDiceRoller().rollSkill();
+      int minimumRoll = DiceInterpreter.getInstance().minimumRollBloodLust();
+      boolean successful = DiceInterpreter.getInstance().isSkillRollSuccessful(roll, minimumRoll);
+      actingPlayer.markSkillUsed(Skill.BLOOD_LUST);
+      if (!successful) {
+        status = ActionStatus.FAILURE;
+        if ((ReRolledAction.BLOOD_LUST != getReRolledAction()) && UtilReRoll.askForReRollIfAvailable(getGameState(), actingPlayer.getPlayer(), ReRolledAction.BLOOD_LUST, minimumRoll, false)) {
+          status = ActionStatus.WAITING_FOR_RE_ROLL;
+        } else {
+          actingPlayer.setSufferingBloodLust(true);
+        }
+      }
+      boolean reRolled = ((ReRolledAction.BLOOD_LUST == getReRolledAction()) && (getReRollSource() != null));
+      getResult().addReport(new ReportSkillRoll(ReportId.BLOOD_LUST_ROLL, actingPlayer.getPlayerId(), successful, roll, minimumRoll, reRolled));
+    }
+    if (status == ActionStatus.SUCCESS) {
+    	getResult().setNextAction(StepAction.NEXT_STEP);
+    }
+    if (status == ActionStatus.FAILURE) {
+    	publishParameter(new StepParameter(StepParameterKey.MOVE_STACK, null));
+    	if (StringTool.isProvided(fGotoLabelOnFailure)) {
+    		getResult().setNextAction(StepAction.GOTO_LABEL, fGotoLabelOnFailure);
+    	} else {
+      	getResult().setNextAction(StepAction.NEXT_STEP);    		
+    	}
+    }
+  }
+  
+  public int getByteArraySerializationVersion() {
+  	return 1;
+  }
+  
+	@Override
+  public void addTo(ByteList pByteList) {
+  	super.addTo(pByteList);
+  	pByteList.addString(fGotoLabelOnFailure);
+  }
+
+	@Override
+	public int initFrom(ByteArray pByteArray) {
+		int byteArraySerializationVersion = super.initFrom(pByteArray);
+		fGotoLabelOnFailure = pByteArray.getString();
+		return byteArraySerializationVersion;
+	}
+	
+}

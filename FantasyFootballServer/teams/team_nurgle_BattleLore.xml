@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<team id="teamNurgleBattleLore">
+
+  <coach>BattleLore</coach>
+  <name>BattleLore's Nurgle</name>
+  <race>Nurgle</race>
+  <rosterId>nurgle.lrb6</rosterId>
+  <reRolls>3</reRolls>
+  <fanFactor>4</fanFactor>
+  <apothecaries>0</apothecaries>
+  <teamRating>100</teamRating>
+  <teamStrength>103</teamStrength>
+  <division>[X]</division>
+  <baseIconPath>http://localhost:2224/icons/</baseIconPath>  
+
+  <player nr="1" id="teamNurgleBattleLore1">
+    <name>The Beast</name>
+  	<gender>male</gender>
+  	<positionId>nurgle.beast</positionId>
+  	<skillList />
+  </player>
+
+  <player nr="2" id="teamNurgleBattleLore2">
+  	<name>Warrior1</name>
+  	<gender>male</gender>
+  	<positionId>nurgle.warrior</positionId>
+  	<skillList />
+  </player>
+
+  <player nr="3" id="teamNurgleBattleLore3">
+  	<name>Warrior2</name>
+  	<gender>male</gender>
+  	<positionId>nurgle.warrior</positionId>
+  	<skillList />
+  </player>
+
+  <player nr="4" id="teamNurgleBattleLore4">
+  	<name>Warrior3</name>
+  	<gender>male</gender>
+  	<positionId>nurgle.warrior</positionId>
+  	<skillList />
+  </player>
+
+  <player nr="5" id="teamNurgleBattleLore5">
+  	<name>Pestigor1</name>
+  	<gender>male</gender>
+  	<positionId>nurgle.pestigor</positionId>
+  	<skillList />
+  </player>
+
+  <player nr="6" id="teamNurgleBattleLore6">
+  	<name>Pestigor2</name>
+  	<gender>male</gender>
+  	<positionId>nurgle.pestigor</positionId>
+  	<skillList />
+  </player>
+
+  <player nr="7" id="teamNurgleBattleLore7">
+  	<name>Pestigor3</name>
+  	<gender>male</gender>
+  	<positionId>nurgle.pestigor</positionId>
+  	<skillList />
+  </player>
+	
+  <player nr="8" id="teamNurgleBattleLore8">
+    <name>Rotter1</name>
+  	<gender>male</gender>
+    <positionId>nurgle.rotter</positionId>
+  	<skillList />
+  </player>
+
+  <player nr="9" id="teamNurgleBattleLore9">
+    <name>Rotter2</name>
+  	<gender>male</gender>
+    <positionId>nurgle.rotter</positionId>
+  	<skillList />
+  </player>
+
+  <player nr="10" id="teamNurgleBattleLore10">
+    <name>Rotter3</name>
+  	<gender>male</gender>
+    <positionId>nurgle.rotter</positionId>
+  	<skillList />
+  </player>
+
+  <player nr="11" id="teamNurgleBattleLore11">
+    <name>Rotter4</name>
+  	<gender>male</gender>
+    <positionId>nurgle.rotter</positionId>
+  	<skillList />
+  </player>
+
+  <player nr="12" id="teamNurgleBattleLore12">
+    <name>Rotter5</name>
+  	<gender>male</gender>
+    <positionId>nurgle.rotter</positionId>
+  	<skillList />
+  </player>
+
+  <player nr="13" id="teamNurgleBattleLore13">
+    <name>Rotter6</name>
+  	<gender>male</gender>
+    <positionId>nurgle.rotter</positionId>
+  	<skillList />
+  </player>
+
+</team>

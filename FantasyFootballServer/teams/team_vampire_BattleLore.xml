@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<team id="teamVampireBattleLore">
+
+  <coach>BattleLore</coach>
+  <name>BattleLore's Vampires</name>
+  <race>Vampire</race>
+  <rosterId>vampire.lrb6</rosterId>
+  <reRolls>5</reRolls>
+  <fanFactor>9</fanFactor>
+  <apothecaries>1</apothecaries>
+  <teamRating>100</teamRating>
+  <teamStrength>104</teamStrength>
+  <division>[X]</division>
+
+  <player nr="1" id="teamVampireBattleLore1">
+  	<name>Vampire1</name>
+  	<gender>male</gender>
+  	<positionId>vampire.vampire</positionId>
+  	<skillList />
+  </player>
+
+  <player nr="2" id="teamVampireBattleLore2">
+  	<name>Vampire2</name>
+  	<gender>male</gender>
+  	<positionId>vampire.vampire</positionId>
+  	<skillList />
+  </player>
+
+  <player nr="3" id="teamVampireBattleLore3">
+  	<name>Vampire3</name>
+  	<gender>male</gender>
+  	<positionId>vampire.vampire</positionId>
+  	<skillList />
+  </player>
+
+  <player nr="4" id="teamVampireBattleLore4">
+  	<name>Vampire4</name>
+  	<gender>male</gender>
+  	<positionId>vampire.vampire</positionId>
+  	<skillList />
+  </player>
+
+  <player nr="5" id="teamVampireBattleLore5">
+  	<name>Thrall1</name>
+  	<gender>male</gender>
+  	<positionId>vampire.thrall</positionId>
+  	<skillList />
+  </player>
+	
+  <player nr="6" id="teamVampireBattleLore6">
+  	<name>Thrall2</name>
+  	<gender>male</gender>
+  	<positionId>vampire.thrall</positionId>
+  	<skillList />
+  </player>
+
+  <player nr="7" id="teamVampireBattleLore7">
+  	<name>Thrall3</name>
+  	<gender>male</gender>
+  	<positionId>vampire.thrall</positionId>
+  	<skillList />
+  </player>
+
+  <player nr="8" id="teamVampireBattleLore8">
+  	<name>Thrall4</name>
+  	<gender>male</gender>
+  	<positionId>vampire.thrall</positionId>
+  	<skillList />
+  </player>
+
+  <player nr="9" id="teamVampireBattleLore9">
+  	<name>Thrall5</name>
+  	<gender>male</gender>
+  	<positionId>vampire.thrall</positionId>
+  	<skillList />
+  </player>
+
+  <player nr="10" id="teamVampireBattleLore10">
+  	<name>Thrall6</name>
+  	<gender>male</gender>
+  	<positionId>vampire.thrall</positionId>
+  	<skillList />
+  </player>
+
+  <player nr="11" id="teamVampireBattleLore11">
+  	<name>Thrall7</name>
+  	<gender>male</gender>
+  	<positionId>vampire.thrall</positionId>
+  	<skillList />
+  </player>
+
+  <player nr="12" id="teamVampireBattleLore12">
+  	<name>Thrall8</name>
+  	<gender>male</gender>
+  	<positionId>vampire.thrall</positionId>
+  	<skillList />
+  </player>
+
+  <player nr="13" id="teamVampireBattleLore13">
+  	<name>Thrall9</name>
+  	<gender>male</gender>
+  	<positionId>vampire.thrall</positionId>
+  	<skillList />
+  </player>
+
+</team>

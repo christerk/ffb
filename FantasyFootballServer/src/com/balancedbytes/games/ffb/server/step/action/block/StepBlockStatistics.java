@@ -1,0 +1,60 @@
+package com.balancedbytes.games.ffb.server.step.action.block;
+
+import com.balancedbytes.games.ffb.model.ActingPlayer;
+import com.balancedbytes.games.ffb.model.Game;
+import com.balancedbytes.games.ffb.model.PlayerResult;
+import com.balancedbytes.games.ffb.net.NetCommand;
+import com.balancedbytes.games.ffb.server.GameState;
+import com.balancedbytes.games.ffb.server.step.AbstractStep;
+import com.balancedbytes.games.ffb.server.step.StepAction;
+import com.balancedbytes.games.ffb.server.step.StepCommandStatus;
+import com.balancedbytes.games.ffb.server.step.StepId;
+
+/**
+ * Step in block sequence to track if acting player has blocked, turn is started etc.
+ * 
+ * @author Kalimar
+ */
+public class StepBlockStatistics extends AbstractStep {
+	
+	public StepBlockStatistics(GameState pGameState) {
+		super(pGameState);
+	}
+	
+	public StepId getId() {
+		return StepId.BLOCK_STATISTICS;
+	}
+	
+	@Override
+	public void start() {
+		super.start();
+		executeStep();
+	}
+	
+	@Override
+	public StepCommandStatus handleNetCommand(NetCommand pNetCommand) {
+		StepCommandStatus commandStatus = super.handleNetCommand(pNetCommand);
+		if (commandStatus == StepCommandStatus.EXECUTE_STEP) {
+			executeStep();
+		}
+		return commandStatus;
+	}
+
+  private void executeStep() {
+    Game game = getGameState().getGame();
+    ActingPlayer actingPlayer = game.getActingPlayer();
+    if (!actingPlayer.hasBlocked()) {
+      actingPlayer.setHasBlocked(true);
+    	game.getTurnData().setTurnStarted(true);
+      game.setConcessionPossible(false);
+      PlayerResult playerResult = game.getGameResult().getPlayerResult(actingPlayer.getPlayer());
+      playerResult.setBlocks(playerResult.getBlocks() + 1);
+    }
+    getResult().setNextAction(StepAction.NEXT_STEP);
+  }
+  
+  public int getByteArraySerializationVersion() {
+  	return 1;
+  }
+
+}

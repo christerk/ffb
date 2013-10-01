@@ -1,0 +1,111 @@
+package com.balancedbytes.games.ffb.server.fumbbl;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.StringReader;
+import java.net.URLEncoder;
+import java.nio.channels.SocketChannel;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import com.balancedbytes.games.ffb.ClientMode;
+import com.balancedbytes.games.ffb.FantasyFootballException;
+import com.balancedbytes.games.ffb.net.ServerStatus;
+import com.balancedbytes.games.ffb.server.DebugLog;
+import com.balancedbytes.games.ffb.server.FantasyFootballServer;
+import com.balancedbytes.games.ffb.server.IServerLogLevel;
+import com.balancedbytes.games.ffb.server.IServerProperty;
+import com.balancedbytes.games.ffb.server.net.commands.InternalServerCommandJoinApproved;
+import com.balancedbytes.games.ffb.server.util.UtilHttpClient;
+import com.balancedbytes.games.ffb.util.StringTool;
+
+
+/**
+ * 
+ * @author Kalimar
+ */
+public class FumbblRequestCheckAuthorization extends FumbblRequest {
+  
+  private static final Pattern _PATTERN_RESPONSE = Pattern.compile("<response>([^<]+)</response>");
+
+  private SocketChannel fSender;
+  private String fCoach;
+  private String fPassword;
+  private long fGameId;
+  private String fGameName;
+  private String fTeamId;
+  private ClientMode fMode;
+  
+  public FumbblRequestCheckAuthorization(SocketChannel pSender, String pCoach, String pPassword, long pGameId, String pGameName, String pTeamId, ClientMode pMode) {
+    fSender = pSender;
+    fCoach = pCoach;
+    fPassword = pPassword;
+    fGameId = pGameId;
+    fGameName = pGameName;
+    fTeamId = pTeamId;
+    fMode = pMode;
+  }
+  
+  public SocketChannel getSender() {
+    return fSender;
+  }
+  
+  public String getCoach() {
+    return fCoach;
+  }
+  
+  public String getPassword() {
+    return fPassword;
+  }
+  
+  public long getGameId() {
+    return fGameId;
+  }
+  
+  public String getGameName() {
+    return fGameName;
+  }
+  
+  public String getTeamId() {
+    return fTeamId;
+  }
+  
+  public ClientMode getMode() {
+    return fMode;
+  }
+  
+  @Override
+  public void process(FumbblRequestProcessor pRequestProcessor) {
+    boolean passwordOk = false;
+    FantasyFootballServer server = pRequestProcessor.getServer();
+    try {
+    	setRequestUrl(StringTool.bind(server.getProperty(IServerProperty.FUMBBL_AUTH_RESPONSE), new String[] { URLEncoder.encode(getCoach(), FumbblRequestProcessor.CHARACTER_ENCODING), URLEncoder.encode(getPassword(), FumbblRequestProcessor.CHARACTER_ENCODING) }));
+    	server.getDebugLog().log(IServerLogLevel.DEBUG, DebugLog.FUMBBL_REQUEST, getRequestUrl());
+      String responseXml = UtilHttpClient.fetchPage(getRequestUrl());
+    	server.getDebugLog().log(IServerLogLevel.DEBUG, DebugLog.FUMBBL_RESPONSE, responseXml);
+      if (StringTool.isProvided(responseXml)) {
+        BufferedReader xmlReader = new BufferedReader(new StringReader(responseXml));
+        String line = null;
+        String response = null;
+        while ((line = xmlReader.readLine()) != null) {
+          Matcher responseMatcher = _PATTERN_RESPONSE.matcher(line);
+          if (responseMatcher.find()) {
+            response = responseMatcher.group(1);
+          }
+        }
+        xmlReader.close();
+        passwordOk = (StringTool.isProvided(response) && response.startsWith("OK"));
+      }
+    } catch (IOException ioe) {
+      throw new FantasyFootballException(ioe);
+    }
+    if (passwordOk) {
+      InternalServerCommandJoinApproved joinApprovedCommand = new InternalServerCommandJoinApproved(getGameId(), getGameName(), getCoach(), getTeamId(), getMode());
+      joinApprovedCommand.setSender(getSender());
+      server.getCommunication().handleNetCommand(joinApprovedCommand);
+    } else {
+      server.getCommunication().sendStatus(getSender(), ServerStatus.ERROR_WRONG_PASSWORD, null);
+    }
+  }
+
+}

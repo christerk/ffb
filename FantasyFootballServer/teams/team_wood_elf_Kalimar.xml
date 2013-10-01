@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<team id="teamWoodElfKalimar">
+
+  <coach>Kalimar</coach>
+  <name>Kalimar's Wood Elves</name>
+  <race>Wood Elf</race>
+  <rosterId>woodelf.lrb6</rosterId>
+  <reRolls>3</reRolls>
+  <fanFactor>8</fanFactor>
+  <apothecaries>2</apothecaries>
+  <teamRating>100</teamRating>
+  <teamStrength>113</teamStrength>
+  <division>[X]</division>
+
+  <player nr="1" id="teamWoodElfKalimar1">
+  	<name>Wardancer1</name>
+  	<gender>male</gender>
+  	<positionId>woodelf.wardancer</positionId>
+  	<skillList>
+  	  <skill>Strip Ball</skill>
+  	</skillList>
+  </player>
+
+  <player nr="2" id="teamWoodElfKalimar2">
+  	<name>Wardancer2</name>
+  	<gender>male</gender>
+  	<positionId>woodelf.wardancer</positionId>
+    <skillList>
+      <skill>Strip Ball</skill>
+    </skillList>
+  </player>
+
+  <player nr="3" id="teamWoodElfKalimar3">
+  	<name>Catcher1</name>
+  	<gender>male</gender>
+  	<positionId>woodelf.catcher</positionId>
+  	<skillList />
+  </player>
+
+  <player nr="4" id="teamWoodElfKalimar4">
+  	<name>Catcher2</name>
+  	<gender>male</gender>
+  	<positionId>woodelf.catcher</positionId>
+  	<skillList />
+  </player>
+
+  <player nr="5" id="teamWoodElfKalimar5">
+    <name>Thrower1</name>
+  	<gender>male</gender>
+  	<positionId>woodelf.thrower</positionId>
+  	<skillList />
+  </player>
+	
+  <player nr="6" id="teamWoodElfKalimar6">
+    <name>Thrower2</name>
+  	<gender>male</gender>
+  	<positionId>woodelf.thrower</positionId>
+  	<skillList />
+  </player>
+
+  <player nr="7" id="teamWoodElfKalimar7">
+    <name>Lineman1</name>
+  	<gender>male</gender>
+  	<positionId>woodelf.lineman</positionId>
+  	<skillList />
+  </player>
+
+  <player nr="8" id="teamWoodElfKalimar8">
+    <name>Lineman2</name>
+  	<gender>male</gender>
+  	<positionId>woodelf.lineman</positionId>
+  	<skillList />
+  </player>
+
+  <player nr="9" id="teamWoodElfKalimar9">
+    <name>Lineman3</name>
+  	<gender>male</gender>
+  	<positionId>woodelf.lineman</positionId>
+  	<skillList />
+  </player>
+
+  <player nr="10" id="teamWoodElfKalimar10">
+    <name>Lineman4</name>
+  	<gender>male</gender>
+  	<positionId>woodelf.lineman</positionId>
+  	<skillList />
+  </player>
+
+  <player nr="11" id="teamWoodElfKalimar11">
+    <name>Lineman5</name>
+  	<gender>male</gender>
+  	<positionId>woodelf.lineman</positionId>
+  	<skillList />
+  </player>
+
+  <player nr="12" id="teamWoodElfKalimar12">
+    <name>Treeman</name>
+  	<gender>male</gender>
+  	<positionId>woodelf.treeman</positionId>
+  	<skillList />
+  </player>
+
+</team>

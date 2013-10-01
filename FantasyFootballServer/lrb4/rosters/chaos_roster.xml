@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<roster id="chaos.roster">
+
+<!--
+LRB 4.0
+
+0-12 Chaos Beastmen  60,000 6 3 3 8 Horns
+0-4  Chaos Warriors 100,000 5 4 3 9 None
+
+Re-roll counter: 70,000 gold pieces each
+-->
+
+  <name>Chaos</name>
+  <type>Regular</type>
+  <reroll_cost>70000</reroll_cost>	
+  <max_rerolls>8</max_rerolls>	
+
+  <position id="chaos.beastman">
+  	<quantity>12</quantity>
+  	<name>Chaos Beastman</name>
+  	<type>Regular</type>
+  	<cost>60000</cost>
+    <movement>6</movement>
+    <strength>3</strength>
+    <agility>3</agility>
+    <armour>8</armour>
+    <icon-list>
+      <portrait>players/chaos/chBeastman.gif</portrait>
+      <home standing="players/chaos/cbeastman1.gif" moving="players/chaos/cbeastman1an.gif" />
+      <away standing="players/chaos/cbeastman1b.gif" moving="players/chaos/cbeastman1ban.gif" />
+      <home standing="players/chaos/cbeastman2.gif" moving="players/chaos/cbeastman2an.gif" />
+      <away standing="players/chaos/cbeastman2b.gif" moving="players/chaos/cbeastman2ban.gif" />
+      <home standing="players/chaos/cbeastman3.gif" moving="players/chaos/cbeastman3an.gif" />
+      <away standing="players/chaos/cbeastman3b.gif" moving="players/chaos/cbeastman3ban.gif" />
+      <home standing="players/chaos/cbeastman4.gif" moving="players/chaos/cbeastman4an.gif" />
+      <away standing="players/chaos/cbeastman4b.gif" moving="players/chaos/cbeastman4ban.gif" />
+    </icon-list>
+  	<skill-list>
+  	  <skill>Horns</skill>
+  	</skill-list>
+  	<skillcategory-list>
+      <normal>General Skill</normal>
+      <normal>Strength Skill</normal>
+      <double>General Trait</double>
+      <double>Strength Trait</double>
+      <double>Agility Skill</double>
+      <double>Passing Skill</double>
+      <double>Physical Trait</double>
+  	</skillcategory-list>
+  </position>
+
+  <position id="chaos.warrior">
+  	<quantity>4</quantity>
+  	<name>Chaos Warrior</name>
+  	<type>Regular</type>
+  	<cost>100000</cost>
+    <movement>5</movement>
+    <strength>4</strength>
+    <agility>3</agility>
+    <armour>9</armour>
+    <icon-list>
+      <portrait>players/chaos/chWarrior.gif</portrait>
+      <home standing="players/chaos/cwarrior1.gif" moving="players/chaos/cwarrior1an.gif" />
+      <away standing="players/chaos/cwarrior1b.gif" moving="players/chaos/cwarrior1ban.gif" />
+      <home standing="players/chaos/cwarrior2.gif" moving="players/chaos/cwarrior2an.gif" />
+      <away standing="players/chaos/cwarrior2b.gif" moving="players/chaos/cwarrior2ban.gif" />
+      <home standing="players/chaos/cwarrior3.gif" moving="players/chaos/cwarrior3an.gif" />
+      <away standing="players/chaos/cwarrior3b.gif" moving="players/chaos/cwarrior3ban.gif" />
+      <home standing="players/chaos/cwarrior4.gif" moving="players/chaos/cwarrior4an.gif" />
+      <away standing="players/chaos/cwarrior4b.gif" moving="players/chaos/cwarrior4ban.gif" />
+    </icon-list>
+  	<skill-list />
+  	<skillcategory-list>
+      <normal>General Skill</normal>
+      <normal>Strength Skill</normal>
+      <double>General Trait</double>
+      <double>Strength Trait</double>
+      <double>Agility Skill</double>
+      <double>Passing Skill</double>
+      <double>Physical Trait</double>
+  	</skillcategory-list>
+  </position>
+
+</roster>

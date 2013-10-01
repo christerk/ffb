@@ -1,0 +1,329 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<roster id="norse.lrb6">
+
+  <name>Norse</name>
+  <type>Regular</type>
+  <reRollCost>60000</reRollCost>
+  <maxReRolls>8</maxReRolls>
+  <baseIconPath>http://localhost:2224/icons/players/norse/</baseIconPath>
+  
+  <position id="norse.lineman">
+    <quantity>16</quantity>
+    <name>Lineman</name>
+    <shorthand>L</shorthand>
+    <type>Regular</type>
+    <cost>50000</cost>
+    <movement>6</movement>
+    <strength>3</strength>
+    <agility>3</agility>
+    <armour>7</armour>
+    <iconList>
+      <portrait/>
+      <home standing="nlineman1.gif" moving="nlineman1an.gif"/>
+      <away standing="nlineman1b.gif" moving="nlineman1ban.gif"/>
+      <home standing="nlineman2.gif" moving="nlineman2an.gif"/>
+      <away standing="nlineman2b.gif" moving="nlineman2ban.gif"/>
+    </iconList>
+    <skillList>
+      <skill>Block</skill>
+    </skillList>
+    <skillCategoryList>
+      <Normal>General</Normal>
+      <double>Agility</double>
+      <double>Passing</double>
+      <double>Strength</double>
+    </skillCategoryList>
+  </position>
+  
+  <position id="norse.thrower">
+    <quantity>2</quantity>
+    <name>Thrower</name>
+    <shorthand>T</shorthand>
+    <type>Regular</type>
+    <cost>70000</cost>
+    <movement>6</movement>
+    <strength>3</strength>
+    <agility>3</agility>
+    <armour>7</armour>
+    <iconList>
+      <portrait/>
+      <home standing="nthrower1.gif" moving="nthrower1an.gif"/>
+      <away standing="nthrower1b.gif" moving="nthrower1ban.gif"/>
+    </iconList>
+    <skillList>
+      <skill>Block</skill>
+      <skill>Pass</skill>
+    </skillList>
+    <skillCategoryList>
+      <Normal>General</Normal>
+      <Normal>Passing</Normal>
+      <double>Agility</double>
+      <double>Strength</double>
+    </skillCategoryList>
+  </position>
+    
+  <position id="norse.runner">
+    <quantity>2</quantity>
+    <name>Runner</name>
+    <shorthand>R</shorthand>
+    <type>Regular</type>
+    <cost>90000</cost>
+    <movement>7</movement>
+    <strength>3</strength>
+    <agility>3</agility>
+    <armour>7</armour>
+    <iconList>
+      <portrait/>
+      <home standing="norunner1.gif" moving="norunner1an.gif"/>
+      <away standing="norunner1b.gif" moving="norunner1ban.gif"/>
+      <home standing="norunner2.gif" moving="norunner2an.gif"/>
+      <away standing="norunner2b.gif" moving="norunner2ban.gif"/>
+    </iconList>
+    <skillList>
+      <skill>Block</skill>
+      <skill>Dauntless</skill>
+    </skillList>
+    <skillCategoryList>
+      <Normal>General</Normal>
+      <Normal>Agility</Normal>
+      <double>Strength</double>
+      <double>Passing</double>
+    </skillCategoryList>
+  </position>
+  
+  <position id="norse.berserker">
+    <quantity>2</quantity>
+    <name>Berserker</name>
+    <shorthand>B</shorthand>
+    <type>Regular</type>
+    <cost>90000</cost>
+    <movement>6</movement>
+    <strength>3</strength>
+    <agility>3</agility>
+    <armour>7</armour>
+    <iconList>
+      <portrait/>
+      <home standing="noberserker1.gif" moving="noberserker1an.gif"/>
+      <away standing="noberserker1b.gif" moving="noberserker1ban.gif"/>
+    </iconList>
+    <skillList>
+      <skill>Block</skill>
+      <skill>Frenzy</skill>
+      <skill>Jump Up</skill>
+    </skillList>
+    <skillCategoryList>
+      <Normal>General</Normal>
+      <Normal>Strength</Normal>
+      <double>Agility</double>
+      <double>Passing</double>
+    </skillCategoryList>
+  </position>
+  
+  <position id="norse.ulfwerener">
+    <quantity>2</quantity>
+    <name>Ulfwerener</name>
+    <shorthand>U</shorthand>
+    <type>Regular</type>
+    <cost>110000</cost>
+    <movement>6</movement>
+    <strength>4</strength>
+    <agility>2</agility>
+    <armour>8</armour>
+    <iconList>
+      <portrait/>
+      <home standing="noulfwerener1.gif" moving="noulfwerener1an.gif"/>
+      <away standing="noulfwerener1b.gif" moving="noulfwerener1ban.gif"/>
+      <home standing="noulfwerener2.gif" moving="noulfwerener2an.gif"/>
+      <away standing="noulfwerener2b.gif" moving="noulfwerener2ban.gif"/>
+    </iconList>
+    <skillList>
+      <skill>Frenzy</skill>
+    </skillList>
+    <skillCategoryList>
+      <Normal>General</Normal>
+      <Normal>Strength</Normal>
+      <double>Agility</double>
+      <double>Passing</double>
+    </skillCategoryList>
+  </position>
+  
+  <position id="norse.troll.snow">
+    <quantity>1</quantity>
+    <name>Snow Troll</name>
+    <shorthand>S</shorthand>
+    <type>Big Guy</type>
+    <cost>140000</cost>
+    <movement>5</movement>
+    <strength>5</strength>
+    <agility>1</agility>
+    <armour>8</armour>
+    <iconList>
+      <portrait/>
+      <home standing="snowtroll1.gif" moving="snowtroll1an.gif"/>
+      <away standing="snowtroll1b.gif" moving="snowtroll1ban.gif"/>
+    </iconList>
+    <skillList>
+      <skill>Claw</skill>
+      <skill>Disturbing Presence</skill>
+      <skill>Frenzy</skill>
+      <skill>Loner</skill>
+      <skill>Wild Animal</skill>
+    </skillList>
+    <skillCategoryList>
+      <Normal>Strength</Normal>
+      <double>Agility</double>
+      <double>General</double>
+      <double>Passing</double>
+    </skillCategoryList>
+  </position>
+  
+  <position id="norse.Eziasson">
+		<quantity>1</quantity>
+		<name>Boomer Eziasson</name>
+		<shorthand>BE</shorthand>
+		<type>Star</type>
+		<cost>60000</cost>
+		<movement>4</movement>
+		<strength>3</strength>
+		<agility>2</agility>
+		<armour>9</armour>
+    <iconList baseIconPath="../stars/">
+			<portrait/>
+			<home standing="Boomer_Eziasson.gif" moving="Boomer_Eziasson_an.gif"/>
+			<away standing="Boomer_Eziasson_b.gif"  moving="Boomer_Eziasson_ban.gif"/>
+		</iconList>
+		<skillList>
+			<skill>Loner</skill>
+			<skill>Accurate</skill>
+			<skill>Block</skill>
+			<skill>Bombardier</skill>
+			<skill>Secret Weapon</skill>
+			<skill>Thick Skull</skill>
+		</skillList>
+	</position>
+
+	<position id="norse.Helmut">
+		<quantity>1</quantity>
+		<name>Helmut Wulf</name>
+		<shorthand>HW</shorthand>
+		<type>Star</type>
+		<cost>110000</cost>
+		<movement>6</movement>
+		<strength>3</strength>
+		<agility>3</agility>
+		<armour>8</armour>
+    <iconList baseIconPath="../stars/">
+			<portrait/>
+			<home standing="Helmut_Wulf.gif" moving="Helmut_Wulf_an.gif"/>
+			<away standing="Helmut_Wulf_b.gif"  moving="Helmut_Wulf_ban.gif"/>
+		</iconList>
+		<skillList>
+			<skill>Loner</skill>
+			<skill>Chainsaw</skill>
+			<skill>Secret Weapon</skill>
+			<skill>Stand Firm</skill>
+		</skillList>
+	</position>
+
+	<position id="norse.Whilhelm">
+		<quantity>1</quantity>
+		<name>Wilhelm Chaney</name>
+		<shorthand>WC</shorthand>
+		<type>Star</type>
+		<cost>240000</cost>
+		<movement>8</movement>
+		<strength>4</strength>
+		<agility>3</agility>
+		<armour>8</armour>
+    <iconList baseIconPath="../stars/">
+			<portrait/>
+			<home standing="Wilhelm_Chaney.gif" moving="Wilhelm_Chaney_an.gif"/>
+			<away standing="Wilhelm_Chaney_b.gif"  moving="Wilhelm_Chaney_ban.gif"/>
+		</iconList>
+		<skillList>
+			<skill>Loner</skill>
+			<skill>Catch</skill>
+			<skill>Claws</skill>
+			<skill>Frenzy</skill>
+			<skill>Regeneration</skill>
+			<skill>Wrestle</skill>
+		</skillList>
+	</position>
+
+	<position id="norse.Zara">
+		<quantity>1</quantity>
+		<name>Zara the Slayer</name>
+		<shorthand>ZS</shorthand>
+		<type>Star</type>
+		<cost>270000</cost>
+		<movement>6</movement>
+		<strength>4</strength>
+		<agility>3</agility>
+		<armour>8</armour>
+    <iconList baseIconPath="../stars/">
+			<portrait/>
+			<home standing="Zara_the_Slayer.gif" moving="Zara_the_Slayer_an.gif"/>
+			<away standing="Zara_the_Slayer_b.gif"  moving="Zara_the_Slayer_ban.gif"/>
+		</iconList>
+		<skillList>
+			<skill>Loner</skill>
+			<skill>Block</skill>
+			<skill>Dauntless</skill>
+			<skill>Dodge</skill>
+			<skill>Jump Up</skill>
+			<skill>Stab</skill>
+			<skill>Stakes</skill>
+		</skillList>
+	</position>
+
+	<position id="norse.Icepelt">
+		<quantity>1</quantity>
+		<name>Icepelt Hammerblow</name>
+		<shorthand>IH</shorthand>
+		<type>Star</type>
+		<cost>330000</cost>
+		<movement>5</movement>
+		<strength>6</strength>
+		<agility>1</agility>
+		<armour>8</armour>
+    <iconList baseIconPath="../stars/">
+			<portrait/>
+			<home standing="Icepelt_Hammerblow.gif" moving="Icepelt_Hammerblow_an.gif"/>
+			<away standing="Icepelt_Hammerblow_b.gif"  moving="Icepelt_Hammerblow_ban.gif"/>
+		</iconList>
+		<skillList>
+			<skill>Loner</skill>
+			<skill>Claws</skill>
+			<skill>Disturbing Presence</skill>
+			<skill>Frenzy</skill>
+			<skill>Regeneration</skill>
+			<skill>Thick Skull</skill>
+		</skillList>
+	</position>
+
+	<position id="norse.Morg">
+		<quantity>1</quantity>
+		<name>Morg 'n' Thorg</name>
+		<shorthand>MT</shorthand>
+		<type>Star</type>
+		<cost>430000</cost>
+		<movement>6</movement>
+		<strength>6</strength>
+		<agility>3</agility>
+		<armour>10</armour>
+    <iconList baseIconPath="../stars/">
+			<portrait/>
+			<home standing="morgnthorg.gif" moving="morgnthorg_an.gif"/>
+			<away standing="morgnthorg_b.gif"  moving="morgnthorg_ban.gif"/>
+		</iconList>
+		<skillList>
+			<skill>Loner</skill>
+			<skill>Block</skill>
+			<skill>Mighty Blow</skill>
+			<skill>Thick Skull</skill>
+			<skill>Throw Team-Mate</skill>
+		</skillList>
+	</position>
+  
+</roster>

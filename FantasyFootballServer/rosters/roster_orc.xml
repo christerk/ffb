@@ -1,0 +1,356 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<roster id="orc.lrb6">
+
+<!-- 
+0-16 Linemen 50,000 5 3 3 9 None G ASP
+0-4 Goblins 40,000 6 2 3 7 Right Stuff, Dodge, Stunty A GSP
+0-2 Throwers 70,000 5 3 3 8 Sure Hands, Pass GP AS
+0-4 Black Orc Blockers 80,000 4 4 2 9 None GS AP
+0-4 Blitzers 80,000 6 3 3 9 Block GS AP
+0-1 Troll 110,000 4 5 1 9 Loner, Always Hungry, Mighty Blow, Really Stupid, Regeneration, Throw Team-Mate S GAP
+
+0-8 Re-roll counters: 60,000 gold pieces each
+
+Star Players available for Inducement:
+Bomber Dribblesnot, Morg ‘n’ Thorg, Ripper, Scrappa Sorehead, Ugroth Bolgrot, Varag Ghoul-Chewer
+-->
+  
+  <name>Orc</name>
+  <type>Regular</type>
+  <reRollCost>60000</reRollCost>	
+  <maxReRolls>8</maxReRolls>	
+  <baseIconPath>http://localhost:2224/icons/players/orc/</baseIconPath>	
+
+  <position id="orc.troll">
+  	<quantity>1</quantity>
+  	<name>Troll</name>
+  	<shorthand>T</shorthand>
+    <type>Big Guy</type>
+  	<cost>110000</cost>
+    <movement>4</movement>
+    <strength>5</strength>
+    <agility>1</agility>
+    <armour>9</armour>
+    <iconList>
+      <portrait>portrait_orc_troll.png</portrait>
+      <home standing="troll1.gif" moving="troll1an.gif" />
+      <away standing="troll1b.gif" moving="troll1ban.gif" />
+    </iconList>
+  	<skillList>
+  	  <skill>Loner</skill>
+  	  <skill>Always Hungry</skill>
+  	  <skill>Mighty Blow</skill>
+  	  <skill>Really Stupid</skill>
+  	  <skill>Regeneration</skill>
+  	  <skill>Throw Team-Mate</skill>
+  	</skillList>
+  	<skillCategoryList>
+      <normal>Strength</normal>
+      <double>General</double>
+      <double>Agility</double>
+      <double>Passing</double>
+  	</skillCategoryList>
+  </position>
+
+  <position id="orc.blitzer">
+  	<quantity>4</quantity>
+  	<name>Blitzer</name>
+  	<displayName>Orc Blitzer</displayName>
+  	<shorthand>B</shorthand>
+    <type>Regular</type>
+  	<cost>80000</cost>
+    <movement>6</movement>
+    <strength>3</strength>
+    <agility>3</agility>
+    <armour>9</armour>
+    <iconList>
+      <portrait>portrait_orc_blitzer.png</portrait>
+      <home standing="oblitzer1.gif" moving="oblitzer1an.gif" />
+      <away standing="oblitzer1b.gif" moving="oblitzer1ban.gif" />
+      <home standing="oblitzer2.gif" moving="oblitzer2an.gif" />
+      <away standing="oblitzer2b.gif" moving="oblitzer2ban.gif" />
+      <home standing="oblitzer3.gif" moving="oblitzer3an.gif" />
+      <away standing="oblitzer3b.gif" moving="oblitzer3ban.gif" />
+    </iconList>
+  	<skillList>
+  	  <skill>Block</skill>
+  	</skillList>
+  	<skillCategoryList>
+      <normal>General</normal>
+      <normal>Strength</normal>
+      <double>Agility</double>
+      <double>Passing</double>
+  	</skillCategoryList>
+  </position>
+  
+  <position id="orc.blackorc">
+  	<quantity>4</quantity>
+  	<name>Black Orc Blocker</name>
+  	<shorthand>Bo</shorthand>
+    <type>Regular</type>
+  	<cost>80000</cost>
+    <movement>4</movement>
+    <strength>4</strength>
+    <agility>2</agility>
+    <armour>9</armour>
+    <iconList>
+      <portrait>portrait_orc_blocker.png</portrait>
+      <home standing="oblackorc1.gif" moving="oblackorc1an.gif" />
+      <away standing="oblackorc1b.gif" moving="oblackorc1ban.gif" />
+      <home standing="oblackorc2.gif" moving="oblackorc2an.gif" />
+      <away standing="oblackorc2b.gif" moving="oblackorc2ban.gif" />
+    </iconList>
+  	<skillList />
+  	<skillCategoryList>
+      <normal>General</normal>
+      <normal>Strength</normal>
+      <double>Agility</double>
+      <double>Passing</double>
+  	</skillCategoryList>
+  </position>
+  
+  <position id="orc.thrower">
+  	<quantity>2</quantity>
+  	<name>Thrower</name>
+  	<displayName>Orc Thrower</displayName>
+  	<shorthand>T</shorthand>
+    <type>Regular</type>
+  	<cost>70000</cost>
+    <movement>5</movement>
+    <strength>3</strength>
+    <agility>3</agility>
+    <armour>8</armour>
+    <iconList>
+      <portrait>portrait_orc_thrower.png</portrait>
+      <home standing="othrower1.gif" moving="othrower1an.gif" />
+      <away standing="othrower1b.gif" moving="othrower1ban.gif" />
+      <home standing="othrower2.gif" moving="othrower2an.gif" />
+      <away standing="othrower2b.gif" moving="othrower2ban.gif" />
+    </iconList>
+  	<skillList>
+  	  <skill>Pass</skill>
+  	  <skill>Sure Hands</skill>
+  	</skillList>
+  	<skillCategoryList>
+      <normal>General</normal>
+      <normal>Passing</normal>
+      <double>Agility</double>
+      <double>Strength</double>
+  	</skillCategoryList>
+  </position>
+
+  <position id="orc.goblin">
+  	<quantity>4</quantity>
+  	<name>Goblin</name>
+  	<shorthand>G</shorthand>
+    <type>Regular</type>
+  	<cost>40000</cost>
+    <movement>6</movement>
+    <strength>2</strength>
+    <agility>3</agility>
+    <armour>7</armour>
+    <iconList>
+      <portrait>portrait_orc_goblin.png</portrait>
+      <home standing="goblin1.gif" moving="goblin1an.gif" />
+      <away standing="goblin1b.gif" moving="goblin1ban.gif" />
+      <home standing="goblin2.gif" moving="goblin2an.gif" />
+      <away standing="goblin2b.gif" moving="goblin2ban.gif" />
+      <home standing="goblin3.gif" moving="goblin3an.gif" />
+      <away standing="goblin3b.gif" moving="goblin3ban.gif" />
+      <home standing="goblin4.gif" moving="goblin4an.gif" />
+      <away standing="goblin4b.gif" moving="goblin4ban.gif" />
+      <home standing="goblin5.gif" moving="goblin5an.gif" />
+      <away standing="goblin5b.gif" moving="goblin5ban.gif" />
+    </iconList>
+  	<skillList>
+  	  <skill>Right Stuff</skill>
+  	  <skill>Dodge</skill>
+  	  <skill>Stunty</skill>
+  	</skillList>
+  	<skillCategoryList>
+      <normal>Agility</normal>
+      <double>General</double>
+      <double>Strength</double>
+      <double>Passing</double>
+  	</skillCategoryList>
+  </position>
+
+  <position id="orc.lineman">
+  	<quantity>16</quantity>
+  	<name>Lineman</name>
+  	<displayName>Orc Lineman</displayName>
+  	<shorthand>L</shorthand>
+    <type>Regular</type>
+  	<cost>50000</cost>
+    <movement>5</movement>
+    <strength>3</strength>
+    <agility>3</agility>
+    <armour>9</armour>
+    <iconList>
+      <portrait>portrait_orc_lineman.png</portrait>
+      <home standing="olineman1.gif" moving="olineman1an.gif" />
+      <away standing="olineman1b.gif" moving="olineman1ban.gif" />
+      <home standing="olineman2.gif" moving="olineman2an.gif" />
+      <away standing="olineman2b.gif" moving="olineman2ban.gif" />
+      <home standing="olineman3.gif" moving="olineman3an.gif" />
+      <away standing="olineman3b.gif" moving="olineman3ban.gif" />
+    </iconList>
+  	<skillList />
+  	<skillCategoryList>
+      <normal>General</normal>
+      <double>Agility</double>
+      <double>Strength</double>
+      <double>Passing</double>
+  	</skillCategoryList>
+  </position>
+  
+  <position id="orc.Dribblesnot">
+		<quantity>1</quantity>
+		<name>Bomber Dribblesnot</name>
+		<shorthand>BD</shorthand>
+		<type>Star</type>
+		<cost>60000</cost>
+		<movement>6</movement>
+		<strength>2</strength>
+		<agility>3</agility>
+		<armour>7</armour>
+    <iconList baseIconPath="../stars/">
+			<portrait/>
+			<home standing="Bomber_Dribblesnot.gif" moving="Bomber_Dribblesnot_an.gif"/>
+			<away standing="Bomber_Dribblesnot_b.gif"  moving="Bomber_Dribblesnot_ban.gif"/>
+		</iconList>
+		<skillList>
+			<skill>Loner</skill>
+			<skill>Accurate</skill>
+			<skill>Bombardier</skill>
+			<skill>Dodge</skill>
+			<skill>Right Stuff</skill>
+			<skill>Secret Weapon</skill>
+			<skill>Stunty</skill>
+		</skillList>
+	</position>
+
+	<position id="orc.Ugroth">
+		<quantity>1</quantity>
+		<name>Ugroth Bolgrot</name>
+		<shorthand>UB</shorthand>
+		<type>Star</type>
+		<cost>100000</cost>
+		<movement>5</movement>
+		<strength>3</strength>
+		<agility>3</agility>
+		<armour>9</armour>
+    <iconList baseIconPath="../stars/">
+			<portrait/>
+			<home standing="Ugroth_Bolgrot.gif" moving="Ugroth_Bolgrot_an.gif"/>
+			<away standing="Ugroth_Bolgrot_b.gif"  moving="Ugroth_Bolgrot_ban.gif"/>
+		</iconList>
+		<skillList>
+			<skill>Loner</skill>
+			<skill>Chainsaw</skill>
+			<skill>Secret Weapon</skill>
+		</skillList>
+	</position>
+
+	<position id="orc.Scrappa">
+		<quantity>1</quantity>
+		<name>Scrappa Sorehead</name>
+		<shorthand>SS</shorthand>
+		<type>Star</type>
+		<cost>150000</cost>
+		<movement>7</movement>
+		<strength>2</strength>
+		<agility>3</agility>
+		<armour>7</armour>
+    <iconList baseIconPath="../stars/">
+			<portrait/>
+			<home standing="Scrappa_Sorehead.gif" moving="Scrappa_Sorehead_an.gif"/>
+			<away standing="Scrappa_Sorehead_b.gif"  moving="Scrappa_Sorehead_ban.gif"/>
+		</iconList>
+		<skillList>
+			<skill>Loner</skill>
+			<skill>Dirty Player</skill>
+			<skill>Dodge</skill>
+			<skill>Leap</skill>
+			<skill>Right Stuff</skill>
+			<skill>Sprint</skill>
+			<skill>Stunty</skill>
+			<skill>Sure Feet</skill>
+			<skill>Very Long Legs</skill>
+		</skillList>
+	</position>
+
+	<position id="orc.Varag">
+		<quantity>1</quantity>
+		<name>Varag Ghoul-Chewer</name>
+		<shorthand>VG</shorthand>
+		<type>Star</type>
+		<cost>290000</cost>
+		<movement>6</movement>
+		<strength>4</strength>
+		<agility>3</agility>
+		<armour>9</armour>
+    <iconList baseIconPath="../stars/">
+			<portrait/>
+			<home standing="Varag_Ghoul-Chewer.gif" moving="Varag_Ghoul-Chewer_an.gif"/>
+			<away standing="Varag_Ghoul-Chewer_b.gif"  moving="Varag_Ghoul-Chewer_ban.gif"/>
+		</iconList>
+		<skillList>
+			<skill>Loner</skill>
+			<skill>Block</skill>
+			<skill>Jump Up</skill>
+			<skill>Mighty Blow</skill>
+			<skill>Thick Skull</skill>
+		</skillList>
+	</position>
+
+	<position id="orc.Ripper">
+		<quantity>1</quantity>
+		<name>Ripper</name>
+		<shorthand>RP</shorthand>
+		<type>Star</type>
+		<cost>270000</cost>
+		<movement>4</movement>
+		<strength>6</strength>
+		<agility>1</agility>
+		<armour>9</armour>
+    <iconList baseIconPath="../stars/">
+			<portrait/>
+			<home standing="ripper.gif" moving="ripper_an.gif"/>
+			<away standing="ripper_b.gif"  moving="ripper_ban.gif"/>
+		</iconList>
+		<skillList>
+			<skill>Loner</skill>
+			<skill>Grab</skill>
+			<skill>Mighty Blow</skill>
+			<skill>Regeneration</skill>
+			<skill>Throw Team-Mate</skill>
+		</skillList>
+	</position>
+
+	<position id="orc.Morg">
+		<quantity>1</quantity>
+		<name>Morg 'n' Thorg</name>
+		<shorthand>MT</shorthand>
+		<type>Star</type>
+		<cost>430000</cost>
+		<movement>6</movement>
+		<strength>6</strength>
+		<agility>3</agility>
+		<armour>10</armour>
+    <iconList baseIconPath="../stars/">
+			<portrait/>
+			<home standing="morgnthorg.gif" moving="morgnthorg_an.gif"/>
+			<away standing="morgnthorg_b.gif"  moving="morgnthorg_ban.gif"/>
+		</iconList>
+		<skillList>
+			<skill>Loner</skill>
+			<skill>Block</skill>
+			<skill>Mighty Blow</skill>
+			<skill>Thick Skull</skill>
+			<skill>Throw Team-Mate</skill>
+		</skillList>
+	</position>
+
+</roster>

@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<team id="team15">
+
+  <coach>Kalimar</coach>
+  <name>Kalimar's Wood Elves</name>
+  <roster-id>woodelf.roster</roster-id>
+  <re-rolls>3</re-rolls>
+  <fanFactor>8</fanFactor>
+  <apothecaries>1</apothecaries>
+  <team-rating>100</team-rating>
+  <team-strength>113</team-strength>
+  <division>[X]</division>
+
+  <player nr="1">
+  	<name>Wardancer1</name>
+  	<position-id>woodelf.wardancer</position-id>
+  	<skill-list />
+  </player>
+
+  <player nr="2">
+  	<name>Wardancer2</name>
+  	<position-id>woodelf.wardancer</position-id>
+  	<skill-list />
+  </player>
+
+  <player nr="3">
+  	<name>Catcher1</name>
+  	<position-id>woodelf.catcher</position-id>
+  	<skill-list />
+  </player>
+
+  <player nr="4">
+  	<name>Catcher2</name>
+  	<position-id>woodelf.catcher</position-id>
+  	<skill-list />
+  </player>
+
+  <player nr="5">
+    <name>Catcher3</name>
+  	<position-id>woodelf.catcher</position-id>
+  	<skill-list />
+  </player>
+
+  <player nr="6">
+    <name>Catcher4</name>
+  	<position-id>woodelf.catcher</position-id>
+  	<skill-list />
+  </player>
+
+  <player nr="7">
+    <name>Thrower1</name>
+  	<position-id>woodelf.thrower</position-id>
+  	<skill-list />
+  </player>
+	
+  <player nr="8">
+    <name>Thrower2</name>
+  	<position-id>woodelf.thrower</position-id>
+  	<skill-list />
+  </player>
+
+  <player nr="9">
+    <name>Lineman1</name>
+  	<position-id>woodelf.lineman</position-id>
+  	<skill-list />
+  </player>
+
+  <player nr="10">
+    <name>Lineman2</name>
+  	<position-id>woodelf.lineman</position-id>
+  	<skill-list />
+  </player>
+
+  <player nr="11">
+    <name>Lineman3</name>
+  	<position-id>woodelf.lineman</position-id>
+  	<skill-list />
+  </player>
+
+  <player nr="12">
+    <name>Lineman4</name>
+  	<position-id>woodelf.lineman</position-id>
+  	<skill-list />
+  </player>
+
+</team>

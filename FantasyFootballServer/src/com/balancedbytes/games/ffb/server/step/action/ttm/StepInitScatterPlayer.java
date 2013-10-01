@@ -1,0 +1,201 @@
+package com.balancedbytes.games.ffb.server.step.action.ttm;
+
+import com.balancedbytes.games.ffb.CatchScatterThrowInMode;
+import com.balancedbytes.games.ffb.FieldCoordinate;
+import com.balancedbytes.games.ffb.InjuryType;
+import com.balancedbytes.games.ffb.Player;
+import com.balancedbytes.games.ffb.PlayerState;
+import com.balancedbytes.games.ffb.bytearray.ByteArray;
+import com.balancedbytes.games.ffb.bytearray.ByteList;
+import com.balancedbytes.games.ffb.model.Animation;
+import com.balancedbytes.games.ffb.model.Game;
+import com.balancedbytes.games.ffb.net.NetCommand;
+import com.balancedbytes.games.ffb.server.GameState;
+import com.balancedbytes.games.ffb.server.InjuryResult;
+import com.balancedbytes.games.ffb.server.step.AbstractStep;
+import com.balancedbytes.games.ffb.server.step.StepAction;
+import com.balancedbytes.games.ffb.server.step.StepCommandStatus;
+import com.balancedbytes.games.ffb.server.step.StepException;
+import com.balancedbytes.games.ffb.server.step.StepId;
+import com.balancedbytes.games.ffb.server.step.StepParameter;
+import com.balancedbytes.games.ffb.server.step.StepParameterKey;
+import com.balancedbytes.games.ffb.server.step.StepParameterSet;
+import com.balancedbytes.games.ffb.server.step.action.common.ApothecaryMode;
+import com.balancedbytes.games.ffb.server.util.UtilGame;
+import com.balancedbytes.games.ffb.server.util.UtilInjury;
+
+/**
+ * Step in ttm sequence to scatter the thrown player.
+ * 
+ * Needs to be initialized with stepParameter THROWN_PLAYER_ID.
+ * Needs to be initialized with stepParameter THROWN_PLAYER_STATE.
+ * Needs to be initialized with stepParameter THROWN_PLAYER_HAS_BALL.
+ * Needs to be initialized with stepParameter THROWN_PLAYER_COORDINATE.
+ * Needs to be initialized with stepParameter THROW_SCATTER.
+ * 
+ * Sets stepParameter CATCH_SCATTER_THROW_IN_MODE for all steps on the stack.
+ * Sets stepParameter END_TURN for all steps on the stack.
+ * Sets stepParameter INJURY_RESULT for all steps on the stack.
+ * Sets stepParameter THROWIN_COORDINATE for all steps on the stack.
+ * Sets stepParameter THROWN_PLAYER_ID for all steps on the stack.
+ * Sets stepParameter THROWN_PLAYER_STATE for all steps on the stack.
+ * Sets stepParameter THROWN_PLAYER_HAS_BALL for all steps on the stack.
+ * Sets stepParameter THROWN_PLAYER_COORDINATE for all steps on the stack.
+ * 
+ * @author Kalimar
+ */
+public final class StepInitScatterPlayer extends AbstractStep {
+
+	protected String fThrownPlayerId;
+	protected PlayerState fThrownPlayerState;
+	protected boolean fThrownPlayerHasBall;
+	protected FieldCoordinate fThrownPlayerCoordinate;
+	protected boolean fThrowScatter;
+
+	public StepInitScatterPlayer(GameState pGameState) {
+		super(pGameState);
+	}
+	
+	public StepId getId() {
+		return StepId.INIT_SCATTER_PLAYER;
+	}
+	
+  @Override
+  public void init(StepParameterSet pParameterSet) {
+  	if (pParameterSet != null) {
+  		for (StepParameter parameter : pParameterSet.values()) {
+  			switch (parameter.getKey()) {
+  			  // mandatory
+  				case THROWN_PLAYER_ID:
+  					fThrownPlayerId = (String) parameter.getValue();
+  					break;
+  			  // mandatory
+  				case THROWN_PLAYER_HAS_BALL:
+  					fThrownPlayerHasBall = (parameter.getValue() != null) ? (Boolean) parameter.getValue() : false;
+  					break;
+  			  // mandatory
+  				case THROWN_PLAYER_COORDINATE:
+  					fThrownPlayerCoordinate = (FieldCoordinate) parameter.getValue();
+  					break;
+  			  // mandatory
+  				case THROWN_PLAYER_STATE:
+  					fThrownPlayerState = (PlayerState) parameter.getValue();
+  					break;
+  			  // mandatory
+  				case THROW_SCATTER:
+  					fThrowScatter = (parameter.getValue() != null) ? (Boolean) parameter.getValue() : false;
+  					break;
+					default:
+						break;
+  			}
+  		}
+  	}
+  	if (fThrownPlayerState == null) {
+			throw new StepException("StepParameter " + StepParameterKey.THROWN_PLAYER_STATE + " is not initialized.");
+  	}
+  	if (fThrownPlayerId == null) {
+			throw new StepException("StepParameter " + StepParameterKey.THROWN_PLAYER_ID + " is not initialized.");
+  	}
+  	if (fThrownPlayerCoordinate == null) {
+			throw new StepException("StepParameter " + StepParameterKey.THROWN_PLAYER_COORDINATE + " is not initialized.");
+  	}
+  }
+	
+	@Override
+	public void start() {
+		super.start();
+		executeStep();
+	}
+	
+	@Override
+	public StepCommandStatus handleNetCommand(NetCommand pNetCommand) {
+		StepCommandStatus commandStatus = super.handleNetCommand(pNetCommand);
+		if (commandStatus == StepCommandStatus.EXECUTE_STEP) {
+			executeStep();
+		}
+		return commandStatus;
+	}
+
+	private void executeStep() {
+    Game game = getGameState().getGame();
+    Player thrownPlayer = game.getPlayerById(fThrownPlayerId);
+    if ((thrownPlayer == null) || (fThrownPlayerCoordinate == null))  {
+    	getResult().setNextAction(StepAction.NEXT_STEP);
+    	return;
+    }
+    FieldCoordinate startCoordinate = fThrownPlayerCoordinate;
+    if (fThrowScatter) {
+    	game.getFieldModel().setRangeRuler(null);
+	    game.getFieldModel().clearMoveSquares();
+	    startCoordinate = game.getPassCoordinate();
+    }
+    UtilThrowTeamMateSequence.ScatterResult scatterResult = UtilThrowTeamMateSequence.scatterPlayer(this, startCoordinate, fThrowScatter);
+    FieldCoordinate endCoordinate = scatterResult.getLastValidCoordinate();
+    Player playerLandedUpon = null;
+    if (scatterResult.isInBounds()) {
+      playerLandedUpon = game.getFieldModel().getPlayer(endCoordinate);
+      if (playerLandedUpon != null) {
+      	InjuryResult injuryResultHitPlayer = UtilInjury.handleInjury(this, InjuryType.TTM_HIT_PLAYER, null, playerLandedUpon, endCoordinate, null, ApothecaryMode.HIT_PLAYER);
+      	publishParameter(new StepParameter(StepParameterKey.INJURY_RESULT, injuryResultHitPlayer));
+        if ((game.isHomePlaying() && game.getTeamHome().hasPlayer(playerLandedUpon)) || (!game.isHomePlaying() && game.getTeamAway().hasPlayer(playerLandedUpon))) {
+        	publishParameter(new StepParameter(StepParameterKey.END_TURN, true));
+        }
+        // continue loop in end step
+        publishParameter(new StepParameter(StepParameterKey.THROWN_PLAYER_COORDINATE, endCoordinate));
+      } else {
+      	// put thrown player in target coordinate (ball we be handled in right stuff step), end loop
+      	game.getFieldModel().setPlayerCoordinate(thrownPlayer, endCoordinate);
+      	game.getFieldModel().setPlayerState(thrownPlayer, fThrownPlayerState);
+      	game.setDefenderId(null);
+        publishParameter(new StepParameter(StepParameterKey.THROWN_PLAYER_COORDINATE, null));
+      }
+    } else {
+    	// throw player out of bounds
+    	game.getFieldModel().setPlayerState(thrownPlayer, new PlayerState(PlayerState.FALLING));
+      InjuryResult injuryResultThrownPlayer = UtilInjury.handleInjury(this, InjuryType.CROWDPUSH, null, thrownPlayer, endCoordinate, null, ApothecaryMode.THROWN_PLAYER);
+      publishParameter(new StepParameter(StepParameterKey.INJURY_RESULT, injuryResultThrownPlayer));
+      if (fThrownPlayerHasBall) {
+      	publishParameter(new StepParameter(StepParameterKey.CATCH_SCATTER_THROW_IN_MODE, CatchScatterThrowInMode.THROW_IN));
+      	publishParameter(new StepParameter(StepParameterKey.THROW_IN_COORDINATE, endCoordinate));
+      	publishParameter(new StepParameter(StepParameterKey.END_TURN, true));
+      }
+      // end loop
+      publishParameter(new StepParameter(StepParameterKey.THROWN_PLAYER_COORDINATE, null));
+    }
+    publishParameter(new StepParameter(StepParameterKey.THROWN_PLAYER_ID, fThrownPlayerId));
+    publishParameter(new StepParameter(StepParameterKey.THROWN_PLAYER_STATE, fThrownPlayerState));
+    publishParameter(new StepParameter(StepParameterKey.THROWN_PLAYER_HAS_BALL, fThrownPlayerHasBall));
+    getResult().setAnimation(new Animation(fThrownPlayerCoordinate, endCoordinate, fThrownPlayerId, fThrownPlayerHasBall));
+    if (playerLandedUpon != null) {
+    	UtilGame.syncGameModel(this);
+      publishParameters(UtilInjury.dropPlayer(this, playerLandedUpon));
+    }
+    getResult().setNextAction(StepAction.NEXT_STEP);
+  }
+	
+  public int getByteArraySerializationVersion() {
+  	return 1;
+  }
+
+  @Override
+  public void addTo(ByteList pByteList) {
+  	super.addTo(pByteList);
+  	pByteList.addString(fThrownPlayerId);
+  	pByteList.addSmallInt((fThrownPlayerState != null) ? fThrownPlayerState.getId() : 0);
+  	pByteList.addBoolean(fThrownPlayerHasBall);
+  	pByteList.addFieldCoordinate(fThrownPlayerCoordinate);
+  	pByteList.addBoolean(fThrowScatter);
+  }
+  
+  @Override
+  public int initFrom(ByteArray pByteArray) {
+  	int byteArraySerializationVersion = super.initFrom(pByteArray);
+  	fThrownPlayerId = pByteArray.getString();
+  	fThrownPlayerState = new PlayerState(pByteArray.getSmallInt());
+  	fThrownPlayerHasBall = pByteArray.getBoolean();
+  	fThrownPlayerCoordinate = pByteArray.getFieldCoordinate();
+  	fThrowScatter = pByteArray.getBoolean();
+  	return byteArraySerializationVersion;
+  }
+
+}

@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<team id="teamWoodElfHangar18">
+
+  <coach>Hangar18</coach>
+  <name>Hangar18's Wood Elves</name>
+  <race>Wood Elf</race>
+  <rosterId>woodelf.lrb6</rosterId>
+  <reRolls>3</reRolls>
+  <fanFactor>8</fanFactor>
+  <apothecaries>2</apothecaries>
+  <teamRating>100</teamRating>
+  <teamStrength>113</teamStrength>
+  <division>[X]</division>
+
+  <player nr="1" id="teamWoodElfHangar181">
+  	<name>Wardancer1</name>
+  	<gender>male</gender>
+  	<positionId>woodelf.wardancer</positionId>
+  	<skillList>
+  	  <skill>Strip Ball</skill>
+	  <skill>Leader</skill>
+  	</skillList>
+  </player>
+
+  <player nr="2" id="teamWoodElfHangar182">
+  	<name>Wardancer2</name>
+  	<gender>male</gender>
+  	<positionId>woodelf.wardancer</positionId>
+    <skillList>
+      <skill>Strip Ball</skill>
+    </skillList>
+  </player>
+
+  <player nr="3" id="teamWoodElfHangar183">
+  	<name>Catcher1</name>
+  	<gender>male</gender>
+  	<positionId>woodelf.catcher</positionId>
+  	<skillList />
+  </player>
+
+  <player nr="4" id="teamWoodElfHangar184">
+  	<name>Catcher2</name>
+  	<gender>male</gender>
+  	<positionId>woodelf.catcher</positionId>
+  	<skillList />
+  </player>
+
+  <player nr="5" id="teamWoodElfHangar185">
+    <name>Thrower1</name>
+  	<gender>male</gender>
+  	<positionId>woodelf.thrower</positionId>
+  	<skillList />
+  </player>
+	
+  <player nr="6" id="teamWoodElfHangar186">
+    <name>Thrower2</name>
+  	<gender>male</gender>
+  	<positionId>woodelf.thrower</positionId>
+  	<skillList />
+  </player>
+
+  <player nr="7" id="teamWoodElfHangar187">
+    <name>Lineman1</name>
+  	<gender>male</gender>
+  	<positionId>woodelf.lineman</positionId>
+  	<skillList />
+  </player>
+
+  <player nr="8" id="teamWoodElfHangar188">
+    <name>Lineman2</name>
+  	<gender>male</gender>
+  	<positionId>woodelf.lineman</positionId>
+  	<skillList />
+  </player>
+
+  <player nr="9" id="teamWoodElfHangar189">
+    <name>Lineman3</name>
+  	<gender>male</gender>
+  	<positionId>woodelf.lineman</positionId>
+  	<skillList />
+  </player>
+
+  <player nr="10" id="teamWoodElfHangar1810">
+    <name>Lineman4</name>
+  	<gender>male</gender>
+  	<positionId>woodelf.lineman</positionId>
+  	<skillList />
+  </player>
+
+  <player nr="11" id="teamWoodElfHangar1811">
+    <name>Lineman5</name>
+  	<gender>male</gender>
+  	<positionId>woodelf.lineman</positionId>
+  	<skillList />
+  </player>
+
+  <player nr="12" id="teamWoodElfHangar1812">
+    <name>Treeman</name>
+  	<gender>male</gender>
+  	<positionId>woodelf.treeman</positionId>
+  	<skillList />
+  </player>
+
+</team>

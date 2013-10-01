@@ -1,0 +1,163 @@
+package com.balancedbytes.games.ffb.server.step.game.end;
+
+import com.balancedbytes.games.ffb.ReRolledAction;
+import com.balancedbytes.games.ffb.bytearray.ByteArray;
+import com.balancedbytes.games.ffb.bytearray.ByteList;
+import com.balancedbytes.games.ffb.dialog.DialogWinningsReRollParameter;
+import com.balancedbytes.games.ffb.model.Game;
+import com.balancedbytes.games.ffb.model.GameResult;
+import com.balancedbytes.games.ffb.net.NetCommand;
+import com.balancedbytes.games.ffb.report.ReportWinningsRoll;
+import com.balancedbytes.games.ffb.server.GameState;
+import com.balancedbytes.games.ffb.server.step.AbstractStepWithReRoll;
+import com.balancedbytes.games.ffb.server.step.StepAction;
+import com.balancedbytes.games.ffb.server.step.StepCommandStatus;
+import com.balancedbytes.games.ffb.server.step.StepId;
+import com.balancedbytes.games.ffb.server.step.StepParameter;
+import com.balancedbytes.games.ffb.server.step.StepParameterSet;
+import com.balancedbytes.games.ffb.server.util.UtilDialog;
+import com.balancedbytes.games.ffb.util.UtilPlayer;
+
+/**
+ * Step in end game sequence to roll winnings.
+ * 
+ * Needs to be initialized with stepParameter AUTOMATIC_RE_ROLL.
+ * 
+ * @author Kalimar
+ */
+public final class StepWinnings extends AbstractStepWithReRoll {
+	
+	private boolean fAutomaticReRoll;
+
+	public StepWinnings(GameState pGameState) {
+		super(pGameState);
+	}
+
+	public StepId getId() {
+		return StepId.WINNINGS;
+	}
+	
+  @Override
+  public void init(StepParameterSet pParameterSet) {
+  	if (pParameterSet != null) {
+  		for (StepParameter parameter : pParameterSet.values()) {
+  			switch (parameter.getKey()) {
+  				// mandatory
+  				case AUTOMATIC_RE_ROLL:
+  					fAutomaticReRoll = (parameter.getValue() != null) ? (Boolean) parameter.getValue() : false;
+  					break;
+					default:
+						break;
+  			}
+  		}
+  	}
+  }
+
+	@Override
+	public void start() {
+		super.start();
+		executeStep();
+	}
+	
+	@Override
+	public StepCommandStatus handleNetCommand(NetCommand pNetCommand) {
+		StepCommandStatus commandStatus = super.handleNetCommand(pNetCommand);
+		if (commandStatus == StepCommandStatus.EXECUTE_STEP) {
+			executeStep();
+		}
+		return commandStatus;
+	}
+
+  private void executeStep() {
+    UtilDialog.hideDialog(getGameState());
+    Game game = getGameState().getGame();
+    if ((getReRolledAction() == null) || ((getReRolledAction() == ReRolledAction.WINNINGS) && (getReRollSource() != null))) {
+      ReportWinningsRoll reportWinnings = rollWinnings();
+      if (fAutomaticReRoll) {
+      	// roll winnings, reroll on a 1 or 2 -->
+        GameResult gameResult = game.getGameResult();
+        int scoreDiffHome = gameResult.getTeamResultHome().getScore() - gameResult.getTeamResultAway().getScore();
+        if (((scoreDiffHome > 0) && (reportWinnings.getRollHome() < 3)) || ((scoreDiffHome < 0) && (reportWinnings.getRollAway() < 3))) {
+        	reportWinnings = rollWinnings();
+        }
+        // <--
+      	UtilDialog.hideDialog(getGameState());
+      }
+      getResult().addReport(rollWinnings());
+    }
+    if (game.getDialogParameter() == null) {
+      getResult().addReport(concedeWinnings());
+      getResult().setNextAction(StepAction.NEXT_STEP);
+    }
+  }
+  
+  private ReportWinningsRoll rollWinnings() {
+    Game game = getGameState().getGame();
+    GameResult gameResult = game.getGameResult(); 
+    int scoreDiffHome = gameResult.getTeamResultHome().getScore() - gameResult.getTeamResultAway().getScore();
+    int winningsHome = 0;
+    int rollHome = 0;
+    if ((getReRolledAction() == null) || (scoreDiffHome > 0)) {
+      rollHome = getGameState().getDiceRoller().rollWinnings();
+      winningsHome = rollHome + gameResult.getTeamResultHome().getFame();
+      if (scoreDiffHome >= 0) {
+        winningsHome++;
+      }
+      gameResult.getTeamResultHome().setWinnings(winningsHome * 10000);
+    }
+    int winningsAway = 0;
+    int rollAway = 0;
+    if ((getReRolledAction() == null) || (scoreDiffHome < 0)) {
+      rollAway = getGameState().getDiceRoller().rollWinnings();
+      winningsAway = rollAway + gameResult.getTeamResultAway().getFame();
+      if (scoreDiffHome <= 0) {
+        winningsAway++;
+      }
+      gameResult.getTeamResultAway().setWinnings(winningsAway * 10000);
+    }
+    if (getReRolledAction() == null) {
+      if (scoreDiffHome > 0) {
+        UtilDialog.showDialog(getGameState(), new DialogWinningsReRollParameter(game.getTeamHome().getId(), rollHome));
+      }
+      if (scoreDiffHome < 0) {
+        UtilDialog.showDialog(getGameState(), new DialogWinningsReRollParameter(game.getTeamAway().getId(), rollAway));
+      }
+    }
+    return new ReportWinningsRoll(rollHome, gameResult.getTeamResultHome().getWinnings(), rollAway, gameResult.getTeamResultAway().getWinnings());
+  }
+  
+  private ReportWinningsRoll concedeWinnings() {
+    ReportWinningsRoll report = null;
+    Game game = getGameState().getGame();
+    GameResult gameResult = game.getGameResult(); 
+    if (gameResult.getTeamResultHome().hasConceded() && (UtilPlayer.findPlayersInReserveOrField(game, game.getTeamHome()).length > 2)) {
+      gameResult.getTeamResultAway().setWinnings(gameResult.getTeamResultAway().getWinnings() + gameResult.getTeamResultHome().getWinnings());
+      gameResult.getTeamResultHome().setWinnings(0);
+      report = new ReportWinningsRoll(0, gameResult.getTeamResultHome().getWinnings(), 0, gameResult.getTeamResultAway().getWinnings());
+    }
+    if (gameResult.getTeamResultAway().hasConceded() && (UtilPlayer.findPlayersInReserveOrField(game, game.getTeamAway()).length > 2)) {
+      gameResult.getTeamResultHome().setWinnings(gameResult.getTeamResultHome().getWinnings() + gameResult.getTeamResultAway().getWinnings());
+      gameResult.getTeamResultAway().setWinnings(0);
+      report = new ReportWinningsRoll(0, gameResult.getTeamResultHome().getWinnings(), 0, gameResult.getTeamResultAway().getWinnings());
+    }
+    return report;
+  }
+
+	public int getByteArraySerializationVersion() {
+		return 1;
+	}
+	
+  @Override
+  public void addTo(ByteList pByteList) {
+  	super.addTo(pByteList);
+  	pByteList.addBoolean(fAutomaticReRoll);
+  }
+  
+  @Override
+  public int initFrom(ByteArray pByteArray) {
+  	int byteArraySerializationVersion = super.initFrom(pByteArray);
+  	fAutomaticReRoll = pByteArray.getBoolean();
+  	return byteArraySerializationVersion;
+  }
+
+}

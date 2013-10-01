@@ -1,0 +1,280 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<roster id="ogre.lrb5">
+
+  <name>Ogre</name>
+  <type>Regular</type>
+  <reRollCost>70000</reRollCost>
+  <maxReRolls>8</maxReRolls>
+  <baseIconPath>http://localhost:2224/icons/players/ogre/</baseIconPath>
+  
+	<position id="ogre.snotling">
+		<quantity>16</quantity>
+		<name>Snotling</name>
+		<shorthand>S</shorthand>
+		<type>Regular</type>
+		<cost>20000</cost>
+		<movement>5</movement>
+		<strength>1</strength>
+		<agility>3</agility>
+		<armour>5</armour>
+		<iconList>
+			<portrait/>
+			<home standing="Snotling1.gif" moving="Snotling1an.gif"/>
+			<away standing="Snotling1b.gif" moving="Snotling1ban.gif"/>
+			<home standing="Snotling2.gif" moving="Snotling2an.gif"/>
+			<away standing="Snotling2b.gif" moving="Snotling2ban.gif"/>
+			<home standing="Snotling3.gif" moving="Snotling3an.gif"/>
+			<away standing="Snotling3b.gif" moving="Snotling3ban.gif"/>
+			<home standing="Snotling4.gif" moving="Snotling4an.gif"/>
+			<away standing="Snotling4b.gif" moving="Snotling4ban.gif"/>
+			<home standing="Snotling5.gif" moving="Snotling5an.gif"/>
+			<away standing="Snotling5b.gif" moving="Snotling5ban.gif"/>
+			<home standing="Snotling6.gif" moving="Snotling6an.gif"/>
+			<away standing="Snotling6b.gif" moving="Snotling6ban.gif"/>
+			<home standing="Snotling7.gif" moving="Snotling7an.gif"/>
+			<away standing="Snotling7b.gif" moving="Snotling7ban.gif"/>
+			<home standing="Snotling8.gif" moving="Snotling8an.gif"/>
+			<away standing="Snotling8b.gif" moving="Snotling8ban.gif"/>
+			<home standing="Snotling9.gif" moving="Snotling9an.gif"/>
+			<away standing="Snotling9b.gif" moving="Snotling9ban.gif"/>
+			<home standing="Snotling10.gif" moving="Snotling10an.gif"/>
+			<away standing="Snotling10b.gif" moving="Snotling10ban.gif"/>
+			<home standing="Snotling11.gif" moving="Snotling11an.gif"/>
+			<away standing="Snotling11b.gif" moving="Snotling11ban.gif"/>
+			<home standing="Snotling12.gif" moving="Snotling12an.gif"/>
+			<away standing="Snotling12b.gif" moving="Snotling12ban.gif"/>
+		</iconList>
+		<skillList>
+			<skill>Dodge</skill>
+			<skill>Right Stuff</skill>
+			<skill>Side Step</skill>
+			<skill>Stunty</skill>
+			<skill>Titchy</skill>
+		</skillList>
+		<skillCategoryList>
+			<normal>Agility</normal>
+			<double>General</double>
+			<double>Strength</double>
+			<double>Passing</double>
+		</skillCategoryList>
+	</position>
+
+	<position id="ogre.ogre">
+		<quantity>6</quantity>
+		<name>Ogre</name>
+		<shorthand>O</shorthand>
+		<type>Regular</type>
+		<cost>140000</cost>
+		<movement>5</movement>
+		<strength>5</strength>
+		<agility>2</agility>
+		<armour>9</armour>
+		<iconList>
+			<portrait/>
+			<home standing="ogre1.gif" moving="ogre1an.gif"/>
+			<away standing="ogre1b.gif" moving="ogre1ban.gif"/>
+			<home standing="ogre2.gif" moving="ogre2an.gif"/>
+			<away standing="ogre2b.gif" moving="ogre2ban.gif"/>
+			<home standing="ogre3.gif" moving="ogre3an.gif"/>
+			<away standing="ogre3b.gif" moving="ogre3ban.gif"/>
+			<home standing="ogre4.gif" moving="ogre4an.gif"/>
+			<away standing="ogre4b.gif" moving="ogre4ban.gif"/>
+	    <home standing="ogre5.gif" moving="ogre5an.gif"/>
+	    <away standing="ogre5b.gif" moving="ogre5ban.gif"/>
+	    <home standing="ogre6.gif" moving="ogre6an.gif"/>
+	    <away standing="ogre6b.gif" moving="ogre6ban.gif"/>
+		</iconList>
+		<skillList>
+			<skill>Bone-head</skill>
+			<skill>Mighty Blow</skill>
+			<skill>Thick Skull</skill>
+			<skill>Throw Team-Mate</skill>
+		</skillList>
+		<skillCategoryList>
+			<normal>Strength</normal>
+			<double>Agility</double>
+			<double>General</double>
+			<double>Passing</double>
+		</skillCategoryList>
+	</position>
+
+	<position id="ogre.Dribblesnot">
+		<quantity>1</quantity>
+		<name>Bomber Dribblesnot</name>
+		<shorthand>BD</shorthand>
+		<type>Star</type>
+		<cost>60000</cost>
+		<movement>6</movement>
+		<strength>2</strength>
+		<agility>3</agility>
+		<armour>7</armour>
+    <iconList baseIconPath="../stars/">
+			<portrait/>
+			<home standing="Bomber_Dribblesnot.gif" moving="Bomber_Dribblesnot_an.gif"/>
+			<away standing="Bomber_Dribblesnot_b.gif"  moving="Bomber_Dribblesnot_ban.gif"/>
+		</iconList>
+		<skillList>
+			<skill>Loner</skill>
+			<skill>Accurate</skill>
+			<skill>Bombardier</skill>
+			<skill>Dodge</skill>
+			<skill>Right Stuff</skill>
+			<skill>Secret Weapon</skill>
+			<skill>Stunty</skill>
+		</skillList>
+	</position>
+
+	<position id="ogre.Nobbla">
+		<quantity>1</quantity>
+		<name>Nobbla Blackwart</name>
+		<shorthand>NB</shorthand>
+		<type>Star</type>
+		<cost>130000</cost>
+		<movement>6</movement>
+		<strength>2</strength>
+		<agility>3</agility>
+		<armour>7</armour>
+    <iconList baseIconPath="../stars/">
+			<portrait/>
+			<home standing="Nobbla_Blackwart.gif" moving="Nobbla_Blackwart_an.gif"/>
+			<away standing="Nobbla_Blackwart_b.gif"  moving="Nobbla_Blackwart_ban.gif"/>
+		</iconList>
+		<skillList>
+			<skill>Loner</skill>
+			<skill>Block</skill>
+			<skill>Dodge</skill>
+			<skill>Chainsaw</skill>
+			<skill>Secret Weapon</skill>
+			<skill>Stunty</skill>
+		</skillList>
+	</position>
+
+	<position id="ogre.Scrappa">
+		<quantity>1</quantity>
+		<name>Scrappa Sorehead</name>
+		<shorthand>SS</shorthand>
+		<type>Star</type>
+		<cost>150000</cost>
+		<movement>7</movement>
+		<strength>2</strength>
+		<agility>3</agility>
+		<armour>7</armour>
+    <iconList baseIconPath="../stars/">
+			<portrait/>
+			<home standing="Scrappa_Sorehead.gif" moving="Scrappa_Sorehead_an.gif"/>
+			<away standing="Scrappa_Sorehead_b.gif"  moving="Scrappa_Sorehead_ban.gif"/>
+		</iconList>
+		<skillList>
+			<skill>Loner</skill>
+			<skill>Dirty Player</skill>
+			<skill>Dodge</skill>
+			<skill>Leap</skill>
+			<skill>Right Stuff</skill>
+			<skill>Sprint</skill>
+			<skill>Stunty</skill>
+			<skill>Sure Feet</skill>
+			<skill>Very Long Legs</skill>
+		</skillList>
+	</position>
+
+	<position id="ogre.Bigfist">
+		<quantity>1</quantity>
+		<name>Bertha Bigfist</name>
+		<shorthand>BB</shorthand>
+		<type>Star</type>
+		<cost>290000</cost>
+		<movement>6</movement>
+		<strength>5</strength>
+		<agility>2</agility>
+		<armour>9</armour>
+    <iconList baseIconPath="../stars/">
+			<portrait/>
+			<home standing="Bertha_Bigfist.gif" moving="Bertha_Bigfist_an.gif"/>
+			<away standing="Bertha_Bigfist_b.gif"  moving="Bertha_Bigfist_ban.gif"/>
+		</iconList>
+		<skillList>
+			<skill>Loner</skill>
+			<skill>Bone-Head</skill>
+			<skill>Break Tackle</skill>
+			<skill>Dodge</skill>
+			<skill>Mighty Blow</skill>
+			<skill>Thick Skull</skill>
+			<skill>Throw Team-Mate</skill>
+		</skillList>
+	</position>
+
+	<position id="ogre.Farth">
+		<quantity>1</quantity>
+		<name>Brick Far'th</name>
+		<shorthand>BF</shorthand>
+		<type>Star</type>
+		<cost>290000</cost>
+		<movement>5</movement>
+		<strength>5</strength>
+		<agility>2</agility>
+		<armour>9</armour>
+    <iconList baseIconPath="../stars/">
+			<portrait/>
+			<home standing="Brick_Farth.gif" moving="Brick_Farth_an.gif"/>
+			<away standing="Brick_Farth_b.gif"  moving="Brick_Farth_ban.gif"/>
+		</iconList>
+		<skillList>
+			<skill>Loner</skill>
+			<skill>Bone-Head</skill>
+			<skill>Mighty Blow</skill>
+			<skill>Nerves of Steel</skill>
+			<skill>Strong Arm</skill>
+			<skill>Thick Skull</skill>
+			<skill>Throw Team-Mate</skill>
+		</skillList>
+	</position>
+
+	<position id="ogre.Grotty">
+		<quantity>1</quantity>
+		<name>Grotty</name>
+		<shorthand>GY</shorthand>
+		<type>Star</type>
+		<cost>290000</cost>
+		<movement>6</movement>
+		<strength>2</strength>
+		<agility>4</agility>
+		<armour>7</armour>
+    <iconList baseIconPath="../stars/">
+			<portrait/>
+			<home standing="Grotty.gif" moving="Grotty_an.gif"/>
+			<away standing="Grotty_b.gif"  moving="Grotty_ban.gif"/>
+		</iconList>
+		<skillList>
+			<skill>Loner</skill>
+			<skill>Dodge</skill>
+			<skill>Right Stuff</skill>
+			<skill>Stunty</skill>
+		</skillList>
+	</position>
+
+	<position id="ogre.Morg">
+		<quantity>1</quantity>
+		<name>Morg 'n' Thorg</name>
+		<shorthand>MT</shorthand>
+		<type>Star</type>
+		<cost>430000</cost>
+		<movement>6</movement>
+		<strength>6</strength>
+		<agility>3</agility>
+		<armour>10</armour>
+    <iconList baseIconPath="../stars/">
+			<portrait/>
+			<home standing="morgnthorg.gif" moving="morgnthorg_an.gif"/>
+			<away standing="morgnthorg_b.gif"  moving="morgnthorg_ban.gif"/>
+		</iconList>
+		<skillList>
+			<skill>Loner</skill>
+			<skill>Block</skill>
+			<skill>Mighty Blow</skill>
+			<skill>Thick Skull</skill>
+			<skill>Throw Team-Mate</skill>
+		</skillList>
+	</position>
+
+</roster>

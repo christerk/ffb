@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<team id="teamDarkElfKalimar">
+
+  <coach>Kalimar</coach>
+  <name>Kalimar's Dark Elves</name>
+  <race>Dark Elf</race>
+  <rosterId>darkelf.lrb6</rosterId>
+  <reRolls>3</reRolls>
+  <fanFactor>8</fanFactor>
+  <apothecaries>1</apothecaries>
+  <teamRating>100</teamRating>
+  <teamStrength>99</teamStrength>
+  <division>[X]</division>
+
+  <player nr="1" id="teamDarkElfKalimar1">
+  	<name>Blitzer1</name>
+  	<gender>male</gender>
+  	<positionId>darkelf.blitzer</positionId>
+  	<skillList />
+  </player>
+
+  <player nr="2" id="teamDarkElfKalimar2">
+  	<name>Blitzer2</name>
+  	<gender>male</gender>
+  	<positionId>darkelf.blitzer</positionId>
+  	<skillList />
+  </player>
+
+  <player nr="3" id="teamDarkElfKalimar3">
+  	<name>Runner1</name>
+  	<gender>male</gender>
+  	<positionId>darkelf.runner</positionId>
+  	<skillList />
+  </player>
+
+  <player nr="4" id="teamDarkElfKalimar4">
+  	<name>Runner2</name>
+  	<gender>male</gender>
+  	<positionId>darkelf.runner</positionId>
+  	<skillList />
+  </player>
+
+  <player nr="5" id="teamDarkElfKalimar5">
+  	<name>Assassin1</name>
+  	<gender>male</gender>
+  	<positionId>darkelf.assassin</positionId>
+  	<skillList />
+  </player>
+
+  <player nr="6" id="teamDarkElfKalimar6">
+  	<name>Assassin2</name>
+  	<gender>male</gender>
+  	<positionId>darkelf.assassin</positionId>
+  	<skillList />
+  </player>
+
+  <player nr="7" id="teamDarkElfKalimar7">
+  	<name>Witch1</name>
+  	<gender>female</gender>
+  	<positionId>darkelf.witchelf</positionId>
+  	<skillList />
+  </player>
+
+  <player nr="8" id="teamDarkElfKalimar8">
+  	<name>Witch2</name>
+  	<gender>female</gender>
+  	<positionId>darkelf.witchelf</positionId>
+  	<skillList />
+  </player>
+
+  <player nr="9" id="teamDarkElfKalimar9">
+  	<name>Lineman1</name>
+  	<gender>male</gender>
+  	<positionId>darkelf.lineman</positionId>
+  	<skillList />
+  </player>
+
+  <player nr="10" id="teamDarkElfKalimar10">
+  	<name>Lineman2</name>
+  	<gender>male</gender>
+  	<positionId>darkelf.lineman</positionId>
+  	<skillList />
+  </player>
+
+  <player nr="11" id="teamDarkElfKalimar11">
+  	<name>Lineman3</name>
+  	<gender>male</gender>
+  	<positionId>darkelf.lineman</positionId>
+  	<skillList />
+  </player>
+
+  <player nr="12" id="teamDarkElfKalimar12">
+  	<name>Lineman4</name>
+  	<gender>male</gender>
+  	<positionId>darkelf.lineman</positionId>
+  	<skillList />
+  </player>
+  
+  <player nr="13" id="teamDarkElfKalimar13">
+  	<name>Lineman5</name>
+  	<gender>male</gender>
+  	<positionId>darkelf.lineman</positionId>
+  	<skillList />
+  </player>
+
+</team>

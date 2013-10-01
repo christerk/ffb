@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<team id="teamSkavenBattleLore">
+
+  <coach>BattleLore</coach>
+  <name>BattleLore's Skaven</name>
+  <race>Skaven</race>
+  <rosterId>skaven.lrb6</rosterId>
+  <reRolls>5</reRolls>
+  <fanFactor>9</fanFactor>
+  <apothecaries>1</apothecaries>
+  <teamRating>100</teamRating>
+  <teamStrength>117</teamStrength>
+  <division>[X]</division>
+
+  <player nr="1" id="teamSkavenBattleLore1">
+  	<name>RatOgre</name>
+  	<gender>male</gender>
+  	<positionId>skaven.ratogre</positionId>
+  	<skillList />
+  </player>
+
+  <player nr="2" id="teamSkavenBattleLore2">
+  	<name>Blitzer1</name>
+  	<gender>male</gender>
+  	<positionId>skaven.blitzer</positionId>
+  	<skillList />
+  </player>
+
+  <player nr="3" id="teamSkavenBattleLore3">
+  	<name>Blitzer2</name>
+  	<gender>male</gender>
+  	<positionId>skaven.blitzer</positionId>
+  	<skillList />
+  </player>
+
+  <player nr="4" id="teamSkavenBattleLore4">
+  	<name>GutterRunner1</name>
+  	<gender>male</gender>
+  	<positionId>skaven.gutterrunner</positionId>
+  	<skillList />
+  </player>
+
+  <player nr="5" id="teamSkavenBattleLore5">
+  	<name>GutterRunner1</name>
+  	<gender>male</gender>
+  	<positionId>skaven.gutterrunner</positionId>
+  	<skillList />
+  </player>
+	
+  <player nr="6" id="teamSkavenBattleLore6">
+  	<name>GutterRunner2</name>
+  	<gender>male</gender>
+  	<positionId>skaven.gutterrunner</positionId>
+  	<skillList />
+  </player>
+
+  <player nr="7" id="teamSkavenBattleLore7">
+  	<name>GutterRunner3</name>
+  	<gender>male</gender>
+  	<positionId>skaven.gutterrunner</positionId>
+  	<skillList />
+  </player>
+
+  <player nr="8" id="teamSkavenBattleLore8">
+    <name>Thrower1</name>
+  	<gender>male</gender>
+  	<positionId>skaven.thrower</positionId>
+  	<skillList />
+  </player>
+
+  <player nr="9" id="teamSkavenBattleLore9">
+    <name>Thrower2</name>
+  	<gender>male</gender>
+  	<positionId>skaven.thrower</positionId>
+  	<skillList />
+  </player>
+  
+  <!--
+
+  <player nr="10" id="teamSkavenBattleLore10">
+    <name>Linerat1</name>
+  	<gender>male</gender>
+  	<positionId>skaven.lineman</positionId>
+  	<skillList />
+  </player>
+
+  <player nr="11" id="teamSkavenBattleLore11">
+    <name>Linerat2</name>
+  	<gender>male</gender>
+  	<positionId>skaven.lineman</positionId>
+  	<skillList />
+  </player>
+
+  <player nr="12" id="teamSkavenBattleLore12">
+    <name>Linerat3</name>
+  	<gender>male</gender>
+  	<positionId>skaven.lineman</positionId>
+  	<skillList />
+  </player>
+
+  <player nr="13" id="teamSkavenBattleLore13">
+    <name>Linerat4</name>
+  	<gender>male</gender>
+  	<positionId>skaven.lineman</positionId>
+  	<skillList />
+  </player>
+
+  <player nr="14" id="teamSkavenBattleLore14">
+    <name>Linerat5</name>
+  	<gender>male</gender>
+  	<positionId>skaven.lineman</positionId>
+  	<skillList />
+  </player>
+
+  <player nr="15" id="teamSkavenBattleLore15">
+    <name>Linerat6</name>
+  	<gender>male</gender>
+  	<positionId>skaven.lineman</positionId>
+  	<skillList />
+  </player>
+  
+  -->
+
+</team>

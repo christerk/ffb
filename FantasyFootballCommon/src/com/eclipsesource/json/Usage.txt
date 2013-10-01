@@ -1,0 +1,110 @@
+Usage
+-----
+
+You can read a JSON object or array from a Reader or from a String:
+
+JsonObject jsonObject = JsonObject.readFrom( reader );
+JsonArray jsonArray = JsonArray.readFrom( string );
+
+Once you have a JsonObject, you can access its contents using the get() method:
+
+String name = jsonObject.get( "name" ).asString();
+int age = jsonObject.get( "age" ).asInt(); // asLong(), asDouble(), ...
+
+The elements of a JSON array can be accessed in a similar way:
+
+String name = jsonArray.get( 0 ).asString();
+int age = jsonArray.get( 1 ).asInt(); // asLong(), asDouble(), ...
+
+As you can see, the get() method always returns an instance of JsonValue,
+which can then be transformed to the target type using asString(), asInt(), asDouble(), etc.
+There’s no automatic conversion to Java types, no instanceof needed.
+If you’re not sure about the type of a value you can check it using isString(), isNumber(), etc.
+
+Nested arrays and objects can be accessed using asArray() and asObject():
+
+JsonArray nestedArray = jsonObject.get( "items" ).asArray();
+
+You can also iterate over the elements of an JsonArray and the names of a JsonObject, e.g.:
+
+for( String name : jsonObject.names() ) {
+  JsonValue value = jsonObject.get( name );
+  ...
+}
+
+Writing JSON
+
+A JsonObject or JsonArray can output JSON to a Writer or as a string using the toString() method.
+The JSON is currently not pretty-printed, formatting support might be added later.
+
+jsonObject.writeTo( writer );
+String json = jsonArray.toString();
+
+To create a JsonObject or a JsonArray, use the add() methods that exist for the relevant types.
+These methods return the object instance to allow method chaining:
+
+jsonObject = new JsonObject().add( "name", "John" ).add( "age", 23 );
+jsonArray = new JsonArray().add( "John" ).add( 23 );
+
+You may have noticed that also the object has an add() method instead of a put() or set().
+That’s because the JsonObject stores and writes its members in the order they are added.
+It allows you to define the output order, it even allows you to add the same key twice,
+which is discouraged but not forbidden by the JSON RFC.
+
+To replace an element in an array of object, you first have to remove() the old value
+and then add() the new one. A replace() method may be added later. However, JsonArray
+and JsonObject are designed to be containers for reading and writing JSON, not general
+purpose data structures.
+
+Discussion
+
+Aaron Digulla says:
+April 29, 2013 at 11:11
+
+Suggestion for an improvment: I hate String ids. In my own code, I do this:
+
+StringOption NAME = new StringOption( “name” );
+String name = jsonObject.get( NAME );
+IntOption AGE = new IntOption( “age” );
+int age = jsonObject.get( AGE );
+
+This works with a mix of generics and method overrides.
+In your case, method overrides should be enough. It also allows type checking when setting values.
+Since most IDs are constants, I can define them in a central place.
+As an additional bonus, I can easily find all places in the code where I’m accessing certain values.
+
+Ralf Sternberg says:
+April 30, 2013 at 21:17
+
+Thanks, that’s an interesting suggestion!
+This approach allows to keep the exception handling at a central place.
+However, since I intend to keep the parser really minimal,
+I’d prefer to keep these classes completely separated from the parser.
+
+For example, The XxxOption types could have a method to retrieve the value from a given JsonObject:
+
+int age = AGE.getFrom( jsonObject );
+
+For primitive types, how would you distinguish missing values from default ones?
+For example, what would be returned by
+
+int age = jsonObject.get( AGE );
+
+in case the object does not contain a member “age”?
+
+Aaron Digulla says:
+May 2, 2013 at 09:38
+
+Re keeping the parser minimal: That makes *your* life easier and make it more horrible for
+thousands of people … :-) Creating an easy-to-use API is more important than having a
+technically perfect API since consumers never care about perfection.
+They don’t feel pain if your code is a mess, they only feel the pains of their own code.
+
+That said, separating this API out will encourage ignorants to ignore it.
+Why bother creating accessor objects when you can use a String literal?
+
+Re primitives: I have two getters; one throws an MissingKeyException, the other returns
+the supplied default value.
+I also do this for reference types (like String).
+Returning null when a value is missing is convenient until someone refactors the code and suddenly,
+null values creep out of the local scope.

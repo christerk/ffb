@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<roster id="chaosdwarf.roster">
+
+<!--
+LRB 4.0
+
+0-12 Hobgoblins     40,000 6 3 3 7 None
+0-6  Chaos Dwarf    70,000 4 3 2 9 Block, Tackle, Thick Skull
+0-2  Bull Centaurs 130,000 6 4 2 9 Sprint, Sure Feet, Thick Skull
+
+Re-roll counter: 70,000 gold pieces each
+-->
+
+  <name>Chaos Dwarf</name>
+  <type>Regular</type>
+  <reroll_cost>70000</reroll_cost>	
+  <max_rerolls>8</max_rerolls>	
+
+  <position id="chaosdwarf.hobgoblin">
+  	<quantity>12</quantity>
+  	<name>Chaos Dwarf Hobgoblin</name>
+  	<type>Regular</type>
+  	<cost>40000</cost>
+    <movement>6</movement>
+    <strength>3</strength>
+    <agility>3</agility>
+    <armour>7</armour>
+    <icon-list>
+      <portrait>players/chaos_dwarf/cdHobgob.gif</portrait>
+      <home standing="players/chaos_dwarf/cdhobgoblin1.gif" moving="players/chaos_dwarf/cdhobgoblin1an.gif" />
+      <away standing="players/chaos_dwarf/cdhobgoblin1b.gif" moving="players/chaos_dwarf/cdhobgoblin1ban.gif" />
+      <home standing="players/chaos_dwarf/cdhobgoblin2.gif" moving="players/chaos_dwarf/cdhobgoblin2an.gif" />
+      <away standing="players/chaos_dwarf/cdhobgoblin2b.gif" moving="players/chaos_dwarf/cdhobgoblin2ban.gif" />
+      <home standing="players/chaos_dwarf/cdhobgoblin3.gif" moving="players/chaos_dwarf/cdhobgoblin3an.gif" />
+      <away standing="players/chaos_dwarf/cdhobgoblin3b.gif" moving="players/chaos_dwarf/cdhobgoblin3ban.gif" />
+      <home standing="players/chaos_dwarf/cdhobgoblin4.gif" moving="players/chaos_dwarf/cdhobgoblin4an.gif" />
+      <away standing="players/chaos_dwarf/cdhobgoblin4b.gif" moving="players/chaos_dwarf/cdhobgoblin4ban.gif" />
+    </icon-list>
+  	<skill-list />
+  	<skillcategory-list>
+      <normal>General Skill</normal>
+      <double>General Trait</double>
+      <double>Strength Skill</double>
+      <double>Agility Skill</double>
+      <double>Passing Skill</double>
+  	</skillcategory-list>
+  </position>
+
+  <position id="chaosdwarf.blocker">
+  	<quantity>6</quantity>
+  	<name>Chaos Dwarf Blocker</name>
+  	<type>Regular</type>
+  	<cost>70000</cost>
+    <movement>4</movement>
+    <strength>3</strength>
+    <agility>2</agility>
+    <armour>9</armour>
+    <icon-list>
+      <portrait>players/chaos_dwarf/cdBlocker.gif</portrait>
+      <home standing="players/chaos_dwarf/cddwarf1.gif" moving="players/chaos_dwarf/cddwarf1an.gif" />
+      <away standing="players/chaos_dwarf/cddwarf1b.gif" moving="players/chaos_dwarf/cddwarf1ban.gif" />
+      <home standing="players/chaos_dwarf/cddwarf2.gif" moving="players/chaos_dwarf/cddwarf2an.gif" />
+      <away standing="players/chaos_dwarf/cddwarf2b.gif" moving="players/chaos_dwarf/cddwarf2ban.gif" />
+      <home standing="players/chaos_dwarf/cddwarf3.gif" moving="players/chaos_dwarf/cddwarf3an.gif" />
+      <away standing="players/chaos_dwarf/cddwarf3b.gif" moving="players/chaos_dwarf/cddwarf3ban.gif" />
+      <home standing="players/chaos_dwarf/cddwarf4.gif" moving="players/chaos_dwarf/cddwarf4an.gif" />
+      <away standing="players/chaos_dwarf/cddwarf4b.gif" moving="players/chaos_dwarf/cddwarf4ban.gif" />
+    </icon-list>
+  	<skill-list>
+  	  <skill>Block</skill>
+  	  <skill>Tackle</skill>
+  	  <skill>Thick Skull</skill>
+  	</skill-list>
+  	<skillcategory-list>
+      <normal>General Skill</normal>
+      <normal>Strength Skill</normal>
+      <double>General Trait</double>
+      <double>Strength Trait</double>
+      <double>Agility Skill</double>
+      <double>Passing Skill</double>
+  	</skillcategory-list>
+  </position>
+
+  <position id="chaosdwarf.bullcentaur">
+  	<quantity>2</quantity>
+  	<name>Dwarf Blitzer</name>
+  	<type>Regular</type>
+  	<cost>130000</cost>
+    <movement>6</movement>
+    <strength>4</strength>
+    <agility>2</agility>
+    <armour>9</armour>
+    <icon-list>
+      <portrait>players/chaos_dwarf/cdBull.gif</portrait>
+      <home standing="players/chaos_dwarf/centaur1.gif" moving="players/chaos_dwarf/centaur1an.gif" />
+      <away standing="players/chaos_dwarf/centaur1b.gif" moving="players/chaos_dwarf/centaur1ban.gif" />
+      <home standing="players/chaos_dwarf/centaur2.gif" moving="players/chaos_dwarf/centaur2an.gif" />
+      <away standing="players/chaos_dwarf/centaur2b.gif" moving="players/chaos_dwarf/centaur2ban.gif" />
+    </icon-list>
+  	<skill-list>
+  	  <skill>Sprint</skill>
+  	  <skill>Sure Feet</skill>
+  	  <skill>Thick Skull</skill>
+  	</skill-list>
+  	<skillcategory-list>
+      <normal>General Skill</normal>
+      <normal>Strength Skill</normal>
+      <double>General Trait</double>
+      <double>Strength Trait</double>
+      <double>Agility Skill</double>
+      <double>Passing Skill</double>
+  	</skillcategory-list>
+  </position>
+
+</roster>

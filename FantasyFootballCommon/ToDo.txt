@@ -1,0 +1,41 @@
+
+Christer uses mySql 5.0.60-r1
+
+I found an instance of an invalid XML from the FFB server that's causing a result to not be pushed through.
+<inducement type="starPlayer" value=""Big" Pudwick" />
+The quotes in the name of the player are not properly converted into XML entities, which breaks the parsing on the FUMBBL side.
+
+Birthday Zombies:
+
+start date: Jan 3rd and a few on jan 4th
+
+Fixing old replays:
+
+Ich:  i'm asking you for a roster for a team id
+ Christer:  Right, you'd have to change that to requesting for the roster id again
+so, the process would be:
+1. FFB requests the team
+2. FUMBBL generates the team XML
+3. FUMBBL generates the roster XML at the same time
+4. FUMBBL does the hash, and if the hash doesn't exist in the history table, it stores the XML
+5. FFB receives the team XML with the hash as a roster id
+ Ich:  ok. i see. i need to change the persisted roster id for the old replays though. to include the zombies. no?
+ Christer:  6. FFB requests the roster with the hash
+ 
+i can add a column to save the roster id with each position
+if empty it refers to the team roster id
+ Christer:  yeah, that'd work
+ Ich:  we need to fix special players then, also
+as i no longer ask for roster with team id then
+ Christer:  I can provide the roster they're defined in.
+
+- handle "Get the Ref" Bribes
+- test "Raise the Dead" and "Nurgle's Rot" in replays
+
+- 30 pixel less vertical screen size (taskbar), or more -> see Whatball about background
+- add new option pilingOnBanOnDouble
+- Pro-Reroll for movement of ball&chain?
+
+- problem: get rid of game.getDefenderAction() ?
+- problem: pass block on dumpOff -> need game.getAttacker() to let ActingPlayer remain standing?
+	

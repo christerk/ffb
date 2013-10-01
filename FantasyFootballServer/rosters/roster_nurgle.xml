@@ -1,0 +1,311 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<roster id="nurgle.lrb6">
+
+  <name>Nurgle</name>
+  <type>Regular</type>
+  <reRollCost>70000</reRollCost>
+  <maxReRolls>8</maxReRolls>
+  <baseIconPath>http://localhost:2224/icons/players/nurgle/</baseIconPath>
+  <raisedPositionId>nurgle.rotter</raisedPositionId>  
+  
+  <position id="nurgle.rotter">
+    <quantity>16</quantity>
+    <name>Rotter</name>
+    <shorthand>R</shorthand>
+    <type>Regular</type>
+    <cost>40000</cost>
+    <movement>5</movement>
+    <strength>3</strength>
+    <agility>3</agility>
+    <armour>8</armour>
+    <iconList>
+      <portrait>portrait_nurgle_rotter.png</portrait>
+      <home standing="rotter1.gif" moving="rotter1an.gif"/>
+      <away standing="rotter1b.gif" moving="rotter1ban.gif"/>
+    </iconList>
+    <skillList>
+      <skill>Decay</skill>
+      <skill>Nurgle's Rot</skill>
+    </skillList>
+    <skillCategoryList>
+      <normal>General</normal>
+      <normal>Mutation</normal>
+      <double>Agility</double>
+      <double>Strength</double>
+      <double>Passing</double>
+    </skillCategoryList>
+  </position>
+  
+  <position id="nurgle.pestigor">
+    <quantity>4</quantity>
+    <name>Pestigor</name>
+    <shorthand>P</shorthand>
+    <type>Regular</type>
+    <cost>80000</cost>
+    <movement>6</movement>
+    <strength>3</strength>
+    <agility>3</agility>
+    <armour>8</armour>
+    <iconList>
+      <portrait>portrait_nurgle_pestigor.png</portrait>
+      <home standing="rtpestigor1.gif" moving="rtpestigor1an.gif"/>
+      <away standing="rtpestigor1b.gif" moving="rtpestigor1ban.gif"/>
+      <home standing="rtpestigor2.gif" moving="rtpestigor2an.gif"/>
+      <away standing="rtpestigor2b.gif" moving="rtpestigor2ban.gif"/>
+      <home standing="rtpestigor3.gif" moving="rtpestigor3an.gif"/>
+      <away standing="rtpestigor3b.gif" moving="rtpestigor3ban.gif"/>
+      <home standing="rtpestigor4.gif" moving="rtpestigor4an.gif"/>
+      <away standing="rtpestigor4b.gif" moving="rtpestigor4ban.gif"/>
+    </iconList>
+    <skillList>
+      <skill>Horns</skill>
+      <skill>Nurgle's Rot</skill>
+      <skill>Regeneration</skill>
+    </skillList>
+    <skillCategoryList>
+      <normal>General</normal>
+      <normal>Strength</normal>
+      <normal>Mutation</normal>
+      <double>Agility</double>
+      <double>Passing</double>
+    </skillCategoryList>
+  </position>
+  
+  <position id="nurgle.warrior">
+    <quantity>4</quantity>
+    <name>Nurgle Warrior</name>
+    <shorthand>W</shorthand>
+    <type>Regular</type>
+    <cost>110000</cost>
+    <movement>4</movement>
+    <strength>4</strength>
+    <agility>2</agility>
+    <armour>9</armour>
+    <iconList>
+      <portrait>portrait_nurgle_warrior.png</portrait>
+      <home standing="rtrotter1.gif" moving="rtrotter1an.gif"/>
+      <away standing="rtrotter1b.gif" moving="rtrotter1ban.gif"/>
+      <home standing="rtrotter2.gif" moving="rtrotter2an.gif"/>
+      <away standing="rtrotter2b.gif" moving="rtrotter2ban.gif"/>
+      <home standing="rtrotter3.gif" moving="rtrotter3an.gif"/>
+      <away standing="rtrotter3b.gif" moving="rtrotter3ban.gif"/>
+      <home standing="rtrotter4.gif" moving="rtrotter4an.gif"/>
+      <away standing="rtrotter4b.gif" moving="rtrotter4ban.gif"/>
+    </iconList>
+    <skillList>
+      <skill>Disturbing Presence</skill>
+      <skill>Foul Appearance</skill>
+      <skill>Nurgle's Rot</skill>
+      <skill>Regeneration</skill>
+    </skillList>
+    <skillCategoryList>
+      <normal>General</normal>
+      <normal>Strength</normal>
+      <normal>Mutation</normal>
+      <double>Agility</double>
+      <double>Passing</double>
+    </skillCategoryList>
+  </position>
+  
+  <position id="nurgle.beast">
+    <quantity>1</quantity>
+    <name>Beast of Nurgle</name>
+    <shorthand>B</shorthand>
+    <type>Big Guy</type>
+    <cost>140000</cost>
+    <movement>4</movement>
+    <strength>5</strength>
+    <agility>1</agility>
+    <armour>9</armour>
+    <iconList>
+      <portrait>portrait_nurgle_beast_of_nurgle.png</portrait>
+      <home standing="rtbeast1.gif" moving="rtbeast1an.gif"/>
+      <away standing="rtbeast1b.gif" moving="rtbeast1ban.gif"/>
+    </iconList>
+    <skillList>
+      <skill>Disturbing Presence</skill>
+      <skill>Foul Appearance</skill>
+      <skill>Loner</skill>
+      <skill>Mighty Blow</skill>
+      <skill>Nurgle's Rot</skill>
+      <skill>Really Stupid</skill>
+      <skill>Regeneration</skill>
+      <skill>Tentacles</skill>
+    </skillList>
+    <skillCategoryList>
+      <normal>Strength</normal>
+      <double>General</double>
+      <double>Agility</double>
+      <double>Passing</double>
+      <double>Mutation</double>
+    </skillCategoryList>
+  </position>
+  
+  <position id="nurgle.Max">
+		<quantity>1</quantity>
+		<name>Max Spleenripper</name>
+		<shorthand>MS</shorthand>
+		<type>Star</type>
+		<cost>130000</cost>
+		<movement>6</movement>
+		<strength>2</strength>
+		<agility>3</agility>
+		<armour>7</armour>
+    	<iconList baseIconPath="../stars/">
+		  <portrait/>
+		  <home standing="Max_Spleenripper.gif" moving="Max_Spleenripper_an.gif"/>
+		  <away standing="Max_Spleenripper_b.gif" moving="Max_Spleenripper_ban.gif"/>
+		</iconList>
+		<skillList>
+			<skill>Loner</skill>
+			<skill>Chainsaw</skill>
+			<skill>Secret Weapon</skill>
+		</skillList>
+	</position>
+
+	<position id="nurgle.Lewdgrip">
+		<quantity>1</quantity>
+		<name>Lewdgrip Whiparm</name>
+		<shorthand>LW</shorthand>
+		<type>Star</type>
+		<cost>150000</cost>
+		<movement>6</movement>
+		<strength>3</strength>
+		<agility>3</agility>
+		<armour>9</armour>
+    <iconList baseIconPath="../stars/">
+			<portrait/>
+			<home standing="Lewdgrip_Whiparm.gif" moving="Lewdgrip_Whiparm_an.gif"/>
+			<away standing="Lewdgrip_Whiparm_b.gif"  moving="Lewdgrip_Whiparm_ban.gif"/>
+		</iconList>
+		<skillList>
+			<skill>Loner</skill>
+			<skill>Pass</skill>
+			<skill>Strong Arm</skill>
+			<skill>Sure Hands</skill>
+			<skill>Tentacles</skill>
+		</skillList>
+	</position>
+
+	<position id="nurgle.Farth">
+		<quantity>1</quantity>
+		<name>Brick Far'th</name>
+		<shorthand>BF</shorthand>
+		<type>Star</type>
+		<cost>290000</cost>
+		<movement>5</movement>
+		<strength>5</strength>
+		<agility>2</agility>
+		<armour>9</armour>
+    <iconList baseIconPath="../stars/">
+			<portrait/>
+			<home standing="Brick_Farth.gif" moving="Brick_Farth_an.gif"/>
+			<away standing="Brick_Farth_b.gif"  moving="Brick_Farth_ban.gif"/>
+		</iconList>
+		<skillList>
+			<skill>Loner</skill>
+			<skill>Bone-Head</skill>
+			<skill>Mighty Blow</skill>
+			<skill>Nerves of Steel</skill>
+			<skill>Strong Arm</skill>
+			<skill>Thick Skull</skill>
+			<skill>Throw Team-Mate</skill>
+		</skillList>
+	</position>
+
+	<position id="nurgle.Grotty">
+		<quantity>1</quantity>
+		<name>Grotty</name>
+		<shorthand>GY</shorthand>
+		<type>Star</type>
+		<cost>290000</cost>
+		<movement>6</movement>
+		<strength>2</strength>
+		<agility>4</agility>
+		<armour>7</armour>
+    <iconList baseIconPath="../stars/">
+			<portrait/>
+			<home standing="Grotty.gif" moving="Grotty_an.gif"/>
+			<away standing="Grotty_b.gif"  moving="Grotty_ban.gif"/>
+		</iconList>
+		<skillList>
+			<skill>Loner</skill>
+			<skill>Dodge</skill>
+			<skill>Right Stuff</skill>
+			<skill>Stunty</skill>
+		</skillList>
+	</position>
+
+	<position id="nurgle.Borak">
+		<quantity>1</quantity>
+		<name>Lord Borak the Despoiler</name>
+		<shorthand>BK</shorthand>
+		<type>Star</type>
+		<cost>270000</cost>
+		<movement>5</movement>
+		<strength>5</strength>
+		<agility>3</agility>
+		<armour>9</armour>
+    <iconList baseIconPath="../stars/">
+			<portrait/>
+			<home standing="Lord_Borak.gif" moving="Lord_Borak_an.gif"/>
+			<away standing="Lord_Borak_b.gif"  moving="Lord_Borak_ban.gif"/>
+		</iconList>
+		<skillList>
+			<skill>Loner</skill>
+			<skill>Block</skill>
+			<skill>Dirty Player</skill>
+			<skill>Mighty Blow</skill>
+		</skillList>
+	</position>
+
+	<position id="nurgle.Grashnak">
+		<quantity>1</quantity>
+		<name>Grashnak Blackhoof</name>
+		<shorthand>GB</shorthand>
+		<type>Star</type>
+		<cost>310000</cost>
+		<movement>6</movement>
+		<strength>6</strength>
+		<agility>2</agility>
+		<armour>8</armour>
+    <iconList baseIconPath="../stars/">
+			<portrait/>
+			<home standing="grashnak.gif" moving="grashnak_an.gif"/>
+			<away standing="grashnak_b.gif"  moving="grashnak_ban.gif"/>
+		</iconList>
+		<skillList>
+			<skill>Loner</skill>
+			<skill>Frenzy</skill>
+			<skill>Horns</skill>
+			<skill>Mighty Blow</skill>
+			<skill>Thick Skull</skill>
+		</skillList>
+	</position>
+
+	<position id="nurgle.Morg">
+		<quantity>1</quantity>
+		<name>Morg 'n' Thorg</name>
+		<shorthand>MT</shorthand>
+		<type>Star</type>
+		<cost>430000</cost>
+		<movement>6</movement>
+		<strength>6</strength>
+		<agility>3</agility>
+		<armour>10</armour>
+    <iconList baseIconPath="../stars/">
+			<portrait/>
+			<home standing="morgnthorg.gif" moving="morgnthorg_an.gif"/>
+			<away standing="morgnthorg_b.gif"  moving="morgnthorg_ban.gif"/>
+		</iconList>
+		<skillList>
+			<skill>Loner</skill>
+			<skill>Block</skill>
+			<skill>Mighty Blow</skill>
+			<skill>Thick Skull</skill>
+			<skill>Throw Team-Mate</skill>
+		</skillList>
+	</position>
+  
+</roster>

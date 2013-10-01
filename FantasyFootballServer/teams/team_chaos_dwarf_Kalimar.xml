@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<team id="teamChaosDwarfKalimar">
+
+  <coach>Kalimar</coach>
+  <name>Kalimar's Chaos Dwarves</name>
+  <race>Chaos Dwarf</race>
+  <rosterId>chaosdwarf.lrb6</rosterId>
+  <reRolls>4</reRolls>
+  <fanFactor>10</fanFactor>
+  <apothecaries>2</apothecaries>
+  <teamRating>100</teamRating>
+  <teamStrength>107</teamStrength>
+  <division>[X]</division>
+
+  <player nr="1" id="teamChaosDwarfKalimar1">
+  	<name>Blocker1</name>
+  	<gender>male</gender>
+  	<positionId>chaosdwarf.blocker</positionId>
+  	<skillList />
+  </player>
+
+  <player nr="2" id="teamChaosDwarfKalimar2">
+  	<name>Blocker2</name>
+  	<gender>male</gender>
+  	<positionId>chaosdwarf.blocker</positionId>
+  	<skillList />
+  </player>
+
+  <player nr="3" id="teamChaosDwarfKalimar3">
+  	<name>Blocker3</name>
+  	<gender>male</gender>
+  	<positionId>chaosdwarf.blocker</positionId>
+  	<skillList />
+  </player>
+
+  <player nr="4" id="teamChaosDwarfKalimar4">
+  	<name>Blocker4</name>
+  	<gender>male</gender>
+  	<positionId>chaosdwarf.blocker</positionId>
+  	<skillList />
+  </player>
+
+  <player nr="5" id="teamChaosDwarfKalimar5">
+  	<name>Blocker5</name>
+  	<gender>male</gender>
+  	<positionId>chaosdwarf.blocker</positionId>
+  	<skillList />
+  </player>
+
+  <player nr="6" id="teamChaosDwarfKalimar6">
+  	<name>Blocker6</name>
+  	<gender>male</gender>
+  	<positionId>chaosdwarf.blocker</positionId>
+  	<skillList />
+  </player>
+  
+  <player nr="7" id="teamChaosDwarfKalimar7">
+  	<name>Bull1</name>
+  	<gender>male</gender>
+  	<positionId>chaosdwarf.bullcentaur</positionId>
+  	<skillList>
+  	  <skill>Break Tackle</skill>
+  	</skillList>
+  </player>
+
+  <player nr="8" id="teamChaosDwarfKalimar8">
+  	<name>Bull2</name>
+  	<gender>male</gender>
+  	<positionId>chaosdwarf.bullcentaur</positionId>
+  	<skillList>
+  	  <skill>Break Tackle</skill>
+  	</skillList>
+  </player>
+
+  <player nr="9" id="teamChaosDwarfKalimar9">
+  	<name>Minotaur</name>
+  	<gender>male</gender>
+  	<positionId>chaosdwarf.minotaur</positionId>
+  	<skillList />
+  </player>
+
+  <player nr="10" id="teamChaosDwarfKalimar10">
+  	<name>Hobgoblin1</name>
+  	<gender>male</gender>
+  	<positionId>chaosdwarf.hobgoblin</positionId>
+  	<skillList />
+  </player>
+
+  <player nr="11" id="teamChaosDwarfKalimar11">
+  	<name>Hobgoblin2</name>
+  	<gender>male</gender>
+  	<positionId>chaosdwarf.hobgoblin</positionId>
+  	<skillList />
+  </player>
+
+  <player nr="12" id="teamChaosDwarfKalimar12">
+  	<name>Hobgoblin3</name>
+  	<gender>male</gender>
+  	<positionId>chaosdwarf.hobgoblin</positionId>
+  	<skillList />
+  </player>
+
+  <player nr="13" id="teamChaosDwarfKalimar13">
+  	<name>Hobgoblin4</name>
+  	<gender>male</gender>
+  	<positionId>chaosdwarf.hobgoblin</positionId>
+  	<skillList />
+  </player>
+
+</team>

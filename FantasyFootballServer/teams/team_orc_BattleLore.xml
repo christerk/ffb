@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<team id="teamOrcBattleLore">
+
+  <coach>BattleLore</coach>
+  <name>BattleLore's Orcs</name>
+  <race>Orc</race>
+  <rosterId>orc.lrb6</rosterId>
+  <reRolls>3</reRolls>
+  <fanFactor>4</fanFactor>
+  <apothecaries>1</apothecaries>
+  <teamRating>100</teamRating>
+  <teamStrength>103</teamStrength>
+  <division>[X]</division>
+  <treasury>1000000</treasury>
+  <baseIconPath>http://localhost:2224/icons/</baseIconPath>
+  <logo>teamlogos/orc.gif</logo>
+
+  <player nr="1" id="teamOrcBattleLore1">
+    <name>The horribly stupid but strong Troll</name>
+  	<gender>male</gender>
+  	<positionId>orc.troll</positionId>
+  	<skillList>
+  	  <skill>Pro</skill>
+  	  <skill>Guard</skill>
+  	  <skill>Tackle</skill>
+  	  <skill>Stand Firm</skill>
+  	</skillList>
+  </player>
+
+  <player nr="14" id="teamOrcBattleLore14">
+  	<name>The unstoppable Orc Blitzer</name>
+  	<gender>male</gender>
+  	<positionId>orc.blitzer</positionId>
+  	<skillList>
+  	  <skill>Block</skill>
+      <skill>Guard</skill>
+  	</skillList>
+  </player>
+
+  <player nr="2" id="teamOrcBattleLore2">
+  	<name>Blitzer2</name>
+  	<gender>male</gender>
+  	<positionId>orc.blitzer</positionId>
+  	<skillList>
+  	  <skill>Block</skill>
+  	  <skill>Guard</skill>
+  	</skillList>
+  </player>
+
+  <player nr="3" id="teamOrcBattleLore3">
+  	<name>Blitzer3</name>
+  	<gender>male</gender>
+  	<positionId>orc.blitzer</positionId>
+  	<skillList>
+  	  <skill>Block</skill>
+  	  <skill>Tackle</skill>
+  	</skillList>
+  </player>
+
+  <player nr="4" id="teamOrcBattleLore4">
+    <name>Blackorc1</name>
+  	<gender>male</gender>
+  	<positionId>orc.blackorc</positionId>
+  	<skillList>
+      <skill>Grab</skill>
+    </skillList>
+  </player>
+
+  <player nr="5" id="teamOrcBattleLore5">
+    <name>Blackorc2</name>
+  	<gender>male</gender>
+  	<positionId>orc.blackorc</positionId>
+    <skillList>
+      <skill>Grab</skill>
+    </skillList>
+  </player>
+
+  <player nr="6" id="teamOrcBattleLore6">
+    <name>Blackorc3</name>
+  	<gender>male</gender>
+  	<positionId>orc.blackorc</positionId>
+    <skillList>
+      <skill>Block</skill>
+      <skill>Piling On</skill>
+    </skillList>
+  </player>
+
+  <player nr="7" id="teamOrcBattleLore7">
+    <name>Thrower1</name>
+  	<gender>male</gender>
+  	<positionId>orc.thrower</positionId>
+  	<skillList>
+  	  <skill>Pass</skill>
+  	  <skill>Sure Hands</skill>  	
+  	</skillList>
+  </player>
+	
+  <player nr="8" id="teamOrcBattleLore8">
+    <name>Lineman1</name>
+  	<gender>male</gender>
+    <positionId>orc.lineman</positionId>
+  	<skillList />
+  </player>
+
+  <player nr="9" id="teamOrcBattleLore9">
+    <name>Lineman2</name>
+  	<gender>male</gender>
+  	<positionId>orc.lineman</positionId>
+  	<skillList />
+  </player>
+
+  <player nr="10" id="teamOrcBattleLore10">
+    <name>Lineman3</name>
+  	<gender>male</gender>
+  	<positionId>orc.lineman</positionId>
+  	<skillList>
+  	  <skill>Pass Block</skill>
+  	</skillList>
+  </player>
+
+  <player nr="11" id="teamOrcBattleLore11">
+    <name>Lineman4</name>
+  	<gender>male</gender>
+  	<positionId>orc.lineman</positionId>
+  	<skillList />
+  </player>
+
+  <player nr="12" id="teamOrcBattleLore12">
+    <name>Goblin1</name>
+  	<gender>male</gender>
+  	<positionId>orc.goblin</positionId>
+  	<skillList />
+  </player>
+
+  <player nr="13" id="teamOrcBattleLore13">
+    <name>Goblin2</name>
+  	<gender>male</gender>
+  	<positionId>orc.goblin</positionId>
+  	<skillList />
+  </player>
+
+</team>

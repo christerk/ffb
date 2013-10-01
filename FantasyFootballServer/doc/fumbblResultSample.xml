@@ -1,0 +1,258 @@
+<gameResult replayId="4">
+  <teamResult teamId="701486">
+    <score>0</score>
+    <conceded>false</conceded>
+    <spectators>7000</spectators>
+    <fame>0</fame>
+    <winnings>10000</winnings>
+    <teamValue>450000</teamValue>
+    <casualtiesSuffered badlyHurt="1" seriousInjury="1" rip="1" />
+    <inducementList>
+      <starPlayer name="Hack Enslash" positionId="3021" playerId="701486S1" />
+      <starPlayer name="J Earlice" positionId="3032" playerId="701486S2" />
+      <mercenary name="Skeleton1" positionId="2927" playerId="701486M1" addedSkill="Block" />
+      <mercenary name="Skeleton2" positionId="2927" playerId="701486M2" addedSkill="Dirty Player" />
+      <mercenary name="Skeleton3" positionId="2927" playerId="701486M3" />
+	  <card type="Magic Item Card" name="Belt of Invulnerability" />
+	  <card type="Magic Item Card" name="Fawndough's Headband" />
+    </inducementList>
+    <playerResultList>
+      <playerResult playerId="8761727" playerType="Regular">
+        <defecting>false</defecting>
+        <starPlayerPoints current="0" earned="0" />
+        <statistics>
+          <turnsPlayed>2</turnsPlayed>
+        </statistics>
+      </playerResult>
+      <playerResult playerId="8761728" playerType="Regular">
+        <defecting>false</defecting>
+        <starPlayerPoints current="0" earned="0" />
+        <statistics>
+          <turnsPlayed>16</turnsPlayed>
+        </statistics>
+      </playerResult>
+      <playerResult playerId="8761745" playerType="Regular">
+        <defecting>false</defecting>
+        <starPlayerPoints current="0" earned="0" />
+        <statistics>
+          <blocks>1</blocks>
+          <turnsPlayed>15</turnsPlayed>
+        </statistics>
+      </playerResult>
+      <playerResult playerId="8761747" playerType="Regular">
+        <defecting>false</defecting>
+        <starPlayerPoints current="1" earned="0" />
+        <statistics>
+          <turnsPlayed>13</turnsPlayed>
+        </statistics>
+      </playerResult>
+      <playerResult playerId="8761748" playerType="Regular">
+        <defecting>false</defecting>
+        <starPlayerPoints current="0" earned="1">
+          <completions>1</completions>
+        </starPlayerPoints>
+        <statistics>
+          <passing>-3</passing>
+          <turnsPlayed>13</turnsPlayed>
+        </statistics>
+      </playerResult>
+      <playerResult playerId="8761749" playerType="Regular">
+        <defecting>false</defecting>
+        <starPlayerPoints current="0" earned="0" />
+        <statistics>
+          <turnsPlayed>13</turnsPlayed>
+        </statistics>
+      </playerResult>
+      <playerResult playerId="8761750" playerType="Regular">
+        <defecting>false</defecting>
+        <starPlayerPoints current="0" earned="0" />
+        <statistics>
+          <blocks>1</blocks>
+          <turnsPlayed>16</turnsPlayed>
+        </statistics>
+      </playerResult>
+      <playerResult playerId="8761752" playerType="Regular">
+        <defecting>false</defecting>
+        <starPlayerPoints current="0" earned="0" />
+        <statistics>
+          <blocks>1</blocks>
+          <turnsPlayed>16</turnsPlayed>
+        </statistics>
+      </playerResult>
+      <playerResult playerId="8761753" playerType="Regular">
+        <defecting>false</defecting>
+        <starPlayerPoints current="0" earned="0" />
+        <statistics>
+          <blocks>1</blocks>
+          <turnsPlayed>10</turnsPlayed>
+        </statistics>
+        <injury>Dead (RIP)</injury>
+      </playerResult>
+      <playerResult playerId="8761754" playerType="Regular">
+        <defecting>false</defecting>
+        <starPlayerPoints current="0" earned="0" />
+        <statistics>
+          <turnsPlayed>16</turnsPlayed>
+        </statistics>
+      </playerResult>
+      <playerResult playerId="8761756" playerType="Regular">
+        <defecting>false</defecting>
+        <starPlayerPoints current="0" earned="0" />
+        <statistics>
+          <turnsPlayed>13</turnsPlayed>
+        </statistics>
+      </playerResult>
+      <playerResult playerId="701486S1" playerType="Star">
+        <defecting>false</defecting>
+        <starPlayerPoints current="0" earned="5">
+          <playerAwards>1</playerAwards>
+        </starPlayerPoints>
+        <statistics>
+          <blocks>3</blocks>
+          <turnsPlayed>3</turnsPlayed>
+        </statistics>
+      </playerResult>
+      <playerResult playerId="701486S2" playerType="Star">
+        <defecting>false</defecting>
+        <starPlayerPoints current="0" earned="0" />
+        <statistics>
+          <blocks>2</blocks>
+          <turnsPlayed>16</turnsPlayed>
+        </statistics>
+      </playerResult>
+      <playerResult playerId="701486M1" playerType="Mercenary">
+        <defecting>false</defecting>
+        <starPlayerPoints current="0" earned="0" />
+        <statistics />
+      </playerResult>
+      <playerResult playerId="701486M2" playerType="Mercenary">
+        <defecting>false</defecting>
+        <starPlayerPoints current="0" earned="0" />
+        <statistics />
+      </playerResult>
+      <playerResult playerId="701486M3" playerType="Mercenary">
+        <defecting>false</defecting>
+        <starPlayerPoints current="0" earned="0" />
+        <statistics />
+      </playerResult>
+    </playerResultList>
+  </teamResult>
+  <teamResult teamId="698951">
+    <score>1</score>
+    <conceded>false</conceded>
+    <spectators>20000</spectators>
+    <fame>2</fame>
+    <winnings>90000</winnings>
+    <fanFactorModifier>1</fanFactorModifier>
+    <teamValue>1540000</teamValue>
+    <casualtiesSuffered badlyHurt="0" seriousInjury="0" rip="0" />
+    <inducementList />
+    <playerResultList>
+      <playerResult playerId="8719237" playerType="Regular">
+        <defecting>false</defecting>
+        <starPlayerPoints current="0" earned="0" />
+        <statistics>
+          <fouls>2</fouls>
+          <turnsPlayed>16</turnsPlayed>
+        </statistics>
+      </playerResult>
+      <playerResult playerId="8719238" playerType="Regular">
+        <defecting>false</defecting>
+        <starPlayerPoints current="0" earned="0" />
+        <statistics>
+          <fouls>1</fouls>
+        </statistics>
+      </playerResult>
+      <playerResult playerId="8719239" playerType="Regular">
+        <defecting>false</defecting>
+        <starPlayerPoints current="0" earned="0" />
+        <statistics>
+          <blocks>2</blocks>
+          <turnsPlayed>16</turnsPlayed>
+        </statistics>
+      </playerResult>
+      <playerResult playerId="8719240" playerType="Regular">
+        <defecting>false</defecting>
+        <starPlayerPoints current="0" earned="0" />
+        <statistics>
+          <blocks>2</blocks>
+          <turnsPlayed>16</turnsPlayed>
+        </statistics>
+      </playerResult>
+      <playerResult playerId="8719241" playerType="Regular">
+        <defecting>false</defecting>
+        <starPlayerPoints current="0" earned="0" />
+        <statistics>
+          <blocks>1</blocks>
+          <fouls>1</fouls>
+          <turnsPlayed>11</turnsPlayed>
+        </statistics>
+      </playerResult>
+      <playerResult playerId="8719244" playerType="Regular">
+        <defecting>false</defecting>
+        <starPlayerPoints current="0" earned="0" />
+        <statistics>
+          <blocks>5</blocks>
+          <fouls>1</fouls>
+          <turnsPlayed>16</turnsPlayed>
+        </statistics>
+      </playerResult>
+      <playerResult playerId="8719245" playerType="Regular">
+        <defecting>false</defecting>
+        <starPlayerPoints current="0" earned="5">
+          <playerAwards>1</playerAwards>
+        </starPlayerPoints>
+        <statistics>
+          <blocks>4</blocks>
+          <turnsPlayed>16</turnsPlayed>
+        </statistics>
+      </playerResult>
+      <playerResult playerId="8719246" playerType="Regular">
+        <defecting>false</defecting>
+        <starPlayerPoints current="0" earned="0" />
+        <statistics>
+          <blocks>1</blocks>
+          <fouls>1</fouls>
+          <turnsPlayed>16</turnsPlayed>
+        </statistics>
+      </playerResult>
+      <playerResult playerId="8719247" playerType="Regular">
+        <defecting>false</defecting>
+        <starPlayerPoints current="0" earned="3">
+          <touchdowns>1</touchdowns>
+        </starPlayerPoints>
+        <statistics>
+          <rushing>15</rushing>
+          <turnsPlayed>16</turnsPlayed>
+        </statistics>
+      </playerResult>
+      <playerResult playerId="8719248" playerType="Regular">
+        <defecting>false</defecting>
+        <starPlayerPoints current="0" earned="0" />
+        <statistics />
+      </playerResult>
+      <playerResult playerId="8719249" playerType="Regular">
+        <defecting>false</defecting>
+        <starPlayerPoints current="0" earned="0" />
+        <statistics>
+          <turnsPlayed>10</turnsPlayed>
+        </statistics>
+      </playerResult>
+      <playerResult playerId="8719250" playerType="Regular">
+        <defecting>false</defecting>
+        <starPlayerPoints current="0" earned="0" />
+        <statistics>
+          <fouls>1</fouls>
+          <turnsPlayed>8</turnsPlayed>
+        </statistics>
+      </playerResult>
+      <playerResult playerId="8719251" playerType="Regular">
+        <defecting>false</defecting>
+        <starPlayerPoints current="0" earned="0" />
+        <statistics>
+          <turnsPlayed>16</turnsPlayed>
+        </statistics>
+      </playerResult>
+    </playerResultList>
+  </teamResult>
+</gameResult>
