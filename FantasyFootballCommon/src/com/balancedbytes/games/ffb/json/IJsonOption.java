@@ -9,6 +9,7 @@ import com.balancedbytes.games.ffb.InducementTypeFactory;
 import com.balancedbytes.games.ffb.KickoffResultFactory;
 import com.balancedbytes.games.ffb.PlayerActionFactory;
 import com.balancedbytes.games.ffb.PlayerChoiceModeFactory;
+import com.balancedbytes.games.ffb.ReRollSourceFactory;
 import com.balancedbytes.games.ffb.ReRolledActionFactory;
 import com.balancedbytes.games.ffb.SeriousInjuryFactory;
 import com.balancedbytes.games.ffb.SkillFactory;
@@ -25,6 +26,7 @@ public interface IJsonOption {
 
            JsonStringOption ACTING_PLAYER_ID = new JsonStringOption("actingPlayerId");
      JsonEnumWithNameOption ANIMATION_TYPE = new JsonEnumWithNameOption("animationType", new AnimationTypeFactory());
+          JsonBooleanOption APOTHECARY_USED = new JsonBooleanOption("apothecaryUsed");
               JsonIntOption AVAILABLE_CARDS = new JsonIntOption("availableCards");
               JsonIntOption AVAILABLE_GOLD = new JsonIntOption("availableGold");
            JsonStringOption AWAY_TEXT = new JsonStringOption("awayText");
@@ -40,6 +42,7 @@ public interface IJsonOption {
            JsonStringOption CATCHER_ID = new JsonStringOption("catcherId");
           JsonBooleanOption CHOICE_FOLLOWUP = new JsonBooleanOption("choiceFollowup");
           JsonBooleanOption CHOICE_HEADS = new JsonBooleanOption("choiceHeads");
+          JsonBooleanOption CHOICE_RECEIVE = new JsonBooleanOption("choiceReceive");
            JsonStringOption CHOOSING_TEAM_ID = new JsonStringOption("choosingTeamId");
      JsonEnumWithNameOption CLIENT_STATE_ID = new JsonEnumWithNameOption("clientStateId", new ClientStateIdFactory());
            JsonStringOption COACH = new JsonStringOption("coach");
@@ -83,6 +86,7 @@ public interface IJsonOption {
               JsonIntOption NUMBER = new JsonIntOption("number");
               JsonIntOption OLD_ROLL = new JsonIntOption("oldRoll");
               JsonIntOption OPPONENT_TEAM_VALUE = new JsonIntOption("opponentTeamValue");
+              JsonIntOption PETTY_CASH = new JsonIntOption("pettyCash");
      JsonEnumWithNameOption PLAYER_ACTION = new JsonEnumWithNameOption("playerAction", new PlayerActionFactory());
      JsonEnumWithNameOption PLAYER_CHOICE_MODE = new JsonEnumWithNameOption("playerChoiceMode", new PlayerChoiceModeFactory());
            JsonStringOption PLAYER_ID = new JsonStringOption("playerId");
@@ -95,19 +99,24 @@ public interface IJsonOption {
       JsonStringArrayOption POSITION_IDS = new JsonStringArrayOption("positionIds"); 
           JsonBooleanOption PRO_RE_ROLL_OPTION = new JsonBooleanOption("proReRollOption"); 
            JsonStringOption RACE = new JsonStringOption("race");
+              JsonIntOption REPLAY_TO_COMMAND_NR = new JsonIntOption("replayToCommandNr");
      JsonEnumWithNameOption RE_ROLLED_ACTION = new JsonEnumWithNameOption("reRolledAction", new ReRolledActionFactory());
           JsonBooleanOption RE_ROLL_INJURY = new JsonBooleanOption("reRollInjury");
+     JsonEnumWithNameOption RE_ROLL_SOURCE = new JsonEnumWithNameOption("reRollSource", new ReRollSourceFactory());
               JsonIntOption ROLL = new JsonIntOption("roll");
           JsonBooleanOption SELECTED = new JsonBooleanOption("selected");
      JsonEnumWithNameOption SERIOUS_INJURY = new JsonEnumWithNameOption("seriousInjury", new SeriousInjuryFactory());
      JsonEnumWithNameOption SERIOUS_INJURY_NEW = new JsonEnumWithNameOption("seriousInjuryNew", new SeriousInjuryFactory());
      JsonEnumWithNameOption SERIOUS_INJURY_OLD = new JsonEnumWithNameOption("seriousInjuryOld", new SeriousInjuryFactory());
       JsonStringArrayOption SETUP_ERRORS = new JsonStringArrayOption("setupErrors");
+           JsonStringOption SETUP_NAME = new JsonStringOption("setupName");
       JsonStringArrayOption SETUP_NAMES = new JsonStringArrayOption("setupNames");
      JsonEnumWithNameOption SKILL = new JsonEnumWithNameOption("skill", new SkillFactory());
+          JsonBooleanOption SKILL_USED = new JsonBooleanOption("skillUsed");
               JsonIntOption SLOTS = new JsonIntOption("slots");
   JsonFieldCoordinateOption START_COORDINATE = new JsonFieldCoordinateOption("startCoordinate");
              JsonDateOption STARTED = new JsonDateOption("started");
+           JsonStringOption TALK = new JsonStringOption("talk");
   JsonFieldCoordinateOption TARGET = new JsonFieldCoordinateOption("target");
            JsonStringOption TEAM_AWAY_COACH = new JsonStringOption("teamAwayCoach");
            JsonStringOption TEAM_AWAY_ID = new JsonStringOption("teamAwayId");

@@ -16,23 +16,20 @@ import com.balancedbytes.games.ffb.xml.UtilXml;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
-
-
-
 /**
  * 
  * @author Kalimar
  */
 public class ClientCommandActingPlayer extends NetCommand {
-  
+
   private static final String _XML_ATTRIBUTE_PLAYER_ID = "playerId";
   private static final String _XML_ATTRIBUTE_PLAYER_ACTION = "playerAction";
   private static final String _XML_ATTRIBUTE_LEAPING = "leaping";
-  
+
   private String fPlayerId;
   private PlayerAction fPlayerAction;
   private boolean fLeaping;
-  
+
   public ClientCommandActingPlayer() {
     super();
   }
@@ -42,43 +39,43 @@ public class ClientCommandActingPlayer extends NetCommand {
     fPlayerAction = pPlayerAction;
     fLeaping = pLeaping;
   }
-  
+
   public NetCommandId getId() {
     return NetCommandId.CLIENT_ACTING_PLAYER;
   }
-  
+
   public String getPlayerId() {
     return fPlayerId;
   }
-  
+
   public PlayerAction getPlayerAction() {
     return fPlayerAction;
   }
-  
+
   public boolean isLeaping() {
     return fLeaping;
   }
 
   // XML serialization
-  
+
   public void addToXml(TransformerHandler pHandler) {
-  	AttributesImpl attributes = new AttributesImpl();
-  	UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_PLAYER_ID, getPlayerId());
+    AttributesImpl attributes = new AttributesImpl();
+    UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_PLAYER_ID, getPlayerId());
     UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_PLAYER_ACTION, (getPlayerAction() != null) ? getPlayerAction().getName() : null);
     UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_LEAPING, isLeaping());
     UtilXml.addEmptyElement(pHandler, getId().getName(), attributes);
   }
-  
+
   public String toXml(boolean pIndent) {
     return UtilXml.toXml(this, pIndent);
   }
 
   // ByteArray serialization
-  
+
   public int getByteArraySerializationVersion() {
     return 1;
   }
-  
+
   public void addTo(ByteList pByteList) {
     pByteList.addSmallInt(getByteArraySerializationVersion());
     pByteList.addString(getPlayerId());
@@ -89,7 +86,7 @@ public class ClientCommandActingPlayer extends NetCommand {
     }
     pByteList.addBoolean(isLeaping());
   }
-  
+
   public int initFrom(ByteArray pByteArray) {
     int byteArraySerializationVersion = pByteArray.getSmallInt();
     fPlayerId = pByteArray.getString();
@@ -97,9 +94,9 @@ public class ClientCommandActingPlayer extends NetCommand {
     fLeaping = pByteArray.getBoolean();
     return byteArraySerializationVersion;
   }
-  
+
   // JSON serialization
-  
+
   public JsonValue toJsonValue() {
     JsonObject jsonObject = new JsonObject();
     IJsonOption.NET_COMMAND_ID.addTo(jsonObject, getId());
@@ -108,7 +105,7 @@ public class ClientCommandActingPlayer extends NetCommand {
     IJsonOption.LEAPING.addTo(jsonObject, fLeaping);
     return jsonObject;
   }
-  
+
   public void initFrom(JsonValue pJsonValue) {
     JsonObject jsonObject = UtilJson.asJsonObject(pJsonValue);
     UtilNetCommand.validateCommandId(this, (NetCommandId) IJsonOption.NET_COMMAND_ID.getFrom(jsonObject));
@@ -116,5 +113,5 @@ public class ClientCommandActingPlayer extends NetCommand {
     fPlayerAction = (PlayerAction) IJsonOption.PLAYER_ACTION.getFrom(jsonObject);
     fLeaping = IJsonOption.LEAPING.getFrom(jsonObject);
   }
-  
+
 }

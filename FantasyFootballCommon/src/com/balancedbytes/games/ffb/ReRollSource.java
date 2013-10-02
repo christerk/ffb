@@ -5,7 +5,7 @@ package com.balancedbytes.games.ffb;
  * 
  * @author Kalimar
  */
-public enum ReRollSource {
+public enum ReRollSource implements IEnumWithId, IEnumWithName {
   
   TEAM_RE_ROLL(1, "Team ReRoll"),
   DODGE(2, Skill.DODGE),
@@ -42,24 +42,6 @@ public enum ReRollSource {
   
   public Skill getSkill() {
     return fSkill;
-  }
-  
-  public static ReRollSource fromId(int pId) {
-    for (ReRollSource source : values()) {
-      if (pId == source.getId()) {
-        return source;
-      }
-    }
-    return null;
-  }
-  
-  public static ReRollSource fromName(String pName) {
-    for (ReRollSource source : values()) {
-      if (source.getName().equalsIgnoreCase(pName)) {
-        return source;
-      }
-    }
-    return null;
   }
   
 }
