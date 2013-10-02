@@ -8,7 +8,7 @@ import java.util.Comparator;
  * 
  * @author Kalimar
  */
-public enum Skill {
+public enum Skill implements IEnumWithId, IEnumWithName {
   
   ACCURATE(1, "Accurate", SkillCategory.PASSING),
   //  The player may add 1 to the D6 roll when he passes.
@@ -770,29 +770,6 @@ public enum Skill {
   
   public SkillCategory getCategory() {
     return fCategory;
-  }
-  
-  public static Skill fromId(int pId) {
-    if (pId > 0) {
-      for (Skill skill : values()) {
-        if (pId == skill.getId()) {
-          return skill;
-        }
-      }
-    }
-    return null;
-  }
-
-  public static Skill fromName(String pName) {
-    for (Skill skill : values()) {
-      if (skill.getName().equalsIgnoreCase(pName)) {
-        return skill;
-      }
-    }
-    if ("Ball & Chain".equalsIgnoreCase(pName) || "Ball &amp; Chain".equalsIgnoreCase(pName)) {
-    	return BALL_AND_CHAIN;
-    }
-    return null;
   }
   
   public static Comparator<Skill> getComparator() {

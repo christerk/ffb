@@ -9,6 +9,7 @@ import org.xml.sax.helpers.AttributesImpl;
 
 import com.balancedbytes.games.ffb.InducementSet;
 import com.balancedbytes.games.ffb.Skill;
+import com.balancedbytes.games.ffb.SkillFactory;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
 import com.balancedbytes.games.ffb.net.NetCommand;
@@ -201,8 +202,9 @@ public class ClientCommandBuyInducements extends NetCommand {
     if (byteArraySerializationVersion > 2) {
       String[] mercenaryPositionIds = pByteArray.getStringArray();
       byte[] mercenarySkillIds = pByteArray.getByteArray();
+      SkillFactory skillFactory = new SkillFactory();
       for (int i = 0; i < mercenaryPositionIds.length; i++) {
-        addMercenaryPosition(mercenaryPositionIds[i], Skill.fromId(mercenarySkillIds[i]));
+        addMercenaryPosition(mercenaryPositionIds[i], skillFactory.forId(mercenarySkillIds[i]));
       }
     }
     return byteArraySerializationVersion;

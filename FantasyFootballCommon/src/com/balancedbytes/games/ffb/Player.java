@@ -477,7 +477,7 @@ public class Player implements IXmlSerializable, IByteArraySerializable {
           fInsideSkillList = false;
         }
         if (_XML_TAG_SKILL.equals(pXmlTag)) {
-          Skill skill = Skill.fromName(pValue);
+          Skill skill = new SkillFactory().forName(pValue);
           if (skill != null) {
             fSkills.add(skill);
           }
@@ -647,8 +647,9 @@ public class Player implements IXmlSerializable, IByteArraySerializable {
     setIconUrlMovingAway(pByteArray.getString());
 
     byte[] skillIds = pByteArray.getByteArray();
+    SkillFactory skillFactory = new SkillFactory();
     for (int j = 0; j < skillIds.length; j++) {
-      addSkill(Skill.fromId(skillIds[j]));
+      addSkill(skillFactory.forId(skillIds[j]));
     }
     
     return byteArraySerializationVersion;

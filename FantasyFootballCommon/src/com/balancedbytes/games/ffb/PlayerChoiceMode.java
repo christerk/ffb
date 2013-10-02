@@ -5,7 +5,7 @@ package com.balancedbytes.games.ffb;
  * 
  * @author Kalimar
  */
-public enum PlayerChoiceMode {
+public enum PlayerChoiceMode implements IEnumWithId, IEnumWithName {
   
   TENTACLES(1, "tentacles"),
   SHADOWING(2, "shadowing"),
@@ -28,24 +28,6 @@ public enum PlayerChoiceMode {
   
   public String getName() {
     return fName;
-  }
-  
-  public static PlayerChoiceMode fromId(int pId) {
-    for (PlayerChoiceMode type : values()) {
-      if (type.getId() == pId) {
-        return type;
-      }
-    }
-    return null;
-  }
-    
-  public static PlayerChoiceMode fromName(String pName) {
-    for (PlayerChoiceMode type : values()) {
-      if (type.getName().equalsIgnoreCase(pName)) {
-        return type;
-      }
-    }
-    return null;
   }
   
   public String getDialogHeader(int pNrOfPlayers) {

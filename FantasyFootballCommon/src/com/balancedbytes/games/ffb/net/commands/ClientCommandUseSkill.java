@@ -5,6 +5,7 @@ import javax.xml.transform.sax.TransformerHandler;
 import org.xml.sax.helpers.AttributesImpl;
 
 import com.balancedbytes.games.ffb.Skill;
+import com.balancedbytes.games.ffb.SkillFactory;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
 import com.balancedbytes.games.ffb.net.NetCommand;
@@ -73,7 +74,7 @@ public class ClientCommandUseSkill extends NetCommand {
   
   public int initFrom(ByteArray pByteArray) {
     int byteArraySerializationVersion = pByteArray.getSmallInt();
-    fSkill = Skill.fromId(pByteArray.getByte());
+    fSkill = new SkillFactory().forId(pByteArray.getByte());
     fSkillUsed = pByteArray.getBoolean();
     return byteArraySerializationVersion;
   }

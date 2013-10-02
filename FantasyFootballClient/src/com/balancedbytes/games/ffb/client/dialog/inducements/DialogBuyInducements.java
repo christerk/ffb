@@ -31,6 +31,7 @@ import com.balancedbytes.games.ffb.InducementType;
 import com.balancedbytes.games.ffb.Player;
 import com.balancedbytes.games.ffb.Roster;
 import com.balancedbytes.games.ffb.Skill;
+import com.balancedbytes.games.ffb.SkillFactory;
 import com.balancedbytes.games.ffb.Team;
 import com.balancedbytes.games.ffb.client.FantasyFootballClient;
 import com.balancedbytes.games.ffb.client.PlayerIconFactory;
@@ -218,7 +219,7 @@ public class DialogBuyInducements extends Dialog implements ActionListener, KeyL
 		List<Skill> mercenarySkills = new ArrayList<Skill>();
 		for (int i = 0; i < fTableModelMercenaries.getRowCount(); i++) {
 			if ((Boolean) fTableModelMercenaries.getValueAt(i, 0)) {
-				Skill mercenarySkill = Skill.fromName((String) fTableModelMercenaries.getValueAt(i, 4));
+				Skill mercenarySkill = new SkillFactory().forName((String) fTableModelMercenaries.getValueAt(i, 4));
 				mercenarySkills.add(mercenarySkill);
 			}
 		}

@@ -30,10 +30,10 @@ public class DialogPlayerChoiceHandler extends DialogHandler {
     if (fDialogPlayerChoiceParameter != null) {
     
       if ((ClientMode.PLAYER == getClient().getMode()) && game.getTeamHome().getId().equals(fDialogPlayerChoiceParameter.getTeamId())) {
-        String dialogHeader = fDialogPlayerChoiceParameter.getMode().getDialogHeader(fDialogPlayerChoiceParameter.getMaxSelects());
+        String dialogHeader = fDialogPlayerChoiceParameter.getPlayerChoiceMode().getDialogHeader(fDialogPlayerChoiceParameter.getMaxSelects());
         FieldCoordinate dialogCoordinate = null;
         String[] playerIds = fDialogPlayerChoiceParameter.getPlayerIds();
-        if (fDialogPlayerChoiceParameter.getMode() != PlayerChoiceMode.CARD) {
+        if (fDialogPlayerChoiceParameter.getPlayerChoiceMode() != PlayerChoiceMode.CARD) {
           int maxX = 0, maxY = 0;
           for (int i = 0; i < playerIds.length; i++) {
             Player player = game.getPlayerById(playerIds[i]);
@@ -51,7 +51,7 @@ public class DialogPlayerChoiceHandler extends DialogHandler {
         getDialog().showDialog(this);
         
       } else {
-        showStatus(fDialogPlayerChoiceParameter.getMode().getStatusTitle(), fDialogPlayerChoiceParameter.getMode().getStatusMessage(), StatusType.WAITING);
+        showStatus(fDialogPlayerChoiceParameter.getPlayerChoiceMode().getStatusTitle(), fDialogPlayerChoiceParameter.getPlayerChoiceMode().getStatusMessage(), StatusType.WAITING);
       }
       
     }
@@ -62,7 +62,7 @@ public class DialogPlayerChoiceHandler extends DialogHandler {
     hideDialog();
     if (testDialogHasId(pDialog, DialogId.PLAYER_CHOICE)) {
       DialogPlayerChoice playerChoiceDialog = (DialogPlayerChoice) pDialog;
-      getClient().getCommunication().sendPlayerChoice(fDialogPlayerChoiceParameter.getMode(), playerChoiceDialog.getSelectedPlayers());
+      getClient().getCommunication().sendPlayerChoice(fDialogPlayerChoiceParameter.getPlayerChoiceMode(), playerChoiceDialog.getSelectedPlayers());
     }
   }
 

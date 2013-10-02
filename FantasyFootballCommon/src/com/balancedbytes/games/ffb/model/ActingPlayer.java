@@ -10,6 +10,7 @@ import org.xml.sax.helpers.AttributesImpl;
 import com.balancedbytes.games.ffb.Player;
 import com.balancedbytes.games.ffb.PlayerAction;
 import com.balancedbytes.games.ffb.Skill;
+import com.balancedbytes.games.ffb.SkillFactory;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
 import com.balancedbytes.games.ffb.bytearray.IByteArraySerializable;
@@ -400,8 +401,9 @@ public class ActingPlayer implements IXmlWriteable, IByteArraySerializable {
     setSufferingAnimosity(pByteArray.getBoolean());
     
     int nrOfUsedSkills = pByteArray.getByte();
+    SkillFactory skillFactory = new SkillFactory();
     for (int i = 0; i < nrOfUsedSkills; i++) {
-      Skill usedSkill = Skill.fromId(pByteArray.getByte());
+      Skill usedSkill = skillFactory.forId(pByteArray.getByte());
       markSkillUsed(usedSkill);
     }
   }

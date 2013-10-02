@@ -1,5 +1,8 @@
 package com.balancedbytes.games.ffb.dialog;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.xml.transform.sax.TransformerHandler;
 
 import org.xml.sax.helpers.AttributesImpl;
@@ -11,8 +14,12 @@ import com.balancedbytes.games.ffb.InducementType;
 import com.balancedbytes.games.ffb.InducementTypeFactory;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
+import com.balancedbytes.games.ffb.json.IJsonOption;
+import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.util.ArrayTool;
 import com.balancedbytes.games.ffb.xml.UtilXml;
+import com.eclipsesource.json.JsonObject;
+import com.eclipsesource.json.JsonValue;
 
 /**
  * 
@@ -25,16 +32,16 @@ public class DialogUseInducementParameter implements IDialogParameter {
   private static final String _XML_TAG_CARD = "card";
 
   private String fTeamId;
-  private InducementType[] fInducements;
+  private InducementType[] fInducementTypes;
   private Card[] fCards;
 
   public DialogUseInducementParameter() {
     super();
   }
 
-  public DialogUseInducementParameter(String pTeamId, InducementType[] pInducements, Card[] pCards) {
+  public DialogUseInducementParameter(String pTeamId, InducementType[] pInducementTypes, Card[] pCards) {
     fTeamId = pTeamId;
-    fInducements = pInducements;
+    fInducementTypes = pInducementTypes;
     fCards = pCards;
   }
 
@@ -46,8 +53,8 @@ public class DialogUseInducementParameter implements IDialogParameter {
     return fTeamId;
   }
 
-  public InducementType[] getInducements() {
-    return fInducements;
+  public InducementType[] getInducementTypes() {
+    return fInducementTypes;
   }
 
   public Card[] getCards() {
@@ -57,7 +64,7 @@ public class DialogUseInducementParameter implements IDialogParameter {
   // transformation
 
   public IDialogParameter transform() {
-    return new DialogUseInducementParameter(getTeamId(), getInducements(), getCards());
+    return new DialogUseInducementParameter(getTeamId(), getInducementTypes(), getCards());
   }
 
   // XML serialization
@@ -67,7 +74,7 @@ public class DialogUseInducementParameter implements IDialogParameter {
     UtilXml.addAttribute(attributes, XML_ATTRIBUTE_ID, getId().getName());
     UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_TEAM_ID, getTeamId());
     UtilXml.startElement(pHandler, XML_TAG, attributes);
-    for (InducementType inducement : getInducements()) {
+    for (InducementType inducement : getInducementTypes()) {
       UtilXml.addValueElement(pHandler, _XML_TAG_INDUCEMENT, inducement.getName());
     }
     for (Card card : getCards()) {
@@ -90,7 +97,7 @@ public class DialogUseInducementParameter implements IDialogParameter {
     pByteList.addSmallInt(getByteArraySerializationVersion());
     pByteList.addByte((byte) getId().getId());
     pByteList.addString(getTeamId());
-    InducementType[] inducements = getInducements();
+    InducementType[] inducements = getInducementTypes();
     byte[] inducementIds = null;
     if (ArrayTool.isProvided(inducements)) {
       inducementIds = new byte[inducements.length];
@@ -108,16 +115,13 @@ public class DialogUseInducementParameter implements IDialogParameter {
 
   public int initFrom(ByteArray pByteArray) {
     int byteArraySerializationVersion = pByteArray.getSmallInt();
-    DialogId dialogId = DialogId.fromId(pByteArray.getByte());
-    if (getId() != dialogId) {
-      throw new IllegalStateException("Wrong dialog id. Expected " + getId().getName() + " received " + ((dialogId != null) ? dialogId.getName() : "null"));
-    }
+    UtilDialogParameter.validateDialogId(this, new DialogIdFactory().forId(pByteArray.getByte()));
     fTeamId = pByteArray.getString();
     byte[] inducementIds = pByteArray.getByteArray();
-    fInducements = new InducementType[inducementIds.length];
+    fInducementTypes = new InducementType[inducementIds.length];
     InducementTypeFactory inducementTypeFactory = new InducementTypeFactory();
-    for (int i = 0; i < fInducements.length; i++) {
-      fInducements[i] = inducementTypeFactory.forId(inducementIds[i]);
+    for (int i = 0; i < fInducementTypes.length; i++) {
+      fInducementTypes[i] = inducementTypeFactory.forId(inducementIds[i]);
     }
     if (byteArraySerializationVersion > 1) {
       fCards = new Card[pByteArray.getByte()];
@@ -127,6 +131,43 @@ public class DialogUseInducementParameter implements IDialogParameter {
       }
     }
     return byteArraySerializationVersion;
+  }
+  
+  // JSON serialization
+  
+  public JsonValue toJsonValue() {
+    JsonObject jsonObject = new JsonObject();
+    IJsonOption.DIALOG_ID.addTo(jsonObject, getId());
+    IJsonOption.TEAM_ID.addTo(jsonObject, fTeamId);
+    List<String> inducementTypeNames = new ArrayList<String>();
+    for (InducementType inducementType : getInducementTypes()) {
+      inducementTypeNames.add(inducementType.getName());
+    }
+    IJsonOption.INDUCEMENT_TYPES.addTo(jsonObject, inducementTypeNames);
+    List<String> cardNames = new ArrayList<String>();
+    for (Card card : getCards()) {
+      cardNames.add(card.getName());
+    }
+    IJsonOption.CARDS.addTo(jsonObject, cardNames);
+    return jsonObject;
+  }
+  
+  public void initFrom(JsonValue pJsonValue) {
+    JsonObject jsonObject = UtilJson.asJsonObject(pJsonValue);
+    UtilDialogParameter.validateDialogId(this, (DialogId) IJsonOption.DIALOG_ID.getFrom(jsonObject));
+    fTeamId = IJsonOption.TEAM_ID.getFrom(jsonObject);
+    String[] inducementTypeNames = IJsonOption.INDUCEMENT_TYPES.getFrom(jsonObject);
+    fInducementTypes = new InducementType[inducementTypeNames.length];
+    InducementTypeFactory inducementTypeFactory = new InducementTypeFactory();
+    for (int i = 0; i < fInducementTypes.length; i++) {
+      fInducementTypes[i] = inducementTypeFactory.forName(inducementTypeNames[i]);
+    }
+    String[] cardNames = IJsonOption.CARDS.getFrom(jsonObject);
+    fCards = new Card[cardNames.length];
+    CardFactory cardFactory = new CardFactory();
+    for (int i = 0; i < fCards.length; i++) {
+      fCards[i] = cardFactory.forName(cardNames[i]);
+    }
   }
 
 }

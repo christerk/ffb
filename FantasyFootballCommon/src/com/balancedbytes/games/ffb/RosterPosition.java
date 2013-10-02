@@ -479,7 +479,7 @@ public class RosterPosition implements IXmlSerializable, IByteArraySerializable 
           fInsideSkillListTag = false;
         }
         if (_XML_TAG_SKILL.equals(pTag)) {
-          Skill skill = Skill.fromName(pValue);
+          Skill skill = new SkillFactory().forName(pValue);
           if (skill != null) {
           	fSkillValues.put(skill, fCurrentSkillValue);
           }
@@ -700,8 +700,9 @@ public class RosterPosition implements IXmlSerializable, IByteArraySerializable 
     
     // Skills
     byte[] skillIds = pByteArray.getByteArray();
+    SkillFactory skillFactory = new SkillFactory();
     for (int j = 0; j < skillIds.length; j++) {
-      Skill skill = Skill.fromId(skillIds[j]);
+      Skill skill = skillFactory.forId(skillIds[j]);
       if (skill != null) {
         fSkillValues.put(skill, null);
       }
@@ -711,7 +712,7 @@ public class RosterPosition implements IXmlSerializable, IByteArraySerializable 
     	int nrOfSkills = pByteArray.getByte();
     	for (int j = 0; j < nrOfSkills; j++) {
     		if (pByteArray.getBoolean()) {
-          Skill skill = Skill.fromId(skillIds[j]);
+          Skill skill = skillFactory.forId(skillIds[j]);
     			fSkillValues.put(skill, pByteArray.getSmallInt());
     		}
 	    }

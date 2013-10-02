@@ -8,6 +8,7 @@ import org.xml.sax.helpers.AttributesImpl;
 import com.balancedbytes.games.ffb.Player;
 import com.balancedbytes.games.ffb.SendToBoxReason;
 import com.balancedbytes.games.ffb.SeriousInjury;
+import com.balancedbytes.games.ffb.SeriousInjuryFactory;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
 import com.balancedbytes.games.ffb.bytearray.IByteArraySerializable;
@@ -479,7 +480,7 @@ public class PlayerResult implements IByteArraySerializable, IXmlSerializable {
         setDefecting(Boolean.parseBoolean(pValue));
       }
       if (_XML_TAG_INJURY.equals(pXmlTag)) {
-        setSeriousInjury(SeriousInjury.forName(pValue));
+        setSeriousInjury(new SeriousInjuryFactory().forName(pValue));
       }
 
     }
@@ -529,7 +530,7 @@ public class PlayerResult implements IByteArraySerializable, IXmlSerializable {
     fRushing = pByteArray.getSmallInt();
     fPassing = pByteArray.getSmallInt();
     setCurrentSpps(pByteArray.getSmallInt());
-    fSeriousInjury = SeriousInjury.fromId(pByteArray.getByte());
+    fSeriousInjury = new SeriousInjuryFactory().forId(pByteArray.getByte());
     fSendToBoxReason = SendToBoxReason.fromId(pByteArray.getByte());
     fSendToBoxTurn = pByteArray.getByte();
     fSendToBoxHalf = pByteArray.getByte();

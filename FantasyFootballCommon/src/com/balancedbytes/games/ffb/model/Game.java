@@ -19,6 +19,7 @@ import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
 import com.balancedbytes.games.ffb.bytearray.IByteArraySerializable;
 import com.balancedbytes.games.ffb.dialog.DialogId;
+import com.balancedbytes.games.ffb.dialog.DialogIdFactory;
 import com.balancedbytes.games.ffb.util.DateTool;
 import com.balancedbytes.games.ffb.util.StringTool;
 import com.balancedbytes.games.ffb.util.UtilActingPlayer;
@@ -708,7 +709,7 @@ public class Game implements IXmlWriteable, IByteArraySerializable {
     setConcessionPossible(pByteArray.getBoolean());
     setTesting(pByteArray.getBoolean());
     
-    DialogId dialogId = DialogId.fromId(pByteArray.getByte());
+    DialogId dialogId = new DialogIdFactory().forId(pByteArray.getByte());
     if (dialogId != null) {
       setDialogParameter(dialogId.createDialogParameter());
       getDialogParameter().initFrom(pByteArray);

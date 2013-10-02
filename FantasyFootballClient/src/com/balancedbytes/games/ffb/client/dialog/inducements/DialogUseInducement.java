@@ -44,8 +44,8 @@ public class DialogUseInducement extends Dialog implements ActionListener {
     super(pClient, "Use Inducement", false);
     
     Set<InducementType> inducementSet = new HashSet<InducementType>();
-    if (ArrayTool.isProvided(pDialogParameter.getInducements())) {
-      for (InducementType inducement : pDialogParameter.getInducements()) {
+    if (ArrayTool.isProvided(pDialogParameter.getInducementTypes())) {
+      for (InducementType inducement : pDialogParameter.getInducementTypes()) {
       	inducementSet.add(inducement);
       }
     }

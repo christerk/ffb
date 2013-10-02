@@ -22,13 +22,16 @@ import com.balancedbytes.games.ffb.PushbackSquare;
 import com.balancedbytes.games.ffb.RangeRuler;
 import com.balancedbytes.games.ffb.SendToBoxReason;
 import com.balancedbytes.games.ffb.SeriousInjury;
+import com.balancedbytes.games.ffb.SeriousInjuryFactory;
 import com.balancedbytes.games.ffb.Skill;
+import com.balancedbytes.games.ffb.SkillFactory;
 import com.balancedbytes.games.ffb.TrackNumber;
 import com.balancedbytes.games.ffb.TurnMode;
 import com.balancedbytes.games.ffb.Weather;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
 import com.balancedbytes.games.ffb.dialog.DialogId;
+import com.balancedbytes.games.ffb.dialog.DialogIdFactory;
 import com.balancedbytes.games.ffb.util.DateTool;
 import com.balancedbytes.games.ffb.util.StringTool;
 import com.balancedbytes.games.ffb.xml.UtilXml;
@@ -274,7 +277,7 @@ public enum ModelAttributeType {
       case PLAYER_ACTION:
         return PlayerAction.fromName(valueString);
       case SKILL:
-        return Skill.fromName(valueString);
+        return new SkillFactory().forName(valueString);
       case LONG:
         return new Long(valueString);
       case STRING:
@@ -288,11 +291,11 @@ public enum ModelAttributeType {
           return null;
         }
       case DIALOG_ID:
-        return DialogId.forName(valueString);
+        return new DialogIdFactory().forName(valueString);
       case PLAYER_STATE:
         return new PlayerState(Integer.parseInt(valueString));
       case SERIOUS_INJURY:
-        return SeriousInjury.forName(valueString);
+        return new SeriousInjuryFactory().forName(valueString);
       case SEND_TO_BOX_REASON:
         return SendToBoxReason.fromName(valueString);
       case WEATHER:
@@ -464,7 +467,7 @@ public enum ModelAttributeType {
       case PLAYER_ACTION:
         return PlayerAction.fromId(pByteArray.getByte());
       case SKILL:
-        return Skill.fromId(pByteArray.getByte());
+        return new SkillFactory().forId(pByteArray.getByte());
       case LONG:
         return pByteArray.getLong();
       case DATE:
@@ -479,10 +482,10 @@ public enum ModelAttributeType {
       case FIELD_COORDINATE:
         return pByteArray.getFieldCoordinate();
       case DIALOG_ID:
-        return DialogId.fromId(pByteArray.getByte());
+        return new DialogIdFactory().forId(pByteArray.getByte());
       case DIALOG_PARAMETER:
         IDialogParameter dialogParameter = null;
-        DialogId dialogId = DialogId.fromId(pByteArray.getByte());
+        DialogId dialogId = new DialogIdFactory().forId(pByteArray.getByte());
         if (dialogId != null) {
           dialogParameter = dialogId.createDialogParameter();
           if (dialogParameter != null) {
@@ -493,7 +496,7 @@ public enum ModelAttributeType {
       case PLAYER_STATE:
         return new PlayerState(pByteArray.getSmallInt());
       case SERIOUS_INJURY:
-        return SeriousInjury.fromId(pByteArray.getByte());
+        return new SeriousInjuryFactory().forId(pByteArray.getByte());
       case SEND_TO_BOX_REASON:
         return SendToBoxReason.fromId(pByteArray.getByte());
       case BLOOD_SPOT:
