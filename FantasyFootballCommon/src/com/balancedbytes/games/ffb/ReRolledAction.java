@@ -4,7 +4,7 @@ package com.balancedbytes.games.ffb;
  * 
  * @author Kalimar
  */
-public enum ReRolledAction {
+public enum ReRolledAction implements IEnumWithId, IEnumWithName {
   
   GO_FOR_IT(1, "Go For It"),
   DODGE(2, "Dodge"),
@@ -61,33 +61,6 @@ public enum ReRolledAction {
   
   public Skill getSkill() {
     return fSkill;
-  }
-  
-  public static ReRolledAction fromId(int pId) {
-    for (ReRolledAction action : values()) {
-      if (pId == action.getId()) {
-        return action;
-      }
-    }
-    return null;
-  }
-  
-  public static ReRolledAction fromSkill(Skill pSkill) {
-    for (ReRolledAction action : values()) {
-      if (pSkill == action.getSkill()) {
-        return action;
-      }
-    }
-    return null;
-  }
-
-  public static ReRolledAction fromName(String pName) {
-    for (ReRolledAction action : values()) {
-      if (action.getName().equalsIgnoreCase(pName)) {
-        return action;
-      }
-    }
-    return null;
   }
 
 }

@@ -1,5 +1,7 @@
 package com.balancedbytes.games.ffb.json;
 
+import java.util.Collection;
+
 import com.eclipsesource.json.JsonArray;
 import com.eclipsesource.json.JsonObject;
 
@@ -43,8 +45,16 @@ public class JsonStringArrayOption extends JsonAbstractOption {
     return jsonArray;
   }
 
-  public void addTo(JsonObject pJsonObject, String[] pValue) {
-    addValueTo(pJsonObject, toJsonArray(pValue));
+  public void addTo(JsonObject pJsonObject, String[] pValues) {
+    addValueTo(pJsonObject, toJsonArray(pValues));
+  }
+  
+  public void addTo(JsonObject pJsonObject, Collection<String> pValues) {
+    if (pValues != null) {
+      addTo(pJsonObject, pValues.toArray(new String[pValues.size()]));
+    } else {
+      addTo(pJsonObject, (String[]) null);
+    }
   }
   
 }

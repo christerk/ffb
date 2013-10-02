@@ -5,6 +5,7 @@ import com.balancedbytes.games.ffb.DirectionFactory;
 import com.balancedbytes.games.ffb.GameOptionFactory;
 import com.balancedbytes.games.ffb.InducementTypeFactory;
 import com.balancedbytes.games.ffb.KickoffResultFactory;
+import com.balancedbytes.games.ffb.ReRolledActionFactory;
 import com.balancedbytes.games.ffb.SeriousInjuryFactory;
 import com.balancedbytes.games.ffb.TeamStatusFactory;
 import com.balancedbytes.games.ffb.dialog.DialogIdFactory;
@@ -22,6 +23,9 @@ public interface IJsonOption {
   JsonFieldCoordinateOption BALL_COORDINATE_WITH_KICK = new JsonFieldCoordinateOption("ballCoordinateWithKick");         
          JsonIntArrayOption BLOCK_ROLL = new JsonIntArrayOption("blockRoll");
   JsonFieldCoordinateOption BOTTOM_RIGHT = new JsonFieldCoordinateOption("bottomRight");
+      JsonStringArrayOption CARDS_ACTIVE = new JsonStringArrayOption("cardsActive");
+      JsonStringArrayOption CARDS_AVAILABLE = new JsonStringArrayOption("cardsAvailable");
+      JsonStringArrayOption CARDS_DEACTIVATED = new JsonStringArrayOption("cardsDeactivated");
      JsonEnumWithNameOption CARD_TYPE = new JsonEnumWithNameOption("cardType", new CardTypeFactory());
            JsonStringOption CHOOSING_TEAM_ID = new JsonStringOption("choosingTeamId");
            JsonStringOption COACH = new JsonStringOption("coach");
@@ -30,12 +34,14 @@ public interface IJsonOption {
      JsonEnumWithNameOption DIRECTION = new JsonEnumWithNameOption("direction", new DirectionFactory());
            JsonStringOption DIVISION = new JsonStringOption("division");
           JsonBooleanOption EXHAUSTED = new JsonBooleanOption("exhausted");
+          JsonBooleanOption FUMBLE = new JsonBooleanOption("fumble");
              JsonLongOption GAME_ID = new JsonLongOption("gameId");
             JsonArrayOption GAME_LIST = new JsonArrayOption("gameList");
      JsonEnumWithNameOption GAME_OPTION = new JsonEnumWithNameOption("gameOption", new GameOptionFactory());
             JsonArrayOption GAME_OPTIONS = new JsonArrayOption("gameOptions");
           JsonBooleanOption HOME_CHOICE = new JsonBooleanOption("homeChoice");
            JsonStringOption HOME_TEXT = new JsonStringOption("homeText");
+            JsonArrayOption INDUCEMENTS = new JsonArrayOption("inducements");
      JsonEnumWithNameOption INDUCEMENT_TYPE = new JsonEnumWithNameOption("inducementType", new InducementTypeFactory());
       JsonPlayerStateOption INJURY = new JsonPlayerStateOption("injury");
      JsonEnumWithNameOption KICKOFF_RESULT = new JsonEnumWithNameOption("kickoffResult", new KickoffResultFactory());
@@ -49,6 +55,7 @@ public interface IJsonOption {
               JsonIntOption NR_OF_CARDS = new JsonIntOption("nrOfCards");
               JsonIntOption NR_OF_DICE = new JsonIntOption("nrOfDice");
               JsonIntOption NUMBER = new JsonIntOption("number");
+              JsonIntOption OLD_ROLL = new JsonIntOption("oldRoll");
               JsonIntOption OPPONENT_TEAM_VALUE = new JsonIntOption("opponentTeamValue");
            JsonStringOption PLAYER_ID = new JsonStringOption("playerId");
       JsonStringArrayOption PLAYER_IDS = new JsonStringArrayOption("playerIds");
@@ -59,6 +66,7 @@ public interface IJsonOption {
       JsonStringArrayOption POSITION_IDS = new JsonStringArrayOption("positionIds"); 
           JsonBooleanOption PRO_RE_ROLL_OPTION = new JsonBooleanOption("proReRollOption"); 
            JsonStringOption RACE = new JsonStringOption("race");
+     JsonEnumWithNameOption RE_ROLLED_ACTION = new JsonEnumWithNameOption("reRolledAction", new ReRolledActionFactory());
           JsonBooleanOption RE_ROLL_INJURY = new JsonBooleanOption("reRollInjury");
               JsonIntOption ROLL = new JsonIntOption("roll");
           JsonBooleanOption SELECTED = new JsonBooleanOption("selected");
