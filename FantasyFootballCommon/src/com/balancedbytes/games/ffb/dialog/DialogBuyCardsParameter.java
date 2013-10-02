@@ -33,7 +33,6 @@ public class DialogBuyCardsParameter implements IDialogParameter {
   
   private static final String _XML_TAG_DECK = "deck";
   
-
   private String fTeamId;
   private int fAvailableGold;
   private int fAvailableCards;

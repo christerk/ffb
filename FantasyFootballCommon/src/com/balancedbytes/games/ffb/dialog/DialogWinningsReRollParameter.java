@@ -7,7 +7,11 @@ import org.xml.sax.helpers.AttributesImpl;
 import com.balancedbytes.games.ffb.IDialogParameter;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
+import com.balancedbytes.games.ffb.json.IJsonOption;
+import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.xml.UtilXml;
+import com.eclipsesource.json.JsonObject;
+import com.eclipsesource.json.JsonValue;
 
 /**
  * 
@@ -77,13 +81,27 @@ public class DialogWinningsReRollParameter implements IDialogParameter {
 
   public int initFrom(ByteArray pByteArray) {
     int byteArraySerializationVersion = pByteArray.getSmallInt();
-    DialogId dialogId = DialogId.fromId(pByteArray.getByte());
-    if (getId() != dialogId) {
-      throw new IllegalStateException("Wrong dialog id. Expected " + getId().getName() + " received " + ((dialogId != null) ? dialogId.getName() : "null"));
-    }
+    UtilDialogParameter.validateDialogId(this, new DialogIdFactory().forId(pByteArray.getByte()));
     fTeamId = pByteArray.getString();
     fOldRoll = pByteArray.getByte();
     return byteArraySerializationVersion;
+  }
+  
+  // JSON serialization
+  
+  public JsonValue toJsonValue() {
+    JsonObject jsonObject = new JsonObject();
+    IJsonOption.DIALOG_ID.addTo(jsonObject, getId());
+    IJsonOption.TEAM_ID.addTo(jsonObject, fTeamId);
+    IJsonOption.OLD_ROLL.addTo(jsonObject, fOldRoll);
+    return jsonObject;
+  }
+  
+  public void initFrom(JsonValue pJsonValue) {
+    JsonObject jsonObject = UtilJson.asJsonObject(pJsonValue);
+    UtilDialogParameter.validateDialogId(this, (DialogId) IJsonOption.DIALOG_ID.getFrom(jsonObject));
+    fTeamId = IJsonOption.TEAM_ID.getFrom(jsonObject);
+    fOldRoll = IJsonOption.OLD_ROLL.getFrom(jsonObject);
   }
 
 }

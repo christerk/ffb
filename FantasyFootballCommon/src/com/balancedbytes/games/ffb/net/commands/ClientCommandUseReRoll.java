@@ -6,6 +6,7 @@ import org.xml.sax.helpers.AttributesImpl;
 
 import com.balancedbytes.games.ffb.ReRollSource;
 import com.balancedbytes.games.ffb.ReRolledAction;
+import com.balancedbytes.games.ffb.ReRolledActionFactory;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
 import com.balancedbytes.games.ffb.net.NetCommand;
@@ -82,7 +83,7 @@ public class ClientCommandUseReRoll extends NetCommand {
   
   public int initFrom(ByteArray pByteArray) {
     int byteArraySerializationVersion = pByteArray.getSmallInt();
-    fReRolledAction = ReRolledAction.fromId(pByteArray.getByte());
+    fReRolledAction = new ReRolledActionFactory().forId(pByteArray.getByte());
     fReRollSource = ReRollSource.fromId(pByteArray.getByte());
     return byteArraySerializationVersion;
   }

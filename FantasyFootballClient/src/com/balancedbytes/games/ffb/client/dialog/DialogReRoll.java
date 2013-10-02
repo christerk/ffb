@@ -109,7 +109,7 @@ public class DialogReRoll extends Dialog implements ActionListener, KeyListener 
       buttonPanel.add(fButtonTeamReRoll);
       buttonPanel.add(Box.createHorizontalStrut(5));
     }
-    if (fDialogParameter.isProOption()) {
+    if (fDialogParameter.isProReRollOption()) {
       buttonPanel.add(fButtonProReRoll);
       buttonPanel.add(Box.createHorizontalStrut(5));
     }
@@ -168,7 +168,7 @@ public class DialogReRoll extends Dialog implements ActionListener, KeyListener 
         }
         break;
       case KeyEvent.VK_P:
-        if (getDialogParameter().isProOption()) {
+        if (getDialogParameter().isProReRollOption()) {
           fReRollSource = ReRollSource.PRO;
         }
         break;

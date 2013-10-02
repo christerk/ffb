@@ -15,12 +15,17 @@ import org.xml.sax.helpers.AttributesImpl;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
 import com.balancedbytes.games.ffb.bytearray.IByteArraySerializable;
+import com.balancedbytes.games.ffb.json.IJsonOption;
+import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.CommandTurnDataChange;
 import com.balancedbytes.games.ffb.model.ModelChangeTurnData;
 import com.balancedbytes.games.ffb.model.TurnData;
 import com.balancedbytes.games.ffb.util.ArrayTool;
 import com.balancedbytes.games.ffb.xml.IXmlWriteable;
 import com.balancedbytes.games.ffb.xml.UtilXml;
+import com.eclipsesource.json.JsonArray;
+import com.eclipsesource.json.JsonObject;
+import com.eclipsesource.json.JsonValue;
 
 /**
  * 
@@ -306,4 +311,54 @@ public class InducementSet implements IByteArraySerializable, IXmlWriteable {
     return byteArraySerializationVersion;
   }
 
+  // JSON serialization
+  
+  public JsonValue toJsonValue() {
+    JsonObject jsonObject = new JsonObject();
+    JsonArray inducementsArray = new JsonArray();
+    for (Inducement inducement : fInducements.values()) {
+      inducementsArray.add(inducement.toJsonValue());
+    }
+    IJsonOption.INDUCEMENTS.addTo(jsonObject, inducementsArray);
+    List<String> cardsAvailable = new ArrayList<String>();
+    for (Card card : getAvailableCards()) {
+      cardsAvailable.add(card.getName());
+    }
+    IJsonOption.CARDS_AVAILABLE.addTo(jsonObject, cardsAvailable);
+    List<String> cardsActive = new ArrayList<String>();
+    for (Card card : getActiveCards()) {
+      cardsActive.add(card.getName());
+    }
+    IJsonOption.CARDS_ACTIVE.addTo(jsonObject, cardsActive);
+    List<String> cardsDeactivated = new ArrayList<String>();
+    for (Card card : getDeactivatedCards()) {
+      cardsDeactivated.add(card.getName());
+    }
+    IJsonOption.CARDS_DEACTIVATED.addTo(jsonObject, cardsDeactivated);
+    return jsonObject;
+  }
+  
+  public void initFrom(JsonValue pJsonValue) {
+    JsonObject jsonObject = UtilJson.asJsonObject(pJsonValue);
+    JsonArray inducements = IJsonOption.INDUCEMENTS.getFrom(jsonObject);
+    for (int i = 0; i < inducements.size(); i++) {
+      Inducement inducement = new Inducement();
+      inducement.initFrom(inducements.get(i));
+      addInducement(inducement);
+    }
+    CardFactory cardFactory = new CardFactory();
+    String[] cardsAvailable = IJsonOption.CARDS_AVAILABLE.getFrom(jsonObject);
+    for (String cardName : cardsAvailable) {
+      fCardsAvailable.add(cardFactory.forName(cardName));
+    }
+    String[] cardsActive = IJsonOption.CARDS_ACTIVE.getFrom(jsonObject);
+    for (String cardName : cardsActive) {
+      fCardsActive.add(cardFactory.forName(cardName));
+    }    
+    String[] cardsDeactivated = IJsonOption.CARDS_DEACTIVATED.getFrom(jsonObject);
+    for (String cardName : cardsDeactivated) {
+      fCardsDeactivated.add(cardFactory.forName(cardName));
+    }
+  }
+  
 }

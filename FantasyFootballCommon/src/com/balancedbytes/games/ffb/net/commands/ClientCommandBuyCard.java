@@ -5,6 +5,7 @@ import javax.xml.transform.sax.TransformerHandler;
 import org.xml.sax.helpers.AttributesImpl;
 
 import com.balancedbytes.games.ffb.CardType;
+import com.balancedbytes.games.ffb.CardTypeFactory;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
 import com.balancedbytes.games.ffb.net.NetCommand;
@@ -65,7 +66,7 @@ public class ClientCommandBuyCard extends NetCommand {
   
   public int initFrom(ByteArray pByteArray) {
     int byteArraySerializationVersion = pByteArray.getSmallInt();
-    fType = CardType.fromId(pByteArray.getByte());
+    fType = new CardTypeFactory().forId(pByteArray.getByte());
     return byteArraySerializationVersion;
   }
 

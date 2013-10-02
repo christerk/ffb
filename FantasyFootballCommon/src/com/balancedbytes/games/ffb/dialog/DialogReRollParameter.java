@@ -6,9 +6,14 @@ import org.xml.sax.helpers.AttributesImpl;
 
 import com.balancedbytes.games.ffb.IDialogParameter;
 import com.balancedbytes.games.ffb.ReRolledAction;
+import com.balancedbytes.games.ffb.ReRolledActionFactory;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
+import com.balancedbytes.games.ffb.json.IJsonOption;
+import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.xml.UtilXml;
+import com.eclipsesource.json.JsonObject;
+import com.eclipsesource.json.JsonValue;
 
 /**
  * 
@@ -27,19 +32,19 @@ public class DialogReRollParameter implements IDialogParameter {
   private ReRolledAction fReRolledAction;
   private int fMinimumRoll;
   private boolean fTeamReRollOption;
-  private boolean fProOption;
+  private boolean fProReRollOption;
   private boolean fFumble;
 
   public DialogReRollParameter() {
     super();
   }
   
-  public DialogReRollParameter(String pPlayerId, ReRolledAction pReRolledAction, int pMinimumRoll, boolean pTeamReRollOption, boolean pProOption, boolean pFumble) {
+  public DialogReRollParameter(String pPlayerId, ReRolledAction pReRolledAction, int pMinimumRoll, boolean pTeamReRollOption, boolean pProReRollOption, boolean pFumble) {
     fPlayerId = pPlayerId;
     fReRolledAction = pReRolledAction;
     fMinimumRoll = pMinimumRoll;
     fTeamReRollOption = pTeamReRollOption;
-    fProOption = pProOption;
+    fProReRollOption = pProReRollOption;
     fFumble = pFumble;
   }
   
@@ -63,8 +68,8 @@ public class DialogReRollParameter implements IDialogParameter {
     return fTeamReRollOption;
   }
   
-  public boolean isProOption() {
-    return fProOption;
+  public boolean isProReRollOption() {
+    return fProReRollOption;
   }
   
   public boolean isFumble() {
@@ -74,7 +79,7 @@ public class DialogReRollParameter implements IDialogParameter {
   // transformation
 
   public IDialogParameter transform() {
-    return new DialogReRollParameter(getPlayerId(), getReRolledAction(), getMinimumRoll(), isTeamReRollOption(), isProOption(), isFumble());
+    return new DialogReRollParameter(getPlayerId(), getReRolledAction(), getMinimumRoll(), isTeamReRollOption(), isProReRollOption(), isFumble());
   }
     
   // XML serialization
@@ -86,7 +91,7 @@ public class DialogReRollParameter implements IDialogParameter {
     UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_RE_ROLLED_ACTION, (getReRolledAction() != null) ? getReRolledAction().getName() : null);
     UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_MINIMUM_ROLL, getMinimumRoll());
     UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_TEAM_RE_ROLL_OPTION, isTeamReRollOption());
-    UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_PRO_OPTION, isProOption());
+    UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_PRO_OPTION, isProReRollOption());
     UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_FUMBLE, isFumble());
     UtilXml.addEmptyElement(pHandler, XML_TAG, attributes);
   }
@@ -108,25 +113,47 @@ public class DialogReRollParameter implements IDialogParameter {
     pByteList.addByte((byte) ((getReRolledAction() != null) ? getReRolledAction().getId() : 0));
     pByteList.addByte((byte) getMinimumRoll());
     pByteList.addBoolean(isTeamReRollOption());
-    pByteList.addBoolean(isProOption());
+    pByteList.addBoolean(isProReRollOption());
     pByteList.addBoolean(isFumble());
   }
 
   public int initFrom(ByteArray pByteArray) {
     int byteArraySerializationVersion = pByteArray.getSmallInt();
-    DialogId dialogId = DialogId.fromId(pByteArray.getByte());
-    if (getId() != dialogId) {
-      throw new IllegalStateException("Wrong dialog id. Expected " + getId().getName() + " received " + ((dialogId != null) ? dialogId.getName() : "null"));
-    }
+    UtilDialogParameter.validateDialogId(this, new DialogIdFactory().forId(pByteArray.getByte()));
     fPlayerId = pByteArray.getString();
-    fReRolledAction = ReRolledAction.fromId(pByteArray.getByte());
+    fReRolledAction = new ReRolledActionFactory().forId(pByteArray.getByte());
     fMinimumRoll = pByteArray.getByte();
     fTeamReRollOption = pByteArray.getBoolean();
-    fProOption = pByteArray.getBoolean();
+    fProReRollOption = pByteArray.getBoolean();
     if (byteArraySerializationVersion > 1) {
     	fFumble = pByteArray.getBoolean();
     }
     return byteArraySerializationVersion;
+  }
+  
+  // JSON serialization
+  
+  public JsonValue toJsonValue() {
+    JsonObject jsonObject = new JsonObject();
+    IJsonOption.DIALOG_ID.addTo(jsonObject, getId());
+    IJsonOption.PLAYER_ID.addTo(jsonObject, fPlayerId);
+    IJsonOption.RE_ROLLED_ACTION.addTo(jsonObject, fReRolledAction);
+    IJsonOption.MINIMUM_ROLL.addTo(jsonObject, fMinimumRoll);
+    IJsonOption.TEAM_RE_ROLL_OPTION.addTo(jsonObject, fTeamReRollOption);
+    IJsonOption.PRO_RE_ROLL_OPTION.addTo(jsonObject, fProReRollOption);
+    IJsonOption.FUMBLE.addTo(jsonObject, fFumble);
+    return jsonObject;
+  }
+  
+  public void initFrom(JsonValue pJsonValue) {
+    JsonObject jsonObject = UtilJson.asJsonObject(pJsonValue);
+    UtilDialogParameter.validateDialogId(this, (DialogId) IJsonOption.DIALOG_ID.getFrom(jsonObject));
+    fPlayerId = IJsonOption.PLAYER_ID.getFrom(jsonObject);
+    fReRolledAction = (ReRolledAction) IJsonOption.RE_ROLLED_ACTION.getFrom(jsonObject);
+    fMinimumRoll = IJsonOption.MINIMUM_ROLL.getFrom(jsonObject);
+    fTeamReRollOption = IJsonOption.TEAM_RE_ROLL_OPTION.getFrom(jsonObject);
+    fProReRollOption = IJsonOption.PRO_RE_ROLL_OPTION.getFrom(jsonObject);
+    fFumble = IJsonOption.FUMBLE.getFrom(jsonObject);
   }
 
 }
