@@ -1,5 +1,7 @@
 package com.balancedbytes.games.ffb.net;
 
+import com.balancedbytes.games.ffb.IEnumWithId;
+import com.balancedbytes.games.ffb.IEnumWithName;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandActingPlayer;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandApothecaryChoice;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandBlock;
@@ -70,7 +72,7 @@ import com.balancedbytes.games.ffb.net.commands.ServerCommandVersion;
  * 
  * @author Kalimar
  */
-public enum NetCommandId {
+public enum NetCommandId implements IEnumWithId, IEnumWithName {
   
   INTERNAL_SOCKET_CLOSED(1, "internalSocketClosed"),
   CLIENT_JOIN(2, "clientJoin"),
@@ -297,24 +299,6 @@ public enum NetCommandId {
       default:
         throw new IllegalStateException("Unhandled netCommandId " + this + ".");
     }
-  }
-    
-  public static NetCommandId fromId(int pId) {
-    for (NetCommandId commandId : values()) {
-      if (commandId.getId() == pId) {
-        return commandId;
-      }
-    }
-    return null;
-  }
-  
-  public static NetCommandId fromName(String pName) {
-    for (NetCommandId commandId : values()) {
-      if (commandId.getName().equalsIgnoreCase(pName)) {
-        return commandId;
-      }
-    }
-    return null;
   }
 
 }

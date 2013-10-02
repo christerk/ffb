@@ -6,7 +6,7 @@ package com.balancedbytes.games.ffb;
  * 
  * @author Kalimar
  */
-public enum ConcedeGameStatus {
+public enum ConcedeGameStatus implements IEnumWithId, IEnumWithName {
   
   REQUESTED(1, "requested"),
   CONFIRMED(2, "confirmed"),
@@ -27,23 +27,5 @@ public enum ConcedeGameStatus {
   public String getName() {
     return fName;
   }
-  
-  public static ConcedeGameStatus fromId(int pId) {
-    for (ConcedeGameStatus mode : values()) {
-      if (mode.getId() == pId) {
-        return mode;
-      }
-    }
-    return null;
-  }
-  
-  public static ConcedeGameStatus fromName(String pName) {
-    for (ConcedeGameStatus mode : values()) {
-      if (mode.getName().equalsIgnoreCase(pName)) {
-        return mode;
-      }
-    }
-    return null;
-  }
-    
+      
 }

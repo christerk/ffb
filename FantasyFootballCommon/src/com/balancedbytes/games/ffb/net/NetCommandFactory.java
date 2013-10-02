@@ -35,7 +35,7 @@ public class NetCommandFactory {
   public NetCommand fromBytes(byte[] pBytes) {
     NetCommand netCommand = null;
     if ((pBytes != null) && (pBytes.length > 1)) {
-      NetCommandId netCommandId = NetCommandId.fromId(((pBytes[0] & 0xff) * 256) + (pBytes[1] & 0xff));
+      NetCommandId netCommandId = new NetCommandIdFactory().forId(((pBytes[0] & 0xff) * 256) + (pBytes[1] & 0xff));
       if (netCommandId != null) {
         netCommand = netCommandId.createNetCommand();
         if (netCommand != null) {

@@ -20,10 +20,10 @@ public class AnimationSequenceFactory {
 	}
 
 	public IAnimationSequence getAnimationSequence(FantasyFootballClient pClient, Animation pAnimation) {
-		if ((pAnimation == null) || (pAnimation.getType() == null)) {
+		if ((pAnimation == null) || (pAnimation.getAnimationType() == null)) {
 			return null;
 		}
-		switch (pAnimation.getType()) {
+		switch (pAnimation.getAnimationType()) {
 			case KICKOFF_BLITZ:
 				return AnimationSequenceKickoff.KICKOFF_BLITZ;
 			case KICKOFF_BLIZZARD:

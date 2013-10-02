@@ -127,11 +127,11 @@ public abstract class AbstractStep implements IStep {
 		StepCommandStatus commandStatus = StepCommandStatus.UNHANDLED_COMMAND;
     Game game = getGameState().getGame();
     GameResult gameResult = game.getGameResult();
-    if (pConcedeGameCommand.getStatus() != null) {
+    if (pConcedeGameCommand.getConcedeGameStatus() != null) {
     	ChannelManager channelManager = getGameState().getServer().getChannelManager();
     	boolean homeCommand = (channelManager.getChannelOfHomeCoach(getGameState()) == pConcedeGameCommand.getSender());
       boolean awayCommand = (channelManager.getChannelOfAwayCoach(getGameState()) == pConcedeGameCommand.getSender());
-      switch (pConcedeGameCommand.getStatus()) {
+      switch (pConcedeGameCommand.getConcedeGameStatus()) {
         case REQUESTED:
           if (game.isConcessionPossible() && ((game.isHomePlaying() && homeCommand) || (!game.isHomePlaying() && awayCommand))) {
             UtilDialog.showDialog(getGameState(), new DialogConcedeGameParameter());

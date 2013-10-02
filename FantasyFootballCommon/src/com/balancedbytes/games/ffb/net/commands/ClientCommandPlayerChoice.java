@@ -9,6 +9,7 @@ import org.xml.sax.helpers.AttributesImpl;
 
 import com.balancedbytes.games.ffb.Player;
 import com.balancedbytes.games.ffb.PlayerChoiceMode;
+import com.balancedbytes.games.ffb.PlayerChoiceModeFactory;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
 import com.balancedbytes.games.ffb.net.NetCommand;
@@ -117,7 +118,7 @@ public class ClientCommandPlayerChoice extends NetCommand {
   
   public int initFrom(ByteArray pByteArray) {
     int byteArraySerializationVersion = pByteArray.getSmallInt();
-    fMode = PlayerChoiceMode.fromId(pByteArray.getByte());
+    fMode = new PlayerChoiceModeFactory().forId(pByteArray.getByte());
     addPlayerIds(pByteArray.getStringArray());
     return byteArraySerializationVersion;
   }

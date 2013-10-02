@@ -5,11 +5,16 @@ import javax.xml.transform.sax.TransformerHandler;
 import org.xml.sax.helpers.AttributesImpl;
 
 import com.balancedbytes.games.ffb.ClientStateId;
+import com.balancedbytes.games.ffb.ClientStateIdFactory;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
+import com.balancedbytes.games.ffb.json.IJsonOption;
+import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.net.NetCommand;
 import com.balancedbytes.games.ffb.net.NetCommandId;
 import com.balancedbytes.games.ffb.xml.UtilXml;
+import com.eclipsesource.json.JsonObject;
+import com.eclipsesource.json.JsonValue;
 
 
 
@@ -65,8 +70,23 @@ public class ClientCommandDebugClientState extends NetCommand {
   
   public int initFrom(ByteArray pByteArray) {
     int byteArraySerializationVersion = pByteArray.getSmallInt();
-    fClientStateId = ClientStateId.fromId(pByteArray.getByte());
+    fClientStateId = new ClientStateIdFactory().forId(pByteArray.getByte());
     return byteArraySerializationVersion;
+  }
+  
+  // JSON serialization
+  
+  public JsonValue toJsonValue() {
+    JsonObject jsonObject = new JsonObject();
+    IJsonOption.NET_COMMAND_ID.addTo(jsonObject, getId());
+    IJsonOption.CLIENT_STATE_ID.addTo(jsonObject, fClientStateId);
+    return jsonObject;
+  }
+  
+  public void initFrom(JsonValue pJsonValue) {
+    JsonObject jsonObject = UtilJson.asJsonObject(pJsonValue);
+    UtilNetCommand.validateCommandId(this, (NetCommandId) IJsonOption.NET_COMMAND_ID.getFrom(jsonObject));
+    fClientStateId = (ClientStateId) IJsonOption.CLIENT_STATE_ID.getFrom(jsonObject);
   }
 
 }

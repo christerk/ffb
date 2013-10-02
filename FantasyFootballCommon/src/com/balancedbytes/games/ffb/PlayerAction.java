@@ -4,7 +4,7 @@ package com.balancedbytes.games.ffb;
  * 
  * @author Kalimar
  */
-public enum PlayerAction {
+public enum PlayerAction implements IEnumWithId, IEnumWithName {
   
   MOVE(1, "move", 1, "starts a Move Action"),
   BLOCK(2, "block", 2, "starts a Block Action"),
@@ -62,24 +62,6 @@ public enum PlayerAction {
   
   public boolean isPassing() {
   	return ((this == PASS) || (this == DUMP_OFF) || (this == HAND_OVER) || (this == HAIL_MARY_PASS) || (this == THROW_BOMB) || (this == HAIL_MARY_BOMB));
-  }
-  
-  public static PlayerAction fromId(int pValue) {
-    for (PlayerAction action : values()) {
-      if (action.getId() == pValue) {
-        return action;
-      }
-    }
-    return null;
-  }
-
-  public static PlayerAction fromName(String pName) {
-    for (PlayerAction action : values()) {
-      if (action.getName().equalsIgnoreCase(pName)) {
-        return action;
-      }
-    }
-    return null;
   }
   
 }

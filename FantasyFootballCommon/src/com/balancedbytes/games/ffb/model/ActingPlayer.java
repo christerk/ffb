@@ -9,6 +9,7 @@ import org.xml.sax.helpers.AttributesImpl;
 
 import com.balancedbytes.games.ffb.Player;
 import com.balancedbytes.games.ffb.PlayerAction;
+import com.balancedbytes.games.ffb.PlayerActionFactory;
 import com.balancedbytes.games.ffb.Skill;
 import com.balancedbytes.games.ffb.SkillFactory;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
@@ -395,7 +396,7 @@ public class ActingPlayer implements IXmlWriteable, IByteArraySerializable {
     setHasBlocked(pByteArray.getBoolean());
     setHasFouled(pByteArray.getBoolean());
     setHasPassed(pByteArray.getBoolean());
-    setPlayerAction(PlayerAction.fromId(pByteArray.getByte()));
+    setPlayerAction(new PlayerActionFactory().forId(pByteArray.getByte()));
     setStandingUp(pByteArray.getBoolean());
     setSufferingBloodLust(pByteArray.getBoolean());
     setSufferingAnimosity(pByteArray.getBoolean());

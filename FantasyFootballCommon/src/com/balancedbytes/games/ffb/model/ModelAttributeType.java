@@ -16,6 +16,7 @@ import com.balancedbytes.games.ffb.IDialogParameter;
 import com.balancedbytes.games.ffb.Inducement;
 import com.balancedbytes.games.ffb.MoveSquare;
 import com.balancedbytes.games.ffb.PlayerAction;
+import com.balancedbytes.games.ffb.PlayerActionFactory;
 import com.balancedbytes.games.ffb.PlayerMarker;
 import com.balancedbytes.games.ffb.PlayerState;
 import com.balancedbytes.games.ffb.PushbackSquare;
@@ -275,7 +276,7 @@ public enum ModelAttributeType {
       case INTEGER:
         return new Integer(valueString);
       case PLAYER_ACTION:
-        return PlayerAction.fromName(valueString);
+        return new PlayerActionFactory().forName(valueString);
       case SKILL:
         return new SkillFactory().forName(valueString);
       case LONG:
@@ -465,7 +466,7 @@ public enum ModelAttributeType {
       case STRING:
         return pByteArray.getString();
       case PLAYER_ACTION:
-        return PlayerAction.fromId(pByteArray.getByte());
+        return new PlayerActionFactory().forId(pByteArray.getByte());
       case SKILL:
         return new SkillFactory().forId(pByteArray.getByte());
       case LONG:

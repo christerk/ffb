@@ -5,7 +5,7 @@ package com.balancedbytes.games.ffb;
  * 
  * @author Kalimar
  */
-public enum ClientStateId {
+public enum ClientStateId implements IEnumWithId, IEnumWithName {
 
   LOGIN(1, "login"),
   RE_ROLL(2, "reRoll"),
@@ -52,24 +52,6 @@ public enum ClientStateId {
     return fName;
   }
   
-  public static ClientStateId fromId(int pId) {
-    for (ClientStateId state : values()) {
-      if (state.getId() == pId) {
-        return state;
-      }
-    }
-    return null;
-  }
-  
-  public static ClientStateId fromName(String pName) {
-    for (ClientStateId state : values()) {
-      if (state.getName().equalsIgnoreCase(pName)) {
-        return state;
-      }
-    }
-    return null;
-  }
-
   public String toString() {
     return getName();
   }

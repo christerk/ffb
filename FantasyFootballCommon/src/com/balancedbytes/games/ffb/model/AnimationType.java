@@ -1,5 +1,8 @@
 package com.balancedbytes.games.ffb.model;
 
+import com.balancedbytes.games.ffb.IEnumWithId;
+import com.balancedbytes.games.ffb.IEnumWithName;
+
 
 
 
@@ -7,7 +10,7 @@ package com.balancedbytes.games.ffb.model;
  * 
  * @author Kalimar
  */
-public enum AnimationType {
+public enum AnimationType implements IEnumWithId, IEnumWithName {
   
   PASS(1, "pass"),
   THROW_TEAM_MATE(2, "throwTeamMate"),
@@ -51,22 +54,4 @@ public enum AnimationType {
     return fName;
   }
     
-  public static AnimationType fromId(int pId) {
-    for (AnimationType type : values()) {
-      if (type.getId() == pId) {
-        return type;
-      }
-    }
-    return null;
-  }
-    
-  public static AnimationType fromName(String pName) {
-    for (AnimationType type : values()) {
-      if (type.getName().equalsIgnoreCase(pName)) {
-        return type;
-      }
-    }
-    return null;
-  }
-
 }

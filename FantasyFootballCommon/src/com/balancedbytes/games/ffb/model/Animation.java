@@ -9,9 +9,13 @@ import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
 import com.balancedbytes.games.ffb.bytearray.IByteArraySerializable;
+import com.balancedbytes.games.ffb.json.IJsonOption;
+import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.xml.IXmlReadable;
 import com.balancedbytes.games.ffb.xml.IXmlSerializable;
 import com.balancedbytes.games.ffb.xml.UtilXml;
+import com.eclipsesource.json.JsonObject;
+import com.eclipsesource.json.JsonValue;
 
 
 
@@ -33,7 +37,7 @@ public class Animation implements IXmlSerializable, IByteArraySerializable {
   private static final String _XML_TAG_END_COORDINATE = "endCoordinate";
   private static final String _XML_TAG_INTERCEPTOR_COORDINATE = "interceptorCoordinate";
   
-  private AnimationType fType;
+  private AnimationType fAnimationType;
   private String fThrownPlayerId;
   private boolean fWithBall;
   private FieldCoordinate fStartCoordinate;
@@ -44,12 +48,12 @@ public class Animation implements IXmlSerializable, IByteArraySerializable {
     super();
   }
 
-  public Animation(AnimationType pType) {
-  	this(pType, null, null, null, false, null);
+  public Animation(AnimationType pAnimationType) {
+  	this(pAnimationType, null, null, null, false, null);
   }
 
-  public Animation(AnimationType pType, FieldCoordinate pCoordinate) {
-  	this(pType, pCoordinate, null, null, false, null);
+  public Animation(AnimationType pAnimationType, FieldCoordinate pCoordinate) {
+  	this(pAnimationType, pCoordinate, null, null, false, null);
   }
   
   public Animation(FieldCoordinate pStartCoordinate, FieldCoordinate pEndCoordinate, String pThrownPlayerId, boolean pWithBall) {
@@ -60,8 +64,8 @@ public class Animation implements IXmlSerializable, IByteArraySerializable {
     this(pAnimationType, pStartCoordinate, pEndCoordinate, null, false, pInterceptorCoordinate);
   }
   
-  private Animation(AnimationType pType, FieldCoordinate pStartCoordinate, FieldCoordinate pEndCoordinate, String pThrownPlayerId, boolean pWithBall, FieldCoordinate pInterceptorCoordinate) {
-    fType = pType;
+  private Animation(AnimationType pAnimationType, FieldCoordinate pStartCoordinate, FieldCoordinate pEndCoordinate, String pThrownPlayerId, boolean pWithBall, FieldCoordinate pInterceptorCoordinate) {
+    fAnimationType = pAnimationType;
     fThrownPlayerId = pThrownPlayerId;
     fWithBall = pWithBall;
     fStartCoordinate = pStartCoordinate;
@@ -69,8 +73,8 @@ public class Animation implements IXmlSerializable, IByteArraySerializable {
     fInterceptorCoordinate = pInterceptorCoordinate;
   }
   
-  public AnimationType getType() {
-		return fType;
+  public AnimationType getAnimationType() {
+		return fAnimationType;
 	}
 
   public String getThrownPlayerId() {
@@ -96,7 +100,7 @@ public class Animation implements IXmlSerializable, IByteArraySerializable {
   // transformation
   
   public Animation transform() {
-    return new Animation(getType(), FieldCoordinate.transform(getStartCoordinate()), FieldCoordinate.transform(getEndCoordinate()), getThrownPlayerId(), isWithBall(), FieldCoordinate.transform(getInterceptorCoordinate()));
+    return new Animation(getAnimationType(), FieldCoordinate.transform(getStartCoordinate()), FieldCoordinate.transform(getEndCoordinate()), getThrownPlayerId(), isWithBall(), FieldCoordinate.transform(getInterceptorCoordinate()));
   }
   
   // XML serialization
@@ -104,7 +108,7 @@ public class Animation implements IXmlSerializable, IByteArraySerializable {
   public void addToXml(TransformerHandler pHandler) {
   	
   	AttributesImpl attributes = new AttributesImpl();
-  	UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_TYPE, (getType() != null) ? getType().getName() : null);
+  	UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_TYPE, (getAnimationType() != null) ? getAnimationType().getName() : null);
   	UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_THROWN_PLAYER_ID, getThrownPlayerId());
   	UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_WITH_BALL, isWithBall());
   	UtilXml.startElement(pHandler, XML_TAG, attributes);
@@ -143,7 +147,7 @@ public class Animation implements IXmlSerializable, IByteArraySerializable {
   
   public IXmlReadable startXmlElement(String pXmlTag, Attributes pXmlAttributes) {
     if (XML_TAG.equals(pXmlTag)) {
-    	fType = AnimationType.fromName(UtilXml.getStringAttribute(pXmlAttributes, _XML_ATTRIBUTE_TYPE));
+    	fAnimationType = new AnimationTypeFactory().forName(UtilXml.getStringAttribute(pXmlAttributes, _XML_ATTRIBUTE_TYPE));
       fThrownPlayerId = UtilXml.getStringAttribute(pXmlAttributes, _XML_ATTRIBUTE_THROWN_PLAYER_ID);
       fWithBall = UtilXml.getBooleanAttribute(pXmlAttributes, _XML_ATTRIBUTE_WITH_BALL);
     }
@@ -182,7 +186,7 @@ public class Animation implements IXmlSerializable, IByteArraySerializable {
     pByteList.addFieldCoordinate(getStartCoordinate());
     pByteList.addFieldCoordinate(getEndCoordinate());
     pByteList.addFieldCoordinate(getInterceptorCoordinate());
-    pByteList.addByte((byte) ((getType() != null) ? getType().getId() : 0));
+    pByteList.addByte((byte) ((getAnimationType() != null) ? getAnimationType().getId() : 0));
   }
   
   public int initFrom(ByteArray pByteArray) {
@@ -193,9 +197,32 @@ public class Animation implements IXmlSerializable, IByteArraySerializable {
     fEndCoordinate = pByteArray.getFieldCoordinate();
     fInterceptorCoordinate = pByteArray.getFieldCoordinate();
     if (byteArraySerializationVersion > 1) {
-    	fType = AnimationType.fromId(pByteArray.getByte());
+    	fAnimationType = new AnimationTypeFactory().forId(pByteArray.getByte());
     }
     return byteArraySerializationVersion;
+  }
+  
+  // JSON serialization
+  
+  public JsonValue toJsonValue() {
+    JsonObject jsonObject = new JsonObject();
+    IJsonOption.THROWN_PLAYER_ID.addTo(jsonObject, fThrownPlayerId);
+    IJsonOption.WITH_BALL.addTo(jsonObject, fWithBall);
+    IJsonOption.START_COORDINATE.addTo(jsonObject, fStartCoordinate);
+    IJsonOption.END_COORDINATE.addTo(jsonObject, fEndCoordinate);
+    IJsonOption.INTERCEPTOR_COORDINATE.addTo(jsonObject, fInterceptorCoordinate);
+    IJsonOption.ANIMATION_TYPE.addTo(jsonObject, fAnimationType);
+    return jsonObject;
+  }
+  
+  public void initFrom(JsonValue pJsonValue) {
+    JsonObject jsonObject = UtilJson.asJsonObject(pJsonValue);
+    fThrownPlayerId = IJsonOption.THROWN_PLAYER_ID.getFrom(jsonObject);
+    fWithBall = IJsonOption.WITH_BALL.getFrom(jsonObject);
+    fStartCoordinate = IJsonOption.START_COORDINATE.getFrom(jsonObject);
+    fEndCoordinate = IJsonOption.END_COORDINATE.getFrom(jsonObject);
+    fInterceptorCoordinate = IJsonOption.INTERCEPTOR_COORDINATE.getFrom(jsonObject);
+    fAnimationType = (AnimationType) IJsonOption.ANIMATION_TYPE.getFrom(jsonObject);
   }
   
 }

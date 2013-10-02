@@ -73,12 +73,12 @@ public final class StepBuyCards extends AbstractStep {
 				case CLIENT_BUY_CARD:
 					ClientCommandBuyCard buyCardCommand = (ClientCommandBuyCard) pNetCommand;
 					if (UtilSteps.checkCommandIsFromHomePlayer(getGameState(), buyCardCommand)) {
-						fBuyCardHome = buyCardCommand.getType();
+						fBuyCardHome = buyCardCommand.getCardType();
 						if (fBuyCardHome == null) {
 							fCardsSelectedHome = true;
 						}
 					} else {
-						fBuyCardAway = buyCardCommand.getType();
+						fBuyCardAway = buyCardCommand.getCardType();
 						if (fBuyCardAway == null) {
 							fCardsSelectedAway = true;
 						}

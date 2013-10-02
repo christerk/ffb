@@ -13,6 +13,7 @@ import com.balancedbytes.games.ffb.GameOptions;
 import com.balancedbytes.games.ffb.IDialogParameter;
 import com.balancedbytes.games.ffb.Player;
 import com.balancedbytes.games.ffb.PlayerAction;
+import com.balancedbytes.games.ffb.PlayerActionFactory;
 import com.balancedbytes.games.ffb.Team;
 import com.balancedbytes.games.ffb.TurnMode;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
@@ -719,7 +720,7 @@ public class Game implements IXmlWriteable, IByteArraySerializable {
 
     // Defender
     setDefenderId(pByteArray.getString());
-    setDefenderAction(PlayerAction.fromId(pByteArray.getByte()));
+    setDefenderAction(new PlayerActionFactory().forId(pByteArray.getByte()));
     
     setPassCoordinate(pByteArray.getFieldCoordinate());
 
@@ -754,7 +755,7 @@ public class Game implements IXmlWriteable, IByteArraySerializable {
     
     if (byteArraySerializationVersion > 1) {
     	fThrowerId = pByteArray.getString();
-    	fThrowerAction = PlayerAction.fromId(pByteArray.getByte());
+    	fThrowerAction = new PlayerActionFactory().forId(pByteArray.getByte());
     }
     
     return byteArraySerializationVersion;

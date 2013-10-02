@@ -91,7 +91,7 @@ public class ClientCommandHandlerModelSync extends ClientCommandHandler implemen
     // prepare for animation by hiding ball, bomb or thrown player
     
     if (waitForAnimation) {
-    	switch (animation.getType()) {
+    	switch (animation.getAnimationType()) {
       	case THROW_BOMB:
       	case HAIL_MARY_BOMB:
           game.getFieldModel().setRangeRuler(null);
@@ -134,7 +134,7 @@ public class ClientCommandHandlerModelSync extends ClientCommandHandler implemen
     UserInterface userInterface = getClient().getUserInterface();
 
     Animation animation = fSyncCommand.getAnimation();
-  	switch (animation.getType()) {
+  	switch (animation.getAnimationType()) {
     	case THROW_BOMB:
     	case HAIL_MARY_BOMB:
         game.getFieldModel().setBombCoordinate(fBombCoordinate);
