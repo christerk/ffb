@@ -7,11 +7,16 @@ import org.xml.sax.helpers.AttributesImpl;
 
 import com.balancedbytes.games.ffb.InducementSet;
 import com.balancedbytes.games.ffb.LeaderState;
+import com.balancedbytes.games.ffb.LeaderStateFactory;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
 import com.balancedbytes.games.ffb.bytearray.IByteArraySerializable;
+import com.balancedbytes.games.ffb.json.IJsonOption;
+import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.xml.IXmlWriteable;
 import com.balancedbytes.games.ffb.xml.UtilXml;
+import com.eclipsesource.json.JsonObject;
+import com.eclipsesource.json.JsonValue;
 
 
 /**
@@ -299,9 +304,49 @@ public class TurnData implements IByteArraySerializable, IXmlWriteable {
     fReRollUsed = pByteArray.getBoolean();
     fHandOverUsed = pByteArray.getBoolean();
     fPassUsed = pByteArray.getBoolean();
-    fLeaderState = LeaderState.fromId(pByteArray.getByte());
+    fLeaderState = new LeaderStateFactory().forId(pByteArray.getByte());
     getInducementSet().initFrom(pByteArray);
     return byteArraySerializationVersion;
+  }
+  
+  // JSON serialization
+  
+  public JsonObject toJsonValue() {
+    JsonObject jsonObject = new JsonObject();
+    IJsonOption.HOME_DATA.addTo(jsonObject, fHomeData);
+    IJsonOption.TURN_STARTED.addTo(jsonObject, fTurnStarted);
+    IJsonOption.TURN_NR.addTo(jsonObject, fTurnNr);
+    IJsonOption.FIRST_TURN_AFTER_KICKOFF.addTo(jsonObject, fFirstTurnAfterKickoff);
+    IJsonOption.RE_ROLLS.addTo(jsonObject, fReRolls);
+    IJsonOption.APOTHECARIES.addTo(jsonObject, fApothecaries);
+    IJsonOption.BLITZ_USED.addTo(jsonObject, fBlitzUsed);
+    IJsonOption.FOUL_USED.addTo(jsonObject, fFoulUsed);
+    IJsonOption.RE_ROLL_USED.addTo(jsonObject, fReRollUsed);
+    IJsonOption.HAND_OVER_USED.addTo(jsonObject, fHandOverUsed);
+    IJsonOption.PASS_USED.addTo(jsonObject, fPassUsed);
+    IJsonOption.LEADER_STATE.addTo(jsonObject, fLeaderState);
+    if (fInducementSet != null) {
+      IJsonOption.INDUCEMENT_SET.addTo(jsonObject, fInducementSet.toJsonValue());
+    }
+    return jsonObject;
+  }
+  
+  public void initFrom(JsonValue pJsonValue) {
+    JsonObject jsonObject = UtilJson.asJsonObject(pJsonValue);
+    fHomeData = IJsonOption.HOME_DATA.getFrom(jsonObject);
+    fTurnStarted = IJsonOption.TURN_STARTED.getFrom(jsonObject);
+    fTurnNr = IJsonOption.TURN_NR.getFrom(jsonObject);
+    fFirstTurnAfterKickoff = IJsonOption.FIRST_TURN_AFTER_KICKOFF.getFrom(jsonObject);
+    fReRolls = IJsonOption.RE_ROLLS.getFrom(jsonObject);
+    fApothecaries = IJsonOption.APOTHECARIES.getFrom(jsonObject);
+    fBlitzUsed = IJsonOption.BLITZ_USED.getFrom(jsonObject);
+    fFoulUsed = IJsonOption.FOUL_USED.getFrom(jsonObject);
+    fReRollUsed = IJsonOption.RE_ROLL_USED.getFrom(jsonObject);
+    fHandOverUsed = IJsonOption.HAND_OVER_USED.getFrom(jsonObject);
+    fPassUsed = IJsonOption.PASS_USED.getFrom(jsonObject);
+    fLeaderState = (LeaderState) IJsonOption.LEADER_STATE.getFrom(jsonObject);
+    fInducementSet = new InducementSet();
+    fInducementSet.initFrom(IJsonOption.INDUCEMENT_SET.getFrom(jsonObject));
   }
   
 }

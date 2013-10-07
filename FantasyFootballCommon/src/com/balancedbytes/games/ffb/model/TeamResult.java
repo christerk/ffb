@@ -14,8 +14,13 @@ import com.balancedbytes.games.ffb.Team;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
 import com.balancedbytes.games.ffb.bytearray.IByteArraySerializable;
+import com.balancedbytes.games.ffb.json.IJsonOption;
+import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.xml.IXmlSerializable;
 import com.balancedbytes.games.ffb.xml.UtilXml;
+import com.eclipsesource.json.JsonArray;
+import com.eclipsesource.json.JsonObject;
+import com.eclipsesource.json.JsonValue;
 
 /**
  * 
@@ -543,6 +548,59 @@ public class TeamResult implements IByteArraySerializable, IXmlSerializable {
       fTeamValue = pByteArray.getInt();
     }
     return byteArraySerializationVersion;
+  }
+  
+  // JSON serialization
+  
+  public JsonObject toJsonValue() {
+    JsonObject jsonObject = new JsonObject();
+    IJsonOption.SCORE.addTo(jsonObject, fScore);
+    IJsonOption.CONCEDED.addTo(jsonObject, fConceded);
+    IJsonOption.RAISED_DEAD.addTo(jsonObject, fRaisedDead);
+    IJsonOption.SPECTATORS.addTo(jsonObject, fSpectators);
+    IJsonOption.FAME.addTo(jsonObject, fFame);
+    IJsonOption.WINNINGS.addTo(jsonObject, fWinnings);
+    IJsonOption.FAN_FACTOR_MODIFIER.addTo(jsonObject, fFanFactorModifier);
+    IJsonOption.BADLY_HURT_SUFFERED.addTo(jsonObject, fBadlyHurtSuffered);
+    IJsonOption.SERIOUS_INJURY_SUFFERED.addTo(jsonObject, fSeriousInjurySuffered);
+    IJsonOption.RIP_SUFFERED.addTo(jsonObject, fRipSuffered);
+    IJsonOption.SPIRALLING_EXPENSES.addTo(jsonObject, fSpirallingExpenses);
+    JsonArray playerResultArray = new JsonArray();
+    for (Player player : getTeam().getPlayers()) {
+      playerResultArray.add(getPlayerResult(player).toJsonValue());
+    }
+    IJsonOption.PLAYER_RESULTS.addTo(jsonObject, playerResultArray);
+    IJsonOption.PETTY_CASH_TRANSFERRED.addTo(jsonObject, fPettyCashTransferred);
+    IJsonOption.PETTY_CASH_USED.addTo(jsonObject, fPettyCashUsed);
+    IJsonOption.TEAM_VALUE.addTo(jsonObject, fTeamValue);
+    return jsonObject;
+  }
+  
+  public void initFrom(JsonValue pJsonValue) {
+    JsonObject jsonObject = UtilJson.asJsonObject(pJsonValue);
+    fScore = IJsonOption.SCORE.getFrom(jsonObject);
+    fConceded = IJsonOption.CONCEDED.getFrom(jsonObject);
+    fRaisedDead = IJsonOption.RAISED_DEAD.getFrom(jsonObject);
+    fSpectators = IJsonOption.SPECTATORS.getFrom(jsonObject);
+    fFame = IJsonOption.FAME.getFrom(jsonObject);
+    fWinnings = IJsonOption.WINNINGS.getFrom(jsonObject);
+    fFanFactorModifier = IJsonOption.FAN_FACTOR_MODIFIER.getFrom(jsonObject);
+    fBadlyHurtSuffered = IJsonOption.BADLY_HURT_SUFFERED.getFrom(jsonObject);
+    fSeriousInjurySuffered = IJsonOption.SERIOUS_INJURY_SUFFERED.getFrom(jsonObject);
+    fRipSuffered = IJsonOption.RIP_SUFFERED.getFrom(jsonObject);
+    fSpirallingExpenses = IJsonOption.SPIRALLING_EXPENSES.getFrom(jsonObject);
+    JsonArray playerResultArray = IJsonOption.PLAYER_RESULTS.getFrom(jsonObject);
+    fPlayerResultByPlayer.clear();
+    if (playerResultArray != null) {
+      for (int i = 0; i < playerResultArray.size(); i++) {
+        PlayerResult playerResult = new PlayerResult(this);
+        playerResult.initFrom(playerResultArray.get(i));
+        fPlayerResultByPlayer.put(playerResult.getPlayer(), playerResult);
+      }
+    }
+    fPettyCashTransferred = IJsonOption.PETTY_CASH_TRANSFERRED.getFrom(jsonObject);
+    fPettyCashUsed = IJsonOption.PETTY_CASH_USED.getFrom(jsonObject);
+    fTeamValue = IJsonOption.TEAM_VALUE.getFrom(jsonObject);
   }
     
 }

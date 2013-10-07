@@ -1,6 +1,6 @@
 package com.balancedbytes.games.ffb;
 
-public enum LeaderState {
+public enum LeaderState implements IEnumWithId, IEnumWithName {
   
   NONE(1, "none"),
   AVAILABLE(2, "available"),
@@ -20,24 +20,6 @@ public enum LeaderState {
   
   public String getName() {
     return fName;
-  }
-  
-  public static LeaderState fromId(int pId) {
-    for (LeaderState state : values()) {
-      if (state.getId() == pId) {
-        return state;
-      }
-    }
-    return null;
-  }
-    
-  public static LeaderState fromName(String pName) {
-    for (LeaderState state : values()) {
-      if (state.getName().equalsIgnoreCase(pName)) {
-        return state;
-      }
-    }
-    return null;
   }
   
 }
