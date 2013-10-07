@@ -149,7 +149,7 @@ public class GameList implements IXmlSerializable, IByteArraySerializable {
   
   // JSON serialization
   
-  public JsonValue toJsonValue() {
+  public JsonObject toJsonValue() {
     JsonObject jsonObject = new JsonObject();
     JsonArray gameListArray = new JsonArray();
     GameListEntry[] gameListEntries = getEntries();

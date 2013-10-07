@@ -5,11 +5,16 @@ import javax.xml.transform.sax.TransformerHandler;
 import org.xml.sax.helpers.AttributesImpl;
 
 import com.balancedbytes.games.ffb.ClientMode;
+import com.balancedbytes.games.ffb.ClientModeFactory;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
+import com.balancedbytes.games.ffb.json.IJsonOption;
+import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.net.NetCommand;
 import com.balancedbytes.games.ffb.net.NetCommandId;
 import com.balancedbytes.games.ffb.xml.UtilXml;
+import com.eclipsesource.json.JsonObject;
+import com.eclipsesource.json.JsonValue;
 
 
 /**
@@ -140,7 +145,7 @@ public class ClientCommandJoin extends NetCommand {
   
   public int initFrom(ByteArray pByteArray) {
     int byteArraySerializationVersion = pByteArray.getSmallInt();
-    fClientMode = ClientMode.fromId(pByteArray.getByte());
+    fClientMode = new ClientModeFactory().forId(pByteArray.getByte());
     fCoach = pByteArray.getString();
     fPassword = pByteArray.getString();
     fGameId = pByteArray.getLong();
@@ -148,6 +153,33 @@ public class ClientCommandJoin extends NetCommand {
     fTeamId = pByteArray.getString();
     fTeamName = pByteArray.getString();
     return byteArraySerializationVersion;
+  }
+  
+  // JSON serialization
+
+  public JsonObject toJsonValue() {
+    JsonObject jsonObject = new JsonObject();
+    IJsonOption.NET_COMMAND_ID.addTo(jsonObject, getId());
+    IJsonOption.CLIENT_MODE.addTo(jsonObject, fClientMode);
+    IJsonOption.COACH.addTo(jsonObject, fCoach);
+    IJsonOption.PASSWORD.addTo(jsonObject, fPassword);
+    IJsonOption.GAME_ID.addTo(jsonObject, fGameId);
+    IJsonOption.GAME_NAME.addTo(jsonObject, fGameName);
+    IJsonOption.TEAM_ID.addTo(jsonObject, fTeamId);
+    IJsonOption.TEAM_NAME.addTo(jsonObject, fTeamName);
+    return jsonObject;
+  }
+
+  public void initFrom(JsonValue pJsonValue) {
+    JsonObject jsonObject = UtilJson.asJsonObject(pJsonValue);
+    UtilNetCommand.validateCommandId(this, (NetCommandId) IJsonOption.NET_COMMAND_ID.getFrom(jsonObject));
+    fClientMode = (ClientMode) IJsonOption.CLIENT_MODE.getFrom(jsonObject);
+    fCoach = IJsonOption.COACH.getFrom(jsonObject);
+    fPassword = IJsonOption.PASSWORD.getFrom(jsonObject);
+    fGameId = IJsonOption.GAME_ID.getFrom(jsonObject);
+    fGameName = IJsonOption.GAME_NAME.getFrom(jsonObject);
+    fTeamId = IJsonOption.TEAM_ID.getFrom(jsonObject);
+    fTeamName = IJsonOption.TEAM_NAME.getFrom(jsonObject);
   }
       
 }

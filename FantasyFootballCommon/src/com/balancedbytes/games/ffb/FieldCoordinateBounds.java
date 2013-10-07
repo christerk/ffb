@@ -183,7 +183,7 @@ public class FieldCoordinateBounds implements IByteArraySerializable {
   
   // JSON serialization
   
-  public JsonValue toJsonValue() {
+  public JsonObject toJsonValue() {
     JsonObject jsonObject = new JsonObject();
     IJsonOption.TOP_LEFT.addTo(jsonObject, fTopLeftCorner);
     IJsonOption.BOTTOM_RIGHT.addTo(jsonObject, fBottomRightCorner);

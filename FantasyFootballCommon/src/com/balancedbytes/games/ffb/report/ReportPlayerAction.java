@@ -5,6 +5,7 @@ import javax.xml.transform.sax.TransformerHandler;
 import org.xml.sax.helpers.AttributesImpl;
 
 import com.balancedbytes.games.ffb.PlayerAction;
+import com.balancedbytes.games.ffb.PlayerActionFactory;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
 import com.balancedbytes.games.ffb.xml.UtilXml;
@@ -86,7 +87,7 @@ public class ReportPlayerAction implements IReport {
     }
     int byteArraySerializationVersion = pByteArray.getSmallInt();
     fActingPlayerId = pByteArray.getString();
-    fPlayerAction = PlayerAction.fromId(pByteArray.getByte());
+    fPlayerAction = new PlayerActionFactory().forId(pByteArray.getByte());
     return byteArraySerializationVersion;
   }
     

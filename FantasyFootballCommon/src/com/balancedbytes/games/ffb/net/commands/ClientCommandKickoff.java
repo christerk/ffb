@@ -7,9 +7,13 @@ import org.xml.sax.helpers.AttributesImpl;
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
+import com.balancedbytes.games.ffb.json.IJsonOption;
+import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.net.NetCommand;
 import com.balancedbytes.games.ffb.net.NetCommandId;
 import com.balancedbytes.games.ffb.xml.UtilXml;
+import com.eclipsesource.json.JsonObject;
+import com.eclipsesource.json.JsonValue;
 
 
 /**
@@ -73,6 +77,21 @@ public class ClientCommandKickoff extends NetCommand {
     int byteArraySerializationVersion = pByteArray.getSmallInt();
     fBallCoordinate = pByteArray.getFieldCoordinate();
     return byteArraySerializationVersion;
+  }
+  
+  // JSON serialization
+  
+  public JsonObject toJsonValue() {
+    JsonObject jsonObject = new JsonObject();
+    IJsonOption.NET_COMMAND_ID.addTo(jsonObject, getId());
+    IJsonOption.BALL_COORDINATE.addTo(jsonObject, fBallCoordinate);
+    return jsonObject;
+  }
+  
+  public void initFrom(JsonValue pJsonValue) {
+    JsonObject jsonObject = UtilJson.asJsonObject(pJsonValue);
+    UtilNetCommand.validateCommandId(this, (NetCommandId) IJsonOption.NET_COMMAND_ID.getFrom(jsonObject));
+    fBallCoordinate = IJsonOption.BALL_COORDINATE.getFrom(jsonObject);
   }
     
 }

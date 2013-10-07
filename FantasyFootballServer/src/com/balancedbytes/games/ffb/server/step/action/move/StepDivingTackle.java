@@ -117,7 +117,7 @@ public class StepDivingTackle extends AbstractStep {
 			switch (pNetCommand.getId()) {
 				case CLIENT_PLAYER_CHOICE:
 	        ClientCommandPlayerChoice playerChoiceCommand = (ClientCommandPlayerChoice) pNetCommand;
-	        if (playerChoiceCommand.getMode() == PlayerChoiceMode.DIVING_TACKLE) {
+	        if (playerChoiceCommand.getPlayerChoiceMode() == PlayerChoiceMode.DIVING_TACKLE) {
 	        	fUsingDivingTackle = StringTool.isProvided(playerChoiceCommand.getPlayerId());
 	        	getGameState().getGame().setDefenderId(playerChoiceCommand.getPlayerId());
 	        	commandStatus = StepCommandStatus.EXECUTE_STEP;

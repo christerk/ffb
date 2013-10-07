@@ -25,11 +25,11 @@ public class DialogJourneymenHandler extends DialogHandler {
     if (dialogJourneymenParameter != null) {
     
       if ((ClientMode.PLAYER == getClient().getMode()) && game.getTeamHome().getId().equals(dialogJourneymenParameter.getTeamId())) {
-        setDialog(new DialogJourneymen(getClient(), dialogJourneymenParameter.getSlots(), dialogJourneymenParameter.getPositionIds()));
+        setDialog(new DialogJourneymen(getClient(), dialogJourneymenParameter.getNrOfSlots(), dialogJourneymenParameter.getPositionIds()));
         getDialog().showDialog(this);
         
       } else {
-        showStatus("Journeymen", "Waiting for coach to hire up to " + dialogJourneymenParameter.getSlots() + " Journeymen.", StatusType.WAITING);
+        showStatus("Journeymen", "Waiting for coach to hire up to " + dialogJourneymenParameter.getNrOfSlots() + " Journeymen.", StatusType.WAITING);
       }
       
     }

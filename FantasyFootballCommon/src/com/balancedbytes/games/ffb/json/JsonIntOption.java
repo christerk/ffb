@@ -24,5 +24,5 @@ public class JsonIntOption extends JsonAbstractOption {
   public void addTo(JsonObject pJsonObject, int pValue) {
     addValueTo(pJsonObject, JsonValue.valueOf(pValue));
   }
-  
+
 }

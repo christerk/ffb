@@ -146,7 +146,7 @@ public class DiceDecoration implements IXmlSerializable, IByteArraySerializable 
   
   // JSON serialization
   
-  public JsonValue toJsonValue() {
+  public JsonObject toJsonValue() {
     JsonObject jsonObject = new JsonObject();
     IJsonOption.COORDINATE.addTo(jsonObject, fCoordinate);
     IJsonOption.NR_OF_DICE.addTo(jsonObject, fNrOfDice);

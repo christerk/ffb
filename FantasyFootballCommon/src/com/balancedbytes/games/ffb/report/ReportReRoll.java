@@ -5,6 +5,7 @@ import javax.xml.transform.sax.TransformerHandler;
 import org.xml.sax.helpers.AttributesImpl;
 
 import com.balancedbytes.games.ffb.ReRollSource;
+import com.balancedbytes.games.ffb.ReRollSourceFactory;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
 import com.balancedbytes.games.ffb.xml.UtilXml;
@@ -104,7 +105,7 @@ public class ReportReRoll implements IReport {
     }
     int byteArraySerializationVersion = pByteArray.getSmallInt();
     fPlayerId = pByteArray.getString();
-    fReRollSource = ReRollSource.fromId(pByteArray.getByte());
+    fReRollSource = new ReRollSourceFactory().forId(pByteArray.getByte());
     fSuccessful = pByteArray.getBoolean();
     fRoll = pByteArray.getByte();
     return byteArraySerializationVersion;

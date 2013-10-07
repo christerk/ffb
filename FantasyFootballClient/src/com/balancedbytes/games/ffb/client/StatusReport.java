@@ -353,7 +353,7 @@ public class StatusReport {
 
   public void reportJoin(ServerCommandJoin pJoinCommand) {
     Game game = getClient().getGame();
-    if (ClientMode.PLAYER == pJoinCommand.getMode()) {
+    if (ClientMode.PLAYER == pJoinCommand.getClientMode()) {
       print(0, TextStyle.BOLD, "Player ");
       if (StringTool.isProvided(game.getTeamHome().getCoach())) {
         if (game.getTeamHome().getCoach().equals(pJoinCommand.getCoach())) {
@@ -376,7 +376,7 @@ public class StatusReport {
 
   public void reportLeave(ServerCommandLeave pLeaveCommand) {
     Game game = getClient().getGame();
-    if (ClientMode.PLAYER == pLeaveCommand.getMode()) {
+    if (ClientMode.PLAYER == pLeaveCommand.getClientMode()) {
       if ((game.getTeamHome() != null) && StringTool.isProvided(game.getTeamHome().getCoach())) {
         print(0, TextStyle.BOLD, "Player ");
         if (game.getTeamHome().getCoach().equals(pLeaveCommand.getCoach())) {

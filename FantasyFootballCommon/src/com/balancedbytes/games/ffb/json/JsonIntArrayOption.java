@@ -1,5 +1,7 @@
 package com.balancedbytes.games.ffb.json;
 
+import java.util.Collection;
+
 import com.eclipsesource.json.JsonArray;
 import com.eclipsesource.json.JsonObject;
 
@@ -17,8 +19,8 @@ public class JsonIntArrayOption extends JsonAbstractOption {
     return toIntArray(getValueFrom(pJsonObject).asArray()); 
   }
   
-  public int[] getFrom(JsonObject pJsonObject, int[] pDefault) {
-    return toIntArray(getValueFrom(pJsonObject, toJsonArray(pDefault)).asArray());
+  public int[] getFrom(JsonObject pJsonObject, int[] pDefaults) {
+    return toIntArray(getValueFrom(pJsonObject, toJsonArray(pDefaults)).asArray());
   }
   
   private int[] toIntArray(JsonArray pJsonArray) {
@@ -43,8 +45,20 @@ public class JsonIntArrayOption extends JsonAbstractOption {
     return jsonArray;
   }
 
-  public void addTo(JsonObject pJsonObject, int[] pValue) {
-    addValueTo(pJsonObject, toJsonArray(pValue));
+  public void addTo(JsonObject pJsonObject, int[] pValues) {
+    addValueTo(pJsonObject, toJsonArray(pValues));
   }
-  
+
+  public void addTo(JsonObject pJsonObject, Collection<Integer> pValues) {
+    int[] intArray = null;
+    if (pValues != null) {
+      Integer[] integerArray = pValues.toArray(new Integer[pValues.size()]);
+      intArray = new int[integerArray.length];
+      for (int i = 0; i < intArray.length; i++) {
+        intArray[i] = integerArray[i];
+      }
+    }
+    addTo(pJsonObject, intArray);
+  }
+
 }

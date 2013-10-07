@@ -12,6 +12,7 @@ import com.balancedbytes.games.ffb.InjuryModifier;
 import com.balancedbytes.games.ffb.InjuryType;
 import com.balancedbytes.games.ffb.PlayerState;
 import com.balancedbytes.games.ffb.SeriousInjury;
+import com.balancedbytes.games.ffb.SeriousInjuryFactory;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
 import com.balancedbytes.games.ffb.util.ArrayTool;
@@ -269,6 +270,7 @@ public class ReportInjury implements IReport {
   }
   
   public int initFrom(ByteArray pByteArray) {
+    SeriousInjuryFactory seriousInjuryFactory = new SeriousInjuryFactory();
     ReportId reportId = ReportId.fromId(pByteArray.getSmallInt());
     if (getId() != reportId) {
       throw new IllegalStateException("Wrong report id. Expected " + getId().getName() + " received " + ((reportId != null) ? reportId.getName() : "null"));
@@ -288,9 +290,9 @@ public class ReportInjury implements IReport {
     }
     fInjuryRoll = pByteArray.getByteArrayAsIntArray();
     fCasualtyRoll = pByteArray.getByteArrayAsIntArray();
-    fSeriousInjury = SeriousInjury.fromId(pByteArray.getByte());
+    fSeriousInjury = seriousInjuryFactory.forId(pByteArray.getByte());
     fCasualtyRollDecay = pByteArray.getByteArrayAsIntArray();
-    fSeriousInjuryDecay = SeriousInjury.fromId(pByteArray.getByte());
+    fSeriousInjuryDecay = seriousInjuryFactory.forId(pByteArray.getByte());
     fInjury = new PlayerState(pByteArray.getSmallInt());
     fInjuryDecay = new PlayerState(pByteArray.getSmallInt());
     fAttackerId = pByteArray.getString();

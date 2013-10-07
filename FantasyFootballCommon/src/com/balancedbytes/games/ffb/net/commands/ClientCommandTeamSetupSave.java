@@ -10,10 +10,14 @@ import org.xml.sax.helpers.AttributesImpl;
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
+import com.balancedbytes.games.ffb.json.IJsonOption;
+import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.net.NetCommand;
 import com.balancedbytes.games.ffb.net.NetCommandId;
 import com.balancedbytes.games.ffb.util.ArrayTool;
 import com.balancedbytes.games.ffb.xml.UtilXml;
+import com.eclipsesource.json.JsonObject;
+import com.eclipsesource.json.JsonValue;
 
 
 
@@ -43,8 +47,8 @@ public class ClientCommandTeamSetupSave extends NetCommand {
   public ClientCommandTeamSetupSave(String pSetupName, int[] pPlayerNumbers, FieldCoordinate[] pPlayerCoordinates) {
     this();
     fSetupName = pSetupName;
-    add(pPlayerNumbers);
-    add(pPlayerCoordinates);
+    addPlayerNumbers(pPlayerNumbers);
+    addPlayerCoordinates(pPlayerCoordinates);
   }
   
   public NetCommandId getId() {
@@ -63,14 +67,14 @@ public class ClientCommandTeamSetupSave extends NetCommand {
     return playerNumbers;
   }
   
-  private void add(int pPlayerNumber) {
+  private void addPlayerNumber(int pPlayerNumber) {
     fPlayerNumbers.add(pPlayerNumber);
   }
 
-  private void add(int[] pPlayerNumbers) {
+  private void addPlayerNumbers(int[] pPlayerNumbers) {
     if (ArrayTool.isProvided(pPlayerNumbers)) {
       for (int i = 0; i < pPlayerNumbers.length; i++) {
-        add(pPlayerNumbers[i]);
+        addPlayerNumber(pPlayerNumbers[i]);
       }
     }
   }
@@ -79,16 +83,16 @@ public class ClientCommandTeamSetupSave extends NetCommand {
     return fPlayerCoordinates.toArray(new FieldCoordinate[fPlayerCoordinates.size()]);
   }
   
-  private void add(FieldCoordinate pPlayerCoordinate) {
+  private void addPlayerCoordinate(FieldCoordinate pPlayerCoordinate) {
     if (pPlayerCoordinate != null) {
       fPlayerCoordinates.add(pPlayerCoordinate);
     }
   }
   
-  private void add(FieldCoordinate[] pPlayerCoordinates) {
+  private void addPlayerCoordinates(FieldCoordinate[] pPlayerCoordinates) {
     if (ArrayTool.isProvided(pPlayerCoordinates)) {
       for (FieldCoordinate playerCoordinate : pPlayerCoordinates) {
-        add(playerCoordinate);
+        addPlayerCoordinate(playerCoordinate);
       }
     }
   }
@@ -140,12 +144,31 @@ public class ClientCommandTeamSetupSave extends NetCommand {
   public int initFrom(ByteArray pByteArray) {
     int byteArraySerializationVersion = pByteArray.getSmallInt();
     fSetupName = pByteArray.getString();
-    add(pByteArray.getByteArrayAsIntArray());
+    addPlayerNumbers(pByteArray.getByteArrayAsIntArray());
     int nrOfPlayerCoordinates = pByteArray.getByte();
     for (int i = 0; i < nrOfPlayerCoordinates; i++) {
-      add(pByteArray.getFieldCoordinate());
+      addPlayerCoordinate(pByteArray.getFieldCoordinate());
     }
     return byteArraySerializationVersion;
+  }
+  
+  // JSON serialization
+
+  public JsonObject toJsonValue() {
+    JsonObject jsonObject = new JsonObject();
+    IJsonOption.NET_COMMAND_ID.addTo(jsonObject, getId());
+    IJsonOption.SETUP_NAME.addTo(jsonObject, fSetupName);
+    IJsonOption.PLAYER_NUMBERS.addTo(jsonObject, fPlayerNumbers);
+    IJsonOption.PLAYER_COORDINATES.addTo(jsonObject, fPlayerCoordinates);
+    return jsonObject;
+  }
+
+  public void initFrom(JsonValue pJsonValue) {
+    JsonObject jsonObject = UtilJson.asJsonObject(pJsonValue);
+    UtilNetCommand.validateCommandId(this, (NetCommandId) IJsonOption.NET_COMMAND_ID.getFrom(jsonObject));
+    fSetupName = IJsonOption.SETUP_NAME.getFrom(jsonObject);
+    addPlayerNumbers(IJsonOption.PLAYER_NUMBERS.getFrom(jsonObject));
+    addPlayerCoordinates(IJsonOption.PLAYER_COORDINATES.getFrom(jsonObject));
   }
 
 }

@@ -113,7 +113,7 @@ public class StepApothecary extends AbstractStep {
 	        break;
 	      case CLIENT_USE_INDUCEMENT:
 	        ClientCommandUseInducement inducementCommand = (ClientCommandUseInducement) pNetCommand;
-	        if (InducementType.IGOR == inducementCommand.getInducement()) {
+	        if (InducementType.IGOR == inducementCommand.getInducementType()) {
 	          if ((fInjuryResult != null) && (fInjuryResult.getApothecaryStatus() == ApothecaryStatus.WAIT_FOR_IGOR_USE)) {
 	            if (inducementCommand.hasPlayerId(fInjuryResult.getDefenderId())) {
 	              fInjuryResult.setApothecaryStatus(ApothecaryStatus.USE_IGOR);

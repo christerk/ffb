@@ -30,7 +30,7 @@ public class ClientCommandHandlerTalk extends ClientCommandHandler {
     
     Game game = getClient().getGame();
     String coach = talkCommand.getCoach();
-    String[] allTalk = talkCommand.getTalk();
+    String[] allTalk = talkCommand.getTalks();
     if (ArrayTool.isProvided(allTalk)) {
       for (String talk : allTalk) {
         StringBuilder status = new StringBuilder();

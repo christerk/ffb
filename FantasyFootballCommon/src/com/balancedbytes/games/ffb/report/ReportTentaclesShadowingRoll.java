@@ -5,6 +5,7 @@ import javax.xml.transform.sax.TransformerHandler;
 import org.xml.sax.helpers.AttributesImpl;
 
 import com.balancedbytes.games.ffb.Skill;
+import com.balancedbytes.games.ffb.SkillFactory;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
 import com.balancedbytes.games.ffb.xml.UtilXml;
@@ -120,7 +121,7 @@ public class ReportTentaclesShadowingRoll implements IReport {
       throw new IllegalStateException("Wrong report id. Expected " + getId().getName() + " received " + ((reportId != null) ? reportId.getName() : "null"));
     }
     int byteArraySerializationVersion = pByteArray.getSmallInt();
-    fSkill = Skill.fromId(pByteArray.getByte());
+    fSkill = new SkillFactory().forId(pByteArray.getByte());
     fDefenderId = pByteArray.getString();
     fRoll = pByteArray.getByteArrayAsIntArray();
     fSuccessful = pByteArray.getBoolean();

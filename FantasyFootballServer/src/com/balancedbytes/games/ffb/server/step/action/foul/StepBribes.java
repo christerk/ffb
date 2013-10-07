@@ -79,7 +79,7 @@ public class StepBribes extends AbstractStep {
 			switch (pNetCommand.getId()) {
 	      case CLIENT_USE_INDUCEMENT:
 	        ClientCommandUseInducement inducementCommand = (ClientCommandUseInducement) pNetCommand;
-	        if (InducementType.BRIBES == inducementCommand.getInducement()) {
+	        if (InducementType.BRIBES == inducementCommand.getInducementType()) {
 	          ActingPlayer actingPlayer = game.getActingPlayer();
 	          fBribesChoice = inducementCommand.hasPlayerId(actingPlayer.getPlayerId());
 	          fBribeSuccessful = null;

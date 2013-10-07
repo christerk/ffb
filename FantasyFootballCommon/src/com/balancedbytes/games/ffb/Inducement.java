@@ -119,7 +119,7 @@ public class Inducement implements IByteArraySerializable, IXmlSerializable {
   
   // JSON serialization
   
-  public JsonValue toJsonValue() {
+  public JsonObject toJsonValue() {
     JsonObject jsonObject = new JsonObject();
     IJsonOption.INDUCEMENT_TYPE.addTo(jsonObject, fType);
     IJsonOption.VALUE.addTo(jsonObject, fValue);

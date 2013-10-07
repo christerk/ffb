@@ -31,17 +31,17 @@ public class DialogJourneymenParameter implements IDialogParameter {
   private static final String _XML_TAG_POSITION_ID = "positionId";
   
   private String fTeamId;
-  private int fSlots;
+  private int fNrOfSlots;
   private List<String> fPositionIds;
 
   public DialogJourneymenParameter() {
     fPositionIds = new ArrayList<String>();
   }
   
-  public DialogJourneymenParameter(String pTeamId, int pSlots, String[] pPositionIds) {
+  public DialogJourneymenParameter(String pTeamId, int pNrOfSlots, String[] pPositionIds) {
     this();
     fTeamId = pTeamId;
-    fSlots = pSlots;
+    fNrOfSlots = pNrOfSlots;
     addPositionIds(pPositionIds);
   }
   
@@ -53,8 +53,8 @@ public class DialogJourneymenParameter implements IDialogParameter {
     return fTeamId;
   }
   
-  public int getSlots() {
-    return fSlots;
+  public int getNrOfSlots() {
+    return fNrOfSlots;
   }
   
   private void addPositionId(String pPositionId) {
@@ -78,7 +78,7 @@ public class DialogJourneymenParameter implements IDialogParameter {
   // transformation
   
   public IDialogParameter transform() {
-    return new DialogJourneymenParameter(getTeamId(), getSlots(), getPositionIds());
+    return new DialogJourneymenParameter(getTeamId(), getNrOfSlots(), getPositionIds());
   }
   
   // XML serialization
@@ -87,7 +87,7 @@ public class DialogJourneymenParameter implements IDialogParameter {
     AttributesImpl attributes = new AttributesImpl();
     UtilXml.addAttribute(attributes, XML_ATTRIBUTE_ID, getId().getName());
     UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_TEAM_ID, getTeamId());
-    UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_SLOTS, getSlots());
+    UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_SLOTS, getNrOfSlots());
     UtilXml.startElement(pHandler, XML_TAG, attributes);
     String[] positionIds = getPositionIds();
     if (ArrayTool.isProvided(positionIds)) {
@@ -114,7 +114,7 @@ public class DialogJourneymenParameter implements IDialogParameter {
     pByteList.addSmallInt(getByteArraySerializationVersion());
     pByteList.addByte((byte) getId().getId());
     pByteList.addString(getTeamId());
-    pByteList.addByte((byte) getSlots());
+    pByteList.addByte((byte) getNrOfSlots());
     pByteList.addStringArray(getPositionIds());
   }
 
@@ -122,7 +122,7 @@ public class DialogJourneymenParameter implements IDialogParameter {
     int byteArraySerializationVersion = pByteArray.getSmallInt();
     UtilDialogParameter.validateDialogId(this, new DialogIdFactory().forId(pByteArray.getByte()));
     fTeamId = pByteArray.getString();
-    fSlots = pByteArray.getByte();
+    fNrOfSlots = pByteArray.getByte();
     addPositionIds(pByteArray.getStringArray());
     return byteArraySerializationVersion;
   }
@@ -133,7 +133,7 @@ public class DialogJourneymenParameter implements IDialogParameter {
     JsonObject jsonObject = new JsonObject();
     IJsonOption.DIALOG_ID.addTo(jsonObject, getId());
     IJsonOption.TEAM_ID.addTo(jsonObject, fTeamId);
-    IJsonOption.SLOTS.addTo(jsonObject, fSlots);
+    IJsonOption.NR_OF_SLOTS.addTo(jsonObject, fNrOfSlots);
     IJsonOption.POSITION_IDS.addTo(jsonObject, getPositionIds());
     return jsonObject;
   }
@@ -142,7 +142,7 @@ public class DialogJourneymenParameter implements IDialogParameter {
     JsonObject jsonObject = UtilJson.asJsonObject(pJsonValue);
     UtilDialogParameter.validateDialogId(this, (DialogId) IJsonOption.DIALOG_ID.getFrom(jsonObject));
     fTeamId = IJsonOption.TEAM_ID.getFrom(jsonObject);
-    fSlots = IJsonOption.SLOTS.getFrom(jsonObject);
+    fNrOfSlots = IJsonOption.NR_OF_SLOTS.getFrom(jsonObject);
     addPositionIds(IJsonOption.POSITION_IDS.getFrom(jsonObject));
   }
 

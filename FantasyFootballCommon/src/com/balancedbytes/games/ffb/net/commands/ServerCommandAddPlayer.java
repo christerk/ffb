@@ -7,6 +7,7 @@ import org.xml.sax.helpers.AttributesImpl;
 import com.balancedbytes.games.ffb.Player;
 import com.balancedbytes.games.ffb.PlayerState;
 import com.balancedbytes.games.ffb.SendToBoxReason;
+import com.balancedbytes.games.ffb.SendToBoxReasonFactory;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
 import com.balancedbytes.games.ffb.model.PlayerResult;
@@ -135,7 +136,7 @@ public class ServerCommandAddPlayer extends ServerCommand {
     fPlayer = new Player();
     fPlayer.initFrom(pByteArray);
     fPlayerState = new PlayerState(pByteArray.getSmallInt());
-    fSendToBoxReason = SendToBoxReason.fromId(pByteArray.getByte());
+    fSendToBoxReason = new SendToBoxReasonFactory().forId(pByteArray.getByte());
     fSendToBoxTurn = pByteArray.getByte();
     fSendToBoxHalf = pByteArray.getByte();
     return byteArraySerializationVersion;

@@ -5,6 +5,7 @@ import javax.xml.transform.sax.TransformerHandler;
 import org.xml.sax.helpers.AttributesImpl;
 
 import com.balancedbytes.games.ffb.Skill;
+import com.balancedbytes.games.ffb.SkillFactory;
 import com.balancedbytes.games.ffb.SkillUse;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
@@ -110,7 +111,7 @@ public class ReportSkillUse implements IReport {
     }
     int byteArraySerializationVersion = pByteArray.getSmallInt();
     fPlayerId = pByteArray.getString();
-    fSkill = Skill.fromId(pByteArray.getByte());
+    fSkill = new SkillFactory().forId(pByteArray.getByte());
     fUsed = pByteArray.getBoolean();
     fSkillUse = SkillUse.fromId(pByteArray.getByte());
     return byteArraySerializationVersion;

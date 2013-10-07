@@ -12,10 +12,15 @@ import com.balancedbytes.games.ffb.Skill;
 import com.balancedbytes.games.ffb.SkillFactory;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
+import com.balancedbytes.games.ffb.json.IJsonOption;
+import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.net.NetCommand;
 import com.balancedbytes.games.ffb.net.NetCommandId;
 import com.balancedbytes.games.ffb.util.ArrayTool;
+import com.balancedbytes.games.ffb.util.StringTool;
 import com.balancedbytes.games.ffb.xml.UtilXml;
+import com.eclipsesource.json.JsonObject;
+import com.eclipsesource.json.JsonValue;
 
 /**
  * 
@@ -208,6 +213,53 @@ public class ClientCommandBuyInducements extends NetCommand {
       }
     }
     return byteArraySerializationVersion;
+  }
+  
+  // JSON serialization
+  
+  public JsonObject toJsonValue() {
+    JsonObject jsonObject = new JsonObject();
+    IJsonOption.NET_COMMAND_ID.addTo(jsonObject, getId());
+    IJsonOption.TEAM_ID.addTo(jsonObject, fTeamId);
+    if (fInducementSet != null) {
+      IJsonOption.INDUCEMENT_SET.addTo(jsonObject, fInducementSet.toJsonValue());
+    }
+    IJsonOption.STAR_PLAYER_POSTION_IDS.addTo(jsonObject, fStarPlayerPositionIds);
+    IJsonOption.AVAILABLE_GOLD.addTo(jsonObject, fAvailableGold);
+    IJsonOption.MERCENARY_POSTION_IDS.addTo(jsonObject, fMercenaryPositionIds);
+    String[] mercenarySkillNames = new String[fMercenarySkills.size()];
+    for (int i = 0; i < mercenarySkillNames.length; i++) {
+      mercenarySkillNames[i] = fMercenarySkills.get(i).getName();
+    }
+    IJsonOption.MERCENARY_SKILLS.addTo(jsonObject, mercenarySkillNames);
+    return jsonObject;
+  }
+  
+  public void initFrom(JsonValue pJsonValue) {
+    JsonObject jsonObject = UtilJson.asJsonObject(pJsonValue);
+    UtilNetCommand.validateCommandId(this, (NetCommandId) IJsonOption.NET_COMMAND_ID.getFrom(jsonObject));
+    fTeamId = IJsonOption.TEAM_ID.getFrom(jsonObject);
+    fInducementSet = new InducementSet();
+    JsonObject inducementSetObject = IJsonOption.INDUCEMENT_SET.getFrom(jsonObject);
+    if (inducementSetObject != null) {
+      fInducementSet.initFrom(inducementSetObject);
+    }
+    String[] starPlayerPositionIds = IJsonOption.STAR_PLAYER_POSTION_IDS.getFrom(jsonObject);
+    for (String positionId : starPlayerPositionIds) {
+      addStarPlayerPositionId(positionId);
+    }
+    fAvailableGold = IJsonOption.AVAILABLE_GOLD.getFrom(jsonObject);
+    String[] mercenaryPositionIds = IJsonOption.MERCENARY_POSTION_IDS.getFrom(jsonObject);
+    String[] mercenarySkillNames = IJsonOption.MERCENARY_SKILLS.getFrom(jsonObject);
+    if (StringTool.isProvided(mercenaryPositionIds) && StringTool.isProvided(mercenarySkillNames)) {
+      SkillFactory skillFactory = new SkillFactory();
+      for (int i = 0; i < mercenaryPositionIds.length; i++) {
+        addMercenaryPosition(
+          mercenaryPositionIds[i],
+          skillFactory.forName(mercenarySkillNames[i])
+        );
+      }
+    }
   }
 
 }

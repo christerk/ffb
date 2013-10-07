@@ -134,7 +134,7 @@ public class TrackNumber implements IXmlSerializable, IByteArraySerializable {
   
   // JSON serialization
   
-  public JsonValue toJsonValue() {
+  public JsonObject toJsonValue() {
     JsonObject jsonObject = new JsonObject();
     IJsonOption.NUMBER.addTo(jsonObject, fNumber);
     IJsonOption.COORDINATE.addTo(jsonObject, fCoordinate);

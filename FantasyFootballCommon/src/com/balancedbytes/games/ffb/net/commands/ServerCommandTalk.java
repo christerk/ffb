@@ -9,10 +9,14 @@ import org.xml.sax.helpers.AttributesImpl;
 
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
+import com.balancedbytes.games.ffb.json.IJsonOption;
+import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.net.NetCommandId;
 import com.balancedbytes.games.ffb.util.ArrayTool;
 import com.balancedbytes.games.ffb.util.StringTool;
 import com.balancedbytes.games.ffb.xml.UtilXml;
+import com.eclipsesource.json.JsonObject;
+import com.eclipsesource.json.JsonValue;
 
 
 
@@ -26,10 +30,10 @@ public class ServerCommandTalk extends ServerCommand {
   private static final String _XML_TAG_TALK = "talk";
   
   private String fCoach;
-  private List<String> fTalk;
+  private List<String> fTalks;
   
   public ServerCommandTalk() {
-    fTalk = new ArrayList<String>();
+    fTalks = new ArrayList<String>();
   }
   
   public ServerCommandTalk(String pCoach, String pTalk) {
@@ -41,7 +45,7 @@ public class ServerCommandTalk extends ServerCommand {
   public ServerCommandTalk(String pCoach, String[] pTalk) {
     this();
     fCoach = pCoach;
-    addTalk(pTalk);
+    addTalks(pTalk);
   }
 
   public NetCommandId getId() {
@@ -54,11 +58,11 @@ public class ServerCommandTalk extends ServerCommand {
   
   public void addTalk(String pTalk) {
     if (StringTool.isProvided(pTalk)) {
-      fTalk.add(pTalk);
+      fTalks.add(pTalk);
     }
   }
   
-  public void addTalk(String[] pTalk) {
+  public void addTalks(String[] pTalk) {
     if (ArrayTool.isProvided(pTalk)) {
       for (String talk : pTalk) {
         addTalk(talk);
@@ -66,8 +70,8 @@ public class ServerCommandTalk extends ServerCommand {
     }
   }
 
-  public String[] getTalk() {
-    return fTalk.toArray(new String[fTalk.size()]);
+  public String[] getTalks() {
+    return fTalks.toArray(new String[fTalks.size()]);
   }
   
   public boolean isReplayable() {
@@ -83,7 +87,7 @@ public class ServerCommandTalk extends ServerCommand {
     }
     UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_COACH, getCoach());
     UtilXml.startElement(pHandler, getId().getName(), attributes);
-    String[] talkArray = getTalk();
+    String[] talkArray = getTalks();
     for (String talk : talkArray) {
       UtilXml.addValueElement(pHandler, _XML_TAG_TALK, talk);
     }
@@ -104,15 +108,32 @@ public class ServerCommandTalk extends ServerCommand {
     pByteList.addSmallInt(getByteArraySerializationVersion());
     pByteList.addSmallInt(getCommandNr());
     pByteList.addString(getCoach());
-    pByteList.addStringArray(getTalk());
+    pByteList.addStringArray(getTalks());
   }
   
   public int initFrom(ByteArray pByteArray) {
     int byteArraySerializationVersion = pByteArray.getSmallInt();
     setCommandNr(pByteArray.getSmallInt());
     fCoach = pByteArray.getString();
-    addTalk(pByteArray.getStringArray());
+    addTalks(pByteArray.getStringArray());
     return byteArraySerializationVersion;
+  }
+  
+  // JSON serialization
+  
+  public JsonObject toJsonValue() {
+    JsonObject jsonObject = new JsonObject();
+    IJsonOption.NET_COMMAND_ID.addTo(jsonObject, getId());
+    IJsonOption.COACH.addTo(jsonObject, fCoach);
+    IJsonOption.TALKS.addTo(jsonObject, fTalks);
+    return jsonObject;
+  }
+  
+  public void initFrom(JsonValue pJsonValue) {
+    JsonObject jsonObject = UtilJson.asJsonObject(pJsonValue);
+    UtilNetCommand.validateCommandId(this, (NetCommandId) IJsonOption.NET_COMMAND_ID.getFrom(jsonObject));
+    fCoach = IJsonOption.COACH.getFrom(jsonObject);
+    addTalks(IJsonOption.TALKS.getFrom(jsonObject));
   }
     
 }

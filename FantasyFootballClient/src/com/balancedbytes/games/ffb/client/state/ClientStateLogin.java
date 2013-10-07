@@ -138,7 +138,7 @@ public class ClientStateLogin extends ClientState implements IDialogCloseListene
         break;
       case SERVER_STATUS:
         ServerCommandStatus errorCommand = (ServerCommandStatus) pNetCommand;
-        fLastServerError = errorCommand.getStatus();
+        fLastServerError = errorCommand.getServerStatus();
         DialogInformation informationDialog = null;
         if (fLastServerError == ServerStatus.FUMBBL_ERROR) {
           informationDialog = new DialogInformation(getClient(), "Fumbbl Error", errorCommand.getMessage(), DialogInformation.CANCEL_DIALOG);
@@ -165,7 +165,7 @@ public class ClientStateLogin extends ClientState implements IDialogCloseListene
         break;
       case SERVER_JOIN:
         ServerCommandJoin joinCommand = (ServerCommandJoin) pNetCommand;
-        if (joinCommand.getPlayers().length <= 1) {
+        if (joinCommand.getPlayerNames().length <= 1) {
           if ((getClient().getParameters().getGameId() == 0) && StringTool.isProvided(fGameName)) {
             getClient().getUserInterface().getStatusReport().reportGameName(fGameName);
           }

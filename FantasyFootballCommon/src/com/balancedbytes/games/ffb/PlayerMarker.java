@@ -136,7 +136,7 @@ public class PlayerMarker implements IXmlSerializable, IByteArraySerializable {
   
   // JSON serialization
   
-  public JsonValue toJsonValue() {
+  public JsonObject toJsonValue() {
     JsonObject jsonObject = new JsonObject();
     IJsonOption.PLAYER_ID.addTo(jsonObject, fPlayerId);
     IJsonOption.HOME_TEXT.addTo(jsonObject, fHomeText);

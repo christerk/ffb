@@ -115,7 +115,7 @@ public class Pushback implements IByteArraySerializable, IXmlSerializable {
   
   // JSON serialization
   
-  public JsonValue toJsonValue() {
+  public JsonObject toJsonValue() {
     JsonObject jsonObject = new JsonObject();
     IJsonOption.PLAYER_ID.addTo(jsonObject, fPlayerId);
     IJsonOption.COORDINATE.addTo(jsonObject, fCoordinate);

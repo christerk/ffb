@@ -76,7 +76,7 @@ public class ClientCommandBuyCard extends NetCommand {
   
   // JSON serialization
   
-  public JsonValue toJsonValue() {
+  public JsonObject toJsonValue() {
     JsonObject jsonObject = new JsonObject();
     IJsonOption.NET_COMMAND_ID.addTo(jsonObject, getId());
     IJsonOption.CARD_TYPE.addTo(jsonObject, fCardType);

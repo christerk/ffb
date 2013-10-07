@@ -219,7 +219,7 @@ public class TeamSetup implements IXmlSerializable, IByteArraySerializable {
   
   // JSON serialization
   
-  public JsonValue toJsonValue() {
+  public JsonObject toJsonValue() {
     JsonObject jsonObject = new JsonObject();
     IJsonOption.NAME.addTo(jsonObject, fName);
     IJsonOption.TEAM_ID.addTo(jsonObject, fTeamId);

@@ -207,7 +207,7 @@ public class TeamListEntry implements IXmlSerializable, IByteArraySerializable {
   
   // JSON serialization
   
-  public JsonValue toJsonValue() {
+  public JsonObject toJsonValue() {
     JsonObject jsonObject = new JsonObject();
     IJsonOption.TEAM_ID.addTo(jsonObject, fTeamId);
     IJsonOption.TEAM_STATUS.addTo(jsonObject, fTeamStatus);

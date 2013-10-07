@@ -28,11 +28,11 @@ public class ClientCommandHandlerJoin extends ClientCommandHandler {
     ServerCommandJoin joinCommand = (ServerCommandJoin) pNetCommand;
     UserInterface userInterface = getClient().getUserInterface();
     
-    if (ClientMode.PLAYER == joinCommand.getMode()) {
+    if (ClientMode.PLAYER == joinCommand.getClientMode()) {
       getClient().getClientData().setTurnTimerStopped(false);
     }
     
-    String[] players = joinCommand.getPlayers();
+    String[] players = joinCommand.getPlayerNames();
     if (ArrayTool.isProvided(players) && (players.length > 1)) {
       
       String homeCoach = null;
@@ -56,7 +56,7 @@ public class ClientCommandHandlerJoin extends ClientCommandHandler {
     getClient().getClientData().setSpectators(joinCommand.getSpectators());
     
     if (pMode != ClientCommandHandlerMode.REPLAYING) {
-      if (ClientMode.PLAYER == joinCommand.getMode()) {
+      if (ClientMode.PLAYER == joinCommand.getClientMode()) {
         userInterface.getLog().markCommandBegin(joinCommand.getCommandNr());
         userInterface.getStatusReport().reportJoin(joinCommand);
         userInterface.getLog().markCommandEnd(joinCommand.getCommandNr());

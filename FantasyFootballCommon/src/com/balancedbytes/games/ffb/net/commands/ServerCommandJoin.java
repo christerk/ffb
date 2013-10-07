@@ -8,12 +8,17 @@ import javax.xml.transform.sax.TransformerHandler;
 import org.xml.sax.helpers.AttributesImpl;
 
 import com.balancedbytes.games.ffb.ClientMode;
+import com.balancedbytes.games.ffb.ClientModeFactory;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
+import com.balancedbytes.games.ffb.json.IJsonOption;
+import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.net.NetCommandId;
 import com.balancedbytes.games.ffb.util.ArrayTool;
 import com.balancedbytes.games.ffb.util.StringTool;
 import com.balancedbytes.games.ffb.xml.UtilXml;
+import com.eclipsesource.json.JsonObject;
+import com.eclipsesource.json.JsonValue;
 
 
 /**
@@ -30,19 +35,19 @@ public class ServerCommandJoin extends ServerCommand {
   private static final String _XML_TAG_PLAYER = "player";
   
   private String fCoach;
-  private ClientMode fMode;
-  private List<String> fPlayers;
+  private ClientMode fClientMode;
+  private List<String> fPlayerNames;
   private int fSpectators;
   
   public ServerCommandJoin() {
-    fPlayers = new ArrayList<String>();
+    fPlayerNames = new ArrayList<String>();
   }
   
-  public ServerCommandJoin(String pCoach, ClientMode pMode, String[] pPlayers, int pSpectators) {
+  public ServerCommandJoin(String pCoach, ClientMode pClientMode, String[] pPlayerNames, int pSpectators) {
     this();
     fCoach = pCoach;
-    fMode = pMode;
-    addPlayers(pPlayers);
+    fClientMode = pClientMode;
+    addPlayerNames(pPlayerNames);
     fSpectators = pSpectators;
   }
   
@@ -54,24 +59,24 @@ public class ServerCommandJoin extends ServerCommand {
     return fCoach;
   }
   
-  public ClientMode getMode() {
-    return fMode;
+  public ClientMode getClientMode() {
+    return fClientMode;
   }
   
-  public String[] getPlayers() {
-    return fPlayers.toArray(new String[fPlayers.size()]);
+  public String[] getPlayerNames() {
+    return fPlayerNames.toArray(new String[fPlayerNames.size()]);
   }
   
-  private void addPlayer(String pPlayer) {
-    if (StringTool.isProvided(pPlayer)) {
-      fPlayers.add(pPlayer);
+  private void addPlayerName(String pPlayerName) {
+    if (StringTool.isProvided(pPlayerName)) {
+      fPlayerNames.add(pPlayerName);
     }
   }
   
-  private void addPlayers(String[] pPlayers) {
-    if (ArrayTool.isProvided(pPlayers)) {
-      for (String player : pPlayers) {
-        addPlayer(player);
+  private void addPlayerNames(String[] pPlayerNames) {
+    if (ArrayTool.isProvided(pPlayerNames)) {
+      for (String player : pPlayerNames) {
+        addPlayerName(player);
       }
     }
   }
@@ -92,11 +97,11 @@ public class ServerCommandJoin extends ServerCommand {
       UtilXml.addAttribute(attributes, XML_ATTRIBUTE_COMMAND_NR, getCommandNr());
     }
     UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_COACH, getCoach());
-    String modeName = (getMode() != null) ? getMode().getName() : null;
+    String modeName = (getClientMode() != null) ? getClientMode().getName() : null;
     UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_MODE, modeName);
     UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_SPECTATORS, getSpectators());
     UtilXml.startElement(pHandler, getId().getName(), attributes);
-    String[] players = getPlayers();
+    String[] players = getPlayerNames();
     if (ArrayTool.isProvided(players)) {
       UtilXml.startElement(pHandler, _XML_TAG_PLAYER_LIST);
       for (String player : players) {
@@ -121,19 +126,42 @@ public class ServerCommandJoin extends ServerCommand {
     pByteList.addSmallInt(getByteArraySerializationVersion());
     pByteList.addSmallInt(getCommandNr());
     pByteList.addString(getCoach());
-    pByteList.addByte((byte) getMode().getId());
+    pByteList.addByte((byte) getClientMode().getId());
     pByteList.addSmallInt(getSpectators());
-    pByteList.addStringArray(getPlayers());
+    pByteList.addStringArray(getPlayerNames());
   }
 
   public int initFrom(ByteArray pByteArray) {
     int byteArraySerializationVersion = pByteArray.getSmallInt();
     setCommandNr(pByteArray.getSmallInt());
     fCoach = pByteArray.getString();
-    fMode = ClientMode.fromId(pByteArray.getByte());
+    fClientMode = new ClientModeFactory().forId(pByteArray.getByte());
     fSpectators = pByteArray.getSmallInt();
-    addPlayers(pByteArray.getStringArray());
+    addPlayerNames(pByteArray.getStringArray());
     return byteArraySerializationVersion;
+  }
+  
+  // JSON serialization
+
+  public JsonObject toJsonValue() {
+    JsonObject jsonObject = new JsonObject();
+    IJsonOption.NET_COMMAND_ID.addTo(jsonObject, getId());
+    IJsonOption.COMMAND_NR.addTo(jsonObject, getCommandNr());
+    IJsonOption.COACH.addTo(jsonObject, fCoach);
+    IJsonOption.CLIENT_MODE.addTo(jsonObject, fClientMode);
+    IJsonOption.SPECTATORS.addTo(jsonObject, fSpectators);
+    IJsonOption.PLAYER_NAMES.addTo(jsonObject, fPlayerNames);
+    return jsonObject;
+  }
+
+  public void initFrom(JsonValue pJsonValue) {
+    JsonObject jsonObject = UtilJson.asJsonObject(pJsonValue);
+    UtilNetCommand.validateCommandId(this, (NetCommandId) IJsonOption.NET_COMMAND_ID.getFrom(jsonObject));
+    setCommandNr(IJsonOption.COMMAND_NR.getFrom(jsonObject));
+    fCoach = IJsonOption.COACH.getFrom(jsonObject);
+    fClientMode = (ClientMode) IJsonOption.CLIENT_MODE.getFrom(jsonObject);
+    fSpectators = IJsonOption.SPECTATORS.getFrom(jsonObject);
+    addPlayerNames(IJsonOption.PLAYER_NAMES.getFrom(jsonObject));
   }
     
 }

@@ -5,6 +5,7 @@ import javax.xml.transform.sax.TransformerHandler;
 import org.xml.sax.helpers.AttributesImpl;
 
 import com.balancedbytes.games.ffb.SpecialEffect;
+import com.balancedbytes.games.ffb.SpecialEffectFactory;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
 import com.balancedbytes.games.ffb.xml.UtilXml;
@@ -99,7 +100,7 @@ public class ReportSpecialEffectRoll implements IReport {
       throw new IllegalStateException("Wrong report id. Expected " + getId().getName() + " received " + ((reportId != null) ? reportId.getName() : "null"));
     }
     int byteArraySerializationVersion = pByteArray.getSmallInt();
-    fSpecialEffect = SpecialEffect.fromId(pByteArray.getByte());
+    fSpecialEffect = new SpecialEffectFactory().forId(pByteArray.getByte());
     fPlayerId = pByteArray.getString();
     fRoll = pByteArray.getByte();
     fSuccessful = pByteArray.getBoolean();

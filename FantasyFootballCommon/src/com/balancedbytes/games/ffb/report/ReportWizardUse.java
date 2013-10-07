@@ -5,6 +5,7 @@ import javax.xml.transform.sax.TransformerHandler;
 import org.xml.sax.helpers.AttributesImpl;
 
 import com.balancedbytes.games.ffb.SpecialEffect;
+import com.balancedbytes.games.ffb.SpecialEffectFactory;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
 import com.balancedbytes.games.ffb.xml.UtilXml;
@@ -84,7 +85,7 @@ public class ReportWizardUse implements IReport {
     }
     int byteArraySerializationVersion = pByteArray.getSmallInt();
     fTeamId = pByteArray.getString();
-    fWizardSpell = SpecialEffect.fromId(pByteArray.getByte());
+    fWizardSpell = new SpecialEffectFactory().forId(pByteArray.getByte());
     return byteArraySerializationVersion;
   }
     

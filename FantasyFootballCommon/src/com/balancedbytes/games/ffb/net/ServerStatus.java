@@ -1,12 +1,15 @@
 package com.balancedbytes.games.ffb.net;
 
+import com.balancedbytes.games.ffb.IEnumWithId;
+import com.balancedbytes.games.ffb.IEnumWithName;
+
 
 
 /**
  * 
  * @author Kalimar
  */
-public enum ServerStatus {
+public enum ServerStatus implements IEnumWithId, IEnumWithName {
   
   ERROR_UNKNOWN_COACH(1, "Unknown Coach", "Unknown Coach!"),
   ERROR_WRONG_PASSWORD(2, "Wrong Password", "Wrong Password!"),
@@ -39,24 +42,4 @@ public enum ServerStatus {
     return fMessage;
   }
   
-  public static ServerStatus fromId(int pId) {
-    if (pId > 0) {
-      for (ServerStatus serverStatus : values()) {
-        if (pId == serverStatus.getId()) {
-          return serverStatus;
-        }
-      }
-    }
-    return null;
-  }
-
-  public static ServerStatus fromName(String pName) {
-    for (ServerStatus serverStatus : values()) {
-      if (serverStatus.getName().equalsIgnoreCase(pName)) {
-        return serverStatus;
-      }
-    }
-    return null;
-  }
-
 }

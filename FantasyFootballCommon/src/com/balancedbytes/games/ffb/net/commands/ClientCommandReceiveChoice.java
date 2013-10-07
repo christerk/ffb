@@ -71,7 +71,7 @@ public class ClientCommandReceiveChoice extends NetCommand {
 
   // JSON serialization
 
-  public JsonValue toJsonValue() {
+  public JsonObject toJsonValue() {
     JsonObject jsonObject = new JsonObject();
     IJsonOption.NET_COMMAND_ID.addTo(jsonObject, getId());
     IJsonOption.CHOICE_RECEIVE.addTo(jsonObject, fChoiceReceive);

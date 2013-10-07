@@ -9,10 +9,14 @@ import org.xml.sax.helpers.AttributesImpl;
 
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
+import com.balancedbytes.games.ffb.json.IJsonOption;
+import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.net.NetCommandId;
 import com.balancedbytes.games.ffb.util.ArrayTool;
 import com.balancedbytes.games.ffb.util.StringTool;
 import com.balancedbytes.games.ffb.xml.UtilXml;
+import com.eclipsesource.json.JsonObject;
+import com.eclipsesource.json.JsonValue;
 
 
 
@@ -33,7 +37,7 @@ public class ServerCommandTeamSetupList extends ServerCommand {
   
   public ServerCommandTeamSetupList(String[] pSetupNames) {
     this();
-    add(pSetupNames);
+    addSetupNames(pSetupNames);
   }
   
   public NetCommandId getId() {
@@ -44,16 +48,16 @@ public class ServerCommandTeamSetupList extends ServerCommand {
     return fSetupNames.toArray(new String[fSetupNames.size()]);
   }
   
-  private void add(String pSetupName) {
+  private void addSetupName(String pSetupName) {
     if (StringTool.isProvided(pSetupName)) {
       fSetupNames.add(pSetupName);
     }
   }
   
-  private void add(String[] pSetupNames) {
+  private void addSetupNames(String[] pSetupNames) {
     if (ArrayTool.isProvided(pSetupNames)) {
       for (String setupName : pSetupNames) {
-        add(setupName);
+        addSetupName(setupName);
       }
     }
   }
@@ -100,8 +104,25 @@ public class ServerCommandTeamSetupList extends ServerCommand {
   public int initFrom(ByteArray pByteArray) {
     int byteArraySerializationVersion = pByteArray.getSmallInt();
     setCommandNr(pByteArray.getSmallInt());
-    add(pByteArray.getStringArray());
+    addSetupNames(pByteArray.getStringArray());
     return byteArraySerializationVersion;
+  }
+  
+  // JSON serialization
+  
+  public JsonObject toJsonValue() {
+    JsonObject jsonObject = new JsonObject();
+    IJsonOption.NET_COMMAND_ID.addTo(jsonObject, getId());
+    IJsonOption.COMMAND_NR.addTo(jsonObject, getCommandNr());
+    IJsonOption.SETUP_NAMES.addTo(jsonObject, fSetupNames);
+    return jsonObject;
+  }
+  
+  public void initFrom(JsonValue pJsonValue) {
+    JsonObject jsonObject = UtilJson.asJsonObject(pJsonValue);
+    UtilNetCommand.validateCommandId(this, (NetCommandId) IJsonOption.NET_COMMAND_ID.getFrom(jsonObject));
+    setCommandNr(IJsonOption.COMMAND_NR.getFrom(jsonObject));
+    addSetupNames(IJsonOption.SETUP_NAMES.getFrom(jsonObject));
   }
     
 }

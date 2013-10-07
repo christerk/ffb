@@ -204,7 +204,7 @@ public class Animation implements IXmlSerializable, IByteArraySerializable {
   
   // JSON serialization
   
-  public JsonValue toJsonValue() {
+  public JsonObject toJsonValue() {
     JsonObject jsonObject = new JsonObject();
     IJsonOption.THROWN_PLAYER_ID.addTo(jsonObject, fThrownPlayerId);
     IJsonOption.WITH_BALL.addTo(jsonObject, fWithBall);

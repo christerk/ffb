@@ -85,7 +85,7 @@ public class ClientCommandHandOver extends NetCommand implements ICommandWithAct
   
   // JSON serialization
   
-  public JsonValue toJsonValue() {
+  public JsonObject toJsonValue() {
     JsonObject jsonObject = new JsonObject();
     IJsonOption.NET_COMMAND_ID.addTo(jsonObject, getId());
     IJsonOption.ACTING_PLAYER_ID.addTo(jsonObject, fActingPlayerId);

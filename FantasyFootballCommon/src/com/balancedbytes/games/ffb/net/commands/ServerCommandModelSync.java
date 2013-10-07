@@ -5,6 +5,7 @@ import javax.xml.transform.sax.TransformerHandler;
 import org.xml.sax.helpers.AttributesImpl;
 
 import com.balancedbytes.games.ffb.Sound;
+import com.balancedbytes.games.ffb.SoundFactory;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
 import com.balancedbytes.games.ffb.model.Animation;
@@ -160,7 +161,7 @@ public class ServerCommandModelSync extends ServerCommand {
       fAnimation.initFrom(pByteArray);
     }
 
-    fSound = Sound.fromId(pByteArray.getByte());
+    fSound = new SoundFactory().forId(pByteArray.getByte());
     fGameTime = pByteArray.getLong();
     fTurnTime = pByteArray.getLong();
 

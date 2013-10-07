@@ -5,7 +5,7 @@ package com.balancedbytes.games.ffb;
  * 
  * @author Kalimar
  */
-public enum SpecialEffect {
+public enum SpecialEffect implements IEnumWithId, IEnumWithName {
   
   LIGHTNING(1, "lightning", true),
   FIREBALL(2, "fireball", true),
@@ -32,23 +32,5 @@ public enum SpecialEffect {
   public boolean isWizardSpell() {
 		return fWizardSpell;
 	}
-  
-  public static SpecialEffect fromId(int pId) {
-    for (SpecialEffect spell : values()) {
-      if (spell.getId() == pId) {
-        return spell;
-      }
-    }
-    return null;
-  }
-    
-  public static SpecialEffect fromName(String pName) {
-    for (SpecialEffect spell : values()) {
-      if (spell.getName().equalsIgnoreCase(pName)) {
-        return spell;
-      }
-    }
-    return null;
-  }
   
 }

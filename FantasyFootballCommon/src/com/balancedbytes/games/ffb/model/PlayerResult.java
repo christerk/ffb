@@ -7,14 +7,19 @@ import org.xml.sax.helpers.AttributesImpl;
 
 import com.balancedbytes.games.ffb.Player;
 import com.balancedbytes.games.ffb.SendToBoxReason;
+import com.balancedbytes.games.ffb.SendToBoxReasonFactory;
 import com.balancedbytes.games.ffb.SeriousInjury;
 import com.balancedbytes.games.ffb.SeriousInjuryFactory;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
 import com.balancedbytes.games.ffb.bytearray.IByteArraySerializable;
+import com.balancedbytes.games.ffb.json.IJsonOption;
+import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.util.StringTool;
 import com.balancedbytes.games.ffb.xml.IXmlSerializable;
 import com.balancedbytes.games.ffb.xml.UtilXml;
+import com.eclipsesource.json.JsonObject;
+import com.eclipsesource.json.JsonValue;
 
 /**
  * 
@@ -432,7 +437,7 @@ public class PlayerResult implements IByteArraySerializable, IXmlSerializable {
       setCurrentSpps(UtilXml.getIntAttribute(pXmlAttributes, _XML_ATTRIBUTE_CURRENT));
     }
     if (_XML_TAG_SEND_TO_BOX.equals(pXmlTag)) {
-      setSendToBoxReason(SendToBoxReason.fromName(UtilXml.getStringAttribute(pXmlAttributes, _XML_ATTRIBUTE_REASON)));
+      setSendToBoxReason(new SendToBoxReasonFactory().forName(UtilXml.getStringAttribute(pXmlAttributes, _XML_ATTRIBUTE_REASON)));
       setSendToBoxTurn(UtilXml.getIntAttribute(pXmlAttributes, _XML_ATTRIBUTE_TURN));
       setSendToBoxHalf(UtilXml.getIntAttribute(pXmlAttributes, _XML_ATTRIBUTE_HALF));
       setSendToBoxByPlayerId(UtilXml.getStringAttribute(pXmlAttributes, _XML_ATTRIBUTE_BY_PLAYER_ID));
@@ -531,7 +536,7 @@ public class PlayerResult implements IByteArraySerializable, IXmlSerializable {
     fPassing = pByteArray.getSmallInt();
     setCurrentSpps(pByteArray.getSmallInt());
     fSeriousInjury = new SeriousInjuryFactory().forId(pByteArray.getByte());
-    fSendToBoxReason = SendToBoxReason.fromId(pByteArray.getByte());
+    fSendToBoxReason = new SendToBoxReasonFactory().forId(pByteArray.getByte());
     fSendToBoxTurn = pByteArray.getByte();
     fSendToBoxHalf = pByteArray.getByte();
     fSendToBoxByPlayerId = pByteArray.getString();
@@ -539,6 +544,56 @@ public class PlayerResult implements IByteArraySerializable, IXmlSerializable {
     setHasUsedSecretWeapon(pByteArray.getBoolean());
     setDefecting(pByteArray.getBoolean());
     return byteArraySerializationVersion;
+  }
+  
+  // JSON serialization
+  
+  public JsonObject toJsonValue() {
+    JsonObject jsonObject = new JsonObject();
+    IJsonOption.PLAYER_ID.addTo(jsonObject, getPlayerId());
+    IJsonOption.COMPLETIONS.addTo(jsonObject, fCompletions);
+    IJsonOption.TOUCHDOWNS.addTo(jsonObject, fTouchdowns);
+    IJsonOption.INTERCEPTIONS.addTo(jsonObject, fInterceptions);
+    IJsonOption.CASUALTIES.addTo(jsonObject, fCasualties);
+    IJsonOption.PLAYER_AWARDS.addTo(jsonObject, fPlayerAwards);
+    IJsonOption.BLOCKS.addTo(jsonObject, fBlocks);
+    IJsonOption.FOULS.addTo(jsonObject, fFouls);
+    IJsonOption.RUSHING.addTo(jsonObject, fRushing);
+    IJsonOption.PASSING.addTo(jsonObject, fPassing);
+    IJsonOption.CURRENT_SPPS.addTo(jsonObject, fCurrentSpps);
+    IJsonOption.SERIOUS_INJURY.addTo(jsonObject, fSeriousInjury);
+    IJsonOption.SEND_TO_BOX_REASON.addTo(jsonObject, fSendToBoxReason);
+    IJsonOption.SEND_TO_BOX_TURN.addTo(jsonObject, fSendToBoxTurn);
+    IJsonOption.SEND_TO_BOX_HALF.addTo(jsonObject, fSendToBoxHalf);
+    IJsonOption.SEND_TO_BOX_BY_PLAYER_ID.addTo(jsonObject, fSendToBoxByPlayerId);
+    IJsonOption.TURNS_PLAYED.addTo(jsonObject, fTurnsPlayed);
+    IJsonOption.HAS_USED_SECRET_WEAPON.addTo(jsonObject, fHasUsedSecretWeapon);
+    IJsonOption.DEFECTING.addTo(jsonObject, fDefecting);
+    return jsonObject;
+  }
+  
+  public void initFrom(JsonValue pJsonValue) {
+    JsonObject jsonObject = UtilJson.asJsonObject(pJsonValue);
+    String playerId = IJsonOption.PLAYER_ID.getFrom(jsonObject);
+    fPlayer = getTeamResult().getTeam().getPlayerById(playerId);
+    fCompletions = IJsonOption.COMPLETIONS.getFrom(jsonObject);
+    fTouchdowns = IJsonOption.TOUCHDOWNS.getFrom(jsonObject);
+    fInterceptions = IJsonOption.INTERCEPTIONS.getFrom(jsonObject);
+    fCasualties = IJsonOption.CASUALTIES.getFrom(jsonObject);
+    fPlayerAwards = IJsonOption.PLAYER_AWARDS.getFrom(jsonObject);
+    fBlocks = IJsonOption.BLOCKS.getFrom(jsonObject);
+    fFouls = IJsonOption.FOULS.getFrom(jsonObject);
+    fRushing = IJsonOption.RUSHING.getFrom(jsonObject);
+    fPassing = IJsonOption.PASSING.getFrom(jsonObject);
+    fCurrentSpps = IJsonOption.CURRENT_SPPS.getFrom(jsonObject);
+    fSeriousInjury = (SeriousInjury) IJsonOption.SERIOUS_INJURY.getFrom(jsonObject);
+    fSendToBoxReason = (SendToBoxReason) IJsonOption.SEND_TO_BOX_REASON.getFrom(jsonObject);
+    fSendToBoxTurn = IJsonOption.SEND_TO_BOX_TURN.getFrom(jsonObject);
+    fSendToBoxHalf = IJsonOption.SEND_TO_BOX_HALF.getFrom(jsonObject);
+    fSendToBoxByPlayerId = IJsonOption.SEND_TO_BOX_BY_PLAYER_ID.getFrom(jsonObject);
+    fTurnsPlayed = IJsonOption.TURNS_PLAYED.getFrom(jsonObject);
+    fHasUsedSecretWeapon = IJsonOption.HAS_USED_SECRET_WEAPON.getFrom(jsonObject);
+    fDefecting = IJsonOption.DEFECTING.getFrom(jsonObject);
   }
     
 }

@@ -105,7 +105,7 @@ public class StepInitFeeding extends AbstractStep {
 			switch (pNetCommand.getId()) {
 	      case CLIENT_PLAYER_CHOICE:
 	        ClientCommandPlayerChoice playerChoiceCommand = (ClientCommandPlayerChoice) pNetCommand;
-	        if (PlayerChoiceMode.FEED == playerChoiceCommand.getMode()) {
+	        if (PlayerChoiceMode.FEED == playerChoiceCommand.getPlayerChoiceMode()) {
 	        	fFeedOnPlayerChoice = StringTool.isProvided(playerChoiceCommand.getPlayerId());
 		        game.setDefenderId(playerChoiceCommand.getPlayerId());
 		        commandStatus = StepCommandStatus.EXECUTE_STEP;

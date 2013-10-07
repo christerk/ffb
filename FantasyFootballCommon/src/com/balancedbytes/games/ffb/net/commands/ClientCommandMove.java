@@ -10,10 +10,14 @@ import org.xml.sax.helpers.AttributesImpl;
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
+import com.balancedbytes.games.ffb.json.IJsonOption;
+import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.net.NetCommand;
 import com.balancedbytes.games.ffb.net.NetCommandId;
 import com.balancedbytes.games.ffb.util.ArrayTool;
 import com.balancedbytes.games.ffb.xml.UtilXml;
+import com.eclipsesource.json.JsonObject;
+import com.eclipsesource.json.JsonValue;
 
 /**
  * 
@@ -39,7 +43,7 @@ public class ClientCommandMove extends NetCommand implements ICommandWithActingP
     this();
     fActingPlayerId = pActingPlayerId;
     fCoordinateFrom = pCoordinateFrom;
-    add(pCoordinatesTo);
+    addCoordinatesTo(pCoordinatesTo);
   }
 
   public NetCommandId getId() {
@@ -50,16 +54,16 @@ public class ClientCommandMove extends NetCommand implements ICommandWithActingP
     return fActingPlayerId;
   }
 
-  private void add(FieldCoordinate pCoordinate) {
-    if (pCoordinate != null) {
-      fCoordinatesTo.add(pCoordinate);
+  private void addCoordinateTo(FieldCoordinate pCoordinateTo) {
+    if (pCoordinateTo != null) {
+      fCoordinatesTo.add(pCoordinateTo);
     }
   }
 
-  private void add(FieldCoordinate[] pCoordinates) {
-    if (ArrayTool.isProvided(pCoordinates)) {
-      for (FieldCoordinate coordinate : pCoordinates) {
-        add(coordinate);
+  private void addCoordinatesTo(FieldCoordinate[] pCoordinatesTo) {
+    if (ArrayTool.isProvided(pCoordinatesTo)) {
+      for (FieldCoordinate coordinate : pCoordinatesTo) {
+        addCoordinateTo(coordinate);
       }
     }
   }
@@ -125,9 +129,29 @@ public class ClientCommandMove extends NetCommand implements ICommandWithActingP
     }
     int nrOfCoordinates = pByteArray.getByte();
     for (int i = 0; i < nrOfCoordinates; i++) {
-      add(pByteArray.getFieldCoordinate());
+      addCoordinateTo(pByteArray.getFieldCoordinate());
     }
     return byteArraySerializationVersion;
   }
+  
+  // JSON serialization
+  
+  public JsonObject toJsonValue() {
+    JsonObject jsonObject = new JsonObject();
+    IJsonOption.NET_COMMAND_ID.addTo(jsonObject, getId());
+    IJsonOption.ACTING_PLAYER_ID.addTo(jsonObject, fActingPlayerId);
+    IJsonOption.COORDINATE_FROM.addTo(jsonObject, fCoordinateFrom);
+    IJsonOption.COORDINATES_TO.addTo(jsonObject, fCoordinatesTo);
+    return jsonObject;
+  }
+  
+  public void initFrom(JsonValue pJsonValue) {
+    JsonObject jsonObject = UtilJson.asJsonObject(pJsonValue);
+    UtilNetCommand.validateCommandId(this, (NetCommandId) IJsonOption.NET_COMMAND_ID.getFrom(jsonObject));
+    fActingPlayerId = IJsonOption.ACTING_PLAYER_ID.getFrom(jsonObject);
+    fCoordinateFrom = IJsonOption.COORDINATE_FROM.getFrom(jsonObject);
+    addCoordinatesTo(IJsonOption.COORDINATES_TO.getFrom(jsonObject));
+  }
+
 
 }

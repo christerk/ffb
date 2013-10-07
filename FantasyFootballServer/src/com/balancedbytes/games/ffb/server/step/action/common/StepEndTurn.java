@@ -116,7 +116,7 @@ public class StepEndTurn extends AbstractStep {
 			switch (pNetCommand.getId()) {
 	      case CLIENT_USE_INDUCEMENT:
 	        ClientCommandUseInducement inducementCommand = (ClientCommandUseInducement) pNetCommand;
-	        if (InducementType.BRIBES == inducementCommand.getInducement()) {
+	        if (InducementType.BRIBES == inducementCommand.getInducementType()) {
 	        	Team team = UtilSteps.checkCommandIsFromHomePlayer(getGameState(), inducementCommand) ? game.getTeamHome() : game.getTeamAway();
 	        	if (useSecretWeaponBribes(team, inducementCommand.getPlayerIds()) || !askForSecretWeaponBribes(team)) {
 	        		commandStatus = StepCommandStatus.EXECUTE_STEP;

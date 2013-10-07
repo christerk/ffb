@@ -8,9 +8,7 @@ import org.xml.sax.helpers.AttributesImpl;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
 import com.balancedbytes.games.ffb.bytearray.IByteArraySerializable;
-import com.balancedbytes.games.ffb.json.JsonBooleanOption;
-import com.balancedbytes.games.ffb.json.JsonIntOption;
-import com.balancedbytes.games.ffb.json.JsonStringOption;
+import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.xml.IXmlReadable;
 import com.balancedbytes.games.ffb.xml.IXmlSerializable;
@@ -23,11 +21,6 @@ import com.eclipsesource.json.JsonValue;
  * @author Kalimar
  */
 public class KnockoutRecovery implements IByteArraySerializable, IXmlSerializable {
-  
-  private static final JsonStringOption _JSON_PLAYER_ID = new JsonStringOption("playerId");
-  private static final JsonBooleanOption _JSON_RECOVERING = new JsonBooleanOption("recovering");
-  private static final JsonIntOption _JSON_ROLL = new JsonIntOption("roll");
-  private static final JsonIntOption _JSON_BLOODWEISER_BABES = new JsonIntOption("bloodweiserBabes");
   
   public static final String XML_TAG = "knockoutRecovery";
   
@@ -123,21 +116,21 @@ public class KnockoutRecovery implements IByteArraySerializable, IXmlSerializabl
   
   // JSON serialization
   
-  public JsonValue toJsonValue() {
+  public JsonObject toJsonValue() {
     JsonObject jsonObject = new JsonObject();
-    _JSON_PLAYER_ID.addTo(jsonObject, fPlayerId);
-    _JSON_RECOVERING.addTo(jsonObject, fRecovering);
-    _JSON_ROLL.addTo(jsonObject, fRoll);
-    _JSON_BLOODWEISER_BABES.addTo(jsonObject, fBloodweiserBabes);
+    IJsonOption.PLAYER_ID.addTo(jsonObject, fPlayerId);
+    IJsonOption.RECOVERING.addTo(jsonObject, fRecovering);
+    IJsonOption.ROLL.addTo(jsonObject, fRoll);
+    IJsonOption.BLOODWEISER_BABES.addTo(jsonObject, fBloodweiserBabes);
     return jsonObject;
   }
   
   public void initFrom(JsonValue pJsonValue) {
     JsonObject jsonObject = UtilJson.asJsonObject(pJsonValue);
-    fPlayerId = _JSON_PLAYER_ID.getFrom(jsonObject);
-    fRecovering = _JSON_RECOVERING.getFrom(jsonObject);
-    fRoll = _JSON_ROLL.getFrom(jsonObject);
-    fBloodweiserBabes = _JSON_BLOODWEISER_BABES.getFrom(jsonObject);
+    fPlayerId = IJsonOption.PLAYER_ID.getFrom(jsonObject);
+    fRecovering = IJsonOption.RECOVERING.getFrom(jsonObject);
+    fRoll = IJsonOption.ROLL.getFrom(jsonObject);
+    fBloodweiserBabes = IJsonOption.BLOODWEISER_BABES.getFrom(jsonObject);
   }
 
 }

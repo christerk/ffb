@@ -29,7 +29,7 @@ public class ClientCommandHandlerLeave extends ClientCommandHandler {
 
     ServerCommandLeave leaveCommand = (ServerCommandLeave) pNetCommand;
 
-    if (ClientMode.PLAYER == leaveCommand.getMode()) {
+    if (ClientMode.PLAYER == leaveCommand.getClientMode()) {
       getClient().getClientData().setTurnTimerStopped(true);
     }
     

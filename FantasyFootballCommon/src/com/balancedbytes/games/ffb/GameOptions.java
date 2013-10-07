@@ -214,7 +214,7 @@ public class GameOptions implements IByteArraySerializable, IXmlSerializable {
   
   // JSON serialization
   
-  public JsonValue toJsonValue() {
+  public JsonObject toJsonValue() {
     JsonObject jsonObject = new JsonObject();
     JsonArray optionArray = new JsonArray();
     GameOptionValue[] options = getOptionValues();

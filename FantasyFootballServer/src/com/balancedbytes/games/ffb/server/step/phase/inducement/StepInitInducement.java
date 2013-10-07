@@ -96,7 +96,7 @@ public final class StepInitInducement extends AbstractStep {
 			switch (pNetCommand.getId()) {
 	      case CLIENT_USE_INDUCEMENT:
 	      	ClientCommandUseInducement useInducementCommand = (ClientCommandUseInducement) pNetCommand;
-	      	fInducement = useInducementCommand.getInducement();
+	      	fInducement = useInducementCommand.getInducementType();
 	      	fCard = useInducementCommand.getCard();
 	      	fEndInducementPhase = ((fInducement == null) && (fCard == null)); 
           commandStatus = StepCommandStatus.EXECUTE_STEP;

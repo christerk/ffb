@@ -1,12 +1,11 @@
 package com.balancedbytes.games.ffb;
 
-import com.balancedbytes.games.ffb.util.StringTool;
 
 /**
  * 
  * @author Kalimar
  */
-public enum SendToBoxReason {
+public enum SendToBoxReason implements IEnumWithId, IEnumWithName {
   
   MNG(1, "mng", "is recovering from a Serious Injury"),
   FOUL_BAN(2, "foulBan", "was banned for fouling"),
@@ -53,26 +52,6 @@ public enum SendToBoxReason {
   
   public String getReason() {
     return fReason;
-  }
-  
-  public static SendToBoxReason fromId(int pId) {
-    for (SendToBoxReason reason : values()) {
-      if (reason.getId() == pId) {
-        return reason;
-      }
-    }
-    return null;
-  }
-  
-  public static SendToBoxReason fromName(String pName) {
-    if (StringTool.isProvided(pName)) {
-      for (SendToBoxReason reason : values()) {
-        if (pName.equalsIgnoreCase(reason.getName())) {
-          return reason;
-        }
-      }
-    }
-    return null;
   }
 
 }

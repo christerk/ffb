@@ -101,7 +101,7 @@ public class StepTentacles extends AbstractStepWithReRoll {
 			switch (pNetCommand.getId()) {
 				case CLIENT_PLAYER_CHOICE:
 	        ClientCommandPlayerChoice playerChoiceCommand = (ClientCommandPlayerChoice) pNetCommand;
-	        if (playerChoiceCommand.getMode() == PlayerChoiceMode.TENTACLES) {
+	        if (playerChoiceCommand.getPlayerChoiceMode() == PlayerChoiceMode.TENTACLES) {
 	        	fUsingTentacles = StringTool.isProvided(playerChoiceCommand.getPlayerId());
 	        	getGameState().getGame().setDefenderId(playerChoiceCommand.getPlayerId());
 	        	commandStatus = StepCommandStatus.EXECUTE_STEP;

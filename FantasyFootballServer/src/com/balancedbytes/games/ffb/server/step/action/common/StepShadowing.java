@@ -86,7 +86,7 @@ public class StepShadowing extends AbstractStepWithReRoll {
 			switch (pNetCommand.getId()) {
 	      case CLIENT_PLAYER_CHOICE:
 	        ClientCommandPlayerChoice playerChoiceCommand = (ClientCommandPlayerChoice) pNetCommand;
-	        if (PlayerChoiceMode.SHADOWING == playerChoiceCommand.getMode()) {
+	        if (PlayerChoiceMode.SHADOWING == playerChoiceCommand.getPlayerChoiceMode()) {
 	        	fUsingShadowing = StringTool.isProvided(playerChoiceCommand.getPlayerId());
 		        game.setDefenderId(playerChoiceCommand.getPlayerId());
 		        commandStatus = StepCommandStatus.EXECUTE_STEP;

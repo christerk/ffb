@@ -13,11 +13,15 @@ import com.balancedbytes.games.ffb.InducementType;
 import com.balancedbytes.games.ffb.InducementTypeFactory;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
+import com.balancedbytes.games.ffb.json.IJsonOption;
+import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.net.NetCommand;
 import com.balancedbytes.games.ffb.net.NetCommandId;
 import com.balancedbytes.games.ffb.util.ArrayTool;
 import com.balancedbytes.games.ffb.util.StringTool;
 import com.balancedbytes.games.ffb.xml.UtilXml;
+import com.eclipsesource.json.JsonObject;
+import com.eclipsesource.json.JsonValue;
 
 
 
@@ -33,7 +37,7 @@ public class ClientCommandUseInducement extends NetCommand {
   private static final String _XML_TAG_PLAYER = "player";
   private static final String _XML_ATTRIBUTE_ID = "id";
   
-  private InducementType fInducement;
+  private InducementType fInducementType;
   private Card fCard;
   private List<String> fPlayerIds;
   
@@ -41,14 +45,14 @@ public class ClientCommandUseInducement extends NetCommand {
     fPlayerIds = new ArrayList<String>();
   }
 
-  public ClientCommandUseInducement(InducementType pInducement) {
+  public ClientCommandUseInducement(InducementType pInducementType) {
     this();
-    fInducement = pInducement;
+    fInducementType = pInducementType;
   }
   
   public ClientCommandUseInducement(InducementType pInducement, String pPlayerId) {
     this(pInducement);
-    add(pPlayerId);
+    addPlayerId(pPlayerId);
   }
   
   public ClientCommandUseInducement(Card pCard) {
@@ -58,20 +62,20 @@ public class ClientCommandUseInducement extends NetCommand {
   
   public ClientCommandUseInducement(Card pCard, String pPlayerId) {
   	this(pCard);
-  	add(pPlayerId);
+  	addPlayerId(pPlayerId);
   }
 
   public ClientCommandUseInducement(InducementType pInducement, String[] pPlayerIds) {
     this(pInducement);
-    add(pPlayerIds);
+    addPlayerIds(pPlayerIds);
   }
   
   public NetCommandId getId() {
     return NetCommandId.CLIENT_USE_INDUCEMENT;
   }
   
-  public InducementType getInducement() {
-    return fInducement;
+  public InducementType getInducementType() {
+    return fInducementType;
   }
   
   public Card getCard() {
@@ -86,16 +90,16 @@ public class ClientCommandUseInducement extends NetCommand {
     return fPlayerIds.contains(pPlayerId);
   }
 
-  private void add(String pPlayerId) {
+  private void addPlayerId(String pPlayerId) {
     if (StringTool.isProvided(pPlayerId)) {
       fPlayerIds.add(pPlayerId);
     }
   }
   
-  private void add(String[] pPlayerIds) {
+  private void addPlayerIds(String[] pPlayerIds) {
     if (ArrayTool.isProvided(pPlayerIds)) {
       for (String playerId : pPlayerIds) {
-        add(playerId);
+        addPlayerId(playerId);
       }
     }
   }
@@ -107,7 +111,7 @@ public class ClientCommandUseInducement extends NetCommand {
     if (getCard() != null) {
       UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_CARD, getCard().getName());
     } else {
-      UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_INDUCEMENT, (getInducement() != null) ? getInducement().getName() : null);
+      UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_INDUCEMENT, (getInducementType() != null) ? getInducementType().getName() : null);
     }
     UtilXml.startElement(pHandler, getId().getName(), attributes);
     String[] playerIds = getPlayerIds();
@@ -133,19 +137,38 @@ public class ClientCommandUseInducement extends NetCommand {
   
   public void addTo(ByteList pByteList) {
     pByteList.addSmallInt(getByteArraySerializationVersion());
-    pByteList.addByte((byte) ((getInducement() != null) ? getInducement().getId() : 0));
+    pByteList.addByte((byte) ((getInducementType() != null) ? getInducementType().getId() : 0));
     pByteList.addStringArray(getPlayerIds());
     pByteList.addSmallInt((getCard() != null) ? getCard().getId() : 0);
   }
   
   public int initFrom(ByteArray pByteArray) {
     int byteArraySerializationVersion = pByteArray.getSmallInt();
-    fInducement = new InducementTypeFactory().forId(pByteArray.getByte());
-    add(pByteArray.getStringArray());
+    fInducementType = new InducementTypeFactory().forId(pByteArray.getByte());
+    addPlayerIds(pByteArray.getStringArray());
     if (byteArraySerializationVersion > 1) {
     	fCard = new CardFactory().forId(pByteArray.getSmallInt());
     }
     return byteArraySerializationVersion;
+  }
+  
+  // JSON serialization
+
+  public JsonObject toJsonValue() {
+    JsonObject jsonObject = new JsonObject();
+    IJsonOption.NET_COMMAND_ID.addTo(jsonObject, getId());
+    IJsonOption.INDUCEMENT_TYPE.addTo(jsonObject, fInducementType);
+    IJsonOption.PLAYER_IDS.addTo(jsonObject, fPlayerIds);
+    IJsonOption.CARD.addTo(jsonObject, fCard);
+    return jsonObject;
+  }
+
+  public void initFrom(JsonValue pJsonValue) {
+    JsonObject jsonObject = UtilJson.asJsonObject(pJsonValue);
+    UtilNetCommand.validateCommandId(this, (NetCommandId) IJsonOption.NET_COMMAND_ID.getFrom(jsonObject));
+    fInducementType = (InducementType) IJsonOption.INDUCEMENT_TYPE.getFrom(jsonObject);
+    addPlayerIds(IJsonOption.PLAYER_IDS.getFrom(jsonObject));
+    fCard = (Card) IJsonOption.CARD.getFrom(jsonObject);
   }
       
 }

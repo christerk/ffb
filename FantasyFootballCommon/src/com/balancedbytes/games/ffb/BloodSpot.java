@@ -134,7 +134,7 @@ public class BloodSpot implements IXmlSerializable, IByteArraySerializable {
   
   // JSON serialization
   
-  public JsonValue toJsonValue() {
+  public JsonObject toJsonValue() {
     JsonObject jsonObject = new JsonObject();
     IJsonOption.INJURY.addTo(jsonObject, fInjury);
     IJsonOption.COORDINATE.addTo(jsonObject, fCoordinate);

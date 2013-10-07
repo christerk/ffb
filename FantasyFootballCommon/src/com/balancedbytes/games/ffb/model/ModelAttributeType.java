@@ -22,6 +22,7 @@ import com.balancedbytes.games.ffb.PlayerState;
 import com.balancedbytes.games.ffb.PushbackSquare;
 import com.balancedbytes.games.ffb.RangeRuler;
 import com.balancedbytes.games.ffb.SendToBoxReason;
+import com.balancedbytes.games.ffb.SendToBoxReasonFactory;
 import com.balancedbytes.games.ffb.SeriousInjury;
 import com.balancedbytes.games.ffb.SeriousInjuryFactory;
 import com.balancedbytes.games.ffb.Skill;
@@ -298,7 +299,7 @@ public enum ModelAttributeType {
       case SERIOUS_INJURY:
         return new SeriousInjuryFactory().forName(valueString);
       case SEND_TO_BOX_REASON:
-        return SendToBoxReason.fromName(valueString);
+        return new SendToBoxReasonFactory().forName(valueString);
       case WEATHER:
         return Weather.fromName(valueString);
       case CARD:
@@ -499,7 +500,7 @@ public enum ModelAttributeType {
       case SERIOUS_INJURY:
         return new SeriousInjuryFactory().forId(pByteArray.getByte());
       case SEND_TO_BOX_REASON:
-        return SendToBoxReason.fromId(pByteArray.getByte());
+        return new SendToBoxReasonFactory().forId(pByteArray.getByte());
       case BLOOD_SPOT:
         BloodSpot bloodSpot = null;
         if (pByteArray.getBoolean()) {

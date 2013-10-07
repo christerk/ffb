@@ -1,6 +1,7 @@
 package com.balancedbytes.games.ffb.client;
 
 import com.balancedbytes.games.ffb.ClientMode;
+import com.balancedbytes.games.ffb.ClientModeFactory;
 import com.balancedbytes.games.ffb.FantasyFootballException;
 import com.balancedbytes.games.ffb.util.ArrayTool;
 import com.balancedbytes.games.ffb.util.StringTool;
@@ -80,11 +81,12 @@ public class ClientParameters {
 	
 	public void initFrom(String[] pArguments) {
 		if (ArrayTool.isProvided(pArguments)) {
+		  ClientModeFactory clientModeFactory = new ClientModeFactory();
 			int pos = 0;
 			while (pos < pArguments.length) {
 				String argument = fetchArgument(pArguments, pos++);
-				if (ClientMode.fromArgument(argument) != null) {
-					fMode = ClientMode.fromArgument(argument);
+				if (clientModeFactory.forArgument(argument) != null) {
+					fMode = clientModeFactory.forArgument(argument);
 				} else if (_ARGUMENT_COACH.equalsIgnoreCase(argument)) {
 					setCoach(fetchArgument(pArguments, pos++));
 				} else if (_ARGUMENT_GAME_ID.equalsIgnoreCase(argument)) {

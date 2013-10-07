@@ -127,7 +127,7 @@ public class GameOptionValue implements IByteArraySerializable, IXmlSerializable
   
   // JSON serialization
   
-  public JsonValue toJsonValue() {
+  public JsonObject toJsonValue() {
     JsonObject jsonObject = new JsonObject();
     IJsonOption.GAME_OPTION.addTo(jsonObject, fGameOption);
     IJsonOption.VALUE.addTo(jsonObject, fValue);

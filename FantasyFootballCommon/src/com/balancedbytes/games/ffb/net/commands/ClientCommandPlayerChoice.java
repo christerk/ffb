@@ -12,11 +12,15 @@ import com.balancedbytes.games.ffb.PlayerChoiceMode;
 import com.balancedbytes.games.ffb.PlayerChoiceModeFactory;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
+import com.balancedbytes.games.ffb.json.IJsonOption;
+import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.net.NetCommand;
 import com.balancedbytes.games.ffb.net.NetCommandId;
 import com.balancedbytes.games.ffb.util.ArrayTool;
 import com.balancedbytes.games.ffb.util.StringTool;
 import com.balancedbytes.games.ffb.xml.UtilXml;
+import com.eclipsesource.json.JsonObject;
+import com.eclipsesource.json.JsonValue;
 
 
 
@@ -31,16 +35,16 @@ public class ClientCommandPlayerChoice extends NetCommand {
   private static final String _XML_TAG_PLAYER = "player";
   private static final String _XML_ATTRIBUTE_ID = "id";
   
-  private PlayerChoiceMode fMode;
+  private PlayerChoiceMode fPlayerChoiceMode;
   private List<String> fPlayerIds;
   
   public ClientCommandPlayerChoice() {
     fPlayerIds = new ArrayList<String>();
   }
 
-  public ClientCommandPlayerChoice(PlayerChoiceMode pMode, Player[] pPlayers) {
+  public ClientCommandPlayerChoice(PlayerChoiceMode pPlayerChoiceMode, Player[] pPlayers) {
     this();
-    fMode = pMode;
+    fPlayerChoiceMode = pPlayerChoiceMode;
     if (ArrayTool.isProvided(pPlayers)) {
       for (Player player : pPlayers) {
         addPlayerId(player.getId());
@@ -74,8 +78,8 @@ public class ClientCommandPlayerChoice extends NetCommand {
     }
   }
 
-  public PlayerChoiceMode getMode() {
-    return fMode;
+  public PlayerChoiceMode getPlayerChoiceMode() {
+    return fPlayerChoiceMode;
   }
   
   // XML serialization
@@ -83,7 +87,7 @@ public class ClientCommandPlayerChoice extends NetCommand {
   public void addToXml(TransformerHandler pHandler) {
   	
   	AttributesImpl attributes = new AttributesImpl();
-  	UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_MODE, (getMode() != null) ? getMode().getName() : null);
+  	UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_MODE, (getPlayerChoiceMode() != null) ? getPlayerChoiceMode().getName() : null);
     UtilXml.startElement(pHandler, getId().getName(), attributes);
     
     String[] playerIds = getPlayerIds();
@@ -112,15 +116,32 @@ public class ClientCommandPlayerChoice extends NetCommand {
   
   public void addTo(ByteList pByteList) {
     pByteList.addSmallInt(getByteArraySerializationVersion());
-    pByteList.addByte((byte) ((getMode() != null) ? getMode().getId() : 0));
+    pByteList.addByte((byte) ((getPlayerChoiceMode() != null) ? getPlayerChoiceMode().getId() : 0));
     pByteList.addStringArray(getPlayerIds());
   }
   
   public int initFrom(ByteArray pByteArray) {
     int byteArraySerializationVersion = pByteArray.getSmallInt();
-    fMode = new PlayerChoiceModeFactory().forId(pByteArray.getByte());
+    fPlayerChoiceMode = new PlayerChoiceModeFactory().forId(pByteArray.getByte());
     addPlayerIds(pByteArray.getStringArray());
     return byteArraySerializationVersion;
+  }
+  
+  // JSON serialization
+
+  public JsonObject toJsonValue() {
+    JsonObject jsonObject = new JsonObject();
+    IJsonOption.NET_COMMAND_ID.addTo(jsonObject, getId());
+    IJsonOption.PLAYER_CHOICE_MODE.addTo(jsonObject, fPlayerChoiceMode);
+    IJsonOption.PLAYER_IDS.addTo(jsonObject, fPlayerIds);
+    return jsonObject;
+  }
+
+  public void initFrom(JsonValue pJsonValue) {
+    JsonObject jsonObject = UtilJson.asJsonObject(pJsonValue);
+    UtilNetCommand.validateCommandId(this, (NetCommandId) IJsonOption.NET_COMMAND_ID.getFrom(jsonObject));
+    fPlayerChoiceMode = (PlayerChoiceMode) IJsonOption.PLAYER_CHOICE_MODE.getFrom(jsonObject);
+    addPlayerIds(IJsonOption.PLAYER_IDS.getFrom(jsonObject));
   }
 
 }

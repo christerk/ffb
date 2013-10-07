@@ -50,11 +50,11 @@ public class JsonStringArrayOption extends JsonAbstractOption {
   }
   
   public void addTo(JsonObject pJsonObject, Collection<String> pValues) {
+    String[] stringArray = null;
     if (pValues != null) {
-      addTo(pJsonObject, pValues.toArray(new String[pValues.size()]));
-    } else {
-      addTo(pJsonObject, (String[]) null);
+      stringArray = pValues.toArray(new String[pValues.size()]);
     }
+    addTo(pJsonObject, stringArray);
   }
   
 }

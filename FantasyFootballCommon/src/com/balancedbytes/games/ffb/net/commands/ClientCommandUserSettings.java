@@ -10,10 +10,14 @@ import org.xml.sax.helpers.AttributesImpl;
 
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
+import com.balancedbytes.games.ffb.json.IJsonOption;
+import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.net.NetCommand;
 import com.balancedbytes.games.ffb.net.NetCommandId;
 import com.balancedbytes.games.ffb.util.ArrayTool;
 import com.balancedbytes.games.ffb.xml.UtilXml;
+import com.eclipsesource.json.JsonObject;
+import com.eclipsesource.json.JsonValue;
 
 
 
@@ -106,6 +110,30 @@ public class ClientCommandUserSettings extends NetCommand {
     String[] settingValues = pByteArray.getStringArray();
     init(settingNames, settingValues);
     return byteArraySerializationVersion;
+  }
+  
+  // JSON serialization
+
+  public JsonObject toJsonValue() {
+    JsonObject jsonObject = new JsonObject();
+    IJsonOption.NET_COMMAND_ID.addTo(jsonObject, getId());
+    String[] settingNames = getSettingNames();
+    IJsonOption.SETTING_NAMES.addTo(jsonObject, settingNames);
+    String[] settingValues = new String[settingNames.length];
+    for (int i = 0; i < settingNames.length; i++) {
+      settingValues[i] = getSettingValue(settingNames[i]);
+    }
+    IJsonOption.SETTING_VALUES.addTo(jsonObject, settingValues);
+    return jsonObject;
+  }
+
+  public void initFrom(JsonValue pJsonValue) {
+    JsonObject jsonObject = UtilJson.asJsonObject(pJsonValue);
+    UtilNetCommand.validateCommandId(this, (NetCommandId) IJsonOption.NET_COMMAND_ID.getFrom(jsonObject));
+    init(
+        IJsonOption.SETTING_NAMES.getFrom(jsonObject),
+        IJsonOption.SETTING_VALUES.getFrom(jsonObject)
+    );
   }
   
 }

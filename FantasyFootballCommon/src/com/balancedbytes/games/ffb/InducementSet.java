@@ -313,7 +313,7 @@ public class InducementSet implements IByteArraySerializable, IXmlWriteable {
 
   // JSON serialization
   
-  public JsonValue toJsonValue() {
+  public JsonObject toJsonValue() {
     JsonObject jsonObject = new JsonObject();
     JsonArray inducementsArray = new JsonArray();
     for (Inducement inducement : fInducements.values()) {

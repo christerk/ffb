@@ -178,7 +178,7 @@ public class TeamList implements IXmlSerializable, IByteArraySerializable {
   
   // JSON serialization
   
-  public JsonValue toJsonValue() {
+  public JsonObject toJsonValue() {
     JsonObject jsonObject = new JsonObject();
     IJsonOption.COACH.addTo(jsonObject, fCoach);
     JsonArray teamList = new JsonArray();

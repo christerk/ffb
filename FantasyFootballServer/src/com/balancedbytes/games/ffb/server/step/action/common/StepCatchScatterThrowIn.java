@@ -95,7 +95,7 @@ public class StepCatchScatterThrowIn extends AbstractStepWithReRoll {
 			switch (pNetCommand.getId()) {
 	      case CLIENT_PLAYER_CHOICE:
 	        ClientCommandPlayerChoice playerChoiceCommand = (ClientCommandPlayerChoice) pNetCommand;
-	        if (PlayerChoiceMode.DIVING_CATCH == playerChoiceCommand.getMode()) {
+	        if (PlayerChoiceMode.DIVING_CATCH == playerChoiceCommand.getPlayerChoiceMode()) {
             fDivingCatchChoice = StringTool.isProvided(playerChoiceCommand.getPlayerId());
             fCatcherId = playerChoiceCommand.getPlayerId();
 	        }

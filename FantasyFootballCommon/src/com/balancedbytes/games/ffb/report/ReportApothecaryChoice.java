@@ -6,6 +6,7 @@ import org.xml.sax.helpers.AttributesImpl;
 
 import com.balancedbytes.games.ffb.PlayerState;
 import com.balancedbytes.games.ffb.SeriousInjury;
+import com.balancedbytes.games.ffb.SeriousInjuryFactory;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
 import com.balancedbytes.games.ffb.xml.UtilXml;
@@ -95,7 +96,7 @@ public class ReportApothecaryChoice implements IReport {
     int byteArraySerializationVersion = pByteArray.getSmallInt();
     fPlayerId = pByteArray.getString();
     fPlayerState = new PlayerState(pByteArray.getSmallInt());
-    fSeriousInjury = SeriousInjury.fromId(pByteArray.getByte());
+    fSeriousInjury = new SeriousInjuryFactory().forId(pByteArray.getByte());
     return byteArraySerializationVersion;
   }
 

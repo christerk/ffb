@@ -3,6 +3,7 @@ package com.balancedbytes.games.ffb.report;
 import org.xml.sax.helpers.AttributesImpl;
 
 import com.balancedbytes.games.ffb.Skill;
+import com.balancedbytes.games.ffb.SkillFactory;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
 import com.balancedbytes.games.ffb.xml.UtilXml;
@@ -61,7 +62,7 @@ public class ReportConfusionRoll extends ReportSkillRoll {
   @Override
   public int initFrom(ByteArray pByteArray) {
     int byteArraySerializationVersion = initCommonPartFrom(pByteArray);
-    fConfusionSkill = Skill.fromId(pByteArray.getByte());
+    fConfusionSkill = new SkillFactory().forId(pByteArray.getByte());
     return byteArraySerializationVersion;
   }
     

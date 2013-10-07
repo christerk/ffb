@@ -165,7 +165,7 @@ public final class MoveSquare implements IXmlSerializable, IByteArraySerializabl
   
   // JSON serialization
   
-  public JsonValue toJsonValue() {
+  public JsonObject toJsonValue() {
     JsonObject jsonObject = new JsonObject();
     IJsonOption.COORDINATE.addTo(jsonObject, fCoordinate);
     IJsonOption.MINIMUM_ROLL_DODGE.addTo(jsonObject, fMinimumRollDodge);

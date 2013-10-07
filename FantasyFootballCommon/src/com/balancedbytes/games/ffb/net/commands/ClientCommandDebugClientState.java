@@ -76,7 +76,7 @@ public class ClientCommandDebugClientState extends NetCommand {
   
   // JSON serialization
   
-  public JsonValue toJsonValue() {
+  public JsonObject toJsonValue() {
     JsonObject jsonObject = new JsonObject();
     IJsonOption.NET_COMMAND_ID.addTo(jsonObject, getId());
     IJsonOption.CLIENT_STATE_ID.addTo(jsonObject, fClientStateId);
