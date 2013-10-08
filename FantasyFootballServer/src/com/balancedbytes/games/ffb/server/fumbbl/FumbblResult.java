@@ -11,15 +11,15 @@ import org.xml.sax.helpers.AttributesImpl;
 
 import com.balancedbytes.games.ffb.Card;
 import com.balancedbytes.games.ffb.Inducement;
-import com.balancedbytes.games.ffb.InducementSet;
 import com.balancedbytes.games.ffb.InducementType;
-import com.balancedbytes.games.ffb.Player;
 import com.balancedbytes.games.ffb.PlayerType;
 import com.balancedbytes.games.ffb.Skill;
-import com.balancedbytes.games.ffb.Team;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.GameResult;
+import com.balancedbytes.games.ffb.model.InducementSet;
+import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.model.PlayerResult;
+import com.balancedbytes.games.ffb.model.Team;
 import com.balancedbytes.games.ffb.model.TeamResult;
 import com.balancedbytes.games.ffb.util.ArrayTool;
 import com.balancedbytes.games.ffb.xml.IXmlWriteable;

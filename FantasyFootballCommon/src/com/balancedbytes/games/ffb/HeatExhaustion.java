@@ -113,11 +113,12 @@ public class HeatExhaustion implements IByteArraySerializable, IXmlSerializable 
     return jsonObject;
   }
   
-  public void initFrom(JsonValue pJsonValue) {
-    JsonObject jsonObject = UtilJson.asJsonObject(pJsonValue);
+  public HeatExhaustion initFrom(JsonValue pJsonValue) {
+    JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
     fPlayerId = IJsonOption.PLAYER_ID.getFrom(jsonObject);
     fExhausted = IJsonOption.EXHAUSTED.getFrom(jsonObject);
     fRoll = IJsonOption.ROLL.getFrom(jsonObject);
+    return this;
   }
 
   

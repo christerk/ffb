@@ -2,14 +2,14 @@ package com.balancedbytes.games.ffb.server.step.phase.inducement;
 
 import com.balancedbytes.games.ffb.Card;
 import com.balancedbytes.games.ffb.CardFactory;
-import com.balancedbytes.games.ffb.InducementSet;
-import com.balancedbytes.games.ffb.Player;
 import com.balancedbytes.games.ffb.PlayerChoiceMode;
-import com.balancedbytes.games.ffb.Team;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
 import com.balancedbytes.games.ffb.dialog.DialogPlayerChoiceParameter;
 import com.balancedbytes.games.ffb.model.Game;
+import com.balancedbytes.games.ffb.model.InducementSet;
+import com.balancedbytes.games.ffb.model.Player;
+import com.balancedbytes.games.ffb.model.Team;
 import com.balancedbytes.games.ffb.net.NetCommand;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandPlayerChoice;
 import com.balancedbytes.games.ffb.report.ReportPlayCard;

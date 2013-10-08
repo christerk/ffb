@@ -186,12 +186,13 @@ public class RangeRuler implements IXmlSerializable, IByteArraySerializable {
     return jsonObject;
   }
   
-  public void initFrom(JsonValue pJsonValue) {
-    JsonObject jsonObject = UtilJson.asJsonObject(pJsonValue);
+  public RangeRuler initFrom(JsonValue pJsonValue) {
+    JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
     fThrowerId = IJsonOption.THROWER_ID.getFrom(jsonObject);
     fTargetCoordinate = IJsonOption.TARGET_COORDINATE.getFrom(jsonObject);
     fMinimumRoll = IJsonOption.MINIMUM_ROLL.getFrom(jsonObject);
     fThrowTeamMate = IJsonOption.THROW_TEAM_MATE.getFrom(jsonObject);
+    return this;
   }
   
 }

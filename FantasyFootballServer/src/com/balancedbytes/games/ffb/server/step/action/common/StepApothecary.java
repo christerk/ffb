@@ -1,20 +1,20 @@
 package com.balancedbytes.games.ffb.server.step.action.common;
 
-import com.balancedbytes.games.ffb.InducementSet;
 import com.balancedbytes.games.ffb.InducementType;
 import com.balancedbytes.games.ffb.InjuryType;
-import com.balancedbytes.games.ffb.Player;
 import com.balancedbytes.games.ffb.PlayerState;
 import com.balancedbytes.games.ffb.PlayerType;
 import com.balancedbytes.games.ffb.SeriousInjury;
 import com.balancedbytes.games.ffb.Skill;
-import com.balancedbytes.games.ffb.Team;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
 import com.balancedbytes.games.ffb.dialog.DialogApothecaryChoiceParameter;
 import com.balancedbytes.games.ffb.dialog.DialogUseApothecaryParameter;
 import com.balancedbytes.games.ffb.dialog.DialogUseIgorParameter;
 import com.balancedbytes.games.ffb.model.Game;
+import com.balancedbytes.games.ffb.model.InducementSet;
+import com.balancedbytes.games.ffb.model.Player;
+import com.balancedbytes.games.ffb.model.Team;
 import com.balancedbytes.games.ffb.net.NetCommand;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandApothecaryChoice;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandUseApothecary;

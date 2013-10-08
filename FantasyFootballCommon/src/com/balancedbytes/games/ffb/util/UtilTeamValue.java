@@ -1,10 +1,10 @@
 package com.balancedbytes.games.ffb.util;
 
-import com.balancedbytes.games.ffb.Player;
-import com.balancedbytes.games.ffb.Roster;
-import com.balancedbytes.games.ffb.RosterPosition;
 import com.balancedbytes.games.ffb.Skill;
-import com.balancedbytes.games.ffb.Team;
+import com.balancedbytes.games.ffb.model.Player;
+import com.balancedbytes.games.ffb.model.Roster;
+import com.balancedbytes.games.ffb.model.RosterPosition;
+import com.balancedbytes.games.ffb.model.Team;
 
 /**
  * 

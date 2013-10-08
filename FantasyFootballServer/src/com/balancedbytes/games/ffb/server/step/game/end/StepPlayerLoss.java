@@ -3,11 +3,11 @@ package com.balancedbytes.games.ffb.server.step.game.end;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.balancedbytes.games.ffb.Player;
-import com.balancedbytes.games.ffb.Team;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.GameResult;
+import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.model.PlayerResult;
+import com.balancedbytes.games.ffb.model.Team;
 import com.balancedbytes.games.ffb.report.ReportDefectingPlayers;
 import com.balancedbytes.games.ffb.server.DiceInterpreter;
 import com.balancedbytes.games.ffb.server.GameState;

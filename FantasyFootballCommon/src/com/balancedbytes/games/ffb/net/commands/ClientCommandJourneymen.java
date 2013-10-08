@@ -141,7 +141,7 @@ public class ClientCommandJourneymen extends NetCommand {
   }
 
   public void initFrom(JsonValue pJsonValue) {
-    JsonObject jsonObject = UtilJson.asJsonObject(pJsonValue);
+    JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
     UtilNetCommand.validateCommandId(this, (NetCommandId) IJsonOption.NET_COMMAND_ID.getFrom(jsonObject));
     addPositionIds(IJsonOption.POSITION_IDS.getFrom(jsonObject));
     addSlots(IJsonOption.SLOTS.getFrom(jsonObject));

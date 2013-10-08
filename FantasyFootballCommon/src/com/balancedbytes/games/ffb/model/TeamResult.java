@@ -8,14 +8,14 @@ import javax.xml.transform.sax.TransformerHandler;
 import org.xml.sax.Attributes;
 import org.xml.sax.helpers.AttributesImpl;
 
-import com.balancedbytes.games.ffb.Player;
 import com.balancedbytes.games.ffb.PlayerState;
-import com.balancedbytes.games.ffb.Team;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
 import com.balancedbytes.games.ffb.bytearray.IByteArraySerializable;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
+import com.balancedbytes.games.ffb.model.change.old.CommandTeamResultChange;
+import com.balancedbytes.games.ffb.model.change.old.ModelChangeTeamResult;
 import com.balancedbytes.games.ffb.xml.IXmlSerializable;
 import com.balancedbytes.games.ffb.xml.UtilXml;
 import com.eclipsesource.json.JsonArray;
@@ -577,7 +577,7 @@ public class TeamResult implements IByteArraySerializable, IXmlSerializable {
   }
   
   public void initFrom(JsonValue pJsonValue) {
-    JsonObject jsonObject = UtilJson.asJsonObject(pJsonValue);
+    JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
     fScore = IJsonOption.SCORE.getFrom(jsonObject);
     fConceded = IJsonOption.CONCEDED.getFrom(jsonObject);
     fRaisedDead = IJsonOption.RAISED_DEAD.getFrom(jsonObject);

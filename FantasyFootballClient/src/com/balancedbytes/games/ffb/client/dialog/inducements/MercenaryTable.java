@@ -8,9 +8,9 @@ import javax.swing.JComboBox;
 import javax.swing.JTable;
 import javax.swing.table.TableCellEditor;
 
-import com.balancedbytes.games.ffb.Player;
 import com.balancedbytes.games.ffb.Skill;
 import com.balancedbytes.games.ffb.SkillCategory;
+import com.balancedbytes.games.ffb.model.Player;
 
 @SuppressWarnings("serial")
 public class MercenaryTable extends JTable {

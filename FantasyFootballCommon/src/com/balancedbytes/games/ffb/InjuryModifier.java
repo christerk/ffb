@@ -4,6 +4,8 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Set;
 
+import com.balancedbytes.games.ffb.model.Player;
+
 /**
  * 
  * @author Kalimar

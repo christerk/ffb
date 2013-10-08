@@ -5,9 +5,6 @@ import java.util.Set;
 
 import javax.swing.SwingUtilities;
 
-import com.balancedbytes.games.ffb.Player;
-import com.balancedbytes.games.ffb.Roster;
-import com.balancedbytes.games.ffb.RosterPosition;
 import com.balancedbytes.games.ffb.client.FantasyFootballClient;
 import com.balancedbytes.games.ffb.client.IconCache;
 import com.balancedbytes.games.ffb.client.PlayerIconFactory;
@@ -17,6 +14,9 @@ import com.balancedbytes.games.ffb.client.dialog.IDialog;
 import com.balancedbytes.games.ffb.client.dialog.IDialogCloseListener;
 import com.balancedbytes.games.ffb.client.util.UtilThrowTeamMate;
 import com.balancedbytes.games.ffb.model.Game;
+import com.balancedbytes.games.ffb.model.Player;
+import com.balancedbytes.games.ffb.model.Roster;
+import com.balancedbytes.games.ffb.model.RosterPosition;
 import com.balancedbytes.games.ffb.net.NetCommand;
 import com.balancedbytes.games.ffb.net.NetCommandId;
 import com.balancedbytes.games.ffb.net.commands.ServerCommandGameState;

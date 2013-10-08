@@ -3,7 +3,6 @@ package com.balancedbytes.games.ffb.client.state;
 import com.balancedbytes.games.ffb.ClientStateId;
 import com.balancedbytes.games.ffb.Direction;
 import com.balancedbytes.games.ffb.FieldCoordinate;
-import com.balancedbytes.games.ffb.Player;
 import com.balancedbytes.games.ffb.Pushback;
 import com.balancedbytes.games.ffb.PushbackSquare;
 import com.balancedbytes.games.ffb.client.ActionKey;
@@ -11,6 +10,7 @@ import com.balancedbytes.games.ffb.client.FantasyFootballClient;
 import com.balancedbytes.games.ffb.client.FieldComponent;
 import com.balancedbytes.games.ffb.client.util.UtilActionKeys;
 import com.balancedbytes.games.ffb.model.Game;
+import com.balancedbytes.games.ffb.model.Player;
 
 /**
  * 

@@ -144,11 +144,12 @@ public class PlayerMarker implements IXmlSerializable, IByteArraySerializable {
     return jsonObject;
   }
   
-  public void initFrom(JsonValue pJsonValue) {
-    JsonObject jsonObject = UtilJson.asJsonObject(pJsonValue);
+  public PlayerMarker initFrom(JsonValue pJsonValue) {
+    JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
     fPlayerId = IJsonOption.PLAYER_ID.getFrom(jsonObject);
     fHomeText = IJsonOption.HOME_TEXT.getFrom(jsonObject);
     fAwayText = IJsonOption.AWAY_TEXT.getFrom(jsonObject);
+    return this;
   }
   
 }

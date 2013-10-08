@@ -8,7 +8,8 @@ import com.eclipsesource.json.JsonValue;
  */
 public interface IJsonSerializable {
   
-  public void initFrom(JsonValue pJsonValue);
+  // will return "this"
+  public Object initFrom(JsonValue pJsonValue);
   
   public JsonValue toJsonValue();
 

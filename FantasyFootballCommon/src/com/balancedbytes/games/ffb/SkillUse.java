@@ -1,5 +1,6 @@
 package com.balancedbytes.games.ffb;
 
+import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.util.StringTool;
 
 /**

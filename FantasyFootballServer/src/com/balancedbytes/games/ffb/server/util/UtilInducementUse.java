@@ -1,10 +1,10 @@
 package com.balancedbytes.games.ffb.server.util;
 
 import com.balancedbytes.games.ffb.Inducement;
-import com.balancedbytes.games.ffb.InducementSet;
 import com.balancedbytes.games.ffb.InducementType;
-import com.balancedbytes.games.ffb.Team;
 import com.balancedbytes.games.ffb.model.Game;
+import com.balancedbytes.games.ffb.model.InducementSet;
+import com.balancedbytes.games.ffb.model.Team;
 import com.balancedbytes.games.ffb.server.GameState;
 
 /**

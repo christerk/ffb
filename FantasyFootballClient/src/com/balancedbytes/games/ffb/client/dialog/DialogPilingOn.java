@@ -1,10 +1,10 @@
 package com.balancedbytes.games.ffb.client.dialog;
 
-import com.balancedbytes.games.ffb.Player;
 import com.balancedbytes.games.ffb.client.FantasyFootballClient;
 import com.balancedbytes.games.ffb.dialog.DialogId;
 import com.balancedbytes.games.ffb.dialog.DialogPilingOnParameter;
 import com.balancedbytes.games.ffb.model.Game;
+import com.balancedbytes.games.ffb.model.Player;
 
 /**
  * 

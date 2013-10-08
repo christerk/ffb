@@ -2,8 +2,6 @@ package com.balancedbytes.games.ffb.client.state;
 
 import com.balancedbytes.games.ffb.ClientStateId;
 import com.balancedbytes.games.ffb.FieldCoordinate;
-import com.balancedbytes.games.ffb.Player;
-import com.balancedbytes.games.ffb.Team;
 import com.balancedbytes.games.ffb.client.ActionKey;
 import com.balancedbytes.games.ffb.client.FantasyFootballClient;
 import com.balancedbytes.games.ffb.client.IIconProperty;
@@ -11,6 +9,8 @@ import com.balancedbytes.games.ffb.client.util.UtilActionKeys;
 import com.balancedbytes.games.ffb.client.util.UtilCursor;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.Game;
+import com.balancedbytes.games.ffb.model.Player;
+import com.balancedbytes.games.ffb.model.Team;
 import com.balancedbytes.games.ffb.util.UtilPlayer;
 
 /**

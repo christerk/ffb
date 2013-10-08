@@ -1,4 +1,4 @@
-package com.balancedbytes.games.ffb.model;
+package com.balancedbytes.games.ffb.model.change.old;
 
 import java.util.Date;
 
@@ -29,7 +29,9 @@ import com.balancedbytes.games.ffb.Skill;
 import com.balancedbytes.games.ffb.SkillFactory;
 import com.balancedbytes.games.ffb.TrackNumber;
 import com.balancedbytes.games.ffb.TurnMode;
+import com.balancedbytes.games.ffb.TurnModeFactory;
 import com.balancedbytes.games.ffb.Weather;
+import com.balancedbytes.games.ffb.WeatherFactory;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
 import com.balancedbytes.games.ffb.dialog.DialogId;
@@ -285,7 +287,7 @@ public enum ModelAttributeType {
       case STRING:
         return valueString;
       case TURN_MODE:
-        return TurnMode.fromName(valueString);
+        return new TurnModeFactory().forName(valueString);
       case DATE:
         if (StringTool.isProvided(valueString)) {
           return DateTool.parseTimestamp(valueString);
@@ -301,7 +303,7 @@ public enum ModelAttributeType {
       case SEND_TO_BOX_REASON:
         return new SendToBoxReasonFactory().forName(valueString);
       case WEATHER:
-        return Weather.fromName(valueString);
+        return new WeatherFactory().forName(valueString);
       case CARD:
       	return new CardFactory().forName(valueString);
       default:
@@ -480,7 +482,7 @@ public enum ModelAttributeType {
           return null;
         }
       case TURN_MODE:
-        return TurnMode.fromId(pByteArray.getByte());
+        return new TurnModeFactory().forId(pByteArray.getByte());
       case FIELD_COORDINATE:
         return pByteArray.getFieldCoordinate();
       case DIALOG_ID:
@@ -530,7 +532,7 @@ public enum ModelAttributeType {
         }
         return moveSquare;
       case WEATHER:
-        return Weather.fromId(pByteArray.getByte());
+        return new WeatherFactory().forId(pByteArray.getByte());
       case CARD:
       	return new CardFactory().forId(pByteArray.getSmallInt());
       case RANGE_RULER:

@@ -9,6 +9,7 @@ import com.balancedbytes.games.ffb.bytearray.ByteList;
 import com.balancedbytes.games.ffb.bytearray.IByteArraySerializable;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
+import com.balancedbytes.games.ffb.model.Team;
 import com.balancedbytes.games.ffb.xml.IXmlReadable;
 import com.balancedbytes.games.ffb.xml.IXmlSerializable;
 import com.balancedbytes.games.ffb.xml.UtilXml;
@@ -219,8 +220,8 @@ public class TeamListEntry implements IXmlSerializable, IByteArraySerializable {
     return jsonObject;
   }
   
-  public void initFrom(JsonValue pJsonValue) {
-    JsonObject jsonObject = UtilJson.asJsonObject(pJsonValue);
+  public TeamListEntry initFrom(JsonValue pJsonValue) {
+    JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
     fTeamId = IJsonOption.TEAM_ID.getFrom(jsonObject);
     fTeamStatus = (TeamStatus) IJsonOption.TEAM_STATUS.getFrom(jsonObject);
     fDivision = IJsonOption.DIVISION.getFrom(jsonObject);
@@ -228,6 +229,7 @@ public class TeamListEntry implements IXmlSerializable, IByteArraySerializable {
     fTeamValue = IJsonOption.TEAM_VALUE.getFrom(jsonObject);
     fRace = IJsonOption.RACE.getFrom(jsonObject);
     fTreasury = IJsonOption.TREASURY.getFrom(jsonObject);
+    return this;
   }
 
 }

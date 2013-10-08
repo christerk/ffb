@@ -6,13 +6,13 @@ import java.util.List;
 import java.util.Set;
 
 import com.balancedbytes.games.ffb.Card;
-import com.balancedbytes.games.ffb.InducementSet;
-import com.balancedbytes.games.ffb.Player;
 import com.balancedbytes.games.ffb.PlayerState;
 import com.balancedbytes.games.ffb.Skill;
-import com.balancedbytes.games.ffb.Team;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.Game;
+import com.balancedbytes.games.ffb.model.InducementSet;
+import com.balancedbytes.games.ffb.model.Player;
+import com.balancedbytes.games.ffb.model.Team;
 
 /**
  * 

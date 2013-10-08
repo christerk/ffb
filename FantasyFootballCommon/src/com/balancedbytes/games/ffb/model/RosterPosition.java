@@ -1,4 +1,4 @@
-package com.balancedbytes.games.ffb;
+package com.balancedbytes.games.ffb.model;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -12,6 +12,11 @@ import javax.xml.transform.sax.TransformerHandler;
 import org.xml.sax.Attributes;
 import org.xml.sax.helpers.AttributesImpl;
 
+import com.balancedbytes.games.ffb.PlayerGender;
+import com.balancedbytes.games.ffb.PlayerType;
+import com.balancedbytes.games.ffb.Skill;
+import com.balancedbytes.games.ffb.SkillCategory;
+import com.balancedbytes.games.ffb.SkillFactory;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
 import com.balancedbytes.games.ffb.bytearray.IByteArraySerializable;

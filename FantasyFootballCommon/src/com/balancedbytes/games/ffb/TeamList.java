@@ -190,8 +190,8 @@ public class TeamList implements IXmlSerializable, IByteArraySerializable {
     return jsonObject;
   }
   
-  public void initFrom(JsonValue pJsonValue) {
-    JsonObject jsonObject = UtilJson.asJsonObject(pJsonValue);
+  public TeamList initFrom(JsonValue pJsonValue) {
+    JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
     fCoach = IJsonOption.COACH.getFrom(jsonObject);
     JsonArray teamList = IJsonOption.TEAM_LIST.getFrom(jsonObject);
     for (int i = 0; i < teamList.size(); i++) {
@@ -199,6 +199,7 @@ public class TeamList implements IXmlSerializable, IByteArraySerializable {
       teamListEntry.initFrom(teamList.get(i));
       add(teamListEntry);
     }
+    return this;
   }
 
 }

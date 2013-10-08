@@ -3,7 +3,6 @@ package com.balancedbytes.games.ffb.server.step.action.pass;
 import java.util.Set;
 
 import com.balancedbytes.games.ffb.InterceptionModifier;
-import com.balancedbytes.games.ffb.Player;
 import com.balancedbytes.games.ffb.PlayerAction;
 import com.balancedbytes.games.ffb.ReRollSource;
 import com.balancedbytes.games.ffb.ReRolledAction;
@@ -13,6 +12,7 @@ import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
 import com.balancedbytes.games.ffb.dialog.DialogInterceptionParameter;
 import com.balancedbytes.games.ffb.model.Game;
+import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.net.NetCommand;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandInterceptorChoice;
 import com.balancedbytes.games.ffb.report.ReportInterceptionRoll;

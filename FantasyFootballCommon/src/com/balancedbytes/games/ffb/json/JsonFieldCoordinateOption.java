@@ -14,15 +14,15 @@ public class JsonFieldCoordinateOption extends JsonAbstractOption {
   }
   
   public FieldCoordinate getFrom(JsonObject pJsonObject) {
-    return UtilJson.asFieldCoordinate(getValueFrom(pJsonObject));
+    return UtilJson.toFieldCoordinate(getValueFrom(pJsonObject));
   }
   
   public FieldCoordinate getFrom(JsonObject pJsonObject, FieldCoordinate pDefault) {
-    return UtilJson.asFieldCoordinate(getValueFrom(pJsonObject, UtilJson.asJsonValue(pDefault)));
+    return UtilJson.toFieldCoordinate(getValueFrom(pJsonObject, UtilJson.toJsonValue(pDefault)));
   }
 
   public void addTo(JsonObject pJsonObject, FieldCoordinate pValue) {
-    addValueTo(pJsonObject, UtilJson.asJsonValue(pValue));
+    addValueTo(pJsonObject, UtilJson.toJsonValue(pValue));
   }
 
 }

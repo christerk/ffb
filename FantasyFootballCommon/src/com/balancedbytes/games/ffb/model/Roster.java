@@ -1,4 +1,4 @@
-package com.balancedbytes.games.ffb;
+package com.balancedbytes.games.ffb.model;
 
 import java.util.HashMap;
 import java.util.Map;

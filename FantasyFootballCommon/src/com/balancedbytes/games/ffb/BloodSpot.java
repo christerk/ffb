@@ -141,10 +141,11 @@ public class BloodSpot implements IXmlSerializable, IByteArraySerializable {
     return jsonObject;
   }
   
-  public void initFrom(JsonValue pJsonValue) {
-    JsonObject jsonObject = UtilJson.asJsonObject(pJsonValue);
+  public BloodSpot initFrom(JsonValue pJsonValue) {
+    JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
     fInjury = IJsonOption.INJURY.getFrom(jsonObject);
     fCoordinate = IJsonOption.COORDINATE.getFrom(jsonObject);
+    return this;
   }
       
 }

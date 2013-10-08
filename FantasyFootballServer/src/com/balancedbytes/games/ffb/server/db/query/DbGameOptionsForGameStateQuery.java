@@ -8,7 +8,7 @@ import java.sql.SQLException;
 import com.balancedbytes.games.ffb.FantasyFootballException;
 import com.balancedbytes.games.ffb.GameOption;
 import com.balancedbytes.games.ffb.GameOptionValue;
-import com.balancedbytes.games.ffb.GameOptions;
+import com.balancedbytes.games.ffb.model.GameOptions;
 import com.balancedbytes.games.ffb.server.FantasyFootballServer;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.db.DbStatement;

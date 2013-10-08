@@ -14,8 +14,8 @@ import java.util.Map;
 import org.xml.sax.InputSource;
 
 import com.balancedbytes.games.ffb.FantasyFootballException;
-import com.balancedbytes.games.ffb.Player;
-import com.balancedbytes.games.ffb.Team;
+import com.balancedbytes.games.ffb.model.Player;
+import com.balancedbytes.games.ffb.model.Team;
 import com.balancedbytes.games.ffb.util.FileIterator;
 import com.balancedbytes.games.ffb.xml.XmlHandler;
 

@@ -16,11 +16,11 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
 import com.balancedbytes.games.ffb.FieldCoordinate;
-import com.balancedbytes.games.ffb.Player;
 import com.balancedbytes.games.ffb.client.FantasyFootballClient;
 import com.balancedbytes.games.ffb.client.layer.FieldLayer;
 import com.balancedbytes.games.ffb.client.ui.SideBarComponent;
 import com.balancedbytes.games.ffb.dialog.DialogId;
+import com.balancedbytes.games.ffb.model.Player;
 
 @SuppressWarnings("serial")
 public class DialogPlayerChoice extends Dialog implements ActionListener {

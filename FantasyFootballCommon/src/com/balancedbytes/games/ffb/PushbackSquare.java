@@ -194,13 +194,14 @@ public final class PushbackSquare implements IXmlSerializable, IByteArraySeriali
     return jsonObject;
   }
   
-  public void initFrom(JsonValue pJsonValue) {
-    JsonObject jsonObject = UtilJson.asJsonObject(pJsonValue);
+  public PushbackSquare initFrom(JsonValue pJsonValue) {
+    JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
     fCoordinate = IJsonOption.COORDINATE.getFrom(jsonObject);
     fDirection = (Direction) IJsonOption.DIRECTION.getFrom(jsonObject);
     fSelected = IJsonOption.SELECTED.getFrom(jsonObject);
     fLocked = IJsonOption.LOCKED.getFrom(jsonObject);
     fHomeChoice = IJsonOption.HOME_CHOICE.getFrom(jsonObject);
+    return this;
   }
   
 }

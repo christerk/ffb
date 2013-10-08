@@ -113,7 +113,7 @@ public class ClientCommandWizardSpell extends NetCommand {
   }
   
   public void initFrom(JsonValue pJsonValue) {
-    JsonObject jsonObject = UtilJson.asJsonObject(pJsonValue);
+    JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
     UtilNetCommand.validateCommandId(this, (NetCommandId) IJsonOption.NET_COMMAND_ID.getFrom(jsonObject));
     fWizardSpell = (SpecialEffect) IJsonOption.WIZARD_SPELL.getFrom(jsonObject);
     fTargetCoordinate = IJsonOption.TARGET_COORDINATE.getFrom(jsonObject);

@@ -9,7 +9,7 @@ import com.balancedbytes.games.ffb.SoundFactory;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
 import com.balancedbytes.games.ffb.model.Animation;
-import com.balancedbytes.games.ffb.model.ModelChangeList;
+import com.balancedbytes.games.ffb.model.change.old.ModelChangeListOld;
 import com.balancedbytes.games.ffb.net.NetCommandId;
 import com.balancedbytes.games.ffb.report.ReportList;
 import com.balancedbytes.games.ffb.xml.UtilXml;
@@ -25,7 +25,7 @@ public class ServerCommandModelSync extends ServerCommand {
   private static final String _XML_ATTRIBUTE_GAME = "game";
   private static final String _XML_ATTRIBUTE_TURN = "turn";
 
-  private ModelChangeList fModelChanges;
+  private ModelChangeListOld fModelChanges;
   private ReportList fReportList;
   private Animation fAnimation;
   private Sound fSound;
@@ -33,11 +33,11 @@ public class ServerCommandModelSync extends ServerCommand {
   private long fTurnTime;
 
   public ServerCommandModelSync() {
-    fModelChanges = new ModelChangeList();
+    fModelChanges = new ModelChangeListOld();
     fReportList = new ReportList();
   }
 
-  public ServerCommandModelSync(ModelChangeList pModelChanges, ReportList pReportList, Animation pAnimation, Sound pSound, long pGameTime, long pTurnTime) {
+  public ServerCommandModelSync(ModelChangeListOld pModelChanges, ReportList pReportList, Animation pAnimation, Sound pSound, long pGameTime, long pTurnTime) {
     this();
     fModelChanges.add(pModelChanges);
     fReportList.add(pReportList);
@@ -51,7 +51,7 @@ public class ServerCommandModelSync extends ServerCommand {
     return NetCommandId.SERVER_MODEL_SYNC;
   }
 
-  public ModelChangeList getModelChanges() {
+  public ModelChangeListOld getModelChanges() {
     return fModelChanges;
   }
 

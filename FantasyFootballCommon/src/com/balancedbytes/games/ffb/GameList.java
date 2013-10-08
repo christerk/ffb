@@ -160,14 +160,15 @@ public class GameList implements IXmlSerializable, IByteArraySerializable {
     return jsonObject;
   }
   
-  public void initFrom(JsonValue pJsonValue) {
-    JsonObject jsonObject = UtilJson.asJsonObject(pJsonValue);
+  public GameList initFrom(JsonValue pJsonValue) {
+    JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
     JsonArray gameListArray = IJsonOption.GAME_LIST.getFrom(jsonObject);
     for (int i = 0; i < gameListArray.size(); i++) {
       GameListEntry gameListEntry = new GameListEntry();
       gameListEntry.initFrom(gameListArray.get(i));
       add(gameListEntry);
     }
+    return this;
   }
 
 }

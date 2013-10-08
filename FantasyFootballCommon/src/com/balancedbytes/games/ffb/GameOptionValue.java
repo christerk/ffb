@@ -134,10 +134,11 @@ public class GameOptionValue implements IByteArraySerializable, IXmlSerializable
     return jsonObject;
   }
   
-  public void initFrom(JsonValue pJsonValue) {
-    JsonObject jsonObject = UtilJson.asJsonObject(pJsonValue);
+  public GameOptionValue initFrom(JsonValue pJsonValue) {
+    JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
     fGameOption = (GameOption) IJsonOption.GAME_OPTION.getFrom(jsonObject);
     fValue = IJsonOption.VALUE.getFrom(jsonObject);
+    return this;
   }
 	
 }

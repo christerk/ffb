@@ -153,10 +153,11 @@ public class DiceDecoration implements IXmlSerializable, IByteArraySerializable 
     return jsonObject;
   }
   
-  public void initFrom(JsonValue pJsonValue) {
-    JsonObject jsonObject = UtilJson.asJsonObject(pJsonValue);
+  public DiceDecoration initFrom(JsonValue pJsonValue) {
+    JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
     fCoordinate = IJsonOption.COORDINATE.getFrom(jsonObject);
     fNrOfDice = IJsonOption.NR_OF_DICE.getFrom(jsonObject);
+    return this;
   }
 
 }

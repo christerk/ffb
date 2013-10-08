@@ -8,7 +8,6 @@ import java.awt.image.BufferedImage;
 import javax.swing.Timer;
 
 import com.balancedbytes.games.ffb.FieldCoordinate;
-import com.balancedbytes.games.ffb.Player;
 import com.balancedbytes.games.ffb.Sound;
 import com.balancedbytes.games.ffb.client.FantasyFootballClient;
 import com.balancedbytes.games.ffb.client.IClientProperty;
@@ -20,6 +19,7 @@ import com.balancedbytes.games.ffb.client.sound.SoundEngine;
 import com.balancedbytes.games.ffb.client.state.ClientState;
 import com.balancedbytes.games.ffb.model.Animation;
 import com.balancedbytes.games.ffb.model.AnimationType;
+import com.balancedbytes.games.ffb.model.Player;
 
 /**
  * 

@@ -1,7 +1,7 @@
 package com.balancedbytes.games.ffb.util;
 
 import com.balancedbytes.games.ffb.InducementType;
-import com.balancedbytes.games.ffb.Roster;
+import com.balancedbytes.games.ffb.model.Roster;
 
 public final class UtilInducements {
 

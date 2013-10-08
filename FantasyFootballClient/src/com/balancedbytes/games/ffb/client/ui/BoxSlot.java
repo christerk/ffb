@@ -2,9 +2,9 @@ package com.balancedbytes.games.ffb.client.ui;
 
 import java.awt.Rectangle;
 
-import com.balancedbytes.games.ffb.Player;
 import com.balancedbytes.games.ffb.PlayerState;
 import com.balancedbytes.games.ffb.model.Game;
+import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.model.PlayerResult;
 
 /**

@@ -14,6 +14,8 @@ import com.balancedbytes.games.ffb.bytearray.IByteArraySerializable;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.Game;
+import com.balancedbytes.games.ffb.model.Player;
+import com.balancedbytes.games.ffb.model.Team;
 import com.balancedbytes.games.ffb.util.ArrayTool;
 import com.balancedbytes.games.ffb.util.UtilBox;
 import com.balancedbytes.games.ffb.xml.IXmlReadable;
@@ -237,8 +239,8 @@ public class TeamSetup implements IXmlSerializable, IByteArraySerializable {
     return jsonObject;
   }
   
-  public void initFrom(JsonValue pJsonValue) {
-    JsonObject jsonObject = UtilJson.asJsonObject(pJsonValue);
+  public TeamSetup initFrom(JsonValue pJsonValue) {
+    JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
     fName = IJsonOption.NAME.getFrom(jsonObject);
     fTeamId = IJsonOption.TEAM_ID.getFrom(jsonObject);
     // get coordinates and playerNrs from array of inner jsonObjects
@@ -250,6 +252,7 @@ public class TeamSetup implements IXmlSerializable, IByteArraySerializable {
         IJsonOption.PLAYER_NR.getFrom(playerPosition)
       );
     }
+    return this;
   }
 
 }

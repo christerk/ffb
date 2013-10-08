@@ -1,4 +1,4 @@
-package com.balancedbytes.games.ffb.model;
+package com.balancedbytes.games.ffb.model.change.old;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -9,6 +9,7 @@ import javax.xml.transform.sax.TransformerHandler;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
 import com.balancedbytes.games.ffb.bytearray.IByteArraySerializable;
+import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.xml.IXmlWriteable;
 import com.balancedbytes.games.ffb.xml.UtilXml;
 
@@ -17,17 +18,17 @@ import com.balancedbytes.games.ffb.xml.UtilXml;
  * 
  * @author Kalimar
  */
-public class ModelChangeList implements IByteArraySerializable, IXmlWriteable {
+public class ModelChangeListOld implements IByteArraySerializable, IXmlWriteable {
   
   public static final String XML_TAG = "modelChangeList";
 
   private List<IModelChange> fChanges;
   
-  private ModelChangeList(int pInitialCapacity) {
+  private ModelChangeListOld(int pInitialCapacity) {
     fChanges = new ArrayList<IModelChange>(pInitialCapacity);
   }
 
-  public ModelChangeList() {
+  public ModelChangeListOld() {
     this(20);
   }
 
@@ -35,7 +36,7 @@ public class ModelChangeList implements IByteArraySerializable, IXmlWriteable {
     fChanges.add(pChange);
   }
   
-  public void add(ModelChangeList pChanges) {
+  public void add(ModelChangeListOld pChanges) {
     if (pChanges != null) {
       for (IModelChange change : pChanges.getChanges()) {
         add(change);
@@ -63,8 +64,8 @@ public class ModelChangeList implements IByteArraySerializable, IXmlWriteable {
     }
   }
   
-  public ModelChangeList copy() {
-    ModelChangeList copiedList = new ModelChangeList(size());
+  public ModelChangeListOld copy() {
+    ModelChangeListOld copiedList = new ModelChangeListOld(size());
     Iterator<IModelChange> changeIterator = fChanges.iterator();
     while (changeIterator.hasNext()) {
       IModelChange change = changeIterator.next();
@@ -75,8 +76,8 @@ public class ModelChangeList implements IByteArraySerializable, IXmlWriteable {
   
   // transformation
   
-  public ModelChangeList transform() {
-    ModelChangeList transformedList = new ModelChangeList(size());
+  public ModelChangeListOld transform() {
+    ModelChangeListOld transformedList = new ModelChangeListOld(size());
     Iterator<IModelChange> changeIterator = fChanges.iterator();
     while (changeIterator.hasNext()) {
       IModelChange change = changeIterator.next();
@@ -123,7 +124,7 @@ public class ModelChangeList implements IByteArraySerializable, IXmlWriteable {
     int byteArraySerializationVersion = pByteArray.getSmallInt();
     int size = pByteArray.getSmallInt();
     for (int i = 0; i < size; i++) {
-      ModelChangeId modelChangeId = ModelChangeId.fromId(pByteArray.getByte(pByteArray.getPosition()));
+      ModelChangeIdOld modelChangeId = ModelChangeIdOld.fromId(pByteArray.getByte(pByteArray.getPosition()));
       if (modelChangeId != null) {
         IModelChange modelChange = modelChangeId.createModelChange();
         modelChange.initFrom(pByteArray);

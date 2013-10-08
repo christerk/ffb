@@ -17,11 +17,11 @@ import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import com.balancedbytes.games.ffb.Roster;
-import com.balancedbytes.games.ffb.RosterPosition;
 import com.balancedbytes.games.ffb.client.FantasyFootballClient;
 import com.balancedbytes.games.ffb.dialog.DialogId;
 import com.balancedbytes.games.ffb.model.Game;
+import com.balancedbytes.games.ffb.model.Roster;
+import com.balancedbytes.games.ffb.model.RosterPosition;
 import com.balancedbytes.games.ffb.util.StringTool;
 
 /**

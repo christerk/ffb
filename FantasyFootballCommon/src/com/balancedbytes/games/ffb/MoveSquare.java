@@ -173,11 +173,12 @@ public final class MoveSquare implements IXmlSerializable, IByteArraySerializabl
     return jsonObject;
   }
   
-  public void initFrom(JsonValue pJsonValue) {
-    JsonObject jsonObject = UtilJson.asJsonObject(pJsonValue);
+  public MoveSquare initFrom(JsonValue pJsonValue) {
+    JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
     fCoordinate = IJsonOption.COORDINATE.getFrom(jsonObject);
     fMinimumRollDodge = IJsonOption.MINIMUM_ROLL_DODGE.getFrom(jsonObject);
     fMinimumRollGoForIt = IJsonOption.MINIMUM_ROLL_GFI.getFrom(jsonObject);
+    return this;
   }
   
 }

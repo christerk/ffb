@@ -9,13 +9,13 @@ import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.event.InternalFrameEvent;
 
-import com.balancedbytes.games.ffb.Player;
-import com.balancedbytes.games.ffb.Team;
 import com.balancedbytes.games.ffb.client.FantasyFootballClient;
 import com.balancedbytes.games.ffb.dialog.DialogId;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.GameResult;
+import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.model.PlayerResult;
+import com.balancedbytes.games.ffb.model.Team;
 import com.balancedbytes.games.ffb.util.StringTool;
 
 @SuppressWarnings("serial")

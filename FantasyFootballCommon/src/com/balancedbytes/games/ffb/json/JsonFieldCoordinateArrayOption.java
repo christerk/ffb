@@ -47,7 +47,7 @@ public class JsonFieldCoordinateArrayOption extends JsonAbstractOption {
     }
     FieldCoordinate[] fieldCoordinates = new FieldCoordinate[jsonArray.size()];
     for (int i = 0; i < jsonArray.size(); i++) {
-      fieldCoordinates[i] = UtilJson.asFieldCoordinate(jsonArray.get(i));
+      fieldCoordinates[i] = UtilJson.toFieldCoordinate(jsonArray.get(i));
     }
     return fieldCoordinates;
   }
@@ -58,7 +58,7 @@ public class JsonFieldCoordinateArrayOption extends JsonAbstractOption {
     }
     JsonArray jsonArray = new JsonArray();
     for (int i = 0; i < pFieldCoordinates.length; i++) {
-      jsonArray.add(UtilJson.asJsonValue(pFieldCoordinates[i]));
+      jsonArray.add(UtilJson.toJsonValue(pFieldCoordinates[i]));
     }
     return jsonArray;
   }

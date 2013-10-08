@@ -165,7 +165,7 @@ public class DialogBuyCardsParameter implements IDialogParameter {
   }
   
   public void initFrom(JsonValue pJsonValue) {
-    JsonObject jsonObject = UtilJson.asJsonObject(pJsonValue);
+    JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
     UtilDialogParameter.validateDialogId(this, (DialogId) IJsonOption.DIALOG_ID.getFrom(jsonObject));
     fTeamId = IJsonOption.TEAM_ID.getFrom(jsonObject);
     fAvailableCards = IJsonOption.AVAILABLE_CARDS.getFrom(jsonObject);

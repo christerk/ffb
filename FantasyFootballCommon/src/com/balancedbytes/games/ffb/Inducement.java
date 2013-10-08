@@ -127,11 +127,12 @@ public class Inducement implements IByteArraySerializable, IXmlSerializable {
     return jsonObject;
   }
   
-  public void initFrom(JsonValue pJsonValue) {
-    JsonObject jsonObject = UtilJson.asJsonObject(pJsonValue);
+  public Inducement initFrom(JsonValue pJsonValue) {
+    JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
     fType = (InducementType) IJsonOption.INDUCEMENT_TYPE.getFrom(jsonObject);
     fValue = IJsonOption.VALUE.getFrom(jsonObject);
     fUses = IJsonOption.USES.getFrom(jsonObject);
+    return this;
   }
   
 }

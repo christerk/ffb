@@ -1,4 +1,4 @@
-package com.balancedbytes.games.ffb.model;
+package com.balancedbytes.games.ffb.model.change.old;
 
 
 import javax.xml.transform.sax.TransformerHandler;
@@ -19,6 +19,8 @@ import com.balancedbytes.games.ffb.TrackNumber;
 import com.balancedbytes.games.ffb.Weather;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
+import com.balancedbytes.games.ffb.model.FieldModel;
+import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.xml.IXmlWriteable;
 import com.balancedbytes.games.ffb.xml.UtilXml;
 
@@ -57,8 +59,8 @@ public class ModelChangeFieldModel implements IModelChange {
     fValue2 = pValue2;
   }
   
-  public ModelChangeId getId() {
-    return ModelChangeId.FIELD_MODEL_CHANGE;
+  public ModelChangeIdOld getId() {
+    return ModelChangeIdOld.FIELD_MODEL_CHANGE;
   }
   
   public CommandFieldModelChange getChange() {
@@ -279,7 +281,7 @@ public class ModelChangeFieldModel implements IModelChange {
   }
   
   public int initFrom(ByteArray pByteArray) {
-    ModelChangeId changeId = ModelChangeId.fromId(pByteArray.getByte());
+    ModelChangeIdOld changeId = ModelChangeIdOld.fromId(pByteArray.getByte());
     if (getId() != changeId) {
       throw new IllegalStateException("Wrong change id. Expected " + getId().getName() + " received " + ((changeId != null) ? changeId.getName() : "null"));
     }

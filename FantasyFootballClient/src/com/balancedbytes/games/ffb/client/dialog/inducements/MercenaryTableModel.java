@@ -8,10 +8,10 @@ import java.util.List;
 import javax.swing.ImageIcon;
 import javax.swing.table.AbstractTableModel;
 
-import com.balancedbytes.games.ffb.Player;
 import com.balancedbytes.games.ffb.PlayerType;
-import com.balancedbytes.games.ffb.RosterPosition;
 import com.balancedbytes.games.ffb.client.PlayerIconFactory;
+import com.balancedbytes.games.ffb.model.Player;
+import com.balancedbytes.games.ffb.model.RosterPosition;
 import com.balancedbytes.games.ffb.util.StringTool;
 
 @SuppressWarnings("serial")

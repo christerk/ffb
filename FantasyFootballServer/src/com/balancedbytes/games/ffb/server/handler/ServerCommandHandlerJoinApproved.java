@@ -4,10 +4,10 @@ import java.nio.channels.SocketChannel;
 
 import com.balancedbytes.games.ffb.ClientMode;
 import com.balancedbytes.games.ffb.GameStatus;
-import com.balancedbytes.games.ffb.Team;
 import com.balancedbytes.games.ffb.TeamList;
 import com.balancedbytes.games.ffb.TeamListEntry;
 import com.balancedbytes.games.ffb.model.Game;
+import com.balancedbytes.games.ffb.model.Team;
 import com.balancedbytes.games.ffb.net.NetCommand;
 import com.balancedbytes.games.ffb.net.NetCommandId;
 import com.balancedbytes.games.ffb.net.ServerStatus;

@@ -5,7 +5,6 @@ import javax.xml.transform.sax.TransformerHandler;
 import org.xml.sax.Attributes;
 import org.xml.sax.helpers.AttributesImpl;
 
-import com.balancedbytes.games.ffb.Player;
 import com.balancedbytes.games.ffb.SendToBoxReason;
 import com.balancedbytes.games.ffb.SendToBoxReasonFactory;
 import com.balancedbytes.games.ffb.SeriousInjury;
@@ -15,6 +14,8 @@ import com.balancedbytes.games.ffb.bytearray.ByteList;
 import com.balancedbytes.games.ffb.bytearray.IByteArraySerializable;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
+import com.balancedbytes.games.ffb.model.change.old.CommandPlayerResultChange;
+import com.balancedbytes.games.ffb.model.change.old.ModelChangePlayerResult;
 import com.balancedbytes.games.ffb.util.StringTool;
 import com.balancedbytes.games.ffb.xml.IXmlSerializable;
 import com.balancedbytes.games.ffb.xml.UtilXml;
@@ -573,7 +574,7 @@ public class PlayerResult implements IByteArraySerializable, IXmlSerializable {
   }
   
   public void initFrom(JsonValue pJsonValue) {
-    JsonObject jsonObject = UtilJson.asJsonObject(pJsonValue);
+    JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
     String playerId = IJsonOption.PLAYER_ID.getFrom(jsonObject);
     fPlayer = getTeamResult().getTeam().getPlayerById(playerId);
     fCompletions = IJsonOption.COMPLETIONS.getFrom(jsonObject);

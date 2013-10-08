@@ -94,7 +94,7 @@ public class ClientCommandGaze extends NetCommand implements ICommandWithActingP
   }
   
   public void initFrom(JsonValue pJsonValue) {
-    JsonObject jsonObject = UtilJson.asJsonObject(pJsonValue);
+    JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
     UtilNetCommand.validateCommandId(this, (NetCommandId) IJsonOption.NET_COMMAND_ID.getFrom(jsonObject));
     fActingPlayerId = IJsonOption.ACTING_PLAYER_ID.getFrom(jsonObject);
     fVictimId = IJsonOption.VICTIM_ID.getFrom(jsonObject);

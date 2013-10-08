@@ -1,7 +1,6 @@
 package com.balancedbytes.games.ffb.client.handler;
 
 import com.balancedbytes.games.ffb.FieldCoordinate;
-import com.balancedbytes.games.ffb.Player;
 import com.balancedbytes.games.ffb.TurnMode;
 import com.balancedbytes.games.ffb.client.ClientData;
 import com.balancedbytes.games.ffb.client.FantasyFootballClient;
@@ -15,10 +14,11 @@ import com.balancedbytes.games.ffb.client.util.UtilTimeout;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.Animation;
 import com.balancedbytes.games.ffb.model.Game;
-import com.balancedbytes.games.ffb.model.IModelChange;
-import com.balancedbytes.games.ffb.model.ModelChangeGameAttribute;
-import com.balancedbytes.games.ffb.model.ModelChangeList;
-import com.balancedbytes.games.ffb.model.ModelChangeTurnData;
+import com.balancedbytes.games.ffb.model.Player;
+import com.balancedbytes.games.ffb.model.change.old.IModelChange;
+import com.balancedbytes.games.ffb.model.change.old.ModelChangeGameAttribute;
+import com.balancedbytes.games.ffb.model.change.old.ModelChangeListOld;
+import com.balancedbytes.games.ffb.model.change.old.ModelChangeTurnData;
 import com.balancedbytes.games.ffb.net.NetCommand;
 import com.balancedbytes.games.ffb.net.NetCommandId;
 import com.balancedbytes.games.ffb.net.commands.ServerCommandModelSync;
@@ -70,7 +70,7 @@ public class ClientCommandHandlerModelSync extends ClientCommandHandler implemen
       return true;
     }
     
-    ModelChangeList modelChangeList = fSyncCommand.getModelChanges();
+    ModelChangeListOld modelChangeList = fSyncCommand.getModelChanges();
     modelChangeList.applyTo(game);
     
     UserInterface userInterface = getClient().getUserInterface();
@@ -163,7 +163,7 @@ public class ClientCommandHandlerModelSync extends ClientCommandHandler implemen
     
   }
   
-  private void findUpdates(ModelChangeList pModelChangeList) {
+  private void findUpdates(ModelChangeListOld pModelChangeList) {
     
     if (pModelChangeList != null) {
 

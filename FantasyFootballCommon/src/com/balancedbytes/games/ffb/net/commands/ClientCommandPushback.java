@@ -84,7 +84,7 @@ public class ClientCommandPushback extends NetCommand {
   }
   
   public void initFrom(JsonValue pJsonValue) {
-    JsonObject jsonObject = UtilJson.asJsonObject(pJsonValue);
+    JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
     UtilNetCommand.validateCommandId(this, (NetCommandId) IJsonOption.NET_COMMAND_ID.getFrom(jsonObject));
     fPushback = new Pushback();
     fPushback.initFrom(IJsonOption.PUSHBACK.getFrom(jsonObject));

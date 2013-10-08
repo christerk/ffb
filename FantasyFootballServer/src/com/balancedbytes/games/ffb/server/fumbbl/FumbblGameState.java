@@ -4,7 +4,7 @@ import javax.xml.transform.sax.TransformerHandler;
 
 import org.xml.sax.Attributes;
 
-import com.balancedbytes.games.ffb.GameOptions;
+import com.balancedbytes.games.ffb.model.GameOptions;
 import com.balancedbytes.games.ffb.xml.IXmlSerializable;
 import com.balancedbytes.games.ffb.xml.UtilXml;
 

@@ -103,7 +103,7 @@ public class ClientCommandPing extends NetCommand {
   }
   
   public void initFrom(JsonValue pJsonValue) {
-    JsonObject jsonObject = UtilJson.asJsonObject(pJsonValue);
+    JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
     UtilNetCommand.validateCommandId(this, (NetCommandId) IJsonOption.NET_COMMAND_ID.getFrom(jsonObject));
     fTimestamp = IJsonOption.TIMESTAMP.getFrom(jsonObject);
     fHasEntropy = IJsonOption.HAS_ENTROPY.getFrom(jsonObject);

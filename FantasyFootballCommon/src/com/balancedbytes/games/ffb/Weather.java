@@ -5,7 +5,7 @@ package com.balancedbytes.games.ffb;
  * 
  * @author Kalimar
  */
-public enum Weather {
+public enum Weather implements IEnumWithId, IEnumWithName {
   
   SWELTERING_HEAT(1, "Sweltering Heat", "Each player on the pitch may suffer from heat exhaustion on a roll of 1 before the next kick-off."),
   VERY_SUNNY(2, "Very Sunny", "A -1 modifier applies to all passing rolls."),
@@ -34,26 +34,6 @@ public enum Weather {
   
   public String getDescription() {
     return fDescription;
-  }
-  
-  public static Weather fromId(int pId) {
-    if (pId > 0) {
-      for (Weather weather : values()) {
-        if (pId == weather.getId()) {
-          return weather;
-        }
-      }
-    }
-    return null;
-  }
-    
-  public static Weather fromName(String pName) {
-    for (Weather weather : values()) {
-      if (weather.getName().equalsIgnoreCase(pName)) {
-        return weather;
-      }
-    }
-    return null;
   }
   
 }

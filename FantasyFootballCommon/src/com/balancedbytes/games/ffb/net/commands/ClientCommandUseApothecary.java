@@ -90,7 +90,7 @@ public class ClientCommandUseApothecary extends NetCommand {
   }
 
   public void initFrom(JsonValue pJsonValue) {
-    JsonObject jsonObject = UtilJson.asJsonObject(pJsonValue);
+    JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
     UtilNetCommand.validateCommandId(this, (NetCommandId) IJsonOption.NET_COMMAND_ID.getFrom(jsonObject));
     fPlayerId = IJsonOption.PLAYER_ID.getFrom(jsonObject);
     fApothecaryUsed = IJsonOption.APOTHECARY_USED.getFrom(jsonObject);

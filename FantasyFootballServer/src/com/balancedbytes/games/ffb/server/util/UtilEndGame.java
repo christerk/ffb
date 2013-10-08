@@ -3,13 +3,13 @@ package com.balancedbytes.games.ffb.server.util;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.balancedbytes.games.ffb.Player;
 import com.balancedbytes.games.ffb.SendToBoxReason;
-import com.balancedbytes.games.ffb.Team;
 import com.balancedbytes.games.ffb.dialog.DialogWinningsReRollParameter;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.GameResult;
+import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.model.PlayerResult;
+import com.balancedbytes.games.ffb.model.Team;
 import com.balancedbytes.games.ffb.report.ReportDefectingPlayers;
 import com.balancedbytes.games.ffb.report.ReportFanFactorRoll;
 import com.balancedbytes.games.ffb.report.ReportMostValuablePlayers;

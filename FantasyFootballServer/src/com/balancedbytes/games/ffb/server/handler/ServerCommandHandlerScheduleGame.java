@@ -1,6 +1,6 @@
 package com.balancedbytes.games.ffb.server.handler;
 
-import com.balancedbytes.games.ffb.Team;
+import com.balancedbytes.games.ffb.model.Team;
 import com.balancedbytes.games.ffb.net.NetCommand;
 import com.balancedbytes.games.ffb.net.NetCommandId;
 import com.balancedbytes.games.ffb.server.FantasyFootballServer;

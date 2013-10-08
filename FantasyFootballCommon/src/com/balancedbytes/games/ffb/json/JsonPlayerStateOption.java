@@ -2,7 +2,6 @@ package com.balancedbytes.games.ffb.json;
 
 import com.balancedbytes.games.ffb.PlayerState;
 import com.eclipsesource.json.JsonObject;
-import com.eclipsesource.json.JsonValue;
 
 /**
  * 
@@ -15,29 +14,15 @@ public class JsonPlayerStateOption extends JsonAbstractOption {
   }
   
   public PlayerState getFrom(JsonObject pJsonObject) {
-    return asPlayerState(getValueFrom(pJsonObject));
+    return UtilJson.toPlayerState(getValueFrom(pJsonObject));
   }
   
   public PlayerState getFrom(JsonObject pJsonObject, PlayerState pDefault) {
-    return asPlayerState(getValueFrom(pJsonObject, asJsonValue(pDefault)));
+    return UtilJson.toPlayerState(getValueFrom(pJsonObject, UtilJson.toJsonValue(pDefault)));
   }
 
   public void addTo(JsonObject pJsonObject, PlayerState pValue) {
-    addValueTo(pJsonObject, asJsonValue(pValue));
-  }
-  
-  private PlayerState asPlayerState(JsonValue pJsonValue) {
-    if ((pJsonValue == null) || pJsonValue.isNull()) {
-      return null;
-    }
-    return new PlayerState(pJsonValue.asInt());
-  }
-  
-  private JsonValue asJsonValue(PlayerState pPlayerState) {
-    if (pPlayerState == null) {
-      return JsonValue.NULL;
-    }
-    return JsonValue.valueOf(pPlayerState.getId());
+    addValueTo(pJsonObject, UtilJson.toJsonValue(pValue));
   }
 
 }

@@ -1,4 +1,4 @@
-package com.balancedbytes.games.ffb;
+package com.balancedbytes.games.ffb.model;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -7,14 +7,15 @@ import javax.xml.transform.sax.TransformerHandler;
 
 import org.xml.sax.Attributes;
 
+import com.balancedbytes.games.ffb.GameOption;
+import com.balancedbytes.games.ffb.GameOptionValue;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
 import com.balancedbytes.games.ffb.bytearray.IByteArraySerializable;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
-import com.balancedbytes.games.ffb.model.CommandGameAttributeChange;
-import com.balancedbytes.games.ffb.model.Game;
-import com.balancedbytes.games.ffb.model.ModelChangeGameAttribute;
+import com.balancedbytes.games.ffb.model.change.old.CommandGameAttributeChange;
+import com.balancedbytes.games.ffb.model.change.old.ModelChangeGameAttribute;
 import com.balancedbytes.games.ffb.xml.IXmlSerializable;
 import com.balancedbytes.games.ffb.xml.UtilXml;
 import com.eclipsesource.json.JsonArray;
@@ -226,7 +227,7 @@ public class GameOptions implements IByteArraySerializable, IXmlSerializable {
   }
   
   public void initFrom(JsonValue pJsonValue) {
-    JsonObject jsonObject = UtilJson.asJsonObject(pJsonValue);
+    JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
     JsonArray optionArray = IJsonOption.GAME_OPTIONS.getFrom(jsonObject);
     int nrOfOptions = optionArray.size();
     for (int i = 0; i < nrOfOptions; i++) {

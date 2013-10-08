@@ -1,4 +1,4 @@
-package com.balancedbytes.games.ffb.model;
+package com.balancedbytes.games.ffb.model.change.old;
 
 
 import javax.xml.transform.sax.TransformerHandler;
@@ -9,6 +9,8 @@ import com.balancedbytes.games.ffb.Card;
 import com.balancedbytes.games.ffb.Inducement;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
+import com.balancedbytes.games.ffb.model.Game;
+import com.balancedbytes.games.ffb.model.TurnData;
 import com.balancedbytes.games.ffb.xml.IXmlWriteable;
 import com.balancedbytes.games.ffb.xml.UtilXml;
 
@@ -40,8 +42,8 @@ public class ModelChangeTurnData implements IModelChange {
     fValue = pValue;
   }
   
-  public ModelChangeId getId() {
-    return ModelChangeId.TURN_DATA_CHANGE;
+  public ModelChangeIdOld getId() {
+    return ModelChangeIdOld.TURN_DATA_CHANGE;
   }
   
   public CommandTurnDataChange getChange() {
@@ -158,7 +160,7 @@ public class ModelChangeTurnData implements IModelChange {
   }
   
   public int initFrom(ByteArray pByteArray) {
-    ModelChangeId changeId = ModelChangeId.fromId(pByteArray.getByte());
+    ModelChangeIdOld changeId = ModelChangeIdOld.fromId(pByteArray.getByte());
     if (getId() != changeId) {
       throw new IllegalStateException("Wrong change id. Expected " + getId().getName() + " received " + ((changeId != null) ? changeId.getName() : "null"));
     }

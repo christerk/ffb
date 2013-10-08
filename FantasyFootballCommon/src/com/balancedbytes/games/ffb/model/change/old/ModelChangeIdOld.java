@@ -1,11 +1,12 @@
-package com.balancedbytes.games.ffb.model;
+package com.balancedbytes.games.ffb.model.change.old;
+
 
 
 /**
  * 
  * @author Kalimar
  */
-public enum ModelChangeId {
+public enum ModelChangeIdOld {
   
   ACTING_PLAYER_CHANGE(1, "actingPlayerChange"),
   TURN_DATA_CHANGE(2, "turnDataChange"),
@@ -17,7 +18,7 @@ public enum ModelChangeId {
   private int fId;
   private String fName;
   
-  private ModelChangeId(int pId, String pName) {
+  private ModelChangeIdOld(int pId, String pName) {
     fId = pId;
     fName = pName;
   }
@@ -30,8 +31,8 @@ public enum ModelChangeId {
     return fName;
   }
   
-  public static ModelChangeId fromId(int pValue) {
-    for (ModelChangeId mode : values()) {
+  public static ModelChangeIdOld fromId(int pValue) {
+    for (ModelChangeIdOld mode : values()) {
       if (mode.getId() == pValue) {
         return mode;
       }
@@ -39,8 +40,8 @@ public enum ModelChangeId {
     return null;
   }
   
-  public static ModelChangeId fromName(String pName) {
-    for (ModelChangeId mode : values()) {
+  public static ModelChangeIdOld fromName(String pName) {
+    for (ModelChangeIdOld mode : values()) {
       if (mode.getName().equalsIgnoreCase(pName)) {
         return mode;
       }

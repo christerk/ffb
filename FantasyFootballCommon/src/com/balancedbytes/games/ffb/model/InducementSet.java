@@ -1,4 +1,4 @@
-package com.balancedbytes.games.ffb;
+package com.balancedbytes.games.ffb.model;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -12,14 +12,17 @@ import javax.xml.transform.sax.TransformerHandler;
 
 import org.xml.sax.helpers.AttributesImpl;
 
+import com.balancedbytes.games.ffb.Card;
+import com.balancedbytes.games.ffb.CardFactory;
+import com.balancedbytes.games.ffb.Inducement;
+import com.balancedbytes.games.ffb.InducementType;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
 import com.balancedbytes.games.ffb.bytearray.IByteArraySerializable;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
-import com.balancedbytes.games.ffb.model.CommandTurnDataChange;
-import com.balancedbytes.games.ffb.model.ModelChangeTurnData;
-import com.balancedbytes.games.ffb.model.TurnData;
+import com.balancedbytes.games.ffb.model.change.old.CommandTurnDataChange;
+import com.balancedbytes.games.ffb.model.change.old.ModelChangeTurnData;
 import com.balancedbytes.games.ffb.util.ArrayTool;
 import com.balancedbytes.games.ffb.xml.IXmlWriteable;
 import com.balancedbytes.games.ffb.xml.UtilXml;
@@ -339,7 +342,7 @@ public class InducementSet implements IByteArraySerializable, IXmlWriteable {
   }
   
   public void initFrom(JsonValue pJsonValue) {
-    JsonObject jsonObject = UtilJson.asJsonObject(pJsonValue);
+    JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
     JsonArray inducements = IJsonOption.INDUCEMENTS.getFrom(jsonObject);
     for (int i = 0; i < inducements.size(); i++) {
       Inducement inducement = new Inducement();

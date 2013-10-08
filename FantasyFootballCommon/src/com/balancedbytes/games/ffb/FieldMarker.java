@@ -161,11 +161,12 @@ public class FieldMarker implements IXmlSerializable, IByteArraySerializable {
     return jsonObject;
   }
   
-  public void initFrom(JsonValue pJsonValue) {
-    JsonObject jsonObject = UtilJson.asJsonObject(pJsonValue);
+  public FieldMarker initFrom(JsonValue pJsonValue) {
+    JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
     fCoordinate = IJsonOption.COORDINATE.getFrom(jsonObject);
     fHomeText = IJsonOption.HOME_TEXT.getFrom(jsonObject);
     fAwayText = IJsonOption.AWAY_TEXT.getFrom(jsonObject);
+    return this;
   }
   
 }

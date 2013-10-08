@@ -8,9 +8,9 @@ import javax.swing.BoxLayout;
 import javax.swing.JPanel;
 
 import com.balancedbytes.games.ffb.BoxType;
-import com.balancedbytes.games.ffb.Player;
 import com.balancedbytes.games.ffb.client.FantasyFootballClient;
 import com.balancedbytes.games.ffb.client.UserInterface;
+import com.balancedbytes.games.ffb.model.Player;
 
 /**
  * 

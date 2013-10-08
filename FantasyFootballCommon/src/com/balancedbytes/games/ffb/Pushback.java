@@ -122,10 +122,11 @@ public class Pushback implements IByteArraySerializable, IXmlSerializable {
     return jsonObject;
   }
   
-  public void initFrom(JsonValue pJsonValue) {
-    JsonObject jsonObject = UtilJson.asJsonObject(pJsonValue);
+  public Pushback initFrom(JsonValue pJsonValue) {
+    JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
     fPlayerId = IJsonOption.PLAYER_ID.getFrom(jsonObject);
     fCoordinate = IJsonOption.COORDINATE.getFrom(jsonObject);
+    return this;
   }
 
 }

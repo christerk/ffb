@@ -125,7 +125,7 @@ public class DialogTeamSetupParameter implements IDialogParameter {
   }
   
   public void initFrom(JsonValue pJsonValue) {
-    JsonObject jsonObject = UtilJson.asJsonObject(pJsonValue);
+    JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
     UtilDialogParameter.validateDialogId(this, (DialogId) IJsonOption.DIALOG_ID.getFrom(jsonObject));
     fLoadDialog = IJsonOption.LOAD_DIALOG.getFrom(jsonObject);
     add(IJsonOption.SETUP_NAMES.getFrom(jsonObject));

@@ -139,14 +139,15 @@ public class DialogApothecaryChoiceParameter implements IDialogParameter {
     return jsonObject;
   }
   
-  public void initFrom(JsonValue pJsonValue) {
-    JsonObject jsonObject = UtilJson.asJsonObject(pJsonValue);
+  public DialogApothecaryChoiceParameter initFrom(JsonValue pJsonValue) {
+    JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
     UtilDialogParameter.validateDialogId(this, (DialogId) IJsonOption.DIALOG_ID.getFrom(jsonObject));
     fPlayerId = IJsonOption.PLAYER_ID.getFrom(jsonObject);
     fPlayerStateOld = IJsonOption.PLAYER_STATE_OLD.getFrom(jsonObject);
     fSeriousInjuryOld = (SeriousInjury) IJsonOption.SERIOUS_INJURY_OLD.getFrom(jsonObject);
     fPlayerStateNew = IJsonOption.PLAYER_STATE_NEW.getFrom(jsonObject);
     fSeriousInjuryNew = (SeriousInjury) IJsonOption.SERIOUS_INJURY_NEW.getFrom(jsonObject);
+    return this;
   }
 
 }

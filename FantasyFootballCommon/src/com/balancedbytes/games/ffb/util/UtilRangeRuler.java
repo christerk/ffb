@@ -5,9 +5,9 @@ import java.util.Set;
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.PassModifier;
 import com.balancedbytes.games.ffb.PassingDistance;
-import com.balancedbytes.games.ffb.Player;
 import com.balancedbytes.games.ffb.RangeRuler;
 import com.balancedbytes.games.ffb.model.Game;
+import com.balancedbytes.games.ffb.model.Player;
 
 /**
  * 

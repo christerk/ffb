@@ -171,7 +171,7 @@ public class ClientCommandJoin extends NetCommand {
   }
 
   public void initFrom(JsonValue pJsonValue) {
-    JsonObject jsonObject = UtilJson.asJsonObject(pJsonValue);
+    JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
     UtilNetCommand.validateCommandId(this, (NetCommandId) IJsonOption.NET_COMMAND_ID.getFrom(jsonObject));
     fClientMode = (ClientMode) IJsonOption.CLIENT_MODE.getFrom(jsonObject);
     fCoach = IJsonOption.COACH.getFrom(jsonObject);

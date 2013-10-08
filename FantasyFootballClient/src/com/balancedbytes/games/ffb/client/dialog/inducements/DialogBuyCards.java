@@ -22,7 +22,6 @@ import javax.swing.event.ListSelectionListener;
 import com.balancedbytes.games.ffb.Card;
 import com.balancedbytes.games.ffb.CardType;
 import com.balancedbytes.games.ffb.InducementPhase;
-import com.balancedbytes.games.ffb.InducementSet;
 import com.balancedbytes.games.ffb.client.FantasyFootballClient;
 import com.balancedbytes.games.ffb.client.ParagraphStyle;
 import com.balancedbytes.games.ffb.client.TextStyle;
@@ -31,6 +30,7 @@ import com.balancedbytes.games.ffb.client.ui.ChatLogScrollPane;
 import com.balancedbytes.games.ffb.client.ui.ChatLogTextPane;
 import com.balancedbytes.games.ffb.dialog.DialogBuyCardsParameter;
 import com.balancedbytes.games.ffb.dialog.DialogId;
+import com.balancedbytes.games.ffb.model.InducementSet;
 import com.balancedbytes.games.ffb.util.StringTool;
 
 /**

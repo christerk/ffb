@@ -5,7 +5,7 @@ package com.balancedbytes.games.ffb;
  * 
  * @author Kalimar
  */
-public enum TurnMode {
+public enum TurnMode implements IEnumWithId, IEnumWithName {
   
   REGULAR(1, "regular"),
   SETUP(2, "setup"),
@@ -50,24 +50,6 @@ public enum TurnMode {
   
   public boolean isBombTurn() {
   	return ((this == BOMB_HOME) || (this == BOMB_HOME_BLITZ) || (this == BOMB_AWAY) || (this == BOMB_AWAY_BLITZ));
-  }
-  
-  public static TurnMode fromId(int pId) {
-    for (TurnMode mode : values()) {
-      if (mode.getId() == pId) {
-        return mode;
-      }
-    }
-    return null;
-  }
-    
-  public static TurnMode fromName(String pName) {
-    for (TurnMode mode : values()) {
-      if (mode.getName().equalsIgnoreCase(pName)) {
-        return mode;
-      }
-    }
-    return null;
   }
 
 }

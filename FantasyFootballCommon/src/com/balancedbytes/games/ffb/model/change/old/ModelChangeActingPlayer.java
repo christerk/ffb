@@ -1,52 +1,49 @@
-package com.balancedbytes.games.ffb.model;
+package com.balancedbytes.games.ffb.model.change.old;
 
 
 import javax.xml.transform.sax.TransformerHandler;
 
 import org.xml.sax.helpers.AttributesImpl;
 
+import com.balancedbytes.games.ffb.PlayerAction;
+import com.balancedbytes.games.ffb.Skill;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
+import com.balancedbytes.games.ffb.model.ActingPlayer;
+import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.xml.UtilXml;
 
 /**
  * 
  * @author Kalimar
  */
-public class ModelChangeTeamResult implements IModelChange {
+public class ModelChangeActingPlayer implements IModelChange {
   
   private static final String _XML_ATTRIBUTE_CHANGE = "change";
-  private static final String _XML_ATTRIBUTE_HOME_DATA = "homeData";
   private static final String _XML_ATTRIBUTE_VALUE = "value";
-  
-  private CommandTeamResultChange fChange;
-  private boolean fHomeData;
-  private Object fValue;
 
-  protected ModelChangeTeamResult() {
+  private CommandActingPlayerChange fChange;
+  private Object fValue;
+  
+  protected ModelChangeActingPlayer() {
     super();
   }
   
-  public ModelChangeTeamResult(CommandTeamResultChange pChange, boolean pHomeData, Object pValue) {
+  public ModelChangeActingPlayer(CommandActingPlayerChange pChange, Object pValue) {
     if (pChange == null) {
       throw new IllegalArgumentException("Parameter change must not be null.");
     }
     fChange = pChange;
-    fHomeData = pHomeData;
     getChange().getAttributeType().checkValueType(pValue);
     fValue = pValue;
   }
   
-  public ModelChangeId getId() {
-    return ModelChangeId.TEAM_RESULT_CHANGE;
+  public ModelChangeIdOld getId() {
+    return ModelChangeIdOld.ACTING_PLAYER_CHANGE;
   }
   
-  public CommandTeamResultChange getChange() {
+  public CommandActingPlayerChange getChange() {
     return fChange;
-  }
-  
-  public boolean isHomeData() {
-    return fHomeData;
   }
   
   public Object getValue() {
@@ -54,51 +51,57 @@ public class ModelChangeTeamResult implements IModelChange {
   }
   
   public void applyTo(Game pGame) {
+    ActingPlayer actingPlayer = pGame.getActingPlayer();
     boolean trackingChanges = pGame.isTrackingChanges();
     pGame.setTrackingChanges(false);
-    TeamResult teamResult = isHomeData() ? pGame.getGameResult().getTeamResultHome() : pGame.getGameResult().getTeamResultAway();
     switch (getChange()) {
-      case SET_SCORE:
-        teamResult.setScore((Byte) getValue());
+      case SET_PLAYER_ID:
+        actingPlayer.setPlayerId((String) getValue());
         break;
-      case SET_CONCEDED:
-        teamResult.setConceded((Boolean) getValue());
+      case SET_STRENGTH:
+        actingPlayer.setStrength((Byte) getValue());
         break;
-      case SET_SPECTATORS:
-        teamResult.setSpectators((Integer) getValue());
+      case SET_CURRENT_MOVE:
+        actingPlayer.setCurrentMove((Byte) getValue());
         break;
-      case SET_FAME:
-        teamResult.setFame((Byte) getValue());
+      case SET_GOING_FOR_IT:
+        actingPlayer.setGoingForIt((Boolean) getValue());
         break;
-      case SET_WINNINGS:
-        teamResult.setWinnings((Integer) getValue());
+      case SET_DODGING:
+        actingPlayer.setDodging((Boolean) getValue());
         break;
-      case SET_FAN_FACTOR_MODIFIER:
-        teamResult.setFanFactorModifier((Byte) getValue());
+      case SET_LEAPING:
+        actingPlayer.setLeaping((Boolean) getValue());
         break;
-      case SET_BADLY_HURT_SUFFERED:
-        teamResult.setBadlyHurtSuffered((Byte) getValue());
+      case SET_STANDING_UP:
+        actingPlayer.setStandingUp((Boolean) getValue());
         break;
-      case SET_SERIOUS_INJURY_SUFFERED:
-        teamResult.setSeriousInjurySuffered((Byte) getValue());
+      case SET_SUFFERING_BLOOD_LUST:
+        actingPlayer.setSufferingBloodLust((Boolean) getValue());
         break;
-      case SET_RIP_SUFFERED:
-        teamResult.setRipSuffered((Byte) getValue());
+      case SET_SUFFERING_ANIMOSITY:
+        actingPlayer.setSufferingAnimosity((Boolean) getValue());
         break;
-      case SET_SPIRALLING_EXPENSES:
-        teamResult.setSpirallingExpenses((Integer) getValue());
+      case SET_HAS_BLOCKED:
+        actingPlayer.setHasBlocked((Boolean) getValue());
         break;
-      case SET_RAISED_DEAD:
-        teamResult.setRaisedDead((Integer) getValue());
+      case SET_HAS_FOULED:
+        actingPlayer.setHasFouled((Boolean) getValue());
         break;
-      case SET_PETTY_CASH_TRANSFERRED:
-        teamResult.setPettyCashTransferred((Integer) getValue());
+      case SET_HAS_PASSED:
+        actingPlayer.setHasPassed((Boolean) getValue());
         break;
-      case SET_PETTY_CASH_USED:
-        teamResult.setPettyCashUsed((Integer) getValue());
+      case SET_HAS_MOVED:
+        actingPlayer.setHasMoved((Boolean) getValue());
         break;
-      case SET_TEAM_VALUE:
-        teamResult.setTeamValue((Integer) getValue());
+      case SET_HAS_FED:
+        actingPlayer.setHasFed((Boolean) getValue());
+        break;
+      case SET_PLAYER_ACTION:
+        actingPlayer.setPlayerAction((PlayerAction) getValue());
+        break;
+      case MARK_SKILL_USED:
+        actingPlayer.markSkillUsed((Skill) getValue());
         break;
       default:
         throw new IllegalStateException("Unhandled change " + getChange() + ".");
@@ -109,26 +112,28 @@ public class ModelChangeTeamResult implements IModelChange {
   // transformation
   
   public IModelChange transform() {
-    return new ModelChangeTeamResult(getChange(), !isHomeData(), getValue());
+    return new ModelChangeActingPlayer(getChange(), getValue());
   }
   
   // XML serialization
-    
+  
   public void addToXml(TransformerHandler pHandler) {
+    
     AttributesImpl attributes = new AttributesImpl();
     UtilXml.addAttribute(attributes, XML_ATTRIBUTE_ID, getId().getName());
     if (getChange() != null) {
       UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_CHANGE, getChange().getName());
-      UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_HOME_DATA, isHomeData());
       getChange().getAttributeType().addXmlAttribute(attributes, _XML_ATTRIBUTE_VALUE, getValue());
     }
-    UtilXml.addEmptyElement(pHandler, XML_TAG, attributes);
+    
+    UtilXml.addEmptyElement(pHandler, XML_TAG);
+    
   }
   
   public String toXml(boolean pIndent) {
     return UtilXml.toXml(this, pIndent);
   }
-
+  
   // ByteArray serialization
   
   public int getByteArraySerializationVersion() {
@@ -139,18 +144,16 @@ public class ModelChangeTeamResult implements IModelChange {
     pByteList.addByte((byte) getId().getId());
     pByteList.addSmallInt(getByteArraySerializationVersion());
     pByteList.addByte((byte) getChange().getId());
-    pByteList.addBoolean(isHomeData());
     getChange().getAttributeType().addTo(pByteList, getValue());
   }
   
   public int initFrom(ByteArray pByteArray) {
-    ModelChangeId changeId = ModelChangeId.fromId(pByteArray.getByte());
+    ModelChangeIdOld changeId = ModelChangeIdOld.fromId(pByteArray.getByte());
     if (getId() != changeId) {
       throw new IllegalStateException("Wrong change id. Expected " + getId().getName() + " received " + ((changeId != null) ? changeId.getName() : "null"));
     }
     int byteArraySerializationVersion = pByteArray.getSmallInt();
-    fChange = CommandTeamResultChange.fromId(pByteArray.getByte());
-    fHomeData = pByteArray.getBoolean();
+    fChange = CommandActingPlayerChange.fromId(pByteArray.getByte());
     if (getChange() == null) {
       throw new IllegalStateException("Attribute change must not be null.");
     }

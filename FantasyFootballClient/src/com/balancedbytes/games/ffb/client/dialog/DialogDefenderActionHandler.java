@@ -6,9 +6,9 @@ import java.util.Map;
 import com.balancedbytes.games.ffb.ClientMode;
 import com.balancedbytes.games.ffb.PlayerAction;
 import com.balancedbytes.games.ffb.StatusType;
-import com.balancedbytes.games.ffb.Team;
 import com.balancedbytes.games.ffb.client.FantasyFootballClient;
 import com.balancedbytes.games.ffb.model.Game;
+import com.balancedbytes.games.ffb.model.Team;
 
 /**
  * 

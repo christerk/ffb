@@ -1,6 +1,7 @@
 package com.balancedbytes.games.ffb.json;
 
 import com.eclipsesource.json.JsonObject;
+import com.eclipsesource.json.JsonValue;
 
 /**
  * 
@@ -13,15 +14,29 @@ public class JsonObjectOption extends JsonAbstractOption {
   }
   
   public JsonObject getFrom(JsonObject pJsonObject) {
-    return getValueFrom(pJsonObject).asObject();
+    JsonValue jsonValue = getValueFrom(pJsonObject);
+    if (jsonValue.isNull()) {
+      return null;
+    } else {
+      return jsonValue.asObject();
+    }
   }
   
   public JsonObject getFrom(JsonObject pJsonObject, JsonObject pDefault) {
-    return getValueFrom(pJsonObject, pDefault).asObject();
+    JsonValue jsonValue = getValueFrom(pJsonObject, pDefault);
+    if (jsonValue.isNull()) {
+      return null;
+    } else {
+      return jsonValue.asObject();
+    }
   }
 
   public void addTo(JsonObject pJsonObject, JsonObject pValue) {
-    addValueTo(pJsonObject, pValue);
+    if (pValue == null) {
+      addValueTo(pJsonObject, JsonValue.NULL);
+    } else {
+      addValueTo(pJsonObject, pValue);
+    }
   }
   
 }

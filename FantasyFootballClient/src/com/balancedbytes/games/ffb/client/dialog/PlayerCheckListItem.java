@@ -2,7 +2,7 @@ package com.balancedbytes.games.ffb.client.dialog;
 
 import javax.swing.Icon;
 
-import com.balancedbytes.games.ffb.Player;
+import com.balancedbytes.games.ffb.model.Player;
 
 /**
  * 

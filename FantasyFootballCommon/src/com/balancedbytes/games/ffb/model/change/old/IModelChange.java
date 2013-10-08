@@ -1,6 +1,7 @@
-package com.balancedbytes.games.ffb.model;
+package com.balancedbytes.games.ffb.model.change.old;
 
 import com.balancedbytes.games.ffb.bytearray.IByteArraySerializable;
+import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.xml.IXmlWriteable;
 
 /**
@@ -13,7 +14,7 @@ public interface IModelChange extends IByteArraySerializable, IXmlWriteable {
   
   public static final String XML_ATTRIBUTE_ID = "id";
   
-  public ModelChangeId getId();
+  public ModelChangeIdOld getId();
   
   public void applyTo(Game pGame);
   

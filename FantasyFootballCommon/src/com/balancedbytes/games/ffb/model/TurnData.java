@@ -5,7 +5,6 @@ import javax.xml.transform.sax.TransformerHandler;
 
 import org.xml.sax.helpers.AttributesImpl;
 
-import com.balancedbytes.games.ffb.InducementSet;
 import com.balancedbytes.games.ffb.LeaderState;
 import com.balancedbytes.games.ffb.LeaderStateFactory;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
@@ -13,6 +12,8 @@ import com.balancedbytes.games.ffb.bytearray.ByteList;
 import com.balancedbytes.games.ffb.bytearray.IByteArraySerializable;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
+import com.balancedbytes.games.ffb.model.change.old.CommandTurnDataChange;
+import com.balancedbytes.games.ffb.model.change.old.ModelChangeTurnData;
 import com.balancedbytes.games.ffb.xml.IXmlWriteable;
 import com.balancedbytes.games.ffb.xml.UtilXml;
 import com.eclipsesource.json.JsonObject;
@@ -332,7 +333,7 @@ public class TurnData implements IByteArraySerializable, IXmlWriteable {
   }
   
   public void initFrom(JsonValue pJsonValue) {
-    JsonObject jsonObject = UtilJson.asJsonObject(pJsonValue);
+    JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
     fHomeData = IJsonOption.HOME_DATA.getFrom(jsonObject);
     fTurnStarted = IJsonOption.TURN_STARTED.getFrom(jsonObject);
     fTurnNr = IJsonOption.TURN_NR.getFrom(jsonObject);

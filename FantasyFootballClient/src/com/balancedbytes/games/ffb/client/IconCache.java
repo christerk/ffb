@@ -14,8 +14,8 @@ import com.balancedbytes.games.ffb.DiceDecoration;
 import com.balancedbytes.games.ffb.FantasyFootballException;
 import com.balancedbytes.games.ffb.PlayerState;
 import com.balancedbytes.games.ffb.PushbackSquare;
-import com.balancedbytes.games.ffb.Team;
 import com.balancedbytes.games.ffb.Weather;
+import com.balancedbytes.games.ffb.model.Team;
 import com.balancedbytes.games.ffb.util.StringTool;
 import com.balancedbytes.games.ffb.util.UtilUrl;
 

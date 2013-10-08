@@ -22,6 +22,7 @@ import com.balancedbytes.games.ffb.SpecialEffectFactory;
 import com.balancedbytes.games.ffb.TeamStatusFactory;
 import com.balancedbytes.games.ffb.dialog.DialogIdFactory;
 import com.balancedbytes.games.ffb.model.AnimationTypeFactory;
+import com.balancedbytes.games.ffb.model.change.ModelChangeIdFactory;
 import com.balancedbytes.games.ffb.net.NetCommandIdFactory;
 import com.balancedbytes.games.ffb.net.ServerStatusFactory;
 
@@ -119,6 +120,10 @@ public interface IJsonOption {
                    JsonIntOption MINIMUM_ROLL = new JsonIntOption("minimumRoll");
                    JsonIntOption MINIMUM_ROLL_DODGE = new JsonIntOption("minimumRollDodge");
                    JsonIntOption MINIMUM_ROLL_GFI = new JsonIntOption("minimumRollGfi");
+          JsonEnumWithNameOption MODEL_CHANGE_ID = new JsonEnumWithNameOption("modelChangeId", new ModelChangeIdFactory());
+                JsonStringOption MODEL_CHANGE_KEY = new JsonStringOption("modelChangeKey");
+                 JsonValueOption MODEL_CHANGE_VALUE = new JsonValueOption("modelChangeValue");
+                 JsonArrayOption MODEL_CHANGES = new JsonArrayOption("modelChanges");
                 JsonStringOption NAME = new JsonStringOption("name");
           JsonEnumWithNameOption NET_COMMAND_ID = new JsonEnumWithNameOption("netCommandId", new NetCommandIdFactory());
                  JsonArrayOption NR_OF_CARDS_PER_TYPE = new JsonArrayOption("nrOfCardsPerType");
@@ -222,7 +227,5 @@ public interface IJsonOption {
                    JsonIntOption WINNINGS = new JsonIntOption("winnings");
                JsonBooleanOption WITH_BALL = new JsonBooleanOption("withBall");
           JsonEnumWithNameOption WIZARD_SPELL = new JsonEnumWithNameOption("wizardSpell", new SpecialEffectFactory());
-          
-//          private LeaderState fLeaderState;
           
 }

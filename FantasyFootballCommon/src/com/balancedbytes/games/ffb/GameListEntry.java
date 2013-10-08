@@ -237,8 +237,8 @@ public class GameListEntry implements IXmlSerializable, IByteArraySerializable {
     return jsonObject;
   }
   
-  public void initFrom(JsonValue pJsonValue) {
-    JsonObject jsonObject = UtilJson.asJsonObject(pJsonValue);
+  public GameListEntry initFrom(JsonValue pJsonValue) {
+    JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
     fGameId = IJsonOption.GAME_ID.getFrom(jsonObject);
     fStarted = IJsonOption.STARTED.getFrom(jsonObject);    
     fTeamHomeId = IJsonOption.TEAM_HOME_ID.getFrom(jsonObject);
@@ -247,6 +247,7 @@ public class GameListEntry implements IXmlSerializable, IByteArraySerializable {
     fTeamAwayId = IJsonOption.TEAM_AWAY_ID.getFrom(jsonObject);
     fTeamAwayName = IJsonOption.TEAM_AWAY_NAME.getFrom(jsonObject);
     fTeamAwayCoach = IJsonOption.TEAM_AWAY_COACH.getFrom(jsonObject);
+    return this;
   }
 
 }

@@ -15,8 +15,8 @@ import org.xml.sax.InputSource;
 
 import com.balancedbytes.games.ffb.FantasyFootballException;
 import com.balancedbytes.games.ffb.PasswordChallenge;
-import com.balancedbytes.games.ffb.Roster;
-import com.balancedbytes.games.ffb.Team;
+import com.balancedbytes.games.ffb.model.Roster;
+import com.balancedbytes.games.ffb.model.Team;
 import com.balancedbytes.games.ffb.net.ServerStatus;
 import com.balancedbytes.games.ffb.server.DebugLog;
 import com.balancedbytes.games.ffb.server.FantasyFootballServer;

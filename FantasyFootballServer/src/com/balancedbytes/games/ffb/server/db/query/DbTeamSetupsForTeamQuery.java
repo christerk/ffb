@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.balancedbytes.games.ffb.FantasyFootballException;
-import com.balancedbytes.games.ffb.Team;
+import com.balancedbytes.games.ffb.model.Team;
 import com.balancedbytes.games.ffb.server.FantasyFootballServer;
 import com.balancedbytes.games.ffb.server.db.DbStatement;
 import com.balancedbytes.games.ffb.server.db.DbStatementId;

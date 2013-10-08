@@ -190,10 +190,11 @@ public class FieldCoordinateBounds implements IByteArraySerializable {
     return jsonObject;
   }
   
-  public void initFrom(JsonValue pJsonValue) {
-    JsonObject jsonObject = UtilJson.asJsonObject(pJsonValue);
+  public FieldCoordinateBounds initFrom(JsonValue pJsonValue) {
+    JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
     fTopLeftCorner = IJsonOption.TOP_LEFT.getFrom(jsonObject);
     fBottomRightCorner = IJsonOption.BOTTOM_RIGHT.getFrom(jsonObject);
+    return this;
   }
 
 }

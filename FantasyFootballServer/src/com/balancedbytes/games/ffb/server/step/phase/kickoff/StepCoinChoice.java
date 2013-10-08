@@ -1,11 +1,11 @@
 package com.balancedbytes.games.ffb.server.step.phase.kickoff;
 
-import com.balancedbytes.games.ffb.Team;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
 import com.balancedbytes.games.ffb.dialog.DialogCoinChoiceParameter;
 import com.balancedbytes.games.ffb.dialog.DialogReceiveChoiceParameter;
 import com.balancedbytes.games.ffb.model.Game;
+import com.balancedbytes.games.ffb.model.Team;
 import com.balancedbytes.games.ffb.net.NetCommand;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandCoinChoice;
 import com.balancedbytes.games.ffb.report.ReportCoinThrow;

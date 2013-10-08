@@ -17,10 +17,10 @@ import javax.swing.ToolTipManager;
 import com.balancedbytes.games.ffb.Card;
 import com.balancedbytes.games.ffb.Inducement;
 import com.balancedbytes.games.ffb.InducementType;
-import com.balancedbytes.games.ffb.Team;
 import com.balancedbytes.games.ffb.client.IIconProperty;
 import com.balancedbytes.games.ffb.client.IconCache;
 import com.balancedbytes.games.ffb.model.Game;
+import com.balancedbytes.games.ffb.model.Team;
 import com.balancedbytes.games.ffb.model.TurnData;
 
 /**

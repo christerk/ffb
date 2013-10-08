@@ -2,19 +2,19 @@ package com.balancedbytes.games.ffb.server.util;
 
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.Inducement;
-import com.balancedbytes.games.ffb.InducementSet;
 import com.balancedbytes.games.ffb.InducementType;
 import com.balancedbytes.games.ffb.LeaderState;
-import com.balancedbytes.games.ffb.Player;
 import com.balancedbytes.games.ffb.PlayerAction;
 import com.balancedbytes.games.ffb.Skill;
 import com.balancedbytes.games.ffb.Sound;
-import com.balancedbytes.games.ffb.Team;
 import com.balancedbytes.games.ffb.model.Animation;
 import com.balancedbytes.games.ffb.model.FieldModel;
 import com.balancedbytes.games.ffb.model.Game;
-import com.balancedbytes.games.ffb.model.ModelChangeList;
+import com.balancedbytes.games.ffb.model.InducementSet;
+import com.balancedbytes.games.ffb.model.Player;
+import com.balancedbytes.games.ffb.model.Team;
 import com.balancedbytes.games.ffb.model.TurnData;
+import com.balancedbytes.games.ffb.model.change.old.ModelChangeListOld;
 import com.balancedbytes.games.ffb.report.ReportInducement;
 import com.balancedbytes.games.ffb.report.ReportLeader;
 import com.balancedbytes.games.ffb.report.ReportList;
@@ -50,7 +50,7 @@ public class UtilGame {
     Game game = pGameState.getGame();
     FantasyFootballServer server = pGameState.getServer();
     UtilTimer.syncTime(pGameState);
-    ModelChangeList modelChanges = game.fetchChanges();
+    ModelChangeListOld modelChanges = game.fetchChanges();
     if ((modelChanges.size() > 0) || ((pReportList != null) && (pReportList.size() > 0)) || (pAnimation != null) || (pSound != null)) {
       server.getCommunication().sendModelSync(pGameState, modelChanges, pReportList, pAnimation, pSound, game.getGameTime(), game.getTurnTime());
       synced = true;

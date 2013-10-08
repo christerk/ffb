@@ -124,7 +124,7 @@ public class DialogKickSkillParameter implements IDialogParameter {
   }
   
   public void initFrom(JsonValue pJsonValue) {
-    JsonObject jsonObject = UtilJson.asJsonObject(pJsonValue);
+    JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
     UtilDialogParameter.validateDialogId(this, (DialogId) IJsonOption.DIALOG_ID.getFrom(jsonObject));
     fPlayerId = IJsonOption.PLAYER_ID.getFrom(jsonObject);
     fBallCoordinate = IJsonOption.BALL_COORDINATE.getFrom(jsonObject);

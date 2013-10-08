@@ -3,13 +3,13 @@ package com.balancedbytes.games.ffb.server.util;
 import java.nio.channels.SocketChannel;
 
 import com.balancedbytes.games.ffb.FieldCoordinate;
-import com.balancedbytes.games.ffb.Player;
 import com.balancedbytes.games.ffb.PlayerState;
-import com.balancedbytes.games.ffb.Team;
 import com.balancedbytes.games.ffb.TeamSetup;
 import com.balancedbytes.games.ffb.TurnMode;
 import com.balancedbytes.games.ffb.model.FieldModel;
 import com.balancedbytes.games.ffb.model.Game;
+import com.balancedbytes.games.ffb.model.Player;
+import com.balancedbytes.games.ffb.model.Team;
 import com.balancedbytes.games.ffb.server.FantasyFootballServer;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.db.DbStatementId;

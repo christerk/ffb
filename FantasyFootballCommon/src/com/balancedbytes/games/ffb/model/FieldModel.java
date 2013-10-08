@@ -22,17 +22,18 @@ import com.balancedbytes.games.ffb.FieldMarker;
 import com.balancedbytes.games.ffb.FieldModelChangeEvent;
 import com.balancedbytes.games.ffb.IFieldModelChangeListener;
 import com.balancedbytes.games.ffb.MoveSquare;
-import com.balancedbytes.games.ffb.Player;
 import com.balancedbytes.games.ffb.PlayerMarker;
 import com.balancedbytes.games.ffb.PlayerState;
 import com.balancedbytes.games.ffb.PushbackSquare;
 import com.balancedbytes.games.ffb.RangeRuler;
-import com.balancedbytes.games.ffb.Team;
 import com.balancedbytes.games.ffb.TrackNumber;
 import com.balancedbytes.games.ffb.Weather;
+import com.balancedbytes.games.ffb.WeatherFactory;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
 import com.balancedbytes.games.ffb.bytearray.IByteArraySerializable;
+import com.balancedbytes.games.ffb.model.change.old.CommandFieldModelChange;
+import com.balancedbytes.games.ffb.model.change.old.ModelChangeFieldModel;
 import com.balancedbytes.games.ffb.util.ArrayTool;
 import com.balancedbytes.games.ffb.xml.IXmlWriteable;
 import com.balancedbytes.games.ffb.xml.UtilXml;
@@ -1008,7 +1009,7 @@ public class FieldModel implements IByteArraySerializable, IXmlWriteable {
   // bad hack to cover up missing byteArraySerialization
   public void deprecatedInitFrom(ByteArray pByteArray, boolean pWithPlayerStates) {
 
-    setWeather(Weather.fromId(pByteArray.getByte()));
+    setWeather(new WeatherFactory().forId(pByteArray.getByte()));
     setBallCoordinate(pByteArray.getFieldCoordinate());
     setBallInPlay(pByteArray.getBoolean());
     setBallMoving(pByteArray.getBoolean());

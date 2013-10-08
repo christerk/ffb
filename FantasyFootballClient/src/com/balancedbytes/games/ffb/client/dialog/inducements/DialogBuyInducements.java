@@ -26,17 +26,17 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableCellRenderer;
 
 import com.balancedbytes.games.ffb.Inducement;
-import com.balancedbytes.games.ffb.InducementSet;
 import com.balancedbytes.games.ffb.InducementType;
-import com.balancedbytes.games.ffb.Player;
-import com.balancedbytes.games.ffb.Roster;
 import com.balancedbytes.games.ffb.Skill;
 import com.balancedbytes.games.ffb.SkillFactory;
-import com.balancedbytes.games.ffb.Team;
 import com.balancedbytes.games.ffb.client.FantasyFootballClient;
 import com.balancedbytes.games.ffb.client.PlayerIconFactory;
 import com.balancedbytes.games.ffb.client.dialog.Dialog;
 import com.balancedbytes.games.ffb.dialog.DialogId;
+import com.balancedbytes.games.ffb.model.InducementSet;
+import com.balancedbytes.games.ffb.model.Player;
+import com.balancedbytes.games.ffb.model.Roster;
+import com.balancedbytes.games.ffb.model.Team;
 import com.balancedbytes.games.ffb.util.UtilInducements;
 import com.balancedbytes.games.ffb.util.StringTool;
 

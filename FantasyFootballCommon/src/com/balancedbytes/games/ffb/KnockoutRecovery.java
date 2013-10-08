@@ -125,12 +125,13 @@ public class KnockoutRecovery implements IByteArraySerializable, IXmlSerializabl
     return jsonObject;
   }
   
-  public void initFrom(JsonValue pJsonValue) {
-    JsonObject jsonObject = UtilJson.asJsonObject(pJsonValue);
+  public KnockoutRecovery initFrom(JsonValue pJsonValue) {
+    JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
     fPlayerId = IJsonOption.PLAYER_ID.getFrom(jsonObject);
     fRecovering = IJsonOption.RECOVERING.getFrom(jsonObject);
     fRoll = IJsonOption.ROLL.getFrom(jsonObject);
     fBloodweiserBabes = IJsonOption.BLOODWEISER_BABES.getFrom(jsonObject);
+    return this;
   }
 
 }

@@ -1,4 +1,4 @@
-package com.balancedbytes.games.ffb.model;
+package com.balancedbytes.games.ffb.model.change.old;
 
 
 import java.util.Date;
@@ -14,6 +14,7 @@ import com.balancedbytes.games.ffb.PlayerAction;
 import com.balancedbytes.games.ffb.TurnMode;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
+import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.xml.UtilXml;
 
 /**
@@ -44,8 +45,8 @@ public class ModelChangeGameAttribute implements IModelChange {
     fValue = pValue;
   }
   
-  public ModelChangeId getId() {
-    return ModelChangeId.GAME_ATTRIBUTE_CHANGE;
+  public ModelChangeIdOld getId() {
+    return ModelChangeIdOld.GAME_ATTRIBUTE_CHANGE;
   }
   
   public CommandGameAttributeChange getChange() {
@@ -198,7 +199,7 @@ public class ModelChangeGameAttribute implements IModelChange {
   }
   
   public int initFrom(ByteArray pByteArray) {
-    ModelChangeId changeId = ModelChangeId.fromId(pByteArray.getByte());
+    ModelChangeIdOld changeId = ModelChangeIdOld.fromId(pByteArray.getByte());
     if (getId() != changeId) {
       throw new IllegalStateException("Wrong change id. Expected " + getId().getName() + " received " + ((changeId != null) ? changeId.getName() : "null"));
     }

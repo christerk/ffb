@@ -1,15 +1,17 @@
-package com.balancedbytes.games.ffb.model;
+package com.balancedbytes.games.ffb.model.change.old;
 
 
 import javax.xml.transform.sax.TransformerHandler;
 
 import org.xml.sax.helpers.AttributesImpl;
 
-import com.balancedbytes.games.ffb.Player;
 import com.balancedbytes.games.ffb.SendToBoxReason;
 import com.balancedbytes.games.ffb.SeriousInjury;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
+import com.balancedbytes.games.ffb.model.Game;
+import com.balancedbytes.games.ffb.model.Player;
+import com.balancedbytes.games.ffb.model.PlayerResult;
 import com.balancedbytes.games.ffb.xml.UtilXml;
 
 /**
@@ -40,8 +42,8 @@ public class ModelChangePlayerResult implements IModelChange {
     fValue = pValue;
   }
   
-  public ModelChangeId getId() {
-    return ModelChangeId.PLAYER_RESULT_CHANGE;
+  public ModelChangeIdOld getId() {
+    return ModelChangeIdOld.PLAYER_RESULT_CHANGE;
   }
   
   public CommandPlayerResultChange getChange() {
@@ -163,7 +165,7 @@ public class ModelChangePlayerResult implements IModelChange {
   }
   
   public int initFrom(ByteArray pByteArray) {
-    ModelChangeId changeId = ModelChangeId.fromId(pByteArray.getByte());
+    ModelChangeIdOld changeId = ModelChangeIdOld.fromId(pByteArray.getByte());
     if (getId() != changeId) {
       throw new IllegalStateException("Wrong change id. Expected " + getId().getName() + " received " + ((changeId != null) ? changeId.getName() : "null"));
     }

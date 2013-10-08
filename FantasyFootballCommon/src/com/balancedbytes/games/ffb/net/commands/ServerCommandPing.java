@@ -104,7 +104,7 @@ public class ServerCommandPing extends ServerCommand {
   }
 
   public void initFrom(JsonValue pJsonValue) {
-    JsonObject jsonObject = UtilJson.asJsonObject(pJsonValue);
+    JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
     UtilNetCommand.validateCommandId(this, (NetCommandId) IJsonOption.NET_COMMAND_ID.getFrom(jsonObject));
     setCommandNr(IJsonOption.COMMAND_NR.getFrom(jsonObject));
     fTimestamp = IJsonOption.TIMESTAMP.getFrom(jsonObject);
