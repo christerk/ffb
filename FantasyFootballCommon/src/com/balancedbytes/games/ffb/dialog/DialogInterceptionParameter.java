@@ -86,10 +86,11 @@ public class DialogInterceptionParameter implements IDialogParameter {
     return jsonObject;
   }
   
-  public void initFrom(JsonValue pJsonValue) {
+  public DialogInterceptionParameter initFrom(JsonValue pJsonValue) {
     JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
     UtilDialogParameter.validateDialogId(this, (DialogId) IJsonOption.DIALOG_ID.getFrom(jsonObject));
     fThrowerId = IJsonOption.THROWER_ID.getFrom(jsonObject);
+    return this;
   }
 
 }

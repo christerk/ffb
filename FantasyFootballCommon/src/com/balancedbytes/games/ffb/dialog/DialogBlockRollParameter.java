@@ -130,7 +130,7 @@ public class DialogBlockRollParameter implements IDialogParameter {
     return jsonObject;
   }
   
-  public void initFrom(JsonValue pJsonValue) {
+  public DialogBlockRollParameter initFrom(JsonValue pJsonValue) {
     JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
     UtilDialogParameter.validateDialogId(this, (DialogId) IJsonOption.DIALOG_ID.getFrom(jsonObject));
     fChoosingTeamId = IJsonOption.CHOOSING_TEAM_ID.getFrom(jsonObject);
@@ -138,6 +138,7 @@ public class DialogBlockRollParameter implements IDialogParameter {
     fBlockRoll = IJsonOption.BLOCK_ROLL.getFrom(jsonObject);
     fTeamReRollOption = IJsonOption.TEAM_RE_ROLL_OPTION.getFrom(jsonObject);
     fProReRollOption = IJsonOption.PRO_RE_ROLL_OPTION.getFrom(jsonObject);
+    return this;
   }
 
 }

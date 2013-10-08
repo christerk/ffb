@@ -164,7 +164,7 @@ public class DialogBuyCardsParameter implements IDialogParameter {
     return jsonObject;
   }
   
-  public void initFrom(JsonValue pJsonValue) {
+  public DialogBuyCardsParameter initFrom(JsonValue pJsonValue) {
     JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
     UtilDialogParameter.validateDialogId(this, (DialogId) IJsonOption.DIALOG_ID.getFrom(jsonObject));
     fTeamId = IJsonOption.TEAM_ID.getFrom(jsonObject);
@@ -178,6 +178,7 @@ public class DialogBuyCardsParameter implements IDialogParameter {
       int nrOfCards = IJsonOption.NR_OF_CARDS.getFrom(nrOfCardsForThisType);
       put(cardType, nrOfCards);
     }
+    return this;
   }
 
 }
