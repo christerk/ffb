@@ -8,8 +8,10 @@ import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.FieldCoordinateBounds;
 import com.balancedbytes.games.ffb.InducementType;
 import com.balancedbytes.games.ffb.PlayerState;
+import com.balancedbytes.games.ffb.SpecialEffectFactory;
 import com.balancedbytes.games.ffb.TurnMode;
 import com.balancedbytes.games.ffb.SpecialEffect;
+import com.balancedbytes.games.ffb.TurnModeFactory;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
 import com.balancedbytes.games.ffb.dialog.DialogWizardSpellParameter;
@@ -156,10 +158,10 @@ public final class StepWizard extends AbstractStep {
   @Override
   public int initFrom(ByteArray pByteArray) {
   	int byteArraySerializationVersion = super.initFrom(pByteArray);
-  	fWizardSpell = SpecialEffect.fromId(pByteArray.getByte());
+  	fWizardSpell = new SpecialEffectFactory().forId(pByteArray.getByte());
   	fTargetCoordinate = pByteArray.getFieldCoordinate();
   	fEndInducement = pByteArray.getBoolean();
-  	fOldTurnMode = TurnMode.fromId(pByteArray.getByte());
+  	fOldTurnMode = new TurnModeFactory().forId(pByteArray.getByte());
   	return byteArraySerializationVersion;
   }
 

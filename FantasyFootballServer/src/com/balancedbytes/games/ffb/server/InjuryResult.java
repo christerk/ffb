@@ -10,9 +10,12 @@ import com.balancedbytes.games.ffb.InjuryModifier;
 import com.balancedbytes.games.ffb.InjuryType;
 import com.balancedbytes.games.ffb.PlayerState;
 import com.balancedbytes.games.ffb.SendToBoxReason;
+import com.balancedbytes.games.ffb.SendToBoxReasonFactory;
 import com.balancedbytes.games.ffb.SeriousInjury;
+import com.balancedbytes.games.ffb.SeriousInjuryFactory;
 import com.balancedbytes.games.ffb.Skill;
 import com.balancedbytes.games.ffb.Sound;
+import com.balancedbytes.games.ffb.SoundFactory;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
 import com.balancedbytes.games.ffb.bytearray.IByteArraySerializable;
@@ -475,14 +478,14 @@ public class InjuryResult implements IByteArraySerializable {
     setInjury(new PlayerState(pByteArray.getSmallInt()));
     setInjuryDecay(new PlayerState(pByteArray.getSmallInt()));
     setCasualtyRoll(pByteArray.getByteArrayAsIntArray());
-    setSeriousInjury(SeriousInjury.fromId(pByteArray.getByte()));
+    setSeriousInjury(new SeriousInjuryFactory().forId(pByteArray.getByte()));
     setCasualtyRollDecay(pByteArray.getByteArrayAsIntArray());
-    setSeriousInjuryDecay(SeriousInjury.fromId(pByteArray.getByte()));
+    setSeriousInjuryDecay(new SeriousInjuryFactory().forId(pByteArray.getByte()));
     setApothecaryStatus(ApothecaryStatus.fromId(pByteArray.getByte()));
-    setSendToBoxReason(SendToBoxReason.fromId(pByteArray.getByte()));
+    setSendToBoxReason(new SendToBoxReasonFactory().forId(pByteArray.getByte()));
     setSendToBoxTurn(pByteArray.getByte());
     setSendToBoxHalf(pByteArray.getByte());
-    setSound(Sound.fromId(pByteArray.getByte()));
+    setSound(new SoundFactory().forId(pByteArray.getByte()));
     if (byteArraySerializationVersion > 1) {
     	setApothecaryMode(ApothecaryMode.fromId(pByteArray.getByte()));
     }

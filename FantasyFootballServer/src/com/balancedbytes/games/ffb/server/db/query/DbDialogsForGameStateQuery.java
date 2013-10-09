@@ -10,6 +10,7 @@ import com.balancedbytes.games.ffb.IDialogParameter;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
 import com.balancedbytes.games.ffb.dialog.DialogId;
+import com.balancedbytes.games.ffb.dialog.DialogIdFactory;
 import com.balancedbytes.games.ffb.server.FantasyFootballServer;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.db.DbStatement;
@@ -32,7 +33,7 @@ public class DbDialogsForGameStateQuery extends DbStatement {
       if (pResultSet != null) {
         int col = 1;
         pResultSet.getLong(col++);  // gameStateId
-        fDialogId = DialogId.fromId(pResultSet.getByte(col++));
+        fDialogId = new DialogIdFactory().forId(pResultSet.getByte(col++));
         pResultSet.getByte(col++);  // sequenceNr
         fParameterBytes = pResultSet.getBytes(col++);
       }

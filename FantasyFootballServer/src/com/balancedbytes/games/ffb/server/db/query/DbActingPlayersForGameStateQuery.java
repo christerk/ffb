@@ -7,7 +7,9 @@ import java.sql.SQLException;
 
 import com.balancedbytes.games.ffb.FantasyFootballException;
 import com.balancedbytes.games.ffb.PlayerAction;
+import com.balancedbytes.games.ffb.PlayerActionFactory;
 import com.balancedbytes.games.ffb.Skill;
+import com.balancedbytes.games.ffb.SkillFactory;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.server.FantasyFootballServer;
@@ -47,6 +49,7 @@ public class DbActingPlayersForGameStateQuery extends DbStatement {
     public QueryResult(ResultSet pResultSet) throws SQLException {
       if (pResultSet != null) {
         int col = 1;
+        SkillFactory skillFactory = new SkillFactory();
         pResultSet.getLong(col++);  // gameStateId
         fPlayerId = pResultSet.getString(col++);
         fStrength = pResultSet.getByte(col++);
@@ -58,15 +61,15 @@ public class DbActingPlayersForGameStateQuery extends DbStatement {
         fHasFouled = pResultSet.getBoolean(col++);
         fHasPassed = pResultSet.getBoolean(col++);
         fHasMoved = pResultSet.getBoolean(col++);
-        fPlayerAction = PlayerAction.fromId(pResultSet.getByte(col++));
+        fPlayerAction = new PlayerActionFactory().forId(pResultSet.getByte(col++));
         fStandingUp = pResultSet.getBoolean(col++);
         fSufferingBloodLust = pResultSet.getBoolean(col++);
         fSufferingAnimosity = pResultSet.getBoolean(col++);
-        fUsedSkill1 = Skill.fromId(pResultSet.getByte(col++));
-        fUsedSkill2 = Skill.fromId(pResultSet.getByte(col++));
-        fUsedSkill3 = Skill.fromId(pResultSet.getByte(col++));
-        fUsedSkill4 = Skill.fromId(pResultSet.getByte(col++));
-        fUsedSkill5 = Skill.fromId(pResultSet.getByte(col++));
+        fUsedSkill1 = skillFactory.forId(pResultSet.getByte(col++));
+        fUsedSkill2 = skillFactory.forId(pResultSet.getByte(col++));
+        fUsedSkill3 = skillFactory.forId(pResultSet.getByte(col++));
+        fUsedSkill4 = skillFactory.forId(pResultSet.getByte(col++));
+        fUsedSkill5 = skillFactory.forId(pResultSet.getByte(col++));
       }
     }
 

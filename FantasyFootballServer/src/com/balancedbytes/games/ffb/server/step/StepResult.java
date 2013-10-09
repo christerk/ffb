@@ -1,6 +1,7 @@
 package com.balancedbytes.games.ffb.server.step;
 
 import com.balancedbytes.games.ffb.Sound;
+import com.balancedbytes.games.ffb.SoundFactory;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
 import com.balancedbytes.games.ffb.bytearray.IByteArraySerializable;
@@ -126,7 +127,7 @@ public class StepResult implements IByteArraySerializable {
   		setAnimation(new Animation());
   		getAnimation().initFrom(pByteArray);
   	}
-  	setSound(Sound.fromId(pByteArray.getByte()));
+  	setSound(new SoundFactory().forId(pByteArray.getByte()));
   	setSynchronize(pByteArray.getBoolean());
   	return byteArraySerializationVersion;
   }

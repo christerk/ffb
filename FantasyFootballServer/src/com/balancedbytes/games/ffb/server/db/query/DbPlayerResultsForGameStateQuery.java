@@ -8,8 +8,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.balancedbytes.games.ffb.FantasyFootballException;
-import com.balancedbytes.games.ffb.SendToBoxReason;
-import com.balancedbytes.games.ffb.SeriousInjury;
+import com.balancedbytes.games.ffb.SendToBoxReasonFactory;
+import com.balancedbytes.games.ffb.SeriousInjuryFactory;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.GameResult;
 import com.balancedbytes.games.ffb.model.Player;
@@ -91,9 +91,9 @@ public class DbPlayerResultsForGameStateQuery extends DbStatement {
       playerResult.setBlocks(fBlocks);
       playerResult.setFouls(fFouls);
       playerResult.setCurrentSpps(fCurrentSpps);
-      playerResult.setSeriousInjury(SeriousInjury.fromId(fSeriousInjury));
-      playerResult.setSeriousInjuryDecay(SeriousInjury.fromId(fSeriousInjuryDecay));
-      playerResult.setSendToBoxReason(SendToBoxReason.fromId(fSendToBoxReason));
+      playerResult.setSeriousInjury(new SeriousInjuryFactory().forId(fSeriousInjury));
+      playerResult.setSeriousInjuryDecay(new SeriousInjuryFactory().forId(fSeriousInjuryDecay));
+      playerResult.setSendToBoxReason(new SendToBoxReasonFactory().forId(fSendToBoxReason));
       playerResult.setSendToBoxTurn(fSendToBoxTurn);
       playerResult.setSendToBoxHalf(fSendToBoxHalf);
       playerResult.setSendToBoxByPlayerId(fSendToBoxByPlayerId);

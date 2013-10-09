@@ -3,6 +3,7 @@ package com.balancedbytes.games.ffb.server.step.phase.special;
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.InjuryType;
 import com.balancedbytes.games.ffb.SpecialEffect;
+import com.balancedbytes.games.ffb.SpecialEffectFactory;
 import com.balancedbytes.games.ffb.TurnMode;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
@@ -168,7 +169,7 @@ public final class StepSpecialEffect extends AbstractStep {
   	fGotoLabelOnFailure = pByteArray.getString();
   	fPlayerId = pByteArray.getString();
   	fRollForEffect = pByteArray.getBoolean();
-  	fSpecialEffect = SpecialEffect.fromId(pByteArray.getByte());
+  	fSpecialEffect = new SpecialEffectFactory().forId(pByteArray.getByte());
   	return byteArraySerializationVersion;
   }
 

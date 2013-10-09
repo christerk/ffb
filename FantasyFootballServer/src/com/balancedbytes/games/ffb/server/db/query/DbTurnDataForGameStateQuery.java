@@ -6,7 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import com.balancedbytes.games.ffb.FantasyFootballException;
-import com.balancedbytes.games.ffb.LeaderState;
+import com.balancedbytes.games.ffb.LeaderStateFactory;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.TurnData;
 import com.balancedbytes.games.ffb.server.FantasyFootballServer;
@@ -45,6 +45,7 @@ public class DbTurnDataForGameStateQuery extends DbStatement {
   public void execute(GameState pGameState) {
     try {
       Game game = pGameState.getGame();
+      LeaderStateFactory leaderStateFactory = new LeaderStateFactory();
       fStatement.setLong(1, pGameState.getId());
       ResultSet resultSet = fStatement.executeQuery();
       while (resultSet.next()) {
@@ -61,7 +62,7 @@ public class DbTurnDataForGameStateQuery extends DbStatement {
         turnData.setFoulUsed(resultSet.getBoolean(col++));
         turnData.setHandOverUsed(resultSet.getBoolean(col++));
         turnData.setPassUsed(resultSet.getBoolean(col++));
-        turnData.setLeaderState(LeaderState.fromId(resultSet.getByte(col++)));
+        turnData.setLeaderState(leaderStateFactory.forId(resultSet.getByte(col++)));
         turnData.setTurnStarted(resultSet.getBoolean(col++));
       }
       resultSet.close();

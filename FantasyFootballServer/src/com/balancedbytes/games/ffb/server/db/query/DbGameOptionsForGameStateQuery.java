@@ -7,6 +7,7 @@ import java.sql.SQLException;
 
 import com.balancedbytes.games.ffb.FantasyFootballException;
 import com.balancedbytes.games.ffb.GameOption;
+import com.balancedbytes.games.ffb.GameOptionFactory;
 import com.balancedbytes.games.ffb.GameOptionValue;
 import com.balancedbytes.games.ffb.model.GameOptions;
 import com.balancedbytes.games.ffb.server.FantasyFootballServer;
@@ -44,6 +45,7 @@ public class DbGameOptionsForGameStateQuery extends DbStatement {
 
   public void execute(GameState pGameState) {
     if (pGameState != null) {
+      GameOptionFactory gameOptionFactory = new GameOptionFactory();
       GameOptions options = pGameState.getGame().getOptions();
       try {
         fStatement.setLong(1, pGameState.getId());
@@ -51,7 +53,7 @@ public class DbGameOptionsForGameStateQuery extends DbStatement {
         while (resultSet.next()) {
           int col = 1;
           resultSet.getLong(col++); // gameStateId
-          GameOption optionName = GameOption.forName(resultSet.getString(col++));
+          GameOption optionName = gameOptionFactory.forName(resultSet.getString(col++));
           int optionValue = resultSet.getInt(col++);
           if (optionName != null) {
           	options.addOption(new GameOptionValue(optionName, optionValue));

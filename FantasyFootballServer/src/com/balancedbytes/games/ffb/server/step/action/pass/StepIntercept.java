@@ -8,6 +8,7 @@ import com.balancedbytes.games.ffb.ReRollSource;
 import com.balancedbytes.games.ffb.ReRolledAction;
 import com.balancedbytes.games.ffb.Skill;
 import com.balancedbytes.games.ffb.TurnMode;
+import com.balancedbytes.games.ffb.TurnModeFactory;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
 import com.balancedbytes.games.ffb.dialog.DialogInterceptionParameter;
@@ -208,7 +209,7 @@ public final class StepIntercept extends AbstractStepWithReRoll {
   	fGotoLabelOnFailure = pByteArray.getString();
   	fInterceptorId = pByteArray.getString();
   	fInterceptorChosen = pByteArray.getBoolean();
-  	fOldTurnMode = TurnMode.fromId(pByteArray.getByte());
+  	fOldTurnMode = new TurnModeFactory().forId(pByteArray.getByte());
   	return byteArraySerializationVersion;
   }
   

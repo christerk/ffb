@@ -20,7 +20,7 @@ import com.balancedbytes.games.ffb.PlayerState;
 import com.balancedbytes.games.ffb.PushbackSquare;
 import com.balancedbytes.games.ffb.RangeRuler;
 import com.balancedbytes.games.ffb.TrackNumber;
-import com.balancedbytes.games.ffb.Weather;
+import com.balancedbytes.games.ffb.WeatherFactory;
 import com.balancedbytes.games.ffb.model.FieldModel;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
@@ -200,7 +200,7 @@ public class DbFieldModelsForGameStateQuery extends DbStatement {
   }
   
   private void addWeather(Game pGame, QueryResult pQueryResult) {
-    pGame.getFieldModel().setWeather(Weather.fromId(pQueryResult.getNumber1()));
+    pGame.getFieldModel().setWeather(new WeatherFactory().forId(pQueryResult.getNumber1()));
   }
 
   private void addBall(Game pGame, QueryResult pQueryResult) {

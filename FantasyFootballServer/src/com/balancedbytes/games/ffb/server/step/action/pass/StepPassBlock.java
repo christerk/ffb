@@ -9,6 +9,7 @@ import com.balancedbytes.games.ffb.PlayerAction;
 import com.balancedbytes.games.ffb.PlayerState;
 import com.balancedbytes.games.ffb.Skill;
 import com.balancedbytes.games.ffb.TurnMode;
+import com.balancedbytes.games.ffb.TurnModeFactory;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
 import com.balancedbytes.games.ffb.dialog.DialogPassBlockParameter;
@@ -316,7 +317,7 @@ public class StepPassBlock extends AbstractStep {
   public int initFrom(ByteArray pByteArray) {
   	int byteArraySerializationVersion = super.initFrom(pByteArray);
   	fGotoLabelOnEnd = pByteArray.getString();
-  	fOldTurnMode = TurnMode.fromId(pByteArray.getByte());
+  	fOldTurnMode = new TurnModeFactory().forId(pByteArray.getByte());
   	fEndPlayerAction = pByteArray.getBoolean();
   	fEndTurn = pByteArray.getBoolean();
   	fOldPlayerStates = new PlayerState[pByteArray.getByte()];

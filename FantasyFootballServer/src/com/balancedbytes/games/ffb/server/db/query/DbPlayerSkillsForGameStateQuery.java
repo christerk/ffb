@@ -7,6 +7,7 @@ import java.sql.SQLException;
 
 import com.balancedbytes.games.ffb.FantasyFootballException;
 import com.balancedbytes.games.ffb.Skill;
+import com.balancedbytes.games.ffb.SkillFactory;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.server.FantasyFootballServer;
@@ -45,6 +46,7 @@ public class DbPlayerSkillsForGameStateQuery extends DbStatement {
     if (pGameState != null) {
       try {
         Game game = pGameState.getGame();
+        SkillFactory skillFactory = new SkillFactory();
         fStatement.setLong(1, pGameState.getId());
         ResultSet resultSet = fStatement.executeQuery();
         while (resultSet.next()) {
@@ -52,7 +54,7 @@ public class DbPlayerSkillsForGameStateQuery extends DbStatement {
           col++;  // gameStateId
           Player player = game.getPlayerById(resultSet.getString(col++));
           if (player != null) {
-            Skill skill = Skill.fromName(resultSet.getString(col++));
+            Skill skill = skillFactory.forName(resultSet.getString(col++));
             if (skill != null) {
               player.addSkill(skill);
             }

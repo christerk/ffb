@@ -2,6 +2,7 @@ package com.balancedbytes.games.ffb.server.step.action.select;
 
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.PlayerAction;
+import com.balancedbytes.games.ffb.PlayerActionFactory;
 import com.balancedbytes.games.ffb.Skill;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
@@ -282,7 +283,7 @@ public final class StepInitSelecting extends AbstractStep {
   public int initFrom(ByteArray pByteArray) {
   	int byteArraySerializationVersion = super.initFrom(pByteArray);
   	fGotoLabelOnEnd = pByteArray.getString();
-  	fDispatchPlayerAction = PlayerAction.fromId(pByteArray.getByte());
+  	fDispatchPlayerAction = new PlayerActionFactory().forId(pByteArray.getByte());
   	fEndTurn = pByteArray.getBoolean();
   	fEndPlayerAction = pByteArray.getBoolean();
   	return byteArraySerializationVersion;

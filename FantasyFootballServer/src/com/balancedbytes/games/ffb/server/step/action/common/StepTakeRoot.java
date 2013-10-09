@@ -3,6 +3,7 @@ package com.balancedbytes.games.ffb.server.step.action.common;
 import com.balancedbytes.games.ffb.PlayerAction;
 import com.balancedbytes.games.ffb.PlayerState;
 import com.balancedbytes.games.ffb.ReRolledAction;
+import com.balancedbytes.games.ffb.ReRolledActionFactory;
 import com.balancedbytes.games.ffb.Skill;
 import com.balancedbytes.games.ffb.Sound;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
@@ -99,7 +100,7 @@ public class StepTakeRoot extends AbstractStepWithReRoll {
     }
     if (UtilCards.hasSkill(game, actingPlayer, Skill.TAKE_ROOT) && !playerState.isRooted()) {
       boolean doRoll = true;
-      ReRolledAction reRolledAction = ReRolledAction.fromSkill(Skill.TAKE_ROOT); 
+      ReRolledAction reRolledAction = new ReRolledActionFactory().forSkill(Skill.TAKE_ROOT); 
       if ((reRolledAction != null) && (reRolledAction == getReRolledAction())) {
         if ((getReRollSource() == null) || !UtilReRoll.useReRoll(this, getReRollSource(), actingPlayer.getPlayer())) {
           doRoll = false;

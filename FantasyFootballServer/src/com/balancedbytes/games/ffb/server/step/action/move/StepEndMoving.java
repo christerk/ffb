@@ -2,6 +2,7 @@ package com.balancedbytes.games.ffb.server.step.action.move;
 
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.PlayerAction;
+import com.balancedbytes.games.ffb.PlayerActionFactory;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
@@ -226,7 +227,7 @@ public class StepEndMoving extends AbstractStep {
   @Override
   public int initFrom(ByteArray pByteArray) {
   	int byteArraySerializationVersion = super.initFrom(pByteArray);
-  	fDispatchPlayerAction = PlayerAction.fromId(pByteArray.getByte());
+  	fDispatchPlayerAction = new PlayerActionFactory().forId(pByteArray.getByte());
   	fMoveStack = new FieldCoordinate[pByteArray.getByte()];
   	for (int i = 0; i < fMoveStack.length; i++) {
   		fMoveStack[i] = pByteArray.getFieldCoordinate();

@@ -10,13 +10,16 @@ import java.util.Set;
 
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.GameOption;
+import com.balancedbytes.games.ffb.GameOptionFactory;
 import com.balancedbytes.games.ffb.GameOptionValue;
 import com.balancedbytes.games.ffb.PlayerState;
 import com.balancedbytes.games.ffb.SeriousInjury;
 import com.balancedbytes.games.ffb.Skill;
+import com.balancedbytes.games.ffb.SkillFactory;
 import com.balancedbytes.games.ffb.Sound;
 import com.balancedbytes.games.ffb.model.Animation;
 import com.balancedbytes.games.ffb.model.AnimationType;
+import com.balancedbytes.games.ffb.model.AnimationTypeFactory;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.model.PlayerResult;
@@ -156,7 +159,7 @@ public class ServerCommandHandlerTalk extends ServerCommandHandler {
     if ((commands == null) || (commands.length <= 1)) {
     	return;
     }
-    AnimationType animationType = AnimationType.fromName(commands[1]);
+    AnimationType animationType = new AnimationTypeFactory().forName(commands[1]);
     if ((animationType == null)
     	|| (animationType == AnimationType.PASS)
     	|| (animationType == AnimationType.KICK)
@@ -188,7 +191,7 @@ public class ServerCommandHandlerTalk extends ServerCommandHandler {
   	String talk = pTalkCommand.getTalk();
     String[] commands = talk.split(" +");
     if ((commands != null) && (commands.length > 2)) {
-    	GameOption optionName = GameOption.forName(commands[1]);
+    	GameOption optionName = new GameOptionFactory().forName(commands[1]);
     	if (optionName == null) {
     		return;
     	}
@@ -353,7 +356,7 @@ public class ServerCommandHandlerTalk extends ServerCommandHandler {
     if ((commands == null) || (commands.length <= 3)) {
     	return;
     }
-    Skill skill = Skill.fromName(commands[2].replace('_', ' '));
+    Skill skill = new SkillFactory().forName(commands[2].replace('_', ' '));
     if (skill == null) {
     	return;
     }

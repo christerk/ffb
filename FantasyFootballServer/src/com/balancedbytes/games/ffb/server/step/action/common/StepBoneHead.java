@@ -2,6 +2,7 @@ package com.balancedbytes.games.ffb.server.step.action.common;
 
 import com.balancedbytes.games.ffb.PlayerState;
 import com.balancedbytes.games.ffb.ReRolledAction;
+import com.balancedbytes.games.ffb.ReRolledActionFactory;
 import com.balancedbytes.games.ffb.Skill;
 import com.balancedbytes.games.ffb.Sound;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
@@ -96,7 +97,7 @@ public class StepBoneHead extends AbstractStepWithReRoll {
     }
     if (UtilCards.hasSkill(game, actingPlayer, Skill.BONE_HEAD)) {
       boolean doRoll = true;
-      ReRolledAction reRolledAction = ReRolledAction.fromSkill(Skill.BONE_HEAD); 
+      ReRolledAction reRolledAction = new ReRolledActionFactory().forSkill(Skill.BONE_HEAD); 
       if ((reRolledAction != null) && (reRolledAction == getReRolledAction())) {
         if ((getReRollSource() == null) || !UtilReRoll.useReRoll(this, getReRollSource(), actingPlayer.getPlayer())) {
           doRoll = false;

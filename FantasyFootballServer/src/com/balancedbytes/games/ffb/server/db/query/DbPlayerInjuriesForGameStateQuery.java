@@ -7,6 +7,7 @@ import java.sql.SQLException;
 
 import com.balancedbytes.games.ffb.FantasyFootballException;
 import com.balancedbytes.games.ffb.SeriousInjury;
+import com.balancedbytes.games.ffb.SeriousInjuryFactory;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.server.FantasyFootballServer;
@@ -44,6 +45,7 @@ public class DbPlayerInjuriesForGameStateQuery extends DbStatement {
   public void execute(GameState pGameState) {
     if (pGameState != null) {
       try {
+        SeriousInjuryFactory seriousInjuryFactory = new SeriousInjuryFactory();
         Game game = pGameState.getGame();
         fStatement.setLong(1, pGameState.getId());
         ResultSet resultSet = fStatement.executeQuery();
@@ -52,7 +54,7 @@ public class DbPlayerInjuriesForGameStateQuery extends DbStatement {
           col++;  // gameStateId
           Player player = game.getPlayerById(resultSet.getString(col++));
           if (player != null) {
-            SeriousInjury injury = SeriousInjury.forName(resultSet.getString(col++));
+            SeriousInjury injury = seriousInjuryFactory.forName(resultSet.getString(col++));
             if (injury != null) {
               player.addLastingInjury(injury);
             }

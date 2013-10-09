@@ -10,8 +10,8 @@ import java.util.Date;
 import com.balancedbytes.games.ffb.FantasyFootballException;
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.GameStatus;
-import com.balancedbytes.games.ffb.PlayerAction;
-import com.balancedbytes.games.ffb.TurnMode;
+import com.balancedbytes.games.ffb.PlayerActionFactory;
+import com.balancedbytes.games.ffb.TurnModeFactory;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.server.FantasyFootballServer;
 import com.balancedbytes.games.ffb.server.GameState;
@@ -69,13 +69,13 @@ public class DbGameStatesQuery extends DbStatement {
           game.setFinished(new Date(finished.getTime()));
         }
         game.setHalf(resultSet.getByte(col++));
-        game.setTurnMode(TurnMode.fromId(resultSet.getByte(col++)));
+        game.setTurnMode(new TurnModeFactory().forId(resultSet.getByte(col++)));
         game.setHomePlaying(resultSet.getBoolean(col++));
         game.setHomeFirstOffense(resultSet.getBoolean(col++));
         game.setSetupOffense(resultSet.getBoolean(col++));
         game.setWaitingForOpponent(resultSet.getBoolean(col++));
         game.setDefenderId(resultSet.getString(col++));
-        game.setDefenderAction(PlayerAction.fromId(resultSet.getByte(col++)));
+        game.setDefenderAction(new PlayerActionFactory().forId(resultSet.getByte(col++)));
         int coordinateX = resultSet.getByte(col++);
         int coordinateY = resultSet.getByte(col++);
         if (!resultSet.wasNull()) {
@@ -88,7 +88,7 @@ public class DbGameStatesQuery extends DbStatement {
         game.setTesting(resultSet.getBoolean(col++));
         gameState.setStatus(GameStatus.fromTypeString(resultSet.getString(col++)));
         game.setThrowerId(resultSet.getString(col++));
-        game.setThrowerAction(PlayerAction.fromId(resultSet.getByte(col++)));
+        game.setThrowerAction(new PlayerActionFactory().forId(resultSet.getByte(col++)));
       }
       resultSet.close();
     } catch (SQLException pSqlE) {

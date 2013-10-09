@@ -4,6 +4,7 @@ import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.PlayerAction;
 import com.balancedbytes.games.ffb.PlayerState;
 import com.balancedbytes.games.ffb.ReRolledAction;
+import com.balancedbytes.games.ffb.ReRolledActionFactory;
 import com.balancedbytes.games.ffb.Skill;
 import com.balancedbytes.games.ffb.Sound;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
@@ -100,7 +101,7 @@ public class StepReallyStupid extends AbstractStepWithReRoll {
     }
     if (UtilCards.hasSkill(game, actingPlayer, Skill.REALLY_STUPID)) {
       boolean doRoll = true;
-      ReRolledAction reRolledAction = ReRolledAction.fromSkill(Skill.REALLY_STUPID); 
+      ReRolledAction reRolledAction = new ReRolledActionFactory().forSkill(Skill.REALLY_STUPID); 
       if ((reRolledAction != null) && (reRolledAction == getReRolledAction())) {
         if ((getReRollSource() == null) || !UtilReRoll.useReRoll(this, getReRollSource(), actingPlayer.getPlayer())) {
           doRoll = false;
