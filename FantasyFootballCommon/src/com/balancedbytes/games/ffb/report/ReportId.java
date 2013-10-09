@@ -1,5 +1,8 @@
 package com.balancedbytes.games.ffb.report;
 
+import com.balancedbytes.games.ffb.IEnumWithId;
+import com.balancedbytes.games.ffb.IEnumWithName;
+
 
 
 
@@ -7,7 +10,7 @@ package com.balancedbytes.games.ffb.report;
  * 
  * @author Kalimar
  */
-public enum ReportId {
+public enum ReportId implements IEnumWithId, IEnumWithName {
   
   ALWAYS_HUNGRY_ROLL(1, "alwaysHungryRoll"),
   CATCH_ROLL(2, "catchRoll"),
@@ -105,24 +108,6 @@ public enum ReportId {
 
   public String getName() {
     return fName;
-  }
-  
-  public static ReportId fromId(int pValue) {
-    for (ReportId mode : values()) {
-      if (mode.getId() == pValue) {
-        return mode;
-      }
-    }
-    return null;
-  }
-  
-  public static ReportId fromName(String pName) {
-    for (ReportId mode : values()) {
-      if (mode.getName().equalsIgnoreCase(pName)) {
-        return mode;
-      }
-    }
-    return null;
   }
   
   public IReport createReport() {

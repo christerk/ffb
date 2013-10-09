@@ -8,7 +8,11 @@ import com.balancedbytes.games.ffb.Card;
 import com.balancedbytes.games.ffb.CardFactory;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
+import com.balancedbytes.games.ffb.json.IJsonOption;
+import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.xml.UtilXml;
+import com.eclipsesource.json.JsonObject;
+import com.eclipsesource.json.JsonValue;
 
 
 
@@ -70,13 +74,26 @@ public class ReportCardDeactivated implements IReport {
   }
   
   public int initFrom(ByteArray pByteArray) {
-    ReportId reportId = ReportId.fromId(pByteArray.getSmallInt());
-    if (getId() != reportId) {
-      throw new IllegalStateException("Wrong report id. Expected " + getId().getName() + " received " + ((reportId != null) ? reportId.getName() : "null"));
-    }
+    UtilReport.validateReportId(this, new ReportIdFactory().forId(pByteArray.getSmallInt()));
     int byteArraySerializationVersion = pByteArray.getSmallInt();
     fCard = new CardFactory().forId(pByteArray.getSmallInt());
     return byteArraySerializationVersion;
+  }
+  
+  // JSON serialization
+  
+  public JsonValue toJsonValue() {
+    JsonObject jsonObject = new JsonObject();
+    IJsonOption.REPORT_ID.addTo(jsonObject, getId());
+    IJsonOption.CARD.addTo(jsonObject, fCard);
+    return jsonObject;
+  }
+  
+  public ReportCardDeactivated initFrom(JsonValue pJsonValue) {
+    JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
+    UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(jsonObject));
+    fCard = (Card) IJsonOption.CARD.getFrom(jsonObject);
+    return this;
   }
     
 }

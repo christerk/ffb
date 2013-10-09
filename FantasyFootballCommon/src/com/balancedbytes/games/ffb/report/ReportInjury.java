@@ -270,11 +270,7 @@ public class ReportInjury implements IReport {
   }
   
   public int initFrom(ByteArray pByteArray) {
-    SeriousInjuryFactory seriousInjuryFactory = new SeriousInjuryFactory();
-    ReportId reportId = ReportId.fromId(pByteArray.getSmallInt());
-    if (getId() != reportId) {
-      throw new IllegalStateException("Wrong report id. Expected " + getId().getName() + " received " + ((reportId != null) ? reportId.getName() : "null"));
-    }
+    UtilReport.validateReportId(this, new ReportIdFactory().forId(pByteArray.getSmallInt()));
     int byteArraySerializationVersion = pByteArray.getSmallInt();
     fDefenderId = pByteArray.getString();
     fInjuryType = InjuryType.fromId(pByteArray.getByte());
@@ -290,9 +286,9 @@ public class ReportInjury implements IReport {
     }
     fInjuryRoll = pByteArray.getByteArrayAsIntArray();
     fCasualtyRoll = pByteArray.getByteArrayAsIntArray();
-    fSeriousInjury = seriousInjuryFactory.forId(pByteArray.getByte());
+    fSeriousInjury = new SeriousInjuryFactory().forId(pByteArray.getByte());
     fCasualtyRollDecay = pByteArray.getByteArrayAsIntArray();
-    fSeriousInjuryDecay = seriousInjuryFactory.forId(pByteArray.getByte());
+    fSeriousInjuryDecay = new SeriousInjuryFactory().forId(pByteArray.getByte());
     fInjury = new PlayerState(pByteArray.getSmallInt());
     fInjuryDecay = new PlayerState(pByteArray.getSmallInt());
     fAttackerId = pByteArray.getString();

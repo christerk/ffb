@@ -72,10 +72,7 @@ public class ReportLeader implements IReport {
   }
 
   public int initFrom(ByteArray pByteArray) {
-    ReportId reportId = ReportId.fromId(pByteArray.getSmallInt());
-    if (getId() != reportId) {
-      throw new IllegalStateException("Wrong report id. Expected " + getId().getName() + " received " + ((reportId != null) ? reportId.getName() : "null"));
-    }
+    UtilReport.validateReportId(this, new ReportIdFactory().forId(pByteArray.getSmallInt()));
     int byteArraySerializationVersion = pByteArray.getSmallInt();
     fTeamId = pByteArray.getString();
     fLeaderState = LeaderState.valueOf(pByteArray.getString());

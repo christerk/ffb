@@ -8,6 +8,7 @@ import java.util.List;
 
 import com.balancedbytes.games.ffb.ArmorModifier;
 import com.balancedbytes.games.ffb.BlockResult;
+import com.balancedbytes.games.ffb.BlockResultFactory;
 import com.balancedbytes.games.ffb.CatchModifier;
 import com.balancedbytes.games.ffb.ClientMode;
 import com.balancedbytes.games.ffb.Direction;
@@ -601,13 +602,13 @@ public class StatusReport {
     }
     StringBuilder status = new StringBuilder();
     status.append(" buys ");
-    if (pReport.getCards() == 0) {
+    if (pReport.getNrOfCards() == 0) {
     	status.append("no Cards.");
     } else {
-    	if (pReport.getCards() == 1) {
+    	if (pReport.getNrOfCards() == 1) {
     		status.append("1 Card");
     	} else {
-    		status.append(pReport.getCards()).append(" Cards");
+    		status.append(pReport.getNrOfCards()).append(" Cards");
     	}
     	status.append(" for ").append(StringTool.formatThousands(pReport.getGold())).append(" gold total.");
     }
@@ -2134,11 +2135,12 @@ public class StatusReport {
   }
   
   public void reportBlockRoll(ReportBlockRoll pReport) {
-    if (ArrayTool.isProvided(pReport.getRoll()))// && ((game.isHomePlaying() && game.getTeamHome().getId().equals(pReport.getChoosingTeamId())) || (!game.isHomePlaying() && game.getTeamAway().getId().equals(pReport.getChoosingTeamId())))) {
+    if (ArrayTool.isProvided(pReport.getBlockRoll()))// && ((game.isHomePlaying() && game.getTeamHome().getId().equals(pReport.getChoosingTeamId())) || (!game.isHomePlaying() && game.getTeamAway().getId().equals(pReport.getChoosingTeamId())))) {
     {   StringBuilder status = new StringBuilder();
       status.append("Block Roll");
-      for (int i = 0; i < pReport.getRoll().length; i++) {
-        BlockResult blockResult = BlockResult.fromRoll(pReport.getRoll()[i]);
+      BlockResultFactory blockResultFactory = new BlockResultFactory();
+      for (int i = 0; i < pReport.getBlockRoll().length; i++) {
+        BlockResult blockResult = blockResultFactory.forRoll(pReport.getBlockRoll()[i]);
         status.append(" [ ").append(blockResult.getName()).append(" ]");
       }
       println(getIndent(), TextStyle.ROLL, status.toString());

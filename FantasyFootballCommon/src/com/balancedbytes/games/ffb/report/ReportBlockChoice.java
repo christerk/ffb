@@ -5,9 +5,14 @@ import javax.xml.transform.sax.TransformerHandler;
 import org.xml.sax.helpers.AttributesImpl;
 
 import com.balancedbytes.games.ffb.BlockResult;
+import com.balancedbytes.games.ffb.BlockResultFactory;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
+import com.balancedbytes.games.ffb.json.IJsonOption;
+import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.xml.UtilXml;
+import com.eclipsesource.json.JsonObject;
+import com.eclipsesource.json.JsonValue;
 
 
 
@@ -105,17 +110,38 @@ public class ReportBlockChoice implements IReport {
   }
 
   public int initFrom(ByteArray pByteArray) {
-    ReportId reportId = ReportId.fromId(pByteArray.getSmallInt());
-    if (getId() != reportId) {
-      throw new IllegalStateException("Wrong report id. Expected " + getId().getName() + " received " + ((reportId != null) ? reportId.getName() : "null"));
-    }
+    UtilReport.validateReportId(this, new ReportIdFactory().forId(pByteArray.getSmallInt()));
     int byteArraySerializationVersion = pByteArray.getSmallInt();
     fNrOfDice = pByteArray.getByte();
     fBlockRoll = pByteArray.getByteArrayAsIntArray();
     fDiceIndex = pByteArray.getByte();
-    fBlockResult = BlockResult.fromId(pByteArray.getByte());
+    fBlockResult = new BlockResultFactory().forId(pByteArray.getByte());
     fDefenderId = pByteArray.getString();
     return byteArraySerializationVersion;
+  }
+  
+  // JSON serialization
+  
+  public JsonValue toJsonValue() {
+    JsonObject jsonObject = new JsonObject();
+    IJsonOption.REPORT_ID.addTo(jsonObject, getId());
+    IJsonOption.NR_OF_DICE.addTo(jsonObject, fNrOfDice);
+    IJsonOption.BLOCK_ROLL.addTo(jsonObject, fBlockRoll);
+    IJsonOption.DICE_INDEX.addTo(jsonObject, fDiceIndex);
+    IJsonOption.BLOCK_RESULT.addTo(jsonObject, fBlockResult);
+    IJsonOption.DEFENDER_ID.addTo(jsonObject, fDefenderId);
+    return jsonObject;
+  }
+  
+  public ReportBlockChoice initFrom(JsonValue pJsonValue) {
+    JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
+    UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(jsonObject));
+    fNrOfDice = IJsonOption.NR_OF_DICE.getFrom(jsonObject);
+    fBlockRoll = IJsonOption.BLOCK_ROLL.getFrom(jsonObject);
+    fDiceIndex = IJsonOption.DICE_INDEX.getFrom(jsonObject);
+    fBlockResult = (BlockResult) IJsonOption.BLOCK_RESULT.getFrom(jsonObject);
+    fDefenderId = IJsonOption.DEFENDER_ID.getFrom(jsonObject);
+    return this;
   }
   
 }

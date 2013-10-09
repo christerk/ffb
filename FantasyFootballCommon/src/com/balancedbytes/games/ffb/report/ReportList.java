@@ -116,8 +116,9 @@ public class ReportList implements IByteArraySerializable, IXmlWriteable {
   public int initFrom(ByteArray pByteArray) {
     int byteArraySerializationVersion = pByteArray.getSmallInt();  // byteArraySerializationVersion
     int size = pByteArray.getSmallInt();
+    ReportIdFactory reportIdFactory = new ReportIdFactory();
     for (int i = 0; i < size; i++) {
-      ReportId reportId = ReportId.fromId((pByteArray.getByte(pByteArray.getPosition()) & 0xff) * 256 + (pByteArray.getByte(pByteArray.getPosition() + 1) & 0xff));
+      ReportId reportId = reportIdFactory.forId((pByteArray.getByte(pByteArray.getPosition()) & 0xff) * 256 + (pByteArray.getByte(pByteArray.getPosition() + 1) & 0xff));
       if (reportId != null) {
         IReport report = reportId.createReport();
         report.initFrom(pByteArray);

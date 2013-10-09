@@ -9,7 +9,11 @@ import com.balancedbytes.games.ffb.SeriousInjury;
 import com.balancedbytes.games.ffb.SeriousInjuryFactory;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
+import com.balancedbytes.games.ffb.json.IJsonOption;
+import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.xml.UtilXml;
+import com.eclipsesource.json.JsonObject;
+import com.eclipsesource.json.JsonValue;
 
 
 
@@ -89,15 +93,32 @@ public class ReportApothecaryChoice implements IReport {
   }
   
   public int initFrom(ByteArray pByteArray) {
-    ReportId reportId = ReportId.fromId(pByteArray.getSmallInt());
-    if (getId() != reportId) {
-      throw new IllegalStateException("Wrong report id. Expected " + getId().getName() + " received " + ((reportId != null) ? reportId.getName() : "null"));
-    }
+    UtilReport.validateReportId(this, new ReportIdFactory().forId(pByteArray.getSmallInt()));
     int byteArraySerializationVersion = pByteArray.getSmallInt();
     fPlayerId = pByteArray.getString();
     fPlayerState = new PlayerState(pByteArray.getSmallInt());
     fSeriousInjury = new SeriousInjuryFactory().forId(pByteArray.getByte());
     return byteArraySerializationVersion;
+  }
+  
+  // JSON serialization
+  
+  public JsonValue toJsonValue() {
+    JsonObject jsonObject = new JsonObject();
+    IJsonOption.REPORT_ID.addTo(jsonObject, getId());
+    IJsonOption.PLAYER_ID.addTo(jsonObject, fPlayerId);
+    IJsonOption.PLAYER_STATE.addTo(jsonObject, fPlayerState);
+    IJsonOption.SERIOUS_INJURY.addTo(jsonObject, fSeriousInjury);
+    return jsonObject;
+  }
+  
+  public ReportApothecaryChoice initFrom(JsonValue pJsonValue) {
+    JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
+    UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(jsonObject));
+    fPlayerId = IJsonOption.PLAYER_ID.getFrom(jsonObject);
+    fPlayerState = IJsonOption.PLAYER_STATE.getFrom(jsonObject);
+    fSeriousInjury = (SeriousInjury) IJsonOption.SERIOUS_INJURY.getFrom(jsonObject);
+    return this;
   }
 
 }

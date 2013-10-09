@@ -6,7 +6,11 @@ import org.xml.sax.helpers.AttributesImpl;
 
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
+import com.balancedbytes.games.ffb.json.IJsonOption;
+import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.xml.UtilXml;
+import com.eclipsesource.json.JsonObject;
+import com.eclipsesource.json.JsonValue;
 
 
 
@@ -19,16 +23,16 @@ public class ReportBlockRoll implements IReport {
   private static final String _XML_ATTRIBUTE_ROLL = "roll";
   private static final String _XML_ATTRIBUTE_CHOOSING_TEAM_ID = "choosingTeamId";
   
-  private int[] fRoll;
+  private int[] fBlockRoll;
   private String fChoosingTeamId;
   
   public ReportBlockRoll() {
     super();
   }
 
-  public ReportBlockRoll(String pChoosingTeamId, int[] pRoll) {
+  public ReportBlockRoll(String pChoosingTeamId, int[] pBlockRoll) {
     fChoosingTeamId = pChoosingTeamId;
-    fRoll = pRoll;
+    fBlockRoll = pBlockRoll;
   }
   
   public ReportId getId() {
@@ -39,14 +43,14 @@ public class ReportBlockRoll implements IReport {
     return fChoosingTeamId;
   }
   
-  public int[] getRoll() {
-    return fRoll;
+  public int[] getBlockRoll() {
+    return fBlockRoll;
   }
   
   // transformation
   
   public IReport transform() {
-    return new ReportBlockRoll(getChoosingTeamId(), getRoll());
+    return new ReportBlockRoll(getChoosingTeamId(), getBlockRoll());
   }
   
   // XML serialization
@@ -55,7 +59,7 @@ public class ReportBlockRoll implements IReport {
     AttributesImpl attributes = new AttributesImpl();
     UtilXml.addAttribute(attributes, XML_ATTRIBUTE_ID, getId().getName());
     UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_CHOOSING_TEAM_ID, getChoosingTeamId());
-    UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_ROLL, getRoll());
+    UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_ROLL, getBlockRoll());
     UtilXml.addEmptyElement(pHandler, XML_TAG, attributes);
   }
 
@@ -73,18 +77,33 @@ public class ReportBlockRoll implements IReport {
     pByteList.addSmallInt(getId().getId());
     pByteList.addSmallInt(getByteArraySerializationVersion());
     pByteList.addString(getChoosingTeamId());
-    pByteList.addByteArray(getRoll());
+    pByteList.addByteArray(getBlockRoll());
   }
 
   public int initFrom(ByteArray pByteArray) {
-    ReportId reportId = ReportId.fromId(pByteArray.getSmallInt());
-    if (getId() != reportId) {
-      throw new IllegalStateException("Wrong report id. Expected " + getId().getName() + " received " + ((reportId != null) ? reportId.getName() : "null"));
-    }
+    UtilReport.validateReportId(this, new ReportIdFactory().forId(pByteArray.getSmallInt()));
     int byteArraySerializationVersion = pByteArray.getSmallInt();
     fChoosingTeamId = pByteArray.getString();
-    fRoll = pByteArray.getByteArrayAsIntArray();
+    fBlockRoll = pByteArray.getByteArrayAsIntArray();
     return byteArraySerializationVersion;
+  }
+  
+  // JSON serialization
+  
+  public JsonValue toJsonValue() {
+    JsonObject jsonObject = new JsonObject();
+    IJsonOption.REPORT_ID.addTo(jsonObject, getId());
+    IJsonOption.CHOOSING_TEAM_ID.addTo(jsonObject, fChoosingTeamId);
+    IJsonOption.BLOCK_ROLL.addTo(jsonObject, fBlockRoll);
+    return jsonObject;
+  }
+  
+  public ReportBlockRoll initFrom(JsonValue pJsonValue) {
+    JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
+    UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(jsonObject));
+    fChoosingTeamId = IJsonOption.CHOOSING_TEAM_ID.getFrom(jsonObject);
+    fBlockRoll = IJsonOption.BLOCK_ROLL.getFrom(jsonObject);
+    return this;
   }
     
 }
