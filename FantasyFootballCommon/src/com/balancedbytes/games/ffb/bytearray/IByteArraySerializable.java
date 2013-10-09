@@ -4,6 +4,7 @@ import com.balancedbytes.games.ffb.json.IJsonSerializable;
 
 
 
+
 /**
  * 
  * @author Kalimar

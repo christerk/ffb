@@ -77,7 +77,7 @@ public final class StepWinnings extends AbstractStepWithReRoll {
       	// roll winnings, reroll on a 1 or 2 -->
         GameResult gameResult = game.getGameResult();
         int scoreDiffHome = gameResult.getTeamResultHome().getScore() - gameResult.getTeamResultAway().getScore();
-        if (((scoreDiffHome > 0) && (reportWinnings.getRollHome() < 3)) || ((scoreDiffHome < 0) && (reportWinnings.getRollAway() < 3))) {
+        if (((scoreDiffHome > 0) && (reportWinnings.getWinningsRollHome() < 3)) || ((scoreDiffHome < 0) && (reportWinnings.getWinningsRollAway() < 3))) {
         	reportWinnings = rollWinnings();
         }
         // <--

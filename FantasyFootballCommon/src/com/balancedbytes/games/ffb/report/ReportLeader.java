@@ -7,7 +7,11 @@ import org.xml.sax.helpers.AttributesImpl;
 import com.balancedbytes.games.ffb.LeaderState;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
+import com.balancedbytes.games.ffb.json.IJsonOption;
+import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.xml.UtilXml;
+import com.eclipsesource.json.JsonObject;
+import com.eclipsesource.json.JsonValue;
 
 public class ReportLeader implements IReport {
 
@@ -34,11 +38,11 @@ public class ReportLeader implements IReport {
     return fTeamId;
   }
 
-    public LeaderState getLeaderState() {
-        return fLeaderState;
-    }
+  public LeaderState getLeaderState() {
+    return fLeaderState;
+  }
 
-    // transformation
+  // transformation
 
   public IReport transform() {
     return new ReportLeader(getTeamId(), getLeaderState());
@@ -59,7 +63,7 @@ public class ReportLeader implements IReport {
   }
 
   // ByteArray serialization
-  
+
   public int getByteArraySerializationVersion() {
     return 1;
   }
@@ -78,4 +82,23 @@ public class ReportLeader implements IReport {
     fLeaderState = LeaderState.valueOf(pByteArray.getString());
     return byteArraySerializationVersion;
   }
+  
+  // JSON serialization
+  
+  public JsonValue toJsonValue() {
+    JsonObject jsonObject = new JsonObject();
+    IJsonOption.REPORT_ID.addTo(jsonObject, getId());
+    IJsonOption.TEAM_ID.addTo(jsonObject, fTeamId);
+    IJsonOption.LEADER_STATE.addTo(jsonObject, fLeaderState);
+    return jsonObject;
+  }
+  
+  public ReportLeader initFrom(JsonValue pJsonValue) {
+    JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
+    UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(jsonObject));
+    fTeamId = IJsonOption.TEAM_ID.getFrom(jsonObject);
+    fLeaderState = (LeaderState) IJsonOption.LEADER_STATE.getFrom(jsonObject);
+    return this;
+  }
+  
 }

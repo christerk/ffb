@@ -1,6 +1,7 @@
 package com.balancedbytes.games.ffb.server.step.action.block;
 
 import com.balancedbytes.games.ffb.BlockResult;
+import com.balancedbytes.games.ffb.BlockResultFactory;
 import com.balancedbytes.games.ffb.PlayerAction;
 import com.balancedbytes.games.ffb.ReRolledAction;
 import com.balancedbytes.games.ffb.Skill;
@@ -65,7 +66,7 @@ public class StepBlockRoll extends AbstractStepWithReRoll {
 				case CLIENT_BLOCK_CHOICE:
 			    ClientCommandBlockChoice blockChoiceCommand = (ClientCommandBlockChoice) pNetCommand;
 			    fBlockDiceIndex = blockChoiceCommand.getDiceIndex();
-			    fBlockResult = BlockResult.fromRoll(fBlockRoll[fBlockDiceIndex]);
+			    fBlockResult = new BlockResultFactory().forRoll(fBlockRoll[fBlockDiceIndex]);
 			    commandStatus = StepCommandStatus.EXECUTE_STEP;
 					break;
 				default:
@@ -140,7 +141,7 @@ public class StepBlockRoll extends AbstractStepWithReRoll {
   	fNrOfBlockDice = pByteArray.getByte();
   	fBlockRoll = pByteArray.getByteArrayAsIntArray();
   	fBlockDiceIndex = pByteArray.getByte();
-  	fBlockResult = BlockResult.fromId(pByteArray.getByte());
+  	fBlockResult = new BlockResultFactory().forId(pByteArray.getByte());
   	return byteArraySerializationVersion;
   }
 

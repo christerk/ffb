@@ -6,7 +6,11 @@ import org.xml.sax.helpers.AttributesImpl;
 
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
+import com.balancedbytes.games.ffb.json.IJsonOption;
+import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.xml.UtilXml;
+import com.eclipsesource.json.JsonObject;
+import com.eclipsesource.json.JsonValue;
 
 
 
@@ -93,6 +97,26 @@ public class ReportPilingOn implements IReport {
     fUsed = pByteArray.getBoolean();
     fReRollInjury = pByteArray.getBoolean();
     return byteArraySerializationVersion;
+  }
+  
+  // JSON serialization
+  
+  public JsonValue toJsonValue() {
+    JsonObject jsonObject = new JsonObject();
+    IJsonOption.REPORT_ID.addTo(jsonObject, getId());
+    IJsonOption.PLAYER_ID.addTo(jsonObject, fPlayerId);
+    IJsonOption.USED.addTo(jsonObject, fUsed);
+    IJsonOption.RE_ROLL_INJURY.addTo(jsonObject, fReRollInjury);
+    return jsonObject;
+  }
+  
+  public ReportPilingOn initFrom(JsonValue pJsonValue) {
+    JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
+    UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(jsonObject));
+    fPlayerId = IJsonOption.PLAYER_ID.getFrom(jsonObject);
+    fUsed = IJsonOption.USED.getFrom(jsonObject);
+    fReRollInjury = IJsonOption.RE_ROLL_INJURY.getFrom(jsonObject);
+    return this;
   }
       
 }

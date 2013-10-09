@@ -8,7 +8,11 @@ import com.balancedbytes.games.ffb.SpecialEffect;
 import com.balancedbytes.games.ffb.SpecialEffectFactory;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
+import com.balancedbytes.games.ffb.json.IJsonOption;
+import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.xml.UtilXml;
+import com.eclipsesource.json.JsonObject;
+import com.eclipsesource.json.JsonValue;
 
 /**
  * 
@@ -102,6 +106,28 @@ public class ReportSpecialEffectRoll implements IReport {
     fRoll = pByteArray.getByte();
     fSuccessful = pByteArray.getBoolean();
     return byteArraySerializationVersion;
+  }
+  
+  // JSON serialization
+  
+  public JsonValue toJsonValue() {
+    JsonObject jsonObject = new JsonObject();
+    IJsonOption.REPORT_ID.addTo(jsonObject, getId());
+    IJsonOption.SPECIAL_EFFECT.addTo(jsonObject, fSpecialEffect);
+    IJsonOption.PLAYER_ID.addTo(jsonObject, fPlayerId);
+    IJsonOption.ROLL.addTo(jsonObject, fRoll);
+    IJsonOption.SUCCESSFUL.addTo(jsonObject, fSuccessful);
+    return jsonObject;
+  }
+  
+  public ReportSpecialEffectRoll initFrom(JsonValue pJsonValue) {
+    JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
+    UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(jsonObject));
+    fSpecialEffect = (SpecialEffect) IJsonOption.SPECIAL_EFFECT.getFrom(jsonObject);
+    fPlayerId = IJsonOption.PLAYER_ID.getFrom(jsonObject);
+    fRoll = IJsonOption.ROLL.getFrom(jsonObject);
+    fSuccessful = IJsonOption.SUCCESSFUL.getFrom(jsonObject);
+    return this;
   }
 
 }

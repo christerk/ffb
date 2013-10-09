@@ -181,7 +181,7 @@ public class StatusReport {
       status.append("failed");
     }
     println(ParagraphStyle.SPACE_ABOVE_BELOW, TextStyle.BOLD, status.toString());
-    println(getIndent() + 1, pReport.getStatus());
+    println(getIndent() + 1, pReport.getUploadStatus());
   }
 
   public void reportGameName(String pGameName) {
@@ -207,14 +207,14 @@ public class StatusReport {
 
   public void reportInducement(ReportInducement pReport) {
     Game game = getClient().getGame();
-    if (StringTool.isProvided(pReport.getTeamId()) && (pReport.getType() != null)) {
+    if (StringTool.isProvided(pReport.getTeamId()) && (pReport.getInducementType() != null)) {
       if (pReport.getTeamId().equals(game.getTeamHome().getId())) {
         print(getIndent(), TextStyle.HOME, game.getTeamHome().getName());
       } else {
         print(getIndent(), TextStyle.AWAY, game.getTeamAway().getName());
       }
       StringBuilder status = new StringBuilder();      
-      switch (pReport.getType()) {
+      switch (pReport.getInducementType()) {
         case EXTRA_TEAM_TRAINING:
           print(getIndent(), " use ");
           print(getIndent(), TextStyle.BOLD, "Extra Team Training");
@@ -254,7 +254,7 @@ public class StatusReport {
   public void reportMasterChef(ReportMasterChefRoll pReport) {
     Game game = getClient().getGame();
     StringBuilder status = new StringBuilder();
-    int[] roll = pReport.getRoll();
+    int[] roll = pReport.getMasterChefRoll();
     status.append("Master Chef Roll [ ").append(roll[0]).append(" ][ ").append(roll[1]).append(" ][ ").append(roll[2]).append(" ]");
     println(getIndent(), TextStyle.ROLL, status.toString());
     status = new StringBuilder();
@@ -557,29 +557,29 @@ public class StatusReport {
     }
     StringBuilder status = new StringBuilder();
     status.append(" buys ");
-    if ((pReport.getInducements() == 0) && (pReport.getStars() == 0) && (pReport.getMercenaries() == 0)) {
+    if ((pReport.getNrOfInducements() == 0) && (pReport.getNrOfStars() == 0) && (pReport.getNrOfMercenaries() == 0)) {
     	status.append("no Inducements.");
     } else {
     	List<String> itemList = new ArrayList<String>();
-    	if (pReport.getInducements() > 0) {
-    		if (pReport.getInducements() == 1) {
+    	if (pReport.getNrOfInducements() > 0) {
+    		if (pReport.getNrOfInducements() == 1) {
     			itemList.add("1 Inducement");
     		} else {
-    			itemList.add(StringTool.bind("$1 Inducements", pReport.getInducements()));
+    			itemList.add(StringTool.bind("$1 Inducements", pReport.getNrOfInducements()));
     		}
     	}
-    	if (pReport.getStars() > 0) {
-    		if (pReport.getStars() == 1) {
+    	if (pReport.getNrOfStars() > 0) {
+    		if (pReport.getNrOfStars() == 1) {
     			itemList.add("1 Star");
     		} else {
-    			itemList.add(StringTool.bind("$1 Stars", pReport.getStars()));
+    			itemList.add(StringTool.bind("$1 Stars", pReport.getNrOfStars()));
     		}
     	}
-    	if (pReport.getMercenaries() > 0) {
-    		if (pReport.getMercenaries() == 1) {
+    	if (pReport.getNrOfMercenaries() > 0) {
+    		if (pReport.getNrOfMercenaries() == 1) {
     			itemList.add("1 Mercenary");
     		} else {
-    			itemList.add(StringTool.bind("$1 Mercenaries", pReport.getMercenaries()));
+    			itemList.add(StringTool.bind("$1 Mercenaries", pReport.getNrOfMercenaries()));
     		}
     	}
     	status.append(StringTool.buildEnumeration(itemList.toArray(new String[itemList.size()])));
@@ -1690,7 +1690,7 @@ public class StatusReport {
   }
 
   public void reportWeather(ReportWeather pReport) {
-    int[] roll = pReport.getRoll();
+    int[] roll = pReport.getWeatherRoll();
     StringBuilder status = new StringBuilder();
     status.append("Weather Roll [ ").append(roll[0]).append(" ][ ").append(roll[1]).append(" ] ");
     println(getIndent(), TextStyle.ROLL, status.toString());
@@ -1879,7 +1879,7 @@ public class StatusReport {
 
     println(getIndent(), TextStyle.BOLD, "Most Valuable Players");
     
-    for (String playerId : pReport.getHomePlayerIds()) {
+    for (String playerId : pReport.getPlayerIdsHome()) {
       Player player = game.getPlayerById(playerId);
       print(getIndent() + 1, TextStyle.NONE, "The jury voted ");
       print(getIndent() + 1, TextStyle.HOME, player.getName());
@@ -1888,7 +1888,7 @@ public class StatusReport {
       println(getIndent() + 1, TextStyle.NONE, " team.");
     }
 
-    for (String playerId : pReport.getAwayPlayerIds()) {
+    for (String playerId : pReport.getPlayerIdsAway()) {
       Player player = game.getPlayerById(playerId);
       print(getIndent() + 1, TextStyle.NONE, "The jury voted ");
       print(getIndent() + 1, TextStyle.AWAY, player.getName());
@@ -1921,20 +1921,20 @@ public class StatusReport {
   public void reportWinningsRoll(ReportWinningsRoll pReport) {
     
     Game game = getClient().getGame();
-    if ((pReport.getRollAway() == 0) && (pReport.getRollHome() > 0)) {
+    if ((pReport.getWinningsRollAway() == 0) && (pReport.getWinningsRollHome() > 0)) {
       print(getIndent(), TextStyle.NONE, "Coach ");
       print(getIndent(), TextStyle.HOME, game.getTeamHome().getCoach());
       println(getIndent(), TextStyle.NONE, " re-rolls winnings.");
     }
-    if ((pReport.getRollHome() == 0) && (pReport.getRollAway() > 0)) {
+    if ((pReport.getWinningsRollHome() == 0) && (pReport.getWinningsRollAway() > 0)) {
       print(getIndent(), TextStyle.NONE, "Coach ");
       print(getIndent(), TextStyle.AWAY, game.getTeamAway().getCoach());
       println(getIndent(), TextStyle.NONE, " re-rolls winnings.");
     }
     
-    if (pReport.getRollHome() > 0) {
+    if (pReport.getWinningsRollHome() > 0) {
       StringBuilder status = new StringBuilder();
-      status.append("Winnings Roll Home Team [ ").append(pReport.getRollHome()).append(" ]");
+      status.append("Winnings Roll Home Team [ ").append(pReport.getWinningsRollHome()).append(" ]");
       println(getIndent(), TextStyle.ROLL, status.toString());
       print(getIndent() + 1, TextStyle.HOME, game.getTeamHome().getName());
       status = new StringBuilder();
@@ -1942,9 +1942,9 @@ public class StatusReport {
       println(getIndent() + 1, TextStyle.NONE, status.toString());
     }
     
-    if (pReport.getRollAway() > 0) {
+    if (pReport.getWinningsRollAway() > 0) {
       StringBuilder status = new StringBuilder();
-      status.append("Winnings Roll Away Team [ ").append(pReport.getRollAway()).append(" ]");
+      status.append("Winnings Roll Away Team [ ").append(pReport.getWinningsRollAway()).append(" ]");
       println(getIndent(), TextStyle.ROLL, status.toString());
       print(getIndent() + 1, TextStyle.AWAY, game.getTeamAway().getName());
       status = new StringBuilder();
@@ -1952,7 +1952,7 @@ public class StatusReport {
       println(getIndent() + 1, TextStyle.NONE, status.toString());
     }
     
-    if ((pReport.getRollHome() == 0) && (pReport.getRollAway() == 0)) {
+    if ((pReport.getWinningsRollHome() == 0) && (pReport.getWinningsRollAway() == 0)) {
       if (pReport.getWinningsHome() > 0) {
         println(getIndent(), TextStyle.BOLD, "Winnings: Concession of Away Team");
         print(getIndent() + 1, TextStyle.HOME, game.getTeamHome().getName());
@@ -1980,9 +1980,9 @@ public class StatusReport {
     Game game = getClient().getGame();
 
     StringBuilder status = new StringBuilder();
-    if (ArrayTool.isProvided(pReport.getRollHome())) {
+    if (ArrayTool.isProvided(pReport.getFanFactorRollHome())) {
       status.append("Fan Factor Roll Home Team ");
-      int[] fanFactorRollHome = pReport.getRollHome();
+      int[] fanFactorRollHome = pReport.getFanFactorRollHome();
       for (int i = 0; i < fanFactorRollHome.length; i++) {
         status.append("[ ").append(fanFactorRollHome[i]).append(" ]");
       }
@@ -1992,26 +1992,26 @@ public class StatusReport {
     println(getIndent(), TextStyle.ROLL, status.toString());
     status = new StringBuilder();
     status.append("FanFactor ").append(game.getTeamHome().getFanFactor());
-    if (pReport.getModifierHome() < 0) {
-      status.append(" - ").append(Math.abs(pReport.getModifierHome()));
+    if (pReport.getFanFactorModifierHome() < 0) {
+      status.append(" - ").append(Math.abs(pReport.getFanFactorModifierHome()));
     } else {
-      status.append(" + ").append(pReport.getModifierHome());
+      status.append(" + ").append(pReport.getFanFactorModifierHome());
     }
-    status.append(" = ").append(game.getTeamHome().getFanFactor() + pReport.getModifierHome());
+    status.append(" = ").append(game.getTeamHome().getFanFactor() + pReport.getFanFactorModifierHome());
     println(getIndent() + 1, TextStyle.NONE, status.toString());
     print(getIndent() + 1, TextStyle.HOME, game.getTeamHome().getName());
-    if (pReport.getModifierHome() > 0) {
+    if (pReport.getFanFactorModifierHome() > 0) {
       println(getIndent() + 1, TextStyle.NONE, " win some new fans.");
-    } else if (pReport.getModifierHome() < 0) {
+    } else if (pReport.getFanFactorModifierHome() < 0) {
       println(getIndent() + 1, TextStyle.NONE, " lose some fans.");
     } else {
       println(getIndent() + 1, TextStyle.NONE, " keep their fans.");
     }
       
     status = new StringBuilder();
-    if (ArrayTool.isProvided(pReport.getRollAway())) {
+    if (ArrayTool.isProvided(pReport.getFanFactorRollAway())) {
       status.append("Fan Factor Roll Away Team ");
-      int[] fanFactorRollAway = pReport.getRollAway();
+      int[] fanFactorRollAway = pReport.getFanFactorRollAway();
       for (int i = 0; i < fanFactorRollAway.length; i++) {
         status.append("[ ").append(fanFactorRollAway[i]).append(" ]");
       }
@@ -2021,17 +2021,17 @@ public class StatusReport {
     println(getIndent(), TextStyle.ROLL, status.toString());
     status = new StringBuilder();
     status.append("FanFactor ").append(game.getTeamAway().getFanFactor());
-    if (pReport.getModifierAway() < 0) {
-      status.append(" - ").append(Math.abs(pReport.getModifierAway()));
+    if (pReport.getFanFactorModifierAway() < 0) {
+      status.append(" - ").append(Math.abs(pReport.getFanFactorModifierAway()));
     } else {
-      status.append(" + ").append(pReport.getModifierAway());
+      status.append(" + ").append(pReport.getFanFactorModifierAway());
     }
-    status.append(" = ").append(game.getTeamAway().getFanFactor() + pReport.getModifierAway());
+    status.append(" = ").append(game.getTeamAway().getFanFactor() + pReport.getFanFactorModifierAway());
     println(getIndent() + 1, TextStyle.NONE, status.toString());
     print(getIndent() + 1, TextStyle.AWAY, game.getTeamAway().getName());
-    if (pReport.getModifierAway() > 0) {
+    if (pReport.getFanFactorModifierAway() > 0) {
       println(getIndent() + 1, TextStyle.NONE, " win some new fans.");
-    } else if (pReport.getModifierAway() < 0) {
+    } else if (pReport.getFanFactorModifierAway() < 0) {
       println(getIndent() + 1, TextStyle.NONE, " lose some fans.");
     } else {
       println(getIndent() + 1, TextStyle.NONE, " keep their fans.");

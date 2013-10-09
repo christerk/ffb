@@ -6,7 +6,11 @@ import org.xml.sax.helpers.AttributesImpl;
 
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
+import com.balancedbytes.games.ffb.json.IJsonOption;
+import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.xml.UtilXml;
+import com.eclipsesource.json.JsonObject;
+import com.eclipsesource.json.JsonValue;
 
 /**
  * 
@@ -80,6 +84,24 @@ public class ReportPassBlock implements IReport {
     fTeamId = pByteArray.getString();
     fPassBlockAvailable = pByteArray.getBoolean();
     return byteArraySerializationVersion;
+  }
+  
+  // JSON serialization
+  
+  public JsonValue toJsonValue() {
+    JsonObject jsonObject = new JsonObject();
+    IJsonOption.REPORT_ID.addTo(jsonObject, getId());
+    IJsonOption.TEAM_ID.addTo(jsonObject, fTeamId);
+    IJsonOption.PASS_BLOCK_AVAILABLE.addTo(jsonObject, fPassBlockAvailable);
+    return jsonObject;
+  }
+  
+  public ReportPassBlock initFrom(JsonValue pJsonValue) {
+    JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
+    UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(jsonObject));
+    fTeamId = IJsonOption.TEAM_ID.getFrom(jsonObject);
+    fPassBlockAvailable = IJsonOption.PASS_BLOCK_AVAILABLE.getFrom(jsonObject);
+    return this;
   }
 
 }

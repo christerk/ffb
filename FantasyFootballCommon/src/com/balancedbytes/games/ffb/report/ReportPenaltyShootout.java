@@ -6,7 +6,11 @@ import org.xml.sax.helpers.AttributesImpl;
 
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
+import com.balancedbytes.games.ffb.json.IJsonOption;
+import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.xml.UtilXml;
+import com.eclipsesource.json.JsonObject;
+import com.eclipsesource.json.JsonValue;
 
 
 
@@ -102,6 +106,28 @@ public class ReportPenaltyShootout implements IReport {
     fRollAway = pByteArray.getByte();
     fReRollsLeftAway = pByteArray.getByte();
     return byteArraySerializationVersion;
+  }
+  
+  // JSON serialization
+  
+  public JsonValue toJsonValue() {
+    JsonObject jsonObject = new JsonObject();
+    IJsonOption.REPORT_ID.addTo(jsonObject, getId());
+    IJsonOption.ROLL_HOME.addTo(jsonObject, fRollHome);
+    IJsonOption.RE_ROLLS_LEFT_HOME.addTo(jsonObject, fReRollsLeftHome);
+    IJsonOption.ROLL_AWAY.addTo(jsonObject, fRollAway);
+    IJsonOption.RE_ROLLS_LEFT_AWAY.addTo(jsonObject, fReRollsLeftAway);
+    return jsonObject;
+  }
+  
+  public ReportPenaltyShootout initFrom(JsonValue pJsonValue) {
+    JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
+    UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(jsonObject));
+    fRollHome = IJsonOption.ROLL_HOME.getFrom(jsonObject);
+    fReRollsLeftHome = IJsonOption.RE_ROLLS_LEFT_HOME.getFrom(jsonObject);
+    fRollAway = IJsonOption.ROLL_AWAY.getFrom(jsonObject);
+    fReRollsLeftAway = IJsonOption.RE_ROLLS_LEFT_AWAY.getFrom(jsonObject);
+    return this;
   }
     
 }

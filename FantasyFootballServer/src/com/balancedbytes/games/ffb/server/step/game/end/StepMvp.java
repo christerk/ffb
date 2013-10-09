@@ -57,14 +57,14 @@ public final class StepMvp extends AbstractStep {
       Player mvpHome = getGameState().getDiceRoller().randomPlayer(playersForMvp);
       PlayerResult playerResultHome = gameResult.getPlayerResult(mvpHome);
       playerResultHome.setPlayerAwards(playerResultHome.getPlayerAwards() + 1);
-      mvpReport.addHomePlayerId(mvpHome.getId());
+      mvpReport.addPlayerIdHome(mvpHome.getId());
     }
     for (int i = 0; i < nrOfAwayMvps; i++) {
       Player[] playersForMvp = findPlayersForMvp(game.getTeamAway());
       Player mvpAway = getGameState().getDiceRoller().randomPlayer(playersForMvp);
       PlayerResult playerResultAway = gameResult.getPlayerResult(mvpAway);
       playerResultAway.setPlayerAwards(playerResultAway.getPlayerAwards() + 1);
-      mvpReport.addAwayPlayerId(mvpAway.getId());
+      mvpReport.addPlayerIdAway(mvpAway.getId());
     }
 
     getResult().addReport(mvpReport);

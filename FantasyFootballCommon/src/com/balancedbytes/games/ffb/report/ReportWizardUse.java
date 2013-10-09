@@ -8,7 +8,11 @@ import com.balancedbytes.games.ffb.SpecialEffect;
 import com.balancedbytes.games.ffb.SpecialEffectFactory;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
+import com.balancedbytes.games.ffb.json.IJsonOption;
+import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.xml.UtilXml;
+import com.eclipsesource.json.JsonObject;
+import com.eclipsesource.json.JsonValue;
 
 
 
@@ -84,6 +88,24 @@ public class ReportWizardUse implements IReport {
     fTeamId = pByteArray.getString();
     fWizardSpell = new SpecialEffectFactory().forId(pByteArray.getByte());
     return byteArraySerializationVersion;
+  }
+  
+  // JSON serialization
+  
+  public JsonValue toJsonValue() {
+    JsonObject jsonObject = new JsonObject();
+    IJsonOption.REPORT_ID.addTo(jsonObject, getId());
+    IJsonOption.TEAM_ID.addTo(jsonObject, fTeamId);
+    IJsonOption.WIZARD_SPELL.addTo(jsonObject, fWizardSpell);
+    return jsonObject;
+  }
+  
+  public ReportWizardUse initFrom(JsonValue pJsonValue) {
+    JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
+    UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(jsonObject));
+    fTeamId = IJsonOption.TEAM_ID.getFrom(jsonObject);
+    fWizardSpell = (SpecialEffect) IJsonOption.WIZARD_SPELL.getFrom(jsonObject);
+    return this;
   }
     
 }

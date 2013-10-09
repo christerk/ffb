@@ -6,7 +6,11 @@ import org.xml.sax.helpers.AttributesImpl;
 
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
+import com.balancedbytes.games.ffb.json.IJsonOption;
+import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.xml.UtilXml;
+import com.eclipsesource.json.JsonObject;
+import com.eclipsesource.json.JsonValue;
 
 
 
@@ -23,9 +27,9 @@ public class ReportInducementsBought implements IReport {
   private static final String _XML_ATTRIBUTE_GOLD = "gold";
 
   private String fTeamId;
-  private int fInducements;
-  private int fStars;
-  private int fMercenaries;
+  private int fNrOfInducements;
+  private int fNrOfStars;
+  private int fNrOfMercenaries;
   private int fGold;
   
   public ReportInducementsBought() {
@@ -34,9 +38,9 @@ public class ReportInducementsBought implements IReport {
 
   public ReportInducementsBought(String pTeamId, int pInducements, int pStars, int pMercenaries, int pGold) {
   	fTeamId = pTeamId;
-  	fInducements = pInducements;
-  	fStars = pStars;
-  	fMercenaries = pMercenaries;
+  	fNrOfInducements = pInducements;
+  	fNrOfStars = pStars;
+  	fNrOfMercenaries = pMercenaries;
   	fGold = pGold;
   }
   
@@ -48,16 +52,16 @@ public class ReportInducementsBought implements IReport {
 	  return fTeamId;
   }
   
-  public int getInducements() {
-	  return fInducements;
+  public int getNrOfInducements() {
+	  return fNrOfInducements;
   }
   
-  public int getStars() {
-	  return fStars;
+  public int getNrOfStars() {
+	  return fNrOfStars;
   }
   
-  public int getMercenaries() {
-	  return fMercenaries;
+  public int getNrOfMercenaries() {
+	  return fNrOfMercenaries;
   }
   
   public int getGold() {
@@ -67,7 +71,7 @@ public class ReportInducementsBought implements IReport {
   // transformation
   
   public IReport transform() {
-    return new ReportInducementsBought(getTeamId(), getInducements(), getStars(), getMercenaries(), getGold());
+    return new ReportInducementsBought(getTeamId(), getNrOfInducements(), getNrOfStars(), getNrOfMercenaries(), getGold());
   }
   
   // XML serialization
@@ -76,9 +80,9 @@ public class ReportInducementsBought implements IReport {
     AttributesImpl attributes = new AttributesImpl();
     UtilXml.addAttribute(attributes, XML_ATTRIBUTE_ID, getId().getName());
     UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_TEAM_ID, getTeamId());
-    UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_INDUCEMENTS, getInducements());
-    UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_STARS, getStars());
-    UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_MERCENARIES, getMercenaries());
+    UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_INDUCEMENTS, getNrOfInducements());
+    UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_STARS, getNrOfStars());
+    UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_MERCENARIES, getNrOfMercenaries());
     UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_GOLD, getGold());
     UtilXml.addEmptyElement(pHandler, XML_TAG, attributes);
   }
@@ -97,9 +101,9 @@ public class ReportInducementsBought implements IReport {
     pByteList.addSmallInt(getId().getId());
     pByteList.addSmallInt(getByteArraySerializationVersion());
     pByteList.addString(getTeamId());
-    pByteList.addByte((byte) getInducements());
-    pByteList.addByte((byte) getStars());
-    pByteList.addByte((byte) getMercenaries());
+    pByteList.addByte((byte) getNrOfInducements());
+    pByteList.addByte((byte) getNrOfStars());
+    pByteList.addByte((byte) getNrOfMercenaries());
     pByteList.addInt(getGold());
   }
   
@@ -107,11 +111,34 @@ public class ReportInducementsBought implements IReport {
     UtilReport.validateReportId(this, new ReportIdFactory().forId(pByteArray.getSmallInt()));
     int byteArraySerializationVersion = pByteArray.getSmallInt();
     fTeamId = pByteArray.getString();
-    fInducements = pByteArray.getByte();
-    fStars = pByteArray.getByte();
-    fMercenaries = pByteArray.getByte();
+    fNrOfInducements = pByteArray.getByte();
+    fNrOfStars = pByteArray.getByte();
+    fNrOfMercenaries = pByteArray.getByte();
     fGold = pByteArray.getInt();
     return byteArraySerializationVersion;
   }
+  
+  // JSON serialization
+  
+  public JsonValue toJsonValue() {
+    JsonObject jsonObject = new JsonObject();
+    IJsonOption.TEAM_ID.addTo(jsonObject, fTeamId);
+    IJsonOption.NR_OF_INDUCEMENTS.addTo(jsonObject, fNrOfInducements);
+    IJsonOption.NR_OF_STARS.addTo(jsonObject, fNrOfStars);
+    IJsonOption.NR_OF_MERCENARIES.addTo(jsonObject, fNrOfMercenaries);
+    IJsonOption.GOLD.addTo(jsonObject, fGold);
+    return jsonObject;
+  }
+  
+  public ReportInducementsBought initFrom(JsonValue pJsonValue) {
+    JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
+    UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(jsonObject));
+    fTeamId = IJsonOption.TEAM_ID.getFrom(jsonObject);
+    fNrOfInducements = IJsonOption.NR_OF_INDUCEMENTS.getFrom(jsonObject);
+    fNrOfStars = IJsonOption.NR_OF_STARS.getFrom(jsonObject);
+    fNrOfMercenaries = IJsonOption.NR_OF_MERCENARIES.getFrom(jsonObject);
+    fGold = IJsonOption.GOLD.getFrom(jsonObject);
+    return this;
+  }   
     
 }

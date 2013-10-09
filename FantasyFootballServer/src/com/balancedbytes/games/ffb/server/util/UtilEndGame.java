@@ -67,7 +67,7 @@ public class UtilEndGame {
         mvpHome = pGameState.getDiceRoller().randomPlayer(playersForMvp);
         playerResultHome = gameResult.getPlayerResult(mvpHome);
         playerResultHome.setPlayerAwards(playerResultHome.getPlayerAwards() + 1);
-        mvpReport.addHomePlayerId(mvpHome.getId());
+        mvpReport.addPlayerIdHome(mvpHome.getId());
       } catch (Exception pAnyException) {
         debugMvp(pGameState, pAnyException, game.getTeamHome(), playersForMvp, mvpHome, playerResultHome);
       }
@@ -81,7 +81,7 @@ public class UtilEndGame {
         mvpAway = pGameState.getDiceRoller().randomPlayer(playersForMvp);
         playerResultAway = gameResult.getPlayerResult(mvpAway);
         playerResultAway.setPlayerAwards(playerResultAway.getPlayerAwards() + 1);
-        mvpReport.addAwayPlayerId(mvpAway.getId());
+        mvpReport.addPlayerIdAway(mvpAway.getId());
       } catch (Exception pAnyException) {
         debugMvp(pGameState, pAnyException, game.getTeamHome(), playersForMvp, mvpAway, playerResultAway);
       }

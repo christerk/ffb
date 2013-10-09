@@ -6,7 +6,11 @@ import org.xml.sax.helpers.AttributesImpl;
 
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
+import com.balancedbytes.games.ffb.json.IJsonOption;
+import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.xml.UtilXml;
+import com.eclipsesource.json.JsonObject;
+import com.eclipsesource.json.JsonValue;
 
 
 
@@ -83,6 +87,24 @@ public class ReportKickoffRiot implements IReport {
     fRoll = pByteArray.getByte();
     fTurnModifier = pByteArray.getByte();
     return byteArraySerializationVersion;
+  }
+  
+  // JSON serialization
+  
+  public JsonValue toJsonValue() {
+    JsonObject jsonObject = new JsonObject();
+    IJsonOption.REPORT_ID.addTo(jsonObject, getId());
+    IJsonOption.ROLL.addTo(jsonObject, fRoll);
+    IJsonOption.TURN_MODIFIER.addTo(jsonObject, fTurnModifier);
+    return jsonObject;
+  }
+  
+  public ReportKickoffRiot initFrom(JsonValue pJsonValue) {
+    JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
+    UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(jsonObject));
+    fRoll = IJsonOption.ROLL.getFrom(jsonObject);
+    fTurnModifier = IJsonOption.TURN_MODIFIER.getFrom(jsonObject);
+    return this;
   }
     
 }

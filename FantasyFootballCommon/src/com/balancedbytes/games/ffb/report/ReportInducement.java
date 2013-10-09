@@ -8,7 +8,11 @@ import com.balancedbytes.games.ffb.InducementType;
 import com.balancedbytes.games.ffb.InducementTypeFactory;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
+import com.balancedbytes.games.ffb.json.IJsonOption;
+import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.xml.UtilXml;
+import com.eclipsesource.json.JsonObject;
+import com.eclipsesource.json.JsonValue;
 
 /**
  * 
@@ -21,7 +25,7 @@ public class ReportInducement implements IReport {
   private static final String _XML_ATTRIBUTE_VALUE = "value";
 
   private String fTeamId;
-  private InducementType fType;
+  private InducementType fInducementType;
   private int fValue;
 
   public ReportInducement() {
@@ -30,7 +34,7 @@ public class ReportInducement implements IReport {
 
   public ReportInducement(String pTeamId, InducementType pType, int pValue) {
     fTeamId = pTeamId;
-    fType = pType;
+    fInducementType = pType;
     fValue = pValue;
   }
 
@@ -42,8 +46,8 @@ public class ReportInducement implements IReport {
     return fTeamId;
   }
   
-  public InducementType getType() {
-    return fType;
+  public InducementType getInducementType() {
+    return fInducementType;
   }
   
   public int getValue() {
@@ -53,7 +57,7 @@ public class ReportInducement implements IReport {
   // transformation
 
   public IReport transform() {
-    return new ReportInducement(getTeamId(), getType(), getValue());
+    return new ReportInducement(getTeamId(), getInducementType(), getValue());
   }
 
   // XML serialization
@@ -62,7 +66,7 @@ public class ReportInducement implements IReport {
     AttributesImpl attributes = new AttributesImpl();
     UtilXml.addAttribute(attributes, XML_ATTRIBUTE_ID, getId().getName());
     UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_TEAM_ID, getTeamId());
-    UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_TYPE, (getType() != null) ? getType().getName() : null);
+    UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_TYPE, (getInducementType() != null) ? getInducementType().getName() : null);
     UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_VALUE, getValue());
     UtilXml.addEmptyElement(pHandler, XML_TAG, attributes);
   }
@@ -81,7 +85,7 @@ public class ReportInducement implements IReport {
     pByteList.addSmallInt(getId().getId());
     pByteList.addSmallInt(getByteArraySerializationVersion());
     pByteList.addString(getTeamId());
-    pByteList.addByte((byte) ((getType() != null) ? getType().getId() : 0));
+    pByteList.addByte((byte) ((getInducementType() != null) ? getInducementType().getId() : 0));
     pByteList.addByte((byte) getValue());
   }
 
@@ -89,9 +93,29 @@ public class ReportInducement implements IReport {
     UtilReport.validateReportId(this, new ReportIdFactory().forId(pByteArray.getSmallInt()));
     int byteArraySerializationVersion = pByteArray.getSmallInt();
     fTeamId = pByteArray.getString();
-    fType = new InducementTypeFactory().forId(pByteArray.getByte());
+    fInducementType = new InducementTypeFactory().forId(pByteArray.getByte());
     fValue = pByteArray.getByte();
     return byteArraySerializationVersion;
+  }
+  
+  // JSON serialization
+  
+  public JsonValue toJsonValue() {
+    JsonObject jsonObject = new JsonObject();
+    IJsonOption.REPORT_ID.addTo(jsonObject, getId());
+    IJsonOption.TEAM_ID.addTo(jsonObject, fTeamId);
+    IJsonOption.INDUCEMENT_TYPE.addTo(jsonObject, fInducementType);
+    IJsonOption.VALUE.addTo(jsonObject, fValue);
+    return jsonObject;
+  }
+  
+  public ReportInducement initFrom(JsonValue pJsonValue) {
+    JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
+    UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(jsonObject));
+    fTeamId = IJsonOption.TEAM_ID.getFrom(jsonObject);
+    fInducementType = (InducementType) IJsonOption.INDUCEMENT_TYPE.getFrom(jsonObject);
+    fValue = IJsonOption.VALUE.getFrom(jsonObject);
+    return this;
   }
 
 }

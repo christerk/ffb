@@ -8,7 +8,11 @@ import com.balancedbytes.games.ffb.Direction;
 import com.balancedbytes.games.ffb.DirectionFactory;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
+import com.balancedbytes.games.ffb.json.IJsonOption;
+import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.xml.UtilXml;
+import com.eclipsesource.json.JsonObject;
+import com.eclipsesource.json.JsonValue;
 
 
 /**
@@ -93,6 +97,26 @@ public class ReportThrowIn implements IReport {
     fDirectionRoll = pByteArray.getByte();
     fDistanceRoll = pByteArray.getByteArrayAsIntArray();
     return byteArraySerializationVersion;
+  }
+  
+  // JSON serialization
+  
+  public JsonValue toJsonValue() {
+    JsonObject jsonObject = new JsonObject();
+    IJsonOption.REPORT_ID.addTo(jsonObject, getId());
+    IJsonOption.DIRECTION.addTo(jsonObject, fDirection);
+    IJsonOption.DIRECTION_ROLL.addTo(jsonObject, fDirectionRoll);
+    IJsonOption.DISTANCE_ROLL.addTo(jsonObject, fDistanceRoll);
+    return jsonObject;
+  }
+  
+  public ReportThrowIn initFrom(JsonValue pJsonValue) {
+    JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
+    UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(jsonObject));
+    fDirection = (Direction) IJsonOption.DIRECTION.getFrom(jsonObject);
+    fDirectionRoll = IJsonOption.DIRECTION_ROLL.getFrom(jsonObject);
+    fDistanceRoll = IJsonOption.DISTANCE_ROLL.getFrom(jsonObject);
+    return this;
   }
     
 }

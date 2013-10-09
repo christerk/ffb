@@ -8,7 +8,11 @@ import com.balancedbytes.games.ffb.Weather;
 import com.balancedbytes.games.ffb.WeatherFactory;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
+import com.balancedbytes.games.ffb.json.IJsonOption;
+import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.xml.UtilXml;
+import com.eclipsesource.json.JsonObject;
+import com.eclipsesource.json.JsonValue;
 
 
 
@@ -22,7 +26,7 @@ public class ReportWeather implements IReport {
   private static final String _XML_ATTRIBUTE_ROLL = "roll";
   
   private Weather fWeather;
-  private int[] fRoll;
+  private int[] fWeatherRoll;
   
   public ReportWeather() {
     super();
@@ -30,7 +34,7 @@ public class ReportWeather implements IReport {
 
   public ReportWeather(Weather pWeather, int[] pRoll) {
     fWeather = pWeather;
-    fRoll = pRoll;
+    fWeatherRoll = pRoll;
   }
   
   public ReportId getId() {
@@ -41,14 +45,14 @@ public class ReportWeather implements IReport {
     return fWeather;
   }
   
-  public int[] getRoll() {
-    return fRoll;
+  public int[] getWeatherRoll() {
+    return fWeatherRoll;
   }
   
   // transformation
   
   public IReport transform() {
-    return new ReportWeather(getWeather(), getRoll());
+    return new ReportWeather(getWeather(), getWeatherRoll());
   }
 
   // XML serialization
@@ -57,7 +61,7 @@ public class ReportWeather implements IReport {
     AttributesImpl attributes = new AttributesImpl();
     UtilXml.addAttribute(attributes, XML_ATTRIBUTE_ID, getId().getName());
     UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_WEATHER, (getWeather() != null) ? getWeather().getName() : null);    
-    UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_ROLL, getRoll());
+    UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_ROLL, getWeatherRoll());
     UtilXml.addEmptyElement(pHandler, XML_TAG, attributes);
   }
 
@@ -79,15 +83,33 @@ public class ReportWeather implements IReport {
     } else {
       pByteList.addByte((byte) 0);
     }
-    pByteList.addByteArray(getRoll());
+    pByteList.addByteArray(getWeatherRoll());
   }
   
   public int initFrom(ByteArray pByteArray) {
     UtilReport.validateReportId(this, new ReportIdFactory().forId(pByteArray.getSmallInt()));
     int byteArraySerializationVersion = pByteArray.getSmallInt();
     fWeather = new WeatherFactory().forId(pByteArray.getByte());
-    fRoll = pByteArray.getByteArrayAsIntArray();
+    fWeatherRoll = pByteArray.getByteArrayAsIntArray();
     return byteArraySerializationVersion;
+  }
+  
+  // JSON serialization
+  
+  public JsonValue toJsonValue() {
+    JsonObject jsonObject = new JsonObject();
+    IJsonOption.REPORT_ID.addTo(jsonObject, getId());
+    IJsonOption.WEATHER.addTo(jsonObject, fWeather);
+    IJsonOption.WEATHER_ROLL.addTo(jsonObject, fWeatherRoll);
+    return jsonObject;
+  }
+  
+  public ReportWeather initFrom(JsonValue pJsonValue) {
+    JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
+    UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(jsonObject));
+    fWeather = (Weather) IJsonOption.WEATHER.getFrom(jsonObject);
+    fWeatherRoll = IJsonOption.WEATHER_ROLL.getFrom(jsonObject);
+    return this;
   }
     
 }

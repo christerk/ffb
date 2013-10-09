@@ -8,7 +8,11 @@ import com.balancedbytes.games.ffb.KickoffResult;
 import com.balancedbytes.games.ffb.KickoffResultFactory;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
+import com.balancedbytes.games.ffb.json.IJsonOption;
+import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.xml.UtilXml;
+import com.eclipsesource.json.JsonObject;
+import com.eclipsesource.json.JsonValue;
 
 
 /**
@@ -86,6 +90,24 @@ public class ReportKickoffResult implements IReport {
     fKickoffResult = new KickoffResultFactory().forId((int) pByteArray.getByte());
     fKickoffRoll = pByteArray.getByteArrayAsIntArray();
     return byteArraySerializationVersion;
+  }
+  
+  // JSON serialization
+  
+  public JsonValue toJsonValue() {
+    JsonObject jsonObject = new JsonObject();
+    IJsonOption.REPORT_ID.addTo(jsonObject, getId());
+    IJsonOption.KICKOFF_RESULT.addTo(jsonObject, fKickoffResult);
+    IJsonOption.KICKOFF_ROLL.addTo(jsonObject, fKickoffRoll);
+    return jsonObject;
+  }
+  
+  public ReportKickoffResult initFrom(JsonValue pJsonValue) {
+    JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
+    UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(jsonObject));
+    fKickoffResult = (KickoffResult) IJsonOption.KICKOFF_RESULT.getFrom(jsonObject);
+    fKickoffRoll = IJsonOption.KICKOFF_ROLL.getFrom(jsonObject);
+    return this;
   }
 
 }

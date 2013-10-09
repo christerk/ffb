@@ -8,7 +8,11 @@ import com.balancedbytes.games.ffb.PlayerAction;
 import com.balancedbytes.games.ffb.PlayerActionFactory;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
+import com.balancedbytes.games.ffb.json.IJsonOption;
+import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.xml.UtilXml;
+import com.eclipsesource.json.JsonObject;
+import com.eclipsesource.json.JsonValue;
 
 
 
@@ -86,6 +90,24 @@ public class ReportPlayerAction implements IReport {
     fActingPlayerId = pByteArray.getString();
     fPlayerAction = new PlayerActionFactory().forId(pByteArray.getByte());
     return byteArraySerializationVersion;
+  }
+  
+  // JSON serialization
+  
+  public JsonValue toJsonValue() {
+    JsonObject jsonObject = new JsonObject();
+    IJsonOption.REPORT_ID.addTo(jsonObject, getId());
+    IJsonOption.ACTING_PLAYER_ID.addTo(jsonObject, fActingPlayerId);
+    IJsonOption.PLAYER_ACTION.addTo(jsonObject, fPlayerAction);
+    return jsonObject;
+  }
+  
+  public ReportPlayerAction initFrom(JsonValue pJsonValue) {
+    JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
+    UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(jsonObject));
+    fActingPlayerId = IJsonOption.ACTING_PLAYER_ID.getFrom(jsonObject);
+    fPlayerAction = (PlayerAction) IJsonOption.PLAYER_ACTION.getFrom(jsonObject);
+    return this;
   }
     
 }

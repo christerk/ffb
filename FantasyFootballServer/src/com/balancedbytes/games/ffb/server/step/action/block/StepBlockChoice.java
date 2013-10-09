@@ -1,6 +1,7 @@
 package com.balancedbytes.games.ffb.server.step.action.block;
 
 import com.balancedbytes.games.ffb.BlockResult;
+import com.balancedbytes.games.ffb.BlockResultFactory;
 import com.balancedbytes.games.ffb.GameOption;
 import com.balancedbytes.games.ffb.PlayerState;
 import com.balancedbytes.games.ffb.Skill;
@@ -212,7 +213,7 @@ public class StepBlockChoice extends AbstractStep {
   	fNrOfBlockDice = pByteArray.getByte();
   	fBlockRoll = pByteArray.getByteArrayAsIntArray();
   	fBlockDiceIndex = pByteArray.getByte();
-  	fBlockResult = BlockResult.fromId(pByteArray.getByte());
+  	fBlockResult = new BlockResultFactory().forId(pByteArray.getByte());
   	int defenderStateId = pByteArray.getSmallInt();
   	fOldDefenderState = (defenderStateId > 0) ? new PlayerState(defenderStateId) : null;
   	return byteArraySerializationVersion;
