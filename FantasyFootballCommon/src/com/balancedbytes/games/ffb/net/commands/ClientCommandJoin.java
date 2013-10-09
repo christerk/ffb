@@ -170,7 +170,7 @@ public class ClientCommandJoin extends NetCommand {
     return jsonObject;
   }
 
-  public void initFrom(JsonValue pJsonValue) {
+  public ClientCommandJoin initFrom(JsonValue pJsonValue) {
     JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
     UtilNetCommand.validateCommandId(this, (NetCommandId) IJsonOption.NET_COMMAND_ID.getFrom(jsonObject));
     fClientMode = (ClientMode) IJsonOption.CLIENT_MODE.getFrom(jsonObject);
@@ -180,6 +180,7 @@ public class ClientCommandJoin extends NetCommand {
     fGameName = IJsonOption.GAME_NAME.getFrom(jsonObject);
     fTeamId = IJsonOption.TEAM_ID.getFrom(jsonObject);
     fTeamName = IJsonOption.TEAM_NAME.getFrom(jsonObject);
+    return this;
   }
       
 }

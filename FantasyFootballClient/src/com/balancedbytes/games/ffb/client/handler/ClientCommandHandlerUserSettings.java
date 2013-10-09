@@ -27,9 +27,9 @@ public class ClientCommandHandlerUserSettings extends ClientCommandHandler {
 
     ServerCommandUserSettings userSettingsCommand = (ServerCommandUserSettings) pNetCommand;
     
-    String[] settingNames = userSettingsCommand.getSettingNames();
+    String[] settingNames = userSettingsCommand.getUserSettingNames();
     for (String settingName : settingNames) {
-      getClient().setProperty(settingName, userSettingsCommand.getSettingValue(settingName));
+      getClient().setProperty(settingName, userSettingsCommand.getUserSettingValue(settingName));
     }
     
     if (pMode == ClientCommandHandlerMode.PLAYING) {

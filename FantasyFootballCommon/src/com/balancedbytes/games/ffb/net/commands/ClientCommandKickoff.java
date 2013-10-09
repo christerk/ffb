@@ -88,10 +88,11 @@ public class ClientCommandKickoff extends NetCommand {
     return jsonObject;
   }
   
-  public void initFrom(JsonValue pJsonValue) {
+  public ClientCommandKickoff initFrom(JsonValue pJsonValue) {
     JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
     UtilNetCommand.validateCommandId(this, (NetCommandId) IJsonOption.NET_COMMAND_ID.getFrom(jsonObject));
     fBallCoordinate = IJsonOption.BALL_COORDINATE.getFrom(jsonObject);
+    return this;
   }
     
 }

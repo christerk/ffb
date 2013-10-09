@@ -93,11 +93,12 @@ public class ClientCommandUseSkill extends NetCommand {
     return jsonObject;
   }
   
-  public void initFrom(JsonValue pJsonValue) {
+  public ClientCommandUseSkill initFrom(JsonValue pJsonValue) {
     JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
     UtilNetCommand.validateCommandId(this, (NetCommandId) IJsonOption.NET_COMMAND_ID.getFrom(jsonObject));
     fSkill = (Skill) IJsonOption.SKILL.getFrom(jsonObject);
     fSkillUsed = IJsonOption.SKILL_USED.getFrom(jsonObject);
+    return this;
   }
     
 }

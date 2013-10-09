@@ -93,11 +93,12 @@ public class ClientCommandHandOver extends NetCommand implements ICommandWithAct
     return jsonObject;
   }
   
-  public void initFrom(JsonValue pJsonValue) {
+  public ClientCommandHandOver initFrom(JsonValue pJsonValue) {
     JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
     UtilNetCommand.validateCommandId(this, (NetCommandId) IJsonOption.NET_COMMAND_ID.getFrom(jsonObject));
     fActingPlayerId = IJsonOption.ACTING_PLAYER_ID.getFrom(jsonObject);
     fCatcherId = IJsonOption.CATCHER_ID.getFrom(jsonObject);
+    return this;
   }
     
 }

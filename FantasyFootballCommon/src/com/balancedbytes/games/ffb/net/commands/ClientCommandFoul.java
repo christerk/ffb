@@ -91,11 +91,12 @@ public class ClientCommandFoul extends NetCommand implements ICommandWithActingP
     return jsonObject;
   }
   
-  public void initFrom(JsonValue pJsonValue) {
+  public ClientCommandFoul initFrom(JsonValue pJsonValue) {
     JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
     UtilNetCommand.validateCommandId(this, (NetCommandId) IJsonOption.NET_COMMAND_ID.getFrom(jsonObject));
     fActingPlayerId = IJsonOption.ACTING_PLAYER_ID.getFrom(jsonObject);
     fDefenderId = IJsonOption.DEFENDER_ID.getFrom(jsonObject);
+    return this;
   }
 
 }

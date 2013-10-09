@@ -197,7 +197,7 @@ public class DialogPlayerChoiceParameter implements IDialogParameter {
     return jsonObject;
   }
   
-  public void initFrom(JsonValue pJsonValue) {
+  public DialogPlayerChoiceParameter initFrom(JsonValue pJsonValue) {
     JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
     UtilDialogParameter.validateDialogId(this, (DialogId) IJsonOption.DIALOG_ID.getFrom(jsonObject));
     fTeamId = IJsonOption.TEAM_ID.getFrom(jsonObject);
@@ -205,6 +205,7 @@ public class DialogPlayerChoiceParameter implements IDialogParameter {
     fMaxSelects = IJsonOption.MAX_SELECTS.getFrom(jsonObject);
     addPlayerIds(IJsonOption.PLAYER_IDS.getFrom(jsonObject));
     addDescriptions(IJsonOption.DESCRIPTIONS.getFrom(jsonObject));
+    return this;
   }
 
 }

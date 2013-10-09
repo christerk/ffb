@@ -78,10 +78,11 @@ public class ClientCommandTeamSetupDelete extends NetCommand {
     return jsonObject;
   }
 
-  public void initFrom(JsonValue pJsonValue) {
+  public ClientCommandTeamSetupDelete initFrom(JsonValue pJsonValue) {
     JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
     UtilNetCommand.validateCommandId(this, (NetCommandId) IJsonOption.NET_COMMAND_ID.getFrom(jsonObject));
     fSetupName = IJsonOption.SETUP_NAME.getFrom(jsonObject);
+    return this;
   }
 
 }

@@ -137,11 +137,12 @@ public class ClientCommandPlayerChoice extends NetCommand {
     return jsonObject;
   }
 
-  public void initFrom(JsonValue pJsonValue) {
+  public ClientCommandPlayerChoice initFrom(JsonValue pJsonValue) {
     JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
     UtilNetCommand.validateCommandId(this, (NetCommandId) IJsonOption.NET_COMMAND_ID.getFrom(jsonObject));
     fPlayerChoiceMode = (PlayerChoiceMode) IJsonOption.PLAYER_CHOICE_MODE.getFrom(jsonObject);
     addPlayerIds(IJsonOption.PLAYER_IDS.getFrom(jsonObject));
+    return this;
   }
 
 }

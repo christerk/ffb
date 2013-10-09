@@ -573,7 +573,7 @@ public class PlayerResult implements IByteArraySerializable, IXmlSerializable {
     return jsonObject;
   }
   
-  public void initFrom(JsonValue pJsonValue) {
+  public PlayerResult initFrom(JsonValue pJsonValue) {
     JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
     String playerId = IJsonOption.PLAYER_ID.getFrom(jsonObject);
     fPlayer = getTeamResult().getTeam().getPlayerById(playerId);
@@ -595,6 +595,7 @@ public class PlayerResult implements IByteArraySerializable, IXmlSerializable {
     fTurnsPlayed = IJsonOption.TURNS_PLAYED.getFrom(jsonObject);
     fHasUsedSecretWeapon = IJsonOption.HAS_USED_SECRET_WEAPON.getFrom(jsonObject);
     fDefecting = IJsonOption.DEFECTING.getFrom(jsonObject);
+    return this;
   }
     
 }

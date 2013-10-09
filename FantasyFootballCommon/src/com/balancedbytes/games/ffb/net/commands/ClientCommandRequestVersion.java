@@ -60,9 +60,10 @@ public class ClientCommandRequestVersion extends NetCommand {
     return jsonObject;
   }
   
-  public void initFrom(JsonValue pJsonValue) {
+  public ClientCommandRequestVersion initFrom(JsonValue pJsonValue) {
     JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
     UtilNetCommand.validateCommandId(this, (NetCommandId) IJsonOption.NET_COMMAND_ID.getFrom(jsonObject));
+    return this;
   }
       
 }

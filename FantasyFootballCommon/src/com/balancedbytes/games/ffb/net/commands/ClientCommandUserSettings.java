@@ -127,13 +127,14 @@ public class ClientCommandUserSettings extends NetCommand {
     return jsonObject;
   }
 
-  public void initFrom(JsonValue pJsonValue) {
+  public ClientCommandUserSettings initFrom(JsonValue pJsonValue) {
     JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
     UtilNetCommand.validateCommandId(this, (NetCommandId) IJsonOption.NET_COMMAND_ID.getFrom(jsonObject));
     init(
         IJsonOption.SETTING_NAMES.getFrom(jsonObject),
         IJsonOption.SETTING_VALUES.getFrom(jsonObject)
     );
+    return this;
   }
   
 }

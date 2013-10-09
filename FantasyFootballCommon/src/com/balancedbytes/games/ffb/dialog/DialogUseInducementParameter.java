@@ -152,7 +152,7 @@ public class DialogUseInducementParameter implements IDialogParameter {
     return jsonObject;
   }
   
-  public void initFrom(JsonValue pJsonValue) {
+  public DialogUseInducementParameter initFrom(JsonValue pJsonValue) {
     JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
     UtilDialogParameter.validateDialogId(this, (DialogId) IJsonOption.DIALOG_ID.getFrom(jsonObject));
     fTeamId = IJsonOption.TEAM_ID.getFrom(jsonObject);
@@ -168,6 +168,7 @@ public class DialogUseInducementParameter implements IDialogParameter {
     for (int i = 0; i < fCards.length; i++) {
       fCards[i] = cardFactory.forName(cardNames[i]);
     }
+    return this;
   }
 
 }

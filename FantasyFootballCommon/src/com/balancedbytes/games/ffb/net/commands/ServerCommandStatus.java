@@ -106,12 +106,13 @@ public class ServerCommandStatus extends ServerCommand {
     return jsonObject;
   }
 
-  public void initFrom(JsonValue pJsonValue) {
+  public ServerCommandStatus initFrom(JsonValue pJsonValue) {
     JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
     UtilNetCommand.validateCommandId(this, (NetCommandId) IJsonOption.NET_COMMAND_ID.getFrom(jsonObject));
     setCommandNr(IJsonOption.COMMAND_NR.getFrom(jsonObject));
     fServerStatus = (ServerStatus) IJsonOption.SERVER_STATUS.getFrom(jsonObject);
     fMessage = IJsonOption.MESSAGE.getFrom(jsonObject);
+    return this;
   }
 
  }

@@ -106,12 +106,13 @@ public class ClientCommandActingPlayer extends NetCommand {
     return jsonObject;
   }
 
-  public void initFrom(JsonValue pJsonValue) {
+  public ClientCommandActingPlayer initFrom(JsonValue pJsonValue) {
     JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
     UtilNetCommand.validateCommandId(this, (NetCommandId) IJsonOption.NET_COMMAND_ID.getFrom(jsonObject));
     fPlayerId = IJsonOption.PLAYER_ID.getFrom(jsonObject);
     fPlayerAction = (PlayerAction) IJsonOption.PLAYER_ACTION.getFrom(jsonObject);
     fLeaping = IJsonOption.LEAPING.getFrom(jsonObject);
+    return this;
   }
 
 }

@@ -8,8 +8,12 @@ import org.xml.sax.helpers.AttributesImpl;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
 import com.balancedbytes.games.ffb.bytearray.IByteArraySerializable;
+import com.balancedbytes.games.ffb.json.IJsonOption;
+import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.xml.IXmlSerializable;
 import com.balancedbytes.games.ffb.xml.UtilXml;
+import com.eclipsesource.json.JsonObject;
+import com.eclipsesource.json.JsonValue;
 
 
 /**
@@ -145,6 +149,22 @@ public class GameResult implements IXmlSerializable, IByteArraySerializable {
     getTeamResultHome().initFrom(pByteArray);
     getTeamResultAway().initFrom(pByteArray);
     return byteArraySerializationVersion;
+  }
+  
+  // JSON serialization
+  
+  public JsonObject toJsonValue() {
+    JsonObject jsonObject = new JsonObject();
+    IJsonOption.TEAM_RESULT_HOME.addTo(jsonObject, fTeamResultHome.toJsonValue());
+    IJsonOption.TEAM_RESULT_AWAY.addTo(jsonObject, fTeamResultAway.toJsonValue());
+    return jsonObject;
+  }
+  
+  public GameResult initFrom(JsonValue pJsonValue) {
+    JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
+    fTeamResultHome.initFrom(IJsonOption.TEAM_RESULT_HOME.getFrom(jsonObject));
+    fTeamResultAway.initFrom(IJsonOption.TEAM_RESULT_AWAY.getFrom(jsonObject));
+    return this;
   }
 
 }

@@ -97,11 +97,12 @@ public class DialogPilingOnParameter implements IDialogParameter {
     return jsonObject;
   }
   
-  public void initFrom(JsonValue pJsonValue) {
+  public DialogPilingOnParameter initFrom(JsonValue pJsonValue) {
     JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
     UtilDialogParameter.validateDialogId(this, (DialogId) IJsonOption.DIALOG_ID.getFrom(jsonObject));
     fPlayerId = IJsonOption.PLAYER_ID.getFrom(jsonObject);
     fReRollInjury = IJsonOption.RE_ROLL_INJURY.getFrom(jsonObject);
+    return this;
   }
 
 }

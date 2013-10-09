@@ -64,9 +64,10 @@ public class InternalCommandSocketClosed extends NetCommand {
     return jsonObject;
   }
   
-  public void initFrom(JsonValue pJsonValue) {
+  public InternalCommandSocketClosed initFrom(JsonValue pJsonValue) {
     JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
     UtilNetCommand.validateCommandId(this, (NetCommandId) IJsonOption.NET_COMMAND_ID.getFrom(jsonObject));
+    return this;
   }
 
 }

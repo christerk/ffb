@@ -215,7 +215,7 @@ public class Animation implements IXmlSerializable, IByteArraySerializable {
     return jsonObject;
   }
   
-  public void initFrom(JsonValue pJsonValue) {
+  public Animation initFrom(JsonValue pJsonValue) {
     JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
     fThrownPlayerId = IJsonOption.THROWN_PLAYER_ID.getFrom(jsonObject);
     fWithBall = IJsonOption.WITH_BALL.getFrom(jsonObject);
@@ -223,6 +223,7 @@ public class Animation implements IXmlSerializable, IByteArraySerializable {
     fEndCoordinate = IJsonOption.END_COORDINATE.getFrom(jsonObject);
     fInterceptorCoordinate = IJsonOption.INTERCEPTOR_COORDINATE.getFrom(jsonObject);
     fAnimationType = (AnimationType) IJsonOption.ANIMATION_TYPE.getFrom(jsonObject);
+    return this;
   }
   
 }

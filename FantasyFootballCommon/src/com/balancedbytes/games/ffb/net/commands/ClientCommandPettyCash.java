@@ -78,10 +78,11 @@ public class ClientCommandPettyCash extends NetCommand {
     return jsonObject;
   }
 
-  public void initFrom(JsonValue pJsonValue) {
+  public ClientCommandPettyCash initFrom(JsonValue pJsonValue) {
     JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
     UtilNetCommand.validateCommandId(this, (NetCommandId) IJsonOption.NET_COMMAND_ID.getFrom(jsonObject));
     fPettyCash = IJsonOption.PETTY_CASH.getFrom(jsonObject);
+    return this;
   }
 
 }

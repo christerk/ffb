@@ -154,7 +154,7 @@ public class ServerCommandJoin extends ServerCommand {
     return jsonObject;
   }
 
-  public void initFrom(JsonValue pJsonValue) {
+  public ServerCommandJoin initFrom(JsonValue pJsonValue) {
     JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
     UtilNetCommand.validateCommandId(this, (NetCommandId) IJsonOption.NET_COMMAND_ID.getFrom(jsonObject));
     setCommandNr(IJsonOption.COMMAND_NR.getFrom(jsonObject));
@@ -162,6 +162,7 @@ public class ServerCommandJoin extends ServerCommand {
     fClientMode = (ClientMode) IJsonOption.CLIENT_MODE.getFrom(jsonObject);
     fSpectators = IJsonOption.SPECTATORS.getFrom(jsonObject);
     addPlayerNames(IJsonOption.PLAYER_NAMES.getFrom(jsonObject));
+    return this;
   }
     
 }

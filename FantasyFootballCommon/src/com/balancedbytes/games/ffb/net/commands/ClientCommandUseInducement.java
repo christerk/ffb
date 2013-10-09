@@ -163,12 +163,13 @@ public class ClientCommandUseInducement extends NetCommand {
     return jsonObject;
   }
 
-  public void initFrom(JsonValue pJsonValue) {
+  public ClientCommandUseInducement initFrom(JsonValue pJsonValue) {
     JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
     UtilNetCommand.validateCommandId(this, (NetCommandId) IJsonOption.NET_COMMAND_ID.getFrom(jsonObject));
     fInducementType = (InducementType) IJsonOption.INDUCEMENT_TYPE.getFrom(jsonObject);
     addPlayerIds(IJsonOption.PLAYER_IDS.getFrom(jsonObject));
     fCard = (Card) IJsonOption.CARD.getFrom(jsonObject);
+    return this;
   }
       
 }

@@ -80,10 +80,11 @@ public class ClientCommandBlockChoice extends NetCommand {
     return jsonObject;
   }
   
-  public void initFrom(JsonValue pJsonValue) {
+  public ClientCommandBlockChoice initFrom(JsonValue pJsonValue) {
     JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
     UtilNetCommand.validateCommandId(this, (NetCommandId) IJsonOption.NET_COMMAND_ID.getFrom(jsonObject));
     fDiceIndex = IJsonOption.DICE_INDEX.getFrom(jsonObject);
+    return this;
   }
     
 }

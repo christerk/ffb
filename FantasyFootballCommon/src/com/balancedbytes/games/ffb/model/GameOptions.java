@@ -226,7 +226,7 @@ public class GameOptions implements IByteArraySerializable, IXmlSerializable {
     return jsonObject;
   }
   
-  public void initFrom(JsonValue pJsonValue) {
+  public GameOptions initFrom(JsonValue pJsonValue) {
     JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
     JsonArray optionArray = IJsonOption.GAME_OPTIONS.getFrom(jsonObject);
     int nrOfOptions = optionArray.size();
@@ -235,6 +235,7 @@ public class GameOptions implements IByteArraySerializable, IXmlSerializable {
       gameOption.initFrom(optionArray.get(i));
       addOption(gameOption);
     }
+    return this;
   }
 
 }

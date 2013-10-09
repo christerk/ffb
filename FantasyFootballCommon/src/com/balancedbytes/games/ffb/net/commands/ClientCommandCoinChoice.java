@@ -80,10 +80,11 @@ public class ClientCommandCoinChoice extends NetCommand {
     return jsonObject;
   }
   
-  public void initFrom(JsonValue pJsonValue) {
+  public ClientCommandCoinChoice initFrom(JsonValue pJsonValue) {
     JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
     UtilNetCommand.validateCommandId(this, (NetCommandId) IJsonOption.NET_COMMAND_ID.getFrom(jsonObject));
     fChoiceHeads = IJsonOption.CHOICE_HEADS.getFrom(jsonObject);
+    return this;
   }
 
 }

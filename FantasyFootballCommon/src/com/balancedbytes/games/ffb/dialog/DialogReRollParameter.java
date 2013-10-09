@@ -145,7 +145,7 @@ public class DialogReRollParameter implements IDialogParameter {
     return jsonObject;
   }
   
-  public void initFrom(JsonValue pJsonValue) {
+  public DialogReRollParameter initFrom(JsonValue pJsonValue) {
     JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
     UtilDialogParameter.validateDialogId(this, (DialogId) IJsonOption.DIALOG_ID.getFrom(jsonObject));
     fPlayerId = IJsonOption.PLAYER_ID.getFrom(jsonObject);
@@ -154,6 +154,7 @@ public class DialogReRollParameter implements IDialogParameter {
     fTeamReRollOption = IJsonOption.TEAM_RE_ROLL_OPTION.getFrom(jsonObject);
     fProReRollOption = IJsonOption.PRO_RE_ROLL_OPTION.getFrom(jsonObject);
     fFumble = IJsonOption.FUMBLE.getFrom(jsonObject);
+    return this;
   }
 
 }

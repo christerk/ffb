@@ -108,11 +108,12 @@ public class ClientCommandPass extends NetCommand implements ICommandWithActingP
     return jsonObject;
   }
   
-  public void initFrom(JsonValue pJsonValue) {
+  public ClientCommandPass initFrom(JsonValue pJsonValue) {
     JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
     UtilNetCommand.validateCommandId(this, (NetCommandId) IJsonOption.NET_COMMAND_ID.getFrom(jsonObject));
     fActingPlayerId = IJsonOption.ACTING_PLAYER_ID.getFrom(jsonObject);
     fTargetCoordinate = IJsonOption.TARGET_COORDINATE.getFrom(jsonObject);
+    return this;
   }
 
 }

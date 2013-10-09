@@ -118,11 +118,12 @@ public class ServerCommandTeamSetupList extends ServerCommand {
     return jsonObject;
   }
   
-  public void initFrom(JsonValue pJsonValue) {
+  public ServerCommandTeamSetupList initFrom(JsonValue pJsonValue) {
     JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
     UtilNetCommand.validateCommandId(this, (NetCommandId) IJsonOption.NET_COMMAND_ID.getFrom(jsonObject));
     setCommandNr(IJsonOption.COMMAND_NR.getFrom(jsonObject));
     addSetupNames(IJsonOption.SETUP_NAMES.getFrom(jsonObject));
+    return this;
   }
     
 }

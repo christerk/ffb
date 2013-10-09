@@ -332,7 +332,7 @@ public class TurnData implements IByteArraySerializable, IXmlWriteable {
     return jsonObject;
   }
   
-  public void initFrom(JsonValue pJsonValue) {
+  public TurnData initFrom(JsonValue pJsonValue) {
     JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
     fHomeData = IJsonOption.HOME_DATA.getFrom(jsonObject);
     fTurnStarted = IJsonOption.TURN_STARTED.getFrom(jsonObject);
@@ -348,6 +348,7 @@ public class TurnData implements IByteArraySerializable, IXmlWriteable {
     fLeaderState = (LeaderState) IJsonOption.LEADER_STATE.getFrom(jsonObject);
     fInducementSet = new InducementSet();
     fInducementSet.initFrom(IJsonOption.INDUCEMENT_SET.getFrom(jsonObject));
+    return this;
   }
   
 }

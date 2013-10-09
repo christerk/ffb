@@ -105,12 +105,13 @@ public class ClientCommandBlock extends NetCommand implements ICommandWithActing
     return jsonObject;
   }
   
-  public void initFrom(JsonValue pJsonValue) {
+  public ClientCommandBlock initFrom(JsonValue pJsonValue) {
     JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
     UtilNetCommand.validateCommandId(this, (NetCommandId) IJsonOption.NET_COMMAND_ID.getFrom(jsonObject));
     fActingPlayerId = IJsonOption.ACTING_PLAYER_ID.getFrom(jsonObject);
     fDefenderId = IJsonOption.DEFENDER_ID.getFrom(jsonObject);
     fUsingStab = IJsonOption.USING_STAB.getFrom(jsonObject);
+    return this;
   }
 
 }

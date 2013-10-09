@@ -115,11 +115,12 @@ public class ServerCommandAdminMessage extends ServerCommand {
     return jsonObject;
   }
   
-  public void initFrom(JsonValue pJsonValue) {
+  public ServerCommandAdminMessage initFrom(JsonValue pJsonValue) {
     JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
     UtilNetCommand.validateCommandId(this, (NetCommandId) IJsonOption.NET_COMMAND_ID.getFrom(jsonObject));
     setCommandNr(IJsonOption.COMMAND_NR.getFrom(jsonObject));
     addMessages(IJsonOption.MESSAGES.getFrom(jsonObject));
+    return this;
   }
 
- }
+}

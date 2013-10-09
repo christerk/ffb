@@ -112,11 +112,12 @@ public class ClientCommandWizardSpell extends NetCommand {
     return jsonObject;
   }
   
-  public void initFrom(JsonValue pJsonValue) {
+  public ClientCommandWizardSpell initFrom(JsonValue pJsonValue) {
     JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
     UtilNetCommand.validateCommandId(this, (NetCommandId) IJsonOption.NET_COMMAND_ID.getFrom(jsonObject));
     fWizardSpell = (SpecialEffect) IJsonOption.WIZARD_SPELL.getFrom(jsonObject);
     fTargetCoordinate = IJsonOption.TARGET_COORDINATE.getFrom(jsonObject);
+    return this;
   }
       
 }

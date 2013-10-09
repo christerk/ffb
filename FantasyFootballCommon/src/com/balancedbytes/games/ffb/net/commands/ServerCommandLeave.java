@@ -112,13 +112,14 @@ public class ServerCommandLeave extends ServerCommand {
     return jsonObject;
   }
   
-  public void initFrom(JsonValue pJsonValue) {
+  public ServerCommandLeave initFrom(JsonValue pJsonValue) {
     JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
     UtilNetCommand.validateCommandId(this, (NetCommandId) IJsonOption.NET_COMMAND_ID.getFrom(jsonObject));
     setCommandNr(IJsonOption.COMMAND_NR.getFrom(jsonObject));
     fCoach = IJsonOption.COACH.getFrom(jsonObject);
     fClientMode = (ClientMode) IJsonOption.CLIENT_MODE.getFrom(jsonObject);
     fSpectators = IJsonOption.SPECTATORS.getFrom(jsonObject);
+    return this;
   }
   
 }

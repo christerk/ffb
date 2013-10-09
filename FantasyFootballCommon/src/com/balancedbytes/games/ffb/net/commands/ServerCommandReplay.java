@@ -10,10 +10,15 @@ import org.xml.sax.helpers.AttributesImpl;
 
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
+import com.balancedbytes.games.ffb.json.IJsonOption;
+import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.net.NetCommandFactory;
 import com.balancedbytes.games.ffb.net.NetCommandId;
 import com.balancedbytes.games.ffb.util.ArrayTool;
 import com.balancedbytes.games.ffb.xml.UtilXml;
+import com.eclipsesource.json.JsonArray;
+import com.eclipsesource.json.JsonObject;
+import com.eclipsesource.json.JsonValue;
 
 /**
  * 
@@ -147,6 +152,34 @@ public class ServerCommandReplay extends ServerCommand {
 //      System.out.println("[" + (i + 1) + "] " + replayCommand.getId().getName());
       add(replayCommand);
     }
+  }
+  
+  // JSON serialization
+  
+  public JsonObject toJsonValue() {
+    JsonObject jsonObject = new JsonObject();
+    IJsonOption.NET_COMMAND_ID.addTo(jsonObject, getId());
+    IJsonOption.COMMAND_NR.addTo(jsonObject, getCommandNr());
+    IJsonOption.TOTAL_NR_OF_COMMANDS.addTo(jsonObject, fTotalNrOfCommands);
+    JsonArray replayCommandArray = new JsonArray();
+    for (ServerCommand replayCommand : getReplayCommands()) {
+      replayCommandArray.add(replayCommand.toJsonValue());
+    }
+    IJsonOption.REPLAY_COMMANDS.addTo(jsonObject, replayCommandArray);
+    return jsonObject;
+  }
+  
+  public ServerCommandReplay initFrom(JsonValue pJsonValue) {
+    JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
+    UtilNetCommand.validateCommandId(this, (NetCommandId) IJsonOption.NET_COMMAND_ID.getFrom(jsonObject));
+    fTotalNrOfCommands = IJsonOption.TOTAL_NR_OF_COMMANDS.getFrom(jsonObject);
+    JsonArray replayCommandArray = IJsonOption.REPLAY_COMMANDS.getFrom(jsonObject);
+    fReplayCommands.clear();
+    for (int i = 0; i < replayCommandArray.size(); i++) {
+      ServerCommand replayCommand = (ServerCommand) NetCommandFactory.getInstance().forJsonValue(pJsonValue);
+      add(replayCommand);
+    }
+    return this;
   }
   
 }

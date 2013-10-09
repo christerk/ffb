@@ -10,9 +10,13 @@ import org.xml.sax.helpers.AttributesImpl;
 
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
+import com.balancedbytes.games.ffb.json.IJsonOption;
+import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.net.NetCommandId;
 import com.balancedbytes.games.ffb.util.ArrayTool;
 import com.balancedbytes.games.ffb.xml.UtilXml;
+import com.eclipsesource.json.JsonObject;
+import com.eclipsesource.json.JsonValue;
 
 
 
@@ -27,39 +31,40 @@ public class ServerCommandUserSettings extends ServerCommand {
   private static final String _XML_ATTRIBUTE_NAME = "name";
   private static final String _XML_ATTRIBUTE_VALUE = "value";
   
-  private Map<String, String> fSettings;
+  private Map<String, String> fUserSettings;
   
   public ServerCommandUserSettings() {
-    fSettings = new HashMap<String, String>();
+    fUserSettings = new HashMap<String, String>();
   }
   
-  public ServerCommandUserSettings(String[] pSettingNames, String[] pSettingValues) {
+  public ServerCommandUserSettings(String[] pUserSettingNames, String[] pUserSettingValues) {
     this();
-    init(pSettingNames, pSettingValues);
+    init(pUserSettingNames, pUserSettingValues);
   }
   
   public NetCommandId getId() {
     return NetCommandId.SERVER_USER_SETTINGS;
   }
   
-  public void addSetting(String pName, String pValue) {
-    fSettings.put(pName, pValue);
+  public void addUserSetting(String pName, String pValue) {
+    fUserSettings.put(pName, pValue);
   }
   
-  public String[] getSettingNames() {
-    String[] names = fSettings.keySet().toArray(new String[fSettings.size()]);
+  public String[] getUserSettingNames() {
+    String[] names = fUserSettings.keySet().toArray(new String[fUserSettings.size()]);
     Arrays.sort(names);
     return names;
   }
   
-  public String getSettingValue(String pName) {
-    return fSettings.get(pName);
+  public String getUserSettingValue(String pName) {
+    return fUserSettings.get(pName);
   }
   
   private void init(String[] pSettingNames, String[] pSettingValues) {
+    fUserSettings.clear();
     if (ArrayTool.isProvided(pSettingNames) && ArrayTool.isProvided(pSettingValues)) {
       for (int i = 0; i < pSettingNames.length; i++) {
-        addSetting(pSettingNames[i], pSettingValues[i]);
+        addUserSetting(pSettingNames[i], pSettingValues[i]);
       }
     }
   }
@@ -76,11 +81,11 @@ public class ServerCommandUserSettings extends ServerCommand {
       UtilXml.addAttribute(attributes, XML_ATTRIBUTE_COMMAND_NR, getCommandNr());
     }
     UtilXml.startElement(pHandler, getId().getName(), attributes);
-    String[] settings = getSettingNames();
+    String[] settings = getUserSettingNames();
     for (String setting : settings) {
       attributes = new AttributesImpl();
       UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_NAME, setting);
-      UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_VALUE, getSettingValue(setting));
+      UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_VALUE, getUserSettingValue(setting));
       UtilXml.addEmptyElement(pHandler, _XML_TAG_SETTING, attributes);
     }
     UtilXml.endElement(pHandler, getId().getName());
@@ -99,10 +104,10 @@ public class ServerCommandUserSettings extends ServerCommand {
   public void addTo(ByteList pByteList) {
     pByteList.addSmallInt(getByteArraySerializationVersion());
     pByteList.addSmallInt(getCommandNr());
-    String[] settingNames = getSettingNames();
+    String[] settingNames = getUserSettingNames();
     String[] settingValues = new String[settingNames.length];
     for (int i = 0; i < settingNames.length; i++) {
-      settingValues[i] = getSettingValue(settingNames[i]);
+      settingValues[i] = getUserSettingValue(settingNames[i]);
     }
     pByteList.addStringArray(settingNames);
     pByteList.addStringArray(settingValues);
@@ -115,6 +120,32 @@ public class ServerCommandUserSettings extends ServerCommand {
     String[] settingValues = pByteArray.getStringArray();
     init(settingNames, settingValues);
     return byteArraySerializationVersion;
+  }
+  
+  // JSON serialization
+  
+  public JsonObject toJsonValue() {
+    JsonObject jsonObject = new JsonObject();
+    IJsonOption.NET_COMMAND_ID.addTo(jsonObject, getId());
+    IJsonOption.COMMAND_NR.addTo(jsonObject, getCommandNr());
+    String[] userSettingNames = getUserSettingNames();
+    String[] userSettingValues = new String[userSettingNames.length];
+    for (int i = 0; i < userSettingNames.length; i++) {
+      userSettingValues[i] = getUserSettingValue(userSettingNames[i]);
+    }
+    IJsonOption.USER_SETTING_NAMES.addTo(jsonObject, userSettingNames);
+    IJsonOption.USER_SETTING_VALUES.addTo(jsonObject, userSettingValues);
+    return jsonObject;
+  }
+  
+  public ServerCommandUserSettings initFrom(JsonValue pJsonValue) {
+    JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
+    UtilNetCommand.validateCommandId(this, (NetCommandId) IJsonOption.NET_COMMAND_ID.getFrom(jsonObject));
+    setCommandNr(IJsonOption.COMMAND_NR.getFrom(jsonObject));
+    String[] userSettingNames = IJsonOption.USER_SETTING_NAMES.getFrom(jsonObject);
+    String[] userSettingValues = IJsonOption.USER_SETTING_VALUES.getFrom(jsonObject);
+    init(userSettingNames, userSettingValues);
+    return this;
   }
   
 }

@@ -341,7 +341,7 @@ public class InducementSet implements IByteArraySerializable, IXmlWriteable {
     return jsonObject;
   }
   
-  public void initFrom(JsonValue pJsonValue) {
+  public InducementSet initFrom(JsonValue pJsonValue) {
     JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
     JsonArray inducements = IJsonOption.INDUCEMENTS.getFrom(jsonObject);
     for (int i = 0; i < inducements.size(); i++) {
@@ -362,6 +362,7 @@ public class InducementSet implements IByteArraySerializable, IXmlWriteable {
     for (String cardName : cardsDeactivated) {
       fCardsDeactivated.add(cardFactory.forName(cardName));
     }
+    return this;
   }
   
 }

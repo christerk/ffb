@@ -121,13 +121,14 @@ public class DialogPettyCashParameter implements IDialogParameter {
     return jsonObject;
   }
   
-  public void initFrom(JsonValue pJsonValue) {
+  public DialogPettyCashParameter initFrom(JsonValue pJsonValue) {
     JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
     UtilDialogParameter.validateDialogId(this, (DialogId) IJsonOption.DIALOG_ID.getFrom(jsonObject));
     fTeamId = IJsonOption.TEAM_ID.getFrom(jsonObject);
     fTeamValue = IJsonOption.TEAM_VALUE.getFrom(jsonObject);
     fTreasury = IJsonOption.TREASURY.getFrom(jsonObject);
     fOpponentTeamValue = IJsonOption.OPPONENT_TEAM_VALUE.getFrom(jsonObject);
+    return this;
   }
 
 }

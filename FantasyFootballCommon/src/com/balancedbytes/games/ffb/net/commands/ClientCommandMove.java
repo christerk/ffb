@@ -145,13 +145,13 @@ public class ClientCommandMove extends NetCommand implements ICommandWithActingP
     return jsonObject;
   }
   
-  public void initFrom(JsonValue pJsonValue) {
+  public ClientCommandMove initFrom(JsonValue pJsonValue) {
     JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
     UtilNetCommand.validateCommandId(this, (NetCommandId) IJsonOption.NET_COMMAND_ID.getFrom(jsonObject));
     fActingPlayerId = IJsonOption.ACTING_PLAYER_ID.getFrom(jsonObject);
     fCoordinateFrom = IJsonOption.COORDINATE_FROM.getFrom(jsonObject);
     addCoordinatesTo(IJsonOption.COORDINATES_TO.getFrom(jsonObject));
+    return this;
   }
-
 
 }

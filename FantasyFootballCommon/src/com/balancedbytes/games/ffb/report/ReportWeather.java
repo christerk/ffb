@@ -5,6 +5,7 @@ import javax.xml.transform.sax.TransformerHandler;
 import org.xml.sax.helpers.AttributesImpl;
 
 import com.balancedbytes.games.ffb.Weather;
+import com.balancedbytes.games.ffb.WeatherFactory;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
 import com.balancedbytes.games.ffb.xml.UtilXml;
@@ -87,7 +88,7 @@ public class ReportWeather implements IReport {
       throw new IllegalStateException("Wrong report id. Expected " + getId().getName() + " received " + ((reportId != null) ? reportId.getName() : "null"));
     }
     int byteArraySerializationVersion = pByteArray.getSmallInt();
-    fWeather = Weather.fromId(pByteArray.getByte());
+    fWeather = new WeatherFactory().forId(pByteArray.getByte());
     fRoll = pByteArray.getByteArrayAsIntArray();
     return byteArraySerializationVersion;
   }

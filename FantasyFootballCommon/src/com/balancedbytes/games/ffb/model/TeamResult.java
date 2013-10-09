@@ -576,7 +576,7 @@ public class TeamResult implements IByteArraySerializable, IXmlSerializable {
     return jsonObject;
   }
   
-  public void initFrom(JsonValue pJsonValue) {
+  public TeamResult initFrom(JsonValue pJsonValue) {
     JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
     fScore = IJsonOption.SCORE.getFrom(jsonObject);
     fConceded = IJsonOption.CONCEDED.getFrom(jsonObject);
@@ -601,6 +601,7 @@ public class TeamResult implements IByteArraySerializable, IXmlSerializable {
     fPettyCashTransferred = IJsonOption.PETTY_CASH_TRANSFERRED.getFrom(jsonObject);
     fPettyCashUsed = IJsonOption.PETTY_CASH_USED.getFrom(jsonObject);
     fTeamValue = IJsonOption.TEAM_VALUE.getFrom(jsonObject);
+    return this;
   }
     
 }

@@ -7,8 +7,12 @@ import org.xml.sax.helpers.AttributesImpl;
 import com.balancedbytes.games.ffb.TeamList;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
+import com.balancedbytes.games.ffb.json.IJsonOption;
+import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.net.NetCommandId;
 import com.balancedbytes.games.ffb.xml.UtilXml;
+import com.eclipsesource.json.JsonObject;
+import com.eclipsesource.json.JsonValue;
 
 
 
@@ -84,6 +88,31 @@ public class ServerCommandTeamList extends ServerCommand {
       fTeamList.initFrom(pByteArray);
     }
     return byteArraySerializationVersion;
+  }
+  
+  // JSON serialization
+  
+  public JsonObject toJsonValue() {
+    JsonObject jsonObject = new JsonObject();
+    IJsonOption.NET_COMMAND_ID.addTo(jsonObject, getId());
+    IJsonOption.COMMAND_NR.addTo(jsonObject, getCommandNr());
+    if (fTeamList != null) {
+      IJsonOption.TEAM_LIST.addTo(jsonObject, fTeamList.toJsonValue());
+    }
+    return jsonObject;
+  }
+  
+  public ServerCommandTeamList initFrom(JsonValue pJsonValue) {
+    JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
+    UtilNetCommand.validateCommandId(this, (NetCommandId) IJsonOption.NET_COMMAND_ID.getFrom(jsonObject));
+    setCommandNr(IJsonOption.COMMAND_NR.getFrom(jsonObject));
+    JsonObject teamListObject = IJsonOption.TEAM_LIST.getFrom(jsonObject);
+    if (teamListObject != null) {
+      fTeamList = new TeamList().initFrom(teamListObject);
+    } else {
+      fTeamList = null;
+    }
+    return this;
   }
     
 }

@@ -235,7 +235,7 @@ public class ClientCommandBuyInducements extends NetCommand {
     return jsonObject;
   }
   
-  public void initFrom(JsonValue pJsonValue) {
+  public ClientCommandBuyInducements initFrom(JsonValue pJsonValue) {
     JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
     UtilNetCommand.validateCommandId(this, (NetCommandId) IJsonOption.NET_COMMAND_ID.getFrom(jsonObject));
     fTeamId = IJsonOption.TEAM_ID.getFrom(jsonObject);
@@ -260,6 +260,7 @@ public class ClientCommandBuyInducements extends NetCommand {
         );
       }
     }
+    return this;
   }
 
 }

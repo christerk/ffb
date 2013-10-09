@@ -14,12 +14,17 @@ import com.balancedbytes.games.ffb.SkillFactory;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
 import com.balancedbytes.games.ffb.bytearray.IByteArraySerializable;
+import com.balancedbytes.games.ffb.json.IJsonOption;
+import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.change.old.CommandActingPlayerChange;
 import com.balancedbytes.games.ffb.model.change.old.ModelChangeActingPlayer;
 import com.balancedbytes.games.ffb.util.ArrayTool;
 import com.balancedbytes.games.ffb.util.UtilCards;
 import com.balancedbytes.games.ffb.xml.IXmlWriteable;
 import com.balancedbytes.games.ffb.xml.UtilXml;
+import com.eclipsesource.json.JsonArray;
+import com.eclipsesource.json.JsonObject;
+import com.eclipsesource.json.JsonValue;
 
 /**
  * 
@@ -410,5 +415,52 @@ public class ActingPlayer implements IXmlWriteable, IByteArraySerializable {
     }
   }
 
+  // JSON serialization
+  
+  public JsonObject toJsonValue() {
+    JsonObject jsonObject = new JsonObject();
+    IJsonOption.PLAYER_ID.addTo(jsonObject, fPlayerId);
+    IJsonOption.CURRENT_MOVE.addTo(jsonObject, fCurrentMove);
+    IJsonOption.GOING_FOR_IT.addTo(jsonObject, fGoingForIt);
+    IJsonOption.HAS_BLOCKED.addTo(jsonObject, fHasBlocked);
+    IJsonOption.HAS_FED.addTo(jsonObject, fHasFed);
+    IJsonOption.HAS_FOULED.addTo(jsonObject, fHasFouled);
+    IJsonOption.HAS_MOVED.addTo(jsonObject, fHasMoved);
+    IJsonOption.HAS_PASSED.addTo(jsonObject, fHasPassed);
+    IJsonOption.PLAYER_ACTION.addTo(jsonObject, fPlayerAction);
+    IJsonOption.STANDING_UP.addTo(jsonObject, fStandingUp);
+    IJsonOption.SUFFERING_ANIMOSITY.addTo(jsonObject, fSufferingAnimosity);
+    IJsonOption.SUFFERING_BLOODLUST.addTo(jsonObject, fSufferingBloodLust);
+    JsonArray usedSkillsArray = new JsonArray();
+    for (Skill skill : getUsedSkills()) {
+      usedSkillsArray.add(UtilJson.toJsonValue(skill));
+    }
+    IJsonOption.USED_SKILLS.addTo(jsonObject, usedSkillsArray);
+    return jsonObject;
+  }
+  
+  public ActingPlayer initFrom(JsonValue pJsonValue) {
+    JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
+    fPlayerId = IJsonOption.PLAYER_ID.getFrom(jsonObject);
+    fCurrentMove = IJsonOption.CURRENT_MOVE.getFrom(jsonObject);
+    fGoingForIt = IJsonOption.GOING_FOR_IT.getFrom(jsonObject);
+    fHasBlocked = IJsonOption.HAS_BLOCKED.getFrom(jsonObject);
+    fHasFed = IJsonOption.HAS_FED.getFrom(jsonObject);
+    fHasFouled = IJsonOption.HAS_FOULED.getFrom(jsonObject);
+    fHasMoved = IJsonOption.HAS_MOVED.getFrom(jsonObject);
+    fHasPassed = IJsonOption.HAS_PASSED.getFrom(jsonObject);
+    fPlayerAction = (PlayerAction) IJsonOption.PLAYER_ACTION.getFrom(jsonObject);
+    fStandingUp = IJsonOption.STANDING_UP.getFrom(jsonObject);
+    fSufferingAnimosity = IJsonOption.SUFFERING_ANIMOSITY.getFrom(jsonObject);
+    fSufferingBloodLust = IJsonOption.SUFFERING_BLOODLUST.getFrom(jsonObject);
+    JsonArray usedSkillsArray = IJsonOption.USED_SKILLS.getFrom(jsonObject);
+    fUsedSkills.clear();
+    if (usedSkillsArray != null) {
+      for (int i = 0; i < usedSkillsArray.size(); i++) {
+        fUsedSkills.add((Skill) UtilJson.toEnumWithName(new SkillFactory(), usedSkillsArray.get(i))); 
+      }
+    }
+    return this;
+  }
       
 }

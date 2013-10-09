@@ -156,13 +156,13 @@ public class GameList implements IXmlSerializable, IByteArraySerializable {
     for (GameListEntry gameListEntry : gameListEntries) {
       gameListArray.add(gameListEntry.toJsonValue());
     }
-    IJsonOption.GAME_LIST.addTo(jsonObject, gameListArray);
+    IJsonOption.GAME_LIST_ENTRIES.addTo(jsonObject, gameListArray);
     return jsonObject;
   }
   
   public GameList initFrom(JsonValue pJsonValue) {
     JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-    JsonArray gameListArray = IJsonOption.GAME_LIST.getFrom(jsonObject);
+    JsonArray gameListArray = IJsonOption.GAME_LIST_ENTRIES.getFrom(jsonObject);
     for (int i = 0; i < gameListArray.size(); i++) {
       GameListEntry gameListEntry = new GameListEntry();
       gameListEntry.initFrom(gameListArray.get(i));

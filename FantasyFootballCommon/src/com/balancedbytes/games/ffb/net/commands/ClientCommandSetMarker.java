@@ -119,12 +119,13 @@ public class ClientCommandSetMarker extends NetCommand {
     return jsonObject;
   }
   
-  public void initFrom(JsonValue pJsonValue) {
+  public ClientCommandSetMarker initFrom(JsonValue pJsonValue) {
     JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
     UtilNetCommand.validateCommandId(this, (NetCommandId) IJsonOption.NET_COMMAND_ID.getFrom(jsonObject));
     fCoordinate = IJsonOption.COORDINATE.getFrom(jsonObject);
     fPlayerId = IJsonOption.PLAYER_ID.getFrom(jsonObject);
     fText = IJsonOption.TEXT.getFrom(jsonObject);
+    return this;
   }
     
 }
