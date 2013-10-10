@@ -11,8 +11,13 @@ import com.balancedbytes.games.ffb.Direction;
 import com.balancedbytes.games.ffb.DirectionFactory;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
+import com.balancedbytes.games.ffb.json.IJsonOption;
+import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.util.ArrayTool;
 import com.balancedbytes.games.ffb.xml.UtilXml;
+import com.eclipsesource.json.JsonArray;
+import com.eclipsesource.json.JsonObject;
+import com.eclipsesource.json.JsonValue;
 
 
 /**
@@ -38,8 +43,8 @@ public class ReportScatterBall implements IReport {
   
   public ReportScatterBall(Direction[] pDirections, int[] pRolls, boolean pGustOfWind) {
     this();
-    add(pDirections);
-    add(pRolls);
+    addDirections(pDirections);
+    addRolls(pRolls);
     fGustOfWind = pGustOfWind;
   }
 
@@ -51,16 +56,16 @@ public class ReportScatterBall implements IReport {
     return fDirections.toArray(new Direction[fDirections.size()]);
   }
   
-  private void add(Direction pDirection) {
+  private void addDirection(Direction pDirection) {
     if (pDirection != null) {
       fDirections.add(pDirection);
     }
   }
   
-  private void add(Direction[] pDirections) {
+  private void addDirections(Direction[] pDirections) {
     if (ArrayTool.isProvided(pDirections)) {
       for (Direction direction : pDirections) {
-        add(direction);
+        addDirection(direction);
       }
     }
   }
@@ -73,14 +78,14 @@ public class ReportScatterBall implements IReport {
     return rolls;
   }
   
-  private void add(int pRoll) {
+  private void addRoll(int pRoll) {
     fRolls.add(pRoll);
   }
   
-  private void add(int[] pRolls) {
+  private void addRolls(int[] pRolls) {
     if (ArrayTool.isProvided(pRolls)) {
       for (int roll : pRolls) {
-        add(roll);
+        addRoll(roll);
       }
     }
   }
@@ -145,11 +150,40 @@ public class ReportScatterBall implements IReport {
     int nrOfDirections = pByteArray.getByte();
     DirectionFactory directionFactory = new DirectionFactory();
     for (int i = 0; i < nrOfDirections; i++) {
-      add(directionFactory.forId(pByteArray.getByte()));
+      addDirection(directionFactory.forId(pByteArray.getByte()));
     }
-    add(pByteArray.getByteArrayAsIntArray());
+    addRolls(pByteArray.getByteArrayAsIntArray());
     fGustOfWind = pByteArray.getBoolean();
     return byteArraySerializationVersion;
+  }
+  
+  // JSON serialization
+  
+  public JsonValue toJsonValue() {
+    JsonObject jsonObject = new JsonObject();
+    IJsonOption.REPORT_ID.addTo(jsonObject, getId());
+    JsonArray directionArray = new JsonArray();
+    for (Direction direction : getDirections()) {
+      directionArray.add(UtilJson.toJsonValue(direction));
+    }
+    IJsonOption.DIRECTIONS.addTo(jsonObject, directionArray);
+    IJsonOption.ROLLS.addTo(jsonObject, fRolls);
+    IJsonOption.GUST_OF_WIND.addTo(jsonObject, fGustOfWind);
+    return jsonObject;
+  }
+  
+  public ReportScatterBall initFrom(JsonValue pJsonValue) {
+    JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
+    UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(jsonObject));
+    JsonArray directionArray = IJsonOption.DIRECTIONS.getFrom(jsonObject);
+    if (directionArray != null) {
+      for (int i = 0; i < directionArray.size(); i++) {
+        addDirection((Direction) UtilJson.toEnumWithName(new DirectionFactory(), directionArray.get(i)));
+      }
+    }
+    addRolls(IJsonOption.ROLLS.getFrom(jsonObject));
+    fGustOfWind = IJsonOption.GUST_OF_WIND.getFrom(jsonObject);
+    return this;
   }
   
 }

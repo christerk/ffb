@@ -466,7 +466,7 @@ public class StatusReport {
     setIndent(0);
     Game game = getClient().getGame();
     StringBuilder status = new StringBuilder();
-    int[] fanRollHome = pReport.getRollHome();
+    int[] fanRollHome = pReport.getSpectatorRollHome();
     status.append("Spectator Roll Home Team [ ").append(fanRollHome[0]).append(" ][ ").append(fanRollHome[1]).append(" ]");
     println(getIndent(), TextStyle.ROLL, status.toString());
     status = new StringBuilder();
@@ -482,7 +482,7 @@ public class StatusReport {
     print(getIndent() + 1, TextStyle.HOME, game.getTeamHome().getName());
     println(getIndent() + 1, ".");
     status = new StringBuilder();
-    int[] fanRollAway = pReport.getRollAway();
+    int[] fanRollAway = pReport.getSpectatorRollAway();
     status.append("Spectator Roll Away Team [ ").append(fanRollAway[0]).append(" ][ ").append(fanRollAway[1]).append(" ]");
     println(getIndent(), TextStyle.ROLL, status.toString());
     status = new StringBuilder();
@@ -843,7 +843,7 @@ public class StatusReport {
     String[] playerIds = pReport.getPlayerIds();
     if (ArrayTool.isProvided(playerIds)) {
     	int[] rolls = pReport.getRolls();
-    	boolean[] banned = pReport.getBanned();
+    	boolean[] banned = pReport.getBans();
 	  	for (int i = 0; i < playerIds.length; i++) {
 	  		Player player = game.getPlayerById(playerIds[i]);
 	      if (pTeam.hasPlayer(player)) {
@@ -1725,7 +1725,7 @@ public class StatusReport {
     print(getIndent() + 1, "Team ");
     printTeamName(game, false, pReport.getTeamId());
     StringBuilder status = new StringBuilder();
-    status.append(" is ").append(pReport.isChoiceReceive() ? "receiving." : "kicking.");
+    status.append(" is ").append(pReport.isReceiveChoice() ? "receiving." : "kicking.");
     println(getIndent() + 1, status.toString());
   }
 
@@ -2185,12 +2185,12 @@ public class StatusReport {
     int indent = getIndent() + 1;
     StringBuilder status = new StringBuilder();
     Player defender = game.getPlayerById(pReport.getDefenderId());
-    if (pReport.getMode() == PushbackMode.SIDE_STEP) {
+    if (pReport.getPushbackMode() == PushbackMode.SIDE_STEP) {
       print(indent, false, defender);
       status.append(" uses Side Step to avoid being pushed.");
       println(indent, status.toString());
     }
-    if (pReport.getMode() == PushbackMode.GRAB) {
+    if (pReport.getPushbackMode() == PushbackMode.GRAB) {
       ActingPlayer actingPlayer = game.getActingPlayer();
       print(indent, false, actingPlayer.getPlayer());
       status.append(" uses Grab to place ").append(actingPlayer.getPlayer().getGender().getGenitive()).append(" opponent.");

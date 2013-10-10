@@ -12,8 +12,13 @@ import com.balancedbytes.games.ffb.DirectionFactory;
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
+import com.balancedbytes.games.ffb.json.IJsonOption;
+import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.util.ArrayTool;
 import com.balancedbytes.games.ffb.xml.UtilXml;
+import com.eclipsesource.json.JsonArray;
+import com.eclipsesource.json.JsonObject;
+import com.eclipsesource.json.JsonValue;
 
 
 /**
@@ -45,8 +50,8 @@ public class ReportScatterPlayer implements IReport {
     this();
     fStartCoordinate = pStartCoordinate;
     fEndCoordinate = pEndCoordinate;
-    add(pDirections);
-    add(pRolls);
+    addDirections(pDirections);
+    addRolls(pRolls);
   }
 
   public ReportId getId() {
@@ -65,16 +70,16 @@ public class ReportScatterPlayer implements IReport {
     return fDirections.toArray(new Direction[fDirections.size()]);
   }
   
-  private void add(Direction pDirection) {
+  private void addDirection(Direction pDirection) {
     if (pDirection != null) {
       fDirections.add(pDirection);
     }
   }
   
-  private void add(Direction[] pDirections) {
+  private void addDirections(Direction[] pDirections) {
     if (ArrayTool.isProvided(pDirections)) {
       for (Direction direction : pDirections) {
-        add(direction);
+        addDirection(direction);
       }
     }
   }
@@ -87,14 +92,14 @@ public class ReportScatterPlayer implements IReport {
     return rolls;
   }
   
-  private void add(int pRoll) {
+  private void addRoll(int pRoll) {
     fRolls.add(pRoll);
   }
   
-  private void add(int[] pRolls) {
+  private void addRolls(int[] pRolls) {
     if (ArrayTool.isProvided(pRolls)) {
       for (int roll : pRolls) {
-        add(roll);
+        addRoll(roll);
       }
     }
   }
@@ -169,10 +174,41 @@ public class ReportScatterPlayer implements IReport {
     int nrOfDirections = pByteArray.getByte();
     DirectionFactory directionFactory = new DirectionFactory();
     for (int i = 0; i < nrOfDirections; i++) {
-      add(directionFactory.forId(pByteArray.getByte()));
+      addDirection(directionFactory.forId(pByteArray.getByte()));
     }
-    add(pByteArray.getByteArrayAsIntArray());
+    addRolls(pByteArray.getByteArrayAsIntArray());
     return byteArraySerializationVersion;
+  }
+  
+  // JSON serialization
+  
+  public JsonValue toJsonValue() {
+    JsonObject jsonObject = new JsonObject();
+    IJsonOption.REPORT_ID.addTo(jsonObject, getId());
+    IJsonOption.START_COORDINATE.addTo(jsonObject, fStartCoordinate);
+    IJsonOption.END_COORDINATE.addTo(jsonObject, fEndCoordinate);
+    JsonArray directionArray = new JsonArray();
+    for (Direction direction : getDirections()) {
+      directionArray.add(UtilJson.toJsonValue(direction));
+    }
+    IJsonOption.DIRECTIONS.addTo(jsonObject, directionArray);
+    IJsonOption.ROLLS.addTo(jsonObject, fRolls);
+    return jsonObject;
+  }
+  
+  public ReportScatterPlayer initFrom(JsonValue pJsonValue) {
+    JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
+    UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(jsonObject));
+    fStartCoordinate = IJsonOption.START_COORDINATE.getFrom(jsonObject);
+    fEndCoordinate = IJsonOption.END_COORDINATE.getFrom(jsonObject);
+    JsonArray directionArray = IJsonOption.DIRECTIONS.getFrom(jsonObject);
+    if (directionArray != null) {
+      for (int i = 0; i < directionArray.size(); i++) {
+        addDirection((Direction) UtilJson.toEnumWithName(new DirectionFactory(), directionArray.get(i)));
+      }
+    }
+    addRolls(IJsonOption.ROLLS.getFrom(jsonObject));
+    return this;
   }
   
 }

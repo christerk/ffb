@@ -13,16 +13,6 @@ import com.eclipsesource.json.JsonValue;
  */
 public class NetCommandFactory {
 
-  private static final NetCommandFactory _INSTANCE = new NetCommandFactory();
-
-  public static NetCommandFactory getInstance() {
-    return _INSTANCE;
-  }
-
-  private NetCommandFactory() {
-    super();
-  }
-
   public byte[] nextCommandBytes(byte[] pBytes, int pStart, int pEnd) {
     byte[] nextCommandBytes = null;
     int bytesLeft = pEnd - pStart;

@@ -11,8 +11,13 @@ import com.balancedbytes.games.ffb.HeatExhaustion;
 import com.balancedbytes.games.ffb.KnockoutRecovery;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
+import com.balancedbytes.games.ffb.json.IJsonOption;
+import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.util.ArrayTool;
 import com.balancedbytes.games.ffb.xml.UtilXml;
+import com.eclipsesource.json.JsonArray;
+import com.eclipsesource.json.JsonObject;
+import com.eclipsesource.json.JsonValue;
 
 
 
@@ -167,5 +172,43 @@ public class ReportTurnEnd implements IReport {
     }
     return byteArraySerializationVersion;
   }
+  
+  // JSON serialization
+  
+  public JsonValue toJsonValue() {
+    JsonObject jsonObject = new JsonObject();
+    IJsonOption.REPORT_ID.addTo(jsonObject, getId());
+    IJsonOption.PLAYER_ID_TOUCHDOWN.addTo(jsonObject, fPlayerIdTouchdown);
+    JsonArray knockoutRecoveryArray = new JsonArray();
+    for (KnockoutRecovery knockoutRecovery : fKnockoutRecoveries) {
+      knockoutRecoveryArray.add(knockoutRecovery.toJsonValue());
+    }
+    IJsonOption.KNOCKOUT_RECOVERIES.addTo(jsonObject, knockoutRecoveryArray);
+    JsonArray heatExhaustionArray = new JsonArray();
+    for (HeatExhaustion heatExhaustion : fHeatExhaustions) {
+      heatExhaustionArray.add(heatExhaustion.toJsonValue());
+    }
+    IJsonOption.HEAT_EXHAUSTIONS.addTo(jsonObject, heatExhaustionArray);
+    return jsonObject;
+  }
+  
+  public ReportTurnEnd initFrom(JsonValue pJsonValue) {
+    JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
+    UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(jsonObject));
+    fPlayerIdTouchdown = IJsonOption.PLAYER_ID_TOUCHDOWN.getFrom(jsonObject);
+    JsonArray knockoutRecoveryArray = IJsonOption.KNOCKOUT_RECOVERIES.getFrom(jsonObject);
+    if (knockoutRecoveryArray != null) {
+      for (int i = 0; i < knockoutRecoveryArray.size(); i++) {
+        add(new KnockoutRecovery().initFrom(knockoutRecoveryArray.get(i)));
+      }
+    }
+    JsonArray heatExhaustionArray = IJsonOption.HEAT_EXHAUSTIONS.getFrom(jsonObject);
+    if (heatExhaustionArray != null) {
+      for (int i = 0; i < heatExhaustionArray.size(); i++) {
+        add(new HeatExhaustion().initFrom(heatExhaustionArray.get(i)));
+      }
+    }
+    return this;
+  }  
   
 }

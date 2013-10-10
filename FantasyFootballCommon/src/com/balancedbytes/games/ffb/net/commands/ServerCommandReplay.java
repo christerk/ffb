@@ -143,12 +143,13 @@ public class ServerCommandReplay extends ServerCommand {
   }
 
   public void initFrom(ByteArray pByteArray, int pNrOfCommands) {
+    NetCommandFactory netCommandFactory = new NetCommandFactory();
     for (int i = 0; i < pNrOfCommands; i++) {
       byte[] commandBytes = new byte[pByteArray.getSmallInt(pByteArray.getPosition() + 2)];
       for (int j = 0; j < commandBytes.length; j++) {
         commandBytes[j] = pByteArray.getByte();
       }
-      ServerCommand replayCommand = (ServerCommand) NetCommandFactory.getInstance().fromBytes(commandBytes);
+      ServerCommand replayCommand = (ServerCommand) netCommandFactory.fromBytes(commandBytes);
 //      System.out.println("[" + (i + 1) + "] " + replayCommand.getId().getName());
       add(replayCommand);
     }
@@ -170,13 +171,14 @@ public class ServerCommandReplay extends ServerCommand {
   }
   
   public ServerCommandReplay initFrom(JsonValue pJsonValue) {
+    NetCommandFactory netCommandFactory = new NetCommandFactory();
     JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
     UtilNetCommand.validateCommandId(this, (NetCommandId) IJsonOption.NET_COMMAND_ID.getFrom(jsonObject));
     fTotalNrOfCommands = IJsonOption.TOTAL_NR_OF_COMMANDS.getFrom(jsonObject);
     JsonArray replayCommandArray = IJsonOption.REPLAY_COMMANDS.getFrom(jsonObject);
     fReplayCommands.clear();
     for (int i = 0; i < replayCommandArray.size(); i++) {
-      ServerCommand replayCommand = (ServerCommand) NetCommandFactory.getInstance().forJsonValue(pJsonValue);
+      ServerCommand replayCommand = (ServerCommand) netCommandFactory.forJsonValue(pJsonValue);
       add(replayCommand);
     }
     return this;

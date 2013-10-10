@@ -7,9 +7,14 @@ import org.xml.sax.helpers.AttributesImpl;
 import com.balancedbytes.games.ffb.Skill;
 import com.balancedbytes.games.ffb.SkillFactory;
 import com.balancedbytes.games.ffb.SkillUse;
+import com.balancedbytes.games.ffb.SkillUseFactory;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
+import com.balancedbytes.games.ffb.json.IJsonOption;
+import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.xml.UtilXml;
+import com.eclipsesource.json.JsonObject;
+import com.eclipsesource.json.JsonValue;
 
 
 
@@ -110,8 +115,30 @@ public class ReportSkillUse implements IReport {
     fPlayerId = pByteArray.getString();
     fSkill = new SkillFactory().forId(pByteArray.getByte());
     fUsed = pByteArray.getBoolean();
-    fSkillUse = SkillUse.fromId(pByteArray.getByte());
+    fSkillUse = new SkillUseFactory().forId(pByteArray.getByte());
     return byteArraySerializationVersion;
   }
-      
+  
+  // JSON serialization
+  
+  public JsonValue toJsonValue() {
+    JsonObject jsonObject = new JsonObject();
+    IJsonOption.REPORT_ID.addTo(jsonObject, getId());
+    IJsonOption.PLAYER_ID.addTo(jsonObject, fPlayerId);
+    IJsonOption.SKILL.addTo(jsonObject, fSkill);
+    IJsonOption.USED.addTo(jsonObject, fUsed);
+    IJsonOption.SKILL_USE.addTo(jsonObject, fSkillUse);
+    return jsonObject;
+  }
+  
+  public ReportSkillUse initFrom(JsonValue pJsonValue) {
+    JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
+    UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(jsonObject));
+    fPlayerId = IJsonOption.PLAYER_ID.getFrom(jsonObject);
+    fSkill = (Skill) IJsonOption.SKILL.getFrom(jsonObject);
+    fUsed = IJsonOption.USED.getFrom(jsonObject);
+    fSkillUse = (SkillUse) IJsonOption.SKILL_USE.getFrom(jsonObject);
+    return this;
+  }    
+
 }

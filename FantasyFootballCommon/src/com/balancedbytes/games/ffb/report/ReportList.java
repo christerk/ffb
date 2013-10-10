@@ -9,8 +9,13 @@ import javax.xml.transform.sax.TransformerHandler;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
 import com.balancedbytes.games.ffb.bytearray.IByteArraySerializable;
+import com.balancedbytes.games.ffb.json.IJsonOption;
+import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.xml.IXmlWriteable;
 import com.balancedbytes.games.ffb.xml.UtilXml;
+import com.eclipsesource.json.JsonArray;
+import com.eclipsesource.json.JsonObject;
+import com.eclipsesource.json.JsonValue;
 
 
 /**
@@ -127,5 +132,29 @@ public class ReportList implements IByteArraySerializable, IXmlWriteable {
     }
     return byteArraySerializationVersion;
   }
+  
+  // JSON serialization
+  
+  public JsonValue toJsonValue() {
+    JsonObject jsonObject = new JsonObject();
+    JsonArray reportArray = new JsonArray();
+    for (IReport report : fReports) {
+      reportArray.add(report.toJsonValue());
+    }
+    IJsonOption.REPORTS.addTo(jsonObject, reportArray);
+    return jsonObject;
+  }
+  
+  public ReportList initFrom(JsonValue pJsonValue) {
+    JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
+    JsonArray reportArray = IJsonOption.REPORTS.getFrom(jsonObject);
+    if (reportArray != null) {
+      ReportFactory reportFactory = new ReportFactory();
+      for (int i = 0; i < reportArray.size(); i++) {
+        add(reportFactory.forJsonValue(reportArray.get(i)));
+      }
+    }
+    return this;
+  }  
   
 }

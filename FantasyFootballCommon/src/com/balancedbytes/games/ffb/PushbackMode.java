@@ -1,13 +1,10 @@
-/**
- * Copyright Sparkassen Informatik GmbH & Co. KG
- */
 package com.balancedbytes.games.ffb;
 
 /**
  * 
  * @author Kalimar
  */
-public enum PushbackMode {
+public enum PushbackMode implements IEnumWithId, IEnumWithName {
   
   REGULAR(1, "regular"),
   SIDE_STEP(2, "sideStep"),
@@ -27,24 +24,6 @@ public enum PushbackMode {
 
   public String getName() {
     return fName;
-  }
-  
-  public static PushbackMode fromId(int pValue) {
-    for (PushbackMode mode : values()) {
-      if (mode.getId() == pValue) {
-        return mode;
-      }
-    }
-    return null;
-  }
-  
-  public static PushbackMode fromName(String pName) {
-    for (PushbackMode mode : values()) {
-      if (mode.getName().equalsIgnoreCase(pName)) {
-        return mode;
-      }
-    }
-    return null;
   }
 
 }

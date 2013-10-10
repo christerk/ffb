@@ -1,14 +1,13 @@
 package com.balancedbytes.games.ffb;
 
 import com.balancedbytes.games.ffb.model.Player;
-import com.balancedbytes.games.ffb.util.StringTool;
 
 /**
  * LRB5 Skill Categories
  * 
  * @author Kalimar
  */
-public enum SkillUse {
+public enum SkillUse implements IEnumWithId, IEnumWithName {
   
   WOULD_NOT_HELP(1, "wouldNotHelp", "because it would not help"),
   NO_TEAM_MATE_IN_RANGE(2, "noTeamMateInRange", "because no team-mate is in range"),
@@ -55,28 +54,6 @@ public enum SkillUse {
     } else {
       return fDescription;
     }
-  }
-  
-  public static SkillUse fromId(int pId) {
-    if (pId > 0) {
-      for (SkillUse skillCategory : values()) {
-        if (pId == skillCategory.getId()) {
-          return skillCategory;
-        }
-      }
-    }
-    return null;
-  }
-  
-  public static SkillUse fromName(String pName) {
-    if (StringTool.isProvided(pName)) {
-      for (SkillUse skillCategory : values()) {
-        if (pName.equalsIgnoreCase(skillCategory.getName())) {
-          return skillCategory;
-        }
-      }
-    }
-    return null;
   }
   
 }

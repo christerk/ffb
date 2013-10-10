@@ -6,7 +6,11 @@ import org.xml.sax.helpers.AttributesImpl;
 
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
+import com.balancedbytes.games.ffb.json.IJsonOption;
+import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.xml.UtilXml;
+import com.eclipsesource.json.JsonObject;
+import com.eclipsesource.json.JsonValue;
 
 
 
@@ -23,10 +27,10 @@ public class ReportSpectators implements IReport {
   private static final String _XML_ATTRIBUTE_SPECTATORS_AWAY = "spectatorsAway";
   private static final String _XML_ATTRIBUTE_FAME_AWAY = "fameAway";
   
-  private int[] fRollHome;
+  private int[] fSpectatorRollHome;
   private int fSpectatorsHome;
   private int fFameHome;
-  private int[] fRollAway;
+  private int[] fSpectatorRollAway;
   private int fSpectatorsAway;
   private int fFameAway;
   
@@ -35,10 +39,10 @@ public class ReportSpectators implements IReport {
   }
 
   public ReportSpectators(int[] pRollHome, int pSupportersHome, int pFameHome, int[] pRollAway, int pSupportersAway, int pFameAway) {
-    fRollHome = pRollHome;
+    fSpectatorRollHome = pRollHome;
     fSpectatorsHome = pSupportersHome;
     fFameHome = pFameHome;
-    fRollAway = pRollAway;
+    fSpectatorRollAway = pRollAway;
     fSpectatorsAway = pSupportersAway;
     fFameAway = pFameAway;
   }
@@ -47,8 +51,8 @@ public class ReportSpectators implements IReport {
     return ReportId.SPECTATORS;
   }
   
-  public int[] getRollHome() {
-    return fRollHome;
+  public int[] getSpectatorRollHome() {
+    return fSpectatorRollHome;
   }
   
   public int getSpectatorsHome() {
@@ -59,8 +63,8 @@ public class ReportSpectators implements IReport {
     return fFameHome;
   }
   
-  public int[] getRollAway() {
-    return fRollAway;
+  public int[] getSpectatorRollAway() {
+    return fSpectatorRollAway;
   }
   
   public int getSpectatorsAway() {
@@ -74,7 +78,7 @@ public class ReportSpectators implements IReport {
   // transformation
   
   public IReport transform() {
-    return new ReportSpectators(getRollAway(), getSpectatorsAway(), getFameAway(), getRollHome(), getSpectatorsHome(), getFameHome());
+    return new ReportSpectators(getSpectatorRollAway(), getSpectatorsAway(), getFameAway(), getSpectatorRollHome(), getSpectatorsHome(), getFameHome());
   }
   
   // XML serialization
@@ -82,10 +86,10 @@ public class ReportSpectators implements IReport {
   public void addToXml(TransformerHandler pHandler) {
     AttributesImpl attributes = new AttributesImpl();
     UtilXml.addAttribute(attributes, XML_ATTRIBUTE_ID, getId().getName());
-    UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_ROLL_HOME, getRollHome());
+    UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_ROLL_HOME, getSpectatorRollHome());
     UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_SPECTATORS_HOME, getSpectatorsHome());
     UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_FAME_HOME, getFameHome());
-    UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_ROLL_AWAY, getRollAway());
+    UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_ROLL_AWAY, getSpectatorRollAway());
     UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_SPECTATORS_AWAY, getSpectatorsAway());
     UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_FAME_AWAY, getFameAway());
     UtilXml.addEmptyElement(pHandler, XML_TAG, attributes);
@@ -104,10 +108,10 @@ public class ReportSpectators implements IReport {
   public void addTo(ByteList pByteList) {
     pByteList.addSmallInt(getId().getId());
     pByteList.addSmallInt(getByteArraySerializationVersion());
-    pByteList.addByteArray(getRollHome());
+    pByteList.addByteArray(getSpectatorRollHome());
     pByteList.addInt(getSpectatorsHome());
     pByteList.addByte((byte) getFameHome());
-    pByteList.addByteArray(getRollAway());
+    pByteList.addByteArray(getSpectatorRollAway());
     pByteList.addInt(getSpectatorsAway());
     pByteList.addByte((byte) getFameAway());
   }
@@ -115,13 +119,39 @@ public class ReportSpectators implements IReport {
   public int initFrom(ByteArray pByteArray) {
     UtilReport.validateReportId(this, new ReportIdFactory().forId(pByteArray.getSmallInt()));
     int byteArraySerializationVersion = pByteArray.getSmallInt();
-    fRollHome = pByteArray.getByteArrayAsIntArray();
+    fSpectatorRollHome = pByteArray.getByteArrayAsIntArray();
     fSpectatorsHome = pByteArray.getInt();
     fFameHome = pByteArray.getByte();
-    fRollAway = pByteArray.getByteArrayAsIntArray();
+    fSpectatorRollAway = pByteArray.getByteArrayAsIntArray();
     fSpectatorsAway = pByteArray.getInt();
     fFameAway = pByteArray.getByte();
     return byteArraySerializationVersion;
   }
-    
+  
+  // JSON serialization
+  
+  public JsonValue toJsonValue() {
+    JsonObject jsonObject = new JsonObject();
+    IJsonOption.REPORT_ID.addTo(jsonObject, getId());
+    IJsonOption.SPECTATOR_ROLL_HOME.addTo(jsonObject, fSpectatorRollHome);
+    IJsonOption.SPECTATORS_HOME.addTo(jsonObject, fSpectatorsHome);
+    IJsonOption.FAME_HOME.addTo(jsonObject, fFameHome);
+    IJsonOption.SPECTATOR_ROLL_AWAY.addTo(jsonObject, fSpectatorRollAway);
+    IJsonOption.SPECTATORS_AWAY.addTo(jsonObject, fSpectatorsAway);
+    IJsonOption.FAME_AWAY.addTo(jsonObject, fFameAway);
+    return jsonObject;
+  }
+  
+  public ReportSpectators initFrom(JsonValue pJsonValue) {
+    JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
+    UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(jsonObject));
+    fSpectatorRollHome = IJsonOption.SPECTATOR_ROLL_HOME.getFrom(jsonObject);
+    fSpectatorsHome = IJsonOption.SPECTATORS_HOME.getFrom(jsonObject);
+    fFameHome = IJsonOption.FAME_HOME.getFrom(jsonObject);
+    fSpectatorRollAway = IJsonOption.SPECTATOR_ROLL_AWAY.getFrom(jsonObject);
+    fSpectatorsAway = IJsonOption.SPECTATORS_AWAY.getFrom(jsonObject);
+    fFameAway = IJsonOption.FAME_AWAY.getFrom(jsonObject);
+    return this;
+  }
+      
 }

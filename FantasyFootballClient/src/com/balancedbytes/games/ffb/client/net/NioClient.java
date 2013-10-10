@@ -56,6 +56,8 @@ public class NioClient implements Runnable {
 	private FantasyFootballClient fClient;
 	
 	private DelayQueue fDelayQueue;
+	
+  private NetCommandFactory fNetCommandFactory;
 
 	public NioClient(FantasyFootballClient pClient) throws IOException {
 	  
@@ -67,6 +69,7 @@ public class NioClient implements Runnable {
 		fReadBuffer = ByteBuffer.allocate(16 * 1024);
 		fReadBuffer.clear();
 		fSelector = initSelector();
+	  fNetCommandFactory = new NetCommandFactory();
 		
 		//TODO: Initialize fDelayProxy instance if enabled. Leave as null to disable it.
 		// 50 to 2000 ms delay is pretty unenjoyable, but should be playable. A large spread is necessary to generate packet bursts.
@@ -203,14 +206,13 @@ public class NioClient implements Runnable {
 			return;
 		}
 		
-    NetCommandFactory netCommandFactory = NetCommandFactory.getInstance();
     byte[] readBytes = fReadBuffer.array();
     int totalReadBytes = fReadBuffer.position();
     int offset = 0;
     while (offset < totalReadBytes) {
-      byte[] cmdBytes = netCommandFactory.nextCommandBytes(readBytes, offset, totalReadBytes);
+      byte[] cmdBytes = fNetCommandFactory.nextCommandBytes(readBytes, offset, totalReadBytes);
       if (cmdBytes != null) {
-        NetCommand netCommand = netCommandFactory.fromBytes(cmdBytes);
+        NetCommand netCommand = fNetCommandFactory.fromBytes(cmdBytes);
         netCommand.setSender(socketChannel);
         if (NetCommandId.SERVER_PING == netCommand.getId()) {
           ServerCommandPing pingCommand = (ServerCommandPing) netCommand; 

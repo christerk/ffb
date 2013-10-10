@@ -122,7 +122,7 @@ public class GameLog implements IByteArraySerializable {
     for (int j = 0; j < commandBytes.length; j++) {
       commandBytes[j] = pByteArray.getByte();
     }
-    return (ServerCommand) NetCommandFactory.getInstance().fromBytes(commandBytes);
+    return (ServerCommand) new NetCommandFactory().fromBytes(commandBytes);
   }
   
 }

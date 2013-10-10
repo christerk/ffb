@@ -9,8 +9,12 @@ import org.xml.sax.helpers.AttributesImpl;
 
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
+import com.balancedbytes.games.ffb.json.IJsonOption;
+import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.util.ArrayTool;
 import com.balancedbytes.games.ffb.xml.UtilXml;
+import com.eclipsesource.json.JsonObject;
+import com.eclipsesource.json.JsonValue;
 
 
 
@@ -28,12 +32,12 @@ public class ReportSecretWeaponBan implements IReport {
 
   private List<String> fPlayerIds;
   private List<Integer> fRolls;
-  private List<Boolean> fBanned;
+  private List<Boolean> fBans;
   
   public ReportSecretWeaponBan() {
     fPlayerIds = new ArrayList<String>();
     fRolls = new ArrayList<Integer>();
-    fBanned = new ArrayList<Boolean>();
+    fBans = new ArrayList<Boolean>();
   }
 
   public ReportId getId() {
@@ -53,10 +57,10 @@ public class ReportSecretWeaponBan implements IReport {
   }
   
   
-  public boolean[] getBanned() {
-  	boolean[] result = new boolean[fBanned.size()];
+  public boolean[] getBans() {
+  	boolean[] result = new boolean[fBans.size()];
   	for (int i = 0; i < result.length; i++) {
-  		result[i] = fBanned.get(i);
+  		result[i] = fBans.get(i);
   	}
   	return result;
   }
@@ -64,16 +68,40 @@ public class ReportSecretWeaponBan implements IReport {
   public void add(String pPlayerId, int pRoll, boolean pBanned) {
   	fPlayerIds.add(pPlayerId);
   	fRolls.add(pRoll);
-  	fBanned.add(pBanned);
+  	fBans.add(pBanned);
   }
-      
+  
+  private void addPlayerIds(String[] pPlayerIds) {
+    if (pPlayerIds != null) {
+      for (String playerId : pPlayerIds) {
+        fPlayerIds.add(playerId);
+      }
+    }
+  }
+
+  private void addRolls(int[] pRolls) {
+    if (pRolls != null) {
+      for (int roll : pRolls) {
+        fRolls.add(roll);
+      }
+    }
+  }
+  
+  private void addBans(boolean[] pBans) {
+    if (pBans != null) {
+      for (boolean ban : pBans) {
+        fBans.add(ban);
+      }
+    }
+  }
+
   // transformation
   
   public ReportSecretWeaponBan transform() {
   	ReportSecretWeaponBan transformed = new ReportSecretWeaponBan();
   	String[] playerIds = getPlayerIds();
   	int[] rolls = getRolls();
-  	boolean[] banned = getBanned();
+  	boolean[] banned = getBans();
   	for (int i = 0; i < playerIds.length; i++) {
   		transformed.add(playerIds[i], rolls[i], banned[i]);
   	}
@@ -88,7 +116,7 @@ public class ReportSecretWeaponBan implements IReport {
     UtilXml.startElement(pHandler, XML_TAG, attributes);
     String[] playerIds = getPlayerIds();
     int[] rolls = getRolls();
-    boolean[] banned = getBanned();
+    boolean[] banned = getBans();
     if (ArrayTool.isProvided(playerIds)) {
       for (int i = 0; i < playerIds.length; i++) {
         attributes = new AttributesImpl();
@@ -118,7 +146,7 @@ public class ReportSecretWeaponBan implements IReport {
     pByteList.addSmallInt(getByteArraySerializationVersion());
     pByteList.addStringArray(getPlayerIds());
     pByteList.addByteArray(getRolls());
-    pByteList.addBooleanArray(getBanned());
+    pByteList.addBooleanArray(getBans());
   }
   
   public int initFrom(ByteArray pByteArray) {
@@ -137,6 +165,29 @@ public class ReportSecretWeaponBan implements IReport {
     	}
     }
     return byteArraySerializationVersion;
+  }
+  
+  // JSON serialization
+  
+  public JsonValue toJsonValue() {
+    JsonObject jsonObject = new JsonObject();
+    IJsonOption.REPORT_ID.addTo(jsonObject, getId());
+    IJsonOption.PLAYER_IDS.addTo(jsonObject, fPlayerIds);
+    IJsonOption.ROLLS.addTo(jsonObject, fRolls);
+    IJsonOption.BANS.addTo(jsonObject, fBans);
+    return jsonObject;
+  }
+  
+  public ReportSecretWeaponBan initFrom(JsonValue pJsonValue) {
+    JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
+    UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(jsonObject));
+    fPlayerIds.clear();
+    addPlayerIds(IJsonOption.PLAYER_IDS.getFrom(jsonObject));
+    fRolls.clear();
+    addRolls(IJsonOption.ROLLS.getFrom(jsonObject));
+    fBans.clear();
+    addBans(IJsonOption.BANS.getFrom(jsonObject));
+    return this;
   }
   
 }

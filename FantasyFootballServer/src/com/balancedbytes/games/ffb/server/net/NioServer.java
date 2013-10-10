@@ -46,6 +46,8 @@ public class NioServer implements Runnable {
 
   // Maps a SocketChannel to a list of ByteBuffer instances
   private Map<SocketChannel,List<ByteBuffer>> fPendingData;
+  
+  private NetCommandFactory fNetCommandFactory;
     
   public NioServer(InetAddress pHostAddress, int pPort, INetCommandHandler pCommandHandler) throws IOException {
     fHostAddress = pHostAddress;
@@ -54,6 +56,7 @@ public class NioServer implements Runnable {
     fReadBufferByChannel = new HashMap<SocketChannel, ByteBuffer>();
     fPendingData = Collections.synchronizedMap(new HashMap<SocketChannel,List<ByteBuffer>>());
     fSelector = initSelector();
+    fNetCommandFactory = new NetCommandFactory();
   }
   
   public void send(SocketChannel pSocketChannel, NetCommand pNetCommand) {
@@ -186,14 +189,13 @@ public class NioServer implements Runnable {
       return;
     }
 
-    NetCommandFactory netCommandFactory = NetCommandFactory.getInstance();
     byte[] readBytes = readBuffer.array();
     int totalReadBytes = readBuffer.position();
     int offset = 0;
     while (offset < nrBytesRead) {
-      byte[] cmdBytes = netCommandFactory.nextCommandBytes(readBytes, offset, totalReadBytes);
+      byte[] cmdBytes = fNetCommandFactory.nextCommandBytes(readBytes, offset, totalReadBytes);
       if (cmdBytes != null) {
-        NetCommand netCommand = netCommandFactory.fromBytes(cmdBytes);
+        NetCommand netCommand = fNetCommandFactory.fromBytes(cmdBytes);
         if (netCommand != null) {
           netCommand.setSender(socketChannel);
           fCommandHandler.handleNetCommand(netCommand);
