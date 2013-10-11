@@ -4,10 +4,6 @@ import java.nio.channels.SocketChannel;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.xml.transform.sax.TransformerHandler;
-
-import org.xml.sax.helpers.AttributesImpl;
-
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
 import com.balancedbytes.games.ffb.json.IJsonOption;
@@ -15,7 +11,6 @@ import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.net.NetCommandFactory;
 import com.balancedbytes.games.ffb.net.NetCommandId;
 import com.balancedbytes.games.ffb.util.ArrayTool;
-import com.balancedbytes.games.ffb.xml.UtilXml;
 import com.eclipsesource.json.JsonArray;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
@@ -25,9 +20,6 @@ import com.eclipsesource.json.JsonValue;
  * @author Kalimar
  */
 public class ServerCommandReplay extends ServerCommand {
-  
-  private static final String _XML_ATTRIBUTE_NR_OF_COMMANDS = "nrOfCommands";
-  private static final String _XML_ATTRIBUTE_TOTAL_NR_OF_COMMANDS = "totalNrOfCommands";
   
   public static final int SIZE_LIMIT = (8 * 1024) - 10; 
   
@@ -96,25 +88,6 @@ public class ServerCommandReplay extends ServerCommand {
     return highestCommandNr;
   }
   
-  // XML serialization
-
-  public void addToXml(TransformerHandler pHandler) {
-    AttributesImpl attributes = new AttributesImpl();
-    UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_NR_OF_COMMANDS, getNrOfCommands());
-    UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_TOTAL_NR_OF_COMMANDS, getTotalNrOfCommands());
-    UtilXml.startElement(pHandler, getId().getName(), attributes);
-    // to cut this short in the debug log ...
-//    ServerCommand[] replayCommands = getReplayCommands();
-//    for (ServerCommand replayCommand : replayCommands) {
-//      replayCommand.addToXml(pHandler);
-//    }
-    UtilXml.endElement(pHandler, getId().getName());
-  }
-
-  public String toXml(boolean pIndent) {
-    return UtilXml.toXml(this, pIndent);
-  }
-
   // ByteArray serialization
   
   public int getByteArraySerializationVersion() {

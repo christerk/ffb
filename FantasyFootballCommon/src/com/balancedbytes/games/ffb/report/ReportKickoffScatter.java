@@ -1,15 +1,10 @@
 package com.balancedbytes.games.ffb.report;
 
-import javax.xml.transform.sax.TransformerHandler;
-
-import org.xml.sax.helpers.AttributesImpl;
-
 import com.balancedbytes.games.ffb.Direction;
 import com.balancedbytes.games.ffb.DirectionFactory;
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
-import com.balancedbytes.games.ffb.xml.UtilXml;
 
 
 /**
@@ -17,14 +12,6 @@ import com.balancedbytes.games.ffb.xml.UtilXml;
  * @author Kalimar
  */
 public class ReportKickoffScatter implements IReport {
-  
-  private static final String _XML_ATTRIBUTE_X = "x";
-  private static final String _XML_ATTRIBUTE_Y = "y";
-  private static final String _XML_ATTRIBUTE_SCATTER_DIRECTION = "scatterDirection";
-  private static final String _XML_ATTRIBUTE_ROLL_SCATTER_DIRECTION = "rollScatterDirection";
-  private static final String _XML_ATTRIBUTE_ROLL_SCATTER_DISTANCE = "rollScatterDistance";
-
-  private static final String _XML_TAG_BALL_COORDINATE_END = "ballCoordinateEnd";
   
   private FieldCoordinate fBallCoordinateEnd;
   private Direction fScatterDirection;
@@ -71,29 +58,6 @@ public class ReportKickoffScatter implements IReport {
   
   public IReport transform() {
     return new ReportKickoffScatter(FieldCoordinate.transform(getBallCoordinateEnd()), new DirectionFactory().transform(getScatterDirection()), getRollScatterDirection(), getRollScatterDistance());
-  }
-  
-  // XML serialization
-
-  public void addToXml(TransformerHandler pHandler) {
-    AttributesImpl attributes = new AttributesImpl();
-    UtilXml.addAttribute(attributes, XML_ATTRIBUTE_ID, getId().getName());
-    String scatterDirectionName = (getScatterDirection() != null) ? getScatterDirection().getName() : null;
-    UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_SCATTER_DIRECTION, scatterDirectionName);
-    UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_ROLL_SCATTER_DIRECTION, getRollScatterDirection());
-    UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_ROLL_SCATTER_DISTANCE, getRollScatterDistance());
-    UtilXml.startElement(pHandler, XML_TAG, attributes);
-    if (getBallCoordinateEnd() != null) {
-      attributes = new AttributesImpl();
-      UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_X, getBallCoordinateEnd().getX());
-      UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_Y, getBallCoordinateEnd().getY());
-      UtilXml.addEmptyElement(pHandler, _XML_TAG_BALL_COORDINATE_END, attributes);
-    }
-    UtilXml.endElement(pHandler, XML_TAG);
-  }
-
-  public String toXml(boolean pIndent) {
-    return UtilXml.toXml(this, pIndent);
   }
   
   // ByteArray serialization

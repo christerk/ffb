@@ -1,16 +1,10 @@
 package com.balancedbytes.games.ffb.net.commands;
 
-import javax.xml.transform.sax.TransformerHandler;
-
-import org.xml.sax.helpers.AttributesImpl;
-
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.net.NetCommandId;
-import com.balancedbytes.games.ffb.util.StringTool;
-import com.balancedbytes.games.ffb.xml.UtilXml;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
@@ -20,8 +14,6 @@ import com.eclipsesource.json.JsonValue;
  */
 public class ServerCommandRemovePlayer extends ServerCommand {
   
-  private static final String _XML_ATTRIBUTE_PLAYER_ID = "playerId";
-
   private String fPlayerId;
   
   public ServerCommandRemovePlayer() {
@@ -39,23 +31,6 @@ public class ServerCommandRemovePlayer extends ServerCommand {
   public String getPlayerId() {
     return fPlayerId;
   }  
-  
-  // XML serialization
-  
-  public void addToXml(TransformerHandler pHandler) {
-    AttributesImpl attributes = new AttributesImpl();
-    if (getCommandNr() > 0) {
-      UtilXml.addAttribute(attributes, XML_ATTRIBUTE_COMMAND_NR, getCommandNr());
-    }
-    if (StringTool.isProvided(getPlayerId())) {
-      UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_PLAYER_ID, getPlayerId());
-    }
-    UtilXml.addEmptyElement(pHandler, getId().getName(), attributes);
-  }
-
-  public String toXml(boolean pIndent) {
-    return UtilXml.toXml(this, pIndent);
-  }
   
   // ByteArray serialization
   

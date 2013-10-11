@@ -1,10 +1,7 @@
 package com.balancedbytes.games.ffb.report;
 
-import org.xml.sax.helpers.AttributesImpl;
-
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
-import com.balancedbytes.games.ffb.xml.UtilXml;
 
 
 
@@ -14,8 +11,6 @@ import com.balancedbytes.games.ffb.xml.UtilXml;
  */
 public class ReportDauntlessRoll extends ReportSkillRoll {
   
-  private static final String _XML_ATTRIBUTE_STRENGTH = "strength";
-
   private int fStrength;
 
   public ReportDauntlessRoll() {
@@ -23,10 +18,14 @@ public class ReportDauntlessRoll extends ReportSkillRoll {
   }
 
   public ReportDauntlessRoll(String pPlayerId, boolean pSuccessful, int pStrength, int pRoll, int pMinimumRoll, boolean pReRolled) {    
-    super(ReportId.DAUNTLESS_ROLL, pPlayerId, pSuccessful, pRoll, pMinimumRoll, null, pReRolled);
+    super(ReportId.DAUNTLESS_ROLL, pPlayerId, pSuccessful, pRoll, pMinimumRoll, pReRolled);
     fStrength = pStrength;
   }
   
+  public ReportId getId() {
+    return ReportId.DAUNTLESS_ROLL;
+  }
+
   public int getStrength() {
     return fStrength;
   }
@@ -37,30 +36,39 @@ public class ReportDauntlessRoll extends ReportSkillRoll {
     return new ReportDauntlessRoll(getPlayerId(), isSuccessful(), getStrength(), getRoll(), getMinimumRoll(), isReRolled());
   }
   
-  // XML serialization
-  
-  protected void addXmlAttributes(AttributesImpl pAttributes) {
-    super.addXmlAttributes(pAttributes);
-    UtilXml.addAttribute(pAttributes, _XML_ATTRIBUTE_STRENGTH, getStrength());
-  }
-  
   // ByteArray serialization
   
-  @Override
   public int getByteArraySerializationVersion() {
     return 1;
   }
 
-  @Override
   public void addTo(ByteList pByteList) {
-    addCommonPartTo(pByteList, getByteArraySerializationVersion());
+    pByteList.addSmallInt(getId().getId());
+    pByteList.addSmallInt(getByteArraySerializationVersion());
+    pByteList.addString(getPlayerId());
+    pByteList.addBoolean(isSuccessful());
+    pByteList.addByte((byte) getRoll());
+    pByteList.addByte((byte) getMinimumRoll());
+    pByteList.addByte((byte) 0);  // nr of modifiers
+    pByteList.addBoolean(isReRolled());
     pByteList.addByte((byte) getStrength());
   }
 
-  @Override
   public int initFrom(ByteArray pByteArray) {
     int byteArraySerializationVersion = initCommonPartFrom(pByteArray);
     fStrength = pByteArray.getByte();
+    return byteArraySerializationVersion;
+  }
+
+  protected int initCommonPartFrom(ByteArray pByteArray) {
+    UtilReport.validateReportId(this, new ReportIdFactory().forId(pByteArray.getSmallInt()));
+    int byteArraySerializationVersion = pByteArray.getSmallInt();
+    fPlayerId = pByteArray.getString();
+    fSuccessful = pByteArray.getBoolean();
+    fRoll = pByteArray.getByte();
+    fMinimumRoll = pByteArray.getByte();
+    pByteArray.getByte();  // nr of modifiers
+    fReRolled = pByteArray.getBoolean();
     return byteArraySerializationVersion;
   }
     

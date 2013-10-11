@@ -1,9 +1,5 @@
 package com.balancedbytes.games.ffb.net.commands;
 
-import javax.xml.transform.sax.TransformerHandler;
-
-import org.xml.sax.helpers.AttributesImpl;
-
 import com.balancedbytes.games.ffb.ClientMode;
 import com.balancedbytes.games.ffb.ClientModeFactory;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
@@ -12,7 +8,6 @@ import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.net.NetCommand;
 import com.balancedbytes.games.ffb.net.NetCommandId;
-import com.balancedbytes.games.ffb.xml.UtilXml;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
@@ -22,14 +17,6 @@ import com.eclipsesource.json.JsonValue;
  * @author Kalimar
  */
 public class ClientCommandJoin extends NetCommand {
-  
-  private static final String _XML_ATTRIBUTE_COACH = "coach";
-  private static final String _XML_ATTRIBUTE_PASSWORD = "password";
-  private static final String _XML_ATTRIBUTE_GAME_ID = "gameId";
-  private static final String _XML_ATTRIBUTE_GAME_NAME = "gameName";
-  private static final String _XML_ATTRIBUTE_TEAM_ID = "teamId";
-  private static final String _XML_ATTRIBUTE_TEAM_NAME = "teamName";
-  private static final String _XML_ATTRIBUTE_CLIENT_MODE = "clientMode";
   
   private String fCoach;
   private String fPassword;
@@ -106,25 +93,6 @@ public class ClientCommandJoin extends NetCommand {
   public void setTeamName(String pTeamName) {
     fTeamName = pTeamName;
   }
-  
-  // XML serialization
-  
-  public void addToXml(TransformerHandler pHandler) {
-  	AttributesImpl attributes = new AttributesImpl();
-    UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_CLIENT_MODE, (getClientMode() != null) ? getClientMode().getName() : null);
-    UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_COACH, getCoach());
-    UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_PASSWORD, getPassword());
-    UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_GAME_ID, Long.toString(getGameId()));
-    UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_GAME_NAME, getGameName());
-    UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_TEAM_ID, getTeamId());
-    UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_TEAM_NAME, getTeamName());
-  	UtilXml.addEmptyElement(pHandler, getId().getName(), attributes);
-  }
-  
-  public String toXml(boolean pIndent) {
-    return UtilXml.toXml(this, pIndent);
-  }
-
   
   // ByteArray serialization
   

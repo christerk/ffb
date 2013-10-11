@@ -1,16 +1,11 @@
 package com.balancedbytes.games.ffb.report;
 
-import javax.xml.transform.sax.TransformerHandler;
-
-import org.xml.sax.helpers.AttributesImpl;
-
 import com.balancedbytes.games.ffb.PlayerAction;
 import com.balancedbytes.games.ffb.PlayerActionFactory;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
-import com.balancedbytes.games.ffb.xml.UtilXml;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
@@ -23,9 +18,6 @@ import com.eclipsesource.json.JsonValue;
  */
 public class ReportPlayerAction implements IReport {
 
-  private static final String _XML_ATTRIBUTE_PLAYER_ID = "playerId";
-  private static final String _XML_ATTRIBUTE_PLAYER_ACTION = "playerAction";
-  
   private String fActingPlayerId;
   private PlayerAction fPlayerAction;
   
@@ -55,20 +47,6 @@ public class ReportPlayerAction implements IReport {
   
   public IReport transform() {
     return new ReportPlayerAction(getActingPlayerId(), getPlayerAction());
-  }
-  
-  // XML serialization
-  
-  public void addToXml(TransformerHandler pHandler) {
-    AttributesImpl attributes = new AttributesImpl();
-    UtilXml.addAttribute(attributes, XML_ATTRIBUTE_ID, getId().getName());
-    UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_PLAYER_ID, getActingPlayerId());
-    UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_PLAYER_ACTION, (getPlayerAction() != null) ? getPlayerAction().getName() : null);
-    UtilXml.addEmptyElement(pHandler, XML_TAG, attributes);
-  }
-
-  public String toXml(boolean pIndent) {
-    return UtilXml.toXml(this, pIndent);
   }
   
   // ByteArray serialization

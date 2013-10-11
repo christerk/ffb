@@ -3,10 +3,6 @@ package com.balancedbytes.games.ffb.report;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.xml.transform.sax.TransformerHandler;
-
-import org.xml.sax.helpers.AttributesImpl;
-
 import com.balancedbytes.games.ffb.Direction;
 import com.balancedbytes.games.ffb.DirectionFactory;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
@@ -14,7 +10,6 @@ import com.balancedbytes.games.ffb.bytearray.ByteList;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.util.ArrayTool;
-import com.balancedbytes.games.ffb.xml.UtilXml;
 import com.eclipsesource.json.JsonArray;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
@@ -26,12 +21,6 @@ import com.eclipsesource.json.JsonValue;
  */
 public class ReportScatterBall implements IReport {
   
-  private static final String _XML_ATTRIBUTE_GUST_OF_WIND = "gustOfWind";
-  private static final String _XML_ATTRIBUTE_DIRECTION = "direction";
-  private static final String _XML_ATTRIBUTE_ROLL = "rolls";
-
-  private static final String _XML_TAG_SCATTER = "scatter";
-
   private List<Direction> fDirections;
   private List<Integer> fRolls;
   private boolean fGustOfWind;
@@ -98,30 +87,6 @@ public class ReportScatterBall implements IReport {
   
   public IReport transform() {
     return new ReportScatterBall(new DirectionFactory().transform(getDirections()), getRolls(), isGustOfWind());
-  }
-  
-  // XML serialization
-  
-  public void addToXml(TransformerHandler pHandler) {
-    AttributesImpl attributes = new AttributesImpl();
-    UtilXml.addAttribute(attributes, XML_ATTRIBUTE_ID, getId().getName());
-    UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_GUST_OF_WIND, isGustOfWind());
-    UtilXml.startElement(pHandler, XML_TAG, attributes);
-    int[] rolls = getRolls();
-    Direction[] directions = getDirections();
-    if (ArrayTool.isProvided(directions) && ArrayTool.isProvided(rolls)) {
-      for (int i = 0; i < directions.length; i++) {
-        attributes = new AttributesImpl();
-        UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_DIRECTION, (directions[i] != null) ? directions[i].getName() : null);
-        UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_ROLL, rolls[i]);
-        UtilXml.addEmptyElement(pHandler, _XML_TAG_SCATTER, attributes);
-      }
-    }
-    UtilXml.endElement(pHandler, XML_TAG);
-  }
-
-  public String toXml(boolean pIndent) {
-    return UtilXml.toXml(this, pIndent);
   }
   
   // ByteArray serialization

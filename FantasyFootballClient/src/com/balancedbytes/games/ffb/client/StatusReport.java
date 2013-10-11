@@ -437,7 +437,7 @@ public class StatusReport {
       }
     }
     if (neededRoll != null) {
-      neededRoll.append(" (Roll").append(formatRollModifiers(pReport.getModifiers())).append(" > ").append(pReport.getMinimumRoll() - 1).append(").");
+      neededRoll.append(" (Roll").append(formatRollModifiers(pReport.getCatchModifiers())).append(" > ").append(pReport.getMinimumRoll() - 1).append(").");
       println(getIndent() + 1, TextStyle.NEEDED_ROLL, neededRoll.toString());
     }
   }
@@ -1060,7 +1060,7 @@ public class StatusReport {
       } else {
         neededRoll.append(" (AG ").append(Math.min(6, actingPlayer.getPlayer().getAgility()));
       }
-      neededRoll.append(" + 1 Dodge").append(formatRollModifiers(pReport.getModifiers())).append(" + Roll > 6).");
+      neededRoll.append(" + 1 Dodge").append(formatRollModifiers(pReport.getCatchModifiers())).append(" + Roll > 6).");
       println(getIndent() + 1, TextStyle.NEEDED_ROLL, neededRoll.toString());
     }
   }
@@ -1219,7 +1219,7 @@ public class StatusReport {
       }
     }
     if (neededRoll != null) {
-      neededRoll.append(" (AG ").append(Math.min(6, player.getAgility())).append(formatRollModifiers(pReport.getModifiers())).append(" + Roll > 6).");
+      neededRoll.append(" (AG ").append(Math.min(6, player.getAgility())).append(formatRollModifiers(pReport.getCatchModifiers())).append(" + Roll > 6).");
       println(getIndent() + 1, TextStyle.NEEDED_ROLL, neededRoll.toString());
     }
   }
@@ -1258,7 +1258,7 @@ public class StatusReport {
       }
     }
     if (neededRoll != null) {
-      neededRoll.append(" (AG ").append(Math.min(6, player.getAgility())).append(formatRollModifiers(pReport.getModifiers())).append(" + Roll > 6).");
+      neededRoll.append(" (AG ").append(Math.min(6, player.getAgility())).append(formatRollModifiers(pReport.getCatchModifiers())).append(" + Roll > 6).");
       println(getIndent() + 1, TextStyle.NEEDED_ROLL, neededRoll.toString());
     }
   }
@@ -1395,7 +1395,7 @@ public class StatusReport {
       }
     }
     if (neededRoll != null) {
-      neededRoll.append(" (AG ").append(Math.min(6, thrownPlayer.getAgility())).append(formatRollModifiers(pReport.getModifiers())).append(" + Roll > 6).");
+      neededRoll.append(" (AG ").append(Math.min(6, thrownPlayer.getAgility())).append(formatRollModifiers(pReport.getCatchModifiers())).append(" + Roll > 6).");
       println(getIndent() + 1, TextStyle.NEEDED_ROLL, neededRoll.toString());
     }
   }
@@ -1487,7 +1487,7 @@ public class StatusReport {
       }
     }
     if (neededRoll != null) {
-      neededRoll.append(" (AG ").append(Math.min(6, player.getAgility())).append(formatRollModifiers(pReport.getModifiers())).append(" + Roll > 6).");
+      neededRoll.append(" (AG ").append(Math.min(6, player.getAgility())).append(formatRollModifiers(pReport.getCatchModifiers())).append(" + Roll > 6).");
       println(getIndent() + 2, TextStyle.NEEDED_ROLL, neededRoll.toString());
     }
   }
@@ -1565,7 +1565,7 @@ public class StatusReport {
       }
     }
     if (neededRoll != null) {
-      neededRoll.append(" (AG ").append(Math.min(6, player.getAgility())).append(formatRollModifiers(pReport.getModifiers())).append(" + Roll > 6).");
+      neededRoll.append(" (AG ").append(Math.min(6, player.getAgility())).append(formatRollModifiers(pReport.getCatchModifiers())).append(" + Roll > 6).");
       println(getIndent() + 2, TextStyle.NEEDED_ROLL, neededRoll.toString());
     }
   }
@@ -1598,7 +1598,7 @@ public class StatusReport {
       }
     }
     if (neededRoll != null) {
-      neededRoll.append(" (AG ").append(Math.min(6, player.getAgility())).append(" + 1 Pickup").append(formatRollModifiers(pReport.getModifiers())).append(" + Roll > 6).");
+      neededRoll.append(" (AG ").append(Math.min(6, player.getAgility())).append(" + 1 Pickup").append(formatRollModifiers(pReport.getCatchModifiers())).append(" + Roll > 6).");
       println(getIndent() + 2, TextStyle.NEEDED_ROLL, neededRoll.toString());
     }
   }

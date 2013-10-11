@@ -3,10 +3,6 @@ package com.balancedbytes.games.ffb.report;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.xml.transform.sax.TransformerHandler;
-
-import org.xml.sax.helpers.AttributesImpl;
-
 import com.balancedbytes.games.ffb.ArmorModifier;
 import com.balancedbytes.games.ffb.InjuryModifier;
 import com.balancedbytes.games.ffb.InjuryType;
@@ -16,7 +12,6 @@ import com.balancedbytes.games.ffb.SeriousInjuryFactory;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
 import com.balancedbytes.games.ffb.util.ArrayTool;
-import com.balancedbytes.games.ffb.xml.UtilXml;
 
 
 /**
@@ -25,24 +20,6 @@ import com.balancedbytes.games.ffb.xml.UtilXml;
  */
 public class ReportInjury implements IReport {
 
-  private static final String _XML_ATTRIBUTE_ATTACKER_ID = "attackerId";
-  private static final String _XML_ATTRIBUTE_DEFENDER_ID = "defenderId";
-  private static final String _XML_ATTRIBUTE_INJURY = "injury";
-  private static final String _XML_ATTRIBUTE_INJURY_DECAY = "injuryDecay";
-  private static final String _XML_ATTRIBUTE_INJURY_TYPE = "injuryType";
-  private static final String _XML_ATTRIBUTE_ARMOR_BROKEN = "armorBroken";
-  private static final String _XML_ATTRIBUTE_ARMOR_ROLL = "armorRoll";
-  private static final String _XML_ATTRIBUTE_INJURY_ROLL = "injuryRoll";
-  private static final String _XML_ATTRIBUTE_CASUALTY_ROLL = "casualtyRoll";
-  private static final String _XML_ATTRIBUTE_SERIOUS_INJURY = "seriousInjury";
-  private static final String _XML_ATTRIBUTE_CASUALTY_ROLL_DECAY = "casualtyRollDecay";
-  private static final String _XML_ATTRIBUTE_SERIOUS_INJURY_DECAY = "seriousInjuryDecay";
-
-  private static final String _XML_TAG_ARMOR_MODIFIER_LIST = "armorModifierList";
-  private static final String _XML_TAG_ARMOR_MODIFIER = "armorModifier";
-  private static final String _XML_TAG_INJURY_MODIFIER_LIST = "injuryModifierList";
-  private static final String _XML_TAG_INJURY_MODIFIER = "injuryModifier";
-  
   private String fAttackerId;
   private String fDefenderId;
   private InjuryType fInjuryType;
@@ -190,52 +167,6 @@ public class ReportInjury implements IReport {
     return new ReportInjury(getDefenderId(), getInjuryType(), isArmorBroken(), getArmorModifiers(), getArmorRoll(), getInjuryModifiers(), getInjuryRoll(), getCasualtyRoll(), getSeriousInjury(), getCasualtyRollDecay(), getSeriousInjuryDecay(), getInjury(), getInjuryDecay(), getAttackerId());
   }
     
-  // XML serialization
-
-  public void addToXml(TransformerHandler pHandler) {
-    AttributesImpl attributes = new AttributesImpl();
-    UtilXml.addAttribute(attributes, XML_ATTRIBUTE_ID, getId().getName());
-    UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_DEFENDER_ID, getDefenderId());
-    String injuryTypeName = (getInjuryType() != null) ? getInjuryType().getName() : null;
-    UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_INJURY_TYPE, injuryTypeName);
-    UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_ARMOR_BROKEN, isArmorBroken());
-    UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_ARMOR_ROLL, getArmorRoll());
-    UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_INJURY_ROLL, getInjuryRoll());
-    UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_CASUALTY_ROLL, getCasualtyRoll());
-    String seriousInjuryName = (getSeriousInjury() != null) ? getSeriousInjury().getName() : null;
-    UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_SERIOUS_INJURY, seriousInjuryName);
-    UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_CASUALTY_ROLL_DECAY, getCasualtyRollDecay());
-    String seriousInjuryDecayName = (getSeriousInjuryDecay() != null) ? getSeriousInjuryDecay().getName() : null;
-    UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_SERIOUS_INJURY_DECAY, seriousInjuryDecayName);
-    UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_INJURY, (getInjury() != null) ? getInjury().getId() : 0);
-    UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_INJURY_DECAY, (getInjuryDecay() != null) ? getInjuryDecay().getId() : 0);
-    UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_ATTACKER_ID, getAttackerId());
-    UtilXml.startElement(pHandler, XML_TAG, attributes);
-    ArmorModifier[] armorModifiers = getArmorModifiers();
-    if (ArrayTool.isProvided(armorModifiers)) {
-      UtilXml.startElement(pHandler, _XML_TAG_ARMOR_MODIFIER_LIST);
-      for (ArmorModifier armorModifier : armorModifiers) {
-        String armorModifierName = (armorModifier != null) ? armorModifier.getName() : null;
-        UtilXml.addValueElement(pHandler, _XML_TAG_ARMOR_MODIFIER, armorModifierName);
-      }
-      UtilXml.endElement(pHandler, _XML_TAG_ARMOR_MODIFIER_LIST);
-    }
-    InjuryModifier[] injuryModifiers = getInjuryModifiers();
-    if (ArrayTool.isProvided(injuryModifiers)) {
-      UtilXml.startElement(pHandler, _XML_TAG_INJURY_MODIFIER_LIST);
-      for (InjuryModifier injuryModifier : injuryModifiers) {
-        String injuryModifierName = (injuryModifier != null) ? injuryModifier.getName() : null;
-        UtilXml.addValueElement(pHandler, _XML_TAG_INJURY_MODIFIER, injuryModifierName);
-      }
-      UtilXml.endElement(pHandler, _XML_TAG_INJURY_MODIFIER_LIST);
-    }
-    UtilXml.endElement(pHandler, XML_TAG);
-  }
-
-  public String toXml(boolean pIndent) {
-    return UtilXml.toXml(this, pIndent);
-  }
-  
   // ByteArray serialization
   
   public int getByteArraySerializationVersion() {

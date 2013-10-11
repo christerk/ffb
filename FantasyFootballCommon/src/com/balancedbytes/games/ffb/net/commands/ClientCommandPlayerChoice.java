@@ -3,10 +3,6 @@ package com.balancedbytes.games.ffb.net.commands;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.xml.transform.sax.TransformerHandler;
-
-import org.xml.sax.helpers.AttributesImpl;
-
 import com.balancedbytes.games.ffb.PlayerChoiceMode;
 import com.balancedbytes.games.ffb.PlayerChoiceModeFactory;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
@@ -18,7 +14,6 @@ import com.balancedbytes.games.ffb.net.NetCommand;
 import com.balancedbytes.games.ffb.net.NetCommandId;
 import com.balancedbytes.games.ffb.util.ArrayTool;
 import com.balancedbytes.games.ffb.util.StringTool;
-import com.balancedbytes.games.ffb.xml.UtilXml;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
@@ -29,11 +24,6 @@ import com.eclipsesource.json.JsonValue;
  * @author Kalimar
  */
 public class ClientCommandPlayerChoice extends NetCommand {
-  
-  private static final String _XML_ATTRIBUTE_MODE = "mode";
-  
-  private static final String _XML_TAG_PLAYER = "player";
-  private static final String _XML_ATTRIBUTE_ID = "id";
   
   private PlayerChoiceMode fPlayerChoiceMode;
   private List<String> fPlayerIds;
@@ -80,32 +70,6 @@ public class ClientCommandPlayerChoice extends NetCommand {
 
   public PlayerChoiceMode getPlayerChoiceMode() {
     return fPlayerChoiceMode;
-  }
-  
-  // XML serialization
-  
-  public void addToXml(TransformerHandler pHandler) {
-  	
-  	AttributesImpl attributes = new AttributesImpl();
-  	UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_MODE, (getPlayerChoiceMode() != null) ? getPlayerChoiceMode().getName() : null);
-    UtilXml.startElement(pHandler, getId().getName(), attributes);
-    
-    String[] playerIds = getPlayerIds();
-    if (ArrayTool.isProvided(playerIds)) {
-      for (String playerId : playerIds) {
-      	attributes = new AttributesImpl();
-      	UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_ID, playerId);
-        UtilXml.startElement(pHandler, _XML_TAG_PLAYER, attributes);
-      	UtilXml.endElement(pHandler, _XML_TAG_PLAYER);
-      }
-  	}
-
-  	UtilXml.endElement(pHandler, getId().getName());
-  	
-  }
-  
-  public String toXml(boolean pIndent) {
-    return UtilXml.toXml(this, pIndent);
   }
   
   // ByteArray serialization

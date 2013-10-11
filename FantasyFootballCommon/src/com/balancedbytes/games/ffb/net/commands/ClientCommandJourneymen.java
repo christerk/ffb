@@ -3,10 +3,6 @@ package com.balancedbytes.games.ffb.net.commands;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.xml.transform.sax.TransformerHandler;
-
-import org.xml.sax.helpers.AttributesImpl;
-
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
 import com.balancedbytes.games.ffb.json.IJsonOption;
@@ -15,7 +11,6 @@ import com.balancedbytes.games.ffb.net.NetCommand;
 import com.balancedbytes.games.ffb.net.NetCommandId;
 import com.balancedbytes.games.ffb.util.ArrayTool;
 import com.balancedbytes.games.ffb.util.StringTool;
-import com.balancedbytes.games.ffb.xml.UtilXml;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
@@ -24,10 +19,6 @@ import com.eclipsesource.json.JsonValue;
  * @author Kalimar
  */
 public class ClientCommandJourneymen extends NetCommand {
-
-  private static final String _XML_TAG_JOURNEYMAN = "journeyman";
-  private static final String _XML_ATTRIBUTE_POSITION_ID = "positionId";
-  private static final String _XML_ATTRIBUTE_SLOTS = "slots";
 
   private List<Integer> fSlots;
   private List<String> fPositionIds;
@@ -88,27 +79,6 @@ public class ClientCommandJourneymen extends NetCommand {
         fSlots.add(slots);
       }
     }
-  }
-
-  // XML serialization
-
-  public void addToXml(TransformerHandler pHandler) {
-    UtilXml.startElement(pHandler, getId().getName());
-    String[] positionIds = getPositionIds();
-    int[] slots = getSlots();
-    if (ArrayTool.isProvided(positionIds) && ArrayTool.isProvided(slots)) {
-      for (int i = 0; i < positionIds.length; i++) {
-        AttributesImpl attributes = new AttributesImpl();
-        UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_POSITION_ID, positionIds[i]);
-        UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_SLOTS, slots[i]);
-        UtilXml.addEmptyElement(pHandler, _XML_TAG_JOURNEYMAN, attributes);
-      }
-    }
-    UtilXml.endElement(pHandler, getId().getName());
-  }
-
-  public String toXml(boolean pIndent) {
-    return UtilXml.toXml(this, pIndent);
   }
 
   // ByteArray serialization

@@ -3,14 +3,9 @@ package com.balancedbytes.games.ffb.report;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.xml.transform.sax.TransformerHandler;
-
-import org.xml.sax.helpers.AttributesImpl;
-
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
 import com.balancedbytes.games.ffb.util.ArrayTool;
-import com.balancedbytes.games.ffb.xml.UtilXml;
 
 
 
@@ -21,13 +16,6 @@ import com.balancedbytes.games.ffb.xml.UtilXml;
  */
 public class ReportKickoffPitchInvasion implements IReport {
 
-  private static final String _XML_ATTRIBUTE_AFFECTED = "affected";
-  private static final String _XML_ATTRIBUTE_ROLL = "roll";
-  
-  private static final String _XML_TAG_HOME = "home";
-  private static final String _XML_TAG_AWAY = "away";
-  private static final String _XML_TAG_PLAYER = "player";
-  
   private List<Integer> fRollsHome;
   private List<Boolean> fPlayersAffectedHome;
   private List<Integer> fRollsAway;
@@ -138,38 +126,6 @@ public class ReportKickoffPitchInvasion implements IReport {
     return new ReportKickoffPitchInvasion(getRollsAway(), getPlayersAffectedAway(), getRollsHome(), getPlayersAffectedHome());
   }
   
-  // XML serialization
-  
-  public void addToXml(TransformerHandler pHandler) {
-    AttributesImpl attributes = new AttributesImpl();
-    UtilXml.addAttribute(attributes, XML_ATTRIBUTE_ID, getId().getName());
-    UtilXml.startElement(pHandler, XML_TAG, attributes);
-    int[] rollsHome = getRollsHome();
-    boolean[] playersAffectedHome = getPlayersAffectedHome();
-    UtilXml.startElement(pHandler, _XML_TAG_HOME);
-    for (int i = 0; i < rollsHome.length; i++) {
-      attributes = new AttributesImpl();
-      UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_ROLL, rollsHome[i]);
-      UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_AFFECTED, playersAffectedHome[i]);
-      UtilXml.addEmptyElement(pHandler, _XML_TAG_PLAYER, attributes);
-    }
-    UtilXml.endElement(pHandler, _XML_TAG_HOME);
-    int[] rollsAway = getRollsAway();
-    boolean[] playersAffectedAway = getPlayersAffectedAway();
-    UtilXml.startElement(pHandler, _XML_TAG_AWAY);
-    for (int i = 0; i < rollsAway.length; i++) {
-      UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_ROLL, rollsAway[i]);
-      UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_AFFECTED, playersAffectedAway[i]);
-      UtilXml.addEmptyElement(pHandler, _XML_TAG_PLAYER, attributes);
-    }
-    UtilXml.endElement(pHandler, _XML_TAG_AWAY);
-    UtilXml.endElement(pHandler, XML_TAG);
-  }
-
-  public String toXml(boolean pIndent) {
-    return UtilXml.toXml(this, pIndent);
-  }
-
   // ByteArray serialization
   
   public int getByteArraySerializationVersion() {

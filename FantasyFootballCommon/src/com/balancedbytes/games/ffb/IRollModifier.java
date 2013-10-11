@@ -4,11 +4,7 @@ package com.balancedbytes.games.ffb;
  * 
  * @author Kalimar
  */
-public interface IRollModifier {
-  
-  public String getName();
-  
-  public int getId();
+public interface IRollModifier extends IEnumWithId, IEnumWithName {
   
   public int getModifier();
   

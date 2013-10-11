@@ -1,9 +1,5 @@
 package com.balancedbytes.games.ffb.net.commands;
 
-import javax.xml.transform.sax.TransformerHandler;
-
-import org.xml.sax.helpers.AttributesImpl;
-
 import com.balancedbytes.games.ffb.PlayerState;
 import com.balancedbytes.games.ffb.SeriousInjury;
 import com.balancedbytes.games.ffb.SeriousInjuryFactory;
@@ -13,7 +9,6 @@ import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.net.NetCommand;
 import com.balancedbytes.games.ffb.net.NetCommandId;
-import com.balancedbytes.games.ffb.xml.UtilXml;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
@@ -24,10 +19,6 @@ import com.eclipsesource.json.JsonValue;
  */
 public class ClientCommandApothecaryChoice extends NetCommand {
    
-  private static final String _XML_ATTRIBUTE_PLAYER_ID = "playerId";
-  private static final String _XML_ATTRIBUTE_PLAYER_STATE = "playerState";
-  private static final String _XML_ATTRIBUTE_SERIOUS_INJURY = "seriousInjury";
-  
   private String fPlayerId;
   private PlayerState fPlayerState;
   private SeriousInjury fSeriousInjury;
@@ -56,20 +47,6 @@ public class ClientCommandApothecaryChoice extends NetCommand {
   
   public SeriousInjury getSeriousInjury() {
     return fSeriousInjury;
-  }
-  
-  // XML serialization
-  
-  public void addToXml(TransformerHandler pHandler) {
-  	AttributesImpl attributes = new AttributesImpl();
-  	UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_PLAYER_ID, getPlayerId());
-    UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_PLAYER_STATE, (getPlayerState() != null) ? getPlayerState().getId() : 0);
-    UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_SERIOUS_INJURY, (getSeriousInjury() != null) ? getSeriousInjury().getName() : null);
-    UtilXml.addEmptyElement(pHandler, getId().getName(), attributes);
-  }
-  
-  public String toXml(boolean pIndent) {
-    return UtilXml.toXml(this, pIndent);
   }
   
   // ByteArray serialization

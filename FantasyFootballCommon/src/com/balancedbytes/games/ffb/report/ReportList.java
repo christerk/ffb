@@ -4,15 +4,11 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import javax.xml.transform.sax.TransformerHandler;
-
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
 import com.balancedbytes.games.ffb.bytearray.IByteArraySerializable;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
-import com.balancedbytes.games.ffb.xml.IXmlWriteable;
-import com.balancedbytes.games.ffb.xml.UtilXml;
 import com.eclipsesource.json.JsonArray;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
@@ -22,10 +18,8 @@ import com.eclipsesource.json.JsonValue;
  * 
  * @author Kalimar
  */
-public class ReportList implements IByteArraySerializable, IXmlWriteable {
+public class ReportList implements IByteArraySerializable {
   
-  public static final String XML_TAG = "reportList";
-
   private List<IReport> fReports;
   
   private ReportList(int pInitialCapacity) {
@@ -88,20 +82,6 @@ public class ReportList implements IByteArraySerializable, IXmlWriteable {
     return transformedList;
   }
 
-  // XML serialization
-  
-  public void addToXml(TransformerHandler pHandler) {
-    UtilXml.startElement(pHandler, XML_TAG);
-    for (IReport report : fReports) {
-      report.addToXml(pHandler);
-    }
-    UtilXml.endElement(pHandler, XML_TAG);
-  }
-
-  public String toXml(boolean pIndent) {
-    return UtilXml.toXml(this, pIndent);
-  }
-  
   // ByteArray serialization
   
   public int getByteArraySerializationVersion() {

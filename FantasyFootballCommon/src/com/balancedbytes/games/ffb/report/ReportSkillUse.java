@@ -1,9 +1,5 @@
 package com.balancedbytes.games.ffb.report;
 
-import javax.xml.transform.sax.TransformerHandler;
-
-import org.xml.sax.helpers.AttributesImpl;
-
 import com.balancedbytes.games.ffb.Skill;
 import com.balancedbytes.games.ffb.SkillFactory;
 import com.balancedbytes.games.ffb.SkillUse;
@@ -12,7 +8,6 @@ import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
-import com.balancedbytes.games.ffb.xml.UtilXml;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
@@ -25,11 +20,6 @@ import com.eclipsesource.json.JsonValue;
  */
 public class ReportSkillUse implements IReport {
   
-  private static final String _XML_ATTRIBUTE_PLAYER_ID = "playerId";
-  private static final String _XML_ATTRIBUTE_SKILL = "skill";
-  private static final String _XML_ATTRIBUTE_USED = "used";
-  private static final String _XML_ATTRIBUTE_SKILL_USE = "skillUse";
-
   private String fPlayerId;
   private Skill fSkill;
   private boolean fUsed;
@@ -76,24 +66,6 @@ public class ReportSkillUse implements IReport {
     return new ReportSkillUse(getPlayerId(), getSkill(), isUsed(), getSkillUse());
   }
     
-  // XML serialization
-  
-  public void addToXml(TransformerHandler pHandler) {
-    AttributesImpl attributes = new AttributesImpl();
-    UtilXml.addAttribute(attributes, XML_ATTRIBUTE_ID, getId().getName());
-    UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_PLAYER_ID, getPlayerId());
-    String skillName = (getSkill() != null) ? getSkill().getName() : null;
-    UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_SKILL, skillName);
-    UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_USED, isUsed());
-    String skillUseName = (getSkillUse() != null) ? getSkillUse().getName() : null;
-    UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_SKILL_USE, skillUseName);
-    UtilXml.addEmptyElement(pHandler, XML_TAG, attributes);
-  }
-
-  public String toXml(boolean pIndent) {
-    return UtilXml.toXml(this, pIndent);
-  }
-  
   // ByteArray serialization
   
   public int getByteArraySerializationVersion() {

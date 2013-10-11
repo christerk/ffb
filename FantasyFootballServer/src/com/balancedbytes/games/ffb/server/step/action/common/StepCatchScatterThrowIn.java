@@ -315,7 +315,7 @@ public class StepCatchScatterThrowIn extends AbstractStepWithReRoll {
 	    boolean reRolled = ((getReRolledAction() == ReRolledAction.CATCH) && (getReRollSource() != null));
 	    int roll = getGameState().getDiceRoller().rollSkill();
 	    boolean successful = DiceInterpreter.getInstance().isSkillRollSuccessful(roll, minimumRoll);
-	    getResult().addReport(new ReportCatchRoll(catcher.getId(), successful, roll, minimumRoll, CatchModifier.toArray(catchModifiers), reRolled, fCatchScatterThrowInMode.isBomb()));
+	    getResult().addReport(new ReportCatchRoll(catcher.getId(), successful, roll, minimumRoll, reRolled, fCatchScatterThrowInMode.isBomb(), CatchModifier.toArray(catchModifiers)));
 
 	    if (successful) {
 

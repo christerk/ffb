@@ -1,9 +1,5 @@
 package com.balancedbytes.games.ffb.net.commands;
 
-import javax.xml.transform.sax.TransformerHandler;
-
-import org.xml.sax.helpers.AttributesImpl;
-
 import com.balancedbytes.games.ffb.PlayerAction;
 import com.balancedbytes.games.ffb.PlayerActionFactory;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
@@ -12,7 +8,6 @@ import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.net.NetCommand;
 import com.balancedbytes.games.ffb.net.NetCommandId;
-import com.balancedbytes.games.ffb.xml.UtilXml;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
@@ -21,10 +16,6 @@ import com.eclipsesource.json.JsonValue;
  * @author Kalimar
  */
 public class ClientCommandActingPlayer extends NetCommand {
-
-  private static final String _XML_ATTRIBUTE_PLAYER_ID = "playerId";
-  private static final String _XML_ATTRIBUTE_PLAYER_ACTION = "playerAction";
-  private static final String _XML_ATTRIBUTE_LEAPING = "leaping";
 
   private String fPlayerId;
   private PlayerAction fPlayerAction;
@@ -54,20 +45,6 @@ public class ClientCommandActingPlayer extends NetCommand {
 
   public boolean isLeaping() {
     return fLeaping;
-  }
-
-  // XML serialization
-
-  public void addToXml(TransformerHandler pHandler) {
-    AttributesImpl attributes = new AttributesImpl();
-    UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_PLAYER_ID, getPlayerId());
-    UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_PLAYER_ACTION, (getPlayerAction() != null) ? getPlayerAction().getName() : null);
-    UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_LEAPING, isLeaping());
-    UtilXml.addEmptyElement(pHandler, getId().getName(), attributes);
-  }
-
-  public String toXml(boolean pIndent) {
-    return UtilXml.toXml(this, pIndent);
   }
 
   // ByteArray serialization

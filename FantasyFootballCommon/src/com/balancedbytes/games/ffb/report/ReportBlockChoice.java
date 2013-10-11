@@ -1,16 +1,11 @@
 package com.balancedbytes.games.ffb.report;
 
-import javax.xml.transform.sax.TransformerHandler;
-
-import org.xml.sax.helpers.AttributesImpl;
-
 import com.balancedbytes.games.ffb.BlockResult;
 import com.balancedbytes.games.ffb.BlockResultFactory;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
-import com.balancedbytes.games.ffb.xml.UtilXml;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
@@ -22,12 +17,6 @@ import com.eclipsesource.json.JsonValue;
  */
 public class ReportBlockChoice implements IReport {
 
-  private static final String _XML_ATTRIBUTE_NR_OF_DICE = "nrOfDice";
-  private static final String _XML_ATTRIBUTE_BLOCK_ROLL = "blockRoll";
-  private static final String _XML_ATTRIBUTE_DICE_INDEX = "diceIndex";
-  private static final String _XML_ATTRIBUTE_BLOCK_RESULT = "blockResult";
-  private static final String _XML_ATTRIBUTE_DEFENDER_ID = "defenderId";
-  
   private int fNrOfDice;
   private int[] fBlockRoll;
   private int fDiceIndex;
@@ -74,23 +63,6 @@ public class ReportBlockChoice implements IReport {
   
   public IReport transform() {
     return new ReportBlockChoice(getNrOfDice(), getBlockRoll(), getDiceIndex(), getBlockResult(), getDefenderId());
-  }
-  
-  // XML serialization
-    
-  public void addToXml(TransformerHandler pHandler) {
-    AttributesImpl attributes = new AttributesImpl();
-    UtilXml.addAttribute(attributes, XML_ATTRIBUTE_ID, getId().getName());
-    UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_NR_OF_DICE, getNrOfDice());
-    UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_BLOCK_ROLL, getBlockRoll());
-    UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_DICE_INDEX, getDiceIndex());
-    UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_BLOCK_RESULT, (getBlockResult() != null) ? getBlockResult().getName() : null);
-    UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_DEFENDER_ID, getDefenderId());
-    UtilXml.addEmptyElement(pHandler, XML_TAG, attributes);
-  }
-
-  public String toXml(boolean pIndent) {
-    return UtilXml.toXml(this, pIndent);
   }
   
   // ByteArray serialization

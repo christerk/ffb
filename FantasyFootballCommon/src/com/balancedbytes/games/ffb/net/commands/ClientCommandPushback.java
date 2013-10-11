@@ -1,7 +1,5 @@
 package com.balancedbytes.games.ffb.net.commands;
 
-import javax.xml.transform.sax.TransformerHandler;
-
 import com.balancedbytes.games.ffb.Pushback;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
@@ -9,7 +7,6 @@ import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.net.NetCommand;
 import com.balancedbytes.games.ffb.net.NetCommandId;
-import com.balancedbytes.games.ffb.xml.UtilXml;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
@@ -40,20 +37,6 @@ public class ClientCommandPushback extends NetCommand {
   
   public Pushback getPushback() {
     return fPushback;
-  }
-  
-  // XML serialization
-  
-  public void addToXml(TransformerHandler pHandler) {
-    UtilXml.startElement(pHandler, getId().getName());
-    if (getPushback() != null) {
-      getPushback().addToXml(pHandler);
-    }
-    UtilXml.endElement(pHandler, getId().getName());
-  }
-  
-  public String toXml(boolean pIndent) {
-    return UtilXml.toXml(this, pIndent);
   }
   
   // ByteArray serialization

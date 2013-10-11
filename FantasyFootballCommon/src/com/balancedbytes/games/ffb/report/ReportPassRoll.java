@@ -1,10 +1,21 @@
 package com.balancedbytes.games.ffb.report;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.xml.sax.helpers.AttributesImpl;
 
+import com.balancedbytes.games.ffb.CatchModifier;
+import com.balancedbytes.games.ffb.DodgeModifier;
+import com.balancedbytes.games.ffb.GazeModifier;
+import com.balancedbytes.games.ffb.GoForItModifier;
 import com.balancedbytes.games.ffb.IRollModifier;
+import com.balancedbytes.games.ffb.InterceptionModifier;
+import com.balancedbytes.games.ffb.LeapModifier;
 import com.balancedbytes.games.ffb.PassModifier;
 import com.balancedbytes.games.ffb.PassingDistance;
+import com.balancedbytes.games.ffb.PickupModifier;
+import com.balancedbytes.games.ffb.RightStuffModifier;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
 import com.balancedbytes.games.ffb.util.ArrayTool;
@@ -16,26 +27,32 @@ import com.balancedbytes.games.ffb.xml.UtilXml;
  * 
  * @author Kalimar
  */
-public class ReportPassRoll extends ReportSkillRoll {
+public class ReportPassRoll implements IReport {
 	
-  private static final String _XML_ATTRIBUTE_PASSING_DISTANCE = "passingDistance";  
-  private static final String _XML_ATTRIBUTE_FUMBLE = "fumble";  
-  private static final String _XML_ATTRIBUTE_SAFE_THROW_HOLD = "safeThrowHold";
-  private static final String _XML_ATTRIBUTE_HAIL_MARY_PASS = "hailMaryPass";
-  private static final String _XML_ATTRIBUTE_BOMB = "bomb";
-
   private PassingDistance fPassingDistance;
   private boolean fFumble;
   private boolean fSafeThrowHold;
   private boolean fHailMaryPass;
   private boolean fBomb;
+  private String fPlayerId;
+  private boolean fSuccessful;
+  private int fRoll;
+  private int fMinimumRoll;
+  private List<PassModifier> fModifiers;
+  private boolean fReRolled;
   
   public ReportPassRoll() {    
-    super(ReportId.PASS_ROLL);
+    fModifiers = new ArrayList<PassModifier>();
   }
 
   public ReportPassRoll(String pPlayerId, boolean pFumble, int pRoll, boolean pReRolled, boolean pBomb) {
-    super(ReportId.PASS_ROLL, pPlayerId, !pFumble, pRoll, 2, pReRolled);
+    this();
+    fPlayerId = pPlayerId;
+    fSuccessful = !pFumble;
+    fFumble = pFumble;
+    fRoll = pRoll;
+    fMinimumRoll = 2;
+    fReRolled = pReRolled;
     fPassingDistance = null;
     fFumble = pFumble;
     fSafeThrowHold = false;
@@ -43,8 +60,15 @@ public class ReportPassRoll extends ReportSkillRoll {
     fBomb = pBomb;
   }
 
-  public ReportPassRoll(String pPlayerId, boolean pSuccessful, boolean pFumble, int pRoll, int pMinimumRoll, PassingDistance pPassingDistance, PassModifier[] pPassModifiers, boolean pReRolled, boolean pSafeThrowHold, boolean pBomb) {
-    super(ReportId.PASS_ROLL, pPlayerId, pSuccessful, pRoll, pMinimumRoll, pPassModifiers, pReRolled);
+  public ReportPassRoll(String pPlayerId, boolean pSuccessful, boolean pFumble, int pRoll, int pMinimumRoll, PassingDistance pPassingDistance, PassModifier[] pModifiers, boolean pReRolled, boolean pSafeThrowHold, boolean pBomb) {
+    this();
+    fPlayerId = pPlayerId;
+    fSuccessful = pSuccessful;
+    fFumble = pFumble;
+    fRoll = pRoll;
+    fMinimumRoll = pMinimumRoll;
+    add(pModifiers);
+    fReRolled = pReRolled;
     fPassingDistance = pPassingDistance;
     fFumble = pFumble;
     fSafeThrowHold = pSafeThrowHold;
@@ -52,6 +76,52 @@ public class ReportPassRoll extends ReportSkillRoll {
     fBomb = pBomb;
   }
   
+  public ReportId getId() {
+    return ReportId.PASS_ROLL;
+  }
+
+  public String getPlayerId() {
+    return fPlayerId;
+  }
+
+  public boolean isSuccessful() {
+    return fSuccessful;
+  }
+
+  public int getRoll() {
+    return fRoll;
+  }
+
+  public int getMinimumRoll() {
+    return fMinimumRoll;
+  }
+
+  public PassModifier[] getModifiers() {
+    return fModifiers.toArray(new PassModifier[fModifiers.size()]);
+  }
+
+  private void add(PassModifier pModifier) {
+    if (pModifier != null) {
+      fModifiers.add(pModifier);
+    }
+  }
+
+  private void add(PassModifier[] pModifiers) {
+    if (ArrayTool.isProvided(pModifiers)) {
+      for (PassModifier modifier : pModifiers) {
+        add(modifier);
+      }
+    }
+  }
+
+  public boolean hasModifier(PassModifier pModifier) {
+    return fModifiers.contains(pModifier);
+  }
+
+  public boolean isReRolled() {
+    return fReRolled;
+  }
+
   public PassingDistance getPassingDistance() {
     return fPassingDistance;
   }
@@ -92,27 +162,27 @@ public class ReportPassRoll extends ReportSkillRoll {
   	}
   }
   
-  // XML serialization
-  
-  protected void addXmlAttributes(AttributesImpl pAttributes) {
-    super.addXmlAttributes(pAttributes);
-    UtilXml.addAttribute(pAttributes, _XML_ATTRIBUTE_PASSING_DISTANCE, (getPassingDistance() != null) ? getPassingDistance().getName() : null);
-    UtilXml.addAttribute(pAttributes, _XML_ATTRIBUTE_FUMBLE, isFumble());
-    UtilXml.addAttribute(pAttributes, _XML_ATTRIBUTE_SAFE_THROW_HOLD, isHeldBySafeThrow());
-    UtilXml.addAttribute(pAttributes, _XML_ATTRIBUTE_HAIL_MARY_PASS, isHailMaryPass());
-    UtilXml.addAttribute(pAttributes, _XML_ATTRIBUTE_BOMB, isBomb());
-  }
-  
   // ByteArray serialization
   
-  @Override
   public int getByteArraySerializationVersion() {
     return 3;
   }
 
-  @Override
   public void addTo(ByteList pByteList) {
-    addCommonPartTo(pByteList, getByteArraySerializationVersion());
+    pByteList.addSmallInt(getId().getId());
+    pByteList.addSmallInt(getByteArraySerializationVersion());
+    pByteList.addString(getPlayerId());
+    pByteList.addBoolean(isSuccessful());
+    pByteList.addByte((byte) getRoll());
+    pByteList.addByte((byte) getMinimumRoll());
+    PassModifier[] modifiers = getModifiers();
+    pByteList.addByte((byte) modifiers.length);
+    if (ArrayTool.isProvided(modifiers)) {
+      for (PassModifier modifier : modifiers) {
+        pByteList.addByte((byte) modifier.getId()); 
+      }
+    }
+    pByteList.addBoolean(isReRolled());
     pByteList.addByte((byte) ((getPassingDistance() != null) ? getPassingDistance().getId() : 0));
     pByteList.addBoolean(isFumble());
     pByteList.addBoolean(isHeldBySafeThrow());
@@ -120,9 +190,19 @@ public class ReportPassRoll extends ReportSkillRoll {
     pByteList.addBoolean(isBomb());
   }
 
-  @Override
   public int initFrom(ByteArray pByteArray) {
-    int byteArraySerializationVersion = initCommonPartFrom(pByteArray);
+    UtilReport.validateReportId(this, new ReportIdFactory().forId(pByteArray.getSmallInt()));
+    int byteArraySerializationVersion1 = pByteArray.getSmallInt();
+    fPlayerId = pByteArray.getString();
+    fSuccessful = pByteArray.getBoolean();
+    fRoll = pByteArray.getByte();
+    fMinimumRoll = pByteArray.getByte();
+    int nrOfModifiers = pByteArray.getByte();
+    for (int i = 0; i < nrOfModifiers; i++) {
+      add(PassModifier.fromId(pByteArray.getByte()));
+    }
+    fReRolled = pByteArray.getBoolean();
+    int byteArraySerializationVersion = byteArraySerializationVersion1;
     fPassingDistance = PassingDistance.fromId(pByteArray.getByte());
     fFumble = pByteArray.getBoolean();
     fSafeThrowHold = pByteArray.getBoolean();

@@ -1,13 +1,12 @@
 package com.balancedbytes.games.ffb.report;
 
 import com.balancedbytes.games.ffb.bytearray.IByteArraySerializable;
-import com.balancedbytes.games.ffb.xml.IXmlWriteable;
 
 /**
  * 
  * @author Kalimar
  */
-public interface IReport extends IXmlWriteable, IByteArraySerializable {
+public interface IReport extends IByteArraySerializable {
   
   public static final String XML_TAG = "report";
   

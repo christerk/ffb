@@ -1,16 +1,11 @@
 package com.balancedbytes.games.ffb.net.commands;
 
-import javax.xml.transform.sax.TransformerHandler;
-
-import org.xml.sax.helpers.AttributesImpl;
-
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.net.NetCommand;
 import com.balancedbytes.games.ffb.net.NetCommandId;
-import com.balancedbytes.games.ffb.xml.UtilXml;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
@@ -19,8 +14,6 @@ import com.eclipsesource.json.JsonValue;
  * @author Kalimar
  */
 public class ClientCommandTeamSetupDelete extends NetCommand {
-
-  private static final String _XML_ATTRIBUTE_SETUP_NAME = "setupName";
 
   private String fSetupName;
 
@@ -38,18 +31,6 @@ public class ClientCommandTeamSetupDelete extends NetCommand {
 
   public String getSetupName() {
     return fSetupName;
-  }
-
-  // XML serialization
-
-  public void addToXml(TransformerHandler pHandler) {
-    AttributesImpl attributes = new AttributesImpl();
-    UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_SETUP_NAME, getSetupName());
-    UtilXml.addEmptyElement(pHandler, getId().getName(), attributes);
-  }
-
-  public String toXml(boolean pIndent) {
-    return UtilXml.toXml(this, pIndent);
   }
 
   // ByteArray serialization

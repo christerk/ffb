@@ -3,15 +3,10 @@ package com.balancedbytes.games.ffb.report;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.xml.transform.sax.TransformerHandler;
-
-import org.xml.sax.helpers.AttributesImpl;
-
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
 import com.balancedbytes.games.ffb.util.ArrayTool;
 import com.balancedbytes.games.ffb.util.StringTool;
-import com.balancedbytes.games.ffb.xml.UtilXml;
 
 
 
@@ -21,10 +16,6 @@ import com.balancedbytes.games.ffb.xml.UtilXml;
  * @author Kalimar
  */
 public class ReportDefectingPlayers implements IReport {
-
-  private static final String _XML_TAG_PLAYER = "player";
-  private static final String _XML_ATTRIBUTE_ROLL = "roll";
-  private static final String _XML_ATTRIBUTE_DEFECTING = "defecting";
 
   private List<String> fPlayerIds;
   private List<Integer> fRolls;
@@ -111,31 +102,6 @@ public class ReportDefectingPlayers implements IReport {
     return new ReportDefectingPlayers(getPlayerIds(), getRolls(), getDefecting());
   }
   
-  // XML serialization
-    
-  public void addToXml(TransformerHandler pHandler) {
-    AttributesImpl attributes = new AttributesImpl();
-    UtilXml.addAttribute(attributes, XML_ATTRIBUTE_ID, getId().getName());
-    UtilXml.startElement(pHandler, XML_TAG, attributes);
-    String[] playerIds = getPlayerIds();
-    if (ArrayTool.isProvided(playerIds)) {
-      int[] rolls = getRolls();
-      boolean[] defecting = getDefecting();
-      for (int i = 0; i < playerIds.length; i++) {
-        attributes = new AttributesImpl();
-        UtilXml.addAttribute(attributes, XML_ATTRIBUTE_ID, playerIds[i]);
-        UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_ROLL, rolls[i]);
-        UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_DEFECTING, defecting[i]);
-        UtilXml.addEmptyElement(pHandler, _XML_TAG_PLAYER, attributes);
-      }
-    }
-    UtilXml.endElement(pHandler, XML_TAG);
-  }
-
-  public String toXml(boolean pIndent) {
-    return UtilXml.toXml(this, pIndent);
-  }
-
   // ByteArray serialization
   
   public int getByteArraySerializationVersion() {

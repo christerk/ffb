@@ -1,9 +1,5 @@
 package com.balancedbytes.games.ffb.net.commands;
 
-import javax.xml.transform.sax.TransformerHandler;
-
-import org.xml.sax.helpers.AttributesImpl;
-
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.SpecialEffect;
 import com.balancedbytes.games.ffb.SpecialEffectFactory;
@@ -13,7 +9,6 @@ import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.net.NetCommand;
 import com.balancedbytes.games.ffb.net.NetCommandId;
-import com.balancedbytes.games.ffb.xml.UtilXml;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
@@ -24,12 +19,6 @@ import com.eclipsesource.json.JsonValue;
  * @author Kalimar
  */
 public class ClientCommandWizardSpell extends NetCommand {
-  
-  private static final String _XML_ATTRIBUTE_WIZARD_SPELL = "wizardSpell";
-
-  private static final String _XML_TAG_TARGET_COORDINATE = "targetCoordinate";
-  private static final String _XML_ATTRIBUTE_X = "x";
-  private static final String _XML_ATTRIBUTE_Y = "y";
   
   private SpecialEffect fWizardSpell;
   private FieldCoordinate fTargetCoordinate;
@@ -59,30 +48,6 @@ public class ClientCommandWizardSpell extends NetCommand {
 		return fTargetCoordinate;
 	}
 
-  // XML serialization
-  
-  public void addToXml(TransformerHandler pHandler) {
-  	
-  	AttributesImpl attributes = new AttributesImpl();
-  	UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_WIZARD_SPELL, (getWizardSpell() != null) ? getWizardSpell().getName() : null);
-  	UtilXml.startElement(pHandler, getId().getName(), attributes);
-  	
-  	if (getTargetCoordinate() != null) {
-  		attributes = new AttributesImpl();
-  		UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_X, getTargetCoordinate().getX());
-  		UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_Y, getTargetCoordinate().getY());
-  		UtilXml.startElement(pHandler, _XML_TAG_TARGET_COORDINATE, attributes);
-  		UtilXml.endElement(pHandler, _XML_TAG_TARGET_COORDINATE);
-  	}
-  	
-  	UtilXml.endElement(pHandler, getId().getName());
-  	
-  }
-  
-  public String toXml(boolean pIndent) {
-    return UtilXml.toXml(this, pIndent);
-  }
-  
   // ByteArray serialization
   
   public int getByteArraySerializationVersion() {

@@ -3,10 +3,6 @@ package com.balancedbytes.games.ffb.net.commands;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.xml.transform.sax.TransformerHandler;
-
-import org.xml.sax.helpers.AttributesImpl;
-
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
@@ -15,7 +11,6 @@ import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.net.NetCommand;
 import com.balancedbytes.games.ffb.net.NetCommandId;
 import com.balancedbytes.games.ffb.util.ArrayTool;
-import com.balancedbytes.games.ffb.xml.UtilXml;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
@@ -27,14 +22,6 @@ import com.eclipsesource.json.JsonValue;
  */
 public class ClientCommandTeamSetupSave extends NetCommand {
   
-  private static final String _XML_ATTRIBUTE_X = "x";
-  private static final String _XML_ATTRIBUTE_Y = "y";
-  private static final String _XML_ATTRIBUTE_NR = "nr";
-  private static final String _XML_ATTRIBUTE_SETUP_NAME = "setupName";
-
-  private static final String _XML_TAG_PLAYER = "player";
-  private static final String _XML_TAG_COORDINATE = "coordinate";
-    
   private String fSetupName;
   private List<Integer> fPlayerNumbers;
   private List<FieldCoordinate> fPlayerCoordinates;
@@ -97,34 +84,6 @@ public class ClientCommandTeamSetupSave extends NetCommand {
     }
   }
   
-  // XML serialization
-  
-  public void addToXml(TransformerHandler pHandler) {
-    AttributesImpl attributes = new AttributesImpl();
-    UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_SETUP_NAME, getSetupName());
-    UtilXml.startElement(pHandler, getId().getName(), attributes);
-    int[] playerNumbers = getPlayerNumbers();
-    FieldCoordinate[] playerCoordinates = getPlayerCoordinates();
-    if (ArrayTool.isProvided(playerNumbers) && ArrayTool.isProvided(playerCoordinates)) {
-      for (int i = 0; i < playerNumbers.length; i++) {
-        attributes = new AttributesImpl();
-        UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_NR, playerNumbers[i]);
-        UtilXml.startElement(pHandler, _XML_TAG_PLAYER, attributes);
-        if (playerCoordinates[i] != null) {
-          UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_X, playerCoordinates[i].getX());
-          UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_Y, playerCoordinates[i].getY());
-          UtilXml.addEmptyElement(pHandler, _XML_TAG_COORDINATE, attributes);
-        }
-        UtilXml.endElement(pHandler, _XML_TAG_PLAYER);
-      }
-    }
-    UtilXml.endElement(pHandler, getId().getName());
-  }
-
-  public String toXml(boolean pIndent) {
-    return UtilXml.toXml(this, pIndent);
-  }
-
   // ByteArray serialization
   
   public int getByteArraySerializationVersion() {

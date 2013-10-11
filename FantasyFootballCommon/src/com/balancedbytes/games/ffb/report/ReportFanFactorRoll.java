@@ -1,14 +1,9 @@
 package com.balancedbytes.games.ffb.report;
 
-import javax.xml.transform.sax.TransformerHandler;
-
-import org.xml.sax.helpers.AttributesImpl;
-
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
-import com.balancedbytes.games.ffb.xml.UtilXml;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
@@ -20,11 +15,6 @@ import com.eclipsesource.json.JsonValue;
  */
 public class ReportFanFactorRoll implements IReport {
   
-  private static final String _XML_ATTRIBUTE_ROLL_HOME = "rollHome";
-  private static final String _XML_ATTRIBUTE_MODIFIER_HOME = "modifierHome";
-  private static final String _XML_ATTRIBUTE_ROLL_AWAY = "rollAway";
-  private static final String _XML_ATTRIBUTE_MODIFIER_AWAY = "modifierAway";
-
   private int[] fFanFactorRollHome;
   private int fFanFactorModifierHome;
   private int[] fFanFactorRollAway;
@@ -67,22 +57,6 @@ public class ReportFanFactorRoll implements IReport {
     return new ReportFanFactorRoll(getFanFactorRollAway(), getFanFactorModifierAway(), getFanFactorRollHome(), getFanFactorModifierHome());
   }
   
-  // XML serialization
-  
-  public void addToXml(TransformerHandler pHandler) {
-    AttributesImpl attributes = new AttributesImpl();
-    UtilXml.addAttribute(attributes, XML_ATTRIBUTE_ID, getId().getName());
-    UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_ROLL_HOME, getFanFactorRollHome());
-    UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_MODIFIER_HOME, getFanFactorModifierHome());
-    UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_ROLL_AWAY, getFanFactorRollAway());
-    UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_MODIFIER_AWAY, getFanFactorModifierAway());
-    UtilXml.addEmptyElement(pHandler, XML_TAG, attributes);
-  }
-
-  public String toXml(boolean pIndent) {
-    return UtilXml.toXml(this, pIndent);
-  }
-
   // ByteArray serialization
   
   public int getByteArraySerializationVersion() {

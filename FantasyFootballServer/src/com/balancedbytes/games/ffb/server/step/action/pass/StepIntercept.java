@@ -169,7 +169,7 @@ public final class StepIntercept extends AbstractStepWithReRoll {
     boolean successful = DiceInterpreter.getInstance().isSkillRollSuccessful(roll, minimumRoll);
     InterceptionModifier[] interceptionModifierArray = InterceptionModifier.toArray(interceptionModifiers);
     boolean reRolled = ((getReRolledAction() == ReRolledAction.CATCH) && (getReRollSource() != null));
-    getResult().addReport(new ReportInterceptionRoll(pInterceptor.getId(), successful, roll, minimumRoll, interceptionModifierArray, reRolled, (PlayerAction.THROW_BOMB == game.getThrowerAction())));
+    getResult().addReport(new ReportInterceptionRoll(pInterceptor.getId(), successful, roll, minimumRoll, reRolled, (PlayerAction.THROW_BOMB == game.getThrowerAction()), interceptionModifierArray));
     if (successful) {
       status = ActionStatus.SUCCESS;
     } else {

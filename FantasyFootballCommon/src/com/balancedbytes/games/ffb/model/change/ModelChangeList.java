@@ -3,8 +3,10 @@ package com.balancedbytes.games.ffb.model.change;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.balancedbytes.games.ffb.bytearray.ByteArray;
+import com.balancedbytes.games.ffb.bytearray.ByteList;
+import com.balancedbytes.games.ffb.bytearray.IByteArraySerializable;
 import com.balancedbytes.games.ffb.json.IJsonOption;
-import com.balancedbytes.games.ffb.json.IJsonSerializable;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.Game;
 import com.eclipsesource.json.JsonArray;
@@ -16,7 +18,7 @@ import com.eclipsesource.json.JsonValue;
  * 
  * @author Kalimar
  */
-public class ModelChangeList implements IJsonSerializable {
+public class ModelChangeList implements IByteArraySerializable {
   
   private List<ModelChange> fChanges;
   
@@ -70,6 +72,32 @@ public class ModelChangeList implements IJsonSerializable {
     return transformedList;
   }
   
+  // ByteArray serialization
+  
+  public int getByteArraySerializationVersion() {
+    return 1;
+  }
+  
+  public void addTo(ByteList pByteList) {
+    pByteList.addSmallInt(getByteArraySerializationVersion());
+    pByteList.addSmallInt(fChanges.size());
+    for (ModelChange modelChange : fChanges) {
+      modelChange.addTo(pByteList);
+    }
+  }
+  
+  public int initFrom(ByteArray pByteArray) {
+    clear();
+    int byteArraySerializationVersion = pByteArray.getSmallInt();
+    int size = pByteArray.getSmallInt();
+    for (int i = 0; i < size; i++) {
+      ModelChange modelChange = new ModelChange();
+      modelChange.initFrom(pByteArray);
+      add(modelChange);
+    }
+    return byteArraySerializationVersion;
+  }
+  
   // JSON serialization
   
   public JsonObject toJsonValue() {
@@ -83,9 +111,9 @@ public class ModelChangeList implements IJsonSerializable {
   }
   
   public ModelChangeList initFrom(JsonValue pJsonValue) {
+    clear();
     JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
     JsonArray modelChanges = IJsonOption.MODEL_CHANGES.getFrom(jsonObject);
-    clear();
     for (int i = 0; i < modelChanges.size(); i++) {
       add(new ModelChange().initFrom(modelChanges.get(i)));
     }

@@ -3,15 +3,10 @@ package com.balancedbytes.games.ffb.report;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.xml.transform.sax.TransformerHandler;
-
-import org.xml.sax.helpers.AttributesImpl;
-
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
 import com.balancedbytes.games.ffb.util.ArrayTool;
 import com.balancedbytes.games.ffb.util.StringTool;
-import com.balancedbytes.games.ffb.xml.UtilXml;
 
 
 
@@ -21,13 +16,6 @@ import com.balancedbytes.games.ffb.xml.UtilXml;
  * @author Kalimar
  */
 public class ReportKickoffThrowARock implements IReport {
-  
-  private static final String _XML_ATTRIBUTE_PLAYER_ID = "id";
-  private static final String _XML_ATTRIBUTE_ROLL_HOME = "rollHome";
-  private static final String _XML_ATTRIBUTE_ROLL_AWAY = "rollAway";
-  
-  private static final String _XML_TAG_PLAYERS_HIT = "playersHit";
-  private static final String _XML_TAG_PLAYER = "player";
   
   private int fRollHome;
   private int fRollAway;
@@ -78,31 +66,6 @@ public class ReportKickoffThrowARock implements IReport {
   
   public IReport transform() {
     return new ReportKickoffThrowARock(getRollAway(), getRollHome(), getPlayersHit());
-  }
-  
-  // XML serialization
-  
-  public void addToXml(TransformerHandler pHandler) {
-    AttributesImpl attributes = new AttributesImpl();
-    UtilXml.addAttribute(attributes, XML_ATTRIBUTE_ID, getId().getName());
-    UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_ROLL_HOME, getRollHome());
-    UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_ROLL_AWAY, getRollAway());
-    UtilXml.startElement(pHandler, XML_TAG, attributes);
-    String[] playersHit = getPlayersHit();
-    if (ArrayTool.isProvided(playersHit)) {
-      UtilXml.startElement(pHandler, _XML_TAG_PLAYERS_HIT);
-      for (String playerId : playersHit) {
-        attributes = new AttributesImpl();
-        UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_PLAYER_ID, playerId);
-        UtilXml.addEmptyElement(pHandler, _XML_TAG_PLAYER, attributes);
-      }
-      UtilXml.endElement(pHandler, _XML_TAG_PLAYERS_HIT);
-    }
-    UtilXml.endElement(pHandler, XML_TAG);
-  }
-
-  public String toXml(boolean pIndent) {
-    return UtilXml.toXml(this, pIndent);
   }
   
   // ByteArray serialization

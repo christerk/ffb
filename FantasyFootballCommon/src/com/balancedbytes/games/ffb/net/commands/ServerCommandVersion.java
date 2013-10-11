@@ -5,17 +5,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.xml.transform.sax.TransformerHandler;
-
-import org.xml.sax.helpers.AttributesImpl;
-
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.net.NetCommandId;
 import com.balancedbytes.games.ffb.util.ArrayTool;
-import com.balancedbytes.games.ffb.xml.UtilXml;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
@@ -26,14 +21,6 @@ import com.eclipsesource.json.JsonValue;
  * @author Kalimar
  */
 public class ServerCommandVersion extends ServerCommand {
-  
-  private static final String _XML_ATTRIBUTE_SERVER_VERSION = "serverVersion";
-  private static final String _XML_ATTRIBUTE_CLIENT_VERSION = "clientVersion";
-  private static final String _XML_ATTRIBUTE_NAME = "name";
-  private static final String _XML_ATTRIBUTE_VALUE = "value";
-  
-  private static final String _XML_TAG_CLIENT_PROPERTIES = "clientProperties";
-  private static final String _XML_TAG_PROPERTY = "property";
   
   private String fServerVersion;
   private String fClientVersion;
@@ -78,33 +65,6 @@ public class ServerCommandVersion extends ServerCommand {
     return false;
   }
   
-  // XML serialization
-  
-  public void addToXml(TransformerHandler pHandler) {
-    AttributesImpl attributes = new AttributesImpl();
-    if (getCommandNr() > 0) {
-      UtilXml.addAttribute(attributes, XML_ATTRIBUTE_COMMAND_NR, getCommandNr());
-    }
-    UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_SERVER_VERSION, getServerVersion());
-    UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_CLIENT_VERSION, getClientVersion());
-    UtilXml.startElement(pHandler, getId().getName(), attributes);
-    if (fClientProperties.size() > 0) {
-      UtilXml.startElement(pHandler, _XML_TAG_CLIENT_PROPERTIES);
-      for (Map.Entry<String, String> property : fClientProperties.entrySet()) {
-        attributes = new AttributesImpl();
-        UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_NAME, property.getKey());
-        UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_VALUE, property.getValue());
-        UtilXml.addEmptyElement(pHandler, _XML_TAG_PROPERTY, attributes);
-      }
-      UtilXml.endElement(pHandler, _XML_TAG_CLIENT_PROPERTIES);
-    }
-    UtilXml.endElement(pHandler, getId().getName());
-  }
-
-  public String toXml(boolean pIndent) {
-    return UtilXml.toXml(this, pIndent);
-  }
-
   // ByteArray serialization
   
   public int getByteArraySerializationVersion() {

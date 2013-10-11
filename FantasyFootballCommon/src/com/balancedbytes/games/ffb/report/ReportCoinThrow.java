@@ -1,14 +1,9 @@
 package com.balancedbytes.games.ffb.report;
 
-import javax.xml.transform.sax.TransformerHandler;
-
-import org.xml.sax.helpers.AttributesImpl;
-
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
-import com.balancedbytes.games.ffb.xml.UtilXml;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
@@ -20,10 +15,6 @@ import com.eclipsesource.json.JsonValue;
  */
 public class ReportCoinThrow implements IReport {
 
-  private static final String _XML_ATTRIBUTE_COIN_THROW_HEADS = "coinThrowHeads";
-  private static final String _XML_ATTRIBUTE_COACH = "coach";
-  private static final String _XML_ATTRIBUTE_COIN_CHOICE_HEADS = "coinChoiceHeads";
-  
   private boolean fCoinThrowHeads;
   private String fCoach;
   private boolean fCoinChoiceHeads;
@@ -58,21 +49,6 @@ public class ReportCoinThrow implements IReport {
   
   public IReport transform() {
     return new ReportCoinThrow(isCoinThrowHeads(), getCoach(), isCoinChoiceHeads());
-  }
-  
-  // XML serialization
-  
-  public void addToXml(TransformerHandler pHandler) {
-    AttributesImpl attributes = new AttributesImpl();
-    UtilXml.addAttribute(attributes, XML_ATTRIBUTE_ID, getId().getName());
-    UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_COIN_THROW_HEADS, isCoinThrowHeads());
-    UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_COACH, getCoach());
-    UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_COIN_CHOICE_HEADS, isCoinChoiceHeads());
-    UtilXml.addEmptyElement(pHandler, XML_TAG, attributes);
-  }
-
-  public String toXml(boolean pIndent) {
-    return UtilXml.toXml(this, pIndent);
   }
   
   // ByteArray serialization

@@ -53,6 +53,7 @@ public interface IJsonOption {
               JsonIntArrayOption BLOCK_ROLL = new JsonIntArrayOption("blockRoll");
                    JsonIntOption BLOCKS = new JsonIntOption("blocks"); 
                    JsonIntOption BLOODWEISER_BABES = new JsonIntOption("bloodweiserBabes");
+               JsonBooleanOption BOMB = new JsonBooleanOption("bomb");
        JsonFieldCoordinateOption BOTTOM_RIGHT = new JsonFieldCoordinateOption("bottomRight");
           JsonEnumWithNameOption CARD = new JsonEnumWithNameOption("card", new CardFactory());
            JsonStringArrayOption CARDS = new JsonStringArrayOption("cards");
@@ -78,6 +79,7 @@ public interface IJsonOption {
                JsonBooleanOption COIN_THROW_HEADS = new JsonBooleanOption("coinThrowHeads");
           JsonEnumWithNameOption CONCEDE_GAME_STATUS = new JsonEnumWithNameOption("concedeGameStatus", new ConcedeGameStatusFactory());
                JsonBooleanOption CONCEDED = new JsonBooleanOption("conceded");
+          JsonEnumWithNameOption CONFUSION_SKILL = new JsonEnumWithNameOption("confusionSkill", new SkillFactory());
                    JsonIntOption COMMAND_NR = new JsonIntOption("commandNr");
                    JsonIntOption COMPLETIONS = new JsonIntOption("completions");
        JsonFieldCoordinateOption COORDINATE = new JsonFieldCoordinateOption("coordinate");
@@ -225,6 +227,7 @@ public interface IJsonOption {
                    JsonIntOption ROLL = new JsonIntOption("roll");
                    JsonIntOption ROLL_AWAY = new JsonIntOption("rollAway");
                    JsonIntOption ROLL_HOME = new JsonIntOption("rollHome");
+                 JsonArrayOption ROLL_MODIFIERS = new JsonArrayOption("rollModifiers");
               JsonIntArrayOption ROLLS = new JsonIntArrayOption("rolls");
                    JsonIntOption RUSHING = new JsonIntOption("rushing");
                    JsonIntOption SCORE = new JsonIntOption("score");

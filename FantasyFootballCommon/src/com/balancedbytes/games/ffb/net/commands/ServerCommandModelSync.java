@@ -1,18 +1,13 @@
 package com.balancedbytes.games.ffb.net.commands;
 
-import javax.xml.transform.sax.TransformerHandler;
-
-import org.xml.sax.helpers.AttributesImpl;
-
 import com.balancedbytes.games.ffb.Sound;
 import com.balancedbytes.games.ffb.SoundFactory;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
 import com.balancedbytes.games.ffb.model.Animation;
-import com.balancedbytes.games.ffb.model.change.old.ModelChangeListOld;
+import com.balancedbytes.games.ffb.model.change.ModelChangeList;
 import com.balancedbytes.games.ffb.net.NetCommandId;
 import com.balancedbytes.games.ffb.report.ReportList;
-import com.balancedbytes.games.ffb.xml.UtilXml;
 
 /**
  * 
@@ -20,12 +15,7 @@ import com.balancedbytes.games.ffb.xml.UtilXml;
  */
 public class ServerCommandModelSync extends ServerCommand {
 
-  private static final String _XML_TAG_SOUND = "sound";
-  private static final String _XML_TAG_TIME = "time";
-  private static final String _XML_ATTRIBUTE_GAME = "game";
-  private static final String _XML_ATTRIBUTE_TURN = "turn";
-
-  private ModelChangeListOld fModelChanges;
+  private ModelChangeList fModelChanges;
   private ReportList fReportList;
   private Animation fAnimation;
   private Sound fSound;
@@ -33,11 +23,11 @@ public class ServerCommandModelSync extends ServerCommand {
   private long fTurnTime;
 
   public ServerCommandModelSync() {
-    fModelChanges = new ModelChangeListOld();
+    fModelChanges = new ModelChangeList();
     fReportList = new ReportList();
   }
 
-  public ServerCommandModelSync(ModelChangeListOld pModelChanges, ReportList pReportList, Animation pAnimation, Sound pSound, long pGameTime, long pTurnTime) {
+  public ServerCommandModelSync(ModelChangeList pModelChanges, ReportList pReportList, Animation pAnimation, Sound pSound, long pGameTime, long pTurnTime) {
     this();
     fModelChanges.add(pModelChanges);
     fReportList.add(pReportList);
@@ -51,7 +41,7 @@ public class ServerCommandModelSync extends ServerCommand {
     return NetCommandId.SERVER_MODEL_SYNC;
   }
 
-  public ModelChangeListOld getModelChanges() {
+  public ModelChangeList getModelChanges() {
     return fModelChanges;
   }
 
@@ -89,33 +79,6 @@ public class ServerCommandModelSync extends ServerCommand {
     );
     transformedCommand.setCommandNr(getCommandNr());
     return transformedCommand;
-  }
-
-  // XML serialization
-
-  public void addToXml(TransformerHandler pHandler) {
-    AttributesImpl attributes = new AttributesImpl();
-    if (getCommandNr() > 0) {
-      UtilXml.addAttribute(attributes, XML_ATTRIBUTE_COMMAND_NR, getCommandNr());
-    }
-    UtilXml.startElement(pHandler, getId().getName(), attributes);
-    getModelChanges().addToXml(pHandler);
-    getReportList().addToXml(pHandler);
-    if (getAnimation() != null) {
-      getAnimation().addToXml(pHandler);
-    }
-    if (getSound() != null) {
-      UtilXml.addValueElement(pHandler, _XML_TAG_SOUND, getSound().getName());
-    }
-    attributes = new AttributesImpl();
-    UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_GAME, getGameTime());
-    UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_TURN, getTurnTime());
-    UtilXml.addEmptyElement(pHandler, _XML_TAG_TIME, attributes);
-    UtilXml.endElement(pHandler, getId().getName());
-  }
-
-  public String toXml(boolean pIndent) {
-    return UtilXml.toXml(this, pIndent);
   }
 
   // ByteArray serialization

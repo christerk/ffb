@@ -15,10 +15,8 @@ import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.Animation;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
-import com.balancedbytes.games.ffb.model.change.old.IModelChange;
-import com.balancedbytes.games.ffb.model.change.old.ModelChangeGameAttribute;
-import com.balancedbytes.games.ffb.model.change.old.ModelChangeListOld;
-import com.balancedbytes.games.ffb.model.change.old.ModelChangeTurnData;
+import com.balancedbytes.games.ffb.model.change.ModelChange;
+import com.balancedbytes.games.ffb.model.change.ModelChangeList;
 import com.balancedbytes.games.ffb.net.NetCommand;
 import com.balancedbytes.games.ffb.net.NetCommandId;
 import com.balancedbytes.games.ffb.net.commands.ServerCommandModelSync;
@@ -70,7 +68,7 @@ public class ClientCommandHandlerModelSync extends ClientCommandHandler implemen
       return true;
     }
     
-    ModelChangeListOld modelChangeList = fSyncCommand.getModelChanges();
+    ModelChangeList modelChangeList = fSyncCommand.getModelChanges();
     modelChangeList.applyTo(game);
     
     UserInterface userInterface = getClient().getUserInterface();
@@ -163,7 +161,7 @@ public class ClientCommandHandlerModelSync extends ClientCommandHandler implemen
     
   }
   
-  private void findUpdates(ModelChangeListOld pModelChangeList) {
+  private void findUpdates(ModelChangeList pModelChangeList) {
     
     if (pModelChangeList != null) {
 
@@ -174,41 +172,42 @@ public class ClientCommandHandlerModelSync extends ClientCommandHandler implemen
       fUpdateInducements = false;
       fClearSelectedPlayer = false;
 
-      for (IModelChange modelChange : pModelChangeList.getChanges()) {
-        switch (modelChange.getId()) {
-          case ACTING_PLAYER_CHANGE:
+      for (ModelChange modelChange : pModelChangeList.getChanges()) {
+        switch (modelChange.getChangeId()) {
+          case ACTING_PLAYER_MARK_SKILL_USED:
+          case ACTING_PLAYER_SET_CURRENT_MOVE:
+          case ACTING_PLAYER_SET_DODGING:
+          case ACTING_PLAYER_SET_GOING_FOR_IT:
+          case ACTING_PLAYER_SET_HAS_BLOCKED:
+          case ACTING_PLAYER_SET_HAS_FED:
+          case ACTING_PLAYER_SET_HAS_FOULED:
+          case ACTING_PLAYER_SET_HAS_MOVED:
+          case ACTING_PLAYER_SET_HAS_PASSED:
+          case ACTING_PLAYER_SET_LEAPING:
+          case ACTING_PLAYER_SET_PLAYER_ACTION:
+          case ACTING_PLAYER_SET_PLAYER_ID:
+          case ACTING_PLAYER_SET_STANDING_UP:
+          case ACTING_PLAYER_SET_STRENGTH:
+          case ACTING_PLAYER_SET_SUFFERING_ANIMOSITY:
+          case ACTING_PLAYER_SET_SUFFERING_BLOOD_LUST:
             fUpdateActingPlayer = true;
             break;
-          case TURN_DATA_CHANGE:
-            ModelChangeTurnData turnDataChange = (ModelChangeTurnData) modelChange;
-            switch (turnDataChange.getChange()) {
-              case SET_TURN_NR:
-                fUpdateTurnNr = true;
-                break;
-              case ADD_INDUCEMENT:
-              case REMOVE_INDUCEMENT:
-                fUpdateInducements = true;
-                break;
-              default:
-              	break;
-            }
+          case TURN_DATA_SET_TURN_NR:
+            fUpdateTurnNr = true;
             break;
-          case GAME_ATTRIBUTE_CHANGE:
-            ModelChangeGameAttribute gameAttributeChange = (ModelChangeGameAttribute) modelChange;
-            switch (gameAttributeChange.getChange()) {
-              case SET_TIMEOUT_POSSIBLE:
-                fUpdateTimeout = true;
-                break;
-              case SET_DEFENDER_ID:
-                fClearSelectedPlayer = (gameAttributeChange.getValue() != null);
-                break;
-              case SET_TURN_MODE:
-              	fUpdateTurnMode = true;
-              	break;
-              default:
-              	break;
-            }
+          case INDUCEMENT_SET_ADD_INDUCEMENT:
+          case INDUCEMENT_SET_REMOVE_INDUCEMENT:
+            fUpdateInducements = true;
             break;
+          case GAME_SET_TIMEOUT_POSSIBLE:
+            fUpdateTimeout = true;
+            break;
+          case GAME_SET_DEFENDER_ID:
+            fClearSelectedPlayer = (modelChange.getValue() != null);
+            break;
+          case GAME_SET_TURN_MODE:
+          	fUpdateTurnMode = true;
+          	break;
           default:
           	break;
         }

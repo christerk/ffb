@@ -3,16 +3,10 @@ package com.balancedbytes.games.ffb.report;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.xml.transform.sax.TransformerHandler;
-
-import org.xml.sax.helpers.AttributesImpl;
-
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
-import com.balancedbytes.games.ffb.util.ArrayTool;
-import com.balancedbytes.games.ffb.xml.UtilXml;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
@@ -24,11 +18,6 @@ import com.eclipsesource.json.JsonValue;
  * @author Kalimar
  */
 public class ReportSecretWeaponBan implements IReport {
-
-  private static final String _XML_TAG_BAN = "ban";
-  private static final String _XML_ATTRIBUTE_PLAYER_ID = "playerId";
-  private static final String _XML_ATTRIBUTE_ROLL = "roll";
-  private static final String _XML_ATTRIBUTE_BANNED = "banned";
 
   private List<String> fPlayerIds;
   private List<Integer> fRolls;
@@ -108,33 +97,6 @@ public class ReportSecretWeaponBan implements IReport {
     return transformed;
   }
   
-  // XML serialization
-    
-  public void addToXml(TransformerHandler pHandler) {
-    AttributesImpl attributes = new AttributesImpl();
-    UtilXml.addAttribute(attributes, XML_ATTRIBUTE_ID, getId().getName());
-    UtilXml.startElement(pHandler, XML_TAG, attributes);
-    String[] playerIds = getPlayerIds();
-    int[] rolls = getRolls();
-    boolean[] banned = getBans();
-    if (ArrayTool.isProvided(playerIds)) {
-      for (int i = 0; i < playerIds.length; i++) {
-        attributes = new AttributesImpl();
-        UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_PLAYER_ID, playerIds[i]);
-        UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_BANNED, banned[i]);
-        if (rolls[i] > 0) {
-          UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_ROLL, rolls[i]);
-        }
-        UtilXml.addEmptyElement(pHandler, _XML_TAG_BAN, attributes);
-      }
-    }
-    UtilXml.endElement(pHandler, XML_TAG);
-  }
-
-  public String toXml(boolean pIndent) {
-    return UtilXml.toXml(this, pIndent);
-  }
-
   // ByteArray serialization
   
   public int getByteArraySerializationVersion() {

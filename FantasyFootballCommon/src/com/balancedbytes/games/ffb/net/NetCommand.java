@@ -6,13 +6,12 @@ import com.balancedbytes.games.ffb.FantasyFootballException;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
 import com.balancedbytes.games.ffb.bytearray.IByteArraySerializable;
-import com.balancedbytes.games.ffb.xml.IXmlWriteable;
 
 /**
  * 
  * @author Kalimar
  */
-public abstract class NetCommand implements IByteArraySerializable, IXmlWriteable {
+public abstract class NetCommand implements IByteArraySerializable {
   
   private int fSize;
   private SocketChannel fSender;

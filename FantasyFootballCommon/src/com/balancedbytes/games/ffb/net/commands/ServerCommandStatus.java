@@ -1,9 +1,5 @@
 package com.balancedbytes.games.ffb.net.commands;
 
-import javax.xml.transform.sax.TransformerHandler;
-
-import org.xml.sax.helpers.AttributesImpl;
-
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
 import com.balancedbytes.games.ffb.json.IJsonOption;
@@ -11,7 +7,6 @@ import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.net.NetCommandId;
 import com.balancedbytes.games.ffb.net.ServerStatus;
 import com.balancedbytes.games.ffb.net.ServerStatusFactory;
-import com.balancedbytes.games.ffb.xml.UtilXml;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
@@ -22,9 +17,6 @@ import com.eclipsesource.json.JsonValue;
  * @author Kalimar
  */
 public class ServerCommandStatus extends ServerCommand {
-  
-  private static final String _XML_ATTRIBUTE_STATUS = "status";
-  private static final String _XML_ATTRIBUTE_MESSAGE = "message";
   
   private ServerStatus fServerStatus;
   private String fMessage;
@@ -54,22 +46,6 @@ public class ServerCommandStatus extends ServerCommand {
     return false;
   }
 
-  // XML serialization
-  
-  public void addToXml(TransformerHandler pHandler) {
-    AttributesImpl attributes = new AttributesImpl();
-    if (getCommandNr() > 0) {
-      UtilXml.addAttribute(attributes, XML_ATTRIBUTE_COMMAND_NR, getCommandNr());
-    }
-    UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_STATUS, (getServerStatus() != null) ? getServerStatus().getName() : null);
-    UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_MESSAGE, getMessage());
-    UtilXml.addEmptyElement(pHandler, getId().getName(), attributes);
-  }
-
-  public String toXml(boolean pIndent) {
-    return UtilXml.toXml(this, pIndent);
-  }
-  
   // ByteArray serialization
   
   public int getByteArraySerializationVersion() {

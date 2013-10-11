@@ -3,10 +3,6 @@ package com.balancedbytes.games.ffb.net.commands;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.xml.transform.sax.TransformerHandler;
-
-import org.xml.sax.helpers.AttributesImpl;
-
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
@@ -15,7 +11,6 @@ import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.net.NetCommand;
 import com.balancedbytes.games.ffb.net.NetCommandId;
 import com.balancedbytes.games.ffb.util.ArrayTool;
-import com.balancedbytes.games.ffb.xml.UtilXml;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
@@ -24,12 +19,6 @@ import com.eclipsesource.json.JsonValue;
  * @author Kalimar
  */
 public class ClientCommandMove extends NetCommand implements ICommandWithActingPlayer {
-
-  private static final String _XML_TAG_COORDINATE_FROM = "coordinateFrom";
-  private static final String _XML_TAG_COORDINATE_TO = "coordinateTo";
-  private static final String _XML_ATTRIBUTE_X = "x";
-  private static final String _XML_ATTRIBUTE_Y = "y";
-  private static final String _XML_ATTRIBUTE_ACTING_PLAYER_ID = "actingPlayerId";
 
   private String fActingPlayerId;
   private FieldCoordinate fCoordinateFrom;
@@ -74,34 +63,6 @@ public class ClientCommandMove extends NetCommand implements ICommandWithActingP
 
   public FieldCoordinate getCoordinateFrom() {
     return fCoordinateFrom;
-  }
-
-  // XML serialization
-
-  public void addToXml(TransformerHandler pHandler) {
-    AttributesImpl attributes = new AttributesImpl();
-    UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_ACTING_PLAYER_ID, getActingPlayerId());
-    UtilXml.startElement(pHandler, getId().getName(), attributes);
-    if (getCoordinateFrom() != null) {
-      attributes = new AttributesImpl();
-      UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_X, getCoordinateFrom().getX());
-      UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_Y, getCoordinateFrom().getY());
-      UtilXml.addEmptyElement(pHandler, _XML_TAG_COORDINATE_FROM, attributes);
-    }
-    FieldCoordinate[] coordinatesTo = getCoordinatesTo();
-    if (ArrayTool.isProvided(coordinatesTo)) {
-      for (FieldCoordinate coordinate : coordinatesTo) {
-        attributes = new AttributesImpl();
-        UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_X, coordinate.getX());
-        UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_Y, coordinate.getY());
-        UtilXml.addEmptyElement(pHandler, _XML_TAG_COORDINATE_TO, attributes);
-      }
-    }
-    UtilXml.endElement(pHandler, getId().getName());
-  }
-
-  public String toXml(boolean pIndent) {
-    return UtilXml.toXml(this, pIndent);
   }
 
   // ByteArray serialization

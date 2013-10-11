@@ -1,25 +1,13 @@
 package com.balancedbytes.games.ffb.report;
 
-import javax.xml.transform.sax.TransformerHandler;
-
-import org.xml.sax.helpers.AttributesImpl;
-
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
-import com.balancedbytes.games.ffb.xml.UtilXml;
 
 /**
  * 
  * @author Georg Seipler
  */
 public class ReportGameOptions implements IReport {
-
-  private static final String _XML_TAG_OVERTIME = "overtime";
-  private static final String _XML_TAG_TURNTIME = "turntime";
-  private static final String _XML_TAG_SNEAKY_GIT_AS_FOUL_GUARD = "sneakyGitAsFoulGuard";
-  private static final String _XML_TAG_FOUL_BONUS_OUTSIDE_TACKLEZONE = "foulBonusOutsideTacklezone";
-  private static final String _XML_TAG_RIGHT_STUFF_CANCELS_TACKLE = "rightStuffCancelsTackle";
-  private static final String _XML_TAG_PILING_ON_WITHOUT_MODIFIER = "pilingOnWithoutModifier";
 
   private boolean fOvertime;
   private int fTurntime;
@@ -82,25 +70,6 @@ public class ReportGameOptions implements IReport {
     ReportGameOptions transformedReport = new ReportGameOptions();
     transformedReport.init(this);
     return transformedReport;
-  }
-
-  // XML serialization
-
-  public void addToXml(TransformerHandler pHandler) {
-    AttributesImpl attributes = new AttributesImpl();
-    UtilXml.addAttribute(attributes, XML_ATTRIBUTE_ID, getId().getName());
-    UtilXml.startElement(pHandler, XML_TAG, attributes);
-    UtilXml.addValueElement(pHandler, _XML_TAG_OVERTIME, isOvertime());
-    UtilXml.addValueElement(pHandler, _XML_TAG_TURNTIME, getTurntime());
-    UtilXml.addValueElement(pHandler, _XML_TAG_SNEAKY_GIT_AS_FOUL_GUARD, isSneakyGitAsFoulGuard());
-    UtilXml.addValueElement(pHandler, _XML_TAG_FOUL_BONUS_OUTSIDE_TACKLEZONE, isFoulBonusOutsideTacklezone());
-    UtilXml.addValueElement(pHandler, _XML_TAG_RIGHT_STUFF_CANCELS_TACKLE, isRightStuffCancelsTackle());
-    UtilXml.addValueElement(pHandler, _XML_TAG_PILING_ON_WITHOUT_MODIFIER, isPilingOnWithoutModifier());
-    UtilXml.endElement(pHandler, XML_TAG);
-  }
-
-  public String toXml(boolean pIndent) {
-    return UtilXml.toXml(this, pIndent);
   }
 
   // ByteArray serialization

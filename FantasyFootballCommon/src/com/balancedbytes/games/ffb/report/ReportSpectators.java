@@ -1,14 +1,9 @@
 package com.balancedbytes.games.ffb.report;
 
-import javax.xml.transform.sax.TransformerHandler;
-
-import org.xml.sax.helpers.AttributesImpl;
-
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
-import com.balancedbytes.games.ffb.xml.UtilXml;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
@@ -19,13 +14,6 @@ import com.eclipsesource.json.JsonValue;
  * @author Kalimar
  */
 public class ReportSpectators implements IReport {
-  
-  private static final String _XML_ATTRIBUTE_ROLL_HOME = "rollHome";
-  private static final String _XML_ATTRIBUTE_SPECTATORS_HOME = "spectatorsHome";
-  private static final String _XML_ATTRIBUTE_FAME_HOME = "fameHome";
-  private static final String _XML_ATTRIBUTE_ROLL_AWAY = "rollAway";
-  private static final String _XML_ATTRIBUTE_SPECTATORS_AWAY = "spectatorsAway";
-  private static final String _XML_ATTRIBUTE_FAME_AWAY = "fameAway";
   
   private int[] fSpectatorRollHome;
   private int fSpectatorsHome;
@@ -79,24 +67,6 @@ public class ReportSpectators implements IReport {
   
   public IReport transform() {
     return new ReportSpectators(getSpectatorRollAway(), getSpectatorsAway(), getFameAway(), getSpectatorRollHome(), getSpectatorsHome(), getFameHome());
-  }
-  
-  // XML serialization
-  
-  public void addToXml(TransformerHandler pHandler) {
-    AttributesImpl attributes = new AttributesImpl();
-    UtilXml.addAttribute(attributes, XML_ATTRIBUTE_ID, getId().getName());
-    UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_ROLL_HOME, getSpectatorRollHome());
-    UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_SPECTATORS_HOME, getSpectatorsHome());
-    UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_FAME_HOME, getFameHome());
-    UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_ROLL_AWAY, getSpectatorRollAway());
-    UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_SPECTATORS_AWAY, getSpectatorsAway());
-    UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_FAME_AWAY, getFameAway());
-    UtilXml.addEmptyElement(pHandler, XML_TAG, attributes);
-  }
-
-  public String toXml(boolean pIndent) {
-    return UtilXml.toXml(this, pIndent);
   }
   
   // ByteArray serialization

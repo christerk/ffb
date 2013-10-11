@@ -3,17 +3,12 @@ package com.balancedbytes.games.ffb.report;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.xml.transform.sax.TransformerHandler;
-
-import org.xml.sax.helpers.AttributesImpl;
-
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.util.ArrayTool;
 import com.balancedbytes.games.ffb.util.StringTool;
-import com.balancedbytes.games.ffb.xml.UtilXml;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
@@ -22,10 +17,6 @@ import com.eclipsesource.json.JsonValue;
  * @author Kalimar
  */
 public class ReportMostValuablePlayers implements IReport {
-
-  private static final String _XML_TAG_HOME_PLAYERS = "homePlayers";
-  private static final String _XML_TAG_AWAY_PLAYERS = "awayPlayers";
-  private static final String _XML_TAG_PLAYER_ID = "playerId";
 
   private List<String> fPlayerIdsHome;
   private List<String> fPlayerIdsAway;
@@ -82,35 +73,6 @@ public class ReportMostValuablePlayers implements IReport {
     transformedReport.addPlayerIdsAway(getPlayerIdsHome());
     transformedReport.addPlayerIdsHome(getPlayerIdsAway());
     return transformedReport;
-  }
-
-  // XML serialization
-
-  public void addToXml(TransformerHandler pHandler) {
-    AttributesImpl attributes = new AttributesImpl();
-    UtilXml.addAttribute(attributes, XML_ATTRIBUTE_ID, getId().getName());
-    UtilXml.startElement(pHandler, XML_TAG, attributes);
-    String[] homePlayerIds = getPlayerIdsHome();
-    if (ArrayTool.isProvided(homePlayerIds)) {
-      UtilXml.startElement(pHandler, _XML_TAG_HOME_PLAYERS, attributes);
-      for (String playerId : homePlayerIds) {
-        UtilXml.addValueElement(pHandler, _XML_TAG_PLAYER_ID, playerId);
-      }
-      UtilXml.endElement(pHandler, _XML_TAG_HOME_PLAYERS);
-    }
-    String[] awayPlayerIds = getPlayerIdsAway();
-    if (ArrayTool.isProvided(awayPlayerIds)) {
-      UtilXml.startElement(pHandler, _XML_TAG_AWAY_PLAYERS, attributes);
-      for (String playerId : awayPlayerIds) {
-        UtilXml.addValueElement(pHandler, _XML_TAG_PLAYER_ID, playerId);
-      }
-      UtilXml.endElement(pHandler, _XML_TAG_AWAY_PLAYERS);
-    }
-    UtilXml.endElement(pHandler, XML_TAG);
-  }
-
-  public String toXml(boolean pIndent) {
-    return UtilXml.toXml(this, pIndent);
   }
 
   // ByteArray serialization
