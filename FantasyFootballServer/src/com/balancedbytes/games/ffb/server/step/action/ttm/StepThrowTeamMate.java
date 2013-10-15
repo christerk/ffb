@@ -4,6 +4,7 @@ import java.util.Set;
 
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.PassModifier;
+import com.balancedbytes.games.ffb.PassModifierFactory;
 import com.balancedbytes.games.ffb.PassingDistance;
 import com.balancedbytes.games.ffb.PlayerState;
 import com.balancedbytes.games.ffb.ReRollSource;
@@ -152,15 +153,16 @@ public final class StepThrowTeamMate extends AbstractStepWithReRoll {
       }
     }
     if (doRoll) {
+      PassModifierFactory passModifierFactory = new PassModifierFactory();
       FieldCoordinate throwerCoordinate = game.getFieldModel().getPlayerCoordinate(thrower);
       PassingDistance passingDistance = UtilPassing.findPassingDistance(game, throwerCoordinate, game.getPassCoordinate(), true);
-      Set<PassModifier> passModifiers = PassModifier.findPassModifiers(game, thrower, passingDistance, true);
+      Set<PassModifier> passModifiers = passModifierFactory.findPassModifiers(game, thrower, passingDistance, true);
       int minimumRoll = DiceInterpreter.getInstance().minimumRollThrowTeamMate(thrower, passingDistance, passModifiers);
       int roll = getGameState().getDiceRoller().rollSkill();
       boolean successful = !DiceInterpreter.getInstance().isPassFumble(roll, actingPlayer.getPlayer(), passingDistance, passModifiers);
-      PassModifier[] passModifierArray = PassModifier.toArray(passModifiers);
+      PassModifier[] passModifierArray = passModifierFactory.toArray(passModifiers);
       boolean reRolled = ((getReRolledAction() == ReRolledAction.THROW_TEAM_MATE) && (getReRollSource() != null));
-      getResult().addReport(new ReportThrowTeamMateRoll(thrower.getId(), fThrownPlayerId, successful, roll, minimumRoll, passingDistance, passModifierArray, reRolled));
+      getResult().addReport(new ReportThrowTeamMateRoll(thrower.getId(), successful, roll, minimumRoll, reRolled, passModifierArray, passingDistance, fThrownPlayerId));
       if (successful) {
       	SequenceGenerator.getInstance().pushScatterPlayerSequence(getGameState(), fThrownPlayerId, fThrownPlayerState, fThrownPlayerHasBall, throwerCoordinate, true);
       	getResult().setNextAction(StepAction.NEXT_STEP);

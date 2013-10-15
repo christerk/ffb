@@ -14,7 +14,7 @@ import com.balancedbytes.games.ffb.model.InducementSet;
 import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.model.Team;
 import com.balancedbytes.games.ffb.model.TurnData;
-import com.balancedbytes.games.ffb.model.change.old.ModelChangeListOld;
+import com.balancedbytes.games.ffb.model.change.ModelChangeList;
 import com.balancedbytes.games.ffb.report.ReportInducement;
 import com.balancedbytes.games.ffb.report.ReportLeader;
 import com.balancedbytes.games.ffb.report.ReportList;
@@ -50,7 +50,7 @@ public class UtilGame {
     Game game = pGameState.getGame();
     FantasyFootballServer server = pGameState.getServer();
     UtilTimer.syncTime(pGameState);
-    ModelChangeListOld modelChanges = game.fetchChanges();
+    ModelChangeList modelChanges = game.fetchChanges();
     if ((modelChanges.size() > 0) || ((pReportList != null) && (pReportList.size() > 0)) || (pAnimation != null) || (pSound != null)) {
       server.getCommunication().sendModelSync(pGameState, modelChanges, pReportList, pAnimation, pSound, game.getGameTime(), game.getTurnTime());
       synced = true;

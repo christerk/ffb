@@ -13,7 +13,7 @@ import com.balancedbytes.games.ffb.TeamList;
 import com.balancedbytes.games.ffb.model.Animation;
 import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.model.PlayerResult;
-import com.balancedbytes.games.ffb.model.change.old.ModelChangeListOld;
+import com.balancedbytes.games.ffb.model.change.ModelChangeList;
 import com.balancedbytes.games.ffb.net.INetCommandHandler;
 import com.balancedbytes.games.ffb.net.NetCommand;
 import com.balancedbytes.games.ffb.net.NetCommandId;
@@ -373,7 +373,7 @@ public class ServerCommunication implements Runnable, INetCommandHandler {
     sendAllChannels(pGameState, soundCommand);
   }
   
-  public void sendModelSync(GameState pGameState, ModelChangeListOld pModelChanges, ReportList pReports, Animation pAnimation, Sound pSound, long pGameTime, long pTurnTime) {
+  public void sendModelSync(GameState pGameState, ModelChangeList pModelChanges, ReportList pReports, Animation pAnimation, Sound pSound, long pGameTime, long pTurnTime) {
     ServerCommandModelSync syncCommand = new ServerCommandModelSync(pModelChanges, pReports, pAnimation, pSound, pGameTime, pTurnTime);
     syncCommand.setCommandNr(pGameState.generateCommandNr());
     sendHomeAndSpectatorChannels(pGameState, syncCommand);

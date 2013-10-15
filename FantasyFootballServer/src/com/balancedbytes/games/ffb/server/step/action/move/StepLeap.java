@@ -126,7 +126,7 @@ public class StepLeap extends AbstractStepWithReRoll {
     boolean successful = DiceInterpreter.getInstance().isSkillRollSuccessful(roll, minimumRoll);
     LeapModifier[] leapModifierArray = LeapModifier.toArray(leapModifiers);
     boolean reRolled = ((getReRolledAction() == ReRolledAction.LEAP) && (getReRollSource() != null));
-    getResult().addReport(new ReportSkillRoll(ReportId.LEAP_ROLL, actingPlayer.getPlayerId(), successful, roll, minimumRoll, leapModifierArray, reRolled));
+    getResult().addReport(new ReportSkillRoll(ReportId.LEAP_ROLL, actingPlayer.getPlayerId(), successful, roll, minimumRoll, reRolled, leapModifierArray));
     if (successful) {
       status = ActionStatus.SUCCESS;
     } else {

@@ -19,10 +19,10 @@ import com.balancedbytes.games.ffb.bytearray.ByteList;
 import com.balancedbytes.games.ffb.bytearray.IByteArraySerializable;
 import com.balancedbytes.games.ffb.dialog.DialogId;
 import com.balancedbytes.games.ffb.dialog.DialogIdFactory;
+import com.balancedbytes.games.ffb.model.change.ModelChangeList;
 import com.balancedbytes.games.ffb.model.change.old.CommandGameAttributeChange;
 import com.balancedbytes.games.ffb.model.change.old.IModelChange;
 import com.balancedbytes.games.ffb.model.change.old.ModelChangeGameAttribute;
-import com.balancedbytes.games.ffb.model.change.old.ModelChangeListOld;
 import com.balancedbytes.games.ffb.util.DateTool;
 import com.balancedbytes.games.ffb.util.StringTool;
 import com.balancedbytes.games.ffb.util.UtilActingPlayer;
@@ -97,7 +97,7 @@ public class Game implements IXmlWriteable, IByteArraySerializable {
   private transient long fGameTime;  // transferred to client but not persisted
     
   private transient boolean fTrackingChanges;
-  private transient ModelChangeListOld fChanges;
+  private transient ModelChangeList fChanges;
 
   public Game() {
     setFieldModel(new FieldModel(this));
@@ -105,7 +105,7 @@ public class Game implements IXmlWriteable, IByteArraySerializable {
     fTurnDataAway = new TurnData(this, false);
     fActingPlayer = new ActingPlayer(this);
     fGameResult = new GameResult(this);
-    fChanges = new ModelChangeListOld();
+    fChanges = new ModelChangeList();
     fHomePlaying = true;
     setTeamHome(new Team());
     setTeamAway(new Team());
@@ -476,8 +476,8 @@ public class Game implements IXmlWriteable, IByteArraySerializable {
     fChanges.add(pChange);
   }
   
-  public ModelChangeListOld fetchChanges() {
-    ModelChangeListOld changes = fChanges.copy();
+  public ModelChangeList fetchChanges() {
+    ModelChangeList changes = fChanges.copy();
     fChanges.clear();
     return changes;
   }

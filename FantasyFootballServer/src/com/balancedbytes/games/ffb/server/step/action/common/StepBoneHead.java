@@ -121,7 +121,7 @@ public class StepBoneHead extends AbstractStepWithReRoll {
           }
         }
         boolean reRolled = ((reRolledAction != null) && (reRolledAction == getReRolledAction()) && (getReRollSource() != null));
-        getResult().addReport(new ReportConfusionRoll(actingPlayer.getPlayerId(), Skill.BONE_HEAD, successful, roll, minimumRoll, reRolled));
+        getResult().addReport(new ReportConfusionRoll(actingPlayer.getPlayerId(), successful, roll, minimumRoll, reRolled, Skill.BONE_HEAD));
       }
     }
     if (status == ActionStatus.SUCCESS) {

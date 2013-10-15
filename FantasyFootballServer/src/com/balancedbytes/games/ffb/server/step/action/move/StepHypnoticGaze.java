@@ -110,7 +110,7 @@ public class StepHypnoticGaze extends AbstractStepWithReRoll {
       if (!reRolled) {
         getResult().setSound(Sound.HYPNO);
       }
-      getResult().addReport(new ReportSkillRoll(ReportId.HYPNOTIC_GAZE_ROLL, actingPlayer.getPlayerId(), successful, roll, minimumRoll, GazeModifier.toArray(gazeModifiers), reRolled));
+      getResult().addReport(new ReportSkillRoll(ReportId.HYPNOTIC_GAZE_ROLL, actingPlayer.getPlayerId(), successful, roll, minimumRoll, reRolled, GazeModifier.toArray(gazeModifiers)));
       if (successful) {
         PlayerState oldVictimState = game.getFieldModel().getPlayerState(game.getDefender());
         if (!oldVictimState.isConfused() && !oldVictimState.isHypnotized()) {

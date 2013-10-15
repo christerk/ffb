@@ -82,7 +82,7 @@ public class StepDauntless extends AbstractStepWithReRoll {
         int minimumRoll = DiceInterpreter.getInstance().minimumRollDauntless(actingPlayer.getStrength(), UtilCards.getPlayerStrength(game, game.getDefender()));
         boolean successful = (dauntlessRoll >= minimumRoll);
         boolean reRolled = ((getReRolledAction() == ReRolledAction.DAUNTLESS) && (getReRollSource() != null));
-        getResult().addReport(new ReportDauntlessRoll(actingPlayer.getPlayerId(), successful, UtilCards.getPlayerStrength(game, game.getDefender()), dauntlessRoll, minimumRoll, reRolled));
+        getResult().addReport(new ReportDauntlessRoll(actingPlayer.getPlayerId(), successful, dauntlessRoll, minimumRoll, reRolled, UtilCards.getPlayerStrength(game, game.getDefender())));
         if (successful) {
           actingPlayer.setStrength(UtilCards.getPlayerStrength(game, game.getDefender()));
         } else {

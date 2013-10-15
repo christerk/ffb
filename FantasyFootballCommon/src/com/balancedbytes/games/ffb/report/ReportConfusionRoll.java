@@ -15,60 +15,31 @@ import com.eclipsesource.json.JsonValue;
  * 
  * @author Kalimar
  */
-public class ReportConfusionRoll implements IReport {
+public class ReportConfusionRoll extends ReportSkillRoll {
   
-  private String fPlayerId;
   private Skill fConfusionSkill;
-  private boolean fSuccessful;
-  private int fRoll;
-  private int fMinimumRoll;
-  private boolean fReRolled;
 
   public ReportConfusionRoll() {
-    super();
+    super(ReportId.CONFUSION_ROLL);
   }
   
-  public ReportConfusionRoll(String pPlayerId, Skill pConfusionSkill, boolean pSuccessful, int pRoll, int pMinimumRoll, boolean pReRolled) {
-    fPlayerId = pPlayerId;
+  public ReportConfusionRoll(String pPlayerId, boolean pSuccessful, int pRoll, int pMinimumRoll, boolean pReRolled, Skill pConfusionSkill) {
+    super(ReportId.CONFUSION_ROLL, pPlayerId, pSuccessful, pRoll, pMinimumRoll, pReRolled);
     fConfusionSkill = pConfusionSkill;
-    fSuccessful = pSuccessful;
-    fRoll = pRoll;
-    fMinimumRoll = pMinimumRoll;
-    fReRolled = pReRolled;
   }
 
   public ReportId getId() {
     return ReportId.CONFUSION_ROLL;
   }
 
-  public String getPlayerId() {
-    return fPlayerId;
-  }
-
   public Skill getConfusionSkill() {
     return fConfusionSkill;
-  }
-  
-  public boolean isSuccessful() {
-    return fSuccessful;
-  }
-
-  public int getRoll() {
-    return fRoll;
-  }
-
-  public int getMinimumRoll() {
-    return fMinimumRoll;
-  }
-
-  public boolean isReRolled() {
-    return fReRolled;
   }
 
   // transformation
   
   public IReport transform() {
-    return new ReportConfusionRoll(getPlayerId(), getConfusionSkill(), isSuccessful(), getRoll(), getMinimumRoll(), isReRolled());
+    return new ReportConfusionRoll(getPlayerId(), isSuccessful(), getRoll(), getMinimumRoll(), isReRolled(), getConfusionSkill());
   }
   
   // ByteArray serialization
@@ -78,52 +49,29 @@ public class ReportConfusionRoll implements IReport {
   }
 
   public void addTo(ByteList pByteList) {
-    pByteList.addSmallInt(getId().getId());
-    pByteList.addSmallInt(getByteArraySerializationVersion());
-    pByteList.addString(getPlayerId());
-    pByteList.addBoolean(isSuccessful());
-    pByteList.addByte((byte) getRoll());
-    pByteList.addByte((byte) getMinimumRoll());
-    pByteList.addByte((byte) 0);  // nr of modifiers
-    pByteList.addBoolean(isReRolled());
+    super.addTo(pByteList);
     pByteList.addByte((byte) ((getConfusionSkill() != null) ? getConfusionSkill().getId() : 0));
   }
 
   public int initFrom(ByteArray pByteArray) {
-    UtilReport.validateReportId(this, new ReportIdFactory().forId(pByteArray.getSmallInt()));
-    int byteArraySerializationVersion = pByteArray.getSmallInt();
-    fPlayerId = pByteArray.getString();
-    fSuccessful = pByteArray.getBoolean();
-    fRoll = pByteArray.getByte();
-    fMinimumRoll = pByteArray.getByte();
-    pByteArray.getByte();  // nr of modifiers
-    fReRolled = pByteArray.getBoolean();
+    int byteArraySerializationVersion = super.initFrom(pByteArray);
     fConfusionSkill = new SkillFactory().forId(pByteArray.getByte());
     return byteArraySerializationVersion;
   }
   
   // JSON serialization
   
+  @Override
   public JsonValue toJsonValue() {
-    JsonObject jsonObject = new JsonObject();
-    IJsonOption.REPORT_ID.addTo(jsonObject, getId());
-    IJsonOption.PLAYER_ID.addTo(jsonObject, fPlayerId);
-    IJsonOption.SUCCESSFUL.addTo(jsonObject, fSuccessful);
-    IJsonOption.ROLL.addTo(jsonObject, fRoll);
-    IJsonOption.MINIMUM_ROLL.addTo(jsonObject, fMinimumRoll);
-    IJsonOption.RE_ROLLED.addTo(jsonObject, fReRolled);
+    JsonObject jsonObject = UtilJson.toJsonObject(super.toJsonValue());
     IJsonOption.CONFUSION_SKILL.addTo(jsonObject, fConfusionSkill);
     return jsonObject;
   }
   
+  @Override
   public ReportConfusionRoll initFrom(JsonValue pJsonValue) {
+    super.initFrom(pJsonValue);
     JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-    UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(jsonObject));
-    fPlayerId = IJsonOption.PLAYER_ID.getFrom(jsonObject);
-    fSuccessful = IJsonOption.SUCCESSFUL.getFrom(jsonObject);
-    fRoll = IJsonOption.ROLL.getFrom(jsonObject);
-    fMinimumRoll = IJsonOption.MINIMUM_ROLL.getFrom(jsonObject);
-    fReRolled = IJsonOption.RE_ROLLED.getFrom(jsonObject);
     fConfusionSkill = (Skill) IJsonOption.CONFUSION_SKILL.getFrom(jsonObject);
     return this;
   }

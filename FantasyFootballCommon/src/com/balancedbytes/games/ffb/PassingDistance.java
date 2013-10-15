@@ -6,7 +6,7 @@ package com.balancedbytes.games.ffb;
  * 
  * @author Kalimar
  */
-public enum PassingDistance {
+public enum PassingDistance implements IEnumWithId, IEnumWithName {
   
   QUICK_PASS(1, "Quick Pass", 1, 'Q'),
   SHORT_PASS(2, "Short Pass", 0, 'S'),
@@ -39,33 +39,6 @@ public enum PassingDistance {
   
   public char getShortcut() {
     return fShortcut;
-  }
-  
-  public static PassingDistance fromId(int pId) {
-    for (PassingDistance distance : values()) {
-      if (distance.getId() == pId) {
-        return distance;
-      }
-    }
-    return null;
-  }
-  
-  public static PassingDistance fromName(String pName) {
-    for (PassingDistance distance : values()) {
-      if (distance.getName().equalsIgnoreCase(pName)) {
-        return distance;
-      }
-    }
-    return null;
-  }
-
-  public static PassingDistance fromShortcut(char pShortcut) {
-    for (PassingDistance distance : values()) {
-      if (distance.getShortcut() == pShortcut) {
-        return distance;
-      }
-    }
-    return null;
   }
 
 }

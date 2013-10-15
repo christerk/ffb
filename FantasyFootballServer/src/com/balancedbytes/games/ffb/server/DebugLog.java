@@ -173,7 +173,7 @@ public class DebugLog {
               }
             }
           }
-          logInternal(gameId, commandFlag, pNetCommand.toXml(false));
+          logInternal(gameId, commandFlag, pNetCommand.toJsonValue().toString());
           break;
       }
     }
@@ -181,7 +181,7 @@ public class DebugLog {
   
   public void logServerCommand(int pLogLevel, long pGameId, NetCommand pNetCommand, String pCommandFlag) {
     if (isLogging(pLogLevel) && (pNetCommand != null)) {
-      logInternal(pGameId, pCommandFlag, pNetCommand.toXml(false));
+      logInternal(pGameId, pCommandFlag, pNetCommand.toJsonValue().toString());
     }
   }
 
@@ -189,7 +189,7 @@ public class DebugLog {
     if (isLogging(pLogLevel) && (pNetCommand != null) && (ArrayTool.isProvided(pReceivers))) {
       ChannelManager channelManager = getServer().getChannelManager();
       long gameId = channelManager.getGameIdForChannel(pReceivers[0]);
-      logInternal(gameId, COMMAND_SERVER_ALL_CLIENTS, pNetCommand.toXml(false));
+      logInternal(gameId, COMMAND_SERVER_ALL_CLIENTS, pNetCommand.toJsonValue().toString());
     }
   }
   
@@ -211,7 +211,7 @@ public class DebugLog {
             }
           }
         }
-        logInternal(gameId, commandFlag, pNetCommand.toXml(false));
+        logInternal(gameId, commandFlag, pNetCommand.toJsonValue().toString());
       }
     }
   }

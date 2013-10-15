@@ -5,6 +5,7 @@ import java.util.Set;
 import com.balancedbytes.games.ffb.CatchScatterThrowInMode;
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.PassModifier;
+import com.balancedbytes.games.ffb.PassModifierFactory;
 import com.balancedbytes.games.ffb.PassingDistance;
 import com.balancedbytes.games.ffb.PlayerAction;
 import com.balancedbytes.games.ffb.PlayerState;
@@ -158,7 +159,7 @@ public class StepPass extends AbstractStepWithReRoll {
     }
     FieldCoordinate throwerCoordinate = game.getFieldModel().getPlayerCoordinate(game.getThrower());
     PassingDistance passingDistance = UtilPassing.findPassingDistance(game, throwerCoordinate, game.getPassCoordinate(), false);
-    Set<PassModifier> passModifiers = PassModifier.findPassModifiers(game, game.getThrower(), passingDistance, false);
+    Set<PassModifier> passModifiers = new PassModifierFactory().findPassModifiers(game, game.getThrower(), passingDistance, false);
     int minimumRoll = DiceInterpreter.getInstance().minimumRollPass(game.getThrower(), passingDistance, passModifiers);
     int roll = getGameState().getDiceRoller().rollSkill();
     if (roll == 6) {
@@ -179,9 +180,9 @@ public class StepPass extends AbstractStepWithReRoll {
 				fHoldingSafeThrow = false;
 			}
 		}
-    PassModifier[] passModifierArray = PassModifier.toArray(passModifiers);
+    PassModifier[] passModifierArray = new PassModifierFactory().toArray(passModifiers);
     boolean reRolled = ((getReRolledAction() == ReRolledAction.PASS) && (getReRollSource() != null));
-    getResult().addReport(new ReportPassRoll(game.getThrowerId(), fSuccessful, fPassFumble, roll, minimumRoll, passingDistance, passModifierArray, reRolled, fHoldingSafeThrow, (PlayerAction.THROW_BOMB == game.getThrowerAction())));
+    getResult().addReport(new ReportPassRoll(game.getThrowerId(), fSuccessful, roll, minimumRoll, reRolled, passModifierArray, passingDistance, fPassFumble, fHoldingSafeThrow, (PlayerAction.THROW_BOMB == game.getThrowerAction())));
     if (fSuccessful) {
       game.getFieldModel().setRangeRuler(null);
     	publishParameter(new StepParameter(StepParameterKey.PASS_FUMBLE, fPassFumble));

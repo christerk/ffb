@@ -109,7 +109,7 @@ public final class StepRightStuff extends AbstractStepWithReRoll {
       boolean successful = DiceInterpreter.getInstance().isSkillRollSuccessful(roll, minimumRoll);
       RightStuffModifier[] rightStuffModifiersArray = RightStuffModifier.toArray(rightStuffModifiers);
       boolean reRolled = ((getReRolledAction() == ReRolledAction.RIGHT_STUFF) && (getReRollSource() != null));
-      getResult().addReport(new ReportSkillRoll(ReportId.RIGHT_STUFF_ROLL, fThrownPlayerId, successful, roll, minimumRoll, rightStuffModifiersArray, reRolled));
+      getResult().addReport(new ReportSkillRoll(ReportId.RIGHT_STUFF_ROLL, fThrownPlayerId, successful, roll, minimumRoll, reRolled, rightStuffModifiersArray));
       if (fThrownPlayerHasBall) {
         game.getFieldModel().setBallCoordinate(game.getFieldModel().getPlayerCoordinate(thrownPlayer));
       }

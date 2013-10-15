@@ -2,6 +2,10 @@ package com.balancedbytes.games.ffb.report;
 
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
+import com.balancedbytes.games.ffb.json.IJsonOption;
+import com.balancedbytes.games.ffb.json.UtilJson;
+import com.eclipsesource.json.JsonObject;
+import com.eclipsesource.json.JsonValue;
 
 
 
@@ -17,7 +21,7 @@ public class ReportDauntlessRoll extends ReportSkillRoll {
     super(ReportId.DAUNTLESS_ROLL);
   }
 
-  public ReportDauntlessRoll(String pPlayerId, boolean pSuccessful, int pStrength, int pRoll, int pMinimumRoll, boolean pReRolled) {    
+  public ReportDauntlessRoll(String pPlayerId, boolean pSuccessful, int pRoll, int pMinimumRoll, boolean pReRolled, int pStrength) {    
     super(ReportId.DAUNTLESS_ROLL, pPlayerId, pSuccessful, pRoll, pMinimumRoll, pReRolled);
     fStrength = pStrength;
   }
@@ -33,7 +37,7 @@ public class ReportDauntlessRoll extends ReportSkillRoll {
   // transformation
   
   public IReport transform() {
-    return new ReportDauntlessRoll(getPlayerId(), isSuccessful(), getStrength(), getRoll(), getMinimumRoll(), isReRolled());
+    return new ReportDauntlessRoll(getPlayerId(), isSuccessful(), getRoll(), getMinimumRoll(), isReRolled(), getStrength());
   }
   
   // ByteArray serialization
@@ -43,33 +47,31 @@ public class ReportDauntlessRoll extends ReportSkillRoll {
   }
 
   public void addTo(ByteList pByteList) {
-    pByteList.addSmallInt(getId().getId());
-    pByteList.addSmallInt(getByteArraySerializationVersion());
-    pByteList.addString(getPlayerId());
-    pByteList.addBoolean(isSuccessful());
-    pByteList.addByte((byte) getRoll());
-    pByteList.addByte((byte) getMinimumRoll());
-    pByteList.addByte((byte) 0);  // nr of modifiers
-    pByteList.addBoolean(isReRolled());
+    super.addTo(pByteList);
     pByteList.addByte((byte) getStrength());
   }
 
   public int initFrom(ByteArray pByteArray) {
-    int byteArraySerializationVersion = initCommonPartFrom(pByteArray);
+    int byteArraySerializationVersion = super.initFrom(pByteArray);
     fStrength = pByteArray.getByte();
     return byteArraySerializationVersion;
   }
-
-  protected int initCommonPartFrom(ByteArray pByteArray) {
-    UtilReport.validateReportId(this, new ReportIdFactory().forId(pByteArray.getSmallInt()));
-    int byteArraySerializationVersion = pByteArray.getSmallInt();
-    fPlayerId = pByteArray.getString();
-    fSuccessful = pByteArray.getBoolean();
-    fRoll = pByteArray.getByte();
-    fMinimumRoll = pByteArray.getByte();
-    pByteArray.getByte();  // nr of modifiers
-    fReRolled = pByteArray.getBoolean();
-    return byteArraySerializationVersion;
+  
+  // JSON serialization
+  
+  @Override
+  public JsonValue toJsonValue() {
+    JsonObject jsonObject = UtilJson.toJsonObject(super.toJsonValue());
+    IJsonOption.STRENGTH.addTo(jsonObject, fStrength);
+    return jsonObject;
   }
-    
+  
+  @Override
+  public ReportDauntlessRoll initFrom(JsonValue pJsonValue) {
+    super.initFrom(pJsonValue);
+    JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
+    fStrength = IJsonOption.STRENGTH.getFrom(jsonObject);
+    return this;
+  }
+
 }

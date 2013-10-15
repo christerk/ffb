@@ -1,25 +1,14 @@
 package com.balancedbytes.games.ffb.report;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.xml.sax.helpers.AttributesImpl;
-
-import com.balancedbytes.games.ffb.CatchModifier;
-import com.balancedbytes.games.ffb.DodgeModifier;
-import com.balancedbytes.games.ffb.GazeModifier;
-import com.balancedbytes.games.ffb.GoForItModifier;
-import com.balancedbytes.games.ffb.IRollModifier;
-import com.balancedbytes.games.ffb.InterceptionModifier;
-import com.balancedbytes.games.ffb.LeapModifier;
 import com.balancedbytes.games.ffb.PassModifier;
 import com.balancedbytes.games.ffb.PassingDistance;
-import com.balancedbytes.games.ffb.PickupModifier;
-import com.balancedbytes.games.ffb.RightStuffModifier;
+import com.balancedbytes.games.ffb.PassingDistanceFactory;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
-import com.balancedbytes.games.ffb.util.ArrayTool;
-import com.balancedbytes.games.ffb.xml.UtilXml;
+import com.balancedbytes.games.ffb.json.IJsonOption;
+import com.balancedbytes.games.ffb.json.UtilJson;
+import com.eclipsesource.json.JsonObject;
+import com.eclipsesource.json.JsonValue;
 
 
 
@@ -27,99 +16,39 @@ import com.balancedbytes.games.ffb.xml.UtilXml;
  * 
  * @author Kalimar
  */
-public class ReportPassRoll implements IReport {
+public class ReportPassRoll extends ReportSkillRoll {
 	
   private PassingDistance fPassingDistance;
   private boolean fFumble;
   private boolean fSafeThrowHold;
   private boolean fHailMaryPass;
   private boolean fBomb;
-  private String fPlayerId;
-  private boolean fSuccessful;
-  private int fRoll;
-  private int fMinimumRoll;
-  private List<PassModifier> fModifiers;
-  private boolean fReRolled;
   
-  public ReportPassRoll() {    
-    fModifiers = new ArrayList<PassModifier>();
+  public ReportPassRoll() {
+    super(ReportId.PASS_ROLL);
   }
 
   public ReportPassRoll(String pPlayerId, boolean pFumble, int pRoll, boolean pReRolled, boolean pBomb) {
-    this();
-    fPlayerId = pPlayerId;
-    fSuccessful = !pFumble;
-    fFumble = pFumble;
-    fRoll = pRoll;
-    fMinimumRoll = 2;
-    fReRolled = pReRolled;
-    fPassingDistance = null;
-    fFumble = pFumble;
-    fSafeThrowHold = false;
+    this(pPlayerId, !pFumble, pRoll, 2, pReRolled, null, null, pFumble, false, pBomb);
     fHailMaryPass = true;
-    fBomb = pBomb;
   }
 
-  public ReportPassRoll(String pPlayerId, boolean pSuccessful, boolean pFumble, int pRoll, int pMinimumRoll, PassingDistance pPassingDistance, PassModifier[] pModifiers, boolean pReRolled, boolean pSafeThrowHold, boolean pBomb) {
-    this();
-    fPlayerId = pPlayerId;
-    fSuccessful = pSuccessful;
+  public ReportPassRoll(String pPlayerId, boolean pSuccessful, int pRoll, int pMinimumRoll, boolean pReRolled, PassModifier[] pRollModifiers, PassingDistance pPassingDistance, boolean pFumble, boolean pSafeThrowHold, boolean pBomb) {
+    super(ReportId.PASS_ROLL, pPlayerId, pSuccessful, pRoll, pMinimumRoll, pReRolled, pRollModifiers);
     fFumble = pFumble;
-    fRoll = pRoll;
-    fMinimumRoll = pMinimumRoll;
-    add(pModifiers);
-    fReRolled = pReRolled;
     fPassingDistance = pPassingDistance;
     fFumble = pFumble;
     fSafeThrowHold = pSafeThrowHold;
-    fHailMaryPass = false;
     fBomb = pBomb;
+    fHailMaryPass = false;
   }
-  
+
   public ReportId getId() {
     return ReportId.PASS_ROLL;
   }
 
-  public String getPlayerId() {
-    return fPlayerId;
-  }
-
-  public boolean isSuccessful() {
-    return fSuccessful;
-  }
-
-  public int getRoll() {
-    return fRoll;
-  }
-
-  public int getMinimumRoll() {
-    return fMinimumRoll;
-  }
-
-  public PassModifier[] getModifiers() {
-    return fModifiers.toArray(new PassModifier[fModifiers.size()]);
-  }
-
-  private void add(PassModifier pModifier) {
-    if (pModifier != null) {
-      fModifiers.add(pModifier);
-    }
-  }
-
-  private void add(PassModifier[] pModifiers) {
-    if (ArrayTool.isProvided(pModifiers)) {
-      for (PassModifier modifier : pModifiers) {
-        add(modifier);
-      }
-    }
-  }
-
-  public boolean hasModifier(PassModifier pModifier) {
-    return fModifiers.contains(pModifier);
-  }
-
-  public boolean isReRolled() {
-    return fReRolled;
+  public PassModifier[] getPassModifiers() {
+    return (PassModifier[]) getRollModifiers();
   }
 
   public PassingDistance getPassingDistance() {
@@ -148,62 +77,31 @@ public class ReportPassRoll implements IReport {
   	if (isHailMaryPass()) {
   		return new ReportPassRoll(getPlayerId(), isFumble(), getRoll(), isReRolled(), isBomb());
   	} else {
-	    PassModifier[] transformedPassModifiers;
-	    IRollModifier[] rollModifiers = getModifiers();
-	    if (ArrayTool.isProvided(rollModifiers)) {
-	      transformedPassModifiers = new PassModifier[rollModifiers.length];
-	      for (int i = 0; i < transformedPassModifiers.length; i++) {
-	        transformedPassModifiers[i] = (PassModifier) rollModifiers[i];
-	      }
-	    } else {
-	      transformedPassModifiers = new PassModifier[0];
-	    }
-	    return new ReportPassRoll(getPlayerId(), isSuccessful(), isFumble(), getRoll(), getMinimumRoll(), getPassingDistance(), transformedPassModifiers, isReRolled(), isHeldBySafeThrow(), isBomb());
+	    return new ReportPassRoll(getPlayerId(), isSuccessful(), getRoll(), getMinimumRoll(), isReRolled(), getPassModifiers(), getPassingDistance(), isFumble(), isHeldBySafeThrow(), isBomb());
   	}
   }
   
   // ByteArray serialization
   
+  @Override
   public int getByteArraySerializationVersion() {
     return 3;
   }
 
+  @Override
   public void addTo(ByteList pByteList) {
-    pByteList.addSmallInt(getId().getId());
-    pByteList.addSmallInt(getByteArraySerializationVersion());
-    pByteList.addString(getPlayerId());
-    pByteList.addBoolean(isSuccessful());
-    pByteList.addByte((byte) getRoll());
-    pByteList.addByte((byte) getMinimumRoll());
-    PassModifier[] modifiers = getModifiers();
-    pByteList.addByte((byte) modifiers.length);
-    if (ArrayTool.isProvided(modifiers)) {
-      for (PassModifier modifier : modifiers) {
-        pByteList.addByte((byte) modifier.getId()); 
-      }
-    }
-    pByteList.addBoolean(isReRolled());
-    pByteList.addByte((byte) ((getPassingDistance() != null) ? getPassingDistance().getId() : 0));
-    pByteList.addBoolean(isFumble());
-    pByteList.addBoolean(isHeldBySafeThrow());
-    pByteList.addBoolean(isHailMaryPass());
-    pByteList.addBoolean(isBomb());
+    addTo(pByteList);
+    pByteList.addByte((byte) ((fPassingDistance != null) ? fPassingDistance.getId() : 0));
+    pByteList.addBoolean(fFumble);
+    pByteList.addBoolean(fSafeThrowHold);
+    pByteList.addBoolean(fHailMaryPass);
+    pByteList.addBoolean(fBomb);
   }
 
+  @Override
   public int initFrom(ByteArray pByteArray) {
-    UtilReport.validateReportId(this, new ReportIdFactory().forId(pByteArray.getSmallInt()));
-    int byteArraySerializationVersion1 = pByteArray.getSmallInt();
-    fPlayerId = pByteArray.getString();
-    fSuccessful = pByteArray.getBoolean();
-    fRoll = pByteArray.getByte();
-    fMinimumRoll = pByteArray.getByte();
-    int nrOfModifiers = pByteArray.getByte();
-    for (int i = 0; i < nrOfModifiers; i++) {
-      add(PassModifier.fromId(pByteArray.getByte()));
-    }
-    fReRolled = pByteArray.getBoolean();
-    int byteArraySerializationVersion = byteArraySerializationVersion1;
-    fPassingDistance = PassingDistance.fromId(pByteArray.getByte());
+    int byteArraySerializationVersion = super.initFrom(pByteArray);
+    fPassingDistance = new PassingDistanceFactory().forId(pByteArray.getByte());
     fFumble = pByteArray.getBoolean();
     fSafeThrowHold = pByteArray.getBoolean();
     if (byteArraySerializationVersion > 1) {
@@ -213,6 +111,31 @@ public class ReportPassRoll implements IReport {
     	fBomb = pByteArray.getBoolean();
     }
     return byteArraySerializationVersion;
+  }
+  
+  // JSON serialization
+  
+  @Override
+  public JsonValue toJsonValue() {
+    JsonObject jsonObject = UtilJson.toJsonObject(super.toJsonValue());
+    IJsonOption.PASSING_DISTANCE.addTo(jsonObject, fPassingDistance);
+    IJsonOption.FUMBLE.addTo(jsonObject, fFumble);
+    IJsonOption.SAFE_THROW_HOLD.addTo(jsonObject, fSafeThrowHold);
+    IJsonOption.HAIL_MARY_PASS.addTo(jsonObject, fHailMaryPass);
+    IJsonOption.BOMB.addTo(jsonObject, fBomb);
+    return jsonObject;
+  }
+  
+  @Override
+  public ReportPassRoll initFrom(JsonValue pJsonValue) {
+    super.initFrom(pJsonValue);
+    JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
+    fPassingDistance = (PassingDistance) IJsonOption.PASSING_DISTANCE.getFrom(jsonObject);
+    fFumble = IJsonOption.FUMBLE.getFrom(jsonObject);
+    fSafeThrowHold = IJsonOption.SAFE_THROW_HOLD.getFrom(jsonObject);
+    fHailMaryPass = IJsonOption.HAIL_MARY_PASS.getFrom(jsonObject);
+    fBomb = IJsonOption.BOMB.getFrom(jsonObject);
+    return this;
   }
     
 }

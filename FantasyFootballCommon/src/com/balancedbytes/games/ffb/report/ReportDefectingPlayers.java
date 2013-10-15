@@ -5,8 +5,12 @@ import java.util.List;
 
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
+import com.balancedbytes.games.ffb.json.IJsonOption;
+import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.util.ArrayTool;
 import com.balancedbytes.games.ffb.util.StringTool;
+import com.eclipsesource.json.JsonObject;
+import com.eclipsesource.json.JsonValue;
 
 
 
@@ -19,19 +23,19 @@ public class ReportDefectingPlayers implements IReport {
 
   private List<String> fPlayerIds;
   private List<Integer> fRolls;
-  private List<Boolean> fDefecting;
+  private List<Boolean> fDefectings;
   
   public ReportDefectingPlayers() {
     fPlayerIds = new ArrayList<String>();
     fRolls = new ArrayList<Integer>();
-    fDefecting = new ArrayList<Boolean>();
+    fDefectings = new ArrayList<Boolean>();
   }
 
   public ReportDefectingPlayers(String[] pPlayerIds, int[] pRolls, boolean[] pDefecting) {
     this();
     addPlayerIds(pPlayerIds);
     addRolls(pRolls);
-    addDefecting(pDefecting);
+    addDefectings(pDefecting);
   }
   
   public ReportId getId() {
@@ -58,21 +62,21 @@ public class ReportDefectingPlayers implements IReport {
     }
   }
   
-  public boolean[] getDefecting() {
-    boolean[] defecting = new boolean[fDefecting.size()];
+  public boolean[] getDefectings() {
+    boolean[] defecting = new boolean[fDefectings.size()];
     for (int i = 0; i < defecting.length; i++) {
-      defecting[i] = fDefecting.get(i);
+      defecting[i] = fDefectings.get(i);
     }
     return defecting;
   }
   
   private void addDefecting(boolean pDefecting) {
-    fDefecting.add(pDefecting);
+    fDefectings.add(pDefecting);
   }
   
-  private void addDefecting(boolean[] pDefecting) {
-    if (ArrayTool.isProvided(pDefecting)) {
-      for (boolean defecting : pDefecting) {
+  private void addDefectings(boolean[] pDefectings) {
+    if (ArrayTool.isProvided(pDefectings)) {
+      for (boolean defecting : pDefectings) {
         addDefecting(defecting);
       }
     }
@@ -99,7 +103,7 @@ public class ReportDefectingPlayers implements IReport {
   // transformation
   
   public ReportDefectingPlayers transform() {
-    return new ReportDefectingPlayers(getPlayerIds(), getRolls(), getDefecting());
+    return new ReportDefectingPlayers(getPlayerIds(), getRolls(), getDefectings());
   }
   
   // ByteArray serialization
@@ -113,7 +117,7 @@ public class ReportDefectingPlayers implements IReport {
     pByteList.addSmallInt(getByteArraySerializationVersion());
     pByteList.addStringArray(getPlayerIds());
     pByteList.addByteArray(getRolls());
-    pByteList.addBooleanArray(getDefecting());
+    pByteList.addBooleanArray(getDefectings());
   }
   
   public int initFrom(ByteArray pByteArray) {
@@ -121,8 +125,31 @@ public class ReportDefectingPlayers implements IReport {
     int byteArraySerializationVersion = pByteArray.getSmallInt();
     addPlayerIds(pByteArray.getStringArray());
     addRolls(pByteArray.getByteArrayAsIntArray());
-    addDefecting(pByteArray.getBooleanArray());
+    addDefectings(pByteArray.getBooleanArray());
     return byteArraySerializationVersion;
+  }
+  
+  // JSON serialization
+  
+  public JsonValue toJsonValue() {
+    JsonObject jsonObject = new JsonObject();
+    IJsonOption.REPORT_ID.addTo(jsonObject, getId());
+    IJsonOption.PLAYER_IDS.addTo(jsonObject, fPlayerIds);
+    IJsonOption.ROLLS.addTo(jsonObject, fRolls);
+    IJsonOption.DEFECTINGS.addTo(jsonObject, fDefectings);
+    return jsonObject;
+  }
+  
+  public ReportDefectingPlayers initFrom(JsonValue pJsonValue) {
+    JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
+    UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(jsonObject));
+    fPlayerIds.clear();
+    addPlayerIds(IJsonOption.PLAYER_IDS.getFrom(jsonObject));
+    fRolls.clear();
+    addRolls(IJsonOption.ROLLS.getFrom(jsonObject));
+    fDefectings.clear();
+    addDefectings(IJsonOption.DEFECTINGS.getFrom(jsonObject));
+    return this;
   }
   
 }

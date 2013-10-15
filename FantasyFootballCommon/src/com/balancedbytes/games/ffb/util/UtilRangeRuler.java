@@ -4,6 +4,7 @@ import java.util.Set;
 
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.PassModifier;
+import com.balancedbytes.games.ffb.PassModifierFactory;
 import com.balancedbytes.games.ffb.PassingDistance;
 import com.balancedbytes.games.ffb.RangeRuler;
 import com.balancedbytes.games.ffb.model.Game;
@@ -22,7 +23,7 @@ public class UtilRangeRuler {
       PassingDistance passingDistance = UtilPassing.findPassingDistance(pGame, throwerCoordinate, pTargetCoordinate, pThrowTeamMate);
       if (passingDistance != null) {
         int minimumRoll = 0;
-        Set<PassModifier> passModifiers = PassModifier.findPassModifiers(pGame, pThrower, passingDistance, pThrowTeamMate);
+        Set<PassModifier> passModifiers = new PassModifierFactory().findPassModifiers(pGame, pThrower, passingDistance, pThrowTeamMate);
         if (pThrowTeamMate) {
           minimumRoll = minimumRollThrowTeamMate(pThrower, passingDistance, passModifiers);
         } else {

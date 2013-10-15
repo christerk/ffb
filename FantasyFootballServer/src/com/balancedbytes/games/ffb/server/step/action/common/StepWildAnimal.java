@@ -129,7 +129,7 @@ public class StepWildAnimal extends AbstractStepWithReRoll {
           }
         }
         boolean reRolled = ((reRolledAction != null) && (reRolledAction == getReRolledAction()) && (getReRollSource() != null));
-        getResult().addReport(new ReportConfusionRoll(actingPlayer.getPlayerId(), Skill.WILD_ANIMAL, successful, roll, minimumRoll, reRolled));
+        getResult().addReport(new ReportConfusionRoll(actingPlayer.getPlayerId(), successful, roll, minimumRoll, reRolled, Skill.WILD_ANIMAL));
       }
     }
     if (status == ActionStatus.SUCCESS) {

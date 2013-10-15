@@ -1,8 +1,6 @@
 package com.balancedbytes.games.ffb.report;
 
 import com.balancedbytes.games.ffb.CatchModifier;
-import com.balancedbytes.games.ffb.CatchModifierFactory;
-import com.balancedbytes.games.ffb.IRollModifierFactory;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
 import com.balancedbytes.games.ffb.json.IJsonOption;
@@ -22,33 +20,23 @@ public class ReportCatchRoll extends ReportSkillRoll {
     super(ReportId.CATCH_ROLL);
   }
 
-  public ReportCatchRoll(String pPlayerId, boolean pSuccessful, int pRoll, int pMinimumRoll, boolean pReRolled, boolean pBomb, CatchModifier[] pModifiers) {
-    super(ReportId.CATCH_ROLL, pPlayerId, pSuccessful, pRoll, pMinimumRoll, pReRolled);
+  public ReportCatchRoll(String pPlayerId, boolean pSuccessful, int pRoll, int pMinimumRoll, boolean pReRolled, CatchModifier[] pRollModifiers, boolean pBomb) {
+    super(ReportId.CATCH_ROLL, pPlayerId, pSuccessful, pRoll, pMinimumRoll, pReRolled, pRollModifiers);
     fBomb = pBomb;
-    addRollModifiers(pModifiers);
   }
-
+  
   public CatchModifier[] getCatchModifiers() {
-    return getRollModifiers().toArray(new CatchModifier[getRollModifiers().size()]);
+    return (CatchModifier[]) getRollModifiers();
   }
-
-  public boolean hasCatchModifier(CatchModifier pModifier) {
-    return getRollModifiers().contains(pModifier);
-  }
-
+  
   public boolean isBomb() {
     return fBomb;
   }
   
-  @Override
-  protected IRollModifierFactory createRollModifierFactory() {
-    return new CatchModifierFactory();
-  }
-
   // transformation
 
   public IReport transform() {
-    return new ReportCatchRoll(getPlayerId(), isSuccessful(), getRoll(), getMinimumRoll(), isReRolled(), isBomb(), getCatchModifiers());
+    return new ReportCatchRoll(getPlayerId(), isSuccessful(), getRoll(), getMinimumRoll(), isReRolled(), getCatchModifiers(), isBomb());
   }
 
   // ByteArray serialization

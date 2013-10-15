@@ -115,7 +115,7 @@ public class ReportList implements IByteArraySerializable {
   
   // JSON serialization
   
-  public JsonValue toJsonValue() {
+  public JsonObject toJsonValue() {
     JsonObject jsonObject = new JsonObject();
     JsonArray reportArray = new JsonArray();
     for (IReport report : fReports) {

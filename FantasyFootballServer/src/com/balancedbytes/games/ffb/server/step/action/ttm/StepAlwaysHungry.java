@@ -151,7 +151,7 @@ public final class StepAlwaysHungry extends AbstractStepWithReRoll {
       if (doEscape) {
         int roll = getGameState().getDiceRoller().rollSkill();
         boolean successful = DiceInterpreter.getInstance().isEscapeFromAlwaysHungrySuccessful(roll);
-        getResult().addReport(new ReportSkillRoll(ReportId.ESCAPE_ROLL, fThrownPlayerId, successful, roll, 2, null, (reRollSource != null)));
+        getResult().addReport(new ReportSkillRoll(ReportId.ESCAPE_ROLL, fThrownPlayerId, successful, roll, 2, (reRollSource != null)));
         if (successful) {
         	getResult().setNextAction(StepAction.GOTO_LABEL, fGotoLabelOnSuccess);
         } else {

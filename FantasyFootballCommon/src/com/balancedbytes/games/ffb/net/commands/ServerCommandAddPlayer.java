@@ -1,13 +1,20 @@
 package com.balancedbytes.games.ffb.net.commands;
 
+import com.balancedbytes.games.ffb.ClientMode;
 import com.balancedbytes.games.ffb.PlayerState;
+import com.balancedbytes.games.ffb.ReRollSource;
+import com.balancedbytes.games.ffb.ReRolledAction;
 import com.balancedbytes.games.ffb.SendToBoxReason;
 import com.balancedbytes.games.ffb.SendToBoxReasonFactory;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
+import com.balancedbytes.games.ffb.json.IJsonOption;
+import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.model.PlayerResult;
 import com.balancedbytes.games.ffb.net.NetCommandId;
+import com.eclipsesource.json.JsonObject;
+import com.eclipsesource.json.JsonValue;
 
 /**
  * 
@@ -97,6 +104,39 @@ public class ServerCommandAddPlayer extends ServerCommand {
     fSendToBoxTurn = pByteArray.getByte();
     fSendToBoxHalf = pByteArray.getByte();
     return byteArraySerializationVersion;
+  }
+  
+  // JSON serialization
+  
+  public JsonObject toJsonValue() {
+    JsonObject jsonObject = new JsonObject();
+    IJsonOption.NET_COMMAND_ID.addTo(jsonObject, getId());
+    IJsonOption.COMMAND_NR.addTo(jsonObject, getCommandNr());
+    IJsonOption.TEAM_ID.addTo(jsonObject, fTeamId);
+    if (fPlayer != null) {
+      IJsonOption.PLAYER.addTo(jsonObject, fPlayer.toJsonValue());
+    }
+    IJsonOption.PLAYER_STATE.addTo(jsonObject, fPlayerState);
+    IJsonOption.SEND_TO_BOX_REASON.addTo(jsonObject, fSendToBoxReason);
+    IJsonOption.SEND_TO_BOX_TURN.addTo(jsonObject, fSendToBoxTurn);
+    IJsonOption.SEND_TO_BOX_HALF.addTo(jsonObject, fSendToBoxHalf);
+    return jsonObject;
+  }
+  
+  public ServerCommandAddPlayer initFrom(JsonValue pJsonValue) {
+    JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
+    UtilNetCommand.validateCommandId(this, (NetCommandId) IJsonOption.NET_COMMAND_ID.getFrom(jsonObject));
+    setCommandNr(IJsonOption.COMMAND_NR.getFrom(jsonObject));
+    fTeamId = IJsonOption.TEAM_ID.getFrom(jsonObject);
+    JsonObject playerObject = IJsonOption.PLAYER.getFrom(jsonObject);
+    if (playerObject != null) {
+      fPlayer = new Player().initFrom(playerObject);
+    }
+    fPlayerState = IJsonOption.PLAYER_STATE.getFrom(jsonObject);
+    fSendToBoxReason = (SendToBoxReason) IJsonOption.SEND_TO_BOX_REASON.getFrom(jsonObject);
+    fSendToBoxTurn = IJsonOption.SEND_TO_BOX_TURN.getFrom(jsonObject);
+    fSendToBoxHalf = IJsonOption.SEND_TO_BOX_HALF.getFrom(jsonObject);
+    return this;
   }
     
 }

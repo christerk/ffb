@@ -11,6 +11,7 @@ import com.balancedbytes.games.ffb.GameOptionFactory;
 import com.balancedbytes.games.ffb.InducementTypeFactory;
 import com.balancedbytes.games.ffb.KickoffResultFactory;
 import com.balancedbytes.games.ffb.LeaderStateFactory;
+import com.balancedbytes.games.ffb.PassingDistanceFactory;
 import com.balancedbytes.games.ffb.PlayerActionFactory;
 import com.balancedbytes.games.ffb.PlayerChoiceModeFactory;
 import com.balancedbytes.games.ffb.PushbackModeFactory;
@@ -38,6 +39,7 @@ import com.balancedbytes.games.ffb.report.ReportIdFactory;
 public interface IJsonOption {
 
                 JsonStringOption ACTING_PLAYER_ID = new JsonStringOption("actingPlayerId");
+                JsonObjectOption ANIMATION = new JsonObjectOption("animation");
           JsonEnumWithNameOption ANIMATION_TYPE = new JsonEnumWithNameOption("animationType", new AnimationTypeFactory());
                    JsonIntOption APOTHECARIES = new JsonIntOption("apothecaries");
                JsonBooleanOption APOTHECARY_USED = new JsonBooleanOption("apothecaryUsed");
@@ -77,17 +79,19 @@ public interface IJsonOption {
                 JsonStringOption COACH = new JsonStringOption("coach");
                JsonBooleanOption COIN_CHOICE_HEADS = new JsonBooleanOption("coinChoiceHeads");
                JsonBooleanOption COIN_THROW_HEADS = new JsonBooleanOption("coinThrowHeads");
-          JsonEnumWithNameOption CONCEDE_GAME_STATUS = new JsonEnumWithNameOption("concedeGameStatus", new ConcedeGameStatusFactory());
-               JsonBooleanOption CONCEDED = new JsonBooleanOption("conceded");
-          JsonEnumWithNameOption CONFUSION_SKILL = new JsonEnumWithNameOption("confusionSkill", new SkillFactory());
                    JsonIntOption COMMAND_NR = new JsonIntOption("commandNr");
                    JsonIntOption COMPLETIONS = new JsonIntOption("completions");
+          JsonEnumWithNameOption CONCEDE_GAME_STATUS = new JsonEnumWithNameOption("concedeGameStatus", new ConcedeGameStatusFactory());
+               JsonBooleanOption CONCEDED = new JsonBooleanOption("conceded");
+                JsonStringOption CONCEDING_TEAM_ID = new JsonStringOption("concedingTeamId");
+          JsonEnumWithNameOption CONFUSION_SKILL = new JsonEnumWithNameOption("confusionSkill", new SkillFactory());
        JsonFieldCoordinateOption COORDINATE = new JsonFieldCoordinateOption("coordinate");
        JsonFieldCoordinateOption COORDINATE_FROM = new JsonFieldCoordinateOption("coordinateFrom");
   JsonFieldCoordinateArrayOption COORDINATES_TO = new JsonFieldCoordinateArrayOption("coordinatesTo");
                    JsonIntOption CURRENT_MOVE = new JsonIntOption("currentMove");
                    JsonIntOption CURRENT_SPPS = new JsonIntOption("currentSpps");
                JsonBooleanOption DEFECTING = new JsonBooleanOption("defecting");
+          JsonBooleanArrayOption DEFECTINGS = new JsonBooleanArrayOption("defectings");
                 JsonStringOption DEFENDER_ID = new JsonStringOption("defenderId");
            JsonStringArrayOption DESCRIPTIONS = new JsonStringArrayOption("descriptions");
           JsonEnumWithNameOption DIALOG_ID = new JsonEnumWithNameOption("dialogId", new DialogIdFactory());
@@ -120,9 +124,11 @@ public interface IJsonOption {
                 JsonStringOption GAME_NAME = new JsonStringOption("gameName");
           JsonEnumWithNameOption GAME_OPTION = new JsonEnumWithNameOption("gameOption", new GameOptionFactory());
                  JsonArrayOption GAME_OPTIONS = new JsonArrayOption("gameOptions");
+                  JsonLongOption GAME_TIME = new JsonLongOption("gameTime");
                JsonBooleanOption GOING_FOR_IT = new JsonBooleanOption("goingForIt");
                    JsonIntOption GOLD = new JsonIntOption("gold");
                JsonBooleanOption GUST_OF_WIND = new JsonBooleanOption("gustOfWind");
+               JsonBooleanOption HAIL_MARY_PASS = new JsonBooleanOption("hailMaryPass");
                    JsonIntOption HALF = new JsonIntOption("half");
                JsonBooleanOption HAND_OVER_USED = new JsonBooleanOption("handOverUsed");
                JsonBooleanOption HAS_BLOCKED = new JsonBooleanOption("hasBlocked");
@@ -135,6 +141,7 @@ public interface IJsonOption {
                  JsonArrayOption HEAT_EXHAUSTIONS = new JsonArrayOption("heatExhaustions"); 
                JsonBooleanOption HOME_CHOICE = new JsonBooleanOption("homeChoice");
                JsonBooleanOption HOME_DATA = new JsonBooleanOption("homeData");
+               JsonBooleanOption HOME_TEAM = new JsonBooleanOption("homeTeam");
                 JsonStringOption HOME_TEXT = new JsonStringOption("homeText");
                 JsonObjectOption INDUCEMENT_SET = new JsonObjectOption("inducementSet");
           JsonEnumWithNameOption INDUCEMENT_TYPE = new JsonEnumWithNameOption("inducementType", new InducementTypeFactory());
@@ -163,6 +170,7 @@ public interface IJsonOption {
                    JsonIntOption MINIMUM_ROLL_GFI = new JsonIntOption("minimumRollGfi");
           JsonEnumWithNameOption MODEL_CHANGE_ID = new JsonEnumWithNameOption("modelChangeId", new ModelChangeIdFactory());
                 JsonStringOption MODEL_CHANGE_KEY = new JsonStringOption("modelChangeKey");
+                JsonObjectOption MODEL_CHANGE_LIST = new JsonObjectOption("modelChangeList");
                  JsonValueOption MODEL_CHANGE_VALUE = new JsonValueOption("modelChangeValue");
                  JsonArrayOption MODEL_CHANGES = new JsonArrayOption("modelChanges");
                 JsonStringOption NAME = new JsonStringOption("name");
@@ -180,11 +188,13 @@ public interface IJsonOption {
                    JsonIntOption OPPONENT_TEAM_VALUE = new JsonIntOption("opponentTeamValue");
                JsonBooleanOption PASS_BLOCK_AVAILABLE = new JsonBooleanOption("passBlockAvailable");
                JsonBooleanOption PASS_USED = new JsonBooleanOption("passUsed");
+          JsonEnumWithNameOption PASSING_DISTANCE = new JsonEnumWithNameOption("passingDistance", new PassingDistanceFactory());
                 JsonStringOption PASSWORD = new JsonStringOption("password");
                    JsonIntOption PASSING = new JsonIntOption("passing");
                    JsonIntOption PETTY_CASH = new JsonIntOption("pettyCash");
                    JsonIntOption PETTY_CASH_TRANSFERRED = new JsonIntOption("pettyCashTransferred");
                    JsonIntOption PETTY_CASH_USED = new JsonIntOption("pettyCashUsed");
+                JsonObjectOption PLAYER = new JsonObjectOption("player");
           JsonEnumWithNameOption PLAYER_ACTION = new JsonEnumWithNameOption("playerAction", new PlayerActionFactory());
                    JsonIntOption PLAYER_AWARDS = new JsonIntOption("playerAwards");
           JsonEnumWithNameOption PLAYER_CHOICE_MODE = new JsonEnumWithNameOption("playerChoiceMode", new PlayerChoiceModeFactory());
@@ -213,6 +223,7 @@ public interface IJsonOption {
                  JsonArrayOption REPLAY_COMMANDS = new JsonArrayOption("replayCommands");
                    JsonIntOption REPLAY_TO_COMMAND_NR = new JsonIntOption("replayToCommandNr");
           JsonEnumWithNameOption REPORT_ID = new JsonEnumWithNameOption("reportId", new ReportIdFactory());
+                JsonObjectOption REPORT_LIST = new JsonObjectOption("reportList");
                  JsonArrayOption REPORTS = new JsonArrayOption("reports");
                JsonBooleanOption RE_ROLLED = new JsonBooleanOption("reRolled");
           JsonEnumWithNameOption RE_ROLLED_ACTION = new JsonEnumWithNameOption("reRolledAction", new ReRolledActionFactory());
@@ -230,6 +241,7 @@ public interface IJsonOption {
                  JsonArrayOption ROLL_MODIFIERS = new JsonArrayOption("rollModifiers");
               JsonIntArrayOption ROLLS = new JsonIntArrayOption("rolls");
                    JsonIntOption RUSHING = new JsonIntOption("rushing");
+               JsonBooleanOption SAFE_THROW_HOLD = new JsonBooleanOption("safeThrowHold");
                    JsonIntOption SCORE = new JsonIntOption("score");
                JsonBooleanOption SELECTED = new JsonBooleanOption("selected");
                 JsonStringOption SEND_TO_BOX_BY_PLAYER_ID = new JsonStringOption("sendToBoxByPlayerId");
@@ -299,6 +311,7 @@ public interface IJsonOption {
                    JsonIntOption TURN_MODIFIER = new JsonIntOption("turnModifier");
                    JsonIntOption TURN_NR = new JsonIntOption("turnNr");
                JsonBooleanOption TURN_STARTED = new JsonBooleanOption("turnStarted");
+                  JsonLongOption TURN_TIME = new JsonLongOption("turnTime");
                    JsonIntOption TURNS_PLAYED = new JsonIntOption("turnsPlayed");
                 JsonStringOption UPLOAD_STATUS = new JsonStringOption("uploadStatus");
                  JsonArrayOption USED_SKILLS = new JsonArrayOption("usedSkills");

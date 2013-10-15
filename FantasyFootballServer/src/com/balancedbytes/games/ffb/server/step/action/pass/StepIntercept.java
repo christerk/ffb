@@ -3,6 +3,7 @@ package com.balancedbytes.games.ffb.server.step.action.pass;
 import java.util.Set;
 
 import com.balancedbytes.games.ffb.InterceptionModifier;
+import com.balancedbytes.games.ffb.InterceptionModifierFactory;
 import com.balancedbytes.games.ffb.PlayerAction;
 import com.balancedbytes.games.ffb.ReRollSource;
 import com.balancedbytes.games.ffb.ReRolledAction;
@@ -163,13 +164,14 @@ public final class StepIntercept extends AbstractStepWithReRoll {
   private ActionStatus intercept(Player pInterceptor) {
     ActionStatus status = null;
     Game game = getGameState().getGame();
-    Set<InterceptionModifier> interceptionModifiers = InterceptionModifier.findInterceptionModifiers(game, pInterceptor);
+    InterceptionModifierFactory modifierFactory = new InterceptionModifierFactory();
+    Set<InterceptionModifier> interceptionModifiers = modifierFactory.findInterceptionModifiers(game, pInterceptor);
     int minimumRoll = DiceInterpreter.getInstance().minimumRollInterception(pInterceptor, interceptionModifiers);
     int roll = getGameState().getDiceRoller().rollSkill();
     boolean successful = DiceInterpreter.getInstance().isSkillRollSuccessful(roll, minimumRoll);
-    InterceptionModifier[] interceptionModifierArray = InterceptionModifier.toArray(interceptionModifiers);
+    InterceptionModifier[] interceptionModifierArray = modifierFactory.toArray(interceptionModifiers);
     boolean reRolled = ((getReRolledAction() == ReRolledAction.CATCH) && (getReRollSource() != null));
-    getResult().addReport(new ReportInterceptionRoll(pInterceptor.getId(), successful, roll, minimumRoll, reRolled, (PlayerAction.THROW_BOMB == game.getThrowerAction()), interceptionModifierArray));
+    getResult().addReport(new ReportInterceptionRoll(pInterceptor.getId(), successful, roll, minimumRoll, reRolled, interceptionModifierArray, (PlayerAction.THROW_BOMB == game.getThrowerAction())));
     if (successful) {
       status = ActionStatus.SUCCESS;
     } else {

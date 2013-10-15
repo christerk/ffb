@@ -8,6 +8,7 @@ import java.util.Set;
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.FieldCoordinateBounds;
 import com.balancedbytes.games.ffb.PassingDistance;
+import com.balancedbytes.games.ffb.PassingDistanceFactory;
 import com.balancedbytes.games.ffb.PlayerAction;
 import com.balancedbytes.games.ffb.PlayerState;
 import com.balancedbytes.games.ffb.Skill;
@@ -46,9 +47,10 @@ public class UtilPassing {
   private static final PassingDistance[][] _PASSING_DISTANCES_TABLE = new PassingDistance[14][14];
   
   static {
+    PassingDistanceFactory passingDistanceFactory = new PassingDistanceFactory();
     for (int y = 0; y < 14; y++) {
       for (int x = 0; x < 14; x++) {
-        _PASSING_DISTANCES_TABLE[y][x] = PassingDistance.fromShortcut(_THROWING_RANGE_TABLE[y].charAt(x * 2));
+        _PASSING_DISTANCES_TABLE[y][x] = passingDistanceFactory.forShortcut(_THROWING_RANGE_TABLE[y].charAt(x * 2));
       }
     }    
   }

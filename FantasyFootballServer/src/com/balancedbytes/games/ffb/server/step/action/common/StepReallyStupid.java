@@ -137,7 +137,7 @@ public class StepReallyStupid extends AbstractStepWithReRoll {
           }
         }
         boolean reRolled = ((reRolledAction != null) && (reRolledAction == getReRolledAction()) && (getReRollSource() != null));
-        getResult().addReport(new ReportConfusionRoll(actingPlayer.getPlayerId(), Skill.REALLY_STUPID, successful, roll, minimumRoll, reRolled));
+        getResult().addReport(new ReportConfusionRoll(actingPlayer.getPlayerId(), successful, roll, minimumRoll, reRolled, Skill.REALLY_STUPID));
       }
     }
     if (status == ActionStatus.SUCCESS) {

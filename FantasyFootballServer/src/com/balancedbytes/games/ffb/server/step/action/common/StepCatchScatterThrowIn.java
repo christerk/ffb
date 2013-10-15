@@ -4,6 +4,7 @@ import java.util.Set;
 
 import com.balancedbytes.games.ffb.Card;
 import com.balancedbytes.games.ffb.CatchModifier;
+import com.balancedbytes.games.ffb.CatchModifierFactory;
 import com.balancedbytes.games.ffb.CatchScatterThrowInMode;
 import com.balancedbytes.games.ffb.Direction;
 import com.balancedbytes.games.ffb.FieldCoordinate;
@@ -293,7 +294,7 @@ public class StepCatchScatterThrowIn extends AbstractStepWithReRoll {
   private CatchScatterThrowInMode catchBall() {
   	
   	getGameState().getServer().getDebugLog().log(IServerLogLevel.DEBUG, "catchBall()");
-  
+
     Game game = getGameState().getGame();   
   	Player catcher = game.getPlayerById(fCatcherId); 
   	if ((catcher == null) || UtilCards.hasSkill(game, catcher, Skill.NO_HANDS)) {
@@ -309,13 +310,14 @@ public class StepCatchScatterThrowIn extends AbstractStepWithReRoll {
     }
 
     if (doRoll) {
-	    
-    	Set<CatchModifier> catchModifiers = CatchModifier.findCatchModifiers(game, catcher, fCatchScatterThrowInMode);
+
+      CatchModifierFactory modifierFactory = new CatchModifierFactory();
+    	Set<CatchModifier> catchModifiers = modifierFactory.findCatchModifiers(game, catcher, fCatchScatterThrowInMode);
 	    int minimumRoll = DiceInterpreter.getInstance().minimumRollCatch(catcher, catchModifiers);
 	    boolean reRolled = ((getReRolledAction() == ReRolledAction.CATCH) && (getReRollSource() != null));
 	    int roll = getGameState().getDiceRoller().rollSkill();
 	    boolean successful = DiceInterpreter.getInstance().isSkillRollSuccessful(roll, minimumRoll);
-	    getResult().addReport(new ReportCatchRoll(catcher.getId(), successful, roll, minimumRoll, reRolled, fCatchScatterThrowInMode.isBomb(), CatchModifier.toArray(catchModifiers)));
+	    getResult().addReport(new ReportCatchRoll(catcher.getId(), successful, roll, minimumRoll, reRolled, modifierFactory.toArray(catchModifiers), fCatchScatterThrowInMode.isBomb()));
 
 	    if (successful) {
 
