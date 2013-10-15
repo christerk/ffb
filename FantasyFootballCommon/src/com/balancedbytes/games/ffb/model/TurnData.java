@@ -1,10 +1,6 @@
 package com.balancedbytes.games.ffb.model;
 
 
-import javax.xml.transform.sax.TransformerHandler;
-
-import org.xml.sax.helpers.AttributesImpl;
-
 import com.balancedbytes.games.ffb.LeaderState;
 import com.balancedbytes.games.ffb.LeaderStateFactory;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
@@ -12,10 +8,8 @@ import com.balancedbytes.games.ffb.bytearray.ByteList;
 import com.balancedbytes.games.ffb.bytearray.IByteArraySerializable;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
-import com.balancedbytes.games.ffb.model.change.old.CommandTurnDataChange;
-import com.balancedbytes.games.ffb.model.change.old.ModelChangeTurnData;
-import com.balancedbytes.games.ffb.xml.IXmlWriteable;
-import com.balancedbytes.games.ffb.xml.UtilXml;
+import com.balancedbytes.games.ffb.model.change.ModelChange;
+import com.balancedbytes.games.ffb.model.change.ModelChangeId;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
@@ -24,29 +18,12 @@ import com.eclipsesource.json.JsonValue;
  * 
  * @author Kalimar
  */
-public class TurnData implements IByteArraySerializable, IXmlWriteable {
-  
-  public static final String XML_TAG = "turnData";
-  
-  private static final String _XML_ATTRIBUTE_HOME = "home";
-  private static final String _XML_ATTRIBUTE_BLITZ = "blitz";
-  private static final String _XML_ATTRIBUTE_FOUL = "foul";
-  private static final String _XML_ATTRIBUTE_RE_ROLL = "reRoll";
-  private static final String _XML_ATTRIBUTE_HAND_OVER = "handOver";
-  private static final String _XML_ATTRIBUTE_PASS = "pass";
-  
-  private static final String _XML_TAG_TURN_NR = "turnNr";
-  private static final String _XML_TAG_FIRST_TURN_AFTER_KICKOFF = "firstTurnAfterKickoff";
-  private static final String _XML_TAG_RE_ROLLS = "reRolls";
-  private static final String _XML_TAG_APOTHECARIES = "apothecaries";
-  private static final String _XML_TAG_ACTIONS_USED = "actionsUsed";
-  private static final String _XML_TAG_LEADER_STATE = "leaderState";
-  private static final String _XML_TAG_TURN_STARTED = "turnStarted";
-  
+public class TurnData implements IByteArraySerializable {
+    
   private boolean fHomeData;
   private int fTurnNr;
   private boolean fFirstTurnAfterKickoff;
-  private boolean fTurnStarted;  // TODO: add to persistence
+  private boolean fTurnStarted;
   private int fReRolls;
   private int fApothecaries;
   private boolean fBlitzUsed;
@@ -75,10 +52,11 @@ public class TurnData implements IByteArraySerializable, IXmlWriteable {
   }
 
   public void setTurnNr(int pTurnNr) {
-    if (getGame().isTrackingChanges() && (pTurnNr != fTurnNr)) {
-      getGame().add(new ModelChangeTurnData(CommandTurnDataChange.SET_TURN_NR, isHomeData(), (byte) pTurnNr));
+    if (pTurnNr == fTurnNr) {
+      return;
     }
     fTurnNr = pTurnNr;
+    notifyObservers(ModelChangeId.TURN_DATA_SET_TURN_NR, fTurnNr);
   }
   
   public boolean isTurnStarted() {
@@ -86,10 +64,11 @@ public class TurnData implements IByteArraySerializable, IXmlWriteable {
   }
   
   public void setTurnStarted(boolean pTurnStarted) {
-  	if (getGame().isTrackingChanges() && (pTurnStarted != fTurnStarted)) {
-      getGame().add(new ModelChangeTurnData(CommandTurnDataChange.SET_TURN_STARTED, isHomeData(), pTurnStarted));
+  	if (pTurnStarted == fTurnStarted) {
+      return;
     }
     fTurnStarted = pTurnStarted;
+    notifyObservers(ModelChangeId.TURN_DATA_SET_TURN_STARTED, fTurnStarted);
   }
   
   public boolean isFirstTurnAfterKickoff() {
@@ -97,10 +76,11 @@ public class TurnData implements IByteArraySerializable, IXmlWriteable {
   }
   
   public void setFirstTurnAfterKickoff(boolean pFirstTurnAfterKickoff) {
-    if (getGame().isTrackingChanges() && (pFirstTurnAfterKickoff != fFirstTurnAfterKickoff)) {
-      getGame().add(new ModelChangeTurnData(CommandTurnDataChange.SET_FIRST_TURN_AFTER_KICKOFF, isHomeData(), pFirstTurnAfterKickoff));
+    if (pFirstTurnAfterKickoff == fFirstTurnAfterKickoff) {
+      return;
     }
     fFirstTurnAfterKickoff = pFirstTurnAfterKickoff;
+    notifyObservers(ModelChangeId.TURN_DATA_SET_FIRST_TURN_AFTER_KICKOFF, fFirstTurnAfterKickoff);
   }
 
   public int getReRolls() {
@@ -108,10 +88,11 @@ public class TurnData implements IByteArraySerializable, IXmlWriteable {
   }
 
   public void setReRolls(int pReRolls) {
-    if (getGame().isTrackingChanges() && (pReRolls != fReRolls)) {
-      getGame().add(new ModelChangeTurnData(CommandTurnDataChange.SET_RE_ROLLS, isHomeData(), (byte) pReRolls));
+    if (pReRolls == fReRolls) {
+      return;
     }
     fReRolls = pReRolls;
+    notifyObservers(ModelChangeId.TURN_DATA_SET_RE_ROLLS, fReRolls);
   }
 
   public boolean isBlitzUsed() {
@@ -119,10 +100,11 @@ public class TurnData implements IByteArraySerializable, IXmlWriteable {
   }
 
   public void setBlitzUsed(boolean pBlitzUsed) {
-    if (getGame().isTrackingChanges() && (pBlitzUsed != fBlitzUsed)) {
-      getGame().add(new ModelChangeTurnData(CommandTurnDataChange.SET_BLITZ_USED, isHomeData(), pBlitzUsed));
+    if (pBlitzUsed == fBlitzUsed) {
+      return;
     }
     fBlitzUsed = pBlitzUsed;
+    notifyObservers(ModelChangeId.TURN_DATA_SET_BLITZ_USED, fBlitzUsed);
   }
 
   public boolean isFoulUsed() {
@@ -130,10 +112,11 @@ public class TurnData implements IByteArraySerializable, IXmlWriteable {
   }
 
   public void setFoulUsed(boolean pFoulUsed) {
-    if (getGame().isTrackingChanges() && (pFoulUsed != fFoulUsed)) {
-      getGame().add(new ModelChangeTurnData(CommandTurnDataChange.SET_FOUL_USED, isHomeData(), pFoulUsed));
+    if (pFoulUsed == fFoulUsed) {
+      return;
     }
     fFoulUsed = pFoulUsed;
+    notifyObservers(ModelChangeId.TURN_DATA_SET_FOUL_USED, fFoulUsed);
   }
 
   public boolean isReRollUsed() {
@@ -141,10 +124,11 @@ public class TurnData implements IByteArraySerializable, IXmlWriteable {
   }
 
   public void setReRollUsed(boolean pReRollUsed) {
-    if (getGame().isTrackingChanges() && (pReRollUsed != fReRollUsed)) {
-      getGame().add(new ModelChangeTurnData(CommandTurnDataChange.SET_RE_ROLL_USED, isHomeData(), pReRollUsed));
+    if (pReRollUsed == fReRollUsed) {
+      return;
     }
     fReRollUsed = pReRollUsed;
+    notifyObservers(ModelChangeId.TURN_DATA_SET_RE_ROLL_USED, fReRollUsed);
   }
 
   public boolean isHandOverUsed() {
@@ -152,10 +136,11 @@ public class TurnData implements IByteArraySerializable, IXmlWriteable {
   }
 
   public void setHandOverUsed(boolean pHandOverUsed) {
-    if (getGame().isTrackingChanges() && (pHandOverUsed != fHandOverUsed)) {
-      getGame().add(new ModelChangeTurnData(CommandTurnDataChange.SET_HAND_OVER_USED, isHomeData(), pHandOverUsed));
+    if (pHandOverUsed == fHandOverUsed) {
+      return;
     }
     fHandOverUsed = pHandOverUsed;
+    notifyObservers(ModelChangeId.TURN_DATA_SET_HAND_OVER_USED, fHandOverUsed);
   }
 
   public boolean isPassUsed() {
@@ -163,10 +148,11 @@ public class TurnData implements IByteArraySerializable, IXmlWriteable {
   }
 
   public void setPassUsed(boolean pPassUsed) {
-    if (getGame().isTrackingChanges() && (pPassUsed != fPassUsed)) {
-      getGame().add(new ModelChangeTurnData(CommandTurnDataChange.SET_PASS_USED, isHomeData(), pPassUsed));
+    if (pPassUsed == fPassUsed) {
+      return;
     }
     fPassUsed = pPassUsed;
+    notifyObservers(ModelChangeId.TURN_DATA_SET_PASS_USED, fPassUsed);
   }
   
   public int getApothecaries() {
@@ -174,10 +160,11 @@ public class TurnData implements IByteArraySerializable, IXmlWriteable {
   }
   
   public void setApothecaries(int pApothecaries) {
-    if (getGame().isTrackingChanges() && (pApothecaries != fApothecaries)) {
-      getGame().add(new ModelChangeTurnData(CommandTurnDataChange.SET_APOTHECARIES, isHomeData(), (byte) pApothecaries));
+    if (pApothecaries == fApothecaries) {
+      return;
     }
     fApothecaries = pApothecaries;
+    notifyObservers(ModelChangeId.TURN_DATA_SET_APOTHECARIES, fApothecaries);
   }
   
   public boolean isHomeData() {
@@ -235,38 +222,15 @@ public class TurnData implements IByteArraySerializable, IXmlWriteable {
     }
   }
   
-  // XML serialization
+  // change tracking
   
-  public void addToXml(TransformerHandler pHandler) {
-	  	
-  	AttributesImpl attributes = new AttributesImpl();
-  	UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_HOME, isHomeData());
-  	UtilXml.startElement(pHandler, XML_TAG, attributes);
-
-  	UtilXml.addValueElement(pHandler, _XML_TAG_TURN_STARTED, isTurnStarted());
-  	UtilXml.addValueElement(pHandler, _XML_TAG_TURN_NR, getTurnNr());
-  	UtilXml.addValueElement(pHandler, _XML_TAG_FIRST_TURN_AFTER_KICKOFF, isFirstTurnAfterKickoff());
-  	UtilXml.addValueElement(pHandler, _XML_TAG_RE_ROLLS, getReRolls());
-  	UtilXml.addValueElement(pHandler, _XML_TAG_APOTHECARIES, getApothecaries());
-  	UtilXml.addValueElement(pHandler, _XML_TAG_LEADER_STATE, ((getLeaderState() != null) ? getLeaderState().getName() : null));
-
-  	attributes = new AttributesImpl();
-  	UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_BLITZ, isBlitzUsed());
-  	UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_FOUL, isFoulUsed());
-  	UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_RE_ROLL, isReRollUsed());
-  	UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_HAND_OVER, isHandOverUsed());
-  	UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_PASS, isPassUsed());
-  	UtilXml.startElement(pHandler, _XML_TAG_ACTIONS_USED, attributes);
-  	UtilXml.endElement(pHandler, _XML_TAG_ACTIONS_USED);
-
-  	getInducementSet().addToXml(pHandler);
-
-  	UtilXml.endElement(pHandler, XML_TAG);
-  	
-  }
-  
-  public String toXml(boolean pIndent) {
-    return UtilXml.toXml(this, pIndent);
+  private void notifyObservers(ModelChangeId pChangeId, Object pValue) {
+  	if ((getGame() == null) || (pChangeId == null)) {
+  		return;
+  	}
+  	String key = isHomeData() ? ModelChange.HOME : ModelChange.AWAY;
+  	ModelChange modelChange = new ModelChange(pChangeId, key, pValue);
+  	getGame().notifyObservers(modelChange);
   }
   
   // ByteArray serialization

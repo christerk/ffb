@@ -8,7 +8,6 @@ import java.awt.Graphics2D;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 
-import com.balancedbytes.games.ffb.FieldModelChangeEvent;
 import com.balancedbytes.games.ffb.Weather;
 import com.balancedbytes.games.ffb.client.FantasyFootballClient;
 import com.balancedbytes.games.ffb.client.IconCache;
@@ -78,21 +77,11 @@ public class FieldLayerField extends FieldLayer {
     return g2d;
   }
   
-  public void fieldModelChanged(FieldModelChangeEvent pChangeEvent) {
-    switch (pChangeEvent.getType()) {
-      case FieldModelChangeEvent.TYPE_WEATHER:
-        Weather weather = (Weather) pChangeEvent.getNewValue();
-        drawWeather(weather);
-        break;
-    }
-  }
-    
   public void init() {
     clear(true);
     FieldModel fieldModel = getClient().getGame().getFieldModel();
     if (fieldModel != null) {
       drawWeather(fieldModel.getWeather());
-      fieldModel.addListener(this);
     }
   }
   

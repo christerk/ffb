@@ -73,12 +73,12 @@ public class ClientStatePushback extends ClientState {
         overPushback = true;
         if (pushbackSquares[i].isHomeChoice() && !pushbackSquares[i].isSelected() && !pushbackSquares[i].isLocked()) {
           pushbackSquares[i].setSelected(true);
-          fieldComponent.getLayerOverPlayers().draw(pushbackSquares[i]);
+          fieldComponent.getLayerOverPlayers().drawPushbackSquare(pushbackSquares[i]);
         }
       } else {
         if (pushbackSquares[i].isSelected() && !pushbackSquares[i].isLocked()) {
           pushbackSquares[i].setSelected(false);
-          fieldComponent.getLayerOverPlayers().draw(pushbackSquares[i]);
+          fieldComponent.getLayerOverPlayers().drawPushbackSquare(pushbackSquares[i]);
         }
       }
     }

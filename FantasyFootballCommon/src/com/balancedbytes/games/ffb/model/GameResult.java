@@ -1,17 +1,10 @@
 package com.balancedbytes.games.ffb.model;
 
-import javax.xml.transform.sax.TransformerHandler;
-
-import org.xml.sax.Attributes;
-import org.xml.sax.helpers.AttributesImpl;
-
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
 import com.balancedbytes.games.ffb.bytearray.IByteArraySerializable;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
-import com.balancedbytes.games.ffb.xml.IXmlSerializable;
-import com.balancedbytes.games.ffb.xml.UtilXml;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
@@ -20,18 +13,12 @@ import com.eclipsesource.json.JsonValue;
  * 
  * @author Kalimar
  */
-public class GameResult implements IXmlSerializable, IByteArraySerializable {
-  
-  public static final String XML_TAG = "gameResult";
-  
-  private static final String _XML_ATTRIBUTE_REPLAY_ID = "replayId";
-    
-  private Game fGame;
+public class GameResult implements IByteArraySerializable {
   
   private TeamResult fTeamResultHome;
   private TeamResult fTeamResultAway;
   
-  private transient boolean fTeamResultHomeInitialized;
+  private transient Game fGame;
   
   public GameResult(Game pGame) {
     this(pGame, null, null);
@@ -85,53 +72,6 @@ public class GameResult implements IXmlSerializable, IByteArraySerializable {
     }
   }
   
-  // XML serialization
-  
-  public void addToXml(TransformerHandler pHandler) {
-    
-    AttributesImpl attributes = new AttributesImpl();
-    UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_REPLAY_ID, (getGame() != null) ? getGame().getId() : 0L);
-    UtilXml.startElement(pHandler, XML_TAG, attributes);
-    
-    getTeamResultHome().addToXml(pHandler);
-    
-    getTeamResultAway().addToXml(pHandler);
-
-    UtilXml.endElement(pHandler, XML_TAG);
-    
-  }
-  
-  public String toXml(boolean pIndent) {
-    return UtilXml.toXml(this, pIndent);
-  }
-  
-  public IXmlSerializable startXmlElement(String pXmlTag, Attributes pXmlAttributes) {
-    IXmlSerializable xmlElement = this;
-    if (TeamResult.XML_TAG.equals(pXmlTag)) {
-      if (fTeamResultHomeInitialized) {
-        fTeamResultAway.startXmlElement(pXmlTag, pXmlAttributes);
-        xmlElement = fTeamResultAway;
-      } else {
-        fTeamResultHome.startXmlElement(pXmlTag, pXmlAttributes);
-        xmlElement = fTeamResultHome;
-        fTeamResultHomeInitialized = true;
-      }
-    }
-    return xmlElement;
-  }
-  
-  public boolean endXmlElement(String pXmlTag, String pValue) {
-    boolean complete = XML_TAG.equals(pXmlTag); 
-    if (complete) {
-      if (getTeamResultHome().getTeam() != getGame().getTeamHome()) {
-        TeamResult teamResultAway = getTeamResultHome();
-        fTeamResultHome = getTeamResultAway();
-        fTeamResultAway = teamResultAway;
-      }
-    }
-    return complete;
-  }
-
   // ByteArray serialization
 
   public int getByteArraySerializationVersion() {

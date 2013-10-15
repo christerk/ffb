@@ -3,21 +3,14 @@ package com.balancedbytes.games.ffb.model;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.xml.transform.sax.TransformerHandler;
-
-import org.xml.sax.Attributes;
-import org.xml.sax.helpers.AttributesImpl;
-
 import com.balancedbytes.games.ffb.PlayerState;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
 import com.balancedbytes.games.ffb.bytearray.IByteArraySerializable;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
-import com.balancedbytes.games.ffb.model.change.old.CommandTeamResultChange;
-import com.balancedbytes.games.ffb.model.change.old.ModelChangeTeamResult;
-import com.balancedbytes.games.ffb.xml.IXmlSerializable;
-import com.balancedbytes.games.ffb.xml.UtilXml;
+import com.balancedbytes.games.ffb.model.change.ModelChange;
+import com.balancedbytes.games.ffb.model.change.ModelChangeId;
 import com.eclipsesource.json.JsonArray;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
@@ -26,35 +19,8 @@ import com.eclipsesource.json.JsonValue;
  * 
  * @author Kalimar
  */
-public class TeamResult implements IByteArraySerializable, IXmlSerializable {
-  
-  public static final String XML_TAG = "teamResult";
-  
-  private static final String XML_ATTRIBUTE_TEAM_ID = "teamId";
-  
-  private static final String _XML_TAG_SCORE = "score";
-  private static final String _XML_TAG_CONCEDED = "conceded";
-  private static final String _XML_TAG_RAISED_DEAD = "raisedDead";
-  private static final String _XML_TAG_FAME = "fame";
-  private static final String _XML_TAG_SPECTATORS = "spectators";
-  private static final String _XML_TAG_WINNINGS = "winnings";
-  private static final String _XML_TAG_FAN_FACTOR_MODIFIER = "fanFactorModifier";
-  private static final String _XML_TAG_SPIRALLING_EXPENSES = "spirallingExpenses";
-  
-  private static final String _XML_TAG_CASUALTIES_SUFFERED = "casualtiesSuffered";
-  private static final String _XML_ATTRIBUTE_BADLY_HURT = "badlyHurt";
-  private static final String _XML_ATTRIBUTE_SERIOUS_INJURY = "seriousInjury";
-  private static final String _XML_ATTRIBUTE_RIP = "rip";
-  private static final String _XML_TAG_PETTY_CASH_TRANSFERRED = "pettyCashTransferred";
-  private static final String _XML_TAG_PETTY_CASH_USED = "pettyCashUsed";
-  private static final String _XML_TAG_TEAM_VALUE = "teamValue";
-  
-  private static final String _XML_TAG_PLAYER_RESULT_LIST = "playerResultList";
+public class TeamResult implements IByteArraySerializable {
 
-  private transient GameResult fGameResult;
-  private transient Team fTeam;
-  private transient boolean fHomeData;
-  
   private int fScore;
   private int fFame;
   private int fSpectators;
@@ -72,15 +38,17 @@ public class TeamResult implements IByteArraySerializable, IXmlSerializable {
   private int fPettyCashUsed;
   private int fTeamValue;
   
-  private Map<Player, PlayerResult> fPlayerResultByPlayer;
-  
-  private transient PlayerResult fCurrentPlayerResult;
+  private Map<String, PlayerResult> fPlayerResultByPlayerId;
+
+  private transient GameResult fGameResult;
+  private transient Team fTeam;
+  private transient boolean fHomeData;
 
   public TeamResult(GameResult pGameResult, boolean pHomeData, Team pTeam) {
     fGameResult = pGameResult;
     fHomeData = pHomeData;
-    setTeam(pTeam);
-    fPlayerResultByPlayer = new HashMap<Player, PlayerResult>();
+    fTeam = pTeam;
+    fPlayerResultByPlayerId = new HashMap<String, PlayerResult>();
   }
   
   public GameResult getGameResult() {
@@ -91,19 +59,16 @@ public class TeamResult implements IByteArraySerializable, IXmlSerializable {
     return fHomeData;
   }
   
-  public void setTeam(Team pTeam) {
-    fTeam = pTeam;
-  }
-  
   public Team getTeam() {
     return fTeam;
   }
   
   public void setConceded(boolean pConceded) {
-    if (getGame().isTrackingChanges() && (pConceded != fConceded)) {
-      getGame().add(new ModelChangeTeamResult(CommandTeamResultChange.SET_CONCEDED, isHomeData(), pConceded));
+    if (pConceded == fConceded) {
+    	return;
     }
     fConceded = pConceded;
+    notifyObservers(ModelChangeId.TEAM_RESULT_SET_CONCEDED, fConceded);
   }
   
   public boolean hasConceded() {
@@ -111,10 +76,11 @@ public class TeamResult implements IByteArraySerializable, IXmlSerializable {
   }
   
   public void setRaisedDead(int pRaisedDead) {
-    if (getGame().isTrackingChanges() && (pRaisedDead != fRaisedDead)) {
-      getGame().add(new ModelChangeTeamResult(CommandTeamResultChange.SET_RAISED_DEAD, isHomeData(), pRaisedDead));
+    if (pRaisedDead == fRaisedDead) {
+    	return;
     }
     fRaisedDead = pRaisedDead;
+    notifyObservers(ModelChangeId.TEAM_RESULT_SET_RAISED_DEAD, fRaisedDead);
   }
   
   public int getRaisedDead() {
@@ -126,10 +92,11 @@ public class TeamResult implements IByteArraySerializable, IXmlSerializable {
   }
   
   public void setFame(int pFame) {
-    if (getGame().isTrackingChanges() && (pFame != fFame)) {
-      getGame().add(new ModelChangeTeamResult(CommandTeamResultChange.SET_FAME, isHomeData(), (byte) pFame));
+    if (pFame == fFame) {
+    	return;
     }
     fFame = pFame;
+    notifyObservers(ModelChangeId.TEAM_RESULT_SET_FAME, fFame);
   }
   
   public int getSpectators() {
@@ -137,10 +104,11 @@ public class TeamResult implements IByteArraySerializable, IXmlSerializable {
   }
   
   public void setSpectators(int pSpectators) {
-    if (getGame().isTrackingChanges() && (pSpectators != fSpectators)) {
-      getGame().add(new ModelChangeTeamResult(CommandTeamResultChange.SET_SPECTATORS, isHomeData(), pSpectators));
+    if (pSpectators == fSpectators) {
+    	return;
     }
     fSpectators = pSpectators;
+    notifyObservers(ModelChangeId.TEAM_RESULT_SET_SPECTATORS, fSpectators);
   }
   
   public int getWinnings() {
@@ -148,10 +116,11 @@ public class TeamResult implements IByteArraySerializable, IXmlSerializable {
   }
   
   public void setWinnings(int pWinnings) {
-    if (getGame().isTrackingChanges() && (pWinnings != fWinnings)) {
-      getGame().add(new ModelChangeTeamResult(CommandTeamResultChange.SET_WINNINGS, isHomeData(), pWinnings));
+    if (pWinnings == fWinnings) {
+    	return;
     }
     fWinnings = pWinnings;
+    notifyObservers(ModelChangeId.TEAM_RESULT_SET_WINNINGS, fWinnings);
   }
   
   public int getFanFactorModifier() {
@@ -159,10 +128,11 @@ public class TeamResult implements IByteArraySerializable, IXmlSerializable {
   }
   
   public void setFanFactorModifier(int pFanFactorModifier) {
-    if (getGame().isTrackingChanges() && (pFanFactorModifier != fFanFactorModifier)) {
-      getGame().add(new ModelChangeTeamResult(CommandTeamResultChange.SET_FAN_FACTOR_MODIFIER, isHomeData(), (byte) pFanFactorModifier));
+    if (pFanFactorModifier == fFanFactorModifier) {
+    	return;
     }
     fFanFactorModifier = pFanFactorModifier;
+    notifyObservers(ModelChangeId.TEAM_RESULT_SET_FAN_FACTOR_MODIFIER, fFanFactorModifier);
   }
   
   public int getScore() {
@@ -170,10 +140,11 @@ public class TeamResult implements IByteArraySerializable, IXmlSerializable {
   }
   
   public void setScore(int pScore) {
-    if (getGame().isTrackingChanges() && (fScore != pScore)) {
-      getGame().add(new ModelChangeTeamResult(CommandTeamResultChange.SET_SCORE, isHomeData(), (byte) pScore));
+    if (pScore == fScore) {
+    	return;
     }
     fScore = pScore;
+    notifyObservers(ModelChangeId.TEAM_RESULT_SET_SCORE, fScore);
   }
 
   public void sufferInjury(PlayerState pPlayerState) {
@@ -197,8 +168,8 @@ public class TeamResult implements IByteArraySerializable, IXmlSerializable {
   }
   
   public void setBadlyHurtSuffered(int pBadlyHurtSuffered) {
-    if (getGame().isTrackingChanges() && (fBadlyHurtSuffered != pBadlyHurtSuffered)) {
-      getGame().add(new ModelChangeTeamResult(CommandTeamResultChange.SET_BADLY_HURT_SUFFERED, isHomeData(), (byte) pBadlyHurtSuffered));
+    if (pBadlyHurtSuffered == fBadlyHurtSuffered) {
+    	return;
     }
     fBadlyHurtSuffered = pBadlyHurtSuffered;
   }
@@ -208,10 +179,11 @@ public class TeamResult implements IByteArraySerializable, IXmlSerializable {
   }
   
   public void setSeriousInjurySuffered(int pSeriousInjurySuffered) {
-    if (getGame().isTrackingChanges() && (fSeriousInjurySuffered != pSeriousInjurySuffered)) {
-      getGame().add(new ModelChangeTeamResult(CommandTeamResultChange.SET_SERIOUS_INJURY_SUFFERED, isHomeData(), (byte) pSeriousInjurySuffered));
+    if (pSeriousInjurySuffered == fSeriousInjurySuffered) {
+    	return;
     }
     fSeriousInjurySuffered = pSeriousInjurySuffered;
+    notifyObservers(ModelChangeId.TEAM_RESULT_SET_SERIOUS_INJURY_SUFFERED, fSeriousInjurySuffered);
   }
   
   public int getRipSuffered() {
@@ -219,10 +191,11 @@ public class TeamResult implements IByteArraySerializable, IXmlSerializable {
   }
   
   public void setRipSuffered(int pRipSuffered) {
-    if (getGame().isTrackingChanges() && (fRipSuffered != pRipSuffered)) {
-      getGame().add(new ModelChangeTeamResult(CommandTeamResultChange.SET_RIP_SUFFERED, isHomeData(), (byte) pRipSuffered));
+    if (pRipSuffered == fRipSuffered) {
+    	return;
     }
     fRipSuffered = pRipSuffered;
+    notifyObservers(ModelChangeId.TEAM_RESULT_SET_RIP_SUFFERED, fRipSuffered);
   }
   
   public int getSpirallingExpenses() {
@@ -230,10 +203,11 @@ public class TeamResult implements IByteArraySerializable, IXmlSerializable {
   }
   
   public void setSpirallingExpenses(int pSpirallingExpenses) {
-    if (getGame().isTrackingChanges() && (pSpirallingExpenses != fSpirallingExpenses)) {
-      getGame().add(new ModelChangeTeamResult(CommandTeamResultChange.SET_SPIRALLING_EXPENSES, isHomeData(), pSpirallingExpenses));
+    if (pSpirallingExpenses == fSpirallingExpenses) {
+      return;
     }
     fSpirallingExpenses = pSpirallingExpenses;
+    notifyObservers(ModelChangeId.TEAM_RESULT_SET_SPIRALLING_EXPENSES, fSpirallingExpenses);
   }
   
   public int getPettyCashTransferred() {
@@ -241,10 +215,11 @@ public class TeamResult implements IByteArraySerializable, IXmlSerializable {
   }
   
   public void setPettyCashTransferred(int pPettyCash) {
-    if (getGame().isTrackingChanges() && (pPettyCash != fPettyCashTransferred)) {
-      getGame().add(new ModelChangeTeamResult(CommandTeamResultChange.SET_PETTY_CASH_TRANSFERRED, isHomeData(), pPettyCash));
+    if (pPettyCash == fPettyCashTransferred) {
+      return;
     }
     fPettyCashTransferred = pPettyCash;
+    notifyObservers(ModelChangeId.TEAM_RESULT_SET_PETTY_CASH_TRANSFERRED, fPettyCashTransferred);
   }
 
   public int getPettyCashUsed() {
@@ -252,10 +227,11 @@ public class TeamResult implements IByteArraySerializable, IXmlSerializable {
   }
   
   public void setPettyCashUsed(int pPettyCash) {
-    if (getGame().isTrackingChanges() && (pPettyCash != fPettyCashUsed)) {
-      getGame().add(new ModelChangeTeamResult(CommandTeamResultChange.SET_PETTY_CASH_USED, isHomeData(), pPettyCash));
+    if (pPettyCash == fPettyCashUsed) {
+      return;
     }
     fPettyCashUsed = pPettyCash;
+    notifyObservers(ModelChangeId.TEAM_RESULT_SET_PETTY_CASH_USED, fPettyCashUsed);
   }
 
   public int getTeamValue() {
@@ -263,10 +239,11 @@ public class TeamResult implements IByteArraySerializable, IXmlSerializable {
   }
   
   public void setTeamValue(int pTeamValue) {
-    if (getGame().isTrackingChanges() && (pTeamValue != fTeamValue)) {
-      getGame().add(new ModelChangeTeamResult(CommandTeamResultChange.SET_TEAM_VALUE, isHomeData(), pTeamValue));
+    if (pTeamValue == fTeamValue) {
+     return;
     }
     fTeamValue = pTeamValue;
+    notifyObservers(ModelChangeId.TEAM_RESULT_SET_TEAM_VALUE, fTeamValue);
   }
 
   public int totalCompletions() {
@@ -334,16 +311,18 @@ public class TeamResult implements IByteArraySerializable, IXmlSerializable {
   }
   
   public PlayerResult getPlayerResult(Player pPlayer) {
-    PlayerResult playerResult = fPlayerResultByPlayer.get(pPlayer);
+    String playerId = (pPlayer != null) ? pPlayer.getId() : null;
+    PlayerResult playerResult = fPlayerResultByPlayerId.get(playerId);
     if ((playerResult == null) && getTeam().hasPlayer(pPlayer)) {
       playerResult = new PlayerResult(this, pPlayer);
-      fPlayerResultByPlayer.put(playerResult.getPlayer(), playerResult);
+      fPlayerResultByPlayerId.put(playerResult.getPlayerId(), playerResult);
     }
     return playerResult;
   }
    
   public void removePlayerResult(Player pPlayer) {
-    fPlayerResultByPlayer.remove(pPlayer);
+    String playerId = (pPlayer != null) ? pPlayer.getId() : null;
+    fPlayerResultByPlayerId.remove(playerId);
   }
     
   public Game getGame() {
@@ -370,128 +349,22 @@ public class TeamResult implements IByteArraySerializable, IXmlSerializable {
         PlayerResult oldPlayerResult = pTeamResult.getPlayerResult(player);
         PlayerResult newPlayerResult = new PlayerResult(this);
         newPlayerResult.init(oldPlayerResult);
-        fPlayerResultByPlayer.put(player, newPlayerResult);
+        fPlayerResultByPlayerId.put(player.getId(), newPlayerResult);
       }
     }
   }
-    
-  // XML serialization
-  
-  public void addToXml(TransformerHandler pHandler) {
 
-    AttributesImpl attributes = new AttributesImpl();
-    UtilXml.addAttribute(attributes, XML_ATTRIBUTE_TEAM_ID, (getTeam() != null) ? getTeam().getId() : null);
-    UtilXml.startElement(pHandler, XML_TAG, attributes);
-    
-    UtilXml.addValueElement(pHandler, _XML_TAG_SCORE, getScore());
-    UtilXml.addValueElement(pHandler, _XML_TAG_CONCEDED, hasConceded());
-    UtilXml.addValueElement(pHandler, _XML_TAG_RAISED_DEAD, getRaisedDead());
-    
-    if (getSpectators() > 0) {
-      UtilXml.addValueElement(pHandler, _XML_TAG_SPECTATORS, getSpectators());
-      UtilXml.addValueElement(pHandler, _XML_TAG_FAME, getFame());
-    }
-    
-    if (getWinnings() > 0) {
-      UtilXml.addValueElement(pHandler, _XML_TAG_WINNINGS, getWinnings());
-    }
-    
-    if (getFanFactorModifier() != 0) {
-      UtilXml.addValueElement(pHandler, _XML_TAG_FAN_FACTOR_MODIFIER, getFanFactorModifier());
-    }
-    
-    if (getSpirallingExpenses() > 0) {
-      UtilXml.addValueElement(pHandler, _XML_TAG_SPIRALLING_EXPENSES, getSpirallingExpenses());
-    }
-    
-    if (getPettyCashTransferred() > 0) {
-      UtilXml.addValueElement(pHandler, _XML_TAG_PETTY_CASH_TRANSFERRED, getPettyCashTransferred());
-    }
-    
-    if (getPettyCashUsed() > 0) {
-      UtilXml.addValueElement(pHandler, _XML_TAG_PETTY_CASH_USED, getPettyCashUsed());
-    }
-    
-    if (getTeamValue() > 0) {
-      UtilXml.addValueElement(pHandler, _XML_TAG_TEAM_VALUE, getTeamValue());
-    }
-    
-    attributes = new AttributesImpl();
-    UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_BADLY_HURT, getBadlyHurtSuffered());
-    UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_SERIOUS_INJURY, getSeriousInjurySuffered());
-    UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_RIP, getRipSuffered());
-    UtilXml.addEmptyElement(pHandler, _XML_TAG_CASUALTIES_SUFFERED, attributes);
-    
-    UtilXml.startElement(pHandler, _XML_TAG_PLAYER_RESULT_LIST);
-    for (Player player : getTeam().getPlayers()) {
-      getPlayerResult(player).addToXml(pHandler);
-    }
-    UtilXml.endElement(pHandler, _XML_TAG_PLAYER_RESULT_LIST);
-
-    UtilXml.endElement(pHandler, XML_TAG);
-    
+  // change tracking
+  
+  private void notifyObservers(ModelChangeId pChangeId, Object pValue) {
+  	if ((getGame() == null) || (pChangeId == null)) {
+  		return;
+  	}
+  	String key = isHomeData() ? ModelChange.HOME : ModelChange.AWAY;
+  	ModelChange modelChange = new ModelChange(pChangeId, key, pValue);
+  	getGame().notifyObservers(modelChange);
   }
-  
-  public String toXml(boolean pIndent) {
-    return UtilXml.toXml(this, pIndent);
-  }
-  
-  public IXmlSerializable startXmlElement(String pXmlTag, Attributes pXmlAttributes) {
-    IXmlSerializable xmlElement = this;
-    if (_XML_TAG_CASUALTIES_SUFFERED.equals(pXmlTag)) {
-      fBadlyHurtSuffered = UtilXml.getIntAttribute(pXmlAttributes, _XML_ATTRIBUTE_BADLY_HURT);
-      fSeriousInjurySuffered = UtilXml.getIntAttribute(pXmlAttributes, _XML_ATTRIBUTE_SERIOUS_INJURY);
-      fRipSuffered = UtilXml.getIntAttribute(pXmlAttributes, _XML_ATTRIBUTE_RIP);
-    }
-    if (PlayerResult.XML_TAG.equals(pXmlTag)) {
-      fCurrentPlayerResult = new PlayerResult(this);
-      fCurrentPlayerResult.startXmlElement(pXmlTag, pXmlAttributes);
-      xmlElement = fCurrentPlayerResult;
-    }
-    return xmlElement;
-  }
-  
-  public boolean endXmlElement(String pXmlTag, String pValue) {
-    if (_XML_TAG_SCORE.equals(pXmlTag)) {
-      fScore = Integer.parseInt(pValue);
-    }
-    if (_XML_TAG_CONCEDED.equals(pXmlTag)) {
-      fConceded = Boolean.parseBoolean(pValue);
-    }
-    if (_XML_TAG_RAISED_DEAD.equals(pXmlTag)) {
-      fRaisedDead = Integer.parseInt(pValue);
-    }
-    if (_XML_TAG_FAME.equals(pXmlTag)) {
-      fFame = Integer.parseInt(pValue);
-    }
-    if (_XML_TAG_SPECTATORS.equals(pXmlTag)) {
-      fSpectators = Integer.parseInt(pValue);
-    }
-    if (_XML_TAG_WINNINGS.equals(pXmlTag)) {
-      fWinnings = Integer.parseInt(pValue);
-    }
-    if (_XML_TAG_FAN_FACTOR_MODIFIER.equals(pXmlTag)) {
-      fFanFactorModifier = Integer.parseInt(pValue);
-    }
-    if (_XML_TAG_SPIRALLING_EXPENSES.equals(pXmlTag)) {
-      fSpirallingExpenses = Integer.parseInt(pValue);
-    }
-    if (_XML_TAG_PETTY_CASH_TRANSFERRED.equals(pXmlTag)) {
-      fPettyCashTransferred = Integer.parseInt(pValue);
-    }
-    if (_XML_TAG_PETTY_CASH_USED.equals(pXmlTag)) {
-      fPettyCashUsed = Integer.parseInt(pValue);
-    }
-    if (_XML_TAG_TEAM_VALUE.equals(pXmlTag)) {
-      fTeamValue = Integer.parseInt(pValue);
-    }
-    if (PlayerResult.XML_TAG.equals(pXmlTag)) {
-      fPlayerResultByPlayer.put(fCurrentPlayerResult.getPlayer(), fCurrentPlayerResult);
-    }
-    return XML_TAG.equals(pXmlTag);
-  }
-  
-  
+    
   // ByteArray serialization
   
   public int getByteArraySerializationVersion() {
@@ -538,7 +411,7 @@ public class TeamResult implements IByteArraySerializable, IXmlSerializable {
     for (int i = 0; i < nrOfPlayers; i++) {
       PlayerResult playerResult = new PlayerResult(this);
       playerResult.initFrom(pByteArray);
-      fPlayerResultByPlayer.put(playerResult.getPlayer(), playerResult);
+      fPlayerResultByPlayerId.put(playerResult.getPlayerId(), playerResult);
     }
     if (byteArraySerializationVersion > 1) {
       fPettyCashTransferred = pByteArray.getInt();
@@ -590,12 +463,12 @@ public class TeamResult implements IByteArraySerializable, IXmlSerializable {
     fRipSuffered = IJsonOption.RIP_SUFFERED.getFrom(jsonObject);
     fSpirallingExpenses = IJsonOption.SPIRALLING_EXPENSES.getFrom(jsonObject);
     JsonArray playerResultArray = IJsonOption.PLAYER_RESULTS.getFrom(jsonObject);
-    fPlayerResultByPlayer.clear();
+    fPlayerResultByPlayerId.clear();
     if (playerResultArray != null) {
       for (int i = 0; i < playerResultArray.size(); i++) {
         PlayerResult playerResult = new PlayerResult(this);
         playerResult.initFrom(playerResultArray.get(i));
-        fPlayerResultByPlayer.put(playerResult.getPlayer(), playerResult);
+        fPlayerResultByPlayerId.put(playerResult.getPlayer().getId(), playerResult);
       }
     }
     fPettyCashTransferred = IJsonOption.PETTY_CASH_TRANSFERRED.getFrom(jsonObject);

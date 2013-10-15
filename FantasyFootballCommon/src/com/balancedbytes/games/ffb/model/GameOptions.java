@@ -14,8 +14,8 @@ import com.balancedbytes.games.ffb.bytearray.ByteList;
 import com.balancedbytes.games.ffb.bytearray.IByteArraySerializable;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
-import com.balancedbytes.games.ffb.model.change.old.CommandGameAttributeChange;
-import com.balancedbytes.games.ffb.model.change.old.ModelChangeGameAttribute;
+import com.balancedbytes.games.ffb.model.change.ModelChange;
+import com.balancedbytes.games.ffb.model.change.ModelChangeId;
 import com.balancedbytes.games.ffb.xml.IXmlSerializable;
 import com.balancedbytes.games.ffb.xml.UtilXml;
 import com.eclipsesource.json.JsonArray;
@@ -41,9 +41,10 @@ public class GameOptions implements IByteArraySerializable, IXmlSerializable {
   private static final String _XML_TAG_RIGHT_STUFF_CANCELS_TACKLE = "rightStuffCancelsTackle";
   private static final String _XML_TAG_PILING_ON_WITHOUT_MODIFIER = "pilingOnWithoutModifier";
 
-  private Game fGame;
   private Map<GameOption, GameOptionValue> fOptionValueByName;
 
+  private transient Game fGame;
+  
   public GameOptions(Game pGame) {
   	fGame = pGame;
   	fOptionValueByName = new HashMap<GameOption, GameOptionValue>();
@@ -69,16 +70,12 @@ public class GameOptions implements IByteArraySerializable, IXmlSerializable {
 	      		}
 	      	}
 	      }
-	      if ((getGame() != null) && getGame().isTrackingChanges()) {
-	        if (oldOption != null) {
-		        getGame().add(new ModelChangeGameAttribute(CommandGameAttributeChange.ADD_OPTION, oldOption));
-	        }
-	        getGame().add(new ModelChangeGameAttribute(CommandGameAttributeChange.ADD_OPTION, pGameOption));
-	      }
 	      if (oldOption != null) {
 		      fOptionValueByName.put(oldOption.getOption(), oldOption);
+		      notifyObservers(ModelChangeId.GAME_OPTIONS_ADD_OPTION, oldOption);
 	      }
 	      fOptionValueByName.put(pGameOption.getOption(), pGameOption);
+	      notifyObservers(ModelChangeId.GAME_OPTIONS_ADD_OPTION, pGameOption);
   		}
   	}
   }
@@ -103,6 +100,15 @@ public class GameOptions implements IByteArraySerializable, IXmlSerializable {
   		}
   	}
   }  
+
+  // change tracking
+  
+  private void notifyObservers(ModelChangeId pChangeId, Object pValue) {
+  	if ((getGame() == null) || (pChangeId == null)) {
+  		return;
+  	}
+  	getGame().notifyObservers(new ModelChange(pChangeId, null, pValue));
+  }
 
   // XML serialization
   

@@ -5,7 +5,6 @@ import java.awt.image.BufferedImage;
 
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.FieldCoordinateBounds;
-import com.balancedbytes.games.ffb.FieldModelChangeEvent;
 import com.balancedbytes.games.ffb.PlayerMarker;
 import com.balancedbytes.games.ffb.client.FantasyFootballClient;
 import com.balancedbytes.games.ffb.client.IIconProperty;
@@ -95,52 +94,17 @@ public class FieldLayerPlayers extends FieldLayer {
     }
   }
 
-  
-  // TODO: add bomb events
-  public void fieldModelChanged(FieldModelChangeEvent pChangeEvent) {
-    Game game = getClient().getGame();
-    switch (pChangeEvent.getType()) {
-      case FieldModelChangeEvent.TYPE_BALL_MOVING:
-        updateBallAndPlayers(game.getFieldModel().getBallCoordinate(), false);
-        break;
-      case FieldModelChangeEvent.TYPE_BOMB_MOVING:
-        updateBallAndPlayers(game.getFieldModel().getBombCoordinate(), false);
-        break;
-      case FieldModelChangeEvent.TYPE_BALL_COORDINATE:
-      case FieldModelChangeEvent.TYPE_BOMB_COORDINATE:
-        if (pChangeEvent.isRemoved() || pChangeEvent.isUpdated()) {
-          updateBallAndPlayers((FieldCoordinate) pChangeEvent.getOldValue(), false);
-        }
-        if (pChangeEvent.isAdded() || pChangeEvent.isUpdated()) {
-          updateBallAndPlayers((FieldCoordinate) pChangeEvent.getNewValue(), false);
-        }
-        break;
-      case FieldModelChangeEvent.TYPE_PLAYER_POSITION:
-        if (pChangeEvent.isRemoved() || pChangeEvent.isUpdated()) {
-          updateBallAndPlayers((FieldCoordinate) pChangeEvent.getOldValue(), true);
-        }
-        if (pChangeEvent.isAdded() || pChangeEvent.isUpdated()) {
-          updateBallAndPlayers((FieldCoordinate) pChangeEvent.getNewValue(), true);
-        }
-        break;
-      case FieldModelChangeEvent.TYPE_PLAYER_MARKER:
-        PlayerMarker playerMarker = (pChangeEvent.isAdded() || pChangeEvent.isUpdated()) ? (PlayerMarker) pChangeEvent.getNewValue() : (PlayerMarker) pChangeEvent.getOldValue();
-        if (playerMarker != null) {
-          Player player = game.getPlayerById(playerMarker.getPlayerId());
-          if (player != null) {
-            FieldCoordinate playerCoordinate = game.getFieldModel().getPlayerCoordinate(player);
-            updateBallAndPlayers(playerCoordinate, true);
-          }
-        }
-        break;
-      case FieldModelChangeEvent.TYPE_PLAYER_STATE:
-        Player player = (Player) pChangeEvent.getProperty();
-        if (player != null) {
-          FieldCoordinate playerCoordinate = game.getFieldModel().getPlayerCoordinate(player);
-          updateBallAndPlayers(playerCoordinate, true);
-        }
-        break;
+  public void updatePlayerMarker(PlayerMarker pPlayerMarker) {
+  	if (pPlayerMarker == null) {
+  		return;
+  	}
+  	Game game = getClient().getGame();
+    Player player = game.getPlayerById(pPlayerMarker.getPlayerId());
+    if (player == null) {
+    	return;
     }
+    FieldCoordinate playerCoordinate = game.getFieldModel().getPlayerCoordinate(player);
+    updateBallAndPlayers(playerCoordinate, true);
   }
   
   public void init() {
@@ -152,7 +116,6 @@ public class FieldLayerPlayers extends FieldLayer {
         updateBallAndPlayers(playerCoordinates[i], true);
       }
       updateBallAndPlayers(fieldModel.getBallCoordinate(), false);
-      fieldModel.addListener(this);
     }
   }
   

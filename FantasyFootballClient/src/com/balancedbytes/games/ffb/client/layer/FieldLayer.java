@@ -8,8 +8,6 @@ import java.awt.image.BufferedImage;
 
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.FieldCoordinateBounds;
-import com.balancedbytes.games.ffb.FieldModelChangeEvent;
-import com.balancedbytes.games.ffb.IFieldModelChangeListener;
 import com.balancedbytes.games.ffb.client.FantasyFootballClient;
 
 
@@ -18,7 +16,7 @@ import com.balancedbytes.games.ffb.client.FantasyFootballClient;
  * 
  * @author Kalimar
  */
-public abstract class FieldLayer implements IFieldModelChangeListener {
+public abstract class FieldLayer {
 
   public static final int FIELD_SQUARE_SIZE = 30;
   
@@ -147,10 +145,7 @@ public abstract class FieldLayer implements IFieldModelChangeListener {
   public FantasyFootballClient getClient() {
     return fClient;
   }
-  
-  public void fieldModelChanged(FieldModelChangeEvent pChangeEvent) {
-  }
-  
+    
   public void init() {
   }
  

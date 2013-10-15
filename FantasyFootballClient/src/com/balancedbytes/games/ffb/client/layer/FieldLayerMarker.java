@@ -12,7 +12,6 @@ import java.util.Map;
 import com.balancedbytes.games.ffb.ClientMode;
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.FieldMarker;
-import com.balancedbytes.games.ffb.FieldModelChangeEvent;
 import com.balancedbytes.games.ffb.client.FantasyFootballClient;
 import com.balancedbytes.games.ffb.model.FieldModel;
 import com.balancedbytes.games.ffb.model.Game;
@@ -34,9 +33,9 @@ public class FieldLayerMarker extends FieldLayer {
     fFieldMarkerBounds = new HashMap<FieldCoordinate, Rectangle>();
   }
   
-  public void draw(FieldMarker pFieldMarker) {
+  public void drawFieldMarker(FieldMarker pFieldMarker) {
     if ((pFieldMarker != null) && StringTool.isProvided(pFieldMarker.getHomeText()) && (getClient().getParameters().getMode() == ClientMode.PLAYER)) {
-      remove(pFieldMarker);
+      removeFieldMarker(pFieldMarker);
       Graphics2D g2d = getImage().createGraphics();
       g2d.setColor(COLOR_MARKER);
       if (pFieldMarker.getHomeText().length() < 2) {
@@ -56,7 +55,7 @@ public class FieldLayerMarker extends FieldLayer {
     }
   }
   
-  public void remove(FieldMarker pFieldMarker) {
+  public void removeFieldMarker(FieldMarker pFieldMarker) {
     if ((pFieldMarker != null) && (ClientMode.PLAYER == getClient().getMode())) {
       Rectangle bounds = fFieldMarkerBounds.get(pFieldMarker.getCoordinate());
       if (bounds != null) {
@@ -66,18 +65,6 @@ public class FieldLayerMarker extends FieldLayer {
     }
   }
 
-  public void fieldModelChanged(FieldModelChangeEvent pChangeEvent) {
-    switch (pChangeEvent.getType()) {
-      case FieldModelChangeEvent.TYPE_FIELD_MARKER:
-        if (pChangeEvent.isAdded()) {
-          draw((FieldMarker) pChangeEvent.getNewValue());
-        } else {
-          remove((FieldMarker) pChangeEvent.getOldValue());
-        }
-        break;
-    }
-  }
-  
   public void init() {
     clear(true);
     fFieldMarkerBounds.clear();
@@ -85,9 +72,8 @@ public class FieldLayerMarker extends FieldLayer {
     FieldModel fieldModel = game.getFieldModel();
     if (fieldModel != null) {
       for (FieldMarker fieldMarker : fieldModel.getFieldMarkers()) {
-        draw(fieldMarker);
+        drawFieldMarker(fieldMarker);
       }
-      fieldModel.addListener(this);
     }
   }
   

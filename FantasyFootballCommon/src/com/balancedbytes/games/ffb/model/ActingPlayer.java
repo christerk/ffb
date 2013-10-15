@@ -3,10 +3,6 @@ package com.balancedbytes.games.ffb.model;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.xml.transform.sax.TransformerHandler;
-
-import org.xml.sax.helpers.AttributesImpl;
-
 import com.balancedbytes.games.ffb.PlayerAction;
 import com.balancedbytes.games.ffb.PlayerActionFactory;
 import com.balancedbytes.games.ffb.Skill;
@@ -16,12 +12,10 @@ import com.balancedbytes.games.ffb.bytearray.ByteList;
 import com.balancedbytes.games.ffb.bytearray.IByteArraySerializable;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
-import com.balancedbytes.games.ffb.model.change.old.CommandActingPlayerChange;
-import com.balancedbytes.games.ffb.model.change.old.ModelChangeActingPlayer;
-import com.balancedbytes.games.ffb.util.ArrayTool;
+import com.balancedbytes.games.ffb.model.change.ModelChange;
+import com.balancedbytes.games.ffb.model.change.ModelChangeId;
+import com.balancedbytes.games.ffb.util.StringTool;
 import com.balancedbytes.games.ffb.util.UtilCards;
-import com.balancedbytes.games.ffb.xml.IXmlWriteable;
-import com.balancedbytes.games.ffb.xml.UtilXml;
 import com.eclipsesource.json.JsonArray;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
@@ -30,30 +24,8 @@ import com.eclipsesource.json.JsonValue;
  * 
  * @author Kalimar
  */
-public class ActingPlayer implements IXmlWriteable, IByteArraySerializable {
-  
-  public static final String XML_TAG = "actingPlayer";
-  
-  private static final String _XML_ATTRIBUTE_PLAYER_ID = "playerId";
-  private static final String _XML_ATTRIBUTE_PLAYER_ACTION = "playerAction";
-  
-  private static final String _XML_TAG_STRENGTH = "strength";
-  private static final String _XML_TAG_CURRENT_MOVE = "currentMove";
-  private static final String _XML_TAG_GOING_FOR_IT = "goingForIt";
-  private static final String _XML_TAG_DODGING = "dodging";
-  private static final String _XML_TAG_LEAPING = "leaping";
-  private static final String _XML_TAG_STANDING_UP = "standingUp";
-  private static final String _XML_TAG_SUFFERING_BLOOD_LUST = "sufferingBloodLust";
-  private static final String _XML_TAG_SUFFERING_ANIMOSITY = "sufferingAnimosity";
-  private static final String _XML_TAG_HAS_BLOCKED = "hasBlocked";
-  private static final String _XML_TAG_HAS_FOULED = "hasFouled";
-  private static final String _XML_TAG_HAS_PASSED = "hasPassed";
-  private static final String _XML_TAG_HAS_MOVED = "hasMoved";
-  private static final String _XML_TAG_HAS_FED = "hasFed";
-  private static final String _XML_TAG_USED_SKILL_LIST = "usedSkillList";
-  private static final String _XML_TAG_SKILL = "skill";
-  
-  private transient Game fGame;
+public class ActingPlayer implements IByteArraySerializable {
+    
   private String fPlayerId;
   private int fStrength;
   private int fCurrentMove;
@@ -70,7 +42,9 @@ public class ActingPlayer implements IXmlWriteable, IByteArraySerializable {
   private boolean fStandingUp;
   private boolean fSufferingBloodLust;
   private boolean fSufferingAnimosity;
-  
+
+  private transient Game fGame;
+
   public ActingPlayer(Game pGame) {
     fGame = pGame;
     fUsedSkills = new HashSet<Skill>();
@@ -81,6 +55,9 @@ public class ActingPlayer implements IXmlWriteable, IByteArraySerializable {
   }
   
   public void setPlayerId(String pPlayerId) {
+  	if (StringTool.isEqual(pPlayerId, fPlayerId)) {
+  		return;
+  	}
     fPlayerId = pPlayerId;
     fUsedSkills.clear();
     fCurrentMove = 0;
@@ -98,9 +75,7 @@ public class ActingPlayer implements IXmlWriteable, IByteArraySerializable {
     fSufferingAnimosity = false;
     Player player = getGame().getPlayerById(getPlayerId());
     setStrength((player != null) ? UtilCards.getPlayerStrength(getGame(), player) : 0);
-    if (getGame().isTrackingChanges()) {
-      getGame().add(new ModelChangeActingPlayer(CommandActingPlayerChange.SET_PLAYER_ID, pPlayerId));
-    }
+    notifyObservers(ModelChangeId.ACTING_PLAYER_SET_PLAYER_ID, fPlayerId);
   }
   
   public Player getPlayer() {
@@ -120,10 +95,11 @@ public class ActingPlayer implements IXmlWriteable, IByteArraySerializable {
   }
   
   public void setCurrentMove(int pCurrentMove) {
-    if (getGame().isTrackingChanges() && (pCurrentMove != fCurrentMove)) {
-      getGame().add(new ModelChangeActingPlayer(CommandActingPlayerChange.SET_CURRENT_MOVE, (byte) pCurrentMove));
+    if (pCurrentMove == fCurrentMove) {
+    	return;
     }
     fCurrentMove = pCurrentMove;
+    notifyObservers(ModelChangeId.ACTING_PLAYER_SET_CURRENT_MOVE, fCurrentMove);
   }
   
   public boolean isGoingForIt() {
@@ -131,10 +107,11 @@ public class ActingPlayer implements IXmlWriteable, IByteArraySerializable {
   }
   
   public void setGoingForIt(boolean pGoingForIt) {
-    if (getGame().isTrackingChanges() && (pGoingForIt != fGoingForIt)) {
-      getGame().add(new ModelChangeActingPlayer(CommandActingPlayerChange.SET_GOING_FOR_IT, pGoingForIt));
+    if (pGoingForIt == fGoingForIt) {
+      return;
     }
     fGoingForIt = pGoingForIt;
+    notifyObservers(ModelChangeId.ACTING_PLAYER_SET_GOING_FOR_IT, fGoingForIt);
   }
   
   public PlayerAction getPlayerAction() {
@@ -142,10 +119,11 @@ public class ActingPlayer implements IXmlWriteable, IByteArraySerializable {
   }
   
   public void setPlayerAction(PlayerAction pPlayerAction) {
-    if (getGame().isTrackingChanges() && (pPlayerAction != fPlayerAction)) {
-      getGame().add(new ModelChangeActingPlayer(CommandActingPlayerChange.SET_PLAYER_ACTION, pPlayerAction));
+    if (pPlayerAction == fPlayerAction) {
+    	return;
     }
     fPlayerAction = pPlayerAction;
+    notifyObservers(ModelChangeId.ACTING_PLAYER_SET_PLAYER_ACTION, fPlayerAction);
   }
   
   public boolean isSkillUsed(Skill pSkill) {
@@ -157,9 +135,7 @@ public class ActingPlayer implements IXmlWriteable, IByteArraySerializable {
     	return;
     }
     fUsedSkills.add(pSkill);
-    if (getGame().isTrackingChanges()) {
-      getGame().add(new ModelChangeActingPlayer(CommandActingPlayerChange.MARK_SKILL_USED, pSkill));
-    }
+    notifyObservers(ModelChangeId.ACTING_PLAYER_MARK_SKILL_USED, pSkill);
   }
   
   public String getRace() {
@@ -179,10 +155,11 @@ public class ActingPlayer implements IXmlWriteable, IByteArraySerializable {
   }
   
   public void setHasBlocked(boolean pHasBlocked) {
-    if (getGame().isTrackingChanges() && (pHasBlocked != fHasBlocked)) {
-      getGame().add(new ModelChangeActingPlayer(CommandActingPlayerChange.SET_HAS_BLOCKED, pHasBlocked));
+    if (pHasBlocked == fHasBlocked) {
+    	return;
     }
     fHasBlocked = pHasBlocked;
+    notifyObservers(ModelChangeId.ACTING_PLAYER_SET_HAS_BLOCKED, fHasBlocked);
   }
   
   public boolean hasPassed() {
@@ -190,10 +167,11 @@ public class ActingPlayer implements IXmlWriteable, IByteArraySerializable {
   }
   
   public void setHasPassed(boolean pHasPassed) {
-    if (getGame().isTrackingChanges() && (pHasPassed != fHasPassed)) {
-      getGame().add(new ModelChangeActingPlayer(CommandActingPlayerChange.SET_HAS_PASSED, pHasPassed));
+    if (pHasPassed == fHasPassed) {
+      return;
     }
     fHasPassed = pHasPassed;
+    notifyObservers(ModelChangeId.ACTING_PLAYER_SET_HAS_PASSED, fHasPassed);
   }
   
   public boolean isDodging() {
@@ -201,10 +179,11 @@ public class ActingPlayer implements IXmlWriteable, IByteArraySerializable {
   }
   
   public void setDodging(boolean pDodging) {
-    if (getGame().isTrackingChanges() && (pDodging != fDodging)) {
-      getGame().add(new ModelChangeActingPlayer(CommandActingPlayerChange.SET_DODGING, pDodging));
+    if (pDodging == fDodging) {
+      return;
     }
     fDodging = pDodging;
+    notifyObservers(ModelChangeId.ACTING_PLAYER_SET_DODGING, fDodging);
   }
   
   public int getStrength() {
@@ -212,10 +191,11 @@ public class ActingPlayer implements IXmlWriteable, IByteArraySerializable {
   }
   
   public void setStrength(int pStrength) {
-    if (getGame().isTrackingChanges() && (pStrength != fStrength)) {
-      getGame().add(new ModelChangeActingPlayer(CommandActingPlayerChange.SET_STRENGTH, (byte) pStrength));
+    if (pStrength == fStrength) {
+      return;
     }
     fStrength = pStrength;
+    notifyObservers(ModelChangeId.ACTING_PLAYER_SET_STRENGTH, fStrength);
   }
   
   public boolean hasMoved() {
@@ -223,10 +203,11 @@ public class ActingPlayer implements IXmlWriteable, IByteArraySerializable {
   }
   
   public void setHasMoved(boolean pHasMoved) {
-    if (getGame().isTrackingChanges() && (pHasMoved != fHasMoved)) {
-      getGame().add(new ModelChangeActingPlayer(CommandActingPlayerChange.SET_HAS_MOVED, pHasMoved));
+    if (pHasMoved == fHasMoved) {
+      return;
     }
     fHasMoved = pHasMoved;
+    notifyObservers(ModelChangeId.ACTING_PLAYER_SET_HAS_MOVED, fHasMoved);
   }
   
   public boolean isLeaping() {
@@ -234,17 +215,19 @@ public class ActingPlayer implements IXmlWriteable, IByteArraySerializable {
   }
   
   public void setLeaping(boolean pLeaping) {
-    if (getGame().isTrackingChanges() && (pLeaping != fLeaping)) {
-      getGame().add(new ModelChangeActingPlayer(CommandActingPlayerChange.SET_LEAPING, pLeaping));
+    if (pLeaping == fLeaping) {
+      return;
     }
     fLeaping = pLeaping;
+    notifyObservers(ModelChangeId.ACTING_PLAYER_SET_LEAPING, fLeaping);
   }
   
   public void setStandingUp(boolean pStandingUp) {
-    if (getGame().isTrackingChanges() && (fStandingUp != pStandingUp)) {
-      getGame().add(new ModelChangeActingPlayer(CommandActingPlayerChange.SET_STANDING_UP, pStandingUp));
+    if (pStandingUp == fStandingUp) {
+      return;
     }
     fStandingUp = pStandingUp;
+    notifyObservers(ModelChangeId.ACTING_PLAYER_SET_STANDING_UP, fStandingUp);
   }
   
   public boolean isStandingUp() {
@@ -252,10 +235,11 @@ public class ActingPlayer implements IXmlWriteable, IByteArraySerializable {
   }
     
   public void setSufferingBloodLust(boolean pSufferingBloodLust) {
-    if (getGame().isTrackingChanges() && (fSufferingBloodLust != pSufferingBloodLust)) {
-      getGame().add(new ModelChangeActingPlayer(CommandActingPlayerChange.SET_SUFFERING_BLOOD_LUST, pSufferingBloodLust));
+    if (pSufferingBloodLust == fSufferingBloodLust) {
+      return;
     }
     fSufferingBloodLust = pSufferingBloodLust;
+    notifyObservers(ModelChangeId.ACTING_PLAYER_SET_SUFFERING_BLOOD_LUST, fSufferingBloodLust);
   }
 
   public boolean isSufferingBloodLust() {
@@ -263,10 +247,11 @@ public class ActingPlayer implements IXmlWriteable, IByteArraySerializable {
   }
 
   public void setSufferingAnimosity(boolean pSufferingAnimosity) {
-    if (getGame().isTrackingChanges() && (fSufferingAnimosity != pSufferingAnimosity)) {
-      getGame().add(new ModelChangeActingPlayer(CommandActingPlayerChange.SET_SUFFERING_ANIMOSITY, pSufferingAnimosity));
-    }
+  	if (pSufferingAnimosity == fSufferingAnimosity) {
+  		return;
+  	}
     fSufferingAnimosity = pSufferingAnimosity;
+    notifyObservers(ModelChangeId.ACTING_PLAYER_SET_SUFFERING_ANIMOSITY, fSufferingAnimosity);
   }
 
   public boolean isSufferingAnimosity() {
@@ -278,10 +263,11 @@ public class ActingPlayer implements IXmlWriteable, IByteArraySerializable {
   }
   
   public void setHasFed(boolean pHasFed) {
-    if (getGame().isTrackingChanges() && (pHasFed != fHasFed)) {
-      getGame().add(new ModelChangeActingPlayer(CommandActingPlayerChange.SET_HAS_FED, pHasFed));
+    if (pHasFed == fHasFed) {
+    	return;
     }
     fHasFed = pHasFed;
+    notifyObservers(ModelChangeId.ACTING_PLAYER_SET_HAS_FED, fHasFed);
   }
   
   public boolean hasFouled() {
@@ -289,66 +275,30 @@ public class ActingPlayer implements IXmlWriteable, IByteArraySerializable {
   }
   
   public void setHasFouled(boolean pHasFouled) {
-    if (getGame().isTrackingChanges() && (pHasFouled != fHasFouled)) {
-      getGame().add(new ModelChangeActingPlayer(CommandActingPlayerChange.SET_HAS_FOULED, pHasFouled));
+    if (pHasFouled == fHasFouled) {
+    	return;
     }
     fHasFouled = pHasFouled;
+    notifyObservers(ModelChangeId.ACTING_PLAYER_SET_HAS_FOULED, fHasFouled);
   }
   
   public Game getGame() {
     return fGame;
   }
-    
+      
   public boolean hasActed() {
     return (hasMoved() || hasFouled() || hasBlocked() || hasPassed() || (fUsedSkills.size() > 0));
   }
   
-  // XML serialization
+  // change tracking
   
-  public void addToXml(TransformerHandler pHandler) {
-    
-    if (getPlayer() == null) {
-      UtilXml.addEmptyElement(pHandler, XML_TAG);
-      return;
-    }
-
-    AttributesImpl attributes = new AttributesImpl();
-    UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_PLAYER_ID, getPlayer().getId());
-    UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_PLAYER_ACTION, (getPlayerAction() != null) ? getPlayerAction().getName() : null);
-    UtilXml.startElement(pHandler, XML_TAG, attributes);
-    
-    UtilXml.addValueElement(pHandler, _XML_TAG_STRENGTH, getStrength());
-    UtilXml.addValueElement(pHandler, _XML_TAG_CURRENT_MOVE, getCurrentMove());
-    UtilXml.addValueElement(pHandler, _XML_TAG_GOING_FOR_IT, isGoingForIt());
-    UtilXml.addValueElement(pHandler, _XML_TAG_DODGING, isDodging());
-    UtilXml.addValueElement(pHandler, _XML_TAG_LEAPING, isLeaping());
-    UtilXml.addValueElement(pHandler, _XML_TAG_STANDING_UP, isStandingUp());
-    UtilXml.addValueElement(pHandler, _XML_TAG_HAS_BLOCKED, hasBlocked());
-    UtilXml.addValueElement(pHandler, _XML_TAG_HAS_FOULED, hasFouled());
-    UtilXml.addValueElement(pHandler, _XML_TAG_HAS_PASSED, hasPassed());
-    UtilXml.addValueElement(pHandler, _XML_TAG_HAS_MOVED, hasMoved());
-    UtilXml.addValueElement(pHandler, _XML_TAG_STANDING_UP, isStandingUp());
-    UtilXml.addValueElement(pHandler, _XML_TAG_SUFFERING_BLOOD_LUST, isSufferingBloodLust());
-    UtilXml.addValueElement(pHandler, _XML_TAG_SUFFERING_ANIMOSITY, isSufferingAnimosity());
-    UtilXml.addValueElement(pHandler, _XML_TAG_HAS_FED, hasFed());
-     
-    UtilXml.startElement(pHandler, _XML_TAG_USED_SKILL_LIST);
-    Skill[] usedSkills = getUsedSkills();
-    if (ArrayTool.isProvided(usedSkills)) {
-      for (Skill skill : usedSkills) {
-        UtilXml.addValueElement(pHandler, _XML_TAG_SKILL, skill.getName());
-      }
-    }
-    UtilXml.endElement(pHandler, _XML_TAG_USED_SKILL_LIST);
-
-    UtilXml.endElement(pHandler, XML_TAG);
-    
+  private void notifyObservers(ModelChangeId pChangeId, Object pValue) {
+  	if ((getGame() == null) || (pChangeId == null)) {
+  		return;
+  	}
+  	getGame().notifyObservers(new ModelChange(pChangeId, null, pValue));
   }
-  
-  public String toXml(boolean pIndent) {
-    return UtilXml.toXml(this, pIndent);
-  }
-  
+    
   // ByteArray serialization
   
   public int getByteArraySerializationVersion() {

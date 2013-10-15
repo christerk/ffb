@@ -15,7 +15,6 @@ import java.util.Map;
 
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.FieldCoordinateBounds;
-import com.balancedbytes.games.ffb.FieldModelChangeEvent;
 import com.balancedbytes.games.ffb.PassingDistance;
 import com.balancedbytes.games.ffb.RangeRuler;
 import com.balancedbytes.games.ffb.client.FantasyFootballClient;
@@ -278,21 +277,11 @@ public class FieldLayerRangeRuler extends FieldLayer {
     }
   }
   
-  public void fieldModelChanged(FieldModelChangeEvent pChangeEvent) {
-    switch (pChangeEvent.getType()) {
-      case FieldModelChangeEvent.TYPE_RANGE_RULER:
-        RangeRuler rangeRuler = (RangeRuler) pChangeEvent.getNewValue();
-        drawRangeRuler(rangeRuler);
-        break;
-    }
-  }
-
   public void init() {
     clear(true);
     FieldModel fieldModel = getClient().getGame().getFieldModel();
     if (fieldModel != null) {
       drawRangeRuler(fieldModel.getRangeRuler());
-      fieldModel.addListener(this);
     }
   }
   

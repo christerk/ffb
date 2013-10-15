@@ -8,7 +8,6 @@ import java.awt.Graphics2D;
 import java.awt.geom.Rectangle2D;
 
 import com.balancedbytes.games.ffb.FieldCoordinate;
-import com.balancedbytes.games.ffb.FieldModelChangeEvent;
 import com.balancedbytes.games.ffb.TrackNumber;
 import com.balancedbytes.games.ffb.client.FantasyFootballClient;
 import com.balancedbytes.games.ffb.model.FieldModel;
@@ -88,18 +87,6 @@ public class FieldLayerUnderPlayers extends FieldLayer {
     }
   }
 
-  public void fieldModelChanged(FieldModelChangeEvent pChangeEvent) {
-    switch (pChangeEvent.getType()) {
-    case FieldModelChangeEvent.TYPE_TRACK_NUMBER:
-      if (pChangeEvent.isAdded()) {
-        drawTrackNumber((TrackNumber) pChangeEvent.getNewValue());
-      } else {
-        removeTrackNumber((TrackNumber) pChangeEvent.getOldValue());
-      }
-      break;
-    }
-  }
-
   public void init() {
     clear(true);
     FieldModel fieldModel = getClient().getGame().getFieldModel();
@@ -108,7 +95,6 @@ public class FieldLayerUnderPlayers extends FieldLayer {
       for (int i = 0; i < trackNumbers.length; i++) {
         drawTrackNumber(trackNumbers[i]);
       }
-      fieldModel.addListener(this);
     }
   }
 

@@ -3,14 +3,9 @@ package com.balancedbytes.games.ffb.model;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
-import javax.xml.transform.sax.TransformerHandler;
-
-import org.xml.sax.helpers.AttributesImpl;
 
 import com.balancedbytes.games.ffb.BloodSpot;
 import com.balancedbytes.games.ffb.Card;
@@ -19,8 +14,6 @@ import com.balancedbytes.games.ffb.DiceDecoration;
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.FieldCoordinateBounds;
 import com.balancedbytes.games.ffb.FieldMarker;
-import com.balancedbytes.games.ffb.FieldModelChangeEvent;
-import com.balancedbytes.games.ffb.IFieldModelChangeListener;
 import com.balancedbytes.games.ffb.MoveSquare;
 import com.balancedbytes.games.ffb.PlayerMarker;
 import com.balancedbytes.games.ffb.PlayerState;
@@ -32,44 +25,18 @@ import com.balancedbytes.games.ffb.WeatherFactory;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
 import com.balancedbytes.games.ffb.bytearray.IByteArraySerializable;
-import com.balancedbytes.games.ffb.model.change.old.CommandFieldModelChange;
-import com.balancedbytes.games.ffb.model.change.old.ModelChangeFieldModel;
+import com.balancedbytes.games.ffb.model.change.ModelChange;
+import com.balancedbytes.games.ffb.model.change.ModelChangeId;
 import com.balancedbytes.games.ffb.util.ArrayTool;
-import com.balancedbytes.games.ffb.xml.IXmlWriteable;
-import com.balancedbytes.games.ffb.xml.UtilXml;
+import com.balancedbytes.games.ffb.util.StringTool;
 
 
 /**
  * 
  * @author Kalimar
  */
-public class FieldModel implements IByteArraySerializable, IXmlWriteable {
-  
-  public static final String XML_TAG = "fieldModel";
-  
-  private static final String _XML_ATTRIBUTE_X = "x";
-  private static final String _XML_ATTRIBUTE_Y = "y";
-  private static final String _XML_ATTRIBUTE_MOVING = "moving";
-  private static final String _XML_ATTRIBUTE_IN_PLAY = "inPlay";
-  private static final String _XML_ATTRIBUTE_ID = "id";
-  private static final String _XML_ATTRIBUTE_STATE = "state";
-  private static final String _XML_ATTRIBUTE_NAME = "name";
-
-  private static final String _XML_TAG_BALL = "ball";
-  private static final String _XML_TAG_BOMB = "bomb";
-  private static final String _XML_TAG_COORDINATE = "coordinate";
-  private static final String _XML_TAG_WEATHER = "weather";
-  private static final String _XML_TAG_BLOODSPOT_LIST = "bloodspotList";
-  private static final String _XML_TAG_PUSHBACK_SQUARE_LIST = "pushbackSquareList";
-  private static final String _XML_TAG_MOVE_SQUARE_LIST = "moveSquareList";
-  private static final String _XML_TAG_TRACK_NUMBER_LIST = "trackNumberList";
-  private static final String _XML_TAG_DICE_DECORATION_LIST = "diceDecorationList";
-  private static final String _XML_TAG_PLAYER_LIST = "playerList";
-  private static final String _XML_TAG_PLAYER = "player";
-  private static final String _XML_TAG_FIELD_MARKER_LIST = "fieldMarkerList";
-  private static final String _XML_TAG_PLAYER_MARKER_LIST = "playerMarkerList";
-  private static final String _XML_TAG_CARD = "card";
-  
+public class FieldModel implements IByteArraySerializable {
+    
   private boolean fBallMoving;
   private boolean fBallInPlay;
   private FieldCoordinate fBallCoordinate;
@@ -77,123 +44,108 @@ public class FieldModel implements IByteArraySerializable, IXmlWriteable {
   private FieldCoordinate fBombCoordinate;
   private boolean fBombMoving;
   
-  private transient Game fGame;
-  
   private Weather fWeather;
-  
   private RangeRuler fRangeRuler;
-  
-  private Map<FieldCoordinate, Player> fPlayerByCoordinate;
-  
-  private Map<Player, FieldCoordinate> fCoordinateByPlayer;
-  
-  private Map<Player, PlayerState> fStateByPlayer;
-  
+  private Map<String, FieldCoordinate> fCoordinateByPlayerId;
+  private Map<String, PlayerState> fStateByPlayerId;
   private List<BloodSpot> fBloodspots;
-  
   private Set<PushbackSquare> fPushbackSquares;
-  
   private Set<MoveSquare> fMoveSquares;
-  
   private Set<TrackNumber> fTrackNumbers;
-  
   private Set<DiceDecoration> fDiceDecorations;
-  
   private Set<FieldMarker> fFieldMarkers;
-  
   private Set<PlayerMarker> fPlayerMarkers;
-  
-  private transient Set<IFieldModelChangeListener> fChangeListeners;
+  private Map<String, Set<Card>> fCardsByPlayerId;
 
-  private Map<Player, Set<Card>> fCardsByPlayer;
+  private transient Map<FieldCoordinate, String> fPlayerIdByCoordinate;  // no need to serialize this, as it can be reconstructed
+
+  private transient Game fGame;
 
   public FieldModel(Game pGame) {
     fGame = pGame;
-    fPlayerByCoordinate = new HashMap<FieldCoordinate,Player>();
-    fCoordinateByPlayer = new HashMap<Player,FieldCoordinate>();
+    fPlayerIdByCoordinate = new HashMap<FieldCoordinate, String>();
+    fCoordinateByPlayerId = new HashMap<String ,FieldCoordinate>();
     fBloodspots = new ArrayList<BloodSpot>();
     fPushbackSquares = new HashSet<PushbackSquare>();
     fMoveSquares = new HashSet<MoveSquare>();
     fTrackNumbers = new HashSet<TrackNumber>();
     fDiceDecorations = new HashSet<DiceDecoration>();
-    fChangeListeners = new HashSet<IFieldModelChangeListener>();
-    fStateByPlayer = new HashMap<Player, PlayerState>();
+    fStateByPlayerId = new HashMap<String, PlayerState>();
     fFieldMarkers = new HashSet<FieldMarker>();
     fPlayerMarkers = new HashSet<PlayerMarker>();
-    fCardsByPlayer = new HashMap<Player, Set<Card>>();
+    fCardsByPlayerId = new HashMap<String, Set<Card>>();
   }
 
   public Player getPlayer(FieldCoordinate pPlayerPosition) {
-    return ((pPlayerPosition != null) ? fPlayerByCoordinate.get(pPlayerPosition) : null);
+  	String playerId = ((pPlayerPosition != null) ? fPlayerIdByCoordinate.get(pPlayerPosition) : null);
+  	return getGame().getPlayerById(playerId);
   }
   
   public void remove(Player pPlayer) {
-    if (pPlayer != null) {
-      FieldCoordinate coordinate = getPlayerCoordinate(pPlayer);
-      fPlayerByCoordinate.remove(coordinate);
-      fCoordinateByPlayer.remove(pPlayer);
-      if (fChangeListeners.size() > 0) {
-        fireChangeEvent(new FieldModelChangeEvent(this, FieldModelChangeEvent.TYPE_PLAYER_POSITION, pPlayer, coordinate, null));
-      }
-      if (getGame().isTrackingChanges()) {
-        getGame().add(new ModelChangeFieldModel(CommandFieldModelChange.REMOVE_PLAYER, pPlayer.getId()));
-      }
+    if (pPlayer == null) {
+    	return;
     }
+    FieldCoordinate coordinate = getPlayerCoordinate(pPlayer);
+    fPlayerIdByCoordinate.remove(coordinate);
+    fCoordinateByPlayerId.remove(pPlayer.getId());
+    notifyObservers(ModelChangeId.FIELD_MODEL_REMOVE_PLAYER, pPlayer.getId(), coordinate);
   }
   
   public void remove(Team pTeam) {
     if (pTeam != null) {
       for (Player player : pTeam.getPlayers()) {
         remove(player);
-        fStateByPlayer.remove(player);
+        fStateByPlayerId.remove(player);
       }
     }
   }
   
   public FieldCoordinate getPlayerCoordinate(Player pPlayer) {
-    return fCoordinateByPlayer.get(pPlayer);
+  	if (pPlayer == null)  {
+  		return null;
+  	}
+    return fCoordinateByPlayerId.get(pPlayer.getId());
   }
   
   public void setPlayerCoordinate(Player pPlayer, FieldCoordinate pCoordinate) {
-    if (pCoordinate != null) {
-      FieldCoordinate oldCoordinate = getPlayerCoordinate(pPlayer);
-      fCoordinateByPlayer.put(pPlayer, pCoordinate);
+    if ((pCoordinate == null) || (pPlayer == null)) {
+    	return;
+    }
+    FieldCoordinate oldCoordinate = getPlayerCoordinate(pPlayer);
+    if (!FieldCoordinate.equals(pCoordinate, oldCoordinate)) {
+      fCoordinateByPlayerId.put(pPlayer.getId(), pCoordinate);
       if (oldCoordinate != null) {
-        fPlayerByCoordinate.remove(oldCoordinate);
+        fPlayerIdByCoordinate.remove(oldCoordinate);
       }
-      Player oldPlayer = fPlayerByCoordinate.get(pCoordinate);
-      if (oldPlayer != null) {
-        fCoordinateByPlayer.remove(oldPlayer);
+      String oldPlayerId = fPlayerIdByCoordinate.get(pCoordinate);
+      if (StringTool.isProvided(oldPlayerId)) {
+        fCoordinateByPlayerId.remove(oldPlayerId);
       }
-      fPlayerByCoordinate.put(pCoordinate, pPlayer);
-      if (fChangeListeners.size() > 0) {
-        fireChangeEvent(new FieldModelChangeEvent(this, FieldModelChangeEvent.TYPE_PLAYER_POSITION, pPlayer, oldCoordinate, pCoordinate));
-      }
-      if (getGame().isTrackingChanges()) {
-        getGame().add(new ModelChangeFieldModel(CommandFieldModelChange.SET_PLAYER_COOORDINATE, pPlayer.getId(), pCoordinate));
-      }
+      fPlayerIdByCoordinate.put(pCoordinate, pPlayer.getId());
+      notifyObservers(ModelChangeId.FIELD_MODEL_SET_PLAYER_COORDINATE, pPlayer.getId(), pCoordinate);
     }
   }
   
   public FieldCoordinate[] getPlayerCoordinates() {
-    return fPlayerByCoordinate.keySet().toArray(new FieldCoordinate[fPlayerByCoordinate.size()]);
+    return fPlayerIdByCoordinate.keySet().toArray(new FieldCoordinate[fPlayerIdByCoordinate.size()]);
   }
   
   public void setPlayerState(Player pPlayer, PlayerState pState) {
-    PlayerState oldState = fStateByPlayer.get(pPlayer);
+  	if (pPlayer == null) {
+  		return;
+  	}
+    PlayerState oldState = fStateByPlayerId.get(pPlayer.getId());
     if ((oldState == null) || ((pState != null) && (pState.getId() != oldState.getId()))) {
-      fStateByPlayer.put(pPlayer, pState);
-      if (fChangeListeners.size() > 0) {
-        fireChangeEvent(new FieldModelChangeEvent(this, FieldModelChangeEvent.TYPE_PLAYER_STATE, pPlayer, oldState, pState));
-      }
-      if (getGame().isTrackingChanges()) {
-        getGame().add(new ModelChangeFieldModel(CommandFieldModelChange.SET_PLAYER_STATE, pPlayer.getId(), pState));
-      }
+      fStateByPlayerId.put(pPlayer.getId(), pState);
+      notifyObservers(ModelChangeId.FIELD_MODEL_SET_PLAYER_STATE, pPlayer.getId(), pState);
     }
   }
   
   public PlayerState getPlayerState(Player pPlayer) {
-    PlayerState playerState = fStateByPlayer.get(pPlayer);
+  	if (pPlayer == null) {
+  		return null;
+  	}
+    PlayerState playerState = fStateByPlayerId.get(pPlayer.getId());
     return (playerState != null) ? playerState : new PlayerState(PlayerState.UNKNOWN);
   }
 
@@ -201,34 +153,35 @@ public class FieldModel implements IByteArraySerializable, IXmlWriteable {
   	if ((pPlayer == null) || (pCard == null)) {
   		return;
   	}
-  	Set<Card> cards = fCardsByPlayer.get(pPlayer);
+  	Set<Card> cards = fCardsByPlayerId.get(pPlayer.getId());
   	if (cards == null) {
   		cards = new HashSet<Card>();
-  		fCardsByPlayer.put(pPlayer, cards);
+  		fCardsByPlayerId.put(pPlayer.getId(), cards);
   	}
   	cards.add(pCard);
-    if (getGame().isTrackingChanges()) {
-      getGame().add(new ModelChangeFieldModel(CommandFieldModelChange.ADD_CARD, pPlayer.getId(), pCard));
-    }
+  	notifyObservers(ModelChangeId.FIELD_MODEL_ADD_CARD, pPlayer.getId(), pCard);
   }
   
   public boolean removeCard(Player pPlayer, Card pCard) {
   	if ((pPlayer == null) || (pCard == null)) {
   		return false;
   	}
-    if (getGame().isTrackingChanges()) {
-      getGame().add(new ModelChangeFieldModel(CommandFieldModelChange.REMOVE_CARD, pPlayer.getId(), pCard));
-    }
-  	Set<Card> cards = fCardsByPlayer.get(pPlayer);
+  	boolean removed = false;
+  	Set<Card> cards = fCardsByPlayerId.get(pPlayer.getId());
   	if (cards != null) {
-    	return cards.remove(pCard);
-  	} else {
-  		return false;
+    	removed = cards.remove(pCard);
   	}
+  	if (removed) {
+  		notifyObservers(ModelChangeId.FIELD_MODEL_REMOVE_CARD, pPlayer.getId(), pCard);
+  	}
+  	return removed;
   }
   
   public Card[] getCards(Player pPlayer) {
-  	Set<Card> cards = fCardsByPlayer.get(pPlayer);
+  	if (pPlayer == null) {
+  		return null;
+  	}
+  	Set<Card> cards = fCardsByPlayerId.get(pPlayer.getId());
   	if (cards == null) {
   		return new Card[0];
   	}
@@ -236,10 +189,10 @@ public class FieldModel implements IByteArraySerializable, IXmlWriteable {
   }
   
   public Player findPlayer(Card pCard) {
-  	for (Player player : fCardsByPlayer.keySet()) {
-  		for (Card card : fCardsByPlayer.get(player)) {
+  	for (String playerId : fCardsByPlayerId.keySet()) {
+  		for (Card card : fCardsByPlayerId.get(playerId)) {
   			if (card == pCard) {
-  				return player;
+  				return getGame().getPlayerById(playerId);
   			}
   		}
   	}
@@ -250,36 +203,24 @@ public class FieldModel implements IByteArraySerializable, IXmlWriteable {
     return fBallCoordinate;
   }
   
-  public void setBallCoordinate(FieldCoordinate pCoordinate) {
-    // System.out.println("Ball at " + pCoordinate);
-    if (fChangeListeners.size() > 0) {
-      FieldModelChangeEvent changeEvent = new FieldModelChangeEvent(this, FieldModelChangeEvent.TYPE_BALL_COORDINATE, this, getBallCoordinate(), pCoordinate);
-      fBallCoordinate = pCoordinate;
-      fireChangeEvent(changeEvent);
-    } else {
-      fBallCoordinate = pCoordinate;
-    }
-    if (getGame().isTrackingChanges()) {
-      getGame().add(new ModelChangeFieldModel(CommandFieldModelChange.SET_BALL_COORDINATE, pCoordinate));
-    }
+  public void setBallCoordinate(FieldCoordinate pBallCoordinate) {
+  	if (FieldCoordinate.equals(pBallCoordinate, fBallCoordinate)) {
+  		return;
+  	}
+    fBallCoordinate = pBallCoordinate;
+    notifyObservers(ModelChangeId.FIELD_MODEL_SET_BALL_COORDINATE, null, fBallCoordinate);
   }
 
   public FieldCoordinate getBombCoordinate() {
     return fBombCoordinate;
   }
   
-  public void setBombCoordinate(FieldCoordinate pCoordinate) {
-    // System.out.println("Ball at " + pCoordinate);
-    if (fChangeListeners.size() > 0) {
-      FieldModelChangeEvent changeEvent = new FieldModelChangeEvent(this, FieldModelChangeEvent.TYPE_BOMB_COORDINATE, this, getBombCoordinate(), pCoordinate);
-      fBombCoordinate = pCoordinate;
-      fireChangeEvent(changeEvent);
-    } else {
-      fBombCoordinate = pCoordinate;
-    }
-    if (getGame().isTrackingChanges()) {
-      getGame().add(new ModelChangeFieldModel(CommandFieldModelChange.SET_BOMB_COORDINATE, pCoordinate));
-    }
+  public void setBombCoordinate(FieldCoordinate pBombCoordinate) {
+  	if (FieldCoordinate.equals(pBombCoordinate, fBombCoordinate)) {
+  		return;
+  	}
+  	fBombCoordinate = pBombCoordinate;
+  	notifyObservers(ModelChangeId.FIELD_MODEL_SET_BOMB_COORDINATE, null, fBombCoordinate);
   }
 
   public FieldCoordinate[] findAdjacentCoordinates(FieldCoordinate pCoordinate, FieldCoordinateBounds pBounds, int pSteps, boolean pWithStartCoordinate) {
@@ -300,15 +241,11 @@ public class FieldModel implements IByteArraySerializable, IXmlWriteable {
   }
 
   public void setBallMoving(boolean pBallMoving) {
-    if (pBallMoving != isBallMoving()) {
-      fBallMoving = pBallMoving;
-      if (fChangeListeners.size() > 0) {
-        fireChangeEvent(new FieldModelChangeEvent(this, FieldModelChangeEvent.TYPE_BALL_MOVING, this, new Boolean(!pBallMoving), new Boolean(pBallMoving)));
-      }
-      if (getGame().isTrackingChanges()) {
-        getGame().add(new ModelChangeFieldModel(CommandFieldModelChange.SET_BALL_MOVING, pBallMoving));
-      }
+    if (pBallMoving == fBallMoving) {
+    	return;
     }
+    fBallMoving = pBallMoving;
+    notifyObservers(ModelChangeId.FIELD_MODEL_SET_BALL_MOVING, null, fBallMoving);
   }
   
   public boolean isBallMoving() {
@@ -316,15 +253,11 @@ public class FieldModel implements IByteArraySerializable, IXmlWriteable {
   }
 
   public void setBombMoving(boolean pBombMoving) {
-    if (pBombMoving != isBombMoving()) {
-      fBombMoving = pBombMoving;
-      if (fChangeListeners.size() > 0) {
-        fireChangeEvent(new FieldModelChangeEvent(this, FieldModelChangeEvent.TYPE_BOMB_MOVING, this, new Boolean(!pBombMoving), new Boolean(pBombMoving)));
-      }
-      if (getGame().isTrackingChanges()) {
-        getGame().add(new ModelChangeFieldModel(CommandFieldModelChange.SET_BOMB_MOVING, pBombMoving));
-      }
+    if (pBombMoving == fBombMoving) {
+    	return;
     }
+    fBombMoving = pBombMoving;
+    notifyObservers(ModelChangeId.FIELD_MODEL_SET_BOMB_MOVING, null, fBombMoving);
   }
 
   public boolean isBombMoving() {
@@ -332,10 +265,11 @@ public class FieldModel implements IByteArraySerializable, IXmlWriteable {
   }
   
   public void setBallInPlay(boolean pBallInPlay) {
-    if (getGame().isTrackingChanges() && (pBallInPlay != fBallInPlay)) {
-      getGame().add(new ModelChangeFieldModel(CommandFieldModelChange.SET_BALL_IN_PLAY, pBallInPlay));
-    }
+  	if (pBallInPlay == fBallInPlay) {
+  		return;
+  	}
     fBallInPlay = pBallInPlay;
+    notifyObservers(ModelChangeId.FIELD_MODEL_SET_BALL_IN_PLAY, null, fBallInPlay);
   }
   
   public boolean isBallInPlay() {
@@ -343,13 +277,11 @@ public class FieldModel implements IByteArraySerializable, IXmlWriteable {
   }
   
   public void add(BloodSpot pBloodspot) {
+  	if (pBloodspot == null) {
+  		return;
+  	}
     fBloodspots.add(pBloodspot);
-    if (fChangeListeners.size() > 0) {
-      fireChangeEvent(new FieldModelChangeEvent(this, FieldModelChangeEvent.TYPE_BLOODSPOT, this, null, pBloodspot));
-    }
-    if (getGame().isTrackingChanges()) {
-      getGame().add(new ModelChangeFieldModel(CommandFieldModelChange.ADD_BLOOD_SPOT, pBloodspot));
-    }
+    notifyObservers(ModelChangeId.FIELD_MODEL_ADD_BLOOD_SPOT, null, pBloodspot);
   }
   
   public BloodSpot[] getBloodSpots() {
@@ -357,26 +289,19 @@ public class FieldModel implements IByteArraySerializable, IXmlWriteable {
   }
   
   public void add(TrackNumber pTrackNumber) {
+  	if (pTrackNumber == null) {
+  		return;
+  	}
     fTrackNumbers.add(pTrackNumber);
-    if (fChangeListeners.size() > 0) {
-      fireChangeEvent(new FieldModelChangeEvent(this, FieldModelChangeEvent.TYPE_TRACK_NUMBER, this, null, pTrackNumber));
-    }
-    if (getGame().isTrackingChanges()) {
-      getGame().add(new ModelChangeFieldModel(CommandFieldModelChange.ADD_TRACK_NUMBER, pTrackNumber));
-    }
+    notifyObservers(ModelChangeId.FIELD_MODEL_ADD_TRACK_NUMBER, null, pTrackNumber);
   }
 
   public boolean remove(TrackNumber pTrackNumber) {
-    boolean removed = fTrackNumbers.remove(pTrackNumber);
-    if (removed) {
-      if (fChangeListeners.size() > 0) {
-        fireChangeEvent(new FieldModelChangeEvent(this, FieldModelChangeEvent.TYPE_TRACK_NUMBER, this, pTrackNumber, null));
-      }
-      if (getGame().isTrackingChanges()) {
-        getGame().add(new ModelChangeFieldModel(CommandFieldModelChange.REMOVE_TRACK_NUMBER, pTrackNumber));
-      }
+    if (fTrackNumbers.remove(pTrackNumber)) {
+      notifyObservers(ModelChangeId.FIELD_MODEL_REMOVE_TRACK_NUMBER, null, pTrackNumber);
+      return true;
     }
-    return removed;
+    return false;
   }
 
   public void clearTrackNumbers() {
@@ -407,26 +332,19 @@ public class FieldModel implements IByteArraySerializable, IXmlWriteable {
   }
 
   public void add(PushbackSquare pPushbackSquare) {
+  	if (pPushbackSquare == null) {
+  		return;
+  	}
     fPushbackSquares.add(pPushbackSquare);
-    if (fChangeListeners.size() > 0) {
-      fireChangeEvent(new FieldModelChangeEvent(this, FieldModelChangeEvent.TYPE_PUSHBACK_SQUARE, this, null, pPushbackSquare));
-    }
-    if (getGame().isTrackingChanges()) {
-      getGame().add(new ModelChangeFieldModel(CommandFieldModelChange.ADD_PUSHBACK_SQUARE, pPushbackSquare));
-    }
+    notifyObservers(ModelChangeId.FIELD_MODEL_ADD_PUSHBACK_SQUARE, null, pPushbackSquare);
   }
 
   public boolean remove(PushbackSquare pPushbackSquare) {
-    boolean removed = fPushbackSquares.remove(pPushbackSquare);
-    if (removed) {
-      if (fChangeListeners.size() > 0) {
-        fireChangeEvent(new FieldModelChangeEvent(this, FieldModelChangeEvent.TYPE_PUSHBACK_SQUARE, this, pPushbackSquare, null));
-      }
-      if (getGame().isTrackingChanges()) {
-        getGame().add(new ModelChangeFieldModel(CommandFieldModelChange.REMOVE_PUSHBACK_SQUARE, pPushbackSquare));
-      }
+    if (fPushbackSquares.remove(pPushbackSquare)) {
+      notifyObservers(ModelChangeId.FIELD_MODEL_REMOVE_PUSHBACK_SQUARE, null, pPushbackSquare);
+      return true;
     }
-    return removed;
+    return false;
   }
   
   public void clearPushbackSquares() {
@@ -440,15 +358,11 @@ public class FieldModel implements IByteArraySerializable, IXmlWriteable {
   }
   
   public void add(MoveSquare pMoveSquare) {
-    if (pMoveSquare != null) {
-      fMoveSquares.add(pMoveSquare);
-      if (fChangeListeners.size() > 0) {
-        fireChangeEvent(new FieldModelChangeEvent(this, FieldModelChangeEvent.TYPE_MOVE_SQUARE, this, null, pMoveSquare));
-      }
-      if (getGame().isTrackingChanges()) {
-        getGame().add(new ModelChangeFieldModel(CommandFieldModelChange.ADD_MOVE_SQUARE, pMoveSquare));
-      }
+    if (pMoveSquare == null) {
+    	return;
     }
+    fMoveSquares.add(pMoveSquare);
+    notifyObservers(ModelChangeId.FIELD_MODEL_ADD_MOVE_SQUARE, null, pMoveSquare);
   }
 
   public void add(MoveSquare[] pMoveSquares) {
@@ -460,16 +374,11 @@ public class FieldModel implements IByteArraySerializable, IXmlWriteable {
   }
   
   public boolean remove(MoveSquare pMoveSquare) {
-    boolean removed = fMoveSquares.remove(pMoveSquare);
-    if (removed) {
-      if (fChangeListeners.size() > 0) {
-        fireChangeEvent(new FieldModelChangeEvent(this, FieldModelChangeEvent.TYPE_MOVE_SQUARE, this, pMoveSquare, null));
-      }
-      if (getGame().isTrackingChanges()) {
-        getGame().add(new ModelChangeFieldModel(CommandFieldModelChange.REMOVE_MOVE_SQUARE, pMoveSquare));
-      }
+    if (fMoveSquares.remove(pMoveSquare)) {
+      notifyObservers(ModelChangeId.FIELD_MODEL_REMOVE_MOVE_SQUARE, null, pMoveSquare);
+      return true;
     }
-    return removed;
+    return false;
   }
   
   public void clearMoveSquares() {
@@ -492,28 +401,19 @@ public class FieldModel implements IByteArraySerializable, IXmlWriteable {
   }
   
   public void add(DiceDecoration pDiceDecoration) {
-    if (pDiceDecoration != null) {
-      fDiceDecorations.add(pDiceDecoration);
-      if (fChangeListeners.size() > 0) {
-        fireChangeEvent(new FieldModelChangeEvent(this, FieldModelChangeEvent.TYPE_DICE_DECORATION, this, null, pDiceDecoration));
-      }
-      if (getGame().isTrackingChanges()) {
-        getGame().add(new ModelChangeFieldModel(CommandFieldModelChange.ADD_DICE_DECORATION, pDiceDecoration));
-      }
+    if (pDiceDecoration == null) {
+    	return;
     }
+    fDiceDecorations.add(pDiceDecoration);
+    notifyObservers(ModelChangeId.FIELD_MODEL_ADD_DICE_DECORATION, null, pDiceDecoration);
   }
 
   public boolean remove(DiceDecoration pDiceDecoration) {
-    boolean removed = fDiceDecorations.remove(pDiceDecoration);
-    if (removed) {
-      if (fChangeListeners.size() > 0) {
-        fireChangeEvent(new FieldModelChangeEvent(this, FieldModelChangeEvent.TYPE_DICE_DECORATION, this, pDiceDecoration, null));
-      }
-      if (getGame().isTrackingChanges()) {
-        getGame().add(new ModelChangeFieldModel(CommandFieldModelChange.REMOVE_DICE_DECORATION, pDiceDecoration));
-      }
+    if (fDiceDecorations.remove(pDiceDecoration)) {
+      notifyObservers(ModelChangeId.FIELD_MODEL_REMOVE_DICE_DECORATION, null, pDiceDecoration);
+      return true;
     }
-    return removed;
+  	return false;
   }
 
   public void clearDiceDecorations() {
@@ -536,29 +436,20 @@ public class FieldModel implements IByteArraySerializable, IXmlWriteable {
   }
 
   public void add(FieldMarker pFieldMarker) {
-    if (pFieldMarker != null) {
-      fFieldMarkers.remove(pFieldMarker);
-      fFieldMarkers.add(pFieldMarker);
-      if (fChangeListeners.size() > 0) {
-        fireChangeEvent(new FieldModelChangeEvent(this, FieldModelChangeEvent.TYPE_FIELD_MARKER, this, null, pFieldMarker));
-      }
-      if (getGame().isTrackingChanges()) {
-        getGame().add(new ModelChangeFieldModel(CommandFieldModelChange.ADD_FIELD_MARKER, pFieldMarker));
-      }
+    if (pFieldMarker == null) {
+    	return;
     }
+    fFieldMarkers.remove(pFieldMarker);
+    fFieldMarkers.add(pFieldMarker);
+    notifyObservers(ModelChangeId.FIELD_MODEL_ADD_FIELD_MARKER, null, pFieldMarker);
   }
 
   public boolean remove(FieldMarker pFieldMarker) {
-    boolean removed = fFieldMarkers.remove(pFieldMarker);
-    if (removed) {
-      if (fChangeListeners.size() > 0) {
-        fireChangeEvent(new FieldModelChangeEvent(this, FieldModelChangeEvent.TYPE_FIELD_MARKER, this, pFieldMarker, null));
-      }
-      if (getGame().isTrackingChanges()) {
-        getGame().add(new ModelChangeFieldModel(CommandFieldModelChange.REMOVE_FIELD_MARKER, pFieldMarker));
-      }
-    }
-    return removed;
+  	if (fFieldMarkers.remove(pFieldMarker)) {
+    	notifyObservers(ModelChangeId.FIELD_MODEL_REMOVE_FIELD_MARKER, null, pFieldMarker);
+      return true;
+  	}
+		return false;
   }
 
   public void clearFieldMarkers() {
@@ -581,29 +472,20 @@ public class FieldModel implements IByteArraySerializable, IXmlWriteable {
   }
 
   public void add(PlayerMarker pPlayerMarker) {
-    if (pPlayerMarker != null) {
-      fPlayerMarkers.remove(pPlayerMarker);
-      fPlayerMarkers.add(pPlayerMarker);
-      if (fChangeListeners.size() > 0) {
-        fireChangeEvent(new FieldModelChangeEvent(this, FieldModelChangeEvent.TYPE_PLAYER_MARKER, this, null, pPlayerMarker));
-      }
-      if (getGame().isTrackingChanges()) {
-        getGame().add(new ModelChangeFieldModel(CommandFieldModelChange.ADD_PLAYER_MARKER, pPlayerMarker));
-      }
+    if (pPlayerMarker == null) {
+    	return;
     }
+    fPlayerMarkers.remove(pPlayerMarker);
+    fPlayerMarkers.add(pPlayerMarker);
+    notifyObservers(ModelChangeId.FIELD_MODEL_ADD_PLAYER_MARKER, null, pPlayerMarker);
   }
 
   public boolean remove(PlayerMarker pPlayerMarker) {
-    boolean removed = fPlayerMarkers.remove(pPlayerMarker);
-    if (removed) {
-      if (fChangeListeners.size() > 0) {
-        fireChangeEvent(new FieldModelChangeEvent(this, FieldModelChangeEvent.TYPE_PLAYER_MARKER, this, pPlayerMarker, null));
-      }
-      if (getGame().isTrackingChanges()) {
-        getGame().add(new ModelChangeFieldModel(CommandFieldModelChange.REMOVE_PLAYER_MARKER, pPlayerMarker));
-      }
+    if (fPlayerMarkers.remove(pPlayerMarker)) {
+    	notifyObservers(ModelChangeId.FIELD_MODEL_REMOVE_PLAYER_MARKER, null, pPlayerMarker);
+      return true;
     }
-    return removed;
+  	return false;
   }
 
   public void clearPlayerMarkers() {
@@ -630,16 +512,11 @@ public class FieldModel implements IByteArraySerializable, IXmlWriteable {
   }
   
   public void setWeather(Weather pWeather) {
-    Weather oldWeather = getWeather();
-    if ((pWeather != null) && (pWeather != oldWeather)) {
-      fWeather = pWeather;
-      if (fChangeListeners.size() > 0) {
-        fireChangeEvent(new FieldModelChangeEvent(this, FieldModelChangeEvent.TYPE_WEATHER, this, oldWeather, getWeather()));
-      }
-      if (getGame().isTrackingChanges()) {
-        getGame().add(new ModelChangeFieldModel(CommandFieldModelChange.SET_WEATHER, pWeather));
-      }
+    if (pWeather == fWeather) {
+    	return;
     }
+    fWeather = pWeather;
+    notifyObservers(ModelChangeId.FIELD_MODEL_SET_WEATHER, null, fWeather);
   }
   
   public RangeRuler getRangeRuler() {
@@ -647,38 +524,13 @@ public class FieldModel implements IByteArraySerializable, IXmlWriteable {
   }
   
   public void setRangeRuler(RangeRuler pRangeRuler) {
-    boolean changed = (pRangeRuler != null) ? !pRangeRuler.equals(fRangeRuler) : (fRangeRuler != null);
-    if (changed) {
-      RangeRuler oldRangeRuler = fRangeRuler;
-      fRangeRuler = pRangeRuler;
-      if (fChangeListeners.size() > 0) {
-        fireChangeEvent(new FieldModelChangeEvent(this, FieldModelChangeEvent.TYPE_RANGE_RULER, this, oldRangeRuler, pRangeRuler));
-      }
-      if (getGame().isTrackingChanges()) {
-        getGame().add(new ModelChangeFieldModel(CommandFieldModelChange.SET_RANGE_RULER, pRangeRuler));
-      }
+    if ((pRangeRuler != null) ? pRangeRuler.equals(fRangeRuler) : (fRangeRuler == null)) {
+    	return;
     }
+    fRangeRuler = pRangeRuler;
+    notifyObservers(ModelChangeId.FIELD_MODEL_SET_RANGE_RULER, null, fRangeRuler);
   }
-  
-  public IFieldModelChangeListener[] getChangeListeners() {
-    return (IFieldModelChangeListener[]) fChangeListeners.toArray(new IFieldModelChangeListener[fChangeListeners.size()]);
-  }
-  
-  public void addListener(IFieldModelChangeListener pChangeListener) {
-    fChangeListeners.add(pChangeListener);
-  }
-  
-  public void removeListener(IFieldModelChangeListener pChangeListener) {
-    fChangeListeners.remove(pChangeListener);
-  }
-  
-  private void fireChangeEvent(FieldModelChangeEvent pChangeEvent) {
-    Iterator<IFieldModelChangeListener> listenerIterator = fChangeListeners.iterator();
-    while (listenerIterator.hasNext()) {
-      listenerIterator.next().fieldModelChanged(pChangeEvent);
-    }
-  }
-  
+    
   public boolean updatePlayerAndBallPosition(Player pPlayer, FieldCoordinate pCoordinate) {
     boolean ballPositionUpdated = false;
     FieldCoordinate oldPosition = getPlayerCoordinate(pPlayer);
@@ -688,6 +540,10 @@ public class FieldModel implements IByteArraySerializable, IXmlWriteable {
     }
     setPlayerCoordinate(pPlayer, pCoordinate);
     return ballPositionUpdated;
+  }
+
+  public void setGame(Game pGame) {
+	  fGame = pGame;
   }
   
   public Game getGame() {
@@ -706,11 +562,8 @@ public class FieldModel implements IByteArraySerializable, IXmlWriteable {
     transformedModel.setBallMoving(isBallMoving());
     transformedModel.setWeather(getWeather());
     
-    for (IFieldModelChangeListener changeListener : getChangeListeners()) {
-      transformedModel.addListener(changeListener);
-    }
-    
-    for (Player player : fStateByPlayer.keySet()) {
+    for (String playerId : fStateByPlayerId.keySet()) {
+    	Player player = getGame().getPlayerById(playerId);
       transformedModel.setPlayerState(player, getPlayerState(player));
       for (Card card : getCards(player)) {
       	transformedModel.addCard(player, card);
@@ -756,115 +609,16 @@ public class FieldModel implements IByteArraySerializable, IXmlWriteable {
     return transformedModel;
     
   }
-  
-  // XML serialization
-  
-  public void addToXml(TransformerHandler pHandler) {
-   
-    UtilXml.startElement(pHandler, XML_TAG);
     
-    AttributesImpl attributes = new AttributesImpl();
-    UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_IN_PLAY, isBallInPlay());
-    UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_MOVING, isBallMoving());
-    UtilXml.startElement(pHandler, _XML_TAG_BALL, attributes);
-    if (getBallCoordinate() != null) {
-      attributes = new AttributesImpl();
-      UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_X, getBallCoordinate().getX());
-      UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_Y, getBallCoordinate().getY());
-      UtilXml.addEmptyElement(pHandler, _XML_TAG_COORDINATE, attributes);
-    }
-    UtilXml.endElement(pHandler, _XML_TAG_BALL);
+  // change tracking
 
-    attributes = new AttributesImpl();
-    UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_MOVING, isBombMoving());
-    UtilXml.startElement(pHandler, _XML_TAG_BOMB, attributes);
-    if (getBombCoordinate() != null) {
-      attributes = new AttributesImpl();
-      UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_X, getBombCoordinate().getX());
-      UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_Y, getBombCoordinate().getY());
-      UtilXml.addEmptyElement(pHandler, _XML_TAG_COORDINATE, attributes);
-    }
-    UtilXml.endElement(pHandler, _XML_TAG_BOMB);
-
-    UtilXml.addValueElement(pHandler, _XML_TAG_WEATHER, (getWeather() != null) ? getWeather().getName() : null);
-
-    UtilXml.startElement(pHandler, _XML_TAG_BLOODSPOT_LIST);
-    for (BloodSpot bloodspot : getBloodSpots()) {
-      bloodspot.addToXml(pHandler);
-    }
-    UtilXml.endElement(pHandler, _XML_TAG_BLOODSPOT_LIST);
-
-    UtilXml.startElement(pHandler, _XML_TAG_PUSHBACK_SQUARE_LIST);
-    for (PushbackSquare pushbackSquare : getPushbackSquares()) {
-      pushbackSquare.addToXml(pHandler);
-    }
-    UtilXml.endElement(pHandler, _XML_TAG_PUSHBACK_SQUARE_LIST);
-
-    UtilXml.startElement(pHandler, _XML_TAG_MOVE_SQUARE_LIST);
-    for (MoveSquare moveSquare : getMoveSquares()) {
-      moveSquare.addToXml(pHandler);
-    }
-    UtilXml.endElement(pHandler, _XML_TAG_MOVE_SQUARE_LIST);
-
-    UtilXml.startElement(pHandler, _XML_TAG_TRACK_NUMBER_LIST);
-    for (TrackNumber trackNumber : getTrackNumbers()) {
-      trackNumber.addToXml(pHandler);
-    }
-    UtilXml.endElement(pHandler, _XML_TAG_TRACK_NUMBER_LIST);
-    
-    UtilXml.startElement(pHandler, _XML_TAG_DICE_DECORATION_LIST);
-    for (DiceDecoration diceDecoration : getDiceDecorations()) {
-      diceDecoration.addToXml(pHandler);
-    }
-    UtilXml.endElement(pHandler, _XML_TAG_DICE_DECORATION_LIST);
-
-    UtilXml.startElement(pHandler, _XML_TAG_PLAYER_LIST);
-    for (Player player : getGame().getPlayers()) {
-      PlayerState playerState = getPlayerState(player);
-      FieldCoordinate playerCoordinate = getPlayerCoordinate(player);
-      Card[] cards = getCards(player);
-      if ((playerState != null) || (playerCoordinate != null) || ArrayTool.isProvided(cards)) {
-        int playerStateId = (playerState != null) ? playerState.getId() : 0;
-        attributes = new AttributesImpl();
-        UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_ID, player.getId());
-        UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_STATE, playerStateId);
-        UtilXml.startElement(pHandler, _XML_TAG_PLAYER, attributes);
-        if (playerCoordinate != null) {
-          attributes = new AttributesImpl();
-          UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_X, playerCoordinate.getX());
-          UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_Y, playerCoordinate.getY());
-          UtilXml.addEmptyElement(pHandler, _XML_TAG_COORDINATE, attributes);
-        }
-        for (Card card : cards) {
-          attributes = new AttributesImpl();
-          UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_NAME, card.getName());
-          UtilXml.addEmptyElement(pHandler, _XML_TAG_CARD, attributes);
-        }
-        UtilXml.endElement(pHandler, _XML_TAG_PLAYER);
-      }
-    }
-    UtilXml.endElement(pHandler, _XML_TAG_PLAYER_LIST);
-
-    UtilXml.startElement(pHandler, _XML_TAG_FIELD_MARKER_LIST);
-    for (FieldMarker fieldMarker : getFieldMarkers()) {
-      fieldMarker.addToXml(pHandler);
-    }
-    UtilXml.endElement(pHandler, _XML_TAG_FIELD_MARKER_LIST);
-
-    UtilXml.startElement(pHandler, _XML_TAG_PLAYER_MARKER_LIST);
-    for (PlayerMarker playerMarker : getPlayerMarkers()) {
-      playerMarker.addToXml(pHandler);
-    }
-    UtilXml.endElement(pHandler, _XML_TAG_PLAYER_MARKER_LIST);
-    
-    UtilXml.endElement(pHandler, XML_TAG);
-    
+  private void notifyObservers(ModelChangeId pChangeId, String pKey, Object pValue) {
+  	if ((getGame() == null) || (pChangeId == null)) {
+  		return;
+  	}
+  	getGame().notifyObservers(new ModelChange(pChangeId, pKey, pValue));
   }
 
-  public String toXml(boolean pIndent) {
-    return UtilXml.toXml(this, pIndent);
-  }
-    
   // ByteArray serialization
   
   public int getByteArraySerializationVersion() {

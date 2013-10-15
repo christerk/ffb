@@ -13,7 +13,6 @@ import com.balancedbytes.games.ffb.ClientMode;
 import com.balancedbytes.games.ffb.DiceDecoration;
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.FieldCoordinateBounds;
-import com.balancedbytes.games.ffb.FieldModelChangeEvent;
 import com.balancedbytes.games.ffb.MoveSquare;
 import com.balancedbytes.games.ffb.PushbackSquare;
 import com.balancedbytes.games.ffb.client.FantasyFootballClient;
@@ -65,7 +64,7 @@ public class FieldLayerOverPlayers extends FieldLayer {
     }
   }
 
-  public void draw(PushbackSquare pPushbackSquare) {
+  public void drawPushbackSquare(PushbackSquare pPushbackSquare) {
     if (pPushbackSquare != null) {
       clear(pPushbackSquare.getCoordinate(), true);
       IconCache iconCache = getClient().getUserInterface().getIconCache();
@@ -74,13 +73,17 @@ public class FieldLayerOverPlayers extends FieldLayer {
     }
   }
   
-  public void remove(PushbackSquare pPushbackSquare) {
+  public void removePushbackSquare(PushbackSquare pPushbackSquare) {
     if (pPushbackSquare != null) {
       clear(pPushbackSquare.getCoordinate(), true);
     }
   }
 
-  public void draw(DiceDecoration pDiceDecoration, boolean pClearBeforeDraw) {
+  public void drawDiceDecoration(DiceDecoration pDiceDecoration) {
+  	drawDiceDecoration(pDiceDecoration, true);
+  }
+
+  private void drawDiceDecoration(DiceDecoration pDiceDecoration, boolean pClearBeforeDraw) {
     
   	if (pDiceDecoration != null) {
     	
@@ -88,7 +91,7 @@ public class FieldLayerOverPlayers extends FieldLayer {
     		clear(pDiceDecoration.getCoordinate(), true);
       	MoveSquare moveSquare = getClient().getGame().getFieldModel().getMoveSquare(pDiceDecoration.getCoordinate()); 
       	if (moveSquare != null) {
-      		draw(moveSquare, false);
+      		drawMoveSquare(moveSquare, false);
       	}
     	}
       
@@ -100,13 +103,17 @@ public class FieldLayerOverPlayers extends FieldLayer {
   	
   }
 
-  public void remove(DiceDecoration pDiceDecoration) {
+  public void removeDiceDecoration(DiceDecoration pDiceDecoration) {
     if (pDiceDecoration != null) {
       clear(pDiceDecoration.getCoordinate(), true);
     }
   }
-  
-  public void draw(MoveSquare pMoveSquare, boolean pClearBeforeDraw) {
+
+  public void drawMoveSquare(MoveSquare pMoveSquare) {
+  	drawMoveSquare(pMoveSquare, true);
+  }
+
+  private void drawMoveSquare(MoveSquare pMoveSquare, boolean pClearBeforeDraw) {
     
     if ((pMoveSquare != null) && (ClientMode.PLAYER == getClient().getMode()) && getClient().getGame().isHomePlaying()) {
       
@@ -176,7 +183,7 @@ public class FieldLayerOverPlayers extends FieldLayer {
       if (pClearBeforeDraw) {
 	      DiceDecoration diceDecoration = getClient().getGame().getFieldModel().getDiceDecoration(pMoveSquare.getCoordinate()); 
 	    	if (diceDecoration != null) {
-	    		draw(diceDecoration, false);
+	    		drawDiceDecoration(diceDecoration, false);
 	    	}
       }
       
@@ -184,7 +191,7 @@ public class FieldLayerOverPlayers extends FieldLayer {
     
   }
   
-  public void remove(MoveSquare pMoveSquare) {
+  public void removeMoveSquare(MoveSquare pMoveSquare) {
     if (pMoveSquare != null) {
       clear(pMoveSquare.getCoordinate(), true);
     }
@@ -276,47 +283,20 @@ public class FieldLayerOverPlayers extends FieldLayer {
     }
   }
   
-  public void fieldModelChanged(FieldModelChangeEvent pChangeEvent) {
-    switch (pChangeEvent.getType()) {
-      case FieldModelChangeEvent.TYPE_PUSHBACK_SQUARE:
-        if (pChangeEvent.isAdded()) {
-          draw((PushbackSquare) pChangeEvent.getNewValue());
-        } else {
-          remove((PushbackSquare) pChangeEvent.getOldValue());
-        }
-        break;
-      case FieldModelChangeEvent.TYPE_DICE_DECORATION:
-        if (pChangeEvent.isAdded()) {
-          draw((DiceDecoration) pChangeEvent.getNewValue(), true);
-        } else {
-          remove((DiceDecoration) pChangeEvent.getOldValue());
-        }
-        break;
-      case FieldModelChangeEvent.TYPE_MOVE_SQUARE:
-        if (pChangeEvent.isAdded()) {
-          draw((MoveSquare) pChangeEvent.getNewValue(), true);
-        } else {
-          remove((MoveSquare) pChangeEvent.getOldValue());
-        }
-        break;
-    }
-  }
-  
   public void init() {
     clear(true);
     Game game = getClient().getGame();
     FieldModel fieldModel = game.getFieldModel();
     if (fieldModel != null) {
       for (PushbackSquare pushbackSquare : fieldModel.getPushbackSquares()) {
-        draw(pushbackSquare);
+        drawPushbackSquare(pushbackSquare);
       }
       for (DiceDecoration diceDecoration : fieldModel.getDiceDecorations()) {
-        draw(diceDecoration, true);
+        drawDiceDecoration(diceDecoration);
       }
       for (MoveSquare moveSquare : fieldModel.getMoveSquares()) {
-        draw(moveSquare, true);
+        drawMoveSquare(moveSquare);
       }
-      fieldModel.addListener(this);
     }
   }
   

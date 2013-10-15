@@ -4,10 +4,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import javax.xml.transform.sax.TransformerHandler;
-
-import org.xml.sax.helpers.AttributesImpl;
-
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.IDialogParameter;
 import com.balancedbytes.games.ffb.PlayerAction;
@@ -19,50 +15,19 @@ import com.balancedbytes.games.ffb.bytearray.ByteList;
 import com.balancedbytes.games.ffb.bytearray.IByteArraySerializable;
 import com.balancedbytes.games.ffb.dialog.DialogId;
 import com.balancedbytes.games.ffb.dialog.DialogIdFactory;
-import com.balancedbytes.games.ffb.model.change.ModelChangeList;
-import com.balancedbytes.games.ffb.model.change.old.CommandGameAttributeChange;
-import com.balancedbytes.games.ffb.model.change.old.IModelChange;
-import com.balancedbytes.games.ffb.model.change.old.ModelChangeGameAttribute;
+import com.balancedbytes.games.ffb.model.change.ModelChange;
+import com.balancedbytes.games.ffb.model.change.ModelChangeId;
+import com.balancedbytes.games.ffb.model.change.ModelChangeObservable;
 import com.balancedbytes.games.ffb.util.DateTool;
 import com.balancedbytes.games.ffb.util.StringTool;
 import com.balancedbytes.games.ffb.util.UtilActingPlayer;
-import com.balancedbytes.games.ffb.xml.IXmlWriteable;
-import com.balancedbytes.games.ffb.xml.UtilXml;
 
 /**
  * 
  * @author Kalimar
  */
-public class Game implements IXmlWriteable, IByteArraySerializable {
+public class Game extends ModelChangeObservable implements IByteArraySerializable {
   
-  public static final String XML_TAG = "game";
-  
-  private static final String _XML_ATTRIBUTE_X = "x";
-  private static final String _XML_ATTRIBUTE_Y = "y";
-  private static final String _XML_ATTRIBUTE_ID = "id";
-  private static final String _XML_ATTRIBUTE_ACTION = "action";
-  
-  private static final String _XML_TAG_SCHEDULED = "scheduled";
-  private static final String _XML_TAG_STARTED = "started";
-  private static final String _XML_TAG_FINISHED = "finished";
-  private static final String _XML_TAG_HALF = "half";
-  private static final String _XML_TAG_TURN_MODE = "turnMode";
-  private static final String _XML_TAG_PASS_COORDINATE = "passCoordinate";
-  private static final String _XML_TAG_HOME_PLAYING = "homePlaying";
-  private static final String _XML_TAG_HOME_FIRST_OFFENSE = "homeFirstOffense";
-  private static final String _XML_TAG_SETUP_OFFENSE = "setupOffense";
-  private static final String _XML_TAG_HOME_DATA = "homeData";
-  private static final String _XML_TAG_AWAY_DATA = "awayData";
-  private static final String _XML_TAG_DEFENDER = "defender";
-  private static final String _XML_TAG_THROWER = "thrower";
-  private static final String _XML_TAG_WAITING_FOR_OPPONENT = "waitingForOpponent";
-  private static final String _XML_TAG_TURN_TIME = "turnTime";
-  private static final String _XML_TAG_GAME_TIME = "gameTime";
-  private static final String _XML_TAG_TIMEOUT_POSSIBLE = "timeoutPossible";
-  private static final String _XML_TAG_TIMEOUT_ENFORCED = "timeoutEnforced";
-  private static final String _XML_TAG_CONCESSION_POSSIBLE = "timeoutPossible";
-  private static final String _XML_TAG_TESTING = "testing";
-
   private long fId;
   private Date fScheduled;
   private Date fStarted;
@@ -74,49 +39,55 @@ public class Game implements IXmlWriteable, IByteArraySerializable {
   private boolean fHomeFirstOffense;
   private boolean fSetupOffense;
   private boolean fWaitingForOpponent;
+  private String fDefenderId;
+  private PlayerAction fDefenderAction;
+  private String fThrowerId;
+  private PlayerAction fThrowerAction;
+  private long fTurnTime;
+  private boolean fTimeoutPossible;
+  private boolean fTimeoutEnforced;
+  private boolean fConcessionPossible;
+  private boolean fTesting;
 
   private IDialogParameter fDialogParameter;
+  
   private FieldModel fFieldModel;
   private Team fTeamHome;
   private Team fTeamAway;
   private TurnData fTurnDataHome;
   private TurnData fTurnDataAway;
   private ActingPlayer fActingPlayer;
-  private String fDefenderId;
-  private PlayerAction fDefenderAction;
-  private String fThrowerId;
-  private PlayerAction fThrowerAction;
   private GameResult fGameResult;
-  private long fTurnTime;
-  private boolean fTimeoutPossible;
-  private boolean fTimeoutEnforced;
-  private boolean fConcessionPossible;
-  private boolean fTesting;
   private GameOptions fOptions;
   
   private transient long fGameTime;  // transferred to client but not persisted
-    
-  private transient boolean fTrackingChanges;
-  private transient ModelChangeList fChanges;
 
   public Game() {
-    setFieldModel(new FieldModel(this));
+    
+  	fFieldModel = new FieldModel(this);
+    
     fTurnDataHome = new TurnData(this, true);
     fTurnDataAway = new TurnData(this, false);
+
     fActingPlayer = new ActingPlayer(this);
+    
     fGameResult = new GameResult(this);
-    fChanges = new ModelChangeList();
+    
     fHomePlaying = true;
+    
     setTeamHome(new Team());
     setTeamAway(new Team());
+    
     fOptions = new GameOptions(this);
+    
   }
   
   public void setId(long pId) {
+  	if (pId == fId) {
+  		return;
+  	}
     fId = pId;
-    if (isTrackingChanges() && (pId != fId)) {
-      add(new ModelChangeGameAttribute(CommandGameAttributeChange.SET_ID, pId));
-    }
+    notifyObservers(ModelChangeId.GAME_SET_ID, null, fId);
   }
   
   public long getId() {
@@ -130,7 +101,7 @@ public class Game implements IXmlWriteable, IByteArraySerializable {
   public TurnData getTurnDataHome() {
     return fTurnDataHome;
   }
-
+  
   public TurnData getTurnDataAway() {
     return fTurnDataAway;
   }
@@ -140,10 +111,11 @@ public class Game implements IXmlWriteable, IByteArraySerializable {
   }
 
   public void setHalf(int pHalf) {
-    if (isTrackingChanges() && (pHalf != fHalf)) {
-      add(new ModelChangeGameAttribute(CommandGameAttributeChange.SET_HALF, (byte) pHalf));
-    }
-    fHalf = pHalf;
+  	if (pHalf == fHalf) {
+  		return;
+  	}
+  	fHalf = pHalf;
+  	notifyObservers(ModelChangeId.GAME_SET_HALF, null, fHalf);
   }
 
   public TurnMode getTurnMode() {
@@ -151,10 +123,11 @@ public class Game implements IXmlWriteable, IByteArraySerializable {
   }
 
   public void setTurnMode(TurnMode pTurnMode) {
-    if (isTrackingChanges() && (pTurnMode != fTurnMode)) {
-      add(new ModelChangeGameAttribute(CommandGameAttributeChange.SET_TURN_MODE, pTurnMode));
-    }
-    fTurnMode = pTurnMode;
+  	if (pTurnMode == fTurnMode)  {
+  		return;
+  	}
+  	fTurnMode = pTurnMode;
+  	notifyObservers(ModelChangeId.GAME_SET_TURN_MODE, null, fTurnMode);
   }
 
   public ActingPlayer getActingPlayer() {
@@ -173,19 +146,16 @@ public class Game implements IXmlWriteable, IByteArraySerializable {
     return fFieldModel;
   }
   
-  public void setFieldModel(FieldModel pFieldModel) {
-    fFieldModel = pFieldModel;
-  }
-
   public boolean isHomePlaying() {
     return fHomePlaying;
   }
 
   public void setHomePlaying(boolean pHomePlaying) {
-    if (isTrackingChanges() && (pHomePlaying != fHomePlaying)) {
-      add(new ModelChangeGameAttribute(CommandGameAttributeChange.SET_HOME_PLAYING, pHomePlaying));
+    if (pHomePlaying == fHomePlaying) {
+    	return;
     }
     fHomePlaying = pHomePlaying;
+    notifyObservers(ModelChangeId.GAME_SET_HOME_PLAYING, null, fHomePlaying);
   }
 
   public FieldCoordinate getPassCoordinate() {
@@ -193,10 +163,11 @@ public class Game implements IXmlWriteable, IByteArraySerializable {
   }
 
   public void setPassCoordinate(FieldCoordinate pPassCoordinate) {
-    if (isTrackingChanges() && !FieldCoordinate.equals(pPassCoordinate, fPassCoordinate)) {
-      add(new ModelChangeGameAttribute(CommandGameAttributeChange.SET_PASS_COORDINATE, pPassCoordinate));
-    }
+  	if (FieldCoordinate.equals(pPassCoordinate, fPassCoordinate)) {
+  		return;
+  	}
     fPassCoordinate = pPassCoordinate;
+    notifyObservers(ModelChangeId.GAME_SET_PASS_COORDINATE, null, fPassCoordinate);
   }
 
   public boolean isHomeFirstOffense() {
@@ -204,10 +175,11 @@ public class Game implements IXmlWriteable, IByteArraySerializable {
   }
 
   public void setHomeFirstOffense(boolean pHomeFirstOffense) {
-    if (isTrackingChanges() && (pHomeFirstOffense != fHomeFirstOffense)) {
-      add(new ModelChangeGameAttribute(CommandGameAttributeChange.SET_HOME_FIRST_OFFENSE, pHomeFirstOffense));
-    }
+  	if (pHomeFirstOffense == fHomeFirstOffense) {
+  		return;
+  	}
     fHomeFirstOffense = pHomeFirstOffense;
+    notifyObservers(ModelChangeId.GAME_SET_HOME_FIRST_OFFENSE, null, fHomeFirstOffense);
   }
 
   public void startTurn() {
@@ -234,10 +206,11 @@ public class Game implements IXmlWriteable, IByteArraySerializable {
   }
 
   public void setSetupOffense(boolean pSetupOffense) {
-    if (isTrackingChanges() && (pSetupOffense != fSetupOffense)) {
-      add(new ModelChangeGameAttribute(CommandGameAttributeChange.SET_SETUP_OFFENSE, pSetupOffense));
+    if (pSetupOffense == fSetupOffense) {
+    	return;
     }
     fSetupOffense = pSetupOffense;
+    notifyObservers(ModelChangeId.GAME_SET_SETUP_OFFENSE, null, fSetupOffense);
   }
   
   public Team getTeamById(String pTeamId) {
@@ -279,12 +252,10 @@ public class Game implements IXmlWriteable, IByteArraySerializable {
 
   public void setTeamHome(Team pTeamHome) {
     fTeamHome = pTeamHome;
-    getGameResult().getTeamResultHome().setTeam(pTeamHome);
   }
 
   public void setTeamAway(Team pTeamAway) {
     fTeamAway = pTeamAway;
-    getGameResult().getTeamResultAway().setTeam(pTeamAway);
   }
 
   public Date getScheduled() {
@@ -292,10 +263,11 @@ public class Game implements IXmlWriteable, IByteArraySerializable {
   }
 
   public void setScheduled(Date pScheduled) {
-    if (isTrackingChanges() && !DateTool.isEqual(pScheduled, fScheduled)) {
-      add(new ModelChangeGameAttribute(CommandGameAttributeChange.SET_SCHEDULED, pScheduled));
+    if (DateTool.isEqual(pScheduled, fScheduled)) {
+    	return;
     }
     fScheduled = pScheduled;
+    notifyObservers(ModelChangeId.GAME_SET_SCHEDULED, null, fScheduled);
   }
   
   public Date getStarted() {
@@ -303,17 +275,19 @@ public class Game implements IXmlWriteable, IByteArraySerializable {
   }
 
   public void setStarted(Date pStarted) {
-    if (isTrackingChanges() && !DateTool.isEqual(pStarted, fStarted)) {
-      add(new ModelChangeGameAttribute(CommandGameAttributeChange.SET_STARTED, pStarted));
+    if (DateTool.isEqual(pStarted, fStarted)) {
+    	return;
     }
     fStarted = pStarted;
+    notifyObservers(ModelChangeId.GAME_SET_STARTED, null, fStarted);
   }
 
   public void setDefenderId(String pDefenderId) {
-    if (isTrackingChanges() && !StringTool.isEqual(pDefenderId, fDefenderId)) {
-      add(new ModelChangeGameAttribute(CommandGameAttributeChange.SET_DEFENDER_ID, pDefenderId));
+    if (StringTool.isEqual(pDefenderId, fDefenderId)) {
+    	return;
     }
     fDefenderId = pDefenderId;
+    notifyObservers(ModelChangeId.GAME_SET_DEFENDER_ID, fDefenderId, null);
   }
   
   public String getDefenderId() {
@@ -325,10 +299,11 @@ public class Game implements IXmlWriteable, IByteArraySerializable {
   }
   
   public void setDefenderAction(PlayerAction pDefenderAction) {
-    if (isTrackingChanges() && (pDefenderAction != fDefenderAction)) {
-      add(new ModelChangeGameAttribute(CommandGameAttributeChange.SET_DEFENDER_ACTION, pDefenderAction));
+    if (pDefenderAction == fDefenderAction) {
+    	return;
     }
     fDefenderAction = pDefenderAction;
+    notifyObservers(ModelChangeId.GAME_SET_DEFENDER_ACTION, null, fDefenderAction);
   }
   
   public PlayerAction getDefenderAction() {
@@ -336,10 +311,11 @@ public class Game implements IXmlWriteable, IByteArraySerializable {
   }
   
   public void setThrowerId(String pThrowerId) {
-    if (isTrackingChanges() && !StringTool.isEqual(pThrowerId, fThrowerId)) {
-      add(new ModelChangeGameAttribute(CommandGameAttributeChange.SET_THROWER_ID, pThrowerId));
+    if (StringTool.isEqual(pThrowerId, fThrowerId)) {
+    	return;
     }
     fThrowerId = pThrowerId;
+    notifyObservers(ModelChangeId.GAME_SET_THROWER_ID, fThrowerId, null);
   }
   
   public String getThrowerId() {
@@ -351,10 +327,11 @@ public class Game implements IXmlWriteable, IByteArraySerializable {
   }
 
   public void setThrowerAction(PlayerAction pThrowerAction) {
-    if (isTrackingChanges() && (pThrowerAction != fThrowerAction)) {
-      add(new ModelChangeGameAttribute(CommandGameAttributeChange.SET_THROWER_ACTION, pThrowerAction));
+    if (pThrowerAction == fThrowerAction) {
+    	return;
     }
     fThrowerAction = pThrowerAction;
+    notifyObservers(ModelChangeId.GAME_SET_THROWER_ACTION, null, fThrowerAction);
   }
   
   public PlayerAction getThrowerAction() {
@@ -362,10 +339,11 @@ public class Game implements IXmlWriteable, IByteArraySerializable {
   }
 
   public void setWaitingForOpponent(boolean pWaitingForOpponent) {
-    if (isTrackingChanges() && (pWaitingForOpponent != fWaitingForOpponent)) {
-      add(new ModelChangeGameAttribute(CommandGameAttributeChange.SET_WAITING_FOR_OPPONENT, pWaitingForOpponent));
+    if (pWaitingForOpponent == fWaitingForOpponent) {
+    	return;
     }
     fWaitingForOpponent = pWaitingForOpponent;
+    notifyObservers(ModelChangeId.GAME_SET_WAITING_FOR_OPPONENT, null, fWaitingForOpponent);
   }
   
   public boolean isWaitingForOpponent() {
@@ -373,10 +351,11 @@ public class Game implements IXmlWriteable, IByteArraySerializable {
   }
   
   public void setDialogParameter(IDialogParameter pDialogParameter) {
-    if (isTrackingChanges() && !((pDialogParameter == null) && (fDialogParameter == null))) {
-      add(new ModelChangeGameAttribute(CommandGameAttributeChange.SET_DIALOG_PARAMETER, pDialogParameter));
-    }
+  	if ((pDialogParameter == null) && (fDialogParameter == null)) {
+  		return;
+  	}
     fDialogParameter = pDialogParameter;
+    notifyObservers(ModelChangeId.GAME_SET_DIALOG_PARAMETER, null, fDialogParameter);
   }
   
   public IDialogParameter getDialogParameter() {
@@ -388,10 +367,11 @@ public class Game implements IXmlWriteable, IByteArraySerializable {
   }
   
   public void setFinished(Date pFinished) {
-    if (isTrackingChanges() && !DateTool.isEqual(pFinished, fFinished)) {
-      add(new ModelChangeGameAttribute(CommandGameAttributeChange.SET_FINISHED, pFinished));
+    if (DateTool.isEqual(pFinished, fFinished)) {
+    	return;
     }
     fFinished = pFinished;
+    notifyObservers(ModelChangeId.GAME_SET_FINISHED, null, fFinished);
   }
   
   public long getGameTime() {
@@ -419,17 +399,19 @@ public class Game implements IXmlWriteable, IByteArraySerializable {
   }
   
   public void setTimeoutPossible(boolean pTimeout) {
-    if (isTrackingChanges() && (pTimeout != fTimeoutPossible)) {
-      add(new ModelChangeGameAttribute(CommandGameAttributeChange.SET_TIMEOUT_POSSIBLE, pTimeout));
+    if (pTimeout == fTimeoutPossible) {
+    	return;
     }
     fTimeoutPossible = pTimeout;
+    notifyObservers(ModelChangeId.GAME_SET_TIMEOUT_POSSIBLE, null, fTimeoutPossible);
   }
   
-  public void setTimeoutEnforced(boolean pIllegalProcedure) {
-    if (isTrackingChanges() && (pIllegalProcedure != fTimeoutEnforced)) {
-      add(new ModelChangeGameAttribute(CommandGameAttributeChange.SET_TIMEOUT_ENFORCED, pIllegalProcedure));
+  public void setTimeoutEnforced(boolean pTimeoutEnforced) {
+    if (pTimeoutEnforced == fTimeoutEnforced) {
+    	return;
     }
-    fTimeoutEnforced = pIllegalProcedure;
+    fTimeoutEnforced = pTimeoutEnforced;
+    notifyObservers(ModelChangeId.GAME_SET_TIMEOUT_ENFORCED, null, fTimeoutEnforced);
   }
   
   public boolean isTimeoutEnforced() {
@@ -437,10 +419,11 @@ public class Game implements IXmlWriteable, IByteArraySerializable {
   }
   
   public void setConcessionPossible(boolean pConcessionPossible) {
-    if (isTrackingChanges() && (pConcessionPossible != fConcessionPossible)) {
-      add(new ModelChangeGameAttribute(CommandGameAttributeChange.SET_CONCESSION_POSSIBLE, pConcessionPossible));
+  	if (pConcessionPossible == fConcessionPossible) {
+      return;
     }
     fConcessionPossible = pConcessionPossible;
+    notifyObservers(ModelChangeId.GAME_SET_CONCESSION_POSSIBLE, null, fConcessionPossible);
   }
   
   public boolean isConcessionPossible() {
@@ -448,10 +431,11 @@ public class Game implements IXmlWriteable, IByteArraySerializable {
   }
   
   public void setTesting(boolean pTesting) {
-    if (isTrackingChanges() && (pTesting != fTesting)) {
-      add(new ModelChangeGameAttribute(CommandGameAttributeChange.SET_TESTING, pTesting));
+    if (pTesting == fTesting) {
+    	return;
     }
     fTesting = pTesting;
+    notifyObservers(ModelChangeId.GAME_SET_TESTING, null, fTesting);
   }
   
   public boolean isTesting() {
@@ -462,26 +446,26 @@ public class Game implements IXmlWriteable, IByteArraySerializable {
     return fOptions;
   }
   
+  public Team findTeam(Player pPlayer) {
+  	if (getTeamHome().hasPlayer(pPlayer)) {
+  		return getTeamHome();
+  	}
+  	if (getTeamAway().hasPlayer(pPlayer)) {
+  		return getTeamAway();
+  	}
+  	return null;
+  }
+    
   // change tracking
   
-  public void setTrackingChanges(boolean pTrackingChanges) {
-    fTrackingChanges = pTrackingChanges;
+  private void notifyObservers(ModelChangeId pChangeId, String pKey, Object pValue) {
+  	if (pChangeId == null) {
+  		return;
+  	}
+  	ModelChange modelChange = new ModelChange(pChangeId, pKey, pValue);
+  	notifyObservers(modelChange);
   }
-  
-  public boolean isTrackingChanges() {
-    return fTrackingChanges;
-  }
-  
-  public void add(IModelChange pChange) {
-    fChanges.add(pChange);
-  }
-  
-  public ModelChangeList fetchChanges() {
-    ModelChangeList changes = fChanges.copy();
-    fChanges.clear();
-    return changes;
-  }
-  
+
   // transformation
   
   public Game transform() {
@@ -531,99 +515,7 @@ public class Game implements IXmlWriteable, IByteArraySerializable {
 
     return transformedGame;
 
-  }
-  
-  // XML serialization
-  
-  public void addToXml(TransformerHandler pHandler) {
-    
-    AttributesImpl attributes = new AttributesImpl();
-    UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_ID, getId());
-    UtilXml.startElement(pHandler, XML_TAG, attributes);
-    
-    if (getScheduled() != null) {
-      UtilXml.addValueElement(pHandler, _XML_TAG_SCHEDULED, DateTool.formatTimestamp(getScheduled()));
-    }
-    if (getStarted() != null) {
-      UtilXml.addValueElement(pHandler, _XML_TAG_STARTED, DateTool.formatTimestamp(getStarted()));
-    }
-    if (getFinished() != null) {
-      UtilXml.addValueElement(pHandler, _XML_TAG_FINISHED, DateTool.formatTimestamp(getFinished()));
-    }
-    
-    UtilXml.addValueElement(pHandler, _XML_TAG_HALF, getHalf());
-    UtilXml.addValueElement(pHandler, _XML_TAG_TURN_MODE, (getTurnMode() != null) ? getTurnMode().getName() : null);
-    UtilXml.addValueElement(pHandler, _XML_TAG_HOME_PLAYING, isHomePlaying());
-    UtilXml.addValueElement(pHandler, _XML_TAG_HOME_FIRST_OFFENSE, isHomeFirstOffense());
-    UtilXml.addValueElement(pHandler, _XML_TAG_SETUP_OFFENSE, isSetupOffense());
-    UtilXml.addValueElement(pHandler, _XML_TAG_WAITING_FOR_OPPONENT, isWaitingForOpponent());
-    UtilXml.addValueElement(pHandler, _XML_TAG_TURN_TIME, getTurnTime());
-    UtilXml.addValueElement(pHandler, _XML_TAG_GAME_TIME, getGameTime());
-    UtilXml.addValueElement(pHandler, _XML_TAG_TIMEOUT_POSSIBLE, isTimeoutPossible());
-    UtilXml.addValueElement(pHandler, _XML_TAG_TIMEOUT_ENFORCED, isTimeoutEnforced());
-    UtilXml.addValueElement(pHandler, _XML_TAG_CONCESSION_POSSIBLE, isConcessionPossible());
-    UtilXml.addValueElement(pHandler, _XML_TAG_TESTING, isTesting());
-
-    if (getDialogParameter() != null) {
-      getDialogParameter().addToXml(pHandler);
-    }
-    
-    UtilXml.startElement(pHandler, _XML_TAG_HOME_DATA);
-    
-    if (getTeamHome().getRoster() != null) {
-      getTeamHome().getRoster().addToXml(pHandler);
-    }
-
-    getTeamHome().addToXml(pHandler);
-
-    getTurnDataHome().addToXml(pHandler);
-    
-    UtilXml.endElement(pHandler, _XML_TAG_HOME_DATA);
-
-    UtilXml.startElement(pHandler, _XML_TAG_AWAY_DATA);
-    
-    if (getTeamAway().getRoster() != null) {
-      getTeamAway().getRoster().addToXml(pHandler);
-    }
-    
-    getTeamAway().addToXml(pHandler);
-
-    getTurnDataAway().addToXml(pHandler);
-
-    UtilXml.endElement(pHandler, _XML_TAG_AWAY_DATA);
-    
-    getFieldModel().addToXml(pHandler);
-    
-    getActingPlayer().addToXml(pHandler);
-    
-    attributes = new AttributesImpl();
-    UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_ID, getDefenderId());
-    UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_ACTION, (getDefenderAction() != null) ? getDefenderAction().getName() : null);
-    UtilXml.addEmptyElement(pHandler, _XML_TAG_DEFENDER, attributes);
-
-    attributes = new AttributesImpl();
-    UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_ID, getThrowerId());
-    UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_ACTION, (getThrowerAction() != null) ? getThrowerAction().getName() : null);
-    UtilXml.addEmptyElement(pHandler, _XML_TAG_THROWER, attributes);
-    
-    if (getPassCoordinate() != null) {
-      attributes = new AttributesImpl();
-      UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_X, getPassCoordinate().getX());
-      UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_Y, getPassCoordinate().getY());
-      UtilXml.addEmptyElement(pHandler, _XML_TAG_PASS_COORDINATE, attributes);
-    }
-            
-    getGameResult().addToXml(pHandler);
-    
-    getOptions().addToXml(pHandler);
-    
-    UtilXml.endElement(pHandler, XML_TAG);
-    
-  }
-  
-  public String toXml(boolean pIndent) {
-    return UtilXml.toXml(this, pIndent);
-  }
+  }  
   
   // ByteArray serialization
 

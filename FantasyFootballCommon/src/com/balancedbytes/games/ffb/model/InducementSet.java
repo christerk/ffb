@@ -8,10 +8,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import javax.xml.transform.sax.TransformerHandler;
-
-import org.xml.sax.helpers.AttributesImpl;
-
 import com.balancedbytes.games.ffb.Card;
 import com.balancedbytes.games.ffb.CardFactory;
 import com.balancedbytes.games.ffb.Inducement;
@@ -21,11 +17,8 @@ import com.balancedbytes.games.ffb.bytearray.ByteList;
 import com.balancedbytes.games.ffb.bytearray.IByteArraySerializable;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
-import com.balancedbytes.games.ffb.model.change.old.CommandTurnDataChange;
-import com.balancedbytes.games.ffb.model.change.old.ModelChangeTurnData;
-import com.balancedbytes.games.ffb.util.ArrayTool;
-import com.balancedbytes.games.ffb.xml.IXmlWriteable;
-import com.balancedbytes.games.ffb.xml.UtilXml;
+import com.balancedbytes.games.ffb.model.change.ModelChange;
+import com.balancedbytes.games.ffb.model.change.ModelChangeId;
 import com.eclipsesource.json.JsonArray;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
@@ -34,22 +27,14 @@ import com.eclipsesource.json.JsonValue;
  * 
  * @author Kalimar
  */
-public class InducementSet implements IByteArraySerializable, IXmlWriteable {
+public class InducementSet implements IByteArraySerializable {
   
-  public static final String XML_TAG = "inducementSet";
-  
-  private static final String _XML_TAG_INDUCEMENTS = "inducements";
-  private static final String _XML_TAG_CARDS = "cards";
-  private static final String _XML_TAG_CARD = "card";
-  
-  private static final String _XML_ATTRIBUTE_NAME = "name";
-  private static final String _XML_ATTRIBUTE_ACTIVE = "active";
-
-  private TurnData fTurnData;
   private Map<InducementType, Inducement> fInducements;
   private Set<Card> fCardsAvailable;
   private Set<Card> fCardsActive;
   private Set<Card> fCardsDeactivated;
+  
+  private transient TurnData fTurnData;
   
   public InducementSet() {
     fInducements = new HashMap<InducementType, Inducement>();
@@ -83,20 +68,16 @@ public class InducementSet implements IByteArraySerializable, IXmlWriteable {
     if (pInducement == null) {
     	return;
     }
-    if ((getTurnData() != null) && getTurnData().getGame().isTrackingChanges()) {
-      getTurnData().getGame().add(new ModelChangeTurnData(CommandTurnDataChange.ADD_INDUCEMENT, getTurnData().isHomeData(), pInducement));
-    }
     fInducements.put(pInducement.getType(), pInducement);
+    notifyObservers(ModelChangeId.INDUCEMENT_SET_ADD_INDUCEMENT, pInducement);
   }
   
   public void removeInducement(Inducement pInducement) {
     if (pInducement == null) {
     	return;
     }
-    if ((getTurnData() != null) && getTurnData().getGame().isTrackingChanges()) {
-      getTurnData().getGame().add(new ModelChangeTurnData(CommandTurnDataChange.REMOVE_INDUCEMENT, getTurnData().isHomeData(), pInducement));
-    }
     fInducements.remove(pInducement.getType());
+    notifyObservers(ModelChangeId.INDUCEMENT_SET_REMOVE_INDUCEMENT, pInducement);
   }
   
   public boolean hasUsesLeft(InducementType pType) {
@@ -108,20 +89,17 @@ public class InducementSet implements IByteArraySerializable, IXmlWriteable {
   	if (pCard == null) {
   		return;
   	}
-    if ((getTurnData() != null) && getTurnData().getGame().isTrackingChanges()) {
-      getTurnData().getGame().add(new ModelChangeTurnData(CommandTurnDataChange.ADD_AVAILABLE_CARD, getTurnData().isHomeData(), pCard));
-    }
     fCardsAvailable.add(pCard);
+    notifyObservers(ModelChangeId.INDUCEMENT_SET_ADD_AVAILABLE_CARD, pCard);
   }
   
   public boolean removeAvailableCard(Card pCard) {
   	if (pCard == null) {
   		return false;
   	}
-    if ((getTurnData() != null) && getTurnData().getGame().isTrackingChanges()) {
-      getTurnData().getGame().add(new ModelChangeTurnData(CommandTurnDataChange.REMOVE_AVAILABLE_CARD, getTurnData().isHomeData(), pCard));
-    }
-    return fCardsAvailable.remove(pCard);
+    boolean removed = fCardsAvailable.remove(pCard);
+    notifyObservers(ModelChangeId.INDUCEMENT_SET_REMOVE_AVAILABLE_CARD, pCard);
+    return removed;
   }
   
   public Card[] getAvailableCards() {
@@ -136,30 +114,24 @@ public class InducementSet implements IByteArraySerializable, IXmlWriteable {
   	if (pCard == null) {
   		return false;
   	}
-    if ((getTurnData() != null) && getTurnData().getGame().isTrackingChanges()) {
-      getTurnData().getGame().add(new ModelChangeTurnData(CommandTurnDataChange.ACTIVATE_CARD, getTurnData().isHomeData(), pCard));
-    }
-    if (fCardsAvailable.remove(pCard)) {
+    boolean removed = fCardsAvailable.remove(pCard);
+    if (removed) {
     	fCardsActive.add(pCard);
-    	return true;
-    } else {
-      return false;
     }
+    notifyObservers(ModelChangeId.INDUCEMENT_SET_ACTIVATE_CARD, pCard);
+    return removed;
   }
     
   public boolean deactivateCard(Card pCard) {
   	if (pCard == null) {
   		return false;
   	}
-    if ((getTurnData() != null) && getTurnData().getGame().isTrackingChanges()) {
-      getTurnData().getGame().add(new ModelChangeTurnData(CommandTurnDataChange.DEACTIVATE_CARD, getTurnData().isHomeData(), pCard));
-    }
-  	if (fCardsActive.remove(pCard)) {
+    boolean removed = fCardsActive.remove(pCard);
+  	if (removed) {
       fCardsDeactivated.add(pCard);
-  		return true;
-  	} else {
-  		return false;
   	}
+  	notifyObservers(ModelChangeId.INDUCEMENT_SET_DEACTIVATE_CARD, pCard);
+  	return removed;
   }
 
   public Card[] getActiveCards() {
@@ -231,41 +203,17 @@ public class InducementSet implements IByteArraySerializable, IXmlWriteable {
     return total;
   }
   
-  // XML serialization
+  // change tracking
   
-  public void addToXml(TransformerHandler pHandler) {
-  	
-  	UtilXml.startElement(pHandler, XML_TAG);
+  private void notifyObservers(ModelChangeId pChangeId, Object pValue) {
+  	if ((getTurnData() == null) || (pChangeId == null)) {
+  		return;
+  	}
+  	String key = getTurnData().isHomeData() ? ModelChange.HOME : ModelChange.AWAY;
+  	ModelChange modelChange = new ModelChange(pChangeId, key, pValue);
+  	getTurnData().getGame().notifyObservers(modelChange);
+  }
 
-    Inducement[] inducements = getInducements();
-    if (ArrayTool.isProvided(inducements)) {
-    	UtilXml.startElement(pHandler, _XML_TAG_INDUCEMENTS);
-      for (Inducement inducement : inducements) {
-      	inducement.addToXml(pHandler);
-      }
-    	UtilXml.endElement(pHandler, _XML_TAG_INDUCEMENTS);
-    }
-    
-    Card[] allCards = getAllCards();
-    if (ArrayTool.isProvided(allCards)) {
-    	UtilXml.startElement(pHandler, _XML_TAG_CARDS);
-    	for (Card card : allCards) {
-      	AttributesImpl attributes = new AttributesImpl();
-      	UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_NAME, card.getName());
-      	UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_ACTIVE, isActive(card));
-      	UtilXml.addEmptyElement(pHandler, _XML_TAG_CARD, attributes);
-    	}
-    	UtilXml.endElement(pHandler, _XML_TAG_CARDS);
-    }
-  	
-  	UtilXml.endElement(pHandler, XML_TAG);
-  	
-  }
-  
-  public String toXml(boolean pIndent) {
-    return UtilXml.toXml(this, pIndent);
-  }
-  
   // ByteArray serialization
   
   public int getByteArraySerializationVersion() {

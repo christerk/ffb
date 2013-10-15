@@ -1,10 +1,5 @@
 package com.balancedbytes.games.ffb.model;
 
-import javax.xml.transform.sax.TransformerHandler;
-
-import org.xml.sax.Attributes;
-import org.xml.sax.helpers.AttributesImpl;
-
 import com.balancedbytes.games.ffb.SendToBoxReason;
 import com.balancedbytes.games.ffb.SendToBoxReasonFactory;
 import com.balancedbytes.games.ffb.SeriousInjury;
@@ -14,11 +9,9 @@ import com.balancedbytes.games.ffb.bytearray.ByteList;
 import com.balancedbytes.games.ffb.bytearray.IByteArraySerializable;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
-import com.balancedbytes.games.ffb.model.change.old.CommandPlayerResultChange;
-import com.balancedbytes.games.ffb.model.change.old.ModelChangePlayerResult;
+import com.balancedbytes.games.ffb.model.change.ModelChange;
+import com.balancedbytes.games.ffb.model.change.ModelChangeId;
 import com.balancedbytes.games.ffb.util.StringTool;
-import com.balancedbytes.games.ffb.xml.IXmlSerializable;
-import com.balancedbytes.games.ffb.xml.UtilXml;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
@@ -26,42 +19,7 @@ import com.eclipsesource.json.JsonValue;
  * 
  * @author Kalimar
  */
-public class PlayerResult implements IByteArraySerializable, IXmlSerializable {
-  
-  public static final String XML_TAG = "playerResult";
-
-  private static final String XML_ATTRIBUTE_PLAYER_ID = "playerId";
-
-  private static final String _XML_TAG_STAR_PLAYER_POINTS = "starPlayerPoints";
-  private static final String _XML_ATTRIBUTE_CURRENT = "current";
-  private static final String _XML_ATTRIBUTE_EARNED = "earned";
-
-  private static final String _XML_TAG_COMPLETIONS = "completions";
-  private static final String _XML_TAG_TOUCHDOWNS = "touchdowns";
-  private static final String _XML_TAG_INTERCEPTIONS = "interceptions";
-  private static final String _XML_TAG_CASUALTIES = "casualties";
-  private static final String _XML_TAG_PLAYER_AWARDS = "playerAwards";
-
-  private static final String _XML_TAG_STATISTICS = "statistics";
-  private static final String _XML_TAG_BLOCKS = "blocks";
-  private static final String _XML_TAG_FOULS = "fouls";
-  private static final String _XML_TAG_RUSHING = "rushing";
-  private static final String _XML_TAG_PASSING = "passing";
-  private static final String _XML_TAG_TURNS_PLAYED = "turnsPlayed";
-  
-  private static final String _XML_TAG_USED_SECRET_WEAPON = "usedSecretWeapon";
-  private static final String _XML_TAG_DEFECTING = "defecting";
-  
-  private static final String _XML_TAG_INJURY = "injury";
-
-  private static final String _XML_TAG_SEND_TO_BOX = "sendToBox";
-  private static final String _XML_ATTRIBUTE_REASON = "reason";
-  private static final String _XML_ATTRIBUTE_TURN = "turn";
-  private static final String _XML_ATTRIBUTE_HALF = "half";
-  private static final String _XML_ATTRIBUTE_BY_PLAYER_ID = "byPlayerId";
-  
-  private TeamResult fTeamResult;
-  private Player fPlayer;
+public class PlayerResult implements IByteArraySerializable {
   
   private int fCompletions;
   private int fTouchdowns;
@@ -83,7 +41,10 @@ public class PlayerResult implements IByteArraySerializable, IXmlSerializable {
   private int fSendToBoxHalf;
   private String fSendToBoxByPlayerId;
   private boolean fHasUsedSecretWeapon;
-  
+
+  private transient TeamResult fTeamResult;
+  private transient Player fPlayer;
+    
   public PlayerResult(TeamResult pTeamResult) {
     this(pTeamResult, null);
   }
@@ -110,10 +71,11 @@ public class PlayerResult implements IByteArraySerializable, IXmlSerializable {
   }
 
   public void setSeriousInjury(SeriousInjury pSeriousInjury) {
-    if (getGame().isTrackingChanges() && (pSeriousInjury != fSeriousInjury)) {
-      getGame().add(new ModelChangePlayerResult(CommandPlayerResultChange.SET_SERIOUS_INJURY, getPlayerId(), pSeriousInjury));
+    if (pSeriousInjury == fSeriousInjury) {
+    	return;
     }
     fSeriousInjury = pSeriousInjury;
+    notifyObservers(ModelChangeId.PLAYER_RESULT_SET_SERIOUS_INJURY, fSeriousInjury);
   }
   
   public SeriousInjury getSeriousInjuryDecay() {
@@ -121,10 +83,11 @@ public class PlayerResult implements IByteArraySerializable, IXmlSerializable {
   }
 
   public void setSeriousInjuryDecay(SeriousInjury pSeriousInjuryDecay) {
-    if (getGame().isTrackingChanges() && (pSeriousInjuryDecay != fSeriousInjuryDecay)) {
-      getGame().add(new ModelChangePlayerResult(CommandPlayerResultChange.SET_SERIOUS_INJURY_DECAY, getPlayerId(), pSeriousInjuryDecay));
+    if (pSeriousInjuryDecay == fSeriousInjuryDecay) {
+      return;
     }
     fSeriousInjuryDecay = pSeriousInjuryDecay;
+    notifyObservers(ModelChangeId.PLAYER_RESULT_SET_SERIOUS_INJURY_DECAY, fSeriousInjuryDecay);
   }
 
   public SendToBoxReason getSendToBoxReason() {
@@ -132,10 +95,11 @@ public class PlayerResult implements IByteArraySerializable, IXmlSerializable {
   }
   
   public void setSendToBoxReason(SendToBoxReason pSendToBoxReason) {
-    if (getGame().isTrackingChanges() && (pSendToBoxReason != fSendToBoxReason)) {
-      getGame().add(new ModelChangePlayerResult(CommandPlayerResultChange.SET_SEND_TO_BOX_REASON, getPlayerId(), pSendToBoxReason));
+    if (pSendToBoxReason == fSendToBoxReason) {
+    	return;
     }
     fSendToBoxReason = pSendToBoxReason;
+    notifyObservers(ModelChangeId.PLAYER_RESULT_SET_SEND_TO_BOX_REASON, fSendToBoxReason);
   }
   
   public int getSendToBoxTurn() {
@@ -143,10 +107,11 @@ public class PlayerResult implements IByteArraySerializable, IXmlSerializable {
   }
   
   public void setSendToBoxTurn(int pSendToBoxTurn) {
-    if (getGame().isTrackingChanges() && (pSendToBoxTurn != fSendToBoxTurn)) {
-      getGame().add(new ModelChangePlayerResult(CommandPlayerResultChange.SET_SEND_TO_BOX_TURN, getPlayerId(), (byte) pSendToBoxTurn));
+    if (pSendToBoxTurn == fSendToBoxTurn) {
+      return;
     }
     fSendToBoxTurn = pSendToBoxTurn;
+    notifyObservers(ModelChangeId.PLAYER_RESULT_SET_SEND_TO_BOX_TURN, fSendToBoxTurn);
   }
 
   public int getSendToBoxHalf() {
@@ -154,10 +119,11 @@ public class PlayerResult implements IByteArraySerializable, IXmlSerializable {
   }
   
   public void setSendToBoxHalf(int pSendToBoxHalf) {
-    if (getGame().isTrackingChanges() && (pSendToBoxHalf != fSendToBoxHalf)) {
-      getGame().add(new ModelChangePlayerResult(CommandPlayerResultChange.SET_SEND_TO_BOX_HALF, getPlayerId(), (byte) pSendToBoxHalf));
+    if (pSendToBoxHalf == fSendToBoxHalf) {
+      return;
     }
     fSendToBoxHalf = pSendToBoxHalf;
+    notifyObservers(ModelChangeId.PLAYER_RESULT_SET_SEND_TO_BOX_HALF, fSendToBoxHalf);
   }
 
   public int getTurnsPlayed() {
@@ -165,10 +131,11 @@ public class PlayerResult implements IByteArraySerializable, IXmlSerializable {
   }
   
   public void setSendToBoxByPlayerId(String pSendToBoxByPlayerId) {
-    if (getGame().isTrackingChanges() && !StringTool.isEqual(pSendToBoxByPlayerId, fSendToBoxByPlayerId)) {
-      getGame().add(new ModelChangePlayerResult(CommandPlayerResultChange.SET_SEND_TO_BOX_BY_PLAYER_ID, getPlayerId(), pSendToBoxByPlayerId));
+    if (StringTool.isEqual(pSendToBoxByPlayerId, fSendToBoxByPlayerId)) {
+    	return;
     }
     fSendToBoxByPlayerId = pSendToBoxByPlayerId;
+    notifyObservers(ModelChangeId.PLAYER_RESULT_SET_SEND_TO_BOX_BY_PLAYER_ID, fSendToBoxByPlayerId);
   }
   
   public String getSendToBoxByPlayerId() {
@@ -176,17 +143,19 @@ public class PlayerResult implements IByteArraySerializable, IXmlSerializable {
   }
   
   public void setTurnsPlayed(int pTurnsPlayed) {
-    if (getGame().isTrackingChanges() && (fTurnsPlayed != pTurnsPlayed)) {
-      getGame().add(new ModelChangePlayerResult(CommandPlayerResultChange.SET_TURNS_PLAYED, getPlayerId(), (byte) pTurnsPlayed));
+    if (pTurnsPlayed == fTurnsPlayed) {
+      return;
     }
     fTurnsPlayed = pTurnsPlayed;
+    notifyObservers(ModelChangeId.PLAYER_RESULT_SET_TURNS_PLAYED, fTurnsPlayed);
   }
 
   public void setHasUsedSecretWeapon(boolean pHasUsedSecretWeapon) {
-    if (getGame().isTrackingChanges() && (pHasUsedSecretWeapon != fHasUsedSecretWeapon)) {
-      getGame().add(new ModelChangePlayerResult(CommandPlayerResultChange.SET_HAS_USED_SECRET_WEAPON, getPlayerId(), pHasUsedSecretWeapon));
+    if (pHasUsedSecretWeapon == fHasUsedSecretWeapon) {
+      return;
     }
     fHasUsedSecretWeapon = pHasUsedSecretWeapon;
+    notifyObservers(ModelChangeId.PLAYER_RESULT_SET_HAS_USED_SECRET_WEAPON, fHasUsedSecretWeapon);
   }
   
   public boolean hasUsedSecretWeapon() {
@@ -198,10 +167,11 @@ public class PlayerResult implements IByteArraySerializable, IXmlSerializable {
   }
   
   public void setCompletions(int pCompletions) {
-    if (getGame().isTrackingChanges() && (fCompletions != pCompletions)) {
-      getGame().add(new ModelChangePlayerResult(CommandPlayerResultChange.SET_COMPLETIONS, getPlayerId(), (byte) pCompletions));
+    if (pCompletions == fCompletions) {
+      return;
     }
     fCompletions = pCompletions;
+    notifyObservers(ModelChangeId.PLAYER_RESULT_SET_COMPLETIONS, fCompletions);
   }
 
   public int getTouchdowns() {
@@ -209,10 +179,11 @@ public class PlayerResult implements IByteArraySerializable, IXmlSerializable {
   }
   
   public void setTouchdowns(int pTouchdowns) {
-    if (getGame().isTrackingChanges() && (pTouchdowns != fTouchdowns)) {
-      getGame().add(new ModelChangePlayerResult(CommandPlayerResultChange.SET_TOUCHDOWNS, getPlayerId(), (byte) pTouchdowns));
+    if (pTouchdowns == fTouchdowns) {
+      return;
     }
     fTouchdowns = pTouchdowns;
+    notifyObservers(ModelChangeId.PLAYER_RESULT_SET_TOUCHDOWNS, fTouchdowns);
   }
 
   public int getInterceptions() {
@@ -220,10 +191,11 @@ public class PlayerResult implements IByteArraySerializable, IXmlSerializable {
   }
 
   public void setInterceptions(int pInterceptions) {
-    if (getGame().isTrackingChanges() && (pInterceptions != fInterceptions)) {
-      getGame().add(new ModelChangePlayerResult(CommandPlayerResultChange.SET_INTERCEPTIONS, getPlayerId(), (byte) pInterceptions));
+    if (pInterceptions == fInterceptions) {
+      return;
     }
     fInterceptions = pInterceptions;
+    notifyObservers(ModelChangeId.PLAYER_RESULT_SET_INTERCEPTIONS, fInterceptions);
   }
   
   public int getCasualties() {
@@ -231,10 +203,11 @@ public class PlayerResult implements IByteArraySerializable, IXmlSerializable {
   }
 
   public void setCasualties(int pCasualties) {
-    if (getGame().isTrackingChanges() && (pCasualties != fCasualties)) {
-      getGame().add(new ModelChangePlayerResult(CommandPlayerResultChange.SET_CASUALTIES, getPlayerId(), (byte) pCasualties));
+    if (pCasualties == fCasualties) {
+      return;
     }
     fCasualties = pCasualties;
+    notifyObservers(ModelChangeId.PLAYER_RESULT_SET_CASUALTIES, fCasualties);
   }
   
   public int getPlayerAwards() {
@@ -242,10 +215,11 @@ public class PlayerResult implements IByteArraySerializable, IXmlSerializable {
   }
 
   public void setPlayerAwards(int pPlayerAwards) {
-    if (getGame().isTrackingChanges() && (pPlayerAwards != fPlayerAwards)) {
-      getGame().add(new ModelChangePlayerResult(CommandPlayerResultChange.SET_PLAYER_AWARDS, getPlayerId(), (byte) pPlayerAwards));
+    if (pPlayerAwards == fPlayerAwards) {
+      return;
     }
     fPlayerAwards = pPlayerAwards;
+    notifyObservers(ModelChangeId.PLAYER_RESULT_SET_PLAYER_AWARDS, fPlayerAwards);
   }
   
   public int getBlocks() {
@@ -253,10 +227,11 @@ public class PlayerResult implements IByteArraySerializable, IXmlSerializable {
   }
   
   public void setBlocks(int pBlocks) {
-    if (getGame().isTrackingChanges() && (pBlocks != fBlocks)) {
-      getGame().add(new ModelChangePlayerResult(CommandPlayerResultChange.SET_BLOCKS, getPlayerId(), (byte) pBlocks));
+    if (pBlocks == fBlocks) {
+      return;
     }
     fBlocks = pBlocks;
+    notifyObservers(ModelChangeId.PLAYER_RESULT_SET_BLOCKS, fBlocks);
   }
 
   public int getFouls() {
@@ -264,10 +239,11 @@ public class PlayerResult implements IByteArraySerializable, IXmlSerializable {
   }
 
   public void setFouls(int pFouls) {
-    if (getGame().isTrackingChanges() && (pFouls != fFouls)) {
-      getGame().add(new ModelChangePlayerResult(CommandPlayerResultChange.SET_FOULS, getPlayerId(), (byte) pFouls));
+    if (pFouls == fFouls) {
+      return;
     }
     fFouls = pFouls;
+    notifyObservers(ModelChangeId.PLAYER_RESULT_SET_FOULS, fFouls);
   }
   
   public int getRushing() {
@@ -275,10 +251,11 @@ public class PlayerResult implements IByteArraySerializable, IXmlSerializable {
   }
 
   public void setRushing(int pRushing) {
-    if (getGame().isTrackingChanges() && (pRushing != fRushing)) {
-      getGame().add(new ModelChangePlayerResult(CommandPlayerResultChange.SET_RUSHING, getPlayerId(), pRushing));
+    if (pRushing == fRushing) {
+      return;
     }
     fRushing = pRushing;
+    notifyObservers(ModelChangeId.PLAYER_RESULT_SET_RUSHING, fRushing);
   }
   
   public int getPassing() {
@@ -286,21 +263,23 @@ public class PlayerResult implements IByteArraySerializable, IXmlSerializable {
   }
   
   public void setPassing(int pPassing) {
-    if (getGame().isTrackingChanges() && (pPassing != fPassing)) {
-      getGame().add(new ModelChangePlayerResult(CommandPlayerResultChange.SET_PASSING, getPlayerId(), pPassing));
+    if (pPassing == fPassing) {
+      return;
     }
     fPassing = pPassing;
+    notifyObservers(ModelChangeId.PLAYER_RESULT_SET_PASSING, fPassing);
   }
 
   public int getCurrentSpps() {
     return fCurrentSpps;
   }
   
-  public void setCurrentSpps(int pOldSpps) {
-    if (getGame().isTrackingChanges() && (pOldSpps != fCurrentSpps)) {
-      getGame().add(new ModelChangePlayerResult(CommandPlayerResultChange.SET_CURRENT_SPPS, getPlayerId(), pOldSpps));
+  public void setCurrentSpps(int pCurrentSpps) {
+    if (pCurrentSpps == fCurrentSpps) {
+      return;
     }
-    fCurrentSpps = pOldSpps;
+    fCurrentSpps = pCurrentSpps;
+    notifyObservers(ModelChangeId.PLAYER_RESULT_SET_CURRENT_SPPS, fCurrentSpps);
   }
   
   public boolean isDefecting() {
@@ -308,10 +287,11 @@ public class PlayerResult implements IByteArraySerializable, IXmlSerializable {
   }
   
   public void setDefecting(boolean pDefecting) {
-    if (getGame().isTrackingChanges() && (pDefecting != fDefecting)) {
-      getGame().add(new ModelChangePlayerResult(CommandPlayerResultChange.SET_DEFECTING, getPlayerId(), pDefecting));
+    if (pDefecting == fDefecting) {
+      return;
     }
     fDefecting = pDefecting;
+    notifyObservers(ModelChangeId.PLAYER_RESULT_SET_DEFECTING, fDefecting);
   }
   
   public int totalEarnedSpps() {
@@ -346,151 +326,14 @@ public class PlayerResult implements IByteArraySerializable, IXmlSerializable {
     }
   }
   
-  // XML serialization
-
-  public void addToXml(TransformerHandler pHandler) {
-
-    AttributesImpl attributes = new AttributesImpl();
-    UtilXml.addAttribute(attributes, XML_ATTRIBUTE_PLAYER_ID, getPlayerId());
-    UtilXml.startElement(pHandler, XML_TAG, attributes);
-
-    UtilXml.addValueElement(pHandler,_XML_TAG_USED_SECRET_WEAPON, hasUsedSecretWeapon());
-    UtilXml.addValueElement(pHandler, _XML_TAG_DEFECTING, isDefecting());
-    
-    if (totalEarnedSpps() > 0) {
-
-      attributes = new AttributesImpl();
-      UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_CURRENT, getCurrentSpps());
-      UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_EARNED, totalEarnedSpps());
-      UtilXml.startElement(pHandler, _XML_TAG_STAR_PLAYER_POINTS, attributes);
-
-      if (getCompletions() > 0) {
-        UtilXml.addValueElement(pHandler, _XML_TAG_COMPLETIONS, getCompletions());
-      }
-      if (getTouchdowns() > 0) {
-        UtilXml.addValueElement(pHandler, _XML_TAG_TOUCHDOWNS, getTouchdowns());
-      }
-      if (getInterceptions() > 0) {
-        UtilXml.addValueElement(pHandler, _XML_TAG_INTERCEPTIONS, getInterceptions());
-      }
-      if (getCasualties() > 0) {
-        UtilXml.addValueElement(pHandler, _XML_TAG_CASUALTIES, getCasualties());
-      }
-      if (getPlayerAwards() > 0) {
-        UtilXml.addValueElement(pHandler, _XML_TAG_PLAYER_AWARDS, getPlayerAwards());
-      }
-      
-      UtilXml.endElement(pHandler, _XML_TAG_STAR_PLAYER_POINTS);
-      
-    }
-    
-    if (((totalEarnedSpps() > 0) || (getBlocks() > 0) || (getFouls() > 0) || (getRushing() != 0) || (getPassing() != 0) || (getTurnsPlayed() > 0))) {
-      
-      UtilXml.startElement(pHandler, _XML_TAG_STATISTICS);
-
-      if (getBlocks() > 0) {
-        UtilXml.addValueElement(pHandler, _XML_TAG_BLOCKS, getBlocks());
-      }
-      if (getFouls() > 0) {
-        UtilXml.addValueElement(pHandler, _XML_TAG_FOULS, getFouls());
-      }
-      if (getRushing() != 0) {
-        UtilXml.addValueElement(pHandler, _XML_TAG_RUSHING, getRushing());
-      }
-      if (getPassing() != 0) {
-        UtilXml.addValueElement(pHandler, _XML_TAG_PASSING, getPassing());
-      }
-      if (getTurnsPlayed() > 0) {
-        UtilXml.addValueElement(pHandler, _XML_TAG_TURNS_PLAYED, getTurnsPlayed());
-      }
-
-      UtilXml.endElement(pHandler, _XML_TAG_STATISTICS);
-      
-    }
-    
-    if (getSeriousInjury() != null) {
-      UtilXml.addValueElement(pHandler, _XML_TAG_INJURY, getSeriousInjury().getName());
-    }
-    
-    if (getSendToBoxReason() != null) {
-      attributes = new AttributesImpl();
-      UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_REASON, getSendToBoxReason().getName());
-      UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_TURN, getSendToBoxTurn());
-      UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_HALF, getSendToBoxHalf());
-      UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_BY_PLAYER_ID, getSendToBoxByPlayerId());
-      UtilXml.addEmptyElement(pHandler, _XML_TAG_SEND_TO_BOX, attributes);
-    }
-    
-    UtilXml.endElement(pHandler, XML_TAG);
-    
-  }
-
-  public String toXml(boolean pIndent) {
-    return UtilXml.toXml(this, pIndent);
-  }
+  // change tracking
   
-  public IXmlSerializable startXmlElement(String pXmlTag, Attributes pXmlAttributes) {
-    if (XML_TAG.equals(pXmlTag)) {
-      String playerId = UtilXml.getStringAttribute(pXmlAttributes, XML_ATTRIBUTE_PLAYER_ID);
-      fPlayer = getTeamResult().getTeam().getPlayerById(playerId);
-    }
-    if (_XML_TAG_STAR_PLAYER_POINTS.equals(pXmlTag)) {
-      setCurrentSpps(UtilXml.getIntAttribute(pXmlAttributes, _XML_ATTRIBUTE_CURRENT));
-    }
-    if (_XML_TAG_SEND_TO_BOX.equals(pXmlTag)) {
-      setSendToBoxReason(new SendToBoxReasonFactory().forName(UtilXml.getStringAttribute(pXmlAttributes, _XML_ATTRIBUTE_REASON)));
-      setSendToBoxTurn(UtilXml.getIntAttribute(pXmlAttributes, _XML_ATTRIBUTE_TURN));
-      setSendToBoxHalf(UtilXml.getIntAttribute(pXmlAttributes, _XML_ATTRIBUTE_HALF));
-      setSendToBoxByPlayerId(UtilXml.getStringAttribute(pXmlAttributes, _XML_ATTRIBUTE_BY_PLAYER_ID));
-    }
-    return this;
-  }
-  
-  public boolean endXmlElement(String pXmlTag, String pValue) {
-    boolean complete = XML_TAG.equals(pXmlTag);
-    if (!complete) {
-      if (_XML_TAG_COMPLETIONS.equals(pXmlTag)) {
-        fCompletions = Integer.parseInt(pValue);
-      }
-      if (_XML_TAG_TOUCHDOWNS.equals(pXmlTag)) {
-        fTouchdowns = Integer.parseInt(pValue);
-      }
-      if (_XML_TAG_INTERCEPTIONS.equals(pXmlTag)) {
-        fInterceptions = Integer.parseInt(pValue);
-      }
-      if (_XML_TAG_CASUALTIES.equals(pXmlTag)) {
-        fCasualties = Integer.parseInt(pValue);
-      }
-      if (_XML_TAG_PLAYER_AWARDS.equals(pXmlTag)) {
-        fPlayerAwards = Integer.parseInt(pValue);
-      }
-      if (_XML_TAG_BLOCKS.equals(pXmlTag)) {
-        fBlocks = Integer.parseInt(pValue);
-      }
-      if (_XML_TAG_FOULS.equals(pXmlTag)) {
-        fFouls = Integer.parseInt(pValue);
-      }
-      if (_XML_TAG_RUSHING.equals(pXmlTag)) {
-        fRushing = Integer.parseInt(pValue);
-      }
-      if (_XML_TAG_PASSING.equals(pXmlTag)) {
-        fPassing = Integer.parseInt(pValue);
-      }
-      if (_XML_TAG_TURNS_PLAYED.equals(pXmlTag)) {
-        fTurnsPlayed = Integer.parseInt(pValue);
-      }
-      if (_XML_TAG_USED_SECRET_WEAPON.equals(pXmlTag)) {
-        setHasUsedSecretWeapon(Boolean.parseBoolean(pValue));
-      }
-      if (_XML_TAG_DEFECTING.equals(pXmlTag)) {
-        setDefecting(Boolean.parseBoolean(pValue));
-      }
-      if (_XML_TAG_INJURY.equals(pXmlTag)) {
-        setSeriousInjury(new SeriousInjuryFactory().forName(pValue));
-      }
-
-    }
-    return complete;
+  private void notifyObservers(ModelChangeId pModelChangeId, Object pValue) {
+  	if ((getGame() == null) || (pModelChangeId == null) || !StringTool.isProvided(getPlayerId())) {
+  		return;
+  	}
+  	ModelChange modelChange = new ModelChange(pModelChangeId, getPlayerId(), pValue);
+  	getGame().notifyObservers(modelChange);
   }
   
   // ByteArray serialization
