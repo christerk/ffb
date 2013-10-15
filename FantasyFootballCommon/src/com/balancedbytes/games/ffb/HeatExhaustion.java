@@ -1,18 +1,11 @@
 package com.balancedbytes.games.ffb;
 
-import javax.xml.transform.sax.TransformerHandler;
-
-import org.xml.sax.Attributes;
-import org.xml.sax.helpers.AttributesImpl;
-
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
 import com.balancedbytes.games.ffb.bytearray.IByteArraySerializable;
 import com.balancedbytes.games.ffb.json.IJsonOption;
+import com.balancedbytes.games.ffb.json.IJsonSerializable;
 import com.balancedbytes.games.ffb.json.UtilJson;
-import com.balancedbytes.games.ffb.xml.IXmlReadable;
-import com.balancedbytes.games.ffb.xml.IXmlSerializable;
-import com.balancedbytes.games.ffb.xml.UtilXml;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
@@ -20,13 +13,7 @@ import com.eclipsesource.json.JsonValue;
  * 
  * @author Kalimar
  */
-public class HeatExhaustion implements IByteArraySerializable, IXmlSerializable {
-  
-  public static final String XML_TAG = "heatExhaustion";
-  
-  private static final String _XML_ATTRIBUTE_PLAYER_ID = "playerId";
-  private static final String _XML_ATTRIBUTE_EXHAUSTED = "exhausted";
-  private static final String _XML_ATTRIBUTE_ROLL = "roll";
+public class HeatExhaustion implements IByteArraySerializable, IJsonSerializable {
   
   private String fPlayerId;
   private boolean fExhausted;
@@ -52,34 +39,6 @@ public class HeatExhaustion implements IByteArraySerializable, IXmlSerializable 
 
   public int getRoll() {
     return fRoll;
-  }
-  
-  // XML serialization
-  
-  public void addToXml(TransformerHandler pHandler) {
-  	AttributesImpl attributes = new AttributesImpl();
-  	UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_PLAYER_ID, getPlayerId());
-  	UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_EXHAUSTED, isExhausted());
-  	UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_ROLL, getRoll());
-  	UtilXml.startElement(pHandler, XML_TAG, attributes);
-  	UtilXml.endElement(pHandler, XML_TAG);
-  }
-  
-  public String toXml(boolean pIndent) {
-    return UtilXml.toXml(this, pIndent);
-  }
-
-  public IXmlReadable startXmlElement(String pXmlTag, Attributes pXmlAttributes) {
-    if (XML_TAG.equals(pXmlTag)) {
-      fPlayerId = UtilXml.getStringAttribute(pXmlAttributes, _XML_ATTRIBUTE_PLAYER_ID);
-      fExhausted = UtilXml.getBooleanAttribute(pXmlAttributes, _XML_ATTRIBUTE_EXHAUSTED);
-      fRoll = UtilXml.getIntAttribute(pXmlAttributes, _XML_ATTRIBUTE_ROLL);
-    }
-    return this;
-  }
-
-  public boolean endXmlElement(String pXmlTag, String pValue) {
-    return XML_TAG.equals(pXmlTag);
   }
   
   // ByteArray serialization

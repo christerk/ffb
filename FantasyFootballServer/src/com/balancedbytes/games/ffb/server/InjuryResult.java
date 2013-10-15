@@ -19,6 +19,7 @@ import com.balancedbytes.games.ffb.SoundFactory;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
 import com.balancedbytes.games.ffb.bytearray.IByteArraySerializable;
+import com.balancedbytes.games.ffb.json.IJsonSerializable;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.GameResult;
 import com.balancedbytes.games.ffb.model.Player;
@@ -34,7 +35,7 @@ import com.balancedbytes.games.ffb.util.UtilCards;
  * 
  * @author Kalimar
  */
-public class InjuryResult implements IByteArraySerializable {
+public class InjuryResult implements IByteArraySerializable, IJsonSerializable {
 
   private InjuryType fInjuryType;
 

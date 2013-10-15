@@ -6,32 +6,12 @@ import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
 import com.balancedbytes.games.ffb.bytearray.IByteArraySerializable;
 import com.balancedbytes.games.ffb.json.IJsonOption;
+import com.balancedbytes.games.ffb.json.IJsonSerializable;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
-public class FieldCoordinateBounds implements IByteArraySerializable {
-
-	// private static final int FIELD_START_X = 2;
-	// private static final int FIELD_START_Y = 0;
-	// private static final int FIELD_END_X = 27;
-	// private static final int FIELD_END_Y = 14;
-	//
-	// private static final int HOME_BOX_START_X = 0;
-	// private static final int HOME_BOX_END_X = 1;
-	// private static final int AWAY_BOX_START_X = 28;
-	// private static final int AWAY_BOX_END_X = 29;
-	//
-	// private static final int RESERVE_BOX_START_Y = 0;
-	// private static final int RESERVE_BOX_END_Y = 7;
-	// private static final int KO_BOX_START_Y = 8;
-	// private static final int KO_BOX_END_Y = 10;
-	// private static final int BADLY_HURT_START_Y = 11;
-	// private static final int BADLY_HURT_END_Y = 12;
-	// private static final int SERIOUS_INSURY_START_Y = 13;
-	// private static final int SERIOUS_INSURY_END_Y = 13;
-	// private static final int RIP_START_Y = 14;
-	// private static final int RIP_END_Y = 14;
+public class FieldCoordinateBounds implements IByteArraySerializable, IJsonSerializable {
 
 	public static final FieldCoordinateBounds FIELD = new FieldCoordinateBounds(new FieldCoordinate(0, 0), new FieldCoordinate(25, 14));
 

@@ -1,10 +1,6 @@
 package com.balancedbytes.games.ffb.model.change.old;
 
 
-import javax.xml.transform.sax.TransformerHandler;
-
-import org.xml.sax.helpers.AttributesImpl;
-
 import com.balancedbytes.games.ffb.BloodSpot;
 import com.balancedbytes.games.ffb.Card;
 import com.balancedbytes.games.ffb.DiceDecoration;
@@ -21,8 +17,6 @@ import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
 import com.balancedbytes.games.ffb.model.FieldModel;
 import com.balancedbytes.games.ffb.model.Game;
-import com.balancedbytes.games.ffb.xml.IXmlWriteable;
-import com.balancedbytes.games.ffb.xml.UtilXml;
 
 /**
  * 
@@ -30,12 +24,6 @@ import com.balancedbytes.games.ffb.xml.UtilXml;
  */
 public class ModelChangeFieldModel implements IModelChange {
   
-  private static final String _XML_ATTRIBUTE_CHANGE = "change";
-  private static final String _XML_ATTRIBUTE_VALUE = "value";
-  private static final String _XML_ATTRIBUTE_PLAYER_ID = "playerId";
-  private static final String _XML_ATTRIBUTE_X = "x";
-  private static final String _XML_ATTRIBUTE_Y = "y";
-
   private CommandFieldModelChange fChange;
   private Object fValue1;
   private Object fValue2;
@@ -76,8 +64,6 @@ public class ModelChangeFieldModel implements IModelChange {
   }
   
   public void applyTo(Game pGame) {
-    boolean trackingChanges = pGame.isTrackingChanges();
-    pGame.setTrackingChanges(false);
     FieldModel fieldModel = pGame.getFieldModel();
     switch (getChange()) {
       case REMOVE_PLAYER:
@@ -158,7 +144,6 @@ public class ModelChangeFieldModel implements IModelChange {
       default:
         throw new IllegalStateException("Unhandled change " + getChange() + ".");
     }
-    pGame.setTrackingChanges(trackingChanges);
   }
  
   // transformation
@@ -198,74 +183,6 @@ public class ModelChangeFieldModel implements IModelChange {
     }
   }
   
-  // XML serialization
-  
-  public void addToXml(TransformerHandler pHandler) {
-    AttributesImpl attributes = new AttributesImpl();
-    UtilXml.addAttribute(attributes, XML_ATTRIBUTE_ID, getId().getName());
-    if (getChange() != null) {
-      UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_CHANGE, getChange().getName());
-      switch (getChange()) {
-        case REMOVE_PLAYER:
-        case SET_BOMB_MOVING:
-        case SET_BALL_MOVING:
-        case SET_BALL_IN_PLAY:
-        case SET_WEATHER:
-          getChange().getAttributeType1().addXmlAttribute(attributes, _XML_ATTRIBUTE_VALUE, getValue1());
-          break;
-        case SET_PLAYER_COOORDINATE:
-          getChange().getAttributeType1().addXmlAttribute(attributes, _XML_ATTRIBUTE_PLAYER_ID, getValue1());
-          addFieldCoordinateXmlAttributes(attributes, (FieldCoordinate) getValue2());
-          break;
-        case SET_PLAYER_STATE:
-          getChange().getAttributeType1().addXmlAttribute(attributes, _XML_ATTRIBUTE_PLAYER_ID, getValue1());
-          getChange().getAttributeType2().addXmlAttribute(attributes, _XML_ATTRIBUTE_VALUE, getValue2());
-          break;
-        case SET_BALL_COORDINATE:
-          addFieldCoordinateXmlAttributes(attributes, (FieldCoordinate) getValue1());
-          break;
-        case SET_BOMB_COORDINATE:
-          addFieldCoordinateXmlAttributes(attributes, (FieldCoordinate) getValue1());
-          break;
-        case ADD_CARD:
-        case REMOVE_CARD:
-          getChange().getAttributeType1().addXmlAttribute(attributes, _XML_ATTRIBUTE_PLAYER_ID, getValue1());
-          getChange().getAttributeType2().addXmlAttribute(attributes, _XML_ATTRIBUTE_VALUE, getValue2());
-          break;
-        default:
-          break;
-      }
-    }
-    UtilXml.startElement(pHandler, XML_TAG, attributes);
-    if (getChange() != null) {
-      switch (getChange()) {
-        case ADD_BLOOD_SPOT:
-        case ADD_TRACK_NUMBER:
-        case REMOVE_TRACK_NUMBER:
-        case ADD_PUSHBACK_SQUARE:
-        case REMOVE_PUSHBACK_SQUARE:
-        case ADD_MOVE_SQUARE:
-        case REMOVE_MOVE_SQUARE:
-        case ADD_DICE_DECORATION:
-        case REMOVE_DICE_DECORATION:
-        case ADD_FIELD_MARKER:
-        case REMOVE_FIELD_MARKER:
-        case ADD_PLAYER_MARKER:
-        case REMOVE_PLAYER_MARKER:
-        case SET_RANGE_RULER:
-          ((IXmlWriteable) getValue1()).addToXml(pHandler);
-          break;
-        default:
-          break;
-      }
-    }
-    UtilXml.endElement(pHandler, XML_TAG);
-  }
-  
-  public String toXml(boolean pIndent) {
-    return UtilXml.toXml(this, pIndent);
-  }
-  
   // ByteArray serialization
   
   public int getByteArraySerializationVersion() {
@@ -294,14 +211,5 @@ public class ModelChangeFieldModel implements IModelChange {
     fValue2 = getChange().getAttributeType2().initFrom(pByteArray);
     return byteArraySerializationVersion;
   }
-  
-  // Helper methods
-  
-  private void addFieldCoordinateXmlAttributes(AttributesImpl pAttributes, FieldCoordinate pFieldCoordinate) {
-    if (pFieldCoordinate != null) {
-      UtilXml.addAttribute(pAttributes, _XML_ATTRIBUTE_X, pFieldCoordinate.getX());
-      UtilXml.addAttribute(pAttributes, _XML_ATTRIBUTE_Y, pFieldCoordinate.getY());
-    }
-  }
-   
+    
 }

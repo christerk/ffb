@@ -3,10 +3,6 @@ package com.balancedbytes.games.ffb.dialog;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.xml.transform.sax.TransformerHandler;
-
-import org.xml.sax.helpers.AttributesImpl;
-
 import com.balancedbytes.games.ffb.IDialogParameter;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
@@ -14,7 +10,6 @@ import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.util.ArrayTool;
 import com.balancedbytes.games.ffb.util.StringTool;
-import com.balancedbytes.games.ffb.xml.UtilXml;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
@@ -23,10 +18,6 @@ import com.eclipsesource.json.JsonValue;
  * @author Kalimar
  */
 public class DialogTeamSetupParameter implements IDialogParameter {
-  
-  private static final String _XML_ATTRIBUTE_LOAD_DIALOG = "loadDialog";
-  
-  private static final String _XML_TAG_SETUP_NAME = "setupName";
   
   private boolean fLoadDialog;
   private List<String> fSetupNames;
@@ -73,26 +64,6 @@ public class DialogTeamSetupParameter implements IDialogParameter {
     return new DialogTeamSetupParameter(isLoadDialog(), getSetupNames());
   }
   
-  // XML serialization
-  
-  public void addToXml(TransformerHandler pHandler) {
-    AttributesImpl attributes = new AttributesImpl();
-    UtilXml.addAttribute(attributes, XML_ATTRIBUTE_ID, getId().getName());
-    UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_LOAD_DIALOG, isLoadDialog());
-    UtilXml.startElement(pHandler, XML_TAG, attributes);
-    String[] setupNames = getSetupNames();
-    if (ArrayTool.isProvided(setupNames)) {
-      for (String setupName : setupNames) {
-        UtilXml.addValueElement(pHandler, _XML_TAG_SETUP_NAME, setupName);
-      }
-    }
-    UtilXml.endElement(pHandler, XML_TAG);
-  }
-
-  public String toXml(boolean pIndent) {
-    return UtilXml.toXml(this, pIndent);
-  }
-
   // ByteArray serialization
   
   public int getByteArraySerializationVersion() {

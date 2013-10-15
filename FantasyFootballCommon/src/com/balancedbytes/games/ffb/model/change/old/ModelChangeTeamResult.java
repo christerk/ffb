@@ -1,25 +1,16 @@
 package com.balancedbytes.games.ffb.model.change.old;
 
 
-import javax.xml.transform.sax.TransformerHandler;
-
-import org.xml.sax.helpers.AttributesImpl;
-
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.TeamResult;
-import com.balancedbytes.games.ffb.xml.UtilXml;
 
 /**
  * 
  * @author Kalimar
  */
 public class ModelChangeTeamResult implements IModelChange {
-  
-  private static final String _XML_ATTRIBUTE_CHANGE = "change";
-  private static final String _XML_ATTRIBUTE_HOME_DATA = "homeData";
-  private static final String _XML_ATTRIBUTE_VALUE = "value";
   
   private CommandTeamResultChange fChange;
   private boolean fHomeData;
@@ -56,8 +47,6 @@ public class ModelChangeTeamResult implements IModelChange {
   }
   
   public void applyTo(Game pGame) {
-    boolean trackingChanges = pGame.isTrackingChanges();
-    pGame.setTrackingChanges(false);
     TeamResult teamResult = isHomeData() ? pGame.getGameResult().getTeamResultHome() : pGame.getGameResult().getTeamResultAway();
     switch (getChange()) {
       case SET_SCORE:
@@ -105,7 +94,6 @@ public class ModelChangeTeamResult implements IModelChange {
       default:
         throw new IllegalStateException("Unhandled change " + getChange() + ".");
     }
-    pGame.setTrackingChanges(trackingChanges);
   }
  
   // transformation
@@ -114,23 +102,6 @@ public class ModelChangeTeamResult implements IModelChange {
     return new ModelChangeTeamResult(getChange(), !isHomeData(), getValue());
   }
   
-  // XML serialization
-    
-  public void addToXml(TransformerHandler pHandler) {
-    AttributesImpl attributes = new AttributesImpl();
-    UtilXml.addAttribute(attributes, XML_ATTRIBUTE_ID, getId().getName());
-    if (getChange() != null) {
-      UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_CHANGE, getChange().getName());
-      UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_HOME_DATA, isHomeData());
-      getChange().getAttributeType().addXmlAttribute(attributes, _XML_ATTRIBUTE_VALUE, getValue());
-    }
-    UtilXml.addEmptyElement(pHandler, XML_TAG, attributes);
-  }
-  
-  public String toXml(boolean pIndent) {
-    return UtilXml.toXml(this, pIndent);
-  }
-
   // ByteArray serialization
   
   public int getByteArraySerializationVersion() {

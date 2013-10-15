@@ -3,10 +3,6 @@ package com.balancedbytes.games.ffb.dialog;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.xml.transform.sax.TransformerHandler;
-
-import org.xml.sax.helpers.AttributesImpl;
-
 import com.balancedbytes.games.ffb.IDialogParameter;
 import com.balancedbytes.games.ffb.PlayerChoiceMode;
 import com.balancedbytes.games.ffb.PlayerChoiceModeFactory;
@@ -17,7 +13,6 @@ import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.util.ArrayTool;
 import com.balancedbytes.games.ffb.util.StringTool;
-import com.balancedbytes.games.ffb.xml.UtilXml;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
@@ -26,13 +21,6 @@ import com.eclipsesource.json.JsonValue;
  * @author Kalimar
  */
 public class DialogPlayerChoiceParameter implements IDialogParameter {
-  
-  private static final String _XML_ATTRIBUTE_TEAM_ID = "teamId";
-  private static final String _XML_ATTRIBUTE_MODE = "mode";
-  private static final String _XML_ATTRIBUTE_MAX_SELECTS = "maxSelects";
-
-  private static final String _XML_TAG_PLAYER = "player";
-  private static final String _XML_ATTRIBUTE_DESCRIPTION = "description";
   
   private String fTeamId;
   private PlayerChoiceMode fPlayerChoiceMode;
@@ -126,35 +114,6 @@ public class DialogPlayerChoiceParameter implements IDialogParameter {
 
   public IDialogParameter transform() {
     return new DialogPlayerChoiceParameter(getTeamId(), getPlayerChoiceMode(), getPlayerIds(), getDescriptions(), getMaxSelects());
-  }
-
-  // XML serialization
-  
-  public void addToXml(TransformerHandler pHandler) {
-    AttributesImpl attributes = new AttributesImpl();
-    UtilXml.addAttribute(attributes, XML_ATTRIBUTE_ID, getId().getName());
-    UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_TEAM_ID, getTeamId());
-    UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_MODE, (getPlayerChoiceMode() != null) ? getPlayerChoiceMode().getName() : null);
-    UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_MAX_SELECTS, getMaxSelects());
-    UtilXml.startElement(pHandler, XML_TAG, attributes);
-    String[] playerIds = getPlayerIds();
-    String[] descriptions = getDescriptions();
-    if (ArrayTool.isProvided(playerIds)) {
-      for (int i = 0; i < playerIds.length; i++) {
-        attributes = new AttributesImpl();
-        UtilXml.addAttribute(attributes, XML_ATTRIBUTE_ID, playerIds[i]);
-        if (ArrayTool.isProvided(descriptions)) {
-          UtilXml.addAttribute(attributes, XML_ATTRIBUTE_ID, playerIds[i]);
-          UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_DESCRIPTION, descriptions[i]);
-        }
-        UtilXml.addEmptyElement(pHandler, _XML_TAG_PLAYER, attributes);
-      }
-    }
-    UtilXml.endElement(pHandler, XML_TAG);
-  }
-
-  public String toXml(boolean pIndent) {
-    return UtilXml.toXml(this, pIndent);
   }
 
   // ByteArray serialization

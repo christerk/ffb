@@ -7,10 +7,16 @@ import com.balancedbytes.games.ffb.GameStatus;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
 import com.balancedbytes.games.ffb.bytearray.IByteArraySerializable;
+import com.balancedbytes.games.ffb.json.IJsonSerializable;
 import com.balancedbytes.games.ffb.model.Game;
+import com.balancedbytes.games.ffb.model.change.IModelChangeObserver;
+import com.balancedbytes.games.ffb.model.change.ModelChange;
+import com.balancedbytes.games.ffb.model.change.ModelChangeList;
 import com.balancedbytes.games.ffb.net.NetCommand;
 import com.balancedbytes.games.ffb.server.step.IStep;
 import com.balancedbytes.games.ffb.server.step.StepException;
+import com.balancedbytes.games.ffb.server.step.StepFactory;
+import com.balancedbytes.games.ffb.server.step.StepId;
 import com.balancedbytes.games.ffb.server.step.StepResult;
 import com.balancedbytes.games.ffb.server.step.StepStack;
 import com.balancedbytes.games.ffb.server.util.UtilGame;
@@ -19,7 +25,7 @@ import com.balancedbytes.games.ffb.server.util.UtilGame;
  * 
  * @author Kalimar
  */
-public class GameState implements IByteArraySerializable {
+public class GameState implements IModelChangeObserver, IByteArraySerializable, IJsonSerializable {
 
 	private Game fGame;
 
@@ -29,7 +35,7 @@ public class GameState implements IByteArraySerializable {
 	
 	private StepStack fStepStack;
 
-	private transient IStep fCurrentStep;
+	private IStep fCurrentStep;
 
 	private transient FantasyFootballServer fServer;
 
@@ -38,6 +44,8 @@ public class GameState implements IByteArraySerializable {
 	private transient IdGenerator fCommandNrGenerator;
 
 	private transient long fTurnTimeStarted;
+	
+	private transient ModelChangeList fChangeList;
 
 	private transient Map<String, Long> fSpectatorCooldownTime;
 	
@@ -48,7 +56,14 @@ public class GameState implements IByteArraySerializable {
 		fSpectatorCooldownTime = new HashMap<String, Long>();
 		initCommandNrGenerator(0);
 		fStepStack = new StepStack(this);
+		setChangeList(new ModelChangeList());
+		setGame(new Game());
+    getGame().addObserver(this);
 	}
+  
+  public void setServer(FantasyFootballServer pServer) {
+	  fServer = pServer;
+  }
 
 	public FantasyFootballServer getServer() {
 		return fServer;
@@ -56,6 +71,7 @@ public class GameState implements IByteArraySerializable {
 
 	public void setGame(Game pGame) {
 		fGame = pGame;
+		getGame().addObserver(this);
 	}
 
 	public Game getGame() {
@@ -65,26 +81,18 @@ public class GameState implements IByteArraySerializable {
 	public long getId() {
 		return getGame().getId();
 	}
-
-	// public void changeServerState(ServerStateId pServerStateId) {
-	// ServerState newServerState = getServer().getStateForId(pServerStateId);
-	// if (newServerState != fServerState) {
-	// ServerState oldServerState = fServerState;
-	// fServerState = newServerState;
-	// getServer().getDebugLog().logChangeState(IServerLogLevel.INFO, this,
-	// pServerStateId);
-	// fServerState.enterState(this, (oldServerState != null) ?
-	// oldServerState.getId() : null);
-	// }
-	// }
-
-	// public void changeServerState(ServerStateId pServerStateId, NetCommand
-	// pNetCommand) {
-	// changeServerState(pServerStateId);
-	// if (pNetCommand != null) {
-	// fServerState.handleNetCommand(this, pNetCommand);
-	// }
-	// }
+	
+	public ModelChangeList getChangeList() {
+	  return fChangeList;
+  }
+	
+	public void setChangeList(ModelChangeList pChangeList) {
+	  fChangeList = pChangeList;
+  }
+	
+	public void update(ModelChange pChange) {
+	  getChangeList().add(pChange);
+	}
 
 	public DiceRoller getDiceRoller() {
 		return fDiceRoller;
@@ -242,12 +250,12 @@ public class GameState implements IByteArraySerializable {
     	pByteList.addBoolean(false);
     }
     if (fCurrentStep != null) {
-			fStepStack.push(fCurrentStep);
-      fStepStack.addTo(pByteList);
-      fStepStack.pop();
+    	pByteList.addBoolean(true);
+    	fCurrentStep.addTo(pByteList);
     } else {
-      fStepStack.addTo(pByteList);
+    	pByteList.addBoolean(false);
     }
+    fStepStack.addTo(pByteList);
     fGameLog.addTo(pByteList);
   }
 
@@ -260,10 +268,23 @@ public class GameState implements IByteArraySerializable {
     } else {
     	fGame = null;
     }
+    if (pByteArray.getBoolean()) {
+    	fCurrentStep = initStepFrom(pByteArray);
+    } else {
+    	fCurrentStep = null;
+    }
     fStepStack.initFrom(pByteArray);
     fGameLog.initFrom(pByteArray);
     initCommandNrGenerator(fGameLog.findMaxCommandNr());
     return byteArraySerializationVersion;
   }
+  
+  private IStep initStepFrom(ByteArray pByteArray) {
+		StepId stepId = StepId.fromId(pByteArray.getSmallInt(pByteArray.getPosition()));
+		IStep step = StepFactory.getInstance().create(stepId, this, null, null);
+		step.initFrom(pByteArray);
+		return step;
+  }
+  
 
 }

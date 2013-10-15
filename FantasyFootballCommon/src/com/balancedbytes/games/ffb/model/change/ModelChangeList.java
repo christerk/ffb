@@ -7,6 +7,7 @@ import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
 import com.balancedbytes.games.ffb.bytearray.IByteArraySerializable;
 import com.balancedbytes.games.ffb.json.IJsonOption;
+import com.balancedbytes.games.ffb.json.IJsonSerializable;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.Game;
 import com.eclipsesource.json.JsonArray;
@@ -18,7 +19,7 @@ import com.eclipsesource.json.JsonValue;
  * 
  * @author Kalimar
  */
-public class ModelChangeList implements IByteArraySerializable {
+public class ModelChangeList implements IByteArraySerializable, IJsonSerializable {
   
   private List<ModelChange> fChanges;
   

@@ -1,18 +1,11 @@
 package com.balancedbytes.games.ffb;
 
-import javax.xml.transform.sax.TransformerHandler;
-
-import org.xml.sax.Attributes;
-import org.xml.sax.helpers.AttributesImpl;
-
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
 import com.balancedbytes.games.ffb.bytearray.IByteArraySerializable;
 import com.balancedbytes.games.ffb.json.IJsonOption;
+import com.balancedbytes.games.ffb.json.IJsonSerializable;
 import com.balancedbytes.games.ffb.json.UtilJson;
-import com.balancedbytes.games.ffb.xml.IXmlReadable;
-import com.balancedbytes.games.ffb.xml.IXmlSerializable;
-import com.balancedbytes.games.ffb.xml.UtilXml;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
@@ -20,14 +13,7 @@ import com.eclipsesource.json.JsonValue;
  * 
  * @author Kalimar
  */
-public class KnockoutRecovery implements IByteArraySerializable, IXmlSerializable {
-  
-  public static final String XML_TAG = "knockoutRecovery";
-  
-  private static final String _XML_ATTRIBUTE_PLAYER_ID = "playerId";
-  private static final String _XML_ATTRIBUTE_RECOVERING = "recovering";
-  private static final String _XML_ATTRIBUTE_ROLL = "roll";
-  private static final String _XML_ATTRIBUTE_BLOODWEISER_BABES = "bloodweiserBabes";
+public class KnockoutRecovery implements IByteArraySerializable, IJsonSerializable {
   
   private String fPlayerId;
   private boolean fRecovering;
@@ -60,37 +46,7 @@ public class KnockoutRecovery implements IByteArraySerializable, IXmlSerializabl
   public int getBloodweiserBabes() {
     return fBloodweiserBabes;
   }
-  
-  // XML serialization
-  
-  public void addToXml(TransformerHandler pHandler) {
-  	AttributesImpl attributes = new AttributesImpl();
-  	UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_PLAYER_ID, getPlayerId());
-  	UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_RECOVERING, isRecovering());
-  	UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_ROLL, getRoll());
-  	UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_BLOODWEISER_BABES, getBloodweiserBabes());
-  	UtilXml.startElement(pHandler, XML_TAG, attributes);
-  	UtilXml.endElement(pHandler, XML_TAG);
-  }
-  
-  public String toXml(boolean pIndent) {
-    return UtilXml.toXml(this, pIndent);
-  }
-
-  public IXmlReadable startXmlElement(String pXmlTag, Attributes pXmlAttributes) {
-    if (XML_TAG.equals(pXmlTag)) {
-      fPlayerId = UtilXml.getStringAttribute(pXmlAttributes, _XML_ATTRIBUTE_PLAYER_ID);
-      fRecovering = UtilXml.getBooleanAttribute(pXmlAttributes, _XML_ATTRIBUTE_RECOVERING);
-      fRoll = UtilXml.getIntAttribute(pXmlAttributes, _XML_ATTRIBUTE_ROLL);
-      fBloodweiserBabes = UtilXml.getIntAttribute(pXmlAttributes, _XML_ATTRIBUTE_BLOODWEISER_BABES);
-    }
-    return this;
-  }
-
-  public boolean endXmlElement(String pXmlTag, String pValue) {
-    return XML_TAG.equals(pXmlTag);
-  }
-  
+    
   // ByteArray serialization
   
   public int getByteArraySerializationVersion() {

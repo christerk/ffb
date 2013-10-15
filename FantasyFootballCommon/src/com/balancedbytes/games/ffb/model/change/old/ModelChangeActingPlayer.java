@@ -1,17 +1,12 @@
 package com.balancedbytes.games.ffb.model.change.old;
 
 
-import javax.xml.transform.sax.TransformerHandler;
-
-import org.xml.sax.helpers.AttributesImpl;
-
 import com.balancedbytes.games.ffb.PlayerAction;
 import com.balancedbytes.games.ffb.Skill;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.Game;
-import com.balancedbytes.games.ffb.xml.UtilXml;
 
 /**
  * 
@@ -19,9 +14,6 @@ import com.balancedbytes.games.ffb.xml.UtilXml;
  */
 public class ModelChangeActingPlayer implements IModelChange {
   
-  private static final String _XML_ATTRIBUTE_CHANGE = "change";
-  private static final String _XML_ATTRIBUTE_VALUE = "value";
-
   private CommandActingPlayerChange fChange;
   private Object fValue;
   
@@ -52,8 +44,6 @@ public class ModelChangeActingPlayer implements IModelChange {
   
   public void applyTo(Game pGame) {
     ActingPlayer actingPlayer = pGame.getActingPlayer();
-    boolean trackingChanges = pGame.isTrackingChanges();
-    pGame.setTrackingChanges(false);
     switch (getChange()) {
       case SET_PLAYER_ID:
         actingPlayer.setPlayerId((String) getValue());
@@ -106,32 +96,12 @@ public class ModelChangeActingPlayer implements IModelChange {
       default:
         throw new IllegalStateException("Unhandled change " + getChange() + ".");
     }
-    pGame.setTrackingChanges(trackingChanges);
   }
  
   // transformation
   
   public IModelChange transform() {
     return new ModelChangeActingPlayer(getChange(), getValue());
-  }
-  
-  // XML serialization
-  
-  public void addToXml(TransformerHandler pHandler) {
-    
-    AttributesImpl attributes = new AttributesImpl();
-    UtilXml.addAttribute(attributes, XML_ATTRIBUTE_ID, getId().getName());
-    if (getChange() != null) {
-      UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_CHANGE, getChange().getName());
-      getChange().getAttributeType().addXmlAttribute(attributes, _XML_ATTRIBUTE_VALUE, getValue());
-    }
-    
-    UtilXml.addEmptyElement(pHandler, XML_TAG);
-    
-  }
-  
-  public String toXml(boolean pIndent) {
-    return UtilXml.toXml(this, pIndent);
   }
   
   // ByteArray serialization

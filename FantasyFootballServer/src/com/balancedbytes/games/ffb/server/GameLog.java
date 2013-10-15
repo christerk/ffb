@@ -6,6 +6,7 @@ import java.util.List;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
 import com.balancedbytes.games.ffb.bytearray.IByteArraySerializable;
+import com.balancedbytes.games.ffb.json.IJsonSerializable;
 import com.balancedbytes.games.ffb.net.NetCommandFactory;
 import com.balancedbytes.games.ffb.net.commands.ServerCommand;
 
@@ -13,7 +14,7 @@ import com.balancedbytes.games.ffb.net.commands.ServerCommand;
  * 
  * @author Kalimar
  */
-public class GameLog implements IByteArraySerializable {
+public class GameLog implements IByteArraySerializable, IJsonSerializable {
 
   private List<ServerCommand> fServerCommands;
 

@@ -1,19 +1,12 @@
 package com.balancedbytes.games.ffb.model;
 
-import javax.xml.transform.sax.TransformerHandler;
-
-import org.xml.sax.Attributes;
-import org.xml.sax.helpers.AttributesImpl;
-
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
 import com.balancedbytes.games.ffb.bytearray.IByteArraySerializable;
 import com.balancedbytes.games.ffb.json.IJsonOption;
+import com.balancedbytes.games.ffb.json.IJsonSerializable;
 import com.balancedbytes.games.ffb.json.UtilJson;
-import com.balancedbytes.games.ffb.xml.IXmlReadable;
-import com.balancedbytes.games.ffb.xml.IXmlSerializable;
-import com.balancedbytes.games.ffb.xml.UtilXml;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
@@ -23,19 +16,7 @@ import com.eclipsesource.json.JsonValue;
  * 
  * @author Kalimar
  */
-public class Animation implements IXmlSerializable, IByteArraySerializable {
-  
-  public static final String XML_TAG = "animation";
-  
-  private static final String _XML_ATTRIBUTE_TYPE = "type";
-  private static final String _XML_ATTRIBUTE_THROWN_PLAYER_ID = "thrownPlayerId";
-  private static final String _XML_ATTRIBUTE_WITH_BALL = "withBall";
-  private static final String _XML_ATTRIBUTE_X = "x";
-  private static final String _XML_ATTRIBUTE_Y = "y";
-
-  private static final String _XML_TAG_START_COORDINATE = "startCoordinate";
-  private static final String _XML_TAG_END_COORDINATE = "endCoordinate";
-  private static final String _XML_TAG_INTERCEPTOR_COORDINATE = "interceptorCoordinate";
+public class Animation implements IByteArraySerializable, IJsonSerializable {
   
   private AnimationType fAnimationType;
   private String fThrownPlayerId;
@@ -101,76 +82,6 @@ public class Animation implements IXmlSerializable, IByteArraySerializable {
   
   public Animation transform() {
     return new Animation(getAnimationType(), FieldCoordinate.transform(getStartCoordinate()), FieldCoordinate.transform(getEndCoordinate()), getThrownPlayerId(), isWithBall(), FieldCoordinate.transform(getInterceptorCoordinate()));
-  }
-  
-  // XML serialization
-  
-  public void addToXml(TransformerHandler pHandler) {
-  	
-  	AttributesImpl attributes = new AttributesImpl();
-  	UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_TYPE, (getAnimationType() != null) ? getAnimationType().getName() : null);
-  	UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_THROWN_PLAYER_ID, getThrownPlayerId());
-  	UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_WITH_BALL, isWithBall());
-  	UtilXml.startElement(pHandler, XML_TAG, attributes);
-  	
-  	if (getStartCoordinate() != null) {
-  		attributes = new AttributesImpl();
-  		UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_X, getStartCoordinate().getX());
-  		UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_Y, getStartCoordinate().getY());
-  		UtilXml.startElement(pHandler, _XML_TAG_START_COORDINATE, attributes);
-  		UtilXml.endElement(pHandler, _XML_TAG_START_COORDINATE);
-  	}
-
-  	if (getEndCoordinate() != null) {
-  		attributes = new AttributesImpl();
-  		UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_X, getEndCoordinate().getX());
-  		UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_Y, getEndCoordinate().getY());
-  		UtilXml.startElement(pHandler, _XML_TAG_END_COORDINATE, attributes);
-  		UtilXml.endElement(pHandler, _XML_TAG_END_COORDINATE);
-  	}
-
-  	if (getInterceptorCoordinate() != null) {
-  		attributes = new AttributesImpl();
-  		UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_X, getInterceptorCoordinate().getX());
-  		UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_Y, getInterceptorCoordinate().getY());
-  		UtilXml.startElement(pHandler, _XML_TAG_INTERCEPTOR_COORDINATE, attributes);
-  		UtilXml.endElement(pHandler, _XML_TAG_INTERCEPTOR_COORDINATE);
-  	}
-
-  	UtilXml.endElement(pHandler, XML_TAG);
-  	
-  }
-  
-  public String toXml(boolean pIndent) {
-    return UtilXml.toXml(this, pIndent);
-  }
-  
-  public IXmlReadable startXmlElement(String pXmlTag, Attributes pXmlAttributes) {
-    if (XML_TAG.equals(pXmlTag)) {
-    	fAnimationType = new AnimationTypeFactory().forName(UtilXml.getStringAttribute(pXmlAttributes, _XML_ATTRIBUTE_TYPE));
-      fThrownPlayerId = UtilXml.getStringAttribute(pXmlAttributes, _XML_ATTRIBUTE_THROWN_PLAYER_ID);
-      fWithBall = UtilXml.getBooleanAttribute(pXmlAttributes, _XML_ATTRIBUTE_WITH_BALL);
-    }
-    if (_XML_TAG_START_COORDINATE.equals(pXmlTag)) {
-      int x = UtilXml.getIntAttribute(pXmlAttributes, _XML_ATTRIBUTE_X);
-      int y = UtilXml.getIntAttribute(pXmlAttributes, _XML_ATTRIBUTE_Y);
-      fStartCoordinate = new FieldCoordinate(x, y);
-    }
-    if (_XML_TAG_END_COORDINATE.equals(pXmlTag)) {
-      int x = UtilXml.getIntAttribute(pXmlAttributes, _XML_ATTRIBUTE_X);
-      int y = UtilXml.getIntAttribute(pXmlAttributes, _XML_ATTRIBUTE_Y);
-      fEndCoordinate = new FieldCoordinate(x, y);
-    }
-    if (_XML_TAG_INTERCEPTOR_COORDINATE.equals(pXmlTag)) {
-      int x = UtilXml.getIntAttribute(pXmlAttributes, _XML_ATTRIBUTE_X);
-      int y = UtilXml.getIntAttribute(pXmlAttributes, _XML_ATTRIBUTE_Y);
-      fInterceptorCoordinate = new FieldCoordinate(x, y);
-    }
-    return this;
-  }
-  
-  public boolean endXmlElement(String pXmlTag, String pValue) {
-    return XML_TAG.equals(pXmlTag);
   }
 
   // ByteArray serialization

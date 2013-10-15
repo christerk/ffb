@@ -3,10 +3,6 @@ package com.balancedbytes.games.ffb.dialog;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.xml.transform.sax.TransformerHandler;
-
-import org.xml.sax.helpers.AttributesImpl;
-
 import com.balancedbytes.games.ffb.CardType;
 import com.balancedbytes.games.ffb.CardTypeFactory;
 import com.balancedbytes.games.ffb.IDialogParameter;
@@ -14,7 +10,6 @@ import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
-import com.balancedbytes.games.ffb.xml.UtilXml;
 import com.eclipsesource.json.JsonArray;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
@@ -25,14 +20,6 @@ import com.eclipsesource.json.JsonValue;
  */
 public class DialogBuyCardsParameter implements IDialogParameter {
 
-  private static final String _XML_ATTRIBUTE_TEAM_ID = "teamId";
-  private static final String _XML_ATTRIBUTE_AVAILABLE_CARDS = "availableCards";
-  private static final String _XML_ATTRIBUTE_AVAILABLE_GOLD = "availableGold";
-  private static final String _XML_ATTRIBUTE_TYPE = "type";
-  private static final String _XML_ATTRIBUTE_CARDS = "cards";
-  
-  private static final String _XML_TAG_DECK = "deck";
-  
   private String fTeamId;
   private int fAvailableGold;
   private int fAvailableCards;
@@ -84,30 +71,6 @@ public class DialogBuyCardsParameter implements IDialogParameter {
   	return dialogParameter;
   }
   
-  // XML serialization
-  
-  public void addToXml(TransformerHandler pHandler) {
-    AttributesImpl attributes = new AttributesImpl();
-    UtilXml.addAttribute(attributes, XML_ATTRIBUTE_ID, getId().getName());
-    UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_TEAM_ID, getTeamId());
-    UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_AVAILABLE_CARDS, getAvailableCards());
-    UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_AVAILABLE_GOLD, getAvailableGold());
-    UtilXml.startElement(pHandler, XML_TAG, attributes);
-    if (fNrOfCardsPerType.size() > 0) {
-      for (CardType type : fNrOfCardsPerType.keySet()) {
-        attributes = new AttributesImpl();
-        UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_TYPE, type.getName());
-        UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_CARDS, fNrOfCardsPerType.get(type));
-        UtilXml.addEmptyElement(pHandler, _XML_TAG_DECK, attributes);
-      }
-    }
-    UtilXml.endElement(pHandler, XML_TAG);
-  }
-
-  public String toXml(boolean pIndent) {
-    return UtilXml.toXml(this, pIndent);
-  }
-
   // ByteArray serialization
   
   public int getByteArraySerializationVersion() {

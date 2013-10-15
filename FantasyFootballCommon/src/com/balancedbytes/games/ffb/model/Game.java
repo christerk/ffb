@@ -15,6 +15,7 @@ import com.balancedbytes.games.ffb.bytearray.ByteList;
 import com.balancedbytes.games.ffb.bytearray.IByteArraySerializable;
 import com.balancedbytes.games.ffb.dialog.DialogId;
 import com.balancedbytes.games.ffb.dialog.DialogIdFactory;
+import com.balancedbytes.games.ffb.json.IJsonSerializable;
 import com.balancedbytes.games.ffb.model.change.ModelChange;
 import com.balancedbytes.games.ffb.model.change.ModelChangeId;
 import com.balancedbytes.games.ffb.model.change.ModelChangeObservable;
@@ -26,7 +27,7 @@ import com.balancedbytes.games.ffb.util.UtilActingPlayer;
  * 
  * @author Kalimar
  */
-public class Game extends ModelChangeObservable implements IByteArraySerializable {
+public class Game extends ModelChangeObservable implements IByteArraySerializable, IJsonSerializable {
   
   private long fId;
   private Date fScheduled;

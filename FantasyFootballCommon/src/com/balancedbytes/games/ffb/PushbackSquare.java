@@ -1,18 +1,11 @@
 package com.balancedbytes.games.ffb;
 
-import javax.xml.transform.sax.TransformerHandler;
-
-import org.xml.sax.Attributes;
-import org.xml.sax.helpers.AttributesImpl;
-
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
 import com.balancedbytes.games.ffb.bytearray.IByteArraySerializable;
 import com.balancedbytes.games.ffb.json.IJsonOption;
+import com.balancedbytes.games.ffb.json.IJsonSerializable;
 import com.balancedbytes.games.ffb.json.UtilJson;
-import com.balancedbytes.games.ffb.xml.IXmlReadable;
-import com.balancedbytes.games.ffb.xml.IXmlSerializable;
-import com.balancedbytes.games.ffb.xml.UtilXml;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
@@ -21,18 +14,7 @@ import com.eclipsesource.json.JsonValue;
  * 
  * @author Kalimar
  */
-public final class PushbackSquare implements IXmlSerializable, IByteArraySerializable {
-
-  public static final String XML_TAG = "pushback-square";
-  
-  private static final String _XML_ATTRIBUTE_X = "x";
-  private static final String _XML_ATTRIBUTE_Y = "y";
-  private static final String _XML_ATTRIBUTE_DIRECTION = "direction";
-  private static final String _XML_ATTRIBUTE_SELECTED = "selected";
-  private static final String _XML_ATTRIBUTE_LOCKED = "locked";
-  private static final String _XML_ATTRIBUTE_HOME_CHOICE = "homeChoice";
-  
-  private static final String _XML_TAG_COORDINATE = "coordinate";
+public final class PushbackSquare implements IByteArraySerializable, IJsonSerializable {
 
   private FieldCoordinate fCoordinate;
   private Direction fDirection;
@@ -108,53 +90,6 @@ public final class PushbackSquare implements IXmlSerializable, IByteArraySeriali
       (pObj instanceof PushbackSquare)
       && getCoordinate().equals(((PushbackSquare) pObj).getCoordinate())
     );
-  }
-  
-  // XML serialization
-  
-  public void addToXml(TransformerHandler pHandler) {
-  	
-  	AttributesImpl attributes = new AttributesImpl();
-  	UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_DIRECTION, (getDirection() != null) ? getDirection().getName() : null);
-  	UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_SELECTED, isSelected());
-  	UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_LOCKED, isLocked());
-  	UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_HOME_CHOICE, isHomeChoice());
-  	UtilXml.startElement(pHandler, XML_TAG, attributes);
-  	
-  	if (getCoordinate() != null) {
-  		attributes = new AttributesImpl();
-  		UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_X, getCoordinate().getX());
-  		UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_Y, getCoordinate().getY());
-  		UtilXml.startElement(pHandler, _XML_TAG_COORDINATE, attributes);
-  		UtilXml.endElement(pHandler, _XML_TAG_COORDINATE);
-  	}
-  	
-  	UtilXml.endElement(pHandler, XML_TAG);
-  	
-  }
-  
-  public String toXml(boolean pIndent) {
-    return UtilXml.toXml(this, pIndent);
-  }
-
-  public IXmlReadable startXmlElement(String pXmlTag, Attributes pXmlAttributes) {
-  	IXmlReadable xmlElement = this;
-    if (XML_TAG.equals(pXmlTag)) {
-      fDirection = new DirectionFactory().forName(UtilXml.getStringAttribute(pXmlAttributes, _XML_ATTRIBUTE_DIRECTION));
-      fSelected = UtilXml.getBooleanAttribute(pXmlAttributes, _XML_ATTRIBUTE_SELECTED);
-      fLocked = UtilXml.getBooleanAttribute(pXmlAttributes, _XML_ATTRIBUTE_LOCKED);
-      fHomeChoice = UtilXml.getBooleanAttribute(pXmlAttributes, _XML_ATTRIBUTE_HOME_CHOICE);
-    }
-    if (_XML_TAG_COORDINATE.equals(pXmlTag)) {
-      int x = UtilXml.getIntAttribute(pXmlAttributes, _XML_ATTRIBUTE_X);
-      int y = UtilXml.getIntAttribute(pXmlAttributes, _XML_ATTRIBUTE_Y);
-      fCoordinate = new FieldCoordinate(x, y);
-    }
-    return xmlElement;
-  }
-  
-  public boolean endXmlElement(String pXmlTag, String pValue) {
-    return XML_TAG.equals(pXmlTag);
   }
   
   // ByteArray serialization

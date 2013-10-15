@@ -3,10 +3,6 @@ package com.balancedbytes.games.ffb.dialog;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.xml.transform.sax.TransformerHandler;
-
-import org.xml.sax.helpers.AttributesImpl;
-
 import com.balancedbytes.games.ffb.IDialogParameter;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
@@ -14,7 +10,6 @@ import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.util.ArrayTool;
 import com.balancedbytes.games.ffb.util.StringTool;
-import com.balancedbytes.games.ffb.xml.UtilXml;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
@@ -23,11 +18,6 @@ import com.eclipsesource.json.JsonValue;
  * @author Kalimar
  */
 public class DialogBribesParameter implements IDialogParameter {
-  
-  private static final String _XML_ATTRIBUTE_TEAM_ID = "teamId";
-  private static final String _XML_ATTRIBUTE_MAX_NR_OF_BRIBES = "maxNrOfBribes";
-  private static final String _XML_TAG_PLAYER_LIST = "playerList";
-  private static final String _XML_TAG_PLAYER = "player";
   
   private String fTeamId;
   private int fMaxNrOfBribes;
@@ -79,26 +69,6 @@ public class DialogBribesParameter implements IDialogParameter {
     DialogBribesParameter transformedParameter = new DialogBribesParameter(getTeamId(), getMaxNrOfBribes());
     transformedParameter.addPlayerIds(getPlayerIds());
     return transformedParameter;
-  }
-
-  // XML serialization
-  
-  public void addToXml(TransformerHandler pHandler) {
-    AttributesImpl attributes = new AttributesImpl();
-    UtilXml.addAttribute(attributes, XML_ATTRIBUTE_ID, getId().getName());
-    UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_TEAM_ID, getTeamId());
-    UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_MAX_NR_OF_BRIBES, getMaxNrOfBribes());
-    UtilXml.startElement(pHandler, XML_TAG, attributes);
-    UtilXml.startElement(pHandler, _XML_TAG_PLAYER_LIST);
-    for (String playerId : getPlayerIds()) {
-      UtilXml.addValueElement(pHandler, _XML_TAG_PLAYER, playerId);
-    }
-    UtilXml.endElement(pHandler, _XML_TAG_PLAYER_LIST);
-    UtilXml.endElement(pHandler, XML_TAG);
-  }
-
-  public String toXml(boolean pIndent) {
-    return UtilXml.toXml(this, pIndent);
   }
 
   // ByteArray serialization

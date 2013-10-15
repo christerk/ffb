@@ -18,6 +18,7 @@ import com.balancedbytes.games.ffb.SkillFactory;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
 import com.balancedbytes.games.ffb.bytearray.IByteArraySerializable;
+import com.balancedbytes.games.ffb.json.IJsonSerializable;
 import com.balancedbytes.games.ffb.util.StringTool;
 import com.balancedbytes.games.ffb.xml.IXmlSerializable;
 import com.balancedbytes.games.ffb.xml.UtilXml;
@@ -28,7 +29,7 @@ import com.balancedbytes.games.ffb.xml.UtilXml;
  * 
  * @author Kalimar
  */
-public class Player implements IXmlSerializable, IByteArraySerializable {
+public class Player implements IXmlSerializable, IByteArraySerializable, IJsonSerializable {
   
   public static final String XML_TAG = "player";
   

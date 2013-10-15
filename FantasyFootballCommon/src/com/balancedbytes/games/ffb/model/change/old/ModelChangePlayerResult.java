@@ -1,10 +1,6 @@
 package com.balancedbytes.games.ffb.model.change.old;
 
 
-import javax.xml.transform.sax.TransformerHandler;
-
-import org.xml.sax.helpers.AttributesImpl;
-
 import com.balancedbytes.games.ffb.SendToBoxReason;
 import com.balancedbytes.games.ffb.SeriousInjury;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
@@ -12,7 +8,6 @@ import com.balancedbytes.games.ffb.bytearray.ByteList;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.model.PlayerResult;
-import com.balancedbytes.games.ffb.xml.UtilXml;
 
 /**
  * 
@@ -20,10 +15,6 @@ import com.balancedbytes.games.ffb.xml.UtilXml;
  */
 public class ModelChangePlayerResult implements IModelChange {
   
-  private static final String _XML_ATTRIBUTE_CHANGE = "change";
-  private static final String _XML_ATTRIBUTE_PLAYER_ID = "playerId";
-  private static final String _XML_ATTRIBUTE_VALUE = "value";
-
   private CommandPlayerResultChange fChange;
   private String fPlayerId;
   private Object fValue;
@@ -59,8 +50,6 @@ public class ModelChangePlayerResult implements IModelChange {
   }
   
   public void applyTo(Game pGame) {
-    boolean trackingChanges = pGame.isTrackingChanges();
-    pGame.setTrackingChanges(false);
     Player player = pGame.getPlayerById(getPlayerId());
     PlayerResult playerResult = pGame.getGameResult().getPlayerResult(player);
     switch (getChange()) {
@@ -124,30 +113,12 @@ public class ModelChangePlayerResult implements IModelChange {
       default:
         throw new IllegalStateException("Unhandled change " + getChange() + ".");
     }
-    pGame.setTrackingChanges(trackingChanges);
   }
  
   // transformation
   
   public IModelChange transform() {
     return new ModelChangePlayerResult(getChange(), getPlayerId(), getValue());
-  }
-  
-  // XML serialization
-
-  public void addToXml(TransformerHandler pHandler) {
-    AttributesImpl attributes = new AttributesImpl();
-    UtilXml.addAttribute(attributes, XML_ATTRIBUTE_ID, getId().getName());
-    if (getChange() != null) {
-      UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_CHANGE, getChange().getName());
-      UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_PLAYER_ID, getPlayerId());
-      getChange().getAttributeType().addXmlAttribute(attributes, _XML_ATTRIBUTE_VALUE, getValue());
-    }
-    UtilXml.addEmptyElement(pHandler, XML_TAG, attributes);
-  }
-  
-  public String toXml(boolean pIndent) {
-    return UtilXml.toXml(this, pIndent);
   }
   
   // ByteArray serialization

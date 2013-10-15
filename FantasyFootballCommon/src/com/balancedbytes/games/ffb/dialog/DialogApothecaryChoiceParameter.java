@@ -1,9 +1,5 @@
 package com.balancedbytes.games.ffb.dialog;
 
-import javax.xml.transform.sax.TransformerHandler;
-
-import org.xml.sax.helpers.AttributesImpl;
-
 import com.balancedbytes.games.ffb.IDialogParameter;
 import com.balancedbytes.games.ffb.PlayerState;
 import com.balancedbytes.games.ffb.SeriousInjury;
@@ -12,7 +8,6 @@ import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
-import com.balancedbytes.games.ffb.xml.UtilXml;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
@@ -21,12 +16,6 @@ import com.eclipsesource.json.JsonValue;
  * @author Kalimar
  */
 public class DialogApothecaryChoiceParameter implements IDialogParameter {
-
-  private static final String _XML_ATTRIBUTE_PLAYER_ID = "playerId";
-  private static final String _XML_ATTRIBUTE_PLAYER_STATE_OLD = "playerStateOld";
-  private static final String _XML_ATTRIBUTE_PLAYER_STATE_NEW = "playerStateNew";
-  private static final String _XML_ATTRIBUTE_SERIOUS_INJURY_OLD = "seriousInjuryOld";
-  private static final String _XML_ATTRIBUTE_SERIOUS_INJURY_NEW = "seriousInjuryNew";
 
   private String fPlayerId;
   private PlayerState fPlayerStateOld;
@@ -80,23 +69,6 @@ public class DialogApothecaryChoiceParameter implements IDialogParameter {
 
   public IDialogParameter transform() {
     return new DialogApothecaryChoiceParameter(getPlayerId(), getPlayerStateOld(), getSeriousInjuryOld(), getPlayerStateNew(), getSeriousInjuryNew());
-  }
-
-  // XML serialization
-
-  public void addToXml(TransformerHandler pHandler) {
-    AttributesImpl attributes = new AttributesImpl();
-    UtilXml.addAttribute(attributes, XML_ATTRIBUTE_ID, getId().getName());
-    UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_PLAYER_ID, getPlayerId());
-    UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_PLAYER_STATE_OLD, (getPlayerStateOld() != null) ? getPlayerStateOld().getId() : 0);
-    UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_SERIOUS_INJURY_OLD, (getSeriousInjuryOld() != null) ? getSeriousInjuryOld().getName() : null);
-    UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_PLAYER_STATE_NEW, (getPlayerStateNew() != null) ? getPlayerStateNew().getId() : 0);
-    UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_SERIOUS_INJURY_NEW, (getSeriousInjuryNew() != null) ? getSeriousInjuryNew().getName() : null);
-    UtilXml.addEmptyElement(pHandler, XML_TAG, attributes);
-  }
-
-  public String toXml(boolean pIndent) {
-    return UtilXml.toXml(this, pIndent);
   }
 
   // ByteArray serialization

@@ -6,13 +6,14 @@ import java.util.List;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
 import com.balancedbytes.games.ffb.bytearray.IByteArraySerializable;
+import com.balancedbytes.games.ffb.json.IJsonSerializable;
 import com.balancedbytes.games.ffb.server.GameState;
 
 /**
  * 
  * @author Kalimar
  */
-public class StepStack implements IByteArraySerializable {
+public class StepStack implements IByteArraySerializable, IJsonSerializable {
 	
 	private List<IStep> fStack;
 

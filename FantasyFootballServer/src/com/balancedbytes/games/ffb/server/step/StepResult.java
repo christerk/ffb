@@ -5,6 +5,7 @@ import com.balancedbytes.games.ffb.SoundFactory;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
 import com.balancedbytes.games.ffb.bytearray.IByteArraySerializable;
+import com.balancedbytes.games.ffb.json.IJsonSerializable;
 import com.balancedbytes.games.ffb.model.Animation;
 import com.balancedbytes.games.ffb.report.IReport;
 import com.balancedbytes.games.ffb.report.ReportList;
@@ -13,7 +14,7 @@ import com.balancedbytes.games.ffb.report.ReportList;
  * 
  * @author Kalimar
  */
-public class StepResult implements IByteArraySerializable {
+public class StepResult implements IByteArraySerializable, IJsonSerializable {
 	
 	private StepAction fNextAction;
 	

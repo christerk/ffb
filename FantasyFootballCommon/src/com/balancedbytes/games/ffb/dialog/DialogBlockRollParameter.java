@@ -1,15 +1,10 @@
 package com.balancedbytes.games.ffb.dialog;
 
-import javax.xml.transform.sax.TransformerHandler;
-
-import org.xml.sax.helpers.AttributesImpl;
-
 import com.balancedbytes.games.ffb.IDialogParameter;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
-import com.balancedbytes.games.ffb.xml.UtilXml;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
@@ -18,12 +13,6 @@ import com.eclipsesource.json.JsonValue;
  * @author Kalimar
  */
 public class DialogBlockRollParameter implements IDialogParameter {
-
-  private static final String _XML_ATTRIBUTE_CHOOSING_TEAM_ID = "choosingTeamId";
-  private static final String _XML_ATTRIBUTE_NR_OF_DICE = "nrOfDice";
-  private static final String _XML_ATTRIBUTE_BLOCK_ROLL = "blockRoll";
-  private static final String _XML_ATTRIBUTE_TEAM_RE_ROLL_OPTION = "teamReRollOption";
-  private static final String _XML_ATTRIBUTE_PRO_RE_ROLL_OPTION = "proReRollOption";
 
   private String fChoosingTeamId;
   private int fNrOfDice;
@@ -71,23 +60,6 @@ public class DialogBlockRollParameter implements IDialogParameter {
   
   public IDialogParameter transform() {
     return new DialogBlockRollParameter(getChoosingTeamId(), getNrOfDice(), getBlockRoll(), hasTeamReRollOption(), hasProReRollOption());
-  }
-
-  // XML serialization
-  
-  public void addToXml(TransformerHandler pHandler) {
-    AttributesImpl attributes = new AttributesImpl();
-    UtilXml.addAttribute(attributes, XML_ATTRIBUTE_ID, getId().getName());
-    UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_CHOOSING_TEAM_ID, getChoosingTeamId());
-    UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_NR_OF_DICE, getNrOfDice());
-    UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_BLOCK_ROLL, getBlockRoll());
-    UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_TEAM_RE_ROLL_OPTION, hasTeamReRollOption());
-    UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_PRO_RE_ROLL_OPTION, hasProReRollOption());
-    UtilXml.addEmptyElement(pHandler, XML_TAG, attributes);
-  }
-
-  public String toXml(boolean pIndent) {
-    return UtilXml.toXml(this, pIndent);
   }
 
   // ByteArray serialization

@@ -3,10 +3,6 @@ package com.balancedbytes.games.ffb.model.change.old;
 
 import java.util.Date;
 
-import javax.xml.transform.sax.TransformerHandler;
-
-import org.xml.sax.helpers.AttributesImpl;
-
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.GameOptionValue;
 import com.balancedbytes.games.ffb.IDialogParameter;
@@ -15,7 +11,6 @@ import com.balancedbytes.games.ffb.TurnMode;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
 import com.balancedbytes.games.ffb.model.Game;
-import com.balancedbytes.games.ffb.xml.UtilXml;
 
 /**
  * 
@@ -23,12 +18,6 @@ import com.balancedbytes.games.ffb.xml.UtilXml;
  */
 public class ModelChangeGameAttribute implements IModelChange {
   
-  private static final String _XML_TAG_FIELD_COORDINATE = "fieldCoordinate";
-  private static final String _XML_ATTRIBUTE_CHANGE = "change";
-  private static final String _XML_ATTRIBUTE_VALUE = "value";
-  private static final String _XML_ATTRIBUTE_X = "x";
-  private static final String _XML_ATTRIBUTE_Y = "y";
-
   private CommandGameAttributeChange fChange;
   private Object fValue;
   
@@ -58,8 +47,6 @@ public class ModelChangeGameAttribute implements IModelChange {
   }
   
   public void applyTo(Game pGame) {
-    boolean trackingChanges = pGame.isTrackingChanges();
-    pGame.setTrackingChanges(false);
     switch (getChange()) {
       case SET_ID:
         pGame.setId((Long) getValue());
@@ -127,7 +114,6 @@ public class ModelChangeGameAttribute implements IModelChange {
       default:
         throw new IllegalStateException("Unhandled change " + getChange() + ".");
     }
-    pGame.setTrackingChanges(trackingChanges);
   }
  
   // transformation
@@ -148,41 +134,6 @@ public class ModelChangeGameAttribute implements IModelChange {
       default:
         return new ModelChangeGameAttribute(getChange(), getValue());
     }
-  }
-  
-  // XML serialization
-  
-  public void addToXml(TransformerHandler pHandler) {
-    AttributesImpl attributes = new AttributesImpl();
-    UtilXml.addAttribute(attributes, XML_ATTRIBUTE_ID, getId().getName());
-    if (getChange() != null) {
-      UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_CHANGE, getChange().getName());
-      getChange().getAttributeType().addXmlAttribute(attributes, _XML_ATTRIBUTE_VALUE, getValue());
-    }
-    UtilXml.startElement(pHandler, XML_TAG, attributes);
-    if ((getChange() != null) && (getValue() != null)) {
-      switch (getChange().getAttributeType()) {
-        case FIELD_COORDINATE:
-          attributes = new AttributesImpl();
-          UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_X, ((FieldCoordinate) getValue()).getX());
-          UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_Y, ((FieldCoordinate) getValue()).getY());
-          UtilXml.addEmptyElement(pHandler, _XML_TAG_FIELD_COORDINATE, attributes);
-          break;
-        case DIALOG_PARAMETER:
-          ((IDialogParameter) getValue()).addToXml(pHandler);
-          break;
-        case GAME_OPTION:
-          ((GameOptionValue) getValue()).addToXml(pHandler);
-          break;
-        default:
-          break;
-      }
-    }
-    UtilXml.endElement(pHandler, XML_TAG);
-  }
-  
-  public String toXml(boolean pIndent) {
-    return UtilXml.toXml(this, pIndent);
   }
   
   // ByteArray serialization

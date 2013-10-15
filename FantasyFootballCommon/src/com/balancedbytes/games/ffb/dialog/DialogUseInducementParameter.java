@@ -3,10 +3,6 @@ package com.balancedbytes.games.ffb.dialog;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.xml.transform.sax.TransformerHandler;
-
-import org.xml.sax.helpers.AttributesImpl;
-
 import com.balancedbytes.games.ffb.Card;
 import com.balancedbytes.games.ffb.CardFactory;
 import com.balancedbytes.games.ffb.IDialogParameter;
@@ -17,7 +13,6 @@ import com.balancedbytes.games.ffb.bytearray.ByteList;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.util.ArrayTool;
-import com.balancedbytes.games.ffb.xml.UtilXml;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
@@ -26,10 +21,6 @@ import com.eclipsesource.json.JsonValue;
  * @author Kalimar
  */
 public class DialogUseInducementParameter implements IDialogParameter {
-
-  private static final String _XML_ATTRIBUTE_TEAM_ID = "teamId";
-  private static final String _XML_TAG_INDUCEMENT = "inducement";
-  private static final String _XML_TAG_CARD = "card";
 
   private String fTeamId;
   private InducementType[] fInducementTypes;
@@ -65,26 +56,6 @@ public class DialogUseInducementParameter implements IDialogParameter {
 
   public IDialogParameter transform() {
     return new DialogUseInducementParameter(getTeamId(), getInducementTypes(), getCards());
-  }
-
-  // XML serialization
-
-  public void addToXml(TransformerHandler pHandler) {
-    AttributesImpl attributes = new AttributesImpl();
-    UtilXml.addAttribute(attributes, XML_ATTRIBUTE_ID, getId().getName());
-    UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_TEAM_ID, getTeamId());
-    UtilXml.startElement(pHandler, XML_TAG, attributes);
-    for (InducementType inducement : getInducementTypes()) {
-      UtilXml.addValueElement(pHandler, _XML_TAG_INDUCEMENT, inducement.getName());
-    }
-    for (Card card : getCards()) {
-      UtilXml.addValueElement(pHandler, _XML_TAG_CARD, card.getName());
-    }
-    UtilXml.endElement(pHandler, XML_TAG);
-  }
-
-  public String toXml(boolean pIndent) {
-    return UtilXml.toXml(this, pIndent);
   }
 
   // ByteArray serialization

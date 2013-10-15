@@ -8,6 +8,7 @@ import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
 import com.balancedbytes.games.ffb.bytearray.IByteArraySerializable;
 import com.balancedbytes.games.ffb.json.IJsonOption;
+import com.balancedbytes.games.ffb.json.IJsonSerializable;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.Team;
 import com.balancedbytes.games.ffb.xml.IXmlReadable;
@@ -21,7 +22,7 @@ import com.eclipsesource.json.JsonValue;
  * 
  * @author Kalimar
  */
-public class TeamListEntry implements IXmlSerializable, IByteArraySerializable {
+public class TeamListEntry implements IXmlSerializable, IByteArraySerializable, IJsonSerializable {
     
 //  <teams coach="47257">
 //    <team>

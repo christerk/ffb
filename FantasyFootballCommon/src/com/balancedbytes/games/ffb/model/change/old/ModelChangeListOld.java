@@ -4,24 +4,18 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import javax.xml.transform.sax.TransformerHandler;
-
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
 import com.balancedbytes.games.ffb.bytearray.IByteArraySerializable;
 import com.balancedbytes.games.ffb.model.Game;
-import com.balancedbytes.games.ffb.xml.IXmlWriteable;
-import com.balancedbytes.games.ffb.xml.UtilXml;
 
 
 /**
  * 
  * @author Kalimar
  */
-public class ModelChangeListOld implements IByteArraySerializable, IXmlWriteable {
+public class ModelChangeListOld implements IByteArraySerializable {
   
-  public static final String XML_TAG = "modelChangeList";
-
   private List<IModelChange> fChanges;
   
   private ModelChangeListOld(int pInitialCapacity) {
@@ -84,24 +78,6 @@ public class ModelChangeListOld implements IByteArraySerializable, IXmlWriteable
       transformedList.add(change.transform());
     }
     return transformedList;
-  }
-  
-  // XML serialization
-
-  public void addToXml(TransformerHandler pHandler) {
-    UtilXml.startElement(pHandler, XML_TAG);
-    if (size() > 0) {
-      Iterator<IModelChange> changeIterator = fChanges.iterator();
-      while (changeIterator.hasNext()) {
-        IModelChange change = changeIterator.next();
-        change.addToXml(pHandler);
-      }
-    }
-    UtilXml.endElement(pHandler, XML_TAG);
-  }
-  
-  public String toXml(boolean pIndent) {
-    return UtilXml.toXml(this, pIndent);
   }
   
   // ByteArray serialization

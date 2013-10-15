@@ -25,6 +25,7 @@ import com.balancedbytes.games.ffb.WeatherFactory;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
 import com.balancedbytes.games.ffb.bytearray.IByteArraySerializable;
+import com.balancedbytes.games.ffb.json.IJsonSerializable;
 import com.balancedbytes.games.ffb.model.change.ModelChange;
 import com.balancedbytes.games.ffb.model.change.ModelChangeId;
 import com.balancedbytes.games.ffb.util.ArrayTool;
@@ -35,7 +36,7 @@ import com.balancedbytes.games.ffb.util.StringTool;
  * 
  * @author Kalimar
  */
-public class FieldModel implements IByteArraySerializable {
+public class FieldModel implements IByteArraySerializable, IJsonSerializable {
     
   private boolean fBallMoving;
   private boolean fBallInPlay;

@@ -6,12 +6,13 @@ import com.balancedbytes.games.ffb.FantasyFootballException;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
 import com.balancedbytes.games.ffb.bytearray.IByteArraySerializable;
+import com.balancedbytes.games.ffb.json.IJsonSerializable;
 
 /**
  * 
  * @author Kalimar
  */
-public abstract class NetCommand implements IByteArraySerializable {
+public abstract class NetCommand implements IByteArraySerializable, IJsonSerializable {
   
   private int fSize;
   private SocketChannel fSender;

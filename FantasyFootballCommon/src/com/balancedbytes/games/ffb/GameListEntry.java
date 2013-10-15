@@ -11,6 +11,7 @@ import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
 import com.balancedbytes.games.ffb.bytearray.IByteArraySerializable;
 import com.balancedbytes.games.ffb.json.IJsonOption;
+import com.balancedbytes.games.ffb.json.IJsonSerializable;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.xml.IXmlReadable;
@@ -24,7 +25,7 @@ import com.eclipsesource.json.JsonValue;
  * 
  * @author Kalimar
  */
-public class GameListEntry implements IXmlSerializable, IByteArraySerializable {
+public class GameListEntry implements IXmlSerializable, IByteArraySerializable, IJsonSerializable {
     
 //  <gameList>
 //    <game id="4765261" started="2009-05-05T11:50:20.345">

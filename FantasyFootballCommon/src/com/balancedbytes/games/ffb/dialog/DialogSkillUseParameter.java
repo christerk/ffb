@@ -1,9 +1,5 @@
 package com.balancedbytes.games.ffb.dialog;
 
-import javax.xml.transform.sax.TransformerHandler;
-
-import org.xml.sax.helpers.AttributesImpl;
-
 import com.balancedbytes.games.ffb.IDialogParameter;
 import com.balancedbytes.games.ffb.Skill;
 import com.balancedbytes.games.ffb.SkillFactory;
@@ -11,7 +7,6 @@ import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
-import com.balancedbytes.games.ffb.xml.UtilXml;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
@@ -20,10 +15,6 @@ import com.eclipsesource.json.JsonValue;
  * @author Kalimar
  */
 public class DialogSkillUseParameter implements IDialogParameter {
-  
-  private static final String _XML_ATTRIBUTE_PLAYER_ID = "playerId";
-  private static final String _XML_ATTRIBUTE_SKILL = "skill";
-  private static final String _XML_ATTRIBUTE_MINIMUM_ROLL = "minimumRoll";
   
   private String fPlayerId;
   private Skill fSkill;
@@ -59,21 +50,6 @@ public class DialogSkillUseParameter implements IDialogParameter {
   
   public IDialogParameter transform() {
     return new DialogSkillUseParameter(getPlayerId(), getSkill(), getMinimumRoll());
-  }
-  
-  // XML serialization
-  
-  public void addToXml(TransformerHandler pHandler) {
-    AttributesImpl attributes = new AttributesImpl();
-    UtilXml.addAttribute(attributes, XML_ATTRIBUTE_ID, getId().getName());
-    UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_PLAYER_ID, getPlayerId());
-    UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_SKILL, (getSkill() != null) ? getSkill().getName() : null);
-    UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_MINIMUM_ROLL, getMinimumRoll());
-    UtilXml.addEmptyElement(pHandler, XML_TAG, attributes);
-  }
-
-  public String toXml(boolean pIndent) {
-    return UtilXml.toXml(this, pIndent);
   }
   
   // ByteArray serialization

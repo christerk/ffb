@@ -1,15 +1,10 @@
 package com.balancedbytes.games.ffb.dialog;
 
-import javax.xml.transform.sax.TransformerHandler;
-
-import org.xml.sax.helpers.AttributesImpl;
-
 import com.balancedbytes.games.ffb.IDialogParameter;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
-import com.balancedbytes.games.ffb.xml.UtilXml;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
@@ -18,11 +13,6 @@ import com.eclipsesource.json.JsonValue;
  * @author Kalimar
  */
 public class DialogPettyCashParameter implements IDialogParameter {
-  
-  private static final String _XML_ATTRIBUTE_TEAM_ID = "teamId";
-  private static final String _XML_TAG_TREASURY = "treasury";
-  private static final String _XML_TAG_TEAM_VALUE = "teamValue";
-  private static final String _XML_TAG_OPPONENT_TEAM_VALUE = "opponentTeamValue";
   
   private String fTeamId;
   private int fTreasury;
@@ -67,23 +57,6 @@ public class DialogPettyCashParameter implements IDialogParameter {
     return new DialogPettyCashParameter(getTeamId(), getTeamValue(), getTreasury(), getOpponentTeamValue());
   }
   
-  // XML serialization
-  
-  public void addToXml(TransformerHandler pHandler) {
-    AttributesImpl attributes = new AttributesImpl();
-    UtilXml.addAttribute(attributes, XML_ATTRIBUTE_ID, getId().getName());
-    UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_TEAM_ID, getTeamId());
-    UtilXml.startElement(pHandler, XML_TAG, attributes);
-    UtilXml.addValueElement(pHandler, _XML_TAG_TEAM_VALUE, getTeamValue());
-    UtilXml.addValueElement(pHandler, _XML_TAG_TREASURY, getTreasury());
-    UtilXml.addValueElement(pHandler, _XML_TAG_OPPONENT_TEAM_VALUE, getOpponentTeamValue());
-    UtilXml.endElement(pHandler, XML_TAG);
-  }
-
-  public String toXml(boolean pIndent) {
-    return UtilXml.toXml(this, pIndent);
-  }
-
   // ByteArray serialization
   
   public int getByteArraySerializationVersion() {

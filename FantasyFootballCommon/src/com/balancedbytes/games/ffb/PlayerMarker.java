@@ -1,18 +1,11 @@
 package com.balancedbytes.games.ffb;
 
-import javax.xml.transform.sax.TransformerHandler;
-
-import org.xml.sax.Attributes;
-import org.xml.sax.helpers.AttributesImpl;
-
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
 import com.balancedbytes.games.ffb.bytearray.IByteArraySerializable;
 import com.balancedbytes.games.ffb.json.IJsonOption;
+import com.balancedbytes.games.ffb.json.IJsonSerializable;
 import com.balancedbytes.games.ffb.json.UtilJson;
-import com.balancedbytes.games.ffb.xml.IXmlReadable;
-import com.balancedbytes.games.ffb.xml.IXmlSerializable;
-import com.balancedbytes.games.ffb.xml.UtilXml;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
@@ -23,14 +16,8 @@ import com.eclipsesource.json.JsonValue;
  * 
  * @author Kalimar
  */
-public class PlayerMarker implements IXmlSerializable, IByteArraySerializable {
+public class PlayerMarker implements IByteArraySerializable, IJsonSerializable {
   
-  public static final String XML_TAG = "playerMarker";
-  
-  private static final String _XML_ATTRIBUTE_PLAYER_ID = "playerId";
-  private static final String _XML_ATTRIBUTE_HOME_TEXT = "homeText";
-  private static final String _XML_ATTRIBUTE_AWAY_TEXT = "awayText";  
-
   private String fPlayerId;
   private String fHomeText;
   private String fAwayText;
@@ -83,36 +70,7 @@ public class PlayerMarker implements IXmlSerializable, IByteArraySerializable {
   public static PlayerMarker transform(PlayerMarker pFieldMarker) {
     return (pFieldMarker != null) ? pFieldMarker.transform() : null;
   }
-   
-  // XML serialization
-  
-  public void addToXml(TransformerHandler pHandler) {
-  	AttributesImpl attributes = new AttributesImpl();
-  	UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_PLAYER_ID, getPlayerId());
-  	UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_HOME_TEXT, getHomeText());
-  	UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_AWAY_TEXT, getAwayText());
-  	UtilXml.startElement(pHandler, XML_TAG, attributes);
-  	UtilXml.endElement(pHandler, XML_TAG);
-  }
-  
-  public String toXml(boolean pIndent) {
-    return UtilXml.toXml(this, pIndent);
-  }
-
-  public IXmlReadable startXmlElement(String pXmlTag, Attributes pXmlAttributes) {
-    IXmlReadable xmlElement = this;
-    if (XML_TAG.equals(pXmlTag)) {
-      fPlayerId = UtilXml.getStringAttribute(pXmlAttributes, _XML_ATTRIBUTE_PLAYER_ID);
-      fHomeText = UtilXml.getStringAttribute(pXmlAttributes, _XML_ATTRIBUTE_HOME_TEXT);
-      fAwayText = UtilXml.getStringAttribute(pXmlAttributes, _XML_ATTRIBUTE_AWAY_TEXT);
-    }
-    return xmlElement;
-  }
-  
-  public boolean endXmlElement(String pXmlTag, String pValue) {
-    return XML_TAG.equals(pXmlTag);
-  }
-  
+    
   // ByteArray serialization
   
   public int getByteArraySerializationVersion() {
