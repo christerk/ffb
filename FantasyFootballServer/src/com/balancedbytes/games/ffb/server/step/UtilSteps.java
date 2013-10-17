@@ -25,6 +25,15 @@ import com.balancedbytes.games.ffb.util.UtilBlock;
  * @author Kalimar
  */
 public class UtilSteps {
+  
+  public static void validateStepId(IStep pStep, StepId pReceivedId) {
+    if (pStep == null) {
+      throw new IllegalArgumentException("Parameter step must not be null.");
+    }
+    if (pStep.getId() != pReceivedId) {
+      throw new IllegalStateException("Wrong step id. Expected " + pStep.getId().getName() + " received " + ((pReceivedId != null) ? pReceivedId.getName() : "null"));
+    }
+  }
 		
 	public static boolean checkCommandIsFromCurrentPlayer(GameState pGameState, NetCommand pNetCommand) {
     Game game = pGameState.getGame();

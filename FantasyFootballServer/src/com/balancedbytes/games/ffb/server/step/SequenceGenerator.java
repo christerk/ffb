@@ -45,7 +45,7 @@ public class SequenceGenerator {
 	}
 
 	private void add(List<IStep> pSequence, StepId pStepId, GameState pGameState, String pLabel, StepParameterSet pParameterSet) {
-		pSequence.add(StepFactory.getInstance().create(pStepId, pGameState, pLabel, pParameterSet));
+		pSequence.add(new StepFactory(pGameState).create(pStepId, pLabel, pParameterSet));
 	}
 
 	public void pushBlockSequence(GameState pGameState) {

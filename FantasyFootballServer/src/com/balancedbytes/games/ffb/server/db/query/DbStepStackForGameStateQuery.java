@@ -17,6 +17,7 @@ import com.balancedbytes.games.ffb.server.db.IDbTableStepStack;
 import com.balancedbytes.games.ffb.server.step.IStep;
 import com.balancedbytes.games.ffb.server.step.StepFactory;
 import com.balancedbytes.games.ffb.server.step.StepId;
+import com.balancedbytes.games.ffb.server.step.StepIdFactory;
 import com.balancedbytes.games.ffb.util.ArrayTool;
 
 /**
@@ -107,8 +108,8 @@ public class DbStepStackForGameStateQuery extends DbStatement {
   
   private IStep fromBytes(GameState pGameState, byte[] pStepBytes) {
   	ByteArray byteArray = new ByteArray(pStepBytes);
-		StepId stepId = StepId.fromId(byteArray.getSmallInt(0));
-		IStep step = StepFactory.getInstance().create(stepId, pGameState, null, null);
+		StepId stepId = new StepIdFactory().forId(byteArray.getSmallInt(0));
+		IStep step = new StepFactory(pGameState).forStepId(stepId);
 		step.initFrom(byteArray);
 		return step;
   }

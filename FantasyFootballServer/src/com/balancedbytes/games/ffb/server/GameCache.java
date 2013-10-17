@@ -97,8 +97,6 @@ public class GameCache {
   
   public void add(GameState pGameState, GameCacheMode pMode) {
     if (pGameState != null) {
-      Game game = pGameState.getGame();
-      game.setTrackingChanges(true);
       if (GameStatus.PAUSED == pGameState.getStatus()) {
         pGameState.setStatus(GameStatus.ACTIVE);
       }

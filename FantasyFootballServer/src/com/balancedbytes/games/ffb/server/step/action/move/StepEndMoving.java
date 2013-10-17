@@ -165,7 +165,7 @@ public class StepEndMoving extends AbstractStep {
 		ActingPlayer actingPlayer = game.getActingPlayer();
 		UtilSteps.changePlayerAction(this, actingPlayer.getPlayerId(), pPlayerAction, actingPlayer.isLeaping());
 		if (pushSequenceForPlayerAction(pPlayerAction)) {
-	    getResult().setNextAction(StepAction.NEXT_STEP_AND_REPEAT_COMMAND);
+	    getResult().setNextAction(StepAction.NEXT_STEP_AND_REPEAT);
 		}
     return StepCommandStatus.SKIP_STEP;
 	}

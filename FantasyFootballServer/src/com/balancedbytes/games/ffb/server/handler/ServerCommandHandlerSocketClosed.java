@@ -66,7 +66,7 @@ public class ServerCommandHandlerSocketClosed extends ServerCommandHandler {
         gameState.setStatus(GameStatus.PAUSED);
         gameCache.queueDbUpdate(gameState);
         removeFumbblGame(gameState);
-        gameState.getGame().fetchChanges();  // remove all changes from queue
+        gameState.fetchChanges();  // remove all changes from queue
       }
 
     	if (ArrayTool.isProvided(receivers)) {

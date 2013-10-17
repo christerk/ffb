@@ -7,7 +7,12 @@ import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
 import com.balancedbytes.games.ffb.bytearray.IByteArraySerializable;
 import com.balancedbytes.games.ffb.json.IJsonSerializable;
+import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.server.GameState;
+import com.balancedbytes.games.ffb.server.IServerJsonOption;
+import com.eclipsesource.json.JsonArray;
+import com.eclipsesource.json.JsonObject;
+import com.eclipsesource.json.JsonValue;
 
 /**
  * 
@@ -94,10 +99,36 @@ public class StepStack implements IByteArraySerializable, IJsonSerializable {
   }
   
   private IStep initStepFrom(ByteArray pByteArray) {
-		StepId stepId = StepId.fromId(pByteArray.getSmallInt(0));
-		IStep step = StepFactory.getInstance().create(stepId, getGameState(), null, null);
+		StepId stepId = new StepIdFactory().forId(pByteArray.getSmallInt(0));
+		IStep step = new StepFactory(getGameState()).forStepId(stepId);
 		step.initFrom(pByteArray);
 		return step;
+  }
+  
+  // JSON serialization
+  
+  public JsonObject toJsonValue() {
+    JsonObject jsonObject = new JsonObject();
+    JsonArray stepArray = new JsonArray();
+    for (IStep step : fStack) {
+      stepArray.add(step.toJsonValue());
+    }
+    IServerJsonOption.STEPS.addTo(jsonObject, stepArray);
+    return jsonObject;
+  }
+  
+  public StepStack initFrom(JsonValue pJsonValue) {
+    StepFactory stepFactory = new StepFactory(getGameState());
+    JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
+    JsonArray stepArray = IServerJsonOption.STEPS.getFrom(jsonObject);
+    fStack.clear();
+    if (stepArray != null) {
+      for (int i = 0; i < stepArray.size(); i++) {
+        IStep step = stepFactory.forJsonValue(pJsonValue);
+        fStack.add(step);
+      }
+    }
+    return this;
   }
 	
 }

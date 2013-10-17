@@ -65,7 +65,7 @@ public class Game extends ModelChangeObservable implements IByteArraySerializabl
 
   public Game() {
     
-  	fFieldModel = new FieldModel(this);
+  	setFieldModel(new FieldModel(this));
     
     fTurnDataHome = new TurnData(this, true);
     fTurnDataAway = new TurnData(this, false);
@@ -145,6 +145,10 @@ public class Game extends ModelChangeObservable implements IByteArraySerializabl
 
   public FieldModel getFieldModel() {
     return fFieldModel;
+  }
+  
+  public void setFieldModel(FieldModel pFieldModel) {
+    fFieldModel = pFieldModel;
   }
   
   public boolean isHomePlaying() {

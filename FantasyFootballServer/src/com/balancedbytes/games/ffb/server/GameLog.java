@@ -6,9 +6,14 @@ import java.util.List;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
 import com.balancedbytes.games.ffb.bytearray.IByteArraySerializable;
+import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.IJsonSerializable;
+import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.net.NetCommandFactory;
 import com.balancedbytes.games.ffb.net.commands.ServerCommand;
+import com.eclipsesource.json.JsonArray;
+import com.eclipsesource.json.JsonObject;
+import com.eclipsesource.json.JsonValue;
 
 /**
  * 
@@ -124,6 +129,30 @@ public class GameLog implements IByteArraySerializable, IJsonSerializable {
       commandBytes[j] = pByteArray.getByte();
     }
     return (ServerCommand) new NetCommandFactory().fromBytes(commandBytes);
+  }
+  
+  // JSON serialization
+  
+  public JsonObject toJsonValue() {
+    JsonObject jsonObject = new JsonObject();
+    JsonArray commandArray = new JsonArray();
+    for (ServerCommand serverCommand : getServerCommands()) {
+      commandArray.add(serverCommand.toJsonValue());
+    }
+    IJsonOption.COMMANDS.addTo(jsonObject, commandArray);
+    return jsonObject;
+  }
+  
+  public GameLog initFrom(JsonValue pJsonValue) {
+    NetCommandFactory netCommandFactory = new NetCommandFactory();
+    JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
+    JsonArray commandArray = IJsonOption.COMMANDS.getFrom(jsonObject);
+    fServerCommands.clear();
+    for (int i = 0; i < commandArray.size(); i++) {
+      ServerCommand serverCommand = (ServerCommand) netCommandFactory.forJsonValue(pJsonValue);
+      add(serverCommand);
+    }
+    return this;
   }
   
 }

@@ -80,6 +80,7 @@ public interface IJsonOption {
                JsonBooleanOption COIN_CHOICE_HEADS = new JsonBooleanOption("coinChoiceHeads");
                JsonBooleanOption COIN_THROW_HEADS = new JsonBooleanOption("coinThrowHeads");
                    JsonIntOption COMMAND_NR = new JsonIntOption("commandNr");
+                 JsonArrayOption COMMANDS = new JsonArrayOption("commands");
                    JsonIntOption COMPLETIONS = new JsonIntOption("completions");
           JsonEnumWithNameOption CONCEDE_GAME_STATUS = new JsonEnumWithNameOption("concedeGameStatus", new ConcedeGameStatusFactory());
                JsonBooleanOption CONCEDED = new JsonBooleanOption("conceded");
@@ -220,7 +221,6 @@ public interface IJsonOption {
                    JsonIntOption RAISED_DEAD = new JsonIntOption("raisedDead");
                JsonBooleanOption RECEIVE_CHOICE = new JsonBooleanOption("receiveChoice");
                JsonBooleanOption RECOVERING = new JsonBooleanOption("recovering");
-                 JsonArrayOption REPLAY_COMMANDS = new JsonArrayOption("replayCommands");
                    JsonIntOption REPLAY_TO_COMMAND_NR = new JsonIntOption("replayToCommandNr");
           JsonEnumWithNameOption REPORT_ID = new JsonEnumWithNameOption("reportId", new ReportIdFactory());
                 JsonObjectOption REPORT_LIST = new JsonObjectOption("reportList");

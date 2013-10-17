@@ -143,7 +143,7 @@ public class StepGoForIt extends AbstractStepWithReRoll {
     boolean successful = DiceInterpreter.getInstance().isSkillRollSuccessful(roll, minimumRoll);
     GoForItModifier[] goForItModifierArray = GoForItModifier.toArray(goForItModifiers);
     boolean reRolled = ((getReRolledAction() == ReRolledAction.GO_FOR_IT) && (getReRollSource() != null));
-    getResult().addReport(new ReportSkillRoll(ReportId.GO_FOR_IT_ROLL, actingPlayer.getPlayerId(), successful, roll, minimumRoll, goForItModifierArray, reRolled));
+    getResult().addReport(new ReportSkillRoll(ReportId.GO_FOR_IT_ROLL, actingPlayer.getPlayerId(), successful, roll, minimumRoll, reRolled, goForItModifierArray));
     if (successful) {
       return ActionStatus.SUCCESS;
     } else {

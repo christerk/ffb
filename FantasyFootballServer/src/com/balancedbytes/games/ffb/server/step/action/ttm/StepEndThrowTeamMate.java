@@ -90,7 +90,7 @@ public final class StepEndThrowTeamMate extends AbstractStep {
 			switch (pNetCommand.getId()) {
 				case CLIENT_ACTING_PLAYER:
 					SequenceGenerator.getInstance().pushSelectSequence(getGameState(), false);
-					getResult().setNextAction(StepAction.NEXT_STEP_AND_REPEAT_COMMAND);
+					getResult().setNextAction(StepAction.NEXT_STEP_AND_REPEAT);
 					commandStatus = StepCommandStatus.SKIP_STEP;
 					break;
 				default:

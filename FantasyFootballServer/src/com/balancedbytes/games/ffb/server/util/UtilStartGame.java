@@ -103,7 +103,7 @@ public class UtilStartGame {
     		}
     	}
 	    server.getCommunication().sendGameState(pGameState);
-	    pGameState.getGame().fetchChanges();  // clear changes after sending the whole model
+	    pGameState.fetchChanges();  // clear changes after sending the whole model
 	    return true;
     } else {
     	return false;

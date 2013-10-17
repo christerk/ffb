@@ -17,6 +17,7 @@ import com.balancedbytes.games.ffb.server.step.IStep;
 import com.balancedbytes.games.ffb.server.step.StepException;
 import com.balancedbytes.games.ffb.server.step.StepFactory;
 import com.balancedbytes.games.ffb.server.step.StepId;
+import com.balancedbytes.games.ffb.server.step.StepIdFactory;
 import com.balancedbytes.games.ffb.server.step.StepResult;
 import com.balancedbytes.games.ffb.server.step.StepStack;
 import com.balancedbytes.games.ffb.server.util.UtilGame;
@@ -56,7 +57,7 @@ public class GameState implements IModelChangeObserver, IByteArraySerializable, 
 		fSpectatorCooldownTime = new HashMap<String, Long>();
 		initCommandNrGenerator(0);
 		fStepStack = new StepStack(this);
-		setChangeList(new ModelChangeList());
+		fChangeList = new ModelChangeList();
 		setGame(new Game());
     getGame().addObserver(this);
 	}
@@ -81,17 +82,15 @@ public class GameState implements IModelChangeObserver, IByteArraySerializable, 
 	public long getId() {
 		return getGame().getId();
 	}
-	
-	public ModelChangeList getChangeList() {
-	  return fChangeList;
-  }
-	
-	public void setChangeList(ModelChangeList pChangeList) {
-	  fChangeList = pChangeList;
+
+	public ModelChangeList fetchChanges() {
+	  ModelChangeList changeList = fChangeList;
+	  fChangeList = new ModelChangeList();
+    return changeList;
   }
 	
 	public void update(ModelChange pChange) {
-	  getChangeList().add(pChange);
+	  fChangeList.add(pChange);
 	}
 
 	public DiceRoller getDiceRoller() {
@@ -189,13 +188,13 @@ public class GameState implements IModelChangeObserver, IByteArraySerializable, 
 				case NEXT_STEP:
 					handleStepResultNextStep(null);
 					break;
-				case NEXT_STEP_AND_REPEAT_COMMAND:
+				case NEXT_STEP_AND_REPEAT:
 					handleStepResultNextStep(pNetCommand);
 					break;
 				case GOTO_LABEL:
 					handleStepResultGotoLabel((String) stepResult.getNextActionParameter(), null);
 					break;
-				case GOTO_LABEL_AND_REPEAT_COMMAND:
+				case GOTO_LABEL_AND_REPEAT:
 					handleStepResultGotoLabel((String) stepResult.getNextActionParameter(), pNetCommand);
 					break;
 				default:
@@ -280,8 +279,8 @@ public class GameState implements IModelChangeObserver, IByteArraySerializable, 
   }
   
   private IStep initStepFrom(ByteArray pByteArray) {
-		StepId stepId = StepId.fromId(pByteArray.getSmallInt(pByteArray.getPosition()));
-		IStep step = StepFactory.getInstance().create(stepId, this, null, null);
+		StepId stepId = new StepIdFactory().forId(pByteArray.getSmallInt(pByteArray.getPosition()));
+		IStep step = new StepFactory(this).forStepId(stepId);
 		step.initFrom(pByteArray);
 		return step;
   }

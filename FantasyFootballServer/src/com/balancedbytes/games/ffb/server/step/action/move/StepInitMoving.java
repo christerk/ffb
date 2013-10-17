@@ -258,7 +258,7 @@ public class StepInitMoving extends AbstractStep {
   
   private StepCommandStatus dispatchPlayerAction(PlayerAction pPlayerAction) {
   	publishParameter(new StepParameter(StepParameterKey.DISPATCH_PLAYER_ACTION, pPlayerAction));
-  	getResult().setNextAction(StepAction.GOTO_LABEL_AND_REPEAT_COMMAND, fGotoLabelOnEnd);
+  	getResult().setNextAction(StepAction.GOTO_LABEL_AND_REPEAT, fGotoLabelOnEnd);
   	return StepCommandStatus.SKIP_STEP;
   }
   

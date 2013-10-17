@@ -1,6 +1,8 @@
 package com.balancedbytes.games.ffb.server.step;
 
+import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.server.GameState;
+import com.balancedbytes.games.ffb.server.IServerJsonOption;
 import com.balancedbytes.games.ffb.server.step.action.block.StepBlockBallAndChain;
 import com.balancedbytes.games.ffb.server.step.action.block.StepBlockChainsaw;
 import com.balancedbytes.games.ffb.server.step.action.block.StepBlockChoice;
@@ -107,6 +109,8 @@ import com.balancedbytes.games.ffb.server.step.phase.kickoff.StepTouchback;
 import com.balancedbytes.games.ffb.server.step.phase.special.StepEndBomb;
 import com.balancedbytes.games.ffb.server.step.phase.special.StepInitBomb;
 import com.balancedbytes.games.ffb.server.step.phase.special.StepSpecialEffect;
+import com.eclipsesource.json.JsonObject;
+import com.eclipsesource.json.JsonValue;
 
 /**
  * Generator class for steps.
@@ -114,21 +118,18 @@ import com.balancedbytes.games.ffb.server.step.phase.special.StepSpecialEffect;
  * @author Kalimar
  */
 public class StepFactory {
-	
-	private static StepFactory _INSTANCE = new StepFactory();
-	
-	/**
-	 * @return the only instance of this class.
-	 */
-	public static StepFactory getInstance() {
-		return _INSTANCE;
-	}
-	
-	private StepFactory() {
-		super();
-	}
-	
-	public IStep create(StepId pStepId, GameState pGameState, String pLabel, StepParameterSet pParameterSet) {
+  
+  private GameState fGameState;
+  
+  public StepFactory(GameState pGameState) {
+    fGameState = pGameState;
+  }
+
+  public IStep forStepId(StepId pStepId) {
+    return create(pStepId, null, null);
+  }
+
+	public IStep create(StepId pStepId, String pLabel, StepParameterSet pParameterSet) {
 		
 		IStep step = null;
 
@@ -136,328 +137,328 @@ public class StepFactory {
 			switch (pStepId) {
 			
 				case ALWAYS_HUNGRY:
-					step = new StepAlwaysHungry(pGameState);
+					step = new StepAlwaysHungry(fGameState);
 					break;
 				case ANIMOSITY:
-					step = new StepAnimosity(pGameState);
+					step = new StepAnimosity(fGameState);
 					break;
 				case APOTHECARY:
-					step = new StepApothecary(pGameState);
+					step = new StepApothecary(fGameState);
 					break;
 				case APPLY_KICKOFF_RESULT:
-					step = new StepApplyKickoffResult(pGameState);
+					step = new StepApplyKickoffResult(fGameState);
 					break;
 				case BLITZ_TURN:
-					step = new StepBlitzTurn(pGameState);
+					step = new StepBlitzTurn(fGameState);
 					break;
 				case BLOCK_BALL_AND_CHAIN:
-					step = new StepBlockBallAndChain(pGameState);
+					step = new StepBlockBallAndChain(fGameState);
 					break;
 				case BLOCK_CHAINSAW:
-					step = new StepBlockChainsaw(pGameState);
+					step = new StepBlockChainsaw(fGameState);
 					break;
 				case BLOCK_CHOICE:
-					step = new StepBlockChoice(pGameState);
+					step = new StepBlockChoice(fGameState);
 					break;
 				case BLOCK_DODGE:
-					step = new StepBlockDodge(pGameState);
+					step = new StepBlockDodge(fGameState);
 					break;
 				case BLOCK_ROLL:
-					step = new StepBlockRoll(pGameState);
+					step = new StepBlockRoll(fGameState);
 					break;
 				case BLOCK_STATISTICS:
-					step = new StepBlockStatistics(pGameState);
+					step = new StepBlockStatistics(fGameState);
 					break;
 				case BLOOD_LUST:
-					step = new StepBloodLust(pGameState);
+					step = new StepBloodLust(fGameState);
 					break;
 				case BOMBARDIER:
-					step = new StepBombardier(pGameState);
+					step = new StepBombardier(fGameState);
 					break;
 				case BONE_HEAD:
-					step = new StepBoneHead(pGameState);
+					step = new StepBoneHead(fGameState);
 					break;
 				case BOTH_DOWN:
-					step =  new StepBothDown(pGameState);
+					step =  new StepBothDown(fGameState);
 					break;
 				case BRIBES:
-					step = new StepBribes(pGameState);
+					step = new StepBribes(fGameState);
 					break;
 				case BUY_CARDS:
-					step = new StepBuyCards(pGameState);
+					step = new StepBuyCards(fGameState);
 					break;
 				case BUY_INDUCEMENTS:
-					step = new StepBuyInducements(pGameState);
+					step = new StepBuyInducements(fGameState);
 					break;
 				case CATCH_SCATTER_THROW_IN:
-					step = new StepCatchScatterThrowIn(pGameState);
+					step = new StepCatchScatterThrowIn(fGameState);
 					break;
 				case COIN_CHOICE:
-					step = new StepCoinChoice(pGameState);
+					step = new StepCoinChoice(fGameState);
 					break;
 				case DAUNTLESS:
-					step = new StepDauntless(pGameState);
+					step = new StepDauntless(fGameState);
 					break;
 				case DISPATCH_PASSING:
-					step = new StepDispatchPassing(pGameState);
+					step = new StepDispatchPassing(fGameState);
 					break;
 				case DIVING_TACKLE:
-					step = new StepDivingTackle(pGameState);
+					step = new StepDivingTackle(fGameState);
 					break;
 				case DROP_DIVING_TACKLER:
-					step = new StepDropDivingTackler(pGameState);
+					step = new StepDropDivingTackler(fGameState);
 					break;
 				case DROP_FALLING_PLAYERS:
-					step = new StepDropFallingPlayers(pGameState);
+					step = new StepDropFallingPlayers(fGameState);
 					break;
 				case DUMP_OFF:
-					step = new StepDumpOff(pGameState);
+					step = new StepDumpOff(fGameState);
 					break;
 				case EAT_TEAM_MATE:
-					step = new StepEatTeamMate(pGameState);
+					step = new StepEatTeamMate(fGameState);
 					break;
 				case EJECT_PLAYER:
-					step = new StepEjectPlayer(pGameState);
+					step = new StepEjectPlayer(fGameState);
 					break;
 				case END_BLOCKING:
-					step = new StepEndBlocking(pGameState);
+					step = new StepEndBlocking(fGameState);
 					break;
 				case END_BOMB:
-					step = new StepEndBomb(pGameState);
+					step = new StepEndBomb(fGameState);
 					break;
 				case END_FEEDING:
-					step = new StepEndFeeding(pGameState);
+					step = new StepEndFeeding(fGameState);
 					break;
 				case END_FOULING:
-					step = new StepEndFouling(pGameState);
+					step = new StepEndFouling(fGameState);
 					break;
 				case END_GAME:
-					step = new StepEndGame(pGameState);
+					step = new StepEndGame(fGameState);
 					break;
 				case END_INDUCEMENT:
-					step = new StepEndInducement(pGameState);
+					step = new StepEndInducement(fGameState);
 					break;
 				case END_KICKOFF:
-					step = new StepEndKickoff(pGameState);
+					step = new StepEndKickoff(fGameState);
 					break;
 				case END_MOVING:
-					step = new StepEndMoving(pGameState);
+					step = new StepEndMoving(fGameState);
 					break;
 				case END_PASSING:
-					step = new StepEndPassing(pGameState);
+					step = new StepEndPassing(fGameState);
 					break;
 				case END_SCATTER_PLAYER:
-					step = new StepEndScatterPlayer(pGameState);
+					step = new StepEndScatterPlayer(fGameState);
 					break;
 				case END_SELECTING:
-					step = new StepEndSelecting(pGameState);
+					step = new StepEndSelecting(fGameState);
 					break;
 				case END_THROW_TEAM_MATE:
-					step = new StepEndThrowTeamMate(pGameState);
+					step = new StepEndThrowTeamMate(fGameState);
 					break;
 				case END_TURN:
-					step = new StepEndTurn(pGameState);
+					step = new StepEndTurn(fGameState);
 					break;
 				case FALL_DOWN:
-					step = new StepFallDown(pGameState);
+					step = new StepFallDown(fGameState);
 					break;
 				case FAN_FACTOR:
-					step = new StepFanFactor(pGameState);
+					step = new StepFanFactor(fGameState);
 					break;
 				case FOLLOWUP:
-					step = new StepFollowup(pGameState);
+					step = new StepFollowup(fGameState);
 					break;
 				case FOUL:
-					step = new StepFoul(pGameState);
+					step = new StepFoul(fGameState);
 					break;
 				case FOUL_APPEARANCE:
-					step = new StepFoulAppearance(pGameState);
+					step = new StepFoulAppearance(fGameState);
 					break;
 				case FOUL_CHAINSAW:
-					step = new StepFoulChainsaw(pGameState);
+					step = new StepFoulChainsaw(fGameState);
 					break;
 				case FUMBLE_TTM_PASS:
-					step = new StepFumbleTtmPass(pGameState);
+					step = new StepFumbleTtmPass(fGameState);
 					break;
 				case GO_FOR_IT:
-					step = new StepGoForIt(pGameState);
+					step = new StepGoForIt(fGameState);
 					break;
 				case GOTO_LABEL:
-					step = new StepGotoLabel(pGameState);
+					step = new StepGotoLabel(fGameState);
 					break;
 				case HAIL_MARY_PASS:
-					step = new StepHailMaryPass(pGameState);
+					step = new StepHailMaryPass(fGameState);
 					break;
 				case HAND_OVER:
-					step = new StepHandOver(pGameState);
+					step = new StepHandOver(fGameState);
 					break;
 				case HORNS:
-					step = new StepHorns(pGameState);
+					step = new StepHorns(fGameState);
 					break;
 				case HYPNOTIC_GAZE:
-					step = new StepHypnoticGaze(pGameState);
+					step = new StepHypnoticGaze(fGameState);
 					break;
 				case INIT_BLOCKING:
-					step = new StepInitBlocking(pGameState);
+					step = new StepInitBlocking(fGameState);
 					break;
 				case INIT_BOMB:
-					step = new StepInitBomb(pGameState);
+					step = new StepInitBomb(fGameState);
 					break;
 				case INIT_CARD:
-					step = new StepInitCard(pGameState);
+					step = new StepInitCard(fGameState);
 					break;
 				case INIT_END_GAME:
-					step = new StepInitEndGame(pGameState);
+					step = new StepInitEndGame(fGameState);
 					break;
 				case INIT_FEEDING:
-					step = new StepInitFeeding(pGameState);
+					step = new StepInitFeeding(fGameState);
 					break;
 				case INIT_FOULING:
-					step = new StepInitFouling(pGameState);
+					step = new StepInitFouling(fGameState);
 					break;
 				case INIT_INDUCEMENT:
-					step = new StepInitInducement(pGameState);
+					step = new StepInitInducement(fGameState);
 					break;
 				case INIT_KICKOFF:
-					step = new StepInitKickoff(pGameState);
+					step = new StepInitKickoff(fGameState);
 					break;
 				case INIT_MOVING:
-					step = new StepInitMoving(pGameState);
+					step = new StepInitMoving(fGameState);
 					break;
 				case INIT_PASSING:
-					step = new StepInitPassing(pGameState);
+					step = new StepInitPassing(fGameState);
 					break;
 				case INIT_SCATTER_PLAYER:
-					step = new StepInitScatterPlayer(pGameState);
+					step = new StepInitScatterPlayer(fGameState);
 					break;
 				case INIT_SELECTING:
-					step = new StepInitSelecting(pGameState);
+					step = new StepInitSelecting(fGameState);
 					break;
 				case INIT_START_GAME:
-					step = new StepInitStartGame(pGameState);
+					step = new StepInitStartGame(fGameState);
 					break;
 				case INIT_THROW_TEAM_MATE:
-					step = new StepInitThrowTeamMate(pGameState);
+					step = new StepInitThrowTeamMate(fGameState);
 					break;
 				case INTERCEPT:
-					step = new StepIntercept(pGameState);
+					step = new StepIntercept(fGameState);
 					break;
 				case JUGGERNAUT:
-					step = new StepJuggernaut(pGameState);
+					step = new StepJuggernaut(fGameState);
 					break;
 				case JUMP_UP:
-					step = new StepJumpUp(pGameState);
+					step = new StepJumpUp(fGameState);
 					break;
 				case KICKOFF_ANIMATION:
-					step = new StepKickoffAnimation(pGameState);
+					step = new StepKickoffAnimation(fGameState);
 					break;
 				case KICKOFF_RESULT_ROLL:
-					step = new StepKickoffResultRoll(pGameState);
+					step = new StepKickoffResultRoll(fGameState);
 					break;
 				case KICKOFF_RETURN:
-					step = new StepKickoffReturn(pGameState);
+					step = new StepKickoffReturn(fGameState);
 					break;
 				case KICKOFF_SCATTER_ROLL:
-					step = new StepKickoffScatterRoll(pGameState);
+					step = new StepKickoffScatterRoll(fGameState);
 					break;
 				case LEAP:
-					step = new StepLeap(pGameState);
+					step = new StepLeap(fGameState);
 					break;
 				case MISSED_PASS:
-					step = new StepMissedPass(pGameState);
+					step = new StepMissedPass(fGameState);
 					break;
 				case MOVE:
-					step = new StepMove(pGameState);
+					step = new StepMove(fGameState);
 					break;
 				case MOVE_BALL_AND_CHAIN:
-					step = new StepMoveBallAndChain(pGameState);
+					step = new StepMoveBallAndChain(fGameState);
 					break;
 				case MOVE_DODGE:
-					step = new StepMoveDodge(pGameState);
+					step = new StepMoveDodge(fGameState);
 					break;
 				case MVP:
-					step = new StepMvp(pGameState);
+					step = new StepMvp(fGameState);
 					break;
 				case NEXT_STEP:
-					step = new StepNextStep(pGameState);
+					step = new StepNextStep(fGameState);
 					break;
 				case PASS:
-					step = new StepPass(pGameState);
+					step = new StepPass(fGameState);
 					break;
 				case PASS_BLOCK:
-					step = new StepPassBlock(pGameState);
+					step = new StepPassBlock(fGameState);
 					break;
 				case PENALTY_SHOOTOUT:
-					step = new StepPenaltyShootout(pGameState);
+					step = new StepPenaltyShootout(fGameState);
 					break;
 				case PETTY_CASH:
-					step = new StepPettyCash(pGameState);
+					step = new StepPettyCash(fGameState);
 					break;
 				case PICK_UP:
-					step = new StepPickUp(pGameState);
+					step = new StepPickUp(fGameState);
 					break;
 				case PLAYER_LOSS:
-					step = new StepPlayerLoss(pGameState);
+					step = new StepPlayerLoss(fGameState);
 					break;
 				case PUSHBACK:
-					step = new StepPushback(pGameState);
+					step = new StepPushback(fGameState);
 					break;
 				case REALLY_STUPID:
-					step = new StepReallyStupid(pGameState);
+					step = new StepReallyStupid(fGameState);
 					break;
 				case RECEIVE_CHOICE:
-					step = new StepReceiveChoice(pGameState);
+					step = new StepReceiveChoice(fGameState);
 					break;
 				case REFEREE:
-					step = new StepReferee(pGameState);
+					step = new StepReferee(fGameState);
 					break;
 				case RIGHT_STUFF:
-					step = new StepRightStuff(pGameState);
+					step = new StepRightStuff(fGameState);
 					break;
 				case SAFE_THROW:
-					step = new StepSafeThrow(pGameState);
+					step = new StepSafeThrow(fGameState);
 					break;
 				case SHADOWING:
-					step = new StepShadowing(pGameState);
+					step = new StepShadowing(fGameState);
 					break;
 				case SPECTATORS:
-					step = new StepSpectators(pGameState);
+					step = new StepSpectators(fGameState);
 					break;
 				case SPECIAL_EFFECT:
-					step = new StepSpecialEffect(pGameState);
+					step = new StepSpecialEffect(fGameState);
 					break;
 				case STAB:
-					step = new StepStab(pGameState);
+					step = new StepStab(fGameState);
 					break;
 				case STAND_UP:
-					step = new StepStandUp(pGameState);
+					step = new StepStandUp(fGameState);
 					break;
 				case TAKE_ROOT:
-					step = new StepTakeRoot(pGameState);
+					step = new StepTakeRoot(fGameState);
 					break;
 				case TENTACLES:
-					step = new StepTentacles(pGameState);
+					step = new StepTentacles(fGameState);
 					break;
 				case THROW_TEAM_MATE:
-					step = new StepThrowTeamMate(pGameState);
+					step = new StepThrowTeamMate(fGameState);
 					break;
 				case TOUCHBACK:
-					step = new StepTouchback(pGameState);
+					step = new StepTouchback(fGameState);
 					break;
 				case WEATHER:
-					step = new StepWeather(pGameState);
+					step = new StepWeather(fGameState);
 					break;
 				case WILD_ANIMAL:
-					step = new StepWildAnimal(pGameState);
+					step = new StepWildAnimal(fGameState);
 					break;
 				case WINNINGS:
-					step = new StepWinnings(pGameState);
+					step = new StepWinnings(fGameState);
 					break;
 				case WIZARD:
-					step = new StepWizard(pGameState);
+					step = new StepWizard(fGameState);
 					break;
 				case WRESTLE:
-					step = new StepWrestle(pGameState);
+					step = new StepWrestle(fGameState);
 					break;
 				default:
 					throw new StepException("Unhandled StepId " + pStepId);
@@ -476,5 +477,23 @@ public class StepFactory {
 		return step;
 		
 	}
+	
+  // JSON serialization
+  
+  public IStep forJsonValue(JsonValue pJsonValue) {
+    if ((pJsonValue == null) || pJsonValue.isNull()) {
+      return null;
+    }
+    IStep step = null;
+    JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
+    StepId stepId = (StepId) IServerJsonOption.STEP_ID.getFrom(jsonObject);
+    if (stepId != null) {
+      step = forStepId(stepId);
+      if (step != null) {
+        step.initFrom(pJsonValue);
+      }
+    }
+    return step;
+  }
 
 }
