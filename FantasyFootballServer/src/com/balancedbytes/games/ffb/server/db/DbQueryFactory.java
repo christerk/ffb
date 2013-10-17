@@ -8,30 +8,29 @@ import java.util.Map;
 
 import com.balancedbytes.games.ffb.server.FantasyFootballServer;
 import com.balancedbytes.games.ffb.server.ServerMode;
-import com.balancedbytes.games.ffb.server.db.query.DbActingPlayersForGameStateQuery;
-import com.balancedbytes.games.ffb.server.db.query.DbAdminListByStatusQueryOld;
-import com.balancedbytes.games.ffb.server.db.query.DbDialogsForGameStateQuery;
-import com.balancedbytes.games.ffb.server.db.query.DbFieldModelsForGameStateQuery;
+import com.balancedbytes.games.ffb.server.db.old.DbActingPlayersForGameStateQuery;
+import com.balancedbytes.games.ffb.server.db.old.DbDialogsForGameStateQuery;
+import com.balancedbytes.games.ffb.server.db.old.DbFieldModelsForGameStateQuery;
+import com.balancedbytes.games.ffb.server.db.old.DbGameLogsForGameStateQuery;
+import com.balancedbytes.games.ffb.server.db.old.DbGameOptionsForGameStateQuery;
+import com.balancedbytes.games.ffb.server.db.old.DbGameStatesQuery;
+import com.balancedbytes.games.ffb.server.db.old.DbInducementsForGameStateQuery;
+import com.balancedbytes.games.ffb.server.db.old.DbPlayerIconsForGameStateQuery;
+import com.balancedbytes.games.ffb.server.db.old.DbPlayerInjuriesForGameStateQuery;
+import com.balancedbytes.games.ffb.server.db.old.DbPlayerResultsForGameStateQuery;
+import com.balancedbytes.games.ffb.server.db.old.DbPlayerSkillsForGameStateQuery;
+import com.balancedbytes.games.ffb.server.db.old.DbPlayersForGameStateQuery;
+import com.balancedbytes.games.ffb.server.db.old.DbStepStackForGameStateQuery;
+import com.balancedbytes.games.ffb.server.db.old.DbTeamResultsForGameStateQuery;
+import com.balancedbytes.games.ffb.server.db.old.DbTeamsForGameStateQuery;
+import com.balancedbytes.games.ffb.server.db.old.DbTurnDataForGameStateQuery;
+import com.balancedbytes.games.ffb.server.db.query.DbAdminListByStatusQuery;
 import com.balancedbytes.games.ffb.server.db.query.DbGameListQueryOpenGamesByCoach;
-import com.balancedbytes.games.ffb.server.db.query.DbGameListQueryOpenGamesByCoachOld;
-import com.balancedbytes.games.ffb.server.db.query.DbGameLogsForGameStateQuery;
-import com.balancedbytes.games.ffb.server.db.query.DbGameOptionsForGameStateQuery;
-import com.balancedbytes.games.ffb.server.db.query.DbGameStatesQuery;
 import com.balancedbytes.games.ffb.server.db.query.DbGamesSerializedQuery;
 import com.balancedbytes.games.ffb.server.db.query.DbGamesSerializedQueryMaxId;
-import com.balancedbytes.games.ffb.server.db.query.DbInducementsForGameStateQuery;
 import com.balancedbytes.games.ffb.server.db.query.DbPasswordForCoachQuery;
-import com.balancedbytes.games.ffb.server.db.query.DbPlayerIconsForGameStateQuery;
-import com.balancedbytes.games.ffb.server.db.query.DbPlayerInjuriesForGameStateQuery;
-import com.balancedbytes.games.ffb.server.db.query.DbPlayerResultsForGameStateQuery;
-import com.balancedbytes.games.ffb.server.db.query.DbPlayerSkillsForGameStateQuery;
-import com.balancedbytes.games.ffb.server.db.query.DbPlayersForGameStateQuery;
-import com.balancedbytes.games.ffb.server.db.query.DbStepStackForGameStateQuery;
-import com.balancedbytes.games.ffb.server.db.query.DbTeamResultsForGameStateQuery;
 import com.balancedbytes.games.ffb.server.db.query.DbTeamSetupsForTeamQuery;
 import com.balancedbytes.games.ffb.server.db.query.DbTeamSetupsQuery;
-import com.balancedbytes.games.ffb.server.db.query.DbTeamsForGameStateQuery;
-import com.balancedbytes.games.ffb.server.db.query.DbTurnDataForGameStateQuery;
 import com.balancedbytes.games.ffb.server.db.query.DbUserSettingsQuery;
 
 /**
@@ -52,11 +51,10 @@ public class DbQueryFactory implements IDbStatementFactory {
     fStatementById = new HashMap<DbStatementId, DbStatement>();
     
     register(new DbActingPlayersForGameStateQuery(pServer));
-    register(new DbAdminListByStatusQueryOld(pServer));  // TODO: adapt to new tables
+    register(new DbAdminListByStatusQuery(pServer));
     register(new DbDialogsForGameStateQuery(pServer));
     register(new DbFieldModelsForGameStateQuery(pServer));
     register(new DbGameListQueryOpenGamesByCoach(pServer));
-    register(new DbGameListQueryOpenGamesByCoachOld(pServer));
     register(new DbGameLogsForGameStateQuery(pServer));
     register(new DbGameOptionsForGameStateQuery(pServer));
     register(new DbGamesSerializedQuery(pServer));

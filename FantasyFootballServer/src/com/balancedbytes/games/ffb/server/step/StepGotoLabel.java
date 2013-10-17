@@ -2,8 +2,12 @@ package com.balancedbytes.games.ffb.server.step;
 
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
+import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.server.GameState;
+import com.balancedbytes.games.ffb.server.IServerJsonOption;
 import com.balancedbytes.games.ffb.util.StringTool;
+import com.eclipsesource.json.JsonObject;
+import com.eclipsesource.json.JsonValue;
 
 /**
  * Step in any sequence to jump to a given label.
@@ -48,6 +52,8 @@ public class StepGotoLabel extends AbstractStep {
 		getResult().setNextAction(StepAction.GOTO_LABEL, fGotoLabel);
 	}
 
+	// ByteArray serialization
+	
   public int getByteArraySerializationVersion() {
   	return 1;
   }
@@ -63,6 +69,21 @@ public class StepGotoLabel extends AbstractStep {
   	int byteArraySerializationVersion = super.initFrom(pByteArray);
   	fGotoLabel = pByteArray.getString();
   	return byteArraySerializationVersion;
+  }
+  
+  // JSON serialization
+  
+  public JsonObject toJsonValue() {
+    JsonObject jsonObject = super.toJsonValue();
+    IServerJsonOption.GOTO_LABEL.addTo(jsonObject, fGotoLabel);
+    return jsonObject;
+  }
+  
+  public StepGotoLabel initFrom(JsonValue pJsonValue) {
+    super.initFrom(pJsonValue);
+    JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
+    fGotoLabel = IServerJsonOption.GOTO_LABEL.getFrom(jsonObject);
+    return this;
   }
 
 }

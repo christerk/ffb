@@ -1,5 +1,6 @@
 package com.balancedbytes.games.ffb.server.db;
 
+import java.nio.charset.Charset;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -15,6 +16,8 @@ import com.balancedbytes.games.ffb.server.IServerProperty;
  * @author Kalimar
  */
 public class DbConnectionManager {
+  
+  public static final Charset CHARSET = Charset.forName("UTF-8");
   
   private FantasyFootballServer fServer;
   private Set<Connection> fConnections;

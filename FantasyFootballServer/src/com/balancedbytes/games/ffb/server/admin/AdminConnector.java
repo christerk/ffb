@@ -28,7 +28,7 @@ import com.balancedbytes.games.ffb.server.FantasyFootballServer;
 import com.balancedbytes.games.ffb.server.IServerProperty;
 import com.balancedbytes.games.ffb.server.ServerMode;
 import com.balancedbytes.games.ffb.server.db.DbStatementId;
-import com.balancedbytes.games.ffb.server.db.query.DbAdminListByStatusQueryOld;
+import com.balancedbytes.games.ffb.server.db.old.DbAdminListByStatusQueryOld;
 import com.balancedbytes.games.ffb.server.net.commands.InternalServerCommandCloseGame;
 import com.balancedbytes.games.ffb.server.net.commands.InternalServerCommandDeleteGame;
 import com.balancedbytes.games.ffb.server.net.commands.InternalServerCommandScheduleGame;

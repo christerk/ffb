@@ -1,6 +1,7 @@
 package com.balancedbytes.games.ffb.server.step;
 
 import com.balancedbytes.games.ffb.server.GameState;
+import com.eclipsesource.json.JsonValue;
 
 /**
  * Step in any sequence to goto next step.
@@ -22,9 +23,18 @@ public class StepNextStep extends AbstractStep {
 		super.start();
 		getResult().setNextAction(StepAction.NEXT_STEP);
 	}
+	
+	// ByteArray serialization
 
   public int getByteArraySerializationVersion() {
   	return 1;
+  }
+  
+  // JSON serialization
+  
+  public StepNextStep initFrom(JsonValue pJsonValue) {
+    super.initFrom(pJsonValue);
+    return this;
   }
   
 }

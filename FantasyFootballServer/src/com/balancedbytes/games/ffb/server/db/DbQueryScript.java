@@ -2,22 +2,22 @@ package com.balancedbytes.games.ffb.server.db;
 
 import com.balancedbytes.games.ffb.server.FantasyFootballServer;
 import com.balancedbytes.games.ffb.server.GameState;
-import com.balancedbytes.games.ffb.server.db.query.DbActingPlayersForGameStateQuery;
-import com.balancedbytes.games.ffb.server.db.query.DbDialogsForGameStateQuery;
-import com.balancedbytes.games.ffb.server.db.query.DbFieldModelsForGameStateQuery;
-import com.balancedbytes.games.ffb.server.db.query.DbGameLogsForGameStateQuery;
-import com.balancedbytes.games.ffb.server.db.query.DbGameOptionsForGameStateQuery;
-import com.balancedbytes.games.ffb.server.db.query.DbGameStatesQuery;
-import com.balancedbytes.games.ffb.server.db.query.DbInducementsForGameStateQuery;
-import com.balancedbytes.games.ffb.server.db.query.DbPlayerIconsForGameStateQuery;
-import com.balancedbytes.games.ffb.server.db.query.DbPlayerInjuriesForGameStateQuery;
-import com.balancedbytes.games.ffb.server.db.query.DbPlayerResultsForGameStateQuery;
-import com.balancedbytes.games.ffb.server.db.query.DbPlayerSkillsForGameStateQuery;
-import com.balancedbytes.games.ffb.server.db.query.DbPlayersForGameStateQuery;
-import com.balancedbytes.games.ffb.server.db.query.DbStepStackForGameStateQuery;
-import com.balancedbytes.games.ffb.server.db.query.DbTeamResultsForGameStateQuery;
-import com.balancedbytes.games.ffb.server.db.query.DbTeamsForGameStateQuery;
-import com.balancedbytes.games.ffb.server.db.query.DbTurnDataForGameStateQuery;
+import com.balancedbytes.games.ffb.server.db.old.DbActingPlayersForGameStateQuery;
+import com.balancedbytes.games.ffb.server.db.old.DbDialogsForGameStateQuery;
+import com.balancedbytes.games.ffb.server.db.old.DbFieldModelsForGameStateQuery;
+import com.balancedbytes.games.ffb.server.db.old.DbGameLogsForGameStateQuery;
+import com.balancedbytes.games.ffb.server.db.old.DbGameOptionsForGameStateQuery;
+import com.balancedbytes.games.ffb.server.db.old.DbGameStatesQuery;
+import com.balancedbytes.games.ffb.server.db.old.DbInducementsForGameStateQuery;
+import com.balancedbytes.games.ffb.server.db.old.DbPlayerIconsForGameStateQuery;
+import com.balancedbytes.games.ffb.server.db.old.DbPlayerInjuriesForGameStateQuery;
+import com.balancedbytes.games.ffb.server.db.old.DbPlayerResultsForGameStateQuery;
+import com.balancedbytes.games.ffb.server.db.old.DbPlayerSkillsForGameStateQuery;
+import com.balancedbytes.games.ffb.server.db.old.DbPlayersForGameStateQuery;
+import com.balancedbytes.games.ffb.server.db.old.DbStepStackForGameStateQuery;
+import com.balancedbytes.games.ffb.server.db.old.DbTeamResultsForGameStateQuery;
+import com.balancedbytes.games.ffb.server.db.old.DbTeamsForGameStateQuery;
+import com.balancedbytes.games.ffb.server.db.old.DbTurnDataForGameStateQuery;
 
 /**
  * 

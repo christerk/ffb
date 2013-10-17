@@ -11,6 +11,22 @@ import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.TeamSetup;
 import com.balancedbytes.games.ffb.server.FantasyFootballServer;
 import com.balancedbytes.games.ffb.server.TeamSetupCache;
+import com.balancedbytes.games.ffb.server.db.old.IDbTableActingPlayers;
+import com.balancedbytes.games.ffb.server.db.old.IDbTableDialogs;
+import com.balancedbytes.games.ffb.server.db.old.IDbTableFieldModels;
+import com.balancedbytes.games.ffb.server.db.old.IDbTableGameLogs;
+import com.balancedbytes.games.ffb.server.db.old.IDbTableGameOptions;
+import com.balancedbytes.games.ffb.server.db.old.IDbTableGameStates;
+import com.balancedbytes.games.ffb.server.db.old.IDbTableInducements;
+import com.balancedbytes.games.ffb.server.db.old.IDbTablePlayerIcons;
+import com.balancedbytes.games.ffb.server.db.old.IDbTablePlayerInjuries;
+import com.balancedbytes.games.ffb.server.db.old.IDbTablePlayerResults;
+import com.balancedbytes.games.ffb.server.db.old.IDbTablePlayerSkills;
+import com.balancedbytes.games.ffb.server.db.old.IDbTablePlayers;
+import com.balancedbytes.games.ffb.server.db.old.IDbTableStepStack;
+import com.balancedbytes.games.ffb.server.db.old.IDbTableTeamResults;
+import com.balancedbytes.games.ffb.server.db.old.IDbTableTeams;
+import com.balancedbytes.games.ffb.server.db.old.IDbTableTurnData;
 import com.balancedbytes.games.ffb.util.StringTool;
 
 /**
@@ -180,7 +196,7 @@ public class DbInitializer {
     StringBuilder sql = new StringBuilder();
     sql.append("CREATE TABLE ").append(IDbTableGamesSerialized.TABLE_NAME).append(" (");
     sql.append(IDbTableGamesSerialized.COLUMN_ID).append(" BIGINT NOT NULL,");     // 1
-  	sql.append(IDbTableGamesSerialized.COLUMN_SERIALIZED).append(" MEDIUMBLOB,");  // 2
+  	sql.append(IDbTableGamesSerialized.COLUMN_SERIALIZED).append(" MEDIUMTEXT,");  // 2
     sql.append("PRIMARY KEY(").append(IDbTableGamesSerialized.COLUMN_ID).append(")");
   	sql.append(") ENGINE=InnoDB DEFAULT CHARSET=utf8;");
     return pStatement.executeUpdate(sql.toString());

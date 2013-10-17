@@ -15,6 +15,7 @@ import com.balancedbytes.games.ffb.server.step.StepIdFactory;
  */
 public interface IServerJsonOption extends IJsonOption {
   
+        JsonStringOption GOTO_LABEL = new JsonStringOption("gotoLabel");
         JsonStringOption LABEL = new JsonStringOption("label");
   JsonEnumWithNameOption NEXT_ACTION = new JsonEnumWithNameOption("nextAction", new StepActionFactory());
         JsonStringOption NEXT_ACTION_PARAMETER = new JsonStringOption("nextActionParameter");

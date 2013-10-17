@@ -1,8 +1,9 @@
 package com.balancedbytes.games.ffb.server.db.query;
 
-import java.io.ByteArrayOutputStream;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.sql.Blob;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -11,16 +12,14 @@ import java.sql.SQLException;
 import java.util.zip.GZIPInputStream;
 
 import com.balancedbytes.games.ffb.FantasyFootballException;
-import com.balancedbytes.games.ffb.bytearray.ByteArray;
+import com.balancedbytes.games.ffb.json.Base64;
 import com.balancedbytes.games.ffb.server.FantasyFootballServer;
 import com.balancedbytes.games.ffb.server.GameCacheMode;
 import com.balancedbytes.games.ffb.server.GameState;
-import com.balancedbytes.games.ffb.server.IServerLogLevel;
 import com.balancedbytes.games.ffb.server.db.DbStatement;
 import com.balancedbytes.games.ffb.server.db.DbStatementId;
 import com.balancedbytes.games.ffb.server.db.IDbTableGamesSerialized;
-import com.balancedbytes.games.ffb.util.ArrayTool;
-import com.balancedbytes.games.ffb.util.StringTool;
+import com.eclipsesource.json.JsonValue;
 
 /**
  * 
@@ -55,16 +54,8 @@ public class DbGamesSerializedQuery extends DbStatement {
       fStatement.setLong(1, pGameStateId);
       ResultSet resultSet = fStatement.executeQuery();
       while (resultSet.next()) {
-      	Blob blob = resultSet.getBlob(1);
-      	byte[] gameStateBytes = readByteArray(blob.getBinaryStream());
-      	if (ArrayTool.isProvided(gameStateBytes)) {
-      		StringBuilder logMsg = new StringBuilder();
-      		logMsg.append("reading serialized game of ").append(StringTool.formatThousands(gameStateBytes.length)).append(" bytes");
-      		getServer().getDebugLog().log(IServerLogLevel.TRACE, pGameStateId, logMsg.toString());
-          gameState = new GameState(pServer);
-          gameState.initFrom(new ByteArray(gameStateBytes));
-      		pServer.getGameCache().add(gameState, GameCacheMode.LOAD_GAME);
-      	}
+      	gameState = readGameStateFromBase64GzipJson(pServer, resultSet.getString(1));
+    		pServer.getGameCache().add(gameState, GameCacheMode.LOAD_GAME);
       }
       resultSet.close();
     } catch (IOException pIOException) {
@@ -74,17 +65,14 @@ public class DbGamesSerializedQuery extends DbStatement {
     }
     return gameState;
   }
-  
-  private byte[] readByteArray(InputStream pBlobBinaryStream) throws IOException {
-  	ByteArrayOutputStream baos = new ByteArrayOutputStream();
-  	GZIPInputStream gzipIn = new GZIPInputStream(pBlobBinaryStream);
-    byte[] buf = new byte[1024];
-    int n = 0;
-    while ((n=gzipIn.read(buf))>=0) {
-    	baos.write(buf, 0, n);
+
+  private GameState readGameStateFromBase64GzipJson(FantasyFootballServer pServer, String pBase64) throws IOException {
+    GameState gameState = null;
+    JsonValue jsonValue = JsonValue.readFrom(new InputStreamReader(new GZIPInputStream(new ByteArrayInputStream(Base64.decodeFast(pBase64)))));
+    if (jsonValue != null) {
+      gameState = new GameState(pServer).initFrom(jsonValue);
     }
-    gzipIn.close();
-    return baos.toByteArray(); 
+    return gameState;
   }
-  
+
 }

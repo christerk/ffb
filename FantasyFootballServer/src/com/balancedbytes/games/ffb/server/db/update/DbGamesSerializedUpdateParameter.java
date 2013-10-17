@@ -1,11 +1,12 @@
 package com.balancedbytes.games.ffb.server.db.update;
 
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.util.zip.GZIPOutputStream;
 
-import com.balancedbytes.games.ffb.bytearray.ByteList;
+import com.balancedbytes.games.ffb.FantasyFootballException;
+import com.balancedbytes.games.ffb.json.Base64;
 import com.balancedbytes.games.ffb.server.FantasyFootballServer;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.db.DbStatementId;
@@ -19,14 +20,12 @@ import com.balancedbytes.games.ffb.server.db.DefaultDbUpdateParameter;
 public class DbGamesSerializedUpdateParameter extends DefaultDbUpdateParameter {
 
   private long fId;
-  private byte[] fSerialized;
+  private String fSerialized;
   
   public DbGamesSerializedUpdateParameter(GameState pGameState) {
   	if (pGameState != null) {
     	fId = pGameState.getId();
-      ByteList byteList = new ByteList();
-      pGameState.addTo(byteList);
-      fSerialized = byteList.toBytes();
+      fSerialized = serialize(pGameState);
     }
   }
   
@@ -34,30 +33,24 @@ public class DbGamesSerializedUpdateParameter extends DefaultDbUpdateParameter {
     return fId;
   }
 
-  public byte[] getSerialized() {
+  public String getSerialized() {
 	  return fSerialized;
   }
   
-  public byte[] compress() throws IOException {
-  	
-  	ByteArrayOutputStream byteArrayOut = new ByteArrayOutputStream();
-  	GZIPOutputStream gzipOut = new GZIPOutputStream(byteArrayOut);
-  	
-  	ByteArrayInputStream byteArrayIn = new ByteArrayInputStream(getSerialized());
-
-  	// Transfer bytes from the input stream to the GZIP output stream
-    byte[] buf = new byte[1024];
-    int len;
-    while ((len = byteArrayIn.read(buf)) > 0) {
-      gzipOut.write(buf, 0, len);
+  private String serialize(GameState pGameState) {
+    if (pGameState == null) {
+      return null;
     }
-
-    byteArrayIn.close();
-    gzipOut.close();
-    
-    return byteArrayOut.toByteArray();
-
-  }  
+    ByteArrayOutputStream byteOut = new ByteArrayOutputStream();
+    try {
+      OutputStreamWriter gzipOut = new OutputStreamWriter(new GZIPOutputStream(byteOut));
+      gzipOut.write(pGameState.toJsonValue().toString());
+      gzipOut.close();
+    } catch (IOException pIoException) {
+      throw new FantasyFootballException(pIoException);
+    }
+    return Base64.encodeToString(byteOut.toByteArray(), false);
+  }
 
   public DbUpdateStatement getDbUpdateStatement(FantasyFootballServer pServer) {
     return (DbUpdateStatement) pServer.getDbUpdateFactory().getStatement(DbStatementId.GAMES_SERIALIZED_UPDATE);

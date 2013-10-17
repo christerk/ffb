@@ -1,22 +1,22 @@
 package com.balancedbytes.games.ffb.server.db;
 
 import com.balancedbytes.games.ffb.server.FantasyFootballServer;
-import com.balancedbytes.games.ffb.server.db.delete.DbActingPlayersDeleteParameter;
-import com.balancedbytes.games.ffb.server.db.delete.DbDialogsDeleteParameter;
-import com.balancedbytes.games.ffb.server.db.delete.DbFieldModelsDeleteParameter;
-import com.balancedbytes.games.ffb.server.db.delete.DbGameLogsDeleteParameter;
-import com.balancedbytes.games.ffb.server.db.delete.DbGameOptionsDeleteParameter;
-import com.balancedbytes.games.ffb.server.db.delete.DbGameStatesDeleteParameter;
-import com.balancedbytes.games.ffb.server.db.delete.DbInducementsDeleteParameter;
-import com.balancedbytes.games.ffb.server.db.delete.DbPlayerIconsDeleteParameter;
-import com.balancedbytes.games.ffb.server.db.delete.DbPlayerInjuriesDeleteParameter;
-import com.balancedbytes.games.ffb.server.db.delete.DbPlayerResultsDeleteParameter;
-import com.balancedbytes.games.ffb.server.db.delete.DbPlayerSkillsDeleteParameter;
-import com.balancedbytes.games.ffb.server.db.delete.DbPlayersDeleteParameter;
-import com.balancedbytes.games.ffb.server.db.delete.DbStepStackDeleteParameter;
-import com.balancedbytes.games.ffb.server.db.delete.DbTeamResultsDeleteParameter;
-import com.balancedbytes.games.ffb.server.db.delete.DbTeamsDeleteParameter;
-import com.balancedbytes.games.ffb.server.db.delete.DbTurnDataDeleteParameter;
+import com.balancedbytes.games.ffb.server.db.old.DbActingPlayersDeleteParameter;
+import com.balancedbytes.games.ffb.server.db.old.DbDialogsDeleteParameter;
+import com.balancedbytes.games.ffb.server.db.old.DbFieldModelsDeleteParameter;
+import com.balancedbytes.games.ffb.server.db.old.DbGameLogsDeleteParameter;
+import com.balancedbytes.games.ffb.server.db.old.DbGameOptionsDeleteParameter;
+import com.balancedbytes.games.ffb.server.db.old.DbGameStatesDeleteParameter;
+import com.balancedbytes.games.ffb.server.db.old.DbInducementsDeleteParameter;
+import com.balancedbytes.games.ffb.server.db.old.DbPlayerIconsDeleteParameter;
+import com.balancedbytes.games.ffb.server.db.old.DbPlayerInjuriesDeleteParameter;
+import com.balancedbytes.games.ffb.server.db.old.DbPlayerResultsDeleteParameter;
+import com.balancedbytes.games.ffb.server.db.old.DbPlayerSkillsDeleteParameter;
+import com.balancedbytes.games.ffb.server.db.old.DbPlayersDeleteParameter;
+import com.balancedbytes.games.ffb.server.db.old.DbStepStackDeleteParameter;
+import com.balancedbytes.games.ffb.server.db.old.DbTeamResultsDeleteParameter;
+import com.balancedbytes.games.ffb.server.db.old.DbTeamsDeleteParameter;
+import com.balancedbytes.games.ffb.server.db.old.DbTurnDataDeleteParameter;
 
 /**
  * 
