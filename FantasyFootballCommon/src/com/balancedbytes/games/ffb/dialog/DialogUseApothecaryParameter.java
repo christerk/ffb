@@ -78,7 +78,7 @@ public class DialogUseApothecaryParameter implements IDialogParameter {
   
   // JSON serialization
   
-  public JsonValue toJsonValue() {
+  public JsonObject toJsonValue() {
     JsonObject jsonObject = new JsonObject();
     IJsonOption.DIALOG_ID.addTo(jsonObject, getId());
     IJsonOption.PLAYER_ID.addTo(jsonObject, fPlayerId);

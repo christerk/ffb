@@ -15,13 +15,20 @@ import com.balancedbytes.games.ffb.bytearray.ByteList;
 import com.balancedbytes.games.ffb.bytearray.IByteArraySerializable;
 import com.balancedbytes.games.ffb.dialog.DialogId;
 import com.balancedbytes.games.ffb.dialog.DialogIdFactory;
+import com.balancedbytes.games.ffb.dialog.DialogParameterFactory;
+import com.balancedbytes.games.ffb.dialog.DialogPassBlockParameter;
+import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.IJsonSerializable;
+import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.change.ModelChange;
 import com.balancedbytes.games.ffb.model.change.ModelChangeId;
 import com.balancedbytes.games.ffb.model.change.ModelChangeObservable;
 import com.balancedbytes.games.ffb.util.DateTool;
 import com.balancedbytes.games.ffb.util.StringTool;
 import com.balancedbytes.games.ffb.util.UtilActingPlayer;
+import com.eclipsesource.json.JsonObject;
+import com.eclipsesource.json.JsonValue;
+import com.sun.corba.se.spi.orbutil.fsm.FSM;
 
 /**
  * 
@@ -658,6 +665,95 @@ public class Game extends ModelChangeObservable implements IByteArraySerializabl
     }
     
     return byteArraySerializationVersion;
+    
+  }
+  
+  // JSON serialization
+  
+  public JsonObject toJsonValue() {
+    JsonObject jsonObject = new JsonObject();
+    
+    IJsonOption.GAME_ID.addTo(jsonObject, fId);
+    IJsonOption.SCHEDULED.addTo(jsonObject, fScheduled);
+    IJsonOption.STARTED.addTo(jsonObject, fStarted);
+    IJsonOption.FINISHED.addTo(jsonObject, fFinished);
+    IJsonOption.HOME_PLAYING.addTo(jsonObject, fHomePlaying);
+    IJsonOption.HALF.addTo(jsonObject, fHalf);
+    IJsonOption.HOME_FIRST_OFFENSE.addTo(jsonObject, fHomeFirstOffense);
+    IJsonOption.SETUP_OFFENSE.addTo(jsonObject, fSetupOffense);
+    IJsonOption.WAITING_FOR_OPPONENT.addTo(jsonObject, fWaitingForOpponent);
+    IJsonOption.TURN_TIME.addTo(jsonObject, fTurnTime);
+    IJsonOption.GAME_TIME.addTo(jsonObject, fGameTime);
+    IJsonOption.TIMEOUT_POSSIBLE.addTo(jsonObject, fTimeoutPossible);
+    IJsonOption.TIMEOUT_ENFORCED.addTo(jsonObject, fTimeoutEnforced);
+    IJsonOption.CONCESSION_POSSIBLE.addTo(jsonObject, fConcessionPossible);
+    IJsonOption.TESTING.addTo(jsonObject, fTesting);
+    IJsonOption.TURN_MODE.addTo(jsonObject, fTurnMode);
+    IJsonOption.DEFENDER_ID.addTo(jsonObject, fDefenderId);
+    IJsonOption.DEFENDER_ACTION.addTo(jsonObject, fDefenderAction);
+    IJsonOption.PASS_COORDINATE.addTo(jsonObject, fPassCoordinate);
+    IJsonOption.THROWER_ID.addTo(jsonObject, fThrowerId);
+    IJsonOption.THROWER_ACTION.addTo(jsonObject, fThrowerAction);
+    
+    IJsonOption.TEAM_AWAY.addTo(jsonObject, fTeamAway.toJsonValue());
+    IJsonOption.TURN_DATA_AWAY.addTo(jsonObject, fTurnDataAway.toJsonValue());
+    IJsonOption.TEAM_HOME.addTo(jsonObject, fTeamHome.toJsonValue());
+    IJsonOption.TURN_DATA_HOME.addTo(jsonObject, fTurnDataHome.toJsonValue());
+    IJsonOption.FIELD_MODEL.addTo(jsonObject, fFieldModel.toJsonValue());
+    IJsonOption.ACTING_PLAYER.addTo(jsonObject, fActingPlayer.toJsonValue());
+    IJsonOption.GAME_RESULT.getFrom(jsonObject, fGameResult.toJsonValue());
+    IJsonOption.GAME_OPTIONS.getFrom(jsonObject, fOptions.toJsonValue());
+
+    if (fDialogParameter != null) {
+      IJsonOption.DIALOG_PARAMETER.addTo(jsonObject, fDialogParameter.toJsonValue());
+    }
+    
+    return jsonObject;
+    
+  }
+  
+  public Game initFrom(JsonValue pJsonValue) {
+    
+    JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
+    
+    fId = IJsonOption.GAME_ID.getFrom(jsonObject);
+    fScheduled = IJsonOption.SCHEDULED.getFrom(jsonObject);
+    fStarted = IJsonOption.STARTED.getFrom(jsonObject);
+    fFinished = IJsonOption.FINISHED.getFrom(jsonObject);
+    fHomePlaying = IJsonOption.HOME_PLAYING.getFrom(jsonObject);
+    fHalf = IJsonOption.HALF.getFrom(jsonObject);
+    fHomeFirstOffense = IJsonOption.HOME_FIRST_OFFENSE.getFrom(jsonObject);
+    fSetupOffense = IJsonOption.SETUP_OFFENSE.getFrom(jsonObject);
+    fWaitingForOpponent = IJsonOption.WAITING_FOR_OPPONENT.getFrom(jsonObject);
+    fTurnTime = IJsonOption.TURN_TIME.getFrom(jsonObject);
+    fGameTime = IJsonOption.GAME_TIME.getFrom(jsonObject);
+    fTimeoutPossible = IJsonOption.TIMEOUT_POSSIBLE.getFrom(jsonObject);
+    fTimeoutEnforced = IJsonOption.TIMEOUT_ENFORCED.getFrom(jsonObject);
+    fConcessionPossible = IJsonOption.CONCESSION_POSSIBLE.getFrom(jsonObject);
+    fTesting = IJsonOption.TESTING.getFrom(jsonObject);
+    fTurnMode = (TurnMode) IJsonOption.TURN_MODE.getFrom(jsonObject);
+    fDefenderId = IJsonOption.DEFENDER_ID.getFrom(jsonObject);
+    fDefenderAction = (PlayerAction) IJsonOption.DEFENDER_ACTION.getFrom(jsonObject);
+    fPassCoordinate = IJsonOption.PASS_COORDINATE.getFrom(jsonObject);
+    fThrowerId = IJsonOption.THROWER_ID.getFrom(jsonObject);
+    fThrowerAction = (PlayerAction) IJsonOption.THROWER_ACTION.getFrom(jsonObject);
+    
+    fTeamAway.initFrom(IJsonOption.TEAM_AWAY.getFrom(jsonObject));
+    fTurnDataAway.initFrom(IJsonOption.TURN_DATA_AWAY.getFrom(jsonObject));
+    fTeamHome.initFrom(IJsonOption.TEAM_HOME.getFrom(jsonObject));
+    fTurnDataHome.initFrom(IJsonOption.TURN_DATA_HOME.getFrom(jsonObject));
+    fFieldModel.initFrom(IJsonOption.FIELD_MODEL.getFrom(jsonObject));
+    fActingPlayer.initFrom(IJsonOption.ACTING_PLAYER.getFrom(jsonObject));
+    fGameResult.initFrom(IJsonOption.GAME_RESULT.getFrom(jsonObject));
+    fOptions.initFrom(IJsonOption.GAME_OPTIONS.getFrom(jsonObject));
+
+    fDialogParameter = null;
+    JsonObject dialogParameterObject = IJsonOption.DIALOG_PARAMETER.getFrom(jsonObject);
+    if (dialogParameterObject != null) {
+      fDialogParameter = new DialogParameterFactory().forJsonValue(dialogParameterObject);
+    }
+
+    return this;
     
   }
   

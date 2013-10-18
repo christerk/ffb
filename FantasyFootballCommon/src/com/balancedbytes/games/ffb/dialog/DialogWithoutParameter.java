@@ -5,7 +5,6 @@ import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.eclipsesource.json.JsonObject;
-import com.eclipsesource.json.JsonValue;
 
 /**
  * 
@@ -35,7 +34,7 @@ public abstract class DialogWithoutParameter implements IDialogParameter {
   
   // JSON serialization
   
-  public JsonValue toJsonValue() {
+  public JsonObject toJsonValue() {
     JsonObject jsonObject = new JsonObject();
     IJsonOption.DIALOG_ID.addTo(jsonObject, getId());
     return jsonObject;

@@ -3,13 +3,11 @@ package com.balancedbytes.games.ffb.server;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.balancedbytes.games.ffb.BloodSpot;
 import com.balancedbytes.games.ffb.GameStatus;
 import com.balancedbytes.games.ffb.GameStatusFactory;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
 import com.balancedbytes.games.ffb.bytearray.IByteArraySerializable;
-import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.IJsonSerializable;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.Game;

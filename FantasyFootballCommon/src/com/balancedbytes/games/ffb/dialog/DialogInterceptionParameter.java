@@ -59,7 +59,7 @@ public class DialogInterceptionParameter implements IDialogParameter {
   
   // JSON serialization
   
-  public JsonValue toJsonValue() {
+  public JsonObject toJsonValue() {
     JsonObject jsonObject = new JsonObject();
     IJsonOption.DIALOG_ID.addTo(jsonObject, getId());
     IJsonOption.THROWER_ID.addTo(jsonObject, fThrowerId);

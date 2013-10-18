@@ -229,13 +229,13 @@ public class GameOptions implements IXmlSerializable, IByteArraySerializable, IJ
     for (GameOptionValue option : options) {
       optionArray.add(option.toJsonValue());
     }
-    IJsonOption.GAME_OPTIONS.addTo(jsonObject, optionArray);
+    IJsonOption.GAME_OPTION_ARRAY.addTo(jsonObject, optionArray);
     return jsonObject;
   }
   
   public GameOptions initFrom(JsonValue pJsonValue) {
     JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-    JsonArray optionArray = IJsonOption.GAME_OPTIONS.getFrom(jsonObject);
+    JsonArray optionArray = IJsonOption.GAME_OPTION_ARRAY.getFrom(jsonObject);
     int nrOfOptions = optionArray.size();
     for (int i = 0; i < nrOfOptions; i++) {
       GameOptionValue gameOption = new GameOptionValue();

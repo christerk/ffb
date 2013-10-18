@@ -87,7 +87,7 @@ public class DialogTeamSetupParameter implements IDialogParameter {
   
   // JSON serialization
   
-  public JsonValue toJsonValue() {
+  public JsonObject toJsonValue() {
     JsonObject jsonObject = new JsonObject();
     IJsonOption.DIALOG_ID.addTo(jsonObject, getId());
     IJsonOption.LOAD_DIALOG.addTo(jsonObject, fLoadDialog);
