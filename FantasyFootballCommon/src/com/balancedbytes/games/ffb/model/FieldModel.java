@@ -25,11 +25,16 @@ import com.balancedbytes.games.ffb.WeatherFactory;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
 import com.balancedbytes.games.ffb.bytearray.IByteArraySerializable;
+import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.IJsonSerializable;
+import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.change.ModelChange;
 import com.balancedbytes.games.ffb.model.change.ModelChangeId;
 import com.balancedbytes.games.ffb.util.ArrayTool;
 import com.balancedbytes.games.ffb.util.StringTool;
+import com.eclipsesource.json.JsonArray;
+import com.eclipsesource.json.JsonObject;
+import com.eclipsesource.json.JsonValue;
 
 
 /**
@@ -827,6 +832,111 @@ public class FieldModel implements IByteArraySerializable, IJsonSerializable {
       }
     }
   
+  }
+  
+  // JSON serialization
+  
+  public JsonObject toJsonValue() {
+
+    JsonObject jsonObject = new JsonObject();
+    
+    IJsonOption.WEATHER.addTo(jsonObject, fWeather);
+    IJsonOption.BALL_COORDINATE.addTo(jsonObject, fBallCoordinate);
+    IJsonOption.BALL_IN_PLAY.addTo(jsonObject, fBallInPlay);
+    IJsonOption.BALL_MOVING.addTo(jsonObject, fBallMoving);
+    IJsonOption.BOMB_COORDINATE.addTo(jsonObject, fBombCoordinate);
+    IJsonOption.BOMB_MOVING.addTo(jsonObject, fBombMoving);
+
+    JsonArray bloodspotArray = new JsonArray();
+    for (BloodSpot bloodSpot : fBloodspots) {
+      bloodspotArray.add(bloodSpot.toJsonValue());
+    }
+    IJsonOption.BLOODSPOT_ARRAY.addTo(jsonObject, bloodspotArray);
+    
+    JsonArray pushbackSquareArray = new JsonArray();
+    for (PushbackSquare pushbackSquare : fPushbackSquares) {
+      pushbackSquareArray.add(pushbackSquare.toJsonValue());
+    }
+    IJsonOption.PUSHBACK_SQUARE_ARRAY.addTo(jsonObject, pushbackSquareArray);
+    
+    MoveSquare[] moveSquares = getMoveSquares();
+    if (ArrayTool.isProvided(moveSquares)) {
+      pByteList.addByte((byte) moveSquares.length);
+      for (MoveSquare moveSquare : moveSquares) {
+        moveSquare.addTo(pByteList);
+      }
+    } else {
+      pByteList.addByte((byte) 0);
+    }
+    
+    TrackNumber[] trackNumbers = getTrackNumbers();
+    if (ArrayTool.isProvided(trackNumbers)) {
+      pByteList.addByte((byte) trackNumbers.length);
+      for (TrackNumber trackNumber : trackNumbers) {
+        trackNumber.addTo(pByteList);
+      }
+    } else {
+      pByteList.addByte((byte) 0);
+    }
+    
+    DiceDecoration[] diceDecorations = getDiceDecorations();
+    if (ArrayTool.isProvided(diceDecorations)) {
+      pByteList.addByte((byte) diceDecorations.length);
+      for (DiceDecoration diceDecoration : diceDecorations) {
+        diceDecoration.addTo(pByteList);
+      }
+    } else {
+      pByteList.addByte((byte) 0);
+    }
+
+    FieldMarker[] fieldMarkers = getFieldMarkers();
+    if (ArrayTool.isProvided(fieldMarkers)) {
+      pByteList.addByte((byte) fieldMarkers.length);
+      for (FieldMarker fieldMarker : fieldMarkers) {
+        fieldMarker.addTo(pByteList);
+      }
+    } else {
+      pByteList.addByte((byte) 0);
+    }
+    
+    PlayerMarker[] playerMarkers = getPlayerMarkers();
+    if (ArrayTool.isProvided(playerMarkers)) {
+      pByteList.addByte((byte) playerMarkers.length);
+      for (PlayerMarker playerMarker : playerMarkers) {
+        playerMarker.addTo(pByteList);
+      }
+    } else {
+      pByteList.addByte((byte) 0);
+    }
+
+    Player[] players = getGame().getPlayers();
+    pByteList.addByte((byte) players.length);
+    
+    for (int i = 0; i < players.length; i++) {
+      
+      pByteList.addString(players[i].getId());
+      pByteList.addFieldCoordinate(getPlayerCoordinate(players[i]));
+      PlayerState playerState = getPlayerState(players[i]);
+      pByteList.addSmallInt(((playerState != null) ? playerState.getId() : 0));
+      
+      Card[] cards = getCards(players[i]);
+      pByteList.addByte((byte) cards.length);
+      for (Card card : cards) {
+        pByteList.addSmallInt(card.getId());
+      }
+      
+    }
+    
+    return jsonObject;
+    
+  }
+  
+  public FieldModel initFrom(JsonValue pJsonValue) {
+
+    JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
+
+    return this;
+    
   }
   
 }

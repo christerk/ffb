@@ -136,7 +136,7 @@ public class ReportSecretWeaponBan implements IReport {
     IJsonOption.REPORT_ID.addTo(jsonObject, getId());
     IJsonOption.PLAYER_IDS.addTo(jsonObject, fPlayerIds);
     IJsonOption.ROLLS.addTo(jsonObject, fRolls);
-    IJsonOption.BANS.addTo(jsonObject, fBans);
+    IJsonOption.BAN_ARRAY.addTo(jsonObject, fBans);
     return jsonObject;
   }
   
@@ -148,7 +148,7 @@ public class ReportSecretWeaponBan implements IReport {
     fRolls.clear();
     addRolls(IJsonOption.ROLLS.getFrom(jsonObject));
     fBans.clear();
-    addBans(IJsonOption.BANS.getFrom(jsonObject));
+    addBans(IJsonOption.BAN_ARRAY.getFrom(jsonObject));
     return this;
   }
   

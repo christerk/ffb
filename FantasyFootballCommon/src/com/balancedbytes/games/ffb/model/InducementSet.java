@@ -271,7 +271,7 @@ public class InducementSet implements IByteArraySerializable, IJsonSerializable 
     for (Inducement inducement : fInducements.values()) {
       inducementsArray.add(inducement.toJsonValue());
     }
-    IJsonOption.INDUCEMENTS.addTo(jsonObject, inducementsArray);
+    IJsonOption.INDUCEMENT_ARRAY.addTo(jsonObject, inducementsArray);
     List<String> cardsAvailable = new ArrayList<String>();
     for (Card card : getAvailableCards()) {
       cardsAvailable.add(card.getName());
@@ -292,7 +292,7 @@ public class InducementSet implements IByteArraySerializable, IJsonSerializable 
   
   public InducementSet initFrom(JsonValue pJsonValue) {
     JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-    JsonArray inducements = IJsonOption.INDUCEMENTS.getFrom(jsonObject);
+    JsonArray inducements = IJsonOption.INDUCEMENT_ARRAY.getFrom(jsonObject);
     for (int i = 0; i < inducements.size(); i++) {
       Inducement inducement = new Inducement();
       inducement.initFrom(inducements.get(i));

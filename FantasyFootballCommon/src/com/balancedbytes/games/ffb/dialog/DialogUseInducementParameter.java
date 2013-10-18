@@ -114,7 +114,7 @@ public class DialogUseInducementParameter implements IDialogParameter {
     for (InducementType inducementType : getInducementTypes()) {
       inducementTypeNames.add(inducementType.getName());
     }
-    IJsonOption.INDUCEMENT_TYPES.addTo(jsonObject, inducementTypeNames);
+    IJsonOption.INDUCEMENT_TYPE_ARRAY.addTo(jsonObject, inducementTypeNames);
     List<String> cardNames = new ArrayList<String>();
     for (Card card : getCards()) {
       cardNames.add(card.getName());
@@ -127,7 +127,7 @@ public class DialogUseInducementParameter implements IDialogParameter {
     JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
     UtilDialogParameter.validateDialogId(this, (DialogId) IJsonOption.DIALOG_ID.getFrom(jsonObject));
     fTeamId = IJsonOption.TEAM_ID.getFrom(jsonObject);
-    String[] inducementTypeNames = IJsonOption.INDUCEMENT_TYPES.getFrom(jsonObject);
+    String[] inducementTypeNames = IJsonOption.INDUCEMENT_TYPE_ARRAY.getFrom(jsonObject);
     fInducementTypes = new InducementType[inducementTypeNames.length];
     InducementTypeFactory inducementTypeFactory = new InducementTypeFactory();
     for (int i = 0; i < fInducementTypes.length; i++) {

@@ -107,14 +107,14 @@ public class ModelChangeList implements IByteArraySerializable, IJsonSerializabl
     for (ModelChange change : fChanges) {
       modelChanges.add(change.toJsonValue());
     }
-    IJsonOption.MODEL_CHANGES.addTo(jsonObject, modelChanges);
+    IJsonOption.MODEL_CHANGE_ARRAY.addTo(jsonObject, modelChanges);
     return jsonObject;
   }
   
   public ModelChangeList initFrom(JsonValue pJsonValue) {
     clear();
     JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-    JsonArray modelChanges = IJsonOption.MODEL_CHANGES.getFrom(jsonObject);
+    JsonArray modelChanges = IJsonOption.MODEL_CHANGE_ARRAY.getFrom(jsonObject);
     for (int i = 0; i < modelChanges.size(); i++) {
       add(new ModelChange().initFrom(modelChanges.get(i)));
     }

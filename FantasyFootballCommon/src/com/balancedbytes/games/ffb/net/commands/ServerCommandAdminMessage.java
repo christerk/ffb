@@ -83,7 +83,7 @@ public class ServerCommandAdminMessage extends ServerCommand {
     JsonObject jsonObject = new JsonObject();
     IJsonOption.NET_COMMAND_ID.addTo(jsonObject, getId());
     IJsonOption.COMMAND_NR.addTo(jsonObject, getCommandNr());
-    IJsonOption.MESSAGES.addTo(jsonObject, fMessages);
+    IJsonOption.MESSAGE_ARRAY.addTo(jsonObject, fMessages);
     return jsonObject;
   }
   
@@ -91,7 +91,7 @@ public class ServerCommandAdminMessage extends ServerCommand {
     JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
     UtilNetCommand.validateCommandId(this, (NetCommandId) IJsonOption.NET_COMMAND_ID.getFrom(jsonObject));
     setCommandNr(IJsonOption.COMMAND_NR.getFrom(jsonObject));
-    addMessages(IJsonOption.MESSAGES.getFrom(jsonObject));
+    addMessages(IJsonOption.MESSAGE_ARRAY.getFrom(jsonObject));
     return this;
   }
 

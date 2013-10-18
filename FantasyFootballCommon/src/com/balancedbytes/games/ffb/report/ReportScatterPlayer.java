@@ -142,7 +142,7 @@ public class ReportScatterPlayer implements IReport {
     for (Direction direction : getDirections()) {
       directionArray.add(UtilJson.toJsonValue(direction));
     }
-    IJsonOption.DIRECTIONS.addTo(jsonObject, directionArray);
+    IJsonOption.DIRECTION_ARRAY.addTo(jsonObject, directionArray);
     IJsonOption.ROLLS.addTo(jsonObject, fRolls);
     return jsonObject;
   }
@@ -152,7 +152,7 @@ public class ReportScatterPlayer implements IReport {
     UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(jsonObject));
     fStartCoordinate = IJsonOption.START_COORDINATE.getFrom(jsonObject);
     fEndCoordinate = IJsonOption.END_COORDINATE.getFrom(jsonObject);
-    JsonArray directionArray = IJsonOption.DIRECTIONS.getFrom(jsonObject);
+    JsonArray directionArray = IJsonOption.DIRECTION_ARRAY.getFrom(jsonObject);
     if (directionArray != null) {
       for (int i = 0; i < directionArray.size(); i++) {
         addDirection((Direction) UtilJson.toEnumWithName(new DirectionFactory(), directionArray.get(i)));

@@ -136,7 +136,7 @@ public class ReportDefectingPlayers implements IReport {
     IJsonOption.REPORT_ID.addTo(jsonObject, getId());
     IJsonOption.PLAYER_IDS.addTo(jsonObject, fPlayerIds);
     IJsonOption.ROLLS.addTo(jsonObject, fRolls);
-    IJsonOption.DEFECTINGS.addTo(jsonObject, fDefectings);
+    IJsonOption.DEFECTING_ARRAY.addTo(jsonObject, fDefectings);
     return jsonObject;
   }
   
@@ -148,7 +148,7 @@ public class ReportDefectingPlayers implements IReport {
     fRolls.clear();
     addRolls(IJsonOption.ROLLS.getFrom(jsonObject));
     fDefectings.clear();
-    addDefectings(IJsonOption.DEFECTINGS.getFrom(jsonObject));
+    addDefectings(IJsonOption.DEFECTING_ARRAY.getFrom(jsonObject));
     return this;
   }
   

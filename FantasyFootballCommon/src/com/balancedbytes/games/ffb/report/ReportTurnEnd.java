@@ -143,12 +143,12 @@ public class ReportTurnEnd implements IReport {
     for (KnockoutRecovery knockoutRecovery : fKnockoutRecoveries) {
       knockoutRecoveryArray.add(knockoutRecovery.toJsonValue());
     }
-    IJsonOption.KNOCKOUT_RECOVERIES.addTo(jsonObject, knockoutRecoveryArray);
+    IJsonOption.KNOCKOUT_RECOVERY_ARRAY.addTo(jsonObject, knockoutRecoveryArray);
     JsonArray heatExhaustionArray = new JsonArray();
     for (HeatExhaustion heatExhaustion : fHeatExhaustions) {
       heatExhaustionArray.add(heatExhaustion.toJsonValue());
     }
-    IJsonOption.HEAT_EXHAUSTIONS.addTo(jsonObject, heatExhaustionArray);
+    IJsonOption.HEAT_EXHAUSTION_ARRAY.addTo(jsonObject, heatExhaustionArray);
     return jsonObject;
   }
   
@@ -156,13 +156,13 @@ public class ReportTurnEnd implements IReport {
     JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
     UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(jsonObject));
     fPlayerIdTouchdown = IJsonOption.PLAYER_ID_TOUCHDOWN.getFrom(jsonObject);
-    JsonArray knockoutRecoveryArray = IJsonOption.KNOCKOUT_RECOVERIES.getFrom(jsonObject);
+    JsonArray knockoutRecoveryArray = IJsonOption.KNOCKOUT_RECOVERY_ARRAY.getFrom(jsonObject);
     if (knockoutRecoveryArray != null) {
       for (int i = 0; i < knockoutRecoveryArray.size(); i++) {
         add(new KnockoutRecovery().initFrom(knockoutRecoveryArray.get(i)));
       }
     }
-    JsonArray heatExhaustionArray = IJsonOption.HEAT_EXHAUSTIONS.getFrom(jsonObject);
+    JsonArray heatExhaustionArray = IJsonOption.HEAT_EXHAUSTION_ARRAY.getFrom(jsonObject);
     if (heatExhaustionArray != null) {
       for (int i = 0; i < heatExhaustionArray.size(); i++) {
         add(new HeatExhaustion().initFrom(heatExhaustionArray.get(i)));

@@ -139,14 +139,14 @@ public class GameLog implements IByteArraySerializable, IJsonSerializable {
     for (ServerCommand serverCommand : getServerCommands()) {
       commandArray.add(serverCommand.toJsonValue());
     }
-    IJsonOption.COMMANDS.addTo(jsonObject, commandArray);
+    IJsonOption.COMMAND_ARRAY.addTo(jsonObject, commandArray);
     return jsonObject;
   }
   
   public GameLog initFrom(JsonValue pJsonValue) {
     NetCommandFactory netCommandFactory = new NetCommandFactory();
     JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-    JsonArray commandArray = IJsonOption.COMMANDS.getFrom(jsonObject);
+    JsonArray commandArray = IJsonOption.COMMAND_ARRAY.getFrom(jsonObject);
     fServerCommands.clear();
     for (int i = 0; i < commandArray.size(); i++) {
       ServerCommand serverCommand = (ServerCommand) netCommandFactory.forJsonValue(pJsonValue);
