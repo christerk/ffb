@@ -24,7 +24,6 @@ import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.model.PlayerResult;
 import com.balancedbytes.games.ffb.model.Roster;
 import com.balancedbytes.games.ffb.model.Team;
-import com.balancedbytes.games.ffb.server.db.DbQueryScript;
 import com.balancedbytes.games.ffb.server.db.DbStatementId;
 import com.balancedbytes.games.ffb.server.db.DbTransaction;
 import com.balancedbytes.games.ffb.server.db.delete.DbGamesInfoDeleteParameter;
@@ -32,6 +31,7 @@ import com.balancedbytes.games.ffb.server.db.delete.DbGamesSerializedDeleteParam
 import com.balancedbytes.games.ffb.server.db.insert.DbGamesInfoInsertParameter;
 import com.balancedbytes.games.ffb.server.db.insert.DbGamesSerializedInsertParameter;
 import com.balancedbytes.games.ffb.server.db.old.DbGameListQueryOpenGamesByCoachOld;
+import com.balancedbytes.games.ffb.server.db.old.DbQueryScript;
 import com.balancedbytes.games.ffb.server.db.query.DbGameListQueryOpenGamesByCoach;
 import com.balancedbytes.games.ffb.server.db.query.DbGamesSerializedQuery;
 import com.balancedbytes.games.ffb.server.db.query.DbGamesSerializedQueryMaxId;
@@ -171,7 +171,7 @@ public class GameCache {
   	GameList gameList = new GameList();
   	DbGameListQueryOpenGamesByCoach queryOpenGames = (DbGameListQueryOpenGamesByCoach) getServer().getDbQueryFactory().getStatement(DbStatementId.GAME_LIST_QUERY_OPEN_GAMES_BY_COACH);
   	queryOpenGames.execute(gameList, pCoach);
-  	// add open games from the old version
+  	// add open games from the old version (will be removed later)
   	DbGameListQueryOpenGamesByCoachOld queryOpenGamesOld = (DbGameListQueryOpenGamesByCoachOld) getServer().getDbQueryFactory().getStatement(DbStatementId.GAME_LIST_QUERY_OPEN_GAMES_BY_COACH_OLD);
   	queryOpenGamesOld.execute(gameList, pCoach);
   	return gameList;

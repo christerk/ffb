@@ -38,47 +38,26 @@ import com.balancedbytes.games.ffb.util.UtilCards;
 public class InjuryResult implements IByteArraySerializable, IJsonSerializable {
 
   private InjuryType fInjuryType;
-
   private String fDefenderId;
-
   private FieldCoordinate fDefenderCoordinate;
-
   private String fAttackerId;
-
   private Set<ArmorModifier> fArmorModifiers;
-
   private int[] fArmorRoll;
-
   private boolean fArmorBroken;
-
   private Set<InjuryModifier> fInjuryModifiers;
-
   private int[] fInjuryRoll;
-
   private int[] fCasualtyRoll;
-
   private int[] fCasualtyRollDecay;
-
   private PlayerState fInjury;
-
   private PlayerState fInjuryDecay;
-
   private SeriousInjury fSeriousInjury;
-
   private SeriousInjury fSeriousInjuryDecay;
-
   private ApothecaryStatus fApothecaryStatus;
-
   private SendToBoxReason fSendToBoxReason;
-
   private int fSendToBoxTurn;
-
   private int fSendToBoxHalf;
-
   private Sound fSound;
-
   private PlayerState fSufferedInjury;
-  
   private ApothecaryMode fApothecaryMode;
 
   public InjuryResult() {

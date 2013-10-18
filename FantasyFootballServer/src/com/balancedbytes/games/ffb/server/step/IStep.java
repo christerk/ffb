@@ -4,6 +4,8 @@ import com.balancedbytes.games.ffb.bytearray.IByteArraySerializable;
 import com.balancedbytes.games.ffb.json.IJsonSerializable;
 import com.balancedbytes.games.ffb.net.NetCommand;
 import com.balancedbytes.games.ffb.server.GameState;
+import com.eclipsesource.json.JsonObject;
+import com.eclipsesource.json.JsonValue;
 
 /**
  * 
@@ -28,5 +30,11 @@ public interface IStep extends IByteArraySerializable, IJsonSerializable {
 	public StepResult getResult();
 	
 	public boolean setParameter(StepParameter pParameter);
+	
+	// overrides IJsonSerializable
+  public IStep initFrom(JsonValue pJsonValue);
+
+  // overrides IJsonSerializable
+  public JsonObject toJsonValue();
 
 }

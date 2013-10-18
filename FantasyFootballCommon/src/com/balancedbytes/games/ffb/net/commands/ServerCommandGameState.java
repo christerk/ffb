@@ -2,8 +2,12 @@ package com.balancedbytes.games.ffb.net.commands;
 
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
+import com.balancedbytes.games.ffb.json.IJsonOption;
+import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.net.NetCommandId;
+import com.eclipsesource.json.JsonObject;
+import com.eclipsesource.json.JsonValue;
 
 /**
  * 
@@ -62,6 +66,29 @@ public class ServerCommandGameState extends ServerCommand {
       fGame.initFrom(pByteArray);
     }
     return byteArraySerializationVersion;
+  }
+  
+  // JSON serialization
+  
+  public JsonObject toJsonValue() {
+    JsonObject jsonObject = new JsonObject();
+    IJsonOption.NET_COMMAND_ID.addTo(jsonObject, getId());
+    IJsonOption.COMMAND_NR.addTo(jsonObject, getCommandNr());
+    if (fGame != null) {
+      IJsonOption.GAME.addTo(jsonObject, fGame.toJsonValue());
+    }
+    return jsonObject;
+  }
+  
+  public ServerCommandGameState initFrom(JsonValue pJsonValue) {
+    JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
+    UtilNetCommand.validateCommandId(this, (NetCommandId) IJsonOption.NET_COMMAND_ID.getFrom(jsonObject));
+    setCommandNr(IJsonOption.COMMAND_NR.getFrom(jsonObject));
+    JsonObject gameObject = IJsonOption.GAME.getFrom(jsonObject);
+    if (gameObject != null) {
+      fGame = new Game().initFrom(gameObject);
+    }
+    return this;
   }
 
 }

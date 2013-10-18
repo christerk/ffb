@@ -3,11 +3,15 @@ package com.balancedbytes.games.ffb.server;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.balancedbytes.games.ffb.BloodSpot;
 import com.balancedbytes.games.ffb.GameStatus;
+import com.balancedbytes.games.ffb.GameStatusFactory;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
 import com.balancedbytes.games.ffb.bytearray.IByteArraySerializable;
+import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.IJsonSerializable;
+import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.change.IModelChangeObserver;
 import com.balancedbytes.games.ffb.model.change.ModelChange;
@@ -21,6 +25,8 @@ import com.balancedbytes.games.ffb.server.step.StepIdFactory;
 import com.balancedbytes.games.ffb.server.step.StepResult;
 import com.balancedbytes.games.ffb.server.step.StepStack;
 import com.balancedbytes.games.ffb.server.util.UtilGame;
+import com.eclipsesource.json.JsonObject;
+import com.eclipsesource.json.JsonValue;
 
 /**
  * 
@@ -29,25 +35,16 @@ import com.balancedbytes.games.ffb.server.util.UtilGame;
 public class GameState implements IModelChangeObserver, IByteArraySerializable, IJsonSerializable {
 
 	private Game fGame;
-
 	private GameLog fGameLog;
-
 	private GameStatus fStatus;
-	
 	private StepStack fStepStack;
-
 	private IStep fCurrentStep;
 
 	private transient FantasyFootballServer fServer;
-
 	private transient DiceRoller fDiceRoller;
-
 	private transient IdGenerator fCommandNrGenerator;
-
 	private transient long fTurnTimeStarted;
-	
 	private transient ModelChangeList fChangeList;
-
 	private transient Map<String, Long> fSpectatorCooldownTime;
 	
 	public GameState(FantasyFootballServer pServer) {
@@ -59,7 +56,6 @@ public class GameState implements IModelChangeObserver, IByteArraySerializable, 
 		fStepStack = new StepStack(this);
 		fChangeList = new ModelChangeList();
 		setGame(new Game());
-    getGame().addObserver(this);
 	}
   
   public void setServer(FantasyFootballServer pServer) {
@@ -72,7 +68,9 @@ public class GameState implements IModelChangeObserver, IByteArraySerializable, 
 
 	public void setGame(Game pGame) {
 		fGame = pGame;
-		getGame().addObserver(this);
+		if (fGame != null) {
+		  fGame.addObserver(this);
+		}
 	}
 
 	public Game getGame() {
@@ -260,7 +258,7 @@ public class GameState implements IModelChangeObserver, IByteArraySerializable, 
 
   public int initFrom(ByteArray pByteArray) {
     int byteArraySerializationVersion = pByteArray.getSmallInt();
-    fStatus = GameStatus.fromId(pByteArray.getByte());
+    fStatus = new GameStatusFactory().forId(pByteArray.getByte());
     if (pByteArray.getBoolean()) {
     	fGame = new Game();
     	fGame.initFrom(pByteArray);
@@ -285,5 +283,46 @@ public class GameState implements IModelChangeObserver, IByteArraySerializable, 
 		return step;
   }
   
+  // JSON serialization
+  
+  public JsonObject toJsonValue() {
+    JsonObject jsonObject = new JsonObject();
+    IServerJsonOption.GAME_STATUS.addTo(jsonObject, fStatus);
+    IServerJsonOption.STEP_STACK.addTo(jsonObject, fStepStack.toJsonValue());
+    IServerJsonOption.GAME_LOG.addTo(jsonObject, fGameLog.toJsonValue());
+    if (fCurrentStep != null) {
+      IServerJsonOption.CURRENT_STEP.addTo(jsonObject, fCurrentStep.toJsonValue());
+    }
+    if (fGame != null) {
+      IServerJsonOption.GAME.addTo(jsonObject, fGame.toJsonValue());
+    }
+    return jsonObject;
+  }
+  
+  public GameState initFrom(JsonValue pJsonValue) {
+    JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
+    fStatus = (GameStatus) IServerJsonOption.GAME_STATUS.getFrom(jsonObject);
+    fStepStack.clear();
+    JsonObject stepStackObject = IServerJsonOption.STEP_STACK.getFrom(jsonObject);
+    if (stepStackObject != null) {
+      fStepStack.initFrom(stepStackObject);
+    }
+    fGameLog.clear();
+    JsonObject gameLogObject = IServerJsonOption.GAME_LOG.getFrom(jsonObject);
+    if (gameLogObject != null) {
+      fGameLog.initFrom(gameLogObject);
+    }
+    fCurrentStep = null;
+    JsonObject currentStepObject = IServerJsonOption.CURRENT_STEP.getFrom(jsonObject);
+    if (currentStepObject != null) {
+      fCurrentStep = new StepFactory(this).forJsonValue(currentStepObject);
+    }
+    setGame(null);
+    JsonObject gameObject = IServerJsonOption.GAME.getFrom(jsonObject);
+    if (gameObject != null) {
+      setGame(new Game().initFrom(gameObject));
+    }
+    return this;
+  } 
 
 }

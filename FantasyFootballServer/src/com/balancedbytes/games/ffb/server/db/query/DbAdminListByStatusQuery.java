@@ -9,6 +9,7 @@ import java.util.Date;
 
 import com.balancedbytes.games.ffb.FantasyFootballException;
 import com.balancedbytes.games.ffb.GameStatus;
+import com.balancedbytes.games.ffb.GameStatusFactory;
 import com.balancedbytes.games.ffb.server.FantasyFootballServer;
 import com.balancedbytes.games.ffb.server.admin.AdminList;
 import com.balancedbytes.games.ffb.server.admin.AdminListEntry;
@@ -79,7 +80,7 @@ public class DbAdminListByStatusQuery extends DbStatement {
         entry.setTeamAwayCoach(resultSet.getString(col++));
         entry.setTeamAwayId(resultSet.getString(col++));
         entry.setTeamAwayName(resultSet.getString(col++));
-        entry.setStatus(GameStatus.fromTypeString(resultSet.getString(col++)));
+        entry.setStatus(new GameStatusFactory().forTypeString(resultSet.getString(col++)));
       }
       resultSet.close();
     } catch (SQLException pSqlE) {

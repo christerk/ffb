@@ -23,6 +23,7 @@ import org.xml.sax.helpers.AttributesImpl;
 
 import com.balancedbytes.games.ffb.FantasyFootballException;
 import com.balancedbytes.games.ffb.GameStatus;
+import com.balancedbytes.games.ffb.GameStatusFactory;
 import com.balancedbytes.games.ffb.PasswordChallenge;
 import com.balancedbytes.games.ffb.server.FantasyFootballServer;
 import com.balancedbytes.games.ffb.server.IServerProperty;
@@ -321,7 +322,7 @@ public class AdminConnector {
 
   private boolean handleList(TransformerHandler pHandler, Properties pParameters) {
     boolean isOk = true;
-    GameStatus status = GameStatus.fromName(pParameters.getProperty(_PARAMETER_STATUS));
+    GameStatus status = new GameStatusFactory().forName(pParameters.getProperty(_PARAMETER_STATUS));
     AttributesImpl attributes = new AttributesImpl();
     if (status != null) {
       UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_GAME_STATUS, status.getName());

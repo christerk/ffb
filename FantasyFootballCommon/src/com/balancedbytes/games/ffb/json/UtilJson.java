@@ -1,14 +1,25 @@
 package com.balancedbytes.games.ffb.json;
 
+import java.io.BufferedWriter;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.nio.charset.Charset;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.zip.Deflater;
+import java.util.zip.DeflaterOutputStream;
+import java.util.zip.InflaterInputStream;
 
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.IEnumWithName;
 import com.balancedbytes.games.ffb.IEnumWithNameFactory;
 import com.balancedbytes.games.ffb.PlayerState;
+import com.balancedbytes.games.ffb.util.ArrayTool;
 import com.eclipsesource.json.JsonArray;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
@@ -20,6 +31,8 @@ import com.eclipsesource.json.JsonValue;
 public class UtilJson {
   
   private static final DateFormat _TIMESTAMP_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS"); // 2001-07-04T12:08:56.235
+  
+  private static final Charset _CHARSET = Charset.forName("UTF-8");
   
   public static JsonObject toJsonObject(JsonValue pJsonValue) {
     if ((pJsonValue == null) || !pJsonValue.isObject()) {
@@ -103,6 +116,27 @@ public class UtilJson {
       return JsonValue.NULL;
     }
     return JsonValue.valueOf(pEnumWithName.getName());
+  }
+  
+  public static byte[] deflate(JsonValue pJsonValue) throws IOException {
+    if (pJsonValue == null) {
+      return new byte[0];
+    }
+    ByteArrayOutputStream byteOut = new ByteArrayOutputStream();
+    DeflaterOutputStream deflaterOut = new DeflaterOutputStream(byteOut, new Deflater(Deflater.BEST_COMPRESSION));
+    BufferedWriter out = new BufferedWriter(new OutputStreamWriter(deflaterOut, _CHARSET));
+    out.write(pJsonValue.toString());
+    out.close();
+    return byteOut.toByteArray();
+  }
+  
+  public static JsonValue inflate(byte[] pDeflatedJson) throws IOException {
+    if (!ArrayTool.isProvided(pDeflatedJson)) {
+      return null;
+    }
+    ByteArrayInputStream byteIn = new ByteArrayInputStream(pDeflatedJson);
+    InputStreamReader in = new InputStreamReader(new InflaterInputStream(byteIn), _CHARSET);
+    return JsonValue.readFrom(in);  // no bufferedReader necessary
   }
 
 }

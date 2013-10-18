@@ -11,6 +11,7 @@ import org.xml.sax.Attributes;
 import org.xml.sax.helpers.AttributesImpl;
 
 import com.balancedbytes.games.ffb.GameStatus;
+import com.balancedbytes.games.ffb.GameStatusFactory;
 import com.balancedbytes.games.ffb.util.StringTool;
 import com.balancedbytes.games.ffb.xml.IXmlSerializable;
 import com.balancedbytes.games.ffb.xml.UtilXml;
@@ -168,7 +169,7 @@ public class AdminListEntry implements IXmlSerializable {
   public IXmlSerializable startXmlElement(String pXmlTag, Attributes pXmlAttributes) {
     if (XML_TAG.equals(pXmlTag)) {
       fGameId = UtilXml.getLongAttribute(pXmlAttributes, _XML_ATTRIBUTE_ID);
-      fStatus = GameStatus.fromName(UtilXml.getStringAttribute(pXmlAttributes, _XML_ATTRIBUTE_STATUS));
+      fStatus = new GameStatusFactory().forName(UtilXml.getStringAttribute(pXmlAttributes, _XML_ATTRIBUTE_STATUS));
       String startedTimestamp = UtilXml.getStringAttribute(pXmlAttributes, _XML_ATTRIBUTE_STARTED);
       if (StringTool.isProvided(startedTimestamp)) {
         try {

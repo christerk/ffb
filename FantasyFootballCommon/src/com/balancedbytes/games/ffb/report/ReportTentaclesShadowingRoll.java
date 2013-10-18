@@ -4,6 +4,10 @@ import com.balancedbytes.games.ffb.Skill;
 import com.balancedbytes.games.ffb.SkillFactory;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
+import com.balancedbytes.games.ffb.json.IJsonOption;
+import com.balancedbytes.games.ffb.json.UtilJson;
+import com.eclipsesource.json.JsonObject;
+import com.eclipsesource.json.JsonValue;
 
 
 
@@ -94,6 +98,32 @@ public class ReportTentaclesShadowingRoll implements IReport {
     fMinimumRoll = pByteArray.getByte();
     fReRolled = pByteArray.getBoolean();
     return byteArraySerializationVersion;
+  }
+  
+  // JSON serialization
+  
+  public JsonValue toJsonValue() {
+    JsonObject jsonObject = new JsonObject();
+    IJsonOption.REPORT_ID.addTo(jsonObject, getId());
+    IJsonOption.SKILL.addTo(jsonObject, fSkill);
+    IJsonOption.DEFENDER_ID.addTo(jsonObject, fDefenderId);
+    IJsonOption.TENTACLE_ROLL.addTo(jsonObject, fRoll);
+    IJsonOption.SUCCESSFUL.addTo(jsonObject, fSuccessful);
+    IJsonOption.MINIMUM_ROLL.addTo(jsonObject, fMinimumRoll);
+    IJsonOption.RE_ROLLED.addTo(jsonObject, fReRolled);
+    return jsonObject;
+  }
+  
+  public ReportTentaclesShadowingRoll initFrom(JsonValue pJsonValue) {
+    JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
+    UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(jsonObject));
+    fSkill = (Skill) IJsonOption.SKILL.getFrom(jsonObject);
+    fDefenderId = IJsonOption.DEFENDER_ID.getFrom(jsonObject);
+    fRoll = IJsonOption.TENTACLE_ROLL.getFrom(jsonObject);
+    fSuccessful = IJsonOption.SUCCESSFUL.getFrom(jsonObject);
+    fMinimumRoll = IJsonOption.MINIMUM_ROLL.getFrom(jsonObject);
+    fReRolled = IJsonOption.RE_ROLLED.getFrom(jsonObject);
+    return this;
   }
     
 }

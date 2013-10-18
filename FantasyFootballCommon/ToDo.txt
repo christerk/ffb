@@ -1,3 +1,8 @@
+2013-10-18
+  add toJsonValue() and initFromJsonValue() to all steps
+  (no problem shown currently because it is implemented in the superclass)
+
+old stuff:
 
 Christer uses mySql 5.0.60-r1
 

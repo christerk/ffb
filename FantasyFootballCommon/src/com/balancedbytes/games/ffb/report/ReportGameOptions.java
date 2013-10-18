@@ -2,8 +2,14 @@ package com.balancedbytes.games.ffb.report;
 
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
+import com.balancedbytes.games.ffb.json.IJsonOption;
+import com.balancedbytes.games.ffb.json.UtilJson;
+import com.eclipsesource.json.JsonObject;
+import com.eclipsesource.json.JsonValue;
 
 /**
+ * This report is no longer used, it remains for compatibility with older versions.
+ * Will be removed in a later version.
  * 
  * @author Georg Seipler
  */
@@ -101,4 +107,20 @@ public class ReportGameOptions implements IReport {
     return byteArraySerializationVersion;
   }
 
+  // JSON serialization
+  
+  public JsonValue toJsonValue() {
+    JsonObject jsonObject = new JsonObject();
+    IJsonOption.REPORT_ID.addTo(jsonObject, getId());
+    // incomplete because it is no longer necessary
+    return jsonObject;
+  }
+  
+  public ReportGameOptions initFrom(JsonValue pJsonValue) {
+    JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
+    UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(jsonObject));
+    // incomplete because it is no longer necessary
+    return this;
+  }
+  
 }

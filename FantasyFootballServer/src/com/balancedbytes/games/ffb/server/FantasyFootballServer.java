@@ -13,6 +13,7 @@ import com.balancedbytes.games.ffb.server.db.DbConnectionManager;
 import com.balancedbytes.games.ffb.server.db.DbInitializer;
 import com.balancedbytes.games.ffb.server.db.DbQueryFactory;
 import com.balancedbytes.games.ffb.server.db.DbUpdateFactory;
+import com.balancedbytes.games.ffb.server.db.old.DbConversion;
 import com.balancedbytes.games.ffb.server.fumbbl.FumbblRequestProcessor;
 import com.balancedbytes.games.ffb.server.handler.ServerCommandHandlerFactory;
 import com.balancedbytes.games.ffb.server.net.ChannelManager;
@@ -37,7 +38,8 @@ public class FantasyFootballServer {
   private static final String _USAGE = "java -jar FantasyFootballServer.jar standalone\n"
                                      + "java -jar FantasyFootballServer.jar standalone initDb\n"
                                      + "java -jar FantasyFootballServer.jar fumbbl\n"
-                                     + "java -jar FantasyFootballServer.jar fumbbl initDb\n";
+                                     + "java -jar FantasyFootballServer.jar fumbbl initDb\n"
+                                     + "java -jar FantasyFootballServer.jar fumbbl convertDb <startGameId> <endGameId>\n";
   
   private ServerMode fMode;
   private DbConnectionManager fDbConnectionManager;
@@ -62,6 +64,9 @@ public class FantasyFootballServer {
   private AdminConnector fAdminConnector;
   private FumbblRequestProcessor fFumbblRequestProcessor;
   private boolean fBlockingNewGames;
+  
+  private long fConvertStartGameId;
+  private long fConvertEndGameId;
   
   public FantasyFootballServer(ServerMode pMode, Properties pProperties) {
     fMode = pMode;
@@ -124,52 +129,66 @@ public class FantasyFootballServer {
       fGameCache = new GameCache(this);
       fGameCache.init();
       
-      fDbUpdater = new DbUpdater(this);
-      fPersistenceUpdaterThread = new Thread(fDbUpdater);
-      fPersistenceUpdaterThread.start();
-              
-      fChannelManager = new ChannelManager();
+      if (fMode.isConvertDb()) {
 
-      fCommandHandlerFactory = new ServerCommandHandlerFactory(this); 
+        System.err.println("FantasyFootballServer " + SERVER_VERSION + " converting games from id " + fConvertStartGameId + " to " + fConvertEndGameId + ".");
 
-      fCommunication = new ServerCommunication(this);
-      fCommunicationThread = new Thread(fCommunication);
-      fCommunicationThread.start();
-      
-      int serverPort = Integer.parseInt(getProperty(IServerProperty.SERVER_PORT));
-      fNioServer = new NioServer(null, serverPort, fCommunication);
-      fNioServerThread = new Thread(fNioServer);
-      fNioServerThread.start();
-
-      String httpPortProperty = getProperty(IServerProperty.HTTP_PORT);
-      String httpDirProperty = getProperty(IServerProperty.HTTP_DIR);
-      if (StringTool.isProvided(httpPortProperty) && StringTool.isProvided(httpDirProperty)) {
-        File httpDir = new File(httpDirProperty);
-        int httpPort = Integer.parseInt(httpPortProperty);
-        fHttpServer = new HttpServer(this, httpPort, httpDir);
-        fHttpServerThread = new Thread(fHttpServer);
-        fHttpServerThread.start();
+      	DbConversion dbConversion = new DbConversion(this);
+      	dbConversion.convert(fConvertStartGameId, fConvertEndGameId);
+      	
+      	fDbQueryFactory.closeDbConnection();
+      	fDbUpdateFactory.closeDbConnection();
+      	
+      } else {
+      	
+        fDbUpdater = new DbUpdater(this);
+        fPersistenceUpdaterThread = new Thread(fDbUpdater);
+        fPersistenceUpdaterThread.start();
+                
+        fChannelManager = new ChannelManager();
+  
+        fCommandHandlerFactory = new ServerCommandHandlerFactory(this); 
+  
+        fCommunication = new ServerCommunication(this);
+        fCommunicationThread = new Thread(fCommunication);
+        fCommunicationThread.start();
+        
+        int serverPort = Integer.parseInt(getProperty(IServerProperty.SERVER_PORT));
+        fNioServer = new NioServer(null, serverPort, fCommunication);
+        fNioServerThread = new Thread(fNioServer);
+        fNioServerThread.start();
+  
+        String httpPortProperty = getProperty(IServerProperty.HTTP_PORT);
+        String httpDirProperty = getProperty(IServerProperty.HTTP_DIR);
+        if (StringTool.isProvided(httpPortProperty) && StringTool.isProvided(httpDirProperty)) {
+          File httpDir = new File(httpDirProperty);
+          int httpPort = Integer.parseInt(httpPortProperty);
+          fHttpServer = new HttpServer(this, httpPort, httpDir);
+          fHttpServerThread = new Thread(fHttpServer);
+          fHttpServerThread.start();
+        }
+        
+        String pingIntervalProperty = getProperty(IServerProperty.SERVER_PING_INTERVAL);
+        if (StringTool.isProvided(pingIntervalProperty)) {
+          int pingInterval = Integer.parseInt(pingIntervalProperty);
+          String pingMaxDelayProperty = getProperty(IServerProperty.SERVER_PING_MAX_DELAY);
+          int pingMaxDelay = StringTool.isProvided(pingMaxDelayProperty) ? Integer.parseInt(pingMaxDelayProperty) : 0;
+          String dbKeepAliveProperty = getProperty(IServerProperty.DB_KEEP_ALIVE);
+          int dbKeepAlive = StringTool.isProvided(dbKeepAliveProperty) ? Integer.parseInt(dbKeepAliveProperty) : 0;
+          fPingTimer.schedule(new ServerPingTask(this, pingInterval, pingMaxDelay, dbKeepAlive), 0, pingInterval);
+        }
+        
+        fReplayer = new ServerReplayer(this);
+        Thread replayerThread = new Thread(fReplayer);
+        replayerThread.setPriority(replayerThread.getPriority() - 1);
+        replayerThread.start();
+        
+        fFumbblRequestProcessor = new FumbblRequestProcessor(this);
+        fFumbblRequestProcessor.start();
+  
+        System.err.println("FantasyFootballServer " + SERVER_VERSION + " running on port " + serverPort + ".");
+        
       }
-      
-      String pingIntervalProperty = getProperty(IServerProperty.SERVER_PING_INTERVAL);
-      if (StringTool.isProvided(pingIntervalProperty)) {
-        int pingInterval = Integer.parseInt(pingIntervalProperty);
-        String pingMaxDelayProperty = getProperty(IServerProperty.SERVER_PING_MAX_DELAY);
-        int pingMaxDelay = StringTool.isProvided(pingMaxDelayProperty) ? Integer.parseInt(pingMaxDelayProperty) : 0;
-        String dbKeepAliveProperty = getProperty(IServerProperty.DB_KEEP_ALIVE);
-        int dbKeepAlive = StringTool.isProvided(dbKeepAliveProperty) ? Integer.parseInt(dbKeepAliveProperty) : 0;
-        fPingTimer.schedule(new ServerPingTask(this, pingInterval, pingMaxDelay, dbKeepAlive), 0, pingInterval);
-      }
-      
-      fReplayer = new ServerReplayer(this);
-      Thread replayerThread = new Thread(fReplayer);
-      replayerThread.setPriority(replayerThread.getPriority() - 1);
-      replayerThread.start();
-      
-      fFumbblRequestProcessor = new FumbblRequestProcessor(this);
-      fFumbblRequestProcessor.start();
-
-      System.err.println("FantasyFootballServer " + SERVER_VERSION + " running on port " + serverPort + ".");
       
     }
     
@@ -268,6 +287,11 @@ public class FantasyFootballServer {
     return fFumbblRequestProcessor;
   }
   
+  public void setConversionRange(long pStartGameId, long pEndGameId) {
+  	fConvertStartGameId = pStartGameId;
+  	fConvertEndGameId = pEndGameId;
+  }
+  
   public boolean isBlockingNewGames() {
 	  return fBlockingNewGames;
   }
@@ -287,12 +311,17 @@ public class FantasyFootballServer {
 
       ServerMode serverMode = ServerMode.fromArguments(args);
 
+      long convertStartGameId = (args.length > 3) ? Long.parseLong(args[2]) : 0;
+      long convertEndGameId = (args.length > 3) ? Long.parseLong(args[3]) : 0;
+
       BufferedInputStream propertyInputStream = new BufferedInputStream(new FileInputStream("server.ini"));
       Properties properties = new Properties();
       properties.load(propertyInputStream);
       propertyInputStream.close();
 
       FantasyFootballServer server = new FantasyFootballServer(serverMode, properties);
+    	server.setConversionRange(convertStartGameId, convertEndGameId);
+      
       try {
         server.run();
       } catch (Exception all) {

@@ -54,12 +54,14 @@ public class DbGamesSerializedInsert extends DbUpdateStatement {
     int col = 1;
     fStatement.setLong(col++, parameter.getId());
     try {
-    	byte[] blobData = pFillBlob ? parameter.compress() : new byte[0];
+    	byte[] blobData = pFillBlob ? parameter.deflate() : new byte[0];
     	if (pFillBlob && getServer().getDebugLog().isLogging(IServerLogLevel.TRACE)) {
+        int newLength = blobData.length;
+        int oldLength = parameter.length();
     		StringBuilder logMsg = new StringBuilder();
-    		logMsg.append("inserting compressed serialized game of ").append(StringTool.formatThousands(blobData.length)).append(" bytes");
-    		logMsg.append(" (").append(Math.round((double) blobData.length * 100 / parameter.getSerialized().length)).append("%");
-    		logMsg.append(" of original ").append(StringTool.formatThousands(parameter.getSerialized().length)).append(" bytes)");
+    		logMsg.append("inserting compressed serialized game of ").append(StringTool.formatThousands(newLength)).append(" bytes");
+    		logMsg.append(" (").append(Math.round((double) newLength * 100 / oldLength)).append("%");
+    		logMsg.append(" of original ").append(StringTool.formatThousands(oldLength)).append(" bytes)");
     		getServer().getDebugLog().log(IServerLogLevel.TRACE, parameter.getId(), logMsg.toString());
     	}
       fStatement.setBlob(col++, new ByteArrayInputStream(blobData), blobData.length);

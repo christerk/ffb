@@ -5,8 +5,12 @@ import java.util.List;
 
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
+import com.balancedbytes.games.ffb.json.IJsonOption;
+import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.util.ArrayTool;
 import com.balancedbytes.games.ffb.util.StringTool;
+import com.eclipsesource.json.JsonObject;
+import com.eclipsesource.json.JsonValue;
 
 
 
@@ -29,7 +33,7 @@ public class ReportKickoffThrowARock implements IReport {
     this();
     fRollHome = pRollHome;
     fRollAway = pRollAway;
-    add(pPlayersHit);
+    addPlayerIds(pPlayersHit);
   }
   
   public ReportId getId() {
@@ -48,16 +52,16 @@ public class ReportKickoffThrowARock implements IReport {
     return fPlayersHit.toArray(new String[fPlayersHit.size()]);
   }
   
-  private void add(String pPlayerId) {
+  private void addPlayerId(String pPlayerId) {
     if (StringTool.isProvided(pPlayerId)) {
       fPlayersHit.add(pPlayerId);
     }
   }
   
-  private void add(String[] pPlayerIds) {
+  private void addPlayerIds(String[] pPlayerIds) {
     if (ArrayTool.isProvided(pPlayerIds)) {
       for (String playerId : pPlayerIds) {
-        add(playerId);
+        addPlayerId(playerId);
       }
     }
   }
@@ -87,8 +91,29 @@ public class ReportKickoffThrowARock implements IReport {
     int byteArraySerializationVersion = pByteArray.getSmallInt();
     fRollHome = pByteArray.getByte();
     fRollAway = pByteArray.getByte();
-    add(pByteArray.getStringArray());
+    addPlayerIds(pByteArray.getStringArray());
     return byteArraySerializationVersion;
+  }
+  
+  // JSON serialization
+  
+  public JsonValue toJsonValue() {
+    JsonObject jsonObject = new JsonObject();
+    IJsonOption.REPORT_ID.addTo(jsonObject, getId());
+    IJsonOption.ROLL_HOME.addTo(jsonObject, fRollHome);
+    IJsonOption.ROLL_AWAY.addTo(jsonObject, fRollAway);
+    IJsonOption.PLAYER_IDS_HIT.addTo(jsonObject, fPlayersHit);
+    return jsonObject;
+  }
+  
+  public ReportKickoffThrowARock initFrom(JsonValue pJsonValue) {
+    JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
+    UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(jsonObject));
+    fRollHome = IJsonOption.ROLL_HOME.getFrom(jsonObject);
+    fRollAway = IJsonOption.ROLL_AWAY.getFrom(jsonObject);
+    fPlayersHit.clear();
+    addPlayerIds(IJsonOption.PLAYER_IDS_HIT.getFrom(jsonObject));
+    return this;
   }
       
 }

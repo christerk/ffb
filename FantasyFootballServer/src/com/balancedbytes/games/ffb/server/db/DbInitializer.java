@@ -196,7 +196,7 @@ public class DbInitializer {
     StringBuilder sql = new StringBuilder();
     sql.append("CREATE TABLE ").append(IDbTableGamesSerialized.TABLE_NAME).append(" (");
     sql.append(IDbTableGamesSerialized.COLUMN_ID).append(" BIGINT NOT NULL,");     // 1
-  	sql.append(IDbTableGamesSerialized.COLUMN_SERIALIZED).append(" MEDIUMTEXT,");  // 2
+  	sql.append(IDbTableGamesSerialized.COLUMN_SERIALIZED).append(" MEDIUMBLOB,");  // 2
     sql.append("PRIMARY KEY(").append(IDbTableGamesSerialized.COLUMN_ID).append(")");
   	sql.append(") ENGINE=InnoDB DEFAULT CHARSET=utf8;");
     return pStatement.executeUpdate(sql.toString());

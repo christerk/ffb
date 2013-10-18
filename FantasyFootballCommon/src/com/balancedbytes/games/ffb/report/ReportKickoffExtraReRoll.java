@@ -4,6 +4,10 @@ import com.balancedbytes.games.ffb.KickoffResult;
 import com.balancedbytes.games.ffb.KickoffResultFactory;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
+import com.balancedbytes.games.ffb.json.IJsonOption;
+import com.balancedbytes.games.ffb.json.UtilJson;
+import com.eclipsesource.json.JsonObject;
+import com.eclipsesource.json.JsonValue;
 
 
 
@@ -86,6 +90,30 @@ public class ReportKickoffExtraReRoll implements IReport {
     fRollAway = pByteArray.getByte();
     fAwayGainsReRoll = pByteArray.getBoolean();
     return byteArraySerializationVersion;
+  }
+  
+  // JSON serialization
+  
+  public JsonValue toJsonValue() {
+    JsonObject jsonObject = new JsonObject();
+    IJsonOption.REPORT_ID.addTo(jsonObject, getId());
+    IJsonOption.KICKOFF_RESULT.addTo(jsonObject, fKickoffResult);
+    IJsonOption.ROLL_HOME.addTo(jsonObject, fRollHome);
+    IJsonOption.HOME_GAINS_RE_ROLL.addTo(jsonObject, fHomeGainsReRoll);
+    IJsonOption.ROLL_AWAY.addTo(jsonObject, fRollAway);
+    IJsonOption.AWAY_GAINS_RE_ROLL.addTo(jsonObject, fAwayGainsReRoll);
+    return jsonObject;
+  }
+  
+  public ReportKickoffExtraReRoll initFrom(JsonValue pJsonValue) {
+    JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
+    UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(jsonObject));
+    fKickoffResult = (KickoffResult) IJsonOption.KICKOFF_RESULT.getFrom(jsonObject);
+    fRollHome = IJsonOption.ROLL_HOME.getFrom(jsonObject);
+    fHomeGainsReRoll = IJsonOption.HOME_GAINS_RE_ROLL.getFrom(jsonObject);
+    fRollAway = IJsonOption.ROLL_AWAY.getFrom(jsonObject);
+    fAwayGainsReRoll = IJsonOption.AWAY_GAINS_RE_ROLL.getFrom(jsonObject);
+    return this;
   }
   
 }

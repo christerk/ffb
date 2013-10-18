@@ -9,7 +9,7 @@ import java.util.Date;
 
 import com.balancedbytes.games.ffb.FantasyFootballException;
 import com.balancedbytes.games.ffb.FieldCoordinate;
-import com.balancedbytes.games.ffb.GameStatus;
+import com.balancedbytes.games.ffb.GameStatusFactory;
 import com.balancedbytes.games.ffb.PlayerActionFactory;
 import com.balancedbytes.games.ffb.TurnModeFactory;
 import com.balancedbytes.games.ffb.model.Game;
@@ -85,7 +85,7 @@ public class DbGameStatesQuery extends DbStatement {
         game.setTimeoutEnforced(resultSet.getBoolean(col++));
         game.setConcessionPossible(resultSet.getBoolean(col++));
         game.setTesting(resultSet.getBoolean(col++));
-        gameState.setStatus(GameStatus.fromTypeString(resultSet.getString(col++)));
+        gameState.setStatus(new GameStatusFactory().forTypeString(resultSet.getString(col++)));
         game.setThrowerId(resultSet.getString(col++));
         game.setThrowerAction(new PlayerActionFactory().forId(resultSet.getByte(col++)));
       }

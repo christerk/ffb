@@ -5,7 +5,11 @@ import java.util.List;
 
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
+import com.balancedbytes.games.ffb.json.IJsonOption;
+import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.util.ArrayTool;
+import com.eclipsesource.json.JsonObject;
+import com.eclipsesource.json.JsonValue;
 
 
 
@@ -149,6 +153,32 @@ public class ReportKickoffPitchInvasion implements IReport {
     addRollsAway(pByteArray.getByteArrayAsIntArray());
     addPlayersAffectedAway(pByteArray.getBooleanArray());
     return byteArraySerializationVersion;
+  }
+  
+  // JSON serialization
+  
+  public JsonValue toJsonValue() {
+    JsonObject jsonObject = new JsonObject();
+    IJsonOption.REPORT_ID.addTo(jsonObject, getId());
+    IJsonOption.ROLLS_HOME.addTo(jsonObject, fRollsHome);
+    IJsonOption.PLAYERS_AFFECTED_HOME.addTo(jsonObject, fPlayersAffectedHome);
+    IJsonOption.ROLLS_AWAY.addTo(jsonObject, fRollsAway);
+    IJsonOption.PLAYERS_AFFECTED_AWAY.addTo(jsonObject, fPlayersAffectedAway);
+    return jsonObject;
+  }
+  
+  public ReportKickoffPitchInvasion initFrom(JsonValue pJsonValue) {
+    JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
+    UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(jsonObject));
+    fRollsHome.clear();
+    addRollsHome(IJsonOption.ROLLS_HOME.getFrom(jsonObject));
+    fPlayersAffectedHome.clear();
+    addPlayersAffectedHome(IJsonOption.PLAYERS_AFFECTED_HOME.getFrom(jsonObject));
+    fRollsAway.clear();
+    addRollsAway(IJsonOption.ROLLS_AWAY.getFrom(jsonObject));
+    fPlayersAffectedAway.clear();
+    addPlayersAffectedAway(IJsonOption.PLAYERS_AFFECTED_AWAY.getFrom(jsonObject));
+    return this;
   }
   
 }

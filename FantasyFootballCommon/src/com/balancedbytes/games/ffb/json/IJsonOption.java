@@ -45,9 +45,11 @@ public interface IJsonOption {
                JsonBooleanOption APOTHECARY_USED = new JsonBooleanOption("apothecaryUsed");
                    JsonIntOption AVAILABLE_CARDS = new JsonIntOption("availableCards");
                    JsonIntOption AVAILABLE_GOLD = new JsonIntOption("availableGold");
+               JsonBooleanOption AWAY_GAINS_RE_ROLL = new JsonBooleanOption("awayGainsReRoll");
                 JsonStringOption AWAY_TEXT = new JsonStringOption("awayText");
                    JsonIntOption BADLY_HURT_SUFFERED = new JsonIntOption("badlyHurtSuffered");
        JsonFieldCoordinateOption BALL_COORDINATE = new JsonFieldCoordinateOption("ballCoordinate");         
+       JsonFieldCoordinateOption BALL_COORDINATE_END = new JsonFieldCoordinateOption("ballCoordinateEnd");         
        JsonFieldCoordinateOption BALL_COORDINATE_WITH_KICK = new JsonFieldCoordinateOption("ballCoordinateWithKick");
           JsonBooleanArrayOption BANS = new JsonBooleanArrayOption("bans");
                JsonBooleanOption BLITZ_USED = new JsonBooleanOption("blitzUsed");
@@ -119,6 +121,7 @@ public interface IJsonOption {
                JsonBooleanOption FOULING_PLAYER_BANNED = new JsonBooleanOption("foulingPlayerBanned");
                    JsonIntOption FOULS = new JsonIntOption("fouls");
                JsonBooleanOption FUMBLE = new JsonBooleanOption("fumble");
+                JsonObjectOption GAME = new JsonObjectOption("game");
                   JsonLongOption GAME_ID = new JsonLongOption("gameId");
                 JsonObjectOption GAME_LIST = new JsonObjectOption("gameList");
                  JsonArrayOption GAME_LIST_ENTRIES = new JsonArrayOption("gameListEntries");
@@ -142,6 +145,7 @@ public interface IJsonOption {
                  JsonArrayOption HEAT_EXHAUSTIONS = new JsonArrayOption("heatExhaustions"); 
                JsonBooleanOption HOME_CHOICE = new JsonBooleanOption("homeChoice");
                JsonBooleanOption HOME_DATA = new JsonBooleanOption("homeData");
+               JsonBooleanOption HOME_GAINS_RE_ROLL = new JsonBooleanOption("homeGainsReRoll");
                JsonBooleanOption HOME_TEAM = new JsonBooleanOption("homeTeam");
                 JsonStringOption HOME_TEXT = new JsonStringOption("homeText");
                 JsonObjectOption INDUCEMENT_SET = new JsonObjectOption("inducementSet");
@@ -204,6 +208,7 @@ public interface IJsonOption {
                 JsonStringOption PLAYER_ID_TOUCHDOWN = new JsonStringOption("playerIdTouchdown");
            JsonStringArrayOption PLAYER_IDS = new JsonStringArrayOption("playerIds");
            JsonStringArrayOption PLAYER_IDS_AWAY = new JsonStringArrayOption("playerIdsAway");
+           JsonStringArrayOption PLAYER_IDS_HIT = new JsonStringArrayOption("playerIdsHit");
            JsonStringArrayOption PLAYER_IDS_HOME = new JsonStringArrayOption("playerIdsHome");
            JsonStringArrayOption PLAYER_NAMES = new JsonStringArrayOption("playerNames");
                    JsonIntOption PLAYER_NR = new JsonIntOption("playerNr");
@@ -213,6 +218,8 @@ public interface IJsonOption {
            JsonPlayerStateOption PLAYER_STATE = new JsonPlayerStateOption("playerState");
            JsonPlayerStateOption PLAYER_STATE_NEW = new JsonPlayerStateOption("playerStateNew");
            JsonPlayerStateOption PLAYER_STATE_OLD = new JsonPlayerStateOption("playerStateOld");
+          JsonBooleanArrayOption PLAYERS_AFFECTED_AWAY = new JsonBooleanArrayOption("playersAffectedAway");
+          JsonBooleanArrayOption PLAYERS_AFFECTED_HOME = new JsonBooleanArrayOption("playersAffectedHome");
            JsonStringArrayOption POSITION_IDS = new JsonStringArrayOption("positionIds"); 
                JsonBooleanOption PRO_RE_ROLL_OPTION = new JsonBooleanOption("proReRollOption");
                 JsonObjectOption PUSHBACK = new JsonObjectOption("pushback");
@@ -236,12 +243,17 @@ public interface IJsonOption {
                    JsonIntOption RE_ROLLS_STOLEN = new JsonIntOption("reRollsStolen");
                    JsonIntOption RIP_SUFFERED = new JsonIntOption("ripSuffered");
                    JsonIntOption ROLL = new JsonIntOption("roll");
+                   JsonIntOption ROLL_SCATTER_DIRECTION = new JsonIntOption("rollScatterDirection");
+                   JsonIntOption ROLL_SCATTER_DISTANCE = new JsonIntOption("rollScatterDistance");
                    JsonIntOption ROLL_AWAY = new JsonIntOption("rollAway");
                    JsonIntOption ROLL_HOME = new JsonIntOption("rollHome");
                  JsonArrayOption ROLL_MODIFIERS = new JsonArrayOption("rollModifiers");
               JsonIntArrayOption ROLLS = new JsonIntArrayOption("rolls");
+              JsonIntArrayOption ROLLS_AWAY = new JsonIntArrayOption("rollsAway");
+              JsonIntArrayOption ROLLS_HOME = new JsonIntArrayOption("rollsHome");
                    JsonIntOption RUSHING = new JsonIntOption("rushing");
                JsonBooleanOption SAFE_THROW_HOLD = new JsonBooleanOption("safeThrowHold");
+          JsonEnumWithNameOption SCATTER_DIRECTION = new JsonEnumWithNameOption("scatterDirection", new DirectionFactory());
                    JsonIntOption SCORE = new JsonIntOption("score");
                JsonBooleanOption SELECTED = new JsonBooleanOption("selected");
                 JsonStringOption SEND_TO_BOX_BY_PLAYER_ID = new JsonStringOption("sendToBoxByPlayerId");
@@ -299,6 +311,7 @@ public interface IJsonOption {
                 JsonObjectOption TEAM_RESULT_HOME = new JsonObjectOption("teamResultHome"); 
           JsonEnumWithNameOption TEAM_STATUS = new JsonEnumWithNameOption("teamStatus", new TeamStatusFactory());
                    JsonIntOption TEAM_VALUE = new JsonIntOption("teamValue");
+              JsonIntArrayOption TENTACLE_ROLL = new JsonIntArrayOption("tentacleRoll");
                 JsonStringOption TEXT = new JsonStringOption("text");
                 JsonStringOption THROWER_ID = new JsonStringOption("throwerId");
                 JsonStringOption THROWN_PLAYER_ID = new JsonStringOption("thrownPlayerId");

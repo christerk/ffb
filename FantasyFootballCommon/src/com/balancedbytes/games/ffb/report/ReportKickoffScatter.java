@@ -5,6 +5,10 @@ import com.balancedbytes.games.ffb.DirectionFactory;
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
+import com.balancedbytes.games.ffb.json.IJsonOption;
+import com.balancedbytes.games.ffb.json.UtilJson;
+import com.eclipsesource.json.JsonObject;
+import com.eclipsesource.json.JsonValue;
 
 
 /**
@@ -83,6 +87,28 @@ public class ReportKickoffScatter implements IReport {
     fRollScatterDirection = pByteArray.getByte();
     fRollScatterDistance = pByteArray.getByte();
     return byteArraySerializationVersion;
+  }
+  
+  // JSON serialization
+  
+  public JsonValue toJsonValue() {
+    JsonObject jsonObject = new JsonObject();
+    IJsonOption.REPORT_ID.addTo(jsonObject, getId());
+    IJsonOption.BALL_COORDINATE_END.addTo(jsonObject, fBallCoordinateEnd);
+    IJsonOption.SCATTER_DIRECTION.addTo(jsonObject, fScatterDirection);
+    IJsonOption.ROLL_SCATTER_DIRECTION.addTo(jsonObject, fRollScatterDirection);
+    IJsonOption.ROLL_SCATTER_DISTANCE.addTo(jsonObject, fRollScatterDistance);
+    return jsonObject;
+  }
+  
+  public ReportKickoffScatter initFrom(JsonValue pJsonValue) {
+    JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
+    UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(jsonObject));
+    fBallCoordinateEnd = IJsonOption.BALL_COORDINATE_END.getFrom(jsonObject);
+    fScatterDirection = (Direction) IJsonOption.SCATTER_DIRECTION.getFrom(jsonObject);
+    fRollScatterDirection = IJsonOption.ROLL_SCATTER_DIRECTION.getFrom(jsonObject);
+    fRollScatterDistance = IJsonOption.ROLL_SCATTER_DISTANCE.getFrom(jsonObject);
+    return this;
   }
 
 }

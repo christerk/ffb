@@ -7,7 +7,7 @@ package com.balancedbytes.games.ffb;
  * 
  * @author Kalimar
  */
-public enum GameStatus {
+public enum GameStatus implements IEnumWithId, IEnumWithName {
   
   SCHEDULED(1, "scheduled", "O"),
   STARTING(2, "starting", "S"),
@@ -36,33 +36,6 @@ public enum GameStatus {
   
   public String getTypeString() {
     return fTypeString;
-  }
-  
-  public static GameStatus fromId(int pId) {
-    for (GameStatus mode : values()) {
-      if (mode.getId() == pId) {
-        return mode;
-      }
-    }
-    return null;
-  }
-  
-  public static GameStatus fromName(String pName) {
-    for (GameStatus mode : values()) {
-      if (mode.getName().equalsIgnoreCase(pName)) {
-        return mode;
-      }
-    }
-    return null;
-  }
-  
-  public static GameStatus fromTypeString(String pTypeString) {
-    for (GameStatus status : values()) {
-      if (status.getTypeString().equals(pTypeString)) {
-        return status;
-      }
-    }
-    return null;
   }
     
 }
