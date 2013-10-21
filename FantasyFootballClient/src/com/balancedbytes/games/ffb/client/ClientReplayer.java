@@ -363,7 +363,7 @@ public class ClientReplayer implements ActionListener {
     FieldModel fieldModel = pGame.getFieldModel();
     for (int i = 0; i < players.length; i++) {
   		// remove mercs, stars and raised players, they will be added via command later
-    	PlayerType playerType = players[i].getType();
+    	PlayerType playerType = players[i].getPlayerType();
     	if ((playerType == null) || (playerType == PlayerType.MERCENARY) || (playerType == PlayerType.STAR) || (playerType == PlayerType.RAISED_FROM_DEAD)) {
     		fieldModel.remove(players[i]);
     		pTeam.remove(players[i]);

@@ -163,7 +163,7 @@ public class Team implements IXmlSerializable, IByteArraySerializable, IJsonSeri
   public int getNrOfRegularPlayers() {
     int nrOfRegularPlayers = 0;
     for (Player player : getPlayers()) {
-      if ((player.getType() != PlayerType.JOURNEYMAN) && (player.getType() != PlayerType.STAR)) {
+      if ((player.getPlayerType() != PlayerType.JOURNEYMAN) && (player.getPlayerType() != PlayerType.STAR)) {
         nrOfRegularPlayers++;
       }
     }

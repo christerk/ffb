@@ -50,7 +50,7 @@ public enum SkillUse implements IEnumWithId, IEnumWithName {
   
   public String getDescription(Player pPlayer) {
     if (pPlayer != null) {
-      return fDescription.replaceAll(_PARAMETER_GENITIVE, pPlayer.getGender().getGenitive());
+      return fDescription.replaceAll(_PARAMETER_GENITIVE, pPlayer.getPlayerGender().getGenitive());
     } else {
       return fDescription;
     }

@@ -836,7 +836,7 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
     Team team = pInducementSet.getTurnData().isHomeData() ? game.getTeamHome() : game.getTeamAway();
     List<Player> starPlayers = new ArrayList<Player>();
     for (Player player : team.getPlayers()) {
-      if (player.getType() == PlayerType.STAR) {
+      if (player.getPlayerType() == PlayerType.STAR) {
       	starPlayers.add(player);
       }
     }
@@ -857,7 +857,7 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
     
     List<Player> mercenaries = new ArrayList<Player>();
     for (Player player : team.getPlayers()) {
-      if (player.getType() == PlayerType.MERCENARY) {
+      if (player.getPlayerType() == PlayerType.MERCENARY) {
       	mercenaries.add(player);
       }
     }

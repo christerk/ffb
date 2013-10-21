@@ -911,9 +911,9 @@ public class StatusReport {
       print(getIndent() + 2, false, player);
       status = new StringBuilder();
       if (pReport.isSuccessful()) {
-        status.append("'s Pro skill allows ").append(player.getGender().getDative()).append(" to re-roll the action.");
+        status.append("'s Pro skill allows ").append(player.getPlayerGender().getDative()).append(" to re-roll the action.");
       } else {
-        status.append("'s Pro skill does not help ").append(player.getGender().getDative()).append(".");
+        status.append("'s Pro skill does not help ").append(player.getPlayerGender().getDative()).append(".");
       }
       println(getIndent() + 2, status.toString());
     } else {
@@ -933,9 +933,9 @@ public class StatusReport {
     print(getIndent() + 1, false, player);
     status = new StringBuilder();
     if (pReport.isSuccessful()) {
-      status.append(" uses Dauntless to push ").append(player.getGender().getSelf()).append(" to Strength ").append(pReport.getStrength()).append(".");
+      status.append(" uses Dauntless to push ").append(player.getPlayerGender().getSelf()).append(" to Strength ").append(pReport.getStrength()).append(".");
     } else {
-      status.append(" fails to push ").append(player.getGender().getGenitive()).append(" strength.");
+      status.append(" fails to push ").append(player.getPlayerGender().getGenitive()).append(" strength.");
     }
     println(getIndent() + 1, status.toString());
   }
@@ -950,9 +950,9 @@ public class StatusReport {
     print(getIndent() + 1, false, player);
     status = new StringBuilder();
     if (pReport.isSuccessful()) {
-      status.append(" uses ").append(player.getGender().getGenitive()).append(" Chainsaw.");
+      status.append(" uses ").append(player.getPlayerGender().getGenitive()).append(" Chainsaw.");
     } else {
-      status.append("'s Chainsaw kicks back to hurt ").append(player.getGender().getDative()).append(".");
+      status.append("'s Chainsaw kicks back to hurt ").append(player.getPlayerGender().getDative()).append(".");
     }
     println(getIndent() + 1, status.toString());
   }
@@ -1086,7 +1086,7 @@ public class StatusReport {
     print(getIndent() + 2, false, thrower);
     if (pReport.isSuccessful()) {
       status = new StringBuilder();
-      status.append(" throws ").append(thrower.getGender().getGenitive()).append(" team-mate successfully.");
+      status.append(" throws ").append(thrower.getPlayerGender().getGenitive()).append(" team-mate successfully.");
       println(getIndent() + 2, status.toString());
     } else {
       println(getIndent() + 2, " fumbles the throw.");
@@ -1157,7 +1157,7 @@ public class StatusReport {
     if (pReport.isSuccessful()) {
       status.append(" resists the hunger.");
     } else {
-      status.append(" tries to eat ").append(thrower.getGender().getGenitive()).append(" team-mate.");
+      status.append(" tries to eat ").append(thrower.getPlayerGender().getGenitive()).append(" team-mate.");
     }
     println(getIndent() + 1, TextStyle.NONE, status.toString());
   }
@@ -1172,7 +1172,7 @@ public class StatusReport {
       print(getIndent() + 1, TextStyle.NONE, "The ref refrains from penalizing ");
       print(getIndent() + 1, false, player);
       status = new StringBuilder();
-      status.append(" and ").append(player.getGender().getNominative()).append(" remains in the game.");
+      status.append(" and ").append(player.getPlayerGender().getNominative()).append(" remains in the game.");
       println(getIndent() + 1, TextStyle.NONE, status.toString());
     } else {
       print(getIndent() + 1, TextStyle.NONE, "The ref appears to be unimpressed and ");
@@ -1192,7 +1192,7 @@ public class StatusReport {
     if (pReport.isSuccessful()) {
       status.append(" manages to wriggle free.");
     } else {
-      status.append(" disappears in ").append(thrownPlayer.getGender().getGenitive()).append(" team-mate's stomach.");
+      status.append(" disappears in ").append(thrownPlayer.getPlayerGender().getGenitive()).append(" team-mate's stomach.");
     }
     println(getIndent() + 1, TextStyle.NONE, status.toString());
   }
@@ -1207,7 +1207,7 @@ public class StatusReport {
     print(getIndent() + 1, false, player);
     if (pReport.isSuccessful()) {
       status = new StringBuilder();
-      status.append(" leaps over ").append(player.getGender().getGenitive()).append(" opponents.");
+      status.append(" leaps over ").append(player.getPlayerGender().getGenitive()).append(" opponents.");
       println(getIndent() + 1, status.toString());
       if (!pReport.isReRolled() && fShowModifiersOnSuccess) {
         neededRoll = new StringBuilder().append("Succeeded on a roll of ").append(pReport.getMinimumRoll()).append("+");
@@ -1243,14 +1243,14 @@ public class StatusReport {
     print(getIndent() + 1, false, player);
     if (pReport.isSuccessful()) {
       status = new StringBuilder();
-      status.append(" jumps up to block ").append(player.getGender().getGenitive()).append(" opponent.");
+      status.append(" jumps up to block ").append(player.getPlayerGender().getGenitive()).append(" opponent.");
       println(getIndent() + 1, status.toString());
       if (!pReport.isReRolled() && fShowModifiersOnSuccess) {
         neededRoll = new StringBuilder().append("Succeeded on a roll of ").append(pReport.getMinimumRoll()).append("+");
       }
     } else {
       status = new StringBuilder();
-      status.append(" doesn't get to ").append(player.getGender().getGenitive()).append(" feet.");
+      status.append(" doesn't get to ").append(player.getPlayerGender().getGenitive()).append(" feet.");
       println(getIndent() + 1, status.toString());
       status = new StringBuilder();
       if (!pReport.isReRolled() && fShowModifiersOnFailure) {
@@ -1280,7 +1280,7 @@ public class StatusReport {
       }
     } else {
       status = new StringBuilder();
-      status.append(" doesn't get to ").append(player.getGender().getGenitive()).append(" feet.");
+      status.append(" doesn't get to ").append(player.getPlayerGender().getGenitive()).append(" feet.");
       println(getIndent() + 1, status.toString());
       status = new StringBuilder();
       if (!pReport.isReRolled() && fShowModifiersOnFailure) {
@@ -1353,14 +1353,14 @@ public class StatusReport {
     print(getIndent() + 1, false, player);
     if (pReport.isSuccessful()) {
       status = new StringBuilder();
-      status.append(" resists ").append(player.getGender().getGenitive()).append(" Animosity.");
+      status.append(" resists ").append(player.getPlayerGender().getGenitive()).append(" Animosity.");
       println(getIndent() + 1, status.toString());
       if (!pReport.isReRolled() && fShowModifiersOnSuccess) {
         neededRoll = new StringBuilder().append("Succeeded on a roll of ").append(pReport.getMinimumRoll()).append("+");
       }
     } else {
       status = new StringBuilder();
-      status.append(" gives in to ").append(player.getGender().getGenitive()).append(" Animosity.");
+      status.append(" gives in to ").append(player.getPlayerGender().getGenitive()).append(" Animosity.");
       println(getIndent() + 1, status.toString());
       status = new StringBuilder();
       if (!pReport.isReRolled() && fShowModifiersOnFailure) {
@@ -1382,7 +1382,7 @@ public class StatusReport {
     print(getIndent() + 1, false, thrownPlayer);
     if (pReport.isSuccessful()) {
       status = new StringBuilder();
-      status.append(" lands on ").append(thrownPlayer.getGender().getGenitive()).append(" feet.");
+      status.append(" lands on ").append(thrownPlayer.getPlayerGender().getGenitive()).append(" feet.");
       println(getIndent() + 1, status.toString());
       if (!pReport.isReRolled() && fShowModifiersOnSuccess) {
         neededRoll = new StringBuilder().append("Succeeded on a roll of ").append(pReport.getMinimumRoll()).append("+");
@@ -1552,13 +1552,13 @@ public class StatusReport {
     print(getIndent() + 2, false, player);
     status = new StringBuilder();
     if (pReport.isSuccessful()) {
-      status.append(" hypnotizes ").append(player.getGender().getGenitive()).append(" victim.");
+      status.append(" hypnotizes ").append(player.getPlayerGender().getGenitive()).append(" victim.");
       println(getIndent() + 2, status.toString());
       if (!pReport.isReRolled() && fShowModifiersOnSuccess) {
         neededRoll = new StringBuilder().append("Succeeded on a roll of ").append(pReport.getMinimumRoll()).append("+");
       }
     } else {
-      status.append(" fails to affect ").append(player.getGender().getGenitive()).append(" victim.");
+      status.append(" fails to affect ").append(player.getPlayerGender().getGenitive()).append(" victim.");
       println(getIndent() + 2, status.toString());
       if (!pReport.isReRolled() && fShowModifiersOnFailure) {
         neededRoll = new StringBuilder().append("Roll a ").append(pReport.getMinimumRoll()).append("+ to succeed");
@@ -1621,7 +1621,7 @@ public class StatusReport {
         print(getIndent(), true, defender);
         print(getIndent(), TextStyle.BOLD, " tries to hold ");
         print(getIndent(), true, actingPlayer.getPlayer());
-        status.append(" with ").append(defender.getGender().getGenitive()).append(" tentacles:");
+        status.append(" with ").append(defender.getPlayerGender().getGenitive()).append(" tentacles:");
         println(getIndent(), TextStyle.BOLD, status.toString());
       }
     }
@@ -1638,14 +1638,14 @@ public class StatusReport {
       status = new StringBuilder();
       if (pReport.isSuccessful()) {
         print(getIndent() + 2, false, actingPlayer.getPlayer());
-        status.append(" escapes ").append(actingPlayer.getPlayer().getGender().getGenitive()).append(" opponent.");
+        status.append(" escapes ").append(actingPlayer.getPlayer().getPlayerGender().getGenitive()).append(" opponent.");
         println(getIndent() + 2, status.toString());
         if (!pReport.isReRolled() && fShowModifiersOnSuccess) {
           neededRoll = new StringBuilder().append("Succeeded on a roll of ").append(pReport.getMinimumRoll()).append("+");
         }
       } else {
         print(getIndent() + 2, false, defender);
-        status.append(" shadows ").append(defender.getGender().getGenitive()).append(" opponent successfully.");
+        status.append(" shadows ").append(defender.getPlayerGender().getGenitive()).append(" opponent successfully.");
         println(getIndent() + 2, status.toString());
         if (!pReport.isReRolled() && fShowModifiersOnFailure) {
           neededRoll = new StringBuilder().append("Roll a ").append(pReport.getMinimumRoll()).append("+ to succeed");
@@ -1667,14 +1667,14 @@ public class StatusReport {
       status = new StringBuilder();
       if (pReport.isSuccessful()) {
         print(getIndent() + 2, false, actingPlayer.getPlayer());
-        status.append(" escapes ").append(actingPlayer.getPlayer().getGender().getGenitive()).append(" opponent.");
+        status.append(" escapes ").append(actingPlayer.getPlayer().getPlayerGender().getGenitive()).append(" opponent.");
         println(getIndent() + 2, status.toString());
         if (!pReport.isReRolled() && fShowModifiersOnSuccess) {
           neededRoll = new StringBuilder().append("Succeeded on a roll of ").append(pReport.getMinimumRoll()).append("+");
         }
       } else {
         print(getIndent() + 2, false, defender);
-        status.append(" holds ").append(defender.getGender().getGenitive()).append(" opponent successfully.");
+        status.append(" holds ").append(defender.getPlayerGender().getGenitive()).append(" opponent successfully.");
         println(getIndent() + 2, status.toString());
         if (!pReport.isReRolled() && fShowModifiersOnFailure) {
           neededRoll = new StringBuilder().append("Roll a ").append(pReport.getMinimumRoll()).append("+ to succeed");
@@ -1884,7 +1884,7 @@ public class StatusReport {
       print(getIndent() + 1, TextStyle.NONE, "The jury voted ");
       print(getIndent() + 1, TextStyle.HOME, player.getName());
       print(getIndent() + 1, TextStyle.NONE, " the most valuable player of ");
-      print(getIndent() + 1, TextStyle.NONE, player.getGender().getGenitive());
+      print(getIndent() + 1, TextStyle.NONE, player.getPlayerGender().getGenitive());
       println(getIndent() + 1, TextStyle.NONE, " team.");
     }
 
@@ -1893,7 +1893,7 @@ public class StatusReport {
       print(getIndent() + 1, TextStyle.NONE, "The jury voted ");
       print(getIndent() + 1, TextStyle.AWAY, player.getName());
       print(getIndent() + 1, TextStyle.NONE, " the most valuable player of ");
-      print(getIndent() + 1, TextStyle.NONE, player.getGender().getGenitive());
+      print(getIndent() + 1, TextStyle.NONE, player.getPlayerGender().getGenitive());
       println(getIndent() + 1, TextStyle.NONE, " team.");
     }
     
@@ -2159,13 +2159,13 @@ public class StatusReport {
         if (UtilCards.hasSkill(game, attacker, Skill.BLOCK)) {
           print(getIndent() + 1, false, attacker);
           status = new StringBuilder();
-          status.append(" has been saved by ").append(attacker.getGender().getGenitive()).append(" Block skill.");
+          status.append(" has been saved by ").append(attacker.getPlayerGender().getGenitive()).append(" Block skill.");
           println(getIndent() + 1, status.toString());
         }
         if (UtilCards.hasSkill(game, defender, Skill.BLOCK)) {
           print(getIndent() + 1, false, defender);
           status = new StringBuilder();
-          status.append(" has been saved by ").append(defender.getGender().getGenitive()).append(" Block skill.");
+          status.append(" has been saved by ").append(defender.getPlayerGender().getGenitive()).append(" Block skill.");
           println(getIndent() + 1, status.toString());
         }
         break;
@@ -2193,7 +2193,7 @@ public class StatusReport {
     if (pReport.getPushbackMode() == PushbackMode.GRAB) {
       ActingPlayer actingPlayer = game.getActingPlayer();
       print(indent, false, actingPlayer.getPlayer());
-      status.append(" uses Grab to place ").append(actingPlayer.getPlayer().getGender().getGenitive()).append(" opponent.");
+      status.append(" uses Grab to place ").append(actingPlayer.getPlayer().getPlayerGender().getGenitive()).append(" opponent.");
       println(indent, status.toString());
     }
   }
@@ -2293,7 +2293,7 @@ public class StatusReport {
       } else {
         print(getIndent() + 1, false, defender);
         status = new StringBuilder();
-        status.append(" has been saved by ").append(defender.getGender().getGenitive()).append(" armour.");
+        status.append(" has been saved by ").append(defender.getPlayerGender().getGenitive()).append(" armour.");
         println(getIndent() + 1, status.toString());
       }
     }
@@ -2341,7 +2341,7 @@ public class StatusReport {
         if (thickSkullUsed) {
           print(getIndent() + 1, false, defender);
           status = new StringBuilder();
-          status.append("'s Thick Skull helps ").append(defender.getGender().getDative()).append(" to stay on the pitch.");
+          status.append("'s Thick Skull helps ").append(defender.getPlayerGender().getDative()).append(" to stay on the pitch.");
           println(getIndent() + 1, status.toString());
         }
         if (ArrayTool.isProvided(pReport.getCasualtyRoll())) {
@@ -2355,7 +2355,7 @@ public class StatusReport {
           if (ArrayTool.isProvided(pReport.getCasualtyRollDecay())) {
             print(getIndent() + 1, false, defender);
             status = new StringBuilder();
-            status.append("'s body is decaying and ").append(defender.getGender().getNominative()).append(" suffers a 2nd casualty.");
+            status.append("'s body is decaying and ").append(defender.getPlayerGender().getNominative()).append(" suffers a 2nd casualty.");
             println(getIndent() + 1, status.toString());
             status = new StringBuilder();
             int[] casualtyRollDecay = pReport.getCasualtyRollDecay();
@@ -2458,7 +2458,7 @@ public class StatusReport {
       print(getIndent(), TextStyle.BOLD, "The apothecary patches ");
       print(getIndent(), true, player);
       StringBuilder status = new StringBuilder();
-      status.append(" up so ").append(player.getGender().getNominative()).append(" is able to play again.");
+      status.append(" up so ").append(player.getPlayerGender().getNominative()).append(" is able to play again.");
       println(getIndent(), TextStyle.BOLD, status.toString());
     } else {
       print(getIndent(), "Coach ");

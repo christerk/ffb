@@ -9,7 +9,9 @@ import org.xml.sax.Attributes;
 import org.xml.sax.helpers.AttributesImpl;
 
 import com.balancedbytes.games.ffb.PlayerGender;
+import com.balancedbytes.games.ffb.PlayerGenderFactory;
 import com.balancedbytes.games.ffb.PlayerType;
+import com.balancedbytes.games.ffb.PlayerTypeFactory;
 import com.balancedbytes.games.ffb.SeriousInjury;
 import com.balancedbytes.games.ffb.SeriousInjuryFactory;
 import com.balancedbytes.games.ffb.Skill;
@@ -70,8 +72,8 @@ public class Player implements IXmlSerializable, IByteArraySerializable, IJsonSe
   private int fNr;
   private Team fTeam;
   private String fName;
-  private PlayerType fType;
-  private PlayerGender fGender;
+  private PlayerType fPlayerType;
+  private PlayerGender fPlayerGender;
   private int fMovement;
   private int fStrength;
   private int fAgility;
@@ -110,12 +112,12 @@ public class Player implements IXmlSerializable, IByteArraySerializable, IJsonSe
     return fName;
   }
   
-  public PlayerType getType() {
-    return fType;
+  public PlayerType getPlayerType() {
+    return fPlayerType;
   }
   
   public void setType(PlayerType pType) {
-    fType = pType;
+    fPlayerType = pType;
   }
   
   public int getNr() {
@@ -210,7 +212,7 @@ public class Player implements IXmlSerializable, IByteArraySerializable, IJsonSe
     fPosition = pPosition;
     if (fPosition != null) {
       setPositionId(fPosition.getId());
-      if (getType() == null) {
+      if (getPlayerType() == null) {
         setType(fPosition.getType());
       }
       if (fPosition.getGender() != null) {
@@ -293,8 +295,8 @@ public class Player implements IXmlSerializable, IByteArraySerializable, IJsonSe
     fId = pId;
   }
   
-  public PlayerGender getGender() {
-    return fGender;
+  public PlayerGender getPlayerGender() {
+    return fPlayerGender;
   }
   
   public String getBaseIconPath() {
@@ -327,7 +329,7 @@ public class Player implements IXmlSerializable, IByteArraySerializable, IJsonSe
   }
 
   public void setGender(PlayerGender gender) {
-    fGender = gender;
+    fPlayerGender = gender;
   }
 
   public void setNr(int nr) {
@@ -394,9 +396,9 @@ public class Player implements IXmlSerializable, IByteArraySerializable, IJsonSe
   	UtilXml.startElement(pHandler, XML_TAG, attributes);
 
     UtilXml.addValueElement(pHandler, _XML_TAG_NAME, getName());
-    UtilXml.addValueElement(pHandler, _XML_TAG_GENDER, (getGender() != null) ? getGender().getName() : null); 
+    UtilXml.addValueElement(pHandler, _XML_TAG_GENDER, (getPlayerGender() != null) ? getPlayerGender().getName() : null); 
     UtilXml.addValueElement(pHandler, _XML_TAG_POSITION_ID, getPositionId());
-    UtilXml.addValueElement(pHandler, _XML_TAG_TYPE, (getType() != null) ? getType().getName() : null);
+    UtilXml.addValueElement(pHandler, _XML_TAG_TYPE, (getPlayerType() != null) ? getPlayerType().getName() : null);
 
     UtilXml.startElement(pHandler, _XML_TAG_SKILL_LIST);
     if (fSkills.size() > 0) {
@@ -515,8 +517,8 @@ public class Player implements IXmlSerializable, IByteArraySerializable, IJsonSe
           setName(pValue);
         }
         if (_XML_TAG_GENDER.equals(pXmlTag)) {
-          setGender(PlayerGender.fromName(pValue));
-          if (getGender() == null) {
+          setGender(new PlayerGenderFactory().forName(pValue));
+          if (getPlayerGender() == null) {
             setGender(PlayerGender.MALE);
           }
         }
@@ -524,7 +526,7 @@ public class Player implements IXmlSerializable, IByteArraySerializable, IJsonSe
           setPositionId(pValue);
         }
         if (_XML_TAG_TYPE.equals(pXmlTag)) {
-          setType(PlayerType.fromName(pValue));
+          setType(new PlayerTypeFactory().forName(pValue));
         }
         // attributes for special player definitions (without rosterPosition)
         if (_XML_TAG_MOVEMENT.equals(pXmlTag)) {
@@ -563,8 +565,8 @@ public class Player implements IXmlSerializable, IByteArraySerializable, IJsonSe
     pByteList.addByte((byte) getNr());
     pByteList.addString(getPositionId());
     pByteList.addString(getName());
-    pByteList.addByte((byte) ((getGender() != null) ? getGender().getId() : 0));
-    pByteList.addByte((byte) ((getType() != null) ? getType().getId() : 0));
+    pByteList.addByte((byte) ((getPlayerGender() != null) ? getPlayerGender().getId() : 0));
+    pByteList.addByte((byte) ((getPlayerType() != null) ? getPlayerType().getId() : 0));
 
     pByteList.addByte((byte) getMovement());
     pByteList.addByte((byte) getStrength());
@@ -631,8 +633,8 @@ public class Player implements IXmlSerializable, IByteArraySerializable, IJsonSe
     setNr(pByteArray.getByte());
     setPositionId(pByteArray.getString());
     setName(pByteArray.getString());
-    setGender(PlayerGender.fromId(pByteArray.getByte()));
-    setType(PlayerType.fromId(pByteArray.getByte()));
+    setGender(new PlayerGenderFactory().forId(pByteArray.getByte()));
+    setType(new PlayerTypeFactory().forId(pByteArray.getByte()));
 
     setMovement(pByteArray.getByte());
     setStrength(pByteArray.getByte());

@@ -322,8 +322,8 @@ public class UtilInjury {
         injuryResult.setSufferedInjury(injuryResult.getPlayerState());
         if ((pInjuryType == InjuryType.EAT_PLAYER) || (pInjuryType == InjuryType.PILING_ON_KNOCKED_OUT) || (injuryResult.isKnockedOut() && UtilCards.hasSkill(game, pDefender, Skill.BALL_AND_CHAIN))) {
           injuryResult.setApothecaryStatus(ApothecaryStatus.NO_APOTHECARY);
-        } else if ((game.getTeamHome().hasPlayer(pDefender) && (game.getTurnDataHome().getApothecaries() > 0) && pDefender.getType() != PlayerType.STAR) 
-        	|| (game.getTeamAway().hasPlayer(pDefender) && (game.getTurnDataAway().getApothecaries() > 0) && pDefender.getType() != PlayerType.STAR)) {
+        } else if ((game.getTeamHome().hasPlayer(pDefender) && (game.getTurnDataHome().getApothecaries() > 0) && pDefender.getPlayerType() != PlayerType.STAR) 
+        	|| (game.getTeamAway().hasPlayer(pDefender) && (game.getTurnDataAway().getApothecaries() > 0) && pDefender.getPlayerType() != PlayerType.STAR)) {
           injuryResult.setApothecaryStatus(ApothecaryStatus.DO_REQUEST);
         } else {
           injuryResult.setApothecaryStatus(ApothecaryStatus.NO_APOTHECARY);

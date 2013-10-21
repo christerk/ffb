@@ -859,73 +859,54 @@ public class FieldModel implements IByteArraySerializable, IJsonSerializable {
     }
     IJsonOption.PUSHBACK_SQUARE_ARRAY.addTo(jsonObject, pushbackSquareArray);
     
-    MoveSquare[] moveSquares = getMoveSquares();
-    if (ArrayTool.isProvided(moveSquares)) {
-      pByteList.addByte((byte) moveSquares.length);
-      for (MoveSquare moveSquare : moveSquares) {
-        moveSquare.addTo(pByteList);
-      }
-    } else {
-      pByteList.addByte((byte) 0);
+    JsonArray moveSquareArray = new JsonArray();
+    for (MoveSquare moveSquare : fMoveSquares) {
+      moveSquareArray.add(moveSquare.toJsonValue());
     }
-    
-    TrackNumber[] trackNumbers = getTrackNumbers();
-    if (ArrayTool.isProvided(trackNumbers)) {
-      pByteList.addByte((byte) trackNumbers.length);
-      for (TrackNumber trackNumber : trackNumbers) {
-        trackNumber.addTo(pByteList);
-      }
-    } else {
-      pByteList.addByte((byte) 0);
-    }
-    
-    DiceDecoration[] diceDecorations = getDiceDecorations();
-    if (ArrayTool.isProvided(diceDecorations)) {
-      pByteList.addByte((byte) diceDecorations.length);
-      for (DiceDecoration diceDecoration : diceDecorations) {
-        diceDecoration.addTo(pByteList);
-      }
-    } else {
-      pByteList.addByte((byte) 0);
-    }
+    IJsonOption.MOVE_SQUARE_ARRAY.addTo(jsonObject, moveSquareArray);
 
-    FieldMarker[] fieldMarkers = getFieldMarkers();
-    if (ArrayTool.isProvided(fieldMarkers)) {
-      pByteList.addByte((byte) fieldMarkers.length);
-      for (FieldMarker fieldMarker : fieldMarkers) {
-        fieldMarker.addTo(pByteList);
-      }
-    } else {
-      pByteList.addByte((byte) 0);
+    JsonArray trackNumberArray = new JsonArray();
+    for (TrackNumber trackNumber : fTrackNumbers) {
+      trackNumberArray.add(trackNumber.toJsonValue());
     }
-    
-    PlayerMarker[] playerMarkers = getPlayerMarkers();
-    if (ArrayTool.isProvided(playerMarkers)) {
-      pByteList.addByte((byte) playerMarkers.length);
-      for (PlayerMarker playerMarker : playerMarkers) {
-        playerMarker.addTo(pByteList);
-      }
-    } else {
-      pByteList.addByte((byte) 0);
-    }
+    IJsonOption.TRACK_NUMBER_ARRAY.addTo(jsonObject, trackNumberArray);
 
-    Player[] players = getGame().getPlayers();
-    pByteList.addByte((byte) players.length);
+    JsonArray diceDecorationArray = new JsonArray();
+    for (DiceDecoration diceDecoration : fDiceDecorations) {
+      diceDecorationArray.add(diceDecoration.toJsonValue());
+    }
+    IJsonOption.DICE_DECORATION_ARRAY.addTo(jsonObject, trackNumberArray);
+
+    JsonArray fieldMarkerArray = new JsonArray();
+    for (FieldMarker fieldMarker : fFieldMarkers) {
+      fieldMarkerArray.add(fieldMarker.toJsonValue());
+    }
+    IJsonOption.FIELD_MARKER_ARRAY.addTo(jsonObject, fieldMarkerArray);
+
+    JsonArray playerMarkerArray = new JsonArray();
+    for (PlayerMarker playerMarker : fPlayerMarkers) {
+      playerMarkerArray.add(playerMarker.toJsonValue());
+    }
+    IJsonOption.PLAYER_MARKER_ARRAY.addTo(jsonObject, playerMarkerArray);
     
-    for (int i = 0; i < players.length; i++) {
+    JsonArray playerDataArray = new JsonArray();
+    for (Player player : getGame().getPlayers()) {
       
-      pByteList.addString(players[i].getId());
-      pByteList.addFieldCoordinate(getPlayerCoordinate(players[i]));
-      PlayerState playerState = getPlayerState(players[i]);
-      pByteList.addSmallInt(((playerState != null) ? playerState.getId() : 0));
+      JsonObject playerDataObject = new JsonObject();
+      IJsonOption.PLAYER_ID.addTo(playerDataObject, player.getId());
+      IJsonOption.PLAYER_COORDINATE.addTo(playerDataObject, getPlayerCoordinate(player));
+      IJsonOption.PLAYER_STATE.addTo(playerDataObject,getPlayerState(player));
       
-      Card[] cards = getCards(players[i]);
-      pByteList.addByte((byte) cards.length);
-      for (Card card : cards) {
-        pByteList.addSmallInt(card.getId());
+      List<String> cardNames = new ArrayList<String>();
+      for (Card card : getCards(player)) {
+        cardNames.add(card.getName());
       }
+      IJsonOption.CARDS.addTo(jsonObject, cardNames);
+      
+      playerDataArray.add(playerDataObject);
       
     }
+    IJsonOption.PLAYER_DATA_ARRAY.addTo(jsonObject, playerDataArray);
     
     return jsonObject;
     
@@ -934,6 +915,82 @@ public class FieldModel implements IByteArraySerializable, IJsonSerializable {
   public FieldModel initFrom(JsonValue pJsonValue) {
 
     JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
+    
+    fWeather = (Weather) IJsonOption.WEATHER.getFrom(jsonObject);
+    fBallCoordinate = IJsonOption.BALL_COORDINATE.getFrom(jsonObject);
+    fBallInPlay = IJsonOption.BALL_IN_PLAY.getFrom(jsonObject);
+    fBallMoving = IJsonOption.BALL_MOVING.getFrom(jsonObject);
+    fBombCoordinate = IJsonOption.BOMB_COORDINATE.getFrom(jsonObject);
+    fBombMoving = IJsonOption.BOMB_MOVING.getFrom(jsonObject);
+
+    fBloodspots.clear();
+    JsonArray bloodspotArray = IJsonOption.BLOODSPOT_ARRAY.getFrom(jsonObject);
+    for (int i = 0; i < bloodspotArray.size(); i++) {
+      fBloodspots.add(new BloodSpot().initFrom(bloodspotArray.get(i)));
+    }
+
+    fPushbackSquares.clear();
+    JsonArray pushbackSquareArray = IJsonOption.PUSHBACK_SQUARE_ARRAY.getFrom(jsonObject);
+    for (int i = 0; i < pushbackSquareArray.size(); i++) {
+      fPushbackSquares.add(new PushbackSquare().initFrom(pushbackSquareArray.get(i)));
+    }
+    
+    fMoveSquares.clear();
+    JsonArray moveSquareArray = IJsonOption.MOVE_SQUARE_ARRAY.getFrom(jsonObject);
+    for (int i = 0; i < moveSquareArray.size(); i++) {
+      fMoveSquares.add(new MoveSquare().initFrom(moveSquareArray.get(i)));
+    }
+
+    fTrackNumbers.clear();
+    JsonArray trackNumberArray = IJsonOption.TRACK_NUMBER_ARRAY.getFrom(jsonObject);
+    for (int i = 0; i < trackNumberArray.size(); i++) {
+      fTrackNumbers.add(new TrackNumber().initFrom(trackNumberArray.get(i)));
+    }
+
+    fDiceDecorations.clear();
+    JsonArray diceDecorationArray = IJsonOption.DICE_DECORATION_ARRAY.getFrom(jsonObject);
+    for (int i = 0; i < diceDecorationArray.size(); i++) {
+      fDiceDecorations.add(new DiceDecoration().initFrom(diceDecorationArray.get(i)));
+    }
+    
+    fFieldMarkers.clear();
+    JsonArray fieldMarkerArray = IJsonOption.FIELD_MARKER_ARRAY.getFrom(jsonObject);
+    for (int i = 0; i < fieldMarkerArray.size(); i++) {
+      fFieldMarkers.add(new FieldMarker().initFrom(fieldMarkerArray.get(i)));
+    }
+    
+    fPlayerMarkers.clear();
+    JsonArray playerMarkerArray = IJsonOption.PLAYER_MARKER_ARRAY.getFrom(jsonObject);
+    for (int i = 0; i < playerMarkerArray.size(); i++) {
+      fPlayerMarkers.add(new PlayerMarker().initFrom(playerMarkerArray.get(i)));
+    }
+
+    fPlayerIdByCoordinate.clear();
+    fCoordinateByPlayerId.clear();
+    fStateByPlayerId.clear();
+    fCardsByPlayerId.clear();
+    
+    CardFactory cardFactory = new CardFactory();
+    JsonArray playerDataArray = IJsonOption.PLAYER_DATA_ARRAY.getFrom(jsonObject);
+    for (int i = 0; i < playerDataArray.size(); i++) {
+      
+      JsonObject playerDataObject = UtilJson.toJsonObject(playerDataArray.get(i));
+      
+      String playerId = IJsonOption.PLAYER_ID.getFrom(playerDataObject);
+      Player player = getGame().getPlayerById(playerId);
+      
+      FieldCoordinate playerCoordinate = IJsonOption.PLAYER_COORDINATE.getFrom(playerDataObject);
+      setPlayerCoordinate(player, playerCoordinate);
+      
+      PlayerState playerState = IJsonOption.PLAYER_STATE.getFrom(playerDataObject);
+      setPlayerState(player, playerState);
+      
+      String[] cardNames = IJsonOption.CARDS.getFrom(playerDataObject);
+      for (int j = 0; j < cardNames.length; j++) {
+        addCard(player, cardFactory.forName(cardNames[j]));
+      }
+      
+    }
 
     return this;
     

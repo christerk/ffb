@@ -14,6 +14,8 @@ import com.balancedbytes.games.ffb.LeaderStateFactory;
 import com.balancedbytes.games.ffb.PassingDistanceFactory;
 import com.balancedbytes.games.ffb.PlayerActionFactory;
 import com.balancedbytes.games.ffb.PlayerChoiceModeFactory;
+import com.balancedbytes.games.ffb.PlayerGenderFactory;
+import com.balancedbytes.games.ffb.PlayerTypeFactory;
 import com.balancedbytes.games.ffb.PushbackModeFactory;
 import com.balancedbytes.games.ffb.ReRollSourceFactory;
 import com.balancedbytes.games.ffb.ReRolledActionFactory;
@@ -108,6 +110,7 @@ public interface IJsonOption {
            JsonStringArrayOption DESCRIPTIONS = new JsonStringArrayOption("descriptions");
           JsonEnumWithNameOption DIALOG_ID = new JsonEnumWithNameOption("dialogId", new DialogIdFactory());
                 JsonObjectOption DIALOG_PARAMETER = new JsonObjectOption("dialogParameter");
+                 JsonArrayOption DICE_DECORATION_ARRAY = new JsonArrayOption("diceDecorationArray");
                    JsonIntOption DICE_INDEX = new JsonIntOption("diceIndex");
           JsonEnumWithNameOption DIRECTION = new JsonEnumWithNameOption("direction", new DirectionFactory());
                  JsonArrayOption DIRECTION_ARRAY = new JsonArrayOption("directionArray");
@@ -126,6 +129,7 @@ public interface IJsonOption {
                    JsonIntOption FAN_FACTOR_MODIFIER_HOME = new JsonIntOption("fanFactorModifierHome");
               JsonIntArrayOption FAN_FACTOR_ROLL_AWAY = new JsonIntArrayOption("fanFactorRollAway");
               JsonIntArrayOption FAN_FACTOR_ROLL_HOME = new JsonIntArrayOption("fanFactorRollHome");
+                 JsonArrayOption FIELD_MARKER_ARRAY = new JsonArrayOption("fieldMarkerArray");
                 JsonObjectOption FIELD_MODEL = new JsonObjectOption("fieldModel");
                   JsonDateOption FINISHED = new JsonDateOption("finished");
                JsonBooleanOption FIRST_TURN_AFTER_KICKOFF = new JsonBooleanOption("firstTurnAfterKickoff");
@@ -194,6 +198,7 @@ public interface IJsonOption {
                 JsonStringOption MODEL_CHANGE_KEY = new JsonStringOption("modelChangeKey");
                 JsonObjectOption MODEL_CHANGE_LIST = new JsonObjectOption("modelChangeList");
                  JsonValueOption MODEL_CHANGE_VALUE = new JsonValueOption("modelChangeValue");
+                 JsonArrayOption MOVE_SQUARE_ARRAY = new JsonArrayOption("moveSquareArray");
                 JsonStringOption NAME = new JsonStringOption("name");
           JsonEnumWithNameOption NET_COMMAND_ID = new JsonEnumWithNameOption("netCommandId", new NetCommandIdFactory());
                  JsonArrayOption NR_OF_CARDS_PER_TYPE = new JsonArrayOption("nrOfCardsPerType");
@@ -220,13 +225,18 @@ public interface IJsonOption {
           JsonEnumWithNameOption PLAYER_ACTION = new JsonEnumWithNameOption("playerAction", new PlayerActionFactory());
                    JsonIntOption PLAYER_AWARDS = new JsonIntOption("playerAwards");
           JsonEnumWithNameOption PLAYER_CHOICE_MODE = new JsonEnumWithNameOption("playerChoiceMode", new PlayerChoiceModeFactory());
+       JsonFieldCoordinateOption PLAYER_COORDINATE = new JsonFieldCoordinateOption("playerCoordinate");
   JsonFieldCoordinateArrayOption PLAYER_COORDINATES = new JsonFieldCoordinateArrayOption("playerCoordinates");
+                 JsonArrayOption PLAYER_DATA_ARRAY = new JsonArrayOption("playerDataArray");
+          JsonEnumWithNameOption PLAYER_GENDER = new JsonEnumWithNameOption("playerGender", new PlayerGenderFactory());
                 JsonStringOption PLAYER_ID = new JsonStringOption("playerId");
                 JsonStringOption PLAYER_ID_TOUCHDOWN = new JsonStringOption("playerIdTouchdown");
            JsonStringArrayOption PLAYER_IDS = new JsonStringArrayOption("playerIds");
            JsonStringArrayOption PLAYER_IDS_AWAY = new JsonStringArrayOption("playerIdsAway");
            JsonStringArrayOption PLAYER_IDS_HIT = new JsonStringArrayOption("playerIdsHit");
            JsonStringArrayOption PLAYER_IDS_HOME = new JsonStringArrayOption("playerIdsHome");
+                 JsonArrayOption PLAYER_MARKER_ARRAY = new JsonArrayOption("playerMarkerArray");
+                JsonStringOption PLAYER_NAME = new JsonStringOption("playerName");
            JsonStringArrayOption PLAYER_NAMES = new JsonStringArrayOption("playerNames");
                    JsonIntOption PLAYER_NR = new JsonIntOption("playerNr");
               JsonIntArrayOption PLAYER_NUMBERS = new JsonIntArrayOption("playerNumbers");
@@ -235,6 +245,7 @@ public interface IJsonOption {
            JsonPlayerStateOption PLAYER_STATE = new JsonPlayerStateOption("playerState");
            JsonPlayerStateOption PLAYER_STATE_NEW = new JsonPlayerStateOption("playerStateNew");
            JsonPlayerStateOption PLAYER_STATE_OLD = new JsonPlayerStateOption("playerStateOld");
+          JsonEnumWithNameOption PLAYER_TYPE = new JsonEnumWithNameOption("playerType", new PlayerTypeFactory());
           JsonBooleanArrayOption PLAYERS_AFFECTED_AWAY = new JsonBooleanArrayOption("playersAffectedAway");
           JsonBooleanArrayOption PLAYERS_AFFECTED_HOME = new JsonBooleanArrayOption("playersAffectedHome");
            JsonStringArrayOption POSITION_IDS = new JsonStringArrayOption("positionIds"); 
@@ -346,6 +357,7 @@ public interface IJsonOption {
        JsonFieldCoordinateOption TOP_LEFT = new JsonFieldCoordinateOption("topLeft");
                    JsonIntOption TOTAL_NR_OF_COMMANDS = new JsonIntOption("totalNrOfCommands");
                    JsonIntOption TOUCHDOWNS = new JsonIntOption("touchdowns");
+                 JsonArrayOption TRACK_NUMBER_ARRAY = new JsonArrayOption("trackNumberArray");
                    JsonIntOption TREASURY = new JsonIntOption("treasury");
                 JsonObjectOption TURN_DATA_AWAY = new JsonObjectOption("turnDataAway");
                 JsonObjectOption TURN_DATA_HOME = new JsonObjectOption("turnDataHome");
@@ -374,5 +386,16 @@ public interface IJsonOption {
                    JsonIntOption WINNINGS_ROLL_HOME = new JsonIntOption("winningsRollHome");
                JsonBooleanOption WITH_BALL = new JsonBooleanOption("withBall");
           JsonEnumWithNameOption WIZARD_SPELL = new JsonEnumWithNameOption("wizardSpell", new SpecialEffectFactory());
+                    
+//          private int fMovement;
+//          private int fStrength;
+//          private int fAgility;
+//          private int fArmour;
+//          private String fBaseIconPath;
+//          private String fIconUrlPortrait;
+//          private String fIconUrlStandingHome;
+//          private String fIconUrlMovingHome;
+//          private String fIconUrlStandingAway;
+//          private String fIconUrlMovingAway;
           
 }

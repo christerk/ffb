@@ -209,10 +209,10 @@ public class FumbblResult implements IXmlWriteable {
       List<Player> starPlayers = new ArrayList<Player>();
       List<Player> mercenaries = new ArrayList<Player>();
       for (Player player : pTeam.getPlayers()) {
-        if (player.getType() == PlayerType.STAR) {
+        if (player.getPlayerType() == PlayerType.STAR) {
           starPlayers.add(player);
         }
-        if (player.getType() == PlayerType.MERCENARY) {
+        if (player.getPlayerType() == PlayerType.MERCENARY) {
           mercenaries.add(player);
         }
       }
@@ -284,7 +284,7 @@ public class FumbblResult implements IXmlWriteable {
 
     if ((getGame() != null) && (pPlayerResult != null)) {
 
-      String playerTypeName = (pPlayerResult.getPlayer().getType() != null) ? pPlayerResult.getPlayer().getType().getName() : null;
+      String playerTypeName = (pPlayerResult.getPlayer().getPlayerType() != null) ? pPlayerResult.getPlayer().getPlayerType().getName() : null;
       
       AttributesImpl attributes = new AttributesImpl();
       UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_PLAYER_ID, pPlayerResult.getPlayerId());

@@ -33,7 +33,7 @@ public class DialogPilingOn extends DialogYesOrNoQuestion {
         messages[0] = line.toString();
         line = new StringBuilder();
         line.append("Using Piling On will re-roll ").append(pDialogParameter.isReRollInjury() ? "Injury" : "Armor");
-        line.append(" for ").append(player.getGender().getGenitive()).append(" opponent.");
+        line.append(" for ").append(player.getPlayerGender().getGenitive()).append(" opponent.");
         messages[1] = line.toString();
         line = new StringBuilder();
         line.append(player.getName()).append(" will be prone after using this skill.");

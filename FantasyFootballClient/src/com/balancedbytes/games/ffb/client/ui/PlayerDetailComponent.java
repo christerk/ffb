@@ -151,7 +151,7 @@ public class PlayerDetailComponent extends JPanel {
 //          positionName.append("[D] ");
 //        }
         // positionName.append(getPlayer().getNr()).append(" - ");
-        if (getPlayer().getType() == PlayerType.STAR) {
+        if (getPlayer().getPlayerType() == PlayerType.STAR) {
           positionName.append("Star Player");
         } else if (StringTool.isProvided(getPlayer().getPosition().getDisplayName())) {
           positionName.append(getPlayer().getPosition().getDisplayName());
@@ -342,7 +342,7 @@ public class PlayerDetailComponent extends JPanel {
       PlayerResult playerResult = game.getGameResult().getPlayerResult(getPlayer());
       StringBuilder sppInfo = new StringBuilder();
       if ((playerResult != null) && (getPlayer() != null)) {
-        if (getPlayer().getType() == PlayerType.STAR) {
+        if (getPlayer().getPlayerType() == PlayerType.STAR) {
           RosterPosition position = getPlayer().getPosition();
           sppInfo.append(StringTool.formatThousands(position.getCost())).append(" gold");
         } else {

@@ -281,7 +281,7 @@ public final class StepBuyInducements extends AbstractStep {
       Map<String, Player> otherTeamStarPlayerByName = new HashMap<String, Player>();
       Team otherTeam = (game.getTeamHome() == pTeam) ? game.getTeamAway() : game.getTeamHome();
       for (Player otherPlayer : otherTeam.getPlayers()) {
-        if (otherPlayer.getType() == PlayerType.STAR) {
+        if (otherPlayer.getPlayerType() == PlayerType.STAR) {
           otherTeamStarPlayerByName.put(otherPlayer.getName(), otherPlayer);
         }
       }

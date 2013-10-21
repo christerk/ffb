@@ -1,6 +1,10 @@
 package com.balancedbytes.games.ffb;
 
-public enum PlayerGender {
+/**
+ * 
+ * @author Kalimar
+ */
+public enum PlayerGender implements IEnumWithId, IEnumWithName {
   
   MALE(1, "male", "M", "he", "his", "him", "himself"),
   FEMALE(2, "female", "F", "she", "her", "her", "herself"),
@@ -50,37 +54,6 @@ public enum PlayerGender {
   
   public String getSelf() {
     return fSelf;
-  }
-  
-  public static PlayerGender fromId(int pId) {
-    for (PlayerGender gender : values()) {
-      if (gender.getId() == pId) {
-        return gender;
-      }
-    }
-    return null;
-  }
-
-  public static PlayerGender fromName(String pName) {
-    if (pName != null) {
-      for (PlayerGender gender : values()) {
-        if (pName.equalsIgnoreCase(gender.getName())) {
-          return gender;
-        }
-      }
-    }
-    return null;
-  }
-
-  public static PlayerGender fromTypeString(String pTypeString) {
-    if (pTypeString != null) {
-      for (PlayerGender gender : values()) {
-        if (pTypeString.equalsIgnoreCase(gender.getTypeString())) {
-          return gender;
-        }
-      }
-    }
-    return null;
   }
 
 }

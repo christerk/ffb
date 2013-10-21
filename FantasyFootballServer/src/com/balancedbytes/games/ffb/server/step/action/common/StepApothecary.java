@@ -212,7 +212,7 @@ public class StepApothecary extends AbstractStep {
             if ((playerState != null) && playerState.isCasualty() && UtilCards.hasSkill(game, player, Skill.REGENERATION) && (fInjuryResult.getInjuryType() != InjuryType.EAT_PLAYER)) {
               if (!UtilInjury.handleRegeneration(this, player)) {
                 InducementSet inducementSet = game.getTeamHome().hasPlayer(player) ? game.getTurnDataHome().getInducementSet() : game.getTurnDataAway().getInducementSet();
-                if (inducementSet.hasUsesLeft(InducementType.IGOR) && player.getType() != PlayerType.STAR) {
+                if (inducementSet.hasUsesLeft(InducementType.IGOR) && player.getPlayerType() != PlayerType.STAR) {
                   game.setDialogParameter(new DialogUseIgorParameter(player.getId()));
                   fInjuryResult.setApothecaryStatus(ApothecaryStatus.WAIT_FOR_IGOR_USE);
                   doNextStep = false;

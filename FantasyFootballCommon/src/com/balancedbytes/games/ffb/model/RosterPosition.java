@@ -13,7 +13,9 @@ import org.xml.sax.Attributes;
 import org.xml.sax.helpers.AttributesImpl;
 
 import com.balancedbytes.games.ffb.PlayerGender;
+import com.balancedbytes.games.ffb.PlayerGenderFactory;
 import com.balancedbytes.games.ffb.PlayerType;
+import com.balancedbytes.games.ffb.PlayerTypeFactory;
 import com.balancedbytes.games.ffb.Skill;
 import com.balancedbytes.games.ffb.SkillCategory;
 import com.balancedbytes.games.ffb.SkillFactory;
@@ -527,10 +529,10 @@ public class RosterPosition implements IXmlSerializable, IByteArraySerializable,
           setShorthand(pValue);
         }
         if (_XML_TAG_TYPE.equals(pTag)) {
-          setType(PlayerType.fromName(pValue));
+          setType(new PlayerTypeFactory().forName(pValue));
         }
         if (_XML_TAG_GENDER.equals(pTag)) {
-          setGender(PlayerGender.fromName(pValue));
+          setGender(new PlayerGenderFactory().forName(pValue));
         }
         if (_XML_TAG_COST.equals(pTag)) {
           setCost(Integer.parseInt(pValue));
@@ -650,8 +652,8 @@ public class RosterPosition implements IXmlSerializable, IByteArraySerializable,
     setName(pByteArray.getString());
     setShorthand(pByteArray.getString());
     setDisplayName(pByteArray.getString());
-    setType(PlayerType.fromId(pByteArray.getByte()));
-    setGender(PlayerGender.fromId(pByteArray.getByte()));
+    setType(new PlayerTypeFactory().forId(pByteArray.getByte()));
+    setGender(new PlayerGenderFactory().forId(pByteArray.getByte()));
     setQuantity(pByteArray.getByte());
     setMovement(pByteArray.getByte());
     setStrength(pByteArray.getByte());

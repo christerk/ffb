@@ -6,8 +6,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import com.balancedbytes.games.ffb.FantasyFootballException;
-import com.balancedbytes.games.ffb.PlayerGender;
-import com.balancedbytes.games.ffb.PlayerType;
+import com.balancedbytes.games.ffb.PlayerGenderFactory;
+import com.balancedbytes.games.ffb.PlayerTypeFactory;
 import com.balancedbytes.games.ffb.SeriousInjuryFactory;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
@@ -59,8 +59,8 @@ public class DbPlayersForGameStateQuery extends DbStatement {
           player.setPositionId(resultSet.getString(col++));
           player.setNr(resultSet.getByte(col++));
           player.setName(resultSet.getString(col++));
-          player.setGender(PlayerGender.fromTypeString(resultSet.getString(col++)));
-          player.setType(PlayerType.fromId(resultSet.getByte(col++)));
+          player.setGender(new PlayerGenderFactory().forTypeString(resultSet.getString(col++)));
+          player.setType(new PlayerTypeFactory().forId(resultSet.getByte(col++)));
           player.setMovement(resultSet.getByte(col++));
           player.setStrength(resultSet.getByte(col++));
           player.setAgility(resultSet.getByte(col++));
