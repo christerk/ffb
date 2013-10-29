@@ -248,6 +248,7 @@ public interface IJsonOption {
           JsonEnumWithNameOption PLAYER_TYPE = new JsonEnumWithNameOption("playerType", new PlayerTypeFactory());
           JsonBooleanArrayOption PLAYERS_AFFECTED_AWAY = new JsonBooleanArrayOption("playersAffectedAway");
           JsonBooleanArrayOption PLAYERS_AFFECTED_HOME = new JsonBooleanArrayOption("playersAffectedHome");
+                 JsonArrayOption POSITION_ARRAY = new JsonArrayOption("positionArray");
            JsonStringArrayOption POSITION_IDS = new JsonStringArrayOption("positionIds"); 
                JsonBooleanOption PRO_RE_ROLL_OPTION = new JsonBooleanOption("proReRollOption");
                 JsonObjectOption PUSHBACK = new JsonObjectOption("pushback");
@@ -387,15 +388,37 @@ public interface IJsonOption {
                JsonBooleanOption WITH_BALL = new JsonBooleanOption("withBall");
           JsonEnumWithNameOption WIZARD_SPELL = new JsonEnumWithNameOption("wizardSpell", new SpecialEffectFactory());
                     
-//          private int fMovement;
-//          private int fStrength;
-//          private int fAgility;
-//          private int fArmour;
-//          private String fBaseIconPath;
-//          private String fIconUrlPortrait;
-//          private String fIconUrlStandingHome;
-//          private String fIconUrlMovingHome;
-//          private String fIconUrlStandingAway;
-//          private String fIconUrlMovingAway;
+                   JsonIntOption AGILITY = new JsonIntOption("agility");
+               JsonBooleanOption APOTHECARY = new JsonBooleanOption("apothecary");
+                   JsonIntOption ARMOUR = new JsonIntOption("armour");
+                JsonStringOption BASE_ICON_PATH = new JsonStringOption("baseIconPath");
+                   JsonIntOption COST = new JsonIntOption("cost");
+                JsonStringOption DISPLAY_NAME = new JsonStringOption("displayName");
+                JsonStringOption ICON_URL_PORTRAIT = new JsonStringOption("iconUrlPortrait");
+           JsonStringArrayOption ICON_URLS_AWAY_MOVING = new JsonStringArrayOption("iconUrlsAwayMoving");
+           JsonStringArrayOption ICON_URLS_AWAY_STANDING = new JsonStringArrayOption("iconUrlsAwayStanding");
+           JsonStringArrayOption ICON_URLS_HOME_MOVING = new JsonStringArrayOption("iconUrlsHomeMoving");
+           JsonStringArrayOption ICON_URLS_HOME_STANDING = new JsonStringArrayOption("iconUrlsHomeStanding");
+                JsonStringOption LOGO_URL = new JsonStringOption("logoUrl");
+                   JsonIntOption MAX_RE_ROLLS = new JsonIntOption("maxReRolls");
+                   JsonIntOption MOVEMENT = new JsonIntOption("movement");
+               JsonBooleanOption NECROMANCER = new JsonBooleanOption("necromancer");
+                JsonStringOption POSITION_ID = new JsonStringOption("positionId");
+                JsonStringOption POSITION_NAME = new JsonStringOption("positionName");
+                   JsonIntOption QUANTITY = new JsonIntOption("quantity");
+                   JsonIntOption RE_ROLL_COST = new JsonIntOption("reRollCost");
+                JsonStringOption ROSTER_ID = new JsonStringOption("rosterId");
+                JsonStringOption ROSTER_NAME = new JsonStringOption("rosterName");
+                JsonStringOption RAISED_POSITION_ID = new JsonStringOption("raisedPositionId");
+                JsonStringOption SHORTHAND = new JsonStringOption("shorthand");
+                 JsonArrayOption SKILL_ARRAY = new JsonArrayOption("skillArray");
+                 JsonArrayOption SKILL_CATEGORIES_DOUBLE = new JsonArrayOption("skillCategoriesDouble");
+                 JsonArrayOption SKILL_CATEGORIES_NORMAL = new JsonArrayOption("skillCategoriesNormal");
+              JsonIntArrayOption SKILL_VALUES = new JsonIntArrayOption("skillValues");
+                JsonStringOption TEAM_WITH_POSITION_ID = new JsonStringOption("teamWithPositionId");
+               JsonBooleanOption THRALL = new JsonBooleanOption("thrall");
+               JsonBooleanOption UNDEAD = new JsonBooleanOption("undead");
+               
+
           
 }
