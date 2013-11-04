@@ -16,7 +16,6 @@ import com.balancedbytes.games.ffb.bytearray.IByteArraySerializable;
 import com.balancedbytes.games.ffb.dialog.DialogId;
 import com.balancedbytes.games.ffb.dialog.DialogIdFactory;
 import com.balancedbytes.games.ffb.dialog.DialogParameterFactory;
-import com.balancedbytes.games.ffb.dialog.DialogPassBlockParameter;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.IJsonSerializable;
 import com.balancedbytes.games.ffb.json.UtilJson;
@@ -28,7 +27,6 @@ import com.balancedbytes.games.ffb.util.StringTool;
 import com.balancedbytes.games.ffb.util.UtilActingPlayer;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
-import com.sun.corba.se.spi.orbutil.fsm.FSM;
 
 /**
  * 
@@ -701,8 +699,8 @@ public class Game extends ModelChangeObservable implements IByteArraySerializabl
     IJsonOption.TURN_DATA_HOME.addTo(jsonObject, fTurnDataHome.toJsonValue());
     IJsonOption.FIELD_MODEL.addTo(jsonObject, fFieldModel.toJsonValue());
     IJsonOption.ACTING_PLAYER.addTo(jsonObject, fActingPlayer.toJsonValue());
-    IJsonOption.GAME_RESULT.getFrom(jsonObject, fGameResult.toJsonValue());
-    IJsonOption.GAME_OPTIONS.getFrom(jsonObject, fOptions.toJsonValue());
+    IJsonOption.GAME_RESULT.addTo(jsonObject, fGameResult.toJsonValue());
+    IJsonOption.GAME_OPTIONS.addTo(jsonObject, fOptions.toJsonValue());
 
     if (fDialogParameter != null) {
       IJsonOption.DIALOG_PARAMETER.addTo(jsonObject, fDialogParameter.toJsonValue());

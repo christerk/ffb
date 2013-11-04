@@ -17,10 +17,6 @@ public class JsonPlayerStateOption extends JsonAbstractOption {
     return UtilJson.toPlayerState(getValueFrom(pJsonObject));
   }
   
-  public PlayerState getFrom(JsonObject pJsonObject, PlayerState pDefault) {
-    return UtilJson.toPlayerState(getValueFrom(pJsonObject, UtilJson.toJsonValue(pDefault)));
-  }
-
   public void addTo(JsonObject pJsonObject, PlayerState pValue) {
     addValueTo(pJsonObject, UtilJson.toJsonValue(pValue));
   }

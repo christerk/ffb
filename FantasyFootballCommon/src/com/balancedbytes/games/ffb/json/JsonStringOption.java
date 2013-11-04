@@ -17,10 +17,6 @@ public class JsonStringOption extends JsonAbstractOption {
     return asString(getValueFrom(pJsonObject));
   }
   
-  public String getFrom(JsonObject pJsonObject, String pDefault) {
-    return asString(getValueFrom(pJsonObject, JsonValue.valueOf(pDefault)));
-  }
-
   public void addTo(JsonObject pJsonObject, String pValue) {
     addValueTo(pJsonObject, JsonValue.valueOf(pValue));
   }

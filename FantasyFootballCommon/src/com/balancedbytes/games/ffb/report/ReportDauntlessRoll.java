@@ -60,7 +60,7 @@ public class ReportDauntlessRoll extends ReportSkillRoll {
   // JSON serialization
   
   @Override
-  public JsonValue toJsonValue() {
+  public JsonObject toJsonValue() {
     JsonObject jsonObject = UtilJson.toJsonObject(super.toJsonValue());
     IJsonOption.STRENGTH.addTo(jsonObject, fStrength);
     return jsonObject;

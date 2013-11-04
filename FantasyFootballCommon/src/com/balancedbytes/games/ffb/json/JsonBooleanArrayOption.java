@@ -19,10 +19,6 @@ public class JsonBooleanArrayOption extends JsonAbstractOption {
     return toBooleanArray(getValueFrom(pJsonObject).asArray()); 
   }
   
-  public boolean[] getFrom(JsonObject pJsonObject, boolean[] pDefaults) {
-    return toBooleanArray(getValueFrom(pJsonObject, toJsonArray(pDefaults)).asArray());
-  }
-  
   private boolean[] toBooleanArray(JsonArray pJsonArray) {
     if (pJsonArray == null) {
       return null;

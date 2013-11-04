@@ -20,10 +20,15 @@ import com.balancedbytes.games.ffb.SkillFactory;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
 import com.balancedbytes.games.ffb.bytearray.IByteArraySerializable;
+import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.IJsonSerializable;
+import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.util.StringTool;
 import com.balancedbytes.games.ffb.xml.IXmlSerializable;
 import com.balancedbytes.games.ffb.xml.UtilXml;
+import com.eclipsesource.json.JsonArray;
+import com.eclipsesource.json.JsonObject;
+import com.eclipsesource.json.JsonValue;
 
 
 
@@ -664,6 +669,94 @@ public class Player implements IXmlSerializable, IByteArraySerializable, IJsonSe
     
     return byteArraySerializationVersion;
 
+  }
+  
+  // JSON serialization
+  
+  public JsonObject toJsonValue() {
+
+    JsonObject jsonObject = new JsonObject();
+    
+    IJsonOption.PLAYER_ID.addTo(jsonObject, fId);
+    IJsonOption.PLAYER_NR.addTo(jsonObject, fNr);
+    IJsonOption.POSITION_ID.addTo(jsonObject, fPositionId);
+    IJsonOption.PLAYER_NAME.addTo(jsonObject, fName);
+    IJsonOption.PLAYER_GENDER.addTo(jsonObject, fPlayerGender);
+    IJsonOption.PLAYER_TYPE.addTo(jsonObject, fPlayerType);
+
+    IJsonOption.MOVEMENT.addTo(jsonObject, fMovement);
+    IJsonOption.STRENGTH.addTo(jsonObject, fStrength);
+    IJsonOption.AGILITY.addTo(jsonObject, fAgility);
+    IJsonOption.ARMOUR.addTo(jsonObject, fArmour);
+    
+    JsonArray lastingInjuries = new JsonArray();
+    for (SeriousInjury injury : fLastingInjuries) {
+      lastingInjuries.add(UtilJson.toJsonValue(injury));
+    }
+    IJsonOption.LASTING_INJURIES.addTo(jsonObject, lastingInjuries);
+    IJsonOption.RECOVERING_INJURY.addTo(jsonObject, fRecoveringInjury);
+
+    IJsonOption.BASE_ICON_PATH.addTo(jsonObject, fBaseIconPath);
+    IJsonOption.ICON_URL_PORTRAIT.addTo(jsonObject, fIconUrlPortrait);
+    IJsonOption.POSITION_ICON_INDEX.addTo(jsonObject, fPositionIconIndex);
+    IJsonOption.ICON_URL_HOME_STANDING.addTo(jsonObject, fIconUrlStandingHome);
+    IJsonOption.ICON_URL_HOME_MOVING.addTo(jsonObject, fIconUrlMovingHome);
+    IJsonOption.ICON_URL_AWAY_STANDING.addTo(jsonObject, fIconUrlStandingAway);
+    IJsonOption.ICON_URL_AWAY_MOVING.addTo(jsonObject, fIconUrlMovingAway);
+
+    JsonArray skillArray = new JsonArray();
+    for (Skill skill : fSkills) {
+      skillArray.add(UtilJson.toJsonValue(skill));
+    }
+    IJsonOption.SKILL_ARRAY.addTo(jsonObject, skillArray);
+
+    return jsonObject;
+    
+  }
+  
+  public Player initFrom(JsonValue pJsonValue) {
+    
+    JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
+
+    fId = IJsonOption.PLAYER_ID.getFrom(jsonObject);
+    fNr = IJsonOption.PLAYER_NR.getFrom(jsonObject);
+    fPositionId = IJsonOption.POSITION_ID.getFrom(jsonObject);
+    fName = IJsonOption.PLAYER_NAME.getFrom(jsonObject);
+    fPlayerGender = (PlayerGender) IJsonOption.PLAYER_GENDER.getFrom(jsonObject);
+    fPlayerType = (PlayerType) IJsonOption.PLAYER_TYPE.getFrom(jsonObject);
+
+    fMovement = IJsonOption.MOVEMENT.getFrom(jsonObject);
+    fStrength = IJsonOption.STRENGTH.getFrom(jsonObject);
+    fAgility = IJsonOption.AGILITY.getFrom(jsonObject);
+    fArmour = IJsonOption.ARMOUR.getFrom(jsonObject);
+    
+    SeriousInjuryFactory seriousInjuryFactory = new SeriousInjuryFactory();
+    
+    fLastingInjuries.clear();
+    JsonArray lastingInjuries = IJsonOption.LASTING_INJURIES.getFrom(jsonObject);
+    for (int i = 0; i < lastingInjuries.size(); i++) {
+      fLastingInjuries.add((SeriousInjury) UtilJson.toEnumWithName(seriousInjuryFactory, lastingInjuries.get(i)));
+    }
+    fRecoveringInjury = (SeriousInjury) IJsonOption.RECOVERING_INJURY.getFrom(jsonObject);
+
+    fBaseIconPath = IJsonOption.BASE_ICON_PATH.getFrom(jsonObject);
+    fIconUrlPortrait = IJsonOption.ICON_URL_PORTRAIT.getFrom(jsonObject);
+    fPositionIconIndex = IJsonOption.POSITION_ICON_INDEX.getFrom(jsonObject);
+    fIconUrlStandingHome = IJsonOption.ICON_URL_HOME_STANDING.getFrom(jsonObject);
+    fIconUrlMovingHome = IJsonOption.ICON_URL_HOME_MOVING.getFrom(jsonObject);
+    fIconUrlStandingAway = IJsonOption.ICON_URL_AWAY_STANDING.getFrom(jsonObject);
+    fIconUrlMovingAway = IJsonOption.ICON_URL_AWAY_MOVING.getFrom(jsonObject);
+
+    SkillFactory skillFactory = new SkillFactory();
+    
+    fSkills.clear();
+    JsonArray skillArray = IJsonOption.SKILL_ARRAY.getFrom(jsonObject);
+    for (int i = 0; i < skillArray.size(); i++) {
+      fSkills.add((Skill) UtilJson.toEnumWithName(skillFactory, skillArray.get(i)));
+    }
+
+    return this;
+    
   }
     
 }

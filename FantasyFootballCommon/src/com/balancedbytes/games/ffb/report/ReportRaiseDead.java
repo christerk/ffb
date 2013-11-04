@@ -66,7 +66,7 @@ public class ReportRaiseDead implements IReport {
 
   // JSON serialization
 
-  public JsonValue toJsonValue() {
+  public JsonObject toJsonValue() {
     JsonObject jsonObject = new JsonObject();
     IJsonOption.REPORT_ID.addTo(jsonObject, getId());
     IJsonOption.PLAYER_ID.addTo(jsonObject, fPlayerId);

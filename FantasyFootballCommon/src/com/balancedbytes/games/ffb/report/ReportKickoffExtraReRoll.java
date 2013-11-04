@@ -94,7 +94,7 @@ public class ReportKickoffExtraReRoll implements IReport {
   
   // JSON serialization
   
-  public JsonValue toJsonValue() {
+  public JsonObject toJsonValue() {
     JsonObject jsonObject = new JsonObject();
     IJsonOption.REPORT_ID.addTo(jsonObject, getId());
     IJsonOption.KICKOFF_RESULT.addTo(jsonObject, fKickoffResult);

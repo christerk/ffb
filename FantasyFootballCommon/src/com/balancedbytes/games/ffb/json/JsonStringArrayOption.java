@@ -19,10 +19,6 @@ public class JsonStringArrayOption extends JsonAbstractOption {
     return toStringArray(getValueFrom(pJsonObject).asArray()); 
   }
   
-  public String[] getFrom(JsonObject pJsonObject, String[] pDefault) {
-    return toStringArray(getValueFrom(pJsonObject, toJsonArray(pDefault)).asArray());
-  }
-  
   private String[] toStringArray(JsonArray pJsonArray) {
     if (pJsonArray == null) {
       return null;

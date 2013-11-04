@@ -92,7 +92,7 @@ public class ReportInducementsBought implements IReport {
   
   // JSON serialization
   
-  public JsonValue toJsonValue() {
+  public JsonObject toJsonValue() {
     JsonObject jsonObject = new JsonObject();
     IJsonOption.TEAM_ID.addTo(jsonObject, fTeamId);
     IJsonOption.NR_OF_INDUCEMENTS.addTo(jsonObject, fNrOfInducements);

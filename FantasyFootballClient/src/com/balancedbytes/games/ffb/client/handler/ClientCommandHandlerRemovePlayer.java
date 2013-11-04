@@ -29,11 +29,11 @@ public class ClientCommandHandlerRemovePlayer extends ClientCommandHandler {
     game.getFieldModel().remove(player);
     game.getFieldModel().setPlayerState(player, null);
     if (game.getTeamHome().hasPlayer(player)) {
-      game.getTeamHome().remove(player);
+      game.getTeamHome().removePlayer(player);
       gameResult.getTeamResultHome().removePlayerResult(player);
     }
     if (game.getTeamAway().hasPlayer(player)) {
-      game.getTeamAway().remove(player);
+      game.getTeamAway().removePlayer(player);
       gameResult.getTeamResultAway().removePlayerResult(player);
     }
     

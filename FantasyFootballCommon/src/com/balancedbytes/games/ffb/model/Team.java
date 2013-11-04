@@ -14,10 +14,15 @@ import com.balancedbytes.games.ffb.PlayerType;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
 import com.balancedbytes.games.ffb.bytearray.IByteArraySerializable;
+import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.IJsonSerializable;
+import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.util.ArrayTool;
 import com.balancedbytes.games.ffb.xml.IXmlSerializable;
 import com.balancedbytes.games.ffb.xml.UtilXml;
+import com.eclipsesource.json.JsonArray;
+import com.eclipsesource.json.JsonObject;
+import com.eclipsesource.json.JsonValue;
 
 /**
  * 
@@ -109,7 +114,7 @@ public class Team implements IXmlSerializable, IByteArraySerializable, IJsonSeri
     return fId;
   }
 
-  public void add(Player pPlayer) {
+  public void addPlayer(Player pPlayer) {
     fPlayerByNr.put(pPlayer.getNr(), pPlayer);
     if (pPlayer.getId() != null) {
       fPlayerById.put(pPlayer.getId(), pPlayer);
@@ -117,7 +122,7 @@ public class Team implements IXmlSerializable, IByteArraySerializable, IJsonSeri
     pPlayer.setTeam(this);
   }
   
-  public void remove(Player pPlayer) {
+  public void removePlayer(Player pPlayer) {
     fPlayerByNr.remove(pPlayer.getNr());
     fPlayerById.remove(pPlayer.getId());
     pPlayer.setTeam(null);
@@ -280,6 +285,23 @@ public class Team implements IXmlSerializable, IByteArraySerializable, IJsonSeri
     return fLogoUrl;
   }
 
+
+  public void setDivision(String division) {
+    fDivision = division;
+  }
+
+  public void setCoach(String coach) {
+    fCoach = coach;
+  }
+
+  public static Comparator<Team> comparatorByName() {
+    return new Comparator<Team>() {
+      public int compare(Team pTeam1, Team pTeam2) {
+        return pTeam1.getName().compareTo(pTeam2.getName());
+      }
+    };
+  }
+
   // XML serialization
 
   public void addToXml(TransformerHandler pHandler) {
@@ -323,7 +345,7 @@ public class Team implements IXmlSerializable, IByteArraySerializable, IJsonSeri
     if (Player.XML_TAG.equals(pXmlTag)) {
       Player player = new Player();
       player.startXmlElement(pXmlTag, pXmlAttributes);
-      add(player);
+      addPlayer(player);
       xmlElement = player;
     }
     return xmlElement;
@@ -438,7 +460,7 @@ public class Team implements IXmlSerializable, IByteArraySerializable, IJsonSeri
     for (int i = 0; i < nrOfPlayers; i++) {
       Player player = new Player();
       player.initFrom(pByteArray);
-      add(player);
+      addPlayer(player);
     }
 
     updateRoster(roster);
@@ -447,21 +469,76 @@ public class Team implements IXmlSerializable, IByteArraySerializable, IJsonSeri
     return 0;
 
   }
+  
+  // JSON serialization
+  
+  public JsonObject toJsonValue() {
 
-  public void setDivision(String division) {
-    fDivision = division;
+    JsonObject jsonObject = new JsonObject();
+    
+    IJsonOption.TEAM_ID.addTo(jsonObject, fId);
+    IJsonOption.TEAM_NAME.addTo(jsonObject, fName);
+    IJsonOption.COACH.addTo(jsonObject, fCoach);
+    IJsonOption.RACE.addTo(jsonObject, fRace);
+    IJsonOption.RE_ROLLS.addTo(jsonObject, fReRolls);
+    IJsonOption.APOTHECARIES.addTo(jsonObject, fApothecaries);
+    IJsonOption.CHEERLEADERS.addTo(jsonObject, fCheerleaders);
+    IJsonOption.ASSISTANT_COACHES.addTo(jsonObject, fAssistantCoaches);
+    IJsonOption.FAN_FACTOR.addTo(jsonObject, fCheerleaders);
+    IJsonOption.TEAM_VALUE.addTo(jsonObject, fTeamValue);
+    IJsonOption.TREASURY.addTo(jsonObject, fTreasury);
+    IJsonOption.BASE_ICON_PATH.addTo(jsonObject, fBaseIconPath);
+    IJsonOption.LOGO_URL.addTo(jsonObject, fLogoUrl);
+    
+    JsonArray playerArray = new JsonArray();
+    for (Player player : getPlayers()) {
+      playerArray.add(player.toJsonValue());
+    }
+    IJsonOption.PLAYER_ARRAY.addTo(jsonObject, playerArray);
+
+    if (fRoster != null) {
+      IJsonOption.ROSTER.addTo(jsonObject, fRoster.toJsonValue());
+    }
+
+    return jsonObject;
+    
   }
+  
+  public Team initFrom(JsonValue pJsonValue) {
+    
+    JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
+    
+    fId = IJsonOption.TEAM_ID.getFrom(jsonObject);
+    fName = IJsonOption.TEAM_NAME.getFrom(jsonObject);
+    fCoach = IJsonOption.COACH.getFrom(jsonObject);
+    fRace = IJsonOption.RACE.getFrom(jsonObject);
+    fReRolls = IJsonOption.RE_ROLLS.getFrom(jsonObject);
+    fApothecaries = IJsonOption.APOTHECARIES.getFrom(jsonObject);
+    fCheerleaders = IJsonOption.CHEERLEADERS.getFrom(jsonObject);
+    fAssistantCoaches = IJsonOption.ASSISTANT_COACHES.getFrom(jsonObject);
+    fCheerleaders = IJsonOption.FAN_FACTOR.getFrom(jsonObject);
+    fTeamValue = IJsonOption.TEAM_VALUE.getFrom(jsonObject);
+    fTreasury = IJsonOption.TREASURY.getFrom(jsonObject);
+    fBaseIconPath = IJsonOption.BASE_ICON_PATH.getFrom(jsonObject);
+    fLogoUrl = IJsonOption.LOGO_URL.getFrom(jsonObject);
 
-  public void setCoach(String coach) {
-    fCoach = coach;
-  }
+    fPlayerById.clear();
+    fPlayerByNr.clear();
+    
+    JsonArray playerArray = IJsonOption.PLAYER_ARRAY.getFrom(jsonObject);
+    for (int i = 0; i < playerArray.size(); i++) {
+      addPlayer(new Player().initFrom(playerArray.get(i)));
+    }
 
-  public static Comparator<Team> comparatorByName() {
-    return new Comparator<Team>() {
-      public int compare(Team pTeam1, Team pTeam2) {
-        return pTeam1.getName().compareTo(pTeam2.getName());
-      }
-    };
+    Roster roster = null;
+    JsonObject rosterObject = IJsonOption.ROSTER.getFrom(jsonObject);
+    if (rosterObject != null) {
+      roster = new Roster().initFrom(rosterObject);
+    }
+    updateRoster(roster);
+
+    return this;
+    
   }
 
 }

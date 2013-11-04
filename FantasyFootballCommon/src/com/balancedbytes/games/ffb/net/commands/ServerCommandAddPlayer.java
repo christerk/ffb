@@ -1,9 +1,6 @@
 package com.balancedbytes.games.ffb.net.commands;
 
-import com.balancedbytes.games.ffb.ClientMode;
 import com.balancedbytes.games.ffb.PlayerState;
-import com.balancedbytes.games.ffb.ReRollSource;
-import com.balancedbytes.games.ffb.ReRolledAction;
 import com.balancedbytes.games.ffb.SendToBoxReason;
 import com.balancedbytes.games.ffb.SendToBoxReasonFactory;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;

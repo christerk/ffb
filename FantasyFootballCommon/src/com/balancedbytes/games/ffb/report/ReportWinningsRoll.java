@@ -84,7 +84,7 @@ public class ReportWinningsRoll implements IReport {
   
   // JSON serialization
   
-  public JsonValue toJsonValue() {
+  public JsonObject toJsonValue() {
     JsonObject jsonObject = new JsonObject();
     IJsonOption.REPORT_ID.addTo(jsonObject, getId());
     IJsonOption.WINNINGS_ROLL_HOME.addTo(jsonObject, fWinningsRollHome);

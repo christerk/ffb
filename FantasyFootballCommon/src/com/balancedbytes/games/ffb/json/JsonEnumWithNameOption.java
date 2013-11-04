@@ -25,10 +25,6 @@ public class JsonEnumWithNameOption extends JsonAbstractOption {
     return asEnumWithName(getValueFrom(pJsonObject));
   }
   
-  public IEnumWithName getFrom(JsonObject pJsonObject, IEnumWithName pDefault) {
-    return asEnumWithName(getValueFrom(pJsonObject, asJsonValue(pDefault)));
-  }
-
   public void addTo(JsonObject pJsonObject, IEnumWithName pValue) {
     addValueTo(pJsonObject, asJsonValue(pValue));
   }

@@ -247,7 +247,7 @@ public final class StepBuyInducements extends AbstractStep {
       if (pSkills[i] != null) {
       	mercenary.addSkill(pSkills[i]);
       }
-      pTeam.add(mercenary);
+      pTeam.addPlayer(mercenary);
       game.getFieldModel().setPlayerState(mercenary, new PlayerState(PlayerState.RESERVE));
       UtilBox.putPlayerIntoBox(game, mercenary);
     }
@@ -301,7 +301,7 @@ public final class StepBuyInducements extends AbstractStep {
           starPlayer.updatePosition(position);
           starPlayer.setName(position.getName());
           starPlayer.setNr(pTeam.getMaxPlayerNr() + 1);
-          pTeam.add(starPlayer);
+          pTeam.addPlayer(starPlayer);
           game.getFieldModel().setPlayerState(starPlayer, new PlayerState(PlayerState.RESERVE));
           UtilBox.putPlayerIntoBox(game, starPlayer);
         }

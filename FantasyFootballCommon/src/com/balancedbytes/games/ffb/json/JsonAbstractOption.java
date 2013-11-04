@@ -28,22 +28,7 @@ public abstract class JsonAbstractOption {
     if (pJsonObject == null) {
       throwJsonObjectIsNullException();
     }
-    JsonValue value = pJsonObject.get(getKey());
-    if (value == null) {
-      throw new MissingKeyException("JsonObject does not contain key " + getKey() + ".");
-    }
-    return value;
-  }
-
-  protected JsonValue getValueFrom(JsonObject pJsonObject, JsonValue pDefault) {
-    if (pJsonObject == null) {
-      throwJsonObjectIsNullException();
-    }
-    JsonValue value = pJsonObject.get(getKey());
-    if (value == null) {
-      return pDefault;
-    }
-    return value;
+    return pJsonObject.get(getKey());
   }
 
   protected void addValueTo(JsonObject pJsonObject, JsonValue pValue) {

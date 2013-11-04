@@ -62,7 +62,7 @@ public class ReportConfusionRoll extends ReportSkillRoll {
   // JSON serialization
   
   @Override
-  public JsonValue toJsonValue() {
+  public JsonObject toJsonValue() {
     JsonObject jsonObject = UtilJson.toJsonObject(super.toJsonValue());
     IJsonOption.CONFUSION_SKILL.addTo(jsonObject, fConfusionSkill);
     return jsonObject;

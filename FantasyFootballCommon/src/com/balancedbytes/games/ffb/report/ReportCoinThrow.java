@@ -76,7 +76,7 @@ public class ReportCoinThrow implements IReport {
     
   // JSON serialization
   
-  public JsonValue toJsonValue() {
+  public JsonObject toJsonValue() {
     JsonObject jsonObject = new JsonObject();
     IJsonOption.REPORT_ID.addTo(jsonObject, getId());
     IJsonOption.COACH.addTo(jsonObject, fCoach);

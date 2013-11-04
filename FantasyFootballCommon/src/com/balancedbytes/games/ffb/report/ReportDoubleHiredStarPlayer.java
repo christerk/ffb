@@ -61,7 +61,7 @@ public class ReportDoubleHiredStarPlayer implements IReport {
   
   // JSON serialization
   
-  public JsonValue toJsonValue() {
+  public JsonObject toJsonValue() {
     JsonObject jsonObject = new JsonObject();
     IJsonOption.REPORT_ID.addTo(jsonObject, getId());
     IJsonOption.STAR_PLAYER_NAME.addTo(jsonObject, fStarPlayerName);

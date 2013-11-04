@@ -18,10 +18,6 @@ public class JsonDateOption extends JsonAbstractOption {
     return UtilJson.toDate(getValueFrom(pJsonObject));
   }
   
-  public Date getFrom(JsonObject pJsonObject, Date pDefault) {
-    return UtilJson.toDate(getValueFrom(pJsonObject, UtilJson.toJsonValue(pDefault)));
-  }
-
   public void addTo(JsonObject pJsonObject, Date pValue) {
     addValueTo(pJsonObject, UtilJson.toJsonValue(pValue));
   }

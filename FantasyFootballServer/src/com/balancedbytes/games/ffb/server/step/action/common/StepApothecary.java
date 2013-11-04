@@ -295,7 +295,7 @@ public class StepApothecary extends AbstractStep {
   @Override
   public int initFrom(ByteArray pByteArray) {
   	int byteArraySerializationVersion = super.initFrom(pByteArray);
-  	fApothecaryMode = ApothecaryMode.fromId(pByteArray.getByte());
+  	fApothecaryMode = new ApothecaryModeFactory().forId(pByteArray.getByte());
   	if (pByteArray.getBoolean()) {
   		fInjuryResult = new InjuryResult();
   		fInjuryResult.initFrom(pByteArray);

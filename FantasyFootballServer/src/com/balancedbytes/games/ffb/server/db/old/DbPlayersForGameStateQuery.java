@@ -66,7 +66,7 @@ public class DbPlayersForGameStateQuery extends DbStatement {
           player.setAgility(resultSet.getByte(col++));
           player.setArmour(resultSet.getByte(col++));
           player.setRecoveringInjury(seriousInjuryFactory.forId(resultSet.getByte(col++)));
-          team.add(player);
+          team.addPlayer(player);
         }
         resultSet.close();
       } catch (SQLException sqlE) {

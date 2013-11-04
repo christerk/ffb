@@ -133,7 +133,7 @@ public class ReportScatterPlayer implements IReport {
   
   // JSON serialization
   
-  public JsonValue toJsonValue() {
+  public JsonObject toJsonValue() {
     JsonObject jsonObject = new JsonObject();
     IJsonOption.REPORT_ID.addTo(jsonObject, getId());
     IJsonOption.START_COORDINATE.addTo(jsonObject, fStartCoordinate);

@@ -112,11 +112,11 @@ public class RosterPosition implements IXmlSerializable, IByteArraySerializable,
   private transient boolean fInsideSkillListTag;
   private transient boolean fInsideSkillCategoryListTag;
   private transient Integer fCurrentSkillValue;
-
+  
   public RosterPosition() {
     this(null);
   }
-
+  
   public RosterPosition(String pId) {
     fId = pId;
     fSkillValues = new LinkedHashMap<Skill, Integer>();
@@ -197,9 +197,8 @@ public class RosterPosition implements IXmlSerializable, IByteArraySerializable,
     return fSkillValues.keySet().toArray(new Skill[fSkillValues.size()]);
   }
   
-  public int getSkillValue(Skill pSkill) {
-    Integer skillValue = fSkillValues.get(pSkill);
-    return (skillValue != null) ? skillValue : 0;
+  public Integer getSkillValue(Skill pSkill) {
+  	return fSkillValues.get(pSkill);
   }
 
   public String getIconUrlPortrait() {
@@ -408,7 +407,7 @@ public class RosterPosition implements IXmlSerializable, IByteArraySerializable,
 
     for (Skill skill : getSkills()) {
     	attributes = new AttributesImpl();
-    	if (getSkillValue(skill) > 0) {
+    	if (getSkillValue(skill) != null) {
     		UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_VALUE, getSkillValue(skill));
     	}
     	UtilXml.startElement(pHandler, _XML_TAG_SKILL, attributes);
@@ -641,7 +640,7 @@ public class RosterPosition implements IXmlSerializable, IByteArraySerializable,
     
     pByteList.addByte((byte) skills.length);
     for (int j = 0; j < skills.length; j++) {
-    	if (getSkillValue(skills[j]) > 0) {
+    	if (getSkillValue(skills[j]) != null) {
     		pByteList.addBoolean(true);
     		pByteList.addSmallInt(getSkillValue(skills[j]));
     	} else {
@@ -698,9 +697,9 @@ public class RosterPosition implements IXmlSerializable, IByteArraySerializable,
     for (int j = 0; j < iconUrlsAwayMoving.length; j++) {
       fIconUrlsAwayMoving.add(iconUrlsAwayMoving[j]);
     }
-    
-    SkillCategoryFactory skillCategoryFactory = new SkillCategoryFactory();
 
+    SkillCategoryFactory skillCategoryFactory = new SkillCategoryFactory();
+    
     // SkillCategories Normal
     byte[] skillCategoryNormalIds = pByteArray.getByteArray();
     for (int j = 0; j < skillCategoryNormalIds.length; j++) {
@@ -713,7 +712,7 @@ public class RosterPosition implements IXmlSerializable, IByteArraySerializable,
     // SkillCategories Double
     byte[] skillCategoryDoubleIds = pByteArray.getByteArray();
     for (int j = 0; j < skillCategoryDoubleIds.length; j++) {
-      SkillCategory pSkillCategory =skillCategoryFactory.forId(skillCategoryDoubleIds[j]);
+      SkillCategory pSkillCategory = skillCategoryFactory.forId(skillCategoryDoubleIds[j]);
       if (pSkillCategory != null) {
         fSkillCategoriesOnDoubleRoll.add(pSkillCategory);
       }
@@ -755,7 +754,7 @@ public class RosterPosition implements IXmlSerializable, IByteArraySerializable,
   // JSON serialization
   
   public JsonObject toJsonValue() {
-    
+
     JsonObject jsonObject = new JsonObject();
     
     IJsonOption.POSITION_ID.addTo(jsonObject, fId);
@@ -781,7 +780,7 @@ public class RosterPosition implements IXmlSerializable, IByteArraySerializable,
     IJsonOption.ICON_URLS_HOME_MOVING.addTo(jsonObject, fIconUrlsHomeMoving);
     IJsonOption.ICON_URLS_AWAY_STANDING.addTo(jsonObject, fIconUrlsAwayStanding);
     IJsonOption.ICON_URLS_AWAY_MOVING.addTo(jsonObject, fIconUrlsAwayMoving);
-
+    
     JsonArray skillCategoriesNormal = new JsonArray();
     for (SkillCategory skillCategory : getSkillCategories(false)) {
       skillCategoriesNormal.add(UtilJson.toJsonValue(skillCategory));
@@ -798,12 +797,11 @@ public class RosterPosition implements IXmlSerializable, IByteArraySerializable,
     List<Integer> skillValues = new ArrayList<Integer>();
     for (Skill skill : getSkills()) {
       skillArray.add(UtilJson.toJsonValue(skill));
-      Integer skillValue = getSkillValue(skill);
-      skillValues.add((skillValue != null) ? skillValue : 0);
+      skillValues.add(getSkillValue(skill));
     }
     IJsonOption.SKILL_ARRAY.addTo(jsonObject, skillArray);
     IJsonOption.SKILL_VALUES.addTo(jsonObject, skillValues);
-
+    
     return jsonObject;
     
   }
@@ -855,22 +853,20 @@ public class RosterPosition implements IXmlSerializable, IByteArraySerializable,
     for (int i = 0; i < skillCategoriesNormal.size(); i++) {
       fSkillCategoriesOnNormalRoll.add((SkillCategory) UtilJson.toEnumWithName(skillCategoryFactory, skillCategoriesNormal.get(i)));
     }
-
     fSkillCategoriesOnDoubleRoll.clear();
     JsonArray skillCategoriesDouble = IJsonOption.SKILL_CATEGORIES_DOUBLE.getFrom(jsonObject);
     for (int i = 0; i < skillCategoriesDouble.size(); i++) {
       fSkillCategoriesOnDoubleRoll.add((SkillCategory) UtilJson.toEnumWithName(skillCategoryFactory, skillCategoriesDouble.get(i)));
     }
-    
-    SkillFactory skillFactory = new SkillFactory();
-    
-    fSkillValues.clear();
-    JsonArray skillArray = IJsonOption.SKILL_ARRAY.getFrom(jsonObject);
-    int[] skillValues = IJsonOption.SKILL_VALUES.getFrom(jsonObject);
-    for (int i = 0; i < skillArray.size(); i++) {
-      Skill skill = (Skill) UtilJson.toEnumWithName(skillFactory, skillArray.get(i));
-      fSkillValues.put(skill, skillValues[i]);
+        
+    JsonArray skillArray = new JsonArray();
+    List<Integer> skillValues = new ArrayList<Integer>();
+    for (Skill skill : getSkills()) {
+      skillArray.add(UtilJson.toJsonValue(skill));
+      skillValues.add(getSkillValue(skill));
     }
+    IJsonOption.SKILL_ARRAY.addTo(jsonObject, skillArray);
+    IJsonOption.SKILL_VALUES.addTo(jsonObject, skillValues);
 
     return this;
     
