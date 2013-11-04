@@ -366,7 +366,7 @@ public class ClientReplayer implements ActionListener {
     	PlayerType playerType = players[i].getPlayerType();
     	if ((playerType == null) || (playerType == PlayerType.MERCENARY) || (playerType == PlayerType.STAR) || (playerType == PlayerType.RAISED_FROM_DEAD)) {
     		fieldModel.remove(players[i]);
-    		pTeam.remove(players[i]);
+    		pTeam.removePlayer(players[i]);
     	} else {
         PlayerResult playerResult = pGame.getGameResult().getPlayerResult(players[i]);
         if (players[i].getRecoveringInjury() != null) {

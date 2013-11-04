@@ -17,10 +17,6 @@ public class JsonLongOption extends JsonAbstractOption {
     return getValueFrom(pJsonObject).asLong();
   }
   
-  public long getFrom(JsonObject pJsonObject, long pDefault) {
-    return getValueFrom(pJsonObject, JsonValue.valueOf(pDefault)).asLong();
-  }
-
   public void addTo(JsonObject pJsonObject, long pValue) {
     addValueTo(pJsonObject, JsonValue.valueOf(pValue));
   }

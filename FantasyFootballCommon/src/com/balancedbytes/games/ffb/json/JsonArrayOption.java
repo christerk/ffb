@@ -17,10 +17,6 @@ public class JsonArrayOption extends JsonAbstractOption {
     return getValueFrom(pJsonObject).asArray();
   }
   
-  public JsonArray getFrom(JsonObject pJsonObject, JsonArray pDefault) {
-    return getValueFrom(pJsonObject, pDefault).asArray();
-  }
-
   public void addTo(JsonObject pJsonObject, JsonArray pValue) {
     addValueTo(pJsonObject, pValue);
   }

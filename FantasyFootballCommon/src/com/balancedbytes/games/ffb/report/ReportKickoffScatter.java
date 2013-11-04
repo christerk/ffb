@@ -91,7 +91,7 @@ public class ReportKickoffScatter implements IReport {
   
   // JSON serialization
   
-  public JsonValue toJsonValue() {
+  public JsonObject toJsonValue() {
     JsonObject jsonObject = new JsonObject();
     IJsonOption.REPORT_ID.addTo(jsonObject, getId());
     IJsonOption.BALL_COORDINATE_END.addTo(jsonObject, fBallCoordinateEnd);

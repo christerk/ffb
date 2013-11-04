@@ -116,7 +116,7 @@ public class ReportPassRoll extends ReportSkillRoll {
   // JSON serialization
   
   @Override
-  public JsonValue toJsonValue() {
+  public JsonObject toJsonValue() {
     JsonObject jsonObject = UtilJson.toJsonObject(super.toJsonValue());
     IJsonOption.PASSING_DISTANCE.addTo(jsonObject, fPassingDistance);
     IJsonOption.FUMBLE.addTo(jsonObject, fFumble);

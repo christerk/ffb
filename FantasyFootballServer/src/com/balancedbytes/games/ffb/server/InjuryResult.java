@@ -4,10 +4,13 @@ import java.util.HashSet;
 import java.util.Set;
 
 import com.balancedbytes.games.ffb.ArmorModifier;
+import com.balancedbytes.games.ffb.ArmorModifierFactory;
 import com.balancedbytes.games.ffb.BloodSpot;
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.InjuryModifier;
+import com.balancedbytes.games.ffb.InjuryModifierFactory;
 import com.balancedbytes.games.ffb.InjuryType;
+import com.balancedbytes.games.ffb.InjuryTypeFactory;
 import com.balancedbytes.games.ffb.PlayerState;
 import com.balancedbytes.games.ffb.SendToBoxReason;
 import com.balancedbytes.games.ffb.SendToBoxReasonFactory;
@@ -20,6 +23,7 @@ import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
 import com.balancedbytes.games.ffb.bytearray.IByteArraySerializable;
 import com.balancedbytes.games.ffb.json.IJsonSerializable;
+import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.GameResult;
 import com.balancedbytes.games.ffb.model.Player;
@@ -27,9 +31,13 @@ import com.balancedbytes.games.ffb.model.PlayerResult;
 import com.balancedbytes.games.ffb.report.ReportInjury;
 import com.balancedbytes.games.ffb.server.step.IStep;
 import com.balancedbytes.games.ffb.server.step.action.common.ApothecaryMode;
+import com.balancedbytes.games.ffb.server.step.action.common.ApothecaryModeFactory;
 import com.balancedbytes.games.ffb.server.util.UtilGame;
 import com.balancedbytes.games.ffb.util.UtilBox;
 import com.balancedbytes.games.ffb.util.UtilCards;
+import com.eclipsesource.json.JsonArray;
+import com.eclipsesource.json.JsonObject;
+import com.eclipsesource.json.JsonValue;
 
 /**
  * 
@@ -116,7 +124,7 @@ public class InjuryResult implements IByteArraySerializable, IJsonSerializable {
   }
 
   public ArmorModifier[] getArmorModifiers() {
-    return ArmorModifier.toArray(fArmorModifiers);
+    return new ArmorModifierFactory().toArray(fArmorModifiers);
   }
   
   public void clearArmorModifiers() {
@@ -142,7 +150,7 @@ public class InjuryResult implements IByteArraySerializable, IJsonSerializable {
   }
 
   public InjuryModifier[] getInjuryModifiers() {
-    return InjuryModifier.toArray(fInjuryModifiers);
+    return new InjuryModifierFactory().toArray(fInjuryModifiers);
   }
   
   public void clearInjuryModifiers() {
@@ -440,19 +448,21 @@ public class InjuryResult implements IByteArraySerializable, IJsonSerializable {
 
   public int initFrom(ByteArray pByteArray) {
     int byteArraySerializationVersion = pByteArray.getSmallInt();
-    setInjuryType(InjuryType.fromId(pByteArray.getByte()));
+    setInjuryType(new InjuryTypeFactory().forId(pByteArray.getByte()));
     setDefenderId(pByteArray.getString());
     setDefenderCoordinate(pByteArray.getFieldCoordinate());
     setAttackerId(pByteArray.getString());
+    ArmorModifierFactory armorModifierFactory = new ArmorModifierFactory();
     int nrOfArmorModifiers = pByteArray.getByte();
     for (int i = 0; i < nrOfArmorModifiers; i++) {
-      addArmorModifier(ArmorModifier.fromId(pByteArray.getByte()));
+      addArmorModifier(armorModifierFactory.forId(pByteArray.getByte()));
     }
     setArmorRoll(pByteArray.getByteArrayAsIntArray());
     setArmorBroken(pByteArray.getBoolean());
+    InjuryModifierFactory injuryModifierFactory = new InjuryModifierFactory();
     int nrOfInjuryModifiers = pByteArray.getByte();
     for (int i = 0; i < nrOfInjuryModifiers; i++) {
-      addInjuryModifier(InjuryModifier.fromId(pByteArray.getByte()));
+      addInjuryModifier(injuryModifierFactory.forId(pByteArray.getByte()));
     }
     setInjuryRoll(pByteArray.getByteArrayAsIntArray());
     setInjury(new PlayerState(pByteArray.getSmallInt()));
@@ -461,15 +471,99 @@ public class InjuryResult implements IByteArraySerializable, IJsonSerializable {
     setSeriousInjury(new SeriousInjuryFactory().forId(pByteArray.getByte()));
     setCasualtyRollDecay(pByteArray.getByteArrayAsIntArray());
     setSeriousInjuryDecay(new SeriousInjuryFactory().forId(pByteArray.getByte()));
-    setApothecaryStatus(ApothecaryStatus.fromId(pByteArray.getByte()));
+    setApothecaryStatus(new ApothecaryStatusFactory().forId(pByteArray.getByte()));
     setSendToBoxReason(new SendToBoxReasonFactory().forId(pByteArray.getByte()));
     setSendToBoxTurn(pByteArray.getByte());
     setSendToBoxHalf(pByteArray.getByte());
     setSound(new SoundFactory().forId(pByteArray.getByte()));
     if (byteArraySerializationVersion > 1) {
-    	setApothecaryMode(ApothecaryMode.fromId(pByteArray.getByte()));
+    	setApothecaryMode(new ApothecaryModeFactory().forId(pByteArray.getByte()));
     }
     return byteArraySerializationVersion;
+  }
+  
+  // JSON serialization
+  
+  public JsonObject toJsonValue() {
+
+    JsonObject jsonObject = new JsonObject();
+    
+    IServerJsonOption.INJURY_TYPE.addTo(jsonObject, fInjuryType);
+    IServerJsonOption.DEFENDER_ID.addTo(jsonObject, fDefenderId);
+    IServerJsonOption.DEFENDER_COORDINATE.addTo(jsonObject, fDefenderCoordinate);
+    IServerJsonOption.ATTACKER_ID.addTo(jsonObject, fAttackerId);
+    IServerJsonOption.ARMOR_ROLL.addTo(jsonObject, fArmorRoll);
+    IServerJsonOption.ARMOR_BROKEN.addTo(jsonObject, fArmorBroken);
+    IServerJsonOption.INJURY_ROLL.addTo(jsonObject, fInjuryRoll);
+    IServerJsonOption.INJURY.addTo(jsonObject, fInjury);
+    IServerJsonOption.INJURY_DECAY.addTo(jsonObject, fInjuryDecay);
+    IServerJsonOption.CASUALTY_ROLL.addTo(jsonObject, fCasualtyRoll);
+    IServerJsonOption.SERIOUS_INJURY.addTo(jsonObject, fSeriousInjury);
+    IServerJsonOption.CASUALTY_ROLL_DECAY.addTo(jsonObject, fCasualtyRollDecay);
+    IServerJsonOption.SERIOUS_INJURY_DECAY.addTo(jsonObject, fSeriousInjuryDecay);
+    IServerJsonOption.APOTHECARY_STATUS.addTo(jsonObject, fApothecaryStatus);
+    IServerJsonOption.SEND_TO_BOX_REASON.addTo(jsonObject, fSendToBoxReason);
+    IServerJsonOption.SEND_TO_BOX_TURN.addTo(jsonObject, fSendToBoxTurn);
+    IServerJsonOption.SEND_TO_BOX_HALF.addTo(jsonObject, fSendToBoxHalf);
+    IServerJsonOption.SOUND.addTo(jsonObject, fSound);
+    IServerJsonOption.APOTHECARY_MODE.addTo(jsonObject, fApothecaryMode);
+
+    JsonArray armorModifiers = new JsonArray();
+    for (ArmorModifier armorModifier : getArmorModifiers()) {
+      armorModifiers.add(UtilJson.toJsonValue(armorModifier));
+    }
+    IServerJsonOption.ARMOR_MODIFIERS.addTo(jsonObject, armorModifiers);
+
+    JsonArray injuryModifiers = new JsonArray();
+    for (InjuryModifier injuryModifier : getInjuryModifiers()) {
+      injuryModifiers.add(UtilJson.toJsonValue(injuryModifier));
+    }
+    IServerJsonOption.INJURY_MODIFIERS.addTo(jsonObject, injuryModifiers);
+
+    return jsonObject;
+    
+  }
+  
+  public InjuryResult initFrom(JsonValue pJsonValue) {
+    
+    JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
+
+    fInjuryType = (InjuryType) IServerJsonOption.INJURY_TYPE.getFrom(jsonObject);
+    fDefenderId = IServerJsonOption.DEFENDER_ID.getFrom(jsonObject);
+    fDefenderCoordinate = IServerJsonOption.DEFENDER_COORDINATE.getFrom(jsonObject);
+    fAttackerId = IServerJsonOption.ATTACKER_ID.getFrom(jsonObject);
+    fArmorRoll = IServerJsonOption.ARMOR_ROLL.getFrom(jsonObject);
+    fArmorBroken = IServerJsonOption.ARMOR_BROKEN.getFrom(jsonObject);
+    fInjuryRoll = IServerJsonOption.INJURY_ROLL.getFrom(jsonObject);
+    fInjury = IServerJsonOption.INJURY.getFrom(jsonObject);
+    fInjuryDecay = IServerJsonOption.INJURY_DECAY.getFrom(jsonObject);
+    fCasualtyRoll = IServerJsonOption.CASUALTY_ROLL.getFrom(jsonObject);
+    fSeriousInjury = (SeriousInjury) IServerJsonOption.SERIOUS_INJURY.getFrom(jsonObject);
+    fCasualtyRollDecay = IServerJsonOption.CASUALTY_ROLL_DECAY.getFrom(jsonObject);
+    fSeriousInjuryDecay = (SeriousInjury) IServerJsonOption.SERIOUS_INJURY_DECAY.getFrom(jsonObject);
+    fApothecaryStatus = (ApothecaryStatus) IServerJsonOption.APOTHECARY_STATUS.getFrom(jsonObject);
+    fSendToBoxReason = (SendToBoxReason) IServerJsonOption.SEND_TO_BOX_REASON.getFrom(jsonObject);
+    fSendToBoxTurn = IServerJsonOption.SEND_TO_BOX_TURN.getFrom(jsonObject);
+    fSendToBoxHalf = IServerJsonOption.SEND_TO_BOX_HALF.getFrom(jsonObject);
+    fSound = (Sound) IServerJsonOption.SOUND.getFrom(jsonObject);
+    fApothecaryMode = (ApothecaryMode) IServerJsonOption.APOTHECARY_MODE.getFrom(jsonObject);
+
+    fArmorModifiers.clear();
+    ArmorModifierFactory armorModifierFactory = new ArmorModifierFactory();
+    JsonArray armorModifiers = IServerJsonOption.ARMOR_MODIFIERS.getFrom(jsonObject);
+    for (int i = 0; i < armorModifiers.size(); i++) {
+      fArmorModifiers.add((ArmorModifier) UtilJson.toEnumWithName(armorModifierFactory, armorModifiers.get(i)));
+    }
+
+    fInjuryModifiers.clear();
+    InjuryModifierFactory injuryModifierFactory = new InjuryModifierFactory();
+    JsonArray injuryModifiers = IServerJsonOption.INJURY_MODIFIERS.getFrom(jsonObject);
+    for (int i = 0; i < injuryModifiers.size(); i++) {
+      fInjuryModifiers.add((InjuryModifier) UtilJson.toEnumWithName(injuryModifierFactory, injuryModifiers.get(i)));
+    }
+    
+    return this;
+    
   }
 
 }

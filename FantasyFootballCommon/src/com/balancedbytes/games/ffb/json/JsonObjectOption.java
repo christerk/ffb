@@ -22,15 +22,6 @@ public class JsonObjectOption extends JsonAbstractOption {
     }
   }
   
-  public JsonObject getFrom(JsonObject pJsonObject, JsonObject pDefault) {
-    JsonValue jsonValue = getValueFrom(pJsonObject, pDefault);
-    if (jsonValue.isNull()) {
-      return null;
-    } else {
-      return jsonValue.asObject();
-    }
-  }
-
   public void addTo(JsonObject pJsonObject, JsonObject pValue) {
     if (pValue == null) {
       addValueTo(pJsonObject, JsonValue.NULL);

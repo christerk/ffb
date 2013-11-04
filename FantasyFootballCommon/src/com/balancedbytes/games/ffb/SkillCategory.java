@@ -1,16 +1,12 @@
 package com.balancedbytes.games.ffb;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import com.balancedbytes.games.ffb.util.StringTool;
 
 /**
  * LRB5 Skill Categories
  * 
  * @author Kalimar
  */
-public enum SkillCategory {
+public enum SkillCategory implements IEnumWithId, IEnumWithName {
   
   GENERAL(1, "General", "G"),
   AGILITY(2, "Agility", "A"),
@@ -42,50 +38,4 @@ public enum SkillCategory {
     return fTypeString;
   }
   
-  public static SkillCategory fromId(int pId) {
-    if (pId > 0) {
-      for (SkillCategory skillCategory : values()) {
-        if (pId == skillCategory.getId()) {
-          return skillCategory;
-        }
-      }
-    }
-    return null;
-  }
-  
-  public static SkillCategory fromName(String pName) {
-    if (StringTool.isProvided(pName)) {
-      for (SkillCategory skillCategory : values()) {
-        if (pName.equalsIgnoreCase(skillCategory.getName())) {
-          return skillCategory;
-        }
-      }
-    }
-    return null;
-  }
-  
-  public static SkillCategory fromTypeString(String pTypeString) {
-    if (StringTool.isProvided(pTypeString)) {
-      for (SkillCategory skillCategory : values()) {
-        if (pTypeString.equalsIgnoreCase(skillCategory.getTypeString())) {
-          return skillCategory;
-        }
-      }
-    }
-    return null;
-  }
-  
-  public static SkillCategory[] fromTypeStrings(String pTypeStrings) {
-    List<SkillCategory> skillCategories = new ArrayList<SkillCategory>();
-    if (StringTool.isProvided(pTypeStrings)) {
-      for (int i = 0; i < pTypeStrings.length(); i++) {
-        SkillCategory skillCategory = fromTypeString(pTypeStrings.substring(i, i + 1));
-        if (skillCategory != null) {
-          skillCategories.add(skillCategory);
-        }
-      }
-    }
-    return skillCategories.toArray(new SkillCategory[skillCategories.size()]);
-  }
-
 }

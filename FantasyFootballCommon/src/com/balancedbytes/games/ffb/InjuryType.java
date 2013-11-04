@@ -5,7 +5,7 @@ package com.balancedbytes.games.ffb;
  * 
  * @author Kalimar
  */
-public enum InjuryType {
+public enum InjuryType implements IEnumWithId, IEnumWithName {
   
   DROP_DODGE(1, "dropDodge", false),
   DROP_GFI(2, "dropGfi", false),
@@ -50,23 +50,5 @@ public enum InjuryType {
   public boolean isWorthSpps() {
 		return fWorthSpps;
 	}
-  
-  public static InjuryType fromId(int pId) {
-    for (InjuryType type : values()) {
-      if (type.getId() == pId) {
-        return type;
-      }
-    }
-    return null;
-  }
-    
-  public static InjuryType fromName(String pName) {
-    for (InjuryType type : values()) {
-      if (type.getName().equalsIgnoreCase(pName)) {
-        return type;
-      }
-    }
-    return null;
-  }
   
 }

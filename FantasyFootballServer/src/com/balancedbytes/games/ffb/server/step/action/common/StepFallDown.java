@@ -2,6 +2,7 @@ package com.balancedbytes.games.ffb.server.step.action.common;
 
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.InjuryType;
+import com.balancedbytes.games.ffb.InjuryTypeFactory;
 import com.balancedbytes.games.ffb.PlayerState;
 import com.balancedbytes.games.ffb.TurnMode;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
@@ -103,7 +104,7 @@ public class StepFallDown extends AbstractStep {
 	@Override
 	public int initFrom(ByteArray pByteArray) {
 		int byteArraySerializationVersion = super.initFrom(pByteArray);
-		fInjuryType = InjuryType.fromId(pByteArray.getByte());
+		fInjuryType = new InjuryTypeFactory().forId(pByteArray.getByte());
 		return byteArraySerializationVersion;
 	}
 

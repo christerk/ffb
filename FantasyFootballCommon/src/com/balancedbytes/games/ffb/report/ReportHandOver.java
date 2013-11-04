@@ -60,7 +60,7 @@ public class ReportHandOver implements IReport {
   
   // JSON serialization
   
-  public JsonValue toJsonValue() {
+  public JsonObject toJsonValue() {
     JsonObject jsonObject = new JsonObject();
     IJsonOption.REPORT_ID.addTo(jsonObject, getId());
     IJsonOption.CATCHER_ID.addTo(jsonObject, fCatcherId);

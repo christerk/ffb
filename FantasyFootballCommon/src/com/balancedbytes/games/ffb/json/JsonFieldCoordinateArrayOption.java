@@ -21,10 +21,6 @@ public class JsonFieldCoordinateArrayOption extends JsonAbstractOption {
     return asFieldCoordinates(getValueFrom(pJsonObject));
   }
   
-  public FieldCoordinate[] getFrom(JsonObject pJsonObject, FieldCoordinate[] pDefaults) {
-    return asFieldCoordinates(getValueFrom(pJsonObject, asJsonValue(pDefaults)));
-  }
-
   public void addTo(JsonObject pJsonObject, FieldCoordinate[] pValues) {
     addValueTo(pJsonObject, asJsonValue(pValues));
   }

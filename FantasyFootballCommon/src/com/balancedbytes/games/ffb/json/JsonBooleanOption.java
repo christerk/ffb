@@ -17,10 +17,6 @@ public class JsonBooleanOption extends JsonAbstractOption {
     return getValueFrom(pJsonObject).asBoolean();
   }
   
-  public boolean getFrom(JsonObject pJsonObject, boolean pDefault) {
-    return getValueFrom(pJsonObject, JsonValue.valueOf(pDefault)).asBoolean();
-  }
-
   public void addTo(JsonObject pJsonObject, boolean pValue) {
     addValueTo(pJsonObject, JsonValue.valueOf(pValue));
   }

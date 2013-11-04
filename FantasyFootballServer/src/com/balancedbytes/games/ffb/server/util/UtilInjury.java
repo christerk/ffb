@@ -1,11 +1,13 @@
 package com.balancedbytes.games.ffb.server.util;
 
 import com.balancedbytes.games.ffb.ArmorModifier;
+import com.balancedbytes.games.ffb.ArmorModifierFactory;
 import com.balancedbytes.games.ffb.Card;
 import com.balancedbytes.games.ffb.CatchScatterThrowInMode;
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.GameOption;
 import com.balancedbytes.games.ffb.InjuryModifier;
+import com.balancedbytes.games.ffb.InjuryModifierFactory;
 import com.balancedbytes.games.ffb.InjuryType;
 import com.balancedbytes.games.ffb.PlayerState;
 import com.balancedbytes.games.ffb.PlayerType;
@@ -191,7 +193,7 @@ public class UtilInjury {
 	        }
 	        int foulAssists = UtilPlayer.findFoulAssists(game, pAttacker, pDefender);
 	        if (foulAssists != 0) {
-	          ArmorModifier assistModifier = ArmorModifier.getFoulAssist(foulAssists);
+	          ArmorModifier assistModifier = new ArmorModifierFactory().getFoulAssist(foulAssists);
 	          injuryResult.addArmorModifier(assistModifier);
 	        }
 	        injuryResult.setArmorBroken(diceInterpreter.isArmourBroken(gameState, injuryResult));
@@ -223,7 +225,7 @@ public class UtilInjury {
         
         injuryResult.setInjuryRoll(diceRoller.rollInjury());
         if (pInjuryType != InjuryType.STAB) {  // stab does not have any modifiers at all
-        	injuryResult.addInjuryModifier(InjuryModifier.getNigglingInjuryModifier(pDefender));
+        	injuryResult.addInjuryModifier(new InjuryModifierFactory().getNigglingInjuryModifier(pDefender));
         }
         switch (pInjuryType) {
           case CROWDPUSH: 
@@ -514,7 +516,7 @@ public class UtilInjury {
       raisedPlayer.setName(pPlayerName);
       raisedPlayer.setNr(pNecroTeam.getMaxPlayerNr() + 1);
       raisedPlayer.setType(PlayerType.RAISED_FROM_DEAD);
-      pNecroTeam.add(raisedPlayer);
+      pNecroTeam.addPlayer(raisedPlayer);
       PlayerResult playerResult = pGame.getGameResult().getPlayerResult(raisedPlayer);
       playerResult.setSendToBoxHalf(pGame.getHalf());
       playerResult.setSendToBoxTurn(pGame.getTurnData().getTurnNr());

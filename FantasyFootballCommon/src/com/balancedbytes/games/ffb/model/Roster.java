@@ -11,11 +11,16 @@ import org.xml.sax.helpers.AttributesImpl;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
 import com.balancedbytes.games.ffb.bytearray.IByteArraySerializable;
+import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.IJsonSerializable;
+import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.util.ArrayTool;
 import com.balancedbytes.games.ffb.util.StringTool;
 import com.balancedbytes.games.ffb.xml.IXmlSerializable;
 import com.balancedbytes.games.ffb.xml.UtilXml;
+import com.eclipsesource.json.JsonArray;
+import com.eclipsesource.json.JsonObject;
+import com.eclipsesource.json.JsonValue;
 
 /**
  * 
@@ -108,7 +113,7 @@ public class Roster implements IXmlSerializable, IByteArraySerializable, IJsonSe
     return fRosterPositionById.get(fRaisedPositionId);
   }
   
-  private void add(RosterPosition pPosition) {
+  private void addPosition(RosterPosition pPosition) {
     if (pPosition != null) {
       fRosterPositionById.put(pPosition.getId(), pPosition);
       fRosterPositionByName.put(pPosition.getName(), pPosition);
@@ -226,7 +231,7 @@ public class Roster implements IXmlSerializable, IByteArraySerializable, IJsonSe
         fRaisedPositionId = pValue;
       }
       if (RosterPosition.XML_TAG.equals(pXmlTag)) {
-        add(fCurrentlyParsedRosterPosition);
+        addPosition(fCurrentlyParsedRosterPosition);
       }
       if (_XML_TAG_APOTHECARY.equals(pXmlTag)) {
       	setApothecary(Boolean.parseBoolean(pValue));
@@ -287,7 +292,7 @@ public class Roster implements IXmlSerializable, IByteArraySerializable, IJsonSe
     for (int i = 0; i < nrOfPositions; i++) {
       RosterPosition position = new RosterPosition(null);
       position.initFrom(pByteArray);
-      add(position);
+      addPosition(position);
     }
     
     setApothecary(pByteArray.getBoolean());
@@ -295,6 +300,61 @@ public class Roster implements IXmlSerializable, IByteArraySerializable, IJsonSe
     setUndead(pByteArray.getBoolean());
     
     return byteArraySerializationVersion;
+    
+  }
+  
+  // JSON serialization
+  
+  public JsonObject toJsonValue() {
+    
+	JsonObject jsonObject = new JsonObject();
+	
+    IJsonOption.ROSTER_ID.addTo(jsonObject, fId);
+    IJsonOption.ROSTER_NAME.addTo(jsonObject, fName);
+    IJsonOption.RE_ROLL_COST.addTo(jsonObject, fReRollCost);
+    IJsonOption.MAX_RE_ROLLS.addTo(jsonObject, fMaxReRolls);
+    IJsonOption.BASE_ICON_PATH.addTo(jsonObject, fBaseIconPath);
+    IJsonOption.LOGO_URL.addTo(jsonObject, fLogoUrl);
+    IJsonOption.RAISED_POSITION_ID.addTo(jsonObject, fRaisedPositionId);
+    IJsonOption.APOTHECARY.addTo(jsonObject, fApothecary);
+    IJsonOption.NECROMANCER.addTo(jsonObject, fNecromancer);
+    IJsonOption.UNDEAD.addTo(jsonObject, fUndead);
+
+    JsonArray positionArray = new JsonArray();
+    for (RosterPosition position : getPositions()) {
+      positionArray.add(position.toJsonValue());
+    }
+    IJsonOption.POSITION_ARRAY.addTo(jsonObject, positionArray);
+
+    return jsonObject;
+    
+  }
+  
+  public Roster initFrom(JsonValue pJsonValue) {
+    
+    JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
+
+    fId = IJsonOption.ROSTER_ID.getFrom(jsonObject);
+    fName = IJsonOption.ROSTER_NAME.getFrom(jsonObject);
+    fReRollCost = IJsonOption.RE_ROLL_COST.getFrom(jsonObject);
+    fMaxReRolls = IJsonOption.MAX_RE_ROLLS.getFrom(jsonObject);
+    fBaseIconPath = IJsonOption.BASE_ICON_PATH.getFrom(jsonObject);
+    fLogoUrl = IJsonOption.LOGO_URL.getFrom(jsonObject);
+    fRaisedPositionId = IJsonOption.RAISED_POSITION_ID.getFrom(jsonObject);
+    fApothecary = IJsonOption.APOTHECARY.getFrom(jsonObject);
+    fNecromancer = IJsonOption.NECROMANCER.getFrom(jsonObject);
+    fUndead = IJsonOption.UNDEAD.getFrom(jsonObject);
+
+    fRosterPositionById.clear();
+    fRosterPositionByName.clear();
+    JsonArray positionArray = IJsonOption.POSITION_ARRAY.getFrom(jsonObject);
+    if (positionArray != null) {
+      for (int i = 0; i < positionArray.size(); i++) {
+        addPosition(new RosterPosition().initFrom(positionArray.get(i)));
+      }
+    }
+
+    return this;
     
   }
 

@@ -75,7 +75,7 @@ public class ReportThrowTeamMateRoll extends ReportSkillRoll {
   // JSON serialization
   
   @Override
-  public JsonValue toJsonValue() {
+  public JsonObject toJsonValue() {
     JsonObject jsonObject = UtilJson.toJsonObject(super.toJsonValue());
     IJsonOption.THROWN_PLAYER_ID.addTo(jsonObject, fThrownPlayerId);
     IJsonOption.PASSING_DISTANCE.addTo(jsonObject, fPassingDistance);

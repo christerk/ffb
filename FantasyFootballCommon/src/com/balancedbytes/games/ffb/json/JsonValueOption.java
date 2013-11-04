@@ -17,10 +17,6 @@ public class JsonValueOption extends JsonAbstractOption {
     return getValueFrom(pJsonObject);
   }
   
-  public JsonValue getFrom(JsonObject pJsonObject, JsonValue pDefault) {
-    return getValueFrom(pJsonObject, pDefault);
-  }
-
   public void addTo(JsonObject pJsonObject, JsonValue pValue) {
     addValueTo(pJsonObject, pValue);
   }

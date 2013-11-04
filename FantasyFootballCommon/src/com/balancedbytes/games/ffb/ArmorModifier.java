@@ -1,14 +1,11 @@
 package com.balancedbytes.games.ffb;
 
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.Set;
 
 /**
  * 
  * @author Kalimar
  */
-public enum ArmorModifier {
+public enum ArmorModifier implements IEnumWithId, IEnumWithName {
   
   CLAWS(1, "Claws", 0, false),
   MIGHTY_BLOW(2, "Mighty Blow", 1, false),
@@ -55,50 +52,6 @@ public enum ArmorModifier {
   
   public boolean isFoulAssistModifier() {
     return fFoulAssistModifier;
-  }
-  
-  public static ArmorModifier getFoulAssist(int pModifier) {
-    for (ArmorModifier modifier : values()) {
-      if (modifier.isFoulAssistModifier() && (modifier.getModifier() == pModifier)) {
-        return modifier;
-      }
-    }
-    return null;
-  }
-  
-  public static ArmorModifier fromId(int pId) {
-    for (ArmorModifier modifier : values()) {
-      if (modifier.getId() == pId) {
-        return modifier;
-      }
-    }
-    return null;
-  }
-  
-  public static ArmorModifier fromName(String pName) {
-    for (ArmorModifier modifier : values()) {
-      if (modifier.getName().equalsIgnoreCase(pName)) {
-        return modifier;
-      }
-    }
-    return null;
-  }
-  
-  public static ArmorModifier[] toArray(Set<ArmorModifier> pArmorModifiers) {
-    if (pArmorModifiers != null) {
-      ArmorModifier[] modifierArray = pArmorModifiers.toArray(new ArmorModifier[pArmorModifiers.size()]);
-      Arrays.sort(
-        modifierArray,
-        new Comparator<ArmorModifier>() {
-          public int compare(ArmorModifier pO1, ArmorModifier pO2) {
-            return (pO1.getId() - pO2.getId());
-          }
-        }
-      );
-      return modifierArray;
-    } else {
-      return new ArmorModifier[0];
-    }
   }
   
 }

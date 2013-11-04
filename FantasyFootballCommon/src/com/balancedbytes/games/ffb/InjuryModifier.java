@@ -1,16 +1,11 @@
 package com.balancedbytes.games.ffb;
 
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.Set;
-
-import com.balancedbytes.games.ffb.model.Player;
 
 /**
  * 
  * @author Kalimar
  */
-public enum InjuryModifier {
+public enum InjuryModifier implements IEnumWithId, IEnumWithName {
   
   MIGHTY_BLOW(1, "Mighty Blow", 1, false),
   DIRTY_PLAYER(2, "Dirty Player", 1, false),
@@ -49,58 +44,6 @@ public enum InjuryModifier {
   
   public boolean isNigglingInjuryModifier() {
     return fNigglingInjuryModifier;
-  }
-  
-  public static InjuryModifier fromId(int pId) {
-    for (InjuryModifier modifier : values()) {
-      if (modifier.getId() == pId) {
-        return modifier;
-      }
-    }
-    return null;
-  }
-  
-  public static InjuryModifier fromName(String pName) {
-    for (InjuryModifier modifier : values()) {
-      if (modifier.getName().equalsIgnoreCase(pName)) {
-        return modifier;
-      }
-    }
-    return null;
-  }
-
-  public static InjuryModifier[] toArray(Set<InjuryModifier> pInjuryModifiers) {
-    if (pInjuryModifiers != null) {
-      InjuryModifier[] modifierArray = pInjuryModifiers.toArray(new InjuryModifier[pInjuryModifiers.size()]);
-      Arrays.sort(
-        modifierArray,
-        new Comparator<InjuryModifier>() {
-          public int compare(InjuryModifier pO1, InjuryModifier pO2) {
-            return (pO1.getId() - pO2.getId());
-          }
-        }
-      );
-      return modifierArray;
-    } else {
-      return new InjuryModifier[0];
-    }
-  }
-  
-  public static InjuryModifier getNigglingInjuryModifier(Player pPlayer) {
-    if (pPlayer != null) {
-      int nigglingInjuries = 0;
-      for (SeriousInjury injury : pPlayer.getLastingInjuries()) {
-        if (InjuryAttribute.NI == injury.getInjuryAttribute()) {
-          nigglingInjuries++;
-        }
-      }
-      for (InjuryModifier modifier : values()) {
-        if (modifier.isNigglingInjuryModifier() && (modifier.getModifier() == nigglingInjuries)) {
-          return modifier;
-        }
-      }
-    }
-    return null;
   }
     
 }

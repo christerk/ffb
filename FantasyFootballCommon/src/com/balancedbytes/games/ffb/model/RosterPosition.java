@@ -18,15 +18,21 @@ import com.balancedbytes.games.ffb.PlayerType;
 import com.balancedbytes.games.ffb.PlayerTypeFactory;
 import com.balancedbytes.games.ffb.Skill;
 import com.balancedbytes.games.ffb.SkillCategory;
+import com.balancedbytes.games.ffb.SkillCategoryFactory;
 import com.balancedbytes.games.ffb.SkillFactory;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
 import com.balancedbytes.games.ffb.bytearray.IByteArraySerializable;
+import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.IJsonSerializable;
+import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.util.StringTool;
 import com.balancedbytes.games.ffb.xml.IXmlReadable;
 import com.balancedbytes.games.ffb.xml.IXmlSerializable;
 import com.balancedbytes.games.ffb.xml.UtilXml;
+import com.eclipsesource.json.JsonArray;
+import com.eclipsesource.json.JsonObject;
+import com.eclipsesource.json.JsonValue;
 
 
 
@@ -106,6 +112,10 @@ public class RosterPosition implements IXmlSerializable, IByteArraySerializable,
   private transient boolean fInsideSkillListTag;
   private transient boolean fInsideSkillCategoryListTag;
   private transient Integer fCurrentSkillValue;
+  
+  public RosterPosition() {
+    this(null);
+  }
   
   public RosterPosition(String pId) {
     fId = pId;
@@ -497,13 +507,13 @@ public class RosterPosition implements IXmlSerializable, IByteArraySerializable,
           fInsideSkillCategoryListTag = false;
         }
         if (_XML_TAG_NORMAL.equals(pTag)) {
-          SkillCategory pSkillCategory = SkillCategory.fromName(pValue);
+          SkillCategory pSkillCategory = new SkillCategoryFactory().forName(pValue);
           if (pSkillCategory != null) {
             fSkillCategoriesOnNormalRoll.add(pSkillCategory);
           }
         }
         if (_XML_TAG_DOUBLE.equals(pTag)) {
-          SkillCategory pSkillCategory = SkillCategory.fromName(pValue);
+          SkillCategory pSkillCategory = new SkillCategoryFactory().forName(pValue);
           if (pSkillCategory != null) {
             fSkillCategoriesOnDoubleRoll.add(pSkillCategory);
           }
@@ -688,10 +698,12 @@ public class RosterPosition implements IXmlSerializable, IByteArraySerializable,
       fIconUrlsAwayMoving.add(iconUrlsAwayMoving[j]);
     }
 
+    SkillCategoryFactory skillCategoryFactory = new SkillCategoryFactory();
+    
     // SkillCategories Normal
     byte[] skillCategoryNormalIds = pByteArray.getByteArray();
     for (int j = 0; j < skillCategoryNormalIds.length; j++) {
-      SkillCategory pSkillCategory = SkillCategory.fromId(skillCategoryNormalIds[j]);
+      SkillCategory pSkillCategory = skillCategoryFactory.forId(skillCategoryNormalIds[j]);
       if (pSkillCategory != null) {
         fSkillCategoriesOnNormalRoll.add(pSkillCategory);
       }
@@ -700,7 +712,7 @@ public class RosterPosition implements IXmlSerializable, IByteArraySerializable,
     // SkillCategories Double
     byte[] skillCategoryDoubleIds = pByteArray.getByteArray();
     for (int j = 0; j < skillCategoryDoubleIds.length; j++) {
-      SkillCategory pSkillCategory = SkillCategory.fromId(skillCategoryDoubleIds[j]);
+      SkillCategory pSkillCategory = skillCategoryFactory.forId(skillCategoryDoubleIds[j]);
       if (pSkillCategory != null) {
         fSkillCategoriesOnDoubleRoll.add(pSkillCategory);
       }
@@ -737,6 +749,128 @@ public class RosterPosition implements IXmlSerializable, IByteArraySerializable,
     
     return byteArraySerializationVersion;
 
+  }
+  
+  // JSON serialization
+  
+  public JsonObject toJsonValue() {
+
+    JsonObject jsonObject = new JsonObject();
+    
+    IJsonOption.POSITION_ID.addTo(jsonObject, fId);
+    IJsonOption.POSITION_NAME.addTo(jsonObject, fName);
+    IJsonOption.SHORTHAND.addTo(jsonObject, fShorthand);
+    IJsonOption.DISPLAY_NAME.addTo(jsonObject, fDisplayName);
+    IJsonOption.PLAYER_TYPE.addTo(jsonObject, fType);
+    IJsonOption.PLAYER_GENDER.addTo(jsonObject, fGender);
+    IJsonOption.QUANTITY.addTo(jsonObject, fQuantity);
+    IJsonOption.MOVEMENT.addTo(jsonObject, fMovement);
+    IJsonOption.STRENGTH.addTo(jsonObject, fStrength);
+    IJsonOption.AGILITY.addTo(jsonObject, fAgility);
+    IJsonOption.ARMOUR.addTo(jsonObject, fArmour);
+    IJsonOption.COST.addTo(jsonObject, fCost);
+    IJsonOption.BASE_ICON_PATH.addTo(jsonObject, fBaseIconPath);
+    IJsonOption.ICON_URL_PORTRAIT.addTo(jsonObject, fIconUrlPortrait);
+    IJsonOption.RACE.addTo(jsonObject, fRace);
+    IJsonOption.UNDEAD.addTo(jsonObject, fUndead);
+    IJsonOption.THRALL.addTo(jsonObject, fThrall);
+    IJsonOption.TEAM_WITH_POSITION_ID.addTo(jsonObject, fTeamWithPositionId);
+    
+    IJsonOption.ICON_URLS_HOME_STANDING.addTo(jsonObject, fIconUrlsHomeStanding);
+    IJsonOption.ICON_URLS_HOME_MOVING.addTo(jsonObject, fIconUrlsHomeMoving);
+    IJsonOption.ICON_URLS_AWAY_STANDING.addTo(jsonObject, fIconUrlsAwayStanding);
+    IJsonOption.ICON_URLS_AWAY_MOVING.addTo(jsonObject, fIconUrlsAwayMoving);
+    
+    JsonArray skillCategoriesNormal = new JsonArray();
+    for (SkillCategory skillCategory : getSkillCategories(false)) {
+      skillCategoriesNormal.add(UtilJson.toJsonValue(skillCategory));
+    }
+    IJsonOption.SKILL_CATEGORIES_NORMAL.addTo(jsonObject, skillCategoriesNormal);
+    
+    JsonArray skillCategoriesDouble = new JsonArray();
+    for (SkillCategory skillCategory : getSkillCategories(true)) {
+      skillCategoriesDouble.add(UtilJson.toJsonValue(skillCategory));
+    }
+    IJsonOption.SKILL_CATEGORIES_DOUBLE.addTo(jsonObject, skillCategoriesDouble);
+    
+    JsonArray skillArray = new JsonArray();
+    List<Integer> skillValues = new ArrayList<Integer>();
+    for (Skill skill : getSkills()) {
+      skillArray.add(UtilJson.toJsonValue(skill));
+      skillValues.add(getSkillValue(skill));
+    }
+    IJsonOption.SKILL_ARRAY.addTo(jsonObject, skillArray);
+    IJsonOption.SKILL_VALUES.addTo(jsonObject, skillValues);
+    
+    return jsonObject;
+    
+  }
+  
+  public RosterPosition initFrom(JsonValue pJsonValue) {
+    
+    JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
+
+    fId = IJsonOption.POSITION_ID.getFrom(jsonObject);
+    fName = IJsonOption.POSITION_NAME.getFrom(jsonObject);
+    fShorthand = IJsonOption.SHORTHAND.getFrom(jsonObject);
+    fDisplayName = IJsonOption.DISPLAY_NAME.getFrom(jsonObject);
+    fType = (PlayerType) IJsonOption.PLAYER_TYPE.getFrom(jsonObject);
+    fGender = (PlayerGender) IJsonOption.PLAYER_GENDER.getFrom(jsonObject);
+    fQuantity = IJsonOption.QUANTITY.getFrom(jsonObject);
+    fMovement = IJsonOption.MOVEMENT.getFrom(jsonObject);
+    fStrength = IJsonOption.STRENGTH.getFrom(jsonObject);
+    fAgility = IJsonOption.AGILITY.getFrom(jsonObject);
+    fArmour = IJsonOption.ARMOUR.getFrom(jsonObject);
+    fCost = IJsonOption.COST.getFrom(jsonObject);
+    fBaseIconPath = IJsonOption.BASE_ICON_PATH.getFrom(jsonObject);
+    fIconUrlPortrait = IJsonOption.ICON_URL_PORTRAIT.getFrom(jsonObject);
+    fRace = IJsonOption.RACE.getFrom(jsonObject);
+    fUndead = IJsonOption.UNDEAD.getFrom(jsonObject);
+    fThrall = IJsonOption.THRALL.getFrom(jsonObject);
+    fTeamWithPositionId = IJsonOption.TEAM_WITH_POSITION_ID.getFrom(jsonObject);
+    
+    fIconUrlsHomeStanding.clear();
+    for (String iconUrl : IJsonOption.ICON_URLS_HOME_STANDING.getFrom(jsonObject)) {
+      fIconUrlsHomeStanding.add(iconUrl);
+    }
+    fIconUrlsHomeMoving.clear();
+    for (String iconUrl : IJsonOption.ICON_URLS_HOME_MOVING.getFrom(jsonObject)) {
+      fIconUrlsHomeMoving.add(iconUrl);
+    }
+    fIconUrlsAwayStanding.clear();
+    for (String iconUrl : IJsonOption.ICON_URLS_AWAY_STANDING.getFrom(jsonObject)) {
+      fIconUrlsAwayStanding.add(iconUrl);
+    }
+    fIconUrlsAwayMoving.clear();
+    for (String iconUrl : IJsonOption.ICON_URLS_AWAY_MOVING.getFrom(jsonObject)) {
+      fIconUrlsAwayMoving.add(iconUrl);
+    }
+    
+    SkillCategoryFactory skillCategoryFactory = new SkillCategoryFactory();
+
+    fSkillCategoriesOnNormalRoll.clear();
+    JsonArray skillCategoriesNormal = IJsonOption.SKILL_CATEGORIES_NORMAL.getFrom(jsonObject);
+    for (int i = 0; i < skillCategoriesNormal.size(); i++) {
+      fSkillCategoriesOnNormalRoll.add((SkillCategory) UtilJson.toEnumWithName(skillCategoryFactory, skillCategoriesNormal.get(i)));
+    }
+    fSkillCategoriesOnDoubleRoll.clear();
+    JsonArray skillCategoriesDouble = IJsonOption.SKILL_CATEGORIES_DOUBLE.getFrom(jsonObject);
+    for (int i = 0; i < skillCategoriesDouble.size(); i++) {
+      fSkillCategoriesOnDoubleRoll.add((SkillCategory) UtilJson.toEnumWithName(skillCategoryFactory, skillCategoriesDouble.get(i)));
+    }
+    
+    SkillFactory skillFactory = new SkillFactory();
+    
+    fSkillValues.clear();
+    JsonArray skillArray = IJsonOption.SKILL_ARRAY.getFrom(jsonObject);
+    int[] skillValues = IJsonOption.SKILL_VALUES.getFrom(jsonObject);
+    for (int i = 0; i < skillArray.size(); i++) {
+      Skill skill = (Skill) UtilJson.toEnumWithName(skillFactory, skillArray.get(i));
+      fSkillValues.put(skill, skillValues[i]);
+    }
+    
+    return this;
+    
   }
 
 }

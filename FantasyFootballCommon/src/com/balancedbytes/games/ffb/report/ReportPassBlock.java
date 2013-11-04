@@ -66,7 +66,7 @@ public class ReportPassBlock implements IReport {
   
   // JSON serialization
   
-  public JsonValue toJsonValue() {
+  public JsonObject toJsonValue() {
     JsonObject jsonObject = new JsonObject();
     IJsonOption.REPORT_ID.addTo(jsonObject, getId());
     IJsonOption.TEAM_ID.addTo(jsonObject, fTeamId);
