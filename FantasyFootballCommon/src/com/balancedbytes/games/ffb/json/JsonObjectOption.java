@@ -15,7 +15,7 @@ public class JsonObjectOption extends JsonAbstractOption {
   
   public JsonObject getFrom(JsonObject pJsonObject) {
     JsonValue jsonValue = getValueFrom(pJsonObject);
-    if (jsonValue.isNull()) {
+    if ((jsonValue == null) || jsonValue.isNull()) {
       return null;
     } else {
       return jsonValue.asObject();

@@ -39,6 +39,7 @@ import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
 import com.balancedbytes.games.ffb.dialog.DialogId;
 import com.balancedbytes.games.ffb.dialog.DialogIdFactory;
+import com.balancedbytes.games.ffb.dialog.DialogParameterFactory;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.eclipsesource.json.JsonValue;
 
@@ -385,8 +386,7 @@ public enum ModelChangeDataType implements IEnumWithId, IEnumWithName {
       case DIALOG_ID:
         return UtilJson.toJsonValue((DialogId) pValue);
       case DIALOG_PARAMETER:
-        // TODO: implement this
-        throw new UnsupportedOperationException("Conversion of dialogParameter to JSON not implemented.");
+        return ((IDialogParameter) pValue).toJsonValue();
       case DICE_DECORATION:
         return ((DiceDecoration) pValue).toJsonValue();
       case FIELD_COORDINATE:
@@ -452,17 +452,7 @@ public enum ModelChangeDataType implements IEnumWithId, IEnumWithName {
       case DIALOG_ID:
         return UtilJson.toEnumWithName(new DialogIdFactory(), pJsonValue);
       case DIALOG_PARAMETER:
-        // TODO: implement this
-        throw new UnsupportedOperationException("Conversion of JSON to dialogParameter not implemented.");
-        //      IDialogParameter dialogParameter = null;
-        //      DialogId dialogId = new DialogIdFactory().forId(pByteArray.getByte());
-        //      if (dialogId != null) {
-        //        dialogParameter = dialogId.createDialogParameter();
-        //        if (dialogParameter != null) {
-        //          dialogParameter.initFrom(pByteArray);
-        //        }
-        //      }
-        //      return dialogParameter;
+        return new DialogParameterFactory().forJsonValue(pJsonValue);
       case DICE_DECORATION:
         return new DiceDecoration().initFrom(pJsonValue);
       case FIELD_COORDINATE:

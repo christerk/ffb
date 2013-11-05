@@ -21,7 +21,7 @@ public enum ModelChangeId implements IEnumWithId, IEnumWithName {
 	ACTING_PLAYER_SET_HAS_PASSED(9, "actingPlayerSetHasPassed", ModelChangeDataType.BOOLEAN),
 	ACTING_PLAYER_SET_LEAPING(10, "actingPlayerSetLeaping", ModelChangeDataType.BOOLEAN),
 	ACTING_PLAYER_SET_PLAYER_ACTION(11, "actingPlayerSetPlayerAction", ModelChangeDataType.BOOLEAN),
-	ACTING_PLAYER_SET_PLAYER_ID(12, "actingPlayerSetPlayerId", ModelChangeDataType.BOOLEAN),
+	ACTING_PLAYER_SET_PLAYER_ID(12, "actingPlayerSetPlayerId", ModelChangeDataType.STRING),
 	ACTING_PLAYER_SET_STANDING_UP(13, "actingPlayerSetStandingUp", ModelChangeDataType.BOOLEAN),
 	ACTING_PLAYER_SET_STRENGTH(14, "actingPlayerSetStrength", ModelChangeDataType.INTEGER),
 	ACTING_PLAYER_SET_SUFFERING_ANIMOSITY(15, "actingPlayerSetSufferingAnimosity", ModelChangeDataType.BOOLEAN),

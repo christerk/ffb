@@ -45,10 +45,9 @@ public class TeamResult implements IByteArraySerializable, IJsonSerializable {
   private transient Team fTeam;
   private transient boolean fHomeData;
 
-  public TeamResult(GameResult pGameResult, boolean pHomeData, Team pTeam) {
+  public TeamResult(GameResult pGameResult, boolean pHomeData) {
     fGameResult = pGameResult;
     fHomeData = pHomeData;
-    fTeam = pTeam;
     fPlayerResultByPlayerId = new HashMap<String, PlayerResult>();
   }
   
@@ -58,6 +57,10 @@ public class TeamResult implements IByteArraySerializable, IJsonSerializable {
   
   public boolean isHomeData() {
     return fHomeData;
+  }
+  
+  public void setTeam(Team pTeam) {
+    fTeam = pTeam;
   }
   
   public Team getTeam() {
@@ -439,11 +442,13 @@ public class TeamResult implements IByteArraySerializable, IJsonSerializable {
     IJsonOption.SERIOUS_INJURY_SUFFERED.addTo(jsonObject, fSeriousInjurySuffered);
     IJsonOption.RIP_SUFFERED.addTo(jsonObject, fRipSuffered);
     IJsonOption.SPIRALLING_EXPENSES.addTo(jsonObject, fSpirallingExpenses);
-    JsonArray playerResultArray = new JsonArray();
-    for (Player player : getTeam().getPlayers()) {
-      playerResultArray.add(getPlayerResult(player).toJsonValue());
+    if (getTeam() != null) {
+      JsonArray playerResultArray = new JsonArray();
+      for (Player player : getTeam().getPlayers()) {
+        playerResultArray.add(getPlayerResult(player).toJsonValue());
+      }
+      IJsonOption.PLAYER_RESULTS.addTo(jsonObject, playerResultArray);
     }
-    IJsonOption.PLAYER_RESULTS.addTo(jsonObject, playerResultArray);
     IJsonOption.PETTY_CASH_TRANSFERRED.addTo(jsonObject, fPettyCashTransferred);
     IJsonOption.PETTY_CASH_USED.addTo(jsonObject, fPettyCashUsed);
     IJsonOption.TEAM_VALUE.addTo(jsonObject, fTeamValue);
@@ -463,8 +468,8 @@ public class TeamResult implements IByteArraySerializable, IJsonSerializable {
     fSeriousInjurySuffered = IJsonOption.SERIOUS_INJURY_SUFFERED.getFrom(jsonObject);
     fRipSuffered = IJsonOption.RIP_SUFFERED.getFrom(jsonObject);
     fSpirallingExpenses = IJsonOption.SPIRALLING_EXPENSES.getFrom(jsonObject);
-    JsonArray playerResultArray = IJsonOption.PLAYER_RESULTS.getFrom(jsonObject);
     fPlayerResultByPlayerId.clear();
+    JsonArray playerResultArray = IJsonOption.PLAYER_RESULTS.getFrom(jsonObject);
     if (playerResultArray != null) {
       for (int i = 0; i < playerResultArray.size(); i++) {
         PlayerResult playerResult = new PlayerResult(this);

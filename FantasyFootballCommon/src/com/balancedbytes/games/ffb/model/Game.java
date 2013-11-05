@@ -260,12 +260,14 @@ public class Game extends ModelChangeObservable implements IByteArraySerializabl
     return allPlayers.toArray(new Player[allPlayers.size()]);
   }
 
-  public void setTeamHome(Team pTeamHome) {
-    fTeamHome = pTeamHome;
+  public void setTeamHome(Team pTeam) {
+    fTeamHome = pTeam;
+    fGameResult.getTeamResultHome().setTeam(pTeam);
   }
 
-  public void setTeamAway(Team pTeamAway) {
-    fTeamAway = pTeamAway;
+  public void setTeamAway(Team pTeam) {
+    fTeamAway = pTeam;
+    fGameResult.getTeamResultAway().setTeam(pTeam);
   }
 
   public Date getScheduled() {

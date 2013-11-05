@@ -24,7 +24,6 @@ import com.balancedbytes.games.ffb.net.NetCommandFactory;
 import com.balancedbytes.games.ffb.net.NetCommandId;
 import com.balancedbytes.games.ffb.net.commands.ServerCommandPing;
 import com.balancedbytes.games.ffb.util.StringTool;
-import com.fumbbl.utils.DelayQueue;
 
 public class NioClient implements Runnable {
 	
@@ -55,9 +54,7 @@ public class NioClient implements Runnable {
 	
 	private FantasyFootballClient fClient;
 	
-	private DelayQueue fDelayQueue;
-	
-  private NetCommandFactory fNetCommandFactory;
+	private NetCommandFactory fNetCommandFactory;
 
 	public NioClient(FantasyFootballClient pClient) throws IOException {
 	  
@@ -90,24 +87,14 @@ public class NioClient implements Runnable {
   }
 	
   public void send(NetCommand pChatCommand) throws IOException {
-    if (fDelayQueue != null) 
-      fDelayQueue.send(pChatCommand);
-    else
-      sendDirect(pChatCommand);
+    // queue the data we want written
+    synchronized (fPendingData) {
+    	fPendingData.add(ByteBuffer.wrap(pChatCommand.toBytes()));
+    }
+    // wake up our selecting thread so it can make the required changes
+    fSelector.wakeup();
   }	
 	
-	public void sendDirect(NetCommand pChatCommand) throws IOException {
-		
-		// queue the data we want written
-		synchronized (fPendingData) {
-			fPendingData.add(ByteBuffer.wrap(pChatCommand.toBytes()));
-		}
-
-		// wake up our selecting thread so it can make the required changes
-		fSelector.wakeup();
-
-	}
-
 	public void run() {
 
     while (true) {

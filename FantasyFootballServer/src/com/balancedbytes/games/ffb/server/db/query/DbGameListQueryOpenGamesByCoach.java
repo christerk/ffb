@@ -52,7 +52,7 @@ public class DbGameListQueryOpenGamesByCoach extends DbStatement {
   }
   
   public void execute(GameList pGameList, String pCoach) {
-  	if ((pGameList == null) || StringTool.isProvided(pCoach)) {
+  	if ((pGameList == null) || !StringTool.isProvided(pCoach)) {
   		return;
   	}
     try {

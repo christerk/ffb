@@ -9,8 +9,10 @@ import java.util.Map;
 import com.balancedbytes.games.ffb.server.FantasyFootballServer;
 import com.balancedbytes.games.ffb.server.ServerMode;
 import com.balancedbytes.games.ffb.server.db.old.DbActingPlayersForGameStateQuery;
+import com.balancedbytes.games.ffb.server.db.old.DbAdminListByStatusQueryOld;
 import com.balancedbytes.games.ffb.server.db.old.DbDialogsForGameStateQuery;
 import com.balancedbytes.games.ffb.server.db.old.DbFieldModelsForGameStateQuery;
+import com.balancedbytes.games.ffb.server.db.old.DbGameListQueryOpenGamesByCoachOld;
 import com.balancedbytes.games.ffb.server.db.old.DbGameLogsForGameStateQuery;
 import com.balancedbytes.games.ffb.server.db.old.DbGameOptionsForGameStateQuery;
 import com.balancedbytes.games.ffb.server.db.old.DbGameStatesQuery;
@@ -52,9 +54,11 @@ public class DbQueryFactory implements IDbStatementFactory {
     
     register(new DbActingPlayersForGameStateQuery(pServer));
     register(new DbAdminListByStatusQuery(pServer));
+    register(new DbAdminListByStatusQueryOld(pServer));  // will be removed later
     register(new DbDialogsForGameStateQuery(pServer));
     register(new DbFieldModelsForGameStateQuery(pServer));
     register(new DbGameListQueryOpenGamesByCoach(pServer));
+    register(new DbGameListQueryOpenGamesByCoachOld(pServer));  // will be removed later
     register(new DbGameLogsForGameStateQuery(pServer));
     register(new DbGameOptionsForGameStateQuery(pServer));
     register(new DbGamesSerializedQuery(pServer));

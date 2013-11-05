@@ -51,7 +51,7 @@ public class DbGamesSerializedQuery extends DbStatement {
       ResultSet resultSet = fStatement.executeQuery();
       while (resultSet.next()) {
       	Blob blob = resultSet.getBlob(1);
-      	JsonValue jsonValue = UtilJson.inflate(blob.getBytes(1, Integer.MAX_VALUE));
+      	JsonValue jsonValue = UtilJson.inflate(blob.getBytes(1, (int) blob.length()));
       	gameState = new GameState(pServer).initFrom(jsonValue);
     		pServer.getGameCache().add(gameState, GameCacheMode.LOAD_GAME);
       }

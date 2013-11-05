@@ -29,11 +29,13 @@ public class GameResult implements IByteArraySerializable, IJsonSerializable {
     fGame = pGame;
     fTeamResultHome = pTeamResultHome;
     if (fTeamResultHome == null) {
-      fTeamResultHome = new TeamResult(this, true, fGame.getTeamHome());
+      fTeamResultHome = new TeamResult(this, true);
+      fTeamResultHome.setTeam(fGame.getTeamHome());
     }
     fTeamResultAway = pTeamResultAway;
     if (fTeamResultAway == null) {
-      fTeamResultAway = new TeamResult(this, false, fGame.getTeamAway());
+      fTeamResultAway = new TeamResult(this, false);
+      fTeamResultAway.setTeam(fGame.getTeamAway());
     }
   }
   
@@ -58,9 +60,11 @@ public class GameResult implements IByteArraySerializable, IJsonSerializable {
   }
   
   public GameResult transform() {
-    TeamResult transformedTeamResultHome = new TeamResult(this, true, getTeamResultAway().getTeam());
+    TeamResult transformedTeamResultHome = new TeamResult(this, true);
+    transformedTeamResultHome.setTeam(getTeamResultAway().getTeam());
     transformedTeamResultHome.init(getTeamResultAway());
-    TeamResult transformedTeamResultAway = new TeamResult(this, false, getTeamResultHome().getTeam());
+    TeamResult transformedTeamResultAway = new TeamResult(this, false);
+    transformedTeamResultAway.setTeam(getTeamResultHome().getTeam());
     transformedTeamResultAway.init(getTeamResultHome());
     return new GameResult(getGame(), transformedTeamResultHome, transformedTeamResultAway);
   }

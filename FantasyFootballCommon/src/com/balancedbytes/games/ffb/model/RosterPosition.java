@@ -197,8 +197,9 @@ public class RosterPosition implements IXmlSerializable, IByteArraySerializable,
     return fSkillValues.keySet().toArray(new Skill[fSkillValues.size()]);
   }
   
-  public Integer getSkillValue(Skill pSkill) {
-  	return fSkillValues.get(pSkill);
+  public int getSkillValue(Skill pSkill) {
+    Integer value = fSkillValues.get(pSkill);
+    return (value != null) ? value : 0; 
   }
 
   public String getIconUrlPortrait() {
@@ -407,7 +408,7 @@ public class RosterPosition implements IXmlSerializable, IByteArraySerializable,
 
     for (Skill skill : getSkills()) {
     	attributes = new AttributesImpl();
-    	if (getSkillValue(skill) != null) {
+    	if (getSkillValue(skill) > 0) {
     		UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_VALUE, getSkillValue(skill));
     	}
     	UtilXml.startElement(pHandler, _XML_TAG_SKILL, attributes);
@@ -640,7 +641,7 @@ public class RosterPosition implements IXmlSerializable, IByteArraySerializable,
     
     pByteList.addByte((byte) skills.length);
     for (int j = 0; j < skills.length; j++) {
-    	if (getSkillValue(skills[j]) != null) {
+    	if (getSkillValue(skills[j]) > 0) {
     		pByteList.addBoolean(true);
     		pByteList.addSmallInt(getSkillValue(skills[j]));
     	} else {
@@ -799,8 +800,12 @@ public class RosterPosition implements IXmlSerializable, IByteArraySerializable,
       skillArray.add(UtilJson.toJsonValue(skill));
       skillValues.add(getSkillValue(skill));
     }
-    IJsonOption.SKILL_ARRAY.addTo(jsonObject, skillArray);
-    IJsonOption.SKILL_VALUES.addTo(jsonObject, skillValues);
+    if (skillArray.size() > 0) {
+      IJsonOption.SKILL_ARRAY.addTo(jsonObject, skillArray);
+    }
+    if (skillValues.size() > 0) {
+      IJsonOption.SKILL_VALUES.addTo(jsonObject, skillValues);
+    }
     
     return jsonObject;
     
