@@ -1487,7 +1487,7 @@ public class StatusReport {
       }
     }
     if (neededRoll != null) {
-      neededRoll.append(" (AG ").append(Math.min(6, player.getAgility())).append(formatRollModifiers(pReport.getCatchModifiers())).append(" + Roll > 6).");
+      neededRoll.append(" (AG ").append(Math.min(6, player.getAgility())).append(formatRollModifiers(pReport.getRollModifiers())).append(" + Roll > 6).");
       println(getIndent() + 2, TextStyle.NEEDED_ROLL, neededRoll.toString());
     }
   }

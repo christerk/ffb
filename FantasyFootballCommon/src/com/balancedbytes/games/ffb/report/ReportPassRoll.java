@@ -47,8 +47,9 @@ public class ReportPassRoll extends ReportSkillRoll {
     return ReportId.PASS_ROLL;
   }
 
-  public PassModifier[] getPassModifiers() {
-    return (PassModifier[]) getRollModifiers();
+  @Override
+  public PassModifier[] getRollModifiers() {
+    return getRollModifierList().toArray(new PassModifier[getRollModifierList().size()]);
   }
 
   public PassingDistance getPassingDistance() {
@@ -77,7 +78,7 @@ public class ReportPassRoll extends ReportSkillRoll {
   	if (isHailMaryPass()) {
   		return new ReportPassRoll(getPlayerId(), isFumble(), getRoll(), isReRolled(), isBomb());
   	} else {
-	    return new ReportPassRoll(getPlayerId(), isSuccessful(), getRoll(), getMinimumRoll(), isReRolled(), getPassModifiers(), getPassingDistance(), isFumble(), isHeldBySafeThrow(), isBomb());
+	    return new ReportPassRoll(getPlayerId(), isSuccessful(), getRoll(), getMinimumRoll(), isReRolled(), getRollModifiers(), getPassingDistance(), isFumble(), isHeldBySafeThrow(), isBomb());
   	}
   }
   
@@ -90,7 +91,7 @@ public class ReportPassRoll extends ReportSkillRoll {
 
   @Override
   public void addTo(ByteList pByteList) {
-    addTo(pByteList);
+    super.addTo(pByteList);
     pByteList.addByte((byte) ((fPassingDistance != null) ? fPassingDistance.getId() : 0));
     pByteList.addBoolean(fFumble);
     pByteList.addBoolean(fSafeThrowHold);

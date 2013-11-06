@@ -31,7 +31,7 @@ public class ReportSkillRoll implements IReport {
   private int fRoll;
   private int fMinimumRoll;
   private boolean fReRolled;
-  private List<IRollModifier> fRollModifiers;
+  private List<IRollModifier> fRollModifierList;
   
   public ReportSkillRoll(ReportId pId) {
     fId = pId;
@@ -53,7 +53,7 @@ public class ReportSkillRoll implements IReport {
   }
   
   private void initRollModifiers(IRollModifier[] pRollModifiers) {
-    fRollModifiers = new ArrayList<IRollModifier>();
+    fRollModifierList = new ArrayList<IRollModifier>();
     if (ArrayTool.isProvided(pRollModifiers)) {
       for (IRollModifier rollModifier : pRollModifiers) {
         addRollModifier(rollModifier);
@@ -63,18 +63,22 @@ public class ReportSkillRoll implements IReport {
   
   public void addRollModifier(IRollModifier pRollModifier) {
     if (pRollModifier != null) {
-      fRollModifiers.add(pRollModifier);
+      fRollModifierList.add(pRollModifier);
     }
   }
   
   public IRollModifier[] getRollModifiers() {
-    return fRollModifiers.toArray(new IRollModifier[fRollModifiers.size()]);
+    return fRollModifierList.toArray(new IRollModifier[fRollModifierList.size()]);
   }
   
   public boolean hasRollModifier(IRollModifier pRollModifier) {
-    return fRollModifiers.contains(pRollModifier);
+    return fRollModifierList.contains(pRollModifier);
   }
-  
+
+  protected List<IRollModifier> getRollModifierList() {
+    return fRollModifierList;
+  }
+
   public ReportId getId() {
     return fId;
   }
@@ -118,8 +122,8 @@ public class ReportSkillRoll implements IReport {
     pByteList.addBoolean(fSuccessful);
     pByteList.addByte((byte) fRoll);
     pByteList.addByte((byte) fMinimumRoll);
-    pByteList.addByte((byte) fRollModifiers.size());
-    for (IRollModifier rollModifier : fRollModifiers) {
+    pByteList.addByte((byte) fRollModifierList.size());
+    for (IRollModifier rollModifier : fRollModifierList) {
       pByteList.addByte((byte) rollModifier.getId()); 
     }
     pByteList.addBoolean(isReRolled());
@@ -133,14 +137,14 @@ public class ReportSkillRoll implements IReport {
     fSuccessful = pByteArray.getBoolean();
     fRoll = pByteArray.getByte();
     fMinimumRoll = pByteArray.getByte();
-    fRollModifiers.clear();
+    fRollModifierList.clear();
     int nrOfModifiers = pByteArray.getByte();
     if (nrOfModifiers > 0) {
       IRollModifierFactory modifierFactory = createRollModifierFactory();
       for (int i = 0; i < nrOfModifiers; i++) {
         int modifierId = pByteArray.getByte();
         if (modifierFactory != null) {
-          fRollModifiers.add(modifierFactory.forId(modifierId));
+          fRollModifierList.add(modifierFactory.forId(modifierId));
         }
       }
     }
@@ -158,9 +162,9 @@ public class ReportSkillRoll implements IReport {
     IJsonOption.ROLL.addTo(jsonObject, fRoll);
     IJsonOption.MINIMUM_ROLL.addTo(jsonObject, fMinimumRoll);
     IJsonOption.RE_ROLLED.addTo(jsonObject, fReRolled);
-    if (fRollModifiers.size() > 0) {
+    if (fRollModifierList.size() > 0) {
       JsonArray modifierArray = new JsonArray();
-      for (IRollModifier modifier : fRollModifiers) {
+      for (IRollModifier modifier : fRollModifierList) {
         modifierArray.add(UtilJson.toJsonValue(modifier));
       }
       IJsonOption.ROLL_MODIFIERS.addTo(jsonObject, modifierArray);
@@ -181,7 +185,7 @@ public class ReportSkillRoll implements IReport {
       IRollModifierFactory modifierFactory = createRollModifierFactory();
       if (modifierFactory != null) {
         for (int i = 0; i < modifierArray.size(); i++) {
-          fRollModifiers.add((IRollModifier) UtilJson.toEnumWithName(modifierFactory, modifierArray.get(i)));
+          fRollModifierList.add((IRollModifier) UtilJson.toEnumWithName(modifierFactory, modifierArray.get(i)));
         }
       }
     }

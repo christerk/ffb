@@ -29,8 +29,9 @@ public class ReportInterceptionRoll extends ReportSkillRoll {
     return ReportId.INTERCEPTION_ROLL;
   }
 
-  public InterceptionModifier[] getInterceptionModifiers() {
-    return (InterceptionModifier[]) getRollModifiers();
+  @Override
+  public InterceptionModifier[] getRollModifiers() {
+    return getRollModifierList().toArray(new InterceptionModifier[getRollModifierList().size()]);
   }
 
   public boolean isBomb() {
@@ -40,7 +41,7 @@ public class ReportInterceptionRoll extends ReportSkillRoll {
   // transformation
 
   public IReport transform() {
-    return new ReportInterceptionRoll(getPlayerId(), isSuccessful(), getRoll(), getMinimumRoll(), isReRolled(), getInterceptionModifiers(), isBomb());
+    return new ReportInterceptionRoll(getPlayerId(), isSuccessful(), getRoll(), getMinimumRoll(), isReRolled(), getRollModifiers(), isBomb());
   }
 
   // ByteArray serialization

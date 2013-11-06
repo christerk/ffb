@@ -57,7 +57,7 @@ public class UtilActingPlayer {
       fieldModel.clearDiceDecorations();
       fieldModel.clearPushbackSquares();
       fieldModel.clearMoveSquares();
-      if (pGame.getActingPlayer() != null) {
+      if (pGame.getActingPlayer().getPlayer() != null) {
         PlayerState playerState = pGame.getFieldModel().getPlayerState(pGame.getActingPlayer().getPlayer());
         if (playerState.hasUsedPro()) {
           pGame.getActingPlayer().markSkillUsed(Skill.PRO);

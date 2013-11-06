@@ -25,18 +25,19 @@ public class ReportCatchRoll extends ReportSkillRoll {
     fBomb = pBomb;
   }
   
-  public CatchModifier[] getCatchModifiers() {
-    return (CatchModifier[]) getRollModifiers();
-  }
-  
   public boolean isBomb() {
     return fBomb;
+  }
+  
+  @Override
+  public CatchModifier[] getRollModifiers() {
+    return getRollModifierList().toArray(new CatchModifier[getRollModifierList().size()]);
   }
   
   // transformation
 
   public IReport transform() {
-    return new ReportCatchRoll(getPlayerId(), isSuccessful(), getRoll(), getMinimumRoll(), isReRolled(), getCatchModifiers(), isBomb());
+    return new ReportCatchRoll(getPlayerId(), isSuccessful(), getRoll(), getMinimumRoll(), isReRolled(), getRollModifiers(), isBomb());
   }
 
   // ByteArray serialization

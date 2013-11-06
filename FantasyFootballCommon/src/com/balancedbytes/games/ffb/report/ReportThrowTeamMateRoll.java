@@ -40,14 +40,15 @@ public class ReportThrowTeamMateRoll extends ReportSkillRoll {
     return fPassingDistance;
   }
   
-  public PassModifier[] getPassModifiers() {
-    return (PassModifier[]) getRollModifiers();
+  @Override
+  public PassModifier[] getRollModifiers() {
+    return getRollModifierList().toArray(new PassModifier[getRollModifierList().size()]);
   }
   
   // transformation
   
   public IReport transform() {
-    return new ReportThrowTeamMateRoll(getPlayerId(), isSuccessful(), getRoll(), getMinimumRoll(), isReRolled(), getPassModifiers(), getPassingDistance(), getThrownPlayerId());
+    return new ReportThrowTeamMateRoll(getPlayerId(), isSuccessful(), getRoll(), getMinimumRoll(), isReRolled(), getRollModifiers(), getPassingDistance(), getThrownPlayerId());
   }
     
   // ByteArray serialization
