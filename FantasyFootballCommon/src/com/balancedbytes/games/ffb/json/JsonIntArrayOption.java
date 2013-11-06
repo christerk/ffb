@@ -4,6 +4,7 @@ import java.util.Collection;
 
 import com.eclipsesource.json.JsonArray;
 import com.eclipsesource.json.JsonObject;
+import com.eclipsesource.json.JsonValue;
 
 /**
  * 
@@ -16,7 +17,12 @@ public class JsonIntArrayOption extends JsonAbstractOption {
   }
   
   public int[] getFrom(JsonObject pJsonObject) {
-    return toIntArray(getValueFrom(pJsonObject).asArray()); 
+    JsonValue value = getValueFrom(pJsonObject);
+    if ((value != null) && !value.isNull()) {
+      return toIntArray(value.asArray()); 
+    } else {
+      return null;
+    }
   }
   
   private int[] toIntArray(JsonArray pJsonArray) {

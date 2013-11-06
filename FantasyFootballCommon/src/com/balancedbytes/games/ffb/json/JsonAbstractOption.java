@@ -35,7 +35,11 @@ public abstract class JsonAbstractOption {
     if (pJsonObject == null) {
       throwJsonObjectIsNullException();
     }
-    pJsonObject.add(getKey(), pValue);
+    if (pValue != null) {
+      pJsonObject.add(getKey(), pValue);
+    } else {
+      pJsonObject.add(getKey(), JsonValue.NULL);
+    }
   }
   
   private void throwJsonObjectIsNullException() {
