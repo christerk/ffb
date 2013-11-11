@@ -145,5 +145,13 @@ public class ArrayTool {
     }
     return result;
   }
+  
+  public static String firstElement(String[] pArray) {
+    if (!isProvided(pArray)) {
+      return null;
+    } else {
+      return pArray[0];
+    }
+  }
 
 }

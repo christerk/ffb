@@ -8,7 +8,12 @@ import java.sql.SQLException;
 import java.util.Properties;
 import java.util.Timer;
 
-import com.balancedbytes.games.ffb.server.admin.AdminConnector;
+import org.eclipse.jetty.server.Server;
+import org.eclipse.jetty.servlet.DefaultServlet;
+import org.eclipse.jetty.servlet.ServletContextHandler;
+import org.eclipse.jetty.servlet.ServletHolder;
+
+import com.balancedbytes.games.ffb.server.admin.AdminServlet;
 import com.balancedbytes.games.ffb.server.db.DbConnectionManager;
 import com.balancedbytes.games.ffb.server.db.DbInitializer;
 import com.balancedbytes.games.ffb.server.db.DbQueryFactory;
@@ -17,7 +22,6 @@ import com.balancedbytes.games.ffb.server.db.old.DbConversion;
 import com.balancedbytes.games.ffb.server.fumbbl.FumbblRequestProcessor;
 import com.balancedbytes.games.ffb.server.handler.ServerCommandHandlerFactory;
 import com.balancedbytes.games.ffb.server.net.ChannelManager;
-import com.balancedbytes.games.ffb.server.net.HttpServer;
 import com.balancedbytes.games.ffb.server.net.NioServer;
 import com.balancedbytes.games.ffb.server.net.ServerCommunication;
 import com.balancedbytes.games.ffb.server.net.ServerPingTask;
@@ -51,8 +55,6 @@ public class FantasyFootballServer {
   private Thread fCommunicationThread;
   private NioServer fNioServer;
   private Thread fNioServerThread;
-  private HttpServer fHttpServer;
-  private Thread fHttpServerThread;
   private ServerCommandHandlerFactory fCommandHandlerFactory;
   private GameCache fGameCache;
   private ChannelManager fChannelManager;
@@ -61,7 +63,6 @@ public class FantasyFootballServer {
   private Timer fPingTimer;
   private DebugLog fDebugLog;
   private ServerReplayer fReplayer;
-  private AdminConnector fAdminConnector;
   private FumbblRequestProcessor fFumbblRequestProcessor;
   private boolean fBlockingNewGames;
   
@@ -81,14 +82,13 @@ public class FantasyFootballServer {
     return fDebugLog;
   }
   
-  public void run() throws IOException, SQLException {
+  public void run() throws Exception {
 
     fPingTimer = new Timer(true);
-    fAdminConnector = new AdminConnector(this);
     fFortuna = new Fortuna();
 
     File logDir = null;
-    String logDirProperty = getProperty(IServerProperty.SERVER_DIR_LOG);
+    String logDirProperty = getProperty(IServerProperty.SERVER_LOG_DIR);
     if (StringTool.isProvided(logDirProperty)) {
       logDir = new File(logDirProperty);
     }
@@ -159,13 +159,18 @@ public class FantasyFootballServer {
         fNioServerThread.start();
   
         String httpPortProperty = getProperty(IServerProperty.HTTP_PORT);
-        String httpDirProperty = getProperty(IServerProperty.HTTP_DIR);
+        String httpDirProperty = getProperty(IServerProperty.HTTP_BASE_DIR);
         if (StringTool.isProvided(httpPortProperty) && StringTool.isProvided(httpDirProperty)) {
+          Server server = new Server(Integer.parseInt(httpPortProperty));
+          ServletContextHandler context = new ServletContextHandler();
+          context.setContextPath("/");
+          server.setHandler(context);
           File httpDir = new File(httpDirProperty);
-          int httpPort = Integer.parseInt(httpPortProperty);
-          fHttpServer = new HttpServer(this, httpPort, httpDir);
-          fHttpServerThread = new Thread(fHttpServer);
-          fHttpServerThread.start();
+          ServletHolder holder = context.addServlet(DefaultServlet.class, "/icons/*");
+          holder.setInitParameter("resourceBase", new File(httpDir, "icons").getAbsolutePath());
+          holder.setInitParameter("pathInfoOnly", "true");
+          context.addServlet(new ServletHolder(new AdminServlet(this)), "/admin/*");
+          server.start();
         }
         
         String pingIntervalProperty = getProperty(IServerProperty.SERVER_PING_INTERVAL);
@@ -277,10 +282,6 @@ public class FantasyFootballServer {
   
   public ServerReplayer getReplayer() {
     return fReplayer;
-  }
-  
-  public AdminConnector getAdminConnector() {
-    return fAdminConnector;
   }
   
   public FumbblRequestProcessor getFumbblRequestProcessor() {

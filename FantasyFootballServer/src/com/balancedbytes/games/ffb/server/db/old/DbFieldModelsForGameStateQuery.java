@@ -27,7 +27,6 @@ import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.model.Team;
 import com.balancedbytes.games.ffb.server.FantasyFootballServer;
 import com.balancedbytes.games.ffb.server.GameState;
-import com.balancedbytes.games.ffb.server.db.DbFieldModelsType;
 import com.balancedbytes.games.ffb.server.db.DbStatement;
 import com.balancedbytes.games.ffb.server.db.DbStatementId;
 

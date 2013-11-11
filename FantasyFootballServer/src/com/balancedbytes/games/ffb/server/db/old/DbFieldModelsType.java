@@ -1,4 +1,4 @@
-package com.balancedbytes.games.ffb.server.db;
+package com.balancedbytes.games.ffb.server.db.old;
 
 /**
  * 

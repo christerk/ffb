@@ -7,15 +7,15 @@ package com.balancedbytes.games.ffb.server;
 public interface IServerProperty {
   
   String SERVER_PORT = "server.port";
-  String SERVER_DIR_LOG = "server.dir.log";
+  String SERVER_LOG_DIR = "server.log.dir";
+  String SERVER_LOG_LEVEL = "server.log.level";
   String SERVER_PING_INTERVAL = "server.ping.interval";
   String SERVER_PING_MAX_DELAY = "server.ping.maxDelay";
-  String SERVER_DEBUG_COMPRESSION = "server.debug.compression";
-  String SERVER_LOG_LEVEL = "server.log.level";
   String SERVER_SPECTATOR_COOLDOWN = "server.spectator.cooldown";
+  String SERVER_DEBUG_COMPRESSION = "server.debug.compression";
   
   String HTTP_PORT = "http.port";
-  String HTTP_DIR = "http.dir";
+  String HTTP_BASE_DIR = "http.base.dir";
 
   String FUMBBL_USER = "fumbbl.user";
   String FUMBBL_PASSWORD = "fumbbl.password";
