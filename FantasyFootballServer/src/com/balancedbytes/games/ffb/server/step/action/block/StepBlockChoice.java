@@ -8,12 +8,14 @@ import com.balancedbytes.games.ffb.Skill;
 import com.balancedbytes.games.ffb.SkillUse;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
+import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.net.NetCommand;
 import com.balancedbytes.games.ffb.report.ReportBlockChoice;
 import com.balancedbytes.games.ffb.report.ReportSkillUse;
 import com.balancedbytes.games.ffb.server.GameState;
+import com.balancedbytes.games.ffb.server.IServerJsonOption;
 import com.balancedbytes.games.ffb.server.step.AbstractStep;
 import com.balancedbytes.games.ffb.server.step.StepAction;
 import com.balancedbytes.games.ffb.server.step.StepCommandStatus;
@@ -25,6 +27,8 @@ import com.balancedbytes.games.ffb.server.step.StepParameterSet;
 import com.balancedbytes.games.ffb.server.util.UtilDialog;
 import com.balancedbytes.games.ffb.util.StringTool;
 import com.balancedbytes.games.ffb.util.UtilCards;
+import com.eclipsesource.json.JsonObject;
+import com.eclipsesource.json.JsonValue;
 
 /**
  * Step in block sequence to handle the block choice.
@@ -47,9 +51,9 @@ public class StepBlockChoice extends AbstractStep {
 	private String fGotoLabelOnJuggernaut;
 	private String fGotoLabelOnPushback;
 	
-  private int fNrOfBlockDice;
+  private int fNrOfDice;
   private int[] fBlockRoll;
-  private int fBlockDiceIndex;
+  private int fDiceIndex;
   private BlockResult fBlockResult;
   private PlayerState fOldDefenderState;
 	
@@ -113,8 +117,8 @@ public class StepBlockChoice extends AbstractStep {
 	public boolean setParameter(StepParameter pParameter) {
 		if ((pParameter != null) && !super.setParameter(pParameter)) {
 			switch (pParameter.getKey()) {
-				case BLOCK_DICE_INDEX:
-					fBlockDiceIndex = (Integer) pParameter.getValue();
+				case DICE_INDEX:
+					fDiceIndex = (Integer) pParameter.getValue();
 					return true;
 				case BLOCK_RESULT:
 					fBlockResult = (BlockResult) pParameter.getValue();
@@ -122,8 +126,8 @@ public class StepBlockChoice extends AbstractStep {
 				case BLOCK_ROLL:
 					fBlockRoll = (int[]) pParameter.getValue();
 					return true;
-				case NR_OF_BLOCK_DICE:
-					fNrOfBlockDice = (Integer) pParameter.getValue();
+				case NR_OF_DICE:
+					fNrOfDice = (Integer) pParameter.getValue();
 					return true;
 				case OLD_DEFENDER_STATE:
 					fOldDefenderState = (PlayerState) pParameter.getValue();
@@ -184,7 +188,7 @@ public class StepBlockChoice extends AbstractStep {
       default:
       	break;
     }
-    getResult().addReport(new ReportBlockChoice(fNrOfBlockDice, fBlockRoll, fBlockDiceIndex, fBlockResult, game.getDefenderId()));
+    getResult().addReport(new ReportBlockChoice(fNrOfDice, fBlockRoll, fDiceIndex, fBlockResult, game.getDefenderId()));
   }
   
   public int getByteArraySerializationVersion() {
@@ -197,9 +201,9 @@ public class StepBlockChoice extends AbstractStep {
   	pByteList.addString(fGotoLabelOnDodge);
   	pByteList.addString(fGotoLabelOnJuggernaut);
   	pByteList.addString(fGotoLabelOnPushback);
-  	pByteList.addByte((byte) fNrOfBlockDice);
+  	pByteList.addByte((byte) fNrOfDice);
   	pByteList.addByteArray(fBlockRoll);
-  	pByteList.addByte((byte) fBlockDiceIndex);
+  	pByteList.addByte((byte) fDiceIndex);
   	pByteList.addByte((byte) ((fBlockResult != null) ? fBlockResult.getId() : 0));
   	pByteList.addSmallInt(((fOldDefenderState != null) ? fOldDefenderState.getId() : 0));
   }
@@ -210,13 +214,42 @@ public class StepBlockChoice extends AbstractStep {
   	fGotoLabelOnDodge = pByteArray.getString();
   	fGotoLabelOnJuggernaut = pByteArray.getString();
   	fGotoLabelOnPushback = pByteArray.getString();
-  	fNrOfBlockDice = pByteArray.getByte();
+  	fNrOfDice = pByteArray.getByte();
   	fBlockRoll = pByteArray.getByteArrayAsIntArray();
-  	fBlockDiceIndex = pByteArray.getByte();
+  	fDiceIndex = pByteArray.getByte();
   	fBlockResult = new BlockResultFactory().forId(pByteArray.getByte());
   	int defenderStateId = pByteArray.getSmallInt();
   	fOldDefenderState = (defenderStateId > 0) ? new PlayerState(defenderStateId) : null;
   	return byteArraySerializationVersion;
   }
   
+  // JSON serialization
+  
+  public JsonObject toJsonValue() {
+    JsonObject jsonObject = toJsonValueTemp();
+    IServerJsonOption.GOTO_LABEL_ON_DODGE.addTo(jsonObject, fGotoLabelOnDodge);
+    IServerJsonOption.GOTO_LABEL_ON_JUGGERNAUT.addTo(jsonObject, fGotoLabelOnJuggernaut);
+    IServerJsonOption.GOTO_LABEL_ON_PUSHBACK.addTo(jsonObject, fGotoLabelOnPushback);
+    IServerJsonOption.NR_OF_DICE.addTo(jsonObject, fNrOfDice);
+    IServerJsonOption.BLOCK_ROLL.addTo(jsonObject, fBlockRoll);
+    IServerJsonOption.DICE_INDEX.addTo(jsonObject, fDiceIndex);
+    IServerJsonOption.BLOCK_RESULT.addTo(jsonObject, fBlockResult);
+    IServerJsonOption.OLD_DEFENDER_STATE.addTo(jsonObject, fOldDefenderState);
+    return jsonObject;
+  }
+  
+  public StepBlockChoice initFrom(JsonValue pJsonValue) {
+    initFromTemp(pJsonValue);
+    JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
+    fGotoLabelOnDodge = IServerJsonOption.GOTO_LABEL_ON_DODGE.getFrom(jsonObject);
+    fGotoLabelOnJuggernaut = IServerJsonOption.GOTO_LABEL_ON_JUGGERNAUT.getFrom(jsonObject);
+    fGotoLabelOnPushback = IServerJsonOption.GOTO_LABEL_ON_PUSHBACK.getFrom(jsonObject);
+    fNrOfDice = IServerJsonOption.NR_OF_DICE.getFrom(jsonObject);
+    fBlockRoll = IServerJsonOption.BLOCK_ROLL.getFrom(jsonObject);
+    fDiceIndex = IServerJsonOption.DICE_INDEX.getFrom(jsonObject);
+    fBlockResult = (BlockResult) IServerJsonOption.BLOCK_RESULT.getFrom(jsonObject);
+    fOldDefenderState = IServerJsonOption.OLD_DEFENDER_STATE.getFrom(jsonObject);
+    return this;
+  }
+
 }

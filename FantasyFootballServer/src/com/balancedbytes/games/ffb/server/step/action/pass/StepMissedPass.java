@@ -23,6 +23,8 @@ import com.balancedbytes.games.ffb.server.step.StepParameter;
 import com.balancedbytes.games.ffb.server.step.StepParameterKey;
 import com.balancedbytes.games.ffb.server.util.UtilCatchScatterThrowIn;
 import com.balancedbytes.games.ffb.server.util.UtilGame;
+import com.eclipsesource.json.JsonObject;
+import com.eclipsesource.json.JsonValue;
 
 /**
  * Step of the pass sequence to handle a missed pass.
@@ -121,6 +123,17 @@ public class StepMissedPass extends AbstractStep {
   
   public int getByteArraySerializationVersion() {
   	return 1;
+  }
+  
+  // JSON serialization
+  
+  public JsonObject toJsonValue() {
+    return toJsonValueTemp();
+  }
+  
+  public StepMissedPass initFrom(JsonValue pJsonValue) {
+    initFromTemp(pJsonValue);
+    return this;
   }
   
 }

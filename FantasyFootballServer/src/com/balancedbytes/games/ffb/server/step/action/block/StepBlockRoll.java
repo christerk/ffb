@@ -99,9 +99,9 @@ public class StepBlockRoll extends AbstractStepWithReRoll {
         showBlockRollDialog(doRoll);
       }
     } else {
-      publishParameter(new StepParameter(StepParameterKey.NR_OF_BLOCK_DICE, fNrOfBlockDice));
+      publishParameter(new StepParameter(StepParameterKey.NR_OF_DICE, fNrOfBlockDice));
       publishParameter(new StepParameter(StepParameterKey.BLOCK_ROLL, fBlockRoll));
-	    publishParameter(new StepParameter(StepParameterKey.BLOCK_DICE_INDEX, fBlockDiceIndex));
+	    publishParameter(new StepParameter(StepParameterKey.DICE_INDEX, fBlockDiceIndex));
 	    publishParameter(new StepParameter(StepParameterKey.BLOCK_RESULT, fBlockResult));
     	getResult().setNextAction(StepAction.NEXT_STEP);
     }

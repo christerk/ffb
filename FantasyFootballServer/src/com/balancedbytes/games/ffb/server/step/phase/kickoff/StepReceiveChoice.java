@@ -2,17 +2,21 @@ package com.balancedbytes.games.ffb.server.step.phase.kickoff;
 
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
+import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.net.NetCommand;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandReceiveChoice;
 import com.balancedbytes.games.ffb.report.ReportReceiveChoice;
 import com.balancedbytes.games.ffb.server.GameState;
+import com.balancedbytes.games.ffb.server.IServerJsonOption;
 import com.balancedbytes.games.ffb.server.step.AbstractStep;
 import com.balancedbytes.games.ffb.server.step.StepAction;
 import com.balancedbytes.games.ffb.server.step.StepCommandStatus;
 import com.balancedbytes.games.ffb.server.step.StepId;
 import com.balancedbytes.games.ffb.server.step.StepParameter;
 import com.balancedbytes.games.ffb.server.util.UtilDialog;
+import com.eclipsesource.json.JsonObject;
+import com.eclipsesource.json.JsonValue;
 
 /**
  * Step in kickoff sequence to determine receive choice.
@@ -108,6 +112,28 @@ public final class StepReceiveChoice extends AbstractStep {
   	fChoosingTeamId = pByteArray.getString();
   	fReceiveChoice = pByteArray.getBoolean();
   	return byteArraySerializationVersion;
+  }
+  
+  // JSON serialization
+  
+  public JsonObject toJsonValue() {
+    JsonObject jsonObject = toJsonValueTemp();
+    IServerJsonOption.CHOOSING_TEAM_ID.addTo(jsonObject, fChoosingTeamId);
+    if (fReceiveChoice != null) {
+      IServerJsonOption.RECEIVE_CHOICE.addTo(jsonObject, fReceiveChoice);
+    }
+    return jsonObject;
+  }
+  
+  public StepReceiveChoice initFrom(JsonValue pJsonValue) {
+    initFromTemp(pJsonValue);
+    JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
+    fChoosingTeamId = IServerJsonOption.CHOOSING_TEAM_ID.getFrom(jsonObject);
+    fReceiveChoice = null;
+    if (IServerJsonOption.RECEIVE_CHOICE.isDefinedIn(jsonObject)) {
+      fReceiveChoice = IServerJsonOption.RECEIVE_CHOICE.getFrom(jsonObject);
+    }
+    return this;
   }
   
 }

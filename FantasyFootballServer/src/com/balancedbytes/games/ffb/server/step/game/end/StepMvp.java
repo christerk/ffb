@@ -15,6 +15,8 @@ import com.balancedbytes.games.ffb.server.step.AbstractStep;
 import com.balancedbytes.games.ffb.server.step.StepAction;
 import com.balancedbytes.games.ffb.server.step.StepId;
 import com.balancedbytes.games.ffb.util.UtilPlayer;
+import com.eclipsesource.json.JsonObject;
+import com.eclipsesource.json.JsonValue;
 
 /**
  * Step in end game sequence to determine the MVP.
@@ -87,5 +89,16 @@ public final class StepMvp extends AbstractStep {
 	public int getByteArraySerializationVersion() {
 		return 1;
 	}
+	
+  // JSON serialization
+  
+  public JsonObject toJsonValue() {
+    return toJsonValueTemp();
+  }
+  
+  public StepMvp initFrom(JsonValue pJsonValue) {
+    initFromTemp(pJsonValue);
+    return this;
+  }
 
 }

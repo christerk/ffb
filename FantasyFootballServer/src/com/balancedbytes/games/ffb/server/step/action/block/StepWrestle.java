@@ -9,12 +9,14 @@ import com.balancedbytes.games.ffb.SkillUse;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
 import com.balancedbytes.games.ffb.dialog.DialogSkillUseParameter;
+import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.net.NetCommand;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandUseSkill;
 import com.balancedbytes.games.ffb.report.ReportSkillUse;
 import com.balancedbytes.games.ffb.server.GameState;
+import com.balancedbytes.games.ffb.server.IServerJsonOption;
 import com.balancedbytes.games.ffb.server.step.AbstractStep;
 import com.balancedbytes.games.ffb.server.step.StepAction;
 import com.balancedbytes.games.ffb.server.step.StepCommandStatus;
@@ -25,6 +27,8 @@ import com.balancedbytes.games.ffb.server.step.action.common.ApothecaryMode;
 import com.balancedbytes.games.ffb.server.util.UtilDialog;
 import com.balancedbytes.games.ffb.server.util.UtilInjury;
 import com.balancedbytes.games.ffb.util.UtilCards;
+import com.eclipsesource.json.JsonObject;
+import com.eclipsesource.json.JsonValue;
 
 /**
  * Step in block sequence to handle skill WRESTLE.
@@ -138,6 +142,23 @@ public class StepWrestle extends AbstractStep {
   	fUsingWrestleAttacker = pByteArray.getBoolean();
   	fUsingWrestleDefender = pByteArray.getBoolean();
   	return byteArraySerializationVersion;
+  }
+  
+  // JSON serialization
+  
+  public JsonObject toJsonValue() {
+    JsonObject jsonObject = toJsonValueTemp();
+    IServerJsonOption.USING_WRESTLE_ATTACKER.addTo(jsonObject, fUsingWrestleAttacker);
+    IServerJsonOption.USING_WRESTLE_DEFENDER.addTo(jsonObject, fUsingWrestleDefender);
+    return jsonObject;
+  }
+  
+  public StepWrestle initFrom(JsonValue pJsonValue) {
+    initFromTemp(pJsonValue);
+    JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
+    fUsingWrestleAttacker = IServerJsonOption.USING_WRESTLE_ATTACKER.getFrom(jsonObject);
+    fUsingWrestleDefender = IServerJsonOption.USING_WRESTLE_DEFENDER.getFrom(jsonObject);
+    return this;
   }
 
 }

@@ -9,6 +9,8 @@ import com.balancedbytes.games.ffb.server.step.SequenceGenerator;
 import com.balancedbytes.games.ffb.server.step.StepAction;
 import com.balancedbytes.games.ffb.server.step.StepCommandStatus;
 import com.balancedbytes.games.ffb.server.step.StepId;
+import com.eclipsesource.json.JsonObject;
+import com.eclipsesource.json.JsonValue;
 
 /**
  * Step to end kickoff sequence.
@@ -51,6 +53,17 @@ public final class StepEndKickoff extends AbstractStep {
   
   public int getByteArraySerializationVersion() {
   	return 1;
+  }
+  
+  // JSON serialization
+  
+  public JsonObject toJsonValue() {
+    return toJsonValueTemp();
+  }
+  
+  public StepEndKickoff initFrom(JsonValue pJsonValue) {
+    initFromTemp(pJsonValue);
+    return this;
   }
   
 }

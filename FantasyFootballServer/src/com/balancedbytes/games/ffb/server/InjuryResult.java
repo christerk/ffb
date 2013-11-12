@@ -47,7 +47,7 @@ public class InjuryResult implements IByteArraySerializable, IJsonSerializable {
 
   private InjuryType fInjuryType;
   private String fDefenderId;
-  private FieldCoordinate fDefenderCoordinate;
+  private FieldCoordinate fDefenderPosition;
   private String fAttackerId;
   private Set<ArmorModifier> fArmorModifiers;
   private int[] fArmorRoll;
@@ -90,11 +90,11 @@ public class InjuryResult implements IByteArraySerializable, IJsonSerializable {
   }
 
   public void setDefenderCoordinate(FieldCoordinate pDefenderCoordinate) {
-    fDefenderCoordinate = pDefenderCoordinate;
+    fDefenderPosition = pDefenderCoordinate;
   }
 
-  public FieldCoordinate getDefenderCoordinate() {
-    return fDefenderCoordinate;
+  public FieldCoordinate getDefenderPosition() {
+    return fDefenderPosition;
   }
 
   public void setAttackerId(String pSendToBoxByPlayerId) {
@@ -381,7 +381,7 @@ public class InjuryResult implements IByteArraySerializable, IJsonSerializable {
           attackerResult.setCasualties(attackerResult.getCasualties() + 1);
         }
       }
-      game.getFieldModel().add(new BloodSpot(getDefenderCoordinate(), getSufferedInjury()));
+      game.getFieldModel().add(new BloodSpot(getDefenderPosition(), getSufferedInjury()));
     }
   }
 
@@ -417,7 +417,7 @@ public class InjuryResult implements IByteArraySerializable, IJsonSerializable {
     pByteList.addSmallInt(getByteArraySerializationVersion());
     pByteList.addByte((byte) ((getInjuryType() != null) ? getInjuryType().getId() : 0));
     pByteList.addString(getDefenderId());
-    pByteList.addFieldCoordinate(getDefenderCoordinate());
+    pByteList.addFieldCoordinate(getDefenderPosition());
     pByteList.addString(getAttackerId());
     ArmorModifier[] armorModifiers = getArmorModifiers();
     pByteList.addByte((byte) armorModifiers.length);
@@ -490,7 +490,7 @@ public class InjuryResult implements IByteArraySerializable, IJsonSerializable {
     
     IServerJsonOption.INJURY_TYPE.addTo(jsonObject, fInjuryType);
     IServerJsonOption.DEFENDER_ID.addTo(jsonObject, fDefenderId);
-    IServerJsonOption.DEFENDER_COORDINATE.addTo(jsonObject, fDefenderCoordinate);
+    IServerJsonOption.DEFENDER_POSITION.addTo(jsonObject, fDefenderPosition);
     IServerJsonOption.ATTACKER_ID.addTo(jsonObject, fAttackerId);
     IServerJsonOption.ARMOR_ROLL.addTo(jsonObject, fArmorRoll);
     IServerJsonOption.ARMOR_BROKEN.addTo(jsonObject, fArmorBroken);
@@ -530,7 +530,7 @@ public class InjuryResult implements IByteArraySerializable, IJsonSerializable {
 
     fInjuryType = (InjuryType) IServerJsonOption.INJURY_TYPE.getFrom(jsonObject);
     fDefenderId = IServerJsonOption.DEFENDER_ID.getFrom(jsonObject);
-    fDefenderCoordinate = IServerJsonOption.DEFENDER_COORDINATE.getFrom(jsonObject);
+    fDefenderPosition = IServerJsonOption.DEFENDER_POSITION.getFrom(jsonObject);
     fAttackerId = IServerJsonOption.ATTACKER_ID.getFrom(jsonObject);
     fArmorRoll = IServerJsonOption.ARMOR_ROLL.getFrom(jsonObject);
     fArmorBroken = IServerJsonOption.ARMOR_BROKEN.getFrom(jsonObject);

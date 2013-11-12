@@ -10,7 +10,6 @@ public enum StepParameterKey {
 	APOTHECARY_MODE,              // ApothecaryMode
 	AUTOMATIC_RE_ROLL,            // Boolean
 	BLOCK_DEFENDER_ID,            // String
-	BLOCK_DICE_INDEX,             // Integer
 	BLOCK_RESULT,                 // BlockResult
 	BLOCK_ROLL,                   // int[]
 	BOMB_EXPLODES,                // Boolean
@@ -22,6 +21,7 @@ public enum StepParameterKey {
 	COORDINATE_TO,                // FieldCoordinate
 	DEFENDER_POSITION,            // FieldCoordinate
 	DEFENDER_PUSHED,              // Boolean
+  DICE_INDEX,                   // Integer
 	DISPATCH_PLAYER_ACTION,       // PlayerAction
 	DODGE_ROLL,                   // Integer
 	END_INDUCEMENT_PHASE,   	    // Boolean
@@ -61,7 +61,7 @@ public enum StepParameterKey {
 	KICKOFF_START_COORDINATE,     // FieldCoordinate
 	MOVE_STACK,                   // FieldCoordinate[]
 	MULTI_BLOCK_DEFENDER_ID,      // String
-	NR_OF_BLOCK_DICE,             // Integer
+	NR_OF_DICE,                   // Integer
 	OLD_DEFENDER_STATE,           // PlayerState
 	PASS_ACCURATE,                // Boolean
 	PASS_FUMBLE,                  // Boolean

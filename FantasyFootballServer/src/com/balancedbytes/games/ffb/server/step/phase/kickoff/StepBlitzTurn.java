@@ -3,10 +3,12 @@ package com.balancedbytes.games.ffb.server.step.phase.kickoff;
 import com.balancedbytes.games.ffb.TurnMode;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
+import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Team;
 import com.balancedbytes.games.ffb.net.NetCommand;
 import com.balancedbytes.games.ffb.server.GameState;
+import com.balancedbytes.games.ffb.server.IServerJsonOption;
 import com.balancedbytes.games.ffb.server.step.AbstractStep;
 import com.balancedbytes.games.ffb.server.step.SequenceGenerator;
 import com.balancedbytes.games.ffb.server.step.StepAction;
@@ -15,6 +17,8 @@ import com.balancedbytes.games.ffb.server.step.StepId;
 import com.balancedbytes.games.ffb.server.step.StepParameter;
 import com.balancedbytes.games.ffb.server.util.UtilGame;
 import com.balancedbytes.games.ffb.server.util.UtilTimer;
+import com.eclipsesource.json.JsonObject;
+import com.eclipsesource.json.JsonValue;
 
 /**
  * Step in kickoff sequence to handle blitz kickoff result.
@@ -116,6 +120,21 @@ public final class StepBlitzTurn extends AbstractStep {
   	int byteArraySerializationVersion = super.initFrom(pByteArray);
   	fEndTurn = pByteArray.getBoolean();
   	return byteArraySerializationVersion;
+  }
+  
+  // JSON serialization
+  
+  public JsonObject toJsonValue() {
+    JsonObject jsonObject = toJsonValueTemp();
+    IServerJsonOption.END_TURN.addTo(jsonObject, fEndTurn);
+    return jsonObject;
+  }
+  
+  public StepBlitzTurn initFrom(JsonValue pJsonValue) {
+    initFromTemp(pJsonValue);
+    JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
+    fEndTurn = IServerJsonOption.END_TURN.getFrom(jsonObject);
+    return this;
   }
   
 }

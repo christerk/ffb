@@ -8,11 +8,13 @@ import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
 import com.balancedbytes.games.ffb.dialog.DialogDefenderActionParameter;
 import com.balancedbytes.games.ffb.dialog.DialogSkillUseParameter;
+import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.net.NetCommand;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandUseSkill;
 import com.balancedbytes.games.ffb.report.ReportSkillUse;
 import com.balancedbytes.games.ffb.server.GameState;
+import com.balancedbytes.games.ffb.server.IServerJsonOption;
 import com.balancedbytes.games.ffb.server.step.AbstractStep;
 import com.balancedbytes.games.ffb.server.step.SequenceGenerator;
 import com.balancedbytes.games.ffb.server.step.StepAction;
@@ -21,6 +23,8 @@ import com.balancedbytes.games.ffb.server.step.StepId;
 import com.balancedbytes.games.ffb.server.step.StepParameter;
 import com.balancedbytes.games.ffb.server.util.UtilDialog;
 import com.balancedbytes.games.ffb.util.UtilCards;
+import com.eclipsesource.json.JsonObject;
+import com.eclipsesource.json.JsonValue;
 
 /**
  * Step in block sequence to handle skill DUMP_OFF.
@@ -138,6 +142,25 @@ public class StepDumpOff extends AbstractStep {
   	fUsingDumpOff = pByteArray.getBoolean();
   	fDefenderPosition = pByteArray.getFieldCoordinate();
   	return byteArraySerializationVersion;
+  }
+  
+  // JSON serialization
+  
+  public JsonObject toJsonValue() {
+    JsonObject jsonObject = toJsonValueTemp();
+    IServerJsonOption.USING_DUMP_OFF.addTo(jsonObject, fUsingDumpOff);
+    IServerJsonOption.DEFENDER_POSITION.addTo(jsonObject, fDefenderPosition);
+    IServerJsonOption.OLD_TURN_MODE.addTo(jsonObject, fOldTurnMode);
+    return jsonObject;
+  }
+  
+  public StepDumpOff initFrom(JsonValue pJsonValue) {
+    initFromTemp(pJsonValue);
+    JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
+    fUsingDumpOff = IServerJsonOption.USING_DUMP_OFF.getFrom(jsonObject);
+    fDefenderPosition = IServerJsonOption.DEFENDER_POSITION.getFrom(jsonObject);
+    fOldTurnMode = (TurnMode) IServerJsonOption.OLD_TURN_MODE.getFrom(jsonObject);
+    return this;
   }
 
 }

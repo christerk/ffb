@@ -4,12 +4,14 @@ import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
 import com.balancedbytes.games.ffb.dialog.DialogCoinChoiceParameter;
 import com.balancedbytes.games.ffb.dialog.DialogReceiveChoiceParameter;
+import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Team;
 import com.balancedbytes.games.ffb.net.NetCommand;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandCoinChoice;
 import com.balancedbytes.games.ffb.report.ReportCoinThrow;
 import com.balancedbytes.games.ffb.server.GameState;
+import com.balancedbytes.games.ffb.server.IServerJsonOption;
 import com.balancedbytes.games.ffb.server.step.AbstractStep;
 import com.balancedbytes.games.ffb.server.step.StepAction;
 import com.balancedbytes.games.ffb.server.step.StepCommandStatus;
@@ -17,6 +19,8 @@ import com.balancedbytes.games.ffb.server.step.StepId;
 import com.balancedbytes.games.ffb.server.step.StepParameter;
 import com.balancedbytes.games.ffb.server.step.StepParameterKey;
 import com.balancedbytes.games.ffb.server.util.UtilDialog;
+import com.eclipsesource.json.JsonObject;
+import com.eclipsesource.json.JsonValue;
 
 /**
  * Step in kickoff sequence to choose coin.
@@ -97,6 +101,26 @@ public final class StepCoinChoice extends AbstractStep {
   	int byteArraySerializationVersion = super.initFrom(pByteArray);
   	fCoinChoiceHeads = pByteArray.getBoolean();
   	return byteArraySerializationVersion;
+  }
+  
+  // JSON serialization
+  
+  public JsonObject toJsonValue() {
+    JsonObject jsonObject = toJsonValueTemp();
+    if (fCoinChoiceHeads != null) {
+      IServerJsonOption.COIN_CHOICE_HEADS.addTo(jsonObject, fCoinChoiceHeads);
+    }
+    return jsonObject;
+  }
+  
+  public StepCoinChoice initFrom(JsonValue pJsonValue) {
+    initFromTemp(pJsonValue);
+    JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
+    fCoinChoiceHeads = null;
+    if (IServerJsonOption.COIN_CHOICE_HEADS.isDefinedIn(jsonObject)) {
+      fCoinChoiceHeads = IServerJsonOption.COIN_CHOICE_HEADS.getFrom(jsonObject);
+    }
+    return this;
   }
   
 }

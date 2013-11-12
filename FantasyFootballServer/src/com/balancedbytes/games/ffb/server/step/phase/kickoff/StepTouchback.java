@@ -9,11 +9,13 @@ import com.balancedbytes.games.ffb.TurnMode;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
 import com.balancedbytes.games.ffb.dialog.DialogTouchbackParameter;
+import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.net.NetCommand;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandTouchback;
 import com.balancedbytes.games.ffb.server.GameState;
+import com.balancedbytes.games.ffb.server.IServerJsonOption;
 import com.balancedbytes.games.ffb.server.step.AbstractStep;
 import com.balancedbytes.games.ffb.server.step.StepAction;
 import com.balancedbytes.games.ffb.server.step.StepCommandStatus;
@@ -23,6 +25,8 @@ import com.balancedbytes.games.ffb.server.step.StepParameterKey;
 import com.balancedbytes.games.ffb.server.step.UtilSteps;
 import com.balancedbytes.games.ffb.server.util.UtilDialog;
 import com.balancedbytes.games.ffb.util.UtilCards;
+import com.eclipsesource.json.JsonObject;
+import com.eclipsesource.json.JsonValue;
 
 /**
  * Step in kickoff sequence to handle touchback.
@@ -141,6 +145,23 @@ public final class StepTouchback extends AbstractStep {
   	fTouchback = pByteArray.getBoolean();
   	fTouchbackCoordinate = pByteArray.getFieldCoordinate();
   	return byteArraySerializationVersion;
+  }
+  
+  // JSON serialization
+  
+  public JsonObject toJsonValue() {
+    JsonObject jsonObject = toJsonValueTemp();
+    IServerJsonOption.TOUCHBACK.addTo(jsonObject, fTouchback);
+    IServerJsonOption.TOUCHBACK_COORDINATE.addTo(jsonObject, fTouchbackCoordinate);
+    return jsonObject;
+  }
+  
+  public StepTouchback initFrom(JsonValue pJsonValue) {
+    initFromTemp(pJsonValue);
+    JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
+    fTouchback = IServerJsonOption.TOUCHBACK.getFrom(jsonObject);
+    fTouchbackCoordinate = IServerJsonOption.TOUCHBACK_COORDINATE.getFrom(jsonObject);
+    return this;
   }
 
 }

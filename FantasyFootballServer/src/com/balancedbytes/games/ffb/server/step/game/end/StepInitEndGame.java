@@ -7,6 +7,8 @@ import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.step.AbstractStep;
 import com.balancedbytes.games.ffb.server.step.StepAction;
 import com.balancedbytes.games.ffb.server.step.StepId;
+import com.eclipsesource.json.JsonObject;
+import com.eclipsesource.json.JsonValue;
 
 /**
  * Initialization step in end game sequence.
@@ -54,5 +56,16 @@ public final class StepInitEndGame extends AbstractStep {
   public int getByteArraySerializationVersion() {
 		return 1;
 	}	
+  
+  // JSON serialization
+  
+  public JsonObject toJsonValue() {
+    return toJsonValueTemp();
+  }
+  
+  public StepInitEndGame initFrom(JsonValue pJsonValue) {
+    initFromTemp(pJsonValue);
+    return this;
+  }
 
 }

@@ -13,6 +13,10 @@ public class JsonBooleanOption extends JsonAbstractOption {
     super(pKey);
   }
   
+  public boolean isDefinedIn(JsonObject pJsonObject) {
+    return (getValueFrom(pJsonObject) != null);
+  }
+  
   public boolean getFrom(JsonObject pJsonObject) {
     return getValueFrom(pJsonObject).asBoolean();
   }

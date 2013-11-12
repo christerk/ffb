@@ -1,6 +1,7 @@
 package com.balancedbytes.games.ffb.server.step;
 
 import com.balancedbytes.games.ffb.server.GameState;
+import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
 /**
@@ -32,8 +33,12 @@ public class StepNextStep extends AbstractStep {
   
   // JSON serialization
   
+  public JsonObject toJsonValue() {
+    return toJsonValueTemp();
+  }
+  
   public StepNextStep initFrom(JsonValue pJsonValue) {
-    super.initFrom(pJsonValue);
+    initFromTemp(pJsonValue);
     return this;
   }
   

@@ -8,6 +8,8 @@ import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.step.AbstractStep;
 import com.balancedbytes.games.ffb.server.step.StepAction;
 import com.balancedbytes.games.ffb.server.step.StepId;
+import com.eclipsesource.json.JsonObject;
+import com.eclipsesource.json.JsonValue;
 
 /**
  * Step in end game sequence to handle fan factor changes.
@@ -55,5 +57,16 @@ public final class StepFanFactor extends AbstractStep {
 	public int getByteArraySerializationVersion() {
 		return 1;
 	}
+	
+  // JSON serialization
+  
+  public JsonObject toJsonValue() {
+    return toJsonValueTemp();
+  }
+  
+  public StepFanFactor initFrom(JsonValue pJsonValue) {
+    initFromTemp(pJsonValue);
+    return this;
+  }
 
 }

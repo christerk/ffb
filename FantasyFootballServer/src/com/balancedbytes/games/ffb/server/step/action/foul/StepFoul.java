@@ -20,6 +20,8 @@ import com.balancedbytes.games.ffb.server.step.action.common.ApothecaryMode;
 import com.balancedbytes.games.ffb.server.util.UtilGame;
 import com.balancedbytes.games.ffb.server.util.UtilInjury;
 import com.balancedbytes.games.ffb.util.UtilCards;
+import com.eclipsesource.json.JsonObject;
+import com.eclipsesource.json.JsonValue;
 
 /**
  * Step in foul sequence to handle the actual foul.
@@ -69,6 +71,17 @@ public class StepFoul extends AbstractStep {
   
   public int getByteArraySerializationVersion() {
   	return 1;
+  }
+  
+  // JSON serialization
+  
+  public JsonObject toJsonValue() {
+    return toJsonValueTemp();
+  }
+  
+  public StepFoul initFrom(JsonValue pJsonValue) {
+    initFromTemp(pJsonValue);
+    return this;
   }
 
 }
