@@ -11,6 +11,7 @@ import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
 import com.balancedbytes.games.ffb.dialog.DialogFollowupChoiceParameter;
 import com.balancedbytes.games.ffb.dialog.DialogSkillUseParameter;
+import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.net.NetCommand;
@@ -18,6 +19,7 @@ import com.balancedbytes.games.ffb.net.commands.ClientCommandFollowupChoice;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandUseSkill;
 import com.balancedbytes.games.ffb.report.ReportSkillUse;
 import com.balancedbytes.games.ffb.server.GameState;
+import com.balancedbytes.games.ffb.server.IServerJsonOption;
 import com.balancedbytes.games.ffb.server.step.AbstractStep;
 import com.balancedbytes.games.ffb.server.step.StepAction;
 import com.balancedbytes.games.ffb.server.step.StepCommandStatus;
@@ -27,6 +29,8 @@ import com.balancedbytes.games.ffb.server.step.StepParameterKey;
 import com.balancedbytes.games.ffb.server.util.UtilDialog;
 import com.balancedbytes.games.ffb.server.util.UtilPlayerMove;
 import com.balancedbytes.games.ffb.util.UtilCards;
+import com.eclipsesource.json.JsonObject;
+import com.eclipsesource.json.JsonValue;
 
 /**
  * Step in block sequence to handle followup.
@@ -196,6 +200,39 @@ public class StepFollowup extends AbstractStep {
   	int oldDefenderStateId = pByteArray.getSmallInt();
   	fOldDefenderState = (oldDefenderStateId > 0) ? new PlayerState(oldDefenderStateId) : null;
   	return byteArraySerializationVersion;
+  }
+  
+  // JSON serialization
+  
+  public JsonObject toJsonValue() {
+    JsonObject jsonObject = toJsonValueTemp();
+    IServerJsonOption.COORDINATE_FROM.addTo(jsonObject, fCoordinateFrom);
+    IServerJsonOption.DEFENDER_POSITION.addTo(jsonObject, fDefenderPosition);
+    if (fUsingFend != null) {
+      IServerJsonOption.USING_FEND.addTo(jsonObject, fUsingFend);
+    }
+    if (fFollowupChoice != null) {
+      IServerJsonOption.FOLLOWUP_CHOICE.addTo(jsonObject, fFollowupChoice);
+    }
+    IServerJsonOption.OLD_DEFENDER_STATE.addTo(jsonObject, fOldDefenderState);
+    return jsonObject;
+  }
+  
+  public StepFollowup initFrom(JsonValue pJsonValue) {
+    initFromTemp(pJsonValue);
+    JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
+    fCoordinateFrom = IServerJsonOption.COORDINATE_FROM.getFrom(jsonObject);
+    fDefenderPosition = IServerJsonOption.DEFENDER_POSITION.getFrom(jsonObject);
+    fUsingFend = null;
+    if (IServerJsonOption.USING_FEND.isDefinedIn(jsonObject)) {
+      fUsingFend = IServerJsonOption.USING_FEND.getFrom(jsonObject);
+    }
+    fFollowupChoice = null;
+    if (IServerJsonOption.FOLLOWUP_CHOICE.isDefinedIn(jsonObject)) {
+      fFollowupChoice = IServerJsonOption.FOLLOWUP_CHOICE.getFrom(jsonObject);
+    }
+    fOldDefenderState = IServerJsonOption.OLD_DEFENDER_STATE.getFrom(jsonObject);
+    return this;
   }
 
 }

@@ -25,8 +25,10 @@ public interface IServerJsonOption extends IJsonOption {
           JsonBooleanOption AUTOMATIC_RE_ROLL = new JsonBooleanOption("automaticReRoll");
            JsonObjectOption CURRENT_STEP = new JsonObjectOption("currentStep");
   JsonFieldCoordinateOption DEFENDER_POSITION = new JsonFieldCoordinateOption("defenderPosition");
+          JsonBooleanOption DEFENDER_PUSHED = new JsonBooleanOption("defenderPushed");
           JsonBooleanOption END_PLAYER_ACTION = new JsonBooleanOption("endPlayerAction");
           JsonBooleanOption END_TURN = new JsonBooleanOption("endTurn");
+          JsonBooleanOption FOLLOWUP_CHOICE = new JsonBooleanOption("followupChoice");
            JsonObjectOption GAME_LOG = new JsonObjectOption("gameLog");
      JsonEnumWithNameOption GAME_STATUS = new JsonEnumWithNameOption("gameStatus", new GameStatusFactory());
            JsonStringOption GOTO_LABEL = new JsonStringOption("gotoLabel");
@@ -35,6 +37,7 @@ public interface IServerJsonOption extends IJsonOption {
            JsonStringOption GOTO_LABEL_ON_FAILURE = new JsonStringOption("gotoLabelOnFailure");
            JsonStringOption GOTO_LABEL_ON_JUGGERNAUT = new JsonStringOption("gotoLabelOnJuggernaut");
            JsonStringOption GOTO_LABEL_ON_PUSHBACK = new JsonStringOption("gotoLabelOnPushback");
+           JsonObjectOption INJURY_RESULT_DEFENDER = new JsonObjectOption("injuryResultDefender");
            JsonStringOption GOTO_LABEL_ON_SUCCESS = new JsonStringOption("gotoLabelOnSuccess");
            JsonStringOption LABEL = new JsonStringOption("label");
      JsonEnumWithNameOption NEXT_ACTION = new JsonEnumWithNameOption("nextAction", new StepActionFactory());
@@ -51,8 +54,10 @@ public interface IServerJsonOption extends IJsonOption {
   JsonFieldCoordinateOption TOUCHBACK_COORDINATE = new JsonFieldCoordinateOption("touchbackCoordinate");
           JsonBooleanOption USING_DODGE = new JsonBooleanOption("usingDodge");
           JsonBooleanOption USING_DUMP_OFF = new JsonBooleanOption("usingDumpOff");
+          JsonBooleanOption USING_FEND = new JsonBooleanOption("usingFend");
           JsonBooleanOption USING_HORNS = new JsonBooleanOption("usingHorns");
           JsonBooleanOption USING_JUGGERNAUT = new JsonBooleanOption("usingJuggernaut");
+          JsonBooleanOption USING_PILING_ON = new JsonBooleanOption("usingPilingOn");
           JsonBooleanOption USING_WRESTLE_ATTACKER = new JsonBooleanOption("usingWrestleAttacker");
           JsonBooleanOption USING_WRESTLE_DEFENDER = new JsonBooleanOption("usingWrestleDefender");
 

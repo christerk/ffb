@@ -9,6 +9,7 @@ import com.balancedbytes.games.ffb.Sound;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
 import com.balancedbytes.games.ffb.dialog.DialogBlockRollParameter;
+import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.net.NetCommand;
@@ -16,6 +17,7 @@ import com.balancedbytes.games.ffb.net.commands.ClientCommandBlockChoice;
 import com.balancedbytes.games.ffb.report.ReportBlock;
 import com.balancedbytes.games.ffb.report.ReportBlockRoll;
 import com.balancedbytes.games.ffb.server.GameState;
+import com.balancedbytes.games.ffb.server.IServerJsonOption;
 import com.balancedbytes.games.ffb.server.step.AbstractStepWithReRoll;
 import com.balancedbytes.games.ffb.server.step.StepAction;
 import com.balancedbytes.games.ffb.server.step.StepCommandStatus;
@@ -26,6 +28,8 @@ import com.balancedbytes.games.ffb.server.util.UtilDialog;
 import com.balancedbytes.games.ffb.server.util.UtilReRoll;
 import com.balancedbytes.games.ffb.util.UtilBlock;
 import com.balancedbytes.games.ffb.util.UtilCards;
+import com.eclipsesource.json.JsonObject;
+import com.eclipsesource.json.JsonValue;
 
 /**
  * Step in block sequence to handle the block roll.
@@ -39,9 +43,9 @@ import com.balancedbytes.games.ffb.util.UtilCards;
  */
 public class StepBlockRoll extends AbstractStepWithReRoll {
 	
-  private int fNrOfBlockDice;
+  private int fNrOfDice;
   private int[] fBlockRoll;
-  private int fBlockDiceIndex;
+  private int fDiceIndex;
   private BlockResult fBlockResult;
 	
 	public StepBlockRoll(GameState pGameState) {
@@ -65,8 +69,8 @@ public class StepBlockRoll extends AbstractStepWithReRoll {
 			switch (pNetCommand.getId()) {
 				case CLIENT_BLOCK_CHOICE:
 			    ClientCommandBlockChoice blockChoiceCommand = (ClientCommandBlockChoice) pNetCommand;
-			    fBlockDiceIndex = blockChoiceCommand.getDiceIndex();
-			    fBlockResult = new BlockResultFactory().forRoll(fBlockRoll[fBlockDiceIndex]);
+			    fDiceIndex = blockChoiceCommand.getDiceIndex();
+			    fBlockResult = new BlockResultFactory().forRoll(fBlockRoll[fDiceIndex]);
 			    commandStatus = StepCommandStatus.EXECUTE_STEP;
 					break;
 				default:
@@ -92,16 +96,16 @@ public class StepBlockRoll extends AbstractStepWithReRoll {
       }
       if (doRoll) {
         game.getFieldModel().clearDiceDecorations();
-        fNrOfBlockDice = UtilBlock.findNrOfBlockDice(game, actingPlayer.getPlayer(), actingPlayer.getStrength(), game.getDefender(), (actingPlayer.getPlayerAction() == PlayerAction.MULTIPLE_BLOCK));
-        fBlockRoll = getGameState().getDiceRoller().rollBlockDice(fNrOfBlockDice);
+        fNrOfDice = UtilBlock.findNrOfBlockDice(game, actingPlayer.getPlayer(), actingPlayer.getStrength(), game.getDefender(), (actingPlayer.getPlayerAction() == PlayerAction.MULTIPLE_BLOCK));
+        fBlockRoll = getGameState().getDiceRoller().rollBlockDice(fNrOfDice);
         getResult().addReport(new ReportBlock(game.getDefenderId()));
         getResult().setSound(Sound.BLOCK);
         showBlockRollDialog(doRoll);
       }
     } else {
-      publishParameter(new StepParameter(StepParameterKey.NR_OF_DICE, fNrOfBlockDice));
+      publishParameter(new StepParameter(StepParameterKey.NR_OF_DICE, fNrOfDice));
       publishParameter(new StepParameter(StepParameterKey.BLOCK_ROLL, fBlockRoll));
-	    publishParameter(new StepParameter(StepParameterKey.DICE_INDEX, fBlockDiceIndex));
+	    publishParameter(new StepParameter(StepParameterKey.DICE_INDEX, fDiceIndex));
 	    publishParameter(new StepParameter(StepParameterKey.BLOCK_RESULT, fBlockResult));
     	getResult().setNextAction(StepAction.NEXT_STEP);
     }
@@ -113,13 +117,13 @@ public class StepBlockRoll extends AbstractStepWithReRoll {
     boolean teamReRollOption = (getReRollSource() == null) && !game.getTurnData().isReRollUsed() && (game.getTurnData().getReRolls() > 0);
     boolean proReRollOption = (getReRollSource() == null) && UtilCards.hasUnusedSkill(game, actingPlayer, Skill.PRO);
     String teamId = game.isHomePlaying() ? game.getTeamHome().getId() : game.getTeamAway().getId();
-    if ((fNrOfBlockDice < 0) && (!pDoRoll || (getReRollSource() != null) || (!teamReRollOption && !proReRollOption))) {
+    if ((fNrOfDice < 0) && (!pDoRoll || (getReRollSource() != null) || (!teamReRollOption && !proReRollOption))) {
       teamId = game.isHomePlaying() ? game.getTeamAway().getId() : game.getTeamHome().getId();
       teamReRollOption = false;
       proReRollOption = false;
     }
     getResult().addReport(new ReportBlockRoll(teamId, fBlockRoll));
-    UtilDialog.showDialog(getGameState(), new DialogBlockRollParameter(teamId, fNrOfBlockDice, fBlockRoll, teamReRollOption, proReRollOption));
+    UtilDialog.showDialog(getGameState(), new DialogBlockRollParameter(teamId, fNrOfDice, fBlockRoll, teamReRollOption, proReRollOption));
   }
   
   public int getByteArraySerializationVersion() {
@@ -129,20 +133,41 @@ public class StepBlockRoll extends AbstractStepWithReRoll {
   @Override
   public void addTo(ByteList pByteList) {
   	super.addTo(pByteList);
-  	pByteList.addByte((byte) fNrOfBlockDice);
+  	pByteList.addByte((byte) fNrOfDice);
   	pByteList.addByteArray(fBlockRoll);
-  	pByteList.addByte((byte) fBlockDiceIndex);
+  	pByteList.addByte((byte) fDiceIndex);
   	pByteList.addByte((byte) ((fBlockResult != null) ? fBlockResult.getId() : 0));
   }
   
   @Override
   public int initFrom(ByteArray pByteArray) {
   	int byteArraySerializationVersion = super.initFrom(pByteArray);
-  	fNrOfBlockDice = pByteArray.getByte();
+  	fNrOfDice = pByteArray.getByte();
   	fBlockRoll = pByteArray.getByteArrayAsIntArray();
-  	fBlockDiceIndex = pByteArray.getByte();
+  	fDiceIndex = pByteArray.getByte();
   	fBlockResult = new BlockResultFactory().forId(pByteArray.getByte());
   	return byteArraySerializationVersion;
+  }
+  
+  // JSON serialization
+  
+  public JsonObject toJsonValue() {
+    JsonObject jsonObject = toJsonValueTemp();
+    IServerJsonOption.NR_OF_DICE.addTo(jsonObject, fNrOfDice);
+    IServerJsonOption.BLOCK_ROLL.addTo(jsonObject, fBlockRoll);
+    IServerJsonOption.DICE_INDEX.addTo(jsonObject, fDiceIndex);
+    IServerJsonOption.BLOCK_RESULT.addTo(jsonObject, fBlockResult);
+    return jsonObject;
+  }
+  
+  public StepBlockRoll initFrom(JsonValue pJsonValue) {
+    initFromTemp(pJsonValue);
+    JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
+    fNrOfDice = IServerJsonOption.NR_OF_DICE.getFrom(jsonObject);
+    fBlockRoll = IServerJsonOption.BLOCK_ROLL.getFrom(jsonObject);
+    fDiceIndex = IServerJsonOption.DICE_INDEX.getFrom(jsonObject);
+    fBlockResult = (BlockResult) IServerJsonOption.BLOCK_RESULT.getFrom(jsonObject);
+    return this;
   }
 
 }
