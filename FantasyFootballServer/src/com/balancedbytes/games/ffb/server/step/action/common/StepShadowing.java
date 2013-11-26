@@ -8,6 +8,7 @@ import com.balancedbytes.games.ffb.TurnMode;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
 import com.balancedbytes.games.ffb.dialog.DialogPlayerChoiceParameter;
+import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
@@ -16,6 +17,7 @@ import com.balancedbytes.games.ffb.net.commands.ClientCommandPlayerChoice;
 import com.balancedbytes.games.ffb.report.ReportTentaclesShadowingRoll;
 import com.balancedbytes.games.ffb.server.DiceInterpreter;
 import com.balancedbytes.games.ffb.server.GameState;
+import com.balancedbytes.games.ffb.server.IServerJsonOption;
 import com.balancedbytes.games.ffb.server.step.AbstractStepWithReRoll;
 import com.balancedbytes.games.ffb.server.step.StepAction;
 import com.balancedbytes.games.ffb.server.step.StepCommandStatus;
@@ -27,6 +29,8 @@ import com.balancedbytes.games.ffb.server.util.UtilReRoll;
 import com.balancedbytes.games.ffb.util.ArrayTool;
 import com.balancedbytes.games.ffb.util.StringTool;
 import com.balancedbytes.games.ffb.util.UtilPlayer;
+import com.eclipsesource.json.JsonObject;
+import com.eclipsesource.json.JsonValue;
 
 /**
  * Step in any sequence to handle skill SHADOWING.
@@ -195,6 +199,27 @@ public class StepShadowing extends AbstractStepWithReRoll {
   	fCoordinateFrom = pByteArray.getFieldCoordinate();
   	fUsingShadowing = pByteArray.getBoolean();
   	return byteArraySerializationVersion;
+  }
+  
+  // JSON serialization
+  
+  public JsonObject toJsonValue() {
+    JsonObject jsonObject = toJsonValueTemp();
+    IServerJsonOption.DEFENDER_POSITION.addTo(jsonObject, fDefenderPosition);
+    IServerJsonOption.COORDINATE_FROM.addTo(jsonObject, fCoordinateFrom);
+    IServerJsonOption.USING_DIVING_TACKLE.addTo(jsonObject, fUsingDivingTackle);
+    IServerJsonOption.USING_SHADOWING.addTo(jsonObject, fUsingDivingTackle);
+    return jsonObject;
+  }
+  
+  public StepShadowing initFrom(JsonValue pJsonValue) {
+    initFromTemp(pJsonValue);
+    JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
+    fDefenderPosition = IServerJsonOption.DEFENDER_POSITION.getFrom(jsonObject);
+    fCoordinateFrom = IServerJsonOption.COORDINATE_FROM.getFrom(jsonObject);
+    fUsingDivingTackle = IServerJsonOption.USING_DIVING_TACKLE.getFrom(jsonObject);
+    fUsingDivingTackle = IServerJsonOption.USING_SHADOWING.getFrom(jsonObject);
+    return this;
   }
 
 }

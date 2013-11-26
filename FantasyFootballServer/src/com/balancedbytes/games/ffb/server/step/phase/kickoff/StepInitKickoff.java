@@ -6,6 +6,7 @@ import com.balancedbytes.games.ffb.Sound;
 import com.balancedbytes.games.ffb.TurnMode;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
+import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.net.NetCommand;
@@ -16,6 +17,7 @@ import com.balancedbytes.games.ffb.net.commands.ClientCommandTeamSetupLoad;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandTeamSetupSave;
 import com.balancedbytes.games.ffb.report.ReportNoPlayersToField;
 import com.balancedbytes.games.ffb.server.GameState;
+import com.balancedbytes.games.ffb.server.IServerJsonOption;
 import com.balancedbytes.games.ffb.server.step.AbstractStep;
 import com.balancedbytes.games.ffb.server.step.SequenceGenerator;
 import com.balancedbytes.games.ffb.server.step.StepAction;
@@ -33,6 +35,8 @@ import com.balancedbytes.games.ffb.util.ArrayTool;
 import com.balancedbytes.games.ffb.util.StringTool;
 import com.balancedbytes.games.ffb.util.UtilBox;
 import com.balancedbytes.games.ffb.util.UtilPlayer;
+import com.eclipsesource.json.JsonObject;
+import com.eclipsesource.json.JsonValue;
 
 /**
  * Step to init the kickoff sequence.
@@ -43,9 +47,9 @@ import com.balancedbytes.games.ffb.util.UtilPlayer;
  */
 public final class StepInitKickoff extends AbstractStep {
 	
-	protected String fGotoLabelOnEnd;
-	protected FieldCoordinate fKickoffStartCoordinate;
-	protected boolean fEndKickoff;
+  private String fGotoLabelOnEnd;
+  private FieldCoordinate fKickoffStartCoordinate;
+  private boolean fEndKickoff;
 
 	public StepInitKickoff(GameState pGameState) {
 		super(pGameState);
@@ -228,4 +232,23 @@ public final class StepInitKickoff extends AbstractStep {
   	return byteArraySerializationVersion;
   }
 
+  // JSON serialization
+  
+  public JsonObject toJsonValue() {
+    JsonObject jsonObject = toJsonValueTemp();
+    IServerJsonOption.GOTO_LABEL_ON_END.addTo(jsonObject, fGotoLabelOnEnd);
+    IServerJsonOption.KICKOFF_START_COORDINATE.addTo(jsonObject, fKickoffStartCoordinate);
+    IServerJsonOption.END_KICKOFF.addTo(jsonObject, fEndKickoff);
+    return jsonObject;
+  }
+  
+  public StepInitKickoff initFrom(JsonValue pJsonValue) {
+    initFromTemp(pJsonValue);
+    JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
+    fGotoLabelOnEnd = IServerJsonOption.GOTO_LABEL_ON_END.getFrom(jsonObject);
+    fKickoffStartCoordinate = IServerJsonOption.KICKOFF_START_COORDINATE.getFrom(jsonObject);
+    fEndKickoff = IServerJsonOption.END_KICKOFF.getFrom(jsonObject);
+    return this;
+  }
+  
 }

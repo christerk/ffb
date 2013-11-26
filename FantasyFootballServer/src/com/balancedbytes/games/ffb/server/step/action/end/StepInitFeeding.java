@@ -9,6 +9,7 @@ import com.balancedbytes.games.ffb.Sound;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
 import com.balancedbytes.games.ffb.dialog.DialogPlayerChoiceParameter;
+import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
@@ -17,6 +18,7 @@ import com.balancedbytes.games.ffb.net.NetCommand;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandPlayerChoice;
 import com.balancedbytes.games.ffb.report.ReportBiteSpectator;
 import com.balancedbytes.games.ffb.server.GameState;
+import com.balancedbytes.games.ffb.server.IServerJsonOption;
 import com.balancedbytes.games.ffb.server.InjuryResult;
 import com.balancedbytes.games.ffb.server.step.AbstractStep;
 import com.balancedbytes.games.ffb.server.step.StepAction;
@@ -33,6 +35,8 @@ import com.balancedbytes.games.ffb.util.ArrayTool;
 import com.balancedbytes.games.ffb.util.StringTool;
 import com.balancedbytes.games.ffb.util.UtilBox;
 import com.balancedbytes.games.ffb.util.UtilPlayer;
+import com.eclipsesource.json.JsonObject;
+import com.eclipsesource.json.JsonValue;
 
 /**
  * Step in any sequence to handle the feeding on another player.
@@ -201,6 +205,27 @@ public class StepInitFeeding extends AbstractStep {
   	fFeedingAllowed = pByteArray.getBoolean();
   	fEndTurn = pByteArray.getBoolean();
   	return byteArraySerializationVersion;
+  }
+  
+  // JSON serialization
+  
+  public JsonObject toJsonValue() {
+    JsonObject jsonObject = toJsonValueTemp();
+    IServerJsonOption.GOTO_LABEL_ON_END.addTo(jsonObject, fGotoLabelOnEnd);
+    IServerJsonOption.FEED_ON_PLAYER_CHOICE.addTo(jsonObject, fFeedOnPlayerChoice);
+    IServerJsonOption.FEEDING_ALLOWED.addTo(jsonObject, fFeedingAllowed);
+    IServerJsonOption.END_TURN.addTo(jsonObject, fEndTurn);
+    return jsonObject;
+  }
+  
+  public StepInitFeeding initFrom(JsonValue pJsonValue) {
+    initFromTemp(pJsonValue);
+    JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
+    fGotoLabelOnEnd = IServerJsonOption.GOTO_LABEL_ON_END.getFrom(jsonObject);
+    fFeedOnPlayerChoice = IServerJsonOption.FEED_ON_PLAYER_CHOICE.getFrom(jsonObject);
+    fFeedingAllowed = IServerJsonOption.FEEDING_ALLOWED.getFrom(jsonObject);
+    fEndTurn = IServerJsonOption.END_TURN.getFrom(jsonObject);
+    return this;
   }
 
 }

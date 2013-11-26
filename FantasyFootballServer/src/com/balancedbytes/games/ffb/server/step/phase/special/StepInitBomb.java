@@ -10,6 +10,7 @@ import com.balancedbytes.games.ffb.PlayerState;
 import com.balancedbytes.games.ffb.SpecialEffect;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
+import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.Animation;
 import com.balancedbytes.games.ffb.model.AnimationType;
 import com.balancedbytes.games.ffb.model.Game;
@@ -17,6 +18,7 @@ import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.net.NetCommand;
 import com.balancedbytes.games.ffb.report.ReportBombOutOfBounds;
 import com.balancedbytes.games.ffb.server.GameState;
+import com.balancedbytes.games.ffb.server.IServerJsonOption;
 import com.balancedbytes.games.ffb.server.step.AbstractStep;
 import com.balancedbytes.games.ffb.server.step.SequenceGenerator;
 import com.balancedbytes.games.ffb.server.step.StepAction;
@@ -28,6 +30,8 @@ import com.balancedbytes.games.ffb.server.step.StepParameterKey;
 import com.balancedbytes.games.ffb.server.step.StepParameterSet;
 import com.balancedbytes.games.ffb.server.util.UtilGame;
 import com.balancedbytes.games.ffb.util.StringTool;
+import com.eclipsesource.json.JsonObject;
+import com.eclipsesource.json.JsonValue;
 
 /**
  * Initialization step of the pass sequence.
@@ -46,10 +50,10 @@ import com.balancedbytes.games.ffb.util.StringTool;
  */
 public final class StepInitBomb extends AbstractStep {
 
-	protected String fGotoLabelOnEnd;
-	protected String fCatcherId;
-	protected boolean fPassFumble;
-	protected FieldCoordinate fBombCoordinate;
+  private String fGotoLabelOnEnd;
+  private String fCatcherId;
+  private boolean fPassFumble;
+  private FieldCoordinate fBombCoordinate;
 	
 	public StepInitBomb(GameState pGameState) {
 		super(pGameState);
@@ -167,6 +171,27 @@ public final class StepInitBomb extends AbstractStep {
   	fPassFumble = pByteArray.getBoolean();
   	fBombCoordinate = pByteArray.getFieldCoordinate();
   	return byteArraySerializationVersion;
+  }
+  
+  // JSON serialization
+  
+  public JsonObject toJsonValue() {
+    JsonObject jsonObject = toJsonValueTemp();
+    IServerJsonOption.GOTO_LABEL_ON_END.addTo(jsonObject, fGotoLabelOnEnd);
+    IServerJsonOption.CATCHER_ID.addTo(jsonObject, fCatcherId);
+    IServerJsonOption.PASS_FUMBLE.addTo(jsonObject, fPassFumble);
+    IServerJsonOption.BOMB_COORDINATE.addTo(jsonObject, fBombCoordinate);
+    return jsonObject;
+  }
+  
+  public StepInitBomb initFrom(JsonValue pJsonValue) {
+    initFromTemp(pJsonValue);
+    JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
+    fGotoLabelOnEnd = IServerJsonOption.GOTO_LABEL_ON_END.getFrom(jsonObject);
+    fCatcherId = IServerJsonOption.CATCHER_ID.getFrom(jsonObject);
+    fPassFumble = IServerJsonOption.PASS_FUMBLE.getFrom(jsonObject);
+    fBombCoordinate = IServerJsonOption.BOMB_COORDINATE.getFrom(jsonObject);
+    return this;
   }
 
 }

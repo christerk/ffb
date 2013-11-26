@@ -29,7 +29,7 @@ import com.eclipsesource.json.JsonValue;
  */
 public final class StepKickoffResultRoll extends AbstractStep {
 	
-	protected KickoffResult fKickoffResult;
+  private KickoffResult fKickoffResult;
 	
 	public StepKickoffResultRoll(GameState pGameState) {
 		super(pGameState);

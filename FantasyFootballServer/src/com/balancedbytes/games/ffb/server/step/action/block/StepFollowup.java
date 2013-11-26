@@ -208,12 +208,8 @@ public class StepFollowup extends AbstractStep {
     JsonObject jsonObject = toJsonValueTemp();
     IServerJsonOption.COORDINATE_FROM.addTo(jsonObject, fCoordinateFrom);
     IServerJsonOption.DEFENDER_POSITION.addTo(jsonObject, fDefenderPosition);
-    if (fUsingFend != null) {
-      IServerJsonOption.USING_FEND.addTo(jsonObject, fUsingFend);
-    }
-    if (fFollowupChoice != null) {
-      IServerJsonOption.FOLLOWUP_CHOICE.addTo(jsonObject, fFollowupChoice);
-    }
+    IServerJsonOption.USING_FEND.addTo(jsonObject, fUsingFend);
+    IServerJsonOption.FOLLOWUP_CHOICE.addTo(jsonObject, fFollowupChoice);
     IServerJsonOption.OLD_DEFENDER_STATE.addTo(jsonObject, fOldDefenderState);
     return jsonObject;
   }
@@ -223,14 +219,8 @@ public class StepFollowup extends AbstractStep {
     JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
     fCoordinateFrom = IServerJsonOption.COORDINATE_FROM.getFrom(jsonObject);
     fDefenderPosition = IServerJsonOption.DEFENDER_POSITION.getFrom(jsonObject);
-    fUsingFend = null;
-    if (IServerJsonOption.USING_FEND.isDefinedIn(jsonObject)) {
-      fUsingFend = IServerJsonOption.USING_FEND.getFrom(jsonObject);
-    }
-    fFollowupChoice = null;
-    if (IServerJsonOption.FOLLOWUP_CHOICE.isDefinedIn(jsonObject)) {
-      fFollowupChoice = IServerJsonOption.FOLLOWUP_CHOICE.getFrom(jsonObject);
-    }
+    fUsingFend = IServerJsonOption.USING_FEND.getFrom(jsonObject);
+    fFollowupChoice = IServerJsonOption.FOLLOWUP_CHOICE.getFrom(jsonObject);
     fOldDefenderState = IServerJsonOption.OLD_DEFENDER_STATE.getFrom(jsonObject);
     return this;
   }

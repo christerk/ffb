@@ -4,17 +4,21 @@ import com.balancedbytes.games.ffb.CatchScatterThrowInMode;
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
+import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.Animation;
 import com.balancedbytes.games.ffb.model.AnimationType;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.net.NetCommand;
 import com.balancedbytes.games.ffb.server.GameState;
+import com.balancedbytes.games.ffb.server.IServerJsonOption;
 import com.balancedbytes.games.ffb.server.step.AbstractStep;
 import com.balancedbytes.games.ffb.server.step.StepAction;
 import com.balancedbytes.games.ffb.server.step.StepCommandStatus;
 import com.balancedbytes.games.ffb.server.step.StepId;
 import com.balancedbytes.games.ffb.server.step.StepParameter;
 import com.balancedbytes.games.ffb.server.step.StepParameterKey;
+import com.eclipsesource.json.JsonObject;
+import com.eclipsesource.json.JsonValue;
 
 /**
  * Step to end kickoff sequence.
@@ -28,8 +32,8 @@ import com.balancedbytes.games.ffb.server.step.StepParameterKey;
  */
 public final class StepKickoffAnimation extends AbstractStep {
 	
-	protected FieldCoordinate fKickingPlayerCoordinate;
-	protected boolean fTouchback;
+  private FieldCoordinate fKickingPlayerCoordinate;
+  private boolean fTouchback;
 
 	public StepKickoffAnimation(GameState pGameState) {
 		super(pGameState);
@@ -106,6 +110,23 @@ public final class StepKickoffAnimation extends AbstractStep {
   	fKickingPlayerCoordinate = pByteArray.getFieldCoordinate();
   	fTouchback = pByteArray.getBoolean();
   	return byteArraySerializationVersion;
+  }
+  
+  // JSON serialization
+  
+  public JsonObject toJsonValue() {
+    JsonObject jsonObject = toJsonValueTemp();
+    IServerJsonOption.KICKING_PLAYER_COORDINATE.addTo(jsonObject, fKickingPlayerCoordinate);
+    IServerJsonOption.TOUCHBACK.addTo(jsonObject, fTouchback);
+    return jsonObject;
+  }
+  
+  public StepKickoffAnimation initFrom(JsonValue pJsonValue) {
+    initFromTemp(pJsonValue);
+    JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
+    fKickingPlayerCoordinate = IServerJsonOption.KICKING_PLAYER_COORDINATE.getFrom(jsonObject);
+    fTouchback = IServerJsonOption.TOUCHBACK.getFrom(jsonObject);
+    return this;
   }
 
 }

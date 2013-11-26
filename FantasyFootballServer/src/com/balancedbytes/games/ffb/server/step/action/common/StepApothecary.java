@@ -11,6 +11,7 @@ import com.balancedbytes.games.ffb.bytearray.ByteList;
 import com.balancedbytes.games.ffb.dialog.DialogApothecaryChoiceParameter;
 import com.balancedbytes.games.ffb.dialog.DialogUseApothecaryParameter;
 import com.balancedbytes.games.ffb.dialog.DialogUseIgorParameter;
+import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.InducementSet;
 import com.balancedbytes.games.ffb.model.Player;
@@ -25,6 +26,7 @@ import com.balancedbytes.games.ffb.report.ReportInducement;
 import com.balancedbytes.games.ffb.server.ApothecaryStatus;
 import com.balancedbytes.games.ffb.server.DiceInterpreter;
 import com.balancedbytes.games.ffb.server.GameState;
+import com.balancedbytes.games.ffb.server.IServerJsonOption;
 import com.balancedbytes.games.ffb.server.InjuryResult;
 import com.balancedbytes.games.ffb.server.step.AbstractStep;
 import com.balancedbytes.games.ffb.server.step.StepAction;
@@ -39,6 +41,8 @@ import com.balancedbytes.games.ffb.server.util.UtilInducementUse;
 import com.balancedbytes.games.ffb.server.util.UtilInjury;
 import com.balancedbytes.games.ffb.util.StringTool;
 import com.balancedbytes.games.ffb.util.UtilCards;
+import com.eclipsesource.json.JsonObject;
+import com.eclipsesource.json.JsonValue;
 
 /**
  * Step in any sequence to handle the apothecary.
@@ -304,6 +308,30 @@ public class StepApothecary extends AbstractStep {
   	}
   	fShowReport = pByteArray.getBoolean();
   	return byteArraySerializationVersion;
+  }
+  
+  // JSON serialization
+  
+  public JsonObject toJsonValue() {
+    JsonObject jsonObject = toJsonValueTemp();
+    IServerJsonOption.APOTHECARY_MODE.addTo(jsonObject, fApothecaryMode);
+    if (fInjuryResult != null) {
+      IServerJsonOption.INJURY_RESULT.addTo(jsonObject, fInjuryResult.toJsonValue());
+    }
+    IServerJsonOption.SHOW_REPORT.addTo(jsonObject, fShowReport);
+    return jsonObject;
+  }
+  
+  public StepApothecary initFrom(JsonValue pJsonValue) {
+    initFromTemp(pJsonValue);
+    JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
+    fApothecaryMode = (ApothecaryMode) IServerJsonOption.APOTHECARY_MODE.getFrom(jsonObject);
+    JsonObject injuryResultObject = IServerJsonOption.INJURY_RESULT.getFrom(jsonObject);
+    if (injuryResultObject != null) {
+      fInjuryResult = new InjuryResult().initFrom(injuryResultObject);
+    }
+    fShowReport = IServerJsonOption.SHOW_REPORT.getFrom(jsonObject);
+    return this;
   }
   
 }

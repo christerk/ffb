@@ -7,12 +7,14 @@ import com.balancedbytes.games.ffb.SpecialEffectFactory;
 import com.balancedbytes.games.ffb.TurnMode;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
+import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.model.Team;
 import com.balancedbytes.games.ffb.report.ReportSpecialEffectRoll;
 import com.balancedbytes.games.ffb.server.DiceInterpreter;
 import com.balancedbytes.games.ffb.server.GameState;
+import com.balancedbytes.games.ffb.server.IServerJsonOption;
 import com.balancedbytes.games.ffb.server.step.AbstractStep;
 import com.balancedbytes.games.ffb.server.step.StepAction;
 import com.balancedbytes.games.ffb.server.step.StepException;
@@ -22,6 +24,8 @@ import com.balancedbytes.games.ffb.server.step.StepParameterKey;
 import com.balancedbytes.games.ffb.server.step.StepParameterSet;
 import com.balancedbytes.games.ffb.server.step.action.common.ApothecaryMode;
 import com.balancedbytes.games.ffb.server.util.UtilInjury;
+import com.eclipsesource.json.JsonObject;
+import com.eclipsesource.json.JsonValue;
 
 /**
  * Step in inducement sequence to handle spell effect.
@@ -37,10 +41,10 @@ import com.balancedbytes.games.ffb.server.util.UtilInjury;
  */
 public final class StepSpecialEffect extends AbstractStep {
 
-	protected String fGotoLabelOnFailure;
-	protected String fPlayerId;
-	protected boolean fRollForEffect;
-	protected SpecialEffect fSpecialEffect;
+  private String fGotoLabelOnFailure;
+  private String fPlayerId;
+  private boolean fRollForEffect;
+  private SpecialEffect fSpecialEffect;
 	
 	public StepSpecialEffect(GameState pGameState) {
 		super(pGameState);
@@ -171,6 +175,27 @@ public final class StepSpecialEffect extends AbstractStep {
   	fRollForEffect = pByteArray.getBoolean();
   	fSpecialEffect = new SpecialEffectFactory().forId(pByteArray.getByte());
   	return byteArraySerializationVersion;
+  }
+  
+  // JSON serialization
+  
+  public JsonObject toJsonValue() {
+    JsonObject jsonObject = toJsonValueTemp();
+    IServerJsonOption.GOTO_LABEL_ON_FAILURE.addTo(jsonObject, fGotoLabelOnFailure);
+    IServerJsonOption.PLAYER_ID.addTo(jsonObject, fPlayerId);
+    IServerJsonOption.ROLL_FOR_EFFECT.addTo(jsonObject, fRollForEffect);
+    IServerJsonOption.SPECIAL_EFFECT.addTo(jsonObject, fSpecialEffect);
+    return jsonObject;
+  }
+  
+  public StepSpecialEffect initFrom(JsonValue pJsonValue) {
+    initFromTemp(pJsonValue);
+    JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
+    fGotoLabelOnFailure = IServerJsonOption.GOTO_LABEL_ON_FAILURE.getFrom(jsonObject);
+    fPlayerId = IServerJsonOption.PLAYER_ID.getFrom(jsonObject);
+    fRollForEffect = IServerJsonOption.ROLL_FOR_EFFECT.getFrom(jsonObject);
+    fSpecialEffect = (SpecialEffect) IServerJsonOption.SPECIAL_EFFECT.getFrom(jsonObject);
+    return this;
   }
 
 }

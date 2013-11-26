@@ -29,8 +29,8 @@ import com.eclipsesource.json.JsonValue;
  */
 public final class StepEndBomb extends AbstractStep {
 
-	protected String fCatcherId;
-	protected boolean fEndTurn;
+	private String fCatcherId;
+	private boolean fEndTurn;
 	
 	public StepEndBomb(GameState pGameState) {
 		super(pGameState);

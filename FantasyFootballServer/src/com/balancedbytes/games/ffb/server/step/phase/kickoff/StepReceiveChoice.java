@@ -27,8 +27,8 @@ import com.eclipsesource.json.JsonValue;
  */
 public final class StepReceiveChoice extends AbstractStep {
 	
-	protected String fChoosingTeamId;
-	protected Boolean fReceiveChoice;
+  private String fChoosingTeamId;
+  private Boolean fReceiveChoice;
 	
 	public StepReceiveChoice(GameState pGameState) {
 		super(pGameState);
@@ -119,9 +119,7 @@ public final class StepReceiveChoice extends AbstractStep {
   public JsonObject toJsonValue() {
     JsonObject jsonObject = toJsonValueTemp();
     IServerJsonOption.CHOOSING_TEAM_ID.addTo(jsonObject, fChoosingTeamId);
-    if (fReceiveChoice != null) {
-      IServerJsonOption.RECEIVE_CHOICE.addTo(jsonObject, fReceiveChoice);
-    }
+    IServerJsonOption.RECEIVE_CHOICE.addTo(jsonObject, fReceiveChoice);
     return jsonObject;
   }
   
@@ -129,10 +127,7 @@ public final class StepReceiveChoice extends AbstractStep {
     initFromTemp(pJsonValue);
     JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
     fChoosingTeamId = IServerJsonOption.CHOOSING_TEAM_ID.getFrom(jsonObject);
-    fReceiveChoice = null;
-    if (IServerJsonOption.RECEIVE_CHOICE.isDefinedIn(jsonObject)) {
-      fReceiveChoice = IServerJsonOption.RECEIVE_CHOICE.getFrom(jsonObject);
-    }
+    fReceiveChoice = IServerJsonOption.RECEIVE_CHOICE.getFrom(jsonObject);
     return this;
   }
   

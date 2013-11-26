@@ -47,9 +47,9 @@ import com.eclipsesource.json.JsonValue;
  */
 public final class StepKickoffReturn extends AbstractStep {
 	
-  protected boolean fTouchback;
-  protected boolean fEndPlayerAction;
-  protected boolean fEndTurn;
+  private boolean fTouchback;
+  private boolean fEndPlayerAction;
+  private boolean fEndTurn;
   
 	public StepKickoffReturn(GameState pGameState) {
 		super(pGameState);

@@ -24,6 +24,10 @@ public abstract class JsonAbstractOption {
     return fKey;
   }
   
+  public boolean isDefinedIn(JsonObject pJsonObject) {
+    return (getValueFrom(pJsonObject) != null);
+  }
+  
   protected JsonValue getValueFrom(JsonObject pJsonObject) {
     if (pJsonObject == null) {
       throwJsonObjectIsNullException();

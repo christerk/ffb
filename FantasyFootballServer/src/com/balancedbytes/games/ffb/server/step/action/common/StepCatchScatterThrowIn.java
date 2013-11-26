@@ -6,6 +6,7 @@ import com.balancedbytes.games.ffb.Card;
 import com.balancedbytes.games.ffb.CatchModifier;
 import com.balancedbytes.games.ffb.CatchModifierFactory;
 import com.balancedbytes.games.ffb.CatchScatterThrowInMode;
+import com.balancedbytes.games.ffb.CatchScatterThrowInModeFactory;
 import com.balancedbytes.games.ffb.Direction;
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.FieldCoordinateBounds;
@@ -23,6 +24,7 @@ import com.balancedbytes.games.ffb.TurnMode;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
 import com.balancedbytes.games.ffb.dialog.DialogPlayerChoiceParameter;
+import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.Animation;
 import com.balancedbytes.games.ffb.model.AnimationType;
 import com.balancedbytes.games.ffb.model.Game;
@@ -36,6 +38,7 @@ import com.balancedbytes.games.ffb.report.ReportThrowIn;
 import com.balancedbytes.games.ffb.server.DiceInterpreter;
 import com.balancedbytes.games.ffb.server.DiceRoller;
 import com.balancedbytes.games.ffb.server.GameState;
+import com.balancedbytes.games.ffb.server.IServerJsonOption;
 import com.balancedbytes.games.ffb.server.IServerLogLevel;
 import com.balancedbytes.games.ffb.server.InjuryResult;
 import com.balancedbytes.games.ffb.server.step.AbstractStepWithReRoll;
@@ -53,6 +56,8 @@ import com.balancedbytes.games.ffb.util.ArrayTool;
 import com.balancedbytes.games.ffb.util.StringTool;
 import com.balancedbytes.games.ffb.util.UtilCards;
 import com.balancedbytes.games.ffb.util.UtilPlayer;
+import com.eclipsesource.json.JsonObject;
+import com.eclipsesource.json.JsonValue;
 
 /**
  * Step in any sequence to handle scattering the ball and throw-ins.
@@ -484,11 +489,42 @@ public class StepCatchScatterThrowIn extends AbstractStepWithReRoll {
   	} else {
   		fScatterBounds = null;
   	}
-  	fCatchScatterThrowInMode = CatchScatterThrowInMode.fromId(pByteArray.getByte());
+  	fCatchScatterThrowInMode = new CatchScatterThrowInModeFactory().forId(pByteArray.getByte());
   	fThrowInCoordinate = pByteArray.getFieldCoordinate();
   	fDivingCatchChoice = pByteArray.getBoolean();
   	fBombMode = pByteArray.getBoolean();
   	return byteArraySerializationVersion;
+  }
+  
+  // JSON serialization
+  
+  public JsonObject toJsonValue() {
+    JsonObject jsonObject = toJsonValueTemp();
+    IServerJsonOption.CATCHER_ID.addTo(jsonObject, fCatcherId);
+    if (fScatterBounds != null) {
+      IServerJsonOption.SCATTER_BOUNDS.addTo(jsonObject, fScatterBounds.toJsonValue());
+    }
+    IServerJsonOption.CATCH_SCATTER_THROW_IN_MODE.addTo(jsonObject, fCatchScatterThrowInMode);
+    IServerJsonOption.THROW_IN_COORDINATE.addTo(jsonObject, fThrowInCoordinate);
+    IServerJsonOption.DIVING_CATCH_CHOICE.addTo(jsonObject, fDivingCatchChoice);
+    IServerJsonOption.BOMB_MODE.addTo(jsonObject, fBombMode);
+    return jsonObject;
+  }
+  
+  public StepCatchScatterThrowIn initFrom(JsonValue pJsonValue) {
+    initFromTemp(pJsonValue);
+    JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
+    fCatcherId = IServerJsonOption.CATCHER_ID.getFrom(jsonObject);
+    fScatterBounds = null;
+    JsonObject scatterBoundsObject = IServerJsonOption.SCATTER_BOUNDS.getFrom(jsonObject);
+    if (scatterBoundsObject != null) {
+      fScatterBounds = new FieldCoordinateBounds().initFrom(scatterBoundsObject);
+    }
+    fCatchScatterThrowInMode = (CatchScatterThrowInMode) IServerJsonOption.CATCH_SCATTER_THROW_IN_MODE.getFrom(jsonObject);
+    fThrowInCoordinate = IServerJsonOption.THROW_IN_COORDINATE.getFrom(jsonObject);
+    fDivingCatchChoice = IServerJsonOption.DIVING_CATCH_CHOICE.getFrom(jsonObject);
+    fBombMode = IServerJsonOption.BOMB_MODE.getFrom(jsonObject);
+    return this;
   }
     
 }

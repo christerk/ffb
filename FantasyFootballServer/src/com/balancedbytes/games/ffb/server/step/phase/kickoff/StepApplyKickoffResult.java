@@ -17,6 +17,7 @@ import com.balancedbytes.games.ffb.TurnMode;
 import com.balancedbytes.games.ffb.Weather;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
+import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.Animation;
 import com.balancedbytes.games.ffb.model.AnimationType;
 import com.balancedbytes.games.ffb.model.Game;
@@ -35,6 +36,7 @@ import com.balancedbytes.games.ffb.report.ReportScatterBall;
 import com.balancedbytes.games.ffb.report.ReportWeather;
 import com.balancedbytes.games.ffb.server.DiceInterpreter;
 import com.balancedbytes.games.ffb.server.GameState;
+import com.balancedbytes.games.ffb.server.IServerJsonOption;
 import com.balancedbytes.games.ffb.server.step.AbstractStep;
 import com.balancedbytes.games.ffb.server.step.StepAction;
 import com.balancedbytes.games.ffb.server.step.StepCommandStatus;
@@ -51,6 +53,8 @@ import com.balancedbytes.games.ffb.server.util.UtilInjury;
 import com.balancedbytes.games.ffb.server.util.UtilSetup;
 import com.balancedbytes.games.ffb.util.StringTool;
 import com.balancedbytes.games.ffb.util.UtilPlayer;
+import com.eclipsesource.json.JsonObject;
+import com.eclipsesource.json.JsonValue;
 
 /**
  * Step in kickoff sequence to apply the kickoff result.
@@ -70,13 +74,12 @@ import com.balancedbytes.games.ffb.util.UtilPlayer;
  */
 public final class StepApplyKickoffResult extends AbstractStep {
 	
-  protected String fGotoLabelOnEnd;
-  protected String fGotoLabelOnBlitz; 
-  
-  protected KickoffResult fKickoffResult;
-  protected boolean fTouchback;
-  protected FieldCoordinateBounds fKickoffBounds;
-  protected boolean fEndKickoff;
+  private String fGotoLabelOnEnd;
+  private String fGotoLabelOnBlitz; 
+  private KickoffResult fKickoffResult;
+  private boolean fTouchback;
+  private FieldCoordinateBounds fKickoffBounds;
+  private boolean fEndKickoff;
 	
 	public StepApplyKickoffResult(GameState pGameState) {
 		super(pGameState);
@@ -601,6 +604,37 @@ public final class StepApplyKickoffResult extends AbstractStep {
   	}
   	fEndKickoff = pByteArray.getBoolean();
   	return byteArraySerializationVersion;
+  }
+  
+  // JSON serialization
+  
+  public JsonObject toJsonValue() {
+    JsonObject jsonObject = toJsonValueTemp();
+    IServerJsonOption.GOTO_LABEL_ON_END.addTo(jsonObject, fGotoLabelOnEnd);
+    IServerJsonOption.GOTO_LABEL_ON_BLITZ.addTo(jsonObject, fGotoLabelOnBlitz);
+    IServerJsonOption.KICKOFF_RESULT.addTo(jsonObject, fKickoffResult);
+    IServerJsonOption.TOUCHBACK.addTo(jsonObject, fTouchback);
+    if (fKickoffBounds != null) {
+      IServerJsonOption.KICKOFF_BOUNDS.addTo(jsonObject, fKickoffBounds.toJsonValue());
+    }
+    IServerJsonOption.END_KICKOFF.addTo(jsonObject, fEndKickoff);
+    return jsonObject;
+  }
+  
+  public StepApplyKickoffResult initFrom(JsonValue pJsonValue) {
+    initFromTemp(pJsonValue);
+    JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
+    fGotoLabelOnEnd = IServerJsonOption.GOTO_LABEL_ON_END.getFrom(jsonObject);
+    fGotoLabelOnBlitz = IServerJsonOption.GOTO_LABEL_ON_BLITZ.getFrom(jsonObject);
+    fKickoffResult = (KickoffResult) IServerJsonOption.KICKOFF_RESULT.getFrom(jsonObject);
+    fTouchback = IServerJsonOption.TOUCHBACK.getFrom(jsonObject);
+    fKickoffBounds = null;
+    JsonObject kickoffBoundsObject = IServerJsonOption.KICKOFF_BOUNDS.getFrom(jsonObject);
+    if (kickoffBoundsObject != null) {
+      fKickoffBounds = new FieldCoordinateBounds().initFrom(kickoffBoundsObject);
+    }
+    fEndKickoff = IServerJsonOption.END_KICKOFF.getFrom(jsonObject);
+    return this;
   }
 
 }

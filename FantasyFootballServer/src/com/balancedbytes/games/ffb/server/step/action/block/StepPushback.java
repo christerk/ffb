@@ -16,6 +16,7 @@ import com.balancedbytes.games.ffb.SkillUse;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
 import com.balancedbytes.games.ffb.dialog.DialogSkillUseParameter;
+import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.FieldModel;
 import com.balancedbytes.games.ffb.model.Game;
@@ -26,6 +27,7 @@ import com.balancedbytes.games.ffb.net.commands.ClientCommandUseSkill;
 import com.balancedbytes.games.ffb.report.ReportPushback;
 import com.balancedbytes.games.ffb.report.ReportSkillUse;
 import com.balancedbytes.games.ffb.server.GameState;
+import com.balancedbytes.games.ffb.server.IServerJsonOption;
 import com.balancedbytes.games.ffb.server.step.AbstractStep;
 import com.balancedbytes.games.ffb.server.step.StepAction;
 import com.balancedbytes.games.ffb.server.step.StepCommandStatus;
@@ -41,6 +43,8 @@ import com.balancedbytes.games.ffb.server.util.UtilPushback;
 import com.balancedbytes.games.ffb.server.util.UtilTimer;
 import com.balancedbytes.games.ffb.util.ArrayTool;
 import com.balancedbytes.games.ffb.util.UtilCards;
+import com.eclipsesource.json.JsonObject;
+import com.eclipsesource.json.JsonValue;
 
 /**
  * Step in block sequence to handle pushbacks.
@@ -368,6 +372,35 @@ public class StepPushback extends AbstractStep {
     fUsingSideStep = pByteArray.getBoolean();
     fUsingStandFirm = pByteArray.getBoolean();
     return byteArraySerializationVersion;
+  }
+  
+  // JSON serialization
+  
+  public JsonObject toJsonValue() {
+    JsonObject jsonObject = toJsonValueTemp();
+    IServerJsonOption.OLD_DEFENDER_STATE.addTo(jsonObject, fOldDefenderState);
+    if (fStartingPushbackSquare != null) {
+      IServerJsonOption.STARTING_PUSHBACK_SQUARE.addTo(jsonObject, fStartingPushbackSquare.toJsonValue());
+    }
+    IServerJsonOption.USING_GRAB.addTo(jsonObject, fUsingGrab);
+    IServerJsonOption.USING_SIDE_STEP.addTo(jsonObject, fUsingSideStep);
+    IServerJsonOption.USING_STAND_FIRM.addTo(jsonObject, fUsingStandFirm);
+    return jsonObject;
+  }
+  
+  public StepPushback initFrom(JsonValue pJsonValue) {
+    initFromTemp(pJsonValue);
+    JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
+    fOldDefenderState = IServerJsonOption.OLD_DEFENDER_STATE.getFrom(jsonObject);
+    fStartingPushbackSquare = null;
+    JsonObject startingPushbackSquareObject = IServerJsonOption.STARTING_PUSHBACK_SQUARE.getFrom(jsonObject);
+    if (startingPushbackSquareObject != null) {
+      fStartingPushbackSquare = new PushbackSquare().initFrom(startingPushbackSquareObject);
+    }
+    fUsingGrab = IServerJsonOption.USING_GRAB.getFrom(jsonObject);
+    fUsingSideStep = IServerJsonOption.USING_SIDE_STEP.getFrom(jsonObject);
+    fUsingStandFirm = IServerJsonOption.USING_STAND_FIRM.getFrom(jsonObject);
+    return this;
   }
 
 }

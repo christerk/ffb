@@ -12,6 +12,7 @@ import com.balancedbytes.games.ffb.SkillUse;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
 import com.balancedbytes.games.ffb.dialog.DialogKickSkillParameter;
+import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.model.Team;
@@ -21,6 +22,7 @@ import com.balancedbytes.games.ffb.report.ReportKickoffScatter;
 import com.balancedbytes.games.ffb.report.ReportSkillUse;
 import com.balancedbytes.games.ffb.server.DiceInterpreter;
 import com.balancedbytes.games.ffb.server.GameState;
+import com.balancedbytes.games.ffb.server.IServerJsonOption;
 import com.balancedbytes.games.ffb.server.step.AbstractStep;
 import com.balancedbytes.games.ffb.server.step.StepAction;
 import com.balancedbytes.games.ffb.server.step.StepCommandStatus;
@@ -30,6 +32,8 @@ import com.balancedbytes.games.ffb.server.step.StepParameterKey;
 import com.balancedbytes.games.ffb.server.util.UtilCatchScatterThrowIn;
 import com.balancedbytes.games.ffb.server.util.UtilDialog;
 import com.balancedbytes.games.ffb.util.UtilCards;
+import com.eclipsesource.json.JsonObject;
+import com.eclipsesource.json.JsonValue;
 
 /**
  * Step in kickoff sequence to scatter the kick.
@@ -44,13 +48,13 @@ import com.balancedbytes.games.ffb.util.UtilCards;
  */
 public final class StepKickoffScatterRoll extends AbstractStep {
 	
-	protected FieldCoordinate fKickoffStartCoordinate;
-	protected Boolean fUseKickChoice;
-	protected Direction fScatterDirection;
-	protected int fScatterDistance;
-	protected FieldCoordinate fKickingPlayerCoordinate;
-	protected FieldCoordinateBounds fKickoffBounds;
-	protected boolean fTouchback;
+  private FieldCoordinate fKickoffStartCoordinate;
+  private Boolean fUseKickChoice;
+  private Direction fScatterDirection;
+  private int fScatterDistance;
+  private FieldCoordinate fKickingPlayerCoordinate;
+  private FieldCoordinateBounds fKickoffBounds;
+  private boolean fTouchback;
 	
 	public StepKickoffScatterRoll(GameState pGameState) {
 		super(pGameState);
@@ -240,6 +244,38 @@ public final class StepKickoffScatterRoll extends AbstractStep {
   	}
   	fTouchback = pByteArray.getBoolean();
   	return byteArraySerializationVersion;
+  }
+  
+  // JSON serialization
+  
+  public JsonObject toJsonValue() {
+    JsonObject jsonObject = toJsonValueTemp();
+    IServerJsonOption.KICKOFF_START_COORDINATE.addTo(jsonObject, fKickoffStartCoordinate);
+    IServerJsonOption.USE_KICK_CHOICE.addTo(jsonObject, fUseKickChoice);
+    IServerJsonOption.SCATTER_DIRECTION.addTo(jsonObject, fScatterDirection);
+    IServerJsonOption.SCATTER_DISTANCE.addTo(jsonObject, fScatterDistance);
+    IServerJsonOption.KICKING_PLAYER_COORDINATE.addTo(jsonObject, fKickingPlayerCoordinate);
+    if (fKickoffBounds != null) {
+      IServerJsonOption.KICKOFF_BOUNDS.addTo(jsonObject, fKickoffBounds.toJsonValue());
+    }
+    IServerJsonOption.TOUCHBACK.addTo(jsonObject, fTouchback);
+    return jsonObject;
+  }
+  
+  public StepKickoffScatterRoll initFrom(JsonValue pJsonValue) {
+    initFromTemp(pJsonValue);
+    JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
+    fKickoffStartCoordinate = IServerJsonOption.KICKOFF_START_COORDINATE.getFrom(jsonObject);
+    fUseKickChoice = IServerJsonOption.USE_KICK_CHOICE.getFrom(jsonObject);
+    fScatterDirection = (Direction) IServerJsonOption.SCATTER_DIRECTION.getFrom(jsonObject);
+    fScatterDistance = IServerJsonOption.SCATTER_DISTANCE.getFrom(jsonObject);
+    fKickingPlayerCoordinate = IServerJsonOption.KICKING_PLAYER_COORDINATE.getFrom(jsonObject);
+    JsonObject kickoffBoundsObject = IServerJsonOption.KICKOFF_BOUNDS.getFrom(jsonObject);
+    if (kickoffBoundsObject != null) {
+      fKickoffBounds = new FieldCoordinateBounds().initFrom(kickoffBoundsObject);
+    }
+    fTouchback = IServerJsonOption.TOUCHBACK.getFrom(jsonObject);
+    return this;
   }
 
 }

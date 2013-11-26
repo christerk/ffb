@@ -6,7 +6,7 @@ package com.balancedbytes.games.ffb;
  * 
  * @author Kalimar
  */
-public enum CatchScatterThrowInMode {
+public enum CatchScatterThrowInMode implements IEnumWithId, IEnumWithName {
   
   CATCH_ACCURATE_PASS(1, "catchAccuratePass", false),
   CATCH_HAND_OFF(2, "catchHandOff", false),
@@ -42,23 +42,5 @@ public enum CatchScatterThrowInMode {
   public boolean isBomb() {
 		return fBomb;
 	}
-  
-  public static CatchScatterThrowInMode fromId(int pId) {
-    for (CatchScatterThrowInMode mode : values()) {
-      if (mode.getId() == pId) {
-        return mode;
-      }
-    }
-    return null;
-  }
-  
-  public static CatchScatterThrowInMode fromName(String pName) {
-    for (CatchScatterThrowInMode mode : values()) {
-      if (mode.getName().equalsIgnoreCase(pName)) {
-        return mode;
-      }
-    }
-    return null;
-  }
     
 }

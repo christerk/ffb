@@ -107,19 +107,14 @@ public final class StepCoinChoice extends AbstractStep {
   
   public JsonObject toJsonValue() {
     JsonObject jsonObject = toJsonValueTemp();
-    if (fCoinChoiceHeads != null) {
-      IServerJsonOption.COIN_CHOICE_HEADS.addTo(jsonObject, fCoinChoiceHeads);
-    }
+    IServerJsonOption.COIN_CHOICE_HEADS.addTo(jsonObject, fCoinChoiceHeads);
     return jsonObject;
   }
   
   public StepCoinChoice initFrom(JsonValue pJsonValue) {
     initFromTemp(pJsonValue);
     JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-    fCoinChoiceHeads = null;
-    if (IServerJsonOption.COIN_CHOICE_HEADS.isDefinedIn(jsonObject)) {
-      fCoinChoiceHeads = IServerJsonOption.COIN_CHOICE_HEADS.getFrom(jsonObject);
-    }
+    fCoinChoiceHeads = IServerJsonOption.COIN_CHOICE_HEADS.getFrom(jsonObject);
     return this;
   }
   

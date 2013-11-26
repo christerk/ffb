@@ -39,8 +39,8 @@ import com.eclipsesource.json.JsonValue;
  */
 public final class StepTouchback extends AbstractStep {
 	
-	protected boolean fTouchback;
-	protected FieldCoordinate fTouchbackCoordinate;
+  private boolean fTouchback;
+  private FieldCoordinate fTouchbackCoordinate;
 	
 	public StepTouchback(GameState pGameState) {
 		super(pGameState);

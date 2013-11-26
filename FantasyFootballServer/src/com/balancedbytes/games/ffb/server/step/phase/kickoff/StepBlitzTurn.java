@@ -30,7 +30,7 @@ import com.eclipsesource.json.JsonValue;
  */
 public final class StepBlitzTurn extends AbstractStep {
 	
-	protected boolean fEndTurn;
+	private boolean fEndTurn;
 	
 	public StepBlitzTurn(GameState pGameState) {
 		super(pGameState);

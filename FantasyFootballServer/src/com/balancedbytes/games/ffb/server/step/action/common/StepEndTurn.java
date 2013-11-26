@@ -22,6 +22,7 @@ import com.balancedbytes.games.ffb.Weather;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
 import com.balancedbytes.games.ffb.dialog.DialogBribesParameter;
+import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.GameResult;
@@ -37,6 +38,7 @@ import com.balancedbytes.games.ffb.report.ReportTurnEnd;
 import com.balancedbytes.games.ffb.server.DiceInterpreter;
 import com.balancedbytes.games.ffb.server.FantasyFootballServer;
 import com.balancedbytes.games.ffb.server.GameState;
+import com.balancedbytes.games.ffb.server.IServerJsonOption;
 import com.balancedbytes.games.ffb.server.ServerMode;
 import com.balancedbytes.games.ffb.server.fumbbl.FumbblRequestUpdateGamestate;
 import com.balancedbytes.games.ffb.server.step.AbstractStep;
@@ -56,6 +58,8 @@ import com.balancedbytes.games.ffb.util.ArrayTool;
 import com.balancedbytes.games.ffb.util.UtilBox;
 import com.balancedbytes.games.ffb.util.UtilCards;
 import com.balancedbytes.games.ffb.util.UtilPlayer;
+import com.eclipsesource.json.JsonObject;
+import com.eclipsesource.json.JsonValue;
 
 /**
  * Step in any sequence to end a turn.
@@ -573,6 +577,35 @@ public class StepEndTurn extends AbstractStep {
   	fNewHalf = pByteArray.getBoolean();
   	fEndGame = pByteArray.getBoolean();
   	return byteArraySerializationVersion;
+  }
+  
+  // JSON serialization
+  
+  public JsonObject toJsonValue() {
+    JsonObject jsonObject = toJsonValueTemp();
+    IServerJsonOption.HANDLE_SECRET_WEAPONS.addTo(jsonObject, fHandleSecretWeapons);
+    IServerJsonOption.TOUCHDOWN.addTo(jsonObject, fTouchdown);
+    IServerJsonOption.BRIBES_CHOICE_HOME.addTo(jsonObject, fBribesChoiceHome);
+    IServerJsonOption.BRIBES_CHOICE_AWAY.addTo(jsonObject, fBribesChoiceAway);
+    IServerJsonOption.NEXT_SEQUENCE_PUSHED.addTo(jsonObject, fNextSequencePushed);
+    IServerJsonOption.REMOVE_USED_SECRET_WEAPONS.addTo(jsonObject, fRemoveUsedSecretWeapons);
+    IServerJsonOption.NEW_HALF.addTo(jsonObject, fNewHalf);
+    IServerJsonOption.END_GAME.addTo(jsonObject, fEndGame);
+    return jsonObject;
+  }
+  
+  public StepEndTurn initFrom(JsonValue pJsonValue) {
+    initFromTemp(pJsonValue);
+    JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
+    fHandleSecretWeapons = IServerJsonOption.HANDLE_SECRET_WEAPONS.getFrom(jsonObject);
+    fTouchdown = IServerJsonOption.TOUCHDOWN.getFrom(jsonObject);
+    fBribesChoiceHome = IServerJsonOption.BRIBES_CHOICE_HOME.getFrom(jsonObject);
+    fBribesChoiceAway = IServerJsonOption.BRIBES_CHOICE_AWAY.getFrom(jsonObject);
+    fNextSequencePushed = IServerJsonOption.NEXT_SEQUENCE_PUSHED.getFrom(jsonObject);
+    fRemoveUsedSecretWeapons = IServerJsonOption.REMOVE_USED_SECRET_WEAPONS.getFrom(jsonObject);
+    fNewHalf = IServerJsonOption.NEW_HALF.getFrom(jsonObject);
+    fEndGame = IServerJsonOption.END_GAME.getFrom(jsonObject);
+    return this;
   }
 
 }
