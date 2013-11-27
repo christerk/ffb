@@ -42,10 +42,10 @@ import com.balancedbytes.games.ffb.server.util.UtilInducementUse;
  */
 public final class StepWizard extends AbstractStep {
 
-	protected SpecialEffect fWizardSpell;
-	protected FieldCoordinate fTargetCoordinate;
-	protected boolean fEndInducement;
-	protected TurnMode fOldTurnMode;
+	private SpecialEffect fWizardSpell;
+	private FieldCoordinate fTargetCoordinate;
+	private boolean fEndInducement;
+	private TurnMode fOldTurnMode;
 	
 	public StepWizard(GameState pGameState) {
 		super(pGameState);

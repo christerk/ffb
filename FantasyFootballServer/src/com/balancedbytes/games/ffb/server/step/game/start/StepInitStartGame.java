@@ -27,7 +27,7 @@ import com.balancedbytes.games.ffb.util.StringTool;
  */
 public final class StepInitStartGame extends AbstractStep {
 	
-	protected boolean fFumbblGameCreated;
+	private boolean fFumbblGameCreated;
 		
 	public StepInitStartGame(GameState pGameState) {
 		super(pGameState);

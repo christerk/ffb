@@ -46,11 +46,11 @@ import com.balancedbytes.games.ffb.server.util.UtilInjury;
  */
 public final class StepInitScatterPlayer extends AbstractStep {
 
-	protected String fThrownPlayerId;
-	protected PlayerState fThrownPlayerState;
-	protected boolean fThrownPlayerHasBall;
-	protected FieldCoordinate fThrownPlayerCoordinate;
-	protected boolean fThrowScatter;
+  private String fThrownPlayerId;
+  private PlayerState fThrownPlayerState;
+  private boolean fThrownPlayerHasBall;
+  private FieldCoordinate fThrownPlayerCoordinate;
+  private boolean fThrowScatter;
 
 	public StepInitScatterPlayer(GameState pGameState) {
 		super(pGameState);

@@ -4,12 +4,14 @@ import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.PlayerAction;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
+import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.GameResult;
 import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.model.PlayerResult;
 import com.balancedbytes.games.ffb.server.GameState;
+import com.balancedbytes.games.ffb.server.IServerJsonOption;
 import com.balancedbytes.games.ffb.server.step.AbstractStep;
 import com.balancedbytes.games.ffb.server.step.SequenceGenerator;
 import com.balancedbytes.games.ffb.server.step.StepAction;
@@ -19,6 +21,8 @@ import com.balancedbytes.games.ffb.server.step.UtilSteps;
 import com.balancedbytes.games.ffb.server.util.UtilDialog;
 import com.balancedbytes.games.ffb.util.StringTool;
 import com.balancedbytes.games.ffb.util.UtilPlayer;
+import com.eclipsesource.json.JsonObject;
+import com.eclipsesource.json.JsonValue;
 
 /**
  * Final step of the pass sequence.
@@ -36,12 +40,12 @@ import com.balancedbytes.games.ffb.util.UtilPlayer;
  */
 public final class StepEndPassing extends AbstractStep {
 
-	protected String fInterceptorId;	
-	protected String fCatcherId;
-	protected boolean fPassAccurate;
-	protected boolean fPassFumble;
-	protected boolean fEndTurn;
-	protected boolean fEndPlayerAction;
+  private String fInterceptorId;	
+  private String fCatcherId;
+  private boolean fPassAccurate;
+  private boolean fPassFumble;
+	private boolean fEndTurn;
+	private boolean fEndPlayerAction;
 
 	public StepEndPassing(GameState pGameState) {
 		super(pGameState);
@@ -188,6 +192,31 @@ public final class StepEndPassing extends AbstractStep {
   	fEndTurn = pByteArray.getBoolean();
   	fEndPlayerAction = pByteArray.getBoolean();
   	return byteArraySerializationVersion;
+  }
+  
+  // JSON serialization
+  
+  public JsonObject toJsonValue() {
+    JsonObject jsonObject = toJsonValueTemp();
+    IServerJsonOption.INTERCEPTOR_ID.addTo(jsonObject, fInterceptorId);
+    IServerJsonOption.CATCHER_ID.addTo(jsonObject, fCatcherId);
+    IServerJsonOption.PASS_ACCURATE.addTo(jsonObject, fPassAccurate);
+    IServerJsonOption.PASS_FUMBLE.addTo(jsonObject, fPassFumble);
+    IServerJsonOption.END_TURN.addTo(jsonObject, fEndTurn);
+    IServerJsonOption.END_PLAYER_ACTION.addTo(jsonObject, fEndPlayerAction);
+    return jsonObject;
+  }
+  
+  public StepEndPassing initFrom(JsonValue pJsonValue) {
+    initFromTemp(pJsonValue);
+    JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
+    fInterceptorId = IServerJsonOption.INTERCEPTOR_ID.getFrom(jsonObject);
+    fCatcherId = IServerJsonOption.CATCHER_ID.getFrom(jsonObject);
+    fPassAccurate = IServerJsonOption.PASS_ACCURATE.getFrom(jsonObject);
+    fPassFumble = IServerJsonOption.PASS_FUMBLE.getFrom(jsonObject);
+    fEndTurn = IServerJsonOption.END_TURN.getFrom(jsonObject);
+    fEndPlayerAction = IServerJsonOption.END_PLAYER_ACTION.getFrom(jsonObject);
+    return this;
   }
 
 }

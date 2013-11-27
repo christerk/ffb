@@ -55,17 +55,17 @@ public final class StepBuyInducements extends AbstractStep {
 	
   protected static final int MINIMUM_PETTY_CASH_FOR_INDUCEMENTS = 50000;
   
-  protected int fInducementGoldHome;
-  protected int fInducementGoldAway;
+  private int fInducementGoldHome;
+  private int fInducementGoldAway;
   
-  protected boolean fInducementsSelectedHome;
-  protected boolean fInducementsSelectedAway;
+  private boolean fInducementsSelectedHome;
+  private boolean fInducementsSelectedAway;
   
-  protected int fGoldUsedHome;
-  protected int fGoldUsedAway;
+  private int fGoldUsedHome;
+  private int fGoldUsedAway;
   
-  protected boolean fReportedHome;
-  protected boolean fReportedAway;
+  private boolean fReportedHome;
+  private boolean fReportedAway;
   
 	public StepBuyInducements(GameState pGameState) {
 		super(pGameState);

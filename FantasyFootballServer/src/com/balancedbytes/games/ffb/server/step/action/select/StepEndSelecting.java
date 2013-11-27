@@ -40,21 +40,21 @@ import com.balancedbytes.games.ffb.util.ArrayTool;
  */
 public final class StepEndSelecting extends AbstractStep {
 	
-	protected boolean fEndTurn;
-	protected boolean fEndPlayerAction;
-	protected PlayerAction fDispatchPlayerAction;
+  private boolean fEndTurn;
+  private boolean fEndPlayerAction;
+  private PlayerAction fDispatchPlayerAction;
 	// moveSequence
-	protected FieldCoordinate[] fMoveStack;
-	protected String fGazeVictimId;
+  private FieldCoordinate[] fMoveStack;
+  private String fGazeVictimId;
   // blockSequence
-	protected String fBlockDefenderId;
-  protected Boolean fUsingStab;
+  private String fBlockDefenderId;
+  private Boolean fUsingStab;
   // foulSequence
-  protected String fFoulDefenderId;
+  private String fFoulDefenderId;
   // passSequence + throwTeamMateSequence
-  protected FieldCoordinate fTargetCoordinate;
-  protected boolean fHailMaryPass;
-  protected String fThrownPlayerId;
+  private FieldCoordinate fTargetCoordinate;
+  private boolean fHailMaryPass;
+  private String fThrownPlayerId;
   
 	public StepEndSelecting(GameState pGameState) {
 		super(pGameState);

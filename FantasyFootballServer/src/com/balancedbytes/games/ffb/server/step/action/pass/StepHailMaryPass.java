@@ -8,11 +8,13 @@ import com.balancedbytes.games.ffb.Skill;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
 import com.balancedbytes.games.ffb.dialog.DialogSkillUseParameter;
+import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.net.NetCommand;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandUseSkill;
 import com.balancedbytes.games.ffb.report.ReportPassRoll;
 import com.balancedbytes.games.ffb.server.GameState;
+import com.balancedbytes.games.ffb.server.IServerJsonOption;
 import com.balancedbytes.games.ffb.server.step.AbstractStepWithReRoll;
 import com.balancedbytes.games.ffb.server.step.StepAction;
 import com.balancedbytes.games.ffb.server.step.StepCommandStatus;
@@ -25,6 +27,8 @@ import com.balancedbytes.games.ffb.server.util.UtilDialog;
 import com.balancedbytes.games.ffb.server.util.UtilReRoll;
 import com.balancedbytes.games.ffb.util.StringTool;
 import com.balancedbytes.games.ffb.util.UtilCards;
+import com.eclipsesource.json.JsonObject;
+import com.eclipsesource.json.JsonValue;
 
 /**
  * Step in the pass sequence to handle skill HAIL_MARY_PASS.
@@ -37,9 +41,9 @@ import com.balancedbytes.games.ffb.util.UtilCards;
  */
 public final class StepHailMaryPass extends AbstractStepWithReRoll {
 	
-	protected String fGotoLabelOnFailure;
-	protected boolean fPassFumble;
-	protected boolean fPassSkillUsed;
+  private String fGotoLabelOnFailure;
+  private boolean fPassFumble;
+  private boolean fPassSkillUsed;
 	
 	public StepHailMaryPass(GameState pGameState) {
 		super(pGameState);
@@ -177,6 +181,25 @@ public final class StepHailMaryPass extends AbstractStepWithReRoll {
   	fPassFumble = pByteArray.getBoolean();
   	fPassSkillUsed = pByteArray.getBoolean();
   	return byteArraySerializationVersion;
+  }
+  
+  // JSON serialization
+  
+  public JsonObject toJsonValue() {
+    JsonObject jsonObject = toJsonValueTemp();
+    IServerJsonOption.GOTO_LABEL_ON_FAILURE.addTo(jsonObject, fGotoLabelOnFailure);
+    IServerJsonOption.PASS_FUMBLE.addTo(jsonObject, fPassFumble);
+    IServerJsonOption.PASS_SKILL_USED.addTo(jsonObject, fPassSkillUsed);
+    return jsonObject;
+  }
+  
+  public StepHailMaryPass initFrom(JsonValue pJsonValue) {
+    initFromTemp(pJsonValue);
+    JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
+    fGotoLabelOnFailure = IServerJsonOption.GOTO_LABEL_ON_FAILURE.getFrom(jsonObject);
+    fPassFumble = IServerJsonOption.PASS_FUMBLE.getFrom(jsonObject);
+    fPassSkillUsed = IServerJsonOption.PASS_SKILL_USED.getFrom(jsonObject);
+    return this;
   }
   
 }

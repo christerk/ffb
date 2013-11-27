@@ -25,10 +25,10 @@ import com.balancedbytes.games.ffb.server.util.UtilDialog;
  */
 public final class StepEndInducement extends AbstractStep {
 	
-	protected boolean fEndInducementPhase;
-	protected boolean fEndTurn;
-	protected InducementPhase fInducementPhase;
-	protected boolean fHomeTeam;
+  private boolean fEndInducementPhase;
+  private boolean fEndTurn;
+	private InducementPhase fInducementPhase;
+	private boolean fHomeTeam;
 	
 	public StepEndInducement(GameState pGameState) {
 		super(pGameState);

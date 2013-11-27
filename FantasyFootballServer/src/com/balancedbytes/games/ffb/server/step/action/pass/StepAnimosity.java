@@ -7,6 +7,7 @@ import com.balancedbytes.games.ffb.ReRolledAction;
 import com.balancedbytes.games.ffb.Skill;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
+import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
@@ -16,6 +17,7 @@ import com.balancedbytes.games.ffb.report.ReportId;
 import com.balancedbytes.games.ffb.report.ReportSkillRoll;
 import com.balancedbytes.games.ffb.server.DiceInterpreter;
 import com.balancedbytes.games.ffb.server.GameState;
+import com.balancedbytes.games.ffb.server.IServerJsonOption;
 import com.balancedbytes.games.ffb.server.step.AbstractStepWithReRoll;
 import com.balancedbytes.games.ffb.server.step.StepAction;
 import com.balancedbytes.games.ffb.server.step.StepCommandStatus;
@@ -28,6 +30,8 @@ import com.balancedbytes.games.ffb.server.util.UtilReRoll;
 import com.balancedbytes.games.ffb.util.StringTool;
 import com.balancedbytes.games.ffb.util.UtilCards;
 import com.balancedbytes.games.ffb.util.UtilPassing;
+import com.eclipsesource.json.JsonObject;
+import com.eclipsesource.json.JsonValue;
 
 /**
  * Step in the pass sequence to handle skill ANIMOSITY.
@@ -40,8 +44,8 @@ import com.balancedbytes.games.ffb.util.UtilPassing;
  */
 public final class StepAnimosity extends AbstractStepWithReRoll {
 	
-	protected String fGotoLabelOnFailure;
-	protected String fCatcherId;
+  private String fGotoLabelOnFailure;
+  private String fCatcherId;
 
 	public StepAnimosity(GameState pGameState) {
 		super(pGameState);
@@ -192,6 +196,23 @@ public final class StepAnimosity extends AbstractStepWithReRoll {
   	fGotoLabelOnFailure = pByteArray.getString();
   	fCatcherId = pByteArray.getString();
   	return byteArraySerializationVersion;
+  }
+  
+  // JSON serialization
+  
+  public JsonObject toJsonValue() {
+    JsonObject jsonObject = toJsonValueTemp();
+    IServerJsonOption.GOTO_LABEL_ON_FAILURE.addTo(jsonObject, fGotoLabelOnFailure);
+    IServerJsonOption.CATCHER_ID.addTo(jsonObject, fCatcherId);
+    return jsonObject;
+  }
+  
+  public StepAnimosity initFrom(JsonValue pJsonValue) {
+    initFromTemp(pJsonValue);
+    JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
+    fGotoLabelOnFailure = IServerJsonOption.GOTO_LABEL_ON_FAILURE.getFrom(jsonObject);
+    fCatcherId = IServerJsonOption.CATCHER_ID.getFrom(jsonObject);
+    return this;
   }
   
 }

@@ -4,16 +4,20 @@ import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.PlayerState;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
+import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.net.NetCommand;
 import com.balancedbytes.games.ffb.server.GameState;
+import com.balancedbytes.games.ffb.server.IServerJsonOption;
 import com.balancedbytes.games.ffb.server.step.AbstractStep;
 import com.balancedbytes.games.ffb.server.step.StepAction;
 import com.balancedbytes.games.ffb.server.step.StepCommandStatus;
 import com.balancedbytes.games.ffb.server.step.StepId;
 import com.balancedbytes.games.ffb.server.step.StepParameter;
 import com.balancedbytes.games.ffb.server.step.StepParameterKey;
+import com.eclipsesource.json.JsonObject;
+import com.eclipsesource.json.JsonValue;
 
 /**
  * Step in ttm sequence to fumble a ttm pass.
@@ -26,9 +30,9 @@ import com.balancedbytes.games.ffb.server.step.StepParameterKey;
  */
 public final class StepFumbleTtmPass extends AbstractStep {
 
-	protected FieldCoordinate fThrownPlayerCoordinate;
-	protected String fThrownPlayerId;
-	protected PlayerState fThrownPlayerState;
+  private FieldCoordinate fThrownPlayerCoordinate;
+  private String fThrownPlayerId;
+  private PlayerState fThrownPlayerState;
 
 	public StepFumbleTtmPass(GameState pGameState) {
 		super(pGameState);
@@ -104,6 +108,25 @@ public final class StepFumbleTtmPass extends AbstractStep {
   	fThrownPlayerId = pByteArray.getString();
   	fThrownPlayerState = new PlayerState(pByteArray.getSmallInt());
   	return byteArraySerializationVersion;
+  }
+  
+  // JSON serialization
+  
+  public JsonObject toJsonValue() {
+    JsonObject jsonObject = toJsonValueTemp();
+    IServerJsonOption.THROWN_PLAYER_COORDINATE.addTo(jsonObject, fThrownPlayerCoordinate);
+    IServerJsonOption.THROWN_PLAYER_ID.addTo(jsonObject, fThrownPlayerId);
+    IServerJsonOption.THROWN_PLAYER_STATE.addTo(jsonObject, fThrownPlayerState);
+    return jsonObject;
+  }
+  
+  public StepFumbleTtmPass initFrom(JsonValue pJsonValue) {
+    initFromTemp(pJsonValue);
+    JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
+    fThrownPlayerCoordinate = IServerJsonOption.THROWN_PLAYER_COORDINATE.getFrom(jsonObject);
+    fThrownPlayerId = IServerJsonOption.THROWN_PLAYER_ID.getFrom(jsonObject);
+    fThrownPlayerState = IServerJsonOption.THROWN_PLAYER_STATE.getFrom(jsonObject);
+    return this;
   }
 
 }

@@ -39,11 +39,11 @@ import com.balancedbytes.games.ffb.util.UtilRangeRuler;
  */
 public final class StepInitThrowTeamMate extends AbstractStep {
 	
-	protected String fGotoLabelOnEnd;
-	protected String fThrownPlayerId;
-	protected FieldCoordinate fTargetCoordinate;
-	protected boolean fEndTurn;
-	protected boolean fEndPlayerAction;
+  private String fGotoLabelOnEnd;
+  private String fThrownPlayerId;
+  private FieldCoordinate fTargetCoordinate;
+  private boolean fEndTurn;
+  private boolean fEndPlayerAction;
 	
 	public StepInitThrowTeamMate(GameState pGameState) {
 		super(pGameState);

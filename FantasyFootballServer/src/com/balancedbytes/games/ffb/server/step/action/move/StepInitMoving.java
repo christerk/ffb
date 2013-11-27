@@ -6,6 +6,7 @@ import com.balancedbytes.games.ffb.MoveSquare;
 import com.balancedbytes.games.ffb.PlayerAction;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
+import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.net.NetCommand;
@@ -19,6 +20,7 @@ import com.balancedbytes.games.ffb.net.commands.ClientCommandMove;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandPass;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandThrowTeamMate;
 import com.balancedbytes.games.ffb.server.GameState;
+import com.balancedbytes.games.ffb.server.IServerJsonOption;
 import com.balancedbytes.games.ffb.server.step.AbstractStep;
 import com.balancedbytes.games.ffb.server.step.StepAction;
 import com.balancedbytes.games.ffb.server.step.StepCommandStatus;
@@ -31,6 +33,8 @@ import com.balancedbytes.games.ffb.server.step.UtilSteps;
 import com.balancedbytes.games.ffb.server.util.UtilPlayerMove;
 import com.balancedbytes.games.ffb.util.ArrayTool;
 import com.balancedbytes.games.ffb.util.StringTool;
+import com.eclipsesource.json.JsonObject;
+import com.eclipsesource.json.JsonValue;
 
 /**
  * Step to init the move sequence.
@@ -56,7 +60,6 @@ import com.balancedbytes.games.ffb.util.StringTool;
 public class StepInitMoving extends AbstractStep {
 	
   private String fGotoLabelOnEnd;
-
   private FieldCoordinate[] fMoveStack;
   private String fGazeVictimId;
 	private boolean fEndTurn;
@@ -295,6 +298,29 @@ public class StepInitMoving extends AbstractStep {
   	fEndTurn = pByteArray.getBoolean();
   	fEndPlayerAction = pByteArray.getBoolean();
   	return byteArraySerializationVersion;
+  }
+  
+  // JSON serialization
+  
+  public JsonObject toJsonValue() {
+    JsonObject jsonObject = toJsonValueTemp();
+    IServerJsonOption.GOTO_LABEL_ON_END.addTo(jsonObject, fGotoLabelOnEnd);
+    IServerJsonOption.MOVE_STACK.addTo(jsonObject, fMoveStack);
+    IServerJsonOption.GAZE_VICTIM_ID.addTo(jsonObject, fGazeVictimId);
+    IServerJsonOption.END_TURN.addTo(jsonObject, fEndTurn);
+    IServerJsonOption.END_PLAYER_ACTION.addTo(jsonObject, fEndPlayerAction);
+    return jsonObject;
+  }
+  
+  public StepInitMoving initFrom(JsonValue pJsonValue) {
+    initFromTemp(pJsonValue);
+    JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
+    fGotoLabelOnEnd = IServerJsonOption.GOTO_LABEL_ON_END.getFrom(jsonObject);
+    fMoveStack = IServerJsonOption.MOVE_STACK.getFrom(jsonObject);
+    fGazeVictimId = IServerJsonOption.GAZE_VICTIM_ID.getFrom(jsonObject);
+    fEndTurn = IServerJsonOption.END_TURN.getFrom(jsonObject);
+    fEndPlayerAction = IServerJsonOption.END_PLAYER_ACTION.getFrom(jsonObject);
+    return this;
   }
   
 }

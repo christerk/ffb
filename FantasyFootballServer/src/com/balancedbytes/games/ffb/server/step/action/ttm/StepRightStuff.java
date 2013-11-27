@@ -10,6 +10,7 @@ import com.balancedbytes.games.ffb.ReRolledAction;
 import com.balancedbytes.games.ffb.RightStuffModifier;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
+import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.net.NetCommand;
@@ -17,6 +18,7 @@ import com.balancedbytes.games.ffb.report.ReportId;
 import com.balancedbytes.games.ffb.report.ReportSkillRoll;
 import com.balancedbytes.games.ffb.server.DiceInterpreter;
 import com.balancedbytes.games.ffb.server.GameState;
+import com.balancedbytes.games.ffb.server.IServerJsonOption;
 import com.balancedbytes.games.ffb.server.InjuryResult;
 import com.balancedbytes.games.ffb.server.step.AbstractStepWithReRoll;
 import com.balancedbytes.games.ffb.server.step.StepAction;
@@ -28,6 +30,8 @@ import com.balancedbytes.games.ffb.server.step.UtilSteps;
 import com.balancedbytes.games.ffb.server.step.action.common.ApothecaryMode;
 import com.balancedbytes.games.ffb.server.util.UtilInjury;
 import com.balancedbytes.games.ffb.server.util.UtilReRoll;
+import com.eclipsesource.json.JsonObject;
+import com.eclipsesource.json.JsonValue;
 
 /**
  * Step in ttm sequence to handle skill RIGHT_STUFF (landing roll).
@@ -43,8 +47,8 @@ import com.balancedbytes.games.ffb.server.util.UtilReRoll;
  */
 public final class StepRightStuff extends AbstractStepWithReRoll {
 	
-	protected Boolean fThrownPlayerHasBall;
-	protected String fThrownPlayerId;
+	private Boolean fThrownPlayerHasBall;
+	private String fThrownPlayerId;
 	
 	public StepRightStuff(GameState pGameState) {
 		super(pGameState);
@@ -164,5 +168,22 @@ public final class StepRightStuff extends AbstractStepWithReRoll {
 		fThrownPlayerId = pByteArray.getString();
 		return byteArraySerializationVersion;
 	}
+	
+  // JSON serialization
+  
+  public JsonObject toJsonValue() {
+    JsonObject jsonObject = toJsonValueTemp();
+    IServerJsonOption.THROWN_PLAYER_HAS_BALL.addTo(jsonObject, fThrownPlayerHasBall);
+    IServerJsonOption.THROWN_PLAYER_ID.addTo(jsonObject, fThrownPlayerId);
+    return jsonObject;
+  }
+  
+  public StepRightStuff initFrom(JsonValue pJsonValue) {
+    initFromTemp(pJsonValue);
+    JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
+    fThrownPlayerHasBall = IServerJsonOption.THROWN_PLAYER_HAS_BALL.getFrom(jsonObject);
+    fThrownPlayerId = IServerJsonOption.THROWN_PLAYER_ID.getFrom(jsonObject);
+    return this;
+  }
 	
 }

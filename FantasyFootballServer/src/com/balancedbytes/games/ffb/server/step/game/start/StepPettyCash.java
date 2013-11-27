@@ -24,11 +24,10 @@ import com.balancedbytes.games.ffb.server.util.UtilDialog;
  */
 public final class StepPettyCash extends AbstractStep {
 	
-	protected boolean fPettyCashSelectedHome;
-	protected boolean fPettyCashSelectedAway;
-	
-  protected boolean fReportedHome;
-  protected boolean fReportedAway;
+  private boolean fPettyCashSelectedHome;
+  private boolean fPettyCashSelectedAway;
+  private boolean fReportedHome;
+  private boolean fReportedAway;
 
 	public StepPettyCash(GameState pGameState) {
 		super(pGameState);

@@ -11,6 +11,7 @@ import com.balancedbytes.games.ffb.TurnMode;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
 import com.balancedbytes.games.ffb.dialog.DialogPlayerChoiceParameter;
+import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
@@ -19,6 +20,7 @@ import com.balancedbytes.games.ffb.net.commands.ClientCommandPlayerChoice;
 import com.balancedbytes.games.ffb.report.ReportSkillUse;
 import com.balancedbytes.games.ffb.server.DiceInterpreter;
 import com.balancedbytes.games.ffb.server.GameState;
+import com.balancedbytes.games.ffb.server.IServerJsonOption;
 import com.balancedbytes.games.ffb.server.step.AbstractStep;
 import com.balancedbytes.games.ffb.server.step.StepAction;
 import com.balancedbytes.games.ffb.server.step.StepCommandStatus;
@@ -31,6 +33,8 @@ import com.balancedbytes.games.ffb.server.util.UtilDialog;
 import com.balancedbytes.games.ffb.util.ArrayTool;
 import com.balancedbytes.games.ffb.util.StringTool;
 import com.balancedbytes.games.ffb.util.UtilPlayer;
+import com.eclipsesource.json.JsonObject;
+import com.eclipsesource.json.JsonValue;
 
 /**
  * Step in move sequence to handle the DIVING_TACKLE skill.
@@ -199,5 +203,30 @@ public class StepDivingTackle extends AbstractStep {
 		fUsingBreakTackle = pByteArray.getBoolean();
 		return byteArraySerializationVersion;
 	}
+	
+  // JSON serialization
+  
+  public JsonObject toJsonValue() {
+    JsonObject jsonObject = toJsonValueTemp();
+    IServerJsonOption.GOTO_LABEL_ON_SUCCESS.addTo(jsonObject, fGotoLabelOnSuccess);
+    IServerJsonOption.COORDINATE_FROM.addTo(jsonObject, fCoordinateFrom);
+    IServerJsonOption.COORDINATE_TO.addTo(jsonObject, fCoordinateTo);
+    IServerJsonOption.DODGE_ROLL.addTo(jsonObject, fDodgeRoll);
+    IServerJsonOption.USING_DIVING_TACKLE.addTo(jsonObject, fUsingDivingTackle);
+    IServerJsonOption.USING_BREAK_TACKLE.addTo(jsonObject, fUsingBreakTackle);
+    return jsonObject;
+  }
+  
+  public StepDivingTackle initFrom(JsonValue pJsonValue) {
+    initFromTemp(pJsonValue);
+    JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
+    fGotoLabelOnSuccess = IServerJsonOption.GOTO_LABEL_ON_SUCCESS.getFrom(jsonObject);
+    fCoordinateFrom = IServerJsonOption.COORDINATE_FROM.getFrom(jsonObject);
+    fCoordinateTo = IServerJsonOption.COORDINATE_TO.getFrom(jsonObject);
+    fDodgeRoll = IServerJsonOption.DODGE_ROLL.getFrom(jsonObject);
+    fUsingDivingTackle = IServerJsonOption.USING_DIVING_TACKLE.getFrom(jsonObject);
+    fUsingBreakTackle = IServerJsonOption.USING_BREAK_TACKLE.getFrom(jsonObject);
+    return this;
+  }
 
 }

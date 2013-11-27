@@ -15,6 +15,7 @@ import com.balancedbytes.games.ffb.Skill;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
 import com.balancedbytes.games.ffb.dialog.DialogSkillUseParameter;
+import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.Animation;
 import com.balancedbytes.games.ffb.model.AnimationType;
 import com.balancedbytes.games.ffb.model.Game;
@@ -24,6 +25,7 @@ import com.balancedbytes.games.ffb.net.commands.ClientCommandUseSkill;
 import com.balancedbytes.games.ffb.report.ReportPassRoll;
 import com.balancedbytes.games.ffb.server.DiceInterpreter;
 import com.balancedbytes.games.ffb.server.GameState;
+import com.balancedbytes.games.ffb.server.IServerJsonOption;
 import com.balancedbytes.games.ffb.server.step.AbstractStepWithReRoll;
 import com.balancedbytes.games.ffb.server.step.StepAction;
 import com.balancedbytes.games.ffb.server.step.StepCommandStatus;
@@ -38,6 +40,8 @@ import com.balancedbytes.games.ffb.server.util.UtilReRoll;
 import com.balancedbytes.games.ffb.util.StringTool;
 import com.balancedbytes.games.ffb.util.UtilCards;
 import com.balancedbytes.games.ffb.util.UtilPassing;
+import com.eclipsesource.json.JsonObject;
+import com.eclipsesource.json.JsonValue;
 
 /**
  * Step in the pass sequence to handle passing the ball.
@@ -57,7 +61,6 @@ public class StepPass extends AbstractStepWithReRoll {
 	
 	private String fGotoLabelOnEnd;
 	private String fGotoLabelOnMissedPass;
-	
 	private String fCatcherId;
 	private boolean fSuccessful;
 	private boolean fHoldingSafeThrow;
@@ -292,6 +295,33 @@ public class StepPass extends AbstractStepWithReRoll {
   	fPassFumble = pByteArray.getBoolean();
   	fPassSkillUsed = pByteArray.getBoolean();
   	return byteArraySerializationVersion;
+  }
+  
+  // JSON serialization
+  
+  public JsonObject toJsonValue() {
+    JsonObject jsonObject = toJsonValueTemp();
+    IServerJsonOption.GOTO_LABEL_ON_END.addTo(jsonObject, fGotoLabelOnEnd);
+    IServerJsonOption.GOTO_LABEL_ON_MISSED_PASS.addTo(jsonObject, fGotoLabelOnMissedPass);
+    IServerJsonOption.CATCHER_ID.addTo(jsonObject, fCatcherId);
+    IServerJsonOption.SUCCESSFUL.addTo(jsonObject, fSuccessful);
+    IServerJsonOption.HOLDING_SAFE_THROW.addTo(jsonObject, fHoldingSafeThrow);
+    IServerJsonOption.PASS_FUMBLE.addTo(jsonObject, fPassFumble);
+    IServerJsonOption.PASS_SKILL_USED.addTo(jsonObject, fPassSkillUsed);
+    return jsonObject;
+  }
+  
+  public StepPass initFrom(JsonValue pJsonValue) {
+    initFromTemp(pJsonValue);
+    JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
+    fGotoLabelOnEnd = IServerJsonOption.GOTO_LABEL_ON_END.getFrom(jsonObject);
+    fGotoLabelOnMissedPass = IServerJsonOption.GOTO_LABEL_ON_MISSED_PASS.getFrom(jsonObject);
+    fCatcherId = IServerJsonOption.CATCHER_ID.getFrom(jsonObject);
+    fSuccessful = IServerJsonOption.SUCCESSFUL.getFrom(jsonObject);
+    fHoldingSafeThrow = IServerJsonOption.HOLDING_SAFE_THROW.getFrom(jsonObject);
+    fPassFumble = IServerJsonOption.PASS_FUMBLE.getFrom(jsonObject);
+    fPassSkillUsed = IServerJsonOption.PASS_SKILL_USED.getFrom(jsonObject);
+    return this;
   }
   
 }

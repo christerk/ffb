@@ -5,10 +5,12 @@ import com.balancedbytes.games.ffb.PlayerAction;
 import com.balancedbytes.games.ffb.PlayerActionFactory;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
+import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.net.NetCommand;
 import com.balancedbytes.games.ffb.server.GameState;
+import com.balancedbytes.games.ffb.server.IServerJsonOption;
 import com.balancedbytes.games.ffb.server.step.AbstractStep;
 import com.balancedbytes.games.ffb.server.step.SequenceGenerator;
 import com.balancedbytes.games.ffb.server.step.StepAction;
@@ -21,6 +23,8 @@ import com.balancedbytes.games.ffb.server.util.UtilPlayerMove;
 import com.balancedbytes.games.ffb.util.ArrayTool;
 import com.balancedbytes.games.ffb.util.StringTool;
 import com.balancedbytes.games.ffb.util.UtilPlayer;
+import com.eclipsesource.json.JsonObject;
+import com.eclipsesource.json.JsonValue;
 
 /**
  * Last step in move sequence.
@@ -236,6 +240,31 @@ public class StepEndMoving extends AbstractStep {
   	fEndPlayerAction = pByteArray.getBoolean();
   	fEndTurn = pByteArray.getBoolean();
   	return byteArraySerializationVersion;
+  }
+  
+  // JSON serialization
+  
+  public JsonObject toJsonValue() {
+    JsonObject jsonObject = toJsonValueTemp();
+    IServerJsonOption.END_TURN.addTo(jsonObject, fEndTurn);
+    IServerJsonOption.END_PLAYER_ACTION.addTo(jsonObject, fEndPlayerAction);
+    IServerJsonOption.FEEDING_ALLOWED.addTo(jsonObject, fFeedingAllowed);
+    IServerJsonOption.MOVE_STACK.addTo(jsonObject, fMoveStack);
+    IServerJsonOption.DISPATCH_PLAYER_ACTION.addTo(jsonObject, fDispatchPlayerAction);
+    IServerJsonOption.BLOCK_DEFENDER_ID.addTo(jsonObject, fBlockDefenderId);
+    return jsonObject;
+  }
+  
+  public StepEndMoving initFrom(JsonValue pJsonValue) {
+    initFromTemp(pJsonValue);
+    JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
+    fEndTurn = IServerJsonOption.END_TURN.getFrom(jsonObject);
+    fEndPlayerAction = IServerJsonOption.END_PLAYER_ACTION.getFrom(jsonObject);
+    fFeedingAllowed = IServerJsonOption.FEEDING_ALLOWED.getFrom(jsonObject);
+    fMoveStack = IServerJsonOption.MOVE_STACK.getFrom(jsonObject);
+    fDispatchPlayerAction = (PlayerAction) IServerJsonOption.DISPATCH_PLAYER_ACTION.getFrom(jsonObject);
+    fBlockDefenderId = IServerJsonOption.BLOCK_DEFENDER_ID.getFrom(jsonObject);
+    return this;
   }
 
 }

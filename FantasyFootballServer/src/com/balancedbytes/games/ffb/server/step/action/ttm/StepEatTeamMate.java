@@ -6,10 +6,12 @@ import com.balancedbytes.games.ffb.InjuryType;
 import com.balancedbytes.games.ffb.Sound;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
+import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.net.NetCommand;
 import com.balancedbytes.games.ffb.server.GameState;
+import com.balancedbytes.games.ffb.server.IServerJsonOption;
 import com.balancedbytes.games.ffb.server.InjuryResult;
 import com.balancedbytes.games.ffb.server.step.AbstractStep;
 import com.balancedbytes.games.ffb.server.step.StepAction;
@@ -19,6 +21,8 @@ import com.balancedbytes.games.ffb.server.step.StepParameter;
 import com.balancedbytes.games.ffb.server.step.StepParameterKey;
 import com.balancedbytes.games.ffb.server.step.action.common.ApothecaryMode;
 import com.balancedbytes.games.ffb.server.util.UtilInjury;
+import com.eclipsesource.json.JsonObject;
+import com.eclipsesource.json.JsonValue;
 
 /**
  * Step in ttm sequence to eat a team mate.
@@ -35,8 +39,8 @@ import com.balancedbytes.games.ffb.server.util.UtilInjury;
  */
 public final class StepEatTeamMate extends AbstractStep {
 
-	protected FieldCoordinate fThrownPlayerCoordinate;
-	protected String fThrownPlayerId;
+  private FieldCoordinate fThrownPlayerCoordinate;
+  private String fThrownPlayerId;
 
 	public StepEatTeamMate(GameState pGameState) {
 		super(pGameState);
@@ -112,6 +116,23 @@ public final class StepEatTeamMate extends AbstractStep {
   	fThrownPlayerCoordinate = pByteArray.getFieldCoordinate();
   	fThrownPlayerId = pByteArray.getString();
   	return byteArraySerializationVersion;
+  }
+  
+  // JSON serialization
+  
+  public JsonObject toJsonValue() {
+    JsonObject jsonObject = toJsonValueTemp();
+    IServerJsonOption.THROWN_PLAYER_COORDINATE.addTo(jsonObject, fThrownPlayerCoordinate);
+    IServerJsonOption.THROWN_PLAYER_ID.addTo(jsonObject, fThrownPlayerId);
+    return jsonObject;
+  }
+  
+  public StepEatTeamMate initFrom(JsonValue pJsonValue) {
+    initFromTemp(pJsonValue);
+    JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
+    fThrownPlayerCoordinate = IServerJsonOption.THROWN_PLAYER_COORDINATE.getFrom(jsonObject);
+    fThrownPlayerId = IServerJsonOption.THROWN_PLAYER_ID.getFrom(jsonObject);
+    return this;
   }
 
 }

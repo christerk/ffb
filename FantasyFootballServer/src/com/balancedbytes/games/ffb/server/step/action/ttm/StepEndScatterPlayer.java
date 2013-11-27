@@ -30,10 +30,10 @@ import com.balancedbytes.games.ffb.server.step.StepParameter;
  */
 public final class StepEndScatterPlayer extends AbstractStep {
 
-	protected String fThrownPlayerId;
-	protected boolean fThrownPlayerHasBall;
-	protected PlayerState fThrownPlayerState;
-	protected FieldCoordinate fThrownPlayerCoordinate;
+  private String fThrownPlayerId;
+  private boolean fThrownPlayerHasBall;
+  private PlayerState fThrownPlayerState;
+  private FieldCoordinate fThrownPlayerCoordinate;
 
 	public StepEndScatterPlayer(GameState pGameState) {
 		super(pGameState);

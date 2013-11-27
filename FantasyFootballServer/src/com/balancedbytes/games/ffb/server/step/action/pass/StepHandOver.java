@@ -4,17 +4,21 @@ import com.balancedbytes.games.ffb.CatchScatterThrowInMode;
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
+import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.net.NetCommand;
 import com.balancedbytes.games.ffb.report.ReportHandOver;
 import com.balancedbytes.games.ffb.server.GameState;
+import com.balancedbytes.games.ffb.server.IServerJsonOption;
 import com.balancedbytes.games.ffb.server.step.AbstractStepWithReRoll;
 import com.balancedbytes.games.ffb.server.step.StepAction;
 import com.balancedbytes.games.ffb.server.step.StepCommandStatus;
 import com.balancedbytes.games.ffb.server.step.StepId;
 import com.balancedbytes.games.ffb.server.step.StepParameter;
 import com.balancedbytes.games.ffb.server.step.StepParameterKey;
+import com.eclipsesource.json.JsonObject;
+import com.eclipsesource.json.JsonValue;
 
 /**
  * Step in the pass sequence to handle a hand over of the ball.
@@ -28,7 +32,7 @@ import com.balancedbytes.games.ffb.server.step.StepParameterKey;
  */
 public final class StepHandOver extends AbstractStepWithReRoll {
 	
-	protected String fCatcherId;
+  private String fCatcherId;
 	
 	public StepHandOver(GameState pGameState) {
 		super(pGameState);
@@ -97,5 +101,19 @@ public final class StepHandOver extends AbstractStepWithReRoll {
     return byteArraySerializationVersion;
   }
   
+  // JSON serialization
+  
+  public JsonObject toJsonValue() {
+    JsonObject jsonObject = toJsonValueTemp();
+    IServerJsonOption.CATCHER_ID.addTo(jsonObject, fCatcherId);
+    return jsonObject;
+  }
+  
+  public StepHandOver initFrom(JsonValue pJsonValue) {
+    initFromTemp(pJsonValue);
+    JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
+    fCatcherId = IServerJsonOption.CATCHER_ID.getFrom(jsonObject);
+    return this;
+  }
   
 }

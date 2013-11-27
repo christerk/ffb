@@ -6,11 +6,13 @@ import com.balancedbytes.games.ffb.Sound;
 import com.balancedbytes.games.ffb.TrackNumber;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
+import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.PlayerResult;
 import com.balancedbytes.games.ffb.net.NetCommand;
 import com.balancedbytes.games.ffb.server.GameState;
+import com.balancedbytes.games.ffb.server.IServerJsonOption;
 import com.balancedbytes.games.ffb.server.step.AbstractStep;
 import com.balancedbytes.games.ffb.server.step.StepAction;
 import com.balancedbytes.games.ffb.server.step.StepCommandStatus;
@@ -19,6 +21,8 @@ import com.balancedbytes.games.ffb.server.step.StepParameter;
 import com.balancedbytes.games.ffb.server.util.UtilPlayerMove;
 import com.balancedbytes.games.ffb.util.UtilBlock;
 import com.balancedbytes.games.ffb.util.UtilPlayer;
+import com.eclipsesource.json.JsonObject;
+import com.eclipsesource.json.JsonValue;
 
 /**
  * Step in move sequence to update player position (actually move).
@@ -128,5 +132,24 @@ public class StepMove extends AbstractStep {
 		fMoveStackSize = pByteArray.getByte();
 		return byteArraySerializationVersion;
 	}
+	
+  // JSON serialization
+  
+  public JsonObject toJsonValue() {
+    JsonObject jsonObject = toJsonValueTemp();
+    IServerJsonOption.COORDINATE_FROM.addTo(jsonObject, fCoordinateFrom);
+    IServerJsonOption.COORDINATE_TO.addTo(jsonObject, fCoordinateTo);
+    IServerJsonOption.MOVE_STACK_SIZE.addTo(jsonObject, fMoveStackSize);
+    return jsonObject;
+  }
+  
+  public StepMove initFrom(JsonValue pJsonValue) {
+    initFromTemp(pJsonValue);
+    JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
+    fCoordinateFrom = IServerJsonOption.COORDINATE_FROM.getFrom(jsonObject);
+    fCoordinateTo = IServerJsonOption.COORDINATE_TO.getFrom(jsonObject);
+    fMoveStackSize = IServerJsonOption.MOVE_STACK_SIZE.getFrom(jsonObject);
+    return this;
+  }
 
 }

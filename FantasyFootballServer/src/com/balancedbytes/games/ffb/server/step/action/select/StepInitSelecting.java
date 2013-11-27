@@ -6,6 +6,7 @@ import com.balancedbytes.games.ffb.PlayerActionFactory;
 import com.balancedbytes.games.ffb.Skill;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
+import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
@@ -22,6 +23,7 @@ import com.balancedbytes.games.ffb.net.commands.ClientCommandThrowTeamMate;
 import com.balancedbytes.games.ffb.server.GameCache;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.IServerConstant;
+import com.balancedbytes.games.ffb.server.IServerJsonOption;
 import com.balancedbytes.games.ffb.server.step.AbstractStep;
 import com.balancedbytes.games.ffb.server.step.StepAction;
 import com.balancedbytes.games.ffb.server.step.StepCommandStatus;
@@ -36,6 +38,8 @@ import com.balancedbytes.games.ffb.util.StringTool;
 import com.balancedbytes.games.ffb.util.UtilBlock;
 import com.balancedbytes.games.ffb.util.UtilCards;
 import com.balancedbytes.games.ffb.util.UtilPlayer;
+import com.eclipsesource.json.JsonObject;
+import com.eclipsesource.json.JsonValue;
 
 /**
  * Step to init the select sequence.
@@ -58,10 +62,10 @@ import com.balancedbytes.games.ffb.util.UtilPlayer;
  */
 public final class StepInitSelecting extends AbstractStep {
 	
-	protected String fGotoLabelOnEnd;
-	protected PlayerAction fDispatchPlayerAction;
-	protected boolean fEndTurn;
-	protected boolean fEndPlayerAction;
+  private String fGotoLabelOnEnd;
+  private PlayerAction fDispatchPlayerAction;
+  private boolean fEndTurn;
+  private boolean fEndPlayerAction;
 	
 	private transient boolean fUpdatePersistence;
 	
@@ -288,5 +292,26 @@ public final class StepInitSelecting extends AbstractStep {
   	fEndPlayerAction = pByteArray.getBoolean();
   	return byteArraySerializationVersion;
   }
-
+  
+  // JSON serialization
+  
+  public JsonObject toJsonValue() {
+    JsonObject jsonObject = toJsonValueTemp();
+    IServerJsonOption.GOTO_LABEL_ON_END.addTo(jsonObject, fGotoLabelOnEnd);
+    IServerJsonOption.DISPATCH_PLAYER_ACTION.addTo(jsonObject, fDispatchPlayerAction);
+    IServerJsonOption.END_TURN.addTo(jsonObject, fEndTurn);
+    IServerJsonOption.END_PLAYER_ACTION.addTo(jsonObject, fEndPlayerAction);
+    return jsonObject;
+  }
+  
+  public StepInitSelecting initFrom(JsonValue pJsonValue) {
+    initFromTemp(pJsonValue);
+    JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
+    fGotoLabelOnEnd = IServerJsonOption.GOTO_LABEL_ON_END.getFrom(jsonObject);
+    fDispatchPlayerAction = (PlayerAction) IServerJsonOption.DISPATCH_PLAYER_ACTION.getFrom(jsonObject);
+    fEndTurn = IServerJsonOption.END_TURN.getFrom(jsonObject);
+    fEndPlayerAction = IServerJsonOption.END_PLAYER_ACTION.getFrom(jsonObject);
+    return this;
+  }
+ 
 }

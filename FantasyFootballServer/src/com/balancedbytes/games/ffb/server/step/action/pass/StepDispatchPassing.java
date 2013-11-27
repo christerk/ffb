@@ -2,9 +2,11 @@ package com.balancedbytes.games.ffb.server.step.action.pass;
 
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
+import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.net.NetCommand;
 import com.balancedbytes.games.ffb.server.GameState;
+import com.balancedbytes.games.ffb.server.IServerJsonOption;
 import com.balancedbytes.games.ffb.server.step.AbstractStep;
 import com.balancedbytes.games.ffb.server.step.StepAction;
 import com.balancedbytes.games.ffb.server.step.StepCommandStatus;
@@ -14,6 +16,8 @@ import com.balancedbytes.games.ffb.server.step.StepParameter;
 import com.balancedbytes.games.ffb.server.step.StepParameterKey;
 import com.balancedbytes.games.ffb.server.step.StepParameterSet;
 import com.balancedbytes.games.ffb.util.StringTool;
+import com.eclipsesource.json.JsonObject;
+import com.eclipsesource.json.JsonValue;
 
 /**
  * Step in the pass sequence dispatching according to different types of passing.
@@ -28,10 +32,9 @@ import com.balancedbytes.games.ffb.util.StringTool;
  */
 public final class StepDispatchPassing extends AbstractStep {
 	
-	protected String fGotoLabelOnEnd;
-	protected String fGotoLabelOnHailMaryPass;
-	protected String fGotoLabelOnHandOver;
-
+  private String fGotoLabelOnEnd;
+	private String fGotoLabelOnHailMaryPass;
+	private String fGotoLabelOnHandOver;
 	private String fCatcherId;
 
 	public StepDispatchPassing(GameState pGameState) {
@@ -149,6 +152,28 @@ public final class StepDispatchPassing extends AbstractStep {
   	fGotoLabelOnHandOver = pByteArray.getString();
   	fCatcherId = pByteArray.getString();
   	return byteArraySerializationVersion;
+  }
+  
+  // JSON serialization
+  
+  public JsonObject toJsonValue() {
+    JsonObject jsonObject = toJsonValueTemp();
+    IServerJsonOption.GOTO_LABEL_ON_END.addTo(jsonObject, fGotoLabelOnEnd);
+    IServerJsonOption.GOTO_LABEL_ON_HAIL_MARY_PASS.addTo(jsonObject, fGotoLabelOnHailMaryPass);
+    IServerJsonOption.GOTO_LABEL_ON_HAND_OVER.addTo(jsonObject, fGotoLabelOnHandOver);
+    IServerJsonOption.CATCHER_ID.addTo(jsonObject, fCatcherId);
+    return jsonObject;
+  }
+  
+  public StepDispatchPassing initFrom(JsonValue pJsonValue) {
+    initFromTemp(pJsonValue);
+    JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
+    fGotoLabelOnEnd = IServerJsonOption.GOTO_LABEL_ON_END.getFrom(jsonObject);
+    fGotoLabelOnHailMaryPass = IServerJsonOption.GOTO_LABEL_ON_HAIL_MARY_PASS.getFrom(jsonObject);
+    fGotoLabelOnHandOver = IServerJsonOption.GOTO_LABEL_ON_HAND_OVER.getFrom(jsonObject);
+    IServerJsonOption.CATCHER_ID.addTo(jsonObject, fCatcherId);
+    fCatcherId = IServerJsonOption.CATCHER_ID.getFrom(jsonObject);
+    return this;
   }
   
 }

@@ -36,8 +36,8 @@ import com.balancedbytes.games.ffb.util.UtilCards;
  */
 public final class StepInitCard extends AbstractStep {
 	
-	protected Card fCard;
-	protected boolean fHomeTeam;
+  private Card fCard;
+  private boolean fHomeTeam;
 	
 	private transient String fPlayerId;
 	private transient boolean fEndCardPlaying;

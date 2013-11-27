@@ -13,6 +13,7 @@ import com.balancedbytes.games.ffb.TurnModeFactory;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
 import com.balancedbytes.games.ffb.dialog.DialogInterceptionParameter;
+import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.net.NetCommand;
@@ -21,6 +22,7 @@ import com.balancedbytes.games.ffb.report.ReportInterceptionRoll;
 import com.balancedbytes.games.ffb.server.ActionStatus;
 import com.balancedbytes.games.ffb.server.DiceInterpreter;
 import com.balancedbytes.games.ffb.server.GameState;
+import com.balancedbytes.games.ffb.server.IServerJsonOption;
 import com.balancedbytes.games.ffb.server.step.AbstractStepWithReRoll;
 import com.balancedbytes.games.ffb.server.step.StepAction;
 import com.balancedbytes.games.ffb.server.step.StepCommandStatus;
@@ -34,6 +36,8 @@ import com.balancedbytes.games.ffb.server.util.UtilReRoll;
 import com.balancedbytes.games.ffb.util.UtilCards;
 import com.balancedbytes.games.ffb.util.UtilPassing;
 import com.balancedbytes.games.ffb.util.UtilRangeRuler;
+import com.eclipsesource.json.JsonObject;
+import com.eclipsesource.json.JsonValue;
 
 /**
  * Step in the pass sequence to handle interceptions.
@@ -46,10 +50,10 @@ import com.balancedbytes.games.ffb.util.UtilRangeRuler;
  */
 public final class StepIntercept extends AbstractStepWithReRoll {
 	
-	protected String fGotoLabelOnFailure;
-	protected String fInterceptorId;
-	protected boolean fInterceptorChosen;
-	protected TurnMode fOldTurnMode;
+  private String fGotoLabelOnFailure;
+  private String fInterceptorId;
+  private boolean fInterceptorChosen;
+  private TurnMode fOldTurnMode;
 	
 	public StepIntercept(GameState pGameState) {
 		super(pGameState);
@@ -213,6 +217,27 @@ public final class StepIntercept extends AbstractStepWithReRoll {
   	fInterceptorChosen = pByteArray.getBoolean();
   	fOldTurnMode = new TurnModeFactory().forId(pByteArray.getByte());
   	return byteArraySerializationVersion;
+  }
+  
+  // JSON serialization
+  
+  public JsonObject toJsonValue() {
+    JsonObject jsonObject = toJsonValueTemp();
+    IServerJsonOption.GOTO_LABEL_ON_FAILURE.addTo(jsonObject, fGotoLabelOnFailure);
+    IServerJsonOption.INTERCEPTOR_ID.addTo(jsonObject, fInterceptorId);
+    IServerJsonOption.INTERCEPTOR_CHOSEN.addTo(jsonObject, fInterceptorChosen);
+    IServerJsonOption.OLD_TURN_MODE.addTo(jsonObject, fOldTurnMode);
+    return jsonObject;
+  }
+  
+  public StepIntercept initFrom(JsonValue pJsonValue) {
+    initFromTemp(pJsonValue);
+    JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
+    fGotoLabelOnFailure = IServerJsonOption.GOTO_LABEL_ON_FAILURE.getFrom(jsonObject);
+    fInterceptorId = IServerJsonOption.INTERCEPTOR_ID.getFrom(jsonObject);
+    fInterceptorChosen = IServerJsonOption.INTERCEPTOR_CHOSEN.getFrom(jsonObject);
+    fOldTurnMode = (TurnMode) IServerJsonOption.OLD_TURN_MODE.getFrom(jsonObject);
+    return this;
   }
   
 }

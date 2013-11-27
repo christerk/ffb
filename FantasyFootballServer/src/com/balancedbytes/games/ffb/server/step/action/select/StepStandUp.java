@@ -35,7 +35,7 @@ import com.eclipsesource.json.JsonValue;
  */
 public final class StepStandUp extends AbstractStepWithReRoll {
 	
-	protected String fGotoLabelOnFailure;
+  private String fGotoLabelOnFailure;
 	
 	public StepStandUp(GameState pGameState) {
 		super(pGameState);

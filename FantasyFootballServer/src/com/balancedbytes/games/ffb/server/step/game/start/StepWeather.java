@@ -9,6 +9,8 @@ import com.balancedbytes.games.ffb.server.step.AbstractStep;
 import com.balancedbytes.games.ffb.server.step.StepAction;
 import com.balancedbytes.games.ffb.server.step.StepCommandStatus;
 import com.balancedbytes.games.ffb.server.step.StepId;
+import com.eclipsesource.json.JsonObject;
+import com.eclipsesource.json.JsonValue;
 
 /**
  * Step in start game sequence to roll weather.
@@ -54,6 +56,17 @@ public final class StepWeather extends AbstractStep {
   
   public int getByteArraySerializationVersion() {
   	return 1;
+  }
+  
+  // JSON serialization
+  
+  public JsonObject toJsonValue() {
+    return toJsonValueTemp();
+  }
+  
+  public StepWeather initFrom(JsonValue pJsonValue) {
+    initFromTemp(pJsonValue);
+    return this;
   }
   
 }

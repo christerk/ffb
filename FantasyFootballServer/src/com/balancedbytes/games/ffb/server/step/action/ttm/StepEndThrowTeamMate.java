@@ -31,12 +31,12 @@ import com.balancedbytes.games.ffb.server.util.UtilDialog;
  */
 public final class StepEndThrowTeamMate extends AbstractStep {
 
-	protected boolean fEndTurn;
-	protected boolean fEndPlayerAction;
-	protected FieldCoordinate fThrownPlayerCoordinate;
-	protected boolean fThrownPlayerHasBall;
-	protected String fThrownPlayerId;
-	protected PlayerState fThrownPlayerState;
+  private boolean fEndTurn;
+  private boolean fEndPlayerAction;
+  private FieldCoordinate fThrownPlayerCoordinate;
+	private boolean fThrownPlayerHasBall;
+	private String fThrownPlayerId;
+	private PlayerState fThrownPlayerState;
 
 	public StepEndThrowTeamMate(GameState pGameState) {
 		super(pGameState);

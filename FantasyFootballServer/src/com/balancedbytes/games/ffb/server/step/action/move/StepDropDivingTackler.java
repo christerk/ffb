@@ -3,9 +3,11 @@ package com.balancedbytes.games.ffb.server.step.action.move;
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
+import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.net.NetCommand;
 import com.balancedbytes.games.ffb.server.GameState;
+import com.balancedbytes.games.ffb.server.IServerJsonOption;
 import com.balancedbytes.games.ffb.server.step.AbstractStep;
 import com.balancedbytes.games.ffb.server.step.StepAction;
 import com.balancedbytes.games.ffb.server.step.StepCommandStatus;
@@ -14,6 +16,8 @@ import com.balancedbytes.games.ffb.server.step.StepParameter;
 import com.balancedbytes.games.ffb.server.util.UtilInjury;
 import com.balancedbytes.games.ffb.server.util.UtilPlayerMove;
 import com.balancedbytes.games.ffb.util.StringTool;
+import com.eclipsesource.json.JsonObject;
+import com.eclipsesource.json.JsonValue;
 
 /**
  * Step in move sequence to drop a player using the DIVING_TACKLE skill.
@@ -100,5 +104,22 @@ public class StepDropDivingTackler extends AbstractStep {
 		fCoordinateFrom = pByteArray.getFieldCoordinate();
 		return byteArraySerializationVersion;
 	}
+	
+  // JSON serialization
+  
+  public JsonObject toJsonValue() {
+    JsonObject jsonObject = toJsonValueTemp();
+    IServerJsonOption.USING_DIVING_TACKLE.addTo(jsonObject, fUsingDivingTackle);
+    IServerJsonOption.COORDINATE_FROM.addTo(jsonObject, fCoordinateFrom);
+    return jsonObject;
+  }
+  
+  public StepDropDivingTackler initFrom(JsonValue pJsonValue) {
+    initFromTemp(pJsonValue);
+    JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
+    fUsingDivingTackle = IServerJsonOption.USING_DIVING_TACKLE.getFrom(jsonObject);
+    fCoordinateFrom = IServerJsonOption.COORDINATE_FROM.getFrom(jsonObject);
+    return this;
+  }
 
 }

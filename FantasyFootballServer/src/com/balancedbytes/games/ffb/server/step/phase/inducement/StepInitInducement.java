@@ -44,10 +44,10 @@ import com.balancedbytes.games.ffb.util.UtilCards;
  */
 public final class StepInitInducement extends AbstractStep {
 	
-	protected InducementPhase fInducementPhase;
-	protected boolean fHomeTeam;
-	protected InducementType fInducement;
-	protected Card fCard;
+  private InducementPhase fInducementPhase;
+  private boolean fHomeTeam;
+  private InducementType fInducement;
+  private Card fCard;
 	
 	private transient boolean fEndInducementPhase;
 	private transient boolean fTouchdownOrEndOfHalf;
