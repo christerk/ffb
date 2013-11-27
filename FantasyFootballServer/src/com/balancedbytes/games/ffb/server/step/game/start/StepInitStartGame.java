@@ -6,11 +6,13 @@ import com.balancedbytes.games.ffb.GameOptionValue;
 import com.balancedbytes.games.ffb.GameStatus;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
+import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.net.NetCommand;
 import com.balancedbytes.games.ffb.server.FantasyFootballServer;
 import com.balancedbytes.games.ffb.server.GameCache;
 import com.balancedbytes.games.ffb.server.GameState;
+import com.balancedbytes.games.ffb.server.IServerJsonOption;
 import com.balancedbytes.games.ffb.server.IServerLogLevel;
 import com.balancedbytes.games.ffb.server.ServerMode;
 import com.balancedbytes.games.ffb.server.fumbbl.FumbblRequestCreateGamestate;
@@ -19,6 +21,8 @@ import com.balancedbytes.games.ffb.server.step.StepAction;
 import com.balancedbytes.games.ffb.server.step.StepCommandStatus;
 import com.balancedbytes.games.ffb.server.step.StepId;
 import com.balancedbytes.games.ffb.util.StringTool;
+import com.eclipsesource.json.JsonObject;
+import com.eclipsesource.json.JsonValue;
 
 /**
  * Step to init the start game sequence.
@@ -134,6 +138,21 @@ public final class StepInitStartGame extends AbstractStep {
   	int byteArraySerializationVersion = super.initFrom(pByteArray);
   	fFumbblGameCreated = pByteArray.getBoolean();
   	return byteArraySerializationVersion;
+  }
+  
+  // JSON serialization
+  
+  public JsonObject toJsonValue() {
+    JsonObject jsonObject = toJsonValueTemp();
+    IServerJsonOption.FUMBBL_GAME_CREATED.addTo(jsonObject, fFumbblGameCreated);
+    return jsonObject;
+  }
+  
+  public StepInitStartGame initFrom(JsonValue pJsonValue) {
+    initFromTemp(pJsonValue);
+    JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
+    fFumbblGameCreated = IServerJsonOption.FUMBBL_GAME_CREATED.getFrom(jsonObject);
+    return this;
   }
 
 }

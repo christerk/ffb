@@ -50,6 +50,7 @@ public interface IServerJsonOption extends IJsonOption {
                JsonBooleanOption FOLLOWUP_CHOICE = new JsonBooleanOption("followupChoice");
                 JsonStringOption FOUL_DEFENDER_ID = new JsonStringOption("foulDefenderId");
                JsonBooleanOption FOULER_HAS_BALL = new JsonBooleanOption("foulerHasBall");
+               JsonBooleanOption FUMBBL_GAME_CREATED = new JsonBooleanOption("fumbblGameCreated");
                 JsonObjectOption GAME_LOG = new JsonObjectOption("gameLog");
           JsonEnumWithNameOption GAME_STATUS = new JsonEnumWithNameOption("gameStatus", new GameStatusFactory());
                 JsonStringOption GAZE_VICTIM_ID = new JsonStringOption("gazeVictimId");
@@ -86,7 +87,11 @@ public interface IServerJsonOption extends IJsonOption {
                JsonBooleanOption PASS_ACCURATE = new JsonBooleanOption("passAccurate");
                JsonBooleanOption PASS_FUMBLE = new JsonBooleanOption("passFumble");
                JsonBooleanOption PASS_SKILL_USED = new JsonBooleanOption("passSkillUsed");
+               JsonBooleanOption PETTY_CASH_SELECTED_AWAY = new JsonBooleanOption("pettyCashSelectedAway");
+               JsonBooleanOption PETTY_CASH_SELECTED_HOME = new JsonBooleanOption("pettyCashSelectedHome");
                JsonBooleanOption REMOVE_USED_SECRET_WEAPONS = new JsonBooleanOption("removeUsedSecretWeapons");
+               JsonBooleanOption REPORTED_AWAY = new JsonBooleanOption("reportedAway");
+               JsonBooleanOption REPORTED_HOME = new JsonBooleanOption("reportedHome");
                JsonBooleanOption ROLL_FOR_EFFECT = new JsonBooleanOption("rollForEffect");
                 JsonObjectOption SCATTER_BOUNDS = new JsonObjectOption("scatterBounds");
                    JsonIntOption SCATTER_DISTANCE = new JsonIntOption("scatterDistance");
@@ -121,5 +126,5 @@ public interface IServerJsonOption extends IJsonOption {
                JsonBooleanOption USING_TENTACLES = new JsonBooleanOption("usingTentacles");
                JsonBooleanOption USING_WRESTLE_ATTACKER = new JsonBooleanOption("usingWrestleAttacker");
                JsonBooleanOption USING_WRESTLE_DEFENDER = new JsonBooleanOption("usingWrestleDefender");
-
+               
 }

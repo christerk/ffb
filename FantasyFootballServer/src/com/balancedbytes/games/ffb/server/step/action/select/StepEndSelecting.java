@@ -6,9 +6,11 @@ import com.balancedbytes.games.ffb.PlayerActionFactory;
 import com.balancedbytes.games.ffb.Skill;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
+import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.server.GameState;
+import com.balancedbytes.games.ffb.server.IServerJsonOption;
 import com.balancedbytes.games.ffb.server.step.AbstractStep;
 import com.balancedbytes.games.ffb.server.step.SequenceGenerator;
 import com.balancedbytes.games.ffb.server.step.StepAction;
@@ -17,6 +19,8 @@ import com.balancedbytes.games.ffb.server.step.StepParameter;
 import com.balancedbytes.games.ffb.server.step.UtilSteps;
 import com.balancedbytes.games.ffb.server.util.UtilDialog;
 import com.balancedbytes.games.ffb.util.ArrayTool;
+import com.eclipsesource.json.JsonObject;
+import com.eclipsesource.json.JsonValue;
 
 /**
  * Last step in select sequence.
@@ -274,6 +278,41 @@ public final class StepEndSelecting extends AbstractStep {
   	}
   	fThrownPlayerId = pByteArray.getString();
   	return byteArraySerializationVersion;
+  }
+  
+  // JSON serialization
+  
+  public JsonObject toJsonValue() {
+    JsonObject jsonObject = toJsonValueTemp();
+    IServerJsonOption.END_TURN.addTo(jsonObject, fEndTurn);
+    IServerJsonOption.END_PLAYER_ACTION.addTo(jsonObject, fEndPlayerAction);
+    IServerJsonOption.DISPATCH_PLAYER_ACTION.addTo(jsonObject, fDispatchPlayerAction);
+    IServerJsonOption.MOVE_STACK.addTo(jsonObject, fMoveStack);
+    IServerJsonOption.GAZE_VICTIM_ID.addTo(jsonObject, fGazeVictimId);
+    IServerJsonOption.BLOCK_DEFENDER_ID.addTo(jsonObject, fBlockDefenderId);
+    IServerJsonOption.USING_STAB.addTo(jsonObject, fUsingStab);
+    IServerJsonOption.FOUL_DEFENDER_ID.addTo(jsonObject, fFoulDefenderId);
+    IServerJsonOption.TARGET_COORDINATE.addTo(jsonObject, fTargetCoordinate);
+    IServerJsonOption.HAIL_MARY_PASS.addTo(jsonObject, fHailMaryPass);
+    IServerJsonOption.THROWN_PLAYER_ID.addTo(jsonObject, fThrownPlayerId);
+    return jsonObject;
+  }
+  
+  public StepEndSelecting initFrom(JsonValue pJsonValue) {
+    initFromTemp(pJsonValue);
+    JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
+    fEndTurn = IServerJsonOption.END_TURN.getFrom(jsonObject);
+    fEndPlayerAction = IServerJsonOption.END_PLAYER_ACTION.getFrom(jsonObject);
+    fDispatchPlayerAction = (PlayerAction) IServerJsonOption.DISPATCH_PLAYER_ACTION.getFrom(jsonObject);
+    fMoveStack = IServerJsonOption.MOVE_STACK.getFrom(jsonObject);
+    fGazeVictimId = IServerJsonOption.GAZE_VICTIM_ID.getFrom(jsonObject);
+    fBlockDefenderId = IServerJsonOption.BLOCK_DEFENDER_ID.getFrom(jsonObject);
+    fUsingStab = IServerJsonOption.USING_STAB.getFrom(jsonObject);
+    fFoulDefenderId = IServerJsonOption.FOUL_DEFENDER_ID.getFrom(jsonObject);
+    fTargetCoordinate = IServerJsonOption.TARGET_COORDINATE.getFrom(jsonObject);
+    fHailMaryPass = IServerJsonOption.HAIL_MARY_PASS.getFrom(jsonObject);
+    fThrownPlayerId = IServerJsonOption.THROWN_PLAYER_ID.getFrom(jsonObject);
+    return this;
   }
   
 }

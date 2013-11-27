@@ -4,18 +4,22 @@ import com.balancedbytes.games.ffb.GameOption;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
 import com.balancedbytes.games.ffb.dialog.DialogPettyCashParameter;
+import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.GameResult;
 import com.balancedbytes.games.ffb.net.NetCommand;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandPettyCash;
 import com.balancedbytes.games.ffb.report.ReportPettyCash;
 import com.balancedbytes.games.ffb.server.GameState;
+import com.balancedbytes.games.ffb.server.IServerJsonOption;
 import com.balancedbytes.games.ffb.server.step.AbstractStep;
 import com.balancedbytes.games.ffb.server.step.StepAction;
 import com.balancedbytes.games.ffb.server.step.StepCommandStatus;
 import com.balancedbytes.games.ffb.server.step.StepId;
 import com.balancedbytes.games.ffb.server.step.UtilSteps;
 import com.balancedbytes.games.ffb.server.util.UtilDialog;
+import com.eclipsesource.json.JsonObject;
+import com.eclipsesource.json.JsonValue;
 
 /**
  * Step in start game sequence to handle petty cash.
@@ -134,4 +138,25 @@ public final class StepPettyCash extends AbstractStep {
   	return byteArraySerializationVersion;
   }
   
+  // JSON serialization
+  
+  public JsonObject toJsonValue() {
+    JsonObject jsonObject = toJsonValueTemp();
+    IServerJsonOption.PETTY_CASH_SELECTED_HOME.addTo(jsonObject, fPettyCashSelectedHome);
+    IServerJsonOption.PETTY_CASH_SELECTED_AWAY.addTo(jsonObject, fPettyCashSelectedAway);
+    IServerJsonOption.REPORTED_HOME.addTo(jsonObject, fReportedHome);
+    IServerJsonOption.REPORTED_AWAY.addTo(jsonObject, fReportedAway);
+    return jsonObject;
+  }
+  
+  public StepPettyCash initFrom(JsonValue pJsonValue) {
+    initFromTemp(pJsonValue);
+    JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
+    fPettyCashSelectedHome = IServerJsonOption.PETTY_CASH_SELECTED_HOME.getFrom(jsonObject);
+    fPettyCashSelectedAway = IServerJsonOption.PETTY_CASH_SELECTED_AWAY.getFrom(jsonObject);
+    fReportedHome = IServerJsonOption.REPORTED_HOME.getFrom(jsonObject);
+    fReportedAway = IServerJsonOption.REPORTED_AWAY.getFrom(jsonObject);
+    return this;
+  }
+
 }
