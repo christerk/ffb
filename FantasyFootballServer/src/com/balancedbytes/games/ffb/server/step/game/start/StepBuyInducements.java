@@ -15,6 +15,7 @@ import com.balancedbytes.games.ffb.Skill;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
 import com.balancedbytes.games.ffb.dialog.DialogBuyInducementsParameter;
+import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.GameResult;
 import com.balancedbytes.games.ffb.model.InducementSet;
@@ -29,6 +30,7 @@ import com.balancedbytes.games.ffb.report.ReportDoubleHiredStarPlayer;
 import com.balancedbytes.games.ffb.report.ReportInducementsBought;
 import com.balancedbytes.games.ffb.server.FantasyFootballServer;
 import com.balancedbytes.games.ffb.server.GameState;
+import com.balancedbytes.games.ffb.server.IServerJsonOption;
 import com.balancedbytes.games.ffb.server.db.DbTransaction;
 import com.balancedbytes.games.ffb.server.step.AbstractStep;
 import com.balancedbytes.games.ffb.server.step.SequenceGenerator;
@@ -40,6 +42,8 @@ import com.balancedbytes.games.ffb.server.step.UtilSteps;
 import com.balancedbytes.games.ffb.server.util.UtilDialog;
 import com.balancedbytes.games.ffb.util.ArrayTool;
 import com.balancedbytes.games.ffb.util.UtilBox;
+import com.eclipsesource.json.JsonObject;
+import com.eclipsesource.json.JsonValue;
 
 /**
  * Step in start game sequence to buy inducements.
@@ -353,6 +357,35 @@ public final class StepBuyInducements extends AbstractStep {
   	fReportedHome = pByteArray.getBoolean();
   	fReportedAway = pByteArray.getBoolean();
   	return byteArraySerializationVersion;
+  }
+  
+  // JSON serialization
+  
+  public JsonObject toJsonValue() {
+    JsonObject jsonObject = toJsonValueTemp();
+    IServerJsonOption.INDUCEMENT_GOLD_AWAY.addTo(jsonObject, fInducementGoldAway);
+    IServerJsonOption.INDUCEMENT_GOLD_HOME.addTo(jsonObject, fInducementGoldHome);
+    IServerJsonOption.INDUCEMENTS_SELECTED_AWAY.addTo(jsonObject, fInducementsSelectedAway);
+    IServerJsonOption.INDUCEMENTS_SELECTED_HOME.addTo(jsonObject, fInducementsSelectedHome);
+    IServerJsonOption.GOLD_USED_AWAY.addTo(jsonObject, fGoldUsedAway);
+    IServerJsonOption.GOLD_USED_HOME.addTo(jsonObject, fGoldUsedHome);
+    IServerJsonOption.REPORTED_AWAY.addTo(jsonObject, fReportedAway);
+    IServerJsonOption.REPORTED_HOME.addTo(jsonObject, fReportedHome);
+    return jsonObject;
+  }
+  
+  public StepBuyInducements initFrom(JsonValue pJsonValue) {
+    initFromTemp(pJsonValue);
+    JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
+    fInducementGoldAway = IServerJsonOption.INDUCEMENT_GOLD_AWAY.getFrom(jsonObject);
+    fInducementGoldHome = IServerJsonOption.INDUCEMENT_GOLD_HOME.getFrom(jsonObject);
+    fInducementsSelectedAway = IServerJsonOption.INDUCEMENTS_SELECTED_AWAY.getFrom(jsonObject);
+    fInducementsSelectedHome = IServerJsonOption.INDUCEMENTS_SELECTED_HOME.getFrom(jsonObject);
+    fGoldUsedAway = IServerJsonOption.GOLD_USED_AWAY.getFrom(jsonObject);
+    fGoldUsedHome = IServerJsonOption.GOLD_USED_HOME.getFrom(jsonObject);
+    fReportedAway = IServerJsonOption.REPORTED_AWAY.getFrom(jsonObject);
+    fReportedHome = IServerJsonOption.REPORTED_HOME.getFrom(jsonObject);
+    return this;
   }
   
 }

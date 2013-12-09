@@ -56,6 +56,8 @@ public interface IServerJsonOption extends IJsonOption {
                 JsonObjectOption GAME_LOG = new JsonObjectOption("gameLog");
           JsonEnumWithNameOption GAME_STATUS = new JsonEnumWithNameOption("gameStatus", new GameStatusFactory());
                 JsonStringOption GAZE_VICTIM_ID = new JsonStringOption("gazeVictimId");
+                   JsonIntOption GOLD_USED_AWAY = new JsonIntOption("goldUsedAway");
+                   JsonIntOption GOLD_USED_HOME = new JsonIntOption("goldUsedHome");
                 JsonStringOption GOTO_LABEL = new JsonStringOption("gotoLabel");
                 JsonStringOption GOTO_LABEL_ON_BLITZ = new JsonStringOption("gotoLabelOnBlitz");
                 JsonStringOption GOTO_LABEL_ON_DODGE = new JsonStringOption("gotoLabelOnDodge");
@@ -72,6 +74,8 @@ public interface IServerJsonOption extends IJsonOption {
                JsonBooleanOption HOLDING_SAFE_THROW = new JsonBooleanOption("holdingSafeThrow");
                    JsonIntOption INDUCEMENT_GOLD_AWAY = new JsonIntOption("inducementGoldAway");
                    JsonIntOption INDUCEMENT_GOLD_HOME = new JsonIntOption("inducementGoldHome");
+               JsonBooleanOption INDUCEMENTS_SELECTED_AWAY = new JsonBooleanOption("inducementsSelectedAway");
+               JsonBooleanOption INDUCEMENTS_SELECTED_HOME = new JsonBooleanOption("inducementsSelectedHome");
                 JsonObjectOption INJURY_RESULT = new JsonObjectOption("injuryResult");
                 JsonObjectOption INJURY_RESULT_DEFENDER = new JsonObjectOption("injuryResultDefender");
                JsonBooleanOption INTERCEPTOR_CHOSEN = new JsonBooleanOption("interceptorChosen");
@@ -108,8 +112,10 @@ public interface IServerJsonOption extends IJsonOption {
                  JsonArrayOption STEPS = new JsonArrayOption("steps");
                JsonBooleanOption SYNCHRONIZE = new JsonBooleanOption("synchronize");
        JsonFieldCoordinateOption THROW_IN_COORDINATE = new JsonFieldCoordinateOption("throwInCoordinate");
+               JsonBooleanOption THROW_SCATTER = new JsonBooleanOption("throwScatter");
        JsonFieldCoordinateOption THROWN_PLAYER_COORDINATE = new JsonFieldCoordinateOption("thrownPlayerCoordinate");
                JsonBooleanOption THROWN_PLAYER_HAS_BALL = new JsonBooleanOption("thrownPlayerHasBall");
+                JsonStringOption THROWN_PLAYER_ID = new JsonStringOption("thrownPlayerId");
            JsonPlayerStateOption THROWN_PLAYER_STATE = new JsonPlayerStateOption("thrownPlayerState");
                JsonBooleanOption TOUCHBACK = new JsonBooleanOption("touchback");
        JsonFieldCoordinateOption TOUCHBACK_COORDINATE = new JsonFieldCoordinateOption("touchbackCoordinate");
