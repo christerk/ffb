@@ -33,6 +33,8 @@ public interface IServerJsonOption extends IJsonOption {
                JsonBooleanOption BRIBES_CHOICE_AWAY = new JsonBooleanOption("bribesChoiceAway");
                JsonBooleanOption BRIBES_CHOICE_HOME = new JsonBooleanOption("bribesChoiceHome");
                JsonBooleanOption BRIBE_SUCCESSFUL = new JsonBooleanOption("bribeSuccessful");
+               JsonBooleanOption CARDS_SELECTED_AWAY = new JsonBooleanOption("cardsSelectedAway");
+               JsonBooleanOption CARDS_SELECTED_HOME = new JsonBooleanOption("cardsSelectedHome");
           JsonEnumWithNameOption CATCH_SCATTER_THROW_IN_MODE = new JsonEnumWithNameOption("catchScatterThrowInMode", new CatchScatterThrowInModeFactory());
        JsonFieldCoordinateOption COORDINATE_TO = new JsonFieldCoordinateOption("coordinateTo");
                 JsonObjectOption CURRENT_STEP = new JsonObjectOption("currentStep");
@@ -68,6 +70,8 @@ public interface IServerJsonOption extends IJsonOption {
                 JsonStringOption GOTO_LABEL_ON_SUCCESS = new JsonStringOption("gotoLabelOnSuccess");
                JsonBooleanOption HANDLE_SECRET_WEAPONS = new JsonBooleanOption("handleSecretWeapons");
                JsonBooleanOption HOLDING_SAFE_THROW = new JsonBooleanOption("holdingSafeThrow");
+                   JsonIntOption INDUCEMENT_GOLD_AWAY = new JsonIntOption("inducementGoldAway");
+                   JsonIntOption INDUCEMENT_GOLD_HOME = new JsonIntOption("inducementGoldHome");
                 JsonObjectOption INJURY_RESULT = new JsonObjectOption("injuryResult");
                 JsonObjectOption INJURY_RESULT_DEFENDER = new JsonObjectOption("injuryResultDefender");
                JsonBooleanOption INTERCEPTOR_CHOSEN = new JsonBooleanOption("interceptorChosen");

@@ -9,6 +9,7 @@ import com.balancedbytes.games.ffb.GameOption;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
 import com.balancedbytes.games.ffb.dialog.DialogBuyCardsParameter;
+import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.GameResult;
 import com.balancedbytes.games.ffb.net.NetCommand;
@@ -16,6 +17,7 @@ import com.balancedbytes.games.ffb.net.commands.ClientCommandBuyCard;
 import com.balancedbytes.games.ffb.report.ReportCardsBought;
 import com.balancedbytes.games.ffb.server.CardDeck;
 import com.balancedbytes.games.ffb.server.GameState;
+import com.balancedbytes.games.ffb.server.IServerJsonOption;
 import com.balancedbytes.games.ffb.server.step.AbstractStep;
 import com.balancedbytes.games.ffb.server.step.StepAction;
 import com.balancedbytes.games.ffb.server.step.StepCommandStatus;
@@ -24,6 +26,8 @@ import com.balancedbytes.games.ffb.server.step.StepParameter;
 import com.balancedbytes.games.ffb.server.step.StepParameterKey;
 import com.balancedbytes.games.ffb.server.step.UtilSteps;
 import com.balancedbytes.games.ffb.server.util.UtilDialog;
+import com.eclipsesource.json.JsonObject;
+import com.eclipsesource.json.JsonValue;
 
 /**
  * Step in start game sequence to buy cards.
@@ -236,6 +240,31 @@ public final class StepBuyCards extends AbstractStep {
     fReportedHome = pByteArray.getBoolean();
     fReportedAway = pByteArray.getBoolean();
     return byteArraySerializationVersion;
+  }
+  
+  // JSON serialization
+  
+  public JsonObject toJsonValue() {
+    JsonObject jsonObject = toJsonValueTemp();
+    IServerJsonOption.INDUCEMENT_GOLD_AWAY.addTo(jsonObject, fInducementGoldAway);
+    IServerJsonOption.INDUCEMENT_GOLD_HOME.addTo(jsonObject, fInducementGoldHome);
+    IServerJsonOption.CARDS_SELECTED_AWAY.addTo(jsonObject, fCardsSelectedAway);
+    IServerJsonOption.CARDS_SELECTED_HOME.addTo(jsonObject, fCardsSelectedHome);
+    IServerJsonOption.REPORTED_AWAY.addTo(jsonObject, fReportedAway);
+    IServerJsonOption.REPORTED_HOME.addTo(jsonObject, fReportedHome);
+    return jsonObject;
+  }
+  
+  public StepBuyCards initFrom(JsonValue pJsonValue) {
+    initFromTemp(pJsonValue);
+    JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
+    fInducementGoldAway = IServerJsonOption.INDUCEMENT_GOLD_AWAY.getFrom(jsonObject);
+    fInducementGoldHome = IServerJsonOption.INDUCEMENT_GOLD_HOME.getFrom(jsonObject);
+    fCardsSelectedAway = IServerJsonOption.CARDS_SELECTED_AWAY.getFrom(jsonObject);
+    fCardsSelectedHome = IServerJsonOption.CARDS_SELECTED_HOME.getFrom(jsonObject);
+    fReportedAway = IServerJsonOption.REPORTED_AWAY.getFrom(jsonObject);
+    fReportedHome = IServerJsonOption.REPORTED_HOME.getFrom(jsonObject);
+    return this;
   }
 
 }
