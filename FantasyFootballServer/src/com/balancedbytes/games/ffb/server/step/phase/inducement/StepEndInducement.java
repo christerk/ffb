@@ -1,9 +1,12 @@
 package com.balancedbytes.games.ffb.server.step.phase.inducement;
 
 import com.balancedbytes.games.ffb.InducementPhase;
+import com.balancedbytes.games.ffb.InducementPhaseFactory;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
+import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.server.GameState;
+import com.balancedbytes.games.ffb.server.IServerJsonOption;
 import com.balancedbytes.games.ffb.server.step.AbstractStep;
 import com.balancedbytes.games.ffb.server.step.SequenceGenerator;
 import com.balancedbytes.games.ffb.server.step.StepAction;
@@ -11,6 +14,8 @@ import com.balancedbytes.games.ffb.server.step.StepId;
 import com.balancedbytes.games.ffb.server.step.StepParameter;
 import com.balancedbytes.games.ffb.server.step.UtilSteps;
 import com.balancedbytes.games.ffb.server.util.UtilDialog;
+import com.eclipsesource.json.JsonObject;
+import com.eclipsesource.json.JsonValue;
 
 /**
  * Last step in the inducement sequence.
@@ -114,9 +119,30 @@ public final class StepEndInducement extends AbstractStep {
   	int byteArraySerializationVersion = super.initFrom(pByteArray);
   	fEndInducementPhase = pByteArray.getBoolean();
   	fEndTurn = pByteArray.getBoolean();
-  	fInducementPhase = InducementPhase.fromId(pByteArray.getByte());
+  	fInducementPhase = new InducementPhaseFactory().forId(pByteArray.getByte());
   	fHomeTeam = pByteArray.getBoolean();
   	return byteArraySerializationVersion;
+  }
+  
+  // JSON serialization
+  
+  public JsonObject toJsonValue() {
+    JsonObject jsonObject = toJsonValueTemp();
+    IServerJsonOption.INDUCEMENT_PHASE.addTo(jsonObject, fInducementPhase);
+    IServerJsonOption.HOME_TEAM.addTo(jsonObject, fHomeTeam);
+    IServerJsonOption.END_TURN.addTo(jsonObject, fEndTurn);
+    IServerJsonOption.END_INDUCEMENT_PHASE.addTo(jsonObject, fEndInducementPhase);
+    return jsonObject;
+  }
+  
+  public StepEndInducement initFrom(JsonValue pJsonValue) {
+    initFromTemp(pJsonValue);
+    JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
+    fInducementPhase = (InducementPhase) IServerJsonOption.INDUCEMENT_PHASE.getFrom(jsonObject);
+    fHomeTeam = IServerJsonOption.HOME_TEAM.getFrom(jsonObject);
+    fEndTurn = IServerJsonOption.END_TURN.getFrom(jsonObject);
+    fEndInducementPhase = IServerJsonOption.END_INDUCEMENT_PHASE.getFrom(jsonObject);
+    return this;
   }
 
 }

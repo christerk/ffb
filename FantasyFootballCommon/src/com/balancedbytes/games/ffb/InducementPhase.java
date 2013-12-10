@@ -5,7 +5,7 @@ package com.balancedbytes.games.ffb;
  * 
  * @author Kalimar
  */
-public enum InducementPhase {
+public enum InducementPhase implements IEnumWithId, IEnumWithName {
   
   END_OF_OWN_TURN(1, "endOfOwnTurn", "at end of own turn"),
   START_OF_OWN_TURN(2, "startOfOwnTurn","at start of own turn"), 
@@ -35,39 +35,6 @@ public enum InducementPhase {
   
   public String getDescription() {
 	  return fDescription;
-  }
-  
-  public static InducementPhase fromId(int pId) {
-    for (InducementPhase type : values()) {
-      if (type.getId() == pId) {
-        return type;
-      }
-    }
-    return null;
-  }
-    
-  public static InducementPhase fromName(String pName) {
-    for (InducementPhase type : values()) {
-      if (type.getName().equalsIgnoreCase(pName)) {
-        return type;
-      }
-    }
-    return null;
-  }
-  
-  public static String getDescription(InducementPhase[] pPhases) {
-  	StringBuilder description = new StringBuilder();
-  	description.append("Play ");
-  	boolean firstPhase = true;
-  	for (InducementPhase phase : pPhases) {
-  		if (firstPhase) {
-  			firstPhase = false;
-  		} else {
-  			description.append(" or ");
-  		}
-  		description.append(phase.getDescription());
-  	}
-  	return description.toString();
   }
   
 }

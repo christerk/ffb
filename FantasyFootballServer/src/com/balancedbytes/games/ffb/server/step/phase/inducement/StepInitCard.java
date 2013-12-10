@@ -6,6 +6,7 @@ import com.balancedbytes.games.ffb.PlayerChoiceMode;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
 import com.balancedbytes.games.ffb.dialog.DialogPlayerChoiceParameter;
+import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.InducementSet;
 import com.balancedbytes.games.ffb.model.Player;
@@ -14,6 +15,7 @@ import com.balancedbytes.games.ffb.net.NetCommand;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandPlayerChoice;
 import com.balancedbytes.games.ffb.report.ReportPlayCard;
 import com.balancedbytes.games.ffb.server.GameState;
+import com.balancedbytes.games.ffb.server.IServerJsonOption;
 import com.balancedbytes.games.ffb.server.step.AbstractStep;
 import com.balancedbytes.games.ffb.server.step.StepAction;
 import com.balancedbytes.games.ffb.server.step.StepCommandStatus;
@@ -25,6 +27,8 @@ import com.balancedbytes.games.ffb.server.step.StepParameterSet;
 import com.balancedbytes.games.ffb.server.util.UtilDialog;
 import com.balancedbytes.games.ffb.util.StringTool;
 import com.balancedbytes.games.ffb.util.UtilCards;
+import com.eclipsesource.json.JsonObject;
+import com.eclipsesource.json.JsonValue;
 
 /**
  * Step to init the inducement sequence.
@@ -38,8 +42,8 @@ public final class StepInitCard extends AbstractStep {
 	
   private Card fCard;
   private boolean fHomeTeam;
-	
-	private transient String fPlayerId;
+
+  private transient String fPlayerId;
 	private transient boolean fEndCardPlaying;
 	
 	public StepInitCard(GameState pGameState) {
@@ -142,6 +146,23 @@ public final class StepInitCard extends AbstractStep {
   	fCard = new CardFactory().forId(pByteArray.getSmallInt());
   	fHomeTeam = pByteArray.getBoolean();
   	return byteArraySerializationVersion;
+  }
+  
+  // JSON serialization
+  
+  public JsonObject toJsonValue() {
+    JsonObject jsonObject = toJsonValueTemp();
+    IServerJsonOption.HOME_TEAM.addTo(jsonObject, fHomeTeam);
+    IServerJsonOption.CARD.addTo(jsonObject, fCard);
+    return jsonObject;
+  }
+  
+  public StepInitCard initFrom(JsonValue pJsonValue) {
+    initFromTemp(pJsonValue);
+    JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
+    fHomeTeam = IServerJsonOption.HOME_TEAM.getFrom(jsonObject);
+    fCard = (Card) IServerJsonOption.CARD.getFrom(jsonObject);
+    return this;
   }
 
 }

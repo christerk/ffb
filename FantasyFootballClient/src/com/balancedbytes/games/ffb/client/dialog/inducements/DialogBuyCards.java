@@ -21,7 +21,7 @@ import javax.swing.event.ListSelectionListener;
 
 import com.balancedbytes.games.ffb.Card;
 import com.balancedbytes.games.ffb.CardType;
-import com.balancedbytes.games.ffb.InducementPhase;
+import com.balancedbytes.games.ffb.InducementPhaseFactory;
 import com.balancedbytes.games.ffb.client.FantasyFootballClient;
 import com.balancedbytes.games.ffb.client.ParagraphStyle;
 import com.balancedbytes.games.ffb.client.TextStyle;
@@ -188,7 +188,7 @@ public class DialogBuyCards extends Dialog implements ActionListener, KeyListene
   	fCardLogTextPane.append(ParagraphStyle.INDENT_1, TextStyle.NONE, null);
   	fCardLogTextPane.append(ParagraphStyle.INDENT_1, TextStyle.NONE, pCard.getDuration().getDescription());
   	fCardLogTextPane.append(ParagraphStyle.INDENT_1, TextStyle.NONE, null);
-  	fCardLogTextPane.append(ParagraphStyle.INDENT_1, TextStyle.NONE, InducementPhase.getDescription(pCard.getPhases()));
+  	fCardLogTextPane.append(ParagraphStyle.INDENT_1, TextStyle.NONE, new InducementPhaseFactory().getDescription(pCard.getPhases()));
   	fCardLogTextPane.append(ParagraphStyle.INDENT_1, TextStyle.NONE, null);
   }
   

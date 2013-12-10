@@ -2,6 +2,7 @@ package com.balancedbytes.games.ffb.server;
 
 import com.balancedbytes.games.ffb.CatchScatterThrowInModeFactory;
 import com.balancedbytes.games.ffb.GameStatusFactory;
+import com.balancedbytes.games.ffb.InducementPhaseFactory;
 import com.balancedbytes.games.ffb.PlayerActionFactory;
 import com.balancedbytes.games.ffb.TurnModeFactory;
 import com.balancedbytes.games.ffb.json.IJsonOption;
@@ -10,6 +11,7 @@ import com.balancedbytes.games.ffb.json.JsonBooleanOption;
 import com.balancedbytes.games.ffb.json.JsonEnumWithNameOption;
 import com.balancedbytes.games.ffb.json.JsonFieldCoordinateArrayOption;
 import com.balancedbytes.games.ffb.json.JsonFieldCoordinateOption;
+import com.balancedbytes.games.ffb.json.JsonIntArrayOption;
 import com.balancedbytes.games.ffb.json.JsonIntOption;
 import com.balancedbytes.games.ffb.json.JsonObjectOption;
 import com.balancedbytes.games.ffb.json.JsonPlayerStateOption;
@@ -45,6 +47,8 @@ public interface IServerJsonOption extends IJsonOption {
                    JsonIntOption DODGE_ROLL = new JsonIntOption("dodgeRoll");
                JsonBooleanOption END_PLAYER_ACTION = new JsonBooleanOption("endPlayerAction");
                JsonBooleanOption END_GAME = new JsonBooleanOption("endGame");
+               JsonBooleanOption END_INDUCEMENT = new JsonBooleanOption("endInducement");
+               JsonBooleanOption END_INDUCEMENT_PHASE = new JsonBooleanOption("endInducementPhase");
                JsonBooleanOption END_KICKOFF = new JsonBooleanOption("endKickoff");
                JsonBooleanOption END_TURN = new JsonBooleanOption("endTurn");
                JsonBooleanOption FEED_ON_PLAYER_CHOICE = new JsonBooleanOption("feedOnPlayerChoice");
@@ -74,6 +78,7 @@ public interface IServerJsonOption extends IJsonOption {
                JsonBooleanOption HOLDING_SAFE_THROW = new JsonBooleanOption("holdingSafeThrow");
                    JsonIntOption INDUCEMENT_GOLD_AWAY = new JsonIntOption("inducementGoldAway");
                    JsonIntOption INDUCEMENT_GOLD_HOME = new JsonIntOption("inducementGoldHome");
+          JsonEnumWithNameOption INDUCEMENT_PHASE = new JsonEnumWithNameOption("inducementPhase", new InducementPhaseFactory());
                JsonBooleanOption INDUCEMENTS_SELECTED_AWAY = new JsonBooleanOption("inducementsSelectedAway");
                JsonBooleanOption INDUCEMENTS_SELECTED_HOME = new JsonBooleanOption("inducementsSelectedHome");
                 JsonObjectOption INJURY_RESULT = new JsonObjectOption("injuryResult");
@@ -91,6 +96,7 @@ public interface IServerJsonOption extends IJsonOption {
                 JsonStringOption NEXT_ACTION_PARAMETER = new JsonStringOption("nextActionParameter");
                JsonBooleanOption NEXT_SEQUENCE_PUSHED = new JsonBooleanOption("nextSequencePushed");
            JsonPlayerStateOption OLD_DEFENDER_STATE = new JsonPlayerStateOption("oldDefenderState");
+              JsonIntArrayOption OLD_PLAYER_STATES = new JsonIntArrayOption("oldPlayerStates");
           JsonEnumWithNameOption OLD_TURN_MODE = new JsonEnumWithNameOption("oldTurnMode", new TurnModeFactory());
                JsonBooleanOption PASS_ACCURATE = new JsonBooleanOption("passAccurate");
                JsonBooleanOption PASS_FUMBLE = new JsonBooleanOption("passFumble");

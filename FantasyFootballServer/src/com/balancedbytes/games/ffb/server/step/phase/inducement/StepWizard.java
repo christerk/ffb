@@ -8,13 +8,14 @@ import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.FieldCoordinateBounds;
 import com.balancedbytes.games.ffb.InducementType;
 import com.balancedbytes.games.ffb.PlayerState;
+import com.balancedbytes.games.ffb.SpecialEffect;
 import com.balancedbytes.games.ffb.SpecialEffectFactory;
 import com.balancedbytes.games.ffb.TurnMode;
-import com.balancedbytes.games.ffb.SpecialEffect;
 import com.balancedbytes.games.ffb.TurnModeFactory;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
 import com.balancedbytes.games.ffb.dialog.DialogWizardSpellParameter;
+import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.Animation;
 import com.balancedbytes.games.ffb.model.AnimationType;
 import com.balancedbytes.games.ffb.model.Game;
@@ -24,6 +25,7 @@ import com.balancedbytes.games.ffb.net.NetCommand;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandWizardSpell;
 import com.balancedbytes.games.ffb.report.ReportWizardUse;
 import com.balancedbytes.games.ffb.server.GameState;
+import com.balancedbytes.games.ffb.server.IServerJsonOption;
 import com.balancedbytes.games.ffb.server.step.AbstractStep;
 import com.balancedbytes.games.ffb.server.step.SequenceGenerator;
 import com.balancedbytes.games.ffb.server.step.StepAction;
@@ -32,6 +34,8 @@ import com.balancedbytes.games.ffb.server.step.StepId;
 import com.balancedbytes.games.ffb.server.util.UtilDialog;
 import com.balancedbytes.games.ffb.server.util.UtilGame;
 import com.balancedbytes.games.ffb.server.util.UtilInducementUse;
+import com.eclipsesource.json.JsonObject;
+import com.eclipsesource.json.JsonValue;
 
 /**
  * Step in inducement sequence to handle wizard.
@@ -163,6 +167,27 @@ public final class StepWizard extends AbstractStep {
   	fEndInducement = pByteArray.getBoolean();
   	fOldTurnMode = new TurnModeFactory().forId(pByteArray.getByte());
   	return byteArraySerializationVersion;
+  }
+  
+  // JSON serialization
+  
+  public JsonObject toJsonValue() {
+    JsonObject jsonObject = toJsonValueTemp();
+    IServerJsonOption.WIZARD_SPELL.addTo(jsonObject, fWizardSpell);
+    IServerJsonOption.TARGET_COORDINATE.addTo(jsonObject, fTargetCoordinate);
+    IServerJsonOption.END_INDUCEMENT.addTo(jsonObject, fEndInducement);
+    IServerJsonOption.OLD_TURN_MODE.addTo(jsonObject, fOldTurnMode);
+    return jsonObject;
+  }
+  
+  public StepWizard initFrom(JsonValue pJsonValue) {
+    initFromTemp(pJsonValue);
+    JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
+    fWizardSpell = (SpecialEffect) IServerJsonOption.WIZARD_SPELL.getFrom(jsonObject);
+    fTargetCoordinate = IServerJsonOption.TARGET_COORDINATE.getFrom(jsonObject);
+    fEndInducement = IServerJsonOption.END_INDUCEMENT.getFrom(jsonObject);
+    fOldTurnMode = (TurnMode) IServerJsonOption.OLD_TURN_MODE.getFrom(jsonObject);
+    return this;
   }
 
 }

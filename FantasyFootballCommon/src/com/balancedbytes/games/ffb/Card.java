@@ -447,7 +447,7 @@ public enum Card implements IEnumWithId, IEnumWithName {
   	StringBuilder description = new StringBuilder();
   	description.append(getHtmlDescription());
   	description.append("<br>");
-  	description.append(InducementPhase.getDescription(getPhases()));
+  	description.append(new InducementPhaseFactory().getDescription(getPhases()));
   	return description.toString();
   }
 

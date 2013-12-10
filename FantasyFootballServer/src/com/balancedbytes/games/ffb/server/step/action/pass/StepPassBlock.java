@@ -13,12 +13,14 @@ import com.balancedbytes.games.ffb.TurnModeFactory;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
 import com.balancedbytes.games.ffb.dialog.DialogPassBlockParameter;
+import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.model.Team;
 import com.balancedbytes.games.ffb.report.ReportPassBlock;
 import com.balancedbytes.games.ffb.server.GameState;
+import com.balancedbytes.games.ffb.server.IServerJsonOption;
 import com.balancedbytes.games.ffb.server.step.AbstractStep;
 import com.balancedbytes.games.ffb.server.step.SequenceGenerator;
 import com.balancedbytes.games.ffb.server.step.StepAction;
@@ -32,6 +34,8 @@ import com.balancedbytes.games.ffb.util.ArrayTool;
 import com.balancedbytes.games.ffb.util.UtilCards;
 import com.balancedbytes.games.ffb.util.UtilPassing;
 import com.balancedbytes.games.ffb.util.UtilPlayer;
+import com.eclipsesource.json.JsonObject;
+import com.eclipsesource.json.JsonValue;
 
 /**
  * Step in pass sequence to handle skill PASS_BLOCK.
@@ -330,6 +334,50 @@ public class StepPassBlock extends AbstractStep {
   		}
   	}
   	return byteArraySerializationVersion;
+  }
+  
+  // JSON serialization
+  
+  public JsonObject toJsonValue() {
+    JsonObject jsonObject = toJsonValueTemp();
+    IServerJsonOption.GOTO_LABEL_ON_END.addTo(jsonObject, fGotoLabelOnEnd);
+    IServerJsonOption.OLD_TURN_MODE.addTo(jsonObject, fOldTurnMode);
+    IServerJsonOption.END_TURN.addTo(jsonObject, fEndTurn);
+    IServerJsonOption.END_PLAYER_ACTION.addTo(jsonObject, fEndPlayerAction);
+    if (fOldPlayerStates != null) {
+      int[] playerStateIds = new int[fOldPlayerStates.length];
+      for (int i = 0; i < fOldPlayerStates.length; i++) {
+        if (fOldPlayerStates[i] != null) {
+          playerStateIds[i] = fOldPlayerStates[i].getId();
+        } else {
+          playerStateIds[i] = 0;
+        }
+      }
+      IServerJsonOption.OLD_PLAYER_STATES.addTo(jsonObject, playerStateIds);
+    }
+    return jsonObject;
+  }
+  
+  public StepPassBlock initFrom(JsonValue pJsonValue) {
+    initFromTemp(pJsonValue);
+    JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
+    fGotoLabelOnEnd = IServerJsonOption.GOTO_LABEL_ON_END.getFrom(jsonObject);
+    fOldTurnMode = (TurnMode) IServerJsonOption.OLD_TURN_MODE.getFrom(jsonObject);
+    fEndTurn = IServerJsonOption.END_TURN.getFrom(jsonObject);
+    fEndPlayerAction = IServerJsonOption.END_PLAYER_ACTION.getFrom(jsonObject);
+    fOldPlayerStates = null;
+    int[] playerStateIds = IServerJsonOption.OLD_PLAYER_STATES.getFrom(jsonObject);
+    if (ArrayTool.isProvided(playerStateIds)) {
+      fOldPlayerStates =  new PlayerState[playerStateIds.length];
+      for (int i = 0; i < playerStateIds.length; i++) {
+        if (playerStateIds[i] > 0) {
+          fOldPlayerStates[i] = new PlayerState(playerStateIds[i]);
+        } else {
+          fOldPlayerStates[i] = null;
+        }
+      }
+    }
+    return this;
   }
 
 }
