@@ -986,8 +986,10 @@ public class FieldModel implements IByteArraySerializable, IJsonSerializable {
       setPlayerState(player, playerState);
       
       String[] cardNames = IJsonOption.CARDS.getFrom(playerDataObject);
-      for (int j = 0; j < cardNames.length; j++) {
-        addCard(player, cardFactory.forName(cardNames[j]));
+      if (ArrayTool.isProvided(cardNames)) {
+        for (int j = 0; j < cardNames.length; j++) {
+          addCard(player, cardFactory.forName(cardNames[j]));
+        }
       }
       
     }

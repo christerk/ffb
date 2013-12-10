@@ -124,7 +124,7 @@ public class StepStack implements IByteArraySerializable, IJsonSerializable {
     fStack.clear();
     if (stepArray != null) {
       for (int i = 0; i < stepArray.size(); i++) {
-        IStep step = stepFactory.forJsonValue(pJsonValue);
+        IStep step = stepFactory.forJsonValue(stepArray.get(i));
         fStack.add(step);
       }
     }
