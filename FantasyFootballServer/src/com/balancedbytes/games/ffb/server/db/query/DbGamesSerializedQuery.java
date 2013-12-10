@@ -53,6 +53,8 @@ public class DbGamesSerializedQuery extends DbStatement {
       	Blob blob = resultSet.getBlob(1);
       	JsonValue jsonValue = UtilJson.inflate(blob.getBytes(1, (int) blob.length()));
       	gameState = new GameState(pServer).initFrom(jsonValue);
+      	// put the current step on stack to properly handle the first call to findNextStep()
+      	gameState.pushCurrentStepOnStack();
     		pServer.getGameCache().add(gameState, GameCacheMode.LOAD_GAME);
       }
       resultSet.close();
