@@ -68,6 +68,8 @@ public class StepFoul extends AbstractStep {
     publishParameter(new StepParameter(StepParameterKey.INJURY_RESULT, injuryResultDefender));
     getResult().setNextAction(StepAction.NEXT_STEP);
   }
+	
+	// ByteArray serialization
   
   public int getByteArraySerializationVersion() {
   	return 1;
@@ -75,12 +77,14 @@ public class StepFoul extends AbstractStep {
   
   // JSON serialization
   
+  @Override
   public JsonObject toJsonValue() {
-    return toJsonValueTemp();
+    return super.toJsonValue();
   }
   
+  @Override
   public StepFoul initFrom(JsonValue pJsonValue) {
-    initFromTemp(pJsonValue);
+    super.initFrom(pJsonValue);
     return this;
   }
 

@@ -196,6 +196,8 @@ public final class StepIntercept extends AbstractStepWithReRoll {
     return status;
   }
   
+  // ByteArray serialization
+  
   public int getByteArraySerializationVersion() {
   	return 1;
   }
@@ -221,8 +223,9 @@ public final class StepIntercept extends AbstractStepWithReRoll {
   
   // JSON serialization
   
+  @Override
   public JsonObject toJsonValue() {
-    JsonObject jsonObject = toJsonValueTemp();
+    JsonObject jsonObject = super.toJsonValue();
     IServerJsonOption.GOTO_LABEL_ON_FAILURE.addTo(jsonObject, fGotoLabelOnFailure);
     IServerJsonOption.INTERCEPTOR_ID.addTo(jsonObject, fInterceptorId);
     IServerJsonOption.INTERCEPTOR_CHOSEN.addTo(jsonObject, fInterceptorChosen);
@@ -230,8 +233,9 @@ public final class StepIntercept extends AbstractStepWithReRoll {
     return jsonObject;
   }
   
+  @Override
   public StepIntercept initFrom(JsonValue pJsonValue) {
-    initFromTemp(pJsonValue);
+    super.initFrom(pJsonValue);
     JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
     fGotoLabelOnFailure = IServerJsonOption.GOTO_LABEL_ON_FAILURE.getFrom(jsonObject);
     fInterceptorId = IServerJsonOption.INTERCEPTOR_ID.getFrom(jsonObject);

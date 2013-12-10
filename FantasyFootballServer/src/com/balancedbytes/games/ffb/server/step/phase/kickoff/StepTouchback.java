@@ -128,6 +128,8 @@ public final class StepTouchback extends AbstractStep {
   	
   }
   
+  // ByteArray serialization
+  
   public int getByteArraySerializationVersion() {
   	return 1;
   }
@@ -149,15 +151,17 @@ public final class StepTouchback extends AbstractStep {
   
   // JSON serialization
   
+  @Override
   public JsonObject toJsonValue() {
-    JsonObject jsonObject = toJsonValueTemp();
+    JsonObject jsonObject = super.toJsonValue();
     IServerJsonOption.TOUCHBACK.addTo(jsonObject, fTouchback);
     IServerJsonOption.TOUCHBACK_COORDINATE.addTo(jsonObject, fTouchbackCoordinate);
     return jsonObject;
   }
   
+  @Override
   public StepTouchback initFrom(JsonValue pJsonValue) {
-    initFromTemp(pJsonValue);
+    super.initFrom(pJsonValue);
     JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
     fTouchback = IServerJsonOption.TOUCHBACK.getFrom(jsonObject);
     fTouchbackCoordinate = IServerJsonOption.TOUCHBACK_COORDINATE.getFrom(jsonObject);

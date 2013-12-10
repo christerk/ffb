@@ -125,6 +125,8 @@ public class StepDumpOff extends AbstractStep {
     
   }
   
+  // ByteArray serialization
+  
   public int getByteArraySerializationVersion() {
   	return 1;
   }
@@ -146,16 +148,18 @@ public class StepDumpOff extends AbstractStep {
   
   // JSON serialization
   
+  @Override
   public JsonObject toJsonValue() {
-    JsonObject jsonObject = toJsonValueTemp();
+    JsonObject jsonObject = super.toJsonValue();
     IServerJsonOption.USING_DUMP_OFF.addTo(jsonObject, fUsingDumpOff);
     IServerJsonOption.DEFENDER_POSITION.addTo(jsonObject, fDefenderPosition);
     IServerJsonOption.OLD_TURN_MODE.addTo(jsonObject, fOldTurnMode);
     return jsonObject;
   }
   
+  @Override
   public StepDumpOff initFrom(JsonValue pJsonValue) {
-    initFromTemp(pJsonValue);
+    super.initFrom(pJsonValue);
     JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
     fUsingDumpOff = IServerJsonOption.USING_DUMP_OFF.getFrom(jsonObject);
     fDefenderPosition = IServerJsonOption.DEFENDER_POSITION.getFrom(jsonObject);

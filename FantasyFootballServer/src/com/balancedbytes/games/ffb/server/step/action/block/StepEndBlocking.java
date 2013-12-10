@@ -158,6 +158,8 @@ public class StepEndBlocking extends AbstractStep {
     }
     getResult().setNextAction(StepAction.NEXT_STEP);
   }
+  
+  // ByteArray serialization
 
   public int getByteArraySerializationVersion() {
     return 1;
@@ -187,8 +189,9 @@ public class StepEndBlocking extends AbstractStep {
   
   // JSON serialization
   
+  @Override
   public JsonObject toJsonValue() {
-    JsonObject jsonObject = toJsonValueTemp();
+    JsonObject jsonObject = super.toJsonValue();
     IServerJsonOption.END_TURN.addTo(jsonObject, fEndTurn);
     IServerJsonOption.END_PLAYER_ACTION.addTo(jsonObject, fEndPlayerAction);
     IServerJsonOption.DEFENDER_PUSHED.addTo(jsonObject, fDefenderPushed);
@@ -197,8 +200,9 @@ public class StepEndBlocking extends AbstractStep {
     return jsonObject;
   }
   
+  @Override
   public StepEndBlocking initFrom(JsonValue pJsonValue) {
-    initFromTemp(pJsonValue);
+    super.initFrom(pJsonValue);
     JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
     fEndTurn = IServerJsonOption.END_TURN.getFrom(jsonObject);
     fEndPlayerAction = IServerJsonOption.END_PLAYER_ACTION.getFrom(jsonObject);

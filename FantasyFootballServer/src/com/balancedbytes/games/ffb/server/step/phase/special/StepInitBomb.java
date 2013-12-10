@@ -149,6 +149,8 @@ public final class StepInitBomb extends AbstractStep {
 	  	getResult().setNextAction(StepAction.NEXT_STEP);
 		}
   }
+  
+  // ByteArray serialization
 
   public int getByteArraySerializationVersion() {
   	return 1;
@@ -175,8 +177,9 @@ public final class StepInitBomb extends AbstractStep {
   
   // JSON serialization
   
+  @Override
   public JsonObject toJsonValue() {
-    JsonObject jsonObject = toJsonValueTemp();
+    JsonObject jsonObject = super.toJsonValue();
     IServerJsonOption.GOTO_LABEL_ON_END.addTo(jsonObject, fGotoLabelOnEnd);
     IServerJsonOption.CATCHER_ID.addTo(jsonObject, fCatcherId);
     IServerJsonOption.PASS_FUMBLE.addTo(jsonObject, fPassFumble);
@@ -184,8 +187,9 @@ public final class StepInitBomb extends AbstractStep {
     return jsonObject;
   }
   
+  @Override
   public StepInitBomb initFrom(JsonValue pJsonValue) {
-    initFromTemp(pJsonValue);
+    super.initFrom(pJsonValue);
     JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
     fGotoLabelOnEnd = IServerJsonOption.GOTO_LABEL_ON_END.getFrom(jsonObject);
     fCatcherId = IServerJsonOption.CATCHER_ID.getFrom(jsonObject);

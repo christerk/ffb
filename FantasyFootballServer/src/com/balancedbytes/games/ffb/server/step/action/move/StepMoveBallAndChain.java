@@ -160,6 +160,8 @@ public class StepMoveBallAndChain extends AbstractStep {
     getResult().setNextAction(StepAction.NEXT_STEP);
   }
   
+  // ByteArray serialization
+  
   public int getByteArraySerializationVersion() {
   	return 1;
   }
@@ -181,8 +183,9 @@ public class StepMoveBallAndChain extends AbstractStep {
   
   // JSON serialization
   
+  @Override
   public JsonObject toJsonValue() {
-    JsonObject jsonObject = toJsonValueTemp();
+    JsonObject jsonObject = super.toJsonValue();
     IServerJsonOption.GOTO_LABEL_ON_END.addTo(jsonObject, fGotoLabelOnEnd);
     IServerJsonOption.GOTO_LABEL_ON_FALL_DOWN.addTo(jsonObject, fGotoLabelOnFallDown);
     IServerJsonOption.COORDINATE_FROM.addTo(jsonObject, fCoordinateFrom);
@@ -190,8 +193,9 @@ public class StepMoveBallAndChain extends AbstractStep {
     return jsonObject;
   }
   
+  @Override
   public StepMoveBallAndChain initFrom(JsonValue pJsonValue) {
-    initFromTemp(pJsonValue);
+    super.initFrom(pJsonValue);
     JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
     fGotoLabelOnEnd = IServerJsonOption.GOTO_LABEL_ON_END.getFrom(jsonObject);
     fGotoLabelOnFallDown = IServerJsonOption.GOTO_LABEL_ON_FALL_DOWN.getFrom(jsonObject);

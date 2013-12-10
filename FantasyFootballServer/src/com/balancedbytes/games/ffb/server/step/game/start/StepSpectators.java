@@ -81,6 +81,8 @@ public final class StepSpectators extends AbstractStep {
     }
     return new ReportSpectators(fanRollHome, teamResultHome.getSpectators(), teamResultHome.getFame(), fanRollAway, teamResultAway.getSpectators(), teamResultAway.getFame());
   }
+  
+  // ByteArray serialization
     
   public int getByteArraySerializationVersion() {
   	return 1;
@@ -88,12 +90,14 @@ public final class StepSpectators extends AbstractStep {
   
   // JSON serialization
   
+  @Override
   public JsonObject toJsonValue() {
-    return toJsonValueTemp();
+    return super.toJsonValue();
   }
   
+  @Override
   public StepSpectators initFrom(JsonValue pJsonValue) {
-    initFromTemp(pJsonValue);
+    super.initFrom(pJsonValue);
     return this;
   }
   

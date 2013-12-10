@@ -279,6 +279,8 @@ public class StepApothecary extends AbstractStep {
     }
   }
 
+  // ByteArray serialization
+  
   public int getByteArraySerializationVersion() {
   	return 1;
   }
@@ -312,8 +314,9 @@ public class StepApothecary extends AbstractStep {
   
   // JSON serialization
   
+  @Override
   public JsonObject toJsonValue() {
-    JsonObject jsonObject = toJsonValueTemp();
+    JsonObject jsonObject = super.toJsonValue();
     IServerJsonOption.APOTHECARY_MODE.addTo(jsonObject, fApothecaryMode);
     if (fInjuryResult != null) {
       IServerJsonOption.INJURY_RESULT.addTo(jsonObject, fInjuryResult.toJsonValue());
@@ -322,8 +325,9 @@ public class StepApothecary extends AbstractStep {
     return jsonObject;
   }
   
+  @Override
   public StepApothecary initFrom(JsonValue pJsonValue) {
-    initFromTemp(pJsonValue);
+    super.initFrom(pJsonValue);
     JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
     fApothecaryMode = (ApothecaryMode) IServerJsonOption.APOTHECARY_MODE.getFrom(jsonObject);
     JsonObject injuryResultObject = IServerJsonOption.INJURY_RESULT.getFrom(jsonObject);

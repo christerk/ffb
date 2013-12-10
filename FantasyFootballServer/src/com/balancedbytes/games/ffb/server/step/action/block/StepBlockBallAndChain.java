@@ -98,6 +98,8 @@ public class StepBlockBallAndChain extends AbstractStep {
     }
   }
 
+  // ByteArray serialization
+  
   public int getByteArraySerializationVersion() {
     return 1;
   }
@@ -120,15 +122,17 @@ public class StepBlockBallAndChain extends AbstractStep {
 
   // JSON serialization
 
+  @Override
   public JsonObject toJsonValue() {
-    JsonObject jsonObject = toJsonValueTemp();
+    JsonObject jsonObject = super.toJsonValue();
     IServerJsonOption.GOTO_LABEL_ON_PUSHBACK.addTo(jsonObject, fGotoLabelOnPushback);
     IServerJsonOption.OLD_DEFENDER_STATE.addTo(jsonObject, fOldDefenderState);
     return jsonObject;
   }
 
+  @Override
   public StepBlockBallAndChain initFrom(JsonValue pJsonValue) {
-    initFromTemp(pJsonValue);
+    super.initFrom(pJsonValue);
     JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
     fGotoLabelOnPushback = IServerJsonOption.GOTO_LABEL_ON_PUSHBACK.getFrom(jsonObject);
     fOldDefenderState = IServerJsonOption.OLD_DEFENDER_STATE.getFrom(jsonObject);

@@ -183,6 +183,8 @@ public class StepDropFallingPlayers extends AbstractStep {
     }
   }
   
+  // ByteArray serialization
+  
   public int getByteArraySerializationVersion() {
   	return 1;
   }
@@ -214,8 +216,9 @@ public class StepDropFallingPlayers extends AbstractStep {
 
   // JSON serialization
   
+  @Override
   public JsonObject toJsonValue() {
-    JsonObject jsonObject = toJsonValueTemp();
+    JsonObject jsonObject = super.toJsonValue();
     if (fInjuryResultDefender != null) {
       IServerJsonOption.INJURY_RESULT_DEFENDER.addTo(jsonObject, fInjuryResultDefender.toJsonValue());
     }
@@ -224,8 +227,9 @@ public class StepDropFallingPlayers extends AbstractStep {
     return jsonObject;
   }
   
+  @Override
   public StepDropFallingPlayers initFrom(JsonValue pJsonValue) {
-    initFromTemp(pJsonValue);
+    super.initFrom(pJsonValue);
     JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
     fInjuryResultDefender = null;
     JsonObject injuryResultDefenderObject = IServerJsonOption.INJURY_RESULT_DEFENDER.getFrom(jsonObject);

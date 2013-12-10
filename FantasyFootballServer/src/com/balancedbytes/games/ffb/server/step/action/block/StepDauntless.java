@@ -101,6 +101,8 @@ public class StepDauntless extends AbstractStepWithReRoll {
     }
   }
   
+  // ByteArray serialization
+  
   public int getByteArraySerializationVersion() {
   	return 1;
   }
@@ -120,14 +122,16 @@ public class StepDauntless extends AbstractStepWithReRoll {
   
   // JSON serialization
   
+  @Override
   public JsonObject toJsonValue() {
-    JsonObject jsonObject = toJsonValueTemp();
+    JsonObject jsonObject = super.toJsonValue();
     IServerJsonOption.USING_STAB.addTo(jsonObject, fUsingStab);
     return jsonObject;
   }
   
+  @Override
   public StepDauntless initFrom(JsonValue pJsonValue) {
-    initFromTemp(pJsonValue);
+    super.initFrom(pJsonValue);
     JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
     fUsingStab = IServerJsonOption.USING_STAB.getFrom(jsonObject);
     return this;

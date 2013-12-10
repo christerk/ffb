@@ -112,6 +112,8 @@ public class StepMove extends AbstractStep {
     getResult().setNextAction(StepAction.NEXT_STEP);
   }
 
+  // ByteArray serialization
+    
 	public int getByteArraySerializationVersion() {
 		return 1;
 	}
@@ -135,16 +137,18 @@ public class StepMove extends AbstractStep {
 	
   // JSON serialization
   
+  @Override
   public JsonObject toJsonValue() {
-    JsonObject jsonObject = toJsonValueTemp();
+    JsonObject jsonObject = super.toJsonValue();
     IServerJsonOption.COORDINATE_FROM.addTo(jsonObject, fCoordinateFrom);
     IServerJsonOption.COORDINATE_TO.addTo(jsonObject, fCoordinateTo);
     IServerJsonOption.MOVE_STACK_SIZE.addTo(jsonObject, fMoveStackSize);
     return jsonObject;
   }
   
+  @Override
   public StepMove initFrom(JsonValue pJsonValue) {
-    initFromTemp(pJsonValue);
+    super.initFrom(pJsonValue);
     JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
     fCoordinateFrom = IServerJsonOption.COORDINATE_FROM.getFrom(jsonObject);
     fCoordinateTo = IServerJsonOption.COORDINATE_TO.getFrom(jsonObject);

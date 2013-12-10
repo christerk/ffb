@@ -6,9 +6,13 @@ import com.balancedbytes.games.ffb.ReRolledAction;
 import com.balancedbytes.games.ffb.ReRolledActionFactory;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
+import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.net.NetCommand;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandUseReRoll;
 import com.balancedbytes.games.ffb.server.GameState;
+import com.balancedbytes.games.ffb.server.IServerJsonOption;
+import com.eclipsesource.json.JsonObject;
+import com.eclipsesource.json.JsonValue;
 
 /**
  * 
@@ -56,6 +60,8 @@ public abstract class AbstractStepWithReRoll extends AbstractStep {
 		fReRollSource = pReRollSource;
 	}
 	
+  // ByteArray serialization
+	
 	@Override
 	public void addTo(ByteList pByteList) {
 		super.addTo(pByteList);
@@ -70,5 +76,24 @@ public abstract class AbstractStepWithReRoll extends AbstractStep {
 		fReRollSource = new ReRollSourceFactory().forId(pByteArray.getByte());
 		return byteArraySerializationVersion;
 	}
+	
+  // JSON serialization
+  
+  @Override
+  public JsonObject toJsonValue() {
+    JsonObject jsonObject = super.toJsonValue();
+    IServerJsonOption.RE_ROLLED_ACTION.addTo(jsonObject, fReRolledAction);
+    IServerJsonOption.RE_ROLL_SOURCE.addTo(jsonObject, fReRollSource);
+    return jsonObject;
+  }
+  
+  @Override
+  public AbstractStepWithReRoll initFrom(JsonValue pJsonValue) {
+    super.initFrom(pJsonValue);
+    JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
+    fReRolledAction = (ReRolledAction) IServerJsonOption.RE_ROLLED_ACTION.getFrom(jsonObject);
+    fReRollSource = (ReRollSource) IServerJsonOption.RE_ROLL_SOURCE.getFrom(jsonObject);
+    return this;
+  }
 
 }

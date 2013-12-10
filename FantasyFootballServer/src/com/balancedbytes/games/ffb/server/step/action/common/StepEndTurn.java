@@ -548,6 +548,8 @@ public class StepEndTurn extends AbstractStep {
   	return false;
   }
   
+  // ByteArray serialization
+  
   public int getByteArraySerializationVersion() {
   	return 1;
   }
@@ -581,8 +583,9 @@ public class StepEndTurn extends AbstractStep {
   
   // JSON serialization
   
+  @Override
   public JsonObject toJsonValue() {
-    JsonObject jsonObject = toJsonValueTemp();
+    JsonObject jsonObject = super.toJsonValue();
     IServerJsonOption.HANDLE_SECRET_WEAPONS.addTo(jsonObject, fHandleSecretWeapons);
     IServerJsonOption.TOUCHDOWN.addTo(jsonObject, fTouchdown);
     IServerJsonOption.BRIBES_CHOICE_HOME.addTo(jsonObject, fBribesChoiceHome);
@@ -594,8 +597,9 @@ public class StepEndTurn extends AbstractStep {
     return jsonObject;
   }
   
+  @Override
   public StepEndTurn initFrom(JsonValue pJsonValue) {
-    initFromTemp(pJsonValue);
+    super.initFrom(pJsonValue);
     JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
     fHandleSecretWeapons = IServerJsonOption.HANDLE_SECRET_WEAPONS.getFrom(jsonObject);
     fTouchdown = IServerJsonOption.TOUCHDOWN.getFrom(jsonObject);

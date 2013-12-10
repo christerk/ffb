@@ -94,6 +94,8 @@ public final class StepReceiveChoice extends AbstractStep {
       getResult().setNextAction(StepAction.NEXT_STEP);
     }
   }
+  
+  // ByteArray serialization
     
   public int getByteArraySerializationVersion() {
   	return 1;
@@ -116,15 +118,17 @@ public final class StepReceiveChoice extends AbstractStep {
   
   // JSON serialization
   
+  @Override
   public JsonObject toJsonValue() {
-    JsonObject jsonObject = toJsonValueTemp();
+    JsonObject jsonObject = super.toJsonValue();
     IServerJsonOption.CHOOSING_TEAM_ID.addTo(jsonObject, fChoosingTeamId);
     IServerJsonOption.RECEIVE_CHOICE.addTo(jsonObject, fReceiveChoice);
     return jsonObject;
   }
   
+  @Override
   public StepReceiveChoice initFrom(JsonValue pJsonValue) {
-    initFromTemp(pJsonValue);
+    super.initFrom(pJsonValue);
     JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
     fChoosingTeamId = IServerJsonOption.CHOOSING_TEAM_ID.getFrom(jsonObject);
     fReceiveChoice = IServerJsonOption.RECEIVE_CHOICE.getFrom(jsonObject);

@@ -207,6 +207,8 @@ public final class StepKickoffScatterRoll extends AbstractStep {
     return kickingPlayer;
   }
   
+  // ByteArray serialization
+  
   public int getByteArraySerializationVersion() {
   	return 1;
   }
@@ -248,8 +250,9 @@ public final class StepKickoffScatterRoll extends AbstractStep {
   
   // JSON serialization
   
+  @Override
   public JsonObject toJsonValue() {
-    JsonObject jsonObject = toJsonValueTemp();
+    JsonObject jsonObject = super.toJsonValue();
     IServerJsonOption.KICKOFF_START_COORDINATE.addTo(jsonObject, fKickoffStartCoordinate);
     IServerJsonOption.USE_KICK_CHOICE.addTo(jsonObject, fUseKickChoice);
     IServerJsonOption.SCATTER_DIRECTION.addTo(jsonObject, fScatterDirection);
@@ -262,8 +265,9 @@ public final class StepKickoffScatterRoll extends AbstractStep {
     return jsonObject;
   }
   
+  @Override
   public StepKickoffScatterRoll initFrom(JsonValue pJsonValue) {
-    initFromTemp(pJsonValue);
+    super.initFrom(pJsonValue);
     JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
     fKickoffStartCoordinate = IServerJsonOption.KICKOFF_START_COORDINATE.getFrom(jsonObject);
     fUseKickChoice = IServerJsonOption.USE_KICK_CHOICE.getFrom(jsonObject);

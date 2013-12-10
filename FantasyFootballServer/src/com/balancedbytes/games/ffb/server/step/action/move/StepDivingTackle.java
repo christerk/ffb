@@ -176,6 +176,8 @@ public class StepDivingTackle extends AbstractStep {
       }
     }
 	}
+	
+	// ByteArray serialization
 
 	public int getByteArraySerializationVersion() {
 		return 1;
@@ -206,8 +208,9 @@ public class StepDivingTackle extends AbstractStep {
 	
   // JSON serialization
   
+  @Override
   public JsonObject toJsonValue() {
-    JsonObject jsonObject = toJsonValueTemp();
+    JsonObject jsonObject = super.toJsonValue();
     IServerJsonOption.GOTO_LABEL_ON_SUCCESS.addTo(jsonObject, fGotoLabelOnSuccess);
     IServerJsonOption.COORDINATE_FROM.addTo(jsonObject, fCoordinateFrom);
     IServerJsonOption.COORDINATE_TO.addTo(jsonObject, fCoordinateTo);
@@ -217,8 +220,9 @@ public class StepDivingTackle extends AbstractStep {
     return jsonObject;
   }
   
+  @Override
   public StepDivingTackle initFrom(JsonValue pJsonValue) {
-    initFromTemp(pJsonValue);
+    super.initFrom(pJsonValue);
     JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
     fGotoLabelOnSuccess = IServerJsonOption.GOTO_LABEL_ON_SUCCESS.getFrom(jsonObject);
     fCoordinateFrom = IServerJsonOption.COORDINATE_FROM.getFrom(jsonObject);

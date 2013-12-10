@@ -131,6 +131,8 @@ public final class StepDispatchPassing extends AbstractStep {
     }
   }
   
+  // ByteArray serialization
+  
   public int getByteArraySerializationVersion() {
   	return 1;
   }
@@ -156,8 +158,9 @@ public final class StepDispatchPassing extends AbstractStep {
   
   // JSON serialization
   
+  @Override
   public JsonObject toJsonValue() {
-    JsonObject jsonObject = toJsonValueTemp();
+    JsonObject jsonObject = super.toJsonValue();
     IServerJsonOption.GOTO_LABEL_ON_END.addTo(jsonObject, fGotoLabelOnEnd);
     IServerJsonOption.GOTO_LABEL_ON_HAIL_MARY_PASS.addTo(jsonObject, fGotoLabelOnHailMaryPass);
     IServerJsonOption.GOTO_LABEL_ON_HAND_OVER.addTo(jsonObject, fGotoLabelOnHandOver);
@@ -165,8 +168,9 @@ public final class StepDispatchPassing extends AbstractStep {
     return jsonObject;
   }
   
+  @Override
   public StepDispatchPassing initFrom(JsonValue pJsonValue) {
-    initFromTemp(pJsonValue);
+    super.initFrom(pJsonValue);
     JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
     fGotoLabelOnEnd = IServerJsonOption.GOTO_LABEL_ON_END.getFrom(jsonObject);
     fGotoLabelOnHailMaryPass = IServerJsonOption.GOTO_LABEL_ON_HAIL_MARY_PASS.getFrom(jsonObject);

@@ -128,7 +128,7 @@ public abstract class AbstractStep implements IStep {
   
   // JSON serialization
   
-  public JsonObject toJsonValueTemp() {
+  public JsonObject toJsonValue() {
     JsonObject jsonObject = new JsonObject();
     IServerJsonOption.STEP_ID.addTo(jsonObject, getId());
     IServerJsonOption.LABEL.addTo(jsonObject, fLabel);
@@ -136,7 +136,7 @@ public abstract class AbstractStep implements IStep {
     return jsonObject;
   }
   
-  public AbstractStep initFromTemp(JsonValue pJsonValue) {
+  public AbstractStep initFrom(JsonValue pJsonValue) {
     JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
     UtilSteps.validateStepId(this, (StepId) IServerJsonOption.STEP_ID.getFrom(jsonObject));
     fLabel = IServerJsonOption.LABEL.getFrom(jsonObject);

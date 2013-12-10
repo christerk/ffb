@@ -214,6 +214,8 @@ public final class StepBuyCards extends AbstractStep {
     }
     return dialogParameter;
   }
+  
+  // ByteArray serialization
 
   public int getByteArraySerializationVersion() {
     return 1;
@@ -244,8 +246,9 @@ public final class StepBuyCards extends AbstractStep {
   
   // JSON serialization
   
+  @Override
   public JsonObject toJsonValue() {
-    JsonObject jsonObject = toJsonValueTemp();
+    JsonObject jsonObject = super.toJsonValue();
     IServerJsonOption.INDUCEMENT_GOLD_AWAY.addTo(jsonObject, fInducementGoldAway);
     IServerJsonOption.INDUCEMENT_GOLD_HOME.addTo(jsonObject, fInducementGoldHome);
     IServerJsonOption.CARDS_SELECTED_AWAY.addTo(jsonObject, fCardsSelectedAway);
@@ -255,8 +258,9 @@ public final class StepBuyCards extends AbstractStep {
     return jsonObject;
   }
   
+  @Override
   public StepBuyCards initFrom(JsonValue pJsonValue) {
-    initFromTemp(pJsonValue);
+    super.initFrom(pJsonValue);
     JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
     fInducementGoldAway = IServerJsonOption.INDUCEMENT_GOLD_AWAY.getFrom(jsonObject);
     fInducementGoldHome = IServerJsonOption.INDUCEMENT_GOLD_HOME.getFrom(jsonObject);

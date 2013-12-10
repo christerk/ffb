@@ -164,6 +164,8 @@ public class StepInitBlocking extends AbstractStep {
 	    }
     }
   }
+  
+  // ByteArray serialization
     
   public int getByteArraySerializationVersion() {
   	return 1;
@@ -194,8 +196,9 @@ public class StepInitBlocking extends AbstractStep {
   
   // JSON serialization
   
+  @Override
   public JsonObject toJsonValue() {
-    JsonObject jsonObject = toJsonValueTemp();
+    JsonObject jsonObject = super.toJsonValue();
     IServerJsonOption.GOTO_LABEL_ON_END.addTo(jsonObject, fGotoLabelOnEnd);
     IServerJsonOption.BLOCK_DEFENDER_ID.addTo(jsonObject, fBlockDefenderId);
     IServerJsonOption.USING_STAB.addTo(jsonObject, fUsingStab);
@@ -205,8 +208,9 @@ public class StepInitBlocking extends AbstractStep {
     return jsonObject;
   }
   
+  @Override
   public StepInitBlocking initFrom(JsonValue pJsonValue) {
-    initFromTemp(pJsonValue);
+    super.initFrom(pJsonValue);
     JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
     fGotoLabelOnEnd = IServerJsonOption.GOTO_LABEL_ON_END.getFrom(jsonObject);
     fBlockDefenderId = IServerJsonOption.BLOCK_DEFENDER_ID.getFrom(jsonObject);

@@ -570,6 +570,8 @@ public final class StepApplyKickoffResult extends AbstractStep {
     FieldCoordinate playerCoordinate = pGame.getFieldModel().getPlayerCoordinate(pPlayer);
     return (FieldCoordinateBounds.FIELD.isInBounds(playerCoordinate));
   }
+  
+  // ByteArray serialization
 
   public int getByteArraySerializationVersion() {
   	return 1;
@@ -608,8 +610,9 @@ public final class StepApplyKickoffResult extends AbstractStep {
   
   // JSON serialization
   
+  @Override
   public JsonObject toJsonValue() {
-    JsonObject jsonObject = toJsonValueTemp();
+    JsonObject jsonObject = super.toJsonValue();
     IServerJsonOption.GOTO_LABEL_ON_END.addTo(jsonObject, fGotoLabelOnEnd);
     IServerJsonOption.GOTO_LABEL_ON_BLITZ.addTo(jsonObject, fGotoLabelOnBlitz);
     IServerJsonOption.KICKOFF_RESULT.addTo(jsonObject, fKickoffResult);
@@ -621,8 +624,9 @@ public final class StepApplyKickoffResult extends AbstractStep {
     return jsonObject;
   }
   
+  @Override
   public StepApplyKickoffResult initFrom(JsonValue pJsonValue) {
-    initFromTemp(pJsonValue);
+    super.initFrom(pJsonValue);
     JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
     fGotoLabelOnEnd = IServerJsonOption.GOTO_LABEL_ON_END.getFrom(jsonObject);
     fGotoLabelOnBlitz = IServerJsonOption.GOTO_LABEL_ON_BLITZ.getFrom(jsonObject);

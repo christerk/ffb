@@ -132,10 +132,6 @@ public class StepBribes extends AbstractStep {
     }
   }
 	
-  public int getByteArraySerializationVersion() {
-  	return 1;
-  }
-  
   private void askForBribes() {
     Game game = getGameState().getGame();
     ActingPlayer actingPlayer = game.getActingPlayer();
@@ -148,6 +144,12 @@ public class StepBribes extends AbstractStep {
     } else {
     	fBribesChoice = false;
     }
+  }
+
+  // ByteArray serialization
+  
+  public int getByteArraySerializationVersion() {
+    return 1;
   }
   
   @Override
@@ -169,16 +171,18 @@ public class StepBribes extends AbstractStep {
 
   // JSON serialization
   
+  @Override
   public JsonObject toJsonValue() {
-    JsonObject jsonObject = toJsonValueTemp();
+    JsonObject jsonObject = super.toJsonValue();
     IServerJsonOption.GOTO_LABEL_ON_END.addTo(jsonObject, fGotoLabelOnEnd);
     IServerJsonOption.BRIBES_CHOICE.addTo(jsonObject, fBribesChoice);
     IServerJsonOption.BRIBE_SUCCESSFUL.addTo(jsonObject, fBribeSuccessful);
     return jsonObject;
   }
   
+  @Override
   public StepBribes initFrom(JsonValue pJsonValue) {
-    initFromTemp(pJsonValue);
+    super.initFrom(pJsonValue);
     JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
     fGotoLabelOnEnd = IServerJsonOption.GOTO_LABEL_ON_END.getFrom(jsonObject);
     fBribesChoice = IServerJsonOption.BRIBES_CHOICE.getFrom(jsonObject);

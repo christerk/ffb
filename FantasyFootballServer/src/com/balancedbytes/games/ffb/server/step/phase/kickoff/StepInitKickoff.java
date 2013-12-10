@@ -210,6 +210,8 @@ public final class StepInitKickoff extends AbstractStep {
   	}
   	return false;
   }
+  
+  // ByteArray serialization
     
   public int getByteArraySerializationVersion() {
   	return 1;
@@ -234,16 +236,18 @@ public final class StepInitKickoff extends AbstractStep {
 
   // JSON serialization
   
+  @Override
   public JsonObject toJsonValue() {
-    JsonObject jsonObject = toJsonValueTemp();
+    JsonObject jsonObject = super.toJsonValue();
     IServerJsonOption.GOTO_LABEL_ON_END.addTo(jsonObject, fGotoLabelOnEnd);
     IServerJsonOption.KICKOFF_START_COORDINATE.addTo(jsonObject, fKickoffStartCoordinate);
     IServerJsonOption.END_KICKOFF.addTo(jsonObject, fEndKickoff);
     return jsonObject;
   }
   
+  @Override
   public StepInitKickoff initFrom(JsonValue pJsonValue) {
-    initFromTemp(pJsonValue);
+    super.initFrom(pJsonValue);
     JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
     fGotoLabelOnEnd = IServerJsonOption.GOTO_LABEL_ON_END.getFrom(jsonObject);
     fKickoffStartCoordinate = IServerJsonOption.KICKOFF_START_COORDINATE.getFrom(jsonObject);

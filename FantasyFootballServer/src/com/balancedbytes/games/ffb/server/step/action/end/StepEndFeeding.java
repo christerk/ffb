@@ -87,7 +87,9 @@ public class StepEndFeeding extends AbstractStep {
     }
     getResult().setNextAction(StepAction.NEXT_STEP);
   }
-  
+	
+	// ByteArray serialization
+	
   public int getByteArraySerializationVersion() {
   	return 1;
   }
@@ -109,15 +111,17 @@ public class StepEndFeeding extends AbstractStep {
   
   // JSON serialization
   
+  @Override
   public JsonObject toJsonValue() {
-    JsonObject jsonObject = toJsonValueTemp();
+    JsonObject jsonObject = super.toJsonValue();
     IServerJsonOption.END_PLAYER_ACTION.addTo(jsonObject, fEndPlayerAction);
     IServerJsonOption.END_TURN.addTo(jsonObject, fEndTurn);
     return jsonObject;
   }
   
+  @Override
   public StepEndFeeding initFrom(JsonValue pJsonValue) {
-    initFromTemp(pJsonValue);
+    super.initFrom(pJsonValue);
     JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
     fEndPlayerAction = IServerJsonOption.END_PLAYER_ACTION.getFrom(jsonObject);
     fEndTurn = IServerJsonOption.END_TURN.getFrom(jsonObject);

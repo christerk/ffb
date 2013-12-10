@@ -84,6 +84,8 @@ public final class StepHandOver extends AbstractStepWithReRoll {
     getResult().setNextAction(StepAction.NEXT_STEP);
   }
   
+  // ByteArray serialization
+  
   public int getByteArraySerializationVersion() {
   	return 1;
   }
@@ -103,14 +105,16 @@ public final class StepHandOver extends AbstractStepWithReRoll {
   
   // JSON serialization
   
+  @Override
   public JsonObject toJsonValue() {
-    JsonObject jsonObject = toJsonValueTemp();
+    JsonObject jsonObject = super.toJsonValue();
     IServerJsonOption.CATCHER_ID.addTo(jsonObject, fCatcherId);
     return jsonObject;
   }
   
+  @Override
   public StepHandOver initFrom(JsonValue pJsonValue) {
-    initFromTemp(pJsonValue);
+    super.initFrom(pJsonValue);
     JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
     fCatcherId = IServerJsonOption.CATCHER_ID.getFrom(jsonObject);
     return this;

@@ -93,6 +93,8 @@ public final class StepKickoffAnimation extends AbstractStep {
     getResult().setNextAction(StepAction.NEXT_STEP);
   }
   
+  // ByteArray serialization
+  
   public int getByteArraySerializationVersion() {
   	return 1;
   }
@@ -114,15 +116,17 @@ public final class StepKickoffAnimation extends AbstractStep {
   
   // JSON serialization
   
+  @Override
   public JsonObject toJsonValue() {
-    JsonObject jsonObject = toJsonValueTemp();
+    JsonObject jsonObject = super.toJsonValue();
     IServerJsonOption.KICKING_PLAYER_COORDINATE.addTo(jsonObject, fKickingPlayerCoordinate);
     IServerJsonOption.TOUCHBACK.addTo(jsonObject, fTouchback);
     return jsonObject;
   }
   
+  @Override
   public StepKickoffAnimation initFrom(JsonValue pJsonValue) {
-    initFromTemp(pJsonValue);
+    super.initFrom(pJsonValue);
     JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
     fKickingPlayerCoordinate = IServerJsonOption.KICKING_PLAYER_COORDINATE.getFrom(jsonObject);
     fTouchback = IServerJsonOption.TOUCHBACK.getFrom(jsonObject);

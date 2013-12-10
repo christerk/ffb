@@ -172,6 +172,8 @@ public final class StepKickoffReturn extends AbstractStep {
     getResult().setNextAction(StepAction.NEXT_STEP);
 
   }
+  
+  // ByteArray serialization
     
   public int getByteArraySerializationVersion() {
   	return 1;
@@ -196,22 +198,23 @@ public final class StepKickoffReturn extends AbstractStep {
   
   // JSON serialization
   
+  @Override
   public JsonObject toJsonValue() {
-    JsonObject jsonObject = toJsonValueTemp();
+    JsonObject jsonObject = super.toJsonValue();
     IServerJsonOption.TOUCHBACK.addTo(jsonObject, fTouchback);
     IServerJsonOption.END_PLAYER_ACTION.addTo(jsonObject, fEndPlayerAction);
     IServerJsonOption.END_TURN.addTo(jsonObject, fEndTurn);
     return jsonObject;
   }
   
+  @Override
   public StepKickoffReturn initFrom(JsonValue pJsonValue) {
-    initFromTemp(pJsonValue);
+    super.initFrom(pJsonValue);
     JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
     fTouchback = IServerJsonOption.TOUCHBACK.getFrom(jsonObject);
     fEndPlayerAction = IServerJsonOption.END_PLAYER_ACTION.getFrom(jsonObject);
     fEndTurn = IServerJsonOption.END_TURN.getFrom(jsonObject);
     return this;
   }
-
 
 }

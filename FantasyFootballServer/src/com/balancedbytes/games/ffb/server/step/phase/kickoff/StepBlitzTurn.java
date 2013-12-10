@@ -105,6 +105,8 @@ public final class StepBlitzTurn extends AbstractStep {
   	
   }
   
+  // ByteArray serialization
+  
   public int getByteArraySerializationVersion() {
   	return 1;
   }
@@ -124,14 +126,16 @@ public final class StepBlitzTurn extends AbstractStep {
   
   // JSON serialization
   
+  @Override
   public JsonObject toJsonValue() {
-    JsonObject jsonObject = toJsonValueTemp();
+    JsonObject jsonObject = super.toJsonValue();
     IServerJsonOption.END_TURN.addTo(jsonObject, fEndTurn);
     return jsonObject;
   }
   
+  @Override
   public StepBlitzTurn initFrom(JsonValue pJsonValue) {
-    initFromTemp(pJsonValue);
+    super.initFrom(pJsonValue);
     JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
     fEndTurn = IServerJsonOption.END_TURN.getFrom(jsonObject);
     return this;

@@ -153,6 +153,8 @@ public final class StepSpecialEffect extends AbstractStep {
 		}
 		
   }
+  
+  // ByteArray serialization
     
   public int getByteArraySerializationVersion() {
   	return 1;
@@ -179,8 +181,9 @@ public final class StepSpecialEffect extends AbstractStep {
   
   // JSON serialization
   
+  @Override
   public JsonObject toJsonValue() {
-    JsonObject jsonObject = toJsonValueTemp();
+    JsonObject jsonObject = super.toJsonValue();
     IServerJsonOption.GOTO_LABEL_ON_FAILURE.addTo(jsonObject, fGotoLabelOnFailure);
     IServerJsonOption.PLAYER_ID.addTo(jsonObject, fPlayerId);
     IServerJsonOption.ROLL_FOR_EFFECT.addTo(jsonObject, fRollForEffect);
@@ -188,8 +191,9 @@ public final class StepSpecialEffect extends AbstractStep {
     return jsonObject;
   }
   
+  @Override
   public StepSpecialEffect initFrom(JsonValue pJsonValue) {
-    initFromTemp(pJsonValue);
+    super.initFrom(pJsonValue);
     JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
     fGotoLabelOnFailure = IServerJsonOption.GOTO_LABEL_ON_FAILURE.getFrom(jsonObject);
     fPlayerId = IServerJsonOption.PLAYER_ID.getFrom(jsonObject);

@@ -292,6 +292,8 @@ public class StepPassBlock extends AbstractStep {
   	return passBlockers;
   }
   
+  // ByteArray serialization
+  
   public int getByteArraySerializationVersion() {
   	return 1;
   }
@@ -338,8 +340,9 @@ public class StepPassBlock extends AbstractStep {
   
   // JSON serialization
   
+  @Override
   public JsonObject toJsonValue() {
-    JsonObject jsonObject = toJsonValueTemp();
+    JsonObject jsonObject = super.toJsonValue();
     IServerJsonOption.GOTO_LABEL_ON_END.addTo(jsonObject, fGotoLabelOnEnd);
     IServerJsonOption.OLD_TURN_MODE.addTo(jsonObject, fOldTurnMode);
     IServerJsonOption.END_TURN.addTo(jsonObject, fEndTurn);
@@ -358,8 +361,9 @@ public class StepPassBlock extends AbstractStep {
     return jsonObject;
   }
   
+  @Override
   public StepPassBlock initFrom(JsonValue pJsonValue) {
-    initFromTemp(pJsonValue);
+    super.initFrom(pJsonValue);
     JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
     fGotoLabelOnEnd = IServerJsonOption.GOTO_LABEL_ON_END.getFrom(jsonObject);
     fOldTurnMode = (TurnMode) IServerJsonOption.OLD_TURN_MODE.getFrom(jsonObject);

@@ -126,6 +126,8 @@ public class StepBlockRoll extends AbstractStepWithReRoll {
     UtilDialog.showDialog(getGameState(), new DialogBlockRollParameter(teamId, fNrOfDice, fBlockRoll, teamReRollOption, proReRollOption));
   }
   
+  // ByteArray serialization
+  
   public int getByteArraySerializationVersion() {
   	return 1;
   }
@@ -151,8 +153,9 @@ public class StepBlockRoll extends AbstractStepWithReRoll {
   
   // JSON serialization
   
+  @Override
   public JsonObject toJsonValue() {
-    JsonObject jsonObject = toJsonValueTemp();
+    JsonObject jsonObject = super.toJsonValue();
     IServerJsonOption.NR_OF_DICE.addTo(jsonObject, fNrOfDice);
     IServerJsonOption.BLOCK_ROLL.addTo(jsonObject, fBlockRoll);
     IServerJsonOption.DICE_INDEX.addTo(jsonObject, fDiceIndex);
@@ -160,8 +163,9 @@ public class StepBlockRoll extends AbstractStepWithReRoll {
     return jsonObject;
   }
   
+  @Override
   public StepBlockRoll initFrom(JsonValue pJsonValue) {
-    initFromTemp(pJsonValue);
+    super.initFrom(pJsonValue);
     JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
     fNrOfDice = IServerJsonOption.NR_OF_DICE.getFrom(jsonObject);
     fBlockRoll = IServerJsonOption.BLOCK_ROLL.getFrom(jsonObject);

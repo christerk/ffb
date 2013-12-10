@@ -85,6 +85,8 @@ public class StepDropDivingTackler extends AbstractStep {
 		game.setDefenderId(null);
 		getResult().setNextAction(StepAction.NEXT_STEP);
 	}
+	
+	// ByteArray serialization
 
 	public int getByteArraySerializationVersion() {
 		return 1;
@@ -107,15 +109,17 @@ public class StepDropDivingTackler extends AbstractStep {
 	
   // JSON serialization
   
+  @Override
   public JsonObject toJsonValue() {
-    JsonObject jsonObject = toJsonValueTemp();
+    JsonObject jsonObject = super.toJsonValue();
     IServerJsonOption.USING_DIVING_TACKLE.addTo(jsonObject, fUsingDivingTackle);
     IServerJsonOption.COORDINATE_FROM.addTo(jsonObject, fCoordinateFrom);
     return jsonObject;
   }
   
+  @Override
   public StepDropDivingTackler initFrom(JsonValue pJsonValue) {
-    initFromTemp(pJsonValue);
+    super.initFrom(pJsonValue);
     JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
     fUsingDivingTackle = IServerJsonOption.USING_DIVING_TACKLE.getFrom(jsonObject);
     fCoordinateFrom = IServerJsonOption.COORDINATE_FROM.getFrom(jsonObject);

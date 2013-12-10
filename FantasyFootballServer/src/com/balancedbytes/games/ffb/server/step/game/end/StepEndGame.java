@@ -55,18 +55,22 @@ public final class StepEndGame extends AbstractStep {
     }
   }
 
+  // ByteArray serialization  
+  
 	public int getByteArraySerializationVersion() {
 		return 1;
 	}
 	
   // JSON serialization
   
+  @Override
   public JsonObject toJsonValue() {
-    return toJsonValueTemp();
+    return super.toJsonValue();
   }
   
+  @Override
   public StepEndGame initFrom(JsonValue pJsonValue) {
-    initFromTemp(pJsonValue);
+    super.initFrom(pJsonValue);
     return this;
   }
 

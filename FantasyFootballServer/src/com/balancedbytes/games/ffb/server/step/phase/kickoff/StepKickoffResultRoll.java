@@ -67,6 +67,8 @@ public final class StepKickoffResultRoll extends AbstractStep {
     
   }
   
+  // ByteArray serialization
+  
   public int getByteArraySerializationVersion() {
   	return 1;
   }
@@ -86,14 +88,16 @@ public final class StepKickoffResultRoll extends AbstractStep {
   
   // JSON serialization
   
+  @Override
   public JsonObject toJsonValue() {
-    JsonObject jsonObject = toJsonValueTemp();
+    JsonObject jsonObject = super.toJsonValue();
     IServerJsonOption.KICKOFF_RESULT.addTo(jsonObject, fKickoffResult);
     return jsonObject;
   }
   
+  @Override
   public StepKickoffResultRoll initFrom(JsonValue pJsonValue) {
-    initFromTemp(pJsonValue);
+    super.initFrom(pJsonValue);
     JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
     fKickoffResult = (KickoffResult) IServerJsonOption.KICKOFF_RESULT.getFrom(jsonObject);
     return this;

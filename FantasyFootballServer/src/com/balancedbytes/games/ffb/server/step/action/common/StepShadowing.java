@@ -180,6 +180,8 @@ public class StepShadowing extends AbstractStepWithReRoll {
     }
   }  
 
+  // ByteArray serialization
+  
   public int getByteArraySerializationVersion() {
   	return 1;
   }
@@ -203,8 +205,9 @@ public class StepShadowing extends AbstractStepWithReRoll {
   
   // JSON serialization
   
+  @Override
   public JsonObject toJsonValue() {
-    JsonObject jsonObject = toJsonValueTemp();
+    JsonObject jsonObject = super.toJsonValue();
     IServerJsonOption.DEFENDER_POSITION.addTo(jsonObject, fDefenderPosition);
     IServerJsonOption.COORDINATE_FROM.addTo(jsonObject, fCoordinateFrom);
     IServerJsonOption.USING_DIVING_TACKLE.addTo(jsonObject, fUsingDivingTackle);
@@ -212,8 +215,9 @@ public class StepShadowing extends AbstractStepWithReRoll {
     return jsonObject;
   }
   
+  @Override
   public StepShadowing initFrom(JsonValue pJsonValue) {
-    initFromTemp(pJsonValue);
+    super.initFrom(pJsonValue);
     JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
     fDefenderPosition = IServerJsonOption.DEFENDER_POSITION.getFrom(jsonObject);
     fCoordinateFrom = IServerJsonOption.COORDINATE_FROM.getFrom(jsonObject);

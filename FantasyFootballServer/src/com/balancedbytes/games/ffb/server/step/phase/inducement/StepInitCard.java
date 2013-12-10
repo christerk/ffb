@@ -129,6 +129,8 @@ public final class StepInitCard extends AbstractStep {
 		}
   }
   
+  // ByteArray serialization
+  
   public int getByteArraySerializationVersion() {
   	return 1;
   }
@@ -150,15 +152,17 @@ public final class StepInitCard extends AbstractStep {
   
   // JSON serialization
   
+  @Override
   public JsonObject toJsonValue() {
-    JsonObject jsonObject = toJsonValueTemp();
+    JsonObject jsonObject = super.toJsonValue();
     IServerJsonOption.HOME_TEAM.addTo(jsonObject, fHomeTeam);
     IServerJsonOption.CARD.addTo(jsonObject, fCard);
     return jsonObject;
   }
   
+  @Override
   public StepInitCard initFrom(JsonValue pJsonValue) {
-    initFromTemp(pJsonValue);
+    super.initFrom(pJsonValue);
     JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
     fHomeTeam = IServerJsonOption.HOME_TEAM.getFrom(jsonObject);
     fCard = (Card) IServerJsonOption.CARD.getFrom(jsonObject);

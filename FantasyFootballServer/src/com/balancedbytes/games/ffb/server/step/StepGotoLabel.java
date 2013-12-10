@@ -73,14 +73,16 @@ public class StepGotoLabel extends AbstractStep {
   
   // JSON serialization
   
+  @Override
   public JsonObject toJsonValue() {
-    JsonObject jsonObject = toJsonValueTemp();
+    JsonObject jsonObject = super.toJsonValue();
     IServerJsonOption.GOTO_LABEL.addTo(jsonObject, fGotoLabel);
     return jsonObject;
   }
   
+  @Override
   public StepGotoLabel initFrom(JsonValue pJsonValue) {
-    initFromTemp(pJsonValue);
+    super.initFrom(pJsonValue);
     JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
     fGotoLabel = IServerJsonOption.GOTO_LABEL.getFrom(jsonObject);
     return this;

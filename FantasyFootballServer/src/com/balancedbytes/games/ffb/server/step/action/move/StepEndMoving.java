@@ -207,6 +207,8 @@ public class StepEndMoving extends AbstractStep {
 		return false;
 	}
 	
+	// ByteArray serialization
+	
 	public int getByteArraySerializationVersion() {
   	return 1;
   }
@@ -244,8 +246,9 @@ public class StepEndMoving extends AbstractStep {
   
   // JSON serialization
   
+  @Override
   public JsonObject toJsonValue() {
-    JsonObject jsonObject = toJsonValueTemp();
+    JsonObject jsonObject = super.toJsonValue();
     IServerJsonOption.END_TURN.addTo(jsonObject, fEndTurn);
     IServerJsonOption.END_PLAYER_ACTION.addTo(jsonObject, fEndPlayerAction);
     IServerJsonOption.FEEDING_ALLOWED.addTo(jsonObject, fFeedingAllowed);
@@ -255,8 +258,9 @@ public class StepEndMoving extends AbstractStep {
     return jsonObject;
   }
   
+  @Override
   public StepEndMoving initFrom(JsonValue pJsonValue) {
-    initFromTemp(pJsonValue);
+    super.initFrom(pJsonValue);
     JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
     fEndTurn = IServerJsonOption.END_TURN.getFrom(jsonObject);
     fEndPlayerAction = IServerJsonOption.END_PLAYER_ACTION.getFrom(jsonObject);

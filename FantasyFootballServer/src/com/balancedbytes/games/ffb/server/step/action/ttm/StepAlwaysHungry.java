@@ -178,6 +178,8 @@ public final class StepAlwaysHungry extends AbstractStepWithReRoll {
   	return 1;
   }
   
+  // ByteArray serialization
+  
 	@Override
   public void addTo(ByteList pByteList) {
   	super.addTo(pByteList);
@@ -197,16 +199,18 @@ public final class StepAlwaysHungry extends AbstractStepWithReRoll {
 	
   // JSON serialization
   
+  @Override
   public JsonObject toJsonValue() {
-    JsonObject jsonObject = toJsonValueTemp();
+    JsonObject jsonObject = super.toJsonValue();
     IServerJsonOption.GOTO_LABEL_ON_FAILURE.addTo(jsonObject, fGotoLabelOnFailure);
     IServerJsonOption.GOTO_LABEL_ON_SUCCESS.addTo(jsonObject, fGotoLabelOnSuccess);
     IServerJsonOption.THROWN_PLAYER_ID.addTo(jsonObject, fThrownPlayerId);
     return jsonObject;
   }
   
+  @Override
   public StepAlwaysHungry initFrom(JsonValue pJsonValue) {
-    initFromTemp(pJsonValue);
+    super.initFrom(pJsonValue);
     JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
     fGotoLabelOnFailure = IServerJsonOption.GOTO_LABEL_ON_FAILURE.getFrom(jsonObject);
     fGotoLabelOnSuccess = IServerJsonOption.GOTO_LABEL_ON_SUCCESS.getFrom(jsonObject);

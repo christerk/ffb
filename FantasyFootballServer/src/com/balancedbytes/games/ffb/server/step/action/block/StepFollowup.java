@@ -176,6 +176,8 @@ public class StepFollowup extends AbstractStep {
     }
   }
   
+  // ByteArray serialization
+  
   public int getByteArraySerializationVersion() {
   	return 1;
   }
@@ -204,8 +206,9 @@ public class StepFollowup extends AbstractStep {
   
   // JSON serialization
   
+  @Override
   public JsonObject toJsonValue() {
-    JsonObject jsonObject = toJsonValueTemp();
+    JsonObject jsonObject = super.toJsonValue();
     IServerJsonOption.COORDINATE_FROM.addTo(jsonObject, fCoordinateFrom);
     IServerJsonOption.DEFENDER_POSITION.addTo(jsonObject, fDefenderPosition);
     IServerJsonOption.USING_FEND.addTo(jsonObject, fUsingFend);
@@ -214,8 +217,9 @@ public class StepFollowup extends AbstractStep {
     return jsonObject;
   }
   
+  @Override
   public StepFollowup initFrom(JsonValue pJsonValue) {
-    initFromTemp(pJsonValue);
+    super.initFrom(pJsonValue);
     JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
     fCoordinateFrom = IServerJsonOption.COORDINATE_FROM.getFrom(jsonObject);
     fDefenderPosition = IServerJsonOption.DEFENDER_POSITION.getFrom(jsonObject);

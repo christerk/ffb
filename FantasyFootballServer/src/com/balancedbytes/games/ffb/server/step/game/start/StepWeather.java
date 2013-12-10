@@ -54,18 +54,22 @@ public final class StepWeather extends AbstractStep {
     return new ReportWeather(weather, roll);
   }
   
+  // ByteArray serialization
+  
   public int getByteArraySerializationVersion() {
   	return 1;
   }
   
   // JSON serialization
   
+  @Override
   public JsonObject toJsonValue() {
-    return toJsonValueTemp();
+    return super.toJsonValue();
   }
   
+  @Override
   public StepWeather initFrom(JsonValue pJsonValue) {
-    initFromTemp(pJsonValue);
+    super.initFrom(pJsonValue);
     return this;
   }
   

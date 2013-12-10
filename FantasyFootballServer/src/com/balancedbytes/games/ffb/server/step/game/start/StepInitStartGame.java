@@ -122,6 +122,8 @@ public final class StepInitStartGame extends AbstractStep {
     }
 		getResult().setNextAction(StepAction.NEXT_STEP);
   }
+  
+  // ByteArray serialization
     
   public int getByteArraySerializationVersion() {
   	return 1;
@@ -142,14 +144,16 @@ public final class StepInitStartGame extends AbstractStep {
   
   // JSON serialization
   
+  @Override
   public JsonObject toJsonValue() {
-    JsonObject jsonObject = toJsonValueTemp();
+    JsonObject jsonObject = super.toJsonValue();
     IServerJsonOption.FUMBBL_GAME_CREATED.addTo(jsonObject, fFumbblGameCreated);
     return jsonObject;
   }
   
+  @Override
   public StepInitStartGame initFrom(JsonValue pJsonValue) {
-    initFromTemp(pJsonValue);
+    super.initFrom(pJsonValue);
     JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
     fFumbblGameCreated = IServerJsonOption.FUMBBL_GAME_CREATED.getFrom(jsonObject);
     return this;

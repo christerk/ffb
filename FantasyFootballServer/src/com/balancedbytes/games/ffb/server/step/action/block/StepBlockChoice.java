@@ -191,6 +191,8 @@ public class StepBlockChoice extends AbstractStep {
     getResult().addReport(new ReportBlockChoice(fNrOfDice, fBlockRoll, fDiceIndex, fBlockResult, game.getDefenderId()));
   }
   
+  // ByteArray serialization
+  
   public int getByteArraySerializationVersion() {
   	return 1;
   }
@@ -225,8 +227,9 @@ public class StepBlockChoice extends AbstractStep {
   
   // JSON serialization
   
+  @Override
   public JsonObject toJsonValue() {
-    JsonObject jsonObject = toJsonValueTemp();
+    JsonObject jsonObject = super.toJsonValue();
     IServerJsonOption.GOTO_LABEL_ON_DODGE.addTo(jsonObject, fGotoLabelOnDodge);
     IServerJsonOption.GOTO_LABEL_ON_JUGGERNAUT.addTo(jsonObject, fGotoLabelOnJuggernaut);
     IServerJsonOption.GOTO_LABEL_ON_PUSHBACK.addTo(jsonObject, fGotoLabelOnPushback);
@@ -238,8 +241,9 @@ public class StepBlockChoice extends AbstractStep {
     return jsonObject;
   }
   
+  @Override
   public StepBlockChoice initFrom(JsonValue pJsonValue) {
-    initFromTemp(pJsonValue);
+    super.initFrom(pJsonValue);
     JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
     fGotoLabelOnDodge = IServerJsonOption.GOTO_LABEL_ON_DODGE.getFrom(jsonObject);
     fGotoLabelOnJuggernaut = IServerJsonOption.GOTO_LABEL_ON_JUGGERNAUT.getFrom(jsonObject);

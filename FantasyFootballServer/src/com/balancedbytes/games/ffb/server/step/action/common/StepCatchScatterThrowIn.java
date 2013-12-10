@@ -457,7 +457,7 @@ public class StepCatchScatterThrowIn extends AbstractStepWithReRoll {
     
   }
   
-  // ByteArraySerialization
+  // ByteArray serialization
   
   public int getByteArraySerializationVersion() {
   	return 1;
@@ -498,8 +498,9 @@ public class StepCatchScatterThrowIn extends AbstractStepWithReRoll {
   
   // JSON serialization
   
+  @Override
   public JsonObject toJsonValue() {
-    JsonObject jsonObject = toJsonValueTemp();
+    JsonObject jsonObject = super.toJsonValue();
     IServerJsonOption.CATCHER_ID.addTo(jsonObject, fCatcherId);
     if (fScatterBounds != null) {
       IServerJsonOption.SCATTER_BOUNDS.addTo(jsonObject, fScatterBounds.toJsonValue());
@@ -511,8 +512,9 @@ public class StepCatchScatterThrowIn extends AbstractStepWithReRoll {
     return jsonObject;
   }
   
+  @Override
   public StepCatchScatterThrowIn initFrom(JsonValue pJsonValue) {
-    initFromTemp(pJsonValue);
+    super.initFrom(pJsonValue);
     JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
     fCatcherId = IServerJsonOption.CATCHER_ID.getFrom(jsonObject);
     fScatterBounds = null;

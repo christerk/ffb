@@ -101,6 +101,8 @@ public final class StepEndInducement extends AbstractStep {
   	getResult().setNextAction(StepAction.NEXT_STEP);
   }
 	
+	// ByteArray serialization
+	
 	public int getByteArraySerializationVersion() {
   	return 1;
   }
@@ -126,8 +128,9 @@ public final class StepEndInducement extends AbstractStep {
   
   // JSON serialization
   
+  @Override
   public JsonObject toJsonValue() {
-    JsonObject jsonObject = toJsonValueTemp();
+    JsonObject jsonObject = super.toJsonValue();
     IServerJsonOption.INDUCEMENT_PHASE.addTo(jsonObject, fInducementPhase);
     IServerJsonOption.HOME_TEAM.addTo(jsonObject, fHomeTeam);
     IServerJsonOption.END_TURN.addTo(jsonObject, fEndTurn);
@@ -135,8 +138,9 @@ public final class StepEndInducement extends AbstractStep {
     return jsonObject;
   }
   
+  @Override
   public StepEndInducement initFrom(JsonValue pJsonValue) {
-    initFromTemp(pJsonValue);
+    super.initFrom(pJsonValue);
     JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
     fInducementPhase = (InducementPhase) IServerJsonOption.INDUCEMENT_PHASE.getFrom(jsonObject);
     fHomeTeam = IServerJsonOption.HOME_TEAM.getFrom(jsonObject);

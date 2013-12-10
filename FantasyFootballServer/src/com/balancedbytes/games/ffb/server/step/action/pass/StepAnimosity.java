@@ -179,6 +179,8 @@ public final class StepAnimosity extends AbstractStepWithReRoll {
     }
   }
   
+  // ByteArray serialization
+  
   public int getByteArraySerializationVersion() {
   	return 1;
   }
@@ -200,15 +202,17 @@ public final class StepAnimosity extends AbstractStepWithReRoll {
   
   // JSON serialization
   
+  @Override
   public JsonObject toJsonValue() {
-    JsonObject jsonObject = toJsonValueTemp();
+    JsonObject jsonObject = super.toJsonValue();
     IServerJsonOption.GOTO_LABEL_ON_FAILURE.addTo(jsonObject, fGotoLabelOnFailure);
     IServerJsonOption.CATCHER_ID.addTo(jsonObject, fCatcherId);
     return jsonObject;
   }
   
+  @Override
   public StepAnimosity initFrom(JsonValue pJsonValue) {
-    initFromTemp(pJsonValue);
+    super.initFrom(pJsonValue);
     JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
     fGotoLabelOnFailure = IServerJsonOption.GOTO_LABEL_ON_FAILURE.getFrom(jsonObject);
     fCatcherId = IServerJsonOption.CATCHER_ID.getFrom(jsonObject);

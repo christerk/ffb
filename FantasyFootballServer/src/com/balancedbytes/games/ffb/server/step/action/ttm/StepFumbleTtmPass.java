@@ -88,7 +88,9 @@ public final class StepFumbleTtmPass extends AbstractStep {
     publishParameter(new StepParameter(StepParameterKey.THROWN_PLAYER_COORDINATE, null));  // avoid reset in end step
     getResult().setNextAction(StepAction.NEXT_STEP);
   }
-  
+
+	// ByteArray serialization
+	
   public int getByteArraySerializationVersion() {
   	return 1;
   }
@@ -112,16 +114,18 @@ public final class StepFumbleTtmPass extends AbstractStep {
   
   // JSON serialization
   
+  @Override
   public JsonObject toJsonValue() {
-    JsonObject jsonObject = toJsonValueTemp();
+    JsonObject jsonObject = super.toJsonValue();
     IServerJsonOption.THROWN_PLAYER_COORDINATE.addTo(jsonObject, fThrownPlayerCoordinate);
     IServerJsonOption.THROWN_PLAYER_ID.addTo(jsonObject, fThrownPlayerId);
     IServerJsonOption.THROWN_PLAYER_STATE.addTo(jsonObject, fThrownPlayerState);
     return jsonObject;
   }
   
+  @Override
   public StepFumbleTtmPass initFrom(JsonValue pJsonValue) {
-    initFromTemp(pJsonValue);
+    super.initFrom(pJsonValue);
     JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
     fThrownPlayerCoordinate = IServerJsonOption.THROWN_PLAYER_COORDINATE.getFrom(jsonObject);
     fThrownPlayerId = IServerJsonOption.THROWN_PLAYER_ID.getFrom(jsonObject);

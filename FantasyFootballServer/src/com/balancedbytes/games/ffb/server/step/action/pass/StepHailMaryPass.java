@@ -162,6 +162,8 @@ public final class StepHailMaryPass extends AbstractStepWithReRoll {
     }
   }
   
+  // ByteArray serialization
+  
   public int getByteArraySerializationVersion() {
   	return 1;
   }
@@ -185,16 +187,18 @@ public final class StepHailMaryPass extends AbstractStepWithReRoll {
   
   // JSON serialization
   
+  @Override
   public JsonObject toJsonValue() {
-    JsonObject jsonObject = toJsonValueTemp();
+    JsonObject jsonObject = super.toJsonValue();
     IServerJsonOption.GOTO_LABEL_ON_FAILURE.addTo(jsonObject, fGotoLabelOnFailure);
     IServerJsonOption.PASS_FUMBLE.addTo(jsonObject, fPassFumble);
     IServerJsonOption.PASS_SKILL_USED.addTo(jsonObject, fPassSkillUsed);
     return jsonObject;
   }
   
+  @Override
   public StepHailMaryPass initFrom(JsonValue pJsonValue) {
-    initFromTemp(pJsonValue);
+    super.initFrom(pJsonValue);
     JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
     fGotoLabelOnFailure = IServerJsonOption.GOTO_LABEL_ON_FAILURE.getFrom(jsonObject);
     fPassFumble = IServerJsonOption.PASS_FUMBLE.getFrom(jsonObject);

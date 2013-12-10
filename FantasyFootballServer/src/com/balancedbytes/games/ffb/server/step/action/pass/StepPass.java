@@ -267,6 +267,7 @@ public class StepPass extends AbstractStepWithReRoll {
     }
   }
   
+  // ByteArray serialization
   
   public int getByteArraySerializationVersion() {
   	return 1;
@@ -299,8 +300,9 @@ public class StepPass extends AbstractStepWithReRoll {
   
   // JSON serialization
   
+  @Override
   public JsonObject toJsonValue() {
-    JsonObject jsonObject = toJsonValueTemp();
+    JsonObject jsonObject = super.toJsonValue();
     IServerJsonOption.GOTO_LABEL_ON_END.addTo(jsonObject, fGotoLabelOnEnd);
     IServerJsonOption.GOTO_LABEL_ON_MISSED_PASS.addTo(jsonObject, fGotoLabelOnMissedPass);
     IServerJsonOption.CATCHER_ID.addTo(jsonObject, fCatcherId);
@@ -311,8 +313,9 @@ public class StepPass extends AbstractStepWithReRoll {
     return jsonObject;
   }
   
+  @Override
   public StepPass initFrom(JsonValue pJsonValue) {
-    initFromTemp(pJsonValue);
+    super.initFrom(pJsonValue);
     JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
     fGotoLabelOnEnd = IServerJsonOption.GOTO_LABEL_ON_END.getFrom(jsonObject);
     fGotoLabelOnMissedPass = IServerJsonOption.GOTO_LABEL_ON_MISSED_PASS.getFrom(jsonObject);

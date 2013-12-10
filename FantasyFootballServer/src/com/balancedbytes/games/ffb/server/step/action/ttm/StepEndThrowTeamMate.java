@@ -124,6 +124,8 @@ public final class StepEndThrowTeamMate extends AbstractStep {
    	SequenceGenerator.getInstance().pushEndPlayerActionSequence(getGameState(), true, fEndTurn);
     getResult().setNextAction(StepAction.NEXT_STEP);
   }
+	
+	// ByteArray serialization
   
   public int getByteArraySerializationVersion() {
   	return 1;
@@ -155,8 +157,9 @@ public final class StepEndThrowTeamMate extends AbstractStep {
   
   // JSON serialization
   
+  @Override
   public JsonObject toJsonValue() {
-    JsonObject jsonObject = toJsonValueTemp();
+    JsonObject jsonObject = super.toJsonValue();
     IServerJsonOption.END_TURN.addTo(jsonObject, fEndTurn);
     IServerJsonOption.END_PLAYER_ACTION.addTo(jsonObject, fEndPlayerAction);
     IServerJsonOption.THROWN_PLAYER_ID.addTo(jsonObject, fThrownPlayerId);
@@ -166,8 +169,9 @@ public final class StepEndThrowTeamMate extends AbstractStep {
     return jsonObject;
   }
   
+  @Override
   public StepEndThrowTeamMate initFrom(JsonValue pJsonValue) {
-    initFromTemp(pJsonValue);
+    super.initFrom(pJsonValue);
     JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
     fEndTurn = IServerJsonOption.END_TURN.getFrom(jsonObject);
     fEndPlayerAction = IServerJsonOption.END_PLAYER_ACTION.getFrom(jsonObject);

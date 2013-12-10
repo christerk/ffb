@@ -94,6 +94,8 @@ public class StepFallDown extends AbstractStep {
     }
     getResult().setNextAction(StepAction.NEXT_STEP);
 	}
+	
+	// ByteArray serialization
 
 	public int getByteArraySerializationVersion() {
 		return 1;
@@ -114,14 +116,16 @@ public class StepFallDown extends AbstractStep {
 	
   // JSON serialization
   
+  @Override
   public JsonObject toJsonValue() {
-    JsonObject jsonObject = toJsonValueTemp();
+    JsonObject jsonObject = super.toJsonValue();
     IServerJsonOption.INJURY_TYPE.addTo(jsonObject, fInjuryType);
     return jsonObject;
   }
   
+  @Override
   public StepFallDown initFrom(JsonValue pJsonValue) {
-    initFromTemp(pJsonValue);
+    super.initFrom(pJsonValue);
     JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
     fInjuryType = (InjuryType) IServerJsonOption.INJURY_TYPE.getFrom(jsonObject);
     return this;

@@ -99,6 +99,8 @@ public final class StepEatTeamMate extends AbstractStep {
     getResult().setNextAction(StepAction.NEXT_STEP);
   }
   
+	// ByteArray serialization
+	
   public int getByteArraySerializationVersion() {
   	return 1;
   }
@@ -120,15 +122,17 @@ public final class StepEatTeamMate extends AbstractStep {
   
   // JSON serialization
   
+  @Override
   public JsonObject toJsonValue() {
-    JsonObject jsonObject = toJsonValueTemp();
+    JsonObject jsonObject = super.toJsonValue();
     IServerJsonOption.THROWN_PLAYER_COORDINATE.addTo(jsonObject, fThrownPlayerCoordinate);
     IServerJsonOption.THROWN_PLAYER_ID.addTo(jsonObject, fThrownPlayerId);
     return jsonObject;
   }
   
+  @Override
   public StepEatTeamMate initFrom(JsonValue pJsonValue) {
-    initFromTemp(pJsonValue);
+    super.initFrom(pJsonValue);
     JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
     fThrownPlayerCoordinate = IServerJsonOption.THROWN_PLAYER_COORDINATE.getFrom(jsonObject);
     fThrownPlayerId = IServerJsonOption.THROWN_PLAYER_ID.getFrom(jsonObject);

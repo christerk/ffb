@@ -179,7 +179,9 @@ public final class StepInitInducement extends AbstractStep {
 		}
 		return playableCards.toArray(new Card[playableCards.size()]);
 	}
-	  
+
+	// ByteArray serialization
+	
   public int getByteArraySerializationVersion() {
   	return 1;
   }
@@ -206,8 +208,9 @@ public final class StepInitInducement extends AbstractStep {
   
   // JSON serialization
   
+  @Override
   public JsonObject toJsonValue() {
-    JsonObject jsonObject = toJsonValueTemp();
+    JsonObject jsonObject = super.toJsonValue();
     IServerJsonOption.INDUCEMENT_PHASE.addTo(jsonObject, fInducementPhase);
     IServerJsonOption.HOME_TEAM.addTo(jsonObject, fHomeTeam);
     IServerJsonOption.INDUCEMENT_TYPE.addTo(jsonObject, fInducementType);
@@ -215,8 +218,9 @@ public final class StepInitInducement extends AbstractStep {
     return jsonObject;
   }
   
+  @Override
   public StepInitInducement initFrom(JsonValue pJsonValue) {
-    initFromTemp(pJsonValue);
+    super.initFrom(pJsonValue);
     JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
     fInducementPhase = (InducementPhase) IServerJsonOption.INDUCEMENT_PHASE.getFrom(jsonObject);
     fHomeTeam = IServerJsonOption.HOME_TEAM.getFrom(jsonObject);

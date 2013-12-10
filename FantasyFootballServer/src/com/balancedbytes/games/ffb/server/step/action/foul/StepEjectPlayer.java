@@ -128,6 +128,8 @@ public class StepEjectPlayer extends AbstractStep {
     }
   }
 	
+	// ByteArray serialization
+	
   public int getByteArraySerializationVersion() {
   	return 1;
   }
@@ -149,15 +151,17 @@ public class StepEjectPlayer extends AbstractStep {
   
   // JSON serialization
   
+  @Override
   public JsonObject toJsonValue() {
-    JsonObject jsonObject = toJsonValueTemp();
+    JsonObject jsonObject = super.toJsonValue();
     IServerJsonOption.GOTO_LABEL_ON_END.addTo(jsonObject, fGotoLabelOnEnd);
     IServerJsonOption.FOULER_HAS_BALL.addTo(jsonObject, fFoulerHasBall);
     return jsonObject;
   }
   
+  @Override
   public StepEjectPlayer initFrom(JsonValue pJsonValue) {
-    initFromTemp(pJsonValue);
+    super.initFrom(pJsonValue);
     JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
     fGotoLabelOnEnd = IServerJsonOption.GOTO_LABEL_ON_END.getFrom(jsonObject);
     fFoulerHasBall = IServerJsonOption.FOULER_HAS_BALL.getFrom(jsonObject);

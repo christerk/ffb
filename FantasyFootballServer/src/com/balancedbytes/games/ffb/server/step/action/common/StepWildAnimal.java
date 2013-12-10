@@ -185,6 +185,8 @@ public class StepWildAnimal extends AbstractStepWithReRoll {
   	return 1;
   }
   
+  // ByteArray serialization
+  
 	@Override
   public void addTo(ByteList pByteList) {
   	super.addTo(pByteList);
@@ -200,14 +202,16 @@ public class StepWildAnimal extends AbstractStepWithReRoll {
 
   // JSON serialization
   
+  @Override
   public JsonObject toJsonValue() {
-    JsonObject jsonObject = toJsonValueTemp();
+    JsonObject jsonObject = super.toJsonValue();
     IServerJsonOption.GOTO_LABEL_ON_FAILURE.addTo(jsonObject, fGotoLabelOnFailure);
     return jsonObject;
   }
   
+  @Override
   public StepWildAnimal initFrom(JsonValue pJsonValue) {
-    initFromTemp(pJsonValue);
+    super.initFrom(pJsonValue);
     JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
     fGotoLabelOnFailure = IServerJsonOption.GOTO_LABEL_ON_PUSHBACK.getFrom(jsonObject);
     return this;

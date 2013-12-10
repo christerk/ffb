@@ -209,8 +209,9 @@ public class StepInitFeeding extends AbstractStep {
   
   // JSON serialization
   
+  @Override
   public JsonObject toJsonValue() {
-    JsonObject jsonObject = toJsonValueTemp();
+    JsonObject jsonObject = super.toJsonValue();
     IServerJsonOption.GOTO_LABEL_ON_END.addTo(jsonObject, fGotoLabelOnEnd);
     IServerJsonOption.FEED_ON_PLAYER_CHOICE.addTo(jsonObject, fFeedOnPlayerChoice);
     IServerJsonOption.FEEDING_ALLOWED.addTo(jsonObject, fFeedingAllowed);
@@ -218,8 +219,9 @@ public class StepInitFeeding extends AbstractStep {
     return jsonObject;
   }
   
+  @Override
   public StepInitFeeding initFrom(JsonValue pJsonValue) {
-    initFromTemp(pJsonValue);
+    super.initFrom(pJsonValue);
     JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
     fGotoLabelOnEnd = IServerJsonOption.GOTO_LABEL_ON_END.getFrom(jsonObject);
     fFeedOnPlayerChoice = IServerJsonOption.FEED_ON_PLAYER_CHOICE.getFrom(jsonObject);

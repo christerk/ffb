@@ -167,6 +167,8 @@ public final class StepEndPassing extends AbstractStep {
   	getResult().setNextAction(StepAction.NEXT_STEP);
   }
 	
+	// ByteArray serialization
+	
   public int getByteArraySerializationVersion() {
   	return 1;
   }
@@ -196,8 +198,9 @@ public final class StepEndPassing extends AbstractStep {
   
   // JSON serialization
   
+  @Override
   public JsonObject toJsonValue() {
-    JsonObject jsonObject = toJsonValueTemp();
+    JsonObject jsonObject = super.toJsonValue();
     IServerJsonOption.INTERCEPTOR_ID.addTo(jsonObject, fInterceptorId);
     IServerJsonOption.CATCHER_ID.addTo(jsonObject, fCatcherId);
     IServerJsonOption.PASS_ACCURATE.addTo(jsonObject, fPassAccurate);
@@ -207,8 +210,9 @@ public final class StepEndPassing extends AbstractStep {
     return jsonObject;
   }
   
+  @Override
   public StepEndPassing initFrom(JsonValue pJsonValue) {
-    initFromTemp(pJsonValue);
+    super.initFrom(pJsonValue);
     JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
     fInterceptorId = IServerJsonOption.INTERCEPTOR_ID.getFrom(jsonObject);
     fCatcherId = IServerJsonOption.CATCHER_ID.getFrom(jsonObject);

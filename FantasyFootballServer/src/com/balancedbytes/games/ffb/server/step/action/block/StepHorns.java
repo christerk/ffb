@@ -51,6 +51,8 @@ public class StepHorns extends AbstractStep {
     }
     getResult().setNextAction(StepAction.NEXT_STEP);
   }
+    
+  // ByteArray serialization
   
   public int getByteArraySerializationVersion() {
   	return 1;
@@ -71,14 +73,16 @@ public class StepHorns extends AbstractStep {
   
   // JSON serialization
   
+  @Override
   public JsonObject toJsonValue() {
-    JsonObject jsonObject = toJsonValueTemp();
+    JsonObject jsonObject = super.toJsonValue();
     IServerJsonOption.USING_HORNS.addTo(jsonObject, fUsingHorns);
     return jsonObject;
   }
   
+  @Override
   public StepHorns initFrom(JsonValue pJsonValue) {
-    initFromTemp(pJsonValue);
+    super.initFrom(pJsonValue);
     JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
     fUsingHorns = IServerJsonOption.USING_HORNS.getFrom(jsonObject);
     return this;

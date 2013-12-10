@@ -125,6 +125,8 @@ public class StepWrestle extends AbstractStep {
     }
   }
 
+  // ByteArray serialization
+  
   public int getByteArraySerializationVersion() {
   	return 1;
   }
@@ -146,15 +148,17 @@ public class StepWrestle extends AbstractStep {
   
   // JSON serialization
   
+  @Override
   public JsonObject toJsonValue() {
-    JsonObject jsonObject = toJsonValueTemp();
+    JsonObject jsonObject = super.toJsonValue();
     IServerJsonOption.USING_WRESTLE_ATTACKER.addTo(jsonObject, fUsingWrestleAttacker);
     IServerJsonOption.USING_WRESTLE_DEFENDER.addTo(jsonObject, fUsingWrestleDefender);
     return jsonObject;
   }
   
+  @Override
   public StepWrestle initFrom(JsonValue pJsonValue) {
-    initFromTemp(pJsonValue);
+    super.initFrom(pJsonValue);
     JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
     fUsingWrestleAttacker = IServerJsonOption.USING_WRESTLE_ATTACKER.getFrom(jsonObject);
     fUsingWrestleDefender = IServerJsonOption.USING_WRESTLE_DEFENDER.getFrom(jsonObject);

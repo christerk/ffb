@@ -114,6 +114,8 @@ public final class StepPettyCash extends AbstractStep {
     	getResult().setNextAction(StepAction.NEXT_STEP);
     }
   }
+  
+  // ByteArray serialization
     
   public int getByteArraySerializationVersion() {
   	return 1;
@@ -140,8 +142,9 @@ public final class StepPettyCash extends AbstractStep {
   
   // JSON serialization
   
+  @Override
   public JsonObject toJsonValue() {
-    JsonObject jsonObject = toJsonValueTemp();
+    JsonObject jsonObject = super.toJsonValue();
     IServerJsonOption.PETTY_CASH_SELECTED_HOME.addTo(jsonObject, fPettyCashSelectedHome);
     IServerJsonOption.PETTY_CASH_SELECTED_AWAY.addTo(jsonObject, fPettyCashSelectedAway);
     IServerJsonOption.REPORTED_HOME.addTo(jsonObject, fReportedHome);
@@ -149,8 +152,9 @@ public final class StepPettyCash extends AbstractStep {
     return jsonObject;
   }
   
+  @Override
   public StepPettyCash initFrom(JsonValue pJsonValue) {
-    initFromTemp(pJsonValue);
+    super.initFrom(pJsonValue);
     JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
     fPettyCashSelectedHome = IServerJsonOption.PETTY_CASH_SELECTED_HOME.getFrom(jsonObject);
     fPettyCashSelectedAway = IServerJsonOption.PETTY_CASH_SELECTED_AWAY.getFrom(jsonObject);

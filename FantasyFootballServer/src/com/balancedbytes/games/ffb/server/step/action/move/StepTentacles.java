@@ -191,7 +191,7 @@ public class StepTentacles extends AbstractStepWithReRoll {
     }
   }
   
-  // ByteArraySerialization
+  // ByteArray serialization
   
   public int getByteArraySerializationVersion() {
   	return 1;
@@ -216,16 +216,18 @@ public class StepTentacles extends AbstractStepWithReRoll {
   
   // JSON serialization
   
+  @Override
   public JsonObject toJsonValue() {
-    JsonObject jsonObject = toJsonValueTemp();
+    JsonObject jsonObject = super.toJsonValue();
     IServerJsonOption.GOTO_LABEL_ON_SUCCESS.addTo(jsonObject, fGotoLabelOnSuccess);
     IServerJsonOption.COORDINATE_FROM.addTo(jsonObject, fCoordinateFrom);
     IServerJsonOption.USING_TENTACLES.addTo(jsonObject, fUsingTentacles);
     return jsonObject;
   }
   
+  @Override
   public StepTentacles initFrom(JsonValue pJsonValue) {
-    initFromTemp(pJsonValue);
+    super.initFrom(pJsonValue);
     JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
     fGotoLabelOnSuccess = IServerJsonOption.GOTO_LABEL_ON_SUCCESS.getFrom(jsonObject);
     fCoordinateFrom = IServerJsonOption.COORDINATE_FROM.getFrom(jsonObject);

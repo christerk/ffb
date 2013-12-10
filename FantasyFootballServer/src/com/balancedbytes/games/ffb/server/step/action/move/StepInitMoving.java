@@ -265,6 +265,8 @@ public class StepInitMoving extends AbstractStep {
   	return StepCommandStatus.SKIP_STEP;
   }
   
+  // ByteArray serialization
+  
   public int getByteArraySerializationVersion() {
   	return 1;
   }
@@ -302,8 +304,9 @@ public class StepInitMoving extends AbstractStep {
   
   // JSON serialization
   
+  @Override
   public JsonObject toJsonValue() {
-    JsonObject jsonObject = toJsonValueTemp();
+    JsonObject jsonObject = super.toJsonValue();
     IServerJsonOption.GOTO_LABEL_ON_END.addTo(jsonObject, fGotoLabelOnEnd);
     IServerJsonOption.MOVE_STACK.addTo(jsonObject, fMoveStack);
     IServerJsonOption.GAZE_VICTIM_ID.addTo(jsonObject, fGazeVictimId);
@@ -312,8 +315,9 @@ public class StepInitMoving extends AbstractStep {
     return jsonObject;
   }
   
+  @Override
   public StepInitMoving initFrom(JsonValue pJsonValue) {
-    initFromTemp(pJsonValue);
+    super.initFrom(pJsonValue);
     JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
     fGotoLabelOnEnd = IServerJsonOption.GOTO_LABEL_ON_END.getFrom(jsonObject);
     fMoveStack = IServerJsonOption.MOVE_STACK.getFrom(jsonObject);

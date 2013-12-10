@@ -150,6 +150,8 @@ public final class StepWinnings extends AbstractStepWithReRoll {
 	public int getByteArraySerializationVersion() {
 		return 1;
 	}
+
+	// ByteArray serialization
 	
   @Override
   public void addTo(ByteList pByteList) {
@@ -166,14 +168,16 @@ public final class StepWinnings extends AbstractStepWithReRoll {
   
   // JSON serialization
   
+  @Override
   public JsonObject toJsonValue() {
-    JsonObject jsonObject = toJsonValueTemp();
+    JsonObject jsonObject = super.toJsonValue();
     IServerJsonOption.AUTOMATIC_RE_ROLL.addTo(jsonObject, fAutomaticReRoll);
     return jsonObject;
   }
   
+  @Override
   public StepWinnings initFrom(JsonValue pJsonValue) {
-    initFromTemp(pJsonValue);
+    super.initFrom(pJsonValue);
     JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
     fAutomaticReRoll = IServerJsonOption.AUTOMATIC_RE_ROLL.getFrom(jsonObject);
     return this;

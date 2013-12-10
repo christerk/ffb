@@ -118,6 +118,8 @@ public class StepStab extends AbstractStep {
     }
   }
 
+  // ByteArray serialization
+  
   public int getByteArraySerializationVersion() {
   	return 1;
   }
@@ -139,15 +141,17 @@ public class StepStab extends AbstractStep {
   
   // JSON serialization
   
+  @Override
   public JsonObject toJsonValue() {
-    JsonObject jsonObject = toJsonValueTemp();
+    JsonObject jsonObject = super.toJsonValue();
     IServerJsonOption.GOTO_LABEL_ON_SUCCESS.addTo(jsonObject, fGotoLabelOnSuccess);
     IServerJsonOption.USING_STAB.addTo(jsonObject, fUsingStab);
     return jsonObject;
   }
   
+  @Override
   public StepStab initFrom(JsonValue pJsonValue) {
-    initFromTemp(pJsonValue);
+    super.initFrom(pJsonValue);
     JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
     fGotoLabelOnSuccess = IServerJsonOption.GOTO_LABEL_ON_SUCCESS.getFrom(jsonObject);
     fUsingStab = IServerJsonOption.USING_STAB.getFrom(jsonObject);

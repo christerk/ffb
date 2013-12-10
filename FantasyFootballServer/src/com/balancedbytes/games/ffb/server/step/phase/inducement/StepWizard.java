@@ -145,6 +145,8 @@ public final class StepWizard extends AbstractStep {
 			pAffectedPlayers.add(pPlayer);
 		}
 	}
+	
+	// ByteArray serialization
   
   public int getByteArraySerializationVersion() {
   	return 1;
@@ -171,8 +173,9 @@ public final class StepWizard extends AbstractStep {
   
   // JSON serialization
   
+  @Override
   public JsonObject toJsonValue() {
-    JsonObject jsonObject = toJsonValueTemp();
+    JsonObject jsonObject = super.toJsonValue();
     IServerJsonOption.WIZARD_SPELL.addTo(jsonObject, fWizardSpell);
     IServerJsonOption.TARGET_COORDINATE.addTo(jsonObject, fTargetCoordinate);
     IServerJsonOption.END_INDUCEMENT.addTo(jsonObject, fEndInducement);
@@ -180,8 +183,9 @@ public final class StepWizard extends AbstractStep {
     return jsonObject;
   }
   
+  @Override
   public StepWizard initFrom(JsonValue pJsonValue) {
-    initFromTemp(pJsonValue);
+    super.initFrom(pJsonValue);
     JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
     fWizardSpell = (SpecialEffect) IServerJsonOption.WIZARD_SPELL.getFrom(jsonObject);
     fTargetCoordinate = IServerJsonOption.TARGET_COORDINATE.getFrom(jsonObject);

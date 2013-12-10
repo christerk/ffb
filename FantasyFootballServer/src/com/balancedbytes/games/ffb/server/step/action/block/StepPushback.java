@@ -337,6 +337,8 @@ public class StepPushback extends AbstractStep {
           CatchScatterThrowInMode.SCATTER_BALL));
     }
   }
+  
+  // ByteArray serialization
 
   public int getByteArraySerializationVersion() {
     return 1;
@@ -376,8 +378,9 @@ public class StepPushback extends AbstractStep {
   
   // JSON serialization
   
+  @Override
   public JsonObject toJsonValue() {
-    JsonObject jsonObject = toJsonValueTemp();
+    JsonObject jsonObject = super.toJsonValue();
     IServerJsonOption.OLD_DEFENDER_STATE.addTo(jsonObject, fOldDefenderState);
     if (fStartingPushbackSquare != null) {
       IServerJsonOption.STARTING_PUSHBACK_SQUARE.addTo(jsonObject, fStartingPushbackSquare.toJsonValue());
@@ -388,8 +391,9 @@ public class StepPushback extends AbstractStep {
     return jsonObject;
   }
   
+  @Override
   public StepPushback initFrom(JsonValue pJsonValue) {
-    initFromTemp(pJsonValue);
+    super.initFrom(pJsonValue);
     JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
     fOldDefenderState = IServerJsonOption.OLD_DEFENDER_STATE.getFrom(jsonObject);
     fStartingPushbackSquare = null;

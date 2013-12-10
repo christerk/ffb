@@ -253,7 +253,7 @@ public class StepMoveDodge extends AbstractStepWithReRoll {
     
   }
     
-  // ByteArraySerialization
+  // ByteArray serialization
   
   public int getByteArraySerializationVersion() {
   	return 1;
@@ -284,8 +284,9 @@ public class StepMoveDodge extends AbstractStepWithReRoll {
   
   // JSON serialization
   
+  @Override
   public JsonObject toJsonValue() {
-    JsonObject jsonObject = toJsonValueTemp();
+    JsonObject jsonObject = super.toJsonValue();
     IServerJsonOption.GOTO_LABEL_ON_FAILURE.addTo(jsonObject, fGotoLabelOnFailure);
     IServerJsonOption.COORDINATE_FROM.addTo(jsonObject, fCoordinateFrom);
     IServerJsonOption.COORDINATE_TO.addTo(jsonObject, fCoordinateTo);
@@ -295,8 +296,9 @@ public class StepMoveDodge extends AbstractStepWithReRoll {
     return jsonObject;
   }
   
+  @Override
   public StepMoveDodge initFrom(JsonValue pJsonValue) {
-    initFromTemp(pJsonValue);
+    super.initFrom(pJsonValue);
     JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
     fGotoLabelOnFailure = IServerJsonOption.GOTO_LABEL_ON_FAILURE.getFrom(jsonObject);
     fCoordinateFrom = IServerJsonOption.COORDINATE_FROM.getFrom(jsonObject);

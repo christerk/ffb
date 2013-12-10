@@ -53,6 +53,8 @@ public final class StepFanFactor extends AbstractStep {
     getResult().addReport(new ReportFanFactorRoll(fanFactorRollHome, fanFactorModifierHome, fanFactorRollAway, fanFactorModifierAway));
     getResult().setNextAction(StepAction.NEXT_STEP);
   }
+  
+  // ByteArray serialization
 
 	public int getByteArraySerializationVersion() {
 		return 1;
@@ -60,12 +62,14 @@ public final class StepFanFactor extends AbstractStep {
 	
   // JSON serialization
   
+  @Override
   public JsonObject toJsonValue() {
-    return toJsonValueTemp();
+    return super.toJsonValue();
   }
   
+  @Override
   public StepFanFactor initFrom(JsonValue pJsonValue) {
-    initFromTemp(pJsonValue);
+    super.initFrom(pJsonValue);
     return this;
   }
 
