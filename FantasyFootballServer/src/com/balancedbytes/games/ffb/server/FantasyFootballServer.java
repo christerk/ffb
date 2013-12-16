@@ -170,6 +170,7 @@ public class FantasyFootballServer {
           holder.setInitParameter("resourceBase", new File(httpDir, "icons").getAbsolutePath());
           holder.setInitParameter("pathInfoOnly", "true");
           context.addServlet(new ServletHolder(new AdminServlet(this)), "/admin/*");
+          context.addServlet(new ServletHolder(new SimpleEchoServlet()), "/echo/*");
           server.start();
         }
         
