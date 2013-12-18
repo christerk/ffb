@@ -1,4 +1,4 @@
-package com.balancedbytes.games.ffb.server;
+package com.balancedbytes.games.ffb.server.net;
 
 import org.eclipse.jetty.websocket.servlet.WebSocketServlet;
 import org.eclipse.jetty.websocket.servlet.WebSocketServletFactory;

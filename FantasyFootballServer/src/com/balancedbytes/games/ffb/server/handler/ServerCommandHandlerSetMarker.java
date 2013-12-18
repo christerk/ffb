@@ -1,16 +1,18 @@
 package com.balancedbytes.games.ffb.server.handler;
 
+import java.nio.channels.SocketChannel;
+
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.FieldMarker;
 import com.balancedbytes.games.ffb.PlayerMarker;
 import com.balancedbytes.games.ffb.model.Game;
-import com.balancedbytes.games.ffb.net.NetCommand;
 import com.balancedbytes.games.ffb.net.NetCommandId;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandSetMarker;
 import com.balancedbytes.games.ffb.server.FantasyFootballServer;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.db.old.IDbTableFieldModels;
 import com.balancedbytes.games.ffb.server.net.ChannelManager;
+import com.balancedbytes.games.ffb.server.net.ReceivedCommand;
 import com.balancedbytes.games.ffb.server.util.UtilGame;
 import com.balancedbytes.games.ffb.util.StringTool;
 
@@ -28,15 +30,16 @@ public class ServerCommandHandlerSetMarker extends ServerCommandHandler {
     return NetCommandId.CLIENT_SET_MARKER;
   }
 
-  public void handleNetCommand(NetCommand pNetCommand) {
+  public void handleCommand(ReceivedCommand pReceivedCommand) {
 
-    ClientCommandSetMarker setMarkerCommand = (ClientCommandSetMarker) pNetCommand;
+    ClientCommandSetMarker setMarkerCommand = (ClientCommandSetMarker) pReceivedCommand.getCommand();
+    SocketChannel sender = pReceivedCommand.getSender();
     
     ChannelManager channelManager = getServer().getChannelManager();
-    long gameId = channelManager.getGameIdForChannel(setMarkerCommand.getSender());
+    long gameId = channelManager.getGameIdForChannel(sender);
     GameState gameState = getServer().getGameCache().getGameStateById(gameId);
-    boolean homeMarker = (setMarkerCommand.getSender() == channelManager.getChannelOfHomeCoach(gameState));
-    boolean awayMarker = (setMarkerCommand.getSender() == channelManager.getChannelOfAwayCoach(gameState));
+    boolean homeMarker = (sender == channelManager.getChannelOfHomeCoach(gameState));
+    boolean awayMarker = (sender == channelManager.getChannelOfAwayCoach(gameState));
 
     if (homeMarker || awayMarker) {
       

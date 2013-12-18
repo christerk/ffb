@@ -16,13 +16,13 @@ import com.balancedbytes.games.ffb.dialog.DialogInterceptionParameter;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
-import com.balancedbytes.games.ffb.net.NetCommand;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandInterceptorChoice;
 import com.balancedbytes.games.ffb.report.ReportInterceptionRoll;
 import com.balancedbytes.games.ffb.server.ActionStatus;
 import com.balancedbytes.games.ffb.server.DiceInterpreter;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.IServerJsonOption;
+import com.balancedbytes.games.ffb.server.net.ReceivedCommand;
 import com.balancedbytes.games.ffb.server.step.AbstractStepWithReRoll;
 import com.balancedbytes.games.ffb.server.step.StepAction;
 import com.balancedbytes.games.ffb.server.step.StepCommandStatus;
@@ -88,27 +88,27 @@ public final class StepIntercept extends AbstractStepWithReRoll {
 		executeStep();
 	}
 	
-	@Override
-	public StepCommandStatus handleNetCommand(NetCommand pNetCommand) {
-		StepCommandStatus commandStatus = super.handleNetCommand(pNetCommand);
-		if (commandStatus == StepCommandStatus.UNHANDLED_COMMAND) {
-			switch (pNetCommand.getId()) {
-	      case CLIENT_INTERCEPTOR_CHOICE:
-	        ClientCommandInterceptorChoice interceptorCommand = (ClientCommandInterceptorChoice) pNetCommand;
-	        fInterceptorId = interceptorCommand.getInterceptorId();
-	        fInterceptorChosen = true;
-	        commandStatus = StepCommandStatus.EXECUTE_STEP;
-	        break;
-				default:
-					break;
-			}
-		}
-		if (commandStatus == StepCommandStatus.EXECUTE_STEP) {
-			executeStep();
-		}
-		return commandStatus;
-	}
-
+  @Override
+  public StepCommandStatus handleCommand(ReceivedCommand pReceivedCommand) {
+    StepCommandStatus commandStatus = super.handleCommand(pReceivedCommand);
+    if (commandStatus == StepCommandStatus.UNHANDLED_COMMAND) {
+      switch (pReceivedCommand.getId()) {
+        case CLIENT_INTERCEPTOR_CHOICE:
+          ClientCommandInterceptorChoice interceptorCommand = (ClientCommandInterceptorChoice) pReceivedCommand.getCommand();
+          fInterceptorId = interceptorCommand.getInterceptorId();
+          fInterceptorChosen = true;
+          commandStatus = StepCommandStatus.EXECUTE_STEP;
+          break;
+        default:
+          break;
+      }
+    }
+    if (commandStatus == StepCommandStatus.EXECUTE_STEP) {
+      executeStep();
+    }
+    return commandStatus;
+  }
+	
   private void executeStep() {
     Game game = getGameState().getGame();
     if (game.getThrower() == null) {

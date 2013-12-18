@@ -4,9 +4,6 @@ import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
-import com.balancedbytes.games.ffb.net.NetCommand;
-import com.balancedbytes.games.ffb.net.NetCommandId;
-import com.balancedbytes.games.ffb.net.commands.UtilNetCommand;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
@@ -15,16 +12,24 @@ import com.eclipsesource.json.JsonValue;
  * 
  * @author Kalimar
  */
-public abstract class InternalServerCommand extends NetCommand {
+public abstract class InternalServerCommandWithGameId extends InternalServerCommand {
   
-  public InternalServerCommand() {
-    super();
+  protected static final String XML_ATTRIBUTE_GAME_ID = "gameId";
+  
+  private long fGameId;
+
+  public InternalServerCommandWithGameId(long pGameId) {
+    setGameId(pGameId);
   }
   
-  public boolean isInternal() {
-    return true;
+  public long getGameId() {
+    return fGameId;
   }
-    
+  
+  protected void setGameId(long pGameId) {
+    fGameId = pGameId;
+  }
+  
   // ByteArray serialization
   
   public int getByteArraySerializationVersion() {
@@ -32,25 +37,28 @@ public abstract class InternalServerCommand extends NetCommand {
   }
   
   public void addTo(ByteList pByteList) {
-    pByteList.addSmallInt(getByteArraySerializationVersion());
+    super.addTo(pByteList);
+    pByteList.addLong(fGameId);
   }
   
   public int initFrom(ByteArray pByteArray) {
-    int byteArraySerializationVersion = pByteArray.getSmallInt();
+    int byteArraySerializationVersion = super.initFrom(pByteArray);
+    fGameId = pByteArray.getLong();
     return byteArraySerializationVersion;
   }
   
   // JSON serialization
 
   public JsonObject toJsonValue() {
-    JsonObject jsonObject = new JsonObject();
-    IJsonOption.NET_COMMAND_ID.addTo(jsonObject, getId());
+    JsonObject jsonObject = super.toJsonValue();
+    IJsonOption.GAME_ID.addTo(jsonObject, fGameId);
     return jsonObject;
   }
 
-  public InternalServerCommand initFrom(JsonValue pJsonValue) {
+  public InternalServerCommandWithGameId initFrom(JsonValue pJsonValue) {
+    super.initFrom(pJsonValue);
     JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-    UtilNetCommand.validateCommandId(this, (NetCommandId) IJsonOption.NET_COMMAND_ID.getFrom(jsonObject));
+    fGameId = IJsonOption.GAME_ID.getFrom(jsonObject);
     return this;
   }
   

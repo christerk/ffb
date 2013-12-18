@@ -2,11 +2,11 @@ package com.balancedbytes.games.ffb.server.handler;
 
 import com.balancedbytes.games.ffb.GameStatus;
 import com.balancedbytes.games.ffb.model.Game;
-import com.balancedbytes.games.ffb.net.NetCommand;
 import com.balancedbytes.games.ffb.net.NetCommandId;
 import com.balancedbytes.games.ffb.server.FantasyFootballServer;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.fumbbl.FumbblRequestCheckGamestate;
+import com.balancedbytes.games.ffb.server.net.ReceivedCommand;
 import com.balancedbytes.games.ffb.server.net.commands.InternalServerCommandFumbblTeamLoaded;
 import com.balancedbytes.games.ffb.server.util.UtilStartGame;
 import com.balancedbytes.games.ffb.util.StringTool;
@@ -25,8 +25,8 @@ public class ServerCommandHandlerFumbblTeamLoaded extends ServerCommandHandler {
     return NetCommandId.INTERNAL_SERVER_FUMBBL_TEAM_LOADED;
   }
 
-  public void handleNetCommand(NetCommand pNetCommand) {
-    InternalServerCommandFumbblTeamLoaded teamLoadedCommand = (InternalServerCommandFumbblTeamLoaded) pNetCommand;
+  public void handleCommand(ReceivedCommand pReceivedCommand) {
+    InternalServerCommandFumbblTeamLoaded teamLoadedCommand = (InternalServerCommandFumbblTeamLoaded) pReceivedCommand.getCommand();
     GameState gameState = getServer().getGameCache().getGameStateById(teamLoadedCommand.getGameId());
     if (gameState == null) {
     	return;
@@ -37,7 +37,7 @@ public class ServerCommandHandlerFumbblTeamLoaded extends ServerCommandHandler {
     		teamLoadedCommand.getAdminGameIdListener().setGameId(gameState.getId());
     	}
     } else {
-      if (UtilStartGame.joinGameAsPlayerAndCheckIfReadyToStart(gameState, teamLoadedCommand.getSender(), teamLoadedCommand.getCoach(), teamLoadedCommand.isHomeTeam())) {
+      if (UtilStartGame.joinGameAsPlayerAndCheckIfReadyToStart(gameState, pReceivedCommand.getSender(), teamLoadedCommand.getCoach(), teamLoadedCommand.isHomeTeam())) {
         getServer().getFumbblRequestProcessor().add(new FumbblRequestCheckGamestate(gameState));
       }
     }

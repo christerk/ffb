@@ -19,10 +19,10 @@ public class InternalServerCommandScheduleGame extends InternalServerCommand {
   
 	private String fTeamHomeId;
 	private String fTeamAwayId;
+	
 	private transient IAdminGameIdListener fAdminGameIdListener;
 
   public InternalServerCommandScheduleGame(String pTeamHomeId, String pTeamAwayId) {
-  	super(0);
     fTeamHomeId = pTeamHomeId;
     fTeamAwayId = pTeamAwayId;
   }
@@ -48,11 +48,7 @@ public class InternalServerCommandScheduleGame extends InternalServerCommand {
   }
   
   // ByteArray serialization
-  
-  public int getByteArraySerializationVersion() {
-    return 1;
-  }
-  
+    
   public void addTo(ByteList pByteList) {
     super.addTo(pByteList);
     pByteList.addString(fTeamHomeId);

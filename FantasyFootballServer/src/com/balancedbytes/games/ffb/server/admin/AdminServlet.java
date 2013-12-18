@@ -209,7 +209,7 @@ public class AdminServlet extends HttpServlet {
         gameIdNotifier.notify();
       }
     });
-    getServer().getCommunication().handleNetCommand(scheduleCommand);
+    getServer().getCommunication().handleCommand(scheduleCommand);
     synchronized (gameIdNotifier) {
       while (gameIdNotifier.get() == null) {
         try {
@@ -230,7 +230,7 @@ public class AdminServlet extends HttpServlet {
     UtilXml.addEmptyElement(pHandler, _XML_TAG_CLOSE, attributes);
     long gameId = parseGameId(gameIdString);
     if (gameId > 0) {
-      getServer().getCommunication().handleNetCommand(new InternalServerCommandCloseGame(gameId));
+      getServer().getCommunication().handleCommand(new InternalServerCommandCloseGame(gameId));
       return true;
     } else {
       UtilXml.addValueElement(pHandler, _XML_TAG_ERROR, "Invalid or missing gameId parameter");
@@ -267,7 +267,7 @@ public class AdminServlet extends HttpServlet {
     UtilXml.addEmptyElement(pHandler, _XML_TAG_DELETE, attributes);
     long gameId = parseGameId(gameIdString);
     if (gameId > 0) {
-      getServer().getCommunication().handleNetCommand(new InternalServerCommandDeleteGame(gameId));
+      getServer().getCommunication().handleCommand(new InternalServerCommandDeleteGame(gameId));
       return true;
     } else {
       UtilXml.addValueElement(pHandler, _XML_TAG_ERROR, "Invalid or missing gameId parameter");
@@ -294,7 +294,7 @@ public class AdminServlet extends HttpServlet {
     UtilXml.addEmptyElement(pHandler, _XML_TAG_UPLOAD, attributes);
     long gameId = parseGameId(gameIdString);
     if (gameId > 0) {
-      getServer().getCommunication().handleNetCommand(new InternalServerCommandUploadGame(gameId));
+      getServer().getCommunication().handleCommand(new InternalServerCommandUploadGame(gameId));
       return true;
     } else {
       UtilXml.addValueElement(pHandler, _XML_TAG_ERROR, "Invalid or missing gameId parameter");
@@ -315,7 +315,7 @@ public class AdminServlet extends HttpServlet {
       UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_GAME_ID, gameIdString);
       UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_TEAM_ID, teamId);
       UtilXml.addEmptyElement(pHandler, _XML_TAG_CONCEDE, attributes);
-      getServer().getCommunication().handleNetCommand(new InternalServerCommandUploadGame(gameId, teamId));
+      getServer().getCommunication().handleCommand(new InternalServerCommandUploadGame(gameId, teamId));
       return true;
     } else {
       UtilXml.addValueElement(pHandler, _XML_TAG_ERROR, "Invalid or missing gameId parameter");
@@ -330,8 +330,7 @@ public class AdminServlet extends HttpServlet {
     if (status != null) {
       UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_GAME_STATUS, status.getName());
       UtilXml.startElement(pHandler, _XML_TAG_LIST, attributes);
-      DbAdminListByStatusQueryOld listQuery = (DbAdminListByStatusQueryOld) getServer().getDbQueryFactory().getStatement(
-          DbStatementId.ADMIN_LIST_BY_STATUS_QUERY_OLD);
+      DbAdminListByStatusQueryOld listQuery = (DbAdminListByStatusQueryOld) getServer().getDbQueryFactory().getStatement(DbStatementId.ADMIN_LIST_BY_STATUS_QUERY_OLD);
       AdminList adminList = new AdminList();
       listQuery.execute(adminList, status);
       if (adminList.size() > 0) {
@@ -368,7 +367,7 @@ public class AdminServlet extends HttpServlet {
     getServer().getGameCache().clearRosterCache();
     return true;
   }
-
+  
   private boolean checkResponse(String pResonse) {
     boolean isOk = (fLastChallenge != null);
     if (isOk) {

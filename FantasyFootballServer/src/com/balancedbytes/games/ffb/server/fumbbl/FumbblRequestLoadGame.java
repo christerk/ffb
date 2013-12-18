@@ -7,6 +7,7 @@ import com.balancedbytes.games.ffb.server.FantasyFootballServer;
 import com.balancedbytes.games.ffb.server.GameCache;
 import com.balancedbytes.games.ffb.server.GameCacheMode;
 import com.balancedbytes.games.ffb.server.GameState;
+import com.balancedbytes.games.ffb.server.net.ReceivedCommand;
 import com.balancedbytes.games.ffb.server.net.commands.InternalServerCommandJoinApproved;
 import com.balancedbytes.games.ffb.server.net.commands.InternalServerCommandReplayLoaded;
 
@@ -76,14 +77,12 @@ public class FumbblRequestLoadGame extends FumbblRequest {
         if (ClientMode.REPLAY == getMode()) {
           server.getGameCache().add(gameState, GameCacheMode.REPLAY_GAME);
           InternalServerCommandReplayLoaded replayCommand = new InternalServerCommandReplayLoaded(getGameId(), getReplayToCommandNr());
-          replayCommand.setSender(getSender());
-          server.getCommunication().handleNetCommand(replayCommand);
+          server.getCommunication().handleCommand(new ReceivedCommand(replayCommand, getSender()));
         } else {
           server.getGameCache().add(gameState, GameCacheMode.LOAD_GAME);
         	gameCache.queueDbUpdate(gameState);  // persist status update
           InternalServerCommandJoinApproved joinApprovedCommand = new InternalServerCommandJoinApproved(getGameId(), null, getCoach(), getTeamId(), getMode());
-          joinApprovedCommand.setSender(getSender());
-          server.getCommunication().handleNetCommand(joinApprovedCommand);
+          server.getCommunication().handleCommand(new ReceivedCommand(joinApprovedCommand, getSender()));
         }
       }
     }

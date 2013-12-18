@@ -1,5 +1,7 @@
 package com.balancedbytes.games.ffb.server.step;
 
+import java.nio.channels.SocketChannel;
+
 import com.balancedbytes.games.ffb.Sound;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
@@ -7,9 +9,7 @@ import com.balancedbytes.games.ffb.dialog.DialogConcedeGameParameter;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.GameResult;
-import com.balancedbytes.games.ffb.net.NetCommand;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandConcedeGame;
-import com.balancedbytes.games.ffb.net.commands.ClientCommandIllegalProcedure;
 import com.balancedbytes.games.ffb.report.ReportList;
 import com.balancedbytes.games.ffb.report.ReportTimeoutEnforced;
 import com.balancedbytes.games.ffb.server.DebugLog;
@@ -18,6 +18,7 @@ import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.IServerJsonOption;
 import com.balancedbytes.games.ffb.server.IServerLogLevel;
 import com.balancedbytes.games.ffb.server.net.ChannelManager;
+import com.balancedbytes.games.ffb.server.net.ReceivedCommand;
 import com.balancedbytes.games.ffb.server.util.UtilDialog;
 import com.balancedbytes.games.ffb.server.util.UtilGame;
 import com.eclipsesource.json.JsonObject;
@@ -67,14 +68,14 @@ public abstract class AbstractStep implements IStep {
     // do nothing, override in subclass if needed
   }
 
-  public StepCommandStatus handleNetCommand(NetCommand pNetCommand) {
+  public StepCommandStatus handleCommand(ReceivedCommand pReceivedCommand) {
     StepCommandStatus commandStatus = StepCommandStatus.UNHANDLED_COMMAND;
-    switch (pNetCommand.getId()) {
+    switch (pReceivedCommand.getId()) {
     case CLIENT_CONCEDE_GAME:
-      commandStatus = handleConcedeGame((ClientCommandConcedeGame) pNetCommand);
+      commandStatus = handleConcedeGame(pReceivedCommand);
       break;
     case CLIENT_ILLEGAL_PROCEDURE:
-      commandStatus = handleIllegalProcedure((ClientCommandIllegalProcedure) pNetCommand);
+      commandStatus = handleIllegalProcedure(pReceivedCommand);
       break;
     default:
       break;
@@ -150,15 +151,17 @@ public abstract class AbstractStep implements IStep {
   
   // Helper methods
 
-  private StepCommandStatus handleConcedeGame(ClientCommandConcedeGame pConcedeGameCommand) {
+  private StepCommandStatus handleConcedeGame(ReceivedCommand pReceivedCommand) {
+    ClientCommandConcedeGame concedeGameCommand = (ClientCommandConcedeGame) pReceivedCommand.getCommand();
+    SocketChannel sender = pReceivedCommand.getSender();
     StepCommandStatus commandStatus = StepCommandStatus.UNHANDLED_COMMAND;
     Game game = getGameState().getGame();
     GameResult gameResult = game.getGameResult();
-    if (pConcedeGameCommand.getConcedeGameStatus() != null) {
+    if (concedeGameCommand.getConcedeGameStatus() != null) {
       ChannelManager channelManager = getGameState().getServer().getChannelManager();
-      boolean homeCommand = (channelManager.getChannelOfHomeCoach(getGameState()) == pConcedeGameCommand.getSender());
-      boolean awayCommand = (channelManager.getChannelOfAwayCoach(getGameState()) == pConcedeGameCommand.getSender());
-      switch (pConcedeGameCommand.getConcedeGameStatus()) {
+      boolean homeCommand = (channelManager.getChannelOfHomeCoach(getGameState()) == sender);
+      boolean awayCommand = (channelManager.getChannelOfAwayCoach(getGameState()) == sender);
+      switch (concedeGameCommand.getConcedeGameStatus()) {
       case REQUESTED:
         if (game.isConcessionPossible() && ((game.isHomePlaying() && homeCommand) || (!game.isHomePlaying() && awayCommand))) {
           UtilDialog.showDialog(getGameState(), new DialogConcedeGameParameter());
@@ -183,13 +186,14 @@ public abstract class AbstractStep implements IStep {
     return commandStatus;
   }
 
-  private StepCommandStatus handleIllegalProcedure(ClientCommandIllegalProcedure pIllegalProcedureCommand) {
+  private StepCommandStatus handleIllegalProcedure(ReceivedCommand pReceivedCommand) {
+    SocketChannel sender = pReceivedCommand.getSender();
     StepCommandStatus commandStatus = StepCommandStatus.UNHANDLED_COMMAND;
     Game game = getGameState().getGame();
     if (game.isTimeoutPossible()) {
       ReportList reports = new ReportList();
       FantasyFootballServer server = getGameState().getServer();
-      String coach = server.getChannelManager().getCoachForChannel(pIllegalProcedureCommand.getSender());
+      String coach = server.getChannelManager().getCoachForChannel(sender);
       reports.add(new ReportTimeoutEnforced(coach));
       game.setTimeoutEnforced(true);
       game.setTimeoutPossible(false);

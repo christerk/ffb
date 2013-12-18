@@ -1,4 +1,4 @@
-package com.balancedbytes.games.ffb.server;
+package com.balancedbytes.games.ffb.server.net;
 
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage;

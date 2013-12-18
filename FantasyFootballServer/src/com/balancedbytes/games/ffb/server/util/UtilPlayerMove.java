@@ -19,7 +19,6 @@ import com.balancedbytes.games.ffb.server.DebugLog;
 import com.balancedbytes.games.ffb.server.DiceInterpreter;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.IServerLogLevel;
-import com.balancedbytes.games.ffb.server.step.UtilSteps;
 import com.balancedbytes.games.ffb.util.ArrayTool;
 import com.balancedbytes.games.ffb.util.UtilCards;
 import com.balancedbytes.games.ffb.util.UtilPassing;
@@ -31,19 +30,18 @@ import com.balancedbytes.games.ffb.util.UtilPlayer;
  */
 public class UtilPlayerMove {
 	
-	public static boolean isValidMove(GameState pGameState, ClientCommandMove pMoveCommand) {
+	public static boolean isValidMove(GameState pGameState, ClientCommandMove pMoveCommand, boolean pHomeCommand) {
 		if ((pMoveCommand == null) || (pMoveCommand.getCoordinateFrom() == null) || !ArrayTool.isProvided(pMoveCommand.getCoordinatesTo())) {
 			return false;
 		}
-		boolean homeCommand = UtilSteps.checkCommandIsFromHomePlayer(pGameState, pMoveCommand);
-		FieldCoordinate coordinateFrom = homeCommand ? pMoveCommand.getCoordinateFrom() : pMoveCommand.getCoordinateFrom().transform();
+		FieldCoordinate coordinateFrom = pHomeCommand ? pMoveCommand.getCoordinateFrom() : pMoveCommand.getCoordinateFrom().transform();
     Game game = pGameState.getGame();
     ActingPlayer actingPlayer = game.getActingPlayer();
     FieldCoordinate playerCoordinate = game.getFieldModel().getPlayerCoordinate(actingPlayer.getPlayer());
     if ((playerCoordinate != null) && playerCoordinate.equals(coordinateFrom)) {
     	return true;
     }
-    pGameState.getServer().getDebugLog().log(IServerLogLevel.DEBUG, homeCommand ? DebugLog.COMMAND_CLIENT_HOME : DebugLog.COMMAND_CLIENT_AWAY, "!Client move out of sync, Command dropped");
+    pGameState.getServer().getDebugLog().log(IServerLogLevel.DEBUG, pHomeCommand ? DebugLog.COMMAND_CLIENT_HOME : DebugLog.COMMAND_CLIENT_AWAY, "!Client move out of sync, Command dropped");
     return false;
 	}
 	
@@ -125,13 +123,13 @@ public class UtilPlayerMove {
     fieldModel.add(moveSquare);
   }
 
-	public static FieldCoordinate[] fetchMoveStack(GameState pGameState, ClientCommandMove pMoveCommand) {
+	public static FieldCoordinate[] fetchMoveStack(GameState pGameState, ClientCommandMove pMoveCommand, boolean pHomeCommand) {
 		if ((pGameState == null) || (pMoveCommand == null) || !ArrayTool.isProvided(pMoveCommand.getCoordinatesTo())) {
 			return new FieldCoordinate[0];
 		}
 	  FieldCoordinate[] coordinatesTo = pMoveCommand.getCoordinatesTo();
 	  FieldCoordinate[] moveStack = new FieldCoordinate[coordinatesTo.length];
-	  if (UtilCommand.isHomeCommand(pGameState.getServer(), pMoveCommand)) {
+	  if (pHomeCommand) {
 	  	for (int i = 0; i < moveStack.length; i++) {
 	  		moveStack[i] = coordinatesTo[i];
 	  	}

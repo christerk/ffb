@@ -1,9 +1,11 @@
 package com.balancedbytes.games.ffb.server.handler;
 
-import com.balancedbytes.games.ffb.net.NetCommand;
+import java.nio.channels.SocketChannel;
+
 import com.balancedbytes.games.ffb.net.NetCommandId;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandPing;
 import com.balancedbytes.games.ffb.server.FantasyFootballServer;
+import com.balancedbytes.games.ffb.server.net.ReceivedCommand;
 
 /**
  * 
@@ -19,13 +21,17 @@ public class ServerCommandHandlerPing extends ServerCommandHandler {
     return NetCommandId.CLIENT_PING;
   }
 
-  public void handleNetCommand(NetCommand pNetCommand) {
-    ClientCommandPing pingCommand = (ClientCommandPing) pNetCommand;
-    getServer().getCommunication().sendPing(pingCommand.getSender(), pingCommand.getTimestamp());
-    getServer().getChannelManager().setLastPing(pingCommand.getSender(), System.currentTimeMillis());
+  public void handleCommand(ReceivedCommand pReceivedCommand) {
+    
+    ClientCommandPing pingCommand = (ClientCommandPing) pReceivedCommand.getCommand();
+    SocketChannel sender = pReceivedCommand.getSender();
+
+    getServer().getCommunication().sendPing(sender, pingCommand.getTimestamp());
+    getServer().getChannelManager().setLastPing(sender, System.currentTimeMillis());
     if (pingCommand.hasEntropy()) {
       getServer().getFortuna().addEntropy(pingCommand.getEntropy());
     }
+    
   }
 
 }

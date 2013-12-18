@@ -12,12 +12,12 @@ import com.balancedbytes.games.ffb.dialog.DialogBlockRollParameter;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.Game;
-import com.balancedbytes.games.ffb.net.NetCommand;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandBlockChoice;
 import com.balancedbytes.games.ffb.report.ReportBlock;
 import com.balancedbytes.games.ffb.report.ReportBlockRoll;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.IServerJsonOption;
+import com.balancedbytes.games.ffb.server.net.ReceivedCommand;
 import com.balancedbytes.games.ffb.server.step.AbstractStepWithReRoll;
 import com.balancedbytes.games.ffb.server.step.StepAction;
 import com.balancedbytes.games.ffb.server.step.StepCommandStatus;
@@ -62,26 +62,26 @@ public class StepBlockRoll extends AbstractStepWithReRoll {
 		executeStep();
 	}
 	
-	@Override
-	public StepCommandStatus handleNetCommand(NetCommand pNetCommand) {
-		StepCommandStatus commandStatus = super.handleNetCommand(pNetCommand);
-		if (commandStatus == StepCommandStatus.UNHANDLED_COMMAND) {
-			switch (pNetCommand.getId()) {
-				case CLIENT_BLOCK_CHOICE:
-			    ClientCommandBlockChoice blockChoiceCommand = (ClientCommandBlockChoice) pNetCommand;
-			    fDiceIndex = blockChoiceCommand.getDiceIndex();
-			    fBlockResult = new BlockResultFactory().forRoll(fBlockRoll[fDiceIndex]);
-			    commandStatus = StepCommandStatus.EXECUTE_STEP;
-					break;
-				default:
-					break;
-			}
-		}
-		if (commandStatus == StepCommandStatus.EXECUTE_STEP) {
-			executeStep();
-		}
-		return commandStatus;
-	}
+  @Override
+  public StepCommandStatus handleCommand(ReceivedCommand pReceivedCommand) {
+    StepCommandStatus commandStatus = super.handleCommand(pReceivedCommand);
+    if (commandStatus == StepCommandStatus.UNHANDLED_COMMAND) {
+      switch (pReceivedCommand.getId()) {
+        case CLIENT_BLOCK_CHOICE:
+          ClientCommandBlockChoice blockChoiceCommand = (ClientCommandBlockChoice) pReceivedCommand.getCommand();
+          fDiceIndex = blockChoiceCommand.getDiceIndex();
+          fBlockResult = new BlockResultFactory().forRoll(fBlockRoll[fDiceIndex]);
+          commandStatus = StepCommandStatus.EXECUTE_STEP;
+          break;
+        default:
+          break;
+      }
+    }
+    if (commandStatus == StepCommandStatus.EXECUTE_STEP) {
+      executeStep();
+    }
+    return commandStatus;
+  }
 	
   private void executeStep() {
     Game game = getGameState().getGame();

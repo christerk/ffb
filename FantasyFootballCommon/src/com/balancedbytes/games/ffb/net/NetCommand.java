@@ -1,7 +1,5 @@
 package com.balancedbytes.games.ffb.net;
 
-import java.nio.channels.SocketChannel;
-
 import com.balancedbytes.games.ffb.FantasyFootballException;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
@@ -15,15 +13,6 @@ import com.balancedbytes.games.ffb.json.IJsonSerializable;
 public abstract class NetCommand implements IByteArraySerializable, IJsonSerializable {
   
   private int fSize;
-  private SocketChannel fSender;
-  
-  public SocketChannel getSender() {
-    return fSender;
-  }
-  
-  public void setSender(SocketChannel pSender) {
-    fSender = pSender;
-  }
   
   public abstract NetCommandId getId();
   

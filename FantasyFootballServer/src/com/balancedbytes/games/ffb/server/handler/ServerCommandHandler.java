@@ -1,7 +1,5 @@
 package com.balancedbytes.games.ffb.server.handler;
 
-import com.balancedbytes.games.ffb.net.INetCommandHandler;
-import com.balancedbytes.games.ffb.net.NetCommand;
 import com.balancedbytes.games.ffb.net.NetCommandId;
 import com.balancedbytes.games.ffb.server.FantasyFootballServer;
 
@@ -9,7 +7,7 @@ import com.balancedbytes.games.ffb.server.FantasyFootballServer;
  * 
  * @author Kalimar
  */
-public abstract class ServerCommandHandler implements INetCommandHandler {
+public abstract class ServerCommandHandler implements IReceivedCommandHandler {
   
   private FantasyFootballServer fServer;
   
@@ -18,8 +16,6 @@ public abstract class ServerCommandHandler implements INetCommandHandler {
   }
 
   public abstract NetCommandId getId();
-  
-  public abstract void handleNetCommand(NetCommand pNetCommand);
   
   protected FantasyFootballServer getServer() {
     return fServer;

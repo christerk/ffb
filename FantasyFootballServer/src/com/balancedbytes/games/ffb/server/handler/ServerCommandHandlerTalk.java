@@ -24,7 +24,6 @@ import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.model.PlayerResult;
 import com.balancedbytes.games.ffb.model.Team;
-import com.balancedbytes.games.ffb.net.NetCommand;
 import com.balancedbytes.games.ffb.net.NetCommandId;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandTalk;
 import com.balancedbytes.games.ffb.server.DiceInterpreter;
@@ -32,6 +31,7 @@ import com.balancedbytes.games.ffb.server.FantasyFootballServer;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.IServerProperty;
 import com.balancedbytes.games.ffb.server.net.ChannelManager;
+import com.balancedbytes.games.ffb.server.net.ReceivedCommand;
 import com.balancedbytes.games.ffb.server.net.ServerCommunication;
 import com.balancedbytes.games.ffb.server.util.UtilGame;
 import com.balancedbytes.games.ffb.util.ArrayTool;
@@ -52,43 +52,44 @@ public class ServerCommandHandlerTalk extends ServerCommandHandler {
     return NetCommandId.CLIENT_TALK;
   }
 
-  public void handleNetCommand(NetCommand pNetCommand) {
+  public void handleCommand(ReceivedCommand pReceivedCommand) {
 
-    ClientCommandTalk talkCommand = (ClientCommandTalk) pNetCommand;
+    ClientCommandTalk talkCommand = (ClientCommandTalk) pReceivedCommand.getCommand();
+    SocketChannel sender = pReceivedCommand.getSender();
     
     ChannelManager channelManager = getServer().getChannelManager();
     ServerCommunication communication = getServer().getCommunication();
-    long gameId = channelManager.getGameIdForChannel(talkCommand.getSender());
+    long gameId = channelManager.getGameIdForChannel(sender);
     GameState gameState = getServer().getGameCache().getGameStateById(gameId);
     Game game = (gameState != null) ? gameState.getGame() : null;
     String talk = talkCommand.getTalk();
     
     if (talk != null) {
 
-      String coach = channelManager.getCoachForChannel(talkCommand.getSender());
-      if ((game != null) && (channelManager.getChannelOfHomeCoach(gameState) == talkCommand.getSender()) || (channelManager.getChannelOfAwayCoach(gameState) == talkCommand.getSender())) {
+      String coach = channelManager.getCoachForChannel(sender);
+      if ((game != null) && (channelManager.getChannelOfHomeCoach(gameState) == sender) || (channelManager.getChannelOfAwayCoach(gameState) == sender)) {
       	if (game.isTesting() && talk.startsWith("/animation")) {
         	handleAnimationCommand(gameState, talkCommand);
       	} else if (game.isTesting() && talk.startsWith("/box")) {
-        	handleBoxCommand(gameState, talkCommand);
+        	handleBoxCommand(gameState, talkCommand, sender);
       	} else if (game.isTesting() && talk.startsWith("/injury")) {
-          handleInjuryCommand(gameState, talkCommand);
+          handleInjuryCommand(gameState, talkCommand, sender);
       	} else if (game.isTesting() && talk.startsWith("/options")) {
           handleOptionsCommand(gameState, talkCommand);
       	} else if (game.isTesting() && talk.startsWith("/option")) {
         	handleOptionCommand(gameState, talkCommand); 
         } else if (game.isTesting() && talk.startsWith("/prone")) {
-        	handleProneOrStunCommand(gameState, talkCommand, false);
+        	handleProneOrStunCommand(gameState, talkCommand, false, sender);
         } else if (game.isTesting() && talk.startsWith("/roll")) {
           handleRollCommand(gameState, talkCommand);
         } else if (game.isTesting() && talk.startsWith("/skill")) {
-        	handleSkillCommand(gameState, talkCommand);
+        	handleSkillCommand(gameState, talkCommand, sender);
         } else if (game.isTesting() && talk.startsWith("/stat")) {
-        	handleStatCommand(gameState, talkCommand);
+        	handleStatCommand(gameState, talkCommand, sender);
         } else if (game.isTesting() && talk.startsWith("/stun")) {
-        	handleProneOrStunCommand(gameState, talkCommand, true);
+        	handleProneOrStunCommand(gameState, talkCommand, true, sender);
         } else if (game.isTesting() && talk.startsWith("/turn")) {
-          handleTurnCommand(gameState, talkCommand);
+          handleTurnCommand(gameState, talkCommand, sender);
         } else {
           communication.sendPlayerTalk(gameState, coach, talk);
         }
@@ -113,7 +114,7 @@ public class ServerCommandHandlerTalk extends ServerCommandHandler {
         } else if (talk.startsWith("/stomp")) {
           playSoundAfterCooldown(gameState, coach, Sound.SPEC_STOMP);
         } else if (talk.startsWith("/spectators") || talk.startsWith("/specs")) {
-          handleSpectatorsCommand(gameState, talkCommand);
+          handleSpectatorsCommand(gameState, talkCommand, sender);
         } else {
           getServer().getCommunication().sendSpectatorTalk(gameState, coach, talk);
         }
@@ -224,7 +225,7 @@ public class ServerCommandHandlerTalk extends ServerCommandHandler {
   	}
   }
   
-  private void handleBoxCommand(GameState pGameState, ClientCommandTalk pTalkCommand) {
+  private void handleBoxCommand(GameState pGameState, ClientCommandTalk pTalkCommand, SocketChannel pSender) {
   	Game game = pGameState.getGame();
     ChannelManager channelManager = getServer().getChannelManager();
   	String talk = pTalkCommand.getTalk();
@@ -232,7 +233,7 @@ public class ServerCommandHandlerTalk extends ServerCommandHandler {
     if ((commands == null) || (commands.length <= 2)) {
     	return;
     }
-    Team team = (channelManager.getChannelOfHomeCoach(pGameState) == pTalkCommand.getSender()) ? game.getTeamHome() : game.getTeamAway();
+    Team team = (channelManager.getChannelOfHomeCoach(pGameState) == pSender) ? game.getTeamHome() : game.getTeamAway();
     for (Player player : findPlayersInCommand(team, commands, 2)) {
     	if ("rsv".equalsIgnoreCase(commands[1])) {
       	putPlayerIntoBox(pGameState, player, new PlayerState(PlayerState.RESERVE), "Reserve", null);
@@ -255,7 +256,7 @@ public class ServerCommandHandlerTalk extends ServerCommandHandler {
     UtilGame.syncGameModel(pGameState, null, null, null);
   }
 
-  private void handleProneOrStunCommand(GameState pGameState, ClientCommandTalk pTalkCommand, boolean pStun) {
+  private void handleProneOrStunCommand(GameState pGameState, ClientCommandTalk pTalkCommand, boolean pStun, SocketChannel pSender) {
   	Game game = pGameState.getGame();
     ChannelManager channelManager = getServer().getChannelManager();
   	String talk = pTalkCommand.getTalk();
@@ -263,7 +264,7 @@ public class ServerCommandHandlerTalk extends ServerCommandHandler {
     if ((commands == null) || (commands.length <= 1)) {
     	return;
     }
-    Team team = (channelManager.getChannelOfHomeCoach(pGameState) == pTalkCommand.getSender()) ? game.getTeamHome() : game.getTeamAway();
+    Team team = (channelManager.getChannelOfHomeCoach(pGameState) == pSender) ? game.getTeamHome() : game.getTeamAway();
     for (Player player : findPlayersInCommand(team, commands, 1)) {
     	FieldCoordinate playerCoordinate = game.getFieldModel().getPlayerCoordinate(player);
     	if (!playerCoordinate.isBoxCoordinate()) {
@@ -348,7 +349,7 @@ public class ServerCommandHandlerTalk extends ServerCommandHandler {
     }
   }
   
-  private void handleSkillCommand(GameState pGameState, ClientCommandTalk pTalkCommand) {
+  private void handleSkillCommand(GameState pGameState, ClientCommandTalk pTalkCommand, SocketChannel pSender) {
   	Game game = pGameState.getGame();
     ChannelManager channelManager = getServer().getChannelManager();
   	String talk = pTalkCommand.getTalk();
@@ -360,7 +361,7 @@ public class ServerCommandHandlerTalk extends ServerCommandHandler {
     if (skill == null) {
     	return;
     }
-    Team team = (channelManager.getChannelOfHomeCoach(pGameState) == pTalkCommand.getSender()) ? game.getTeamHome() : game.getTeamAway();
+    Team team = (channelManager.getChannelOfHomeCoach(pGameState) == pSender) ? game.getTeamHome() : game.getTeamAway();
     for (Player player : findPlayersInCommand(team, commands, 3)) {
       if ("add".equals(commands[1])) {
         player.addSkill(skill);
@@ -379,7 +380,7 @@ public class ServerCommandHandlerTalk extends ServerCommandHandler {
     }
   }
 
-  private void handleInjuryCommand(GameState pGameState, ClientCommandTalk pTalkCommand) {
+  private void handleInjuryCommand(GameState pGameState, ClientCommandTalk pTalkCommand, SocketChannel pSender) {
   	Game game = pGameState.getGame();
     ChannelManager channelManager = getServer().getChannelManager();
   	String talk = pTalkCommand.getTalk();
@@ -387,7 +388,7 @@ public class ServerCommandHandlerTalk extends ServerCommandHandler {
     if ((commands == null) || (commands.length <= 2)) {
     	return;
     }
-    Team team = (channelManager.getChannelOfHomeCoach(pGameState) == pTalkCommand.getSender()) ? game.getTeamHome() : game.getTeamAway();
+    Team team = (channelManager.getChannelOfHomeCoach(pGameState) == pSender) ? game.getTeamHome() : game.getTeamAway();
     for (Player player : findPlayersInCommand(team, commands, 2)) {
 	    SeriousInjury lastingInjury;
 	    if ("ni".equalsIgnoreCase(commands[1])) {
@@ -413,7 +414,7 @@ public class ServerCommandHandlerTalk extends ServerCommandHandler {
     }
   }
 
-  private void handleStatCommand(GameState pGameState, ClientCommandTalk pTalkCommand) {
+  private void handleStatCommand(GameState pGameState, ClientCommandTalk pTalkCommand, SocketChannel pSender) {
   	Game game = pGameState.getGame();
     ChannelManager channelManager = getServer().getChannelManager();
   	String talk = pTalkCommand.getTalk();
@@ -427,7 +428,7 @@ public class ServerCommandHandlerTalk extends ServerCommandHandler {
     } catch (NumberFormatException nfe) {
     	return;
     }
-    Team team = (channelManager.getChannelOfHomeCoach(pGameState) == pTalkCommand.getSender()) ? game.getTeamHome() : game.getTeamAway();
+    Team team = (channelManager.getChannelOfHomeCoach(pGameState) == pSender) ? game.getTeamHome() : game.getTeamAway();
     for (Player player : findPlayersInCommand(team, commands, 3)) {
       if ((player != null) && (stat >= 0)) {
         if ("ma".equalsIgnoreCase(commands[1])) {
@@ -461,7 +462,7 @@ public class ServerCommandHandlerTalk extends ServerCommandHandler {
     }
   }
 
-  private void handleTurnCommand(GameState pGameState, ClientCommandTalk pTalkCommand) {
+  private void handleTurnCommand(GameState pGameState, ClientCommandTalk pTalkCommand, SocketChannel pSender) {
   	Game game = pGameState.getGame();
     ChannelManager channelManager = getServer().getChannelManager();
   	String talk = pTalkCommand.getTalk();
@@ -474,7 +475,7 @@ public class ServerCommandHandlerTalk extends ServerCommandHandler {
       }
       if (newTurnNr >= 0) {
         int turnDiff = 0;
-        if (channelManager.getChannelOfHomeCoach(pGameState) == pTalkCommand.getSender()) {
+        if (channelManager.getChannelOfHomeCoach(pGameState) == pSender) {
           turnDiff = newTurnNr - game.getTurnDataHome().getTurnNr();
         } else {
           turnDiff = newTurnNr - game.getTurnDataAway().getTurnNr();
@@ -489,7 +490,7 @@ public class ServerCommandHandlerTalk extends ServerCommandHandler {
     }
   }
   
-  private void handleSpectatorsCommand(GameState pGameState, ClientCommandTalk pTalkCommand) {
+  private void handleSpectatorsCommand(GameState pGameState, ClientCommandTalk pTalkCommand, SocketChannel pSender) {
     String[] spectators = findSpectators(pGameState);
     String[] spectatorTalk = null;
     StringBuilder spectatorMessage = new StringBuilder();
@@ -504,7 +505,7 @@ public class ServerCommandHandlerTalk extends ServerCommandHandler {
         spectatorTalk[i + 1] = spectators[i];
       }
     }
-    getServer().getCommunication().sendTalk(pTalkCommand.getSender(), pGameState, null, spectatorTalk);
+    getServer().getCommunication().sendTalk(pSender, pGameState, null, spectatorTalk);
   }
   
 }

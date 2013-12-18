@@ -4,15 +4,14 @@ import java.nio.channels.SocketChannel;
 
 import com.balancedbytes.games.ffb.ClientMode;
 import com.balancedbytes.games.ffb.GameStatus;
-import com.balancedbytes.games.ffb.net.NetCommand;
 import com.balancedbytes.games.ffb.net.NetCommandId;
-import com.balancedbytes.games.ffb.net.commands.InternalCommandSocketClosed;
 import com.balancedbytes.games.ffb.server.FantasyFootballServer;
 import com.balancedbytes.games.ffb.server.GameCache;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.ServerMode;
 import com.balancedbytes.games.ffb.server.fumbbl.FumbblRequestRemoveGamestate;
 import com.balancedbytes.games.ffb.server.net.ChannelManager;
+import com.balancedbytes.games.ffb.server.net.ReceivedCommand;
 import com.balancedbytes.games.ffb.server.util.UtilTimer;
 import com.balancedbytes.games.ffb.util.ArrayTool;
 
@@ -27,18 +26,18 @@ public class ServerCommandHandlerSocketClosed extends ServerCommandHandler {
   }
   
   public NetCommandId getId() {
-    return NetCommandId.INTERNAL_SOCKET_CLOSED;
+    return NetCommandId.INTERNAL_SERVER_SOCKET_CLOSED;
   }
 
-  public void handleNetCommand(NetCommand pNetCommand) {
+  public void handleCommand(ReceivedCommand pReceivedCommand) {
     
-    InternalCommandSocketClosed socketClosedCommand = (InternalCommandSocketClosed) pNetCommand;
+    SocketChannel sender = pReceivedCommand.getSender();
     
     ChannelManager channelManager = getServer().getChannelManager();
-    String coach = channelManager.getCoachForChannel(socketClosedCommand.getSender());
-    ClientMode mode = channelManager.getModeForChannel(socketClosedCommand.getSender());
-    long gameId = channelManager.getGameIdForChannel(socketClosedCommand.getSender());
-    channelManager.removeChannel(socketClosedCommand.getSender());
+    String coach = channelManager.getCoachForChannel(sender);
+    ClientMode mode = channelManager.getModeForChannel(sender);
+    long gameId = channelManager.getGameIdForChannel(sender);
+    channelManager.removeChannel(sender);
 
     SocketChannel[] receivers = channelManager.getChannelsForGameId(gameId);
 

@@ -1,12 +1,14 @@
 package com.balancedbytes.games.ffb.server.handler;
 
-import com.balancedbytes.games.ffb.net.NetCommand;
+import java.nio.channels.SocketChannel;
+
 import com.balancedbytes.games.ffb.net.NetCommandId;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandUserSettings;
 import com.balancedbytes.games.ffb.server.FantasyFootballServer;
 import com.balancedbytes.games.ffb.server.db.DbTransaction;
 import com.balancedbytes.games.ffb.server.db.delete.DbUserSettingsDeleteParameter;
 import com.balancedbytes.games.ffb.server.db.insert.DbUserSettingsInsertParameterList;
+import com.balancedbytes.games.ffb.server.net.ReceivedCommand;
 
 /**
  * 
@@ -22,10 +24,11 @@ public class ServerCommandHandlerUserSettings extends ServerCommandHandler {
     return NetCommandId.CLIENT_USER_SETTINGS;
   }
 
-  public void handleNetCommand(NetCommand pNetCommand) {
+  public void handleCommand(ReceivedCommand pReceivedCommand) {
     
-    ClientCommandUserSettings userSettingsCommand = (ClientCommandUserSettings) pNetCommand;
-    String coach = getServer().getChannelManager().getCoachForChannel(userSettingsCommand.getSender());
+    ClientCommandUserSettings userSettingsCommand = (ClientCommandUserSettings) pReceivedCommand.getCommand();        
+    SocketChannel sender = pReceivedCommand.getSender();
+    String coach = getServer().getChannelManager().getCoachForChannel(sender);
 
     if (coach != null) {
     

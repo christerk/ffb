@@ -9,12 +9,12 @@ import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
-import com.balancedbytes.games.ffb.net.NetCommand;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandActingPlayer;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandHandOver;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandPass;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.IServerJsonOption;
+import com.balancedbytes.games.ffb.server.net.ReceivedCommand;
 import com.balancedbytes.games.ffb.server.step.AbstractStep;
 import com.balancedbytes.games.ffb.server.step.StepAction;
 import com.balancedbytes.games.ffb.server.step.StepCommandStatus;
@@ -102,67 +102,67 @@ public final class StepInitPassing extends AbstractStep {
 		super.start();
 		executeStep();
 	}
-	
-	@Override
-	public StepCommandStatus handleNetCommand(NetCommand pNetCommand) {
-		StepCommandStatus commandStatus = super.handleNetCommand(pNetCommand);
-		Game game = getGameState().getGame();
-		ActingPlayer actingPlayer = game.getActingPlayer();
-		if ((pNetCommand != null) && (commandStatus == StepCommandStatus.UNHANDLED_COMMAND) && (UtilSteps.checkCommandIsFromCurrentPlayer(getGameState(), pNetCommand) || (game.getTurnMode() == TurnMode.DUMP_OFF))) {
-			switch (pNetCommand.getId()) {
-	      case CLIENT_PASS:
-	        ClientCommandPass passCommand = (ClientCommandPass) pNetCommand;
-	      	if (UtilSteps.checkCommandWithActingPlayer(getGameState(), passCommand) || (game.getTurnMode() == TurnMode.DUMP_OFF)) {
-  	        if (UtilSteps.checkCommandIsFromHomePlayer(getGameState(), passCommand)) {
-  	          game.setPassCoordinate(passCommand.getTargetCoordinate());
-  	        } else {
-  	          game.setPassCoordinate(passCommand.getTargetCoordinate().transform());
-  	        }
-  	        Player catcher = game.getFieldModel().getPlayer(game.getPassCoordinate());
-  	        fCatcherId = ((catcher != null) ? catcher.getId() : null);
-  	        if ((game.getDefender() != null) && (game.getDefenderAction() == PlayerAction.DUMP_OFF)) {
-  	        	game.setThrowerId(game.getDefenderId());
-  	        	game.setThrowerAction(game.getDefenderAction());
-  	        } else {
-  						game.setThrowerId(actingPlayer.getPlayerId());
-  						game.setThrowerAction(actingPlayer.getPlayerAction());
-  	        }
-  	        commandStatus = StepCommandStatus.EXECUTE_STEP;
-	      	}
-	        break;
-	      case CLIENT_HAND_OVER:
-	        ClientCommandHandOver handOverCommand = (ClientCommandHandOver) pNetCommand;
-	      	if (UtilSteps.checkCommandWithActingPlayer(getGameState(), handOverCommand)) {
-  	        fCatcherId = handOverCommand.getCatcherId();
-  					game.setThrowerId(actingPlayer.getPlayerId());
-  					game.setThrowerAction(PlayerAction.HAND_OVER);
-  	        commandStatus = StepCommandStatus.EXECUTE_STEP;
-	      	}
-	        break;
+  
+  @Override
+  public StepCommandStatus handleCommand(ReceivedCommand pReceivedCommand) {
+    StepCommandStatus commandStatus = super.handleCommand(pReceivedCommand);
+    Game game = getGameState().getGame();
+    ActingPlayer actingPlayer = game.getActingPlayer();
+    if ((pReceivedCommand != null) && (commandStatus == StepCommandStatus.UNHANDLED_COMMAND) && (UtilSteps.checkCommandIsFromCurrentPlayer(getGameState(), pReceivedCommand) || (game.getTurnMode() == TurnMode.DUMP_OFF))) {
+      switch (pReceivedCommand.getId()) {
+        case CLIENT_PASS:
+          ClientCommandPass passCommand = (ClientCommandPass) pReceivedCommand.getCommand();
+          if (UtilSteps.checkCommandWithActingPlayer(getGameState(), passCommand) || (game.getTurnMode() == TurnMode.DUMP_OFF)) {
+            if (UtilSteps.checkCommandIsFromHomePlayer(getGameState(), pReceivedCommand)) {
+              game.setPassCoordinate(passCommand.getTargetCoordinate());
+            } else {
+              game.setPassCoordinate(passCommand.getTargetCoordinate().transform());
+            }
+            Player catcher = game.getFieldModel().getPlayer(game.getPassCoordinate());
+            fCatcherId = ((catcher != null) ? catcher.getId() : null);
+            if ((game.getDefender() != null) && (game.getDefenderAction() == PlayerAction.DUMP_OFF)) {
+              game.setThrowerId(game.getDefenderId());
+              game.setThrowerAction(game.getDefenderAction());
+            } else {
+              game.setThrowerId(actingPlayer.getPlayerId());
+              game.setThrowerAction(actingPlayer.getPlayerAction());
+            }
+            commandStatus = StepCommandStatus.EXECUTE_STEP;
+          }
+          break;
+        case CLIENT_HAND_OVER:
+          ClientCommandHandOver handOverCommand = (ClientCommandHandOver) pReceivedCommand.getCommand();
+          if (UtilSteps.checkCommandWithActingPlayer(getGameState(), handOverCommand)) {
+            fCatcherId = handOverCommand.getCatcherId();
+            game.setThrowerId(actingPlayer.getPlayerId());
+            game.setThrowerAction(PlayerAction.HAND_OVER);
+            commandStatus = StepCommandStatus.EXECUTE_STEP;
+          }
+          break;
         case CLIENT_ACTING_PLAYER:
-          ClientCommandActingPlayer actingPlayerCommand = (ClientCommandActingPlayer) pNetCommand;
+          ClientCommandActingPlayer actingPlayerCommand = (ClientCommandActingPlayer) pReceivedCommand.getCommand();
           if (StringTool.isProvided(actingPlayerCommand.getPlayerId())) {
             UtilSteps.changePlayerAction(this, actingPlayerCommand.getPlayerId(), actingPlayerCommand.getPlayerAction(), actingPlayerCommand.isLeaping());
           } else {
-          	fEndPlayerAction = true;
+            fEndPlayerAction = true;
           }
-	        commandStatus = StepCommandStatus.EXECUTE_STEP;
+          commandStatus = StepCommandStatus.EXECUTE_STEP;
           break;
         case CLIENT_END_TURN:
-        	if (UtilSteps.checkCommandIsFromCurrentPlayer(getGameState(), pNetCommand)) {
-        		fEndTurn = true;
-		        commandStatus = StepCommandStatus.EXECUTE_STEP;
-        	}
-        	break;
-      	default:
-      		break;
-			}
-		}
-		if (commandStatus == StepCommandStatus.EXECUTE_STEP) {
-			executeStep();
-		}
-		return commandStatus;
-	}
+          if (UtilSteps.checkCommandIsFromCurrentPlayer(getGameState(), pReceivedCommand)) {
+            fEndTurn = true;
+            commandStatus = StepCommandStatus.EXECUTE_STEP;
+          }
+          break;
+        default:
+          break;
+      }
+    }
+    if (commandStatus == StepCommandStatus.EXECUTE_STEP) {
+      executeStep();
+    }
+    return commandStatus;
+  }
 
   private void executeStep() {
     Game game = getGameState().getGame();

@@ -8,9 +8,9 @@ import com.balancedbytes.games.ffb.bytearray.ByteList;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.Game;
-import com.balancedbytes.games.ffb.net.NetCommand;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.IServerJsonOption;
+import com.balancedbytes.games.ffb.server.net.ReceivedCommand;
 import com.balancedbytes.games.ffb.server.step.AbstractStep;
 import com.balancedbytes.games.ffb.server.step.SequenceGenerator;
 import com.balancedbytes.games.ffb.server.step.StepAction;
@@ -99,38 +99,38 @@ public class StepEndMoving extends AbstractStep {
 		executeStep();
 	}
 	
-	@Override
-	public StepCommandStatus handleNetCommand(NetCommand pNetCommand) {
-		StepCommandStatus commandStatus = super.handleNetCommand(pNetCommand);
-		if (commandStatus == StepCommandStatus.UNHANDLED_COMMAND) {
-			switch (pNetCommand.getId()) {
+  @Override
+  public StepCommandStatus handleCommand(ReceivedCommand pReceivedCommand) {
+    StepCommandStatus commandStatus = super.handleCommand(pReceivedCommand);
+    if (commandStatus == StepCommandStatus.UNHANDLED_COMMAND) {
+      switch (pReceivedCommand.getId()) {
         // commands redirected from initMoving
         // add proper sequence to stack, repeat command once more -->
-	      case CLIENT_BLOCK:
-	      	commandStatus = dispatchPlayerAction(fDispatchPlayerAction);
-	      	break;
-	      case CLIENT_FOUL:
-	      	commandStatus = dispatchPlayerAction(fDispatchPlayerAction);
-	        break;
-	      case CLIENT_HAND_OVER:
-	      	commandStatus = dispatchPlayerAction(fDispatchPlayerAction);
-	        break;
-	      case CLIENT_PASS:
-	      	commandStatus = dispatchPlayerAction(fDispatchPlayerAction);
-	        break;
-	      case CLIENT_THROW_TEAM_MATE:
-	      	commandStatus = dispatchPlayerAction(fDispatchPlayerAction);
-	        break;
+        case CLIENT_BLOCK:
+          commandStatus = dispatchPlayerAction(fDispatchPlayerAction);
+          break;
+        case CLIENT_FOUL:
+          commandStatus = dispatchPlayerAction(fDispatchPlayerAction);
+          break;
+        case CLIENT_HAND_OVER:
+          commandStatus = dispatchPlayerAction(fDispatchPlayerAction);
+          break;
+        case CLIENT_PASS:
+          commandStatus = dispatchPlayerAction(fDispatchPlayerAction);
+          break;
+        case CLIENT_THROW_TEAM_MATE:
+          commandStatus = dispatchPlayerAction(fDispatchPlayerAction);
+          break;
         default:
-        	break;
-	      // <--
-			}
-		}
-		if (commandStatus == StepCommandStatus.EXECUTE_STEP) {
-			executeStep();
-		}
-		return commandStatus;
-	}
+          break;
+        // <--
+      }
+    }
+    if (commandStatus == StepCommandStatus.EXECUTE_STEP) {
+      executeStep();
+    }
+    return commandStatus;
+  }
 	
 	private void executeStep() {
 		UtilDialog.hideDialog(getGameState());

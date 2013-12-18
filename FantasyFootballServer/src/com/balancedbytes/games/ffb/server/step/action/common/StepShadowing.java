@@ -12,12 +12,12 @@ import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
-import com.balancedbytes.games.ffb.net.NetCommand;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandPlayerChoice;
 import com.balancedbytes.games.ffb.report.ReportTentaclesShadowingRoll;
 import com.balancedbytes.games.ffb.server.DiceInterpreter;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.IServerJsonOption;
+import com.balancedbytes.games.ffb.server.net.ReceivedCommand;
 import com.balancedbytes.games.ffb.server.step.AbstractStepWithReRoll;
 import com.balancedbytes.games.ffb.server.step.StepAction;
 import com.balancedbytes.games.ffb.server.step.StepCommandStatus;
@@ -82,29 +82,29 @@ public class StepShadowing extends AbstractStepWithReRoll {
 		return false;
 	}
   
-	@Override
-	public StepCommandStatus handleNetCommand(NetCommand pNetCommand) {
-		StepCommandStatus commandStatus = super.handleNetCommand(pNetCommand);
-		if (commandStatus == StepCommandStatus.UNHANDLED_COMMAND) {
-			Game game = getGameState().getGame();
-			switch (pNetCommand.getId()) {
-	      case CLIENT_PLAYER_CHOICE:
-	        ClientCommandPlayerChoice playerChoiceCommand = (ClientCommandPlayerChoice) pNetCommand;
-	        if (PlayerChoiceMode.SHADOWING == playerChoiceCommand.getPlayerChoiceMode()) {
-	        	fUsingShadowing = StringTool.isProvided(playerChoiceCommand.getPlayerId());
-		        game.setDefenderId(playerChoiceCommand.getPlayerId());
-		        commandStatus = StepCommandStatus.EXECUTE_STEP;
-	        }
-	        break;
+  @Override
+  public StepCommandStatus handleCommand(ReceivedCommand pReceivedCommand) {
+    StepCommandStatus commandStatus = super.handleCommand(pReceivedCommand);
+    if (commandStatus == StepCommandStatus.UNHANDLED_COMMAND) {
+      Game game = getGameState().getGame();
+      switch (pReceivedCommand.getId()) {
+        case CLIENT_PLAYER_CHOICE:
+          ClientCommandPlayerChoice playerChoiceCommand = (ClientCommandPlayerChoice) pReceivedCommand.getCommand();
+          if (PlayerChoiceMode.SHADOWING == playerChoiceCommand.getPlayerChoiceMode()) {
+            fUsingShadowing = StringTool.isProvided(playerChoiceCommand.getPlayerId());
+            game.setDefenderId(playerChoiceCommand.getPlayerId());
+            commandStatus = StepCommandStatus.EXECUTE_STEP;
+          }
+          break;
         default:
-        	break;
-			}
-		}
-		if (commandStatus == StepCommandStatus.EXECUTE_STEP) {
-			executeStep();
-		}
-		return commandStatus;
-	}
+          break;
+      }
+    }
+    if (commandStatus == StepCommandStatus.EXECUTE_STEP) {
+      executeStep();
+    }
+    return commandStatus;
+  }
 
   private void executeStep() {
   	Game game = getGameState().getGame();

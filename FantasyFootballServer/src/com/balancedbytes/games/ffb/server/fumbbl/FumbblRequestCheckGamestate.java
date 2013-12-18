@@ -40,10 +40,12 @@ public class FumbblRequestCheckGamestate extends FumbblRequest {
       } else {
         game.getOptions().init(fumbblGameState.getOptions());
       	game.setTesting(game.isTesting() || game.getOptions().getOptionValue(GameOption.TEST_MODE).isEnabled());
-        server.getCommunication().handleNetCommand(new InternalServerCommandFumbblGameChecked(getGameState().getId()));
+      	InternalServerCommandFumbblGameChecked gameCheckedCommand = new InternalServerCommandFumbblGameChecked(getGameState().getId());
+        server.getCommunication().handleCommand(gameCheckedCommand);
       }
     } else {
-      server.getCommunication().handleNetCommand(new InternalServerCommandFumbblGameChecked(getGameState().getId()));
+      InternalServerCommandFumbblGameChecked gameCheckedCommand = new InternalServerCommandFumbblGameChecked(getGameState().getId());
+      server.getCommunication().handleCommand(gameCheckedCommand);
     }
   }
 

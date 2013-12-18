@@ -1,4 +1,4 @@
-package com.balancedbytes.games.ffb.client;
+package com.balancedbytes.games.ffb.client.net;
 
 import java.net.URI;
 import java.util.concurrent.TimeUnit;

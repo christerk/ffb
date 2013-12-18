@@ -1,11 +1,11 @@
 package com.balancedbytes.games.ffb.server.handler;
 
 import com.balancedbytes.games.ffb.model.Game;
-import com.balancedbytes.games.ffb.net.NetCommand;
 import com.balancedbytes.games.ffb.net.NetCommandId;
 import com.balancedbytes.games.ffb.server.FantasyFootballServer;
 import com.balancedbytes.games.ffb.server.GameCache;
 import com.balancedbytes.games.ffb.server.GameState;
+import com.balancedbytes.games.ffb.server.net.ReceivedCommand;
 import com.balancedbytes.games.ffb.server.net.commands.InternalServerCommandUploadGame;
 import com.balancedbytes.games.ffb.server.step.SequenceGenerator;
 import com.balancedbytes.games.ffb.util.StringTool;
@@ -24,8 +24,8 @@ public class ServerCommandHandlerUploadGame extends ServerCommandHandler {
     return NetCommandId.INTERNAL_SERVER_UPLOAD_GAME;
   }
 
-  public void handleNetCommand(NetCommand pNetCommand) {
-    InternalServerCommandUploadGame uploadGameCommand = (InternalServerCommandUploadGame) pNetCommand;
+  public void handleCommand(ReceivedCommand pReceivedCommand) {
+    InternalServerCommandUploadGame uploadGameCommand = (InternalServerCommandUploadGame) pReceivedCommand.getCommand();
     GameCache gameCache = getServer().getGameCache();
     GameState gameState = gameCache.closeGame(uploadGameCommand.getGameId());
     if (gameState == null) {

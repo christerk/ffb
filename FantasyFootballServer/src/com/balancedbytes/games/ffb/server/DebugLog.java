@@ -16,6 +16,7 @@ import java.util.zip.GZIPOutputStream;
 
 import com.balancedbytes.games.ffb.net.NetCommand;
 import com.balancedbytes.games.ffb.server.net.ChannelManager;
+import com.balancedbytes.games.ffb.server.net.ReceivedCommand;
 import com.balancedbytes.games.ffb.util.ArrayTool;
 import com.balancedbytes.games.ffb.util.StringTool;
 
@@ -150,15 +151,15 @@ public class DebugLog {
     return fServer;
   }
   
-  public void logClientCommand(int pLogLevel, NetCommand pNetCommand) {
-    if (isLogging(pLogLevel) && (pNetCommand != null) && (pNetCommand.getId() != null)) {
-      switch (pNetCommand.getId()) {
+  public void logClientCommand(int pLogLevel, ReceivedCommand pReceivedCommand) {
+    if (isLogging(pLogLevel) && (pReceivedCommand != null) && (pReceivedCommand.getId() != null)) {
+      switch (pReceivedCommand.getId()) {
         case CLIENT_PING:
           break;
         default:
         	GameState gameState = null;
           String commandFlag = COMMAND_CLIENT_UNKNOWN;
-          SocketChannel sender = pNetCommand.getSender();
+          SocketChannel sender = pReceivedCommand.getSender();
           ChannelManager channelManager = getServer().getChannelManager();
           long gameId = channelManager.getGameIdForChannel(sender);
           if (gameId > 0) {
@@ -173,7 +174,7 @@ public class DebugLog {
               }
             }
           }
-          logInternal(gameId, commandFlag, pNetCommand.toJsonValue().toString());
+          logInternal(gameId, commandFlag, pReceivedCommand.getCommand().toJsonValue().toString());
           break;
       }
     }

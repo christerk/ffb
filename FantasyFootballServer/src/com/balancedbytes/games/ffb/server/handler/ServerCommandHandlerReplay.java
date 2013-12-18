@@ -5,7 +5,6 @@ import java.nio.channels.SocketChannel;
 
 import com.balancedbytes.games.ffb.ClientMode;
 import com.balancedbytes.games.ffb.model.Game;
-import com.balancedbytes.games.ffb.net.NetCommand;
 import com.balancedbytes.games.ffb.net.NetCommandId;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandReplay;
 import com.balancedbytes.games.ffb.server.FantasyFootballServer;
@@ -15,6 +14,7 @@ import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.ServerMode;
 import com.balancedbytes.games.ffb.server.fumbbl.FumbblRequestLoadGame;
 import com.balancedbytes.games.ffb.server.net.ChannelManager;
+import com.balancedbytes.games.ffb.server.net.ReceivedCommand;
 import com.balancedbytes.games.ffb.server.util.UtilReplay;
 
 /**
@@ -31,9 +31,10 @@ public class ServerCommandHandlerReplay extends ServerCommandHandler {
     return NetCommandId.CLIENT_REPLAY;
   }
 
-  public void handleNetCommand(NetCommand pNetCommand) {
+  public void handleCommand(ReceivedCommand pReceivedCommand) {
 
-    ClientCommandReplay replayCommand = (ClientCommandReplay) pNetCommand;
+    ClientCommandReplay replayCommand = (ClientCommandReplay) pReceivedCommand.getCommand();
+    SocketChannel sender = pReceivedCommand.getSender();
     int replayToCommandNr = replayCommand.getReplayToCommandNr();
 
     GameState gameState = null;
@@ -41,14 +42,14 @@ public class ServerCommandHandlerReplay extends ServerCommandHandler {
       gameState = getServer().getGameCache().getGameStateById(replayCommand.getGameId());
     } else {
       ChannelManager channelManager = getServer().getChannelManager();
-      long gameId = channelManager.getGameIdForChannel(replayCommand.getSender());
+      long gameId = channelManager.getGameIdForChannel(sender);
       gameState = getServer().getGameCache().getGameStateById(gameId);
     }
 
     // client signals that it has received the complete replay - socket can be closed
     if (replayToCommandNr < 0) {
     	try {
-    		getServer().getNioServer().removeChannel(replayCommand.getSender());
+    		getServer().getNioServer().removeChannel(sender);
     	} catch (IOException pIoException) {
     		getServer().getDebugLog().log((gameState != null) ? gameState.getId() : -1, pIoException);
     	}
@@ -56,11 +57,11 @@ public class ServerCommandHandlerReplay extends ServerCommandHandler {
     }
     
     if (gameState == null) {
-      gameState = loadGameStateById(replayCommand.getSender(), replayCommand.getGameId());
+      gameState = loadGameStateById(sender, replayCommand.getGameId());
     }
     
     if (gameState != null) {
-    	UtilReplay.startServerReplay(gameState, replayToCommandNr, replayCommand.getSender());
+    	UtilReplay.startServerReplay(gameState, replayToCommandNr, sender);
     }
     
   }

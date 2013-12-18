@@ -8,11 +8,11 @@ import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.model.PlayerResult;
-import com.balancedbytes.games.ffb.net.NetCommand;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandActingPlayer;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandFoul;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.IServerJsonOption;
+import com.balancedbytes.games.ffb.server.net.ReceivedCommand;
 import com.balancedbytes.games.ffb.server.step.AbstractStep;
 import com.balancedbytes.games.ffb.server.step.StepAction;
 import com.balancedbytes.games.ffb.server.step.StepCommandStatus;
@@ -82,43 +82,43 @@ public class StepInitFouling extends AbstractStep {
 		executeStep();
 	}
 	
-	@Override
-	public StepCommandStatus handleNetCommand(NetCommand pNetCommand) {
-		StepCommandStatus commandStatus = super.handleNetCommand(pNetCommand);
-		if ((pNetCommand != null) && (commandStatus == StepCommandStatus.UNHANDLED_COMMAND) && UtilSteps.checkCommandIsFromCurrentPlayer(getGameState(), pNetCommand)) {
-			switch (pNetCommand.getId()) {
-	      case CLIENT_FOUL:
-	        ClientCommandFoul foulCommand = (ClientCommandFoul) pNetCommand;
-	        if (UtilSteps.checkCommandWithActingPlayer(getGameState(), foulCommand)) {
-  	        fFoulDefenderId = foulCommand.getDefenderId();
+  @Override
+  public StepCommandStatus handleCommand(ReceivedCommand pReceivedCommand) {
+    StepCommandStatus commandStatus = super.handleCommand(pReceivedCommand);
+    if ((pReceivedCommand != null) && (commandStatus == StepCommandStatus.UNHANDLED_COMMAND) && UtilSteps.checkCommandIsFromCurrentPlayer(getGameState(), pReceivedCommand)) {
+      switch (pReceivedCommand.getId()) {
+        case CLIENT_FOUL:
+          ClientCommandFoul foulCommand = (ClientCommandFoul) pReceivedCommand.getCommand();
+          if (UtilSteps.checkCommandWithActingPlayer(getGameState(), foulCommand)) {
+            fFoulDefenderId = foulCommand.getDefenderId();
             commandStatus = StepCommandStatus.EXECUTE_STEP;
-	        }
-	        break;
-        case CLIENT_ACTING_PLAYER:
-          ClientCommandActingPlayer actingPlayerCommand = (ClientCommandActingPlayer) pNetCommand;
-          if (StringTool.isProvided(actingPlayerCommand.getPlayerId())) {
-          	UtilSteps.changePlayerAction(this, actingPlayerCommand.getPlayerId(), actingPlayerCommand.getPlayerAction(), actingPlayerCommand.isLeaping());
-          } else {
-          	fEndPlayerAction = true;
           }
-	        commandStatus = StepCommandStatus.EXECUTE_STEP;
-	        break;
+          break;
+        case CLIENT_ACTING_PLAYER:
+          ClientCommandActingPlayer actingPlayerCommand = (ClientCommandActingPlayer) pReceivedCommand.getCommand();
+          if (StringTool.isProvided(actingPlayerCommand.getPlayerId())) {
+            UtilSteps.changePlayerAction(this, actingPlayerCommand.getPlayerId(), actingPlayerCommand.getPlayerAction(), actingPlayerCommand.isLeaping());
+          } else {
+            fEndPlayerAction = true;
+          }
+          commandStatus = StepCommandStatus.EXECUTE_STEP;
+          break;
         case CLIENT_END_TURN:
-        	if (UtilSteps.checkCommandIsFromCurrentPlayer(getGameState(), pNetCommand)) {
-        		fEndTurn = true;
+          if (UtilSteps.checkCommandIsFromCurrentPlayer(getGameState(), pReceivedCommand)) {
+            fEndTurn = true;
             commandStatus = StepCommandStatus.EXECUTE_STEP;
-        	}
+          }
           break;
         default:
-        	break;
-			}
-		}
-		if (commandStatus == StepCommandStatus.EXECUTE_STEP) {
-			executeStep();
-		}
-		return commandStatus;
-	}
-
+          break;
+      }
+    }
+    if (commandStatus == StepCommandStatus.EXECUTE_STEP) {
+      executeStep();
+    }
+    return commandStatus;
+  }
+	
   private void executeStep() {
     Game game = getGameState().getGame();
     ActingPlayer actingPlayer = game.getActingPlayer();

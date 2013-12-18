@@ -21,21 +21,21 @@ import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.FieldModel;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
-import com.balancedbytes.games.ffb.net.NetCommand;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandPushback;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandUseSkill;
 import com.balancedbytes.games.ffb.report.ReportPushback;
 import com.balancedbytes.games.ffb.report.ReportSkillUse;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.IServerJsonOption;
+import com.balancedbytes.games.ffb.server.net.ReceivedCommand;
 import com.balancedbytes.games.ffb.server.step.AbstractStep;
 import com.balancedbytes.games.ffb.server.step.StepAction;
 import com.balancedbytes.games.ffb.server.step.StepCommandStatus;
 import com.balancedbytes.games.ffb.server.step.StepId;
 import com.balancedbytes.games.ffb.server.step.StepParameter;
 import com.balancedbytes.games.ffb.server.step.StepParameterKey;
+import com.balancedbytes.games.ffb.server.step.UtilSteps;
 import com.balancedbytes.games.ffb.server.step.action.common.ApothecaryMode;
-import com.balancedbytes.games.ffb.server.util.UtilCommand;
 import com.balancedbytes.games.ffb.server.util.UtilDialog;
 import com.balancedbytes.games.ffb.server.util.UtilInjury;
 import com.balancedbytes.games.ffb.server.util.UtilPlayerMove;
@@ -84,34 +84,34 @@ public class StepPushback extends AbstractStep {
     super.start();
     executeStep();
   }
-
+  
   @Override
-  public StepCommandStatus handleNetCommand(NetCommand pNetCommand) {
-    StepCommandStatus commandStatus = super.handleNetCommand(pNetCommand);
+  public StepCommandStatus handleCommand(ReceivedCommand pReceivedCommand) {
+    StepCommandStatus commandStatus = super.handleCommand(pReceivedCommand);
     if (commandStatus == StepCommandStatus.UNHANDLED_COMMAND) {
-      switch (pNetCommand.getId()) {
+      switch (pReceivedCommand.getId()) {
       case CLIENT_USE_SKILL:
-        ClientCommandUseSkill useSkillCommand = (ClientCommandUseSkill) pNetCommand;
+        ClientCommandUseSkill useSkillCommand = (ClientCommandUseSkill) pReceivedCommand.getCommand();
         switch (useSkillCommand.getSkill()) {
-        case STAND_FIRM:
-          fUsingStandFirm = useSkillCommand.isSkillUsed();
-          commandStatus = StepCommandStatus.EXECUTE_STEP;
-          break;
-        case SIDE_STEP:
-          fUsingSideStep = useSkillCommand.isSkillUsed();
-          commandStatus = StepCommandStatus.EXECUTE_STEP;
-          break;
-        case GRAB:
-          fUsingGrab = useSkillCommand.isSkillUsed();
-          commandStatus = StepCommandStatus.EXECUTE_STEP;
-          break;
-        default:
-          break;
+          case STAND_FIRM:
+            fUsingStandFirm = useSkillCommand.isSkillUsed();
+            commandStatus = StepCommandStatus.EXECUTE_STEP;
+            break;
+          case SIDE_STEP:
+            fUsingSideStep = useSkillCommand.isSkillUsed();
+            commandStatus = StepCommandStatus.EXECUTE_STEP;
+            break;
+          case GRAB:
+            fUsingGrab = useSkillCommand.isSkillUsed();
+            commandStatus = StepCommandStatus.EXECUTE_STEP;
+            break;
+          default:
+            break;
         }
         break;
       case CLIENT_PUSHBACK:
-        ClientCommandPushback pushbackCommand = (ClientCommandPushback) pNetCommand;
-        if (UtilCommand.isHomeCommand(getGameState().getServer(), pushbackCommand)) {
+        ClientCommandPushback pushbackCommand = (ClientCommandPushback) pReceivedCommand.getCommand();
+        if (UtilSteps.checkCommandIsFromHomePlayer(getGameState(), pReceivedCommand)) {
           fPushbackStack.push(pushbackCommand.getPushback());
         } else {
           fPushbackStack.push(pushbackCommand.getPushback().transform());

@@ -3,16 +3,15 @@ package com.balancedbytes.games.ffb.server.handler;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.balancedbytes.games.ffb.net.INetCommandHandler;
-import com.balancedbytes.games.ffb.net.NetCommand;
 import com.balancedbytes.games.ffb.net.NetCommandId;
 import com.balancedbytes.games.ffb.server.FantasyFootballServer;
+import com.balancedbytes.games.ffb.server.net.ReceivedCommand;
 
 /**
  * 
  * @author Kalimar
  */
-public class ServerCommandHandlerFactory implements INetCommandHandler {
+public class ServerCommandHandlerFactory {
   
   private Map<NetCommandId,ServerCommandHandler> fCommandHandlerById;
   
@@ -38,10 +37,10 @@ public class ServerCommandHandlerFactory implements INetCommandHandler {
     register(new ServerCommandHandlerUserSettings(pServer));
   }
   
-  public void handleNetCommand(NetCommand pNetCommand) {
-    ServerCommandHandler commandHandler = getCommandHandler(pNetCommand.getId());
+  public void handleCommand(ReceivedCommand pReceivedCommand) {
+    ServerCommandHandler commandHandler = getCommandHandler(pReceivedCommand.getId());
     if (commandHandler != null) {
-      commandHandler.handleNetCommand(pNetCommand);
+      commandHandler.handleCommand(pReceivedCommand);
     }
   }
   
@@ -49,8 +48,8 @@ public class ServerCommandHandlerFactory implements INetCommandHandler {
     return fCommandHandlerById.get(pType);
   }
 
-  private void register(ServerCommandHandler pUiCommandHandler) {
-    fCommandHandlerById.put(pUiCommandHandler.getId(), pUiCommandHandler);
+  private void register(ServerCommandHandler pCommandHandler) {
+    fCommandHandlerById.put(pCommandHandler.getId(), pCommandHandler);
   }
   
 }

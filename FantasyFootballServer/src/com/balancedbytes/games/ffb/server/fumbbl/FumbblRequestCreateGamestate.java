@@ -38,10 +38,12 @@ public class FumbblRequestCreateGamestate extends FumbblRequest {
       if ((fumbblGameState == null) || !fumbblGameState.isOk()) {
         pRequestProcessor.reportFumbblError(getGameState(), fumbblGameState);
       } else {
-        server.getCommunication().handleNetCommand(new InternalServerCommandFumbblGameCreated(game.getId()));
+        InternalServerCommandFumbblGameCreated gameCreatedCommand = new InternalServerCommandFumbblGameCreated(game.getId());
+        server.getCommunication().handleCommand(gameCreatedCommand);
       }
     } else {
-      server.getCommunication().handleNetCommand(new InternalServerCommandFumbblGameCreated(game.getId()));
+      InternalServerCommandFumbblGameCreated gameCreatedCommand = new InternalServerCommandFumbblGameCreated(game.getId());
+      server.getCommunication().handleCommand(gameCreatedCommand);
     }
   }
 

@@ -15,6 +15,7 @@ import com.balancedbytes.games.ffb.server.DebugLog;
 import com.balancedbytes.games.ffb.server.FantasyFootballServer;
 import com.balancedbytes.games.ffb.server.IServerLogLevel;
 import com.balancedbytes.games.ffb.server.IServerProperty;
+import com.balancedbytes.games.ffb.server.net.ReceivedCommand;
 import com.balancedbytes.games.ffb.server.net.commands.InternalServerCommandJoinApproved;
 import com.balancedbytes.games.ffb.server.util.UtilHttpClient;
 import com.balancedbytes.games.ffb.util.StringTool;
@@ -101,8 +102,7 @@ public class FumbblRequestCheckAuthorization extends FumbblRequest {
     }
     if (passwordOk) {
       InternalServerCommandJoinApproved joinApprovedCommand = new InternalServerCommandJoinApproved(getGameId(), getGameName(), getCoach(), getTeamId(), getMode());
-      joinApprovedCommand.setSender(getSender());
-      server.getCommunication().handleNetCommand(joinApprovedCommand);
+      server.getCommunication().handleCommand(new ReceivedCommand(joinApprovedCommand, getSender()));
     } else {
       server.getCommunication().sendStatus(getSender(), ServerStatus.ERROR_WRONG_PASSWORD, null);
     }

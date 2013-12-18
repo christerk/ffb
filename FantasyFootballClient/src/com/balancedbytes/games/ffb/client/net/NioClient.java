@@ -200,7 +200,7 @@ public class NioClient implements Runnable {
       byte[] cmdBytes = fNetCommandFactory.nextCommandBytes(readBytes, offset, totalReadBytes);
       if (cmdBytes != null) {
         NetCommand netCommand = fNetCommandFactory.fromBytes(cmdBytes);
-        netCommand.setSender(socketChannel);
+        // netCommand.setSender(socketChannel);
         if (NetCommandId.SERVER_PING == netCommand.getId()) {
           ServerCommandPing pingCommand = (ServerCommandPing) netCommand; 
           pingCommand.setReceived(System.currentTimeMillis());

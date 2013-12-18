@@ -9,11 +9,11 @@ import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.model.Team;
-import com.balancedbytes.games.ffb.net.NetCommand;
 import com.balancedbytes.games.ffb.net.commands.ICommandWithActingPlayer;
 import com.balancedbytes.games.ffb.report.ReportCardDeactivated;
 import com.balancedbytes.games.ffb.server.FantasyFootballServer;
 import com.balancedbytes.games.ffb.server.GameState;
+import com.balancedbytes.games.ffb.server.net.ReceivedCommand;
 import com.balancedbytes.games.ffb.server.util.UtilGame;
 import com.balancedbytes.games.ffb.server.util.UtilPlayerMove;
 import com.balancedbytes.games.ffb.util.ArrayTool;
@@ -35,21 +35,21 @@ public class UtilSteps {
     }
   }
 		
-	public static boolean checkCommandIsFromCurrentPlayer(GameState pGameState, NetCommand pNetCommand) {
+	public static boolean checkCommandIsFromCurrentPlayer(GameState pGameState, ReceivedCommand pReceivedCommand) {
     Game game = pGameState.getGame();
     if (game.isHomePlaying()) {
-      return checkCommandIsFromHomePlayer(pGameState, pNetCommand);
+      return checkCommandIsFromHomePlayer(pGameState, pReceivedCommand);
     } else {
-    	return checkCommandIsFromAwayPlayer(pGameState, pNetCommand);
+    	return checkCommandIsFromAwayPlayer(pGameState, pReceivedCommand);
     }
   }
 
-	public static boolean checkCommandIsFromHomePlayer(GameState pGameState, NetCommand pNetCommand) {
-    return (pGameState.getServer().getChannelManager().getChannelOfHomeCoach(pGameState) == pNetCommand.getSender());
+	public static boolean checkCommandIsFromHomePlayer(GameState pGameState, ReceivedCommand pReceivedCommand) {
+    return (pGameState.getServer().getChannelManager().getChannelOfHomeCoach(pGameState) == pReceivedCommand.getSender());
 	}
 
-	public static boolean checkCommandIsFromAwayPlayer(GameState pGameState, NetCommand pNetCommand) {
-    return (pGameState.getServer().getChannelManager().getChannelOfAwayCoach(pGameState) == pNetCommand.getSender());
+	public static boolean checkCommandIsFromAwayPlayer(GameState pGameState, ReceivedCommand pReceivedCommand) {
+    return (pGameState.getServer().getChannelManager().getChannelOfAwayCoach(pGameState) == pReceivedCommand.getSender());
 	}
 	
 	public static boolean checkCommandWithActingPlayer(GameState pGameState, ICommandWithActingPlayer pActingPlayerCommand) {

@@ -1,12 +1,12 @@
 package com.balancedbytes.games.ffb.server.handler;
 
+import java.nio.channels.SocketChannel;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.balancedbytes.games.ffb.net.NetCommand;
 import com.balancedbytes.games.ffb.net.NetCommandId;
-import com.balancedbytes.games.ffb.net.commands.ClientCommandRequestVersion;
 import com.balancedbytes.games.ffb.server.FantasyFootballServer;
+import com.balancedbytes.games.ffb.server.net.ReceivedCommand;
 
 /**
  * 
@@ -22,8 +22,8 @@ public class ServerCommandHandlerRequestVersion extends ServerCommandHandler {
     return NetCommandId.CLIENT_REQUEST_VERSION;
   }
 
-  public void handleNetCommand(NetCommand pNetCommand) {
-    ClientCommandRequestVersion requestVersionCommand = (ClientCommandRequestVersion) pNetCommand;
+  public void handleCommand(ReceivedCommand pReceivedCommand) {
+    SocketChannel sender = pReceivedCommand.getSender();
     String[] properties = getServer().getProperties();
     List<String> clientProperties = new ArrayList<String>();
     List<String> clientPropertyValues = new ArrayList<String>();
@@ -34,7 +34,7 @@ public class ServerCommandHandlerRequestVersion extends ServerCommandHandler {
       }
     }
     getServer().getCommunication().sendVersion(
-      requestVersionCommand.getSender(),
+      sender,
       FantasyFootballServer.SERVER_VERSION,
       FantasyFootballServer.CLIENT_VERSION,
       clientProperties.toArray(new String[clientProperties.size()]),

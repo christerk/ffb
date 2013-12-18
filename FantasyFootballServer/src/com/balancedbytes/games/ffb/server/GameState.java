@@ -14,7 +14,7 @@ import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.change.IModelChangeObserver;
 import com.balancedbytes.games.ffb.model.change.ModelChange;
 import com.balancedbytes.games.ffb.model.change.ModelChangeList;
-import com.balancedbytes.games.ffb.net.NetCommand;
+import com.balancedbytes.games.ffb.server.net.ReceivedCommand;
 import com.balancedbytes.games.ffb.server.step.IStep;
 import com.balancedbytes.games.ffb.server.step.StepException;
 import com.balancedbytes.games.ffb.server.step.StepFactory;
@@ -145,18 +145,18 @@ public class GameState implements IModelChangeObserver, IByteArraySerializable, 
 		fCurrentStep = pCurrentStep;
 	}
 
-	public void handleNetCommand(NetCommand pNetCommand) {
-		if (pNetCommand == null) {
+	public void handleCommand(ReceivedCommand pReceivedCommand) {
+		if (pReceivedCommand == null) {
 			return;
 		}
 		if (fCurrentStep == null) {
 			findNextStep(null);
 		}
 		if (fCurrentStep != null) {
-			fCurrentStep.handleNetCommand(pNetCommand);
+			fCurrentStep.handleCommand(pReceivedCommand);
 			UtilGame.syncGameModel(fCurrentStep);
 		}
-		progressStepStack(pNetCommand);
+		progressStepStack(pReceivedCommand);
 	}
 	
 	public void pushCurrentStepOnStack() {
@@ -165,19 +165,19 @@ public class GameState implements IModelChangeObserver, IByteArraySerializable, 
 		}
 	}
 	
-	public void findNextStep(NetCommand pNetCommand) {
+	public void findNextStep(ReceivedCommand pReceivedCommand) {
 		fCurrentStep = getStepStack().pop();
 		if (fCurrentStep != null) {
 			getServer().getDebugLog().logCurrentStep(IServerLogLevel.DEBUG, this);
-			if (pNetCommand == null) {
+			if (pReceivedCommand == null) {
 				fCurrentStep.start();
 				UtilGame.syncGameModel(fCurrentStep);
 			}
-			progressStepStack(pNetCommand);
+			progressStepStack(pReceivedCommand);
 		}
 	}
 
-	private void progressStepStack(NetCommand pNetCommand) {
+	private void progressStepStack(ReceivedCommand pReceivedCommand) {
 		if (fCurrentStep != null) {
 			StepResult stepResult = fCurrentStep.getResult();
 			switch (stepResult.getNextAction()) {
@@ -185,13 +185,13 @@ public class GameState implements IModelChangeObserver, IByteArraySerializable, 
 					handleStepResultNextStep(null);
 					break;
 				case NEXT_STEP_AND_REPEAT:
-					handleStepResultNextStep(pNetCommand);
+					handleStepResultNextStep(pReceivedCommand);
 					break;
 				case GOTO_LABEL:
 					handleStepResultGotoLabel((String) stepResult.getNextActionParameter(), null);
 					break;
 				case GOTO_LABEL_AND_REPEAT:
-					handleStepResultGotoLabel((String) stepResult.getNextActionParameter(), pNetCommand);
+					handleStepResultGotoLabel((String) stepResult.getNextActionParameter(), pReceivedCommand);
 					break;
 				default:
 					break;
@@ -199,14 +199,14 @@ public class GameState implements IModelChangeObserver, IByteArraySerializable, 
 		}
 	}
 	
-	private void handleStepResultNextStep(NetCommand pNetCommand) {
-		findNextStep(pNetCommand);
-		if (pNetCommand != null) {
-			handleNetCommand(pNetCommand);
+	private void handleStepResultNextStep(ReceivedCommand pReceivedCommand) {
+		findNextStep(pReceivedCommand);
+		if (pReceivedCommand != null) {
+			handleCommand(pReceivedCommand);
 		}
 	}
 	
-	private void handleStepResultGotoLabel(String pGotoLabel, NetCommand pNetCommand) {
+	private void handleStepResultGotoLabel(String pGotoLabel, ReceivedCommand pReceivedCommand) {
 		if (pGotoLabel == null) {
 			throw new StepException("No goto label set.");
 		}
@@ -223,9 +223,9 @@ public class GameState implements IModelChangeObserver, IByteArraySerializable, 
 		if (nextStep == null) {
 			throw new StepException("Goto unknown label " + pGotoLabel);
 		}
-		findNextStep(pNetCommand);
-		if (pNetCommand != null) {
-			handleNetCommand(pNetCommand);
+		findNextStep(pReceivedCommand);
+		if (pReceivedCommand != null) {
+			handleCommand(pReceivedCommand);
 		}
 	}
 	

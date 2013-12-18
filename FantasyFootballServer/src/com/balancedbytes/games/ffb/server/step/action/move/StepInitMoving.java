@@ -9,10 +9,8 @@ import com.balancedbytes.games.ffb.bytearray.ByteList;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.Game;
-import com.balancedbytes.games.ffb.net.NetCommand;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandActingPlayer;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandBlock;
-import com.balancedbytes.games.ffb.net.commands.ClientCommandEndTurn;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandFoul;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandGaze;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandHandOver;
@@ -21,6 +19,7 @@ import com.balancedbytes.games.ffb.net.commands.ClientCommandPass;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandThrowTeamMate;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.IServerJsonOption;
+import com.balancedbytes.games.ffb.server.net.ReceivedCommand;
 import com.balancedbytes.games.ffb.server.step.AbstractStep;
 import com.balancedbytes.games.ffb.server.step.StepAction;
 import com.balancedbytes.games.ffb.server.step.StepCommandStatus;
@@ -120,89 +119,89 @@ public class StepInitMoving extends AbstractStep {
 		executeStep();
 	}
 	
-	@Override
-	public StepCommandStatus handleNetCommand(NetCommand pNetCommand) {
-		StepCommandStatus commandStatus = super.handleNetCommand(pNetCommand);
-		if ((pNetCommand != null) && (commandStatus == StepCommandStatus.UNHANDLED_COMMAND) && UtilSteps.checkCommandIsFromCurrentPlayer(getGameState(), pNetCommand)) {
-	    Game game = getGameState().getGame();
-	    ActingPlayer actingPlayer = game.getActingPlayer();
-			switch (pNetCommand.getId()) {
-	      case CLIENT_MOVE:
-	      	ClientCommandMove moveCommand = (ClientCommandMove) pNetCommand;
-	      	if (UtilSteps.checkCommandWithActingPlayer(getGameState(), moveCommand) && UtilPlayerMove.isValidMove(getGameState(), (ClientCommandMove) pNetCommand) && !ArrayTool.isProvided(fMoveStack)) {
-	        	publishParameter(new StepParameter(StepParameterKey.MOVE_STACK, UtilPlayerMove.fetchMoveStack(getGameState(), (ClientCommandMove) pNetCommand)));
+  @Override
+  public StepCommandStatus handleCommand(ReceivedCommand pReceivedCommand) {
+    StepCommandStatus commandStatus = super.handleCommand(pReceivedCommand);
+    if ((pReceivedCommand != null) && (commandStatus == StepCommandStatus.UNHANDLED_COMMAND) && UtilSteps.checkCommandIsFromCurrentPlayer(getGameState(), pReceivedCommand)) {
+      Game game = getGameState().getGame();
+      ActingPlayer actingPlayer = game.getActingPlayer();
+      switch (pReceivedCommand.getId()) {
+        case CLIENT_MOVE:
+          ClientCommandMove moveCommand = (ClientCommandMove) pReceivedCommand.getCommand();
+          boolean homePlayer = UtilSteps.checkCommandIsFromHomePlayer(getGameState(), pReceivedCommand);
+          if (UtilSteps.checkCommandWithActingPlayer(getGameState(), moveCommand) && UtilPlayerMove.isValidMove(getGameState(), moveCommand, homePlayer) && !ArrayTool.isProvided(fMoveStack)) {
+            publishParameter(new StepParameter(StepParameterKey.MOVE_STACK, UtilPlayerMove.fetchMoveStack(getGameState(), moveCommand, homePlayer)));
             commandStatus = StepCommandStatus.EXECUTE_STEP;
-	        }
-	        break;
-	      case CLIENT_BLOCK:
-	      	ClientCommandBlock blockCommand = (ClientCommandBlock) pNetCommand;
-	      	if (UtilSteps.checkCommandWithActingPlayer(getGameState(), blockCommand) && (actingPlayer.getPlayerAction() == PlayerAction.BLITZ_MOVE) && !actingPlayer.hasBlocked()) {
-	      		commandStatus = dispatchPlayerAction(PlayerAction.BLITZ);
-	      	}
-	      	break;
-	      case CLIENT_FOUL:
-	      	ClientCommandFoul foulCommand = (ClientCommandFoul) pNetCommand;
-	      	if (UtilSteps.checkCommandWithActingPlayer(getGameState(), foulCommand) && (actingPlayer.getPlayerAction() == PlayerAction.FOUL_MOVE) && !actingPlayer.hasFouled()) {
-	      		commandStatus = dispatchPlayerAction(PlayerAction.FOUL);
-	        }
-	        break;
-	      case CLIENT_HAND_OVER:
-	      	ClientCommandHandOver handOverCommand = (ClientCommandHandOver) pNetCommand;
-	      	if (UtilSteps.checkCommandWithActingPlayer(getGameState(), handOverCommand) && ((actingPlayer.getPlayerAction() == PlayerAction.HAND_OVER_MOVE) || (actingPlayer.getPlayerAction() == PlayerAction.HAND_OVER))) {
-	      		commandStatus = dispatchPlayerAction(PlayerAction.HAND_OVER);
-	        }
-	        break;
-	      case CLIENT_PASS:
-	      	ClientCommandPass passCommand = (ClientCommandPass) pNetCommand;
-	      	if (UtilSteps.checkCommandWithActingPlayer(getGameState(), passCommand)) {
-  	        if (((actingPlayer.getPlayerAction() == PlayerAction.PASS_MOVE) || (actingPlayer.getPlayerAction() == PlayerAction.PASS))) {
-  	      		commandStatus = dispatchPlayerAction(PlayerAction.PASS);
-  	        }
-  	        if (actingPlayer.getPlayerAction() == PlayerAction.HAIL_MARY_PASS) {
-  	      		commandStatus = dispatchPlayerAction(PlayerAction.HAIL_MARY_PASS);
-  	        }
-	      	}
-	        break;
-	      case CLIENT_THROW_TEAM_MATE:
-	      	ClientCommandThrowTeamMate throwTeamMateCommand = (ClientCommandThrowTeamMate) pNetCommand;
+          }
+          break;
+        case CLIENT_BLOCK:
+          ClientCommandBlock blockCommand = (ClientCommandBlock) pReceivedCommand.getCommand();
+          if (UtilSteps.checkCommandWithActingPlayer(getGameState(), blockCommand) && (actingPlayer.getPlayerAction() == PlayerAction.BLITZ_MOVE) && !actingPlayer.hasBlocked()) {
+            commandStatus = dispatchPlayerAction(PlayerAction.BLITZ);
+          }
+          break;
+        case CLIENT_FOUL:
+          ClientCommandFoul foulCommand = (ClientCommandFoul) pReceivedCommand.getCommand();
+          if (UtilSteps.checkCommandWithActingPlayer(getGameState(), foulCommand) && (actingPlayer.getPlayerAction() == PlayerAction.FOUL_MOVE) && !actingPlayer.hasFouled()) {
+            commandStatus = dispatchPlayerAction(PlayerAction.FOUL);
+          }
+          break;
+        case CLIENT_HAND_OVER:
+          ClientCommandHandOver handOverCommand = (ClientCommandHandOver) pReceivedCommand.getCommand();
+          if (UtilSteps.checkCommandWithActingPlayer(getGameState(), handOverCommand) && ((actingPlayer.getPlayerAction() == PlayerAction.HAND_OVER_MOVE) || (actingPlayer.getPlayerAction() == PlayerAction.HAND_OVER))) {
+            commandStatus = dispatchPlayerAction(PlayerAction.HAND_OVER);
+          }
+          break;
+        case CLIENT_PASS:
+          ClientCommandPass passCommand = (ClientCommandPass) pReceivedCommand.getCommand();
+          if (UtilSteps.checkCommandWithActingPlayer(getGameState(), passCommand)) {
+            if (((actingPlayer.getPlayerAction() == PlayerAction.PASS_MOVE) || (actingPlayer.getPlayerAction() == PlayerAction.PASS))) {
+              commandStatus = dispatchPlayerAction(PlayerAction.PASS);
+            }
+            if (actingPlayer.getPlayerAction() == PlayerAction.HAIL_MARY_PASS) {
+              commandStatus = dispatchPlayerAction(PlayerAction.HAIL_MARY_PASS);
+            }
+          }
+          break;
+        case CLIENT_THROW_TEAM_MATE:
+          ClientCommandThrowTeamMate throwTeamMateCommand = (ClientCommandThrowTeamMate) pReceivedCommand.getCommand();
           if (UtilSteps.checkCommandWithActingPlayer(getGameState(), throwTeamMateCommand) && (actingPlayer.getPlayerAction() == PlayerAction.THROW_TEAM_MATE_MOVE)) {
-	      		commandStatus = dispatchPlayerAction(PlayerAction.THROW_TEAM_MATE);
-	        }
-	        break;
+            commandStatus = dispatchPlayerAction(PlayerAction.THROW_TEAM_MATE);
+          }
+          break;
         case CLIENT_GAZE:
-          ClientCommandGaze gazeCommand = (ClientCommandGaze) pNetCommand;
+          ClientCommandGaze gazeCommand = (ClientCommandGaze) pReceivedCommand.getCommand();
           if (UtilSteps.checkCommandWithActingPlayer(getGameState(), gazeCommand)) {
             fGazeVictimId = gazeCommand.getVictimId();
-  	        commandStatus = StepCommandStatus.EXECUTE_STEP;
+            commandStatus = StepCommandStatus.EXECUTE_STEP;
           }
           break;
         case CLIENT_ACTING_PLAYER:
-          ClientCommandActingPlayer actingPlayerCommand = (ClientCommandActingPlayer) pNetCommand;
+          ClientCommandActingPlayer actingPlayerCommand = (ClientCommandActingPlayer) pReceivedCommand.getCommand();
           if (StringTool.isProvided(actingPlayerCommand.getPlayerId())) {
-          	UtilSteps.changePlayerAction(this, actingPlayerCommand.getPlayerId(), actingPlayerCommand.getPlayerAction(), actingPlayerCommand.isLeaping());
+            UtilSteps.changePlayerAction(this, actingPlayerCommand.getPlayerId(), actingPlayerCommand.getPlayerAction(), actingPlayerCommand.isLeaping());
           } else {
-          	fEndPlayerAction = true;
+            fEndPlayerAction = true;
           }
-	        commandStatus = StepCommandStatus.EXECUTE_STEP;
+          commandStatus = StepCommandStatus.EXECUTE_STEP;
           break;
         case CLIENT_END_TURN:
-        	ClientCommandEndTurn endTurnCommand = (ClientCommandEndTurn) pNetCommand;
-        	if (UtilSteps.checkCommandIsFromCurrentPlayer(getGameState(), endTurnCommand)) {
-        		fEndTurn = true;
+          if (UtilSteps.checkCommandIsFromCurrentPlayer(getGameState(), pReceivedCommand)) {
+            fEndTurn = true;
             commandStatus = StepCommandStatus.EXECUTE_STEP;
-        	}
+          }
           break;
         default:
-        	break;
-			}
-		}
-		if (commandStatus == StepCommandStatus.EXECUTE_STEP) {
-			executeStep();
-		}
-		return commandStatus;
-	}
-
-  private void executeStep() {
+          break;
+      }
+    }
+    if (commandStatus == StepCommandStatus.EXECUTE_STEP) {
+      executeStep();
+    }
+    return commandStatus;
+  }
+	
+	private void executeStep() {
     Game game = getGameState().getGame();
     ActingPlayer actingPlayer = game.getActingPlayer();
     if (fEndTurn) {

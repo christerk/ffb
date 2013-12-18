@@ -30,7 +30,6 @@ import com.balancedbytes.games.ffb.model.InducementSet;
 import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.model.PlayerResult;
 import com.balancedbytes.games.ffb.model.Team;
-import com.balancedbytes.games.ffb.net.NetCommand;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandUseInducement;
 import com.balancedbytes.games.ffb.report.ReportBribesRoll;
 import com.balancedbytes.games.ffb.report.ReportSecretWeaponBan;
@@ -41,6 +40,7 @@ import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.IServerJsonOption;
 import com.balancedbytes.games.ffb.server.ServerMode;
 import com.balancedbytes.games.ffb.server.fumbbl.FumbblRequestUpdateGamestate;
+import com.balancedbytes.games.ffb.server.net.ReceivedCommand;
 import com.balancedbytes.games.ffb.server.step.AbstractStep;
 import com.balancedbytes.games.ffb.server.step.SequenceGenerator;
 import com.balancedbytes.games.ffb.server.step.StepAction;
@@ -111,33 +111,33 @@ public class StepEndTurn extends AbstractStep {
 		super.start();
 		executeStep();
 	}
-
-	@Override
-	public StepCommandStatus handleNetCommand(NetCommand pNetCommand) {
-		StepCommandStatus commandStatus = super.handleNetCommand(pNetCommand);
-		if (commandStatus == StepCommandStatus.UNHANDLED_COMMAND) {
-			Game game = getGameState().getGame();
-			switch (pNetCommand.getId()) {
-	      case CLIENT_USE_INDUCEMENT:
-	        ClientCommandUseInducement inducementCommand = (ClientCommandUseInducement) pNetCommand;
-	        if (InducementType.BRIBES == inducementCommand.getInducementType()) {
-	        	Team team = UtilSteps.checkCommandIsFromHomePlayer(getGameState(), inducementCommand) ? game.getTeamHome() : game.getTeamAway();
-	        	if (useSecretWeaponBribes(team, inducementCommand.getPlayerIds()) || !askForSecretWeaponBribes(team)) {
-	        		commandStatus = StepCommandStatus.EXECUTE_STEP;
-	        	} else {
-	        		commandStatus = StepCommandStatus.SKIP_STEP;
-	        	}
-	        }
-	        break;
+	
+  @Override
+  public StepCommandStatus handleCommand(ReceivedCommand pReceivedCommand) {
+    StepCommandStatus commandStatus = super.handleCommand(pReceivedCommand);
+    if (commandStatus == StepCommandStatus.UNHANDLED_COMMAND) {
+      Game game = getGameState().getGame();
+      switch (pReceivedCommand.getId()) {
+        case CLIENT_USE_INDUCEMENT:
+          ClientCommandUseInducement inducementCommand = (ClientCommandUseInducement) pReceivedCommand.getCommand();
+          if (InducementType.BRIBES == inducementCommand.getInducementType()) {
+            Team team = UtilSteps.checkCommandIsFromHomePlayer(getGameState(), pReceivedCommand) ? game.getTeamHome() : game.getTeamAway();
+            if (useSecretWeaponBribes(team, inducementCommand.getPlayerIds()) || !askForSecretWeaponBribes(team)) {
+              commandStatus = StepCommandStatus.EXECUTE_STEP;
+            } else {
+              commandStatus = StepCommandStatus.SKIP_STEP;
+            }
+          }
+          break;
         default:
-        	break;
-			}
-		}
-		if (commandStatus == StepCommandStatus.EXECUTE_STEP) {
-			executeStep();
-		}
-		return commandStatus;
-	}
+          break;
+      }
+    }
+    if (commandStatus == StepCommandStatus.EXECUTE_STEP) {
+      executeStep();
+    }
+    return commandStatus;
+  }
 
 	private void executeStep() {
     

@@ -15,7 +15,7 @@ import com.eclipsesource.json.JsonValue;
  * 
  * @author Kalimar
  */
-public class InternalServerCommandFumbblTeamLoaded extends InternalServerCommand {
+public class InternalServerCommandFumbblTeamLoaded extends InternalServerCommandWithGameId {
   
   private String fCoach;
   private boolean fHomeTeam;
@@ -48,10 +48,6 @@ public class InternalServerCommandFumbblTeamLoaded extends InternalServerCommand
   }
   
   // ByteArray serialization
-  
-  public int getByteArraySerializationVersion() {
-    return 1;
-  }
   
   public void addTo(ByteList pByteList) {
     super.addTo(pByteList);

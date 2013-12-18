@@ -1,8 +1,8 @@
 package com.balancedbytes.games.ffb.server.handler;
 
-import com.balancedbytes.games.ffb.net.NetCommand;
 import com.balancedbytes.games.ffb.net.NetCommandId;
 import com.balancedbytes.games.ffb.server.FantasyFootballServer;
+import com.balancedbytes.games.ffb.server.net.ReceivedCommand;
 import com.balancedbytes.games.ffb.server.net.commands.InternalServerCommandCloseGame;
 
 /**
@@ -19,8 +19,8 @@ public class ServerCommandHandlerCloseGame extends ServerCommandHandler {
     return NetCommandId.INTERNAL_SERVER_CLOSE_GAME;
   }
 
-  public void handleNetCommand(NetCommand pNetCommand) {
-    InternalServerCommandCloseGame closeGameCommand = (InternalServerCommandCloseGame) pNetCommand;
+  public void handleCommand(ReceivedCommand pReceivedCommand) {
+    InternalServerCommandCloseGame closeGameCommand = (InternalServerCommandCloseGame) pReceivedCommand.getCommand();
     getServer().getGameCache().closeGame(closeGameCommand.getGameId());
   }
   

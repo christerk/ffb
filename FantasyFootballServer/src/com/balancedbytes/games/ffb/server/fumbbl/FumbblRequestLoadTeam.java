@@ -12,6 +12,7 @@ import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.IServerLogLevel;
 import com.balancedbytes.games.ffb.server.admin.IAdminGameIdListener;
 import com.balancedbytes.games.ffb.server.net.ChannelManager;
+import com.balancedbytes.games.ffb.server.net.ReceivedCommand;
 import com.balancedbytes.games.ffb.server.net.commands.InternalServerCommandFumbblTeamLoaded;
 import com.balancedbytes.games.ffb.util.StringTool;
 
@@ -89,9 +90,8 @@ public class FumbblRequestLoadTeam extends FumbblRequest {
         team.updateRoster(roster);
         server.getGameCache().addTeamToGame(getGameState(), team, isHomeTeam());
         InternalServerCommandFumbblTeamLoaded loadedCommand = new InternalServerCommandFumbblTeamLoaded(getGameState().getId(), getCoach(), isHomeTeam());
-        loadedCommand.setSender(getSender());
         loadedCommand.setAdminGameIdListener(getAdminGameIdListener());
-        server.getCommunication().handleNetCommand(loadedCommand);
+        server.getCommunication().handleCommand(new ReceivedCommand(loadedCommand, getSender()));
       }
     }
   }

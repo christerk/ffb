@@ -1,8 +1,8 @@
 package com.balancedbytes.games.ffb.server.handler;
 
-import com.balancedbytes.games.ffb.net.NetCommand;
 import com.balancedbytes.games.ffb.net.NetCommandId;
 import com.balancedbytes.games.ffb.server.FantasyFootballServer;
+import com.balancedbytes.games.ffb.server.net.ReceivedCommand;
 import com.balancedbytes.games.ffb.server.net.commands.InternalServerCommandDeleteGame;
 
 /**
@@ -19,8 +19,8 @@ public class ServerCommandHandlerDeleteGame extends ServerCommandHandler {
     return NetCommandId.INTERNAL_SERVER_DELETE_GAME;
   }
 
-  public void handleNetCommand(NetCommand pNetCommand) {
-    InternalServerCommandDeleteGame deleteGameCommand = (InternalServerCommandDeleteGame) pNetCommand;
+  public void handleCommand(ReceivedCommand pReceivedCommand) {
+    InternalServerCommandDeleteGame deleteGameCommand = (InternalServerCommandDeleteGame) pReceivedCommand.getCommand();
     getServer().getGameCache().closeGame(deleteGameCommand.getGameId());
     getServer().getGameCache().queueDbDelete(deleteGameCommand.getGameId());
   }

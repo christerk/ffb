@@ -17,10 +17,10 @@ import java.util.List;
 import java.util.Map;
 
 import com.balancedbytes.games.ffb.FantasyFootballException;
-import com.balancedbytes.games.ffb.net.INetCommandHandler;
 import com.balancedbytes.games.ffb.net.NetCommand;
 import com.balancedbytes.games.ffb.net.NetCommandFactory;
-import com.balancedbytes.games.ffb.net.commands.InternalCommandSocketClosed;
+import com.balancedbytes.games.ffb.server.handler.IReceivedCommandHandler;
+import com.balancedbytes.games.ffb.server.net.commands.InternalServerCommandSocketClosed;
 
 public class NioServer implements Runnable {
   
@@ -42,14 +42,14 @@ public class NioServer implements Runnable {
   // The buffer into which we'll read data when it's available
   private Map<SocketChannel,ByteBuffer> fReadBufferByChannel;
 
-  private INetCommandHandler fCommandHandler;
+  private IReceivedCommandHandler fCommandHandler;
 
   // Maps a SocketChannel to a list of ByteBuffer instances
   private Map<SocketChannel,List<ByteBuffer>> fPendingData;
   
   private NetCommandFactory fNetCommandFactory;
     
-  public NioServer(InetAddress pHostAddress, int pPort, INetCommandHandler pCommandHandler) throws IOException {
+  public NioServer(InetAddress pHostAddress, int pPort, IReceivedCommandHandler pCommandHandler) throws IOException {
     fHostAddress = pHostAddress;
     fPort = pPort;
     fCommandHandler = pCommandHandler;
@@ -197,8 +197,9 @@ public class NioServer implements Runnable {
       if (cmdBytes != null) {
         NetCommand netCommand = fNetCommandFactory.fromBytes(cmdBytes);
         if (netCommand != null) {
-          netCommand.setSender(socketChannel);
-          fCommandHandler.handleNetCommand(netCommand);
+          ReceivedCommand receivedCommand = new ReceivedCommand(netCommand);
+          receivedCommand.setSender(socketChannel);
+          fCommandHandler.handleCommand(receivedCommand);
           offset += netCommand.size();
         }
       } else {
@@ -222,7 +223,9 @@ public class NioServer implements Runnable {
       }
       fReadBufferByChannel.remove(pSocketChannel);
       fSelector.wakeup();
-      fCommandHandler.handleNetCommand(new InternalCommandSocketClosed(pSocketChannel));
+      ReceivedCommand receivedCommand = new ReceivedCommand(new InternalServerCommandSocketClosed());
+      receivedCommand.setSender(pSocketChannel);
+      fCommandHandler.handleCommand(receivedCommand);
     }
   }
   

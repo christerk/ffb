@@ -74,7 +74,7 @@ import com.balancedbytes.games.ffb.net.commands.ServerCommandVersion;
  */
 public enum NetCommandId implements IEnumWithId, IEnumWithName {
   
-  INTERNAL_SOCKET_CLOSED(1, "internalSocketClosed"),
+  INTERNAL_SERVER_SOCKET_CLOSED(1, "internalServerSocketClosed"),
   CLIENT_JOIN(2, "clientJoin"),
   CLIENT_TALK(3, "clientTalk"),
   SERVER_GAME_STATE(4, "serverGameState"),

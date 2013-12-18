@@ -14,7 +14,6 @@ import com.balancedbytes.games.ffb.model.Animation;
 import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.model.PlayerResult;
 import com.balancedbytes.games.ffb.model.change.ModelChangeList;
-import com.balancedbytes.games.ffb.net.INetCommandHandler;
 import com.balancedbytes.games.ffb.net.NetCommand;
 import com.balancedbytes.games.ffb.net.NetCommandId;
 import com.balancedbytes.games.ffb.net.ServerStatus;
@@ -41,29 +40,35 @@ import com.balancedbytes.games.ffb.server.DebugLog;
 import com.balancedbytes.games.ffb.server.FantasyFootballServer;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.IServerLogLevel;
+import com.balancedbytes.games.ffb.server.handler.IReceivedCommandHandler;
 import com.balancedbytes.games.ffb.server.net.commands.InternalServerCommand;
+import com.balancedbytes.games.ffb.server.net.commands.InternalServerCommandWithGameId;
 import com.balancedbytes.games.ffb.util.ArrayTool;
 
 /**
  * 
  * @author Kalimar
  */
-public class ServerCommunication implements Runnable, INetCommandHandler {
+public class ServerCommunication implements Runnable, IReceivedCommandHandler {
   
   private boolean fStopped;
-  private List<NetCommand> fQueue;
+  private List<ReceivedCommand> fReceiveQueue;
   private FantasyFootballServer fServer;
   
   public ServerCommunication(FantasyFootballServer pServer) {
     fServer = pServer;
-    fQueue = Collections.synchronizedList(new LinkedList<NetCommand>()); 
+    fReceiveQueue = Collections.synchronizedList(new LinkedList<ReceivedCommand>()); 
   }
   
-  public void handleNetCommand(NetCommand pNetCommand) {
-    synchronized (fQueue) {
-      fQueue.add(pNetCommand);
-      fQueue.notify();
+  public void handleCommand(ReceivedCommand pReceivedCommand) {
+    synchronized (fReceiveQueue) {
+      fReceiveQueue.add(pReceivedCommand);
+      fReceiveQueue.notify();
     }
+  }
+  
+  public void handleCommand(InternalServerCommand pInternalServerCommand) {
+    handleCommand(new ReceivedCommand(pInternalServerCommand));
   }
   
   public void run() {
@@ -72,11 +77,11 @@ public class ServerCommunication implements Runnable, INetCommandHandler {
     
       while (true) {
         
-        NetCommand netCommand = null;
-        synchronized (fQueue) {
+        ReceivedCommand receivedCommand = null;
+        synchronized (fReceiveQueue) {
           try {
-            while (fQueue.isEmpty() && !fStopped) {
-              fQueue.wait();
+            while (fReceiveQueue.isEmpty() && !fStopped) {
+              fReceiveQueue.wait();
             }
           } catch (InterruptedException e) {
             break;
@@ -84,18 +89,18 @@ public class ServerCommunication implements Runnable, INetCommandHandler {
           if (fStopped) {
             break;
           }
-          netCommand = fQueue.remove(0);
+          receivedCommand = fReceiveQueue.remove(0);
         }
               
-        getServer().getDebugLog().logClientCommand(IServerLogLevel.INFO, netCommand);
+        getServer().getDebugLog().logClientCommand(IServerLogLevel.INFO, receivedCommand);
         try {
-          getServer().getCommandHandlerFactory().handleNetCommand(netCommand);
+          getServer().getCommandHandlerFactory().handleCommand(receivedCommand);
         } catch (Exception any) {
           GameState gameState = null;
 
           // Fetch the game state if available
           try {
-            long gameId = getServer().getChannelManager().getGameIdForChannel(netCommand.getSender());
+            long gameId = getServer().getChannelManager().getGameIdForChannel(receivedCommand.getSender());
             gameState = getServer().getGameCache().getGameStateById(gameId);
           } catch (Exception _) { }
           
@@ -105,18 +110,18 @@ public class ServerCommunication implements Runnable, INetCommandHandler {
           shutdownGame(gameState);
         }
         
-        if ((netCommand != null) && (netCommand.getId() != NetCommandId.CLIENT_PING) && (netCommand.getId() != NetCommandId.CLIENT_DEBUG_CLIENT_STATE)) {
+        if ((receivedCommand != null) && (receivedCommand.getId() != NetCommandId.CLIENT_PING) && (receivedCommand.getId() != NetCommandId.CLIENT_DEBUG_CLIENT_STATE)) {
           long gameId = 0;
-          if (netCommand.isInternal()) {
-            gameId = ((InternalServerCommand) netCommand).getGameId();
+          if (receivedCommand.isInternal()) {
+            gameId = ((InternalServerCommandWithGameId) receivedCommand.getCommand()).getGameId();
           } else {
-            gameId = getServer().getChannelManager().getGameIdForChannel(netCommand.getSender());
+            gameId = getServer().getChannelManager().getGameIdForChannel(receivedCommand.getSender());
           }
           GameState gameState = getServer().getGameCache().getGameStateById(gameId);
           if (gameState != null) {
             try {
-              if (netCommand.isInternal() || (getServer().getChannelManager().getChannelOfHomeCoach(gameState) == netCommand.getSender()) || (getServer().getChannelManager().getChannelOfAwayCoach(gameState) == netCommand.getSender())) {
-                gameState.handleNetCommand(netCommand);
+              if (receivedCommand.isInternal() || (getServer().getChannelManager().getChannelOfHomeCoach(gameState) == receivedCommand.getSender()) || (getServer().getChannelManager().getChannelOfAwayCoach(gameState) == receivedCommand.getSender())) {
+                gameState.handleCommand(receivedCommand);
               }
             } catch (Exception any) {
               getServer().getDebugLog().log(any);
@@ -158,8 +163,8 @@ public class ServerCommunication implements Runnable, INetCommandHandler {
   
   public void stop() {
     fStopped = true;
-    synchronized (fQueue) {
-      fQueue.notifyAll();
+    synchronized (fReceiveQueue) {
+      fReceiveQueue.notifyAll();
     }
   }
   

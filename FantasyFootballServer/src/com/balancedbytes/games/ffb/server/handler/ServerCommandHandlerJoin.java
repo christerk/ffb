@@ -2,7 +2,6 @@ package com.balancedbytes.games.ffb.server.handler;
 
 import com.balancedbytes.games.ffb.ClientMode;
 import com.balancedbytes.games.ffb.GameList;
-import com.balancedbytes.games.ffb.net.NetCommand;
 import com.balancedbytes.games.ffb.net.NetCommandId;
 import com.balancedbytes.games.ffb.net.ServerStatus;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandJoin;
@@ -13,6 +12,7 @@ import com.balancedbytes.games.ffb.server.db.DbQueryFactory;
 import com.balancedbytes.games.ffb.server.db.DbStatementId;
 import com.balancedbytes.games.ffb.server.db.query.DbPasswordForCoachQuery;
 import com.balancedbytes.games.ffb.server.fumbbl.FumbblRequestCheckAuthorization;
+import com.balancedbytes.games.ffb.server.net.ReceivedCommand;
 import com.balancedbytes.games.ffb.server.net.ServerCommunication;
 import com.balancedbytes.games.ffb.server.net.commands.InternalServerCommandJoinApproved;
 import com.balancedbytes.games.ffb.util.StringTool;
@@ -31,9 +31,9 @@ public class ServerCommandHandlerJoin extends ServerCommandHandler {
     return NetCommandId.CLIENT_JOIN;
   }
 
-  public void handleNetCommand(NetCommand pNetCommand) {
+  public void handleCommand(ReceivedCommand pReceivedCommand) {
     
-    ClientCommandJoin joinCommand = (ClientCommandJoin) pNetCommand;
+    ClientCommandJoin joinCommand = (ClientCommandJoin) pReceivedCommand.getCommand();
     ServerCommunication communication = getServer().getCommunication();
     
     if ((joinCommand.getGameId() > 0) || StringTool.isProvided(joinCommand.getGameName())) {
@@ -42,7 +42,7 @@ public class ServerCommandHandlerJoin extends ServerCommandHandler {
       	
         getServer().getFumbblRequestProcessor().add(
           new FumbblRequestCheckAuthorization(
-            joinCommand.getSender(),
+            pReceivedCommand.getSender(),
             joinCommand.getCoach(),
             joinCommand.getPassword(),
             joinCommand.getGameId(),
@@ -66,11 +66,12 @@ public class ServerCommandHandlerJoin extends ServerCommandHandler {
             joinCommand.getTeamId(),
             joinCommand.getClientMode()
           );
-          joinApprovedCommand.setSender(joinCommand.getSender());
-          communication.handleNetCommand(joinApprovedCommand);
+          ReceivedCommand receivedJoinApproved = new ReceivedCommand(joinApprovedCommand);
+          receivedJoinApproved.setSender(pReceivedCommand.getSender());
+          communication.handleCommand(receivedJoinApproved);
           
         } else {
-          communication.sendStatus(joinCommand.getSender(), ServerStatus.ERROR_WRONG_PASSWORD, null);
+          communication.sendStatus(pReceivedCommand.getSender(), ServerStatus.ERROR_WRONG_PASSWORD, null);
         }
         
       }
@@ -84,7 +85,7 @@ public class ServerCommandHandlerJoin extends ServerCommandHandler {
       } else {
         gameList = gameCache.findActiveGames();
       }
-      communication.sendGameList(joinCommand.getSender(), gameList);
+      communication.sendGameList(pReceivedCommand.getSender(), gameList);
   	
     }
     

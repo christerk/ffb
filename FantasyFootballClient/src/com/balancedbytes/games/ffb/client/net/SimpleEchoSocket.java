@@ -1,4 +1,4 @@
-package com.balancedbytes.games.ffb.client;
+package com.balancedbytes.games.ffb.client.net;
 
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Future;

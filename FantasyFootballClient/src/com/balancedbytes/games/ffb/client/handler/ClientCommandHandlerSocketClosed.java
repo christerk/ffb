@@ -12,7 +12,7 @@ public class ClientCommandHandlerSocketClosed extends ClientCommandHandler {
   }
 
   public NetCommandId getId() {
-    return NetCommandId.INTERNAL_SOCKET_CLOSED;
+    return NetCommandId.INTERNAL_SERVER_SOCKET_CLOSED;
   }
 
   public boolean handleNetCommand(NetCommand pNetCommand, ClientCommandHandlerMode pMode) {

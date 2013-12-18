@@ -127,7 +127,7 @@ public class ClientCommunication implements Runnable, INetCommandHandler {
         case SERVER_TALK:
         case SERVER_SOUND:
         case SERVER_REPLAY:
-        case INTERNAL_SOCKET_CLOSED:
+        case INTERNAL_SERVER_SOCKET_CLOSED:
           break;
         default:
           getClient().getReplayer().add((ServerCommand) netCommand);

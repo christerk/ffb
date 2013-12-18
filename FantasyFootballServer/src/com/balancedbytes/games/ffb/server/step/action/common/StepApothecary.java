@@ -16,7 +16,6 @@ import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.InducementSet;
 import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.model.Team;
-import com.balancedbytes.games.ffb.net.NetCommand;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandApothecaryChoice;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandUseApothecary;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandUseInducement;
@@ -28,6 +27,7 @@ import com.balancedbytes.games.ffb.server.DiceInterpreter;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.IServerJsonOption;
 import com.balancedbytes.games.ffb.server.InjuryResult;
+import com.balancedbytes.games.ffb.server.net.ReceivedCommand;
 import com.balancedbytes.games.ffb.server.step.AbstractStep;
 import com.balancedbytes.games.ffb.server.step.StepAction;
 import com.balancedbytes.games.ffb.server.step.StepCommandStatus;
@@ -95,49 +95,49 @@ public class StepApothecary extends AbstractStep {
 		super.start();
 		executeStep();
 	}
-
-	@Override
-	public StepCommandStatus handleNetCommand(NetCommand pNetCommand) {
-		StepCommandStatus commandStatus = super.handleNetCommand(pNetCommand);
-		if (commandStatus == StepCommandStatus.UNHANDLED_COMMAND) {
-			switch (pNetCommand.getId()) {
-			  case CLIENT_APOTHECARY_CHOICE:
-			    ClientCommandApothecaryChoice apothecaryChoiceCommand = (ClientCommandApothecaryChoice) pNetCommand;
-			    if ((fInjuryResult != null) && StringTool.isEqual(apothecaryChoiceCommand.getPlayerId(), fInjuryResult.getDefenderId())) {
-			      handleApothecaryChoice(apothecaryChoiceCommand.getPlayerState(), apothecaryChoiceCommand.getSeriousInjury());
-			      commandStatus = StepCommandStatus.EXECUTE_STEP;
-			    }
-			    break;
-	      case CLIENT_USE_APOTHECARY:
-	        ClientCommandUseApothecary useApothecaryCommand = (ClientCommandUseApothecary) pNetCommand;
-	        if ((fInjuryResult != null) && StringTool.isEqual(useApothecaryCommand.getPlayerId(), fInjuryResult.getDefenderId())) {
-	          fInjuryResult.setApothecaryStatus(useApothecaryCommand.isApothecaryUsed() ? ApothecaryStatus.USE_APOTHECARY : ApothecaryStatus.DO_NOT_USE_APOTHECARY);
-			      commandStatus = StepCommandStatus.EXECUTE_STEP;
-	        }
-	        break;
-	      case CLIENT_USE_INDUCEMENT:
-	        ClientCommandUseInducement inducementCommand = (ClientCommandUseInducement) pNetCommand;
-	        if (InducementType.IGOR == inducementCommand.getInducementType()) {
-	          if ((fInjuryResult != null) && (fInjuryResult.getApothecaryStatus() == ApothecaryStatus.WAIT_FOR_IGOR_USE)) {
-	            if (inducementCommand.hasPlayerId(fInjuryResult.getDefenderId())) {
-	              fInjuryResult.setApothecaryStatus(ApothecaryStatus.USE_IGOR);
-	            } else {
-	              fInjuryResult.setApothecaryStatus(ApothecaryStatus.DO_NOT_USE_IGOR);
-	            }
-				      commandStatus = StepCommandStatus.EXECUTE_STEP;
-	          }
-	        }
-	        break;
-        default:
-        	break;
-			}
-		}
-		if (commandStatus == StepCommandStatus.EXECUTE_STEP) {
-			executeStep();
-		}
-		return commandStatus;
-	}
 	
+  @Override
+  public StepCommandStatus handleCommand(ReceivedCommand pReceivedCommand) {
+    StepCommandStatus commandStatus = super.handleCommand(pReceivedCommand);
+    if (commandStatus == StepCommandStatus.UNHANDLED_COMMAND) {
+      switch (pReceivedCommand.getId()) {
+        case CLIENT_APOTHECARY_CHOICE:
+          ClientCommandApothecaryChoice apothecaryChoiceCommand = (ClientCommandApothecaryChoice) pReceivedCommand.getCommand();
+          if ((fInjuryResult != null) && StringTool.isEqual(apothecaryChoiceCommand.getPlayerId(), fInjuryResult.getDefenderId())) {
+            handleApothecaryChoice(apothecaryChoiceCommand.getPlayerState(), apothecaryChoiceCommand.getSeriousInjury());
+            commandStatus = StepCommandStatus.EXECUTE_STEP;
+          }
+          break;
+        case CLIENT_USE_APOTHECARY:
+          ClientCommandUseApothecary useApothecaryCommand = (ClientCommandUseApothecary) pReceivedCommand.getCommand();
+          if ((fInjuryResult != null) && StringTool.isEqual(useApothecaryCommand.getPlayerId(), fInjuryResult.getDefenderId())) {
+            fInjuryResult.setApothecaryStatus(useApothecaryCommand.isApothecaryUsed() ? ApothecaryStatus.USE_APOTHECARY : ApothecaryStatus.DO_NOT_USE_APOTHECARY);
+            commandStatus = StepCommandStatus.EXECUTE_STEP;
+          }
+          break;
+        case CLIENT_USE_INDUCEMENT:
+          ClientCommandUseInducement inducementCommand = (ClientCommandUseInducement) pReceivedCommand.getCommand();
+          if (InducementType.IGOR == inducementCommand.getInducementType()) {
+            if ((fInjuryResult != null) && (fInjuryResult.getApothecaryStatus() == ApothecaryStatus.WAIT_FOR_IGOR_USE)) {
+              if (inducementCommand.hasPlayerId(fInjuryResult.getDefenderId())) {
+                fInjuryResult.setApothecaryStatus(ApothecaryStatus.USE_IGOR);
+              } else {
+                fInjuryResult.setApothecaryStatus(ApothecaryStatus.DO_NOT_USE_IGOR);
+              }
+              commandStatus = StepCommandStatus.EXECUTE_STEP;
+            }
+          }
+          break;
+        default:
+          break;
+      }
+    }
+    if (commandStatus == StepCommandStatus.EXECUTE_STEP) {
+      executeStep();
+    }
+    return commandStatus;
+  }
+
 	@Override
 	public boolean setParameter(StepParameter pParameter) {
 		if ((pParameter != null) && !super.setParameter(pParameter)) {

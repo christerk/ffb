@@ -14,7 +14,7 @@ import com.eclipsesource.json.JsonValue;
  * 
  * @author Kalimar
  */
-public class InternalServerCommandReplayLoaded extends InternalServerCommand {
+public class InternalServerCommandReplayLoaded extends InternalServerCommandWithGameId {
   
   private int fReplayToCommandNr;
   

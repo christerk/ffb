@@ -8,12 +8,12 @@ import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Team;
-import com.balancedbytes.games.ffb.net.NetCommand;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandUseInducement;
 import com.balancedbytes.games.ffb.report.ReportBribesRoll;
 import com.balancedbytes.games.ffb.server.DiceInterpreter;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.IServerJsonOption;
+import com.balancedbytes.games.ffb.server.net.ReceivedCommand;
 import com.balancedbytes.games.ffb.server.step.AbstractStep;
 import com.balancedbytes.games.ffb.server.step.StepAction;
 import com.balancedbytes.games.ffb.server.step.StepCommandStatus;
@@ -75,30 +75,30 @@ public class StepBribes extends AbstractStep {
 		executeStep();
 	}
 	
-	@Override
-	public StepCommandStatus handleNetCommand(NetCommand pNetCommand) {
-		StepCommandStatus commandStatus = super.handleNetCommand(pNetCommand);
-		if ((pNetCommand != null) && (commandStatus == StepCommandStatus.UNHANDLED_COMMAND)) {
-			Game game = getGameState().getGame();
-			switch (pNetCommand.getId()) {
-	      case CLIENT_USE_INDUCEMENT:
-	        ClientCommandUseInducement inducementCommand = (ClientCommandUseInducement) pNetCommand;
-	        if (InducementType.BRIBES == inducementCommand.getInducementType()) {
-	          ActingPlayer actingPlayer = game.getActingPlayer();
-	          fBribesChoice = inducementCommand.hasPlayerId(actingPlayer.getPlayerId());
-	          fBribeSuccessful = null;
-	        }
-	        commandStatus = StepCommandStatus.EXECUTE_STEP;
-	        break;
+  @Override
+  public StepCommandStatus handleCommand(ReceivedCommand pReceivedCommand) {
+    StepCommandStatus commandStatus = super.handleCommand(pReceivedCommand);
+    if ((pReceivedCommand != null) && (commandStatus == StepCommandStatus.UNHANDLED_COMMAND)) {
+      Game game = getGameState().getGame();
+      switch (pReceivedCommand.getId()) {
+        case CLIENT_USE_INDUCEMENT:
+          ClientCommandUseInducement inducementCommand = (ClientCommandUseInducement) pReceivedCommand.getCommand();
+          if (InducementType.BRIBES == inducementCommand.getInducementType()) {
+            ActingPlayer actingPlayer = game.getActingPlayer();
+            fBribesChoice = inducementCommand.hasPlayerId(actingPlayer.getPlayerId());
+            fBribeSuccessful = null;
+          }
+          commandStatus = StepCommandStatus.EXECUTE_STEP;
+          break;
         default:
-        	break;
-			}
-		}
-		if (commandStatus == StepCommandStatus.EXECUTE_STEP) {
-			executeStep();
-		}
-		return commandStatus;
-	}
+          break;
+      }
+    }
+    if (commandStatus == StepCommandStatus.EXECUTE_STEP) {
+      executeStep();
+    }
+    return commandStatus;
+  }
 
 	private void executeStep() {
     Game game = getGameState().getGame();

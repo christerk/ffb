@@ -1,13 +1,14 @@
 package com.balancedbytes.games.ffb.server.handler;
 
+import java.nio.channels.SocketChannel;
+
 import com.balancedbytes.games.ffb.GameOption;
 import com.balancedbytes.games.ffb.Sound;
 import com.balancedbytes.games.ffb.model.Game;
-import com.balancedbytes.games.ffb.net.NetCommand;
 import com.balancedbytes.games.ffb.net.NetCommandId;
-import com.balancedbytes.games.ffb.net.commands.ClientCommandTimeoutPossible;
 import com.balancedbytes.games.ffb.server.FantasyFootballServer;
 import com.balancedbytes.games.ffb.server.GameState;
+import com.balancedbytes.games.ffb.server.net.ReceivedCommand;
 import com.balancedbytes.games.ffb.server.util.UtilGame;
 
 /**
@@ -24,11 +25,11 @@ public class ServerCommandHandlerTimeout extends ServerCommandHandler {
     return NetCommandId.CLIENT_TIMEOUT_POSSIBLE;
   }
 
-  public void handleNetCommand(NetCommand pNetCommand) {
+  public void handleCommand(ReceivedCommand pReceivedCommand) {
     
-    ClientCommandTimeoutPossible timeoutCommand = (ClientCommandTimeoutPossible) pNetCommand;
+    SocketChannel sender = pReceivedCommand.getSender();
     
-    long gameId = getServer().getChannelManager().getGameIdForChannel(timeoutCommand.getSender());
+    long gameId = getServer().getChannelManager().getGameIdForChannel(sender);
     GameState gameState = getServer().getGameCache().getGameStateById(gameId);
     Game game = (gameState != null) ? gameState.getGame() : null;
     

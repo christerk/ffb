@@ -2,8 +2,8 @@ package com.balancedbytes.games.ffb.server.step;
 
 import com.balancedbytes.games.ffb.bytearray.IByteArraySerializable;
 import com.balancedbytes.games.ffb.json.IJsonSerializable;
-import com.balancedbytes.games.ffb.net.NetCommand;
 import com.balancedbytes.games.ffb.server.GameState;
+import com.balancedbytes.games.ffb.server.net.ReceivedCommand;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
@@ -23,7 +23,7 @@ public interface IStep extends IByteArraySerializable, IJsonSerializable {
 	
 	public void init(StepParameterSet pParameterSet);
 	
-	public StepCommandStatus handleNetCommand(NetCommand pNetCommand);
+	public StepCommandStatus handleCommand(ReceivedCommand pReceivedCommand);
 	
 	public GameState getGameState();
 	

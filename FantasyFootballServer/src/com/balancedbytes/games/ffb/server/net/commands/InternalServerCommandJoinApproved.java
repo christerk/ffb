@@ -16,7 +16,7 @@ import com.eclipsesource.json.JsonValue;
  * 
  * @author Kalimar
  */
-public class InternalServerCommandJoinApproved extends InternalServerCommand {
+public class InternalServerCommandJoinApproved extends InternalServerCommandWithGameId {
   
   private String fCoach;
   private String fGameName;
