@@ -9,7 +9,6 @@ import com.balancedbytes.games.ffb.bytearray.ByteList;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
-import com.balancedbytes.games.ffb.net.NetCommand;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandKickoff;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandSetupPlayer;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandTeamSetupDelete;
@@ -18,6 +17,7 @@ import com.balancedbytes.games.ffb.net.commands.ClientCommandTeamSetupSave;
 import com.balancedbytes.games.ffb.report.ReportNoPlayersToField;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.IServerJsonOption;
+import com.balancedbytes.games.ffb.server.net.ReceivedCommand;
 import com.balancedbytes.games.ffb.server.step.AbstractStep;
 import com.balancedbytes.games.ffb.server.step.SequenceGenerator;
 import com.balancedbytes.games.ffb.server.step.StepAction;
@@ -83,34 +83,34 @@ public final class StepInitKickoff extends AbstractStep {
 		}
 	}
 	
-	@Override
-	public StepCommandStatus handleNetCommand(NetCommand pNetCommand) {
-		StepCommandStatus commandStatus = super.handleNetCommand(pNetCommand);
+  @Override
+  public StepCommandStatus handleCommand(ReceivedCommand pReceivedCommand) {
+    StepCommandStatus commandStatus = super.handleCommand(pReceivedCommand);
 		if (commandStatus == StepCommandStatus.UNHANDLED_COMMAND) {
 			Game game = getGameState().getGame();
-			switch (pNetCommand.getId()) {
+			switch (pReceivedCommand.getId()) {
 	      case CLIENT_TEAM_SETUP_LOAD:
-	        ClientCommandTeamSetupLoad loadSetupCommand = (ClientCommandTeamSetupLoad) pNetCommand;
+	        ClientCommandTeamSetupLoad loadSetupCommand = (ClientCommandTeamSetupLoad) pReceivedCommand.getCommand();
 	        UtilSetup.loadTeamSetup(getGameState(), loadSetupCommand.getSetupName());
 	        commandStatus = StepCommandStatus.SKIP_STEP;
 	        break;
 	      case CLIENT_TEAM_SETUP_SAVE:
-	        ClientCommandTeamSetupSave saveSetupCommand = (ClientCommandTeamSetupSave) pNetCommand;
+	        ClientCommandTeamSetupSave saveSetupCommand = (ClientCommandTeamSetupSave) pReceivedCommand.getCommand();
 	        UtilSetup.saveTeamSetup(getGameState(), saveSetupCommand.getSetupName(), saveSetupCommand.getPlayerNumbers(), saveSetupCommand.getPlayerCoordinates());
 	        commandStatus = StepCommandStatus.SKIP_STEP;
 	        break;
 	      case CLIENT_TEAM_SETUP_DELETE:
-	        ClientCommandTeamSetupDelete deleteSetupCommand = (ClientCommandTeamSetupDelete) pNetCommand;
+	        ClientCommandTeamSetupDelete deleteSetupCommand = (ClientCommandTeamSetupDelete) pReceivedCommand.getCommand();
 	        UtilSetup.deleteTeamSetup(getGameState(), deleteSetupCommand.getSetupName());
 	        commandStatus = StepCommandStatus.SKIP_STEP;
 	        break;
 	      case CLIENT_SETUP_PLAYER:
-	        ClientCommandSetupPlayer setupPlayerCommand = (ClientCommandSetupPlayer) pNetCommand;
+	        ClientCommandSetupPlayer setupPlayerCommand = (ClientCommandSetupPlayer) pReceivedCommand.getCommand();
 	        UtilSetup.setupPlayer(getGameState(), setupPlayerCommand.getPlayerId(), setupPlayerCommand.getCoordinate());
 	        commandStatus = StepCommandStatus.SKIP_STEP;
 	        break;
         case CLIENT_KICKOFF:
-          ClientCommandKickoff kickoffCommand = (ClientCommandKickoff) pNetCommand;
+          ClientCommandKickoff kickoffCommand = (ClientCommandKickoff) pReceivedCommand.getCommand();
           if (game.isHomePlaying()) {
           	fKickoffStartCoordinate = kickoffCommand.getBallCoordinate();
           } else {
@@ -119,7 +119,7 @@ public final class StepInitKickoff extends AbstractStep {
           commandStatus = StepCommandStatus.EXECUTE_STEP;
           break;
         case CLIENT_END_TURN:
-        	if (UtilSteps.checkCommandIsFromCurrentPlayer(getGameState(), pNetCommand)) {
+        	if (UtilSteps.checkCommandIsFromCurrentPlayer(getGameState(), pReceivedCommand)) {
         		fEndKickoff = true;
             commandStatus = StepCommandStatus.EXECUTE_STEP;
         	}

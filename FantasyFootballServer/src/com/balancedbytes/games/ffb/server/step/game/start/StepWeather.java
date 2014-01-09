@@ -1,10 +1,10 @@
 package com.balancedbytes.games.ffb.server.step.game.start;
 
 import com.balancedbytes.games.ffb.Weather;
-import com.balancedbytes.games.ffb.net.NetCommand;
 import com.balancedbytes.games.ffb.report.ReportWeather;
 import com.balancedbytes.games.ffb.server.DiceInterpreter;
 import com.balancedbytes.games.ffb.server.GameState;
+import com.balancedbytes.games.ffb.server.net.ReceivedCommand;
 import com.balancedbytes.games.ffb.server.step.AbstractStep;
 import com.balancedbytes.games.ffb.server.step.StepAction;
 import com.balancedbytes.games.ffb.server.step.StepCommandStatus;
@@ -34,8 +34,8 @@ public final class StepWeather extends AbstractStep {
 	}
 	
 	@Override
-	public StepCommandStatus handleNetCommand(NetCommand pNetCommand) {
-		StepCommandStatus commandStatus = super.handleNetCommand(pNetCommand);
+  public StepCommandStatus handleCommand(ReceivedCommand pReceivedCommand) {
+    StepCommandStatus commandStatus = super.handleCommand(pReceivedCommand);
 		if (commandStatus == StepCommandStatus.EXECUTE_STEP) {
 			executeStep();
 		}

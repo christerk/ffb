@@ -12,10 +12,10 @@ import com.balancedbytes.games.ffb.dialog.DialogTouchbackParameter;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
-import com.balancedbytes.games.ffb.net.NetCommand;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandTouchback;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.IServerJsonOption;
+import com.balancedbytes.games.ffb.server.net.ReceivedCommand;
 import com.balancedbytes.games.ffb.server.step.AbstractStep;
 import com.balancedbytes.games.ffb.server.step.StepAction;
 import com.balancedbytes.games.ffb.server.step.StepCommandStatus;
@@ -57,13 +57,13 @@ public final class StepTouchback extends AbstractStep {
 	}
 	
 	@Override
-	public StepCommandStatus handleNetCommand(NetCommand pNetCommand) {
-		StepCommandStatus commandStatus = super.handleNetCommand(pNetCommand);
+  public StepCommandStatus handleCommand(ReceivedCommand pReceivedCommand) {
+    StepCommandStatus commandStatus = super.handleCommand(pReceivedCommand);
 		if (commandStatus == StepCommandStatus.UNHANDLED_COMMAND) {
-			switch (pNetCommand.getId()) {
+			switch (pReceivedCommand.getId()) {
 	      case CLIENT_TOUCHBACK:
-	        ClientCommandTouchback touchbackCommand = (ClientCommandTouchback) pNetCommand;
-	        if (UtilSteps.checkCommandIsFromHomePlayer(getGameState(), pNetCommand)) {
+	        ClientCommandTouchback touchbackCommand = (ClientCommandTouchback) pReceivedCommand.getCommand();
+	        if (UtilSteps.checkCommandIsFromHomePlayer(getGameState(), pReceivedCommand)) {
 	        	fTouchbackCoordinate = touchbackCommand.getBallCoordinate();
 	        } else {
 	        	fTouchbackCoordinate = touchbackCommand.getBallCoordinate().transform();

@@ -7,11 +7,11 @@ import com.balancedbytes.games.ffb.dialog.DialogReceiveChoiceParameter;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Team;
-import com.balancedbytes.games.ffb.net.NetCommand;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandCoinChoice;
 import com.balancedbytes.games.ffb.report.ReportCoinThrow;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.IServerJsonOption;
+import com.balancedbytes.games.ffb.server.net.ReceivedCommand;
 import com.balancedbytes.games.ffb.server.step.AbstractStep;
 import com.balancedbytes.games.ffb.server.step.StepAction;
 import com.balancedbytes.games.ffb.server.step.StepCommandStatus;
@@ -47,13 +47,13 @@ public final class StepCoinChoice extends AbstractStep {
 		executeStep();
 	}
 	
-	@Override
-	public StepCommandStatus handleNetCommand(NetCommand pNetCommand) {
-		StepCommandStatus commandStatus = super.handleNetCommand(pNetCommand);
+  @Override
+  public StepCommandStatus handleCommand(ReceivedCommand pReceivedCommand) {
+    StepCommandStatus commandStatus = super.handleCommand(pReceivedCommand);
 		if (commandStatus == StepCommandStatus.UNHANDLED_COMMAND) {
-			switch (pNetCommand.getId()) {
+			switch (pReceivedCommand.getId()) {
 			  case CLIENT_COIN_CHOICE:
-			    ClientCommandCoinChoice coinChoiceCommand = (ClientCommandCoinChoice) pNetCommand;
+			    ClientCommandCoinChoice coinChoiceCommand = (ClientCommandCoinChoice) pReceivedCommand.getCommand();
 			    fCoinChoiceHeads = coinChoiceCommand.isChoiceHeads();
 			    commandStatus = StepCommandStatus.EXECUTE_STEP;
 			    break;

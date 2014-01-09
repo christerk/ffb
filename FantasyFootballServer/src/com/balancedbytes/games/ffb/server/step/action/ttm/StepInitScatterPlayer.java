@@ -10,10 +10,10 @@ import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.Animation;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
-import com.balancedbytes.games.ffb.net.NetCommand;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.IServerJsonOption;
 import com.balancedbytes.games.ffb.server.InjuryResult;
+import com.balancedbytes.games.ffb.server.net.ReceivedCommand;
 import com.balancedbytes.games.ffb.server.step.AbstractStep;
 import com.balancedbytes.games.ffb.server.step.StepAction;
 import com.balancedbytes.games.ffb.server.step.StepCommandStatus;
@@ -112,8 +112,8 @@ public final class StepInitScatterPlayer extends AbstractStep {
 	}
 	
 	@Override
-	public StepCommandStatus handleNetCommand(NetCommand pNetCommand) {
-		StepCommandStatus commandStatus = super.handleNetCommand(pNetCommand);
+  public StepCommandStatus handleCommand(ReceivedCommand pReceivedCommand) {
+    StepCommandStatus commandStatus = super.handleCommand(pReceivedCommand);
 		if (commandStatus == StepCommandStatus.EXECUTE_STEP) {
 			executeStep();
 		}

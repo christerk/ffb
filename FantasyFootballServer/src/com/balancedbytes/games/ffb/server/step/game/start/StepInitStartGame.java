@@ -8,7 +8,6 @@ import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.Game;
-import com.balancedbytes.games.ffb.net.NetCommand;
 import com.balancedbytes.games.ffb.server.FantasyFootballServer;
 import com.balancedbytes.games.ffb.server.GameCache;
 import com.balancedbytes.games.ffb.server.GameState;
@@ -16,6 +15,7 @@ import com.balancedbytes.games.ffb.server.IServerJsonOption;
 import com.balancedbytes.games.ffb.server.IServerLogLevel;
 import com.balancedbytes.games.ffb.server.ServerMode;
 import com.balancedbytes.games.ffb.server.fumbbl.FumbblRequestCreateGamestate;
+import com.balancedbytes.games.ffb.server.net.ReceivedCommand;
 import com.balancedbytes.games.ffb.server.step.AbstractStep;
 import com.balancedbytes.games.ffb.server.step.StepAction;
 import com.balancedbytes.games.ffb.server.step.StepCommandStatus;
@@ -49,11 +49,11 @@ public final class StepInitStartGame extends AbstractStep {
 	}
 	
 	@Override
-	public StepCommandStatus handleNetCommand(NetCommand pNetCommand) {
-		StepCommandStatus commandStatus = super.handleNetCommand(pNetCommand);
+  public StepCommandStatus handleCommand(ReceivedCommand pReceivedCommand) {
+    StepCommandStatus commandStatus = super.handleCommand(pReceivedCommand);
 		if (commandStatus == StepCommandStatus.UNHANDLED_COMMAND) {
 			Game game = getGameState().getGame();
-			switch (pNetCommand.getId()) {
+			switch (pReceivedCommand.getId()) {
 		    case INTERNAL_SERVER_FUMBBL_GAME_CREATED:
 		    	fFumbblGameCreated = true;
 	        commandStatus = StepCommandStatus.EXECUTE_STEP;

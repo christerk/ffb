@@ -16,10 +16,10 @@ import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.InducementSet;
 import com.balancedbytes.games.ffb.model.TurnData;
-import com.balancedbytes.games.ffb.net.NetCommand;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandUseInducement;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.IServerJsonOption;
+import com.balancedbytes.games.ffb.server.net.ReceivedCommand;
 import com.balancedbytes.games.ffb.server.step.AbstractStep;
 import com.balancedbytes.games.ffb.server.step.SequenceGenerator;
 import com.balancedbytes.games.ffb.server.step.StepAction;
@@ -95,12 +95,12 @@ public final class StepInitInducement extends AbstractStep {
 	}
 	
 	@Override
-	public StepCommandStatus handleNetCommand(NetCommand pNetCommand) {
-		StepCommandStatus commandStatus = super.handleNetCommand(pNetCommand);
+  public StepCommandStatus handleCommand(ReceivedCommand pReceivedCommand) {
+    StepCommandStatus commandStatus = super.handleCommand(pReceivedCommand);
 		if (commandStatus == StepCommandStatus.UNHANDLED_COMMAND) {
-			switch (pNetCommand.getId()) {
+			switch (pReceivedCommand.getId()) {
 	      case CLIENT_USE_INDUCEMENT:
-	      	ClientCommandUseInducement useInducementCommand = (ClientCommandUseInducement) pNetCommand;
+	      	ClientCommandUseInducement useInducementCommand = (ClientCommandUseInducement) pReceivedCommand.getCommand();
 	      	fInducementType = useInducementCommand.getInducementType();
 	      	fCard = useInducementCommand.getCard();
 	      	fEndInducementPhase = ((fInducementType == null) && (fCard == null)); 

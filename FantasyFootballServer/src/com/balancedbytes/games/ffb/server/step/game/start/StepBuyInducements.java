@@ -24,7 +24,6 @@ import com.balancedbytes.games.ffb.model.Roster;
 import com.balancedbytes.games.ffb.model.RosterPosition;
 import com.balancedbytes.games.ffb.model.Team;
 import com.balancedbytes.games.ffb.model.TurnData;
-import com.balancedbytes.games.ffb.net.NetCommand;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandBuyInducements;
 import com.balancedbytes.games.ffb.report.ReportDoubleHiredStarPlayer;
 import com.balancedbytes.games.ffb.report.ReportInducementsBought;
@@ -32,6 +31,7 @@ import com.balancedbytes.games.ffb.server.FantasyFootballServer;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.IServerJsonOption;
 import com.balancedbytes.games.ffb.server.db.DbTransaction;
+import com.balancedbytes.games.ffb.server.net.ReceivedCommand;
 import com.balancedbytes.games.ffb.server.step.AbstractStep;
 import com.balancedbytes.games.ffb.server.step.SequenceGenerator;
 import com.balancedbytes.games.ffb.server.step.StepAction;
@@ -103,14 +103,14 @@ public final class StepBuyInducements extends AbstractStep {
 	}
 	
 	@Override
-	public StepCommandStatus handleNetCommand(NetCommand pNetCommand) {
-		StepCommandStatus commandStatus = super.handleNetCommand(pNetCommand);
+  public StepCommandStatus handleCommand(ReceivedCommand pReceivedCommand) {
+    StepCommandStatus commandStatus = super.handleCommand(pReceivedCommand);
 		if (commandStatus == StepCommandStatus.UNHANDLED_COMMAND) {
 			Game game = getGameState().getGame();
 			GameResult gameResult = game.getGameResult();
-			switch (pNetCommand.getId()) {
+			switch (pReceivedCommand.getId()) {
 	      case CLIENT_BUY_INDUCEMENTS:
-	        ClientCommandBuyInducements buyInducementsCommand = (ClientCommandBuyInducements) pNetCommand;
+	        ClientCommandBuyInducements buyInducementsCommand = (ClientCommandBuyInducements) pReceivedCommand.getCommand();
 	        if (game.getTeamHome().getId().equals(buyInducementsCommand.getTeamId())) {
 	          game.getTurnDataHome().getInducementSet().add(buyInducementsCommand.getInducementSet());
 	          addStarPlayers(game.getTeamHome(), buyInducementsCommand.getStarPlayerPositionIds());

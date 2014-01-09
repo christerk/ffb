@@ -10,10 +10,8 @@ import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
-import com.balancedbytes.games.ffb.net.NetCommand;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandActingPlayer;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandBlock;
-import com.balancedbytes.games.ffb.net.commands.ClientCommandEndTurn;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandFoul;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandGaze;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandHandOver;
@@ -24,6 +22,7 @@ import com.balancedbytes.games.ffb.server.GameCache;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.IServerConstant;
 import com.balancedbytes.games.ffb.server.IServerJsonOption;
+import com.balancedbytes.games.ffb.server.net.ReceivedCommand;
 import com.balancedbytes.games.ffb.server.step.AbstractStep;
 import com.balancedbytes.games.ffb.server.step.StepAction;
 import com.balancedbytes.games.ffb.server.step.StepCommandStatus;
@@ -101,14 +100,15 @@ public final class StepInitSelecting extends AbstractStep {
   }
 	
 	@Override
-	public StepCommandStatus handleNetCommand(NetCommand pNetCommand) {
-		StepCommandStatus commandStatus = super.handleNetCommand(pNetCommand);
-		if ((pNetCommand != null) && (commandStatus == StepCommandStatus.UNHANDLED_COMMAND) && UtilSteps.checkCommandIsFromCurrentPlayer(getGameState(), pNetCommand)) {
+  public StepCommandStatus handleCommand(ReceivedCommand pReceivedCommand) {
+		StepCommandStatus commandStatus = super.handleCommand(pReceivedCommand);
+		if ((pReceivedCommand != null) && (commandStatus == StepCommandStatus.UNHANDLED_COMMAND) && UtilSteps.checkCommandIsFromCurrentPlayer(getGameState(), pReceivedCommand)) {
 			Game game = getGameState().getGame();
 			ActingPlayer actingPlayer = game.getActingPlayer();
-			switch (pNetCommand.getId()) {
+      boolean homeCommand = UtilSteps.checkCommandIsFromHomePlayer(getGameState(), pReceivedCommand);
+			switch (pReceivedCommand.getId()) {
 	      case CLIENT_ACTING_PLAYER:
-	        ClientCommandActingPlayer actingPlayerCommand = (ClientCommandActingPlayer) pNetCommand;
+	        ClientCommandActingPlayer actingPlayerCommand = (ClientCommandActingPlayer) pReceivedCommand.getCommand();
 	        if (StringTool.isProvided(actingPlayerCommand.getPlayerId())) {
 	        	UtilSteps.changePlayerAction(this, actingPlayerCommand.getPlayerId(), actingPlayerCommand.getPlayerAction(), actingPlayerCommand.isLeaping());
 	        } else {
@@ -117,15 +117,15 @@ public final class StepInitSelecting extends AbstractStep {
           commandStatus = StepCommandStatus.EXECUTE_STEP;
 	        break;
 	      case CLIENT_MOVE:
-	      	ClientCommandMove moveCommand = (ClientCommandMove) pNetCommand;
-	      	if (UtilSteps.checkCommandWithActingPlayer(getGameState(), moveCommand) && UtilPlayerMove.isValidMove(getGameState(), moveCommand)) {
-  	      	publishParameter(new StepParameter(StepParameterKey.MOVE_STACK, UtilPlayerMove.fetchMoveStack(getGameState(), moveCommand)));
+	      	ClientCommandMove moveCommand = (ClientCommandMove) pReceivedCommand.getCommand();
+	      	if (UtilSteps.checkCommandWithActingPlayer(getGameState(), moveCommand) && UtilPlayerMove.isValidMove(getGameState(), moveCommand, homeCommand)) {
+  	      	publishParameter(new StepParameter(StepParameterKey.MOVE_STACK, UtilPlayerMove.fetchMoveStack(getGameState(), moveCommand, homeCommand)));
   	      	fDispatchPlayerAction = PlayerAction.MOVE;
             commandStatus = StepCommandStatus.EXECUTE_STEP;
 	      	}
 	        break;
 	      case CLIENT_FOUL:
-	      	ClientCommandFoul foulCommand = (ClientCommandFoul) pNetCommand;
+	      	ClientCommandFoul foulCommand = (ClientCommandFoul) pReceivedCommand.getCommand();
 	      	if (UtilSteps.checkCommandWithActingPlayer(getGameState(), foulCommand) && !game.getTurnData().isFoulUsed()) {
   	      	publishParameter(new StepParameter(StepParameterKey.FOUL_DEFENDER_ID, foulCommand.getDefenderId()));
   	        UtilSteps.changePlayerAction(this, actingPlayer.getPlayerId(), PlayerAction.FOUL, false);
@@ -134,7 +134,7 @@ public final class StepInitSelecting extends AbstractStep {
 	      	}
 	        break;
 	      case CLIENT_BLOCK:
-	    		ClientCommandBlock blockCommand = (ClientCommandBlock) pNetCommand;
+	    		ClientCommandBlock blockCommand = (ClientCommandBlock) pReceivedCommand.getCommand();
 	      	if (UtilSteps.checkCommandWithActingPlayer(getGameState(), blockCommand)) {
   	      	publishParameter(new StepParameter(StepParameterKey.BLOCK_DEFENDER_ID, blockCommand.getDefenderId()));
   	      	publishParameter(new StepParameter(StepParameterKey.USING_STAB, blockCommand.isUsingStab()));
@@ -143,7 +143,7 @@ public final class StepInitSelecting extends AbstractStep {
 	      	}
 	        break;
 	      case CLIENT_GAZE:
-	      	ClientCommandGaze gazeCommand = (ClientCommandGaze) pNetCommand;
+	      	ClientCommandGaze gazeCommand = (ClientCommandGaze) pReceivedCommand.getCommand();
 	      	if (UtilSteps.checkCommandWithActingPlayer(getGameState(), gazeCommand)) {
   	      	publishParameter(new StepParameter(StepParameterKey.GAZE_VICTIM_ID, gazeCommand.getVictimId()));
   	        UtilSteps.changePlayerAction(this, actingPlayer.getPlayerId(), PlayerAction.GAZE, false);
@@ -152,7 +152,7 @@ public final class StepInitSelecting extends AbstractStep {
 	      	}
 	        break;
 	      case CLIENT_PASS:
-	      	ClientCommandPass passCommand = (ClientCommandPass) pNetCommand;
+	      	ClientCommandPass passCommand = (ClientCommandPass) pReceivedCommand.getCommand();
 	      	boolean passAllowed = !game.getTurnData().isPassUsed() || ((actingPlayer.getPlayer() != null) && ((actingPlayer.getPlayerAction() == PlayerAction.THROW_BOMB) || (actingPlayer.getPlayerAction() == PlayerAction.HAIL_MARY_BOMB)));
 	      	if (UtilSteps.checkCommandWithActingPlayer(getGameState(), passCommand) && passAllowed) {
   	      	if (passCommand.getTargetCoordinate() != null) {
@@ -172,7 +172,7 @@ public final class StepInitSelecting extends AbstractStep {
 	      	}
 	      	break;
 	      case CLIENT_HAND_OVER:
-	      	ClientCommandHandOver handOverCommand = (ClientCommandHandOver) pNetCommand;
+	      	ClientCommandHandOver handOverCommand = (ClientCommandHandOver) pReceivedCommand.getCommand();
 	      	if (UtilSteps.checkCommandWithActingPlayer(getGameState(), handOverCommand) && !game.getTurnData().isHandOverUsed()) {
 	      		Player catcher = game.getPlayerById(handOverCommand.getCatcherId());
 	      		FieldCoordinate catcherCoordinate = game.getFieldModel().getPlayerCoordinate(catcher);
@@ -183,7 +183,7 @@ public final class StepInitSelecting extends AbstractStep {
 	      	}
 	      	break;
 	      case CLIENT_THROW_TEAM_MATE:
-	      	ClientCommandThrowTeamMate throwTeamMateCommand = (ClientCommandThrowTeamMate) pNetCommand;
+	      	ClientCommandThrowTeamMate throwTeamMateCommand = (ClientCommandThrowTeamMate) pReceivedCommand.getCommand();
 	      	if (UtilSteps.checkCommandWithActingPlayer(getGameState(), throwTeamMateCommand) && !game.getTurnData().isPassUsed()) {
   	      	if (throwTeamMateCommand.getTargetCoordinate() != null) {
   	      		if (game.isHomePlaying()) {
@@ -199,8 +199,7 @@ public final class StepInitSelecting extends AbstractStep {
 	      	}
 	        break;
         case CLIENT_END_TURN:
-        	ClientCommandEndTurn endTurnCommand = (ClientCommandEndTurn) pNetCommand;
-        	if (UtilSteps.checkCommandIsFromCurrentPlayer(getGameState(), endTurnCommand)) {
+        	if (UtilSteps.checkCommandIsFromCurrentPlayer(getGameState(), pReceivedCommand)) {
         		fEndTurn = true;
             commandStatus = StepCommandStatus.EXECUTE_STEP;
         	}

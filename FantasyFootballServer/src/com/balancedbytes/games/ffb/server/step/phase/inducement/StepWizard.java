@@ -21,11 +21,11 @@ import com.balancedbytes.games.ffb.model.AnimationType;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.model.Team;
-import com.balancedbytes.games.ffb.net.NetCommand;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandWizardSpell;
 import com.balancedbytes.games.ffb.report.ReportWizardUse;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.IServerJsonOption;
+import com.balancedbytes.games.ffb.server.net.ReceivedCommand;
 import com.balancedbytes.games.ffb.server.step.AbstractStep;
 import com.balancedbytes.games.ffb.server.step.SequenceGenerator;
 import com.balancedbytes.games.ffb.server.step.StepAction;
@@ -66,13 +66,13 @@ public final class StepWizard extends AbstractStep {
 	}
 	
 	@Override
-	public StepCommandStatus handleNetCommand(NetCommand pNetCommand) {
-		StepCommandStatus commandStatus = super.handleNetCommand(pNetCommand);
+  public StepCommandStatus handleCommand(ReceivedCommand pReceivedCommand) {
+    StepCommandStatus commandStatus = super.handleCommand(pReceivedCommand);
 		if (commandStatus == StepCommandStatus.UNHANDLED_COMMAND) {
 			Game game = getGameState().getGame();
-			switch (pNetCommand.getId()) {
+			switch (pReceivedCommand.getId()) {
 				case CLIENT_WIZARD_SPELL:
-					ClientCommandWizardSpell wizardSpellCommand = (ClientCommandWizardSpell) pNetCommand;
+					ClientCommandWizardSpell wizardSpellCommand = (ClientCommandWizardSpell) pReceivedCommand.getCommand();
 					if (wizardSpellCommand.getWizardSpell() == null) { // cancel spellcasting
 						fEndInducement = true;
 					} else {

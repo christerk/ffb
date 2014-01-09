@@ -17,12 +17,12 @@ import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
-import com.balancedbytes.games.ffb.net.NetCommand;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandUseSkill;
 import com.balancedbytes.games.ffb.report.ReportThrowTeamMateRoll;
 import com.balancedbytes.games.ffb.server.DiceInterpreter;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.IServerJsonOption;
+import com.balancedbytes.games.ffb.server.net.ReceivedCommand;
 import com.balancedbytes.games.ffb.server.step.AbstractStepWithReRoll;
 import com.balancedbytes.games.ffb.server.step.SequenceGenerator;
 import com.balancedbytes.games.ffb.server.step.StepAction;
@@ -113,12 +113,12 @@ public final class StepThrowTeamMate extends AbstractStepWithReRoll {
 	}
 	
 	@Override
-	public StepCommandStatus handleNetCommand(NetCommand pNetCommand) {
-		StepCommandStatus commandStatus = super.handleNetCommand(pNetCommand);
-		if ((pNetCommand != null) && (commandStatus == StepCommandStatus.UNHANDLED_COMMAND)) {
-			switch (pNetCommand.getId()) {
+  public StepCommandStatus handleCommand(ReceivedCommand pReceivedCommand) {
+    StepCommandStatus commandStatus = super.handleCommand(pReceivedCommand);
+		if ((pReceivedCommand != null) && (commandStatus == StepCommandStatus.UNHANDLED_COMMAND)) {
+			switch (pReceivedCommand.getId()) {
 			  case CLIENT_USE_SKILL:
-			    ClientCommandUseSkill useSkillCommand = (ClientCommandUseSkill) pNetCommand;
+			    ClientCommandUseSkill useSkillCommand = (ClientCommandUseSkill) pReceivedCommand.getCommand();
 			    switch (useSkillCommand.getSkill()) {
 			      case PASS:
 			        if (useSkillCommand.isSkillUsed()) {

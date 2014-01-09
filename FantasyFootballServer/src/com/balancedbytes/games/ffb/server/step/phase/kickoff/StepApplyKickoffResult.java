@@ -26,7 +26,6 @@ import com.balancedbytes.games.ffb.model.InducementSet;
 import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.model.Team;
 import com.balancedbytes.games.ffb.model.TurnData;
-import com.balancedbytes.games.ffb.net.NetCommand;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandSetupPlayer;
 import com.balancedbytes.games.ffb.report.ReportKickoffExtraReRoll;
 import com.balancedbytes.games.ffb.report.ReportKickoffPitchInvasion;
@@ -37,6 +36,7 @@ import com.balancedbytes.games.ffb.report.ReportWeather;
 import com.balancedbytes.games.ffb.server.DiceInterpreter;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.IServerJsonOption;
+import com.balancedbytes.games.ffb.server.net.ReceivedCommand;
 import com.balancedbytes.games.ffb.server.step.AbstractStep;
 import com.balancedbytes.games.ffb.server.step.StepAction;
 import com.balancedbytes.games.ffb.server.step.StepCommandStatus;
@@ -143,17 +143,17 @@ public final class StepApplyKickoffResult extends AbstractStep {
 	}
 	
 	@Override
-	public StepCommandStatus handleNetCommand(NetCommand pNetCommand) {
-		StepCommandStatus commandStatus = super.handleNetCommand(pNetCommand);
+  public StepCommandStatus handleCommand(ReceivedCommand pReceivedCommand) {
+		StepCommandStatus commandStatus = super.handleCommand(pReceivedCommand);
 		if (commandStatus == StepCommandStatus.UNHANDLED_COMMAND) {
-			switch (pNetCommand.getId()) {
+			switch (pReceivedCommand.getId()) {
 	      case CLIENT_SETUP_PLAYER:
-	        ClientCommandSetupPlayer setupPlayerCommand = (ClientCommandSetupPlayer) pNetCommand;
+	        ClientCommandSetupPlayer setupPlayerCommand = (ClientCommandSetupPlayer) pReceivedCommand.getCommand();
 	        UtilSetup.setupPlayer(getGameState(), setupPlayerCommand.getPlayerId(), setupPlayerCommand.getCoordinate());
 	        commandStatus = StepCommandStatus.SKIP_STEP;
 	        break;
 	      case CLIENT_END_TURN:
-	      	if (UtilSteps.checkCommandIsFromCurrentPlayer(getGameState(), pNetCommand)) {
+	      	if (UtilSteps.checkCommandIsFromCurrentPlayer(getGameState(), pReceivedCommand)) {
 	      		fEndKickoff = true;
 	          commandStatus = StepCommandStatus.EXECUTE_STEP;
 	      	}
