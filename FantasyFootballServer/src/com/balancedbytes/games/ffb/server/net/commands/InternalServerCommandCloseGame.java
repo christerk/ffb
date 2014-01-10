@@ -7,7 +7,7 @@ import com.balancedbytes.games.ffb.net.NetCommandId;
  * 
  * @author Kalimar
  */
-public class InternalServerCommandCloseGame extends InternalServerCommandWithGameId {
+public class InternalServerCommandCloseGame extends InternalServerCommand {
   
   public InternalServerCommandCloseGame(long pGameId) {
     super(pGameId);

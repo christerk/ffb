@@ -14,7 +14,7 @@ import com.eclipsesource.json.JsonValue;
  * 
  * @author Kalimar
  */
-public class InternalServerCommandUploadGame extends InternalServerCommandWithGameId {
+public class InternalServerCommandUploadGame extends InternalServerCommand {
 
 	private String fConcedingTeamId;
 	

@@ -7,7 +7,7 @@ import com.balancedbytes.games.ffb.net.NetCommandId;
  * 
  * @author Kalimar
  */
-public class InternalServerCommandFumbblGameChecked extends InternalServerCommandWithGameId {
+public class InternalServerCommandFumbblGameChecked extends InternalServerCommand {
   
   public InternalServerCommandFumbblGameChecked(long pGameId) {
     super(pGameId);

@@ -42,7 +42,6 @@ import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.IServerLogLevel;
 import com.balancedbytes.games.ffb.server.handler.IReceivedCommandHandler;
 import com.balancedbytes.games.ffb.server.net.commands.InternalServerCommand;
-import com.balancedbytes.games.ffb.server.net.commands.InternalServerCommandWithGameId;
 import com.balancedbytes.games.ffb.util.ArrayTool;
 
 /**
@@ -113,7 +112,7 @@ public class ServerCommunication implements Runnable, IReceivedCommandHandler {
         if ((receivedCommand != null) && (receivedCommand.getId() != NetCommandId.CLIENT_PING) && (receivedCommand.getId() != NetCommandId.CLIENT_DEBUG_CLIENT_STATE)) {
           long gameId = 0;
           if (receivedCommand.isInternal()) {
-            gameId = ((InternalServerCommandWithGameId) receivedCommand.getCommand()).getGameId();
+            gameId = ((InternalServerCommand) receivedCommand.getCommand()).getGameId();
           } else {
             gameId = getServer().getChannelManager().getGameIdForChannel(receivedCommand.getSender());
           }

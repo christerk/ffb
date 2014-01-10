@@ -15,7 +15,7 @@ import com.eclipsesource.json.JsonValue;
  * 
  * @author Kalimar
  */
-public class InternalServerCommandFumbblTeamLoaded extends InternalServerCommandWithGameId {
+public class InternalServerCommandFumbblTeamLoaded extends InternalServerCommand {
   
   private String fCoach;
   private boolean fHomeTeam;

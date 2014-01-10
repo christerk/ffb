@@ -7,7 +7,7 @@ import com.balancedbytes.games.ffb.net.NetCommandId;
  * 
  * @author Kalimar
  */
-public class InternalServerCommandDeleteGame extends InternalServerCommandWithGameId {
+public class InternalServerCommandDeleteGame extends InternalServerCommand {
   
   public InternalServerCommandDeleteGame(long pGameId) {
     super(pGameId);
