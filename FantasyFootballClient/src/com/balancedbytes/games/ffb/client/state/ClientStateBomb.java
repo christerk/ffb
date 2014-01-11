@@ -125,9 +125,9 @@ public class ClientStateBomb extends ClientState {
   }
   
   @Override
-  public void handleNetCommand(NetCommand pNetCommand) {
+  public void handleCommand(NetCommand pNetCommand) {
     fRangeGridHandler.refreshRangeGrid();
-    super.handleNetCommand(pNetCommand);
+    super.handleCommand(pNetCommand);
   }
   
   @Override

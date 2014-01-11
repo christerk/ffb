@@ -42,7 +42,7 @@ public class ServerCommandHandlerJoin extends ServerCommandHandler {
       	
         getServer().getFumbblRequestProcessor().add(
           new FumbblRequestCheckAuthorization(
-            pReceivedCommand.getSender(),
+            pReceivedCommand.getSession(),
             joinCommand.getCoach(),
             joinCommand.getPassword(),
             joinCommand.getGameId(),
@@ -66,12 +66,11 @@ public class ServerCommandHandlerJoin extends ServerCommandHandler {
             joinCommand.getTeamId(),
             joinCommand.getClientMode()
           );
-          ReceivedCommand receivedJoinApproved = new ReceivedCommand(joinApprovedCommand);
-          receivedJoinApproved.setSender(pReceivedCommand.getSender());
+          ReceivedCommand receivedJoinApproved = new ReceivedCommand(joinApprovedCommand, pReceivedCommand.getSession());
           communication.handleCommand(receivedJoinApproved);
           
         } else {
-          communication.sendStatus(pReceivedCommand.getSender(), ServerStatus.ERROR_WRONG_PASSWORD, null);
+          communication.sendStatus(pReceivedCommand.getSession(), ServerStatus.ERROR_WRONG_PASSWORD, null);
         }
         
       }
@@ -85,7 +84,7 @@ public class ServerCommandHandlerJoin extends ServerCommandHandler {
       } else {
         gameList = gameCache.findActiveGames();
       }
-      communication.sendGameList(pReceivedCommand.getSender(), gameList);
+      communication.sendGameList(pReceivedCommand.getSession(), gameList);
   	
     }
     

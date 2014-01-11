@@ -88,7 +88,7 @@ public abstract class ClientState implements INetCommandHandler, MouseListener, 
   public void mousePressed(MouseEvent pMouseEvent) {
   }
 
-  public void handleNetCommand(NetCommand pNetCommand) {
+  public void handleCommand(NetCommand pNetCommand) {
   }
 
   // Helper Methods

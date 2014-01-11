@@ -1,7 +1,8 @@
 package com.balancedbytes.games.ffb.server.handler;
 
 import java.io.IOException;
-import java.nio.channels.SocketChannel;
+
+import org.eclipse.jetty.websocket.api.Session;
 
 import com.balancedbytes.games.ffb.ClientMode;
 import com.balancedbytes.games.ffb.model.Game;
@@ -13,8 +14,8 @@ import com.balancedbytes.games.ffb.server.GameCacheMode;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.ServerMode;
 import com.balancedbytes.games.ffb.server.fumbbl.FumbblRequestLoadGame;
-import com.balancedbytes.games.ffb.server.net.ChannelManager;
 import com.balancedbytes.games.ffb.server.net.ReceivedCommand;
+import com.balancedbytes.games.ffb.server.net.SessionManager;
 import com.balancedbytes.games.ffb.server.util.UtilReplay;
 
 /**
@@ -34,22 +35,21 @@ public class ServerCommandHandlerReplay extends ServerCommandHandler {
   public void handleCommand(ReceivedCommand pReceivedCommand) {
 
     ClientCommandReplay replayCommand = (ClientCommandReplay) pReceivedCommand.getCommand();
-    SocketChannel sender = pReceivedCommand.getSender();
     int replayToCommandNr = replayCommand.getReplayToCommandNr();
 
     GameState gameState = null;
     if (replayCommand.getGameId() > 0) {
       gameState = getServer().getGameCache().getGameStateById(replayCommand.getGameId());
     } else {
-      ChannelManager channelManager = getServer().getChannelManager();
-      long gameId = channelManager.getGameIdForChannel(sender);
+      SessionManager sessionManager = getServer().getSessionManager();
+      long gameId = sessionManager.getGameIdForSession(pReceivedCommand.getSession());
       gameState = getServer().getGameCache().getGameStateById(gameId);
     }
 
     // client signals that it has received the complete replay - socket can be closed
     if (replayToCommandNr < 0) {
     	try {
-    		getServer().getNioServer().removeChannel(sender);
+    	  pReceivedCommand.getSession().close();
     	} catch (IOException pIoException) {
     		getServer().getDebugLog().log((gameState != null) ? gameState.getId() : -1, pIoException);
     	}
@@ -57,23 +57,23 @@ public class ServerCommandHandlerReplay extends ServerCommandHandler {
     }
     
     if (gameState == null) {
-      gameState = loadGameStateById(sender, replayCommand.getGameId());
+      gameState = loadGameStateById(pReceivedCommand.getSession(), replayCommand.getGameId());
     }
     
     if (gameState != null) {
-    	UtilReplay.startServerReplay(gameState, replayToCommandNr, sender);
+    	UtilReplay.startServerReplay(gameState, replayToCommandNr, pReceivedCommand.getSession());
     }
     
   }
   
   // either returns immediately with the gameState
   // or queues a fumbbl request and returns with null
-  private GameState loadGameStateById(SocketChannel pSender, long pGameId) {
+  private GameState loadGameStateById(Session pSession, long pGameId) {
     GameCache gameCache = getServer().getGameCache();
     GameState gameState = gameCache.getGameStateById(pGameId);
     if (gameState == null) {
       if (getServer().getMode() == ServerMode.FUMBBL) {
-        getServer().getFumbblRequestProcessor().add(new FumbblRequestLoadGame(pGameId, null, null, ClientMode.REPLAY, pSender));
+        getServer().getFumbblRequestProcessor().add(new FumbblRequestLoadGame(pGameId, null, null, ClientMode.REPLAY, pSession));
       } else {
       	gameState = gameCache.queryFromDb(pGameId);
         if (gameState != null) {

@@ -1,6 +1,6 @@
 package com.balancedbytes.games.ffb.server.util;
 
-import java.nio.channels.SocketChannel;
+import org.eclipse.jetty.websocket.api.Session;
 
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.PlayerState;
@@ -47,8 +47,8 @@ public class UtilSetup {
       } else {
         DbTeamSetupsForTeamQuery allSetupNamesQuery = (DbTeamSetupsForTeamQuery) server.getDbQueryFactory().getStatement(DbStatementId.TEAM_SETUPS_QUERY_ALL_FOR_A_TEAM);
         String[] setupNames = allSetupNamesQuery.execute(team);
-        SocketChannel receiver = game.isHomePlaying() ? server.getChannelManager().getChannelOfHomeCoach(pGameState) : server.getChannelManager().getChannelOfAwayCoach(pGameState);
-        server.getCommunication().sendTeamSetupList(receiver, setupNames);
+        Session session = game.isHomePlaying() ? server.getSessionManager().getSessionOfHomeCoach(pGameState) : server.getSessionManager().getSessionOfAwayCoach(pGameState);
+        server.getCommunication().sendTeamSetupList(session, setupNames);
       }
       
     }
@@ -101,8 +101,8 @@ public class UtilSetup {
   
       DbTeamSetupsForTeamQuery allSetupNamesQuery = (DbTeamSetupsForTeamQuery) server.getDbQueryFactory().getStatement(DbStatementId.TEAM_SETUPS_QUERY_ALL_FOR_A_TEAM);
       String[] setupNames = allSetupNamesQuery.execute(team);
-      SocketChannel receiver = game.isHomePlaying() ? server.getChannelManager().getChannelOfHomeCoach(pGameState) : server.getChannelManager().getChannelOfAwayCoach(pGameState);
-      server.getCommunication().sendTeamSetupList(receiver, setupNames);
+      Session session = game.isHomePlaying() ? server.getSessionManager().getSessionOfHomeCoach(pGameState) : server.getSessionManager().getSessionOfAwayCoach(pGameState);
+      server.getCommunication().sendTeamSetupList(session, setupNames);
       
     }
 

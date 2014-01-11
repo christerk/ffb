@@ -2,10 +2,11 @@ package com.balancedbytes.games.ffb.server;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.channels.SocketChannel;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+
+import org.eclipse.jetty.websocket.api.Session;
 
 import com.balancedbytes.games.ffb.FantasyFootballException;
 import com.balancedbytes.games.ffb.GameList;
@@ -38,7 +39,7 @@ import com.balancedbytes.games.ffb.server.db.query.DbGamesSerializedQueryMaxId;
 import com.balancedbytes.games.ffb.server.db.update.DbGamesInfoUpdateParameter;
 import com.balancedbytes.games.ffb.server.db.update.DbGamesSerializedUpdateParameter;
 import com.balancedbytes.games.ffb.server.fumbbl.FumbblRequestRemoveGamestate;
-import com.balancedbytes.games.ffb.server.net.ChannelManager;
+import com.balancedbytes.games.ffb.server.net.SessionManager;
 import com.balancedbytes.games.ffb.server.util.UtilTimer;
 import com.balancedbytes.games.ffb.util.StringTool;
 import com.balancedbytes.games.ffb.util.UtilBox;
@@ -291,14 +292,10 @@ public class GameCache {
 	public GameState closeGame(long pGameId) {
 		GameState gameState = getGameStateById(pGameId);
 		if (gameState != null) {
-      ChannelManager channelManager = getServer().getChannelManager();
-      SocketChannel[] receivers = channelManager.getChannelsForGameId(gameState.getId());
-      for (SocketChannel receiver : receivers) {
-      	try {
-      		getServer().getNioServer().removeChannel(receiver);
-      	} catch (IOException pIoException) {
-      		getServer().getDebugLog().log(pGameId, pIoException);
-      	}
+      SessionManager sessionManager = getServer().getSessionManager();
+      Session[] sessions = sessionManager.getSessionsForGameId(gameState.getId());
+      for (Session session : sessions) {
+    		getServer().getCommunication().close(session);
       }
       removeGameStateFromCache(gameState);
       if (getServer().getMode() == ServerMode.FUMBBL) {

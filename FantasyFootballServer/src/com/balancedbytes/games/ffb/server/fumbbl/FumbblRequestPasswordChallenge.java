@@ -4,9 +4,10 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.StringReader;
 import java.net.URLEncoder;
-import java.nio.channels.SocketChannel;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import org.eclipse.jetty.websocket.api.Session;
 
 import com.balancedbytes.games.ffb.FantasyFootballException;
 import com.balancedbytes.games.ffb.server.DebugLog;
@@ -26,19 +27,19 @@ public class FumbblRequestPasswordChallenge extends FumbblRequest {
   private static final Pattern _PATTERN_CHALLENGE = Pattern.compile("<challenge>([^<]+)</challenge>");
   
   private String fCoach;
-  private SocketChannel fSender;
+  private Session fSession;
   
-  public FumbblRequestPasswordChallenge(String pCoach, SocketChannel pSender) {
+  public FumbblRequestPasswordChallenge(String pCoach, Session pSession) {
     fCoach = pCoach;
-    fSender = pSender;
+    fSession = pSession;
   }
 
   public String getCoach() {
     return fCoach;
   }
   
-  public SocketChannel getSender() {
-    return fSender;
+  public Session getSession() {
+    return fSession;
   }
   
   @Override
@@ -65,7 +66,7 @@ public class FumbblRequestPasswordChallenge extends FumbblRequest {
     } catch (IOException pIoException) {
       throw new FantasyFootballException(pIoException);
     }
-    server.getCommunication().sendPasswordChallenge(getSender(), challenge);
+    server.getCommunication().sendPasswordChallenge(getSession(), challenge);
   }
 
 }

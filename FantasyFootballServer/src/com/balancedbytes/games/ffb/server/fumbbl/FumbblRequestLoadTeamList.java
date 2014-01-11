@@ -4,8 +4,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.StringReader;
 import java.net.URLEncoder;
-import java.nio.channels.SocketChannel;
 
+import org.eclipse.jetty.websocket.api.Session;
 import org.xml.sax.InputSource;
 
 import com.balancedbytes.games.ffb.FantasyFootballException;
@@ -26,12 +26,12 @@ public class FumbblRequestLoadTeamList extends FumbblRequest {
   
   private String fCoach;
   private GameState fGameState;
-  private SocketChannel fSender;
+  private Session fSession;
   
-  public FumbblRequestLoadTeamList(GameState pGameState, String pCoach, SocketChannel pSender) {
+  public FumbblRequestLoadTeamList(GameState pGameState, String pCoach, Session pSession) {
     fGameState = pGameState;
     fCoach = pCoach;
-    fSender = pSender;
+    fSession = pSession;
   }
 
   public GameState getGameState() {
@@ -42,8 +42,8 @@ public class FumbblRequestLoadTeamList extends FumbblRequest {
     return fCoach;
   }
     
-  public SocketChannel getSender() {
-    return fSender;
+  public Session getSession() {
+    return fSession;
   }
   
   @Override
@@ -64,7 +64,7 @@ public class FumbblRequestLoadTeamList extends FumbblRequest {
       throw new FantasyFootballException(ioe);
     }
     if (teamList != null) {
-      server.getCommunication().sendTeamList(getSender(), teamList);
+      server.getCommunication().sendTeamList(getSession(), teamList);
     }
   }
   

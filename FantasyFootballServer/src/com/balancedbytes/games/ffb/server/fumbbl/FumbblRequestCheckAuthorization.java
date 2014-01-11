@@ -4,9 +4,10 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.StringReader;
 import java.net.URLEncoder;
-import java.nio.channels.SocketChannel;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import org.eclipse.jetty.websocket.api.Session;
 
 import com.balancedbytes.games.ffb.ClientMode;
 import com.balancedbytes.games.ffb.FantasyFootballException;
@@ -29,7 +30,7 @@ public class FumbblRequestCheckAuthorization extends FumbblRequest {
   
   private static final Pattern _PATTERN_RESPONSE = Pattern.compile("<response>([^<]+)</response>");
 
-  private SocketChannel fSender;
+  private Session fSession;
   private String fCoach;
   private String fPassword;
   private long fGameId;
@@ -37,8 +38,8 @@ public class FumbblRequestCheckAuthorization extends FumbblRequest {
   private String fTeamId;
   private ClientMode fMode;
   
-  public FumbblRequestCheckAuthorization(SocketChannel pSender, String pCoach, String pPassword, long pGameId, String pGameName, String pTeamId, ClientMode pMode) {
-    fSender = pSender;
+  public FumbblRequestCheckAuthorization(Session pSession, String pCoach, String pPassword, long pGameId, String pGameName, String pTeamId, ClientMode pMode) {
+    fSession = pSession;
     fCoach = pCoach;
     fPassword = pPassword;
     fGameId = pGameId;
@@ -47,8 +48,8 @@ public class FumbblRequestCheckAuthorization extends FumbblRequest {
     fMode = pMode;
   }
   
-  public SocketChannel getSender() {
-    return fSender;
+  public Session getSession() {
+    return fSession;
   }
   
   public String getCoach() {
@@ -102,9 +103,9 @@ public class FumbblRequestCheckAuthorization extends FumbblRequest {
     }
     if (passwordOk) {
       InternalServerCommandJoinApproved joinApprovedCommand = new InternalServerCommandJoinApproved(getGameId(), getGameName(), getCoach(), getTeamId(), getMode());
-      server.getCommunication().handleCommand(new ReceivedCommand(joinApprovedCommand, getSender()));
+      server.getCommunication().handleCommand(new ReceivedCommand(joinApprovedCommand, getSession()));
     } else {
-      server.getCommunication().sendStatus(getSender(), ServerStatus.ERROR_WRONG_PASSWORD, null);
+      server.getCommunication().sendStatus(getSession(), ServerStatus.ERROR_WRONG_PASSWORD, null);
     }
   }
 

@@ -78,9 +78,8 @@ public class ServerReplayer implements Runnable {
           
         	ServerCommandReplay replayCommand = new ServerCommandReplay();
           replayCommand.initFrom(new ByteArray(replayByteList.toBytes()), nrOfCommands);
-          replayCommand.setReceiver(serverReplay.getReceiver());
           replayCommand.setTotalNrOfCommands(serverReplay.getTotalNrOfCommands());
-          getServer().getNioServer().send(replayCommand.getReceiver(), replayCommand);
+          getServer().getCommunication().send(serverReplay.getSession(), replayCommand, false);
           getServer().getDebugLog().logServerCommand(IServerLogLevel.DEBUG, (serverReplay.getGameState() != null) ? serverReplay.getGameState().getId() : -1, replayCommand, DebugLog.COMMAND_SERVER_SPECTATOR);
           if (!serverReplay.isComplete()) {
             serverReplay.setFromCommandNr(replayCommand.findHighestCommandNr() + 1);

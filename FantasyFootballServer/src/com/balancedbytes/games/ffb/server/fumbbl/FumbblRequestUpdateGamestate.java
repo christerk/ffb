@@ -33,7 +33,7 @@ public class FumbblRequestUpdateGamestate extends FumbblRequest {
     Game game = getGameState().getGame();
     if (!game.isTesting()) {
       GameResult gameResult = game.getGameResult();
-      int spectators = getGameState().getServer().getChannelManager().getChannelsOfSpectators(getGameState()).length;
+      int spectators = getGameState().getServer().getSessionManager().getSessionsOfSpectators(getGameState()).length;
       setRequestUrl(StringTool.bind(server.getProperty(IServerProperty.FUMBBL_GAMESTATE_UPDATE), new Object[] { challengeResponse, game.getId(), game.getHalf(), game.getTurnData().getTurnNr(), gameResult.getTeamResultHome().getScore(), gameResult.getTeamResultAway().getScore(), spectators }));
       server.getDebugLog().log(IServerLogLevel.DEBUG, DebugLog.FUMBBL_REQUEST, getRequestUrl());
       FumbblGameState fumbblGameState = pRequestProcessor.processGameStateRequest(getRequestUrl());

@@ -21,11 +21,10 @@ import com.balancedbytes.games.ffb.server.db.DbUpdateFactory;
 import com.balancedbytes.games.ffb.server.db.old.DbConversion;
 import com.balancedbytes.games.ffb.server.fumbbl.FumbblRequestProcessor;
 import com.balancedbytes.games.ffb.server.handler.ServerCommandHandlerFactory;
-import com.balancedbytes.games.ffb.server.net.ChannelManager;
-import com.balancedbytes.games.ffb.server.net.NioServer;
+import com.balancedbytes.games.ffb.server.net.CommandServlet;
 import com.balancedbytes.games.ffb.server.net.ServerCommunication;
 import com.balancedbytes.games.ffb.server.net.ServerPingTask;
-import com.balancedbytes.games.ffb.server.net.SimpleEchoServlet;
+import com.balancedbytes.games.ffb.server.net.SessionManager;
 import com.balancedbytes.games.ffb.util.ArrayTool;
 import com.balancedbytes.games.ffb.util.StringTool;
 import com.fumbbl.rng.Fortuna;
@@ -54,11 +53,9 @@ public class FantasyFootballServer {
   private Thread fPersistenceUpdaterThread;
   private ServerCommunication fCommunication;
   private Thread fCommunicationThread;
-  private NioServer fNioServer;
-  private Thread fNioServerThread;
   private ServerCommandHandlerFactory fCommandHandlerFactory;
   private GameCache fGameCache;
-  private ChannelManager fChannelManager;
+  private SessionManager fSessionManager;
   private Properties fProperties;
   private Fortuna fFortuna;
   private Timer fPingTimer;
@@ -146,7 +143,7 @@ public class FantasyFootballServer {
         fPersistenceUpdaterThread = new Thread(fDbUpdater);
         fPersistenceUpdaterThread.start();
                 
-        fChannelManager = new ChannelManager();
+        fSessionManager = new SessionManager();
   
         fCommandHandlerFactory = new ServerCommandHandlerFactory(this); 
   
@@ -154,11 +151,6 @@ public class FantasyFootballServer {
         fCommunicationThread = new Thread(fCommunication);
         fCommunicationThread.start();
         
-        int serverPort = Integer.parseInt(getProperty(IServerProperty.SERVER_PORT));
-        fNioServer = new NioServer(null, serverPort, fCommunication);
-        fNioServerThread = new Thread(fNioServer);
-        fNioServerThread.start();
-  
         String httpPortProperty = getProperty(IServerProperty.HTTP_PORT);
         String httpDirProperty = getProperty(IServerProperty.HTTP_BASE_DIR);
         if (StringTool.isProvided(httpPortProperty) && StringTool.isProvided(httpDirProperty)) {
@@ -171,7 +163,7 @@ public class FantasyFootballServer {
           holder.setInitParameter("resourceBase", new File(httpDir, "icons").getAbsolutePath());
           holder.setInitParameter("pathInfoOnly", "true");
           context.addServlet(new ServletHolder(new AdminServlet(this)), "/admin/*");
-          context.addServlet(new ServletHolder(new SimpleEchoServlet()), "/echo/*");
+          context.addServlet(new ServletHolder(new CommandServlet(this)), "/command/*");
           server.start();
         }
         
@@ -193,7 +185,7 @@ public class FantasyFootballServer {
         fFumbblRequestProcessor = new FumbblRequestProcessor(this);
         fFumbblRequestProcessor.start();
   
-        System.err.println("FantasyFootballServer " + SERVER_VERSION + " running on port " + serverPort + ".");
+        System.err.println("FantasyFootballServer " + SERVER_VERSION + " running on port " + httpPortProperty + ".");
         
       }
       
@@ -204,11 +196,7 @@ public class FantasyFootballServer {
   public DbQueryFactory getDbQueryFactory() {
     return fDbQueryFactory;
   }
-  
-  public NioServer getNioServer() {
-    return fNioServer;
-  }
-  
+    
   public ServerCommunication getCommunication() {
     return fCommunication;
   }
@@ -221,8 +209,8 @@ public class FantasyFootballServer {
     return fGameCache;
   }
   
-  public ChannelManager getChannelManager() {
-    return fChannelManager;
+  public SessionManager getSessionManager() {
+    return fSessionManager;
   }
   
   public Fortuna getFortuna() {
@@ -242,14 +230,6 @@ public class FantasyFootballServer {
       }
       getDebugLog().log(IServerLogLevel.ERROR, "Communication Thread stopped.");
     }
-    if (getNioServer() != null) {
-      getNioServer().stop();
-      try {
-        fNioServerThread.join();
-      } catch (InterruptedException ie) {
-      }
-      getDebugLog().log(IServerLogLevel.ERROR, "NioServer Thread stopped.");
-    }
     if (getDbUpdater() != null) {
       getDbUpdater().stop();
       try {
@@ -258,6 +238,9 @@ public class FantasyFootballServer {
       }
       getDebugLog().log(IServerLogLevel.ERROR, "PersistenceUpdater Thread stopped.");
     }
+    
+    // TODO: stop jetty?
+    
     getDebugLog().close();
     System.exit(pStatus);
   }

@@ -1,7 +1,5 @@
 package com.balancedbytes.games.ffb.server.handler;
 
-import java.nio.channels.SocketChannel;
-
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.FieldMarker;
 import com.balancedbytes.games.ffb.PlayerMarker;
@@ -11,8 +9,8 @@ import com.balancedbytes.games.ffb.net.commands.ClientCommandSetMarker;
 import com.balancedbytes.games.ffb.server.FantasyFootballServer;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.db.old.IDbTableFieldModels;
-import com.balancedbytes.games.ffb.server.net.ChannelManager;
 import com.balancedbytes.games.ffb.server.net.ReceivedCommand;
+import com.balancedbytes.games.ffb.server.net.SessionManager;
 import com.balancedbytes.games.ffb.server.util.UtilGame;
 import com.balancedbytes.games.ffb.util.StringTool;
 
@@ -33,13 +31,12 @@ public class ServerCommandHandlerSetMarker extends ServerCommandHandler {
   public void handleCommand(ReceivedCommand pReceivedCommand) {
 
     ClientCommandSetMarker setMarkerCommand = (ClientCommandSetMarker) pReceivedCommand.getCommand();
-    SocketChannel sender = pReceivedCommand.getSender();
     
-    ChannelManager channelManager = getServer().getChannelManager();
-    long gameId = channelManager.getGameIdForChannel(sender);
+    SessionManager sessionManager = getServer().getSessionManager();
+    long gameId = sessionManager.getGameIdForSession(pReceivedCommand.getSession());
     GameState gameState = getServer().getGameCache().getGameStateById(gameId);
-    boolean homeMarker = (sender == channelManager.getChannelOfHomeCoach(gameState));
-    boolean awayMarker = (sender == channelManager.getChannelOfAwayCoach(gameState));
+    boolean homeMarker = (sessionManager.getSessionOfHomeCoach(gameState) == pReceivedCommand.getSession());
+    boolean awayMarker = (sessionManager.getSessionOfAwayCoach(gameState) == pReceivedCommand.getSession());
 
     if (homeMarker || awayMarker) {
       

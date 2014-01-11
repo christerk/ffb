@@ -1,6 +1,5 @@
 package com.balancedbytes.games.ffb.client.net;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -8,7 +7,6 @@ import com.balancedbytes.games.ffb.Card;
 import com.balancedbytes.games.ffb.CardType;
 import com.balancedbytes.games.ffb.ClientStateId;
 import com.balancedbytes.games.ffb.ConcedeGameStatus;
-import com.balancedbytes.games.ffb.FantasyFootballException;
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.InducementType;
 import com.balancedbytes.games.ffb.PlayerAction;
@@ -75,6 +73,10 @@ import com.balancedbytes.games.ffb.net.commands.ClientCommandUserSettings;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandWizardSpell;
 import com.balancedbytes.games.ffb.net.commands.ServerCommand;
 
+/**
+ * 
+ * @author Kalimar
+ */
 public class ClientCommunication implements Runnable, INetCommandHandler {
 
   private boolean fStopped;
@@ -86,7 +88,7 @@ public class ClientCommunication implements Runnable, INetCommandHandler {
     fCommandQueue = new ArrayList<NetCommand>();
   }
 
-  public void handleNetCommand(NetCommand pNetCommand) {
+  public void handleCommand(NetCommand pNetCommand) {
     synchronized (fCommandQueue) {
       fCommandQueue.add(pNetCommand);
 //      System.out.println("queued " + pNetCommand.toXml(-1));
@@ -141,11 +143,7 @@ public class ClientCommunication implements Runnable, INetCommandHandler {
   }
   
   protected void send(NetCommand pNetCommand) {
-    try {
-      getClient().getNioClient().send(pNetCommand);
-    } catch (IOException ioe) {
-      throw new FantasyFootballException(ioe);
-    }
+    getClient().getCommandSocket().send(pNetCommand);
   }
 
   public void sendDebugClientState(ClientStateId pClientStateId) {

@@ -45,11 +45,11 @@ public class UtilSteps {
   }
 
 	public static boolean checkCommandIsFromHomePlayer(GameState pGameState, ReceivedCommand pReceivedCommand) {
-    return (pGameState.getServer().getChannelManager().getChannelOfHomeCoach(pGameState) == pReceivedCommand.getSender());
+    return (pGameState.getServer().getSessionManager().getSessionOfHomeCoach(pGameState) == pReceivedCommand.getSession());
 	}
 
 	public static boolean checkCommandIsFromAwayPlayer(GameState pGameState, ReceivedCommand pReceivedCommand) {
-    return (pGameState.getServer().getChannelManager().getChannelOfAwayCoach(pGameState) == pReceivedCommand.getSender());
+    return (pGameState.getServer().getSessionManager().getSessionOfAwayCoach(pGameState) == pReceivedCommand.getSession());
 	}
 	
 	public static boolean checkCommandWithActingPlayer(GameState pGameState, ICommandWithActingPlayer pActingPlayerCommand) {

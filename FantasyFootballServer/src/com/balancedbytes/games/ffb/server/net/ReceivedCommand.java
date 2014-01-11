@@ -1,6 +1,6 @@
 package com.balancedbytes.games.ffb.server.net;
 
-import java.nio.channels.SocketChannel;
+import org.eclipse.jetty.websocket.api.Session;
 
 import com.balancedbytes.games.ffb.net.NetCommand;
 import com.balancedbytes.games.ffb.net.NetCommandId;
@@ -12,27 +12,19 @@ import com.balancedbytes.games.ffb.net.NetCommandId;
 public class ReceivedCommand {
   
   private NetCommand fCommand;
-  private SocketChannel fSender;
+  private Session fSession;
   
-  public ReceivedCommand(NetCommand pCommand) {
-    this(pCommand, null);
-  }
-
-  public ReceivedCommand(NetCommand pCommand, SocketChannel pSender) {
+  public ReceivedCommand(NetCommand pCommand, Session pSession) {
     fCommand = pCommand;
-    setSender(pSender);
+    fSession = pSession;
   }
 
   public NetCommand getCommand() {
     return fCommand;
   }
   
-  public SocketChannel getSender() {
-    return fSender;
-  }
-  
-  public void setSender(SocketChannel pSender) {
-    fSender = pSender;
+  public Session getSession() {
+    return fSession;
   }
   
   // convenience methods ...

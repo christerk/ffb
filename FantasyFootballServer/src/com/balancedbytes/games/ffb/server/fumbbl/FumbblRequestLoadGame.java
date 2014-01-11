@@ -1,6 +1,6 @@
 package com.balancedbytes.games.ffb.server.fumbbl;
 
-import java.nio.channels.SocketChannel;
+import org.eclipse.jetty.websocket.api.Session;
 
 import com.balancedbytes.games.ffb.ClientMode;
 import com.balancedbytes.games.ffb.server.FantasyFootballServer;
@@ -22,25 +22,25 @@ public class FumbblRequestLoadGame extends FumbblRequest {
   private String fCoach;
   private String fTeamId;
   private ClientMode fMode;
-  private SocketChannel fSender;
+  private Session fSession;
   private int fReplayToCommandNr;
 
   public FumbblRequestLoadGame(long pGameId) {
     fGameId = pGameId;
   }
 
-  public FumbblRequestLoadGame(long pGameId, int pReplayToCommandNr, SocketChannel pSender) {
+  public FumbblRequestLoadGame(long pGameId, int pReplayToCommandNr, Session pSession) {
     fGameId = pGameId;
     fReplayToCommandNr = pReplayToCommandNr;
-    fSender = pSender;
+    fSession = pSession;
   }
 
-  public FumbblRequestLoadGame(long pGameId, String pCoach, String pTeamId, ClientMode pMode, SocketChannel pSender) {
+  public FumbblRequestLoadGame(long pGameId, String pCoach, String pTeamId, ClientMode pMode, Session pSession) {
     fGameId = pGameId;
     fCoach = pCoach;
     fTeamId = pTeamId;
     fMode = pMode;
-    fSender = pSender;
+    fSession = pSession;
   }
 
   public long getGameId() {
@@ -59,8 +59,8 @@ public class FumbblRequestLoadGame extends FumbblRequest {
     return fMode;
   }
   
-  public SocketChannel getSender() {
-    return fSender;
+  public Session getSession() {
+    return fSession;
   }
   
   public int getReplayToCommandNr() {
@@ -77,12 +77,12 @@ public class FumbblRequestLoadGame extends FumbblRequest {
         if (ClientMode.REPLAY == getMode()) {
           server.getGameCache().add(gameState, GameCacheMode.REPLAY_GAME);
           InternalServerCommandReplayLoaded replayCommand = new InternalServerCommandReplayLoaded(getGameId(), getReplayToCommandNr());
-          server.getCommunication().handleCommand(new ReceivedCommand(replayCommand, getSender()));
+          server.getCommunication().handleCommand(new ReceivedCommand(replayCommand, getSession()));
         } else {
           server.getGameCache().add(gameState, GameCacheMode.LOAD_GAME);
         	gameCache.queueDbUpdate(gameState);  // persist status update
           InternalServerCommandJoinApproved joinApprovedCommand = new InternalServerCommandJoinApproved(getGameId(), null, getCoach(), getTeamId(), getMode());
-          server.getCommunication().handleCommand(new ReceivedCommand(joinApprovedCommand, getSender()));
+          server.getCommunication().handleCommand(new ReceivedCommand(joinApprovedCommand, getSession()));
         }
       }
     }

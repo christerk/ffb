@@ -206,7 +206,7 @@ public class NioClient implements Runnable {
           pingCommand.setReceived(System.currentTimeMillis());
           getClient().getClientPingTask().setLastPingReceived(pingCommand.getReceived());
         }
-        fCommandHandler.handleNetCommand(netCommand);
+        fCommandHandler.handleCommand(netCommand);
         offset += netCommand.size();
       } else {
         break;

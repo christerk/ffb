@@ -1,8 +1,9 @@
 package com.balancedbytes.games.ffb.server;
 
-import java.nio.channels.SocketChannel;
 import java.util.ArrayList;
 import java.util.List;
+
+import org.eclipse.jetty.websocket.api.Session;
 
 import com.balancedbytes.games.ffb.net.commands.ServerCommand;
 
@@ -15,14 +16,14 @@ public class ServerReplay {
   private GameState fGameState;
   private int fFromCommandNr;
   private int fToCommandNr;
-  private SocketChannel fReceiver;
+  private Session fSession;
   private boolean fComplete;
   private int fTotalNrOfCommands;
   
-  public ServerReplay(GameState pGameState, int pToCommandNr, SocketChannel pReceiver) {
+  public ServerReplay(GameState pGameState, int pToCommandNr, Session pSession) {
     fGameState = pGameState;
     fToCommandNr = pToCommandNr;
-    fReceiver = pReceiver;
+    fSession = pSession;
   }
   
   public void setFromCommandNr(int pFromCommandNr) {
@@ -41,8 +42,8 @@ public class ServerReplay {
     return fGameState;
   }
   
-  public SocketChannel getReceiver() {
-    return fReceiver;
+  public Session getSession() {
+    return fSession;
   }
   
   public void setComplete(boolean pComplete) {

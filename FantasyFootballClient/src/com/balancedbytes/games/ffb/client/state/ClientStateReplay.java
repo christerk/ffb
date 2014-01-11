@@ -53,7 +53,7 @@ public class ClientStateReplay extends ClientState implements IDialogCloseListen
     }
   }
   
-  public void handleNetCommand(NetCommand pNetCommand) {
+  public void handleCommand(NetCommand pNetCommand) {
     ClientReplayer replayer = getClient().getReplayer();
     switch (pNetCommand.getId()) {
       case SERVER_REPLAY:

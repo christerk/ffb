@@ -4,11 +4,17 @@ import java.awt.Insets;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.InetAddress;
+import java.net.URI;
 import java.net.UnknownHostException;
 import java.util.Properties;
 import java.util.Timer;
+import java.util.concurrent.Future;
 
 import javax.swing.UIManager;
+
+import org.eclipse.jetty.websocket.api.Session;
+import org.eclipse.jetty.websocket.client.ClientUpgradeRequest;
+import org.eclipse.jetty.websocket.client.WebSocketClient;
 
 import com.balancedbytes.games.ffb.ClientMode;
 import com.balancedbytes.games.ffb.FantasyFootballException;
@@ -19,7 +25,7 @@ import com.balancedbytes.games.ffb.client.dialog.IDialogCloseListener;
 import com.balancedbytes.games.ffb.client.handler.ClientCommandHandlerFactory;
 import com.balancedbytes.games.ffb.client.net.ClientCommunication;
 import com.balancedbytes.games.ffb.client.net.ClientPingTask;
-import com.balancedbytes.games.ffb.client.net.NioClient;
+import com.balancedbytes.games.ffb.client.net.CommandSocket;
 import com.balancedbytes.games.ffb.client.state.ClientState;
 import com.balancedbytes.games.ffb.client.state.ClientStateFactory;
 import com.balancedbytes.games.ffb.model.Game;
@@ -39,8 +45,6 @@ public class FantasyFootballClient implements IConnectionListener, IDialogCloseL
   private UserInterface fUserInterface;
   private ClientCommunication fCommunication;
   private Thread fCommunicationThread;
-  private NioClient fNioClient;
-  private Thread fNioClientThread;
   private Timer fPingTimer;
   private Timer fTurnTimer;
   private TurnTimerTask fTurnTimerTask;
@@ -54,6 +58,9 @@ public class FantasyFootballClient implements IConnectionListener, IDialogCloseL
   private ClientReplayer fReplayer;
   private ClientParameters fParameters;
   private ClientMode fMode;
+  private WebSocketClient fWebSocketClient;
+  private CommandSocket fCommandSocket;
+  
   private transient ClientData fClientData;
 
   public FantasyFootballClient(ClientParameters pParameters) throws IOException {
@@ -85,13 +92,12 @@ public class FantasyFootballClient implements IConnectionListener, IDialogCloseL
     fUserInterface.refreshSideBars();
     fUserInterface.getScoreBar().refresh();
     
+    fWebSocketClient = new WebSocketClient();
+    fCommandSocket = new CommandSocket(this);
+    
     fCommunication = new ClientCommunication(this);
     fCommunicationThread = new Thread(fCommunication);
     fCommunicationThread.start();
-
-    fNioClient = new NioClient(this);
-    fNioClientThread = new Thread(fNioClient);
-    fNioClientThread.start();
 
     fPingTimer = new Timer(true);
     fTurnTimer = new Timer(true);
@@ -138,29 +144,24 @@ public class FantasyFootballClient implements IConnectionListener, IDialogCloseL
   public void startClient() {
     
     getUserInterface().getStatusReport().reportVersion();
-    getUserInterface().getStatusReport().reportConnecting(getNioClient().getHostAddress(), getNioClient().getPort());
-
-    int connectionAttempts = 0;
-    
     try {
-      synchronized (this) {
-        while (!fConnectionEstablished && (connectionAttempts < 3)) {
-          if (connectionAttempts > 0) {
-            getUserInterface().getStatusReport().reportRetrying();
-          }
-          getNioClient().initiateConnection(this);
-          try {
-            this.wait();
-          } catch (InterruptedException ie) {
-            break;
-          }
-          connectionAttempts++;
-        }
-      }
-      getUserInterface().getStatusReport().reportConnectionEstablished(fConnectionEstablished);
-    } catch (IOException ioe) {
-      throw new FantasyFootballException(ioe);
+      getUserInterface().getStatusReport().reportConnecting(getServerHost(), getServerPort());
+    } catch (UnknownHostException pUnknownHostException) {
+      throw new FantasyFootballException(pUnknownHostException);
     }
+
+    Session session = null;
+    try {
+      URI uri = new URI("ws", null, getServerHost().getCanonicalHostName(), getServerPort(), "/command", null, null);
+      fWebSocketClient.start();
+      ClientUpgradeRequest request = new ClientUpgradeRequest();
+      Future<Session> future = fWebSocketClient.connect(fCommandSocket, uri, request);
+      session = future.get();
+    } catch (Exception pAnyException) {
+      throw new FantasyFootballException(pAnyException);
+    }
+    
+    getUserInterface().getStatusReport().reportConnectionEstablished(session != null);
 
     if (ClientMode.REPLAY != getMode()) {
       fTurnTimerTask = new TurnTimerTask(this);
@@ -175,9 +176,9 @@ public class FantasyFootballClient implements IConnectionListener, IDialogCloseL
     fPingTimer = null;
     fTurnTimer = null;
     try {
-    	getNioClient().stop();
-    } catch (IOException pIoException) {
-    	pIoException.printStackTrace();
+    	fWebSocketClient.stop();
+    } catch (Exception pAnyException) {
+    	pAnyException.printStackTrace();
     }
     getCommunication().stop();
     getUserInterface().setVisible(false);
@@ -229,10 +230,6 @@ public class FantasyFootballClient implements IConnectionListener, IDialogCloseL
   
   public ClientPingTask getClientPingTask() {
     return fClientPingTask;
-  }
-  
-  public NioClient getNioClient() {
-    return fNioClient;
   }
   
   public boolean isConnectionEstablished() {
@@ -298,5 +295,9 @@ public class FantasyFootballClient implements IConnectionListener, IDialogCloseL
   public void setMode(ClientMode pMode) {
 		fMode = pMode;
 	}
+  
+  public CommandSocket getCommandSocket() {
+    return fCommandSocket;
+  }
   
 }

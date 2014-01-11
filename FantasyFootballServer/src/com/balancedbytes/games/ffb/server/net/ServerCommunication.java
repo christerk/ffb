@@ -1,9 +1,12 @@
 package com.balancedbytes.games.ffb.server.net;
 
-import java.nio.channels.SocketChannel;
+import java.io.IOException;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.Future;
+
+import org.eclipse.jetty.websocket.api.Session;
 
 import com.balancedbytes.games.ffb.ClientMode;
 import com.balancedbytes.games.ffb.GameList;
@@ -42,7 +45,9 @@ import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.IServerLogLevel;
 import com.balancedbytes.games.ffb.server.handler.IReceivedCommandHandler;
 import com.balancedbytes.games.ffb.server.net.commands.InternalServerCommand;
+import com.balancedbytes.games.ffb.server.net.commands.InternalServerCommandSocketClosed;
 import com.balancedbytes.games.ffb.util.ArrayTool;
+import com.eclipsesource.json.JsonValue;
 
 /**
  * 
@@ -67,7 +72,7 @@ public class ServerCommunication implements Runnable, IReceivedCommandHandler {
   }
   
   public void handleCommand(InternalServerCommand pInternalServerCommand) {
-    handleCommand(new ReceivedCommand(pInternalServerCommand));
+    handleCommand(new ReceivedCommand(pInternalServerCommand, null));
   }
   
   public void run() {
@@ -99,7 +104,7 @@ public class ServerCommunication implements Runnable, IReceivedCommandHandler {
 
           // Fetch the game state if available
           try {
-            long gameId = getServer().getChannelManager().getGameIdForChannel(receivedCommand.getSender());
+            long gameId = getServer().getSessionManager().getGameIdForSession(receivedCommand.getSession());
             gameState = getServer().getGameCache().getGameStateById(gameId);
           } catch (Exception _) { }
           
@@ -114,12 +119,12 @@ public class ServerCommunication implements Runnable, IReceivedCommandHandler {
           if (receivedCommand.isInternal()) {
             gameId = ((InternalServerCommand) receivedCommand.getCommand()).getGameId();
           } else {
-            gameId = getServer().getChannelManager().getGameIdForChannel(receivedCommand.getSender());
+            gameId = getServer().getSessionManager().getGameIdForSession(receivedCommand.getSession());
           }
           GameState gameState = getServer().getGameCache().getGameStateById(gameId);
           if (gameState != null) {
             try {
-              if (receivedCommand.isInternal() || (getServer().getChannelManager().getChannelOfHomeCoach(gameState) == receivedCommand.getSender()) || (getServer().getChannelManager().getChannelOfAwayCoach(gameState) == receivedCommand.getSender())) {
+              if (receivedCommand.isInternal() || (getServer().getSessionManager().getSessionOfHomeCoach(gameState) == receivedCommand.getSession()) || (getServer().getSessionManager().getSessionOfAwayCoach(gameState) == receivedCommand.getSession())) {
                 gameState.handleCommand(receivedCommand);
               }
             } catch (Exception any) {
@@ -148,13 +153,13 @@ public class ServerCommunication implements Runnable, IReceivedCommandHandler {
     // Send out an error message
     try {
       ServerCommandAdminMessage messageCommand = new ServerCommandAdminMessage(new String[] { "This match has entered an invalid state and is shutting down." });
-      send(getServer().getChannelManager().getChannelsForGameId(gameState.getId()), messageCommand, false);
+      send(getServer().getSessionManager().getSessionsForGameId(gameState.getId()), messageCommand, false);
     } catch (Exception _) { }
 
     // Disconnect clients
     try {
-      for (SocketChannel channel : getServer().getChannelManager().getChannelsForGameId(gameState.getId())) {
-        getServer().getNioServer().removeChannel(channel);
+      for (Session session : getServer().getSessionManager().getSessionsForGameId(gameState.getId())) {
+        getServer().getCommunication().close(session);
       }
     } catch (Exception _) { }
 
@@ -171,217 +176,246 @@ public class ServerCommunication implements Runnable, IReceivedCommandHandler {
     return fServer;
   }
   
-  public void send(SocketChannel pReceiver, NetCommand pNetCommand, boolean pLog) {
-    if (pReceiver != null) {
-      if (pLog) {
-        getServer().getDebugLog().logServerCommand(IServerLogLevel.INFO, pNetCommand, pReceiver);
-      }
-      send(new SocketChannel[] { pReceiver }, pNetCommand, false);
+  public void close(Session pSession) {
+    if (pSession == null) {
+      return;
     }
+    try {
+      pSession.close();
+    } catch (IOException pIoe) {
+      // nothing to be done at this point
+    }
+    handleCommand(new ReceivedCommand(new InternalServerCommandSocketClosed(), pSession));
   }
 
-  protected void send(SocketChannel[] pReceivers, NetCommand pNetCommand, boolean pLog) {
-    if (ArrayTool.isProvided(pReceivers)) {
-      if (pLog) {
-        getServer().getDebugLog().logServerCommand(IServerLogLevel.INFO, pNetCommand, pReceivers);
-      }
-      for (int i = 0; i < pReceivers.length; i++) {
-        getServer().getNioServer().send(pReceivers[i], pNetCommand);
-      }
+  public void send(Session pSession, NetCommand pCommand, boolean pLog) {
+    if (pLog && (pSession != null) && (pCommand != null)) {
+      getServer().getDebugLog().logServerCommand(IServerLogLevel.INFO, pCommand, pSession);
+    }
+    send(pSession, pCommand);
+  }
+  
+  protected void send(Session[] pSessions, NetCommand pCommand, boolean pLog) {
+    if (pLog && ArrayTool.isProvided(pSessions) && (pCommand != null)) {
+      getServer().getDebugLog().logServerCommand(IServerLogLevel.INFO, pCommand, pSessions);
+    }
+    for (int i = 0; i < pSessions.length; i++) {
+      send(pSessions[i], pCommand);
     }
   }
   
-  protected void sendAllChannels(GameState pGameState, NetCommand pNetCommand) {
-    if ((pGameState != null) && (pNetCommand != null)) {
-      getServer().getDebugLog().logServerCommand(IServerLogLevel.INFO, pGameState.getId(), pNetCommand, DebugLog.COMMAND_SERVER_ALL_CLIENTS);
-      if (pGameState != null) {
-        ChannelManager channelManager = getServer().getChannelManager();
-        SocketChannel[] allChannels = channelManager.getChannelsForGameId(pGameState.getId());
-        send(allChannels, pNetCommand, false);
-        pGameState.getGameLog().add((ServerCommand) pNetCommand);
-      }
+  private Future<Void> send(Session pSession, NetCommand pCommand) {
+    if ((pSession == null) || (pCommand == null) || !pSession.isOpen()) {
+      return null;
+    }
+    JsonValue jsonValue = pCommand.toJsonValue();
+    if (jsonValue == null) {
+      return null;
+    }
+    String textMessage = jsonValue.toString();
+    if (textMessage == null) {
+      return null;
+    }
+    return pSession.getRemote().sendStringByFuture(textMessage);
+  }
+
+  protected void sendAllSessions(GameState pGameState, NetCommand pCommand) {
+    if ((pGameState == null) || (pCommand == null)) {
+      return;
+    }
+    getServer().getDebugLog().logServerCommand(IServerLogLevel.INFO, pGameState.getId(), pCommand, DebugLog.COMMAND_SERVER_ALL_CLIENTS);
+    if (pGameState != null) {
+      SessionManager sessionManager = getServer().getSessionManager();
+      Session[] allSessions = sessionManager.getSessionsForGameId(pGameState.getId());
+      send(allSessions, pCommand, false);
+      pGameState.getGameLog().add((ServerCommand) pCommand);
     }
   }
 
-  protected void sendHomeChannel(GameState pGameState, NetCommand pNetCommand) {
-    if ((pGameState != null) && (pNetCommand != null)) {
-      getServer().getDebugLog().logServerCommand(IServerLogLevel.INFO, pGameState.getId(), pNetCommand, DebugLog.COMMAND_SERVER_HOME);
-      ChannelManager channelManager = getServer().getChannelManager();
-      SocketChannel homeChannel = channelManager.getChannelOfHomeCoach(pGameState);
-      send(homeChannel, pNetCommand, false);
+  protected void sendHomeSession(GameState pGameState, NetCommand pCommand) {
+    if ((pGameState == null) || (pCommand == null)) {
+      return;
     }
+    getServer().getDebugLog().logServerCommand(IServerLogLevel.INFO, pGameState.getId(), pCommand, DebugLog.COMMAND_SERVER_HOME);
+    SessionManager sessionManager = getServer().getSessionManager();
+    Session homeSession = sessionManager.getSessionOfHomeCoach(pGameState);
+    send(homeSession, pCommand, false);
   }
 
-  protected void sendHomeAndSpectatorChannels(GameState pGameState, NetCommand pNetCommand) {
-    if ((pGameState != null) && (pNetCommand != null)) {
-      getServer().getDebugLog().logServerCommand(IServerLogLevel.INFO, pGameState.getId(), pNetCommand, DebugLog.COMMAND_SERVER_HOME_SPECTATORS);
-      ChannelManager channelManager = getServer().getChannelManager();
-      SocketChannel[] homeChannels = channelManager.getChannelsWithoutAwayCoach(pGameState);
-      send(homeChannels, pNetCommand, false);
-      pGameState.getGameLog().add((ServerCommand) pNetCommand);
+  protected void sendHomeAndSpectatorSessions(GameState pGameState, NetCommand pCommand) {
+    if ((pGameState == null) || (pCommand == null)) {
+      return;
     }
+    getServer().getDebugLog().logServerCommand(IServerLogLevel.INFO, pGameState.getId(), pCommand, DebugLog.COMMAND_SERVER_HOME_SPECTATORS);
+    SessionManager sessionManager = getServer().getSessionManager();
+    Session[] sessions = sessionManager.getSessionsWithoutAwayCoach(pGameState);
+    send(sessions, pCommand, false);
+    pGameState.getGameLog().add((ServerCommand) pCommand);
   }
 
-  protected void sendAwayChannel(GameState pGameState, NetCommand pNetCommand) {
-    if ((pGameState != null) && (pNetCommand != null)) {
-      getServer().getDebugLog().logServerCommand(IServerLogLevel.INFO, pGameState.getId(), pNetCommand, DebugLog.COMMAND_SERVER_AWAY);
-      ChannelManager channelManager = getServer().getChannelManager();
-      SocketChannel awayChannel = channelManager.getChannelOfAwayCoach(pGameState);
-      send(awayChannel, pNetCommand, false);
+  protected void sendAwaySession(GameState pGameState, NetCommand pCommand) {
+    if ((pGameState == null) || (pCommand == null)) {
+      return;
     }
+    getServer().getDebugLog().logServerCommand(IServerLogLevel.INFO, pGameState.getId(), pCommand, DebugLog.COMMAND_SERVER_AWAY);
+    SessionManager sessionManager = getServer().getSessionManager();
+    Session awaySession = sessionManager.getSessionOfAwayCoach(pGameState);
+    send(awaySession, pCommand, false);
   }
   
-  protected void sendAwayAndSpectatorChannels(GameState pGameState, NetCommand pNetCommand) {
-    if ((pGameState != null) && (pNetCommand != null)) {
-      getServer().getDebugLog().logServerCommand(IServerLogLevel.INFO, pGameState.getId(), pNetCommand, DebugLog.COMMAND_SERVER_AWAY_SPECTATORS);
-      ChannelManager channelManager = getServer().getChannelManager();
-      SocketChannel[] spectatorChannels = channelManager.getChannelsWithoutHomeCoach(pGameState);
-      send(spectatorChannels, pNetCommand, false);
-      pGameState.getGameLog().add((ServerCommand) pNetCommand);
+  protected void sendAwayAndSpectatorSessions(GameState pGameState, NetCommand pCommand) {
+    if ((pGameState == null) || (pCommand == null)) {
+      return;
     }
+    getServer().getDebugLog().logServerCommand(IServerLogLevel.INFO, pGameState.getId(), pCommand, DebugLog.COMMAND_SERVER_AWAY_SPECTATORS);
+    SessionManager sessionManager = getServer().getSessionManager();
+    Session[] sessions = sessionManager.getSessionsWithoutHomeCoach(pGameState);
+    send(sessions, pCommand, false);
+    pGameState.getGameLog().add((ServerCommand) pCommand);
   }
 
-  protected void sendSpectatorChannels(GameState pGameState, NetCommand pNetCommand) {
-    if ((pGameState != null) && (pNetCommand != null)) {
-      getServer().getDebugLog().logServerCommand(IServerLogLevel.INFO, pGameState.getId(), pNetCommand, DebugLog.COMMAND_SERVER_SPECTATOR);
-      ChannelManager channelManager = getServer().getChannelManager();
-      SocketChannel[] spectatorChannels = channelManager.getChannelsOfSpectators(pGameState);
-      send(spectatorChannels, pNetCommand, false);
-      pGameState.getGameLog().add((ServerCommand) pNetCommand);
+  protected void sendSpectatorSessions(GameState pGameState, NetCommand pCommand) {
+    if ((pGameState == null) || (pCommand == null)) {
+      return;
     }
+    getServer().getDebugLog().logServerCommand(IServerLogLevel.INFO, pGameState.getId(), pCommand, DebugLog.COMMAND_SERVER_SPECTATOR);
+    SessionManager sessionManager = getServer().getSessionManager();
+    Session[] spectatorSessions = sessionManager.getSessionsOfSpectators(pGameState);
+    send(spectatorSessions, pCommand, false);
+    pGameState.getGameLog().add((ServerCommand) pCommand);
   }
 
   // Server Commands
   
-  public void sendUserSettings(SocketChannel pReceiver, String[] pSettingNames, String[] pSettingValues) {
+  public void sendUserSettings(Session pSession, String[] pSettingNames, String[] pSettingValues) {
     ServerCommandUserSettings userSettingsCommand = new ServerCommandUserSettings(pSettingNames, pSettingValues);
-    send(pReceiver, userSettingsCommand, true);
+    send(pSession, userSettingsCommand, true);
     // not logged in Game Log
   }
   
-  public void sendStatus(SocketChannel pReceiver, ServerStatus pStatus, String pMessage) {
-    sendStatus(new SocketChannel[] { pReceiver }, pStatus, pMessage);
+  public void sendStatus(Session pSession, ServerStatus pStatus, String pMessage) {
+    sendStatus(new Session[] { pSession }, pStatus, pMessage);
     // not logged in Game Log
   }
   
-  public void sendStatus(SocketChannel[] pReceivers, ServerStatus pStatus, String pMessage) {
+  public void sendStatus(Session[] pSessions, ServerStatus pStatus, String pMessage) {
     ServerCommandStatus statusCommand = new ServerCommandStatus(pStatus, pMessage);
-    send(pReceivers, statusCommand, true);
+    send(pSessions, statusCommand, true);
   }
 
   public void sendAdminMessage(String[] pMessages) {
     ServerCommandAdminMessage messageCommand = new ServerCommandAdminMessage(pMessages);
-    ChannelManager channelManager = getServer().getChannelManager();
-    SocketChannel[] allChannels = channelManager.getAllChannels();
-    send(allChannels, messageCommand, false);
+    SessionManager sessionManager = getServer().getSessionManager();
+    Session[] allSessions = sessionManager.getAllSessions();
+    send(allSessions, messageCommand, false);
   }
   
   public void sendStatus(GameState pGameState, ServerStatus pStatus, String pMessage) {
     ServerCommandStatus statusCommand = new ServerCommandStatus(pStatus, pMessage);
     statusCommand.setCommandNr(pGameState.generateCommandNr());
-    sendAllChannels(pGameState, statusCommand);
+    sendAllSessions(pGameState, statusCommand);
   }
 
-  public void sendTeamList(SocketChannel pReceiver, TeamList pTeamList) {
+  public void sendTeamList(Session pSession, TeamList pTeamList) {
     ServerCommandTeamList teamListCommand = new ServerCommandTeamList(pTeamList);
-    send(pReceiver, teamListCommand, true);
+    send(pSession, teamListCommand, true);
     // not logged in Game Log
   }
   
-  public void sendGameList(SocketChannel pReceiver, GameList pGameList) {
+  public void sendGameList(Session pSession, GameList pGameList) {
     ServerCommandGameList gameListCommand = new ServerCommandGameList(pGameList);
-    send(pReceiver, gameListCommand, true);
+    send(pSession, gameListCommand, true);
     // not logged in Game Log
   }
 
-  public void sendPasswordChallenge(SocketChannel pReceiver, String pChallenge) {
+  public void sendPasswordChallenge(Session pSession, String pChallenge) {
     ServerCommandPasswordChallenge passwordChallengeCommand = new ServerCommandPasswordChallenge(pChallenge);
-    send(pReceiver, passwordChallengeCommand, true);
+    send(pSession, passwordChallengeCommand, true);
     // not logged in Game Log
   }
 
-  public void sendVersion(SocketChannel pReceiver, String pServerVersion, String pClientVersion, String[] pClientProperties, String[] pClientPropertyValues) {
+  public void sendVersion(Session pSession, String pServerVersion, String pClientVersion, String[] pClientProperties, String[] pClientPropertyValues) {
     ServerCommandVersion versionCommand = new ServerCommandVersion(pServerVersion, pClientVersion, pClientProperties, pClientPropertyValues); 
-    send(pReceiver, versionCommand, true);
+    send(pSession, versionCommand, true);
     // not logged in Game Log
   }
 
-  public void sendJoin(SocketChannel[] pReceivers, String pCoach, ClientMode pMode, String[] pPlayers, int pSpectators) {
+  public void sendJoin(Session[] pSessions, String pCoach, ClientMode pMode, String[] pPlayers, int pSpectators) {
     ServerCommandJoin joinCommand = new ServerCommandJoin(pCoach, pMode, pPlayers, pSpectators);
-    send(pReceivers, joinCommand, true);
+    send(pSessions, joinCommand, true);
     // not logged in Game Log
   }
 
-  public void sendLeave(SocketChannel[] pReceivers, String pCoach, ClientMode pMode, int pSpectators) {
+  public void sendLeave(Session[] pSessions, String pCoach, ClientMode pMode, int pSpectators) {
     ServerCommandLeave leaveCommand = new ServerCommandLeave(pCoach, pMode, pSpectators);
-    send(pReceivers, leaveCommand, true);
+    send(pSessions, leaveCommand, true);
     // not logged in Game Log
   }
   
-  public void sendPing(SocketChannel pReceiver, long pClientTime) {
+  public void sendPing(Session pSession, long pClientTime) {
     ServerCommandPing pingCommand = new ServerCommandPing(pClientTime);
-    send(pReceiver, pingCommand, false);
+    send(pSession, pingCommand, false);
     // not logged in Game Log
   }
 
-  public void sendGameState(SocketChannel pReceiver, GameState pGameState) {
+  public void sendGameState(Session pSession, GameState pGameState) {
     ServerCommandGameState gameStateCommand = new ServerCommandGameState(pGameState.getGame());
-    send(pReceiver, gameStateCommand, true);
+    send(pSession, gameStateCommand, true);
     // not logged in Game Log
   }
   
-  public void sendTalk(SocketChannel pReceiver, GameState pGameState, String pCoach, String[] pTalk) {
+  public void sendTalk(Session pSession, GameState pGameState, String pCoach, String[] pTalk) {
     ServerCommandTalk talkCommand = new ServerCommandTalk(pCoach, pTalk);
-    send(pReceiver, talkCommand, true);
+    send(pSession, talkCommand, true);
     // not logged in Game Log
   }
     
   public void sendPlayerTalk(GameState pGameState, String pCoach, String pTalk) {
     ServerCommandTalk talkCommand = new ServerCommandTalk(pCoach, pTalk);
-    sendAllChannels(pGameState, talkCommand);
+    sendAllSessions(pGameState, talkCommand);
     // not logged in Game Log
   }
 
   public void sendSpectatorTalk(GameState pGameState, String pCoach, String pTalk) {
     ServerCommandTalk talkCommand = new ServerCommandTalk(pCoach, pTalk);
-    sendSpectatorChannels(pGameState, talkCommand);    // not logged in Game Log
+    sendSpectatorSessions(pGameState, talkCommand);    // not logged in Game Log
   }
 
-  public void sendTeamSetupList(SocketChannel pReceiver, String[] pSetupNames) {
+  public void sendTeamSetupList(Session pSession, String[] pSetupNames) {
     ServerCommandTeamSetupList teamSetupListCommand = new ServerCommandTeamSetupList(pSetupNames);
-    send(pReceiver, teamSetupListCommand, true);
+    send(pSession, teamSetupListCommand, true);
     // not logged in Game Log
   }
             
   public void sendGameState(GameState pGameState) {
     ServerCommandGameState gameStateCommand = new ServerCommandGameState(pGameState.getGame());
-    sendHomeAndSpectatorChannels(pGameState, gameStateCommand);
-    sendAwayChannel(pGameState, gameStateCommand.transform());
+    sendHomeAndSpectatorSessions(pGameState, gameStateCommand);
+    sendAwaySession(pGameState, gameStateCommand.transform());
   }
   
   public void sendAddPlayer(GameState pGameState, String pTeamId, Player pPlayer, PlayerState pPlayerState, PlayerResult pPlayerResult) {
     ServerCommandAddPlayer addPlayersCommand = new ServerCommandAddPlayer(pTeamId, pPlayer, pPlayerState, pPlayerResult);
     addPlayersCommand.setCommandNr(pGameState.generateCommandNr());
-    sendAllChannels(pGameState, addPlayersCommand);
+    sendAllSessions(pGameState, addPlayersCommand);
   }
   
   public void sendRemovePlayer(GameState pGameState, String pPlayerId) {
     ServerCommandRemovePlayer removePlayerCommand = new ServerCommandRemovePlayer(pPlayerId);
     removePlayerCommand.setCommandNr(pGameState.generateCommandNr());
-    sendAllChannels(pGameState, removePlayerCommand);
+    sendAllSessions(pGameState, removePlayerCommand);
   }
 
   public void sendSound(GameState pGameState, Sound pSound) {
     ServerCommandSound soundCommand = new ServerCommandSound(pSound);
     soundCommand.setCommandNr(pGameState.generateCommandNr());
-    sendAllChannels(pGameState, soundCommand);
+    sendAllSessions(pGameState, soundCommand);
   }
   
   public void sendModelSync(GameState pGameState, ModelChangeList pModelChanges, ReportList pReports, Animation pAnimation, Sound pSound, long pGameTime, long pTurnTime) {
     ServerCommandModelSync syncCommand = new ServerCommandModelSync(pModelChanges, pReports, pAnimation, pSound, pGameTime, pTurnTime);
     syncCommand.setCommandNr(pGameState.generateCommandNr());
-    sendHomeAndSpectatorChannels(pGameState, syncCommand);
-    sendAwayChannel(pGameState, syncCommand.transform());
+    sendHomeAndSpectatorSessions(pGameState, syncCommand);
+    sendAwaySession(pGameState, syncCommand.transform());
   }
   
 }

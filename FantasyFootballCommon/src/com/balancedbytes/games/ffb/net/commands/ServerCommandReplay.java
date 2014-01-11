@@ -1,6 +1,5 @@
 package com.balancedbytes.games.ffb.net.commands;
 
-import java.nio.channels.SocketChannel;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,8 +25,6 @@ public class ServerCommandReplay extends ServerCommand {
   private List<ServerCommand> fReplayCommands;
   private int fTotalNrOfCommands;
   
-  private transient SocketChannel fReceiver;
-
   public NetCommandId getId() {
     return NetCommandId.SERVER_REPLAY;
   }
@@ -68,14 +65,6 @@ public class ServerCommandReplay extends ServerCommand {
   
   public boolean isReplayable() {
     return false;
-  }
-  
-  public void setReceiver(SocketChannel pReceiver) {
-    fReceiver = pReceiver;
-  }
-  
-  public SocketChannel getReceiver() {
-    return fReceiver;
   }
   
   public int findHighestCommandNr() {

@@ -122,7 +122,7 @@ public class ClientStateLogin extends ClientState implements IDialogCloseListene
     }
   }
   
-  public void handleNetCommand(NetCommand pNetCommand) {
+  public void handleCommand(NetCommand pNetCommand) {
     Game game = getClient().getGame();
     UserInterface userInterface = getClient().getUserInterface();
     switch (pNetCommand.getId()) {
@@ -181,7 +181,7 @@ public class ClientStateLogin extends ClientState implements IDialogCloseListene
         sendJoin(response);
         break;
       default:
-        super.handleNetCommand(pNetCommand);
+        super.handleCommand(pNetCommand);
         break;
     }
   }

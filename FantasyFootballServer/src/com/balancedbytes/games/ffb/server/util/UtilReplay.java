@@ -1,6 +1,6 @@
 package com.balancedbytes.games.ffb.server.util;
 
-import java.nio.channels.SocketChannel;
+import org.eclipse.jetty.websocket.api.Session;
 
 import com.balancedbytes.games.ffb.ClientMode;
 import com.balancedbytes.games.ffb.server.FantasyFootballServer;
@@ -13,17 +13,17 @@ import com.balancedbytes.games.ffb.server.ServerReplay;
  */
 public class UtilReplay {
 	
-	public static void startServerReplay(GameState pGameState, int pReplayToCommandNr, SocketChannel pSender) {
-		if ((pGameState == null) || (pSender == null)) {
+	public static void startServerReplay(GameState pGameState, int pReplayToCommandNr, Session pSession) {
+		if ((pGameState == null) || (pSession == null)) {
 			return;
 		}
     FantasyFootballServer server = pGameState.getServer();
-    if (server.getChannelManager().getGameIdForChannel(pSender) != pGameState.getId()) {
-    	server.getChannelManager().addChannel(pSender, pGameState, null, ClientMode.REPLAY, false);
-      server.getCommunication().sendGameState(pSender, pGameState);
+    if (server.getSessionManager().getGameIdForSession(pSession) != pGameState.getId()) {
+    	server.getSessionManager().addSession(pSession, pGameState, null, ClientMode.REPLAY, false);
+      server.getCommunication().sendGameState(pSession, pGameState);
     }
     int replayToCommandNr = (pReplayToCommandNr > 0) ? pReplayToCommandNr : pGameState.lastCommandNr() + 1;
-    server.getReplayer().add(new ServerReplay(pGameState, replayToCommandNr, pSender));
+    server.getReplayer().add(new ServerReplay(pGameState, replayToCommandNr, pSession));
 	}
 
 }

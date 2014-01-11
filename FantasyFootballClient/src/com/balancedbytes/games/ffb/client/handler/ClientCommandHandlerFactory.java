@@ -67,7 +67,7 @@ public class ClientCommandHandlerFactory {
   private void updateClientState(NetCommand pNetCommand, ClientCommandHandlerMode pMode, boolean pNotify) {
     ClientState clientState = getClient().updateClientState();
     if (clientState != null) {
-      clientState.handleNetCommand(pNetCommand);
+      clientState.handleCommand(pNetCommand);
     }
     if (pNotify) {
       synchronized (this) {

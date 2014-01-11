@@ -1,7 +1,5 @@
 package com.balancedbytes.games.ffb.server.handler;
 
-import java.nio.channels.SocketChannel;
-
 import com.balancedbytes.games.ffb.net.NetCommandId;
 import com.balancedbytes.games.ffb.net.ServerStatus;
 import com.balancedbytes.games.ffb.server.FantasyFootballServer;
@@ -27,14 +25,13 @@ public class ServerCommandHandlerReplayLoaded extends ServerCommandHandler {
   public void handleCommand(ReceivedCommand pReceivedCommand) {
 
     InternalServerCommandReplayLoaded replayCommand = (InternalServerCommandReplayLoaded) pReceivedCommand.getCommand();
-    SocketChannel sender = pReceivedCommand.getSender();
     
     if (replayCommand.getGameId() > 0) {
       GameState gameState = getServer().getGameCache().getGameStateById(replayCommand.getGameId());
       if (gameState != null) {
-        UtilReplay.startServerReplay(gameState, replayCommand.getReplayToCommandNr(), sender);
+        UtilReplay.startServerReplay(gameState, replayCommand.getReplayToCommandNr(), pReceivedCommand.getSession());
       } else {
-        getServer().getCommunication().sendStatus(sender, ServerStatus.ERROR_UNKNOWN_GAME_ID, null);
+        getServer().getCommunication().sendStatus(pReceivedCommand.getSession(), ServerStatus.ERROR_UNKNOWN_GAME_ID, null);
       }
     }
     

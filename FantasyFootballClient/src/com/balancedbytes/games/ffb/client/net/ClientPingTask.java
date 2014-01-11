@@ -35,7 +35,7 @@ public class ClientPingTask extends TimerTask {
   }
   
   public void run() {
-    if (getClient().getNioClient().isRunning()) {
+    if (getClient().getCommandSocket().isOpen()) {
       long currentTimeMillis = System.currentTimeMillis();
       long lastPingReceived = getLastPingReceived();
       if (_TRACE) {

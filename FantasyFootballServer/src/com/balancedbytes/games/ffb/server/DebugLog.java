@@ -7,16 +7,17 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.nio.channels.SocketChannel;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.StringTokenizer;
 import java.util.zip.GZIPOutputStream;
 
+import org.eclipse.jetty.websocket.api.Session;
+
 import com.balancedbytes.games.ffb.net.NetCommand;
-import com.balancedbytes.games.ffb.server.net.ChannelManager;
 import com.balancedbytes.games.ffb.server.net.ReceivedCommand;
+import com.balancedbytes.games.ffb.server.net.SessionManager;
 import com.balancedbytes.games.ffb.util.ArrayTool;
 import com.balancedbytes.games.ffb.util.StringTool;
 
@@ -159,15 +160,15 @@ public class DebugLog {
         default:
         	GameState gameState = null;
           String commandFlag = COMMAND_CLIENT_UNKNOWN;
-          SocketChannel sender = pReceivedCommand.getSender();
-          ChannelManager channelManager = getServer().getChannelManager();
-          long gameId = channelManager.getGameIdForChannel(sender);
+          Session session = pReceivedCommand.getSession();
+          SessionManager sessionManager = getServer().getSessionManager();
+          long gameId = sessionManager.getGameIdForSession(session);
           if (gameId > 0) {
           	gameState = getServer().getGameCache().getGameStateById(gameId);
             if ((gameState != null) && (gameState.getGame().getStarted() != null)) {
-              if (sender == channelManager.getChannelOfHomeCoach(gameState)) {
+              if (session == sessionManager.getSessionOfHomeCoach(gameState)) {
                 commandFlag = COMMAND_CLIENT_HOME;
-              } else if (sender == channelManager.getChannelOfAwayCoach(gameState)) {
+              } else if (session == sessionManager.getSessionOfAwayCoach(gameState)) {
                 commandFlag = COMMAND_CLIENT_AWAY;
               } else {
                 commandFlag = COMMAND_CLIENT_SPECTATOR;
@@ -186,28 +187,28 @@ public class DebugLog {
     }
   }
 
-  public void logServerCommand(int pLogLevel, NetCommand pNetCommand, SocketChannel[] pReceivers) {
-    if (isLogging(pLogLevel) && (pNetCommand != null) && (ArrayTool.isProvided(pReceivers))) {
-      ChannelManager channelManager = getServer().getChannelManager();
-      long gameId = channelManager.getGameIdForChannel(pReceivers[0]);
+  public void logServerCommand(int pLogLevel, NetCommand pNetCommand, Session[] pSessions) {
+    if (isLogging(pLogLevel) && (pNetCommand != null) && (ArrayTool.isProvided(pSessions))) {
+      SessionManager sessionManager = getServer().getSessionManager();
+      long gameId = sessionManager.getGameIdForSession(pSessions[0]);
       logInternal(gameId, COMMAND_SERVER_ALL_CLIENTS, pNetCommand.toJsonValue().toString());
     }
   }
   
-  public void logServerCommand(int pLogLevel, NetCommand pNetCommand, SocketChannel pReceiver) {
-    if (isLogging(pLogLevel) && (pNetCommand != null) && (pReceiver != null)) {
+  public void logServerCommand(int pLogLevel, NetCommand pNetCommand, Session pSession) {
+    if (isLogging(pLogLevel) && (pNetCommand != null) && (pSession != null)) {
       String commandFlag = COMMAND_SERVER_UNKNOWN;
-      ChannelManager channelManager = getServer().getChannelManager();
-      long gameId = channelManager.getGameIdForChannel(pReceiver);
+      SessionManager sessionManager = getServer().getSessionManager();
+      long gameId = sessionManager.getGameIdForSession(pSession);
       if (gameId > 0) {
         GameState gameState = getServer().getGameCache().getGameStateById(gameId);
         if ((gameState != null) && (gameState.getGame().getStarted() != null)) {
-          if (channelManager.getChannelOfHomeCoach(gameState) == pReceiver) {
+          if (sessionManager.getSessionOfHomeCoach(gameState) == pSession) {
             commandFlag = COMMAND_SERVER_HOME;
-          } else if (channelManager.getChannelOfAwayCoach(gameState) == pReceiver) {
+          } else if (sessionManager.getSessionOfAwayCoach(gameState) == pSession) {
             commandFlag = COMMAND_SERVER_AWAY;
           } else {
-            if (channelManager.getCoachForChannel(pReceiver) != null) {
+            if (sessionManager.getCoachForSession(pSession) != null) {
               commandFlag = COMMAND_SERVER_SPECTATOR;
             }
           }

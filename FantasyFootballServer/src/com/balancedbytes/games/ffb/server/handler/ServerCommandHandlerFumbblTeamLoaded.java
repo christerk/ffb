@@ -37,7 +37,7 @@ public class ServerCommandHandlerFumbblTeamLoaded extends ServerCommandHandler {
     		teamLoadedCommand.getAdminGameIdListener().setGameId(gameState.getId());
     	}
     } else {
-      if (UtilStartGame.joinGameAsPlayerAndCheckIfReadyToStart(gameState, pReceivedCommand.getSender(), teamLoadedCommand.getCoach(), teamLoadedCommand.isHomeTeam())) {
+      if (UtilStartGame.joinGameAsPlayerAndCheckIfReadyToStart(gameState, pReceivedCommand.getSession(), teamLoadedCommand.getCoach(), teamLoadedCommand.isHomeTeam())) {
         getServer().getFumbblRequestProcessor().add(new FumbblRequestCheckGamestate(gameState));
       }
     }

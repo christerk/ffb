@@ -38,7 +38,7 @@ public class JsonFieldCoordinateArrayOption extends JsonAbstractOption {
       return null;
     }
     JsonArray jsonArray = pJsonValue.isArray() ? pJsonValue.asArray() : null;
-    if ((jsonArray == null) || (jsonArray.size() != 2)) {
+    if (jsonArray == null) {
       throw new IllegalArgumentException("JsonValue is not a valid FieldCoordinate array.");
     }
     FieldCoordinate[] fieldCoordinates = new FieldCoordinate[jsonArray.size()];

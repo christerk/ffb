@@ -1,7 +1,5 @@
 package com.balancedbytes.games.ffb.server.step;
 
-import java.nio.channels.SocketChannel;
-
 import com.balancedbytes.games.ffb.Sound;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
@@ -17,8 +15,8 @@ import com.balancedbytes.games.ffb.server.FantasyFootballServer;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.IServerJsonOption;
 import com.balancedbytes.games.ffb.server.IServerLogLevel;
-import com.balancedbytes.games.ffb.server.net.ChannelManager;
 import com.balancedbytes.games.ffb.server.net.ReceivedCommand;
+import com.balancedbytes.games.ffb.server.net.SessionManager;
 import com.balancedbytes.games.ffb.server.util.UtilDialog;
 import com.balancedbytes.games.ffb.server.util.UtilGame;
 import com.eclipsesource.json.JsonObject;
@@ -153,14 +151,13 @@ public abstract class AbstractStep implements IStep {
 
   private StepCommandStatus handleConcedeGame(ReceivedCommand pReceivedCommand) {
     ClientCommandConcedeGame concedeGameCommand = (ClientCommandConcedeGame) pReceivedCommand.getCommand();
-    SocketChannel sender = pReceivedCommand.getSender();
     StepCommandStatus commandStatus = StepCommandStatus.UNHANDLED_COMMAND;
     Game game = getGameState().getGame();
     GameResult gameResult = game.getGameResult();
     if (concedeGameCommand.getConcedeGameStatus() != null) {
-      ChannelManager channelManager = getGameState().getServer().getChannelManager();
-      boolean homeCommand = (channelManager.getChannelOfHomeCoach(getGameState()) == sender);
-      boolean awayCommand = (channelManager.getChannelOfAwayCoach(getGameState()) == sender);
+      SessionManager sessionManager = getGameState().getServer().getSessionManager();
+      boolean homeCommand = (sessionManager.getSessionOfHomeCoach(getGameState()) == pReceivedCommand.getSession());
+      boolean awayCommand = (sessionManager.getSessionOfAwayCoach(getGameState()) == pReceivedCommand.getSession());
       switch (concedeGameCommand.getConcedeGameStatus()) {
       case REQUESTED:
         if (game.isConcessionPossible() && ((game.isHomePlaying() && homeCommand) || (!game.isHomePlaying() && awayCommand))) {
@@ -187,13 +184,12 @@ public abstract class AbstractStep implements IStep {
   }
 
   private StepCommandStatus handleIllegalProcedure(ReceivedCommand pReceivedCommand) {
-    SocketChannel sender = pReceivedCommand.getSender();
     StepCommandStatus commandStatus = StepCommandStatus.UNHANDLED_COMMAND;
     Game game = getGameState().getGame();
     if (game.isTimeoutPossible()) {
       ReportList reports = new ReportList();
       FantasyFootballServer server = getGameState().getServer();
-      String coach = server.getChannelManager().getCoachForChannel(sender);
+      String coach = server.getSessionManager().getCoachForSession(pReceivedCommand.getSession());
       reports.add(new ReportTimeoutEnforced(coach));
       game.setTimeoutEnforced(true);
       game.setTimeoutPossible(false);

@@ -1,7 +1,8 @@
 package com.balancedbytes.games.ffb.server.net;
 
-import java.nio.channels.SocketChannel;
 import java.util.TimerTask;
+
+import org.eclipse.jetty.websocket.api.Session;
 
 import com.balancedbytes.games.ffb.ClientMode;
 import com.balancedbytes.games.ffb.server.FantasyFootballServer;
@@ -35,22 +36,22 @@ public class ServerPingTask extends TimerTask {
   public void run() {
     try {
       long currentTimeMillis = System.currentTimeMillis();
-      ChannelManager channelManager = getServer().getChannelManager();
-      for (SocketChannel channel : channelManager.getAllChannels()) {
-        long lastPing = channelManager.getLastPing(channel);
+      SessionManager sessionManager = getServer().getSessionManager();
+      for (Session session : sessionManager.getAllSessions()) {
+        long lastPing = sessionManager.getLastPing(session);
         if ((fMaxPingDelay > 0) && (lastPing > 0) && (currentTimeMillis - lastPing > fMaxPingDelay)) {
         	if (getServer().getDebugLog().isLogging(IServerLogLevel.WARN)) {
             StringBuilder logMessage = new StringBuilder();
-            String coach = channelManager.getCoachForChannel(channel);
-            GameState gameState = getServer().getGameCache().getGameStateById(channelManager.getGameIdForChannel(channel));
-            ClientMode clientMode = channelManager.getModeForChannel(channel);
+            String coach = sessionManager.getCoachForSession(session);
+            GameState gameState = getServer().getGameCache().getGameStateById(sessionManager.getGameIdForSession(session));
+            ClientMode clientMode = sessionManager.getModeForSession(session);
             logMessage.append("Connection closed for ");
             logMessage.append((ClientMode.PLAYER == clientMode) ? "Player " : "Spectator ");
             logMessage.append(coach);
             logMessage.append(" (Ping Timeout).");
             getServer().getDebugLog().log(IServerLogLevel.WARN, (gameState != null) ? gameState.getId() : -1, logMessage.toString());
         	}
-          getServer().getNioServer().removeChannel(channel);  // sends an internalCommandSocketClosed
+        	getServer().getCommunication().close(session);  // sends an internalCommandSocketClosed
         }
       }
       if (fNetworkEntropySource.hasEnoughEntropy()) {

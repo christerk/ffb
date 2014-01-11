@@ -94,6 +94,7 @@ public class ReportInducementsBought implements IReport {
   
   public JsonObject toJsonValue() {
     JsonObject jsonObject = new JsonObject();
+    IJsonOption.REPORT_ID.addTo(jsonObject, getId());
     IJsonOption.TEAM_ID.addTo(jsonObject, fTeamId);
     IJsonOption.NR_OF_INDUCEMENTS.addTo(jsonObject, fNrOfInducements);
     IJsonOption.NR_OF_STARS.addTo(jsonObject, fNrOfStars);

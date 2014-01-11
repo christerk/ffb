@@ -1,7 +1,5 @@
 package com.balancedbytes.games.ffb.server.handler;
 
-import java.nio.channels.SocketChannel;
-
 import com.balancedbytes.games.ffb.net.NetCommandId;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandPasswordChallenge;
 import com.balancedbytes.games.ffb.server.FantasyFootballServer;
@@ -27,13 +25,12 @@ public class ServerCommandHandlerPasswordChallenge extends ServerCommandHandler 
   public void handleCommand(ReceivedCommand pReceivedCommand) {
     
     ClientCommandPasswordChallenge passwordChallengeCommand = (ClientCommandPasswordChallenge) pReceivedCommand.getCommand();
-    SocketChannel sender = pReceivedCommand.getSender();
 
     String challenge = null;
     if ((ServerMode.FUMBBL == getServer().getMode()) && StringTool.isProvided(passwordChallengeCommand.getCoach())) {
-      getServer().getFumbblRequestProcessor().add(new FumbblRequestPasswordChallenge(passwordChallengeCommand.getCoach(), sender));
+      getServer().getFumbblRequestProcessor().add(new FumbblRequestPasswordChallenge(passwordChallengeCommand.getCoach(), pReceivedCommand.getSession()));
     } else {
-      getServer().getCommunication().sendPasswordChallenge(sender, challenge);
+      getServer().getCommunication().sendPasswordChallenge(pReceivedCommand.getSession(), challenge);
     }
     
   }

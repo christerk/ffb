@@ -1,7 +1,6 @@
 package com.balancedbytes.games.ffb.server.fumbbl;
 
-import java.io.IOException;
-import java.nio.channels.SocketChannel;
+import org.eclipse.jetty.websocket.api.Session;
 
 import com.balancedbytes.games.ffb.FantasyFootballException;
 import com.balancedbytes.games.ffb.model.Roster;
@@ -11,8 +10,8 @@ import com.balancedbytes.games.ffb.server.FantasyFootballServer;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.IServerLogLevel;
 import com.balancedbytes.games.ffb.server.admin.IAdminGameIdListener;
-import com.balancedbytes.games.ffb.server.net.ChannelManager;
 import com.balancedbytes.games.ffb.server.net.ReceivedCommand;
+import com.balancedbytes.games.ffb.server.net.SessionManager;
 import com.balancedbytes.games.ffb.server.net.commands.InternalServerCommandFumbblTeamLoaded;
 import com.balancedbytes.games.ffb.util.StringTool;
 
@@ -27,15 +26,15 @@ public class FumbblRequestLoadTeam extends FumbblRequest {
   private String fTeamId;
   private boolean fHomeTeam; 
   private GameState fGameState;
-  private SocketChannel fSender;
+  private Session fSession;
   private IAdminGameIdListener fAdminGameIdListener;
   
-  public FumbblRequestLoadTeam(GameState pGameState, String pCoach, String pTeamId, boolean pHomeTeam, SocketChannel pSender) {
+  public FumbblRequestLoadTeam(GameState pGameState, String pCoach, String pTeamId, boolean pHomeTeam, Session pSession) {
     fGameState = pGameState;
     fCoach = pCoach;
     fTeamId = pTeamId;
     fHomeTeam = pHomeTeam;
-    fSender = pSender;
+    fSession = pSession;
   }
 
   public GameState getGameState() {
@@ -54,8 +53,8 @@ public class FumbblRequestLoadTeam extends FumbblRequest {
     return fHomeTeam;
   }
   
-  public SocketChannel getSender() {
-    return fSender;
+  public Session getSession() {
+    return fSession;
   }
   
   public void setAdminGameIdListener(IAdminGameIdListener pAdminGameIdListener) {
@@ -91,7 +90,7 @@ public class FumbblRequestLoadTeam extends FumbblRequest {
         server.getGameCache().addTeamToGame(getGameState(), team, isHomeTeam());
         InternalServerCommandFumbblTeamLoaded loadedCommand = new InternalServerCommandFumbblTeamLoaded(getGameState().getId(), getCoach(), isHomeTeam());
         loadedCommand.setAdminGameIdListener(getAdminGameIdListener());
-        server.getCommunication().handleCommand(new ReceivedCommand(loadedCommand, getSender()));
+        server.getCommunication().handleCommand(new ReceivedCommand(loadedCommand, getSession()));
       }
     }
   }
@@ -117,14 +116,10 @@ public class FumbblRequestLoadTeam extends FumbblRequest {
   private void closeGame(FumbblRequestProcessor pRequestProcessor, GameState pGameState) {
     if (pGameState != null) {
     	FantasyFootballServer server = pGameState.getServer();
-      ChannelManager channelManager = server.getChannelManager();
-      SocketChannel[] receivers = channelManager.getChannelsForGameId(pGameState.getId());
-      for (int i = 0; i < receivers.length; i++) {
-        try {
-        	server.getNioServer().removeChannel(receivers[i]);
-        } catch (IOException pIoe) {
-        	// unable to close this socket - continue with the others
-        }
+      SessionManager sessionManager = server.getSessionManager();
+      Session[] sessions = sessionManager.getSessionsForGameId(pGameState.getId());
+      for (int i = 0; i < sessions.length; i++) {
+      	server.getCommunication().close(sessions[i]);
       }
     }
   }

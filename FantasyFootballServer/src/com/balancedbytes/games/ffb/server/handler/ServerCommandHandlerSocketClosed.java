@@ -1,6 +1,6 @@
 package com.balancedbytes.games.ffb.server.handler;
 
-import java.nio.channels.SocketChannel;
+import org.eclipse.jetty.websocket.api.Session;
 
 import com.balancedbytes.games.ffb.ClientMode;
 import com.balancedbytes.games.ffb.GameStatus;
@@ -10,8 +10,8 @@ import com.balancedbytes.games.ffb.server.GameCache;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.ServerMode;
 import com.balancedbytes.games.ffb.server.fumbbl.FumbblRequestRemoveGamestate;
-import com.balancedbytes.games.ffb.server.net.ChannelManager;
 import com.balancedbytes.games.ffb.server.net.ReceivedCommand;
+import com.balancedbytes.games.ffb.server.net.SessionManager;
 import com.balancedbytes.games.ffb.server.util.UtilTimer;
 import com.balancedbytes.games.ffb.util.ArrayTool;
 
@@ -31,23 +31,21 @@ public class ServerCommandHandlerSocketClosed extends ServerCommandHandler {
 
   public void handleCommand(ReceivedCommand pReceivedCommand) {
     
-    SocketChannel sender = pReceivedCommand.getSender();
-    
-    ChannelManager channelManager = getServer().getChannelManager();
-    String coach = channelManager.getCoachForChannel(sender);
-    ClientMode mode = channelManager.getModeForChannel(sender);
-    long gameId = channelManager.getGameIdForChannel(sender);
-    channelManager.removeChannel(sender);
+    SessionManager sessionManager = getServer().getSessionManager();
+    String coach = sessionManager.getCoachForSession(pReceivedCommand.getSession());
+    ClientMode mode = sessionManager.getModeForSession(pReceivedCommand.getSession());
+    long gameId = sessionManager.getGameIdForSession(pReceivedCommand.getSession());
+    sessionManager.removeSession(pReceivedCommand.getSession());
 
-    SocketChannel[] receivers = channelManager.getChannelsForGameId(gameId);
+    Session[] sessions = sessionManager.getSessionsForGameId(gameId);
 
     GameCache gameCache = getServer().getGameCache();
     GameState gameState = gameCache.getGameStateById(gameId);
     if (gameState != null) {
       
       int spectators = 0;
-      for (int i = 0; i < receivers.length; i++) {
-        if (channelManager.getModeForChannel(receivers[i]) == ClientMode.SPECTATOR) {
+      for (int i = 0; i < sessions.length; i++) {
+        if (sessionManager.getModeForSession(sessions[i]) == ClientMode.SPECTATOR) {
           spectators++;
         }
       }
@@ -58,18 +56,18 @@ public class ServerCommandHandlerSocketClosed extends ServerCommandHandler {
         UtilTimer.stopTurnTimer(gameState);
     	}
       
-      SocketChannel homeChannel = channelManager.getChannelOfHomeCoach(gameState);
-      SocketChannel awayChannel = channelManager.getChannelOfAwayCoach(gameState);
+      Session homeSession = sessionManager.getSessionOfHomeCoach(gameState);
+      Session awaySession = sessionManager.getSessionOfAwayCoach(gameState);
 
-      if ((homeChannel == null) && (awayChannel == null) && ((GameStatus.STARTING == gameState.getStatus()) || (GameStatus.ACTIVE == gameState.getStatus()))) {
+      if ((homeSession == null) && (awaySession == null) && ((GameStatus.STARTING == gameState.getStatus()) || (GameStatus.ACTIVE == gameState.getStatus()))) {
         gameState.setStatus(GameStatus.PAUSED);
         gameCache.queueDbUpdate(gameState);
         removeFumbblGame(gameState);
         gameState.fetchChanges();  // remove all changes from queue
       }
 
-    	if (ArrayTool.isProvided(receivers)) {
-    		getServer().getCommunication().sendLeave(receivers, coach, mode, spectators);
+    	if (ArrayTool.isProvided(sessions)) {
+    		getServer().getCommunication().sendLeave(sessions, coach, mode, spectators);
     	} else {
         getServer().getGameCache().removeGameStateFromCache(gameState);
     	}

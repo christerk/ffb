@@ -1,7 +1,5 @@
 package com.balancedbytes.games.ffb.server.handler;
 
-import java.nio.channels.SocketChannel;
-
 import com.balancedbytes.games.ffb.GameOption;
 import com.balancedbytes.games.ffb.Sound;
 import com.balancedbytes.games.ffb.model.Game;
@@ -27,9 +25,7 @@ public class ServerCommandHandlerTimeout extends ServerCommandHandler {
 
   public void handleCommand(ReceivedCommand pReceivedCommand) {
     
-    SocketChannel sender = pReceivedCommand.getSender();
-    
-    long gameId = getServer().getChannelManager().getGameIdForChannel(sender);
+    long gameId = getServer().getSessionManager().getGameIdForSession(pReceivedCommand.getSession());
     GameState gameState = getServer().getGameCache().getGameStateById(gameId);
     Game game = (gameState != null) ? gameState.getGame() : null;
     

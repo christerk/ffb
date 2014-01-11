@@ -1,12 +1,13 @@
 package com.balancedbytes.games.ffb.server.handler;
 
-import java.nio.channels.SocketChannel;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
+import org.eclipse.jetty.websocket.api.Session;
 
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.GameOption;
@@ -30,9 +31,9 @@ import com.balancedbytes.games.ffb.server.DiceInterpreter;
 import com.balancedbytes.games.ffb.server.FantasyFootballServer;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.IServerProperty;
-import com.balancedbytes.games.ffb.server.net.ChannelManager;
 import com.balancedbytes.games.ffb.server.net.ReceivedCommand;
 import com.balancedbytes.games.ffb.server.net.ServerCommunication;
+import com.balancedbytes.games.ffb.server.net.SessionManager;
 import com.balancedbytes.games.ffb.server.util.UtilGame;
 import com.balancedbytes.games.ffb.util.ArrayTool;
 import com.balancedbytes.games.ffb.util.StringTool;
@@ -55,41 +56,39 @@ public class ServerCommandHandlerTalk extends ServerCommandHandler {
   public void handleCommand(ReceivedCommand pReceivedCommand) {
 
     ClientCommandTalk talkCommand = (ClientCommandTalk) pReceivedCommand.getCommand();
-    SocketChannel sender = pReceivedCommand.getSender();
-    
-    ChannelManager channelManager = getServer().getChannelManager();
+    SessionManager sessionManager = getServer().getSessionManager();
     ServerCommunication communication = getServer().getCommunication();
-    long gameId = channelManager.getGameIdForChannel(sender);
+    long gameId = sessionManager.getGameIdForSession(pReceivedCommand.getSession());
     GameState gameState = getServer().getGameCache().getGameStateById(gameId);
     Game game = (gameState != null) ? gameState.getGame() : null;
     String talk = talkCommand.getTalk();
     
     if (talk != null) {
 
-      String coach = channelManager.getCoachForChannel(sender);
-      if ((game != null) && (channelManager.getChannelOfHomeCoach(gameState) == sender) || (channelManager.getChannelOfAwayCoach(gameState) == sender)) {
+      String coach = sessionManager.getCoachForSession(pReceivedCommand.getSession());
+      if ((game != null) && (sessionManager.getSessionOfHomeCoach(gameState) == pReceivedCommand.getSession()) || (sessionManager.getSessionOfAwayCoach(gameState) == pReceivedCommand.getSession())) {
       	if (game.isTesting() && talk.startsWith("/animation")) {
         	handleAnimationCommand(gameState, talkCommand);
       	} else if (game.isTesting() && talk.startsWith("/box")) {
-        	handleBoxCommand(gameState, talkCommand, sender);
+        	handleBoxCommand(gameState, talkCommand, pReceivedCommand.getSession());
       	} else if (game.isTesting() && talk.startsWith("/injury")) {
-          handleInjuryCommand(gameState, talkCommand, sender);
+          handleInjuryCommand(gameState, talkCommand, pReceivedCommand.getSession());
       	} else if (game.isTesting() && talk.startsWith("/options")) {
           handleOptionsCommand(gameState, talkCommand);
       	} else if (game.isTesting() && talk.startsWith("/option")) {
         	handleOptionCommand(gameState, talkCommand); 
         } else if (game.isTesting() && talk.startsWith("/prone")) {
-        	handleProneOrStunCommand(gameState, talkCommand, false, sender);
+        	handleProneOrStunCommand(gameState, talkCommand, false, pReceivedCommand.getSession());
         } else if (game.isTesting() && talk.startsWith("/roll")) {
           handleRollCommand(gameState, talkCommand);
         } else if (game.isTesting() && talk.startsWith("/skill")) {
-        	handleSkillCommand(gameState, talkCommand, sender);
+        	handleSkillCommand(gameState, talkCommand, pReceivedCommand.getSession());
         } else if (game.isTesting() && talk.startsWith("/stat")) {
-        	handleStatCommand(gameState, talkCommand, sender);
+        	handleStatCommand(gameState, talkCommand, pReceivedCommand.getSession());
         } else if (game.isTesting() && talk.startsWith("/stun")) {
-        	handleProneOrStunCommand(gameState, talkCommand, true, sender);
+        	handleProneOrStunCommand(gameState, talkCommand, true, pReceivedCommand.getSession());
         } else if (game.isTesting() && talk.startsWith("/turn")) {
-          handleTurnCommand(gameState, talkCommand, sender);
+          handleTurnCommand(gameState, talkCommand, pReceivedCommand.getSession());
         } else {
           communication.sendPlayerTalk(gameState, coach, talk);
         }
@@ -114,7 +113,7 @@ public class ServerCommandHandlerTalk extends ServerCommandHandler {
         } else if (talk.startsWith("/stomp")) {
           playSoundAfterCooldown(gameState, coach, Sound.SPEC_STOMP);
         } else if (talk.startsWith("/spectators") || talk.startsWith("/specs")) {
-          handleSpectatorsCommand(gameState, talkCommand, sender);
+          handleSpectatorsCommand(gameState, talkCommand, pReceivedCommand.getSession());
         } else {
           getServer().getCommunication().sendSpectatorTalk(gameState, coach, talk);
         }
@@ -126,10 +125,10 @@ public class ServerCommandHandlerTalk extends ServerCommandHandler {
   
   private String[] findSpectators(GameState pGameState) {
     List<String> spectatorList = new ArrayList<String>();
-    ChannelManager channelManager = getServer().getChannelManager();
-    SocketChannel[] spectatorChannels = channelManager.getChannelsOfSpectators(pGameState);
-    for (SocketChannel spectatorChannel : spectatorChannels) {
-      String spectator = channelManager.getCoachForChannel(spectatorChannel);
+    SessionManager sessionManager = getServer().getSessionManager();
+    Session[] sessions = sessionManager.getSessionsOfSpectators(pGameState);
+    for (Session session : sessions) {
+      String spectator = sessionManager.getCoachForSession(session);
       if (spectator != null) {
         spectatorList.add(spectator);
       }
@@ -225,15 +224,15 @@ public class ServerCommandHandlerTalk extends ServerCommandHandler {
   	}
   }
   
-  private void handleBoxCommand(GameState pGameState, ClientCommandTalk pTalkCommand, SocketChannel pSender) {
+  private void handleBoxCommand(GameState pGameState, ClientCommandTalk pTalkCommand, Session pSession) {
   	Game game = pGameState.getGame();
-    ChannelManager channelManager = getServer().getChannelManager();
+    SessionManager sessionManager = getServer().getSessionManager();
   	String talk = pTalkCommand.getTalk();
     String[] commands = talk.split(" +");
     if ((commands == null) || (commands.length <= 2)) {
     	return;
     }
-    Team team = (channelManager.getChannelOfHomeCoach(pGameState) == pSender) ? game.getTeamHome() : game.getTeamAway();
+    Team team = (sessionManager.getSessionOfHomeCoach(pGameState) == pSession) ? game.getTeamHome() : game.getTeamAway();
     for (Player player : findPlayersInCommand(team, commands, 2)) {
     	if ("rsv".equalsIgnoreCase(commands[1])) {
       	putPlayerIntoBox(pGameState, player, new PlayerState(PlayerState.RESERVE), "Reserve", null);
@@ -256,15 +255,15 @@ public class ServerCommandHandlerTalk extends ServerCommandHandler {
     UtilGame.syncGameModel(pGameState, null, null, null);
   }
 
-  private void handleProneOrStunCommand(GameState pGameState, ClientCommandTalk pTalkCommand, boolean pStun, SocketChannel pSender) {
+  private void handleProneOrStunCommand(GameState pGameState, ClientCommandTalk pTalkCommand, boolean pStun, Session pSession) {
   	Game game = pGameState.getGame();
-    ChannelManager channelManager = getServer().getChannelManager();
+    SessionManager sessionManager = getServer().getSessionManager();
   	String talk = pTalkCommand.getTalk();
     String[] commands = talk.split(" +");
     if ((commands == null) || (commands.length <= 1)) {
     	return;
     }
-    Team team = (channelManager.getChannelOfHomeCoach(pGameState) == pSender) ? game.getTeamHome() : game.getTeamAway();
+    Team team = (sessionManager.getSessionOfHomeCoach(pGameState) == pSession) ? game.getTeamHome() : game.getTeamAway();
     for (Player player : findPlayersInCommand(team, commands, 1)) {
     	FieldCoordinate playerCoordinate = game.getFieldModel().getPlayerCoordinate(player);
     	if (!playerCoordinate.isBoxCoordinate()) {
@@ -349,9 +348,9 @@ public class ServerCommandHandlerTalk extends ServerCommandHandler {
     }
   }
   
-  private void handleSkillCommand(GameState pGameState, ClientCommandTalk pTalkCommand, SocketChannel pSender) {
+  private void handleSkillCommand(GameState pGameState, ClientCommandTalk pTalkCommand, Session pSession) {
   	Game game = pGameState.getGame();
-    ChannelManager channelManager = getServer().getChannelManager();
+    SessionManager sessionManager = getServer().getSessionManager();
   	String talk = pTalkCommand.getTalk();
     String[] commands = talk.split(" +");
     if ((commands == null) || (commands.length <= 3)) {
@@ -361,7 +360,7 @@ public class ServerCommandHandlerTalk extends ServerCommandHandler {
     if (skill == null) {
     	return;
     }
-    Team team = (channelManager.getChannelOfHomeCoach(pGameState) == pSender) ? game.getTeamHome() : game.getTeamAway();
+    Team team = (sessionManager.getSessionOfHomeCoach(pGameState) == pSession) ? game.getTeamHome() : game.getTeamAway();
     for (Player player : findPlayersInCommand(team, commands, 3)) {
       if ("add".equals(commands[1])) {
         player.addSkill(skill);
@@ -380,15 +379,15 @@ public class ServerCommandHandlerTalk extends ServerCommandHandler {
     }
   }
 
-  private void handleInjuryCommand(GameState pGameState, ClientCommandTalk pTalkCommand, SocketChannel pSender) {
+  private void handleInjuryCommand(GameState pGameState, ClientCommandTalk pTalkCommand, Session pSession) {
   	Game game = pGameState.getGame();
-    ChannelManager channelManager = getServer().getChannelManager();
+    SessionManager sessionManager = getServer().getSessionManager();
   	String talk = pTalkCommand.getTalk();
     String[] commands = talk.split(" +");
     if ((commands == null) || (commands.length <= 2)) {
     	return;
     }
-    Team team = (channelManager.getChannelOfHomeCoach(pGameState) == pSender) ? game.getTeamHome() : game.getTeamAway();
+    Team team = (sessionManager.getSessionOfHomeCoach(pGameState) == pSession) ? game.getTeamHome() : game.getTeamAway();
     for (Player player : findPlayersInCommand(team, commands, 2)) {
 	    SeriousInjury lastingInjury;
 	    if ("ni".equalsIgnoreCase(commands[1])) {
@@ -414,9 +413,9 @@ public class ServerCommandHandlerTalk extends ServerCommandHandler {
     }
   }
 
-  private void handleStatCommand(GameState pGameState, ClientCommandTalk pTalkCommand, SocketChannel pSender) {
+  private void handleStatCommand(GameState pGameState, ClientCommandTalk pTalkCommand, Session pSession) {
   	Game game = pGameState.getGame();
-    ChannelManager channelManager = getServer().getChannelManager();
+    SessionManager sessionManager = getServer().getSessionManager();
   	String talk = pTalkCommand.getTalk();
     String[] commands = talk.split(" +");
     if ((commands == null) || (commands.length <= 2)) {
@@ -428,7 +427,7 @@ public class ServerCommandHandlerTalk extends ServerCommandHandler {
     } catch (NumberFormatException nfe) {
     	return;
     }
-    Team team = (channelManager.getChannelOfHomeCoach(pGameState) == pSender) ? game.getTeamHome() : game.getTeamAway();
+    Team team = (sessionManager.getSessionOfHomeCoach(pGameState) == pSession) ? game.getTeamHome() : game.getTeamAway();
     for (Player player : findPlayersInCommand(team, commands, 3)) {
       if ((player != null) && (stat >= 0)) {
         if ("ma".equalsIgnoreCase(commands[1])) {
@@ -462,9 +461,9 @@ public class ServerCommandHandlerTalk extends ServerCommandHandler {
     }
   }
 
-  private void handleTurnCommand(GameState pGameState, ClientCommandTalk pTalkCommand, SocketChannel pSender) {
+  private void handleTurnCommand(GameState pGameState, ClientCommandTalk pTalkCommand, Session pSession) {
   	Game game = pGameState.getGame();
-    ChannelManager channelManager = getServer().getChannelManager();
+    SessionManager sessionManager = getServer().getSessionManager();
   	String talk = pTalkCommand.getTalk();
     String[] commands = talk.split(" +");
     if ((commands != null) && (commands.length > 1)) {
@@ -475,7 +474,7 @@ public class ServerCommandHandlerTalk extends ServerCommandHandler {
       }
       if (newTurnNr >= 0) {
         int turnDiff = 0;
-        if (channelManager.getChannelOfHomeCoach(pGameState) == pSender) {
+        if (sessionManager.getSessionOfHomeCoach(pGameState) == pSession) {
           turnDiff = newTurnNr - game.getTurnDataHome().getTurnNr();
         } else {
           turnDiff = newTurnNr - game.getTurnDataAway().getTurnNr();
@@ -490,7 +489,7 @@ public class ServerCommandHandlerTalk extends ServerCommandHandler {
     }
   }
   
-  private void handleSpectatorsCommand(GameState pGameState, ClientCommandTalk pTalkCommand, SocketChannel pSender) {
+  private void handleSpectatorsCommand(GameState pGameState, ClientCommandTalk pTalkCommand, Session pSession) {
     String[] spectators = findSpectators(pGameState);
     String[] spectatorTalk = null;
     StringBuilder spectatorMessage = new StringBuilder();
@@ -505,7 +504,7 @@ public class ServerCommandHandlerTalk extends ServerCommandHandler {
         spectatorTalk[i + 1] = spectators[i];
       }
     }
-    getServer().getCommunication().sendTalk(pSender, pGameState, null, spectatorTalk);
+    getServer().getCommunication().sendTalk(pSession, pGameState, null, spectatorTalk);
   }
   
 }

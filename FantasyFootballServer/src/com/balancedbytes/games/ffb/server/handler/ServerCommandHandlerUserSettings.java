@@ -1,7 +1,5 @@
 package com.balancedbytes.games.ffb.server.handler;
 
-import java.nio.channels.SocketChannel;
-
 import com.balancedbytes.games.ffb.net.NetCommandId;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandUserSettings;
 import com.balancedbytes.games.ffb.server.FantasyFootballServer;
@@ -27,8 +25,7 @@ public class ServerCommandHandlerUserSettings extends ServerCommandHandler {
   public void handleCommand(ReceivedCommand pReceivedCommand) {
     
     ClientCommandUserSettings userSettingsCommand = (ClientCommandUserSettings) pReceivedCommand.getCommand();        
-    SocketChannel sender = pReceivedCommand.getSender();
-    String coach = getServer().getChannelManager().getCoachForChannel(sender);
+    String coach = getServer().getSessionManager().getCoachForSession(pReceivedCommand.getSession());
 
     if (coach != null) {
     

@@ -4,13 +4,13 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.StringReader;
 import java.net.URLEncoder;
-import java.nio.channels.SocketChannel;
 import java.security.NoSuchAlgorithmException;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.eclipse.jetty.websocket.api.Session;
 import org.xml.sax.InputSource;
 
 import com.balancedbytes.games.ffb.FantasyFootballException;
@@ -143,13 +143,13 @@ public class FumbblRequestProcessor extends Thread {
   
   public void reportFumbblError(GameState pGameState, FumbblGameState pFumbblState) {
     FantasyFootballServer server = pGameState.getServer();
-    SocketChannel[] receivers = server.getChannelManager().getChannelsForGameId(pGameState.getId());
+    Session[] sessions = server.getSessionManager().getSessionsForGameId(pGameState.getId());
     if (pFumbblState != null) {
       server.getDebugLog().log(IServerLogLevel.ERROR, pFumbblState.toXml(false));
-      server.getCommunication().sendStatus(receivers, ServerStatus.FUMBBL_ERROR, pFumbblState.getDescription());
+      server.getCommunication().sendStatus(sessions, ServerStatus.FUMBBL_ERROR, pFumbblState.getDescription());
     } else {
       server.getDebugLog().log(IServerLogLevel.ERROR, _UNKNOWN_FUMBBL_ERROR);
-      server.getCommunication().sendStatus(receivers, ServerStatus.FUMBBL_ERROR, _UNKNOWN_FUMBBL_ERROR);
+      server.getCommunication().sendStatus(sessions, ServerStatus.FUMBBL_ERROR, _UNKNOWN_FUMBBL_ERROR);
     }
   }
   

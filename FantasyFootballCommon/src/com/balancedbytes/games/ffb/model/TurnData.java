@@ -311,7 +311,7 @@ public class TurnData implements IByteArraySerializable, IJsonSerializable {
     fHandOverUsed = IJsonOption.HAND_OVER_USED.getFrom(jsonObject);
     fPassUsed = IJsonOption.PASS_USED.getFrom(jsonObject);
     fLeaderState = (LeaderState) IJsonOption.LEADER_STATE.getFrom(jsonObject);
-    fInducementSet = new InducementSet();
+    fInducementSet = new InducementSet(this);
     fInducementSet.initFrom(IJsonOption.INDUCEMENT_SET.getFrom(jsonObject));
     return this;
   }

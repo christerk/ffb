@@ -99,7 +99,7 @@ public class ClientStateSetup extends ClientState {
     getClient().getCommunication().sendEndTurn();
   }
   
-  public void handleNetCommand(NetCommand pNetCommand) {
+  public void handleCommand(NetCommand pNetCommand) {
     Game game = getClient().getGame();
     UserInterface userInterface = getClient().getUserInterface();
     switch (pNetCommand.getId()) {
