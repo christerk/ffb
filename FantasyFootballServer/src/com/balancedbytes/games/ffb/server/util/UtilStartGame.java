@@ -16,7 +16,6 @@ import com.balancedbytes.games.ffb.server.db.IDbStatementFactory;
 import com.balancedbytes.games.ffb.server.db.query.DbUserSettingsQuery;
 import com.balancedbytes.games.ffb.server.net.SessionManager;
 import com.balancedbytes.games.ffb.server.step.SequenceGenerator;
-import com.balancedbytes.games.ffb.util.ArrayTool;
 import com.balancedbytes.games.ffb.util.StringTool;
 
 
@@ -71,13 +70,26 @@ public class UtilStartGame {
   
   public static void sendUserSettings(GameState pGameState, String pCoach, Session pSession) {
     FantasyFootballServer server = pGameState.getServer();
+    List<String> settingNames = new ArrayList<String>();
+    List<String> settingValues = new ArrayList<String>();
+    // always send any client settings defined in server.ini
+    for (String serverProperty : server.getProperties()) {
+      if (serverProperty.startsWith("client.")) {
+        settingNames.add(serverProperty);
+        settingValues.add(server.getProperty(serverProperty));
+      }
+    }
     IDbStatementFactory statementFactory = server.getDbQueryFactory();
     DbUserSettingsQuery userSettingsQuery = (DbUserSettingsQuery) statementFactory.getStatement(DbStatementId.USER_SETTINGS_QUERY);
     userSettingsQuery.execute(pCoach);
-    String[] settingNames = userSettingsQuery.getSettingNames();
-    String[] settingValues = userSettingsQuery.getSettingValues();
-    if (ArrayTool.isProvided(settingNames) && ArrayTool.isProvided(settingValues)) {
-      server.getCommunication().sendUserSettings(pSession, settingNames, settingValues);
+    for (String userSettingName : userSettingsQuery.getSettingNames()) {
+      settingNames.add(userSettingName);
+    }
+    for (String userSettingValue : userSettingsQuery.getSettingValues()) {
+      settingValues.add(userSettingValue);
+    }
+    if ((settingNames.size() > 0) && (settingValues.size() > 0)) {
+      server.getCommunication().sendUserSettings(pSession, settingNames.toArray(new String[settingNames.size()]), settingValues.toArray(new String[settingValues.size()]));
     }
   }
   

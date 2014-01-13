@@ -135,6 +135,9 @@ public final class StepInitScatterPlayer extends AbstractStep {
     }
     UtilThrowTeamMateSequence.ScatterResult scatterResult = UtilThrowTeamMateSequence.scatterPlayer(this, startCoordinate, fThrowScatter);
     FieldCoordinate endCoordinate = scatterResult.getLastValidCoordinate();
+    // send animation before sending player coordinate and state change (otherwise thrown player will be displayed in landing square first)
+    getResult().setAnimation(new Animation(fThrownPlayerCoordinate, endCoordinate, fThrownPlayerId, fThrownPlayerHasBall));
+    UtilGame.syncGameModel(this);
     Player playerLandedUpon = null;
     if (scatterResult.isInBounds()) {
       playerLandedUpon = game.getFieldModel().getPlayer(endCoordinate);
@@ -169,9 +172,7 @@ public final class StepInitScatterPlayer extends AbstractStep {
     publishParameter(new StepParameter(StepParameterKey.THROWN_PLAYER_ID, fThrownPlayerId));
     publishParameter(new StepParameter(StepParameterKey.THROWN_PLAYER_STATE, fThrownPlayerState));
     publishParameter(new StepParameter(StepParameterKey.THROWN_PLAYER_HAS_BALL, fThrownPlayerHasBall));
-    getResult().setAnimation(new Animation(fThrownPlayerCoordinate, endCoordinate, fThrownPlayerId, fThrownPlayerHasBall));
     if (playerLandedUpon != null) {
-    	UtilGame.syncGameModel(this);
       publishParameters(UtilInjury.dropPlayer(this, playerLandedUpon));
     }
     getResult().setNextAction(StepAction.NEXT_STEP);
