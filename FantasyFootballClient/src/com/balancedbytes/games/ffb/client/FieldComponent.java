@@ -60,8 +60,7 @@ public class FieldComponent extends JPanel implements IModelChangeObserver, Mous
   private FieldLayerRangeRuler fLayerRangeRuler;
   private BufferedImage fImage;
 
-  // we need to keep some old model values for a redraw (if those get set to
-  // null)
+  // we need to keep some old model values for a redraw (if those get set to null)
   private FieldCoordinate fBallCoordinate;
   private FieldCoordinate fBombCoordinate;
   private Map<String, FieldCoordinate> fCoordinateByPlayerId;
@@ -135,19 +134,19 @@ public class FieldComponent extends JPanel implements IModelChangeObserver, Mous
 
   public void refresh() {
 
-		Rectangle updatedArea = combineRectangles(
-		  new Rectangle[] {
-		    getLayerField().fetchUpdatedArea(),
+    Rectangle updatedArea = combineRectangles(
+      new Rectangle[] {
+        getLayerField().fetchUpdatedArea(),
         getLayerTeamLogo().fetchUpdatedArea(),
-				getLayerBloodspots().fetchUpdatedArea(),
-				getLayerRangeGrid().fetchUpdatedArea(),
+        getLayerBloodspots().fetchUpdatedArea(),
+        getLayerRangeGrid().fetchUpdatedArea(),
         getLayerMarker().fetchUpdatedArea(),
-				getLayerUnderPlayers().fetchUpdatedArea(),
-				getLayerPlayers().fetchUpdatedArea(),
-				getLayerOverPlayers().fetchUpdatedArea(),
-				getLayerRangeRuler().fetchUpdatedArea()
-		  }
-		);
+        getLayerUnderPlayers().fetchUpdatedArea(),
+        getLayerPlayers().fetchUpdatedArea(),
+        getLayerOverPlayers().fetchUpdatedArea(),
+        getLayerRangeRuler().fetchUpdatedArea()
+      }
+    );
 
     if (updatedArea != null) {
       refresh(updatedArea);
@@ -194,99 +193,101 @@ public class FieldComponent extends JPanel implements IModelChangeObserver, Mous
     Game game = getClient().getGame();
     FieldModel fieldModel = game.getFieldModel();
     switch (pModelChange.getChangeId()) {
-    case FIELD_MODEL_ADD_BLOOD_SPOT:
-      getLayerBloodspots().drawBloodspot((BloodSpot) pModelChange.getValue());
-      break;
-    case FIELD_MODEL_ADD_DICE_DECORATION:
-      getLayerOverPlayers().drawDiceDecoration((DiceDecoration) pModelChange.getValue());
-      break;
-    case FIELD_MODEL_ADD_FIELD_MARKER:
-      getLayerMarker().drawFieldMarker((FieldMarker) pModelChange.getValue());
-      break;
-    case FIELD_MODEL_ADD_MOVE_SQUARE:
-      getLayerOverPlayers().drawMoveSquare((MoveSquare) pModelChange.getValue());
-      break;
-    case FIELD_MODEL_ADD_PLAYER_MARKER:
-      getLayerPlayers().updatePlayerMarker((PlayerMarker) pModelChange.getValue());
-      break;
-    case FIELD_MODEL_ADD_PUSHBACK_SQUARE:
-      getLayerOverPlayers().drawPushbackSquare((PushbackSquare) pModelChange.getValue());
-      break;
-    case FIELD_MODEL_ADD_TRACK_NUMBER:
-      getLayerUnderPlayers().drawTrackNumber((TrackNumber) pModelChange.getValue());
-      break;
-    case FIELD_MODEL_REMOVE_DICE_DECORATION:
-      getLayerOverPlayers().removeDiceDecoration((DiceDecoration) pModelChange.getValue());
-      break;
-    case FIELD_MODEL_REMOVE_FIELD_MARKER:
-      getLayerMarker().removeFieldMarker((FieldMarker) pModelChange.getValue());
-      break;
-    case FIELD_MODEL_REMOVE_MOVE_SQUARE:
-      getLayerOverPlayers().removeMoveSquare((MoveSquare) pModelChange.getValue());
-      break;
-    case FIELD_MODEL_REMOVE_PLAYER_MARKER:
-      getLayerPlayers().updatePlayerMarker((PlayerMarker) pModelChange.getValue());
-      break;
-    case FIELD_MODEL_REMOVE_PUSHBACK_SQUARE:
-      getLayerOverPlayers().removePushbackSquare((PushbackSquare) pModelChange.getValue());
-      break;
-    case FIELD_MODEL_REMOVE_TRACK_NUMBER:
-      getLayerUnderPlayers().removeTrackNumber((TrackNumber) pModelChange.getValue());
-      break;
-    case FIELD_MODEL_SET_BALL_COORDINATE:
-      if (fBallCoordinate != null) {
-        getLayerPlayers().updateBallAndPlayers(fBallCoordinate, false);
-      }
-      FieldCoordinate ballCoordinate = (FieldCoordinate) pModelChange.getValue();
-      if (ballCoordinate != null) {
-        getLayerPlayers().updateBallAndPlayers(ballCoordinate, false);
-      }
-      fBallCoordinate = ballCoordinate;
-      break;
-    case FIELD_MODEL_SET_BALL_MOVING:
-      getLayerPlayers().updateBallAndPlayers(fieldModel.getBallCoordinate(), false);
-      break;
-    case FIELD_MODEL_SET_BOMB_COORDINATE:
-      if (fBombCoordinate != null) {
-        getLayerPlayers().updateBallAndPlayers(fBombCoordinate, false);
-      }
-      FieldCoordinate bombCoordinate = (FieldCoordinate) pModelChange.getValue();
-      if (bombCoordinate != null) {
-        getLayerPlayers().updateBallAndPlayers(bombCoordinate, false);
-      }
-      fBombCoordinate = bombCoordinate;
-      break;
-    case FIELD_MODEL_SET_BOMB_MOVING:
-      getLayerPlayers().updateBallAndPlayers(fieldModel.getBombCoordinate(), false);
-      break;
-    case FIELD_MODEL_SET_PLAYER_COORDINATE:
-      FieldCoordinate oldPlayerCoordinate = fCoordinateByPlayerId.get(pModelChange.getKey());
-      if (oldPlayerCoordinate != null) {
-        getLayerPlayers().updateBallAndPlayers(oldPlayerCoordinate, true);
-      }
-      FieldCoordinate playerCoordinate = (FieldCoordinate) pModelChange.getValue();
-      if (playerCoordinate != null) {
-        getLayerPlayers().updateBallAndPlayers(playerCoordinate, true);
-      }
-      fCoordinateByPlayerId.put(pModelChange.getKey(), playerCoordinate);
-      break;
-    case FIELD_MODEL_SET_PLAYER_STATE:
-      Player player = game.getPlayerById(pModelChange.getKey());
-      getLayerPlayers().updateBallAndPlayers(fieldModel.getPlayerCoordinate(player), true);
-      break;
-    case FIELD_MODEL_SET_RANGE_RULER:
-      getLayerRangeRuler().drawRangeRuler((RangeRuler) pModelChange.getValue());
-      break;
-    case FIELD_MODEL_SET_WEATHER:
-      getLayerField().drawWeather((Weather) pModelChange.getValue());
-      break;
-    default:
-      break;
+      case FIELD_MODEL_ADD_BLOOD_SPOT:
+        getLayerBloodspots().drawBloodspot((BloodSpot) pModelChange.getValue());
+        break;
+      case FIELD_MODEL_ADD_DICE_DECORATION:
+        getLayerOverPlayers().drawDiceDecoration((DiceDecoration) pModelChange.getValue());
+        break;
+      case FIELD_MODEL_ADD_FIELD_MARKER:
+        getLayerMarker().drawFieldMarker((FieldMarker) pModelChange.getValue());
+        break;
+      case FIELD_MODEL_ADD_MOVE_SQUARE:
+        getLayerOverPlayers().drawMoveSquare((MoveSquare) pModelChange.getValue());
+        break;
+      case FIELD_MODEL_ADD_PLAYER_MARKER:
+        getLayerPlayers().updatePlayerMarker((PlayerMarker) pModelChange.getValue());
+        break;
+      case FIELD_MODEL_ADD_PUSHBACK_SQUARE:
+        getLayerOverPlayers().drawPushbackSquare((PushbackSquare) pModelChange.getValue());
+        break;
+      case FIELD_MODEL_ADD_TRACK_NUMBER:
+        getLayerUnderPlayers().drawTrackNumber((TrackNumber) pModelChange.getValue());
+        break;
+      case FIELD_MODEL_REMOVE_DICE_DECORATION:
+        getLayerOverPlayers().removeDiceDecoration((DiceDecoration) pModelChange.getValue());
+        break;
+      case FIELD_MODEL_REMOVE_FIELD_MARKER:
+        getLayerMarker().removeFieldMarker((FieldMarker) pModelChange.getValue());
+        break;
+      case FIELD_MODEL_REMOVE_MOVE_SQUARE:
+        getLayerOverPlayers().removeMoveSquare((MoveSquare) pModelChange.getValue());
+        break;
+      case FIELD_MODEL_REMOVE_PLAYER_MARKER:
+        getLayerPlayers().updatePlayerMarker((PlayerMarker) pModelChange.getValue());
+        break;
+      case FIELD_MODEL_REMOVE_PUSHBACK_SQUARE:
+        getLayerOverPlayers().removePushbackSquare((PushbackSquare) pModelChange.getValue());
+        break;
+      case FIELD_MODEL_REMOVE_TRACK_NUMBER:
+        getLayerUnderPlayers().removeTrackNumber((TrackNumber) pModelChange.getValue());
+        break;
+      case FIELD_MODEL_SET_BALL_COORDINATE:
+        if (fBallCoordinate != null) {
+          getLayerPlayers().updateBallAndPlayers(fBallCoordinate, false);
+        }
+        FieldCoordinate ballCoordinate = (FieldCoordinate) pModelChange.getValue();
+        if (ballCoordinate != null) {
+          getLayerPlayers().updateBallAndPlayers(ballCoordinate, false);
+        }
+        fBallCoordinate = ballCoordinate;
+        break;
+      case FIELD_MODEL_SET_BALL_MOVING:
+        getLayerPlayers().updateBallAndPlayers(fieldModel.getBallCoordinate(), false);
+        break;
+      case FIELD_MODEL_SET_BOMB_COORDINATE:
+        if (fBombCoordinate != null) {
+          getLayerPlayers().updateBallAndPlayers(fBombCoordinate, false);
+        }
+        FieldCoordinate bombCoordinate = (FieldCoordinate) pModelChange.getValue();
+        if (bombCoordinate != null) {
+          getLayerPlayers().updateBallAndPlayers(bombCoordinate, false);
+        }
+        fBombCoordinate = bombCoordinate;
+        break;
+      case FIELD_MODEL_SET_BOMB_MOVING:
+        getLayerPlayers().updateBallAndPlayers(fieldModel.getBombCoordinate(), false);
+        break;
+      case FIELD_MODEL_SET_PLAYER_COORDINATE:
+        FieldCoordinate oldPlayerCoordinate = fCoordinateByPlayerId.get(pModelChange.getKey());
+        if (oldPlayerCoordinate != null) {
+          getLayerPlayers().updateBallAndPlayers(oldPlayerCoordinate, true);
+        }
+        FieldCoordinate playerCoordinate = (FieldCoordinate) pModelChange.getValue();
+        if (playerCoordinate != null) {
+          getLayerPlayers().updateBallAndPlayers(playerCoordinate, true);
+        }
+        fCoordinateByPlayerId.put(pModelChange.getKey(), playerCoordinate);
+        break;
+      case FIELD_MODEL_SET_PLAYER_STATE:
+        Player player = game.getPlayerById(pModelChange.getKey());
+        getLayerPlayers().updateBallAndPlayers(fieldModel.getPlayerCoordinate(player), true);
+        break;
+      case FIELD_MODEL_SET_RANGE_RULER:
+        getLayerRangeRuler().drawRangeRuler((RangeRuler) pModelChange.getValue());
+        break;
+      case FIELD_MODEL_SET_WEATHER:
+        getLayerField().drawWeather((Weather) pModelChange.getValue());
+        break;
+      default:
+        break;
     }
   }
 
   public void init() {
-    getClient().getGame().addObserver(this);
+    Game game = getClient().getGame();
+    game.addObserver(this);
+    initPlayerCoordinates();
     getLayerField().init();
     getLayerTeamLogo().init();
     getLayerBloodspots().init();
@@ -297,6 +298,13 @@ public class FieldComponent extends JPanel implements IModelChangeObserver, Mous
     getLayerOverPlayers().init();
     getLayerRangeRuler().init();
     refresh();
+  }
+  
+  private void initPlayerCoordinates() {
+    Game game = getClient().getGame();
+    for (Player player : game.getPlayers()) {
+      fCoordinateByPlayerId.put(player.getId(), game.getFieldModel().getPlayerCoordinate(player));
+    }
   }
 
   private Rectangle combineRectangles(Rectangle[] pRectangles) {

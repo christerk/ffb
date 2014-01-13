@@ -875,7 +875,7 @@ public class FieldModel implements IByteArraySerializable, IJsonSerializable {
     for (DiceDecoration diceDecoration : fDiceDecorations) {
       diceDecorationArray.add(diceDecoration.toJsonValue());
     }
-    IJsonOption.DICE_DECORATION_ARRAY.addTo(jsonObject, trackNumberArray);
+    IJsonOption.DICE_DECORATION_ARRAY.addTo(jsonObject, diceDecorationArray);
 
     JsonArray fieldMarkerArray = new JsonArray();
     for (FieldMarker fieldMarker : fFieldMarkers) {

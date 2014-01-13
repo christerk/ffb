@@ -139,25 +139,25 @@ public final class StepHailMaryPass extends AbstractStepWithReRoll {
           }
         }
       }
-      if (doNextStep) {
-      	publishParameter(new StepParameter(StepParameterKey.PASS_FUMBLE, fPassFumble));
-      	if (fPassFumble) {
-      		if (PlayerAction.HAIL_MARY_BOMB == game.getThrowerAction()) {
-	      		game.getFieldModel().setBombCoordinate(game.getFieldModel().getPlayerCoordinate(game.getThrower()));
-      		} else {
-	      		game.getFieldModel().setBallCoordinate(game.getFieldModel().getPlayerCoordinate(game.getThrower()));
-	          publishParameter(new StepParameter(StepParameterKey.CATCH_SCATTER_THROW_IN_MODE, CatchScatterThrowInMode.SCATTER_BALL));
-      		}
-          getResult().setNextAction(StepAction.GOTO_LABEL, fGotoLabelOnFailure);
+    }
+    if (doNextStep) {
+      publishParameter(new StepParameter(StepParameterKey.PASS_FUMBLE, fPassFumble));
+      if (fPassFumble) {
+        if (PlayerAction.HAIL_MARY_BOMB == game.getThrowerAction()) {
+          game.getFieldModel().setBombCoordinate(game.getFieldModel().getPlayerCoordinate(game.getThrower()));
         } else {
-      		if (PlayerAction.HAIL_MARY_BOMB == game.getThrowerAction()) {
-	      		game.getFieldModel().setBombCoordinate(game.getFieldModel().getPlayerCoordinate(game.getThrower()));
-      			game.getFieldModel().setBombMoving(false);
-      		} else {
-      			game.getFieldModel().setBallCoordinate(game.getPassCoordinate());
-      		}
-          getResult().setNextAction(StepAction.NEXT_STEP);
+          game.getFieldModel().setBallCoordinate(game.getFieldModel().getPlayerCoordinate(game.getThrower()));
+          publishParameter(new StepParameter(StepParameterKey.CATCH_SCATTER_THROW_IN_MODE, CatchScatterThrowInMode.SCATTER_BALL));
         }
+        getResult().setNextAction(StepAction.GOTO_LABEL, fGotoLabelOnFailure);
+      } else {
+        if (PlayerAction.HAIL_MARY_BOMB == game.getThrowerAction()) {
+          game.getFieldModel().setBombCoordinate(game.getFieldModel().getPlayerCoordinate(game.getThrower()));
+          game.getFieldModel().setBombMoving(false);
+        } else {
+          game.getFieldModel().setBallCoordinate(game.getPassCoordinate());
+        }
+        getResult().setNextAction(StepAction.NEXT_STEP);
       }
     }
   }

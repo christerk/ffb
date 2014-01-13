@@ -294,8 +294,8 @@ public class UtilPlayer {
     return throwablePlayers.toArray(new Player[throwablePlayers.size()]);
   }
   
-  public static boolean canThrowTeamMate(Game pGame, Player pThrower) {
-    return ((pThrower != null) && !pGame.getTurnData().isPassUsed() && UtilCards.hasSkill(pGame, pThrower, Skill.THROW_TEAM_MATE) && (UtilPlayer.findThrowableTeamMates(pGame, pThrower).length > 0));
+  public static boolean canThrowTeamMate(Game pGame, Player pThrower, boolean pCheckPassUsed) {
+    return ((pThrower != null) && (!pCheckPassUsed || !pGame.getTurnData().isPassUsed()) && UtilCards.hasSkill(pGame, pThrower, Skill.THROW_TEAM_MATE) && (UtilPlayer.findThrowableTeamMates(pGame, pThrower).length > 0));
   }
   
   public static boolean isBlockable(Game pGame, Player pPlayer) {

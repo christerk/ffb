@@ -210,7 +210,7 @@ public class ClientStateMove extends ClientState {
       menuItemList.add(passAction);
     }
     if (((PlayerAction.PASS_MOVE == actingPlayer.getPlayerAction()) && UtilPlayer.hasBall(game, actingPlayer.getPlayer()))
-    	|| ((PlayerAction.THROW_TEAM_MATE_MOVE == actingPlayer.getPlayerAction()) && UtilPlayer.canThrowTeamMate(game, actingPlayer.getPlayer()))) {
+    	|| ((PlayerAction.THROW_TEAM_MATE_MOVE == actingPlayer.getPlayerAction()) && UtilPlayer.canThrowTeamMate(game, actingPlayer.getPlayer(), true))) {
       JMenuItem toggleRangeGridAction = new JMenuItem("Range Grid on/off", new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_TOGGLE_RANGE_GRID)));
       toggleRangeGridAction.setMnemonic(IPlayerPopupMenuKeys.KEY_RANGE_GRID);
       toggleRangeGridAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_RANGE_GRID, 0));

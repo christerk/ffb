@@ -155,7 +155,7 @@ public class StepEndMoving extends AbstractStep {
       || ((PlayerAction.PASS_MOVE == actingPlayer.getPlayerAction()) && UtilPlayer.hasBall(game, actingPlayer.getPlayer()))
       || ((PlayerAction.FOUL_MOVE == actingPlayer.getPlayerAction()) && UtilPlayer.canFoul(game, actingPlayer.getPlayer()))
       || ((PlayerAction.MOVE == actingPlayer.getPlayerAction()) && UtilPlayer.canGaze(game, actingPlayer.getPlayer())
-      || ((PlayerAction.THROW_TEAM_MATE_MOVE == actingPlayer.getPlayerAction()) && UtilPlayer.canThrowTeamMate(game, actingPlayer.getPlayer())))) {
+      || ((PlayerAction.THROW_TEAM_MATE_MOVE == actingPlayer.getPlayerAction()) && UtilPlayer.canThrowTeamMate(game, actingPlayer.getPlayer(), false)))) {
       UtilPlayerMove.updateMoveSquares(getGameState(), actingPlayer.isLeaping());
     	SequenceGenerator.getInstance().pushMoveSequence(getGameState());
     } else {
