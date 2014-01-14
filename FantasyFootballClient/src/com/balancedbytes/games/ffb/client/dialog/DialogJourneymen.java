@@ -7,6 +7,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -34,7 +36,7 @@ public class DialogJourneymen extends Dialog implements ActionListener, KeyListe
   private int fSlotsAvailable;
   private String[] fPositionIds;
   
-  private JComboBox[] fBoxes;
+  private List<JComboBox<String>> fBoxes;
   private int[] fSlotsSelected;
   
   private int fOldTeamValue;
@@ -52,9 +54,9 @@ public class DialogJourneymen extends Dialog implements ActionListener, KeyListe
 
     fSlotsSelected = new int[fPositionIds.length];
 
-    fBoxes = new JComboBox[fPositionIds.length];
-    for (int i = 0; i < fBoxes.length; i++) {
-      fBoxes[i] = new JComboBox();
+    fBoxes = new ArrayList<JComboBox<String>>();
+    for (int i = 0; i < fPositionIds.length; i++) {
+      fBoxes.add(new JComboBox<String>());
     }
     refreshModels();
 
@@ -65,7 +67,7 @@ public class DialogJourneymen extends Dialog implements ActionListener, KeyListe
 
     JPanel boxPanel = new JPanel();
     boxPanel.setLayout(new GridLayout(0, 2, 5, 5));
-    for (int i = 0; i < fBoxes.length; i++) {
+    for (int i = 0; i < fBoxes.size(); i++) {
       RosterPosition rosterPosition = roster.getPositionById(fPositionIds[i]);
       JPanel boxLabelPanel = new JPanel();
       boxLabelPanel.setLayout(new BoxLayout(boxLabelPanel, BoxLayout.X_AXIS));
@@ -74,7 +76,7 @@ public class DialogJourneymen extends Dialog implements ActionListener, KeyListe
       boxPanel.add(boxLabelPanel);
       JPanel boxSelectPanel = new JPanel();
       boxSelectPanel.setLayout(new BoxLayout(boxSelectPanel, BoxLayout.X_AXIS));
-      boxSelectPanel.add(fBoxes[i]);
+      boxSelectPanel.add(fBoxes.get(i));
       boxSelectPanel.add(Box.createHorizontalGlue());
       boxPanel.add(boxSelectPanel);
     }
@@ -156,16 +158,17 @@ public class DialogJourneymen extends Dialog implements ActionListener, KeyListe
     for (int i = 0; i < fSlotsSelected.length; i++) {
       freeSlots -= fSlotsSelected[i];
     }
-    for (int i = 0; i < fBoxes.length; i++) {
+    for (int i = 0; i < fBoxes.size(); i++) {
       String[] selection = new String[fSlotsSelected[i] + freeSlots +  1];
       for (int j = 0; j < selection.length; j++) {
         selection[j] = Integer.toString(j);
       }
-      fBoxes[i].removeActionListener(this);
-      fBoxes[i].setModel(new DefaultComboBoxModel(selection));
-      fBoxes[i].setSelectedIndex(fSlotsSelected[i]);
-      fBoxes[i].setPreferredSize(fBoxes[i].getMinimumSize());
-      fBoxes[i].addActionListener(this);
+      JComboBox<String> box = fBoxes.get(i);
+      box.removeActionListener(this);
+      box.setModel(new DefaultComboBoxModel<String>(selection));
+      box.setSelectedIndex(fSlotsSelected[i]);
+      box.setPreferredSize(box.getMinimumSize());
+      box.addActionListener(this);
     }
   }
   
@@ -175,9 +178,10 @@ public class DialogJourneymen extends Dialog implements ActionListener, KeyListe
         getCloseListener().dialogClosed(this);
       }
     } else {
-      for (int i = 0; i < fBoxes.length; i++) {
-        if (pActionEvent.getSource() == fBoxes[i]) {
-          fSlotsSelected[i] = fBoxes[i].getSelectedIndex();
+      for (int i = 0; i < fBoxes.size(); i++) {
+        JComboBox<String> box = fBoxes.get(i);
+        if (pActionEvent.getSource() == box) {
+          fSlotsSelected[i] = box.getSelectedIndex();
           break;
         }
       }

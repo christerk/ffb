@@ -19,7 +19,7 @@ public class DropDownPanel extends JPanel implements ActionListener {
 	private int fMax;
 	private String fText;
 	private int fCost;
-	private JComboBox fBox;
+	private JComboBox<String> fBox;
 	private boolean fAvailable;
 	private ActionListener fActionListener;
 	private int fAmountSelected = 0;
@@ -54,7 +54,7 @@ public class DropDownPanel extends JPanel implements ActionListener {
 		for (int i = 0; i <= fMax && i * fCost <= pAvailableGold; i++) {
 			anzahl.add(Integer.toString(i));
 		}
-		fBox = new JComboBox(anzahl.toArray(new String[anzahl.size()]));
+		fBox = new JComboBox<String>(anzahl.toArray(new String[anzahl.size()]));
 		fBox.setSelectedIndex(0);
 		fBox.setMaximumSize(fBox.getMinimumSize());
 		fBox.addActionListener(pListener);

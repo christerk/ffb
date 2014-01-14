@@ -23,11 +23,11 @@ import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.util.ArrayTool;
 
 @SuppressWarnings("serial")
-public class PlayerCheckList extends JList {
+public class PlayerCheckList extends JList<PlayerCheckListItem> {
   
   // Handles rendering cells in the list using a check box
 
-  private class PlayerCheckListRenderer extends JPanel implements ListCellRenderer {
+  private class PlayerCheckListRenderer extends JPanel implements ListCellRenderer<PlayerCheckListItem> {
     
     private JCheckBox fCheckBox;
     private JLabel fLabel;
@@ -41,16 +41,15 @@ public class PlayerCheckList extends JList {
       add(fLabel);
     }
     
-    public Component getListCellRendererComponent(JList pList, Object pValue, int pIndex, boolean pIsSelected, boolean pCellHasFocus) {
+    public Component getListCellRendererComponent(JList<? extends PlayerCheckListItem> pList, PlayerCheckListItem pValue, int pIndex, boolean pIsSelected, boolean pCellHasFocus) {
       setEnabled(pList.isEnabled());
       setFont(pList.getFont());
       setBackground(pList.getBackground());
       setForeground(pList.getForeground());
       fCheckBox.setBackground(pList.getBackground());
-      PlayerCheckListItem listItem = (PlayerCheckListItem) pValue;
-      fCheckBox.setSelected(listItem.isSelected());
-      fLabel.setIcon(listItem.getIcon());
-      fLabel.setText(listItem.getText());
+      fCheckBox.setSelected(pValue.isSelected());
+      fLabel.setIcon(pValue.getIcon());
+      fLabel.setText(pValue.getText());
       return this;
     }
     
@@ -64,8 +63,9 @@ public class PlayerCheckList extends JList {
       fMaxSelects = pMaxSelects;
     }
 
+    @SuppressWarnings("unchecked")
     public void mouseReleased(MouseEvent event) {
-      JList list = (JList) event.getSource();
+      JList<PlayerCheckListItem> list = (JList<PlayerCheckListItem>) event.getSource();
       int index = list.locationToIndex(event.getPoint());
       PlayerCheckListItem selectedItem = (PlayerCheckListItem) list.getModel().getElementAt(index);
       if (!selectedItem.isSelected()) {

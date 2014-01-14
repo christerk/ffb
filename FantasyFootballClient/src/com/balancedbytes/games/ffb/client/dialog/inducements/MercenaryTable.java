@@ -33,7 +33,7 @@ public class MercenaryTable extends JTable {
 					}
 				}
 			}
-			JComboBox box = new JComboBox(skills.toArray(new String[skills.size()]));
+			JComboBox<String> box = new JComboBox<String>(skills.toArray(new String[skills.size()]));
 			return new DefaultCellEditor(box);
 		}
 		return super.getCellEditor(row, column);
