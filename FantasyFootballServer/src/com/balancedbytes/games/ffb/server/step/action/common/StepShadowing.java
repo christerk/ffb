@@ -28,6 +28,7 @@ import com.balancedbytes.games.ffb.server.util.UtilPlayerMove;
 import com.balancedbytes.games.ffb.server.util.UtilReRoll;
 import com.balancedbytes.games.ffb.util.ArrayTool;
 import com.balancedbytes.games.ffb.util.StringTool;
+import com.balancedbytes.games.ffb.util.UtilBlock;
 import com.balancedbytes.games.ffb.util.UtilPlayer;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
@@ -169,6 +170,7 @@ public class StepShadowing extends AbstractStepWithReRoll {
       if (doNextStep && fUsingShadowing) {
         game.getFieldModel().updatePlayerAndBallPosition(game.getDefender(), fCoordinateFrom);
         UtilPlayerMove.updateMoveSquares(getGameState(), actingPlayer.isLeaping());
+        UtilBlock.updateDiceDecorations(game);
       }
     }
     if (doNextStep) {
