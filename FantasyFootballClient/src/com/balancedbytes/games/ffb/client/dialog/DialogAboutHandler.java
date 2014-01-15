@@ -4,6 +4,8 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import javax.swing.JPanel;
 
@@ -14,6 +16,8 @@ import com.balancedbytes.games.ffb.client.FantasyFootballClient;
  * @author Kalimar
  */
 public class DialogAboutHandler extends DialogHandler {
+
+  private Timer fCloseTimer;
   
   // used only when showing the AboutDialog on client startup
   
@@ -53,12 +57,26 @@ public class DialogAboutHandler extends DialogHandler {
     getDialog().showDialog(this);
     getClient().getUserInterface().setGlassPane(new MyGlassPane());
     getClient().getUserInterface().getGlassPane().setVisible(true);
+    getClient().getUserInterface().getGlassPane().requestFocus();
+    fCloseTimer = new Timer();
+    fCloseTimer.schedule(
+      new TimerTask() {
+        @Override
+        public void run() {
+          fCloseTimer = null;
+          dialogClosed(getDialog());
+        }
+      },
+      5 * 1000
+    );
   }
   
   public void dialogClosed(IDialog pDialog) {
-    hideDialog();
-    getClient().getUserInterface().getGlassPane().setVisible(false);
-    getClient().startClient();
+    if (getDialog().isVisible()) {
+      hideDialog();
+      getClient().getUserInterface().getGlassPane().setVisible(false);
+      getClient().startClient();
+    }
   }
 
 }

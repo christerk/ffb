@@ -92,10 +92,8 @@ public final class StepEndScatterPlayer extends AbstractStep {
 	private void executeStep() {
     Game game = getGameState().getGame();
     Player thrownPlayer = game.getPlayerById(fThrownPlayerId);
-    if (thrownPlayer != null) {
-    	if ((fThrownPlayerState != null) && (fThrownPlayerCoordinate != null)) {
-    		SequenceGenerator.getInstance().pushScatterPlayerSequence(getGameState(), fThrownPlayerId, fThrownPlayerState, fThrownPlayerHasBall, fThrownPlayerCoordinate, false);
-    	}
+    if ((thrownPlayer != null)  && (fThrownPlayerState != null) && (fThrownPlayerCoordinate != null)) {
+  		SequenceGenerator.getInstance().pushScatterPlayerSequence(getGameState(), fThrownPlayerId, fThrownPlayerState, fThrownPlayerHasBall, fThrownPlayerCoordinate, false);
     }
   	getResult().setNextAction(StepAction.NEXT_STEP);
   }
