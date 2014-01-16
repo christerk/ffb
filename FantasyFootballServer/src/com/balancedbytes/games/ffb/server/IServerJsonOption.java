@@ -116,6 +116,7 @@ public interface IServerJsonOption extends IJsonOption {
                 JsonObjectOption STEP_RESULT = new JsonObjectOption("stepResult");
                 JsonObjectOption STEP_STACK = new JsonObjectOption("stepStack");
                  JsonArrayOption STEPS = new JsonArrayOption("steps");
+               JsonBooleanOption SWAPPED_OUT = new JsonBooleanOption("swappedOut");
                JsonBooleanOption SYNCHRONIZE = new JsonBooleanOption("synchronize");
        JsonFieldCoordinateOption THROW_IN_COORDINATE = new JsonFieldCoordinateOption("throwInCoordinate");
                JsonBooleanOption THROW_SCATTER = new JsonBooleanOption("throwScatter");

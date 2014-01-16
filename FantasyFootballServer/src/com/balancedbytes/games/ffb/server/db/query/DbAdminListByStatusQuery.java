@@ -46,7 +46,8 @@ public class DbAdminListByStatusQuery extends DbStatement {
     	.append(IDbTableGamesInfo.COLUMN_COACH_AWAY).append(",")
     	.append(IDbTableGamesInfo.COLUMN_TEAM_AWAY_ID).append(",")
     	.append(IDbTableGamesInfo.COLUMN_TEAM_AWAY_NAME).append(",")
-      .append(IDbTableGamesInfo.COLUMN_STATUS)
+      .append(IDbTableGamesInfo.COLUMN_STATUS).append(",")
+      .append(IDbTableGamesInfo.COLUMN_SWAPPED_OUT)
       .append(" FROM ").append(IDbTableGamesInfo.TABLE_NAME)
       .append(" WHERE ").append(IDbTableGamesInfo.COLUMN_STATUS).append("=? AND ").append(IDbTableGamesInfo.COLUMN_TESTING).append("=false");
       fStatement = pConnection.prepareStatement(sql.toString());

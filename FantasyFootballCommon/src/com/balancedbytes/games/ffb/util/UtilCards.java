@@ -154,7 +154,16 @@ public final class UtilCards {
   	}
   	return allActiveCards.toArray(new Card[allActiveCards.size()]);
   }
-  
+
+  public static boolean isCardActive(Game pGame, Card pCard) {
+    for (Card card : findAllActiveCards(pGame)) {
+      if (card == pCard) {
+        return true;
+      }
+    }
+    return false;
+  }
+
   public static boolean hasCard(Game pGame, Player pPlayer, Card pCard) {
   	if ((pGame == null) || (pPlayer == null) || (pCard == null)) {
   		return false;

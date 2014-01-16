@@ -29,6 +29,7 @@ public class AdminListEntry implements IXmlSerializable {
   private static final String _XML_ATTRIBUTE_STARTED = "started";
   private static final String _XML_ATTRIBUTE_FINISHED = "finished";
   private static final String _XML_ATTRIBUTE_STATUS = "status";
+  private static final String _XML_ATTRIBUTE_SWAPPED_OUT = "swappedOut";
 
   private static final String _XML_TAG_TEAM = "team";
   private static final String _XML_ATTRIBUTE_HOME = "home";
@@ -48,6 +49,7 @@ public class AdminListEntry implements IXmlSerializable {
   private String fTeamAwayId;
   private String fTeamAwayName;
   private String fTeamAwayCoach;
+  private boolean fSwappedOut;
   
   public AdminListEntry() {
     super();
@@ -133,6 +135,14 @@ public class AdminListEntry implements IXmlSerializable {
     fTeamAwayCoach = pTeamAwayCoach;
   }
   
+  public void setSwappedOut(boolean pSwappedOut) {
+    fSwappedOut = pSwappedOut;
+  }
+  
+  public boolean isSwappedOut() {
+    return fSwappedOut;
+  }
+  
   // XML serialization
 
   public void addToXml(TransformerHandler pHandler) {
@@ -142,6 +152,7 @@ public class AdminListEntry implements IXmlSerializable {
     UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_STARTED, (getStarted() != null) ? _TIMESTAMP_FORMAT.format(getStarted()) : null);
     UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_FINISHED, (getFinished() != null) ? _TIMESTAMP_FORMAT.format(getFinished()) : null);
     UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_STATUS, (getStatus() != null) ? getStatus().getName() : null);
+    UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_SWAPPED_OUT, isSwappedOut());
     UtilXml.startElement(pHandler, XML_TAG, attributes);
 
     attributes = new AttributesImpl();
@@ -170,6 +181,7 @@ public class AdminListEntry implements IXmlSerializable {
     if (XML_TAG.equals(pXmlTag)) {
       fGameId = UtilXml.getLongAttribute(pXmlAttributes, _XML_ATTRIBUTE_ID);
       fStatus = new GameStatusFactory().forName(UtilXml.getStringAttribute(pXmlAttributes, _XML_ATTRIBUTE_STATUS));
+      fSwappedOut = UtilXml.getBooleanAttribute(pXmlAttributes, _XML_ATTRIBUTE_SWAPPED_OUT);
       String startedTimestamp = UtilXml.getStringAttribute(pXmlAttributes, _XML_ATTRIBUTE_STARTED);
       if (StringTool.isProvided(startedTimestamp)) {
         try {

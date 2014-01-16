@@ -197,6 +197,8 @@ public class ClientCommandHandlerModelSync extends ClientCommandHandler implemen
             break;
           case INDUCEMENT_SET_ADD_INDUCEMENT:
           case INDUCEMENT_SET_REMOVE_INDUCEMENT:
+          case INDUCEMENT_SET_ACTIVATE_CARD:
+          case INDUCEMENT_SET_DEACTIVATE_CARD:
             fUpdateInducements = true;
             break;
           case GAME_SET_TIMEOUT_POSSIBLE:

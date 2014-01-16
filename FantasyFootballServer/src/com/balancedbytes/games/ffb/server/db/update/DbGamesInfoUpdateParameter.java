@@ -30,6 +30,7 @@ public class DbGamesInfoUpdateParameter extends DefaultDbUpdateParameter {
   private boolean fHomePlaying;
   private String fStatus;
   private boolean fTesting;
+  private boolean fSwappedOut;
 
   public DbGamesInfoUpdateParameter(GameState pGameState) {
     if (pGameState != null) {
@@ -49,6 +50,7 @@ public class DbGamesInfoUpdateParameter extends DefaultDbUpdateParameter {
       fHomePlaying = game.isHomePlaying();
       fStatus = (pGameState.getStatus() != null) ? pGameState.getStatus().getTypeString() : " ";
       fTesting = game.isTesting();
+      fSwappedOut = pGameState.isSwappedOut();
     }
   }
   
@@ -110,6 +112,10 @@ public class DbGamesInfoUpdateParameter extends DefaultDbUpdateParameter {
   
   public boolean isTesting() {
     return fTesting;
+  }
+  
+  public boolean isSwappedOut() {
+    return fSwappedOut;
   }
 
   public DbUpdateStatement getDbUpdateStatement(FantasyFootballServer pServer) {

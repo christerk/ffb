@@ -44,7 +44,8 @@ public class DbGamesInfoUpdate extends DbUpdateStatement {
       sql.append(IDbTableGamesInfo.COLUMN_TURN).append("=?,");                 // 12
       sql.append(IDbTableGamesInfo.COLUMN_HOME_PLAYING).append("=?,");         // 13
       sql.append(IDbTableGamesInfo.COLUMN_STATUS).append("=?,");               // 14
-      sql.append(IDbTableGamesInfo.COLUMN_TESTING).append("=?");               // 15
+      sql.append(IDbTableGamesInfo.COLUMN_TESTING).append("=?,");              // 15
+      sql.append(IDbTableGamesInfo.COLUMN_SWAPPED_OUT).append("=?");           // 16
       sql.append(" WHERE ").append(IDbTableGamesInfo.COLUMN_ID).append("=?");  // 1
       fStatement = pConnection.prepareStatement(sql.toString());      
     } catch (SQLException sqlE) {
@@ -78,6 +79,7 @@ public class DbGamesInfoUpdate extends DbUpdateStatement {
     fStatement.setBoolean(col++, parameter.isHomePlaying());   // 13
     fStatement.setString(col++, parameter.getStatus());        // 14
     fStatement.setBoolean(col++, parameter.isTesting());       // 15
+    fStatement.setBoolean(col++, parameter.isSwappedOut());    // 16
     fStatement.setLong(col++, parameter.getId());              // 1
     return fStatement;
   }

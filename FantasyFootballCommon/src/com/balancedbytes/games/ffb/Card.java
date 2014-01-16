@@ -189,7 +189,7 @@ public enum Card implements IEnumWithId, IEnumWithName {
   
   WAND_OF_SMASHING(39, "Wand of Smashing", "Wand of Smashing", CardType.MAGIC_ITEM, CardTarget.OWN_PLAYER, false,
   	new InducementPhase[] { InducementPhase.START_OF_OWN_TURN }, InducementDuration.UNTIL_END_OF_TURN,
-  	"Player gets +1 ST & Mighty Blow");
+  	"Player gets +1 ST & Mighty Blow"),
   //  Description:
   //  	Stick! Smash!
   //  Timing:
@@ -202,9 +202,9 @@ public enum Card implements IEnumWithId, IEnumWithName {
   // 13x Dirty Trick
   // ---------------
   
-//  BLATANT_FOUL(40, "Blatant Foul", "Blatant Foul", CardType.DIRTY_TRICK, CardTarget.TURN, false,
-//   	new InducementPhase[] { InducementPhase.START_OF_OWN_TURN }, InducementDuration.UNTIL_END_OF_TURN,
-//   	"Next foul breaks armour automatically"),
+  BLATANT_FOUL(40, "Blatant Foul", "Blatant Foul", CardType.DIRTY_TRICK, CardTarget.TURN, false,
+   	new InducementPhase[] { InducementPhase.START_OF_OWN_TURN }, InducementDuration.UNTIL_END_OF_TURN,
+   	"Next foul breaks armour automatically");
   //	Description:
   //  	A player on your team is determined to take out the opposition, no matter what.
   //	Timing:

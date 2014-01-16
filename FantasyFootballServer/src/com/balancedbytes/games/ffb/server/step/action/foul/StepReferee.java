@@ -1,5 +1,6 @@
 package com.balancedbytes.games.ffb.server.step.action.foul;
 
+import com.balancedbytes.games.ffb.Card;
 import com.balancedbytes.games.ffb.GameOption;
 import com.balancedbytes.games.ffb.Skill;
 import com.balancedbytes.games.ffb.Sound;
@@ -105,9 +106,10 @@ public class StepReferee extends AbstractStep {
 	    Game game = getGameState().getGame();
 	    ActingPlayer actingPlayer = game.getActingPlayer();
 	    boolean refereeSpotsFoul = false;
-	    if (!UtilCards.hasSkill(game, actingPlayer, Skill.SNEAKY_GIT)
+	    if (!UtilCards.isCardActive(game, Card.BLATANT_FOUL)
+	      && (!UtilCards.hasSkill(game, actingPlayer, Skill.SNEAKY_GIT)
 	    	|| fInjuryResultDefender.isArmorBroken()
-	    	|| ((UtilCards.hasSkill(game, actingPlayer, Skill.SNEAKY_GIT) && game.getOptions().getOptionValue(GameOption.SNEAKY_GIT_BAN_TO_KO).isEnabled()))) {
+	    	|| ((UtilCards.hasSkill(game, actingPlayer, Skill.SNEAKY_GIT) && game.getOptions().getOptionValue(GameOption.SNEAKY_GIT_BAN_TO_KO).isEnabled())))) {
 	      int[] armorRoll = fInjuryResultDefender.getArmorRoll();
 	      refereeSpotsFoul = (armorRoll[0] == armorRoll[1]);
 	    }

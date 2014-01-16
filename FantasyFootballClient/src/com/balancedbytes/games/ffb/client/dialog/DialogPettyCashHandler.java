@@ -24,7 +24,7 @@ public class DialogPettyCashHandler extends DialogHandler {
 
     if (dialogPettyCashParameter != null) {
     
-      if ((ClientMode.PLAYER == getClient().getMode()) && game.getTeamHome().getId().equals(dialogPettyCashParameter.getTeamId())) {
+      if ((ClientMode.PLAYER == getClient().getMode()) && dialogPettyCashParameter.getTeamId().equals(game.getTeamHome().getId())) {
         setDialog(new DialogPettyCash(getClient(), dialogPettyCashParameter.getTeamValue(), dialogPettyCashParameter.getTreasury(), dialogPettyCashParameter.getOpponentTeamValue()));
         getDialog().showDialog(this);
         

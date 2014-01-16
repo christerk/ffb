@@ -87,6 +87,11 @@ public class UtilInjury {
     	&& (pInjuryType != InjuryType.STAB) && (pInjuryType != InjuryType.CHAINSAW)) {
     	injuryResult.setArmorBroken(true);
     }
+
+    // Blatant Foul breaks armor without roll
+    if ((pInjuryType == InjuryType.FOUL) && UtilCards.isCardActive(game, Card.BLATANT_FOUL)) {
+      injuryResult.setArmorBroken(true);
+    }
     
     if (!injuryResult.isArmorBroken()) {
 	    
