@@ -7,6 +7,6 @@
 <listEntry value="1"/>
 </listAttribute>
 <stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="com.balancedbytes.games.ffb.tools.CollectPlayerIcons"/>
-<stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="D:/Temp/fumbblIcons"/>
+<stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="C:/Temp/fumbblIcons"/>
 <stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="FantasyFootballTools"/>
 </launchConfiguration>

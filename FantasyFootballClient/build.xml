@@ -3,6 +3,7 @@
 
     <property name="src.dir" value="src" />
     <property name="bin.dir" value="bin" />
+    <property name="lib.dir" value="lib" />
     <property name="build.dir" value="build" />
 
 	<target name="prepareTest">
@@ -41,15 +42,25 @@
             <manifest>
               <attribute name="Built-By" value="${user.name}" />
               <attribute name="Main-Class" value="com.balancedbytes.games.ffb.client.FantasyFootballClient" />
+              <attribute name="Permissions" value="all-permissions" />
+              <attribute name="Application-Name" value="Fantasy Football Client" />
+              <attribute name="Codebase" value="www.fumbbl.com fumbbl.com" />
             </manifest>
             <zipfileset dir="${bin.dir}" includes="**/*.class" />
             <zipfileset dir="../FantasyFootballCommon/${bin.dir}" includes="**/*.class" />
+        	<!-- zipgroupfileset dir="${lib.dir}" includes="*.jar" -->
         </jar>
         <jar destfile="${build.dir}/${ant.project.name}Resources.jar">
         	<zipfileset dir="." includes="icons/**, sounds/**" excludes="**/Thumbs.db, **/.cvsignore, icons/alternatives/**" />
         </jar>
     </target>
-	
+
+	<target name="jarFumbblTest" depends="jarCommon">
+        <jar destfile="${build.dir}/${ant.project.name}.jar" update="true">
+        	<zipfileset file="client-fumbbl-test.ini" fullpath="client.ini" />
+        </jar>
+	</target>
+
 	<target name="jarFumbbl" depends="jarCommon">
         <jar destfile="${build.dir}/${ant.project.name}.jar" update="true">
         	<zipfileset file="client-fumbbl.ini" fullpath="client.ini" />
@@ -68,10 +79,13 @@
 		</signjar>
 	</target>
 	
-    <target name="buildFumbbl" depends="jarFumbbl">
+    <target name="buildStandalone" depends="jarStandalone">
    	</target>
 
-    <target name="buildStandalone" depends="jarFumbbl">
+	<target name="buildFumbbl" depends="jarFumbbl">
+   	</target>
+
+    <target name="buildFumbblTest" depends="jarFumbblTest">
    	</target>
 
 </project>

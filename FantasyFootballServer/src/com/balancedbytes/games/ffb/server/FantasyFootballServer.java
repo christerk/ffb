@@ -151,8 +151,8 @@ public class FantasyFootballServer {
         fCommunicationThread = new Thread(fCommunication);
         fCommunicationThread.start();
         
-        String httpPortProperty = getProperty(IServerProperty.HTTP_PORT);
-        String httpDirProperty = getProperty(IServerProperty.HTTP_BASE_DIR);
+        String httpPortProperty = getProperty(IServerProperty.SERVER_PORT);
+        String httpDirProperty = getProperty(IServerProperty.SERVER_BASE_DIR);
         if (StringTool.isProvided(httpPortProperty) && StringTool.isProvided(httpDirProperty)) {
           Server server = new Server(Integer.parseInt(httpPortProperty));
           ServletContextHandler context = new ServletContextHandler();
