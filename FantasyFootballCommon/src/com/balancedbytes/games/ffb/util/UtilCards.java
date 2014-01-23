@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Set;
 
 import com.balancedbytes.games.ffb.Card;
+import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.PlayerState;
 import com.balancedbytes.games.ffb.Skill;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
@@ -122,19 +123,23 @@ public final class UtilCards {
   	}
   	List<Player> allowedPlayers = new ArrayList<Player>();
   	Team ownTeam = pGame.getTurnDataHome().getInducementSet().isAvailable(pCard) ? pGame.getTeamHome() : pGame.getTeamAway();
+  	Team otherTeam = (pGame.getTeamHome() == ownTeam) ? pGame.getTeamAway() : pGame.getTeamHome();
   	for (Player player : pGame.getPlayers()) {
   		PlayerState playerState = pGame.getFieldModel().getPlayerState(player);
+  		FieldCoordinate playerCoordinate = pGame.getFieldModel().getPlayerCoordinate(player);
   		boolean playerInGame = ((playerState != null) && !playerState.isCasualty() && (playerState.getBase() != PlayerState.BANNED) && (playerState.getBase() != PlayerState.MISSING));
-  		boolean playerAllowed;
+  		boolean playerAllowed = (playerInGame && ownTeam.hasPlayer(player));
   		switch (pCard) {
   			case FORCE_SHIELD:
-  				playerAllowed = (playerInGame && ownTeam.hasPlayer(player) && UtilPlayer.hasBall(pGame, player));
+  				playerAllowed &= UtilPlayer.hasBall(pGame, player);
   				break;
   			case RABBITS_FOOT:
-  				playerAllowed = (playerInGame && ownTeam.hasPlayer(player) && !hasSkill(pGame, player, Skill.LONER));
+  				playerAllowed &= !hasSkill(pGame, player, Skill.LONER);
   				break;
+  			case CHOP_BLOCK:
+  			  playerAllowed &= playerState.isActive() && (UtilPlayer.findAdjacentBlockablePlayers(pGame, otherTeam, playerCoordinate).length > 0);
+  			  break;
   			default:
-  				playerAllowed = (playerInGame && ownTeam.hasPlayer(player));
   				break;
   		}
   		if (playerAllowed) {

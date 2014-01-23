@@ -204,7 +204,7 @@ public enum Card implements IEnumWithId, IEnumWithName {
   
   BLATANT_FOUL(40, "Blatant Foul", "Blatant Foul", CardType.DIRTY_TRICK, CardTarget.TURN, false,
    	new InducementPhase[] { InducementPhase.START_OF_OWN_TURN }, InducementDuration.UNTIL_END_OF_TURN,
-   	"Next foul breaks armour automatically");
+   	"Next foul breaks armour automatically"),
   //	Description:
   //  	A player on your team is determined to take out the opposition, no matter what.
   //	Timing:
@@ -214,9 +214,9 @@ public enum Card implements IEnumWithId, IEnumWithName {
   //  	and is considered a non-doubles roll, however the injury roll for the
   //  	foul must be rolled as normal with the player sent off on doubles.
  
-//  CHOP_BLOCK(41, "Chop Block", "Chop Block", CardType.DIRTY_TRICK, CardTarget.OWN_PLAYER, false,
-//		new InducementPhase[] { InducementPhase.END_OF_OWN_TURN }, InducementDuration.UNTIL_END_OF_TURN,
-//		"Player drops prone and stuns an adjacent player"),
+  CHOP_BLOCK(41, "Chop Block", "Chop Block", CardType.DIRTY_TRICK, CardTarget.OWN_PLAYER, false,
+		new InducementPhase[] { InducementPhase.END_OF_OWN_TURN }, InducementDuration.UNTIL_END_OF_TURN,
+		"Player drops prone and stuns an adjacent player");
   //	Description:
   //  	A player throws a dirty block on the opponent.
   //	Timing:

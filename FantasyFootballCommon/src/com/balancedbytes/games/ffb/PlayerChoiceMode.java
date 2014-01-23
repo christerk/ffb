@@ -12,7 +12,8 @@ public enum PlayerChoiceMode implements IEnumWithId, IEnumWithName {
   DIVING_TACKLE(3, "divingTackle"),
   FEED(4, "feed"),
   DIVING_CATCH(5, "divingCatch"),
-  CARD(6, "card");
+  CARD(6, "card"),
+  BLOCK(7, "block");
   
   private int fId;
   private String fName;
@@ -50,6 +51,10 @@ public enum PlayerChoiceMode implements IEnumWithId, IEnumWithName {
         break;
       case CARD:
       	header.append("Select a player to play this card on");
+      	break;
+      case BLOCK:
+        header.append("Select a player to block");
+        break;
       default:
       	break;
     }
@@ -77,6 +82,9 @@ public enum PlayerChoiceMode implements IEnumWithId, IEnumWithName {
       case CARD:
       	title.append("Play Card");
       	break;
+      case BLOCK:
+        title.append("Block");
+        break;
       default:
       	break;
     }
@@ -104,6 +112,9 @@ public enum PlayerChoiceMode implements IEnumWithId, IEnumWithName {
       case CARD:
       	message.append("Waiting for coach to play card on player.");
       	break;
+      case BLOCK:
+        message.append("Waiting for coach to choose player to block.");
+        break;
       default:
       	break;
     }

@@ -2,7 +2,9 @@ package com.balancedbytes.games.ffb.server.step.phase.inducement;
 
 import com.balancedbytes.games.ffb.Card;
 import com.balancedbytes.games.ffb.CardFactory;
+import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.PlayerChoiceMode;
+import com.balancedbytes.games.ffb.PlayerState;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
 import com.balancedbytes.games.ffb.dialog.DialogPlayerChoiceParameter;
@@ -27,6 +29,7 @@ import com.balancedbytes.games.ffb.server.step.StepParameterSet;
 import com.balancedbytes.games.ffb.server.util.UtilDialog;
 import com.balancedbytes.games.ffb.util.StringTool;
 import com.balancedbytes.games.ffb.util.UtilCards;
+import com.balancedbytes.games.ffb.util.UtilPlayer;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
@@ -44,6 +47,7 @@ public final class StepInitCard extends AbstractStep {
   private boolean fHomeTeam;
 
   private transient String fPlayerId;
+  private transient String fOpponentId;
 	private transient boolean fEndCardPlaying;
 	
 	public StepInitCard(GameState pGameState) {
@@ -90,9 +94,13 @@ public final class StepInitCard extends AbstractStep {
 			switch (pReceivedCommand.getId()) {
 	      case CLIENT_PLAYER_CHOICE:
 	      	ClientCommandPlayerChoice playerChoiceCommand = (ClientCommandPlayerChoice) pReceivedCommand.getCommand();
-	      	fPlayerId = playerChoiceCommand.getPlayerId();
-	      	if (!StringTool.isProvided(fPlayerId)) {
-	      		fEndCardPlaying = true;
+	      	if (PlayerChoiceMode.BLOCK == playerChoiceCommand.getPlayerChoiceMode()) {
+	      	  fOpponentId = playerChoiceCommand.getPlayerId();
+	      	} else {
+  	      	fPlayerId = playerChoiceCommand.getPlayerId();
+  	      	if (!StringTool.isProvided(fPlayerId)) {
+  	      		fEndCardPlaying = true;
+  	      	}
 	      	}
           commandStatus = StepCommandStatus.EXECUTE_STEP;
 	        break;
@@ -109,24 +117,71 @@ public final class StepInitCard extends AbstractStep {
   private void executeStep() {
   	UtilDialog.hideDialog(getGameState());
   	Game game = getGameState().getGame();
-		InducementSet inducementSet = fHomeTeam ? game.getTurnDataHome().getInducementSet() : game.getTurnDataAway().getInducementSet();
-  	Team playingTeam = fHomeTeam ? game.getTeamHome() : game.getTeamAway();
+  	Team ownTeam = fHomeTeam ? game.getTeamHome() : game.getTeamAway();
 		if (fEndCardPlaying) {
 			getResult().setNextAction(StepAction.NEXT_STEP);
 		} else if (StringTool.isProvided(fPlayerId)) {
-			inducementSet.activateCard(fCard);
-			game.getFieldModel().addCard(game.getPlayerById(fPlayerId), fCard);
-			getResult().addReport(new ReportPlayCard(playingTeam.getId(), fCard, fPlayerId));
-			getResult().setNextAction(StepAction.NEXT_STEP);
+			playCardOnPlayer();
 		} else if (fCard.getTarget().isPlayedOnPlayer()) {
 			// step initInducement has already checked if this card can be played
 			Player[] allowedPlayers = UtilCards.findAllowedPlayersForCard(game, fCard);
-			game.setDialogParameter(new DialogPlayerChoiceParameter(playingTeam.getId(), PlayerChoiceMode.CARD, allowedPlayers, null, 1));
+			game.setDialogParameter(new DialogPlayerChoiceParameter(ownTeam.getId(), PlayerChoiceMode.CARD, allowedPlayers, null, 1));
 		} else {
-			inducementSet.activateCard(fCard);
-			getResult().addReport(new ReportPlayCard(playingTeam.getId(), fCard));
+	    activateCard(null);
 			getResult().setNextAction(StepAction.NEXT_STEP);
 		}
+  }
+  
+  private void playCardOnPlayer() {
+    Game game = getGameState().getGame();
+    Player player = game.getPlayerById(fPlayerId);    
+    if (player == null) {
+      return;
+    }
+    PlayerState playerState = game.getFieldModel().getPlayerState(player);
+    FieldCoordinate playerCoordinate = game.getFieldModel().getPlayerCoordinate(player);
+    Team ownTeam = fHomeTeam ? game.getTeamHome() : game.getTeamAway();
+    Team otherTeam = fHomeTeam ? game.getTeamAway() : game.getTeamHome();
+    boolean doNextStep = true;
+    switch (fCard) {
+      case CHOP_BLOCK:
+        if (!StringTool.isProvided(fOpponentId)) {
+          doNextStep = false;
+          Player[] blockablePlayers = UtilPlayer.findAdjacentBlockablePlayers(game, otherTeam, playerCoordinate);
+          if (blockablePlayers.length == 1) {
+            fOpponentId = blockablePlayers[0].getId();
+          } else {
+            game.setDialogParameter(new DialogPlayerChoiceParameter(ownTeam.getId(), PlayerChoiceMode.BLOCK, blockablePlayers, null, 1));
+          }
+          activateCard(fPlayerId);
+        }
+        if (StringTool.isProvided(fOpponentId)) {
+          doNextStep = true;
+          game.getFieldModel().setPlayerState(player, playerState.changeBase(PlayerState.PRONE).changeActive(false));
+          Player opponent = game.getPlayerById(fOpponentId);
+          PlayerState opponentState = game.getFieldModel().getPlayerState(opponent);
+          game.getFieldModel().setPlayerState(opponent, opponentState.changeBase(PlayerState.STUNNED).changeActive(false));
+        }
+        break;
+      default:
+        break;
+    }
+    if (doNextStep) {
+      getResult().setNextAction(StepAction.NEXT_STEP);
+    }
+  }
+  
+  private void activateCard(String pPlayerId) {
+    Game game = getGameState().getGame();
+    Team ownTeam = fHomeTeam ? game.getTeamHome() : game.getTeamAway();
+    InducementSet inducementSet = fHomeTeam ? game.getTurnDataHome().getInducementSet() : game.getTurnDataAway().getInducementSet();
+    inducementSet.activateCard(fCard);
+    if (StringTool.isProvided(pPlayerId)) {
+      game.getFieldModel().addCard(game.getPlayerById(pPlayerId), fCard);    
+      getResult().addReport(new ReportPlayCard(ownTeam.getId(), fCard, pPlayerId));
+    } else {
+      getResult().addReport(new ReportPlayCard(ownTeam.getId(), fCard));
+    }
   }
   
   // ByteArray serialization
