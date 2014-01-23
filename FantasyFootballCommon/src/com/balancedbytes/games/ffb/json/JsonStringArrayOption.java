@@ -31,7 +31,10 @@ public class JsonStringArrayOption extends JsonAbstractOption {
     }
     String[] stringArray = new String[pJsonArray.size()];
     for (int i = 0; i < stringArray.length; i++) {
-      stringArray[i] = pJsonArray.get(i).asString();
+      JsonValue jsonValue = pJsonArray.get(i);
+      if ((jsonValue != null) && !jsonValue.isNull()) {
+        stringArray[i] = jsonValue.asString();
+      }
     }
     return stringArray;
   }

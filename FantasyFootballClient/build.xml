@@ -54,11 +54,22 @@
         	<zipfileset dir="." includes="icons/**, sounds/**" excludes="**/Thumbs.db, **/.cvsignore, icons/alternatives/**" />
         </jar>
     </target>
+	
+	<!--
+	keytool -genkeypair -dname "cn=Kalimar, o=fumbbl.com"
+      -alias Kalimar -keypass dragon -keystore keystore.jks -storepass dragon -validity 180
+	-->
 
 	<target name="jarFumbblTest" depends="jarCommon">
         <jar destfile="${build.dir}/${ant.project.name}.jar" update="true">
         	<zipfileset file="client-fumbbl-test.ini" fullpath="client.ini" />
         </jar>
+		<copy todir="${build.dir}">
+			<fileset dir="${lib.dir}" includes="*.jar" />
+		</copy>
+		<signjar keystore="../FantasyFootballCommon/keystore.jks" storepass="dragon" alias="Kalimar" keypass="dragon">
+			<fileset dir="${build.dir}" includes="*.jar" />
+		</signjar>
 	</target>
 
 	<target name="jarFumbbl" depends="jarCommon">
@@ -73,11 +84,13 @@
         </jar>
 	</target>
 	
+	<!--
 	<target name="sign" depends="jarCommon">
 		<signjar keystore="../FantasyFootballCommon/.keystore" storepass="dragon" alias="www.balancedbytes.com" keypass="dragon">
 			<fileset dir="${build.dir}" includes="*.jar" />
 		</signjar>
 	</target>
+	-->
 	
     <target name="buildStandalone" depends="jarStandalone">
    	</target>

@@ -153,8 +153,7 @@ public class DbInitializer {
     sql.append("CREATE TABLE ").append(IDbTableUserSettings.TABLE_NAME).append("(");
     sql.append(IDbTableUserSettings.COLUMN_COACH).append(" VARCHAR(40) NOT NULL,");  // 1
     sql.append(IDbTableUserSettings.COLUMN_NAME).append(" VARCHAR(40) NOT NULL,");   // 2
-    sql.append(IDbTableUserSettings.COLUMN_VALUE).append(" VARCHAR(40),");           // 3
-    sql.append("PRIMARY KEY(").append(IDbTableUserSettings.COLUMN_COACH).append(")");
+    sql.append(IDbTableUserSettings.COLUMN_VALUE).append(" VARCHAR(40)");           // 3
   	sql.append(") ENGINE=InnoDB DEFAULT CHARSET=utf8;");
     return pStatement.executeUpdate(sql.toString());
   }
