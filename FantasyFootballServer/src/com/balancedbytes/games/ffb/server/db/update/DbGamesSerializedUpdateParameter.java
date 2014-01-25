@@ -18,11 +18,13 @@ public class DbGamesSerializedUpdateParameter extends DefaultDbUpdateParameter {
 
   private long fId;
   private JsonObject fJsonObject;
+  private GameState fGameState;
   
   public DbGamesSerializedUpdateParameter(GameState pGameState) {
-  	if (pGameState != null) {
-      fId = pGameState.getId();
-      fJsonObject = pGameState.toJsonValue();
+    fGameState = pGameState;
+  	if (fGameState != null) {
+      fId = fGameState.getId();
+      fJsonObject = fGameState.toJsonValue();
     }
   }
   
@@ -32,6 +34,10 @@ public class DbGamesSerializedUpdateParameter extends DefaultDbUpdateParameter {
   
   public int length() {
     return fJsonObject.toString().length();
+  }
+  
+  public GameState getGameState() {
+    return fGameState;
   }
   
   public byte[] deflate() throws IOException {

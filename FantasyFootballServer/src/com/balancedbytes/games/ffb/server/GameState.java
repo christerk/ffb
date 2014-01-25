@@ -32,232 +32,232 @@ import com.eclipsesource.json.JsonValue;
  */
 public class GameState implements IModelChangeObserver, IByteArraySerializable, IJsonSerializable {
 
-	private Game fGame;
-	private GameLog fGameLog;
-	private GameStatus fStatus;
-	private StepStack fStepStack;
-	private IStep fCurrentStep;
-	private boolean fSwappedOut;
+  private Game fGame;
+  private GameLog fGameLog;
+  private GameStatus fStatus;
+  private StepStack fStepStack;
+  private IStep fCurrentStep;
+  private boolean fSwappedOut;
 
-	private transient FantasyFootballServer fServer;
-	private transient DiceRoller fDiceRoller;
-	private transient IdGenerator fCommandNrGenerator;
-	private transient long fTurnTimeStarted;
-	private transient ModelChangeList fChangeList;
-	private transient Map<String, Long> fSpectatorCooldownTime;
-	
-	public GameState(FantasyFootballServer pServer) {
-		fServer = pServer;
-		fGameLog = new GameLog(this);
-		fDiceRoller = new DiceRoller(this);
-		fSpectatorCooldownTime = new HashMap<String, Long>();
-		initCommandNrGenerator(0);
-		fStepStack = new StepStack(this);
-		fChangeList = new ModelChangeList();
-		setGame(new Game());
-	}
-  
-  public void setServer(FantasyFootballServer pServer) {
-	  fServer = pServer;
+  private transient FantasyFootballServer fServer;
+  private transient DiceRoller fDiceRoller;
+  private transient IdGenerator fCommandNrGenerator;
+  private transient long fTurnTimeStarted;
+  private transient ModelChangeList fChangeList;
+  private transient Map<String, Long> fSpectatorCooldownTime;
+
+  public GameState(FantasyFootballServer pServer) {
+    fServer = pServer;
+    fGameLog = new GameLog(this);
+    fDiceRoller = new DiceRoller(this);
+    fSpectatorCooldownTime = new HashMap<String, Long>();
+    initCommandNrGenerator(0);
+    fStepStack = new StepStack(this);
+    fChangeList = new ModelChangeList();
+    setGame(new Game());
   }
 
-	public FantasyFootballServer getServer() {
-		return fServer;
-	}
+  public void setServer(FantasyFootballServer pServer) {
+    fServer = pServer;
+  }
 
-	public void setGame(Game pGame) {
-		fGame = pGame;
-		if (fGame != null) {
-		  fGame.addObserver(this);
-		}
-	}
+  public FantasyFootballServer getServer() {
+    return fServer;
+  }
 
-	public Game getGame() {
-		return fGame;
-	}
+  public void setGame(Game pGame) {
+    fGame = pGame;
+    if (fGame != null) {
+      fGame.addObserver(this);
+    }
+  }
 
-	public long getId() {
-		return getGame().getId();
-	}
+  public Game getGame() {
+    return fGame;
+  }
 
-	public ModelChangeList fetchChanges() {
-	  ModelChangeList changeList = fChangeList;
-	  fChangeList = new ModelChangeList();
+  public long getId() {
+    return getGame().getId();
+  }
+
+  public ModelChangeList fetchChanges() {
+    ModelChangeList changeList = fChangeList;
+    fChangeList = new ModelChangeList();
     return changeList;
   }
-	
-	public void update(ModelChange pChange) {
-	  fChangeList.add(pChange);
-	}
 
-	public DiceRoller getDiceRoller() {
-		return fDiceRoller;
-	}
+  public void update(ModelChange pChange) {
+    fChangeList.add(pChange);
+  }
 
-	public int generateCommandNr() {
-		return (int) fCommandNrGenerator.generateId();
-	}
+  public DiceRoller getDiceRoller() {
+    return fDiceRoller;
+  }
 
-	public int lastCommandNr() {
-		return (int) fCommandNrGenerator.lastId();
-	}
+  public int generateCommandNr() {
+    return (int) fCommandNrGenerator.generateId();
+  }
 
-	public void initCommandNrGenerator(long pLastId) {
-		fCommandNrGenerator = new IdGenerator(pLastId);
-	}
+  public int lastCommandNr() {
+    return (int) fCommandNrGenerator.lastId();
+  }
 
-	public GameLog getGameLog() {
-		return fGameLog;
-	}
+  public void initCommandNrGenerator(long pLastId) {
+    fCommandNrGenerator = new IdGenerator(pLastId);
+  }
 
-	public long getTurnTimeStarted() {
-		return fTurnTimeStarted;
-	}	
+  public GameLog getGameLog() {
+    return fGameLog;
+  }
 
-	public void setTurnTimeStarted(long pTurnTimeStarted) {
-		fTurnTimeStarted = pTurnTimeStarted;
-	}
+  public long getTurnTimeStarted() {
+    return fTurnTimeStarted;
+  }
 
-	public GameStatus getStatus() {
-		return fStatus;
-	}
+  public void setTurnTimeStarted(long pTurnTimeStarted) {
+    fTurnTimeStarted = pTurnTimeStarted;
+  }
 
-	public void setStatus(GameStatus pStatus) {
-		fStatus = pStatus;
-	}
-	
-	public void setSwappedOut(boolean pSwappedOut) {
+  public GameStatus getStatus() {
+    return fStatus;
+  }
+
+  public void setStatus(GameStatus pStatus) {
+    fStatus = pStatus;
+  }
+
+  public void setSwappedOut(boolean pSwappedOut) {
     fSwappedOut = pSwappedOut;
   }
-	
-	public boolean isSwappedOut() {
+
+  public boolean isSwappedOut() {
     return fSwappedOut;
   }
 
-	public long getSpectatorCooldownTime(String pCoach) {
-		return (fSpectatorCooldownTime.get(pCoach) != null) ? fSpectatorCooldownTime.get(pCoach) : 0;
-	}
+  public long getSpectatorCooldownTime(String pCoach) {
+    return (fSpectatorCooldownTime.get(pCoach) != null) ? fSpectatorCooldownTime.get(pCoach) : 0;
+  }
 
-	public void putSpectatorCooldownTime(String pCoach, long pTimestamp) {
-		fSpectatorCooldownTime.put(pCoach, pTimestamp);
-	}
+  public void putSpectatorCooldownTime(String pCoach, long pTimestamp) {
+    fSpectatorCooldownTime.put(pCoach, pTimestamp);
+  }
 
-	public StepStack getStepStack() {
-		return fStepStack;
-	}
-	
-	public IStep getCurrentStep() {
-		return fCurrentStep;
-	}
-	
-	public void setCurrentStep(IStep pCurrentStep) {
-		fCurrentStep = pCurrentStep;
-	}
+  public StepStack getStepStack() {
+    return fStepStack;
+  }
 
-	public void handleCommand(ReceivedCommand pReceivedCommand) {
-		if (pReceivedCommand == null) {
-			return;
-		}
-		if (fCurrentStep == null) {
-			findNextStep(null);
-		}
-		if (fCurrentStep != null) {
-			fCurrentStep.handleCommand(pReceivedCommand);
-			UtilGame.syncGameModel(fCurrentStep);
-		}
-		progressStepStack(pReceivedCommand);
-	}
-	
-	public void pushCurrentStepOnStack() {
-		if (fCurrentStep != null) {
-			getStepStack().push(fCurrentStep);
-		}
-	}
-	
-	public void findNextStep(ReceivedCommand pReceivedCommand) {
-		fCurrentStep = getStepStack().pop();
-		if (fCurrentStep != null) {
-			getServer().getDebugLog().logCurrentStep(IServerLogLevel.DEBUG, this);
-			if (pReceivedCommand == null) {
-				fCurrentStep.start();
-				UtilGame.syncGameModel(fCurrentStep);
-			}
-			progressStepStack(pReceivedCommand);
-		}
-	}
+  public IStep getCurrentStep() {
+    return fCurrentStep;
+  }
 
-	private void progressStepStack(ReceivedCommand pReceivedCommand) {
-		if (fCurrentStep != null) {
-			StepResult stepResult = fCurrentStep.getResult();
-			switch (stepResult.getNextAction()) {
-				case NEXT_STEP:
-					handleStepResultNextStep(null);
-					break;
-				case NEXT_STEP_AND_REPEAT:
-					handleStepResultNextStep(pReceivedCommand);
-					break;
-				case GOTO_LABEL:
-					handleStepResultGotoLabel((String) stepResult.getNextActionParameter(), null);
-					break;
-				case GOTO_LABEL_AND_REPEAT:
-					handleStepResultGotoLabel((String) stepResult.getNextActionParameter(), pReceivedCommand);
-					break;
-				default:
-					break;
-			}
-		}
-	}
-	
-	private void handleStepResultNextStep(ReceivedCommand pReceivedCommand) {
-		findNextStep(pReceivedCommand);
-		if (pReceivedCommand != null) {
-			handleCommand(pReceivedCommand);
-		}
-	}
-	
-	private void handleStepResultGotoLabel(String pGotoLabel, ReceivedCommand pReceivedCommand) {
-		if (pGotoLabel == null) {
-			throw new StepException("No goto label set.");
-		}
-		fCurrentStep = null;
-		IStep nextStep = getStepStack().pop();
-		while (nextStep != null) {
-			if (pGotoLabel.equals(nextStep.getLabel())) {
-				getStepStack().push(nextStep);  // push back onto stack
-				break;
-			} else {
-				nextStep = getStepStack().pop();
-			}
-		}
-		if (nextStep == null) {
-			throw new StepException("Goto unknown label " + pGotoLabel);
-		}
-		findNextStep(pReceivedCommand);
-		if (pReceivedCommand != null) {
-			handleCommand(pReceivedCommand);
-		}
-	}
-	
+  public void setCurrentStep(IStep pCurrentStep) {
+    fCurrentStep = pCurrentStep;
+  }
+
+  public void handleCommand(ReceivedCommand pReceivedCommand) {
+    if (pReceivedCommand == null) {
+      return;
+    }
+    if (fCurrentStep == null) {
+      findNextStep(null);
+    }
+    if (fCurrentStep != null) {
+      fCurrentStep.handleCommand(pReceivedCommand);
+      UtilGame.syncGameModel(fCurrentStep);
+    }
+    progressStepStack(pReceivedCommand);
+  }
+
+  public void pushCurrentStepOnStack() {
+    if (fCurrentStep != null) {
+      getStepStack().push(fCurrentStep);
+    }
+  }
+
+  public void findNextStep(ReceivedCommand pReceivedCommand) {
+    fCurrentStep = getStepStack().pop();
+    if (fCurrentStep != null) {
+      getServer().getDebugLog().logCurrentStep(IServerLogLevel.DEBUG, this);
+      if (pReceivedCommand == null) {
+        fCurrentStep.start();
+        UtilGame.syncGameModel(fCurrentStep);
+      }
+      progressStepStack(pReceivedCommand);
+    }
+  }
+
+  private void progressStepStack(ReceivedCommand pReceivedCommand) {
+    if (fCurrentStep != null) {
+      StepResult stepResult = fCurrentStep.getResult();
+      switch (stepResult.getNextAction()) {
+      case NEXT_STEP:
+        handleStepResultNextStep(null);
+        break;
+      case NEXT_STEP_AND_REPEAT:
+        handleStepResultNextStep(pReceivedCommand);
+        break;
+      case GOTO_LABEL:
+        handleStepResultGotoLabel((String) stepResult.getNextActionParameter(), null);
+        break;
+      case GOTO_LABEL_AND_REPEAT:
+        handleStepResultGotoLabel((String) stepResult.getNextActionParameter(), pReceivedCommand);
+        break;
+      default:
+        break;
+      }
+    }
+  }
+
+  private void handleStepResultNextStep(ReceivedCommand pReceivedCommand) {
+    findNextStep(pReceivedCommand);
+    if (pReceivedCommand != null) {
+      handleCommand(pReceivedCommand);
+    }
+  }
+
+  private void handleStepResultGotoLabel(String pGotoLabel, ReceivedCommand pReceivedCommand) {
+    if (pGotoLabel == null) {
+      throw new StepException("No goto label set.");
+    }
+    fCurrentStep = null;
+    IStep nextStep = getStepStack().pop();
+    while (nextStep != null) {
+      if (pGotoLabel.equals(nextStep.getLabel())) {
+        getStepStack().push(nextStep); // push back onto stack
+        break;
+      } else {
+        nextStep = getStepStack().pop();
+      }
+    }
+    if (nextStep == null) {
+      throw new StepException("Goto unknown label " + pGotoLabel);
+    }
+    findNextStep(pReceivedCommand);
+    if (pReceivedCommand != null) {
+      handleCommand(pReceivedCommand);
+    }
+  }
+
   // ByteArray serialization
-  
+
   public int getByteArraySerializationVersion() {
     return 1;
   }
-  
+
   public void addTo(ByteList pByteList) {
     pByteList.addSmallInt(getByteArraySerializationVersion());
     pByteList.addByte((byte) ((getStatus() != null) ? getStatus().getId() : 0));
     if (fGame != null) {
-    	pByteList.addBoolean(true);
-    	fGame.addTo(pByteList);
+      pByteList.addBoolean(true);
+      fGame.addTo(pByteList);
     } else {
-    	pByteList.addBoolean(false);
+      pByteList.addBoolean(false);
     }
     if (fCurrentStep != null) {
-    	pByteList.addBoolean(true);
-    	fCurrentStep.addTo(pByteList);
+      pByteList.addBoolean(true);
+      fCurrentStep.addTo(pByteList);
     } else {
-    	pByteList.addBoolean(false);
+      pByteList.addBoolean(false);
     }
     fStepStack.addTo(pByteList);
     fGameLog.addTo(pByteList);
@@ -267,31 +267,31 @@ public class GameState implements IModelChangeObserver, IByteArraySerializable, 
     int byteArraySerializationVersion = pByteArray.getSmallInt();
     fStatus = new GameStatusFactory().forId(pByteArray.getByte());
     if (pByteArray.getBoolean()) {
-    	fGame = new Game();
-    	fGame.initFrom(pByteArray);
+      fGame = new Game();
+      fGame.initFrom(pByteArray);
     } else {
-    	fGame = null;
+      fGame = null;
     }
     if (pByteArray.getBoolean()) {
-    	fCurrentStep = initStepFrom(pByteArray);
+      fCurrentStep = initStepFrom(pByteArray);
     } else {
-    	fCurrentStep = null;
+      fCurrentStep = null;
     }
     fStepStack.initFrom(pByteArray);
     fGameLog.initFrom(pByteArray);
     initCommandNrGenerator(fGameLog.findMaxCommandNr());
     return byteArraySerializationVersion;
   }
-  
+
   private IStep initStepFrom(ByteArray pByteArray) {
-		StepId stepId = new StepIdFactory().forId(pByteArray.getSmallInt(pByteArray.getPosition()));
-		IStep step = new StepFactory(this).forStepId(stepId);
-		step.initFrom(pByteArray);
-		return step;
+    StepId stepId = new StepIdFactory().forId(pByteArray.getSmallInt(pByteArray.getPosition()));
+    IStep step = new StepFactory(this).forStepId(stepId);
+    step.initFrom(pByteArray);
+    return step;
   }
-  
+
   // JSON serialization
-  
+
   public JsonObject toJsonValue() {
     JsonObject jsonObject = new JsonObject();
     IServerJsonOption.GAME_STATUS.addTo(jsonObject, fStatus);
@@ -306,7 +306,7 @@ public class GameState implements IModelChangeObserver, IByteArraySerializable, 
     }
     return jsonObject;
   }
-  
+
   public GameState initFrom(JsonValue pJsonValue) {
     JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
     fStatus = (GameStatus) IServerJsonOption.GAME_STATUS.getFrom(jsonObject);
@@ -332,6 +332,6 @@ public class GameState implements IModelChangeObserver, IByteArraySerializable, 
       setGame(new Game().initFrom(gameObject));
     }
     return this;
-  } 
+  }
 
 }

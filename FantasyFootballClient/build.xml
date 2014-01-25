@@ -43,7 +43,7 @@
 		</path>
 		<property name="myClasspath" refid="classpath" />
 		<echo message="Classpath = ${myClasspath}" />
-		<javac srcdir="${src.dir}" destdir="${bin.dir}" target="1.5" source="1.5" debug="on">
+		<javac srcdir="${src.dir}" destdir="${bin.dir}" target="1.7" source="1.7" debug="on">
 			<classpath refid="classpath" />
 		</javac>
 	</target>
@@ -79,9 +79,11 @@
 		<copy todir="${build.dir}">
 			<fileset dir="${lib.dir}" includes="*.jar" />
 		</copy>
+		<!--
 		<signjar keystore="../FantasyFootballCommon/keystore.jks" storepass="dragon" alias="Kalimar" keypass="dragon">
 			<fileset dir="${build.dir}" includes="*.jar" />
 		</signjar>
+		-->
 	</target>
 
 	<target name="jarFumbbl" depends="jarCommon">

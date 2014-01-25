@@ -12,9 +12,11 @@ import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.server.FantasyFootballServer;
 import com.balancedbytes.games.ffb.server.GameCacheMode;
 import com.balancedbytes.games.ffb.server.GameState;
+import com.balancedbytes.games.ffb.server.IServerLogLevel;
 import com.balancedbytes.games.ffb.server.db.DbStatement;
 import com.balancedbytes.games.ffb.server.db.DbStatementId;
 import com.balancedbytes.games.ffb.server.db.IDbTableGamesSerialized;
+import com.balancedbytes.games.ffb.util.StringTool;
 import com.eclipsesource.json.JsonValue;
 
 /**
@@ -50,12 +52,14 @@ public class DbGamesSerializedQuery extends DbStatement {
       fStatement.setLong(1, pGameStateId);
       ResultSet resultSet = fStatement.executeQuery();
       while (resultSet.next()) {
-      	Blob blob = resultSet.getBlob(1);
-      	JsonValue jsonValue = UtilJson.inflate(blob.getBytes(1, (int) blob.length()));
-      	gameState = new GameState(pServer).initFrom(jsonValue);
-      	// put the current step on stack to properly handle the first call to findNextStep()
-      	gameState.pushCurrentStepOnStack();
-    		pServer.getGameCache().add(gameState, GameCacheMode.LOAD_GAME);
+        Blob blob = resultSet.getBlob(1);
+        JsonValue jsonValue = UtilJson.inflate(blob.getBytes(1, (int) blob.length()));
+        gameState = new GameState(pServer).initFrom(jsonValue);
+        if (getServer().getDebugLog().isLogging(IServerLogLevel.TRACE)) {
+          String currentStepName = (gameState.getCurrentStep() != null) ? gameState.getCurrentStep().getId().getName() : "null";
+          getServer().getDebugLog().log(IServerLogLevel.TRACE, StringTool.bind("loaded CurrentStep $1", currentStepName));
+        }
+        pServer.getGameCache().add(gameState, GameCacheMode.LOAD_GAME);
       }
       resultSet.close();
     } catch (IOException pIOException) {
