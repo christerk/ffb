@@ -23,7 +23,7 @@ import com.balancedbytes.games.ffb.model.Team;
 /**
  * 
  * @author Kalimar
- * @author Kristian Widén
+ * @author Kristian WidÃ©n
  */
 public class UtilPlayer {
 

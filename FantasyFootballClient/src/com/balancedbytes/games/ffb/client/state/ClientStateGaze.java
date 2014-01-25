@@ -14,7 +14,7 @@ import com.balancedbytes.games.ffb.model.Team;
 import com.balancedbytes.games.ffb.util.UtilPlayer;
 
 /**
- * @author Kristian Widén
+ * @author Kristian WidÃ©n
  * @author Kalimar
  */
 public class ClientStateGaze extends ClientStateMove {

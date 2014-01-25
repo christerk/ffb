@@ -182,7 +182,7 @@ public final class StepInitKickoff extends AbstractStep {
   }
   
 	//	In the rare event that one team has no players to set up after
-	//	KO’d rolls, both teams' turn markers are moved forward along
+	//	KOÂ’d rolls, both teams' turn markers are moved forward along
 	//	the turn track two spaces and if one team could field at least one
 	//	player then that team is awarded a touchdown (however no
 	//	player receives Star Player points (see page 25) for this.) If this
