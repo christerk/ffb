@@ -7,7 +7,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * Hilfsklasse für String-Operationen.
+ * Hilfsklasse fÃ¼r String-Operationen.
  */
 public class StringTool {
   

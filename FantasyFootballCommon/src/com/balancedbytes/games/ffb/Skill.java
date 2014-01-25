@@ -14,7 +14,7 @@ public enum Skill implements IEnumWithId, IEnumWithName {
   //  The player may add 1 to the D6 roll when he passes.
 
   ALWAYS_HUNGRY(2, "Always Hungry", SkillCategory.EXTRAORDINARY),
-  //  The player is always ravenously hungry – and what’s more they’ll eat
+  //  The player is always ravenously hungry Â– and whatÂ’s more theyÂ’ll eat
   //  absolutely anything! Should the player ever use the Throw Team-Mate
   //  skill, roll a D6 after he has finished moving, but before he throws his
   //  team-mate. On a 2+ continue with the throw. On a roll of 1 he attempts to
@@ -44,13 +44,13 @@ public enum Skill implements IEnumWithId, IEnumWithName {
   //  they push back another player, and will then carry on with their move as
   //  described above. If the player is ever Knocked Down or Placed Prone
   //  roll immediately for injury (no Armour roll is required). Stunned results for
-  //  any Injury rolls are always treated as KO’d. A Ball & Chain player may
+  //  any Injury rolls are always treated as KOÂ’d. A Ball & Chain player may
   //  use the Grab skill (as if a Block Action was being used) with his blocks (if
   //  he has learned it!). A Ball & Chain player may never use the Diving
   //  Tackle, Frenzy, Kick-Off Return, Pass Block or Shadowing skills.
 
   BIG_HAND(4, "Big Hand", SkillCategory.MUTATION),
-  //  One of the player’s hands has grown monstrously large, yet remained
+  //  One of the playerÂ’s hands has grown monstrously large, yet remained
   //  completely functional. The player ignores modifier(s) for enemy tackle
   //  zones or Pouring Rain weather when he attempts to pick up the ball.
 
@@ -77,7 +77,7 @@ public enum Skill implements IEnumWithId, IEnumWithName {
   //  team suffers a turnover. If he was holding the ball it bounces from the
   //  square he occupied when he was removed, and he will not score a
   //  Touchdown (even if he gets into the End Zone while holding the ball
-  //  before being removed). If the Vampire is KO’d or suffers a Casualty
+  //  before being removed). If the Vampire is KOÂ’d or suffers a Casualty
   //  before biting a Thrall, then he should be placed in the appropriate box of
   //  the Dug Out instead of being placed in the Reserves box. Note that the
   //  Vampire is allowed to pick up the ball or do anything else they could
@@ -98,8 +98,8 @@ public enum Skill implements IEnumWithId, IEnumWithName {
   //  place out of the normal sequence of play. A player holding the ball can
   //  catch or intercept and throw a bomb. The bomb explodes when it lands
   //  in an empty square or an opportunity to catch the bomb fails or is
-  //  declined (i.e., bombs don’t ‘bounce’). If the bomb is fumbled it explodes
-  //  in the bomb thrower’s square. If a bomb lands in the crowd, it explodes
+  //  declined (i.e., bombs donÂ’t Â‘bounceÂ’). If the bomb is fumbled it explodes
+  //  in the bomb throwerÂ’s square. If a bomb lands in the crowd, it explodes
   //  with no effect. When the bomb finally does explode any player in the
   //  same square is Knocked Down, and players in adjacent squares are
   //  Knocked Down on a roll of 4+. Players can be hit by a bomb and treated
@@ -111,8 +111,8 @@ public enum Skill implements IEnumWithId, IEnumWithName {
   //  The player is not noted for his intelligence. Because of this you must roll
   //  a D6 immediately after declaring an Action for the player, but before
   //  taking the Action. On a roll of 1 they stand around trying to remember
-  //  what it is they’re meant to be doing. The player can’t do anything for the
-  //  turn, and the player’s team loses the declared Action for the turn. (So if a
+  //  what it is theyÂ’re meant to be doing. The player canÂ’t do anything for the
+  //  turn, and the playerÂ’s team loses the declared Action for the turn. (So if a
   //  Bone-head player declares a Blitz Action and rolls a 1, then the team
   //  cannot declare another Blitz Action that turn.) The player loses his tackle
   //  zones and may not catch, intercept or pass, assist another player on a
@@ -134,11 +134,11 @@ public enum Skill implements IEnumWithId, IEnumWithName {
   //  A player armed with a chainsaw must attack with it instead of making a
   //  block as part of a Block or Blitz Action. When the chainsaw is used to
   //  make an attack, roll a D6 instead of the Block dice. On a roll of 2 or more
-  //  the chainsaw hits the opposing player, but on a roll of 1 it ‘kicks back’
+  //  the chainsaw hits the opposing player, but on a roll of 1 it Â‘kicks backÂ’
   //  and hits the wielder instead! Make an Armour roll for the player hit by the
-  //  chainsaw, adding 3 to the score. If the roll beats the victim’s Armour
-  //  value then the victim is Knocked Down and injured – roll on the Injury
-  //  table. If the roll fails to beat the victim’s Armour value then the attack has
+  //  chainsaw, adding 3 to the score. If the roll beats the victimÂ’s Armour
+  //  value then the victim is Knocked Down and injured Â– roll on the Injury
+  //  table. If the roll fails to beat the victimÂ’s Armour value then the attack has
   //  no effect. A player armed with a chainsaw may take a Foul Action, and
   //  adds 3 to the Armour roll, but must roll for kick back as described above.
   //  A running chainsaw is a dangerous thing to carry around, and so if a
@@ -165,9 +165,9 @@ public enum Skill implements IEnumWithId, IEnumWithName {
   //  the player attempts to block an opponent who is stronger than himself.
   //  When the skill is used, the coach of the player with the Dauntless skill
   //  rolls a D6 and adds it to his strength. If the total is equal to or lower than
-  //  the opponent’s Strength, the player must block using his normal
+  //  the opponentÂ’s Strength, the player must block using his normal
   //  Strength. If the total is greater, then the player with the Dauntless skill
-  //  counts as having a Strength equal to his opponent’s when he makes the
+  //  counts as having a Strength equal to his opponentÂ’s when he makes the
   //  block. The strength of both players is calculated before any defensive or
   //  offensive assists are added but after all other modifiers.
 
@@ -203,7 +203,7 @@ public enum Skill implements IEnumWithId, IEnumWithName {
   //  zones as if it had landed in his own square without leaving his current
   //  square. A failed catch will bounce from the Diving Catch player's square.
   //  If there are two or more players attempting to use this skill then they get
-  //  in each other’s way and neither can use it.
+  //  in each otherÂ’s way and neither can use it.
 
   DIVING_TACKLE(18, "Diving Tackle", SkillCategory.AGILITY),
   //  The player may use this skill after an opposing player attempts to dodge
@@ -220,7 +220,7 @@ public enum Skill implements IEnumWithId, IEnumWithName {
   DODGE(19, "Dodge", SkillCategory.AGILITY),
   //  A player with the Dodge skill is adept at slipping away from opponents,
   //  and is allowed to re-roll the D6 if he fails to dodge out of any of an
-  //  opposing player’s tackle zones. However, the player may only re-roll one
+  //  opposing playerÂ’s tackle zones. However, the player may only re-roll one
   //  failed Dodge roll per turn. In addition, the Dodge skill, if used, affects the
   //  results rolled on the Block dice, as explained in the Blocking rules in the
   //  Blood Bowl book.
@@ -230,7 +230,7 @@ public enum Skill implements IEnumWithId, IEnumWithName {
   //  declares that he will throw a block at him, allowing the player to get rid of
   //  the ball before he is hit. Work out the Dump-Off pass before the
   //  opponent makes his block. The normal throwing rules apply, except that
-  //  neither team’s turn ends as a result of the throw, whatever it may be.
+  //  neither teamÂ’s turn ends as a result of the throw, whatever it may be.
   //  After the throw is worked out your opponent completes the block, and
   //  then carries on with his turn. Dump-Off may not be used on the second
   //  block from an opponent with the Frenzy skill or in conjunction with the
@@ -253,7 +253,7 @@ public enum Skill implements IEnumWithId, IEnumWithName {
   //  moving after blocking if he had declared a Blitz Action.
   
   FOUL_APPEARANCE(24, "Foul Appearance", SkillCategory.MUTATION),
-  //  The player’s appearance is so horrible that any opposing player that
+  //  The playerÂ’s appearance is so horrible that any opposing player that
   //  wants to block the player (or use a special attack that takes the place of
   //  a block) must first roll a D6 and score 2 or more. If the opposing player
   //  rolls a 1 he is too revolted to make the block and it is wasted (though the
@@ -285,22 +285,22 @@ public enum Skill implements IEnumWithId, IEnumWithName {
 
   GUARD(27, "Guard", SkillCategory.STRENGTH),
   //  A player with this skill assists an offensive or defensive block even if he
-  //  is in another player’s tackle zone. This skill may not be used to assist a
+  //  is in another playerÂ’s tackle zone. This skill may not be used to assist a
   //  foul.
 
   HAIL_MARY_PASS(28, "Hail Mary Pass", SkillCategory.PASSING),
   //  The player may throw the ball to any square on the playing pitch, no
   //  matter what the range: the range ruler is not used. Roll a D6. On a roll of
   //  1 the player fumbles the throw, and the ball will bounce once from the
-  //  thrower’s square. On a roll of 2-6 the player may make the pass. The
-  //  Hail Mary pass may not be intercepted, but it is never accurate – the ball
+  //  throwerÂ’s square. On a roll of 2-6 the player may make the pass. The
+  //  Hail Mary pass may not be intercepted, but it is never accurate Â– the ball
   //  automatically misses and scatters three squares. Note that if you are
   //  lucky, the ball will scatter back into the target square! This skill may not
   //  be used in a blizzard or with the Throw Team-Mate skill.  
 
   HORNS(29, "Horns", SkillCategory.MUTATION),
   //  A player with horns may use them to butt an opponent. This adds 1 to
-  //  the player’s Strength when he makes a block. However, the player may
+  //  the playerÂ’s Strength when he makes a block. However, the player may
   //  only use this ability as part of a Blitz, and only if he has moved at least
   //  one square before he makes the block (standing up at the start of your
   //  Action does not count!). If the player has the Frenzy skill, then the Horns
@@ -322,7 +322,7 @@ public enum Skill implements IEnumWithId, IEnumWithName {
   //  A player with this skill is virtually impossible to stop once he is in motion.
   //  If this player takes a Blitz Action, then opposing players may not use
   //  their Fend, Stand Firm or Wrestle skills against blocks, and he may
-  //  choose to treat a ‘Both Down’ result as if a ‘Pushed’ result has been
+  //  choose to treat a Â‘Both DownÂ’ result as if a Â‘PushedÂ’ result has been
   //  rolled instead.
 
   JUMP_UP(32, "Jump Up", SkillCategory.AGILITY),
@@ -351,7 +351,7 @@ public enum Skill implements IEnumWithId, IEnumWithName {
   //  been scattered but before rolling on the Kick-Off table. Only one player
   //  may use this skill each kick-off. This skill may not be used for a
   //  touchback kick-off and does not allow the player to cross into the
-  //  opponent’s half of the pitch.
+  //  opponentÂ’s half of the pitch.
   
   LEADER(35, "Leader", SkillCategory.PASSING),
   //  The player is a natural leader and commands the rest of
@@ -378,7 +378,7 @@ public enum Skill implements IEnumWithId, IEnumWithName {
   //  carry on moving. If the player fails the Agility roll then he is Knocked
   //  Down in the square that he was leaping to, and the opposing coach
   //  makes an Armour roll to see if he was injured. A failed leap causes a
-  //  turnover, and the moving team’s turn ends immediately. A player may
+  //  turnover, and the moving teamÂ’s turn ends immediately. A player may
   //  only use the Leap skill once per Action.
 
   LONER(37, "Loner", SkillCategory.EXTRAORDINARY),
@@ -412,7 +412,7 @@ public enum Skill implements IEnumWithId, IEnumWithName {
   //  The player is unable to pick up, intercept or carry the ball and will fail any
   //  catch roll automatically, either because he literally has no hands or
   //  because his hands are full. If he attempts to pick up the ball then it will
-  //  bounce, and will causes a turnover if it is his team’s turn.
+  //  bounce, and will causes a turnover if it is his teamÂ’s turn.
 
   NURGLES_ROT(42, "Nurgle's Rot", SkillCategory.EXTRAORDINARY),
   //  This player has a horrible infectious disease which spreads when he kills
@@ -444,9 +444,9 @@ public enum Skill implements IEnumWithId, IEnumWithName {
   //  reached another legal Pass Block square on the route. The opposing
   //  coach is not allowed to change his mind about passing after the player
   //  with this skill has made his move. The special move is free, and in no
-  //  way affects the player’s ability to move in the following turn. Apart from
+  //  way affects the playerÂ’s ability to move in the following turn. Apart from
   //  this, however, the move is made using all of the normal rules and skills
-  //  and the player does have to dodge in order to leave opposing players’
+  //  and the player does have to dodge in order to leave opposing playersÂ’
   //  tackle zones.
 
   PILING_ON(45, "Piling On", SkillCategory.STRENGTH),
@@ -463,7 +463,7 @@ public enum Skill implements IEnumWithId, IEnumWithName {
   PREHENSILE_TAIL(46, "Prehensile Tail", SkillCategory.MUTATION),
   //  The player has a long, thick tail which he can use to trip up opposing
   //  players. To represent this, opposing players must subtract 1 from the D6
-  //  roll if they attempt to dodge out of any of the player’s tackle zones.
+  //  roll if they attempt to dodge out of any of the playerÂ’s tackle zones.
 
   PRO(47, "Pro", SkillCategory.GENERAL),
   //  A player with this skill is a hardened veteran. Such players are called
@@ -481,10 +481,10 @@ public enum Skill implements IEnumWithId, IEnumWithName {
   //  really saying something!). Because of this you must roll a D6 immediately
   //  after declaring an Action for the player, but before taking the Action. If
   //  there are one or more players from the same team standing adjacent to
-  //  the Really Stupid player’s square, and who aren’t Really Stupid, then add
+  //  the Really Stupid playerÂ’s square, and who arenÂ’t Really Stupid, then add
   //  2 to the D6 roll. On a result of 1-3 they stand around trying to remember
-  //  what it is they’re meant to be doing. The player can’t do anything for the
-  //  turn, and the player’s team loses the declared Action for that turn (for
+  //  what it is theyÂ’re meant to be doing. The player canÂ’t do anything for the
+  //  turn, and the playerÂ’s team loses the declared Action for that turn (for
   //  example if a Really Stupid player declares a Blitz Action and fails the
   //  Really Stupid roll, then the team cannot declare another Blitz Action that
   //  turn). The player loses his tackle zones and may not catch, intercept or
@@ -510,7 +510,7 @@ public enum Skill implements IEnumWithId, IEnumWithName {
   //  with this skill is thrown or fumbled and ends up in an unoccupied square,
   //  he must make a landing roll unless he landed on another player during
   //  the throw. A landing roll is an Agility roll with a -1 modifier for each
-  //  opposing player’s tackle zone on the square he lands in. If he passes the
+  //  opposing playerÂ’s tackle zone on the square he lands in. If he passes the
   //  roll he lands on his feet. If the landing roll is failed or he landed on
   //  another player during the throw he is Placed Prone and must pass an
   //  Armour roll to avoid injury. If the player is not injured during his landing
@@ -527,7 +527,7 @@ public enum Skill implements IEnumWithId, IEnumWithName {
 
   SECRET_WEAPON(52, "Secret Weapon", SkillCategory.EXTRAORDINARY),
   //  Some players are armed with special pieces of equipment that are called
-  //  ‘secret weapons’. Although the Blood Bowl rules specifically ban the use
+  //  Â‘secret weaponsÂ’. Although the Blood Bowl rules specifically ban the use
   //  of any weapons, the game has a long history of teams trying to get
   //  weapons of some sort onto the pitch. Nonetheless, the use of secret
   //  weapons is simply not legal, and referees have a nasty habit of sending
@@ -539,7 +539,7 @@ public enum Skill implements IEnumWithId, IEnumWithName {
   SHADOWING(53, "Shadowing", SkillCategory.GENERAL),
   //  The player may use this s kill when a player performing an Action on the
   //  opposing team moves out of any of his tackle zones for any reason. The
-  //  opposing player rolls 2D6 adding their own player’s movement allowance
+  //  opposing player rolls 2D6 adding their own playerÂ’s movement allowance
   //  and subtracting the Shadowing player's movement allowance from the
   //  score. I f the final result is 7 or less, the player with Shadowing may move
   //  into the square vacated by the opposing player. He does not have to
@@ -582,8 +582,8 @@ public enum Skill implements IEnumWithId, IEnumWithName {
   //  slashing or hacking up an opponent, like sharp fangs or a trusty dagger.
   //  This player may attack an opponent with their stabbing attack instead of
   //  throwing a block at them. Make an unmodified Armour roll for the victim.
-  //  If the score is less than or equal to the victim’s Armour value then the
-  //  attack has no effect. If the score beats the victim’s Armour value then
+  //  If the score is less than or equal to the victimÂ’s Armour value then the
+  //  attack has no effect. If the score beats the victimÂ’s Armour value then
   //  they have been wounded and an unmodified Injury roll must be made. If
   //  Stab is used as part of a Blitz Action, the player cannot continue moving
   //  after using it. Casualties caused by a stabbing attack do not count for
@@ -597,14 +597,14 @@ public enum Skill implements IEnumWithId, IEnumWithName {
 
   STAND_FIRM(59, "Stand Firm", SkillCategory.STRENGTH),
   //  A player with this skill may choose to not be pushed back as the result of
-  //  a block. He may choose to ignore being pushed by ‘Pushed’ results, and
+  //  a block. He may choose to ignore being pushed by Â‘PushedÂ’ results, and
   //  to have 'Knock-down' results knock the player down in the square where
   //  he started. If a player is pushed back into a player with using Stand Firm
   //  then neither player moves.
 
   STRIP_BALL(60, "Strip Ball", SkillCategory.GENERAL),
   //  When a player with this skill blocks an opponent with the ball, applying a
-  //  ‘Pushed’ or ‘Defender Stumbles’ result will cause the opposing player to
+  //  Â‘PushedÂ’ or Â‘Defender StumblesÂ’ result will cause the opposing player to
   //  drop the ball in the square that they are pushed to, even if the opposing
   //  player is not Knocked Down.
 
@@ -614,7 +614,7 @@ public enum Skill implements IEnumWithId, IEnumWithName {
 
   STUNTY(62, "Stunty", SkillCategory.EXTRAORDINARY),
   //  The player is so small that they are very difficult to tackle because they
-  //  can duck underneath opposing players’ outstretched arms and run
+  //  can duck underneath opposing playersÂ’ outstretched arms and run
   //  between their legs. On the other hand, Stunty players are just a bit too
   //  small to throw the ball very well, and are easily injured. To represent
   //  these things a player with the Stunty skill may ignore any enemy tackle
@@ -637,15 +637,15 @@ public enum Skill implements IEnumWithId, IEnumWithName {
   //  player with this skill.
 
   TACKLE(65, "Tackle", SkillCategory.GENERAL),
-  //  Opposing players who are standing in any of this player’s tackle zones
+  //  Opposing players who are standing in any of this playerÂ’s tackle zones
   //  are not allowed to use their Dodge skill if they attempt to dodge out of
-  //  any of the player’s tackle zones, nor may they use their Dodge skill if the
+  //  any of the playerÂ’s tackle zones, nor may they use their Dodge skill if the
   //  player throws a block at them and uses the Tackle skill.
 
   TAKE_ROOT(66, "Take Root", SkillCategory.EXTRAORDINARY),
   //  Immediately after declaring an Action with this player, roll a D6. On a 2 or
-  //  more, the player may take his Action as normal. On a 1, the player “takes
-  //  root”, and his MA is considered 0 until a drive ends, or he is Knocked
+  //  more, the player may take his Action as normal. On a 1, the player Â“takes
+  //  rootÂ”, and his MA is considered 0 until a drive ends, or he is Knocked
   //  Down or Placed Prone (and no, players from his own team may not try
   //  and block him in order to try to knock him down!). A player that has taken
   //  root may not Go For It, be pushed back for any reason, or use any skill
@@ -658,7 +658,7 @@ public enum Skill implements IEnumWithId, IEnumWithName {
   TENTACLES(67, "Tentacles", SkillCategory.MUTATION),
   //  The player may attempt to use this skill when an opposing player
   //  attempts to dodge or leap out of any of his tackle zones. The opposing
-  //  player rolls 2D6 adding their own player’s ST and subtracting the
+  //  player rolls 2D6 adding their own playerÂ’s ST and subtracting the
   //  Tentacles player's ST from the score. If the final result is 5 or less, then
   //  the moving player is held firm, and his action ends immediately. If a
   //  player attempts to leave the tackle zone of several players that have the
@@ -667,7 +667,7 @@ public enum Skill implements IEnumWithId, IEnumWithName {
 
   THICK_SKULL(68, "Thick Skull", SkillCategory.STRENGTH),
   //  This player treats a roll of 8 on the Injury table, after any modifiers have
-  //  been applied, as a Stunned result rather than a KO’d result. This skill
+  //  been applied, as a Stunned result rather than a KOÂ’d result. This skill
   //  may be used even if the player is Prone or Stunned.
 
   THROW_TEAM_MATE(69, "Throw Team-Mate", SkillCategory.EXTRAORDINARY),
@@ -698,7 +698,7 @@ public enum Skill implements IEnumWithId, IEnumWithName {
   //  Titchy players tend to be even smaller and more nimble than other
   //  Stunty players. To represent this, the player may add 1 to any Dodge roll
   //  he attempts. On the other hand, while opponents do have to dodge to
-  //  leave any of a Titchy player’s tackle zones, Titchy players are so small
+  //  leave any of a Titchy playerÂ’s tackle zones, Titchy players are so small
   //  that they do not exert a -1 modifier when opponents dodge into any of
   //  their tackle zones.
 
@@ -723,7 +723,7 @@ public enum Skill implements IEnumWithId, IEnumWithName {
 
   WRESTLE(74, "Wrestle", SkillCategory.GENERAL),
   //  The player is specially trained in grappling techniques. This player may
-  //  use Wrestle when he blocks or is blocked and a ‘Both Down’ result on
+  //  use Wrestle when he blocks or is blocked and a Â‘Both DownÂ’ result on
   //  the Block dice is chosen by either coach. Instead of applying the 'Both
   //  Down' result, both players are wrestled to the ground. Both players are
   //  Placed Prone in their respective squares even if one or both have the
