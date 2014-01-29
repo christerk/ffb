@@ -10,7 +10,7 @@
 		<delete dir="${build.dir}" />
 	</target>
 	
-	<target name="prepare">
+	<target name="prepare" depends="clean">
 		<mkdir dir="${bin.dir}" />
 		<mkdir dir="${build.dir}" />
 	</target>
