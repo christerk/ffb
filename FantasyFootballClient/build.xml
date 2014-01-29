@@ -46,7 +46,6 @@
 		<javac srcdir="${src.dir}" destdir="${bin.dir}" target="1.6" source="1.6" debug="on">
 			<classpath refid="classpath" />
 		</javac>
-		<javac srcdir="${src.dir}" destdir="${bin.dir}" target="1.6" source="1.6" debug="on" />
 	</target>
 
     <target name="jarCommon" depends="compile">
