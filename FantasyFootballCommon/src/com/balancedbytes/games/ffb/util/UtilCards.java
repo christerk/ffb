@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Set;
 
 import com.balancedbytes.games.ffb.Card;
+import com.balancedbytes.games.ffb.CardTarget;
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.PlayerState;
 import com.balancedbytes.games.ffb.Skill;
@@ -127,8 +128,12 @@ public final class UtilCards {
   	for (Player player : pGame.getPlayers()) {
   		PlayerState playerState = pGame.getFieldModel().getPlayerState(player);
   		FieldCoordinate playerCoordinate = pGame.getFieldModel().getPlayerCoordinate(player);
-  		boolean playerInGame = ((playerState != null) && !playerState.isCasualty() && (playerState.getBase() != PlayerState.BANNED) && (playerState.getBase() != PlayerState.MISSING));
-  		boolean playerAllowed = (playerInGame && ownTeam.hasPlayer(player));
+  		boolean playerAllowed = ((playerState != null) && !playerState.isCasualty() && (playerState.getBase() != PlayerState.BANNED) && (playerState.getBase() != PlayerState.MISSING));
+  		if (pCard.getTarget() == CardTarget.OWN_PLAYER) {
+  		  playerAllowed &= ownTeam.hasPlayer(player);
+  		} else {
+        playerAllowed &= otherTeam.hasPlayer(player);
+  		}
   		switch (pCard) {
   			case FORCE_SHIELD:
   				playerAllowed &= UtilPlayer.hasBall(pGame, player);
@@ -179,6 +184,34 @@ public final class UtilCards {
   		}
   	}
   	return false;
+  }
+
+  public static boolean deactivateCard(Game pGame, Card pCard) {
+  	if ((pGame == null) || (pCard == null)) {
+  		return false;
+  	}
+  	if (pGame.getTurnDataHome().getInducementSet().isActive(pCard)) {
+  	  pGame.getTurnDataHome().getInducementSet().deactivateCard(pCard);
+  	} else if (pGame.getTurnDataAway().getInducementSet().isActive(pCard)) {
+  	  pGame.getTurnDataAway().getInducementSet().deactivateCard(pCard);
+  	} else {
+  		return false;
+  	}
+    Player player = pGame.getFieldModel().findPlayer(pCard);
+  	if ((player != null) && pCard.getTarget().isPlayedOnPlayer() && !pCard.isRemainsInPlay()) {
+  		pGame.getFieldModel().removeCard(player, pCard);
+  	}
+  	switch (pCard) {
+  	  case CUSTARD_PIE:
+  	    PlayerState playerState = pGame.getFieldModel().getPlayerState(player);
+  	    if ((playerState != null) && playerState.isHypnotized()) {
+  	      pGame.getFieldModel().setPlayerState(player, playerState.changeHypnotized(false));
+  	    }
+  	    break;
+  	  default:
+  	    break;
+  	}
+  	return true;
   }
   
 }

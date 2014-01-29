@@ -19,6 +19,7 @@ import com.balancedbytes.games.ffb.server.util.UtilPlayerMove;
 import com.balancedbytes.games.ffb.util.ArrayTool;
 import com.balancedbytes.games.ffb.util.StringTool;
 import com.balancedbytes.games.ffb.util.UtilBlock;
+import com.balancedbytes.games.ffb.util.UtilCards;
 
 /**
  * 
@@ -98,24 +99,14 @@ public class UtilSteps {
     return (game.getTurnDataHome().getTurnNr() >= 8) && (game.getTurnDataAway().getTurnNr() >= 8);
 	}
 	
-  public static boolean deactivateCard(IStep pStep, Card pCard) {
-  	if ((pStep == null) || (pCard == null)) {
-  		return false;
-  	}
-  	Game game = pStep.getGameState().getGame();
-  	if (game.getTurnDataHome().getInducementSet().isActive(pCard)) {
-  		game.getTurnDataHome().getInducementSet().deactivateCard(pCard);
-  	} else if (game.getTurnDataAway().getInducementSet().isActive(pCard)) {
-  		game.getTurnDataAway().getInducementSet().deactivateCard(pCard);
-  	} else {
-  		return false;
-  	}
-  	if (pCard.getTarget().isPlayedOnPlayer() && !pCard.isRemainsInPlay()) {
-  		Player player = game.getFieldModel().findPlayer(pCard);
-  		game.getFieldModel().removeCard(player, pCard);
-  	}
-  	pStep.getResult().addReport(new ReportCardDeactivated(pCard));
-  	return true;
-  }
+	public static void deactivateCard(IStep pStep, Card pCard) {
+	  if ((pStep == null) || (pCard == null)) {
+	    return;
+	  }
+	  Game game = pStep.getGameState().getGame();
+    if (UtilCards.deactivateCard(game, pCard)) {
+      pStep.getResult().addReport(new ReportCardDeactivated(pCard));
+    }
+	}
 
 }

@@ -321,6 +321,7 @@ public class StepEndTurn extends AbstractStep {
       }
       
       deactivateCards(InducementDuration.UNTIL_END_OF_TURN);
+      
       if (fNewHalf || fTouchdown) {
         deactivateCards(InducementDuration.UNTIL_END_OF_DRIVE);
         if (fHandleSecretWeapons) {
@@ -512,18 +513,16 @@ public class StepEndTurn extends AbstractStep {
   		return;
   	}
     Game game = getGameState().getGame();
-    InducementSet inducementSetHome = game.getTurnDataHome().getInducementSet();
-  	for (Card card : inducementSetHome.getActiveCards()) {
+  	for (Card card : game.getTurnDataHome().getInducementSet().getActiveCards()) {
     	if (pDuration == card.getDuration()) {
-    		UtilSteps.deactivateCard(this, card);
+    	  UtilSteps.deactivateCard(this, card);
     	}
   	}
-    InducementSet inducementSetAway = game.getTurnDataAway().getInducementSet();
-  	for (Card card : inducementSetAway.getActiveCards()) {
-    	if (pDuration == card.getDuration()) {
-    		UtilSteps.deactivateCard(this, card);
-    	}
-  	}
+    for (Card card : game.getTurnDataAway().getInducementSet().getActiveCards()) {
+      if (pDuration == card.getDuration()) {
+        UtilSteps.deactivateCard(this, card);
+      }
+    }
   }
   
   private boolean askForSecretWeaponBribes(Team pTeam) {

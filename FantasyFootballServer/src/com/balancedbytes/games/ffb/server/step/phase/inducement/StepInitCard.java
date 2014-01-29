@@ -125,8 +125,7 @@ public final class StepInitCard extends AbstractStep {
     } else if (fCard.getTarget().isPlayedOnPlayer()) {
       // step initInducement has already checked if this card can be played
       Player[] allowedPlayers = UtilCards.findAllowedPlayersForCard(game, fCard);
-      game.setDialogParameter(new DialogPlayerChoiceParameter(ownTeam.getId(), PlayerChoiceMode.CARD, allowedPlayers,
-          null, 1));
+      game.setDialogParameter(new DialogPlayerChoiceParameter(ownTeam.getId(), PlayerChoiceMode.CARD, allowedPlayers, null, 1));
     } else {
       activateCard(null);
       getResult().setNextAction(StepAction.NEXT_STEP);
@@ -139,35 +138,17 @@ public final class StepInitCard extends AbstractStep {
     if (player == null) {
       return;
     }
-    PlayerState playerState = game.getFieldModel().getPlayerState(player);
-    FieldCoordinate playerCoordinate = game.getFieldModel().getPlayerCoordinate(player);
-    Team ownTeam = fHomeTeam ? game.getTeamHome() : game.getTeamAway();
-    Team otherTeam = fHomeTeam ? game.getTeamAway() : game.getTeamHome();
-    boolean doNextStep = true;
+    boolean doNextStep;
     switch (fCard) {
-    case CHOP_BLOCK:
-      if (!StringTool.isProvided(fOpponentId)) {
-        doNextStep = false;
-        Player[] blockablePlayers = UtilPlayer.findAdjacentBlockablePlayers(game, otherTeam, playerCoordinate);
-        if (blockablePlayers.length == 1) {
-          fOpponentId = blockablePlayers[0].getId();
-        } else {
-          game.setDialogParameter(new DialogPlayerChoiceParameter(ownTeam.getId(), PlayerChoiceMode.BLOCK,
-              blockablePlayers, null, 1));
-        }
-        activateCard(fPlayerId);
-      }
-      if (StringTool.isProvided(fOpponentId)) {
+      case CHOP_BLOCK:
+        doNextStep = playChopBlock();
+        break;
+      case CUSTARD_PIE:
+        doNextStep = playCustardPie();
+        break;
+      default:
         doNextStep = true;
-        game.getFieldModel().setPlayerState(player, playerState.changeBase(PlayerState.PRONE).changeActive(false));
-        Player opponent = game.getPlayerById(fOpponentId);
-        PlayerState opponentState = game.getFieldModel().getPlayerState(opponent);
-        game.getFieldModel()
-            .setPlayerState(opponent, opponentState.changeBase(PlayerState.STUNNED).changeActive(false));
-      }
-      break;
-    default:
-      break;
+        break;
     }
     if (doNextStep) {
       getResult().setNextAction(StepAction.NEXT_STEP);
@@ -185,6 +166,42 @@ public final class StepInitCard extends AbstractStep {
     } else {
       getResult().addReport(new ReportPlayCard(ownTeam.getId(), fCard));
     }
+  }
+
+  private boolean playCustardPie() {
+    Game game = getGameState().getGame();
+    Player player = game.getPlayerById(fPlayerId);
+    activateCard(fPlayerId);
+    PlayerState playerState = game.getFieldModel().getPlayerState(player);
+    game.getFieldModel().setPlayerState(player, playerState.changeHypnotized(true));
+    return true;
+  }
+  
+  private boolean playChopBlock() {
+    boolean doNextStep = false;
+    Game game = getGameState().getGame();
+    Player player = game.getPlayerById(fPlayerId);
+    PlayerState playerState = game.getFieldModel().getPlayerState(player);
+    FieldCoordinate playerCoordinate = game.getFieldModel().getPlayerCoordinate(player);
+    Team ownTeam = fHomeTeam ? game.getTeamHome() : game.getTeamAway();
+    Team otherTeam = fHomeTeam ? game.getTeamAway() : game.getTeamHome();
+    if (!StringTool.isProvided(fOpponentId)) {
+      Player[] blockablePlayers = UtilPlayer.findAdjacentBlockablePlayers(game, otherTeam, playerCoordinate);
+      if (blockablePlayers.length == 1) {
+        fOpponentId = blockablePlayers[0].getId();
+      } else {
+        game.setDialogParameter(new DialogPlayerChoiceParameter(ownTeam.getId(), PlayerChoiceMode.BLOCK, blockablePlayers, null, 1));
+      }
+      activateCard(fPlayerId);
+    }
+    if (StringTool.isProvided(fOpponentId)) {
+      doNextStep = true;
+      game.getFieldModel().setPlayerState(player, playerState.changeBase(PlayerState.PRONE).changeActive(false));
+      Player opponent = game.getPlayerById(fOpponentId);
+      PlayerState opponentState = game.getFieldModel().getPlayerState(opponent);
+      game.getFieldModel().setPlayerState(opponent, opponentState.changeBase(PlayerState.STUNNED).changeActive(false));
+    }
+    return doNextStep;
   }
 
   // ByteArray serialization

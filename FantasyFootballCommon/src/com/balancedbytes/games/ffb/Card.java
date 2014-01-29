@@ -216,7 +216,7 @@ public enum Card implements IEnumWithId, IEnumWithName {
  
   CHOP_BLOCK(41, "Chop Block", "Chop Block", CardType.DIRTY_TRICK, CardTarget.OWN_PLAYER, false,
 		new InducementPhase[] { InducementPhase.END_OF_OWN_TURN }, InducementDuration.UNTIL_END_OF_TURN,
-		"Player drops prone and stuns an adjacent player");
+		"Player drops prone and stuns an adjacent player"),
   //	Description:
   //  	A player throws a dirty block on the opponent.
   //	Timing:
@@ -228,9 +228,9 @@ public enum Card implements IEnumWithId, IEnumWithName {
   //  	Prone and an opposing player in a square adjacent to him is now
   //  	considered Stunned.
 
-//  CUSTARD_PIE(42, "Custard Pie", "Custard Pie", CardType.DIRTY_TRICK, CardTarget.OPPOSING_PLAYER, false,
-//		new InducementPhase[] { InducementPhase.START_OF_OWN_TURN }, InducementDuration.UNTIL_END_OF_TURN,
-//		"Opponent distracted as per Hypnotic Gaze"),
+  CUSTARD_PIE(42, "Custard Pie", "Custard Pie", CardType.DIRTY_TRICK, CardTarget.OPPOSING_PLAYER, false,
+		new InducementPhase[] { InducementPhase.START_OF_OWN_TURN }, InducementDuration.UNTIL_END_OF_TURN,
+		"Opponent distracted as per Hypnotic Gaze");
   //	Description:
   //		One of your players thrusts a cleverly concealed custard pie in the
   //		face of an opposing player.
