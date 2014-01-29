@@ -1,14 +1,10 @@
 package com.balancedbytes.games.ffb.client.net;
 
+import java.io.IOException;
 import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
-import org.eclipse.jetty.websocket.api.Session;
-import org.eclipse.jetty.websocket.api.annotations.OnWebSocketClose;
-import org.eclipse.jetty.websocket.api.annotations.OnWebSocketConnect;
-import org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage;
-import org.eclipse.jetty.websocket.api.annotations.WebSocket;
+import org.eclipse.jetty.websocket.WebSocket;
 
 import com.balancedbytes.games.ffb.client.FantasyFootballClient;
 import com.balancedbytes.games.ffb.net.NetCommand;
@@ -21,12 +17,11 @@ import com.eclipsesource.json.JsonValue;
  * 
  * @author Kalimar
  */
-@WebSocket(maxMessageSize = 64 * 1024)
-public class CommandSocket {
+public class CommandSocket implements WebSocket.OnTextMessage {
 
   private FantasyFootballClient fClient;
   private NetCommandFactory fNetCommandFactory;
-  private Session fSession;
+  private Connection fConnection;
 
   private final CountDownLatch fCloseLatch;
 
@@ -35,13 +30,21 @@ public class CommandSocket {
     fNetCommandFactory = new NetCommandFactory();
     fCloseLatch = new CountDownLatch(1);
   }
+  
+  @Override
+  public void onOpen(Connection pConnection) {
+    fConnection = pConnection;
+    System.out.printf("Got connect: %s%n", fConnection);
+    fConnection.setMaxIdleTime(Integer.MAX_VALUE);
+    fConnection.setMaxTextMessageSize(64 * 1024);
+  }
 
-  @OnWebSocketMessage
-  public void onTextMessage(Session pSession, String pTextMessage) {
-    if ((pSession == null) || (pTextMessage == null) || !pSession.isOpen()) {
+  @Override
+  public void onMessage(String pMessage) {
+    if ((pMessage == null) || !isOpen()) {
       return;
     }
-    JsonValue jsonValue = JsonValue.readFrom(pTextMessage);
+    JsonValue jsonValue = JsonValue.readFrom(pMessage);
     NetCommand netCommand = fNetCommandFactory.forJsonValue(jsonValue);
     if (netCommand == null) {
       return;
@@ -54,41 +57,36 @@ public class CommandSocket {
     fClient.getCommunication().handleCommand(netCommand);
   }
 
-  @OnWebSocketClose
+  @Override
   public void onClose(int pCloseCode, String pCloseReason) {
     System.out.printf("Connection closed: %d - %s%n", pCloseCode, pCloseReason);
-    fSession = null;
+    fConnection = null;
     fCloseLatch.countDown();
   }
 
-  @OnWebSocketConnect
-  public void onConnect(Session pSession) {
-    pSession.setIdleTimeout(Long.MAX_VALUE);
-    System.out.printf("Got connect: %s%n", pSession);
-    fSession = pSession;
-  }
 
   public boolean awaitClose(int duration, TimeUnit unit) throws InterruptedException {
     return fCloseLatch.await(duration, unit);
   }
 
-  public Future<Void> send(NetCommand pCommand) {
+  public boolean send(NetCommand pCommand) throws IOException {
     if ((pCommand == null) || !isOpen()) {
-      return null;
+      return false;
     }
     JsonValue jsonValue = pCommand.toJsonValue();
     if (jsonValue == null) {
-      return null;
+      return false;
     }
-    String textMessage = jsonValue.toString();
-    if (textMessage == null) {
-      return null;
+    String message = jsonValue.toString();
+    if (message == null) {
+      return false;
     }
-    return fSession.getRemote().sendStringByFuture(textMessage);
+    fConnection.sendMessage(message);
+    return true;
   }
 
   public boolean isOpen() {
-    return ((fSession != null) && fSession.isOpen());
+    return ((fConnection != null) && fConnection.isOpen());
   }
 
   // LogComponent log = getClient().getUserInterface().getLog();

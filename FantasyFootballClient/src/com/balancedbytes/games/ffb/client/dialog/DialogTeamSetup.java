@@ -41,8 +41,8 @@ public class DialogTeamSetup extends Dialog implements ActionListener, ListSelec
   private JButton fButtonDelete;
   private JTextField fTextfieldSetupName;
   private boolean fLoadDialog;
-  private JList<String> fSetupList;
-  private DefaultListModel<String> fSetupListModel;
+  private JList fSetupList;
+  private DefaultListModel fSetupListModel;
   private int fUserChoice;
   private String fSetupName;
 
@@ -66,14 +66,14 @@ public class DialogTeamSetup extends Dialog implements ActionListener, ListSelec
     fButtonDelete = new JButton(new ImageIcon(deleteIcon));
     fButtonDelete.addActionListener(this);
     
-    fSetupListModel = new DefaultListModel<String>();
+    fSetupListModel = new DefaultListModel();
     if (ArrayTool.isProvided(pSetups)) {
       for (int i = 0; i < pSetups.length; i++) {
         fSetupListModel.addElement(pSetups[i]);
       }
     }
     
-    fSetupList = new JList<String>(fSetupListModel);
+    fSetupList = new JList(fSetupListModel);
     fSetupList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
     fSetupList.setVisibleRowCount(Math.min(7, Math.max(3, pSetups.length)));
     fSetupList.addListSelectionListener(this);

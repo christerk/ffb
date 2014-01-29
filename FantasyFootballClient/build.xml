@@ -2,7 +2,6 @@
 <project name="FantasyFootballClient" default="buildFumbbl" basedir=".">
 
     <property name="src.dir" value="src" />
-    <property name="jetty.dir" value="jetty" />
     <property name="bin.dir" value="bin" />
     <property name="lib.dir" value="lib" />
     <property name="build.dir" value="build" />
@@ -38,7 +37,6 @@
 	</target>
 	
 	<target name="compile" depends="prepare,FantasyFootballCommon">
-		<!--
 		<path id="classpath">
 			<path refid="libraries" />
 			<pathelement location="../FantasyFootballCommon/bin" />
@@ -48,8 +46,6 @@
 		<javac srcdir="${src.dir}" destdir="${bin.dir}" target="1.6" source="1.6" debug="on">
 			<classpath refid="classpath" />
 		</javac>
-		-->
-		<javac srcdir="${jetty.dir}" destdir="${bin.dir}" target="1.6" source="1.6" debug="on" />
 		<javac srcdir="${src.dir}" destdir="${bin.dir}" target="1.6" source="1.6" debug="on" />
 	</target>
 
@@ -81,11 +77,9 @@
         <jar destfile="${build.dir}/${ant.project.name}.jar" update="true">
         	<zipfileset file="client-fumbbl-test.ini" fullpath="client.ini" />
         </jar>
-		<!--
 		<copy todir="${build.dir}">
 			<fileset dir="${lib.dir}" includes="*.jar" />
 		</copy>
-		-->
 		<!--
 		<signjar keystore="../FantasyFootballCommon/keystore.jks" storepass="dragon" alias="Kalimar" keypass="dragon">
 			<fileset dir="${build.dir}" includes="*.jar" />

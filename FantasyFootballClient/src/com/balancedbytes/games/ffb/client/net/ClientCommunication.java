@@ -1,5 +1,6 @@
 package com.balancedbytes.games.ffb.client.net;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -7,6 +8,7 @@ import com.balancedbytes.games.ffb.Card;
 import com.balancedbytes.games.ffb.CardType;
 import com.balancedbytes.games.ffb.ClientStateId;
 import com.balancedbytes.games.ffb.ConcedeGameStatus;
+import com.balancedbytes.games.ffb.FantasyFootballException;
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.InducementType;
 import com.balancedbytes.games.ffb.PlayerAction;
@@ -143,7 +145,11 @@ public class ClientCommunication implements Runnable, INetCommandHandler {
   }
   
   protected void send(NetCommand pNetCommand) {
-    getClient().getCommandSocket().send(pNetCommand);
+    try {
+      getClient().getCommandSocket().send(pNetCommand);
+    } catch (IOException pIoException) {
+      throw new FantasyFootballException(pIoException);
+    }
   }
 
   public void sendDebugClientState(ClientStateId pClientStateId) {

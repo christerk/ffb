@@ -569,7 +569,7 @@ public class FieldModel implements IByteArraySerializable, IJsonSerializable {
     transformedModel.setWeather(getWeather());
     
     for (String playerId : fStateByPlayerId.keySet()) {
-    	Player player = getGame().getPlayerById(playerId);
+      Player player = getGame().getPlayerById(playerId);
       transformedModel.setPlayerState(player, getPlayerState(player));
       for (Card card : getCards(player)) {
       	transformedModel.addCard(player, card);
