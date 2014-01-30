@@ -249,7 +249,7 @@ public enum Card implements IEnumWithId, IEnumWithName {
   //		Your player is very good at distracting all those around him.
   //	Timing:
   //		Play after your turn has ended or your kick-off to an opponent is
-  //		resolved, but before your opponent’s turn begins.
+  //		resolved, but before your opponent's turn begins.
   //	Effect:
   //		The chosen player gains the skill Disturbing Presence for this turn
   //		and all opposing players starting their Action within 3 squares of the
@@ -260,10 +260,10 @@ public enum Card implements IEnumWithId, IEnumWithName {
 		new InducementPhase[] { InducementPhase.END_OF_OWN_TURN, InducementPhase.AFTER_KICKOFF_TO_OPPONENT_RESOLVED }, InducementDuration.UNTIL_END_OF_OPPONENTS_TURN,
 		"Opposing players need to roll 5+ to Go For It"),
   //	Description:
-  //		The magic grease applied to your opponents’ shoes has finally taken	effect.
+  //		The magic grease applied to your opponent's shoes has finally taken	effect.
   //	Timing:
   //		Play after your turn has ended or your kick-off to an opponent is
-  //		resolved, but before your opponent’s turn begins.
+  //		resolved, but before your opponent's turn begins.
   //	Effect:
   //		This turn all opposing players need to roll a 5+ to Go For It instead of
   //		the normal 2+.
