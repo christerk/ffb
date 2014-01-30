@@ -33,7 +33,8 @@ public enum PassModifier implements IRollModifier {
   DISTURBING_PRESENCES_9(23, "9 Disturbing Presences", 9, false, true),
   DISTURBING_PRESENCES_10(24, "10 Disturbing Presences", 10, false, true),
   DISTURBING_PRESENCES_11(25, "11 Disturbing Presences", 11, false, true),
-  THROW_TEAM_MATE(26, "Throw Team-Mate", 1, false, false);
+  THROW_TEAM_MATE(26, "Throw Team-Mate", 1, false, false),
+  GROMSKULLS_EXPLODING_RUNES(27, "Gromskull's Exploding Runes", 1, false, false);
 
   private int fId;
   private String fName;

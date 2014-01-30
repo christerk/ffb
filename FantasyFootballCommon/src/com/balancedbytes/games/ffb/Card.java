@@ -230,7 +230,7 @@ public enum Card implements IEnumWithId, IEnumWithName {
 
   CUSTARD_PIE(42, "Custard Pie", "Custard Pie", CardType.DIRTY_TRICK, CardTarget.OPPOSING_PLAYER, false,
 		new InducementPhase[] { InducementPhase.START_OF_OWN_TURN }, InducementDuration.UNTIL_END_OF_TURN,
-		"Opponent distracted as per Hypnotic Gaze");
+		"Opponent distracted as per Hypnotic Gaze"),
   //	Description:
   //		One of your players thrusts a cleverly concealed custard pie in the
   //		face of an opposing player.
@@ -249,28 +249,28 @@ public enum Card implements IEnumWithId, IEnumWithName {
   //		Your player is very good at distracting all those around him.
   //	Timing:
   //		Play after your turn has ended or your kick-off to an opponent is
-  //		resolved, but before your opponentÂ’s turn begins.
+  //		resolved, but before your opponent’s turn begins.
   //	Effect:
   //		The chosen player gains the skill Disturbing Presence for this turn
   //		and all opposing players starting their Action within 3 squares of the
   //		player count as having Bone-head (lost Tackle Zones from failed
   //		Bone-head rolls return at the end of this turn).
 		
-//  GREASED_SHOES(44, "Greased Shoes", "Greased Shoes", CardType.DIRTY_TRICK, CardTarget.TURN, false,
-//		new InducementPhase[] { InducementPhase.END_OF_OWN_TURN, InducementPhase.AFTER_KICKOFF_TO_OPPONENT_RESOLVED }, InducementDuration.UNTIL_END_OF_TURN,
-//		"Opposing players need to roll 5+ to Go For It"),
+  GREASED_SHOES(44, "Greased Shoes", "Greased Shoes", CardType.DIRTY_TRICK, CardTarget.TURN, false,
+		new InducementPhase[] { InducementPhase.END_OF_OWN_TURN, InducementPhase.AFTER_KICKOFF_TO_OPPONENT_RESOLVED }, InducementDuration.UNTIL_END_OF_TURN,
+		"Opposing players need to roll 5+ to Go For It"),
   //	Description:
-  //		The magic grease applied to your opponentsÂ’ shoes has finally taken	effect.
+  //		The magic grease applied to your opponents’ shoes has finally taken	effect.
   //	Timing:
   //		Play after your turn has ended or your kick-off to an opponent is
-  //		resolved, but before your opponentÂ’s turn begins.
+  //		resolved, but before your opponent’s turn begins.
   //	Effect:
   //		This turn all opposing players need to roll a 5+ to Go For It instead of
   //		the normal 2+.
 		
-//  GROMSKULLS_EXPLODING_RUNES(45, "Gromskull's Exploding Runes", "Exploding Runes", CardType.DIRTY_TRICK, CardTarget.OWN_PLAYER, false,
-//		new InducementPhase[] { InducementPhase.BEFORE_SETUP }, InducementDuration.UNTIL_END_OF_GAME,
-//		"Player gets Bombardier, No Hands, Secret Weapon & -1 to pass");
+  GROMSKULLS_EXPLODING_RUNES(45, "Gromskull's Exploding Runes", "Exploding Runes", CardType.DIRTY_TRICK, CardTarget.OWN_PLAYER, false,
+		new InducementPhase[] { InducementPhase.BEFORE_SETUP }, InducementDuration.UNTIL_END_OF_GAME,
+		"Player gets Bombardier, No Hands, Secret Weapon & -1 to pass");
   //  Description:
   //  	A player purchased some exploding runes from a dwarven runesmith
   //  	before the game. Although they are illegal, they are highly effective.

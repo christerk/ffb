@@ -333,8 +333,13 @@ public class SequenceGenerator {
 			add(kickoffSequence, StepId.RECEIVE_CHOICE, pGameState);
 		}
 
-		add(kickoffSequence, StepId.INIT_KICKOFF, pGameState, createParameterSet(StepParameterKey.GOTO_LABEL_ON_END, IStepLabel.END_KICKOFF));
-		
+		add(kickoffSequence, StepId.INIT_KICKOFF, pGameState);
+    // inserts inducement sequence at this point
+    add(kickoffSequence, StepId.SETUP, pGameState, createParameterSet(StepParameterKey.GOTO_LABEL_ON_END, IStepLabel.END_KICKOFF));
+    // inserts inducement sequence at this point
+    add(kickoffSequence, StepId.SETUP, pGameState, createParameterSet(StepParameterKey.GOTO_LABEL_ON_END, IStepLabel.END_KICKOFF));
+
+    add(kickoffSequence, StepId.KICKOFF, pGameState);
 		add(kickoffSequence, StepId.KICKOFF_SCATTER_ROLL, pGameState);
 		add(kickoffSequence, StepId.KICKOFF_RETURN, pGameState);
 		

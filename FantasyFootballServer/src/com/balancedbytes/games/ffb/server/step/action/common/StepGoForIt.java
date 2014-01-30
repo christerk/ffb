@@ -3,6 +3,7 @@ package com.balancedbytes.games.ffb.server.step.action.common;
 import java.util.Set;
 
 import com.balancedbytes.games.ffb.GoForItModifier;
+import com.balancedbytes.games.ffb.GoForItModifierFactory;
 import com.balancedbytes.games.ffb.InjuryType;
 import com.balancedbytes.games.ffb.PlayerAction;
 import com.balancedbytes.games.ffb.ReRollSource;
@@ -141,11 +142,12 @@ public class StepGoForIt extends AbstractStepWithReRoll {
   private ActionStatus goForIt() {
     Game game = getGameState().getGame();
     ActingPlayer actingPlayer = game.getActingPlayer();
-    Set<GoForItModifier> goForItModifiers = GoForItModifier.findGoForItModifiers(game);
+    GoForItModifierFactory modifierFactory = new GoForItModifierFactory();
+    Set<GoForItModifier> goForItModifiers = modifierFactory.findGoForItModifiers(game);
     int minimumRoll = DiceInterpreter.getInstance().minimumRollGoingForIt(goForItModifiers);
     int roll = getGameState().getDiceRoller().rollGoingForIt();
     boolean successful = DiceInterpreter.getInstance().isSkillRollSuccessful(roll, minimumRoll);
-    GoForItModifier[] goForItModifierArray = GoForItModifier.toArray(goForItModifiers);
+    GoForItModifier[] goForItModifierArray = modifierFactory.toArray(goForItModifiers);
     boolean reRolled = ((getReRolledAction() == ReRolledAction.GO_FOR_IT) && (getReRollSource() != null));
     getResult().addReport(new ReportSkillRoll(ReportId.GO_FOR_IT_ROLL, actingPlayer.getPlayerId(), successful, roll, minimumRoll, reRolled, goForItModifierArray));
     if (successful) {

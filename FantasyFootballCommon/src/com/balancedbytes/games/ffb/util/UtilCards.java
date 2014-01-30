@@ -78,6 +78,11 @@ public final class UtilCards {
 				case WAND_OF_SMASHING:
 					cardSkills.add(Skill.MIGHTY_BLOW);
 					break;
+				case GROMSKULLS_EXPLODING_RUNES:
+				  cardSkills.add(Skill.BOMBARDIER);
+          cardSkills.add(Skill.NO_HANDS);
+          cardSkills.add(Skill.SECRET_WEAPON);
+          break;
 				default:
 					break;
 			}

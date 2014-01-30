@@ -100,11 +100,13 @@ import com.balancedbytes.games.ffb.server.step.phase.kickoff.StepBlitzTurn;
 import com.balancedbytes.games.ffb.server.step.phase.kickoff.StepCoinChoice;
 import com.balancedbytes.games.ffb.server.step.phase.kickoff.StepEndKickoff;
 import com.balancedbytes.games.ffb.server.step.phase.kickoff.StepInitKickoff;
+import com.balancedbytes.games.ffb.server.step.phase.kickoff.StepKickoff;
 import com.balancedbytes.games.ffb.server.step.phase.kickoff.StepKickoffAnimation;
 import com.balancedbytes.games.ffb.server.step.phase.kickoff.StepKickoffResultRoll;
 import com.balancedbytes.games.ffb.server.step.phase.kickoff.StepKickoffReturn;
 import com.balancedbytes.games.ffb.server.step.phase.kickoff.StepKickoffScatterRoll;
 import com.balancedbytes.games.ffb.server.step.phase.kickoff.StepReceiveChoice;
+import com.balancedbytes.games.ffb.server.step.phase.kickoff.StepSetup;
 import com.balancedbytes.games.ffb.server.step.phase.kickoff.StepTouchback;
 import com.balancedbytes.games.ffb.server.step.phase.special.StepEndBomb;
 import com.balancedbytes.games.ffb.server.step.phase.special.StepInitBomb;
@@ -349,6 +351,9 @@ public class StepFactory {
 				case JUMP_UP:
 					step = new StepJumpUp(fGameState);
 					break;
+        case KICKOFF:
+          step = new StepKickoff(fGameState);
+          break;
 				case KICKOFF_ANIMATION:
 					step = new StepKickoffAnimation(fGameState);
 					break;
@@ -418,6 +423,9 @@ public class StepFactory {
 				case SAFE_THROW:
 					step = new StepSafeThrow(fGameState);
 					break;
+        case SETUP:
+          step = new StepSetup(fGameState);
+          break;
 				case SHADOWING:
 					step = new StepShadowing(fGameState);
 					break;

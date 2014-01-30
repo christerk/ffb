@@ -65,6 +65,9 @@ public class PassModifierFactory implements IRollModifierFactory {
       if (UtilCards.hasSkill(pGame, pThrower, Skill.ACCURATE)) {
         passModifiers.add(PassModifier.ACCURATE);
       }
+      if (UtilCards.hasCard(pGame, pThrower, Card.GROMSKULLS_EXPLODING_RUNES)) {
+        passModifiers.add(PassModifier.GROMSKULLS_EXPLODING_RUNES);
+      }
       PassModifier disturbingPresenceModifier = getDisturbingPresenceModifier(pGame, pThrower);
       if (disturbingPresenceModifier != null) {
         passModifiers.add(disturbingPresenceModifier);

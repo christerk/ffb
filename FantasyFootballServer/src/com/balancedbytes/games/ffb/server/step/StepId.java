@@ -80,6 +80,7 @@ public enum StepId implements IEnumWithId, IEnumWithName {
 	INTERCEPT(49, "intercept"),                         // action.pass
 	JUGGERNAUT(14, "juggernaut"),                       // action.block
 	JUMP_UP(72, "jumpUp"),                              // action.select
+  KICKOFF(112, "kickoff"),                            // phase.kickoff
 	KICKOFF_ANIMATION(69, "kickoffAnimation"),          // phase.kickoff
 	KICKOFF_RESULT_ROLL(67, "kickoffResultRoll"),       // phase.kickoff
 	KICKOFF_RETURN(66, "kickoffReturn"),                // phase.kickoff
@@ -103,6 +104,7 @@ public enum StepId implements IEnumWithId, IEnumWithName {
 	REFEREE(85, "referee"),                             // action.foul
 	RIGHT_STUFF(94, "rightStuff"),                      // action.ttm
 	SAFE_THROW(50, "safeThrow"),                        // action.pass
+	SETUP(111, "setup"),                                // phase.kickoff
 	SHADOWING(23, "shadowing"),                         // action.common
 	SPECTATORS(90, "spectators"),                       // game.start
 	SPECIAL_EFFECT(77, "specialEffect"),                // phase.special
@@ -120,7 +122,7 @@ public enum StepId implements IEnumWithId, IEnumWithName {
 	WRESTLE(17, "wrestle");                             // action.block
 
 	// obsolete = 57 (createGame)
-	// maxId = 110
+	// maxId = 111
 
 	private int fId;
 	private String fName;

@@ -49,13 +49,13 @@ public class DialogBuyCards extends Dialog implements ActionListener, KeyListene
 	private int fAvailableCards;
 	private JLabel fLabelAvailableCards;
 
-  private JButton fButtonMiscellaneousMayhem;
-  private JButton fButtonSpecialTeamPlay;
+//  private JButton fButtonMiscellaneousMayhem;
+//  private JButton fButtonSpecialTeamPlay;
   private JButton fButtonMagicItem;
   private JButton fButtonDirtyTrick;
-  private JButton fButtonGoodKarma;
-  private JButton fButtonRandomEvent;
-  private JButton fButtonDesperateMeasure;
+//  private JButton fButtonGoodKarma;
+//  private JButton fButtonRandomEvent;
+//  private JButton fButtonDesperateMeasure;
 
   private ChatLogScrollPane fCardLogScrollPane;
   private ChatLogTextPane fCardLogTextPane;
@@ -97,19 +97,19 @@ public class DialogBuyCards extends Dialog implements ActionListener, KeyListene
 
 //    Icon cardIcon = new ImageIcon(pClient.getUserInterface().getIconCache().getIconByProperty(IIconProperty.SIDEBAR_OVERLAY_PLAYER_CARD));
     
-    fButtonMiscellaneousMayhem = new JButton();
-    fButtonMiscellaneousMayhem.addActionListener(this);
-    fButtonPerType.put(CardType.MISCELLANEOUS_MAYHEM, fButtonMiscellaneousMayhem);
-    fNrOfCardsPerType.put(CardType.MISCELLANEOUS_MAYHEM, pParameter.getNrOfCards(CardType.MISCELLANEOUS_MAYHEM));
-    panelMain.add(createDeckPanel(CardType.MISCELLANEOUS_MAYHEM));
-    panelMain.add(Box.createVerticalStrut(5));
+//    fButtonMiscellaneousMayhem = new JButton();
+//    fButtonMiscellaneousMayhem.addActionListener(this);
+//    fButtonPerType.put(CardType.MISCELLANEOUS_MAYHEM, fButtonMiscellaneousMayhem);
+//    fNrOfCardsPerType.put(CardType.MISCELLANEOUS_MAYHEM, pParameter.getNrOfCards(CardType.MISCELLANEOUS_MAYHEM));
+//    panelMain.add(createDeckPanel(CardType.MISCELLANEOUS_MAYHEM));
+//    panelMain.add(Box.createVerticalStrut(5));
     
-    fButtonSpecialTeamPlay = new JButton();
-    fButtonSpecialTeamPlay.addActionListener(this);
-    fButtonPerType.put(CardType.SPECIAL_TEAM_PLAY, fButtonSpecialTeamPlay);
-    fNrOfCardsPerType.put(CardType.SPECIAL_TEAM_PLAY, pParameter.getNrOfCards(CardType.SPECIAL_TEAM_PLAY));
-    panelMain.add(createDeckPanel(CardType.SPECIAL_TEAM_PLAY));
-    panelMain.add(Box.createVerticalStrut(5));
+//    fButtonSpecialTeamPlay = new JButton();
+//    fButtonSpecialTeamPlay.addActionListener(this);
+//    fButtonPerType.put(CardType.SPECIAL_TEAM_PLAY, fButtonSpecialTeamPlay);
+//    fNrOfCardsPerType.put(CardType.SPECIAL_TEAM_PLAY, pParameter.getNrOfCards(CardType.SPECIAL_TEAM_PLAY));
+//    panelMain.add(createDeckPanel(CardType.SPECIAL_TEAM_PLAY));
+//    panelMain.add(Box.createVerticalStrut(5));
     
     fButtonMagicItem = new JButton();
     fButtonMagicItem.addActionListener(this);
@@ -125,26 +125,26 @@ public class DialogBuyCards extends Dialog implements ActionListener, KeyListene
     panelMain.add(createDeckPanel(CardType.DIRTY_TRICK));
     panelMain.add(Box.createVerticalStrut(5));
 
-    fButtonGoodKarma = new JButton();
-    fButtonGoodKarma.addActionListener(this);
-    fButtonPerType.put(CardType.GOOD_KARMA, fButtonGoodKarma);
-    fNrOfCardsPerType.put(CardType.GOOD_KARMA, pParameter.getNrOfCards(CardType.GOOD_KARMA));
-    panelMain.add(createDeckPanel(CardType.GOOD_KARMA));
-    panelMain.add(Box.createVerticalStrut(5));
-
-    fButtonRandomEvent = new JButton();
-    fButtonRandomEvent.addActionListener(this);
-    fButtonPerType.put(CardType.RANDOM_EVENT, fButtonRandomEvent);
-    fNrOfCardsPerType.put(CardType.RANDOM_EVENT, pParameter.getNrOfCards(CardType.RANDOM_EVENT));
-    panelMain.add(createDeckPanel(CardType.RANDOM_EVENT));
-    panelMain.add(Box.createVerticalStrut(5));
-
-    fButtonDesperateMeasure = new JButton();
-    fButtonDesperateMeasure.addActionListener(this);
-    fButtonPerType.put(CardType.DESPERATE_MEASURE, fButtonDesperateMeasure);
-    fNrOfCardsPerType.put(CardType.DESPERATE_MEASURE, pParameter.getNrOfCards(CardType.DESPERATE_MEASURE));
-    panelMain.add(createDeckPanel(CardType.DESPERATE_MEASURE));
-    panelMain.add(Box.createVerticalStrut(10));
+//    fButtonGoodKarma = new JButton();
+//    fButtonGoodKarma.addActionListener(this);
+//    fButtonPerType.put(CardType.GOOD_KARMA, fButtonGoodKarma);
+//    fNrOfCardsPerType.put(CardType.GOOD_KARMA, pParameter.getNrOfCards(CardType.GOOD_KARMA));
+//    panelMain.add(createDeckPanel(CardType.GOOD_KARMA));
+//    panelMain.add(Box.createVerticalStrut(5));
+//
+//    fButtonRandomEvent = new JButton();
+//    fButtonRandomEvent.addActionListener(this);
+//    fButtonPerType.put(CardType.RANDOM_EVENT, fButtonRandomEvent);
+//    fNrOfCardsPerType.put(CardType.RANDOM_EVENT, pParameter.getNrOfCards(CardType.RANDOM_EVENT));
+//    panelMain.add(createDeckPanel(CardType.RANDOM_EVENT));
+//    panelMain.add(Box.createVerticalStrut(5));
+//
+//    fButtonDesperateMeasure = new JButton();
+//    fButtonDesperateMeasure.addActionListener(this);
+//    fButtonPerType.put(CardType.DESPERATE_MEASURE, fButtonDesperateMeasure);
+//    fNrOfCardsPerType.put(CardType.DESPERATE_MEASURE, pParameter.getNrOfCards(CardType.DESPERATE_MEASURE));
+//    panelMain.add(createDeckPanel(CardType.DESPERATE_MEASURE));
+//    panelMain.add(Box.createVerticalStrut(10));
 
     fCardLogTextPane = new ChatLogTextPane();
     fCardLogScrollPane = new ChatLogScrollPane(fCardLogTextPane);
@@ -263,27 +263,27 @@ public class DialogBuyCards extends Dialog implements ActionListener, KeyListene
   
   public void actionPerformed(ActionEvent pActionEvent) {
 
-  	if (pActionEvent.getSource() == fButtonMiscellaneousMayhem) {
-  		buyCard(CardType.MISCELLANEOUS_MAYHEM);
-  	}
-  	if (pActionEvent.getSource() == fButtonSpecialTeamPlay) {
-  		buyCard(CardType.SPECIAL_TEAM_PLAY);
-  	}
+//  	if (pActionEvent.getSource() == fButtonMiscellaneousMayhem) {
+//  		buyCard(CardType.MISCELLANEOUS_MAYHEM);
+//  	}
+//  	if (pActionEvent.getSource() == fButtonSpecialTeamPlay) {
+//  		buyCard(CardType.SPECIAL_TEAM_PLAY);
+//  	}
   	if (pActionEvent.getSource() == fButtonMagicItem) {
   		buyCard(CardType.MAGIC_ITEM);
   	}
   	if (pActionEvent.getSource() == fButtonDirtyTrick) {
   		buyCard(CardType.DIRTY_TRICK);
   	}
-  	if (pActionEvent.getSource() == fButtonGoodKarma) {
-  		buyCard(CardType.GOOD_KARMA);
-  	}
-  	if (pActionEvent.getSource() == fButtonRandomEvent) {
-  		buyCard(CardType.RANDOM_EVENT);
-  	}
-  	if (pActionEvent.getSource() == fButtonDesperateMeasure) {
-  		buyCard(CardType.DESPERATE_MEASURE);
-  	}
+//  	if (pActionEvent.getSource() == fButtonGoodKarma) {
+//  		buyCard(CardType.GOOD_KARMA);
+//  	}
+//  	if (pActionEvent.getSource() == fButtonRandomEvent) {
+//  		buyCard(CardType.RANDOM_EVENT);
+//  	}
+//  	if (pActionEvent.getSource() == fButtonDesperateMeasure) {
+//  		buyCard(CardType.DESPERATE_MEASURE);
+//  	}
   	
   	if (pActionEvent.getSource() == fButtonContinue) {
       if (getCloseListener() != null) {
@@ -306,13 +306,13 @@ public class DialogBuyCards extends Dialog implements ActionListener, KeyListene
   	fAvailableGold -= pType.getPrice();
   	updateAvailableGoldLabel();
   	
-    updateDeckButton(CardType.MISCELLANEOUS_MAYHEM);
-    updateDeckButton(CardType.SPECIAL_TEAM_PLAY);
+//    updateDeckButton(CardType.MISCELLANEOUS_MAYHEM);
+//    updateDeckButton(CardType.SPECIAL_TEAM_PLAY);
     updateDeckButton(CardType.MAGIC_ITEM);
     updateDeckButton(CardType.DIRTY_TRICK);
-    updateDeckButton(CardType.GOOD_KARMA);
-    updateDeckButton(CardType.RANDOM_EVENT);
-    updateDeckButton(CardType.DESPERATE_MEASURE);
+//    updateDeckButton(CardType.GOOD_KARMA);
+//    updateDeckButton(CardType.RANDOM_EVENT);
+//    updateDeckButton(CardType.DESPERATE_MEASURE);
 
   }
   
