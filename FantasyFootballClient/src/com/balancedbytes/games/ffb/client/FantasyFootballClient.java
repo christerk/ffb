@@ -191,6 +191,10 @@ public class FantasyFootballClient implements IConnectionListener, IDialogCloseL
 
   public void setProperty(String pProperty, String pValue) {
     
+    if ((fProperties == null) || (pProperty == null) || (pValue == null)) {
+      return;
+    }
+    
     fProperties.setProperty(pProperty, pValue);
     // System.out.println("setProperty(" + pProperty + "=" + pValue + ")");
     
