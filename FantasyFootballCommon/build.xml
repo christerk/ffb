@@ -10,13 +10,13 @@
 		<delete dir="${build.dir}" />
 	</target>
 	
-	<target name="prepare">
+	<target name="prepare" depends="clean">
 		<mkdir dir="${bin.dir}" />
 		<mkdir dir="${build.dir}" />
 	</target>
 
 	<target name="compile" depends="prepare">
-		<javac srcdir="${src.dir}" destdir="${bin.dir}" target="1.5" source="1.5" debug="on" />
+		<javac srcdir="${src.dir}" destdir="${bin.dir}" target="1.6" source="1.6" debug="on" />
 	</target>
 
     <target name="build">
