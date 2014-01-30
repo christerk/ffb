@@ -5,12 +5,13 @@ import java.util.Set;
 import com.balancedbytes.games.ffb.DodgeModifier;
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.FieldCoordinateBounds;
+import com.balancedbytes.games.ffb.GoForItModifier;
+import com.balancedbytes.games.ffb.GoForItModifierFactory;
 import com.balancedbytes.games.ffb.LeapModifier;
 import com.balancedbytes.games.ffb.MoveSquare;
 import com.balancedbytes.games.ffb.PathFinderWithPassBlockSupport;
 import com.balancedbytes.games.ffb.Skill;
 import com.balancedbytes.games.ffb.TurnMode;
-import com.balancedbytes.games.ffb.Weather;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.FieldModel;
 import com.balancedbytes.games.ffb.model.Game;
@@ -117,7 +118,8 @@ public class UtilPlayerMove {
     }
     int minimumRollGoForIt = 0;
     if (goForIt) {
-      minimumRollGoForIt = (fieldModel.getWeather() == Weather.BLIZZARD) ? 3 : 2;
+      Set<GoForItModifier> goForItModifiers = new GoForItModifierFactory().findGoForItModifiers(game);
+      minimumRollGoForIt = DiceInterpreter.getInstance().minimumRollGoingForIt(goForItModifiers);
     }
     MoveSquare moveSquare = new MoveSquare(pCoordinate, minimumRollDodge, minimumRollGoForIt);
     fieldModel.add(moveSquare);

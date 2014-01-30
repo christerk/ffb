@@ -147,6 +147,7 @@ public final class StepInitCard extends AbstractStep {
         doNextStep = playCustardPie();
         break;
       default:
+        activateCard(fPlayerId);
         doNextStep = true;
         break;
     }

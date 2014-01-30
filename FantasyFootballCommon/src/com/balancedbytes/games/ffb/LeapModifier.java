@@ -15,6 +15,8 @@ import com.balancedbytes.games.ffb.util.UtilCards;
  */
 public enum LeapModifier implements IRollModifier {
   
+  // TODO: create factory for this
+  
   VERY_LONG_LEGS(1, "Very Long Legs", -1);
   
   private int fId;

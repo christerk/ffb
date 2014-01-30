@@ -257,7 +257,7 @@ public enum Card implements IEnumWithId, IEnumWithName {
   //		Bone-head rolls return at the end of this turn).
 		
   GREASED_SHOES(44, "Greased Shoes", "Greased Shoes", CardType.DIRTY_TRICK, CardTarget.TURN, false,
-		new InducementPhase[] { InducementPhase.END_OF_OWN_TURN, InducementPhase.AFTER_KICKOFF_TO_OPPONENT_RESOLVED }, InducementDuration.UNTIL_END_OF_TURN,
+		new InducementPhase[] { InducementPhase.END_OF_OWN_TURN, InducementPhase.AFTER_KICKOFF_TO_OPPONENT_RESOLVED }, InducementDuration.UNTIL_END_OF_OPPONENTS_TURN,
 		"Opposing players need to roll 5+ to Go For It"),
   //	Description:
   //		The magic grease applied to your opponents’ shoes has finally taken	effect.

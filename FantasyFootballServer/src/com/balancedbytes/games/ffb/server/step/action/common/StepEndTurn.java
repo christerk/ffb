@@ -321,6 +321,7 @@ public class StepEndTurn extends AbstractStep {
       }
       
       deactivateCards(InducementDuration.UNTIL_END_OF_TURN);
+      deactivateCards(InducementDuration.UNTIL_END_OF_OPPONENTS_TURN);
       
       if (fNewHalf || fTouchdown) {
         deactivateCards(InducementDuration.UNTIL_END_OF_DRIVE);
@@ -515,12 +516,16 @@ public class StepEndTurn extends AbstractStep {
     Game game = getGameState().getGame();
   	for (Card card : game.getTurnDataHome().getInducementSet().getActiveCards()) {
     	if (pDuration == card.getDuration()) {
-    	  UtilSteps.deactivateCard(this, card);
+    	  if ((pDuration != InducementDuration.UNTIL_END_OF_OPPONENTS_TURN) || game.isHomePlaying()) {
+          UtilSteps.deactivateCard(this, card);
+    	  }
     	}
   	}
     for (Card card : game.getTurnDataAway().getInducementSet().getActiveCards()) {
       if (pDuration == card.getDuration()) {
-        UtilSteps.deactivateCard(this, card);
+        if ((pDuration != InducementDuration.UNTIL_END_OF_OPPONENTS_TURN) || !game.isHomePlaying()) {
+          UtilSteps.deactivateCard(this, card);
+        }
       }
     }
   }

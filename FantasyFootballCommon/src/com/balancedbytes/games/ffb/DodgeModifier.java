@@ -18,6 +18,8 @@ import com.balancedbytes.games.ffb.util.UtilPlayer;
  */
 public enum DodgeModifier implements IRollModifier {
   
+  // TODO: create factory for this
+  
   STUNTY(1, "Stunty", 0, false, false),
   BREAK_TACKLE(2, "Break Tackle", 0, false, false),
   TWO_HEADS(3, "Two Heads", -1, false, false),

@@ -12,7 +12,7 @@ import java.util.concurrent.TimeUnit;
 
 import javax.swing.UIManager;
 
-import org.eclipse.jetty.server.session.JDBCSessionManager.Session;
+import org.eclipse.jetty.websocket.WebSocket;
 import org.eclipse.jetty.websocket.WebSocketClient;
 import org.eclipse.jetty.websocket.WebSocketClientFactory;
 
@@ -152,17 +152,15 @@ public class FantasyFootballClient implements IConnectionListener, IDialogCloseL
       throw new FantasyFootballException(pUnknownHostException);
     }
 
-    Session session = null;
     try {
       fWebSocketClientFactory.start();
       URI uri = new URI("ws", null, getServerHost().getCanonicalHostName(), getServerPort(), "/command", null, null);
       fWebSocketClient = fWebSocketClientFactory.newWebSocketClient();
-      fWebSocketClient.open(uri, fCommandSocket).get();
+      WebSocket.Connection connection = fWebSocketClient.open(uri, fCommandSocket).get();
+      getUserInterface().getStatusReport().reportConnectionEstablished(connection != null);
     } catch (Exception pAnyException) {
       throw new FantasyFootballException(pAnyException);
     }
-    
-    getUserInterface().getStatusReport().reportConnectionEstablished(session != null);
 
     if (ClientMode.REPLAY != getMode()) {
       fTurnTimerTask = new TurnTimerTask(this);
