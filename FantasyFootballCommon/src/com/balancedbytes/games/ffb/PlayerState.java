@@ -134,6 +134,10 @@ public class PlayerState {
   	return ((PRONE == getBase()) || (STUNNED == getBase()));
   }
   
+  public boolean isStunned() {
+    return (STUNNED == getBase());
+  }
+  
   public boolean isAbleToMove() {
     return (((STANDING == getBase()) || (MOVING == getBase()) || (PRONE == getBase())) && isActive() && !isRooted());
   }

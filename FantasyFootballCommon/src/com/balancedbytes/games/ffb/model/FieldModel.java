@@ -194,15 +194,16 @@ public class FieldModel implements IByteArraySerializable, IJsonSerializable {
   	return cards.toArray(new Card[cards.size()]);
   }
   
-  public Player findPlayer(Card pCard) {
+  public Player[] findPlayers(Card pCard) {
+    List<Player> players = new ArrayList<Player>();
   	for (String playerId : fCardsByPlayerId.keySet()) {
   		for (Card card : fCardsByPlayerId.get(playerId)) {
   			if (card == pCard) {
-  				return getGame().getPlayerById(playerId);
+  			  players.add(getGame().getPlayerById(playerId));
   			}
   		}
   	}
-  	return null;
+  	return players.toArray(new Player[players.size()]);
   }
   
   public FieldCoordinate getBallCoordinate() {

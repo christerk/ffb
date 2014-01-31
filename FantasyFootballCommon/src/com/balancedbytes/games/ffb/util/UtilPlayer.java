@@ -85,6 +85,22 @@ public class UtilPlayer {
     return adjacentPlayers.toArray(new Player[adjacentPlayers.size()]);
   }
 
+  public static Player[] findAdjacentStandingOrPronePlayers(Game pGame, Team pTeam, FieldCoordinate pCoordinate) {
+    List<Player> adjacentPlayers = new ArrayList<Player>();
+    FieldModel fieldModel = pGame.getFieldModel();
+    FieldCoordinate[] adjacentCoordinates = fieldModel.findAdjacentCoordinates(pCoordinate, FieldCoordinateBounds.FIELD, 1, false);
+    for (int i = 0; i < adjacentCoordinates.length; i++) {
+      Player player = fieldModel.getPlayer(adjacentCoordinates[i]);
+      if ((player != null) && (player.getTeam() == pTeam)) {
+        PlayerState playerState = fieldModel.getPlayerState(player);
+        if (!playerState.isStunned()) {
+          adjacentPlayers.add(player);
+        }
+      }
+    }
+    return adjacentPlayers.toArray(new Player[adjacentPlayers.size()]);
+  }
+
   public static Player[] findAdjacentPlayersWithTacklezones(Game pGame, Team pTeam, FieldCoordinate pCoordinate, boolean pWithStartCoordinate) {
     List<Player> adjacentPlayers = new ArrayList<Player>();
     FieldModel fieldModel = pGame.getFieldModel();

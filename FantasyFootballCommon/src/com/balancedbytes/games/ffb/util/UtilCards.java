@@ -149,6 +149,9 @@ public final class UtilCards {
   			case CHOP_BLOCK:
   			  playerAllowed &= playerState.isActive() && (UtilPlayer.findAdjacentBlockablePlayers(pGame, otherTeam, playerCoordinate).length > 0);
   			  break;
+  			case CUSTARD_PIE:
+  			  playerAllowed &= (UtilPlayer.findAdjacentStandingOrPronePlayers(pGame, ownTeam, playerCoordinate).length > 0);
+  			  break;
   			default:
   				break;
   		}
@@ -202,20 +205,22 @@ public final class UtilCards {
   	} else {
   		return false;
   	}
-    Player player = pGame.getFieldModel().findPlayer(pCard);
-  	if ((player != null) && pCard.getTarget().isPlayedOnPlayer() && !pCard.isRemainsInPlay()) {
-  		pGame.getFieldModel().removeCard(player, pCard);
-  	}
-  	switch (pCard) {
-  	  case CUSTARD_PIE:
-  	    PlayerState playerState = pGame.getFieldModel().getPlayerState(player);
-  	    if ((playerState != null) && playerState.isHypnotized()) {
-  	      pGame.getFieldModel().setPlayerState(player, playerState.changeHypnotized(false));
-  	    }
-  	    break;
-  	  default:
-  	    break;
-  	}
+    Player[] players = pGame.getFieldModel().findPlayers(pCard);
+    for (Player player : players) {
+    	if (!pCard.isRemainsInPlay()) {
+    		pGame.getFieldModel().removeCard(player, pCard);
+    	}
+    	switch (pCard) {
+    	  case CUSTARD_PIE:
+    	    PlayerState playerState = pGame.getFieldModel().getPlayerState(player);
+    	    if ((playerState != null) && playerState.isHypnotized()) {
+    	      pGame.getFieldModel().setPlayerState(player, playerState.changeHypnotized(false));
+    	    }
+    	    break;
+    	  default:
+    	    break;
+    	}
+    }
   	return true;
   }
   
