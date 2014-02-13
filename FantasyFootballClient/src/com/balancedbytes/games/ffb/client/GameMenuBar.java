@@ -785,12 +785,25 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
   }
 
   private void addActiveCards(JMenu pCardsMenu, Card[] pCards) {
+    Game game = getClient().getGame();
   	Arrays.sort(pCards, Card.createComparator());
     Icon cardIcon = new ImageIcon(getClient().getUserInterface().getIconCache().getIconByProperty(IIconProperty.SIDEBAR_OVERLAY_PLAYER_CARD));
   	for (Card card : pCards) {
 			Player player = null;
     	if (card.getTarget().isPlayedOnPlayer()) {
-    		player = getClient().getGame().getFieldModel().findPlayer(card);
+    	  Player[] players = game.getFieldModel().findPlayers(card);
+  	    if (players.length == 1) {
+  	      player = players[0];
+  	    }
+  	    if (players.length > 1) {
+  	      for (int i = 0; i < players.length; i++) {
+  	        if (((game.getTeamHome().hasPlayer(players[i])) && (game.getTurnDataHome().getInducementSet().isActive(card)))
+  	          || ((game.getTeamAway().hasPlayer(players[i])) && (game.getTurnDataAway().getInducementSet().isActive(card)))) {
+	            player = players[i];
+	            break;
+	          }
+  	      }
+  	    }
     	}
 			StringBuilder cardText = new StringBuilder();
 			cardText.append("<html>");

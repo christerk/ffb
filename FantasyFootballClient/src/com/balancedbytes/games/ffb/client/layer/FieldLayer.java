@@ -56,14 +56,14 @@ public abstract class FieldLayer {
     return updatedArea;
   }
   
-  public Rectangle drawCenteredAndScaled(BufferedImage pImage, int pX, int pY, float pAlpha, double pScale) {
+  public Rectangle drawCenteredAndScaled(BufferedImage pImage, int pX, int pY, float pAlpha, double pScaleX, double pScaleY) {
   	if (pImage != null) {
-      int width = (int) (pImage.getWidth() * pScale);
-      int height =  (int) (pImage.getHeight() * pScale);
+      int width = (int) (pImage.getWidth() * pScaleX);
+      int height =  (int) (pImage.getHeight() * pScaleY);
       if ((width > 0) && (height > 0)) {
         BufferedImage scaledIcon = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
         Graphics2D g2d = scaledIcon.createGraphics();
-        AffineTransform transformation = AffineTransform.getScaleInstance(pScale, pScale);
+        AffineTransform transformation = AffineTransform.getScaleInstance(pScaleX, pScaleY);
         g2d.drawRenderedImage(pImage, transformation);
         g2d.dispose();
         int x = pX - (width / 2);

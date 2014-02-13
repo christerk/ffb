@@ -17,11 +17,13 @@ public class AnimationFrame {
 	
 	private String fIconProperty1;
 	private float fAlpha1;
-	private double fScale1;
+	private double fScaleX1;
+  private double fScaleY1;
 	private BufferedImage fIcon1;
 	private String fIconProperty2;
 	private float fAlpha2;
-	private double fScale2;
+	private double fScaleX2;
+  private double fScaleY2;
 	private BufferedImage fIcon2;
 	private int fTime;
 	private Sound fSound;
@@ -30,36 +32,42 @@ public class AnimationFrame {
 	private Rectangle fUpdatedArea;
 
 	public AnimationFrame(String pIconProperty, float pAlpha, int pTime) {
-		this(pIconProperty, pAlpha, 1.0, null, 1.0f, 1.0, pTime, null);
+		this(pIconProperty, pAlpha, 1.0, 1.0, null, 1.0f, 1.0, 1.0, pTime, null);
 	}
 
 	public AnimationFrame(String pIconProperty, float pAlpha, int pTime, Sound pSound) {
-		this(pIconProperty, pAlpha, 1.0, null, 1.0f, 1.0, pTime, pSound);
+		this(pIconProperty, pAlpha, 1.0, 1.0, null, 1.0f, 1.0, 1.0, pTime, pSound);
 	}
 
 	public AnimationFrame(String pIconProperty, float pAlpha, double pScale, int pTime) {
-		this(pIconProperty, pAlpha, pScale, null, 1.0f, 1.0, pTime, null);
+		this(pIconProperty, pAlpha, pScale, pScale, null, 1.0f, 1.0, 1.0, pTime, null);
 	}
 
 	public AnimationFrame(String pIconProperty, float pAlpha, double pScale, int pTime, Sound pSound) {
-		this(pIconProperty, pAlpha, pScale, null, 1.0f, 1.0, pTime, pSound);
+		this(pIconProperty, pAlpha, pScale, pScale, null, 1.0f, 1.0, 1.0, pTime, pSound);
 	}
 
 	public AnimationFrame(String pIconProperty1, float pAlpha1, String pIconProperty2, float pAlpha2, int pTime) {
-		this(pIconProperty1, pAlpha1, 1.0, pIconProperty2, pAlpha2, 1.0, pTime, null);
+		this(pIconProperty1, pAlpha1, 1.0, 1.0, pIconProperty2, pAlpha2, 1.0, 1.0, pTime, null);
 	}
 
 	public AnimationFrame(String pIconProperty1, float pAlpha1, String pIconProperty2, float pAlpha2, int pTime, Sound pSound) {
-		this(pIconProperty1, pAlpha1, 1.0, pIconProperty2, pAlpha2, 1.0, pTime, pSound);
+		this(pIconProperty1, pAlpha1, 1.0, 1.0, pIconProperty2, pAlpha2, 1.0, 1.0, pTime, pSound);
 	}
 
-	public AnimationFrame(String pIconProperty1, float pAlpha1, double pScale1, String pIconProperty2, float pAlpha2, double pScale2, int pTime, Sound pSound) {
+  public AnimationFrame(String pIconProperty1, float pAlpha1, double pScale1, String pIconProperty2, float pAlpha2, double pScale2, int pTime, Sound pSound) {
+    this(pIconProperty1, pAlpha1, pScale1, pScale1, pIconProperty2, pAlpha2, pScale2, pScale2, pTime, pSound);
+  }
+
+	public AnimationFrame(String pIconProperty1, float pAlpha1, double pScaleX1, double pScaleY1, String pIconProperty2, float pAlpha2, double pScaleX2, double pScaleY2, int pTime, Sound pSound) {
 		fIconProperty1 = pIconProperty1;
 		fAlpha1 = pAlpha1;
-		fScale1 = pScale1;
+		fScaleX1 = pScaleX1;
+    fScaleY1 = pScaleY1;
 		fIconProperty2 = pIconProperty2;
 		fAlpha2 = pAlpha2;
-		fScale2 = pScale2;
+		fScaleX2 = pScaleX2;
+    fScaleY2 = pScaleY2;
 		fTime = pTime;
 		fSound = pSound;
 	}
@@ -77,12 +85,12 @@ public class AnimationFrame {
 		getIcons();		
 		if (fIcon1 != null) {
 			addUpdatedArea(
-				fFieldLayer.drawCenteredAndScaled(fIcon1, pX, pY, fAlpha1, fScale1)
+				fFieldLayer.drawCenteredAndScaled(fIcon1, pX, pY, fAlpha1, fScaleX1, fScaleY1)
 			);
 		}
 		if (fIcon2 != null) {
 			addUpdatedArea(
-				fFieldLayer.drawCenteredAndScaled(fIcon2, pX, pY, fAlpha2, fScale2)
+				fFieldLayer.drawCenteredAndScaled(fIcon2, pX, pY, fAlpha2, fScaleX2, fScaleY2)
 			);
 		}
 	}

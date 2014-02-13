@@ -195,7 +195,7 @@ public class AnimationSequenceThrowing implements IAnimationSequence, ActionList
     
 //    System.out.println("scale " + scale);
     
-  	fLastIconBounds = fFieldLayer.drawCenteredAndScaled(fAnimatedIcon, fPositionX, fPositionY, 1.0f, scale);
+  	fLastIconBounds = fFieldLayer.drawCenteredAndScaled(fAnimatedIcon, fPositionX, fPositionY, 1.0f, scale, scale);
     fFieldLayer.getClient().getUserInterface().getFieldComponent().refresh();
 
     int stepping = findStepping();
