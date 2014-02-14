@@ -26,6 +26,7 @@ import com.balancedbytes.games.ffb.bytearray.IByteArraySerializable;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.IJsonSerializable;
 import com.balancedbytes.games.ffb.json.UtilJson;
+import com.balancedbytes.games.ffb.util.ArrayTool;
 import com.balancedbytes.games.ffb.util.StringTool;
 import com.balancedbytes.games.ffb.xml.IXmlReadable;
 import com.balancedbytes.games.ffb.xml.IXmlSerializable;
@@ -378,7 +379,7 @@ public class RosterPosition implements IXmlSerializable, IByteArraySerializable,
 
   	UtilXml.addValueElement(pHandler, _XML_TAG_QUANTITY, getQuantity());
   	UtilXml.addValueElement(pHandler, _XML_TAG_NAME, getName());
-		UtilXml.addValueElement(pHandler, _XML_TAG_SHORTHAND, getShorthand());
+	UtilXml.addValueElement(pHandler, _XML_TAG_SHORTHAND, getShorthand());
   	UtilXml.addValueElement(pHandler, _XML_TAG_TYPE, (getType() != null) ? getType().getName() : null);
   	UtilXml.addValueElement(pHandler, _XML_TAG_GENDER, (getGender() != null) ? getGender().getName() : null);
   	UtilXml.addValueElement(pHandler, _XML_TAG_DISPLAY_NAME, getDisplayName());
@@ -863,15 +864,17 @@ public class RosterPosition implements IXmlSerializable, IByteArraySerializable,
     for (int i = 0; i < skillCategoriesDouble.size(); i++) {
       fSkillCategoriesOnDoubleRoll.add((SkillCategory) UtilJson.toEnumWithName(skillCategoryFactory, skillCategoriesDouble.get(i)));
     }
-        
-    JsonArray skillArray = new JsonArray();
-    List<Integer> skillValues = new ArrayList<Integer>();
-    for (Skill skill : getSkills()) {
-      skillArray.add(UtilJson.toJsonValue(skill));
-      skillValues.add(getSkillValue(skill));
+    
+    fSkillValues.clear();
+    JsonArray skillArray = IJsonOption.SKILL_ARRAY.getFrom(jsonObject);
+    int[] skillValues = IJsonOption.SKILL_VALUES.getFrom(jsonObject);
+    if ((skillArray != null) && (skillArray.size() > 0) && ArrayTool.isProvided(skillValues)) {
+      SkillFactory skillFactory = new SkillFactory();
+      for (int i = 0; i < skillArray.size(); i++) {
+        Skill skill = (Skill) UtilJson.toEnumWithName(skillFactory, skillArray.get(i));
+        fSkillValues.put(skill, skillValues[i]);
+      }
     }
-    IJsonOption.SKILL_ARRAY.addTo(jsonObject, skillArray);
-    IJsonOption.SKILL_VALUES.addTo(jsonObject, skillValues);
 
     return this;
     
