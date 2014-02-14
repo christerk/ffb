@@ -9,6 +9,7 @@ import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
 import com.balancedbytes.games.ffb.dialog.DialogPlayerChoiceParameter;
 import com.balancedbytes.games.ffb.json.UtilJson;
+import com.balancedbytes.games.ffb.model.Animation;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.InducementSet;
 import com.balancedbytes.games.ffb.model.Player;
@@ -27,6 +28,7 @@ import com.balancedbytes.games.ffb.server.step.StepParameter;
 import com.balancedbytes.games.ffb.server.step.StepParameterKey;
 import com.balancedbytes.games.ffb.server.step.StepParameterSet;
 import com.balancedbytes.games.ffb.server.util.UtilDialog;
+import com.balancedbytes.games.ffb.server.util.UtilGame;
 import com.balancedbytes.games.ffb.util.StringTool;
 import com.balancedbytes.games.ffb.util.UtilCards;
 import com.balancedbytes.games.ffb.util.UtilPlayer;
@@ -161,6 +163,8 @@ public final class StepInitCard extends AbstractStep {
     Team ownTeam = fHomeTeam ? game.getTeamHome() : game.getTeamAway();
     InducementSet inducementSet = fHomeTeam ? game.getTurnDataHome().getInducementSet() : game.getTurnDataAway().getInducementSet();
     inducementSet.activateCard(fCard);
+    getResult().setAnimation(new Animation(fCard));
+    UtilGame.syncGameModel(this);
     if (StringTool.isProvided(pPlayerId)) {
       game.getFieldModel().addCard(game.getPlayerById(pPlayerId), fCard);
       getResult().addReport(new ReportPlayCard(ownTeam.getId(), fCard, pPlayerId));

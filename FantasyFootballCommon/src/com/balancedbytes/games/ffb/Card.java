@@ -40,7 +40,7 @@ public enum Card implements IEnumWithId, IEnumWithName {
   //    Your player really has found a way to become a man of steel.
   //  Timing:
   //    Play after your turn has ended or your kick-off to an opponent is
-  //    resolved, but before your opponentÂ’s turn begins.
+  //    resolved, but before your opponent’s turn begins.
   //  Effect:
   //    Armour rolls made against a player of your choice may not be
   //    modified or re-rolled by any positive modifiers for the remainder of

@@ -1,5 +1,6 @@
 package com.balancedbytes.games.ffb.model;
 
+import com.balancedbytes.games.ffb.Card;
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
@@ -24,29 +25,35 @@ public class Animation implements IByteArraySerializable, IJsonSerializable {
   private FieldCoordinate fStartCoordinate;
   private FieldCoordinate fEndCoordinate;
   private FieldCoordinate fInterceptorCoordinate;
+  private Card fCard;
   
   public Animation() {
     super();
   }
 
   public Animation(AnimationType pAnimationType) {
-  	this(pAnimationType, null, null, null, false, null);
+  	this(pAnimationType, null, null, null, null, false, null);
+  }
+
+  public Animation(Card pCard) {
+    this(AnimationType.CARD, pCard, null, null, null, false, null);
   }
 
   public Animation(AnimationType pAnimationType, FieldCoordinate pCoordinate) {
-  	this(pAnimationType, pCoordinate, null, null, false, null);
+  	this(pAnimationType, null, pCoordinate, null, null, false, null);
   }
   
   public Animation(FieldCoordinate pStartCoordinate, FieldCoordinate pEndCoordinate, String pThrownPlayerId, boolean pWithBall) {
-    this(AnimationType.THROW_TEAM_MATE, pStartCoordinate, pEndCoordinate, pThrownPlayerId, pWithBall, null);
+    this(AnimationType.THROW_TEAM_MATE, null, pStartCoordinate, pEndCoordinate, pThrownPlayerId, pWithBall, null);
   }
 
   public Animation(AnimationType pAnimationType, FieldCoordinate pStartCoordinate, FieldCoordinate pEndCoordinate, FieldCoordinate pInterceptorCoordinate) {
-    this(pAnimationType, pStartCoordinate, pEndCoordinate, null, false, pInterceptorCoordinate);
+    this(pAnimationType, null, pStartCoordinate, pEndCoordinate, null, false, pInterceptorCoordinate);
   }
   
-  private Animation(AnimationType pAnimationType, FieldCoordinate pStartCoordinate, FieldCoordinate pEndCoordinate, String pThrownPlayerId, boolean pWithBall, FieldCoordinate pInterceptorCoordinate) {
+  private Animation(AnimationType pAnimationType, Card pCard, FieldCoordinate pStartCoordinate, FieldCoordinate pEndCoordinate, String pThrownPlayerId, boolean pWithBall, FieldCoordinate pInterceptorCoordinate) {
     fAnimationType = pAnimationType;
+    fCard = pCard;
     fThrownPlayerId = pThrownPlayerId;
     fWithBall = pWithBall;
     fStartCoordinate = pStartCoordinate;
@@ -78,10 +85,14 @@ public class Animation implements IByteArraySerializable, IJsonSerializable {
     return fInterceptorCoordinate;
   }
   
+  public Card getCard() {
+    return fCard;
+  }
+  
   // transformation
   
   public Animation transform() {
-    return new Animation(getAnimationType(), FieldCoordinate.transform(getStartCoordinate()), FieldCoordinate.transform(getEndCoordinate()), getThrownPlayerId(), isWithBall(), FieldCoordinate.transform(getInterceptorCoordinate()));
+    return new Animation(getAnimationType(), getCard(), FieldCoordinate.transform(getStartCoordinate()), FieldCoordinate.transform(getEndCoordinate()), getThrownPlayerId(), isWithBall(), FieldCoordinate.transform(getInterceptorCoordinate()));
   }
 
   // ByteArray serialization
@@ -123,6 +134,7 @@ public class Animation implements IByteArraySerializable, IJsonSerializable {
     IJsonOption.END_COORDINATE.addTo(jsonObject, fEndCoordinate);
     IJsonOption.INTERCEPTOR_COORDINATE.addTo(jsonObject, fInterceptorCoordinate);
     IJsonOption.ANIMATION_TYPE.addTo(jsonObject, fAnimationType);
+    IJsonOption.CARD.addTo(jsonObject, fCard);
     return jsonObject;
   }
   
@@ -134,6 +146,7 @@ public class Animation implements IByteArraySerializable, IJsonSerializable {
     fEndCoordinate = IJsonOption.END_COORDINATE.getFrom(jsonObject);
     fInterceptorCoordinate = IJsonOption.INTERCEPTOR_COORDINATE.getFrom(jsonObject);
     fAnimationType = (AnimationType) IJsonOption.ANIMATION_TYPE.getFrom(jsonObject);
+    fCard = (Card) IJsonOption.CARD.getFrom(jsonObject);
     return this;
   }
   

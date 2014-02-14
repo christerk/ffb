@@ -24,4 +24,13 @@ public class CardFactory implements IEnumWithIdFactory, IEnumWithNameFactory {
     return null;
   }
 
+  public Card forShortName(String pName) {
+    for (Card card : Card.values()) {
+      if (card.getShortName().equalsIgnoreCase(pName)) {
+        return card;
+      }
+    }
+    return null;
+  }
+
 }

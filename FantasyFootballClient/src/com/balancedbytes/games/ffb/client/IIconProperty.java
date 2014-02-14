@@ -198,6 +198,7 @@ public interface IIconProperty {
   String ANIMATION_FIREBALL_SMOKE_2  = "animation.fireball.smoke.2";
   String ANIMATION_FIREBALL_SMOKE_3  = "animation.fireball.smoke.3";
   String ANIMATION_FIREBALL_SMOKE_4  = "animation.fireball.smoke.4"; 
+ 
   String ANIMATION_LIGHTNING_01  = "animation.lightning.01";
   String ANIMATION_LIGHTNING_02  = "animation.lightning.02";
   String ANIMATION_LIGHTNING_03  = "animation.lightning.03";
@@ -210,6 +211,7 @@ public interface IIconProperty {
   String ANIMATION_LIGHTNING_10  = "animation.lightning.10";
   String ANIMATION_LIGHTNING_11  = "animation.lightning.11";
   String ANIMATION_LIGHTNING_12  = "animation.lightning.12";
+  
   String ANIMATION_KICKOFF_BLITZ = "animation.kickoff.blitz";
   String ANIMATION_KICKOFF_BLIZZARD = "animation.kickoff.blizzard";
   String ANIMATION_KICKOFF_BRILLIANT_COACHING = "animation.kickoff.brilliantCoaching";
@@ -226,4 +228,9 @@ public interface IIconProperty {
   String ANIMATION_KICKOFF_THROW_A_ROCK = "animation.kickoff.throwARock";
   String ANIMATION_KICKOFF_VERY_SUNNY = "animation.kickoff.verySunny";
   
+  String ANIMATION_CARD_DIRTY_TRICK_FRONT = "animation.card.dirtyTrick.front";
+  String ANIMATION_CARD_DIRTY_TRICK_BACK = "animation.card.dirtyTrick.back";
+  String ANIMATION_CARD_MAGIC_ITEM_FRONT = "animation.card.magicItem.front";
+  String ANIMATION_CARD_MAGIC_ITEM_BACK = "animation.card.magicItem.back";
+ 
 }

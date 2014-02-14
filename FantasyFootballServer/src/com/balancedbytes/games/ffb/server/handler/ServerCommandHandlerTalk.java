@@ -9,6 +9,8 @@ import java.util.Set;
 
 import org.eclipse.jetty.websocket.api.Session;
 
+import com.balancedbytes.games.ffb.Card;
+import com.balancedbytes.games.ffb.CardFactory;
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.GameOption;
 import com.balancedbytes.games.ffb.GameOptionFactory;
@@ -167,7 +169,12 @@ public class ServerCommandHandlerTalk extends ServerCommandHandler {
     ) {
     	return;
     }
+    Card card = null;
+    Animation animation = null;
     FieldCoordinate animationCoordinate = null;
+    if ((commands.length > 2) && (animationType == AnimationType.CARD) && StringTool.isProvided(commands[2])) {
+      card = new CardFactory().forShortName(commands[2].replaceAll("_", " "));
+    }
     if (commands.length > 3) {
     	try {
     		animationCoordinate = new FieldCoordinate(Integer.parseInt(commands[2]), Integer.parseInt(commands[3]));
@@ -177,12 +184,17 @@ public class ServerCommandHandlerTalk extends ServerCommandHandler {
     }
     StringBuilder info = new StringBuilder();
     info.append("Playing Animation ").append(animationType.getName());
-    if (animationCoordinate != null) {
+    if (card != null) {
+      animation = new Animation(card);
+      info.append(" ").append(card.getShortName());
+    } else if (animationCoordinate != null) {
+      animation = new Animation(animationType, animationCoordinate);
     	info.append(" at ").append(animationCoordinate.toString());
+    } else {
+      animation = new Animation(animationType);
     }
     info.append(".");
     getServer().getCommunication().sendPlayerTalk(pGameState, null, info.toString());
-    Animation animation = new Animation(animationType, animationCoordinate);
   	UtilGame.syncGameModel(pGameState, null, animation, null);
   }
 

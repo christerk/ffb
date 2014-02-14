@@ -36,7 +36,8 @@ public enum AnimationType implements IEnumWithId, IEnumWithName {
 	THROW_A_ROCK(22, "throwARock"),
 	THROW_BOMB(23, "throwBomb"),
 	HAIL_MARY_BOMB(24, "hailMaryBomb"),
-	BOMB_EXLOSION(25, "bombExplosion");
+	BOMB_EXLOSION(25, "bombExplosion"),
+	CARD(26, "card");
   
   private int fId;
   private String fName;

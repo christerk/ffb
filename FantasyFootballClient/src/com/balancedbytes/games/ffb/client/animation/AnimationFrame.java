@@ -47,8 +47,26 @@ public class AnimationFrame {
 		this(pIconProperty, pAlpha, pScale, pScale, null, 1.0f, 1.0, 1.0, pTime, pSound);
 	}
 
+  public AnimationFrame(String pIconProperty, float pAlpha, double pScaleX, double pScaleY, int pTime) {
+    this(pIconProperty, pAlpha, pScaleX, pScaleY, null, 1.0f, 1.0, 1.0, pTime, null);
+  }
+
+  public AnimationFrame(BufferedImage pIcon, float pAlpha, double pScaleX, double pScaleY, int pTime) {
+    fIcon1 = pIcon;
+    fIconProperty1 = null;
+    fAlpha1 = pAlpha;
+    fScaleX1 = pScaleX;
+    fScaleY1 = pScaleY;
+    fIconProperty2 = null;
+    fAlpha2 = 1.0f;
+    fScaleX2 = 1.0;
+    fScaleY2 = 1.0;
+    fTime = pTime;
+    fSound = null;
+  }
+
 	public AnimationFrame(String pIconProperty1, float pAlpha1, String pIconProperty2, float pAlpha2, int pTime) {
-		this(pIconProperty1, pAlpha1, 1.0, 1.0, pIconProperty2, pAlpha2, 1.0, 1.0, pTime, null);
+	  this(pIconProperty1, pAlpha1, 1.0, 1.0, pIconProperty2, pAlpha2, 1.0, 1.0, pTime, null);
 	}
 
 	public AnimationFrame(String pIconProperty1, float pAlpha1, String pIconProperty2, float pAlpha2, int pTime, Sound pSound) {

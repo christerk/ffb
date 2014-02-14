@@ -63,6 +63,9 @@ public class IconCache {
   }
 
   public BufferedImage getIconByProperty(String pIconProperty) {
+    if (!StringTool.isProvided(pIconProperty)) {
+      return null;
+    }
     BufferedImage icon = fIconByProperty.get(pIconProperty);
     if (icon == null) {
       String iconFilename = getClient().getProperty(pIconProperty);

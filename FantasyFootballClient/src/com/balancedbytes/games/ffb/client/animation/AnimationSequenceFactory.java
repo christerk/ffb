@@ -74,6 +74,8 @@ public class AnimationSequenceFactory {
 				return AnimationSequenceThrowing.createAnimationSequenceThrowBomb(pClient, pAnimation);
 			case HAIL_MARY_BOMB:
 				return AnimationSequenceThrowing.createAnimationSequenceHailMaryBomb(pClient, pAnimation);
+			case CARD:
+			  return AnimationSequenceCard.createAnimationSequence(pClient, pAnimation);
 			default:
 				return null;
 		}
