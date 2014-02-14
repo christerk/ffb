@@ -41,7 +41,8 @@ public class ClientCommandHandlerModelSync extends ClientCommandHandler implemen
   private boolean fUpdateTurnNr;
   private boolean fUpdateTurnMode;
   private boolean fUpdateTimeout;
-  private boolean fUpdateInducements;
+//  private boolean fUpdateInducements;
+//  private boolean fUpdateActiveCards;
   private boolean fClearSelectedPlayer;
 
   protected ClientCommandHandlerModelSync(FantasyFootballClient pClient) {
@@ -169,7 +170,8 @@ public class ClientCommandHandlerModelSync extends ClientCommandHandler implemen
       fUpdateTurnMode = false;
       fUpdateActingPlayer = false;
       fUpdateTimeout = false;
-      fUpdateInducements = false;
+//      fUpdateInducements = false;
+//      fUpdateActiveCards = false;
       fClearSelectedPlayer = false;
 
       for (ModelChange modelChange : pModelChangeList.getChanges()) {
@@ -195,12 +197,16 @@ public class ClientCommandHandlerModelSync extends ClientCommandHandler implemen
           case TURN_DATA_SET_TURN_NR:
             fUpdateTurnNr = true;
             break;
-          case INDUCEMENT_SET_ADD_INDUCEMENT:
-          case INDUCEMENT_SET_REMOVE_INDUCEMENT:
-          case INDUCEMENT_SET_ACTIVATE_CARD:
-          case INDUCEMENT_SET_DEACTIVATE_CARD:
-            fUpdateInducements = true;
-            break;
+//          case INDUCEMENT_SET_ADD_INDUCEMENT:
+//          case INDUCEMENT_SET_REMOVE_INDUCEMENT:
+//            fUpdateInducements = true;
+//            break;
+//          case FIELD_MODEL_ADD_CARD:
+//          case FIELD_MODEL_REMOVE_CARD:
+//          case INDUCEMENT_SET_ACTIVATE_CARD:
+//          case INDUCEMENT_SET_DEACTIVATE_CARD:
+//            fUpdateActiveCards = true;
+//            break;
           case GAME_SET_TIMEOUT_POSSIBLE:
             fUpdateTimeout = true;
             break;
@@ -247,9 +253,13 @@ public class ClientCommandHandlerModelSync extends ClientCommandHandler implemen
       clientData.clear();
     }
         
-    if (fUpdateInducements) {
-      userInterface.getGameMenuBar().updateInducements();
-    }
+//    if (fUpdateInducements) {
+//      userInterface.getGameMenuBar().updateInducements();
+//    }
+    
+//    if (fUpdateActiveCards) {
+//      userInterface.getGameMenuBar().updateActiveCards();
+//    }
     
     if (fMode == ClientCommandHandlerMode.PLAYING) {
       UtilThrowTeamMate.updateThrownPlayer(getClient());

@@ -163,10 +163,12 @@ public final class StepInitCard extends AbstractStep {
     Team ownTeam = fHomeTeam ? game.getTeamHome() : game.getTeamAway();
     InducementSet inducementSet = fHomeTeam ? game.getTurnDataHome().getInducementSet() : game.getTurnDataAway().getInducementSet();
     inducementSet.activateCard(fCard);
+    if (StringTool.isProvided(pPlayerId)) {
+      game.getFieldModel().addCard(game.getPlayerById(pPlayerId), fCard);
+    }
     getResult().setAnimation(new Animation(fCard));
     UtilGame.syncGameModel(this);
     if (StringTool.isProvided(pPlayerId)) {
-      game.getFieldModel().addCard(game.getPlayerById(pPlayerId), fCard);
       getResult().addReport(new ReportPlayCard(ownTeam.getId(), fCard, pPlayerId));
     } else {
       getResult().addReport(new ReportPlayCard(ownTeam.getId(), fCard));
