@@ -40,7 +40,7 @@ public enum Card implements IEnumWithId, IEnumWithName {
   //    Your player really has found a way to become a man of steel.
   //  Timing:
   //    Play after your turn has ended or your kick-off to an opponent is
-  //    resolved, but before your opponent’s turn begins.
+  //    resolved, but before your opponent's turn begins.
   //  Effect:
   //    Armour rolls made against a player of your choice may not be
   //    modified or re-rolled by any positive modifiers for the remainder of
@@ -69,7 +69,7 @@ public enum Card implements IEnumWithId, IEnumWithName {
   //    was advertised.
   //  Timing:
   //    Play after your turn has ended or your kick-off to an opponent is
-  //    resolved, but before your opponentÂ’s turn begins.
+  //    resolved, but before your opponent's turn begins.
   //  Effect:
   //    Choose the player on your team holding the ball. That player gains
   //    the Sure Hands and Fend skills until he no longer has the ball.
@@ -109,7 +109,7 @@ public enum Card implements IEnumWithId, IEnumWithName {
   //    any large objects that happen to intersect with his location.
   //  Timing:
   //	  Play after your turn has ended or your kick-off to an opponent is
-  //    resolved, but before your opponentÂ’s turn begins.
+  //    resolved, but before your opponent's turn begins.
   //  Effect:
   //	  Choose one player on your team. For the remainder of this drive, any
   //    opponent moving one square or more first and then blitzing this
@@ -137,7 +137,7 @@ public enum Card implements IEnumWithId, IEnumWithName {
   //  	these gloves for your upcoming game.
   //  Timing:
   //  	Play after your turn has ended or your kick-off to an opponent is
-  //  	resolved, but before your opponentÂ’s turn begins.
+  //  	resolved, but before your opponent's turn begins.
   //  Effect:
   //  	A player of your choice gains the Pass Block skill, and an additional +1
   //  	modifier to all interception rolls until the drive ends.
@@ -220,7 +220,7 @@ public enum Card implements IEnumWithId, IEnumWithName {
   //	Description:
   //  	A player throws a dirty block on the opponent.
   //	Timing:
-  //  	Play after your turn has ended but before your opponentÂ’s turn
+  //  	Play after your turn has ended but before your opponentÃ‚â€™s turn
   // 		begins. You may not play this card after a kick-off is resolved.
   //	Effect:
   // 		This card may only be played on one of your Standing players that
@@ -308,7 +308,7 @@ public enum Card implements IEnumWithId, IEnumWithName {
   //  	A devious groundskeeper has set up a pit trap for you.
   //  Timing:
   //    Play after your turn has ended or your kick-off to an opponent is
-  //    resolved, but before your opponent’s turn begins.
+  //    resolved, but before your opponent's turn begins.
   //  Effect:
   //  	Choose a player: that player is Placed Prone, no armour roll is made,
   //  	and if the player had the ball bounce it as normal.
@@ -328,11 +328,11 @@ public enum Card implements IEnumWithId, IEnumWithName {
     
   //  STOLEN PLAYBOOK
   //  Description:
-  //  	You nabbed a playbook from the opponent’s coach! He sure will be
+  //  	You nabbed a playbook from the opponentâ€™s coach! He sure will be
   //    surprised when you know exactly how to ruin his play.
   //  Timing:
   //    Play after your turn has ended or your kick-off to an opponent is
-  //    resolved, but before your opponent’s turn begins.
+  //    resolved, but before your opponent's turn begins.
   //  Effect:
   //    A player of your choice gains Pass Block and Shadowing until the drive
   //    ends.
@@ -342,7 +342,7 @@ public enum Card implements IEnumWithId, IEnumWithName {
   //  	Someone set up a deep pit trap...with a trampoline in it!
   //  Timing:
   //    Play after your turn has ended or your kick-off to an opponent is
-  //    resolved, but before your opponent’s turn begins.
+  //    resolved, but before your opponent's turn begins.
   //  Effect:
   //    Choose any opposing player. Using all the rules for the Throw Team-
   //    Mate skill, the player is automatically thrown (i.e. cannot be fumbled) to
@@ -352,7 +352,7 @@ public enum Card implements IEnumWithId, IEnumWithName {
     
   //  WITCH'S BREW
   //  Description:
-  //    You've spiked the opponent’s Kroxorade bottle with a witch's
+  //    You've spiked the opponentâ€™s Kroxorade bottle with a witch's
   //    concoction!
   //  Timing:
   //		Play after all players have been set up for a kick-off, but before any
