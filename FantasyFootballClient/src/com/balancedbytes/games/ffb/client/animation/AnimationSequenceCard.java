@@ -26,75 +26,75 @@ import com.balancedbytes.games.ffb.model.Animation;
  * @author Kalimar
  */
 public class AnimationSequenceCard implements IAnimationSequence, ActionListener {
-	
-	public static AnimationSequenceCard createAnimationSequence(FantasyFootballClient pClient, Animation pAnimation) {
-	  String cardBackProperty = getCardBackProperty(pAnimation.getCard());
-	  BufferedImage cardFront = createCardFront(pClient, pAnimation.getCard());
-	  return new AnimationSequenceCard(
-		  new AnimationFrame[] {
-				new AnimationFrame(cardBackProperty, 0.5f, 0.3, 100),
-				new AnimationFrame(cardBackProperty, 0.6f, 0.4, 100),
-				new AnimationFrame(cardBackProperty, 0.7f, 0.5, 100),
-				new AnimationFrame(cardBackProperty, 0.8f, 0.6, 100),
-				new AnimationFrame(cardBackProperty, 0.9f, 0.7, 100),
-				new AnimationFrame(cardBackProperty, 1.0f, 0.8, 100),
-				new AnimationFrame(cardBackProperty, 1.0f, 0.9, 100),
+
+  public static AnimationSequenceCard createAnimationSequence(FantasyFootballClient pClient, Animation pAnimation) {
+    String cardBackProperty = getCardBackProperty(pAnimation.getCard());
+    BufferedImage cardFront = createCardFront(pClient, pAnimation.getCard());
+    return new AnimationSequenceCard(
+      new AnimationFrame[] {
+        new AnimationFrame(cardBackProperty, 0.5f, 0.3, 100),
+        new AnimationFrame(cardBackProperty, 0.6f, 0.4, 100),
+        new AnimationFrame(cardBackProperty, 0.7f, 0.5, 100),
+        new AnimationFrame(cardBackProperty, 0.8f, 0.6, 100),
+        new AnimationFrame(cardBackProperty, 0.9f, 0.7, 100),
+        new AnimationFrame(cardBackProperty, 1.0f, 0.8, 100),
+        new AnimationFrame(cardBackProperty, 1.0f, 0.9, 100),
         new AnimationFrame(cardBackProperty, 1.0f, 1.0, 1.0, 500),
-        new AnimationFrame(cardBackProperty, 1.0f, 0.9, 1.0, 100),
+        // new AnimationFrame(cardBackProperty, 1.0f, 0.9, 1.0, 100),
         new AnimationFrame(cardBackProperty, 1.0f, 0.8, 1.0, 100),
-        new AnimationFrame(cardBackProperty, 1.0f, 0.7, 1.0, 100),
+        // new AnimationFrame(cardBackProperty, 1.0f, 0.7, 1.0, 100),
         new AnimationFrame(cardBackProperty, 1.0f, 0.6, 1.0, 100),
-        new AnimationFrame(cardBackProperty, 1.0f, 0.5, 1.0, 100),
+        // new AnimationFrame(cardBackProperty, 1.0f, 0.5, 1.0, 100),
         new AnimationFrame(cardBackProperty, 1.0f, 0.4, 1.0, 100),
-        new AnimationFrame(cardBackProperty, 1.0f, 0.3, 1.0, 100),
+        // new AnimationFrame(cardBackProperty, 1.0f, 0.3, 1.0, 100),
         new AnimationFrame(cardBackProperty, 1.0f, 0.2, 1.0, 100),
-        new AnimationFrame(cardBackProperty, 1.0f, 0.1, 1.0, 100),
+        // new AnimationFrame(cardBackProperty, 1.0f, 0.1, 1.0, 100),
         new AnimationFrame(cardBackProperty, 1.0f, 0.0, 1.0, 100),
-        new AnimationFrame(cardFront, 1.0f, 0.1, 1.0, 100),
+        // new AnimationFrame(cardFront, 1.0f, 0.1, 1.0, 100),
         new AnimationFrame(cardFront, 1.0f, 0.2, 1.0, 100),
-        new AnimationFrame(cardFront, 1.0f, 0.3, 1.0, 100),
+        // new AnimationFrame(cardFront, 1.0f, 0.3, 1.0, 100),
         new AnimationFrame(cardFront, 1.0f, 0.4, 1.0, 100),
-        new AnimationFrame(cardFront, 1.0f, 0.5, 1.0, 100),
+        // new AnimationFrame(cardFront, 1.0f, 0.5, 1.0, 100),
         new AnimationFrame(cardFront, 1.0f, 0.6, 1.0, 100),
-        new AnimationFrame(cardFront, 1.0f, 0.7, 1.0, 100),
+        // new AnimationFrame(cardFront, 1.0f, 0.7, 1.0, 100),
         new AnimationFrame(cardFront, 1.0f, 0.8, 1.0, 100),
-        new AnimationFrame(cardFront, 1.0f, 0.9, 1.0, 100),
+        // new AnimationFrame(cardFront, 1.0f, 0.9, 1.0, 100),
         new AnimationFrame(cardFront, 1.0f, 1.0, 1.0, 2000)
-		  }
-		);
-	}
-	
-	private static String getCardFrontProperty(Card pCard) {
-	  if (pCard != null) {
-  	  switch (pCard.getType()) {
-  	    case DIRTY_TRICK:
-  	      return IIconProperty.ANIMATION_CARD_DIRTY_TRICK_FRONT;
-  	    case MAGIC_ITEM:
-  	      return IIconProperty.ANIMATION_CARD_MAGIC_ITEM_FRONT;
-  	    default:
-  	      break;
-  	  }
-	  }
-	  return null;
-	}
-	
-	private static String getCardBackProperty(Card pCard) {
+      }
+    );
+  }
+
+  private static String getCardFrontProperty(Card pCard) {
     if (pCard != null) {
       switch (pCard.getType()) {
-        case DIRTY_TRICK:
-          return IIconProperty.ANIMATION_CARD_DIRTY_TRICK_BACK;
-        case MAGIC_ITEM:
-          return IIconProperty.ANIMATION_CARD_MAGIC_ITEM_BACK;
-        default:
-          break;
+      case DIRTY_TRICK:
+        return IIconProperty.ANIMATION_CARD_DIRTY_TRICK_FRONT;
+      case MAGIC_ITEM:
+        return IIconProperty.ANIMATION_CARD_MAGIC_ITEM_FRONT;
+      default:
+        break;
       }
     }
     return null;
-	}
-	
-	private static BufferedImage createCardFront(FantasyFootballClient pClient, Card pCard) {
-	  IconCache iconCache = pClient.getUserInterface().getIconCache();
-	  BufferedImage frontIcon = iconCache.getIconByProperty(getCardFrontProperty(pCard));
+  }
+
+  private static String getCardBackProperty(Card pCard) {
+    if (pCard != null) {
+      switch (pCard.getType()) {
+      case DIRTY_TRICK:
+        return IIconProperty.ANIMATION_CARD_DIRTY_TRICK_BACK;
+      case MAGIC_ITEM:
+        return IIconProperty.ANIMATION_CARD_MAGIC_ITEM_BACK;
+      default:
+        break;
+      }
+    }
+    return null;
+  }
+
+  private static BufferedImage createCardFront(FantasyFootballClient pClient, Card pCard) {
+    IconCache iconCache = pClient.getUserInterface().getIconCache();
+    BufferedImage frontIcon = iconCache.getIconByProperty(getCardFrontProperty(pCard));
     if (frontIcon == null) {
       return null;
     }
@@ -113,61 +113,61 @@ public class AnimationSequenceCard implements IAnimationSequence, ActionListener
     }
     g2d.dispose();
     return cardIcon;
-	}
-	
-	private static final int _TIMER_DELAY = 100;
-	
-	private AnimationFrame[] fFrames;
-	private int fPosition;
-	private Timer fTimer;
-	private FieldLayer fFieldLayer;
-	private int fX;
-	private int fY;
-	private int fDelay;
-	private IAnimationListener fListener;
-	
-	protected AnimationSequenceCard(AnimationFrame[] pFrames)  {
-		fFrames = pFrames;
-		fX = FieldLayer.FIELD_IMAGE_WIDTH / 2;
-		fY = FieldLayer.FIELD_IMAGE_HEIGHT / 2;
-		fTimer = new Timer(_TIMER_DELAY, this);
-	}
+  }
 
-	public void play(FieldLayer pFieldLayer, IAnimationListener pListener) {
-		fFieldLayer = pFieldLayer;
-		fListener = pListener;
-		fPosition = -1;
-		fDelay = 0;
-		fTimer.start();
-	}
+  private static final int _TIMER_DELAY = 100;
 
-	public void actionPerformed(ActionEvent pE) {
-		fDelay -= _TIMER_DELAY;
-		if (fDelay > 0) {
-			return;
-		}
-		if (fPosition >= 0) {
-			fFrames[fPosition].clear();
-		}
-		if (fPosition < fFrames.length - 1) {
-			fPosition++;
-			fDelay = fFrames[fPosition].getTime();
-			fFrames[fPosition].drawCenteredAndScaled(fFieldLayer, fX, fY);
-			if (fFrames[fPosition].getSound() != null) {
-	      SoundEngine soundEngine = fFieldLayer.getClient().getUserInterface().getSoundEngine();
-	      String soundSetting = fFieldLayer.getClient().getProperty(IClientProperty.SETTING_SOUND_MODE);
-	      if (IClientPropertyValue.SETTING_SOUND_ON.equals(soundSetting) || (IClientPropertyValue.SETTING_SOUND_MUTE_SPECTATORS.equals(soundSetting))) {
-	        soundEngine.playSound(fFrames[fPosition].getSound());
-	      }
-			}
-		} else {
-			fTimer.stop();
-			fPosition = -1;
-		}
-		fFieldLayer.getClient().getUserInterface().getFieldComponent().refresh();
-		if ((fPosition < 0) && (fListener != null)) {
-			fListener.animationFinished();
-		}
-	}
-	
+  private AnimationFrame[] fFrames;
+  private int fPosition;
+  private Timer fTimer;
+  private FieldLayer fFieldLayer;
+  private int fX;
+  private int fY;
+  private int fDelay;
+  private IAnimationListener fListener;
+
+  protected AnimationSequenceCard(AnimationFrame[] pFrames) {
+    fFrames = pFrames;
+    fX = FieldLayer.FIELD_IMAGE_WIDTH / 2;
+    fY = FieldLayer.FIELD_IMAGE_HEIGHT / 2;
+    fTimer = new Timer(_TIMER_DELAY, this);
+  }
+
+  public void play(FieldLayer pFieldLayer, IAnimationListener pListener) {
+    fFieldLayer = pFieldLayer;
+    fListener = pListener;
+    fPosition = -1;
+    fDelay = 0;
+    fTimer.start();
+  }
+
+  public void actionPerformed(ActionEvent pE) {
+    fDelay -= _TIMER_DELAY;
+    if (fDelay > 0) {
+      return;
+    }
+    if (fPosition >= 0) {
+      fFrames[fPosition].clear();
+    }
+    if (fPosition < fFrames.length - 1) {
+      fPosition++;
+      fDelay = fFrames[fPosition].getTime();
+      fFrames[fPosition].drawCenteredAndScaled(fFieldLayer, fX, fY);
+      if (fFrames[fPosition].getSound() != null) {
+        SoundEngine soundEngine = fFieldLayer.getClient().getUserInterface().getSoundEngine();
+        String soundSetting = fFieldLayer.getClient().getProperty(IClientProperty.SETTING_SOUND_MODE);
+        if (IClientPropertyValue.SETTING_SOUND_ON.equals(soundSetting) || (IClientPropertyValue.SETTING_SOUND_MUTE_SPECTATORS.equals(soundSetting))) {
+          soundEngine.playSound(fFrames[fPosition].getSound());
+        }
+      }
+    } else {
+      fTimer.stop();
+      fPosition = -1;
+    }
+    fFieldLayer.getClient().getUserInterface().getFieldComponent().refresh();
+    if ((fPosition < 0) && (fListener != null)) {
+      fListener.animationFinished();
+    }
+  }
+
 }
