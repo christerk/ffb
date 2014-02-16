@@ -8,7 +8,6 @@ import com.balancedbytes.games.ffb.CardFactory;
 import com.balancedbytes.games.ffb.DiceDecoration;
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.FieldMarker;
-import com.balancedbytes.games.ffb.GameOption;
 import com.balancedbytes.games.ffb.GameOptionFactory;
 import com.balancedbytes.games.ffb.GameOptionValue;
 import com.balancedbytes.games.ffb.IDialogParameter;
@@ -394,7 +393,7 @@ public enum ModelChangeDataType implements IEnumWithId, IEnumWithName {
       case FIELD_MARKER:
         return ((FieldMarker) pValue).toJsonValue();
       case GAME_OPTION:
-        return UtilJson.toJsonValue((GameOption) pValue);
+        return ((GameOptionValue) pValue).toJsonValue();
       case INDUCEMENT:
         return ((Inducement) pValue).toJsonValue();
       case INTEGER:
