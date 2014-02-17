@@ -22,6 +22,7 @@ import com.balancedbytes.games.ffb.GameStatus;
 import com.balancedbytes.games.ffb.GameStatusFactory;
 import com.balancedbytes.games.ffb.PasswordChallenge;
 import com.balancedbytes.games.ffb.server.FantasyFootballServer;
+import com.balancedbytes.games.ffb.server.IGameIdListener;
 import com.balancedbytes.games.ffb.server.IServerProperty;
 import com.balancedbytes.games.ffb.server.db.DbStatementId;
 import com.balancedbytes.games.ffb.server.db.old.DbAdminListByStatusQueryOld;
@@ -203,7 +204,7 @@ public class AdminServlet extends HttpServlet {
     }
     final AtomicReference<Long> gameIdNotifier = new AtomicReference<Long>();
     InternalServerCommandScheduleGame scheduleCommand = new InternalServerCommandScheduleGame(teamHomeId, teamAwayId);
-    scheduleCommand.setAdminGameIdListener(new IAdminGameIdListener() {
+    scheduleCommand.setGameIdListener(new IGameIdListener() {
       public void setGameId(long pGameId) {
         gameIdNotifier.set(pGameId);
         gameIdNotifier.notify();

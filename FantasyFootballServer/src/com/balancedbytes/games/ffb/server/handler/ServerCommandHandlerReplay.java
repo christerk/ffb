@@ -4,18 +4,13 @@ import java.io.IOException;
 
 import org.eclipse.jetty.websocket.api.Session;
 
-import com.balancedbytes.games.ffb.ClientMode;
-import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.net.NetCommandId;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandReplay;
 import com.balancedbytes.games.ffb.server.FantasyFootballServer;
-import com.balancedbytes.games.ffb.server.GameCache;
-import com.balancedbytes.games.ffb.server.GameCacheMode;
 import com.balancedbytes.games.ffb.server.GameState;
-import com.balancedbytes.games.ffb.server.ServerMode;
-import com.balancedbytes.games.ffb.server.fumbbl.FumbblRequestLoadGame;
 import com.balancedbytes.games.ffb.server.net.ReceivedCommand;
 import com.balancedbytes.games.ffb.server.net.SessionManager;
+import com.balancedbytes.games.ffb.server.request.ServerRequestLoadReplay;
 import com.balancedbytes.games.ffb.server.util.UtilReplay;
 
 /**
@@ -35,6 +30,7 @@ public class ServerCommandHandlerReplay extends ServerCommandHandler {
   public void handleCommand(ReceivedCommand pReceivedCommand) {
 
     ClientCommandReplay replayCommand = (ClientCommandReplay) pReceivedCommand.getCommand();
+    Session session = pReceivedCommand.getSession();
     int replayToCommandNr = replayCommand.getReplayToCommandNr();
 
     GameState gameState = null;
@@ -55,36 +51,14 @@ public class ServerCommandHandlerReplay extends ServerCommandHandler {
     	}
     	return;
     }
-    
-    if (gameState == null) {
-      gameState = loadGameStateById(pReceivedCommand.getSession(), replayCommand.getGameId());
-    }
-    
+
     if (gameState != null) {
-    	UtilReplay.startServerReplay(gameState, replayToCommandNr, pReceivedCommand.getSession());
+      UtilReplay.startServerReplay(gameState, replayToCommandNr, pReceivedCommand.getSession());
+
+    } else {
+      getServer().getRequestProcessor().add(new ServerRequestLoadReplay(replayCommand.getGameId(), replayToCommandNr, session));
     }
     
   }
-  
-  // either returns immediately with the gameState
-  // or queues a fumbbl request and returns with null
-  private GameState loadGameStateById(Session pSession, long pGameId) {
-    GameCache gameCache = getServer().getGameCache();
-    GameState gameState = gameCache.getGameStateById(pGameId);
-    if (gameState == null) {
-      if (getServer().getMode() == ServerMode.FUMBBL) {
-        getServer().getFumbblRequestProcessor().add(new FumbblRequestLoadGame(pGameId, null, null, ClientMode.REPLAY, pSession));
-      } else {
-      	gameState = gameCache.queryFromDb(pGameId);
-        if (gameState != null) {
-          Game game = gameState.getGame();
-          game.getTeamHome().updateRoster(gameCache.getRosterById(game.getTeamHome().getRosterId()));
-          game.getTeamAway().updateRoster(gameCache.getRosterById(game.getTeamAway().getRosterId()));
-          gameCache.add(gameState, GameCacheMode.REPLAY_GAME);
-        }
-      }
-    }
-    return gameState;
-  }
-  
+    
 }

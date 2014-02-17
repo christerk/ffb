@@ -52,7 +52,7 @@ public final class StepSpectators extends AbstractStep {
     getResult().addReport(rollSpectators());
     SequenceGenerator.getInstance().pushKickoffSequence(getGameState(), true);
     GameCache gameCache = getGameState().getServer().getGameCache();
-    gameCache.queueDbUpdate(getGameState());
+    gameCache.queueDbUpdate(getGameState(), true);
     getResult().setNextAction(StepAction.NEXT_STEP);
   }
   

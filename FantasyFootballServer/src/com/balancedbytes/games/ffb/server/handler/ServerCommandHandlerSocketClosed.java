@@ -9,9 +9,9 @@ import com.balancedbytes.games.ffb.server.FantasyFootballServer;
 import com.balancedbytes.games.ffb.server.GameCache;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.ServerMode;
-import com.balancedbytes.games.ffb.server.fumbbl.FumbblRequestRemoveGamestate;
 import com.balancedbytes.games.ffb.server.net.ReceivedCommand;
 import com.balancedbytes.games.ffb.server.net.SessionManager;
+import com.balancedbytes.games.ffb.server.request.fumbbl.FumbblRequestRemoveGamestate;
 import com.balancedbytes.games.ffb.server.util.UtilTimer;
 import com.balancedbytes.games.ffb.util.ArrayTool;
 
@@ -61,7 +61,7 @@ public class ServerCommandHandlerSocketClosed extends ServerCommandHandler {
 
       if ((homeSession == null) && (awaySession == null) && ((GameStatus.STARTING == gameState.getStatus()) || (GameStatus.ACTIVE == gameState.getStatus()))) {
         gameState.setStatus(GameStatus.PAUSED);
-        gameCache.queueDbUpdate(gameState);
+        gameCache.queueDbUpdate(gameState, true);
         removeFumbblGame(gameState);
         gameState.fetchChanges();  // remove all changes from queue
       }
@@ -78,7 +78,7 @@ public class ServerCommandHandlerSocketClosed extends ServerCommandHandler {
   
   private void removeFumbblGame(GameState pGameState) {
     if (!pGameState.getGame().isTesting() && (getServer().getMode() == ServerMode.FUMBBL)) {
-      getServer().getFumbblRequestProcessor().add(new FumbblRequestRemoveGamestate(pGameState));
+      getServer().getRequestProcessor().add(new FumbblRequestRemoveGamestate(pGameState));
     }
   }
 

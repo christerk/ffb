@@ -1,4 +1,4 @@
-package com.balancedbytes.games.ffb.server.fumbbl;
+package com.balancedbytes.games.ffb.server.request.fumbbl;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -14,6 +14,8 @@ import com.balancedbytes.games.ffb.server.DebugLog;
 import com.balancedbytes.games.ffb.server.FantasyFootballServer;
 import com.balancedbytes.games.ffb.server.IServerLogLevel;
 import com.balancedbytes.games.ffb.server.IServerProperty;
+import com.balancedbytes.games.ffb.server.request.ServerRequest;
+import com.balancedbytes.games.ffb.server.request.ServerRequestProcessor;
 import com.balancedbytes.games.ffb.server.util.UtilHttpClient;
 import com.balancedbytes.games.ffb.util.StringTool;
 
@@ -22,7 +24,7 @@ import com.balancedbytes.games.ffb.util.StringTool;
  * 
  * @author Kalimar
  */
-public class FumbblRequestPasswordChallenge extends FumbblRequest {
+public class FumbblRequestPasswordChallenge extends ServerRequest {
   
   private static final Pattern _PATTERN_CHALLENGE = Pattern.compile("<challenge>([^<]+)</challenge>");
   
@@ -43,11 +45,11 @@ public class FumbblRequestPasswordChallenge extends FumbblRequest {
   }
   
   @Override
-  public void process(FumbblRequestProcessor pRequestProcessor) {
+  public void process(ServerRequestProcessor pRequestProcessor) {
     String challenge = null;
     FantasyFootballServer server = pRequestProcessor.getServer();
     try {
-      setRequestUrl(StringTool.bind(server.getProperty(IServerProperty.FUMBBL_AUTH_CHALLENGE), URLEncoder.encode(getCoach(), FumbblRequestProcessor.CHARACTER_ENCODING)));
+      setRequestUrl(StringTool.bind(server.getProperty(IServerProperty.FUMBBL_AUTH_CHALLENGE), URLEncoder.encode(getCoach(), UtilFumbblRequest.CHARACTER_ENCODING)));
     	server.getDebugLog().log(IServerLogLevel.DEBUG, DebugLog.FUMBBL_REQUEST, getRequestUrl());
       String responseXml = UtilHttpClient.fetchPage(getRequestUrl());
       if (StringTool.isProvided(responseXml)) {

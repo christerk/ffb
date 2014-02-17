@@ -14,8 +14,8 @@ import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.IServerJsonOption;
 import com.balancedbytes.games.ffb.server.IServerLogLevel;
 import com.balancedbytes.games.ffb.server.ServerMode;
-import com.balancedbytes.games.ffb.server.fumbbl.FumbblRequestCreateGamestate;
 import com.balancedbytes.games.ffb.server.net.ReceivedCommand;
+import com.balancedbytes.games.ffb.server.request.fumbbl.FumbblRequestCreateGamestate;
 import com.balancedbytes.games.ffb.server.step.AbstractStep;
 import com.balancedbytes.games.ffb.server.step.StepAction;
 import com.balancedbytes.games.ffb.server.step.StepCommandStatus;
@@ -86,7 +86,7 @@ public final class StepInitStartGame extends AbstractStep {
       	if (fFumbblGameCreated) {
       		leaveStep();
       	} else {
-          server.getFumbblRequestProcessor().add(new FumbblRequestCreateGamestate(getGameState()));
+          server.getRequestProcessor().add(new FumbblRequestCreateGamestate(getGameState()));
       	}
       } else {
     		leaveStep();
@@ -100,7 +100,7 @@ public final class StepInitStartGame extends AbstractStep {
   	GameCache gameCache = server.getGameCache();
     if ((game != null) && (game.getTeamHome() != null) && (game.getTeamAway() != null)) {
     	getGameState().setStatus(GameStatus.ACTIVE);
-    	gameCache.queueDbUpdate(getGameState());
+    	gameCache.queueDbUpdate(getGameState(), true);
       // log start game -->
       StringBuilder logEntry = new StringBuilder();
       logEntry.append("START GAME ").append(StringTool.print(game.getTeamHome().getName())).append(" vs. ").append(StringTool.print(game.getTeamAway().getName()));

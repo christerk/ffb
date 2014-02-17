@@ -104,6 +104,7 @@ public interface IServerJsonOption extends IJsonOption {
                JsonBooleanOption PETTY_CASH_SELECTED_AWAY = new JsonBooleanOption("pettyCashSelectedAway");
                JsonBooleanOption PETTY_CASH_SELECTED_HOME = new JsonBooleanOption("pettyCashSelectedHome");
                JsonBooleanOption REMOVE_USED_SECRET_WEAPONS = new JsonBooleanOption("removeUsedSecretWeapons");
+               JsonBooleanOption REPLAY = new JsonBooleanOption("replay");
                JsonBooleanOption REPORTED_AWAY = new JsonBooleanOption("reportedAway");
                JsonBooleanOption REPORTED_HOME = new JsonBooleanOption("reportedHome");
                JsonBooleanOption ROLL_FOR_EFFECT = new JsonBooleanOption("rollForEffect");

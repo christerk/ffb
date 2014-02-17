@@ -17,7 +17,7 @@ import com.balancedbytes.games.ffb.server.db.delete.DbGamesInfoDeleteParameter;
 import com.balancedbytes.games.ffb.server.db.delete.DbGamesSerializedDeleteParameter;
 import com.balancedbytes.games.ffb.server.db.insert.DbGamesInfoInsertParameter;
 import com.balancedbytes.games.ffb.server.db.insert.DbGamesSerializedInsertParameter;
-import com.balancedbytes.games.ffb.server.fumbbl.FumbblRequestProcessor;
+import com.balancedbytes.games.ffb.server.request.fumbbl.UtilFumbblRequest;
 import com.balancedbytes.games.ffb.util.StringTool;
 
 /**
@@ -34,6 +34,10 @@ public class DbConversion {
     fDbQueryFactory = new DbQueryFactory(pServer);
   }
   
+  public FantasyFootballServer getServer() {
+    return fServer;
+  }
+  
   public void convert(long pStartGameId, long pEndGameId) throws SQLException {
     fDbQueryFactory.prepareStatements();
     long startTime = System.currentTimeMillis();
@@ -47,10 +51,9 @@ public class DbConversion {
       GameState gameState = DbQueryScript.readGameState(fServer, gameStateId);
       if (gameState != null) {
         Game game = gameState.getGame();
-        FumbblRequestProcessor fumbblRequestProcessor = new FumbblRequestProcessor(fServer);
         System.out.print(", load rosters from fumbbl");
-        Roster homeRoster = fumbblRequestProcessor.loadRoster(game.getTeamHome().getId());
-        Roster awayRoster = fumbblRequestProcessor.loadRoster(game.getTeamAway().getId());
+        Roster homeRoster = UtilFumbblRequest.loadFumbblRosterForTeam(getServer(), game.getTeamHome().getId());
+        Roster awayRoster = UtilFumbblRequest.loadFumbblRosterForTeam(getServer(), game.getTeamAway().getId());
         if ((homeRoster != null) && (awayRoster != null)) {
           game.getTeamHome().updateRoster(homeRoster);
           game.getTeamAway().updateRoster(awayRoster);

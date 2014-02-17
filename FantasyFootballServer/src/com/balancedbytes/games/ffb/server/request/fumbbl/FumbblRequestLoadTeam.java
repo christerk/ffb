@@ -1,4 +1,4 @@
-package com.balancedbytes.games.ffb.server.fumbbl;
+package com.balancedbytes.games.ffb.server.request.fumbbl;
 
 import org.eclipse.jetty.websocket.api.Session;
 
@@ -8,11 +8,13 @@ import com.balancedbytes.games.ffb.model.Team;
 import com.balancedbytes.games.ffb.net.ServerStatus;
 import com.balancedbytes.games.ffb.server.FantasyFootballServer;
 import com.balancedbytes.games.ffb.server.GameState;
+import com.balancedbytes.games.ffb.server.IGameIdListener;
 import com.balancedbytes.games.ffb.server.IServerLogLevel;
-import com.balancedbytes.games.ffb.server.admin.IAdminGameIdListener;
 import com.balancedbytes.games.ffb.server.net.ReceivedCommand;
 import com.balancedbytes.games.ffb.server.net.SessionManager;
 import com.balancedbytes.games.ffb.server.net.commands.InternalServerCommandFumbblTeamLoaded;
+import com.balancedbytes.games.ffb.server.request.ServerRequest;
+import com.balancedbytes.games.ffb.server.request.ServerRequestProcessor;
 import com.balancedbytes.games.ffb.util.StringTool;
 
 
@@ -20,14 +22,15 @@ import com.balancedbytes.games.ffb.util.StringTool;
  * 
  * @author Kalimar
  */
-public class FumbblRequestLoadTeam extends FumbblRequest {
+public class FumbblRequestLoadTeam extends ServerRequest {
   
   private String fCoach;
   private String fTeamId;
   private boolean fHomeTeam; 
   private GameState fGameState;
-  private Session fSession;
-  private IAdminGameIdListener fAdminGameIdListener;
+
+  private transient Session fSession;
+  private transient IGameIdListener fGameIdListener;
   
   public FumbblRequestLoadTeam(GameState pGameState, String pCoach, String pTeamId, boolean pHomeTeam, Session pSession) {
     fGameState = pGameState;
@@ -57,20 +60,20 @@ public class FumbblRequestLoadTeam extends FumbblRequest {
     return fSession;
   }
   
-  public void setAdminGameIdListener(IAdminGameIdListener pAdminGameIdListener) {
-	  fAdminGameIdListener = pAdminGameIdListener;
+  public void setGameIdListener(IGameIdListener pGameIdListener) {
+	  fGameIdListener = pGameIdListener;
   }
   
-  public IAdminGameIdListener getAdminGameIdListener() {
-	  return fAdminGameIdListener;
+  public IGameIdListener getGameIdListener() {
+	  return fGameIdListener;
   }
   
   @Override
-  public void process(FumbblRequestProcessor pRequestProcessor) {
+  public void process(ServerRequestProcessor pRequestProcessor) {
     FantasyFootballServer server = pRequestProcessor.getServer();
     Team team = null;
     try {
-      team = pRequestProcessor.loadTeam(getTeamId());
+      team = UtilFumbblRequest.loadFumbblTeam(server, getTeamId());
     } catch (FantasyFootballException pFantasyFootballException) {
       handleInvalidTeam(pRequestProcessor, getTeamId(), pFantasyFootballException);
     }
@@ -79,7 +82,7 @@ public class FumbblRequestLoadTeam extends FumbblRequest {
     } else {
     	Roster roster = null;
       try {
-        roster = pRequestProcessor.loadRoster(getTeamId());
+        roster = UtilFumbblRequest.loadFumbblRosterForTeam(server, getTeamId());
       } catch (FantasyFootballException pFantasyFootballException) {
         handleInvalidRoster(pRequestProcessor, getTeamId(), pFantasyFootballException);
       }
@@ -89,14 +92,14 @@ public class FumbblRequestLoadTeam extends FumbblRequest {
         team.updateRoster(roster);
         server.getGameCache().addTeamToGame(getGameState(), team, isHomeTeam());
         InternalServerCommandFumbblTeamLoaded loadedCommand = new InternalServerCommandFumbblTeamLoaded(getGameState().getId(), getCoach(), isHomeTeam());
-        loadedCommand.setAdminGameIdListener(getAdminGameIdListener());
+        loadedCommand.setGameIdListener(getGameIdListener());
         server.getCommunication().handleCommand(new ReceivedCommand(loadedCommand, getSession()));
       }
     }
   }
   
   // this might be overkill, we'll see how it does in practice
-  private void handleInvalidTeam(FumbblRequestProcessor pRequestProcessor, String pTeamId, Throwable pThrowable) {
+  private void handleInvalidTeam(ServerRequestProcessor pRequestProcessor, String pTeamId, Throwable pThrowable) {
     FantasyFootballServer server = pRequestProcessor.getServer();
     server.getDebugLog().log(IServerLogLevel.ERROR, StringTool.bind("Error loading Team $1.", pTeamId));
     server.getDebugLog().log(pThrowable);
@@ -105,7 +108,7 @@ public class FumbblRequestLoadTeam extends FumbblRequest {
   }
   
   // this might be overkill, we'll see how it does in practice
-  private void handleInvalidRoster(FumbblRequestProcessor pRequestProcessor, String pTeamId, Throwable pThrowable) {
+  private void handleInvalidRoster(ServerRequestProcessor pRequestProcessor, String pTeamId, Throwable pThrowable) {
     FantasyFootballServer server = pRequestProcessor.getServer();
     server.getDebugLog().log(IServerLogLevel.ERROR, StringTool.bind("Error loading Roster for Team $1.", pTeamId));
     server.getDebugLog().log(pThrowable);
@@ -113,7 +116,7 @@ public class FumbblRequestLoadTeam extends FumbblRequest {
     closeGame(pRequestProcessor, getGameState());
   }
   
-  private void closeGame(FumbblRequestProcessor pRequestProcessor, GameState pGameState) {
+  private void closeGame(ServerRequestProcessor pRequestProcessor, GameState pGameState) {
     if (pGameState != null) {
     	FantasyFootballServer server = pGameState.getServer();
       SessionManager sessionManager = server.getSessionManager();

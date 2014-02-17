@@ -6,7 +6,7 @@ import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.net.NetCommandId;
 import com.balancedbytes.games.ffb.net.commands.UtilNetCommand;
-import com.balancedbytes.games.ffb.server.admin.IAdminGameIdListener;
+import com.balancedbytes.games.ffb.server.IGameIdListener;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
@@ -20,7 +20,7 @@ public class InternalServerCommandScheduleGame extends InternalServerCommand {
 	private String fTeamHomeId;
 	private String fTeamAwayId;
 	
-	private transient IAdminGameIdListener fAdminGameIdListener;
+	private transient IGameIdListener fGameIdListener;
 
   public InternalServerCommandScheduleGame(String pTeamHomeId, String pTeamAwayId) {
     fTeamHomeId = pTeamHomeId;
@@ -39,12 +39,12 @@ public class InternalServerCommandScheduleGame extends InternalServerCommand {
 	  return fTeamAwayId;
   }
   
-  public void setAdminGameIdListener(IAdminGameIdListener pAdminGameIdListener) {
-	  fAdminGameIdListener = pAdminGameIdListener;
+  public void setGameIdListener(IGameIdListener pGameIdListener) {
+	  fGameIdListener = pGameIdListener;
   }
   
-  public IAdminGameIdListener getAdminGameIdListener() {
-	  return fAdminGameIdListener;
+  public IGameIdListener getGameIdListener() {
+	  return fGameIdListener;
   }
   
   // ByteArray serialization

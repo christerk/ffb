@@ -1,4 +1,4 @@
-package com.balancedbytes.games.ffb.server.fumbbl;
+package com.balancedbytes.games.ffb.server.request.fumbbl;
 
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.GameResult;
@@ -7,6 +7,8 @@ import com.balancedbytes.games.ffb.server.FantasyFootballServer;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.IServerLogLevel;
 import com.balancedbytes.games.ffb.server.IServerProperty;
+import com.balancedbytes.games.ffb.server.request.ServerRequest;
+import com.balancedbytes.games.ffb.server.request.ServerRequestProcessor;
 import com.balancedbytes.games.ffb.util.StringTool;
 
 
@@ -14,7 +16,7 @@ import com.balancedbytes.games.ffb.util.StringTool;
  * 
  * @author Kalimar
  */
-public class FumbblRequestUpdateGamestate extends FumbblRequest {
+public class FumbblRequestUpdateGamestate extends ServerRequest {
 
   private GameState fGameState;
   
@@ -27,18 +29,18 @@ public class FumbblRequestUpdateGamestate extends FumbblRequest {
   }
   
   @Override
-  public void process(FumbblRequestProcessor pRequestProcessor) {
+  public void process(ServerRequestProcessor pRequestProcessor) {
     FantasyFootballServer server = pRequestProcessor.getServer();
-    String challengeResponse = pRequestProcessor.getChallengeResponseForFumbblUser();
+    String challengeResponse = UtilFumbblRequest.getFumbblAuthChallengeResponseForFumbblUser(server);
     Game game = getGameState().getGame();
     if (!game.isTesting()) {
       GameResult gameResult = game.getGameResult();
       int spectators = getGameState().getServer().getSessionManager().getSessionsOfSpectators(getGameState()).length;
       setRequestUrl(StringTool.bind(server.getProperty(IServerProperty.FUMBBL_GAMESTATE_UPDATE), new Object[] { challengeResponse, game.getId(), game.getHalf(), game.getTurnData().getTurnNr(), gameResult.getTeamResultHome().getScore(), gameResult.getTeamResultAway().getScore(), spectators }));
       server.getDebugLog().log(IServerLogLevel.DEBUG, DebugLog.FUMBBL_REQUEST, getRequestUrl());
-      FumbblGameState fumbblGameState = pRequestProcessor.processGameStateRequest(getRequestUrl());
+      FumbblGameState fumbblGameState = UtilFumbblRequest.processFumbblGameStateRequest(server, getRequestUrl());
       if ((fumbblGameState == null) || !fumbblGameState.isOk()) {
-        pRequestProcessor.reportFumbblError(getGameState(), fumbblGameState);
+        UtilFumbblRequest.reportFumbblError(getGameState(), fumbblGameState);
       }
     }
   }

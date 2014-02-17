@@ -4,8 +4,8 @@ import com.balancedbytes.games.ffb.net.NetCommandId;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandPasswordChallenge;
 import com.balancedbytes.games.ffb.server.FantasyFootballServer;
 import com.balancedbytes.games.ffb.server.ServerMode;
-import com.balancedbytes.games.ffb.server.fumbbl.FumbblRequestPasswordChallenge;
 import com.balancedbytes.games.ffb.server.net.ReceivedCommand;
+import com.balancedbytes.games.ffb.server.request.fumbbl.FumbblRequestPasswordChallenge;
 import com.balancedbytes.games.ffb.util.StringTool;
 
 /**
@@ -28,7 +28,7 @@ public class ServerCommandHandlerPasswordChallenge extends ServerCommandHandler 
 
     String challenge = null;
     if ((ServerMode.FUMBBL == getServer().getMode()) && StringTool.isProvided(passwordChallengeCommand.getCoach())) {
-      getServer().getFumbblRequestProcessor().add(new FumbblRequestPasswordChallenge(passwordChallengeCommand.getCoach(), pReceivedCommand.getSession()));
+      getServer().getRequestProcessor().add(new FumbblRequestPasswordChallenge(passwordChallengeCommand.getCoach(), pReceivedCommand.getSession()));
     } else {
       getServer().getCommunication().sendPasswordChallenge(pReceivedCommand.getSession(), challenge);
     }

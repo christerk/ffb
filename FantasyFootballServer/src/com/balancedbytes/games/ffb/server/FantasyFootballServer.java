@@ -14,17 +14,18 @@ import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
 
 import com.balancedbytes.games.ffb.server.admin.AdminServlet;
+import com.balancedbytes.games.ffb.server.admin.BackupServlet;
 import com.balancedbytes.games.ffb.server.db.DbConnectionManager;
 import com.balancedbytes.games.ffb.server.db.DbInitializer;
 import com.balancedbytes.games.ffb.server.db.DbQueryFactory;
 import com.balancedbytes.games.ffb.server.db.DbUpdateFactory;
 import com.balancedbytes.games.ffb.server.db.old.DbConversion;
-import com.balancedbytes.games.ffb.server.fumbbl.FumbblRequestProcessor;
 import com.balancedbytes.games.ffb.server.handler.ServerCommandHandlerFactory;
 import com.balancedbytes.games.ffb.server.net.CommandServlet;
 import com.balancedbytes.games.ffb.server.net.ServerCommunication;
 import com.balancedbytes.games.ffb.server.net.ServerPingTask;
 import com.balancedbytes.games.ffb.server.net.SessionManager;
+import com.balancedbytes.games.ffb.server.request.ServerRequestProcessor;
 import com.balancedbytes.games.ffb.util.ArrayTool;
 import com.balancedbytes.games.ffb.util.StringTool;
 import com.fumbbl.rng.Fortuna;
@@ -61,7 +62,7 @@ public class FantasyFootballServer {
   private Timer fPingTimer;
   private DebugLog fDebugLog;
   private ServerReplayer fReplayer;
-  private FumbblRequestProcessor fFumbblRequestProcessor;
+  private ServerRequestProcessor fServerRequestProcessor;
   private boolean fBlockingNewGames;
   
   private long fConvertStartGameId;
@@ -163,6 +164,7 @@ public class FantasyFootballServer {
           holder.setInitParameter("resourceBase", new File(httpDir, "icons").getAbsolutePath());
           holder.setInitParameter("pathInfoOnly", "true");
           context.addServlet(new ServletHolder(new AdminServlet(this)), "/admin/*");
+          context.addServlet(new ServletHolder(new BackupServlet(this)), "/backup/*");
           context.addServlet(new ServletHolder(new CommandServlet(this)), "/command/*");
           server.start();
         }
@@ -182,8 +184,8 @@ public class FantasyFootballServer {
         replayerThread.setPriority(replayerThread.getPriority() - 1);
         replayerThread.start();
         
-        fFumbblRequestProcessor = new FumbblRequestProcessor(this);
-        fFumbblRequestProcessor.start();
+        fServerRequestProcessor = new ServerRequestProcessor(this);
+        fServerRequestProcessor.start();
   
         System.err.println("FantasyFootballServer " + SERVER_VERSION + " running on port " + httpPortProperty + ".");
         
@@ -269,8 +271,8 @@ public class FantasyFootballServer {
     return fReplayer;
   }
   
-  public FumbblRequestProcessor getFumbblRequestProcessor() {
-    return fFumbblRequestProcessor;
+  public ServerRequestProcessor getRequestProcessor() {
+    return fServerRequestProcessor;
   }
   
   public void setConversionRange(long pStartGameId, long pEndGameId) {

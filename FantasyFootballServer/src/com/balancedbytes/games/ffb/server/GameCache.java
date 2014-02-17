@@ -32,14 +32,14 @@ import com.balancedbytes.games.ffb.server.db.delete.DbGamesSerializedDeleteParam
 import com.balancedbytes.games.ffb.server.db.insert.DbGamesInfoInsertParameter;
 import com.balancedbytes.games.ffb.server.db.insert.DbGamesSerializedInsertParameter;
 import com.balancedbytes.games.ffb.server.db.old.DbGameListQueryOpenGamesByCoachOld;
-import com.balancedbytes.games.ffb.server.db.old.DbQueryScript;
 import com.balancedbytes.games.ffb.server.db.query.DbGameListQueryOpenGamesByCoach;
 import com.balancedbytes.games.ffb.server.db.query.DbGamesSerializedQuery;
 import com.balancedbytes.games.ffb.server.db.query.DbGamesSerializedQueryMaxId;
 import com.balancedbytes.games.ffb.server.db.update.DbGamesInfoUpdateParameter;
 import com.balancedbytes.games.ffb.server.db.update.DbGamesSerializedUpdateParameter;
-import com.balancedbytes.games.ffb.server.fumbbl.FumbblRequestRemoveGamestate;
 import com.balancedbytes.games.ffb.server.net.SessionManager;
+import com.balancedbytes.games.ffb.server.net.commands.InternalServerCommandBackupGame;
+import com.balancedbytes.games.ffb.server.request.fumbbl.FumbblRequestRemoveGamestate;
 import com.balancedbytes.games.ffb.server.util.UtilTimer;
 import com.balancedbytes.games.ffb.util.StringTool;
 import com.balancedbytes.games.ffb.util.UtilBox;
@@ -131,6 +131,9 @@ public class GameCache {
         FantasyFootballServer server = pGameState.getServer();
         server.getDebugLog().log(IServerLogLevel.WARN, cachedGameState.getId(), StringTool.bind("REMOVE GAME cache decreases to $1 games.", fGameStateById.size()));
         // <-- log game cache size
+        if (!pGameState.isSwappedOut() && (pGameState.getGame().getFinished() != null)) {
+          server.getCommunication().handleCommand(new InternalServerCommandBackupGame(pGameState.getId()));
+        }
   		}
     }
   }
@@ -251,7 +254,7 @@ public class GameCache {
         playerResult.setCurrentSpps(players[i].getCurrentSpps());
       }
     }
-    queueDbUpdate(pGameState);
+    queueDbUpdate(pGameState, true);
   }
     
   public Team[] getTeamsForCoach(String pCoach) {
@@ -265,10 +268,12 @@ public class GameCache {
 	  getServer().getDbUpdater().add(transaction);
   }
   
-	public void queueDbUpdate(GameState pGameState) {
+	public void queueDbUpdate(GameState pGameState, boolean pWithSerialization) {
 	  DbTransaction transaction = new DbTransaction();
 	  transaction.add(new DbGamesInfoUpdateParameter(pGameState));
-	  transaction.add(new DbGamesSerializedUpdateParameter(pGameState));
+	  if (pWithSerialization) {
+	    transaction.add(new DbGamesSerializedUpdateParameter(pGameState));
+	  }
 	  getServer().getDbUpdater().add(transaction);
 	}
 
@@ -282,10 +287,8 @@ public class GameCache {
 	public GameState queryFromDb(long pGameStateId) {
 	  DbGamesSerializedQuery gameQuery = (DbGamesSerializedQuery) getServer().getDbQueryFactory().getStatement(DbStatementId.GAMES_SERIALIZED_QUERY);
 	  GameState gameState = gameQuery.execute(getServer(), pGameStateId);
-	  // if no new version is found, try to load an old version
-	  if (gameState == null) {
-	  	gameState = DbQueryScript.readGameState(getServer(), pGameStateId);
-	  }
+	  // the old way to do it:
+    // gameState = DbQueryScript.readGameState(getServer(), pGameStateId);
 	  return gameState;
 	}
 
@@ -299,7 +302,7 @@ public class GameCache {
       }
       removeGameStateFromCache(gameState);
       if (getServer().getMode() == ServerMode.FUMBBL) {
-      	getServer().getFumbblRequestProcessor().add(new FumbblRequestRemoveGamestate(gameState));
+      	getServer().getRequestProcessor().add(new FumbblRequestRemoveGamestate(gameState));
       }
 		}
 		return gameState;

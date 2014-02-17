@@ -11,10 +11,10 @@ import com.balancedbytes.games.ffb.server.ServerMode;
 import com.balancedbytes.games.ffb.server.db.DbQueryFactory;
 import com.balancedbytes.games.ffb.server.db.DbStatementId;
 import com.balancedbytes.games.ffb.server.db.query.DbPasswordForCoachQuery;
-import com.balancedbytes.games.ffb.server.fumbbl.FumbblRequestCheckAuthorization;
 import com.balancedbytes.games.ffb.server.net.ReceivedCommand;
 import com.balancedbytes.games.ffb.server.net.ServerCommunication;
 import com.balancedbytes.games.ffb.server.net.commands.InternalServerCommandJoinApproved;
+import com.balancedbytes.games.ffb.server.request.fumbbl.FumbblRequestCheckAuthorization;
 import com.balancedbytes.games.ffb.util.StringTool;
 
 /**
@@ -40,7 +40,7 @@ public class ServerCommandHandlerJoin extends ServerCommandHandler {
     
       if (ServerMode.FUMBBL == getServer().getMode()) {
       	
-        getServer().getFumbblRequestProcessor().add(
+        getServer().getRequestProcessor().add(
           new FumbblRequestCheckAuthorization(
             pReceivedCommand.getSession(),
             joinCommand.getCoach(),

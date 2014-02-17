@@ -1,12 +1,10 @@
-package com.balancedbytes.games.ffb.server.fumbbl;
+package com.balancedbytes.games.ffb.server.request.fumbbl;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.StringReader;
 import java.net.URLEncoder;
 import java.security.NoSuchAlgorithmException;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.LinkedBlockingQueue;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -31,61 +29,22 @@ import com.balancedbytes.games.ffb.xml.XmlHandler;
  * 
  * @author Kalimar
  */
-public class FumbblRequestProcessor extends Thread {
-
+public class UtilFumbblRequest {
+  
   public static final String CHARACTER_ENCODING = "UTF-8";
+  
   private static final Pattern _PATTERN_CHALLENGE = Pattern.compile("<challenge>([^<]+)</challenge>");
   private static final String _UNKNOWN_FUMBBL_ERROR = "Unknown problem accessing Fumbbl.";
 
-  private final FantasyFootballServer fServer;
-  private final BlockingQueue<FumbblRequest> fRequestQueue;
-
-  public FumbblRequestProcessor(FantasyFootballServer pServer) {
-    fServer = pServer;
-    fRequestQueue = new LinkedBlockingQueue<FumbblRequest>();
-  }
-
-  public FantasyFootballServer getServer() {
-    return fServer;
-  }
-  
-  public boolean add(FumbblRequest pFumbblRequest) {
-    return fRequestQueue.offer(pFumbblRequest);
-  }
-
-  @Override
-  public void run() {
-    while (true) { 
-      FumbblRequest fumbblRequest = null;
-      try {
-      	fumbblRequest = fRequestQueue.take();
-      } catch (InterruptedException pInterruptedException) {
-      	// continue with fumbblRequest == null
-      }
-    	boolean sent = false;
-    	do {
-    		try {
-	        fumbblRequest.process(this);
-	  			sent = true;
-	    	} catch (Exception pAnyException) {
-	    		getServer().getDebugLog().log(IServerLogLevel.ERROR, StringTool.print(fumbblRequest.getRequestUrl()));
-	    		getServer().getDebugLog().log(pAnyException);
-	    		try {
-	    			Thread.sleep(1000);
-	    		} catch (InterruptedException pInterruptedException) {
-	    			// just continue
-	    		}
-	    	}
-    	} while (!sent);
+  public static FumbblGameState processFumbblGameStateRequest(FantasyFootballServer pServer, String pRequestUrl) {
+    if ((pServer == null) || !StringTool.isProvided(pRequestUrl)) {
+      return null;
     }
-  }
-
-  public FumbblGameState processGameStateRequest(String pRequestUrl) {
     FumbblGameState gameState = null;
     try {
       String responseXml = UtilHttpClient.fetchPage(pRequestUrl);
       if (StringTool.isProvided(responseXml)) {
-      	getServer().getDebugLog().log(IServerLogLevel.DEBUG, DebugLog.FUMBBL_RESPONSE, responseXml);
+        pServer.getDebugLog().log(IServerLogLevel.DEBUG, DebugLog.FUMBBL_RESPONSE, responseXml);
         BufferedReader xmlReader = new BufferedReader(new StringReader(responseXml));
         InputSource xmlSource = new InputSource(xmlReader);
         gameState = new FumbblGameState(pRequestUrl);
@@ -98,14 +57,20 @@ public class FumbblRequestProcessor extends Thread {
     return gameState;
   }
 
-  public String getChallengeResponseForFumbblUser() {
-    String fumbblUser = getServer().getProperty(IServerProperty.FUMBBL_USER);
-    String challenge = getChallengeFor(fumbblUser);
-    String fumbblUserPassword = getServer().getProperty(IServerProperty.FUMBBL_PASSWORD);
-    return createChallengeResponse(challenge, fumbblUserPassword);
+  public static String getFumbblAuthChallengeResponseForFumbblUser(FantasyFootballServer pServer) {
+    if (pServer == null) {
+      return null;
+    }
+    String fumbblUser = pServer.getProperty(IServerProperty.FUMBBL_USER);
+    String challenge = getFumbblAuthChallengeFor(pServer, fumbblUser);
+    String fumbblUserPassword = pServer.getProperty(IServerProperty.FUMBBL_PASSWORD);
+    return createFumbblAuthChallengeResponse(challenge, fumbblUserPassword);
   }  
   
-  public String createChallengeResponse(String pChallenge, String pPassword) {
+  public static String createFumbblAuthChallengeResponse(String pChallenge, String pPassword) {
+    if (!StringTool.isProvided(pChallenge) || !StringTool.isProvided(pPassword)) {
+      return null;
+    }
     try {
       byte[] encodedPassword = PasswordChallenge.fromHexString(pPassword);
       return PasswordChallenge.createResponse(pChallenge, encodedPassword);
@@ -116,14 +81,17 @@ public class FumbblRequestProcessor extends Thread {
     }
   }
 
-  public String getChallengeFor(String pCoach) {
+  public static String getFumbblAuthChallengeFor(FantasyFootballServer pServer, String pCoach) {
+    if ((pServer == null) || !StringTool.isProvided(pCoach)) {
+      return null;
+    }
     try {
       String challenge = null;
-      String challengeUrl = StringTool.bind(getServer().getProperty(IServerProperty.FUMBBL_AUTH_CHALLENGE), URLEncoder.encode(pCoach, CHARACTER_ENCODING));
-    	getServer().getDebugLog().log(IServerLogLevel.DEBUG, DebugLog.FUMBBL_REQUEST, challengeUrl);
+      String challengeUrl = StringTool.bind(pServer.getProperty(IServerProperty.FUMBBL_AUTH_CHALLENGE), URLEncoder.encode(pCoach, CHARACTER_ENCODING));
+      pServer.getDebugLog().log(IServerLogLevel.DEBUG, DebugLog.FUMBBL_REQUEST, challengeUrl);
       String responseXml = UtilHttpClient.fetchPage(challengeUrl);
       if (StringTool.isProvided(responseXml)) {
-      	getServer().getDebugLog().log(IServerLogLevel.DEBUG, DebugLog.FUMBBL_RESPONSE, responseXml);
+        pServer.getDebugLog().log(IServerLogLevel.DEBUG, DebugLog.FUMBBL_RESPONSE, responseXml);
         BufferedReader xmlReader = new BufferedReader(new StringReader(responseXml));
         String line = null;
         while ((line = xmlReader.readLine()) != null) {
@@ -141,7 +109,10 @@ public class FumbblRequestProcessor extends Thread {
     }
   }
   
-  public void reportFumbblError(GameState pGameState, FumbblGameState pFumbblState) {
+  public static void reportFumbblError(GameState pGameState, FumbblGameState pFumbblState) {
+    if (pGameState == null) {
+      return;
+    }
     FantasyFootballServer server = pGameState.getServer();
     Session[] sessions = server.getSessionManager().getSessionsForGameId(pGameState.getId());
     if (pFumbblState != null) {
@@ -153,10 +124,13 @@ public class FumbblRequestProcessor extends Thread {
     }
   }
   
-  public Team loadTeam(String pTeamId) {
+  public static Team loadFumbblTeam(FantasyFootballServer pServer, String pTeamId) {
+    if ((pServer == null) || !StringTool.isProvided(pTeamId)) {
+      return null;
+    }
     Team team = null;
     try {
-    	String teamUrl = StringTool.bind(getServer().getProperty(IServerProperty.FUMBBL_TEAM), pTeamId);
+      String teamUrl = StringTool.bind(pServer.getProperty(IServerProperty.FUMBBL_TEAM), pTeamId);
       String teamXml = UtilHttpClient.fetchPage(teamUrl);
       if (StringTool.isProvided(teamXml)) {
         team = new Team();
@@ -171,10 +145,13 @@ public class FumbblRequestProcessor extends Thread {
     return team;
   }
   
-  public Roster loadRoster(String pTeamId) {
+  public static Roster loadFumbblRosterForTeam(FantasyFootballServer pServer, String pTeamId) {
+    if ((pServer == null) || !StringTool.isProvided(pTeamId)) {
+      return null;
+    }
     Roster roster = null;
     try {
-    	String rosterUrl = StringTool.bind(getServer().getProperty(IServerProperty.FUMBBL_ROSTER_TEAM), pTeamId);
+      String rosterUrl = StringTool.bind(pServer.getProperty(IServerProperty.FUMBBL_ROSTER_TEAM), pTeamId);
       String rosterXml = UtilHttpClient.fetchPage(rosterUrl);
       if (StringTool.isProvided(rosterXml)) {
         roster = new Roster();
@@ -188,5 +165,5 @@ public class FumbblRequestProcessor extends Thread {
     }
     return roster;
   }
-      
+
 }

@@ -15,14 +15,14 @@ import com.balancedbytes.games.ffb.server.GameCache;
 import com.balancedbytes.games.ffb.server.GameCacheMode;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.ServerMode;
-import com.balancedbytes.games.ffb.server.fumbbl.FumbblRequestCheckGamestate;
-import com.balancedbytes.games.ffb.server.fumbbl.FumbblRequestLoadGame;
-import com.balancedbytes.games.ffb.server.fumbbl.FumbblRequestLoadTeam;
-import com.balancedbytes.games.ffb.server.fumbbl.FumbblRequestLoadTeamList;
 import com.balancedbytes.games.ffb.server.net.ReceivedCommand;
 import com.balancedbytes.games.ffb.server.net.ServerCommunication;
 import com.balancedbytes.games.ffb.server.net.SessionManager;
 import com.balancedbytes.games.ffb.server.net.commands.InternalServerCommandJoinApproved;
+import com.balancedbytes.games.ffb.server.request.fumbbl.FumbblRequestCheckGamestate;
+import com.balancedbytes.games.ffb.server.request.fumbbl.FumbblRequestLoadGame;
+import com.balancedbytes.games.ffb.server.request.fumbbl.FumbblRequestLoadTeam;
+import com.balancedbytes.games.ffb.server.request.fumbbl.FumbblRequestLoadTeamList;
 import com.balancedbytes.games.ffb.server.util.UtilStartGame;
 import com.balancedbytes.games.ffb.server.util.UtilTimer;
 import com.balancedbytes.games.ffb.util.StringTool;
@@ -121,7 +121,7 @@ public class ServerCommandHandlerJoinApproved extends ServerCommandHandler {
         boolean homeTeam = pJoinApprovedCommand.getCoach().equalsIgnoreCase(game.getTeamHome().getCoach());
         if (UtilStartGame.joinGameAsPlayerAndCheckIfReadyToStart(pGameState, pSession, pJoinApprovedCommand.getCoach(), homeTeam)) {
           if (getServer().getMode() == ServerMode.FUMBBL) {
-            getServer().getFumbblRequestProcessor().add(new FumbblRequestCheckGamestate(pGameState));
+            getServer().getRequestProcessor().add(new FumbblRequestCheckGamestate(pGameState));
           } else {
             UtilStartGame.startGame(pGameState);
           }
@@ -138,7 +138,7 @@ public class ServerCommandHandlerJoinApproved extends ServerCommandHandler {
       } else {
         boolean homeTeam = (!StringTool.isProvided(game.getTeamHome().getId()) || pJoinApprovedCommand.getTeamId().equals(game.getTeamHome().getId()));
         if (getServer().getMode() == ServerMode.FUMBBL) {
-          getServer().getFumbblRequestProcessor().add(new FumbblRequestLoadTeam(pGameState, pJoinApprovedCommand.getCoach(), pJoinApprovedCommand.getTeamId(), homeTeam, pSession));
+          getServer().getRequestProcessor().add(new FumbblRequestLoadTeam(pGameState, pJoinApprovedCommand.getCoach(), pJoinApprovedCommand.getTeamId(), homeTeam, pSession));
         } else {
           Team team = getServer().getGameCache().getTeamById(pJoinApprovedCommand.getTeamId());
           getServer().getGameCache().addTeamToGame(pGameState, team, homeTeam);
@@ -169,7 +169,7 @@ public class ServerCommandHandlerJoinApproved extends ServerCommandHandler {
     GameState gameState = gameCache.getGameStateById(pJoinApprovedCommand.getGameId());
     if (gameState == null) {
       if (getServer().getMode() == ServerMode.FUMBBL) {
-        getServer().getFumbblRequestProcessor().add(
+        getServer().getRequestProcessor().add(
         	new FumbblRequestLoadGame(pJoinApprovedCommand.getGameId(), pJoinApprovedCommand.getCoach(), pJoinApprovedCommand.getTeamId(), pJoinApprovedCommand.getClientMode(), pSession)
         );
       } else {
@@ -181,7 +181,7 @@ public class ServerCommandHandlerJoinApproved extends ServerCommandHandler {
   
   private void sendTeamList(GameState pGameState, InternalServerCommandJoinApproved pJoinApprovedCommand, Session pSession) {
     if (getServer().getMode() == ServerMode.FUMBBL) {
-      getServer().getFumbblRequestProcessor().add(new FumbblRequestLoadTeamList(pGameState, pJoinApprovedCommand.getCoach(), pSession));
+      getServer().getRequestProcessor().add(new FumbblRequestLoadTeamList(pGameState, pJoinApprovedCommand.getCoach(), pSession));
     } else {
       TeamList teamList = new TeamList();
       Team[] teams = getServer().getGameCache().getTeamsForCoach(pJoinApprovedCommand.getCoach());

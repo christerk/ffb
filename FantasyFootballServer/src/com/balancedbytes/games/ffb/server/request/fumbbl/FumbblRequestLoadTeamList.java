@@ -1,4 +1,4 @@
-package com.balancedbytes.games.ffb.server.fumbbl;
+package com.balancedbytes.games.ffb.server.request.fumbbl;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -13,6 +13,8 @@ import com.balancedbytes.games.ffb.TeamList;
 import com.balancedbytes.games.ffb.server.FantasyFootballServer;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.IServerProperty;
+import com.balancedbytes.games.ffb.server.request.ServerRequest;
+import com.balancedbytes.games.ffb.server.request.ServerRequestProcessor;
 import com.balancedbytes.games.ffb.server.util.UtilHttpClient;
 import com.balancedbytes.games.ffb.util.StringTool;
 import com.balancedbytes.games.ffb.xml.XmlHandler;
@@ -22,7 +24,7 @@ import com.balancedbytes.games.ffb.xml.XmlHandler;
  * 
  * @author Kalimar
  */
-public class FumbblRequestLoadTeamList extends FumbblRequest {
+public class FumbblRequestLoadTeamList extends ServerRequest {
   
   private String fCoach;
   private GameState fGameState;
@@ -47,11 +49,11 @@ public class FumbblRequestLoadTeamList extends FumbblRequest {
   }
   
   @Override
-  public void process(FumbblRequestProcessor pRequestProcessor) {
+  public void process(ServerRequestProcessor pRequestProcessor) {
     FantasyFootballServer server = pRequestProcessor.getServer();
     TeamList teamList = null;
     try {
-    	setRequestUrl(StringTool.bind(server.getProperty(IServerProperty.FUMBBL_TEAMS), URLEncoder.encode(getCoach(), FumbblRequestProcessor.CHARACTER_ENCODING)));
+    	setRequestUrl(StringTool.bind(server.getProperty(IServerProperty.FUMBBL_TEAMS), URLEncoder.encode(getCoach(), UtilFumbblRequest.CHARACTER_ENCODING)));
       String teamsXml = UtilHttpClient.fetchPage(getRequestUrl());
       if (StringTool.isProvided(teamsXml)) {
         BufferedReader xmlReader = new BufferedReader(new StringReader(teamsXml));

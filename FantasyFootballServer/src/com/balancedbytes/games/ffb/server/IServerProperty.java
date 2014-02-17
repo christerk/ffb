@@ -32,18 +32,26 @@ public interface IServerProperty {
   
   String ADMIN_SALT = "admin.salt";
   String ADMIN_PASSWORD = "admin.password";
-  String ADMIN_CHALLENGE = "admin.challenge";
-  String ADMIN_LIST_STATUS = "admin.list.status";
-  String ADMIN_CLOSE = "admin.close";
-  String ADMIN_CONCEDE = "admin.concede";
-  String ADMIN_SHUTDOWN = "admin.shutdown";
-  String ADMIN_REFRESH = "admin.refresh";
-  String ADMIN_UPLOAD = "admin.upload";
-  String ADMIN_DELETE = "admin.delete";
-  String ADMIN_MESSAGE = "admin.message";
-  String ADMIN_SCHEDULE = "admin.schedule";
-  String ADMIN_BLOCK = "admin.block";
-  String ADMIN_UNBLOCK = "admin.unblock";
+  String ADMIN_URL_CHALLENGE = "admin.url.challenge";
+  String ADMIN_URL_LIST_STATUS = "admin.url.list.status";
+  String ADMIN_URL_CLOSE = "admin.url.close";
+  String ADMIN_URL_CONCEDE = "admin.url.concede";
+  String ADMIN_URL_SHUTDOWN = "admin.url.shutdown";
+  String ADMIN_URL_REFRESH = "admin.url.refresh";
+  String ADMIN_URL_UPLOAD = "admin.url.upload";
+  String ADMIN_URL_DELETE = "admin.url.delete";
+  String ADMIN_URL_MESSAGE = "admin.url.message";
+  String ADMIN_URL_SCHEDULE = "admin.url.schedule";
+  String ADMIN_URL_BLOCK = "admin.url.block";
+  String ADMIN_URL_UNBLOCK = "admin.url.unblock";
+
+  String BACKUP_DIR = "backup.dir";
+  String BACKUP_EXTENSION = "backup.extension";
+  String BACKUP_SALT = "backup.salt";
+  String BACKUP_PASSWORD = "backup.password";
+  String BACKUP_URL_CHALLENGE = "backup.url.challenge";
+  String BACKUP_URL_LOAD = "backup.url.load";
+  String BACKUP_URL_SAVE = "backup.url.save";
   
   String DB_DRIVER = "db.driver";
   String DB_URL = "db.url";

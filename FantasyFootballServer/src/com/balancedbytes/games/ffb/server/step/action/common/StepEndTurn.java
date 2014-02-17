@@ -39,8 +39,8 @@ import com.balancedbytes.games.ffb.server.FantasyFootballServer;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.IServerJsonOption;
 import com.balancedbytes.games.ffb.server.ServerMode;
-import com.balancedbytes.games.ffb.server.fumbbl.FumbblRequestUpdateGamestate;
 import com.balancedbytes.games.ffb.server.net.ReceivedCommand;
+import com.balancedbytes.games.ffb.server.request.fumbbl.FumbblRequestUpdateGamestate;
 import com.balancedbytes.games.ffb.server.step.AbstractStep;
 import com.balancedbytes.games.ffb.server.step.SequenceGenerator;
 import com.balancedbytes.games.ffb.server.step.StepAction;
@@ -476,7 +476,7 @@ public class StepEndTurn extends AbstractStep {
     if (server.getMode() == ServerMode.FUMBBL) {
       Game game = pGameState.getGame();
       if (!game.isTesting() && ((game.getTurnMode() == TurnMode.REGULAR) || pNewHalf || pTouchdown)) {
-        server.getFumbblRequestProcessor().add(new FumbblRequestUpdateGamestate(pGameState));
+        server.getRequestProcessor().add(new FumbblRequestUpdateGamestate(pGameState));
       }
     }
     return isOk;

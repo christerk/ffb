@@ -1,4 +1,4 @@
-package com.balancedbytes.games.ffb.server.fumbbl;
+package com.balancedbytes.games.ffb.server.request.fumbbl;
 
 import com.balancedbytes.games.ffb.GameOption;
 import com.balancedbytes.games.ffb.model.Game;
@@ -8,6 +8,8 @@ import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.IServerLogLevel;
 import com.balancedbytes.games.ffb.server.IServerProperty;
 import com.balancedbytes.games.ffb.server.net.commands.InternalServerCommandFumbblGameChecked;
+import com.balancedbytes.games.ffb.server.request.ServerRequest;
+import com.balancedbytes.games.ffb.server.request.ServerRequestProcessor;
 import com.balancedbytes.games.ffb.util.StringTool;
 
 
@@ -15,7 +17,7 @@ import com.balancedbytes.games.ffb.util.StringTool;
  * 
  * @author Kalimar
  */
-public class FumbblRequestCheckGamestate extends FumbblRequest {
+public class FumbblRequestCheckGamestate extends ServerRequest {
   
   private GameState fGameState;
   
@@ -28,15 +30,15 @@ public class FumbblRequestCheckGamestate extends FumbblRequest {
   }
   
   @Override
-  public void process(FumbblRequestProcessor pRequestProcessor) {
+  public void process(ServerRequestProcessor pRequestProcessor) {
     Game game = getGameState().getGame();
     FantasyFootballServer server = pRequestProcessor.getServer();
     if (!game.isTesting()) {
       setRequestUrl(StringTool.bind(server.getProperty(IServerProperty.FUMBBL_GAMESTATE_CHECK), new Object[] { game.getTeamHome().getId(), game.getTeamAway().getId() }));
     	server.getDebugLog().log(IServerLogLevel.DEBUG, DebugLog.FUMBBL_REQUEST, getRequestUrl());
-      FumbblGameState fumbblGameState = pRequestProcessor.processGameStateRequest(getRequestUrl());
+      FumbblGameState fumbblGameState = UtilFumbblRequest.processFumbblGameStateRequest(server, getRequestUrl());
       if ((fumbblGameState == null) || !fumbblGameState.isOk()) {
-        pRequestProcessor.reportFumbblError(getGameState(), fumbblGameState);
+        UtilFumbblRequest.reportFumbblError(getGameState(), fumbblGameState);
       } else {
         game.getOptions().init(fumbblGameState.getOptions());
       	game.setTesting(game.isTesting() || game.getOptions().getOptionValue(GameOption.TEST_MODE).isEnabled());

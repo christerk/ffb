@@ -1,4 +1,4 @@
-package com.balancedbytes.games.ffb.server.fumbbl;
+package com.balancedbytes.games.ffb.server.request.fumbbl;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -18,6 +18,8 @@ import com.balancedbytes.games.ffb.server.IServerLogLevel;
 import com.balancedbytes.games.ffb.server.IServerProperty;
 import com.balancedbytes.games.ffb.server.net.ReceivedCommand;
 import com.balancedbytes.games.ffb.server.net.commands.InternalServerCommandJoinApproved;
+import com.balancedbytes.games.ffb.server.request.ServerRequest;
+import com.balancedbytes.games.ffb.server.request.ServerRequestProcessor;
 import com.balancedbytes.games.ffb.server.util.UtilHttpClient;
 import com.balancedbytes.games.ffb.util.StringTool;
 
@@ -26,7 +28,7 @@ import com.balancedbytes.games.ffb.util.StringTool;
  * 
  * @author Kalimar
  */
-public class FumbblRequestCheckAuthorization extends FumbblRequest {
+public class FumbblRequestCheckAuthorization extends ServerRequest {
   
   private static final Pattern _PATTERN_RESPONSE = Pattern.compile("<response>([^<]+)</response>");
 
@@ -77,11 +79,17 @@ public class FumbblRequestCheckAuthorization extends FumbblRequest {
   }
   
   @Override
-  public void process(FumbblRequestProcessor pRequestProcessor) {
+  public void process(ServerRequestProcessor pRequestProcessor) {
     boolean passwordOk = false;
     FantasyFootballServer server = pRequestProcessor.getServer();
     try {
-    	setRequestUrl(StringTool.bind(server.getProperty(IServerProperty.FUMBBL_AUTH_RESPONSE), new String[] { URLEncoder.encode(getCoach(), FumbblRequestProcessor.CHARACTER_ENCODING), URLEncoder.encode(getPassword(), FumbblRequestProcessor.CHARACTER_ENCODING) }));
+    	setRequestUrl(StringTool.bind(
+  	    server.getProperty(IServerProperty.FUMBBL_AUTH_RESPONSE),
+  	    new String[] {
+  	      URLEncoder.encode(getCoach(), UtilFumbblRequest.CHARACTER_ENCODING),
+  	      URLEncoder.encode(getPassword(), UtilFumbblRequest.CHARACTER_ENCODING)
+  	    }
+    	));
     	server.getDebugLog().log(IServerLogLevel.DEBUG, DebugLog.FUMBBL_REQUEST, getRequestUrl());
       String responseXml = UtilHttpClient.fetchPage(getRequestUrl());
     	server.getDebugLog().log(IServerLogLevel.DEBUG, DebugLog.FUMBBL_RESPONSE, responseXml);

@@ -219,7 +219,7 @@ public final class StepInitSelecting extends AbstractStep {
   	if (fUpdatePersistence) {
   		fUpdatePersistence = false;
   		GameCache gameCache = getGameState().getServer().getGameCache();
-  		gameCache.queueDbUpdate(getGameState());
+  		gameCache.queueDbUpdate(getGameState(), true);
   	}
 	}
 

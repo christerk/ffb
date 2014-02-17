@@ -1,4 +1,4 @@
-package com.balancedbytes.games.ffb.server.fumbbl;
+package com.balancedbytes.games.ffb.server.request.fumbbl;
 
 import org.eclipse.jetty.websocket.api.Session;
 
@@ -10,13 +10,15 @@ import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.net.ReceivedCommand;
 import com.balancedbytes.games.ffb.server.net.commands.InternalServerCommandJoinApproved;
 import com.balancedbytes.games.ffb.server.net.commands.InternalServerCommandReplayLoaded;
+import com.balancedbytes.games.ffb.server.request.ServerRequest;
+import com.balancedbytes.games.ffb.server.request.ServerRequestProcessor;
 
 
 /**
  * 
  * @author Kalimar
  */
-public class FumbblRequestLoadGame extends FumbblRequest {
+public class FumbblRequestLoadGame extends ServerRequest {
 
   private long fGameId;
   private String fCoach;
@@ -68,7 +70,7 @@ public class FumbblRequestLoadGame extends FumbblRequest {
   }
   
   @Override
-  public void process(FumbblRequestProcessor pRequestProcessor) {
+  public void process(ServerRequestProcessor pRequestProcessor) {
     FantasyFootballServer server = pRequestProcessor.getServer();
     GameCache gameCache = server.getGameCache();
     if (!server.isBlockingNewGames()) {
@@ -80,7 +82,7 @@ public class FumbblRequestLoadGame extends FumbblRequest {
           server.getCommunication().handleCommand(new ReceivedCommand(replayCommand, getSession()));
         } else {
           server.getGameCache().add(gameState, GameCacheMode.LOAD_GAME);
-        	gameCache.queueDbUpdate(gameState);  // persist status update
+        	gameCache.queueDbUpdate(gameState, true);  // persist status update
           InternalServerCommandJoinApproved joinApprovedCommand = new InternalServerCommandJoinApproved(getGameId(), null, getCoach(), getTeamId(), getMode());
           server.getCommunication().handleCommand(new ReceivedCommand(joinApprovedCommand, getSession()));
         }

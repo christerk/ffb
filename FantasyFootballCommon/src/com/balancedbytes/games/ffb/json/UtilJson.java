@@ -13,6 +13,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.zip.Deflater;
 import java.util.zip.DeflaterOutputStream;
+import java.util.zip.GZIPInputStream;
+import java.util.zip.GZIPOutputStream;
 import java.util.zip.InflaterInputStream;
 
 import com.balancedbytes.games.ffb.FieldCoordinate;
@@ -130,12 +132,33 @@ public class UtilJson {
     return byteOut.toByteArray();
   }
   
+  public static byte[] gzip(JsonValue pJsonValue) throws IOException {
+    if (pJsonValue == null) {
+      return new byte[0];
+    }
+    ByteArrayOutputStream byteOut = new ByteArrayOutputStream();
+    GZIPOutputStream gzipOut = new GZIPOutputStream(byteOut);
+    BufferedWriter out = new BufferedWriter(new OutputStreamWriter(gzipOut, _CHARSET));
+    out.write(pJsonValue.toString());
+    out.close();
+    return byteOut.toByteArray();
+  }
+  
   public static JsonValue inflate(byte[] pDeflatedJson) throws IOException {
     if (!ArrayTool.isProvided(pDeflatedJson)) {
       return null;
     }
     ByteArrayInputStream byteIn = new ByteArrayInputStream(pDeflatedJson);
     InputStreamReader in = new InputStreamReader(new InflaterInputStream(byteIn), _CHARSET);
+    return JsonValue.readFrom(in);  // no bufferedReader necessary
+  }
+  
+  public static JsonValue gunzip(byte[] pGzippedJson) throws IOException {
+    if (!ArrayTool.isProvided(pGzippedJson)) {
+      return null;
+    }
+    ByteArrayInputStream byteIn = new ByteArrayInputStream(pGzippedJson);
+    InputStreamReader in = new InputStreamReader(new GZIPInputStream(byteIn), _CHARSET);
     return JsonValue.readFrom(in);  // no bufferedReader necessary
   }
 

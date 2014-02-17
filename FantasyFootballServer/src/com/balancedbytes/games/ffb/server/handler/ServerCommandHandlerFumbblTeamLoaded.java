@@ -5,9 +5,9 @@ import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.net.NetCommandId;
 import com.balancedbytes.games.ffb.server.FantasyFootballServer;
 import com.balancedbytes.games.ffb.server.GameState;
-import com.balancedbytes.games.ffb.server.fumbbl.FumbblRequestCheckGamestate;
 import com.balancedbytes.games.ffb.server.net.ReceivedCommand;
 import com.balancedbytes.games.ffb.server.net.commands.InternalServerCommandFumbblTeamLoaded;
+import com.balancedbytes.games.ffb.server.request.fumbbl.FumbblRequestCheckGamestate;
 import com.balancedbytes.games.ffb.server.util.UtilStartGame;
 import com.balancedbytes.games.ffb.util.StringTool;
 
@@ -33,12 +33,12 @@ public class ServerCommandHandlerFumbblTeamLoaded extends ServerCommandHandler {
     }
   	Game game = gameState.getGame();
     if (GameStatus.SCHEDULED == gameState.getStatus()) {
-    	if (StringTool.isProvided(game.getTeamHome().getId()) && StringTool.isProvided(game.getTeamAway().getId()) && (teamLoadedCommand.getAdminGameIdListener() != null)) {
-    		teamLoadedCommand.getAdminGameIdListener().setGameId(gameState.getId());
+    	if (StringTool.isProvided(game.getTeamHome().getId()) && StringTool.isProvided(game.getTeamAway().getId()) && (teamLoadedCommand.getGameIdListener() != null)) {
+    		teamLoadedCommand.getGameIdListener().setGameId(gameState.getId());
     	}
     } else {
       if (UtilStartGame.joinGameAsPlayerAndCheckIfReadyToStart(gameState, pReceivedCommand.getSession(), teamLoadedCommand.getCoach(), teamLoadedCommand.isHomeTeam())) {
-        getServer().getFumbblRequestProcessor().add(new FumbblRequestCheckGamestate(gameState));
+        getServer().getRequestProcessor().add(new FumbblRequestCheckGamestate(gameState));
       }
     }
   }
