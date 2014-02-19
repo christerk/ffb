@@ -117,7 +117,6 @@ public interface IServerJsonOption extends IJsonOption {
                 JsonObjectOption STEP_RESULT = new JsonObjectOption("stepResult");
                 JsonObjectOption STEP_STACK = new JsonObjectOption("stepStack");
                  JsonArrayOption STEPS = new JsonArrayOption("steps");
-               JsonBooleanOption SWAPPED_OUT = new JsonBooleanOption("swappedOut");
                JsonBooleanOption SYNCHRONIZE = new JsonBooleanOption("synchronize");
        JsonFieldCoordinateOption THROW_IN_COORDINATE = new JsonFieldCoordinateOption("throwInCoordinate");
                JsonBooleanOption THROW_SCATTER = new JsonBooleanOption("throwScatter");
@@ -144,5 +143,6 @@ public interface IServerJsonOption extends IJsonOption {
                JsonBooleanOption USING_TENTACLES = new JsonBooleanOption("usingTentacles");
                JsonBooleanOption USING_WRESTLE_ATTACKER = new JsonBooleanOption("usingWrestleAttacker");
                JsonBooleanOption USING_WRESTLE_DEFENDER = new JsonBooleanOption("usingWrestleDefender");
+               JsonBooleanOption WITH_GAMES_INFO = new JsonBooleanOption("withGamesInfo"); 
                
 }

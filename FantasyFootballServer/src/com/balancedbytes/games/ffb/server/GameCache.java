@@ -97,24 +97,25 @@ public class GameCache {
   }  
   
   public void add(GameState pGameState, GameCacheMode pMode) {
-    if (pGameState != null) {
-      if (GameStatus.PAUSED == pGameState.getStatus()) {
-        pGameState.setStatus(GameStatus.ACTIVE);
-      }
-      if (GameStatus.STARTING != pGameState.getStatus()) {
-        UtilTimer.syncTime(pGameState);
-        UtilTimer.startTurnTimer(pGameState);
-      }
-  		fGameStateById.put(pGameState.getId(), pGameState);
-      // log game cache size -->
-      FantasyFootballServer server = pGameState.getServer();
-      if (server.getDebugLog().isLogging(IServerLogLevel.WARN)) {
-      	StringBuilder log = new StringBuilder();
-      	log.append(pMode.getName()).append(" cache increases to ").append(fGameStateById.size()).append(" games.");
-      	server.getDebugLog().log(IServerLogLevel.WARN, pGameState.getId(), log.toString());
-      }
-      // <-- log game cache size
+    if (pGameState == null) {
+      return;
     }
+    if (GameStatus.PAUSED == pGameState.getStatus()) {
+      pGameState.setStatus(GameStatus.ACTIVE);
+    }
+    if (GameStatus.STARTING != pGameState.getStatus()) {
+      UtilTimer.syncTime(pGameState);
+      UtilTimer.startTurnTimer(pGameState);
+    }
+		fGameStateById.put(pGameState.getId(), pGameState);
+    // log game cache size -->
+    FantasyFootballServer server = pGameState.getServer();
+    if (server.getDebugLog().isLogging(IServerLogLevel.WARN)) {
+    	StringBuilder log = new StringBuilder();
+    	log.append(pMode.getName()).append(" cache increases to ").append(fGameStateById.size()).append(" games.");
+    	server.getDebugLog().log(IServerLogLevel.WARN, pGameState.getId(), log.toString());
+    }
+    // <-- log game cache size
   }
     
   public GameState getGameStateByName(String pGameName, boolean pLoadFromDb) {
@@ -131,7 +132,7 @@ public class GameCache {
         FantasyFootballServer server = pGameState.getServer();
         server.getDebugLog().log(IServerLogLevel.WARN, cachedGameState.getId(), StringTool.bind("REMOVE GAME cache decreases to $1 games.", fGameStateById.size()));
         // <-- log game cache size
-        if (!pGameState.isSwappedOut() && (pGameState.getGame().getFinished() != null)) {
+        if (pGameState.getGame().getFinished() != null) {
           server.getCommunication().handleCommand(new InternalServerCommandBackupGame(pGameState.getId()));
         }
   		}
@@ -262,6 +263,9 @@ public class GameCache {
   }
   
   private void queueDbInsert(GameState pGameState) {
+    if (pGameState == null) {
+      return;
+    }
     DbTransaction transaction = new DbTransaction();
 		transaction.add(new DbGamesInfoInsertParameter(pGameState));
 		transaction.add(new DbGamesSerializedInsertParameter(pGameState));
@@ -269,6 +273,9 @@ public class GameCache {
   }
   
 	public void queueDbUpdate(GameState pGameState, boolean pWithSerialization) {
+	  if (pGameState == null) {
+	    return;
+	  }
 	  DbTransaction transaction = new DbTransaction();
 	  transaction.add(new DbGamesInfoUpdateParameter(pGameState));
 	  if (pWithSerialization) {
@@ -277,22 +284,33 @@ public class GameCache {
 	  getServer().getDbUpdater().add(transaction);
 	}
 
-	public void queueDbDelete(long pGameStateId) {
+	public void queueDbDelete(long pGameStateId, boolean pWithGamesInfo) {
+	  if (pGameStateId <= 0) {
+	    return;
+	  }
     DbTransaction deleteTransaction = new DbTransaction();
-    deleteTransaction.add(new DbGamesInfoDeleteParameter(pGameStateId));
+    if (pWithGamesInfo) {
+      deleteTransaction.add(new DbGamesInfoDeleteParameter(pGameStateId));
+    }
     deleteTransaction.add(new DbGamesSerializedDeleteParameter(pGameStateId));
     getServer().getDbUpdater().add(deleteTransaction);
 	}	
   
-	public GameState queryFromDb(long pGameStateId) {
+	public GameState queryFromDb(long pGameId) {
+    if (pGameId <= 0) {
+      return null;
+    }
 	  DbGamesSerializedQuery gameQuery = (DbGamesSerializedQuery) getServer().getDbQueryFactory().getStatement(DbStatementId.GAMES_SERIALIZED_QUERY);
-	  GameState gameState = gameQuery.execute(getServer(), pGameStateId);
-	  // the old way to do it:
-    // gameState = DbQueryScript.readGameState(getServer(), pGameStateId);
+	  GameState gameState = gameQuery.execute(getServer(), pGameId);
+	  // the old way to do this:
+    // gameState = DbQueryScript.readGameState(getServer(), pGameId);
 	  return gameState;
 	}
 
 	public GameState closeGame(long pGameId) {
+	  if (pGameId <= 0) {
+      return null;
+    }
 		GameState gameState = getGameStateById(pGameId);
 		if (gameState != null) {
       SessionManager sessionManager = getServer().getSessionManager();

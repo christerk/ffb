@@ -268,7 +268,7 @@ public class AdminServlet extends HttpServlet {
     UtilXml.addEmptyElement(pHandler, _XML_TAG_DELETE, attributes);
     long gameId = parseGameId(gameIdString);
     if (gameId > 0) {
-      getServer().getCommunication().handleCommand(new InternalServerCommandDeleteGame(gameId));
+      getServer().getCommunication().handleCommand(new InternalServerCommandDeleteGame(gameId, true));
       return true;
     } else {
       UtilXml.addValueElement(pHandler, _XML_TAG_ERROR, "Invalid or missing gameId parameter");

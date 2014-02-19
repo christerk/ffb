@@ -7,6 +7,7 @@ import org.eclipse.jetty.websocket.api.Session;
 import com.balancedbytes.games.ffb.net.NetCommandId;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandReplay;
 import com.balancedbytes.games.ffb.server.FantasyFootballServer;
+import com.balancedbytes.games.ffb.server.GameCacheMode;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.net.ReceivedCommand;
 import com.balancedbytes.games.ffb.server.net.SessionManager;
@@ -33,29 +34,38 @@ public class ServerCommandHandlerReplay extends ServerCommandHandler {
     Session session = pReceivedCommand.getSession();
     int replayToCommandNr = replayCommand.getReplayToCommandNr();
 
-    GameState gameState = null;
-    if (replayCommand.getGameId() > 0) {
-      gameState = getServer().getGameCache().getGameStateById(replayCommand.getGameId());
-    } else {
-      SessionManager sessionManager = getServer().getSessionManager();
-      long gameId = sessionManager.getGameIdForSession(pReceivedCommand.getSession());
-      gameState = getServer().getGameCache().getGameStateById(gameId);
-    }
+    long gameId = replayCommand.getGameId();
 
+    if (gameId == 0) {
+      SessionManager sessionManager = getServer().getSessionManager();
+      gameId = sessionManager.getGameIdForSession(pReceivedCommand.getSession());
+    }
+    
+    if (gameId == 0) {
+      return;
+    }
+    
     // client signals that it has received the complete replay - socket can be closed
     if (replayToCommandNr < 0) {
-    	try {
-    	  pReceivedCommand.getSession().close();
-    	} catch (IOException pIoException) {
-    		getServer().getDebugLog().log((gameState != null) ? gameState.getId() : -1, pIoException);
-    	}
-    	return;
+      try {
+        pReceivedCommand.getSession().close();
+      } catch (IOException pIoException) {
+        getServer().getDebugLog().log(gameId, pIoException);
+      }
+      return;
     }
-
+    
+    GameState gameState = getServer().getGameCache().getGameStateById(gameId);
+    if (gameState == null) {
+      gameState = getServer().getGameCache().queryFromDb(gameId);
+      getServer().getGameCache().add(gameState, GameCacheMode.REPLAY_GAME);
+    }
+    
     if (gameState != null) {
       UtilReplay.startServerReplay(gameState, replayToCommandNr, pReceivedCommand.getSession());
 
     } else {
+      // game has been moved out of the db - request it from the backup service
       getServer().getRequestProcessor().add(new ServerRequestLoadReplay(replayCommand.getGameId(), replayToCommandNr, session));
     }
     

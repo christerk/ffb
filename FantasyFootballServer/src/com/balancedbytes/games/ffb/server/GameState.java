@@ -37,7 +37,6 @@ public class GameState implements IModelChangeObserver, IByteArraySerializable, 
   private GameStatus fStatus;
   private StepStack fStepStack;
   private IStep fCurrentStep;
-  private boolean fSwappedOut;
 
   private transient FantasyFootballServer fServer;
   private transient DiceRoller fDiceRoller;
@@ -124,14 +123,6 @@ public class GameState implements IModelChangeObserver, IByteArraySerializable, 
 
   public void setStatus(GameStatus pStatus) {
     fStatus = pStatus;
-  }
-
-  public void setSwappedOut(boolean pSwappedOut) {
-    fSwappedOut = pSwappedOut;
-  }
-
-  public boolean isSwappedOut() {
-    return fSwappedOut;
   }
 
   public long getSpectatorCooldownTime(String pCoach) {
@@ -295,7 +286,6 @@ public class GameState implements IModelChangeObserver, IByteArraySerializable, 
   public JsonObject toJsonValue() {
     JsonObject jsonObject = new JsonObject();
     IServerJsonOption.GAME_STATUS.addTo(jsonObject, fStatus);
-    IServerJsonOption.SWAPPED_OUT.addTo(jsonObject, fSwappedOut);
     IServerJsonOption.STEP_STACK.addTo(jsonObject, fStepStack.toJsonValue());
     IServerJsonOption.GAME_LOG.addTo(jsonObject, fGameLog.toJsonValue());
     if (fCurrentStep != null) {
@@ -310,7 +300,6 @@ public class GameState implements IModelChangeObserver, IByteArraySerializable, 
   public GameState initFrom(JsonValue pJsonValue) {
     JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
     fStatus = (GameStatus) IServerJsonOption.GAME_STATUS.getFrom(jsonObject);
-    fSwappedOut = IServerJsonOption.SWAPPED_OUT.getFrom(jsonObject);
     fStepStack.clear();
     JsonObject stepStackObject = IServerJsonOption.STEP_STACK.getFrom(jsonObject);
     if (stepStackObject != null) {

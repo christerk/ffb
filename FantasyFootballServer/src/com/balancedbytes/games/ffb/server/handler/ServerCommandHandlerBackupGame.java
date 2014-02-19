@@ -4,10 +4,10 @@ import com.balancedbytes.games.ffb.net.NetCommandId;
 import com.balancedbytes.games.ffb.server.FantasyFootballServer;
 import com.balancedbytes.games.ffb.server.GameCache;
 import com.balancedbytes.games.ffb.server.GameState;
-import com.balancedbytes.games.ffb.server.IServerLogLevel;
 import com.balancedbytes.games.ffb.server.admin.UtilBackup;
 import com.balancedbytes.games.ffb.server.net.ReceivedCommand;
 import com.balancedbytes.games.ffb.server.net.commands.InternalServerCommandBackupGame;
+import com.balancedbytes.games.ffb.server.request.ServerRequestLoadReplay;
 
 /**
  * 
@@ -27,13 +27,13 @@ public class ServerCommandHandlerBackupGame extends ServerCommandHandler {
     InternalServerCommandBackupGame backupGameCommand = (InternalServerCommandBackupGame) pReceivedCommand.getCommand();
     GameState gameState = loadGameStateById(backupGameCommand.getGameId());
     if (gameState == null) {
-      getServer().getDebugLog().log(IServerLogLevel.WARN, backupGameCommand.getGameId(), "Unable to backup game - game not found.");
+      // game already backed up - nothing to be done
       return;
     }
     boolean backupOk = UtilBackup.save(gameState);
     if (backupOk) {
-      gameState.setSwappedOut(true);
-      gameState.getServer().getGameCache().queueDbUpdate(gameState, false);
+      // request replay to see if backup has been successful, queue delete command
+      getServer().getRequestProcessor().add(new ServerRequestLoadReplay(gameState.getId(), true));
     }
   }
   

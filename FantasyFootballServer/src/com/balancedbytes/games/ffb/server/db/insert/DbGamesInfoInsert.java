@@ -30,7 +30,7 @@ public class DbGamesInfoInsert extends DbUpdateStatement {
   public void prepare(Connection pConnection) {
     try {
       StringBuilder sql = new StringBuilder();
-      sql.append("INSERT INTO ").append(IDbTableGamesInfo.TABLE_NAME).append(" VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+      sql.append("INSERT INTO ").append(IDbTableGamesInfo.TABLE_NAME).append(" VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
       fStatement = pConnection.prepareStatement(sql.toString());
     } catch (SQLException sqlE) {
       throw new FantasyFootballException(sqlE);
@@ -63,7 +63,6 @@ public class DbGamesInfoInsert extends DbUpdateStatement {
     fStatement.setBoolean(col++, parameter.isHomePlaying());   // 13
     fStatement.setString(col++, parameter.getStatus());        // 14
     fStatement.setBoolean(col++, parameter.isTesting());       // 15
-    fStatement.setBoolean(col++, parameter.isSwappedOut());    // 16
     return fStatement;
   }
 

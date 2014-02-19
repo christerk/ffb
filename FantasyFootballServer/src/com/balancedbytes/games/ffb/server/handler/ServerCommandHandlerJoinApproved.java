@@ -20,7 +20,6 @@ import com.balancedbytes.games.ffb.server.net.ServerCommunication;
 import com.balancedbytes.games.ffb.server.net.SessionManager;
 import com.balancedbytes.games.ffb.server.net.commands.InternalServerCommandJoinApproved;
 import com.balancedbytes.games.ffb.server.request.fumbbl.FumbblRequestCheckGamestate;
-import com.balancedbytes.games.ffb.server.request.fumbbl.FumbblRequestLoadGame;
 import com.balancedbytes.games.ffb.server.request.fumbbl.FumbblRequestLoadTeam;
 import com.balancedbytes.games.ffb.server.request.fumbbl.FumbblRequestLoadTeamList;
 import com.balancedbytes.games.ffb.server.util.UtilStartGame;
@@ -167,15 +166,15 @@ public class ServerCommandHandlerJoinApproved extends ServerCommandHandler {
   private GameState loadGameStateById(InternalServerCommandJoinApproved pJoinApprovedCommand, Session pSession) {
     GameCache gameCache = getServer().getGameCache();
     GameState gameState = gameCache.getGameStateById(pJoinApprovedCommand.getGameId());
-    if (gameState == null) {
-      if (getServer().getMode() == ServerMode.FUMBBL) {
-        getServer().getRequestProcessor().add(
-        	new FumbblRequestLoadGame(pJoinApprovedCommand.getGameId(), pJoinApprovedCommand.getCoach(), pJoinApprovedCommand.getTeamId(), pJoinApprovedCommand.getClientMode(), pSession)
-        );
-      } else {
-				gameState = gameCache.queryFromDb(pJoinApprovedCommand.getGameId());
-      }
+    if (gameState != null) {
+      return gameState;
     }
+    gameState = gameCache.queryFromDb(pJoinApprovedCommand.getGameId());
+    if (gameState == null) {
+      return null;
+    }
+    gameCache.add(gameState, GameCacheMode.LOAD_GAME);
+    gameCache.queueDbUpdate(gameState, true);  // persist status update
     return gameState;
   }
   
