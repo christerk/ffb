@@ -10,13 +10,11 @@ import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Roster;
 import com.balancedbytes.games.ffb.server.FantasyFootballServer;
 import com.balancedbytes.games.ffb.server.GameState;
+import com.balancedbytes.games.ffb.server.admin.UtilBackup;
 import com.balancedbytes.games.ffb.server.db.DbQueryFactory;
 import com.balancedbytes.games.ffb.server.db.DbStatementId;
 import com.balancedbytes.games.ffb.server.db.DbTransaction;
-import com.balancedbytes.games.ffb.server.db.delete.DbGamesInfoDeleteParameter;
-import com.balancedbytes.games.ffb.server.db.delete.DbGamesSerializedDeleteParameter;
 import com.balancedbytes.games.ffb.server.db.insert.DbGamesInfoInsertParameter;
-import com.balancedbytes.games.ffb.server.db.insert.DbGamesSerializedInsertParameter;
 import com.balancedbytes.games.ffb.server.request.fumbbl.UtilFumbblRequest;
 import com.balancedbytes.games.ffb.util.StringTool;
 
@@ -47,7 +45,7 @@ public class DbConversion {
     long[] finishedGameStateIds = finishedGamesQuery.execute(pStartGameId, pEndGameId);
     List<Long> unconvertedGames = new ArrayList<Long>();
     for (long gameStateId : finishedGameStateIds) {
-      System.out.print("load game " + gameStateId + " in old format");
+      System.out.print("load old game " + gameStateId + " from db");
       GameState gameState = DbQueryScript.readGameState(fServer, gameStateId);
       if (gameState != null) {
         Game game = gameState.getGame();
@@ -62,9 +60,34 @@ public class DbConversion {
         }
       }
       if (gameState != null) {
-        System.out.print(" and save game in new format");
+        System.out.print(", save info to db");
         try {
-          saveToDb(gameState);
+          DbTransaction insertTransaction = new DbTransaction();
+          insertTransaction.add(new DbGamesInfoInsertParameter(gameState));
+          insertTransaction.executeUpdate(fServer);
+        } catch (Exception pAny) {
+          fServer.getDebugLog().log(gameStateId, pAny);
+          gameState = null;
+        }
+      }
+      if (gameState != null) {
+        System.out.print(", back game up");
+        try {
+          if (UtilBackup.save(gameState)) {
+            gameState = UtilBackup.load(fServer, gameStateId);
+          } else {
+            gameState = null;
+          }
+        } catch (Exception pAny) {
+          fServer.getDebugLog().log(gameStateId, pAny);
+          gameState = null;
+        }
+      }
+      if (gameState != null) {
+        System.out.print(" and delete old entry");
+        try {
+          DbTransaction deleteTransaction = DbUpdateScript.createDeleteGameStateTransaction(fServer, gameStateId);
+          deleteTransaction.executeUpdate(fServer);
           System.out.println(".");
         } catch (Exception pAny) {
           fServer.getDebugLog().log(gameStateId, pAny);
@@ -94,14 +117,5 @@ public class DbConversion {
     }
     fDbQueryFactory.closeDbConnection();
   } 
-  
-  public void saveToDb(GameState pGameState) {
-    DbTransaction transaction = new DbTransaction();
-    transaction.add(new DbGamesInfoDeleteParameter(pGameState.getId()));
-    transaction.add(new DbGamesInfoInsertParameter(pGameState));
-    transaction.add(new DbGamesSerializedDeleteParameter(pGameState.getId()));
-    transaction.add(new DbGamesSerializedInsertParameter(pGameState));
-    transaction.executeUpdate(fServer);
-  }
-  
+    
 }
