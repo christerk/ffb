@@ -18,35 +18,34 @@ import com.eclipsesource.json.JsonValue;
 /**
  * Step in start game sequence to roll spectators.
  * 
- * Updates persistence.
- * Pushes kickoffSequence on stack when finishing.
+ * Updates persistence. Pushes kickoffSequence on stack when finishing.
  * 
  * @author Kalimar
  */
 public final class StepSpectators extends AbstractStep {
-	
-	public StepSpectators(GameState pGameState) {
-		super(pGameState);
-	}
-	
-	public StepId getId() {
-		return StepId.SPECTATORS;
-	}
-		
-	@Override
-	public void start() {
-		super.start();
-		executeStep();
-	}
-	
-	@Override
+
+  public StepSpectators(GameState pGameState) {
+    super(pGameState);
+  }
+
+  public StepId getId() {
+    return StepId.SPECTATORS;
+  }
+
+  @Override
+  public void start() {
+    super.start();
+    executeStep();
+  }
+
+  @Override
   public StepCommandStatus handleCommand(ReceivedCommand pReceivedCommand) {
     StepCommandStatus commandStatus = super.handleCommand(pReceivedCommand);
-		if (commandStatus == StepCommandStatus.EXECUTE_STEP) {
-			executeStep();
-		}
-		return commandStatus;
-	}
+    if (commandStatus == StepCommandStatus.EXECUTE_STEP) {
+      executeStep();
+    }
+    return commandStatus;
+  }
 
   private void executeStep() {
     getResult().addReport(rollSpectators());
@@ -55,7 +54,7 @@ public final class StepSpectators extends AbstractStep {
     gameCache.queueDbUpdate(getGameState(), true);
     getResult().setNextAction(StepAction.NEXT_STEP);
   }
-  
+
   private ReportSpectators rollSpectators() {
     Game game = getGameState().getGame();
     GameResult gameResult = game.getGameResult();
@@ -65,40 +64,41 @@ public final class StepSpectators extends AbstractStep {
     teamResultHome.setSpectators((fanRollHome[0] + fanRollHome[1] + game.getTeamHome().getFanFactor()) * 1000);
     int[] fanRollAway = getGameState().getDiceRoller().rollSpectators();
     teamResultAway.setSpectators((fanRollAway[0] + fanRollAway[1] + game.getTeamAway().getFanFactor()) * 1000);
-    if (teamResultHome.getSpectators() >= (2* teamResultAway.getSpectators())) {
+    if (teamResultHome.getSpectators() >= (2 * teamResultAway.getSpectators())) {
       teamResultHome.setFame(2);
     } else if (teamResultHome.getSpectators() > teamResultAway.getSpectators()) {
       teamResultHome.setFame(1);
     } else {
       teamResultHome.setFame(0);
     }
-    if (teamResultAway.getSpectators() >= (2* teamResultHome.getSpectators())) {
+    if (teamResultAway.getSpectators() >= (2 * teamResultHome.getSpectators())) {
       teamResultAway.setFame(2);
     } else if (teamResultAway.getSpectators() > teamResultHome.getSpectators()) {
       teamResultAway.setFame(1);
     } else {
       teamResultAway.setFame(0);
     }
-    return new ReportSpectators(fanRollHome, teamResultHome.getSpectators(), teamResultHome.getFame(), fanRollAway, teamResultAway.getSpectators(), teamResultAway.getFame());
+    return new ReportSpectators(fanRollHome, teamResultHome.getSpectators(), teamResultHome.getFame(), fanRollAway, teamResultAway.getSpectators(),
+        teamResultAway.getFame());
   }
-  
+
   // ByteArray serialization
-    
+
   public int getByteArraySerializationVersion() {
-  	return 1;
+    return 1;
   }
-  
+
   // JSON serialization
-  
+
   @Override
   public JsonObject toJsonValue() {
     return super.toJsonValue();
   }
-  
+
   @Override
   public StepSpectators initFrom(JsonValue pJsonValue) {
     super.initFrom(pJsonValue);
     return this;
   }
-  
+
 }

@@ -77,7 +77,7 @@ public class FieldCoordinate {
   }
   
   public boolean isAdjacent(FieldCoordinate pOtherCoordinate) {
-    return (distanceInSteps(pOtherCoordinate) == 1);
+    return (pOtherCoordinate != null) && (distanceInSteps(pOtherCoordinate) == 1);
   }
   
   public FieldCoordinate transform() {

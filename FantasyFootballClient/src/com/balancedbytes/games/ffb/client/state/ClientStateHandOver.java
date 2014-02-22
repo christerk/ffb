@@ -67,9 +67,10 @@ public class ClientStateHandOver extends ClientStateMove {
   
   protected boolean mouseOverPlayer(Player pPlayer) {
     super.mouseOverPlayer(pPlayer);
-    Game game = getClient().getGame();
-    ActingPlayer actingPlayer = game.getActingPlayer();
-    if (canPlayerGetHandOver(pPlayer) || (actingPlayer.getPlayerAction() == PlayerAction.HAND_OVER)) {
+    // Game game = getClient().getGame();
+    // ActingPlayer actingPlayer = game.getActingPlayer();
+    // if (canPlayerGetHandOver(pPlayer) || (actingPlayer.getPlayerAction() == PlayerAction.HAND_OVER)) {
+    if (canPlayerGetHandOver(pPlayer)) {
       UtilCursor.setCustomCursor(getClient().getUserInterface(), IIconProperty.CURSOR_PASS);
     } else {
       UtilCursor.setDefaultCursor(getClient().getUserInterface());

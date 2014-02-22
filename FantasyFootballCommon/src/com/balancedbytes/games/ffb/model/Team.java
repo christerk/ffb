@@ -484,7 +484,7 @@ public class Team implements IXmlSerializable, IByteArraySerializable, IJsonSeri
     IJsonOption.APOTHECARIES.addTo(jsonObject, fApothecaries);
     IJsonOption.CHEERLEADERS.addTo(jsonObject, fCheerleaders);
     IJsonOption.ASSISTANT_COACHES.addTo(jsonObject, fAssistantCoaches);
-    IJsonOption.FAN_FACTOR.addTo(jsonObject, fCheerleaders);
+    IJsonOption.FAN_FACTOR.addTo(jsonObject, fFanFactor);
     IJsonOption.TEAM_VALUE.addTo(jsonObject, fTeamValue);
     IJsonOption.TREASURY.addTo(jsonObject, fTreasury);
     IJsonOption.BASE_ICON_PATH.addTo(jsonObject, fBaseIconPath);
@@ -516,7 +516,7 @@ public class Team implements IXmlSerializable, IByteArraySerializable, IJsonSeri
     fApothecaries = IJsonOption.APOTHECARIES.getFrom(jsonObject);
     fCheerleaders = IJsonOption.CHEERLEADERS.getFrom(jsonObject);
     fAssistantCoaches = IJsonOption.ASSISTANT_COACHES.getFrom(jsonObject);
-    fCheerleaders = IJsonOption.FAN_FACTOR.getFrom(jsonObject);
+    fFanFactor = IJsonOption.FAN_FACTOR.getFrom(jsonObject);
     fTeamValue = IJsonOption.TEAM_VALUE.getFrom(jsonObject);
     fTreasury = IJsonOption.TREASURY.getFrom(jsonObject);
     fBaseIconPath = IJsonOption.BASE_ICON_PATH.getFrom(jsonObject);

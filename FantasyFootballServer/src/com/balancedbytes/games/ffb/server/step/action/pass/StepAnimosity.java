@@ -30,6 +30,7 @@ import com.balancedbytes.games.ffb.server.util.UtilReRoll;
 import com.balancedbytes.games.ffb.util.StringTool;
 import com.balancedbytes.games.ffb.util.UtilCards;
 import com.balancedbytes.games.ffb.util.UtilPassing;
+import com.balancedbytes.games.ffb.util.UtilPlayer;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
@@ -39,61 +40,61 @@ import com.eclipsesource.json.JsonValue;
  * Needs to be initialized with stepParameter GOTO_LABEL_ON_FAILURE.
  * 
  * Expects stepParameter CATCHER_ID to be set by a preceding step.
- *  
+ * 
  * @author Kalimar
  */
 public final class StepAnimosity extends AbstractStepWithReRoll {
-	
+
   private String fGotoLabelOnFailure;
   private String fCatcherId;
 
-	public StepAnimosity(GameState pGameState) {
-		super(pGameState);
-	}
-	
-	public StepId getId() {
-		return StepId.ANIMOSITY;
-	}
-	
+  public StepAnimosity(GameState pGameState) {
+    super(pGameState);
+  }
+
+  public StepId getId() {
+    return StepId.ANIMOSITY;
+  }
+
   @Override
   public void init(StepParameterSet pParameterSet) {
-  	if (pParameterSet != null) {
-  		for (StepParameter parameter : pParameterSet.values()) {
-  			switch (parameter.getKey()) {
-  			  // mandatory
-  				case GOTO_LABEL_ON_FAILURE:
-  					fGotoLabelOnFailure = (String) parameter.getValue();
-  					break;
-					default:
-						break;
-  			}
-  		}
-  	}
-  	if (fGotoLabelOnFailure == null) {
-			throw new StepException("StepParameter " + StepParameterKey.GOTO_LABEL_ON_FAILURE + " is not initialized.");
-  	}
+    if (pParameterSet != null) {
+      for (StepParameter parameter : pParameterSet.values()) {
+        switch (parameter.getKey()) {
+        // mandatory
+        case GOTO_LABEL_ON_FAILURE:
+          fGotoLabelOnFailure = (String) parameter.getValue();
+          break;
+        default:
+          break;
+        }
+      }
+    }
+    if (fGotoLabelOnFailure == null) {
+      throw new StepException("StepParameter " + StepParameterKey.GOTO_LABEL_ON_FAILURE + " is not initialized.");
+    }
   }
-  
+
   @Override
   public boolean setParameter(StepParameter pParameter) {
-		if ((pParameter != null) && !super.setParameter(pParameter)) {
-	  	switch (pParameter.getKey()) {
-				case CATCHER_ID:
-					fCatcherId = (String) pParameter.getValue();
-					return true;
-				default:
-					break;
-	  	}
-		}
-		return false;
+    if ((pParameter != null) && !super.setParameter(pParameter)) {
+      switch (pParameter.getKey()) {
+      case CATCHER_ID:
+        fCatcherId = (String) pParameter.getValue();
+        return true;
+      default:
+        break;
+      }
+    }
+    return false;
   }
-	
-	@Override
-	public void start() {
-		super.start();
-		executeStep();
-	}
-	
+
+  @Override
+  public void start() {
+    super.start();
+    executeStep();
+  }
+
   @Override
   public StepCommandStatus handleCommand(ReceivedCommand pReceivedCommand) {
     StepCommandStatus commandStatus = super.handleCommand(pReceivedCommand);
@@ -108,31 +109,44 @@ public final class StepAnimosity extends AbstractStepWithReRoll {
     Game game = getGameState().getGame();
     ActingPlayer actingPlayer = game.getActingPlayer();
     if (game.getTurnMode().isBombTurn()) {
-    	getResult().setNextAction(StepAction.NEXT_STEP);
-    	return;
+      getResult().setNextAction(StepAction.NEXT_STEP);
+      return;
     }
     Player thrower = game.getThrower();
-  	Player catcher = game.getPlayerById(fCatcherId);
+    FieldCoordinate throwerCoordinate = game.getFieldModel().getPlayerCoordinate(thrower);
+    Player catcher = game.getPlayerById(fCatcherId);
     if (actingPlayer.isSufferingAnimosity()) {
-  	  if ((catcher != null) && !(thrower.getRace().equalsIgnoreCase(catcher.getRace()))) {
+      if ((actingPlayer.getPlayerAction() == PlayerAction.HAND_OVER)) {
+        boolean targetAvailable = false;
+        Player[] targets = UtilPlayer.findAdjacentBlockablePlayers(game, UtilPlayer.findOtherTeam(game, thrower), throwerCoordinate);
+        for (Player target : targets) {
+          targetAvailable |= thrower.getRace().equalsIgnoreCase(target.getRace());
+        }
+        if (targetAvailable) {
+          getResult().setNextAction(StepAction.NEXT_STEP);
+        } else {          
+          publishParameter(new StepParameter(StepParameterKey.END_PLAYER_ACTION, true));
+          getResult().setNextAction(StepAction.GOTO_LABEL, fGotoLabelOnFailure);
+        }
+      } else if ((catcher != null) && !(thrower.getRace().equalsIgnoreCase(catcher.getRace()))) {
         // step END_PASSING will push a new pass sequence onto the stack
         game.setPassCoordinate(null);
         game.getFieldModel().setRangeRuler(null);
         getResult().setNextAction(StepAction.GOTO_LABEL, fGotoLabelOnFailure);
-  	  } else {
-    		getResult().setNextAction(StepAction.NEXT_STEP);
-  	  }
+      } else {
+        getResult().setNextAction(StepAction.NEXT_STEP);
+      }
     } else {
       if (ReRolledAction.ANIMOSITY == getReRolledAction()) {
-    	  if ((getReRollSource() == null) || !UtilReRoll.useReRoll(this, getReRollSource(), thrower)) {
+        if ((getReRollSource() == null) || !UtilReRoll.useReRoll(this, getReRollSource(), thrower)) {
           actingPlayer.setSufferingAnimosity(true);
         } else {
-        	doRoll = true;
+          doRoll = true;
         }
       } else {
-    	  if (catcher != null) {
-    	  	doRoll = (UtilCards.hasSkill(game, thrower, Skill.ANIMOSITY) && !(thrower.getRace().equalsIgnoreCase(catcher.getRace())));
-    	  }
+        if (catcher != null) {
+          doRoll = (UtilCards.hasSkill(game, thrower, Skill.ANIMOSITY) && !(thrower.getRace().equalsIgnoreCase(catcher.getRace())));
+        }
       }
       if (doRoll) {
         int roll = getGameState().getDiceRoller().rollSkill();
@@ -141,9 +155,10 @@ public final class StepAnimosity extends AbstractStepWithReRoll {
         actingPlayer.markSkillUsed(Skill.ANIMOSITY);
         if (successful) {
           actingPlayer.setSufferingAnimosity(false);
-      		getResult().setNextAction(StepAction.NEXT_STEP);
+          getResult().setNextAction(StepAction.NEXT_STEP);
         } else {
-          if ((ReRolledAction.ANIMOSITY == getReRolledAction()) || !UtilReRoll.askForReRollIfAvailable(getGameState(), actingPlayer.getPlayer(), ReRolledAction.ANIMOSITY, minimumRoll, false)) {
+          if ((ReRolledAction.ANIMOSITY == getReRolledAction())
+              || !UtilReRoll.askForReRollIfAvailable(getGameState(), actingPlayer.getPlayer(), ReRolledAction.ANIMOSITY, minimumRoll, false)) {
             actingPlayer.setSufferingAnimosity(true);
           }
         }
@@ -152,14 +167,13 @@ public final class StepAnimosity extends AbstractStepWithReRoll {
       }
       if (actingPlayer.isSufferingAnimosity()) {
         boolean animosityPassPossible = false;
-        FieldCoordinate throwerCoordinate = game.getFieldModel().getPlayerCoordinate(actingPlayer.getPlayer());
         Team team = game.getTeamHome().hasPlayer(actingPlayer.getPlayer()) ? game.getTeamHome() : game.getTeamAway();
         for (Player player : team.getPlayers()) {
-          PlayerState playerState = game.getFieldModel().getPlayerState(player); 
+          PlayerState playerState = game.getFieldModel().getPlayerState(player);
           FieldCoordinate playerCoordinate = game.getFieldModel().getPlayerCoordinate(player);
           if ((playerState != null) && playerState.hasTacklezones() && StringTool.isEqual(actingPlayer.getRace(), player.getRace())) {
             if (((actingPlayer.getPlayerAction() == PlayerAction.HAND_OVER) && playerCoordinate.isAdjacent(throwerCoordinate))
-              || ((actingPlayer.getPlayerAction() == PlayerAction.PASS) && UtilPassing.findPassingDistance(game, throwerCoordinate, playerCoordinate, false) != null)) {
+                || ((actingPlayer.getPlayerAction() == PlayerAction.PASS) && UtilPassing.findPassingDistance(game, throwerCoordinate, playerCoordinate, false) != null)) {
               animosityPassPossible = true;
               break;
             }
@@ -173,35 +187,35 @@ public final class StepAnimosity extends AbstractStepWithReRoll {
         getResult().setNextAction(StepAction.GOTO_LABEL, fGotoLabelOnFailure);
       } else {
         if (!doRoll) {
-      		getResult().setNextAction(StepAction.NEXT_STEP);
+          getResult().setNextAction(StepAction.NEXT_STEP);
         }
       }
     }
   }
-  
+
   // ByteArray serialization
-  
+
   public int getByteArraySerializationVersion() {
-  	return 1;
+    return 1;
   }
 
   @Override
   public void addTo(ByteList pByteList) {
-  	super.addTo(pByteList);
-  	pByteList.addString(fGotoLabelOnFailure);
-  	pByteList.addString(fCatcherId);
+    super.addTo(pByteList);
+    pByteList.addString(fGotoLabelOnFailure);
+    pByteList.addString(fCatcherId);
   }
-  
+
   @Override
   public int initFrom(ByteArray pByteArray) {
-  	int byteArraySerializationVersion = super.initFrom(pByteArray);
-  	fGotoLabelOnFailure = pByteArray.getString();
-  	fCatcherId = pByteArray.getString();
-  	return byteArraySerializationVersion;
+    int byteArraySerializationVersion = super.initFrom(pByteArray);
+    fGotoLabelOnFailure = pByteArray.getString();
+    fCatcherId = pByteArray.getString();
+    return byteArraySerializationVersion;
   }
-  
+
   // JSON serialization
-  
+
   @Override
   public JsonObject toJsonValue() {
     JsonObject jsonObject = super.toJsonValue();
@@ -209,7 +223,7 @@ public final class StepAnimosity extends AbstractStepWithReRoll {
     IServerJsonOption.CATCHER_ID.addTo(jsonObject, fCatcherId);
     return jsonObject;
   }
-  
+
   @Override
   public StepAnimosity initFrom(JsonValue pJsonValue) {
     super.initFrom(pJsonValue);
@@ -218,5 +232,5 @@ public final class StepAnimosity extends AbstractStepWithReRoll {
     fCatcherId = IServerJsonOption.CATCHER_ID.getFrom(jsonObject);
     return this;
   }
-  
+
 }

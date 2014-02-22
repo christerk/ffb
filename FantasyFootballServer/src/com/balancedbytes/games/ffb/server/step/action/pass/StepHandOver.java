@@ -25,43 +25,43 @@ import com.eclipsesource.json.JsonValue;
  * 
  * Expects stepParameter CATCHER_ID to be set by a preceding step.
  * 
- * Sets stepParameter CATCH_SCATTER_THROW_IN_MODE for all steps on the stack.
- * Sets stepParameter END_PLAYER_ACTION for all steps on the stack.
+ * Sets stepParameter CATCH_SCATTER_THROW_IN_MODE for all steps on the stack. Sets stepParameter END_PLAYER_ACTION for
+ * all steps on the stack.
  * 
  * @author Kalimar
  */
 public final class StepHandOver extends AbstractStepWithReRoll {
-	
+
   private String fCatcherId;
-	
-	public StepHandOver(GameState pGameState) {
-		super(pGameState);
-	}
-	
-	public StepId getId() {
-		return StepId.HAND_OVER;
-	}
-	
-	@Override
-	public boolean setParameter(StepParameter pParameter) {
-		if ((pParameter != null) && !super.setParameter(pParameter)) {
-			switch (pParameter.getKey()) {
-				case CATCHER_ID:
-					fCatcherId = (String) pParameter.getValue();
-					return true;
-				default:
-					break;
-			}
-		}
-		return false;
-	}
-	
-	@Override
-	public void start() {
-		super.start();
-		executeStep();
-	}
-	
+
+  public StepHandOver(GameState pGameState) {
+    super(pGameState);
+  }
+
+  public StepId getId() {
+    return StepId.HAND_OVER;
+  }
+
+  @Override
+  public boolean setParameter(StepParameter pParameter) {
+    if ((pParameter != null) && !super.setParameter(pParameter)) {
+      switch (pParameter.getKey()) {
+        case CATCHER_ID:
+          fCatcherId = (String) pParameter.getValue();
+          return true;
+        default:
+          break;
+      }
+    }
+    return false;
+  }
+
+  @Override
+  public void start() {
+    super.start();
+    executeStep();
+  }
+
   @Override
   public StepCommandStatus handleCommand(ReceivedCommand pReceivedCommand) {
     StepCommandStatus commandStatus = super.handleCommand(pReceivedCommand);
@@ -75,43 +75,47 @@ public final class StepHandOver extends AbstractStepWithReRoll {
     Game game = getGameState().getGame();
     game.getFieldModel().setBallMoving(true);
     game.setPassCoordinate(null);
+    Player thrower = game.getActingPlayer().getPlayer();
+    FieldCoordinate throwerCoordinate = game.getFieldModel().getPlayerCoordinate(thrower);
     Player catcher = game.getPlayerById(fCatcherId);
     FieldCoordinate catcherCoordinate = game.getFieldModel().getPlayerCoordinate(catcher);
-    game.getFieldModel().setBallCoordinate(catcherCoordinate);
-    getResult().addReport(new ReportHandOver(fCatcherId));
-    publishParameter(new StepParameter(StepParameterKey.CATCH_SCATTER_THROW_IN_MODE, CatchScatterThrowInMode.CATCH_HAND_OFF));
+    if ((throwerCoordinate != null) && throwerCoordinate.isAdjacent(catcherCoordinate)) {
+      game.getFieldModel().setBallCoordinate(catcherCoordinate);
+      getResult().addReport(new ReportHandOver(fCatcherId));
+      publishParameter(new StepParameter(StepParameterKey.CATCH_SCATTER_THROW_IN_MODE, CatchScatterThrowInMode.CATCH_HAND_OFF));
+    }
     publishParameter(new StepParameter(StepParameterKey.END_PLAYER_ACTION, true));
     getResult().setNextAction(StepAction.NEXT_STEP);
   }
-  
+
   // ByteArray serialization
-  
+
   public int getByteArraySerializationVersion() {
-  	return 1;
+    return 1;
   }
-  
+
   @Override
   public void addTo(ByteList pByteList) {
     super.addTo(pByteList);
     pByteList.addString(fCatcherId);
   }
-  
+
   @Override
   public int initFrom(ByteArray pByteArray) {
     int byteArraySerializationVersion = super.initFrom(pByteArray);
     fCatcherId = pByteArray.getString();
     return byteArraySerializationVersion;
   }
-  
+
   // JSON serialization
-  
+
   @Override
   public JsonObject toJsonValue() {
     JsonObject jsonObject = super.toJsonValue();
     IServerJsonOption.CATCHER_ID.addTo(jsonObject, fCatcherId);
     return jsonObject;
   }
-  
+
   @Override
   public StepHandOver initFrom(JsonValue pJsonValue) {
     super.initFrom(pJsonValue);
@@ -119,5 +123,5 @@ public final class StepHandOver extends AbstractStepWithReRoll {
     fCatcherId = IServerJsonOption.CATCHER_ID.getFrom(jsonObject);
     return this;
   }
-  
+
 }
