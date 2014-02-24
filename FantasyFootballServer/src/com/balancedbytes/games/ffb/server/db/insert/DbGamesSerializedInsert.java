@@ -54,7 +54,7 @@ public class DbGamesSerializedInsert extends DbUpdateStatement {
     int col = 1;
     fStatement.setLong(col++, parameter.getId());
     try {
-      byte[] blobData = pFillBlob ? parameter.deflate() : new byte[0];
+      byte[] blobData = pFillBlob ? parameter.gzip() : new byte[0];
       if (pFillBlob && getServer().getDebugLog().isLogging(IServerLogLevel.TRACE)) {
         int newLength = blobData.length;
         int oldLength = parameter.length();

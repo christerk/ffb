@@ -30,11 +30,23 @@ public class UtilHttpClient {
   public static String fetchPage(String pUrl) throws IOException {
     HttpClient client = new HttpClient();
     client.getHttpConnectionManager().getParams().setConnectionTimeout(CONNECTION_TIMEOUT);
-    // HttpMethod method = new GetMethod(URLEncoder.encode(pUrl, CHARACTER_ENCODING));
     HttpMethod method = new GetMethod(pUrl);
     method.setFollowRedirects(true);
+    method.addRequestHeader("Accept-Encoding", "gzip");
     client.executeMethod(method);
     String responseBody = new String(method.getResponseBody(), CHARACTER_ENCODING);
+    method.releaseConnection();
+    return responseBody;
+  }
+  
+  public static byte[] fetchGzippedPage(String pUrl) throws IOException {
+    HttpClient client = new HttpClient();
+    client.getHttpConnectionManager().getParams().setConnectionTimeout(CONNECTION_TIMEOUT);
+    HttpMethod method = new GetMethod(pUrl);
+    method.setFollowRedirects(true);
+    method.addRequestHeader("Accept-Encoding", "gzip");
+    client.executeMethod(method);
+    byte[] responseBody = method.getResponseBody();
     method.releaseConnection();
     return responseBody;
   }

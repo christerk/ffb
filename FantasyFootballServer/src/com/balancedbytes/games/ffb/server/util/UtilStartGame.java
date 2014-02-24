@@ -13,6 +13,7 @@ import com.balancedbytes.games.ffb.server.FantasyFootballServer;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.db.DbStatementId;
 import com.balancedbytes.games.ffb.server.db.IDbStatementFactory;
+import com.balancedbytes.games.ffb.server.db.query.DbPlayerMarkersQuery;
 import com.balancedbytes.games.ffb.server.db.query.DbUserSettingsQuery;
 import com.balancedbytes.games.ffb.server.net.SessionManager;
 import com.balancedbytes.games.ffb.server.step.SequenceGenerator;
@@ -112,6 +113,8 @@ public class UtilStartGame {
       if ((game.getFinished() == null) && (pGameState.getStepStack().size() == 0)) {
         SequenceGenerator.getInstance().pushStartGameSequence(pGameState);
       }
+      DbPlayerMarkersQuery dbPlayerMarkersQuery = (DbPlayerMarkersQuery) server.getDbQueryFactory().getStatement(DbStatementId.PLAYER_MARKERS_QUERY);
+      dbPlayerMarkersQuery.execute(pGameState);
       server.getCommunication().sendGameState(pGameState);
       pGameState.fetchChanges(); // clear changes after sending the whole model
       return true;

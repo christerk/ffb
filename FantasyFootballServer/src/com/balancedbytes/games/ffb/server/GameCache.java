@@ -29,8 +29,10 @@ import com.balancedbytes.games.ffb.server.db.DbStatementId;
 import com.balancedbytes.games.ffb.server.db.DbTransaction;
 import com.balancedbytes.games.ffb.server.db.delete.DbGamesInfoDeleteParameter;
 import com.balancedbytes.games.ffb.server.db.delete.DbGamesSerializedDeleteParameter;
+import com.balancedbytes.games.ffb.server.db.delete.DbPlayerMarkersDeleteParameter;
 import com.balancedbytes.games.ffb.server.db.insert.DbGamesInfoInsertParameter;
 import com.balancedbytes.games.ffb.server.db.insert.DbGamesSerializedInsertParameter;
+import com.balancedbytes.games.ffb.server.db.insert.DbPlayerMarkersInsertParameterList;
 import com.balancedbytes.games.ffb.server.db.old.DbGameListQueryOpenGamesByCoachOld;
 import com.balancedbytes.games.ffb.server.db.query.DbGameListQueryOpenGamesByCoach;
 import com.balancedbytes.games.ffb.server.db.query.DbGamesSerializedQuery;
@@ -134,6 +136,7 @@ public class GameCache {
         // <-- log game cache size
         if (pGameState.getGame().getFinished() != null) {
           server.getCommunication().handleCommand(new InternalServerCommandBackupGame(pGameState.getId()));
+          queueDbPlayerMarkersUpdate(pGameState);
         }
   		}
     }
@@ -283,7 +286,7 @@ public class GameCache {
 	  }
 	  getServer().getDbUpdater().add(transaction);
 	}
-
+	
 	public void queueDbDelete(long pGameStateId, boolean pWithGamesInfo) {
 	  if (pGameStateId <= 0) {
 	    return;
@@ -324,6 +327,25 @@ public class GameCache {
       }
 		}
 		return gameState;
+  }
+	
+  private void queueDbPlayerMarkersUpdate(GameState pGameState) {
+    if (pGameState == null) {
+      return;
+    }
+    DbTransaction transaction = new DbTransaction();
+    Team teamHome = pGameState.getGame().getTeamHome();
+    if ((teamHome != null) && StringTool.isProvided(teamHome.getId())) {
+      transaction.add(new DbPlayerMarkersDeleteParameter(teamHome.getId()));
+    }
+    Team teamAway = pGameState.getGame().getTeamAway();
+    if ((teamAway != null) && StringTool.isProvided(teamAway.getId())) {
+      transaction.add(new DbPlayerMarkersDeleteParameter(teamAway.getId()));
+    }
+    DbPlayerMarkersInsertParameterList playerMarkersInsert = new DbPlayerMarkersInsertParameterList();
+    playerMarkersInsert.initFrom(pGameState);
+    transaction.add(playerMarkersInsert);
+    getServer().getDbUpdater().add(transaction);
   }
 
 }

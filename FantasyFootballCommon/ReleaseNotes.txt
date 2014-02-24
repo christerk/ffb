@@ -1,7 +1,12 @@
 
-[size=18][b]Release Notes Version 1.0.3[/b][/size]
+[size=18][b]Release Notes Version 1.2.0[/b][/size]
 
 [b]Improvements:[/b]
+
+- Dirty Tricks card deck available for inducements
+- Card playing animation when using a card in the game
+- Player Markers saved by team - upon starting a new game your players will be marked the same as in the last game
+- New way to store replays, drastically reducing database size (making it much easier for Christer to do backups)
 
 [b]22 Bugfixes:[/b]
 

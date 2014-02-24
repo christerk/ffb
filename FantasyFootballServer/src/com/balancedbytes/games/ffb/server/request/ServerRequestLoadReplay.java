@@ -5,6 +5,7 @@ import java.io.IOException;
 import org.eclipse.jetty.websocket.api.Session;
 
 import com.balancedbytes.games.ffb.FantasyFootballException;
+import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.server.FantasyFootballServer;
 import com.balancedbytes.games.ffb.server.GameCacheMode;
 import com.balancedbytes.games.ffb.server.GameState;
@@ -65,13 +66,11 @@ public class ServerRequestLoadReplay extends ServerRequest {
     GameState gameState = null;
     try {
       String loadUrl = StringTool.bind(server.getProperty(IServerProperty.BACKUP_URL_LOAD), getGameId());
-      String response = UtilHttpClient.fetchPage(loadUrl);
-      if (StringTool.isProvided(response)) {
-        JsonValue jsonValue = JsonValue.readFrom(response);
-        if ((jsonValue != null) && !jsonValue.isNull()) {
-          gameState = new GameState(server);
-          gameState.initFrom(jsonValue);
-        }
+      byte[] gzippedJson = UtilHttpClient.fetchGzippedPage(loadUrl);
+      JsonValue jsonValue = UtilJson.gunzip(gzippedJson);
+      if ((jsonValue != null) && !jsonValue.isNull()) {
+        gameState = new GameState(server);
+        gameState.initFrom(jsonValue);
       }
     } catch (IOException pIoException) {
       server.getDebugLog().log(getGameId(), new FantasyFootballException("Unable to load Replay", pIoException));

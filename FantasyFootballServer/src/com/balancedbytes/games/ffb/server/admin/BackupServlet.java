@@ -1,6 +1,8 @@
 package com.balancedbytes.games.ffb.server.admin;
 
+import java.io.BufferedOutputStream;
 import java.io.BufferedWriter;
+import java.io.Closeable;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.util.Map;
@@ -67,68 +69,34 @@ public class BackupServlet extends HttpServlet {
     if ((command != null) && (command.length() > 1) && command.startsWith("/")) {
       command = command.substring(1);
     }
-    Map<String, String[]> parameters = pRequest.getParameterMap();
+
+    if (CHALLENGE.equals(command)) {
+      executeChallenge(pRequest, pResponse);
+    }
 
     if (LOAD.equals(command)) {
-      
-      pResponse.setContentType("application/json;charset=UTF-8");
-      BufferedWriter out = null;
-      
-      try {
-        
-        out = new BufferedWriter(pResponse.getWriter());
-        
-        long gameId = parseGameId(ArrayTool.firstElement(parameters.get(_PARAMETER_GAME_ID)));
-        GameState gameState = UtilBackup.load(getServer(), gameId);
-
-        if (gameState != null) {
-          gameState.toJsonValue().writeTo(out);
-        }
-        
-      } finally {
-        if (out != null) {
-          out.close();
-        }
-      }
-      
-    } else { 
-      
-      pResponse.setContentType("text/xml;charset=UTF-8");
-      TransformerHandler handler = UtilXml.createTransformerHandler(pResponse.getWriter(), true);
-
-      try {
-        handler.startDocument();
-      } catch (SAXException pSaxException) {
-        throw new FantasyFootballException(pSaxException);
-      }
-      
-      UtilXml.startElement(handler, _XML_TAG_BACKUP);
-      
-      boolean isOk = true;
-      
-      if (CHALLENGE.equals(command)) {
-        isOk = executeChallenge(handler);
-      }
-      
-      if (SAVE.equals(command)) {
-        isOk = checkResponse(ArrayTool.firstElement(parameters.get(_PARAMETER_RESPONSE))) && executeSave(handler, parameters);
-      }
-      
-      UtilXml.addValueElement(handler, _XML_TAG_STATUS, isOk ? _STATUS_OK : _STATUS_FAIL); 
-      
-      UtilXml.endElement(handler, _XML_TAG_BACKUP);
-      
-      try {
-        handler.endDocument();
-      } catch (SAXException pSaxException) {
-        throw new FantasyFootballException(pSaxException);
-      }
-
+      executeLoad(pRequest, pResponse);
+    }
+    
+    if (SAVE.equals(command)) {
+      executeSave(pRequest, pResponse);
     }
 
   }
 
-  private boolean executeChallenge(TransformerHandler pHandler) {
+  private void executeChallenge(HttpServletRequest pRequest, HttpServletResponse pResponse) throws IOException {
+    
+    pResponse.setContentType("text/xml;charset=UTF-8");
+
+    TransformerHandler handler = UtilXml.createTransformerHandler(pResponse.getWriter(), true);
+    try {
+      handler.startDocument();
+    } catch (SAXException pSaxException) {
+      throw new FantasyFootballException(pSaxException);
+    }
+    
+    UtilXml.startElement(handler, _XML_TAG_BACKUP);
+
     boolean isOk = true;
     String challenge = new StringBuilder().append(fServer.getProperty(IServerProperty.BACKUP_SALT)).append(System.currentTimeMillis()).toString();
     try {
@@ -137,11 +105,21 @@ public class BackupServlet extends HttpServlet {
       fLastChallenge = null;
     }
     if (fLastChallenge != null) {
-      UtilXml.addValueElement(pHandler, _XML_TAG_CHALLENGE, fLastChallenge);
+      UtilXml.addValueElement(handler, _XML_TAG_CHALLENGE, fLastChallenge);
     } else {
       isOk = false;
     }
-    return isOk;
+    
+    UtilXml.addValueElement(handler, _XML_TAG_STATUS, isOk ? _STATUS_OK : _STATUS_FAIL); 
+    
+    UtilXml.endElement(handler, _XML_TAG_BACKUP);
+    
+    try {
+      handler.endDocument();
+    } catch (SAXException pSaxException) {
+      throw new FantasyFootballException(pSaxException);
+    }
+
   }
 
   private boolean checkResponse(String pResonse) {
@@ -161,19 +139,93 @@ public class BackupServlet extends HttpServlet {
     return isOk;
   }
   
-  private boolean executeSave(TransformerHandler pHandler, Map<String, String[]> pParameters) {
-    String gameIdString = ArrayTool.firstElement(pParameters.get(_PARAMETER_GAME_ID));
-    AttributesImpl attributes = new AttributesImpl();
-    UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_GAME_ID, gameIdString);
-    UtilXml.addEmptyElement(pHandler, _XML_TAG_SAVE, attributes);
-    long gameId = parseGameId(gameIdString);
-    if (gameId > 0) {
-      getServer().getCommunication().handleCommand(new InternalServerCommandBackupGame(gameId));
-      return true;
-    } else {
-      UtilXml.addValueElement(pHandler, _XML_TAG_ERROR, "Invalid or missing gameId parameter");
-      return false;
+  private void executeSave(HttpServletRequest pRequest, HttpServletResponse pResponse) throws IOException {
+    
+    pResponse.setContentType("text/xml;charset=UTF-8");
+    Map<String, String[]> parameters = pRequest.getParameterMap();
+    String gameIdString = ArrayTool.firstElement(parameters.get(_PARAMETER_GAME_ID));
+    String response = ArrayTool.firstElement(parameters.get(_PARAMETER_RESPONSE));
+
+    TransformerHandler handler = UtilXml.createTransformerHandler(pResponse.getWriter(), true);
+    try {
+      handler.startDocument();
+    } catch (SAXException pSaxException) {
+      throw new FantasyFootballException(pSaxException);
     }
+    
+    UtilXml.startElement(handler, _XML_TAG_BACKUP);
+    
+    boolean isOk = checkResponse(response);
+    
+    if (isOk) {
+      AttributesImpl attributes = new AttributesImpl();
+      UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_GAME_ID, gameIdString);
+      UtilXml.addEmptyElement(handler, _XML_TAG_SAVE, attributes);
+      long gameId = parseGameId(gameIdString);
+      if (gameId > 0) {
+        getServer().getCommunication().handleCommand(new InternalServerCommandBackupGame(gameId));
+      } else {
+        UtilXml.addValueElement(handler, _XML_TAG_ERROR, "Invalid or missing gameId parameter");
+        isOk = false;
+      }
+    }
+    
+    UtilXml.addValueElement(handler, _XML_TAG_STATUS, isOk ? _STATUS_OK : _STATUS_FAIL); 
+    
+    UtilXml.endElement(handler, _XML_TAG_BACKUP);
+    
+    try {
+      handler.endDocument();
+    } catch (SAXException pSaxException) {
+      throw new FantasyFootballException(pSaxException);
+    }
+
+  }
+  
+  private void executeLoad(HttpServletRequest pRequest, HttpServletResponse pResponse) throws IOException {
+
+    Map<String, String[]> parameters = pRequest.getParameterMap();
+    long gameId = parseGameId(ArrayTool.firstElement(parameters.get(_PARAMETER_GAME_ID)));
+
+    String acceptEncoding = pRequest.getHeader("Accept-Encoding");
+    boolean doGzip = false;
+    if (StringTool.isProvided(acceptEncoding) && acceptEncoding.contains("gzip")) {
+      doGzip = true;
+    }
+    
+    pResponse.setContentType("application/json;charset=UTF-8");
+
+    Closeable out = null;
+    try {
+    
+      if (doGzip) {
+        
+        pResponse.addHeader("Content-Encoding", "gzip");
+
+        out = new BufferedOutputStream(pResponse.getOutputStream());
+        
+        byte[] gzippedJson = UtilBackup.loadAsGzip(getServer(), gameId);
+        if (gzippedJson != null) {
+          ((BufferedOutputStream) out).write(gzippedJson, 0, gzippedJson.length);
+        }
+        
+      } else {
+        
+        out = new BufferedWriter(pResponse.getWriter());
+
+        GameState gameState = UtilBackup.load(getServer(), gameId);
+        if (gameState != null) {
+          ((BufferedWriter) out).write(gameState.toJsonValue().toString());
+        }
+        
+      }
+                  
+    } finally {
+      if (out != null) {
+        out.close();
+      }
+    }
+    
   }
   
   private long parseGameId(String pGameStateId) {

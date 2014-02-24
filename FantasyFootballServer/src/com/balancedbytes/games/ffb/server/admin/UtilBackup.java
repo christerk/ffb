@@ -11,6 +11,7 @@ import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.server.FantasyFootballServer;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.IServerProperty;
+import com.balancedbytes.games.ffb.util.ArrayTool;
 import com.eclipsesource.json.JsonValue;
 
 /**
@@ -64,7 +65,7 @@ public class UtilBackup {
     return true;
   }
   
-  public static GameState load(FantasyFootballServer pServer, long pGameId) {
+  public static byte[] loadAsGzip(FantasyFootballServer pServer, long pGameId) {
     if ((pServer == null) || (pGameId <= 0)) {
       return null;
     }
@@ -89,19 +90,27 @@ public class UtilBackup {
         }
       }
     }
-    JsonValue jsonValue = null;
-    try {
-       jsonValue = UtilJson.gunzip(gzippedJson);
-    } catch (IOException pIoException) {
-      pServer.getDebugLog().log(pGameId, pIoException);
-      return null;
+    return gzippedJson;
+  }
+  
+  public static GameState load(FantasyFootballServer pServer, long pGameId) {
+    byte[] gzippedJson = loadAsGzip(pServer, pGameId);
+    if (ArrayTool.isProvided(gzippedJson)) {
+      JsonValue jsonValue = null; 
+      try {
+        jsonValue = UtilJson.gunzip(gzippedJson);
+      } catch (IOException pIoException) {
+        pServer.getDebugLog().log(pGameId, pIoException);
+      }
+      GameState gameState = null;
+      if (jsonValue != null) {
+        gameState = new GameState(pServer);
+        gameState.initFrom(jsonValue);
+        return gameState;
+      }
+      
     }
-    GameState gameState = null;
-    if ((jsonValue != null) && !jsonValue.isNull()) {
-      gameState = new GameState(pServer);
-      gameState.initFrom(jsonValue);
-    }
-    return gameState;
+    return null;
   }
 
 }

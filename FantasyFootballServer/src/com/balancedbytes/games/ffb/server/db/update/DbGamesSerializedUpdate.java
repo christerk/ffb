@@ -56,7 +56,7 @@ public class DbGamesSerializedUpdate extends DbUpdateStatement {
     fStatement.clearParameters();
     int col = 1;
     try {
-      byte[] blobData = pFillBlob ? parameter.deflate() : new byte[0];
+      byte[] blobData = pFillBlob ? parameter.gzip() : new byte[0];
       if (pFillBlob && getServer().getDebugLog().isLogging(IServerLogLevel.TRACE)) {
         int newLength = blobData.length;
         int oldLength = parameter.length();

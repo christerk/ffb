@@ -40,8 +40,8 @@ public class DbGamesSerializedUpdateParameter extends DefaultDbUpdateParameter {
     return fGameState;
   }
   
-  public byte[] deflate() throws IOException {
-    return UtilJson.deflate(fJsonObject);
+  public byte[] gzip() throws IOException {
+    return UtilJson.gzip(fJsonObject);
   }
 
   public DbUpdateStatement getDbUpdateStatement(FantasyFootballServer pServer) {

@@ -9,10 +9,12 @@ import java.util.Map;
 import com.balancedbytes.games.ffb.server.FantasyFootballServer;
 import com.balancedbytes.games.ffb.server.db.delete.DbGamesInfoDelete;
 import com.balancedbytes.games.ffb.server.db.delete.DbGamesSerializedDelete;
+import com.balancedbytes.games.ffb.server.db.delete.DbPlayerMarkersDelete;
 import com.balancedbytes.games.ffb.server.db.delete.DbTeamSetupsDelete;
 import com.balancedbytes.games.ffb.server.db.delete.DbUserSettingsDelete;
 import com.balancedbytes.games.ffb.server.db.insert.DbGamesInfoInsert;
 import com.balancedbytes.games.ffb.server.db.insert.DbGamesSerializedInsert;
+import com.balancedbytes.games.ffb.server.db.insert.DbPlayerMarkersInsert;
 import com.balancedbytes.games.ffb.server.db.insert.DbTeamSetupsInsert;
 import com.balancedbytes.games.ffb.server.db.insert.DbUserSettingsInsert;
 import com.balancedbytes.games.ffb.server.db.old.DbActingPlayersDelete;
@@ -79,6 +81,9 @@ public class DbUpdateFactory implements IDbStatementFactory {
     register(new DbTeamSetupsDelete(pServer));
     register(new DbTurnDataDelete(pServer));
     register(new DbUserSettingsDelete(pServer));
+    
+    register(new DbPlayerMarkersDelete(pServer));
+    register(new DbPlayerMarkersInsert(pServer));
     
   }
 

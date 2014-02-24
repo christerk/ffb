@@ -78,6 +78,7 @@ public class DbInitializer {
     dropTable(statement, IDbTableGameStates.TABLE_NAME);
 
     // new tables (1.0.6) -->
+    dropTable(statement, IDbTablePlayerMarkers.TABLE_NAME);
     dropTable(statement, IDbTableTeamSetups.TABLE_NAME);
     dropTable(statement, IDbTableUserSettings.TABLE_NAME);
     dropTable(statement, IDbTableGamesInfo.TABLE_NAME);
@@ -90,6 +91,7 @@ public class DbInitializer {
     }
 
     // new tables (1.0.6) -->
+    createTablePlayerMarkers(statement);
     createTableUserSettings(statement);
     createTableTeamSetups(statement);
     createTableGamesInfo(statement);
@@ -198,6 +200,17 @@ public class DbInitializer {
   	sql.append(IDbTableGamesSerialized.COLUMN_SERIALIZED).append(" MEDIUMBLOB,");  // 2
     sql.append("PRIMARY KEY(").append(IDbTableGamesSerialized.COLUMN_ID).append(")");
   	sql.append(") ENGINE=InnoDB DEFAULT CHARSET=utf8;");
+    return pStatement.executeUpdate(sql.toString());
+  }
+  
+  private int createTablePlayerMarkers(Statement pStatement) throws SQLException {
+    StringBuilder sql = new StringBuilder();
+    sql.append("CREATE TABLE ").append(IDbTablePlayerMarkers.TABLE_NAME).append("(");
+    sql.append(IDbTablePlayerMarkers.COLUMN_TEAM_ID).append(" VARCHAR(40) NOT NULL,");    // 1
+    sql.append(IDbTablePlayerMarkers.COLUMN_PLAYER_ID).append(" VARCHAR(40) NOT NULL,");  // 2
+    sql.append(IDbTablePlayerMarkers.COLUMN_TEXT).append(" VARCHAR(40),");                // 3
+    sql.append("PRIMARY KEY(").append(IDbTablePlayerMarkers.COLUMN_TEAM_ID).append(",").append(IDbTablePlayerMarkers.COLUMN_PLAYER_ID).append(")");
+    sql.append(") ENGINE=InnoDB DEFAULT CHARSET=utf8;");
     return pStatement.executeUpdate(sql.toString());
   }
 
