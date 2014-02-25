@@ -56,7 +56,10 @@ public class DbUpdateFactory implements IDbStatementFactory {
     register(new DbGamesSerializedInsert(pServer));
     register(new DbTeamSetupsInsert(pServer));
     register(new DbUserSettingsInsert(pServer));
-    
+    register(new DbUserSettingsDelete(pServer));
+    register(new DbPlayerMarkersInsert(pServer));    
+    register(new DbPlayerMarkersDelete(pServer));
+ 
     register(new DbGamesInfoUpdate(pServer));
     register(new DbGamesSerializedUpdate(pServer));
 
@@ -80,11 +83,6 @@ public class DbUpdateFactory implements IDbStatementFactory {
     register(new DbTeamsDelete(pServer));
     register(new DbTeamSetupsDelete(pServer));
     register(new DbTurnDataDelete(pServer));
-    register(new DbUserSettingsDelete(pServer));
-    
-    register(new DbPlayerMarkersDelete(pServer));
-    register(new DbPlayerMarkersInsert(pServer));
-    
   }
 
   public DbStatement getStatement(DbStatementId pStatementId) {

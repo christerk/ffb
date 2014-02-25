@@ -31,6 +31,7 @@ import com.balancedbytes.games.ffb.server.db.query.DbGameListQueryOpenGamesByCoa
 import com.balancedbytes.games.ffb.server.db.query.DbGamesSerializedQuery;
 import com.balancedbytes.games.ffb.server.db.query.DbGamesSerializedQueryMaxId;
 import com.balancedbytes.games.ffb.server.db.query.DbPasswordForCoachQuery;
+import com.balancedbytes.games.ffb.server.db.query.DbPlayerMarkersQuery;
 import com.balancedbytes.games.ffb.server.db.query.DbTeamSetupsForTeamQuery;
 import com.balancedbytes.games.ffb.server.db.query.DbTeamSetupsQuery;
 import com.balancedbytes.games.ffb.server.db.query.DbUserSettingsQuery;
@@ -77,6 +78,7 @@ public class DbQueryFactory implements IDbStatementFactory {
     register(new DbTeamsForGameStateQuery(pServer));
     register(new DbTurnDataForGameStateQuery(pServer));
     register(new DbUserSettingsQuery(pServer));
+    register(new DbPlayerMarkersQuery(pServer));
     
     if (ServerMode.STANDALONE == getServer().getMode()) {
       register(new DbPasswordForCoachQuery(pServer));
