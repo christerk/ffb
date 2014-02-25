@@ -152,15 +152,19 @@ public class FantasyFootballClient implements IConnectionListener, IDialogCloseL
       throw new FantasyFootballException(pUnknownHostException);
     }
 
+    boolean connectionEstablished = false;
+
     try {
       fWebSocketClientFactory.start();
       URI uri = new URI("ws", null, getServerHost().getCanonicalHostName(), getServerPort(), "/command", null, null);
       fWebSocketClient = fWebSocketClientFactory.newWebSocketClient();
       WebSocket.Connection connection = fWebSocketClient.open(uri, fCommandSocket).get();
-      getUserInterface().getStatusReport().reportConnectionEstablished(connection != null);
+      connectionEstablished = (connection != null);
     } catch (Exception pAnyException) {
-      throw new FantasyFootballException(pAnyException);
+      pAnyException.printStackTrace();
     }
+
+    getUserInterface().getStatusReport().reportConnectionEstablished(connectionEstablished);
 
     if (ClientMode.REPLAY != getMode()) {
       fTurnTimerTask = new TurnTimerTask(this);

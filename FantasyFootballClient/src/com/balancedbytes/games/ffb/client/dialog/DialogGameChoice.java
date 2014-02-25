@@ -63,8 +63,7 @@ public class DialogGameChoice extends Dialog {
     
     super(pClient, "Select Game", false);
     
-    fGameListEntries = pGameList.getEntries(true);
-    
+    fGameListEntries = pGameList.getEntriesSorted();    
     String[] columnNames = null;
     if (getClient().getParameters().getMode() == ClientMode.PLAYER) {
       columnNames = new String[] { "My Team", "Opposing Team", "Opponent", "Started" }; 
@@ -83,7 +82,7 @@ public class DialogGameChoice extends Dialog {
     };
 
     for (int i = 0; i < fGameListEntries.length; i++) {
-      String startedTimestamp = _TIMESTAMP_FORMAT.format(fGameListEntries[i].getStarted());
+      String startedTimestamp = (fGameListEntries[i].getStarted() != null) ? _TIMESTAMP_FORMAT.format(fGameListEntries[i].getStarted()) : "scheduled";
       if (ClientMode.PLAYER == getClient().getMode()) {
         if (getClient().getParameters().getCoach().equals(fGameListEntries[i].getTeamHomeCoach())) {
           tableModel.setValueAt(fGameListEntries[i].getTeamHomeName(), i, 0);

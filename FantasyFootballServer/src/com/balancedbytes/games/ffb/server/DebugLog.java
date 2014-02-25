@@ -129,7 +129,7 @@ public class DebugLog {
     
     fSize = 0;
     StringBuilder logName = new StringBuilder();
-    logName.append("serverDebug-");
+    logName.append("ffbServer-");
     logName.append(_FILE_TIMESTAMP_FORMAT.format(new Date()));
     logName.append(".log");
     // logName.append(".log.gz");
@@ -139,6 +139,7 @@ public class DebugLog {
       fLogFile = new File(logName.toString());
     }
     try {
+      fLogFile.getParentFile().mkdirs();
       fOut = new PrintWriter(new FileWriter(getLogFile()));
       // fOut = new PrintWriter(new GZIPOutputStream(new FileOutputStream(getLogFile())));
     } catch (IOException ioe) {

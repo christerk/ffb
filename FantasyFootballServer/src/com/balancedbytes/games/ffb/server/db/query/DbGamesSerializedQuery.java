@@ -10,7 +10,6 @@ import java.sql.SQLException;
 import com.balancedbytes.games.ffb.FantasyFootballException;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.server.FantasyFootballServer;
-import com.balancedbytes.games.ffb.server.GameCacheMode;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.IServerLogLevel;
 import com.balancedbytes.games.ffb.server.db.DbStatement;
@@ -55,11 +54,10 @@ public class DbGamesSerializedQuery extends DbStatement {
         Blob blob = resultSet.getBlob(1);
         JsonValue jsonValue = UtilJson.gunzip(blob.getBytes(1, (int) blob.length()));
         gameState = new GameState(pServer).initFrom(jsonValue);
-        if (getServer().getDebugLog().isLogging(IServerLogLevel.TRACE)) {
+        if (getServer().getDebugLog().isLogging(IServerLogLevel.TRACE) && (gameState.getCurrentStep() != null)) {
           String currentStepName = (gameState.getCurrentStep() != null) ? gameState.getCurrentStep().getId().getName() : "null";
           getServer().getDebugLog().log(IServerLogLevel.TRACE, StringTool.bind("loaded CurrentStep $1", currentStepName));
         }
-        pServer.getGameCache().add(gameState, GameCacheMode.LOAD_GAME);
       }
       resultSet.close();
     } catch (IOException pIOException) {

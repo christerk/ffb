@@ -206,8 +206,10 @@ public class AdminServlet extends HttpServlet {
     InternalServerCommandScheduleGame scheduleCommand = new InternalServerCommandScheduleGame(teamHomeId, teamAwayId);
     scheduleCommand.setGameIdListener(new IGameIdListener() {
       public void setGameId(long pGameId) {
-        gameIdNotifier.set(pGameId);
-        gameIdNotifier.notify();
+        synchronized (gameIdNotifier) {
+          gameIdNotifier.set(pGameId);
+          gameIdNotifier.notify();
+        }
       }
     });
     getServer().getCommunication().handleCommand(scheduleCommand);

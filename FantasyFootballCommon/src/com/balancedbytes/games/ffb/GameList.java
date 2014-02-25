@@ -3,7 +3,7 @@ package com.balancedbytes.games.ffb;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
-import java.util.LinkedList;
+import java.util.Date;
 import java.util.List;
 
 import javax.xml.transform.sax.TransformerHandler;
@@ -55,16 +55,13 @@ public class GameList implements IXmlSerializable, IByteArraySerializable, IJson
     return fEntries.toArray(new GameListEntry[fEntries.size()]);
   }
   
-  public GameListEntry[] getEntries(boolean onlyActive) {
-	  LinkedList<GameListEntry> list = new LinkedList<GameListEntry>();
-	  for (GameListEntry entry : fEntries) {
-		  if (!onlyActive || entry.getStarted() != null)
-			  list.add(entry);
-	  }
-	  GameListEntry[] result = list.toArray(new GameListEntry[list.size()]);
+  public GameListEntry[] getEntriesSorted() {
+    GameListEntry[] result = getEntries();
 	  Arrays.sort(result, new Comparator<GameListEntry>() {
 	    public int compare(GameListEntry pEntry1, GameListEntry pEntry2) {
-	      return pEntry2.getStarted().compareTo(pEntry1.getStarted());
+        Date date1 = (pEntry1.getStarted() != null) ? pEntry1.getStarted() : new Date(0);
+	      Date date2 = (pEntry2.getStarted() != null) ? pEntry2.getStarted() : new Date(0);
+	      return date2.compareTo(date1);
 	    }
 	  });
 	  return result;

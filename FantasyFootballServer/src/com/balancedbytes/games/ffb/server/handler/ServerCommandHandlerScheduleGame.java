@@ -41,7 +41,6 @@ public class ServerCommandHandlerScheduleGame extends ServerCommandHandler {
       gameCache.addTeamToGame(gameState, teamHome, true);
       Team teamAway = gameCache.getTeamById(scheduleGameCommand.getTeamAwayId());
       gameCache.addTeamToGame(gameState, teamAway, false);
-      gameCache.queueDbUpdate(gameState, true);
       if (scheduleGameCommand.getGameIdListener() != null) {
       	scheduleGameCommand.getGameIdListener().setGameId(gameState.getId());
       }

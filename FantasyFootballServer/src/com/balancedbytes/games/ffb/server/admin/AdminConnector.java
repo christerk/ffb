@@ -48,7 +48,7 @@ public class AdminConnector {
       Properties serverProperties = new Properties();
       BufferedInputStream in = null;
       try {
-        in = new BufferedInputStream(AdminConnector.class.getResourceAsStream("server.ini")); 
+        in = new BufferedInputStream(AdminConnector.class.getResourceAsStream("/server.ini")); 
         serverProperties.load(in);
       } finally {
         if (in != null) {
