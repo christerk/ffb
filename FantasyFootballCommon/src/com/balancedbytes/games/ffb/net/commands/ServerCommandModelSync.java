@@ -3,11 +3,11 @@ package com.balancedbytes.games.ffb.net.commands;
 import com.balancedbytes.games.ffb.Sound;
 import com.balancedbytes.games.ffb.SoundFactory;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
-import com.balancedbytes.games.ffb.bytearray.ByteList;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.Animation;
 import com.balancedbytes.games.ffb.model.change.ModelChangeList;
+import com.balancedbytes.games.ffb.model.change.old.ModelChangeListOld;
 import com.balancedbytes.games.ffb.net.NetCommandId;
 import com.balancedbytes.games.ffb.report.ReportList;
 import com.eclipsesource.json.JsonObject;
@@ -87,41 +87,17 @@ public class ServerCommandModelSync extends ServerCommand {
 
   // ByteArray serialization
 
-  public int getByteArraySerializationVersion() {
-    return 1;
-  }
-
-  public void addTo(ByteList pByteList) {
-    pByteList.addSmallInt(getByteArraySerializationVersion());
-    pByteList.addSmallInt(getCommandNr());
-    getModelChanges().addTo(pByteList);
-    getReportList().addTo(pByteList);
-    pByteList.addBoolean(getAnimation() != null);
-    if (getAnimation() != null) {
-      getAnimation().addTo(pByteList);
-    }
-    pByteList.addByte((byte) ((getSound() != null) ? getSound().getId() : 0));
-    pByteList.addLong(getGameTime());
-    pByteList.addLong(getTurnTime());
-  }
-
   public int initFrom(ByteArray pByteArray) {
     int byteArraySerializationVersion = pByteArray.getSmallInt();
     setCommandNr(pByteArray.getSmallInt());
+    
+    // TODO: this needs to init the OLD ModelChangeList and convert it
 
-    fModelChanges.initFrom(pByteArray);
-    // System.out.print("ModelChanges:");
-    // for (IModelChange modelChange : fModelChanges.getChanges()) {
-    // System.out.print(" " + modelChange.getId().getName());
-    // }
-    // System.out.println();
-
+    ModelChangeListOld changeListOld = new ModelChangeListOld();
+    changeListOld.initFrom(pByteArray);
+    fModelChanges = changeListOld.convert();
+    
     fReportList.initFrom(pByteArray);
-    // System.out.print("     Reports:");
-    // for (IReport report : fReportList.getReports()) {
-    // System.out.print(" " + report.getId().getName());
-    // }
-    // System.out.println();
 
     if (pByteArray.getBoolean()) {
       fAnimation = new Animation();

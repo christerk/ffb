@@ -4,7 +4,6 @@ import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.PlayerAction;
 import com.balancedbytes.games.ffb.PlayerActionFactory;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
-import com.balancedbytes.games.ffb.bytearray.ByteList;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.Game;
@@ -209,27 +208,6 @@ public class StepEndMoving extends AbstractStep {
 	
 	// ByteArray serialization
 	
-	public int getByteArraySerializationVersion() {
-  	return 1;
-  }
-  
-	@Override
-  public void addTo(ByteList pByteList) {
-  	super.addTo(pByteList);
-  	pByteList.addByte((byte) ((fDispatchPlayerAction != null) ? fDispatchPlayerAction.getId() : 0));
-  	if (ArrayTool.isProvided(fMoveStack)) {
-  		pByteList.addByte((byte) fMoveStack.length);
-  		for (int i = 0; i < fMoveStack.length; i++) {
-  			pByteList.addFieldCoordinate(fMoveStack[i]);
-  		}
-  	} else {
-  		pByteList.addByte((byte) 0);
-  	}
-  	pByteList.addBoolean(fFeedingAllowed);
-  	pByteList.addBoolean(fEndPlayerAction);
-  	pByteList.addBoolean(fEndTurn);
-  }
-  
   @Override
   public int initFrom(ByteArray pByteArray) {
   	int byteArraySerializationVersion = super.initFrom(pByteArray);

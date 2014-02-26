@@ -3,7 +3,6 @@ package com.balancedbytes.games.ffb.server.step.phase.kickoff;
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.InducementPhase;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
-import com.balancedbytes.games.ffb.bytearray.ByteList;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandKickoff;
@@ -83,16 +82,6 @@ public final class StepKickoff extends AbstractStep {
   
   // ByteArray serialization
     
-  public int getByteArraySerializationVersion() {
-  	return 1;
-  }
-  
-  @Override
-  public void addTo(ByteList pByteList) {
-  	super.addTo(pByteList);
-  	pByteList.addFieldCoordinate(fKickoffStartCoordinate);
-  }
-  
   @Override
   public int initFrom(ByteArray pByteArray) {
   	int byteArraySerializationVersion = super.initFrom(pByteArray);

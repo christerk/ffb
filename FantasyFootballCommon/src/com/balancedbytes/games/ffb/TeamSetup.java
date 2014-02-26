@@ -10,7 +10,7 @@ import org.xml.sax.helpers.AttributesImpl;
 
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
-import com.balancedbytes.games.ffb.bytearray.IByteArraySerializable;
+import com.balancedbytes.games.ffb.bytearray.IByteArrayReadable;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.IJsonSerializable;
 import com.balancedbytes.games.ffb.json.UtilJson;
@@ -31,7 +31,7 @@ import com.eclipsesource.json.JsonValue;
  * 
  * @author Kalimar
  */
-public class TeamSetup implements IXmlSerializable, IByteArraySerializable, IJsonSerializable {
+public class TeamSetup implements IXmlSerializable, IByteArrayReadable, IJsonSerializable {
   
   public static final String XML_TAG = "teamSetup";
   

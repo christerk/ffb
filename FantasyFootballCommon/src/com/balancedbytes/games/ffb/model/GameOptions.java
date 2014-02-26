@@ -11,7 +11,7 @@ import com.balancedbytes.games.ffb.GameOption;
 import com.balancedbytes.games.ffb.GameOptionValue;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
-import com.balancedbytes.games.ffb.bytearray.IByteArraySerializable;
+import com.balancedbytes.games.ffb.bytearray.IByteArrayReadable;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.IJsonSerializable;
 import com.balancedbytes.games.ffb.json.UtilJson;
@@ -27,7 +27,7 @@ import com.eclipsesource.json.JsonValue;
  * 
  * @author Kalimar
  */
-public class GameOptions implements IXmlSerializable, IByteArraySerializable, IJsonSerializable {
+public class GameOptions implements IXmlSerializable, IByteArrayReadable, IJsonSerializable {
   
   public static final String XML_TAG = "options";
   

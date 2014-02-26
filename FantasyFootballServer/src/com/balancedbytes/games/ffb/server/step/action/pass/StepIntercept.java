@@ -11,7 +11,6 @@ import com.balancedbytes.games.ffb.Skill;
 import com.balancedbytes.games.ffb.TurnMode;
 import com.balancedbytes.games.ffb.TurnModeFactory;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
-import com.balancedbytes.games.ffb.bytearray.ByteList;
 import com.balancedbytes.games.ffb.dialog.DialogInterceptionParameter;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.Game;
@@ -197,19 +196,6 @@ public final class StepIntercept extends AbstractStepWithReRoll {
   }
   
   // ByteArray serialization
-  
-  public int getByteArraySerializationVersion() {
-  	return 1;
-  }
-  
-  @Override
-  public void addTo(ByteList pByteList) {
-  	super.addTo(pByteList);
-  	pByteList.addString(fGotoLabelOnFailure);
-  	pByteList.addString(fInterceptorId);
-  	pByteList.addBoolean(fInterceptorChosen);
-  	pByteList.addByte((byte) ((fOldTurnMode != null) ? fOldTurnMode.getId() : 0));
-  }
   
   @Override
   public int initFrom(ByteArray pByteArray) {

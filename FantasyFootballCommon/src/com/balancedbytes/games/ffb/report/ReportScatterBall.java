@@ -6,7 +6,6 @@ import java.util.List;
 import com.balancedbytes.games.ffb.Direction;
 import com.balancedbytes.games.ffb.DirectionFactory;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
-import com.balancedbytes.games.ffb.bytearray.ByteList;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.util.ArrayTool;
@@ -91,24 +90,6 @@ public class ReportScatterBall implements IReport {
   
   // ByteArray serialization
   
-  public int getByteArraySerializationVersion() {
-    return 1;
-  }
-  
-  public void addTo(ByteList pByteList) {
-    pByteList.addSmallInt(getId().getId());
-    pByteList.addSmallInt(getByteArraySerializationVersion());
-    Direction[] directions = getDirections();
-    pByteList.addByte((byte) directions.length);
-    if (ArrayTool.isProvided(directions)) {
-      for (Direction direction : directions) {
-        pByteList.addByte((byte) direction.getId());
-      }
-    }
-    pByteList.addByteArray(getRolls());
-    pByteList.addBoolean(isGustOfWind());
-  }
-
   public int initFrom(ByteArray pByteArray) {
     UtilReport.validateReportId(this, new ReportIdFactory().forId(pByteArray.getSmallInt()));
     int byteArraySerializationVersion = pByteArray.getSmallInt();

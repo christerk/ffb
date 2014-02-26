@@ -8,7 +8,6 @@ import com.balancedbytes.games.ffb.SkillUse;
 import com.balancedbytes.games.ffb.Sound;
 import com.balancedbytes.games.ffb.TrackNumber;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
-import com.balancedbytes.games.ffb.bytearray.ByteList;
 import com.balancedbytes.games.ffb.dialog.DialogFollowupChoiceParameter;
 import com.balancedbytes.games.ffb.dialog.DialogSkillUseParameter;
 import com.balancedbytes.games.ffb.json.UtilJson;
@@ -177,20 +176,6 @@ public class StepFollowup extends AbstractStep {
   }
   
   // ByteArray serialization
-  
-  public int getByteArraySerializationVersion() {
-  	return 1;
-  }
-  
-  @Override
-  public void addTo(ByteList pByteList) {
-  	super.addTo(pByteList);
-  	pByteList.addFieldCoordinate(fCoordinateFrom);
-  	pByteList.addFieldCoordinate(fDefenderPosition);
-  	pByteList.addBoolean(fUsingFend);
-  	pByteList.addBoolean(fFollowupChoice);
-  	pByteList.addSmallInt((fOldDefenderState != null) ? fOldDefenderState.getId() : 0);
-  }
   
   @Override
   public int initFrom(ByteArray pByteArray) {

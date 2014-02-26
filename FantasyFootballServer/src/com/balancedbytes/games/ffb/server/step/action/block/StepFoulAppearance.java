@@ -4,7 +4,6 @@ import com.balancedbytes.games.ffb.ReRolledAction;
 import com.balancedbytes.games.ffb.Skill;
 import com.balancedbytes.games.ffb.Sound;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
-import com.balancedbytes.games.ffb.bytearray.ByteList;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.Game;
@@ -117,16 +116,6 @@ public class StepFoulAppearance extends AbstractStepWithReRoll {
   }
   
   // ByteArray serialization
-  
-  public int getByteArraySerializationVersion() {
-  	return 1;
-  }
-  
-  @Override
-  public void addTo(ByteList pByteList) {
-  	super.addTo(pByteList);
-  	pByteList.addString(fGotoLabelOnFailure);
-  }
   
   @Override
   public int initFrom(ByteArray pByteArray) {

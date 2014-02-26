@@ -26,12 +26,6 @@ public class DialogTransferPettyCashParameter extends DialogWithoutParameter {
     return new DialogTransferPettyCashParameter();
   }
   
-  // ByteArray serialization
-  
-  public int getByteArraySerializationVersion() {
-    return 1;
-  }
-
   // JSON serialization
   
   public DialogTransferPettyCashParameter initFrom(JsonValue pJsonValue) {

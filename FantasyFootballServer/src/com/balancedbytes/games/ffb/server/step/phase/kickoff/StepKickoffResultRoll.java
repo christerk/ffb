@@ -3,7 +3,6 @@ package com.balancedbytes.games.ffb.server.step.phase.kickoff;
 import com.balancedbytes.games.ffb.KickoffResult;
 import com.balancedbytes.games.ffb.KickoffResultFactory;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
-import com.balancedbytes.games.ffb.bytearray.ByteList;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.report.ReportKickoffResult;
 import com.balancedbytes.games.ffb.server.DiceInterpreter;
@@ -68,16 +67,6 @@ public final class StepKickoffResultRoll extends AbstractStep {
   }
   
   // ByteArray serialization
-  
-  public int getByteArraySerializationVersion() {
-  	return 1;
-  }
-
-  @Override
-  public void addTo(ByteList pByteList) {
-  	super.addTo(pByteList);
-  	pByteList.addByte((byte) ((fKickoffResult != null) ? fKickoffResult.getId() : 0));
-  }
   
   @Override
   public int initFrom(ByteArray pByteArray) {

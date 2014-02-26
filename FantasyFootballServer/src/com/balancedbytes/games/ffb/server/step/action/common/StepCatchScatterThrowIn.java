@@ -22,7 +22,6 @@ import com.balancedbytes.games.ffb.SkillUse;
 import com.balancedbytes.games.ffb.Sound;
 import com.balancedbytes.games.ffb.TurnMode;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
-import com.balancedbytes.games.ffb.bytearray.ByteList;
 import com.balancedbytes.games.ffb.dialog.DialogPlayerChoiceParameter;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.Animation;
@@ -458,26 +457,6 @@ public class StepCatchScatterThrowIn extends AbstractStepWithReRoll {
   }
   
   // ByteArray serialization
-  
-  public int getByteArraySerializationVersion() {
-  	return 1;
-  }
-  
-  @Override
-  public void addTo(ByteList pByteList) {
-  	super.addTo(pByteList);
-  	pByteList.addString(fCatcherId);
-  	if (fScatterBounds != null) {
-  		pByteList.addBoolean(true);
-  		fScatterBounds.addTo(pByteList);
-  	} else {
-  		pByteList.addBoolean(false);
-  	}
-  	pByteList.addByte((byte) ((fCatchScatterThrowInMode != null) ? fCatchScatterThrowInMode.getId() : 0));
-  	pByteList.addFieldCoordinate(fThrowInCoordinate);
-  	pByteList.addBoolean(fDivingCatchChoice);
-  	pByteList.addBoolean(fBombMode);
-  }
   
   @Override
   public int initFrom(ByteArray pByteArray) {

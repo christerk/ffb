@@ -3,7 +3,6 @@ package com.balancedbytes.games.ffb.report;
 import com.balancedbytes.games.ffb.SpecialEffect;
 import com.balancedbytes.games.ffb.SpecialEffectFactory;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
-import com.balancedbytes.games.ffb.bytearray.ByteList;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.eclipsesource.json.JsonObject;
@@ -58,19 +57,6 @@ public class ReportSpecialEffectRoll implements IReport {
   }
 
   // ByteArray serialization
-
-  public int getByteArraySerializationVersion() {
-    return 1;
-  }
-
-  public void addTo(ByteList pByteList) {
-    pByteList.addSmallInt(getId().getId());
-    pByteList.addSmallInt(getByteArraySerializationVersion());
-    pByteList.addByte((byte) ((getSpecialEffect() != null) ? getSpecialEffect().getId() : 0));
-    pByteList.addString(getPlayerId());
-    pByteList.addByte((byte) getRoll());
-    pByteList.addBoolean(isSuccessful());
-  }
 
   public int initFrom(ByteArray pByteArray) {
     UtilReport.validateReportId(this, new ReportIdFactory().forId(pByteArray.getSmallInt()));

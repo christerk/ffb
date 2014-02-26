@@ -3,7 +3,6 @@ package com.balancedbytes.games.ffb.report;
 import com.balancedbytes.games.ffb.BlockResult;
 import com.balancedbytes.games.ffb.BlockResultFactory;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
-import com.balancedbytes.games.ffb.bytearray.ByteList;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.eclipsesource.json.JsonObject;
@@ -67,20 +66,6 @@ public class ReportBlockChoice implements IReport {
   
   // ByteArray serialization
   
-  public int getByteArraySerializationVersion() {
-    return 1;
-  }
-  
-  public void addTo(ByteList pByteList) {
-    pByteList.addSmallInt(getId().getId());
-    pByteList.addSmallInt(getByteArraySerializationVersion());
-    pByteList.addByte((byte) getNrOfDice());
-    pByteList.addByteArray(getBlockRoll());
-    pByteList.addByte((byte) getDiceIndex());
-    pByteList.addByte((byte) ((getBlockResult() != null) ? getBlockResult().getId() : 0)); 
-    pByteList.addString(getDefenderId());
-  }
-
   public int initFrom(ByteArray pByteArray) {
     UtilReport.validateReportId(this, new ReportIdFactory().forId(pByteArray.getSmallInt()));
     int byteArraySerializationVersion = pByteArray.getSmallInt();

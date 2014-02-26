@@ -1,7 +1,6 @@
 package com.balancedbytes.games.ffb.report;
 
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
-import com.balancedbytes.games.ffb.bytearray.ByteList;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.eclipsesource.json.JsonObject;
@@ -79,21 +78,6 @@ public class ReportGameOptions implements IReport {
   }
 
   // ByteArray serialization
-
-  public int getByteArraySerializationVersion() {
-    return 1;
-  }
-
-  public void addTo(ByteList pByteList) {
-    pByteList.addSmallInt(getId().getId());
-    pByteList.addSmallInt(getByteArraySerializationVersion());
-    pByteList.addBoolean(isOvertime());
-    pByteList.addInt(getTurntime());
-    pByteList.addBoolean(isSneakyGitAsFoulGuard());
-    pByteList.addBoolean(isFoulBonusOutsideTacklezone());
-    pByteList.addBoolean(isRightStuffCancelsTackle());
-    pByteList.addBoolean(isPilingOnWithoutModifier());
-  }
 
   public int initFrom(ByteArray pByteArray) {
     UtilReport.validateReportId(this, new ReportIdFactory().forId(pByteArray.getSmallInt()));

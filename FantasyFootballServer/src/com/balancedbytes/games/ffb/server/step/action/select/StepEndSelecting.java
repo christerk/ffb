@@ -5,7 +5,6 @@ import com.balancedbytes.games.ffb.PlayerAction;
 import com.balancedbytes.games.ffb.PlayerActionFactory;
 import com.balancedbytes.games.ffb.Skill;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
-import com.balancedbytes.games.ffb.bytearray.ByteList;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.Game;
@@ -18,7 +17,6 @@ import com.balancedbytes.games.ffb.server.step.StepId;
 import com.balancedbytes.games.ffb.server.step.StepParameter;
 import com.balancedbytes.games.ffb.server.step.UtilSteps;
 import com.balancedbytes.games.ffb.server.util.UtilDialog;
-import com.balancedbytes.games.ffb.util.ArrayTool;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
@@ -231,33 +229,6 @@ public final class StepEndSelecting extends AbstractStep {
 	}
 	
 	// ByteArray serialization
-
-  public int getByteArraySerializationVersion() {
-  	return 2;
-  }
-  
-  @Override
-  public void addTo(ByteList pByteList) {
-  	super.addTo(pByteList);
-  	pByteList.addBoolean(fEndTurn);
-  	pByteList.addBoolean(fEndPlayerAction);
-  	pByteList.addByte((byte) ((fDispatchPlayerAction != null) ? fDispatchPlayerAction.getId() : 0));
-  	if (ArrayTool.isProvided(fMoveStack)) {
-  		pByteList.addByte((byte) fMoveStack.length);
-  		for (int i = 0; i < fMoveStack.length; i++) {
-  			pByteList.addFieldCoordinate(fMoveStack[i]);
-  		}
-  	} else {
-  		pByteList.addByte((byte) 0);
-  	}
-  	pByteList.addString(fGazeVictimId);
-  	pByteList.addString(fBlockDefenderId);
-  	pByteList.addBoolean(fUsingStab);
-  	pByteList.addString(fFoulDefenderId);
-  	pByteList.addFieldCoordinate(fTargetCoordinate);
-  	pByteList.addBoolean(fHailMaryPass);
-  	pByteList.addString(fThrownPlayerId);
-  }
 
   @Override
   public int initFrom(ByteArray pByteArray) {

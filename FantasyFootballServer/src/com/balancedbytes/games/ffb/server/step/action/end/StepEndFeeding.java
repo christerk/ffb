@@ -3,7 +3,6 @@ package com.balancedbytes.games.ffb.server.step.action.end;
 import com.balancedbytes.games.ffb.InducementPhase;
 import com.balancedbytes.games.ffb.TurnMode;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
-import com.balancedbytes.games.ffb.bytearray.ByteList;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.server.GameState;
@@ -90,17 +89,6 @@ public class StepEndFeeding extends AbstractStep {
 	
 	// ByteArray serialization
 	
-  public int getByteArraySerializationVersion() {
-  	return 1;
-  }
-  
-  @Override
-  public void addTo(ByteList pByteList) {
-  	super.addTo(pByteList);
-  	pByteList.addBoolean(fEndPlayerAction);
-  	pByteList.addBoolean(fEndTurn);
-  }
-
   @Override
   public int initFrom(ByteArray pByteArray) {
   	int byteArraySerializationVersion = super.initFrom(pByteArray);

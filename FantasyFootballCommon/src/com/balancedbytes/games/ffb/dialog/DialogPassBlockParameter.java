@@ -26,12 +26,6 @@ public class DialogPassBlockParameter extends DialogWithoutParameter {
     return new DialogPassBlockParameter();
   }
   
-  // ByteArray serialization
-  
-  public int getByteArraySerializationVersion() {
-    return 1;
-  }
-
   // JSON serialization
   
   public DialogPassBlockParameter initFrom(JsonValue pJsonValue) {

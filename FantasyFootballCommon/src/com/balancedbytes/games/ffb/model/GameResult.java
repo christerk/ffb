@@ -2,7 +2,7 @@ package com.balancedbytes.games.ffb.model;
 
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
-import com.balancedbytes.games.ffb.bytearray.IByteArraySerializable;
+import com.balancedbytes.games.ffb.bytearray.IByteArrayReadable;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.IJsonSerializable;
 import com.balancedbytes.games.ffb.json.UtilJson;
@@ -14,7 +14,7 @@ import com.eclipsesource.json.JsonValue;
  * 
  * @author Kalimar
  */
-public class GameResult implements IByteArraySerializable, IJsonSerializable {
+public class GameResult implements IByteArrayReadable, IJsonSerializable {
   
   private TeamResult fTeamResultHome;
   private TeamResult fTeamResultAway;

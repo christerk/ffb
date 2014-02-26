@@ -2,7 +2,6 @@ package com.balancedbytes.games.ffb.server.step.game.start;
 
 import com.balancedbytes.games.ffb.GameOption;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
-import com.balancedbytes.games.ffb.bytearray.ByteList;
 import com.balancedbytes.games.ffb.dialog.DialogPettyCashParameter;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.Game;
@@ -117,19 +116,6 @@ public final class StepPettyCash extends AbstractStep {
   
   // ByteArray serialization
     
-  public int getByteArraySerializationVersion() {
-  	return 1;
-  }
-
-  @Override
-  public void addTo(ByteList pByteList) {
-  	super.addTo(pByteList);
-  	pByteList.addBoolean(fPettyCashSelectedHome);
-  	pByteList.addBoolean(fPettyCashSelectedAway);
-  	pByteList.addBoolean(fReportedHome);
-  	pByteList.addBoolean(fReportedAway);
-  }
-
   @Override
   public int initFrom(ByteArray pByteArray) {
   	int byteArraySerializationVersion = super.initFrom(pByteArray);

@@ -4,7 +4,7 @@ import com.balancedbytes.games.ffb.Card;
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
-import com.balancedbytes.games.ffb.bytearray.IByteArraySerializable;
+import com.balancedbytes.games.ffb.bytearray.IByteArrayReadable;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.IJsonSerializable;
 import com.balancedbytes.games.ffb.json.UtilJson;
@@ -17,7 +17,7 @@ import com.eclipsesource.json.JsonValue;
  * 
  * @author Kalimar
  */
-public class Animation implements IByteArraySerializable, IJsonSerializable {
+public class Animation implements IByteArrayReadable, IJsonSerializable {
   
   private AnimationType fAnimationType;
   private String fThrownPlayerId;

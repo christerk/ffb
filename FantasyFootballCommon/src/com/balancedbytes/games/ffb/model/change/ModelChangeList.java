@@ -3,9 +3,6 @@ package com.balancedbytes.games.ffb.model.change;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.balancedbytes.games.ffb.bytearray.ByteArray;
-import com.balancedbytes.games.ffb.bytearray.ByteList;
-import com.balancedbytes.games.ffb.bytearray.IByteArraySerializable;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.IJsonSerializable;
 import com.balancedbytes.games.ffb.json.UtilJson;
@@ -19,7 +16,7 @@ import com.eclipsesource.json.JsonValue;
  * 
  * @author Kalimar
  */
-public class ModelChangeList implements IByteArraySerializable, IJsonSerializable {
+public class ModelChangeList implements IJsonSerializable {
   
   private List<ModelChange> fChanges;
   
@@ -71,32 +68,6 @@ public class ModelChangeList implements IByteArraySerializable, IJsonSerializabl
     	transformedList.add(processor.transform(change));
     }
     return transformedList;
-  }
-  
-  // ByteArray serialization
-  
-  public int getByteArraySerializationVersion() {
-    return 1;
-  }
-  
-  public void addTo(ByteList pByteList) {
-    pByteList.addSmallInt(getByteArraySerializationVersion());
-    pByteList.addSmallInt(fChanges.size());
-    for (ModelChange modelChange : fChanges) {
-      modelChange.addTo(pByteList);
-    }
-  }
-  
-  public int initFrom(ByteArray pByteArray) {
-    clear();
-    int byteArraySerializationVersion = pByteArray.getSmallInt();
-    int size = pByteArray.getSmallInt();
-    for (int i = 0; i < size; i++) {
-      ModelChange modelChange = new ModelChange();
-      modelChange.initFrom(pByteArray);
-      add(modelChange);
-    }
-    return byteArraySerializationVersion;
   }
   
   // JSON serialization

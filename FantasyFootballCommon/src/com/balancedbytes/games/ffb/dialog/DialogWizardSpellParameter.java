@@ -26,12 +26,6 @@ public class DialogWizardSpellParameter extends DialogWithoutParameter {
     return new DialogWizardSpellParameter();
   }
   
-  // ByteArray serialization
-  
-  public int getByteArraySerializationVersion() {
-    return 1;
-  }
-  
   // JSON serialization
   
   public DialogWizardSpellParameter initFrom(JsonValue pJsonValue) {

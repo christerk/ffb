@@ -2,7 +2,7 @@ package com.balancedbytes.games.ffb;
 
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
-import com.balancedbytes.games.ffb.bytearray.IByteArraySerializable;
+import com.balancedbytes.games.ffb.bytearray.IByteArrayReadable;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.IJsonSerializable;
 import com.balancedbytes.games.ffb.json.UtilJson;
@@ -16,7 +16,7 @@ import com.eclipsesource.json.JsonValue;
  * 
  * @author Kalimar
  */
-public class FieldMarker implements IByteArraySerializable, IJsonSerializable {
+public class FieldMarker implements IByteArrayReadable, IJsonSerializable {
   
   private FieldCoordinate fCoordinate;
   private String fHomeText;

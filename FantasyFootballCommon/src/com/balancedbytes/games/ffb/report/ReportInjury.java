@@ -13,7 +13,6 @@ import com.balancedbytes.games.ffb.PlayerState;
 import com.balancedbytes.games.ffb.SeriousInjury;
 import com.balancedbytes.games.ffb.SeriousInjuryFactory;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
-import com.balancedbytes.games.ffb.bytearray.ByteList;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.util.ArrayTool;
@@ -176,37 +175,6 @@ public class ReportInjury implements IReport {
   }
     
   // ByteArray serialization
-  
-  public int getByteArraySerializationVersion() {
-    return 1;
-  }
-  
-  public void addTo(ByteList pByteList) {
-    pByteList.addSmallInt(getId().getId());
-    pByteList.addSmallInt(getByteArraySerializationVersion());
-    pByteList.addString(getDefenderId());
-    pByteList.addByte((byte) ((getInjuryType() != null) ? getInjuryType().getId() : 0));
-    pByteList.addBoolean(isArmorBroken());
-    ArmorModifier[] armorModifiers = getArmorModifiers();
-    pByteList.addByte((byte) armorModifiers.length);
-    for (ArmorModifier armorModifier : armorModifiers) {
-      pByteList.addByte((byte) armorModifier.getId()); 
-    }
-    pByteList.addByteArray(getArmorRoll());
-    InjuryModifier[] injuryModifiers = getInjuryModifiers();
-    pByteList.addByte((byte) injuryModifiers.length);
-    for (InjuryModifier injuryModifier : injuryModifiers) {
-      pByteList.addByte((byte) injuryModifier.getId()); 
-    }
-    pByteList.addByteArray(getInjuryRoll());
-    pByteList.addByteArray(getCasualtyRoll());
-    pByteList.addByte((byte) ((getSeriousInjury() != null) ? getSeriousInjury().getId() : 0));
-    pByteList.addByteArray(getCasualtyRollDecay());
-    pByteList.addByte((byte) ((getSeriousInjuryDecay() != null) ? getSeriousInjuryDecay().getId() : 0));
-    pByteList.addSmallInt((getInjury() != null) ? getInjury().getId() : 0);
-    pByteList.addSmallInt((getInjuryDecay() != null) ? getInjuryDecay().getId() : 0);
-    pByteList.addString(getAttackerId());
-  }
   
   public int initFrom(ByteArray pByteArray) {
     UtilReport.validateReportId(this, new ReportIdFactory().forId(pByteArray.getSmallInt()));

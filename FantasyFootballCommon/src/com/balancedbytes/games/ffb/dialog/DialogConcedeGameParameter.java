@@ -26,12 +26,6 @@ public class DialogConcedeGameParameter extends DialogWithoutParameter {
     return new DialogConcedeGameParameter();
   }
   
-  // ByteArray serialization
-  
-  public int getByteArraySerializationVersion() {
-    return 1;
-  }
-  
   // JSON serialization
   
   public DialogConcedeGameParameter initFrom(JsonValue pJsonValue) {

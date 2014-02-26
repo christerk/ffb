@@ -13,7 +13,6 @@ import com.balancedbytes.games.ffb.ReRollSource;
 import com.balancedbytes.games.ffb.ReRolledAction;
 import com.balancedbytes.games.ffb.Skill;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
-import com.balancedbytes.games.ffb.bytearray.ByteList;
 import com.balancedbytes.games.ffb.dialog.DialogSkillUseParameter;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.Animation;
@@ -268,22 +267,6 @@ public class StepPass extends AbstractStepWithReRoll {
   }
   
   // ByteArray serialization
-  
-  public int getByteArraySerializationVersion() {
-  	return 1;
-  }
-  
-  @Override
-  public void addTo(ByteList pByteList) {
-  	super.addTo(pByteList);
-  	pByteList.addString(fGotoLabelOnEnd);
-  	pByteList.addString(fGotoLabelOnMissedPass);
-  	pByteList.addString(fCatcherId);
-  	pByteList.addBoolean(fSuccessful);
-  	pByteList.addBoolean(fHoldingSafeThrow);
-  	pByteList.addBoolean(fPassFumble);
-  	pByteList.addBoolean(fPassSkillUsed);
-  }
   
   @Override
   public int initFrom(ByteArray pByteArray) {

@@ -4,10 +4,11 @@ package com.balancedbytes.games.ffb.model.change.old;
 import com.balancedbytes.games.ffb.SendToBoxReason;
 import com.balancedbytes.games.ffb.SeriousInjury;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
-import com.balancedbytes.games.ffb.bytearray.ByteList;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.model.PlayerResult;
+import com.balancedbytes.games.ffb.model.change.ModelChange;
+import com.balancedbytes.games.ffb.model.change.ModelChangeId;
 
 /**
  * 
@@ -114,7 +115,52 @@ public class ModelChangePlayerResult implements IModelChange {
         throw new IllegalStateException("Unhandled change " + getChange() + ".");
     }
   }
- 
+    
+  public ModelChange convert() {
+    switch (getChange()) {
+      case SET_SERIOUS_INJURY:
+        return new ModelChange(ModelChangeId.PLAYER_RESULT_SET_SERIOUS_INJURY, getPlayerId(), getValue());
+      case SET_SEND_TO_BOX_REASON:
+        return new ModelChange(ModelChangeId.PLAYER_RESULT_SET_SEND_TO_BOX_REASON, getPlayerId(), getValue());
+      case SET_SEND_TO_BOX_TURN:
+        return new ModelChange(ModelChangeId.PLAYER_RESULT_SET_SEND_TO_BOX_TURN, getPlayerId(), getValue());
+      case SET_SEND_TO_BOX_HALF:
+        return new ModelChange(ModelChangeId.PLAYER_RESULT_SET_SEND_TO_BOX_HALF, getPlayerId(), getValue());
+      case SET_SEND_TO_BOX_BY_PLAYER_ID:
+        return new ModelChange(ModelChangeId.PLAYER_RESULT_SET_SEND_TO_BOX_BY_PLAYER_ID, getPlayerId(), getValue());
+      case SET_COMPLETIONS:
+        return new ModelChange(ModelChangeId.PLAYER_RESULT_SET_COMPLETIONS, getPlayerId(), getValue());
+      case SET_TOUCHDOWNS:
+        return new ModelChange(ModelChangeId.PLAYER_RESULT_SET_TOUCHDOWNS, getPlayerId(), getValue());
+      case SET_INTERCEPTIONS:
+        return new ModelChange(ModelChangeId.PLAYER_RESULT_SET_INTERCEPTIONS, getPlayerId(), getValue());
+      case SET_CASUALTIES:
+        return new ModelChange(ModelChangeId.PLAYER_RESULT_SET_CASUALTIES, getPlayerId(), getValue());
+      case SET_PLAYER_AWARDS:
+        return new ModelChange(ModelChangeId.PLAYER_RESULT_SET_PLAYER_AWARDS, getPlayerId(), getValue());
+      case SET_BLOCKS:
+        return new ModelChange(ModelChangeId.PLAYER_RESULT_SET_BLOCKS, getPlayerId(), getValue());
+      case SET_FOULS:
+        return new ModelChange(ModelChangeId.PLAYER_RESULT_SET_FOULS, getPlayerId(), getValue());
+      case SET_TURNS_PLAYED:
+        return new ModelChange(ModelChangeId.PLAYER_RESULT_SET_TURNS_PLAYED, getPlayerId(), getValue());
+      case SET_RUSHING:
+        return new ModelChange(ModelChangeId.PLAYER_RESULT_SET_RUSHING, getPlayerId(), getValue());
+      case SET_PASSING:
+        return new ModelChange(ModelChangeId.PLAYER_RESULT_SET_PASSING, getPlayerId(), getValue());
+      case SET_CURRENT_SPPS:
+        return new ModelChange(ModelChangeId.PLAYER_RESULT_SET_CURRENT_SPPS, getPlayerId(), getValue());
+      case SET_DEFECTING:
+        return new ModelChange(ModelChangeId.PLAYER_RESULT_SET_DEFECTING, getPlayerId(), getValue());
+      case SET_SERIOUS_INJURY_DECAY:
+        return new ModelChange(ModelChangeId.PLAYER_RESULT_SET_SERIOUS_INJURY_DECAY, getPlayerId(), getValue());
+      case SET_HAS_USED_SECRET_WEAPON:
+        return new ModelChange(ModelChangeId.PLAYER_RESULT_SET_HAS_USED_SECRET_WEAPON, getPlayerId(), getValue());
+      default:
+        throw new IllegalStateException("Unhandled change " + getChange() + ".");
+    }
+  }
+  
   // transformation
   
   public IModelChange transform() {
@@ -122,18 +168,6 @@ public class ModelChangePlayerResult implements IModelChange {
   }
   
   // ByteArray serialization
-  
-  public int getByteArraySerializationVersion() {
-    return 1;
-  }
-  
-  public void addTo(ByteList pByteList) {
-    pByteList.addByte((byte) getId().getId());
-    pByteList.addSmallInt(getByteArraySerializationVersion());
-    pByteList.addByte((byte) getChange().getId());
-    pByteList.addString(getPlayerId());
-    getChange().getAttributeType().addTo(pByteList, getValue());
-  }
   
   public int initFrom(ByteArray pByteArray) {
     ModelChangeIdOld changeId = ModelChangeIdOld.fromId(pByteArray.getByte());

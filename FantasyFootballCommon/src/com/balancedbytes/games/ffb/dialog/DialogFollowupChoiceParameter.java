@@ -26,12 +26,6 @@ public class DialogFollowupChoiceParameter extends DialogWithoutParameter {
     return new DialogFollowupChoiceParameter();
   }
   
-  // ByteArray serialization
-  
-  public int getByteArraySerializationVersion() {
-    return 1;
-  }
-
   // JSON serialization
   
   public DialogFollowupChoiceParameter initFrom(JsonValue pJsonValue) {

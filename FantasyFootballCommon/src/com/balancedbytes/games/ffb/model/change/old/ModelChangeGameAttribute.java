@@ -9,8 +9,9 @@ import com.balancedbytes.games.ffb.IDialogParameter;
 import com.balancedbytes.games.ffb.PlayerAction;
 import com.balancedbytes.games.ffb.TurnMode;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
-import com.balancedbytes.games.ffb.bytearray.ByteList;
 import com.balancedbytes.games.ffb.model.Game;
+import com.balancedbytes.games.ffb.model.change.ModelChange;
+import com.balancedbytes.games.ffb.model.change.ModelChangeId;
 
 /**
  * 
@@ -115,7 +116,60 @@ public class ModelChangeGameAttribute implements IModelChange {
         throw new IllegalStateException("Unhandled change " + getChange() + ".");
     }
   }
- 
+  
+//case GAME_SET_TURN_TIME:
+//  pGame.setTurnTime((Long) pModelChange.getValue());
+//  return true;
+  
+  public ModelChange convert() {
+    switch (getChange()) {
+      case SET_ID:
+        return new ModelChange(ModelChangeId.GAME_SET_ID, null, getValue());
+      case SET_STARTED:
+        return new ModelChange(ModelChangeId.GAME_SET_STARTED, null, getValue());
+      case SET_FINISHED:
+        return new ModelChange(ModelChangeId.GAME_SET_FINISHED, null, getValue());
+      case SET_HALF:
+        return new ModelChange(ModelChangeId.GAME_SET_HALF, null, getValue());
+      case SET_TURN_MODE:
+        return new ModelChange(ModelChangeId.GAME_SET_TURN_MODE, null, getValue());
+      case SET_PASS_COORDINATE:
+        return new ModelChange(ModelChangeId.GAME_SET_PASS_COORDINATE, null, getValue());
+      case SET_HOME_PLAYING:
+        return new ModelChange(ModelChangeId.GAME_SET_HOME_PLAYING, null, getValue());
+      case SET_HOME_FIRST_OFFENSE:
+        return new ModelChange(ModelChangeId.GAME_SET_HOME_FIRST_OFFENSE, null, getValue());
+      case SET_SETUP_OFFENSE:
+        return new ModelChange(ModelChangeId.GAME_SET_SETUP_OFFENSE, null, getValue());
+      case SET_WAITING_FOR_OPPONENT:
+        return new ModelChange(ModelChangeId.GAME_SET_WAITING_FOR_OPPONENT, null, getValue());
+      case SET_DIALOG_PARAMETER:
+        return new ModelChange(ModelChangeId.GAME_SET_DIALOG_PARAMETER, null, getValue());
+      case SET_DEFENDER_ID:
+        return new ModelChange(ModelChangeId.GAME_SET_DEFENDER_ID,(String) getValue(), null);
+      case SET_DEFENDER_ACTION:
+        return new ModelChange(ModelChangeId.GAME_SET_DEFENDER_ACTION, null, getValue());
+      case SET_TIMEOUT_POSSIBLE:
+        return new ModelChange(ModelChangeId.GAME_SET_TIMEOUT_POSSIBLE, null, getValue());
+      case SET_TIMEOUT_ENFORCED:
+        return new ModelChange(ModelChangeId.GAME_SET_TIMEOUT_ENFORCED, null, getValue());
+      case SET_CONCESSION_POSSIBLE:
+        return new ModelChange(ModelChangeId.GAME_SET_CONCESSION_POSSIBLE, null, getValue());
+      case SET_TESTING:
+        return new ModelChange(ModelChangeId.GAME_SET_TESTING, null, getValue());
+      case SET_SCHEDULED:
+        return new ModelChange(ModelChangeId.GAME_SET_SCHEDULED, null, getValue());
+      case SET_THROWER_ID:
+        return new ModelChange(ModelChangeId.GAME_SET_THROWER_ID, (String) getValue(), null);
+      case SET_THROWER_ACTION:
+        return new ModelChange(ModelChangeId.GAME_SET_THROWER_ACTION, null, getValue());
+      case ADD_OPTION:
+        return new ModelChange(ModelChangeId.GAME_OPTIONS_ADD_OPTION, null, getValue());
+      default:
+        throw new IllegalStateException("Unhandled change " + getChange() + ".");
+    }
+  }
+
   // transformation
   
   public IModelChange transform() {
@@ -137,17 +191,6 @@ public class ModelChangeGameAttribute implements IModelChange {
   }
   
   // ByteArray serialization
-  
-  public int getByteArraySerializationVersion() {
-    return 1;
-  }
-  
-  public void addTo(ByteList pByteList) {
-    pByteList.addByte((byte) getId().getId());
-    pByteList.addSmallInt(getByteArraySerializationVersion());
-    pByteList.addByte((byte) getChange().getId());
-    getChange().getAttributeType().addTo(pByteList, getValue());
-  }
   
   public int initFrom(ByteArray pByteArray) {
     ModelChangeIdOld changeId = ModelChangeIdOld.fromId(pByteArray.getByte());

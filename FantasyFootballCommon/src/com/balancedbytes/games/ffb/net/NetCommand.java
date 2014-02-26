@@ -2,33 +2,18 @@ package com.balancedbytes.games.ffb.net;
 
 import com.balancedbytes.games.ffb.FantasyFootballException;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
-import com.balancedbytes.games.ffb.bytearray.ByteList;
-import com.balancedbytes.games.ffb.bytearray.IByteArraySerializable;
+import com.balancedbytes.games.ffb.bytearray.IByteArrayReadable;
 import com.balancedbytes.games.ffb.json.IJsonSerializable;
 
 /**
  * 
  * @author Kalimar
  */
-public abstract class NetCommand implements IByteArraySerializable, IJsonSerializable {
+public abstract class NetCommand implements IByteArrayReadable, IJsonSerializable {
   
   private int fSize;
   
   public abstract NetCommandId getId();
-  
-  public byte[] toBytes() {
-    ByteList byteList = new ByteList();
-    byteList.addSmallInt(getId().getId());
-    byteList.addSmallInt(0);  // placeholder for size
-    addTo(byteList);
-    byte[] bytes = byteList.toBytes();
-    int size = bytes.length;
-    setSize(size);
-    byte[] sizeBytes = ByteList.convertSmallIntToByteArray(size);
-    bytes[2] = sizeBytes[0];
-    bytes[3] = sizeBytes[1];
-    return bytes;
-  }
   
   public void initFrom(byte[] pBytes) {
     ByteArray byteArray = new ByteArray(pBytes);
@@ -44,9 +29,6 @@ public abstract class NetCommand implements IByteArraySerializable, IJsonSeriali
   }
 
   public int size() {
-    if (fSize == 0) {
-      toBytes();
-    }
     return fSize;
   }
   

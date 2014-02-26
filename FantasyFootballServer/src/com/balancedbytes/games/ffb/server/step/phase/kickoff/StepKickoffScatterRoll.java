@@ -10,7 +10,6 @@ import com.balancedbytes.games.ffb.FieldCoordinateBounds;
 import com.balancedbytes.games.ffb.Skill;
 import com.balancedbytes.games.ffb.SkillUse;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
-import com.balancedbytes.games.ffb.bytearray.ByteList;
 import com.balancedbytes.games.ffb.dialog.DialogKickSkillParameter;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.Game;
@@ -208,27 +207,6 @@ public final class StepKickoffScatterRoll extends AbstractStep {
   }
   
   // ByteArray serialization
-  
-  public int getByteArraySerializationVersion() {
-  	return 1;
-  }
-
-  @Override
-  public void addTo(ByteList pByteList) {
-  	super.addTo(pByteList);
-  	pByteList.addFieldCoordinate(fKickoffStartCoordinate);
-  	pByteList.addBoolean(fUseKickChoice);
-  	pByteList.addByte((byte) ((fScatterDirection != null) ? fScatterDirection.getId() : 0));
-  	pByteList.addByte((byte) fScatterDistance);
-  	pByteList.addFieldCoordinate(fKickingPlayerCoordinate);
-  	if (fKickoffBounds != null) {
-  		pByteList.addBoolean(true);
-  		fKickoffBounds.addTo(pByteList);
-  	} else {
-  		pByteList.addBoolean(false);
-  	}
-  	pByteList.addBoolean(fTouchback);
-  }
   
   @Override
   public int initFrom(ByteArray pByteArray) {

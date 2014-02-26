@@ -9,7 +9,6 @@ import com.balancedbytes.games.ffb.IRollModifierFactory;
 import com.balancedbytes.games.ffb.InterceptionModifierFactory;
 import com.balancedbytes.games.ffb.PassModifierFactory;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
-import com.balancedbytes.games.ffb.bytearray.ByteList;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.util.ArrayTool;
@@ -111,25 +110,6 @@ public class ReportSkillRoll implements IReport {
   
   // ByteArray serialization
   
-  public int getByteArraySerializationVersion() {
-    return 1;
-  }
-  
-  public void addTo(ByteList pByteList) {
-    pByteList.addSmallInt(fId.getId());
-    pByteList.addSmallInt(getByteArraySerializationVersion());
-    pByteList.addString(fPlayerId);
-    pByteList.addBoolean(fSuccessful);
-    pByteList.addByte((byte) fRoll);
-    pByteList.addByte((byte) fMinimumRoll);
-    pByteList.addByte((byte) fRollModifierList.size());
-    for (IRollModifier rollModifier : fRollModifierList) {
-      pByteList.addByte((byte) rollModifier.getId()); 
-    }
-    pByteList.addBoolean(isReRolled());
-  }
-
-
   public int initFrom(ByteArray pByteArray) {
     UtilReport.validateReportId(this, new ReportIdFactory().forId(pByteArray.getSmallInt()));
     int byteArraySerializationVersion = pByteArray.getSmallInt();

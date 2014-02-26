@@ -9,10 +9,8 @@ import com.balancedbytes.games.ffb.IDialogParameter;
 import com.balancedbytes.games.ffb.InducementType;
 import com.balancedbytes.games.ffb.InducementTypeFactory;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
-import com.balancedbytes.games.ffb.bytearray.ByteList;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
-import com.balancedbytes.games.ffb.util.ArrayTool;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
@@ -59,30 +57,6 @@ public class DialogUseInducementParameter implements IDialogParameter {
   }
 
   // ByteArray serialization
-
-  public int getByteArraySerializationVersion() {
-    return 2;
-  }
-
-  public void addTo(ByteList pByteList) {
-    pByteList.addSmallInt(getByteArraySerializationVersion());
-    pByteList.addByte((byte) getId().getId());
-    pByteList.addString(getTeamId());
-    InducementType[] inducements = getInducementTypes();
-    byte[] inducementIds = null;
-    if (ArrayTool.isProvided(inducements)) {
-      inducementIds = new byte[inducements.length];
-      for (int i = 0; i < inducementIds.length; i++) {
-        inducementIds[i] = (byte) inducements[i].getId();
-      }
-    }
-    pByteList.addByteArray(inducementIds);
-    Card[] cards = getCards();
-    pByteList.addByte((byte) cards.length);
-    for (int i = 0; i < cards.length; i++) {
-      pByteList.addSmallInt(cards[i].getId());
-    }
-  }
 
   public int initFrom(ByteArray pByteArray) {
     int byteArraySerializationVersion = pByteArray.getSmallInt();

@@ -26,12 +26,6 @@ public class DialogDefenderActionParameter extends DialogWithoutParameter {
     return new DialogDefenderActionParameter();
   }
   
-  // ByteArray serialization
-  
-  public int getByteArraySerializationVersion() {
-    return 1;
-  }
-  
   // JSON serialization
   
   public DialogDefenderActionParameter initFrom(JsonValue pJsonValue) {

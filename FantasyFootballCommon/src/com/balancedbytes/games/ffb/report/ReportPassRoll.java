@@ -4,7 +4,6 @@ import com.balancedbytes.games.ffb.PassModifier;
 import com.balancedbytes.games.ffb.PassingDistance;
 import com.balancedbytes.games.ffb.PassingDistanceFactory;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
-import com.balancedbytes.games.ffb.bytearray.ByteList;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.eclipsesource.json.JsonObject;
@@ -84,21 +83,6 @@ public class ReportPassRoll extends ReportSkillRoll {
   
   // ByteArray serialization
   
-  @Override
-  public int getByteArraySerializationVersion() {
-    return 3;
-  }
-
-  @Override
-  public void addTo(ByteList pByteList) {
-    super.addTo(pByteList);
-    pByteList.addByte((byte) ((fPassingDistance != null) ? fPassingDistance.getId() : 0));
-    pByteList.addBoolean(fFumble);
-    pByteList.addBoolean(fSafeThrowHold);
-    pByteList.addBoolean(fHailMaryPass);
-    pByteList.addBoolean(fBomb);
-  }
-
   @Override
   public int initFrom(ByteArray pByteArray) {
     int byteArraySerializationVersion = super.initFrom(pByteArray);

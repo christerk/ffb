@@ -3,7 +3,6 @@ package com.balancedbytes.games.ffb.server.step.phase.inducement;
 import com.balancedbytes.games.ffb.InducementPhase;
 import com.balancedbytes.games.ffb.InducementPhaseFactory;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
-import com.balancedbytes.games.ffb.bytearray.ByteList;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.IServerJsonOption;
@@ -103,19 +102,6 @@ public final class StepEndInducement extends AbstractStep {
 	
 	// ByteArray serialization
 	
-	public int getByteArraySerializationVersion() {
-  	return 1;
-  }
-  
-	@Override
-  public void addTo(ByteList pByteList) {
-  	super.addTo(pByteList);
-  	pByteList.addBoolean(fEndInducementPhase);
-  	pByteList.addBoolean(fEndTurn);
-  	pByteList.addByte((byte) ((fInducementPhase != null) ? fInducementPhase.getId() : 0));
-  	pByteList.addBoolean(fHomeTeam);
-  }
-  
   @Override
   public int initFrom(ByteArray pByteArray) {
   	int byteArraySerializationVersion = super.initFrom(pByteArray);

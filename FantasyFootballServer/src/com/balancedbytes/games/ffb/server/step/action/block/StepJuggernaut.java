@@ -6,7 +6,6 @@ import com.balancedbytes.games.ffb.PlayerState;
 import com.balancedbytes.games.ffb.Skill;
 import com.balancedbytes.games.ffb.SkillUse;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
-import com.balancedbytes.games.ffb.bytearray.ByteList;
 import com.balancedbytes.games.ffb.dialog.DialogSkillUseParameter;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
@@ -139,18 +138,6 @@ public class StepJuggernaut extends AbstractStep {
   }
   
   // ByteArray serialization
-  
-  public int getByteArraySerializationVersion() {
-  	return 1;
-  }
-  
-  @Override
-  public void addTo(ByteList pByteList) {
-  	super.addTo(pByteList);
-  	pByteList.addBoolean(fUsingJuggernaut);
-  	pByteList.addSmallInt((fOldDefenderState != null) ? fOldDefenderState.getId() : 0);
-  	pByteList.addString(fGotoLabelOnSuccess);
-  }
   
   @Override
   public int initFrom(ByteArray pByteArray) {

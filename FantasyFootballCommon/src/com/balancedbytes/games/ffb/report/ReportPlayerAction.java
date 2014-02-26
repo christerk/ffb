@@ -3,7 +3,6 @@ package com.balancedbytes.games.ffb.report;
 import com.balancedbytes.games.ffb.PlayerAction;
 import com.balancedbytes.games.ffb.PlayerActionFactory;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
-import com.balancedbytes.games.ffb.bytearray.ByteList;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.eclipsesource.json.JsonObject;
@@ -50,17 +49,6 @@ public class ReportPlayerAction implements IReport {
   }
   
   // ByteArray serialization
-  
-  public int getByteArraySerializationVersion() {
-    return 1;
-  }
-  
-  public void addTo(ByteList pByteList) {
-    pByteList.addSmallInt(getId().getId());
-    pByteList.addSmallInt(getByteArraySerializationVersion());
-    pByteList.addString(getActingPlayerId());
-    pByteList.addByte((byte)((getPlayerAction() != null) ? getPlayerAction().getId() : 0));
-  }
   
   public int initFrom(ByteArray pByteArray) {
     UtilReport.validateReportId(this, new ReportIdFactory().forId(pByteArray.getSmallInt()));

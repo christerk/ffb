@@ -2,7 +2,6 @@ package com.balancedbytes.games.ffb.server.step.action.foul;
 
 import com.balancedbytes.games.ffb.Card;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
-import com.balancedbytes.games.ffb.bytearray.ByteList;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.Game;
@@ -144,19 +143,6 @@ public class StepInitFouling extends AbstractStep {
   }
   
   // ByteArray serialization
-  
-  public int getByteArraySerializationVersion() {
-  	return 1;
-  }
-  
-  @Override
-  public void addTo(ByteList pByteList) {
-  	super.addTo(pByteList);
-  	pByteList.addString(fGotoLabelOnEnd);
-  	pByteList.addString(fFoulDefenderId);
-  	pByteList.addBoolean(fEndTurn);
-  	pByteList.addBoolean(fEndPlayerAction);
-  }
   
   @Override
   public int initFrom(ByteArray pByteArray) {

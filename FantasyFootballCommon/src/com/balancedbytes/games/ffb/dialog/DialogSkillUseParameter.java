@@ -4,7 +4,6 @@ import com.balancedbytes.games.ffb.IDialogParameter;
 import com.balancedbytes.games.ffb.Skill;
 import com.balancedbytes.games.ffb.SkillFactory;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
-import com.balancedbytes.games.ffb.bytearray.ByteList;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.eclipsesource.json.JsonObject;
@@ -54,18 +53,6 @@ public class DialogSkillUseParameter implements IDialogParameter {
   
   // ByteArray serialization
   
-  public int getByteArraySerializationVersion() {
-    return 1;
-  }
-  
-  public void addTo(ByteList pByteList) {
-    pByteList.addSmallInt(getByteArraySerializationVersion());
-    pByteList.addByte((byte) getId().getId());
-    pByteList.addString(getPlayerId());
-    pByteList.addByte((byte) ((getSkill() != null) ? getSkill().getId() : 0));
-    pByteList.addByte((byte) getMinimumRoll());
-  }
-
   public int initFrom(ByteArray pByteArray) {
     int byteArraySerializationVersion = pByteArray.getSmallInt();
     UtilDialogParameter.validateDialogId(this, new DialogIdFactory().forId(pByteArray.getByte()));

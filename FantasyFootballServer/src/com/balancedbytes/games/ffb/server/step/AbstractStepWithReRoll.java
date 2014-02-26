@@ -5,7 +5,6 @@ import com.balancedbytes.games.ffb.ReRollSourceFactory;
 import com.balancedbytes.games.ffb.ReRolledAction;
 import com.balancedbytes.games.ffb.ReRolledActionFactory;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
-import com.balancedbytes.games.ffb.bytearray.ByteList;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandUseReRoll;
 import com.balancedbytes.games.ffb.server.GameState;
@@ -61,13 +60,6 @@ public abstract class AbstractStepWithReRoll extends AbstractStep {
 	}
 	
   // ByteArray serialization
-	
-	@Override
-	public void addTo(ByteList pByteList) {
-		super.addTo(pByteList);
-		pByteList.addByte((byte) ((fReRolledAction != null) ? fReRolledAction.getId() : 0));
-		pByteList.addByte((byte) ((fReRollSource != null) ? fReRollSource.getId() : 0));
-	}
 	
 	@Override
 	public int initFrom(ByteArray pByteArray) {

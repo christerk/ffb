@@ -4,9 +4,10 @@ package com.balancedbytes.games.ffb.model.change.old;
 import com.balancedbytes.games.ffb.Card;
 import com.balancedbytes.games.ffb.Inducement;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
-import com.balancedbytes.games.ffb.bytearray.ByteList;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.TurnData;
+import com.balancedbytes.games.ffb.model.change.ModelChange;
+import com.balancedbytes.games.ffb.model.change.ModelChangeId;
 
 /**
  * 
@@ -103,6 +104,53 @@ public class ModelChangeTurnData implements IModelChange {
         throw new IllegalStateException("Unhandled change " + getChange() + ".");
     }
   }
+  
+//case TURN_DATA_SET_LEADER_STATE:
+//  getTurnData(pGame, isHomeData(pModelChange)).setLeaderState((LeaderState) pModelChange.getValue());
+//  return true;
+  
+  public ModelChange convert() {
+    switch (getChange()) {
+      case SET_TURN_NR:
+        return new ModelChange(ModelChangeId.TURN_DATA_SET_TURN_NR, getHomeDataKey(), getValue());
+      case SET_RE_ROLLS:
+        return new ModelChange(ModelChangeId.TURN_DATA_SET_RE_ROLLS, getHomeDataKey(), getValue());
+      case SET_APOTHECARIES:
+        return new ModelChange(ModelChangeId.TURN_DATA_SET_APOTHECARIES, getHomeDataKey(), getValue());
+      case SET_BLITZ_USED:
+        return new ModelChange(ModelChangeId.TURN_DATA_SET_BLITZ_USED, getHomeDataKey(), getValue());
+      case SET_FOUL_USED:
+        return new ModelChange(ModelChangeId.TURN_DATA_SET_FOUL_USED, getHomeDataKey(), getValue());
+      case SET_RE_ROLL_USED:
+        return new ModelChange(ModelChangeId.TURN_DATA_SET_RE_ROLL_USED, getHomeDataKey(), getValue());
+      case SET_HAND_OVER_USED:
+        return new ModelChange(ModelChangeId.TURN_DATA_SET_HAND_OVER_USED, getHomeDataKey(), getValue());
+      case SET_PASS_USED:
+        return new ModelChange(ModelChangeId.TURN_DATA_SET_PASS_USED, getHomeDataKey(), getValue());
+      case SET_FIRST_TURN_AFTER_KICKOFF:
+        return new ModelChange(ModelChangeId.TURN_DATA_SET_FIRST_TURN_AFTER_KICKOFF, getHomeDataKey(), getValue());
+      case SET_TURN_STARTED:
+        return new ModelChange(ModelChangeId.TURN_DATA_SET_TURN_STARTED, getHomeDataKey(), getValue());
+      case ADD_INDUCEMENT:
+        return new ModelChange(ModelChangeId.INDUCEMENT_SET_ADD_INDUCEMENT, getHomeDataKey(), getValue());
+      case REMOVE_INDUCEMENT:
+        return new ModelChange(ModelChangeId.INDUCEMENT_SET_REMOVE_INDUCEMENT, getHomeDataKey(), getValue());
+      case ACTIVATE_CARD:
+        return new ModelChange(ModelChangeId.INDUCEMENT_SET_ACTIVATE_CARD, getHomeDataKey(), getValue());
+      case DEACTIVATE_CARD:
+        return new ModelChange(ModelChangeId.INDUCEMENT_SET_DEACTIVATE_CARD, getHomeDataKey(), getValue());
+      case ADD_AVAILABLE_CARD:
+        return new ModelChange(ModelChangeId.INDUCEMENT_SET_ADD_AVAILABLE_CARD, getHomeDataKey(), getValue());
+      case REMOVE_AVAILABLE_CARD:
+        return new ModelChange(ModelChangeId.INDUCEMENT_SET_REMOVE_AVAILABLE_CARD, getHomeDataKey(), getValue());
+      default:
+        throw new IllegalStateException("Unhandled change " + getChange() + ".");
+    }
+  }
+  
+  private String getHomeDataKey() {
+    return isHomeData() ? ModelChange.HOME : ModelChange.AWAY;
+  }
  
   // transformation
   
@@ -111,18 +159,6 @@ public class ModelChangeTurnData implements IModelChange {
   }
   
   // ByteArray serialization
-  
-  public int getByteArraySerializationVersion() {
-    return 1;
-  }
-  
-  public void addTo(ByteList pByteList) {
-    pByteList.addByte((byte) getId().getId());
-    pByteList.addSmallInt(getByteArraySerializationVersion());
-    pByteList.addByte((byte) getChange().getId());
-    pByteList.addBoolean(isHomeData());
-    getChange().getAttributeType().addTo(pByteList, getValue());
-  }
   
   public int initFrom(ByteArray pByteArray) {
     ModelChangeIdOld changeId = ModelChangeIdOld.fromId(pByteArray.getByte());

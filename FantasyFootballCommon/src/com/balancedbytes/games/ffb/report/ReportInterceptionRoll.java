@@ -2,7 +2,6 @@ package com.balancedbytes.games.ffb.report;
 
 import com.balancedbytes.games.ffb.InterceptionModifier;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
-import com.balancedbytes.games.ffb.bytearray.ByteList;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.eclipsesource.json.JsonObject;
@@ -45,17 +44,6 @@ public class ReportInterceptionRoll extends ReportSkillRoll {
   }
 
   // ByteArray serialization
-
-  @Override
-  public int getByteArraySerializationVersion() {
-    return 2;
-  }
-
-  @Override
-  public void addTo(ByteList pByteList) {
-    super.addTo(pByteList);
-    pByteList.addBoolean(isBomb());
-  }
 
   @Override
   public int initFrom(ByteArray pByteArray) {

@@ -4,9 +4,10 @@ package com.balancedbytes.games.ffb.model.change.old;
 import com.balancedbytes.games.ffb.PlayerAction;
 import com.balancedbytes.games.ffb.Skill;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
-import com.balancedbytes.games.ffb.bytearray.ByteList;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.Game;
+import com.balancedbytes.games.ffb.model.change.ModelChange;
+import com.balancedbytes.games.ffb.model.change.ModelChangeId;
 
 /**
  * 
@@ -97,6 +98,45 @@ public class ModelChangeActingPlayer implements IModelChange {
         throw new IllegalStateException("Unhandled change " + getChange() + ".");
     }
   }
+  
+  public ModelChange convert() {
+    switch (getChange()) {
+      case SET_PLAYER_ID:
+        return new ModelChange(ModelChangeId.ACTING_PLAYER_SET_PLAYER_ID, null, getValue());
+      case SET_STRENGTH:
+        return new ModelChange(ModelChangeId.ACTING_PLAYER_SET_STRENGTH, null, getValue());
+      case SET_CURRENT_MOVE:
+        return new ModelChange(ModelChangeId.ACTING_PLAYER_SET_CURRENT_MOVE, null, getValue());
+      case SET_GOING_FOR_IT:
+        return new ModelChange(ModelChangeId.ACTING_PLAYER_SET_GOING_FOR_IT, null, getValue());
+      case SET_DODGING:
+        return new ModelChange(ModelChangeId.ACTING_PLAYER_SET_DODGING, null, getValue());
+      case SET_LEAPING:
+        return new ModelChange(ModelChangeId.ACTING_PLAYER_SET_LEAPING, null, getValue());
+      case SET_STANDING_UP:
+        return new ModelChange(ModelChangeId.ACTING_PLAYER_SET_STANDING_UP, null, getValue());
+      case SET_SUFFERING_BLOOD_LUST:
+        return new ModelChange(ModelChangeId.ACTING_PLAYER_SET_SUFFERING_BLOOD_LUST, null, getValue());
+      case SET_SUFFERING_ANIMOSITY:
+        return new ModelChange(ModelChangeId.ACTING_PLAYER_SET_SUFFERING_ANIMOSITY, null, getValue());
+      case SET_HAS_BLOCKED:
+        return new ModelChange(ModelChangeId.ACTING_PLAYER_SET_HAS_BLOCKED, null, getValue());
+      case SET_HAS_FOULED:
+        return new ModelChange(ModelChangeId.ACTING_PLAYER_SET_HAS_FOULED, null, getValue());
+      case SET_HAS_PASSED:
+        return new ModelChange(ModelChangeId.ACTING_PLAYER_SET_HAS_PASSED, null, getValue());
+      case SET_HAS_MOVED:
+        return new ModelChange(ModelChangeId.ACTING_PLAYER_SET_HAS_MOVED, null, getValue());
+      case SET_HAS_FED:
+        return new ModelChange(ModelChangeId.ACTING_PLAYER_SET_HAS_FED, null, getValue());
+      case SET_PLAYER_ACTION:
+        return new ModelChange(ModelChangeId.ACTING_PLAYER_SET_PLAYER_ACTION, null, getValue());
+      case MARK_SKILL_USED:
+        return new ModelChange(ModelChangeId.ACTING_PLAYER_MARK_SKILL_USED, null, getValue());
+      default:
+        throw new IllegalStateException("Unhandled change " + getChange() + ".");
+    }
+  }
  
   // transformation
   
@@ -105,17 +145,6 @@ public class ModelChangeActingPlayer implements IModelChange {
   }
   
   // ByteArray serialization
-  
-  public int getByteArraySerializationVersion() {
-    return 1;
-  }
-  
-  public void addTo(ByteList pByteList) {
-    pByteList.addByte((byte) getId().getId());
-    pByteList.addSmallInt(getByteArraySerializationVersion());
-    pByteList.addByte((byte) getChange().getId());
-    getChange().getAttributeType().addTo(pByteList, getValue());
-  }
   
   public int initFrom(ByteArray pByteArray) {
     ModelChangeIdOld changeId = ModelChangeIdOld.fromId(pByteArray.getByte());

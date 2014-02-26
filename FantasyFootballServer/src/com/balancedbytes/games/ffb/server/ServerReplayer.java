@@ -3,8 +3,6 @@ package com.balancedbytes.games.ffb.server;
 import java.util.LinkedList;
 import java.util.List;
 
-import com.balancedbytes.games.ffb.bytearray.ByteArray;
-import com.balancedbytes.games.ffb.bytearray.ByteList;
 import com.balancedbytes.games.ffb.net.commands.ServerCommand;
 import com.balancedbytes.games.ffb.net.commands.ServerCommandReplay;
 
@@ -58,29 +56,23 @@ public class ServerReplayer implements Runnable {
         
       	while (serverReplay != null) {
           
-      		int nrOfCommands = 0;
-          ByteList replayByteList = new ByteList();
-        	
           serverReplay.setComplete(true);
+
+          ServerCommandReplay replayCommand = new ServerCommandReplay();
+          replayCommand.setTotalNrOfCommands(serverReplay.getTotalNrOfCommands());
+
           ServerCommand[] serverCommands = serverReplay.findRelevantCommandsInLog();
         	for (ServerCommand serverCommand : serverCommands) {
-            byte[] commandBytes = serverCommand.toBytes();
-            if (replayByteList.size() + commandBytes.length <= ServerCommandReplay.SIZE_LIMIT) {
-            	nrOfCommands++;
-            	for (byte commandByte : commandBytes) {
-                replayByteList.addByte(commandByte);
-            	}
-            } else {
+        	  replayCommand.add(serverCommand);
+        	  if (replayCommand.getNrOfCommands() >= ServerCommandReplay.MAX_NR_OF_COMMANDS) {
               serverReplay.setComplete(false);
               break;
-            }
+        	  }
         	}
           
-        	ServerCommandReplay replayCommand = new ServerCommandReplay();
-          replayCommand.initFrom(new ByteArray(replayByteList.toBytes()), nrOfCommands);
-          replayCommand.setTotalNrOfCommands(serverReplay.getTotalNrOfCommands());
           getServer().getCommunication().send(serverReplay.getSession(), replayCommand, false);
           getServer().getDebugLog().logServerCommand(IServerLogLevel.DEBUG, (serverReplay.getGameState() != null) ? serverReplay.getGameState().getId() : -1, replayCommand, DebugLog.COMMAND_SERVER_SPECTATOR);
+          
           if (!serverReplay.isComplete()) {
             serverReplay.setFromCommandNr(replayCommand.findHighestCommandNr() + 1);
           } else {

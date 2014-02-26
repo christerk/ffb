@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
-import com.balancedbytes.games.ffb.bytearray.ByteList;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.net.NetCommandFactory;
@@ -20,7 +19,7 @@ import com.eclipsesource.json.JsonValue;
  */
 public class ServerCommandReplay extends ServerCommand {
   
-  public static final int SIZE_LIMIT = (8 * 1024) - 10; 
+  public static final int MAX_NR_OF_COMMANDS = 100; 
   
   private List<ServerCommand> fReplayCommands;
   private int fTotalNrOfCommands;
@@ -79,23 +78,6 @@ public class ServerCommandReplay extends ServerCommand {
   
   // ByteArray serialization
   
-  public int getByteArraySerializationVersion() {
-    return 1;
-  }
-  
-  public void addTo(ByteList pByteList) {
-    pByteList.addSmallInt(getByteArraySerializationVersion());
-    pByteList.addSmallInt(getNrOfCommands());
-    pByteList.addSmallInt(getTotalNrOfCommands());
-    ServerCommand[] replayCommands = getReplayCommands();
-    for (ServerCommand replayCommand : replayCommands) {
-      byte[] commandBytes = replayCommand.toBytes();
-      for (int i = 0; i < commandBytes.length; i++) {
-        pByteList.addByte(commandBytes[i]);
-      }
-    }
-  }
-
   public int initFrom(ByteArray pByteArray) {
     int byteArraySerializationVersion = pByteArray.getSmallInt();
     int nrOfCommands = pByteArray.getSmallInt();

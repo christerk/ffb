@@ -26,12 +26,6 @@ public class DialogStartGameParameter extends DialogWithoutParameter {
     return new DialogStartGameParameter();
   }
   
-  // ByteArray serialization
-  
-  public int getByteArraySerializationVersion() {
-    return 1;
-  }
-  
   // JSON serialization
   
   public DialogStartGameParameter initFrom(JsonValue pJsonValue) {

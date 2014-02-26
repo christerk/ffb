@@ -22,12 +22,6 @@ public class DialogKickoffReturnParameter extends DialogWithoutParameter {
     return new DialogKickoffReturnParameter();
   }
   
-  // ByteArray serialization
-  
-  public int getByteArraySerializationVersion() {
-    return 1;
-  }
-
   // JSON serialization
   
   public DialogKickoffReturnParameter initFrom(JsonValue pJsonValue) {

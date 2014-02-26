@@ -2,9 +2,10 @@ package com.balancedbytes.games.ffb.model.change.old;
 
 
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
-import com.balancedbytes.games.ffb.bytearray.ByteList;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.TeamResult;
+import com.balancedbytes.games.ffb.model.change.ModelChange;
+import com.balancedbytes.games.ffb.model.change.ModelChangeId;
 
 /**
  * 
@@ -95,7 +96,46 @@ public class ModelChangeTeamResult implements IModelChange {
         throw new IllegalStateException("Unhandled change " + getChange() + ".");
     }
   }
+  
+  public ModelChange convert() {
+    switch (getChange()) {
+      case SET_SCORE:
+        return new ModelChange(ModelChangeId.TEAM_RESULT_SET_SCORE, getHomeDataKey(), getValue());
+      case SET_CONCEDED:
+        return new ModelChange(ModelChangeId.TEAM_RESULT_SET_CONCEDED, getHomeDataKey(), getValue());
+      case SET_SPECTATORS:
+        return new ModelChange(ModelChangeId.TEAM_RESULT_SET_SPECTATORS, getHomeDataKey(), getValue());
+      case SET_FAME:
+        return new ModelChange(ModelChangeId.TEAM_RESULT_SET_FAME, getHomeDataKey(), getValue());
+      case SET_WINNINGS:
+        return new ModelChange(ModelChangeId.TEAM_RESULT_SET_WINNINGS, getHomeDataKey(), getValue());
+      case SET_FAN_FACTOR_MODIFIER:
+        return new ModelChange(ModelChangeId.TEAM_RESULT_SET_FAN_FACTOR_MODIFIER, getHomeDataKey(), getValue());
+      case SET_BADLY_HURT_SUFFERED:
+        return new ModelChange(ModelChangeId.TEAM_RESULT_SET_BADLY_HURT_SUFFERED, getHomeDataKey(), getValue());
+      case SET_SERIOUS_INJURY_SUFFERED:
+        return new ModelChange(ModelChangeId.TEAM_RESULT_SET_SERIOUS_INJURY_SUFFERED, getHomeDataKey(), getValue());
+      case SET_RIP_SUFFERED:
+        return new ModelChange(ModelChangeId.TEAM_RESULT_SET_RIP_SUFFERED, getHomeDataKey(), getValue());
+      case SET_SPIRALLING_EXPENSES:
+        return new ModelChange(ModelChangeId.TEAM_RESULT_SET_SPIRALLING_EXPENSES, getHomeDataKey(), getValue());
+      case SET_RAISED_DEAD:
+        return new ModelChange(ModelChangeId.TEAM_RESULT_SET_RAISED_DEAD, getHomeDataKey(), getValue());
+      case SET_PETTY_CASH_TRANSFERRED:
+        return new ModelChange(ModelChangeId.TEAM_RESULT_SET_PETTY_CASH_TRANSFERRED, getHomeDataKey(), getValue());
+      case SET_PETTY_CASH_USED:
+        return new ModelChange(ModelChangeId.TEAM_RESULT_SET_PETTY_CASH_USED, getHomeDataKey(), getValue());
+      case SET_TEAM_VALUE:
+        return new ModelChange(ModelChangeId.TEAM_RESULT_SET_TEAM_VALUE, getHomeDataKey(), getValue());
+      default:
+        throw new IllegalStateException("Unhandled change " + getChange() + ".");
+    }
+  }
  
+  private String getHomeDataKey() {
+    return isHomeData() ? ModelChange.HOME : ModelChange.AWAY;
+  }
+
   // transformation
   
   public IModelChange transform() {
@@ -103,18 +143,6 @@ public class ModelChangeTeamResult implements IModelChange {
   }
   
   // ByteArray serialization
-  
-  public int getByteArraySerializationVersion() {
-    return 1;
-  }
-  
-  public void addTo(ByteList pByteList) {
-    pByteList.addByte((byte) getId().getId());
-    pByteList.addSmallInt(getByteArraySerializationVersion());
-    pByteList.addByte((byte) getChange().getId());
-    pByteList.addBoolean(isHomeData());
-    getChange().getAttributeType().addTo(pByteList, getValue());
-  }
   
   public int initFrom(ByteArray pByteArray) {
     ModelChangeIdOld changeId = ModelChangeIdOld.fromId(pByteArray.getByte());

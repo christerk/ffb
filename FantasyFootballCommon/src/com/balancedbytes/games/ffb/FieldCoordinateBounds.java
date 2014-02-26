@@ -4,14 +4,14 @@ import java.util.LinkedList;
 
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
-import com.balancedbytes.games.ffb.bytearray.IByteArraySerializable;
+import com.balancedbytes.games.ffb.bytearray.IByteArrayReadable;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.IJsonSerializable;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
-public class FieldCoordinateBounds implements IByteArraySerializable, IJsonSerializable {
+public class FieldCoordinateBounds implements IByteArrayReadable, IJsonSerializable {
 
 	public static final FieldCoordinateBounds FIELD = new FieldCoordinateBounds(new FieldCoordinate(0, 0), new FieldCoordinate(25, 14));
 

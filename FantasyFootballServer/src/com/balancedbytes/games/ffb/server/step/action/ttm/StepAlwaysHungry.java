@@ -4,7 +4,6 @@ import com.balancedbytes.games.ffb.ReRollSource;
 import com.balancedbytes.games.ffb.ReRolledAction;
 import com.balancedbytes.games.ffb.Skill;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
-import com.balancedbytes.games.ffb.bytearray.ByteList;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.Game;
@@ -174,20 +173,8 @@ public final class StepAlwaysHungry extends AbstractStepWithReRoll {
     }
   }
   
-  public int getByteArraySerializationVersion() {
-  	return 1;
-  }
-  
   // ByteArray serialization
   
-	@Override
-  public void addTo(ByteList pByteList) {
-  	super.addTo(pByteList);
-  	pByteList.addString(fGotoLabelOnFailure);
-  	pByteList.addString(fGotoLabelOnSuccess);
-  	pByteList.addString(fThrownPlayerId);
-  }
-
 	@Override
 	public int initFrom(ByteArray pByteArray) {
 		int byteArraySerializationVersion = super.initFrom(pByteArray);

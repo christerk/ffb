@@ -3,8 +3,7 @@ package com.balancedbytes.games.ffb.server.step;
 import com.balancedbytes.games.ffb.Sound;
 import com.balancedbytes.games.ffb.SoundFactory;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
-import com.balancedbytes.games.ffb.bytearray.ByteList;
-import com.balancedbytes.games.ffb.bytearray.IByteArraySerializable;
+import com.balancedbytes.games.ffb.bytearray.IByteArrayReadable;
 import com.balancedbytes.games.ffb.json.IJsonSerializable;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.Animation;
@@ -18,7 +17,7 @@ import com.eclipsesource.json.JsonValue;
  * 
  * @author Kalimar
  */
-public class StepResult implements IByteArraySerializable, IJsonSerializable {
+public class StepResult implements IByteArrayReadable, IJsonSerializable {
 	
 	private StepAction fNextAction;
 	private String fNextActionParameter;
@@ -99,25 +98,6 @@ public class StepResult implements IByteArraySerializable, IJsonSerializable {
 	}
   
   // ByteArray serialization
-  
-  public int getByteArraySerializationVersion() {
-  	return 1;
-  }
-  
-  public void addTo(ByteList pByteList) {
-  	pByteList.addSmallInt(getByteArraySerializationVersion());
-  	pByteList.addByte((byte) ((getNextAction() != null) ? getNextAction().getId() : 0));
-  	pByteList.addString(getNextActionParameter());
-  	getReportList().addTo(pByteList);
-  	if (getAnimation() != null) {
-  		pByteList.addBoolean(true);
-  		getAnimation().addTo(pByteList);
-  	} else {
-  		pByteList.addBoolean(false);
-  	}
-  	pByteList.addByte((byte) ((getSound() != null) ? getSound().getId() : 0));
-  	pByteList.addBoolean(isSynchronize());
-  }
   
   public int initFrom(ByteArray pByteArray) {
   	int byteArraySerializationVersion = pByteArray.getSmallInt();

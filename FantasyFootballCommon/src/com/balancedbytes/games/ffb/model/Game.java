@@ -11,8 +11,7 @@ import com.balancedbytes.games.ffb.PlayerActionFactory;
 import com.balancedbytes.games.ffb.TurnMode;
 import com.balancedbytes.games.ffb.TurnModeFactory;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
-import com.balancedbytes.games.ffb.bytearray.ByteList;
-import com.balancedbytes.games.ffb.bytearray.IByteArraySerializable;
+import com.balancedbytes.games.ffb.bytearray.IByteArrayReadable;
 import com.balancedbytes.games.ffb.dialog.DialogId;
 import com.balancedbytes.games.ffb.dialog.DialogIdFactory;
 import com.balancedbytes.games.ffb.dialog.DialogParameterFactory;
@@ -32,7 +31,7 @@ import com.eclipsesource.json.JsonValue;
  * 
  * @author Kalimar
  */
-public class Game extends ModelChangeObservable implements IByteArraySerializable, IJsonSerializable {
+public class Game extends ModelChangeObservable implements IByteArrayReadable, IJsonSerializable {
   
   private long fId;
   private Date fScheduled;
@@ -530,68 +529,6 @@ public class Game extends ModelChangeObservable implements IByteArraySerializabl
   }  
   
   // ByteArray serialization
-
-  public int getByteArraySerializationVersion() {
-    return 2;
-  }  
-  
-  public void addTo(ByteList pByteList) {
-
-    pByteList.addSmallInt(getByteArraySerializationVersion());
-    pByteList.addLong(getId());
-    pByteList.addLong((getScheduled() != null) ? getScheduled().getTime() : 0L);
-    pByteList.addLong((getStarted() != null) ? getStarted().getTime() : 0L);
-    pByteList.addLong((getFinished() != null) ? getFinished().getTime() : 0L);
-    pByteList.addBoolean(isHomePlaying());
-    pByteList.addByte((byte) getHalf());
-    pByteList.addBoolean(isHomeFirstOffense());
-    pByteList.addBoolean(isSetupOffense());
-    pByteList.addBoolean(isWaitingForOpponent());
-    pByteList.addLong(getTurnTime());
-    pByteList.addLong(getGameTime());
-    pByteList.addBoolean(isTimeoutPossible());
-    pByteList.addBoolean(isTimeoutEnforced());
-    pByteList.addBoolean(isConcessionPossible());
-    pByteList.addBoolean(isTesting());
-    
-    pByteList.addByte((byte) ((getDialogParameter() != null) ? getDialogParameter().getId().getId() : 0));
-    if (getDialogParameter() != null) {
-      getDialogParameter().addTo(pByteList);
-    }
-
-    pByteList.addByte((byte) ((getTurnMode() != null) ? getTurnMode().getId() : 0));
-
-    // Defender
-    pByteList.addString(getDefenderId());
-    pByteList.addByte((byte) ((getDefenderAction() != null) ? getDefenderAction().getId() : 0));
-    
-    pByteList.addFieldCoordinate(getPassCoordinate());
-
-    // Home Team Data
-    getTeamHome().addTo(pByteList);
-    getTurnDataHome().addTo(pByteList);
-
-    // Away Team Data
-    getTeamAway().addTo(pByteList);
-    getTurnDataAway().addTo(pByteList);
-
-    // Field Model
-    getFieldModel().addTo(pByteList);
-
-    // Acting Player
-    getActingPlayer().addTo(pByteList);
-    
-    // GameResult
-    getGameResult().addTo(pByteList);
-    
-    // Options
-    getOptions().addTo(pByteList);  
-    
-    // Thrower
-    pByteList.addString(getThrowerId());
-    pByteList.addByte((byte) ((getThrowerAction() != null) ? getThrowerAction().getId() : 0));
-
-  }
 
   public int initFrom(ByteArray pByteArray) {
 

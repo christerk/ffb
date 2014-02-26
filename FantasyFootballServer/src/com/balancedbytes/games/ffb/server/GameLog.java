@@ -4,8 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
-import com.balancedbytes.games.ffb.bytearray.ByteList;
-import com.balancedbytes.games.ffb.bytearray.IByteArraySerializable;
+import com.balancedbytes.games.ffb.bytearray.IByteArrayReadable;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.IJsonSerializable;
 import com.balancedbytes.games.ffb.json.UtilJson;
@@ -19,7 +18,7 @@ import com.eclipsesource.json.JsonValue;
  * 
  * @author Kalimar
  */
-public class GameLog implements IByteArraySerializable, IJsonSerializable {
+public class GameLog implements IByteArrayReadable, IJsonSerializable {
 
   private List<ServerCommand> fServerCommands;
 
@@ -101,18 +100,6 @@ public class GameLog implements IByteArraySerializable, IJsonSerializable {
   
   // ByteArray serialization
   
-  public int getByteArraySerializationVersion() {
-    return 1;
-  }
-  
-  public void addTo(ByteList pByteList) {
-    pByteList.addSmallInt(getByteArraySerializationVersion());
-    pByteList.addSmallInt(size());
-    for (ServerCommand serverCommand : getServerCommands()) {
-    	serverCommand.addTo(pByteList);
-    }
-  }
-
   public int initFrom(ByteArray pByteArray) {
     int byteArraySerializationVersion = pByteArray.getSmallInt();
     fServerCommands.clear();

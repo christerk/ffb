@@ -3,7 +3,6 @@ package com.balancedbytes.games.ffb.report;
 import com.balancedbytes.games.ffb.Skill;
 import com.balancedbytes.games.ffb.SkillFactory;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
-import com.balancedbytes.games.ffb.bytearray.ByteList;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.eclipsesource.json.JsonObject;
@@ -44,15 +43,6 @@ public class ReportConfusionRoll extends ReportSkillRoll {
   
   // ByteArray serialization
   
-  public int getByteArraySerializationVersion() {
-    return 1;
-  }
-
-  public void addTo(ByteList pByteList) {
-    super.addTo(pByteList);
-    pByteList.addByte((byte) ((getConfusionSkill() != null) ? getConfusionSkill().getId() : 0));
-  }
-
   public int initFrom(ByteArray pByteArray) {
     int byteArraySerializationVersion = super.initFrom(pByteArray);
     fConfusionSkill = new SkillFactory().forId(pByteArray.getByte());

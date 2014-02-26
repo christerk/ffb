@@ -24,7 +24,7 @@ import com.balancedbytes.games.ffb.Weather;
 import com.balancedbytes.games.ffb.WeatherFactory;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
-import com.balancedbytes.games.ffb.bytearray.IByteArraySerializable;
+import com.balancedbytes.games.ffb.bytearray.IByteArrayReadable;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.IJsonSerializable;
 import com.balancedbytes.games.ffb.json.UtilJson;
@@ -41,7 +41,7 @@ import com.eclipsesource.json.JsonValue;
  * 
  * @author Kalimar
  */
-public class FieldModel implements IByteArraySerializable, IJsonSerializable {
+public class FieldModel implements IByteArrayReadable, IJsonSerializable {
     
   private boolean fBallMoving;
   private boolean fBallInPlay;

@@ -5,16 +5,16 @@ import java.util.Iterator;
 import java.util.List;
 
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
-import com.balancedbytes.games.ffb.bytearray.ByteList;
-import com.balancedbytes.games.ffb.bytearray.IByteArraySerializable;
+import com.balancedbytes.games.ffb.bytearray.IByteArrayReadable;
 import com.balancedbytes.games.ffb.model.Game;
+import com.balancedbytes.games.ffb.model.change.ModelChangeList;
 
 
 /**
  * 
  * @author Kalimar
  */
-public class ModelChangeListOld implements IByteArraySerializable {
+public class ModelChangeListOld implements IByteArrayReadable {
   
   private List<IModelChange> fChanges;
   
@@ -68,6 +68,14 @@ public class ModelChangeListOld implements IByteArraySerializable {
     return copiedList;
   }
   
+  public ModelChangeList convert() {
+    ModelChangeList changeList = new ModelChangeList();
+    for (IModelChange modelChange : getChanges()) {
+      changeList.add(modelChange.convert());
+    }
+    return changeList;
+  }
+  
   // transformation
   
   public ModelChangeListOld transform() {
@@ -81,20 +89,6 @@ public class ModelChangeListOld implements IByteArraySerializable {
   }
   
   // ByteArray serialization
-  
-  public int getByteArraySerializationVersion() {
-    return 1;
-  }
-  
-  public void addTo(ByteList pByteList) {
-    pByteList.addSmallInt(getByteArraySerializationVersion());
-    pByteList.addSmallInt(fChanges.size());
-    Iterator<IModelChange> changeIterator = fChanges.iterator();
-    while (changeIterator.hasNext()) {
-      IModelChange change = changeIterator.next();
-      change.addTo(pByteList);
-    }
-  }
   
   public int initFrom(ByteArray pByteArray) {
     int byteArraySerializationVersion = pByteArray.getSmallInt();

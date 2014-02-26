@@ -14,9 +14,10 @@ import com.balancedbytes.games.ffb.RangeRuler;
 import com.balancedbytes.games.ffb.TrackNumber;
 import com.balancedbytes.games.ffb.Weather;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
-import com.balancedbytes.games.ffb.bytearray.ByteList;
 import com.balancedbytes.games.ffb.model.FieldModel;
 import com.balancedbytes.games.ffb.model.Game;
+import com.balancedbytes.games.ffb.model.change.ModelChange;
+import com.balancedbytes.games.ffb.model.change.ModelChangeId;
 
 /**
  * 
@@ -145,7 +146,64 @@ public class ModelChangeFieldModel implements IModelChange {
         throw new IllegalStateException("Unhandled change " + getChange() + ".");
     }
   }
- 
+
+  public ModelChange convert() {
+    switch (getChange()) {
+      case REMOVE_PLAYER:
+        return new ModelChange(ModelChangeId.FIELD_MODEL_REMOVE_PLAYER, (String) getValue1(), null);
+      case SET_PLAYER_COOORDINATE:
+        return new ModelChange(ModelChangeId.FIELD_MODEL_SET_PLAYER_COORDINATE, (String) getValue1(), getValue2());
+      case SET_PLAYER_STATE:
+        return new ModelChange(ModelChangeId.FIELD_MODEL_SET_PLAYER_STATE, (String) getValue1(), getValue2());
+      case SET_BALL_COORDINATE:
+        return new ModelChange(ModelChangeId.FIELD_MODEL_SET_BALL_COORDINATE, null, getValue1());
+      case SET_BOMB_COORDINATE:
+        return new ModelChange(ModelChangeId.FIELD_MODEL_SET_BOMB_COORDINATE, null, getValue1());
+      case SET_BALL_MOVING:
+        return new ModelChange(ModelChangeId.FIELD_MODEL_SET_BALL_MOVING, null, getValue1());
+      case SET_BOMB_MOVING:
+        return new ModelChange(ModelChangeId.FIELD_MODEL_SET_BOMB_MOVING, null, getValue1());
+      case SET_BALL_IN_PLAY:
+        return new ModelChange(ModelChangeId.FIELD_MODEL_SET_BALL_IN_PLAY, null, getValue1());
+      case ADD_BLOOD_SPOT:
+        return new ModelChange(ModelChangeId.FIELD_MODEL_ADD_BLOOD_SPOT, null, getValue1());
+      case ADD_TRACK_NUMBER:
+        return new ModelChange(ModelChangeId.FIELD_MODEL_ADD_TRACK_NUMBER, null, getValue1());
+      case REMOVE_TRACK_NUMBER:
+        return new ModelChange(ModelChangeId.FIELD_MODEL_REMOVE_TRACK_NUMBER, null, getValue1());
+      case ADD_PUSHBACK_SQUARE:
+        return new ModelChange(ModelChangeId.FIELD_MODEL_ADD_PUSHBACK_SQUARE, null, getValue1());
+      case REMOVE_PUSHBACK_SQUARE:
+        return new ModelChange(ModelChangeId.FIELD_MODEL_REMOVE_PUSHBACK_SQUARE, null, getValue1());
+      case ADD_MOVE_SQUARE:
+        return new ModelChange(ModelChangeId.FIELD_MODEL_ADD_MOVE_SQUARE, null, getValue1());
+      case REMOVE_MOVE_SQUARE:
+        return new ModelChange(ModelChangeId.FIELD_MODEL_REMOVE_MOVE_SQUARE, null, getValue1());
+      case ADD_DICE_DECORATION:
+        return new ModelChange(ModelChangeId.FIELD_MODEL_ADD_DICE_DECORATION, null, getValue1());
+      case REMOVE_DICE_DECORATION:
+        return new ModelChange(ModelChangeId.FIELD_MODEL_REMOVE_DICE_DECORATION, null, getValue1());
+      case ADD_FIELD_MARKER:
+        return new ModelChange(ModelChangeId.FIELD_MODEL_ADD_FIELD_MARKER, null, getValue1());
+      case REMOVE_FIELD_MARKER:
+        return new ModelChange(ModelChangeId.FIELD_MODEL_REMOVE_FIELD_MARKER, null, getValue1());
+      case ADD_PLAYER_MARKER:
+        return new ModelChange(ModelChangeId.FIELD_MODEL_ADD_PLAYER_MARKER, null, getValue1());
+      case REMOVE_PLAYER_MARKER:
+        return new ModelChange(ModelChangeId.FIELD_MODEL_REMOVE_PLAYER_MARKER, null, getValue1());
+      case SET_WEATHER:
+        return new ModelChange(ModelChangeId.FIELD_MODEL_SET_WEATHER, null, getValue1());
+      case SET_RANGE_RULER:
+        return new ModelChange(ModelChangeId.FIELD_MODEL_SET_RANGE_RULER, null, getValue1());
+      case ADD_CARD:
+        return new ModelChange(ModelChangeId.FIELD_MODEL_ADD_CARD, (String) getValue1(), getValue2());
+      case REMOVE_CARD:
+        return new ModelChange(ModelChangeId.FIELD_MODEL_REMOVE_CARD, (String) getValue1(), getValue2());
+      default:
+        throw new IllegalStateException("Unhandled change " + getChange() + ".");
+    }
+  }
+  
   // transformation
   
   public IModelChange transform() {
@@ -184,18 +242,6 @@ public class ModelChangeFieldModel implements IModelChange {
   }
   
   // ByteArray serialization
-  
-  public int getByteArraySerializationVersion() {
-    return 1;
-  }
-  
-  public void addTo(ByteList pByteList) {
-    pByteList.addByte((byte) getId().getId());
-    pByteList.addSmallInt(getByteArraySerializationVersion());
-    pByteList.addByte((byte) getChange().getId());
-    getChange().getAttributeType1().addTo(pByteList, getValue1());
-    getChange().getAttributeType2().addTo(pByteList, getValue2());
-  }
   
   public int initFrom(ByteArray pByteArray) {
     ModelChangeIdOld changeId = ModelChangeIdOld.fromId(pByteArray.getByte());

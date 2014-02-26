@@ -12,7 +12,7 @@ import org.xml.sax.Attributes;
 
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
-import com.balancedbytes.games.ffb.bytearray.IByteArraySerializable;
+import com.balancedbytes.games.ffb.bytearray.IByteArrayReadable;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.IJsonSerializable;
 import com.balancedbytes.games.ffb.json.UtilJson;
@@ -29,7 +29,7 @@ import com.eclipsesource.json.JsonValue;
  * 
  * @author Kalimar
  */
-public class GameList implements IXmlSerializable, IByteArraySerializable, IJsonSerializable {
+public class GameList implements IXmlSerializable, IByteArrayReadable, IJsonSerializable {
     
   // <gameList>
   //   <game id="4765261" started="2009-05-05T11:50:20.345">

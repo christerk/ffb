@@ -26,12 +26,6 @@ public class DialogCoinChoiceParameter extends DialogWithoutParameter {
     return new DialogCoinChoiceParameter();
   }
   
-  // ByteArray serialization
-  
-  public int getByteArraySerializationVersion() {
-    return 1;
-  }
-  
   // JSON serialization
   
   public DialogCoinChoiceParameter initFrom(JsonValue pJsonValue) {

@@ -1,6 +1,6 @@
 package com.balancedbytes.games.ffb.server.step;
 
-import com.balancedbytes.games.ffb.bytearray.IByteArraySerializable;
+import com.balancedbytes.games.ffb.bytearray.IByteArrayReadable;
 import com.balancedbytes.games.ffb.json.IJsonSerializable;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.net.ReceivedCommand;
@@ -11,7 +11,7 @@ import com.eclipsesource.json.JsonValue;
  * 
  * @author Kalimar
  */
-public interface IStep extends IByteArraySerializable, IJsonSerializable {
+public interface IStep extends IByteArrayReadable, IJsonSerializable {
 	
 	public StepId getId();
 

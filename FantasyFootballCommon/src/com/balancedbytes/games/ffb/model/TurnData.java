@@ -5,7 +5,7 @@ import com.balancedbytes.games.ffb.LeaderState;
 import com.balancedbytes.games.ffb.LeaderStateFactory;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
-import com.balancedbytes.games.ffb.bytearray.IByteArraySerializable;
+import com.balancedbytes.games.ffb.bytearray.IByteArrayReadable;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.IJsonSerializable;
 import com.balancedbytes.games.ffb.json.UtilJson;
@@ -19,7 +19,7 @@ import com.eclipsesource.json.JsonValue;
  * 
  * @author Kalimar
  */
-public class TurnData implements IByteArraySerializable, IJsonSerializable {
+public class TurnData implements IByteArrayReadable, IJsonSerializable {
     
   private boolean fHomeData;
   private int fTurnNr;

@@ -22,7 +22,7 @@ import com.balancedbytes.games.ffb.SkillCategoryFactory;
 import com.balancedbytes.games.ffb.SkillFactory;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
-import com.balancedbytes.games.ffb.bytearray.IByteArraySerializable;
+import com.balancedbytes.games.ffb.bytearray.IByteArrayReadable;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.IJsonSerializable;
 import com.balancedbytes.games.ffb.json.UtilJson;
@@ -42,7 +42,7 @@ import com.eclipsesource.json.JsonValue;
  * 
  * @author Kalimar
  */
-public class RosterPosition implements IXmlSerializable, IByteArraySerializable, IJsonSerializable {
+public class RosterPosition implements IXmlSerializable, IByteArrayReadable, IJsonSerializable {
   
   public static final String XML_TAG = "position";
   

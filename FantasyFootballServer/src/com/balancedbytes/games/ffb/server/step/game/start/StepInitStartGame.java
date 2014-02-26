@@ -5,7 +5,6 @@ import java.util.Date;
 import com.balancedbytes.games.ffb.GameOptionValue;
 import com.balancedbytes.games.ffb.GameStatus;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
-import com.balancedbytes.games.ffb.bytearray.ByteList;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.server.FantasyFootballServer;
@@ -125,16 +124,6 @@ public final class StepInitStartGame extends AbstractStep {
   
   // ByteArray serialization
     
-  public int getByteArraySerializationVersion() {
-  	return 1;
-  }
-  
-  @Override
-  public void addTo(ByteList pByteList) {
-  	super.addTo(pByteList);
-  	pByteList.addBoolean(fFumbblGameCreated);
-  }
-  
   @Override
   public int initFrom(ByteArray pByteArray) {
   	int byteArraySerializationVersion = super.initFrom(pByteArray);

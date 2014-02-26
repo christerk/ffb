@@ -6,7 +6,7 @@ import com.balancedbytes.games.ffb.SeriousInjury;
 import com.balancedbytes.games.ffb.SeriousInjuryFactory;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
-import com.balancedbytes.games.ffb.bytearray.IByteArraySerializable;
+import com.balancedbytes.games.ffb.bytearray.IByteArrayReadable;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.IJsonSerializable;
 import com.balancedbytes.games.ffb.json.UtilJson;
@@ -20,7 +20,7 @@ import com.eclipsesource.json.JsonValue;
  * 
  * @author Kalimar
  */
-public class PlayerResult implements IByteArraySerializable, IJsonSerializable {
+public class PlayerResult implements IByteArrayReadable, IJsonSerializable {
   
   private int fCompletions;
   private int fTouchdowns;

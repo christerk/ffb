@@ -2,7 +2,6 @@ package com.balancedbytes.games.ffb.dialog;
 
 import com.balancedbytes.games.ffb.IDialogParameter;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
-import com.balancedbytes.games.ffb.bytearray.ByteList;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.eclipsesource.json.JsonObject;
 
@@ -17,11 +16,6 @@ public abstract class DialogWithoutParameter implements IDialogParameter {
   }
 
   // ByteArray serialization
-  
-  public void addTo(ByteList pByteList) {
-    pByteList.addSmallInt(getByteArraySerializationVersion());
-    pByteList.addByte((byte) getId().getId());
-  }
   
   public int initFrom(ByteArray pByteArray) {
     int byteArraySerializationVersion = pByteArray.getSmallInt();

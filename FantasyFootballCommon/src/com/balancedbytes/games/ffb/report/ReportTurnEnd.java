@@ -6,7 +6,6 @@ import java.util.List;
 import com.balancedbytes.games.ffb.HeatExhaustion;
 import com.balancedbytes.games.ffb.KnockoutRecovery;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
-import com.balancedbytes.games.ffb.bytearray.ByteList;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.util.ArrayTool;
@@ -89,30 +88,6 @@ public class ReportTurnEnd implements IReport {
   }
   
   // ByteArray serialization
-  
-  public int getByteArraySerializationVersion() {
-    return 1;
-  }
-  
-  public void addTo(ByteList pByteList) {
-    pByteList.addSmallInt(getId().getId());
-    pByteList.addSmallInt(getByteArraySerializationVersion());
-    pByteList.addString(getPlayerIdTouchdown());
-    KnockoutRecovery[] knockoutRecoveries = getKnockoutRecoveries();
-    pByteList.addByte((byte) knockoutRecoveries.length);
-    if (ArrayTool.isProvided(knockoutRecoveries)) {
-      for (KnockoutRecovery knockoutRecovery : knockoutRecoveries) {
-        knockoutRecovery.addTo(pByteList);
-      }
-    }
-    HeatExhaustion[] heatExhaustions = getHeatExhaustions();
-    pByteList.addByte((byte) heatExhaustions.length);
-    if (ArrayTool.isProvided(heatExhaustions)) {
-      for (HeatExhaustion heatExhaustion : heatExhaustions) {
-        heatExhaustion.addTo(pByteList);
-      }
-    }
-  }
   
   public int initFrom(ByteArray pByteArray) {
     UtilReport.validateReportId(this, new ReportIdFactory().forId(pByteArray.getSmallInt()));

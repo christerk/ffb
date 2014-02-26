@@ -2,7 +2,6 @@ package com.balancedbytes.games.ffb.dialog;
 
 import com.balancedbytes.games.ffb.IDialogParameter;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
-import com.balancedbytes.games.ffb.bytearray.ByteList;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.eclipsesource.json.JsonObject;
@@ -59,19 +58,6 @@ public class DialogPettyCashParameter implements IDialogParameter {
   
   // ByteArray serialization
   
-  public int getByteArraySerializationVersion() {
-    return 1;
-  }
-  
-  public void addTo(ByteList pByteList) {
-    pByteList.addSmallInt(getByteArraySerializationVersion());
-    pByteList.addByte((byte) getId().getId());
-    pByteList.addString(getTeamId());
-    pByteList.addInt(getTeamValue());
-    pByteList.addInt(getTreasury());
-    pByteList.addInt(getOpponentTeamValue());
-  }
-
   public int initFrom(ByteArray pByteArray) {
     int byteArraySerializationVersion = pByteArray.getSmallInt();
     UtilDialogParameter.validateDialogId(this, new DialogIdFactory().forId(pByteArray.getByte()));

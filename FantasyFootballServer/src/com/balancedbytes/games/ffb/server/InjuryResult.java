@@ -21,7 +21,7 @@ import com.balancedbytes.games.ffb.Sound;
 import com.balancedbytes.games.ffb.SoundFactory;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
-import com.balancedbytes.games.ffb.bytearray.IByteArraySerializable;
+import com.balancedbytes.games.ffb.bytearray.IByteArrayReadable;
 import com.balancedbytes.games.ffb.json.IJsonSerializable;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.Game;
@@ -43,7 +43,7 @@ import com.eclipsesource.json.JsonValue;
  * 
  * @author Kalimar
  */
-public class InjuryResult implements IByteArraySerializable, IJsonSerializable {
+public class InjuryResult implements IByteArrayReadable, IJsonSerializable {
 
   private InjuryType fInjuryType;
   private String fDefenderId;

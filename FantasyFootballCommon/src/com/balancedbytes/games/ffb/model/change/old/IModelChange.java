@@ -1,13 +1,14 @@
 package com.balancedbytes.games.ffb.model.change.old;
 
-import com.balancedbytes.games.ffb.bytearray.IByteArraySerializable;
+import com.balancedbytes.games.ffb.bytearray.IByteArrayReadable;
 import com.balancedbytes.games.ffb.model.Game;
+import com.balancedbytes.games.ffb.model.change.ModelChange;
 
 /**
  * 
  * @author Kalimar
  */
-public interface IModelChange extends IByteArraySerializable {
+public interface IModelChange extends IByteArrayReadable {
   
   public ModelChangeIdOld getId();
   
@@ -15,4 +16,6 @@ public interface IModelChange extends IByteArraySerializable {
   
   public IModelChange transform();
 
+  public ModelChange convert();
+  
 }

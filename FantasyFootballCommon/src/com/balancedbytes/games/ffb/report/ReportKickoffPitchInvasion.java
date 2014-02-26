@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
-import com.balancedbytes.games.ffb.bytearray.ByteList;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.util.ArrayTool;
@@ -131,19 +130,6 @@ public class ReportKickoffPitchInvasion implements IReport {
   }
   
   // ByteArray serialization
-  
-  public int getByteArraySerializationVersion() {
-    return 1;
-  }
-  
-  public void addTo(ByteList pByteList) {
-    pByteList.addSmallInt(getId().getId());
-    pByteList.addSmallInt(getByteArraySerializationVersion());
-    pByteList.addByteArray(getRollsHome());
-    pByteList.addBooleanArray(getPlayersAffectedHome());
-    pByteList.addByteArray(getRollsAway());
-    pByteList.addBooleanArray(getPlayersAffectedAway());
-  }
   
   public int initFrom(ByteArray pByteArray) {
     UtilReport.validateReportId(this, new ReportIdFactory().forId(pByteArray.getSmallInt()));

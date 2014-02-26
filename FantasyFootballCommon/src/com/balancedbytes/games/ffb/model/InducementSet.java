@@ -14,7 +14,7 @@ import com.balancedbytes.games.ffb.Inducement;
 import com.balancedbytes.games.ffb.InducementType;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
-import com.balancedbytes.games.ffb.bytearray.IByteArraySerializable;
+import com.balancedbytes.games.ffb.bytearray.IByteArrayReadable;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.IJsonSerializable;
 import com.balancedbytes.games.ffb.json.UtilJson;
@@ -28,7 +28,7 @@ import com.eclipsesource.json.JsonValue;
  * 
  * @author Kalimar
  */
-public class InducementSet implements IByteArraySerializable, IJsonSerializable {
+public class InducementSet implements IByteArrayReadable, IJsonSerializable {
   
   private Map<InducementType, Inducement> fInducements;
   private Set<Card> fCardsAvailable;

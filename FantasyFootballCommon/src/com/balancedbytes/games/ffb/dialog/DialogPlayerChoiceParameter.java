@@ -7,7 +7,6 @@ import com.balancedbytes.games.ffb.IDialogParameter;
 import com.balancedbytes.games.ffb.PlayerChoiceMode;
 import com.balancedbytes.games.ffb.PlayerChoiceModeFactory;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
-import com.balancedbytes.games.ffb.bytearray.ByteList;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.Player;
@@ -118,20 +117,6 @@ public class DialogPlayerChoiceParameter implements IDialogParameter {
 
   // ByteArray serialization
   
-  public int getByteArraySerializationVersion() {
-    return 1;
-  }
-  
-  public void addTo(ByteList pByteList) {
-    pByteList.addSmallInt(getByteArraySerializationVersion());
-    pByteList.addByte((byte) getId().getId());
-    pByteList.addString(getTeamId());
-    pByteList.addByte((byte) ((getPlayerChoiceMode() != null) ? getPlayerChoiceMode().getId() :0));
-    pByteList.addByte((byte) getMaxSelects());
-    pByteList.addStringArray(getPlayerIds());
-    pByteList.addStringArray(getDescriptions());
-  }
-
   public int initFrom(ByteArray pByteArray) {
     int byteArraySerializationVersion = pByteArray.getSmallInt();
     UtilDialogParameter.validateDialogId(this, new DialogIdFactory().forId(pByteArray.getByte()));

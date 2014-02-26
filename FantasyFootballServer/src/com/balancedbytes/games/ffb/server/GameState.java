@@ -6,8 +6,7 @@ import java.util.Map;
 import com.balancedbytes.games.ffb.GameStatus;
 import com.balancedbytes.games.ffb.GameStatusFactory;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
-import com.balancedbytes.games.ffb.bytearray.ByteList;
-import com.balancedbytes.games.ffb.bytearray.IByteArraySerializable;
+import com.balancedbytes.games.ffb.bytearray.IByteArrayReadable;
 import com.balancedbytes.games.ffb.json.IJsonSerializable;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.Game;
@@ -30,7 +29,7 @@ import com.eclipsesource.json.JsonValue;
  * 
  * @author Kalimar
  */
-public class GameState implements IModelChangeObserver, IByteArraySerializable, IJsonSerializable {
+public class GameState implements IModelChangeObserver, IByteArrayReadable, IJsonSerializable {
 
   private Game fGame;
   private GameLog fGameLog;
@@ -230,29 +229,6 @@ public class GameState implements IModelChangeObserver, IByteArraySerializable, 
   }
 
   // ByteArray serialization
-
-  public int getByteArraySerializationVersion() {
-    return 1;
-  }
-
-  public void addTo(ByteList pByteList) {
-    pByteList.addSmallInt(getByteArraySerializationVersion());
-    pByteList.addByte((byte) ((getStatus() != null) ? getStatus().getId() : 0));
-    if (fGame != null) {
-      pByteList.addBoolean(true);
-      fGame.addTo(pByteList);
-    } else {
-      pByteList.addBoolean(false);
-    }
-    if (fCurrentStep != null) {
-      pByteList.addBoolean(true);
-      fCurrentStep.addTo(pByteList);
-    } else {
-      pByteList.addBoolean(false);
-    }
-    fStepStack.addTo(pByteList);
-    fGameLog.addTo(pByteList);
-  }
 
   public int initFrom(ByteArray pByteArray) {
     int byteArraySerializationVersion = pByteArray.getSmallInt();

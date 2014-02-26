@@ -26,12 +26,6 @@ public class DialogTouchbackParameter extends DialogWithoutParameter {
     return new DialogTouchbackParameter();
   }
   
-  // ByteArray serialization
-  
-  public int getByteArraySerializationVersion() {
-    return 1;
-  }
-
   // JSON serialization
   
   public DialogTouchbackParameter initFrom(JsonValue pJsonValue) {
