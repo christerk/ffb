@@ -31,8 +31,6 @@ import com.balancedbytes.games.ffb.ClientStateId;
 import com.balancedbytes.games.ffb.ConcedeGameStatus;
 import com.balancedbytes.games.ffb.FantasyFootballException;
 import com.balancedbytes.games.ffb.FieldCoordinate;
-import com.balancedbytes.games.ffb.GameOption;
-import com.balancedbytes.games.ffb.GameOptionValue;
 import com.balancedbytes.games.ffb.Inducement;
 import com.balancedbytes.games.ffb.InducementType;
 import com.balancedbytes.games.ffb.PlayerType;
@@ -52,6 +50,8 @@ import com.balancedbytes.games.ffb.model.InducementSet;
 import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.model.PlayerResult;
 import com.balancedbytes.games.ffb.model.Team;
+import com.balancedbytes.games.ffb.old.GameOptionOld;
+import com.balancedbytes.games.ffb.old.GameOptionValueOld;
 import com.balancedbytes.games.ffb.util.ArrayTool;
 import com.balancedbytes.games.ffb.util.StringTool;
 
@@ -617,9 +617,9 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
   public void updateGameOptions() {
   	fGameOptionsMenu.removeAll();
   	GameOptions gameOptions = getClient().getGame().getOptions();
-  	GameOptionValue[] optionValues = gameOptions.getOptionValues();
-  	Arrays.sort(optionValues, new Comparator<GameOptionValue>() {
-  		public int compare(GameOptionValue pO1, GameOptionValue pO2) {
+  	GameOptionValueOld[] optionValues = gameOptions.getOptionValues();
+  	Arrays.sort(optionValues, new Comparator<GameOptionValueOld>() {
+  		public int compare(GameOptionValueOld pO1, GameOptionValueOld pO2) {
   			return pO1.getOption().getName().compareTo(pO2.getOption().getName());
   		}
 		});
@@ -629,8 +629,8 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
       fGameOptionsMenu.add(optionItem);
       optionsAdded++;
   	}
-  	for (GameOptionValue optionValue : gameOptions.getOptionValues()) {
-  		if (optionValue.isChanged() && (optionValue.getOption() != GameOption.TEST_MODE)) {
+  	for (GameOptionValueOld optionValue : gameOptions.getOptionValues()) {
+  		if (optionValue.isChanged() && (optionValue.getOption() != GameOptionOld.TEST_MODE)) {
   	  	StringBuilder optionText = new StringBuilder();
   			optionText.append("* ").append(optionValue.getChangedMessage());
         JMenuItem optionItem = new JMenuItem(optionText.toString());

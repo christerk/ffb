@@ -2,11 +2,11 @@ package com.balancedbytes.games.ffb.server.step.game.start;
 
 import java.util.Date;
 
-import com.balancedbytes.games.ffb.GameOptionValue;
 import com.balancedbytes.games.ffb.GameStatus;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.Game;
+import com.balancedbytes.games.ffb.old.GameOptionValueOld;
 import com.balancedbytes.games.ffb.server.FantasyFootballServer;
 import com.balancedbytes.games.ffb.server.GameCache;
 import com.balancedbytes.games.ffb.server.GameState;
@@ -106,7 +106,7 @@ public final class StepInitStartGame extends AbstractStep {
       server.getDebugLog().log(IServerLogLevel.WARN, getGameState().getId(), logEntry.toString());
       if (game.getOptions() != null) {
       	StringBuilder optionValues = new StringBuilder();
-        for (GameOptionValue option : game.getOptions().getOptionValues()) {
+        for (GameOptionValueOld option : game.getOptions().getOptionValues()) {
         	if (option.getValue() != option.getOption().getDefaultValue()) {
         		optionValues.append(" ").append(option.getOption().getName()).append("=").append(option.getValue());
         	}

@@ -1,7 +1,6 @@
 package com.balancedbytes.games.ffb.server.step.action.foul;
 
 import com.balancedbytes.games.ffb.CatchScatterThrowInMode;
-import com.balancedbytes.games.ffb.GameOption;
 import com.balancedbytes.games.ffb.PlayerState;
 import com.balancedbytes.games.ffb.SendToBoxReason;
 import com.balancedbytes.games.ffb.Skill;
@@ -11,6 +10,7 @@ import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.GameResult;
 import com.balancedbytes.games.ffb.model.PlayerResult;
+import com.balancedbytes.games.ffb.old.GameOptionOld;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.IServerJsonOption;
 import com.balancedbytes.games.ffb.server.net.ReceivedCommand;
@@ -107,7 +107,7 @@ public class StepEjectPlayer extends AbstractStep {
     ActingPlayer actingPlayer = game.getActingPlayer();
     PlayerState playerState = game.getFieldModel().getPlayerState(actingPlayer.getPlayer());
     PlayerResult attackerResult = gameResult.getPlayerResult(actingPlayer.getPlayer()); 
-    if (UtilCards.hasSkill(game, actingPlayer, Skill.SNEAKY_GIT) && game.getOptions().getOptionValue(GameOption.SNEAKY_GIT_BAN_TO_KO).isEnabled()) {
+    if (UtilCards.hasSkill(game, actingPlayer, Skill.SNEAKY_GIT) && game.getOptions().getOptionValue(GameOptionOld.SNEAKY_GIT_BAN_TO_KO).isEnabled()) {
     	game.getFieldModel().setPlayerState(actingPlayer.getPlayer(), playerState.changeBase(PlayerState.KNOCKED_OUT));
     } else {
     	game.getFieldModel().setPlayerState(actingPlayer.getPlayer(), playerState.changeBase(PlayerState.BANNED));

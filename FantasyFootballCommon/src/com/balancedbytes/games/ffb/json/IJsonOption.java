@@ -7,7 +7,6 @@ import com.balancedbytes.games.ffb.ClientModeFactory;
 import com.balancedbytes.games.ffb.ClientStateIdFactory;
 import com.balancedbytes.games.ffb.ConcedeGameStatusFactory;
 import com.balancedbytes.games.ffb.DirectionFactory;
-import com.balancedbytes.games.ffb.GameOptionFactory;
 import com.balancedbytes.games.ffb.InducementTypeFactory;
 import com.balancedbytes.games.ffb.InjuryTypeFactory;
 import com.balancedbytes.games.ffb.KickoffResultFactory;
@@ -34,6 +33,7 @@ import com.balancedbytes.games.ffb.model.AnimationTypeFactory;
 import com.balancedbytes.games.ffb.model.change.ModelChangeIdFactory;
 import com.balancedbytes.games.ffb.net.NetCommandIdFactory;
 import com.balancedbytes.games.ffb.net.ServerStatusFactory;
+import com.balancedbytes.games.ffb.old.GameOptionFactoryOld;
 import com.balancedbytes.games.ffb.report.ReportIdFactory;
 
 /**
@@ -157,7 +157,7 @@ public interface IJsonOption {
                 JsonObjectOption GAME_LIST = new JsonObjectOption("gameList");
                  JsonArrayOption GAME_LIST_ENTRIES = new JsonArrayOption("gameListEntries");
                 JsonStringOption GAME_NAME = new JsonStringOption("gameName");
-          JsonEnumWithNameOption GAME_OPTION = new JsonEnumWithNameOption("gameOption", new GameOptionFactory());
+          JsonEnumWithNameOption GAME_OPTION = new JsonEnumWithNameOption("gameOption", new GameOptionFactoryOld());
                  JsonArrayOption GAME_OPTION_ARRAY = new JsonArrayOption("gameOptionArray");
                 JsonObjectOption GAME_OPTIONS = new JsonObjectOption("gameOptions");
                 JsonObjectOption GAME_RESULT = new JsonObjectOption("gameResult");

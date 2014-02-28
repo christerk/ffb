@@ -2,7 +2,6 @@ package com.balancedbytes.games.ffb.server.step.action.block;
 
 import com.balancedbytes.games.ffb.Card;
 import com.balancedbytes.games.ffb.FieldCoordinate;
-import com.balancedbytes.games.ffb.GameOption;
 import com.balancedbytes.games.ffb.InjuryType;
 import com.balancedbytes.games.ffb.PlayerState;
 import com.balancedbytes.games.ffb.Skill;
@@ -12,6 +11,7 @@ import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandUseSkill;
+import com.balancedbytes.games.ffb.old.GameOptionOld;
 import com.balancedbytes.games.ffb.report.ReportPilingOn;
 import com.balancedbytes.games.ffb.server.DiceInterpreter;
 import com.balancedbytes.games.ffb.server.GameState;
@@ -129,7 +129,7 @@ public class StepDropFallingPlayers extends AbstractStep {
           	fInjuryResultDefender = UtilInjury.handleInjury(this, InjuryType.PILING_ON_ARMOR, actingPlayer.getPlayer(), game.getDefender(), defenderCoordinate, null, ApothecaryMode.DEFENDER);
           	rolledDouble = DiceInterpreter.getInstance().isDouble(fInjuryResultDefender.getArmorRoll());
           }
-          if (rolledDouble && game.getOptions().getOptionValue(GameOption.PILING_ON_TO_KO_ON_DOUBLE).isEnabled()) {
+          if (rolledDouble && game.getOptions().getOptionValue(GameOptionOld.PILING_ON_TO_KO_ON_DOUBLE).isEnabled()) {
             publishParameter(new StepParameter(StepParameterKey.INJURY_RESULT, UtilInjury.handleInjury(this, InjuryType.PILING_ON_KNOCKED_OUT, null, actingPlayer.getPlayer(), attackerCoordinate, null, ApothecaryMode.ATTACKER)));
           }
         }
@@ -145,8 +145,8 @@ public class StepDropFallingPlayers extends AbstractStep {
           && attackerCoordinate.isAdjacent(defenderCoordinate)
           && !fInjuryResultDefender.isCasualty()
           && !attackerState.isRooted()
-          && (!game.getOptions().getOptionValue(GameOption.PILING_ON_INJURY_ONLY).isEnabled() || fInjuryResultDefender.isArmorBroken())
-          && (!game.getOptions().getOptionValue(GameOption.PILING_ON_ARMOR_ONLY).isEnabled() || !fInjuryResultDefender.isArmorBroken())
+          && (!game.getOptions().getOptionValue(GameOptionOld.PILING_ON_INJURY_ONLY).isEnabled() || fInjuryResultDefender.isArmorBroken())
+          && (!game.getOptions().getOptionValue(GameOptionOld.PILING_ON_ARMOR_ONLY).isEnabled() || !fInjuryResultDefender.isArmorBroken())
           && (!UtilCards.hasCard(game, game.getDefender(), Card.BELT_OF_INVULNERABILITY) || fInjuryResultDefender.isArmorBroken())
           && !UtilCards.hasSkill(game, actingPlayer, Skill.BALL_AND_CHAIN)
           && !UtilCards.hasCard(game, game.getDefender(), Card.GOOD_OLD_MAGIC_CODPIECE)

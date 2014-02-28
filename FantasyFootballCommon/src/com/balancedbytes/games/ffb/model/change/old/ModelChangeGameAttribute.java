@@ -4,7 +4,6 @@ package com.balancedbytes.games.ffb.model.change.old;
 import java.util.Date;
 
 import com.balancedbytes.games.ffb.FieldCoordinate;
-import com.balancedbytes.games.ffb.GameOptionValue;
 import com.balancedbytes.games.ffb.IDialogParameter;
 import com.balancedbytes.games.ffb.PlayerAction;
 import com.balancedbytes.games.ffb.TurnMode;
@@ -12,6 +11,7 @@ import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.change.ModelChange;
 import com.balancedbytes.games.ffb.model.change.ModelChangeId;
+import com.balancedbytes.games.ffb.old.GameOptionValueOld;
 
 /**
  * 
@@ -110,7 +110,7 @@ public class ModelChangeGameAttribute implements IModelChange {
       	pGame.setThrowerAction((PlayerAction) getValue());
       	break;
       case ADD_OPTION:
-      	pGame.getOptions().addOption((GameOptionValue) getValue());
+      	pGame.getOptions().addOption((GameOptionValueOld) getValue());
       	break;
       default:
         throw new IllegalStateException("Unhandled change " + getChange() + ".");

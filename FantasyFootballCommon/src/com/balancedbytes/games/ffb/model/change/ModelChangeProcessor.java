@@ -7,7 +7,6 @@ import com.balancedbytes.games.ffb.Card;
 import com.balancedbytes.games.ffb.DiceDecoration;
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.FieldMarker;
-import com.balancedbytes.games.ffb.GameOptionValue;
 import com.balancedbytes.games.ffb.IDialogParameter;
 import com.balancedbytes.games.ffb.Inducement;
 import com.balancedbytes.games.ffb.LeaderState;
@@ -28,6 +27,7 @@ import com.balancedbytes.games.ffb.model.InducementSet;
 import com.balancedbytes.games.ffb.model.PlayerResult;
 import com.balancedbytes.games.ffb.model.TeamResult;
 import com.balancedbytes.games.ffb.model.TurnData;
+import com.balancedbytes.games.ffb.old.GameOptionValueOld;
 
 /**
  * 
@@ -233,7 +233,7 @@ public class ModelChangeProcessor {
   			return true;
   			
   		case GAME_OPTIONS_ADD_OPTION:
-  			pGame.getOptions().addOption((GameOptionValue) pModelChange.getValue());
+  			pGame.getOptions().addOption((GameOptionValueOld) pModelChange.getValue());
   			return true;
   			
   		case INDUCEMENT_SET_ACTIVATE_CARD:

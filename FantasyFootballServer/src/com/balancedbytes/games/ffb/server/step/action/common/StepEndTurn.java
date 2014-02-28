@@ -6,7 +6,6 @@ import java.util.List;
 import com.balancedbytes.games.ffb.Card;
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.FieldCoordinateBounds;
-import com.balancedbytes.games.ffb.GameOption;
 import com.balancedbytes.games.ffb.HeatExhaustion;
 import com.balancedbytes.games.ffb.Inducement;
 import com.balancedbytes.games.ffb.InducementDuration;
@@ -30,6 +29,7 @@ import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.model.PlayerResult;
 import com.balancedbytes.games.ffb.model.Team;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandUseInducement;
+import com.balancedbytes.games.ffb.old.GameOptionOld;
 import com.balancedbytes.games.ffb.report.ReportBribesRoll;
 import com.balancedbytes.games.ffb.report.ReportSecretWeaponBan;
 import com.balancedbytes.games.ffb.report.ReportTurnEnd;
@@ -276,7 +276,7 @@ public class StepEndTurn extends AbstractStep {
         	fEndGame = true;
         } else if (game.getHalf() > 1) {
           GameResult gameResult = game.getGameResult();
-          if (game.getOptions().getOptionValue(GameOption.OVERTIME).isEnabled() && (gameResult.getTeamResultHome().getScore() == gameResult.getTeamResultAway().getScore())) {
+          if (game.getOptions().getOptionValue(GameOptionOld.OVERTIME).isEnabled() && (gameResult.getTeamResultHome().getScore() == gameResult.getTeamResultAway().getScore())) {
             UtilGame.startHalf(this, game.getHalf() + 1);
             SequenceGenerator.getInstance().pushKickoffSequence(getGameState(), true);
           } else {

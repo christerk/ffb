@@ -2,7 +2,6 @@ package com.balancedbytes.games.ffb.server.step.action.block;
 
 import com.balancedbytes.games.ffb.BlockResult;
 import com.balancedbytes.games.ffb.BlockResultFactory;
-import com.balancedbytes.games.ffb.GameOption;
 import com.balancedbytes.games.ffb.PlayerState;
 import com.balancedbytes.games.ffb.Skill;
 import com.balancedbytes.games.ffb.SkillUse;
@@ -10,6 +9,7 @@ import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.Game;
+import com.balancedbytes.games.ffb.old.GameOptionOld;
 import com.balancedbytes.games.ffb.report.ReportBlockChoice;
 import com.balancedbytes.games.ffb.report.ReportSkillUse;
 import com.balancedbytes.games.ffb.server.GameState;
@@ -156,7 +156,7 @@ public class StepBlockChoice extends AbstractStep {
 	    case POW_PUSHBACK:
 	      if (UtilCards.hasSkill(game, game.getDefender(), Skill.DODGE)) {
 	        if (UtilCards.hasSkill(game, actingPlayer, Skill.TACKLE) && (!UtilCards.hasSkill(game, actingPlayer, Skill.BALL_AND_CHAIN) || actingPlayer.getPlayer().getTeam() != game.getDefender().getTeam())) {
-	        	if (game.getOptions().getOptionValue(GameOption.RIGHT_STUFF_CANCELS_TACKLE).isEnabled() && UtilCards.hasSkill(game, game.getDefender(), Skill.RIGHT_STUFF)) {
+	        	if (game.getOptions().getOptionValue(GameOptionOld.RIGHT_STUFF_CANCELS_TACKLE).isEnabled() && UtilCards.hasSkill(game, game.getDefender(), Skill.RIGHT_STUFF)) {
 		          getResult().addReport(new ReportSkillUse(game.getDefenderId(), Skill.RIGHT_STUFF, true, SkillUse.CANCEL_TACKLE));
 		        	getResult().setNextAction(StepAction.GOTO_LABEL, fGotoLabelOnDodge);
 	        	} else {

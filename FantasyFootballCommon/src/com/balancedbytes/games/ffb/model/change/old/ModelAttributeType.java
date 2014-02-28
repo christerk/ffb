@@ -11,7 +11,6 @@ import com.balancedbytes.games.ffb.CardFactory;
 import com.balancedbytes.games.ffb.DiceDecoration;
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.FieldMarker;
-import com.balancedbytes.games.ffb.GameOptionValue;
 import com.balancedbytes.games.ffb.IDialogParameter;
 import com.balancedbytes.games.ffb.Inducement;
 import com.balancedbytes.games.ffb.MoveSquare;
@@ -35,6 +34,7 @@ import com.balancedbytes.games.ffb.WeatherFactory;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.dialog.DialogId;
 import com.balancedbytes.games.ffb.dialog.DialogIdFactory;
+import com.balancedbytes.games.ffb.old.GameOptionValueOld;
 import com.balancedbytes.games.ffb.util.DateTool;
 import com.balancedbytes.games.ffb.util.StringTool;
 import com.balancedbytes.games.ffb.xml.UtilXml;
@@ -203,7 +203,7 @@ public enum ModelAttributeType {
           typeOk = (pValue instanceof PlayerMarker);
           break;
         case GAME_OPTION:
-        	typeOk = (pValue instanceof GameOptionValue);
+        	typeOk = (pValue instanceof GameOptionValueOld);
         	break;
         case CARD:
         	typeOk = (pValue instanceof Card);
@@ -425,9 +425,9 @@ public enum ModelAttributeType {
         }
         return playerMarker;
       case GAME_OPTION:
-      	GameOptionValue gameOption = null;
+      	GameOptionValueOld gameOption = null;
       	if (pByteArray.getBoolean()) {
-      		gameOption = new GameOptionValue();
+      		gameOption = new GameOptionValueOld();
       		gameOption.initFrom(pByteArray);
       	}
       	return gameOption;

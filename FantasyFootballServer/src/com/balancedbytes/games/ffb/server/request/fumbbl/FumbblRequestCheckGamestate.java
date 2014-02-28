@@ -1,7 +1,7 @@
 package com.balancedbytes.games.ffb.server.request.fumbbl;
 
-import com.balancedbytes.games.ffb.GameOption;
 import com.balancedbytes.games.ffb.model.Game;
+import com.balancedbytes.games.ffb.old.GameOptionOld;
 import com.balancedbytes.games.ffb.server.DebugLog;
 import com.balancedbytes.games.ffb.server.FantasyFootballServer;
 import com.balancedbytes.games.ffb.server.GameState;
@@ -41,7 +41,7 @@ public class FumbblRequestCheckGamestate extends ServerRequest {
         UtilFumbblRequest.reportFumbblError(getGameState(), fumbblGameState);
       } else {
         game.getOptions().init(fumbblGameState.getOptions());
-      	game.setTesting(game.isTesting() || game.getOptions().getOptionValue(GameOption.TEST_MODE).isEnabled());
+      	game.setTesting(game.isTesting() || game.getOptions().getOptionValue(GameOptionOld.TEST_MODE).isEnabled());
       	InternalServerCommandFumbblGameChecked gameCheckedCommand = new InternalServerCommandFumbblGameChecked(getGameState().getId());
         server.getCommunication().handleCommand(gameCheckedCommand);
       }

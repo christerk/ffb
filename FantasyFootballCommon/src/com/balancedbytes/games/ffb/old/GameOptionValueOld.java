@@ -1,4 +1,4 @@
-package com.balancedbytes.games.ffb;
+package com.balancedbytes.games.ffb.old;
 
 import javax.xml.transform.sax.TransformerHandler;
 
@@ -22,30 +22,30 @@ import com.eclipsesource.json.JsonValue;
  * 
  * @author Kalimar
  */
-public class GameOptionValue implements IXmlSerializable, IByteArrayReadable, IJsonSerializable {
+public class GameOptionValueOld implements IXmlSerializable, IByteArrayReadable, IJsonSerializable {
 
   public static final String XML_TAG = "option";
   
   private static final String _XML_ATTRIBUTE_NAME = "name";
   private static final String _XML_ATTRIBUTE_VALUE = "value";
 
-	private GameOption fGameOption;
+	private GameOptionOld fGameOption;
 	private int fValue;
 	
-	public GameOptionValue() {
+	public GameOptionValueOld() {
 		super();
 	}
 	
-	public GameOptionValue(GameOption pName, int pValue) {
+	public GameOptionValueOld(GameOptionOld pName, int pValue) {
 		setOption(pName);
 		setValue(pValue);
 	}
 	
-	public GameOption getOption() {
+	public GameOptionOld getOption() {
 		return fGameOption;
 	}
 	
-	public void setOption(GameOption pOption) {
+	public void setOption(GameOptionOld pOption) {
 		fGameOption = pOption;
 	}
 	
@@ -90,7 +90,7 @@ public class GameOptionValue implements IXmlSerializable, IByteArrayReadable, IJ
   public IXmlReadable startXmlElement(String pXmlTag, Attributes pXmlAttributes) {
   	if (XML_TAG.equals(pXmlTag)) {
   	  String name = UtilXml.getStringAttribute(pXmlAttributes, _XML_ATTRIBUTE_NAME);
-  		setOption(new GameOptionFactory().forName(name));
+  		setOption(new GameOptionFactoryOld().forName(name));
   		String value = UtilXml.getStringAttribute(pXmlAttributes, _XML_ATTRIBUTE_VALUE);
   		if ("true".equalsIgnoreCase(value)) {
   			setValue(1);
@@ -121,7 +121,7 @@ public class GameOptionValue implements IXmlSerializable, IByteArrayReadable, IJ
   
   public int initFrom(ByteArray pByteArray) {
     int byteArraySerializationVersion = pByteArray.getSmallInt();
-    setOption(new GameOptionFactory().forName(pByteArray.getString()));
+    setOption(new GameOptionFactoryOld().forName(pByteArray.getString()));
     setValue(pByteArray.getInt());
     return byteArraySerializationVersion;
   }
@@ -135,9 +135,9 @@ public class GameOptionValue implements IXmlSerializable, IByteArrayReadable, IJ
     return jsonObject;
   }
   
-  public GameOptionValue initFrom(JsonValue pJsonValue) {
+  public GameOptionValueOld initFrom(JsonValue pJsonValue) {
     JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-    fGameOption = (GameOption) IJsonOption.GAME_OPTION.getFrom(jsonObject);
+    fGameOption = (GameOptionOld) IJsonOption.GAME_OPTION.getFrom(jsonObject);
     fValue = IJsonOption.VALUE.getFrom(jsonObject);
     return this;
   }

@@ -5,7 +5,6 @@ import com.balancedbytes.games.ffb.ArmorModifierFactory;
 import com.balancedbytes.games.ffb.Card;
 import com.balancedbytes.games.ffb.CatchScatterThrowInMode;
 import com.balancedbytes.games.ffb.FieldCoordinate;
-import com.balancedbytes.games.ffb.GameOption;
 import com.balancedbytes.games.ffb.InjuryModifier;
 import com.balancedbytes.games.ffb.InjuryModifierFactory;
 import com.balancedbytes.games.ffb.InjuryType;
@@ -22,6 +21,7 @@ import com.balancedbytes.games.ffb.model.PlayerResult;
 import com.balancedbytes.games.ffb.model.RosterPosition;
 import com.balancedbytes.games.ffb.model.Team;
 import com.balancedbytes.games.ffb.model.TeamResult;
+import com.balancedbytes.games.ffb.old.GameOptionOld;
 import com.balancedbytes.games.ffb.report.ReportId;
 import com.balancedbytes.games.ffb.report.ReportRaiseDead;
 import com.balancedbytes.games.ffb.report.ReportSkillRoll;
@@ -146,7 +146,7 @@ public class UtilInjury {
 		        injuryResult.setArmorBroken(diceInterpreter.isArmourBroken(gameState, injuryResult));
 		        if (!injuryResult.isArmorBroken() && UtilCards.hasSkill(game, pAttacker, Skill.MIGHTY_BLOW)
 		        	&& !UtilCards.hasSkill(game, pAttacker, Skill.CHAINSAW)
-		        	&& !(UtilCards.hasSkill(game, pAttacker, Skill.CLAW) && game.getOptions().getOptionValue(GameOption.CLAW_DOES_NOT_STACK).isEnabled())) {
+		        	&& !(UtilCards.hasSkill(game, pAttacker, Skill.CLAW) && game.getOptions().getOptionValue(GameOptionOld.CLAW_DOES_NOT_STACK).isEnabled())) {
 		          injuryResult.addArmorModifier(ArmorModifier.MIGHTY_BLOW);
 		          injuryResult.setArmorBroken(diceInterpreter.isArmourBroken(gameState, injuryResult));
 		        }
@@ -155,7 +155,7 @@ public class UtilInjury {
 	      case PILING_ON_ARMOR:
 	        injuryResult.setArmorRoll(diceRoller.rollArmour());
 	        injuryResult.setArmorBroken(diceInterpreter.isArmourBroken(gameState, injuryResult));
-	        if (!game.getOptions().getOptionValue(GameOption.PILING_ON_DOES_NOT_STACK).isEnabled()) {
+	        if (!game.getOptions().getOptionValue(GameOptionOld.PILING_ON_DOES_NOT_STACK).isEnabled()) {
 	        	if (UtilCards.hasSkill(game, pAttacker, Skill.CHAINSAW) || UtilCards.hasSkill(game, pDefender, Skill.CHAINSAW)) {
 		          injuryResult.addArmorModifier(ArmorModifier.CHAINSAW);
 		        }
@@ -165,7 +165,7 @@ public class UtilInjury {
 		        injuryResult.setArmorBroken(diceInterpreter.isArmourBroken(gameState, injuryResult));
 		        if (!injuryResult.isArmorBroken() && UtilCards.hasSkill(game, pAttacker, Skill.MIGHTY_BLOW)
 		        	&& !UtilCards.hasSkill(game, pAttacker, Skill.CHAINSAW)
-		        	&& !(UtilCards.hasSkill(game, pAttacker, Skill.CLAW) && game.getOptions().getOptionValue(GameOption.CLAW_DOES_NOT_STACK).isEnabled())) {
+		        	&& !(UtilCards.hasSkill(game, pAttacker, Skill.CLAW) && game.getOptions().getOptionValue(GameOptionOld.CLAW_DOES_NOT_STACK).isEnabled())) {
 		          injuryResult.addArmorModifier(ArmorModifier.MIGHTY_BLOW);
 		          injuryResult.setArmorBroken(diceInterpreter.isArmourBroken(gameState, injuryResult));
 		        }
@@ -192,8 +192,8 @@ public class UtilInjury {
 	        if (UtilCards.hasSkill(game, pAttacker, Skill.CHAINSAW)) {
 	          injuryResult.addArmorModifier(ArmorModifier.CHAINSAW);
 	        }
-	        if (game.getOptions().getOptionValue(GameOption.FOUL_BONUS).isEnabled()
-	        	|| (game.getOptions().getOptionValue(GameOption.FOUL_BONUS_OUTSIDE_TACKLEZONE).isEnabled() && (UtilPlayer.findTacklezones(game, pAttacker) < 1))) {
+	        if (game.getOptions().getOptionValue(GameOptionOld.FOUL_BONUS).isEnabled()
+	        	|| (game.getOptions().getOptionValue(GameOptionOld.FOUL_BONUS_OUTSIDE_TACKLEZONE).isEnabled() && (UtilPlayer.findTacklezones(game, pAttacker) < 1))) {
 	        	injuryResult.addArmorModifier(ArmorModifier.FOUL);
 	        }
 	        int foulAssists = UtilPlayer.findFoulAssists(game, pAttacker, pDefender);
@@ -258,7 +258,7 @@ public class UtilInjury {
             break;
           case PILING_ON_ARMOR:
           case PILING_ON_INJURY:
-          	if (!game.getOptions().getOptionValue(GameOption.PILING_ON_DOES_NOT_STACK).isEnabled()) {
+          	if (!game.getOptions().getOptionValue(GameOptionOld.PILING_ON_DOES_NOT_STACK).isEnabled()) {
     	        if (UtilCards.hasSkill(game, pAttacker, Skill.MIGHTY_BLOW) && !injuryResult.hasArmorModifier(ArmorModifier.MIGHTY_BLOW)) {
 	              injuryResult.addInjuryModifier(InjuryModifier.MIGHTY_BLOW);
 	            }

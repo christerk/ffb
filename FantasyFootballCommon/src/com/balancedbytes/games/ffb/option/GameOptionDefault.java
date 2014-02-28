@@ -1,4 +1,6 @@
-package com.balancedbytes.games.ffb;
+package com.balancedbytes.games.ffb.option;
+
+import com.balancedbytes.games.ffb.IEnumWithName;
 
 
 
@@ -7,7 +9,7 @@ package com.balancedbytes.games.ffb;
  * 
  * @author Kalimar
  */
-public enum GameOption implements IEnumWithName {
+public enum GameOptionDefault implements IEnumWithName {
   
   OVERTIME("overtime", 0, null, "Game will go into overtime if there is a draw after 2nd half."), 
   TURNTIME("turntime", 240, null, "Turntime is $1 sec."),
@@ -41,7 +43,7 @@ public enum GameOption implements IEnumWithName {
   private String fGroup;
   private String fChangedMessage;
 
-  private GameOption(String pName, int pDefaultValue, String pGroup, String pChangedMessage) {
+  private GameOptionDefault(String pName, int pDefaultValue, String pGroup, String pChangedMessage) {
     fName = pName;
     fGroup = pGroup;
     fDefaultValue = pDefaultValue;

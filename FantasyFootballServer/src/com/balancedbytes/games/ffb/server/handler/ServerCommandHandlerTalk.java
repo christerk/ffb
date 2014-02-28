@@ -12,9 +12,6 @@ import org.eclipse.jetty.websocket.api.Session;
 import com.balancedbytes.games.ffb.Card;
 import com.balancedbytes.games.ffb.CardFactory;
 import com.balancedbytes.games.ffb.FieldCoordinate;
-import com.balancedbytes.games.ffb.GameOption;
-import com.balancedbytes.games.ffb.GameOptionFactory;
-import com.balancedbytes.games.ffb.GameOptionValue;
 import com.balancedbytes.games.ffb.PlayerState;
 import com.balancedbytes.games.ffb.SeriousInjury;
 import com.balancedbytes.games.ffb.Skill;
@@ -29,6 +26,9 @@ import com.balancedbytes.games.ffb.model.PlayerResult;
 import com.balancedbytes.games.ffb.model.Team;
 import com.balancedbytes.games.ffb.net.NetCommandId;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandTalk;
+import com.balancedbytes.games.ffb.old.GameOptionOld;
+import com.balancedbytes.games.ffb.old.GameOptionFactoryOld;
+import com.balancedbytes.games.ffb.old.GameOptionValueOld;
 import com.balancedbytes.games.ffb.server.DiceInterpreter;
 import com.balancedbytes.games.ffb.server.FantasyFootballServer;
 import com.balancedbytes.games.ffb.server.GameState;
@@ -203,7 +203,7 @@ public class ServerCommandHandlerTalk extends ServerCommandHandler {
   	String talk = pTalkCommand.getTalk();
     String[] commands = talk.split(" +");
     if ((commands != null) && (commands.length > 2)) {
-    	GameOption optionName = new GameOptionFactory().forName(commands[1]);
+    	GameOptionOld optionName = new GameOptionFactoryOld().forName(commands[1]);
     	if (optionName == null) {
     		return;
     	}
@@ -213,7 +213,7 @@ public class ServerCommandHandlerTalk extends ServerCommandHandler {
     	} catch (NumberFormatException pNfe) {
     		return;
     	}
-    	game.getOptions().addOption(new GameOptionValue(optionName, value));
+    	game.getOptions().addOption(new GameOptionValueOld(optionName, value));
       StringBuilder info = new StringBuilder();
       info.append("Setting game option ").append(optionName.getName()).append(" to value ").append(value).append(".");
       getServer().getCommunication().sendPlayerTalk(pGameState, null, info.toString());
@@ -223,13 +223,13 @@ public class ServerCommandHandlerTalk extends ServerCommandHandler {
 
   private void handleOptionsCommand(GameState pGameState, ClientCommandTalk pTalkCommand) {
   	Game game = pGameState.getGame();
-  	GameOption[] optionNames = GameOption.values();
-  	Arrays.sort(optionNames, new Comparator<GameOption>() {
-  		public int compare(GameOption pO1, GameOption pO2) {
+  	GameOptionOld[] optionNames = GameOptionOld.values();
+  	Arrays.sort(optionNames, new Comparator<GameOptionOld>() {
+  		public int compare(GameOptionOld pO1, GameOptionOld pO2) {
   			return pO1.getName().compareTo(pO2.getName());
   		}
 		});
-  	for (GameOption optionName : optionNames) {
+  	for (GameOptionOld optionName : optionNames) {
       StringBuilder info = new StringBuilder();
       info.append("Option ").append(optionName.getName()).append(" = ").append(game.getOptions().getOptionValue(optionName).getValue());
       getServer().getCommunication().sendPlayerTalk(pGameState, null, info.toString());

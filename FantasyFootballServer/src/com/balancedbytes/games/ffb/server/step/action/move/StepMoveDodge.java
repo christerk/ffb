@@ -4,7 +4,6 @@ import java.util.Set;
 
 import com.balancedbytes.games.ffb.DodgeModifier;
 import com.balancedbytes.games.ffb.FieldCoordinate;
-import com.balancedbytes.games.ffb.GameOption;
 import com.balancedbytes.games.ffb.InjuryType;
 import com.balancedbytes.games.ffb.ReRollSource;
 import com.balancedbytes.games.ffb.ReRolledAction;
@@ -16,6 +15,7 @@ import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.model.Team;
+import com.balancedbytes.games.ffb.old.GameOptionOld;
 import com.balancedbytes.games.ffb.report.ReportId;
 import com.balancedbytes.games.ffb.report.ReportSkillRoll;
 import com.balancedbytes.games.ffb.report.ReportSkillUse;
@@ -150,7 +150,7 @@ public class StepMoveDodge extends AbstractStepWithReRoll {
           	getResult().setNextAction(StepAction.NEXT_STEP);
             break;
           case FAILURE:
-          	if (game.getOptions().getOptionValue(GameOption.STAND_FIRM_NO_DROP_ON_FAILED_DODGE).isEnabled()) {
+          	if (game.getOptions().getOptionValue(GameOptionOld.STAND_FIRM_NO_DROP_ON_FAILED_DODGE).isEnabled()) {
           		publishParameter(new StepParameter(StepParameterKey.END_PLAYER_ACTION, true));
             	getResult().setNextAction(StepAction.NEXT_STEP);
           	} else {

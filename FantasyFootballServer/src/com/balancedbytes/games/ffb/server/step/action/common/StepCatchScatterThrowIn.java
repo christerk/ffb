@@ -10,7 +10,6 @@ import com.balancedbytes.games.ffb.CatchScatterThrowInModeFactory;
 import com.balancedbytes.games.ffb.Direction;
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.FieldCoordinateBounds;
-import com.balancedbytes.games.ffb.GameOption;
 import com.balancedbytes.games.ffb.InducementDuration;
 import com.balancedbytes.games.ffb.InjuryType;
 import com.balancedbytes.games.ffb.PlayerChoiceMode;
@@ -29,6 +28,7 @@ import com.balancedbytes.games.ffb.model.AnimationType;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandPlayerChoice;
+import com.balancedbytes.games.ffb.old.GameOptionOld;
 import com.balancedbytes.games.ffb.report.ReportCatchRoll;
 import com.balancedbytes.games.ffb.report.ReportScatterBall;
 import com.balancedbytes.games.ffb.report.ReportSkillUse;
@@ -213,7 +213,7 @@ public class StepCatchScatterThrowIn extends AbstractStepWithReRoll {
         break;
       case FAILED_CATCH:
       case FAILED_PICK_UP:
-      	if ((playerUnderBall != null) && game.getFieldModel().isBallInPlay() && game.getOptions().getOptionValue(GameOption.SPIKED_BALL).isEnabled()) {
+      	if ((playerUnderBall != null) && game.getFieldModel().isBallInPlay() && game.getOptions().getOptionValue(GameOptionOld.SPIKED_BALL).isEnabled()) {
           InjuryResult injuryResultCatcher = UtilInjury.handleInjury(this, InjuryType.STAB, null, playerUnderBall, game.getFieldModel().getBallCoordinate(), null, ApothecaryMode.CATCHER);
           if (injuryResultCatcher.isArmorBroken()) {
             UtilInjury.dropPlayer(this, playerUnderBall);
