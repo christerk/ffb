@@ -194,41 +194,38 @@ public class GameOptions implements IXmlSerializable, IByteArrayReadable, IJsonS
       return null;
     }
     switch (pOptionId) {
-      case OVERTIME:
-        return new GameOptionBoolean(GameOptionId.OVERTIME)
-          .setDefault(false)
-          .setMessageTrue("Game ends after 2nd half.")
-          .setMessageFalse("Game will go into overtime if there is a draw after 2nd half.");
-      case TURNTIME:
-        return new GameOptionInt(GameOptionId.TURNTIME)
-          .setDefault(240)
-          .setMessage("Turntime is $1 sec.");
-      case PETTY_CASH:
-//      PETTY_CASH("pettyCash", 1, null, "Petty Cash is not available."),
-      case INDUCEMENTS:
-//      INDUCEMENTS("inducements", 1, null, "Inducements are not available."),
       case CHECK_OWNERSHIP:
-//      CHECK_OWNERSHIP("checkOwnership", 1, null, "Team Ownership is not checked."),
-      case TEST_MODE:
-//      TEST_MODE("testMode", 0, null, "Game is in TEST mode. No result will be uploaded. See help for available test commands."),
-      case MAX_NR_OF_CARDS:
-//      MAX_NR_OF_CARDS("maxNrOfCards", 5, null, "A maximum of $1 cards can be bought."),
-      case MAX_PLAYERS_ON_FIELD:
-//      MAX_PLAYERS_ON_FIELD("maxPlayersOnField", 11, null, "A maximum of $1 players may be set up on the field."),
-      case MAX_PLAYERS_IN_WIDE_ZONE:
-//      MAX_PLAYERS_IN_WIDE_ZONE("maxPlayersInWideZone", 2, null, "A maximum of $1 players may be set up in a widezone."),
-      case MIN_PLAYERS_ON_LOS:
-//      MIN_PLAYERS_ON_LOS("minPlayersOnLos", 3, null, "A minimum of $1 players must be set up on the line of scrimmage."),
+        return new GameOptionBoolean(GameOptionId.CHECK_OWNERSHIP)
+          .setDefault(true)
+          .setMessageTrue("Team ownership is checked.")
+          .setMessageFalse("Team ownership is not checked.");
       case CLAW_DOES_NOT_STACK:
 //      CLAW_DOES_NOT_STACK("clawDoesNotStack", 0, null, "Claw does not stack with other skills that modify armour rolls."),
       case FOUL_BONUS:
 //      FOUL_BONUS("foulBonus", 0, "foul", "+1 to armour roll for a foul."),
       case FOUL_BONUS_OUTSIDE_TACKLEZONE:
 //      FOUL_BONUS_OUTSIDE_TACKLEZONE("foulBonusOutsideTacklezone", 0, "foul", "+1 to armour roll for a foul, if fouler is not in an opposing tacklezone."),
-      case FREE_INDUCEMENT_CASH:
-//      FREE_INDUCEMENT_CASH("freeInducementCash", 0, null, "Both coaches get $1 extra gold to buy inducements with."),
       case FREE_CARD_CASH:
 //      FREE_CARD_CASH("freeCardCash", 0, null, "Both coaches get $1 extra gold to buy cards with."),
+      case FREE_INDUCEMENT_CASH:
+//      FREE_INDUCEMENT_CASH("freeInducementCash", 0, null, "Both coaches get $1 extra gold to buy inducements with."),
+      case INDUCEMENTS:
+//      INDUCEMENTS("inducements", 1, null, "Inducements are not available."),
+      case MAX_NR_OF_CARDS:
+//      MAX_NR_OF_CARDS("maxNrOfCards", 5, null, "A maximum of $1 cards can be bought."),
+      case MAX_PLAYERS_IN_WIDE_ZONE:
+//      MAX_PLAYERS_IN_WIDE_ZONE("maxPlayersInWideZone", 2, null, "A maximum of $1 players may be set up in a widezone."),
+      case MAX_PLAYERS_ON_FIELD:
+//      MAX_PLAYERS_ON_FIELD("maxPlayersOnField", 11, null, "A maximum of $1 players may be set up on the field."),
+      case MIN_PLAYERS_ON_LOS:
+//      MIN_PLAYERS_ON_LOS("minPlayersOnLos", 3, null, "A minimum of $1 players must be set up on the line of scrimmage."),
+      case OVERTIME:
+        return new GameOptionBoolean(GameOptionId.OVERTIME)
+          .setDefault(false)
+          .setMessageTrue("Game ends after 2nd half.")
+          .setMessageFalse("Game will go into overtime if there is a draw after 2nd half.");
+      case PETTY_CASH:
+//      PETTY_CASH("pettyCash", 1, null, "Petty Cash is not available."),
       case PILING_ON_ARMOR_ONLY:
 //      PILING_ON_ARMOR_ONLY("pilingOnArmorOnly", 0, "pilingOn", "Piling On lets you re-roll armour-rolls only."),
       case PILING_ON_DOES_NOT_STACK:
@@ -237,16 +234,6 @@ public class GameOptions implements IXmlSerializable, IByteArrayReadable, IJsonS
 //      PILING_ON_INJURY_ONLY("pilingOnInjuryOnly", 0, "pilingOn", "Piling On lets you re-roll injury-rolls only."),
       case PILING_ON_TO_KO_ON_DOUBLE:
 //      PILING_ON_TO_KO_ON_DOUBLE("pilingOnToKoOnDouble", 0, "pilingOn", "Piling On player knocks himself out when rolling a double on armour or injury."),
-      case RIGHT_STUFF_CANCELS_TACKLE:
-//      RIGHT_STUFF_CANCELS_TACKLE("rightStuffCancelsTackle", 0, null, "Right Stuff prevents Tackle from negating Dodge for Pow/Pushback."),
-      case SNEAKY_GIT_AS_FOUL_GUARD:
-//      SNEAKY_GIT_AS_FOUL_GUARD("sneakyGitAsFoulGuard", 0, "sneakyGit", "Sneaky Git works like Guard for fouling assists."),
-      case SNEAKY_GIT_BAN_TO_KO:
-//      SNEAKY_GIT_BAN_TO_KO("sneakyGitBanToKo", 0, "sneakyGit", "Sneaky Git players that get banned are sent to the KO box instead."),
-      case STAND_FIRM_NO_DROP_ON_FAILED_DODGE:
-//      STAND_FIRM_NO_DROP_ON_FAILED_DODGE("standFirmNoDropOnFailedDodge", 0, null, "Stand Firm players do not drop on a failed dodge roll but end their move instead."),
-      case SPIKED_BALL:
-//      SPIKED_BALL("spikedBall", 0, null, "A Spiked Ball is used for play. Any failed Pickup or Catch roll results in the player being stabbed.");
       case PITCH_URL_BLIZZARD:
         return new GameOptionString(GameOptionId.PITCH_URL_BLIZZARD);
       case PITCH_URL_HEAT:
@@ -257,6 +244,22 @@ public class GameOptions implements IXmlSerializable, IByteArrayReadable, IJsonS
         return new GameOptionString(GameOptionId.PITCH_URL_RAIN);
       case PITCH_URL_SUNNY:
         return new GameOptionString(GameOptionId.PITCH_URL_SUNNY);
+      case RIGHT_STUFF_CANCELS_TACKLE:
+//      RIGHT_STUFF_CANCELS_TACKLE("rightStuffCancelsTackle", 0, null, "Right Stuff prevents Tackle from negating Dodge for Pow/Pushback."),
+      case SNEAKY_GIT_AS_FOUL_GUARD:
+//      SNEAKY_GIT_AS_FOUL_GUARD("sneakyGitAsFoulGuard", 0, "sneakyGit", "Sneaky Git works like Guard for fouling assists."),
+      case SNEAKY_GIT_BAN_TO_KO:
+//      SNEAKY_GIT_BAN_TO_KO("sneakyGitBanToKo", 0, "sneakyGit", "Sneaky Git players that get banned are sent to the KO box instead."),
+      case SPIKED_BALL:
+//      SPIKED_BALL("spikedBall", 0, null, "A Spiked Ball is used for play. Any failed Pickup or Catch roll results in the player being stabbed.");
+      case STAND_FIRM_NO_DROP_ON_FAILED_DODGE:
+//      STAND_FIRM_NO_DROP_ON_FAILED_DODGE("standFirmNoDropOnFailedDodge", 0, null, "Stand Firm players do not drop on a failed dodge roll but end their move instead."),
+      case TEST_MODE:
+//      TEST_MODE("testMode", 0, null, "Game is in TEST mode. No result will be uploaded. See help for available test commands."),
+      case TURNTIME:
+        return new GameOptionInt(GameOptionId.TURNTIME)
+          .setDefault(240)
+          .setMessage("Turntime is $1 sec.");
       default:
         return null;
     }
