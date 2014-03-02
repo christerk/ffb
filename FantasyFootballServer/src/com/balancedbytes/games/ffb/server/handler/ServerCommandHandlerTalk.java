@@ -26,9 +26,10 @@ import com.balancedbytes.games.ffb.model.PlayerResult;
 import com.balancedbytes.games.ffb.model.Team;
 import com.balancedbytes.games.ffb.net.NetCommandId;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandTalk;
-import com.balancedbytes.games.ffb.old.GameOptionOld;
-import com.balancedbytes.games.ffb.old.GameOptionFactoryOld;
-import com.balancedbytes.games.ffb.old.GameOptionValueOld;
+import com.balancedbytes.games.ffb.option.GameOptionFactory;
+import com.balancedbytes.games.ffb.option.GameOptionId;
+import com.balancedbytes.games.ffb.option.GameOptionIdFactory;
+import com.balancedbytes.games.ffb.option.IGameOption;
 import com.balancedbytes.games.ffb.server.DiceInterpreter;
 import com.balancedbytes.games.ffb.server.FantasyFootballServer;
 import com.balancedbytes.games.ffb.server.GameState;
@@ -203,19 +204,18 @@ public class ServerCommandHandlerTalk extends ServerCommandHandler {
   	String talk = pTalkCommand.getTalk();
     String[] commands = talk.split(" +");
     if ((commands != null) && (commands.length > 2)) {
-    	GameOptionOld optionName = new GameOptionFactoryOld().forName(commands[1]);
-    	if (optionName == null) {
+    	GameOptionId optionId = new GameOptionIdFactory().forName(commands[1]);
+    	if (optionId == null) {
     		return;
     	}
-    	int value = 0;
-    	try {
-    		value = Integer.parseInt(commands[2]);
-    	} catch (NumberFormatException pNfe) {
-    		return;
+    	IGameOption gameOption = new GameOptionFactory().createGameOption(optionId);
+    	if (gameOption == null) {
+    	  return;
     	}
-    	game.getOptions().addOption(new GameOptionValueOld(optionName, value));
+    	gameOption.setValue(commands[2]);
+    	game.getOptions().addOption(gameOption);
       StringBuilder info = new StringBuilder();
-      info.append("Setting game option ").append(optionName.getName()).append(" to value ").append(value).append(".");
+      info.append("Setting game option ").append(gameOption.getId().getName()).append(" to value ").append(gameOption.getValueAsString()).append(".");
       getServer().getCommunication().sendPlayerTalk(pGameState, null, info.toString());
     	UtilGame.syncGameModel(pGameState, null, null, null);
     }
@@ -223,15 +223,15 @@ public class ServerCommandHandlerTalk extends ServerCommandHandler {
 
   private void handleOptionsCommand(GameState pGameState, ClientCommandTalk pTalkCommand) {
   	Game game = pGameState.getGame();
-  	GameOptionOld[] optionNames = GameOptionOld.values();
-  	Arrays.sort(optionNames, new Comparator<GameOptionOld>() {
-  		public int compare(GameOptionOld pO1, GameOptionOld pO2) {
-  			return pO1.getName().compareTo(pO2.getName());
+  	IGameOption[] gameOptions = game.getOptions().getOptions();
+  	Arrays.sort(gameOptions, new Comparator<IGameOption>() {
+  		public int compare(IGameOption pO1, IGameOption pO2) {
+  			return pO1.getId().getName().compareTo(pO2.getId().getName());
   		}
 		});
-  	for (GameOptionOld optionName : optionNames) {
+  	for (IGameOption option : gameOptions) {
       StringBuilder info = new StringBuilder();
-      info.append("Option ").append(optionName.getName()).append(" = ").append(game.getOptions().getOptionValue(optionName).getValue());
+      info.append("Option ").append(option.getId().getName()).append(" = ").append(option.getValueAsString());
       getServer().getCommunication().sendPlayerTalk(pGameState, null, info.toString());
   	}
   }

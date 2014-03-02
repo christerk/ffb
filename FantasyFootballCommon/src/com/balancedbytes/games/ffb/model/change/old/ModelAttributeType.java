@@ -34,7 +34,12 @@ import com.balancedbytes.games.ffb.WeatherFactory;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.dialog.DialogId;
 import com.balancedbytes.games.ffb.dialog.DialogIdFactory;
+import com.balancedbytes.games.ffb.dialog.DialogParameterFactory;
 import com.balancedbytes.games.ffb.old.GameOptionValueOld;
+import com.balancedbytes.games.ffb.option.GameOptionFactory;
+import com.balancedbytes.games.ffb.option.GameOptionId;
+import com.balancedbytes.games.ffb.option.GameOptionIdFactory;
+import com.balancedbytes.games.ffb.option.IGameOption;
 import com.balancedbytes.games.ffb.util.DateTool;
 import com.balancedbytes.games.ffb.util.StringTool;
 import com.balancedbytes.games.ffb.xml.UtilXml;
@@ -342,13 +347,10 @@ public enum ModelAttributeType {
       case DIALOG_ID:
         return new DialogIdFactory().forId(pByteArray.getByte());
       case DIALOG_PARAMETER:
-        IDialogParameter dialogParameter = null;
         DialogId dialogId = new DialogIdFactory().forId(pByteArray.getByte());
-        if (dialogId != null) {
-          dialogParameter = dialogId.createDialogParameter();
-          if (dialogParameter != null) {
-            dialogParameter.initFrom(pByteArray);
-          }
+        IDialogParameter dialogParameter = new DialogParameterFactory().createDialogParameter(dialogId);
+        if (dialogParameter != null) {
+          dialogParameter.initFrom(pByteArray);
         }
         return dialogParameter;
       case PLAYER_STATE:
@@ -430,7 +432,16 @@ public enum ModelAttributeType {
       		gameOption = new GameOptionValueOld();
       		gameOption.initFrom(pByteArray);
       	}
-      	return gameOption;
+      	if (gameOption != null) {
+        	// convert to new model
+        	GameOptionId optionId = new GameOptionIdFactory().forName(gameOption.getOption().getName());
+        	IGameOption gameOptionNew = new GameOptionFactory().createGameOption(optionId);
+        	if (gameOptionNew != null) {
+        	  gameOptionNew.setValue(Integer.toString(gameOption.getValue()));
+        	}
+        	return gameOptionNew;
+      	}
+      	return null;
       default:
         throw new IllegalStateException("Unhandled type " + this + ".");
     }

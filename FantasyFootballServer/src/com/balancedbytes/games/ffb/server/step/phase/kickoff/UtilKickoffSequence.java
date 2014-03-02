@@ -10,7 +10,8 @@ import com.balancedbytes.games.ffb.dialog.DialogSetupErrorParameter;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.model.Team;
-import com.balancedbytes.games.ffb.old.GameOptionOld;
+import com.balancedbytes.games.ffb.option.GameOptionId;
+import com.balancedbytes.games.ffb.option.UtilGameOption;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.util.UtilDialog;
 import com.balancedbytes.games.ffb.util.UtilPlayer;
@@ -52,7 +53,7 @@ public class UtilKickoffSequence {
         playersOnLos++;
       }
     }
-    int maxPlayersOnField = game.getOptions().getOptionValue(GameOptionOld.MAX_PLAYERS_ON_FIELD).getValue();
+    int maxPlayersOnField = UtilGameOption.getIntOption(game, GameOptionId.MAX_PLAYERS_ON_FIELD);
     if (playersOnField > maxPlayersOnField) {
       messageList.add("You placed " + playersOnField + " Players on the field. Maximum are " + maxPlayersOnField + " players.");
     }
@@ -63,14 +64,14 @@ public class UtilKickoffSequence {
         messageList.add("You placed " + playersOnField + " Players on the field. You have to put all players on the field.");
       }
     }
-    int maxPlayersInWideZone = game.getOptions().getOptionValue(GameOptionOld.MAX_PLAYERS_IN_WIDE_ZONE).getValue();
+    int maxPlayersInWideZone = UtilGameOption.getIntOption(game, GameOptionId.MAX_PLAYERS_IN_WIDE_ZONE);
     if (playersInLowerWideZone > maxPlayersInWideZone) {
       messageList.add("You placed " + playersInLowerWideZone + " Players in the lower wide zone. Only " + maxPlayersInWideZone + " allowed there.");
     }
     if (playersInUpperWideZone > maxPlayersInWideZone) {
       messageList.add("You placed " + playersInUpperWideZone + " Players in the upper wide zone. Only " + maxPlayersInWideZone + " allowed there.");
     }
-    int minPlayersOnLos = game.getOptions().getOptionValue(GameOptionOld.MIN_PLAYERS_ON_LOS).getValue();
+    int minPlayersOnLos = UtilGameOption.getIntOption(game, GameOptionId.MIN_PLAYERS_ON_LOS);
     if ((playersOnLos < minPlayersOnLos) && (availablePlayers >= minPlayersOnLos)) {
       messageList.add("You placed " + playersOnLos + " Players on the Line of Scrimmage. You have to put " + minPlayersOnLos + " there.");
     } else {

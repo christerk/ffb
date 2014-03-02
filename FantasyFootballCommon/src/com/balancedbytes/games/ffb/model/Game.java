@@ -554,10 +554,11 @@ public class Game extends ModelChangeObservable implements IByteArrayReadable, I
     setTesting(pByteArray.getBoolean());
     
     DialogId dialogId = new DialogIdFactory().forId(pByteArray.getByte());
-    if (dialogId != null) {
-      setDialogParameter(dialogId.createDialogParameter());
-      getDialogParameter().initFrom(pByteArray);
+    IDialogParameter dialogParameter = new DialogParameterFactory().createDialogParameter(dialogId);
+    if (dialogParameter != null) {
+      dialogParameter.initFrom(pByteArray);
     }
+    setDialogParameter(dialogParameter);
     
     setTurnMode(new TurnModeFactory().forId(pByteArray.getByte()));
 

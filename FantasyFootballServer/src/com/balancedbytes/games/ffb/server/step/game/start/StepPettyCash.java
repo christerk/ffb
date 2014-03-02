@@ -6,7 +6,8 @@ import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.GameResult;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandPettyCash;
-import com.balancedbytes.games.ffb.old.GameOptionOld;
+import com.balancedbytes.games.ffb.option.GameOptionId;
+import com.balancedbytes.games.ffb.option.UtilGameOption;
 import com.balancedbytes.games.ffb.report.ReportPettyCash;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.IServerJsonOption;
@@ -78,7 +79,7 @@ public final class StepPettyCash extends AbstractStep {
     GameResult gameResult = game.getGameResult();
     gameResult.getTeamResultHome().setTeamValue(Math.max(gameResult.getTeamResultHome().getTeamValue(), game.getTeamHome().getTeamValue())); 
     gameResult.getTeamResultAway().setTeamValue(Math.max(gameResult.getTeamResultAway().getTeamValue(), game.getTeamAway().getTeamValue())); 
-    if (game.getOptions().getOptionValue(GameOptionOld.PETTY_CASH).isEnabled()) {
+    if (UtilGameOption.isOptionEnabled(game, GameOptionId.PETTY_CASH)) {
       if (game.getTeamHome().getTreasury() < 50000 || (fPettyCashSelectedAway && ((game.getTeamAway().getTeamValue() - game.getTeamHome().getTeamValue()) > game.getTeamHome().getTreasury())) ) {
       	fPettyCashSelectedHome = true;
       }

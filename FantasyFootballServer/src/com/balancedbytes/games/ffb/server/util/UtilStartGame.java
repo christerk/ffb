@@ -8,7 +8,8 @@ import org.eclipse.jetty.websocket.api.Session;
 import com.balancedbytes.games.ffb.ClientMode;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.net.ServerStatus;
-import com.balancedbytes.games.ffb.old.GameOptionOld;
+import com.balancedbytes.games.ffb.option.GameOptionId;
+import com.balancedbytes.games.ffb.option.UtilGameOption;
 import com.balancedbytes.games.ffb.server.FantasyFootballServer;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.db.DbStatementId;
@@ -99,7 +100,7 @@ public class UtilStartGame {
     Game game = pGameState.getGame();
     FantasyFootballServer server = pGameState.getServer();
     boolean ownershipOk = true;
-    if (!game.isTesting() && game.getOptions().getOptionValue(GameOptionOld.CHECK_OWNERSHIP).isEnabled()) {
+    if (!game.isTesting() && UtilGameOption.isOptionEnabled(game, GameOptionId.CHECK_OWNERSHIP)) {
       if (!server.getSessionManager().isHomeCoach(pGameState, game.getTeamHome().getCoach())) {
         ownershipOk = false;
         server.getCommunication().sendStatus(server.getSessionManager().getSessionOfHomeCoach(pGameState), ServerStatus.ERROR_NOT_YOUR_TEAM, null);

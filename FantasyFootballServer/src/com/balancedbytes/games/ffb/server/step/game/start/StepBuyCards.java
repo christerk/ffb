@@ -11,7 +11,8 @@ import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.GameResult;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandBuyCard;
-import com.balancedbytes.games.ffb.old.GameOptionOld;
+import com.balancedbytes.games.ffb.option.GameOptionId;
+import com.balancedbytes.games.ffb.option.UtilGameOption;
 import com.balancedbytes.games.ffb.report.ReportCardsBought;
 import com.balancedbytes.games.ffb.server.CardDeck;
 import com.balancedbytes.games.ffb.server.GameState;
@@ -101,7 +102,7 @@ public final class StepBuyCards extends AbstractStep {
   private void executeStep() {
     Game game = getGameState().getGame();
     GameResult gameResult = game.getGameResult();
-    if (game.getOptions().getOptionValue(GameOptionOld.MAX_NR_OF_CARDS).getValue() == 0) {
+    if (UtilGameOption.getIntOption(game, GameOptionId.MAX_NR_OF_CARDS) == 0) {
       calculateInducementGold();
       publishParameter(new StepParameter(StepParameterKey.INDUCEMENT_GOLD_HOME, fInducementGoldHome));
       publishParameter(new StepParameter(StepParameterKey.INDUCEMENT_GOLD_AWAY, fInducementGoldAway));
@@ -124,8 +125,8 @@ public final class StepBuyCards extends AbstractStep {
     } else {
       if (!fCardsSelectedHome && !fCardsSelectedAway) {
         calculateInducementGold();
-        fInducementGoldHome += game.getOptions().getOptionValue(GameOptionOld.FREE_CARD_CASH).getValue();
-        fInducementGoldAway += game.getOptions().getOptionValue(GameOptionOld.FREE_CARD_CASH).getValue();
+        fInducementGoldHome += UtilGameOption.getIntOption(game, GameOptionId.FREE_CARD_CASH);
+        fInducementGoldAway += UtilGameOption.getIntOption(game, GameOptionId.FREE_CARD_CASH);
       }
       if (fInducementGoldHome < CardType.getMinimumPrice()) {
         fCardsSelectedHome = true;
@@ -141,7 +142,7 @@ public final class StepBuyCards extends AbstractStep {
           totalCostHome += card.getType().getPrice();
         }
         gameResult.getTeamResultHome().setPettyCashUsed(
-            Math.max(0, totalCostHome - game.getOptions().getOptionValue(GameOptionOld.FREE_CARD_CASH).getValue()));
+            Math.max(0, totalCostHome - UtilGameOption.getIntOption(game, GameOptionId.FREE_CARD_CASH)));
         getResult().addReport(new ReportCardsBought(game.getTeamHome().getId(), cardsHome.length, totalCostHome));
       }
       if (fCardsSelectedAway && !fReportedAway) {
@@ -152,7 +153,7 @@ public final class StepBuyCards extends AbstractStep {
           totalCostAway += card.getType().getPrice();
         }
         gameResult.getTeamResultAway().setPettyCashUsed(
-            Math.max(0, totalCostAway - game.getOptions().getOptionValue(GameOptionOld.FREE_CARD_CASH).getValue()));
+            Math.max(0, totalCostAway - UtilGameOption.getIntOption(game, GameOptionId.FREE_CARD_CASH)));
         getResult().addReport(new ReportCardsBought(game.getTeamAway().getId(), cardsAway.length, totalCostAway));
       }
       if (!fCardsSelectedHome && !fCardsSelectedAway) {
@@ -169,10 +170,10 @@ public final class StepBuyCards extends AbstractStep {
         UtilDialog.showDialog(getGameState(), createDialogParameter(game.getTeamAway().getId(), fInducementGoldAway));
       } else {
         fInducementGoldHome = Math.max(0,
-            fInducementGoldHome - game.getOptions().getOptionValue(GameOptionOld.FREE_CARD_CASH).getValue());
+            fInducementGoldHome - UtilGameOption.getIntOption(game, GameOptionId.FREE_CARD_CASH));
         publishParameter(new StepParameter(StepParameterKey.INDUCEMENT_GOLD_HOME, fInducementGoldHome));
         fInducementGoldAway = Math.max(0,
-            fInducementGoldAway - game.getOptions().getOptionValue(GameOptionOld.FREE_CARD_CASH).getValue());
+            fInducementGoldAway - UtilGameOption.getIntOption(game, GameOptionId.FREE_CARD_CASH));
         publishParameter(new StepParameter(StepParameterKey.INDUCEMENT_GOLD_AWAY, fInducementGoldAway));
         getResult().setNextAction(StepAction.NEXT_STEP);
       }
@@ -205,7 +206,7 @@ public final class StepBuyCards extends AbstractStep {
   }
 
   private DialogBuyCardsParameter createDialogParameter(String pTeamId, int pAvailableGold) {
-    int availableCards = getGameState().getGame().getOptions().getOptionValue(GameOptionOld.MAX_NR_OF_CARDS).getValue();
+    int availableCards = UtilGameOption.getIntOption(getGameState().getGame(), GameOptionId.MAX_NR_OF_CARDS);
     DialogBuyCardsParameter dialogParameter = new DialogBuyCardsParameter(pTeamId, availableCards, pAvailableGold);
     for (CardType type : fDeckByType.keySet()) {
       CardDeck deck = fDeckByType.get(type);

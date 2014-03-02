@@ -6,24 +6,23 @@ import com.balancedbytes.games.ffb.util.StringTool;
  * 
  * @author Kalimar
  */
-public class GameOptionInt implements IGameOption {
+public class GameOptionInt extends GameOptionAbstract {
   
-  private GameOptionId fId;
   private int fDefault;
   private int fValue;
   private String fMessage;
 
   public GameOptionInt(GameOptionId pId) {
-    fId = pId;
+    super(pId);
   }
 
-  @Override
-  public GameOptionId getId() {
-    return fId;
+  protected int getDefault() {
+    return fDefault;
   }
   
-  private int getDefault() {
-    return fDefault;
+  @Override
+  protected String getDefaultAsString() {
+    return Integer.toString(getDefault());
   }
 
   public GameOptionInt setDefault(int pDefault) {
@@ -54,11 +53,6 @@ public class GameOptionInt implements IGameOption {
     return this;
   }
 
-  @Override
-  public boolean isChanged() {
-    return (getDefault() != getValue());
-  }
-
   public GameOptionInt setMessage(String pMessage) {
     fMessage = pMessage;
     return this;
@@ -67,12 +61,6 @@ public class GameOptionInt implements IGameOption {
   @Override
   public String getDisplayMessage() {
     return StringTool.bind(fMessage, StringTool.formatThousands(getValue()));
-  }
-
-  @Override
-  public GameOptionInt reset() {
-    setValue(getDefault());
-    return this;
   }
 
 }

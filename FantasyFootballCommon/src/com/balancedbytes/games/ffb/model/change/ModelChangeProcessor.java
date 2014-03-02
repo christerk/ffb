@@ -27,7 +27,7 @@ import com.balancedbytes.games.ffb.model.InducementSet;
 import com.balancedbytes.games.ffb.model.PlayerResult;
 import com.balancedbytes.games.ffb.model.TeamResult;
 import com.balancedbytes.games.ffb.model.TurnData;
-import com.balancedbytes.games.ffb.old.GameOptionValueOld;
+import com.balancedbytes.games.ffb.option.IGameOption;
 
 /**
  * 
@@ -233,7 +233,7 @@ public class ModelChangeProcessor {
   			return true;
   			
   		case GAME_OPTIONS_ADD_OPTION:
-  			pGame.getOptions().addOption((GameOptionValueOld) pModelChange.getValue());
+  			pGame.getOptions().addOption((IGameOption) pModelChange.getValue());
   			return true;
   			
   		case INDUCEMENT_SET_ACTIVATE_CARD:

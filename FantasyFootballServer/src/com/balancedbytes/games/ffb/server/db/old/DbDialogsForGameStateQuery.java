@@ -11,6 +11,7 @@ import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
 import com.balancedbytes.games.ffb.dialog.DialogId;
 import com.balancedbytes.games.ffb.dialog.DialogIdFactory;
+import com.balancedbytes.games.ffb.dialog.DialogParameterFactory;
 import com.balancedbytes.games.ffb.server.FantasyFootballServer;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.db.DbStatement;
@@ -88,11 +89,11 @@ public class DbDialogsForGameStateQuery extends DbStatement {
       } catch (SQLException pSqlE) {
         throw new FantasyFootballException(pSqlE);
       }
-      if (dialogId != null) {
-        IDialogParameter dialogParameter = dialogId.createDialogParameter();
+      IDialogParameter dialogParameter = new DialogParameterFactory().createDialogParameter(dialogId);
+      if (dialogParameter != null) {
         dialogParameter.initFrom(new ByteArray(parameterByteList.toBytes()));
-        pGameState.getGame().setDialogParameter(dialogParameter);
       }
+      pGameState.getGame().setDialogParameter(dialogParameter);
     }
   }
     

@@ -10,7 +10,8 @@ import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.GameResult;
 import com.balancedbytes.games.ffb.model.PlayerResult;
-import com.balancedbytes.games.ffb.old.GameOptionOld;
+import com.balancedbytes.games.ffb.option.GameOptionId;
+import com.balancedbytes.games.ffb.option.UtilGameOption;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.IServerJsonOption;
 import com.balancedbytes.games.ffb.server.net.ReceivedCommand;
@@ -107,7 +108,7 @@ public class StepEjectPlayer extends AbstractStep {
     ActingPlayer actingPlayer = game.getActingPlayer();
     PlayerState playerState = game.getFieldModel().getPlayerState(actingPlayer.getPlayer());
     PlayerResult attackerResult = gameResult.getPlayerResult(actingPlayer.getPlayer()); 
-    if (UtilCards.hasSkill(game, actingPlayer, Skill.SNEAKY_GIT) && game.getOptions().getOptionValue(GameOptionOld.SNEAKY_GIT_BAN_TO_KO).isEnabled()) {
+    if (UtilCards.hasSkill(game, actingPlayer, Skill.SNEAKY_GIT) && UtilGameOption.isOptionEnabled(game, GameOptionId.SNEAKY_GIT_BAN_TO_KO)) {
     	game.getFieldModel().setPlayerState(actingPlayer.getPlayer(), playerState.changeBase(PlayerState.KNOCKED_OUT));
     } else {
     	game.getFieldModel().setPlayerState(actingPlayer.getPlayer(), playerState.changeBase(PlayerState.BANNED));

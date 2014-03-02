@@ -23,7 +23,8 @@ import com.balancedbytes.games.ffb.model.RosterPosition;
 import com.balancedbytes.games.ffb.model.Team;
 import com.balancedbytes.games.ffb.model.TurnData;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandBuyInducements;
-import com.balancedbytes.games.ffb.old.GameOptionOld;
+import com.balancedbytes.games.ffb.option.GameOptionId;
+import com.balancedbytes.games.ffb.option.UtilGameOption;
 import com.balancedbytes.games.ffb.report.ReportDoubleHiredStarPlayer;
 import com.balancedbytes.games.ffb.report.ReportInducementsBought;
 import com.balancedbytes.games.ffb.server.FantasyFootballServer;
@@ -115,7 +116,7 @@ public final class StepBuyInducements extends AbstractStep {
 	          addStarPlayers(game.getTeamHome(), buyInducementsCommand.getStarPlayerPositionIds());
 	          addMercenaries(game.getTeamHome(), buyInducementsCommand.getMercenaryPositionIds(), buyInducementsCommand.getMercenarySkills());
 	          fGoldUsedHome = fInducementGoldHome - buyInducementsCommand.getAvailableGold();
-	          int pettyCashUsed = Math.max(0, fGoldUsedHome - game.getOptions().getOptionValue(GameOptionOld.FREE_INDUCEMENT_CASH).getValue());
+	          int pettyCashUsed = Math.max(0, fGoldUsedHome - UtilGameOption.getIntOption(game, GameOptionId.FREE_INDUCEMENT_CASH));
 	          gameResult.getTeamResultHome().setPettyCashUsed(gameResult.getTeamResultHome().getPettyCashUsed() + pettyCashUsed);
 	          fInducementsSelectedHome = true;
 	        } else {
@@ -123,7 +124,7 @@ public final class StepBuyInducements extends AbstractStep {
 	          addStarPlayers(game.getTeamAway(), buyInducementsCommand.getStarPlayerPositionIds());
 	          addMercenaries(game.getTeamAway(), buyInducementsCommand.getMercenaryPositionIds(), buyInducementsCommand.getMercenarySkills());
 	          fGoldUsedAway = fInducementGoldAway - buyInducementsCommand.getAvailableGold();
-	          int pettyCashUsed = Math.max(0, fGoldUsedAway - game.getOptions().getOptionValue(GameOptionOld.FREE_INDUCEMENT_CASH).getValue());
+	          int pettyCashUsed = Math.max(0, fGoldUsedAway - UtilGameOption.getIntOption(game, GameOptionId.FREE_INDUCEMENT_CASH));
 	          gameResult.getTeamResultAway().setPettyCashUsed(gameResult.getTeamResultAway().getPettyCashUsed() + pettyCashUsed);
 	          fInducementsSelectedAway = true;
 	        }
@@ -147,10 +148,10 @@ public final class StepBuyInducements extends AbstractStep {
     GameResult gameResult = game.getGameResult();
     int homeTV = gameResult.getTeamResultHome().getTeamValue();
     int awayTV = gameResult.getTeamResultAway().getTeamValue();
-    if (game.getOptions().getOptionValue(GameOptionOld.INDUCEMENTS).isEnabled()) {
+    if (UtilGameOption.isOptionEnabled(game, GameOptionId.INDUCEMENTS)) {
       if (!fInducementsSelectedHome && !fInducementsSelectedAway) {
-    	  fInducementGoldHome += game.getOptions().getOptionValue(GameOptionOld.FREE_INDUCEMENT_CASH).getValue();
-    	  fInducementGoldAway += game.getOptions().getOptionValue(GameOptionOld.FREE_INDUCEMENT_CASH).getValue();
+    	  fInducementGoldHome += UtilGameOption.getIntOption(game, GameOptionId.FREE_INDUCEMENT_CASH);
+    	  fInducementGoldAway += UtilGameOption.getIntOption(game, GameOptionId.FREE_INDUCEMENT_CASH);
       }
       if (fInducementGoldHome < MINIMUM_PETTY_CASH_FOR_INDUCEMENTS) {
         fInducementsSelectedHome = true;

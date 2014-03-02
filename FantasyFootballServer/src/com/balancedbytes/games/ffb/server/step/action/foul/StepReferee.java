@@ -7,7 +7,8 @@ import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.Game;
-import com.balancedbytes.games.ffb.old.GameOptionOld;
+import com.balancedbytes.games.ffb.option.GameOptionId;
+import com.balancedbytes.games.ffb.option.UtilGameOption;
 import com.balancedbytes.games.ffb.report.ReportReferee;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.IServerJsonOption;
@@ -108,7 +109,7 @@ public class StepReferee extends AbstractStep {
 	    if (!UtilCards.isCardActive(game, Card.BLATANT_FOUL)
 	      && (!UtilCards.hasSkill(game, actingPlayer, Skill.SNEAKY_GIT)
 	    	|| fInjuryResultDefender.isArmorBroken()
-	    	|| ((UtilCards.hasSkill(game, actingPlayer, Skill.SNEAKY_GIT) && game.getOptions().getOptionValue(GameOptionOld.SNEAKY_GIT_BAN_TO_KO).isEnabled())))) {
+	    	|| ((UtilCards.hasSkill(game, actingPlayer, Skill.SNEAKY_GIT) && UtilGameOption.isOptionEnabled(game, GameOptionId.SNEAKY_GIT_BAN_TO_KO))))) {
 	      int[] armorRoll = fInjuryResultDefender.getArmorRoll();
 	      refereeSpotsFoul = (armorRoll[0] == armorRoll[1]);
 	    }

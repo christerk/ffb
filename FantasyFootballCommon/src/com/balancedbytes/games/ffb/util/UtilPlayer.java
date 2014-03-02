@@ -18,7 +18,8 @@ import com.balancedbytes.games.ffb.model.FieldModel;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.model.Team;
-import com.balancedbytes.games.ffb.old.GameOptionOld;
+import com.balancedbytes.games.ffb.option.GameOptionId;
+import com.balancedbytes.games.ffb.option.UtilGameOption;
 
 /**
  * 
@@ -190,7 +191,7 @@ public class UtilPlayer {
       if (offensiveAssist != pAttacker) {
         FieldCoordinate coordinateAssist = pGame.getFieldModel().getPlayerCoordinate(offensiveAssist);
         if ((findAdjacentPlayersWithTacklezones(pGame, pDefender.getTeam(), coordinateAssist, false).length < 1)
-        	|| (pGame.getOptions().getOptionValue(GameOptionOld.SNEAKY_GIT_AS_FOUL_GUARD).isEnabled() && UtilCards.hasSkill(pGame, offensiveAssist, Skill.SNEAKY_GIT))) {
+        	|| (UtilGameOption.isOptionEnabled(pGame, GameOptionId.SNEAKY_GIT_AS_FOUL_GUARD) && UtilCards.hasSkill(pGame, offensiveAssist, Skill.SNEAKY_GIT))) {
           foulAssists++;
         }
       }

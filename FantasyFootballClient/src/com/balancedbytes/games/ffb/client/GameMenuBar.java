@@ -45,13 +45,12 @@ import com.balancedbytes.games.ffb.client.dialog.IDialogCloseListener;
 import com.balancedbytes.games.ffb.client.ui.BoxComponent;
 import com.balancedbytes.games.ffb.dialog.DialogId;
 import com.balancedbytes.games.ffb.model.Game;
-import com.balancedbytes.games.ffb.model.GameOptions;
 import com.balancedbytes.games.ffb.model.InducementSet;
 import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.model.PlayerResult;
 import com.balancedbytes.games.ffb.model.Team;
-import com.balancedbytes.games.ffb.old.GameOptionOld;
-import com.balancedbytes.games.ffb.old.GameOptionValueOld;
+import com.balancedbytes.games.ffb.option.GameOptionId;
+import com.balancedbytes.games.ffb.option.IGameOption;
 import com.balancedbytes.games.ffb.util.ArrayTool;
 import com.balancedbytes.games.ffb.util.StringTool;
 
@@ -616,11 +615,10 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
   
   public void updateGameOptions() {
   	fGameOptionsMenu.removeAll();
-  	GameOptions gameOptions = getClient().getGame().getOptions();
-  	GameOptionValueOld[] optionValues = gameOptions.getOptionValues();
-  	Arrays.sort(optionValues, new Comparator<GameOptionValueOld>() {
-  		public int compare(GameOptionValueOld pO1, GameOptionValueOld pO2) {
-  			return pO1.getOption().getName().compareTo(pO2.getOption().getName());
+  	IGameOption[] gameOptions = getClient().getGame().getOptions().getOptions();
+  	Arrays.sort(gameOptions, new Comparator<IGameOption>() {
+  		public int compare(IGameOption pO1, IGameOption pO2) {
+  			return pO1.getId().getName().compareTo(pO2.getId().getName());
   		}
 		});
   	int optionsAdded = 0;
@@ -629,10 +627,10 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
       fGameOptionsMenu.add(optionItem);
       optionsAdded++;
   	}
-  	for (GameOptionValueOld optionValue : gameOptions.getOptionValues()) {
-  		if (optionValue.isChanged() && (optionValue.getOption() != GameOptionOld.TEST_MODE)) {
+  	for (IGameOption option : gameOptions) {
+  		if (option.isChanged() && (option.getId() != GameOptionId.TEST_MODE)) {
   	  	StringBuilder optionText = new StringBuilder();
-  			optionText.append("* ").append(optionValue.getChangedMessage());
+  			optionText.append("* ").append(option.getDisplayMessage());
         JMenuItem optionItem = new JMenuItem(optionText.toString());
         fGameOptionsMenu.add(optionItem);
         optionsAdded++;

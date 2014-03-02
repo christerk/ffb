@@ -7,9 +7,12 @@ import java.sql.SQLException;
 
 import com.balancedbytes.games.ffb.FantasyFootballException;
 import com.balancedbytes.games.ffb.model.GameOptions;
-import com.balancedbytes.games.ffb.old.GameOptionOld;
 import com.balancedbytes.games.ffb.old.GameOptionFactoryOld;
-import com.balancedbytes.games.ffb.old.GameOptionValueOld;
+import com.balancedbytes.games.ffb.old.GameOptionOld;
+import com.balancedbytes.games.ffb.option.GameOptionFactory;
+import com.balancedbytes.games.ffb.option.GameOptionId;
+import com.balancedbytes.games.ffb.option.GameOptionIdFactory;
+import com.balancedbytes.games.ffb.option.IGameOption;
 import com.balancedbytes.games.ffb.server.FantasyFootballServer;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.db.DbStatement;
@@ -46,6 +49,8 @@ public class DbGameOptionsForGameStateQuery extends DbStatement {
     if (pGameState != null) {
       GameOptionFactoryOld gameOptionFactory = new GameOptionFactoryOld();
       GameOptions options = pGameState.getGame().getOptions();
+      GameOptionIdFactory idFactory = new GameOptionIdFactory();
+      GameOptionFactory optionFactory = new GameOptionFactory();
       try {
         fStatement.setLong(1, pGameState.getId());
         ResultSet resultSet = fStatement.executeQuery();
@@ -53,9 +58,14 @@ public class DbGameOptionsForGameStateQuery extends DbStatement {
           int col = 1;
           resultSet.getLong(col++); // gameStateId
           GameOptionOld optionName = gameOptionFactory.forName(resultSet.getString(col++));
-          int optionValue = resultSet.getInt(col++);
           if (optionName != null) {
-          	options.addOption(new GameOptionValueOld(optionName, optionValue));
+            int optionValue = resultSet.getInt(col++);
+            GameOptionId optionId = idFactory.forName(optionName.getName());
+            IGameOption gameOption = optionFactory.createGameOption(optionId);
+            if (gameOption != null) {
+              gameOption.setValue(Integer.toString(optionValue));
+              options.addOption(gameOption);
+            }
           }
         }
         resultSet.close();

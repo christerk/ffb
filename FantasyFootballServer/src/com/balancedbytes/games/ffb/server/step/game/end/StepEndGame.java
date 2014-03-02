@@ -3,7 +3,9 @@ package com.balancedbytes.games.ffb.server.step.game.end;
 import java.util.Date;
 
 import com.balancedbytes.games.ffb.GameStatus;
+import com.balancedbytes.games.ffb.IDialogParameter;
 import com.balancedbytes.games.ffb.dialog.DialogId;
+import com.balancedbytes.games.ffb.dialog.DialogParameterFactory;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.server.FantasyFootballServer;
 import com.balancedbytes.games.ffb.server.GameCache;
@@ -46,7 +48,8 @@ public final class StepEndGame extends AbstractStep {
       getGameState().setStatus(GameStatus.FINISHED);
       getGameState().getStepStack().clear();  // clean up after ourselves
       gameCache.queueDbUpdate(getGameState(), true);
-      UtilDialog.showDialog(getGameState(), DialogId.GAME_STATISTICS.createDialogParameter());
+      IDialogParameter gameStatistics = new DialogParameterFactory().createDialogParameter(DialogId.GAME_STATISTICS);
+      UtilDialog.showDialog(getGameState(), gameStatistics);
       FantasyFootballServer server = getGameState().getServer();
       if ((server.getMode() == ServerMode.FUMBBL) && !game.isTesting()) {
         server.getRequestProcessor().add(new FumbblRequestUploadResults(getGameState()));

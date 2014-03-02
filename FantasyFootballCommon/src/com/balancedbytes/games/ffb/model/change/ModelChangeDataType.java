@@ -36,8 +36,8 @@ import com.balancedbytes.games.ffb.dialog.DialogId;
 import com.balancedbytes.games.ffb.dialog.DialogIdFactory;
 import com.balancedbytes.games.ffb.dialog.DialogParameterFactory;
 import com.balancedbytes.games.ffb.json.UtilJson;
-import com.balancedbytes.games.ffb.old.GameOptionFactoryOld;
-import com.balancedbytes.games.ffb.old.GameOptionValueOld;
+import com.balancedbytes.games.ffb.option.GameOptionFactory;
+import com.balancedbytes.games.ffb.option.IGameOption;
 import com.eclipsesource.json.JsonValue;
 
 
@@ -118,7 +118,7 @@ public enum ModelChangeDataType implements IEnumWithId, IEnumWithName {
       case FIELD_MARKER:
         return ((FieldMarker) pValue).toJsonValue();
       case GAME_OPTION:
-        return ((GameOptionValueOld) pValue).toJsonValue();
+        return ((IGameOption) pValue).toJsonValue();
       case INDUCEMENT:
         return ((Inducement) pValue).toJsonValue();
       case INTEGER:
@@ -184,7 +184,7 @@ public enum ModelChangeDataType implements IEnumWithId, IEnumWithName {
       case FIELD_MARKER:
         return new FieldMarker().initFrom(pJsonValue);
       case GAME_OPTION:
-        return UtilJson.toEnumWithName(new GameOptionFactoryOld(), pJsonValue);
+        return new GameOptionFactory().fromJsonValue(pJsonValue);
       case INDUCEMENT:
         return new Inducement().initFrom(pJsonValue);
       case INTEGER:

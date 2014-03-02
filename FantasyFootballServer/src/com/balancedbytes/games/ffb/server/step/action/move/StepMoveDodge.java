@@ -15,7 +15,8 @@ import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.model.Team;
-import com.balancedbytes.games.ffb.old.GameOptionOld;
+import com.balancedbytes.games.ffb.option.GameOptionId;
+import com.balancedbytes.games.ffb.option.UtilGameOption;
 import com.balancedbytes.games.ffb.report.ReportId;
 import com.balancedbytes.games.ffb.report.ReportSkillRoll;
 import com.balancedbytes.games.ffb.report.ReportSkillUse;
@@ -150,7 +151,7 @@ public class StepMoveDodge extends AbstractStepWithReRoll {
           	getResult().setNextAction(StepAction.NEXT_STEP);
             break;
           case FAILURE:
-          	if (game.getOptions().getOptionValue(GameOptionOld.STAND_FIRM_NO_DROP_ON_FAILED_DODGE).isEnabled()) {
+          	if (UtilGameOption.isOptionEnabled(game, GameOptionId.STAND_FIRM_NO_DROP_ON_FAILED_DODGE)) {
           		publishParameter(new StepParameter(StepParameterKey.END_PLAYER_ACTION, true));
             	getResult().setNextAction(StepAction.NEXT_STEP);
           	} else {

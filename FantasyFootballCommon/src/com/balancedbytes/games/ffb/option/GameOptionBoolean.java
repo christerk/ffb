@@ -6,25 +6,24 @@ import com.balancedbytes.games.ffb.util.StringTool;
  * 
  * @author Kalimar
  */
-public class GameOptionBoolean implements IGameOption {
+public class GameOptionBoolean extends GameOptionAbstract {
   
-  private GameOptionId fId;
   private boolean fDefault;
   private boolean fValue;
   private String fMessageTrue;
   private String fMessageFalse;
 
   public GameOptionBoolean(GameOptionId pId) {
-    fId = pId;
+    super(pId);
   }
 
-  @Override
-  public GameOptionId getId() {
-    return fId;
-  }
-
-  private boolean getDefault() {
+  protected boolean getDefault() {
     return fDefault;
+  }
+  
+  @Override
+  protected String getDefaultAsString() {
+    return Boolean.toString(getDefault());
   }
 
   public GameOptionBoolean setDefault(boolean pDefault) {
@@ -34,10 +33,10 @@ public class GameOptionBoolean implements IGameOption {
   
   @Override
   public String getValueAsString() {
-    return Boolean.toString(getValue());
+    return Boolean.toString(isEnabled());
   }
   
-  public boolean getValue() {
+  public boolean isEnabled() {
     return fValue;
   }
   
@@ -57,11 +56,6 @@ public class GameOptionBoolean implements IGameOption {
     return this;
   }
 
-  @Override
-  public boolean isChanged() {
-    return (getDefault() != getValue()); 
-  }
-
   public GameOptionBoolean setMessageTrue(String pMessage) {
     fMessageTrue = pMessage;
     return this;
@@ -74,13 +68,7 @@ public class GameOptionBoolean implements IGameOption {
 
   @Override
   public String getDisplayMessage() {
-    return (getValue() ? fMessageTrue : fMessageFalse);
-  }
-
-  @Override
-  public GameOptionBoolean reset() {
-    setValue(getDefault());
-    return this;
+    return (isEnabled() ? fMessageTrue : fMessageFalse);
   }
 
 }

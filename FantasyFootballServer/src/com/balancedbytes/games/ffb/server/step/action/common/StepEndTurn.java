@@ -29,7 +29,8 @@ import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.model.PlayerResult;
 import com.balancedbytes.games.ffb.model.Team;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandUseInducement;
-import com.balancedbytes.games.ffb.old.GameOptionOld;
+import com.balancedbytes.games.ffb.option.GameOptionId;
+import com.balancedbytes.games.ffb.option.UtilGameOption;
 import com.balancedbytes.games.ffb.report.ReportBribesRoll;
 import com.balancedbytes.games.ffb.report.ReportSecretWeaponBan;
 import com.balancedbytes.games.ffb.report.ReportTurnEnd;
@@ -276,7 +277,7 @@ public class StepEndTurn extends AbstractStep {
         	fEndGame = true;
         } else if (game.getHalf() > 1) {
           GameResult gameResult = game.getGameResult();
-          if (game.getOptions().getOptionValue(GameOptionOld.OVERTIME).isEnabled() && (gameResult.getTeamResultHome().getScore() == gameResult.getTeamResultAway().getScore())) {
+          if (UtilGameOption.isOptionEnabled(game, GameOptionId.OVERTIME) && (gameResult.getTeamResultHome().getScore() == gameResult.getTeamResultAway().getScore())) {
             UtilGame.startHalf(this, game.getHalf() + 1);
             SequenceGenerator.getInstance().pushKickoffSequence(getGameState(), true);
           } else {

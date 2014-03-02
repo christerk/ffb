@@ -11,7 +11,7 @@ import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.change.ModelChange;
 import com.balancedbytes.games.ffb.model.change.ModelChangeId;
-import com.balancedbytes.games.ffb.old.GameOptionValueOld;
+import com.balancedbytes.games.ffb.option.IGameOption;
 
 /**
  * 
@@ -110,7 +110,7 @@ public class ModelChangeGameAttribute implements IModelChange {
       	pGame.setThrowerAction((PlayerAction) getValue());
       	break;
       case ADD_OPTION:
-      	pGame.getOptions().addOption((GameOptionValueOld) getValue());
+      	pGame.getOptions().addOption((IGameOption) getValue());
       	break;
       default:
         throw new IllegalStateException("Unhandled change " + getChange() + ".");

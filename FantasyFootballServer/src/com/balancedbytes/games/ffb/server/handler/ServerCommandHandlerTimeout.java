@@ -3,7 +3,8 @@ package com.balancedbytes.games.ffb.server.handler;
 import com.balancedbytes.games.ffb.Sound;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.net.NetCommandId;
-import com.balancedbytes.games.ffb.old.GameOptionOld;
+import com.balancedbytes.games.ffb.option.GameOptionId;
+import com.balancedbytes.games.ffb.option.UtilGameOption;
 import com.balancedbytes.games.ffb.server.FantasyFootballServer;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.net.ReceivedCommand;
@@ -30,7 +31,7 @@ public class ServerCommandHandlerTimeout extends ServerCommandHandler {
     Game game = (gameState != null) ? gameState.getGame() : null;
     
     if ((game != null) && !game.isTimeoutPossible() && !game.isTimeoutEnforced()) {
-      long clientTurnLimit = game.getOptions().getOptionValue(GameOptionOld.TURNTIME).getValue() * 1000;
+      long clientTurnLimit = UtilGameOption.getIntOption(game, GameOptionId.TURNTIME) * 1000;
       long turnTime = System.currentTimeMillis() - gameState.getTurnTimeStarted();
       if (turnTime >= clientTurnLimit - 1000) {
         game.setTimeoutPossible(true);
