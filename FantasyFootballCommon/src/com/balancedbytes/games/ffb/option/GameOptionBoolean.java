@@ -28,7 +28,7 @@ public class GameOptionBoolean extends GameOptionAbstract {
 
   public GameOptionBoolean setDefault(boolean pDefault) {
     fDefault = pDefault;
-    return this;
+    return setValue(getDefault());
   }
   
   @Override

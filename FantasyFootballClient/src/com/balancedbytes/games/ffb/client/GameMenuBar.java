@@ -728,13 +728,13 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
   	Game game = getClient().getGame();    
     
     Card[] cardsHome = game.getTurnDataHome().getInducementSet().getActiveCards();
-    if ((fCurrentActiveCardsHome == null) || (ArrayTool.isProvided(cardsHome) && (cardsHome.length != fCurrentActiveCardsHome.length))) {
+    if ((fCurrentActiveCardsHome == null) || (cardsHome.length != fCurrentActiveCardsHome.length)) {
     	fCurrentActiveCardsHome = cardsHome;
     	refreshNecessary = true;
     }
     
     Card[] cardsAway = game.getTurnDataAway().getInducementSet().getActiveCards();
-    if ((fCurrentActiveCardsAway == null) || (ArrayTool.isProvided(cardsAway) && (cardsAway.length != fCurrentActiveCardsAway.length))) {
+    if ((fCurrentActiveCardsAway == null) || (cardsAway.length != fCurrentActiveCardsAway.length)) {
     	fCurrentActiveCardsAway = cardsAway;
     	refreshNecessary = true;
     }

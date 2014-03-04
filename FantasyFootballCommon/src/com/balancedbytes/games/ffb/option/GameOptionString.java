@@ -27,7 +27,7 @@ public class GameOptionString extends GameOptionAbstract {
 
   public GameOptionString setDefault(String pDefault) {
     fDefault = pDefault;
-    return this;
+    return setValue(getDefault());
   }
   
   @Override

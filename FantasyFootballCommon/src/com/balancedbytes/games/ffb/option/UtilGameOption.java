@@ -12,14 +12,22 @@ public class UtilGameOption {
     if ((pGame == null) || (pOptionId == null)) {
       return false;
     }
-    return ((GameOptionBoolean) pGame.getOptions().getOption(pOptionId)).isEnabled();
+    GameOptionBoolean gameOption = (GameOptionBoolean) pGame.getOptions().getOption(pOptionId);
+    if (gameOption == null) {
+      gameOption = (GameOptionBoolean) new GameOptionFactory().createGameOption(pOptionId);
+    }
+    return gameOption.isEnabled();
   }
   
   public static int getIntOption(Game pGame, GameOptionId pOptionId) {
     if ((pGame == null) || (pOptionId == null)) {
       return 0;
     }
-    return ((GameOptionInt) pGame.getOptions().getOption(pOptionId)).getValue();
+    GameOptionInt gameOption = (GameOptionInt) pGame.getOptions().getOption(pOptionId);
+    if (gameOption == null) {
+      gameOption = (GameOptionInt) new GameOptionFactory().createGameOption(pOptionId);
+    }
+    return gameOption.getValue();
   }
 
 }

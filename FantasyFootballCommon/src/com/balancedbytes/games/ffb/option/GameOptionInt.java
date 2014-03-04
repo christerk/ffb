@@ -27,7 +27,7 @@ public class GameOptionInt extends GameOptionAbstract {
 
   public GameOptionInt setDefault(int pDefault) {
     fDefault = pDefault;
-    return this;
+    return setValue(getDefault());
   }
   
   @Override

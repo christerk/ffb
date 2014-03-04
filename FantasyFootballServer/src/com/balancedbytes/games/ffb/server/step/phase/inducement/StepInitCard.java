@@ -3,6 +3,7 @@ package com.balancedbytes.games.ffb.server.step.phase.inducement;
 import com.balancedbytes.games.ffb.Card;
 import com.balancedbytes.games.ffb.CardFactory;
 import com.balancedbytes.games.ffb.FieldCoordinate;
+import com.balancedbytes.games.ffb.FieldCoordinateBounds;
 import com.balancedbytes.games.ffb.PlayerChoiceMode;
 import com.balancedbytes.games.ffb.PlayerState;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
@@ -147,6 +148,9 @@ public final class StepInitCard extends AbstractStep {
       case CUSTARD_PIE:
         doNextStep = playCustardPie();
         break;
+      case DISTRACT:
+        doNextStep = playDistract();
+        break;
       default:
         activateCard(fPlayerId);
         doNextStep = true;
@@ -174,6 +178,22 @@ public final class StepInitCard extends AbstractStep {
     }
   }
 
+  private boolean playDistract() {
+    Game game = getGameState().getGame();
+    Player player = game.getPlayerById(fPlayerId);
+    Team otherTeam = UtilPlayer.findOtherTeam(game, player);
+    FieldCoordinate playerCoordinate = game.getFieldModel().getPlayerCoordinate(player);
+    FieldCoordinate[] adjacentCoordinates = game.getFieldModel().findAdjacentCoordinates(playerCoordinate, FieldCoordinateBounds.FIELD, 3, false);
+    for (FieldCoordinate coordinate : adjacentCoordinates) {
+      Player otherPlayer = game.getFieldModel().getPlayer(coordinate);
+      if ((otherPlayer != null) && otherTeam.hasPlayer(otherPlayer)) {
+        game.getFieldModel().addCard(otherPlayer, Card.DISTRACT);
+      }
+    }
+    activateCard(fPlayerId);
+    return true;
+  }
+  
   private boolean playCustardPie() {
     Game game = getGameState().getGame();
     Player player = game.getPlayerById(fPlayerId);

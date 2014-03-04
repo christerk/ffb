@@ -242,9 +242,9 @@ public enum Card implements IEnumWithId, IEnumWithName {
   //		flabbergasted by the pie hit that he loses his tackle zones for the
   //		remainder of this turn as per a successful Hypnotic Gaze roll.
 
-//  DISTRACT(43, "Distract", "Distract", CardType.DIRTY_TRICK, CardTarget.OWN_PLAYER, false,
-//		new InducementPhase[] { InducementPhase.END_OF_OWN_TURN, InducementPhase.AFTER_KICKOFF_TO_OPPONENT_RESOLVED }, InducementDuration.UNTIL_END_OF_OPPONENTS_TURN,
-//		"Player gets Disturbing Presence & opponents in 3 squares get Bone-head"),
+  DISTRACT(43, "Distract", "Distract", CardType.DIRTY_TRICK, CardTarget.OWN_PLAYER, false,
+		new InducementPhase[] { InducementPhase.END_OF_OWN_TURN, InducementPhase.AFTER_KICKOFF_TO_OPPONENT_RESOLVED }, InducementDuration.UNTIL_END_OF_OPPONENTS_TURN,
+		"Player gets Disturbing Presence & opponents in 3 squares get Bone-head"),
   //	Description:
   //		Your player is very good at distracting all those around him.
   //	Timing:

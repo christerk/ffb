@@ -15,6 +15,7 @@ import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.InducementSet;
 import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.model.Team;
+import com.balancedbytes.games.ffb.model.TurnData;
 
 /**
  * 
@@ -49,42 +50,50 @@ public final class UtilCards {
     if ((pGame == null) || (pPlayer == null)) {
       return cardSkills;
     }
+    TurnData turnData = pGame.getTeamHome().hasPlayer(pPlayer) ? pGame.getTurnDataHome() : pGame.getTurnDataAway();
     Card[] playerCards = pGame.getFieldModel().getCards(pPlayer);
     for (Card card : playerCards) {
       switch (card) {
-      case BEGUILING_BRACERS:
-        cardSkills.add(Skill.BONE_HEAD);
-        cardSkills.add(Skill.HYPNOTIC_GAZE);
-        cardSkills.add(Skill.SIDE_STEP);
-        break;
-      case FAWNDOUGHS_HEADBAND:
-        cardSkills.add(Skill.ACCURATE);
-        cardSkills.add(Skill.PASS);
-        break;
-      case FORCE_SHIELD:
-        cardSkills.add(Skill.FEND);
-        cardSkills.add(Skill.SURE_HANDS);
-        break;
-      case GLOVES_OF_HOLDING:
-        cardSkills.add(Skill.CATCH);
-        cardSkills.add(Skill.SURE_HANDS);
-        break;
-      case MAGIC_GLOVES_OF_JARK_LONGARM:
-        cardSkills.add(Skill.PASS_BLOCK);
-        break;
-      case RABBITS_FOOT:
-        cardSkills.add(Skill.PRO);
-        break;
-      case WAND_OF_SMASHING:
-        cardSkills.add(Skill.MIGHTY_BLOW);
-        break;
-      case GROMSKULLS_EXPLODING_RUNES:
-        cardSkills.add(Skill.BOMBARDIER);
-        cardSkills.add(Skill.NO_HANDS);
-        cardSkills.add(Skill.SECRET_WEAPON);
-        break;
-      default:
-        break;
+        case BEGUILING_BRACERS:
+          cardSkills.add(Skill.BONE_HEAD);
+          cardSkills.add(Skill.HYPNOTIC_GAZE);
+          cardSkills.add(Skill.SIDE_STEP);
+          break;
+        case FAWNDOUGHS_HEADBAND:
+          cardSkills.add(Skill.ACCURATE);
+          cardSkills.add(Skill.PASS);
+          break;
+        case FORCE_SHIELD:
+          cardSkills.add(Skill.FEND);
+          cardSkills.add(Skill.SURE_HANDS);
+          break;
+        case GLOVES_OF_HOLDING:
+          cardSkills.add(Skill.CATCH);
+          cardSkills.add(Skill.SURE_HANDS);
+          break;
+        case MAGIC_GLOVES_OF_JARK_LONGARM:
+          cardSkills.add(Skill.PASS_BLOCK);
+          break;
+        case RABBITS_FOOT:
+          cardSkills.add(Skill.PRO);
+          break;
+        case WAND_OF_SMASHING:
+          cardSkills.add(Skill.MIGHTY_BLOW);
+          break;
+        case GROMSKULLS_EXPLODING_RUNES:
+          cardSkills.add(Skill.BOMBARDIER);
+          cardSkills.add(Skill.NO_HANDS);
+          cardSkills.add(Skill.SECRET_WEAPON);
+          break;
+        case DISTRACT:
+          if (turnData.getInducementSet().isActive(card)) {
+            cardSkills.add(Skill.DISTURBING_PRESENCE);
+          } else {
+            cardSkills.add(Skill.BONE_HEAD);
+          }
+          break;
+        default:
+          break;
       }
     }
     return cardSkills;
@@ -212,14 +221,14 @@ public final class UtilCards {
         pGame.getFieldModel().removeCard(player, pCard);
       }
       switch (pCard) {
-      case CUSTARD_PIE:
-        PlayerState playerState = pGame.getFieldModel().getPlayerState(player);
-        if ((playerState != null) && playerState.isHypnotized()) {
-          pGame.getFieldModel().setPlayerState(player, playerState.changeHypnotized(false));
-        }
-        break;
-      default:
-        break;
+        case CUSTARD_PIE:
+          PlayerState playerState = pGame.getFieldModel().getPlayerState(player);
+          if ((playerState != null) && playerState.isHypnotized()) {
+            pGame.getFieldModel().setPlayerState(player, playerState.changeHypnotized(false));
+          }
+          break;
+        default:
+          break;
       }
     }
     return true;
