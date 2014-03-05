@@ -17,6 +17,8 @@ import com.balancedbytes.games.ffb.SeriousInjury;
 import com.balancedbytes.games.ffb.Skill;
 import com.balancedbytes.games.ffb.SkillFactory;
 import com.balancedbytes.games.ffb.Sound;
+import com.balancedbytes.games.ffb.Weather;
+import com.balancedbytes.games.ffb.WeatherFactory;
 import com.balancedbytes.games.ffb.model.Animation;
 import com.balancedbytes.games.ffb.model.AnimationType;
 import com.balancedbytes.games.ffb.model.AnimationTypeFactory;
@@ -92,6 +94,8 @@ public class ServerCommandHandlerTalk extends ServerCommandHandler {
         	handleProneOrStunCommand(gameState, talkCommand, true, pReceivedCommand.getSession());
         } else if (game.isTesting() && talk.startsWith("/turn")) {
           handleTurnCommand(gameState, talkCommand, pReceivedCommand.getSession());
+        } else if (game.isTesting() && talk.startsWith("/weather")) {
+          handleWeatherCommand(gameState, talkCommand);
         } else {
           communication.sendPlayerTalk(gameState, coach, talk);
         }
@@ -218,6 +222,22 @@ public class ServerCommandHandlerTalk extends ServerCommandHandler {
       info.append("Setting game option ").append(gameOption.getId().getName()).append(" to value ").append(gameOption.getValueAsString()).append(".");
       getServer().getCommunication().sendPlayerTalk(pGameState, null, info.toString());
     	UtilGame.syncGameModel(pGameState, null, null, null);
+    }
+  }
+
+  private void handleWeatherCommand(GameState pGameState, ClientCommandTalk pTalkCommand) {
+    Game game = pGameState.getGame();
+    String talk = pTalkCommand.getTalk();
+    String[] commands = talk.split(" +");
+    if ((commands != null) && (commands.length > 1)) {
+      Weather weather = new WeatherFactory().forShortName(commands[1]);
+      if (weather != null) {
+        game.getFieldModel().setWeather(weather);
+        StringBuilder info = new StringBuilder();
+        info.append("Setting weather to ").append(game.getFieldModel().getWeather().getName()).append(".");
+        getServer().getCommunication().sendPlayerTalk(pGameState, null, info.toString());
+        UtilGame.syncGameModel(pGameState, null, null, null);
+      }
     }
   }
 

@@ -175,6 +175,10 @@ public class DialogChatCommands extends Dialog {
       html.append("<td>").append(_FONT_OPEN).append("jumps to the turn with the given number").append(_FONT_CLOSE).append("</td>\n");
       html.append("</tr>\n");
       html.append("<tr>\n");
+      html.append("<td>").append(_FONT_BOLD_OPEN).append("/weather &lt;name&gt;").append(_FONT_BOLD_CLOSE).append("</td>\n");
+      html.append("<td>").append(_FONT_OPEN).append("changes the weather to nice, sunny, rain, heat or blizzard").append(_FONT_CLOSE).append("</td>\n");
+      html.append("</tr>\n");
+      html.append("<tr>\n");
       html.append("<td colspan=\"2\">").append(_FONT_OPEN).append("<i>Commands accepting a playerlist may either list player numbers separated by space or use the keyword &quot;all&quot; for all players.</i>").append(_FONT_CLOSE).append("</td>\n");
       html.append("</tr>\n");
       html.append("</table>\n");

@@ -7,11 +7,6 @@ package com.balancedbytes.games.ffb.client;
 public interface IIconProperty {
 
   // Fields
-  String FIELD_BLIZZARD = "field.blizzard";
-  String FIELD_GOOD = "field.good";
-  String FIELD_HEAT = "field.heat";
-  String FIELD_RAIN = "field.rain";
-  String FIELD_SUNNY = "field.sunny";
   String FIELD_INTRO = "field.intro";
   
   // Player decorations

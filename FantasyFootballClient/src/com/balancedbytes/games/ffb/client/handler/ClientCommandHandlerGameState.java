@@ -5,6 +5,7 @@ import java.util.Set;
 
 import javax.swing.SwingUtilities;
 
+import com.balancedbytes.games.ffb.Weather;
 import com.balancedbytes.games.ffb.client.FantasyFootballClient;
 import com.balancedbytes.games.ffb.client.IconCache;
 import com.balancedbytes.games.ffb.client.PlayerIconFactory;
@@ -46,8 +47,8 @@ public class ClientCommandHandlerGameState extends ClientCommandHandler implemen
     // update player icons and collect all icon urls needed for the game
     Set<String> iconUrls = new HashSet<String>();
     
-    addIconUrl(iconUrls, IconCache.getTeamLogoUrl(game.getTeamHome()));
-    addIconUrl(iconUrls, IconCache.getTeamLogoUrl(game.getTeamAway()));
+    addIconUrl(iconUrls, IconCache.findTeamLogoUrl(game.getTeamHome()));
+    addIconUrl(iconUrls, IconCache.findTeamLogoUrl(game.getTeamAway()));
     
     addRosterIconUrls(iconUrls, game.getTeamHome().getRoster(), true);
     addRosterIconUrls(iconUrls, game.getTeamAway().getRoster(), false);
@@ -58,21 +59,23 @@ public class ClientCommandHandlerGameState extends ClientCommandHandler implemen
       addIconUrl(iconUrls, PlayerIconFactory.getPlayerIconUrl(player, homePlayer, true));
       addIconUrl(iconUrls, PlayerIconFactory.getPlayerIconUrl(player, homePlayer, false));
     }
+    
+    for (Weather weather : Weather.values()) {
+      addIconUrl(iconUrls, IconCache.findPitchUrl(game, weather));
+    }
 
     Set<String> iconUrlsToDownload = new HashSet<String>();
     for (String iconUrl : iconUrls) {
-      if (!iconCache.loadIconFromArchive(iconUrl)) {
-        // TODO: FUMBBL wrong empty player portraits
-        if (!iconUrl.endsWith("/i/0")) {
-          iconUrlsToDownload.add(iconUrl);
-        }
+      // TODO: FUMBBL wrong empty player portraits
+      if (!iconCache.loadIconFromArchive(iconUrl) && !iconUrl.endsWith("/i/0")) {
+        iconUrlsToDownload.add(iconUrl);
       }
     }
     
     int nrOfIcons = iconUrlsToDownload.size();
     if (nrOfIcons > 0) {
       
-      DialogProgressBar dialogProgress = new DialogProgressBar(getClient(), "Loading team icons", 0, nrOfIcons);
+      DialogProgressBar dialogProgress = new DialogProgressBar(getClient(), "Loading icons", 0, nrOfIcons);
       dialogProgress.showDialog(this);
 
       // preload all icon urls now

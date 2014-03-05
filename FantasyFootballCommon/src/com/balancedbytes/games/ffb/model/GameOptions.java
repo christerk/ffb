@@ -36,10 +36,12 @@ public class GameOptions implements IXmlSerializable, IByteArrayReadable, IJsonS
   private Map<GameOptionId, IGameOption> fOptionById;
 
   private transient Game fGame;
+  private transient GameOptionFactory fGameOptionFactory;
 
   public GameOptions(Game pGame) {
     fGame = pGame;
     fOptionById = new HashMap<GameOptionId, IGameOption>();
+    fGameOptionFactory = new GameOptionFactory();
   }
 
   public Game getGame() {
@@ -55,6 +57,14 @@ public class GameOptions implements IXmlSerializable, IByteArrayReadable, IJsonS
 
   public IGameOption getOption(GameOptionId pOptionId) {
     return fOptionById.get(pOptionId);
+  }
+  
+  public IGameOption getOptionWithDefault(GameOptionId pOptionId) {
+    IGameOption option = getOption(pOptionId);
+    if (option == null) {
+      option = fGameOptionFactory.createGameOption(pOptionId);
+    }
+    return option;
   }
 
   public IGameOption[] getOptions() {

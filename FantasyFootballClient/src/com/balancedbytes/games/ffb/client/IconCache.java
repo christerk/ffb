@@ -11,11 +11,12 @@ import javax.imageio.ImageIO;
 
 import com.balancedbytes.games.ffb.BloodSpot;
 import com.balancedbytes.games.ffb.DiceDecoration;
-import com.balancedbytes.games.ffb.FantasyFootballException;
 import com.balancedbytes.games.ffb.PlayerState;
 import com.balancedbytes.games.ffb.PushbackSquare;
 import com.balancedbytes.games.ffb.Weather;
+import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Team;
+import com.balancedbytes.games.ffb.option.GameOptionId;
 import com.balancedbytes.games.ffb.util.StringTool;
 import com.balancedbytes.games.ffb.util.UtilUrl;
 
@@ -26,38 +27,46 @@ import com.balancedbytes.games.ffb.util.UtilUrl;
  */
 public class IconCache {
   
-  private Map<String,BufferedImage> fIconByProperty;
+  private Map<String,BufferedImage> fIconByKey;
     
   private Map<String,Integer> fCurrentIndexPerKey;
-  
-  private Map<String,BufferedImage> fIconByUrl;
   
   private FantasyFootballClient fClient;
   
   public IconCache(FantasyFootballClient pClient) {
     fClient = pClient;
-    fIconByProperty = new HashMap<String,BufferedImage>();
-    fIconByUrl = new HashMap<String,BufferedImage>();
+    fIconByKey = new HashMap<String,BufferedImage>();
     fCurrentIndexPerKey = new HashMap<String,Integer>();
   }
   
   public boolean loadIconFromArchive(String pIconUrl) {
+    if (!StringTool.isProvided(pIconUrl)) {
+      return false;
+    }
+    String iconPath = pIconUrl;
     String iconBaseUrl = getClient().getProperty(IClientProperty.ICON_BASE_URL);
     String iconBasePath = getClient().getProperty(IClientProperty.ICON_BASE_PATH);
-    if (StringTool.isProvided(iconBasePath) && StringTool.isProvided(iconBaseUrl) && StringTool.isProvided(pIconUrl) && pIconUrl.startsWith(iconBaseUrl)) {
-      try {
-        InputStream iconInputStream = getClass().getResourceAsStream(iconBasePath + pIconUrl.substring(iconBaseUrl.length()));
-        if (iconInputStream != null) {
-          BufferedImage icon = ImageIO.read(iconInputStream);
-          iconInputStream.close();
-          if (icon != null) {
-            fIconByUrl.put(pIconUrl, icon);
-            return true;
-          }
+    if (StringTool.isProvided(iconBasePath) && StringTool.isProvided(iconBaseUrl) && pIconUrl.startsWith(iconBaseUrl)) {
+      iconPath = iconBasePath + pIconUrl.substring(iconBaseUrl.length());
+    }
+    if (!iconPath.startsWith("/")) {
+      iconPath = "/" + iconPath;
+    }
+    if (!iconPath.startsWith("/icons")) {
+      iconPath = "/icons" + iconPath;
+    }
+    try {
+      InputStream iconInputStream = getClass().getResourceAsStream(iconPath);
+      if (iconInputStream != null) {
+        BufferedImage icon = ImageIO.read(iconInputStream);
+        iconInputStream.close();
+        if (icon != null) {
+          fIconByKey.put(pIconUrl, icon);
+          return true;
         }
-      } catch (IOException ioe) {
-        // just skip precaching
       }
+    } catch (IOException ioe) {
+      // just skip precaching
     }
     return false;
   }
@@ -66,30 +75,16 @@ public class IconCache {
     if (!StringTool.isProvided(pIconProperty)) {
       return null;
     }
-    BufferedImage icon = fIconByProperty.get(pIconProperty);
-    if (icon == null) {
-      String iconFilename = getClient().getProperty(pIconProperty);
-      if (iconFilename != null) {
-//      	System.out.println(iconFilename);
-        try {
-          // File iconFile = new File(ICON_DIRECTORY, iconFilename);
-          InputStream iconInputStream = getClass().getResourceAsStream("/icons/" + iconFilename);
-          // icon = ImageIO.read(iconFile);
-          icon = ImageIO.read(iconInputStream);
-          fIconByProperty.put(pIconProperty, icon);
-          iconInputStream.close();
-        } catch (IllegalArgumentException iae) {
-          throw new FantasyFootballException("Error reading icon property " + pIconProperty, iae);
-        } catch (IOException ioe) {
-          throw new FantasyFootballException("Error reading icon property " + pIconProperty, ioe);
-        }
-      }
+    String iconUrl = getClient().getProperty(pIconProperty);
+    BufferedImage icon = getIconByUrl(iconUrl);
+    if ((icon == null) && loadIconFromArchive(iconUrl)) {
+      icon = getIconByUrl(iconUrl);
     }
     return icon;
   }
   
   public BufferedImage getIconByUrl(String pIconUrl) {
-    return fIconByUrl.get(pIconUrl);
+    return fIconByKey.get(pIconUrl);
   }
   
   public void loadIconFromUrl(String pIconUrl) {
@@ -97,7 +92,7 @@ public class IconCache {
     try {
       fullIconUrl = new URL(pIconUrl);
       BufferedImage icon = ImageIO.read(fullIconUrl);
-      fIconByUrl.put(pIconUrl, icon);
+      fIconByKey.put(pIconUrl, icon);
     } catch (IOException ioe) {
       getClient().getUserInterface().getStatusReport().reportIconLoadFailure(fullIconUrl);
     } catch (Exception _) { // This should catch issues where the image is broken...
@@ -215,30 +210,17 @@ public class IconCache {
   }
   
   public BufferedImage getIcon(Weather pWeather) {
-    String iconProperty = null;
-    switch (pWeather) {
-      case SWELTERING_HEAT:
-        iconProperty = IIconProperty.FIELD_HEAT;
-        break;
-      case VERY_SUNNY:
-        iconProperty = IIconProperty.FIELD_SUNNY;
-        break;
-      case NICE:
-        iconProperty = IIconProperty.FIELD_GOOD;
-        break;
-      case POURING_RAIN:
-        iconProperty = IIconProperty.FIELD_RAIN;
-        break;
-      case BLIZZARD:
-        iconProperty = IIconProperty.FIELD_BLIZZARD;
-        break;
-      case INTRO:
-        iconProperty = IIconProperty.FIELD_INTRO;
-        break;
+    if (pWeather == null) {
+      return null;
     }
-    return getIconByProperty(iconProperty);
+    switch (pWeather) {
+      case INTRO:
+        return getIconByProperty(IIconProperty.FIELD_INTRO);
+      default:
+        return getIconByUrl(findPitchUrl(getClient().getGame(), pWeather));
+    }
   }
-  
+    
   public BufferedImage getIcon(DiceDecoration pDiceDecoration) {
     String iconProperty = null;
     switch (pDiceDecoration.getNrOfDice()) {
@@ -283,7 +265,7 @@ public class IconCache {
     return null;
   }
   
-  public static String getTeamLogoUrl(Team pTeam) {
+  public static String findTeamLogoUrl(Team pTeam) {
     String iconUrl = null;
     if ((pTeam != null) && StringTool.isProvided(pTeam.getLogoUrl())) {
       if (StringTool.isProvided(pTeam.getBaseIconPath())) {
@@ -293,6 +275,14 @@ public class IconCache {
       }
     }
     return iconUrl;
+  }
+  
+  public static String findPitchUrl(Game pGame, Weather pWeather) {
+    if ((pGame == null) || (pWeather == null) || (pWeather == Weather.INTRO)) {
+      return null;
+    }
+    String pitchUrlTemplate = pGame.getOptions().getOptionWithDefault(GameOptionId.PITCH_URL_TEMPLATE).getValueAsString();
+    return StringTool.bind(pitchUrlTemplate, pWeather.getShortName());
   }
   
   public FantasyFootballClient getClient() {

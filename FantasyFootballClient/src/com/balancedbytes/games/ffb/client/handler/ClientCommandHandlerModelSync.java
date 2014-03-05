@@ -2,8 +2,10 @@ package com.balancedbytes.games.ffb.client.handler;
 
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.TurnMode;
+import com.balancedbytes.games.ffb.Weather;
 import com.balancedbytes.games.ffb.client.ClientData;
 import com.balancedbytes.games.ffb.client.FantasyFootballClient;
+import com.balancedbytes.games.ffb.client.IconCache;
 import com.balancedbytes.games.ffb.client.UserInterface;
 import com.balancedbytes.games.ffb.client.animation.AnimationSequenceFactory;
 import com.balancedbytes.games.ffb.client.animation.IAnimationListener;
@@ -20,6 +22,8 @@ import com.balancedbytes.games.ffb.model.change.ModelChangeList;
 import com.balancedbytes.games.ffb.net.NetCommand;
 import com.balancedbytes.games.ffb.net.NetCommandId;
 import com.balancedbytes.games.ffb.net.commands.ServerCommandModelSync;
+import com.balancedbytes.games.ffb.option.GameOptionId;
+import com.balancedbytes.games.ffb.option.IGameOption;
 import com.balancedbytes.games.ffb.report.IReport;
 import com.balancedbytes.games.ffb.report.ReportBlockChoice;
 import com.balancedbytes.games.ffb.report.ReportList;
@@ -41,9 +45,8 @@ public class ClientCommandHandlerModelSync extends ClientCommandHandler implemen
   private boolean fUpdateTurnNr;
   private boolean fUpdateTurnMode;
   private boolean fUpdateTimeout;
-//  private boolean fUpdateInducements;
-//  private boolean fUpdateActiveCards;
   private boolean fClearSelectedPlayer;
+  private boolean fReloadPitches;
 
   protected ClientCommandHandlerModelSync(FantasyFootballClient pClient) {
     super(pClient);
@@ -170,9 +173,8 @@ public class ClientCommandHandlerModelSync extends ClientCommandHandler implemen
       fUpdateTurnMode = false;
       fUpdateActingPlayer = false;
       fUpdateTimeout = false;
-//      fUpdateInducements = false;
-//      fUpdateActiveCards = false;
       fClearSelectedPlayer = false;
+      fReloadPitches = false;
 
       for (ModelChange modelChange : pModelChangeList.getChanges()) {
         switch (modelChange.getChangeId()) {
@@ -216,6 +218,12 @@ public class ClientCommandHandlerModelSync extends ClientCommandHandler implemen
           case GAME_SET_TURN_MODE:
           	fUpdateTurnMode = true;
           	break;
+          case GAME_OPTIONS_ADD_OPTION:
+            IGameOption gameOption = (IGameOption) modelChange.getValue();
+            if ((gameOption != null) && (gameOption.getId() == GameOptionId.PITCH_URL_TEMPLATE)) {
+              fReloadPitches = true;
+            }
+            break;
           default:
           	break;
         }
@@ -253,13 +261,15 @@ public class ClientCommandHandlerModelSync extends ClientCommandHandler implemen
       clientData.clear();
     }
         
-//    if (fUpdateInducements) {
-//      userInterface.getGameMenuBar().updateInducements();
-//    }
-    
-//    if (fUpdateActiveCards) {
-//      userInterface.getGameMenuBar().updateActiveCards();
-//    }
+    if (fReloadPitches) {
+      for (Weather weather : Weather.values()) {
+        String iconUrl = IconCache.findPitchUrl(game, weather);
+        if ((iconUrl != null) && !userInterface.getIconCache().loadIconFromArchive(iconUrl)) {
+          userInterface.getIconCache().loadIconFromUrl(iconUrl);
+        }
+      }
+      userInterface.getFieldComponent().getLayerField().init();
+    }
     
     if (fMode == ClientCommandHandlerMode.PLAYING) {
       UtilThrowTeamMate.updateThrownPlayer(getClient());

@@ -66,7 +66,7 @@ public class FieldLayerTeamLogo extends FieldLayer {
   private void drawTeamLogo(Team pTeam, boolean pHomeTeam) {
     if ((pTeam != null) && StringTool.isProvided(pTeam.getLogoUrl())) {
       IconCache iconCache = getClient().getUserInterface().getIconCache();
-      BufferedImage teamLogo = iconCache.getIconByUrl(IconCache.getTeamLogoUrl(pTeam));
+      BufferedImage teamLogo = iconCache.getIconByUrl(IconCache.findTeamLogoUrl(pTeam));
       if (teamLogo != null) {
         Graphics2D g2d = getImage().createGraphics();
         g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.4f));
