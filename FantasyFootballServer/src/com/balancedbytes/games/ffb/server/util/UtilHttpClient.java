@@ -32,7 +32,6 @@ public class UtilHttpClient {
     client.getHttpConnectionManager().getParams().setConnectionTimeout(CONNECTION_TIMEOUT);
     HttpMethod method = new GetMethod(pUrl);
     method.setFollowRedirects(true);
-    method.addRequestHeader("Accept-Encoding", "gzip");
     client.executeMethod(method);
     String responseBody = new String(method.getResponseBody(), CHARACTER_ENCODING);
     method.releaseConnection();
