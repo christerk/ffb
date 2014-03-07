@@ -29,7 +29,7 @@ import com.balancedbytes.games.ffb.util.UtilPlayer;
  * 
  * @author Kalimar
  */
-public class UtilPlayerMove {
+public class UtilServerPlayerMove {
 	
 	public static boolean isValidMove(GameState pGameState, ClientCommandMove pMoveCommand, boolean pHomeCommand) {
 		if ((pMoveCommand == null) || (pMoveCommand.getCoordinateFrom() == null) || !ArrayTool.isProvided(pMoveCommand.getCoordinatesTo())) {

@@ -270,7 +270,7 @@ public enum Card implements IEnumWithId, IEnumWithName {
 		
   GROMSKULLS_EXPLODING_RUNES(45, "Gromskull's Exploding Runes", "Exploding Runes", CardType.DIRTY_TRICK, CardTarget.OWN_PLAYER, false,
 		new InducementPhase[] { InducementPhase.BEFORE_SETUP }, InducementDuration.UNTIL_END_OF_GAME,
-		"Player gets Bombardier, No Hands, Secret Weapon & -1 to pass");
+		"Player gets Bombardier, No Hands, Secret Weapon & -1 to pass"),
   //  Description:
   //  	A player purchased some exploding runes from a dwarven runesmith
   //  	before the game. Although they are illegal, they are highly effective.
@@ -282,7 +282,7 @@ public enum Card implements IEnumWithId, IEnumWithName {
   //  	Rune can be very volatile, any pass roll made with a Rune bomb is
   //  	performed with a -1 modifier to the pass roll.
   	
-  //  ILLEGAL SUBSTITUTION
+  //  ILLEGAL SUBSTITUTION (46)
   //  Description:
   //  	A reserve sneaks onto the pitch while the ref is cleaning his glasses.
   //  Timing:
@@ -293,7 +293,7 @@ public enum Card implements IEnumWithId, IEnumWithName {
   //  	a Move Action this turn. This may take your team to 12 players for
   //  	the remainder of the drive.
   	
-  //  KICKING BOOTS
+  //  KICKING BOOTS (47)
   //  Description:
   //  	These boots were made for stomping, and that is just what they will do!
   //	Timing:
@@ -303,7 +303,9 @@ public enum Card implements IEnumWithId, IEnumWithName {
   //		A player of your choice on your team gains the Kick and Dirty Player
   //		skills and a -1 MA for the remainder of this game.
 		
-  //	PIT TRAP
+  PIT_TRAP(45, "Pit Trap", "Pit Trap", CardType.DIRTY_TRICK, CardTarget.ANY_PLAYER, false,
+    new InducementPhase[] { InducementPhase.END_OF_OWN_TURN }, InducementDuration.UNTIL_END_OF_TURN,
+    "Player is placed prone, no armour roll"),
   //  Description:
   //  	A devious groundskeeper has set up a pit trap for you.
   //  Timing:
@@ -313,7 +315,7 @@ public enum Card implements IEnumWithId, IEnumWithName {
   //  	Choose a player: that player is Placed Prone, no armour roll is made,
   //  	and if the player had the ball bounce it as normal.
 
-  //  SPIKED BALL
+  //  SPIKED BALL (46)
   //  Description:
   //    A Bloodthirster is in the crowd today, so in honour of this event a
   //    spiked ball is swapped with the real ball. More blood for the blood god
@@ -326,9 +328,11 @@ public enum Card implements IEnumWithId, IEnumWithName {
   //    roll) is treated as the player being attacked with the Stab skill by an
   //    opponent.
     
-  //  STOLEN PLAYBOOK
+  STOLEN_PLAYBOOK(47, "Stolen Playbook", "Stolen Playbook", CardType.DIRTY_TRICK, CardTarget.OWN_PLAYER, false,
+    new InducementPhase[] { InducementPhase.END_OF_OWN_TURN }, InducementDuration.UNTIL_END_OF_DRIVE,
+    "Player gets Pass Block and Shadowing");
   //  Description:
-  //  	You nabbed a playbook from the opponent’s coach! He sure will be
+  //  	You nabbed a playbook from the opponent's coach! He sure will be
   //    surprised when you know exactly how to ruin his play.
   //  Timing:
   //    Play after your turn has ended or your kick-off to an opponent is

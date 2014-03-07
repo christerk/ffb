@@ -21,7 +21,7 @@ import com.balancedbytes.games.ffb.server.step.StepId;
 import com.balancedbytes.games.ffb.server.step.StepIdFactory;
 import com.balancedbytes.games.ffb.server.step.StepResult;
 import com.balancedbytes.games.ffb.server.step.StepStack;
-import com.balancedbytes.games.ffb.server.util.UtilGame;
+import com.balancedbytes.games.ffb.server.util.UtilServerGame;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
@@ -153,7 +153,7 @@ public class GameState implements IModelChangeObserver, IByteArrayReadable, IJso
     }
     if (fCurrentStep != null) {
       fCurrentStep.handleCommand(pReceivedCommand);
-      UtilGame.syncGameModel(fCurrentStep);
+      UtilServerGame.syncGameModel(fCurrentStep);
     }
     progressStepStack(pReceivedCommand);
   }
@@ -170,7 +170,7 @@ public class GameState implements IModelChangeObserver, IByteArrayReadable, IJso
       getServer().getDebugLog().logCurrentStep(IServerLogLevel.DEBUG, this);
       if (pReceivedCommand == null) {
         fCurrentStep.start();
-        UtilGame.syncGameModel(fCurrentStep);
+        UtilServerGame.syncGameModel(fCurrentStep);
       }
       progressStepStack(pReceivedCommand);
     }

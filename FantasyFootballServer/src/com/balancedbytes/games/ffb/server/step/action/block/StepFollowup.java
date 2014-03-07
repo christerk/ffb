@@ -25,8 +25,8 @@ import com.balancedbytes.games.ffb.server.step.StepCommandStatus;
 import com.balancedbytes.games.ffb.server.step.StepId;
 import com.balancedbytes.games.ffb.server.step.StepParameter;
 import com.balancedbytes.games.ffb.server.step.StepParameterKey;
-import com.balancedbytes.games.ffb.server.util.UtilDialog;
-import com.balancedbytes.games.ffb.server.util.UtilPlayerMove;
+import com.balancedbytes.games.ffb.server.util.UtilServerDialog;
+import com.balancedbytes.games.ffb.server.util.UtilServerPlayerMove;
 import com.balancedbytes.games.ffb.util.UtilCards;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
@@ -137,7 +137,7 @@ public class StepFollowup extends AbstractStep {
 				  }
 				}
         if (fUsingFend == null) {
-          UtilDialog.showDialog(getGameState(), new DialogSkillUseParameter(game.getDefenderId(), Skill.FEND, 0));
+          UtilServerDialog.showDialog(getGameState(), new DialogSkillUseParameter(game.getDefenderId(), Skill.FEND, 0));
         } else {
           if (fUsingFend) {
           	publishParameter(new StepParameter(StepParameterKey.FOLLOWUP_CHOICE, false));
@@ -151,7 +151,7 @@ public class StepFollowup extends AbstractStep {
       	publishParameter(new StepParameter(StepParameterKey.FOLLOWUP_CHOICE, true));
       }
       if ((fFollowupChoice == null) && (fUsingFend != null)) {
-        UtilDialog.showDialog(getGameState(), new DialogFollowupChoiceParameter());
+        UtilServerDialog.showDialog(getGameState(), new DialogFollowupChoiceParameter());
       }
     }
     if (fFollowupChoice != null) {
@@ -161,7 +161,7 @@ public class StepFollowup extends AbstractStep {
         followupCoordinate = fDefenderPosition;
         publishParameter(new StepParameter(StepParameterKey.COORDINATE_FROM, game.getFieldModel().getPlayerCoordinate(actingPlayer.getPlayer())));
         game.getFieldModel().updatePlayerAndBallPosition(actingPlayer.getPlayer(), followupCoordinate);
-        UtilPlayerMove.updateMoveSquares(getGameState(), false);
+        UtilServerPlayerMove.updateMoveSquares(getGameState(), false);
         if (PlayerAction.BLITZ == actingPlayer.getPlayerAction()) {
           trackNumber = new TrackNumber(fCoordinateFrom, actingPlayer.getCurrentMove() - 1);
           game.getFieldModel().add(trackNumber);

@@ -14,8 +14,8 @@ import com.balancedbytes.games.ffb.server.step.StepAction;
 import com.balancedbytes.games.ffb.server.step.StepCommandStatus;
 import com.balancedbytes.games.ffb.server.step.StepId;
 import com.balancedbytes.games.ffb.server.step.StepParameter;
-import com.balancedbytes.games.ffb.server.util.UtilGame;
-import com.balancedbytes.games.ffb.server.util.UtilTimer;
+import com.balancedbytes.games.ffb.server.util.UtilServerGame;
+import com.balancedbytes.games.ffb.server.util.UtilServerTimer;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
@@ -88,12 +88,12 @@ public final class StepBlitzTurn extends AbstractStep {
 	    Team blitzingTeam = game.isHomePlaying() ? game.getTeamHome() : game.getTeamAway();
 	    UtilKickoffSequence.pinPlayersInTacklezones(getGameState(), blitzingTeam);
 	    if (game.isTurnTimeEnabled()) {
-	      UtilTimer.stopTurnTimer(getGameState());
+	      UtilServerTimer.stopTurnTimer(getGameState());
 	      game.setTurnTime(0);
-	      UtilTimer.startTurnTimer(getGameState());
+	      UtilServerTimer.startTurnTimer(getGameState());
 	    }
 	    game.startTurn();
-	    UtilGame.updateLeaderReRolls(this);
+	    UtilServerGame.updateLeaderReRolls(this);
 	    // insert select sequence into kickoff sequence after this step
 	    getGameState().pushCurrentStepOnStack();
 	    SequenceGenerator.getInstance().pushSelectSequence(getGameState(), true);

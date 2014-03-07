@@ -9,7 +9,8 @@ public enum CardTarget {
   
   TURN(1, "turn"),
   OWN_PLAYER(2, "ownPlayer"), 
-  OPPOSING_PLAYER(3, "opposingPlayer");
+  OPPOSING_PLAYER(3, "opposingPlayer"),
+  ANY_PLAYER(4, "anyPlayer");
 
   private int fId;
   private String fName;
@@ -28,7 +29,7 @@ public enum CardTarget {
   }
   
   public boolean isPlayedOnPlayer() {
-	  return ((this == OWN_PLAYER) || (this == OPPOSING_PLAYER));
+	  return ((this == OWN_PLAYER) || (this == OPPOSING_PLAYER) || (this == ANY_PLAYER));
   }
   
   public static CardTarget fromId(int pId) {

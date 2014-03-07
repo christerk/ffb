@@ -16,7 +16,7 @@ import com.balancedbytes.games.ffb.server.step.StepCommandStatus;
 import com.balancedbytes.games.ffb.server.step.StepId;
 import com.balancedbytes.games.ffb.server.step.StepParameter;
 import com.balancedbytes.games.ffb.server.step.StepParameterKey;
-import com.balancedbytes.games.ffb.server.util.UtilDialog;
+import com.balancedbytes.games.ffb.server.util.UtilServerDialog;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
@@ -72,7 +72,7 @@ public final class StepKickoff extends AbstractStep {
   private void executeStep() {
     if (fKickoffStartCoordinate != null) {
       Game game = getGameState().getGame();
-      UtilDialog.hideDialog(getGameState());
+      UtilServerDialog.hideDialog(getGameState());
       publishParameter(new StepParameter(StepParameterKey.KICKOFF_START_COORDINATE, fKickoffStartCoordinate));
     	SequenceGenerator.getInstance().pushInducementSequence(getGameState(), InducementPhase.BEFORE_KICKOFF_SCATTER, game.isHomePlaying());
     	SequenceGenerator.getInstance().pushInducementSequence(getGameState(), InducementPhase.BEFORE_KICKOFF_SCATTER, !game.isHomePlaying());

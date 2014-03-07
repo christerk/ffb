@@ -21,7 +21,7 @@ import com.balancedbytes.games.ffb.server.step.StepId;
 import com.balancedbytes.games.ffb.server.step.StepParameter;
 import com.balancedbytes.games.ffb.server.step.StepParameterKey;
 import com.balancedbytes.games.ffb.server.step.StepParameterSet;
-import com.balancedbytes.games.ffb.server.util.UtilReRoll;
+import com.balancedbytes.games.ffb.server.util.UtilServerReRoll;
 import com.balancedbytes.games.ffb.util.UtilCards;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
@@ -84,7 +84,7 @@ public class StepFoulAppearance extends AbstractStepWithReRoll {
     if ((game.getDefender() != null) && UtilCards.hasSkill(game, game.getDefender(), Skill.FOUL_APPEARANCE) && !UtilCards.hasSkill(game, actingPlayer, Skill.BALL_AND_CHAIN)) {
       boolean doRoll = true;
       if (ReRolledAction.FOUL_APPEARANCE == getReRolledAction()) {
-        if ((getReRollSource() == null) || !UtilReRoll.useReRoll(this, getReRollSource(), actingPlayer.getPlayer())) {
+        if ((getReRollSource() == null) || !UtilServerReRoll.useReRoll(this, getReRollSource(), actingPlayer.getPlayer())) {
           doRoll = false;
           actingPlayer.setHasBlocked(true);
         	game.getTurnData().setTurnStarted(true);
@@ -100,7 +100,7 @@ public class StepFoulAppearance extends AbstractStepWithReRoll {
         if (mayBlock) {
         	getResult().setNextAction(StepAction.NEXT_STEP);
         } else {
-          if (!UtilReRoll.askForReRollIfAvailable(getGameState(), actingPlayer.getPlayer(), ReRolledAction.FOUL_APPEARANCE, minimumRoll, false)) {
+          if (!UtilServerReRoll.askForReRollIfAvailable(getGameState(), actingPlayer.getPlayer(), ReRolledAction.FOUL_APPEARANCE, minimumRoll, false)) {
             actingPlayer.setHasBlocked(true);
           	game.getTurnData().setTurnStarted(true);
           	getResult().setNextAction(StepAction.GOTO_LABEL, fGotoLabelOnFailure);

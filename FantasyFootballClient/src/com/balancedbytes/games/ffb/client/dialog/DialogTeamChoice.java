@@ -30,8 +30,8 @@ import javax.swing.table.DefaultTableModel;
 import com.balancedbytes.games.ffb.TeamList;
 import com.balancedbytes.games.ffb.TeamListEntry;
 import com.balancedbytes.games.ffb.client.FantasyFootballClient;
-import com.balancedbytes.games.ffb.client.util.UtilJTable;
-import com.balancedbytes.games.ffb.client.util.UtilReflection;
+import com.balancedbytes.games.ffb.client.util.UtilClientJTable;
+import com.balancedbytes.games.ffb.client.util.UtilClientReflection;
 import com.balancedbytes.games.ffb.dialog.DialogId;
 import com.balancedbytes.games.ffb.util.StringTool;
 
@@ -109,8 +109,8 @@ public class DialogTeamChoice extends Dialog {
     }
         
     fTable = new JTable(tableModel);
-    UtilReflection.setFillsViewportHeight(fTable, true);
-    UtilReflection.setAutoCreateRowSorter(fTable, true);
+    UtilClientReflection.setFillsViewportHeight(fTable, true);
+    UtilClientReflection.setAutoCreateRowSorter(fTable, true);
     fTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
     fTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
     fTable.getTableHeader().setReorderingAllowed(false);
@@ -125,14 +125,14 @@ public class DialogTeamChoice extends Dialog {
             fButtonOk.setEnabled(false);
           } else {
             fButtonOk.setEnabled(true);
-            fSelectedIndex = UtilReflection.convertRowIndexToModel(fTable, viewRow);
+            fSelectedIndex = UtilClientReflection.convertRowIndexToModel(fTable, viewRow);
           }
         }
       }
     );
     
     for (int column = 0; column < fTable.getColumnCount(); column++) {
-      UtilJTable.packTableColumn(fTable, column, 5);
+      UtilClientJTable.packTableColumn(fTable, column, 5);
     }
     
     // int height = fTable.getTableHeader().getHeight();

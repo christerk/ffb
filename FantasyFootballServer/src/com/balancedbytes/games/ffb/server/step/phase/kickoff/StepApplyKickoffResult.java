@@ -44,12 +44,12 @@ import com.balancedbytes.games.ffb.server.step.StepId;
 import com.balancedbytes.games.ffb.server.step.StepParameter;
 import com.balancedbytes.games.ffb.server.step.StepParameterKey;
 import com.balancedbytes.games.ffb.server.step.StepParameterSet;
-import com.balancedbytes.games.ffb.server.step.UtilSteps;
+import com.balancedbytes.games.ffb.server.step.UtilServerSteps;
 import com.balancedbytes.games.ffb.server.step.action.common.ApothecaryMode;
-import com.balancedbytes.games.ffb.server.util.UtilCatchScatterThrowIn;
-import com.balancedbytes.games.ffb.server.util.UtilGame;
-import com.balancedbytes.games.ffb.server.util.UtilInjury;
-import com.balancedbytes.games.ffb.server.util.UtilSetup;
+import com.balancedbytes.games.ffb.server.util.UtilServerCatchScatterThrowIn;
+import com.balancedbytes.games.ffb.server.util.UtilServerGame;
+import com.balancedbytes.games.ffb.server.util.UtilServerInjury;
+import com.balancedbytes.games.ffb.server.util.UtilServerSetup;
 import com.balancedbytes.games.ffb.util.StringTool;
 import com.balancedbytes.games.ffb.util.UtilPlayer;
 import com.eclipsesource.json.JsonObject;
@@ -148,11 +148,11 @@ public final class StepApplyKickoffResult extends AbstractStep {
 			switch (pReceivedCommand.getId()) {
 	      case CLIENT_SETUP_PLAYER:
 	        ClientCommandSetupPlayer setupPlayerCommand = (ClientCommandSetupPlayer) pReceivedCommand.getCommand();
-	        UtilSetup.setupPlayer(getGameState(), setupPlayerCommand.getPlayerId(), setupPlayerCommand.getCoordinate());
+	        UtilServerSetup.setupPlayer(getGameState(), setupPlayerCommand.getPlayerId(), setupPlayerCommand.getCoordinate());
 	        commandStatus = StepCommandStatus.SKIP_STEP;
 	        break;
 	      case CLIENT_END_TURN:
-	      	if (UtilSteps.checkCommandIsFromCurrentPlayer(getGameState(), pReceivedCommand)) {
+	      	if (UtilServerSteps.checkCommandIsFromCurrentPlayer(getGameState(), pReceivedCommand)) {
 	      		fEndKickoff = true;
 	          commandStatus = StepCommandStatus.EXECUTE_STEP;
 	      	}
@@ -388,7 +388,7 @@ public final class StepApplyKickoffResult extends AbstractStep {
       FieldCoordinate lastValidCoordinate = game.getFieldModel().getBallCoordinate();
       int roll = getGameState().getDiceRoller().rollScatterDirection();
       Direction direction = DiceInterpreter.getInstance().interpretScatterDirectionRoll(roll);
-      FieldCoordinate ballCoordinateEnd = UtilCatchScatterThrowIn.findScatterCoordinate(lastValidCoordinate, direction, 1);
+      FieldCoordinate ballCoordinateEnd = UtilServerCatchScatterThrowIn.findScatterCoordinate(lastValidCoordinate, direction, 1);
       fTouchback = !fKickoffBounds.isInBounds(ballCoordinateEnd);
       if (!fTouchback) {
         game.getFieldModel().setBallCoordinate(ballCoordinateEnd);
@@ -427,7 +427,7 @@ public final class StepApplyKickoffResult extends AbstractStep {
   private void handleThrowARock() {
 
     getResult().setAnimation(new Animation(AnimationType.KICKOFF_THROW_A_ROCK));    
-    UtilGame.syncGameModel(this);
+    UtilServerGame.syncGameModel(this);
   	
     Game game = getGameState().getGame();
     GameResult gameResult = game.getGameResult();
@@ -480,11 +480,11 @@ public final class StepApplyKickoffResult extends AbstractStep {
       	startCoordinate = new FieldCoordinate(getGameState().getDiceRoller().rollXCoordinate(), 14);
       }
       getResult().setAnimation(new Animation(AnimationType.THROW_A_ROCK, startCoordinate, playerCoordinate, null));
-      UtilGame.syncGameModel(this);
+      UtilServerGame.syncGameModel(this);
       
-      publishParameters(UtilInjury.dropPlayer(this, player));
+      publishParameters(UtilServerInjury.dropPlayer(this, player));
       publishParameter(new StepParameter(StepParameterKey.INJURY_RESULT,
-        	UtilInjury.handleInjury(this, InjuryType.THROW_A_ROCK, null, player, playerCoordinate, null, ApothecaryMode.HOME)));
+        	UtilServerInjury.handleInjury(this, InjuryType.THROW_A_ROCK, null, player, playerCoordinate, null, ApothecaryMode.HOME)));
       
     }
 
@@ -500,11 +500,11 @@ public final class StepApplyKickoffResult extends AbstractStep {
       	startCoordinate = new FieldCoordinate(getGameState().getDiceRoller().rollXCoordinate(), 14);
       }
       getResult().setAnimation(new Animation(AnimationType.THROW_A_ROCK, startCoordinate, playerCoordinate, null));
-      UtilGame.syncGameModel(this);
+      UtilServerGame.syncGameModel(this);
       
-      publishParameters(UtilInjury.dropPlayer(this, player));
+      publishParameters(UtilServerInjury.dropPlayer(this, player));
       publishParameter(new StepParameter(StepParameterKey.INJURY_RESULT,
-      	UtilInjury.handleInjury(this, InjuryType.THROW_A_ROCK, null, player, playerCoordinate, null, ApothecaryMode.AWAY)));
+      	UtilServerInjury.handleInjury(this, InjuryType.THROW_A_ROCK, null, player, playerCoordinate, null, ApothecaryMode.AWAY)));
       
     }
     

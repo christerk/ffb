@@ -16,8 +16,8 @@ import com.balancedbytes.games.ffb.client.FantasyFootballClient;
 import com.balancedbytes.games.ffb.client.IIconProperty;
 import com.balancedbytes.games.ffb.client.IconCache;
 import com.balancedbytes.games.ffb.client.UserInterface;
-import com.balancedbytes.games.ffb.client.util.UtilActionKeys;
-import com.balancedbytes.games.ffb.client.util.UtilCursor;
+import com.balancedbytes.games.ffb.client.util.UtilClientActionKeys;
+import com.balancedbytes.games.ffb.client.util.UtilClientCursor;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
@@ -77,7 +77,7 @@ public class ClientStateFoul extends ClientStateMove {
       }
     } else {
       FieldCoordinate playerPosition = game.getFieldModel().getPlayerCoordinate(actingPlayer.getPlayer());
-      FieldCoordinate defenderPosition = UtilActionKeys.findMoveCoordinate(getClient(), playerPosition, pActionKey);
+      FieldCoordinate defenderPosition = UtilClientActionKeys.findMoveCoordinate(getClient(), playerPosition, pActionKey);
       Player defender = game.getFieldModel().getPlayer(defenderPosition);
       if (defender != null) {
         actionHandled = foul(defender);
@@ -92,7 +92,7 @@ public class ClientStateFoul extends ClientStateMove {
     super.mouseOverPlayer(pPlayer);
     Game game = getClient().getGame();
     if (UtilPlayer.isFoulable(game, pPlayer)) {
-      UtilCursor.setCustomCursor(getClient().getUserInterface(), IIconProperty.CURSOR_FOUL);
+      UtilClientCursor.setCustomCursor(getClient().getUserInterface(), IIconProperty.CURSOR_FOUL);
     }
     return true;
   }

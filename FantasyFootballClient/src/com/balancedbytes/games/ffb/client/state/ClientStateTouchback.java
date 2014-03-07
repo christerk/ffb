@@ -6,7 +6,7 @@ import com.balancedbytes.games.ffb.PlayerState;
 import com.balancedbytes.games.ffb.Skill;
 import com.balancedbytes.games.ffb.client.FantasyFootballClient;
 import com.balancedbytes.games.ffb.client.IIconProperty;
-import com.balancedbytes.games.ffb.client.util.UtilCursor;
+import com.balancedbytes.games.ffb.client.util.UtilClientCursor;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.util.UtilCards;
@@ -45,9 +45,9 @@ public class ClientStateTouchback extends ClientState {
   protected boolean mouseOverPlayer(Player pPlayer) {
     super.mouseOverPlayer(pPlayer);
     if (isClickable() && (fTouchbackToAnyField || isPlayerSelectable(pPlayer))) {
-      UtilCursor.setCustomCursor(getClient().getUserInterface(), IIconProperty.CURSOR_PASS);
+      UtilClientCursor.setCustomCursor(getClient().getUserInterface(), IIconProperty.CURSOR_PASS);
     } else {
-      UtilCursor.setDefaultCursor(getClient().getUserInterface());
+      UtilClientCursor.setDefaultCursor(getClient().getUserInterface());
     }
     return true;
   }
@@ -56,9 +56,9 @@ public class ClientStateTouchback extends ClientState {
   protected boolean mouseOverField(FieldCoordinate pCoordinate) {
     super.mouseOverField(pCoordinate);
     if (isClickable() && fTouchbackToAnyField) {
-      UtilCursor.setCustomCursor(getClient().getUserInterface(), IIconProperty.CURSOR_PASS);
+      UtilClientCursor.setCustomCursor(getClient().getUserInterface(), IIconProperty.CURSOR_PASS);
     } else {
-      UtilCursor.setDefaultCursor(getClient().getUserInterface());
+      UtilClientCursor.setDefaultCursor(getClient().getUserInterface());
     }
     return true;
   }

@@ -5,8 +5,8 @@ import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.client.ActionKey;
 import com.balancedbytes.games.ffb.client.FantasyFootballClient;
 import com.balancedbytes.games.ffb.client.IIconProperty;
-import com.balancedbytes.games.ffb.client.util.UtilActionKeys;
-import com.balancedbytes.games.ffb.client.util.UtilCursor;
+import com.balancedbytes.games.ffb.client.util.UtilClientActionKeys;
+import com.balancedbytes.games.ffb.client.util.UtilClientCursor;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
@@ -44,7 +44,7 @@ public class ClientStateGaze extends ClientStateMove {
     Game game = getClient().getGame();
     ActingPlayer actingPlayer = game.getActingPlayer();
     FieldCoordinate playerPosition = game.getFieldModel().getPlayerCoordinate(actingPlayer.getPlayer());
-    FieldCoordinate victimPosition = UtilActionKeys.findMoveCoordinate(getClient(), playerPosition, pActionKey);
+    FieldCoordinate victimPosition = UtilClientActionKeys.findMoveCoordinate(getClient(), playerPosition, pActionKey);
     Player victim = game.getFieldModel().getPlayer(victimPosition);
     if (victim != null) {
       actionHandled = canBeGazed(victim);
@@ -60,16 +60,16 @@ public class ClientStateGaze extends ClientStateMove {
   protected boolean mouseOverPlayer(Player pPlayer) {
     super.mouseOverPlayer(pPlayer);
     if (canBeGazed(pPlayer)) {
-      UtilCursor.setCustomCursor(getClient().getUserInterface(), IIconProperty.CURSOR_GAZE);
+      UtilClientCursor.setCustomCursor(getClient().getUserInterface(), IIconProperty.CURSOR_GAZE);
     } else {
-      UtilCursor.setDefaultCursor(getClient().getUserInterface());
+      UtilClientCursor.setDefaultCursor(getClient().getUserInterface());
     }
     return true;
   }
   
   protected boolean mouseOverField(FieldCoordinate pCoordinate) {
     super.mouseOverField(pCoordinate);
-    UtilCursor.setDefaultCursor(getClient().getUserInterface());
+    UtilClientCursor.setDefaultCursor(getClient().getUserInterface());
     return true;
   }
   

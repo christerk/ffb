@@ -21,7 +21,7 @@ import com.balancedbytes.games.ffb.server.step.StepParameter;
 import com.balancedbytes.games.ffb.server.step.StepParameterKey;
 import com.balancedbytes.games.ffb.server.step.StepParameterSet;
 import com.balancedbytes.games.ffb.server.step.action.common.ApothecaryMode;
-import com.balancedbytes.games.ffb.server.util.UtilInjury;
+import com.balancedbytes.games.ffb.server.util.UtilServerInjury;
 import com.balancedbytes.games.ffb.util.StringTool;
 import com.balancedbytes.games.ffb.util.UtilCards;
 import com.eclipsesource.json.JsonObject;
@@ -106,9 +106,9 @@ public class StepStab extends AbstractStep {
     if (UtilCards.hasSkill(game, actingPlayer, Skill.STAB) && (fUsingStab != null) && fUsingStab) {
       getResult().setSound(Sound.STAB);
       FieldCoordinate defenderCoordinate = game.getFieldModel().getPlayerCoordinate(game.getDefender());
-      InjuryResult injuryResultDefender = UtilInjury.handleInjury(this, InjuryType.STAB, actingPlayer.getPlayer(), game.getDefender(), defenderCoordinate, null, ApothecaryMode.DEFENDER);
+      InjuryResult injuryResultDefender = UtilServerInjury.handleInjury(this, InjuryType.STAB, actingPlayer.getPlayer(), game.getDefender(), defenderCoordinate, null, ApothecaryMode.DEFENDER);
       if (injuryResultDefender.isArmorBroken()) {
-        publishParameters(UtilInjury.dropPlayer(this, game.getDefender()));
+        publishParameters(UtilServerInjury.dropPlayer(this, game.getDefender()));
       }
       publishParameter(new StepParameter(StepParameterKey.INJURY_RESULT, injuryResultDefender));
       getResult().setNextAction(StepAction.GOTO_LABEL, fGotoLabelOnSuccess);

@@ -20,8 +20,8 @@ import com.balancedbytes.games.ffb.client.ActionKey;
 import com.balancedbytes.games.ffb.client.FantasyFootballClient;
 import com.balancedbytes.games.ffb.client.FieldComponent;
 import com.balancedbytes.games.ffb.client.UserInterface;
-import com.balancedbytes.games.ffb.client.util.UtilCursor;
-import com.balancedbytes.games.ffb.client.util.UtilMarker;
+import com.balancedbytes.games.ffb.client.util.UtilClientCursor;
+import com.balancedbytes.games.ffb.client.util.UtilClientMarker;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.net.INetCommandHandler;
@@ -63,11 +63,11 @@ public abstract class ClientState implements INetCommandHandler, MouseListener, 
   public void enterState() {
     UserInterface userInterface = getClient().getUserInterface();
     userInterface.getDialogManager().updateDialog();
-    UtilCursor.setDefaultCursor(userInterface);
+    UtilClientCursor.setDefaultCursor(userInterface);
   }
   
   public void leaveState() {
-    UtilCursor.setDefaultCursor(getClient().getUserInterface());
+    UtilClientCursor.setDefaultCursor(getClient().getUserInterface());
   }
 
   // Interface Methods
@@ -178,9 +178,9 @@ public abstract class ClientState implements INetCommandHandler, MouseListener, 
         if (player != null) {
           int x = (coordinate.getX() + 1) * FIELD_SQUARE_SIZE;
           int y = (coordinate.getY() + 1) * FIELD_SQUARE_SIZE;
-          UtilMarker.showMarkerPopup(getClient(), player, x, y);
+          UtilClientMarker.showMarkerPopup(getClient(), player, x, y);
         } else {
-          UtilMarker.showMarkerPopup(getClient(), coordinate);
+          UtilClientMarker.showMarkerPopup(getClient(), coordinate);
         }
       } else {
         if (isClickable()) {

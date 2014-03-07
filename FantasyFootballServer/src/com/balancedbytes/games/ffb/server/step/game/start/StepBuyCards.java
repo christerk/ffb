@@ -24,8 +24,8 @@ import com.balancedbytes.games.ffb.server.step.StepCommandStatus;
 import com.balancedbytes.games.ffb.server.step.StepId;
 import com.balancedbytes.games.ffb.server.step.StepParameter;
 import com.balancedbytes.games.ffb.server.step.StepParameterKey;
-import com.balancedbytes.games.ffb.server.step.UtilSteps;
-import com.balancedbytes.games.ffb.server.util.UtilDialog;
+import com.balancedbytes.games.ffb.server.step.UtilServerSteps;
+import com.balancedbytes.games.ffb.server.util.UtilServerDialog;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
@@ -76,7 +76,7 @@ public final class StepBuyCards extends AbstractStep {
       switch (pReceivedCommand.getId()) {
       case CLIENT_BUY_CARD:
         ClientCommandBuyCard buyCardCommand = (ClientCommandBuyCard) pReceivedCommand.getCommand();
-        if (UtilSteps.checkCommandIsFromHomePlayer(getGameState(), pReceivedCommand)) {
+        if (UtilServerSteps.checkCommandIsFromHomePlayer(getGameState(), pReceivedCommand)) {
           fBuyCardHome = buyCardCommand.getCardType();
           if (fBuyCardHome == null) {
             fCardsSelectedHome = true;
@@ -160,14 +160,14 @@ public final class StepBuyCards extends AbstractStep {
         int homeTV = gameResult.getTeamResultHome().getTeamValue();
         int awayTV = gameResult.getTeamResultAway().getTeamValue();
         if (homeTV > awayTV) {
-          UtilDialog.showDialog(getGameState(), createDialogParameter(game.getTeamHome().getId(), fInducementGoldHome));
+          UtilServerDialog.showDialog(getGameState(), createDialogParameter(game.getTeamHome().getId(), fInducementGoldHome));
         } else {
-          UtilDialog.showDialog(getGameState(), createDialogParameter(game.getTeamAway().getId(), fInducementGoldAway));
+          UtilServerDialog.showDialog(getGameState(), createDialogParameter(game.getTeamAway().getId(), fInducementGoldAway));
         }
       } else if (!fCardsSelectedHome) {
-        UtilDialog.showDialog(getGameState(), createDialogParameter(game.getTeamHome().getId(), fInducementGoldHome));
+        UtilServerDialog.showDialog(getGameState(), createDialogParameter(game.getTeamHome().getId(), fInducementGoldHome));
       } else if (!fCardsSelectedAway) {
-        UtilDialog.showDialog(getGameState(), createDialogParameter(game.getTeamAway().getId(), fInducementGoldAway));
+        UtilServerDialog.showDialog(getGameState(), createDialogParameter(game.getTeamAway().getId(), fInducementGoldAway));
       } else {
         fInducementGoldHome = Math.max(0,
             fInducementGoldHome - UtilGameOption.getIntOption(game, GameOptionId.FREE_CARD_CASH));

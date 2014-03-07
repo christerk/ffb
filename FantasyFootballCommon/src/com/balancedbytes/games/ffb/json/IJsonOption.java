@@ -1,6 +1,7 @@
 package com.balancedbytes.games.ffb.json;
 
 import com.balancedbytes.games.ffb.BlockResultFactory;
+import com.balancedbytes.games.ffb.CardEffectFactory;
 import com.balancedbytes.games.ffb.CardFactory;
 import com.balancedbytes.games.ffb.CardTypeFactory;
 import com.balancedbytes.games.ffb.ClientModeFactory;
@@ -81,6 +82,8 @@ public interface IJsonOption {
        JsonFieldCoordinateOption BOTTOM_RIGHT = new JsonFieldCoordinateOption("bottomRight");
           JsonEnumWithNameOption CARD = new JsonEnumWithNameOption("card", new CardFactory());
            JsonStringArrayOption CARDS = new JsonStringArrayOption("cards");
+          JsonEnumWithNameOption CARD_EFFECT = new JsonEnumWithNameOption("cardEffect", new CardEffectFactory());
+           JsonStringArrayOption CARD_EFFECTS = new JsonStringArrayOption("cardEffects");
            JsonStringArrayOption CARDS_ACTIVE = new JsonStringArrayOption("cardsActive");
            JsonStringArrayOption CARDS_AVAILABLE = new JsonStringArrayOption("cardsAvailable");
            JsonStringArrayOption CARDS_DEACTIVATED = new JsonStringArrayOption("cardsDeactivated");

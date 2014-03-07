@@ -11,8 +11,8 @@ import com.balancedbytes.games.ffb.server.step.SequenceGenerator;
 import com.balancedbytes.games.ffb.server.step.StepAction;
 import com.balancedbytes.games.ffb.server.step.StepId;
 import com.balancedbytes.games.ffb.server.step.StepParameter;
-import com.balancedbytes.games.ffb.server.step.UtilSteps;
-import com.balancedbytes.games.ffb.server.util.UtilDialog;
+import com.balancedbytes.games.ffb.server.step.UtilServerSteps;
+import com.balancedbytes.games.ffb.server.util.UtilServerDialog;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
@@ -76,11 +76,11 @@ public final class StepEndInducement extends AbstractStep {
 	}
 	
 	private void executeStep() {
-		UtilDialog.hideDialog(getGameState());
+		UtilServerDialog.hideDialog(getGameState());
 		if (fInducementPhase == null) {
 			return;
 		}
-    fEndTurn |= UtilSteps.checkTouchdown(getGameState());
+    fEndTurn |= UtilServerSteps.checkTouchdown(getGameState());
     if (fEndTurn) {
     	SequenceGenerator.getInstance().pushEndTurnSequence(getGameState());
     } else if (fEndInducementPhase) {

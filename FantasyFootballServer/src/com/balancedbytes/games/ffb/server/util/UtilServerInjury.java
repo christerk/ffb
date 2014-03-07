@@ -35,7 +35,6 @@ import com.balancedbytes.games.ffb.server.step.IStep;
 import com.balancedbytes.games.ffb.server.step.StepParameter;
 import com.balancedbytes.games.ffb.server.step.StepParameterKey;
 import com.balancedbytes.games.ffb.server.step.StepParameterSet;
-import com.balancedbytes.games.ffb.server.step.UtilSteps;
 import com.balancedbytes.games.ffb.server.step.action.common.ApothecaryMode;
 import com.balancedbytes.games.ffb.util.UtilBox;
 import com.balancedbytes.games.ffb.util.UtilCards;
@@ -45,7 +44,7 @@ import com.balancedbytes.games.ffb.util.UtilPlayer;
  * 
  * @author Kalimar
  */
-public class UtilInjury {
+public class UtilServerInjury {
   
   public static InjuryResult handleInjury(
   	IStep pStep,
@@ -219,7 +218,7 @@ public class UtilInjury {
     	if (UtilCards.hasCard(game, pDefender, Card.LUCKY_CHARM) && (injuryResult.getArmorRoll() != null)) {
     		injuryResult.setArmorBroken(false);
     		injuryResult.setInjury(new PlayerState(PlayerState.PRONE));
-    		UtilSteps.deactivateCard(pStep, Card.LUCKY_CHARM);
+    		UtilServerCards.deactivateCard(pStep, Card.LUCKY_CHARM);
 
     	} else if (pInjuryType == InjuryType.EAT_PLAYER) {
         injuryResult.setInjury(new PlayerState(PlayerState.RIP));
@@ -452,7 +451,7 @@ public class UtilInjury {
           playerResult.setSeriousInjuryDecay(null);
           UtilBox.putPlayerIntoBox(game, pPlayer);
           UtilBox.refreshBoxes(game);
-          UtilGame.updateLeaderReRolls(pStep);
+          UtilServerGame.updateLeaderReRolls(pStep);
         }
         pStep.getResult().addReport(new ReportSkillRoll(ReportId.REGENERATION_ROLL, pPlayer.getId(), successful, roll, 4, false));
       }
@@ -566,7 +565,7 @@ public class UtilInjury {
         }
       }
     }
-    UtilPlayerMove.updateMoveSquares(gameState, false);
+    UtilServerPlayerMove.updateMoveSquares(gameState, false);
     return stepParameters;
   }
   

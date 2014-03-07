@@ -26,7 +26,7 @@ import com.balancedbytes.games.ffb.util.UtilBox;
  * 
  * @author Kalimar
  */
-public class UtilSetup {
+public class UtilServerSetup {
   
   public static void loadTeamSetup(GameState pGameState, String pSetupName) {
     

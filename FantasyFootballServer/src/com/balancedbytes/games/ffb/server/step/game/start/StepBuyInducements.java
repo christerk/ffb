@@ -38,8 +38,8 @@ import com.balancedbytes.games.ffb.server.step.StepAction;
 import com.balancedbytes.games.ffb.server.step.StepCommandStatus;
 import com.balancedbytes.games.ffb.server.step.StepId;
 import com.balancedbytes.games.ffb.server.step.StepParameter;
-import com.balancedbytes.games.ffb.server.step.UtilSteps;
-import com.balancedbytes.games.ffb.server.util.UtilDialog;
+import com.balancedbytes.games.ffb.server.step.UtilServerSteps;
+import com.balancedbytes.games.ffb.server.util.UtilServerDialog;
 import com.balancedbytes.games.ffb.util.ArrayTool;
 import com.balancedbytes.games.ffb.util.UtilBox;
 import com.eclipsesource.json.JsonObject;
@@ -169,14 +169,14 @@ public final class StepBuyInducements extends AbstractStep {
       }
       if (!fInducementsSelectedHome && !fInducementsSelectedAway) {
         if (homeTV > awayTV) {
-          UtilDialog.showDialog(getGameState(), new DialogBuyInducementsParameter(game.getTeamHome().getId(), fInducementGoldHome));
+          UtilServerDialog.showDialog(getGameState(), new DialogBuyInducementsParameter(game.getTeamHome().getId(), fInducementGoldHome));
         } else {
-          UtilDialog.showDialog(getGameState(), new DialogBuyInducementsParameter(game.getTeamAway().getId(), fInducementGoldAway));
+          UtilServerDialog.showDialog(getGameState(), new DialogBuyInducementsParameter(game.getTeamAway().getId(), fInducementGoldAway));
         }
       } else if (!fInducementsSelectedHome) {
-        UtilDialog.showDialog(getGameState(), new DialogBuyInducementsParameter(game.getTeamHome().getId(), fInducementGoldHome));
+        UtilServerDialog.showDialog(getGameState(), new DialogBuyInducementsParameter(game.getTeamHome().getId(), fInducementGoldHome));
       } else if (!fInducementsSelectedAway) {
-        UtilDialog.showDialog(getGameState(), new DialogBuyInducementsParameter(game.getTeamAway().getId(), fInducementGoldAway));
+        UtilServerDialog.showDialog(getGameState(), new DialogBuyInducementsParameter(game.getTeamAway().getId(), fInducementGoldAway));
       } else {
       	leaveStep(homeTV, awayTV);
       }
@@ -258,7 +258,7 @@ public final class StepBuyInducements extends AbstractStep {
     
     if (addedPlayerList.size() > 0) {
       Player[] addedPlayers = addedPlayerList.toArray(new Player[addedPlayerList.size()]);
-      UtilSteps.sendAddedPlayers(getGameState(), pTeam, addedPlayers);
+      UtilServerSteps.sendAddedPlayers(getGameState(), pTeam, addedPlayers);
     }
     
   }
@@ -324,7 +324,7 @@ public final class StepBuyInducements extends AbstractStep {
       
       if (addedPlayerList.size() > 0) {
         Player[] addedPlayers = addedPlayerList.toArray(new Player[addedPlayerList.size()]);
-        UtilSteps.sendAddedPlayers(getGameState(), pTeam, addedPlayers);
+        UtilServerSteps.sendAddedPlayers(getGameState(), pTeam, addedPlayers);
         // TODO: update persistence?
       }
       

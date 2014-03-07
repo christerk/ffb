@@ -20,7 +20,7 @@ import com.balancedbytes.games.ffb.server.step.StepAction;
 import com.balancedbytes.games.ffb.server.step.StepCommandStatus;
 import com.balancedbytes.games.ffb.server.step.StepId;
 import com.balancedbytes.games.ffb.server.step.StepParameter;
-import com.balancedbytes.games.ffb.server.util.UtilDialog;
+import com.balancedbytes.games.ffb.server.util.UtilServerDialog;
 import com.balancedbytes.games.ffb.util.UtilCards;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
@@ -99,7 +99,7 @@ public class StepDumpOff extends AbstractStep {
     } else if (fUsingDumpOff == null) {
       if (UtilCards.hasSkill(game, game.getDefender(), Skill.DUMP_OFF) && (fDefenderPosition != null) && fDefenderPosition.equals(game.getFieldModel().getBallCoordinate())
         && !(game.getFieldModel().getPlayerState(game.getDefender()).isConfused() || game.getFieldModel().getPlayerState(game.getDefender()).isHypnotized())) {
-        UtilDialog.showDialog(getGameState(), new DialogSkillUseParameter(game.getDefenderId(), Skill.DUMP_OFF, 0));
+        UtilServerDialog.showDialog(getGameState(), new DialogSkillUseParameter(game.getDefenderId(), Skill.DUMP_OFF, 0));
         getResult().setNextAction(StepAction.CONTINUE);
       } else {
       	fUsingDumpOff = false;
@@ -112,7 +112,7 @@ public class StepDumpOff extends AbstractStep {
     	game.setThrowerId(game.getDefenderId());
     	game.setThrowerAction(PlayerAction.DUMP_OFF);
     	game.setDefenderAction(PlayerAction.DUMP_OFF);
-      UtilDialog.showDialog(getGameState(), new DialogDefenderActionParameter());
+      UtilServerDialog.showDialog(getGameState(), new DialogDefenderActionParameter());
     	getGameState().pushCurrentStepOnStack();
       SequenceGenerator.getInstance().pushPassSequence(getGameState());
       getResult().setNextAction(StepAction.NEXT_STEP);

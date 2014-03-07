@@ -24,8 +24,8 @@ import com.balancedbytes.games.ffb.server.step.StepId;
 import com.balancedbytes.games.ffb.server.step.StepParameter;
 import com.balancedbytes.games.ffb.server.step.StepParameterKey;
 import com.balancedbytes.games.ffb.server.step.StepParameterSet;
-import com.balancedbytes.games.ffb.server.util.UtilDialog;
-import com.balancedbytes.games.ffb.server.util.UtilReRoll;
+import com.balancedbytes.games.ffb.server.util.UtilServerDialog;
+import com.balancedbytes.games.ffb.server.util.UtilServerReRoll;
 import com.balancedbytes.games.ffb.util.ArrayTool;
 import com.balancedbytes.games.ffb.util.StringTool;
 import com.balancedbytes.games.ffb.util.UtilCards;
@@ -144,7 +144,7 @@ public class StepTentacles extends AbstractStepWithReRoll {
             }
             descriptionArray[i] = description.toString();
           } 
-          UtilDialog.showDialog(getGameState(), new DialogPlayerChoiceParameter(teamId, PlayerChoiceMode.TENTACLES, playerArray, descriptionArray, 1));
+          UtilServerDialog.showDialog(getGameState(), new DialogPlayerChoiceParameter(teamId, PlayerChoiceMode.TENTACLES, playerArray, descriptionArray, 1));
         } else {
         	fUsingTentacles = false;
         }
@@ -157,7 +157,7 @@ public class StepTentacles extends AbstractStepWithReRoll {
       if (fUsingTentacles && (game.getDefender() != null)) {
         boolean rollTentacles = true;
         if (ReRolledAction.TENTACLES_ESCAPE == getReRolledAction()) {
-          if ((getReRollSource() == null) || !UtilReRoll.useReRoll(this, getReRollSource(), actingPlayer.getPlayer())) {
+          if ((getReRollSource() == null) || !UtilServerReRoll.useReRoll(this, getReRollSource(), actingPlayer.getPlayer())) {
             rollTentacles = false;
           }
         }
@@ -171,7 +171,7 @@ public class StepTentacles extends AbstractStepWithReRoll {
           	fUsingTentacles = false;
           } else {
             if (getReRolledAction() != ReRolledAction.TENTACLES_ESCAPE) {
-              if (UtilReRoll.askForReRollIfAvailable(getGameState(), actingPlayer.getPlayer(), ReRolledAction.TENTACLES_ESCAPE, minimumRoll, false)) {
+              if (UtilServerReRoll.askForReRollIfAvailable(getGameState(), actingPlayer.getPlayer(), ReRolledAction.TENTACLES_ESCAPE, minimumRoll, false)) {
                 doNextStep = false;
               }
             }

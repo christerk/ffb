@@ -28,8 +28,8 @@ import com.balancedbytes.games.ffb.server.step.StepParameter;
 import com.balancedbytes.games.ffb.server.step.StepParameterKey;
 import com.balancedbytes.games.ffb.server.step.StepParameterSet;
 import com.balancedbytes.games.ffb.server.step.action.common.ApothecaryMode;
-import com.balancedbytes.games.ffb.server.util.UtilDialog;
-import com.balancedbytes.games.ffb.server.util.UtilInjury;
+import com.balancedbytes.games.ffb.server.util.UtilServerDialog;
+import com.balancedbytes.games.ffb.server.util.UtilServerInjury;
 import com.balancedbytes.games.ffb.util.ArrayTool;
 import com.balancedbytes.games.ffb.util.StringTool;
 import com.balancedbytes.games.ffb.util.UtilBox;
@@ -125,7 +125,7 @@ public class StepInitFeeding extends AbstractStep {
 	}
 
   private void executeStep() {
-    UtilDialog.hideDialog(getGameState());
+    UtilServerDialog.hideDialog(getGameState());
     Game game = getGameState().getGame();
     ActingPlayer actingPlayer = game.getActingPlayer();
     if (actingPlayer.isSufferingBloodLust() && !actingPlayer.hasFed() && !fFeedingAllowed) {
@@ -145,7 +145,7 @@ public class StepInitFeeding extends AbstractStep {
       Team team = game.isHomePlaying() ? game.getTeamHome() : game.getTeamAway();
       Player[] victims = UtilPlayer.findAdjacentPlayersToFeedOn(game, team, playerCoordinate);
       if (ArrayTool.isProvided(victims)) {
-        UtilDialog.showDialog(getGameState(), new DialogPlayerChoiceParameter(team.getId(), PlayerChoiceMode.FEED, victims, null, 1));
+        UtilServerDialog.showDialog(getGameState(), new DialogPlayerChoiceParameter(team.getId(), PlayerChoiceMode.FEED, victims, null, 1));
       } else {
       	fFeedOnPlayerChoice = false;
       }
@@ -153,10 +153,10 @@ public class StepInitFeeding extends AbstractStep {
     if (!playerState.hasTacklezones() || (fFeedOnPlayerChoice != null)) {
       if ((fFeedOnPlayerChoice != null) && fFeedOnPlayerChoice && (game.getDefender() != null)) {
         FieldCoordinate feedOnPlayerCoordinate = game.getFieldModel().getPlayerCoordinate(game.getDefender());
-        InjuryResult injuryResultFeeding = UtilInjury.handleInjury(this, InjuryType.BITTEN, actingPlayer.getPlayer(), game.getDefender(), feedOnPlayerCoordinate, null, ApothecaryMode.FEEDING);
+        InjuryResult injuryResultFeeding = UtilServerInjury.handleInjury(this, InjuryType.BITTEN, actingPlayer.getPlayer(), game.getDefender(), feedOnPlayerCoordinate, null, ApothecaryMode.FEEDING);
         fEndTurn = UtilPlayer.hasBall(game, game.getDefender());  // turn end on biting the ball carrier
         publishParameter(new StepParameter(StepParameterKey.INJURY_RESULT, injuryResultFeeding));
-        publishParameters(UtilInjury.dropPlayer(this, game.getDefender()));
+        publishParameters(UtilServerInjury.dropPlayer(this, game.getDefender()));
         getResult().setSound(Sound.SLURP);
         actingPlayer.setSufferingBloodLust(false);
         doNextStep = true;

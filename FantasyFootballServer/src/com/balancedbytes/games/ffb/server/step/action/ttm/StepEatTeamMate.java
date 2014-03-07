@@ -19,7 +19,7 @@ import com.balancedbytes.games.ffb.server.step.StepId;
 import com.balancedbytes.games.ffb.server.step.StepParameter;
 import com.balancedbytes.games.ffb.server.step.StepParameterKey;
 import com.balancedbytes.games.ffb.server.step.action.common.ApothecaryMode;
-import com.balancedbytes.games.ffb.server.util.UtilInjury;
+import com.balancedbytes.games.ffb.server.util.UtilServerInjury;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
@@ -90,7 +90,7 @@ public final class StepEatTeamMate extends AbstractStep {
 	      publishParameter(new StepParameter(StepParameterKey.END_TURN, true));
 	      publishParameter(new StepParameter(StepParameterKey.CATCH_SCATTER_THROW_IN_MODE, CatchScatterThrowInMode.SCATTER_BALL));
 	    }
-	    InjuryResult injuryResultThrownPlayer = UtilInjury.handleInjury(this, InjuryType.EAT_PLAYER, null, thrownPlayer, fThrownPlayerCoordinate, null, ApothecaryMode.THROWN_PLAYER);
+	    InjuryResult injuryResultThrownPlayer = UtilServerInjury.handleInjury(this, InjuryType.EAT_PLAYER, null, thrownPlayer, fThrownPlayerCoordinate, null, ApothecaryMode.THROWN_PLAYER);
 	    publishParameter(new StepParameter(StepParameterKey.INJURY_RESULT, injuryResultThrownPlayer));
 	    publishParameter(new StepParameter(StepParameterKey.THROWN_PLAYER_COORDINATE, null));  // avoid reset in end step
 	    getResult().setSound(Sound.NOMNOM);

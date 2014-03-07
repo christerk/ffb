@@ -13,7 +13,7 @@ import com.balancedbytes.games.ffb.model.Team;
 import com.balancedbytes.games.ffb.option.GameOptionId;
 import com.balancedbytes.games.ffb.option.UtilGameOption;
 import com.balancedbytes.games.ffb.server.GameState;
-import com.balancedbytes.games.ffb.server.util.UtilDialog;
+import com.balancedbytes.games.ffb.server.util.UtilServerDialog;
 import com.balancedbytes.games.ffb.util.UtilPlayer;
 
 /**
@@ -80,7 +80,7 @@ public class UtilKickoffSequence {
       }
     }
     if (messageList.size() > 0) {
-      UtilDialog.showDialog(pGameState, new DialogSetupErrorParameter(team.getId(), messageList.toArray(new String[messageList.size()])));
+      UtilServerDialog.showDialog(pGameState, new DialogSetupErrorParameter(team.getId(), messageList.toArray(new String[messageList.size()])));
       return false;
     } else {
       return true;

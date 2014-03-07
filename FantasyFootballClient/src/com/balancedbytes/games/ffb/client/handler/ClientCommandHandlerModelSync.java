@@ -11,8 +11,8 @@ import com.balancedbytes.games.ffb.client.animation.AnimationSequenceFactory;
 import com.balancedbytes.games.ffb.client.animation.IAnimationListener;
 import com.balancedbytes.games.ffb.client.animation.IAnimationSequence;
 import com.balancedbytes.games.ffb.client.layer.FieldLayer;
-import com.balancedbytes.games.ffb.client.util.UtilThrowTeamMate;
-import com.balancedbytes.games.ffb.client.util.UtilTimeout;
+import com.balancedbytes.games.ffb.client.util.UtilClientThrowTeamMate;
+import com.balancedbytes.games.ffb.client.util.UtilClientTimeout;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.Animation;
 import com.balancedbytes.games.ffb.model.Game;
@@ -241,7 +241,7 @@ public class ClientCommandHandlerModelSync extends ClientCommandHandler implemen
     ActingPlayer actingPlayer = game.getActingPlayer();
 
     if (fUpdateTimeout && (fMode == ClientCommandHandlerMode.PLAYING)) {
-      UtilTimeout.showTimeoutStatus(getClient());    
+      UtilClientTimeout.showTimeoutStatus(getClient());    
     }
     
     if (fUpdateActingPlayer)  {
@@ -272,7 +272,7 @@ public class ClientCommandHandlerModelSync extends ClientCommandHandler implemen
     }
     
     if (fMode == ClientCommandHandlerMode.PLAYING) {
-      UtilThrowTeamMate.updateThrownPlayer(getClient());
+      UtilClientThrowTeamMate.updateThrownPlayer(getClient());
       refreshFieldComponent();
       updateDialog();
       refreshSideBars();

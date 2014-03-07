@@ -33,7 +33,7 @@ import com.balancedbytes.games.ffb.server.step.StepId;
 import com.balancedbytes.games.ffb.server.step.StepParameter;
 import com.balancedbytes.games.ffb.server.step.StepParameterKey;
 import com.balancedbytes.games.ffb.server.step.StepParameterSet;
-import com.balancedbytes.games.ffb.server.util.UtilReRoll;
+import com.balancedbytes.games.ffb.server.util.UtilServerReRoll;
 import com.balancedbytes.games.ffb.util.UtilCards;
 import com.balancedbytes.games.ffb.util.UtilPlayer;
 import com.eclipsesource.json.JsonObject;
@@ -139,7 +139,7 @@ public class StepMoveDodge extends AbstractStepWithReRoll {
     boolean doDodge = actingPlayer.isDodging();
     if (doDodge) {
       if (ReRolledAction.DODGE == getReRolledAction()) {
-        if ((getReRollSource() == null) || !UtilReRoll.useReRoll(this, getReRollSource(), actingPlayer.getPlayer())) {
+        if ((getReRollSource() == null) || !UtilServerReRoll.useReRoll(this, getReRollSource(), actingPlayer.getPlayer())) {
           failDodge();
           doDodge = false;
         }
@@ -233,10 +233,10 @@ public class StepMoveDodge extends AbstractStepWithReRoll {
         }
         if (useDodgeSkill) {
           setReRollSource(ReRollSource.DODGE);
-          UtilReRoll.useReRoll(this, getReRollSource(), actingPlayer.getPlayer());
+          UtilServerReRoll.useReRoll(this, getReRollSource(), actingPlayer.getPlayer());
           status = dodge(true);
         } else {
-          if (UtilReRoll.askForReRollIfAvailable(getGameState(), actingPlayer.getPlayer(), ReRolledAction.DODGE, minimumRoll, false)) {
+          if (UtilServerReRoll.askForReRollIfAvailable(getGameState(), actingPlayer.getPlayer(), ReRolledAction.DODGE, minimumRoll, false)) {
             status = ActionStatus.WAITING_FOR_RE_ROLL;
           }
         }

@@ -16,9 +16,9 @@ import com.balancedbytes.games.ffb.server.step.StepAction;
 import com.balancedbytes.games.ffb.server.step.StepCommandStatus;
 import com.balancedbytes.games.ffb.server.step.StepId;
 import com.balancedbytes.games.ffb.server.step.StepParameter;
-import com.balancedbytes.games.ffb.server.step.UtilSteps;
-import com.balancedbytes.games.ffb.server.util.UtilDialog;
-import com.balancedbytes.games.ffb.server.util.UtilPlayerMove;
+import com.balancedbytes.games.ffb.server.step.UtilServerSteps;
+import com.balancedbytes.games.ffb.server.util.UtilServerDialog;
+import com.balancedbytes.games.ffb.server.util.UtilServerPlayerMove;
 import com.balancedbytes.games.ffb.util.ArrayTool;
 import com.balancedbytes.games.ffb.util.StringTool;
 import com.balancedbytes.games.ffb.util.UtilPlayer;
@@ -132,8 +132,8 @@ public class StepEndMoving extends AbstractStep {
   }
 	
 	private void executeStep() {
-		UtilDialog.hideDialog(getGameState());
-    fEndTurn |= UtilSteps.checkTouchdown(getGameState());
+		UtilServerDialog.hideDialog(getGameState());
+    fEndTurn |= UtilServerSteps.checkTouchdown(getGameState());
     if (fFeedingAllowed == null) {
     	fFeedingAllowed = true;  // feeding allowed if not specified otherwise
     }
@@ -155,7 +155,7 @@ public class StepEndMoving extends AbstractStep {
       || ((PlayerAction.FOUL_MOVE == actingPlayer.getPlayerAction()) && UtilPlayer.canFoul(game, actingPlayer.getPlayer()))
       || ((PlayerAction.MOVE == actingPlayer.getPlayerAction()) && UtilPlayer.canGaze(game, actingPlayer.getPlayer())
       || ((PlayerAction.THROW_TEAM_MATE_MOVE == actingPlayer.getPlayerAction()) && UtilPlayer.canThrowTeamMate(game, actingPlayer.getPlayer(), false)))) {
-      UtilPlayerMove.updateMoveSquares(getGameState(), actingPlayer.isLeaping());
+      UtilServerPlayerMove.updateMoveSquares(getGameState(), actingPlayer.isLeaping());
     	SequenceGenerator.getInstance().pushMoveSequence(getGameState());
     } else {
     	SequenceGenerator.getInstance().pushEndPlayerActionSequence(getGameState(), fFeedingAllowed, fEndTurn);
@@ -166,7 +166,7 @@ public class StepEndMoving extends AbstractStep {
 	private StepCommandStatus dispatchPlayerAction(PlayerAction pPlayerAction) {
 		Game game = getGameState().getGame();
 		ActingPlayer actingPlayer = game.getActingPlayer();
-		UtilSteps.changePlayerAction(this, actingPlayer.getPlayerId(), pPlayerAction, actingPlayer.isLeaping());
+		UtilServerSteps.changePlayerAction(this, actingPlayer.getPlayerId(), pPlayerAction, actingPlayer.isLeaping());
 		if (pushSequenceForPlayerAction(pPlayerAction)) {
 	    getResult().setNextAction(StepAction.NEXT_STEP_AND_REPEAT);
 		}

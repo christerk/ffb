@@ -28,7 +28,7 @@ import com.balancedbytes.games.ffb.server.step.StepId;
 import com.balancedbytes.games.ffb.server.step.StepParameter;
 import com.balancedbytes.games.ffb.server.step.StepParameterKey;
 import com.balancedbytes.games.ffb.server.step.StepParameterSet;
-import com.balancedbytes.games.ffb.server.util.UtilReRoll;
+import com.balancedbytes.games.ffb.server.util.UtilServerReRoll;
 import com.balancedbytes.games.ffb.util.UtilCards;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
@@ -94,7 +94,7 @@ public class StepPickUp extends AbstractStepWithReRoll {
     boolean doPickUp = true;
     if (isPickUp()) {
       if (ReRolledAction.PICK_UP == getReRolledAction()) {
-        if ((getReRollSource() == null) || !UtilReRoll.useReRoll(this, getReRollSource(), actingPlayer.getPlayer())) {
+        if ((getReRollSource() == null) || !UtilServerReRoll.useReRoll(this, getReRollSource(), actingPlayer.getPlayer())) {
         	doPickUp = false;
           publishParameter(new StepParameter(StepParameterKey.END_TURN, true));
         	publishParameter(new StepParameter(StepParameterKey.CATCH_SCATTER_THROW_IN_MODE, CatchScatterThrowInMode.FAILED_PICK_UP));
@@ -150,10 +150,10 @@ public class StepPickUp extends AbstractStepWithReRoll {
           setReRolledAction(ReRolledAction.PICK_UP);
           if (UtilCards.hasUnusedSkill(game, actingPlayer, Skill.SURE_HANDS)) {
             setReRollSource(ReRollSource.SURE_HANDS);
-            UtilReRoll.useReRoll(this, getReRollSource(), actingPlayer.getPlayer());
+            UtilServerReRoll.useReRoll(this, getReRollSource(), actingPlayer.getPlayer());
             return pickUp();
           } else {
-            if (UtilReRoll.askForReRollIfAvailable(getGameState(), actingPlayer.getPlayer(), ReRolledAction.PICK_UP, minimumRoll, false)) {
+            if (UtilServerReRoll.askForReRollIfAvailable(getGameState(), actingPlayer.getPlayer(), ReRolledAction.PICK_UP, minimumRoll, false)) {
               return ActionStatus.WAITING_FOR_RE_ROLL;
             } else {
               return ActionStatus.FAILURE;

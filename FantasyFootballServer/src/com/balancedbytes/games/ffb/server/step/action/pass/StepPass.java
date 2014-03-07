@@ -33,9 +33,9 @@ import com.balancedbytes.games.ffb.server.step.StepId;
 import com.balancedbytes.games.ffb.server.step.StepParameter;
 import com.balancedbytes.games.ffb.server.step.StepParameterKey;
 import com.balancedbytes.games.ffb.server.step.StepParameterSet;
-import com.balancedbytes.games.ffb.server.util.UtilDialog;
-import com.balancedbytes.games.ffb.server.util.UtilGame;
-import com.balancedbytes.games.ffb.server.util.UtilReRoll;
+import com.balancedbytes.games.ffb.server.util.UtilServerDialog;
+import com.balancedbytes.games.ffb.server.util.UtilServerGame;
+import com.balancedbytes.games.ffb.server.util.UtilServerReRoll;
 import com.balancedbytes.games.ffb.util.StringTool;
 import com.balancedbytes.games.ffb.util.UtilCards;
 import com.balancedbytes.games.ffb.util.UtilPassing;
@@ -154,7 +154,7 @@ public class StepPass extends AbstractStepWithReRoll {
     	game.getFieldModel().setBallMoving(true);
     }
     if (ReRolledAction.PASS == getReRolledAction()) {
-      if ((getReRollSource() == null) || !UtilReRoll.useReRoll(this, getReRollSource(), game.getThrower())) {
+      if ((getReRollSource() == null) || !UtilServerReRoll.useReRoll(this, getReRollSource(), game.getThrower())) {
     	  handleFailedPass();
         return;
       }
@@ -194,7 +194,7 @@ public class StepPass extends AbstractStepWithReRoll {
       } else {
       	getResult().setAnimation(new Animation(AnimationType.PASS, startCoordinate, game.getPassCoordinate(), null));
       }
-      UtilGame.syncGameModel(this);
+      UtilServerGame.syncGameModel(this);
       Player catcher = game.getPlayerById(fCatcherId);
       PlayerState catcherState = game.getFieldModel().getPlayerState(catcher);
       if ((catcher == null) || (catcherState == null) || !catcherState.hasTacklezones()) {
@@ -224,9 +224,9 @@ public class StepPass extends AbstractStepWithReRoll {
         if (UtilCards.hasSkill(game, game.getThrower(), Skill.PASS) && !fPassSkillUsed) {
         	doNextStep = false;
         	fPassSkillUsed = true;
-          UtilDialog.showDialog(getGameState(), new DialogSkillUseParameter(game.getThrowerId(), Skill.PASS, minimumRoll));
+          UtilServerDialog.showDialog(getGameState(), new DialogSkillUseParameter(game.getThrowerId(), Skill.PASS, minimumRoll));
         } else {
-          if (UtilReRoll.askForReRollIfAvailable(getGameState(), game.getThrower(), ReRolledAction.PASS, minimumRoll, fPassFumble)) {
+          if (UtilServerReRoll.askForReRollIfAvailable(getGameState(), game.getThrower(), ReRolledAction.PASS, minimumRoll, fPassFumble)) {
           	doNextStep = false;
           }
         }

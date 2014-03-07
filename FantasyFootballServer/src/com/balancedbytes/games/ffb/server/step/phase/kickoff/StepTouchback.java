@@ -21,8 +21,8 @@ import com.balancedbytes.games.ffb.server.step.StepCommandStatus;
 import com.balancedbytes.games.ffb.server.step.StepId;
 import com.balancedbytes.games.ffb.server.step.StepParameter;
 import com.balancedbytes.games.ffb.server.step.StepParameterKey;
-import com.balancedbytes.games.ffb.server.step.UtilSteps;
-import com.balancedbytes.games.ffb.server.util.UtilDialog;
+import com.balancedbytes.games.ffb.server.step.UtilServerSteps;
+import com.balancedbytes.games.ffb.server.util.UtilServerDialog;
 import com.balancedbytes.games.ffb.util.UtilCards;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
@@ -62,7 +62,7 @@ public final class StepTouchback extends AbstractStep {
 			switch (pReceivedCommand.getId()) {
 	      case CLIENT_TOUCHBACK:
 	        ClientCommandTouchback touchbackCommand = (ClientCommandTouchback) pReceivedCommand.getCommand();
-	        if (UtilSteps.checkCommandIsFromHomePlayer(getGameState(), pReceivedCommand)) {
+	        if (UtilServerSteps.checkCommandIsFromHomePlayer(getGameState(), pReceivedCommand)) {
 	        	fTouchbackCoordinate = touchbackCommand.getBallCoordinate();
 	        } else {
 	        	fTouchbackCoordinate = touchbackCommand.getBallCoordinate().transform();
@@ -106,7 +106,7 @@ public final class StepTouchback extends AbstractStep {
         game.setDialogParameter(new DialogTouchbackParameter());
         doNextStep = false;
       } else {
-        UtilDialog.hideDialog(getGameState());
+        UtilServerDialog.hideDialog(getGameState());
         game.getFieldModel().setBallCoordinate(fTouchbackCoordinate);
         Player player = game.getFieldModel().getPlayer(fTouchbackCoordinate);
         PlayerState playerState = game.getFieldModel().getPlayerState(player);

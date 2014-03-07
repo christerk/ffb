@@ -22,7 +22,7 @@ import com.balancedbytes.games.ffb.server.step.StepId;
 import com.balancedbytes.games.ffb.server.step.StepParameter;
 import com.balancedbytes.games.ffb.server.step.StepParameterKey;
 import com.balancedbytes.games.ffb.server.step.StepParameterSet;
-import com.balancedbytes.games.ffb.server.util.UtilReRoll;
+import com.balancedbytes.games.ffb.server.util.UtilServerReRoll;
 import com.balancedbytes.games.ffb.util.UtilCards;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
@@ -119,7 +119,7 @@ public final class StepAlwaysHungry extends AbstractStepWithReRoll {
     boolean doEscape = UtilCards.hasSkill(game, actingPlayer, Skill.ALWAYS_HUNGRY) && !doAlwaysHungry;
     if (doAlwaysHungry) {
       if (ReRolledAction.ALWAYS_HUNGRY == getReRolledAction()) {
-        if ((getReRollSource() == null) || !UtilReRoll.useReRoll(this, getReRollSource(), actingPlayer.getPlayer())) {
+        if ((getReRollSource() == null) || !UtilServerReRoll.useReRoll(this, getReRollSource(), actingPlayer.getPlayer())) {
           doEscape = true;
           doAlwaysHungry = false;
         }
@@ -135,7 +135,7 @@ public final class StepAlwaysHungry extends AbstractStepWithReRoll {
           doEscape = true;
           if (getReRolledAction() != ReRolledAction.ALWAYS_HUNGRY) {
             setReRolledAction(ReRolledAction.ALWAYS_HUNGRY);
-            if (UtilReRoll.askForReRollIfAvailable(getGameState(), actingPlayer.getPlayer(), ReRolledAction.ALWAYS_HUNGRY, 2, false)) {
+            if (UtilServerReRoll.askForReRollIfAvailable(getGameState(), actingPlayer.getPlayer(), ReRolledAction.ALWAYS_HUNGRY, 2, false)) {
               doEscape = false;
             }
           }
@@ -146,7 +146,7 @@ public final class StepAlwaysHungry extends AbstractStepWithReRoll {
       actingPlayer.markSkillUsed(Skill.ALWAYS_HUNGRY);
       ReRollSource reRollSource = null;
       if (ReRolledAction.ESCAPE == getReRolledAction()) {
-        if ((getReRollSource() == null) || !UtilReRoll.useReRoll(this, getReRollSource(), thrownPlayer)) {
+        if ((getReRollSource() == null) || !UtilServerReRoll.useReRoll(this, getReRollSource(), thrownPlayer)) {
         	getResult().setNextAction(StepAction.GOTO_LABEL, fGotoLabelOnFailure);
           return;
         }
@@ -160,7 +160,7 @@ public final class StepAlwaysHungry extends AbstractStepWithReRoll {
         } else {
           if (getReRolledAction() != ReRolledAction.ESCAPE) {
             setReRolledAction(ReRolledAction.ESCAPE);
-            if (UtilReRoll.askForReRollIfAvailable(getGameState(), thrownPlayer, ReRolledAction.ESCAPE, 2, false)) {
+            if (UtilServerReRoll.askForReRollIfAvailable(getGameState(), thrownPlayer, ReRolledAction.ESCAPE, 2, false)) {
             	return;
             }
           }

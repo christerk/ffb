@@ -16,7 +16,7 @@ import com.balancedbytes.games.ffb.server.step.StepCommandStatus;
 import com.balancedbytes.games.ffb.server.step.StepId;
 import com.balancedbytes.games.ffb.server.step.StepParameter;
 import com.balancedbytes.games.ffb.server.step.StepParameterSet;
-import com.balancedbytes.games.ffb.server.util.UtilDialog;
+import com.balancedbytes.games.ffb.server.util.UtilServerDialog;
 import com.balancedbytes.games.ffb.util.UtilPlayer;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
@@ -72,7 +72,7 @@ public final class StepWinnings extends AbstractStepWithReRoll {
   }
 
   private void executeStep() {
-    UtilDialog.hideDialog(getGameState());
+    UtilServerDialog.hideDialog(getGameState());
     Game game = getGameState().getGame();
     if ((getReRolledAction() == null) || ((getReRolledAction() == ReRolledAction.WINNINGS) && (getReRollSource() != null))) {
       ReportWinningsRoll reportWinnings = rollWinnings();
@@ -84,7 +84,7 @@ public final class StepWinnings extends AbstractStepWithReRoll {
         	reportWinnings = rollWinnings();
         }
         // <--
-      	UtilDialog.hideDialog(getGameState());
+      	UtilServerDialog.hideDialog(getGameState());
       }
       getResult().addReport(rollWinnings());
     }
@@ -120,10 +120,10 @@ public final class StepWinnings extends AbstractStepWithReRoll {
     }
     if (getReRolledAction() == null) {
       if (scoreDiffHome > 0) {
-        UtilDialog.showDialog(getGameState(), new DialogWinningsReRollParameter(game.getTeamHome().getId(), rollHome));
+        UtilServerDialog.showDialog(getGameState(), new DialogWinningsReRollParameter(game.getTeamHome().getId(), rollHome));
       }
       if (scoreDiffHome < 0) {
-        UtilDialog.showDialog(getGameState(), new DialogWinningsReRollParameter(game.getTeamAway().getId(), rollAway));
+        UtilServerDialog.showDialog(getGameState(), new DialogWinningsReRollParameter(game.getTeamAway().getId(), rollAway));
       }
     }
     return new ReportWinningsRoll(rollHome, gameResult.getTeamResultHome().getWinnings(), rollAway, gameResult.getTeamResultAway().getWinnings());

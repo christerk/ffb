@@ -11,8 +11,8 @@ import com.balancedbytes.games.ffb.server.step.SequenceGenerator;
 import com.balancedbytes.games.ffb.server.step.StepAction;
 import com.balancedbytes.games.ffb.server.step.StepCommandStatus;
 import com.balancedbytes.games.ffb.server.step.StepId;
-import com.balancedbytes.games.ffb.server.util.UtilDialog;
-import com.balancedbytes.games.ffb.server.util.UtilGame;
+import com.balancedbytes.games.ffb.server.util.UtilServerDialog;
+import com.balancedbytes.games.ffb.server.util.UtilServerGame;
 import com.eclipsesource.json.JsonValue;
 
 /**
@@ -47,11 +47,11 @@ public final class StepInitKickoff extends AbstractStep {
   private void executeStep() {
     Game game = getGameState().getGame();
     if (game.getTurnMode() == TurnMode.START_GAME) {
-      UtilDialog.hideDialog(getGameState());
-      UtilGame.startHalf(this, 1);
+      UtilServerDialog.hideDialog(getGameState());
+      UtilServerGame.startHalf(this, 1);
       game.setTurnMode(TurnMode.SETUP);
       game.startTurn();
-      UtilGame.updateLeaderReRolls(this);
+      UtilServerGame.updateLeaderReRolls(this);
     }
     SequenceGenerator.getInstance().pushInducementSequence(getGameState(), InducementPhase.BEFORE_SETUP, game.isHomePlaying());
     getResult().setNextAction(StepAction.NEXT_STEP);

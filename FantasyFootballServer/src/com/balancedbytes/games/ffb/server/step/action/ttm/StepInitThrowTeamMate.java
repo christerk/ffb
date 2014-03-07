@@ -20,7 +20,7 @@ import com.balancedbytes.games.ffb.server.step.StepId;
 import com.balancedbytes.games.ffb.server.step.StepParameter;
 import com.balancedbytes.games.ffb.server.step.StepParameterKey;
 import com.balancedbytes.games.ffb.server.step.StepParameterSet;
-import com.balancedbytes.games.ffb.server.step.UtilSteps;
+import com.balancedbytes.games.ffb.server.step.UtilServerSteps;
 import com.balancedbytes.games.ffb.util.StringTool;
 import com.balancedbytes.games.ffb.util.UtilRangeRuler;
 import com.eclipsesource.json.JsonObject;
@@ -92,12 +92,12 @@ public final class StepInitThrowTeamMate extends AbstractStep {
 	@Override
   public StepCommandStatus handleCommand(ReceivedCommand pReceivedCommand) {
     StepCommandStatus commandStatus = super.handleCommand(pReceivedCommand);
-		if ((pReceivedCommand != null) && (commandStatus == StepCommandStatus.UNHANDLED_COMMAND) && UtilSteps.checkCommandIsFromCurrentPlayer(getGameState(), pReceivedCommand)) {
+		if ((pReceivedCommand != null) && (commandStatus == StepCommandStatus.UNHANDLED_COMMAND) && UtilServerSteps.checkCommandIsFromCurrentPlayer(getGameState(), pReceivedCommand)) {
 			Game game = getGameState().getGame();
 			switch (pReceivedCommand.getId()) {
 	      case CLIENT_THROW_TEAM_MATE:
 	        ClientCommandThrowTeamMate throwTeamMateCommand = (ClientCommandThrowTeamMate) pReceivedCommand.getCommand();
-	        if (UtilSteps.checkCommandWithActingPlayer(getGameState(), throwTeamMateCommand)) {
+	        if (UtilServerSteps.checkCommandWithActingPlayer(getGameState(), throwTeamMateCommand)) {
   	        if (throwTeamMateCommand.getTargetCoordinate() != null) {
   	          if (game.isHomePlaying()) {
   	          	fTargetCoordinate = throwTeamMateCommand.getTargetCoordinate();
@@ -113,14 +113,14 @@ public final class StepInitThrowTeamMate extends AbstractStep {
         case CLIENT_ACTING_PLAYER:
           ClientCommandActingPlayer actingPlayerCommand = (ClientCommandActingPlayer) pReceivedCommand.getCommand();
           if (StringTool.isProvided(actingPlayerCommand.getPlayerId())) {
-          	UtilSteps.changePlayerAction(this, actingPlayerCommand.getPlayerId(), actingPlayerCommand.getPlayerAction(), actingPlayerCommand.isLeaping());
+          	UtilServerSteps.changePlayerAction(this, actingPlayerCommand.getPlayerId(), actingPlayerCommand.getPlayerAction(), actingPlayerCommand.isLeaping());
           } else {
           	fEndPlayerAction = true;
           }
 	        commandStatus = StepCommandStatus.EXECUTE_STEP;
 	        break;
         case CLIENT_END_TURN:
-        	if (UtilSteps.checkCommandIsFromCurrentPlayer(getGameState(), pReceivedCommand)) {
+        	if (UtilServerSteps.checkCommandIsFromCurrentPlayer(getGameState(), pReceivedCommand)) {
         		fEndTurn = true;
             commandStatus = StepCommandStatus.EXECUTE_STEP;
         	}
@@ -162,7 +162,7 @@ public final class StepInitThrowTeamMate extends AbstractStep {
 	        boolean thrownPlayerHasBall = thrownPlayerCoordinate.equals(game.getFieldModel().getBallCoordinate()) && !game.getFieldModel().isBallMoving();
 	        publishParameter(new StepParameter(StepParameterKey.THROWN_PLAYER_HAS_BALL, thrownPlayerHasBall));
 		      game.getFieldModel().setPlayerState(game.getDefender(), thrownPlayerState.changeBase(PlayerState.PICKED_UP));
-		      UtilSteps.changePlayerAction(this, actingPlayer.getPlayerId(), PlayerAction.THROW_TEAM_MATE, false);
+		      UtilServerSteps.changePlayerAction(this, actingPlayer.getPlayerId(), PlayerAction.THROW_TEAM_MATE, false);
 		    }
       }
     }

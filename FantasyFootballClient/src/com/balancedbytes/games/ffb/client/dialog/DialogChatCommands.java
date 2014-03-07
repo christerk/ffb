@@ -135,6 +135,10 @@ public class DialogChatCommands extends Dialog {
       html.append("<td>").append(_FONT_OPEN).append("puts players on your team into a box (rsv, ko, bh, si, rip, ban).").append(_FONT_CLOSE).append("</td>\n");
       html.append("</tr>\n");
       html.append("<tr>\n");
+      html.append("<td>").append(_FONT_BOLD_OPEN).append("/card &lt;shortname&gt;").append(_FONT_BOLD_CLOSE).append("</td>\n");
+      html.append("<td>").append(_FONT_OPEN).append("adds card with given shortname to your inducements.").append(_FONT_CLOSE).append("</td>\n");
+      html.append("</tr>\n");
+      html.append("<tr>\n");
       html.append("<td>").append(_FONT_BOLD_OPEN).append("/injury &lt;injury&gt; &lt;playerlist&gt; ").append(_FONT_BOLD_CLOSE).append("</td>\n");
       html.append("<td>").append(_FONT_OPEN).append("gives players on your team an injury of that type (ni, -ma, -av, -ag or -st)").append(_FONT_CLOSE).append("</td>\n");
       html.append("</tr>\n");
@@ -175,7 +179,7 @@ public class DialogChatCommands extends Dialog {
       html.append("<td>").append(_FONT_OPEN).append("jumps to the turn with the given number").append(_FONT_CLOSE).append("</td>\n");
       html.append("</tr>\n");
       html.append("<tr>\n");
-      html.append("<td>").append(_FONT_BOLD_OPEN).append("/weather &lt;name&gt;").append(_FONT_BOLD_CLOSE).append("</td>\n");
+      html.append("<td>").append(_FONT_BOLD_OPEN).append("/weather &lt;shortname&gt;").append(_FONT_BOLD_CLOSE).append("</td>\n");
       html.append("<td>").append(_FONT_OPEN).append("changes the weather to nice, sunny, rain, heat or blizzard").append(_FONT_CLOSE).append("</td>\n");
       html.append("</tr>\n");
       html.append("<tr>\n");

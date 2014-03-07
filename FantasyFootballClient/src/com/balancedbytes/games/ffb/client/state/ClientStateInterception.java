@@ -4,7 +4,7 @@ import com.balancedbytes.games.ffb.ClientStateId;
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.client.FantasyFootballClient;
 import com.balancedbytes.games.ffb.client.IIconProperty;
-import com.balancedbytes.games.ffb.client.util.UtilCursor;
+import com.balancedbytes.games.ffb.client.util.UtilClientCursor;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.util.UtilPassing;
@@ -38,16 +38,16 @@ public class ClientStateInterception extends ClientState {
   protected boolean mouseOverPlayer(Player pPlayer) {
     super.mouseOverPlayer(pPlayer);
     if (isInterceptor(pPlayer)) {
-      UtilCursor.setCustomCursor(getClient().getUserInterface(), IIconProperty.CURSOR_PASS);
+      UtilClientCursor.setCustomCursor(getClient().getUserInterface(), IIconProperty.CURSOR_PASS);
     } else {
-      UtilCursor.setDefaultCursor(getClient().getUserInterface());
+      UtilClientCursor.setDefaultCursor(getClient().getUserInterface());
     }
     return true;
   }
   
   protected boolean mouseOverField(FieldCoordinate pCoordinate) {
     super.mouseOverField(pCoordinate);
-    UtilCursor.setDefaultCursor(getClient().getUserInterface());
+    UtilClientCursor.setDefaultCursor(getClient().getUserInterface());
     return true;
   }
 

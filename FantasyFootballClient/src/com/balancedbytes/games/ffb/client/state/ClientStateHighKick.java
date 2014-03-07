@@ -7,7 +7,7 @@ import com.balancedbytes.games.ffb.PlayerState;
 import com.balancedbytes.games.ffb.client.FantasyFootballClient;
 import com.balancedbytes.games.ffb.client.IIconProperty;
 import com.balancedbytes.games.ffb.client.ui.SideBarComponent;
-import com.balancedbytes.games.ffb.client.util.UtilCursor;
+import com.balancedbytes.games.ffb.client.util.UtilClientCursor;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
 
@@ -51,16 +51,16 @@ public class ClientStateHighKick extends ClientState {
   protected boolean mouseOverPlayer(Player pPlayer) {
     super.mouseOverPlayer(pPlayer);
     if (isPlayerSelectable(pPlayer)) {
-      UtilCursor.setCustomCursor(getClient().getUserInterface(), IIconProperty.CURSOR_PASS);
+      UtilClientCursor.setCustomCursor(getClient().getUserInterface(), IIconProperty.CURSOR_PASS);
     } else {
-      UtilCursor.setDefaultCursor(getClient().getUserInterface());
+      UtilClientCursor.setDefaultCursor(getClient().getUserInterface());
     }
     return true;
   }
   
   protected boolean mouseOverField(FieldCoordinate pCoordinate) {
     super.mouseOverField(pCoordinate);
-    UtilCursor.setDefaultCursor(getClient().getUserInterface());
+    UtilClientCursor.setDefaultCursor(getClient().getUserInterface());
     return true;
   }
 

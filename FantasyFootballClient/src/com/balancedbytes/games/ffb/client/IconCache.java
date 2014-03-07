@@ -282,7 +282,11 @@ public class IconCache {
       return null;
     }
     String pitchUrlTemplate = pGame.getOptions().getOptionWithDefault(GameOptionId.PITCH_URL_TEMPLATE).getValueAsString();
-    return StringTool.bind(pitchUrlTemplate, pWeather.getShortName());
+    String pitchUrl = StringTool.bind(pitchUrlTemplate, pWeather.getShortName());
+    if (!pitchUrlTemplate.equals(pitchUrl) && !pitchUrl.contains("$")) {
+      return pitchUrl;
+    }
+    return null;
   }
   
   public FantasyFootballClient getClient() {

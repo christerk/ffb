@@ -26,7 +26,7 @@ import com.balancedbytes.games.ffb.server.step.StepId;
 import com.balancedbytes.games.ffb.server.step.StepParameter;
 import com.balancedbytes.games.ffb.server.step.StepParameterKey;
 import com.balancedbytes.games.ffb.server.step.StepParameterSet;
-import com.balancedbytes.games.ffb.server.util.UtilReRoll;
+import com.balancedbytes.games.ffb.server.util.UtilServerReRoll;
 import com.balancedbytes.games.ffb.util.StringTool;
 import com.balancedbytes.games.ffb.util.UtilCards;
 import com.eclipsesource.json.JsonObject;
@@ -97,7 +97,7 @@ public class StepHypnoticGaze extends AbstractStepWithReRoll {
     }
     boolean gotoEndLabel = true;
     if (ReRolledAction.HYPNOTIC_GAZE == getReRolledAction()) {
-      if ((getReRollSource() == null) || !UtilReRoll.useReRoll(this, getReRollSource(), actingPlayer.getPlayer())) {
+      if ((getReRollSource() == null) || !UtilServerReRoll.useReRoll(this, getReRollSource(), actingPlayer.getPlayer())) {
         doGaze = false;
       }
     } else {
@@ -120,7 +120,7 @@ public class StepHypnoticGaze extends AbstractStepWithReRoll {
           game.getFieldModel().setPlayerState(game.getDefender(), oldVictimState.changeHypnotized(true));
         }
       } else {
-        if ((getReRolledAction() != ReRolledAction.HYPNOTIC_GAZE) && UtilReRoll.askForReRollIfAvailable(getGameState(), actingPlayer.getPlayer(), ReRolledAction.HYPNOTIC_GAZE, minimumRoll, false)) {
+        if ((getReRolledAction() != ReRolledAction.HYPNOTIC_GAZE) && UtilServerReRoll.askForReRollIfAvailable(getGameState(), actingPlayer.getPlayer(), ReRolledAction.HYPNOTIC_GAZE, minimumRoll, false)) {
           gotoEndLabel = false;
         }
       }

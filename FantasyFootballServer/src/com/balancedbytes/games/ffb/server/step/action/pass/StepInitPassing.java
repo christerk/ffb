@@ -22,7 +22,7 @@ import com.balancedbytes.games.ffb.server.step.StepId;
 import com.balancedbytes.games.ffb.server.step.StepParameter;
 import com.balancedbytes.games.ffb.server.step.StepParameterKey;
 import com.balancedbytes.games.ffb.server.step.StepParameterSet;
-import com.balancedbytes.games.ffb.server.step.UtilSteps;
+import com.balancedbytes.games.ffb.server.step.UtilServerSteps;
 import com.balancedbytes.games.ffb.util.StringTool;
 import com.balancedbytes.games.ffb.util.UtilPassing;
 import com.balancedbytes.games.ffb.util.UtilRangeRuler;
@@ -107,12 +107,12 @@ public final class StepInitPassing extends AbstractStep {
     StepCommandStatus commandStatus = super.handleCommand(pReceivedCommand);
     Game game = getGameState().getGame();
     ActingPlayer actingPlayer = game.getActingPlayer();
-    if ((pReceivedCommand != null) && (commandStatus == StepCommandStatus.UNHANDLED_COMMAND) && (UtilSteps.checkCommandIsFromCurrentPlayer(getGameState(), pReceivedCommand) || (game.getTurnMode() == TurnMode.DUMP_OFF))) {
+    if ((pReceivedCommand != null) && (commandStatus == StepCommandStatus.UNHANDLED_COMMAND) && (UtilServerSteps.checkCommandIsFromCurrentPlayer(getGameState(), pReceivedCommand) || (game.getTurnMode() == TurnMode.DUMP_OFF))) {
       switch (pReceivedCommand.getId()) {
         case CLIENT_PASS:
           ClientCommandPass passCommand = (ClientCommandPass) pReceivedCommand.getCommand();
-          if (UtilSteps.checkCommandWithActingPlayer(getGameState(), passCommand) || (game.getTurnMode() == TurnMode.DUMP_OFF)) {
-            if (UtilSteps.checkCommandIsFromHomePlayer(getGameState(), pReceivedCommand)) {
+          if (UtilServerSteps.checkCommandWithActingPlayer(getGameState(), passCommand) || (game.getTurnMode() == TurnMode.DUMP_OFF)) {
+            if (UtilServerSteps.checkCommandIsFromHomePlayer(getGameState(), pReceivedCommand)) {
               game.setPassCoordinate(passCommand.getTargetCoordinate());
             } else {
               game.setPassCoordinate(passCommand.getTargetCoordinate().transform());
@@ -131,7 +131,7 @@ public final class StepInitPassing extends AbstractStep {
           break;
         case CLIENT_HAND_OVER:
           ClientCommandHandOver handOverCommand = (ClientCommandHandOver) pReceivedCommand.getCommand();
-          if (UtilSteps.checkCommandWithActingPlayer(getGameState(), handOverCommand)) {
+          if (UtilServerSteps.checkCommandWithActingPlayer(getGameState(), handOverCommand)) {
             fCatcherId = handOverCommand.getCatcherId();
             game.setThrowerId(actingPlayer.getPlayerId());
             game.setThrowerAction(PlayerAction.HAND_OVER);
@@ -141,14 +141,14 @@ public final class StepInitPassing extends AbstractStep {
         case CLIENT_ACTING_PLAYER:
           ClientCommandActingPlayer actingPlayerCommand = (ClientCommandActingPlayer) pReceivedCommand.getCommand();
           if (StringTool.isProvided(actingPlayerCommand.getPlayerId())) {
-            UtilSteps.changePlayerAction(this, actingPlayerCommand.getPlayerId(), actingPlayerCommand.getPlayerAction(), actingPlayerCommand.isLeaping());
+            UtilServerSteps.changePlayerAction(this, actingPlayerCommand.getPlayerId(), actingPlayerCommand.getPlayerAction(), actingPlayerCommand.isLeaping());
           } else {
             fEndPlayerAction = true;
           }
           commandStatus = StepCommandStatus.EXECUTE_STEP;
           break;
         case CLIENT_END_TURN:
-          if (UtilSteps.checkCommandIsFromCurrentPlayer(getGameState(), pReceivedCommand)) {
+          if (UtilServerSteps.checkCommandIsFromCurrentPlayer(getGameState(), pReceivedCommand)) {
             fEndTurn = true;
             commandStatus = StepCommandStatus.EXECUTE_STEP;
           }

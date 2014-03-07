@@ -20,7 +20,7 @@ import com.balancedbytes.games.ffb.server.step.StepId;
 import com.balancedbytes.games.ffb.server.step.StepParameter;
 import com.balancedbytes.games.ffb.server.step.StepParameterKey;
 import com.balancedbytes.games.ffb.server.step.StepParameterSet;
-import com.balancedbytes.games.ffb.server.step.UtilSteps;
+import com.balancedbytes.games.ffb.server.step.UtilServerSteps;
 import com.balancedbytes.games.ffb.util.StringTool;
 import com.balancedbytes.games.ffb.util.UtilCards;
 import com.eclipsesource.json.JsonObject;
@@ -98,11 +98,11 @@ public class StepInitBlocking extends AbstractStep {
   @Override
   public StepCommandStatus handleCommand(ReceivedCommand pReceivedCommand) {
     StepCommandStatus commandStatus = super.handleCommand(pReceivedCommand);
-    if ((pReceivedCommand != null) && (commandStatus == StepCommandStatus.UNHANDLED_COMMAND) && UtilSteps.checkCommandIsFromCurrentPlayer(getGameState(), pReceivedCommand)) {
+    if ((pReceivedCommand != null) && (commandStatus == StepCommandStatus.UNHANDLED_COMMAND) && UtilServerSteps.checkCommandIsFromCurrentPlayer(getGameState(), pReceivedCommand)) {
       switch (pReceivedCommand.getId()) {
         case CLIENT_BLOCK:
           ClientCommandBlock blockCommand = (ClientCommandBlock) pReceivedCommand.getCommand();
-          if (UtilSteps.checkCommandWithActingPlayer(getGameState(), blockCommand)) {
+          if (UtilServerSteps.checkCommandWithActingPlayer(getGameState(), blockCommand)) {
             if ((fMultiBlockDefenderId == null) || !fMultiBlockDefenderId.equals(blockCommand.getDefenderId())) { 
               fBlockDefenderId = blockCommand.getDefenderId();
               fUsingStab = blockCommand.isUsingStab();
@@ -111,7 +111,7 @@ public class StepInitBlocking extends AbstractStep {
           }
           break;
         case CLIENT_END_TURN:
-          if (UtilSteps.checkCommandIsFromCurrentPlayer(getGameState(), pReceivedCommand)) {
+          if (UtilServerSteps.checkCommandIsFromCurrentPlayer(getGameState(), pReceivedCommand)) {
             fEndTurn = true;
             commandStatus = StepCommandStatus.EXECUTE_STEP;
           }
@@ -119,7 +119,7 @@ public class StepInitBlocking extends AbstractStep {
         case CLIENT_ACTING_PLAYER:
           ClientCommandActingPlayer actingPlayerCommand = (ClientCommandActingPlayer) pReceivedCommand.getCommand();
           if (StringTool.isProvided(actingPlayerCommand.getPlayerId())) {
-            UtilSteps.changePlayerAction(this, actingPlayerCommand.getPlayerId(), actingPlayerCommand.getPlayerAction(), actingPlayerCommand.isLeaping());
+            UtilServerSteps.changePlayerAction(this, actingPlayerCommand.getPlayerId(), actingPlayerCommand.getPlayerAction(), actingPlayerCommand.isLeaping());
           } else {
             fEndPlayerAction = true;
           }
@@ -157,7 +157,7 @@ public class StepInitBlocking extends AbstractStep {
 	      publishParameter(new StepParameter(StepParameterKey.USING_STAB, fUsingStab));
 	      game.getFieldModel().setPlayerState(defender, oldDefenderState.changeBase(PlayerState.BLOCKED));
 	      if (actingPlayer.getPlayerAction() == PlayerAction.BLITZ_MOVE) {
-	      	UtilSteps.changePlayerAction(this, actingPlayer.getPlayerId(), PlayerAction.BLITZ, actingPlayer.isLeaping());
+	      	UtilServerSteps.changePlayerAction(this, actingPlayer.getPlayerId(), PlayerAction.BLITZ, actingPlayer.isLeaping());
 	      }
 	      getResult().setNextAction(StepAction.NEXT_STEP);
 	    }

@@ -8,7 +8,7 @@ import com.balancedbytes.games.ffb.PushbackSquare;
 import com.balancedbytes.games.ffb.client.ActionKey;
 import com.balancedbytes.games.ffb.client.FantasyFootballClient;
 import com.balancedbytes.games.ffb.client.FieldComponent;
-import com.balancedbytes.games.ffb.client.util.UtilActionKeys;
+import com.balancedbytes.games.ffb.client.util.UtilClientActionKeys;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
 
@@ -89,7 +89,7 @@ public class ClientStatePushback extends ClientState {
   public boolean actionKeyPressed(ActionKey pActionKey) {
     boolean actionHandled = false;
     Game game = getClient().getGame();
-    Direction moveDirection = UtilActionKeys.findMoveDirection(getClient(), pActionKey);
+    Direction moveDirection = UtilClientActionKeys.findMoveDirection(getClient(), pActionKey);
     if (moveDirection != null) {
       PushbackSquare pushbackSquare = null;
       PushbackSquare[] pushbackSquares = game.getFieldModel().getPushbackSquares();

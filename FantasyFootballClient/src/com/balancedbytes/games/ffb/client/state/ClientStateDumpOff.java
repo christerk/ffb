@@ -7,7 +7,7 @@ import com.balancedbytes.games.ffb.RangeRuler;
 import com.balancedbytes.games.ffb.client.FantasyFootballClient;
 import com.balancedbytes.games.ffb.client.IIconProperty;
 import com.balancedbytes.games.ffb.client.UserInterface;
-import com.balancedbytes.games.ffb.client.util.UtilCursor;
+import com.balancedbytes.games.ffb.client.util.UtilClientCursor;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
@@ -60,9 +60,9 @@ public class ClientStateDumpOff extends ClientStateMove {
     if (testCoordinateInRange(pCoordinate) && (game.getPassCoordinate() == null)) {
       RangeRuler rangeRuler = UtilRangeRuler.createRangeRuler(game, game.getThrower(), pCoordinate, false);
       game.getFieldModel().setRangeRuler(rangeRuler);
-      UtilCursor.setCustomCursor(userInterface, IIconProperty.CURSOR_PASS);
+      UtilClientCursor.setCustomCursor(userInterface, IIconProperty.CURSOR_PASS);
     } else {
-      UtilCursor.setDefaultCursor(userInterface);
+      UtilClientCursor.setDefaultCursor(userInterface);
       selectable = true;
     }
     userInterface.getFieldComponent().refresh();

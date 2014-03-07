@@ -20,7 +20,7 @@ import com.balancedbytes.games.ffb.server.step.StepId;
 import com.balancedbytes.games.ffb.server.step.StepParameter;
 import com.balancedbytes.games.ffb.server.step.StepParameterKey;
 import com.balancedbytes.games.ffb.server.step.StepParameterSet;
-import com.balancedbytes.games.ffb.server.util.UtilReRoll;
+import com.balancedbytes.games.ffb.server.util.UtilServerReRoll;
 import com.balancedbytes.games.ffb.util.StringTool;
 import com.balancedbytes.games.ffb.util.UtilCards;
 import com.eclipsesource.json.JsonObject;
@@ -88,7 +88,7 @@ public class StepBloodLust extends AbstractStepWithReRoll {
     ActingPlayer actingPlayer = game.getActingPlayer();
 	  boolean doRoll = true;
 	  if (ReRolledAction.BLOOD_LUST == getReRolledAction()) {
-	    if ((getReRollSource() == null) || !UtilReRoll.useReRoll(this, getReRollSource(), actingPlayer.getPlayer())) {
+	    if ((getReRollSource() == null) || !UtilServerReRoll.useReRoll(this, getReRollSource(), actingPlayer.getPlayer())) {
 	      doRoll = false;
 	      status = ActionStatus.FAILURE;
 	      actingPlayer.setSufferingBloodLust(true);
@@ -103,7 +103,7 @@ public class StepBloodLust extends AbstractStepWithReRoll {
       actingPlayer.markSkillUsed(Skill.BLOOD_LUST);
       if (!successful) {
         status = ActionStatus.FAILURE;
-        if ((ReRolledAction.BLOOD_LUST != getReRolledAction()) && UtilReRoll.askForReRollIfAvailable(getGameState(), actingPlayer.getPlayer(), ReRolledAction.BLOOD_LUST, minimumRoll, false)) {
+        if ((ReRolledAction.BLOOD_LUST != getReRolledAction()) && UtilServerReRoll.askForReRollIfAvailable(getGameState(), actingPlayer.getPlayer(), ReRolledAction.BLOOD_LUST, minimumRoll, false)) {
           status = ActionStatus.WAITING_FOR_RE_ROLL;
         } else {
           actingPlayer.setSufferingBloodLust(true);

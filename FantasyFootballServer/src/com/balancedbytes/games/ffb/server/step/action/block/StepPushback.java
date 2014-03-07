@@ -33,13 +33,13 @@ import com.balancedbytes.games.ffb.server.step.StepCommandStatus;
 import com.balancedbytes.games.ffb.server.step.StepId;
 import com.balancedbytes.games.ffb.server.step.StepParameter;
 import com.balancedbytes.games.ffb.server.step.StepParameterKey;
-import com.balancedbytes.games.ffb.server.step.UtilSteps;
+import com.balancedbytes.games.ffb.server.step.UtilServerSteps;
 import com.balancedbytes.games.ffb.server.step.action.common.ApothecaryMode;
-import com.balancedbytes.games.ffb.server.util.UtilDialog;
-import com.balancedbytes.games.ffb.server.util.UtilInjury;
-import com.balancedbytes.games.ffb.server.util.UtilPlayerMove;
-import com.balancedbytes.games.ffb.server.util.UtilPushback;
-import com.balancedbytes.games.ffb.server.util.UtilTimer;
+import com.balancedbytes.games.ffb.server.util.UtilServerDialog;
+import com.balancedbytes.games.ffb.server.util.UtilServerInjury;
+import com.balancedbytes.games.ffb.server.util.UtilServerPlayerMove;
+import com.balancedbytes.games.ffb.server.util.UtilServerPushback;
+import com.balancedbytes.games.ffb.server.util.UtilServerTimer;
 import com.balancedbytes.games.ffb.util.ArrayTool;
 import com.balancedbytes.games.ffb.util.UtilCards;
 import com.eclipsesource.json.JsonObject;
@@ -110,7 +110,7 @@ public class StepPushback extends AbstractStep {
         break;
       case CLIENT_PUSHBACK:
         ClientCommandPushback pushbackCommand = (ClientCommandPushback) pReceivedCommand.getCommand();
-        if (UtilSteps.checkCommandIsFromHomePlayer(getGameState(), pReceivedCommand)) {
+        if (UtilServerSteps.checkCommandIsFromHomePlayer(getGameState(), pReceivedCommand)) {
           fPushbackStack.push(pushbackCommand.getPushback());
         } else {
           fPushbackStack.push(pushbackCommand.getPushback().transform());
@@ -146,7 +146,7 @@ public class StepPushback extends AbstractStep {
 
   private void executeStep() {
     boolean doPush = false;
-    UtilDialog.hideDialog(getGameState());
+    UtilServerDialog.hideDialog(getGameState());
     Game game = getGameState().getGame();
     ActingPlayer actingPlayer = game.getActingPlayer();
     FieldModel fieldModel = game.getFieldModel();
@@ -178,7 +178,7 @@ public class StepPushback extends AbstractStep {
         throw new IllegalStateException("Defender unknown at this point - cannot continue.");
       }
       PushbackMode pushbackMode = PushbackMode.REGULAR;
-      PushbackSquare[] pushbackSquares = UtilPushback.findPushbackSquares(game, fStartingPushbackSquare, pushbackMode);
+      PushbackSquare[] pushbackSquares = UtilServerPushback.findPushbackSquares(game, fStartingPushbackSquare, pushbackMode);
       fieldModel.add(pushbackSquares);
       boolean freeSquareAroundDefender = false;
       FieldCoordinate[] adjacentSquares = fieldModel.findAdjacentCoordinates(fStartingPushbackSquare.getCoordinate(),
@@ -207,7 +207,7 @@ public class StepPushback extends AbstractStep {
       // handle stand firm
       if (UtilCards.hasSkill(game, defender, Skill.STAND_FIRM) && ((fUsingStandFirm == null) || fUsingStandFirm)) {
         if (fUsingStandFirm == null) {
-          UtilDialog.showDialog(getGameState(), new DialogSkillUseParameter(defender.getId(), Skill.STAND_FIRM, 0));
+          UtilServerDialog.showDialog(getGameState(), new DialogSkillUseParameter(defender.getId(), Skill.STAND_FIRM, 0));
         }
         if (fUsingStandFirm != null) {
           if (fUsingStandFirm) {
@@ -231,7 +231,7 @@ public class StepPushback extends AbstractStep {
               .isAdjacent(game.getFieldModel().getPlayerCoordinate(defender)))
           && !(playerState.getBase() == PlayerState.PRONE || playerState.getBase() == PlayerState.STUNNED)) {
         if (fUsingSideStep == null) {
-          UtilDialog.showDialog(getGameState(), new DialogSkillUseParameter(defender.getId(), Skill.SIDE_STEP, 0));
+          UtilServerDialog.showDialog(getGameState(), new DialogSkillUseParameter(defender.getId(), Skill.SIDE_STEP, 0));
         } else {
           if (fUsingSideStep) {
             pushbackMode = PushbackMode.SIDE_STEP;
@@ -240,14 +240,14 @@ public class StepPushback extends AbstractStep {
                 fieldModel.remove(pushbackSquares[i]);
               }
             }
-            pushbackSquares = UtilPushback.findPushbackSquares(game, fStartingPushbackSquare, pushbackMode);
+            pushbackSquares = UtilServerPushback.findPushbackSquares(game, fStartingPushbackSquare, pushbackMode);
             boolean sideStepHomePlayer = game.getTeamHome().hasPlayer(defender);
             for (PushbackSquare pushbackSquare : pushbackSquares) {
               pushbackSquare.setHomeChoice(sideStepHomePlayer);
             }
             fieldModel.add(pushbackSquares);
             if ((sideStepHomePlayer && !game.isHomePlaying()) || (!sideStepHomePlayer && game.isHomePlaying())) {
-              UtilTimer.waitForOpponent(getGameState(), true);
+              UtilServerTimer.waitForOpponent(getGameState(), true);
             }
           }
           publishParameter(new StepParameter(StepParameterKey.STARTING_PUSHBACK_SQUARE, null));
@@ -272,7 +272,7 @@ public class StepPushback extends AbstractStep {
           }
         }
         if (fUsingGrab == null) {
-          UtilDialog.showDialog(getGameState(), new DialogSkillUseParameter(actingPlayer.getPlayerId(), Skill.GRAB, 0));
+          UtilServerDialog.showDialog(getGameState(), new DialogSkillUseParameter(actingPlayer.getPlayerId(), Skill.GRAB, 0));
           fUsingGrab = null;
         } else {
           if (fUsingGrab) {
@@ -282,7 +282,7 @@ public class StepPushback extends AbstractStep {
                 fieldModel.remove(pushbackSquares[i]);
               }
             }
-            fieldModel.add(UtilPushback.findPushbackSquares(game, fStartingPushbackSquare, pushbackMode));
+            fieldModel.add(UtilServerPushback.findPushbackSquares(game, fStartingPushbackSquare, pushbackMode));
             fUsingGrab = null;
           } else {
             fUsingGrab = false;
@@ -293,7 +293,7 @@ public class StepPushback extends AbstractStep {
       } else {
         if (!ArrayTool.isProvided(pushbackSquares)) {
           // Crowdpush
-          publishParameter(new StepParameter(StepParameterKey.INJURY_RESULT, UtilInjury.handleInjury(this,
+          publishParameter(new StepParameter(StepParameterKey.INJURY_RESULT, UtilServerInjury.handleInjury(this,
               InjuryType.CROWDPUSH, null, defender, fStartingPushbackSquare.getCoordinate(), null,
               ApothecaryMode.CROWD_PUSH)));
           game.getFieldModel().remove(defender);
@@ -330,7 +330,7 @@ public class StepPushback extends AbstractStep {
     Game game = getGameState().getGame();
     FieldModel fieldModel = game.getFieldModel();
     fieldModel.updatePlayerAndBallPosition(pPlayer, pCoordinate);
-    UtilPlayerMove.updateMoveSquares(getGameState(), false);
+    UtilServerPlayerMove.updateMoveSquares(getGameState(), false);
     if (fieldModel.isBallMoving() && pCoordinate.equals(fieldModel.getBallCoordinate())) {
       publishParameter(new StepParameter(StepParameterKey.CATCH_SCATTER_THROW_IN_MODE,
           CatchScatterThrowInMode.SCATTER_BALL));

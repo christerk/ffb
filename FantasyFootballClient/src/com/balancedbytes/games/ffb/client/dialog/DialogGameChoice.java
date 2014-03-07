@@ -33,8 +33,8 @@ import com.balancedbytes.games.ffb.ClientMode;
 import com.balancedbytes.games.ffb.GameList;
 import com.balancedbytes.games.ffb.GameListEntry;
 import com.balancedbytes.games.ffb.client.FantasyFootballClient;
-import com.balancedbytes.games.ffb.client.util.UtilJTable;
-import com.balancedbytes.games.ffb.client.util.UtilReflection;
+import com.balancedbytes.games.ffb.client.util.UtilClientJTable;
+import com.balancedbytes.games.ffb.client.util.UtilClientReflection;
 import com.balancedbytes.games.ffb.dialog.DialogId;
 
 @SuppressWarnings("serial")
@@ -104,8 +104,8 @@ public class DialogGameChoice extends Dialog {
     }
         
     fTable = new JTable(tableModel);
-    UtilReflection.setFillsViewportHeight(fTable, true);
-    UtilReflection.setAutoCreateRowSorter(fTable, true);
+    UtilClientReflection.setFillsViewportHeight(fTable, true);
+    UtilClientReflection.setAutoCreateRowSorter(fTable, true);
     fTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
     fTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
     fTable.getTableHeader().setReorderingAllowed(false);
@@ -120,14 +120,14 @@ public class DialogGameChoice extends Dialog {
             fButtonOk.setEnabled(false);
           } else {
             fButtonOk.setEnabled(true);
-            fSelectedIndex = UtilReflection.convertRowIndexToModel(fTable, viewRow);
+            fSelectedIndex = UtilClientReflection.convertRowIndexToModel(fTable, viewRow);
           }
         }
       }
     );
     
     for (int column = 0; column < fTable.getColumnCount(); column++) {
-      UtilJTable.packTableColumn(fTable, column, 5);
+      UtilClientJTable.packTableColumn(fTable, column, 5);
     }
     
     // int height = fTable.getTableHeader().getHeight();

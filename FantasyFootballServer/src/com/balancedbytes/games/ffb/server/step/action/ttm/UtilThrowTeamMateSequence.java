@@ -11,7 +11,7 @@ import com.balancedbytes.games.ffb.report.ReportScatterPlayer;
 import com.balancedbytes.games.ffb.server.DiceInterpreter;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.step.IStep;
-import com.balancedbytes.games.ffb.server.util.UtilCatchScatterThrowIn;
+import com.balancedbytes.games.ffb.server.util.UtilServerCatchScatterThrowIn;
 
 /**
  * 
@@ -59,7 +59,7 @@ public class UtilThrowTeamMateSequence {
       rollList.add(roll);
       Direction direction = DiceInterpreter.getInstance().interpretScatterDirectionRoll(roll);
       directionList.add(direction);
-      endCoordinate = UtilCatchScatterThrowIn.findScatterCoordinate(startCoordinate, direction, 1);
+      endCoordinate = UtilServerCatchScatterThrowIn.findScatterCoordinate(startCoordinate, direction, 1);
       if (FieldCoordinateBounds.FIELD.isInBounds(endCoordinate)) {
       	lastValidCoordinate = endCoordinate;
       } else {

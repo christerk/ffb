@@ -12,7 +12,7 @@ import com.balancedbytes.games.ffb.client.FieldComponent;
 import com.balancedbytes.games.ffb.client.IIconProperty;
 import com.balancedbytes.games.ffb.client.UserInterface;
 import com.balancedbytes.games.ffb.client.layer.FieldLayerRangeRuler;
-import com.balancedbytes.games.ffb.client.util.UtilCursor;
+import com.balancedbytes.games.ffb.client.util.UtilClientCursor;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
@@ -96,9 +96,9 @@ public class ClientStateThrowTeamMate extends ClientStateMove {
     UserInterface userInterface = getClient().getUserInterface();
     if ((game.getDefender() == null) && (game.getPassCoordinate() == null)) {
       if (canBeThrown(pPlayer)) {
-        UtilCursor.setCustomCursor(userInterface, IIconProperty.CURSOR_PASS);
+        UtilClientCursor.setCustomCursor(userInterface, IIconProperty.CURSOR_PASS);
       } else {
-        UtilCursor.setDefaultCursor(userInterface);
+        UtilClientCursor.setDefaultCursor(userInterface);
       }
     }
 //    if ((PlayerAction.THROW_TEAM_MATE == actingPlayer.getPlayerAction()) && (game.getPassCoordinate() == null)) {
@@ -122,9 +122,9 @@ public class ClientStateThrowTeamMate extends ClientStateMove {
       }
       game.getFieldModel().setRangeRuler(rangeRuler);
       if (rangeRuler != null) {
-        UtilCursor.setCustomCursor(userInterface, IIconProperty.CURSOR_PASS);
+        UtilClientCursor.setCustomCursor(userInterface, IIconProperty.CURSOR_PASS);
       } else {
-        UtilCursor.setDefaultCursor(userInterface);
+        UtilClientCursor.setDefaultCursor(userInterface);
       }
       fieldComponent.getLayerUnderPlayers().clearMovePath();
       fieldComponent.refresh();

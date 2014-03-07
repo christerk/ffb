@@ -16,8 +16,8 @@ import com.balancedbytes.games.ffb.server.step.SequenceGenerator;
 import com.balancedbytes.games.ffb.server.step.StepAction;
 import com.balancedbytes.games.ffb.server.step.StepId;
 import com.balancedbytes.games.ffb.server.step.StepParameter;
-import com.balancedbytes.games.ffb.server.step.UtilSteps;
-import com.balancedbytes.games.ffb.server.util.UtilDialog;
+import com.balancedbytes.games.ffb.server.step.UtilServerSteps;
+import com.balancedbytes.games.ffb.server.util.UtilServerDialog;
 import com.balancedbytes.games.ffb.util.StringTool;
 import com.balancedbytes.games.ffb.util.UtilPlayer;
 import com.eclipsesource.json.JsonObject;
@@ -98,7 +98,7 @@ public final class StepEndPassing extends AbstractStep {
   // TODO: what happens here in the case of dump-off interception?
 
 	private void executeStep() {
-		UtilDialog.hideDialog(getGameState());
+		UtilServerDialog.hideDialog(getGameState());
     Game game = getGameState().getGame();
     game.getFieldModel().setRangeRuler(null);
     ActingPlayer actingPlayer = game.getActingPlayer();
@@ -142,7 +142,7 @@ public final class StepEndPassing extends AbstractStep {
       throwerResult.setPassing(throwerResult.getPassing() + deltaX);
     }
     if (fEndTurn || fEndPlayerAction || ((game.getThrower() == actingPlayer.getPlayer()) && actingPlayer.isSufferingBloodLust() && !actingPlayer.hasFed())) {
-    	fEndTurn |= (UtilSteps.checkTouchdown(getGameState()) || (catcher == null) || UtilPlayer.findOtherTeam(game, game.getThrower()).hasPlayer(catcher) || fPassFumble);
+    	fEndTurn |= (UtilServerSteps.checkTouchdown(getGameState()) || (catcher == null) || UtilPlayer.findOtherTeam(game, game.getThrower()).hasPlayer(catcher) || fPassFumble);
     	SequenceGenerator.getInstance().pushEndPlayerActionSequence(getGameState(), true, fEndTurn);
     } else {
 	    if (StringTool.isProvided(fInterceptorId)) {
@@ -157,7 +157,7 @@ public final class StepEndPassing extends AbstractStep {
 	      catcher = game.getFieldModel().getPlayer(game.getFieldModel().getBallCoordinate());
 	    }
 	    if (game.getThrower() == actingPlayer.getPlayer()) {
-	    	fEndTurn |= (UtilSteps.checkTouchdown(getGameState()) || (catcher == null) || UtilPlayer.findOtherTeam(game, game.getThrower()).hasPlayer(catcher) || fPassFumble);
+	    	fEndTurn |= (UtilServerSteps.checkTouchdown(getGameState()) || (catcher == null) || UtilPlayer.findOtherTeam(game, game.getThrower()).hasPlayer(catcher) || fPassFumble);
 	    	SequenceGenerator.getInstance().pushEndPlayerActionSequence(getGameState(), true, fEndTurn);
 	    } else {
       	game.setDefenderAction(null);  // reset dump-off action

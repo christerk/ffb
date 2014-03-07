@@ -21,7 +21,7 @@ import com.balancedbytes.games.ffb.server.FantasyFootballServer;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.IServerLogLevel;
 import com.balancedbytes.games.ffb.server.IServerProperty;
-import com.balancedbytes.games.ffb.server.util.UtilHttpClient;
+import com.balancedbytes.games.ffb.server.util.UtilServerHttpClient;
 import com.balancedbytes.games.ffb.util.StringTool;
 import com.balancedbytes.games.ffb.xml.XmlHandler;
 
@@ -42,7 +42,7 @@ public class UtilFumbblRequest {
     }
     FumbblGameState gameState = null;
     try {
-      String responseXml = UtilHttpClient.fetchPage(pRequestUrl);
+      String responseXml = UtilServerHttpClient.fetchPage(pRequestUrl);
       if (StringTool.isProvided(responseXml)) {
         pServer.getDebugLog().log(IServerLogLevel.DEBUG, DebugLog.FUMBBL_RESPONSE, responseXml);
         BufferedReader xmlReader = new BufferedReader(new StringReader(responseXml));
@@ -89,7 +89,7 @@ public class UtilFumbblRequest {
       String challenge = null;
       String challengeUrl = StringTool.bind(pServer.getProperty(IServerProperty.FUMBBL_AUTH_CHALLENGE), URLEncoder.encode(pCoach, CHARACTER_ENCODING));
       pServer.getDebugLog().log(IServerLogLevel.DEBUG, DebugLog.FUMBBL_REQUEST, challengeUrl);
-      String responseXml = UtilHttpClient.fetchPage(challengeUrl);
+      String responseXml = UtilServerHttpClient.fetchPage(challengeUrl);
       if (StringTool.isProvided(responseXml)) {
         pServer.getDebugLog().log(IServerLogLevel.DEBUG, DebugLog.FUMBBL_RESPONSE, responseXml);
         BufferedReader xmlReader = new BufferedReader(new StringReader(responseXml));
@@ -131,7 +131,7 @@ public class UtilFumbblRequest {
     Team team = null;
     try {
       String teamUrl = StringTool.bind(pServer.getProperty(IServerProperty.FUMBBL_TEAM), pTeamId);
-      String teamXml = UtilHttpClient.fetchPage(teamUrl);
+      String teamXml = UtilServerHttpClient.fetchPage(teamUrl);
       if (StringTool.isProvided(teamXml)) {
         team = new Team();
         BufferedReader xmlReader = new BufferedReader(new StringReader(teamXml));
@@ -152,7 +152,7 @@ public class UtilFumbblRequest {
     Roster roster = null;
     try {
       String rosterUrl = StringTool.bind(pServer.getProperty(IServerProperty.FUMBBL_ROSTER_TEAM), pTeamId);
-      String rosterXml = UtilHttpClient.fetchPage(rosterUrl);
+      String rosterXml = UtilServerHttpClient.fetchPage(rosterUrl);
       if (StringTool.isProvided(rosterXml)) {
         roster = new Roster();
         BufferedReader xmlReader = new BufferedReader(new StringReader(rosterXml));

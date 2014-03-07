@@ -22,7 +22,7 @@ import com.balancedbytes.games.ffb.server.step.StepId;
 import com.balancedbytes.games.ffb.server.step.StepParameter;
 import com.balancedbytes.games.ffb.server.step.StepParameterKey;
 import com.balancedbytes.games.ffb.server.step.StepParameterSet;
-import com.balancedbytes.games.ffb.server.util.UtilReRoll;
+import com.balancedbytes.games.ffb.server.util.UtilServerReRoll;
 import com.balancedbytes.games.ffb.util.StringTool;
 import com.balancedbytes.games.ffb.util.UtilCards;
 import com.eclipsesource.json.JsonObject;
@@ -94,7 +94,7 @@ public final class StepJumpUp extends AbstractStepWithReRoll {
       actingPlayer.markSkillUsed(Skill.JUMP_UP);
       if ((PlayerAction.BLOCK == actingPlayer.getPlayerAction()) || (PlayerAction.MULTIPLE_BLOCK == actingPlayer.getPlayerAction())) {
         if (ReRolledAction.JUMP_UP == getReRolledAction()) {
-          if ((getReRollSource() == null) || !UtilReRoll.useReRoll(this, getReRollSource(), actingPlayer.getPlayer())) {
+          if ((getReRollSource() == null) || !UtilServerReRoll.useReRoll(this, getReRollSource(), actingPlayer.getPlayer())) {
             game.getFieldModel().setPlayerState(actingPlayer.getPlayer(), playerState.changeBase(PlayerState.PRONE).changeActive(false));
             publishParameter(new StepParameter(StepParameterKey.END_PLAYER_ACTION, true));
             getResult().setNextAction(StepAction.GOTO_LABEL, fGotoLabelOnFailure);
@@ -111,7 +111,7 @@ public final class StepJumpUp extends AbstractStepWithReRoll {
           getResult().setNextAction(StepAction.NEXT_STEP);
           return;
         } else {
-          if ((getReRolledAction() == ReRolledAction.JUMP_UP) || !UtilReRoll.askForReRollIfAvailable(getGameState(), actingPlayer.getPlayer(), ReRolledAction.JUMP_UP, minimumRoll, false)) {
+          if ((getReRolledAction() == ReRolledAction.JUMP_UP) || !UtilServerReRoll.askForReRollIfAvailable(getGameState(), actingPlayer.getPlayer(), ReRolledAction.JUMP_UP, minimumRoll, false)) {
             game.getFieldModel().setPlayerState(actingPlayer.getPlayer(), playerState.changeBase(PlayerState.PRONE).changeActive(false));
             publishParameter(new StepParameter(StepParameterKey.END_PLAYER_ACTION, true));
             getResult().setNextAction(StepAction.GOTO_LABEL, fGotoLabelOnFailure);

@@ -13,8 +13,8 @@ import com.balancedbytes.games.ffb.server.step.StepAction;
 import com.balancedbytes.games.ffb.server.step.StepId;
 import com.balancedbytes.games.ffb.server.step.StepParameter;
 import com.balancedbytes.games.ffb.server.step.StepParameterKey;
-import com.balancedbytes.games.ffb.server.step.UtilSteps;
-import com.balancedbytes.games.ffb.server.util.UtilDialog;
+import com.balancedbytes.games.ffb.server.step.UtilServerSteps;
+import com.balancedbytes.games.ffb.server.util.UtilServerDialog;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
@@ -66,14 +66,14 @@ public class StepEndFeeding extends AbstractStep {
 	}
 
 	private void executeStep() {
-		UtilDialog.hideDialog(getGameState());
+		UtilServerDialog.hideDialog(getGameState());
 		Game game = getGameState().getGame();
-    fEndTurn |= UtilSteps.checkTouchdown(getGameState());
+    fEndTurn |= UtilServerSteps.checkTouchdown(getGameState());
     if (fEndTurn) {
     	if (game.getTurnMode() == TurnMode.PASS_BLOCK) {
 	    	SequenceGenerator.getInstance().pushEndTurnSequence(getGameState());    		
     	} else {
-	      UtilSteps.changePlayerAction(this, null, null, false);
+	      UtilServerSteps.changePlayerAction(this, null, null, false);
 	    	SequenceGenerator.getInstance().pushInducementSequence(getGameState(), InducementPhase.END_OF_OWN_TURN, game.isHomePlaying());
     	}
     } else if (!fEndPlayerAction && (game.getThrowerAction() != null) && game.getThrowerAction().isPassing()) {
@@ -81,7 +81,7 @@ public class StepEndFeeding extends AbstractStep {
     } else if ((game.getTurnMode() == TurnMode.KICKOFF_RETURN) || (game.getTurnMode() == TurnMode.PASS_BLOCK)) {
 	    publishParameter(new StepParameter(StepParameterKey.END_PLAYER_ACTION, true));
     } else {
-      UtilSteps.changePlayerAction(this, null, null, false);
+      UtilServerSteps.changePlayerAction(this, null, null, false);
     	SequenceGenerator.getInstance().pushSelectSequence(getGameState(), false);
     }
     getResult().setNextAction(StepAction.NEXT_STEP);

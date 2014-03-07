@@ -28,7 +28,7 @@ import com.balancedbytes.games.ffb.server.step.StepId;
 import com.balancedbytes.games.ffb.server.step.StepParameter;
 import com.balancedbytes.games.ffb.server.step.StepParameterKey;
 import com.balancedbytes.games.ffb.server.step.StepParameterSet;
-import com.balancedbytes.games.ffb.server.util.UtilReRoll;
+import com.balancedbytes.games.ffb.server.util.UtilServerReRoll;
 import com.balancedbytes.games.ffb.util.StringTool;
 import com.balancedbytes.games.ffb.util.UtilCards;
 import com.balancedbytes.games.ffb.util.UtilPlayer;
@@ -101,7 +101,7 @@ public class StepGoForIt extends AbstractStepWithReRoll {
     }
     if (actingPlayer.isGoingForIt() && (actingPlayer.getCurrentMove() > actingPlayer.getPlayer().getMovement())) {
       if (ReRolledAction.GO_FOR_IT == getReRolledAction()) {
-        if ((getReRollSource() == null) || !UtilReRoll.useReRoll(this, getReRollSource(), actingPlayer.getPlayer())) {
+        if ((getReRollSource() == null) || !UtilServerReRoll.useReRoll(this, getReRollSource(), actingPlayer.getPlayer())) {
           failGfi();
           return;
         }
@@ -156,10 +156,10 @@ public class StepGoForIt extends AbstractStepWithReRoll {
         setReRolledAction(ReRolledAction.GO_FOR_IT);
         if (UtilCards.hasUnusedSkill(game, actingPlayer, Skill.SURE_FEET)) {
           setReRollSource(ReRollSource.SURE_FEET);
-          UtilReRoll.useReRoll(this, getReRollSource(), actingPlayer.getPlayer());
+          UtilServerReRoll.useReRoll(this, getReRollSource(), actingPlayer.getPlayer());
           return goForIt();
         } else {
-          if (UtilReRoll.askForReRollIfAvailable(getGameState(), actingPlayer.getPlayer(), ReRolledAction.GO_FOR_IT, minimumRoll, false)) {
+          if (UtilServerReRoll.askForReRollIfAvailable(getGameState(), actingPlayer.getPlayer(), ReRolledAction.GO_FOR_IT, minimumRoll, false)) {
             return ActionStatus.WAITING_FOR_RE_ROLL;
           } else {
             return ActionStatus.FAILURE;

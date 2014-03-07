@@ -12,7 +12,7 @@ import java.util.regex.Pattern;
 
 import com.balancedbytes.games.ffb.PasswordChallenge;
 import com.balancedbytes.games.ffb.server.IServerProperty;
-import com.balancedbytes.games.ffb.server.util.UtilHttpClient;
+import com.balancedbytes.games.ffb.server.util.UtilServerHttpClient;
 import com.balancedbytes.games.ffb.util.ArrayTool;
 import com.balancedbytes.games.ffb.util.StringTool;
 
@@ -58,7 +58,7 @@ public class AdminConnector {
     	
       String adminChallengeUrl = serverProperties.getProperty(IServerProperty.ADMIN_URL_CHALLENGE);
       System.out.println(adminChallengeUrl);
-      String adminChallengeXml = UtilHttpClient.fetchPage(adminChallengeUrl);
+      String adminChallengeXml = UtilServerHttpClient.fetchPage(adminChallengeUrl);
       System.out.println(adminChallengeXml);
 
       String challenge = null;
@@ -79,63 +79,63 @@ public class AdminConnector {
       if (AdminServlet.SHUTDOWN.equals(args[0])) {
         String shutdownUrl = StringTool.bind(serverProperties.getProperty(IServerProperty.ADMIN_URL_SHUTDOWN), response);
         System.out.println(shutdownUrl);
-        String shutdownXml = UtilHttpClient.fetchPage(shutdownUrl);
+        String shutdownXml = UtilServerHttpClient.fetchPage(shutdownUrl);
         System.out.println(shutdownXml);
       }
 
       if (AdminServlet.REFRESH.equals(args[0])) {
         String refreshUrl = StringTool.bind(serverProperties.getProperty(IServerProperty.ADMIN_URL_REFRESH), response);
         System.out.println(refreshUrl);
-        String refreshXml = UtilHttpClient.fetchPage(refreshUrl);
+        String refreshXml = UtilServerHttpClient.fetchPage(refreshUrl);
         System.out.println(refreshXml);
       }
 
       if (AdminServlet.BLOCK.equals(args[0])) {
         String blockUrl = StringTool.bind(serverProperties.getProperty(IServerProperty.ADMIN_URL_BLOCK), response);
         System.out.println(blockUrl);
-        String blockXml = UtilHttpClient.fetchPage(blockUrl);
+        String blockXml = UtilServerHttpClient.fetchPage(blockUrl);
         System.out.println(blockXml);
       }
 
       if (AdminServlet.UNBLOCK.equals(args[0])) {
         String blockUrl = StringTool.bind(serverProperties.getProperty(IServerProperty.ADMIN_URL_UNBLOCK), response);
         System.out.println(blockUrl);
-        String blockXml = UtilHttpClient.fetchPage(blockUrl);
+        String blockXml = UtilServerHttpClient.fetchPage(blockUrl);
         System.out.println(blockXml);
       }
 
       if (AdminServlet.LIST.equals(args[0])) {
         String adminListUrl = StringTool.bind(serverProperties.getProperty(IServerProperty.ADMIN_URL_LIST_STATUS), response, args[1]);
         System.out.println(adminListUrl);
-        String adminListXml = UtilHttpClient.fetchPage(adminListUrl);
+        String adminListXml = UtilServerHttpClient.fetchPage(adminListUrl);
         System.out.println(adminListXml);
       }
 
       if (AdminServlet.CLOSE.equals(args[0])) {
         String closeUrl = StringTool.bind(serverProperties.getProperty(IServerProperty.ADMIN_URL_CLOSE), response, args[1]);
         System.out.println(closeUrl);
-        String closeXml = UtilHttpClient.fetchPage(closeUrl);
+        String closeXml = UtilServerHttpClient.fetchPage(closeUrl);
         System.out.println(closeXml);
       }
 
       if (AdminServlet.CONCEDE.equals(args[0])) {
         String concedeUrl = StringTool.bind(serverProperties.getProperty(IServerProperty.ADMIN_URL_CONCEDE), response, args[1], args[2]);
         System.out.println(concedeUrl);
-        String concedeXml = UtilHttpClient.fetchPage(concedeUrl);
+        String concedeXml = UtilServerHttpClient.fetchPage(concedeUrl);
         System.out.println(concedeXml);
       }
 
       if (AdminServlet.UPLOAD.equals(args[0])) {
         String uploadUrl = StringTool.bind(serverProperties.getProperty(IServerProperty.ADMIN_URL_UPLOAD), response, args[1]);
         System.out.println(uploadUrl);
-        String uploadXml = UtilHttpClient.fetchPage(uploadUrl);
+        String uploadXml = UtilServerHttpClient.fetchPage(uploadUrl);
         System.out.println(uploadXml);
       }
 
       if (AdminServlet.DELETE.equals(args[0])) {
         String deleteUrl = StringTool.bind(serverProperties.getProperty(IServerProperty.ADMIN_URL_DELETE), response, args[1], args[2]);
         System.out.println(deleteUrl);
-        String deleteXml = UtilHttpClient.fetchPage(deleteUrl);
+        String deleteXml = UtilServerHttpClient.fetchPage(deleteUrl);
         System.out.println(deleteXml);
       }
 
@@ -143,14 +143,14 @@ public class AdminConnector {
         String message = URLEncoder.encode(args[1], "UTF-8");
         String messageUrl = StringTool.bind(serverProperties.getProperty(IServerProperty.ADMIN_URL_MESSAGE), response, message);
         System.out.println(messageUrl);
-        String messageXml = UtilHttpClient.fetchPage(messageUrl);
+        String messageXml = UtilServerHttpClient.fetchPage(messageUrl);
         System.out.println(messageXml);
       }
 
       if (AdminServlet.SCHEDULE.equals(args[0])) {
         String scheduleUrl = StringTool.bind(serverProperties.getProperty(IServerProperty.ADMIN_URL_SCHEDULE), response, args[1], args[2]);
         System.out.println(scheduleUrl);
-        String scheduleXml = UtilHttpClient.fetchPage(scheduleUrl);
+        String scheduleXml = UtilServerHttpClient.fetchPage(scheduleUrl);
         System.out.println(scheduleXml);
       }
 

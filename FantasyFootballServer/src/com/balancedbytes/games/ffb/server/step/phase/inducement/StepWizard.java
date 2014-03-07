@@ -30,9 +30,9 @@ import com.balancedbytes.games.ffb.server.step.SequenceGenerator;
 import com.balancedbytes.games.ffb.server.step.StepAction;
 import com.balancedbytes.games.ffb.server.step.StepCommandStatus;
 import com.balancedbytes.games.ffb.server.step.StepId;
-import com.balancedbytes.games.ffb.server.util.UtilDialog;
-import com.balancedbytes.games.ffb.server.util.UtilGame;
-import com.balancedbytes.games.ffb.server.util.UtilInducementUse;
+import com.balancedbytes.games.ffb.server.util.UtilServerDialog;
+import com.balancedbytes.games.ffb.server.util.UtilServerGame;
+import com.balancedbytes.games.ffb.server.util.UtilServerInducementUse;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
@@ -105,7 +105,7 @@ public final class StepWizard extends AbstractStep {
 		} else if ((fWizardSpell != null) && (fTargetCoordinate != null) && (game.getTurnMode() == TurnMode.WIZARD)) {
 			Team team = game.isHomePlaying() ? game.getTeamHome() : game.getTeamAway();
 			getResult().addReport(new ReportWizardUse(team.getId(), fWizardSpell));
-			UtilInducementUse.useInducement(getGameState(), team, InducementType.WIZARD, 1);
+			UtilServerInducementUse.useInducement(getGameState(), team, InducementType.WIZARD, 1);
 	    List<Player> affectedPlayers = new ArrayList<Player>();
 			if (fWizardSpell == SpecialEffect.LIGHTNING) {
 				getResult().setAnimation(new Animation(AnimationType.SPELL_LIGHTNING, fTargetCoordinate));
@@ -121,7 +121,7 @@ public final class StepWizard extends AbstractStep {
 			if (fOldTurnMode != null) {
 				game.setTurnMode(fOldTurnMode);
 			}
-			UtilGame.syncGameModel(this);
+			UtilServerGame.syncGameModel(this);
 			PlayerState bloodSpotInjury = new PlayerState((fWizardSpell == SpecialEffect.FIREBALL) ? PlayerState.HIT_BY_FIREBALL : PlayerState.HIT_BY_LIGHTNING); 
 			game.getFieldModel().add(new BloodSpot(fTargetCoordinate, bloodSpotInjury));
 			for (Player affectedPlayer : affectedPlayers) {
@@ -133,7 +133,7 @@ public final class StepWizard extends AbstractStep {
 				fOldTurnMode = game.getTurnMode();
 			}
 			game.setTurnMode(TurnMode.WIZARD);
-			UtilDialog.showDialog(getGameState(), new DialogWizardSpellParameter());
+			UtilServerDialog.showDialog(getGameState(), new DialogWizardSpellParameter());
 		}
   }
   

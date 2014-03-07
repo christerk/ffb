@@ -19,7 +19,7 @@ import com.balancedbytes.games.ffb.client.ClientData;
 import com.balancedbytes.games.ffb.client.FantasyFootballClient;
 import com.balancedbytes.games.ffb.client.IIconProperty;
 import com.balancedbytes.games.ffb.client.IconCache;
-import com.balancedbytes.games.ffb.client.util.UtilGraphics;
+import com.balancedbytes.games.ffb.client.util.UtilClientGraphics;
 import com.balancedbytes.games.ffb.model.FieldModel;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.util.StringTool;
@@ -89,10 +89,10 @@ public class ScoreBarComponent extends JPanel implements MouseMotionListener {
     Rectangle2D boundsHome = fontMetrics.getStringBounds(scoreHome, g2d);
     int x = ((WIDTH - (int) boundsHome.getWidth()) / 2) - 40;
     int y = ((HEIGHT + fontMetrics.getHeight()) / 2) - fontMetrics.getDescent() - 1;
-    UtilGraphics.drawShadowedText(g2d, scoreHome, x, y);
+    UtilClientGraphics.drawShadowedText(g2d, scoreHome, x, y);
     Rectangle2D boundsAway = fontMetrics.getStringBounds(scoreAway, g2d);
     x = ((WIDTH - (int) boundsAway.getWidth()) / 2) + 40;
-    UtilGraphics.drawShadowedText(g2d, scoreAway, x, y);
+    UtilClientGraphics.drawShadowedText(g2d, scoreAway, x, y);
     g2d.dispose();
   }
   
@@ -103,14 +103,14 @@ public class ScoreBarComponent extends JPanel implements MouseMotionListener {
     FontMetrics metrics = g2d.getFontMetrics();
     int x = 4;
     int y = ((HEIGHT + metrics.getHeight()) / 2) - metrics.getDescent();
-    UtilGraphics.drawShadowedText(g2d, _TURN, x, y);
+    UtilClientGraphics.drawShadowedText(g2d, _TURN, x, y);
     Rectangle2D bounds = metrics.getStringBounds(_TURN, g2d);
     x += bounds.getWidth() + 10;
     String turn = new StringBuilder().append(game.getTurnDataHome().getTurnNr()).append(" / ").append(game.getTurnDataAway().getTurnNr()).toString();
     g2d.setFont(_TURN_NUMBER_FONT);
     metrics = g2d.getFontMetrics();
     y = ((HEIGHT + metrics.getHeight()) / 2) - metrics.getDescent() - 1;
-    UtilGraphics.drawShadowedText(g2d, turn, x, y);
+    UtilClientGraphics.drawShadowedText(g2d, turn, x, y);
     bounds = metrics.getStringBounds(turn, g2d);
     x += bounds.getWidth() + 10;
     String half;
@@ -124,7 +124,7 @@ public class ScoreBarComponent extends JPanel implements MouseMotionListener {
     g2d.setFont(_TURN_TEXT_FONT);
     metrics = g2d.getFontMetrics();
     y = (HEIGHT + metrics.getHeight()) / 2 - metrics.getDescent();
-    UtilGraphics.drawShadowedText(g2d, half, x, y);
+    UtilClientGraphics.drawShadowedText(g2d, half, x, y);
     g2d.dispose();
   }
   
@@ -136,7 +136,7 @@ public class ScoreBarComponent extends JPanel implements MouseMotionListener {
       g2d.drawImage(spectatorsImage, _SPECTATOR_LOCATION.x, _SPECTATOR_LOCATION.y, null);
       g2d.setFont(_SPECTATOR_FONT);
       String spectatorString = Integer.toString(fSpectators);
-      UtilGraphics.drawShadowedText(g2d, spectatorString, _SPECTATOR_LOCATION.x + 108, 21);
+      UtilClientGraphics.drawShadowedText(g2d, spectatorString, _SPECTATOR_LOCATION.x + 108, 21);
       g2d.dispose();
     }
   }

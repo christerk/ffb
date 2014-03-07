@@ -24,8 +24,8 @@ import com.balancedbytes.games.ffb.client.IconCache;
 import com.balancedbytes.games.ffb.client.UserInterface;
 import com.balancedbytes.games.ffb.client.net.ClientCommunication;
 import com.balancedbytes.games.ffb.client.ui.SideBarComponent;
-import com.balancedbytes.games.ffb.client.util.UtilActionKeys;
-import com.balancedbytes.games.ffb.client.util.UtilCursor;
+import com.balancedbytes.games.ffb.client.util.UtilClientActionKeys;
+import com.balancedbytes.games.ffb.client.util.UtilClientCursor;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
@@ -57,7 +57,7 @@ public class ClientStateMove extends ClientState {
     if (moveSquare != null) {
     	setCustomCursor(moveSquare);
     } else {
-      UtilCursor.setDefaultCursor(getClient().getUserInterface());
+      UtilClientCursor.setDefaultCursor(getClient().getUserInterface());
       String automoveProperty = getClient().getProperty(IClientProperty.SETTING_AUTOMOVE);
       if ((actingPlayer != null)
       	&& (actingPlayer.getPlayerAction() != null)
@@ -82,13 +82,13 @@ public class ClientStateMove extends ClientState {
     Game game = getClient().getGame();
     ActingPlayer actingPlayer = game.getActingPlayer();
     if (pMoveSquare.isGoingForIt() && (pMoveSquare.isDodging() && !actingPlayer.isLeaping())) {
-      UtilCursor.setCustomCursor(getClient().getUserInterface(), IIconProperty.CURSOR_GFI_DODGE);
+      UtilClientCursor.setCustomCursor(getClient().getUserInterface(), IIconProperty.CURSOR_GFI_DODGE);
     } else if (pMoveSquare.isGoingForIt()) {
-      UtilCursor.setCustomCursor(getClient().getUserInterface(), IIconProperty.CURSOR_GFI);
+      UtilClientCursor.setCustomCursor(getClient().getUserInterface(), IIconProperty.CURSOR_GFI);
     } else if (pMoveSquare.isDodging() && !actingPlayer.isLeaping()) {
-      UtilCursor.setCustomCursor(getClient().getUserInterface(), IIconProperty.CURSOR_DODGE);
+      UtilClientCursor.setCustomCursor(getClient().getUserInterface(), IIconProperty.CURSOR_DODGE);
     } else {
-      UtilCursor.setCustomCursor(getClient().getUserInterface(), IIconProperty.CURSOR_MOVE);
+      UtilClientCursor.setCustomCursor(getClient().getUserInterface(), IIconProperty.CURSOR_MOVE);
     }
   }
   
@@ -99,7 +99,7 @@ public class ClientStateMove extends ClientState {
     if (moveSquare != null) {
     	setCustomCursor(moveSquare);
     } else {
-      UtilCursor.setDefaultCursor(getClient().getUserInterface());
+      UtilClientCursor.setDefaultCursor(getClient().getUserInterface());
 	    FieldComponent fieldComponent = getClient().getUserInterface().getFieldComponent();
 	    if (fieldComponent.getLayerUnderPlayers().clearMovePath()) {
 	      fieldComponent.refresh();
@@ -257,7 +257,7 @@ public class ClientStateMove extends ClientState {
     Game game = getClient().getGame();
     ActingPlayer actingPlayer = game.getActingPlayer();
     FieldCoordinate playerPosition = game.getFieldModel().getPlayerCoordinate(actingPlayer.getPlayer());
-    FieldCoordinate moveCoordinate = UtilActionKeys.findMoveCoordinate(getClient(), playerPosition, pActionKey);
+    FieldCoordinate moveCoordinate = UtilClientActionKeys.findMoveCoordinate(getClient(), playerPosition, pActionKey);
     if (moveCoordinate != null) {
       MoveSquare[] moveSquares = game.getFieldModel().getMoveSquares();
       for (MoveSquare moveSquare : moveSquares) {

@@ -12,7 +12,7 @@ import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.net.ReceivedCommand;
 import com.balancedbytes.games.ffb.server.net.SessionManager;
 import com.balancedbytes.games.ffb.server.request.ServerRequestLoadReplay;
-import com.balancedbytes.games.ffb.server.util.UtilReplay;
+import com.balancedbytes.games.ffb.server.util.UtilServerReplay;
 
 /**
  * 
@@ -62,7 +62,7 @@ public class ServerCommandHandlerReplay extends ServerCommandHandler {
     }
     
     if (gameState != null) {
-      UtilReplay.startServerReplay(gameState, replayToCommandNr, pReceivedCommand.getSession());
+      UtilServerReplay.startServerReplay(gameState, replayToCommandNr, pReceivedCommand.getSession());
 
     } else {
       // game has been moved out of the db - request it from the backup service

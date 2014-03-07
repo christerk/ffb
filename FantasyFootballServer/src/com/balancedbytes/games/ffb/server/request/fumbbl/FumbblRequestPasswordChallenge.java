@@ -16,7 +16,7 @@ import com.balancedbytes.games.ffb.server.IServerLogLevel;
 import com.balancedbytes.games.ffb.server.IServerProperty;
 import com.balancedbytes.games.ffb.server.request.ServerRequest;
 import com.balancedbytes.games.ffb.server.request.ServerRequestProcessor;
-import com.balancedbytes.games.ffb.server.util.UtilHttpClient;
+import com.balancedbytes.games.ffb.server.util.UtilServerHttpClient;
 import com.balancedbytes.games.ffb.util.StringTool;
 
 
@@ -51,7 +51,7 @@ public class FumbblRequestPasswordChallenge extends ServerRequest {
     try {
       setRequestUrl(StringTool.bind(server.getProperty(IServerProperty.FUMBBL_AUTH_CHALLENGE), URLEncoder.encode(getCoach(), UtilFumbblRequest.CHARACTER_ENCODING)));
     	server.getDebugLog().log(IServerLogLevel.DEBUG, DebugLog.FUMBBL_REQUEST, getRequestUrl());
-      String responseXml = UtilHttpClient.fetchPage(getRequestUrl());
+      String responseXml = UtilServerHttpClient.fetchPage(getRequestUrl());
       if (StringTool.isProvided(responseXml)) {
 	    	server.getDebugLog().log(IServerLogLevel.DEBUG, DebugLog.FUMBBL_RESPONSE, responseXml);
 	      BufferedReader xmlReader = new BufferedReader(new StringReader(responseXml));

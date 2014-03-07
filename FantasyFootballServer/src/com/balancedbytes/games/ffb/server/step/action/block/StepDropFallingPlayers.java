@@ -26,8 +26,8 @@ import com.balancedbytes.games.ffb.server.step.StepId;
 import com.balancedbytes.games.ffb.server.step.StepParameter;
 import com.balancedbytes.games.ffb.server.step.StepParameterKey;
 import com.balancedbytes.games.ffb.server.step.action.common.ApothecaryMode;
-import com.balancedbytes.games.ffb.server.util.UtilDialog;
-import com.balancedbytes.games.ffb.server.util.UtilInjury;
+import com.balancedbytes.games.ffb.server.util.UtilServerDialog;
+import com.balancedbytes.games.ffb.server.util.UtilServerInjury;
 import com.balancedbytes.games.ffb.util.UtilCards;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
@@ -121,25 +121,25 @@ public class StepDropFallingPlayers extends AbstractStep {
         getResult().addReport(new ReportPilingOn(actingPlayer.getPlayerId(), fUsingPilingOn, reRollInjury));
         if (fUsingPilingOn) {
           actingPlayer.markSkillUsed(Skill.PILING_ON);
-          publishParameters(UtilInjury.dropPlayer(this, actingPlayer.getPlayer()));
+          publishParameters(UtilServerInjury.dropPlayer(this, actingPlayer.getPlayer()));
           boolean rolledDouble;
           if (reRollInjury) {
-          	fInjuryResultDefender = UtilInjury.handleInjury(this, InjuryType.PILING_ON_INJURY, actingPlayer.getPlayer(), game.getDefender(), defenderCoordinate, fInjuryResultDefender, ApothecaryMode.DEFENDER);
+          	fInjuryResultDefender = UtilServerInjury.handleInjury(this, InjuryType.PILING_ON_INJURY, actingPlayer.getPlayer(), game.getDefender(), defenderCoordinate, fInjuryResultDefender, ApothecaryMode.DEFENDER);
           	rolledDouble = DiceInterpreter.getInstance().isDouble(fInjuryResultDefender.getInjuryRoll());
           } else {
-          	fInjuryResultDefender = UtilInjury.handleInjury(this, InjuryType.PILING_ON_ARMOR, actingPlayer.getPlayer(), game.getDefender(), defenderCoordinate, null, ApothecaryMode.DEFENDER);
+          	fInjuryResultDefender = UtilServerInjury.handleInjury(this, InjuryType.PILING_ON_ARMOR, actingPlayer.getPlayer(), game.getDefender(), defenderCoordinate, null, ApothecaryMode.DEFENDER);
           	rolledDouble = DiceInterpreter.getInstance().isDouble(fInjuryResultDefender.getArmorRoll());
           }
           if (rolledDouble && UtilGameOption.isOptionEnabled(game, GameOptionId.PILING_ON_TO_KO_ON_DOUBLE)) {
-            publishParameter(new StepParameter(StepParameterKey.INJURY_RESULT, UtilInjury.handleInjury(this, InjuryType.PILING_ON_KNOCKED_OUT, null, actingPlayer.getPlayer(), attackerCoordinate, null, ApothecaryMode.ATTACKER)));
+            publishParameter(new StepParameter(StepParameterKey.INJURY_RESULT, UtilServerInjury.handleInjury(this, InjuryType.PILING_ON_KNOCKED_OUT, null, actingPlayer.getPlayer(), attackerCoordinate, null, ApothecaryMode.ATTACKER)));
           }
         }
       } else {
-        publishParameters(UtilInjury.dropPlayer(this, game.getDefender()));
+        publishParameters(UtilServerInjury.dropPlayer(this, game.getDefender()));
         if ((fOldDefenderState != null) && fOldDefenderState.isProne()) {
-        	fInjuryResultDefender = UtilInjury.handleInjury(this, InjuryType.BLOCK_PRONE, actingPlayer.getPlayer(), game.getDefender(), defenderCoordinate, null, ApothecaryMode.DEFENDER);
+        	fInjuryResultDefender = UtilServerInjury.handleInjury(this, InjuryType.BLOCK_PRONE, actingPlayer.getPlayer(), game.getDefender(), defenderCoordinate, null, ApothecaryMode.DEFENDER);
         } else {
-        	fInjuryResultDefender = UtilInjury.handleInjury(this, InjuryType.BLOCK, actingPlayer.getPlayer(), game.getDefender(), defenderCoordinate, null, ApothecaryMode.DEFENDER);
+        	fInjuryResultDefender = UtilServerInjury.handleInjury(this, InjuryType.BLOCK, actingPlayer.getPlayer(), game.getDefender(), defenderCoordinate, null, ApothecaryMode.DEFENDER);
         }
         if ((attackerState.getBase() != PlayerState.FALLING)
         	&& UtilCards.hasUnusedSkill(game, actingPlayer, Skill.PILING_ON)
@@ -153,7 +153,7 @@ public class StepDropFallingPlayers extends AbstractStep {
           && !UtilCards.hasCard(game, game.getDefender(), Card.GOOD_OLD_MAGIC_CODPIECE)
         ) {
         	fInjuryResultDefender.report(this);
-          UtilDialog.showDialog(getGameState(), new DialogPilingOnParameter(actingPlayer.getPlayerId(), fInjuryResultDefender.isArmorBroken()));
+          UtilServerDialog.showDialog(getGameState(), new DialogPilingOnParameter(actingPlayer.getPlayerId(), fInjuryResultDefender.isArmorBroken()));
           doNextStep = false;
         }
       }
@@ -174,9 +174,9 @@ public class StepDropFallingPlayers extends AbstractStep {
     	}
       if ((attackerState.getBase() == PlayerState.FALLING) && (attackerCoordinate != null)) {
       	publishParameter(new StepParameter(StepParameterKey.END_TURN, true));
-        publishParameters(UtilInjury.dropPlayer(this, actingPlayer.getPlayer()));
+        publishParameters(UtilServerInjury.dropPlayer(this, actingPlayer.getPlayer()));
         publishParameter(new StepParameter(StepParameterKey.INJURY_RESULT,
-        	UtilInjury.handleInjury(this, InjuryType.BLOCK, game.getDefender(), actingPlayer.getPlayer(), attackerCoordinate, null, ApothecaryMode.ATTACKER)));
+        	UtilServerInjury.handleInjury(this, InjuryType.BLOCK, game.getDefender(), actingPlayer.getPlayer(), attackerCoordinate, null, ApothecaryMode.ATTACKER)));
       }
       getResult().setNextAction(StepAction.NEXT_STEP);
     }

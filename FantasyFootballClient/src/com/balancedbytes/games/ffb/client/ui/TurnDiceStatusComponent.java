@@ -35,7 +35,7 @@ import com.balancedbytes.games.ffb.client.UserInterface;
 import com.balancedbytes.games.ffb.client.dialog.DialogEndTurn;
 import com.balancedbytes.games.ffb.client.dialog.IDialog;
 import com.balancedbytes.games.ffb.client.dialog.IDialogCloseListener;
-import com.balancedbytes.games.ffb.client.util.UtilGraphics;
+import com.balancedbytes.games.ffb.client.util.UtilClientGraphics;
 import com.balancedbytes.games.ffb.dialog.DialogId;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.util.ArrayTool;
@@ -259,8 +259,8 @@ public class TurnDiceStatusComponent extends JPanel implements MouseListener, Mo
         FontMetrics fontMetrics = g2d.getFontMetrics();
         String opponentsChoice = "Opponent's choice";
         y += 38 + fontMetrics.getAscent();
-        x = UtilGraphics.findCenteredX(g2d, opponentsChoice, WIDTH);
-        UtilGraphics.drawShadowedText(g2d, opponentsChoice, x, y);
+        x = UtilClientGraphics.findCenteredX(g2d, opponentsChoice, WIDTH);
+        UtilClientGraphics.drawShadowedText(g2d, opponentsChoice, x, y);
       }
       g2d.dispose();
     }

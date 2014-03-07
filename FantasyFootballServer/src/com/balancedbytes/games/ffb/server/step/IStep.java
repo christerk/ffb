@@ -31,6 +31,10 @@ public interface IStep extends IByteArrayReadable, IJsonSerializable {
 	
 	public boolean setParameter(StepParameter pParameter);
 	
+  public void publishParameter(StepParameter pParameter);
+
+  public void publishParameters(StepParameterSet pParameterSet);
+	
 	// overrides IJsonSerializable
   public IStep initFrom(JsonValue pJsonValue);
 

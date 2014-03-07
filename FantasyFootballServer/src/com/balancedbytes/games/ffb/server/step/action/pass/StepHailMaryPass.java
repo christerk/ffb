@@ -22,8 +22,8 @@ import com.balancedbytes.games.ffb.server.step.StepId;
 import com.balancedbytes.games.ffb.server.step.StepParameter;
 import com.balancedbytes.games.ffb.server.step.StepParameterKey;
 import com.balancedbytes.games.ffb.server.step.StepParameterSet;
-import com.balancedbytes.games.ffb.server.util.UtilDialog;
-import com.balancedbytes.games.ffb.server.util.UtilReRoll;
+import com.balancedbytes.games.ffb.server.util.UtilServerDialog;
+import com.balancedbytes.games.ffb.server.util.UtilServerReRoll;
 import com.balancedbytes.games.ffb.util.StringTool;
 import com.balancedbytes.games.ffb.util.UtilCards;
 import com.eclipsesource.json.JsonObject;
@@ -113,7 +113,7 @@ public final class StepHailMaryPass extends AbstractStepWithReRoll {
     boolean doRoll = true;
   	boolean doNextStep = false;
     if (ReRolledAction.PASS == getReRolledAction()) {
-      if ((getReRollSource() == null) || !UtilReRoll.useReRoll(this, getReRollSource(), game.getThrower())) {
+      if ((getReRollSource() == null) || !UtilServerReRoll.useReRoll(this, getReRollSource(), game.getThrower())) {
       	doRoll = false;
       	doNextStep = true;
       }
@@ -130,9 +130,9 @@ public final class StepHailMaryPass extends AbstractStepWithReRoll {
           if (UtilCards.hasSkill(game, game.getThrower(), Skill.PASS) && !fPassSkillUsed) {
           	doNextStep = false;
           	fPassSkillUsed = true;
-            UtilDialog.showDialog(getGameState(), new DialogSkillUseParameter(game.getThrowerId(), Skill.PASS, 2));
+            UtilServerDialog.showDialog(getGameState(), new DialogSkillUseParameter(game.getThrowerId(), Skill.PASS, 2));
           } else {
-            if (UtilReRoll.askForReRollIfAvailable(getGameState(), game.getThrower(), ReRolledAction.PASS, 2, false)) {
+            if (UtilServerReRoll.askForReRollIfAvailable(getGameState(), game.getThrower(), ReRolledAction.PASS, 2, false)) {
             	doNextStep = false;
             }
           }

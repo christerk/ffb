@@ -21,7 +21,7 @@ import com.balancedbytes.games.ffb.client.IIconProperty;
 import com.balancedbytes.games.ffb.client.IconCache;
 import com.balancedbytes.games.ffb.client.UserInterface;
 import com.balancedbytes.games.ffb.client.net.ClientCommunication;
-import com.balancedbytes.games.ffb.client.util.UtilCursor;
+import com.balancedbytes.games.ffb.client.util.UtilClientCursor;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
@@ -104,9 +104,9 @@ public class ClientStatePass extends ClientStateMove {
       fieldComponent.refresh();
       selectable = true;
       if (PlayerAction.HAIL_MARY_PASS == actingPlayer.getPlayerAction()) {
-        UtilCursor.setCustomCursor(userInterface, IIconProperty.CURSOR_PASS);
+        UtilClientCursor.setCustomCursor(userInterface, IIconProperty.CURSOR_PASS);
       } else {
-      	UtilCursor.setDefaultCursor(userInterface);
+      	UtilClientCursor.setDefaultCursor(userInterface);
       }
     }
     getClient().getClientData().setSelectedPlayer(pPlayer);
@@ -124,7 +124,7 @@ public class ClientStatePass extends ClientStateMove {
       userInterface.getFieldComponent().getLayerUnderPlayers().clearMovePath();
       userInterface.getFieldComponent().refresh();
       selectable = true;
-      UtilCursor.setCustomCursor(userInterface, IIconProperty.CURSOR_PASS);
+      UtilClientCursor.setCustomCursor(userInterface, IIconProperty.CURSOR_PASS);
     } else if (actingPlayer.getPlayerAction() == PlayerAction.PASS_MOVE) {
       game.getFieldModel().setRangeRuler(null);
       userInterface.getFieldComponent().refresh();
@@ -145,9 +145,9 @@ public class ClientStatePass extends ClientStateMove {
       rangeRuler = UtilRangeRuler.createRangeRuler(game, actingPlayer.getPlayer(), pCoordinate, false);
       game.getFieldModel().setRangeRuler(rangeRuler);
       if (rangeRuler != null) {
-        UtilCursor.setCustomCursor(userInterface, IIconProperty.CURSOR_PASS);
+        UtilClientCursor.setCustomCursor(userInterface, IIconProperty.CURSOR_PASS);
       } else {
-        UtilCursor.setDefaultCursor(userInterface);
+        UtilClientCursor.setDefaultCursor(userInterface);
       }
       fieldComponent.getLayerUnderPlayers().clearMovePath();
       fieldComponent.refresh();

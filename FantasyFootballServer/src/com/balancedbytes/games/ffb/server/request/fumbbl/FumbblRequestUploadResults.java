@@ -24,7 +24,7 @@ import com.balancedbytes.games.ffb.server.IServerLogLevel;
 import com.balancedbytes.games.ffb.server.IServerProperty;
 import com.balancedbytes.games.ffb.server.request.ServerRequest;
 import com.balancedbytes.games.ffb.server.request.ServerRequestProcessor;
-import com.balancedbytes.games.ffb.server.util.UtilGame;
+import com.balancedbytes.games.ffb.server.util.UtilServerGame;
 import com.balancedbytes.games.ffb.util.StringTool;
 
 
@@ -105,7 +105,7 @@ public class FumbblRequestUploadResults extends ServerRequest {
 
       ReportList reportList = new ReportList();
       reportList.add(new ReportFumbblResultUpload(isUploadSuccessful(), getUploadStatus()));
-      UtilGame.syncGameModel(getGameState(), reportList, null, null);
+      UtilServerGame.syncGameModel(getGameState(), reportList, null, null);
       
     } catch (Exception ex) {
       throw new FantasyFootballException(ex);

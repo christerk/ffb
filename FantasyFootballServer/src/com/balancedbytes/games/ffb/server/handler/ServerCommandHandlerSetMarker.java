@@ -11,7 +11,7 @@ import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.db.old.IDbTableFieldModels;
 import com.balancedbytes.games.ffb.server.net.ReceivedCommand;
 import com.balancedbytes.games.ffb.server.net.SessionManager;
-import com.balancedbytes.games.ffb.server.util.UtilGame;
+import com.balancedbytes.games.ffb.server.util.UtilServerGame;
 import com.balancedbytes.games.ffb.util.StringTool;
 
 /**
@@ -83,7 +83,7 @@ public class ServerCommandHandlerSetMarker extends ServerCommandHandler {
         }
       }
       
-      UtilGame.syncGameModel(gameState, null, null, null);
+      UtilServerGame.syncGameModel(gameState, null, null, null);
       
     }
     

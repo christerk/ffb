@@ -13,7 +13,7 @@ import com.balancedbytes.games.ffb.server.step.SequenceGenerator;
 import com.balancedbytes.games.ffb.server.step.StepAction;
 import com.balancedbytes.games.ffb.server.step.StepId;
 import com.balancedbytes.games.ffb.server.step.StepParameter;
-import com.balancedbytes.games.ffb.server.step.UtilSteps;
+import com.balancedbytes.games.ffb.server.step.UtilServerSteps;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
@@ -68,7 +68,7 @@ public final class StepEndBomb extends AbstractStep {
   private void executeStep() {
     Game game = getGameState().getGame();
 		game.setPassCoordinate(null);
-  	fEndTurn |= UtilSteps.checkTouchdown(getGameState());
+  	fEndTurn |= UtilServerSteps.checkTouchdown(getGameState());
     if (fEndTurn || (fCatcherId == null)) {
   		game.setHomePlaying((TurnMode.BOMB_HOME == game.getTurnMode()) || (TurnMode.BOMB_HOME_BLITZ == game.getTurnMode()));
     	if ((TurnMode.BOMB_HOME_BLITZ == game.getTurnMode()) || (TurnMode.BOMB_AWAY_BLITZ == game.getTurnMode())) {
@@ -80,7 +80,7 @@ public final class StepEndBomb extends AbstractStep {
     } else {
     	Player catcher = game.getPlayerById(fCatcherId);
     	game.setHomePlaying(game.getTeamHome().hasPlayer(catcher));
-    	UtilSteps.changePlayerAction(this, fCatcherId, PlayerAction.THROW_BOMB, false);
+    	UtilServerSteps.changePlayerAction(this, fCatcherId, PlayerAction.THROW_BOMB, false);
     	SequenceGenerator.getInstance().pushPassSequence(getGameState());
     }
   	getResult().setNextAction(StepAction.NEXT_STEP);

@@ -8,7 +8,7 @@ import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.net.ReceivedCommand;
 import com.balancedbytes.games.ffb.server.net.commands.InternalServerCommandFumbblTeamLoaded;
 import com.balancedbytes.games.ffb.server.request.fumbbl.FumbblRequestCheckGamestate;
-import com.balancedbytes.games.ffb.server.util.UtilStartGame;
+import com.balancedbytes.games.ffb.server.util.UtilServerStartGame;
 import com.balancedbytes.games.ffb.util.StringTool;
 
 /**
@@ -37,7 +37,7 @@ public class ServerCommandHandlerFumbblTeamLoaded extends ServerCommandHandler {
     		teamLoadedCommand.getGameIdListener().setGameId(gameState.getId());
     	}
     } else {
-      if (UtilStartGame.joinGameAsPlayerAndCheckIfReadyToStart(gameState, pReceivedCommand.getSession(), teamLoadedCommand.getCoach(), teamLoadedCommand.isHomeTeam())) {
+      if (UtilServerStartGame.joinGameAsPlayerAndCheckIfReadyToStart(gameState, pReceivedCommand.getSession(), teamLoadedCommand.getCoach(), teamLoadedCommand.isHomeTeam())) {
         getServer().getRequestProcessor().add(new FumbblRequestCheckGamestate(gameState));
       }
     }

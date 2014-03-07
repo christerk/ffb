@@ -35,9 +35,9 @@ import com.balancedbytes.games.ffb.server.step.StepId;
 import com.balancedbytes.games.ffb.server.step.StepParameter;
 import com.balancedbytes.games.ffb.server.step.StepParameterKey;
 import com.balancedbytes.games.ffb.server.step.StepParameterSet;
-import com.balancedbytes.games.ffb.server.util.UtilDialog;
-import com.balancedbytes.games.ffb.server.util.UtilInducementUse;
-import com.balancedbytes.games.ffb.server.util.UtilInjury;
+import com.balancedbytes.games.ffb.server.util.UtilServerDialog;
+import com.balancedbytes.games.ffb.server.util.UtilServerInducementUse;
+import com.balancedbytes.games.ffb.server.util.UtilServerInjury;
 import com.balancedbytes.games.ffb.util.StringTool;
 import com.balancedbytes.games.ffb.util.UtilCards;
 import com.eclipsesource.json.JsonObject;
@@ -174,7 +174,7 @@ public class StepApothecary extends AbstractStep {
             if (fShowReport) {
               fInjuryResult.report(this);
             }
-            UtilDialog.showDialog(getGameState(), new DialogUseApothecaryParameter(fInjuryResult.getDefenderId(), fInjuryResult.getPlayerState(), fInjuryResult.getSeriousInjury()));
+            UtilServerDialog.showDialog(getGameState(), new DialogUseApothecaryParameter(fInjuryResult.getDefenderId(), fInjuryResult.getPlayerState(), fInjuryResult.getSeriousInjury()));
             fInjuryResult.setApothecaryStatus(ApothecaryStatus.WAIT_FOR_APOTHECARY_USE);
             doNextStep = false;
             break;
@@ -205,15 +205,15 @@ public class StepApothecary extends AbstractStep {
             break;
           case USE_IGOR:
             Team team = game.getTeamHome().hasPlayer(player) ? game.getTeamHome() : game.getTeamAway();
-            UtilInducementUse.useInducement(getGameState(), team, InducementType.IGOR, 1);
+            UtilServerInducementUse.useInducement(getGameState(), team, InducementType.IGOR, 1);
             getResult().addReport(new ReportInducement(team.getId(), InducementType.IGOR, 0));
-            UtilInjury.handleRegeneration(this, player);
+            UtilServerInjury.handleRegeneration(this, player);
             break;
           default:
             fInjuryResult.applyTo(this);
             PlayerState playerState = game.getFieldModel().getPlayerState(player);
             if ((playerState != null) && playerState.isCasualty() && UtilCards.hasSkill(game, player, Skill.REGENERATION) && (fInjuryResult.getInjuryType() != InjuryType.EAT_PLAYER)) {
-              if (!UtilInjury.handleRegeneration(this, player)) {
+              if (!UtilServerInjury.handleRegeneration(this, player)) {
                 InducementSet inducementSet = game.getTeamHome().hasPlayer(player) ? game.getTurnDataHome().getInducementSet() : game.getTurnDataAway().getInducementSet();
                 if (inducementSet.hasUsesLeft(InducementType.IGOR) && player.getPlayerType() != PlayerType.STAR) {
                   game.setDialogParameter(new DialogUseIgorParameter(player.getId()));
@@ -226,7 +226,7 @@ public class StepApothecary extends AbstractStep {
         }
       }
       if (doNextStep) {
-        UtilInjury.handleRaiseDead(this, fInjuryResult);
+        UtilServerInjury.handleRaiseDead(this, fInjuryResult);
   	  	getResult().setNextAction(StepAction.NEXT_STEP);
       }
     }
@@ -250,7 +250,7 @@ public class StepApothecary extends AbstractStep {
       apothecaryChoice = (newInjuryResult.getPlayerState().getBase() != PlayerState.BADLY_HURT);
       getResult().addReport(new ReportApothecaryRoll(defender.getId(), newInjuryResult.getCasualtyRoll(), newInjuryResult.getPlayerState(), newInjuryResult.getSeriousInjury()));
       if (apothecaryChoice) {
-        UtilDialog.showDialog(getGameState(), new DialogApothecaryChoiceParameter(defender.getId(), fInjuryResult.getPlayerState(), fInjuryResult.getSeriousInjury(), newInjuryResult.getPlayerState(), newInjuryResult.getSeriousInjury()));
+        UtilServerDialog.showDialog(getGameState(), new DialogApothecaryChoiceParameter(defender.getId(), fInjuryResult.getPlayerState(), fInjuryResult.getSeriousInjury(), newInjuryResult.getPlayerState(), newInjuryResult.getSeriousInjury()));
       }
     }
     if (!apothecaryChoice) {

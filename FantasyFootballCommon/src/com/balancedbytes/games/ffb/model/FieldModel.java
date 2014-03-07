@@ -10,6 +10,7 @@ import java.util.Set;
 import com.balancedbytes.games.ffb.BloodSpot;
 import com.balancedbytes.games.ffb.Card;
 import com.balancedbytes.games.ffb.CardEffect;
+import com.balancedbytes.games.ffb.CardEffectFactory;
 import com.balancedbytes.games.ffb.CardFactory;
 import com.balancedbytes.games.ffb.DiceDecoration;
 import com.balancedbytes.games.ffb.FieldCoordinate;
@@ -24,7 +25,6 @@ import com.balancedbytes.games.ffb.TrackNumber;
 import com.balancedbytes.games.ffb.Weather;
 import com.balancedbytes.games.ffb.WeatherFactory;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
-import com.balancedbytes.games.ffb.bytearray.ByteList;
 import com.balancedbytes.games.ffb.bytearray.IByteArrayReadable;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.IJsonSerializable;
@@ -682,113 +682,6 @@ public class FieldModel implements IByteArrayReadable, IJsonSerializable {
 
   // ByteArray serialization
   
-  public int getByteArraySerializationVersion() {
-  	return 3;
-  }
-  
-  public void addTo(ByteList pByteList) {
-
-  	pByteList.addSmallInt(getByteArraySerializationVersion());
-
-    pByteList.addByte((byte) getWeather().getId());
-    pByteList.addFieldCoordinate(getBallCoordinate());
-    pByteList.addBoolean(isBallInPlay());
-    pByteList.addBoolean(isBallMoving());
-    
-    BloodSpot[] bloodspots = getBloodSpots();
-    if (ArrayTool.isProvided(bloodspots)) {
-      pByteList.addByte((byte) bloodspots.length);
-      for (BloodSpot bloodspot : bloodspots) {
-        bloodspot.addTo(pByteList);
-      }
-    } else {
-      pByteList.addByte((byte) 0);
-    }
-
-    PushbackSquare[] pushbackSquares = getPushbackSquares();
-    if (ArrayTool.isProvided(pushbackSquares)) {
-      pByteList.addByte((byte) pushbackSquares.length);
-      for (PushbackSquare pushbackSquare : pushbackSquares) {
-        pushbackSquare.addTo(pByteList);
-      }
-    } else {
-      pByteList.addByte((byte) 0);
-    }
-    
-    MoveSquare[] moveSquares = getMoveSquares();
-    if (ArrayTool.isProvided(moveSquares)) {
-      pByteList.addByte((byte) moveSquares.length);
-      for (MoveSquare moveSquare : moveSquares) {
-        moveSquare.addTo(pByteList);
-      }
-    } else {
-      pByteList.addByte((byte) 0);
-    }
-    
-    TrackNumber[] trackNumbers = getTrackNumbers();
-    if (ArrayTool.isProvided(trackNumbers)) {
-      pByteList.addByte((byte) trackNumbers.length);
-      for (TrackNumber trackNumber : trackNumbers) {
-        trackNumber.addTo(pByteList);
-      }
-    } else {
-      pByteList.addByte((byte) 0);
-    }
-    
-    DiceDecoration[] diceDecorations = getDiceDecorations();
-    if (ArrayTool.isProvided(diceDecorations)) {
-      pByteList.addByte((byte) diceDecorations.length);
-      for (DiceDecoration diceDecoration : diceDecorations) {
-        diceDecoration.addTo(pByteList);
-      }
-    } else {
-      pByteList.addByte((byte) 0);
-    }
-
-    FieldMarker[] fieldMarkers = getFieldMarkers();
-    if (ArrayTool.isProvided(fieldMarkers)) {
-      pByteList.addByte((byte) fieldMarkers.length);
-      for (FieldMarker fieldMarker : fieldMarkers) {
-        fieldMarker.addTo(pByteList);
-      }
-    } else {
-      pByteList.addByte((byte) 0);
-    }
-    
-    PlayerMarker[] playerMarkers = getPlayerMarkers();
-    if (ArrayTool.isProvided(playerMarkers)) {
-      pByteList.addByte((byte) playerMarkers.length);
-      for (PlayerMarker playerMarker : playerMarkers) {
-        playerMarker.addTo(pByteList);
-      }
-    } else {
-      pByteList.addByte((byte) 0);
-    }
-
-    Player[] players = getGame().getPlayers();
-    pByteList.addByte((byte) players.length);
-    
-    for (int i = 0; i < players.length; i++) {
-      
-    	pByteList.addString(players[i].getId());
-      pByteList.addFieldCoordinate(getPlayerCoordinate(players[i]));
-      PlayerState playerState = getPlayerState(players[i]);
-      pByteList.addSmallInt(((playerState != null) ? playerState.getId() : 0));
-      
-      Card[] cards = getCards(players[i]);
-      pByteList.addByte((byte) cards.length);
-      for (Card card : cards) {
-      	pByteList.addSmallInt(card.getId());
-      }
-      
-    }
-    
-    pByteList.addFieldCoordinate(getBombCoordinate());
-    pByteList.addBoolean(isBombMoving());
-    
-  }
-  
-  
   public int initFrom(ByteArray pByteArray) {
     
   	int byteArraySerializationVersion = pByteArray.getSmallInt();
@@ -952,12 +845,18 @@ public class FieldModel implements IByteArrayReadable, IJsonSerializable {
       IJsonOption.PLAYER_COORDINATE.addTo(playerDataObject, getPlayerCoordinate(player));
       IJsonOption.PLAYER_STATE.addTo(playerDataObject,getPlayerState(player));
       
-      List<String> cardNames = new ArrayList<String>();
+      List<String> cards = new ArrayList<String>();
       for (Card card : getCards(player)) {
-        cardNames.add(card.getName());
+        cards.add(card.getName());
       }
-      IJsonOption.CARDS.addTo(jsonObject, cardNames);
-      
+      IJsonOption.CARDS.addTo(jsonObject, cards);
+
+      List<String> cardEffects = new ArrayList<String>();
+      for (CardEffect cardEffect : getCardEffects(player)) {
+        cardEffects.add(cardEffect.getName());
+      }
+      IJsonOption.CARD_EFFECTS.addTo(jsonObject, cardEffects);
+
       playerDataArray.add(playerDataObject);
       
     }
@@ -1026,6 +925,8 @@ public class FieldModel implements IByteArrayReadable, IJsonSerializable {
     fCardsByPlayerId.clear();
     
     CardFactory cardFactory = new CardFactory();
+    CardEffectFactory cardEffectFactory = new CardEffectFactory();
+    
     JsonArray playerDataArray = IJsonOption.PLAYER_DATA_ARRAY.getFrom(jsonObject);
     for (int i = 0; i < playerDataArray.size(); i++) {
       
@@ -1040,13 +941,20 @@ public class FieldModel implements IByteArrayReadable, IJsonSerializable {
       PlayerState playerState = IJsonOption.PLAYER_STATE.getFrom(playerDataObject);
       setPlayerState(player, playerState);
       
-      String[] cardNames = IJsonOption.CARDS.getFrom(playerDataObject);
-      if (ArrayTool.isProvided(cardNames)) {
-        for (int j = 0; j < cardNames.length; j++) {
-          addCard(player, cardFactory.forName(cardNames[j]));
+      String[] cards = IJsonOption.CARDS.getFrom(playerDataObject);
+      if (ArrayTool.isProvided(cards)) {
+        for (int j = 0; j < cards.length; j++) {
+          addCard(player, cardFactory.forName(cards[j]));
         }
       }
-      
+
+      String[] cardEffects = IJsonOption.CARDS.getFrom(playerDataObject);
+      if (ArrayTool.isProvided(cardEffects)) {
+        for (int j = 0; j < cardEffects.length; j++) {
+          addCardEffect(player, cardEffectFactory.forName(cardEffects[j]));
+        }
+      }
+
     }
 
     return this;

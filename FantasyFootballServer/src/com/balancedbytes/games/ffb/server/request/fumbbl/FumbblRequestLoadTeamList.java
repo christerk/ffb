@@ -15,7 +15,7 @@ import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.IServerProperty;
 import com.balancedbytes.games.ffb.server.request.ServerRequest;
 import com.balancedbytes.games.ffb.server.request.ServerRequestProcessor;
-import com.balancedbytes.games.ffb.server.util.UtilHttpClient;
+import com.balancedbytes.games.ffb.server.util.UtilServerHttpClient;
 import com.balancedbytes.games.ffb.util.StringTool;
 import com.balancedbytes.games.ffb.xml.XmlHandler;
 
@@ -54,7 +54,7 @@ public class FumbblRequestLoadTeamList extends ServerRequest {
     TeamList teamList = null;
     try {
     	setRequestUrl(StringTool.bind(server.getProperty(IServerProperty.FUMBBL_TEAMS), URLEncoder.encode(getCoach(), UtilFumbblRequest.CHARACTER_ENCODING)));
-      String teamsXml = UtilHttpClient.fetchPage(getRequestUrl());
+      String teamsXml = UtilServerHttpClient.fetchPage(getRequestUrl());
       if (StringTool.isProvided(teamsXml)) {
         BufferedReader xmlReader = new BufferedReader(new StringReader(teamsXml));
         InputSource xmlSource = new InputSource(xmlReader);

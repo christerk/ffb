@@ -1,33 +1,28 @@
 package com.balancedbytes.games.ffb.server.step;
 
-import com.balancedbytes.games.ffb.Card;
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.FieldCoordinateBounds;
 import com.balancedbytes.games.ffb.PlayerAction;
 import com.balancedbytes.games.ffb.PlayerState;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
-import com.balancedbytes.games.ffb.model.Animation;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.model.Team;
 import com.balancedbytes.games.ffb.net.commands.ICommandWithActingPlayer;
-import com.balancedbytes.games.ffb.report.ReportCardDeactivated;
-import com.balancedbytes.games.ffb.report.ReportPlayCard;
 import com.balancedbytes.games.ffb.server.FantasyFootballServer;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.net.ReceivedCommand;
-import com.balancedbytes.games.ffb.server.util.UtilGame;
-import com.balancedbytes.games.ffb.server.util.UtilPlayerMove;
+import com.balancedbytes.games.ffb.server.util.UtilServerGame;
+import com.balancedbytes.games.ffb.server.util.UtilServerPlayerMove;
 import com.balancedbytes.games.ffb.util.ArrayTool;
 import com.balancedbytes.games.ffb.util.StringTool;
 import com.balancedbytes.games.ffb.util.UtilBlock;
-import com.balancedbytes.games.ffb.util.UtilCards;
 
 /**
  * 
  * @author Kalimar
  */
-public class UtilSteps {
+public class UtilServerSteps {
   
   public static void validateStepId(IStep pStep, StepId pReceivedId) {
     if (pStep == null) {
@@ -63,9 +58,9 @@ public class UtilSteps {
 
   public static void changePlayerAction(IStep pStep, String pPlayerId, PlayerAction pPlayerAction, boolean pLeaping) {
     ActingPlayer actingPlayer = pStep.getGameState().getGame().getActingPlayer();
-    UtilGame.changeActingPlayer(pStep, pPlayerId, pPlayerAction, pLeaping);
+    UtilServerGame.changeActingPlayer(pStep, pPlayerId, pPlayerAction, pLeaping);
     if (StringTool.isProvided(pPlayerId)) {
-    	UtilPlayerMove.updateMoveSquares(pStep.getGameState(), actingPlayer.isLeaping());
+    	UtilServerPlayerMove.updateMoveSquares(pStep.getGameState(), actingPlayer.isLeaping());
     	UtilBlock.updateDiceDecorations(pStep.getGameState().getGame());
     }
   }
@@ -100,31 +95,5 @@ public class UtilSteps {
 		Game game = pGameState.getGame();
     return (game.getTurnDataHome().getTurnNr() >= 8) && (game.getTurnDataAway().getTurnNr() >= 8);
 	}
-	
-	public static void deactivateCard(IStep pStep, Card pCard) {
-	  if ((pStep == null) || (pCard == null)) {
-	    return;
-	  }
-	  Game game = pStep.getGameState().getGame();
-    if (UtilCards.deactivateCard(game, pCard)) {
-      pStep.getResult().addReport(new ReportCardDeactivated(pCard));
-    }
-	}
-	
-  public static void activateCard(IStep pStep, Card pCard, boolean pHomeTeam, String pPlayerId) {
-    if ((pStep == null) || (pCard == null)) {
-      return;
-    }
-    pStep.getResult().setAnimation(new Animation(pCard));
-    UtilGame.syncGameModel(pStep);
-    Game game = pStep.getGameState().getGame();
-    Team ownTeam = pHomeTeam ? game.getTeamHome() : game.getTeamAway();
-    if (StringTool.isProvided(pPlayerId)) {
-      pStep.getResult().addReport(new ReportPlayCard(ownTeam.getId(), pCard, pPlayerId));
-    } else {
-      pStep.getResult().addReport(new ReportPlayCard(ownTeam.getId(), pCard));
-    }
-    UtilCards.activateCard(game, pCard, pHomeTeam, pPlayerId);
-  }
 
 }

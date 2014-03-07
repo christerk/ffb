@@ -27,7 +27,7 @@ import com.balancedbytes.games.ffb.server.step.StepId;
 import com.balancedbytes.games.ffb.server.step.StepParameter;
 import com.balancedbytes.games.ffb.server.step.StepParameterKey;
 import com.balancedbytes.games.ffb.server.step.StepParameterSet;
-import com.balancedbytes.games.ffb.server.util.UtilGame;
+import com.balancedbytes.games.ffb.server.util.UtilServerGame;
 import com.balancedbytes.games.ffb.util.StringTool;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
@@ -117,7 +117,7 @@ public final class StepInitBomb extends AbstractStep {
     	} else {
       	game.getFieldModel().setBombCoordinate(null);
   			getResult().setAnimation(new Animation(AnimationType.BOMB_EXLOSION, fBombCoordinate));
-  			UtilGame.syncGameModel(this);
+  			UtilServerGame.syncGameModel(this);
   			game.getFieldModel().add(new BloodSpot(fBombCoordinate, new PlayerState(PlayerState.HIT_BY_BOMB)));
   			List<Player> affectedPlayers = new ArrayList<Player>();
   			FieldCoordinate[] targetCoordinates = game.getFieldModel().findAdjacentCoordinates(fBombCoordinate, FieldCoordinateBounds.FIELD, 1, true);

@@ -23,8 +23,8 @@ import com.balancedbytes.games.ffb.server.step.StepCommandStatus;
 import com.balancedbytes.games.ffb.server.step.StepId;
 import com.balancedbytes.games.ffb.server.step.StepParameter;
 import com.balancedbytes.games.ffb.server.step.StepParameterKey;
-import com.balancedbytes.games.ffb.server.util.UtilDialog;
-import com.balancedbytes.games.ffb.server.util.UtilReRoll;
+import com.balancedbytes.games.ffb.server.util.UtilServerDialog;
+import com.balancedbytes.games.ffb.server.util.UtilServerReRoll;
 import com.balancedbytes.games.ffb.util.UtilBlock;
 import com.balancedbytes.games.ffb.util.UtilCards;
 import com.eclipsesource.json.JsonObject;
@@ -88,7 +88,7 @@ public class StepBlockRoll extends AbstractStepWithReRoll {
     if (fBlockResult == null) {
       boolean doRoll = true;
       if (ReRolledAction.BLOCK == getReRolledAction()) {
-        if ((getReRollSource() == null) || !UtilReRoll.useReRoll(this, getReRollSource(), actingPlayer.getPlayer())) {
+        if ((getReRollSource() == null) || !UtilServerReRoll.useReRoll(this, getReRollSource(), actingPlayer.getPlayer())) {
           doRoll = false;
           showBlockRollDialog(doRoll);
         }
@@ -122,7 +122,7 @@ public class StepBlockRoll extends AbstractStepWithReRoll {
       proReRollOption = false;
     }
     getResult().addReport(new ReportBlockRoll(teamId, fBlockRoll));
-    UtilDialog.showDialog(getGameState(), new DialogBlockRollParameter(teamId, fNrOfDice, fBlockRoll, teamReRollOption, proReRollOption));
+    UtilServerDialog.showDialog(getGameState(), new DialogBlockRollParameter(teamId, fNrOfDice, fBlockRoll, teamReRollOption, proReRollOption));
   }
   
   // ByteArray serialization

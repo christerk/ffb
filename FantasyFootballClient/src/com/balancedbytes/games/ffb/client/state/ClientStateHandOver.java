@@ -17,8 +17,8 @@ import com.balancedbytes.games.ffb.client.FantasyFootballClient;
 import com.balancedbytes.games.ffb.client.IIconProperty;
 import com.balancedbytes.games.ffb.client.IconCache;
 import com.balancedbytes.games.ffb.client.UserInterface;
-import com.balancedbytes.games.ffb.client.util.UtilActionKeys;
-import com.balancedbytes.games.ffb.client.util.UtilCursor;
+import com.balancedbytes.games.ffb.client.util.UtilClientActionKeys;
+import com.balancedbytes.games.ffb.client.util.UtilClientCursor;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.FieldModel;
 import com.balancedbytes.games.ffb.model.Game;
@@ -55,7 +55,7 @@ public class ClientStateHandOver extends ClientStateMove {
     Game game = getClient().getGame();
     ActingPlayer actingPlayer = game.getActingPlayer();
     FieldCoordinate playerPosition = game.getFieldModel().getPlayerCoordinate(actingPlayer.getPlayer());
-    FieldCoordinate catcherPosition = UtilActionKeys.findMoveCoordinate(getClient(), playerPosition, pActionKey);
+    FieldCoordinate catcherPosition = UtilClientActionKeys.findMoveCoordinate(getClient(), playerPosition, pActionKey);
     Player catcher = game.getFieldModel().getPlayer(catcherPosition);
     if (catcher != null) {
       actionHandled = handOver(catcher);
@@ -71,16 +71,16 @@ public class ClientStateHandOver extends ClientStateMove {
     // ActingPlayer actingPlayer = game.getActingPlayer();
     // if (canPlayerGetHandOver(pPlayer) || (actingPlayer.getPlayerAction() == PlayerAction.HAND_OVER)) {
     if (canPlayerGetHandOver(pPlayer)) {
-      UtilCursor.setCustomCursor(getClient().getUserInterface(), IIconProperty.CURSOR_PASS);
+      UtilClientCursor.setCustomCursor(getClient().getUserInterface(), IIconProperty.CURSOR_PASS);
     } else {
-      UtilCursor.setDefaultCursor(getClient().getUserInterface());
+      UtilClientCursor.setDefaultCursor(getClient().getUserInterface());
     }
     return true;
   }
   
   protected boolean mouseOverField(FieldCoordinate pCoordinate) {
     super.mouseOverField(pCoordinate);
-    UtilCursor.setDefaultCursor(getClient().getUserInterface());
+    UtilClientCursor.setDefaultCursor(getClient().getUserInterface());
     return true;
   }
 

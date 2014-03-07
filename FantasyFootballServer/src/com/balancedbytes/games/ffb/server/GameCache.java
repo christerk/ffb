@@ -41,7 +41,7 @@ import com.balancedbytes.games.ffb.server.db.update.DbGamesSerializedUpdateParam
 import com.balancedbytes.games.ffb.server.net.SessionManager;
 import com.balancedbytes.games.ffb.server.net.commands.InternalServerCommandBackupGame;
 import com.balancedbytes.games.ffb.server.request.fumbbl.FumbblRequestRemoveGamestate;
-import com.balancedbytes.games.ffb.server.util.UtilTimer;
+import com.balancedbytes.games.ffb.server.util.UtilServerTimer;
 import com.balancedbytes.games.ffb.util.StringTool;
 import com.balancedbytes.games.ffb.util.UtilBox;
 import com.balancedbytes.games.ffb.util.UtilTeamValue;
@@ -105,8 +105,8 @@ public class GameCache {
       pGameState.setStatus(GameStatus.ACTIVE);
     }
     if (GameStatus.STARTING != pGameState.getStatus()) {
-      UtilTimer.syncTime(pGameState);
-      UtilTimer.startTurnTimer(pGameState);
+      UtilServerTimer.syncTime(pGameState);
+      UtilServerTimer.startTurnTimer(pGameState);
     }
 		fGameStateById.put(pGameState.getId(), pGameState);
     // log game cache size -->

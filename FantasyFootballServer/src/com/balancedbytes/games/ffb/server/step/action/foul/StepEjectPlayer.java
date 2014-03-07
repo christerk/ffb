@@ -23,7 +23,7 @@ import com.balancedbytes.games.ffb.server.step.StepId;
 import com.balancedbytes.games.ffb.server.step.StepParameter;
 import com.balancedbytes.games.ffb.server.step.StepParameterKey;
 import com.balancedbytes.games.ffb.server.step.StepParameterSet;
-import com.balancedbytes.games.ffb.server.util.UtilGame;
+import com.balancedbytes.games.ffb.server.util.UtilServerGame;
 import com.balancedbytes.games.ffb.util.StringTool;
 import com.balancedbytes.games.ffb.util.UtilBox;
 import com.balancedbytes.games.ffb.util.UtilCards;
@@ -118,7 +118,7 @@ public class StepEjectPlayer extends AbstractStep {
     attackerResult.setSendToBoxHalf(game.getHalf());
     UtilBox.putPlayerIntoBox(game, actingPlayer.getPlayer());
     UtilBox.refreshBoxes(game);
-    UtilGame.updateLeaderReRolls(this);
+    UtilServerGame.updateLeaderReRolls(this);
   	publishParameter(new StepParameter(StepParameterKey.END_TURN, true));
     if ((fFoulerHasBall != null) && fFoulerHasBall) {
     	publishParameter(new StepParameter(StepParameterKey.CATCH_SCATTER_THROW_IN_MODE, CatchScatterThrowInMode.SCATTER_BALL));

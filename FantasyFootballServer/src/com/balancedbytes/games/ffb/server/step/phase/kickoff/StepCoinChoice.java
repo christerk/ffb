@@ -17,7 +17,7 @@ import com.balancedbytes.games.ffb.server.step.StepCommandStatus;
 import com.balancedbytes.games.ffb.server.step.StepId;
 import com.balancedbytes.games.ffb.server.step.StepParameter;
 import com.balancedbytes.games.ffb.server.step.StepParameterKey;
-import com.balancedbytes.games.ffb.server.util.UtilDialog;
+import com.balancedbytes.games.ffb.server.util.UtilServerDialog;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
@@ -69,7 +69,7 @@ public final class StepCoinChoice extends AbstractStep {
   private void executeStep() {
     Game game = getGameState().getGame();
     if (fCoinChoiceHeads == null) {
-      UtilDialog.showDialog(getGameState(), new DialogCoinChoiceParameter());
+      UtilServerDialog.showDialog(getGameState(), new DialogCoinChoiceParameter());
     } else {
       boolean coinThrowHeads = getGameState().getDiceRoller().throwCoin();
       Team choosingTeam = game.isHomePlaying() ? game.getTeamHome() : game.getTeamAway();
@@ -80,7 +80,7 @@ public final class StepCoinChoice extends AbstractStep {
         choosingTeam = game.getTeamHome();
       }
       publishParameter(new StepParameter(StepParameterKey.CHOOSING_TEAM_ID, choosingTeam.getId()));
-      UtilDialog.showDialog(getGameState(), new DialogReceiveChoiceParameter(choosingTeam.getId()));
+      UtilServerDialog.showDialog(getGameState(), new DialogReceiveChoiceParameter(choosingTeam.getId()));
       getResult().setNextAction(StepAction.NEXT_STEP);
     }
   }

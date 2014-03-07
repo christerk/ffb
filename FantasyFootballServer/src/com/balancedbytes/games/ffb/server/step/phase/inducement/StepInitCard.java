@@ -23,10 +23,9 @@ import com.balancedbytes.games.ffb.server.step.StepId;
 import com.balancedbytes.games.ffb.server.step.StepParameter;
 import com.balancedbytes.games.ffb.server.step.StepParameterKey;
 import com.balancedbytes.games.ffb.server.step.StepParameterSet;
-import com.balancedbytes.games.ffb.server.step.UtilSteps;
-import com.balancedbytes.games.ffb.server.util.UtilDialog;
+import com.balancedbytes.games.ffb.server.util.UtilServerDialog;
+import com.balancedbytes.games.ffb.server.util.UtilServerCards;
 import com.balancedbytes.games.ffb.util.StringTool;
-import com.balancedbytes.games.ffb.util.UtilCards;
 import com.balancedbytes.games.ffb.util.UtilPlayer;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
@@ -113,7 +112,7 @@ public final class StepInitCard extends AbstractStep {
   }
 
   private void executeStep() {
-    UtilDialog.hideDialog(getGameState());
+    UtilServerDialog.hideDialog(getGameState());
     Game game = getGameState().getGame();
     Team ownTeam = fHomeTeam ? game.getTeamHome() : game.getTeamAway();
     if (fEndCardPlaying) {
@@ -122,10 +121,10 @@ public final class StepInitCard extends AbstractStep {
       playCardOnPlayer();
     } else if (fCard.getTarget().isPlayedOnPlayer()) {
       // step initInducement has already checked if this card can be played
-      Player[] allowedPlayers = UtilCards.findAllowedPlayersForCard(game, fCard);
+      Player[] allowedPlayers = UtilServerCards.findAllowedPlayersForCard(game, fCard);
       game.setDialogParameter(new DialogPlayerChoiceParameter(ownTeam.getId(), PlayerChoiceMode.CARD, allowedPlayers, null, 1));
     } else {
-      UtilSteps.activateCard(this, fCard, fHomeTeam, null);
+      UtilServerCards.activateCard(this, fCard, fHomeTeam, null);
       getResult().setNextAction(StepAction.NEXT_STEP);
     }
   }
@@ -142,7 +141,7 @@ public final class StepInitCard extends AbstractStep {
         doNextStep = playCardChopBlock();
         break;
       default:
-        UtilSteps.activateCard(this, fCard, fHomeTeam, fPlayerId);
+        UtilServerCards.activateCard(this, fCard, fHomeTeam, fPlayerId);
         doNextStep = true;
         break;
     }
@@ -166,7 +165,7 @@ public final class StepInitCard extends AbstractStep {
       } else {
         game.setDialogParameter(new DialogPlayerChoiceParameter(ownTeam.getId(), PlayerChoiceMode.BLOCK, blockablePlayers, null, 1));
       }
-      UtilSteps.activateCard(this, fCard, fHomeTeam, fPlayerId);
+      UtilServerCards.activateCard(this, fCard, fHomeTeam, fPlayerId);
     }
     if (StringTool.isProvided(fOpponentId)) {
       doNextStep = true;

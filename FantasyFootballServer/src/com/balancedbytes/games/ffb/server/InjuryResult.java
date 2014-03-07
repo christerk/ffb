@@ -32,7 +32,7 @@ import com.balancedbytes.games.ffb.report.ReportInjury;
 import com.balancedbytes.games.ffb.server.step.IStep;
 import com.balancedbytes.games.ffb.server.step.action.common.ApothecaryMode;
 import com.balancedbytes.games.ffb.server.step.action.common.ApothecaryModeFactory;
-import com.balancedbytes.games.ffb.server.util.UtilGame;
+import com.balancedbytes.games.ffb.server.util.UtilServerGame;
 import com.balancedbytes.games.ffb.util.UtilBox;
 import com.balancedbytes.games.ffb.util.UtilCards;
 import com.eclipsesource.json.JsonArray;
@@ -343,7 +343,7 @@ public class InjuryResult implements IByteArrayReadable, IJsonSerializable {
       }
       if (isCasualty() || isKnockedOut() || isReserve()) {
         UtilBox.putPlayerIntoBox(game, defender);
-        UtilGame.updateLeaderReRolls(pStep);
+        UtilServerGame.updateLeaderReRolls(pStep);
       }
     }
     // death is also a serious injury

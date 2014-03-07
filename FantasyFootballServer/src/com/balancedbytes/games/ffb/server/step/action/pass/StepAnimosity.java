@@ -25,7 +25,7 @@ import com.balancedbytes.games.ffb.server.step.StepId;
 import com.balancedbytes.games.ffb.server.step.StepParameter;
 import com.balancedbytes.games.ffb.server.step.StepParameterKey;
 import com.balancedbytes.games.ffb.server.step.StepParameterSet;
-import com.balancedbytes.games.ffb.server.util.UtilReRoll;
+import com.balancedbytes.games.ffb.server.util.UtilServerReRoll;
 import com.balancedbytes.games.ffb.util.StringTool;
 import com.balancedbytes.games.ffb.util.UtilCards;
 import com.balancedbytes.games.ffb.util.UtilPassing;
@@ -137,7 +137,7 @@ public final class StepAnimosity extends AbstractStepWithReRoll {
       }
     } else {
       if (ReRolledAction.ANIMOSITY == getReRolledAction()) {
-        if ((getReRollSource() == null) || !UtilReRoll.useReRoll(this, getReRollSource(), thrower)) {
+        if ((getReRollSource() == null) || !UtilServerReRoll.useReRoll(this, getReRollSource(), thrower)) {
           actingPlayer.setSufferingAnimosity(true);
         } else {
           doRoll = true;
@@ -157,7 +157,7 @@ public final class StepAnimosity extends AbstractStepWithReRoll {
           getResult().setNextAction(StepAction.NEXT_STEP);
         } else {
           if ((ReRolledAction.ANIMOSITY == getReRolledAction())
-              || !UtilReRoll.askForReRollIfAvailable(getGameState(), actingPlayer.getPlayer(), ReRolledAction.ANIMOSITY, minimumRoll, false)) {
+              || !UtilServerReRoll.askForReRollIfAvailable(getGameState(), actingPlayer.getPlayer(), ReRolledAction.ANIMOSITY, minimumRoll, false)) {
             actingPlayer.setSufferingAnimosity(true);
           }
         }

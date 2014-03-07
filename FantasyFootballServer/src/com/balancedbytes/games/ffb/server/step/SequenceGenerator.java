@@ -509,6 +509,7 @@ public class SequenceGenerator {
 		add(inducementSequence, StepId.INIT_INDUCEMENT, pGameState, initParameters);
 		// may insert wizard or card sequence at this point
 
+    add(inducementSequence, StepId.CATCH_SCATTER_THROW_IN, pGameState);
 		add(inducementSequence, StepId.END_INDUCEMENT, pGameState);
 		// may insert endTurn or inducement sequence at this point
 		

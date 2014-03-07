@@ -12,7 +12,7 @@ import com.balancedbytes.games.ffb.server.ServerMode;
 import com.balancedbytes.games.ffb.server.net.ReceivedCommand;
 import com.balancedbytes.games.ffb.server.net.SessionManager;
 import com.balancedbytes.games.ffb.server.request.fumbbl.FumbblRequestRemoveGamestate;
-import com.balancedbytes.games.ffb.server.util.UtilTimer;
+import com.balancedbytes.games.ffb.server.util.UtilServerTimer;
 import com.balancedbytes.games.ffb.util.ArrayTool;
 
 /**
@@ -52,8 +52,8 @@ public class ServerCommandHandlerSocketClosed extends ServerCommandHandler {
       
       // stop timer whenever a player drops out
     	if (ClientMode.PLAYER == mode) {
-      	UtilTimer.syncTime(gameState);
-        UtilTimer.stopTurnTimer(gameState);
+      	UtilServerTimer.syncTime(gameState);
+        UtilServerTimer.stopTurnTimer(gameState);
     	}
       
       Session homeSession = sessionManager.getSessionOfHomeCoach(gameState);

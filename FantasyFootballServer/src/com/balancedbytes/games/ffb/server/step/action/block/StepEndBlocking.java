@@ -15,10 +15,10 @@ import com.balancedbytes.games.ffb.server.step.SequenceGenerator;
 import com.balancedbytes.games.ffb.server.step.StepAction;
 import com.balancedbytes.games.ffb.server.step.StepId;
 import com.balancedbytes.games.ffb.server.step.StepParameter;
-import com.balancedbytes.games.ffb.server.step.UtilSteps;
-import com.balancedbytes.games.ffb.server.util.UtilDialog;
-import com.balancedbytes.games.ffb.server.util.UtilGame;
-import com.balancedbytes.games.ffb.server.util.UtilPlayerMove;
+import com.balancedbytes.games.ffb.server.step.UtilServerSteps;
+import com.balancedbytes.games.ffb.server.util.UtilServerDialog;
+import com.balancedbytes.games.ffb.server.util.UtilServerGame;
+import com.balancedbytes.games.ffb.server.util.UtilServerPlayerMove;
 import com.balancedbytes.games.ffb.util.UtilBlock;
 import com.balancedbytes.games.ffb.util.UtilCards;
 import com.balancedbytes.games.ffb.util.UtilPlayer;
@@ -94,8 +94,8 @@ public class StepEndBlocking extends AbstractStep {
   private void executeStep() {
     Game game = getGameState().getGame();
     ActingPlayer actingPlayer = game.getActingPlayer();
-    UtilDialog.hideDialog(getGameState());
-    fEndTurn |= UtilSteps.checkTouchdown(getGameState());
+    UtilServerDialog.hideDialog(getGameState());
+    fEndTurn |= UtilServerSteps.checkTouchdown(getGameState());
     if (fEndTurn || fEndPlayerAction) {
       game.setDefenderId(null); // clear defender for next multi block
       SequenceGenerator.getInstance().pushEndPlayerActionSequence(getGameState(), true, fEndTurn);
@@ -134,13 +134,13 @@ public class StepEndBlocking extends AbstractStep {
             && !UtilCards.hasSkill(game, actingPlayer, Skill.CHAINSAW) && attackerState.hasTacklezones()
             && UtilPlayer.isNextMovePossible(game, false)) {
           String actingPlayerId = actingPlayer.getPlayer().getId();
-          UtilGame.changeActingPlayer(this, actingPlayerId, PlayerAction.BLITZ_MOVE, actingPlayer.isLeaping());
-          UtilPlayerMove.updateMoveSquares(getGameState(), actingPlayer.isLeaping());
+          UtilServerGame.changeActingPlayer(this, actingPlayerId, PlayerAction.BLITZ_MOVE, actingPlayer.isLeaping());
+          UtilServerPlayerMove.updateMoveSquares(getGameState(), actingPlayer.isLeaping());
           UtilBlock.updateDiceDecorations(game);
           SequenceGenerator.getInstance().pushMoveSequence(getGameState());
           // this may happen for ball and chain
         } else if ((actingPlayer.getPlayerAction() == PlayerAction.MOVE) && UtilPlayer.isNextMovePossible(game, false)) {
-          UtilPlayerMove.updateMoveSquares(getGameState(), actingPlayer.isLeaping());
+          UtilServerPlayerMove.updateMoveSquares(getGameState(), actingPlayer.isLeaping());
           UtilBlock.updateDiceDecorations(game);
           SequenceGenerator.getInstance().pushMoveSequence(getGameState());
           // this may happen on a failed bloodlust roll

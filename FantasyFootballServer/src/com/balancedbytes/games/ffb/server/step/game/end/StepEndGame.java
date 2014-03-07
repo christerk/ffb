@@ -15,7 +15,7 @@ import com.balancedbytes.games.ffb.server.request.fumbbl.FumbblRequestUploadResu
 import com.balancedbytes.games.ffb.server.step.AbstractStep;
 import com.balancedbytes.games.ffb.server.step.StepAction;
 import com.balancedbytes.games.ffb.server.step.StepId;
-import com.balancedbytes.games.ffb.server.util.UtilDialog;
+import com.balancedbytes.games.ffb.server.util.UtilServerDialog;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
@@ -49,7 +49,7 @@ public final class StepEndGame extends AbstractStep {
       getGameState().getStepStack().clear();  // clean up after ourselves
       gameCache.queueDbUpdate(getGameState(), true);
       IDialogParameter gameStatistics = new DialogParameterFactory().createDialogParameter(DialogId.GAME_STATISTICS);
-      UtilDialog.showDialog(getGameState(), gameStatistics);
+      UtilServerDialog.showDialog(getGameState(), gameStatistics);
       FantasyFootballServer server = getGameState().getServer();
       if ((server.getMode() == ServerMode.FUMBBL) && !game.isTesting()) {
         server.getRequestProcessor().add(new FumbblRequestUploadResults(getGameState()));

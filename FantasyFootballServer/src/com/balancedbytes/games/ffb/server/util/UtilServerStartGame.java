@@ -24,7 +24,7 @@ import com.balancedbytes.games.ffb.util.StringTool;
  * 
  * @author Kalimar
  */
-public class UtilStartGame {
+public class UtilServerStartGame {
 
   public static boolean joinGameAsPlayerAndCheckIfReadyToStart(GameState pGameState, Session pSession, String pCoach, boolean pHomeTeam) {
     Game game = pGameState.getGame();

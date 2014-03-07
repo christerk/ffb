@@ -28,9 +28,9 @@ import com.balancedbytes.games.ffb.server.step.StepId;
 import com.balancedbytes.games.ffb.server.step.StepParameter;
 import com.balancedbytes.games.ffb.server.step.StepParameterKey;
 import com.balancedbytes.games.ffb.server.step.StepParameterSet;
-import com.balancedbytes.games.ffb.server.step.UtilSteps;
+import com.balancedbytes.games.ffb.server.step.UtilServerSteps;
+import com.balancedbytes.games.ffb.server.util.UtilServerCards;
 import com.balancedbytes.games.ffb.util.ArrayTool;
-import com.balancedbytes.games.ffb.util.UtilCards;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
@@ -120,7 +120,7 @@ public final class StepInitInducement extends AbstractStep {
 		if (fEndInducementPhase) {
 			leaveStep(true);
 		} else if ((fCard == null) && (fInducementType == null)) {
-			fTouchdownOrEndOfHalf = UtilSteps.checkTouchdown(getGameState());
+			fTouchdownOrEndOfHalf = UtilServerSteps.checkTouchdown(getGameState());
   		Card[] playableCards = findPlayableCards();
   		InducementType[] useableInducements = findUseableInducements();
   		if (ArrayTool.isProvided(useableInducements) || ArrayTool.isProvided(playableCards)) {
@@ -169,7 +169,7 @@ public final class StepInitInducement extends AbstractStep {
 		Set<Card> playableCards = new HashSet<Card>();
 		InducementSet inducementSet = fHomeTeam ? game.getTurnDataHome().getInducementSet() : game.getTurnDataAway().getInducementSet();
 		for (Card card : inducementSet.getAvailableCards()) {
-			boolean playable = (!card.getTarget().isPlayedOnPlayer() || ArrayTool.isProvided(UtilCards.findAllowedPlayersForCard(game, card)));
+			boolean playable = (!card.getTarget().isPlayedOnPlayer() || ArrayTool.isProvided(UtilServerCards.findAllowedPlayersForCard(game, card)));
 			for (InducementPhase phase : card.getPhases()) {
 				if (playable && (phase == fInducementPhase) && (!fTouchdownOrEndOfHalf || (phase != InducementPhase.END_OF_OWN_TURN))) {
 					playableCards.add(card);

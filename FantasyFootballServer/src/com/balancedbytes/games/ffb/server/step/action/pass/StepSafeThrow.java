@@ -24,8 +24,8 @@ import com.balancedbytes.games.ffb.server.step.StepId;
 import com.balancedbytes.games.ffb.server.step.StepParameter;
 import com.balancedbytes.games.ffb.server.step.StepParameterKey;
 import com.balancedbytes.games.ffb.server.step.StepParameterSet;
-import com.balancedbytes.games.ffb.server.util.UtilGame;
-import com.balancedbytes.games.ffb.server.util.UtilReRoll;
+import com.balancedbytes.games.ffb.server.util.UtilServerGame;
+import com.balancedbytes.games.ffb.server.util.UtilServerReRoll;
 import com.balancedbytes.games.ffb.util.UtilCards;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
@@ -113,7 +113,7 @@ public class StepSafeThrow extends AbstractStepWithReRoll {
     boolean doSafeThrow = (UtilCards.hasSkill(game, game.getThrower(), Skill.SAFE_THROW) && !UtilCards.hasSkill(game, interceptor, Skill.VERY_LONG_LEGS));
     if (doSafeThrow) {
       if (ReRolledAction.SAFE_THROW == getReRolledAction()) {
-        if ((getReRollSource() == null) || !UtilReRoll.useReRoll(this, getReRollSource(), game.getThrower())) {
+        if ((getReRollSource() == null) || !UtilServerReRoll.useReRoll(this, getReRollSource(), game.getThrower())) {
           doSafeThrow = false;
         }
       }
@@ -123,7 +123,7 @@ public class StepSafeThrow extends AbstractStepWithReRoll {
         safeThrowSuccessful = DiceInterpreter.getInstance().isSkillRollSuccessful(roll, minimumRoll);
         boolean reRolled = ((getReRolledAction() == ReRolledAction.SAFE_THROW) && (getReRollSource() != null));
         getResult().addReport(new ReportSkillRoll(ReportId.SAFE_THROW_ROLL, game.getThrowerId(), safeThrowSuccessful, roll, minimumRoll, reRolled));
-        if (!safeThrowSuccessful && (getReRolledAction() != ReRolledAction.SAFE_THROW) && UtilReRoll.askForReRollIfAvailable(getGameState(), game.getThrower(), ReRolledAction.SAFE_THROW, minimumRoll, false)) {
+        if (!safeThrowSuccessful && (getReRolledAction() != ReRolledAction.SAFE_THROW) && UtilServerReRoll.askForReRollIfAvailable(getGameState(), game.getThrower(), ReRolledAction.SAFE_THROW, minimumRoll, false)) {
           doNextStep = false;
         }
       }
@@ -144,7 +144,7 @@ public class StepSafeThrow extends AbstractStepWithReRoll {
         } else {
         	getResult().setAnimation(new Animation(AnimationType.PASS, startCoordinate, game.getPassCoordinate(), interceptorCoordinate));
         }
-        UtilGame.syncGameModel(this);
+        UtilServerGame.syncGameModel(this);
         if (PlayerAction.THROW_BOMB == game.getThrowerAction()) {
         	game.getFieldModel().setBombCoordinate(interceptorCoordinate);
         	game.getFieldModel().setBombMoving(false);

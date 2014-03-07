@@ -22,9 +22,9 @@ import com.balancedbytes.games.ffb.server.step.StepAction;
 import com.balancedbytes.games.ffb.server.step.StepCommandStatus;
 import com.balancedbytes.games.ffb.server.step.StepId;
 import com.balancedbytes.games.ffb.server.step.StepParameter;
-import com.balancedbytes.games.ffb.server.util.UtilDialog;
-import com.balancedbytes.games.ffb.server.util.UtilPlayerMove;
-import com.balancedbytes.games.ffb.server.util.UtilReRoll;
+import com.balancedbytes.games.ffb.server.util.UtilServerDialog;
+import com.balancedbytes.games.ffb.server.util.UtilServerPlayerMove;
+import com.balancedbytes.games.ffb.server.util.UtilServerReRoll;
 import com.balancedbytes.games.ffb.util.ArrayTool;
 import com.balancedbytes.games.ffb.util.StringTool;
 import com.balancedbytes.games.ffb.util.UtilBlock;
@@ -134,7 +134,7 @@ public class StepShadowing extends AbstractStepWithReRoll {
           }
           descriptionArray[i] = description.toString();
         } 
-        UtilDialog.showDialog(getGameState(), new DialogPlayerChoiceParameter(teamId, PlayerChoiceMode.SHADOWING, shadowers, descriptionArray, 1));
+        UtilServerDialog.showDialog(getGameState(), new DialogPlayerChoiceParameter(teamId, PlayerChoiceMode.SHADOWING, shadowers, descriptionArray, 1));
         doNextStep = false;
       } else {
       	fUsingShadowing = false;
@@ -145,7 +145,7 @@ public class StepShadowing extends AbstractStepWithReRoll {
       if (fUsingShadowing && (game.getDefender() != null)) {
         boolean rollShadowing = true;
         if (ReRolledAction.SHADOWING_ESCAPE == getReRolledAction()) {
-          if ((getReRollSource() == null) || !UtilReRoll.useReRoll(this, getReRollSource(), actingPlayer.getPlayer())) {
+          if ((getReRollSource() == null) || !UtilServerReRoll.useReRoll(this, getReRollSource(), actingPlayer.getPlayer())) {
             rollShadowing = false;
           }
         }
@@ -159,7 +159,7 @@ public class StepShadowing extends AbstractStepWithReRoll {
           	fUsingShadowing = false;
           } else {
             if (getReRolledAction() != ReRolledAction.SHADOWING_ESCAPE) {
-              if (UtilReRoll.askForReRollIfAvailable(getGameState(), actingPlayer.getPlayer(), ReRolledAction.SHADOWING_ESCAPE, minimumRoll, false)) {
+              if (UtilServerReRoll.askForReRollIfAvailable(getGameState(), actingPlayer.getPlayer(), ReRolledAction.SHADOWING_ESCAPE, minimumRoll, false)) {
                 doNextStep = false;
               }
             }
@@ -168,7 +168,7 @@ public class StepShadowing extends AbstractStepWithReRoll {
       }
       if (doNextStep && fUsingShadowing) {
         game.getFieldModel().updatePlayerAndBallPosition(game.getDefender(), fCoordinateFrom);
-        UtilPlayerMove.updateMoveSquares(getGameState(), actingPlayer.isLeaping());
+        UtilServerPlayerMove.updateMoveSquares(getGameState(), actingPlayer.isLeaping());
         UtilBlock.updateDiceDecorations(game);
       }
     }

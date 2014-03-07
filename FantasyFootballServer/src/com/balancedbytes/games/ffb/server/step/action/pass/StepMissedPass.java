@@ -21,8 +21,8 @@ import com.balancedbytes.games.ffb.server.step.StepCommandStatus;
 import com.balancedbytes.games.ffb.server.step.StepId;
 import com.balancedbytes.games.ffb.server.step.StepParameter;
 import com.balancedbytes.games.ffb.server.step.StepParameterKey;
-import com.balancedbytes.games.ffb.server.util.UtilCatchScatterThrowIn;
-import com.balancedbytes.games.ffb.server.util.UtilGame;
+import com.balancedbytes.games.ffb.server.util.UtilServerCatchScatterThrowIn;
+import com.balancedbytes.games.ffb.server.util.UtilServerGame;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
@@ -73,7 +73,7 @@ public class StepMissedPass extends AbstractStep {
       rollList.add(roll);
       Direction direction = DiceInterpreter.getInstance().interpretScatterDirectionRoll(roll);
       directionList.add(direction);
-      coordinateEnd = UtilCatchScatterThrowIn.findScatterCoordinate(coordinateStart, direction, 1);
+      coordinateEnd = UtilServerCatchScatterThrowIn.findScatterCoordinate(coordinateStart, direction, 1);
       lastValidCoordinate = FieldCoordinateBounds.FIELD.isInBounds(coordinateEnd) ? coordinateEnd : coordinateStart;
       coordinateStart = coordinateEnd;
     }
@@ -96,7 +96,7 @@ public class StepMissedPass extends AbstractStep {
     } else {
     	getResult().setAnimation(new Animation(AnimationType.PASS, throwerCoordinate, lastValidCoordinate, null));
     }
-    UtilGame.syncGameModel(this);
+    UtilServerGame.syncGameModel(this);
     if (!FieldCoordinateBounds.FIELD.isInBounds(coordinateEnd)) {
     	if ((PlayerAction.HAIL_MARY_BOMB == game.getThrowerAction()) || (PlayerAction.THROW_BOMB == game.getThrowerAction())) {
     		game.getFieldModel().setBombCoordinate(null);

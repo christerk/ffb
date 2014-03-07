@@ -24,8 +24,8 @@ import com.balancedbytes.games.ffb.server.step.StepAction;
 import com.balancedbytes.games.ffb.server.step.StepCommandStatus;
 import com.balancedbytes.games.ffb.server.step.StepId;
 import com.balancedbytes.games.ffb.server.step.StepParameter;
-import com.balancedbytes.games.ffb.server.util.UtilDialog;
-import com.balancedbytes.games.ffb.server.util.UtilPushback;
+import com.balancedbytes.games.ffb.server.util.UtilServerDialog;
+import com.balancedbytes.games.ffb.server.util.UtilServerPushback;
 import com.balancedbytes.games.ffb.util.ArrayTool;
 import com.balancedbytes.games.ffb.util.UtilCards;
 import com.eclipsesource.json.JsonObject;
@@ -97,7 +97,7 @@ public class StepBlockDodge extends AbstractStep {
     findDodgeChoice();
     Game game = getGameState().getGame();
     if (fUsingDodge == null) {
-      UtilDialog.showDialog(getGameState(), new DialogSkillUseParameter(game.getDefenderId(), Skill.DODGE, 0));
+      UtilServerDialog.showDialog(getGameState(), new DialogSkillUseParameter(game.getDefenderId(), Skill.DODGE, 0));
     } else {
       getResult().addReport(new ReportSkillUse(game.getDefenderId(), Skill.DODGE, fUsingDodge, SkillUse.AVOID_FALLING));
       if (fUsingDodge) {
@@ -133,9 +133,9 @@ public class StepBlockDodge extends AbstractStep {
       Player attacker = actingPlayer.getPlayer();
       FieldCoordinate attackerCoordinate = game.getFieldModel().getPlayerCoordinate(attacker);
       FieldCoordinate defenderCoordinate = game.getFieldModel().getPlayerCoordinate(game.getDefender());    
-      PushbackSquare startingSquare = UtilPushback.findStartingSquare(attackerCoordinate, defenderCoordinate, game.isHomePlaying());
+      PushbackSquare startingSquare = UtilServerPushback.findStartingSquare(attackerCoordinate, defenderCoordinate, game.isHomePlaying());
       
-      PushbackSquare[] regularPushbackSquares = UtilPushback.findPushbackSquares(game, startingSquare, PushbackMode.REGULAR);
+      PushbackSquare[] regularPushbackSquares = UtilServerPushback.findPushbackSquares(game, startingSquare, PushbackMode.REGULAR);
       if (ArrayTool.isProvided(regularPushbackSquares)) {
         for (PushbackSquare pushbackSquare : regularPushbackSquares) {
           FieldCoordinate coordinate = pushbackSquare.getCoordinate();
@@ -147,7 +147,7 @@ public class StepBlockDodge extends AbstractStep {
   
       PushbackSquare[] grabPushbackSquares = regularPushbackSquares;
       if ((actingPlayer.getPlayerAction() == PlayerAction.BLOCK) && UtilCards.hasSkill(game, attacker, Skill.GRAB) && !UtilCards.hasSkill(game, game.getDefender(), Skill.SIDE_STEP)) {
-        grabPushbackSquares = UtilPushback.findPushbackSquares(game, startingSquare, PushbackMode.GRAB);
+        grabPushbackSquares = UtilServerPushback.findPushbackSquares(game, startingSquare, PushbackMode.GRAB);
       }
       if (ArrayTool.isProvided(regularPushbackSquares)) {
         for (PushbackSquare pushbackSquare : grabPushbackSquares) {

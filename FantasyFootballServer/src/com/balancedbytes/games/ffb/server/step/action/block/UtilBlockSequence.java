@@ -11,7 +11,7 @@ import com.balancedbytes.games.ffb.server.step.IStep;
 import com.balancedbytes.games.ffb.server.step.StepParameter;
 import com.balancedbytes.games.ffb.server.step.StepParameterKey;
 import com.balancedbytes.games.ffb.server.step.StepParameterSet;
-import com.balancedbytes.games.ffb.server.util.UtilPushback;
+import com.balancedbytes.games.ffb.server.util.UtilServerPushback;
 import com.balancedbytes.games.ffb.util.UtilCards;
 
 /**
@@ -33,7 +33,7 @@ public class UtilBlockSequence {
     FieldCoordinate attackerCoordinate = game.getFieldModel().getPlayerCoordinate(actingPlayer.getPlayer());
     FieldCoordinate defenderCoordinate = game.getFieldModel().getPlayerCoordinate(game.getDefender());
     game.getFieldModel().clearPushbackSquares();
-    parameterSet.add(new StepParameter(StepParameterKey.STARTING_PUSHBACK_SQUARE, UtilPushback.findStartingSquare(attackerCoordinate, defenderCoordinate, game.isHomePlaying())));
+    parameterSet.add(new StepParameter(StepParameterKey.STARTING_PUSHBACK_SQUARE, UtilServerPushback.findStartingSquare(attackerCoordinate, defenderCoordinate, game.isHomePlaying())));
     if (UtilCards.hasUnusedSkill(game, actingPlayer, Skill.STRIP_BALL) && (defenderCoordinate != null) && defenderCoordinate.equals(game.getFieldModel().getBallCoordinate()) && (game.getDefender().getTeam() != actingPlayer.getPlayer().getTeam())) {
       if ((game.getDefender() != null) && UtilCards.hasSkill(game, game.getDefender(), Skill.SURE_HANDS)) {
         pStep.getResult().addReport(new ReportSkillUse(game.getDefenderId(), Skill.SURE_HANDS, true, SkillUse.CANCEL_STRIP_BALL));

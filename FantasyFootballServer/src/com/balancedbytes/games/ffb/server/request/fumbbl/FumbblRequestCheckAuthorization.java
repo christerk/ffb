@@ -20,7 +20,7 @@ import com.balancedbytes.games.ffb.server.net.ReceivedCommand;
 import com.balancedbytes.games.ffb.server.net.commands.InternalServerCommandJoinApproved;
 import com.balancedbytes.games.ffb.server.request.ServerRequest;
 import com.balancedbytes.games.ffb.server.request.ServerRequestProcessor;
-import com.balancedbytes.games.ffb.server.util.UtilHttpClient;
+import com.balancedbytes.games.ffb.server.util.UtilServerHttpClient;
 import com.balancedbytes.games.ffb.util.StringTool;
 
 
@@ -91,7 +91,7 @@ public class FumbblRequestCheckAuthorization extends ServerRequest {
   	    }
     	));
     	server.getDebugLog().log(IServerLogLevel.DEBUG, DebugLog.FUMBBL_REQUEST, getRequestUrl());
-      String responseXml = UtilHttpClient.fetchPage(getRequestUrl());
+      String responseXml = UtilServerHttpClient.fetchPage(getRequestUrl());
     	server.getDebugLog().log(IServerLogLevel.DEBUG, DebugLog.FUMBBL_RESPONSE, responseXml);
       if (StringTool.isProvided(responseXml)) {
         BufferedReader xmlReader = new BufferedReader(new StringReader(responseXml));

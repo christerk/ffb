@@ -22,7 +22,7 @@ import com.balancedbytes.games.ffb.server.step.StepParameter;
 import com.balancedbytes.games.ffb.server.step.StepParameterKey;
 import com.balancedbytes.games.ffb.server.step.StepParameterSet;
 import com.balancedbytes.games.ffb.server.step.action.common.ApothecaryMode;
-import com.balancedbytes.games.ffb.server.util.UtilInjury;
+import com.balancedbytes.games.ffb.server.util.UtilServerInjury;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
@@ -118,18 +118,18 @@ public final class StepSpecialEffect extends AbstractStep {
 				FieldCoordinate playerCoordinate = game.getFieldModel().getPlayerCoordinate(player);
 				if (fSpecialEffect == SpecialEffect.LIGHTNING) {
 					publishParameter(new StepParameter(StepParameterKey.INJURY_RESULT,
-						UtilInjury.handleInjury(this, InjuryType.LIGHTNING, null, player, playerCoordinate, null, ApothecaryMode.SPECIAL_EFFECT)));
+						UtilServerInjury.handleInjury(this, InjuryType.LIGHTNING, null, player, playerCoordinate, null, ApothecaryMode.SPECIAL_EFFECT)));
 				}
 				if (fSpecialEffect == SpecialEffect.FIREBALL) {
 					publishParameter(new StepParameter(StepParameterKey.INJURY_RESULT,
-						UtilInjury.handleInjury(this, InjuryType.FIREBALL, null, player, playerCoordinate, null, ApothecaryMode.SPECIAL_EFFECT)));
+						UtilServerInjury.handleInjury(this, InjuryType.FIREBALL, null, player, playerCoordinate, null, ApothecaryMode.SPECIAL_EFFECT)));
 				}
 				if (fSpecialEffect == SpecialEffect.BOMB) {
 					publishParameter(new StepParameter(StepParameterKey.INJURY_RESULT,
-						UtilInjury.handleInjury(this, InjuryType.BOMB, null, player, playerCoordinate, null, ApothecaryMode.SPECIAL_EFFECT)));
+						UtilServerInjury.handleInjury(this, InjuryType.BOMB, null, player, playerCoordinate, null, ApothecaryMode.SPECIAL_EFFECT)));
 				}
 
-				publishParameters(UtilInjury.dropPlayer(this, player));
+				publishParameters(UtilServerInjury.dropPlayer(this, player));
 
 				// check end turn
 				Team actingTeam = game.isHomePlaying() ? game.getTeamHome() : game.getTeamAway();

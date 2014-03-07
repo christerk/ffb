@@ -26,7 +26,7 @@ import com.balancedbytes.games.ffb.server.step.StepId;
 import com.balancedbytes.games.ffb.server.step.StepParameter;
 import com.balancedbytes.games.ffb.server.step.StepParameterKey;
 import com.balancedbytes.games.ffb.server.step.StepParameterSet;
-import com.balancedbytes.games.ffb.server.util.UtilReRoll;
+import com.balancedbytes.games.ffb.server.util.UtilServerReRoll;
 import com.balancedbytes.games.ffb.util.UtilCards;
 import com.balancedbytes.games.ffb.util.UtilPlayer;
 import com.eclipsesource.json.JsonObject;
@@ -106,7 +106,7 @@ public class StepReallyStupid extends AbstractStepWithReRoll {
       boolean doRoll = true;
       ReRolledAction reRolledAction = new ReRolledActionFactory().forSkill(Skill.REALLY_STUPID); 
       if ((reRolledAction != null) && (reRolledAction == getReRolledAction())) {
-        if ((getReRollSource() == null) || !UtilReRoll.useReRoll(this, getReRollSource(), actingPlayer.getPlayer())) {
+        if ((getReRollSource() == null) || !UtilServerReRoll.useReRoll(this, getReRollSource(), actingPlayer.getPlayer())) {
           doRoll = false;
           status = ActionStatus.FAILURE;
           cancelPlayerAction();
@@ -133,7 +133,7 @@ public class StepReallyStupid extends AbstractStepWithReRoll {
         actingPlayer.markSkillUsed(Skill.REALLY_STUPID);
         if (!successful) {
           status = ActionStatus.FAILURE;
-          if (((reRolledAction == null) || (reRolledAction != getReRolledAction())) && UtilReRoll.askForReRollIfAvailable(getGameState(), actingPlayer.getPlayer(), reRolledAction, minimumRoll, false)) {
+          if (((reRolledAction == null) || (reRolledAction != getReRolledAction())) && UtilServerReRoll.askForReRollIfAvailable(getGameState(), actingPlayer.getPlayer(), reRolledAction, minimumRoll, false)) {
             status = ActionStatus.WAITING_FOR_RE_ROLL;
           } else {
             cancelPlayerAction();

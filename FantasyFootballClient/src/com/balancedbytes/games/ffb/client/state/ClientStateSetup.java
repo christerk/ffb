@@ -12,7 +12,7 @@ import com.balancedbytes.games.ffb.client.ActionKey;
 import com.balancedbytes.games.ffb.client.FantasyFootballClient;
 import com.balancedbytes.games.ffb.client.UserInterface;
 import com.balancedbytes.games.ffb.client.ui.SideBarComponent;
-import com.balancedbytes.games.ffb.client.util.UtilPlayerDrag;
+import com.balancedbytes.games.ffb.client.util.UtilClientPlayerDrag;
 import com.balancedbytes.games.ffb.dialog.DialogTeamSetupParameter;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.net.NetCommand;
@@ -56,18 +56,18 @@ public class ClientStateSetup extends ClientState {
   }
   
   public void mousePressed(MouseEvent pMouseEvent) {
-    UtilPlayerDrag.mousePressed(getClient(), pMouseEvent, false);
+    UtilClientPlayerDrag.mousePressed(getClient(), pMouseEvent, false);
   }
   
   public void mouseDragged(MouseEvent pMouseEvent) {
-    UtilPlayerDrag.mouseDragged(getClient(), pMouseEvent, false);
+    UtilClientPlayerDrag.mouseDragged(getClient(), pMouseEvent, false);
   }
 
   public void mouseReleased(MouseEvent pMouseEvent) {
     if (SwingUtilities.isRightMouseButton(pMouseEvent)) {
       super.mouseReleased(pMouseEvent);
     } else {
-      UtilPlayerDrag.mouseReleased(getClient(), pMouseEvent, false);
+      UtilClientPlayerDrag.mouseReleased(getClient(), pMouseEvent, false);
     }
   }
     
@@ -95,7 +95,7 @@ public class ClientStateSetup extends ClientState {
     if (sideBarHome.getOpenBox() == BoxType.RESERVES) {
       sideBarHome.closeBox();
     }
-    UtilPlayerDrag.resetDragging(getClient());
+    UtilClientPlayerDrag.resetDragging(getClient());
     getClient().getCommunication().sendEndTurn();
   }
   

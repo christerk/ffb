@@ -16,7 +16,7 @@ import com.balancedbytes.games.ffb.server.step.StepAction;
 import com.balancedbytes.games.ffb.server.step.StepCommandStatus;
 import com.balancedbytes.games.ffb.server.step.StepId;
 import com.balancedbytes.games.ffb.server.step.StepParameter;
-import com.balancedbytes.games.ffb.server.util.UtilReRoll;
+import com.balancedbytes.games.ffb.server.util.UtilServerReRoll;
 import com.balancedbytes.games.ffb.util.UtilCards;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
@@ -76,7 +76,7 @@ public class StepDauntless extends AbstractStepWithReRoll {
     if (UtilCards.hasSkill(game, actingPlayer, Skill.DAUNTLESS) && (actingPlayer.getStrength() < UtilCards.getPlayerStrength(game, game.getDefender())) && ((fUsingStab == null) || !fUsingStab) && !UtilCards.hasSkill(game, actingPlayer, Skill.CHAINSAW)) {
       boolean doDauntless = true;
       if (ReRolledAction.DAUNTLESS == getReRolledAction()) {
-        if ((getReRollSource() == null) || !UtilReRoll.useReRoll(this, getReRollSource(), actingPlayer.getPlayer())) {
+        if ((getReRollSource() == null) || !UtilServerReRoll.useReRoll(this, getReRollSource(), actingPlayer.getPlayer())) {
           doDauntless = false;
         }
       }
@@ -89,7 +89,7 @@ public class StepDauntless extends AbstractStepWithReRoll {
         if (successful) {
           actingPlayer.setStrength(UtilCards.getPlayerStrength(game, game.getDefender()));
         } else {
-          if (UtilReRoll.askForReRollIfAvailable(getGameState(), actingPlayer.getPlayer(), ReRolledAction.DAUNTLESS, minimumRoll, false)) {
+          if (UtilServerReRoll.askForReRollIfAvailable(getGameState(), actingPlayer.getPlayer(), ReRolledAction.DAUNTLESS, minimumRoll, false)) {
             doNextStep = false;
           }
         }

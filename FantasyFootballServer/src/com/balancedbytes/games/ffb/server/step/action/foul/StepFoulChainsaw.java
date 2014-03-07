@@ -25,8 +25,8 @@ import com.balancedbytes.games.ffb.server.step.StepParameter;
 import com.balancedbytes.games.ffb.server.step.StepParameterKey;
 import com.balancedbytes.games.ffb.server.step.StepParameterSet;
 import com.balancedbytes.games.ffb.server.step.action.common.ApothecaryMode;
-import com.balancedbytes.games.ffb.server.util.UtilInjury;
-import com.balancedbytes.games.ffb.server.util.UtilReRoll;
+import com.balancedbytes.games.ffb.server.util.UtilServerInjury;
+import com.balancedbytes.games.ffb.server.util.UtilServerReRoll;
 import com.balancedbytes.games.ffb.util.StringTool;
 import com.balancedbytes.games.ffb.util.UtilCards;
 import com.eclipsesource.json.JsonObject;
@@ -93,7 +93,7 @@ public class StepFoulChainsaw extends AbstractStepWithReRoll {
     if (UtilCards.hasSkill(game, actingPlayer, Skill.CHAINSAW)) {
       boolean dropChainsawPlayer = false;
       if (ReRolledAction.CHAINSAW == getReRolledAction()) {
-        if ((getReRollSource() == null) || !UtilReRoll.useReRoll(this, getReRollSource(), actingPlayer.getPlayer())) {
+        if ((getReRollSource() == null) || !UtilServerReRoll.useReRoll(this, getReRollSource(), actingPlayer.getPlayer())) {
           dropChainsawPlayer = true;
         }
       }
@@ -109,16 +109,16 @@ public class StepFoulChainsaw extends AbstractStepWithReRoll {
         if (successful) {
         	getResult().setNextAction(StepAction.NEXT_STEP);
         } else {
-          if (!UtilReRoll.askForReRollIfAvailable(getGameState(), actingPlayer.getPlayer(), ReRolledAction.CHAINSAW, minimumRoll, false)) {
+          if (!UtilServerReRoll.askForReRollIfAvailable(getGameState(), actingPlayer.getPlayer(), ReRolledAction.CHAINSAW, minimumRoll, false)) {
             dropChainsawPlayer = true;
           }
         }
       }
       if (dropChainsawPlayer) {
         FieldCoordinate attackerCoordinate = game.getFieldModel().getPlayerCoordinate(actingPlayer.getPlayer());
-        InjuryResult injuryResultAttacker = UtilInjury.handleInjury(this, InjuryType.CHAINSAW, null, actingPlayer.getPlayer(), attackerCoordinate, null, ApothecaryMode.ATTACKER); 
+        InjuryResult injuryResultAttacker = UtilServerInjury.handleInjury(this, InjuryType.CHAINSAW, null, actingPlayer.getPlayer(), attackerCoordinate, null, ApothecaryMode.ATTACKER); 
         if (injuryResultAttacker.isArmorBroken()) {
-          publishParameters(UtilInjury.dropPlayer(this, actingPlayer.getPlayer()));
+          publishParameters(UtilServerInjury.dropPlayer(this, actingPlayer.getPlayer()));
           publishParameter(new StepParameter(StepParameterKey.END_TURN, true));
         }
         publishParameter(new StepParameter(StepParameterKey.INJURY_RESULT, injuryResultAttacker));

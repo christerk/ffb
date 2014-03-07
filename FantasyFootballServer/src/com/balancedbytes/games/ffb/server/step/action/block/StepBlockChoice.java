@@ -24,7 +24,7 @@ import com.balancedbytes.games.ffb.server.step.StepId;
 import com.balancedbytes.games.ffb.server.step.StepParameter;
 import com.balancedbytes.games.ffb.server.step.StepParameterKey;
 import com.balancedbytes.games.ffb.server.step.StepParameterSet;
-import com.balancedbytes.games.ffb.server.util.UtilDialog;
+import com.balancedbytes.games.ffb.server.util.UtilServerDialog;
 import com.balancedbytes.games.ffb.util.StringTool;
 import com.balancedbytes.games.ffb.util.UtilCards;
 import com.eclipsesource.json.JsonObject;
@@ -142,7 +142,7 @@ public class StepBlockChoice extends AbstractStep {
   private void executeStep() {
     Game game = getGameState().getGame();
     ActingPlayer actingPlayer = game.getActingPlayer();
-    UtilDialog.hideDialog(getGameState());
+    UtilServerDialog.hideDialog(getGameState());
     PlayerState attackerState = game.getFieldModel().getPlayerState(actingPlayer.getPlayer());
     PlayerState defenderState = game.getFieldModel().getPlayerState(game.getDefender());
     switch (fBlockResult) {

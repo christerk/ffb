@@ -25,7 +25,7 @@ import com.balancedbytes.games.ffb.server.step.StepId;
 import com.balancedbytes.games.ffb.server.step.StepParameter;
 import com.balancedbytes.games.ffb.server.step.StepParameterKey;
 import com.balancedbytes.games.ffb.server.step.StepParameterSet;
-import com.balancedbytes.games.ffb.server.util.UtilReRoll;
+import com.balancedbytes.games.ffb.server.util.UtilServerReRoll;
 import com.balancedbytes.games.ffb.util.UtilCards;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
@@ -91,7 +91,7 @@ public class StepLeap extends AbstractStepWithReRoll {
     boolean doLeap = (actingPlayer.isLeaping() && UtilCards.hasUnusedSkill(game, actingPlayer, Skill.LEAP));
     if (doLeap) {
       if (ReRolledAction.LEAP == getReRolledAction()) {
-        if ((getReRollSource() == null) || !UtilReRoll.useReRoll(this, getReRollSource(), actingPlayer.getPlayer())) {
+        if ((getReRollSource() == null) || !UtilServerReRoll.useReRoll(this, getReRollSource(), actingPlayer.getPlayer())) {
         	publishParameter(new StepParameter(StepParameterKey.INJURY_TYPE, InjuryType.DROP_LEAP));
         	getResult().setNextAction(StepAction.GOTO_LABEL, fGotoLabelOnFailure);
           doLeap = false;
@@ -136,7 +136,7 @@ public class StepLeap extends AbstractStepWithReRoll {
       status = ActionStatus.FAILURE;
       if (getReRolledAction() != ReRolledAction.LEAP) {
         setReRolledAction(ReRolledAction.LEAP);
-        if (UtilReRoll.askForReRollIfAvailable(getGameState(), actingPlayer.getPlayer(), ReRolledAction.LEAP, minimumRoll, false)) {
+        if (UtilServerReRoll.askForReRollIfAvailable(getGameState(), actingPlayer.getPlayer(), ReRolledAction.LEAP, minimumRoll, false)) {
           status = ActionStatus.WAITING_FOR_RE_ROLL;
         }
       }

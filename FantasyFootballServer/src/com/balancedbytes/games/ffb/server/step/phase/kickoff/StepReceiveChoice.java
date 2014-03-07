@@ -13,7 +13,7 @@ import com.balancedbytes.games.ffb.server.step.StepAction;
 import com.balancedbytes.games.ffb.server.step.StepCommandStatus;
 import com.balancedbytes.games.ffb.server.step.StepId;
 import com.balancedbytes.games.ffb.server.step.StepParameter;
-import com.balancedbytes.games.ffb.server.util.UtilDialog;
+import com.balancedbytes.games.ffb.server.util.UtilServerDialog;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
@@ -80,7 +80,7 @@ public final class StepReceiveChoice extends AbstractStep {
   private void executeStep() {
     Game game = getGameState().getGame();
     if (fReceiveChoice != null) {
-    	UtilDialog.hideDialog(getGameState());
+    	UtilServerDialog.hideDialog(getGameState());
       if (game.getTeamHome().getId().equals(fChoosingTeamId)) {
         game.setHomePlaying(!fReceiveChoice);
         getResult().addReport(new ReportReceiveChoice(game.getTeamHome().getId(), fReceiveChoice));

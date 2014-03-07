@@ -19,7 +19,7 @@ import com.balancedbytes.games.ffb.server.step.StepCommandStatus;
 import com.balancedbytes.games.ffb.server.step.StepId;
 import com.balancedbytes.games.ffb.server.step.StepParameter;
 import com.balancedbytes.games.ffb.server.step.StepParameterKey;
-import com.balancedbytes.games.ffb.server.util.UtilInjury;
+import com.balancedbytes.games.ffb.server.util.UtilServerInjury;
 import com.balancedbytes.games.ffb.util.UtilBox;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
@@ -79,8 +79,8 @@ public class StepFallDown extends AbstractStep {
 		Game game = getGameState().getGame();
     ActingPlayer actingPlayer = game.getActingPlayer();
     FieldCoordinate playerCoordinate = game.getFieldModel().getPlayerCoordinate(actingPlayer.getPlayer());
-    InjuryResult injuryResultAttacker = UtilInjury.handleInjury(this, fInjuryType, null, actingPlayer.getPlayer(), playerCoordinate, null, ApothecaryMode.ATTACKER);
-    publishParameters(UtilInjury.dropPlayer(this, actingPlayer.getPlayer()));
+    InjuryResult injuryResultAttacker = UtilServerInjury.handleInjury(this, fInjuryType, null, actingPlayer.getPlayer(), playerCoordinate, null, ApothecaryMode.ATTACKER);
+    publishParameters(UtilServerInjury.dropPlayer(this, actingPlayer.getPlayer()));
     if (actingPlayer.isSufferingBloodLust()) {
       game.getFieldModel().clearMoveSquares();
       PlayerState playerState = game.getFieldModel().getPlayerState(actingPlayer.getPlayer());

@@ -28,9 +28,9 @@ import com.balancedbytes.games.ffb.client.IconCache;
 import com.balancedbytes.games.ffb.client.PlayerIconFactory;
 import com.balancedbytes.games.ffb.client.UserInterface;
 import com.balancedbytes.games.ffb.client.layer.FieldLayer;
-import com.balancedbytes.games.ffb.client.util.UtilGraphics;
-import com.balancedbytes.games.ffb.client.util.UtilMarker;
-import com.balancedbytes.games.ffb.client.util.UtilPlayerDrag;
+import com.balancedbytes.games.ffb.client.util.UtilClientGraphics;
+import com.balancedbytes.games.ffb.client.util.UtilClientMarker;
+import com.balancedbytes.games.ffb.client.util.UtilClientPlayerDrag;
 import com.balancedbytes.games.ffb.model.FieldModel;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
@@ -181,13 +181,13 @@ public class BoxComponent extends JPanel implements MouseListener, MouseMotionLi
   
   public void mousePressed(MouseEvent pMouseEvent) {
     if (getSideBar().isHomeSide() && (BoxType.RESERVES == fOpenBox)) {
-      UtilPlayerDrag.mousePressed(getSideBar().getClient(), pMouseEvent, true);
+      UtilClientPlayerDrag.mousePressed(getSideBar().getClient(), pMouseEvent, true);
     }
   }
   
   public void mouseDragged(MouseEvent pMouseEvent) {
     if (getSideBar().isHomeSide() && (BoxType.RESERVES == fOpenBox)) {
-      UtilPlayerDrag.mouseDragged(getSideBar().getClient(), pMouseEvent, true);
+      UtilClientPlayerDrag.mouseDragged(getSideBar().getClient(), pMouseEvent, true);
     }
   }
 
@@ -197,11 +197,11 @@ public class BoxComponent extends JPanel implements MouseListener, MouseMotionLi
       if (boxSlot != null) {
         int x = getSideBar().isHomeSide() ? 5 : FieldLayer.FIELD_IMAGE_WIDTH - 135;
         int y = boxSlot.getLocation().y + boxSlot.getLocation().height; 
-        UtilMarker.showMarkerPopup(getSideBar().getClient(), boxSlot.getPlayer(), x, y);
+        UtilClientMarker.showMarkerPopup(getSideBar().getClient(), boxSlot.getPlayer(), x, y);
       }
     } else {
       if (getSideBar().isHomeSide() && (BoxType.RESERVES == fOpenBox)) {
-        UtilPlayerDrag.mouseReleased(getSideBar().getClient(), pMouseEvent, true);
+        UtilClientPlayerDrag.mouseReleased(getSideBar().getClient(), pMouseEvent, true);
       }
     }
   }
@@ -293,7 +293,7 @@ public class BoxComponent extends JPanel implements MouseListener, MouseMotionLi
         Rectangle2D bounds = metrics.getStringBounds(title, g2d);
         int x = ((WIDTH - (int) bounds.getWidth()) / 2);
         int y = pYPosition + metrics.getAscent() + 2;
-        UtilGraphics.drawShadowedText(g2d, title, x, y);
+        UtilClientGraphics.drawShadowedText(g2d, title, x, y);
         y = pYPosition + ((int) bounds.getHeight() / 2) + 3;
         g2d.setColor(Color.WHITE);
         g2d.drawLine(2, y, x - 4, y);

@@ -21,7 +21,7 @@ import com.balancedbytes.games.ffb.client.IIconProperty;
 import com.balancedbytes.games.ffb.client.IconCache;
 import com.balancedbytes.games.ffb.client.UserInterface;
 import com.balancedbytes.games.ffb.client.net.ClientCommunication;
-import com.balancedbytes.games.ffb.client.util.UtilCursor;
+import com.balancedbytes.games.ffb.client.util.UtilClientCursor;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
@@ -97,7 +97,7 @@ public class ClientStateBomb extends ClientState {
       game.getFieldModel().setRangeRuler(null);
       userInterface.getFieldComponent().refresh();
       selectable = true;
-      UtilCursor.setCustomCursor(userInterface, IIconProperty.CURSOR_BOMB);
+      UtilClientCursor.setCustomCursor(userInterface, IIconProperty.CURSOR_BOMB);
     } else {
     	drawRangeRuler(pCoordinate);
     }
@@ -114,9 +114,9 @@ public class ClientStateBomb extends ClientState {
       rangeRuler = UtilRangeRuler.createRangeRuler(game, actingPlayer.getPlayer(), pCoordinate, false);
       game.getFieldModel().setRangeRuler(rangeRuler);
       if (rangeRuler != null) {
-        UtilCursor.setCustomCursor(userInterface, IIconProperty.CURSOR_BOMB);
+        UtilClientCursor.setCustomCursor(userInterface, IIconProperty.CURSOR_BOMB);
       } else {
-        UtilCursor.setDefaultCursor(userInterface);
+        UtilClientCursor.setDefaultCursor(userInterface);
       }
       fieldComponent.getLayerUnderPlayers().clearMovePath();
       fieldComponent.refresh();

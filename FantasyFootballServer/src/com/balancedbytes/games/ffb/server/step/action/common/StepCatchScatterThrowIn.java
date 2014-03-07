@@ -47,11 +47,11 @@ import com.balancedbytes.games.ffb.server.step.StepCommandStatus;
 import com.balancedbytes.games.ffb.server.step.StepId;
 import com.balancedbytes.games.ffb.server.step.StepParameter;
 import com.balancedbytes.games.ffb.server.step.StepParameterKey;
-import com.balancedbytes.games.ffb.server.step.UtilSteps;
-import com.balancedbytes.games.ffb.server.util.UtilCatchScatterThrowIn;
-import com.balancedbytes.games.ffb.server.util.UtilDialog;
-import com.balancedbytes.games.ffb.server.util.UtilInjury;
-import com.balancedbytes.games.ffb.server.util.UtilReRoll;
+import com.balancedbytes.games.ffb.server.util.UtilServerCatchScatterThrowIn;
+import com.balancedbytes.games.ffb.server.util.UtilServerDialog;
+import com.balancedbytes.games.ffb.server.util.UtilServerInjury;
+import com.balancedbytes.games.ffb.server.util.UtilServerReRoll;
+import com.balancedbytes.games.ffb.server.util.UtilServerCards;
 import com.balancedbytes.games.ffb.util.ArrayTool;
 import com.balancedbytes.games.ffb.util.StringTool;
 import com.balancedbytes.games.ffb.util.UtilCards;
@@ -139,7 +139,7 @@ public class StepCatchScatterThrowIn extends AbstractStepWithReRoll {
   private void executeStep() {
   	getResult().reset();
   	Game game = getGameState().getGame();
-  	UtilDialog.hideDialog(getGameState());
+  	UtilServerDialog.hideDialog(getGameState());
   	getGameState().getServer().getDebugLog().log(IServerLogLevel.DEBUG, "executeStep(" + fCatchScatterThrowInMode + ")");
     if (fCatchScatterThrowInMode == null) {
     	getResult().setNextAction(StepAction.NEXT_STEP);
@@ -215,9 +215,9 @@ public class StepCatchScatterThrowIn extends AbstractStepWithReRoll {
       case FAILED_CATCH:
       case FAILED_PICK_UP:
       	if ((playerUnderBall != null) && game.getFieldModel().isBallInPlay() && UtilGameOption.isOptionEnabled(game, GameOptionId.SPIKED_BALL)) {
-          InjuryResult injuryResultCatcher = UtilInjury.handleInjury(this, InjuryType.STAB, null, playerUnderBall, game.getFieldModel().getBallCoordinate(), null, ApothecaryMode.CATCHER);
+          InjuryResult injuryResultCatcher = UtilServerInjury.handleInjury(this, InjuryType.STAB, null, playerUnderBall, game.getFieldModel().getBallCoordinate(), null, ApothecaryMode.CATCHER);
           if (injuryResultCatcher.isArmorBroken()) {
-            UtilInjury.dropPlayer(this, playerUnderBall);
+            publishParameters(UtilServerInjury.dropPlayer(this, playerUnderBall));
           }
           publishParameter(new StepParameter(StepParameterKey.INJURY_RESULT, injuryResultCatcher));
       	}
@@ -259,7 +259,7 @@ public class StepCatchScatterThrowIn extends AbstractStepWithReRoll {
   	for (Player player : game.getPlayers()) {
     	for (Card card : game.getFieldModel().getCards(player)) {
     		if ((InducementDuration.WHILE_HOLDING_THE_BALL == card.getDuration()) && !UtilPlayer.hasBall(game, player)) {
-    			UtilSteps.deactivateCard(this, card);
+    			UtilServerCards.deactivateCard(this, card);
     		}
     	}
   	}
@@ -269,15 +269,15 @@ public class StepCatchScatterThrowIn extends AbstractStepWithReRoll {
   	Game game = getGameState().getGame();
   	if (fDivingCatchChoice == null) { 
     	fCatcherId = null;
-    	Player[] divingCatchersHome = UtilCatchScatterThrowIn.findDivingCatchers(getGameState(), game.getTeamHome(), pCoordinate);
-    	Player[] divingCatchersAway = UtilCatchScatterThrowIn.findDivingCatchers(getGameState(), game.getTeamAway(), pCoordinate);
+    	Player[] divingCatchersHome = UtilServerCatchScatterThrowIn.findDivingCatchers(getGameState(), game.getTeamHome(), pCoordinate);
+    	Player[] divingCatchersAway = UtilServerCatchScatterThrowIn.findDivingCatchers(getGameState(), game.getTeamAway(), pCoordinate);
     	if (ArrayTool.isProvided(divingCatchersHome) && ArrayTool.isProvided(divingCatchersAway)) {
       	fDivingCatchChoice = false;
     		getResult().addReport(new ReportSkillUse(Skill.DIVING_CATCH, false, SkillUse.CANCEL_DIVING_CATCH));
     	} else if (ArrayTool.isProvided(divingCatchersHome)) {
-    		UtilDialog.showDialog(getGameState(), new DialogPlayerChoiceParameter(game.getTeamHome().getId(), PlayerChoiceMode.DIVING_CATCH, divingCatchersHome, null, 1));
+    		UtilServerDialog.showDialog(getGameState(), new DialogPlayerChoiceParameter(game.getTeamHome().getId(), PlayerChoiceMode.DIVING_CATCH, divingCatchersHome, null, 1));
     	} else if (ArrayTool.isProvided(divingCatchersAway)) {
-    		UtilDialog.showDialog(getGameState(), new DialogPlayerChoiceParameter(game.getTeamAway().getId(), PlayerChoiceMode.DIVING_CATCH, divingCatchersAway, null, 1));
+    		UtilServerDialog.showDialog(getGameState(), new DialogPlayerChoiceParameter(game.getTeamAway().getId(), PlayerChoiceMode.DIVING_CATCH, divingCatchersAway, null, 1));
     	} else {
       	fDivingCatchChoice = false;
     	}
@@ -309,7 +309,7 @@ public class StepCatchScatterThrowIn extends AbstractStepWithReRoll {
   	
   	boolean doRoll = true;
     if (ReRolledAction.CATCH == getReRolledAction()) {
-      if ((getReRollSource() == null) || !UtilReRoll.useReRoll(this, getReRollSource(), catcher)) {
+      if ((getReRollSource() == null) || !UtilServerReRoll.useReRoll(this, getReRollSource(), catcher)) {
       	doRoll = false;
       }
     }
@@ -350,7 +350,7 @@ public class StepCatchScatterThrowIn extends AbstractStepWithReRoll {
 	          setReRollSource(ReRollSource.CATCH);
 	          return catchBall();
 	        } else {
-	        	if (UtilReRoll.askForReRollIfAvailable(getGameState(), catcher, ReRolledAction.CATCH, minimumRoll, false)) {
+	        	if (UtilServerReRoll.askForReRollIfAvailable(getGameState(), catcher, ReRolledAction.CATCH, minimumRoll, false)) {
 	            setReRolledAction(ReRolledAction.CATCH);
 	        		return fCatchScatterThrowInMode;
 	        	}
@@ -385,7 +385,7 @@ public class StepCatchScatterThrowIn extends AbstractStepWithReRoll {
     int roll = getGameState().getDiceRoller().rollScatterDirection();
     Direction direction = DiceInterpreter.getInstance().interpretScatterDirectionRoll(roll);
     FieldCoordinate ballCoordinateStart = game.getFieldModel().getBallCoordinate();
-    FieldCoordinate ballCoordinateEnd = UtilCatchScatterThrowIn.findScatterCoordinate(ballCoordinateStart, direction, 1);
+    FieldCoordinate ballCoordinateEnd = UtilServerCatchScatterThrowIn.findScatterCoordinate(ballCoordinateStart, direction, 1);
     FieldCoordinate lastValidCoordinate = fScatterBounds.isInBounds(ballCoordinateEnd) ? ballCoordinateEnd : ballCoordinateStart;
     getResult().addReport(new ReportScatterBall(new Direction[] { direction }, new int[] { roll }, false));
     getResult().setSound(Sound.BOUNCE);
@@ -434,7 +434,7 @@ public class StepCatchScatterThrowIn extends AbstractStepWithReRoll {
     FieldCoordinate ballCoordinateEnd = ballCoordinateStart;
     FieldCoordinate lastValidCoordinate = ballCoordinateEnd;
     for (int i = 0; i < distance; i++) {
-    	ballCoordinateEnd = UtilCatchScatterThrowIn.findScatterCoordinate(ballCoordinateStart, direction, i);
+    	ballCoordinateEnd = UtilServerCatchScatterThrowIn.findScatterCoordinate(ballCoordinateStart, direction, i);
     	if (FieldCoordinateBounds.FIELD.isInBounds(ballCoordinateEnd)) {
     		lastValidCoordinate = ballCoordinateEnd;
     	}

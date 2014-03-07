@@ -30,8 +30,8 @@ import com.balancedbytes.games.ffb.server.step.StepId;
 import com.balancedbytes.games.ffb.server.step.StepParameter;
 import com.balancedbytes.games.ffb.server.step.StepParameterKey;
 import com.balancedbytes.games.ffb.server.step.StepParameterSet;
-import com.balancedbytes.games.ffb.server.util.UtilDialog;
-import com.balancedbytes.games.ffb.server.util.UtilReRoll;
+import com.balancedbytes.games.ffb.server.util.UtilServerDialog;
+import com.balancedbytes.games.ffb.server.util.UtilServerReRoll;
 import com.balancedbytes.games.ffb.util.UtilCards;
 import com.balancedbytes.games.ffb.util.UtilPassing;
 import com.balancedbytes.games.ffb.util.UtilRangeRuler;
@@ -123,13 +123,13 @@ public final class StepIntercept extends AbstractStepWithReRoll {
     if (doIntercept) {
       Player interceptor = game.getPlayerById(fInterceptorId);
       if (ReRolledAction.INTERCEPTION == getReRolledAction()) {
-        if ((getReRollSource() == null) || !UtilReRoll.useReRoll(this, getReRollSource(), interceptor)) {
+        if ((getReRollSource() == null) || !UtilServerReRoll.useReRoll(this, getReRollSource(), interceptor)) {
           doIntercept = false;
         }
       }
       if (doIntercept) {
         if (!fInterceptorChosen) {
-          UtilDialog.showDialog(getGameState(), new DialogInterceptionParameter(game.getThrowerId()));
+          UtilServerDialog.showDialog(getGameState(), new DialogInterceptionParameter(game.getThrowerId()));
           fOldTurnMode = game.getTurnMode();
           game.setTurnMode(TurnMode.INTERCEPTION);
           doNextStep = false;
@@ -183,10 +183,10 @@ public final class StepIntercept extends AbstractStepWithReRoll {
         setReRolledAction(ReRolledAction.CATCH);
         if (UtilCards.hasSkill(game, pInterceptor, Skill.CATCH)) {
           setReRollSource(ReRollSource.CATCH);
-          UtilReRoll.useReRoll(this, getReRollSource(), pInterceptor);
+          UtilServerReRoll.useReRoll(this, getReRollSource(), pInterceptor);
           status = intercept(pInterceptor);
         } else {
-          if (UtilReRoll.askForReRollIfAvailable(getGameState(), pInterceptor, ReRolledAction.INTERCEPTION, minimumRoll, false)) {
+          if (UtilServerReRoll.askForReRollIfAvailable(getGameState(), pInterceptor, ReRolledAction.INTERCEPTION, minimumRoll, false)) {
             status = ActionStatus.WAITING_FOR_RE_ROLL;
           }
         }

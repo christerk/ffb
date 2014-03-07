@@ -49,11 +49,12 @@ import com.balancedbytes.games.ffb.server.step.StepId;
 import com.balancedbytes.games.ffb.server.step.StepParameter;
 import com.balancedbytes.games.ffb.server.step.StepParameterKey;
 import com.balancedbytes.games.ffb.server.step.StepParameterSet;
-import com.balancedbytes.games.ffb.server.step.UtilSteps;
-import com.balancedbytes.games.ffb.server.util.UtilDialog;
-import com.balancedbytes.games.ffb.server.util.UtilGame;
-import com.balancedbytes.games.ffb.server.util.UtilInducementUse;
-import com.balancedbytes.games.ffb.server.util.UtilTimer;
+import com.balancedbytes.games.ffb.server.step.UtilServerSteps;
+import com.balancedbytes.games.ffb.server.util.UtilServerDialog;
+import com.balancedbytes.games.ffb.server.util.UtilServerGame;
+import com.balancedbytes.games.ffb.server.util.UtilServerInducementUse;
+import com.balancedbytes.games.ffb.server.util.UtilServerCards;
+import com.balancedbytes.games.ffb.server.util.UtilServerTimer;
 import com.balancedbytes.games.ffb.util.ArrayTool;
 import com.balancedbytes.games.ffb.util.UtilBox;
 import com.balancedbytes.games.ffb.util.UtilCards;
@@ -121,7 +122,7 @@ public class StepEndTurn extends AbstractStep {
         case CLIENT_USE_INDUCEMENT:
           ClientCommandUseInducement inducementCommand = (ClientCommandUseInducement) pReceivedCommand.getCommand();
           if (InducementType.BRIBES == inducementCommand.getInducementType()) {
-            Team team = UtilSteps.checkCommandIsFromHomePlayer(getGameState(), pReceivedCommand) ? game.getTeamHome() : game.getTeamAway();
+            Team team = UtilServerSteps.checkCommandIsFromHomePlayer(getGameState(), pReceivedCommand) ? game.getTeamHome() : game.getTeamAway();
             if (useSecretWeaponBribes(team, inducementCommand.getPlayerIds()) || !askForSecretWeaponBribes(team)) {
               commandStatus = StepCommandStatus.EXECUTE_STEP;
             } else {
@@ -142,7 +143,7 @@ public class StepEndTurn extends AbstractStep {
 	private void executeStep() {
     
     Game game = getGameState().getGame();
-		UtilDialog.hideDialog(getGameState());
+		UtilServerDialog.hideDialog(getGameState());
     
     if ((game.getTurnMode() == TurnMode.BLITZ) || (game.getTurnMode() == TurnMode.KICKOFF_RETURN) || (game.getTurnMode() == TurnMode.PASS_BLOCK)) {
     	publishParameter(new StepParameter(StepParameterKey.END_TURN, true));
@@ -151,7 +152,7 @@ public class StepEndTurn extends AbstractStep {
     }
     
     if (fTouchdown == null) {
-    	fTouchdown = UtilSteps.checkTouchdown(getGameState());
+    	fTouchdown = UtilServerSteps.checkTouchdown(getGameState());
     }
     
     if (fHandleSecretWeapons) {
@@ -159,7 +160,7 @@ public class StepEndTurn extends AbstractStep {
     }
     
     fEndGame = false;
-    fNewHalf = UtilSteps.checkEndOfHalf(getGameState());
+    fNewHalf = UtilServerSteps.checkEndOfHalf(getGameState());
 
     if (!fNextSequencePushed) {
       
@@ -191,7 +192,7 @@ public class StepEndTurn extends AbstractStep {
 
           if (offTurnTouchDown) {
           	game.getTurnData().setTurnNr(game.getTurnData().getTurnNr() + 1); 
-            fNewHalf = UtilSteps.checkEndOfHalf(getGameState());
+            fNewHalf = UtilServerSteps.checkEndOfHalf(getGameState());
           }
           
         }
@@ -205,7 +206,7 @@ public class StepEndTurn extends AbstractStep {
         	case NO_PLAYERS_TO_FIELD:
             game.getTurnDataHome().setTurnNr(game.getTurnDataHome().getTurnNr() + 2);
             game.getTurnDataAway().setTurnNr(game.getTurnDataAway().getTurnNr() + 2);
-            fNewHalf = UtilSteps.checkEndOfHalf(getGameState());
+            fNewHalf = UtilServerSteps.checkEndOfHalf(getGameState());
             game.setTurnMode(TurnMode.SETUP);
             game.setSetupOffense(false);
             fTouchdown = true;
@@ -278,13 +279,13 @@ public class StepEndTurn extends AbstractStep {
         } else if (game.getHalf() > 1) {
           GameResult gameResult = game.getGameResult();
           if (UtilGameOption.isOptionEnabled(game, GameOptionId.OVERTIME) && (gameResult.getTeamResultHome().getScore() == gameResult.getTeamResultAway().getScore())) {
-            UtilGame.startHalf(this, game.getHalf() + 1);
+            UtilServerGame.startHalf(this, game.getHalf() + 1);
             SequenceGenerator.getInstance().pushKickoffSequence(getGameState(), true);
           } else {
           	fEndGame = true;
           }
         } else {
-          UtilGame.startHalf(this, game.getHalf() + 1);
+          UtilServerGame.startHalf(this, game.getHalf() + 1);
           SequenceGenerator.getInstance().pushKickoffSequence(getGameState(), false);
           fRemoveUsedSecretWeapons = true;
         }
@@ -316,7 +317,7 @@ public class StepEndTurn extends AbstractStep {
       getResult().addReport(new ReportTurnEnd(touchdownPlayerId, knockoutRecoveryArray, heatExhaustionArray));
 
       if (game.isTurnTimeEnabled()) {
-        UtilTimer.stopTurnTimer(getGameState());
+        UtilServerTimer.stopTurnTimer(getGameState());
         game.setTurnTime(0);
       }
       
@@ -353,14 +354,14 @@ public class StepEndTurn extends AbstractStep {
       }
         
       game.startTurn();
-      UtilGame.updateLeaderReRolls(this);
+      UtilServerGame.updateLeaderReRolls(this);
       
       if (fEndGame) {
       	SequenceGenerator.getInstance().pushEndGameSequence(getGameState(), false);
       }
       
       if (!fEndGame && game.isTurnTimeEnabled()) {
-        UtilTimer.startTurnTimer(getGameState());
+        UtilServerTimer.startTurnTimer(getGameState());
       }
       
       updateFumbblGame(getGameState(), fNewHalf, fTouchdown);
@@ -429,7 +430,7 @@ public class StepEndTurn extends AbstractStep {
         playerResult.setHasUsedSecretWeapon(false);
       }
     }
-    UtilGame.updateLeaderReRolls(this);
+    UtilServerGame.updateLeaderReRolls(this);
   }
 
   public boolean checkTouchdown() {
@@ -490,7 +491,7 @@ public class StepEndTurn extends AbstractStep {
     } else {
     	fBribesChoiceAway = ArrayTool.isProvided(pPlayerIds);
     }
-    if (ArrayTool.isProvided(pPlayerIds) && UtilInducementUse.useInducement(getGameState(), pTeam, InducementType.BRIBES, pPlayerIds.length)) {
+    if (ArrayTool.isProvided(pPlayerIds) && UtilServerInducementUse.useInducement(getGameState(), pTeam, InducementType.BRIBES, pPlayerIds.length)) {
       for (String playerId : pPlayerIds) {
         Player player = pTeam.getPlayerById(playerId);
         if (player != null) {
@@ -517,14 +518,14 @@ public class StepEndTurn extends AbstractStep {
   	for (Card card : game.getTurnDataHome().getInducementSet().getActiveCards()) {
     	if (pDuration == card.getDuration()) {
     	  if ((pDuration != InducementDuration.UNTIL_END_OF_OPPONENTS_TURN) || game.isHomePlaying()) {
-          UtilSteps.deactivateCard(this, card);
+          UtilServerCards.deactivateCard(this, card);
     	  }
     	}
   	}
     for (Card card : game.getTurnDataAway().getInducementSet().getActiveCards()) {
       if (pDuration == card.getDuration()) {
         if ((pDuration != InducementDuration.UNTIL_END_OF_OPPONENTS_TURN) || !game.isHomePlaying()) {
-          UtilSteps.deactivateCard(this, card);
+          UtilServerCards.deactivateCard(this, card);
         }
       }
     }
@@ -545,7 +546,7 @@ public class StepEndTurn extends AbstractStep {
         Inducement bribes = inducementSet.get(InducementType.BRIBES);
         DialogBribesParameter dialogParameter = new DialogBribesParameter(pTeam.getId(), bribes.getUsesLeft()); 
         dialogParameter.addPlayerIds(playerIds.toArray(new String[playerIds.size()]));
-        UtilDialog.showDialog(getGameState(), dialogParameter);
+        UtilServerDialog.showDialog(getGameState(), dialogParameter);
         return true;
       }
     }

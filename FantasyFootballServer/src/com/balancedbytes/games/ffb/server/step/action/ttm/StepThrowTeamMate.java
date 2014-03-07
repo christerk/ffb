@@ -31,8 +31,8 @@ import com.balancedbytes.games.ffb.server.step.StepId;
 import com.balancedbytes.games.ffb.server.step.StepParameter;
 import com.balancedbytes.games.ffb.server.step.StepParameterKey;
 import com.balancedbytes.games.ffb.server.step.StepParameterSet;
-import com.balancedbytes.games.ffb.server.util.UtilDialog;
-import com.balancedbytes.games.ffb.server.util.UtilReRoll;
+import com.balancedbytes.games.ffb.server.util.UtilServerDialog;
+import com.balancedbytes.games.ffb.server.util.UtilServerReRoll;
 import com.balancedbytes.games.ffb.util.UtilCards;
 import com.balancedbytes.games.ffb.util.UtilPassing;
 import com.eclipsesource.json.JsonObject;
@@ -150,7 +150,7 @@ public final class StepThrowTeamMate extends AbstractStepWithReRoll {
     Player thrower = game.getActingPlayer().getPlayer();
     boolean doRoll = true;
     if (ReRolledAction.THROW_TEAM_MATE == getReRolledAction()) {
-      if ((getReRollSource() == null) || !UtilReRoll.useReRoll(this, getReRollSource(), thrower)) {
+      if ((getReRollSource() == null) || !UtilServerReRoll.useReRoll(this, getReRollSource(), thrower)) {
       	getResult().setNextAction(StepAction.GOTO_LABEL, fGotoLabelOnFailure);
         doRoll = false;
       }
@@ -173,9 +173,9 @@ public final class StepThrowTeamMate extends AbstractStepWithReRoll {
         if (getReRolledAction() != ReRolledAction.THROW_TEAM_MATE) {
           setReRolledAction(ReRolledAction.THROW_TEAM_MATE);
           if (UtilCards.hasSkill(game, thrower, Skill.PASS)) {
-            UtilDialog.showDialog(getGameState(), new DialogSkillUseParameter(thrower.getId(), Skill.PASS, minimumRoll));
+            UtilServerDialog.showDialog(getGameState(), new DialogSkillUseParameter(thrower.getId(), Skill.PASS, minimumRoll));
           } else {
-            if (!UtilReRoll.askForReRollIfAvailable(getGameState(), actingPlayer.getPlayer(), ReRolledAction.THROW_TEAM_MATE, minimumRoll, false)) {
+            if (!UtilServerReRoll.askForReRollIfAvailable(getGameState(), actingPlayer.getPlayer(), ReRolledAction.THROW_TEAM_MATE, minimumRoll, false)) {
             	getResult().setNextAction(StepAction.GOTO_LABEL, fGotoLabelOnFailure);
             }
           }

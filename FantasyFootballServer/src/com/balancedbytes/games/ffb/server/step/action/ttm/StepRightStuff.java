@@ -25,10 +25,10 @@ import com.balancedbytes.games.ffb.server.step.StepCommandStatus;
 import com.balancedbytes.games.ffb.server.step.StepId;
 import com.balancedbytes.games.ffb.server.step.StepParameter;
 import com.balancedbytes.games.ffb.server.step.StepParameterKey;
-import com.balancedbytes.games.ffb.server.step.UtilSteps;
+import com.balancedbytes.games.ffb.server.step.UtilServerSteps;
 import com.balancedbytes.games.ffb.server.step.action.common.ApothecaryMode;
-import com.balancedbytes.games.ffb.server.util.UtilInjury;
-import com.balancedbytes.games.ffb.server.util.UtilReRoll;
+import com.balancedbytes.games.ffb.server.util.UtilServerInjury;
+import com.balancedbytes.games.ffb.server.util.UtilServerReRoll;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
@@ -101,7 +101,7 @@ public final class StepRightStuff extends AbstractStepWithReRoll {
   	}
     boolean doRoll = true;
     if (ReRolledAction.RIGHT_STUFF == getReRolledAction()) {
-      if ((getReRollSource() == null) || !UtilReRoll.useReRoll(this, getReRollSource(), thrownPlayer)) {
+      if ((getReRollSource() == null) || !UtilServerReRoll.useReRoll(this, getReRollSource(), thrownPlayer)) {
         doRoll = false;
       }
     }
@@ -118,7 +118,7 @@ public final class StepRightStuff extends AbstractStepWithReRoll {
       }
       if (successful) {
       	if (fThrownPlayerHasBall) {
-	      	if (UtilSteps.checkTouchdown(getGameState())) {
+	      	if (UtilServerSteps.checkTouchdown(getGameState())) {
 	      		publishParameter(new StepParameter(StepParameterKey.END_TURN, true));
 	      	}
       	} else {
@@ -132,7 +132,7 @@ public final class StepRightStuff extends AbstractStepWithReRoll {
       } else {
         if (getReRolledAction() != ReRolledAction.RIGHT_STUFF) {
           setReRolledAction(ReRolledAction.RIGHT_STUFF);
-          doRoll = UtilReRoll.askForReRollIfAvailable(getGameState(), thrownPlayer, ReRolledAction.RIGHT_STUFF, minimumRoll, false);
+          doRoll = UtilServerReRoll.askForReRollIfAvailable(getGameState(), thrownPlayer, ReRolledAction.RIGHT_STUFF, minimumRoll, false);
         } else {
           doRoll = false;
         }
@@ -140,9 +140,9 @@ public final class StepRightStuff extends AbstractStepWithReRoll {
     }
     if (!doRoll) {
       FieldCoordinate playerCoordinate = game.getFieldModel().getPlayerCoordinate(thrownPlayer);
-      InjuryResult injuryResultThrownPlayer = UtilInjury.handleInjury(this, InjuryType.TTM_LANDING, null, thrownPlayer, playerCoordinate, null, ApothecaryMode.THROWN_PLAYER);
+      InjuryResult injuryResultThrownPlayer = UtilServerInjury.handleInjury(this, InjuryType.TTM_LANDING, null, thrownPlayer, playerCoordinate, null, ApothecaryMode.THROWN_PLAYER);
       publishParameter(new StepParameter(StepParameterKey.INJURY_RESULT, injuryResultThrownPlayer));
-      publishParameters(UtilInjury.dropPlayer(this, thrownPlayer));
+      publishParameters(UtilServerInjury.dropPlayer(this, thrownPlayer));
   		publishParameter(new StepParameter(StepParameterKey.END_TURN, fThrownPlayerHasBall));
 	    publishParameter(new StepParameter(StepParameterKey.THROWN_PLAYER_COORDINATE, null));  // avoid reset in end step
   		getResult().setNextAction(StepAction.NEXT_STEP);

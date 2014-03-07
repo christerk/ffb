@@ -11,7 +11,7 @@ import com.balancedbytes.games.ffb.server.ServerReplay;
  * 
  * @author Kalimar
  */
-public class UtilReplay {
+public class UtilServerReplay {
 	
 	public static void startServerReplay(GameState pGameState, int pReplayToCommandNr, Session pSession) {
 		if ((pGameState == null) || (pSession == null)) {

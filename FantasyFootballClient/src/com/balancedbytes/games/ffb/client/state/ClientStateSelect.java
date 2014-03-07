@@ -21,7 +21,7 @@ import com.balancedbytes.games.ffb.client.IconCache;
 import com.balancedbytes.games.ffb.client.UserInterface;
 import com.balancedbytes.games.ffb.client.net.ClientCommunication;
 import com.balancedbytes.games.ffb.client.ui.SideBarComponent;
-import com.balancedbytes.games.ffb.client.util.UtilActionKeys;
+import com.balancedbytes.games.ffb.client.util.UtilClientActionKeys;
 import com.balancedbytes.games.ffb.model.FieldModel;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
@@ -202,7 +202,7 @@ public class ClientStateSelect extends ClientState {
         }
         break;
       case PLAYER_CYCLE_RIGHT:
-        selectedPlayer = UtilActionKeys.cyclePlayer(game, selectedPlayer, true);
+        selectedPlayer = UtilClientActionKeys.cyclePlayer(game, selectedPlayer, true);
         if (selectedPlayer != null) {
           hideSelectSquare();
           FieldCoordinate selectedCoordinate = game.getFieldModel().getPlayerCoordinate(selectedPlayer);
@@ -212,7 +212,7 @@ public class ClientStateSelect extends ClientState {
         }
         break;
       case PLAYER_CYCLE_LEFT:
-        selectedPlayer = UtilActionKeys.cyclePlayer(game, selectedPlayer, false);
+        selectedPlayer = UtilClientActionKeys.cyclePlayer(game, selectedPlayer, false);
         if (selectedPlayer != null) {
           hideSelectSquare();
           FieldCoordinate selectedCoordinate = game.getFieldModel().getPlayerCoordinate(selectedPlayer);

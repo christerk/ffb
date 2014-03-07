@@ -24,8 +24,8 @@ import com.balancedbytes.games.ffb.server.step.StepAction;
 import com.balancedbytes.games.ffb.server.step.StepCommandStatus;
 import com.balancedbytes.games.ffb.server.step.StepId;
 import com.balancedbytes.games.ffb.server.step.StepParameter;
-import com.balancedbytes.games.ffb.server.step.UtilSteps;
-import com.balancedbytes.games.ffb.server.util.UtilDialog;
+import com.balancedbytes.games.ffb.server.step.UtilServerSteps;
+import com.balancedbytes.games.ffb.server.util.UtilServerDialog;
 import com.balancedbytes.games.ffb.util.UtilCards;
 import com.balancedbytes.games.ffb.util.UtilPlayer;
 import com.eclipsesource.json.JsonObject;
@@ -108,14 +108,14 @@ public final class StepKickoffReturn extends AbstractStep {
     if (game.getTurnMode() == TurnMode.KICKOFF_RETURN) {
     	
     	if (fEndPlayerAction && !actingPlayer.hasActed()) {
-        UtilSteps.changePlayerAction(this, null, null, false);
+        UtilServerSteps.changePlayerAction(this, null, null, false);
         getGameState().pushCurrentStepOnStack();
         SequenceGenerator.getInstance().pushSelectSequence(getGameState(), false);
         
     	} else {
     		
       	if (fEndPlayerAction || fEndTurn) {
-          UtilSteps.changePlayerAction(this, null, null, false);
+          UtilServerSteps.changePlayerAction(this, null, null, false);
   	    	game.setHomePlaying(!game.isHomePlaying());
   	      game.setTurnMode(TurnMode.KICKOFF);
   	      UtilPlayer.refreshPlayersForTurnStart(game);
@@ -159,7 +159,7 @@ public final class StepKickoffReturn extends AbstractStep {
         }
         game.setHomePlaying(!game.isHomePlaying());
         game.setTurnMode(TurnMode.KICKOFF_RETURN);
-        UtilDialog.showDialog(getGameState(), new DialogKickoffReturnParameter());
+        UtilServerDialog.showDialog(getGameState(), new DialogKickoffReturnParameter());
         
         getGameState().pushCurrentStepOnStack();
         SequenceGenerator.getInstance().pushSelectSequence(getGameState(), false);

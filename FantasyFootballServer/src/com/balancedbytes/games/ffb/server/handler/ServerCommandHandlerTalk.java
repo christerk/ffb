@@ -26,6 +26,7 @@ import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.model.PlayerResult;
 import com.balancedbytes.games.ffb.model.Team;
+import com.balancedbytes.games.ffb.model.TurnData;
 import com.balancedbytes.games.ffb.net.NetCommandId;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandTalk;
 import com.balancedbytes.games.ffb.option.GameOptionFactory;
@@ -39,7 +40,7 @@ import com.balancedbytes.games.ffb.server.IServerProperty;
 import com.balancedbytes.games.ffb.server.net.ReceivedCommand;
 import com.balancedbytes.games.ffb.server.net.ServerCommunication;
 import com.balancedbytes.games.ffb.server.net.SessionManager;
-import com.balancedbytes.games.ffb.server.util.UtilGame;
+import com.balancedbytes.games.ffb.server.util.UtilServerGame;
 import com.balancedbytes.games.ffb.util.ArrayTool;
 import com.balancedbytes.games.ffb.util.StringTool;
 import com.balancedbytes.games.ffb.util.UtilBox;
@@ -76,6 +77,8 @@ public class ServerCommandHandlerTalk extends ServerCommandHandler {
         	handleAnimationCommand(gameState, talkCommand);
       	} else if (game.isTesting() && talk.startsWith("/box")) {
         	handleBoxCommand(gameState, talkCommand, pReceivedCommand.getSession());
+        } else if (game.isTesting() && talk.startsWith("/card")) {
+          handleCardCommand(gameState, talkCommand, pReceivedCommand.getSession());
       	} else if (game.isTesting() && talk.startsWith("/injury")) {
           handleInjuryCommand(gameState, talkCommand, pReceivedCommand.getSession());
       	} else if (game.isTesting() && talk.startsWith("/options")) {
@@ -200,7 +203,7 @@ public class ServerCommandHandlerTalk extends ServerCommandHandler {
     }
     info.append(".");
     getServer().getCommunication().sendPlayerTalk(pGameState, null, info.toString());
-  	UtilGame.syncGameModel(pGameState, null, animation, null);
+  	UtilServerGame.syncGameModel(pGameState, null, animation, null);
   }
 
   private void handleOptionCommand(GameState pGameState, ClientCommandTalk pTalkCommand) {
@@ -221,7 +224,7 @@ public class ServerCommandHandlerTalk extends ServerCommandHandler {
       StringBuilder info = new StringBuilder();
       info.append("Setting game option ").append(gameOption.getId().getName()).append(" to value ").append(gameOption.getValueAsString()).append(".");
       getServer().getCommunication().sendPlayerTalk(pGameState, null, info.toString());
-    	UtilGame.syncGameModel(pGameState, null, null, null);
+    	UtilServerGame.syncGameModel(pGameState, null, null, null);
     }
   }
 
@@ -236,7 +239,7 @@ public class ServerCommandHandlerTalk extends ServerCommandHandler {
         StringBuilder info = new StringBuilder();
         info.append("Setting weather to ").append(game.getFieldModel().getWeather().getName()).append(".");
         getServer().getCommunication().sendPlayerTalk(pGameState, null, info.toString());
-        UtilGame.syncGameModel(pGameState, null, null, null);
+        UtilServerGame.syncGameModel(pGameState, null, null, null);
       }
     }
   }
@@ -284,7 +287,28 @@ public class ServerCommandHandlerTalk extends ServerCommandHandler {
       	break;
       }
     }
-    UtilGame.syncGameModel(pGameState, null, null, null);
+    UtilServerGame.syncGameModel(pGameState, null, null, null);
+  }
+
+  private void handleCardCommand(GameState pGameState, ClientCommandTalk pTalkCommand, Session pSession) {
+    Game game = pGameState.getGame();
+    SessionManager sessionManager = getServer().getSessionManager();
+    String talk = pTalkCommand.getTalk();
+    String[] commands = talk.split(" +");
+    if ((commands == null) || (commands.length < 2)) {
+        return;
+    }
+    Card card = new CardFactory().forShortName(commands[1].replace('_', ' '));
+    if (card == null) {
+      return;
+    }
+    boolean homeCoach = (sessionManager.getSessionOfHomeCoach(pGameState) == pSession);
+    TurnData turnData = homeCoach ? game.getTurnDataHome() : game.getTurnDataAway();
+    turnData.getInducementSet().addAvailableCard(card);
+    StringBuilder info = new StringBuilder();
+    info.append("Card ").append(card.getName()).append(" added for coach ").append(homeCoach ? game.getTeamHome().getCoach() : game.getTeamAway().getCoach()).append(".");
+    getServer().getCommunication().sendPlayerTalk(pGameState, null, info.toString());
+    UtilServerGame.syncGameModel(pGameState, null, null, null);
   }
 
   private void handleProneOrStunCommand(GameState pGameState, ClientCommandTalk pTalkCommand, boolean pStun, Session pSession) {
@@ -311,7 +335,7 @@ public class ServerCommandHandlerTalk extends ServerCommandHandler {
         getServer().getCommunication().sendPlayerTalk(pGameState, null, info.toString());
     	}
     }
-    UtilGame.syncGameModel(pGameState, null, null, null);
+    UtilServerGame.syncGameModel(pGameState, null, null, null);
   }
 
   private Player[] findPlayersInCommand(Team pTeam, String[] pCommands, int pIndex) {
@@ -516,7 +540,7 @@ public class ServerCommandHandlerTalk extends ServerCommandHandler {
         StringBuilder info = new StringBuilder();
         info.append("Jumping to turn ").append(newTurnNr).append(".");
         getServer().getCommunication().sendPlayerTalk(pGameState, null, info.toString());
-        UtilGame.syncGameModel(pGameState, null, null, null);
+        UtilServerGame.syncGameModel(pGameState, null, null, null);
       }
     }
   }

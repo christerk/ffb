@@ -21,8 +21,8 @@ import com.balancedbytes.games.ffb.server.step.StepId;
 import com.balancedbytes.games.ffb.server.step.StepParameter;
 import com.balancedbytes.games.ffb.server.step.StepParameterKey;
 import com.balancedbytes.games.ffb.server.step.StepParameterSet;
-import com.balancedbytes.games.ffb.server.util.UtilDialog;
-import com.balancedbytes.games.ffb.server.util.UtilInducementUse;
+import com.balancedbytes.games.ffb.server.util.UtilServerDialog;
+import com.balancedbytes.games.ffb.server.util.UtilServerInducementUse;
 import com.balancedbytes.games.ffb.util.StringTool;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
@@ -111,7 +111,7 @@ public class StepBribes extends AbstractStep {
     	if (fBribesChoice) {
 		  	if (fBribeSuccessful == null) {
 		      Team team = game.isHomePlaying() ? game.getTeamHome() : game.getTeamAway();
-		      if (UtilInducementUse.useInducement(getGameState(), team, InducementType.BRIBES, 1)) {
+		      if (UtilServerInducementUse.useInducement(getGameState(), team, InducementType.BRIBES, 1)) {
 		        int roll = getGameState().getDiceRoller().rollBribes();
 		        fBribeSuccessful = DiceInterpreter.getInstance().isBribesSuccessful(roll);
 		        getResult().addReport(new ReportBribesRoll(actingPlayer.getPlayerId(), fBribeSuccessful, roll));
@@ -138,7 +138,7 @@ public class StepBribes extends AbstractStep {
       Team team = game.isHomePlaying() ? game.getTeamHome() : game.getTeamAway();
       DialogBribesParameter dialogParameter = new DialogBribesParameter(team.getId() , 1);
       dialogParameter.addPlayerId(actingPlayer.getPlayerId());
-      UtilDialog.showDialog(getGameState(), dialogParameter);
+      UtilServerDialog.showDialog(getGameState(), dialogParameter);
     	fBribesChoice = null;
     } else {
     	fBribesChoice = false;

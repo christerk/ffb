@@ -23,7 +23,7 @@ import com.balancedbytes.games.ffb.server.step.StepId;
 import com.balancedbytes.games.ffb.server.step.StepParameter;
 import com.balancedbytes.games.ffb.server.step.StepParameterKey;
 import com.balancedbytes.games.ffb.server.step.StepParameterSet;
-import com.balancedbytes.games.ffb.server.util.UtilCatchScatterThrowIn;
+import com.balancedbytes.games.ffb.server.util.UtilServerCatchScatterThrowIn;
 import com.balancedbytes.games.ffb.util.StringTool;
 import com.balancedbytes.games.ffb.util.UtilCards;
 import com.balancedbytes.games.ffb.util.UtilPlayer;
@@ -139,7 +139,7 @@ public class StepMoveBallAndChain extends AbstractStep {
     	} else {  // coordinateFrom.getY() > coordinateTo.getY()
     		playerScatter = DiceInterpreter.getInstance().interpretThrowInDirectionRoll(Direction.NORTH, scatterRoll);
     	}
-    	fCoordinateTo = UtilCatchScatterThrowIn.findScatterCoordinate(fCoordinateFrom, playerScatter, 1);
+    	fCoordinateTo = UtilServerCatchScatterThrowIn.findScatterCoordinate(fCoordinateFrom, playerScatter, 1);
     	getResult().addReport(new ReportScatterPlayer(fCoordinateFrom, fCoordinateTo, new Direction[] { playerScatter }, new int[] { scatterRoll }));
     	if (!FieldCoordinateBounds.FIELD.isInBounds(fCoordinateTo)) {
     		publishParameter(new StepParameter(StepParameterKey.INJURY_TYPE, InjuryType.CROWDPUSH));

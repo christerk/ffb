@@ -16,8 +16,8 @@ import com.balancedbytes.games.ffb.server.IServerJsonOption;
 import com.balancedbytes.games.ffb.server.IServerLogLevel;
 import com.balancedbytes.games.ffb.server.net.ReceivedCommand;
 import com.balancedbytes.games.ffb.server.net.SessionManager;
-import com.balancedbytes.games.ffb.server.util.UtilDialog;
-import com.balancedbytes.games.ffb.server.util.UtilGame;
+import com.balancedbytes.games.ffb.server.util.UtilServerDialog;
+import com.balancedbytes.games.ffb.server.util.UtilServerGame;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
@@ -85,7 +85,7 @@ public abstract class AbstractStep implements IStep {
     return false;
   }
 
-  protected void publishParameter(StepParameter pParameter) {
+  public void publishParameter(StepParameter pParameter) {
     if (pParameter != null) {
       DebugLog debugLog = getGameState().getServer().getDebugLog();
       if (debugLog.isLogging(IServerLogLevel.TRACE)) {
@@ -98,7 +98,7 @@ public abstract class AbstractStep implements IStep {
     }
   }
 
-  protected void publishParameters(StepParameterSet pParameterSet) {
+  public void publishParameters(StepParameterSet pParameterSet) {
     if (pParameterSet != null) {
       for (StepParameter parameter : pParameterSet.values()) {
         publishParameter(parameter);
@@ -109,7 +109,7 @@ public abstract class AbstractStep implements IStep {
   // ByteArray serialization
 
   public int initFrom(ByteArray pByteArray) {
-    UtilSteps.validateStepId(this, new StepIdFactory().forId(pByteArray.getSmallInt()));
+    UtilServerSteps.validateStepId(this, new StepIdFactory().forId(pByteArray.getSmallInt()));
     int byteArraySerializationVersion = pByteArray.getSmallInt();
     setLabel(pByteArray.getString());
     setStepResult(new StepResult());
@@ -129,7 +129,7 @@ public abstract class AbstractStep implements IStep {
   
   public AbstractStep initFrom(JsonValue pJsonValue) {
     JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-    UtilSteps.validateStepId(this, (StepId) IServerJsonOption.STEP_ID.getFrom(jsonObject));
+    UtilServerSteps.validateStepId(this, (StepId) IServerJsonOption.STEP_ID.getFrom(jsonObject));
     fLabel = IServerJsonOption.LABEL.getFrom(jsonObject);
     fStepResult = null;
     JsonObject stepResultObject = IServerJsonOption.STEP_RESULT.getFrom(jsonObject);
@@ -153,7 +153,7 @@ public abstract class AbstractStep implements IStep {
       switch (concedeGameCommand.getConcedeGameStatus()) {
       case REQUESTED:
         if (game.isConcessionPossible() && ((game.isHomePlaying() && homeCommand) || (!game.isHomePlaying() && awayCommand))) {
-          UtilDialog.showDialog(getGameState(), new DialogConcedeGameParameter());
+          UtilServerDialog.showDialog(getGameState(), new DialogConcedeGameParameter());
         }
         break;
       case CONFIRMED:
@@ -162,7 +162,7 @@ public abstract class AbstractStep implements IStep {
         gameResult.getTeamResultAway().setConceded(!game.isHomePlaying() && awayCommand);
         break;
       case DENIED:
-        UtilDialog.hideDialog(getGameState());
+        UtilServerDialog.hideDialog(getGameState());
         break;
       }
       if (gameResult.getTeamResultHome().hasConceded() || gameResult.getTeamResultAway().hasConceded()) {
@@ -185,7 +185,7 @@ public abstract class AbstractStep implements IStep {
       reports.add(new ReportTimeoutEnforced(coach));
       game.setTimeoutEnforced(true);
       game.setTimeoutPossible(false);
-      UtilGame.syncGameModel(getGameState(), reports, null, Sound.WHISTLE);
+      UtilServerGame.syncGameModel(getGameState(), reports, null, Sound.WHISTLE);
       commandStatus = StepCommandStatus.EXECUTE_STEP;
     }
     return commandStatus;

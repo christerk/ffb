@@ -24,8 +24,8 @@ import com.balancedbytes.games.ffb.server.step.StepId;
 import com.balancedbytes.games.ffb.server.step.StepParameter;
 import com.balancedbytes.games.ffb.server.step.StepParameterKey;
 import com.balancedbytes.games.ffb.server.step.StepParameterSet;
-import com.balancedbytes.games.ffb.server.step.UtilSteps;
-import com.balancedbytes.games.ffb.server.util.UtilSetup;
+import com.balancedbytes.games.ffb.server.step.UtilServerSteps;
+import com.balancedbytes.games.ffb.server.util.UtilServerSetup;
 import com.balancedbytes.games.ffb.util.ArrayTool;
 import com.balancedbytes.games.ffb.util.StringTool;
 import com.balancedbytes.games.ffb.util.UtilBox;
@@ -82,26 +82,26 @@ public final class StepSetup extends AbstractStep {
 			switch (pReceivedCommand.getId()) {
 	      case CLIENT_TEAM_SETUP_LOAD:
 	        ClientCommandTeamSetupLoad loadSetupCommand = (ClientCommandTeamSetupLoad) pReceivedCommand.getCommand();
-	        UtilSetup.loadTeamSetup(getGameState(), loadSetupCommand.getSetupName());
+	        UtilServerSetup.loadTeamSetup(getGameState(), loadSetupCommand.getSetupName());
 	        commandStatus = StepCommandStatus.SKIP_STEP;
 	        break;
 	      case CLIENT_TEAM_SETUP_SAVE:
 	        ClientCommandTeamSetupSave saveSetupCommand = (ClientCommandTeamSetupSave) pReceivedCommand.getCommand();
-	        UtilSetup.saveTeamSetup(getGameState(), saveSetupCommand.getSetupName(), saveSetupCommand.getPlayerNumbers(), saveSetupCommand.getPlayerCoordinates());
+	        UtilServerSetup.saveTeamSetup(getGameState(), saveSetupCommand.getSetupName(), saveSetupCommand.getPlayerNumbers(), saveSetupCommand.getPlayerCoordinates());
 	        commandStatus = StepCommandStatus.SKIP_STEP;
 	        break;
 	      case CLIENT_TEAM_SETUP_DELETE:
 	        ClientCommandTeamSetupDelete deleteSetupCommand = (ClientCommandTeamSetupDelete) pReceivedCommand.getCommand();
-	        UtilSetup.deleteTeamSetup(getGameState(), deleteSetupCommand.getSetupName());
+	        UtilServerSetup.deleteTeamSetup(getGameState(), deleteSetupCommand.getSetupName());
 	        commandStatus = StepCommandStatus.SKIP_STEP;
 	        break;
 	      case CLIENT_SETUP_PLAYER:
 	        ClientCommandSetupPlayer setupPlayerCommand = (ClientCommandSetupPlayer) pReceivedCommand.getCommand();
-	        UtilSetup.setupPlayer(getGameState(), setupPlayerCommand.getPlayerId(), setupPlayerCommand.getCoordinate());
+	        UtilServerSetup.setupPlayer(getGameState(), setupPlayerCommand.getPlayerId(), setupPlayerCommand.getCoordinate());
 	        commandStatus = StepCommandStatus.SKIP_STEP;
 	        break;
         case CLIENT_END_TURN:
-        	if (UtilSteps.checkCommandIsFromCurrentPlayer(getGameState(), pReceivedCommand)) {
+        	if (UtilServerSteps.checkCommandIsFromCurrentPlayer(getGameState(), pReceivedCommand)) {
         		fEndSetup = true;
             commandStatus = StepCommandStatus.EXECUTE_STEP;
         	}

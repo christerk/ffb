@@ -22,8 +22,8 @@ import com.balancedbytes.games.ffb.server.net.commands.InternalServerCommandJoin
 import com.balancedbytes.games.ffb.server.request.fumbbl.FumbblRequestCheckGamestate;
 import com.balancedbytes.games.ffb.server.request.fumbbl.FumbblRequestLoadTeam;
 import com.balancedbytes.games.ffb.server.request.fumbbl.FumbblRequestLoadTeamList;
-import com.balancedbytes.games.ffb.server.util.UtilStartGame;
-import com.balancedbytes.games.ffb.server.util.UtilTimer;
+import com.balancedbytes.games.ffb.server.util.UtilServerStartGame;
+import com.balancedbytes.games.ffb.server.util.UtilServerTimer;
 import com.balancedbytes.games.ffb.util.StringTool;
 
 /**
@@ -98,9 +98,9 @@ public class ServerCommandHandlerJoinApproved extends ServerCommandHandler {
           getServer().getCommunication().sendStatus(session, ServerStatus.ERROR_ALREADY_LOGGED_IN, null);
         } else {
           sessionManager.addSession(session, gameState, joinApprovedCommand.getCoach(), joinApprovedCommand.getClientMode(), false);
-          UtilStartGame.sendServerJoin(gameState, session, joinApprovedCommand.getCoach(), false, ClientMode.SPECTATOR);
+          UtilServerStartGame.sendServerJoin(gameState, session, joinApprovedCommand.getCoach(), false, ClientMode.SPECTATOR);
           if (gameState.getGame().getStarted() != null) {
-            UtilTimer.syncTime(gameState);
+            UtilServerTimer.syncTime(gameState);
             communication.sendGameState(session, gameState);
           }
         }
@@ -118,11 +118,11 @@ public class ServerCommandHandlerJoinApproved extends ServerCommandHandler {
         getServer().getCommunication().sendStatus(pSession, ServerStatus.ERROR_ALREADY_LOGGED_IN, null);
       } else {
         boolean homeTeam = pJoinApprovedCommand.getCoach().equalsIgnoreCase(game.getTeamHome().getCoach());
-        if (UtilStartGame.joinGameAsPlayerAndCheckIfReadyToStart(pGameState, pSession, pJoinApprovedCommand.getCoach(), homeTeam)) {
+        if (UtilServerStartGame.joinGameAsPlayerAndCheckIfReadyToStart(pGameState, pSession, pJoinApprovedCommand.getCoach(), homeTeam)) {
           if (getServer().getMode() == ServerMode.FUMBBL) {
             getServer().getRequestProcessor().add(new FumbblRequestCheckGamestate(pGameState));
           } else {
-            UtilStartGame.startGame(pGameState);
+            UtilServerStartGame.startGame(pGameState);
           }
         }
       }
@@ -141,8 +141,8 @@ public class ServerCommandHandlerJoinApproved extends ServerCommandHandler {
         } else {
           Team team = getServer().getGameCache().getTeamById(pJoinApprovedCommand.getTeamId());
           getServer().getGameCache().addTeamToGame(pGameState, team, homeTeam);
-          if (UtilStartGame.joinGameAsPlayerAndCheckIfReadyToStart(pGameState, pSession, pJoinApprovedCommand.getCoach(), homeTeam)) {
-            UtilStartGame.startGame(pGameState);
+          if (UtilServerStartGame.joinGameAsPlayerAndCheckIfReadyToStart(pGameState, pSession, pJoinApprovedCommand.getCoach(), homeTeam)) {
+            UtilServerStartGame.startGame(pGameState);
           }
         }
       }

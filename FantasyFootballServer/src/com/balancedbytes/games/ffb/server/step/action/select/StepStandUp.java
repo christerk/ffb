@@ -20,7 +20,7 @@ import com.balancedbytes.games.ffb.server.step.StepId;
 import com.balancedbytes.games.ffb.server.step.StepParameter;
 import com.balancedbytes.games.ffb.server.step.StepParameterKey;
 import com.balancedbytes.games.ffb.server.step.StepParameterSet;
-import com.balancedbytes.games.ffb.server.util.UtilReRoll;
+import com.balancedbytes.games.ffb.server.util.UtilServerReRoll;
 import com.balancedbytes.games.ffb.util.StringTool;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
@@ -89,7 +89,7 @@ public final class StepStandUp extends AbstractStepWithReRoll {
       boolean rollStandUp = (actingPlayer.getPlayer().getMovement() < IServerConstant.MINIMUM_MOVE_TO_STAND_UP);
       if (rollStandUp) {
         if (ReRolledAction.STAND_UP == getReRolledAction()) {
-          if ((getReRollSource() == null) || !UtilReRoll.useReRoll(this, getReRollSource(), actingPlayer.getPlayer())) {
+          if ((getReRollSource() == null) || !UtilServerReRoll.useReRoll(this, getReRollSource(), actingPlayer.getPlayer())) {
             rollStandUp = false;
           }
         }
@@ -106,7 +106,7 @@ public final class StepStandUp extends AbstractStepWithReRoll {
             	getResult().setNextAction(StepAction.NEXT_STEP);
             }
           } else {
-            if ((getReRolledAction() == ReRolledAction.STAND_UP) || !UtilReRoll.askForReRollIfAvailable(getGameState(), actingPlayer.getPlayer(), ReRolledAction.STAND_UP, 4, false)) {
+            if ((getReRolledAction() == ReRolledAction.STAND_UP) || !UtilServerReRoll.askForReRollIfAvailable(getGameState(), actingPlayer.getPlayer(), ReRolledAction.STAND_UP, 4, false)) {
               rollStandUp = false;
               switch (actingPlayer.getPlayerAction()) {
                 case BLITZ:

@@ -15,7 +15,7 @@ import com.balancedbytes.games.ffb.server.step.StepCommandStatus;
 import com.balancedbytes.games.ffb.server.step.StepId;
 import com.balancedbytes.games.ffb.server.step.StepParameter;
 import com.balancedbytes.games.ffb.server.step.StepParameterKey;
-import com.balancedbytes.games.ffb.server.util.UtilDialog;
+import com.balancedbytes.games.ffb.server.util.UtilServerDialog;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
@@ -55,7 +55,7 @@ public final class StepKickoffResultRoll extends AbstractStep {
 
   private void executeStep() {
 
-    UtilDialog.hideDialog(getGameState());
+    UtilServerDialog.hideDialog(getGameState());
 
     int[] rollKickoff = getGameState().getDiceRoller().rollKickoff();
     fKickoffResult = DiceInterpreter.getInstance().interpretRollKickoff(rollKickoff);

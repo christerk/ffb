@@ -6,7 +6,7 @@ import com.balancedbytes.games.ffb.server.FantasyFootballServer;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.net.ReceivedCommand;
 import com.balancedbytes.games.ffb.server.net.commands.InternalServerCommandReplayLoaded;
-import com.balancedbytes.games.ffb.server.util.UtilReplay;
+import com.balancedbytes.games.ffb.server.util.UtilServerReplay;
 
 /**
  * 
@@ -29,7 +29,7 @@ public class ServerCommandHandlerReplayLoaded extends ServerCommandHandler {
     if (replayCommand.getGameId() > 0) {
       GameState gameState = getServer().getGameCache().getGameStateById(replayCommand.getGameId());
       if (gameState != null) {
-        UtilReplay.startServerReplay(gameState, replayCommand.getReplayToCommandNr(), pReceivedCommand.getSession());
+        UtilServerReplay.startServerReplay(gameState, replayCommand.getReplayToCommandNr(), pReceivedCommand.getSession());
       } else {
         getServer().getCommunication().sendStatus(pReceivedCommand.getSession(), ServerStatus.ERROR_UNKNOWN_GAME_ID, null);
       }

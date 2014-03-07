@@ -15,8 +15,8 @@ import com.balancedbytes.games.ffb.server.step.SequenceGenerator;
 import com.balancedbytes.games.ffb.server.step.StepAction;
 import com.balancedbytes.games.ffb.server.step.StepId;
 import com.balancedbytes.games.ffb.server.step.StepParameter;
-import com.balancedbytes.games.ffb.server.step.UtilSteps;
-import com.balancedbytes.games.ffb.server.util.UtilDialog;
+import com.balancedbytes.games.ffb.server.step.UtilServerSteps;
+import com.balancedbytes.games.ffb.server.util.UtilServerDialog;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
@@ -128,7 +128,7 @@ public final class StepEndSelecting extends AbstractStep {
 	}
 	
 	private void executeStep() {
-    UtilDialog.hideDialog(getGameState());
+    UtilServerDialog.hideDialog(getGameState());
     Game game = getGameState().getGame();
     ActingPlayer actingPlayer = game.getActingPlayer();
     if (fEndTurn || fEndPlayerAction) {
@@ -141,7 +141,7 @@ public final class StepEndSelecting extends AbstractStep {
       	dispatchPlayerAction(fDispatchPlayerAction, false);
     	} else {
     		if ((actingPlayer.getPlayerAction() != null) && !actingPlayer.getPlayerAction().isMoving()) {
-    			UtilSteps.changePlayerAction(this, actingPlayer.getPlayerId(), PlayerAction.MOVE, actingPlayer.isLeaping());
+    			UtilServerSteps.changePlayerAction(this, actingPlayer.getPlayerId(), PlayerAction.MOVE, actingPlayer.isLeaping());
     		}
       	dispatchPlayerAction(actingPlayer.getPlayerAction(), false);
     	}

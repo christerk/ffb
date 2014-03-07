@@ -28,7 +28,7 @@ import com.balancedbytes.games.ffb.server.step.StepId;
 import com.balancedbytes.games.ffb.server.step.StepParameter;
 import com.balancedbytes.games.ffb.server.step.StepParameterKey;
 import com.balancedbytes.games.ffb.server.step.StepParameterSet;
-import com.balancedbytes.games.ffb.server.step.UtilSteps;
+import com.balancedbytes.games.ffb.server.step.UtilServerSteps;
 import com.balancedbytes.games.ffb.util.ArrayTool;
 import com.balancedbytes.games.ffb.util.UtilCards;
 import com.balancedbytes.games.ffb.util.UtilPassing;
@@ -145,7 +145,7 @@ public class StepPassBlock extends AbstractStep {
     	if (actingPlayer.getPlayer() != null) {
     		PlayerState playerState = game.getFieldModel().getPlayerState(actingPlayer.getPlayer());
     		if (!playerState.hasTacklezones()) {
-    			UtilSteps.changePlayerAction(this, null, null, false);
+    			UtilServerSteps.changePlayerAction(this, null, null, false);
     			fEndTurn = true;
     			fEndPlayerAction = false;
     		}
@@ -154,7 +154,7 @@ public class StepPassBlock extends AbstractStep {
     	if (fEndPlayerAction) {
     		FieldCoordinate playerCoordinate = game.getFieldModel().getPlayerCoordinate(actingPlayer.getPlayer());
     		if (validEndCoordinates.contains(playerCoordinate) || !actingPlayer.hasActed()) {
-    			UtilSteps.changePlayerAction(this, null, null, false);
+    			UtilServerSteps.changePlayerAction(this, null, null, false);
     			if (checkNoPlayerActive(passBlockers)) {
     				fEndTurn = true;
     			} else {

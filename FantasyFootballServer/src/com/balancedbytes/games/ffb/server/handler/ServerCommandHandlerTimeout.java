@@ -8,7 +8,7 @@ import com.balancedbytes.games.ffb.option.UtilGameOption;
 import com.balancedbytes.games.ffb.server.FantasyFootballServer;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.net.ReceivedCommand;
-import com.balancedbytes.games.ffb.server.util.UtilGame;
+import com.balancedbytes.games.ffb.server.util.UtilServerGame;
 
 /**
  * 
@@ -35,7 +35,7 @@ public class ServerCommandHandlerTimeout extends ServerCommandHandler {
       long turnTime = System.currentTimeMillis() - gameState.getTurnTimeStarted();
       if (turnTime >= clientTurnLimit - 1000) {
         game.setTimeoutPossible(true);
-        UtilGame.syncGameModel(gameState, null, null, Sound.WHISTLE);
+        UtilServerGame.syncGameModel(gameState, null, null, Sound.WHISTLE);
       }
     }
     

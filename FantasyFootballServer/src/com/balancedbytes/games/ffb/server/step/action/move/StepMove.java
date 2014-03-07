@@ -17,7 +17,7 @@ import com.balancedbytes.games.ffb.server.step.StepAction;
 import com.balancedbytes.games.ffb.server.step.StepCommandStatus;
 import com.balancedbytes.games.ffb.server.step.StepId;
 import com.balancedbytes.games.ffb.server.step.StepParameter;
-import com.balancedbytes.games.ffb.server.util.UtilPlayerMove;
+import com.balancedbytes.games.ffb.server.util.UtilServerPlayerMove;
 import com.balancedbytes.games.ffb.util.UtilBlock;
 import com.balancedbytes.games.ffb.util.UtilPlayer;
 import com.eclipsesource.json.JsonObject;
@@ -103,7 +103,7 @@ public class StepMove extends AbstractStep {
       }
       actingPlayer.setGoingForIt(UtilPlayer.isNextMoveGoingForIt(game));  // auto go-for-it
       if (fMoveStackSize == 0) {
-        UtilPlayerMove.updateMoveSquares(getGameState(), false);
+        UtilServerPlayerMove.updateMoveSquares(getGameState(), false);
       }
       UtilBlock.updateDiceDecorations(game);
       getResult().setSound(actingPlayer.isDodging() ? Sound.DODGE : Sound.STEP);

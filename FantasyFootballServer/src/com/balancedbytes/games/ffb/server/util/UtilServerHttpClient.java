@@ -12,7 +12,7 @@ import org.apache.commons.httpclient.methods.GetMethod;
  * 
  * @author Kalimar
  */
-public class UtilHttpClient {
+public class UtilServerHttpClient {
   
   public static final int CONNECTION_TIMEOUT = 10000;
   public static final String CHARACTER_ENCODING = "UTF-8";

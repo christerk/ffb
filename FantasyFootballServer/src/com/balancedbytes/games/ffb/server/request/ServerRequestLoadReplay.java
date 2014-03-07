@@ -13,7 +13,7 @@ import com.balancedbytes.games.ffb.server.IServerProperty;
 import com.balancedbytes.games.ffb.server.net.ReceivedCommand;
 import com.balancedbytes.games.ffb.server.net.commands.InternalServerCommandDeleteGame;
 import com.balancedbytes.games.ffb.server.net.commands.InternalServerCommandReplayLoaded;
-import com.balancedbytes.games.ffb.server.util.UtilHttpClient;
+import com.balancedbytes.games.ffb.server.util.UtilServerHttpClient;
 import com.balancedbytes.games.ffb.util.StringTool;
 import com.eclipsesource.json.JsonValue;
 
@@ -66,7 +66,7 @@ public class ServerRequestLoadReplay extends ServerRequest {
     GameState gameState = null;
     try {
       String loadUrl = StringTool.bind(server.getProperty(IServerProperty.BACKUP_URL_LOAD), getGameId());
-      byte[] gzippedJson = UtilHttpClient.fetchGzippedPage(loadUrl);
+      byte[] gzippedJson = UtilServerHttpClient.fetchGzippedPage(loadUrl);
       JsonValue jsonValue = UtilJson.gunzip(gzippedJson);
       if ((jsonValue != null) && !jsonValue.isNull()) {
         gameState = new GameState(server);

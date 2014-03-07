@@ -13,7 +13,7 @@ import com.balancedbytes.games.ffb.client.UserInterface;
 import com.balancedbytes.games.ffb.client.dialog.DialogProgressBar;
 import com.balancedbytes.games.ffb.client.dialog.IDialog;
 import com.balancedbytes.games.ffb.client.dialog.IDialogCloseListener;
-import com.balancedbytes.games.ffb.client.util.UtilThrowTeamMate;
+import com.balancedbytes.games.ffb.client.util.UtilClientThrowTeamMate;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.model.Roster;
@@ -91,7 +91,7 @@ public class ClientCommandHandlerGameState extends ClientCommandHandler implemen
     }
       
     getClient().setGame(game);
-    UtilThrowTeamMate.updateThrownPlayer(getClient());
+    UtilClientThrowTeamMate.updateThrownPlayer(getClient());
 
     if (pMode == ClientCommandHandlerMode.PLAYING) {
       SwingUtilities.invokeLater(

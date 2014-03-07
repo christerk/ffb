@@ -5,7 +5,7 @@ import com.balancedbytes.games.ffb.server.FantasyFootballServer;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.net.ReceivedCommand;
 import com.balancedbytes.games.ffb.server.net.commands.InternalServerCommandFumbblGameChecked;
-import com.balancedbytes.games.ffb.server.util.UtilStartGame;
+import com.balancedbytes.games.ffb.server.util.UtilServerStartGame;
 
 /**
  * 
@@ -24,7 +24,7 @@ public class ServerCommandHandlerFumbblGameChecked extends ServerCommandHandler 
   public void handleCommand(ReceivedCommand pReceivedCommand) {
   	InternalServerCommandFumbblGameChecked gameCheckedCommand = (InternalServerCommandFumbblGameChecked) pReceivedCommand.getCommand();
     GameState gameState = getServer().getGameCache().getGameStateById(gameCheckedCommand.getGameId());
-    UtilStartGame.startGame(gameState);
+    UtilServerStartGame.startGame(gameState);
   }
 
 }

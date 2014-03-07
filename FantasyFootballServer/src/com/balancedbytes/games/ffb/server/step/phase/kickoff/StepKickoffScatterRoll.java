@@ -28,8 +28,8 @@ import com.balancedbytes.games.ffb.server.step.StepCommandStatus;
 import com.balancedbytes.games.ffb.server.step.StepId;
 import com.balancedbytes.games.ffb.server.step.StepParameter;
 import com.balancedbytes.games.ffb.server.step.StepParameterKey;
-import com.balancedbytes.games.ffb.server.util.UtilCatchScatterThrowIn;
-import com.balancedbytes.games.ffb.server.util.UtilDialog;
+import com.balancedbytes.games.ffb.server.util.UtilServerCatchScatterThrowIn;
+import com.balancedbytes.games.ffb.server.util.UtilServerDialog;
 import com.balancedbytes.games.ffb.util.UtilCards;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
@@ -116,14 +116,14 @@ public final class StepKickoffScatterRoll extends AbstractStep {
       fScatterDirection = DiceInterpreter.getInstance().interpretScatterDirectionRoll(rollScatterDirection);
       fScatterDistance = getGameState().getDiceRoller().rollScatterDistance();
 
-      FieldCoordinate ballCoordinateEnd = UtilCatchScatterThrowIn.findScatterCoordinate(fKickoffStartCoordinate, fScatterDirection, fScatterDistance);
+      FieldCoordinate ballCoordinateEnd = UtilServerCatchScatterThrowIn.findScatterCoordinate(fKickoffStartCoordinate, fScatterDirection, fScatterDistance);
       getResult().addReport(new ReportKickoffScatter(ballCoordinateEnd, fScatterDirection, rollScatterDirection, fScatterDistance));
       
       if (kickingPlayer != null) {
       	fKickingPlayerCoordinate = game.getFieldModel().getPlayerCoordinate(kickingPlayer);
         if (UtilCards.hasSkill(game, kickingPlayer, Skill.KICK) && ((game.isHomePlaying()&& FieldCoordinateBounds.CENTER_FIELD_HOME.isInBounds(game.getFieldModel().getPlayerCoordinate(kickingPlayer))) || (!game.isHomePlaying() && FieldCoordinateBounds.CENTER_FIELD_AWAY.isInBounds(game.getFieldModel().getPlayerCoordinate(kickingPlayer))))) {
-          FieldCoordinate ballCoordinateEndWithKick = UtilCatchScatterThrowIn.findScatterCoordinate(fKickoffStartCoordinate, fScatterDirection, fScatterDistance / 2);
-          UtilDialog.showDialog(getGameState(), new DialogKickSkillParameter(kickingPlayer.getId(),ballCoordinateEnd, ballCoordinateEndWithKick));
+          FieldCoordinate ballCoordinateEndWithKick = UtilServerCatchScatterThrowIn.findScatterCoordinate(fKickoffStartCoordinate, fScatterDirection, fScatterDistance / 2);
+          UtilServerDialog.showDialog(getGameState(), new DialogKickSkillParameter(kickingPlayer.getId(),ballCoordinateEnd, ballCoordinateEndWithKick));
         } else {
         	fUseKickChoice = false;
         }
@@ -141,10 +141,10 @@ public final class StepKickoffScatterRoll extends AbstractStep {
     if (fUseKickChoice != null) {
     
       int distance = fUseKickChoice ? fScatterDistance / 2 : fScatterDistance;
-      FieldCoordinate ballCoordinateEnd = UtilCatchScatterThrowIn.findScatterCoordinate(fKickoffStartCoordinate, fScatterDirection, distance);
+      FieldCoordinate ballCoordinateEnd = UtilServerCatchScatterThrowIn.findScatterCoordinate(fKickoffStartCoordinate, fScatterDirection, distance);
       FieldCoordinate lastValidCoordinate = ballCoordinateEnd;
       while (!FieldCoordinateBounds.FIELD.isInBounds(lastValidCoordinate)) {
-        lastValidCoordinate = UtilCatchScatterThrowIn.findScatterCoordinate(fKickoffStartCoordinate, fScatterDirection, --distance);
+        lastValidCoordinate = UtilServerCatchScatterThrowIn.findScatterCoordinate(fKickoffStartCoordinate, fScatterDirection, --distance);
       }
       game.getFieldModel().setBallInPlay(false);
       game.getFieldModel().setBallCoordinate(lastValidCoordinate);
