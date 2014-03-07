@@ -9,6 +9,7 @@ import java.util.Set;
 
 import com.balancedbytes.games.ffb.BloodSpot;
 import com.balancedbytes.games.ffb.Card;
+import com.balancedbytes.games.ffb.CardEffect;
 import com.balancedbytes.games.ffb.CardFactory;
 import com.balancedbytes.games.ffb.DiceDecoration;
 import com.balancedbytes.games.ffb.FieldCoordinate;
@@ -62,6 +63,7 @@ public class FieldModel implements IByteArrayReadable, IJsonSerializable {
   private Set<FieldMarker> fFieldMarkers;
   private Set<PlayerMarker> fPlayerMarkers;
   private Map<String, Set<Card>> fCardsByPlayerId;
+  private Map<String, Set<CardEffect>> fCardEffectsByPlayerId;
 
   private transient Map<FieldCoordinate, String> fPlayerIdByCoordinate;  // no need to serialize this, as it can be reconstructed
 
@@ -80,6 +82,7 @@ public class FieldModel implements IByteArrayReadable, IJsonSerializable {
     fFieldMarkers = new HashSet<FieldMarker>();
     fPlayerMarkers = new HashSet<PlayerMarker>();
     fCardsByPlayerId = new HashMap<String, Set<Card>>();
+    fCardEffectsByPlayerId = new HashMap<String, Set<CardEffect>>();
   }
 
   public Player getPlayer(FieldCoordinate pPlayerPosition) {
@@ -194,18 +197,69 @@ public class FieldModel implements IByteArrayReadable, IJsonSerializable {
   	return cards.toArray(new Card[cards.size()]);
   }
   
-  public Player[] findPlayers(Card pCard) {
-    List<Player> players = new ArrayList<Player>();
+  public Player findPlayer(Card pCard) {
   	for (String playerId : fCardsByPlayerId.keySet()) {
   		for (Card card : fCardsByPlayerId.get(playerId)) {
   			if (card == pCard) {
-  			  players.add(getGame().getPlayerById(playerId));
+  			  return getGame().getPlayerById(playerId);
   			}
   		}
   	}
-  	return players.toArray(new Player[players.size()]);
+  	return null;
+  }
+
+  public void addCardEffect(Player pPlayer, CardEffect pCardEffect) {
+    if ((pPlayer == null) || (pCardEffect == null)) {
+      return;
+    }
+    Set<CardEffect> cardEffects = fCardEffectsByPlayerId.get(pPlayer.getId());
+    if (cardEffects == null) {
+      cardEffects = new HashSet<CardEffect>();
+      fCardEffectsByPlayerId.put(pPlayer.getId(), cardEffects);
+    }
+    cardEffects.add(pCardEffect);
+    notifyObservers(ModelChangeId.FIELD_MODEL_ADD_CARD_EFFECT, pPlayer.getId(), pCardEffect);
   }
   
+  public boolean removeCardEffect(Player pPlayer, CardEffect pCardEffect) {
+    if ((pPlayer == null) || (pCardEffect == null)) {
+      return false;
+    }
+    boolean removed = false;
+    Set<CardEffect> cardEffects = fCardEffectsByPlayerId.get(pPlayer.getId());
+    if (cardEffects != null) {
+      removed = cardEffects.remove(pCardEffect);
+    }
+    if (removed) {
+      notifyObservers(ModelChangeId.FIELD_MODEL_REMOVE_CARD_EFFECT, pPlayer.getId(), pCardEffect);
+    }
+    return removed;
+  }
+  
+  public CardEffect[] getCardEffects(Player pPlayer) {
+    if (pPlayer == null) {
+      return null;
+    }
+    Set<CardEffect> cardEffects = fCardEffectsByPlayerId.get(pPlayer.getId());
+    if (cardEffects == null) {
+      return new CardEffect[0];
+    }
+    return cardEffects.toArray(new CardEffect[cardEffects.size()]);
+  }
+  
+  public Player[] findPlayers(CardEffect pCardEffect) {
+    Set<Player> players = new HashSet<Player>();
+    for (String playerId : fCardEffectsByPlayerId.keySet()) {
+      for (CardEffect cardEffect : fCardEffectsByPlayerId.get(playerId)) {
+        if (cardEffect == pCardEffect) {
+          players.add(getGame().getPlayerById(playerId));
+          break;
+        }
+      }
+    }
+    return players.toArray(new Player[players.size()]);
+  }
+
   public FieldCoordinate getBallCoordinate() {
     return fBallCoordinate;
   }

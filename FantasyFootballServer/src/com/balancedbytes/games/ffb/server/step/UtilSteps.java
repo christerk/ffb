@@ -6,11 +6,13 @@ import com.balancedbytes.games.ffb.FieldCoordinateBounds;
 import com.balancedbytes.games.ffb.PlayerAction;
 import com.balancedbytes.games.ffb.PlayerState;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
+import com.balancedbytes.games.ffb.model.Animation;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.model.Team;
 import com.balancedbytes.games.ffb.net.commands.ICommandWithActingPlayer;
 import com.balancedbytes.games.ffb.report.ReportCardDeactivated;
+import com.balancedbytes.games.ffb.report.ReportPlayCard;
 import com.balancedbytes.games.ffb.server.FantasyFootballServer;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.net.ReceivedCommand;
@@ -108,5 +110,21 @@ public class UtilSteps {
       pStep.getResult().addReport(new ReportCardDeactivated(pCard));
     }
 	}
+	
+  public static void activateCard(IStep pStep, Card pCard, boolean pHomeTeam, String pPlayerId) {
+    if ((pStep == null) || (pCard == null)) {
+      return;
+    }
+    pStep.getResult().setAnimation(new Animation(pCard));
+    UtilGame.syncGameModel(pStep);
+    Game game = pStep.getGameState().getGame();
+    Team ownTeam = pHomeTeam ? game.getTeamHome() : game.getTeamAway();
+    if (StringTool.isProvided(pPlayerId)) {
+      pStep.getResult().addReport(new ReportPlayCard(ownTeam.getId(), pCard, pPlayerId));
+    } else {
+      pStep.getResult().addReport(new ReportPlayCard(ownTeam.getId(), pCard));
+    }
+    UtilCards.activateCard(game, pCard, pHomeTeam, pPlayerId);
+  }
 
 }

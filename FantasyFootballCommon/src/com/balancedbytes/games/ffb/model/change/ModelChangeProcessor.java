@@ -4,6 +4,7 @@ import java.util.Date;
 
 import com.balancedbytes.games.ffb.BloodSpot;
 import com.balancedbytes.games.ffb.Card;
+import com.balancedbytes.games.ffb.CardEffect;
 import com.balancedbytes.games.ffb.DiceDecoration;
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.FieldMarker;
@@ -98,6 +99,9 @@ public class ModelChangeProcessor {
   		case FIELD_MODEL_ADD_CARD:
   			pGame.getFieldModel().addCard(pGame.getPlayerById(pModelChange.getKey()), (Card) pModelChange.getValue());
   			return true;
+      case FIELD_MODEL_ADD_CARD_EFFECT:
+        pGame.getFieldModel().addCardEffect(pGame.getPlayerById(pModelChange.getKey()), (CardEffect) pModelChange.getValue());
+        return true;
   		case FIELD_MODEL_ADD_DICE_DECORATION:
   			pGame.getFieldModel().add((DiceDecoration) pModelChange.getValue());
   			return true;
@@ -119,6 +123,9 @@ public class ModelChangeProcessor {
   		case FIELD_MODEL_REMOVE_CARD:
   			pGame.getFieldModel().removeCard(pGame.getPlayerById(pModelChange.getKey()), (Card) pModelChange.getValue()); 
   			return true;
+      case FIELD_MODEL_REMOVE_CARD_EFFECT:
+        pGame.getFieldModel().removeCardEffect(pGame.getPlayerById(pModelChange.getKey()), (CardEffect) pModelChange.getValue());
+        return true;
   		case FIELD_MODEL_REMOVE_DICE_DECORATION:
   			pGame.getFieldModel().remove((DiceDecoration) pModelChange.getValue());
   			return true;

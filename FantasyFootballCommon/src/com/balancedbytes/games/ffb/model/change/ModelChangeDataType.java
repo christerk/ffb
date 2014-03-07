@@ -4,6 +4,8 @@ import java.util.Date;
 
 import com.balancedbytes.games.ffb.BloodSpot;
 import com.balancedbytes.games.ffb.Card;
+import com.balancedbytes.games.ffb.CardEffect;
+import com.balancedbytes.games.ffb.CardEffectFactory;
 import com.balancedbytes.games.ffb.CardFactory;
 import com.balancedbytes.games.ffb.DiceDecoration;
 import com.balancedbytes.games.ffb.FieldCoordinate;
@@ -74,7 +76,8 @@ public enum ModelChangeDataType implements IEnumWithId, IEnumWithName {
   PLAYER_MARKER(25, "playerMarker"),
   GAME_OPTION(26, "gameOption"),
   CARD(27, "card"),
-  LEADER_STATE(28, "leaderState");
+  LEADER_STATE(28, "leaderState"),
+  CARD_EFFECT(29, "cardEffect");
   
   private int fId;
   private String fName;
@@ -105,6 +108,8 @@ public enum ModelChangeDataType implements IEnumWithId, IEnumWithName {
         return JsonValue.valueOf((Boolean) pValue);
       case CARD:
         return UtilJson.toJsonValue((Card) pValue);
+      case CARD_EFFECT:
+        return UtilJson.toJsonValue((CardEffect) pValue);
       case DATE:
         return UtilJson.toJsonValue((Date) pValue); 
       case DIALOG_ID:
@@ -171,6 +176,8 @@ public enum ModelChangeDataType implements IEnumWithId, IEnumWithName {
         return pJsonValue.asBoolean();
       case CARD:
         return UtilJson.toEnumWithName(new CardFactory(), pJsonValue);
+      case CARD_EFFECT:
+        return UtilJson.toEnumWithName(new CardEffectFactory(), pJsonValue);
       case DATE:
         return UtilJson.toDate(pJsonValue); 
       case DIALOG_ID:

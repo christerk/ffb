@@ -3,19 +3,15 @@ package com.balancedbytes.games.ffb.server.step.phase.inducement;
 import com.balancedbytes.games.ffb.Card;
 import com.balancedbytes.games.ffb.CardFactory;
 import com.balancedbytes.games.ffb.FieldCoordinate;
-import com.balancedbytes.games.ffb.FieldCoordinateBounds;
 import com.balancedbytes.games.ffb.PlayerChoiceMode;
 import com.balancedbytes.games.ffb.PlayerState;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.dialog.DialogPlayerChoiceParameter;
 import com.balancedbytes.games.ffb.json.UtilJson;
-import com.balancedbytes.games.ffb.model.Animation;
 import com.balancedbytes.games.ffb.model.Game;
-import com.balancedbytes.games.ffb.model.InducementSet;
 import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.model.Team;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandPlayerChoice;
-import com.balancedbytes.games.ffb.report.ReportPlayCard;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.IServerJsonOption;
 import com.balancedbytes.games.ffb.server.net.ReceivedCommand;
@@ -27,8 +23,8 @@ import com.balancedbytes.games.ffb.server.step.StepId;
 import com.balancedbytes.games.ffb.server.step.StepParameter;
 import com.balancedbytes.games.ffb.server.step.StepParameterKey;
 import com.balancedbytes.games.ffb.server.step.StepParameterSet;
+import com.balancedbytes.games.ffb.server.step.UtilSteps;
 import com.balancedbytes.games.ffb.server.util.UtilDialog;
-import com.balancedbytes.games.ffb.server.util.UtilGame;
 import com.balancedbytes.games.ffb.util.StringTool;
 import com.balancedbytes.games.ffb.util.UtilCards;
 import com.balancedbytes.games.ffb.util.UtilPlayer;
@@ -129,7 +125,7 @@ public final class StepInitCard extends AbstractStep {
       Player[] allowedPlayers = UtilCards.findAllowedPlayersForCard(game, fCard);
       game.setDialogParameter(new DialogPlayerChoiceParameter(ownTeam.getId(), PlayerChoiceMode.CARD, allowedPlayers, null, 1));
     } else {
-      activateCard(null);
+      UtilSteps.activateCard(this, fCard, fHomeTeam, null);
       getResult().setNextAction(StepAction.NEXT_STEP);
     }
   }
@@ -143,16 +139,10 @@ public final class StepInitCard extends AbstractStep {
     boolean doNextStep;
     switch (fCard) {
       case CHOP_BLOCK:
-        doNextStep = playChopBlock();
-        break;
-      case CUSTARD_PIE:
-        doNextStep = playCustardPie();
-        break;
-      case DISTRACT:
-        doNextStep = playDistract();
+        doNextStep = playCardChopBlock();
         break;
       default:
-        activateCard(fPlayerId);
+        UtilSteps.activateCard(this, fCard, fHomeTeam, fPlayerId);
         doNextStep = true;
         break;
     }
@@ -160,50 +150,8 @@ public final class StepInitCard extends AbstractStep {
       getResult().setNextAction(StepAction.NEXT_STEP);
     }
   }
-
-  private void activateCard(String pPlayerId) {
-    Game game = getGameState().getGame();
-    Team ownTeam = fHomeTeam ? game.getTeamHome() : game.getTeamAway();
-    InducementSet inducementSet = fHomeTeam ? game.getTurnDataHome().getInducementSet() : game.getTurnDataAway().getInducementSet();
-    inducementSet.activateCard(fCard);
-    if (StringTool.isProvided(pPlayerId)) {
-      game.getFieldModel().addCard(game.getPlayerById(pPlayerId), fCard);
-    }
-    getResult().setAnimation(new Animation(fCard));
-    UtilGame.syncGameModel(this);
-    if (StringTool.isProvided(pPlayerId)) {
-      getResult().addReport(new ReportPlayCard(ownTeam.getId(), fCard, pPlayerId));
-    } else {
-      getResult().addReport(new ReportPlayCard(ownTeam.getId(), fCard));
-    }
-  }
-
-  private boolean playDistract() {
-    Game game = getGameState().getGame();
-    Player player = game.getPlayerById(fPlayerId);
-    Team otherTeam = UtilPlayer.findOtherTeam(game, player);
-    FieldCoordinate playerCoordinate = game.getFieldModel().getPlayerCoordinate(player);
-    FieldCoordinate[] adjacentCoordinates = game.getFieldModel().findAdjacentCoordinates(playerCoordinate, FieldCoordinateBounds.FIELD, 3, false);
-    for (FieldCoordinate coordinate : adjacentCoordinates) {
-      Player otherPlayer = game.getFieldModel().getPlayer(coordinate);
-      if ((otherPlayer != null) && otherTeam.hasPlayer(otherPlayer)) {
-        game.getFieldModel().addCard(otherPlayer, Card.DISTRACT);
-      }
-    }
-    activateCard(fPlayerId);
-    return true;
-  }
   
-  private boolean playCustardPie() {
-    Game game = getGameState().getGame();
-    Player player = game.getPlayerById(fPlayerId);
-    activateCard(fPlayerId);
-    PlayerState playerState = game.getFieldModel().getPlayerState(player);
-    game.getFieldModel().setPlayerState(player, playerState.changeHypnotized(true));
-    return true;
-  }
-  
-  private boolean playChopBlock() {
+  private boolean playCardChopBlock() {
     boolean doNextStep = false;
     Game game = getGameState().getGame();
     Player player = game.getPlayerById(fPlayerId);
@@ -218,7 +166,7 @@ public final class StepInitCard extends AbstractStep {
       } else {
         game.setDialogParameter(new DialogPlayerChoiceParameter(ownTeam.getId(), PlayerChoiceMode.BLOCK, blockablePlayers, null, 1));
       }
-      activateCard(fPlayerId);
+      UtilSteps.activateCard(this, fCard, fHomeTeam, fPlayerId);
     }
     if (StringTool.isProvided(fOpponentId)) {
       doNextStep = true;

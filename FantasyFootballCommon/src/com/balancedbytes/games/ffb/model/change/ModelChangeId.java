@@ -29,6 +29,7 @@ public enum ModelChangeId implements IEnumWithId, IEnumWithName {
 	
   FIELD_MODEL_ADD_BLOOD_SPOT(17, "fieldModelAddBloodSpot", ModelChangeDataType.BLOOD_SPOT),
   FIELD_MODEL_ADD_CARD(18, "fieldModelAddCard", ModelChangeDataType.CARD),
+  FIELD_MODEL_ADD_CARD_EFFECT(114, "fieldModelAddCardEffect", ModelChangeDataType.CARD_EFFECT),
   FIELD_MODEL_ADD_DICE_DECORATION(19, "fieldModelAddDiceDecoration", ModelChangeDataType.DICE_DECORATION),
   FIELD_MODEL_ADD_FIELD_MARKER(20, "fieldModelAddFieldMarker", ModelChangeDataType.FIELD_MARKER),
   FIELD_MODEL_ADD_MOVE_SQUARE(21, "fieldModelAddMoveSquare", ModelChangeDataType.MOVE_SQUARE),
@@ -36,6 +37,7 @@ public enum ModelChangeId implements IEnumWithId, IEnumWithName {
   FIELD_MODEL_ADD_PUSHBACK_SQUARE(23, "fieldModelAddPushbackSquare", ModelChangeDataType.PUSHBACK_SQUARE),
   FIELD_MODEL_ADD_TRACK_NUMBER(24, "fieldModelAddTrackNumber", ModelChangeDataType.TRACK_NUMBER),
   FIELD_MODEL_REMOVE_CARD(25, "fieldModelRemoveCard", ModelChangeDataType.CARD),
+  FIELD_MODEL_REMOVE_CARD_EFFECT(115, "fieldModelRemoveCardEffect", ModelChangeDataType.CARD_EFFECT),
   FIELD_MODEL_REMOVE_DICE_DECORATION(26, "fieldModelRemoveDiceDecoration", ModelChangeDataType.DICE_DECORATION),
   FIELD_MODEL_REMOVE_FIELD_MARKER(27, "fieldModelRemoveFieldMarker", ModelChangeDataType.FIELD_MARKER),
   FIELD_MODEL_REMOVE_MOVE_SQUARE(28, "fieldModelRemoveMoveSquare", ModelChangeDataType.MOVE_SQUARE),

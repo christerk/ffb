@@ -789,19 +789,7 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
   	for (Card card : pCards) {
 			Player player = null;
     	if (card.getTarget().isPlayedOnPlayer()) {
-    	  Player[] players = game.getFieldModel().findPlayers(card);
-  	    if (players.length == 1) {
-  	      player = players[0];
-  	    }
-  	    if (players.length > 1) {
-  	      for (int i = 0; i < players.length; i++) {
-  	        if (((game.getTeamHome().hasPlayer(players[i])) && (game.getTurnDataHome().getInducementSet().isActive(card)))
-  	          || ((game.getTeamAway().hasPlayer(players[i])) && (game.getTurnDataAway().getInducementSet().isActive(card)))) {
-	            player = players[i];
-	            break;
-	          }
-  	      }
-  	    }
+    	  player = game.getFieldModel().findPlayer(card);
     	}
 			StringBuilder cardText = new StringBuilder();
 			cardText.append("<html>");

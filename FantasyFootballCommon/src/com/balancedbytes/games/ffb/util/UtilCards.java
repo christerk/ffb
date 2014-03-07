@@ -6,8 +6,10 @@ import java.util.List;
 import java.util.Set;
 
 import com.balancedbytes.games.ffb.Card;
+import com.balancedbytes.games.ffb.CardEffect;
 import com.balancedbytes.games.ffb.CardTarget;
 import com.balancedbytes.games.ffb.FieldCoordinate;
+import com.balancedbytes.games.ffb.FieldCoordinateBounds;
 import com.balancedbytes.games.ffb.PlayerState;
 import com.balancedbytes.games.ffb.Skill;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
@@ -15,7 +17,6 @@ import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.InducementSet;
 import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.model.Team;
-import com.balancedbytes.games.ffb.model.TurnData;
 
 /**
  * 
@@ -27,7 +28,7 @@ public final class UtilCards {
     if ((pGame == null) || (pPlayer == null) || (pSkill == null)) {
       return false;
     }
-    Set<Skill> cardSkills = findSkillsProvidedByCards(pGame, pPlayer);
+    Set<Skill> cardSkills = findSkillsProvidedByCardsAndEffects(pGame, pPlayer);
     return (pPlayer.hasSkill(pSkill) || cardSkills.contains(pSkill));
   }
 
@@ -45,14 +46,13 @@ public final class UtilCards {
     return (hasSkill(pGame, pActingPlayer.getPlayer(), pSkill) && !pActingPlayer.isSkillUsed(pSkill));
   }
 
-  private static Set<Skill> findSkillsProvidedByCards(Game pGame, Player pPlayer) {
+  private static Set<Skill> findSkillsProvidedByCardsAndEffects(Game pGame, Player pPlayer) {
     Set<Skill> cardSkills = new HashSet<Skill>();
     if ((pGame == null) || (pPlayer == null)) {
       return cardSkills;
     }
-    TurnData turnData = pGame.getTeamHome().hasPlayer(pPlayer) ? pGame.getTurnDataHome() : pGame.getTurnDataAway();
-    Card[] playerCards = pGame.getFieldModel().getCards(pPlayer);
-    for (Card card : playerCards) {
+    Card[] cards = pGame.getFieldModel().getCards(pPlayer);
+    for (Card card : cards) {
       switch (card) {
         case BEGUILING_BRACERS:
           cardSkills.add(Skill.BONE_HEAD);
@@ -86,11 +86,17 @@ public final class UtilCards {
           cardSkills.add(Skill.SECRET_WEAPON);
           break;
         case DISTRACT:
-          if (turnData.getInducementSet().isActive(card)) {
-            cardSkills.add(Skill.DISTURBING_PRESENCE);
-          } else {
-            cardSkills.add(Skill.BONE_HEAD);
-          }
+          cardSkills.add(Skill.DISTURBING_PRESENCE);
+          break;
+        default:
+          break;
+      }
+    }
+    CardEffect[] cardEffects = pGame.getFieldModel().getCardEffects(pPlayer);
+    for (CardEffect cardEffect : cardEffects) {
+      switch (cardEffect) {
+        case DISTRACTED:
+          cardSkills.add(Skill.BONE_HEAD);
           break;
         default:
           break;
@@ -126,7 +132,7 @@ public final class UtilCards {
   }
 
   public static Skill[] findAllSkills(Game pGame, Player pPlayer) {
-    Set<Skill> allSkills = findSkillsProvidedByCards(pGame, pPlayer);
+    Set<Skill> allSkills = findSkillsProvidedByCardsAndEffects(pGame, pPlayer);
     for (Skill skill : pPlayer.getSkills()) {
       allSkills.add(skill);
     }
@@ -215,8 +221,8 @@ public final class UtilCards {
     } else {
       return false;
     }
-    Player[] players = pGame.getFieldModel().findPlayers(pCard);
-    for (Player player : players) {
+    Player player = pGame.getFieldModel().findPlayer(pCard);
+    if (player != null) {
       if (!pCard.isRemainsInPlay()) {
         pGame.getFieldModel().removeCard(player, pCard);
       }
@@ -227,11 +233,64 @@ public final class UtilCards {
             pGame.getFieldModel().setPlayerState(player, playerState.changeHypnotized(false));
           }
           break;
+        case DISTRACT:
+          deactivateCardDistract(pGame);
+          break;
         default:
           break;
       }
     }
     return true;
+  }
+  
+  private static void deactivateCardDistract(Game pGame) {
+    Player[] players = pGame.getFieldModel().findPlayers(CardEffect.DISTRACTED);
+    for (Player player : players) {
+      pGame.getFieldModel().removeCardEffect(player, CardEffect.DISTRACTED);
+      PlayerState playerState = pGame.getFieldModel().getPlayerState(player);
+      if (playerState.isConfused()) {
+        pGame.getFieldModel().setPlayerState(player, playerState.changeConfused(false));
+      }
+    }
+  }
+  
+  public static void activateCard(Game pGame, Card pCard, boolean pHomeTeam, String pPlayerId) {
+    if ((pGame == null) || (pCard == null)) {
+      return;
+    }
+    InducementSet inducementSet = pHomeTeam ? pGame.getTurnDataHome().getInducementSet() : pGame.getTurnDataAway().getInducementSet();
+    inducementSet.activateCard(pCard);
+    Player player = pGame.getPlayerById(pPlayerId);
+    if (player != null) {
+      pGame.getFieldModel().addCard(player, pCard);
+      switch (pCard) {
+        case DISTRACT:
+          activateCardDistract(pGame, player);
+          break;
+        case CUSTARD_PIE:
+          activateCardCustardPie(pGame, player);
+          break;
+        default:
+          break;
+      }
+    }
+  }
+
+  private static void activateCardDistract(Game pGame, Player pPlayer) {
+    Team otherTeam = UtilPlayer.findOtherTeam(pGame, pPlayer);
+    FieldCoordinate playerCoordinate = pGame.getFieldModel().getPlayerCoordinate(pPlayer);
+    FieldCoordinate[] adjacentCoordinates = pGame.getFieldModel().findAdjacentCoordinates(playerCoordinate, FieldCoordinateBounds.FIELD, 3, false);
+    for (FieldCoordinate coordinate : adjacentCoordinates) {
+      Player otherPlayer = pGame.getFieldModel().getPlayer(coordinate);
+      if ((otherPlayer != null) && otherTeam.hasPlayer(otherPlayer) && !otherPlayer.hasSkill(Skill.BONE_HEAD)) {
+        pGame.getFieldModel().addCardEffect(otherPlayer, CardEffect.DISTRACTED);
+      }
+    }
+  }
+  
+  private static void activateCardCustardPie(Game pGame, Player pPlayer) {
+    PlayerState playerState = pGame.getFieldModel().getPlayerState(pPlayer);
+    pGame.getFieldModel().setPlayerState(pPlayer, playerState.changeHypnotized(true));
   }
 
 }
