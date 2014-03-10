@@ -39,7 +39,7 @@
 		<ant antfile="build.xml" dir="../FantasyFootballCommon" target="build" />
 	</target>
 	
-	<target name="compile" depends="prepare,FantasyFootballCommon">
+	<target name="compile" depends="clean,prepare,FantasyFootballCommon">
 		<path id="classpath">
 			<path refid="libraries" />
 			<pathelement location="../FantasyFootballCommon/bin" />
@@ -73,20 +73,24 @@
 	
     <target name="buildFumbbl" depends="jar">
     	<copy file="server-fumbbl.ini" tofile="${build.dir}/server.ini" />
+    	<!--
     	<tar destfile="${build.dir}/${ant.project.name}.tar.gz" compression="gzip">
 	  		<fileset dir="." excludes="src/**, bin/**, build/**, doc/**, lib/*.zip, **/build.xml, **/.*" />
 	  		<fileset dir="${build.dir}" includes="${ant.project.name}.jar" />
 	  		<fileset file="${build.dir}/server.ini" />
     	</tar>
+    	-->
    	</target>
 
     <target name="buildFumbblTest" depends="jar">
     	<copy file="server-fumbbl-test.ini" tofile="${build.dir}/server.ini" />
+    	<!--
     	<tar destfile="${build.dir}/${ant.project.name}.tar.gz" compression="gzip">
 	  		<fileset dir="." excludes="src/**, bin/**, build/**, doc/**, lib/*.zip, **/build.xml, **/.*" />
 	  		<fileset dir="${build.dir}" includes="${ant.project.name}.jar" />
 	  		<fileset file="${build.dir}/server.ini" />
     	</tar>
+    	-->
    	</target>
 
 </project>

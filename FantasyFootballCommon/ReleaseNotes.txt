@@ -7,6 +7,8 @@
 - Card playing animation when using a card in the game
 - Player Markers saved by team - upon starting a new game your players will be marked the same as in the last game
 - New way to store replays, drastically reducing database size (making it much easier for Christer to do backups)
+- Custom pitches
+- New test commands (/weather, /card)
 
 [b]22 Bugfixes:[/b]
 
