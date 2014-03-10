@@ -92,7 +92,7 @@ import com.balancedbytes.games.ffb.server.step.game.start.StepPettyCash;
 import com.balancedbytes.games.ffb.server.step.game.start.StepSpectators;
 import com.balancedbytes.games.ffb.server.step.game.start.StepWeather;
 import com.balancedbytes.games.ffb.server.step.phase.inducement.StepEndInducement;
-import com.balancedbytes.games.ffb.server.step.phase.inducement.StepInitCard;
+import com.balancedbytes.games.ffb.server.step.phase.inducement.StepPlayCard;
 import com.balancedbytes.games.ffb.server.step.phase.inducement.StepInitInducement;
 import com.balancedbytes.games.ffb.server.step.phase.inducement.StepWizard;
 import com.balancedbytes.games.ffb.server.step.phase.kickoff.StepApplyKickoffResult;
@@ -306,8 +306,8 @@ public class StepFactory {
 				case INIT_BOMB:
 					step = new StepInitBomb(fGameState);
 					break;
-				case INIT_CARD:
-					step = new StepInitCard(fGameState);
+				case PLAY_CARD:
+					step = new StepPlayCard(fGameState);
 					break;
 				case INIT_END_GAME:
 					step = new StepInitEndGame(fGameState);

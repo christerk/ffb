@@ -145,7 +145,7 @@ public class StepEndTurn extends AbstractStep {
     Game game = getGameState().getGame();
 		UtilServerDialog.hideDialog(getGameState());
     
-    if ((game.getTurnMode() == TurnMode.BLITZ) || (game.getTurnMode() == TurnMode.KICKOFF_RETURN) || (game.getTurnMode() == TurnMode.PASS_BLOCK)) {
+    if ((game.getTurnMode() == TurnMode.BLITZ) || (game.getTurnMode() == TurnMode.KICKOFF_RETURN) || (game.getTurnMode() == TurnMode.PASS_BLOCK) || (game.getTurnMode() == TurnMode.ILLEGAL_SUBSTITUTION)) {
     	publishParameter(new StepParameter(StepParameterKey.END_TURN, true));
       getResult().setNextAction(StepAction.NEXT_STEP);
       return;

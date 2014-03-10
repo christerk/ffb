@@ -219,7 +219,7 @@ public class PlayerDetailComponent extends JPanel {
       }
       
       int maIncreases = findStatIncreases(Skill.MOVEMENT_INCREASE);
-      int maDecreases = findStatDecreases(InjuryAttribute.MA);
+      int maDecreases = findStatDecreases(InjuryAttribute.MA) + findStatDecreases(Skill.MOVEMENT_DECREASE);
       if ((maIncreases > 0) && (maDecreases > 0)) {
         maIncreases = 1;
         maDecreases = 1;
@@ -227,7 +227,7 @@ public class PlayerDetailComponent extends JPanel {
       drawStatBox(g2d, x, y, moveLeft, moveIsRed, maIncreases, maDecreases);
       
       int stIncreases = findStatIncreases(Skill.STRENGTH_INCREASE);
-      int stDecreases = findStatDecreases(InjuryAttribute.ST);
+      int stDecreases = findStatDecreases(InjuryAttribute.ST) + findStatDecreases(Skill.STRENGTH_DECREASE);
       if ((stIncreases > 0) && (stDecreases > 0)) {
         stIncreases = 1;
         stDecreases = 1;
@@ -236,7 +236,7 @@ public class PlayerDetailComponent extends JPanel {
       drawStatBox(g2d, x + _STAT_BOX_WIDTH, y, strength, strengthIsRed, stIncreases, stDecreases);
 
       int agIncreases = findStatIncreases(Skill.AGILITY_INCREASE);
-      int agDecreases = findStatDecreases(InjuryAttribute.AG);
+      int agDecreases = findStatDecreases(InjuryAttribute.AG) + findStatDecreases(Skill.AGILITY_DECREASE);
       if ((agIncreases > 0) && (agDecreases > 0)) {
         agIncreases = 1;
         agDecreases = 1;
@@ -244,7 +244,7 @@ public class PlayerDetailComponent extends JPanel {
       drawStatBox(g2d, x + (_STAT_BOX_WIDTH * 2), y, agility, false, agIncreases, agDecreases);
       
       int avIncreases = findStatIncreases(Skill.ARMOUR_INCREASE);
-      int avDecreases = findStatDecreases(InjuryAttribute.AV);
+      int avDecreases = findStatDecreases(InjuryAttribute.AV) + findStatDecreases(Skill.ARMOUR_DECREASE);
       if ((avIncreases > 0) && (avDecreases > 0)) {
         avIncreases = 1;
         avDecreases = 1;
@@ -268,6 +268,19 @@ public class PlayerDetailComponent extends JPanel {
       }
     }
     return Math.min(2, increases);
+  }
+  
+  private int findStatDecreases(Skill pSkill) {
+    int decreases = 0;
+    if ((getPlayer() != null) && (pSkill != null)) {
+      Game game = getSideBar().getClient().getGame();
+      for (Skill skill: UtilCards.findAllSkills(game, getPlayer())) { 
+        if (skill == pSkill) {
+          decreases++;
+        }
+      }
+    }
+    return decreases;
   }
   
   private int findNewStatDecreases(PlayerResult pPlayerResult, InjuryAttribute pInjuryAttribute) {
@@ -388,14 +401,16 @@ public class PlayerDetailComponent extends JPanel {
       List<String> rosterSkills = new ArrayList<String>();
       Set<String> usedSkills = new HashSet<String>();
       for (Skill skill : skills) {
-        if (SkillCategory.STAT_INCREASE != skill.getCategory()) {
-          if (getPlayer().getPosition().hasSkill(skill)) {
+        if (getPlayer().getPosition().hasSkill(skill)) {
+          if ((SkillCategory.STAT_INCREASE != skill.getCategory()) && (SkillCategory.STAT_DECREASE != skill.getCategory())) {
             rosterSkills.add(skill.getName());
-          } else if (getPlayer().hasSkill(skill)) {
-            acquiredSkills.add(skill.getName());
-          } else {
-          	cardSkills.add(skill.getName());
           }
+        } else if (getPlayer().hasSkill(skill)) {
+          if ((SkillCategory.STAT_INCREASE != skill.getCategory()) && (SkillCategory.STAT_DECREASE != skill.getCategory())) {
+            acquiredSkills.add(skill.getName());
+          }
+        } else {
+          cardSkills.add(skill.getName());
         }
         if (((getPlayer() == actingPlayer.getPlayer()) && actingPlayer.isSkillUsed(skill)) || ((skill == Skill.PRO) && playerState.hasUsedPro())) {
         	usedSkills.add(skill.getName());

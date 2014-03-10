@@ -87,6 +87,10 @@ public final class UtilCards {
           cardSkills.add(Skill.PASS_BLOCK);
           cardSkills.add(Skill.SHADOWING);
           break;
+        case KICKING_BOOTS:
+          cardSkills.add(Skill.KICK);
+          cardSkills.add(Skill.DIRTY_PLAYER);
+          cardSkills.add(Skill.MOVEMENT_DECREASE);
         default:
           break;
       }

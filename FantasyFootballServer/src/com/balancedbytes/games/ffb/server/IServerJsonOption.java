@@ -76,6 +76,7 @@ public interface IServerJsonOption extends IJsonOption {
                 JsonStringOption GOTO_LABEL_ON_SUCCESS = new JsonStringOption("gotoLabelOnSuccess");
                JsonBooleanOption HANDLE_SECRET_WEAPONS = new JsonBooleanOption("handleSecretWeapons");
                JsonBooleanOption HOLDING_SAFE_THROW = new JsonBooleanOption("holdingSafeThrow");
+               JsonBooleanOption ILLEGAL_SUBSTITUTION = new JsonBooleanOption("illegalSubstitution");
                    JsonIntOption INDUCEMENT_GOLD_AWAY = new JsonIntOption("inducementGoldAway");
                    JsonIntOption INDUCEMENT_GOLD_HOME = new JsonIntOption("inducementGoldHome");
           JsonEnumWithNameOption INDUCEMENT_PHASE = new JsonEnumWithNameOption("inducementPhase", new InducementPhaseFactory());
@@ -111,6 +112,8 @@ public interface IServerJsonOption extends IJsonOption {
                 JsonObjectOption SCATTER_BOUNDS = new JsonObjectOption("scatterBounds");
                    JsonIntOption SCATTER_DISTANCE = new JsonIntOption("scatterDistance");
                JsonBooleanOption SECOND_GO_FOR_IT = new JsonBooleanOption("secondGoForIt");
+       JsonFieldCoordinateOption SETUP_PLAYER_COORDINATE = new JsonFieldCoordinateOption("setupPlayerCoordinate");
+                JsonStringOption SETUP_PLAYER_ID = new JsonStringOption("setupPlayerId");
                JsonBooleanOption SHOW_REPORT = new JsonBooleanOption("showReport");
                 JsonObjectOption STARTING_PUSHBACK_SQUARE = new JsonObjectOption("startingPushbackSquare");
           JsonEnumWithNameOption STEP_ID = new JsonEnumWithNameOption("stepId", new StepIdFactory());

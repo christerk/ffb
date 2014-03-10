@@ -282,7 +282,9 @@ public enum Card implements IEnumWithId, IEnumWithName {
   //  	Rune can be very volatile, any pass roll made with a Rune bomb is
   //  	performed with a -1 modifier to the pass roll.
   	
-  //  ILLEGAL SUBSTITUTION (46)
+	ILLEGAL_SUBSTITUTION(46, "Illegal Substitution", "Illegal Substitution", CardType.DIRTY_TRICK, CardTarget.TURN, false,
+    new InducementPhase[] { InducementPhase.START_OF_OWN_TURN }, InducementDuration.UNTIL_END_OF_TURN,
+    "Place an extra player in your end zone"),
   //  Description:
   //  	A reserve sneaks onto the pitch while the ref is cleaning his glasses.
   //  Timing:
@@ -293,7 +295,9 @@ public enum Card implements IEnumWithId, IEnumWithName {
   //  	a Move Action this turn. This may take your team to 12 players for
   //  	the remainder of the drive.
   	
-  //  KICKING BOOTS (47)
+  KICKING_BOOTS(47, "Kicking Boots", "Kicking Boots", CardType.DIRTY_TRICK, CardTarget.ANY_PLAYER, false,
+    new InducementPhase[] { InducementPhase.BEFORE_KICKOFF_SCATTER }, InducementDuration.UNTIL_END_OF_GAME,
+    "Player gets Kick, Dirty Player & -1 MA"),
   //  Description:
   //  	These boots were made for stomping, and that is just what they will do!
   //	Timing:
@@ -303,7 +307,7 @@ public enum Card implements IEnumWithId, IEnumWithName {
   //		A player of your choice on your team gains the Kick and Dirty Player
   //		skills and a -1 MA for the remainder of this game.
 		
-  PIT_TRAP(45, "Pit Trap", "Pit Trap", CardType.DIRTY_TRICK, CardTarget.ANY_PLAYER, false,
+  PIT_TRAP(48, "Pit Trap", "Pit Trap", CardType.DIRTY_TRICK, CardTarget.ANY_PLAYER, false,
     new InducementPhase[] { InducementPhase.END_OF_OWN_TURN }, InducementDuration.UNTIL_END_OF_TURN,
     "Player is placed prone, no armour roll"),
   //  Description:
@@ -315,7 +319,9 @@ public enum Card implements IEnumWithId, IEnumWithName {
   //  	Choose a player: that player is Placed Prone, no armour roll is made,
   //  	and if the player had the ball bounce it as normal.
 
-  //  SPIKED BALL (46)
+  SPIKED_BALL(49, "Spiked Ball", "Spiked Ball", CardType.DIRTY_TRICK, CardTarget.TURN, false,
+    new InducementPhase[] { InducementPhase.BEFORE_KICKOFF_SCATTER }, InducementDuration.UNTIL_END_OF_DRIVE,
+    "Any failed pick up or catch roll results in being stabbed"),
   //  Description:
   //    A Bloodthirster is in the crowd today, so in honour of this event a
   //    spiked ball is swapped with the real ball. More blood for the blood god
@@ -328,7 +334,7 @@ public enum Card implements IEnumWithId, IEnumWithName {
   //    roll) is treated as the player being attacked with the Stab skill by an
   //    opponent.
     
-  STOLEN_PLAYBOOK(47, "Stolen Playbook", "Stolen Playbook", CardType.DIRTY_TRICK, CardTarget.OWN_PLAYER, false,
+  STOLEN_PLAYBOOK(50, "Stolen Playbook", "Stolen Playbook", CardType.DIRTY_TRICK, CardTarget.OWN_PLAYER, false,
     new InducementPhase[] { InducementPhase.END_OF_OWN_TURN }, InducementDuration.UNTIL_END_OF_DRIVE,
     "Player gets Pass Block and Shadowing");
   //  Description:
@@ -341,7 +347,7 @@ public enum Card implements IEnumWithId, IEnumWithName {
   //    A player of your choice gains Pass Block and Shadowing until the drive
   //    ends.
     
-  //  TRAMPOLINE TRAP
+  //  TRAMPOLINE TRAP (51)
   //  Description:
   //  	Someone set up a deep pit trap...with a trampoline in it!
   //  Timing:
@@ -354,10 +360,9 @@ public enum Card implements IEnumWithId, IEnumWithName {
   //    own square (use the scatter template). The player will need to make a
   //    landing roll as normal if they land on the pitch.
     
-  //  WITCH'S BREW
+  //  WITCH'S BREW (52)
   //  Description:
-  //    You've spiked the opponent’s Kroxorade bottle with a witch's
-  //    concoction!
+  //    You've spiked the opponent's Kroxorade bottle with a witch's concoction!
   //  Timing:
   //		Play after all players have been set up for a kick-off, but before any
   //  	kick-off result is rolled.

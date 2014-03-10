@@ -14,7 +14,8 @@ public enum SkillCategory implements IEnumWithId, IEnumWithName {
   STRENGTH(4, "Strength", "S"),
   MUTATION(5, "Mutation", "M"),
   EXTRAORDINARY(6, "Extraordinary", "E"),
-  STAT_INCREASE(7, "Stat Increase", "+");
+  STAT_INCREASE(7, "Stat Increase", "+"),
+  STAT_DECREASE(8, "Stat Decrease", "-");
   
   private int fId;
   private String fName;

@@ -125,26 +125,35 @@ public class UtilServerCards {
 
     pStep.getResult().addReport(new ReportCardDeactivated(pCard));
 
-    Player player = game.getFieldModel().findPlayer(pCard);
-    if (player != null) {
-      if (!pCard.isRemainsInPlay()) {
-        game.getFieldModel().removeCard(player, pCard);
+    if (pCard.getTarget().isPlayedOnPlayer()) {
+      Player player = game.getFieldModel().findPlayer(pCard);
+      if (player != null) {
+        if (!pCard.isRemainsInPlay()) {
+          game.getFieldModel().removeCard(player, pCard);
+        }
+        switch (pCard) {
+          case CUSTARD_PIE:
+            PlayerState playerState = game.getFieldModel().getPlayerState(player);
+            if ((playerState != null) && playerState.isHypnotized()) {
+              game.getFieldModel().setPlayerState(player, playerState.changeHypnotized(false));
+            }
+            break;
+          case DISTRACT:
+            deactivateCardDistract(pStep);
+            break;
+          default:
+            break;
+        }
       }
+    } else {
       switch (pCard) {
-        case CUSTARD_PIE:
-          PlayerState playerState = game.getFieldModel().getPlayerState(player);
-          if ((playerState != null) && playerState.isHypnotized()) {
-            game.getFieldModel().setPlayerState(player, playerState.changeHypnotized(false));
-          }
-          break;
-        case DISTRACT:
-          deactivateCardDistract(pStep);
+        case ILLEGAL_SUBSTITUTION:
+          deactivateCardIllegalSubstitution(pStep);
           break;
         default:
           break;
       }
     }
-    
   }
   
   private static void deactivateCardDistract(IStep pStep) {
@@ -158,7 +167,15 @@ public class UtilServerCards {
       }
     }
   }
-  
+
+  private static void deactivateCardIllegalSubstitution(IStep pStep) {
+    Game game = pStep.getGameState().getGame();
+    Player[] players = game.getFieldModel().findPlayers(CardEffect.ILLEGALLY_SUBSTITUTED);
+    for (Player player : players) {
+      game.getFieldModel().removeCardEffect(player, CardEffect.ILLEGALLY_SUBSTITUTED);
+    }
+  }
+
   private static void activateCardDistract(IStep pStep, Player pPlayer) {
     Game game = pStep.getGameState().getGame();
     Team otherTeam = UtilPlayer.findOtherTeam(game, pPlayer);

@@ -135,8 +135,8 @@ public class DialogChatCommands extends Dialog {
       html.append("<td>").append(_FONT_OPEN).append("puts players on your team into a box (rsv, ko, bh, si, rip, ban).").append(_FONT_CLOSE).append("</td>\n");
       html.append("</tr>\n");
       html.append("<tr>\n");
-      html.append("<td>").append(_FONT_BOLD_OPEN).append("/card &lt;shortname&gt;").append(_FONT_BOLD_CLOSE).append("</td>\n");
-      html.append("<td>").append(_FONT_OPEN).append("adds card with given shortname to your inducements.").append(_FONT_CLOSE).append("</td>\n");
+      html.append("<td>").append(_FONT_BOLD_OPEN).append("/card &lt;add|remove&gt; &lt;shortCardName&gt;").append(_FONT_BOLD_CLOSE).append("</td>\n");
+      html.append("<td>").append(_FONT_OPEN).append("adds or removes card with given name to/from your inducements.").append(_FONT_CLOSE).append("</td>\n");
       html.append("</tr>\n");
       html.append("<tr>\n");
       html.append("<td>").append(_FONT_BOLD_OPEN).append("/injury &lt;injury&gt; &lt;playerlist&gt; ").append(_FONT_BOLD_CLOSE).append("</td>\n");

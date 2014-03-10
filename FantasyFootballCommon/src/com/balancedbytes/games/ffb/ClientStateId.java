@@ -34,7 +34,8 @@ public enum ClientStateId implements IEnumWithId, IEnumWithName {
   KICKOFF_RETURN(25, "kickoffReturn"),
   WIZARD(26, "wizard"),
   PASS_BLOCK(27, "passBlock"),
-  BOMB(28, "bomb");
+  BOMB(28, "bomb"),
+  ILLEGAL_SUBSTITUTION(29, "illegalSubstitution");
   
   private int fId;
   private String fName;

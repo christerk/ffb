@@ -51,6 +51,9 @@ import com.balancedbytes.games.ffb.util.UtilBox;
  */
 public class ServerCommandHandlerTalk extends ServerCommandHandler {
   
+  private static final String _ADD = "add";
+  private static final String _REMOVE = "remove";
+  
   protected ServerCommandHandlerTalk(FantasyFootballServer pServer) {
     super(pServer);
   }
@@ -295,19 +298,29 @@ public class ServerCommandHandlerTalk extends ServerCommandHandler {
     SessionManager sessionManager = getServer().getSessionManager();
     String talk = pTalkCommand.getTalk();
     String[] commands = talk.split(" +");
-    if ((commands == null) || (commands.length < 2)) {
-        return;
+    if ((commands == null) || (commands.length <= 2)) {
+      return;
     }
-    Card card = new CardFactory().forShortName(commands[1].replace('_', ' '));
+    Card card = new CardFactory().forShortName(commands[2].replace('_', ' '));
     if (card == null) {
       return;
     }
     boolean homeCoach = (sessionManager.getSessionOfHomeCoach(pGameState) == pSession);
     TurnData turnData = homeCoach ? game.getTurnDataHome() : game.getTurnDataAway();
-    turnData.getInducementSet().addAvailableCard(card);
-    StringBuilder info = new StringBuilder();
-    info.append("Card ").append(card.getName()).append(" added for coach ").append(homeCoach ? game.getTeamHome().getCoach() : game.getTeamAway().getCoach()).append(".");
-    getServer().getCommunication().sendPlayerTalk(pGameState, null, info.toString());
+    if (_ADD.equals(commands[1])) {
+      turnData.getInducementSet().addAvailableCard(card);
+      StringBuilder info = new StringBuilder();
+      info.append("Added card ").append(card.getName()).append(" for coach ")
+        .append(homeCoach ? game.getTeamHome().getCoach() : game.getTeamAway().getCoach()).append(".");
+      getServer().getCommunication().sendPlayerTalk(pGameState, null, info.toString());
+    }
+    if (_REMOVE.equals(commands[1])) {
+      turnData.getInducementSet().removeAvailableCard(card);
+      StringBuilder info = new StringBuilder();
+      info.append("Removed card ").append(card.getName()).append(" for coach ")
+        .append(homeCoach ? game.getTeamHome().getCoach() : game.getTeamAway().getCoach()).append(".");
+      getServer().getCommunication().sendPlayerTalk(pGameState, null, info.toString());
+    }
     UtilServerGame.syncGameModel(pGameState, null, null, null);
   }
 
@@ -418,14 +431,14 @@ public class ServerCommandHandlerTalk extends ServerCommandHandler {
     }
     Team team = (sessionManager.getSessionOfHomeCoach(pGameState) == pSession) ? game.getTeamHome() : game.getTeamAway();
     for (Player player : findPlayersInCommand(team, commands, 3)) {
-      if ("add".equals(commands[1])) {
+      if (_ADD.equals(commands[1])) {
         player.addSkill(skill);
         getServer().getCommunication().sendAddPlayer(pGameState, team.getId(), player, game.getFieldModel().getPlayerState(player), game.getGameResult().getPlayerResult(player));
         StringBuilder info = new StringBuilder();
         info.append("Added skill ").append(skill.getName()).append(" to player ").append(player.getName()).append(".");
         getServer().getCommunication().sendPlayerTalk(pGameState, null, info.toString());
       }
-      if ("remove".equals(commands[1])) {
+      if (_REMOVE.equals(commands[1])) {
         player.removeSkill(skill);
         getServer().getCommunication().sendAddPlayer(pGameState, team.getId(), player, game.getFieldModel().getPlayerState(player), game.getGameResult().getPlayerResult(player));
         StringBuilder info = new StringBuilder();

@@ -1,10 +1,12 @@
 package com.balancedbytes.games.ffb.server.step.phase.inducement;
 
 import com.balancedbytes.games.ffb.Card;
+import com.balancedbytes.games.ffb.CardEffect;
 import com.balancedbytes.games.ffb.CardFactory;
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.PlayerChoiceMode;
 import com.balancedbytes.games.ffb.PlayerState;
+import com.balancedbytes.games.ffb.TurnMode;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.dialog.DialogPlayerChoiceParameter;
 import com.balancedbytes.games.ffb.json.UtilJson;
@@ -12,6 +14,7 @@ import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.model.Team;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandPlayerChoice;
+import com.balancedbytes.games.ffb.net.commands.ClientCommandSetupPlayer;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.IServerJsonOption;
 import com.balancedbytes.games.ffb.server.net.ReceivedCommand;
@@ -23,36 +26,42 @@ import com.balancedbytes.games.ffb.server.step.StepId;
 import com.balancedbytes.games.ffb.server.step.StepParameter;
 import com.balancedbytes.games.ffb.server.step.StepParameterKey;
 import com.balancedbytes.games.ffb.server.step.StepParameterSet;
-import com.balancedbytes.games.ffb.server.util.UtilServerDialog;
+import com.balancedbytes.games.ffb.server.step.UtilServerSteps;
 import com.balancedbytes.games.ffb.server.util.UtilServerCards;
+import com.balancedbytes.games.ffb.server.util.UtilServerDialog;
+import com.balancedbytes.games.ffb.server.util.UtilServerSetup;
 import com.balancedbytes.games.ffb.util.StringTool;
 import com.balancedbytes.games.ffb.util.UtilPlayer;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
 /**
- * Step to init the inducement sequence.
+ * Step to play a card.
  * 
- * Needs to be initialized with stepParameter CARD. Needs to be initialized with
- * stepParameter HOME_TEAM.
+ * Needs to be initialized with stepParameter CARD.
+ * Needs to be initialized with stepParameter HOME_TEAM.
  * 
  * @author Kalimar
  */
-public final class StepInitCard extends AbstractStep {
+public final class StepPlayCard extends AbstractStep {
 
   private Card fCard;
   private boolean fHomeTeam;
+  private boolean fIllegalSubstitution;
+  private String fSetupPlayerId;
+  private FieldCoordinate fSetupPlayerCoordinate;
 
   private transient String fPlayerId;
   private transient String fOpponentId;
   private transient boolean fEndCardPlaying;
+  
 
-  public StepInitCard(GameState pGameState) {
+  public StepPlayCard(GameState pGameState) {
     super(pGameState);
   }
 
   public StepId getId() {
-    return StepId.INIT_CARD;
+    return StepId.PLAY_CARD;
   }
 
   @Override
@@ -88,21 +97,45 @@ public final class StepInitCard extends AbstractStep {
   public StepCommandStatus handleCommand(ReceivedCommand pReceivedCommand) {
     StepCommandStatus commandStatus = super.handleCommand(pReceivedCommand);
     if (commandStatus == StepCommandStatus.UNHANDLED_COMMAND) {
+      Game game = getGameState().getGame();
       switch (pReceivedCommand.getId()) {
-      case CLIENT_PLAYER_CHOICE:
-        ClientCommandPlayerChoice playerChoiceCommand = (ClientCommandPlayerChoice) pReceivedCommand.getCommand();
-        if (PlayerChoiceMode.BLOCK == playerChoiceCommand.getPlayerChoiceMode()) {
-          fOpponentId = playerChoiceCommand.getPlayerId();
-        } else {
-          fPlayerId = playerChoiceCommand.getPlayerId();
-          if (!StringTool.isProvided(fPlayerId)) {
-            fEndCardPlaying = true;
+        case CLIENT_PLAYER_CHOICE:
+          ClientCommandPlayerChoice playerChoiceCommand = (ClientCommandPlayerChoice) pReceivedCommand.getCommand();
+          if (PlayerChoiceMode.BLOCK == playerChoiceCommand.getPlayerChoiceMode()) {
+            fOpponentId = playerChoiceCommand.getPlayerId();
+          } else {
+            fPlayerId = playerChoiceCommand.getPlayerId();
+            if (!StringTool.isProvided(fPlayerId)) {
+              fEndCardPlaying = true;
+            }
           }
-        }
-        commandStatus = StepCommandStatus.EXECUTE_STEP;
-        break;
-      default:
-        break;
+          commandStatus = StepCommandStatus.EXECUTE_STEP;
+          break;
+        case CLIENT_SETUP_PLAYER:
+          if (fIllegalSubstitution) {
+            ClientCommandSetupPlayer setupPlayerCommand = (ClientCommandSetupPlayer) pReceivedCommand.getCommand();
+            fSetupPlayerId = setupPlayerCommand.getPlayerId();
+            fSetupPlayerCoordinate = setupPlayerCommand.getCoordinate();
+            commandStatus = StepCommandStatus.SKIP_STEP;
+          }
+          break;
+        case CLIENT_END_TURN:
+          if (fIllegalSubstitution && UtilServerSteps.checkCommandIsFromCurrentPlayer(getGameState(), pReceivedCommand)) {
+            fEndCardPlaying = true;
+            Player setupPlayer = game.getPlayerById(fSetupPlayerId);
+            if ((setupPlayer != null) && (fSetupPlayerCoordinate != null)) {
+              game.getFieldModel().addCardEffect(setupPlayer, CardEffect.ILLEGALLY_SUBSTITUTED);
+              UtilServerSetup.setupPlayer(getGameState(), fSetupPlayerId, fSetupPlayerCoordinate);
+            }
+            fSetupPlayerId = null;
+            fSetupPlayerCoordinate = null;
+            fIllegalSubstitution = false;
+            game.setTurnMode(TurnMode.REGULAR);
+            commandStatus = StepCommandStatus.EXECUTE_STEP;
+          }
+          break;
+        default:
+          break;
       }
     }
     if (commandStatus == StepCommandStatus.EXECUTE_STEP) {
@@ -124,7 +157,21 @@ public final class StepInitCard extends AbstractStep {
       Player[] allowedPlayers = UtilServerCards.findAllowedPlayersForCard(game, fCard);
       game.setDialogParameter(new DialogPlayerChoiceParameter(ownTeam.getId(), PlayerChoiceMode.CARD, allowedPlayers, null, 1));
     } else {
-      UtilServerCards.activateCard(this, fCard, fHomeTeam, null);
+      playCardOnTurn();
+    }
+  }
+
+  private void playCardOnTurn() {
+    boolean doNextStep = true;
+    switch (fCard) {
+      case ILLEGAL_SUBSTITUTION:
+        doNextStep = playIllegalSubstitution();
+        break;
+      default:
+        UtilServerCards.activateCard(this, fCard, fHomeTeam, null);
+        break;
+    }
+    if (doNextStep) {
       getResult().setNextAction(StepAction.NEXT_STEP);
     }
   }
@@ -135,14 +182,13 @@ public final class StepInitCard extends AbstractStep {
     if (player == null) {
       return;
     }
-    boolean doNextStep;
+    boolean doNextStep = true;
     switch (fCard) {
       case CHOP_BLOCK:
         doNextStep = playCardChopBlock();
         break;
       default:
         UtilServerCards.activateCard(this, fCard, fHomeTeam, fPlayerId);
-        doNextStep = true;
         break;
     }
     if (doNextStep) {
@@ -150,6 +196,14 @@ public final class StepInitCard extends AbstractStep {
     }
   }
   
+  private boolean playIllegalSubstitution() {
+    Game game = getGameState().getGame();
+    UtilServerCards.activateCard(this, fCard, fHomeTeam, null);
+    game.setTurnMode(TurnMode.ILLEGAL_SUBSTITUTION);
+    fIllegalSubstitution = true;
+    return false;
+  }
+    
   private boolean playCardChopBlock() {
     boolean doNextStep = false;
     Game game = getGameState().getGame();
@@ -194,15 +248,21 @@ public final class StepInitCard extends AbstractStep {
     JsonObject jsonObject = super.toJsonValue();
     IServerJsonOption.HOME_TEAM.addTo(jsonObject, fHomeTeam);
     IServerJsonOption.CARD.addTo(jsonObject, fCard);
+    IServerJsonOption.ILLEGAL_SUBSTITUTION.addTo(jsonObject, fIllegalSubstitution);
+    IServerJsonOption.SETUP_PLAYER_ID.addTo(jsonObject, fSetupPlayerId);
+    IServerJsonOption.SETUP_PLAYER_COORDINATE.addTo(jsonObject, fSetupPlayerCoordinate);
     return jsonObject;
   }
 
   @Override
-  public StepInitCard initFrom(JsonValue pJsonValue) {
+  public StepPlayCard initFrom(JsonValue pJsonValue) {
     super.initFrom(pJsonValue);
     JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
     fHomeTeam = IServerJsonOption.HOME_TEAM.getFrom(jsonObject);
     fCard = (Card) IServerJsonOption.CARD.getFrom(jsonObject);
+    fIllegalSubstitution = IServerJsonOption.ILLEGAL_SUBSTITUTION.getFrom(jsonObject);
+    fSetupPlayerId = IServerJsonOption.SETUP_PLAYER_ID.getFrom(jsonObject);
+    fSetupPlayerCoordinate = IServerJsonOption.SETUP_PLAYER_COORDINATE.getFrom(jsonObject);
     return this;
   }
 

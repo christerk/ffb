@@ -65,7 +65,6 @@ public enum StepId implements IEnumWithId, IEnumWithName {
 	HYPNOTIC_GAZE(30, "hypnoticGaze"),                  // action.move
 	INIT_BLOCKING(19, "initBlocking"),                  // action.block
 	INIT_BOMB(106, "initBomb"),                         // phase.special
-	INIT_CARD(109, "initCard"),                         // phase.inducement
 	INIT_END_GAME(39, "initEndGame"),                   // game.end
 	INIT_FEEDING(25, "initFeeding"),                    // action.end
 	INIT_FOULING(81, "initFouling"),                    // action.foul
@@ -97,6 +96,7 @@ public enum StepId implements IEnumWithId, IEnumWithName {
 	PENALTY_SHOOTOUT(40, "penaltyShootout"),            // game.end
 	PETTY_CASH(59, "pettyCash"),                        // game.start
 	PICK_UP(21, "pickUp"),                              // action.common
+  PLAY_CARD(109, "playCard"),                         // phase.inducement
 	PLAYER_LOSS(44, "playerLoss"),                      // game.end
 	PUSHBACK(15, "pushback"),                           // action.block
 	REALLY_STUPID(58, "reallyStupid"),                  // action.common

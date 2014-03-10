@@ -9,7 +9,8 @@ package com.balancedbytes.games.ffb;
  */
 public enum CardEffect implements IEnumWithName {
   
-  DISTRACTED("Distracted");
+  DISTRACTED("Distracted"),
+  ILLEGALLY_SUBSTITUTED("IllegallySubstituted");
 
   private String fName;
   

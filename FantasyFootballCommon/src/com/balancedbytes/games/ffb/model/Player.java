@@ -172,7 +172,7 @@ public class Player implements IXmlSerializable, IByteArrayReadable, IJsonSerial
   }
   
   public void addSkill(Skill pSkill) {
-    if ((pSkill != null) && ((pSkill.getCategory() == SkillCategory.STAT_INCREASE) || !fSkills.contains(pSkill))) {
+    if ((pSkill != null) && ((pSkill.getCategory() == SkillCategory.STAT_INCREASE) || (pSkill.getCategory() == SkillCategory.STAT_DECREASE) || !fSkills.contains(pSkill))) {
       fSkills.add(pSkill);
     }
   }

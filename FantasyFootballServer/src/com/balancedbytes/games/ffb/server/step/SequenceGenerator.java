@@ -525,7 +525,7 @@ public class SequenceGenerator {
 
 		StepParameterSet initParameters = createParameterSet(StepParameterKey.CARD, pCard);
 		addParameter(initParameters, StepParameterKey.HOME_TEAM, pHomeTeam);
-		add(cardSequence, StepId.INIT_CARD, pGameState, initParameters);
+		add(cardSequence, StepId.PLAY_CARD, pGameState, initParameters);
 		
 		pGameState.getStepStack().push(cardSequence);
 

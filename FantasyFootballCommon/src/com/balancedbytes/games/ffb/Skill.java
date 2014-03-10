@@ -731,12 +731,16 @@ public enum Skill implements IEnumWithId, IEnumWithName {
   //  does not cause a turnover unless the active player was holding the ball.
 
   MOVEMENT_INCREASE(75, "+MA", SkillCategory.STAT_INCREASE),
+  MOVEMENT_DECREASE(80, "-MA", SkillCategory.STAT_DECREASE),
   
   STRENGTH_INCREASE(76, "+ST", SkillCategory.STAT_INCREASE),
+  STRENGTH_DECREASE(81, "-ST", SkillCategory.STAT_DECREASE),
   
   AGILITY_INCREASE(77, "+AG", SkillCategory.STAT_INCREASE),
+  AGILITY_DECREASE(82, "-AG", SkillCategory.STAT_DECREASE),
   
   ARMOUR_INCREASE(78, "+AV", SkillCategory.STAT_INCREASE),
+  ARMOUR_DECREASE(83, "-AV", SkillCategory.STAT_DECREASE),
   
   ANIMOSITY(79, "Animosity", SkillCategory.EXTRAORDINARY);
   //  A player with this skill does not like players from his team that are a

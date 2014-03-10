@@ -53,6 +53,7 @@ public class ClientStateFactory {
     register(new ClientStateWizard(pClient));
     register(new ClientStatePassBlock(pClient));
     register(new ClientStateBomb(pClient));
+    register(new ClientStateIllegalSubstitution(pClient));
   }
   
   public FantasyFootballClient getClient() {
@@ -193,6 +194,13 @@ public class ClientStateFactory {
         case QUICK_SNAP:
           if (game.isHomePlaying()) {
             clientStateId = ClientStateId.QUICK_SNAP;
+          } else {
+            clientStateId = ClientStateId.WAIT_FOR_OPPONENT;
+          }
+          break;
+        case ILLEGAL_SUBSTITUTION:
+          if (game.isHomePlaying()) {
+            clientStateId = ClientStateId.ILLEGAL_SUBSTITUTION;
           } else {
             clientStateId = ClientStateId.WAIT_FOR_OPPONENT;
           }

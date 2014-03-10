@@ -26,7 +26,8 @@ public enum TurnMode implements IEnumWithId, IEnumWithName {
   BOMB_HOME(17, "bombHome"),
   BOMB_AWAY(18, "bombAway"),
   BOMB_HOME_BLITZ(19, "bombHomeBlitz"),
-  BOMB_AWAY_BLITZ(20, "bombAwayBlitz");
+  BOMB_AWAY_BLITZ(20, "bombAwayBlitz"),
+  ILLEGAL_SUBSTITUTION(21, "illegalSubstitution");
   
   private int fId;
   private String fName;

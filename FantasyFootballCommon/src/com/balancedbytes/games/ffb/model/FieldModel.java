@@ -247,6 +247,17 @@ public class FieldModel implements IByteArrayReadable, IJsonSerializable {
     return cardEffects.toArray(new CardEffect[cardEffects.size()]);
   }
   
+  public boolean hasCardEffect(Player pPlayer, CardEffect pCardEffect) {
+    if ((pPlayer == null) || (pCardEffect == null)) {
+      return false;
+    }
+    Set<CardEffect> cardEffects = fCardEffectsByPlayerId.get(pPlayer.getId());
+    if (cardEffects == null) {
+      return false;
+    }
+    return cardEffects.contains(pCardEffect);
+  }
+  
   public Player[] findPlayers(CardEffect pCardEffect) {
     Set<Player> players = new HashSet<Player>();
     for (String playerId : fCardEffectsByPlayerId.keySet()) {
