@@ -16,7 +16,9 @@ import com.balancedbytes.games.ffb.model.InducementSet;
 import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.model.Team;
 import com.balancedbytes.games.ffb.report.ReportCardDeactivated;
+import com.balancedbytes.games.ffb.report.ReportCardEffectRoll;
 import com.balancedbytes.games.ffb.report.ReportPlayCard;
+import com.balancedbytes.games.ffb.server.DiceInterpreter;
 import com.balancedbytes.games.ffb.server.step.IStep;
 import com.balancedbytes.games.ffb.util.StringTool;
 import com.balancedbytes.games.ffb.util.UtilCards;
@@ -99,7 +101,10 @@ public class UtilServerCards {
           activateCardCustardPie(pStep, player);
           break;
         case PIT_TRAP:
-          pStep.publishParameters(UtilServerInjury.dropPlayer(pStep, player));
+          activateCardPitTrap(pStep, player);
+          break;
+        case WITCH_BREW:
+          activateCardWitchBrew(pStep, player);
           break;
         default:
           break;
@@ -133,13 +138,13 @@ public class UtilServerCards {
         }
         switch (pCard) {
           case CUSTARD_PIE:
-            PlayerState playerState = game.getFieldModel().getPlayerState(player);
-            if ((playerState != null) && playerState.isHypnotized()) {
-              game.getFieldModel().setPlayerState(player, playerState.changeHypnotized(false));
-            }
+            deactivateCardCustardPie(pStep, player);
             break;
           case DISTRACT:
-            deactivateCardDistract(pStep);
+            deactivateCardDistract(pStep, player);
+            break;
+          case WITCH_BREW:
+            deactivateCardWitchBrew(pStep, player);
             break;
           default:
             break;
@@ -155,8 +160,16 @@ public class UtilServerCards {
       }
     }
   }
-  
-  private static void deactivateCardDistract(IStep pStep) {
+
+  private static void deactivateCardCustardPie(IStep pStep, Player pPlayer) {
+    Game game = pStep.getGameState().getGame();
+    PlayerState playerState = game.getFieldModel().getPlayerState(pPlayer);
+    if ((playerState != null) && playerState.isHypnotized()) {
+      game.getFieldModel().setPlayerState(pPlayer, playerState.changeHypnotized(false));
+    }
+  }
+
+  private static void deactivateCardDistract(IStep pStep, Player pPlayer) {
     Game game = pStep.getGameState().getGame();
     Player[] players = game.getFieldModel().findPlayers(CardEffect.DISTRACTED);
     for (Player player : players) {
@@ -168,6 +181,16 @@ public class UtilServerCards {
     }
   }
 
+  private static void deactivateCardWitchBrew(IStep pStep, Player pPlayer) {
+    Game game = pStep.getGameState().getGame();
+    if (game.getFieldModel().hasCardEffect(pPlayer, CardEffect.SEDATIVE)) {
+      game.getFieldModel().removeCardEffect(pPlayer, CardEffect.SEDATIVE);
+    }
+    if (game.getFieldModel().hasCardEffect(pPlayer, CardEffect.MAD_CAP_MUSHROOM_POTION)) {
+      game.getFieldModel().removeCardEffect(pPlayer, CardEffect.MAD_CAP_MUSHROOM_POTION);
+    }
+  }
+
   private static void deactivateCardIllegalSubstitution(IStep pStep) {
     Game game = pStep.getGameState().getGame();
     Player[] players = game.getFieldModel().findPlayers(CardEffect.ILLEGALLY_SUBSTITUTED);
@@ -175,7 +198,7 @@ public class UtilServerCards {
       game.getFieldModel().removeCardEffect(player, CardEffect.ILLEGALLY_SUBSTITUTED);
     }
   }
-
+  
   private static void activateCardDistract(IStep pStep, Player pPlayer) {
     Game game = pStep.getGameState().getGame();
     Team otherTeam = UtilPlayer.findOtherTeam(game, pPlayer);
@@ -193,6 +216,20 @@ public class UtilServerCards {
     Game game = pStep.getGameState().getGame();
     PlayerState playerState = game.getFieldModel().getPlayerState(pPlayer);
     game.getFieldModel().setPlayerState(pPlayer, playerState.changeHypnotized(true));
+  }
+  
+  private static void activateCardPitTrap(IStep pStep, Player pPlayer) {
+    pStep.publishParameters(UtilServerInjury.dropPlayer(pStep, pPlayer));
+  }
+  
+  private static void activateCardWitchBrew(IStep pStep, Player pPlayer) {
+    Game game = pStep.getGameState().getGame();
+    int roll = pStep.getGameState().getDiceRoller().rollCardEffect();
+    CardEffect cardEffect = DiceInterpreter.getInstance().interpretWitchBrewRoll(roll);
+    game.getFieldModel().addCardEffect(pPlayer, cardEffect);
+    ReportCardEffectRoll cardEffectReport = new ReportCardEffectRoll(Card.WITCH_BREW, roll);
+    cardEffectReport.setCardEffect(cardEffect);
+    pStep.getResult().addReport(cardEffectReport);
   }
 
 }

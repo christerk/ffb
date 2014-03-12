@@ -53,7 +53,11 @@ public class DiceRoller {
   public int rollSkill() {
     return rollDice(6);
   }
-  
+
+  public int rollCardEffect() {
+    return rollDice(6);
+  }
+
   public int[] rollTentaclesEscape() {
     return rollDice(2, 6);
   }

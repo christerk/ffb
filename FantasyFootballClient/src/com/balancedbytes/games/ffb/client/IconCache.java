@@ -220,9 +220,8 @@ public class IconCache {
     }
     String customPitchUrl = findCustomPitchUrl(getClient().getGame(), myWeather);
     if ((myWeather == Weather.INTRO)
-      || (StringTool.isProvided(customPitchUrl))
-        && !IClientPropertyValue.SETTING_PITCH_DEFAULT.equals(getClient().getProperty(IClientProperty.SETTING_PITCH_CUSTOMIZATION))
-    ) {
+      || !StringTool.isProvided(customPitchUrl)
+      || IClientPropertyValue.SETTING_PITCH_DEFAULT.equals(getClient().getProperty(IClientProperty.SETTING_PITCH_CUSTOMIZATION))) {
       switch (pWeather) {
         case BLIZZARD:
           return getIconByProperty(IIconProperty.FIELD_BLIZZARD);

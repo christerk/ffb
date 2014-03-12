@@ -89,7 +89,8 @@ public enum ReportId implements IEnumWithId, IEnumWithName {
   BOMB_OUT_OF_BOUNDS(76, "bombOutOfBounds"),
   PETTY_CASH(77, "pettyCash"),
   INDUCEMENTS_BOUGHT(78, "inducementsBought"),
-  CARDS_BOUGHT(79, "cardsBought");
+  CARDS_BOUGHT(79, "cardsBought"),
+  CARD_EFFECT_ROLL(80, "cardEffectRoll");
   
   // obsolete: 50 (spiralling expenses)
   // obsolete: 71 (game options)
@@ -114,6 +115,8 @@ public enum ReportId implements IEnumWithId, IEnumWithName {
     switch(this) {
       case ALWAYS_HUNGRY_ROLL:
         return new ReportSkillRoll(ALWAYS_HUNGRY_ROLL);
+      case CARD_EFFECT_ROLL:
+        return new ReportCardEffectRoll();
       case CATCH_ROLL:
         return new ReportCatchRoll();
       case CONFUSION_ROLL:

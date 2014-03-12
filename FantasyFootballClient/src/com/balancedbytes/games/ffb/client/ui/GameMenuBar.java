@@ -328,7 +328,7 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
     fDefaultPitchMenuItem = new JRadioButtonMenuItem("Use Default Pitch");
     fDefaultPitchMenuItem.addActionListener(this);
     pitchCustomGroup.add(fDefaultPitchMenuItem);
-    fPitchCustomizationMenu.add(fPitchMarkingsOffMenuItem);
+    fPitchCustomizationMenu.add(fDefaultPitchMenuItem);
     
     fPitchMarkingsMenu = new JMenu("Pitch Markings");
     fPitchMarkingsMenu.setMnemonic(KeyEvent.VK_M);

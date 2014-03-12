@@ -9,6 +9,8 @@ import java.util.List;
 import com.balancedbytes.games.ffb.ArmorModifier;
 import com.balancedbytes.games.ffb.BlockResult;
 import com.balancedbytes.games.ffb.BlockResultFactory;
+import com.balancedbytes.games.ffb.Card;
+import com.balancedbytes.games.ffb.CardEffect;
 import com.balancedbytes.games.ffb.CatchModifier;
 import com.balancedbytes.games.ffb.ClientMode;
 import com.balancedbytes.games.ffb.Direction;
@@ -50,6 +52,7 @@ import com.balancedbytes.games.ffb.report.ReportBlockRoll;
 import com.balancedbytes.games.ffb.report.ReportBombOutOfBounds;
 import com.balancedbytes.games.ffb.report.ReportBribesRoll;
 import com.balancedbytes.games.ffb.report.ReportCardDeactivated;
+import com.balancedbytes.games.ffb.report.ReportCardEffectRoll;
 import com.balancedbytes.games.ffb.report.ReportCardsBought;
 import com.balancedbytes.games.ffb.report.ReportCatchRoll;
 import com.balancedbytes.games.ffb.report.ReportCoinThrow;
@@ -1340,6 +1343,21 @@ public class StatusReport {
     }
     if (neededRoll != null) {
       println(getIndent() + 1, TextStyle.NEEDED_ROLL, neededRoll.toString());
+    }
+  }
+  
+  public void reportCardEffectRoll(ReportCardEffectRoll pReport) {
+    StringBuilder status = new StringBuilder();
+    if (Card.WITCH_BREW == pReport.getCard()) {
+      status.append("Witch Brew Roll [ ").append(pReport.getRoll()).append(" ]");
+      println(getIndent(), TextStyle.ROLL, status.toString());
+      if (CardEffect.SEDATIVE == pReport.getCardEffect()) {
+        println(getIndent() + 1, "Sedative! The player gains the Really Stupid skill until the drive ends.");
+      } else if (CardEffect.MAD_CAP_MUSHROOM_POTION == pReport.getCardEffect()) {
+        println(getIndent() + 1, "Mad Cap Mushroom potion! The player gains the Jump Up and No Hands skills until the drive ends.");
+      } else {
+        println(getIndent() + 1, "Snake Oil! Bad taste, but no effect.");
+      }
     }
   }
 
@@ -2809,6 +2827,8 @@ public class StatusReport {
         case CARDS_BOUGHT:
         	reportCardsBought((ReportCardsBought) report);
         	break;
+        case CARD_EFFECT_ROLL:
+          reportCardEffectRoll((ReportCardEffectRoll) report);
         case GAME_OPTIONS:
         	// deprecated, do nothing
         	break;

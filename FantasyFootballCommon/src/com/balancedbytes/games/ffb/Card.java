@@ -336,7 +336,7 @@ public enum Card implements IEnumWithId, IEnumWithName {
     
   STOLEN_PLAYBOOK(50, "Stolen Playbook", "Stolen Playbook", CardType.DIRTY_TRICK, CardTarget.OWN_PLAYER, false,
     new InducementPhase[] { InducementPhase.END_OF_OWN_TURN }, InducementDuration.UNTIL_END_OF_DRIVE,
-    "Player gets Pass Block and Shadowing");
+    "Player gets Pass Block and Shadowing"),
   //  Description:
   //  	You nabbed a playbook from the opponent's coach! He sure will be
   //    surprised when you know exactly how to ruin his play.
@@ -360,7 +360,9 @@ public enum Card implements IEnumWithId, IEnumWithName {
   //    own square (use the scatter template). The player will need to make a
   //    landing roll as normal if they land on the pitch.
     
-  //  WITCH'S BREW (52)
+  WITCH_BREW(50, "Witch's Brew", "Witch Brew", CardType.DIRTY_TRICK, CardTarget.OPPOSING_PLAYER, false,
+      new InducementPhase[] { InducementPhase.BEFORE_KICKOFF_SCATTER }, InducementDuration.UNTIL_END_OF_DRIVE,
+      "Poison an opponent (random effect)");
   //  Description:
   //    You've spiked the opponent's Kroxorade bottle with a witch's concoction!
   //  Timing:

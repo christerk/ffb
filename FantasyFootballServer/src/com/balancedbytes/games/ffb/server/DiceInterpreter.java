@@ -4,6 +4,7 @@ import java.util.Set;
 
 import com.balancedbytes.games.ffb.ArmorModifier;
 import com.balancedbytes.games.ffb.Card;
+import com.balancedbytes.games.ffb.CardEffect;
 import com.balancedbytes.games.ffb.CatchModifier;
 import com.balancedbytes.games.ffb.Direction;
 import com.balancedbytes.games.ffb.DirectionFactory;
@@ -536,6 +537,20 @@ public class DiceInterpreter {
   
   public boolean isDouble(int[] pRoll) {
   	return ((pRoll != null) && (pRoll.length == 2) && (pRoll[0] == pRoll[1]));
+  }
+  
+  public CardEffect interpretWitchBrewRoll(int pRoll) {
+    switch (pRoll) {
+      case 1:
+        return CardEffect.MAD_CAP_MUSHROOM_POTION;
+      case 3:
+      case 4:
+      case 5:
+      case 6:
+        return CardEffect.SEDATIVE;
+      default:
+        return null;
+    }
   }
  
 }

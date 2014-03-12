@@ -214,7 +214,7 @@ public class PlayerIconFactory {
     if (pIcon != null) {
       resultingIcon = new BufferedImage(pIcon.getWidth(), pIcon.getHeight(), BufferedImage.TYPE_INT_ARGB);
       Graphics2D g2d = resultingIcon.createGraphics();
-      g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.6f));
+      g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.7f));
       g2d.drawImage(pIcon, 0, 0, null);
       g2d.dispose();
     }

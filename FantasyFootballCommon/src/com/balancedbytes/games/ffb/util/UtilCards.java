@@ -101,6 +101,13 @@ public final class UtilCards {
         case DISTRACTED:
           cardSkills.add(Skill.BONE_HEAD);
           break;
+        case SEDATIVE:
+          cardSkills.add(Skill.REALLY_STUPID);
+          break;
+        case MAD_CAP_MUSHROOM_POTION:
+          cardSkills.add(Skill.JUMP_UP);
+          cardSkills.add(Skill.NO_HANDS);
+          break;
         default:
           break;
       }
