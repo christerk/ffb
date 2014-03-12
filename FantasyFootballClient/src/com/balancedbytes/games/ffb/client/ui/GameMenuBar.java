@@ -378,7 +378,7 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
     pitchWeatherGroup.add(fPitchWeatherOnMenuItem);
     fPitchWeatherMenu.add(fPitchWeatherOnMenuItem);
     
-    fPitchWeatherOffMenuItem = new JRadioButtonMenuItem("Show default pitch");
+    fPitchWeatherOffMenuItem = new JRadioButtonMenuItem("Always show nice weather pitch");
     fPitchWeatherOffMenuItem.addActionListener(this);
     pitchWeatherGroup.add(fPitchWeatherOffMenuItem);
     fPitchWeatherMenu.add(fPitchWeatherOffMenuItem);
@@ -613,7 +613,7 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
     }
     if (source == fPitchWeatherOffMenuItem) {
       getClient().setProperty(IClientProperty.SETTING_PITCH_WEATHER, IClientPropertyValue.SETTING_PITCH_WEATHER_OFF);
-      saveUserSettings(false);
+      saveUserSettings(true);
     }
     if (source == fRangeGridAlwaysOnMenuItem) {
       getClient().setProperty(IClientProperty.SETTING_RANGEGRID, IClientPropertyValue.SETTING_RANGEGRID_ALWAYS_ON);

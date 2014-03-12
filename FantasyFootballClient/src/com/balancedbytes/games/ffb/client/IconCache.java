@@ -222,7 +222,7 @@ public class IconCache {
     if ((myWeather == Weather.INTRO)
       || !StringTool.isProvided(customPitchUrl)
       || IClientPropertyValue.SETTING_PITCH_DEFAULT.equals(getClient().getProperty(IClientProperty.SETTING_PITCH_CUSTOMIZATION))) {
-      switch (pWeather) {
+      switch (myWeather) {
         case BLIZZARD:
           return getIconByProperty(IIconProperty.FIELD_BLIZZARD);
         case NICE:
