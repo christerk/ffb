@@ -17,6 +17,7 @@ import com.balancedbytes.games.ffb.Weather;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Team;
 import com.balancedbytes.games.ffb.option.GameOptionId;
+import com.balancedbytes.games.ffb.option.IGameOption;
 import com.balancedbytes.games.ffb.util.StringTool;
 import com.balancedbytes.games.ffb.util.UtilUrl;
 
@@ -213,12 +214,31 @@ public class IconCache {
     if (pWeather == null) {
       return null;
     }
-    switch (pWeather) {
-      case INTRO:
-        return getIconByProperty(IIconProperty.FIELD_INTRO);
-      default:
-        return getIconByUrl(findPitchUrl(getClient().getGame(), pWeather));
+    Weather myWeather = pWeather;
+    if (IClientPropertyValue.SETTING_PITCH_WEATHER_OFF.equals(getClient().getProperty(IClientProperty.SETTING_PITCH_WEATHER))) {
+      myWeather = (pWeather == Weather.INTRO) ? Weather.INTRO : Weather.NICE;
     }
+    String customPitchUrl = findCustomPitchUrl(getClient().getGame(), myWeather);
+    if ((myWeather == Weather.INTRO)
+      || (StringTool.isProvided(customPitchUrl))
+        && !IClientPropertyValue.SETTING_PITCH_DEFAULT.equals(getClient().getProperty(IClientProperty.SETTING_PITCH_CUSTOMIZATION))
+    ) {
+      switch (pWeather) {
+        case BLIZZARD:
+          return getIconByProperty(IIconProperty.FIELD_BLIZZARD);
+        case NICE:
+          return getIconByProperty(IIconProperty.FIELD_NICE);
+        case POURING_RAIN:
+          return getIconByProperty(IIconProperty.FIELD_RAIN);
+        case SWELTERING_HEAT:
+          return getIconByProperty(IIconProperty.FIELD_HEAT);
+        case VERY_SUNNY:
+          return getIconByProperty(IIconProperty.FIELD_SUNNY);
+        default:
+          return getIconByProperty(IIconProperty.FIELD_INTRO);
+      }
+    }
+    return getIconByUrl(customPitchUrl);
   }
     
   public BufferedImage getIcon(DiceDecoration pDiceDecoration) {
@@ -277,14 +297,33 @@ public class IconCache {
     return iconUrl;
   }
   
-  public static String findPitchUrl(Game pGame, Weather pWeather) {
-    if ((pGame == null) || (pWeather == null) || (pWeather == Weather.INTRO)) {
+  public static String findCustomPitchUrl(Game pGame, Weather pWeather) {
+    if ((pGame == null) || (pWeather == null)) {
       return null;
     }
-    String pitchUrlTemplate = pGame.getOptions().getOptionWithDefault(GameOptionId.PITCH_URL_TEMPLATE).getValueAsString();
-    String pitchUrl = StringTool.bind(pitchUrlTemplate, pWeather.getShortName());
-    if (!pitchUrlTemplate.equals(pitchUrl) && !pitchUrl.contains("$")) {
-      return pitchUrl;
+    IGameOption pitchUrlOption = null;
+    switch (pWeather) {
+      case BLIZZARD:
+        pitchUrlOption = pGame.getOptions().getOption(GameOptionId.PITCH_URL_BLIZZARD);
+        break;
+      case NICE:
+        pitchUrlOption = pGame.getOptions().getOption(GameOptionId.PITCH_URL_NICE);
+        break;
+      case POURING_RAIN:
+        pitchUrlOption = pGame.getOptions().getOption(GameOptionId.PITCH_URL_RAIN);
+        break;
+      case SWELTERING_HEAT:
+        pitchUrlOption = pGame.getOptions().getOption(GameOptionId.PITCH_URL_HEAT);
+        break;
+      case VERY_SUNNY:
+        pitchUrlOption = pGame.getOptions().getOption(GameOptionId.PITCH_URL_SUNNY);
+        break;
+      default:
+        // PitchUrlOption remains null
+        break;
+    }
+    if (pitchUrlOption != null) {
+      return pitchUrlOption.getValueAsString();
     }
     return null;
   }

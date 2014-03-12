@@ -22,7 +22,6 @@ import com.balancedbytes.games.ffb.model.change.ModelChangeList;
 import com.balancedbytes.games.ffb.net.NetCommand;
 import com.balancedbytes.games.ffb.net.NetCommandId;
 import com.balancedbytes.games.ffb.net.commands.ServerCommandModelSync;
-import com.balancedbytes.games.ffb.option.GameOptionId;
 import com.balancedbytes.games.ffb.option.IGameOption;
 import com.balancedbytes.games.ffb.report.IReport;
 import com.balancedbytes.games.ffb.report.ReportBlockChoice;
@@ -220,8 +219,19 @@ public class ClientCommandHandlerModelSync extends ClientCommandHandler implemen
           	break;
           case GAME_OPTIONS_ADD_OPTION:
             IGameOption gameOption = (IGameOption) modelChange.getValue();
-            if ((gameOption != null) && (gameOption.getId() == GameOptionId.PITCH_URL_TEMPLATE)) {
-              fReloadPitches = true;
+            if (gameOption != null) {
+              switch (gameOption.getId()) {
+                case PITCH_URL_BLIZZARD:
+                case PITCH_URL_HEAT:
+                case PITCH_URL_NICE:
+                case PITCH_URL_RAIN:
+                case PITCH_URL_SUNNY:
+                  fReloadPitches = true;
+                  break;
+                default:
+                  // do nothing
+                  break;
+              }
             }
             break;
           default:
@@ -263,9 +273,11 @@ public class ClientCommandHandlerModelSync extends ClientCommandHandler implemen
         
     if (fReloadPitches) {
       for (Weather weather : Weather.values()) {
-        String iconUrl = IconCache.findPitchUrl(game, weather);
-        if ((iconUrl != null) && !userInterface.getIconCache().loadIconFromArchive(iconUrl)) {
-          userInterface.getIconCache().loadIconFromUrl(iconUrl);
+        if (userInterface.getIconCache().getIcon(weather) == null) {
+          String iconUrl = IconCache.findCustomPitchUrl(game, weather);
+          if ((iconUrl != null) && !userInterface.getIconCache().loadIconFromArchive(iconUrl)) {
+            userInterface.getIconCache().loadIconFromUrl(iconUrl);
+          }
         }
       }
       userInterface.getFieldComponent().getLayerField().init();

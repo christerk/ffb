@@ -53,7 +53,7 @@ public class UtilServerCards {
         playerAllowed &= !UtilCards.hasSkill(pGame, player, Skill.LONER);
         break;
       case CHOP_BLOCK:
-        playerAllowed &= playerState.isActive() && (UtilPlayer.findAdjacentBlockablePlayers(pGame, otherTeam, playerCoordinate).length > 0);
+        playerAllowed &= playerState.isActive() && !playerState.isProne() && (UtilPlayer.findAdjacentBlockablePlayers(pGame, otherTeam, playerCoordinate).length > 0);
         break;
       case CUSTARD_PIE:
         playerAllowed &= (UtilPlayer.findAdjacentStandingOrPronePlayers(pGame, ownTeam, playerCoordinate).length > 0);

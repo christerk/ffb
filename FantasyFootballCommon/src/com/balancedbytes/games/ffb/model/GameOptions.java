@@ -15,6 +15,7 @@ import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.change.ModelChange;
 import com.balancedbytes.games.ffb.model.change.ModelChangeId;
 import com.balancedbytes.games.ffb.old.GameOptionValueOld;
+import com.balancedbytes.games.ffb.option.GameOptionBoolean;
 import com.balancedbytes.games.ffb.option.GameOptionFactory;
 import com.balancedbytes.games.ffb.option.GameOptionId;
 import com.balancedbytes.games.ffb.option.GameOptionIdFactory;
@@ -50,9 +51,34 @@ public class GameOptions implements IXmlSerializable, IByteArrayReadable, IJsonS
 
   public void addOption(IGameOption pOption) {
     if (pOption != null) {
-      fOptionById.put(pOption.getId(), pOption);
-      notifyObservers(ModelChangeId.GAME_OPTIONS_ADD_OPTION, pOption);
+      addOptionInternal(pOption);
+      // handle mutually exclusive options
+      switch (pOption.getId()) {
+        case PILING_ON_ARMOR_ONLY:
+          if (((GameOptionBoolean) pOption).isEnabled()) {
+            GameOptionBoolean pilingOnInjuryOnly = (GameOptionBoolean) getOptionWithDefault(GameOptionId.PILING_ON_INJURY_ONLY);
+            if (pilingOnInjuryOnly.isEnabled()) {
+              addOptionInternal(pilingOnInjuryOnly.setValue(false));
+            }
+          }
+          break;
+        case PILING_ON_INJURY_ONLY:
+          if (((GameOptionBoolean) pOption).isEnabled()) {
+            GameOptionBoolean pilingOnArmorOnly = (GameOptionBoolean) getOptionWithDefault(GameOptionId.PILING_ON_ARMOR_ONLY);
+            if (pilingOnArmorOnly.isEnabled()) {
+              addOptionInternal(pilingOnArmorOnly.setValue(false));
+            }
+          }
+          break;
+        default:
+          break;
+      }
     }
+  }
+  
+  private void addOptionInternal(IGameOption pOption) {
+    fOptionById.put(pOption.getId(), pOption);
+    notifyObservers(ModelChangeId.GAME_OPTIONS_ADD_OPTION, pOption);
   }
 
   public IGameOption getOption(GameOptionId pOptionId) {

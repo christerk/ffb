@@ -19,8 +19,10 @@ public interface IClientProperty {
   String SETTING_ICONS = "setting.icons";
   String SETTING_CHATLOG = "setting.chatlog";
   String SETTING_AUTOMOVE = "setting.automove";
+  String SETTING_PITCH_CUSTOMIZATION = "setting.pitch.customization";
   String SETTING_PITCH_MARKINGS = "setting.pitch.markings";
   String SETTING_TEAM_LOGOS = "setting.pitch.teamLogos";
+  String SETTING_PITCH_WEATHER = "setting.pitch.weather";
   String SETTING_RANGEGRID = "setting.rangegrid";
   
   String CLIENT_PING_INTERVAL = "client.ping.interval";

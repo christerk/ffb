@@ -20,13 +20,19 @@ public interface IClientPropertyValue {
   
   String SETTING_AUTOMOVE_ON = "automoveOn";
   String SETTING_AUTOMOVE_OFF = "automoveOff";
-  
+
+  String SETTING_PITCH_CUSTOM = "pitchCustom";
+  String SETTING_PITCH_DEFAULT = "pitchDefault";
+
   String SETTING_PITCH_MARKINGS_ON = "pitchMarkingsOn";
   String SETTING_PITCH_MARKINGS_OFF = "pitchMarkingsOff";
   
   String SETTING_TEAM_LOGOS_BOTH = "teamLogosBoth";
   String SETTING_TEAM_LOGOS_OWN = "teamLogosOwn";
   String SETTING_TEAM_LOGOS_NONE = "teamLogosNone";
+
+  String SETTING_PITCH_WEATHER_ON = "pitchWeatherOn";
+  String SETTING_PITCH_WEATHER_OFF = "pitchWeatherOff";
 
   String SETTING_RANGEGRID_ALWAYS_ON = "rangegridAlwaysOn";
   String SETTING_RANGEGRID_TOGGLE = "rangegridToggle";

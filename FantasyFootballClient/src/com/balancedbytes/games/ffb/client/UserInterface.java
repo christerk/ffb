@@ -20,6 +20,7 @@ import com.balancedbytes.games.ffb.client.dialog.IDialog;
 import com.balancedbytes.games.ffb.client.dialog.IDialogCloseListener;
 import com.balancedbytes.games.ffb.client.sound.SoundEngine;
 import com.balancedbytes.games.ffb.client.ui.ChatComponent;
+import com.balancedbytes.games.ffb.client.ui.GameMenuBar;
 import com.balancedbytes.games.ffb.client.ui.LogComponent;
 import com.balancedbytes.games.ffb.client.ui.ScoreBarComponent;
 import com.balancedbytes.games.ffb.client.ui.SideBarComponent;

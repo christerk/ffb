@@ -1,4 +1,4 @@
-package com.balancedbytes.games.ffb.client;
+package com.balancedbytes.games.ffb.client.ui;
 
 import java.awt.Color;
 import java.awt.Font;
@@ -35,6 +35,15 @@ import com.balancedbytes.games.ffb.Inducement;
 import com.balancedbytes.games.ffb.InducementType;
 import com.balancedbytes.games.ffb.PlayerType;
 import com.balancedbytes.games.ffb.TurnMode;
+import com.balancedbytes.games.ffb.client.ActionKey;
+import com.balancedbytes.games.ffb.client.ClientData;
+import com.balancedbytes.games.ffb.client.ClientReplayer;
+import com.balancedbytes.games.ffb.client.FantasyFootballClient;
+import com.balancedbytes.games.ffb.client.IClientProperty;
+import com.balancedbytes.games.ffb.client.IClientPropertyValue;
+import com.balancedbytes.games.ffb.client.IIconProperty;
+import com.balancedbytes.games.ffb.client.PlayerIconFactory;
+import com.balancedbytes.games.ffb.client.UserInterface;
 import com.balancedbytes.games.ffb.client.dialog.DialogAbout;
 import com.balancedbytes.games.ffb.client.dialog.DialogChatCommands;
 import com.balancedbytes.games.ffb.client.dialog.DialogGameStatistics;
@@ -42,7 +51,6 @@ import com.balancedbytes.games.ffb.client.dialog.DialogKeyBindings;
 import com.balancedbytes.games.ffb.client.dialog.DialogSoundVolume;
 import com.balancedbytes.games.ffb.client.dialog.IDialog;
 import com.balancedbytes.games.ffb.client.dialog.IDialogCloseListener;
-import com.balancedbytes.games.ffb.client.ui.BoxComponent;
 import com.balancedbytes.games.ffb.dialog.DialogId;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.InducementSet;
@@ -67,8 +75,10 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
     IClientProperty.SETTING_ICONS,
     IClientProperty.SETTING_CHATLOG,
     IClientProperty.SETTING_AUTOMOVE,
+    IClientProperty.SETTING_PITCH_CUSTOMIZATION,
     IClientProperty.SETTING_PITCH_MARKINGS,
     IClientProperty.SETTING_TEAM_LOGOS,
+    IClientProperty.SETTING_PITCH_WEATHER,
     IClientProperty.SETTING_RANGEGRID
   };
   
@@ -107,6 +117,10 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
   
   private JMenu fPitchMenu;
   
+  private JMenu fPitchCustomizationMenu;
+  private JRadioButtonMenuItem fCustomPitchMenuItem;
+  private JRadioButtonMenuItem fDefaultPitchMenuItem;
+  
   private JMenu fPitchMarkingsMenu;
   private JRadioButtonMenuItem fPitchMarkingsOnMenuItem;
   private JRadioButtonMenuItem fPitchMarkingsOffMenuItem;
@@ -115,6 +129,10 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
   private JRadioButtonMenuItem fTeamLogoBothMenuItem;
   private JRadioButtonMenuItem fTeamLogoOwnMenuItem;
   private JRadioButtonMenuItem fTeamLogoNoneMenuItem;
+  
+  private JMenu fPitchWeatherMenu;
+  private JRadioButtonMenuItem fPitchWeatherOnMenuItem;
+  private JRadioButtonMenuItem fPitchWeatherOffMenuItem;
   
   private JMenu fRangeGridMenu;
   private JRadioButtonMenuItem fRangeGridAlwaysOnMenuItem;
@@ -296,6 +314,22 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
     fPitchMenu.setMnemonic(KeyEvent.VK_P);
     fUserSettingsMenu.add(fPitchMenu);
     
+    fPitchCustomizationMenu = new JMenu("Pitch Customization");
+    fPitchCustomizationMenu.setMnemonic(KeyEvent.VK_C);
+    fPitchMenu.add(fPitchCustomizationMenu);
+
+    ButtonGroup pitchCustomGroup = new ButtonGroup();
+
+    fCustomPitchMenuItem = new JRadioButtonMenuItem("Use Custom Pitch");
+    fCustomPitchMenuItem.addActionListener(this);
+    pitchCustomGroup.add(fCustomPitchMenuItem);
+    fPitchCustomizationMenu.add(fCustomPitchMenuItem);
+    
+    fDefaultPitchMenuItem = new JRadioButtonMenuItem("Use Default Pitch");
+    fDefaultPitchMenuItem.addActionListener(this);
+    pitchCustomGroup.add(fDefaultPitchMenuItem);
+    fPitchCustomizationMenu.add(fPitchMarkingsOffMenuItem);
+    
     fPitchMarkingsMenu = new JMenu("Pitch Markings");
     fPitchMarkingsMenu.setMnemonic(KeyEvent.VK_M);
     fPitchMenu.add(fPitchMarkingsMenu);
@@ -332,6 +366,22 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
     fTeamLogoNoneMenuItem.addActionListener(this);
     teamLogoGroup.add(fTeamLogoNoneMenuItem);
     fTeamLogoMenu.add(fTeamLogoNoneMenuItem);
+    
+    fPitchWeatherMenu = new JMenu("Pitch Weather");
+    fPitchWeatherMenu.setMnemonic(KeyEvent.VK_W);
+    fPitchMenu.add(fPitchWeatherMenu);
+
+    ButtonGroup pitchWeatherGroup = new ButtonGroup();
+
+    fPitchWeatherOnMenuItem = new JRadioButtonMenuItem("Change pitch with weather");
+    fPitchWeatherOnMenuItem.addActionListener(this);
+    pitchWeatherGroup.add(fPitchWeatherOnMenuItem);
+    fPitchWeatherMenu.add(fPitchWeatherOnMenuItem);
+    
+    fPitchWeatherOffMenuItem = new JRadioButtonMenuItem("Show default pitch");
+    fPitchWeatherOffMenuItem.addActionListener(this);
+    pitchWeatherGroup.add(fPitchWeatherOffMenuItem);
+    fPitchWeatherMenu.add(fPitchWeatherOffMenuItem);
     
     fRangeGridMenu = new JMenu("Range Grid");
     fRangeGridMenu.setMnemonic(KeyEvent.VK_R);
@@ -425,6 +475,10 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
     fAutomoveOnMenuItem.setSelected(true);
     fAutomoveOffMenuItem.setSelected(IClientPropertyValue.SETTING_AUTOMOVE_OFF.equals(automoveSetting));
     
+    String pitchCustomizationSetting = getClient().getProperty(IClientProperty.SETTING_PITCH_CUSTOMIZATION);
+    fCustomPitchMenuItem.setSelected(true);
+    fDefaultPitchMenuItem.setSelected(IClientPropertyValue.SETTING_PITCH_DEFAULT.equals(pitchCustomizationSetting));
+    
     String pitchMarkingsSetting = getClient().getProperty(IClientProperty.SETTING_PITCH_MARKINGS);
     fPitchMarkingsOffMenuItem.setSelected(true);
     fPitchMarkingsOnMenuItem.setSelected(IClientPropertyValue.SETTING_PITCH_MARKINGS_ON.equals(pitchMarkingsSetting));
@@ -433,7 +487,11 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
     fTeamLogoBothMenuItem.setSelected(true);
     fTeamLogoOwnMenuItem.setSelected(IClientPropertyValue.SETTING_TEAM_LOGOS_OWN.equals(teamLogosSetting));
     fTeamLogoNoneMenuItem.setSelected(IClientPropertyValue.SETTING_TEAM_LOGOS_NONE.equals(teamLogosSetting));
-    
+
+    String pitchWeatherSetting = getClient().getProperty(IClientProperty.SETTING_PITCH_WEATHER);
+    fPitchWeatherOnMenuItem.setSelected(true);
+    fPitchWeatherOffMenuItem.setSelected(IClientPropertyValue.SETTING_PITCH_WEATHER_OFF.equals(pitchWeatherSetting));
+
     String rangeGridSetting = getClient().getProperty(IClientProperty.SETTING_RANGEGRID);
     fRangeGridToggleMenuItem.setSelected(true);
     fRangeGridAlwaysOnMenuItem.setSelected(IClientPropertyValue.SETTING_RANGEGRID_ALWAYS_ON.equals(rangeGridSetting));
@@ -517,6 +575,14 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
       getClient().setProperty(IClientProperty.SETTING_AUTOMOVE, IClientPropertyValue.SETTING_AUTOMOVE_ON);
       saveUserSettings(false);
     }
+    if (source == fCustomPitchMenuItem) {
+      getClient().setProperty(IClientProperty.SETTING_PITCH_CUSTOMIZATION, IClientPropertyValue.SETTING_PITCH_CUSTOM);
+      saveUserSettings(true);
+    }
+    if (source == fDefaultPitchMenuItem) {
+      getClient().setProperty(IClientProperty.SETTING_PITCH_CUSTOMIZATION, IClientPropertyValue.SETTING_PITCH_DEFAULT);
+      saveUserSettings(true);
+    }
     if (source == fPitchMarkingsOffMenuItem) {
       getClient().setProperty(IClientProperty.SETTING_PITCH_MARKINGS, IClientPropertyValue.SETTING_PITCH_MARKINGS_OFF);
       saveUserSettings(true);
@@ -537,8 +603,16 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
       getClient().setProperty(IClientProperty.SETTING_TEAM_LOGOS, IClientPropertyValue.SETTING_TEAM_LOGOS_NONE);
       saveUserSettings(true);
     }
-    if (source == fRangeGridToggleMenuItem) {
-      getClient().setProperty(IClientProperty.SETTING_RANGEGRID, IClientPropertyValue.SETTING_RANGEGRID_TOGGLE);
+    if (source == fCustomPitchMenuItem) {
+      getClient().setProperty(IClientProperty.SETTING_PITCH_CUSTOMIZATION, IClientPropertyValue.SETTING_PITCH_CUSTOM);
+      saveUserSettings(true);
+    }
+    if (source == fPitchWeatherOnMenuItem) {
+      getClient().setProperty(IClientProperty.SETTING_PITCH_WEATHER, IClientPropertyValue.SETTING_PITCH_WEATHER_ON);
+      saveUserSettings(true);
+    }
+    if (source == fPitchWeatherOffMenuItem) {
+      getClient().setProperty(IClientProperty.SETTING_PITCH_WEATHER, IClientPropertyValue.SETTING_PITCH_WEATHER_OFF);
       saveUserSettings(false);
     }
     if (source == fRangeGridAlwaysOnMenuItem) {

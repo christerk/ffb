@@ -544,18 +544,16 @@ public class UtilServerInjury {
   	GameState gameState = pStep.getGameState();
     Game game = gameState.getGame();
     FieldCoordinate playerCoordinate = game.getFieldModel().getPlayerCoordinate(pPlayer);
-    if (playerCoordinate != null) {
-      PlayerState playerState = game.getFieldModel().getPlayerState(pPlayer);
-      if ((playerState != null) && (playerState.getBase() != PlayerState.PRONE) && (playerState.getBase() != PlayerState.STUNNED)) {
+    PlayerState playerState = game.getFieldModel().getPlayerState(pPlayer);
+    if ((playerCoordinate != null) && (playerState != null)) {
+      if ((playerState.getBase() != PlayerState.PRONE) && (playerState.getBase() != PlayerState.STUNNED)) {
+        playerState = playerState.changeBase(PlayerState.PRONE);
         if (pPlayer == game.getActingPlayer().getPlayer()) {
-        	game.getFieldModel().setPlayerState(pPlayer, playerState.changeBase(PlayerState.PRONE).changeRooted(false).changeActive(false));
-        } else {
-        	game.getFieldModel().setPlayerState(pPlayer, playerState.changeBase(PlayerState.PRONE).changeRooted(false));
+        	playerState = playerState.changeActive(false);
         }
       }
-      if (game.getFieldModel().getPlayerState(pPlayer).isRooted()) {
-    	  game.getFieldModel().setPlayerState(pPlayer, playerState.changeRooted(false));  
-      }
+      playerState = playerState.changeRooted(false);
+      game.getFieldModel().setPlayerState(pPlayer, playerState);  
       if (playerCoordinate.equals(game.getFieldModel().getBallCoordinate())) {
         game.getFieldModel().setBallMoving(true);
         stepParameters.add(new StepParameter(StepParameterKey.CATCH_SCATTER_THROW_IN_MODE, CatchScatterThrowInMode.SCATTER_BALL));
