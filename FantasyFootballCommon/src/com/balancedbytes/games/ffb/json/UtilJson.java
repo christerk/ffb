@@ -22,6 +22,7 @@ import com.balancedbytes.games.ffb.IEnumWithName;
 import com.balancedbytes.games.ffb.IEnumWithNameFactory;
 import com.balancedbytes.games.ffb.PlayerState;
 import com.balancedbytes.games.ffb.util.ArrayTool;
+import com.balancedbytes.games.ffb.util.StringTool;
 import com.eclipsesource.json.JsonArray;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
@@ -120,16 +121,16 @@ public class UtilJson {
     return JsonValue.valueOf(pEnumWithName.getName());
   }
   
-  public static byte[] deflate(JsonValue pJsonValue) throws IOException {
+  public static String deflateToBase64(JsonValue pJsonValue) throws IOException {
     if (pJsonValue == null) {
-      return new byte[0];
+      return null;
     }
     ByteArrayOutputStream byteOut = new ByteArrayOutputStream();
     DeflaterOutputStream deflaterOut = new DeflaterOutputStream(byteOut, new Deflater(Deflater.BEST_COMPRESSION));
     BufferedWriter out = new BufferedWriter(new OutputStreamWriter(deflaterOut, _CHARSET));
     out.write(pJsonValue.toString());
     out.close();
-    return byteOut.toByteArray();
+    return Base64.encodeToString(byteOut.toByteArray(), false);
   }
   
   public static byte[] gzip(JsonValue pJsonValue) throws IOException {
@@ -144,11 +145,11 @@ public class UtilJson {
     return byteOut.toByteArray();
   }
   
-  public static JsonValue inflate(byte[] pDeflatedJson) throws IOException {
-    if (!ArrayTool.isProvided(pDeflatedJson)) {
+  public static JsonValue inflateFromBase64(String pBase64DeflatedJson) throws IOException {
+    if (!StringTool.isProvided(pBase64DeflatedJson)) {
       return null;
-    }
-    ByteArrayInputStream byteIn = new ByteArrayInputStream(pDeflatedJson);
+    }    
+    ByteArrayInputStream byteIn = new ByteArrayInputStream(Base64.decodeFast(pBase64DeflatedJson));
     InputStreamReader in = new InputStreamReader(new InflaterInputStream(byteIn), _CHARSET);
     return JsonValue.readFrom(in);  // no bufferedReader necessary
   }

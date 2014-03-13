@@ -32,11 +32,11 @@ public class ServerReplayer implements Runnable {
     
     ServerReplay serverReplay = null;
 
-    try {
-    
-      while (true) {
-        
-      	synchronized (fReplayQueue) {
+    while (true) {
+      
+    	try {
+      
+        synchronized (fReplayQueue) {
           try {
             while (fReplayQueue.isEmpty() && !fStopped) {
               fReplayQueue.wait();
@@ -57,10 +57,10 @@ public class ServerReplayer implements Runnable {
       	while (serverReplay != null) {
           
           serverReplay.setComplete(true);
-
+  
           ServerCommandReplay replayCommand = new ServerCommandReplay();
           replayCommand.setTotalNrOfCommands(serverReplay.getTotalNrOfCommands());
-
+  
           ServerCommand[] serverCommands = serverReplay.findRelevantCommandsInLog();
         	for (ServerCommand serverCommand : serverCommands) {
         	  replayCommand.add(serverCommand);
@@ -79,14 +79,13 @@ public class ServerReplayer implements Runnable {
           	serverReplay = null;
           }
           
-        }
-      	
+      	}
+        
+      } catch (Exception pException) {
+      	GameState gameState = (serverReplay != null) ? serverReplay.getGameState() : null;
+        getServer().getDebugLog().log((gameState != null) ? gameState.getId() : -1, pException);
       }
       
-    } catch (Exception pException) {
-    	GameState gameState = (serverReplay != null) ? serverReplay.getGameState() : null;
-      getServer().getDebugLog().log((gameState != null) ? gameState.getId() : -1, pException);
-      System.exit(99);
     }
     
   }

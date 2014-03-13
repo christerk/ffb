@@ -215,7 +215,7 @@ public class ClientReplayer implements ActionListener {
               fReplayList.add(unseenCommand);
             }
             fLastReplayPosition = getReplaySize() - 1;
-            replayTo(fLastReplayPosition, ClientCommandHandlerMode.INITIALIZING, null);
+            replayTo(fLastReplayPosition + 1, ClientCommandHandlerMode.INITIALIZING, null);
           }
         }
         fUnseenPosition++;
@@ -226,7 +226,7 @@ public class ClientReplayer implements ActionListener {
         getClient().getUserInterface().getLog().getLogScrollPane().setScrollBarToMaximum();
       }
     } else if (fReplayDirectionForward) {
-      if (fLastReplayPosition < getReplaySize() - 1) {
+      if (fLastReplayPosition < getReplaySize()) {
       	replayTo(fLastReplayPosition + 1, ClientCommandHandlerMode.REPLAYING, null);
       } else {
         pause();

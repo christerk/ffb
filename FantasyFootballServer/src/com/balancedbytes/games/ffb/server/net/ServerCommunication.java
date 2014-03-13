@@ -13,6 +13,7 @@ import com.balancedbytes.games.ffb.GameList;
 import com.balancedbytes.games.ffb.PlayerState;
 import com.balancedbytes.games.ffb.Sound;
 import com.balancedbytes.games.ffb.TeamList;
+import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.Animation;
 import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.model.PlayerResult;
@@ -47,7 +48,6 @@ import com.balancedbytes.games.ffb.server.handler.IReceivedCommandHandler;
 import com.balancedbytes.games.ffb.server.net.commands.InternalServerCommand;
 import com.balancedbytes.games.ffb.server.net.commands.InternalServerCommandSocketClosed;
 import com.balancedbytes.games.ffb.util.ArrayTool;
-import com.eclipsesource.json.JsonValue;
 
 /**
  * 
@@ -205,9 +205,13 @@ public class ServerCommunication implements Runnable, IReceivedCommandHandler {
   }
   
   private Future<Void> send(Session pSession, NetCommand pCommand) {
+    
     if ((pSession == null) || (pCommand == null) || !pSession.isOpen()) {
       return null;
     }
+    
+    // old:
+    /*
     JsonValue jsonValue = pCommand.toJsonValue();
     if (jsonValue == null) {
       return null;
@@ -216,7 +220,21 @@ public class ServerCommunication implements Runnable, IReceivedCommandHandler {
     if (textMessage == null) {
       return null;
     }
+    */
+    
+    // new:
+    String textMessage = null;
+    try {
+      textMessage = UtilJson.deflateToBase64(pCommand.toJsonValue());
+    } catch (IOException pIoException) {
+      return null;
+    }
+    if (textMessage == null) {
+      return null;
+    }
+    
     return pSession.getRemote().sendStringByFuture(textMessage);
+    
   }
 
   protected void sendAllSessions(GameState pGameState, NetCommand pCommand) {

@@ -500,9 +500,7 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
     fGameStatisticsMenuItem.setEnabled(gameStarted);
     fGameConcessionMenuItem.setEnabled(gameStarted && game.isHomePlaying() && (ClientMode.PLAYER == getClient().getMode()) && game.isConcessionPossible());
 
-    // TODO: deactivated for now - needs further investigation
-    fGameReplayMenuItem.setEnabled(false);
-//    fGameReplayMenuItem.setEnabled(ClientMode.SPECTATOR == getClient().getMode());
+    fGameReplayMenuItem.setEnabled(ClientMode.SPECTATOR == getClient().getMode());
     
     updateMissingPlayers();
     updateInducements();

@@ -7,6 +7,7 @@ import java.util.concurrent.TimeUnit;
 import org.eclipse.jetty.websocket.WebSocket;
 
 import com.balancedbytes.games.ffb.client.FantasyFootballClient;
+import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.net.NetCommand;
 import com.balancedbytes.games.ffb.net.NetCommandFactory;
 import com.balancedbytes.games.ffb.net.NetCommandId;
@@ -40,21 +41,38 @@ public class CommandSocket implements WebSocket.OnTextMessage {
   }
 
   @Override
-  public void onMessage(String pMessage) {
-    if ((pMessage == null) || !isOpen()) {
+  public void onMessage(String pTextMessage) {
+    
+    if ((pTextMessage == null) || !isOpen()) {
       return;
     }
-    JsonValue jsonValue = JsonValue.readFrom(pMessage);
+    
+    // old:
+    // JsonValue jsonValue = JsonValue.readFrom(pTextMessage);
+    
+    // new:
+    JsonValue jsonValue = null;
+    try {
+      jsonValue = UtilJson.inflateFromBase64(pTextMessage);
+    } catch (IOException pIoException) {
+      return;
+    }
+
     NetCommand netCommand = fNetCommandFactory.forJsonValue(jsonValue);
     if (netCommand == null) {
       return;
     }
+    
     if (NetCommandId.SERVER_PING == netCommand.getId()) {
       ServerCommandPing pingCommand = (ServerCommandPing) netCommand;
       pingCommand.setReceived(System.currentTimeMillis());
       fClient.getClientPingTask().setLastPingReceived(pingCommand.getReceived());
+    } else {
+      System.out.println("Received: " + netCommand.getId().getName() + " (" + pTextMessage.length() + " bytes)");
     }
+    
     fClient.getCommunication().handleCommand(netCommand);
+    
   }
 
   @Override
@@ -70,19 +88,33 @@ public class CommandSocket implements WebSocket.OnTextMessage {
   }
 
   public boolean send(NetCommand pCommand) throws IOException {
+    
     if ((pCommand == null) || !isOpen()) {
       return false;
     }
+    
+    // old:
+    /*
     JsonValue jsonValue = pCommand.toJsonValue();
     if (jsonValue == null) {
       return false;
     }
+    
     String message = jsonValue.toString();
     if (message == null) {
       return false;
     }
+    */
+
+    // new:
+    String message = UtilJson.deflateToBase64(pCommand.toJsonValue());
+    if (message == null) {
+      return false;
+    }
+    
     fConnection.sendMessage(message);
     return true;
+    
   }
 
   public boolean isOpen() {

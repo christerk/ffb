@@ -1,7 +1,5 @@
 package com.balancedbytes.games.ffb.server.handler;
 
-import java.io.IOException;
-
 import org.eclipse.jetty.websocket.api.Session;
 
 import com.balancedbytes.games.ffb.net.NetCommandId;
@@ -46,6 +44,7 @@ public class ServerCommandHandlerReplay extends ServerCommandHandler {
     }
     
     // client signals that it has received the complete replay - socket can be closed
+    /*
     if (replayToCommandNr < 0) {
       try {
         pReceivedCommand.getSession().close();
@@ -54,6 +53,7 @@ public class ServerCommandHandlerReplay extends ServerCommandHandler {
       }
       return;
     }
+    */
     
     GameState gameState = getServer().getGameCache().getGameStateById(gameId);
     if (gameState == null) {

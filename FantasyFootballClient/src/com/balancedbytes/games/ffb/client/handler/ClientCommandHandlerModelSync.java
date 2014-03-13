@@ -198,16 +198,6 @@ public class ClientCommandHandlerModelSync extends ClientCommandHandler implemen
           case TURN_DATA_SET_TURN_NR:
             fUpdateTurnNr = true;
             break;
-//          case INDUCEMENT_SET_ADD_INDUCEMENT:
-//          case INDUCEMENT_SET_REMOVE_INDUCEMENT:
-//            fUpdateInducements = true;
-//            break;
-//          case FIELD_MODEL_ADD_CARD:
-//          case FIELD_MODEL_REMOVE_CARD:
-//          case INDUCEMENT_SET_ACTIVATE_CARD:
-//          case INDUCEMENT_SET_DEACTIVATE_CARD:
-//            fUpdateActiveCards = true;
-//            break;
           case GAME_SET_TIMEOUT_POSSIBLE:
             fUpdateTimeout = true;
             break;
@@ -229,7 +219,6 @@ public class ClientCommandHandlerModelSync extends ClientCommandHandler implemen
                   fReloadPitches = true;
                   break;
                 default:
-                  // do nothing
                   break;
               }
             }

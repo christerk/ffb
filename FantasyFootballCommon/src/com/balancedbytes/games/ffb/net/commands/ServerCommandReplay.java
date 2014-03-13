@@ -115,14 +115,14 @@ public class ServerCommandReplay extends ServerCommand {
   }
   
   public ServerCommandReplay initFrom(JsonValue pJsonValue) {
-    NetCommandFactory netCommandFactory = new NetCommandFactory();
     JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
     UtilNetCommand.validateCommandId(this, (NetCommandId) IJsonOption.NET_COMMAND_ID.getFrom(jsonObject));
     fTotalNrOfCommands = IJsonOption.TOTAL_NR_OF_COMMANDS.getFrom(jsonObject);
     JsonArray commandArray = IJsonOption.COMMAND_ARRAY.getFrom(jsonObject);
     fReplayCommands.clear();
+    NetCommandFactory netCommandFactory = new NetCommandFactory();
     for (int i = 0; i < commandArray.size(); i++) {
-      ServerCommand replayCommand = (ServerCommand) netCommandFactory.forJsonValue(pJsonValue);
+      ServerCommand replayCommand = (ServerCommand) netCommandFactory.forJsonValue(commandArray.get(i));
       add(replayCommand);
     }
     return this;

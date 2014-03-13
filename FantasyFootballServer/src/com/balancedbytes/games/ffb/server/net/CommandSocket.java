@@ -1,11 +1,14 @@
 package com.balancedbytes.games.ffb.server.net;
 
+import java.io.IOException;
+
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketClose;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketConnect;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
 
+import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.net.NetCommand;
 import com.balancedbytes.games.ffb.net.NetCommandFactory;
 import com.balancedbytes.games.ffb.server.handler.IReceivedCommandHandler;
@@ -29,16 +32,30 @@ public class CommandSocket {
 
   @OnWebSocketMessage
   public void onTextMessage(Session pSession, String pTextMessage) {
+    
     if ((pSession == null) || (pTextMessage == null) || !pSession.isOpen()) {
       return;
     }
-    JsonValue jsonValue = JsonValue.readFrom(pTextMessage);
+    
+    // old:
+    // JsonValue jsonValue = JsonValue.readFrom(pTextMessage);
+    
+    // new:
+    JsonValue jsonValue = null;
+    try {
+      jsonValue = UtilJson.inflateFromBase64(pTextMessage);
+    } catch (IOException pIoException) {
+      return;
+    }
+    
     NetCommand netCommand = fNetCommandFactory.forJsonValue(jsonValue);
     if (netCommand == null) {
       return;
     }
+    
     ReceivedCommand receivedCommand = new ReceivedCommand(netCommand, pSession);
     fCommandHandler.handleCommand(receivedCommand);
+    
   }
   
   @OnWebSocketConnect
