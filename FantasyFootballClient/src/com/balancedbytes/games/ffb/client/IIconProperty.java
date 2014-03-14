@@ -6,13 +6,13 @@ package com.balancedbytes.games.ffb.client;
  */
 public interface IIconProperty {
 
-  // Fields
-  String FIELD_BLIZZARD = "field.blizzard";
-  String FIELD_HEAT = "field.heat";
-  String FIELD_INTRO = "field.intro";
-  String FIELD_NICE = "field.nice";
-  String FIELD_RAIN = "field.rain";
-  String FIELD_SUNNY = "field.sunny";
+  // Pitches
+  String PITCH_BLIZZARD = "pitch.blizzard";
+  String PITCH_HEAT = "pitch.heat";
+  String PITCH_INTRO = "pitch.intro";
+  String PITCH_NICE = "pitch.nice";
+  String PITCH_RAIN = "pitch.rain";
+  String PITCH_SUNNY = "pitch.sunny";
   
   // Player decorations
   String DECORATION_PRONE = "decoration.prone";

@@ -19,9 +19,9 @@ import com.balancedbytes.games.ffb.model.Game;
  * 
  * @author Kalimar
  */
-public class FieldLayerField extends FieldLayer {
+public class FieldLayerPitch extends FieldLayer {
   
-  public FieldLayerField(FantasyFootballClient pClient) {
+  public FieldLayerPitch(FantasyFootballClient pClient) {
     super(pClient);
   }
   

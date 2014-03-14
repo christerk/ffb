@@ -25,7 +25,7 @@ import com.balancedbytes.games.ffb.TrackNumber;
 import com.balancedbytes.games.ffb.Weather;
 import com.balancedbytes.games.ffb.client.layer.FieldLayer;
 import com.balancedbytes.games.ffb.client.layer.FieldLayerBloodspots;
-import com.balancedbytes.games.ffb.client.layer.FieldLayerField;
+import com.balancedbytes.games.ffb.client.layer.FieldLayerPitch;
 import com.balancedbytes.games.ffb.client.layer.FieldLayerMarker;
 import com.balancedbytes.games.ffb.client.layer.FieldLayerOverPlayers;
 import com.balancedbytes.games.ffb.client.layer.FieldLayerPlayers;
@@ -49,7 +49,7 @@ public class FieldComponent extends JPanel implements IModelChangeObserver, Mous
 
   private FantasyFootballClient fClient;
 
-  private FieldLayerField fLayerField;
+  private FieldLayerPitch fLayerField;
   private FieldLayerTeamLogo fLayerTeamLogo;
   private FieldLayerBloodspots fLayerBloodspots;
   private FieldLayerRangeGrid fLayerRangeGrid;
@@ -68,7 +68,7 @@ public class FieldComponent extends JPanel implements IModelChangeObserver, Mous
   public FieldComponent(FantasyFootballClient pClient) {
 
     fClient = pClient;
-    fLayerField = new FieldLayerField(pClient);
+    fLayerField = new FieldLayerPitch(pClient);
     fLayerTeamLogo = new FieldLayerTeamLogo(pClient);
     fLayerBloodspots = new FieldLayerBloodspots(pClient);
     fLayerRangeGrid = new FieldLayerRangeGrid(pClient);
@@ -96,7 +96,7 @@ public class FieldComponent extends JPanel implements IModelChangeObserver, Mous
 
   }
 
-  public FieldLayerField getLayerField() {
+  public FieldLayerPitch getLayerField() {
     return fLayerField;
   }
 

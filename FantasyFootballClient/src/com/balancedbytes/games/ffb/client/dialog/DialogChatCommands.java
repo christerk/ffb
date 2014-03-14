@@ -151,6 +151,11 @@ public class DialogChatCommands extends Dialog {
       html.append("<td>").append(_FONT_OPEN).append("lists all available options with their current value").append(_FONT_CLOSE).append("</td>\n");
       html.append("</tr>\n");
       html.append("<tr>\n");
+      html.append("<td valign=\"top\">").append(_FONT_BOLD_OPEN).append("/pitch &lt;pitchname&gt;").append(_FONT_BOLD_CLOSE).append("</td>\n");
+      html.append("<td>").append(_FONT_OPEN).append("changes the pitch set (all weather conditions).<br>").append(_FONT_CLOSE).append("\n");
+      html.append(_FONT_SMALL_OPEN).append("(angelux.khemri, garion.chaos, garion.khorne, ziocrock.ulthuan.dark, ziocrock.ulthuan.light)").append(_FONT_CLOSE).append("</td>\n");
+      html.append("</tr>\n");
+      html.append("<tr>\n");
       html.append("<td>").append(_FONT_BOLD_OPEN).append("/prone &lt;playerlist&gt;").append(_FONT_BOLD_CLOSE).append("</td>\n");
       html.append("<td>").append(_FONT_OPEN).append("places players on your team prone.").append(_FONT_CLOSE).append("</td>\n");
       html.append("</tr>\n");

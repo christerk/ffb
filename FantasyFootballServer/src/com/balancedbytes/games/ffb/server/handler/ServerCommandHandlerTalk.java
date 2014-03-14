@@ -88,6 +88,8 @@ public class ServerCommandHandlerTalk extends ServerCommandHandler {
           handleOptionsCommand(gameState, talkCommand);
       	} else if (game.isTesting() && talk.startsWith("/option")) {
         	handleOptionCommand(gameState, talkCommand); 
+        } else if (game.isTesting() && talk.startsWith("/pitch")) {
+          handlePitchCommand(gameState, talkCommand); 
         } else if (game.isTesting() && talk.startsWith("/prone")) {
         	handleProneOrStunCommand(gameState, talkCommand, false, pReceivedCommand.getSession());
         } else if (game.isTesting() && talk.startsWith("/roll")) {
@@ -229,6 +231,62 @@ public class ServerCommandHandlerTalk extends ServerCommandHandler {
       getServer().getCommunication().sendPlayerTalk(pGameState, null, info.toString());
     	UtilServerGame.syncGameModel(pGameState, null, null, null);
     }
+  }
+
+  private void handlePitchCommand(GameState pGameState, ClientCommandTalk pTalkCommand) {
+    Game game = pGameState.getGame();
+    String talk = pTalkCommand.getTalk();
+    String[] commands = talk.split(" +");
+    if ((commands != null) && (commands.length > 1)) {
+      String pitchName = commands[1];
+      if (!StringTool.isProvided(pitchName)) {
+        return;
+      }
+      boolean pitchSet = false;
+      GameOptionFactory gameOptionFactory = new GameOptionFactory();
+      String propertyKeyBlizzard = buildPitchUrl(commands[1], Weather.BLIZZARD);
+      String propertyValueBlizzard = getServer().getProperty(propertyKeyBlizzard);
+      if (StringTool.isProvided(propertyValueBlizzard)) {
+        game.getOptions().addOption(gameOptionFactory.createGameOption(GameOptionId.PITCH_URL_BLIZZARD).setValue(propertyValueBlizzard));
+        pitchSet = true;
+      }
+      String propertyKeyHeat = buildPitchUrl(commands[1], Weather.SWELTERING_HEAT);
+      String propertyValueHeat = getServer().getProperty(propertyKeyHeat);
+      if (StringTool.isProvided(propertyValueHeat)) {
+        game.getOptions().addOption(gameOptionFactory.createGameOption(GameOptionId.PITCH_URL_HEAT).setValue(propertyValueHeat));
+        pitchSet = true;
+      }
+      String propertyKeyNice = buildPitchUrl(commands[1], Weather.NICE);
+      String propertyValueNice = getServer().getProperty(propertyKeyNice);
+      if (StringTool.isProvided(propertyValueNice)) {
+        game.getOptions().addOption(gameOptionFactory.createGameOption(GameOptionId.PITCH_URL_NICE).setValue(propertyValueNice));
+        pitchSet = true;
+      }
+      String propertyKeyRain = buildPitchUrl(commands[1], Weather.POURING_RAIN);
+      String propertyValueRain = getServer().getProperty(propertyKeyRain);
+      if (StringTool.isProvided(propertyValueNice)) {
+        game.getOptions().addOption(gameOptionFactory.createGameOption(GameOptionId.PITCH_URL_RAIN).setValue(propertyValueRain));
+        pitchSet = true;
+      }
+      String propertyKeySunny = buildPitchUrl(commands[1], Weather.VERY_SUNNY);
+      String propertyValueSunny = getServer().getProperty(propertyKeySunny);
+      if (StringTool.isProvided(propertyValueSunny)) {
+        game.getOptions().addOption(gameOptionFactory.createGameOption(GameOptionId.PITCH_URL_SUNNY).setValue(propertyValueSunny));
+        pitchSet = true;
+      }
+      if (pitchSet) {
+        StringBuilder info = new StringBuilder();
+        info.append("Setting pitch to ").append(pitchName);
+        getServer().getCommunication().sendPlayerTalk(pGameState, null, info.toString());
+        UtilServerGame.syncGameModel(pGameState, null, null, null);
+      }
+    }
+  }
+  
+  private String buildPitchUrl(String pPitchName, Weather pWeather) {
+    StringBuilder pitchUrl = new StringBuilder();
+    pitchUrl.append("pitch.").append(pWeather.getShortName()).append(".").append(pPitchName);
+    return pitchUrl.toString();
   }
 
   private void handleWeatherCommand(GameState pGameState, ClientCommandTalk pTalkCommand) {

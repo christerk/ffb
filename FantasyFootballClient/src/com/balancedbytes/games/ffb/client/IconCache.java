@@ -224,17 +224,17 @@ public class IconCache {
       || IClientPropertyValue.SETTING_PITCH_DEFAULT.equals(getClient().getProperty(IClientProperty.SETTING_PITCH_CUSTOMIZATION))) {
       switch (myWeather) {
         case BLIZZARD:
-          return getIconByProperty(IIconProperty.FIELD_BLIZZARD);
+          return getIconByProperty(IIconProperty.PITCH_BLIZZARD);
         case NICE:
-          return getIconByProperty(IIconProperty.FIELD_NICE);
+          return getIconByProperty(IIconProperty.PITCH_NICE);
         case POURING_RAIN:
-          return getIconByProperty(IIconProperty.FIELD_RAIN);
+          return getIconByProperty(IIconProperty.PITCH_RAIN);
         case SWELTERING_HEAT:
-          return getIconByProperty(IIconProperty.FIELD_HEAT);
+          return getIconByProperty(IIconProperty.PITCH_HEAT);
         case VERY_SUNNY:
-          return getIconByProperty(IIconProperty.FIELD_SUNNY);
+          return getIconByProperty(IIconProperty.PITCH_SUNNY);
         default:
-          return getIconByProperty(IIconProperty.FIELD_INTRO);
+          return getIconByProperty(IIconProperty.PITCH_INTRO);
       }
     }
     return getIconByUrl(customPitchUrl);

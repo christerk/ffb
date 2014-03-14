@@ -69,14 +69,15 @@ public class FieldLayerTeamLogo extends FieldLayer {
       BufferedImage teamLogo = iconCache.getIconByUrl(IconCache.findTeamLogoUrl(pTeam));
       if (teamLogo != null) {
         Graphics2D g2d = getImage().createGraphics();
-        g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.4f));
+        g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.5f));
         int x, y;
         if (pHomeTeam) {
-          x = (FIELD_IMAGE_WIDTH / 4) - (teamLogo.getWidth() / 2);
+          x = (FIELD_IMAGE_WIDTH / 4) - (teamLogo.getWidth() / 2) + (FIELD_SQUARE_SIZE / 2);
         } else {
-          x = (3 * (FIELD_IMAGE_WIDTH / 4)) - (teamLogo.getWidth() / 2);
+          x = (3 * (FIELD_IMAGE_WIDTH / 4)) - (teamLogo.getWidth() / 2) - (FIELD_SQUARE_SIZE / 2);
         }
         y = (FIELD_IMAGE_HEIGHT / 2) - (teamLogo.getHeight() / 2);
+        g2d.setClip(pHomeTeam ? FIELD_SQUARE_SIZE : FIELD_IMAGE_WIDTH / 2, 0, (FIELD_IMAGE_WIDTH / 2) - FIELD_SQUARE_SIZE, FIELD_IMAGE_HEIGHT);
         g2d.drawImage(teamLogo, x, y, null);
         g2d.dispose();
       }

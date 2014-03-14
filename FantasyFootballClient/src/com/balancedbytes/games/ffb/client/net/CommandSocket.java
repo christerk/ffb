@@ -67,8 +67,8 @@ public class CommandSocket implements WebSocket.OnTextMessage {
       ServerCommandPing pingCommand = (ServerCommandPing) netCommand;
       pingCommand.setReceived(System.currentTimeMillis());
       fClient.getClientPingTask().setLastPingReceived(pingCommand.getReceived());
-    } else {
-      System.out.println("Received: " + netCommand.getId().getName() + " (" + pTextMessage.length() + " bytes)");
+    // } else {
+      // System.out.println("Received: " + netCommand.getId().getName() + " (" + pTextMessage.length() + " bytes)");
     }
     
     fClient.getCommunication().handleCommand(netCommand);
