@@ -2,10 +2,6 @@ package com.balancedbytes.games.ffb.option;
 
 import com.balancedbytes.games.ffb.IEnumWithName;
 
-
-
-
-
 /**
  * 
  * @author Kalimar
@@ -38,7 +34,7 @@ public enum GameOptionId implements IEnumWithName {
   SNEAKY_GIT_BAN_TO_KO("sneakyGitBanToKo"),
   STAND_FIRM_NO_DROP_ON_FAILED_DODGE("standFirmNoDropOnFailedDodge"),
   SPIKED_BALL("spikedBall"),
-
+ 
   PITCH_URL_BLIZZARD("pitchUrlBlizzard"),
   PITCH_URL_HEAT("pitchUrlHeat"),
   PITCH_URL_NICE("pitchUrlNice"),

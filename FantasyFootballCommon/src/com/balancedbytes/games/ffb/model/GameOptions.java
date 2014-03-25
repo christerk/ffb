@@ -131,9 +131,11 @@ public class GameOptions implements IXmlSerializable, IByteArrayReadable, IJsonS
   public IXmlSerializable startXmlElement(String pXmlTag, Attributes pXmlAttributes) {
     if (IGameOption.XML_TAG.equals(pXmlTag)) {
       IGameOption gameOption = new GameOptionFactory().fromXmlElement(pXmlTag, pXmlAttributes);
-      gameOption.startXmlElement(pXmlTag, pXmlAttributes);
-      addOption(gameOption);
-      return gameOption;
+      if (gameOption != null) {
+        gameOption.startXmlElement(pXmlTag, pXmlAttributes);
+        addOption(gameOption);
+        return gameOption;
+      }
     }
     return this;
   }
