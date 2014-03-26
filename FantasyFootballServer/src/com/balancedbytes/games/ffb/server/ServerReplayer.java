@@ -49,8 +49,7 @@ public class ServerReplayer implements Runnable {
           }
           if ((serverReplay == null) && !fReplayQueue.isEmpty()) {
             serverReplay = fReplayQueue.remove(0);
-            GameState gameState = serverReplay.getGameState();
-            serverReplay.setTotalNrOfCommands(gameState.getGameLog().size());
+            serverReplay.setTotalNrOfCommands(serverReplay.findTotalNrOfCommands());
           }
         }
         

@@ -64,7 +64,18 @@ public class ServerReplay {
   	}
     return replayCommands.toArray(new ServerCommand[replayCommands.size()]);
   }
-  
+
+  public int findTotalNrOfCommands() {
+    int nrOfCommands = 0;
+    ServerCommand[] logCommands = getGameState().getGameLog().getServerCommands();
+    for (ServerCommand serverCommand : logCommands) {
+      if ((serverCommand.getCommandNr() >= getFromCommandNr()) && (serverCommand.getCommandNr() < getToCommandNr())) {
+        nrOfCommands++;
+      }
+    }
+    return nrOfCommands;
+  }
+
   public void setTotalNrOfCommands(int pTotalNrOfCommands) {
     fTotalNrOfCommands = pTotalNrOfCommands;
   }
