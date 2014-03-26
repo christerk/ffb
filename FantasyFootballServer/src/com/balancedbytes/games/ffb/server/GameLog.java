@@ -136,7 +136,7 @@ public class GameLog implements IByteArrayReadable, IJsonSerializable {
     JsonArray commandArray = IJsonOption.COMMAND_ARRAY.getFrom(jsonObject);
     fServerCommands.clear();
     for (int i = 0; i < commandArray.size(); i++) {
-      ServerCommand serverCommand = (ServerCommand) netCommandFactory.forJsonValue(pJsonValue);
+      ServerCommand serverCommand = (ServerCommand) netCommandFactory.forJsonValue(commandArray.get(i));
       add(serverCommand);
     }
     return this;
