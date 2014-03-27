@@ -7,6 +7,7 @@ import com.balancedbytes.games.ffb.server.GameCache;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.net.ReceivedCommand;
 import com.balancedbytes.games.ffb.server.net.commands.InternalServerCommandUploadGame;
+import com.balancedbytes.games.ffb.server.request.ServerRequestLoadReplay;
 import com.balancedbytes.games.ffb.server.step.SequenceGenerator;
 import com.balancedbytes.games.ffb.util.StringTool;
 
@@ -31,7 +32,10 @@ public class ServerCommandHandlerUploadGame extends ServerCommandHandler {
     if (gameState == null) {
     	gameState = gameCache.queryFromDb(uploadGameCommand.getGameId());
     }
-    if (gameState != null) {
+    if (gameState == null) {
+      // game has been moved out of the db - request it from the backup service
+      getServer().getRequestProcessor().add(new ServerRequestLoadReplay(uploadGameCommand.getGameId(), 0, pReceivedCommand.getSession(), ServerRequestLoadReplay.UPLOAD_GAME));
+    } else {
     	gameState.getStepStack().clear();
     	SequenceGenerator.getInstance().pushEndGameSequence(gameState, true);
     	if (StringTool.isProvided(uploadGameCommand.getConcedingTeamId())) {

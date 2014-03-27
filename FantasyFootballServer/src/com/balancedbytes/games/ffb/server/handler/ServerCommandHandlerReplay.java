@@ -66,7 +66,7 @@ public class ServerCommandHandlerReplay extends ServerCommandHandler {
 
     } else {
       // game has been moved out of the db - request it from the backup service
-      getServer().getRequestProcessor().add(new ServerRequestLoadReplay(replayCommand.getGameId(), replayToCommandNr, session));
+      getServer().getRequestProcessor().add(new ServerRequestLoadReplay(replayCommand.getGameId(), replayToCommandNr, session, ServerRequestLoadReplay.LOAD_GAME));
     }
     
   }

@@ -33,7 +33,7 @@ public class ServerCommandHandlerBackupGame extends ServerCommandHandler {
     boolean backupOk = UtilBackup.save(gameState);
     if (backupOk) {
       // request replay to see if backup has been successful, queue delete command
-      getServer().getRequestProcessor().add(new ServerRequestLoadReplay(gameState.getId(), true));
+      getServer().getRequestProcessor().add(new ServerRequestLoadReplay(gameState.getId(), 0, null, ServerRequestLoadReplay.DELETE_GAME));
     }
   }
   

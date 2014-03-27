@@ -13,6 +13,7 @@ import com.balancedbytes.games.ffb.server.IServerProperty;
 import com.balancedbytes.games.ffb.server.net.ReceivedCommand;
 import com.balancedbytes.games.ffb.server.net.commands.InternalServerCommandDeleteGame;
 import com.balancedbytes.games.ffb.server.net.commands.InternalServerCommandReplayLoaded;
+import com.balancedbytes.games.ffb.server.net.commands.InternalServerCommandUploadGame;
 import com.balancedbytes.games.ffb.server.util.UtilServerHttpClient;
 import com.balancedbytes.games.ffb.util.StringTool;
 import com.eclipsesource.json.JsonValue;
@@ -24,24 +25,20 @@ import com.eclipsesource.json.JsonValue;
  */
 public class ServerRequestLoadReplay extends ServerRequest {
 
+  public static final int LOAD_GAME = 1;
+  public static final int DELETE_GAME = 2;
+  public static final int UPLOAD_GAME = 3;  
+  
   private long fGameId;
   private int fReplayToCommandNr;
   private Session fSession;
-  private boolean fCheckForDeletion;
+  private int fMode;
 
-  public ServerRequestLoadReplay(long pGameId, boolean pCheckForDeletion) {
-    this(pGameId, 0, null, pCheckForDeletion);
-  }
-
-  public ServerRequestLoadReplay(long pGameId, int pReplayToCommandNr, Session pSession) {
-    this(pGameId, pReplayToCommandNr, pSession, false);
-  }
-
-  private ServerRequestLoadReplay(long pGameId, int pReplayToCommandNr, Session pSession, boolean pCheckForDeletion) {
+  public ServerRequestLoadReplay(long pGameId, int pReplayToCommandNr, Session pSession, int pMode) {
     fGameId = pGameId;
     fReplayToCommandNr = pReplayToCommandNr;
     fSession = pSession;
-    fCheckForDeletion = pCheckForDeletion;
+    fMode = pMode;
   }
 
   public long getGameId() {
@@ -54,10 +51,6 @@ public class ServerRequestLoadReplay extends ServerRequest {
   
   public int getReplayToCommandNr() {
     return fReplayToCommandNr;
-  }
-  
-  public boolean isCheckForDeletion() {
-    return fCheckForDeletion;
   }
   
   @Override
@@ -77,12 +70,18 @@ public class ServerRequestLoadReplay extends ServerRequest {
       return;
     }
     if (gameState != null) {
-      if (isCheckForDeletion()) {
-        server.getCommunication().handleCommand(new InternalServerCommandDeleteGame(getGameId(), false));
-      } else {
+      if (fMode == LOAD_GAME) {
         server.getGameCache().add(gameState, GameCacheMode.REPLAY_GAME);
         InternalServerCommandReplayLoaded replayLoadedCommand = new InternalServerCommandReplayLoaded(getGameId(), getReplayToCommandNr());
         server.getCommunication().handleCommand(new ReceivedCommand(replayLoadedCommand, getSession()));
+      }
+      if (fMode == DELETE_GAME) {
+        server.getCommunication().handleCommand(new InternalServerCommandDeleteGame(getGameId(), false));
+      }
+      if (fMode == UPLOAD_GAME) {
+        server.getGameCache().add(gameState, GameCacheMode.REPLAY_GAME);
+        InternalServerCommandUploadGame uploadCommand = new InternalServerCommandUploadGame(gameState.getId());
+        server.getCommunication().handleCommand(new ReceivedCommand(uploadCommand, getSession()));
       }
     }
   }
