@@ -18,6 +18,7 @@ import com.balancedbytes.games.ffb.FantasyFootballException;
 import com.balancedbytes.games.ffb.GameStatus;
 import com.balancedbytes.games.ffb.report.ReportFumbblResultUpload;
 import com.balancedbytes.games.ffb.report.ReportList;
+import com.balancedbytes.games.ffb.server.DebugLog;
 import com.balancedbytes.games.ffb.server.FantasyFootballServer;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.IServerLogLevel;
@@ -80,7 +81,8 @@ public class FumbblRequestUploadResults extends ServerRequest {
       client.getHttpConnectionManager().getParams().setConnectionTimeout(5000);
       client.executeMethod(multipartPost);
       String responseXml = new String(multipartPost.getResponseBody(), "UTF-8");
-      
+      server.getDebugLog().log(IServerLogLevel.DEBUG, DebugLog.FUMBBL_RESPONSE, responseXml);
+
       if (StringTool.isProvided(responseXml)) {
         BufferedReader xmlReader = new BufferedReader(new StringReader(responseXml));
         String line = null;
