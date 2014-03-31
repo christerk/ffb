@@ -22,8 +22,7 @@ public class UtilServerReplay {
     	server.getSessionManager().addSession(pSession, pGameState, null, ClientMode.REPLAY, false);
       server.getCommunication().sendGameState(pSession, pGameState);
     }
-    int replayToCommandNr = (pReplayToCommandNr > 0) ? pReplayToCommandNr : pGameState.lastCommandNr() + 1;
-    server.getReplayer().add(new ServerReplay(pGameState, replayToCommandNr, pSession));
+    server.getReplayer().add(new ServerReplay(pGameState, pReplayToCommandNr, pSession));
 	}
 
 }
