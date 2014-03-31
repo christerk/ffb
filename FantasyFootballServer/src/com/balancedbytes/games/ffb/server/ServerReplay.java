@@ -58,7 +58,7 @@ public class ServerReplay {
   	List<ServerCommand> replayCommands = new ArrayList<ServerCommand>();
   	ServerCommand[] logCommands = getGameState().getGameLog().getServerCommands();
   	for (ServerCommand serverCommand : logCommands) {
-  		if ((serverCommand.getCommandNr() >= getFromCommandNr()) && (serverCommand.getCommandNr() < getToCommandNr())) {
+  		if ((serverCommand.getCommandNr() >= getFromCommandNr()) && ((getToCommandNr() == 0) || (serverCommand.getCommandNr() < getToCommandNr()))) {
   			replayCommands.add(serverCommand);
   		}
   	}
