@@ -18,6 +18,7 @@ public interface IStepLabel {
 	String END_BOMB = "endBomb";
 	String END_FEEDING = "endFeeding";
 	String END_FOULING = "endFouling";
+  String END_GAME = "endGame";
 	String END_KICKOFF = "endKickoff";
 	String END_MOVING = "endMoving";
 	String END_PASSING = "endPassing";

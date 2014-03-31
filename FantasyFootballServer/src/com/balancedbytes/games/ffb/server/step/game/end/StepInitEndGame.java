@@ -1,12 +1,19 @@
 package com.balancedbytes.games.ffb.server.step.game.end;
 
 import com.balancedbytes.games.ffb.TurnMode;
+import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.GameResult;
 import com.balancedbytes.games.ffb.server.GameState;
+import com.balancedbytes.games.ffb.server.IServerJsonOption;
 import com.balancedbytes.games.ffb.server.step.AbstractStep;
 import com.balancedbytes.games.ffb.server.step.StepAction;
+import com.balancedbytes.games.ffb.server.step.StepException;
 import com.balancedbytes.games.ffb.server.step.StepId;
+import com.balancedbytes.games.ffb.server.step.StepParameter;
+import com.balancedbytes.games.ffb.server.step.StepParameterKey;
+import com.balancedbytes.games.ffb.server.step.StepParameterSet;
+import com.balancedbytes.games.ffb.util.StringTool;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
@@ -16,6 +23,8 @@ import com.eclipsesource.json.JsonValue;
  * @author Kalimar
  */
 public final class StepInitEndGame extends AbstractStep {
+  
+  private String fGotoLabelOnEnd;
 
 	public StepInitEndGame(GameState pGameState) {
 		super(pGameState);
@@ -24,6 +33,26 @@ public final class StepInitEndGame extends AbstractStep {
 	public StepId getId() {
 		return StepId.INIT_END_GAME;
 	}
+	
+  @Override
+  public void init(StepParameterSet pParameterSet) {
+    if (pParameterSet != null) {
+      for (StepParameter parameter : pParameterSet.values()) {
+        switch (parameter.getKey()) {
+          // mandatory
+          case GOTO_LABEL_ON_END:
+            fGotoLabelOnEnd = (String) parameter.getValue();
+            break;
+          default:
+            break;
+        }
+      }
+    }
+    if (!StringTool.isProvided(fGotoLabelOnEnd)) {
+      throw new StepException("StepParameter " + StepParameterKey.GOTO_LABEL_ON_END + " is not initialized.");
+    }
+  }
+
 
 	@Override
 	public void start() {
@@ -33,6 +62,10 @@ public final class StepInitEndGame extends AbstractStep {
 	
   private void executeStep() {
     Game game = getGameState().getGame();
+    if (game.getFinished() != null) {
+      getResult().setNextAction(StepAction.GOTO_LABEL, fGotoLabelOnEnd);
+      return;
+    }
 		GameResult gameResult = game.getGameResult();
 		if (gameResult.getTeamResultHome().hasConceded()) {
 		  int scoreDiffAway = gameResult.getTeamResultAway().getScore() - gameResult.getTeamResultHome().getScore();
@@ -48,9 +81,7 @@ public final class StepInitEndGame extends AbstractStep {
 		}
     game.setTurnMode(TurnMode.END_GAME);
     game.setConcessionPossible(false);
-    if (game.getFinished() == null) {
-      getResult().setNextAction(StepAction.NEXT_STEP);
-    }
+    getResult().setNextAction(StepAction.NEXT_STEP);
   }
   
   // ByteArray serialization
@@ -63,12 +94,16 @@ public final class StepInitEndGame extends AbstractStep {
   
   @Override
   public JsonObject toJsonValue() {
-    return super.toJsonValue();
+    JsonObject jsonObject = super.toJsonValue();
+    IServerJsonOption.GOTO_LABEL_ON_END.addTo(jsonObject, fGotoLabelOnEnd);
+    return jsonObject;
   }
   
   @Override
   public StepInitEndGame initFrom(JsonValue pJsonValue) {
     super.initFrom(pJsonValue);
+    JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
+    fGotoLabelOnEnd = IServerJsonOption.GOTO_LABEL_ON_END.getFrom(jsonObject);
     return this;
   }
 

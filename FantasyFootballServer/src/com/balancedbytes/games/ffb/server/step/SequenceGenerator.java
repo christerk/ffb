@@ -405,7 +405,7 @@ public class SequenceGenerator {
 
 		List<IStep> endGameSequence = new ArrayList<IStep>();
 
-		add(endGameSequence, StepId.INIT_END_GAME, pGameState);
+		add(endGameSequence, StepId.INIT_END_GAME, pGameState, createParameterSet(StepParameterKey.GOTO_LABEL_ON_END, IStepLabel.END_GAME));
 		
 		add(endGameSequence, StepId.PENALTY_SHOOTOUT, pGameState);
 		add(endGameSequence, StepId.MVP, pGameState);
@@ -413,7 +413,7 @@ public class SequenceGenerator {
 		add(endGameSequence, StepId.FAN_FACTOR, pGameState);
 		add(endGameSequence, StepId.PLAYER_LOSS, pGameState);
 		
-		add(endGameSequence, StepId.END_GAME, pGameState);
+		add(endGameSequence, StepId.END_GAME, pGameState, IStepLabel.END_GAME);
 
 		pGameState.getStepStack().push(endGameSequence);
 		

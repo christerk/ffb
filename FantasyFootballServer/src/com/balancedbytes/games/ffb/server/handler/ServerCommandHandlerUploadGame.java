@@ -37,12 +37,12 @@ public class ServerCommandHandlerUploadGame extends ServerCommandHandler {
       getServer().getRequestProcessor().add(new ServerRequestLoadReplay(uploadGameCommand.getGameId(), 0, pReceivedCommand.getSession(), ServerRequestLoadReplay.UPLOAD_GAME));
     } else {
     	gameState.getStepStack().clear();
-    	SequenceGenerator.getInstance().pushEndGameSequence(gameState, true);
-    	if (StringTool.isProvided(uploadGameCommand.getConcedingTeamId())) {
-      	Game game = gameState.getGame();
+      Game game = gameState.getGame();
+      if (StringTool.isProvided(uploadGameCommand.getConcedingTeamId())) {
         game.getGameResult().getTeamResultHome().setConceded(game.getTeamHome().getId().equals(uploadGameCommand.getConcedingTeamId()));
         game.getGameResult().getTeamResultAway().setConceded(game.getTeamAway().getId().equals(uploadGameCommand.getConcedingTeamId()));
-    	}
+      }
+      SequenceGenerator.getInstance().pushEndGameSequence(gameState, true);
     	gameState.findNextStep(null);
     }
   }
