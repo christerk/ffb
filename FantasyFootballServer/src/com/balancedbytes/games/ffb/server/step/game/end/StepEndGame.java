@@ -50,12 +50,12 @@ public final class StepEndGame extends AbstractStep {
       gameCache.queueDbUpdate(getGameState(), true);
       IDialogParameter gameStatistics = new DialogParameterFactory().createDialogParameter(DialogId.GAME_STATISTICS);
       UtilServerDialog.showDialog(getGameState(), gameStatistics);
-      FantasyFootballServer server = getGameState().getServer();
-      if ((server.getMode() == ServerMode.FUMBBL) && !game.isTesting()) {
-        server.getRequestProcessor().add(new FumbblRequestUploadResults(getGameState()));
-      }
-      getResult().setNextAction(StepAction.NEXT_STEP);
     }
+    FantasyFootballServer server = getGameState().getServer();
+    if ((server.getMode() == ServerMode.FUMBBL) && !game.isTesting()) {
+      server.getRequestProcessor().add(new FumbblRequestUploadResults(getGameState()));
+    }
+    getResult().setNextAction(StepAction.NEXT_STEP);
   }
 
   // ByteArray serialization  
