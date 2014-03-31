@@ -69,7 +69,7 @@ public class ServerReplay {
     int nrOfCommands = 0;
     ServerCommand[] logCommands = getGameState().getGameLog().getServerCommands();
     for (ServerCommand serverCommand : logCommands) {
-      if ((serverCommand.getCommandNr() >= getFromCommandNr()) && (serverCommand.getCommandNr() < getToCommandNr())) {
+      if ((serverCommand.getCommandNr() >= getFromCommandNr()) && ((getToCommandNr() == 0) || (serverCommand.getCommandNr() < getToCommandNr()))) {
         nrOfCommands++;
       }
     }
