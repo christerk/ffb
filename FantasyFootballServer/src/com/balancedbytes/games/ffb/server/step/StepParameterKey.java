@@ -24,6 +24,7 @@ public enum StepParameterKey {
   DICE_INDEX,                   // Integer
 	DISPATCH_PLAYER_ACTION,       // PlayerAction
 	DODGE_ROLL,                   // Integer
+	DROP_THROWN_PLAYER,           // Boolean
 	END_INDUCEMENT_PHASE,   	    // Boolean
 	END_PLAYER_ACTION,            // Boolean
 	END_TURN,                     // Boolean

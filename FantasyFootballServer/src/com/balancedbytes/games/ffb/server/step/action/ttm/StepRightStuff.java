@@ -35,6 +35,7 @@ import com.eclipsesource.json.JsonValue;
 /**
  * Step in ttm sequence to handle skill RIGHT_STUFF (landing roll).
  * 
+ * Expects stepParameter DROP_THROWN_PLAYER to be set by a preceding step.
  * Expects stepParameter THROWN_PLAYER_HAS_BALL to be set by a preceding step.
  * Expects stepParameter THROWN_PLAYER_ID to be set by a preceding step.
  * 
@@ -48,6 +49,7 @@ public final class StepRightStuff extends AbstractStepWithReRoll {
 	
 	private Boolean fThrownPlayerHasBall;
 	private String fThrownPlayerId;
+	private boolean fDropThrownPlayer;
 	
 	public StepRightStuff(GameState pGameState) {
 		super(pGameState);
@@ -67,6 +69,9 @@ public final class StepRightStuff extends AbstractStepWithReRoll {
 				case THROWN_PLAYER_ID:
 					fThrownPlayerId = (String) pParameter.getValue();
 					return true;
+				case DROP_THROWN_PLAYER:
+				  fDropThrownPlayer = (pParameter.getValue() != null) ? (Boolean) pParameter.getValue() : false;
+				  return true;
 				default:
 					break;
 			}
@@ -99,8 +104,14 @@ public final class StepRightStuff extends AbstractStepWithReRoll {
   		getResult().setNextAction(StepAction.NEXT_STEP);
   		return;
   	}
+    if (fThrownPlayerHasBall) {
+      game.getFieldModel().setBallCoordinate(game.getFieldModel().getPlayerCoordinate(thrownPlayer));
+    }
     boolean doRoll = true;
-    if (ReRolledAction.RIGHT_STUFF == getReRolledAction()) {
+    if (fDropThrownPlayer) {
+      doRoll = false;
+    }
+    if (!fDropThrownPlayer && (ReRolledAction.RIGHT_STUFF == getReRolledAction())) {
       if ((getReRollSource() == null) || !UtilServerReRoll.useReRoll(this, getReRollSource(), thrownPlayer)) {
         doRoll = false;
       }
@@ -113,9 +124,6 @@ public final class StepRightStuff extends AbstractStepWithReRoll {
       RightStuffModifier[] rightStuffModifiersArray = RightStuffModifier.toArray(rightStuffModifiers);
       boolean reRolled = ((getReRolledAction() == ReRolledAction.RIGHT_STUFF) && (getReRollSource() != null));
       getResult().addReport(new ReportSkillRoll(ReportId.RIGHT_STUFF_ROLL, fThrownPlayerId, successful, roll, minimumRoll, reRolled, rightStuffModifiersArray));
-      if (fThrownPlayerHasBall) {
-        game.getFieldModel().setBallCoordinate(game.getFieldModel().getPlayerCoordinate(thrownPlayer));
-      }
       if (successful) {
       	if (fThrownPlayerHasBall) {
 	      	if (UtilServerSteps.checkTouchdown(getGameState())) {
@@ -143,7 +151,9 @@ public final class StepRightStuff extends AbstractStepWithReRoll {
       InjuryResult injuryResultThrownPlayer = UtilServerInjury.handleInjury(this, InjuryType.TTM_LANDING, null, thrownPlayer, playerCoordinate, null, ApothecaryMode.THROWN_PLAYER);
       publishParameter(new StepParameter(StepParameterKey.INJURY_RESULT, injuryResultThrownPlayer));
       publishParameters(UtilServerInjury.dropPlayer(this, thrownPlayer));
-  		publishParameter(new StepParameter(StepParameterKey.END_TURN, fThrownPlayerHasBall));
+      if (fThrownPlayerHasBall) {
+        publishParameter(new StepParameter(StepParameterKey.END_TURN, true));
+      }
 	    publishParameter(new StepParameter(StepParameterKey.THROWN_PLAYER_COORDINATE, null));  // avoid reset in end step
   		getResult().setNextAction(StepAction.NEXT_STEP);
     }

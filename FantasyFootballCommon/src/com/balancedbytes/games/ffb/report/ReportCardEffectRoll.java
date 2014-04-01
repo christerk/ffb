@@ -52,7 +52,9 @@ public class ReportCardEffectRoll implements IReport {
   // transformation
   
   public IReport transform() {
-    return new ReportCardEffectRoll(getCard(), getRoll());
+    ReportCardEffectRoll transformedReport = new ReportCardEffectRoll(getCard(), getRoll());
+    transformedReport.setCardEffect(getCardEffect());
+    return transformedReport;
   }
   
   // ByteArray serialization

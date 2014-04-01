@@ -37,6 +37,7 @@ import com.eclipsesource.json.JsonValue;
  * Needs to be initialized with stepParameter THROW_SCATTER.
  * 
  * Sets stepParameter CATCH_SCATTER_THROW_IN_MODE for all steps on the stack.
+ * Sets stepParameter DROP_TTM_PLAYER for all steps on the stack.
  * Sets stepParameter END_TURN for all steps on the stack.
  * Sets stepParameter INJURY_RESULT for all steps on the stack.
  * Sets stepParameter THROWIN_COORDINATE for all steps on the stack.
@@ -141,6 +142,7 @@ public final class StepInitScatterPlayer extends AbstractStep {
     if (scatterResult.isInBounds()) {
       playerLandedUpon = game.getFieldModel().getPlayer(endCoordinate);
       if (playerLandedUpon != null) {
+        publishParameter(new StepParameter(StepParameterKey.DROP_THROWN_PLAYER, true));
       	InjuryResult injuryResultHitPlayer = UtilServerInjury.handleInjury(this, InjuryType.TTM_HIT_PLAYER, null, playerLandedUpon, endCoordinate, null, ApothecaryMode.HIT_PLAYER);
       	publishParameter(new StepParameter(StepParameterKey.INJURY_RESULT, injuryResultHitPlayer));
         if ((game.isHomePlaying() && game.getTeamHome().hasPlayer(playerLandedUpon)) || (!game.isHomePlaying() && game.getTeamAway().hasPlayer(playerLandedUpon))) {

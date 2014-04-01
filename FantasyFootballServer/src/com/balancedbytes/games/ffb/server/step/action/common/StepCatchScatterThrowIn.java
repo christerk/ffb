@@ -182,6 +182,7 @@ public class StepCatchScatterThrowIn extends AbstractStepWithReRoll {
       case CATCH_ACCURATE_PASS:
       case CATCH_HAND_OFF:
       case CATCH_SCATTER:
+        fBombMode = false;
     		if (!StringTool.isProvided(fCatcherId)) {
     			fCatcherId = (playerUnderBall != null) ? playerUnderBall.getId() : null;
     		}
@@ -199,6 +200,7 @@ public class StepCatchScatterThrowIn extends AbstractStepWithReRoll {
       case CATCH_KICKOFF:
       case CATCH_THROW_IN:
       case CATCH_MISSED_PASS:
+        fBombMode = false;
         if (playerUnderBall != null) {
         	fCatchScatterThrowInMode = CatchScatterThrowInMode.CATCH_SCATTER;
         } else {
@@ -206,6 +208,7 @@ public class StepCatchScatterThrowIn extends AbstractStepWithReRoll {
         }
       	break;
       case THROW_IN:
+        fBombMode = false;
         if (fThrowInCoordinate != null) {
         	fCatchScatterThrowInMode = throwInBall();
         } else {
@@ -214,6 +217,7 @@ public class StepCatchScatterThrowIn extends AbstractStepWithReRoll {
         break;
       case FAILED_CATCH:
       case FAILED_PICK_UP:
+        fBombMode = false;
       	if ((playerUnderBall != null) && game.getFieldModel().isBallInPlay()
       	  && (UtilGameOption.isOptionEnabled(game, GameOptionId.SPIKED_BALL) || UtilCards.isCardActive(game, Card.SPIKED_BALL))) {
           InjuryResult injuryResultCatcher = UtilServerInjury.handleInjury(this, InjuryType.STAB, null, playerUnderBall, game.getFieldModel().getBallCoordinate(), null, ApothecaryMode.CATCHER);
@@ -224,6 +228,7 @@ public class StepCatchScatterThrowIn extends AbstractStepWithReRoll {
       	}
       	// drop through to regular scatter
       case SCATTER_BALL:
+        fBombMode = false;
         if (game.getFieldModel().isBallInPlay()) {
         	fCatchScatterThrowInMode = scatterBall();
         } else {
