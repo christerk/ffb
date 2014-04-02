@@ -161,9 +161,9 @@ public class StepDropFallingPlayers extends AbstractStep {
     if (doNextStep) {
     	if (fInjuryResultDefender != null) {
     		publishParameter(new StepParameter(StepParameterKey.INJURY_RESULT, fInjuryResultDefender));
-    		if (fOldDefenderState != null) {
-    			game.getFieldModel().setPlayerState(game.getDefender(), fOldDefenderState);
-    		}
+//    		if (fOldDefenderState != null) {
+//    			game.getFieldModel().setPlayerState(game.getDefender(), fOldDefenderState);
+//    		}
     	}
     	if (fUsingPilingOn != null) {
     		publishParameter(new StepParameter(StepParameterKey.USING_PILING_ON, fUsingPilingOn));
