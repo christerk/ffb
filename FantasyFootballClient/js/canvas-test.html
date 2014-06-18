@@ -31,20 +31,39 @@
 	function resourceLoaded() {
 		numResourcesLoaded += 1;
 		if (numResourcesLoaded >= numTotalResources) {
-			draw();
+			init();
 		}
 	}
 
 	var contextFg = document.getElementById('canvasFg').getContext("2d");
 	var contextBg = document.getElementById('canvasBg').getContext("2d");
 	
-	function draw() {
+	function init() {
 		contextBg.clearRect(0, 0, 782, 452);
 		contextBg.drawImage(images['pitch'], 0, 0);
 		contextFg.clearRect(0, 0, 782, 452);
-		contextFg.drawImage(images['player1'], 32, 32);
+		gameLoop();
+	}
+
+	function gameLoop() {
+		window.requestAnimationFrame(gameLoop);
+		redraw();
 	}
 	
+	var xPos = 32;
+	var yPos = 32;
+	var xInc = 2;
+
+	function redraw() {
+		contextFg.clearRect(xPos, yPos, 28, 28);
+		xPos += xInc;
+		if ((xPos >= 720) || (xPos <= 32)) {
+			xInc *= -1;
+		}
+		contextFg.drawImage(images['player1'], xPos, yPos);
+	}
+	
+
 //-->
 </script>
 </body>
