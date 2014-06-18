@@ -1,0 +1,51 @@
+<html>
+<head>
+<title>Canvas Test</title>
+</head>
+<body>
+<div id="canvasStack" style="postion:relative; width:782px; height:452px">
+<canvas id="canvasBg" width="782" height="452" style="position: absolute; left: 0px; top: 0px; z-index: 1">
+</canvas>
+<canvas id="canvasFg" width="782" height="452" style="position: absolute; left: 0px; top: 0px; z-index: 2">
+</canvas>
+</div>
+<script type="text/javascript">
+<!--	
+	
+	var images = { };
+
+	loadImage('pitch', 'pitches/default/nice.jpg');
+	loadImage('player1', 'players/amazon/amblitzer1.gif');
+	
+	function loadImage(name, path) {
+		images[name] = new Image();
+		images[name].onload = function() {
+			resourceLoaded();
+		}
+		images[name].src = "http://localhost:2224/icons/" + path;
+	}
+
+	var numTotalResources = 2;
+	var numResourcesLoaded = 0;
+
+	function resourceLoaded() {
+		numResourcesLoaded += 1;
+		if (numResourcesLoaded >= numTotalResources) {
+			draw();
+		}
+	}
+
+	var contextFg = document.getElementById('canvasFg').getContext("2d");
+	var contextBg = document.getElementById('canvasBg').getContext("2d");
+	
+	function draw() {
+		contextBg.clearRect(0, 0, 782, 452);
+		contextBg.drawImage(images['pitch'], 0, 0);
+		contextFg.clearRect(0, 0, 782, 452);
+		contextFg.drawImage(images['player1'], 32, 32);
+	}
+	
+//-->
+</script>
+</body>
+</html>
