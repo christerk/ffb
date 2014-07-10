@@ -160,12 +160,15 @@ public class FantasyFootballServer {
           context.setContextPath("/");
           server.setHandler(context);
           File httpDir = new File(httpDirProperty);
-          ServletHolder holder = context.addServlet(DefaultServlet.class, "/icons/*");
-          holder.setInitParameter("resourceBase", new File(httpDir, "icons").getAbsolutePath());
-          holder.setInitParameter("pathInfoOnly", "true");
+//          ServletHolder holder = context.addServlet(DefaultServlet.class, "/icons/*");
+//          holder.setInitParameter("resourceBase", new File(httpDir, "icons").getAbsolutePath());
+//          holder.setInitParameter("pathInfoOnly", "true");
           context.addServlet(new ServletHolder(new AdminServlet(this)), "/admin/*");
           context.addServlet(new ServletHolder(new BackupServlet(this)), "/backup/*");
           context.addServlet(new ServletHolder(new CommandServlet(this)), "/command/*");
+          ServletHolder holder = context.addServlet(DefaultServlet.class, "/*");
+          holder.setInitParameter("resourceBase", httpDir.getAbsolutePath());
+          holder.setInitParameter("pathInfoOnly", "true");
           server.start();
         }
         

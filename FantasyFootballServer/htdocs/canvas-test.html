@@ -1,0 +1,92 @@
+<html>
+<head>
+<title>Canvas Test</title>
+<style type="text/css">
+#client { position: relative; width: 1014px; height: 712px; }
+#playerDetailsRed { position: absolute; left: 0px; top: 0px; }
+#boxButtonsRed { position: absolute; left: 0px; top: 430px; }
+#turnDiceStatusRed { position: absolute; left: 0px; top: 452px; }
+#resourcesRed { position: absolute; left: 0px; top: 544px; }
+#pitch { position: absolute; left: 116px; top: 0px; z-index: 1; }
+#playerCanvas { position: absolute; left: 116px; top: 0px; z-index: 2; }
+#scorebar { position: absolute; left: 116px; top: 452px; }
+#playerDetailsBlue { position: absolute; left: 897px; top: 0px; }
+#boxButtonsBlue { position: absolute; left: 897px; top: 430px; }
+#turnDiceStatusBlue { position: absolute; left: 897px; top: 452px; }
+#resourcesBlue { position: absolute; left: 897px; top: 544px; }
+</style>
+</head>
+<body>
+<div id="client">
+
+<img id="playerDetailsRed" src="/icons/client/bg_player_details_red.png" width="116" height="430" />
+<img id="boxButtonsRed" src="/icons/client/bg_box_buttons_red.png" width="116" height="22" />
+<img id="turnDiceStatusRed" src="/icons/client/bg_turn_dice_status_red.png" width="116" height="92" />
+<img id="resourcesRed" src="/icons/client/bg_resources_red.png" width="116" height="168" />
+
+<img id="pitch" src="/icons/pitches/default/nice.jpg" width="782" height="452" />
+<canvas id="playerCanvas" width="782" height="452"></canvas>
+
+<img id="scorebar" src="/icons/client/bg_scorebar.png" width="782" height="32" />
+
+<img id="playerDetailsBlue" src="/icons/client/bg_player_details_blue.png" width="116" height="430" />
+<img id="boxButtonsBlue" src="/icons/client/bg_box_buttons_blue.png" width="116" height="22" />
+<img id="turnDiceStatusBlue" src="/icons/client/bg_turn_dice_status_blue.png" width="116" height="92" />
+<img id="resourcesBlue" src="/icons/client/bg_resources_blue.png" width="116" height="168" />
+
+</div>
+<script type="text/javascript">
+<!--	
+	
+	var images = { };
+
+	loadImage('player1', '/icons/players/amazon/amblitzer1.gif');
+	
+	function loadImage(name, path) {
+		images[name] = new Image();
+		images[name].onload = function() {
+			resourceLoaded();
+		}
+		images[name].src = path;
+	}
+
+	var numTotalResources = 1;
+	var numResourcesLoaded = 0;
+
+	function resourceLoaded() {
+		numResourcesLoaded += 1;
+		if (numResourcesLoaded >= numTotalResources) {
+			init();
+		}
+	}
+
+	var contextPlayers = document.getElementById('playerCanvas').getContext("2d");
+	
+	function init() {
+		contextPlayers.clearRect(0, 0, 782, 452);
+		gameLoop();
+	}
+
+	function gameLoop() {
+		window.requestAnimationFrame(gameLoop);
+		redraw();
+	}
+	
+	var xPos = 32;
+	var yPos = 32;
+	var xInc = 2;
+
+	function redraw() {
+		contextPlayers.clearRect(xPos, yPos, 28, 28);
+		xPos += xInc;
+		if ((xPos >= 720) || (xPos <= 32)) {
+			xInc *= -1;
+		}
+		contextPlayers.drawImage(images['player1'], xPos, yPos);
+	}
+	
+
+//-->
+</script>
+</body>
+</html>
