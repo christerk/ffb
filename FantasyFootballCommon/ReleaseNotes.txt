@@ -8,7 +8,7 @@
 - Player Markers saved by team - upon starting a new game your players will be marked the same as in the last game
 - New way to store replays, drastically reducing database size (making it much easier for Christer to do backups)
 - Custom pitches
-- New test commands (/weather, /card)
+- New test commands (/weather, /card, /pitch)
 
 [b]22 Bugfixes:[/b]
 
@@ -19,7 +19,7 @@
 [url=http://www.fumbbl.com/FUMBBL.php?page=bugs&op=view&id=1324]#1324[/url] Problems with Leap in new client
 [url=http://www.fumbbl.com/FUMBBL.php?page=bugs&op=view&id=1327]#1327[/url] Teleporting player
 [url=http://www.fumbbl.com/FUMBBL.php?page=bugs&op=view&id=1336]#1336[/url] BLOCKING: Wrong player blocked/multiple blocks/etc
-[url=http://www.fumbbl.com/FUMBBL.php?page=bugs&op=view&id=1344]#1344[/url] Can,t Leap on a hand over action
+[url=http://www.fumbbl.com/FUMBBL.php?page=bugs&op=view&id=1344]#1344[/url] Can't Leap on a hand over action
 [url=http://www.fumbbl.com/FUMBBL.php?page=bugs&op=view&id=1348]#1348[/url] Server disconnect during setup corrupts game (?)
 [url=http://www.fumbbl.com/FUMBBL.php?page=bugs&op=view&id=1350]#1350[/url] NO MA ISSUES: Can't leap
 [url=http://www.fumbbl.com/FUMBBL.php?page=bugs&op=view&id=1351]#1351[/url] FREEZE: Dump Off

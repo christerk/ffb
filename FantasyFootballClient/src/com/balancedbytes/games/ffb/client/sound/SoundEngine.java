@@ -12,6 +12,9 @@ import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
 import javax.sound.sampled.DataLine;
 import javax.sound.sampled.FloatControl;
+import javax.sound.sampled.Line;
+import javax.sound.sampled.LineEvent;
+import javax.sound.sampled.LineListener;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
 
@@ -31,11 +34,9 @@ public class SoundEngine extends Thread {
   static {
     _SOUND_PROPERTY_KEYS.put(Sound.BLOCK, ISoundProperty.BLOCK);
     _SOUND_PROPERTY_KEYS.put(Sound.BLUNDER, ISoundProperty.BLUNDER);
-    // _SOUND_PROPERTY_KEYS.put(Sound.BOO, ISoundProperty.BOO);
     _SOUND_PROPERTY_KEYS.put(Sound.BOUNCE, ISoundProperty.BOUNCE);
     _SOUND_PROPERTY_KEYS.put(Sound.CATCH, ISoundProperty.CATCH);
     _SOUND_PROPERTY_KEYS.put(Sound.CHAINSAW, ISoundProperty.CHAINSAW);
-    // _SOUND_PROPERTY_KEYS.put(Sound.CHEER, ISoundProperty.CHEER);
     _SOUND_PROPERTY_KEYS.put(Sound.CLICK, ISoundProperty.CLICK);
     _SOUND_PROPERTY_KEYS.put(Sound.DING, ISoundProperty.DING);
     _SOUND_PROPERTY_KEYS.put(Sound.DODGE, ISoundProperty.DODGE);
@@ -131,6 +132,17 @@ public class SoundEngine extends Thread {
           float dB = (float) (Math.log(gain) / Math.log(10.0) * 20.0);
           gainControl.setValue(dB);
         }
+        // Christer fix for running out of memory
+        clip.addLineListener(new LineListener() {
+          @Override
+          public void update(LineEvent pEvent) {
+            LineEvent.Type type = pEvent.getType();
+            if (type == LineEvent.Type.STOP) {
+              Line line = pEvent.getLine();
+              line.close();
+            }
+          }
+        });
         clip.start(); // Start playing
       }
       
