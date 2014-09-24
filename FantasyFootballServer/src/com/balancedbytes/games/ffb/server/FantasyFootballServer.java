@@ -255,6 +255,14 @@ public class FantasyFootballServer {
     return fProperties.getProperty(pProperty);
   }
   
+  public void setProperty(String pProperty, String pValue) {
+    fProperties.setProperty(pProperty, pValue);
+  }
+  
+  public String removeProperty(String pProperty) {
+    return (String) fProperties.remove(pProperty);
+  }
+  
   public String[] getProperties() {
     return fProperties.keySet().toArray(new String[fProperties.size()]);
   }

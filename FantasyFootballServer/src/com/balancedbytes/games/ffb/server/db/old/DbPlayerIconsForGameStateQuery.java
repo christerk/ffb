@@ -51,6 +51,10 @@ public class DbPlayerIconsForGameStateQuery extends DbStatement {
           Player player = game.getPlayerById(resultSet.getString(col++));
           DbPlayerIconType iconType = DbPlayerIconType.fromTypeString(resultSet.getString(col++));
           String iconUrl = resultSet.getString(col++);
+          if (DbPlayerIconType.PORTRAIT == iconType) {
+            player.setUrlPortrait(iconUrl);
+          }
+          /*
           if (iconType != null) {
             switch (iconType) {
               case HOME_STANDING:
@@ -73,6 +77,7 @@ public class DbPlayerIconsForGameStateQuery extends DbStatement {
                 break;
             }
           }
+          */
         }
         resultSet.close();
       } catch (SQLException sqlE) {

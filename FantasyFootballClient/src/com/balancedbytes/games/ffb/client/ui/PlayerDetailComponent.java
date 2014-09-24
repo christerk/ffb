@@ -139,7 +139,7 @@ public class PlayerDetailComponent extends JPanel {
     if (fPlayer != null) {
       int x = 3, y = 32;
       Graphics2D g2d = fImage.createGraphics();
-      String portraitUrl = PlayerIconFactory.getPlayerPortraitUrl(getPlayer());
+      String portraitUrl = PlayerIconFactory.getPortraitUrl(getPlayer());
       IconCache iconCache = getSideBar().getClient().getUserInterface().getIconCache();
       StringBuilder positionName = new StringBuilder();
       if (getPlayer() != null) {

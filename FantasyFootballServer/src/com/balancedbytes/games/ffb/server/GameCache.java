@@ -1,10 +1,13 @@
 package com.balancedbytes.games.ffb.server;
 
+import java.io.BufferedInputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Properties;
 
 import org.eclipse.jetty.websocket.api.Session;
 
@@ -59,6 +62,9 @@ public class GameCache {
   private RosterCache fRosterCache;
   private TeamCache fTeamCache;  // used in standalone mode only
   
+  private static final String _PITCHES_INI = "pitches.ini";
+  private static final String _PITCH_PROPERTY_PREFIX = "pitch.";
+  
   public GameCache(FantasyFootballServer pServer) {
     fServer = pServer;
     fIdGenerator = new IdGenerator(0);
@@ -71,6 +77,7 @@ public class GameCache {
   public void init() {
     DbGamesSerializedQueryMaxId queryMaxId = (DbGamesSerializedQueryMaxId) getServer().getDbQueryFactory().getStatement(DbStatementId.GAMES_SERIALIZED_QUERY_MAX_ID);
     fIdGenerator = new IdGenerator(queryMaxId.execute());
+    loadPitchProperties();
     if (ServerMode.STANDALONE == getServer().getMode()) {
       try {
         fRosterCache.init(new File("rosters"));
@@ -229,10 +236,35 @@ public class GameCache {
     }
   }
   
-  public void clearRosterCache() {
+  public void refresh() {
     fRosterCache.clear();
+    loadPitchProperties();
   }
-    
+  
+  private void loadPitchProperties() {
+    Properties pitchProperties = new Properties();
+    try {
+      // load pitch properties
+      BufferedInputStream propertyInputStream = new BufferedInputStream(new FileInputStream(_PITCHES_INI));
+      pitchProperties.load(propertyInputStream);
+      propertyInputStream.close();
+    } catch (IOException pIoException) {
+      getServer().getDebugLog().log(pIoException);
+    }
+    // clear old pitch properties
+    for (String serverProperty : getServer().getProperties()) {
+      if (StringTool.isProvided(serverProperty) && serverProperty.startsWith(_PITCH_PROPERTY_PREFIX)) {
+        getServer().removeProperty(serverProperty);
+      }
+    }
+    // add new pitch properties
+    String[] pitchKeys = pitchProperties.keySet().toArray(new String[pitchProperties.size()]);
+    for (String pitchKey : pitchKeys) {
+      StringBuilder serverKey = new StringBuilder().append(_PITCH_PROPERTY_PREFIX).append(pitchKey);
+      getServer().setProperty(serverKey.toString(), (String) pitchProperties.get(pitchKey));
+    }
+  }
+  
   public void addTeamToGame(GameState pGameState, Team pTeam, boolean pHomeTeam) {
     Game game = pGameState.getGame();
     Player[] players = pTeam.getPlayers();

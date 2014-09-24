@@ -14,120 +14,102 @@ Star Players available for Inducement:
 Helmut Wulf, Morg ‘n’ Thorg, Zara the Slayer
 -->
 
-  <name>Amazon</name>
-  <type>Regular</type>
-  <reRollCost>50000</reRollCost>	
-  <maxReRolls>8</maxReRolls>
-  <baseIconPath>http://localhost:2224/icons/players/amazon/</baseIconPath>	
+	<name>Amazon</name>
+	<type>Regular</type>
+	<reRollCost>50000</reRollCost>	
+	<maxReRolls>8</maxReRolls>
+	<baseIconPath>http://localhost:2224/icons/players/</baseIconPath>	
 
-  <position id="amazon.blitzer">
-  	<quantity>4</quantity>
-  	<name>Blitzer</name>
-  	<type>Regular</type>
-  	<cost>90000</cost>
-    <movement>6</movement>
-    <strength>3</strength>
-    <agility>3</agility>
-    <armour>7</armour>
-    <iconList>
-      <portrait>portrait_amazon_blitzer.png</portrait>
-      <home standing="amblitzer1.gif" moving="amblitzer1an.gif" />
-      <away standing="amblitzer1b.gif" moving="amblitzer1ban.gif" />
-      <home standing="amblitzer2.gif" moving="amblitzer2an.gif" />
-      <away standing="amblitzer2b.gif" moving="amblitzer2ban.gif" />
-    </iconList>
-  	<skillList>
-  	  <skill>Dodge</skill>
-  	  <skill>Block</skill>
-  	</skillList>
-  	<skillCategoryList>
-      <normal>General</normal>
-      <normal>Strength</normal>
-      <double>Agility</double>
-      <double>Passing</double>
-  	</skillCategoryList>
-  </position>
+	<position id="amazon.blitzer">
+		<quantity>4</quantity>
+		<name>Blitzer</name>
+		<type>Regular</type>
+		<cost>90000</cost>
+		<movement>6</movement>
+		<strength>3</strength>
+		<agility>3</agility>
+		<armour>7</armour>
+		<portrait>portraits/amblitzer.png</portrait>
+		<iconSet size="2">iconsets/amblitzer.png</iconSet>
+		<skillList>
+			<skill>Dodge</skill>
+			<skill>Block</skill>
+		</skillList>
+		<skillCategoryList>
+			<normal>General</normal>
+			<normal>Strength</normal>
+			<double>Agility</double>
+			<double>Passing</double>
+		</skillCategoryList>
+	</position>
 
-  <position id="amazon.catcher">
-  	<quantity>2</quantity>
-  	<name>Catcher</name>
-  	<type>Regular</type>
-  	<cost>70000</cost>
-    <movement>6</movement>
-    <strength>3</strength>
-    <agility>3</agility>
-    <armour>7</armour>
-    <iconList>
-      <portrait>portrait_amazon_catcher.png</portrait>
-      <home standing="amcatcher1.gif" moving="amcatcher1an.gif" />
-      <away standing="amcatcher1b.gif" moving="amcatcher1ban.gif" />
-      <home standing="amcatcher2.gif" moving="amcatcher2an.gif" />
-      <away standing="amcatcher2b.gif" moving="amcatcher2ban.gif" />
-    </iconList>
-  	<skillList>
-  	  <skill>Dodge</skill>
-  	  <skill>Catch</skill>
-  	</skillList>
-  	<skillCategoryList>
-      <normal>General</normal>
-      <normal>Agility</normal>
-      <double>Strength</double>
-      <double>Passing</double>
-  	</skillCategoryList>
-  </position>
+	<position id="amazon.catcher">
+		<quantity>2</quantity>
+		<name>Catcher</name>
+		<type>Regular</type>
+		<cost>70000</cost>
+		<movement>6</movement>
+		<strength>3</strength>
+		<agility>3</agility>
+		<armour>7</armour>
+		<portrait>portraits/amcatcher.png</portrait>
+		<iconSet size="2">iconsets/amcatcher.png</iconSet>
+		<skillList>
+			<skill>Dodge</skill>
+			<skill>Catch</skill>
+		</skillList>
+		<skillCategoryList>
+			<normal>General</normal>
+			<normal>Agility</normal>
+			<double>Strength</double>
+			<double>Passing</double>
+		</skillCategoryList>
+	</position>
 
-  <position id="amazon.thrower">
-  	<quantity>2</quantity>
-  	<name>Thrower</name>
-  	<type>Regular</type>
-  	<cost>70000</cost>
-    <movement>6</movement>
-    <strength>3</strength>
-    <agility>3</agility>
-    <armour>7</armour>
-    <iconList>
-      <portrait>portrait_amazon_thrower.png</portrait>
-      <home standing="amthrower1.gif" moving="amthrower1an.gif" />
-      <away standing="amthrower1b.gif" moving="amthrower1ban.gif" />
-    </iconList>
-  	<skillList>
-  	  <skill>Dodge</skill>
-  	  <skill>Pass</skill>
-  	</skillList>
-  	<skillCategoryList>
-      <normal>General</normal>
-      <normal>Passing</normal>
-      <double>Agility</double>
-      <double>Strength</double>
-  	</skillCategoryList>
-  </position>
+	<position id="amazon.thrower">
+		<quantity>2</quantity>
+		<name>Thrower</name>
+		<type>Regular</type>
+		<cost>70000</cost>
+		<movement>6</movement>
+		<strength>3</strength>
+		<agility>3</agility>
+		<armour>7</armour>
+		<portrait>portraits/amthrower.png</portrait>
+		<iconSet size="1">iconsets/amthrower.png</iconSet>
+		<skillList>
+			<skill>Dodge</skill>
+			<skill>Pass</skill>
+		</skillList>
+		<skillCategoryList>
+			<normal>General</normal>
+			<normal>Passing</normal>
+			<double>Agility</double>
+			<double>Strength</double>
+		</skillCategoryList>
+	</position>
 
-  <position id="amazon.linewoman">
-  	<quantity>16</quantity>
-  	<name>Linewoman</name>
-  	<type>Regular</type>
-  	<cost>50000</cost>
-    <movement>6</movement>
-    <strength>3</strength>
-    <agility>3</agility>
-    <armour>7</armour>
-    <iconList>
-      <portrait>portrait_amazon_linewoman.png</portrait>
-      <home standing="amlineman1.gif" moving="amlineman1an.gif" />
-      <away standing="amlineman1b.gif" moving="amlineman1ban.gif" />
-      <home standing="amlineman2.gif" moving="amlineman2an.gif" />
-      <away standing="amlineman2b.gif" moving="amlineman2ban.gif" />
-    </iconList>
-  	<skillList>
-  	  <skill>Dodge</skill>
-  	</skillList>
-  	<skillCategoryList>
-      <normal>General</normal>
-      <double>Agility</double>
-      <double>Strength</double>
-      <double>Passing</double>
-  	</skillCategoryList>
-  </position>
+	<position id="amazon.linewoman">
+		<quantity>16</quantity>
+		<name>Linewoman</name>
+		<type>Regular</type>
+		<cost>50000</cost>
+		<movement>6</movement>
+		<strength>3</strength>
+		<agility>3</agility>
+		<armour>7</armour>
+		<portrait>portraits/amlineman.png</portrait>
+		<iconSet size="2">iconsets/amlineman.png</iconSet>
+		<skillList>
+			<skill>Dodge</skill>
+		</skillList>
+		<skillCategoryList>
+			<normal>General</normal>
+			<double>Agility</double>
+			<double>Strength</double>
+			<double>Passing</double>
+		</skillCategoryList>
+	</position>
   
 	<position id="amazon.Helmut">
 		<quantity>1</quantity>
@@ -139,11 +121,8 @@ Helmut Wulf, Morg ‘n’ Thorg, Zara the Slayer
 		<strength>3</strength>
 		<agility>3</agility>
 		<armour>8</armour>
-		<iconList baseIconPath="../stars/">
-			<portrait/>
-			<home standing="Helmut_Wulf.gif" moving="Helmut_Wulf_an.gif"/>
-			<away standing="Helmut_Wulf_b.gif"  moving="Helmut_Wulf_ban.gif"/>
-		</iconList>
+		<portrait></portrait>
+		<iconSet size="1">iconsets/Helmut_Wulf.png</iconSet>
 		<skillList>
 			<skill>Loner</skill>
 			<skill>Chainsaw</skill>
@@ -162,11 +141,8 @@ Helmut Wulf, Morg ‘n’ Thorg, Zara the Slayer
 		<strength>4</strength>
 		<agility>3</agility>
 		<armour>8</armour>
-    	<iconList baseIconPath="../stars/">
-			<portrait/>
-			<home standing="Willow_Rosebark.gif" moving="Willow_Rosebark_an.gif"/>
-			<away standing="Willow_Rosebark_b.gif"  moving="Willow_Rosebark_ban.gif"/>
-		</iconList>
+		<portrait></portrait>
+		<iconSet size="1">iconsets/Willow_Rosebark.png</iconSet>
 		<skillList>
 			<skill>Loner</skill>
 			<skill>Dauntless</skill>
@@ -185,11 +161,8 @@ Helmut Wulf, Morg ‘n’ Thorg, Zara the Slayer
 		<strength>3</strength>
 		<agility>5</agility>
 		<armour>7</armour>
-    	<iconList baseIconPath="../stars/">
-			<portrait/>
-			<home standing="Roxanna_Darknail.gif" moving="Roxanna_Darknail_an.gif"/>
-			<away standing="Roxanna_Darknail_b.gif"  moving="Roxanna_Darknail_ban.gif"/>
-		</iconList>
+		<portrait></portrait>
+		<iconSet size="1">iconsets/Roxanna_Darknail.png</iconSet>
 		<skillList>
 			<skill>Loner</skill>
 			<skill>Dodge</skill>
@@ -210,11 +183,8 @@ Helmut Wulf, Morg ‘n’ Thorg, Zara the Slayer
 		<strength>4</strength>
 		<agility>3</agility>
 		<armour>8</armour>
-    	<iconList baseIconPath="../stars/">
-			<portrait/>
-			<home standing="Zara_the_Slayer.gif" moving="Zara_the_Slayer_an.gif"/>
-			<away standing="Zara_the_Slayer_b.gif"  moving="Zara_the_Slayer_ban.gif"/>
-		</iconList>
+		<portrait></portrait>
+		<iconSet size="1">iconsets/Zara_the_Slayer.png</iconSet>
 		<skillList>
 			<skill>Loner</skill>
 			<skill>Block</skill>
@@ -236,11 +206,8 @@ Helmut Wulf, Morg ‘n’ Thorg, Zara the Slayer
 		<strength>5</strength>
 		<agility>2</agility>
 		<armour>9</armour>
-    	<iconList baseIconPath="../stars/">
-			<portrait/>
-			<home standing="Bertha_Bigfist.gif" moving="Bertha_Bigfist_an.gif"/>
-			<away standing="Bertha_Bigfist_b.gif"  moving="Bertha_Bigfist_ban.gif"/>
-		</iconList>
+		<portrait></portrait>
+		<iconSet size="1">iconsets/Bertha_Bigfist.png</iconSet>
 		<skillList>
 			<skill>Loner</skill>
 			<skill>Bone-Head</skill>
@@ -262,11 +229,8 @@ Helmut Wulf, Morg ‘n’ Thorg, Zara the Slayer
 		<strength>6</strength>
 		<agility>3</agility>
 		<armour>10</armour>
-    	<iconList baseIconPath="../stars/">
-			<portrait/>
-			<home standing="morgnthorg.gif" moving="morgnthorg_an.gif"/>
-			<away standing="morgnthorg_b.gif"  moving="morgnthorg_ban.gif"/>
-		</iconList>
+		<portrait></portrait>
+		<iconSet size="1">iconsets/morgnthorg.png</iconSet>
 		<skillList>
 			<skill>Loner</skill>
 			<skill>Block</skill>

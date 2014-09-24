@@ -39,22 +39,44 @@ public class PlayerIconFactory {
   public static final int MAX_ICON_HEIGHT = 40;
 
   public BufferedImage getBasicIcon(FantasyFootballClient pClient, Player pPlayer, boolean pHomePlayer, boolean pMoving, boolean pWithBall, boolean pWithBomb) {
+    
+    if ((pClient == null) || (pPlayer == null)) {
+      return null;
+    }
 
-    BufferedImage icon = null;
     Game game = pClient.getGame();
     IconCache iconCache = pClient.getUserInterface().getIconCache();
-
     String settingIcons = pClient.getProperty(IClientProperty.SETTING_ICONS);
+    BufferedImage icon = null;
+    String iconSetUrl = null;
     
     if (!StringTool.isProvided(settingIcons) || IClientPropertyValue.SETTING_ICONS_TEAM.equals(settingIcons) || (pHomePlayer && IClientPropertyValue.SETTING_ICONS_ROSTER_OPPONENT.equals(settingIcons))) {
-      icon = iconCache.getIconByUrl(getPlayerIconUrl(pPlayer, pHomePlayer, !pMoving));
+      iconSetUrl = pPlayer.getUrlIconSet();
     }
     
-    if (IClientPropertyValue.SETTING_ICONS_ROSTER_BOTH.equals(settingIcons) || (!pHomePlayer && IClientPropertyValue.SETTING_ICONS_ROSTER_OPPONENT.equals(settingIcons)) || (icon == null)) {
-      icon = iconCache.getIconByUrl(getPositionIconUrl(pPlayer.getPosition(), pHomePlayer, !pMoving, pPlayer.getPositionIconIndex()));
+    if (!StringTool.isProvided(iconSetUrl) || IClientPropertyValue.SETTING_ICONS_ROSTER_BOTH.equals(settingIcons) || (!pHomePlayer && IClientPropertyValue.SETTING_ICONS_ROSTER_OPPONENT.equals(settingIcons))) {
+      iconSetUrl = pPlayer.getPosition().getUrlIconSet();
     }
-    
-    if (IClientPropertyValue.SETTING_ICONS_ABSTRACT.equals(settingIcons) || (icon == null)) {
+
+    if (StringTool.isProvided(iconSetUrl)) {
+      BufferedImage iconSet = iconCache.getIconByUrl(iconSetUrl);
+      if (iconSet != null) {
+        int iconSize = iconSet.getWidth() / 4;
+        int y = pPlayer.getIconSetIndex() * iconSize;
+        int x = 0;
+        if (pHomePlayer) {
+          x = (pMoving ? 1 : 0) * iconSize;
+        } else {
+          x = (pMoving ? 3 : 2) * iconSize;
+        }
+        icon = new BufferedImage(iconSize, iconSize, BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g2d = icon.createGraphics();
+        g2d.drawImage(iconSet, x, y, iconSize, iconSize, null);
+        g2d.dispose();
+      }
+    }
+
+    if ((icon == null) || IClientPropertyValue.SETTING_ICONS_ABSTRACT.equals(settingIcons)) {
       int fontSize = 0;
       Color fontColor = Color.WHITE;
       Color shadowColor = Color.BLACK;
@@ -252,73 +274,60 @@ public class PlayerIconFactory {
     }
   }
 
-  public static String getPlayerIconUrl(Player pPlayer, boolean pHome, boolean pStanding) {
-    String iconUrl = null;
+  public static String getPortraitUrl(Player pPlayer) {
     if (pPlayer != null) {
-      iconUrl = getIconUrl(pPlayer, pPlayer.getIconUrl(pHome, pStanding));
-    }
-    return iconUrl;
-  }
-  
-  public static String getPlayerPortraitUrl(Player pPlayer) {
-    String iconUrl = null;
-    if (pPlayer != null) {
-      if (StringTool.isProvided(pPlayer.getIconUrlPortrait())) {
-        iconUrl = getIconUrl(pPlayer, pPlayer.getIconUrlPortrait());
+      if (StringTool.isProvided(pPlayer.getUrlPortrait())) {
+        return getIconUrl(pPlayer, pPlayer.getUrlPortrait());
       } else {
-        RosterPosition position = pPlayer.getPosition();
-        if (position != null) {
-          iconUrl = getIconUrl(position, position.getIconUrlPortrait());
-        }
+        return getPortraitUrl(pPlayer.getPosition());
       }
     }
-    return iconUrl;
+    return null;
   }
 
-  public static String getPlayerPortraitUrl(RosterPosition pPosition) {
-    String iconUrl = null;
+  public static String getPortraitUrl(RosterPosition pPosition) {
     if (pPosition != null) {
-      iconUrl = getIconUrl(pPosition, pPosition.getIconUrlPortrait());
+      return getIconUrl(pPosition, pPosition.getUrlPortrait());
     }
-    return iconUrl;
+    return null;
   }
 
-  public static String getPositionIconUrl(RosterPosition pPosition, boolean pHome, boolean pStanding, int pIndex) {
-    String iconUrl = null;
-    if (pPosition != null) {
-      iconUrl = getIconUrl(pPosition, pPosition.getIconUrl(pHome, pStanding, pIndex));
+  public static String getIconSetUrl(Player pPlayer) {
+    if (pPlayer != null) {
+      if (StringTool.isProvided(pPlayer.getUrlIconSet())) {
+        return getIconUrl(pPlayer, pPlayer.getUrlIconSet());
+      } else {
+        return getIconSetUrl(pPlayer.getPosition());
+      }
     }
-    return iconUrl;
+    return null;
+  }
+
+  public static String getIconSetUrl(RosterPosition pPosition) {
+    if (pPosition != null) {
+      return getIconUrl(pPosition, pPosition.getUrlIconSet());
+    }
+    return null;
   }
 
   private static String getIconUrl(Player pPlayer, String pRelativeUrl) {
-    String iconUrl = null;
     if ((pPlayer != null) && StringTool.isProvided(pRelativeUrl)) {
-      String urlBase = null;
       Team team = pPlayer.getTeam();
-      if ((team != null) && StringTool.isProvided(team.getBaseIconPath())) {
-        urlBase = UtilUrl.createUrl(team.getBaseIconPath(), pPlayer.getBaseIconPath());
-      } else {
-        urlBase = pPlayer.getBaseIconPath();     
+      if (team != null) {
+        return UtilUrl.createUrl(team.getBaseIconPath(), pRelativeUrl);
       }
-      iconUrl = UtilUrl.createUrl(urlBase, pRelativeUrl);
     }
-    return iconUrl;
+    return pRelativeUrl;
   }
   
   private static String getIconUrl(RosterPosition pPosition, String pRelativeUrl) {
-    String iconUrl = null;
     if ((pPosition != null) && StringTool.isProvided(pRelativeUrl)) {
-      String urlBase = null;
       Roster roster = pPosition.getRoster();
-      if ((roster != null) && StringTool.isProvided(roster.getBaseIconPath())) {
-        urlBase = UtilUrl.createUrl(roster.getBaseIconPath(), pPosition.getBaseIconPath());
-      } else {
-        urlBase = pPosition.getBaseIconPath();     
+      if (roster != null) {
+        return UtilUrl.createUrl(roster.getBaseIconPath(), pRelativeUrl);
       }
-      return UtilUrl.createUrl(urlBase, pRelativeUrl);
     }
-    return iconUrl;
+    return pRelativeUrl;
   }
   
 }

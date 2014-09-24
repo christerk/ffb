@@ -189,11 +189,6 @@ public interface IJsonOption {
                JsonBooleanOption HOME_PLAYING = new JsonBooleanOption("homePlaying");
                JsonBooleanOption HOME_TEAM = new JsonBooleanOption("homeTeam");
                 JsonStringOption HOME_TEXT = new JsonStringOption("homeText");
-                JsonStringOption ICON_URL_AWAY_MOVING = new JsonStringOption("iconUrlAwayMoving");
-                JsonStringOption ICON_URL_AWAY_STANDING = new JsonStringOption("iconUrlAwayStanding");
-                JsonStringOption ICON_URL_HOME_MOVING = new JsonStringOption("iconUrlHomeMoving");
-                JsonStringOption ICON_URL_HOME_STANDING = new JsonStringOption("iconUrlHomeStanding");
-                JsonStringOption ICON_URL_PORTRAIT = new JsonStringOption("iconUrlPortrait");
            JsonStringArrayOption ICON_URLS_AWAY_MOVING = new JsonStringArrayOption("iconUrlsAwayMoving");
            JsonStringArrayOption ICON_URLS_AWAY_STANDING = new JsonStringArrayOption("iconUrlsAwayStanding");
            JsonStringArrayOption ICON_URLS_HOME_MOVING = new JsonStringArrayOption("iconUrlsHomeMoving");
@@ -243,6 +238,7 @@ public interface IJsonOption {
                  JsonArrayOption NR_OF_CARDS_PER_TYPE = new JsonArrayOption("nrOfCardsPerType");
                    JsonIntOption NR_OF_CARDS = new JsonIntOption("nrOfCards");
                    JsonIntOption NR_OF_DICE = new JsonIntOption("nrOfDice");
+                   JsonIntOption NR_OF_ICONS = new JsonIntOption("nrOfIcons");
                    JsonIntOption NR_OF_INDUCEMENTS = new JsonIntOption("nrOfInducements");
                    JsonIntOption NR_OF_MERCENARIES = new JsonIntOption("nrOfMercenaries");
                    JsonIntOption NR_OF_SLOTS = new JsonIntOption("nrOfSlots");
@@ -427,6 +423,8 @@ public interface IJsonOption {
                    JsonIntOption TURNS_PLAYED = new JsonIntOption("turnsPlayed");
                JsonBooleanOption UNDEAD = new JsonBooleanOption("undead");
                 JsonStringOption UPLOAD_STATUS = new JsonStringOption("uploadStatus");
+                JsonStringOption URL_ICON_SET = new JsonStringOption("urlIconSet");
+                JsonStringOption URL_PORTRAIT = new JsonStringOption("urlPortrait");
                  JsonArrayOption USED_SKILLS = new JsonArrayOption("usedSkills");
            JsonStringArrayOption USER_SETTING_NAMES = new JsonStringArrayOption("userSettingNames");
            JsonStringArrayOption USER_SETTING_VALUES = new JsonStringArrayOption("userSettingValues");

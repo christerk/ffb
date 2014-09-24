@@ -47,10 +47,8 @@ public class RosterPosition implements IXmlSerializable, IByteArrayReadable, IJs
   public static final String XML_TAG = "position";
   
   private static final String _XML_ATTRIBUTE_ID = "id";
-  private static final String _XML_ATTRIBUTE_STANDING = "standing";
-  private static final String _XML_ATTRIBUTE_MOVING = "moving";
-  private static final String _XML_ATTRIBUTE_BASE_ICON_PATH = "baseIconPath";
   private static final String _XML_ATTRIBUTE_VALUE = "value";
+  private static final String _XML_ATTRIBUTE_SIZE = "size";
   
   private static final String _XML_TAG_QUANTITY = "quantity";
   private static final String _XML_TAG_NAME = "name";
@@ -75,10 +73,8 @@ public class RosterPosition implements IXmlSerializable, IByteArrayReadable, IJs
   private static final String _XML_TAG_NORMAL = "normal";
   private static final String _XML_TAG_DOUBLE = "double";
   
-  private static final String _XML_TAG_ICON_LIST = "iconList";
   private static final String _XML_TAG_PORTRAIT = "portrait";
-  private static final String _XML_TAG_AWAY = "away";
-  private static final String _XML_TAG_HOME = "home";
+  private static final String _XML_TAG_ICON_SET = "iconSet";
   
   private String fId;
   private Roster fRoster;
@@ -93,23 +89,21 @@ public class RosterPosition implements IXmlSerializable, IByteArrayReadable, IJs
   private int fStrength;
   private int fAgility;
   private int fArmour;
-  private String fIconUrlPortrait;
-  private int fCurrentIconIndex;
-  private String fBaseIconPath;
   private String fRace;
   private boolean fUndead;
   private boolean fThrall;
   private String fTeamWithPositionId;
-  private List<String> fIconUrlsHomeStanding;
-  private List<String> fIconUrlsHomeMoving;
-  private List<String> fIconUrlsAwayStanding;
-  private List<String> fIconUrlsAwayMoving;
+  
+  private String fUrlPortrait;
+  private String fUrlIconSet;
+  private int fNrOfIcons;
+  private int fCurrentIconSetIndex;
+  
   private Map<Skill, Integer> fSkillValues;
   private Set<SkillCategory> fSkillCategoriesOnNormalRoll;
   private Set<SkillCategory> fSkillCategoriesOnDoubleRoll;
   
   // attributes used for parsing
-  private transient boolean fInsideIconListTag;
   private transient boolean fInsideSkillListTag;
   private transient boolean fInsideSkillCategoryListTag;
   private transient Integer fCurrentSkillValue;
@@ -123,11 +117,7 @@ public class RosterPosition implements IXmlSerializable, IByteArrayReadable, IJs
     fSkillValues = new LinkedHashMap<Skill, Integer>();
     fSkillCategoriesOnNormalRoll = new HashSet<SkillCategory>();
     fSkillCategoriesOnDoubleRoll = new HashSet<SkillCategory>();
-    fIconUrlsHomeMoving = new ArrayList<String>();
-    fIconUrlsHomeStanding = new ArrayList<String>();
-    fIconUrlsAwayMoving = new ArrayList<String>();
-    fIconUrlsAwayStanding = new ArrayList<String>();
-    fCurrentIconIndex = -1;
+    fCurrentIconSetIndex = -1;
   }
     
   public PlayerType getType() {
@@ -203,66 +193,22 @@ public class RosterPosition implements IXmlSerializable, IByteArrayReadable, IJs
     return (value != null) ? value : 0; 
   }
 
-  public String getIconUrlPortrait() {
-    return fIconUrlPortrait;
+  public String getUrlPortrait() {
+    return fUrlPortrait;
   }
 
-  public void setIconUrlPortrait(String pIconPortrait) {
-    fIconUrlPortrait = pIconPortrait;
+  public void setUrlPortrait(String pUrlPortrait) {
+    fUrlPortrait = pUrlPortrait;
+  }
+  
+  public String getUrlIconSet() {
+    return fUrlIconSet;
+  }
+  
+  public void setUrlIconSet(String pUrlIconSet) {
+    fUrlIconSet = pUrlIconSet;
   }
 
-  public String getIconUrl(boolean pHome, boolean pStanding, int pIndex) {
-    if (pHome) {
-      if (pStanding) {
-        return getIconUrl(fIconUrlsHomeStanding, pIndex);
-      } else {
-        return getIconUrl(fIconUrlsHomeMoving, pIndex);
-      }
-    } else {
-      if (pStanding) {
-        return getIconUrl(fIconUrlsAwayStanding, pIndex);
-      } else {
-        return getIconUrl(fIconUrlsAwayMoving, pIndex);
-      }
-    }
-  }
-  
-  private String getIconUrl(List<String> pRelativeUrls, int pIndex) {
-    if ((pRelativeUrls != null) && (pRelativeUrls.size() > 0) && (pIndex >= 0) && (pIndex < pRelativeUrls.size())) {
-      return pRelativeUrls.get(pIndex);
-    } else {
-      return null;
-    }
-  }
-  
-//  public String[] getIconUrls(boolean pHome, boolean pStanding) {
-//    if (pHome) {
-//      if (pStanding) {
-//        return getIconUrls(fIconUrlsHomeStanding);
-//      } else {
-//        return getIconUrls(fIconUrlsHomeMoving);
-//      }
-//    } else {
-//      if (pStanding) {
-//        return getIconUrls(fIconUrlsAwayStanding);
-//      } else {
-//        return getIconUrls(fIconUrlsAwayMoving);
-//      }
-//    }
-//  }
-  
-//  private String[] getIconUrls(List<String> pRelativeUrls) {
-//    if ((pRelativeUrls != null) && (pRelativeUrls.size() > 0)) {
-//      String[] urls = new String[pRelativeUrls.size()];
-//      for (int i = 0; i < urls.length; i++) {
-//        urls[i] = getIconUrl(pRelativeUrls.get(i));
-//      }
-//      return urls;
-//    } else {
-//      return new String[0];
-//    }
-//  }
-  
   public int getQuantity() {
     return fQuantity;
   }
@@ -279,28 +225,24 @@ public class RosterPosition implements IXmlSerializable, IByteArrayReadable, IJs
     return fId;
   }
   
-  public String getBaseIconPath() {
-    return fBaseIconPath;
+  public int getNrOfIcons() {
+    return fNrOfIcons;
   }
   
-  public void setBaseIconPath(String pBaseIconPath) {
-    fBaseIconPath = pBaseIconPath;
+  public void setNrOfIcons(int pNrOfIcons) {
+    fNrOfIcons = pNrOfIcons;
   }
   
-  public int getNextIconIndex() {
-    if (fIconUrlsHomeStanding.size() > 0) {
-      fCurrentIconIndex++;
-      if (fCurrentIconIndex >= fIconUrlsHomeStanding.size()) {
-        fCurrentIconIndex = 0;
+  public int findNextIconSetIndex() {
+    if (fNrOfIcons > 0) {
+      fCurrentIconSetIndex++;
+      if (fCurrentIconSetIndex >= fNrOfIcons) {
+        fCurrentIconSetIndex = 0;
       }
     }
-    return fCurrentIconIndex;
+    return fCurrentIconSetIndex;
   }
   
-  public int getNrOfIcons() {
-    return fIconUrlsHomeStanding.size();
-  }
-
   public void setType(PlayerType type) {
     fType = type;
   }
@@ -379,7 +321,7 @@ public class RosterPosition implements IXmlSerializable, IByteArrayReadable, IJs
 
   	UtilXml.addValueElement(pHandler, _XML_TAG_QUANTITY, getQuantity());
   	UtilXml.addValueElement(pHandler, _XML_TAG_NAME, getName());
-	UtilXml.addValueElement(pHandler, _XML_TAG_SHORTHAND, getShorthand());
+  	UtilXml.addValueElement(pHandler, _XML_TAG_SHORTHAND, getShorthand());
   	UtilXml.addValueElement(pHandler, _XML_TAG_TYPE, (getType() != null) ? getType().getName() : null);
   	UtilXml.addValueElement(pHandler, _XML_TAG_GENDER, (getGender() != null) ? getGender().getName() : null);
   	UtilXml.addValueElement(pHandler, _XML_TAG_DISPLAY_NAME, getDisplayName());
@@ -392,6 +334,16 @@ public class RosterPosition implements IXmlSerializable, IByteArrayReadable, IJs
   	UtilXml.addValueElement(pHandler, _XML_TAG_UNDEAD, isUndead());
   	UtilXml.addValueElement(pHandler, _XML_TAG_THRALL, isThrall());
   	UtilXml.addValueElement(pHandler, _XML_TAG_TEAM_WITH_POSITION_ID, getTeamWithPositionId());
+
+  	UtilXml.addValueElement(pHandler, _XML_TAG_PORTRAIT, getUrlPortrait());
+    
+    attributes = new AttributesImpl();
+    UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_SIZE, getNrOfIcons());
+    UtilXml.startElement(pHandler, _XML_TAG_ICON_SET, attributes);
+    UtilXml.addCharacters(pHandler, getUrlIconSet());
+    UtilXml.endElement(pHandler, _XML_TAG_ICON_SET);
+    
+    UtilXml.addValueElement(pHandler, _XML_TAG_TEAM_WITH_POSITION_ID, getTeamWithPositionId());
 		
   	UtilXml.startElement(pHandler, _XML_TAG_SKILLCATEGORY_LIST);
     
@@ -419,28 +371,6 @@ public class RosterPosition implements IXmlSerializable, IByteArrayReadable, IJs
 
     UtilXml.endElement(pHandler, _XML_TAG_SKILL_LIST);
         
-  	attributes = new AttributesImpl();
-  	UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_BASE_ICON_PATH, getBaseIconPath());
-    UtilXml.startElement(pHandler, _XML_TAG_ICON_LIST, attributes);
-    
-  	UtilXml.addValueElement(pHandler, _XML_TAG_PORTRAIT, getIconUrlPortrait());
-
-    for (int i = 0; i < fIconUrlsHomeStanding.size(); i++) {
-    	
-    	attributes = new AttributesImpl();
-    	UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_STANDING, fIconUrlsHomeStanding.get(i));
-    	UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_MOVING, fIconUrlsAwayMoving.get(i));
-    	UtilXml.addEmptyElement(pHandler, _XML_TAG_HOME, attributes);
-
-    	attributes = new AttributesImpl();
-    	UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_STANDING, fIconUrlsAwayStanding.get(i));
-    	UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_MOVING, fIconUrlsAwayMoving.get(i));
-    	UtilXml.addEmptyElement(pHandler, _XML_TAG_AWAY, attributes);
-
-    }
-		
-    UtilXml.endElement(pHandler, _XML_TAG_ICON_LIST);
-
     UtilXml.endElement(pHandler, XML_TAG);
   	
   }
@@ -450,16 +380,7 @@ public class RosterPosition implements IXmlSerializable, IByteArrayReadable, IJs
   }  
   
   public IXmlReadable startXmlElement(String pXmlTag, Attributes pXmlAttributes) {
-    if (fInsideIconListTag) {
-      if (_XML_TAG_AWAY.equals(pXmlTag)) {
-        fIconUrlsAwayStanding.add(UtilXml.getStringAttribute(pXmlAttributes, _XML_ATTRIBUTE_STANDING));
-        fIconUrlsAwayMoving.add(UtilXml.getStringAttribute(pXmlAttributes, _XML_ATTRIBUTE_MOVING));
-      }
-      if (_XML_TAG_HOME.equals(pXmlTag)) {
-        fIconUrlsHomeStanding.add(UtilXml.getStringAttribute(pXmlAttributes, _XML_ATTRIBUTE_STANDING));
-        fIconUrlsHomeMoving.add(UtilXml.getStringAttribute(pXmlAttributes, _XML_ATTRIBUTE_MOVING));
-      }
-    } else if (fInsideSkillListTag) {
+    if (fInsideSkillListTag) {
       if (_XML_TAG_SKILL.equals(pXmlTag)) {
       	String skillValue = UtilXml.getStringAttribute(pXmlAttributes, _XML_ATTRIBUTE_VALUE);
       	if (StringTool.isProvided(skillValue)) {
@@ -475,9 +396,8 @@ public class RosterPosition implements IXmlSerializable, IByteArrayReadable, IJs
       if (_XML_TAG_SKILLCATEGORY_LIST.equals(pXmlTag)) {
         fInsideSkillCategoryListTag = true;
       }
-      if (_XML_TAG_ICON_LIST.equals(pXmlTag)) {
-        fInsideIconListTag = true;
-        setBaseIconPath(UtilXml.getStringAttribute(pXmlAttributes, _XML_ATTRIBUTE_BASE_ICON_PATH));
+      if (_XML_TAG_ICON_SET.equals(pXmlTag)) {
+        setNrOfIcons(UtilXml.getIntAttribute(pXmlAttributes, _XML_ATTRIBUTE_SIZE));
       }
       if (_XML_TAG_SKILL_LIST.equals(pXmlTag)) {
         fInsideSkillListTag = true;
@@ -493,86 +413,86 @@ public class RosterPosition implements IXmlSerializable, IByteArrayReadable, IJs
       if (!StringTool.isProvided(getShorthand()) && StringTool.isProvided(getName())) {
         setShorthand(getName().substring(0, 1));
       }
+    } else if (fInsideSkillListTag) {
+      if (_XML_TAG_SKILL_LIST.equals(pTag)) {
+        fInsideSkillListTag = false;
+      }
+      if (_XML_TAG_SKILL.equals(pTag)) {
+        Skill skill = new SkillFactory().forName(pValue);
+        if (skill != null) {
+        	fSkillValues.put(skill, fCurrentSkillValue);
+        }
+      }
+    } else if (fInsideSkillCategoryListTag) {
+      if (_XML_TAG_SKILLCATEGORY_LIST.equals(pTag)) {
+        fInsideSkillCategoryListTag = false;
+      }
+      if (_XML_TAG_NORMAL.equals(pTag)) {
+        SkillCategory pSkillCategory = new SkillCategoryFactory().forName(pValue);
+        if (pSkillCategory != null) {
+          fSkillCategoriesOnNormalRoll.add(pSkillCategory);
+        }
+      }
+      if (_XML_TAG_DOUBLE.equals(pTag)) {
+        SkillCategory pSkillCategory = new SkillCategoryFactory().forName(pValue);
+        if (pSkillCategory != null) {
+          fSkillCategoriesOnDoubleRoll.add(pSkillCategory);
+        }
+      }
     } else {
-      if (fInsideSkillListTag) {
-        if (_XML_TAG_SKILL_LIST.equals(pTag)) {
-          fInsideSkillListTag = false;
+      if (_XML_TAG_PORTRAIT.equals(pTag)) {
+        setUrlPortrait(pValue);
+      }
+      if (_XML_TAG_ICON_SET.equals(pTag)) {
+        setUrlIconSet(pValue);
+        if (getNrOfIcons() < 1) {
+          setNrOfIcons(1);
         }
-        if (_XML_TAG_SKILL.equals(pTag)) {
-          Skill skill = new SkillFactory().forName(pValue);
-          if (skill != null) {
-          	fSkillValues.put(skill, fCurrentSkillValue);
-          }
-        }
-      } else if (fInsideSkillCategoryListTag) {
-        if (_XML_TAG_SKILLCATEGORY_LIST.equals(pTag)) {
-          fInsideSkillCategoryListTag = false;
-        }
-        if (_XML_TAG_NORMAL.equals(pTag)) {
-          SkillCategory pSkillCategory = new SkillCategoryFactory().forName(pValue);
-          if (pSkillCategory != null) {
-            fSkillCategoriesOnNormalRoll.add(pSkillCategory);
-          }
-        }
-        if (_XML_TAG_DOUBLE.equals(pTag)) {
-          SkillCategory pSkillCategory = new SkillCategoryFactory().forName(pValue);
-          if (pSkillCategory != null) {
-            fSkillCategoriesOnDoubleRoll.add(pSkillCategory);
-          }
-        }
-      } else if (fInsideIconListTag) {
-        if (_XML_TAG_ICON_LIST.equals(pTag)) {
-          fInsideIconListTag = false;
-        }
-        if (_XML_TAG_PORTRAIT.equals(pTag)) {
-          setIconUrlPortrait(pValue);
-        }
-      } else {
-        if (_XML_TAG_QUANTITY.equals(pTag)) {
-          setQuantity(Integer.parseInt(pValue));
-        }
-        if (_XML_TAG_NAME.equals(pTag)) {
-          setName(pValue);
-        }
-        if (_XML_TAG_DISPLAY_NAME.equals(pTag)) {
-          setDisplayName(pValue);
-        }
-        if (_XML_TAG_SHORTHAND.equals(pTag)) {
-          setShorthand(pValue);
-        }
-        if (_XML_TAG_TYPE.equals(pTag)) {
-          setType(new PlayerTypeFactory().forName(pValue));
-        }
-        if (_XML_TAG_GENDER.equals(pTag)) {
-          setGender(new PlayerGenderFactory().forName(pValue));
-        }
-        if (_XML_TAG_COST.equals(pTag)) {
-          setCost(Integer.parseInt(pValue));
-        }
-        if (_XML_TAG_MOVEMENT.equals(pTag)) {
-          setMovement(Integer.parseInt(pValue));
-        }
-        if (_XML_TAG_STRENGTH.equals(pTag)) {
-          setStrength(Integer.parseInt(pValue));
-        }
-        if (_XML_TAG_AGILITY.equals(pTag)) {
-          setAgility(Integer.parseInt(pValue));
-        }
-        if (_XML_TAG_ARMOUR.equals(pTag)) {
-          setArmour(Integer.parseInt(pValue));
-        }
-        if (_XML_TAG_RACE.equals(pTag)) {
-          setRace(pValue);
-        }
-        if (_XML_TAG_UNDEAD.equals(pTag)) {
-        	setUndead(Boolean.parseBoolean(pValue));
-        }
-        if (_XML_TAG_THRALL.equals(pTag)) {
-        	setThrall(Boolean.parseBoolean(pValue));
-        }
-        if (_XML_TAG_TEAM_WITH_POSITION_ID.equals(pTag)) {
-        	setTeamWithPositionId(pValue);
-        }
+      }
+      if (_XML_TAG_QUANTITY.equals(pTag)) {
+        setQuantity(Integer.parseInt(pValue));
+      }
+      if (_XML_TAG_NAME.equals(pTag)) {
+        setName(pValue);
+      }
+      if (_XML_TAG_DISPLAY_NAME.equals(pTag)) {
+        setDisplayName(pValue);
+      }
+      if (_XML_TAG_SHORTHAND.equals(pTag)) {
+        setShorthand(pValue);
+      }
+      if (_XML_TAG_TYPE.equals(pTag)) {
+        setType(new PlayerTypeFactory().forName(pValue));
+      }
+      if (_XML_TAG_GENDER.equals(pTag)) {
+        setGender(new PlayerGenderFactory().forName(pValue));
+      }
+      if (_XML_TAG_COST.equals(pTag)) {
+        setCost(Integer.parseInt(pValue));
+      }
+      if (_XML_TAG_MOVEMENT.equals(pTag)) {
+        setMovement(Integer.parseInt(pValue));
+      }
+      if (_XML_TAG_STRENGTH.equals(pTag)) {
+        setStrength(Integer.parseInt(pValue));
+      }
+      if (_XML_TAG_AGILITY.equals(pTag)) {
+        setAgility(Integer.parseInt(pValue));
+      }
+      if (_XML_TAG_ARMOUR.equals(pTag)) {
+        setArmour(Integer.parseInt(pValue));
+      }
+      if (_XML_TAG_RACE.equals(pTag)) {
+        setRace(pValue);
+      }
+      if (_XML_TAG_UNDEAD.equals(pTag)) {
+      	setUndead(Boolean.parseBoolean(pValue));
+      }
+      if (_XML_TAG_THRALL.equals(pTag)) {
+      	setThrall(Boolean.parseBoolean(pValue));
+      }
+      if (_XML_TAG_TEAM_WITH_POSITION_ID.equals(pTag)) {
+      	setTeamWithPositionId(pValue);
       }
     }
     return complete;
@@ -581,7 +501,7 @@ public class RosterPosition implements IXmlSerializable, IByteArrayReadable, IJs
   // ByteArray serialization
   
   public int getByteArraySerializationVersion() {
-    return 4;
+    return 5;
   }
   
   public void addTo(ByteList pByteList) {
@@ -600,21 +520,11 @@ public class RosterPosition implements IXmlSerializable, IByteArrayReadable, IJs
     pByteList.addByte((byte) getAgility());
     pByteList.addByte((byte) getArmour());
     pByteList.addInt(getCost());
-    pByteList.addString(getBaseIconPath());
-    pByteList.addString(fIconUrlPortrait);
     pByteList.addString(getRace());
-    
-    // Icons Home Standing
-    pByteList.addStringArray(fIconUrlsHomeStanding.toArray(new String[fIconUrlsHomeStanding.size()]));
 
-    // Icons Home Moving
-    pByteList.addStringArray(fIconUrlsHomeMoving.toArray(new String[fIconUrlsHomeMoving.size()]));
-
-    // Icons Away Standing
-    pByteList.addStringArray(fIconUrlsAwayStanding.toArray(new String[fIconUrlsAwayStanding.size()]));
-    
-    // Icons Away Moving
-    pByteList.addStringArray(fIconUrlsAwayMoving.toArray(new String[fIconUrlsAwayMoving.size()]));
+    pByteList.addString(fUrlPortrait);
+    pByteList.addString(fUrlIconSet);
+    pByteList.addByte((byte) fNrOfIcons); 
 
     // SkillCategories Normal
     SkillCategory[] skillCategories = getSkillCategories(false);
@@ -672,33 +582,11 @@ public class RosterPosition implements IXmlSerializable, IByteArrayReadable, IJs
     setAgility(pByteArray.getByte());
     setArmour(pByteArray.getByte());
     setCost(pByteArray.getInt());
-    setBaseIconPath(pByteArray.getString());
-    setIconUrlPortrait(pByteArray.getString());
     setRace(pByteArray.getString());
     
-    // Icons Home Standing
-    String[] iconUrlsHomeStanding = pByteArray.getStringArray();
-    for (int j = 0; j < iconUrlsHomeStanding.length; j++) {
-      fIconUrlsHomeStanding.add(iconUrlsHomeStanding[j]);
-    }
-    
-    // Icons Home Moving
-    String[] iconUrlsHomeMoving = pByteArray.getStringArray();
-    for (int j = 0; j < iconUrlsHomeMoving.length; j++) {
-      fIconUrlsHomeMoving.add(iconUrlsHomeMoving[j]);
-    }
-
-    // Icons Away Standing
-    String[] iconUrlsAwayStanding = pByteArray.getStringArray();
-    for (int j = 0; j < iconUrlsAwayStanding.length; j++) {
-      fIconUrlsAwayStanding.add(iconUrlsAwayStanding[j]);
-    }
-
-    // Icons Away Moving
-    String[] iconUrlsAwayMoving = pByteArray.getStringArray();
-    for (int j = 0; j < iconUrlsAwayMoving.length; j++) {
-      fIconUrlsAwayMoving.add(iconUrlsAwayMoving[j]);
-    }
+    fUrlPortrait = pByteArray.getString();
+    fUrlIconSet = pByteArray.getString();
+    fNrOfIcons = pByteArray.getByte();
 
     SkillCategoryFactory skillCategoryFactory = new SkillCategoryFactory();
     
@@ -771,17 +659,14 @@ public class RosterPosition implements IXmlSerializable, IByteArrayReadable, IJs
     IJsonOption.AGILITY.addTo(jsonObject, fAgility);
     IJsonOption.ARMOUR.addTo(jsonObject, fArmour);
     IJsonOption.COST.addTo(jsonObject, fCost);
-    IJsonOption.BASE_ICON_PATH.addTo(jsonObject, fBaseIconPath);
-    IJsonOption.ICON_URL_PORTRAIT.addTo(jsonObject, fIconUrlPortrait);
     IJsonOption.RACE.addTo(jsonObject, fRace);
     IJsonOption.UNDEAD.addTo(jsonObject, fUndead);
     IJsonOption.THRALL.addTo(jsonObject, fThrall);
     IJsonOption.TEAM_WITH_POSITION_ID.addTo(jsonObject, fTeamWithPositionId);
     
-    IJsonOption.ICON_URLS_HOME_STANDING.addTo(jsonObject, fIconUrlsHomeStanding);
-    IJsonOption.ICON_URLS_HOME_MOVING.addTo(jsonObject, fIconUrlsHomeMoving);
-    IJsonOption.ICON_URLS_AWAY_STANDING.addTo(jsonObject, fIconUrlsAwayStanding);
-    IJsonOption.ICON_URLS_AWAY_MOVING.addTo(jsonObject, fIconUrlsAwayMoving);
+    IJsonOption.URL_PORTRAIT.addTo(jsonObject, fUrlPortrait);
+    IJsonOption.URL_ICON_SET.addTo(jsonObject, fUrlIconSet);
+    IJsonOption.NR_OF_ICONS.addTo(jsonObject, fNrOfIcons);
     
     JsonArray skillCategoriesNormal = new JsonArray();
     for (SkillCategory skillCategory : getSkillCategories(false)) {
@@ -828,29 +713,14 @@ public class RosterPosition implements IXmlSerializable, IByteArrayReadable, IJs
     fAgility = IJsonOption.AGILITY.getFrom(jsonObject);
     fArmour = IJsonOption.ARMOUR.getFrom(jsonObject);
     fCost = IJsonOption.COST.getFrom(jsonObject);
-    fBaseIconPath = IJsonOption.BASE_ICON_PATH.getFrom(jsonObject);
-    fIconUrlPortrait = IJsonOption.ICON_URL_PORTRAIT.getFrom(jsonObject);
     fRace = IJsonOption.RACE.getFrom(jsonObject);
     fUndead = IJsonOption.UNDEAD.getFrom(jsonObject);
     fThrall = IJsonOption.THRALL.getFrom(jsonObject);
     fTeamWithPositionId = IJsonOption.TEAM_WITH_POSITION_ID.getFrom(jsonObject);
-    
-    fIconUrlsHomeStanding.clear();
-    for (String iconUrl : IJsonOption.ICON_URLS_HOME_STANDING.getFrom(jsonObject)) {
-      fIconUrlsHomeStanding.add(iconUrl);
-    }
-    fIconUrlsHomeMoving.clear();
-    for (String iconUrl : IJsonOption.ICON_URLS_HOME_MOVING.getFrom(jsonObject)) {
-      fIconUrlsHomeMoving.add(iconUrl);
-    }
-    fIconUrlsAwayStanding.clear();
-    for (String iconUrl : IJsonOption.ICON_URLS_AWAY_STANDING.getFrom(jsonObject)) {
-      fIconUrlsAwayStanding.add(iconUrl);
-    }
-    fIconUrlsAwayMoving.clear();
-    for (String iconUrl : IJsonOption.ICON_URLS_AWAY_MOVING.getFrom(jsonObject)) {
-      fIconUrlsAwayMoving.add(iconUrl);
-    }
+
+    fUrlPortrait = IJsonOption.URL_PORTRAIT.getFrom(jsonObject);
+    fUrlIconSet = IJsonOption.URL_ICON_SET.getFrom(jsonObject);
+    fNrOfIcons = IJsonOption.NR_OF_ICONS.getFrom(jsonObject);
     
     SkillCategoryFactory skillCategoryFactory = new SkillCategoryFactory();
 

@@ -2,156 +2,154 @@
 
 <team id="teamAmazonKalimar">
 
-  <coach>Kalimar</coach>
-  <name>Kalimar's Amazons</name>
-  <race>Amazon</race>
-  <rosterId>amazon.lrb6</rosterId>
-  <reRolls>4</reRolls>
-  <fanFactor>10</fanFactor>
-  <apothecaries>2</apothecaries>
-  <teamRating>100</teamRating>
-  <teamStrength>106</teamStrength>
-  <division>[X]</division>
+	<coach>Kalimar</coach>
+	<name>Kalimar's Amazons</name>
+	<race>Amazon</race>
+	<rosterId>amazon.lrb6</rosterId>
+	<reRolls>4</reRolls>
+	<fanFactor>10</fanFactor>
+	<apothecaries>2</apothecaries>
+	<teamRating>100</teamRating>
+	<teamStrength>106</teamStrength>
+	<division>[X]</division>
+	<baseIconPath>http://localhost:2224/icons/players/</baseIconPath>	
 
-  <player nr="1" id="teamAmazonKalimar1">
-  	<name>Blitzer1</name>
-  	<gender>female</gender>
-  	<positionId>amazon.blitzer</positionId>
-  	<skillList />
-    <iconList baseIconPath="http://localhost:2224/icons/players/starplayer/">
-  	  <home standing="amzara1.gif" moving="amzara1an.gif" />
-      <away standing="amzara1b.gif" moving="amzara1ban.gif" />
-    </iconList>
-  </player>
+	<player nr="1" id="teamAmazonKalimar1">
+		<name>Blitzer1</name>
+		<gender>female</gender>
+		<positionId>amazon.blitzer</positionId>
+		<skillList />
+		<iconSet size="1">iconsets/Zara_the_Slayer.png</iconSet>
+	</player>
 
-  <player nr="2" id="teamAmazonKalimar2">
-  	<name>Blitzer2</name>
-  	<gender>female</gender>
-  	<positionId>amazon.blitzer</positionId>
-  	<skillList />
-  </player>
+	<player nr="2" id="teamAmazonKalimar2">
+		<name>Blitzer2</name>
+		<gender>female</gender>
+		<positionId>amazon.blitzer</positionId>
+		<skillList />
+	</player>
 
-  <player nr="3" id="teamAmazonKalimar3">
-  	<name>Blitzer3</name>
-  	<gender>female</gender>
-  	<positionId>amazon.blitzer</positionId>
-  	<skillList />
-  </player>
+	<player nr="3" id="teamAmazonKalimar3">
+		<name>Blitzer3</name>
+		<gender>female</gender>
+		<positionId>amazon.blitzer</positionId>
+		<skillList />
+	</player>
 
-  <player nr="4" id="teamAmazonKalimar4">
-  	<name>Blitzer4</name>
-  	<gender>female</gender>
-  	<positionId>amazon.blitzer</positionId>
-  	<skillList />
-  </player>
+	<player nr="4" id="teamAmazonKalimar4">
+		<name>Blitzer4</name>
+		<gender>female</gender>
+		<positionId>amazon.blitzer</positionId>
+		<skillList />
+	</player>
   
-  <player nr="5" id="teamAmazonKalimar5">
-  	<name>Thrower1</name>
-  	<gender>female</gender>
-  	<positionId>amazon.thrower</positionId>
-  	<skillList />
-  </player>
+	<player nr="5" id="teamAmazonKalimar5">
+		<name>Thrower1</name>
+		<gender>female</gender>
+		<positionId>amazon.thrower</positionId>
+		<skillList />
+	</player>
 
-  <player nr="6" id="teamAmazonKalimar6">
-  	<name>Thrower2</name>
-  	<gender>female</gender>
-  	<positionId>amazon.thrower</positionId>
-  	<skillList />
-  </player>
+	<player nr="6" id="teamAmazonKalimar6">
+		<name>Thrower2</name>
+		<gender>female</gender>
+		<positionId>amazon.thrower</positionId>
+		<skillList />
+	</player>
 
-  <player nr="7" id="teamAmazonKalimar7">
-  	<name>Catcher1</name>
-  	<gender>female</gender>
-  	<positionId>amazon.catcher</positionId>
-  	<skillList />
-  </player>
+	<player nr="7" id="teamAmazonKalimar7">
+		<name>Catcher1</name>
+		<gender>female</gender>
+		<positionId>amazon.catcher</positionId>
+		<skillList />
+	</player>
 
-  <player nr="8" id="teamAmazonKalimar8">
-  	<name>Catcher2</name>
-  	<gender>female</gender>
-  	<positionId>amazon.catcher</positionId>
-  	<skillList />
-  </player>
+	<player nr="8" id="teamAmazonKalimar8">
+		<name>Catcher2</name>
+		<gender>female</gender>
+		<positionId>amazon.catcher</positionId>
+		<skillList />
+	</player>
 
-  <player nr="9" id="teamAmazonKalimar9">
-  	<name>Linewoman1</name>
-  	<gender>female</gender>
-  	<positionId>amazon.linewoman</positionId>
-  	<skillList>
-  	  <skill>Fend</skill>
-  	</skillList>
-  </player>
+	<player nr="9" id="teamAmazonKalimar9">
+		<name>Linewoman1</name>
+		<gender>female</gender>
+		<positionId>amazon.linewoman</positionId>
+		<skillList>
+			<skill>Fend</skill>
+		</skillList>
+	</player>
 
-  <player nr="10" id="teamAmazonKalimar10">
-  	<name>Linewoman2</name>
-  	<gender>female</gender>
-  	<positionId>amazon.linewoman</positionId>
-  	<skillList>
-  	  <skill>Fend</skill>
-  	</skillList>
-  </player>
+	<player nr="10" id="teamAmazonKalimar10">
+		<name>Linewoman2</name>
+		<gender>female</gender>
+		<positionId>amazon.linewoman</positionId>
+		<skillList>
+			<skill>Fend</skill>
+		</skillList>
+	</player>
 
-  <player nr="11" id="teamAmazonKalimar11">
-  	<name>Linewoman3</name>
-  	<gender>female</gender>
-  	<positionId>amazon.linewoman</positionId>
-  	<skillList>
-  	  <skill>Fend</skill>
-  	</skillList>
-  </player>
+	<player nr="11" id="teamAmazonKalimar11">
+		<name>Linewoman3</name>
+		<gender>female</gender>
+		<positionId>amazon.linewoman</positionId>
+		<skillList>
+			<skill>Fend</skill>
+		</skillList>
+	</player>
 
-  <player nr="12" id="teamAmazonKalimar12">
-  	<name>Linewoman4</name>
-  	<gender>female</gender>
-  	<positionId>amazon.linewoman</positionId>
-  	<skillList>
-  	  <skill>Fend</skill>
-  	</skillList>
-  </player>
+	<player nr="12" id="teamAmazonKalimar12">
+		<name>Linewoman4</name>
+		<gender>female</gender>
+		<positionId>amazon.linewoman</positionId>
+		<skillList>
+			<skill>Fend</skill>
+		</skillList>
+	</player>
 
-  <player nr="13" id="teamAmazonKalimar13">
-  	<name>Linewoman5</name>
-  	<gender>female</gender>
-  	<positionId>amazon.linewoman</positionId>
-  	<skillList>
-  	  <skill>Fend</skill>
-  	</skillList>
-  </player>
+	<player nr="13" id="teamAmazonKalimar13">
+		<name>Linewoman5</name>
+		<gender>female</gender>
+		<positionId>amazon.linewoman</positionId>
+		<skillList>
+			<skill>Fend</skill>
+		</skillList>
+	</player>
 
-  <player nr="14" id="teamAmazonKalimar14">
-  	<name>Linewoman6</name>
-  	<gender>female</gender>
-  	<positionId>amazon.linewoman</positionId>
-  	<skillList>
-  	  <skill>Fend</skill>
-  	</skillList>
-  </player>
+	<player nr="14" id="teamAmazonKalimar14">
+		<name>Linewoman6</name>
+		<gender>female</gender>
+		<positionId>amazon.linewoman</positionId>
+		<skillList>
+			<skill>Fend</skill>
+		</skillList>
+	</player>
 
-  <player nr="15" id="teamAmazonKalimar15">
-  	<name>Linewoman7</name>
-  	<gender>female</gender>
-  	<positionId>amazon.linewoman</positionId>
-  	<skillList>
-  	  <skill>Fend</skill>
-  	</skillList>
-  </player>
+	<player nr="15" id="teamAmazonKalimar15">
+		<name>Linewoman7</name>
+		<gender>female</gender>
+		<positionId>amazon.linewoman</positionId>
+		<skillList>
+			<skill>Fend</skill>
+		</skillList>
+	</player>
 
-  <player nr="16" id="teamAmazonKalimar16">
-  	<name>Linewoman8</name>
-  	<gender>female</gender>
-  	<positionId>amazon.linewoman</positionId>
-  	<skillList>
-  	  <skill>Fend</skill>
-  	</skillList>
-  </player>
+	<player nr="16" id="teamAmazonKalimar16">
+		<name>Linewoman8</name>
+		<gender>female</gender>
+		<positionId>amazon.linewoman</positionId>
+		<skillList>
+			<skill>Fend</skill>
+		</skillList>
+	</player>
 
-  <player nr="17" id="teamAmazonKalimar17">
-  	<name>Linewoman9</name>
-  	<gender>female</gender>
-  	<positionId>amazon.linewoman</positionId>
-  	<skillList>
-  	  <skill>Fend</skill>
-  	</skillList>
-  </player>
+	<player nr="17" id="teamAmazonKalimar17">
+		<name>Linewoman9</name>
+		<gender>female</gender>
+		<positionId>amazon.linewoman</positionId>
+		<skillList>
+			<skill>Fend</skill>
+		</skillList>
+	</player>
 
 </team>

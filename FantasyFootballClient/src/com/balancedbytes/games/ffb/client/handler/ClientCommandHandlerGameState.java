@@ -50,14 +50,12 @@ public class ClientCommandHandlerGameState extends ClientCommandHandler implemen
     addIconUrl(iconUrls, IconCache.findTeamLogoUrl(game.getTeamHome()));
     addIconUrl(iconUrls, IconCache.findTeamLogoUrl(game.getTeamAway()));
     
-    addRosterIconUrls(iconUrls, game.getTeamHome().getRoster(), true);
-    addRosterIconUrls(iconUrls, game.getTeamAway().getRoster(), false);
+    addRosterIconUrls(iconUrls, game.getTeamHome().getRoster());
+    addRosterIconUrls(iconUrls, game.getTeamAway().getRoster());
 
     for (Player player : game.getPlayers()) {
-      boolean homePlayer = game.getTeamHome().hasPlayer(player);
-      addIconUrl(iconUrls, PlayerIconFactory.getPlayerPortraitUrl(player));
-      addIconUrl(iconUrls, PlayerIconFactory.getPlayerIconUrl(player, homePlayer, true));
-      addIconUrl(iconUrls, PlayerIconFactory.getPlayerIconUrl(player, homePlayer, false));
+      addIconUrl(iconUrls, PlayerIconFactory.getPortraitUrl(player));
+      addIconUrl(iconUrls, PlayerIconFactory.getIconSetUrl(player));
     }
     
     for (Weather weather : Weather.values()) {
@@ -126,13 +124,10 @@ public class ClientCommandHandlerGameState extends ClientCommandHandler implemen
     }
   }
   
-  private void addRosterIconUrls(Set<String> pIconUrls, Roster pRoster, boolean pHome) {
+  private void addRosterIconUrls(Set<String> pIconUrls, Roster pRoster) {
     for (RosterPosition position : pRoster.getPositions()) {
-      addIconUrl(pIconUrls, PlayerIconFactory.getPlayerPortraitUrl(position));
-      for (int i = 0; i < position.getNrOfIcons(); i++) {
-        addIconUrl(pIconUrls, PlayerIconFactory.getPositionIconUrl(position, pHome, true, i));
-        addIconUrl(pIconUrls, PlayerIconFactory.getPositionIconUrl(position, pHome, false, i));
-      }
+      addIconUrl(pIconUrls, PlayerIconFactory.getPortraitUrl(position));
+      addIconUrl(pIconUrls, PlayerIconFactory.getIconSetUrl(position));
     }
   }
   

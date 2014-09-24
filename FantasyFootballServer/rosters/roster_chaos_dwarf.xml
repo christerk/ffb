@@ -14,136 +14,110 @@ Star Players available for Inducement:
 Grashnak Blackhoof, Hthark the Unstoppable, Morg ‘n’ Thorg, Nobbla Blackwart, Rashnak Backstabber, Zzharg Madeye
 -->
 
-  <name>Chaos Dwarf</name>
-  <type>Regular</type>
-  <reRollCost>70000</reRollCost>	
-  <maxReRolls>8</maxReRolls>	
-  <baseIconPath>http://localhost:2224/icons/players/chaos_dwarf/</baseIconPath>	
+	<name>Chaos Dwarf</name>
+	<type>Regular</type>
+	<reRollCost>70000</reRollCost>	
+	<maxReRolls>8</maxReRolls>	
+	<baseIconPath>http://localhost:2224/icons/players/</baseIconPath>	
 
-  <position id="chaosdwarf.hobgoblin">
-  	<quantity>16</quantity>
-  	<name>Hobgoblin</name>
-  	<type>Regular</type>
-  	<cost>40000</cost>
-    <movement>6</movement>
-    <strength>3</strength>
-    <agility>3</agility>
-    <armour>7</armour>
-    <iconList>
-      <portrait>portrait_chaos_dwarf_hobgoblin.png</portrait>
-      <home standing="cdhobgoblin1.gif" moving="cdhobgoblin1an.gif" />
-      <away standing="cdhobgoblin1b.gif" moving="cdhobgoblin1ban.gif" />
-      <home standing="cdhobgoblin2.gif" moving="cdhobgoblin2an.gif" />
-      <away standing="cdhobgoblin2b.gif" moving="cdhobgoblin2ban.gif" />
-      <home standing="cdhobgoblin3.gif" moving="cdhobgoblin3an.gif" />
-      <away standing="cdhobgoblin3b.gif" moving="cdhobgoblin3ban.gif" />
-      <home standing="cdhobgoblin4.gif" moving="cdhobgoblin4an.gif" />
-      <away standing="cdhobgoblin4b.gif" moving="cdhobgoblin4ban.gif" />
-    </iconList>
-  	<skillList />
-  	<skillCategoryList>
-      <normal>General</normal>
-      <double>Agility</double>
-      <double>Strength</double>
-      <double>Passing</double>
-  	</skillCategoryList>
-  </position>
+	<position id="chaosdwarf.hobgoblin">
+		<quantity>16</quantity>
+		<name>Hobgoblin</name>
+		<type>Regular</type>
+		<cost>40000</cost>
+		<movement>6</movement>
+		<strength>3</strength>
+		<agility>3</agility>
+		<armour>7</armour>
+		<portrait>portraits/cdhobgoblin.png</portrait>
+		<iconSet size="4">iconsets/cdhobgoblin1.png</iconSet>
+		<skillList />
+		<skillCategoryList>
+			<normal>General</normal>
+			<double>Agility</double>
+			<double>Strength</double>
+			<double>Passing</double>
+		</skillCategoryList>
+	</position>
 
-  <position id="chaosdwarf.blocker">
-  	<quantity>6</quantity>
-  	<name>Chaos Dwarf Blocker</name>
-  	<type>Regular</type>
-  	<cost>70000</cost>
-    <movement>4</movement>
-    <strength>3</strength>
-    <agility>2</agility>
-    <armour>9</armour>
-    <iconList>
-      <portrait>portrait_chaos_dwarf_blocker.png</portrait>
-      <home standing="cddwarf1.gif" moving="cddwarf1an.gif" />
-      <away standing="cddwarf1b.gif" moving="cddwarf1ban.gif" />
-      <home standing="cddwarf2.gif" moving="cddwarf2an.gif" />
-      <away standing="cddwarf2b.gif" moving="cddwarf2ban.gif" />
-      <home standing="cddwarf3.gif" moving="cddwarf3an.gif" />
-      <away standing="cddwarf3b.gif" moving="cddwarf3ban.gif" />
-      <home standing="cddwarf4.gif" moving="cddwarf4an.gif" />
-      <away standing="cddwarf4b.gif" moving="cddwarf4ban.gif" />
-    </iconList>
-  	<skillList>
-  	  <skill>Block</skill>
-  	  <skill>Tackle</skill>
-  	  <skill>Thick Skull</skill>
-  	</skillList>
-  	<skillCategoryList>
-      <normal>General</normal>
-      <normal>Strength</normal>
-      <double>Agility</double>
-      <double>Passing</double>
-      <double>Mutation</double>
-  	</skillCategoryList>
-  </position>
+	<position id="chaosdwarf.blocker">
+		<quantity>6</quantity>
+		<name>Chaos Dwarf Blocker</name>
+		<type>Regular</type>
+		<cost>70000</cost>
+		<movement>4</movement>
+		<strength>3</strength>
+		<agility>2</agility>
+		<armour>9</armour>
+		<portrait>portraits/cddwarf.png</portrait>
+		<iconSet size="4">iconsets/cddwarf.png</iconSet>
+		<skillList>
+			<skill>Block</skill>
+			<skill>Tackle</skill>
+			<skill>Thick Skull</skill>
+		</skillList>
+		<skillCategoryList>
+			<normal>General</normal>
+			<normal>Strength</normal>
+			<double>Agility</double>
+			<double>Passing</double>
+			<double>Mutation</double>
+		</skillCategoryList>
+	</position>
 
-  <position id="chaosdwarf.bullcentaur">
-  	<quantity>2</quantity>
-  	<name>Bull Centaur</name>
-  	<type>Regular</type>
-  	<cost>130000</cost>
-    <movement>6</movement>
-    <strength>4</strength>
-    <agility>2</agility>
-    <armour>9</armour>
-    <iconList>
-      <portrait>portrait_chaos_dwarf_bull_centaur.png</portrait>
-      <home standing="centaur1.gif" moving="centaur1an.gif" />
-      <away standing="centaur1b.gif" moving="centaur1ban.gif" />
-      <home standing="centaur2.gif" moving="centaur2an.gif" />
-      <away standing="centaur2b.gif" moving="centaur2ban.gif" />
-    </iconList>
-  	<skillList>
-  	  <skill>Sprint</skill>
-  	  <skill>Sure Feet</skill>
-  	  <skill>Thick Skull</skill>
-  	</skillList>
-  	<skillCategoryList>
-      <normal>General</normal>
-      <normal>Strength</normal>
-      <double>Agility</double>
-      <double>Passing</double>
-  	</skillCategoryList>
-  </position>
+	<position id="chaosdwarf.bullcentaur">
+		<quantity>2</quantity>
+		<name>Bull Centaur</name>
+		<type>Regular</type>
+		<cost>130000</cost>
+		<movement>6</movement>
+		<strength>4</strength>
+		<agility>2</agility>
+		<armour>9</armour>
+		<portrait>portraits/centaur.png</portrait>
+		<iconSet size="2">iconsets/centaur.png</iconSet>
+		<skillList>
+			<skill>Sprint</skill>
+			<skill>Sure Feet</skill>
+			<skill>Thick Skull</skill>
+		</skillList>
+		<skillCategoryList>
+			<normal>General</normal>
+			<normal>Strength</normal>
+			<double>Agility</double>
+			<double>Passing</double>
+		</skillCategoryList>
+	</position>
 
-  <position id="chaosdwarf.minotaur">
-  	<quantity>1</quantity>
-  	<name>Minotaur</name>
-  	<type>Big Guy</type>
-  	<cost>150000</cost>
-    <movement>5</movement>
-    <strength>5</strength>
-    <agility>2</agility>
-    <armour>8</armour>
-    <iconList>
-      <portrait>portrait_chaos_dwarf_minotaur.png</portrait>
-      <home standing="minotaur1.gif" moving="minotaur1an.gif" />
-      <away standing="minotaur1b.gif" moving="minotaur1ban.gif" />
-    </iconList>
-  	<skillList>
-  	  <skill>Loner</skill>
-  	  <skill>Frenzy</skill>
-  	  <skill>Horns</skill>
-  	  <skill>Mighty Blow</skill>
-  	  <skill>Thick Skull</skill>
-  	  <skill>Wild Animal</skill>
-  	</skillList>
-  	<skillCategoryList>
-      <normal>Strength</normal>
-      <double>General</double>
-      <double>Agility</double>
-      <double>Passing</double>
-      <double>Mutation</double>
-  	</skillCategoryList>
-  </position>
+	<position id="chaosdwarf.minotaur">
+		<quantity>1</quantity>
+		<name>Minotaur</name>
+		<type>Big Guy</type>
+		<cost>150000</cost>
+		<movement>5</movement>
+		<strength>5</strength>
+		<agility>2</agility>
+		<armour>8</armour>
+		<portrait>portraits/minotaur.png</portrait>
+		<iconSet size="1">iconsets/minotaur.png</iconSet>
+		<skillList>
+			<skill>Loner</skill>
+			<skill>Frenzy</skill>
+			<skill>Horns</skill>
+			<skill>Mighty Blow</skill>
+			<skill>Thick Skull</skill>
+			<skill>Wild Animal</skill>
+		</skillList>
+		<skillCategoryList>
+			<normal>Strength</normal>
+			<double>General</double>
+			<double>Agility</double>
+			<double>Passing</double>
+			<double>Mutation</double>
+		</skillCategoryList>
+	</position>
   
-  <position id="chaosdwarf.Madeye">
+	<position id="chaosdwarf.Madeye">
 		<quantity>1</quantity>
 		<name>Zzharg Madeye</name>
 		<shorthand>ZZ</shorthand>
@@ -153,11 +127,8 @@ Grashnak Blackhoof, Hthark the Unstoppable, Morg ‘n’ Thorg, Nobbla Blackwart
 		<strength>4</strength>
 		<agility>3</agility>
 		<armour>9</armour>
-    <iconList baseIconPath="../stars/">
-			<portrait/>
-			<home standing="Zzharg_Madeye.gif" moving="Zzharg_Madeye_an.gif"/>
-			<away standing="Zzharg_Madeye_b.gif"  moving="Zzharg_Madeye_ban.gif"/>
-		</iconList>
+		<portrait></portrait>
+		<iconSet size="1">iconsets/Zzharg_Madeye.png</iconSet>
 		<skillList>
 			<skill>Loner</skill>
 			<skill>Hail Mary Pass</skill>
@@ -180,11 +151,8 @@ Grashnak Blackhoof, Hthark the Unstoppable, Morg ‘n’ Thorg, Nobbla Blackwart
 		<strength>2</strength>
 		<agility>3</agility>
 		<armour>7</armour>
-    <iconList baseIconPath="../stars/">
-			<portrait/>
-			<home standing="Nobbla_Blackwart.gif" moving="Nobbla_Blackwart_an.gif"/>
-			<away standing="Nobbla_Blackwart_b.gif"  moving="Nobbla_Blackwart_ban.gif"/>
-		</iconList>
+		<portrait></portrait>
+		<iconSet size="1">iconsets/Nobbla_Blackwart.png</iconSet>
 		<skillList>
 			<skill>Loner</skill>
 			<skill>Block</skill>
@@ -205,11 +173,8 @@ Grashnak Blackhoof, Hthark the Unstoppable, Morg ‘n’ Thorg, Nobbla Blackwart
 		<strength>3</strength>
 		<agility>3</agility>
 		<armour>7</armour>
-    <iconList baseIconPath="../stars/">
-			<portrait/>
-			<home standing="Rashnak_Backstabber.gif" moving="Rashnak_Backstabber_an.gif"/>
-			<away standing="Rashnak_Backstabber_b.gif"  moving="Rashnak_Backstabber_ban.gif"/>
-		</iconList>
+		<portrait></portrait>
+		<iconSet size="1">iconsets/Rashnak_Backstabber.png</iconSet>
 		<skillList>
 			<skill>Loner</skill>
 			<skill>Dodge</skill>
@@ -229,11 +194,8 @@ Grashnak Blackhoof, Hthark the Unstoppable, Morg ‘n’ Thorg, Nobbla Blackwart
 		<strength>6</strength>
 		<agility>2</agility>
 		<armour>8</armour>
-    <iconList baseIconPath="../stars/">
-			<portrait/>
-			<home standing="grashnak.gif" moving="grashnak_an.gif"/>
-			<away standing="grashnak_b.gif"  moving="grashnak_ban.gif"/>
-		</iconList>
+		<portrait></portrait>
+		<iconSet size="1">iconsets/grashnak.png</iconSet>
 		<skillList>
 			<skill>Loner</skill>
 			<skill>Frenzy</skill>
@@ -253,11 +215,8 @@ Grashnak Blackhoof, Hthark the Unstoppable, Morg ‘n’ Thorg, Nobbla Blackwart
 		<strength>5</strength>
 		<agility>2</agility>
 		<armour>9</armour>
-    <iconList baseIconPath="../stars/">
-			<portrait/>
-			<home standing="Hthark.gif" moving="Hthark_an.gif"/>
-			<away standing="Hthark_b.gif"  moving="Hthark_ban.gif"/>
-		</iconList>
+		<portrait></portrait>
+		<iconSet size="1">iconsets/Hthark.png</iconSet>
 		<skillList>
 			<skill>Loner</skill>
 			<skill>Block</skill>
@@ -279,11 +238,8 @@ Grashnak Blackhoof, Hthark the Unstoppable, Morg ‘n’ Thorg, Nobbla Blackwart
 		<strength>6</strength>
 		<agility>3</agility>
 		<armour>10</armour>
-    <iconList baseIconPath="../stars/">
-			<portrait/>
-			<home standing="morgnthorg.gif" moving="morgnthorg_an.gif"/>
-			<away standing="morgnthorg_b.gif"  moving="morgnthorg_ban.gif"/>
-		</iconList>
+		<portrait></portrait>
+		<iconSet size="1">iconsets/morgnthorg.png</iconSet>
 		<skillList>
 			<skill>Loner</skill>
 			<skill>Block</skill>

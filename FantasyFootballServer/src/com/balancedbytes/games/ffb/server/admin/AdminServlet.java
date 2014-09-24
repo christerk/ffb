@@ -367,7 +367,7 @@ public class AdminServlet extends HttpServlet {
     AttributesImpl attributes = new AttributesImpl();
     UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_INITIATED, _TIMESTAMP_FORMAT.format(new Date()));
     UtilXml.addEmptyElement(pHandler, _XML_TAG_REFRESH, attributes);
-    getServer().getGameCache().clearRosterCache();
+    getServer().getGameCache().refresh();
     return true;
   }
   
