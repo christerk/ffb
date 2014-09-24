@@ -74,7 +74,7 @@ Grashnak Blackhoof, Hthark the Unstoppable, Morg ‘n’ Thorg, Nobbla Blackwart
 		<strength>4</strength>
 		<agility>2</agility>
 		<armour>9</armour>
-		<portrait>portraits/centaur.png</portrait>
+		<portrait>portraits/cdcentaur.png</portrait>
 		<iconSet size="2">iconsets/centaur.png</iconSet>
 		<skillList>
 			<skill>Sprint</skill>
@@ -98,7 +98,7 @@ Grashnak Blackhoof, Hthark the Unstoppable, Morg ‘n’ Thorg, Nobbla Blackwart
 		<strength>5</strength>
 		<agility>2</agility>
 		<armour>8</armour>
-		<portrait>portraits/minotaur.png</portrait>
+		<portrait>portraits/cdminotaur.png</portrait>
 		<iconSet size="1">iconsets/minotaur.png</iconSet>
 		<skillList>
 			<skill>Loner</skill>

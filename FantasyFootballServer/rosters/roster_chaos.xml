@@ -13,108 +13,87 @@ Star Players available for Inducement:
 Brick Far’th & Grotty, Grashnak Blackhoof, Lord Borak the Despoiler, Max Spleenripper, Morg ‘n’ Thorg, Ripper
 -->
 
-  <name>Chaos</name>
-  <type>Regular</type>
-  <reRollCost>60000</reRollCost>	
-  <maxReRolls>8</maxReRolls>	
-  <baseIconPath>http://localhost:2224/icons/players/chaos/</baseIconPath>	
+	<name>Chaos</name>
+	<type>Regular</type>
+	<reRollCost>60000</reRollCost>	
+	<maxReRolls>8</maxReRolls>	
+	<baseIconPath>http://localhost:2224/icons/players/</baseIconPath>	
 
-  <position id="chaos.beastman">
-  	<quantity>12</quantity>
-  	<name>Chaos Beastman</name>
-  	<shorthand>B</shorthand>
-  	<type>Regular</type>
-  	<cost>60000</cost>
-    <movement>6</movement>
-    <strength>3</strength>
-    <agility>3</agility>
-    <armour>8</armour>
-    <iconList>
-      <portrait>portrait_chaos_beastman.png</portrait>
-      <home standing="cbeastman1.gif" moving="cbeastman1an.gif" />
-      <away standing="cbeastman1b.gif" moving="cbeastman1ban.gif" />
-      <home standing="cbeastman2.gif" moving="cbeastman2an.gif" />
-      <away standing="cbeastman2b.gif" moving="cbeastman2ban.gif" />
-      <home standing="cbeastman3.gif" moving="cbeastman3an.gif" />
-      <away standing="cbeastman3b.gif" moving="cbeastman3ban.gif" />
-      <home standing="cbeastman4.gif" moving="cbeastman4an.gif" />
-      <away standing="cbeastman4b.gif" moving="cbeastman4ban.gif" />
-    </iconList>
-  	<skillList>
-  	  <skill>Horns</skill>
-  	</skillList>
-  	<skillCategoryList>
-      <normal>General</normal>
-      <normal>Strength</normal>
-      <normal>Mutation</normal>
-      <double>Agility</double>
-      <double>Passing</double>
-  	</skillCategoryList>
-  </position>
+	<position id="chaos.beastman">
+		<quantity>12</quantity>
+		<name>Chaos Beastman</name>
+		<shorthand>B</shorthand>
+		<type>Regular</type>
+		<cost>60000</cost>
+		<movement>6</movement>
+		<strength>3</strength>
+		<agility>3</agility>
+		<armour>8</armour>
+		<portrait>portraits/cbeastman.png</portrait>
+		<iconSet size="4">iconsets/cbeastman.png</iconSet>
+		<skillList>
+			<skill>Horns</skill>
+		</skillList>
+		<skillCategoryList>
+			<normal>General</normal>
+			<normal>Strength</normal>
+			<normal>Mutation</normal>
+			<double>Agility</double>
+			<double>Passing</double>
+		</skillCategoryList>
+	</position>
 
-  <position id="chaos.warrior">
-  	<quantity>4</quantity>
-  	<name>Chaos Warrior</name>
-  	<shorthand>W</shorthand>
-  	<type>Regular</type>
-  	<cost>100000</cost>
-    <movement>5</movement>
-    <strength>4</strength>
-    <agility>3</agility>
-    <armour>9</armour>
-    <iconList>
-      <portrait>portrait_chaos_warrior.png</portrait>
-      <home standing="cwarrior1.gif" moving="cwarrior1an.gif" />
-      <away standing="cwarrior1b.gif" moving="cwarrior1ban.gif" />
-      <home standing="cwarrior2.gif" moving="cwarrior2an.gif" />
-      <away standing="cwarrior2b.gif" moving="cwarrior2ban.gif" />
-      <home standing="cwarrior3.gif" moving="cwarrior3an.gif" />
-      <away standing="cwarrior3b.gif" moving="cwarrior3ban.gif" />
-      <home standing="cwarrior4.gif" moving="cwarrior4an.gif" />
-      <away standing="cwarrior4b.gif" moving="cwarrior4ban.gif" />
-    </iconList>
-  	<skillList />
-  	<skillCategoryList>
-      <normal>General</normal>
-      <normal>Strength</normal>
-      <normal>Mutation</normal>
-      <double>Agility</double>
-      <double>Passing</double>
-  	</skillCategoryList>
-  </position>
+	<position id="chaos.warrior">
+		<quantity>4</quantity>
+		<name>Chaos Warrior</name>
+		<shorthand>W</shorthand>
+		<type>Regular</type>
+		<cost>100000</cost>
+		<movement>5</movement>
+		<strength>4</strength>
+		<agility>3</agility>
+		<armour>9</armour>
+		<portrait>portraits/cwarrior.png</portrait>
+		<iconSet size="4">iconsets/cwarrior.png</iconSet>
+		<skillList />
+		<skillCategoryList>
+			<normal>General</normal>
+			<normal>Strength</normal>
+			<normal>Mutation</normal>
+			<double>Agility</double>
+			<double>Passing</double>
+		</skillCategoryList>
+	</position>
 
-  <position id="chaos.minotaur">
-  	<quantity>1</quantity>
-  	<name>Minotaur</name>
-  	<type>Big Guy</type>
-  	<cost>150000</cost>
-    <movement>5</movement>
-    <strength>5</strength>
-    <agility>2</agility>
-    <armour>8</armour>
-    <iconList>
-      <portrait>portrait_chaos_minotaur.png</portrait>
-      <home standing="minotaur1.gif" moving="minotaur1an.gif" />
-      <away standing="minotaur1b.gif" moving="minotaur1ban.gif" />
-    </iconList>
-  	<skillList>
-  	  <skill>Loner</skill>
-  	  <skill>Frenzy</skill>
-  	  <skill>Horns</skill>
-  	  <skill>Mighty Blow</skill>
-  	  <skill>Thick Skull</skill>
-  	  <skill>Wild Animal</skill>
-  	</skillList>
-  	<skillCategoryList>
-      <normal>Strength</normal>
-      <normal>Mutation</normal>
-      <double>General</double>
-      <double>Agility</double>
-      <double>Passing</double>
-  	</skillCategoryList>
-  </position>
+	<position id="chaos.minotaur">
+		<quantity>1</quantity>
+		<name>Minotaur</name>
+		<type>Big Guy</type>
+		<cost>150000</cost>
+		<movement>5</movement>
+		<strength>5</strength>
+		<agility>2</agility>
+		<armour>8</armour>
+		<portrait>portraits/cminotaur.png</portrait>
+		<iconSet size="1">iconsets/minotaur.png</iconSet>
+		<skillList>
+			<skill>Loner</skill>
+			<skill>Frenzy</skill>
+			<skill>Horns</skill>
+			<skill>Mighty Blow</skill>
+			<skill>Thick Skull</skill>
+			<skill>Wild Animal</skill>
+		</skillList>
+		<skillCategoryList>
+			<normal>Strength</normal>
+			<normal>Mutation</normal>
+			<double>General</double>
+			<double>Agility</double>
+			<double>Passing</double>
+		</skillCategoryList>
+	</position>
   
-  <position id="chaos.Max">
+	<position id="chaos.Max">
 		<quantity>1</quantity>
 		<name>Max Spleenripper</name>
 		<shorthand>MS</shorthand>
@@ -124,11 +103,8 @@ Brick Far’th & Grotty, Grashnak Blackhoof, Lord Borak the Despoiler, Max Splee
 		<strength>2</strength>
 		<agility>3</agility>
 		<armour>7</armour>
-    <iconList baseIconPath="../stars/">
-			<portrait/>
-			<home standing="Max_Spleenripper.gif" moving="Max_Spleenripper_an.gif"/>
-			<away standing="Max_Spleenripper_b.gif" moving="Max_Spleenripper_ban.gif"/>
-		</iconList>
+		<portrait></portrait>
+		<iconSet size="1">iconsets/Max_Spleenripper.png</iconSet>
 		<skillList>
 			<skill>Loner</skill>
 			<skill>Chainsaw</skill>
@@ -146,11 +122,8 @@ Brick Far’th & Grotty, Grashnak Blackhoof, Lord Borak the Despoiler, Max Splee
 		<strength>3</strength>
 		<agility>3</agility>
 		<armour>9</armour>
-    <iconList baseIconPath="../stars/">
-			<portrait/>
-			<home standing="Lewdgrip_Whiparm.gif" moving="Lewdgrip_Whiparm_an.gif"/>
-			<away standing="Lewdgrip_Whiparm_b.gif"  moving="Lewdgrip_Whiparm_ban.gif"/>
-		</iconList>
+		<portrait></portrait>
+		<iconSet size="1">iconsets/Lewdgrip_Whiparm.png</iconSet>
 		<skillList>
 			<skill>Loner</skill>
 			<skill>Pass</skill>
@@ -170,11 +143,8 @@ Brick Far’th & Grotty, Grashnak Blackhoof, Lord Borak the Despoiler, Max Splee
 		<strength>5</strength>
 		<agility>2</agility>
 		<armour>9</armour>
-    <iconList baseIconPath="../stars/">
-			<portrait/>
-			<home standing="Brick_Farth.gif" moving="Brick_Farth_an.gif"/>
-			<away standing="Brick_Farth_b.gif"  moving="Brick_Farth_ban.gif"/>
-		</iconList>
+		<portrait></portrait>
+		<iconSet size="1">iconsets/Brick_Farth.png</iconSet>
 		<skillList>
 			<skill>Loner</skill>
 			<skill>Bone-Head</skill>
@@ -196,11 +166,8 @@ Brick Far’th & Grotty, Grashnak Blackhoof, Lord Borak the Despoiler, Max Splee
 		<strength>2</strength>
 		<agility>4</agility>
 		<armour>7</armour>
-    <iconList baseIconPath="../stars/">
-			<portrait/>
-			<home standing="Grotty.gif" moving="Grotty_an.gif"/>
-			<away standing="Grotty_b.gif"  moving="Grotty_ban.gif"/>
-		</iconList>
+		<portrait></portrait>
+		<iconSet size="1">iconsets/Grotty.png</iconSet>
 		<skillList>
 			<skill>Loner</skill>
 			<skill>Dodge</skill>
@@ -219,11 +186,8 @@ Brick Far’th & Grotty, Grashnak Blackhoof, Lord Borak the Despoiler, Max Splee
 		<strength>5</strength>
 		<agility>3</agility>
 		<armour>9</armour>
-    <iconList baseIconPath="../stars/">
-			<portrait/>
-			<home standing="Lord_Borak.gif" moving="Lord_Borak_an.gif"/>
-			<away standing="Lord_Borak_b.gif"  moving="Lord_Borak_ban.gif"/>
-		</iconList>
+		<portrait></portrait>
+		<iconSet size="1">iconsets/Lord_Borak.png</iconSet>
 		<skillList>
 			<skill>Loner</skill>
 			<skill>Block</skill>
@@ -242,11 +206,8 @@ Brick Far’th & Grotty, Grashnak Blackhoof, Lord Borak the Despoiler, Max Splee
 		<strength>6</strength>
 		<agility>2</agility>
 		<armour>8</armour>
-    <iconList baseIconPath="../stars/">
-			<portrait/>
-			<home standing="grashnak.gif" moving="grashnak_an.gif"/>
-			<away standing="grashnak_b.gif"  moving="grashnak_ban.gif"/>
-		</iconList>
+		<portrait></portrait>
+		<iconSet size="1">iconsets/grashnak.png</iconSet>
 		<skillList>
 			<skill>Loner</skill>
 			<skill>Frenzy</skill>
@@ -266,11 +227,8 @@ Brick Far’th & Grotty, Grashnak Blackhoof, Lord Borak the Despoiler, Max Splee
 		<strength>6</strength>
 		<agility>3</agility>
 		<armour>10</armour>
-    <iconList baseIconPath="../stars/">
-			<portrait/>
-			<home standing="morgnthorg.gif" moving="morgnthorg_an.gif"/>
-			<away standing="morgnthorg_b.gif" moving="morgnthorg_ban.gif"/>
-		</iconList>
+		<portrait></portrait>
+		<iconSet size="1">iconsets/morgnthorg.png</iconSet>
 		<skillList>
 			<skill>Loner</skill>
 			<skill>Block</skill>

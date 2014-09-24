@@ -2,131 +2,131 @@
 
 <team id="teamChaosBattleLore">
 
-  <coach>BattleLore</coach>
-  <name>BattleLore's Chaos</name>
-  <race>Chaos</race>
-  <rosterId>chaos.lrb6</rosterId>
-  <reRolls>3</reRolls>
-  <fanFactor>8</fanFactor>
-  <apothecaries>0</apothecaries>
-  <teamRating>100</teamRating>
-  <teamStrength>98</teamStrength>
-  <division>[X]</division>
+	<coach>BattleLore</coach>
+	<name>BattleLore's Chaos</name>
+	<race>Chaos</race>
+	<rosterId>chaos.lrb6</rosterId>
+	<reRolls>3</reRolls>
+	<fanFactor>8</fanFactor>
+	<apothecaries>0</apothecaries>
+	<teamRating>100</teamRating>
+	<teamStrength>98</teamStrength>
+	<division>[X]</division>
 
-  <player nr="1" id="teamChaosBattleLore1">
-  	<name>Warrior1</name>
-  	<gender>male</gender>
-  	<positionId>chaos.warrior</positionId>
-  	<skillList>
-  	  <skill>Pro</skill>
-      <skill>Foul Appearance</skill>
-  	</skillList>
-  </player>
+	<player nr="1" id="teamChaosBattleLore1">
+		<name>Warrior1</name>
+		<gender>male</gender>
+		<positionId>chaos.warrior</positionId>
+		<skillList>
+			<skill>Pro</skill>
+			<skill>Foul Appearance</skill>
+		</skillList>
+	</player>
 
-  <player nr="2" id="teamChaosBattleLore2">
-  	<name>Warrior2</name>
-  	<gender>male</gender>
-  	<positionId>chaos.warrior</positionId>
-  	<skillList>
-      <skill>Pro</skill>
-      <skill>Foul Appearance</skill>
-  	</skillList>
-  </player>
+	<player nr="2" id="teamChaosBattleLore2">
+		<name>Warrior2</name>
+		<gender>male</gender>
+		<positionId>chaos.warrior</positionId>
+		<skillList>
+			<skill>Pro</skill>
+			<skill>Foul Appearance</skill>
+		</skillList>
+	</player>
 
-  <player nr="3" id="teamChaosBattleLore3">
-  	<name>Warrior3</name>
-  	<gender>male</gender>
-  	<positionId>chaos.warrior</positionId>
-  	<skillList>
-  	  <skill>Pro</skill>
-      <skill>Foul Appearance</skill>
-  	</skillList>
-  </player>
+	<player nr="3" id="teamChaosBattleLore3">
+		<name>Warrior3</name>
+		<gender>male</gender>
+		<positionId>chaos.warrior</positionId>
+		<skillList>
+			<skill>Pro</skill>
+			<skill>Foul Appearance</skill>
+		</skillList>
+	</player>
 
-  <player nr="4" id="teamChaosBattleLore4">
-  	<name>Warrior4</name>
-  	<gender>male</gender>
-  	<positionId>chaos.warrior</positionId>
-  	<skillList>
-  	  <skill>Pro</skill>
-      <skill>Foul Appearance</skill>
-  	</skillList>
-  </player>
+	<player nr="4" id="teamChaosBattleLore4">
+		<name>Warrior4</name>
+		<gender>male</gender>
+		<positionId>chaos.warrior</positionId>
+		<skillList>
+			<skill>Pro</skill>
+			<skill>Foul Appearance</skill>
+		</skillList>
+	</player>
 
-  <player nr="5" id="teamChaosBattleLore5">
-  	<name>Beastman1</name>
-  	<gender>male</gender>
-  	<positionId>chaos.beastman</positionId>
-  	<skillList>
-  	  <skill>Block</skill>
-  	  <skill>Claw</skill>
-  	</skillList>
-  </player>
+	<player nr="5" id="teamChaosBattleLore5">
+		<name>Beastman1</name>
+		<gender>male</gender>
+		<positionId>chaos.beastman</positionId>
+		<skillList>
+			<skill>Block</skill>
+			<skill>Claw</skill>
+		</skillList>
+	</player>
 
-  <player nr="6" id="teamChaosBattleLore6">
-  	<name>Beastman2</name>
-  	<gender>male</gender>
-  	<positionId>chaos.beastman</positionId>
-  	<skillList>
-  	  <skill>Block</skill>
-  	  <skill>Claw</skill>
-  	</skillList>
-  </player>
+	<player nr="6" id="teamChaosBattleLore6">
+		<name>Beastman2</name>
+		<gender>male</gender>
+		<positionId>chaos.beastman</positionId>
+		<skillList>
+			<skill>Block</skill>
+			<skill>Claw</skill>
+		</skillList>
+	</player>
 
-  <player nr="7" id="teamChaosBattleLore7">
-  	<name>Beastman3</name>
-  	<gender>male</gender>
-  	<positionId>chaos.beastman</positionId>
-  	<skillList />
-    <injuryList>
-      <injury>Smashed Collar Bone (-ST)</injury>
-    </injuryList>
-  </player>
+	<player nr="7" id="teamChaosBattleLore7">
+		<name>Beastman3</name>
+		<gender>male</gender>
+		<positionId>chaos.beastman</positionId>
+		<skillList />
+		<injuryList>
+			<injury>Smashed Collar Bone (-ST)</injury>
+		</injuryList>
+	</player>
 
-  <player nr="8" id="teamChaosBattleLore8">
-  	<name>Beastman4</name>
-  	<gender>male</gender>
-  	<positionId>chaos.beastman</positionId>
-  	<skillList />
-  </player>
+	<player nr="8" id="teamChaosBattleLore8">
+		<name>Beastman4</name>
+		<gender>male</gender>
+		<positionId>chaos.beastman</positionId>
+		<skillList />
+	</player>
 
-  <player nr="9" id="teamChaosBattleLore9">
-  	<name>Beastman5</name>
-  	<gender>male</gender>
-  	<positionId>chaos.beastman</positionId>
-  	<skillList />
-  </player>
+	<player nr="9" id="teamChaosBattleLore9">
+		<name>Beastman5</name>
+		<gender>male</gender>
+		<positionId>chaos.beastman</positionId>
+		<skillList />
+	</player>
 
-  <player nr="10" id="teamChaosBattleLore10">
-  	<name>Beastman6</name>
-  	<gender>male</gender>
-  	<positionId>chaos.beastman</positionId>
-  	<skillList />
-  </player>
+	<player nr="10" id="teamChaosBattleLore10">
+		<name>Beastman6</name>
+		<gender>male</gender>
+		<positionId>chaos.beastman</positionId>
+		<skillList />
+	</player>
 
-  <player nr="11" id="teamChaosBattleLore11">
-  	<name>Beastman7</name>
-  	<gender>male</gender>
-  	<positionId>chaos.beastman</positionId>
-  	<skillList />
-  </player>
+	<player nr="11" id="teamChaosBattleLore11">
+		<name>Beastman7</name>
+		<gender>male</gender>
+		<positionId>chaos.beastman</positionId>
+		<skillList />
+	</player>
 
-  <player nr="12" id="teamChaosBattleLore12">
-  	<name>Beastman8</name>
-  	<gender>male</gender>
-  	<positionId>chaos.beastman</positionId>
-  	<skillList />
-  </player>
+	<player nr="12" id="teamChaosBattleLore12">
+		<name>Beastman8</name>
+		<gender>male</gender>
+		<positionId>chaos.beastman</positionId>
+		<skillList />
+	</player>
   
-  <player nr="13" id="teamChaosBattleLore13">
-  	<name>Minotaur</name>
-  	<gender>male</gender>
-  	<positionId>chaos.minotaur</positionId>
-  	<skillList>
-  	  <skill>Juggernaut</skill>
-  	  <skill>Tentacles</skill>
-  	  <skill>Pro</skill>
-  	</skillList>
-  </player>
+	<player nr="13" id="teamChaosBattleLore13">
+		<name>Minotaur</name>
+		<gender>male</gender>
+		<positionId>chaos.minotaur</positionId>
+		<skillList>
+			<skill>Juggernaut</skill>
+			<skill>Tentacles</skill>
+			<skill>Pro</skill>
+		</skillList>
+  	</player>
 
 </team>
