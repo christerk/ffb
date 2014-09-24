@@ -2,18 +2,6 @@
 
 <roster id="chaosdwarf.lrb6">
 
-<!--
-0-16 Hobgoblins 40,000 6 3 3 7 None G ASP
-0-6 Chaos Dwarf Blockers 70,000 4 3 2 9 Block, Tackle, Thick Skull GS APM
-0-2 Bull Centaurs 130,000 6 4 2 9 Sprint, Sure Feet, Thick Skull GS AP
-0-1 Minotaur 150,000 5 5 2 8 Loner, Frenzy, Horns, Mighty Blow, Thick Skull, Wild Animal S GAPM
-
-0-8 Re-roll counters: 70,000 gold pieces each
-
-Star Players available for Inducement:
-Grashnak Blackhoof, Hthark the Unstoppable, Morg ‘n’ Thorg, Nobbla Blackwart, Rashnak Backstabber, Zzharg Madeye
--->
-
 	<name>Chaos Dwarf</name>
 	<type>Regular</type>
 	<reRollCost>70000</reRollCost>	
@@ -31,7 +19,7 @@ Grashnak Blackhoof, Hthark the Unstoppable, Morg ‘n’ Thorg, Nobbla Blackwart
 		<armour>7</armour>
 		<portrait>portraits/cdhobgoblin.png</portrait>
 		<iconSet size="4">iconsets/cdhobgoblin1.png</iconSet>
-		<skillList />
+		<skillList></skillList>
 		<skillCategoryList>
 			<normal>General</normal>
 			<double>Agility</double>

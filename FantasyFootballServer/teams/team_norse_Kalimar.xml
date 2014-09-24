@@ -21,7 +21,7 @@
   	<name>Berserker1</name>
   	<gender>male</gender>
     <positionId>norse.berserker</positionId>
-  	<skillList/>
+  	<skillList></skillList>
   	<injuryList/>
   	<playerStatistics currentSpps="0" />
   </player>
@@ -30,7 +30,7 @@
   	<name>Berserker2</name>
   	<gender>male</gender>
     <positionId>norse.berserker</positionId>
-  	<skillList/>
+  	<skillList></skillList>
   	<injuryList/>
   	<playerStatistics currentSpps="0" />
   </player>
@@ -39,7 +39,7 @@
   	<name>Ulfwerener1</name>
   	<gender>male</gender>
     <positionId>norse.ulfwerener</positionId>
-  	<skillList/>
+  	<skillList></skillList>
   	 <injuryList/>
   	<playerStatistics currentSpps="0" />
   </player>
@@ -48,7 +48,7 @@
   	<name>Ulfwerener2</name>
   	<gender>male</gender>
     <positionId>norse.ulfwerener</positionId>
-  	<skillList/>
+  	<skillList></skillList>
   	 <injuryList/>
   	<playerStatistics currentSpps="0" />
   </player>
@@ -57,7 +57,7 @@
   	<name>Runner1</name>
   	<gender>male</gender>
     <positionId>norse.runner</positionId>
-  	<skillList/>
+  	<skillList></skillList>
   	 <injuryList/>
   	<playerStatistics currentSpps="0" />
   </player>
@@ -66,7 +66,7 @@
   	<name>Runner2</name>
   	<gender>male</gender>
     <positionId>norse.runner</positionId>
-  	<skillList/>
+  	<skillList></skillList>
   	<injuryList/>
   	<playerStatistics currentSpps="0" />
   </player>
@@ -75,7 +75,7 @@
   	<name>Lineman1</name>
   	<gender>male</gender>
     <positionId>norse.lineman</positionId>
-  	<skillList/>
+  	<skillList></skillList>
   	<injuryList/>
   	<playerStatistics currentSpps="0" />
   </player>
@@ -84,7 +84,7 @@
   	<name>Lineman2</name>
   	<gender>male</gender>
     <positionId>norse.lineman</positionId>
-  	<skillList/>
+  	<skillList></skillList>
   	<injuryList/>
   	<playerStatistics currentSpps="0" />
   </player>
@@ -93,7 +93,7 @@
   	<name>Lineman3</name>
   	<gender>male</gender>
     <positionId>norse.lineman</positionId>
-  	<skillList/>
+  	<skillList></skillList>
   	<injuryList/>
   	<playerStatistics currentSpps="0" />
   </player>
@@ -102,7 +102,7 @@
   	<name>Lineman4</name>
   	<gender>male</gender>
     <positionId>norse.lineman</positionId>
-  	<skillList/>
+  	<skillList></skillList>
   	<injuryList/>
   	<playerStatistics currentSpps="0" />
   </player>
@@ -111,7 +111,7 @@
   	<name>Lineman5</name>
   	<gender>male</gender>
     <positionId>norse.lineman</positionId>
-  	<skillList/>
+  	<skillList></skillList>
   	<injuryList/>
   	<playerStatistics currentSpps="0" />
   </player>
@@ -120,7 +120,7 @@
   	<name>Snow Troll</name>
   	<gender>male</gender>
     <positionId>norse.troll.snow</positionId>
-  	<skillList/>
+  	<skillList></skillList>
   	<injuryList/>
   	<playerStatistics currentSpps="0" />
   </player>

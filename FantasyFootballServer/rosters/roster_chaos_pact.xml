@@ -20,7 +20,7 @@
 		<armour>8</armour>
 		<portrait>portraits/marauder.png</portrait>
 		<iconSet size="5">iconsets/marauder.png</iconSet>
-		<skillList/>
+		<skillList></skillList>
 		<skillCategoryList>
 			<normal>Strength</normal>
 			<normal>General</normal>

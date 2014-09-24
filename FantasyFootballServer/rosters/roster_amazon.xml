@@ -2,18 +2,6 @@
 
 <roster id="amazon.lrb6">
 
-<!--
-0-16 Linewomen 50,000 6 3 3 7 Dodge G ASP
-0-2 Throwers 70,000 6 3 3 7 Dodge, Pass GP AS
-0-2 Catchers 70,000 6 3 3 7 Dodge, Catch GA SP
-0-4 Blitzers 90,000 6 3 3 7 Dodge, Block GS AP
-
-0-8 Re-roll counters: 50,000 gold pieces each
-
-Star Players available for Inducement:
-Helmut Wulf, Morg ‘n’ Thorg, Zara the Slayer
--->
-
 	<name>Amazon</name>
 	<type>Regular</type>
 	<reRollCost>50000</reRollCost>	

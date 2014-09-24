@@ -2,17 +2,6 @@
 
 <roster id="chaos.lrb6">
 
-<!--
-0-16 Beastmen 60,000 6 3 3 8 Horns GSM AP
-0-4 Chaos Warriors 100,000 5 4 3 9 None GSM AP
-0-1 Minotaur 150,000 5 5 2 8 Loner, Frenzy, Horns, Mighty Blow, Thick Skull, Wild Animal SM GAP
-
-0-8 Re-roll counters: 60,000 gold pieces each
-
-Star Players available for Inducement:
-Brick Far’th & Grotty, Grashnak Blackhoof, Lord Borak the Despoiler, Max Spleenripper, Morg ‘n’ Thorg, Ripper
--->
-
 	<name>Chaos</name>
 	<type>Regular</type>
 	<reRollCost>60000</reRollCost>	
@@ -55,7 +44,7 @@ Brick Far’th & Grotty, Grashnak Blackhoof, Lord Borak the Despoiler, Max Splee
 		<armour>9</armour>
 		<portrait>portraits/cwarrior.png</portrait>
 		<iconSet size="4">iconsets/cwarrior.png</iconSet>
-		<skillList />
+		<skillList></skillList>
 		<skillCategoryList>
 			<normal>General</normal>
 			<normal>Strength</normal>
