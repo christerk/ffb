@@ -17,42 +17,42 @@
 		<name>Blocker1</name>
 		<gender>male</gender>
 		<positionId>chaosdwarf.blocker</positionId>
-		<skillList />
+		<skillList></skillList>
 	</player>
 
 	<player nr="2" id="teamChaosDwarfKalimar2">
 		<name>Blocker2</name>
 		<gender>male</gender>
 		<positionId>chaosdwarf.blocker</positionId>
-		<skillList />
+		<skillList></skillList>
 	</player>
 
 	<player nr="3" id="teamChaosDwarfKalimar3">
 		<name>Blocker3</name>
 		<gender>male</gender>
 		<positionId>chaosdwarf.blocker</positionId>
-		<skillList />
+		<skillList></skillList>
 	</player>
 
 	<player nr="4" id="teamChaosDwarfKalimar4">
 		<name>Blocker4</name>
 		<gender>male</gender>
 		<positionId>chaosdwarf.blocker</positionId>
-		<skillList />
+		<skillList></skillList>
 	</player>
 
 	<player nr="5" id="teamChaosDwarfKalimar5">
 		<name>Blocker5</name>
 		<gender>male</gender>
 		<positionId>chaosdwarf.blocker</positionId>
-		<skillList />
+		<skillList></skillList>
 	</player>
 
 	<player nr="6" id="teamChaosDwarfKalimar6">
 		<name>Blocker6</name>
 		<gender>male</gender>
 		<positionId>chaosdwarf.blocker</positionId>
-		<skillList />
+		<skillList></skillList>
 	</player>
   
 	<player nr="7" id="teamChaosDwarfKalimar7">
@@ -77,35 +77,35 @@
 		<name>Minotaur</name>
 		<gender>male</gender>
 		<positionId>chaosdwarf.minotaur</positionId>
-		<skillList />
+		<skillList></skillList>
 	</player>
 
 	<player nr="10" id="teamChaosDwarfKalimar10">
 		<name>Hobgoblin1</name>
 		<gender>male</gender>
 		<positionId>chaosdwarf.hobgoblin</positionId>
-		<skillList />
+		<skillList></skillList>
 	</player>
 
 	<player nr="11" id="teamChaosDwarfKalimar11">
 		<name>Hobgoblin2</name>
 		<gender>male</gender>
 		<positionId>chaosdwarf.hobgoblin</positionId>
-		<skillList />
+		<skillList></skillList>
 	</player>
 
 	<player nr="12" id="teamChaosDwarfKalimar12">
 		<name>Hobgoblin3</name>
 		<gender>male</gender>
 		<positionId>chaosdwarf.hobgoblin</positionId>
-		<skillList />
+		<skillList></skillList>
 	</player>
 
 	<player nr="13" id="teamChaosDwarfKalimar13">
 		<name>Hobgoblin4</name>
 		<gender>male</gender>
 		<positionId>chaosdwarf.hobgoblin</positionId>
-		<skillList />
+		<skillList></skillList>
 	</player>
 
 </team>

@@ -17,91 +17,91 @@
   	<name>Blitzer1</name>
   	<gender>male</gender>
   	<positionId>highelf.blitzer</positionId>
-  	<skillList />
+  	<skillList></skillList>
   </player>
 
   <player nr="2" id="teamHighElfBattleLore2">
   	<name>Blitzer2</name>
   	<gender>male</gender>
   	<positionId>highelf.blitzer</positionId>
-  	<skillList />
+  	<skillList></skillList>
   </player>
 
   <player nr="3" id="teamHighElfBattleLore3">
   	<name>Thrower1</name>
   	<gender>male</gender>
   	<positionId>highelf.thrower</positionId>
-  	<skillList />
+  	<skillList></skillList>
   </player>
 
   <player nr="4" id="teamHighElfBattleLore4">
   	<name>Thrower2</name>
   	<gender>male</gender>
   	<positionId>highelf.thrower</positionId>
-  	<skillList />
+  	<skillList></skillList>
   </player>
 
   <player nr="5" id="teamHighElfBattleLore5">
   	<name>Catcher1</name>
   	<gender>male</gender>
   	<positionId>highelf.catcher</positionId>
-  	<skillList />
+  	<skillList></skillList>
   </player>
 
   <player nr="6" id="teamHighElfBattleLore6">
   	<name>Catcher2</name>
   	<gender>male</gender>
   	<positionId>highelf.catcher</positionId>
-  	<skillList />
+  	<skillList></skillList>
   </player>
 
   <player nr="7" id="teamHighElfBattleLore7">
   	<name>Catcher3</name>
   	<gender>male</gender>
   	<positionId>highelf.catcher</positionId>
-  	<skillList />
+  	<skillList></skillList>
   </player>
 
   <player nr="8" id="teamHighElfBattleLore8">
   	<name>Catcher4</name>
   	<gender>male</gender>
   	<positionId>highelf.catcher</positionId>
-  	<skillList />
+  	<skillList></skillList>
   </player>
 
   <player nr="9" id="teamHighElfBattleLore9">
   	<name>Lineman1</name>
   	<gender>male</gender>
   	<positionId>highelf.lineman</positionId>
-  	<skillList />
+  	<skillList></skillList>
   </player>
 
   <player nr="10" id="teamHighElfBattleLore10">
   	<name>Lineman2</name>
   	<gender>male</gender>
   	<positionId>highelf.lineman</positionId>
-  	<skillList />
+  	<skillList></skillList>
   </player>
 
   <player nr="11" id="teamHighElfBattleLore11">
   	<name>Lineman3</name>
   	<gender>male</gender>
   	<positionId>highelf.lineman</positionId>
-  	<skillList />
+  	<skillList></skillList>
   </player>
 
   <player nr="12" id="teamHighElfBattleLore12">
   	<name>Lineman4</name>
   	<gender>male</gender>
   	<positionId>highelf.lineman</positionId>
-  	<skillList />
+  	<skillList></skillList>
   </player>
   
   <player nr="13" id="teamHighElfBattleLore13">
   	<name>Lineman5</name>
   	<gender>male</gender>
   	<positionId>highelf.lineman</positionId>
-  	<skillList />
+  	<skillList></skillList>
   </player>
 
 </team>

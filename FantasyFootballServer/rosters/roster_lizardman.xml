@@ -69,7 +69,7 @@ Helmut Wulf, Hemlock, Morg ‘n’ Thorg, Slibli
       <home standing="lmsaurus4.gif" moving="lmsaurus4an.gif" />
       <away standing="lmsaurus4b.gif" moving="lmsaurus4ban.gif" />
     </iconList>
-  	<skillList />
+  	<skillList></skillList>
   	<skillCategoryList>
       <normal>General</normal>
       <normal>Strength</normal>

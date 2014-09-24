@@ -2,129 +2,99 @@
 
 <roster id="elf.lrb6">
 
-<!--
-0-16 Linemen 60,000 6 3 4 7 None GA SP
-0-2 Throwers 70,000 6 3 4 7 Pass GAP S
-0-4 Catchers 100,000 8 3 4 7 Catch, Nerves of Steel GA SP
-0-2 Blitzers 110,000 7 3 4 8 Block, Side Step GA SP
+	<name>Elf</name>
+	<type>Regular</type>
+	<reRollCost>50000</reRollCost>	
+	<maxReRolls>8</maxReRolls>	
+	<baseIconPath>http://localhost:2224/icons/players/elf/</baseIconPath>	
 
-0-8 Re-roll counters: 50,000 gold pieces each
+	<position id="elf.lineman">
+		<quantity>16</quantity>
+		<name>Lineman</name>
+		<type>Regular</type>
+		<cost>60000</cost>
+		<movement>6</movement>
+		<strength>3</strength>
+		<agility>4</agility>
+		<armour>7</armour>
+		<portrait>portraits/eplineman.png</portrait>
+		<iconSet size="2">iconsets/eplineman.png</iconSet>
+		<skillList></skillList>
+		<skillCategoryList>
+			<normal>General</normal>
+			<normal>Agility</normal>
+			<double>Strength</double>
+			<double>Passing</double>
+		</skillCategoryList>
+	</position>
 
-Star Players available for Inducement:
-Eldril Sidewinder, Hubris Rakarth, Jordell Freshbreeze, Morg ‘n’ Thorg, Prince Moranion
--->
+	<position id="elf.catcher">
+		<quantity>4</quantity>
+		<name>Catcher</name>
+		<type>Regular</type>
+		<cost>100000</cost>
+		<movement>8</movement>
+		<strength>3</strength>
+		<agility>4</agility>
+		<armour>7</armour>
+		<portrait>portraits/epcatcher.png</portrait>
+		<iconSet size="2">iconsets/epcatcher.png</iconSet>
+		<skillList>
+			<skill>Catch</skill>
+			<skill>Nerves of Steel</skill>
+		</skillList>
+		<skillCategoryList>
+			<normal>General</normal>
+			<normal>Agility</normal>
+			<double>Strength</double>
+			<double>Passing</double>
+		</skillCategoryList>
+	</position>
 
-  <name>Elf</name>
-  <type>Regular</type>
-  <reRollCost>50000</reRollCost>	
-  <maxReRolls>8</maxReRolls>	
-  <baseIconPath>http://localhost:2224/icons/players/elf/</baseIconPath>	
+	<position id="elf.thrower">
+		<quantity>2</quantity>
+		<name>Thrower</name>
+		<type>Regular</type>
+		<cost>70000</cost>
+		<movement>6</movement>
+		<strength>3</strength>
+		<agility>4</agility>
+		<armour>7</armour>
+		<portrait>portraits/epthrower.png</portrait>
+		<iconSet size="1">iconsets/epthrower.png</iconSet>
+		<skillList>
+			<skill>Pass</skill>
+		</skillList>
+		<skillCategoryList>
+			<normal>General</normal>
+			<normal>Agility</normal>
+			<normal>Passing</normal>
+			<double>Strength</double>
+		</skillCategoryList>
+	</position>
 
-  <position id="elf.lineman">
-  	<quantity>16</quantity>
-  	<name>Lineman</name>
-  	<type>Regular</type>
-  	<cost>60000</cost>
-    <movement>6</movement>
-    <strength>3</strength>
-    <agility>4</agility>
-    <armour>7</armour>
-    <iconList>
-      <portrait>portrait_elf_lineman.png</portrait>
-      <home standing="eplineman1.gif" moving="eplineman1an.gif" />
-      <away standing="eplineman1b.gif" moving="eplineman1ban.gif" />
-      <home standing="eplineman2.gif" moving="eplineman2an.gif" />
-      <away standing="eplineman2b.gif" moving="eplineman2ban.gif" />
-    </iconList>
-  	<skillList />
-  	<skillCategoryList>
-      <normal>General</normal>
-      <normal>Agility</normal>
-      <double>Strength</double>
-      <double>Passing</double>
-  	</skillCategoryList>
-  </position>
-
-  <position id="elf.catcher">
-  	<quantity>4</quantity>
-  	<name>Catcher</name>
-  	<type>Regular</type>
-  	<cost>100000</cost>
-    <movement>8</movement>
-    <strength>3</strength>
-    <agility>4</agility>
-    <armour>7</armour>
-    <iconList>
-      <portrait>portrait_elf_catcher.png</portrait>
-      <home standing="epcatcher1.gif" moving="epcatcher1an.gif" />
-      <away standing="epcatcher1b.gif" moving="epcatcher1ban.gif" />
-      <home standing="epcatcher2.gif" moving="epcatcher2an.gif" />
-      <away standing="epcatcher2b.gif" moving="epcatcher2ban.gif" />
-    </iconList>
-  	<skillList>
-  	  <skill>Catch</skill>
-  	  <skill>Nerves of Steel</skill>
-  	</skillList>
-  	<skillCategoryList>
-      <normal>General</normal>
-      <normal>Agility</normal>
-      <double>Strength</double>
-      <double>Passing</double>
-  	</skillCategoryList>
-  </position>
-
-  <position id="elf.thrower">
-  	<quantity>2</quantity>
-  	<name>Thrower</name>
-  	<type>Regular</type>
-  	<cost>70000</cost>
-    <movement>6</movement>
-    <strength>3</strength>
-    <agility>4</agility>
-    <armour>7</armour>
-    <iconList>
-      <portrait>portrait_elf_thrower.png</portrait>
-      <home standing="epthrower1.gif" moving="epthrower1an.gif" />
-      <away standing="epthrower1b.gif" moving="epthrower1ban.gif" />
-    </iconList>
-  	<skillList>
-  	  <skill>Pass</skill>
-  	</skillList>
-  	<skillCategoryList>
-      <normal>General</normal>
-      <normal>Agility</normal>
-      <normal>Passing</normal>
-      <double>Strength</double>
-  	</skillCategoryList>
-  </position>
-
-  <position id="elf.blitzer">
-  	<quantity>2</quantity>
-  	<name>Blitzer</name>
-  	<type>Regular</type>
-  	<cost>110000</cost>
-    <movement>7</movement>
-    <strength>3</strength>
-    <agility>4</agility>
-    <armour>8</armour>
-    <iconList>
-      <portrait>portrait_elf_blitzer.png</portrait>
-      <home standing="epblitzer1.gif" moving="epblitzer1an.gif" />
-      <away standing="epblitzer1b.gif" moving="epblitzer1ban.gif" />
-      <home standing="epblitzer2.gif" moving="epblitzer2an.gif" />
-      <away standing="epblitzer2b.gif" moving="epblitzer2ban.gif" />
-    </iconList>
-  	<skillList>
-  	  <skill>Block</skill>
-  	  <skill>Side Step</skill>
-  	</skillList>
-  	<skillCategoryList>
-      <normal>General</normal>
-      <normal>Agility</normal>
-      <double>Strength</double>
-      <double>Passing</double>
-  	</skillCategoryList>
-  </position>
+	<position id="elf.blitzer">
+		<quantity>2</quantity>
+		<name>Blitzer</name>
+		<type>Regular</type>
+		<cost>110000</cost>
+		<movement>7</movement>
+		<strength>3</strength>
+		<agility>4</agility>
+		<armour>8</armour>
+		<portrait>portraits/epblitzer.png</portrait>
+		<iconSet size="2">iconsets/epblitzer.png</iconSet>
+		<skillList>
+			<skill>Block</skill>
+			<skill>Side Step</skill>
+		</skillList>
+		<skillCategoryList>
+			<normal>General</normal>
+			<normal>Agility</normal>
+			<double>Strength</double>
+			<double>Passing</double>
+		</skillCategoryList>
+	</position>
 
 	<position id="elf.Longstride">
 		<quantity>1</quantity>
@@ -136,11 +106,8 @@ Eldril Sidewinder, Hubris Rakarth, Jordell Freshbreeze, Morg ‘n’ Thorg, Prin
 		<strength>3</strength>
 		<agility>4</agility>
 		<armour>7</armour>
-    	<iconList baseIconPath="../stars/">
-			<portrait/>
-			<home standing="Dolfar_Longstride.gif" moving="Dolfar_Longstride_an.gif"/>
-			<away standing="Dolfar_Longstride_b.gif"  moving="Dolfar_Longstride_ban.gif"/>
-		</iconList>
+		<portrait></portrait>
+		<iconSet size="1">iconsets/Dolfar_Longstride.png</iconSet>
 		<skillList>
 			<skill>Loner</skill>
 			<skill>Diving Catch</skill>
@@ -161,11 +128,8 @@ Eldril Sidewinder, Hubris Rakarth, Jordell Freshbreeze, Morg ‘n’ Thorg, Prin
 		<strength>3</strength>
 		<agility>4</agility>
 		<armour>7</armour>
-    <iconList baseIconPath="../stars/">
-			<portrait/>
-			<home standing="Eldril_Sidewinder.gif" moving="Eldril_Sidewinder_an.gif"/>
-			<away standing="Eldril_Sidewinder_b.gif"  moving="Eldril_Sidewinder_ban.gif"/>
-		</iconList>
+		<portrait></portrait>
+		<iconSet size="1">iconsets/Eldril_Sidewinder.png</iconSet>
 		<skillList>
 			<skill>Loner</skill>
 			<skill>Catch</skill>
@@ -186,11 +150,8 @@ Eldril Sidewinder, Hubris Rakarth, Jordell Freshbreeze, Morg ‘n’ Thorg, Prin
 		<strength>4</strength>
 		<agility>4</agility>
 		<armour>8</armour>
-    <iconList baseIconPath="../stars/">
-			<portrait/>
-			<home standing="Hubris_Rakarth.gif" moving="Hubris_Rakarth_an.gif"/>
-			<away standing="Hubris_Rakarth_b.gif"  moving="Hubris_Rakarth_ban.gif"/>
-		</iconList>
+		<portrait></portrait>
+		<iconSet size="1">iconsets/Hubris_Rakarth.png</iconSet>
 		<skillList>
 			<skill>Loner</skill>
 			<skill>Block</skill>
@@ -211,11 +172,8 @@ Eldril Sidewinder, Hubris Rakarth, Jordell Freshbreeze, Morg ‘n’ Thorg, Prin
 		<strength>4</strength>
 		<agility>4</agility>
 		<armour>8</armour>
-    <iconList baseIconPath="../stars/">
-			<portrait/>
-			<home standing="Prince_Moranion.gif" moving="Prince_Moranion_an.gif"/>
-			<away standing="Prince_Moranion_b.gif"  moving="Prince_Moranion_ban.gif"/>
-		</iconList>
+		<portrait></portrait>
+		<iconSet size="1">iconsets/Prince_Moranion.png</iconSet>
 		<skillList>
 			<skill>Loner</skill>
 			<skill>Block</skill>
@@ -235,11 +193,8 @@ Eldril Sidewinder, Hubris Rakarth, Jordell Freshbreeze, Morg ‘n’ Thorg, Prin
 		<strength>3</strength>
 		<agility>5</agility>
 		<armour>7</armour>
-    <iconList baseIconPath="../stars/">
-			<portrait/>
-			<home standing="Jordell_Freshbreeze.gif" moving="Jordell_Freshbreeze_an.gif"/>
-			<away standing="Jordell_Freshbreeze_b.gif"  moving="Jordell_Freshbreeze_ban.gif"/>
-		</iconList>
+		<portrait></portrait>
+		<iconSet size="1">iconsets/Jordell_Freshbreeze.png</iconSet>
 		<skillList>
 			<skill>Loner</skill>
 			<skill>Block</skill>
@@ -260,11 +215,8 @@ Eldril Sidewinder, Hubris Rakarth, Jordell Freshbreeze, Morg ‘n’ Thorg, Prin
 		<strength>6</strength>
 		<agility>3</agility>
 		<armour>10</armour>
-    <iconList baseIconPath="../stars/">
-			<portrait/>
-			<home standing="morgnthorg.gif" moving="morgnthorg_an.gif"/>
-			<away standing="morgnthorg_b.gif"  moving="morgnthorg_ban.gif"/>
-		</iconList>
+		<portrait></portrait>
+		<iconSet size="1">iconsets/morgnthorg.png</iconSet>
 		<skillList>
 			<skill>Loner</skill>
 			<skill>Block</skill>

@@ -17,91 +17,91 @@
   	<name>Blitzer1</name>
   	<gender>male</gender>
   	<positionId>elf.blitzer</positionId>
-  	<skillList />
+  	<skillList></skillList>
   </player>
 
   <player nr="2" id="teamElfKalimar2">
   	<name>Blitzer2</name>
   	<gender>male</gender>
   	<positionId>elf.blitzer</positionId>
-  	<skillList />
+  	<skillList></skillList>
   </player>
 
   <player nr="3" id="teamElfKalimar3">
   	<name>Thrower1</name>
   	<gender>male</gender>
   	<positionId>elf.thrower</positionId>
-  	<skillList />
+  	<skillList></skillList>
   </player>
 
   <player nr="4" id="teamElfKalimar4">
   	<name>Thrower2</name>
   	<gender>male</gender>
   	<positionId>elf.thrower</positionId>
-  	<skillList />
+  	<skillList></skillList>
   </player>
 
   <player nr="5" id="teamElfKalimar5">
   	<name>Cather1</name>
   	<gender>male</gender>
   	<positionId>elf.catcher</positionId>
-  	<skillList />
+  	<skillList></skillList>
   </player>
 
   <player nr="6" id="teamElfKalimar6">
   	<name>Cather2</name>
   	<gender>male</gender>
   	<positionId>elf.catcher</positionId>
-  	<skillList />
+  	<skillList></skillList>
   </player>
 
   <player nr="7" id="teamElfKalimar7">
   	<name>Cather3</name>
   	<gender>male</gender>
   	<positionId>elf.catcher</positionId>
-  	<skillList />
+  	<skillList></skillList>
   </player>
 
   <player nr="8" id="teamElfKalimar8">
   	<name>Cather4</name>
   	<gender>male</gender>
   	<positionId>elf.catcher</positionId>
-  	<skillList />
+  	<skillList></skillList>
   </player>
 
   <player nr="9" id="teamElfKalimar9">
   	<name>Lineman1</name>
   	<gender>male</gender>
   	<positionId>elf.lineman</positionId>
-  	<skillList />
+  	<skillList></skillList>
   </player>
 
   <player nr="10" id="teamElfKalimar10">
   	<name>Lineman2</name>
   	<gender>male</gender>
   	<positionId>elf.lineman</positionId>
-  	<skillList />
+  	<skillList></skillList>
   </player>
 
   <player nr="11" id="teamElfKalimar11">
   	<name>Lineman3</name>
   	<gender>male</gender>
   	<positionId>elf.lineman</positionId>
-  	<skillList />
+  	<skillList></skillList>
   </player>
 
   <player nr="12" id="teamElfKalimar12">
   	<name>Lineman4</name>
   	<gender>male</gender>
   	<positionId>elf.lineman</positionId>
-  	<skillList />
+  	<skillList></skillList>
   </player>
 
   <player nr="13" id="teamElfKalimar13">
   	<name>Lineman5</name>
   	<gender>male</gender>
   	<positionId>elf.lineman</positionId>
-  	<skillList />
+  	<skillList></skillList>
   </player>
 
 </team>

@@ -100,14 +100,14 @@
     <name>Lineman1</name>
   	<gender>male</gender>
     <positionId>orc.lineman</positionId>
-  	<skillList />
+  	<skillList></skillList>
   </player>
 
   <player nr="9" id="teamOrcBattleLore9">
     <name>Lineman2</name>
   	<gender>male</gender>
   	<positionId>orc.lineman</positionId>
-  	<skillList />
+  	<skillList></skillList>
   </player>
 
   <player nr="10" id="teamOrcBattleLore10">
@@ -123,21 +123,21 @@
     <name>Lineman4</name>
   	<gender>male</gender>
   	<positionId>orc.lineman</positionId>
-  	<skillList />
+  	<skillList></skillList>
   </player>
 
   <player nr="12" id="teamOrcBattleLore12">
     <name>Goblin1</name>
   	<gender>male</gender>
   	<positionId>orc.goblin</positionId>
-  	<skillList />
+  	<skillList></skillList>
   </player>
 
   <player nr="13" id="teamOrcBattleLore13">
     <name>Goblin2</name>
   	<gender>male</gender>
   	<positionId>orc.goblin</positionId>
-  	<skillList />
+  	<skillList></skillList>
   </player>
 
 </team>

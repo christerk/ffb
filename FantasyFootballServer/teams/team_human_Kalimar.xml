@@ -124,7 +124,7 @@
   	<name>Lineman1</name>
   	<gender>male</gender>
     <positionId>human.lineman</positionId>
-  	<skillList />
+  	<skillList></skillList>
   </player>
 
   <player nr="9" id="teamHumanKalimar9">
@@ -164,21 +164,21 @@
   	<name>Lineman4</name>
   	<gender>male</gender>
     <positionId>human.lineman</positionId>
-  	<skillList />
+  	<skillList></skillList>
   </player>
   
   <player nr="13" id="teamHumanKalimar13">
   	<name>Lineman5</name>
   	<gender>male</gender>
     <positionId>human.lineman</positionId>
-  	<skillList />
+  	<skillList></skillList>
   </player>
 
   <player nr="14" id="teamHumanKalimar14">
   	<name>Lineman6</name>
   	<gender>male</gender>
     <positionId>human.lineman</positionId>
-  	<skillList />
+  	<skillList></skillList>
   </player>
 
   <player nr="15" id="teamHumanKalimar15">
@@ -199,7 +199,7 @@
   	<injuryList>
        <injury recovering="true">Fractured Leg (MNG)</injury>
   	</injuryList>
-  	<skillList />
+  	<skillList></skillList>
   </player>
 
 </team>

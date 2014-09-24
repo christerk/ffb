@@ -101,7 +101,7 @@ Bomber Dribblesnot, Morg ‘n’ Thorg, Ripper, Scrappa Sorehead, Ugroth Bolgrot
       <home standing="oblackorc2.gif" moving="oblackorc2an.gif" />
       <away standing="oblackorc2b.gif" moving="oblackorc2ban.gif" />
     </iconList>
-  	<skillList />
+  	<skillList></skillList>
   	<skillCategoryList>
       <normal>General</normal>
       <normal>Strength</normal>
@@ -196,7 +196,7 @@ Bomber Dribblesnot, Morg ‘n’ Thorg, Ripper, Scrappa Sorehead, Ugroth Bolgrot
       <home standing="olineman3.gif" moving="olineman3an.gif" />
       <away standing="olineman3b.gif" moving="olineman3ban.gif" />
     </iconList>
-  	<skillList />
+  	<skillList></skillList>
   	<skillCategoryList>
       <normal>General</normal>
       <double>Agility</double>

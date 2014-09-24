@@ -17,105 +17,105 @@
   	<name>Treeman1</name>
   	<gender>male</gender>
   	<positionId>halfling.treeman</positionId>
-  	<skillList />
+  	<skillList></skillList>
   </player>
 
   <player nr="2" id="teamHalflingBattleLore2">
   	<name>Treeman2</name>
   	<gender>male</gender>
   	<positionId>halfling.treeman</positionId>
-  	<skillList />
+  	<skillList></skillList>
   </player>
 
   <player nr="3" id="teamHalflingBattleLore3">
   	<name>Halfling1</name>
   	<gender>male</gender>
   	<positionId>halfling.halfling</positionId>
-  	<skillList />
+  	<skillList></skillList>
   </player>
 
   <player nr="4" id="teamHalflingBattleLore4">
   	<name>Halfling2</name>
   	<gender>male</gender>
   	<positionId>halfling.halfling</positionId>
-  	<skillList />
+  	<skillList></skillList>
   </player>
 
   <player nr="5" id="teamHalflingBattleLore5">
   	<name>Halfling3</name>
   	<gender>male</gender>
   	<positionId>halfling.halfling</positionId>
-  	<skillList />
+  	<skillList></skillList>
   </player>
 
   <player nr="6" id="teamHalflingBattleLore6">
   	<name>Halfling4</name>
   	<gender>male</gender>
   	<positionId>halfling.halfling</positionId>
-  	<skillList />
+  	<skillList></skillList>
   </player>
 
   <player nr="7" id="teamHalflingBattleLore7">
   	<name>Halfling5</name>
   	<gender>male</gender>
   	<positionId>halfling.halfling</positionId>
-  	<skillList />
+  	<skillList></skillList>
   </player>
 
   <player nr="8" id="teamHalflingBattleLore8">
   	<name>Halfling6</name>
   	<gender>male</gender>
   	<positionId>halfling.halfling</positionId>
-  	<skillList />
+  	<skillList></skillList>
   </player>
 
   <player nr="9" id="teamHalflingBattleLore9">
   	<name>Halfling7</name>
   	<gender>male</gender>
   	<positionId>halfling.halfling</positionId>
-  	<skillList />
+  	<skillList></skillList>
   </player>
 
   <player nr="10" id="teamHalflingBattleLore10">
   	<name>Halfling8</name>
   	<gender>male</gender>
   	<positionId>halfling.halfling</positionId>
-  	<skillList />
+  	<skillList></skillList>
   </player>
 
   <player nr="11" id="teamHalflingBattleLore11">
   	<name>Halfling9</name>
   	<gender>male</gender>
   	<positionId>halfling.halfling</positionId>
-  	<skillList />
+  	<skillList></skillList>
   </player>
 
   <player nr="12" id="teamHalflingBattleLore12">
   	<name>Halfling10</name>
   	<gender>male</gender>
   	<positionId>halfling.halfling</positionId>
-  	<skillList />
+  	<skillList></skillList>
   </player>
 
   <player nr="13" id="teamHalflingBattleLore13">
   	<name>Halfling11</name>
   	<gender>male</gender>
   	<positionId>halfling.halfling</positionId>
-  	<skillList />
+  	<skillList></skillList>
   </player>
 
   <player nr="14" id="teamHalflingBattleLore14">
   	<name>Halfling12</name>
   	<gender>male</gender>
   	<positionId>halfling.halfling</positionId>
-  	<skillList />
+  	<skillList></skillList>
   </player>
 
   <player nr="15" id="teamHalflingBattleLore15">
   	<name>Halfling13</name>
   	<gender>male</gender>
   	<positionId>halfling.halfling</positionId>
-  	<skillList />
+  	<skillList></skillList>
   </player>
 
 </team>

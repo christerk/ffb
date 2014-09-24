@@ -152,7 +152,7 @@ Hakflem Skuttlespike, Headsplitter, Morg ‘n’ Thorg, Skitter Stab-Stab
       <home standing="sklineman3.gif" moving="sklineman3an.gif" />
       <away standing="sklineman3b.gif" moving="sklineman3ban.gif" />
     </iconList>
-  	<skillList />
+  	<skillList></skillList>
   	<skillCategoryList>
       <normal>General</normal>
       <double>Agility</double>

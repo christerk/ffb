@@ -35,70 +35,70 @@
   	<name>Catcher1</name>
   	<gender>male</gender>
   	<positionId>woodelf.catcher</positionId>
-  	<skillList />
+  	<skillList></skillList>
   </player>
 
   <player nr="4" id="teamWoodElfKalimar4">
   	<name>Catcher2</name>
   	<gender>male</gender>
   	<positionId>woodelf.catcher</positionId>
-  	<skillList />
+  	<skillList></skillList>
   </player>
 
   <player nr="5" id="teamWoodElfKalimar5">
     <name>Thrower1</name>
   	<gender>male</gender>
   	<positionId>woodelf.thrower</positionId>
-  	<skillList />
+  	<skillList></skillList>
   </player>
 	
   <player nr="6" id="teamWoodElfKalimar6">
     <name>Thrower2</name>
   	<gender>male</gender>
   	<positionId>woodelf.thrower</positionId>
-  	<skillList />
+  	<skillList></skillList>
   </player>
 
   <player nr="7" id="teamWoodElfKalimar7">
     <name>Lineman1</name>
   	<gender>male</gender>
   	<positionId>woodelf.lineman</positionId>
-  	<skillList />
+  	<skillList></skillList>
   </player>
 
   <player nr="8" id="teamWoodElfKalimar8">
     <name>Lineman2</name>
   	<gender>male</gender>
   	<positionId>woodelf.lineman</positionId>
-  	<skillList />
+  	<skillList></skillList>
   </player>
 
   <player nr="9" id="teamWoodElfKalimar9">
     <name>Lineman3</name>
   	<gender>male</gender>
   	<positionId>woodelf.lineman</positionId>
-  	<skillList />
+  	<skillList></skillList>
   </player>
 
   <player nr="10" id="teamWoodElfKalimar10">
     <name>Lineman4</name>
   	<gender>male</gender>
   	<positionId>woodelf.lineman</positionId>
-  	<skillList />
+  	<skillList></skillList>
   </player>
 
   <player nr="11" id="teamWoodElfKalimar11">
     <name>Lineman5</name>
   	<gender>male</gender>
   	<positionId>woodelf.lineman</positionId>
-  	<skillList />
+  	<skillList></skillList>
   </player>
 
   <player nr="12" id="teamWoodElfKalimar12">
     <name>Treeman</name>
   	<gender>male</gender>
   	<positionId>woodelf.treeman</positionId>
-  	<skillList />
+  	<skillList></skillList>
   </player>
 
 </team>

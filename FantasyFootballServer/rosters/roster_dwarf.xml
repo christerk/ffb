@@ -2,172 +2,136 @@
 
 <roster id="dwarf.lrb6">
 
-<!--
-0-16 Blockers 70,000 4 3 2 9 Block, Tackle, Thick Skull GS AP
-0-2 Runners 80,000 6 3 3 8 Sure Hands, Thick Skull GP AS
-0-2 Blitzers 80,000 5 3 3 9 Block, Thick Skull GS AP
-0-2 Troll Slayers 90,000 5 3 2 8 Block, Dauntless, Frenzy, Thick Skull GS AP
-0-1 Deathroller 160,000 4 7 1 10 Break Tackle, Dirty Player, Juggernaut, Mighty Blow, No Hands, Secret Weapon, Stand Firm S GAP
+	<name>Dwarf</name>
+	<type>Regular</type>
+	<reRollCost>40000</reRollCost>	
+	<maxReRolls>8</maxReRolls>	
+	<baseIconPath>http://localhost:2224/icons/players/</baseIconPath>	
 
-0-8 Re-roll counters: 40,000 gold pieces each
+	<position id="dwarf.blocker">
+		<quantity>12</quantity>
+		<name>Blocker</name>
+		<type>Regular</type>
+		<cost>70000</cost>
+		<movement>4</movement>
+		<strength>3</strength>
+		<agility>2</agility>
+		<armour>9</armour>
+		<portrait>portraits/dlongbeard.png</portrait>
+		<iconSet size="3">iconsets/dlongbeard.png</iconSet>
+		<skillList>
+			<skill>Block</skill>
+			<skill>Tackle</skill>
+			<skill>Thick Skull</skill>
+		</skillList>
+		<skillCategoryList>
+			<normal>General</normal>
+			<normal>Strength</normal>
+			<double>Agility</double>
+			<double>Passing</double>
+		</skillCategoryList>
+	</position>
 
-Star Players available for Inducement:
-Barik Farblast, Boomer Eziasson, Flint Churnblade, Grim Ironjaw, Morg ‘n’ Thorg, Zara the Slayer
--->
+	<position id="dwarf.blitzer">
+		<quantity>2</quantity>
+		<name>Blitzer</name>
+		<type>Regular</type>
+		<cost>80000</cost>
+		<movement>5</movement>
+		<strength>3</strength>
+		<agility>3</agility>
+		<armour>9</armour>
+		<portrait>portraits/dblitzer.png</portrait>
+		<iconSet size="2">iconsets/dblitzer.png</iconSet>
+		<skillList>
+			<skill>Block</skill>
+			<skill>Thick Skull</skill>
+		</skillList>
+		<skillCategoryList>
+			<normal>General</normal>
+			<normal>Strength</normal>
+			<double>Agility</double>
+			<double>Passing</double>
+		</skillCategoryList>
+	</position>
 
-  <name>Dwarf</name>
-  <type>Regular</type>
-  <reRollCost>40000</reRollCost>	
-  <maxReRolls>8</maxReRolls>	
-  <baseIconPath>http://localhost:2224/icons/players/dwarf/</baseIconPath>	
-
-  <position id="dwarf.blocker">
-  	<quantity>12</quantity>
-  	<name>Blocker</name>
-  	<type>Regular</type>
-  	<cost>70000</cost>
-    <movement>4</movement>
-    <strength>3</strength>
-    <agility>2</agility>
-    <armour>9</armour>
-    <iconList>
-      <portrait>portrait_dwarf_longbeard.png</portrait>
-      <home standing="dlongbeard1.gif" moving="dlongbeard1an.gif" />
-      <away standing="dlongbeard1b.gif" moving="dlongbeard1ban.gif" />
-      <home standing="dlongbeard2.gif" moving="dlongbeard2an.gif" />
-      <away standing="dlongbeard2b.gif" moving="dlongbeard2ban.gif" />
-    </iconList>
-  	<skillList>
-  	  <skill>Block</skill>
-  	  <skill>Tackle</skill>
-  	  <skill>Thick Skull</skill>
-  	</skillList>
-  	<skillCategoryList>
-      <normal>General</normal>
-      <normal>Strength</normal>
-      <double>Agility</double>
-      <double>Passing</double>
-  	</skillCategoryList>
-  </position>
-
-  <position id="dwarf.blitzer">
-  	<quantity>2</quantity>
-  	<name>Blitzer</name>
-  	<type>Regular</type>
-  	<cost>80000</cost>
-    <movement>5</movement>
-    <strength>3</strength>
-    <agility>3</agility>
-    <armour>9</armour>
-    <iconList>
-      <portrait>portrait_dwarf_blitzer.png</portrait>
-      <home standing="dblitzer1.gif" moving="dblitzer1an.gif" />
-      <away standing="dblitzer1b.gif" moving="dblitzer1ban.gif" />
-      <home standing="dblitzer2.gif" moving="dblitzer2an.gif" />
-      <away standing="dblitzer2b.gif" moving="dblitzer2ban.gif" />
-    </iconList>
-  	<skillList>
-  	  <skill>Block</skill>
-  	  <skill>Thick Skull</skill>
-  	</skillList>
-  	<skillCategoryList>
-      <normal>General</normal>
-      <normal>Strength</normal>
-      <double>Agility</double>
-      <double>Passing</double>
-  	</skillCategoryList>
-  </position>
-
-  <position id="dwarf.runner">
-  	<quantity>2</quantity>
-  	<name>Runner</name>
-  	<type>Regular</type>
-  	<cost>80000</cost>
-    <movement>6</movement>
-    <strength>3</strength>
-    <agility>3</agility>
-    <armour>8</armour>
-    <iconList>
-      <portrait>portrait_dwarf_runner.png</portrait>
-      <home standing="drunner1.gif" moving="drunner1an.gif" />
-      <away standing="drunner1b.gif" moving="drunner1ban.gif" />
-      <home standing="drunner2.gif" moving="drunner2an.gif" />
-      <away standing="drunner2b.gif" moving="drunner2ban.gif" />
-    </iconList>
-  	<skillList>
-  	  <skill>Sure Hands</skill>
-  	  <skill>Thick Skull</skill>
-  	</skillList>
-  	<skillCategoryList>
-      <normal>General</normal>
-      <normal>Passing</normal>
-      <double>Agility</double>
-      <double>Strength</double>
-  	</skillCategoryList>
-  </position>
+	<position id="dwarf.runner">
+		<quantity>2</quantity>
+		<name>Runner</name>
+		<type>Regular</type>
+		<cost>80000</cost>
+		<movement>6</movement>
+		<strength>3</strength>
+		<agility>3</agility>
+		<armour>8</armour>
+		<portrait>portraits/drunner.png</portrait>
+		<iconSet size="2">iconsets/drunner.png</iconSet>
+		<skillList>
+			<skill>Sure Hands</skill>
+			<skill>Thick Skull</skill>
+		</skillList>
+		<skillCategoryList>
+			<normal>General</normal>
+			<normal>Passing</normal>
+			<double>Agility</double>
+			<double>Strength</double>
+		</skillCategoryList>
+	</position>
 	
-  <position id="dwarf.trollslayer">
-  	<quantity>2</quantity>
-  	<name>Troll Slayer</name>
-  	<type>Regular</type>
-  	<cost>90000</cost>
-    <movement>5</movement>
-    <strength>3</strength>
-    <agility>2</agility>
-    <armour>8</armour>
-    <iconList>
-      <portrait>portrait_dwarf_trollslayer.png</portrait>
-      <home standing="dslayer1.gif" moving="dslayer1an.gif" />
-      <away standing="dslayer1b.gif" moving="dslayer1ban.gif" />
-      <home standing="dslayer2.gif" moving="dslayer2an.gif" />
-      <away standing="dslayer2b.gif" moving="dslayer2ban.gif" />
-    </iconList>
-  	<skillList>
-  	  <skill>Block</skill>
-  	  <skill>Dauntless</skill>
-  	  <skill>Frenzy</skill>
-  	  <skill>Thick Skull</skill>
-  	</skillList>
-  	<skillCategoryList>
-      <normal>General</normal>
-      <normal>Strength</normal>
-      <double>Agility</double>
-      <double>Passing</double>
-  	</skillCategoryList>
-  </position>
+	<position id="dwarf.trollslayer">
+		<quantity>2</quantity>
+		<name>Troll Slayer</name>
+		<type>Regular</type>
+		<cost>90000</cost>
+		<movement>5</movement>
+		<strength>3</strength>
+		<agility>2</agility>
+		<armour>8</armour>
+		<portrait>portraits/dslayer.png</portrait>
+		<iconSet size="2">iconsets/dslayer.png</iconSet>
+		<skillList>
+			<skill>Block</skill>
+			<skill>Dauntless</skill>
+			<skill>Frenzy</skill>
+			<skill>Thick Skull</skill>
+		</skillList>
+		<skillCategoryList>
+			<normal>General</normal>
+			<normal>Strength</normal>
+			<double>Agility</double>
+			<double>Passing</double>
+		</skillCategoryList>
+	</position>
 
-  <position id="dwarf.deathroller">
-  	<quantity>1</quantity>
-  	<name>Deathroller</name>
-  	<type>Big Guy</type>
-  	<cost>160000</cost>
-    <movement>4</movement>
-    <strength>7</strength>
-    <agility>1</agility>
-    <armour>10</armour>
-    <iconList>
-      <portrait>portrait_dwarf_deathroller.png</portrait>
-      <home standing="ddeathroller1.gif" moving="ddeathroller1an.gif" />
-      <away standing="ddeathroller1b.gif" moving="ddeathroller1ban.gif" />
-    </iconList>
-  	<skillList>
-  	  <skill>Break Tackle</skill>
-  	  <skill>Dirty Player</skill>
-  	  <skill>Juggernaut</skill>
-  	  <skill>Mighty Blow</skill>
-  	  <skill>No Hands</skill>
-  	  <skill>Secret Weapon</skill>
-  	  <skill>Stand Firm</skill>
-  	</skillList>
-  	<skillCategoryList>
-      <normal>Strength</normal>
-      <double>General</double>
-      <double>Agility</double>
-      <double>Passing</double>
-  	</skillCategoryList>
-  </position>
+	<position id="dwarf.deathroller">
+		<quantity>1</quantity>
+		<name>Deathroller</name>
+		<type>Big Guy</type>
+		<cost>160000</cost>
+		<movement>4</movement>
+		<strength>7</strength>
+		<agility>1</agility>
+		<armour>10</armour>
+		<portrait>portraits/ddeathroller.png</portrait>
+		<iconSet size="1">iconsets/ddeathroller.png</iconSet>
+		<skillList>
+			<skill>Break Tackle</skill>
+			<skill>Dirty Player</skill>
+			<skill>Juggernaut</skill>
+			<skill>Mighty Blow</skill>
+			<skill>No Hands</skill>
+			<skill>Secret Weapon</skill>
+			<skill>Stand Firm</skill>
+		</skillList>
+		<skillCategoryList>
+			<normal>Strength</normal>
+			<double>General</double>
+			<double>Agility</double>
+			<double>Passing</double>
+		</skillCategoryList>
+	</position>
   
-  <position id="dwarf.Farblast">
+	<position id="dwarf.Farblast">
 		<quantity>1</quantity>
 		<name>Barik Farblast</name>
 		<shorthand>BF</shorthand>
@@ -177,11 +141,8 @@ Barik Farblast, Boomer Eziasson, Flint Churnblade, Grim Ironjaw, Morg ‘n’ Th
 		<strength>3</strength>
 		<agility>3</agility>
 		<armour>8</armour>
-    <iconList baseIconPath="../stars/">
-			<portrait/>
-			<home standing="Barik_Farblast.gif" moving="Barik_Farblast_an.gif"/>
-			<away standing="Barik_Farblast_b.gif"  moving="Barik_Farblast_ban.gif"/>
-		</iconList>
+		<portrait></portrait>
+		<iconSet size="1">iconsets/Barik_Farblast.png</iconSet>
 		<skillList>
 			<skill>Loner</skill>
 			<skill>Hail Mary Pass</skill>
@@ -190,8 +151,8 @@ Barik Farblast, Boomer Eziasson, Flint Churnblade, Grim Ironjaw, Morg ‘n’ Th
 			<skill>Strong Arm</skill>
 			<skill>Sure Hands</skill>
 			<skill>Thick Skull</skill>
-  	</skillList>
-  </position>
+		</skillList>
+	</position>
 
 	<position id="dwarf.Eziasson">
 		<quantity>1</quantity>
@@ -203,11 +164,8 @@ Barik Farblast, Boomer Eziasson, Flint Churnblade, Grim Ironjaw, Morg ‘n’ Th
 		<strength>3</strength>
 		<agility>2</agility>
 		<armour>9</armour>
-    <iconList baseIconPath="../stars/">
-			<portrait/>
-			<home standing="Boomer_Eziasson.gif" moving="Boomer_Eziasson_an.gif"/>
-			<away standing="Boomer_Eziasson_b.gif"  moving="Boomer_Eziasson_ban.gif"/>
-		</iconList>
+		<portrait></portrait>
+		<iconSet size="1">iconsets/Boomer_Eziasson.png</iconSet>
 		<skillList>
 			<skill>Loner</skill>
 			<skill>Accurate</skill>
@@ -216,7 +174,7 @@ Barik Farblast, Boomer Eziasson, Flint Churnblade, Grim Ironjaw, Morg ‘n’ Th
 			<skill>Secret Weapon</skill>
 			<skill>Thick Skull</skill>
 		</skillList>
-  </position>
+	</position>
   
 	<position id="dwarf.Churnblade">
 		<quantity>1</quantity>
@@ -228,11 +186,8 @@ Barik Farblast, Boomer Eziasson, Flint Churnblade, Grim Ironjaw, Morg ‘n’ Th
 		<strength>3</strength>
 		<agility>2</agility>
 		<armour>8</armour>
-    <iconList baseIconPath="../stars/">
-			<portrait/>
-			<home standing="Flint_Churnblade.gif" moving="Flint_Churnblade_an.gif"/>
-			<away standing="Flint_Churnblade_b.gif"  moving="Flint_Churnblade_ban.gif"/>
-		</iconList>
+		<portrait></portrait>
+		<iconSet size="1">iconsets/Flint_Churnblade.png</iconSet>
 		<skillList>
 			<skill>Loner</skill>
 			<skill>Block</skill>
@@ -240,7 +195,7 @@ Barik Farblast, Boomer Eziasson, Flint Churnblade, Grim Ironjaw, Morg ‘n’ Th
 			<skill>Secret Weapon</skill>
 			<skill>Thick Skull</skill>
 		</skillList>
-  </position>
+	</position>
   
 	<position id="dwarf.Ironjaw">
 		<quantity>1</quantity>
@@ -252,11 +207,8 @@ Barik Farblast, Boomer Eziasson, Flint Churnblade, Grim Ironjaw, Morg ‘n’ Th
 		<strength>4</strength>
 		<agility>3</agility>
 		<armour>8</armour>
-    <iconList baseIconPath="../stars/">
-			<portrait/>
-			<home standing="Grim_Ironjaw.gif" moving="Grim_Ironjaw_an.gif"/>
-			<away standing="Grim_Ironjaw_b.gif"  moving="Grim_Ironjaw_ban.gif"/>
-		</iconList>
+		<portrait></portrait>
+		<iconSet size="1">iconsets/Grim_Ironjaw.png</iconSet>
 		<skillList>
 			<skill>Loner</skill>
 			<skill>Block</skill>
@@ -265,7 +217,7 @@ Barik Farblast, Boomer Eziasson, Flint Churnblade, Grim Ironjaw, Morg ‘n’ Th
 			<skill>Mighty Blow</skill>
 			<skill>Thick Skull</skill>
 		</skillList>
-  </position>
+	</position>
   
 	<position id="dwarf.Zara">
 		<quantity>1</quantity>
@@ -277,11 +229,8 @@ Barik Farblast, Boomer Eziasson, Flint Churnblade, Grim Ironjaw, Morg ‘n’ Th
 		<strength>4</strength>
 		<agility>3</agility>
 		<armour>8</armour>
-    <iconList baseIconPath="../stars/">
-			<portrait/>
-			<home standing="Zara_the_Slayer.gif" moving="Zara_the_Slayer_an.gif"/>
-			<away standing="Zara_the_Slayer_b.gif"  moving="Zara_the_Slayer_ban.gif"/>
-		</iconList>
+		<portrait></portrait>
+		<iconSet size="1">iconsets/Zara_the_Slayer.png</iconSet>
 		<skillList>
 			<skill>Loner</skill>
 			<skill>Block</skill>
@@ -291,7 +240,7 @@ Barik Farblast, Boomer Eziasson, Flint Churnblade, Grim Ironjaw, Morg ‘n’ Th
 			<skill>Stab</skill>
 			<skill>Stakes</skill>
 		</skillList>
-  </position>
+	</position>
   
 	<position id="dwarf.Morg">
 		<quantity>1</quantity>
@@ -303,11 +252,8 @@ Barik Farblast, Boomer Eziasson, Flint Churnblade, Grim Ironjaw, Morg ‘n’ Th
 		<strength>6</strength>
 		<agility>3</agility>
 		<armour>10</armour>
-    <iconList baseIconPath="../stars/">
-			<portrait/>
-			<home standing="morgnthorg.gif" moving="morgnthorg_an.gif"/>
-			<away standing="morgnthorg_b.gif" moving="morgnthorg_ban.gif"/>
-		</iconList>
+		<portrait></portrait>
+		<iconSet size="1">iconsets/morgnthorg.png</iconSet>
 		<skillList>
 			<skill>Loner</skill>
 			<skill>Block</skill>

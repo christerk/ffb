@@ -74,7 +74,7 @@ Count Luthor von Drakenborg, Helmut Wulf, Morg ‘n’ Thorg, Wilhelm Chaney
       <home standing="vthrall3.gif" moving="vthrall3an.gif" />
       <away standing="vthrall3b.gif" moving="vthrall3ban.gif" />
     </iconList>
-  	<skillList />
+  	<skillList></skillList>
   	<skillCategoryList>
       <normal>General</normal>
       <double>Strength</double>

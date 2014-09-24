@@ -150,7 +150,7 @@ Eldril Sidewinder, Jordell Freshbreeze, Morg ‘n’ Thorg
       <home standing="welineman2.gif" moving="welineman2an.gif" />
       <away standing="welineman2b.gif" moving="welineman2ban.gif" />
     </iconList>
-  	<skillList />
+  	<skillList></skillList>
   	<skillCategoryList>
       <normal>General</normal>
       <normal>Agility</normal>

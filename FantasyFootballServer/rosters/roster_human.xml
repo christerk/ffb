@@ -38,7 +38,7 @@ Griff Oberwald, Helmut Wulf, Mighty Zug, Morg ‘n’ Thorg, Puggy Baconbreath, 
       <home standing="hlineman2.gif" moving="hlineman2an.gif" />
       <away standing="hlineman2b.gif" moving="hlineman2ban.gif" />
     </iconList>
-  	<skillList />
+  	<skillList></skillList>
   	<skillCategoryList>
       <normal>General</normal>
       <double>Agility</double>

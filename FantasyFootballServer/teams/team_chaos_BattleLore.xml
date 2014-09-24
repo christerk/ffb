@@ -77,7 +77,7 @@
 		<name>Beastman3</name>
 		<gender>male</gender>
 		<positionId>chaos.beastman</positionId>
-		<skillList />
+		<skillList></skillList>
 		<injuryList>
 			<injury>Smashed Collar Bone (-ST)</injury>
 		</injuryList>
@@ -87,35 +87,35 @@
 		<name>Beastman4</name>
 		<gender>male</gender>
 		<positionId>chaos.beastman</positionId>
-		<skillList />
+		<skillList></skillList>
 	</player>
 
 	<player nr="9" id="teamChaosBattleLore9">
 		<name>Beastman5</name>
 		<gender>male</gender>
 		<positionId>chaos.beastman</positionId>
-		<skillList />
+		<skillList></skillList>
 	</player>
 
 	<player nr="10" id="teamChaosBattleLore10">
 		<name>Beastman6</name>
 		<gender>male</gender>
 		<positionId>chaos.beastman</positionId>
-		<skillList />
+		<skillList></skillList>
 	</player>
 
 	<player nr="11" id="teamChaosBattleLore11">
 		<name>Beastman7</name>
 		<gender>male</gender>
 		<positionId>chaos.beastman</positionId>
-		<skillList />
+		<skillList></skillList>
 	</player>
 
 	<player nr="12" id="teamChaosBattleLore12">
 		<name>Beastman8</name>
 		<gender>male</gender>
 		<positionId>chaos.beastman</positionId>
-		<skillList />
+		<skillList></skillList>
 	</player>
   
 	<player nr="13" id="teamChaosBattleLore13">

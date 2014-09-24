@@ -17,91 +17,91 @@
   	<name>Saurus1</name>
   	<gender>male</gender>
   	<positionId>lizardman.saurus</positionId>
-  	<skillList />
+  	<skillList></skillList>
   </player>
 
   <player nr="2" id="teamLizardmanKalimar2">
   	<name>Saurus2</name>
   	<gender>male</gender>
   	<positionId>lizardman.saurus</positionId>
-  	<skillList />
+  	<skillList></skillList>
   </player>
 
   <player nr="3" id="teamLizardmanKalimar3">
   	<name>Saurus3</name>
   	<gender>male</gender>
   	<positionId>lizardman.saurus</positionId>
-  	<skillList />
+  	<skillList></skillList>
   </player>
 
   <player nr="4" id="teamLizardmanKalimar4">
   	<name>Saurus4</name>
   	<gender>male</gender>
   	<positionId>lizardman.saurus</positionId>
-  	<skillList />
+  	<skillList></skillList>
   </player>
 
   <player nr="5" id="teamLizardmanKalimar5">
   	<name>Saurus5</name>
   	<gender>male</gender>
   	<positionId>lizardman.saurus</positionId>
-  	<skillList />
+  	<skillList></skillList>
   </player>
 
   <player nr="6" id="teamLizardmanKalimar6">
   	<name>Saurus6</name>
   	<gender>male</gender>
   	<positionId>lizardman.saurus</positionId>
-  	<skillList />
+  	<skillList></skillList>
   </player>
   
   <player nr="7" id="teamLizardmanKalimar7">
   	<name>Kroxigor</name>
   	<gender>male</gender>
   	<positionId>lizardman.kroxigor</positionId>
-  	<skillList />
+  	<skillList></skillList>
   </player>
 
   <player nr="8" id="teamLizardmanKalimar8">
   	<name>Skink1</name>
   	<gender>male</gender>
   	<positionId>lizardman.skink</positionId>
-  	<skillList />
+  	<skillList></skillList>
   </player>
 
   <player nr="9" id="teamLizardmanKalimar9">
   	<name>Skink2</name>
   	<gender>male</gender>
   	<positionId>lizardman.skink</positionId>
-  	<skillList />
+  	<skillList></skillList>
   </player>
 
   <player nr="10" id="teamLizardmanKalimar10">
   	<name>Skink3</name>
   	<gender>male</gender>
   	<positionId>lizardman.skink</positionId>
-  	<skillList />
+  	<skillList></skillList>
   </player>
 
   <player nr="11" id="teamLizardmanKalimar11">
   	<name>Skink4</name>
   	<gender>male</gender>
   	<positionId>lizardman.skink</positionId>
-  	<skillList />
+  	<skillList></skillList>
   </player>
 
   <player nr="12" id="teamLizardmanKalimar12">
   	<name>Skink5</name>
   	<gender>male</gender>
   	<positionId>lizardman.skink</positionId>
-  	<skillList />
+  	<skillList></skillList>
   </player>
 
   <player nr="13" id="teamLizardmanKalimar13">
   	<name>Skink6</name>
   	<gender>male</gender>
   	<positionId>lizardman.skink</positionId>
-  	<skillList />
+  	<skillList></skillList>
   </player>
 
 </team>

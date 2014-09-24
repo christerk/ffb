@@ -18,7 +18,7 @@
 		<name>Blitzer1</name>
 		<gender>female</gender>
 		<positionId>amazon.blitzer</positionId>
-		<skillList />
+		<skillList></skillList>
 		<iconSet size="1">iconsets/Zara_the_Slayer.png</iconSet>
 	</player>
 
@@ -26,49 +26,49 @@
 		<name>Blitzer2</name>
 		<gender>female</gender>
 		<positionId>amazon.blitzer</positionId>
-		<skillList />
+		<skillList></skillList>
 	</player>
 
 	<player nr="3" id="teamAmazonKalimar3">
 		<name>Blitzer3</name>
 		<gender>female</gender>
 		<positionId>amazon.blitzer</positionId>
-		<skillList />
+		<skillList></skillList>
 	</player>
 
 	<player nr="4" id="teamAmazonKalimar4">
 		<name>Blitzer4</name>
 		<gender>female</gender>
 		<positionId>amazon.blitzer</positionId>
-		<skillList />
+		<skillList></skillList>
 	</player>
   
 	<player nr="5" id="teamAmazonKalimar5">
 		<name>Thrower1</name>
 		<gender>female</gender>
 		<positionId>amazon.thrower</positionId>
-		<skillList />
+		<skillList></skillList>
 	</player>
 
 	<player nr="6" id="teamAmazonKalimar6">
 		<name>Thrower2</name>
 		<gender>female</gender>
 		<positionId>amazon.thrower</positionId>
-		<skillList />
+		<skillList></skillList>
 	</player>
 
 	<player nr="7" id="teamAmazonKalimar7">
 		<name>Catcher1</name>
 		<gender>female</gender>
 		<positionId>amazon.catcher</positionId>
-		<skillList />
+		<skillList></skillList>
 	</player>
 
 	<player nr="8" id="teamAmazonKalimar8">
 		<name>Catcher2</name>
 		<gender>female</gender>
 		<positionId>amazon.catcher</positionId>
-		<skillList />
+		<skillList></skillList>
 	</player>
 
 	<player nr="9" id="teamAmazonKalimar9">
