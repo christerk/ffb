@@ -19,7 +19,7 @@
 		<agility>3</agility>
 		<armour>8</armour>
 		<portrait>portraits/marauder.png</portrait>
-		<iconSet size="5">iconsets/marauder.png</iconSet>
+		<iconSet size="8">iconsets/marauder.png</iconSet>
 		<skillList></skillList>
 		<skillCategoryList>
 			<normal>Strength</normal>

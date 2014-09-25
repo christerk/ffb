@@ -43,7 +43,7 @@
 		<agility>3</agility>
 		<armour>9</armour>
 		<portrait>portraits/cwarrior.png</portrait>
-		<iconSet size="4">iconsets/cwarrior.png</iconSet>
+		<iconSet size="6">iconsets/cwarrior.png</iconSet>
 		<skillList></skillList>
 		<skillCategoryList>
 			<normal>General</normal>
@@ -64,7 +64,7 @@
 		<agility>2</agility>
 		<armour>8</armour>
 		<portrait>portraits/cminotaur.png</portrait>
-		<iconSet size="1">iconsets/minotaur.png</iconSet>
+		<iconSet size="3">iconsets/cminotaur.png</iconSet>
 		<skillList>
 			<skill>Loner</skill>
 			<skill>Frenzy</skill>

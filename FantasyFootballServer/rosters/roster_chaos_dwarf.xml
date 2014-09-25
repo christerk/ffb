@@ -63,7 +63,7 @@
 		<agility>2</agility>
 		<armour>9</armour>
 		<portrait>portraits/cdcentaur.png</portrait>
-		<iconSet size="2">iconsets/centaur.png</iconSet>
+		<iconSet size="2">iconsets/cdcentaur.png</iconSet>
 		<skillList>
 			<skill>Sprint</skill>
 			<skill>Sure Feet</skill>

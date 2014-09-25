@@ -65,7 +65,7 @@
 		<agility>3</agility>
 		<armour>8</armour>
 		<portrait>portraits/drunner.png</portrait>
-		<iconSet size="2">iconsets/drunner.png</iconSet>
+		<iconSet size="3">iconsets/drunner.png</iconSet>
 		<skillList>
 			<skill>Sure Hands</skill>
 			<skill>Thick Skull</skill>

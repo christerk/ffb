@@ -1,4 +1,10 @@
 
+centaur.png      -> cdcentaur.png
+
+minotaur.png     -> cminotaur.png
+
+gopogo.png       -> pogoer.png
+
 rtrotter.png     -> nurgle_warrior.png
 rtpestigor.png   -> nurgle_pestigor.png
 rotter.png       -> nurgle_rotter.png

@@ -46,7 +46,7 @@
 		<agility>3</agility>
 		<armour>6</armour>
 		<portrait>portraits/halfling.png</portrait>
-		<iconSet size="5">iconsets/halfling.png</iconSet>
+		<iconSet size="16">iconsets/halfling.png</iconSet>
 		<skillList>
 			<skill>Dodge</skill>
 			<skill>Right Stuff</skill>

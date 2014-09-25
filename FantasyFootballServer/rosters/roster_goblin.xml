@@ -18,7 +18,7 @@
 		<agility>3</agility>
 		<armour>7</armour>
 		<portrait>portraits/goblin.png</portrait>
-		<iconSet size="5">iconsets/goblin.png</iconSet>
+		<iconSet size="7">iconsets/goblin.png</iconSet>
 		<skillList>
 			<skill>Dodge</skill>
 			<skill>Right Stuff</skill>
@@ -43,7 +43,7 @@
 		<agility>1</agility>
 		<armour>9</armour>
 		<portrait>portraits/troll.png</portrait>
-		<iconSet size="2">iconsets/troll.png</iconSet>
+		<iconSet size="3">iconsets/troll.png</iconSet>
 		<skillList>
 			<skill>Always Hungry</skill>
 			<skill>Loner</skill>
@@ -97,7 +97,7 @@
 		<agility>3</agility>
 		<armour>7</armour>
 		<portrait>portraits/pogoer.png</portrait>
-		<iconSet size="1">iconsets/gopogo.png</iconSet>
+		<iconSet size="2">iconsets/pogoer.png</iconSet>
 		<skillList>
 			<skill>Dodge</skill>
 			<skill>Leap</skill>
