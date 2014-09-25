@@ -2,127 +2,127 @@
 
 <team id="teamNorseKalimar">
 
-  <coach>Kalimar</coach>
-  <name>Kalimar's Norse</name>
-  <race>Norse</race>
-  <rosterId>norse.lrb6</rosterId>
-  <reRolls>5</reRolls>
-  <fanFactor>6</fanFactor>
-  <apothecaries>2</apothecaries>
-  <cheerleaders>3</cheerleaders>
-  <assistantCoaches>4</assistantCoaches>
-  <teamRating>100</teamRating>
-  <teamStrength>102</teamStrength>
-  <division>[X]</division>
-  <baseIconPath>http://localhost:2224/icons/</baseIconPath>
-  <logo/>
+	<coach>Kalimar</coach>
+	<name>Kalimar's Norse</name>
+	<race>Norse</race>
+	<rosterId>norse.lrb6</rosterId>
+	<reRolls>5</reRolls>
+	<fanFactor>6</fanFactor>
+	<apothecaries>2</apothecaries>
+	<cheerleaders>3</cheerleaders>
+	<assistantCoaches>4</assistantCoaches>
+	<teamRating>100</teamRating>
+	<teamStrength>102</teamStrength>
+	<division>[X]</division>
+	<baseIconPath>http://localhost:2224/icons/</baseIconPath>
+	<logo/>
 
-  <player nr="1" id="teamNorseKalimar1">
-  	<name>Berserker1</name>
-  	<gender>male</gender>
-    <positionId>norse.berserker</positionId>
-  	<skillList></skillList>
-  	<injuryList/>
-  	<playerStatistics currentSpps="0" />
-  </player>
+	<player nr="1" id="teamNorseKalimar1">
+		<name>Berserker1</name>
+		<gender>male</gender>
+		<positionId>norse.berserker</positionId>
+		<skillList></skillList>
+		<injuryList/>
+		<playerStatistics currentSpps="0" />
+	</player>
 
-  <player nr="2" id="teamNorseKalimar2">
-  	<name>Berserker2</name>
-  	<gender>male</gender>
-    <positionId>norse.berserker</positionId>
-  	<skillList></skillList>
-  	<injuryList/>
-  	<playerStatistics currentSpps="0" />
-  </player>
+	<player nr="2" id="teamNorseKalimar2">
+		<name>Berserker2</name>
+		<gender>male</gender>
+		<positionId>norse.berserker</positionId>
+		<skillList></skillList>
+		<injuryList/>
+		<playerStatistics currentSpps="0" />
+	</player>
 
-  <player nr="3" id="teamNorseKalimar3">
-  	<name>Ulfwerener1</name>
-  	<gender>male</gender>
-    <positionId>norse.ulfwerener</positionId>
-  	<skillList></skillList>
-  	 <injuryList/>
-  	<playerStatistics currentSpps="0" />
-  </player>
+	<player nr="3" id="teamNorseKalimar3">
+		<name>Ulfwerener1</name>
+		<gender>male</gender>
+		<positionId>norse.ulfwerener</positionId>
+		<skillList></skillList>
+		<injuryList/>
+		<playerStatistics currentSpps="0" />
+	</player>
 
-  <player nr="4" id="teamNorseKalimar4">
-  	<name>Ulfwerener2</name>
-  	<gender>male</gender>
-    <positionId>norse.ulfwerener</positionId>
-  	<skillList></skillList>
-  	 <injuryList/>
-  	<playerStatistics currentSpps="0" />
-  </player>
+	<player nr="4" id="teamNorseKalimar4">
+		<name>Ulfwerener2</name>
+		<gender>male</gender>
+		<positionId>norse.ulfwerener</positionId>
+		<skillList></skillList>
+		<injuryList/>
+		<playerStatistics currentSpps="0" />
+	</player>
 
-  <player nr="5" id="teamNorseKalimar5">
-  	<name>Runner1</name>
-  	<gender>male</gender>
-    <positionId>norse.runner</positionId>
-  	<skillList></skillList>
-  	 <injuryList/>
-  	<playerStatistics currentSpps="0" />
-  </player>
+	<player nr="5" id="teamNorseKalimar5">
+		<name>Runner1</name>
+		<gender>male</gender>
+		<positionId>norse.runner</positionId>
+		<skillList></skillList>
+		<injuryList/>
+		<playerStatistics currentSpps="0" />
+	</player>
 	
-  <player nr="6" id="teamNorseKalimar6">
-  	<name>Runner2</name>
-  	<gender>male</gender>
-    <positionId>norse.runner</positionId>
-  	<skillList></skillList>
-  	<injuryList/>
-  	<playerStatistics currentSpps="0" />
-  </player>
+	<player nr="6" id="teamNorseKalimar6">
+		<name>Runner2</name>
+		<gender>male</gender>
+		<positionId>norse.runner</positionId>
+		<skillList></skillList>
+		<injuryList/>
+		<playerStatistics currentSpps="0" />
+	</player>
 	
-  <player nr="7" id="teamNorseKalimar7">
-  	<name>Lineman1</name>
-  	<gender>male</gender>
-    <positionId>norse.lineman</positionId>
-  	<skillList></skillList>
-  	<injuryList/>
-  	<playerStatistics currentSpps="0" />
-  </player>
+	<player nr="7" id="teamNorseKalimar7">
+		<name>Lineman1</name>
+		<gender>male</gender>
+		<positionId>norse.lineman</positionId>
+		<skillList></skillList>
+		<injuryList/>
+		<playerStatistics currentSpps="0" />
+	</player>
 	
-  <player nr="8" id="teamNorseKalimar8">
-  	<name>Lineman2</name>
-  	<gender>male</gender>
-    <positionId>norse.lineman</positionId>
-  	<skillList></skillList>
-  	<injuryList/>
-  	<playerStatistics currentSpps="0" />
-  </player>
+	<player nr="8" id="teamNorseKalimar8">
+		<name>Lineman2</name>
+		<gender>male</gender>
+		<positionId>norse.lineman</positionId>
+		<skillList></skillList>
+		<injuryList/>
+		<playerStatistics currentSpps="0" />
+	</player>
 
-  <player nr="9" id="teamNorseKalimar9">
-  	<name>Lineman3</name>
-  	<gender>male</gender>
-    <positionId>norse.lineman</positionId>
-  	<skillList></skillList>
-  	<injuryList/>
-  	<playerStatistics currentSpps="0" />
-  </player>
+	<player nr="9" id="teamNorseKalimar9">
+		<name>Lineman3</name>
+		<gender>male</gender>
+		<positionId>norse.lineman</positionId>
+		<skillList></skillList>
+		<injuryList/>
+		<playerStatistics currentSpps="0" />
+	</player>
 
-  <player nr="10" id="teamNorseKalimar10">
-  	<name>Lineman4</name>
-  	<gender>male</gender>
-    <positionId>norse.lineman</positionId>
-  	<skillList></skillList>
-  	<injuryList/>
-  	<playerStatistics currentSpps="0" />
-  </player>
+	<player nr="10" id="teamNorseKalimar10">
+		<name>Lineman4</name>
+		<gender>male</gender>
+		<positionId>norse.lineman</positionId>
+		<skillList></skillList>
+		<injuryList/>
+		<playerStatistics currentSpps="0" />
+	</player>
 
-  <player nr="11" id="teamNorseKalimar11">
-  	<name>Lineman5</name>
-  	<gender>male</gender>
-    <positionId>norse.lineman</positionId>
-  	<skillList></skillList>
-  	<injuryList/>
-  	<playerStatistics currentSpps="0" />
-  </player>
+	<player nr="11" id="teamNorseKalimar11">
+		<name>Lineman5</name>
+		<gender>male</gender>
+		<positionId>norse.lineman</positionId>
+		<skillList></skillList>
+		<injuryList/>
+		<playerStatistics currentSpps="0" />
+	</player>
 
-  <player nr="12" id="teamNorseKalimar12">
-  	<name>Snow Troll</name>
-  	<gender>male</gender>
-    <positionId>norse.troll.snow</positionId>
-  	<skillList></skillList>
-  	<injuryList/>
-  	<playerStatistics currentSpps="0" />
-  </player>
+	<player nr="12" id="teamNorseKalimar12">
+		<name>Snow Troll</name>
+		<gender>male</gender>
+		<positionId>norse.troll.snow</positionId>
+		<skillList></skillList>
+		<injuryList/>
+		<playerStatistics currentSpps="0" />
+	</player>
 
 </team>
