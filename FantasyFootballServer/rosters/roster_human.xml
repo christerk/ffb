@@ -2,161 +2,131 @@
 
 <roster id="human.lrb6">
 
-<!--
-0-16 Linemen 50,000 6 3 3 8 None G ASP
-0-4 Catchers 70,000 8 2 3 7 Catch, Dodge GA SP
-0-2 Throwers 70,000 6 3 3 8 Sure Hands, Pass GP AS
-0-4 Blitzers 90,000 7 3 3 8 Block GS AP
-0-1 Ogre 140,000 5 5 2 9 Loner, Bone-head, Mighty Blow, Thick Skull, Throw Team-Mate S GAP
+	<name>Human</name>
+	<type>Regular</type>
+	<reRollCost>50000</reRollCost>	
+	<maxReRolls>8</maxReRolls>	
+	<baseIconPath>http://localhost:2224/icons/players/</baseIconPath>	
 
-0-8 Re-roll counters: 50,000 gold pieces each
+	<position id="human.lineman">
+		<quantity>16</quantity>
+		<name>Lineman</name>
+		<displayName>Human Lineman</displayName>
+		<type>Regular</type>
+		<cost>50000</cost>
+		<movement>6</movement>
+		<strength>3</strength>
+		<agility>3</agility>
+		<armour>8</armour>
+		<portrait>portraits/hlineman.png</portrait>
+		<iconSet size="2">iconsets/hlineman.png</iconSet>
+		<skillList></skillList>
+		<skillCategoryList>
+			<normal>General</normal>
+			<double>Agility</double>
+			<double>Strength</double>
+			<double>Passing</double>
+		</skillCategoryList>
+	</position>
 
-Star Players available for Inducement:
-Griff Oberwald, Helmut Wulf, Mighty Zug, Morg ‘n’ Thorg, Puggy Baconbreath, Zara the Slayer
--->
+	<position id="human.blitzer">
+		<quantity>4</quantity>
+		<name>Blitzer</name>
+		<displayName>Human Blitzer</displayName>
+		<type>Regular</type>
+		<cost>90000</cost>
+		<movement>7</movement>
+		<strength>3</strength>
+		<agility>3</agility>
+		<armour>8</armour>
+		<portrait>portraits/hblitzer.png</portrait>
+		<iconSet size="1">iconsets/hblitzer.png</iconSet>
+		<skillList>
+			<skill>Block</skill>
+		</skillList>
+		<skillCategoryList>
+			<normal>General</normal>
+			<normal>Strength</normal>
+			<double>Agility</double>
+			<double>Passing</double>
+		</skillCategoryList>
+	</position>
 
-  <name>Human</name>
-  <type>Regular</type>
-  <reRollCost>50000</reRollCost>	
-  <maxReRolls>8</maxReRolls>	
-  <baseIconPath>http://localhost:2224/icons/players/human/</baseIconPath>	
-
-  <position id="human.lineman">
-  	<quantity>16</quantity>
-  	<name>Lineman</name>
-  	<displayName>Human Lineman</displayName>
-  	<type>Regular</type>
-  	<cost>50000</cost>
-    <movement>6</movement>
-    <strength>3</strength>
-    <agility>3</agility>
-    <armour>8</armour>
-    <iconList>
-      <portrait>portrait_human_lineman.png</portrait>
-      <home standing="hlineman1.gif" moving="hlineman1an.gif" />
-      <away standing="hlineman1b.gif" moving="hlineman1ban.gif" />
-      <home standing="hlineman2.gif" moving="hlineman2an.gif" />
-      <away standing="hlineman2b.gif" moving="hlineman2ban.gif" />
-    </iconList>
-  	<skillList></skillList>
-  	<skillCategoryList>
-      <normal>General</normal>
-      <double>Agility</double>
-      <double>Strength</double>
-      <double>Passing</double>
-  	</skillCategoryList>
-  </position>
-
-  <position id="human.blitzer">
-  	<quantity>4</quantity>
-  	<name>Blitzer</name>
-  	<displayName>Human Blitzer</displayName>
-  	<type>Regular</type>
-  	<cost>90000</cost>
-    <movement>7</movement>
-    <strength>3</strength>
-    <agility>3</agility>
-    <armour>8</armour>
-    <iconList>
-      <portrait>portrait_human_blitzer.png</portrait>
-      <home standing="hblitzer1.gif" moving="hblitzer1an.gif" />
-      <away standing="hblitzer1b.gif" moving="hblitzer1ban.gif" />
-    </iconList>
-  	<skillList>
-  	  <skill>Block</skill>
-  	</skillList>
-  	<skillCategoryList>
-      <normal>General</normal>
-      <normal>Strength</normal>
-      <double>Agility</double>
-      <double>Passing</double>
-  	</skillCategoryList>
-  </position>
-
-  <position id="human.thrower">
-  	<quantity>2</quantity>
-  	<name>Thrower</name>
-  	<displayName>Human Thrower</displayName>
-  	<type>Regular</type>
-  	<cost>70000</cost>
-    <movement>6</movement>
-    <strength>3</strength>
-    <agility>3</agility>
-    <armour>8</armour>
-    <iconList>
-      <portrait>portrait_human_thrower.png</portrait>
-      <home standing="hthrower1.gif" moving="hthrower1an.gif" />
-      <away standing="hthrower1b.gif" moving="hthrower1ban.gif" />
-    </iconList>
-  	<skillList>
-  	  <skill>Pass</skill>
-  	  <skill>Sure Hands</skill>
-  	</skillList>
-  	<skillCategoryList>
-      <normal>General</normal>
-      <normal>Passing</normal>
-      <double>Agility</double>
-      <double>Strength</double>
-  	</skillCategoryList>
-  </position>
+	<position id="human.thrower">
+		<quantity>2</quantity>
+		<name>Thrower</name>
+		<displayName>Human Thrower</displayName>
+		<type>Regular</type>
+		<cost>70000</cost>
+		<movement>6</movement>
+		<strength>3</strength>
+		<agility>3</agility>
+		<armour>8</armour>
+		<portrait>portraits/hthrower.png</portrait>
+		<iconSet size="1">iconsets/hthrower.png</iconSet>
+		<skillList>
+			<skill>Pass</skill>
+			<skill>Sure Hands</skill>
+		</skillList>
+		<skillCategoryList>
+			<normal>General</normal>
+			<normal>Passing</normal>
+			<double>Agility</double>
+			<double>Strength</double>
+		</skillCategoryList>
+	</position>
 	
-  <position id="human.catcher">
-  	<quantity>4</quantity>
-  	<name>Catcher</name>
-  	<displayName>Human Catcher</displayName>
-  	<type>Regular</type>
-  	<cost>70000</cost>
-    <movement>8</movement>
-    <strength>2</strength>
-    <agility>3</agility>
-    <armour>7</armour>
-    <iconList>
-      <portrait>portrait_human_catcher.png</portrait>
-      <home standing="hcatcher1.gif" moving="hcatcher1an.gif" />
-      <away standing="hcatcher1b.gif" moving="hcatcher1ban.gif" />
-    </iconList>
-  	<skillList>
-  	  <skill>Catch</skill>
-  	  <skill>Dodge</skill>
-  	</skillList>
-  	<skillCategoryList>
-      <normal>General</normal>
-      <normal>Agility</normal>
-      <double>Passing</double>
-      <double>Strength</double>
-  	</skillCategoryList>
-  </position>
+	<position id="human.catcher">
+		<quantity>4</quantity>
+		<name>Catcher</name>
+		<displayName>Human Catcher</displayName>
+		<type>Regular</type>
+		<cost>70000</cost>
+		<movement>8</movement>
+		<strength>2</strength>
+		<agility>3</agility>
+		<armour>7</armour>
+		<portrait>portraits/hcatcher.png</portrait>
+		<iconSet size="1">iconsets/hcatcher.png</iconSet>
+		<skillList>
+			<skill>Catch</skill>
+			<skill>Dodge</skill>
+		</skillList>
+		<skillCategoryList>
+			<normal>General</normal>
+			<normal>Agility</normal>
+			<double>Passing</double>
+			<double>Strength</double>
+		</skillCategoryList>
+	</position>
 
-  <position id="human.ogre">
-  	<quantity>1</quantity>
-  	<name>Ogre</name>
-  	<type>Big Guy</type>
-  	<cost>140000</cost>
-    <movement>5</movement>
-    <strength>5</strength>
-    <agility>2</agility>
-    <armour>9</armour>
-    <iconList>
-      <portrait>portrait_human_ogre.png</portrait>
-      <home standing="ogre1.gif" moving="ogre1an.gif" />
-      <away standing="ogre1b.gif" moving="ogre1ban.gif" />
-    </iconList>
-  	<skillList>
-  	  <skill>Loner</skill>
-  	  <skill>Bone-Head</skill>
-  	  <skill>Mighty Blow</skill>
-  	  <skill>Thick Skull</skill>
-  	  <skill>Throw Team-Mate</skill>
-  	</skillList>
-  	<skillCategoryList>
-      <normal>Strength</normal>
-      <double>Agility</double>
-      <double>Passing</double>
-      <double>General</double>
-  	</skillCategoryList>
-  </position>
+	<position id="human.ogre">
+		<quantity>1</quantity>
+		<name>Ogre</name>
+		<type>Big Guy</type>
+		<cost>140000</cost>
+		<movement>5</movement>
+		<strength>5</strength>
+		<agility>2</agility>
+		<armour>9</armour>
+		<portrait>portraits/ogre.png</portrait>
+		<iconSet size="6">iconsets/ogre.png</iconSet>
+		<skillList>
+			<skill>Loner</skill>
+			<skill>Bone-Head</skill>
+			<skill>Mighty Blow</skill>
+			<skill>Thick Skull</skill>
+			<skill>Throw Team-Mate</skill>
+		</skillList>
+		<skillCategoryList>
+			<normal>Strength</normal>
+			<double>Agility</double>
+			<double>Passing</double>
+			<double>General</double>
+		</skillCategoryList>
+	</position>
   
-  <position id="human.Helmut">
+	<position id="human.Helmut">
 		<quantity>1</quantity>
 		<name>Helmut Wulf</name>
 		<shorthand>HW</shorthand>
@@ -166,11 +136,8 @@ Griff Oberwald, Helmut Wulf, Mighty Zug, Morg ‘n’ Thorg, Puggy Baconbreath, 
 		<strength>3</strength>
 		<agility>3</agility>
 		<armour>8</armour>
-    <iconList baseIconPath="../stars/">
-			<portrait/>
-			<home standing="Helmut_Wulf.gif" moving="Helmut_Wulf_an.gif"/>
-			<away standing="Helmut_Wulf_b.gif"  moving="Helmut_Wulf_ban.gif"/>
-		</iconList>
+		<portrait></portrait>
+		<iconSet size="1">iconsets/Helmut_Wulf.png</iconSet>
 		<skillList>
 			<skill>Loner</skill>
 			<skill>Chainsaw</skill>
@@ -189,11 +156,8 @@ Griff Oberwald, Helmut Wulf, Mighty Zug, Morg ‘n’ Thorg, Puggy Baconbreath, 
 		<strength>3</strength>
 		<agility>3</agility>
 		<armour>6</armour>
-    <iconList baseIconPath="../stars/">
-			<portrait/>
-			<home standing="Puggy_Baconbreath.gif" moving="Puggy_Baconbreath_an.gif"/>
-			<away standing="Puggy_Baconbreath_b.gif"  moving="Puggy_Baconbreath_ban.gif"/>
-		</iconList>
+		<portrait></portrait>
+		<iconSet size="1">iconsets/Puggy_Baconbreath.png</iconSet>
 		<skillList>
 			<skill>Loner</skill>
 			<skill>Block</skill>
@@ -214,11 +178,8 @@ Griff Oberwald, Helmut Wulf, Mighty Zug, Morg ‘n’ Thorg, Puggy Baconbreath, 
 		<strength>5</strength>
 		<agility>2</agility>
 		<armour>9</armour>
-    <iconList baseIconPath="../stars/">
-			<portrait/>
-			<home standing="Mighty_Zug.gif" moving="Mighty_Zug_an.gif"/>
-			<away standing="Mighty_Zug_b.gif"  moving="Mighty_Zug_ban.gif"/>
-		</iconList>
+		<portrait></portrait>
+		<iconSet size="1">iconsets/Mighty_Zug.png</iconSet>
 		<skillList>
 			<skill>Loner</skill>
 			<skill>Block</skill>
@@ -236,11 +197,8 @@ Griff Oberwald, Helmut Wulf, Mighty Zug, Morg ‘n’ Thorg, Puggy Baconbreath, 
 		<strength>4</strength>
 		<agility>3</agility>
 		<armour>8</armour>
-    <iconList baseIconPath="../stars/">
-			<portrait/>
-			<home standing="Zara_the_Slayer.gif" moving="Zara_the_Slayer_an.gif"/>
-			<away standing="Zara_the_Slayer_b.gif"  moving="Zara_the_Slayer_ban.gif"/>
-		</iconList>
+		<portrait></portrait>
+		<iconSet size="1">iconsets/Zara_the_Slayer.png</iconSet>
 		<skillList>
 			<skill>Loner</skill>
 			<skill>Block</skill>
@@ -262,11 +220,8 @@ Griff Oberwald, Helmut Wulf, Mighty Zug, Morg ‘n’ Thorg, Puggy Baconbreath, 
 		<strength>4</strength>
 		<agility>4</agility>
 		<armour>8</armour>
-    <iconList baseIconPath="../stars/">
-			<portrait/>
-			<home standing="Griff_Oberwald.gif" moving="Griff_Oberwald_an.gif"/>
-			<away standing="Griff_Oberwald_b.gif"  moving="Griff_Oberwald_ban.gif"/>
-		</iconList>
+		<portrait></portrait>
+		<iconSet size="1">iconsets/Griff_Oberwald.png</iconSet>
 		<skillList>
 			<skill>Loner</skill>
 			<skill>Block</skill>
@@ -287,11 +242,8 @@ Griff Oberwald, Helmut Wulf, Mighty Zug, Morg ‘n’ Thorg, Puggy Baconbreath, 
 		<strength>6</strength>
 		<agility>3</agility>
 		<armour>10</armour>
-    <iconList baseIconPath="../stars/">
-			<portrait/>
-			<home standing="morgnthorg.gif" moving="morgnthorg_an.gif"/>
-			<away standing="morgnthorg_b.gif"  moving="morgnthorg_ban.gif"/>
-		</iconList>
+		<portrait></portrait>
+		<iconSet size="1">iconsets/morgnthorg.png</iconSet>
 		<skillList>
 			<skill>Loner</skill>
 			<skill>Block</skill>

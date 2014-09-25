@@ -2,137 +2,106 @@
 
 <roster id="khemri.lrb6">
 
-<!--
-0-16 Skeletons 30,000 5 3 2 7 Regeneration G ASP
-0-2 Thro-Ras 70,000 6 3 2 7 Pass, Regeneration, Sure Hands GP AS
-0-2 Blitz-Ras 90,000 6 3 2 8 Block, Regeneration GS AP
-0-4 Mummies 110,000 3 5 1 9 Mighty Blow, Regeneration S GAP
-
-0-8 Re-roll counters: 70,000 gold pieces each
-
-Star Players available for Inducement:
-Hack Enslash, Ramtut III, Setekh
--->
-
-  <name>Khemri</name>
-  <type>Regular</type>
-  <reRollCost>70000</reRollCost>	
-  <maxReRolls>8</maxReRolls>
-  <baseIconPath>http://localhost:2224/icons/players/khemri/</baseIconPath>	
+	<name>Khemri</name>
+	<type>Regular</type>
+	<reRollCost>70000</reRollCost>	
+	<maxReRolls>8</maxReRolls>
+	<baseIconPath>http://localhost:2224/icons/players/</baseIconPath>	
   
-  <position id="khemri.mummy">
-  	<quantity>4</quantity>
-  	<name>Mummy</name>
-  	<type>Regular</type>
-  	<cost>110000</cost>
-    <movement>3</movement>
-    <strength>5</strength>
-    <agility>1</agility>
-    <armour>9</armour>
-    <iconList>
-      <portrait>khMummy.gif</portrait>
-      <home standing="kmmummy1.gif" moving="kmmummy1an.gif" />
-      <away standing="kmmummy1b.gif" moving="kmmummy1ban.gif" />
-      <home standing="kmmummy2.gif" moving="kmmummy2an.gif" />
-      <away standing="kmmummy2b.gif" moving="kmmummy2ban.gif" />
-    </iconList>
-  	<skillList>
-  	  <skill>Mighty Blow</skill>
-  	  <skill>Regeneration</skill>
-  	</skillList>
-  	<skillCategoryList>
-      <normal>Strength</normal>
-      <double>General</double>
-      <double>Agility</double>
-      <double>Passing</double>
-  	</skillCategoryList>
-  </position>
+	<position id="khemri.tombguardian">
+		<quantity>4</quantity>
+		<name>Tomb Guardian</name>
+		<type>Regular</type>
+		<cost>100000</cost>
+		<movement>4</movement>
+		<strength>5</strength>
+		<agility>1</agility>
+		<armour>9</armour>
+		<portrait>portraits/tomb_guardian.png</portrait>
+		<iconSet size="4">iconsets/tomb_guardian.png</iconSet>
+		<skillList>
+			<skill>Decay</skill>
+			<skill>Regeneration</skill>
+		</skillList>
+		<skillCategoryList>
+			<normal>Strength</normal>
+			<double>General</double>
+			<double>Agility</double>
+			<double>Passing</double>
+		</skillCategoryList>
+	</position>
   
-  <position id="khemri.blitzra">
-  	<quantity>2</quantity>
-  	<name>Blitz-Ra</name>
-  	<type>Regular</type>
-  	<cost>90000</cost>
-    <movement>6</movement>
-    <strength>3</strength>
-    <agility>2</agility>
-    <armour>8</armour>
-    <iconList>
-      <portrait>khBlitzRa.gif</portrait>
-      <home standing="kmblitzer1.gif" moving="kmblitzer1an.gif" />
-      <away standing="kmblitzer1b.gif" moving="kmblitzer1ban.gif" />
-      <home standing="kmblitzer2.gif" moving="kmblitzer2an.gif" />
-      <away standing="kmblitzer2b.gif" moving="kmblitzer2ban.gif" />
-    </iconList>
-  	<skillList>
-  	  <skill>Block</skill>
-  	  <skill>Regeneration</skill>
-  	</skillList>
-  	<skillCategoryList>
-      <normal>General</normal>
-      <normal>Strength</normal>
-      <double>Agility</double>
-      <double>Passing</double>
-  	</skillCategoryList>
-  </position>
+	<position id="khemri.blitzra">
+		<quantity>2</quantity>
+		<name>Blitz-Ra</name>
+		<type>Regular</type>
+		<cost>90000</cost>
+		<movement>6</movement>
+		<strength>3</strength>
+		<agility>2</agility>
+		<armour>8</armour>
+		<portrait>portraits/kmblitzer.png</portrait>
+		<iconSet size="2">iconsets/kmblitzer.png</iconSet>
+		<skillList>
+			<skill>Block</skill>
+			<skill>Regeneration</skill>
+		</skillList>
+		<skillCategoryList>
+			<normal>General</normal>
+			<normal>Strength</normal>
+			<double>Agility</double>
+			<double>Passing</double>
+		</skillCategoryList>
+	</position>
   
-  <position id="khemri.throra">
-  	<quantity>2</quantity>
-  	<name>Thro-Ra</name>
-  	<type>Regular</type>
-  	<cost>70000</cost>
-    <movement>6</movement>
-    <strength>3</strength>
-    <agility>2</agility>
-    <armour>7</armour>
-    <iconList>
-      <portrait>khThrowRa.gif</portrait>
-      <home standing="kmthrower1.gif" moving="kmthrower1an.gif" />
-      <away standing="kmthrower1b.gif" moving="kmthrower1ban.gif" />
-      <home standing="kmthrower2.gif" moving="kmthrower2an.gif" />
-      <away standing="kmthrower2b.gif" moving="kmthrower2ban.gif" />
-    </iconList>
-  	<skillList>
-  	  <skill>Pass</skill>
-  	  <skill>Regeneration</skill>
-  	  <skill>Sure Hands</skill>
-  	</skillList>
-  	<skillCategoryList>
-      <normal>General</normal>
-      <normal>Passing</normal>
-      <double>Agility</double>
-      <double>Strength</double>
-  	</skillCategoryList>
-  </position>	
+	<position id="khemri.throra">
+		<quantity>2</quantity>
+		<name>Thro-Ra</name>
+		<type>Regular</type>
+		<cost>70000</cost>
+		<movement>6</movement>
+		<strength>3</strength>
+		<agility>2</agility>
+		<armour>7</armour>
+		<portrait>portraits/kmthrower.png</portrait>
+		<iconSet size="2">iconsets/kmthrower.png</iconSet>
+		<skillList>
+			<skill>Pass</skill>
+			<skill>Regeneration</skill>
+			<skill>Sure Hands</skill>
+		</skillList>
+		<skillCategoryList>
+			<normal>General</normal>
+			<normal>Passing</normal>
+			<double>Agility</double>
+			<double>Strength</double>
+		</skillCategoryList>
+	</position>	
 
-  <position id="khemri.skeleton">
-  	<quantity>16</quantity>
-  	<name>Skeleton</name>
-  	<type>Regular</type>
-  	<cost>30000</cost>
-    <movement>5</movement>
-    <strength>3</strength>
-    <agility>2</agility>
-    <armour>7</armour>
-    <iconList>
-      <portrait>khSkeleton.gif</portrait>
-      <home standing="kmskeleton1.gif" moving="kmskeleton1an.gif" />
-      <away standing="kmskeleton1b.gif" moving="kmskeleton1ban.gif" />
-      <home standing="kmskeleton2.gif" moving="kmskeleton2an.gif" />
-      <away standing="kmskeleton2b.gif" moving="kmskeleton2ban.gif" />
-    </iconList>
-  	<skillList>
-  	  <skill>Regeneration</skill>
-  	</skillList>
-  	<skillCategoryList>
-      <normal>General</normal>
-      <double>Agility</double>
-      <double>Strength</double>
-      <double>Passing</double>
-  	</skillCategoryList>
-  </position>
+	<position id="khemri.skeleton">
+		<quantity>16</quantity>
+		<name>Skeleton</name>
+		<type>Regular</type>
+		<cost>40000</cost>
+		<movement>5</movement>
+		<strength>3</strength>
+		<agility>2</agility>
+		<armour>7</armour>
+		<portrait>portraits/kmskeleton.png</portrait>
+		<iconSet size="2">iconsets/kmskeleton.png</iconSet>
+		<skillList>
+			<skill>Regeneration</skill>
+			<skill>Thick Skull</skill>
+		</skillList>
+		<skillCategoryList>
+			<normal>General</normal>
+			<double>Agility</double>
+			<double>Strength</double>
+			<double>Passing</double>
+		</skillCategoryList>
+	</position>
   
-  <position id="khemri.Sinnedbad">
+	<position id="khemri.Sinnedbad">
 		<quantity>1</quantity>
 		<name>Sinnedbad</name>
 		<shorthand>SB</shorthand>
@@ -142,11 +111,8 @@ Hack Enslash, Ramtut III, Setekh
 		<strength>3</strength>
 		<agility>2</agility>
 		<armour>7</armour>
-    <iconList baseIconPath="../stars/">
-			<portrait/>
-			<home standing="Sinnedbad.gif" moving="Sinnedbad_an.gif"/>
-			<away standing="Sinnedbad_b.gif"  moving="Sinnedbad_ban.gif"/>
-		</iconList>
+		<portrait></portrait>
+		<iconSet size="1">iconsets/Sinnedbad.png</iconSet>
 		<skillList>
 			<skill>Loner</skill>
 			<skill>Block</skill>
@@ -169,11 +135,8 @@ Hack Enslash, Ramtut III, Setekh
 		<strength>3</strength>
 		<agility>2</agility>
 		<armour>7</armour>
-    <iconList baseIconPath="../stars/">
-			<portrait/>
-			<home standing="Hack_Enslash.gif" moving="Hack_Enslash_an.gif"/>
-			<away standing="Hack_Enslash_b.gif"  moving="Hack_Enslash_ban.gif"/>
-		</iconList>
+		<portrait></portrait>
+		<iconSet size="1">iconsets/Hack_Enslash.png</iconSet>
 		<skillList>
 			<skill>Loner</skill>
 			<skill>Chainsaw</skill>
@@ -193,11 +156,8 @@ Hack Enslash, Ramtut III, Setekh
 		<strength>2</strength>
 		<agility>3</agility>
 		<armour>7</armour>
-    <iconList baseIconPath="../stars/">
-			<portrait/>
-			<home standing="Humerus_Carpal.gif" moving="Humerus_Carpal_an.gif"/>
-			<away standing="Humerus_Carpal_b.gif"  moving="Humerus_Carpal_ban.gif"/>
-		</iconList>
+		<portrait></portrait>
+		<iconSet size="1">iconsets/Humerus_Carpal.png</iconSet>
 		<skillList>
 			<skill>Loner</skill>
 			<skill>Catch</skill>
@@ -217,11 +177,8 @@ Hack Enslash, Ramtut III, Setekh
 		<strength>3</strength>
 		<agility>3</agility>
 		<armour>7</armour>
-    <iconList baseIconPath="../stars/">
-			<portrait/>
-			<home standing="Ithaca_Benoin.gif" moving="Ithaca_Benoin_an.gif"/>
-			<away standing="Ithaca_Benoin_b.gif"  moving="Ithaca_Benoin_ban.gif"/>
-		</iconList>
+		<portrait></portrait>
+		<iconSet size="1">iconsets/Ithaca_Benoin.png</iconSet>
 		<skillList>
 			<skill>Loner</skill>
 			<skill>Accurate</skill>
@@ -243,11 +200,8 @@ Hack Enslash, Ramtut III, Setekh
 		<strength>4</strength>
 		<agility>2</agility>
 		<armour>8</armour>
-    <iconList baseIconPath="../stars/">
-			<portrait/>
-			<home standing="Setekh.gif" moving="Setekh_an.gif"/>
-			<away standing="Setekh_b.gif"  moving="Setekh_ban.gif"/>
-		</iconList>
+		<portrait></portrait>
+		<iconSet size="1">iconsets/Setekh.png</iconSet>
 		<skillList>
 			<skill>Loner</skill>
 			<skill>Block</skill>
@@ -268,11 +222,8 @@ Hack Enslash, Ramtut III, Setekh
 		<strength>6</strength>
 		<agility>1</agility>
 		<armour>9</armour>
-    <iconList baseIconPath="../stars/">
-			<portrait/>
-			<home standing="Ramtut_III.gif" moving="Ramtut_III_an.gif"/>
-			<away standing="Ramtut_III_b.gif"  moving="Ramtut_III_ban.gif"/>
-		</iconList>
+		<portrait></portrait>
+		<iconSet size="1">iconsets/Ramtut_III.png</iconSet>
 		<skillList>
 			<skill>Loner</skill>
 			<skill>Break Tackle</skill>
