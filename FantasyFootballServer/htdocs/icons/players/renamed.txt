@@ -15,3 +15,7 @@ nthrower.png     -> norse_thrower.png
 norunner.png     -> norse_runner.png
 noberserker.png  -> norse_berserker.png
 noulfwerener.png -> norse_ulfwerener.png
+
+Snotling.png     -> snotling.png
+
+skstorm.png      -> skblitzer.png

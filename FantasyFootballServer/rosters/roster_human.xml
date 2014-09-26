@@ -109,7 +109,7 @@
 		<strength>5</strength>
 		<agility>2</agility>
 		<armour>9</armour>
-		<portrait>portraits/ogre.png</portrait>
+		<portrait>portraits/hogre.png</portrait>
 		<iconSet size="6">iconsets/ogre.png</iconSet>
 		<skillList>
 			<skill>Loner</skill>

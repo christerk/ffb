@@ -2,141 +2,115 @@
 
 <roster id="slann.lrb6">
 
-  <name>Slann</name>
-  <type>Regular</type>
-  <reRollCost>50000</reRollCost>
-  <maxReRolls>8</maxReRolls>
-  <baseIconPath>http://localhost:2224/icons/players/slann/</baseIconPath>
+	<name>Slann</name>
+	<type>Regular</type>
+	<reRollCost>50000</reRollCost>
+	<maxReRolls>8</maxReRolls>
+	<baseIconPath>http://localhost:2224/icons/players/</baseIconPath>
   
-  <position id="slann.lineman">
-    <quantity>16</quantity>
-    <name>Lineman</name>
-    <shorthand>L</shorthand>
-    <type>Regular</type>
-    <cost>60000</cost>
-    <movement>6</movement>
-    <strength>3</strength>
-    <agility>3</agility>
-    <armour>8</armour>
-    <iconList>
-      <portrait/>
-      <home standing="slannlino1.gif" moving="slannlino1an.gif"/>
-      <away standing="slannlino1b.gif" moving="slannlino1ban.gif"/>
-      <home standing="slannlino2.gif" moving="slannlino2an.gif"/>
-      <away standing="slannlino2b.gif" moving="slannlino2ban.gif"/>
-      <home standing="slannlino3.gif" moving="slannlino3an.gif"/>
-      <away standing="slannlino3b.gif" moving="slannlino3ban.gif"/>
-    </iconList>
-    <skillList>
-      <skill>Leap</skill>
-      <skill>Very Long Legs</skill>
-    </skillList>
-    <skillCategoryList>
-      <Normal>General</Normal>
-      <double>Agility</double>
-      <double>Strength</double>
-      <double>Passing</double>
-    </skillCategoryList>
-  </position>
+	<position id="slann.lineman">
+		<quantity>16</quantity>
+		<name>Lineman</name>
+		<shorthand>L</shorthand>
+		<type>Regular</type>
+		<cost>60000</cost>
+		<movement>6</movement>
+		<strength>3</strength>
+		<agility>3</agility>
+		<armour>8</armour>
+		<portrait>portraits/slannlino.png</portrait>
+		<iconSet size="2">iconsets/slannlino.png</iconSet>
+		<skillList>
+			<skill>Leap</skill>
+			<skill>Very Long Legs</skill>
+		</skillList>
+		<skillCategoryList>
+			<Normal>General</Normal>
+			<double>Agility</double>
+			<double>Strength</double>
+			<double>Passing</double>
+		</skillCategoryList>
+	</position>
   
-  <position id="slann.catcher">
-    <quantity>4</quantity>
-    <name>Catcher</name>
-    <shorthand>C</shorthand>
-    <type>Regular</type>
-    <cost>80000</cost>
-    <movement>7</movement>
-    <strength>2</strength>
-    <agility>4</agility>
-    <armour>7</armour>
-    <iconList>
-      <portrait/>
-      <home standing="slanncatcherslanncatcher1.gif" moving="slanncatcher1an.gif"/>
-      <away standing="slanncatcher1b.gif" moving="slanncatcher1ban.gif"/>
-      <home standing="slanncatcher2.gif" moving="slanncatcher2an.gif"/>
-      <away standing="slanncatcher2b.gif" moving="slanncatcher2ban.gif"/>
-      <home standing="slanncatcher3.gif" moving="slanncatcher3an.gif"/>
-      <away standing="slanncatcher3b.gif" moving="slanncatcher3ban.gif"/>
-    </iconList>
-    <skillList>
-      <skill>Diving Catch</skill>
-      <skill>Leap</skill>
-      <skill>Very Long Legs</skill>
-    </skillList>
-    <skillCategoryList>
-      <Normal>General</Normal>
-      <Normal>Agility</Normal>
-      <double>Strength</double>
-      <double>Passing</double>
-    </skillCategoryList>
-  </position>
+	<position id="slann.catcher">
+		<quantity>4</quantity>
+		<name>Catcher</name>
+		<shorthand>C</shorthand>
+		<type>Regular</type>
+		<cost>80000</cost>
+		<movement>7</movement>
+		<strength>2</strength>
+		<agility>4</agility>
+		<armour>7</armour>
+		<portrait>portraits/slanncatcher.png</portrait>
+		<iconSet size="3">iconsets/slanncatcher.png</iconSet>
+		<skillList>
+			<skill>Diving Catch</skill>
+			<skill>Leap</skill>
+			<skill>Very Long Legs</skill>
+		</skillList>
+		<skillCategoryList>
+			<Normal>General</Normal>
+			<Normal>Agility</Normal>
+			<double>Strength</double>
+			<double>Passing</double>
+		</skillCategoryList>
+	</position>
 
-  <position id="slann.blitzer">
-    <quantity>4</quantity>
-    <name>Blitzer</name>
-    <shorthand>B</shorthand>
-    <type>Regular</type>
-    <cost>110000</cost>
-    <movement>7</movement>
-    <strength>3</strength>
-    <agility>3</agility>
-    <armour>8</armour>
-    <iconList>
-      <portrait/>
-      <home standing="slannblitzer1.gif" moving="slannblitzerslannblitzer1an.gif"/>
-      <away standing="slannblitzer1b.gif" moving="slannblitzer1ban.gif"/>
-      <home standing="slannblitzer2.gif" moving="slannblitzer2an.gif"/>
-      <away standing="slannblitzer2b.gif" moving="slannblitzer2ban.gif"/>
-      <home standing="slannblitzer3.gif" moving="slannblitzer3an.gif"/>
-      <away standing="slannblitzer3b.gif" moving="slannblitzer3ban.gif"/>
-      <home standing="slannblitzer4.gif" moving="slannblitzer4an.gif"/>
-      <away standing="slannblitzer4b.gif" moving="slannblitzer4ban.gif"/>
-    </iconList>
-    <skillList>
-      <skill>Diving Tackle</skill>
-      <skill>Jump Up</skill>
-      <skill>Leap</skill>
-      <skill>Very Long Legs</skill>
-    </skillList>
-    <skillCategoryList>
-      <Normal>General</Normal>
-      <Normal>Agility</Normal>
-      <Normal>Strength</Normal>
-      <double>Passing</double>
-    </skillCategoryList>
-  </position>
+	<position id="slann.blitzer">
+		<quantity>4</quantity>
+		<name>Blitzer</name>
+		<shorthand>B</shorthand>
+		<type>Regular</type>
+		<cost>110000</cost>
+		<movement>7</movement>
+		<strength>3</strength>
+		<agility>3</agility>
+		<armour>8</armour>
+		<portrait>portraits/slannblitzer.png</portrait>
+		<iconSet size="4">iconsets/slannblitzer.png</iconSet>
+		<skillList>
+			<skill>Diving Tackle</skill>
+			<skill>Jump Up</skill>
+			<skill>Leap</skill>
+			<skill>Very Long Legs</skill>
+		</skillList>
+		<skillCategoryList>
+			<Normal>General</Normal>
+			<Normal>Agility</Normal>
+			<Normal>Strength</Normal>
+			<double>Passing</double>
+		</skillCategoryList>
+	</position>
   
-  <position id="slann.kroxigor">
-    <quantity>1</quantity>
-    <name>Kroxigor</name>
-    <shorthand>K</shorthand>
-    <type>Big Guy</type>
-    <cost>140000</cost>
-    <movement>6</movement>
-    <strength>5</strength>
-    <agility>1</agility>
-    <armour>9</armour>
-    <iconList>
-      <portrait>portrait_kroxigor.gif</portrait>
-      <home standing="slannkrox1.gif" moving="slannkrox1an.gif"/>
-      <away standing="slannkrox1b.gif" moving="slannkrox1ban.gif"/>
-    </iconList>
-    <skillList>
-      <skill>Bone-head</skill>
-      <skill>Loner</skill>
-      <skill>Mighty Blow</skill>
-      <skill>Prehensile Tail</skill>
-      <skill>Thick Skull</skill>
-    </skillList>
-    <skillCategoryList>
-      <Normal>Strength</Normal>
-      <double>General</double>
-      <double>Agility</double>
-      <double>Passing</double>
-    </skillCategoryList>
-  </position>
+	<position id="slann.kroxigor">
+		<quantity>1</quantity>
+		<name>Kroxigor</name>
+		<shorthand>K</shorthand>
+		<type>Big Guy</type>
+		<cost>140000</cost>
+		<movement>6</movement>
+		<strength>5</strength>
+		<agility>1</agility>
+		<armour>9</armour>
+		<portrait>portraits/slannkrox.png</portrait>
+		<iconSet size="1">iconsets/slannkrox.png</iconSet>
+		<skillList>
+			<skill>Bone-head</skill>
+			<skill>Loner</skill>
+			<skill>Mighty Blow</skill>
+			<skill>Prehensile Tail</skill>
+			<skill>Thick Skull</skill>
+		</skillList>
+		<skillCategoryList>
+			<Normal>Strength</Normal>
+			<double>General</double>
+			<double>Agility</double>
+			<double>Passing</double>
+		</skillCategoryList>
+	</position>
   
-  <position id="slann.Helmut">
+	<position id="slann.Helmut">
 		<quantity>1</quantity>
 		<name>Helmut Wulf</name>
 		<shorthand>HW</shorthand>
@@ -146,11 +120,8 @@
 		<strength>3</strength>
 		<agility>3</agility>
 		<armour>8</armour>
-    <iconList baseIconPath="../stars/">
-			<portrait/>
-			<home standing="Helmut_Wulf.gif" moving="Helmut_Wulf_an.gif"/>
-			<away standing="Helmut_Wulf_b.gif"  moving="Helmut_Wulf_ban.gif"/>
-		</iconList>
+		<portrait></portrait>
+		<iconSet size="1">iconsets/Helmut_Wulf.png</iconSet>
 		<skillList>
 			<skill>Loner</skill>
 			<skill>Chainsaw</skill>
@@ -169,11 +140,8 @@
 		<strength>2</strength>
 		<agility>3</agility>
 		<armour>7</armour>
-    <iconList baseIconPath="../stars/">
-			<portrait/>
-			<home standing="Hemlock.gif" moving="Hemlock_an.gif"/>
-			<away standing="Hemlock_b.gif"  moving="Hemlock_ban.gif"/>
-		</iconList>
+		<portrait></portrait>
+		<iconSet size="1">iconsets/Hemlock.png</iconSet>
 		<skillList>
 			<skill>Loner</skill>
 			<skill>Block</skill>
@@ -195,11 +163,8 @@
 		<strength>3</strength>
 		<agility>3</agility>
 		<armour>8</armour>
-    <iconList baseIconPath="../stars/">
-			<portrait/>
-			<home standing="Lottabottol.gif" moving="Lottabottol_an.gif"/>
-			<away standing="Lottabottol_b.gif"  moving="Lottabottol_ban.gif"/>
-		</iconList>
+		<portrait></portrait>
+		<iconSet size="1">iconsets/Lottabottol.png</iconSet>
 		<skillList>
 			<skill>Loner</skill>
 			<skill>Catch</skill>
@@ -222,11 +187,8 @@
 		<strength>4</strength>
 		<agility>1</agility>
 		<armour>9</armour>
-    <iconList baseIconPath="../stars/">
-			<portrait/>
-			<home standing="Slibli.gif" moving="Slibli_an.gif"/>
-			<away standing="Slibli_b.gif"  moving="Slibli_ban.gif"/>
-		</iconList>
+		<portrait></portrait>
+		<iconSet size="1">iconsets/Slibli.png</iconSet>
 		<skillList>
 			<skill>Loner</skill>
 			<skill>Block</skill>
@@ -246,11 +208,8 @@
 		<strength>2</strength>
 		<agility>4</agility>
 		<armour>7</armour>
-    <iconList baseIconPath="../stars/">
-			<portrait/>
-			<home standing="Quetzal_Leap.gif" moving="Quetzal_Leap_an.gif"/>
-			<away standing="Quetzal_Leap_b.gif"  moving="Quetzal_Leap_ban.gif"/>
-		</iconList>
+		<portrait></portrait>
+		<iconSet size="1">iconsets/Quetzal_Leap.png</iconSet>
 		<skillList>
 			<skill>Loner</skill>
 			<skill>Catch</skill>
@@ -265,7 +224,7 @@
 
 	<position id="slann.Morg">
 		<quantity>1</quantity>
-    <name>Morg 'n' Thorg</name>
+		<name>Morg 'n' Thorg</name>
 		<shorthand>MT</shorthand>
 		<type>Star</type>
 		<cost>430000</cost>
@@ -273,11 +232,8 @@
 		<strength>6</strength>
 		<agility>3</agility>
 		<armour>10</armour>
-    <iconList baseIconPath="../stars/">
-			<portrait/>
-			<home standing="morgnthorg.gif" moving="morgnthorg_an.gif"/>
-			<away standing="morgnthorg_b.gif"  moving="morgnthorg_ban.gif"/>
-		</iconList>
+		<portrait></portrait>
+		<iconSet size="1">iconsets/morgnthorg.png</iconSet>
 		<skillList>
 			<skill>Loner</skill>
 			<skill>Block</skill>
