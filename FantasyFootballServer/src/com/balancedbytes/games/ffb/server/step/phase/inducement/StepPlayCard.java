@@ -223,7 +223,7 @@ public final class StepPlayCard extends AbstractStep {
     }
     if (StringTool.isProvided(fOpponentId)) {
       doNextStep = true;
-      game.getFieldModel().setPlayerState(player, playerState.changeBase(PlayerState.PRONE).changeActive(false));
+      game.getFieldModel().setPlayerState(player, playerState.changeBase(PlayerState.PRONE).changeActive(false).changeRooted(false));
       Player opponent = game.getPlayerById(fOpponentId);
       PlayerState opponentState = game.getFieldModel().getPlayerState(opponent);
       game.getFieldModel().setPlayerState(opponent, opponentState.changeBase(PlayerState.STUNNED).changeActive(false));
