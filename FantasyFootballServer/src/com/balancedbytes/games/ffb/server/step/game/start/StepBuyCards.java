@@ -169,11 +169,8 @@ public final class StepBuyCards extends AbstractStep {
       } else if (!fCardsSelectedAway) {
         UtilServerDialog.showDialog(getGameState(), createDialogParameter(game.getTeamAway().getId(), fInducementGoldAway));
       } else {
-        fInducementGoldHome = Math.max(0,
-            fInducementGoldHome - UtilGameOption.getIntOption(game, GameOptionId.FREE_CARD_CASH));
+        calculateInducementGold();
         publishParameter(new StepParameter(StepParameterKey.INDUCEMENT_GOLD_HOME, fInducementGoldHome));
-        fInducementGoldAway = Math.max(0,
-            fInducementGoldAway - UtilGameOption.getIntOption(game, GameOptionId.FREE_CARD_CASH));
         publishParameter(new StepParameter(StepParameterKey.INDUCEMENT_GOLD_AWAY, fInducementGoldAway));
         getResult().setNextAction(StepAction.NEXT_STEP);
       }
@@ -193,6 +190,8 @@ public final class StepBuyCards extends AbstractStep {
     if ((homeTV > awayTV) && ((homeTV - awayTV) > fInducementGoldAway)) {
       fInducementGoldAway = (homeTV - awayTV);
     }
+    fInducementGoldHome -= gameResult.getTeamResultHome().getPettyCashUsed();
+    fInducementGoldAway -= gameResult.getTeamResultAway().getPettyCashUsed();
   }
 
   private void buildDecks() {
