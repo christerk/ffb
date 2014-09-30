@@ -51,11 +51,11 @@ public class PlayerIconFactory {
     String iconSetUrl = null;
     
     if (!StringTool.isProvided(settingIcons) || IClientPropertyValue.SETTING_ICONS_TEAM.equals(settingIcons) || (pHomePlayer && IClientPropertyValue.SETTING_ICONS_ROSTER_OPPONENT.equals(settingIcons))) {
-      iconSetUrl = pPlayer.getUrlIconSet();
+      iconSetUrl = getIconSetUrl(pPlayer);
     }
     
     if (!StringTool.isProvided(iconSetUrl) || IClientPropertyValue.SETTING_ICONS_ROSTER_BOTH.equals(settingIcons) || (!pHomePlayer && IClientPropertyValue.SETTING_ICONS_ROSTER_OPPONENT.equals(settingIcons))) {
-      iconSetUrl = pPlayer.getPosition().getUrlIconSet();
+      iconSetUrl = getIconSetUrl(pPlayer.getPosition());
     }
 
     if (StringTool.isProvided(iconSetUrl)) {
@@ -71,7 +71,7 @@ public class PlayerIconFactory {
         }
         icon = new BufferedImage(iconSize, iconSize, BufferedImage.TYPE_INT_ARGB);
         Graphics2D g2d = icon.createGraphics();
-        g2d.drawImage(iconSet, x, y, iconSize, iconSize, null);
+        g2d.drawImage(iconSet, 0, 0, iconSize, iconSize, x, y, x + iconSize, y + iconSize, null);
         g2d.dispose();
       }
     }

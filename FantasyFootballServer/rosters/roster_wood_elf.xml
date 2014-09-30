@@ -2,164 +2,130 @@
 
 <roster id="woodelf.lrb6">
 
-<!--
-0-16 Linemen 70,000 7 3 4 7 None GA SP
-0-4 Catchers 90,000 9 2 4 7 Catch, Dodge GA SP
-0-2 Throwers 90,000 7 3 4 7 Pass GAP S
-0-2 Wardancers 120,000 8 3 4 7 Block, Dodge, Leap GA SP
-0-1 Treeman 120,000 2 6 1 10 Loner, Mighty Blow, Stand Firm, Strong Arm, Take Root, Thick Skull, Throw Team-Mate S GAP
+	<name>Wood Elf</name>
+	<type>Regular</type>
+	<reRollCost>50000</reRollCost>	
+	<maxReRolls>8</maxReRolls>	
+	<baseIconPath>http://localhost:2224/icons/players/</baseIconPath>	
 
-0-8 Re-roll counters: 50,000 gold pieces each
-
-Star Players available for Inducement:
-Eldril Sidewinder, Jordell Freshbreeze, Morg ‘n’ Thorg
--->
-
-  <name>Wood Elf</name>
-  <type>Regular</type>
-  <reRollCost>50000</reRollCost>	
-  <maxReRolls>8</maxReRolls>	
-  <baseIconPath>http://localhost:2224/icons/players/wood_elf/</baseIconPath>	
-
-  <position id="woodelf.treeman">
-  	<quantity>1</quantity>
-  	<name>Treeman</name>
-  	<type>Big Guy</type>
-  	<cost>120000</cost>
-    <movement>2</movement>
-    <strength>6</strength>
-    <agility>1</agility>
-    <armour>10</armour>
-    <iconList>
-      <portrait>portrait_wood_elf_treeman.png</portrait>
-      <home standing="treeman1.gif" moving="treeman1an.gif" />
-      <away standing="treeman1b.gif" moving="treeman1ban.gif" />
-    </iconList>
-  	<skillList>
-  	  <skill>Loner</skill>
-  	  <skill>Mighty Blow</skill>
-  	  <skill>Stand Firm</skill>
-  	  <skill>Strong Arm</skill>
-  	  <skill>Take Root</skill>
-  	  <skill>Thick Skull</skill>
-  	  <skill>Throw Team-Mate</skill>
-  	</skillList>
-  	<skillCategoryList>
-      <normal>Strength</normal>
-      <double>General</double>
-      <double>Agility</double>
-      <double>Passing</double>
-  	</skillCategoryList>
-  </position> 
+	<position id="woodelf.treeman">
+		<quantity>1</quantity>
+		<name>Treeman</name>
+		<type>Big Guy</type>
+		<cost>120000</cost>
+		<movement>2</movement>
+		<strength>6</strength>
+		<agility>1</agility>
+		<armour>10</armour>
+		<portrait>portraits/wetreeman.png</portrait>
+		<iconSet size="3">iconsets/treeman.png</iconSet>
+		<skillList>
+			<skill>Loner</skill>
+			<skill>Mighty Blow</skill>
+			<skill>Stand Firm</skill>
+			<skill>Strong Arm</skill>
+			<skill>Take Root</skill>
+			<skill>Thick Skull</skill>
+			<skill>Throw Team-Mate</skill>
+		</skillList>
+		<skillCategoryList>
+			<normal>Strength</normal>
+			<double>General</double>
+			<double>Agility</double>
+			<double>Passing</double>
+		</skillCategoryList>
+	</position> 
  
-  <position id="woodelf.wardancer">
-  	<quantity>2</quantity>
-  	<name>Wardancer</name>
-  	<type>Regular</type>
-  	<cost>120000</cost>
-    <movement>8</movement>
-    <strength>3</strength>
-    <agility>4</agility>
-    <armour>7</armour>
-    <iconList>
-      <portrait>portrait_wood_elf_wardancer.png</portrait>
-      <home standing="weblitzer1.gif" moving="weblitzer1an.gif" />
-      <away standing="weblitzer1b.gif" moving="weblitzer1ban.gif" />
-      <home standing="weblitzer2.gif" moving="weblitzer2an.gif" />
-      <away standing="weblitzer2b.gif" moving="weblitzer2ban.gif" />
-    </iconList>
-  	<skillList>
-  	  <skill>Block</skill>
-  	  <skill>Dodge</skill>
-  	  <skill>Leap</skill>
-  	</skillList>
-  	<skillCategoryList>
-      <normal>General</normal>
-      <normal>Agility</normal>
-      <double>Strength</double>
-      <double>Passing</double>
-  	</skillCategoryList>
-  </position>
+	<position id="woodelf.wardancer">
+		<quantity>2</quantity>
+		<name>Wardancer</name>
+		<type>Regular</type>
+		<cost>120000</cost>
+		<movement>8</movement>
+		<strength>3</strength>
+		<agility>4</agility>
+		<armour>7</armour>
+		<portrait>portraits/weblitzer.png</portrait>
+		<iconSet size="2">iconsets/weblitzer.png</iconSet>
+		<skillList>
+			<skill>Block</skill>
+			<skill>Dodge</skill>
+			<skill>Leap</skill>
+		</skillList>
+		<skillCategoryList>
+			<normal>General</normal>
+			<normal>Agility</normal>
+			<double>Strength</double>
+			<double>Passing</double>
+		</skillCategoryList>
+	</position>
 
-  <position id="woodelf.thrower">
-  	<quantity>2</quantity>
-  	<name>Thrower</name>
-  	<type>Regular</type>
-  	<cost>90000</cost>
-    <movement>7</movement>
-    <strength>3</strength>
-    <agility>4</agility>
-    <armour>7</armour>
-    <iconList>
-      <portrait>portrait_wood_elf_thrower.png</portrait>
-      <home standing="wethrower1.gif" moving="wethrower1an.gif" />
-      <away standing="wethrower1b.gif" moving="wethrower1ban.gif" />
-    </iconList>
-  	<skillList>
-  	  <skill>Pass</skill>
-  	</skillList>
-  	<skillCategoryList>
-      <normal>General</normal>
-      <normal>Agility</normal>
-      <normal>Passing</normal>
-      <double>Strength</double>
-  	</skillCategoryList>
-  </position>
+	<position id="woodelf.thrower">
+		<quantity>2</quantity>
+		<name>Thrower</name>
+		<type>Regular</type>
+		<cost>90000</cost>
+		<movement>7</movement>
+		<strength>3</strength>
+		<agility>4</agility>
+		<armour>7</armour>
+		<portrait>portraits/wethrower.png</portrait>
+		<iconSet size="1">iconsets/wethrower.png</iconSet>
+		<skillList>
+			<skill>Pass</skill>
+		</skillList>
+		<skillCategoryList>
+			<normal>General</normal>
+			<normal>Agility</normal>
+			<normal>Passing</normal>
+			<double>Strength</double>
+		</skillCategoryList>
+	</position>
 
-  <position id="woodelf.catcher">
-  	<quantity>4</quantity>
-  	<name>Catcher</name>
-  	<type>Regular</type>
-  	<cost>90000</cost>
-    <movement>9</movement>
-    <strength>2</strength>
-    <agility>4</agility>
-    <armour>7</armour>
-    <iconList>
-      <portrait>portrait_wood_elf_catcher.png</portrait>
-      <home standing="wecatcher1.gif" moving="wecatcher1an.gif" />
-      <away standing="wecatcher1b.gif" moving="wecatcher1ban.gif" />
-      <home standing="wecatcher2.gif" moving="wecatcher2an.gif" />
-      <away standing="wecatcher2b.gif" moving="wecatcher2ban.gif" />
-    </iconList>
-  	<skillList>
-  	  <skill>Catch</skill>
-  	  <skill>Dodge</skill>
-  	</skillList>
-  	<skillCategoryList>
-      <normal>General</normal>
-      <normal>Agility</normal>
-      <double>Strength</double>
-      <double>Passing</double>
-  	</skillCategoryList>
-  </position>
+	<position id="woodelf.catcher">
+		<quantity>4</quantity>
+		<name>Catcher</name>
+		<type>Regular</type>
+		<cost>90000</cost>
+		<movement>9</movement>
+		<strength>2</strength>
+		<agility>4</agility>
+		<armour>7</armour>
+		<portrait>portraits/wecatcher.png</portrait>
+		<iconSet size="2">iconsets/wecatcher.png</iconSet>
+		<skillList>
+			<skill>Catch</skill>
+			<skill>Dodge</skill>
+		</skillList>
+		<skillCategoryList>
+			<normal>General</normal>
+			<normal>Agility</normal>
+			<double>Strength</double>
+			<double>Passing</double>
+		</skillCategoryList>
+	</position>
 
-  <position id="woodelf.lineman">
-  	<quantity>16</quantity>
-  	<name>Lineman</name>
-  	<type>Regular</type>
-  	<cost>70000</cost>
-    <movement>7</movement>
-    <strength>3</strength>
-    <agility>4</agility>
-    <armour>7</armour>
-    <iconList>
-      <portrait>portrait_wood_elf_lineman.png</portrait>
-      <home standing="welineman1.gif" moving="welineman1an.gif" />
-      <away standing="welineman1b.gif" moving="welineman1ban.gif" />
-      <home standing="welineman2.gif" moving="welineman2an.gif" />
-      <away standing="welineman2b.gif" moving="welineman2ban.gif" />
-    </iconList>
-  	<skillList></skillList>
-  	<skillCategoryList>
-      <normal>General</normal>
-      <normal>Agility</normal>
-      <double>Strength</double>
-      <double>Passing</double>
-  	</skillCategoryList>
-  </position>
+	<position id="woodelf.lineman">
+		<quantity>16</quantity>
+		<name>Lineman</name>
+		<type>Regular</type>
+		<cost>70000</cost>
+		<movement>7</movement>
+		<strength>3</strength>
+		<agility>4</agility>
+		<armour>7</armour>
+		<portrait>portraits/welineman.png</portrait>
+		<iconSet size="2">iconsets/welineman.png</iconSet>
+		<skillList></skillList>
+		<skillCategoryList>
+			<normal>General</normal>
+			<normal>Agility</normal>
+			<double>Strength</double>
+			<double>Passing</double>
+		</skillCategoryList>
+	</position>
   
-  <position id="woodelf.Longstride">
+	<position id="woodelf.Longstride">
 		<quantity>1</quantity>
 		<name>Dolfar Longstride</name>
 		<shorthand>DL</shorthand>
@@ -169,11 +135,8 @@ Eldril Sidewinder, Jordell Freshbreeze, Morg ‘n’ Thorg
 		<strength>3</strength>
 		<agility>4</agility>
 		<armour>7</armour>
-    	<iconList baseIconPath="../stars/">
-			<portrait/>
-			<home standing="Dolfar_Longstride.gif" moving="Dolfar_Longstride_an.gif"/>
-			<away standing="Dolfar_Longstride_b.gif"  moving="Dolfar_Longstride_ban.gif"/>
-		</iconList>
+		<portrait></portrait>
+		<iconSet size="1">iconsets/Dolfar_Longstride.png</iconSet>
 		<skillList>
 			<skill>Loner</skill>
 			<skill>Diving Catch</skill>
@@ -194,11 +157,8 @@ Eldril Sidewinder, Jordell Freshbreeze, Morg ‘n’ Thorg
 		<strength>4</strength>
 		<agility>3</agility>
 		<armour>8</armour>
-    	<iconList baseIconPath="../stars/">
-			<portrait/>
-			<home standing="Willow_Rosebark.gif" moving="Willow_Rosebark_an.gif"/>
-			<away standing="Willow_Rosebark_b.gif"  moving="Willow_Rosebark_ban.gif"/>
-		</iconList>
+		<portrait></portrait>
+		<iconSet size="1">iconsets/Willow_Rosebark.png</iconSet>
 		<skillList>
 			<skill>Loner</skill>
 			<skill>Dauntless</skill>
@@ -217,11 +177,8 @@ Eldril Sidewinder, Jordell Freshbreeze, Morg ‘n’ Thorg
 		<strength>3</strength>
 		<agility>4</agility>
 		<armour>7</armour>
-	    <iconList baseIconPath="../stars/">
-			<portrait/>
-			<home standing="Eldril_Sidewinder.gif" moving="Eldril_Sidewinder_an.gif"/>
-			<away standing="Eldril_Sidewinder_b.gif"  moving="Eldril_Sidewinder_ban.gif"/>
-		</iconList>
+		<portrait></portrait>
+		<iconSet size="1">iconsets/Eldril_Sidewinder.png</iconSet>
 		<skillList>
 			<skill>Loner</skill>
 			<skill>Catch</skill>
@@ -234,7 +191,7 @@ Eldril Sidewinder, Jordell Freshbreeze, Morg ‘n’ Thorg
 
 	<position id="woodelf.Morg">
 		<quantity>1</quantity>
-    	<name>Morg 'n' Thorg</name>
+		<name>Morg 'n' Thorg</name>
 		<shorthand>MT</shorthand>
 		<type>Star</type>
 		<cost>430000</cost>
@@ -242,11 +199,8 @@ Eldril Sidewinder, Jordell Freshbreeze, Morg ‘n’ Thorg
 		<strength>6</strength>
 		<agility>3</agility>
 		<armour>10</armour>
-    	<iconList baseIconPath="../stars/">
-			<portrait/>
-			<home standing="morgnthorg.gif" moving="morgnthorg_an.gif"/>
-			<away standing="morgnthorg_b.gif"  moving="morgnthorg_ban.gif"/>
-		</iconList>
+		<portrait></portrait>
+		<iconSet size="1">iconsets/morgnthorg.png</iconSet>
 		<skillList>
 			<skill>Loner</skill>
 			<skill>Block</skill>
@@ -266,11 +220,8 @@ Eldril Sidewinder, Jordell Freshbreeze, Morg ‘n’ Thorg
 		<strength>4</strength>
 		<agility>3</agility>
 		<armour>8</armour>
-    	<iconList baseIconPath="../stars/">
-			<portrait/>
-			<home standing="Zara_the_Slayer.gif" moving="Zara_the_Slayer_an.gif"/>
-			<away standing="Zara_the_Slayer_b.gif"  moving="Zara_the_Slayer_ban.gif"/>
-		</iconList>
+		<portrait></portrait>
+		<iconSet size="1">iconsets/Zara_the_Slayer.png</iconSet>
 		<skillList>
 			<skill>Loner</skill>
 			<skill>Block</skill>
@@ -292,11 +243,8 @@ Eldril Sidewinder, Jordell Freshbreeze, Morg ‘n’ Thorg
 		<strength>3</strength>
 		<agility>5</agility>
 		<armour>7</armour>
-    	<iconList baseIconPath="../stars/">
-			<portrait/>
-			<home standing="Jordell_Freshbreeze.gif" moving="Jordell_Freshbreeze_an.gif"/>
-			<away standing="Jordell_Freshbreeze_b.gif"  moving="Jordell_Freshbreeze_ban.gif"/>
-		</iconList>
+		<portrait></portrait>
+		<iconSet size="1">iconsets/Jordell_Freshbreeze.png</iconSet>
 		<skillList>
 			<skill>Loner</skill>
 			<skill>Block</skill>
