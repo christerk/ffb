@@ -1,7 +1,7 @@
 package com.balancedbytes.games.ffb.server.net;
 
-import org.eclipse.jetty.websocket.api.UpgradeRequest;
-import org.eclipse.jetty.websocket.api.UpgradeResponse;
+import org.eclipse.jetty.websocket.servlet.ServletUpgradeRequest;
+import org.eclipse.jetty.websocket.servlet.ServletUpgradeResponse;
 import org.eclipse.jetty.websocket.servlet.WebSocketCreator;
 import org.eclipse.jetty.websocket.servlet.WebSocketServlet;
 import org.eclipse.jetty.websocket.servlet.WebSocketServletFactory;
@@ -27,7 +27,7 @@ public class CommandServlet extends WebSocketServlet implements WebSocketCreator
     factory.setCreator(this);
   }
   
-  public Object createWebSocket(UpgradeRequest pReq, UpgradeResponse pResp) {
+  public Object createWebSocket(ServletUpgradeRequest pRequest, ServletUpgradeResponse pResponse) {
     return new CommandSocket(fServer.getCommunication());
   }
   

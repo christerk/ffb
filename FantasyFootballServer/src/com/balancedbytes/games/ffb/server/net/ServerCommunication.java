@@ -1,6 +1,5 @@
 package com.balancedbytes.games.ffb.server.net;
 
-import java.io.IOException;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
@@ -180,11 +179,7 @@ public class ServerCommunication implements Runnable, IReceivedCommandHandler {
     if (pSession == null) {
       return;
     }
-    try {
-      pSession.close();
-    } catch (IOException pIoe) {
-      // nothing to be done at this point
-    }
+    pSession.close();
     handleCommand(new ReceivedCommand(new InternalServerCommandSocketClosed(), pSession));
   }
 

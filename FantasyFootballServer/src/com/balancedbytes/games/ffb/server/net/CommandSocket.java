@@ -16,7 +16,7 @@ import com.eclipsesource.json.JsonValue;
  * 
  * @author Kalimar
  */
-@WebSocket(maxMessageSize = 64 * 1024)
+@WebSocket(maxTextMessageSize = 64 * 1024)
 public class CommandSocket {
   
   private IReceivedCommandHandler fCommandHandler;

@@ -8,13 +8,13 @@ import java.net.URI;
 import java.net.UnknownHostException;
 import java.util.Properties;
 import java.util.Timer;
+import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
 import javax.swing.UIManager;
 
-import org.eclipse.jetty.websocket.WebSocket;
-import org.eclipse.jetty.websocket.WebSocketClient;
-import org.eclipse.jetty.websocket.WebSocketClientFactory;
+import org.eclipse.jetty.websocket.api.Session;
+import org.eclipse.jetty.websocket.client.WebSocketClient;
 
 import com.balancedbytes.games.ffb.ClientMode;
 import com.balancedbytes.games.ffb.FantasyFootballException;
@@ -58,7 +58,6 @@ public class FantasyFootballClient implements IConnectionListener, IDialogCloseL
   private ClientReplayer fReplayer;
   private ClientParameters fParameters;
   private ClientMode fMode;
-  private WebSocketClientFactory fWebSocketClientFactory;
   private WebSocketClient fWebSocketClient;
   private CommandSocket fCommandSocket;
   
@@ -93,8 +92,6 @@ public class FantasyFootballClient implements IConnectionListener, IDialogCloseL
     fUserInterface.refreshSideBars();
     fUserInterface.getScoreBar().refresh();
     
-    fWebSocketClientFactory = new WebSocketClientFactory();
-
     fCommandSocket = new CommandSocket(this);
     
     fCommunication = new ClientCommunication(this);
@@ -155,11 +152,16 @@ public class FantasyFootballClient implements IConnectionListener, IDialogCloseL
     boolean connectionEstablished = false;
 
     try {
-      fWebSocketClientFactory.start();
+      
+      fWebSocketClient = new WebSocketClient();
+      fWebSocketClient.start();
+      
       URI uri = new URI("ws", null, getServerHost().getCanonicalHostName(), getServerPort(), "/command", null, null);
-      fWebSocketClient = fWebSocketClientFactory.newWebSocketClient();
-      WebSocket.Connection connection = fWebSocketClient.open(uri, fCommandSocket).get();
-      connectionEstablished = (connection != null);
+      Future<Session> session = fWebSocketClient.connect(fCommandSocket, uri);
+      
+      session.get(10, TimeUnit.SECONDS);
+      connectionEstablished = true;
+      
     } catch (Exception pAnyException) {
       pAnyException.printStackTrace();
     }
@@ -179,7 +181,7 @@ public class FantasyFootballClient implements IConnectionListener, IDialogCloseL
     fPingTimer = null;
     fTurnTimer = null;
     try {
-      fWebSocketClientFactory.stop();
+      fCommandSocket.close();
       fCommandSocket.awaitClose(10, TimeUnit.SECONDS);
     } catch (Exception pAnyException) {
       pAnyException.printStackTrace();
