@@ -153,7 +153,7 @@ public class DialogChatCommands extends Dialog {
     html.append("<tr>\n");
     html.append("<td valign=\"top\">").append(_FONT_BOLD_OPEN).append("/pitch &lt;pitchname&gt;").append(_FONT_BOLD_CLOSE).append("</td>\n");
     html.append("<td>").append(_FONT_OPEN).append("changes the pitch set (all weather conditions).<br>").append(_FONT_CLOSE).append("\n");
-    html.append(_FONT_SMALL_OPEN).append("(angelux.khemri, garion.chaos, garion.khorne, ziocrock.ulthuan.dark, ziocrock.ulthuan.light)").append(_FONT_CLOSE).append("</td>\n");
+    html.append(_FONT_SMALL_OPEN).append("(basic, blackbox, crownofsands, fumbblcup, glt, lustrian, ulthuan.dark, ulthuan.light, warpstone, wheelofchaos.final, wheelofchaos.khorne, wheelofchaos.nurgle, wheelofchaos.slaanesh, wheelofchaos.tzeentch)").append(_FONT_CLOSE).append("</td>\n");
     html.append("</tr>\n");
     html.append("<tr>\n");
     html.append("<td>").append(_FONT_BOLD_OPEN).append("/prone &lt;playerlist&gt;").append(_FONT_BOLD_CLOSE).append("</td>\n");
