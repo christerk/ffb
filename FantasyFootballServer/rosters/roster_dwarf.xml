@@ -18,7 +18,7 @@
 		<agility>2</agility>
 		<armour>9</armour>
 		<portrait>portraits/dlongbeard.png</portrait>
-		<iconSet size="3">iconsets/dlongbeard.png</iconSet>
+		<iconSet size="6">iconsets/dlongbeard.png</iconSet>
 		<skillList>
 			<skill>Block</skill>
 			<skill>Tackle</skill>

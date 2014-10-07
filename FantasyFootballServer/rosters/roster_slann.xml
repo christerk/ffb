@@ -19,7 +19,7 @@
 		<agility>3</agility>
 		<armour>8</armour>
 		<portrait>portraits/slannlino.png</portrait>
-		<iconSet size="2">iconsets/slannlino.png</iconSet>
+		<iconSet size="7">iconsets/slannlino.png</iconSet>
 		<skillList>
 			<skill>Leap</skill>
 			<skill>Very Long Legs</skill>
@@ -43,7 +43,7 @@
 		<agility>4</agility>
 		<armour>7</armour>
 		<portrait>portraits/slanncatcher.png</portrait>
-		<iconSet size="3">iconsets/slanncatcher.png</iconSet>
+		<iconSet size="4">iconsets/slanncatcher.png</iconSet>
 		<skillList>
 			<skill>Diving Catch</skill>
 			<skill>Leap</skill>

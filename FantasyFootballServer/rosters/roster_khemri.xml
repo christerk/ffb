@@ -88,7 +88,7 @@
 		<agility>2</agility>
 		<armour>7</armour>
 		<portrait>portraits/kmskeleton.png</portrait>
-		<iconSet size="2">iconsets/kmskeleton.png</iconSet>
+		<iconSet size="4">iconsets/kmskeleton.png</iconSet>
 		<skillList>
 			<skill>Regeneration</skill>
 			<skill>Thick Skull</skill>

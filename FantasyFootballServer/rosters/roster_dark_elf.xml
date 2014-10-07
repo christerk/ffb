@@ -19,7 +19,7 @@
 		<agility>4</agility>
 		<armour>8</armour>
 		<portrait>portraits/delineman.png</portrait>
-		<iconSet size="1">iconsets/delineman.png</iconSet>
+		<iconSet size="3">iconsets/delineman.png</iconSet>
 		<skillList></skillList>
 		<skillCategoryList>
 			<normal>General</normal>
@@ -40,7 +40,7 @@
 		<agility>4</agility>
 		<armour>8</armour>
 		<portrait>portraits/deblitzer.png</portrait>
-		<iconSet size="1">iconsets/deblitzer.png</iconSet>
+		<iconSet size="2">iconsets/deblitzer.png</iconSet>
 		<skillList>
 			<skill>Block</skill>
 		</skillList>
@@ -63,7 +63,7 @@
 		<agility>4</agility>
 		<armour>7</armour>
 		<portrait>portraits/derunner.png</portrait>
-		<iconSet size="1">iconsets/derunner.png</iconSet>
+		<iconSet size="2">iconsets/derunner.png</iconSet>
 		<skillList>
 			<skill>Dump-Off</skill>
 		</skillList>
@@ -110,7 +110,7 @@
 		<agility>4</agility>
 		<armour>7</armour>
 		<portrait>portraits/dewitchelf.png</portrait>
-		<iconSet size="1">iconsets/dewitchelf.png</iconSet>
+		<iconSet size="2">iconsets/dewitchelf.png</iconSet>
 		<skillList>
 			<skill>Dodge</skill>
 			<skill>Frenzy</skill>

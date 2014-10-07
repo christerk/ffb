@@ -19,7 +19,7 @@
 		<agility>3</agility>
 		<armour>7</armour>
 		<portrait>portraits/norse_lineman.png</portrait>
-		<iconSet size="2">iconsets/norse_lineman.png</iconSet>
+		<iconSet size="4">iconsets/norse_lineman.png</iconSet>
 		<skillList>
 			<skill>Block</skill>
 		</skillList>
@@ -42,7 +42,7 @@
 		<agility>3</agility>
 		<armour>7</armour>
 		<portrait>portraits/norse_thrower.png</portrait>
-		<iconSet size="1">iconsets/norse_thrower.png</iconSet>
+		<iconSet size="2">iconsets/norse_thrower.png</iconSet>
 		<skillList>
 			<skill>Block</skill>
 			<skill>Pass</skill>
@@ -90,7 +90,7 @@
 		<agility>3</agility>
 		<armour>7</armour>
 		<portrait>portraits/norse_berserker.png</portrait>
-		<iconSet size="1">iconsets/norse_berserker.png</iconSet>
+		<iconSet size="2">iconsets/norse_berserker.png</iconSet>
 		<skillList>
 			<skill>Block</skill>
 			<skill>Frenzy</skill>

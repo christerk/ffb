@@ -64,7 +64,7 @@
 		<agility>2</agility>
 		<armour>8</armour>
 		<portrait>portraits/cminotaur.png</portrait>
-		<iconSet size="3">iconsets/cminotaur.png</iconSet>
+		<iconSet size="1">iconsets/cminotaur.png</iconSet>
 		<skillList>
 			<skill>Loner</skill>
 			<skill>Frenzy</skill>

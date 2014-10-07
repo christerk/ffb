@@ -18,7 +18,7 @@
 		<agility>4</agility>
 		<armour>8</armour>
 		<portrait>portraits/helineman.png</portrait>
-		<iconSet size="2">iconsets/helineman.png</iconSet>
+		<iconSet size="4">iconsets/helineman.png</iconSet>
 		<skillList></skillList>
 		<skillCategoryList>
 			<normal>General</normal>
@@ -38,7 +38,7 @@
 		<agility>4</agility>
 		<armour>8</armour>
 		<portrait>portraits/hethrower.png</portrait>
-		<iconSet size="1">iconsets/hethrower.png</iconSet>
+		<iconSet size="2">iconsets/hethrower.png</iconSet>
 		<skillList>
 			<skill>Pass</skill>
 			<skill>Safe Throw</skill>
@@ -61,7 +61,7 @@
 		<agility>4</agility>
 		<armour>8</armour>
 		<portrait>portraits/heblitzer.png</portrait>
-		<iconSet size="1">iconsets/heblitzer.png</iconSet>
+		<iconSet size="2">iconsets/heblitzer.png</iconSet>
 		<skillList>
 			<skill>Block</skill>
 		</skillList>
@@ -83,7 +83,7 @@
 		<agility>4</agility>
 		<armour>7</armour>
 		<portrait>portraits/hecatcher.png</portrait>
-		<iconSet size="2">iconsets/hecatcher.png</iconSet>
+		<iconSet size="4">iconsets/hecatcher.png</iconSet>
 		<skillList>
 			<skill>Catch</skill>
 		</skillList>

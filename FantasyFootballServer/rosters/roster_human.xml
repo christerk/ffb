@@ -87,7 +87,7 @@
 		<agility>3</agility>
 		<armour>7</armour>
 		<portrait>portraits/hcatcher.png</portrait>
-		<iconSet size="1">iconsets/hcatcher.png</iconSet>
+		<iconSet size="4">iconsets/hcatcher.png</iconSet>
 		<skillList>
 			<skill>Catch</skill>
 			<skill>Dodge</skill>

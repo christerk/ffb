@@ -18,7 +18,7 @@
 		<agility>3</agility>
 		<armour>7</armour>
 		<portrait>portraits/amblitzer.png</portrait>
-		<iconSet size="2">iconsets/amblitzer.png</iconSet>
+		<iconSet size="4">iconsets/amblitzer.png</iconSet>
 		<skillList>
 			<skill>Dodge</skill>
 			<skill>Block</skill>
@@ -64,7 +64,7 @@
 		<agility>3</agility>
 		<armour>7</armour>
 		<portrait>portraits/amthrower.png</portrait>
-		<iconSet size="1">iconsets/amthrower.png</iconSet>
+		<iconSet size="2">iconsets/amthrower.png</iconSet>
 		<skillList>
 			<skill>Dodge</skill>
 			<skill>Pass</skill>

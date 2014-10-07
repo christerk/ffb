@@ -118,8 +118,8 @@
 		<strength>5</strength>
 		<agility>1</agility>
 		<armour>9</armour>
-		<portrait>portraits/chaostroll.png</portrait>
-		<iconSet size="1">iconsets/chaostroll.png</iconSet>
+		<portrait>portraits/pact_troll.png</portrait>
+		<iconSet size="1">iconsets/pact_troll.png</iconSet>
 		<skillList>
 			<skill>Always Hungry</skill>
 			<skill>Loner</skill>

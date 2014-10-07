@@ -67,7 +67,7 @@
 		<agility>3</agility>
 		<armour>8</armour>
 		<portrait>portraits/nwight.png</portrait>
-		<iconSet size="2">iconsets/uwight.png</iconSet>
+		<iconSet size="2">iconsets/nwight.png</iconSet>
 		<skillList>
 			<skill>Block</skill>
 			<skill>Regeneration</skill>

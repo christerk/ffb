@@ -48,7 +48,7 @@
 		<agility>3</agility>
 		<armour>9</armour>
 		<portrait>portraits/oblitzer.png</portrait>
-		<iconSet size="3">iconsets/oblitzer.png</iconSet>
+		<iconSet size="4">iconsets/oblitzer.png</iconSet>
 		<skillList>
 			<skill>Block</skill>
 		</skillList>

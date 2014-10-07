@@ -18,7 +18,7 @@
 		<agility>4</agility>
 		<armour>7</armour>
 		<portrait>portraits/eplineman.png</portrait>
-		<iconSet size="2">iconsets/eplineman.png</iconSet>
+		<iconSet size="4">iconsets/eplineman.png</iconSet>
 		<skillList></skillList>
 		<skillCategoryList>
 			<normal>General</normal>
@@ -38,7 +38,7 @@
 		<agility>4</agility>
 		<armour>7</armour>
 		<portrait>portraits/epcatcher.png</portrait>
-		<iconSet size="2">iconsets/epcatcher.png</iconSet>
+		<iconSet size="4">iconsets/epcatcher.png</iconSet>
 		<skillList>
 			<skill>Catch</skill>
 			<skill>Nerves of Steel</skill>
@@ -61,7 +61,7 @@
 		<agility>4</agility>
 		<armour>7</armour>
 		<portrait>portraits/epthrower.png</portrait>
-		<iconSet size="1">iconsets/epthrower.png</iconSet>
+		<iconSet size="2">iconsets/epthrower.png</iconSet>
 		<skillList>
 			<skill>Pass</skill>
 		</skillList>

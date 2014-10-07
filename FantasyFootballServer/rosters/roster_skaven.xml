@@ -68,7 +68,7 @@
 		<agility>4</agility>
 		<armour>7</armour>
 		<portrait>portraits/skrunner.png</portrait>
-		<iconSet size="2">iconsets/skrunner.png</iconSet>
+		<iconSet size="4">iconsets/skrunner.png</iconSet>
 		<skillList>
 			<skill>Dodge</skill>
 		</skillList>
