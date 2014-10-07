@@ -38,12 +38,12 @@ public class BuildIconsIni {
     addIconUrls(
         new File(pIconDir, "players/iconsets"),
         "http://localhost:2224/icons/players/iconsets/",
-        "/icons/players/iconsets/"
+        "/icons/cached/players/iconsets/"
     );
     addIconUrls(
         new File(pIconDir, "players/portraits"),
         "http://localhost:2224/icons/players/portraits/",
-        "/icons/players/portraits/"
+        "/icons/cached/players/portraits/"
     );
     if (fIconIniProperties.size() > 0) {
       Writer out = new OutputStreamWriter(new FileOutputStream(pIconsIniFile), Charset.forName("utf-8"));
