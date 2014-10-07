@@ -11,9 +11,6 @@ public interface IClientProperty {
   String SERVER_HOST = "server.host";
   String SERVER_PORT = "server.port";
   
-  String ICON_BASE_URL = "icon.base.url";
-  String ICON_BASE_PATH = "icon.base.path";
-  
   String SETTING_SOUND_MODE = "setting.sound.mode";
   String SETTING_SOUND_VOLUME = "setting.sound.volume";
   String SETTING_ICONS = "setting.icons";

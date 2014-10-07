@@ -58,6 +58,7 @@ public class UserInterface extends JFrame implements WindowListener, IDialogClos
 
     fClient = pClient;
     fIconCache = new IconCache(getClient());
+    fIconCache.init();
     fSoundEngine = new SoundEngine(getClient());
     fDialogManager = new DialogManager(getClient());
     setGameMenuBar(new GameMenuBar(getClient()));

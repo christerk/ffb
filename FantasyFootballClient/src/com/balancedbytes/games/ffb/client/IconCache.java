@@ -1,11 +1,14 @@
 package com.balancedbytes.games.ffb.client;
 
 import java.awt.image.BufferedImage;
+import java.io.BufferedInputStream;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Properties;
 
 import javax.imageio.ImageIO;
 
@@ -27,8 +30,12 @@ import com.balancedbytes.games.ffb.util.UtilUrl;
  * @author Kalimar
  */
 public class IconCache {
+
+  private static final String _ICONS_INI = "icons.ini";
   
   private Map<String,BufferedImage> fIconByKey;
+  
+  private Properties fIconUrlProperties;
     
   private Map<String,Integer> fCurrentIndexPerKey;
   
@@ -40,15 +47,24 @@ public class IconCache {
     fCurrentIndexPerKey = new HashMap<String,Integer>();
   }
   
+  public void init() {
+    fIconUrlProperties = new Properties();
+    try {
+      BufferedInputStream propertyInputStream = new BufferedInputStream(new FileInputStream(_ICONS_INI));
+      fIconUrlProperties.load(propertyInputStream);
+      propertyInputStream.close();
+    } catch (IOException pIoException) {
+      // empty properties
+    }
+  }
+  
   public boolean loadIconFromArchive(String pIconUrl) {
     if (!StringTool.isProvided(pIconUrl)) {
       return false;
     }
-    String iconPath = pIconUrl;
-    String iconBaseUrl = getClient().getProperty(IClientProperty.ICON_BASE_URL);
-    String iconBasePath = getClient().getProperty(IClientProperty.ICON_BASE_PATH);
-    if (StringTool.isProvided(iconBasePath) && StringTool.isProvided(iconBaseUrl) && pIconUrl.startsWith(iconBaseUrl)) {
-      iconPath = iconBasePath + pIconUrl.substring(iconBaseUrl.length());
+    String iconPath = fIconUrlProperties.getProperty(pIconUrl);
+    if (iconPath == null) {
+      iconPath = pIconUrl;
     }
     if (!iconPath.startsWith("/")) {
       iconPath = "/" + iconPath;
