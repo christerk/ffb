@@ -40,7 +40,7 @@
 		<agility>4</agility>
 		<armour>8</armour>
 		<portrait>portraits/deblitzer.png</portrait>
-		<iconSet size="2">iconsets/deblitzer.png</iconSet>
+		<iconSet size="4">iconsets/deblitzer.png</iconSet>
 		<skillList>
 			<skill>Block</skill>
 		</skillList>

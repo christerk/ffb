@@ -38,7 +38,7 @@
 		<agility>2</agility>
 		<armour>9</armour>
 		<portrait>portraits/cddwarf.png</portrait>
-		<iconSet size="4">iconsets/cddwarf.png</iconSet>
+		<iconSet size="6">iconsets/cddwarf.png</iconSet>
 		<skillList>
 			<skill>Block</skill>
 			<skill>Tackle</skill>
