@@ -18,8 +18,8 @@
 		<strength>3</strength>
 		<agility>4</agility>
 		<armour>8</armour>
-		<portrait>portraits/delineman.png</portrait>
-		<iconSet size="3">iconsets/delineman.png</iconSet>
+		<portrait>portraits/darkelf_lineman.png</portrait>
+		<iconSet size="3">iconsets/darkelf_lineman.png</iconSet>
 		<skillList></skillList>
 		<skillCategoryList>
 			<normal>General</normal>
@@ -39,8 +39,8 @@
 		<strength>3</strength>
 		<agility>4</agility>
 		<armour>8</armour>
-		<portrait>portraits/deblitzer.png</portrait>
-		<iconSet size="4">iconsets/deblitzer.png</iconSet>
+		<portrait>portraits/darkelf_blitzer.png</portrait>
+		<iconSet size="4">iconsets/darkelf_blitzer.png</iconSet>
 		<skillList>
 			<skill>Block</skill>
 		</skillList>
@@ -62,8 +62,8 @@
 		<strength>3</strength>
 		<agility>4</agility>
 		<armour>7</armour>
-		<portrait>portraits/derunner.png</portrait>
-		<iconSet size="2">iconsets/derunner.png</iconSet>
+		<portrait>portraits/darkelf_runner.png</portrait>
+		<iconSet size="2">iconsets/darkelf_runner.png</iconSet>
 		<skillList>
 			<skill>Dump-Off</skill>
 		</skillList>
@@ -85,8 +85,8 @@
 		<strength>3</strength>
 		<agility>4</agility>
 		<armour>7</armour>
-		<portrait>portraits/deassassin.png</portrait>
-		<iconSet size="1">iconsets/deassassin.png</iconSet>
+		<portrait>portraits/darkelf_assassin.png</portrait>
+		<iconSet size="1">iconsets/darkelf_assassin.png</iconSet>
 		<skillList>
 			<skill>Shadowing</skill>
 			<skill>Stab</skill>
@@ -109,8 +109,8 @@
 		<strength>3</strength>
 		<agility>4</agility>
 		<armour>7</armour>
-		<portrait>portraits/dewitchelf.png</portrait>
-		<iconSet size="2">iconsets/dewitchelf.png</iconSet>
+		<portrait>portraits/darkelf_witchelf.png</portrait>
+		<iconSet size="2">iconsets/darkelf_witchelf.png</iconSet>
 		<skillList>
 			<skill>Dodge</skill>
 			<skill>Frenzy</skill>
@@ -134,8 +134,8 @@
 		<strength>3</strength>
 		<agility>4</agility>
 		<armour>7</armour>
-		<portrait></portrait>
-		<iconSet size="1">iconsets/Eldril_Sidewinder.png</iconSet>
+		<portrait>portraits/EldrilSidewinder.png</portrait>
+		<iconSet size="1">iconsets/EldrilSidewinder.png</iconSet>
 		<skillList>
 			<skill>Loner</skill>
 			<skill>Catch</skill>
@@ -156,8 +156,8 @@
 		<strength>3</strength>
 		<agility>4</agility>
 		<armour>7</armour>
-		<portrait></portrait>
-		<iconSet size="1">iconsets/Horkon.png</iconSet>
+		<portrait>portraits/HorkonHeartripper.png</portrait>
+		<iconSet size="1">iconsets/HorkonHeartripper.png</iconSet>
 		<skillList>
 			<skill>Loner</skill>
 			<skill>Dodge</skill>
@@ -179,7 +179,7 @@
 		<agility>3</agility>
 		<armour>7</armour>
 		<portrait></portrait>
-		<iconSet size="1">iconsets/Ithaca_Benoin.png</iconSet>
+		<iconSet size="1">iconsets/IthacaBenoin.png</iconSet>
 		<skillList>
 			<skill>Loner</skill>
 			<skill>Accurate</skill>
@@ -202,7 +202,7 @@
 		<agility>5</agility>
 		<armour>7</armour>
 		<portrait></portrait>
-		<iconSet size="1">iconsets/Roxanna_Darknail.png</iconSet>
+		<iconSet size="1">iconsets/RoxannaDarknail.png</iconSet>
 		<skillList>
 			<skill>Loner</skill>
 			<skill>Dodge</skill>
@@ -224,7 +224,7 @@
 		<agility>4</agility>
 		<armour>8</armour>
 		<portrait></portrait>
-		<iconSet size="1">iconsets/Hubris_Rakarth.png</iconSet>
+		<iconSet size="1">iconsets/HubrisRakarth.png</iconSet>
 		<skillList>
 			<skill>Loner</skill>
 			<skill>Block</skill>
@@ -245,8 +245,8 @@
 		<strength>6</strength>
 		<agility>3</agility>
 		<armour>10</armour>
-		<portrait></portrait>
-		<iconSet size="1">iconsets/morgnthorg.png</iconSet>
+		<portrait>portraits/MorgNThorg.png</portrait>
+		<iconSet size="1">iconsets/MorgNThorg.png</iconSet>
 		<skillList>
 			<skill>Loner</skill>
 			<skill>Block</skill>

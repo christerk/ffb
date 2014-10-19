@@ -137,8 +137,8 @@
 		<strength>5</strength>
 		<agility>1</agility>
 		<armour>8</armour>
-		<portrait>portraits/snowtroll.png</portrait>
-		<iconSet size="1">iconsets/snowtroll.png</iconSet>
+		<portrait>portraits/norse_snowtroll.png</portrait>
+		<iconSet size="1">iconsets/norse_snowtroll.png</iconSet>
 		<skillList>
 			<skill>Claw</skill>
 			<skill>Disturbing Presence</skill>
@@ -164,8 +164,8 @@
 		<strength>3</strength>
 		<agility>2</agility>
 		<armour>9</armour>
-		<portrait></portrait>
-		<iconSet size="1">iconsets/Boomer_Eziasson.png</iconSet>
+		<portrait>portraits/BoomerEziasson.png</portrait>
+		<iconSet size="1">iconsets/BoomerEziasson.png</iconSet>
 		<skillList>
 			<skill>Loner</skill>
 			<skill>Accurate</skill>
@@ -186,8 +186,8 @@
 		<strength>3</strength>
 		<agility>3</agility>
 		<armour>8</armour>
-		<portrait></portrait>
-		<iconSet size="1">iconsets/Helmut_Wulf.png</iconSet>
+		<portrait>portraits/HelmutWulf.png</portrait>
+		<iconSet size="1">iconsets/HelmutWulf.png</iconSet>
 		<skillList>
 			<skill>Loner</skill>
 			<skill>Chainsaw</skill>
@@ -206,8 +206,8 @@
 		<strength>4</strength>
 		<agility>3</agility>
 		<armour>8</armour>
-		<portrait></portrait>
-		<iconSet size="1">iconsets/Wilhelm_Chaney.png</iconSet>
+		<portrait>portraits/WilhelmChaney.png</portrait>
+		<iconSet size="1">iconsets/WilhelmChaney.png</iconSet>
 		<skillList>
 			<skill>Loner</skill>
 			<skill>Catch</skill>
@@ -228,8 +228,8 @@
 		<strength>4</strength>
 		<agility>3</agility>
 		<armour>8</armour>
-		<portrait></portrait>
-		<iconSet size="1">iconsets/Zara_the_Slayer.png</iconSet>
+		<portrait>portraits/ZaraTheSlayer.png</portrait>
+		<iconSet size="1">iconsets/ZaraTheSlayer.png</iconSet>
 		<skillList>
 			<skill>Loner</skill>
 			<skill>Block</skill>
@@ -251,8 +251,8 @@
 		<strength>6</strength>
 		<agility>1</agility>
 		<armour>8</armour>
-		<portrait></portrait>
-		<iconSet size="1">iconsets/Icepelt_Hammerblow.png</iconSet>
+		<portrait>portraits/IcepeltHammerblow.png</portrait>
+		<iconSet size="1">iconsets/IcepeltHammerblow.png</iconSet>
 		<skillList>
 			<skill>Loner</skill>
 			<skill>Claws</skill>
@@ -273,8 +273,8 @@
 		<strength>6</strength>
 		<agility>3</agility>
 		<armour>10</armour>
-		<portrait></portrait>
-		<iconSet size="1">iconsets/morgnthorg.png</iconSet>
+		<portrait>portraits/MorgNThorg.png</portrait>
+		<iconSet size="1">iconsets/MorgNThorg.png</iconSet>
 		<skillList>
 			<skill>Loner</skill>
 			<skill>Block</skill>

@@ -17,8 +17,8 @@
 		<strength>6</strength>
 		<agility>1</agility>
 		<armour>10</armour>
-		<portrait>portraits/treeman.png</portrait>
-		<iconSet size="3">iconsets/treeman.png</iconSet>
+		<portrait>portraits/halfling_treeman.png</portrait>
+		<iconSet size="3">iconsets/halfling_treeman.png</iconSet>
 		<skillList>
 			<skill>Loner</skill>
 			<skill>Mighty Blow</skill>
@@ -45,8 +45,8 @@
 		<strength>2</strength>
 		<agility>3</agility>
 		<armour>6</armour>
-		<portrait>portraits/halfling.png</portrait>
-		<iconSet size="16">iconsets/halfling.png</iconSet>
+		<portrait>portraits/halfling_halfling.png</portrait>
+		<iconSet size="16">iconsets/halfling_halfling.png</iconSet>
 		<skillList>
 			<skill>Dodge</skill>
 			<skill>Right Stuff</skill>
@@ -70,8 +70,8 @@
 		<strength>3</strength>
 		<agility>3</agility>
 		<armour>6</armour>
-		<portrait></portrait>
-		<iconSet size="1">iconsets/Puggy_Baconbreath.png</iconSet>
+		<portrait>portraits/PuggyBaconbreath.png</portrait>
+		<iconSet size="1">iconsets/PuggyBaconbreath.png</iconSet>
 		<skillList>
 			<skill>Loner</skill>
 			<skill>Block</skill>
@@ -93,7 +93,7 @@
 		<agility>3</agility>
 		<armour>8</armour>
 		<portrait></portrait>
-		<iconSet size="1">iconsets/Willow_Rosebark.png</iconSet>
+		<iconSet size="1">iconsets/WillowRosebark.png</iconSet>
 		<skillList>
 			<skill>Loner</skill>
 			<skill>Dauntless</skill>
@@ -112,8 +112,8 @@
 		<strength>4</strength>
 		<agility>3</agility>
 		<armour>8</armour>
-		<portrait></portrait>
-		<iconSet size="1">iconsets/Zara_the_Slayer.png</iconSet>
+		<portrait>portraits/ZaraTheSlayer.png</portrait>
+		<iconSet size="1">iconsets/ZaraTheSlayer.png</iconSet>
 		<skillList>
 			<skill>Loner</skill>
 			<skill>Block</skill>
@@ -135,8 +135,8 @@
 		<strength>7</strength>
 		<agility>1</agility>
 		<armour>10</armour>
-		<portrait></portrait>
-		<iconSet size="1">iconsets/deeproot.png</iconSet>
+		<portrait>portraits/DeeprootStrongbranch.png</portrait>
+		<iconSet size="1">iconsets/DeeprootStrongbranch.png</iconSet>
 		<skillList>
 			<skill>Loner</skill>
 			<skill>Block</skill>
@@ -159,7 +159,7 @@
 		<agility>2</agility>
 		<armour>9</armour>
 		<portrait></portrait>
-		<iconSet size="1">iconsets/Bertha_Bigfist.png</iconSet>
+		<iconSet size="1">iconsets/BerthaBigfist.png</iconSet>
 		<skillList>
 			<skill>Loner</skill>
 			<skill>Bone-Head</skill>
@@ -181,8 +181,8 @@
 		<strength>6</strength>
 		<agility>3</agility>
 		<armour>10</armour>
-		<portrait></portrait>
-		<iconSet size="1">iconsets/morgnthorg.png</iconSet>
+		<portrait>portraits/MorgNThorg.png</portrait>
+		<iconSet size="1">iconsets/MorgNThorg.png</iconSet>
 		<skillList>
 			<skill>Loner</skill>
 			<skill>Block</skill>

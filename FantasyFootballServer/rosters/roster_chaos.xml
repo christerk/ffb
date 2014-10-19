@@ -18,8 +18,8 @@
 		<strength>3</strength>
 		<agility>3</agility>
 		<armour>8</armour>
-		<portrait>portraits/cbeastman.png</portrait>
-		<iconSet size="4">iconsets/cbeastman.png</iconSet>
+		<portrait>portraits/chaos_beastman.png</portrait>
+		<iconSet size="4">iconsets/chaos_beastman.png</iconSet>
 		<skillList>
 			<skill>Horns</skill>
 		</skillList>
@@ -42,8 +42,8 @@
 		<strength>4</strength>
 		<agility>3</agility>
 		<armour>9</armour>
-		<portrait>portraits/cwarrior.png</portrait>
-		<iconSet size="6">iconsets/cwarrior.png</iconSet>
+		<portrait>portraits/chaos_chaoswarrior.png</portrait>
+		<iconSet size="6">iconsets/chaos_chaoswarrior.png</iconSet>
 		<skillList></skillList>
 		<skillCategoryList>
 			<normal>General</normal>
@@ -63,8 +63,8 @@
 		<strength>5</strength>
 		<agility>2</agility>
 		<armour>8</armour>
-		<portrait>portraits/cminotaur.png</portrait>
-		<iconSet size="1">iconsets/cminotaur.png</iconSet>
+		<portrait>portraits/chaos_minotaur.png</portrait>
+		<iconSet size="1">iconsets/chaos_minotaur.png</iconSet>
 		<skillList>
 			<skill>Loner</skill>
 			<skill>Frenzy</skill>
@@ -92,8 +92,8 @@
 		<strength>2</strength>
 		<agility>3</agility>
 		<armour>7</armour>
-		<portrait></portrait>
-		<iconSet size="1">iconsets/Max_Spleenripper.png</iconSet>
+		<portrait>portraits/MaxSpleenripper.png</portrait>
+		<iconSet size="1">iconsets/MaxSpleenripper.png</iconSet>
 		<skillList>
 			<skill>Loner</skill>
 			<skill>Chainsaw</skill>
@@ -112,7 +112,7 @@
 		<agility>3</agility>
 		<armour>9</armour>
 		<portrait></portrait>
-		<iconSet size="1">iconsets/Lewdgrip_Whiparm.png</iconSet>
+		<iconSet size="1">iconsets/LewdgripWhiparm.png</iconSet>
 		<skillList>
 			<skill>Loner</skill>
 			<skill>Pass</skill>
@@ -132,8 +132,8 @@
 		<strength>5</strength>
 		<agility>2</agility>
 		<armour>9</armour>
-		<portrait></portrait>
-		<iconSet size="1">iconsets/Brick_Farth.png</iconSet>
+		<portrait>portraits/BrickFarth.png</portrait>
+		<iconSet size="1">iconsets/BrickFarth.png</iconSet>
 		<skillList>
 			<skill>Loner</skill>
 			<skill>Bone-Head</skill>
@@ -155,7 +155,7 @@
 		<strength>2</strength>
 		<agility>4</agility>
 		<armour>7</armour>
-		<portrait></portrait>
+		<portrait>portraits/Grotty.png</portrait>
 		<iconSet size="1">iconsets/Grotty.png</iconSet>
 		<skillList>
 			<skill>Loner</skill>
@@ -175,8 +175,8 @@
 		<strength>5</strength>
 		<agility>3</agility>
 		<armour>9</armour>
-		<portrait></portrait>
-		<iconSet size="1">iconsets/Lord_Borak.png</iconSet>
+		<portrait>portraits/LordBorakTheDespoiler.png</portrait>
+		<iconSet size="1">iconsets/LordBorakTheDespoiler.png</iconSet>
 		<skillList>
 			<skill>Loner</skill>
 			<skill>Block</skill>
@@ -195,8 +195,8 @@
 		<strength>6</strength>
 		<agility>2</agility>
 		<armour>8</armour>
-		<portrait></portrait>
-		<iconSet size="1">iconsets/grashnak.png</iconSet>
+		<portrait>portraits/GrashnakBlackhoof.png</portrait>
+		<iconSet size="1">iconsets/GrashnakBlackhoof.png</iconSet>
 		<skillList>
 			<skill>Loner</skill>
 			<skill>Frenzy</skill>
@@ -216,8 +216,8 @@
 		<strength>6</strength>
 		<agility>3</agility>
 		<armour>10</armour>
-		<portrait></portrait>
-		<iconSet size="1">iconsets/morgnthorg.png</iconSet>
+		<portrait>portraits/MorgNThorg.png</portrait>
+		<iconSet size="1">iconsets/MorgNThorg.png</iconSet>
 		<skillList>
 			<skill>Loner</skill>
 			<skill>Block</skill>

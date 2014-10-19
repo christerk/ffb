@@ -18,8 +18,8 @@
 		<strength>4</strength>
 		<agility>4</agility>
 		<armour>8</armour>
-		<portrait>portraits/vampire.png</portrait>
-		<iconSet size="5">iconsets/vampire.png</iconSet>
+		<portrait>portraits/vampire_vampire.png</portrait>
+		<iconSet size="5">iconsets/vampire_vampire.png</iconSet>
 		<skillList>
 			<skill>Blood Lust</skill>
 			<skill>Hypnotic Gaze</skill>
@@ -44,8 +44,8 @@
 		<agility>3</agility>
 		<armour>7</armour>
 		<thrall>true</thrall>
-		<portrait>portraits/vthrall.png</portrait>
-		<iconSet size="6">iconsets/vthrall.png</iconSet>
+		<portrait>portraits/vampire_thrall.png</portrait>
+		<iconSet size="6">iconsets/vampire_thrall.png</iconSet>
 		<skillList></skillList>
 		<skillCategoryList>
 			<normal>General</normal>
@@ -65,8 +65,8 @@
 		<strength>3</strength>
 		<agility>3</agility>
 		<armour>8</armour>
-		<portrait></portrait>
-		<iconSet size="1">iconsets/Helmut_Wulf.png</iconSet>
+		<portrait>portraits/HelmutWulf.png</portrait>
+		<iconSet size="1">iconsets/HelmutWulf.png</iconSet>
 		<skillList>
 			<skill>Loner</skill>
 			<skill>Chainsaw</skill>
@@ -87,8 +87,8 @@
 		<agility>3</agility>
 		<armour>8</armour>
 		<race>Thrall</race>
-		<portrait></portrait>
-		<iconSet size="1">iconsets/Crazy_Igor.png</iconSet>
+		<portrait>portraits/CrazyIgor.png</portrait>
+		<iconSet size="1">iconsets/CrazyIgor.png</iconSet>
 		<skillList>
 			<skill>Loner</skill>
 			<skill>Dauntless</skill>
@@ -109,7 +109,7 @@
 		<agility>3</agility>
 		<armour>7</armour>
 		<portrait></portrait>
-		<iconSet size="1">iconsets/J_Earlice.png</iconSet>
+		<iconSet size="1">iconsets/JEarlice.png</iconSet>
 		<skillList>
 			<skill>Loner</skill>
 			<skill>Catch</skill>
@@ -129,8 +129,8 @@
 		<strength>4</strength>
 		<agility>3</agility>
 		<armour>8</armour>
-		<portrait></portrait>
-		<iconSet size="1">iconsets/Wilhelm_Chaney.png</iconSet>
+		<portrait>portraits/WilhelmChaney.png</portrait>
+		<iconSet size="1">iconsets/WilhelmChaney.png</iconSet>
 		<skillList>
 			<skill>Loner</skill>
 			<skill>Catch</skill>
@@ -151,8 +151,8 @@
 		<strength>5</strength>
 		<agility>4</agility>
 		<armour>9</armour>
-		<portrait></portrait>
-		<iconSet size="1">iconsets/Count_Luthor.png</iconSet>
+		<portrait>portraits/CountLuthorVonDrakenborg.png</portrait>
+		<iconSet size="1">iconsets/CountLuthorVonDrakenborg.png</iconSet>
 		<skillList>
 			<skill>Loner</skill>
 			<skill>Block</skill>
@@ -172,8 +172,8 @@
 		<strength>6</strength>
 		<agility>3</agility>
 		<armour>10</armour>
-		<portrait></portrait>
-		<iconSet size="1">iconsets/morgnthorg.png</iconSet>
+		<portrait>portraits/MorgNThorg.png</portrait>
+		<iconSet size="1">iconsets/MorgNThorg.png</iconSet>
 		<skillList>
 			<skill>Loner</skill>
 			<skill>Block</skill>

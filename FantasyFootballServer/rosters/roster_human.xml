@@ -18,8 +18,8 @@
 		<strength>3</strength>
 		<agility>3</agility>
 		<armour>8</armour>
-		<portrait>portraits/hlineman.png</portrait>
-		<iconSet size="2">iconsets/hlineman.png</iconSet>
+		<portrait>portraits/human_lineman.png</portrait>
+		<iconSet size="2">iconsets/human_lineman.png</iconSet>
 		<skillList></skillList>
 		<skillCategoryList>
 			<normal>General</normal>
@@ -39,8 +39,8 @@
 		<strength>3</strength>
 		<agility>3</agility>
 		<armour>8</armour>
-		<portrait>portraits/hblitzer.png</portrait>
-		<iconSet size="1">iconsets/hblitzer.png</iconSet>
+		<portrait>portraits/human_blitzer.png</portrait>
+		<iconSet size="1">iconsets/human_blitzer.png</iconSet>
 		<skillList>
 			<skill>Block</skill>
 		</skillList>
@@ -62,8 +62,8 @@
 		<strength>3</strength>
 		<agility>3</agility>
 		<armour>8</armour>
-		<portrait>portraits/hthrower.png</portrait>
-		<iconSet size="1">iconsets/hthrower.png</iconSet>
+		<portrait>portraits/human_thrower.png</portrait>
+		<iconSet size="1">iconsets/human_thrower.png</iconSet>
 		<skillList>
 			<skill>Pass</skill>
 			<skill>Sure Hands</skill>
@@ -86,8 +86,8 @@
 		<strength>2</strength>
 		<agility>3</agility>
 		<armour>7</armour>
-		<portrait>portraits/hcatcher.png</portrait>
-		<iconSet size="4">iconsets/hcatcher.png</iconSet>
+		<portrait>portraits/human_catcher.png</portrait>
+		<iconSet size="4">iconsets/human_catcher.png</iconSet>
 		<skillList>
 			<skill>Catch</skill>
 			<skill>Dodge</skill>
@@ -109,8 +109,8 @@
 		<strength>5</strength>
 		<agility>2</agility>
 		<armour>9</armour>
-		<portrait>portraits/hogre.png</portrait>
-		<iconSet size="6">iconsets/ogre.png</iconSet>
+		<portrait>portraits/human_ogre.png</portrait>
+		<iconSet size="6">iconsets/human_ogre.png</iconSet>
 		<skillList>
 			<skill>Loner</skill>
 			<skill>Bone-Head</skill>
@@ -136,8 +136,8 @@
 		<strength>3</strength>
 		<agility>3</agility>
 		<armour>8</armour>
-		<portrait></portrait>
-		<iconSet size="1">iconsets/Helmut_Wulf.png</iconSet>
+		<portrait>portraits/HelmutWulf.png</portrait>
+		<iconSet size="1">iconsets/HelmutWulf.png</iconSet>
 		<skillList>
 			<skill>Loner</skill>
 			<skill>Chainsaw</skill>
@@ -156,8 +156,8 @@
 		<strength>3</strength>
 		<agility>3</agility>
 		<armour>6</armour>
-		<portrait></portrait>
-		<iconSet size="1">iconsets/Puggy_Baconbreath.png</iconSet>
+		<portrait>portraits/PuggyBaconbreath.png</portrait>
+		<iconSet size="1">iconsets/PuggyBaconbreath.png</iconSet>
 		<skillList>
 			<skill>Loner</skill>
 			<skill>Block</skill>
@@ -178,8 +178,8 @@
 		<strength>5</strength>
 		<agility>2</agility>
 		<armour>9</armour>
-		<portrait></portrait>
-		<iconSet size="1">iconsets/Mighty_Zug.png</iconSet>
+		<portrait>portraits/MightyZug.png</portrait>
+		<iconSet size="1">iconsets/MightyZug.png</iconSet>
 		<skillList>
 			<skill>Loner</skill>
 			<skill>Block</skill>
@@ -197,8 +197,8 @@
 		<strength>4</strength>
 		<agility>3</agility>
 		<armour>8</armour>
-		<portrait></portrait>
-		<iconSet size="1">iconsets/Zara_the_Slayer.png</iconSet>
+		<portrait>portraits/ZaraTheSlayer.png</portrait>
+		<iconSet size="1">iconsets/ZaraTheSlayer.png</iconSet>
 		<skillList>
 			<skill>Loner</skill>
 			<skill>Block</skill>
@@ -220,8 +220,8 @@
 		<strength>4</strength>
 		<agility>4</agility>
 		<armour>8</armour>
-		<portrait></portrait>
-		<iconSet size="1">iconsets/Griff_Oberwald.png</iconSet>
+		<portrait>portraits/GriffOberwald.png</portrait>
+		<iconSet size="1">iconsets/GriffOberwald.png</iconSet>
 		<skillList>
 			<skill>Loner</skill>
 			<skill>Block</skill>
@@ -242,8 +242,8 @@
 		<strength>6</strength>
 		<agility>3</agility>
 		<armour>10</armour>
-		<portrait></portrait>
-		<iconSet size="1">iconsets/morgnthorg.png</iconSet>
+		<portrait>portraits/MorgNThorg.png</portrait>
+		<iconSet size="1">iconsets/MorgNThorg.png</iconSet>
 		<skillList>
 			<skill>Loner</skill>
 			<skill>Block</skill>

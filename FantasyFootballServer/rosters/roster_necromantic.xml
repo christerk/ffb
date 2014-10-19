@@ -18,8 +18,8 @@
 		<strength>3</strength>
 		<agility>3</agility>
 		<armour>8</armour>
-		<portrait>portraits/nwerewolf.png</portrait>
-		<iconSet size="2">iconsets/nwerewolf.png</iconSet>
+		<portrait>portraits/necromantic_werewolf.png</portrait>
+		<iconSet size="2">iconsets/necromantic_werewolf.png</iconSet>
 		<skillList>
 			<skill>Claw</skill>
 			<skill>Frenzy</skill>
@@ -42,8 +42,8 @@
 		<strength>4</strength>
 		<agility>2</agility>
 		<armour>9</armour>
-		<portrait>portraits/ngolem.png</portrait>
-		<iconSet size="2">iconsets/ngolem.png</iconSet>
+		<portrait>portraits/necromantic_fleshgolem.png</portrait>
+		<iconSet size="2">iconsets/necromantic_fleshgolem.png</iconSet>
 		<skillList>
 			<skill>Regeneration</skill>
 			<skill>Stand Firm</skill>
@@ -66,8 +66,8 @@
 		<strength>3</strength>
 		<agility>3</agility>
 		<armour>8</armour>
-		<portrait>portraits/nwight.png</portrait>
-		<iconSet size="2">iconsets/nwight.png</iconSet>
+		<portrait>portraits/necromantic_wight.png</portrait>
+		<iconSet size="2">iconsets/necromantic_wight.png</iconSet>
 		<skillList>
 			<skill>Block</skill>
 			<skill>Regeneration</skill>
@@ -89,8 +89,8 @@
 		<strength>3</strength>
 		<agility>3</agility>
 		<armour>7</armour>
-		<portrait>portraits/nghoul.png</portrait>
-		<iconSet size="2">iconsets/nghoul.png</iconSet>
+		<portrait>portraits/necromantic_ghoul.png</portrait>
+		<iconSet size="2">iconsets/necromantic_ghoul.png</iconSet>
 		<skillList>
 			<skill>Dodge</skill>
 		</skillList>
@@ -111,8 +111,8 @@
 		<strength>3</strength>
 		<agility>2</agility>
 		<armour>8</armour>
-		<portrait>portraits/nzombie.png</portrait>
-		<iconSet size="12">iconsets/zombie.png</iconSet>
+		<portrait>portraits/necromantic_zombie.png</portrait>
+		<iconSet size="12">iconsets/necromantic_zombie.png</iconSet>
 		<skillList>
 			<skill>Regeneration</skill>
 		</skillList>
@@ -134,8 +134,8 @@
 		<strength>3</strength>
 		<agility>2</agility>
 		<armour>7</armour>
-		<portrait></portrait>
-		<iconSet size="1">iconsets/Hack_Enslash.png</iconSet>
+		<portrait>portraits/HackEnslash.png</portrait>
+		<iconSet size="1">iconsets/HackEnslash.png</iconSet>
 		<skillList>
 			<skill>Loner</skill>
 			<skill>Chainsaw</skill>
@@ -156,7 +156,7 @@
 		<agility>3</agility>
 		<armour>7</armour>
 		<portrait></portrait>
-		<iconSet size="1">iconsets/J_Earlice.png</iconSet>
+		<iconSet size="1">iconsets/JEarlice.png</iconSet>
 		<skillList>
 			<skill>Loner</skill>
 			<skill>Catch</skill>
@@ -176,7 +176,7 @@
 		<strength>4</strength>
 		<agility>2</agility>
 		<armour>8</armour>
-		<portrait></portrait>
+		<portrait>portraits/Setekh.png</portrait>
 		<iconSet size="1">iconsets/Setekh.png</iconSet>
 		<skillList>
 			<skill>Loner</skill>
@@ -198,8 +198,8 @@
 		<strength>4</strength>
 		<agility>3</agility>
 		<armour>8</armour>
-		<portrait></portrait>
-		<iconSet size="1">iconsets/Wilhelm_Chaney.png</iconSet>
+		<portrait>portraits/WilhelmChaney.png</portrait>
+		<iconSet size="1">iconsets/WilhelmChaney.png</iconSet>
 		<skillList>
 			<skill>Loner</skill>
 			<skill>Catch</skill>
@@ -220,8 +220,8 @@
 		<strength>6</strength>
 		<agility>1</agility>
 		<armour>9</armour>
-		<portrait></portrait>
-		<iconSet size="1">iconsets/Ramtut_III.png</iconSet>
+		<portrait>portraits/RamtutIII.png</portrait>
+		<iconSet size="1">iconsets/RamtutIII.png</iconSet>
 		<skillList>
 			<skill>Loner</skill>
 			<skill>Break Tackle</skill>
@@ -241,8 +241,8 @@
 		<strength>5</strength>
 		<agility>4</agility>
 		<armour>9</armour>
-		<portrait></portrait>
-		<iconSet size="1">iconsets/Count_Luthor.png</iconSet>
+		<portrait>portraits/CountLuthorVonDrakenborg.png</portrait>
+		<iconSet size="1">iconsets/CountLuthorVonDrakenborg.png</iconSet>
 		<skillList>
 			<skill>Loner</skill>
 			<skill>Block</skill>

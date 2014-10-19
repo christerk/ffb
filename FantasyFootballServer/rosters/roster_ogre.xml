@@ -18,8 +18,8 @@
 		<strength>1</strength>
 		<agility>3</agility>
 		<armour>5</armour>
-		<portrait>portraits/snotling.png</portrait>
-		<iconSet size="12">iconsets/snotling.png</iconSet>
+		<portrait>portraits/ogre_snotling.png</portrait>
+		<iconSet size="12">iconsets/ogre_snotling.png</iconSet>
 		<skillList>
 			<skill>Dodge</skill>
 			<skill>Right Stuff</skill>
@@ -45,8 +45,8 @@
 		<strength>5</strength>
 		<agility>2</agility>
 		<armour>9</armour>
-		<portrait>portraits/ogre1.png</portrait>
-		<iconSet size="6">iconsets/ogre.png</iconSet>
+		<portrait>portraits/ogre_ogre.png</portrait>
+		<iconSet size="6">iconsets/ogre_ogre.png</iconSet>
 		<skillList>
 			<skill>Bone-head</skill>
 			<skill>Mighty Blow</skill>
@@ -71,8 +71,8 @@
 		<strength>2</strength>
 		<agility>3</agility>
 		<armour>7</armour>
-		<portrait></portrait>
-		<iconSet size="1">iconsets/Bomber_Dribblesnot.png</iconSet>
+		<portrait>portraits/BomberDribblesnot.png</portrait>
+		<iconSet size="1">iconsets/BomberDribblesnot.png</iconSet>
 		<skillList>
 			<skill>Loner</skill>
 			<skill>Accurate</skill>
@@ -94,8 +94,8 @@
 		<strength>2</strength>
 		<agility>3</agility>
 		<armour>7</armour>
-		<portrait></portrait>
-		<iconSet size="1">iconsets/Nobbla_Blackwart.png</iconSet>
+		<portrait>portraits/NobblaBlackwart.png</portrait>
+		<iconSet size="1">iconsets/NobblaBlackwart.png</iconSet>
 		<skillList>
 			<skill>Loner</skill>
 			<skill>Block</skill>
@@ -116,8 +116,8 @@
 		<strength>2</strength>
 		<agility>3</agility>
 		<armour>7</armour>
-		<portrait></portrait>
-		<iconSet size="1">iconsets/Scrappa_Sorehead.png</iconSet>
+		<portrait>portraits/ScrappaSorehead.png</portrait>
+		<iconSet size="1">iconsets/ScrappaSorehead.png</iconSet>
 		<skillList>
 			<skill>Loner</skill>
 			<skill>Dirty Player</skill>
@@ -142,7 +142,7 @@
 		<agility>2</agility>
 		<armour>9</armour>
 		<portrait></portrait>
-		<iconSet size="1">iconsets/Bertha_Bigfist.png</iconSet>
+		<iconSet size="1">iconsets/BerthaBigfist.png</iconSet>
 		<skillList>
 			<skill>Loner</skill>
 			<skill>Bone-Head</skill>
@@ -164,8 +164,8 @@
 		<strength>5</strength>
 		<agility>2</agility>
 		<armour>9</armour>
-		<portrait></portrait>
-		<iconSet size="1">iconsets/Brick_Farth.png</iconSet>
+		<portrait>portraits/BrickFarth.png</portrait>
+		<iconSet size="1">iconsets/BrickFarth.png</iconSet>
 		<skillList>
 			<skill>Loner</skill>
 			<skill>Bone-Head</skill>
@@ -187,7 +187,7 @@
 		<strength>2</strength>
 		<agility>4</agility>
 		<armour>7</armour>
-		<portrait></portrait>
+		<portrait>portraits/Grotty.png</portrait>
 		<iconSet size="1">iconsets/Grotty.png</iconSet>
 		<skillList>
 			<skill>Loner</skill>
@@ -207,8 +207,8 @@
 		<strength>6</strength>
 		<agility>3</agility>
 		<armour>10</armour>
-		<portrait></portrait>
-		<iconSet size="1">iconsets/morgnthorg.png</iconSet>
+		<portrait>portraits/MorgNThorg.png</portrait>
+		<iconSet size="1">iconsets/MorgNThorg.png</iconSet>
 		<skillList>
 			<skill>Loner</skill>
 			<skill>Block</skill>

@@ -22,8 +22,8 @@ import org.xml.sax.XMLReader;
 public class CollectRosters {
   
 	// division overview via https://fumbbl.com/xml:roster
-  private static final String _URL_DIVISION = "https://fumbbl.com/xml:roster?division=$1";
-  private static final String _URL_ROSTER = "https://fumbbl.com/xml:roster?id=$1";
+  private static final String _URL_DIVISION = "http://www.fumbbl.com/xml:roster?division=$1&server=test";
+  private static final String _URL_ROSTER = "http://www.fumbbl.com/xml:roster?id=$1&server=test";
   
   public void collectRosters(File pDownloadDir, int pDivision) throws IOException, SAXException, ParserConfigurationException {
 

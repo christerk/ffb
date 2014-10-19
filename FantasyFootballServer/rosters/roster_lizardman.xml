@@ -17,8 +17,8 @@
 		<strength>5</strength>
 		<agility>1</agility>
 		<armour>9</armour>
-		<portrait>portraits/kroxigor.png</portrait>
-		<iconSet size="1">iconsets/kroxigor.png</iconSet>
+		<portrait>portraits/lizardman_kroxigor.png</portrait>
+		<iconSet size="1">iconsets/lizardman_kroxigor.png</iconSet>
 		<skillList>
 			<skill>Loner</skill>
 			<skill>Bone-Head</skill>
@@ -44,8 +44,8 @@
 		<strength>4</strength>
 		<agility>1</agility>
 		<armour>9</armour>
-		<portrait>portraits/lmsaurus.png</portrait>
-		<iconSet size="6">iconsets/lmsaurus.png</iconSet>
+		<portrait>portraits/lizardman_saurus.png</portrait>
+		<iconSet size="6">iconsets/lizardman_saurus.png</iconSet>
 		<skillList></skillList>
 		<skillCategoryList>
 			<normal>General</normal>
@@ -65,8 +65,8 @@
 		<strength>2</strength>
 		<agility>3</agility>
 		<armour>7</armour>
-		<portrait>portraits/lmskink.png</portrait>
-		<iconSet size="6">iconsets/lmskink.png</iconSet>
+		<portrait>portraits/lizardman_skink.png</portrait>
+		<iconSet size="6">iconsets/lizardman_skink.png</iconSet>
 		<skillList>
 			<skill>Dodge</skill>
 			<skill>Stunty</skill>
@@ -89,7 +89,7 @@
 		<strength>2</strength>
 		<agility>3</agility>
 		<armour>7</armour>
-		<portrait></portrait>
+		<portrait>portraits/Hemlock.png</portrait>
 		<iconSet size="1">iconsets/Hemlock.png</iconSet>
 		<skillList>
 			<skill>Loner</skill>
@@ -112,7 +112,7 @@
 		<strength>3</strength>
 		<agility>3</agility>
 		<armour>8</armour>
-		<portrait></portrait>
+		<portrait>portraits/Lottabottol.png</portrait>
 		<iconSet size="1">iconsets/Lottabottol.png</iconSet>
 		<skillList>
 			<skill>Loner</skill>
@@ -136,8 +136,8 @@
 		<strength>3</strength>
 		<agility>3</agility>
 		<armour>8</armour>
-		<portrait></portrait>
-		<iconSet size="1">iconsets/Helmut_Wulf.png</iconSet>
+		<portrait>portraits/HelmutWulf.png</portrait>
+		<iconSet size="1">iconsets/HelmutWulf.png</iconSet>
 		<skillList>
 			<skill>Loner</skill>
 			<skill>Chainsaw</skill>
@@ -156,8 +156,8 @@
 		<strength>2</strength>
 		<agility>4</agility>
 		<armour>7</armour>
-		<portrait></portrait>
-		<iconSet size="1">iconsets/Quetzal_Leap.png</iconSet>
+		<portrait>portraits/QuetzalLeap.png</portrait>
+		<iconSet size="1">iconsets/QuetzalLeap.png</iconSet>
 		<skillList>
 			<skill>Loner</skill>
 			<skill>Catch</skill>
@@ -180,7 +180,7 @@
 		<strength>4</strength>
 		<agility>1</agility>
 		<armour>9</armour>
-		<portrait></portrait>
+		<portrait>portraits/Slibli.png</portrait>
 		<iconSet size="1">iconsets/Slibli.png</iconSet>
 		<skillList>
 			<skill>Loner</skill>
@@ -201,8 +201,8 @@
 		<strength>6</strength>
 		<agility>3</agility>
 		<armour>10</armour>
-		<portrait></portrait>
-		<iconSet size="1">iconsets/morgnthorg.png</iconSet>
+		<portrait>iconsets/MorgNThorg.png</portrait>
+		<iconSet size="1">iconsets/MorgNThorg.png</iconSet>
 		<skillList>
 			<skill>Loner</skill>
 			<skill>Block</skill>

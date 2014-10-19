@@ -18,8 +18,8 @@
 		<strength>3</strength>
 		<agility>3</agility>
 		<armour>8</armour>
-		<portrait>portraits/marauder.png</portrait>
-		<iconSet size="8">iconsets/marauder.png</iconSet>
+		<portrait>portraits/chaospact_marauder.png</portrait>
+		<iconSet size="8">iconsets/chaospact_marauder.png</iconSet>
 		<skillList></skillList>
 		<skillCategoryList>
 			<normal>Strength</normal>
@@ -41,8 +41,8 @@
 		<agility>3</agility>
 		<armour>7</armour>
 		<race>Goblin</race>
-		<portrait>portraits/gobrenegade.png</portrait>
-		<iconSet size="1">iconsets/gobrenegade.png</iconSet>
+		<portrait>portraits/chaospact_goblinrenegade.png</portrait>
+		<iconSet size="1">iconsets/chaospact_goblinrenegade.png</iconSet>
 		<skillList>
 			<skill>Animosity</skill>
 			<skill>Dodge</skill>
@@ -69,8 +69,8 @@
 		<agility>3</agility>
 		<armour>7</armour>
 		<race>Skaven</race>
-		<portrait>portraits/skaven.png</portrait>
-		<iconSet size="1">iconsets/skavenrenegade.png</iconSet>
+		<portrait>portraits/chaospact_skavenrenegade.png</portrait>
+		<iconSet size="1">iconsets/chaospact_skavenrenegade.png</iconSet>
 		<skillList>
 			<skill>Animosity</skill>
 		</skillList>
@@ -94,8 +94,8 @@
 		<agility>4</agility>
 		<armour>8</armour>
 		<race>Dark Elf</race>
-		<portrait>portraits/delfrenegade.png</portrait>
-		<iconSet size="1">iconsets/delfrenegade.png</iconSet>
+		<portrait>portraits/chaospact_darkelfrenegade.png</portrait>
+		<iconSet size="1">iconsets/chaospact_darkelfrenegade.png</iconSet>
 		<skillList>
 			<skill>Animosity</skill>
 		</skillList>
@@ -118,8 +118,8 @@
 		<strength>5</strength>
 		<agility>1</agility>
 		<armour>9</armour>
-		<portrait>portraits/pact_troll.png</portrait>
-		<iconSet size="1">iconsets/pact_troll.png</iconSet>
+		<portrait>portraits/chaospact_chaostroll.png</portrait>
+		<iconSet size="1">iconsets/chaospact_chaostroll.png</iconSet>
 		<skillList>
 			<skill>Always Hungry</skill>
 			<skill>Loner</skill>
@@ -147,8 +147,8 @@
 		<strength>5</strength>
 		<agility>2</agility>
 		<armour>9</armour>
-		<portrait>portraits/pact_ogre.png</portrait>
-		<iconSet size="1">iconsets/pact_ogre.png</iconSet>
+		<portrait>portraits/chaospact_chaosogre.png</portrait>
+		<iconSet size="1">iconsets/chaospact_chaosogre.png</iconSet>
 		<skillList>
 			<skill>Bone-head</skill>
 			<skill>Loner</skill>
@@ -175,8 +175,8 @@
 		<strength>5</strength>
 		<agility>2</agility>
 		<armour>8</armour>
-		<portrait>portraits/pact_minotaur.png</portrait>
-		<iconSet size="1">iconsets/pact_minotaur.png</iconSet>
+		<portrait>portraits/chaospact_minotaur.png</portrait>
+		<iconSet size="1">iconsets/chaospact_minotaur.png</iconSet>
 		<skillList>
 			<skill>Frenzy</skill>
 			<skill>Horns</skill>
@@ -204,8 +204,8 @@
 		<strength>2</strength>
 		<agility>3</agility>
 		<armour>7</armour>
-		<portrait></portrait>
-		<iconSet size="1">iconsets/Bomber_Dribblesnot.png</iconSet>
+		<portrait>portraits/BomberDribblesnot.png</portrait>
+		<iconSet size="1">iconsets/BomberDribblesnot.png</iconSet>
 		<skillList>
 			<skill>Loner</skill>
 			<skill>Accurate</skill>
@@ -228,7 +228,7 @@
 		<agility>3</agility>
 		<armour>8</armour>
 		<portrait></portrait>
-		<iconSet size="1">iconsets/Crazy_Igor.png</iconSet>
+		<iconSet size="1">iconsets/CrazyIgor.png</iconSet>
 		<skillList>
 			<skill>Loner</skill>
 			<skill>Dauntless</skill>
@@ -237,7 +237,7 @@
 		</skillList>
 	</position>
 
-	<position id="chaospact.Ithica">
+	<position id="chaospact.Ithaca">
 		<quantity>1</quantity>
 		<name>Ithaca Benoin</name>
 		<shorthand>IB</shorthand>
@@ -248,7 +248,7 @@
 		<agility>3</agility>
 		<armour>7</armour>
 		<portrait></portrait>
-		<iconSet size="1">iconsets/Ithaca_Benoin.png</iconSet>
+		<iconSet size="1">iconsets/IthacaBenoin.png</iconSet>
 		<skillList>
 			<skill>Loner</skill>
 			<skill>Accurate</skill>
@@ -270,8 +270,8 @@
 		<strength>4</strength>
 		<agility>3</agility>
 		<armour>9</armour>
-		<portrait></portrait>
-		<iconSet size="1">iconsets/Zzharg_Madeye.png</iconSet>
+		<portrait>portraits/ZzhargMadeye.png</portrait>
+		<iconSet size="1">iconsets/ZzhargMadeye.png</iconSet>
 		<skillList>
 			<skill>Loner</skill>
 			<skill>Hail Mary Pass</skill>
@@ -294,8 +294,8 @@
 		<strength>3</strength>
 		<agility>3</agility>
 		<armour>9</armour>
-		<portrait></portrait>
-		<iconSet size="1">iconsets/Ugroth_Bolgrot_b.png</iconSet>
+		<portrait>portraits/UgrothBolgrot.png</portrait>
+		<iconSet size="1">iconsets/UgrothBolgrot.png</iconSet>
 		<skillList>
 			<skill>Loner</skill>
 			<skill>Chainsaw</skill>
@@ -313,8 +313,8 @@
 		<strength>6</strength>
 		<agility>3</agility>
 		<armour>10</armour>
-		<portrait></portrait>
-		<iconSet size="1">iconsets/morgnthorg.png</iconSet>
+		<portrait>portraits/MorgNThorg.png</portrait>
+		<iconSet size="1">iconsets/MorgNThorg.png</iconSet>
 		<skillList>
 			<skill>Loner</skill>
 			<skill>Block</skill>

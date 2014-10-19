@@ -18,8 +18,8 @@
 		<strength>3</strength>
 		<agility>3</agility>
 		<armour>8</armour>
-		<portrait>portraits/slannlino.png</portrait>
-		<iconSet size="7">iconsets/slannlino.png</iconSet>
+		<portrait>portraits/slann_lineman.png</portrait>
+		<iconSet size="7">iconsets/slann_lineman.png</iconSet>
 		<skillList>
 			<skill>Leap</skill>
 			<skill>Very Long Legs</skill>
@@ -42,8 +42,8 @@
 		<strength>2</strength>
 		<agility>4</agility>
 		<armour>7</armour>
-		<portrait>portraits/slanncatcher.png</portrait>
-		<iconSet size="4">iconsets/slanncatcher.png</iconSet>
+		<portrait>portraits/slann_catcher.png</portrait>
+		<iconSet size="4">iconsets/slann_catcher.png</iconSet>
 		<skillList>
 			<skill>Diving Catch</skill>
 			<skill>Leap</skill>
@@ -67,8 +67,8 @@
 		<strength>3</strength>
 		<agility>3</agility>
 		<armour>8</armour>
-		<portrait>portraits/slannblitzer.png</portrait>
-		<iconSet size="4">iconsets/slannblitzer.png</iconSet>
+		<portrait>portraits/slann_blitzer.png</portrait>
+		<iconSet size="4">iconsets/slann_blitzer.png</iconSet>
 		<skillList>
 			<skill>Diving Tackle</skill>
 			<skill>Jump Up</skill>
@@ -93,8 +93,8 @@
 		<strength>5</strength>
 		<agility>1</agility>
 		<armour>9</armour>
-		<portrait>portraits/slannkrox.png</portrait>
-		<iconSet size="1">iconsets/slannkrox.png</iconSet>
+		<portrait>portraits/slann_kroxigor.png</portrait>
+		<iconSet size="1">iconsets/slann_kroxigor.png</iconSet>
 		<skillList>
 			<skill>Bone-head</skill>
 			<skill>Loner</skill>
@@ -120,8 +120,8 @@
 		<strength>3</strength>
 		<agility>3</agility>
 		<armour>8</armour>
-		<portrait></portrait>
-		<iconSet size="1">iconsets/Helmut_Wulf.png</iconSet>
+		<portrait>portraits/HelmutWulf.png</portrait>
+		<iconSet size="1">iconsets/HelmutWulf.png</iconSet>
 		<skillList>
 			<skill>Loner</skill>
 			<skill>Chainsaw</skill>
@@ -140,7 +140,7 @@
 		<strength>2</strength>
 		<agility>3</agility>
 		<armour>7</armour>
-		<portrait></portrait>
+		<portrait>portraits/Hemlock.png</portrait>
 		<iconSet size="1">iconsets/Hemlock.png</iconSet>
 		<skillList>
 			<skill>Loner</skill>
@@ -163,7 +163,7 @@
 		<strength>3</strength>
 		<agility>3</agility>
 		<armour>8</armour>
-		<portrait></portrait>
+		<portrait>portraits/Lottabottol.png</portrait>
 		<iconSet size="1">iconsets/Lottabottol.png</iconSet>
 		<skillList>
 			<skill>Loner</skill>
@@ -187,7 +187,7 @@
 		<strength>4</strength>
 		<agility>1</agility>
 		<armour>9</armour>
-		<portrait></portrait>
+		<portrait>portraits/Slibli.png</portrait>
 		<iconSet size="1">iconsets/Slibli.png</iconSet>
 		<skillList>
 			<skill>Loner</skill>
@@ -208,8 +208,8 @@
 		<strength>2</strength>
 		<agility>4</agility>
 		<armour>7</armour>
-		<portrait></portrait>
-		<iconSet size="1">iconsets/Quetzal_Leap.png</iconSet>
+		<portrait>portraits/QuetzalLeap.png</portrait>
+		<iconSet size="1">iconsets/QuetzalLeap.png</iconSet>
 		<skillList>
 			<skill>Loner</skill>
 			<skill>Catch</skill>
@@ -232,8 +232,8 @@
 		<strength>6</strength>
 		<agility>3</agility>
 		<armour>10</armour>
-		<portrait></portrait>
-		<iconSet size="1">iconsets/morgnthorg.png</iconSet>
+		<portrait>iconsets/MorgNThorg.png</portrait>
+		<iconSet size="1">iconsets/MorgNThorg.png</iconSet>
 		<skillList>
 			<skill>Loner</skill>
 			<skill>Block</skill>

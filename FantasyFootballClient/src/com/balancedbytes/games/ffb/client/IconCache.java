@@ -63,13 +63,17 @@ public class IconCache {
       return false;
     }
     String iconPath = fIconUrlProperties.getProperty(pIconUrl);
-    if (iconPath == null) {
+    boolean cached = StringTool.isProvided(iconPath);
+    if (!cached) {
       iconPath = pIconUrl;
     }
     if (!iconPath.startsWith("/")) {
       iconPath = "/" + iconPath;
     }
-    if (!iconPath.startsWith("/icons")) {
+    if (cached && !iconPath.startsWith("/icons/cached")) {
+      iconPath = "/icons/cached" + iconPath;
+    }
+    if (!cached && !iconPath.startsWith("/icons")) {
       iconPath = "/icons" + iconPath;
     }
     try {

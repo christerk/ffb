@@ -19,8 +19,8 @@
 		<agility>3</agility>
 		<armour>7</armour>
 		<race>Goblin</race>
-		<portrait>portraits/uwgoblin.png</portrait>
-		<iconSet size="6">iconsets/uwgoblin.png</iconSet>
+		<portrait>portraits/underworld_underworldgoblin.png</portrait>
+		<iconSet size="6">iconsets/underworld_underworldgoblin.png</iconSet>
 		<skillList>
 			<skill>Dodge</skill>
 			<skill>Right Stuff</skill>
@@ -46,8 +46,8 @@
 		<agility>3</agility>
 		<armour>7</armour>
 		<race>Skaven</race>
-		<portrait>portraits/uwlineman.png</portrait>
-		<iconSet size="3">iconsets/sklineman.png</iconSet>
+		<portrait>portraits/underworld_skavenlineman.png</portrait>
+		<iconSet size="3">iconsets/underworld_skavenlineman.png</iconSet>
 		<skillList>
 			<skill>Animosity</skill>
 		</skillList>
@@ -71,8 +71,8 @@
 		<agility>3</agility>
 		<armour>7</armour>
 		<race>Skaven</race>
-		<portrait>portraits/uwthrower.png</portrait>
-		<iconSet size="1">iconsets/skthrower.png</iconSet>
+		<portrait>portraits/underworld_skaventhrower.png</portrait>
+		<iconSet size="1">iconsets/underworld_skaventhrower.png</iconSet>
 		<skillList>
 			<skill>Animosity</skill>
 			<skill>Pass</skill>
@@ -98,8 +98,8 @@
 		<agility>3</agility>
 		<armour>8</armour>
 		<race>Skaven</race>
-		<portrait>portraits/uwblitzer.png</portrait>
-		<iconSet size="2">iconsets/skblitzer.png</iconSet>
+		<portrait>portraits/underworld_skavenblitzer.png</portrait>
+		<iconSet size="2">iconsets/underworld_skavenblitzer.png</iconSet>
 		<skillList>
 			<skill>Animosity</skill>
 			<skill>Block</skill>
@@ -123,8 +123,8 @@
 		<strength>5</strength>
 		<agility>1</agility>
 		<armour>9</armour>
-		<portrait>portraits/warptroll.png</portrait>
-		<iconSet size="1">iconsets/warptroll.png</iconSet>
+		<portrait>portraits/underworld_warpstonetroll.png</portrait>
+		<iconSet size="1">iconsets/underworld_warpstonetroll.png</iconSet>
 		<skillList>
 			<skill>Always Hungry</skill>
 			<skill>Loner</skill>
@@ -152,8 +152,8 @@
 		<strength>2</strength>
 		<agility>3</agility>
 		<armour>7</armour>
-		<portrait></portrait>
-		<iconSet size="1">iconsets/Bomber_Dribblesnot.png</iconSet>
+		<portrait>portraits/BomberDribblesnot.png</portrait>
+		<iconSet size="1">iconsets/BomberDribblesnot.png</iconSet>
 		<skillList>
 			<skill>Loner</skill>
 			<skill>Accurate</skill>
@@ -175,7 +175,7 @@
 		<strength>7</strength>
 		<agility>3</agility>
 		<armour>7</armour>
-		<portrait></portrait>
+		<portrait>portraits/Fezglitch.png</portrait>
 		<iconSet size="1">iconsets/Fezglitch.png</iconSet>
 		<skillList>
 			<skill>Loner</skill>
@@ -197,8 +197,8 @@
 		<strength>4</strength>
 		<agility>3</agility>
 		<armour>8</armour>
-		<portrait></portrait>
-		<iconSet size="1">iconsets/Glart_Smashrip_Jr.png</iconSet>
+		<portrait>portraits/GlartSmashripJr.png</portrait>
+		<iconSet size="1">iconsets/GlartSmashripJr.png</iconSet>
 		<skillList>
 			<skill>Loner</skill>
 			<skill>Block</skill>
@@ -217,8 +217,8 @@
 		<strength>2</strength>
 		<agility>3</agility>
 		<armour>7</armour>
-		<portrait></portrait>
-		<iconSet size="1">iconsets/Nobbla_Blackwart.png</iconSet>
+		<portrait>portraits/NobblaBlackwart.png</portrait>
+		<iconSet size="1">iconsets/NobblaBlackwart.png</iconSet>
 		<skillList>
 			<skill>Loner</skill>
 			<skill>Block</skill>
@@ -239,8 +239,8 @@
 		<strength>2</strength>
 		<agility>4</agility>
 		<armour>7</armour>
-		<portrait></portrait>
-		<iconSet size="1">iconsets/Skitter_Stab-Stab.png</iconSet>
+		<portrait>portraits/SkitterStabStab.png</portrait>
+		<iconSet size="1">iconsets/SkitterStabStab.png</iconSet>
 		<skillList>
 			<skill>Loner</skill>
 			<skill>Dodge</skill>
@@ -260,8 +260,8 @@
 		<strength>6</strength>
 		<agility>3</agility>
 		<armour>10</armour>
-		<portrait></portrait>
-		<iconSet size="1">iconsets/morgnthorg.png</iconSet>
+		<portrait>portraits/MorgNThorg.png</portrait>
+		<iconSet size="1">iconsets/MorgNThorg.png</iconSet>
 		<skillList>
 			<skill>Loner</skill>
 			<skill>Block</skill>

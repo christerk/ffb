@@ -17,8 +17,8 @@
 		<strength>3</strength>
 		<agility>2</agility>
 		<armour>9</armour>
-		<portrait>portraits/dlongbeard.png</portrait>
-		<iconSet size="6">iconsets/dlongbeard.png</iconSet>
+		<portrait>portraits/dwarf_blocker.png</portrait>
+		<iconSet size="6">iconsets/dwarf_blocker.png</iconSet>
 		<skillList>
 			<skill>Block</skill>
 			<skill>Tackle</skill>
@@ -41,8 +41,8 @@
 		<strength>3</strength>
 		<agility>3</agility>
 		<armour>9</armour>
-		<portrait>portraits/dblitzer.png</portrait>
-		<iconSet size="2">iconsets/dblitzer.png</iconSet>
+		<portrait>portraits/dwarf_blitzer.png</portrait>
+		<iconSet size="2">iconsets/dwarf_blitzer.png</iconSet>
 		<skillList>
 			<skill>Block</skill>
 			<skill>Thick Skull</skill>
@@ -64,8 +64,8 @@
 		<strength>3</strength>
 		<agility>3</agility>
 		<armour>8</armour>
-		<portrait>portraits/drunner.png</portrait>
-		<iconSet size="3">iconsets/drunner.png</iconSet>
+		<portrait>portraits/dwarf_runner.png</portrait>
+		<iconSet size="3">iconsets/dwarf_runner.png</iconSet>
 		<skillList>
 			<skill>Sure Hands</skill>
 			<skill>Thick Skull</skill>
@@ -87,8 +87,8 @@
 		<strength>3</strength>
 		<agility>2</agility>
 		<armour>8</armour>
-		<portrait>portraits/dslayer.png</portrait>
-		<iconSet size="2">iconsets/dslayer.png</iconSet>
+		<portrait>portraits/dwarf_trollslayer.png</portrait>
+		<iconSet size="2">iconsets/dwarf_trollslayer.png</iconSet>
 		<skillList>
 			<skill>Block</skill>
 			<skill>Dauntless</skill>
@@ -112,8 +112,8 @@
 		<strength>7</strength>
 		<agility>1</agility>
 		<armour>10</armour>
-		<portrait>portraits/ddeathroller.png</portrait>
-		<iconSet size="1">iconsets/ddeathroller.png</iconSet>
+		<portrait>portraits/dwarf_deathroller.png</portrait>
+		<iconSet size="1">iconsets/dwarf_deathroller.png</iconSet>
 		<skillList>
 			<skill>Break Tackle</skill>
 			<skill>Dirty Player</skill>
@@ -141,8 +141,8 @@
 		<strength>3</strength>
 		<agility>3</agility>
 		<armour>8</armour>
-		<portrait></portrait>
-		<iconSet size="1">iconsets/Barik_Farblast.png</iconSet>
+		<portrait>portraits/BarikFarblast.png</portrait>
+		<iconSet size="1">iconsets/BarikFarblast.png</iconSet>
 		<skillList>
 			<skill>Loner</skill>
 			<skill>Hail Mary Pass</skill>
@@ -164,8 +164,8 @@
 		<strength>3</strength>
 		<agility>2</agility>
 		<armour>9</armour>
-		<portrait></portrait>
-		<iconSet size="1">iconsets/Boomer_Eziasson.png</iconSet>
+		<portrait>portraits/BoomerEziasson.png</portrait>
+		<iconSet size="1">iconsets/BoomerEziasson.png</iconSet>
 		<skillList>
 			<skill>Loner</skill>
 			<skill>Accurate</skill>
@@ -186,8 +186,8 @@
 		<strength>3</strength>
 		<agility>2</agility>
 		<armour>8</armour>
-		<portrait></portrait>
-		<iconSet size="1">iconsets/Flint_Churnblade.png</iconSet>
+		<portrait>portraits/FlintChurnblade.png</portrait>
+		<iconSet size="1">iconsets/FlintChurnblade.png</iconSet>
 		<skillList>
 			<skill>Loner</skill>
 			<skill>Block</skill>
@@ -207,8 +207,8 @@
 		<strength>4</strength>
 		<agility>3</agility>
 		<armour>8</armour>
-		<portrait></portrait>
-		<iconSet size="1">iconsets/Grim_Ironjaw.png</iconSet>
+		<portrait>portraits/GrimIronjaw.png</portrait>
+		<iconSet size="1">iconsets/GrimIronjaw.png</iconSet>
 		<skillList>
 			<skill>Loner</skill>
 			<skill>Block</skill>
@@ -229,8 +229,8 @@
 		<strength>4</strength>
 		<agility>3</agility>
 		<armour>8</armour>
-		<portrait></portrait>
-		<iconSet size="1">iconsets/Zara_the_Slayer.png</iconSet>
+		<portrait>portraits/ZaraTheSlayer.png</portrait>
+		<iconSet size="1">iconsets/ZaraTheSlayer.png</iconSet>
 		<skillList>
 			<skill>Loner</skill>
 			<skill>Block</skill>
@@ -252,8 +252,8 @@
 		<strength>6</strength>
 		<agility>3</agility>
 		<armour>10</armour>
-		<portrait></portrait>
-		<iconSet size="1">iconsets/morgnthorg.png</iconSet>
+		<portrait>portraits/MorgNThorg.png</portrait>
+		<iconSet size="1">iconsets/MorgNThorg.png</iconSet>
 		<skillList>
 			<skill>Loner</skill>
 			<skill>Block</skill>

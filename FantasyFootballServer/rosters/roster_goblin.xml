@@ -17,8 +17,8 @@
 		<strength>2</strength>
 		<agility>3</agility>
 		<armour>7</armour>
-		<portrait>portraits/goblin.png</portrait>
-		<iconSet size="7">iconsets/goblin.png</iconSet>
+		<portrait>portraits/goblin_goblin.png</portrait>
+		<iconSet size="7">iconsets/goblin_goblin.png</iconSet>
 		<skillList>
 			<skill>Dodge</skill>
 			<skill>Right Stuff</skill>
@@ -42,8 +42,8 @@
 		<strength>5</strength>
 		<agility>1</agility>
 		<armour>9</armour>
-		<portrait>portraits/troll.png</portrait>
-		<iconSet size="3">iconsets/troll.png</iconSet>
+		<portrait>portraits/goblin_troll.png</portrait>
+		<iconSet size="3">iconsets/goblin_troll.png</iconSet>
 		<skillList>
 			<skill>Always Hungry</skill>
 			<skill>Loner</skill>
@@ -70,8 +70,8 @@
 		<strength>2</strength>
 		<agility>3</agility>
 		<armour>7</armour>
-		<portrait>portraits/gobombardier.png</portrait>
-		<iconSet size="2">iconsets/gobombardier.png</iconSet>
+		<portrait>portraits/goblin_bombardier.png</portrait>
+		<iconSet size="2">iconsets/goblin_bombardier.png</iconSet>
 		<skillList>
 			<skill>Bombardier</skill>
 			<skill>Dodge</skill>
@@ -96,8 +96,8 @@
 		<strength>2</strength>
 		<agility>3</agility>
 		<armour>7</armour>
-		<portrait>portraits/pogoer.png</portrait>
-		<iconSet size="2">iconsets/pogoer.png</iconSet>
+		<portrait>portraits/goblin_pogoer.png</portrait>
+		<iconSet size="2">iconsets/goblin_pogoer.png</iconSet>
 		<skillList>
 			<skill>Dodge</skill>
 			<skill>Leap</skill>
@@ -122,8 +122,8 @@
 		<strength>2</strength>
 		<agility>3</agility>
 		<armour>7</armour>
-		<portrait>portraits/looney.png</portrait>
-		<iconSet size="1">iconsets/looeney.png</iconSet>
+		<portrait>portraits/goblin_looney.png</portrait>
+		<iconSet size="1">iconsets/goblin_looney.png</iconSet>
 		<skillList>
 			<skill>Chainsaw</skill>
 			<skill>Secret Weapon</skill>
@@ -147,8 +147,8 @@
 		<strength>7</strength>
 		<agility>3</agility>
 		<armour>7</armour>
-		<portrait>portraits/fanatic.png</portrait>
-		<iconSet size="1">iconsets/fanatic.png</iconSet>
+		<portrait>portraits/goblin_fanatic.png</portrait>
+		<iconSet size="1">iconsets/goblin_fanatic.png</iconSet>
 		<skillList>
 			<skill>Ball and Chain</skill>
 			<skill>No Hands</skill>
@@ -173,8 +173,8 @@
 		<strength>2</strength>
 		<agility>3</agility>
 		<armour>7</armour>
-		<portrait></portrait>
-		<iconSet size="1">iconsets/Bomber_Dribblesnot.png</iconSet>
+		<portrait>portraits/BomberDribblesnot.png</portrait>
+		<iconSet size="1">iconsets/BomberDribblesnot.png</iconSet>
 		<skillList>
 			<skill>Loner</skill>
 			<skill>Accurate</skill>
@@ -196,8 +196,8 @@
 		<strength>7</strength>
 		<agility>3</agility>
 		<armour>7</armour>
-		<portrait></portrait>
-		<iconSet size="1">iconsets/Fungus.png</iconSet>
+		<portrait>portraits/FungusTheLoon.png</portrait>
+		<iconSet size="1">iconsets/FungusTheLoon.png</iconSet>
 		<skillList>
 			<skill>Loner</skill>
 			<skill>Ball and Chain</skill>
@@ -218,8 +218,8 @@
 		<strength>2</strength>
 		<agility>3</agility>
 		<armour>7</armour>
-		<portrait></portrait>
-		<iconSet size="1">iconsets/Nobbla_Blackwart.png</iconSet>
+		<portrait>portraits/NobblaBlackwart.png</portrait>
+		<iconSet size="1">iconsets/NobblaBlackwart.png</iconSet>
 		<skillList>
 			<skill>Loner</skill>
 			<skill>Block</skill>
@@ -240,8 +240,8 @@
 		<strength>2</strength>
 		<agility>3</agility>
 		<armour>7</armour>
-		<portrait></portrait>
-		<iconSet size="1">iconsets/Scrappa_Sorehead.png</iconSet>
+		<portrait>portraits/ScrappaSorehead.png</portrait>
+		<iconSet size="1">iconsets/ScrappaSorehead.png</iconSet>
 		<skillList>
 			<skill>Loner</skill>
 			<skill>Dirty Player</skill>
@@ -265,8 +265,8 @@
 		<strength>6</strength>
 		<agility>1</agility>
 		<armour>9</armour>
-		<portrait></portrait>
-		<iconSet size="1">iconsets/ripper.png</iconSet>
+		<portrait>portraits/Ripper.png</portrait>
+		<iconSet size="1">iconsets/Ripper.png</iconSet>
 		<skillList>
 			<skill>Loner</skill>
 			<skill>Grab</skill>
@@ -286,8 +286,8 @@
 		<strength>6</strength>
 		<agility>3</agility>
 		<armour>10</armour>
-		<portrait></portrait>
-		<iconSet size="1">iconsets/morgnthorg.png</iconSet>
+		<portrait>portraits/MorgNThorg.png</portrait>
+		<iconSet size="1">iconsets/MorgNThorg.png</iconSet>
 		<skillList>
 			<skill>Loner</skill>
 			<skill>Block</skill>

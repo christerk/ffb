@@ -17,8 +17,8 @@
 		<strength>5</strength>
 		<agility>1</agility>
 		<armour>9</armour>
-		<portrait>portraits/tomb_guardian.png</portrait>
-		<iconSet size="4">iconsets/tomb_guardian.png</iconSet>
+		<portrait>portraits/khemri_tombguardian.png</portrait>
+		<iconSet size="4">iconsets/khemri_tombguardian.png</iconSet>
 		<skillList>
 			<skill>Decay</skill>
 			<skill>Regeneration</skill>
@@ -40,8 +40,8 @@
 		<strength>3</strength>
 		<agility>2</agility>
 		<armour>8</armour>
-		<portrait>portraits/kmblitzer.png</portrait>
-		<iconSet size="2">iconsets/kmblitzer.png</iconSet>
+		<portrait>portraits/khemri_blitz-ra.png</portrait>
+		<iconSet size="2">iconsets/khemri_blitz-ra.png</iconSet>
 		<skillList>
 			<skill>Block</skill>
 			<skill>Regeneration</skill>
@@ -63,8 +63,8 @@
 		<strength>3</strength>
 		<agility>2</agility>
 		<armour>7</armour>
-		<portrait>portraits/kmthrower.png</portrait>
-		<iconSet size="2">iconsets/kmthrower.png</iconSet>
+		<portrait>portraits/khemri_throw-ra.png</portrait>
+		<iconSet size="2">iconsets/khemri_throw-ra.png</iconSet>
 		<skillList>
 			<skill>Pass</skill>
 			<skill>Regeneration</skill>
@@ -87,8 +87,8 @@
 		<strength>3</strength>
 		<agility>2</agility>
 		<armour>7</armour>
-		<portrait>portraits/kmskeleton.png</portrait>
-		<iconSet size="4">iconsets/kmskeleton.png</iconSet>
+		<portrait>portraits/khemri_skeleton.png</portrait>
+		<iconSet size="4">iconsets/khemri_skeleton.png</iconSet>
 		<skillList>
 			<skill>Regeneration</skill>
 			<skill>Thick Skull</skill>
@@ -111,7 +111,7 @@
 		<strength>3</strength>
 		<agility>2</agility>
 		<armour>7</armour>
-		<portrait></portrait>
+		<portrait>portraits/Sinnedbad.png</portrait>
 		<iconSet size="1">iconsets/Sinnedbad.png</iconSet>
 		<skillList>
 			<skill>Loner</skill>
@@ -135,8 +135,8 @@
 		<strength>3</strength>
 		<agility>2</agility>
 		<armour>7</armour>
-		<portrait></portrait>
-		<iconSet size="1">iconsets/Hack_Enslash.png</iconSet>
+		<portrait>portraits/HackEnslash.png</portrait>
+		<iconSet size="1">iconsets/HackEnslash.png</iconSet>
 		<skillList>
 			<skill>Loner</skill>
 			<skill>Chainsaw</skill>
@@ -157,7 +157,7 @@
 		<agility>3</agility>
 		<armour>7</armour>
 		<portrait></portrait>
-		<iconSet size="1">iconsets/Humerus_Carpal.png</iconSet>
+		<iconSet size="1">iconsets/HumerusCarpal.png</iconSet>
 		<skillList>
 			<skill>Loner</skill>
 			<skill>Catch</skill>
@@ -167,7 +167,7 @@
 		</skillList>
 	</position>
 
-	<position id="khemri.Ithica">
+	<position id="khemri.Ithaca">
 		<quantity>1</quantity>
 		<name>Ithaca Benoin</name>
 		<shorthand>IB</shorthand>
@@ -178,7 +178,7 @@
 		<agility>3</agility>
 		<armour>7</armour>
 		<portrait></portrait>
-		<iconSet size="1">iconsets/Ithaca_Benoin.png</iconSet>
+		<iconSet size="1">iconsets/IthacaBenoin.png</iconSet>
 		<skillList>
 			<skill>Loner</skill>
 			<skill>Accurate</skill>
@@ -200,7 +200,7 @@
 		<strength>4</strength>
 		<agility>2</agility>
 		<armour>8</armour>
-		<portrait></portrait>
+		<portrait>portraits/Setekh.png</portrait>
 		<iconSet size="1">iconsets/Setekh.png</iconSet>
 		<skillList>
 			<skill>Loner</skill>
@@ -222,8 +222,8 @@
 		<strength>6</strength>
 		<agility>1</agility>
 		<armour>9</armour>
-		<portrait></portrait>
-		<iconSet size="1">iconsets/Ramtut_III.png</iconSet>
+		<portrait>portraits/RamtutIII.png</portrait>
+		<iconSet size="1">iconsets/RamtutIII.png</iconSet>
 		<skillList>
 			<skill>Loner</skill>
 			<skill>Break Tackle</skill>

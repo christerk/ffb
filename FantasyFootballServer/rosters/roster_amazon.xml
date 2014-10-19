@@ -17,8 +17,8 @@
 		<strength>3</strength>
 		<agility>3</agility>
 		<armour>7</armour>
-		<portrait>portraits/amblitzer.png</portrait>
-		<iconSet size="4">iconsets/amblitzer.png</iconSet>
+		<portrait>portraits/amazon_blitzer.png</portrait>
+		<iconSet size="4">iconsets/amazon_blitzer.png</iconSet>
 		<skillList>
 			<skill>Dodge</skill>
 			<skill>Block</skill>
@@ -40,8 +40,8 @@
 		<strength>3</strength>
 		<agility>3</agility>
 		<armour>7</armour>
-		<portrait>portraits/amcatcher.png</portrait>
-		<iconSet size="2">iconsets/amcatcher.png</iconSet>
+		<portrait>portraits/amazon_catcher.png</portrait>
+		<iconSet size="2">iconsets/amazon_catcher.png</iconSet>
 		<skillList>
 			<skill>Dodge</skill>
 			<skill>Catch</skill>
@@ -63,8 +63,8 @@
 		<strength>3</strength>
 		<agility>3</agility>
 		<armour>7</armour>
-		<portrait>portraits/amthrower.png</portrait>
-		<iconSet size="2">iconsets/amthrower.png</iconSet>
+		<portrait>portraits/amazon_thrower.png</portrait>
+		<iconSet size="2">iconsets/amazon_thrower.png</iconSet>
 		<skillList>
 			<skill>Dodge</skill>
 			<skill>Pass</skill>
@@ -86,8 +86,8 @@
 		<strength>3</strength>
 		<agility>3</agility>
 		<armour>7</armour>
-		<portrait>portraits/amlineman.png</portrait>
-		<iconSet size="2">iconsets/amlineman.png</iconSet>
+		<portrait>portraits/amazon_linewoman.png</portrait>
+		<iconSet size="2">iconsets/amazon_linewoman.png</iconSet>
 		<skillList>
 			<skill>Dodge</skill>
 		</skillList>
@@ -109,8 +109,8 @@
 		<strength>3</strength>
 		<agility>3</agility>
 		<armour>8</armour>
-		<portrait></portrait>
-		<iconSet size="1">iconsets/Helmut_Wulf.png</iconSet>
+		<portrait>portraits/HelmutWulf.png</portrait>
+		<iconSet size="1">iconsets/HelmutWulf.png</iconSet>
 		<skillList>
 			<skill>Loner</skill>
 			<skill>Chainsaw</skill>
@@ -130,7 +130,7 @@
 		<agility>3</agility>
 		<armour>8</armour>
 		<portrait></portrait>
-		<iconSet size="1">iconsets/Willow_Rosebark.png</iconSet>
+		<iconSet size="1">iconsets/WillowRosebark.png</iconSet>
 		<skillList>
 			<skill>Loner</skill>
 			<skill>Dauntless</skill>
@@ -150,7 +150,7 @@
 		<agility>5</agility>
 		<armour>7</armour>
 		<portrait></portrait>
-		<iconSet size="1">iconsets/Roxanna_Darknail.png</iconSet>
+		<iconSet size="1">iconsets/RoxannaDarknail.png</iconSet>
 		<skillList>
 			<skill>Loner</skill>
 			<skill>Dodge</skill>
@@ -171,8 +171,8 @@
 		<strength>4</strength>
 		<agility>3</agility>
 		<armour>8</armour>
-		<portrait></portrait>
-		<iconSet size="1">iconsets/Zara_the_Slayer.png</iconSet>
+		<portrait>portraits/ZaraTheSlayer.png</portrait>
+		<iconSet size="1">iconsets/ZaraTheSlayer.png</iconSet>
 		<skillList>
 			<skill>Loner</skill>
 			<skill>Block</skill>
@@ -195,7 +195,7 @@
 		<agility>2</agility>
 		<armour>9</armour>
 		<portrait></portrait>
-		<iconSet size="1">iconsets/Bertha_Bigfist.png</iconSet>
+		<iconSet size="1">iconsets/BerthaBigfist.png</iconSet>
 		<skillList>
 			<skill>Loner</skill>
 			<skill>Bone-Head</skill>
@@ -217,8 +217,8 @@
 		<strength>6</strength>
 		<agility>3</agility>
 		<armour>10</armour>
-		<portrait></portrait>
-		<iconSet size="1">iconsets/morgnthorg.png</iconSet>
+		<portrait>portraits/MorgNThorg.png</portrait>
+		<iconSet size="1">iconsets/MorgNThorg.png</iconSet>
 		<skillList>
 			<skill>Loner</skill>
 			<skill>Block</skill>

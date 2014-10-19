@@ -17,8 +17,8 @@
 		<strength>3</strength>
 		<agility>3</agility>
 		<armour>7</armour>
-		<portrait>portraits/cdhobgoblin.png</portrait>
-		<iconSet size="4">iconsets/cdhobgoblin1.png</iconSet>
+		<portrait>portraits/chaosdwarf_hobgoblin.png</portrait>
+		<iconSet size="4">iconsets/chaosdwarf_hobgoblin.png</iconSet>
 		<skillList></skillList>
 		<skillCategoryList>
 			<normal>General</normal>
@@ -37,8 +37,8 @@
 		<strength>3</strength>
 		<agility>2</agility>
 		<armour>9</armour>
-		<portrait>portraits/cddwarf.png</portrait>
-		<iconSet size="6">iconsets/cddwarf.png</iconSet>
+		<portrait>portraits/chaosdwarf_chaosdwarfblocker.png</portrait>
+		<iconSet size="6">iconsets/chaosdwarf_chaosdwarfblocker.png</iconSet>
 		<skillList>
 			<skill>Block</skill>
 			<skill>Tackle</skill>
@@ -62,8 +62,8 @@
 		<strength>4</strength>
 		<agility>2</agility>
 		<armour>9</armour>
-		<portrait>portraits/cdcentaur.png</portrait>
-		<iconSet size="2">iconsets/cdcentaur.png</iconSet>
+		<portrait>portraits/chaosdwarf_bullcentaur.png</portrait>
+		<iconSet size="2">iconsets/chaosdwarf_bullcentaur.png</iconSet>
 		<skillList>
 			<skill>Sprint</skill>
 			<skill>Sure Feet</skill>
@@ -86,8 +86,8 @@
 		<strength>5</strength>
 		<agility>2</agility>
 		<armour>8</armour>
-		<portrait>portraits/cdminotaur.png</portrait>
-		<iconSet size="1">iconsets/cdminotaur.png</iconSet>
+		<portrait>portraits/chaosdwarf_minotaur.png</portrait>
+		<iconSet size="1">iconsets/chaosdwarf_minotaur.png</iconSet>
 		<skillList>
 			<skill>Loner</skill>
 			<skill>Frenzy</skill>
@@ -115,8 +115,8 @@
 		<strength>4</strength>
 		<agility>3</agility>
 		<armour>9</armour>
-		<portrait></portrait>
-		<iconSet size="1">iconsets/Zzharg_Madeye.png</iconSet>
+		<portrait>portraits/ZzhargMadeye.png</portrait>
+		<iconSet size="1">iconsets/ZzhargMadeye.png</iconSet>
 		<skillList>
 			<skill>Loner</skill>
 			<skill>Hail Mary Pass</skill>
@@ -139,8 +139,8 @@
 		<strength>2</strength>
 		<agility>3</agility>
 		<armour>7</armour>
-		<portrait></portrait>
-		<iconSet size="1">iconsets/Nobbla_Blackwart.png</iconSet>
+		<portrait>portraits/NobblaBlackwart.png</portrait>
+		<iconSet size="1">iconsets/NobblaBlackwart.png</iconSet>
 		<skillList>
 			<skill>Loner</skill>
 			<skill>Block</skill>
@@ -161,8 +161,8 @@
 		<strength>3</strength>
 		<agility>3</agility>
 		<armour>7</armour>
-		<portrait></portrait>
-		<iconSet size="1">iconsets/Rashnak_Backstabber.png</iconSet>
+		<portrait>portraits/RashnakBackstabber.png</portrait>
+		<iconSet size="1">iconsets/RashnakBackstabber.png</iconSet>
 		<skillList>
 			<skill>Loner</skill>
 			<skill>Dodge</skill>
@@ -182,8 +182,8 @@
 		<strength>6</strength>
 		<agility>2</agility>
 		<armour>8</armour>
-		<portrait></portrait>
-		<iconSet size="1">iconsets/grashnak.png</iconSet>
+		<portrait>portraits/GrashnakBlackhoof.png</portrait>
+		<iconSet size="1">iconsets/GrashnakBlackhoof.png</iconSet>
 		<skillList>
 			<skill>Loner</skill>
 			<skill>Frenzy</skill>
@@ -203,8 +203,8 @@
 		<strength>5</strength>
 		<agility>2</agility>
 		<armour>9</armour>
-		<portrait></portrait>
-		<iconSet size="1">iconsets/Hthark.png</iconSet>
+		<portrait>portraits/HtharkTheUnstoppable.png</portrait>
+		<iconSet size="1">iconsets/HtharkTheUnstoppable.png</iconSet>
 		<skillList>
 			<skill>Loner</skill>
 			<skill>Block</skill>
@@ -226,8 +226,8 @@
 		<strength>6</strength>
 		<agility>3</agility>
 		<armour>10</armour>
-		<portrait></portrait>
-		<iconSet size="1">iconsets/morgnthorg.png</iconSet>
+		<portrait>portraits/MorgNThorg.png</portrait>
+		<iconSet size="1">iconsets/MorgNThorg.png</iconSet>
 		<skillList>
 			<skill>Loner</skill>
 			<skill>Block</skill>

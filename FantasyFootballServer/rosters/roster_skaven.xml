@@ -17,8 +17,8 @@
 		<strength>5</strength>
 		<agility>2</agility>
 		<armour>8</armour>
-		<portrait>portraits/ratogre.png</portrait>
-		<iconSet size="1">iconsets/ratogre.png</iconSet>
+		<portrait>portraits/skaven_ratogre.png</portrait>
+		<iconSet size="1">iconsets/skaven_ratogre.png</iconSet>
 		<skillList>
 			<skill>Loner</skill>
 			<skill>Frenzy</skill>
@@ -44,8 +44,8 @@
 		<strength>3</strength>
 		<agility>3</agility>
 		<armour>8</armour>
-		<portrait>portraits/skblitzer.png</portrait>
-		<iconSet size="2">iconsets/skblitzer.png</iconSet>
+		<portrait>portraits/skaven_blitzer.png</portrait>
+		<iconSet size="2">iconsets/skaven_blitzer.png</iconSet>
 		<skillList>
 			<skill>Block</skill>
 		</skillList>
@@ -67,8 +67,8 @@
 		<strength>2</strength>
 		<agility>4</agility>
 		<armour>7</armour>
-		<portrait>portraits/skrunner.png</portrait>
-		<iconSet size="4">iconsets/skrunner.png</iconSet>
+		<portrait>portraits/skaven_gutterrunner.png</portrait>
+		<iconSet size="4">iconsets/skaven_gutterrunner.png</iconSet>
 		<skillList>
 			<skill>Dodge</skill>
 		</skillList>
@@ -90,8 +90,8 @@
 		<strength>3</strength>
 		<agility>3</agility>
 		<armour>7</armour>
-		<portrait>portraits/skthrower.png</portrait>
-		<iconSet size="1">iconsets/skthrower.png</iconSet>
+		<portrait>portraits/skaven_thrower.png</portrait>
+		<iconSet size="1">iconsets/skaven_thrower.png</iconSet>
 		<skillList>
 			<skill>Pass</skill>
 			<skill>Sure Hands</skill>
@@ -114,8 +114,8 @@
 		<strength>3</strength>
 		<agility>3</agility>
 		<armour>7</armour>
-		<portrait>portraits/sklineman.png</portrait>
-		<iconSet size="3">iconsets/sklineman.png</iconSet>
+		<portrait>portraits/skaven_lineman.png</portrait>
+		<iconSet size="3">iconsets/skaven_lineman.png</iconSet>
 		<skillList></skillList>
 		<skillCategoryList>
 			<normal>General</normal>
@@ -136,7 +136,7 @@
 		<strength>7</strength>
 		<agility>3</agility>
 		<armour>7</armour>
-		<portrait></portrait>
+		<portrait>portraits/Fezglitch.png</portrait>
 		<iconSet size="1">iconsets/Fezglitch.png</iconSet>
 		<skillList>
 			<skill>Loner</skill>
@@ -158,8 +158,8 @@
 		<strength>4</strength>
 		<agility>3</agility>
 		<armour>8</armour>
-		<portrait></portrait>
-		<iconSet size="1">iconsets/Glart_Smashrip_Jr.png</iconSet>
+		<portrait>portraits/GlartSmashripJr.png</portrait>
+		<iconSet size="1">iconsets/GlartSmashripJr.png</iconSet>
 		<skillList>
 			<skill>Loner</skill>
 			<skill>Block</skill>
@@ -178,8 +178,8 @@
 		<strength>3</strength>
 		<agility>4</agility>
 		<armour>7</armour>
-		<portrait></portrait>
-		<iconSet size="1">iconsets/hakflem.png</iconSet>
+		<portrait>portraits/HakflemSkuttlespike.png</portrait>
+		<iconSet size="1">iconsets/HakflemSkuttlespike.png</iconSet>
 		<skillList>
 			<skill>Loner</skill>
 			<skill>Dodge</skill>
@@ -199,8 +199,8 @@
 		<strength>2</strength>
 		<agility>4</agility>
 		<armour>7</armour>
-		<portrait></portrait>
-		<iconSet size="1">iconsets/Skitter_Stab-Stab.png</iconSet>
+		<portrait>portraits/SkitterStabStab.png</portrait>
+		<iconSet size="1">iconsets/SkitterStabStab.png</iconSet>
 		<skillList>
 			<skill>Loner</skill>
 			<skill>Dodge</skill>
@@ -220,8 +220,8 @@
 		<strength>6</strength>
 		<agility>3</agility>
 		<armour>8</armour>
-		<portrait></portrait>
-		<iconSet size="1">iconsets/headsplitter.png</iconSet>
+		<portrait>portraits/Headsplitter.png</portrait>
+		<iconSet size="1">iconsets/Headsplitter.png</iconSet>
 		<skillList>
 			<skill>Loner</skill>
 			<skill>Frenzy</skill>
@@ -240,8 +240,8 @@
 		<strength>6</strength>
 		<agility>3</agility>
 		<armour>10</armour>
-		<portrait></portrait>
-		<iconSet size="1">iconsets/morgnthorg.png</iconSet>
+		<portrait>portraits/MorgNThorg.png</portrait>
+		<iconSet size="1">iconsets/MorgNThorg.png</iconSet>
 		<skillList>
 			<skill>Loner</skill>
 			<skill>Block</skill>
