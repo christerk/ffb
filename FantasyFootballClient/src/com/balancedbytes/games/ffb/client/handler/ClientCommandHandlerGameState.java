@@ -58,9 +58,8 @@ public class ClientCommandHandlerGameState extends ClientCommandHandler implemen
       addIconUrl(iconUrls, PlayerIconFactory.getIconSetUrl(player));
     }
     
-    for (Weather weather : Weather.values()) {
-      addIconUrl(iconUrls, IconCache.findCustomPitchUrl(game, weather));
-    }
+    // loading one pitch weather caches the full set 
+    addIconUrl(iconUrls, iconCache.findPitchUrl(Weather.NICE));
 
     Set<String> iconUrlsToDownload = new HashSet<String>();
     for (String iconUrl : iconUrls) {

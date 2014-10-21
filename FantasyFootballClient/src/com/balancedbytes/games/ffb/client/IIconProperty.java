@@ -6,14 +6,6 @@ package com.balancedbytes.games.ffb.client;
  */
 public interface IIconProperty {
 
-  // Pitches
-  String PITCH_BLIZZARD = "pitch.blizzard";
-  String PITCH_HEAT = "pitch.heat";
-  String PITCH_INTRO = "pitch.intro";
-  String PITCH_NICE = "pitch.nice";
-  String PITCH_RAIN = "pitch.rain";
-  String PITCH_SUNNY = "pitch.sunny";
-  
   // Player decorations
   String DECORATION_PRONE = "decoration.prone";
   String DECORATION_STUNNED = "decoration.stunned";
@@ -232,5 +224,10 @@ public interface IIconProperty {
   String ANIMATION_CARD_DIRTY_TRICK_BACK = "animation.card.dirtyTrick.back";
   String ANIMATION_CARD_MAGIC_ITEM_FRONT = "animation.card.magicItem.front";
   String ANIMATION_CARD_MAGIC_ITEM_BACK = "animation.card.magicItem.back";
- 
+
+  // Pitches
+  String PITCH_INTRO  = "pitch.intro";
+  String PITCH_URL_DEFAULT = "pitch.url.default";
+  String PITCH_URL_BASIC = "pitch.url.basic";
+
 }

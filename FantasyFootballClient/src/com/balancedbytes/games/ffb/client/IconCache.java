@@ -5,10 +5,15 @@ import java.io.BufferedInputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 
 import javax.imageio.ImageIO;
 
@@ -17,10 +22,9 @@ import com.balancedbytes.games.ffb.DiceDecoration;
 import com.balancedbytes.games.ffb.PlayerState;
 import com.balancedbytes.games.ffb.PushbackSquare;
 import com.balancedbytes.games.ffb.Weather;
-import com.balancedbytes.games.ffb.model.Game;
+import com.balancedbytes.games.ffb.WeatherFactory;
 import com.balancedbytes.games.ffb.model.Team;
 import com.balancedbytes.games.ffb.option.GameOptionId;
-import com.balancedbytes.games.ffb.option.IGameOption;
 import com.balancedbytes.games.ffb.util.StringTool;
 import com.balancedbytes.games.ffb.util.UtilUrl;
 
@@ -33,18 +37,22 @@ public class IconCache {
 
   private static final String _ICONS_INI = "icons.ini";
   
-  private Map<String,BufferedImage> fIconByKey;
+  private static final String _PITCH_INI = "pitch.ini";
+  
+  private static final Pattern _PATTERN_PITCH = Pattern.compile("\\?pitch=([a-z]+)$");
+  
+  private Map<String, BufferedImage> fIconByKey;
   
   private Properties fIconUrlProperties;
     
-  private Map<String,Integer> fCurrentIndexPerKey;
+  private Map<String, Integer> fCurrentIndexPerKey;
   
   private FantasyFootballClient fClient;
   
   public IconCache(FantasyFootballClient pClient) {
     fClient = pClient;
-    fIconByKey = new HashMap<String,BufferedImage>();
-    fCurrentIndexPerKey = new HashMap<String,Integer>();
+    fIconByKey = new HashMap<String, BufferedImage>();
+    fCurrentIndexPerKey = new HashMap<String, Integer>();
   }
   
   public void init() {
@@ -58,14 +66,23 @@ public class IconCache {
     }
   }
   
-  public boolean loadIconFromArchive(String pIconUrl) {
-    if (!StringTool.isProvided(pIconUrl)) {
+  public boolean loadIconFromArchive(String pUrl) {
+    
+    if (!StringTool.isProvided(pUrl)) {
       return false;
     }
-    String iconPath = fIconUrlProperties.getProperty(pIconUrl);
+    
+    String myUrl = pUrl;
+    Weather pitchWeather = findPitchWeather(myUrl);
+    if (pitchWeather != null) {
+      myUrl = myUrl.substring(0, myUrl.length() - 7 - pitchWeather.getShortName().length());
+    }
+    
+    String iconPath = fIconUrlProperties.getProperty(myUrl);
     boolean cached = StringTool.isProvided(iconPath);
+
     if (!cached) {
-      iconPath = pIconUrl;
+      iconPath = myUrl;
     }
     if (!iconPath.startsWith("/")) {
       iconPath = "/" + iconPath;
@@ -76,20 +93,27 @@ public class IconCache {
     if (!cached && !iconPath.startsWith("/icons")) {
       iconPath = "/icons" + iconPath;
     }
+    
     try {
       InputStream iconInputStream = getClass().getResourceAsStream(iconPath);
       if (iconInputStream != null) {
-        BufferedImage icon = ImageIO.read(iconInputStream);
-        iconInputStream.close();
-        if (icon != null) {
-          fIconByKey.put(pIconUrl, icon);
-          return true;
+        if (pitchWeather != null) {
+          loadPitchFromStream(new ZipInputStream(iconInputStream), myUrl);
+        } else {
+          BufferedImage icon = ImageIO.read(iconInputStream);
+          iconInputStream.close();
+          if (icon != null) {
+            fIconByKey.put(pUrl, icon);
+            return true;
+          }
         }
       }
     } catch (IOException ioe) {
       // just skip precaching
     }
+    
     return false;
+    
   }
 
   public BufferedImage getIconByProperty(String pIconProperty) {
@@ -104,21 +128,48 @@ public class IconCache {
     return icon;
   }
   
-  public BufferedImage getIconByUrl(String pIconUrl) {
-    return fIconByKey.get(pIconUrl);
+  public BufferedImage getIconByUrl(String pUrl) {
+    return fIconByKey.get(pUrl);
   }
   
-  public void loadIconFromUrl(String pIconUrl) {
-    URL fullIconUrl = null;
-    try {
-      fullIconUrl = new URL(pIconUrl);
-      BufferedImage icon = ImageIO.read(fullIconUrl);
-      fIconByKey.put(pIconUrl, icon);
-    } catch (IOException ioe) {
-      getClient().getUserInterface().getStatusReport().reportIconLoadFailure(fullIconUrl);
-    } catch (Exception _) { // This should catch issues where the image is broken...
-      getClient().getUserInterface().getStatusReport().reportIconLoadFailure(fullIconUrl);
+  public BufferedImage getPitch(Weather pWeather) {
+    if (pWeather == Weather.INTRO) {
+      return getIconByProperty(IIconProperty.PITCH_INTRO);
+    } else {
+      return getIconByUrl(findPitchUrl(pWeather));
     }
+  }
+  
+  public void loadIconFromUrl(String pUrl) {
+    
+    if (!StringTool.isProvided(pUrl)) {
+      return;
+    }
+    
+    Weather weather = findPitchWeather(pUrl);
+    if (weather != null) {
+      loadPitchFromUrl(pUrl.substring(0, pUrl.length() - 7 - weather.getShortName().length()));
+    
+    } else {
+      URL iconUrl = null;
+      try {
+        iconUrl = new URL(pUrl);
+        BufferedImage icon = ImageIO.read(iconUrl);
+        fIconByKey.put(pUrl, icon);
+      } catch (Exception pAny) {
+        // This should catch issues where the image is broken...
+        getClient().getUserInterface().getStatusReport().reportIconLoadFailure(iconUrl);
+      }
+    }
+    
+  }
+  
+  private Weather findPitchWeather(String pUrl) {
+    Matcher pitchMatcher = _PATTERN_PITCH.matcher(pUrl);
+    if (pitchMatcher.find()) {
+      return new WeatherFactory().forShortName(pitchMatcher.group(1));
+    }
+    return null;
   }
   
   public String getNextProperty(String pIconProperty) {
@@ -230,34 +281,71 @@ public class IconCache {
     return getIconByProperty(iconProperty);
   }
   
-  public BufferedImage getIcon(Weather pWeather) {
-    if (pWeather == null) {
-      return null;
-    }
+  public String findPitchUrl(Weather pWeather) {
     Weather myWeather = pWeather;
     if (IClientPropertyValue.SETTING_PITCH_WEATHER_OFF.equals(getClient().getProperty(IClientProperty.SETTING_PITCH_WEATHER))) {
-      myWeather = (pWeather == Weather.INTRO) ? Weather.INTRO : Weather.NICE;
+      myWeather = Weather.NICE;
     }
-    String customPitchUrl = findCustomPitchUrl(getClient().getGame(), myWeather);
-    if ((myWeather == Weather.INTRO)
-      || !StringTool.isProvided(customPitchUrl)
-      || IClientPropertyValue.SETTING_PITCH_DEFAULT.equals(getClient().getProperty(IClientProperty.SETTING_PITCH_CUSTOMIZATION))) {
-      switch (myWeather) {
-        case BLIZZARD:
-          return getIconByProperty(IIconProperty.PITCH_BLIZZARD);
-        case NICE:
-          return getIconByProperty(IIconProperty.PITCH_NICE);
-        case POURING_RAIN:
-          return getIconByProperty(IIconProperty.PITCH_RAIN);
-        case SWELTERING_HEAT:
-          return getIconByProperty(IIconProperty.PITCH_HEAT);
-        case VERY_SUNNY:
-          return getIconByProperty(IIconProperty.PITCH_SUNNY);
-        default:
-          return getIconByProperty(IIconProperty.PITCH_INTRO);
+    String pitchUrl = getClient().getGame().getOptions().getOptionWithDefault(GameOptionId.PITCH_URL).getValueAsString();
+    if (!StringTool.isProvided(pitchUrl) || IClientPropertyValue.SETTING_PITCH_DEFAULT.equals(getClient().getProperty(IClientProperty.SETTING_PITCH_CUSTOMIZATION))) {
+      pitchUrl = getClient().getProperty(IIconProperty.PITCH_URL_DEFAULT);
+    }
+    if (IClientPropertyValue.SETTING_PITCH_BASIC.equals(getClient().getProperty(IClientProperty.SETTING_PITCH_CUSTOMIZATION))) {
+      pitchUrl = getClient().getProperty(IIconProperty.PITCH_URL_BASIC);
+    }
+    return buildPitchUrl(pitchUrl, myWeather);
+  }
+  
+  private String buildPitchUrl(String pUrl, Weather pWeather) {
+    if (!StringTool.isProvided(pUrl) || (pWeather == null)) {
+      return null;
+    }
+    return pUrl + "?pitch=" + pWeather.getShortName();
+  }
+  
+  private void loadPitchFromUrl(String pUrl) {
+    URL pitchUrl = null;
+    try {
+      pitchUrl = new URL(pUrl);
+      HttpURLConnection connection = (HttpURLConnection) pitchUrl.openConnection();
+      connection.setRequestMethod("GET");
+      loadPitchFromStream(new ZipInputStream(connection.getInputStream()), pUrl);
+    } catch (Exception pAny) {
+      // This should catch issues where the image is broken...
+      getClient().getUserInterface().getStatusReport().reportIconLoadFailure(pitchUrl);
+    }
+  }
+  
+  private void loadPitchFromStream(ZipInputStream pZipIn, String pUrl) {
+    URL pitchUrl = null;
+    try {
+      pitchUrl = new URL(pUrl);
+      Properties pitchProperties = new Properties();
+      Map<String, BufferedImage> iconByName = new HashMap<String, BufferedImage>();
+      ZipEntry entry = null;
+      while ((entry = pZipIn.getNextEntry()) != null) {
+        if (_PITCH_INI.equals(entry.getName())) {
+          pitchProperties.load(pZipIn);
+        } else {
+          iconByName.put(entry.getName(), ImageIO.read(pZipIn));
+        }
       }
+      pZipIn.close();
+      for (Weather weather : Weather.values()) {
+        String iconName = pitchProperties.getProperty(weather.getShortName());
+        if (!StringTool.isProvided(iconName)) { 
+          continue;
+        }
+        BufferedImage pitchIcon = iconByName.get(iconName);
+        if (pitchIcon == null) {
+          continue;
+        }
+        fIconByKey.put(buildPitchUrl(pUrl, weather), pitchIcon);
+      }
+    } catch (Exception pAny) {
+      // This should catch issues where the image is broken...
+      getClient().getUserInterface().getStatusReport().reportIconLoadFailure(pitchUrl);
     }
-    return getIconByUrl(customPitchUrl);
   }
     
   public BufferedImage getIcon(DiceDecoration pDiceDecoration) {
@@ -314,37 +402,6 @@ public class IconCache {
       }
     }
     return iconUrl;
-  }
-  
-  public static String findCustomPitchUrl(Game pGame, Weather pWeather) {
-    if ((pGame == null) || (pWeather == null)) {
-      return null;
-    }
-    IGameOption pitchUrlOption = null;
-    switch (pWeather) {
-      case BLIZZARD:
-        pitchUrlOption = pGame.getOptions().getOption(GameOptionId.PITCH_URL_BLIZZARD);
-        break;
-      case NICE:
-        pitchUrlOption = pGame.getOptions().getOption(GameOptionId.PITCH_URL_NICE);
-        break;
-      case POURING_RAIN:
-        pitchUrlOption = pGame.getOptions().getOption(GameOptionId.PITCH_URL_RAIN);
-        break;
-      case SWELTERING_HEAT:
-        pitchUrlOption = pGame.getOptions().getOption(GameOptionId.PITCH_URL_HEAT);
-        break;
-      case VERY_SUNNY:
-        pitchUrlOption = pGame.getOptions().getOption(GameOptionId.PITCH_URL_SUNNY);
-        break;
-      default:
-        // PitchUrlOption remains null
-        break;
-    }
-    if (pitchUrlOption != null) {
-      return pitchUrlOption.getValueAsString();
-    }
-    return null;
   }
   
   public FantasyFootballClient getClient() {

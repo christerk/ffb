@@ -260,8 +260,12 @@ public class GameCache {
     // add new pitch properties
     String[] pitchKeys = pitchProperties.keySet().toArray(new String[pitchProperties.size()]);
     for (String pitchKey : pitchKeys) {
-      StringBuilder serverKey = new StringBuilder().append(_PITCH_PROPERTY_PREFIX).append(pitchKey);
-      getServer().setProperty(serverKey.toString(), (String) pitchProperties.get(pitchKey));
+      String pitchUrl = pitchProperties.getProperty(pitchKey);
+      if (!pitchKey.startsWith(_PITCH_PROPERTY_PREFIX)) {
+        getServer().setProperty(_PITCH_PROPERTY_PREFIX + pitchKey, pitchUrl);
+      } else {
+        getServer().setProperty(pitchKey, pitchUrl);
+      }
     }
   }
   

@@ -28,7 +28,7 @@ public class FieldLayerPitch extends FieldLayer {
   public void drawWeather(Weather pWeather) {
     if (pWeather != null) {
       IconCache iconCache = getClient().getUserInterface().getIconCache();
-      BufferedImage fieldImage = iconCache.getIcon(pWeather);
+      BufferedImage fieldImage = iconCache.getPitch(pWeather);
       draw(fieldImage, 0, 0, 1.0f);
       drawTeamNames();
     }

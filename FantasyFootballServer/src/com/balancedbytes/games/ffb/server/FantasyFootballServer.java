@@ -9,7 +9,6 @@ import java.util.Properties;
 import java.util.Timer;
 
 import org.eclipse.jetty.server.Server;
-import org.eclipse.jetty.servlet.DefaultServlet;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
 
@@ -22,6 +21,7 @@ import com.balancedbytes.games.ffb.server.db.DbUpdateFactory;
 import com.balancedbytes.games.ffb.server.db.old.DbConversion;
 import com.balancedbytes.games.ffb.server.handler.ServerCommandHandlerFactory;
 import com.balancedbytes.games.ffb.server.net.CommandServlet;
+import com.balancedbytes.games.ffb.server.net.FileServlet;
 import com.balancedbytes.games.ffb.server.net.ServerCommunication;
 import com.balancedbytes.games.ffb.server.net.ServerPingTask;
 import com.balancedbytes.games.ffb.server.net.SessionManager;
@@ -160,15 +160,13 @@ public class FantasyFootballServer {
           context.setContextPath("/");
           server.setHandler(context);
           File httpDir = new File(httpDirProperty);
-//          ServletHolder holder = context.addServlet(DefaultServlet.class, "/icons/*");
-//          holder.setInitParameter("resourceBase", new File(httpDir, "icons").getAbsolutePath());
-//          holder.setInitParameter("pathInfoOnly", "true");
           context.addServlet(new ServletHolder(new AdminServlet(this)), "/admin/*");
           context.addServlet(new ServletHolder(new BackupServlet(this)), "/backup/*");
           context.addServlet(new ServletHolder(new CommandServlet(this)), "/command/*");
-          ServletHolder holder = context.addServlet(DefaultServlet.class, "/*");
-          holder.setInitParameter("resourceBase", httpDir.getAbsolutePath());
-          holder.setInitParameter("pathInfoOnly", "true");
+          ServletHolder fileServletHolder = new ServletHolder(new FileServlet(this));
+          fileServletHolder.setInitParameter("resourceBase", httpDir.getAbsolutePath());
+          fileServletHolder.setInitParameter("pathInfoOnly", "true");
+          context.addServlet(fileServletHolder, "/*");
           server.start();
         }
         

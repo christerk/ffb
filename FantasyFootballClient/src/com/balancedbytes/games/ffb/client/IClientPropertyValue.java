@@ -23,6 +23,7 @@ public interface IClientPropertyValue {
 
   String SETTING_PITCH_CUSTOM = "pitchCustom";
   String SETTING_PITCH_DEFAULT = "pitchDefault";
+  String SETTING_PITCH_BASIC = "pitchBasic";
 
   String SETTING_PITCH_MARKINGS_ON = "pitchMarkingsOn";
   String SETTING_PITCH_MARKINGS_OFF = "pitchMarkingsOff";

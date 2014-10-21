@@ -291,16 +291,19 @@ public class DebugLog {
     headerBuffer.append(" ");
     String header = headerBuffer.toString();
     StringTokenizer tokenizer = new StringTokenizer(pLogString, "\r\n");
-    while (tokenizer.hasMoreTokens()) {
-      String line = tokenizer.nextToken();
-      fOut.print(header);
-      fOut.println(line);
-      fOut.flush();
-      fSize += header.length() + line.length() + 1;
-    }
-    if (getSize() >= FILE_SIZE_LIMIT) {
-      close();
-      openNewLogFile();
+    // write synchronized to the log, create a new one if necessary 
+    synchronized (this) {
+      while (tokenizer.hasMoreTokens()) {
+        String line = tokenizer.nextToken();
+        fOut.print(header);
+        fOut.println(line);
+        fOut.flush();
+        fSize += header.length() + line.length() + 1;
+      }
+      if (getSize() >= FILE_SIZE_LIMIT) {
+        close();
+        openNewLogFile();
+      }
     }
   }
   

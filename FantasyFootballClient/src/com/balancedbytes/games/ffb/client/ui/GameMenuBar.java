@@ -120,6 +120,7 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
   private JMenu fPitchCustomizationMenu;
   private JRadioButtonMenuItem fCustomPitchMenuItem;
   private JRadioButtonMenuItem fDefaultPitchMenuItem;
+  private JRadioButtonMenuItem fBasicPitchMenuItem;
   
   private JMenu fPitchMarkingsMenu;
   private JRadioButtonMenuItem fPitchMarkingsOnMenuItem;
@@ -329,7 +330,12 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
     fDefaultPitchMenuItem.addActionListener(this);
     pitchCustomGroup.add(fDefaultPitchMenuItem);
     fPitchCustomizationMenu.add(fDefaultPitchMenuItem);
-    
+
+    fBasicPitchMenuItem = new JRadioButtonMenuItem("Use Basic Pitch");
+    fBasicPitchMenuItem.addActionListener(this);
+    pitchCustomGroup.add(fBasicPitchMenuItem);
+    fPitchCustomizationMenu.add(fBasicPitchMenuItem);
+
     fPitchMarkingsMenu = new JMenu("Pitch Markings");
     fPitchMarkingsMenu.setMnemonic(KeyEvent.VK_M);
     fPitchMenu.add(fPitchMarkingsMenu);
@@ -478,6 +484,7 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
     String pitchCustomizationSetting = getClient().getProperty(IClientProperty.SETTING_PITCH_CUSTOMIZATION);
     fCustomPitchMenuItem.setSelected(true);
     fDefaultPitchMenuItem.setSelected(IClientPropertyValue.SETTING_PITCH_DEFAULT.equals(pitchCustomizationSetting));
+    fBasicPitchMenuItem.setSelected(IClientPropertyValue.SETTING_PITCH_BASIC.equals(pitchCustomizationSetting));
     
     String pitchMarkingsSetting = getClient().getProperty(IClientProperty.SETTING_PITCH_MARKINGS);
     fPitchMarkingsOffMenuItem.setSelected(true);
@@ -579,6 +586,10 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
     }
     if (source == fDefaultPitchMenuItem) {
       getClient().setProperty(IClientProperty.SETTING_PITCH_CUSTOMIZATION, IClientPropertyValue.SETTING_PITCH_DEFAULT);
+      saveUserSettings(true);
+    }
+    if (source == fBasicPitchMenuItem) {
+      getClient().setProperty(IClientProperty.SETTING_PITCH_CUSTOMIZATION, IClientPropertyValue.SETTING_PITCH_BASIC);
       saveUserSettings(true);
     }
     if (source == fPitchMarkingsOffMenuItem) {

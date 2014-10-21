@@ -87,16 +87,8 @@ public class GameOptionFactory {
         return new GameOptionBoolean(GameOptionId.PILING_ON_TO_KO_ON_DOUBLE)
           .setDefault(false)
           .setMessageTrue("Piling On player knocks himself out when rolling a double on armour or injury.");
-      case PITCH_URL_BLIZZARD:
-        return new GameOptionString(GameOptionId.PITCH_URL_BLIZZARD);
-      case PITCH_URL_HEAT:
-        return new GameOptionString(GameOptionId.PITCH_URL_HEAT);
-      case PITCH_URL_NICE:
-        return new GameOptionString(GameOptionId.PITCH_URL_NICE);
-      case PITCH_URL_RAIN:
-        return new GameOptionString(GameOptionId.PITCH_URL_RAIN);
-      case PITCH_URL_SUNNY:
-        return new GameOptionString(GameOptionId.PITCH_URL_SUNNY);
+      case PITCH_URL:
+        return new GameOptionString(GameOptionId.PITCH_URL);
       case RIGHT_STUFF_CANCELS_TACKLE:
         return new GameOptionBoolean(GameOptionId.RIGHT_STUFF_CANCELS_TACKLE)
           .setDefault(false)
