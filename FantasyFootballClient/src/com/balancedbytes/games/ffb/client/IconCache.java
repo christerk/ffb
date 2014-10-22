@@ -1,8 +1,6 @@
 package com.balancedbytes.games.ffb.client;
 
 import java.awt.image.BufferedImage;
-import java.io.BufferedInputStream;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
@@ -54,7 +52,7 @@ public class IconCache {
   public void init() {
     fIconUrlProperties = new Properties();
     try {
-      BufferedInputStream propertyInputStream = new BufferedInputStream(new FileInputStream("/icons.ini"));
+      InputStream propertyInputStream = getClass().getResourceAsStream("/icons.ini");
       fIconUrlProperties.load(propertyInputStream);
       propertyInputStream.close();
     } catch (IOException pIoException) {
