@@ -88,7 +88,6 @@ public class IconCache {
       iconPath = "/icons" + iconPath;
     }
     
-    /*
     if (myUrl.startsWith("http:")) {
       if (cached) {
         System.out.println("cached " + myUrl + " = " + iconPath);
@@ -96,7 +95,6 @@ public class IconCache {
         System.out.println("not cached " + myUrl);
       }
     }
-    */
     
     try {
       InputStream iconInputStream = getClass().getResourceAsStream(iconPath);
