@@ -64,7 +64,7 @@ public class ClientCommandHandlerGameState extends ClientCommandHandler implemen
     Set<String> iconUrlsToDownload = new HashSet<String>();
     for (String iconUrl : iconUrls) {
       // TODO: FUMBBL wrong empty player portraits
-      if (!iconCache.loadIconFromArchive(iconUrl) && !iconUrl.endsWith("/i/0") && !iconUrl.endsWith("/i")) {
+      if (!iconCache.loadIconFromArchive(iconUrl) && !iconUrl.endsWith("/i/")) {
         iconUrlsToDownload.add(iconUrl);
       }
     }
@@ -78,6 +78,7 @@ public class ClientCommandHandlerGameState extends ClientCommandHandler implemen
       // preload all icon urls now
       int currentIconNr = 0;
       for (String iconUrl : iconUrlsToDownload) {
+        System.out.println("download " + iconUrl);
         iconCache.loadIconFromUrl(iconUrl);
         String message = String.format("Loaded icon %d of %d.", ++currentIconNr, nrOfIcons);
         dialogProgress.updateProgress(currentIconNr, message);
