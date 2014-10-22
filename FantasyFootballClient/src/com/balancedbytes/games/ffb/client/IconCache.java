@@ -94,11 +94,19 @@ public class IconCache {
       iconPath = "/icons" + iconPath;
     }
     
+    if (myUrl.startsWith("http:")) {
+      if (cached) {
+        System.out.println("cached " + myUrl + " = " + iconPath);
+      } else {
+        System.out.println("not cached " + myUrl);
+      }
+    }
+    
     try {
       InputStream iconInputStream = getClass().getResourceAsStream(iconPath);
       if (iconInputStream != null) {
         if (pitchWeather != null) {
-          loadPitchFromStream(new ZipInputStream(iconInputStream), myUrl);
+          return loadPitchFromStream(new ZipInputStream(iconInputStream), myUrl);
         } else {
           BufferedImage icon = ImageIO.read(iconInputStream);
           iconInputStream.close();
@@ -316,8 +324,9 @@ public class IconCache {
     }
   }
   
-  private void loadPitchFromStream(ZipInputStream pZipIn, String pUrl) {
+  private boolean loadPitchFromStream(ZipInputStream pZipIn, String pUrl) {
     URL pitchUrl = null;
+    boolean pitchLoaded = false;
     try {
       pitchUrl = new URL(pUrl);
       Properties pitchProperties = new Properties();
@@ -341,11 +350,13 @@ public class IconCache {
           continue;
         }
         fIconByKey.put(buildPitchUrl(pUrl, weather), pitchIcon);
+        pitchLoaded = true;
       }
     } catch (Exception pAny) {
       // This should catch issues where the image is broken...
       getClient().getUserInterface().getStatusReport().reportIconLoadFailure(pitchUrl);
     }
+    return pitchLoaded;
   }
     
   public BufferedImage getIcon(DiceDecoration pDiceDecoration) {
