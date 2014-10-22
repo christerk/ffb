@@ -35,10 +35,6 @@ import com.balancedbytes.games.ffb.util.UtilUrl;
  */
 public class IconCache {
 
-  private static final String _ICONS_INI = "icons.ini";
-  
-  private static final String _PITCH_INI = "pitch.ini";
-  
   private static final Pattern _PATTERN_PITCH = Pattern.compile("\\?pitch=([a-z]+)$");
   
   private Map<String, BufferedImage> fIconByKey;
@@ -58,7 +54,7 @@ public class IconCache {
   public void init() {
     fIconUrlProperties = new Properties();
     try {
-      BufferedInputStream propertyInputStream = new BufferedInputStream(new FileInputStream(_ICONS_INI));
+      BufferedInputStream propertyInputStream = new BufferedInputStream(new FileInputStream("/icons.ini"));
       fIconUrlProperties.load(propertyInputStream);
       propertyInputStream.close();
     } catch (IOException pIoException) {
@@ -94,6 +90,7 @@ public class IconCache {
       iconPath = "/icons" + iconPath;
     }
     
+    /*
     if (myUrl.startsWith("http:")) {
       if (cached) {
         System.out.println("cached " + myUrl + " = " + iconPath);
@@ -101,6 +98,7 @@ public class IconCache {
         System.out.println("not cached " + myUrl);
       }
     }
+    */
     
     try {
       InputStream iconInputStream = getClass().getResourceAsStream(iconPath);
@@ -333,7 +331,7 @@ public class IconCache {
       Map<String, BufferedImage> iconByName = new HashMap<String, BufferedImage>();
       ZipEntry entry = null;
       while ((entry = pZipIn.getNextEntry()) != null) {
-        if (_PITCH_INI.equals(entry.getName())) {
+        if ("pitch.ini".equals(entry.getName())) {
           pitchProperties.load(pZipIn);
         } else {
           iconByName.put(entry.getName(), ImageIO.read(pZipIn));
