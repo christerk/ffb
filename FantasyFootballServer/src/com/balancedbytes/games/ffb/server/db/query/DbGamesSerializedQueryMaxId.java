@@ -7,9 +7,11 @@ import java.sql.SQLException;
 
 import com.balancedbytes.games.ffb.FantasyFootballException;
 import com.balancedbytes.games.ffb.server.FantasyFootballServer;
+import com.balancedbytes.games.ffb.server.IServerProperty;
 import com.balancedbytes.games.ffb.server.db.DbStatement;
 import com.balancedbytes.games.ffb.server.db.DbStatementId;
 import com.balancedbytes.games.ffb.server.db.IDbTableGamesSerialized;
+import com.balancedbytes.games.ffb.util.StringTool;
 
 /**
  * 
@@ -47,6 +49,11 @@ public class DbGamesSerializedQueryMaxId extends DbStatement {
       resultSet.close();
     } catch (SQLException pSqlE) {
       throw new FantasyFootballException(pSqlE);
+    }
+    // if serverProperty game.min.id is set use that id as a minimum
+    String gameMinId = getServer().getProperty(IServerProperty.GAME_MIN_ID);
+    if (StringTool.isProvided(gameMinId)) {
+      maxId = Math.max(Long.parseLong(gameMinId), maxId);
     }
     return maxId;
   }

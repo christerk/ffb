@@ -70,6 +70,22 @@ public class GameOptions implements IXmlSerializable, IByteArrayReadable, IJsonS
             }
           }
           break;
+        case FOUL_BONUS:
+          if (((GameOptionBoolean) pOption).isEnabled()) {
+            GameOptionBoolean foulBonusOutsideTacklezone = (GameOptionBoolean) getOptionWithDefault(GameOptionId.FOUL_BONUS_OUTSIDE_TACKLEZONE);
+            if (foulBonusOutsideTacklezone.isEnabled()) {
+              addOptionInternal(foulBonusOutsideTacklezone.setValue(false));
+            }
+          }
+          break;
+        case FOUL_BONUS_OUTSIDE_TACKLEZONE:
+          if (((GameOptionBoolean) pOption).isEnabled()) {
+            GameOptionBoolean foulBonus = (GameOptionBoolean) getOptionWithDefault(GameOptionId.FOUL_BONUS);
+            if (foulBonus.isEnabled()) {
+              addOptionInternal(foulBonus.setValue(false));
+            }
+          }
+          break;
         default:
           break;
       }

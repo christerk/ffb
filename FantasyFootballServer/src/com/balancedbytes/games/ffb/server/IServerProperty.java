@@ -8,6 +8,8 @@ public interface IServerProperty {
   
   String SERVER_PORT = "server.port";
   String SERVER_BASE_DIR = "server.base.dir";
+  
+  String GAME_MIN_ID = "game.min.id";
 
   String SERVER_LOG_DIR = "server.log.dir";
   String SERVER_LOG_LEVEL = "server.log.level";
@@ -59,7 +61,7 @@ public interface IServerProperty {
   String DB_USER = "db.user";
   String DB_PASSWORD = "db.password";
   String DB_KEEP_ALIVE = "db.keepAlive";
-
+  
   String DB_OLD_URL = "db.old.url";
   String DB_OLD_USER = "db.old.user";
   String DB_OLD_PASSWORD = "db.old.password";
