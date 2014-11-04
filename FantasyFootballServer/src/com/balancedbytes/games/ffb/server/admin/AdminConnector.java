@@ -32,7 +32,7 @@ public class AdminConnector {
       + "java com.balancedbytes.games.ffb.server.admin.AdminConnector refresh\n"
       + "java com.balancedbytes.games.ffb.server.admin.AdminConnector shutdown\n"
       + "java com.balancedbytes.games.ffb.server.admin.AdminConnector schedule <teamHomeId> <teamAwayId>\n"
-      + "java com.balancedbytes.games.ffb.server.admin.AdminConnector unblock"
+      + "java com.balancedbytes.games.ffb.server.admin.AdminConnector unblock\n"
       + "java com.balancedbytes.games.ffb.server.admin.AdminConnector upload <gameId>";
 
   private static final Pattern _PATTERN_CHALLENGE = Pattern.compile("<challenge>([^<]+)</challenge>");
