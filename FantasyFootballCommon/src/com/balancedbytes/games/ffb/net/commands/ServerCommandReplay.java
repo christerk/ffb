@@ -19,7 +19,7 @@ import com.eclipsesource.json.JsonValue;
  */
 public class ServerCommandReplay extends ServerCommand {
   
-  public static final int MAX_NR_OF_COMMANDS = 100; 
+  public static final int MAX_NR_OF_COMMANDS = 50; 
   
   private List<ServerCommand> fReplayCommands;
   private int fTotalNrOfCommands;

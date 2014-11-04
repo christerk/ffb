@@ -17,7 +17,7 @@ public interface IServerProperty {
   String SERVER_PING_MAX_DELAY = "server.ping.maxDelay";
   String SERVER_SPECTATOR_COOLDOWN = "server.spectator.cooldown";
   String SERVER_DEBUG_COMPRESSION = "server.debug.compression";
-  String SERVER_TEXT = "server.test";
+  String SERVER_TEST = "server.test";
 
   String FUMBBL_USER = "fumbbl.user";
   String FUMBBL_PASSWORD = "fumbbl.password";

@@ -142,7 +142,7 @@ public class ServerCommandHandlerTalk extends ServerCommandHandler {
     if (pGameState == null) {
       return false;
     }
-    String testSetting = getServer().getProperty(IServerProperty.SERVER_TEXT);
+    String testSetting = getServer().getProperty(IServerProperty.SERVER_TEST);
     return (pGameState.getGame().isTesting() || (StringTool.isProvided(testSetting) && Boolean.parseBoolean(testSetting)));
   }
 
