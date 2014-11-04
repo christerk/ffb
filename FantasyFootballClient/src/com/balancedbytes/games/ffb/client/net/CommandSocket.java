@@ -7,6 +7,7 @@ import java.util.concurrent.TimeUnit;
 import org.eclipse.jetty.websocket.WebSocket;
 
 import com.balancedbytes.games.ffb.client.FantasyFootballClient;
+import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.net.NetCommand;
 import com.balancedbytes.games.ffb.net.NetCommandFactory;
 import com.balancedbytes.games.ffb.net.NetCommandId;
@@ -47,17 +48,17 @@ public class CommandSocket implements WebSocket.OnTextMessage {
     }
     
     // old:
+    /*
     JsonValue jsonValue = JsonValue.readFrom(pTextMessage);
+    */
     
     // new:
-    /*
     JsonValue jsonValue = null;
     try {
       jsonValue = UtilJson.inflateFromBase64(pTextMessage);
     } catch (IOException pIoException) {
       return;
     }
-    */
 
     NetCommand netCommand = fNetCommandFactory.forJsonValue(jsonValue);
     if (netCommand == null) {
@@ -93,6 +94,7 @@ public class CommandSocket implements WebSocket.OnTextMessage {
     }
     
     // old:
+    /*
     JsonValue jsonValue = pCommand.toJsonValue();
     if (jsonValue == null) {
       return false;
@@ -102,14 +104,13 @@ public class CommandSocket implements WebSocket.OnTextMessage {
     if (message == null) {
       return false;
     }
+    */
 
     // new:
-    /*
     String message = UtilJson.deflateToBase64(pCommand.toJsonValue());
     if (message == null) {
       return false;
     }
-    */
     
     fConnection.sendMessage(message);
     return true;
