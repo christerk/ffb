@@ -4,6 +4,6 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/FantasyFootballCommon"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="lib" path="lib/jetty-all-9.2.3.v20140905.jar" sourcepath="lib/jetty-all-9.2.3.v20140905-sources.zip"/>
+	<classpathentry kind="lib" path="lib/jetty-all-8.1.14.v20131031.jar" sourcepath="lib/jetty-all-8.1.14.v20131031-sources.zip"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

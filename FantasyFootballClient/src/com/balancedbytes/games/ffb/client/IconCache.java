@@ -298,7 +298,7 @@ public class IconCache {
     return buildPitchUrl(pitchUrl, myWeather);
   }
   
-  private String buildPitchUrl(String pUrl, Weather pWeather) {
+  public String buildPitchUrl(String pUrl, Weather pWeather) {
     if (!StringTool.isProvided(pUrl) || (pWeather == null)) {
       return null;
     }

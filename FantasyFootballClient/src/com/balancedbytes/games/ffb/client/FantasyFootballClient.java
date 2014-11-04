@@ -8,13 +8,13 @@ import java.net.URI;
 import java.net.UnknownHostException;
 import java.util.Properties;
 import java.util.Timer;
-import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
 import javax.swing.UIManager;
 
-import org.eclipse.jetty.websocket.api.Session;
-import org.eclipse.jetty.websocket.client.WebSocketClient;
+import org.eclipse.jetty.websocket.WebSocket;
+import org.eclipse.jetty.websocket.WebSocketClient;
+import org.eclipse.jetty.websocket.WebSocketClientFactory;
 
 import com.balancedbytes.games.ffb.ClientMode;
 import com.balancedbytes.games.ffb.FantasyFootballException;
@@ -38,8 +38,8 @@ import com.balancedbytes.games.ffb.util.StringTool;
  */
 public class FantasyFootballClient implements IConnectionListener, IDialogCloseListener {
 
-  public static final String CLIENT_VERSION = "1.2.0";
-  public static final String SERVER_VERSION = "1.2.0";
+  public static final String CLIENT_VERSION = "1.1.2";
+  public static final String SERVER_VERSION = "1.1.2";
   
   private Game fGame;
   private UserInterface fUserInterface;
@@ -58,6 +58,8 @@ public class FantasyFootballClient implements IConnectionListener, IDialogCloseL
   private ClientReplayer fReplayer;
   private ClientParameters fParameters;
   private ClientMode fMode;
+  
+  private WebSocketClientFactory fWebSocketClientFactory;
   private WebSocketClient fWebSocketClient;
   private CommandSocket fCommandSocket;
   
@@ -91,6 +93,8 @@ public class FantasyFootballClient implements IConnectionListener, IDialogCloseL
     fUserInterface = new UserInterface(this);
     fUserInterface.refreshSideBars();
     fUserInterface.getScoreBar().refresh();
+    
+    fWebSocketClientFactory = new WebSocketClientFactory();
     
     fCommandSocket = new CommandSocket(this);
     
@@ -153,14 +157,12 @@ public class FantasyFootballClient implements IConnectionListener, IDialogCloseL
 
     try {
       
-      fWebSocketClient = new WebSocketClient();
-      fWebSocketClient.start();
+      fWebSocketClientFactory.start();
       
       URI uri = new URI("ws", null, getServerHost().getCanonicalHostName(), getServerPort(), "/command", null, null);
-      Future<Session> session = fWebSocketClient.connect(fCommandSocket, uri);
-      
-      session.get(10, TimeUnit.SECONDS);
-      connectionEstablished = true;
+      fWebSocketClient = fWebSocketClientFactory.newWebSocketClient();
+      WebSocket.Connection connection = fWebSocketClient.open(uri, fCommandSocket).get();
+      connectionEstablished = (connection != null);
       
     } catch (Exception pAnyException) {
       pAnyException.printStackTrace();
@@ -181,7 +183,7 @@ public class FantasyFootballClient implements IConnectionListener, IDialogCloseL
     fPingTimer = null;
     fTurnTimer = null;
     try {
-      fCommandSocket.close();
+      fWebSocketClientFactory.stop();
       fCommandSocket.awaitClose(10, TimeUnit.SECONDS);
     } catch (Exception pAnyException) {
       pAnyException.printStackTrace();

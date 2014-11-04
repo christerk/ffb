@@ -4,11 +4,7 @@ import java.io.IOException;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
-import org.eclipse.jetty.websocket.api.Session;
-import org.eclipse.jetty.websocket.api.annotations.OnWebSocketClose;
-import org.eclipse.jetty.websocket.api.annotations.OnWebSocketConnect;
-import org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage;
-import org.eclipse.jetty.websocket.api.annotations.WebSocket;
+import org.eclipse.jetty.websocket.WebSocket;
 
 import com.balancedbytes.games.ffb.client.FantasyFootballClient;
 import com.balancedbytes.games.ffb.net.NetCommand;
@@ -21,12 +17,11 @@ import com.eclipsesource.json.JsonValue;
  * 
  * @author Kalimar
  */
-@WebSocket(maxTextMessageSize = 64 * 1024)
-public class CommandSocket {
+public class CommandSocket implements WebSocket.OnTextMessage {
 
   private FantasyFootballClient fClient;
   private NetCommandFactory fNetCommandFactory;
-  private Session fSession;
+  private Connection fConnection;
 
   private final CountDownLatch fCloseLatch;
 
@@ -36,14 +31,15 @@ public class CommandSocket {
     fCloseLatch = new CountDownLatch(1);
   }
   
-  @OnWebSocketConnect
-  public void onConnect(Session pSession) {
-    fSession = pSession;
-    fSession.getPolicy().setIdleTimeout(Long.MAX_VALUE);
-    fSession.getPolicy().setMaxTextMessageSize(64 * 1024);
+  @Override
+  public void onOpen(Connection pConnection) {
+    fConnection = pConnection;
+    System.out.printf("Got connect: %s%n", fConnection);
+    fConnection.setMaxIdleTime(Integer.MAX_VALUE);
+    fConnection.setMaxTextMessageSize(64 * 1024);
   }
 
-  @OnWebSocketMessage
+  @Override
   public void onMessage(String pTextMessage) {
     
     if ((pTextMessage == null) || !isOpen()) {
@@ -72,27 +68,19 @@ public class CommandSocket {
       ServerCommandPing pingCommand = (ServerCommandPing) netCommand;
       pingCommand.setReceived(System.currentTimeMillis());
       fClient.getClientPingTask().setLastPingReceived(pingCommand.getReceived());
-    // } else {
-      // System.out.println("Received: " + netCommand.getId().getName() + " (" + pTextMessage.length() + " bytes)");
     }
     
     fClient.getCommunication().handleCommand(netCommand);
     
   }
 
-  @OnWebSocketClose
+  @Override
   public void onClose(int pCloseCode, String pCloseReason) {
-    fSession = null;
+    System.out.printf("Connection closed: %d - %s%n", pCloseCode, pCloseReason);
+    fConnection = null;
     fCloseLatch.countDown();
   }
 
-  public void close() {
-    if (isOpen()) {
-      fSession.close();
-    } else {
-      fCloseLatch.countDown();
-    }
-  }
 
   public boolean awaitClose(int duration, TimeUnit unit) throws InterruptedException {
     return fCloseLatch.await(duration, unit);
@@ -123,28 +111,13 @@ public class CommandSocket {
     }
     */
     
-    fSession.getRemote().sendString(message);
+    fConnection.sendMessage(message);
     return true;
     
   }
 
   public boolean isOpen() {
-    return ((fSession != null) && fSession.isOpen());
+    return ((fConnection != null) && fConnection.isOpen());
   }
-
-  // LogComponent log = getClient().getUserInterface().getLog();
-  // log.append(null, null, null);
-  // if (StringTool.isProvided(pIoe.getMessage())) {
-  // log.append(ParagraphStyle.INDENT_0, TextStyle.BOLD, "Connection Problem:");
-  // log.append(null, null, null);
-  // log.append(ParagraphStyle.INDENT_1, TextStyle.NONE,
-  // StringTool.print(pIoe.getMessage()));
-  // } else {
-  // log.append(ParagraphStyle.INDENT_0, TextStyle.BOLD,
-  // "Unknown Connection Problem");
-  // }
-  // log.append(null, null, null);
-  // log.append(ParagraphStyle.INDENT_0, TextStyle.BOLD, "retrying ...");
-  // log.append(null, null, null);
 
 }

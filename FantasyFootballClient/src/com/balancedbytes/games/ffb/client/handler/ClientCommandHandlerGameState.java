@@ -7,6 +7,7 @@ import javax.swing.SwingUtilities;
 
 import com.balancedbytes.games.ffb.Weather;
 import com.balancedbytes.games.ffb.client.FantasyFootballClient;
+import com.balancedbytes.games.ffb.client.IIconProperty;
 import com.balancedbytes.games.ffb.client.IconCache;
 import com.balancedbytes.games.ffb.client.PlayerIconFactory;
 import com.balancedbytes.games.ffb.client.UserInterface;
@@ -58,9 +59,11 @@ public class ClientCommandHandlerGameState extends ClientCommandHandler implemen
       addIconUrl(iconUrls, PlayerIconFactory.getIconSetUrl(player));
     }
     
-    // loading one pitch weather caches the full set 
+    // load pitches for default, basic and custom (if defined)
+    addIconUrl(iconUrls, iconCache.buildPitchUrl(getClient().getProperty(IIconProperty.PITCH_URL_DEFAULT), Weather.NICE));
+    addIconUrl(iconUrls, iconCache.buildPitchUrl(getClient().getProperty(IIconProperty.PITCH_URL_BASIC), Weather.NICE));
     addIconUrl(iconUrls, iconCache.findPitchUrl(Weather.NICE));
-
+    
     Set<String> iconUrlsToDownload = new HashSet<String>();
     for (String iconUrl : iconUrls) {
       // TODO: FUMBBL wrong empty player portraits
