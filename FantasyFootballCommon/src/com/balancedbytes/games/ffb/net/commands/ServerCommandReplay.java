@@ -76,6 +76,16 @@ public class ServerCommandReplay extends ServerCommand {
     return highestCommandNr;
   }
   
+  public int findLowestCommandNr() {
+    int lowestCommandNr = Integer.MAX_VALUE;
+    for (ServerCommand serverCommand : fReplayCommands) {
+      if (serverCommand.getCommandNr() < lowestCommandNr) {
+        lowestCommandNr = serverCommand.getCommandNr();
+      }
+    }
+    return lowestCommandNr;
+  }
+  
   // ByteArray serialization
   
   public int initFrom(ByteArray pByteArray) {

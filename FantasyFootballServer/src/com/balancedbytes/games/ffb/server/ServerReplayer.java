@@ -70,7 +70,11 @@ public class ServerReplayer implements Runnable {
         	}
           
           getServer().getCommunication().send(serverReplay.getSession(), replayCommand, false);
-          getServer().getDebugLog().logServerCommand(IServerLogLevel.DEBUG, (serverReplay.getGameState() != null) ? serverReplay.getGameState().getId() : -1, replayCommand, DebugLog.COMMAND_SERVER_SPECTATOR);
+          // getServer().getDebugLog().logServerCommand(IServerLogLevel.DEBUG, (serverReplay.getGameState() != null) ? serverReplay.getGameState().getId() : -1, replayCommand, DebugLog.COMMAND_SERVER_SPECTATOR);
+          StringBuilder message = new StringBuilder().append("Replay commands ").append(replayCommand.getCommandNr());
+          message.append(replayCommand.findLowestCommandNr()).append(" - ").append(replayCommand.findHighestCommandNr());
+          message.append(" of ").append(replayCommand.getTotalNrOfCommands()).append(" total.");
+          getServer().getDebugLog().log(IServerLogLevel.DEBUG, (serverReplay.getGameState() != null) ? serverReplay.getGameState().getId() : -1, DebugLog.COMMAND_SERVER_SPECTATOR, message.toString());
           
           if (!serverReplay.isComplete()) {
             serverReplay.setFromCommandNr(replayCommand.findHighestCommandNr() + 1);

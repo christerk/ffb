@@ -236,6 +236,12 @@ public class DebugLog {
       logInternal(pGameId, null, pLogString);
     }
   }
+
+  public void log(int pLogLevel, long pGameId, String pCommandFlag, String pLogString) {
+    if (isLogging(pLogLevel) && StringTool.isProvided(pLogString)) {
+      logInternal(pGameId, pCommandFlag, pLogString);
+    }
+  }
   
   public void log(Throwable pThrowable) {
     log(-1, pThrowable);
