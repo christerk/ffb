@@ -9,6 +9,8 @@ import com.balancedbytes.games.ffb.model.GameResult;
 import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.model.PlayerResult;
 import com.balancedbytes.games.ffb.model.Team;
+import com.balancedbytes.games.ffb.option.GameOptionBoolean;
+import com.balancedbytes.games.ffb.option.GameOptionId;
 import com.balancedbytes.games.ffb.report.ReportMostValuablePlayers;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.step.AbstractStep;
@@ -46,13 +48,17 @@ public final class StepMvp extends AbstractStep {
     ReportMostValuablePlayers mvpReport = new ReportMostValuablePlayers();
     int nrOfHomeMvps = 1;
     int nrOfAwayMvps = 1;
+    if (((GameOptionBoolean) game.getOptions().getOptionWithDefault(GameOptionId.EXTRA_MVP)).isEnabled()) {
+      nrOfHomeMvps++;
+      nrOfAwayMvps++;
+    }
     if (gameResult.getTeamResultHome().hasConceded() && (UtilPlayer.findPlayersInReserveOrField(game, game.getTeamHome()).length > 2)) {
-      nrOfHomeMvps = 0;
-      nrOfAwayMvps = 2;
+      nrOfHomeMvps--;
+      nrOfAwayMvps++;
     }
     if (gameResult.getTeamResultAway().hasConceded() && (UtilPlayer.findPlayersInReserveOrField(game, game.getTeamAway()).length > 2)) {
-      nrOfHomeMvps = 2;
-      nrOfAwayMvps = 0;
+      nrOfHomeMvps++;
+      nrOfAwayMvps--;
     }
     for (int i = 0; i < nrOfHomeMvps; i++) {
       Player[] playersForMvp = findPlayersForMvp(game.getTeamHome());
@@ -79,7 +85,7 @@ public final class StepMvp extends AbstractStep {
     GameResult gameResult = getGameState().getGame().getGameResult();
     for (Player player : pTeam.getPlayers()) {
       PlayerResult playerResult = gameResult.getPlayerResult(player);
-      if (SendToBoxReason.MNG != playerResult.getSendToBoxReason() && (SendToBoxReason.NURGLES_ROT != playerResult.getSendToBoxReason())) {
+      if ((SendToBoxReason.MNG != playerResult.getSendToBoxReason()) && (SendToBoxReason.NURGLES_ROT != playerResult.getSendToBoxReason())) {
         players.add(player);
       }
     }

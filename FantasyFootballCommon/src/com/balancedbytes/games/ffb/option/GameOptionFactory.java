@@ -27,6 +27,10 @@ public class GameOptionFactory {
         return new GameOptionBoolean(GameOptionId.CLAW_DOES_NOT_STACK)
           .setDefault(false)
           .setMessageTrue("Claw does not stack with other skills that modify armour rolls.");
+      case EXTRA_MVP:
+        return new GameOptionBoolean(GameOptionId.EXTRA_MVP)
+          .setDefault(false)
+          .setMessageTrue("An extra MVP is awarded at the end of the match");
       case FOUL_BONUS:
         return new GameOptionBoolean(GameOptionId.FOUL_BONUS)
           .setDefault(false)

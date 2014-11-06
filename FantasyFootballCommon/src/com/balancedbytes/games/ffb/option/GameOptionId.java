@@ -35,6 +35,8 @@ public enum GameOptionId implements IEnumWithName {
   STAND_FIRM_NO_DROP_ON_FAILED_DODGE("standFirmNoDropOnFailedDodge"),
   SPIKED_BALL("spikedBall"),
 
+  EXTRA_MVP("extraMvp"),
+  
   PITCH_URL("pitchUrl");
   
   private String fName;
