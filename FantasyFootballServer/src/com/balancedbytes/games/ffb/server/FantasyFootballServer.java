@@ -37,8 +37,8 @@ import com.fumbbl.rng.Fortuna;
  */
 public class FantasyFootballServer {
   
-  public static final String SERVER_VERSION = "1.1.6";
-  public static final String CLIENT_VERSION = "1.1.6";
+  public static final String SERVER_VERSION = "1.1.7";
+  public static final String CLIENT_VERSION = "1.1.7";
 
   private static final String _USAGE = "java -jar FantasyFootballServer.jar standalone\n"
                                      + "java -jar FantasyFootballServer.jar standalone initDb\n"
