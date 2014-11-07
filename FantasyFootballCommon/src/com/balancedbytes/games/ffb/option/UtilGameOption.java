@@ -13,10 +13,7 @@ public class UtilGameOption {
       return false;
     }
     GameOptionBoolean gameOption = (GameOptionBoolean) pGame.getOptions().getOptionWithDefault(pOptionId);
-    if (gameOption == null) {
-      return false;
-    }
-    return gameOption.isEnabled();
+    return (gameOption != null) ? gameOption.isEnabled() : false;
   }
   
   public static int getIntOption(Game pGame, GameOptionId pOptionId) {
@@ -24,10 +21,7 @@ public class UtilGameOption {
       return 0;
     }
     GameOptionInt gameOption = (GameOptionInt) pGame.getOptions().getOptionWithDefault(pOptionId);
-    if (gameOption == null) {
-      return 0;
-    }
-    return gameOption.getValue();
+    return (gameOption != null) ? gameOption.getValue() : 0;
   }
 
 }

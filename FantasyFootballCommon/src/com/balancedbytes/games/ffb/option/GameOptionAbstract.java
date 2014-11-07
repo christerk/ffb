@@ -31,12 +31,6 @@ public abstract class GameOptionAbstract implements IGameOption {
   }
   
   @Override
-  public GameOptionAbstract reset() {
-    setValue(getDefaultAsString());
-    return this;
-  }
-
-  @Override
   public boolean isChanged() {
     return !StringTool.print(getDefaultAsString()).equals(getValueAsString());
   }

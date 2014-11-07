@@ -16,6 +16,8 @@ import org.xml.sax.InputSource;
 
 import com.balancedbytes.games.ffb.FantasyFootballException;
 import com.balancedbytes.games.ffb.PasswordChallenge;
+import com.balancedbytes.games.ffb.model.Game;
+import com.balancedbytes.games.ffb.model.GameOptions;
 import com.balancedbytes.games.ffb.model.Roster;
 import com.balancedbytes.games.ffb.model.Team;
 import com.balancedbytes.games.ffb.net.ServerStatus;
@@ -215,8 +217,10 @@ public class UtilFumbblRequest {
           + "</options>"
           + "</gamestate>";
       
-      FumbblGameState fumbblGameState = processFumbblGameStateResponse(server, "http://fumbbl.com/", responseXml);      
-      System.out.println(fumbblGameState.getOptions().toJsonValue());      
+      FumbblGameState fumbblGameState = processFumbblGameStateResponse(server, "http://fumbbl.com/", responseXml);
+      GameOptions gameOptions = new GameOptions(new Game());
+      gameOptions.init(fumbblGameState.getOptions());
+      System.out.println(gameOptions.toJsonValue());      
       
     } catch (Exception pAny) {
       pAny.printStackTrace();

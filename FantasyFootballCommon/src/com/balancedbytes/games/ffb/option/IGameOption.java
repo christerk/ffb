@@ -24,6 +24,4 @@ public interface IGameOption extends IJsonWriteable, IXmlWriteable {
   
   public String getDisplayMessage();
   
-  public IGameOption reset();
-  
 }
