@@ -22,6 +22,7 @@ import com.balancedbytes.games.ffb.server.step.StepParameterKey;
 import com.balancedbytes.games.ffb.server.step.StepParameterSet;
 import com.balancedbytes.games.ffb.server.util.UtilServerReRoll;
 import com.balancedbytes.games.ffb.util.StringTool;
+import com.balancedbytes.games.ffb.util.UtilCards;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
@@ -86,7 +87,7 @@ public final class StepStandUp extends AbstractStepWithReRoll {
     if ((actingPlayer.isStandingUp() && !actingPlayer.hasMoved()) || (ReRolledAction.STAND_UP == getReRolledAction())) {
       actingPlayer.setHasMoved(true);
       game.setConcessionPossible(false);
-      boolean rollStandUp = (actingPlayer.getPlayer().getMovement() < IServerConstant.MINIMUM_MOVE_TO_STAND_UP);
+      boolean rollStandUp = (UtilCards.getPlayerMovement(game, actingPlayer.getPlayer()) < IServerConstant.MINIMUM_MOVE_TO_STAND_UP);
       if (rollStandUp) {
         if (ReRolledAction.STAND_UP == getReRolledAction()) {
           if ((getReRollSource() == null) || !UtilServerReRoll.useReRoll(this, getReRollSource(), actingPlayer.getPlayer())) {

@@ -330,7 +330,7 @@ public class ClientStateMove extends ClientState {
   private boolean isEndPlayerActionAvailable() {
   	Game game = getClient().getGame();
   	ActingPlayer actingPlayer = game.getActingPlayer();
-  	return (!actingPlayer.hasActed() || !UtilCards.hasSkill(game, actingPlayer, Skill.BALL_AND_CHAIN) || (actingPlayer.getCurrentMove() >= actingPlayer.getPlayer().getMovement()));
+  	return (!actingPlayer.hasActed() || !UtilCards.hasSkill(game, actingPlayer, Skill.BALL_AND_CHAIN) || (actingPlayer.getCurrentMove() >= UtilCards.getPlayerMovement(game, actingPlayer.getPlayer())));
   }
 
   private boolean isHypnoticGazeActionAvailable() {

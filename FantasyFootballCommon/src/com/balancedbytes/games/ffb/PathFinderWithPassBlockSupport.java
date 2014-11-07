@@ -199,7 +199,7 @@ public class PathFinderWithPassBlockSupport {
       return null;
 
     Team movingTeam = actingPlayer.getPlayer().getTeam();
-    int maxDistance =  actingPlayer.getPlayer().getMovement() - actingPlayer.getCurrentMove();
+    int maxDistance =  UtilCards.getPlayerMovement(pGame, actingPlayer.getPlayer()) - actingPlayer.getCurrentMove();
     
     Set<FieldCoordinate> pEndCoords = new HashSet<FieldCoordinate>(1);
     pEndCoords.add(pEndCoord);

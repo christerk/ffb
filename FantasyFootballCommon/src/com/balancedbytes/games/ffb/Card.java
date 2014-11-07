@@ -295,7 +295,7 @@ public enum Card implements IEnumWithId, IEnumWithName {
   //  	a Move Action this turn. This may take your team to 12 players for
   //  	the remainder of the drive.
   	
-  KICKING_BOOTS(47, "Kicking Boots", "Kicking Boots", CardType.DIRTY_TRICK, CardTarget.ANY_PLAYER, false,
+  KICKING_BOOTS(47, "Kicking Boots", "Kicking Boots", CardType.DIRTY_TRICK, CardTarget.OWN_PLAYER, false,
     new InducementPhase[] { InducementPhase.BEFORE_KICKOFF_SCATTER }, InducementDuration.UNTIL_END_OF_GAME,
     "Player gets Kick, Dirty Player & -1 MA"),
   //  Description:

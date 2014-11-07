@@ -90,7 +90,6 @@ public final class UtilCards {
         case KICKING_BOOTS:
           cardSkills.add(Skill.KICK);
           cardSkills.add(Skill.DIRTY_PLAYER);
-          cardSkills.add(Skill.MOVEMENT_DECREASE);
         default:
           break;
       }
@@ -124,21 +123,42 @@ public final class UtilCards {
         .getInducementSet();
     for (Card card : pGame.getFieldModel().getCards(pPlayer)) {
       switch (card) {
-      case GIKTAS_STRENGTH_OF_DA_BEAR:
-        if (inducementSet.isActive(card)) {
+        case GIKTAS_STRENGTH_OF_DA_BEAR:
+          if (inducementSet.isActive(card)) {
+            strength += 1;
+          } else {
+            strength -= 1;
+          }
+          break;
+        case WAND_OF_SMASHING:
           strength += 1;
-        } else {
-          strength -= 1;
-        }
-        break;
-      case WAND_OF_SMASHING:
-        strength += 1;
-        break;
-      default:
-        break;
+          break;
+        default:
+          break;
       }
     }
     return strength;
+  }
+
+  public static int getPlayerMovement(Game pGame, Player pPlayer) {
+    if ((pGame == null) || (pPlayer == null)) {
+      return 0;
+    }
+    int movement = pPlayer.getMovement();
+    InducementSet inducementSet = (pPlayer.getTeam() == pGame.getTeamHome()) ? pGame.getTurnDataHome().getInducementSet() : pGame.getTurnDataAway()
+        .getInducementSet();
+    for (Card card : pGame.getFieldModel().getCards(pPlayer)) {
+      switch (card) {
+        case KICKING_BOOTS:
+          if (inducementSet.isActive(card)) {
+            movement -= 1;
+          }
+          break;
+        default:
+          break;
+      }
+    }
+    return movement;
   }
 
   public static Skill[] findAllSkills(Game pGame, Player pPlayer) {

@@ -28,6 +28,7 @@ import com.balancedbytes.games.ffb.server.util.UtilServerReRoll;
 import com.balancedbytes.games.ffb.util.ArrayTool;
 import com.balancedbytes.games.ffb.util.StringTool;
 import com.balancedbytes.games.ffb.util.UtilBlock;
+import com.balancedbytes.games.ffb.util.UtilCards;
 import com.balancedbytes.games.ffb.util.UtilPlayer;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
@@ -151,8 +152,8 @@ public class StepShadowing extends AbstractStepWithReRoll {
         }
         if (rollShadowing) {
           int[] rollEscape = getGameState().getDiceRoller().rollShadowingEscape();
-          boolean successful = DiceInterpreter.getInstance().isShadowingEscapeSuccessful(rollEscape, game.getDefender().getMovement(), actingPlayer.getPlayer().getMovement());
-          int minimumRoll = DiceInterpreter.getInstance().minimumRollShadowingEscape(game.getDefender().getMovement(), actingPlayer.getPlayer().getMovement());
+          boolean successful = DiceInterpreter.getInstance().isShadowingEscapeSuccessful(rollEscape, UtilCards.getPlayerMovement(game, game.getDefender()), UtilCards.getPlayerMovement(game, actingPlayer.getPlayer()));
+          int minimumRoll = DiceInterpreter.getInstance().minimumRollShadowingEscape(UtilCards.getPlayerMovement(game, game.getDefender()), UtilCards.getPlayerMovement(game, actingPlayer.getPlayer()));
           boolean reRolled = ((getReRolledAction() == ReRolledAction.SHADOWING_ESCAPE) && (getReRollSource() != null));
           getResult().addReport(new ReportTentaclesShadowingRoll(Skill.SHADOWING, game.getDefenderId(), rollEscape, successful, minimumRoll, reRolled));
           if (successful) {

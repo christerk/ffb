@@ -9,8 +9,8 @@ import com.balancedbytes.games.ffb.model.GameResult;
 import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.model.PlayerResult;
 import com.balancedbytes.games.ffb.model.Team;
-import com.balancedbytes.games.ffb.option.GameOptionBoolean;
 import com.balancedbytes.games.ffb.option.GameOptionId;
+import com.balancedbytes.games.ffb.option.UtilGameOption;
 import com.balancedbytes.games.ffb.report.ReportMostValuablePlayers;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.step.AbstractStep;
@@ -48,7 +48,7 @@ public final class StepMvp extends AbstractStep {
     ReportMostValuablePlayers mvpReport = new ReportMostValuablePlayers();
     int nrOfHomeMvps = 1;
     int nrOfAwayMvps = 1;
-    if (((GameOptionBoolean) game.getOptions().getOptionWithDefault(GameOptionId.EXTRA_MVP)).isEnabled()) {
+    if (UtilGameOption.isOptionEnabled(game, GameOptionId.EXTRA_MVP)) {
       nrOfHomeMvps++;
       nrOfAwayMvps++;
     }

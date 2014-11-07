@@ -12,9 +12,9 @@ public class UtilGameOption {
     if ((pGame == null) || (pOptionId == null)) {
       return false;
     }
-    GameOptionBoolean gameOption = (GameOptionBoolean) pGame.getOptions().getOption(pOptionId);
+    GameOptionBoolean gameOption = (GameOptionBoolean) pGame.getOptions().getOptionWithDefault(pOptionId);
     if (gameOption == null) {
-      gameOption = (GameOptionBoolean) new GameOptionFactory().createGameOption(pOptionId);
+      return false;
     }
     return gameOption.isEnabled();
   }
@@ -23,9 +23,9 @@ public class UtilGameOption {
     if ((pGame == null) || (pOptionId == null)) {
       return 0;
     }
-    GameOptionInt gameOption = (GameOptionInt) pGame.getOptions().getOption(pOptionId);
+    GameOptionInt gameOption = (GameOptionInt) pGame.getOptions().getOptionWithDefault(pOptionId);
     if (gameOption == null) {
-      gameOption = (GameOptionInt) new GameOptionFactory().createGameOption(pOptionId);
+      return 0;
     }
     return gameOption.getValue();
   }

@@ -105,9 +105,9 @@ public class UtilServerPlayerMove {
       Set<LeapModifier> leapModifiers = LeapModifier.findLeapModifiers(game);
       minimumRollDodge = DiceInterpreter.getInstance().minimumRollLeap(actingPlayer.getPlayer(), leapModifiers);
       if (actingPlayer.isStandingUp() && !actingPlayer.hasActed() && !UtilCards.hasSkill(game, actingPlayer, Skill.JUMP_UP)) {
-        goForIt = ((3 + playerCoordinate.distanceInSteps(pCoordinate)) > actingPlayer.getPlayer().getMovement());
+        goForIt = ((3 + playerCoordinate.distanceInSteps(pCoordinate)) > UtilCards.getPlayerMovement(game, actingPlayer.getPlayer()));
       } else {
-        goForIt = ((actingPlayer.getCurrentMove() + playerCoordinate.distanceInSteps(pCoordinate)) > actingPlayer.getPlayer().getMovement());
+        goForIt = ((actingPlayer.getCurrentMove() + playerCoordinate.distanceInSteps(pCoordinate)) > UtilCards.getPlayerMovement(game, actingPlayer.getPlayer()));
       }
     } else {
       goForIt = UtilPlayer.isNextMoveGoingForIt(game);

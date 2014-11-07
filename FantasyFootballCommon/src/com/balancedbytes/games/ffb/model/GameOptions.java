@@ -114,10 +114,13 @@ public class GameOptions implements IXmlSerializable, IByteArrayReadable, IJsonS
   }
 
   public void init(GameOptions pOtherOptions) {
-    if (pOtherOptions != null) {
-      for (IGameOption option : pOtherOptions.getOptions()) {
-        addOption(option);
-      }
+    if (pOtherOptions == null) {
+      return;
+    }
+    for (IGameOption otherOption : pOtherOptions.getOptions()) {
+      IGameOption myOption = fGameOptionFactory.createGameOption(otherOption.getId());
+      myOption.setValue(otherOption.getValueAsString());
+      addOption(myOption);
     }
   }
 

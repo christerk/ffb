@@ -364,12 +364,12 @@ public class UtilPlayer {
       if ((pGame.getTurnMode() == TurnMode.KICKOFF_RETURN) || (pGame.getTurnMode() == TurnMode.PASS_BLOCK)) {
       	return false;
       } else if (actingPlayer.isStandingUp() && !actingPlayer.hasActed() && !UtilCards.hasSkill(pGame, actingPlayer, Skill.JUMP_UP)) {
-        nextMoveGoingForIt = (3 >= player.getMovement());
+        nextMoveGoingForIt = (3 >= UtilCards.getPlayerMovement(pGame, player));
       } else {
       	if (actingPlayer.isLeaping()) {
-          nextMoveGoingForIt = ((actingPlayer.getCurrentMove() + 1) >= player.getMovement());
+          nextMoveGoingForIt = ((actingPlayer.getCurrentMove() + 1) >= UtilCards.getPlayerMovement(pGame, player));
       	} else {
-          nextMoveGoingForIt = (actingPlayer.getCurrentMove() >= player.getMovement());
+          nextMoveGoingForIt = (actingPlayer.getCurrentMove() >= UtilCards.getPlayerMovement(pGame, player));
       	}
       }
     }
@@ -404,7 +404,7 @@ public class UtilPlayer {
           	extraMove--;
           }
         }
-        movePossible = (actingPlayer.getCurrentMove() < (actingPlayer.getPlayer().getMovement() + extraMove));
+        movePossible = (actingPlayer.getCurrentMove() < (UtilCards.getPlayerMovement(pGame, actingPlayer.getPlayer()) + extraMove));
       }
     }
     return movePossible;

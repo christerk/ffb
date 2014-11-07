@@ -148,7 +148,7 @@ public class StepTakeRoot extends AbstractStepWithReRoll {
     Game game = getGameState().getGame();
     ActingPlayer actingPlayer = game.getActingPlayer();
     actingPlayer.setGoingForIt(false);
-    actingPlayer.setCurrentMove(actingPlayer.getPlayer().getMovement());
+    actingPlayer.setCurrentMove(UtilCards.getPlayerMovement(game, actingPlayer.getPlayer()));
     switch (actingPlayer.getPlayerAction()) {
       case BLITZ:
       case BLITZ_MOVE:

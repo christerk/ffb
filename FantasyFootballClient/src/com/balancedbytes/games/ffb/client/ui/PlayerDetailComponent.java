@@ -201,7 +201,7 @@ public class PlayerDetailComponent extends JPanel {
       Game game = getSideBar().getClient().getGame();
       PlayerResult playerResult = game.getGameResult().getPlayerResult(getPlayer());
       boolean moveIsRed = false;
-      int moveLeft = getPlayer().getMovement() - findNewStatDecreases(playerResult, InjuryAttribute.MA);
+      int moveLeft = UtilCards.getPlayerMovement(game, getPlayer()) - findNewStatDecreases(playerResult, InjuryAttribute.MA);
       int strength = UtilCards.getPlayerStrength(game, getPlayer()) - findNewStatDecreases(playerResult, InjuryAttribute.ST);
       int agility = getPlayer().getAgility() - findNewStatDecreases(playerResult, InjuryAttribute.AG);
       int armour = getPlayer().getArmour() - findNewStatDecreases(playerResult, InjuryAttribute.AV);
