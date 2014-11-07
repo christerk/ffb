@@ -2,16 +2,12 @@ package com.balancedbytes.games.ffb.option;
 
 import javax.xml.transform.sax.TransformerHandler;
 
-import org.xml.sax.Attributes;
 import org.xml.sax.helpers.AttributesImpl;
 
 import com.balancedbytes.games.ffb.json.IJsonOption;
-import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.util.StringTool;
-import com.balancedbytes.games.ffb.xml.IXmlReadable;
 import com.balancedbytes.games.ffb.xml.UtilXml;
 import com.eclipsesource.json.JsonObject;
-import com.eclipsesource.json.JsonValue;
 
 /**
  * 
@@ -56,13 +52,6 @@ public abstract class GameOptionAbstract implements IGameOption {
     return jsonObject;
   }
   
-  public GameOptionAbstract initFrom(JsonValue pJsonValue) {
-    JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-    setId((GameOptionId) IJsonOption.GAME_OPTION_ID.getFrom(jsonObject));
-    setValue(IJsonOption.GAME_OPTION_VALUE.getFrom(jsonObject));
-    return this;
-  }
-  
   // XML serialization
   
   public void addToXml(TransformerHandler pHandler) {
@@ -76,19 +65,5 @@ public abstract class GameOptionAbstract implements IGameOption {
   public String toXml(boolean pIndent) {
     return UtilXml.toXml(this, pIndent);
   }
-
-  public IXmlReadable startXmlElement(String pXmlTag, Attributes pXmlAttributes) {
-    if (XML_TAG.equals(pXmlTag)) {
-      String name = UtilXml.getStringAttribute(pXmlAttributes, XML_ATTRIBUTE_NAME);
-      setId(new GameOptionIdFactory().forName(name));
-      String value = UtilXml.getStringAttribute(pXmlAttributes, XML_ATTRIBUTE_VALUE);
-      setValue(value);
-    }
-    return this;
-  }
   
-  public boolean endXmlElement(String pXmlTag, String pValue) {
-    return XML_TAG.equals(pXmlTag);
-  }
-
 }

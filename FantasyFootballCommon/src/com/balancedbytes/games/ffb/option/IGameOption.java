@@ -1,14 +1,14 @@
 package com.balancedbytes.games.ffb.option;
 
-import com.balancedbytes.games.ffb.json.IJsonSerializable;
-import com.balancedbytes.games.ffb.xml.IXmlSerializable;
+import com.balancedbytes.games.ffb.json.IJsonWriteable;
+import com.balancedbytes.games.ffb.xml.IXmlWriteable;
 
 
 /**
  * 
  * @author Kalimar
  */
-public interface IGameOption extends IJsonSerializable, IXmlSerializable {
+public interface IGameOption extends IJsonWriteable, IXmlWriteable {
   
   public static final String XML_TAG = "option";
   public static final String XML_ATTRIBUTE_NAME = "name";

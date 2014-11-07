@@ -41,7 +41,7 @@ public class FumbblRequestCheckGamestate extends ServerRequest {
       if ((fumbblGameState == null) || !fumbblGameState.isOk()) {
         UtilFumbblRequest.reportFumbblError(getGameState(), fumbblGameState);
       } else {
-        server.getDebugLog().log(IServerLogLevel.TRACE, getGameState().getId(), fumbblGameState.getOptions().toJsonValue().toString());
+        // server.getDebugLog().log(IServerLogLevel.TRACE, getGameState().getId(), fumbblGameState.getOptions().toJsonValue().toString());
         game.getOptions().init(fumbblGameState.getOptions());
       	game.setTesting(game.isTesting() || UtilGameOption.isOptionEnabled(game, GameOptionId.TEST_MODE));
       	InternalServerCommandFumbblGameChecked gameCheckedCommand = new InternalServerCommandFumbblGameChecked(getGameState().getId());
@@ -52,5 +52,7 @@ public class FumbblRequestCheckGamestate extends ServerRequest {
       server.getCommunication().handleCommand(gameCheckedCommand);
     }
   }
+  
+  
 
 }

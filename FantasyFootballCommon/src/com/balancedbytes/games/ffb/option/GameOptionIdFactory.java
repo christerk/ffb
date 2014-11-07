@@ -25,7 +25,7 @@ public class GameOptionIdFactory implements IEnumWithNameFactory {
       if ("cardGold".equalsIgnoreCase(pName)) {
         return GameOptionId.FREE_CARD_CASH;
       }
-      if ("inducementGold".equalsIgnoreCase(pName)) {
+      if ("freeInducementMoney".equalsIgnoreCase(pName)) {
         return GameOptionId.FREE_INDUCEMENT_CASH;
       }
       if ("wideZonePlayers".equalsIgnoreCase(pName)) {

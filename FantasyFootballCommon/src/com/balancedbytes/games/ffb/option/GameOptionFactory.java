@@ -133,7 +133,7 @@ public class GameOptionFactory {
     GameOptionId optionId = (GameOptionId) IJsonOption.GAME_OPTION_ID.getFrom(jsonObject);
     IGameOption gameOption = createGameOption(optionId);
     if (gameOption != null) {
-      gameOption.initFrom(jsonObject);
+      gameOption.setValue(IJsonOption.GAME_OPTION_VALUE.getFrom(jsonObject));
     }
     return gameOption;
   }

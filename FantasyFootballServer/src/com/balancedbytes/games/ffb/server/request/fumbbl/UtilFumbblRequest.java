@@ -1,10 +1,13 @@
 package com.balancedbytes.games.ffb.server.request.fumbbl;
 
+import java.io.BufferedInputStream;
 import java.io.BufferedReader;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.StringReader;
 import java.net.URLEncoder;
 import java.security.NoSuchAlgorithmException;
+import java.util.Properties;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -21,6 +24,7 @@ import com.balancedbytes.games.ffb.server.FantasyFootballServer;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.IServerLogLevel;
 import com.balancedbytes.games.ffb.server.IServerProperty;
+import com.balancedbytes.games.ffb.server.ServerMode;
 import com.balancedbytes.games.ffb.server.util.UtilServerHttpClient;
 import com.balancedbytes.games.ffb.util.StringTool;
 import com.balancedbytes.games.ffb.xml.XmlHandler;
@@ -40,23 +44,33 @@ public class UtilFumbblRequest {
     if ((pServer == null) || !StringTool.isProvided(pRequestUrl)) {
       return null;
     }
-    FumbblGameState gameState = null;
     try {
       String responseXml = UtilServerHttpClient.fetchPage(pRequestUrl);
-      if (StringTool.isProvided(responseXml)) {
-        pServer.getDebugLog().log(IServerLogLevel.DEBUG, DebugLog.FUMBBL_RESPONSE, responseXml);
-        BufferedReader xmlReader = new BufferedReader(new StringReader(responseXml));
-        InputSource xmlSource = new InputSource(xmlReader);
-        gameState = new FumbblGameState(pRequestUrl);
-        XmlHandler.parse(xmlSource, gameState);
-        xmlReader.close();
-      }
+      pServer.getDebugLog().log(IServerLogLevel.DEBUG, DebugLog.FUMBBL_RESPONSE, responseXml);
+      return processFumbblGameStateResponse(pServer, pRequestUrl, responseXml);
+    } catch (IOException ioe) {
+      throw new FantasyFootballException(ioe);
+    }
+  }
+
+  private static FumbblGameState processFumbblGameStateResponse(FantasyFootballServer pServer, String pRequestUrl, String pResponseXml) {
+    if ((pServer == null) || !StringTool.isProvided(pResponseXml)) {
+      return null;
+    }
+    FumbblGameState gameState = null;
+    try {
+      BufferedReader xmlReader = new BufferedReader(new StringReader(pResponseXml));
+      InputSource xmlSource = new InputSource(xmlReader);
+      gameState = new FumbblGameState(pRequestUrl);
+      XmlHandler.parse(xmlSource, gameState);
+      xmlReader.close();
     } catch (IOException ioe) {
       throw new FantasyFootballException(ioe);
     }
     return gameState;
   }
 
+  
   public static String getFumbblAuthChallengeResponseForFumbblUser(FantasyFootballServer pServer) {
     if (pServer == null) {
       return null;
@@ -164,6 +178,50 @@ public class UtilFumbblRequest {
       throw new FantasyFootballException(ioe);
     }
     return roster;
+  }
+  
+  public static void main(String[] args) {
+    
+    try {
+      
+      BufferedInputStream propertyInputStream = new BufferedInputStream(new FileInputStream(args[0]));
+      Properties properties = new Properties();
+      properties.load(propertyInputStream);
+      propertyInputStream.close();
+      
+      FantasyFootballServer server = new FantasyFootballServer(ServerMode.STANDALONE, properties);
+      
+      String responseXml = "<gamestate>"
+          + "<result>OK</result>"
+          + "<options>"
+          + "<option name=\"overtime\" value=\"false\"/>"
+          + "<option name=\"turntime\" value=\"240\"/>"
+          + "<option name=\"maxCards\" value=\"5\"/>"
+          + "<option name=\"cardGold\" value=\"0\"/>"
+          + "<option name=\"inducementGold\" value=\"0\"/>"
+          + "<option name=\"wideZonePlayers\" value=\"2\"/>"
+          + "<option name=\"playersOnField\" value=\"11\"/>"
+          + "<option name=\"playersOnLos\" value=\"3\"/>"
+          + "<option name=\"spikedBall\" value=\"false\"/>"
+          + "<option name=\"clawNoStack\" value=\"false\"/>"
+          + "<option name=\"pilingOnNoStack\" value=\"false\"/>"
+          + "<option name=\"pilingOnKoDouble\" value=\"false\"/>"
+          + "<option name=\"sneakyAsFoul\" value=\"false\"/>"
+          + "<option name=\"sneakyBanToKo\" value=\"false\"/>"
+          + "<option name=\"standFirmNoFall\" value=\"false\"/>"
+          + "<option name=\"rightStuffCancelTackle\" value=\"false\"/>"
+          + "<option name=\"extraMvp\" value=\"true\"/>"
+          + "<option name=\"freeInducementMoney\" value=\"100000\"/>"
+          + "</options>"
+          + "</gamestate>";
+      
+      FumbblGameState fumbblGameState = processFumbblGameStateResponse(server, "http://fumbbl.com/", responseXml);      
+      System.out.println(fumbblGameState.getOptions().toJsonValue());      
+      
+    } catch (Exception pAny) {
+      pAny.printStackTrace();
+    }
+    
   }
 
 }

@@ -47,7 +47,7 @@ public class GameOptionBoolean extends GameOptionAbstract {
     } else if ("1".equals(pValue)) {
       return setValue(true);
     } else {
-      return setValue(Boolean.getBoolean(pValue));
+      return setValue(Boolean.parseBoolean(pValue));
     }
   }
 
