@@ -114,21 +114,21 @@ public class DbInitializer {
   private int createTableGamesInfo(Statement pStatement) throws SQLException {
     StringBuilder sql = new StringBuilder();
     sql.append("CREATE TABLE ").append(IDbTableGamesInfo.TABLE_NAME).append(" (");
-    sql.append(IDbTableGamesInfo.COLUMN_ID).append(" BIGINT NOT NULL,");             // 1
-    sql.append(IDbTableGamesInfo.COLUMN_SCHEDULED).append(" DATETIME,");             // 2
-    sql.append(IDbTableGamesInfo.COLUMN_STARTED).append(" DATETIME,");               // 3
-    sql.append(IDbTableGamesInfo.COLUMN_FINISHED).append(" DATETIME,");              // 4
-    sql.append(IDbTableGamesInfo.COLUMN_COACH_HOME).append(" VARCHAR(40),");         // 5
-    sql.append(IDbTableGamesInfo.COLUMN_TEAM_HOME_ID).append(" VARCHAR(40),");       // 6
-    sql.append(IDbTableGamesInfo.COLUMN_TEAM_HOME_NAME).append(" VARCHAR(100),");    // 7
-    sql.append(IDbTableGamesInfo.COLUMN_COACH_AWAY).append(" VARCHAR(40),");         // 8
-    sql.append(IDbTableGamesInfo.COLUMN_TEAM_AWAY_ID).append(" VARCHAR(40),");       // 9
-    sql.append(IDbTableGamesInfo.COLUMN_TEAM_AWAY_NAME).append(" VARCHAR(100),");    // 10
-    sql.append(IDbTableGamesInfo.COLUMN_HALF).append(" TINYINT NOT NULL,");          // 11
-    sql.append(IDbTableGamesInfo.COLUMN_TURN).append(" TINYINT NOT NULL,");          // 12
-    sql.append(IDbTableGamesInfo.COLUMN_HOME_PLAYING).append(" BOOLEAN NOT NULL,");  // 13
-    sql.append(IDbTableGamesInfo.COLUMN_STATUS).append(" CHAR(1) NOT NULL,");        // 14
-    sql.append(IDbTableGamesInfo.COLUMN_TESTING).append(" BOOLEAN NOT NULL,");       // 15
+    sql.append(IDbTableGamesInfo.COLUMN_ID).append(" BIGINT NOT NULL AUTO_INCREMENT,");  // 1
+    sql.append(IDbTableGamesInfo.COLUMN_SCHEDULED).append(" DATETIME,");                 // 2
+    sql.append(IDbTableGamesInfo.COLUMN_STARTED).append(" DATETIME,");                   // 3
+    sql.append(IDbTableGamesInfo.COLUMN_FINISHED).append(" DATETIME,");                  // 4
+    sql.append(IDbTableGamesInfo.COLUMN_COACH_HOME).append(" VARCHAR(40),");             // 5
+    sql.append(IDbTableGamesInfo.COLUMN_TEAM_HOME_ID).append(" VARCHAR(40),");           // 6
+    sql.append(IDbTableGamesInfo.COLUMN_TEAM_HOME_NAME).append(" VARCHAR(100),");        // 7
+    sql.append(IDbTableGamesInfo.COLUMN_COACH_AWAY).append(" VARCHAR(40),");             // 8
+    sql.append(IDbTableGamesInfo.COLUMN_TEAM_AWAY_ID).append(" VARCHAR(40),");           // 9
+    sql.append(IDbTableGamesInfo.COLUMN_TEAM_AWAY_NAME).append(" VARCHAR(100),");        // 10
+    sql.append(IDbTableGamesInfo.COLUMN_HALF).append(" TINYINT NOT NULL,");              // 11
+    sql.append(IDbTableGamesInfo.COLUMN_TURN).append(" TINYINT NOT NULL,");              // 12
+    sql.append(IDbTableGamesInfo.COLUMN_HOME_PLAYING).append(" BOOLEAN NOT NULL,");      // 13
+    sql.append(IDbTableGamesInfo.COLUMN_STATUS).append(" CHAR(1) NOT NULL,");            // 14
+    sql.append(IDbTableGamesInfo.COLUMN_TESTING).append(" BOOLEAN NOT NULL,");           // 15
     sql.append("PRIMARY KEY(").append(IDbTableGamesInfo.COLUMN_ID).append(")");
   	sql.append(") ENGINE=InnoDB DEFAULT CHARSET=utf8;");
     return pStatement.executeUpdate(sql.toString());

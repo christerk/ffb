@@ -174,7 +174,8 @@ public class ClientCommandBuyInducements extends NetCommand {
     IJsonOption.MERCENARY_POSTION_IDS.addTo(jsonObject, fMercenaryPositionIds);
     String[] mercenarySkillNames = new String[fMercenarySkills.size()];
     for (int i = 0; i < mercenarySkillNames.length; i++) {
-      mercenarySkillNames[i] = fMercenarySkills.get(i).getName();
+      Skill skill = fMercenarySkills.get(i);
+      mercenarySkillNames[i] = (skill != null) ? skill.getName() : "";
     }
     IJsonOption.MERCENARY_SKILLS.addTo(jsonObject, mercenarySkillNames);
     return jsonObject;

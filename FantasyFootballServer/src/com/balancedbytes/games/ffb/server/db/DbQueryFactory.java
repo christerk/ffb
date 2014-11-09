@@ -28,8 +28,8 @@ import com.balancedbytes.games.ffb.server.db.old.DbTeamsForGameStateQuery;
 import com.balancedbytes.games.ffb.server.db.old.DbTurnDataForGameStateQuery;
 import com.balancedbytes.games.ffb.server.db.query.DbAdminListByStatusQuery;
 import com.balancedbytes.games.ffb.server.db.query.DbGameListQueryOpenGamesByCoach;
+import com.balancedbytes.games.ffb.server.db.query.DbGamesInfoInsertQuery;
 import com.balancedbytes.games.ffb.server.db.query.DbGamesSerializedQuery;
-import com.balancedbytes.games.ffb.server.db.query.DbGamesSerializedQueryMaxId;
 import com.balancedbytes.games.ffb.server.db.query.DbPasswordForCoachQuery;
 import com.balancedbytes.games.ffb.server.db.query.DbPlayerMarkersQuery;
 import com.balancedbytes.games.ffb.server.db.query.DbTeamSetupsForTeamQuery;
@@ -63,7 +63,7 @@ public class DbQueryFactory implements IDbStatementFactory {
     register(new DbGameLogsForGameStateQuery(pServer));
     register(new DbGameOptionsForGameStateQuery(pServer));
     register(new DbGamesSerializedQuery(pServer));
-    register(new DbGamesSerializedQueryMaxId(pServer));
+    register(new DbGamesInfoInsertQuery(pServer));
     register(new DbGameStatesQuery(pServer));
     register(new DbInducementsForGameStateQuery(pServer));
     register(new DbPlayerIconsForGameStateQuery(pServer));

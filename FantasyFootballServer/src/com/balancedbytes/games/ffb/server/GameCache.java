@@ -33,12 +33,11 @@ import com.balancedbytes.games.ffb.server.db.DbTransaction;
 import com.balancedbytes.games.ffb.server.db.delete.DbGamesInfoDeleteParameter;
 import com.balancedbytes.games.ffb.server.db.delete.DbGamesSerializedDeleteParameter;
 import com.balancedbytes.games.ffb.server.db.delete.DbPlayerMarkersDeleteParameter;
-import com.balancedbytes.games.ffb.server.db.insert.DbGamesInfoInsertParameter;
 import com.balancedbytes.games.ffb.server.db.insert.DbGamesSerializedInsertParameter;
 import com.balancedbytes.games.ffb.server.db.insert.DbPlayerMarkersInsertParameterList;
 import com.balancedbytes.games.ffb.server.db.query.DbGameListQueryOpenGamesByCoach;
+import com.balancedbytes.games.ffb.server.db.query.DbGamesInfoInsertQuery;
 import com.balancedbytes.games.ffb.server.db.query.DbGamesSerializedQuery;
-import com.balancedbytes.games.ffb.server.db.query.DbGamesSerializedQueryMaxId;
 import com.balancedbytes.games.ffb.server.db.update.DbGamesInfoUpdateParameter;
 import com.balancedbytes.games.ffb.server.db.update.DbGamesSerializedUpdateParameter;
 import com.balancedbytes.games.ffb.server.net.SessionManager;
@@ -56,7 +55,6 @@ import com.balancedbytes.games.ffb.util.UtilTeamValue;
 public class GameCache {
 	
   private FantasyFootballServer fServer;
-  private IdGenerator fIdGenerator; 
   private Map<Long, GameState> fGameStateById;
   private Map<String, Long> fGameIdByName;
   private RosterCache fRosterCache;
@@ -67,7 +65,6 @@ public class GameCache {
   
   public GameCache(FantasyFootballServer pServer) {
     fServer = pServer;
-    fIdGenerator = new IdGenerator(0);
     fGameStateById = new HashMap<Long, GameState>();
     fGameIdByName = new HashMap<String, Long>();
     fRosterCache = new RosterCache();
@@ -75,8 +72,6 @@ public class GameCache {
   }
   
   public void init() {
-    DbGamesSerializedQueryMaxId queryMaxId = (DbGamesSerializedQueryMaxId) getServer().getDbQueryFactory().getStatement(DbStatementId.GAMES_SERIALIZED_QUERY_MAX_ID);
-    fIdGenerator = new IdGenerator(queryMaxId.execute());
     loadPitchProperties();
     if (ServerMode.STANDALONE == getServer().getMode()) {
       try {
@@ -193,7 +188,7 @@ public class GameCache {
   
   public GameState createGameState(GameCacheMode pMode) {
     Game game = new Game();
-    game.setId(fIdGenerator.generateId());
+    game.setId(0L);  // id is unknown - will be determined by the db
   	game.setTesting(GameCacheMode.START_TEST_GAME == pMode);
     game.setHomePlaying(true);
     game.setTurnMode(TurnMode.START_GAME);
@@ -206,9 +201,17 @@ public class GameCache {
 	    gameState.getGame().setScheduled(new Date());
     } else {
       gameState.setStatus(GameStatus.STARTING);
-    	add(gameState, pMode);
     }
-    queueDbInsert(gameState);
+    // insert the games info directly and generate an id
+    DbGamesInfoInsertQuery insertQuery = (DbGamesInfoInsertQuery) getServer().getDbQueryFactory().getStatement(DbStatementId.GAMES_INFO_INSERT_QUERY);
+    insertQuery.execute(gameState);
+    if (GameCacheMode.SCHEDULE_GAME != pMode) {
+      add(gameState, pMode);
+    }
+    // queue the game serialization
+    DbTransaction transaction = new DbTransaction();
+    transaction.add(new DbGamesSerializedInsertParameter(gameState));
+    getServer().getDbUpdater().add(transaction);
     return gameState;
   }
   
@@ -299,17 +302,7 @@ public class GameCache {
   public Team[] getTeamsForCoach(String pCoach) {
     return fTeamCache.getTeamsForCoach(pCoach);
   }
-  
-  private void queueDbInsert(GameState pGameState) {
-    if (pGameState == null) {
-      return;
-    }
-    DbTransaction transaction = new DbTransaction();
-		transaction.add(new DbGamesInfoInsertParameter(pGameState));
-		transaction.add(new DbGamesSerializedInsertParameter(pGameState));
-	  getServer().getDbUpdater().add(transaction);
-  }
-  
+ 
 	public void queueDbUpdate(GameState pGameState, boolean pWithSerialization) {
 	  if (pGameState == null) {
 	    return;
