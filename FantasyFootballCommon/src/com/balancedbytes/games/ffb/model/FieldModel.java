@@ -637,8 +637,11 @@ public class FieldModel implements IByteArrayReadable, IJsonSerializable {
     for (String playerId : fStateByPlayerId.keySet()) {
       Player player = getGame().getPlayerById(playerId);
       transformedModel.setPlayerState(player, getPlayerState(player));
-      for (Card card : getCards(player)) {
-      	transformedModel.addCard(player, card);
+      Card[] cards = getCards(player);
+      if (ArrayTool.isProvided(cards)) {
+        for (Card card : getCards(player)) {
+        	transformedModel.addCard(player, card);
+        }
       }
     }
     

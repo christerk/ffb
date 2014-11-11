@@ -180,7 +180,7 @@ public class ResourceComponent extends JPanel {
     if (igor != null) {
 	    fRefreshNecessary |= ((igor.getValue() - igor.getUses()) != fCurrentIgor);
 	    fCurrentIgor = igor.getValue() - igor.getUses();
-	    if (fCurrentApothecaries > 0) {
+	    if (fCurrentIgor > 0) {
 	      ResourceSlot igorSlot = fSlots[slotIndex++];
 	      igorSlot.setType(ResourceSlot.TYPE_IGOR);
 	      igorSlot.setValue(fCurrentIgor);

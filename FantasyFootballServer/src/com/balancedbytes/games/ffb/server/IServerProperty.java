@@ -8,8 +8,6 @@ public interface IServerProperty {
   
   String SERVER_PORT = "server.port";
   String SERVER_BASE_DIR = "server.base.dir";
-  
-  String GAME_MIN_ID = "game.min.id";
 
   String SERVER_LOG_DIR = "server.log.dir";
   String SERVER_LOG_LEVEL = "server.log.level";

@@ -537,9 +537,17 @@ public class UtilServerInjury {
     return raisedPlayer;
   }
 
+  public static StepParameterSet dropPlayer(IStep pStep, Player pPlayer) {
+    return dropPlayer(pStep, pPlayer, PlayerState.PRONE);
+  }
+  
+  public static StepParameterSet stunPlayer(IStep pStep, Player pPlayer) {
+    return dropPlayer(pStep, pPlayer, PlayerState.STUNNED);
+  }
+  
   // drops the given player
   // sets stepParameter END_TURN if player is on acting team and drops the ball 
-  public static StepParameterSet dropPlayer(IStep pStep, Player pPlayer) {
+  private static StepParameterSet dropPlayer(IStep pStep, Player pPlayer, int pPlayerBase) {
   	StepParameterSet stepParameters = new StepParameterSet();
   	GameState gameState = pStep.getGameState();
     Game game = gameState.getGame();
@@ -547,8 +555,8 @@ public class UtilServerInjury {
     PlayerState playerState = game.getFieldModel().getPlayerState(pPlayer);
     if ((playerCoordinate != null) && (playerState != null)) {
       if ((playerState.getBase() != PlayerState.PRONE) && (playerState.getBase() != PlayerState.STUNNED)) {
-        playerState = playerState.changeBase(PlayerState.PRONE);
-        if (pPlayer == game.getActingPlayer().getPlayer()) {
+        playerState = playerState.changeBase(pPlayerBase);
+        if ((pPlayer == game.getActingPlayer().getPlayer()) || (PlayerState.STUNNED == pPlayerBase)) {
         	playerState = playerState.changeActive(false);
         }
       }

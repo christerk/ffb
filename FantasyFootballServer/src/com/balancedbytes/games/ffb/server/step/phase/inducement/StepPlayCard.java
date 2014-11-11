@@ -29,6 +29,7 @@ import com.balancedbytes.games.ffb.server.step.StepParameterSet;
 import com.balancedbytes.games.ffb.server.step.UtilServerSteps;
 import com.balancedbytes.games.ffb.server.util.UtilServerCards;
 import com.balancedbytes.games.ffb.server.util.UtilServerDialog;
+import com.balancedbytes.games.ffb.server.util.UtilServerInjury;
 import com.balancedbytes.games.ffb.server.util.UtilServerSetup;
 import com.balancedbytes.games.ffb.util.StringTool;
 import com.balancedbytes.games.ffb.util.UtilPlayer;
@@ -225,8 +226,7 @@ public final class StepPlayCard extends AbstractStep {
       doNextStep = true;
       game.getFieldModel().setPlayerState(player, playerState.changeBase(PlayerState.PRONE).changeActive(false).changeRooted(false));
       Player opponent = game.getPlayerById(fOpponentId);
-      PlayerState opponentState = game.getFieldModel().getPlayerState(opponent);
-      game.getFieldModel().setPlayerState(opponent, opponentState.changeBase(PlayerState.STUNNED).changeActive(false));
+      UtilServerInjury.stunPlayer(this, opponent);
     }
     return doNextStep;
   }

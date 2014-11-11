@@ -53,12 +53,12 @@ public final class StepMvp extends AbstractStep {
       nrOfAwayMvps++;
     }
     if (gameResult.getTeamResultHome().hasConceded() && (UtilPlayer.findPlayersInReserveOrField(game, game.getTeamHome()).length > 2)) {
-      nrOfHomeMvps--;
+      nrOfHomeMvps = 0;
       nrOfAwayMvps++;
     }
     if (gameResult.getTeamResultAway().hasConceded() && (UtilPlayer.findPlayersInReserveOrField(game, game.getTeamAway()).length > 2)) {
       nrOfHomeMvps++;
-      nrOfAwayMvps--;
+      nrOfAwayMvps = 0;
     }
     for (int i = 0; i < nrOfHomeMvps; i++) {
       Player[] playersForMvp = findPlayersForMvp(game.getTeamHome());
