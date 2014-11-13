@@ -26,6 +26,7 @@ import com.balancedbytes.games.ffb.server.step.StepParameter;
 import com.balancedbytes.games.ffb.server.step.StepParameterKey;
 import com.balancedbytes.games.ffb.server.step.UtilServerSteps;
 import com.balancedbytes.games.ffb.server.util.UtilServerDialog;
+import com.balancedbytes.games.ffb.util.ArrayTool;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
@@ -103,8 +104,10 @@ public final class StepBuyCards extends AbstractStep {
     Game game = getGameState().getGame();
     GameResult gameResult = game.getGameResult();
     if (UtilGameOption.getIntOption(game, GameOptionId.MAX_NR_OF_CARDS) == 0) {
-      calculateInducementGold();
+      int freeCash = UtilGameOption.getIntOption(game, GameOptionId.FREE_INDUCEMENT_CASH);
+      fInducementGoldHome = UtilInducementSequence.calculateInducementGold(game, true) + freeCash;
       publishParameter(new StepParameter(StepParameterKey.INDUCEMENT_GOLD_HOME, fInducementGoldHome));
+      fInducementGoldAway = UtilInducementSequence.calculateInducementGold(game, false) + freeCash;
       publishParameter(new StepParameter(StepParameterKey.INDUCEMENT_GOLD_AWAY, fInducementGoldAway));
       getResult().setNextAction(StepAction.NEXT_STEP);
       return;
@@ -124,9 +127,9 @@ public final class StepBuyCards extends AbstractStep {
       fBuyCardAway = null;
     } else {
       if (!fCardsSelectedHome && !fCardsSelectedAway) {
-        calculateInducementGold();
-        fInducementGoldHome += UtilGameOption.getIntOption(game, GameOptionId.FREE_CARD_CASH);
-        fInducementGoldAway += UtilGameOption.getIntOption(game, GameOptionId.FREE_CARD_CASH);
+        int freeCash = UtilGameOption.getIntOption(game, GameOptionId.FREE_INDUCEMENT_CASH) + UtilGameOption.getIntOption(game, GameOptionId.FREE_CARD_CASH);
+        fInducementGoldHome = UtilInducementSequence.calculateInducementGold(game, true) + freeCash;
+        fInducementGoldAway = UtilInducementSequence.calculateInducementGold(game, false) + freeCash;
       }
       if (fInducementGoldHome < CardType.getMinimumPrice()) {
         fCardsSelectedHome = true;
@@ -136,24 +139,14 @@ public final class StepBuyCards extends AbstractStep {
       }
       if (fCardsSelectedHome && !fReportedHome) {
         fReportedHome = true;
-        int totalCostHome = 0;
         Card[] cardsHome = game.getTurnDataHome().getInducementSet().getAllCards();
-        for (Card card : cardsHome) {
-          totalCostHome += card.getType().getPrice();
-        }
-        gameResult.getTeamResultHome().setPettyCashUsed(
-            Math.max(0, totalCostHome - UtilGameOption.getIntOption(game, GameOptionId.FREE_CARD_CASH)));
+        int totalCostHome = calculateTotalCost(cardsHome);
         getResult().addReport(new ReportCardsBought(game.getTeamHome().getId(), cardsHome.length, totalCostHome));
       }
       if (fCardsSelectedAway && !fReportedAway) {
         fReportedAway = true;
-        int totalCostAway = 0;
         Card[] cardsAway = game.getTurnDataAway().getInducementSet().getAllCards();
-        for (Card card : cardsAway) {
-          totalCostAway += card.getType().getPrice();
-        }
-        gameResult.getTeamResultAway().setPettyCashUsed(
-            Math.max(0, totalCostAway - UtilGameOption.getIntOption(game, GameOptionId.FREE_CARD_CASH)));
+        int totalCostAway = calculateTotalCost(cardsAway);
         getResult().addReport(new ReportCardsBought(game.getTeamAway().getId(), cardsAway.length, totalCostAway));
       }
       if (!fCardsSelectedHome && !fCardsSelectedAway) {
@@ -169,29 +162,24 @@ public final class StepBuyCards extends AbstractStep {
       } else if (!fCardsSelectedAway) {
         UtilServerDialog.showDialog(getGameState(), createDialogParameter(game.getTeamAway().getId(), fInducementGoldAway));
       } else {
-        calculateInducementGold();
-        publishParameter(new StepParameter(StepParameterKey.INDUCEMENT_GOLD_HOME, fInducementGoldHome));
-        publishParameter(new StepParameter(StepParameterKey.INDUCEMENT_GOLD_AWAY, fInducementGoldAway));
+        int freeCash = UtilGameOption.getIntOption(game, GameOptionId.FREE_INDUCEMENT_CASH);
+        int maxInducementGoldHome = UtilInducementSequence.calculateInducementGold(game, true) + freeCash;
+        publishParameter(new StepParameter(StepParameterKey.INDUCEMENT_GOLD_HOME, Math.min(fInducementGoldHome, maxInducementGoldHome)));
+        int maxInducementGoldAway = UtilInducementSequence.calculateInducementGold(game, false) + freeCash;
+        publishParameter(new StepParameter(StepParameterKey.INDUCEMENT_GOLD_AWAY, Math.min(fInducementGoldAway, maxInducementGoldAway)));
         getResult().setNextAction(StepAction.NEXT_STEP);
       }
     }
   }
-
-  private void calculateInducementGold() {
-    Game game = getGameState().getGame();
-    GameResult gameResult = game.getGameResult();
-    int homeTV = gameResult.getTeamResultHome().getTeamValue();
-    int awayTV = gameResult.getTeamResultAway().getTeamValue();
-    fInducementGoldHome = gameResult.getTeamResultHome().getPettyCashTransferred();
-    fInducementGoldAway = gameResult.getTeamResultAway().getPettyCashTransferred();
-    if ((awayTV > homeTV) && ((awayTV - homeTV) > fInducementGoldHome)) {
-      fInducementGoldHome = (awayTV - homeTV);
+  
+  private int calculateTotalCost(Card[] pCards) {
+    int totalCost = 0;
+    if (ArrayTool.isProvided(pCards)) {
+      for (Card card : pCards) {
+        totalCost += card.getType().getPrice();
+      }
     }
-    if ((homeTV > awayTV) && ((homeTV - awayTV) > fInducementGoldAway)) {
-      fInducementGoldAway = (homeTV - awayTV);
-    }
-    fInducementGoldHome -= gameResult.getTeamResultHome().getPettyCashUsed();
-    fInducementGoldAway -= gameResult.getTeamResultAway().getPettyCashUsed();
+    return totalCost;
   }
 
   private void buildDecks() {

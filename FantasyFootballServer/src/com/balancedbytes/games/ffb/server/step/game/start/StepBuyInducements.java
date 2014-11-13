@@ -107,7 +107,6 @@ public final class StepBuyInducements extends AbstractStep {
     StepCommandStatus commandStatus = super.handleCommand(pReceivedCommand);
 		if (commandStatus == StepCommandStatus.UNHANDLED_COMMAND) {
 			Game game = getGameState().getGame();
-			GameResult gameResult = game.getGameResult();
 			switch (pReceivedCommand.getId()) {
 	      case CLIENT_BUY_INDUCEMENTS:
 	        ClientCommandBuyInducements buyInducementsCommand = (ClientCommandBuyInducements) pReceivedCommand.getCommand();
@@ -116,16 +115,12 @@ public final class StepBuyInducements extends AbstractStep {
 	          addStarPlayers(game.getTeamHome(), buyInducementsCommand.getStarPlayerPositionIds());
 	          addMercenaries(game.getTeamHome(), buyInducementsCommand.getMercenaryPositionIds(), buyInducementsCommand.getMercenarySkills());
 	          fGoldUsedHome = fInducementGoldHome - buyInducementsCommand.getAvailableGold();
-	          int pettyCashUsed = Math.max(0, fGoldUsedHome - UtilGameOption.getIntOption(game, GameOptionId.FREE_INDUCEMENT_CASH));
-	          gameResult.getTeamResultHome().setPettyCashUsed(gameResult.getTeamResultHome().getPettyCashUsed() + pettyCashUsed);
 	          fInducementsSelectedHome = true;
 	        } else {
 	          game.getTurnDataAway().getInducementSet().add(buyInducementsCommand.getInducementSet());
 	          addStarPlayers(game.getTeamAway(), buyInducementsCommand.getStarPlayerPositionIds());
 	          addMercenaries(game.getTeamAway(), buyInducementsCommand.getMercenaryPositionIds(), buyInducementsCommand.getMercenarySkills());
 	          fGoldUsedAway = fInducementGoldAway - buyInducementsCommand.getAvailableGold();
-	          int pettyCashUsed = Math.max(0, fGoldUsedAway - UtilGameOption.getIntOption(game, GameOptionId.FREE_INDUCEMENT_CASH));
-	          gameResult.getTeamResultAway().setPettyCashUsed(gameResult.getTeamResultAway().getPettyCashUsed() + pettyCashUsed);
 	          fInducementsSelectedAway = true;
 	        }
 	        commandStatus = StepCommandStatus.EXECUTE_STEP;
@@ -149,10 +144,6 @@ public final class StepBuyInducements extends AbstractStep {
     int homeTV = gameResult.getTeamResultHome().getTeamValue();
     int awayTV = gameResult.getTeamResultAway().getTeamValue();
     if (UtilGameOption.isOptionEnabled(game, GameOptionId.INDUCEMENTS)) {
-      if (!fInducementsSelectedHome && !fInducementsSelectedAway) {
-    	  fInducementGoldHome += UtilGameOption.getIntOption(game, GameOptionId.FREE_INDUCEMENT_CASH);
-    	  fInducementGoldAway += UtilGameOption.getIntOption(game, GameOptionId.FREE_INDUCEMENT_CASH);
-      }
       if (fInducementGoldHome < MINIMUM_PETTY_CASH_FOR_INDUCEMENTS) {
         fInducementsSelectedHome = true;
       }
@@ -214,6 +205,13 @@ public final class StepBuyInducements extends AbstractStep {
   		SequenceGenerator.getInstance().pushInducementSequence(getGameState(), InducementPhase.AFTER_INDUCEMENTS_PURCHASED, false);
   		SequenceGenerator.getInstance().pushInducementSequence(getGameState(), InducementPhase.AFTER_INDUCEMENTS_PURCHASED, true);
   	}
+  	Game game = getGameState().getGame();
+  	int restGoldHome = Math.max(0, fInducementGoldHome - fGoldUsedHome);
+  	int maxInducementGoldHome = UtilInducementSequence.calculateInducementGold(game, true);
+  	game.getGameResult().getTeamResultHome().setPettyCashUsed(Math.max(0, maxInducementGoldHome - restGoldHome));
+    int restGoldAway = Math.max(0, fInducementGoldAway - fGoldUsedAway);
+    int maxInducementGoldAway = UtilInducementSequence.calculateInducementGold(game, false);
+    game.getGameResult().getTeamResultHome().setPettyCashUsed(Math.max(0, maxInducementGoldAway - restGoldAway));
   	getResult().setNextAction(StepAction.NEXT_STEP);
   }
     

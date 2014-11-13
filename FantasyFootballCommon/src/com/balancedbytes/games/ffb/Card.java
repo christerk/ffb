@@ -216,11 +216,11 @@ public enum Card implements IEnumWithId, IEnumWithName {
  
   CHOP_BLOCK(41, "Chop Block", "Chop Block", CardType.DIRTY_TRICK, CardTarget.OWN_PLAYER, false,
 		new InducementPhase[] { InducementPhase.END_OF_OWN_TURN }, InducementDuration.UNTIL_END_OF_TURN,
-		"Player drops prone and stuns an adjacent player"),
+		"Unmoved player drops prone and stuns an adjacent player"),
   //	Description:
   //  	A player throws a dirty block on the opponent.
   //	Timing:
-  //  	Play after your turn has ended but before your opponentÂ’s turn
+  //  	Play after your turn has ended but before your opponent's turn
   // 		begins. You may not play this card after a kick-off is resolved.
   //	Effect:
   // 		This card may only be played on one of your Standing players that
