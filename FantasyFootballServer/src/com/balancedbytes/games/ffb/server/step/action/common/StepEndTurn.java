@@ -5,7 +5,6 @@ import java.util.List;
 
 import com.balancedbytes.games.ffb.Card;
 import com.balancedbytes.games.ffb.FieldCoordinate;
-import com.balancedbytes.games.ffb.FieldCoordinateBounds;
 import com.balancedbytes.games.ffb.HeatExhaustion;
 import com.balancedbytes.games.ffb.Inducement;
 import com.balancedbytes.games.ffb.InducementDuration;
@@ -21,7 +20,6 @@ import com.balancedbytes.games.ffb.Weather;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.dialog.DialogBribesParameter;
 import com.balancedbytes.games.ffb.json.UtilJson;
-import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.GameResult;
 import com.balancedbytes.games.ffb.model.InducementSet;
@@ -50,10 +48,10 @@ import com.balancedbytes.games.ffb.server.step.StepParameter;
 import com.balancedbytes.games.ffb.server.step.StepParameterKey;
 import com.balancedbytes.games.ffb.server.step.StepParameterSet;
 import com.balancedbytes.games.ffb.server.step.UtilServerSteps;
+import com.balancedbytes.games.ffb.server.util.UtilServerCards;
 import com.balancedbytes.games.ffb.server.util.UtilServerDialog;
 import com.balancedbytes.games.ffb.server.util.UtilServerGame;
 import com.balancedbytes.games.ffb.server.util.UtilServerInducementUse;
-import com.balancedbytes.games.ffb.server.util.UtilServerCards;
 import com.balancedbytes.games.ffb.server.util.UtilServerTimer;
 import com.balancedbytes.games.ffb.util.ArrayTool;
 import com.balancedbytes.games.ffb.util.UtilBox;
@@ -431,22 +429,6 @@ public class StepEndTurn extends AbstractStep {
       }
     }
     UtilServerGame.updateLeaderReRolls(this);
-  }
-
-  public boolean checkTouchdown() {
-  	boolean touchdown = false;
-    Game game = getGameState().getGame();
-    if (game.getFieldModel().isBallInPlay() && !game.getFieldModel().isBallMoving()) {
-      FieldCoordinate ballPosition = game.getFieldModel().getBallCoordinate();
-      Player ballCarrier = game.getFieldModel().getPlayer(ballPosition);
-      PlayerState ballCarrierState = game.getFieldModel().getPlayerState(ballCarrier);
-      ActingPlayer actingPlayer = game.getActingPlayer();
-      if ((ballCarrier != null) && (ballCarrierState != null) && !ballCarrierState.isProne() && ((ballCarrier != actingPlayer.getPlayer()) || !actingPlayer.isSufferingBloodLust())) {
-        touchdown = ((game.getTeamHome().hasPlayer(ballCarrier) && FieldCoordinateBounds.ENDZONE_AWAY.isInBounds(ballPosition))
-          || (game.getTeamAway().hasPlayer(ballCarrier) && FieldCoordinateBounds.ENDZONE_HOME.isInBounds(ballPosition)));
-      }
-    }
-    return touchdown;
   }
 
   private KnockoutRecovery recoverKnockout(Player pPlayer) {
