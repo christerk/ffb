@@ -67,6 +67,7 @@ public class FumbblRequestUploadResults extends ServerRequest {
     String resultXml = fumbblResult.toXml(true);
     server.getDebugLog().log(IServerLogLevel.DEBUG, getGameState().getId(), resultXml);
     setRequestUrl(server.getProperty(IServerProperty.FUMBBL_RESULT));
+    server.getDebugLog().log(IServerLogLevel.DEBUG, DebugLog.FUMBBL_REQUEST, getRequestUrl());
     PostMethod multipartPost = new PostMethod(getRequestUrl());
     multipartPost.getParams().setBooleanParameter(HttpMethodParams.USE_EXPECT_CONTINUE, true);
     
