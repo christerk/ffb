@@ -441,7 +441,7 @@ public class StepEndTurn extends AbstractStep {
       Player ballCarrier = game.getFieldModel().getPlayer(ballPosition);
       PlayerState ballCarrierState = game.getFieldModel().getPlayerState(ballCarrier);
       ActingPlayer actingPlayer = game.getActingPlayer();
-      if ((ballCarrier != null) && (ballCarrierState != null) && ballCarrierState.hasTacklezones() && ((ballCarrier != actingPlayer.getPlayer()) || !actingPlayer.isSufferingBloodLust())) {
+      if ((ballCarrier != null) && (ballCarrierState != null) && !ballCarrierState.isProne() && ((ballCarrier != actingPlayer.getPlayer()) || !actingPlayer.isSufferingBloodLust())) {
         touchdown = ((game.getTeamHome().hasPlayer(ballCarrier) && FieldCoordinateBounds.ENDZONE_AWAY.isInBounds(ballPosition))
           || (game.getTeamAway().hasPlayer(ballCarrier) && FieldCoordinateBounds.ENDZONE_HOME.isInBounds(ballPosition)));
       }
