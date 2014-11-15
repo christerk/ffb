@@ -5,7 +5,6 @@ import com.balancedbytes.games.ffb.CardEffect;
 import com.balancedbytes.games.ffb.CardFactory;
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.PlayerChoiceMode;
-import com.balancedbytes.games.ffb.PlayerState;
 import com.balancedbytes.games.ffb.TurnMode;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.dialog.DialogPlayerChoiceParameter;
@@ -209,7 +208,6 @@ public final class StepPlayCard extends AbstractStep {
     boolean doNextStep = false;
     Game game = getGameState().getGame();
     Player player = game.getPlayerById(fPlayerId);
-    PlayerState playerState = game.getFieldModel().getPlayerState(player);
     FieldCoordinate playerCoordinate = game.getFieldModel().getPlayerCoordinate(player);
     Team ownTeam = fHomeTeam ? game.getTeamHome() : game.getTeamAway();
     Team otherTeam = fHomeTeam ? game.getTeamAway() : game.getTeamHome();
@@ -224,7 +222,7 @@ public final class StepPlayCard extends AbstractStep {
     }
     if (StringTool.isProvided(fOpponentId)) {
       doNextStep = true;
-      game.getFieldModel().setPlayerState(player, playerState.changeBase(PlayerState.PRONE).changeActive(false).changeRooted(false));
+      UtilServerInjury.dropPlayer(this, player);
       Player opponent = game.getPlayerById(fOpponentId);
       UtilServerInjury.stunPlayer(this, opponent);
     }

@@ -15,6 +15,10 @@ public class InducementPhaseFactory implements IEnumWithIdFactory, IEnumWithName
           return phase;
         }
       }
+      // backwards compatibility (name change)
+      if ("afterKickoffToOpponentResolved".equals(pName)) {
+        return InducementPhase.AFTER_KICKOFF_TO_OPPONENT;
+      }
     }
     return null;
   }

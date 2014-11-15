@@ -117,7 +117,8 @@ public class StepWrestle extends AbstractStep {
         if (UtilCards.hasSkill(game, game.getDefender(), Skill.BALL_AND_CHAIN)) {
         	FieldCoordinate defenderCoordinate = game.getFieldModel().getPlayerCoordinate(game.getDefender());
           publishParameter(new StepParameter(StepParameterKey.INJURY_RESULT,
-          	UtilServerInjury.handleInjury(this, InjuryType.BALL_AND_CHAIN, actingPlayer.getPlayer(), game.getDefender(), defenderCoordinate, null, ApothecaryMode.DEFENDER)));
+          	UtilServerInjury.handleInjury(this, InjuryType.BALL_AND_CHAIN, actingPlayer.getPlayer(), game.getDefender(), defenderCoordinate, null, ApothecaryMode.DEFENDER))
+          );
         }
       }
     	getResult().setNextAction(StepAction.NEXT_STEP);

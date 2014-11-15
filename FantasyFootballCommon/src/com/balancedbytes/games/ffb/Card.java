@@ -34,7 +34,7 @@ public enum Card implements IEnumWithId, IEnumWithName {
   //    Hypnotic Gaze, Side Step, and Bone-head for the remainder of this game.
 
   BELT_OF_INVULNERABILITY(28, "Belt of Invulnerability", "Invulnerability Belt", CardType.MAGIC_ITEM, CardTarget.OWN_PLAYER, false,
-  	new InducementPhase[] { InducementPhase.END_OF_OWN_TURN, InducementPhase.AFTER_KICKOFF_TO_OPPONENT_RESOLVED }, InducementDuration.UNTIL_END_OF_GAME,
+  	new InducementPhase[] { InducementPhase.END_OF_OWN_TURN, InducementPhase.AFTER_KICKOFF_TO_OPPONENT }, InducementDuration.UNTIL_END_OF_GAME,
   	"No modifiers or re-rolls on armour rolls"),
   //  Description:
   //    Your player really has found a way to become a man of steel.
@@ -62,7 +62,7 @@ public enum Card implements IEnumWithId, IEnumWithName {
   //    as well.
   
   FORCE_SHIELD(30, "Force Shield", "Force Shield", CardType.MAGIC_ITEM, CardTarget.OWN_PLAYER, false,
-   	new InducementPhase[] { InducementPhase.END_OF_OWN_TURN, InducementPhase.AFTER_KICKOFF_TO_OPPONENT_RESOLVED }, InducementDuration.WHILE_HOLDING_THE_BALL,
+   	new InducementPhase[] { InducementPhase.END_OF_OWN_TURN, InducementPhase.AFTER_KICKOFF_TO_OPPONENT }, InducementDuration.WHILE_HOLDING_THE_BALL,
    	"Player gets Sure Hands & Fend"),
   //  Description:
   //    Your player paid top gold for a Ring of Invincibility, but it's not all that
@@ -102,7 +102,7 @@ public enum Card implements IEnumWithId, IEnumWithName {
   //    remainder of this game.
 
   INERTIA_DAMPER(33, "Inertia Damper", "Inertia Damper", CardType.MAGIC_ITEM, CardTarget.OWN_PLAYER, false,
-    new InducementPhase[] { InducementPhase.END_OF_OWN_TURN, InducementPhase.AFTER_KICKOFF_TO_OPPONENT_RESOLVED }, InducementDuration.UNTIL_END_OF_DRIVE,
+    new InducementPhase[] { InducementPhase.END_OF_OWN_TURN, InducementPhase.AFTER_KICKOFF_TO_OPPONENT }, InducementDuration.UNTIL_END_OF_DRIVE,
     "Opponents get -1 ST to Blitzing from 1 or more squares away"),
   //  Description:
   //	  The player has come across a magic amulet that slows the speed of
@@ -130,7 +130,7 @@ public enum Card implements IEnumWithId, IEnumWithName {
   //  	crowd or throw a rock, is not affected by a lucky charm.
   
   MAGIC_GLOVES_OF_JARK_LONGARM(35, "Magic Gloves of Jark Longarm", "Magic Gloves", CardType.MAGIC_ITEM, CardTarget.OWN_PLAYER, false,
-  	new InducementPhase[] { InducementPhase.END_OF_OWN_TURN, InducementPhase.AFTER_KICKOFF_TO_OPPONENT_RESOLVED }, InducementDuration.UNTIL_END_OF_DRIVE,
+  	new InducementPhase[] { InducementPhase.END_OF_OWN_TURN, InducementPhase.AFTER_KICKOFF_TO_OPPONENT }, InducementDuration.UNTIL_END_OF_DRIVE,
   	"Player gets Pass Block & +1 to interception"),
   //  Description:
   //		Your team is featured in Spike! magazine and the magazine gives you
@@ -243,7 +243,7 @@ public enum Card implements IEnumWithId, IEnumWithName {
   //		remainder of this turn as per a successful Hypnotic Gaze roll.
 
   DISTRACT(43, "Distract", "Distract", CardType.DIRTY_TRICK, CardTarget.OWN_PLAYER, false,
-		new InducementPhase[] { InducementPhase.END_OF_OWN_TURN, InducementPhase.AFTER_KICKOFF_TO_OPPONENT_RESOLVED }, InducementDuration.UNTIL_END_OF_OPPONENTS_TURN,
+		new InducementPhase[] { InducementPhase.END_OF_OWN_TURN, InducementPhase.AFTER_KICKOFF_TO_OPPONENT }, InducementDuration.UNTIL_END_OF_OPPONENTS_TURN,
 		"Player gets Disturbing Presence & opponents in 3 squares get Bone-head"),
   //	Description:
   //		Your player is very good at distracting all those around him.
@@ -257,7 +257,7 @@ public enum Card implements IEnumWithId, IEnumWithName {
   //		Bone-head rolls return at the end of this turn).
 		
   GREASED_SHOES(44, "Greased Shoes", "Greased Shoes", CardType.DIRTY_TRICK, CardTarget.TURN, false,
-		new InducementPhase[] { InducementPhase.END_OF_OWN_TURN, InducementPhase.AFTER_KICKOFF_TO_OPPONENT_RESOLVED }, InducementDuration.UNTIL_END_OF_OPPONENTS_TURN,
+		new InducementPhase[] { InducementPhase.END_OF_OWN_TURN, InducementPhase.AFTER_KICKOFF_TO_OPPONENT }, InducementDuration.UNTIL_END_OF_OPPONENTS_TURN,
 		"Opposing players need to roll 5+ to Go For It"),
   //	Description:
   //		The magic grease applied to your opponent's shoes has finally taken	effect.

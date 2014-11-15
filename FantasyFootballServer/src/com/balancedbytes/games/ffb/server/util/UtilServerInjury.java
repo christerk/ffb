@@ -83,8 +83,8 @@ public class UtilServerInjury {
     }
     
     // ball and chain always breaks armor on being knocked down
-    if (UtilCards.hasSkill(game, pDefender, Skill.BALL_AND_CHAIN)
-    	&& (pInjuryType != InjuryType.STAB) && (pInjuryType != InjuryType.CHAINSAW)) {
+    if ((pInjuryType == InjuryType.BALL_AND_CHAIN) || (UtilCards.hasSkill(game, pDefender, Skill.BALL_AND_CHAIN)
+    	&& (pInjuryType != InjuryType.STAB) && (pInjuryType != InjuryType.CHAINSAW))) {
     	injuryResult.setArmorBroken(true);
     }
 
@@ -223,7 +223,7 @@ public class UtilServerInjury {
     	} else if (pInjuryType == InjuryType.EAT_PLAYER) {
         injuryResult.setInjury(new PlayerState(PlayerState.RIP));
         
-      } else if (pInjuryType == InjuryType.PILING_ON_KNOCKED_OUT) {
+      } else if ((pInjuryType == InjuryType.PILING_ON_KNOCKED_OUT) || (pInjuryType == InjuryType.BALL_AND_CHAIN)) {
       	injuryResult.setInjury(new PlayerState(PlayerState.KNOCKED_OUT));
       
       } else {
@@ -547,6 +547,7 @@ public class UtilServerInjury {
   
   // drops the given player
   // sets stepParameter END_TURN if player is on acting team and drops the ball 
+  // sets stepParameter INJURY_RESULT if player has skill Ball&Chain 
   private static StepParameterSet dropPlayer(IStep pStep, Player pPlayer, int pPlayerBase) {
   	StepParameterSet stepParameters = new StepParameterSet();
   	GameState gameState = pStep.getGameState();
@@ -554,14 +555,21 @@ public class UtilServerInjury {
     FieldCoordinate playerCoordinate = game.getFieldModel().getPlayerCoordinate(pPlayer);
     PlayerState playerState = game.getFieldModel().getPlayerState(pPlayer);
     if ((playerCoordinate != null) && (playerState != null)) {
-      if ((playerState.getBase() != PlayerState.PRONE) && (playerState.getBase() != PlayerState.STUNNED)) {
-        playerState = playerState.changeBase(pPlayerBase);
-        if ((pPlayer == game.getActingPlayer().getPlayer()) || (PlayerState.STUNNED == pPlayerBase)) {
-        	playerState = playerState.changeActive(false);
+      if (UtilCards.hasSkill(game, pPlayer, Skill.BALL_AND_CHAIN)) {
+        boolean homeTeam = game.isHomePlaying() ? game.getTeamHome().hasPlayer(pPlayer) : game.getTeamAway().hasPlayer(pPlayer);
+        pStep.publishParameter(new StepParameter(StepParameterKey.INJURY_RESULT,
+          UtilServerInjury.handleInjury(pStep, InjuryType.BALL_AND_CHAIN, pPlayer, null, null, null, (homeTeam ? ApothecaryMode.ATTACKER : ApothecaryMode.DEFENDER)))
+        );
+      } else {
+        if ((playerState.getBase() != PlayerState.PRONE) && (playerState.getBase() != PlayerState.STUNNED)) {
+          playerState = playerState.changeBase(pPlayerBase);
+          if ((pPlayer == game.getActingPlayer().getPlayer()) || (PlayerState.STUNNED == pPlayerBase)) {
+          	playerState = playerState.changeActive(false);
+          }
         }
+        playerState = playerState.changeRooted(false);
+        game.getFieldModel().setPlayerState(pPlayer, playerState);
       }
-      playerState = playerState.changeRooted(false);
-      game.getFieldModel().setPlayerState(pPlayer, playerState);  
       if (playerCoordinate.equals(game.getFieldModel().getBallCoordinate())) {
         game.getFieldModel().setBallMoving(true);
         stepParameters.add(new StepParameter(StepParameterKey.CATCH_SCATTER_THROW_IN_MODE, CatchScatterThrowInMode.SCATTER_BALL));

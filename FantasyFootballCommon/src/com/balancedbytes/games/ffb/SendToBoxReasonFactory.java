@@ -15,6 +15,10 @@ public class SendToBoxReasonFactory implements IEnumWithIdFactory, IEnumWithName
           return reason;
         }
       }
+      // backward compatibility (name change)
+      if ("wrestle".equals(pName)) {
+        return SendToBoxReason.BALL_AND_CHAIN;
+      }
     }
     return null;
   }

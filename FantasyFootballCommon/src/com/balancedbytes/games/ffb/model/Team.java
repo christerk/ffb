@@ -155,10 +155,10 @@ public class Team implements IXmlSerializable, IByteArrayReadable, IJsonSerializ
     return maxPlayerNr;
   }
   
-  public int getNrOfPlayerInPosition(RosterPosition pos) {
+  public int getNrOfAvailablePlayersInPosition(RosterPosition pos) {
 	    int nrOfPlayersInPosition = 0;
 	    for (Player player : getPlayers()) {
-	      if (player.getPosition() == pos) {
+	      if ((player.getPosition() == pos) && (player.getRecoveringInjury() == null)) {
 	    	  nrOfPlayersInPosition++;
 	      }
 	    }

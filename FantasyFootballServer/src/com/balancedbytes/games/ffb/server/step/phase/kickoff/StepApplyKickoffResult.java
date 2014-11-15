@@ -528,8 +528,7 @@ public final class StepApplyKickoffResult extends AbstractStep {
         rollsHome[i] = getGameState().getDiceRoller().rollPitchInvasion();
         playerAffectedHome[i] = DiceInterpreter.getInstance().isAffectedByPitchInvasion(rollsHome[i], gameResult.getTeamResultAway().getFame() + fanFavouritesAway);
         if (playerAffectedHome[i]) {
-          PlayerState playerState = game.getFieldModel().getPlayerState(playersHome[i]);
-          game.getFieldModel().setPlayerState(playersHome[i], playerState.changeBase(PlayerState.STUNNED));
+          UtilServerInjury.stunPlayer(this, playersHome[i]);
         }
       }
     }
@@ -542,8 +541,7 @@ public final class StepApplyKickoffResult extends AbstractStep {
         rollsAway[i] = getGameState().getDiceRoller().rollPitchInvasion();
         playerAffectedAway[i] = DiceInterpreter.getInstance().isAffectedByPitchInvasion(rollsAway[i], gameResult.getTeamResultHome().getFame() + fanFavouritesHome);
         if (playerAffectedAway[i]) {
-          PlayerState playerState = game.getFieldModel().getPlayerState(playersAway[i]);
-          game.getFieldModel().setPlayerState(playersAway[i], playerState.changeBase(PlayerState.STUNNED));
+          UtilServerInjury.stunPlayer(this, playersAway[i]);
         }
       }
     }

@@ -47,7 +47,7 @@ public final class StepEndKickoff extends AbstractStep {
   private void executeStep() {
   	Game game = getGameState().getGame();
   	SequenceGenerator.getInstance().pushEndTurnSequence(getGameState());
-  	SequenceGenerator.getInstance().pushInducementSequence(getGameState(), InducementPhase.AFTER_KICKOFF_TO_OPPONENT_RESOLVED, game.isHomePlaying());
+  	SequenceGenerator.getInstance().pushInducementSequence(getGameState(), InducementPhase.AFTER_KICKOFF_TO_OPPONENT, game.isHomePlaying());
   	getResult().setNextAction(StepAction.NEXT_STEP);
   }
   

@@ -30,7 +30,7 @@ public enum SendToBoxReason implements IEnumWithId, IEnumWithName {
   FIREBALL(21, "fireball", "has been hit by a fireball"),
   KO_ON_PILING_ON(22, "koOnPilingOn", "has been knocked out while Piling On"),
   BOMB(23, "bomb", "has been hit by a bomb"),
-  BALL_AND_CHAIN(24, "wrestle", "has been hit by a ball and chain");
+  BALL_AND_CHAIN(24, "ballAndChain", "has been hit by a ball and chain");
   
   private int fId;
   private String fName;
