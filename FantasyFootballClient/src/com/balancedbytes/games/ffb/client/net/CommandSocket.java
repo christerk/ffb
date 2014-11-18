@@ -47,12 +47,7 @@ public class CommandSocket implements WebSocket.OnTextMessage {
       return;
     }
     
-    // old:
-    /*
-    JsonValue jsonValue = JsonValue.readFrom(pTextMessage);
-    */
-    
-    // new:
+    // inflate from base64 if necessary
     JsonValue jsonValue = null;
     try {
       jsonValue = UtilJson.inflateFromBase64(pTextMessage);
@@ -93,21 +88,13 @@ public class CommandSocket implements WebSocket.OnTextMessage {
       return false;
     }
     
-    // old:
-    /*
+    // commands send from client to server aren't compressed
     JsonValue jsonValue = pCommand.toJsonValue();
     if (jsonValue == null) {
       return false;
     }
     
     String message = jsonValue.toString();
-    if (message == null) {
-      return false;
-    }
-    */
-
-    // new:
-    String message = UtilJson.deflateToBase64(pCommand.toJsonValue());
     if (message == null) {
       return false;
     }

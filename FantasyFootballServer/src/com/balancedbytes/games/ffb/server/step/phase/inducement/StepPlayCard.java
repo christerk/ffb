@@ -125,7 +125,7 @@ public final class StepPlayCard extends AbstractStep {
             Player setupPlayer = game.getPlayerById(fSetupPlayerId);
             if ((setupPlayer != null) && (fSetupPlayerCoordinate != null)) {
               game.getFieldModel().addCardEffect(setupPlayer, CardEffect.ILLEGALLY_SUBSTITUTED);
-              UtilServerSetup.setupPlayer(getGameState(), fSetupPlayerId, fSetupPlayerCoordinate);
+              UtilServerSetup.setupPlayer(getGameState(), fSetupPlayerId, fSetupPlayerCoordinate, false);
             }
             fSetupPlayerId = null;
             fSetupPlayerCoordinate = null;

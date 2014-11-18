@@ -37,6 +37,8 @@ public class UtilJson {
   
   private static final Charset _CHARSET = Charset.forName("UTF-8");
   
+  private static final String _COMPRESSED = "compressed";
+  
   public static JsonObject toJsonObject(JsonValue pJsonValue) {
     if ((pJsonValue == null) || !pJsonValue.isObject()) {
       throw new IllegalArgumentException("JsonValue is not an object.");
@@ -130,7 +132,8 @@ public class UtilJson {
     BufferedWriter out = new BufferedWriter(new OutputStreamWriter(deflaterOut, _CHARSET));
     out.write(pJsonValue.toString());
     out.close();
-    return Base64.encodeToString(byteOut.toByteArray(), false);
+    String base64Deflated = Base64.encodeToString(byteOut.toByteArray(), false);
+    return new JsonObject().add(_COMPRESSED, base64Deflated).toString();
   }
   
   public static byte[] gzip(JsonValue pJsonValue) throws IOException {
@@ -145,13 +148,24 @@ public class UtilJson {
     return byteOut.toByteArray();
   }
   
-  public static JsonValue inflateFromBase64(String pBase64DeflatedJson) throws IOException {
-    if (!StringTool.isProvided(pBase64DeflatedJson)) {
+  public static JsonValue inflateFromBase64(String pJsonString) throws IOException {
+    if (!StringTool.isProvided(pJsonString)) {
       return null;
-    }    
-    ByteArrayInputStream byteIn = new ByteArrayInputStream(Base64.decodeFast(pBase64DeflatedJson));
-    InputStreamReader in = new InputStreamReader(new InflaterInputStream(byteIn), _CHARSET);
-    return JsonValue.readFrom(in);  // no bufferedReader necessary
+    }
+    JsonValue jsonValue = JsonValue.readFrom(pJsonString);
+    String base64Deflated = null;
+    if (jsonValue != null)  {
+      JsonValue compressedValue = jsonValue.asObject().get(_COMPRESSED);
+      if (compressedValue != null) {
+        base64Deflated = compressedValue.asString();
+      }
+    }
+    if (StringTool.isProvided(base64Deflated)) {
+      ByteArrayInputStream byteIn = new ByteArrayInputStream(Base64.decodeFast(base64Deflated));
+      InputStreamReader in = new InputStreamReader(new InflaterInputStream(byteIn), _CHARSET);
+      return JsonValue.readFrom(in);  // no bufferedReader necessary
+    }
+    return jsonValue;
   }
   
   public static JsonValue gunzip(byte[] pGzippedJson) throws IOException {

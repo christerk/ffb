@@ -48,6 +48,7 @@ import com.balancedbytes.games.ffb.server.handler.IReceivedCommandHandler;
 import com.balancedbytes.games.ffb.server.net.commands.InternalServerCommand;
 import com.balancedbytes.games.ffb.server.net.commands.InternalServerCommandSocketClosed;
 import com.balancedbytes.games.ffb.util.ArrayTool;
+import com.eclipsesource.json.JsonValue;
 
 /**
  * 
@@ -205,26 +206,26 @@ public class ServerCommunication implements Runnable, IReceivedCommandHandler {
     if ((pSession == null) || (pCommand == null) || !pSession.isOpen()) {
       return null;
     }
-    
-    // old:
-    /*
-    JsonValue jsonValue = pCommand.toJsonValue();
-    if (jsonValue == null) {
-      return null;
-    }
-    String textMessage = jsonValue.toString();
-    if (textMessage == null) {
-      return null;
-    }
-    */
-    
-    // new:
+
     String textMessage = null;
-    try {
-      textMessage = UtilJson.deflateToBase64(pCommand.toJsonValue());
-    } catch (IOException pIoException) {
-      return null;
+    
+    // gameState and serverReplay commands are compressed
+    if ((NetCommandId.SERVER_GAME_STATE == pCommand.getId()) || (NetCommandId.SERVER_REPLAY == pCommand.getId())) {
+      try {
+        textMessage = UtilJson.deflateToBase64(pCommand.toJsonValue());
+      } catch (IOException pIoException) {
+        textMessage = null;
+      }
+    
+    // other commands are sent as plain json 
+    } else {
+      JsonValue jsonValue = pCommand.toJsonValue();
+      if (jsonValue == null) {
+        return null;
+      }
+      textMessage = jsonValue.toString();
     }
+
     if (textMessage == null) {
       return null;
     }

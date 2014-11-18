@@ -108,17 +108,21 @@ public class UtilServerSetup {
 
   }
   
-  public static void setupPlayer(GameState pGameState, String pPlayerId, FieldCoordinate pCoordinate) {
+  public static void setupPlayer(GameState pGameState, String pPlayerId, FieldCoordinate pCoordinate, boolean pCheckIsPlaying) {
     
     if ((pGameState != null) && StringTool.isProvided(pPlayerId) && (pCoordinate != null)) {
       
       Game game = pGameState.getGame();
       Player player = game.getPlayerById(pPlayerId);
-      Team team = game.isHomePlaying() ? game.getTeamHome() : game.getTeamAway();
-      if ((player != null) && team.hasPlayer(player)) {
+      if (player != null) {
+        
+        boolean homeTeam = game.getTeamHome().hasPlayer(player);
+        if (pCheckIsPlaying && (homeTeam != game.isHomePlaying())) {
+          return;
+        }
         
         FieldModel fieldModel = game.getFieldModel();
-        FieldCoordinate coordinate = game.isHomePlaying() ? pCoordinate : pCoordinate.transform();
+        FieldCoordinate coordinate = homeTeam ? pCoordinate : pCoordinate.transform();
         FieldCoordinate oldCoordinate = fieldModel.getPlayerCoordinate(player);
         PlayerState playerState = fieldModel.getPlayerState(player);       
         
