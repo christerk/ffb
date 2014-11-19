@@ -108,37 +108,37 @@ public class UtilServerSetup {
 
   }
   
-  public static void setupPlayer(GameState pGameState, String pPlayerId, FieldCoordinate pCoordinate, boolean pCheckIsPlaying) {
+  public static void setupPlayer(GameState pGameState, String pPlayerId, FieldCoordinate pCoordinate) {
     
     if ((pGameState != null) && StringTool.isProvided(pPlayerId) && (pCoordinate != null)) {
       
       Game game = pGameState.getGame();
       Player player = game.getPlayerById(pPlayerId);
-      if (player != null) {
-        
-        boolean homeTeam = game.getTeamHome().hasPlayer(player);
-        if (pCheckIsPlaying && (homeTeam != game.isHomePlaying())) {
-          return;
-        }
-        
-        FieldModel fieldModel = game.getFieldModel();
-        FieldCoordinate coordinate = homeTeam ? pCoordinate : pCoordinate.transform();
-        FieldCoordinate oldCoordinate = fieldModel.getPlayerCoordinate(player);
-        PlayerState playerState = fieldModel.getPlayerState(player);       
-        
-        if (coordinate.isBoxCoordinate()) {
-          fieldModel.setPlayerState(player, playerState.changeBase(PlayerState.RESERVE));
-        } else {
-          if ((game.getTurnMode() == TurnMode.QUICK_SNAP) && !coordinate.equals(oldCoordinate)) {
-            fieldModel.setPlayerState(player, playerState.changeBase(PlayerState.STANDING).changeActive(false));
-          } else {
-            fieldModel.setPlayerState(player, playerState.changeBase(PlayerState.STANDING).changeActive(true));
-          }
-        }
-        fieldModel.setPlayerCoordinate(player, coordinate);
-  
+      if (player == null) {
+        return;
       }
-    
+        
+      boolean homeTeam = game.getTeamHome().hasPlayer(player);
+      if (homeTeam != game.isHomePlaying()) {
+        return;
+      }
+        
+      FieldModel fieldModel = game.getFieldModel();
+      FieldCoordinate coordinate = homeTeam ? pCoordinate : pCoordinate.transform();
+      FieldCoordinate oldCoordinate = fieldModel.getPlayerCoordinate(player);
+      PlayerState playerState = fieldModel.getPlayerState(player);       
+      
+      if (coordinate.isBoxCoordinate()) {
+        fieldModel.setPlayerState(player, playerState.changeBase(PlayerState.RESERVE));
+      } else {
+        if ((game.getTurnMode() == TurnMode.QUICK_SNAP) && !coordinate.equals(oldCoordinate)) {
+          fieldModel.setPlayerState(player, playerState.changeBase(PlayerState.STANDING).changeActive(false));
+        } else {
+          fieldModel.setPlayerState(player, playerState.changeBase(PlayerState.STANDING).changeActive(true));
+        }
+      }
+      fieldModel.setPlayerCoordinate(player, coordinate);
+  
     }
     
   }

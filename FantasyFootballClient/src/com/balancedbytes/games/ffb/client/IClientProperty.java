@@ -11,6 +11,8 @@ public interface IClientProperty {
   String SERVER_HOST = "server.host";
   String SERVER_PORT = "server.port";
   
+  String CLIENT_COMMAND_COMPRESSION = "client.command.compression";
+  
   String SETTING_SOUND_MODE = "setting.sound.mode";
   String SETTING_SOUND_VOLUME = "setting.sound.volume";
   String SETTING_ICONS = "setting.icons";

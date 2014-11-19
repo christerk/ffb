@@ -44,7 +44,7 @@ public class ClientStateIllegalSubstitution extends ClientStateSetup {
         if (pCoordinate.isBoxCoordinate()) {
           for (FieldCoordinate coordinate : FieldCoordinateBounds.ENDZONE_HOME.fieldCoordinates()) {
             Player player = game.getFieldModel().getPlayer(coordinate);
-            if ((player != null) && !fFieldPlayers.contains(player)) {
+            if ((player != null) && game.getTeamHome().hasPlayer(player) && !fFieldPlayers.contains(player)) {
               return false;
             }
           }

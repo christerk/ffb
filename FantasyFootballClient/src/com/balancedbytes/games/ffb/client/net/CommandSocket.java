@@ -7,11 +7,13 @@ import java.util.concurrent.TimeUnit;
 import org.eclipse.jetty.websocket.WebSocket;
 
 import com.balancedbytes.games.ffb.client.FantasyFootballClient;
+import com.balancedbytes.games.ffb.client.IClientProperty;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.net.NetCommand;
 import com.balancedbytes.games.ffb.net.NetCommandFactory;
 import com.balancedbytes.games.ffb.net.NetCommandId;
 import com.balancedbytes.games.ffb.net.commands.ServerCommandPing;
+import com.balancedbytes.games.ffb.util.StringTool;
 import com.eclipsesource.json.JsonValue;
 
 /**
@@ -23,13 +25,18 @@ public class CommandSocket implements WebSocket.OnTextMessage {
   private FantasyFootballClient fClient;
   private NetCommandFactory fNetCommandFactory;
   private Connection fConnection;
+  private boolean fCommandCompression;
 
   private final CountDownLatch fCloseLatch;
-
+  
   public CommandSocket(FantasyFootballClient pClient) {
     fClient = pClient;
     fNetCommandFactory = new NetCommandFactory();
     fCloseLatch = new CountDownLatch(1);
+    String commandCompression = (fClient != null) ? fClient.getProperty(IClientProperty.CLIENT_COMMAND_COMPRESSION) : null; 
+    if (StringTool.isProvided(commandCompression)) {
+      fCommandCompression = Boolean.parseBoolean(commandCompression);
+    }
   }
   
   @Override
@@ -43,16 +50,16 @@ public class CommandSocket implements WebSocket.OnTextMessage {
   @Override
   public void onMessage(String pTextMessage) {
     
-    if ((pTextMessage == null) || !isOpen()) {
+    if (!StringTool.isProvided(pTextMessage) || !isOpen()) {
       return;
     }
     
     // inflate from base64 if necessary
-    JsonValue jsonValue = null;
+    JsonValue jsonValue;
     try {
       jsonValue = UtilJson.inflateFromBase64(pTextMessage);
     } catch (IOException pIoException) {
-      return;
+      jsonValue = null;
     }
 
     NetCommand netCommand = fNetCommandFactory.forJsonValue(jsonValue);
@@ -88,18 +95,26 @@ public class CommandSocket implements WebSocket.OnTextMessage {
       return false;
     }
     
-    // commands send from client to server aren't compressed
-    JsonValue jsonValue = pCommand.toJsonValue();
-    if (jsonValue == null) {
+    String textMessage = null;
+    
+    if (fCommandCompression) {
+      try {
+        textMessage = UtilJson.deflateToBase64(pCommand.toJsonValue());
+      } catch (IOException pIoException) {
+        // textMessage remains null
+      }
+    } else {
+      JsonValue jsonValue = pCommand.toJsonValue();
+      if (jsonValue != null) {
+        textMessage = jsonValue.toString();
+      }
+    }
+
+    if (!StringTool.isProvided(textMessage)) {
       return false;
     }
     
-    String message = jsonValue.toString();
-    if (message == null) {
-      return false;
-    }
-    
-    fConnection.sendMessage(message);
+    fConnection.sendMessage(textMessage);
     return true;
     
   }

@@ -97,7 +97,7 @@ public final class StepSetup extends AbstractStep {
 	        break;
 	      case CLIENT_SETUP_PLAYER:
 	        ClientCommandSetupPlayer setupPlayerCommand = (ClientCommandSetupPlayer) pReceivedCommand.getCommand();
-	        UtilServerSetup.setupPlayer(getGameState(), setupPlayerCommand.getPlayerId(), setupPlayerCommand.getCoordinate(), true);
+	        UtilServerSetup.setupPlayer(getGameState(), setupPlayerCommand.getPlayerId(), setupPlayerCommand.getCoordinate());
 	        commandStatus = StepCommandStatus.SKIP_STEP;
 	        break;
         case CLIENT_END_TURN:

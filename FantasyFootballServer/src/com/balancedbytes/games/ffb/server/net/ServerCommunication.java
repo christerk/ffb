@@ -44,10 +44,12 @@ import com.balancedbytes.games.ffb.server.DebugLog;
 import com.balancedbytes.games.ffb.server.FantasyFootballServer;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.IServerLogLevel;
+import com.balancedbytes.games.ffb.server.IServerProperty;
 import com.balancedbytes.games.ffb.server.handler.IReceivedCommandHandler;
 import com.balancedbytes.games.ffb.server.net.commands.InternalServerCommand;
 import com.balancedbytes.games.ffb.server.net.commands.InternalServerCommandSocketClosed;
 import com.balancedbytes.games.ffb.util.ArrayTool;
+import com.balancedbytes.games.ffb.util.StringTool;
 import com.eclipsesource.json.JsonValue;
 
 /**
@@ -59,10 +61,15 @@ public class ServerCommunication implements Runnable, IReceivedCommandHandler {
   private boolean fStopped;
   private List<ReceivedCommand> fReceiveQueue;
   private FantasyFootballServer fServer;
+  private boolean fCommandCompression;
   
   public ServerCommunication(FantasyFootballServer pServer) {
     fServer = pServer;
-    fReceiveQueue = Collections.synchronizedList(new LinkedList<ReceivedCommand>()); 
+    fReceiveQueue = Collections.synchronizedList(new LinkedList<ReceivedCommand>());
+    String commandCompression = (fServer != null) ? fServer.getProperty(IServerProperty.SERVER_COMMAND_COMPRESSION) : null; 
+    if (StringTool.isProvided(commandCompression)) {
+      fCommandCompression = Boolean.parseBoolean(commandCompression);
+    }
   }
   
   public void handleCommand(ReceivedCommand pReceivedCommand) {
@@ -209,21 +216,17 @@ public class ServerCommunication implements Runnable, IReceivedCommandHandler {
 
     String textMessage = null;
     
-    // gameState and serverReplay commands are compressed
-    if ((NetCommandId.SERVER_GAME_STATE == pCommand.getId()) || (NetCommandId.SERVER_REPLAY == pCommand.getId())) {
+    if (fCommandCompression || (NetCommandId.SERVER_REPLAY == pCommand.getId())) {
       try {
         textMessage = UtilJson.deflateToBase64(pCommand.toJsonValue());
       } catch (IOException pIoException) {
-        textMessage = null;
+        // textMessage remains null
       }
-    
-    // other commands are sent as plain json 
     } else {
       JsonValue jsonValue = pCommand.toJsonValue();
-      if (jsonValue == null) {
-        return null;
+      if (jsonValue != null) {
+        textMessage = jsonValue.toString();
       }
-      textMessage = jsonValue.toString();
     }
 
     if (textMessage == null) {

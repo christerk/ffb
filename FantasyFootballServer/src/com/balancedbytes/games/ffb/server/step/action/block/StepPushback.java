@@ -229,7 +229,9 @@ public class StepPushback extends AbstractStep {
           && !(UtilCards.hasSkill(game, actingPlayer, Skill.GRAB) && game.getFieldModel()
               .getPlayerCoordinate(actingPlayer.getPlayer())
               .isAdjacent(game.getFieldModel().getPlayerCoordinate(defender)))
-          && !(playerState.getBase() == PlayerState.PRONE || playerState.getBase() == PlayerState.STUNNED)) {
+          && !playerState.isProne()
+          && ((fOldDefenderState == null) || !fOldDefenderState.isProne())
+      ) {
         if (fUsingSideStep == null) {
           UtilServerDialog.showDialog(getGameState(), new DialogSkillUseParameter(defender.getId(), Skill.SIDE_STEP, 0));
         } else {

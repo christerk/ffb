@@ -125,7 +125,7 @@ public final class StepPlayCard extends AbstractStep {
             Player setupPlayer = game.getPlayerById(fSetupPlayerId);
             if ((setupPlayer != null) && (fSetupPlayerCoordinate != null)) {
               game.getFieldModel().addCardEffect(setupPlayer, CardEffect.ILLEGALLY_SUBSTITUTED);
-              UtilServerSetup.setupPlayer(getGameState(), fSetupPlayerId, fSetupPlayerCoordinate, false);
+              UtilServerSetup.setupPlayer(getGameState(), fSetupPlayerId, fSetupPlayerCoordinate);
             }
             fSetupPlayerId = null;
             fSetupPlayerCoordinate = null;
@@ -222,9 +222,9 @@ public final class StepPlayCard extends AbstractStep {
     }
     if (StringTool.isProvided(fOpponentId)) {
       doNextStep = true;
-      UtilServerInjury.dropPlayer(this, player);
+      publishParameters(UtilServerInjury.dropPlayer(this, player));
       Player opponent = game.getPlayerById(fOpponentId);
-      UtilServerInjury.stunPlayer(this, opponent);
+      publishParameters(UtilServerInjury.stunPlayer(this, opponent));
     }
     return doNextStep;
   }
