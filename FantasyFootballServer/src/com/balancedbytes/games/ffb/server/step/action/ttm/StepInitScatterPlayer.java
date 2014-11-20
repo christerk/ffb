@@ -174,7 +174,7 @@ public final class StepInitScatterPlayer extends AbstractStep {
     publishParameter(new StepParameter(StepParameterKey.THROWN_PLAYER_STATE, fThrownPlayerState));
     publishParameter(new StepParameter(StepParameterKey.THROWN_PLAYER_HAS_BALL, fThrownPlayerHasBall));
     if (playerLandedUpon != null) {
-      publishParameters(UtilServerInjury.dropPlayer(this, playerLandedUpon));
+      publishParameters(UtilServerInjury.dropPlayer(this, playerLandedUpon, ApothecaryMode.HIT_PLAYER));
     }
     getResult().setNextAction(StepAction.NEXT_STEP);
   }

@@ -139,6 +139,7 @@ public class TurnDiceStatusComponent extends JPanel implements MouseListener, Mo
           break;
         case KICKOFF_RETURN:
         case PASS_BLOCK:
+        case ILLEGAL_SUBSTITUTION:
           drawButton(_LABEL_CONTINUE);
           fEndTurnButtonShown = true;
           break;

@@ -112,8 +112,8 @@ public class StepWrestle extends AbstractStep {
         }
       }
       if (fUsingWrestleAttacker || fUsingWrestleDefender) {
-        publishParameters(UtilServerInjury.dropPlayer(this, actingPlayer.getPlayer()));
-        publishParameters(UtilServerInjury.dropPlayer(this, game.getDefender()));
+        publishParameters(UtilServerInjury.dropPlayer(this, game.getDefender(), ApothecaryMode.DEFENDER));
+        publishParameters(UtilServerInjury.dropPlayer(this, actingPlayer.getPlayer(), ApothecaryMode.ATTACKER));
         if (UtilCards.hasSkill(game, game.getDefender(), Skill.BALL_AND_CHAIN)) {
         	FieldCoordinate defenderCoordinate = game.getFieldModel().getPlayerCoordinate(game.getDefender());
           publishParameter(new StepParameter(StepParameterKey.INJURY_RESULT,

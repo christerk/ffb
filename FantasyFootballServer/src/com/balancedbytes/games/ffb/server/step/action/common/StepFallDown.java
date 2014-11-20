@@ -80,7 +80,7 @@ public class StepFallDown extends AbstractStep {
     ActingPlayer actingPlayer = game.getActingPlayer();
     FieldCoordinate playerCoordinate = game.getFieldModel().getPlayerCoordinate(actingPlayer.getPlayer());
     InjuryResult injuryResultAttacker = UtilServerInjury.handleInjury(this, fInjuryType, null, actingPlayer.getPlayer(), playerCoordinate, null, ApothecaryMode.ATTACKER);
-    publishParameters(UtilServerInjury.dropPlayer(this, actingPlayer.getPlayer()));
+    publishParameters(UtilServerInjury.dropPlayer(this, actingPlayer.getPlayer(), ApothecaryMode.ATTACKER));
     if (actingPlayer.isSufferingBloodLust()) {
       game.getFieldModel().clearMoveSquares();
       PlayerState playerState = game.getFieldModel().getPlayerState(actingPlayer.getPlayer());

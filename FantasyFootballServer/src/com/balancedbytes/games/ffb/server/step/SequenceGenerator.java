@@ -466,7 +466,8 @@ public class SequenceGenerator {
 		add(moveSequence, StepId.SHADOWING, pGameState);  // falling player can be shadowed
 		add(moveSequence, StepId.FALL_DOWN, pGameState);
 		
-		add(moveSequence, StepId.APOTHECARY, pGameState, IStepLabel.APOTHECARY_ATTACKER, createParameterSet(StepParameterKey.APOTHECARY_MODE, ApothecaryMode.ATTACKER));
+    add(moveSequence, StepId.APOTHECARY, pGameState, createParameterSet(StepParameterKey.APOTHECARY_MODE, ApothecaryMode.DEFENDER));
+		add(moveSequence, StepId.APOTHECARY, pGameState, createParameterSet(StepParameterKey.APOTHECARY_MODE, ApothecaryMode.ATTACKER));
 		add(moveSequence, StepId.CATCH_SCATTER_THROW_IN, pGameState, IStepLabel.SCATTER_BALL);
 		add(moveSequence, StepId.APOTHECARY, pGameState, createParameterSet(StepParameterKey.APOTHECARY_MODE, ApothecaryMode.CATCHER));
 		
@@ -509,7 +510,11 @@ public class SequenceGenerator {
 		add(inducementSequence, StepId.INIT_INDUCEMENT, pGameState, initParameters);
 		// may insert wizard or card sequence at this point
 
+    add(inducementSequence, StepId.APOTHECARY, pGameState, createParameterSet(StepParameterKey.APOTHECARY_MODE, ApothecaryMode.DEFENDER));
+    add(inducementSequence, StepId.APOTHECARY, pGameState, createParameterSet(StepParameterKey.APOTHECARY_MODE, ApothecaryMode.ATTACKER));
     add(inducementSequence, StepId.CATCH_SCATTER_THROW_IN, pGameState);
+    add(inducementSequence, StepId.APOTHECARY, pGameState, createParameterSet(StepParameterKey.APOTHECARY_MODE, ApothecaryMode.CATCHER));
+    
 		add(inducementSequence, StepId.END_INDUCEMENT, pGameState);
 		// may insert endTurn or inducement sequence at this point
 		

@@ -536,19 +536,19 @@ public class UtilServerInjury {
     }
     return raisedPlayer;
   }
+  
+  public static StepParameterSet dropPlayer(IStep pStep, Player pPlayer, ApothecaryMode pApothecaryMode) {
+    return dropPlayer(pStep, pPlayer, PlayerState.PRONE, pApothecaryMode);
+  }
 
-  public static StepParameterSet dropPlayer(IStep pStep, Player pPlayer) {
-    return dropPlayer(pStep, pPlayer, PlayerState.PRONE);
+  public static StepParameterSet stunPlayer(IStep pStep, Player pPlayer, ApothecaryMode pApothecaryMode) {
+    return dropPlayer(pStep, pPlayer, PlayerState.STUNNED, pApothecaryMode);
   }
-  
-  public static StepParameterSet stunPlayer(IStep pStep, Player pPlayer) {
-    return dropPlayer(pStep, pPlayer, PlayerState.STUNNED);
-  }
-  
+
   // drops the given player
   // sets stepParameter END_TURN if player is on acting team and drops the ball 
   // sets stepParameter INJURY_RESULT if player has skill Ball&Chain 
-  private static StepParameterSet dropPlayer(IStep pStep, Player pPlayer, int pPlayerBase) {
+  private static StepParameterSet dropPlayer(IStep pStep, Player pPlayer, int pPlayerBase, ApothecaryMode pApothecaryMode) {
   	StepParameterSet stepParameters = new StepParameterSet();
   	GameState gameState = pStep.getGameState();
     Game game = gameState.getGame();
@@ -556,9 +556,8 @@ public class UtilServerInjury {
     PlayerState playerState = game.getFieldModel().getPlayerState(pPlayer);
     if ((playerCoordinate != null) && (playerState != null)) {
       if (UtilCards.hasSkill(game, pPlayer, Skill.BALL_AND_CHAIN)) {
-        boolean homeTeam = game.isHomePlaying() ? game.getTeamHome().hasPlayer(pPlayer) : game.getTeamAway().hasPlayer(pPlayer);
         pStep.publishParameter(new StepParameter(StepParameterKey.INJURY_RESULT,
-          UtilServerInjury.handleInjury(pStep, InjuryType.BALL_AND_CHAIN, pPlayer, null, null, null, (homeTeam ? ApothecaryMode.ATTACKER : ApothecaryMode.DEFENDER)))
+          UtilServerInjury.handleInjury(pStep, InjuryType.BALL_AND_CHAIN, null, pPlayer, playerCoordinate, null, pApothecaryMode))
         );
       } else {
         if ((playerState.getBase() != PlayerState.PRONE) && (playerState.getBase() != PlayerState.STUNNED)) {

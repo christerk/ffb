@@ -2264,6 +2264,14 @@ public class StatusReport {
         println(getIndent(), TextStyle.BOLD, ":");
         setIndent(getIndent() + 1);
         break;
+      case BALL_AND_CHAIN:
+        print(getIndent() + 1, false, defender);
+        status.append(" is knocked out by ");
+        status.append(defender.getPlayerGender().getGenitive());
+        status.append(" own Ball & Chain.");
+        println(getIndent() + 1, status.toString());
+        status = new StringBuilder();
+        break;
       default:
       	break;
     }

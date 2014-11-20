@@ -20,6 +20,7 @@ import com.balancedbytes.games.ffb.report.ReportCardEffectRoll;
 import com.balancedbytes.games.ffb.report.ReportPlayCard;
 import com.balancedbytes.games.ffb.server.DiceInterpreter;
 import com.balancedbytes.games.ffb.server.step.IStep;
+import com.balancedbytes.games.ffb.server.step.action.common.ApothecaryMode;
 import com.balancedbytes.games.ffb.util.StringTool;
 import com.balancedbytes.games.ffb.util.UtilCards;
 import com.balancedbytes.games.ffb.util.UtilPlayer;
@@ -219,7 +220,7 @@ public class UtilServerCards {
   }
   
   private static void activateCardPitTrap(IStep pStep, Player pPlayer) {
-    pStep.publishParameters(UtilServerInjury.dropPlayer(pStep, pPlayer));
+    pStep.publishParameters(UtilServerInjury.dropPlayer(pStep, pPlayer, ApothecaryMode.DEFENDER));
   }
   
   private static void activateCardWitchBrew(IStep pStep, Player pPlayer) {

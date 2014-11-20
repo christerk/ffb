@@ -26,6 +26,7 @@ import com.balancedbytes.games.ffb.server.step.StepParameter;
 import com.balancedbytes.games.ffb.server.step.StepParameterKey;
 import com.balancedbytes.games.ffb.server.step.StepParameterSet;
 import com.balancedbytes.games.ffb.server.step.UtilServerSteps;
+import com.balancedbytes.games.ffb.server.step.action.common.ApothecaryMode;
 import com.balancedbytes.games.ffb.server.util.UtilServerCards;
 import com.balancedbytes.games.ffb.server.util.UtilServerDialog;
 import com.balancedbytes.games.ffb.server.util.UtilServerInjury;
@@ -222,9 +223,9 @@ public final class StepPlayCard extends AbstractStep {
     }
     if (StringTool.isProvided(fOpponentId)) {
       doNextStep = true;
-      publishParameters(UtilServerInjury.dropPlayer(this, player));
       Player opponent = game.getPlayerById(fOpponentId);
-      publishParameters(UtilServerInjury.stunPlayer(this, opponent));
+      publishParameters(UtilServerInjury.stunPlayer(this, opponent, ApothecaryMode.DEFENDER));
+      publishParameters(UtilServerInjury.dropPlayer(this, player, ApothecaryMode.ATTACKER));
     }
     return doNextStep;
   }

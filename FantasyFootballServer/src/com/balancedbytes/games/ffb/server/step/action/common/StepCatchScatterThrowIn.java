@@ -222,7 +222,7 @@ public class StepCatchScatterThrowIn extends AbstractStepWithReRoll {
       	  && (UtilGameOption.isOptionEnabled(game, GameOptionId.SPIKED_BALL) || UtilCards.isCardActive(game, Card.SPIKED_BALL))) {
           InjuryResult injuryResultCatcher = UtilServerInjury.handleInjury(this, InjuryType.STAB, null, playerUnderBall, game.getFieldModel().getBallCoordinate(), null, ApothecaryMode.CATCHER);
           if (injuryResultCatcher.isArmorBroken()) {
-            publishParameters(UtilServerInjury.dropPlayer(this, playerUnderBall));
+            publishParameters(UtilServerInjury.dropPlayer(this, playerUnderBall, ApothecaryMode.CATCHER));
           }
           publishParameter(new StepParameter(StepParameterKey.INJURY_RESULT, injuryResultCatcher));
       	}

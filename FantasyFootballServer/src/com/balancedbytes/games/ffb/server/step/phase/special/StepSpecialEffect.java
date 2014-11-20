@@ -129,7 +129,7 @@ public final class StepSpecialEffect extends AbstractStep {
 						UtilServerInjury.handleInjury(this, InjuryType.BOMB, null, player, playerCoordinate, null, ApothecaryMode.SPECIAL_EFFECT)));
 				}
 
-				publishParameters(UtilServerInjury.dropPlayer(this, player));
+				publishParameters(UtilServerInjury.dropPlayer(this, player, ApothecaryMode.SPECIAL_EFFECT));
 
 				// check end turn
 				Team actingTeam = game.isHomePlaying() ? game.getTeamHome() : game.getTeamAway();

@@ -156,7 +156,7 @@ public class StepInitFeeding extends AbstractStep {
         InjuryResult injuryResultFeeding = UtilServerInjury.handleInjury(this, InjuryType.BITTEN, actingPlayer.getPlayer(), game.getDefender(), feedOnPlayerCoordinate, null, ApothecaryMode.FEEDING);
         fEndTurn = UtilPlayer.hasBall(game, game.getDefender());  // turn end on biting the ball carrier
         publishParameter(new StepParameter(StepParameterKey.INJURY_RESULT, injuryResultFeeding));
-        publishParameters(UtilServerInjury.dropPlayer(this, game.getDefender()));
+        publishParameters(UtilServerInjury.dropPlayer(this, game.getDefender(), ApothecaryMode.FEEDING));
         getResult().setSound(Sound.SLURP);
         actingPlayer.setSufferingBloodLust(false);
         doNextStep = true;

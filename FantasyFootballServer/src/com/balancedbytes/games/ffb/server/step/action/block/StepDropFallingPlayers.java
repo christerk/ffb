@@ -121,7 +121,7 @@ public class StepDropFallingPlayers extends AbstractStep {
         getResult().addReport(new ReportPilingOn(actingPlayer.getPlayerId(), fUsingPilingOn, reRollInjury));
         if (fUsingPilingOn) {
           actingPlayer.markSkillUsed(Skill.PILING_ON);
-          publishParameters(UtilServerInjury.dropPlayer(this, actingPlayer.getPlayer()));
+          publishParameters(UtilServerInjury.dropPlayer(this, actingPlayer.getPlayer(), ApothecaryMode.ATTACKER));
           boolean rolledDouble;
           if (reRollInjury) {
           	fInjuryResultDefender = UtilServerInjury.handleInjury(this, InjuryType.PILING_ON_INJURY, actingPlayer.getPlayer(), game.getDefender(), defenderCoordinate, fInjuryResultDefender, ApothecaryMode.DEFENDER);
@@ -135,7 +135,7 @@ public class StepDropFallingPlayers extends AbstractStep {
           }
         }
       } else {
-        publishParameters(UtilServerInjury.dropPlayer(this, game.getDefender()));
+        publishParameters(UtilServerInjury.dropPlayer(this, game.getDefender(), ApothecaryMode.DEFENDER));
         if ((fOldDefenderState != null) && fOldDefenderState.isProne()) {
         	fInjuryResultDefender = UtilServerInjury.handleInjury(this, InjuryType.BLOCK_PRONE, actingPlayer.getPlayer(), game.getDefender(), defenderCoordinate, null, ApothecaryMode.DEFENDER);
         } else {
@@ -174,7 +174,7 @@ public class StepDropFallingPlayers extends AbstractStep {
     	}
       if ((attackerState.getBase() == PlayerState.FALLING) && (attackerCoordinate != null)) {
       	publishParameter(new StepParameter(StepParameterKey.END_TURN, true));
-        publishParameters(UtilServerInjury.dropPlayer(this, actingPlayer.getPlayer()));
+        publishParameters(UtilServerInjury.dropPlayer(this, actingPlayer.getPlayer(), ApothecaryMode.ATTACKER));
         publishParameter(new StepParameter(StepParameterKey.INJURY_RESULT,
         	UtilServerInjury.handleInjury(this, InjuryType.BLOCK, game.getDefender(), actingPlayer.getPlayer(), attackerCoordinate, null, ApothecaryMode.ATTACKER)));
       }

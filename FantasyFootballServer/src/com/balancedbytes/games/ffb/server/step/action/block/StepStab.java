@@ -108,7 +108,7 @@ public class StepStab extends AbstractStep {
       FieldCoordinate defenderCoordinate = game.getFieldModel().getPlayerCoordinate(game.getDefender());
       InjuryResult injuryResultDefender = UtilServerInjury.handleInjury(this, InjuryType.STAB, actingPlayer.getPlayer(), game.getDefender(), defenderCoordinate, null, ApothecaryMode.DEFENDER);
       if (injuryResultDefender.isArmorBroken()) {
-        publishParameters(UtilServerInjury.dropPlayer(this, game.getDefender()));
+        publishParameters(UtilServerInjury.dropPlayer(this, game.getDefender(), ApothecaryMode.DEFENDER));
       }
       publishParameter(new StepParameter(StepParameterKey.INJURY_RESULT, injuryResultDefender));
       getResult().setNextAction(StepAction.GOTO_LABEL, fGotoLabelOnSuccess);

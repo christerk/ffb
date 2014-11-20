@@ -482,7 +482,7 @@ public final class StepApplyKickoffResult extends AbstractStep {
       getResult().setAnimation(new Animation(AnimationType.THROW_A_ROCK, startCoordinate, playerCoordinate, null));
       UtilServerGame.syncGameModel(this);
       
-      publishParameters(UtilServerInjury.dropPlayer(this, player));
+      publishParameters(UtilServerInjury.dropPlayer(this, player, ApothecaryMode.HOME));
       publishParameter(new StepParameter(StepParameterKey.INJURY_RESULT,
         	UtilServerInjury.handleInjury(this, InjuryType.THROW_A_ROCK, null, player, playerCoordinate, null, ApothecaryMode.HOME)));
       
@@ -502,7 +502,7 @@ public final class StepApplyKickoffResult extends AbstractStep {
       getResult().setAnimation(new Animation(AnimationType.THROW_A_ROCK, startCoordinate, playerCoordinate, null));
       UtilServerGame.syncGameModel(this);
       
-      publishParameters(UtilServerInjury.dropPlayer(this, player));
+      publishParameters(UtilServerInjury.dropPlayer(this, player, ApothecaryMode.AWAY));
       publishParameter(new StepParameter(StepParameterKey.INJURY_RESULT,
       	UtilServerInjury.handleInjury(this, InjuryType.THROW_A_ROCK, null, player, playerCoordinate, null, ApothecaryMode.AWAY)));
       
@@ -528,7 +528,7 @@ public final class StepApplyKickoffResult extends AbstractStep {
         rollsHome[i] = getGameState().getDiceRoller().rollPitchInvasion();
         playerAffectedHome[i] = DiceInterpreter.getInstance().isAffectedByPitchInvasion(rollsHome[i], gameResult.getTeamResultAway().getFame() + fanFavouritesAway);
         if (playerAffectedHome[i]) {
-          UtilServerInjury.stunPlayer(this, playersHome[i]);
+          UtilServerInjury.stunPlayer(this, playersHome[i], ApothecaryMode.HOME);
         }
       }
     }
@@ -541,7 +541,7 @@ public final class StepApplyKickoffResult extends AbstractStep {
         rollsAway[i] = getGameState().getDiceRoller().rollPitchInvasion();
         playerAffectedAway[i] = DiceInterpreter.getInstance().isAffectedByPitchInvasion(rollsAway[i], gameResult.getTeamResultHome().getFame() + fanFavouritesHome);
         if (playerAffectedAway[i]) {
-          UtilServerInjury.stunPlayer(this, playersAway[i]);
+          UtilServerInjury.stunPlayer(this, playersAway[i], ApothecaryMode.DEFENDER);
         }
       }
     }

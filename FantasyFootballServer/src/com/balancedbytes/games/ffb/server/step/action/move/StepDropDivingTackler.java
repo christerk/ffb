@@ -12,6 +12,7 @@ import com.balancedbytes.games.ffb.server.step.StepAction;
 import com.balancedbytes.games.ffb.server.step.StepCommandStatus;
 import com.balancedbytes.games.ffb.server.step.StepId;
 import com.balancedbytes.games.ffb.server.step.StepParameter;
+import com.balancedbytes.games.ffb.server.step.action.common.ApothecaryMode;
 import com.balancedbytes.games.ffb.server.util.UtilServerInjury;
 import com.balancedbytes.games.ffb.server.util.UtilServerPlayerMove;
 import com.balancedbytes.games.ffb.util.StringTool;
@@ -77,7 +78,7 @@ public class StepDropDivingTackler extends AbstractStep {
 		Game game = getGameState().getGame();
 		if (fUsingDivingTackle && StringTool.isProvided(game.getDefenderId())) {
 			game.getFieldModel().updatePlayerAndBallPosition(game.getDefender(), fCoordinateFrom);
-			publishParameters(UtilServerInjury.dropPlayer(this, game.getDefender()));
+			publishParameters(UtilServerInjury.dropPlayer(this, game.getDefender(), ApothecaryMode.DEFENDER));
 			UtilServerPlayerMove.updateMoveSquares(getGameState(), game.getActingPlayer().isLeaping());
 		}
 		// reset DivingTackle & Shadowing attributes
