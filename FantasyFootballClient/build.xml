@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<project name="FantasyFootballClient" default="buildFumbbl" basedir=".">
+<project name="FantasyFootballClient" default="buildFumbblLive" basedir=".">
 
     <property name="src.dir" value="src" />
     <property name="bin.dir" value="bin" />
@@ -87,10 +87,14 @@
 		-->
 	</target>
 
-	<target name="jarFumbbl" depends="jarCommon">
+	<target name="jarFumbblLive" depends="jarCommon">
         <jar destfile="${build.dir}/${ant.project.name}.jar" update="true">
-        	<zipfileset file="client-fumbbl.ini" fullpath="client.ini" />
+        	<zipfileset file="client-fumbbl-live.ini" fullpath="client.ini" />
+        	<zipfileset file="icons-fumbbl-live.ini" fullpath="icons.ini" />
         </jar>
+		<copy todir="${build.dir}">
+			<fileset dir="${lib.dir}" includes="*.jar" />
+		</copy>
 	</target>
 	
 	<target name="jarStandalone" depends="jarCommon">
@@ -110,7 +114,7 @@
     <target name="buildStandalone" depends="jarStandalone">
    	</target>
 
-	<target name="buildFumbbl" depends="jarFumbbl">
+	<target name="buildFumbblLive" depends="jarFumbblLive">
    	</target>
 
     <target name="buildFumbblTest" depends="jarFumbblTest">

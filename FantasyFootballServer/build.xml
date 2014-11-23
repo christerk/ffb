@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<project name="FantasyFootballServer" default="buildFumbbl" basedir=".">
+<project name="FantasyFootballServer" default="buildFumbblLive" basedir=".">
 
     <property name="src.dir" value="src" />
     <property name="bin.dir" value="bin" />
@@ -71,8 +71,8 @@
     	<copy file="server-standalone.ini" tofile="${build.dir}/server.ini" />
    	</target>
 	
-    <target name="buildFumbbl" depends="jar">
-    	<copy file="server-fumbbl.ini" tofile="${build.dir}/server.ini" />
+    <target name="buildFumbblLive" depends="jar">
+    	<copy file="server-fumbbl-live.ini" tofile="${build.dir}/server.ini" />
     	<!--
     	<tar destfile="${build.dir}/${ant.project.name}.tar.gz" compression="gzip">
 	  		<fileset dir="." excludes="src/**, bin/**, build/**, doc/**, lib/*.zip, **/build.xml, **/.*" />
