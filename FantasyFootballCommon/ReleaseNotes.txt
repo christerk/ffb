@@ -3,14 +3,15 @@
 
 [b]Improvements:[/b]
 
-- Dirty Tricks card deck available for inducements
+- Dirty Tricks card deck available for inducements (with the exception of Trampoline Trap)
 - Card playing animation when using a card in the game
 - Player Markers saved by team - upon starting a new game your players will be marked the same as in the last game
 - New way to store replays, drastically reducing database size (making it much easier for Christer to do backups)
 - Custom pitches
 - New test commands (/weather, /card, /pitch)
+- In-game replay for spectators working again
 
-[b]22 Bugfixes:[/b]
+[b]Some of the contained Bugfixes:[/b]
 
 [url=http://www.fumbbl.com/FUMBBL.php?page=bugs&op=view&id=1305]#1305[/url] Wizard fireballing own team clarification 
 [url=http://www.fumbbl.com/FUMBBL.php?page=bugs&op=view&id=1311]#1311[/url] REPLAY: controls broken after switch from spec mode
