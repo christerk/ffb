@@ -6,7 +6,6 @@ import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.net.NetCommandId;
 import com.balancedbytes.games.ffb.net.commands.UtilNetCommand;
-import com.balancedbytes.games.ffb.server.IGameIdListener;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
@@ -19,7 +18,6 @@ public class InternalServerCommandFumbblTeamLoaded extends InternalServerCommand
   
   private String fCoach;
   private boolean fHomeTeam;
-  private transient IGameIdListener fGameIdListener;
 
   public InternalServerCommandFumbblTeamLoaded(long pGameId, String pCoach, boolean pHomeTeam) {
     super(pGameId);
@@ -31,22 +29,14 @@ public class InternalServerCommandFumbblTeamLoaded extends InternalServerCommand
     return NetCommandId.INTERNAL_SERVER_FUMBBL_TEAM_LOADED;
   }
   
-  public String getCoach() {
+ public String getCoach() {
     return fCoach;
   }
     
   public boolean isHomeTeam() {
     return fHomeTeam;
   }
-  
-  public void setGameIdListener(IGameIdListener pGameIdListener) {
-	  fGameIdListener = pGameIdListener;
-  }
- 
-  public IGameIdListener getGameIdListener() {
-	  return fGameIdListener;
-  }
-  
+    
   // ByteArray serialization
   
   public void addTo(ByteList pByteList) {

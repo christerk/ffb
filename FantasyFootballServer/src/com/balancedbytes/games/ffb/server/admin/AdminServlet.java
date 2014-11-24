@@ -6,7 +6,8 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Map;
-import java.util.concurrent.atomic.AtomicReference;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.atomic.AtomicLong;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -202,27 +203,22 @@ public class AdminServlet extends HttpServlet {
       UtilXml.addValueElement(pHandler, _XML_TAG_ERROR, "No new games allowed");
       return false;
     }
-    final AtomicReference<Long> gameIdNotifier = new AtomicReference<Long>();
+    final CountDownLatch latch = new CountDownLatch(1);
+    final AtomicLong gameIdHolder = new AtomicLong();
     InternalServerCommandScheduleGame scheduleCommand = new InternalServerCommandScheduleGame(teamHomeId, teamAwayId);
     scheduleCommand.setGameIdListener(new IGameIdListener() {
       public void setGameId(long pGameId) {
-        synchronized (gameIdNotifier) {
-          gameIdNotifier.set(pGameId);
-          gameIdNotifier.notify();
-        }
+        gameIdHolder.set(pGameId);
+        latch.countDown();
       }
     });
     getServer().getCommunication().handleCommand(scheduleCommand);
-    synchronized (gameIdNotifier) {
-      while (gameIdNotifier.get() == null) {
-        try {
-          gameIdNotifier.wait();
-        } catch (InterruptedException pInterruptedException) {
-          throw new FantasyFootballException(pInterruptedException);
-        }
-      }
+    try {
+      latch.await();
+    } catch (InterruptedException e) {
+      // simply continue
     }
-    UtilXml.addValueElement(pHandler, _XML_TAG_GAME_ID, gameIdNotifier.get());
+    UtilXml.addValueElement(pHandler, _XML_TAG_GAME_ID, gameIdHolder.get());
     return true;
   }
 

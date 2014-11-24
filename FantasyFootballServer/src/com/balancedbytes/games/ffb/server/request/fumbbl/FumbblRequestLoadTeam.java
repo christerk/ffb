@@ -8,7 +8,6 @@ import com.balancedbytes.games.ffb.model.Team;
 import com.balancedbytes.games.ffb.net.ServerStatus;
 import com.balancedbytes.games.ffb.server.FantasyFootballServer;
 import com.balancedbytes.games.ffb.server.GameState;
-import com.balancedbytes.games.ffb.server.IGameIdListener;
 import com.balancedbytes.games.ffb.server.IServerLogLevel;
 import com.balancedbytes.games.ffb.server.net.ReceivedCommand;
 import com.balancedbytes.games.ffb.server.net.SessionManager;
@@ -30,7 +29,6 @@ public class FumbblRequestLoadTeam extends ServerRequest {
   private GameState fGameState;
 
   private transient Session fSession;
-  private transient IGameIdListener fGameIdListener;
   
   public FumbblRequestLoadTeam(GameState pGameState, String pCoach, String pTeamId, boolean pHomeTeam, Session pSession) {
     fGameState = pGameState;
@@ -60,14 +58,6 @@ public class FumbblRequestLoadTeam extends ServerRequest {
     return fSession;
   }
   
-  public void setGameIdListener(IGameIdListener pGameIdListener) {
-	  fGameIdListener = pGameIdListener;
-  }
-  
-  public IGameIdListener getGameIdListener() {
-	  return fGameIdListener;
-  }
-  
   @Override
   public void process(ServerRequestProcessor pRequestProcessor) {
     FantasyFootballServer server = pRequestProcessor.getServer();
@@ -92,7 +82,6 @@ public class FumbblRequestLoadTeam extends ServerRequest {
         team.updateRoster(roster);
         server.getGameCache().addTeamToGame(getGameState(), team, isHomeTeam());
         InternalServerCommandFumbblTeamLoaded loadedCommand = new InternalServerCommandFumbblTeamLoaded(getGameState().getId(), getCoach(), isHomeTeam());
-        loadedCommand.setGameIdListener(getGameIdListener());
         server.getCommunication().handleCommand(new ReceivedCommand(loadedCommand, getSession()));
       }
     }
