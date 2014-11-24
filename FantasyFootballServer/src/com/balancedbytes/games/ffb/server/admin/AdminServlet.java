@@ -25,7 +25,7 @@ import com.balancedbytes.games.ffb.server.FantasyFootballServer;
 import com.balancedbytes.games.ffb.server.IGameIdListener;
 import com.balancedbytes.games.ffb.server.IServerProperty;
 import com.balancedbytes.games.ffb.server.db.DbStatementId;
-import com.balancedbytes.games.ffb.server.db.old.DbAdminListByStatusQueryOld;
+import com.balancedbytes.games.ffb.server.db.query.DbAdminListByStatusQuery;
 import com.balancedbytes.games.ffb.server.net.commands.InternalServerCommandCloseGame;
 import com.balancedbytes.games.ffb.server.net.commands.InternalServerCommandDeleteGame;
 import com.balancedbytes.games.ffb.server.net.commands.InternalServerCommandScheduleGame;
@@ -333,7 +333,7 @@ public class AdminServlet extends HttpServlet {
     if (status != null) {
       UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_GAME_STATUS, status.getName());
       UtilXml.startElement(pHandler, _XML_TAG_LIST, attributes);
-      DbAdminListByStatusQueryOld listQuery = (DbAdminListByStatusQueryOld) getServer().getDbQueryFactory().getStatement(DbStatementId.ADMIN_LIST_BY_STATUS_QUERY_OLD);
+      DbAdminListByStatusQuery listQuery = (DbAdminListByStatusQuery) getServer().getDbQueryFactory().getStatement(DbStatementId.ADMIN_LIST_BY_STATUS_QUERY);
       AdminList adminList = new AdminList();
       listQuery.execute(adminList, status);
       if (adminList.size() > 0) {
