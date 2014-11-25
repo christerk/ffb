@@ -211,7 +211,7 @@ public final class StepBuyInducements extends AbstractStep {
   	game.getGameResult().getTeamResultHome().setPettyCashUsed(Math.max(0, maxInducementGoldHome - restGoldHome));
     int restGoldAway = Math.max(0, fInducementGoldAway - fGoldUsedAway);
     int maxInducementGoldAway = UtilInducementSequence.calculateInducementGold(game, false);
-    game.getGameResult().getTeamResultHome().setPettyCashUsed(Math.max(0, maxInducementGoldAway - restGoldAway));
+    game.getGameResult().getTeamResultAway().setPettyCashUsed(Math.max(0, maxInducementGoldAway - restGoldAway));
   	getResult().setNextAction(StepAction.NEXT_STEP);
   }
     
