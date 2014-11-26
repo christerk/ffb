@@ -60,29 +60,22 @@ public enum Skill implements IEnumWithId, IEnumWithName {
   //  explained in the Blocking rules.
 
   BLOOD_LUST(6, "Blood Lust", SkillCategory.EXTRAORDINARY),
-  //  Vampires must occasionally feed on the blood of the living. Because of
-  //  this, roll a D6 immediately after declaring an Action with a Vampire. On a
-  //  2+ the Vampire may carry out the Action as normal. On a 1, however, the
-  //  Vampire is overcome by the desire to drink Human blood and must carry
-  //  out the following special Action instead. The Vampire must take a Move
-  //  Action, and loses his declared action for the turn. If the original action
-  //  was one that could only be used by one player on the team then it counts
-  //  as having been used up for the turn. If the Vampire finishes the move
-  //  standing adjacent to one or more standing, Prone or Stunned Thralls
-  //  from his own team, he attacks one of them. Immediately roll for injury on
-  //  the Thrall who has been attacked without making an Armour roll. The
-  //  injury will not cause a turnover unless the Thrall was holding the ball. If
-  //  the Vampire is not able to attack a Thrall (for any reason), then he is
-  //  removed from the pitch and placed in his team's Reserves box, and his
-  //  team suffers a turnover. If he was holding the ball it bounces from the
-  //  square he occupied when he was removed, and he will not score a
-  //  Touchdown (even if he gets into the End Zone while holding the ball
-  //  before being removed). If the Vampire is KO'd or suffers a Casualty
-  //  before biting a Thrall, then he should be placed in the appropriate box of
-  //  the Dug Out instead of being placed in the Reserves box. Note that the
-  //  Vampire is allowed to pick up the ball or do anything else they could
-  //  normally do while taking a Move Action, but must bite a Thrall to avoid
-  //  the turnover.
+  //  Vampires must occasionally feed on the blood of the living. Immediately
+  //  after declaring an Action with a Vampire, roll a d6: On a 2+ the Vampire
+  //  can carry out the Action as normal. On a 1, however, the Vampire must
+  //  feed on a Thrall team-mate or a spectator. The Vampire may continue
+  //  with his declared Action or if he had declared a Block Action, he may
+  //  take a Move Action instead. Either way, at the end of the declared
+  //  Action, but before actually passing, handing off, or scoring, the vampire
+  //  must feed. If he is standing adjacent to one or more Thrall team-mates
+  //  (standing, prone or stunned), then choose one to bite and make an Injury
+  //  roll on the Thrall treating any casualty roll as Badly Hurt. The injury will
+  //  not cause a turnover unless the Thrall was holding the ball. Once the
+  //  Vampire has bitten a Thrall he may complete his Action. Failure to bite a
+  //  Thrall is a turnover and requires you to feed on a spectator – move the
+  //  Vampire to the reserves box if he was still on the pitch. If he was holding
+  //  the ball, it bounces from the square he occupied when he was removed
+  //  and he will not score a touchdown if he was in the opposing end zone.
 
   BOMBARDIER(7, "Bombardier", SkillCategory.EXTRAORDINARY),
   //  A coach may choose to have a Bombardier who is not Prone or Stunned

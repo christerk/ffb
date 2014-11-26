@@ -863,13 +863,13 @@ public class FieldModel implements IByteArrayReadable, IJsonSerializable {
       for (Card card : getCards(player)) {
         cards.add(card.getName());
       }
-      IJsonOption.CARDS.addTo(jsonObject, cards);
+      IJsonOption.CARDS.addTo(playerDataObject, cards);
 
       List<String> cardEffects = new ArrayList<String>();
       for (CardEffect cardEffect : getCardEffects(player)) {
         cardEffects.add(cardEffect.getName());
       }
-      IJsonOption.CARD_EFFECTS.addTo(jsonObject, cardEffects);
+      IJsonOption.CARD_EFFECTS.addTo(playerDataObject, cardEffects);
 
       playerDataArray.add(playerDataObject);
       
@@ -962,7 +962,7 @@ public class FieldModel implements IByteArrayReadable, IJsonSerializable {
         }
       }
 
-      String[] cardEffects = IJsonOption.CARDS.getFrom(playerDataObject);
+      String[] cardEffects = IJsonOption.CARD_EFFECTS.getFrom(playerDataObject);
       if (ArrayTool.isProvided(cardEffects)) {
         for (int j = 0; j < cardEffects.length; j++) {
           addCardEffect(player, cardEffectFactory.forName(cardEffects[j]));

@@ -21,6 +21,7 @@ import com.balancedbytes.games.ffb.PlayerState;
 import com.balancedbytes.games.ffb.PushbackSquare;
 import com.balancedbytes.games.ffb.Weather;
 import com.balancedbytes.games.ffb.WeatherFactory;
+import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Team;
 import com.balancedbytes.games.ffb.option.GameOptionId;
 import com.balancedbytes.games.ffb.util.StringTool;
@@ -136,11 +137,11 @@ public class IconCache {
     return fIconByKey.get(pUrl);
   }
   
-  public BufferedImage getPitch(Weather pWeather) {
+  public BufferedImage getPitch(Game pGame, Weather pWeather) {
     if (pWeather == Weather.INTRO) {
       return getIconByProperty(IIconProperty.PITCH_INTRO);
     } else {
-      return getIconByUrl(findPitchUrl(pWeather));
+      return getIconByUrl(findPitchUrl(pGame, pWeather));
     }
   }
   
@@ -285,12 +286,15 @@ public class IconCache {
     return getIconByProperty(iconProperty);
   }
   
-  public String findPitchUrl(Weather pWeather) {
+  public String findPitchUrl(Game pGame, Weather pWeather) {
+    if ((pGame == null) || (pWeather == null)) {
+      return null;
+    }
     Weather myWeather = pWeather;
     if (IClientPropertyValue.SETTING_PITCH_WEATHER_OFF.equals(getClient().getProperty(IClientProperty.SETTING_PITCH_WEATHER))) {
       myWeather = Weather.NICE;
     }
-    String pitchUrl = getClient().getGame().getOptions().getOptionWithDefault(GameOptionId.PITCH_URL).getValueAsString();
+    String pitchUrl = pGame.getOptions().getOptionWithDefault(GameOptionId.PITCH_URL).getValueAsString();
     if (!StringTool.isProvided(pitchUrl) || IClientPropertyValue.SETTING_PITCH_DEFAULT.equals(getClient().getProperty(IClientProperty.SETTING_PITCH_CUSTOMIZATION))) {
       pitchUrl = getClient().getProperty(IIconProperty.PITCH_URL_DEFAULT);
     }

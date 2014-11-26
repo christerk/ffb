@@ -250,7 +250,7 @@ public class ClientCommandHandlerModelSync extends ClientCommandHandler implemen
     }
         
     if (fReloadPitch) {
-      String pitchUrl = userInterface.getIconCache().findPitchUrl(game.getFieldModel().getWeather());
+      String pitchUrl = userInterface.getIconCache().findPitchUrl(game, game.getFieldModel().getWeather());
       if ((pitchUrl != null) && !userInterface.getIconCache().loadIconFromArchive(pitchUrl)) {
         // TODO: add dialog to show pitch download ...
         userInterface.getIconCache().loadIconFromUrl(pitchUrl);

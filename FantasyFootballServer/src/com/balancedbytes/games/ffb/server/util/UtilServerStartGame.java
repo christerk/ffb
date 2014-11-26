@@ -8,10 +8,13 @@ import org.eclipse.jetty.websocket.api.Session;
 import com.balancedbytes.games.ffb.ClientMode;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.net.ServerStatus;
+import com.balancedbytes.games.ffb.option.GameOptionFactory;
 import com.balancedbytes.games.ffb.option.GameOptionId;
+import com.balancedbytes.games.ffb.option.GameOptionString;
 import com.balancedbytes.games.ffb.option.UtilGameOption;
 import com.balancedbytes.games.ffb.server.FantasyFootballServer;
 import com.balancedbytes.games.ffb.server.GameState;
+import com.balancedbytes.games.ffb.server.ServerMode;
 import com.balancedbytes.games.ffb.server.db.DbStatementId;
 import com.balancedbytes.games.ffb.server.db.IDbStatementFactory;
 import com.balancedbytes.games.ffb.server.db.query.DbPlayerMarkersQuery;
@@ -111,6 +114,7 @@ public class UtilServerStartGame {
       }
     }
     if (ownershipOk) {
+      addDefaultGameOptions(pGameState);
       if ((game.getFinished() == null) && (pGameState.getStepStack().size() == 0)) {
         SequenceGenerator.getInstance().pushStartGameSequence(pGameState);
       }
@@ -121,6 +125,17 @@ public class UtilServerStartGame {
       return true;
     } else {
       return false;
+    }
+  }
+  
+  private static void addDefaultGameOptions(GameState pGameState) {
+    Game game = pGameState.getGame();
+    FantasyFootballServer server = pGameState.getServer();
+    if (ServerMode.STANDALONE == server.getMode()) {
+      GameOptionFactory optionFactory = new GameOptionFactory();
+      GameOptionString pitchUrl = (GameOptionString) optionFactory.createGameOption(GameOptionId.PITCH_URL);
+      pitchUrl.setValue("http://localhost:2224/icons/pitches/fumbblcup.zip");
+      game.getOptions().addOption(pitchUrl);
     }
   }
 

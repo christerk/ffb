@@ -62,7 +62,7 @@ public class ClientCommandHandlerGameState extends ClientCommandHandler implemen
     // load pitches for default, basic and custom (if defined)
     addIconUrl(iconUrls, iconCache.buildPitchUrl(getClient().getProperty(IIconProperty.PITCH_URL_DEFAULT), Weather.NICE));
     addIconUrl(iconUrls, iconCache.buildPitchUrl(getClient().getProperty(IIconProperty.PITCH_URL_BASIC), Weather.NICE));
-    addIconUrl(iconUrls, iconCache.findPitchUrl(Weather.NICE));
+    addIconUrl(iconUrls, iconCache.findPitchUrl(game, Weather.NICE));
     
     Set<String> iconUrlsToDownload = new HashSet<String>();
     for (String iconUrl : iconUrls) {
