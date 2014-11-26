@@ -4,10 +4,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.balancedbytes.games.ffb.CatchModifierFactory;
+import com.balancedbytes.games.ffb.DodgeModifierFactory;
+import com.balancedbytes.games.ffb.GazeModifierFactory;
+import com.balancedbytes.games.ffb.GoForItModifierFactory;
 import com.balancedbytes.games.ffb.IRollModifier;
 import com.balancedbytes.games.ffb.IRollModifierFactory;
 import com.balancedbytes.games.ffb.InterceptionModifierFactory;
+import com.balancedbytes.games.ffb.LeapModifierFactory;
 import com.balancedbytes.games.ffb.PassModifierFactory;
+import com.balancedbytes.games.ffb.PickupModifierFactory;
+import com.balancedbytes.games.ffb.RightStuffModifierFactory;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
@@ -177,28 +183,22 @@ public class ReportSkillRoll implements IReport {
       case CATCH_ROLL:
         return new CatchModifierFactory();
       case DODGE_ROLL:
-        // TODO: return DodgeModifierFactory
-        return null;
+        return new DodgeModifierFactory();
       case GO_FOR_IT_ROLL:
-        // TODO: return GoForItModifierFactory
-        return null;
+        return new GoForItModifierFactory();
       case INTERCEPTION_ROLL:
         return new InterceptionModifierFactory();
       case LEAP_ROLL:
-        // TODO: return LeapModifierFactory
-        return null;
+        return new LeapModifierFactory();
       case PASS_ROLL:
       case THROW_TEAM_MATE_ROLL:
         return new PassModifierFactory();
       case PICK_UP_ROLL:
-        // TODO: return PickUpModifierFactory
-        return null;
+        return new PickupModifierFactory();
       case RIGHT_STUFF_ROLL:
-        // TODO: return RightStuffModifierFactory
-        return null;
+        return new RightStuffModifierFactory();
       case HYPNOTIC_GAZE_ROLL:
-        // TODO: return GazeModifierFactory
-        return null;
+        return new GazeModifierFactory();
       default:
         return null;
     }

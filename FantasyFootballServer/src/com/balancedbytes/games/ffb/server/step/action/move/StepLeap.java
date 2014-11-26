@@ -4,6 +4,7 @@ import java.util.Set;
 
 import com.balancedbytes.games.ffb.InjuryType;
 import com.balancedbytes.games.ffb.LeapModifier;
+import com.balancedbytes.games.ffb.LeapModifierFactory;
 import com.balancedbytes.games.ffb.ReRolledAction;
 import com.balancedbytes.games.ffb.Skill;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
@@ -123,11 +124,12 @@ public class StepLeap extends AbstractStepWithReRoll {
     ActionStatus status = null;
     Game game = getGameState().getGame();
     ActingPlayer actingPlayer = game.getActingPlayer();
-    Set<LeapModifier> leapModifiers = LeapModifier.findLeapModifiers(game);
+    LeapModifierFactory modifierFactory = new LeapModifierFactory();
+    Set<LeapModifier> leapModifiers = modifierFactory.findLeapModifiers(game);
     int minimumRoll = DiceInterpreter.getInstance().minimumRollLeap(actingPlayer.getPlayer(), leapModifiers);
     int roll = getGameState().getDiceRoller().rollSkill();
     boolean successful = DiceInterpreter.getInstance().isSkillRollSuccessful(roll, minimumRoll);
-    LeapModifier[] leapModifierArray = LeapModifier.toArray(leapModifiers);
+    LeapModifier[] leapModifierArray = modifierFactory.toArray(leapModifiers);
     boolean reRolled = ((getReRolledAction() == ReRolledAction.LEAP) && (getReRollSource() != null));
     getResult().addReport(new ReportSkillRoll(ReportId.LEAP_ROLL, actingPlayer.getPlayerId(), successful, roll, minimumRoll, reRolled, leapModifierArray));
     if (successful) {

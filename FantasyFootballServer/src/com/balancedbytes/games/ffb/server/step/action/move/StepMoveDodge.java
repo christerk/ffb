@@ -3,6 +3,7 @@ package com.balancedbytes.games.ffb.server.step.action.move;
 import java.util.Set;
 
 import com.balancedbytes.games.ffb.DodgeModifier;
+import com.balancedbytes.games.ffb.DodgeModifierFactory;
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.InjuryType;
 import com.balancedbytes.games.ffb.ReRollSource;
@@ -181,7 +182,8 @@ public class StepMoveDodge extends AbstractStepWithReRoll {
     if (pDoRoll) {
       publishParameter(new StepParameter(StepParameterKey.DODGE_ROLL, getGameState().getDiceRoller().rollSkill()));
     }
-    Set<DodgeModifier> dodgeModifiers = DodgeModifier.findDodgeModifiers(game, fCoordinateFrom, fCoordinateTo, 0);
+    DodgeModifierFactory modifierFactory = new DodgeModifierFactory();
+    Set<DodgeModifier> dodgeModifiers = modifierFactory.findDodgeModifiers(game, fCoordinateFrom, fCoordinateTo, 0);
     if (fUsingBreakTackle) {
     	dodgeModifiers.add(DodgeModifier.BREAK_TACKLE);
     }
@@ -210,7 +212,7 @@ public class StepMoveDodge extends AbstractStepWithReRoll {
     	}
     }  	
 
-    DodgeModifier[] dodgeModifierArray = DodgeModifier.toArray(dodgeModifiers);
+    DodgeModifier[] dodgeModifierArray = modifierFactory.toArray(dodgeModifiers);
     boolean reRolled = ((getReRolledAction() == ReRolledAction.DODGE) && (getReRollSource() != null));
     getResult().addReport(new ReportSkillRoll(ReportId.DODGE_ROLL, actingPlayer.getPlayerId(), successful, (pDoRoll ? fDodgeRoll : 0), minimumRoll, reRolled, dodgeModifierArray));
     

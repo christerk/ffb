@@ -3,11 +3,13 @@ package com.balancedbytes.games.ffb.server.util;
 import java.util.Set;
 
 import com.balancedbytes.games.ffb.DodgeModifier;
+import com.balancedbytes.games.ffb.DodgeModifierFactory;
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.FieldCoordinateBounds;
 import com.balancedbytes.games.ffb.GoForItModifier;
 import com.balancedbytes.games.ffb.GoForItModifierFactory;
 import com.balancedbytes.games.ffb.LeapModifier;
+import com.balancedbytes.games.ffb.LeapModifierFactory;
 import com.balancedbytes.games.ffb.MoveSquare;
 import com.balancedbytes.games.ffb.PathFinderWithPassBlockSupport;
 import com.balancedbytes.games.ffb.Skill;
@@ -102,7 +104,8 @@ public class UtilServerPlayerMove {
     int minimumRollDodge = 0;
     boolean dodging = !UtilCards.hasSkill(game, actingPlayer, Skill.BALL_AND_CHAIN) && (UtilPlayer.findTacklezones(game, actingPlayer.getPlayer()) > 0);
     if (pLeaping) {
-      Set<LeapModifier> leapModifiers = LeapModifier.findLeapModifiers(game);
+      LeapModifierFactory modifierFactory = new LeapModifierFactory();
+      Set<LeapModifier> leapModifiers = modifierFactory.findLeapModifiers(game);
       minimumRollDodge = DiceInterpreter.getInstance().minimumRollLeap(actingPlayer.getPlayer(), leapModifiers);
       if (actingPlayer.isStandingUp() && !actingPlayer.hasActed() && !UtilCards.hasSkill(game, actingPlayer, Skill.JUMP_UP)) {
         goForIt = ((3 + playerCoordinate.distanceInSteps(pCoordinate)) > UtilCards.getPlayerMovement(game, actingPlayer.getPlayer()));
@@ -112,7 +115,8 @@ public class UtilServerPlayerMove {
     } else {
       goForIt = UtilPlayer.isNextMoveGoingForIt(game);
       if (dodging) {
-        Set<DodgeModifier> dodgeModifiers = DodgeModifier.findDodgeModifiers(game, playerCoordinate, pCoordinate, 0);
+        DodgeModifierFactory modifierFactory = new DodgeModifierFactory();
+        Set<DodgeModifier> dodgeModifiers = modifierFactory.findDodgeModifiers(game, playerCoordinate, pCoordinate, 0);
         minimumRollDodge = DiceInterpreter.getInstance().minimumRollDodge(game, actingPlayer.getPlayer(), dodgeModifiers);
       }
     }

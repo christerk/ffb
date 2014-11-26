@@ -81,6 +81,7 @@ public class DbAdminListByStatusQuery extends DbStatement {
         entry.setTeamAwayId(resultSet.getString(col++));
         entry.setTeamAwayName(resultSet.getString(col++));
         entry.setStatus(new GameStatusFactory().forTypeString(resultSet.getString(col++)));
+        pAdminList.add(entry);
       }
       resultSet.close();
     } catch (SQLException pSqlE) {

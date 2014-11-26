@@ -8,6 +8,7 @@ import com.balancedbytes.games.ffb.InjuryType;
 import com.balancedbytes.games.ffb.PlayerState;
 import com.balancedbytes.games.ffb.ReRolledAction;
 import com.balancedbytes.games.ffb.RightStuffModifier;
+import com.balancedbytes.games.ffb.RightStuffModifierFactory;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.Game;
@@ -117,11 +118,12 @@ public final class StepRightStuff extends AbstractStepWithReRoll {
       }
     }
     if (doRoll) {
-      Set<RightStuffModifier> rightStuffModifiers = RightStuffModifier.findRightStuffModifiers(game, thrownPlayer);
+      RightStuffModifierFactory modifierFactory = new RightStuffModifierFactory();
+      Set<RightStuffModifier> rightStuffModifiers = modifierFactory.findRightStuffModifiers(game, thrownPlayer);
       int minimumRoll = DiceInterpreter.getInstance().minimumRollRightStuff(thrownPlayer, rightStuffModifiers);
       int roll = getGameState().getDiceRoller().rollSkill();
       boolean successful = DiceInterpreter.getInstance().isSkillRollSuccessful(roll, minimumRoll);
-      RightStuffModifier[] rightStuffModifiersArray = RightStuffModifier.toArray(rightStuffModifiers);
+      RightStuffModifier[] rightStuffModifiersArray = modifierFactory.toArray(rightStuffModifiers);
       boolean reRolled = ((getReRolledAction() == ReRolledAction.RIGHT_STUFF) && (getReRollSource() != null));
       getResult().addReport(new ReportSkillRoll(ReportId.RIGHT_STUFF_ROLL, fThrownPlayerId, successful, roll, minimumRoll, reRolled, rightStuffModifiersArray));
       if (successful) {

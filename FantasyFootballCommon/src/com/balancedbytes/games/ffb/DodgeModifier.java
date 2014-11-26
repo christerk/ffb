@@ -1,16 +1,5 @@
 package com.balancedbytes.games.ffb;
 
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.HashSet;
-import java.util.Set;
-
-import com.balancedbytes.games.ffb.model.ActingPlayer;
-import com.balancedbytes.games.ffb.model.Game;
-import com.balancedbytes.games.ffb.model.Player;
-import com.balancedbytes.games.ffb.model.Team;
-import com.balancedbytes.games.ffb.util.UtilCards;
-import com.balancedbytes.games.ffb.util.UtilPlayer;
 
 /**
  * 
@@ -75,107 +64,7 @@ public enum DodgeModifier implements IRollModifier {
   public boolean isPrehensileTailModifier() {
     return fPrehensileTailModifier;
   }
-  
-  public static DodgeModifier fromId(int pId) {
-    for (DodgeModifier modifier : values()) {
-      if (modifier.getId() == pId) {
-        return modifier;
-      }
-    }
-    return null;
-  }
-  
-  public static DodgeModifier fromName(String pName) {
-    for (DodgeModifier modifier : values()) {
-      if (modifier.getName().equalsIgnoreCase(pName)) {
-        return modifier;
-      }
-    }
-    return null;
-  }
-
-  public static Set<DodgeModifier> findDodgeModifiers(Game pGame, FieldCoordinate pCoordinateFrom, FieldCoordinate pCoordinateTo, int pTacklezoneModifier) {
-    Set<DodgeModifier> dodgeModifiers = new HashSet<DodgeModifier>();
-    ActingPlayer actingPlayer = pGame.getActingPlayer();
-    if (UtilCards.hasSkill(pGame, actingPlayer, Skill.TWO_HEADS)) {
-      dodgeModifiers.add(TWO_HEADS);
-    }
-    if (UtilCards.hasSkill(pGame, actingPlayer, Skill.TITCHY)) {
-      dodgeModifiers.add(TITCHY);
-    }
-    DodgeModifier prehensileTailModifier = findPrehensileTailModifier(pGame, pCoordinateFrom);
-    if (prehensileTailModifier != null) {
-      dodgeModifiers.add(prehensileTailModifier);
-    }
-    DodgeModifier tacklezoneModifier = findTacklezoneModifier(pGame, pCoordinateTo, pTacklezoneModifier);
-    if (tacklezoneModifier != null) {
-      if (UtilCards.hasSkill(pGame, actingPlayer, Skill.STUNTY) && (!UtilCards.hasSkill(pGame, actingPlayer, Skill.SECRET_WEAPON))) {
-        dodgeModifiers.add(STUNTY);
-      } else {
-        dodgeModifiers.add(tacklezoneModifier);
-      }
-    }
-    if (UtilCards.hasUnusedSkill(pGame, actingPlayer, Skill.BREAK_TACKLE)) {
-      dodgeModifiers.add(BREAK_TACKLE);
-    }
-    return dodgeModifiers;
-  }
     
-  public static DodgeModifier[] toArray(Set<DodgeModifier> pDodgeModifierSet) {
-    if (pDodgeModifierSet != null) {
-      DodgeModifier[] dodgeModifierArray = pDodgeModifierSet.toArray(new DodgeModifier[pDodgeModifierSet.size()]);
-      Arrays.sort(
-          dodgeModifierArray,
-        new Comparator<DodgeModifier>() {
-          public int compare(DodgeModifier pO1, DodgeModifier pO2) {
-            return (pO1.getId() - pO2.getId());
-          }
-        }
-      );
-      return dodgeModifierArray;
-    } else {
-      return new DodgeModifier[0];
-    }
-  }
-  
-  private static DodgeModifier findTacklezoneModifier(Game pGame, FieldCoordinate pCoordinateTo, int pModifier) {
-    ActingPlayer actingPlayer = pGame.getActingPlayer();
-    Team otherTeam = UtilPlayer.findOtherTeam(pGame, actingPlayer.getPlayer());
-    int tacklezones = pModifier;
-    Player[] adjacentPlayers = UtilPlayer.findAdjacentPlayersWithTacklezones(pGame, otherTeam, pCoordinateTo, false);
-    for (Player player : adjacentPlayers) {
-      if (!UtilCards.hasSkill(pGame, player, Skill.TITCHY)) {
-        tacklezones++;
-      }
-    }
-    for (DodgeModifier modifier : values()) {
-      if (modifier.isTacklezoneModifier() && (modifier.getModifier() == tacklezones)) {
-        return modifier;
-      }
-    }
-    return null;
-  }
-  
-  private static DodgeModifier findPrehensileTailModifier(Game pGame, FieldCoordinate pCoordinateFrom) {
-    ActingPlayer actingPlayer = pGame.getActingPlayer();
-    Team otherTeam = UtilPlayer.findOtherTeam(pGame, actingPlayer.getPlayer());
-    int nrOfPrehensileTails = 0;
-    Player[] opponents = UtilPlayer.findAdjacentPlayersWithTacklezones(pGame, otherTeam, pCoordinateFrom, true);
-    for (Player opponent : opponents) {
-      if (UtilCards.hasSkill(pGame, opponent, Skill.PREHENSILE_TAIL)) {
-        nrOfPrehensileTails++;
-      }
-    }
-    if (nrOfPrehensileTails > 0) {
-      for (DodgeModifier modifier : values()) {
-        if (modifier.isPrehensileTailModifier() && (modifier.getModifier() == nrOfPrehensileTails)) {
-          return modifier;
-        }
-      }
-    }
-    return null;
-  }
-  
   public boolean isModifierIncluded() {
     return (isTacklezoneModifier() || isPrehensileTailModifier());
   }

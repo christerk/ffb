@@ -3,6 +3,7 @@ package com.balancedbytes.games.ffb.server.step.action.move;
 import java.util.Set;
 
 import com.balancedbytes.games.ffb.DodgeModifier;
+import com.balancedbytes.games.ffb.DodgeModifierFactory;
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.PlayerChoiceMode;
 import com.balancedbytes.games.ffb.Skill;
@@ -150,7 +151,8 @@ public class StepDivingTackle extends AbstractStep {
       		divingTacklers = UtilPlayer.filterAttackerAndDefender(game, divingTacklers);
       	}
         if (ArrayTool.isProvided(divingTacklers) && (fDodgeRoll > 0)) {
-          Set<DodgeModifier> dodgeModifiers = DodgeModifier.findDodgeModifiers(game, fCoordinateFrom, fCoordinateTo, 0);
+          DodgeModifierFactory modifierFactory = new DodgeModifierFactory();
+          Set<DodgeModifier> dodgeModifiers = modifierFactory.findDodgeModifiers(game, fCoordinateFrom, fCoordinateTo, 0);
           dodgeModifiers.add(DodgeModifier.DIVING_TACKLE);
           if (fUsingBreakTackle) {
           	dodgeModifiers.add(DodgeModifier.BREAK_TACKLE);

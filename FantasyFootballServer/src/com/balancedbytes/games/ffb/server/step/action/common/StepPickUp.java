@@ -5,6 +5,7 @@ import java.util.Set;
 import com.balancedbytes.games.ffb.CatchScatterThrowInMode;
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.PickupModifier;
+import com.balancedbytes.games.ffb.PickupModifierFactory;
 import com.balancedbytes.games.ffb.ReRollSource;
 import com.balancedbytes.games.ffb.ReRolledAction;
 import com.balancedbytes.games.ffb.Skill;
@@ -136,11 +137,12 @@ public class StepPickUp extends AbstractStepWithReRoll {
     if (UtilCards.hasSkill(game, actingPlayer, Skill.NO_HANDS)) {
       return ActionStatus.FAILURE;
     } else {
-      Set<PickupModifier> pickupModifiers = PickupModifier.findPickupModifiers(game);
+      PickupModifierFactory modifierFactory = new PickupModifierFactory();
+      Set<PickupModifier> pickupModifiers = modifierFactory.findPickupModifiers(game);
       int minimumRoll = DiceInterpreter.getInstance().minimumRollPickup(actingPlayer.getPlayer(), pickupModifiers);
       int roll = getGameState().getDiceRoller().rollSkill();
       boolean successful = DiceInterpreter.getInstance().isSkillRollSuccessful(roll, minimumRoll);
-      PickupModifier[] pickupModifierArray = PickupModifier.toArray(pickupModifiers);
+      PickupModifier[] pickupModifierArray = modifierFactory.toArray(pickupModifiers);
       boolean reRolled = ((getReRolledAction() == ReRolledAction.PICK_UP) && (getReRollSource() != null));
       getResult().addReport(new ReportSkillRoll(ReportId.PICK_UP_ROLL, actingPlayer.getPlayerId(), successful, roll, minimumRoll, reRolled, pickupModifierArray));
       if (successful) {
