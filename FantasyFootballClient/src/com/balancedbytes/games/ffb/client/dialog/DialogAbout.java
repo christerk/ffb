@@ -76,7 +76,7 @@ public class DialogAbout extends Dialog {
     drawBold(g2d, 10, y += 0, "Headcoach: BattleLore");
     drawText(g2d, 20, y += 20, "thank you for providing ideas, encouragement and the occasional kick in the butt.");
 
-    drawBold(g2d, 10, y += 25, "Assistant Coaches: Lakrillo and WhatBall");
+    drawBold(g2d, 10, y += 25, "Assistant Coaches: WhatBall, Garion and Lakrillo");
     drawText(g2d, 20, y += 20, "thank you for helping to to pull the cart along.");
 
     drawBold(g2d, 10, y += 25, "Sports Director: Christer");
@@ -85,7 +85,7 @@ public class DialogAbout extends Dialog {
     drawBold(g2d, 10, y += 25, "Lifetime Luxury Suite Owner: SkiJunkie");
     drawText(g2d, 20, y += 20, "thank you doing it first and giving a vision to follow.");
     
-    drawBold(g2d, 10, y += 25, "Light Show by: Cowhead, F_alk, FreeRange, Harvestmouse, Knut_Rockie, MisterFurious, Ryanfitz and WhatBall");
+    drawBold(g2d, 10, y += 25, "Light Show by: Cowhead, F_alk, FreeRange, Harvestmouse, Knut_Rockie, MisterFurious and Ryanfitz");
     drawBold(g2d, 10, y += 20, "Playing the Stadium Organ: VocalVoodoo and Minenbonnie");
     drawBold(g2d, 10, y += 20, "Official supplier of game balls: Qaz");
     drawText(g2d, 20, y += 20, "thank you all for making FFB look and sound great.");
