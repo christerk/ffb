@@ -68,16 +68,15 @@ public final class StepEndBomb extends AbstractStep {
   private void executeStep() {
     Game game = getGameState().getGame();
 		game.setPassCoordinate(null);
-  	boolean touchdown = UtilServerSteps.checkTouchdown(getGameState());
-    if (fEndTurn || touchdown || (fCatcherId == null)) {
-      fEndTurn = fEndTurn && (TurnMode.BOMB_AWAY != game.getTurnMode()) && (TurnMode.BOMB_AWAY_BLITZ != game.getTurnMode());
+  	fEndTurn |= UtilServerSteps.checkTouchdown(getGameState());
+    if (fEndTurn || (fCatcherId == null)) {
   		game.setHomePlaying((TurnMode.BOMB_HOME == game.getTurnMode()) || (TurnMode.BOMB_HOME_BLITZ == game.getTurnMode()));
     	if ((TurnMode.BOMB_HOME_BLITZ == game.getTurnMode()) || (TurnMode.BOMB_AWAY_BLITZ == game.getTurnMode())) {
     		game.setTurnMode(TurnMode.BLITZ);
     	} else {
     		game.setTurnMode(TurnMode.REGULAR);
     	}
-    	SequenceGenerator.getInstance().pushEndPlayerActionSequence(getGameState(), false, fEndTurn || touchdown);
+    	SequenceGenerator.getInstance().pushEndPlayerActionSequence(getGameState(), false, fEndTurn);
     } else {
     	Player catcher = game.getPlayerById(fCatcherId);
     	game.setHomePlaying(game.getTeamHome().hasPlayer(catcher));

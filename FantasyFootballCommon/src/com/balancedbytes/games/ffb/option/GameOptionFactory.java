@@ -92,7 +92,8 @@ public class GameOptionFactory {
           .setDefault(false)
           .setMessageTrue("Piling On player knocks himself out when rolling a double on armour or injury.");
       case PITCH_URL:
-        return new GameOptionString(GameOptionId.PITCH_URL);
+        return new GameOptionString(GameOptionId.PITCH_URL)
+          .setMessage("Custom pitch set.");
       case RIGHT_STUFF_CANCELS_TACKLE:
         return new GameOptionBoolean(GameOptionId.RIGHT_STUFF_CANCELS_TACKLE)
           .setDefault(false)
