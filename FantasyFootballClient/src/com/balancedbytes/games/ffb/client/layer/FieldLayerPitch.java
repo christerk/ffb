@@ -49,7 +49,7 @@ public class FieldLayerPitch extends FieldLayer {
       Graphics2D g2d = getGraphicsWithFontAndColor();
       FontMetrics metrics = g2d.getFontMetrics ();
       Rectangle2D teamNameBounds = metrics.getStringBounds(teamNameHome, g2d);
-      int translateX = (int) ((0.5 * FIELD_SQUARE_SIZE) + (teamNameBounds.getHeight() / 2)) - 3;
+      int translateX = (int) ((0.5 * FIELD_SQUARE_SIZE) + (teamNameBounds.getHeight() / 2)) - 4;
       int translateY = (int) ((getImage().getHeight() / 2) + (teamNameBounds.getWidth() / 2));
       g2d.translate(translateX, translateY);
       g2d.rotate(-Math.PI/2.0);
