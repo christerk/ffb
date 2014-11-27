@@ -286,7 +286,7 @@ public class IconCache {
     return getIconByProperty(iconProperty);
   }
   
-  public String findPitchUrl(Game pGame, Weather pWeather) {
+  private String findPitchUrl(Game pGame, Weather pWeather) {
     if ((pGame == null) || (pWeather == null)) {
       return null;
     }

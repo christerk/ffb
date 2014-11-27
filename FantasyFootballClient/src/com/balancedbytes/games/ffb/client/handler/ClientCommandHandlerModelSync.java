@@ -25,6 +25,7 @@ import com.balancedbytes.games.ffb.option.IGameOption;
 import com.balancedbytes.games.ffb.report.IReport;
 import com.balancedbytes.games.ffb.report.ReportBlockChoice;
 import com.balancedbytes.games.ffb.report.ReportList;
+import com.balancedbytes.games.ffb.util.StringTool;
 
 /**
  * 
@@ -250,8 +251,9 @@ public class ClientCommandHandlerModelSync extends ClientCommandHandler implemen
     }
         
     if (fReloadPitch) {
-      String pitchUrl = userInterface.getIconCache().findPitchUrl(game, game.getFieldModel().getWeather());
-      if ((pitchUrl != null) && !userInterface.getIconCache().loadIconFromArchive(pitchUrl)) {
+      
+      String pitchUrl = game.getOptions().getOptionWithDefault(GameOptionId.PITCH_URL).getValueAsString();
+      if (StringTool.isProvided(pitchUrl) && !userInterface.getIconCache().loadIconFromArchive(pitchUrl)) {
         // TODO: add dialog to show pitch download ...
         userInterface.getIconCache().loadIconFromUrl(pitchUrl);
       }

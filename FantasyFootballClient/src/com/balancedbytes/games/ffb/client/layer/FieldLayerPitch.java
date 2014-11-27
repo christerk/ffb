@@ -5,6 +5,7 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics2D;
+import java.awt.RenderingHints;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 
@@ -48,7 +49,7 @@ public class FieldLayerPitch extends FieldLayer {
       Graphics2D g2d = getGraphicsWithFontAndColor();
       FontMetrics metrics = g2d.getFontMetrics ();
       Rectangle2D teamNameBounds = metrics.getStringBounds(teamNameHome, g2d);
-      int translateX = (int) ((0.5 * FIELD_SQUARE_SIZE) + (teamNameBounds.getHeight() / 2)) - 4;
+      int translateX = (int) ((0.5 * FIELD_SQUARE_SIZE) + (teamNameBounds.getHeight() / 2)) - 3;
       int translateY = (int) ((getImage().getHeight() / 2) + (teamNameBounds.getWidth() / 2));
       g2d.translate(translateX, translateY);
       g2d.rotate(-Math.PI/2.0);
@@ -58,7 +59,7 @@ public class FieldLayerPitch extends FieldLayer {
       g2d = getGraphicsWithFontAndColor();
       metrics = g2d.getFontMetrics ();
       teamNameBounds = metrics.getStringBounds(teamNameAway, g2d);
-      translateX = (int) ((25.0 * FIELD_SQUARE_SIZE) + (teamNameBounds.getHeight() / 2)) - 3;
+      translateX = (int) ((25.0 * FIELD_SQUARE_SIZE) + (teamNameBounds.getHeight() / 2)) - 4;
       translateY = (int) ((getImage().getHeight() / 2) - (teamNameBounds.getWidth() / 2));
       g2d.translate(translateX, translateY);
       g2d.rotate(Math.PI/2.0);
@@ -74,6 +75,7 @@ public class FieldLayerPitch extends FieldLayer {
     g2d.setColor(Color.WHITE);
     g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.5f));
     g2d.setFont(new Font("Sans Serif", Font.BOLD, 20));
+    g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
     return g2d;
   }
   

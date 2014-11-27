@@ -22,6 +22,7 @@ import com.balancedbytes.games.ffb.model.RosterPosition;
 import com.balancedbytes.games.ffb.net.NetCommand;
 import com.balancedbytes.games.ffb.net.NetCommandId;
 import com.balancedbytes.games.ffb.net.commands.ServerCommandGameState;
+import com.balancedbytes.games.ffb.option.GameOptionId;
 import com.balancedbytes.games.ffb.util.StringTool;
 
 /**
@@ -62,7 +63,10 @@ public class ClientCommandHandlerGameState extends ClientCommandHandler implemen
     // load pitches for default, basic and custom (if defined)
     addIconUrl(iconUrls, iconCache.buildPitchUrl(getClient().getProperty(IIconProperty.PITCH_URL_DEFAULT), Weather.NICE));
     addIconUrl(iconUrls, iconCache.buildPitchUrl(getClient().getProperty(IIconProperty.PITCH_URL_BASIC), Weather.NICE));
-    addIconUrl(iconUrls, iconCache.findPitchUrl(game, Weather.NICE));
+    String pitchUrl = game.getOptions().getOptionWithDefault(GameOptionId.PITCH_URL).getValueAsString();
+    if (StringTool.isProvided(pitchUrl)) {
+      addIconUrl(iconUrls, iconCache.buildPitchUrl(pitchUrl, Weather.NICE));
+    }
     
     Set<String> iconUrlsToDownload = new HashSet<String>();
     for (String iconUrl : iconUrls) {
