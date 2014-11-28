@@ -345,6 +345,7 @@ public class ClientReplayer implements ActionListener {
     game.setTurnMode(TurnMode.START_GAME);
     game.setDialogParameter(new DialogStartGameParameter());
     game.getFieldModel().setWeather(Weather.NICE);
+    game.getOptions().init(oldGame.getOptions());
     GameResult oldGameResult = oldGame.getGameResult();
     addTeam(game, oldGame.getTeamHome(), oldGameResult.getTeamResultHome(), true);
     addTeam(game, oldGame.getTeamAway(), oldGameResult.getTeamResultAway(), false);

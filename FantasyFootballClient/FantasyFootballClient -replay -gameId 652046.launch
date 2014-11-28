@@ -13,6 +13,6 @@
 </listAttribute>
 <booleanAttribute key="org.eclipse.jdt.launching.DEFAULT_CLASSPATH" value="false"/>
 <stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="com.balancedbytes.games.ffb.client.FantasyFootballClient"/>
-<stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="-player -coach BattleLore"/>
+<stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="-replay -gameId 652046"/>
 <stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="FantasyFootballClient"/>
 </launchConfiguration>
