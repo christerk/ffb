@@ -52,7 +52,7 @@ public class DbConversion {
     List<Long> unconvertedGames = new ArrayList<Long>();
     for (long gameStateId : finishedGameStateIds) {
       System.out.print("load old game " + gameStateId + " from db");
-      GameState gameState = DbQueryScript.readGameState(fServer, gameStateId);
+      GameState gameState = DbQueryScript.readGameState(fServer, fDbOldQueryFactory, gameStateId);
       if (gameState != null) {
         Game game = gameState.getGame();
         System.out.print(", load rosters from fumbbl");
