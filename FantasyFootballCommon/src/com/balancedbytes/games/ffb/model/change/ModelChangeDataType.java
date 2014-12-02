@@ -127,7 +127,11 @@ public enum ModelChangeDataType implements IEnumWithId, IEnumWithName {
       case INDUCEMENT:
         return ((Inducement) pValue).toJsonValue();
       case INTEGER:
-        return JsonValue.valueOf((Integer) pValue);
+        if (pValue instanceof Byte) {
+          return JsonValue.valueOf(((Byte) pValue).intValue());
+        } else {
+          return JsonValue.valueOf((Integer) pValue);
+        }
       case LEADER_STATE:
         return UtilJson.toJsonValue((LeaderState) pValue);
       case LONG:
