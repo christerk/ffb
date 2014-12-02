@@ -42,46 +42,46 @@ import com.balancedbytes.games.ffb.server.db.query.DbUserSettingsQuery;
  */
 public class DbQueryFactory implements IDbStatementFactory {
   
-  private FantasyFootballServer fServer;
+  private DbConnectionManager fDbConnectionManager;
   
   private Connection fDbConnection;
   
   private Map<DbStatementId, DbStatement> fStatementById;
   
-  public DbQueryFactory(FantasyFootballServer pServer) {
+  public DbQueryFactory(DbConnectionManager pDbConnectionManager) {
     
-  	fServer = pServer;
+  	fDbConnectionManager = pDbConnectionManager;
     fStatementById = new HashMap<DbStatementId, DbStatement>();
     
-    register(new DbActingPlayersForGameStateQuery(pServer));
-    register(new DbAdminListByStatusQuery(pServer));
-    register(new DbAdminListByStatusQueryOld(pServer));  // will be removed later
-    register(new DbDialogsForGameStateQuery(pServer));
-    register(new DbFieldModelsForGameStateQuery(pServer));
-    register(new DbGameListQueryOpenGamesByCoach(pServer));
-    register(new DbGameListQueryOpenGamesByCoachOld(pServer));  // will be removed later
-    register(new DbGameLogsForGameStateQuery(pServer));
-    register(new DbGameOptionsForGameStateQuery(pServer));
-    register(new DbGamesSerializedQuery(pServer));
-    register(new DbGamesInfoInsertQuery(pServer));
-    register(new DbGameStatesQuery(pServer));
-    register(new DbInducementsForGameStateQuery(pServer));
-    register(new DbPlayerIconsForGameStateQuery(pServer));
-    register(new DbPlayerInjuriesForGameStateQuery(pServer));
-    register(new DbPlayerResultsForGameStateQuery(pServer));
-    register(new DbPlayersForGameStateQuery(pServer));
-    register(new DbPlayerSkillsForGameStateQuery(pServer));
-    register(new DbStepStackForGameStateQuery(pServer));
-    register(new DbTeamResultsForGameStateQuery(pServer));
-    register(new DbTeamSetupsForTeamQuery(pServer));
-    register(new DbTeamSetupsQuery(pServer));
-    register(new DbTeamsForGameStateQuery(pServer));
-    register(new DbTurnDataForGameStateQuery(pServer));
-    register(new DbUserSettingsQuery(pServer));
-    register(new DbPlayerMarkersQuery(pServer));
+    register(new DbActingPlayersForGameStateQuery(getServer()));
+    register(new DbAdminListByStatusQuery(getServer()));
+    register(new DbAdminListByStatusQueryOld(getServer()));  // will be removed later
+    register(new DbDialogsForGameStateQuery(getServer()));
+    register(new DbFieldModelsForGameStateQuery(getServer()));
+    register(new DbGameListQueryOpenGamesByCoach(getServer()));
+    register(new DbGameListQueryOpenGamesByCoachOld(getServer()));  // will be removed later
+    register(new DbGameLogsForGameStateQuery(getServer()));
+    register(new DbGameOptionsForGameStateQuery(getServer()));
+    register(new DbGamesSerializedQuery(getServer()));
+    register(new DbGamesInfoInsertQuery(getServer()));
+    register(new DbGameStatesQuery(getServer()));
+    register(new DbInducementsForGameStateQuery(getServer()));
+    register(new DbPlayerIconsForGameStateQuery(getServer()));
+    register(new DbPlayerInjuriesForGameStateQuery(getServer()));
+    register(new DbPlayerResultsForGameStateQuery(getServer()));
+    register(new DbPlayersForGameStateQuery(getServer()));
+    register(new DbPlayerSkillsForGameStateQuery(getServer()));
+    register(new DbStepStackForGameStateQuery(getServer()));
+    register(new DbTeamResultsForGameStateQuery(getServer()));
+    register(new DbTeamSetupsForTeamQuery(getServer()));
+    register(new DbTeamSetupsQuery(getServer()));
+    register(new DbTeamsForGameStateQuery(getServer()));
+    register(new DbTurnDataForGameStateQuery(getServer()));
+    register(new DbUserSettingsQuery(getServer()));
+    register(new DbPlayerMarkersQuery(getServer()));
     
     if (ServerMode.STANDALONE == getServer().getMode()) {
-      register(new DbPasswordForCoachQuery(pServer));
+      register(new DbPasswordForCoachQuery(getServer()));
     }
     
   }
@@ -95,7 +95,7 @@ public class DbQueryFactory implements IDbStatementFactory {
   }
   
   public void prepareStatements() throws SQLException {
-    fDbConnection = getServer().getDbConnectionManager().openDbConnection();
+    fDbConnection = getDbConnectionManager().openDbConnection();
     fDbConnection.setAutoCommit(true);
     Iterator<DbStatement> statementIterator = fStatementById.values().iterator();
     while (statementIterator.hasNext()) {
@@ -105,11 +105,15 @@ public class DbQueryFactory implements IDbStatementFactory {
   }
   
   public void closeDbConnection() throws SQLException {
-    getServer().getDbConnectionManager().closeDbConnection(fDbConnection);
+    getDbConnectionManager().closeDbConnection(fDbConnection);
+  }
+  
+  public DbConnectionManager getDbConnectionManager() {
+    return fDbConnectionManager;
   }
   
   public FantasyFootballServer getServer() {
-    return fServer;
+    return getDbConnectionManager().getServer();
   }
 
 }

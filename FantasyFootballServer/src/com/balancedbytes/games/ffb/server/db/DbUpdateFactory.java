@@ -43,46 +43,46 @@ import com.balancedbytes.games.ffb.server.db.update.DbGamesSerializedUpdate;
  */
 public class DbUpdateFactory implements IDbStatementFactory {
 
-  private FantasyFootballServer fServer;
+  private DbConnectionManager fDbConnectionManager;
   private Connection fDbConnection;
   private Map<DbStatementId, DbUpdateStatement> fStatementById;
 
-  public DbUpdateFactory(FantasyFootballServer pServer) {
+  public DbUpdateFactory(DbConnectionManager pDbConnectionManager) {
 
-  	fServer = pServer;
+  	fDbConnectionManager = pDbConnectionManager;
     fStatementById = new HashMap<DbStatementId, DbUpdateStatement>();
 
-    register(new DbGamesInfoInsert(pServer));
-    register(new DbGamesSerializedInsert(pServer));
-    register(new DbTeamSetupsInsert(pServer));
-    register(new DbUserSettingsInsert(pServer));
-    register(new DbUserSettingsDelete(pServer));
-    register(new DbPlayerMarkersInsert(pServer));    
-    register(new DbPlayerMarkersDelete(pServer));
+    register(new DbGamesInfoInsert(getServer()));
+    register(new DbGamesSerializedInsert(getServer()));
+    register(new DbTeamSetupsInsert(getServer()));
+    register(new DbUserSettingsInsert(getServer()));
+    register(new DbUserSettingsDelete(getServer()));
+    register(new DbPlayerMarkersInsert(getServer()));    
+    register(new DbPlayerMarkersDelete(getServer()));
  
-    register(new DbGamesInfoUpdate(pServer));
-    register(new DbGamesSerializedUpdate(pServer));
+    register(new DbGamesInfoUpdate(getServer()));
+    register(new DbGamesSerializedUpdate(getServer()));
 
-    register(new DbActingPlayersDelete(pServer));
-    register(new DbDialogsDelete(pServer));
-    register(new DbFieldModelsDelete(pServer));
-    register(new DbGameLogsDelete(pServer));
-    register(new DbGameOptionsDelete(pServer));
-    register(new DbGamesInfoDelete(pServer));
-    register(new DbGamesSerializedDelete(pServer));
-    register(new DbGameStatesDelete(pServer));
-    register(new DbInducementsDelete(pServer));
-    register(new DbPlayerDelete(pServer));
-    register(new DbPlayerIconsDelete(pServer));
-    register(new DbPlayerInjuriesDelete(pServer));
-    register(new DbPlayerResultsDelete(pServer));
-    register(new DbPlayersDelete(pServer));
-    register(new DbPlayerSkillsDelete(pServer));
-    register(new DbStepStackDelete(pServer));
-    register(new DbTeamResultsDelete(pServer));
-    register(new DbTeamsDelete(pServer));
-    register(new DbTeamSetupsDelete(pServer));
-    register(new DbTurnDataDelete(pServer));
+    register(new DbActingPlayersDelete(getServer()));
+    register(new DbDialogsDelete(getServer()));
+    register(new DbFieldModelsDelete(getServer()));
+    register(new DbGameLogsDelete(getServer()));
+    register(new DbGameOptionsDelete(getServer()));
+    register(new DbGamesInfoDelete(getServer()));
+    register(new DbGamesSerializedDelete(getServer()));
+    register(new DbGameStatesDelete(getServer()));
+    register(new DbInducementsDelete(getServer()));
+    register(new DbPlayerDelete(getServer()));
+    register(new DbPlayerIconsDelete(getServer()));
+    register(new DbPlayerInjuriesDelete(getServer()));
+    register(new DbPlayerResultsDelete(getServer()));
+    register(new DbPlayersDelete(getServer()));
+    register(new DbPlayerSkillsDelete(getServer()));
+    register(new DbStepStackDelete(getServer()));
+    register(new DbTeamResultsDelete(getServer()));
+    register(new DbTeamsDelete(getServer()));
+    register(new DbTeamSetupsDelete(getServer()));
+    register(new DbTurnDataDelete(getServer()));
   }
 
   public DbStatement getStatement(DbStatementId pStatementId) {
@@ -94,7 +94,7 @@ public class DbUpdateFactory implements IDbStatementFactory {
   }
 
   public void prepareStatements() throws SQLException {
-    fDbConnection = getServer().getDbConnectionManager().openDbConnection();
+    fDbConnection = getDbConnectionManager().openDbConnection();
     fDbConnection.setAutoCommit(false);
     Iterator<DbUpdateStatement> statementIterator = fStatementById.values().iterator();
     while (statementIterator.hasNext()) {
@@ -112,11 +112,15 @@ public class DbUpdateFactory implements IDbStatementFactory {
   }
 
   public void closeDbConnection() throws SQLException {
-    getServer().getDbConnectionManager().closeDbConnection(fDbConnection);
+    getDbConnectionManager().closeDbConnection(fDbConnection);
   }
 
+  public DbConnectionManager getDbConnectionManager() {
+    return fDbConnectionManager;
+  }
+  
   public FantasyFootballServer getServer() {
-    return fServer;
+    return getDbConnectionManager().getServer();
   }
   
 }

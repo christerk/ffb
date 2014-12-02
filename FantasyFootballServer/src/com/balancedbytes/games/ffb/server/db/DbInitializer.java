@@ -25,19 +25,15 @@ public class DbInitializer {
   private static final String[] _COACHES = new String[] { "Kalimar", "BattleLore", "LordCrunchy", "LordMisery" };
   private static final String[] _PASSWORDS = new String[] { "f14bcf4b9ce4dd76dcc324a034dcabb6", "77acbde639f9676910987a94227d1192", "fb8f371eb70e3ac3117aa77b6929ee0a", "74baf495a667a34978097fbe81968c0a" };
   
-  private FantasyFootballServer fServer;
+  private DbConnectionManager fDbConnectionManager;
   
-  public DbInitializer(FantasyFootballServer pServer) {
-    fServer = pServer;
+  public DbInitializer(DbConnectionManager pDbConnectionManager) {
+    fDbConnectionManager = pDbConnectionManager;
   }
 
-  public FantasyFootballServer getServer() {
-    return fServer;
-  }
-      
   public void initDb() throws SQLException {
     
-    Connection connection = getServer().getDbConnectionManager().openDbConnection();
+    Connection connection = fDbConnectionManager.openDbConnection();
     Statement statement = connection.createStatement();
     
     dropTable(statement, IDbTablePlayerMarkers.TABLE_NAME);
@@ -46,7 +42,9 @@ public class DbInitializer {
     dropTable(statement, IDbTableGamesInfo.TABLE_NAME);
     dropTable(statement, IDbTableGamesSerialized.TABLE_NAME);
     
-    if (getServer().getMode().isStandalone()) {
+    FantasyFootballServer server = fDbConnectionManager.getServer();
+    
+    if (server.getMode().isStandalone()) {
       dropTable(statement, IDbTableCoaches.TABLE_NAME);
       createTableCoaches(statement);
     }
@@ -57,7 +55,7 @@ public class DbInitializer {
     createTableGamesInfo(statement);
     createTableGamesSerialized(statement);
     
-    if (getServer().getMode().isStandalone()) {
+    if (server.getMode().isStandalone()) {
       initTableCoaches(statement);
       initTableTeamSetups(statement);
     }

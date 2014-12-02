@@ -10,7 +10,9 @@ import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Roster;
 import com.balancedbytes.games.ffb.server.FantasyFootballServer;
 import com.balancedbytes.games.ffb.server.GameState;
+import com.balancedbytes.games.ffb.server.IServerProperty;
 import com.balancedbytes.games.ffb.server.admin.UtilBackup;
+import com.balancedbytes.games.ffb.server.db.DbConnectionManager;
 import com.balancedbytes.games.ffb.server.db.DbQueryFactory;
 import com.balancedbytes.games.ffb.server.db.DbStatementId;
 import com.balancedbytes.games.ffb.server.db.DbTransaction;
@@ -25,11 +27,15 @@ import com.balancedbytes.games.ffb.util.StringTool;
 public class DbConversion {
 
   private FantasyFootballServer fServer;
-  private DbQueryFactory fDbQueryFactory;
+  private DbQueryFactory fDbOldQueryFactory;
   
   public DbConversion(FantasyFootballServer pServer) {
     fServer = pServer;
-    fDbQueryFactory = new DbQueryFactory(pServer);
+    DbConnectionManager dbConnectionManagerOld = new DbConnectionManager(fServer);
+    dbConnectionManagerOld.setDbUrl(fServer.getProperty(IServerProperty.DB_OLD_URL));
+    dbConnectionManagerOld.setDbUser(fServer.getProperty(IServerProperty.DB_OLD_USER));
+    dbConnectionManagerOld.setDbPassword(fServer.getProperty(IServerProperty.DB_OLD_PASSWORD));
+    fDbOldQueryFactory = new DbQueryFactory(dbConnectionManagerOld);
   }
   
   public FantasyFootballServer getServer() {
@@ -37,11 +43,11 @@ public class DbConversion {
   }
   
   public void convert(long pStartGameId, long pEndGameId) throws SQLException {
-    fDbQueryFactory.prepareStatements();
+    fDbOldQueryFactory.prepareStatements();
     long startTime = System.currentTimeMillis();
     SimpleDateFormat timestampFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     System.out.println("Conversion started at " + timestampFormat.format(new Date(startTime)));
-    DbGameStatesQueryFinishedGames finishedGamesQuery = (DbGameStatesQueryFinishedGames) fDbQueryFactory.getStatement(DbStatementId.GAME_STATES_QUERY_FINISHED_GAMES);
+    DbGameStatesQueryFinishedGames finishedGamesQuery = (DbGameStatesQueryFinishedGames) fDbOldQueryFactory.getStatement(DbStatementId.GAME_STATES_QUERY_FINISHED_GAMES);
     long[] finishedGameStateIds = finishedGamesQuery.execute(pStartGameId, pEndGameId);
     List<Long> unconvertedGames = new ArrayList<Long>();
     for (long gameStateId : finishedGameStateIds) {
@@ -83,18 +89,20 @@ public class DbConversion {
           gameState = null;
         }
       }
+//      if (gameState != null) {
+//        System.out.print(" and delete old entry");
+//        try {
+//          DbTransaction deleteTransaction = DbUpdateScript.createDeleteGameStateTransaction(fServer, gameStateId);
+//          deleteTransaction.executeUpdate(fServer);
+//          System.out.println(".");
+//        } catch (Exception pAny) {
+//          fServer.getDebugLog().log(gameStateId, pAny);
+//          gameState = null;
+//        }
+//      }
       if (gameState != null) {
-        System.out.print(" and delete old entry");
-        try {
-          DbTransaction deleteTransaction = DbUpdateScript.createDeleteGameStateTransaction(fServer, gameStateId);
-          deleteTransaction.executeUpdate(fServer);
-          System.out.println(".");
-        } catch (Exception pAny) {
-          fServer.getDebugLog().log(gameStateId, pAny);
-          gameState = null;
-        }
-      }
-      if (gameState == null) {
+        System.out.println(".");
+      } else {
         System.out.println(" -> unable to convert!");
         unconvertedGames.add(gameStateId);
       }
@@ -115,7 +123,7 @@ public class DbConversion {
       }
       System.out.println();
     }
-    fDbQueryFactory.closeDbConnection();
+    fDbOldQueryFactory.closeDbConnection();
   } 
     
 }

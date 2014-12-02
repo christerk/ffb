@@ -8,11 +8,13 @@ import com.balancedbytes.games.ffb.ClientMode;
 import com.balancedbytes.games.ffb.server.FantasyFootballServer;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.IServerLogLevel;
+import com.balancedbytes.games.ffb.server.db.DbConnectionManager;
 import com.fumbbl.rng.NetworkEntropySource;
 
 public class ServerPingTask extends TimerTask {
   
   private FantasyFootballServer fServer;
+  private DbConnectionManager fDbConnectionManager;
   private int fPingInterval; 
   private int fMaxPingDelay;
   private int fDbKeepAlive;
@@ -59,8 +61,8 @@ public class ServerPingTask extends TimerTask {
       }
       if (fDbKeepAlive > 0) {
         fDbKeepAliveCounter += fPingInterval;
-        if (fDbKeepAliveCounter >= fDbKeepAlive) {
-          getServer().getDbConnectionManager().doKeepAlivePing();
+        if ((fDbKeepAliveCounter >= fDbKeepAlive) && (fDbConnectionManager != null)) {
+          getDbConnectionManager().doKeepAlivePing();
           fDbKeepAliveCounter = 0;
         }
       }
@@ -72,6 +74,14 @@ public class ServerPingTask extends TimerTask {
   
   public FantasyFootballServer getServer() {
     return fServer;
+  }
+  
+  public void setDbConnectionManager(DbConnectionManager pDbConnectionManager) {
+    fDbConnectionManager = pDbConnectionManager;
+  }
+  
+  public DbConnectionManager getDbConnectionManager() {
+    return fDbConnectionManager;
   }
 
 }

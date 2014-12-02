@@ -47,7 +47,6 @@ public class FantasyFootballServer {
                                      + "java -jar FantasyFootballServer.jar fumbbl convertDb <startGameId> <endGameId>\n";
   
   private ServerMode fMode;
-  private DbConnectionManager fDbConnectionManager;
   private DbQueryFactory fDbQueryFactory;
   private DbUpdateFactory fDbUpdateFactory;
   private DbUpdater fDbUpdater;
@@ -108,21 +107,24 @@ public class FantasyFootballServer {
       throw new SQLException("JDBCDriver Class not found");
     }
 
-    fDbConnectionManager = new DbConnectionManager(this);
+    DbConnectionManager dbConnectionManager = new DbConnectionManager(this);
+    dbConnectionManager.setDbUrl(getProperty(IServerProperty.DB_URL));
+    dbConnectionManager.setDbUser(getProperty(IServerProperty.DB_USER));
+    dbConnectionManager.setDbPassword(getProperty(IServerProperty.DB_PASSWORD));
     
     if (fMode.isInitDb()) {
       
       System.err.println("FantasyFootballServer " + SERVER_VERSION + " initializing database.");
 
-      DbInitializer dbInitializer = new DbInitializer(this);
+      DbInitializer dbInitializer = new DbInitializer(dbConnectionManager);
       dbInitializer.initDb();
 
     } else {
 
-      fDbQueryFactory = new DbQueryFactory(this);
+      fDbQueryFactory = new DbQueryFactory(dbConnectionManager);
       fDbQueryFactory.prepareStatements();
 
-      fDbUpdateFactory = new DbUpdateFactory(this);
+      fDbUpdateFactory = new DbUpdateFactory(dbConnectionManager);
       fDbUpdateFactory.prepareStatements();
 
       fGameCache = new GameCache(this);
@@ -139,7 +141,7 @@ public class FantasyFootballServer {
       	fDbUpdateFactory.closeDbConnection();
       	
       } else {
-      	
+
         fDbUpdater = new DbUpdater(this);
         fPersistenceUpdaterThread = new Thread(fDbUpdater);
         fPersistenceUpdaterThread.start();
@@ -177,7 +179,9 @@ public class FantasyFootballServer {
           int pingMaxDelay = StringTool.isProvided(pingMaxDelayProperty) ? Integer.parseInt(pingMaxDelayProperty) : 0;
           String dbKeepAliveProperty = getProperty(IServerProperty.DB_KEEP_ALIVE);
           int dbKeepAlive = StringTool.isProvided(dbKeepAliveProperty) ? Integer.parseInt(dbKeepAliveProperty) : 0;
-          fPingTimer.schedule(new ServerPingTask(this, pingInterval, pingMaxDelay, dbKeepAlive), 0, pingInterval);
+          ServerPingTask serverPingTask = new ServerPingTask(this, pingInterval, pingMaxDelay, dbKeepAlive);
+          serverPingTask.setDbConnectionManager(dbConnectionManager);
+          fPingTimer.schedule(serverPingTask, 0, pingInterval);
         }
         
         fReplayer = new ServerReplayer(this);
@@ -272,11 +276,7 @@ public class FantasyFootballServer {
   public DbUpdateFactory getDbUpdateFactory() {
     return fDbUpdateFactory;
   }
-  
-  public DbConnectionManager getDbConnectionManager() {
-    return fDbConnectionManager;
-  }
-  
+    
   public ServerReplayer getReplayer() {
     return fReplayer;
   }

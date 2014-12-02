@@ -8,7 +8,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 import com.balancedbytes.games.ffb.server.FantasyFootballServer;
-import com.balancedbytes.games.ffb.server.IServerProperty;
 
 /**
  * 
@@ -18,6 +17,9 @@ public class DbConnectionManager {
   
   private FantasyFootballServer fServer;
   private Set<Connection> fConnections;
+  private String fDbUrl;
+  private String fDbUser;
+  private String fDbPassword;
   
   public DbConnectionManager(FantasyFootballServer pServer) {
     fServer = pServer;
@@ -25,11 +27,7 @@ public class DbConnectionManager {
   }
     
   public Connection openDbConnection() throws SQLException {
-  	Connection connection = DriverManager.getConnection(
-      getServer().getProperty(IServerProperty.DB_URL),
-      getServer().getProperty(IServerProperty.DB_USER),
-      getServer().getProperty(IServerProperty.DB_PASSWORD)
-    );
+  	Connection connection = DriverManager.getConnection(fDbUrl, fDbUser, fDbPassword);
     connection.setAutoCommit(false);
     fConnections.add(connection);
     return connection;
@@ -54,6 +52,30 @@ public class DbConnectionManager {
       Statement statement = connection.createStatement();
       statement.executeQuery("SELECT 1;");
     }
+  }
+
+  public String getDbUrl() {
+    return fDbUrl;
+  }
+
+  public void setDbUrl(String pDbUrl) {
+    fDbUrl = pDbUrl;
+  }
+
+  public String getDbUser() {
+    return fDbUser;
+  }
+
+  public void setDbUser(String pDbUser) {
+    fDbUser = pDbUser;
+  }
+
+  public String getDbPassword() {
+    return fDbPassword;
+  }
+
+  public void setDbPassword(String pDbPassword) {
+    fDbPassword = pDbPassword;
   }
 
 }
