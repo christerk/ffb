@@ -14,7 +14,6 @@ import com.balancedbytes.games.ffb.dialog.DialogIdFactory;
 import com.balancedbytes.games.ffb.dialog.DialogParameterFactory;
 import com.balancedbytes.games.ffb.server.FantasyFootballServer;
 import com.balancedbytes.games.ffb.server.GameState;
-import com.balancedbytes.games.ffb.server.IServerLogLevel;
 import com.balancedbytes.games.ffb.server.db.DbStatement;
 import com.balancedbytes.games.ffb.server.db.DbStatementId;
 
@@ -62,7 +61,7 @@ public class DbDialogsForGameStateQuery extends DbStatement {
   public void prepare(Connection pConnection) {
     try {
       StringBuilder sql = new StringBuilder();
-      sql.append("SELECT * FROM ").append(IDbTableGameStates.TABLE_NAME)
+      sql.append("SELECT * FROM ").append(IDbTableDialogs.TABLE_NAME)
          .append(" WHERE ").append(IDbTableDialogs.COLUMN_GAME_STATE_ID).append("=?")
          .append(" ORDER BY ").append(IDbTableDialogs.COLUMN_DIALOG_ID).append(",").append(IDbTableDialogs.COLUMN_SEQUENCE_NR).append(" DESC");
       fStatement = pConnection.prepareStatement(sql.toString());
@@ -77,7 +76,7 @@ public class DbDialogsForGameStateQuery extends DbStatement {
       ByteList parameterByteList = new ByteList();
       try {
         fStatement.setLong(1, pGameState.getId());
-        pGameState.getServer().getDebugLog().log(IServerLogLevel.WARN, fStatement.toString());
+        // pGameState.getServer().getDebugLog().log(IServerLogLevel.WARN, fStatement.toString());
         ResultSet resultSet = fStatement.executeQuery();
         while (resultSet.next()) {
           QueryResult queryResult = new QueryResult(resultSet);
