@@ -80,6 +80,7 @@ public class CommandSocket implements WebSocket.OnTextMessage {
   @Override
   public void onClose(int pCloseCode, String pCloseReason) {
     System.out.printf("Connection closed: %d - %s%n", pCloseCode, pCloseReason);
+    fClient.getUserInterface().getStatusReport().reportSocketClosed();
     fConnection = null;
     fCloseLatch.countDown();
   }
