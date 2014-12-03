@@ -1,15 +1,18 @@
 package com.balancedbytes.games.ffb.server.handler;
 
+import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Team;
 import com.balancedbytes.games.ffb.net.NetCommandId;
 import com.balancedbytes.games.ffb.server.FantasyFootballServer;
 import com.balancedbytes.games.ffb.server.GameCache;
 import com.balancedbytes.games.ffb.server.GameCacheMode;
 import com.balancedbytes.games.ffb.server.GameState;
+import com.balancedbytes.games.ffb.server.IServerLogLevel;
 import com.balancedbytes.games.ffb.server.ServerMode;
 import com.balancedbytes.games.ffb.server.net.ReceivedCommand;
 import com.balancedbytes.games.ffb.server.net.commands.InternalServerCommandScheduleGame;
 import com.balancedbytes.games.ffb.server.request.fumbbl.FumbblRequestLoadTeam;
+import com.balancedbytes.games.ffb.util.StringTool;
 
 /**
  * 
@@ -43,6 +46,14 @@ public class ServerCommandHandlerScheduleGame extends ServerCommandHandler {
     if (scheduleGameCommand.getGameIdListener() != null) {
       scheduleGameCommand.getGameIdListener().setGameId(gameState.getId());
     }
+    // log schedule game -->
+    if (gameState != null) {
+      Game game = gameState.getGame();
+      StringBuilder logEntry = new StringBuilder();
+      logEntry.append("SCHEDULE GAME ").append(StringTool.print(game.getTeamHome().getName())).append(" vs. ").append(StringTool.print(game.getTeamAway().getName()));
+      getServer().getDebugLog().log(IServerLogLevel.WARN, gameState.getId(), logEntry.toString());
+    }
+    // <-- log schedule game
   }
   
 }

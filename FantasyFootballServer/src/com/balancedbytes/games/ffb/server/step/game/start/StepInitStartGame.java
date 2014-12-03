@@ -108,11 +108,14 @@ public final class StepInitStartGame extends AbstractStep {
       	StringBuilder optionValues = new StringBuilder();
         for (IGameOption option : game.getOptions().getOptions()) {
         	if (option.isChanged()) {
-        		optionValues.append(" ").append(option.getId().getName()).append("=").append(option.getValueAsString());
+        	  if (optionValues.length() > 0) {
+        	    optionValues.append(",");
+        	  }
+        		optionValues.append(option.getId().getName()).append("=").append(option.getValueAsString());
         	}
     		}
         if (optionValues.length() > 0) {
-          server.getDebugLog().log(IServerLogLevel.WARN, getGameState().getId(), "Options" + optionValues.toString());
+          server.getDebugLog().log(IServerLogLevel.WARN, getGameState().getId(), "Options " + optionValues.toString());
         } else {
           server.getDebugLog().log(IServerLogLevel.WARN, getGameState().getId(), "Default Options");
         }
