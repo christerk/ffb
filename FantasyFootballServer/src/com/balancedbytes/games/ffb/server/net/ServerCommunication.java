@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.concurrent.Future;
 
 import org.eclipse.jetty.websocket.api.Session;
+import org.eclipse.jetty.websocket.api.WebSocketException;
 
 import com.balancedbytes.games.ffb.ClientMode;
 import com.balancedbytes.games.ffb.GameList;
@@ -233,8 +234,15 @@ public class ServerCommunication implements Runnable, IReceivedCommandHandler {
       return null;
     }
     
-    return pSession.getRemote().sendStringByFuture(textMessage);
-    
+    try {
+      return pSession.getRemote().sendStringByFuture(textMessage);
+    } catch (WebSocketException pWebSocketException) {
+      // getServer().getDebugLog().log(IServerLogLevel.WARN, pWebSocketException.getMessage());
+      close(pSession);
+    }
+
+    return null;
+
   }
 
   protected void sendAllSessions(GameState pGameState, NetCommand pCommand) {
