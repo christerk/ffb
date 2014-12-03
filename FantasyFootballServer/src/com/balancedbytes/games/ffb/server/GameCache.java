@@ -119,6 +119,12 @@ public class GameCache {
     	server.getDebugLog().log(IServerLogLevel.WARN, pGameState.getId(), log.toString());
     }
     // <-- log game cache size
+    // remove dead games from cache
+    for (Long gameId : fGameStateById.keySet()) {
+      if ((gameId != null) && !checkGameOpen(gameId)) {
+        closeGame(gameId);
+      }
+    }
   }
     
   public GameState getGameStateByName(String pGameName, boolean pLoadFromDb) {
@@ -356,6 +362,21 @@ public class GameCache {
 		}
 		return gameState;
   }
+	
+	private boolean checkGameOpen(long pGameId) {
+    GameState gameState = getGameStateById(pGameId);
+    if (gameState != null) {
+      SessionManager sessionManager = getServer().getSessionManager();
+      Session[] sessions = sessionManager.getSessionsForGameId(gameState.getId());
+      for (Session session : sessions) {
+        if ((session != null) && session.isOpen()) {
+          return true;
+        }
+      }
+    }
+    return false;
+	}
+	
 	
   private void queueDbPlayerMarkersUpdate(GameState pGameState) {
     if (pGameState == null) {

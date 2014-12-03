@@ -109,7 +109,9 @@ public class DbStepStackForGameStateQuery extends DbStatement {
   	ByteArray byteArray = new ByteArray(pStepBytes);
 		StepId stepId = new StepIdFactory().forId(byteArray.getSmallInt(0));
 		IStep step = new StepFactory(pGameState).forStepId(stepId);
-		step.initFrom(byteArray);
+		if (step != null) {
+		  step.initFrom(byteArray);
+		}
 		return step;
   }
     
