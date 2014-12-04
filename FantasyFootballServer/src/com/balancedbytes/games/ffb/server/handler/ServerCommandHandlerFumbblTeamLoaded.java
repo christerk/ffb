@@ -5,6 +5,7 @@ import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.net.NetCommandId;
 import com.balancedbytes.games.ffb.server.FantasyFootballServer;
 import com.balancedbytes.games.ffb.server.GameState;
+import com.balancedbytes.games.ffb.server.IServerLogLevel;
 import com.balancedbytes.games.ffb.server.net.ReceivedCommand;
 import com.balancedbytes.games.ffb.server.net.commands.InternalServerCommandFumbblTeamLoaded;
 import com.balancedbytes.games.ffb.server.request.fumbbl.FumbblRequestCheckGamestate;
@@ -35,6 +36,11 @@ public class ServerCommandHandlerFumbblTeamLoaded extends ServerCommandHandler {
     if (GameStatus.SCHEDULED == gameState.getStatus()) {
     	if (StringTool.isProvided(game.getTeamHome().getId()) && StringTool.isProvided(game.getTeamAway().getId())) {
     	  getServer().getGameCache().queueDbUpdate(gameState, true);
+        // log schedule game -->
+        StringBuilder logEntry = new StringBuilder();
+        logEntry.append("SCHEDULE GAME ").append(StringTool.print(game.getTeamHome().getName())).append(" vs. ").append(StringTool.print(game.getTeamAway().getName()));
+        getServer().getDebugLog().log(IServerLogLevel.WARN, gameState.getId(), logEntry.toString());
+        // <-- log schedule game
     	}
     } else {
       if (UtilServerStartGame.joinGameAsPlayerAndCheckIfReadyToStart(gameState, pReceivedCommand.getSession(), teamLoadedCommand.getCoach(), teamLoadedCommand.isHomeTeam())) {
