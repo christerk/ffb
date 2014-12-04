@@ -3,6 +3,8 @@ package com.balancedbytes.games.ffb.server.request.fumbbl;
 import org.eclipse.jetty.websocket.api.Session;
 
 import com.balancedbytes.games.ffb.FantasyFootballException;
+import com.balancedbytes.games.ffb.GameStatus;
+import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Roster;
 import com.balancedbytes.games.ffb.model.Team;
 import com.balancedbytes.games.ffb.net.ServerStatus;
@@ -85,8 +87,21 @@ public class FumbblRequestLoadTeam extends ServerRequest {
     }
     team.updateRoster(roster);
     server.getGameCache().addTeamToGame(getGameState(), team, isHomeTeam());
-    InternalServerCommandFumbblTeamLoaded loadedCommand = new InternalServerCommandFumbblTeamLoaded(getGameState().getId(), getCoach(), isHomeTeam());
-    server.getCommunication().handleCommand(new ReceivedCommand(loadedCommand, getSession()));
+    if (GameStatus.SCHEDULED == getGameState().getStatus()) {
+      Game game = getGameState().getGame();
+      if (StringTool.isProvided(game.getTeamHome().getId()) && StringTool.isProvided(game.getTeamAway().getId())) {
+        // log game scheduled -->
+        if (server.getDebugLog().isLogging(IServerLogLevel.WARN)) {
+          StringBuilder logEntry = new StringBuilder();
+          logEntry.append("GAME SCHEDULED ").append(StringTool.print(game.getTeamHome().getName())).append(" vs. ").append(StringTool.print(game.getTeamAway().getName()));
+          server.getDebugLog().log(IServerLogLevel.WARN, getGameState().getId(), logEntry.toString());
+        }
+        // <-- log game scheduled
+      }
+    } else {
+      InternalServerCommandFumbblTeamLoaded loadedCommand = new InternalServerCommandFumbblTeamLoaded(getGameState().getId(), getCoach(), isHomeTeam());
+      server.getCommunication().handleCommand(new ReceivedCommand(loadedCommand, getSession()));
+    }
   }
   
   // this might be overkill, we'll see how it does in practice
