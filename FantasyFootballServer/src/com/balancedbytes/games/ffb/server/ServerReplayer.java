@@ -81,7 +81,7 @@ public class ServerReplayer implements Runnable {
           if (!serverReplay.isComplete()) {
             serverReplay.setFromCommandNr(replayCommand.findHighestCommandNr() + 1);
           } else {
-            getServer().getCommunication().close(serverReplay.getSession());
+            // getServer().getCommunication().close(serverReplay.getSession());
             serverReplay = null;
           }
           

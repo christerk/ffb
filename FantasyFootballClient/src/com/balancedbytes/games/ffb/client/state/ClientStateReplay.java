@@ -73,9 +73,7 @@ public class ClientStateReplay extends ClientState implements IDialogCloseListen
         	fDialogProgress.hideDialog();
 
         	// replay received - signal the server that this socket can be closed
-        	/*
-          getClient().getCommunication().sendReplay(getClient().getParameters().getGameId(), -1);
-          */
+        	getClient().getCommunication().sendCloseSession();
 
           ServerCommand[] replayCommands = fReplayList.toArray(new ServerCommand[fReplayList.size()]);
           fDialogProgress = new DialogProgressBar(getClient(), "Initializing Replay");
