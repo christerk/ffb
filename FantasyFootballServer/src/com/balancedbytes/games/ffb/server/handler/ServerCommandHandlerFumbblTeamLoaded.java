@@ -36,6 +36,7 @@ public class ServerCommandHandlerFumbblTeamLoaded extends ServerCommandHandler {
     if (GameStatus.SCHEDULED == gameState.getStatus()) {
     	if (StringTool.isProvided(game.getTeamHome().getId()) && StringTool.isProvided(game.getTeamAway().getId())) {
     	  getServer().getGameCache().queueDbUpdate(gameState, true);
+    	  getServer().getGameCache().closeGame(gameState.getId());
         // log schedule game -->
         StringBuilder logEntry = new StringBuilder();
         logEntry.append("SCHEDULE GAME ").append(StringTool.print(game.getTeamHome().getName())).append(" vs. ").append(StringTool.print(game.getTeamAway().getName()));

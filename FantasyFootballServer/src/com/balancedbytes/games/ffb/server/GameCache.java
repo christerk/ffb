@@ -210,12 +210,10 @@ public class GameCache {
     } else {
       gameState.setStatus(GameStatus.STARTING);
     }
+    add(gameState, pMode);
     // insert the games info directly and generate an id
     DbGamesInfoInsertQuery insertQuery = (DbGamesInfoInsertQuery) getServer().getDbQueryFactory().getStatement(DbStatementId.GAMES_INFO_INSERT_QUERY);
     insertQuery.execute(gameState);
-    if (GameCacheMode.SCHEDULE_GAME != pMode) {
-      add(gameState, pMode);
-    }
     // queue the game serialization
     DbTransaction transaction = new DbTransaction();
     transaction.add(new DbGamesSerializedInsertParameter(gameState));

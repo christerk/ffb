@@ -66,25 +66,27 @@ public class FumbblRequestLoadTeam extends ServerRequest {
       team = UtilFumbblRequest.loadFumbblTeam(server, getTeamId());
     } catch (FantasyFootballException pFantasyFootballException) {
       handleInvalidTeam(pRequestProcessor, getTeamId(), pFantasyFootballException);
+      return;
     }
     if ((team == null) || !StringTool.isProvided(team.getName())) {
       handleInvalidTeam(pRequestProcessor, getTeamId(), null);
-    } else {
-    	Roster roster = null;
-      try {
-        roster = UtilFumbblRequest.loadFumbblRosterForTeam(server, getTeamId());
-      } catch (FantasyFootballException pFantasyFootballException) {
-        handleInvalidRoster(pRequestProcessor, getTeamId(), pFantasyFootballException);
-      }
-      if ((roster == null) || !StringTool.isProvided(roster.getName())) {
-        handleInvalidRoster(pRequestProcessor, getTeamId(), null);
-      } else {
-        team.updateRoster(roster);
-        server.getGameCache().addTeamToGame(getGameState(), team, isHomeTeam());
-        InternalServerCommandFumbblTeamLoaded loadedCommand = new InternalServerCommandFumbblTeamLoaded(getGameState().getId(), getCoach(), isHomeTeam());
-        server.getCommunication().handleCommand(new ReceivedCommand(loadedCommand, getSession()));
-      }
+      return;
     }
+  	Roster roster = null;
+    try {
+      roster = UtilFumbblRequest.loadFumbblRosterForTeam(server, getTeamId());
+    } catch (FantasyFootballException pFantasyFootballException) {
+      handleInvalidRoster(pRequestProcessor, getTeamId(), pFantasyFootballException);
+      return;
+    }
+    if ((roster == null) || !StringTool.isProvided(roster.getName())) {
+      handleInvalidRoster(pRequestProcessor, getTeamId(), null);
+      return;
+    }
+    team.updateRoster(roster);
+    server.getGameCache().addTeamToGame(getGameState(), team, isHomeTeam());
+    InternalServerCommandFumbblTeamLoaded loadedCommand = new InternalServerCommandFumbblTeamLoaded(getGameState().getId(), getCoach(), isHomeTeam());
+    server.getCommunication().handleCommand(new ReceivedCommand(loadedCommand, getSession()));
   }
   
   // this might be overkill, we'll see how it does in practice
