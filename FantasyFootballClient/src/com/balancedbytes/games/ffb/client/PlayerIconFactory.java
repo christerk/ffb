@@ -81,7 +81,7 @@ public class PlayerIconFactory {
       Color fontColor = Color.WHITE;
       Color shadowColor = Color.BLACK;
       BufferedImage playerIcon = null;
-      if (PlayerType.BIG_GUY == pPlayer.getPosition().getType()) {
+      if ((pPlayer.getPosition() != null) && (PlayerType.BIG_GUY == pPlayer.getPosition().getType())) {
         fontSize = 17;
         if (pHomePlayer) {
           playerIcon = iconCache.getIconByProperty(IIconProperty.PLAYER_LARGE_HOME);
@@ -109,8 +109,8 @@ public class PlayerIconFactory {
       }
       if (playerIcon != null) {
         icon = new BufferedImage(playerIcon.getWidth() + 2, playerIcon.getHeight() + 2, BufferedImage.TYPE_INT_ARGB);
-        String shorthand = pPlayer.getPosition().getShorthand();
-        if (shorthand != null) {
+        String shorthand = (pPlayer.getPosition() != null) ? pPlayer.getPosition().getShorthand() : "?";
+        if (StringTool.isProvided(shorthand)) {
 	        Graphics2D g2d = icon.createGraphics();
 	        g2d.drawImage(playerIcon, 2, 2, null);
 	        g2d.setFont(new Font("Sans Serif", Font.BOLD, fontSize));
