@@ -21,6 +21,7 @@ public class ClientCommandHandlerSocketClosed extends ClientCommandHandler {
     
     UserInterface userInterface = getClient().getUserInterface();
     userInterface.getStatusReport().reportSocketClosed();
+    System.out.println("Connection closed by server.");
     
     return true;
 

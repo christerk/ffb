@@ -196,8 +196,10 @@ public class StatusReport {
   }
   
   public void reportSocketClosed() {
-    println(ParagraphStyle.SPACE_ABOVE, TextStyle.NONE, "The connection to the server has been closed.");
-    println(ParagraphStyle.SPACE_BELOW, TextStyle.NONE, "To re-connect you need to restart the client.");
+    if (getClient().getMode() != ClientMode.REPLAY) {
+      println(ParagraphStyle.SPACE_ABOVE, TextStyle.NONE, "The connection to the server has been closed.");
+      println(ParagraphStyle.SPACE_BELOW, TextStyle.NONE, "To re-connect you need to restart the client.");
+    }
   }
 
   public void reportConnectionEstablished(boolean pSuccesful) {
