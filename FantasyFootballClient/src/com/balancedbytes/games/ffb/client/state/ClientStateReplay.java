@@ -59,21 +59,13 @@ public class ClientStateReplay extends ClientState implements IDialogCloseListen
       case SERVER_REPLAY:
         ServerCommandReplay replayCommand = (ServerCommandReplay) pNetCommand;
         initProgress(0, replayCommand.getTotalNrOfCommands());
-//        ServerCommand[] test = replayCommand.getReplayCommands();
-//        if (ArrayTool.isProvided(test)) {
-//          System.out.println(test[0].getCommandNr() + " - " + test[test.length - 1].getCommandNr());
-//        }
         for (ServerCommand command : replayCommand.getReplayCommands()) {
-//          System.out.println(command.toXml(0));
           fReplayList.add(command);
           updateProgress(fReplayList.size(), "Received Step %d of %d.");
         }
         if (fReplayList.size() >= replayCommand.getTotalNrOfCommands()) {
           
         	fDialogProgress.hideDialog();
-
-        	// replay received - signal the server that this socket can be closed
-        	getClient().getCommunication().sendCloseSession();
 
           ServerCommand[] replayCommands = fReplayList.toArray(new ServerCommand[fReplayList.size()]);
           fDialogProgress = new DialogProgressBar(getClient(), "Initializing Replay");

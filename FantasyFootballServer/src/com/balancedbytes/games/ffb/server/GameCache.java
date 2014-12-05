@@ -44,6 +44,7 @@ import com.balancedbytes.games.ffb.server.net.SessionManager;
 import com.balancedbytes.games.ffb.server.net.commands.InternalServerCommandBackupGame;
 import com.balancedbytes.games.ffb.server.request.fumbbl.FumbblRequestRemoveGamestate;
 import com.balancedbytes.games.ffb.server.util.UtilServerTimer;
+import com.balancedbytes.games.ffb.util.ArrayTool;
 import com.balancedbytes.games.ffb.util.StringTool;
 import com.balancedbytes.games.ffb.util.UtilBox;
 import com.balancedbytes.games.ffb.util.UtilTeamValue;
@@ -119,14 +120,12 @@ public class GameCache {
     	server.getDebugLog().log(IServerLogLevel.WARN, pGameState.getId(), log.toString());
     }
     // <-- log game cache size
-    /*
     // remove dead games from cache
     for (Long gameId : fGameStateById.keySet()) {
-      if ((gameId != null) && !checkGameOpen(gameId)) {
+      if ((gameId != null) && (gameId != pGameState.getId()) && !checkGameOpen(gameId)) {
         closeGame(gameId);
       }
     }
-    */
   }
     
   public GameState getGameStateByName(String pGameName, boolean pLoadFromDb) {
@@ -365,12 +364,16 @@ public class GameCache {
 		return gameState;
   }
 	
-	/*
 	private boolean checkGameOpen(long pGameId) {
     GameState gameState = getGameStateById(pGameId);
     if (gameState != null) {
       SessionManager sessionManager = getServer().getSessionManager();
       Session[] sessions = sessionManager.getSessionsForGameId(gameState.getId());
+      // no sessions connected yet - game starting
+      if (!ArrayTool.isProvided(sessions)) {
+        return true;
+      }
+      // check connected sessions and find an open one
       for (Session session : sessions) {
         if ((session != null) && session.isOpen()) {
           return true;
@@ -379,7 +382,6 @@ public class GameCache {
     }
     return false;
 	}
-	*/
 	
   private void queueDbPlayerMarkersUpdate(GameState pGameState) {
     if (pGameState == null) {

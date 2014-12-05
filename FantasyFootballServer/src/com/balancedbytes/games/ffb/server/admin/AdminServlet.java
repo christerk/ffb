@@ -105,6 +105,8 @@ public class AdminServlet extends HttpServlet {
 
   @Override
   protected void doGet(HttpServletRequest pRequest, HttpServletResponse pResponse) throws ServletException, IOException {
+    
+    pResponse.setContentType("text/xml; charset=UTF-8");
 
     boolean isOk = true;
     TransformerHandler handler = UtilXml.createTransformerHandler(pResponse.getWriter(), true);
