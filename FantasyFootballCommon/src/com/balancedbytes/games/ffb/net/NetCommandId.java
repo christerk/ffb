@@ -8,6 +8,7 @@ import com.balancedbytes.games.ffb.net.commands.ClientCommandBlock;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandBlockChoice;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandBuyCard;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandBuyInducements;
+import com.balancedbytes.games.ffb.net.commands.ClientCommandCloseSession;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandCoinChoice;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandConcedeGame;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandConfirm;
@@ -298,6 +299,8 @@ public enum NetCommandId implements IEnumWithId, IEnumWithName {
       	return new ClientCommandWizardSpell();
       case CLIENT_BUY_CARD:
       	return new ClientCommandBuyCard();
+      case CLIENT_CLOSE_SESSION:
+        return new ClientCommandCloseSession();
       default:
         throw new IllegalStateException("Unhandled netCommandId " + this + ".");
     }
