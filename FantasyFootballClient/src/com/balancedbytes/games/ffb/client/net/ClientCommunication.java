@@ -33,6 +33,7 @@ import com.balancedbytes.games.ffb.net.commands.ClientCommandBlock;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandBlockChoice;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandBuyCard;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandBuyInducements;
+import com.balancedbytes.games.ffb.net.commands.ClientCommandCloseSession;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandCoinChoice;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandConcedeGame;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandConfirm;
@@ -205,6 +206,10 @@ public class ClientCommunication implements Runnable, INetCommandHandler {
   
   public void sendConfirm() {
     send(new ClientCommandConfirm());
+  }
+  
+  public void sendCloseSession() {
+    send(new ClientCommandCloseSession());
   }
   
   public void sendConcedeGame(ConcedeGameStatus pStatus) {

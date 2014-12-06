@@ -66,6 +66,11 @@ public class ClientStateReplay extends ClientState implements IDialogCloseListen
         if (fReplayList.size() >= replayCommand.getTotalNrOfCommands()) {
           
         	fDialogProgress.hideDialog();
+        	
+        	// signal server that we've received the full replay and the session can be closed
+        	if (ClientMode.REPLAY == getClient().getMode()) {
+        	  getClient().getCommunication().sendCloseSession();
+        	}
 
           ServerCommand[] replayCommands = fReplayList.toArray(new ServerCommand[fReplayList.size()]);
           fDialogProgress = new DialogProgressBar(getClient(), "Initializing Replay");
