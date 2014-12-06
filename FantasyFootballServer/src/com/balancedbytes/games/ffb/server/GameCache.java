@@ -137,6 +137,7 @@ public class GameCache {
     if (pGameState != null) {
     	GameState cachedGameState = fGameStateById.remove(pGameState.getId());
   		if (cachedGameState != null) {
+  		  Game game = pGameState.getGame();
         removeMappingForGameId(pGameState.getId());
         // log game cache size -->
         FantasyFootballServer server = pGameState.getServer();
@@ -145,6 +146,10 @@ public class GameCache {
         if (pGameState.getGame().getFinished() != null) {
           server.getCommunication().handleCommand(new InternalServerCommandBackupGame(pGameState.getId()));
           queueDbPlayerMarkersUpdate(pGameState);
+        }
+        // remove gameState from db if only one team has joined
+        if (!StringTool.isProvided(game.getTeamHome().getId()) || !StringTool.isProvided(game.getTeamAway().getId())) {
+          queueDbDelete(pGameState.getId(), true);
         }
   		}
     }
