@@ -34,7 +34,7 @@ public class DbGamesInfoInsertQuery extends DbStatement {
   public void prepare(Connection pConnection) {
     try {
       StringBuilder sql = new StringBuilder();
-      sql.append("INSERT INTO ").append(IDbTableGamesInfo.TABLE_NAME).append(" VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+      sql.append("INSERT INTO ").append(IDbTableGamesInfo.TABLE_NAME).append(" VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
       fStatement = pConnection.prepareStatement(sql.toString(), Statement.RETURN_GENERATED_KEYS);
     } catch (SQLException sqlE) {
       throw new FantasyFootballException(sqlE);
@@ -63,6 +63,7 @@ public class DbGamesInfoInsertQuery extends DbStatement {
       fStatement.setBoolean(col++, game.isHomePlaying());                                                                   // 13
       fStatement.setString(col++,(pGameState.getStatus() != null) ? pGameState.getStatus().getTypeString() : " ");          // 14
       fStatement.setBoolean(col++, game.isTesting());                                                                       // 15
+      fStatement.setTimestamp(col++, null);                                                                                 // 16
       fStatement.executeUpdate();
       ResultSet rs = fStatement.getGeneratedKeys();
       if (rs.next()) {

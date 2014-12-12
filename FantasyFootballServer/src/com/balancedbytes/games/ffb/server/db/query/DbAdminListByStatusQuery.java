@@ -11,6 +11,7 @@ import com.balancedbytes.games.ffb.FantasyFootballException;
 import com.balancedbytes.games.ffb.GameStatus;
 import com.balancedbytes.games.ffb.GameStatusFactory;
 import com.balancedbytes.games.ffb.server.FantasyFootballServer;
+import com.balancedbytes.games.ffb.server.ServerMode;
 import com.balancedbytes.games.ffb.server.admin.AdminList;
 import com.balancedbytes.games.ffb.server.admin.AdminListEntry;
 import com.balancedbytes.games.ffb.server.db.DbStatement;
@@ -40,15 +41,21 @@ public class DbAdminListByStatusQuery extends DbStatement {
       .append(IDbTableGamesInfo.COLUMN_ID).append(",")
       .append(IDbTableGamesInfo.COLUMN_STARTED).append(",")
       .append(IDbTableGamesInfo.COLUMN_FINISHED).append(",")
+      .append(IDbTableGamesInfo.COLUMN_LAST_UPDATED).append(",")
       .append(IDbTableGamesInfo.COLUMN_COACH_HOME).append(",")
     	.append(IDbTableGamesInfo.COLUMN_TEAM_HOME_ID).append(",")
     	.append(IDbTableGamesInfo.COLUMN_TEAM_HOME_NAME).append(",")
     	.append(IDbTableGamesInfo.COLUMN_COACH_AWAY).append(",")
     	.append(IDbTableGamesInfo.COLUMN_TEAM_AWAY_ID).append(",")
     	.append(IDbTableGamesInfo.COLUMN_TEAM_AWAY_NAME).append(",")
+      .append(IDbTableGamesInfo.COLUMN_HALF).append(",")
+      .append(IDbTableGamesInfo.COLUMN_TURN).append(",")
       .append(IDbTableGamesInfo.COLUMN_STATUS)
       .append(" FROM ").append(IDbTableGamesInfo.TABLE_NAME)
-      .append(" WHERE ").append(IDbTableGamesInfo.COLUMN_STATUS).append("=? AND ").append(IDbTableGamesInfo.COLUMN_TESTING).append("=false");
+      .append(" WHERE ").append(IDbTableGamesInfo.COLUMN_STATUS).append("=?");
+      if (getServer().getMode() == ServerMode.FUMBBL) {
+        sql.append("AND ").append(IDbTableGamesInfo.COLUMN_TESTING).append("=false");
+      }
       fStatement = pConnection.prepareStatement(sql.toString());
     } catch (SQLException sqlE) {
       throw new FantasyFootballException(sqlE);
@@ -74,12 +81,18 @@ public class DbAdminListByStatusQuery extends DbStatement {
         if (finished != null) {
           entry.setFinished(new Date(finished.getTime()));
         }
+        Timestamp lastUpdated = resultSet.getTimestamp(col++);
+        if (lastUpdated != null) {
+          entry.setLastUpdated(new Date(lastUpdated.getTime()));
+        }
         entry.setTeamHomeCoach(resultSet.getString(col++));
         entry.setTeamHomeId(resultSet.getString(col++));
         entry.setTeamHomeName(resultSet.getString(col++));
         entry.setTeamAwayCoach(resultSet.getString(col++));
         entry.setTeamAwayId(resultSet.getString(col++));
         entry.setTeamAwayName(resultSet.getString(col++));
+        entry.setHalf(resultSet.getInt(col++));
+        entry.setTurn(resultSet.getInt(col++));
         entry.setStatus(new GameStatusFactory().forTypeString(resultSet.getString(col++)));
         pAdminList.add(entry);
       }

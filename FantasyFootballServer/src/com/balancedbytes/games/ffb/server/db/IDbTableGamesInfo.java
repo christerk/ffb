@@ -23,5 +23,6 @@ public interface IDbTableGamesInfo {
   String COLUMN_HOME_PLAYING = "home_playing";
   String COLUMN_STATUS = "status";
   String COLUMN_TESTING = "testing";
+  String COLUMN_LAST_UPDATED = "last_updated";
 
 }

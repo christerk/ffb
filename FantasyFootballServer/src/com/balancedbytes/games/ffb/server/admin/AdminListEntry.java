@@ -28,6 +28,9 @@ public class AdminListEntry implements IXmlSerializable {
   private static final String _XML_ATTRIBUTE_ID = "id";
   private static final String _XML_ATTRIBUTE_STARTED = "started";
   private static final String _XML_ATTRIBUTE_FINISHED = "finished";
+  private static final String _XML_ATTRIBUTE_LAST_UPDATED = "lastUpdated";
+  private static final String _XML_ATTRIBUTE_HALF = "half";
+  private static final String _XML_ATTRIBUTE_TURN = "turn";
   private static final String _XML_ATTRIBUTE_STATUS = "status";
   private static final String _XML_ATTRIBUTE_SWAPPED_OUT = "swappedOut";
 
@@ -42,6 +45,9 @@ public class AdminListEntry implements IXmlSerializable {
   
   private Date fStarted;
   private Date fFinished;
+  private Date fLastUpdated;
+  private int fHalf;
+  private int fTurn;
   private GameStatus fStatus;
   private String fTeamHomeId;
   private String fTeamHomeName;
@@ -77,6 +83,30 @@ public class AdminListEntry implements IXmlSerializable {
   
   public void setFinished(Date pFinished) {
     fFinished = pFinished;
+  }
+  
+  public void setLastUpdated(Date pLastUpdated) {
+    fLastUpdated = pLastUpdated;
+  }
+  
+  public Date getLastUpdated() {
+    return fLastUpdated;
+  }
+  
+  public void setHalf(int pHalf) {
+    fHalf = pHalf;
+  }
+  
+  public int getHalf() {
+    return fHalf;
+  }
+  
+  public void setTurn(int pTurn) {
+    fTurn = pTurn;
+  }
+  
+  public int getTurn() {
+    return fTurn;
   }
   
   public GameStatus getStatus() {
@@ -151,6 +181,9 @@ public class AdminListEntry implements IXmlSerializable {
     UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_ID, getGameId());
     UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_STARTED, (getStarted() != null) ? _TIMESTAMP_FORMAT.format(getStarted()) : null);
     UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_FINISHED, (getFinished() != null) ? _TIMESTAMP_FORMAT.format(getFinished()) : null);
+    UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_LAST_UPDATED, (getLastUpdated() != null) ? _TIMESTAMP_FORMAT.format(getLastUpdated()) : null);
+    UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_HALF, getHalf());
+    UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_TURN, getTurn());
     UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_STATUS, (getStatus() != null) ? getStatus().getName() : null);
     UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_SWAPPED_OUT, isSwappedOut());
     UtilXml.startElement(pHandler, XML_TAG, attributes);
@@ -182,6 +215,8 @@ public class AdminListEntry implements IXmlSerializable {
       fGameId = UtilXml.getLongAttribute(pXmlAttributes, _XML_ATTRIBUTE_ID);
       fStatus = new GameStatusFactory().forName(UtilXml.getStringAttribute(pXmlAttributes, _XML_ATTRIBUTE_STATUS));
       fSwappedOut = UtilXml.getBooleanAttribute(pXmlAttributes, _XML_ATTRIBUTE_SWAPPED_OUT);
+      fHalf = UtilXml.getIntAttribute(pXmlAttributes, _XML_ATTRIBUTE_HALF);
+      fTurn = UtilXml.getIntAttribute(pXmlAttributes, _XML_ATTRIBUTE_TURN);
       String startedTimestamp = UtilXml.getStringAttribute(pXmlAttributes, _XML_ATTRIBUTE_STARTED);
       if (StringTool.isProvided(startedTimestamp)) {
         try {
@@ -201,6 +236,16 @@ public class AdminListEntry implements IXmlSerializable {
         }
       } else {
         fFinished = null;
+      }
+      String lastUpdatedTimestamp = UtilXml.getStringAttribute(pXmlAttributes, _XML_ATTRIBUTE_LAST_UPDATED);
+      if (StringTool.isProvided(lastUpdatedTimestamp)) {
+        try {
+          fLastUpdated = _TIMESTAMP_FORMAT.parse(lastUpdatedTimestamp);
+        } catch (ParseException pe) {
+          fLastUpdated = null;
+        }
+      } else {
+        fLastUpdated = null;
       }
     }
     if (_XML_TAG_TEAM.equals(pXmlTag)) {
