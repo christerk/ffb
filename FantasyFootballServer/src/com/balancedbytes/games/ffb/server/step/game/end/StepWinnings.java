@@ -86,7 +86,7 @@ public final class StepWinnings extends AbstractStepWithReRoll {
         // <--
       	UtilServerDialog.hideDialog(getGameState());
       }
-      getResult().addReport(rollWinnings());
+      getResult().addReport(reportWinnings);
     }
     if (game.getDialogParameter() == null) {
       getResult().addReport(concedeWinnings());
