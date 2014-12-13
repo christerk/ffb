@@ -17,23 +17,6 @@ import com.balancedbytes.games.ffb.server.db.insert.DbGamesSerializedInsert;
 import com.balancedbytes.games.ffb.server.db.insert.DbPlayerMarkersInsert;
 import com.balancedbytes.games.ffb.server.db.insert.DbTeamSetupsInsert;
 import com.balancedbytes.games.ffb.server.db.insert.DbUserSettingsInsert;
-import com.balancedbytes.games.ffb.server.db.old.DbActingPlayersDelete;
-import com.balancedbytes.games.ffb.server.db.old.DbDialogsDelete;
-import com.balancedbytes.games.ffb.server.db.old.DbFieldModelsDelete;
-import com.balancedbytes.games.ffb.server.db.old.DbGameLogsDelete;
-import com.balancedbytes.games.ffb.server.db.old.DbGameOptionsDelete;
-import com.balancedbytes.games.ffb.server.db.old.DbGameStatesDelete;
-import com.balancedbytes.games.ffb.server.db.old.DbInducementsDelete;
-import com.balancedbytes.games.ffb.server.db.old.DbPlayerDelete;
-import com.balancedbytes.games.ffb.server.db.old.DbPlayerIconsDelete;
-import com.balancedbytes.games.ffb.server.db.old.DbPlayerInjuriesDelete;
-import com.balancedbytes.games.ffb.server.db.old.DbPlayerResultsDelete;
-import com.balancedbytes.games.ffb.server.db.old.DbPlayerSkillsDelete;
-import com.balancedbytes.games.ffb.server.db.old.DbPlayersDelete;
-import com.balancedbytes.games.ffb.server.db.old.DbStepStackDelete;
-import com.balancedbytes.games.ffb.server.db.old.DbTeamResultsDelete;
-import com.balancedbytes.games.ffb.server.db.old.DbTeamsDelete;
-import com.balancedbytes.games.ffb.server.db.old.DbTurnDataDelete;
 import com.balancedbytes.games.ffb.server.db.update.DbGamesInfoUpdate;
 import com.balancedbytes.games.ffb.server.db.update.DbGamesSerializedUpdate;
 
@@ -59,30 +42,12 @@ public class DbUpdateFactory implements IDbStatementFactory {
     register(new DbUserSettingsDelete(getServer()));
     register(new DbPlayerMarkersInsert(getServer()));    
     register(new DbPlayerMarkersDelete(getServer()));
- 
     register(new DbGamesInfoUpdate(getServer()));
     register(new DbGamesSerializedUpdate(getServer()));
-
-    register(new DbActingPlayersDelete(getServer()));
-    register(new DbDialogsDelete(getServer()));
-    register(new DbFieldModelsDelete(getServer()));
-    register(new DbGameLogsDelete(getServer()));
-    register(new DbGameOptionsDelete(getServer()));
     register(new DbGamesInfoDelete(getServer()));
     register(new DbGamesSerializedDelete(getServer()));
-    register(new DbGameStatesDelete(getServer()));
-    register(new DbInducementsDelete(getServer()));
-    register(new DbPlayerDelete(getServer()));
-    register(new DbPlayerIconsDelete(getServer()));
-    register(new DbPlayerInjuriesDelete(getServer()));
-    register(new DbPlayerResultsDelete(getServer()));
-    register(new DbPlayersDelete(getServer()));
-    register(new DbPlayerSkillsDelete(getServer()));
-    register(new DbStepStackDelete(getServer()));
-    register(new DbTeamResultsDelete(getServer()));
-    register(new DbTeamsDelete(getServer()));
     register(new DbTeamSetupsDelete(getServer()));
-    register(new DbTurnDataDelete(getServer()));
+
   }
 
   public DbStatement getStatement(DbStatementId pStatementId) {

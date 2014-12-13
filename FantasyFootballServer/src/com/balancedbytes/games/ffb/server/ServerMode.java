@@ -11,10 +11,8 @@ public enum ServerMode {
   STANDALONE("standalone"),
   FUMBBL("fumbbl"),
   STANDALONE_INIT_DB("standaloneInitDb"),
-  FUMBBL_INIT_DB("fumbblInitDb"),
-  FUMBBL_CONVERT_DB("fumbblConvertDb");
+  FUMBBL_INIT_DB("fumbblInitDb");
 
-  
   private String fName;
   
   private ServerMode(String pName) {
@@ -33,10 +31,6 @@ public enum ServerMode {
   	return (STANDALONE_INIT_DB.equals(this) || FUMBBL_INIT_DB.equals(this)); 
   }
 
-  public boolean isConvertDb() {
-  	return FUMBBL_CONVERT_DB.equals(this); 
-  }
-
   public static ServerMode fromArguments(String[] pArguments) {
   	if (ArrayTool.isProvided(pArguments)) {
     	if ("fumbbl".equalsIgnoreCase(pArguments[0])) {
@@ -45,9 +39,6 @@ public enum ServerMode {
     		}
     		if ("initdb".equalsIgnoreCase(pArguments[1])) {
     			return ServerMode.FUMBBL_INIT_DB;
-    		}
-    		if ("convertdb".equalsIgnoreCase(pArguments[1])) {
-    			return ServerMode.FUMBBL_CONVERT_DB;
     		}
     	}
     	if ("standalone".equalsIgnoreCase(pArguments[0])) {

@@ -12,4 +12,6 @@ public interface IDbTablePlayerMarkers {
   String COLUMN_PLAYER_ID = "player_id";
   String COLUMN_TEXT = "text";
   
+  int MAX_TEXT_LENGTH = 40;
+  
 }

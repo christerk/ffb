@@ -8,7 +8,7 @@ import com.balancedbytes.games.ffb.net.NetCommandId;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandSetMarker;
 import com.balancedbytes.games.ffb.server.FantasyFootballServer;
 import com.balancedbytes.games.ffb.server.GameState;
-import com.balancedbytes.games.ffb.server.db.old.IDbTableFieldModels;
+import com.balancedbytes.games.ffb.server.db.IDbTablePlayerMarkers;
 import com.balancedbytes.games.ffb.server.net.ReceivedCommand;
 import com.balancedbytes.games.ffb.server.net.SessionManager;
 import com.balancedbytes.games.ffb.server.util.UtilServerGame;
@@ -42,8 +42,8 @@ public class ServerCommandHandlerSetMarker extends ServerCommandHandler {
       
       Game game = gameState.getGame();    
       String text = setMarkerCommand.getText();
-      if ((text != null) && (text.length() > IDbTableFieldModels.MAX_TEXT_LENGTH)) {
-        text = text.substring(0, IDbTableFieldModels.MAX_TEXT_LENGTH);
+      if ((text != null) && (text.length() > IDbTablePlayerMarkers.MAX_TEXT_LENGTH)) {
+        text = text.substring(0, IDbTablePlayerMarkers.MAX_TEXT_LENGTH);
       }
       FieldCoordinate coordinate = setMarkerCommand.getCoordinate();
       if ((coordinate != null) && !homeMarker) {
