@@ -17,7 +17,6 @@ public interface IServerProperty {
   String SERVER_DEBUG_COMPRESSION = "server.debug.compression";
   String SERVER_COMMAND_COMPRESSION = "server.command.compression";
   String SERVER_TEST = "server.test";
-
   
   String FUMBBL_USER = "fumbbl.user";
   String FUMBBL_PASSWORD = "fumbbl.password";
@@ -36,6 +35,7 @@ public interface IServerProperty {
   String ADMIN_SALT = "admin.salt";
   String ADMIN_PASSWORD = "admin.password";
   String ADMIN_URL_CHALLENGE = "admin.url.challenge";
+  String ADMIN_URL_LIST_ID = "admin.url.list.id";
   String ADMIN_URL_LIST_STATUS = "admin.url.list.status";
   String ADMIN_URL_CLOSE = "admin.url.close";
   String ADMIN_URL_CONCEDE = "admin.url.concede";
@@ -61,9 +61,5 @@ public interface IServerProperty {
   String DB_USER = "db.user";
   String DB_PASSWORD = "db.password";
   String DB_KEEP_ALIVE = "db.keepAlive";
-  
-  String DB_OLD_URL = "db.old.url";
-  String DB_OLD_USER = "db.old.user";
-  String DB_OLD_PASSWORD = "db.old.password";
 
 }

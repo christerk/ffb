@@ -8,6 +8,7 @@ import java.util.Map;
 
 import com.balancedbytes.games.ffb.server.FantasyFootballServer;
 import com.balancedbytes.games.ffb.server.ServerMode;
+import com.balancedbytes.games.ffb.server.db.query.DbAdminListByIdQuery;
 import com.balancedbytes.games.ffb.server.db.query.DbAdminListByStatusQuery;
 import com.balancedbytes.games.ffb.server.db.query.DbGameListQueryOpenGamesByCoach;
 import com.balancedbytes.games.ffb.server.db.query.DbGamesInfoInsertQuery;
@@ -35,6 +36,7 @@ public class DbQueryFactory implements IDbStatementFactory {
   	fDbConnectionManager = pDbConnectionManager;
     fStatementById = new HashMap<DbStatementId, DbStatement>();
     
+    register(new DbAdminListByIdQuery(getServer()));
     register(new DbAdminListByStatusQuery(getServer()));
     register(new DbGameListQueryOpenGamesByCoach(getServer()));
     register(new DbGamesSerializedQuery(getServer()));

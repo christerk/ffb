@@ -45,6 +45,7 @@ import com.balancedbytes.games.ffb.server.net.commands.InternalServerCommandBack
 import com.balancedbytes.games.ffb.server.request.fumbbl.FumbblRequestRemoveGamestate;
 import com.balancedbytes.games.ffb.server.util.UtilServerTimer;
 import com.balancedbytes.games.ffb.util.ArrayTool;
+import com.balancedbytes.games.ffb.util.DateTool;
 import com.balancedbytes.games.ffb.util.StringTool;
 import com.balancedbytes.games.ffb.util.UtilBox;
 import com.balancedbytes.games.ffb.util.UtilTeamValue;
@@ -148,7 +149,9 @@ public class GameCache {
           queueDbPlayerMarkersUpdate(pGameState);
         }
         // remove gameState from db if only one team has joined
-        if (!StringTool.isProvided(game.getTeamHome().getId()) || !StringTool.isProvided(game.getTeamAway().getId())) {
+        // or the game hasn't even started yet (and isn't scheduled)
+        if (!StringTool.isProvided(game.getTeamHome().getId()) || !StringTool.isProvided(game.getTeamAway().getId())
+          || ((game.getScheduled() == null) && ((game.getStarted() == null) || DateTool.isEqual(new Date(0), game.getStarted())))) {
           queueDbDelete(pGameState.getId(), true);
         }
   		}

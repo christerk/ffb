@@ -28,6 +28,7 @@ public class AdminConnector {
       + "java com.balancedbytes.games.ffb.server.admin.AdminConnector delete <gameId>\n"
       + "java com.balancedbytes.games.ffb.server.admin.AdminConnector list <status>\n"
       + "  [status being one of: scheduled, starting, active, paused, finished or uploaded]\n"
+      + "java com.balancedbytes.games.ffb.server.admin.AdminConnector list <gameId>\n"
       + "java com.balancedbytes.games.ffb.server.admin.AdminConnector message <message>\n"
       + "java com.balancedbytes.games.ffb.server.admin.AdminConnector refresh\n"
       + "java com.balancedbytes.games.ffb.server.admin.AdminConnector shutdown\n"
@@ -105,7 +106,18 @@ public class AdminConnector {
       }
 
       if (AdminServlet.LIST.equals(args[0])) {
-        String adminListUrl = StringTool.bind(serverProperties.getProperty(IServerProperty.ADMIN_URL_LIST_STATUS), response, args[1]);
+        long gameId = 0;
+        try {
+          gameId = Long.parseLong(args[1]);
+        } catch (NumberFormatException pNfe) {
+          gameId = 0;
+        }
+        String adminListUrl;
+        if (gameId > 0) {
+          adminListUrl = StringTool.bind(serverProperties.getProperty(IServerProperty.ADMIN_URL_LIST_ID), response, args[1]);
+        } else {
+          adminListUrl = StringTool.bind(serverProperties.getProperty(IServerProperty.ADMIN_URL_LIST_STATUS), response, args[1]);
+        }
         System.out.println(adminListUrl);
         String adminListXml = UtilServerHttpClient.fetchPage(adminListUrl);
         System.out.println(adminListXml);

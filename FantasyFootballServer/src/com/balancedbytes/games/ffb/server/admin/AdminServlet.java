@@ -26,6 +26,7 @@ import com.balancedbytes.games.ffb.server.FantasyFootballServer;
 import com.balancedbytes.games.ffb.server.IGameIdListener;
 import com.balancedbytes.games.ffb.server.IServerProperty;
 import com.balancedbytes.games.ffb.server.db.DbStatementId;
+import com.balancedbytes.games.ffb.server.db.query.DbAdminListByIdQuery;
 import com.balancedbytes.games.ffb.server.db.query.DbAdminListByStatusQuery;
 import com.balancedbytes.games.ffb.server.net.commands.InternalServerCommandCloseGame;
 import com.balancedbytes.games.ffb.server.net.commands.InternalServerCommandDeleteGame;
@@ -326,23 +327,39 @@ public class AdminServlet extends HttpServlet {
 
   private boolean handleList(TransformerHandler pHandler, Map<String, String[]> pParameters) {
     boolean isOk = true;
-    GameStatus status = new GameStatusFactory().forName(ArrayTool.firstElement(pParameters.get(_PARAMETER_STATUS)));
     AttributesImpl attributes = new AttributesImpl();
+    GameStatus status = null;
+    String statusParameter = ArrayTool.firstElement(pParameters.get(_PARAMETER_STATUS));
+    if (StringTool.isProvided(statusParameter)) {
+      UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_GAME_STATUS, statusParameter);
+      status = new GameStatusFactory().forName(statusParameter);
+    }
+    long gameId = 0;
+    String gameIdParameter = ArrayTool.firstElement(pParameters.get(_PARAMETER_GAME_ID));
+    if (StringTool.isProvided(gameIdParameter)) {
+      UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_GAME_ID, gameIdParameter);
+      try {
+        gameId = Long.parseLong(gameIdParameter);
+      } catch (NumberFormatException pNfe) {
+        gameId = 0;
+      }
+    }
+    AdminList adminList = new AdminList();
     if (status != null) {
-      UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_GAME_STATUS, status.getName());
-      UtilXml.startElement(pHandler, _XML_TAG_LIST, attributes);
       DbAdminListByStatusQuery listQuery = (DbAdminListByStatusQuery) getServer().getDbQueryFactory().getStatement(DbStatementId.ADMIN_LIST_BY_STATUS_QUERY);
-      AdminList adminList = new AdminList();
       listQuery.execute(adminList, status);
-      if (adminList.size() > 0) {
-        for (AdminListEntry listEntry : adminList.getEntries()) {
-          listEntry.addToXml(pHandler);
-        }
+    }
+    if (gameId > 0) {
+      DbAdminListByIdQuery listQuery = (DbAdminListByIdQuery) getServer().getDbQueryFactory().getStatement(DbStatementId.ADMIN_LIST_BY_ID_QUERY);
+      listQuery.execute(adminList, gameId);
+    }
+    if (adminList.size() > 0) {
+      UtilXml.startElement(pHandler, _XML_TAG_LIST, attributes);
+      for (AdminListEntry listEntry : adminList.getEntries()) {
+        listEntry.addToXml(pHandler);
       }
       UtilXml.endElement(pHandler, _XML_TAG_LIST);
     } else {
-      isOk = false;
-      UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_GAME_STATUS, pParameters.get(_PARAMETER_STATUS));
       UtilXml.addEmptyElement(pHandler, _XML_TAG_LIST, attributes);
     }
     return isOk;

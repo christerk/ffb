@@ -8,7 +8,6 @@ import java.sql.Timestamp;
 import java.util.Date;
 
 import com.balancedbytes.games.ffb.FantasyFootballException;
-import com.balancedbytes.games.ffb.GameStatus;
 import com.balancedbytes.games.ffb.GameStatusFactory;
 import com.balancedbytes.games.ffb.server.FantasyFootballServer;
 import com.balancedbytes.games.ffb.server.ServerMode;
@@ -22,16 +21,16 @@ import com.balancedbytes.games.ffb.server.db.IDbTableGamesInfo;
  * 
  * @author Kalimar
  */
-public class DbAdminListByStatusQuery extends DbStatement {
+public class DbAdminListByIdQuery extends DbStatement {
   
   private PreparedStatement fStatement;
   
-  public DbAdminListByStatusQuery(FantasyFootballServer pServer) {
+  public DbAdminListByIdQuery(FantasyFootballServer pServer) {
     super(pServer);
   }
   
   public DbStatementId getId() {
-    return DbStatementId.ADMIN_LIST_BY_STATUS_QUERY;
+    return DbStatementId.ADMIN_LIST_BY_ID_QUERY;
   }
   
   public void prepare(Connection pConnection) {
@@ -52,7 +51,7 @@ public class DbAdminListByStatusQuery extends DbStatement {
       .append(IDbTableGamesInfo.COLUMN_TURN).append(",")
       .append(IDbTableGamesInfo.COLUMN_STATUS)
       .append(" FROM ").append(IDbTableGamesInfo.TABLE_NAME)
-      .append(" WHERE ").append(IDbTableGamesInfo.COLUMN_STATUS).append("=?");
+      .append(" WHERE ").append(IDbTableGamesInfo.COLUMN_ID).append("=?");
       if (getServer().getMode() == ServerMode.FUMBBL) {
         sql.append(" AND ").append(IDbTableGamesInfo.COLUMN_TESTING).append("=false");
       }
@@ -62,12 +61,12 @@ public class DbAdminListByStatusQuery extends DbStatement {
     }
   }
   
-  public void execute(AdminList pAdminList, GameStatus pStatus) {
-    if ((pAdminList == null) || (pStatus == null)) {
+  public void execute(AdminList pAdminList, long pGameId) {
+    if (pAdminList == null) {
     	return;
     }
     try {
-      fStatement.setString(1, pStatus.getTypeString());
+      fStatement.setLong(1, pGameId);
       ResultSet resultSet = fStatement.executeQuery();
       while (resultSet.next()) {
         int col = 1;
