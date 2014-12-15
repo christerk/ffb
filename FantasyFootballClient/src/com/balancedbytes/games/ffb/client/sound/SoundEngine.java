@@ -10,7 +10,6 @@ import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
-import javax.sound.sampled.DataLine;
 import javax.sound.sampled.FloatControl;
 import javax.sound.sampled.Line;
 import javax.sound.sampled.LineEvent;
@@ -116,22 +115,26 @@ public class SoundEngine extends Thread {
     Clip clip = null;
     AudioData audioData = loadAudioData(pSound);
     if (audioData != null) {
-      
+
       try {
-        DataLine.Info info = new DataLine.Info(Clip.class, audioData.getFormat(), audioData.size());
-        clip = (Clip) AudioSystem.getLine(info);
+        clip = AudioSystem.getClip();
         clip.open(audioData.getFormat(), audioData.getAudio(), 0, audioData.size());
       } catch (LineUnavailableException lue) {
         // clip remains null
       }
 
       if (clip != null) {
-        if (clip.isControlSupported(FloatControl.Type.MASTER_GAIN)){
+        
+        if (clip.isControlSupported(FloatControl.Type.MASTER_GAIN)) {
           FloatControl gainControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
-          double gain = fVolume/100.0;
-          float dB = (float) (Math.log(gain) / Math.log(10.0) * 20.0);
-          gainControl.setValue(dB);
+          // float gainMin = gainControl.getMinimum();
+          // float gainMax = Math.min(0, gainControl.getMaximum());  // never go beyond 0 dB
+          // float gainValue = gainMin + (float) ((Math.log((double) fVolume) / Math.log(100.0)) * (gainMax - gainMin)); 
+          float gainValue = (float) (33.22 * Math.log10(fVolume / 100.0));
+          // System.out.println("gainMin=" + gainMin + " gainMax=" + gainMax + " gainValue=" + gainValue);
+          gainControl.setValue(gainValue);
         }
+        
         // Christer fix for running out of memory
         clip.addLineListener(new LineListener() {
           @Override

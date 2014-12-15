@@ -209,7 +209,7 @@ public class UserInterface extends JFrame implements WindowListener, IDialogClos
     setGameTitle(gameTitle);
     
     String volumeSetting = getClient().getProperty(IClientProperty.SETTING_SOUND_VOLUME);
-    int volume = StringTool.isProvided(volumeSetting) ? Integer.parseInt(volumeSetting) : 70;
+    int volume = StringTool.isProvided(volumeSetting) ? Integer.parseInt(volumeSetting) : 50;
     getClient().getUserInterface().getSoundEngine().setVolume(volume);
     
   }

@@ -34,12 +34,18 @@ public class DialogSoundVolume extends Dialog implements ChangeListener, ActionL
     super(pClient, "Sound Volume Setting", true);
     
     String volumeProperty = pClient.getProperty(IClientProperty.SETTING_SOUND_VOLUME);
-    fVolume = StringTool.isProvided(volumeProperty) ? Integer.parseInt(volumeProperty) : 70;
+    fVolume = StringTool.isProvided(volumeProperty) ? Integer.parseInt(volumeProperty) : 50;
+    if (fVolume < 10) {
+      fVolume = 10;
+    }
+    if (fVolume > 100) {
+      fVolume = 100;
+    }
 
     fSlider = new JSlider();
-    fSlider.setMinimum(0);
+    fSlider.setMinimum(10);
     fSlider.setMaximum(100);
-    fSlider.setValue(fVolume);
+    fSlider.setValue(Math.max(10, fVolume));
     fSlider.addChangeListener(this);
     
     fSettingLabel = new JLabel(Integer.toString(fVolume));
