@@ -127,12 +127,7 @@ public class SoundEngine extends Thread {
         
         if (clip.isControlSupported(FloatControl.Type.MASTER_GAIN)) {
           FloatControl gainControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
-          // float gainMin = gainControl.getMinimum();
-          // float gainMax = Math.min(0, gainControl.getMaximum());  // never go beyond 0 dB
-          // float gainValue = gainMin + (float) ((Math.log((double) fVolume) / Math.log(100.0)) * (gainMax - gainMin)); 
-          float gainValue = (float) (33.22 * Math.log10(fVolume / 100.0));
-          // System.out.println("gainMin=" + gainMin + " gainMax=" + gainMax + " gainValue=" + gainValue);
-          gainControl.setValue(gainValue);
+          gainControl.setValue(findGain(fVolume));
         }
         
         // Christer fix for running out of memory
@@ -151,6 +146,10 @@ public class SoundEngine extends Thread {
       
     }
     
+  }
+  
+  public float findGain(int pVolume) {
+    return (float) (33.22 * Math.log10(pVolume / 100.0));
   }
 
   private AudioData loadAudioData(Sound pSound) {

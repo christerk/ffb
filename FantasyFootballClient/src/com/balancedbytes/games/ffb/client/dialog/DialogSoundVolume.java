@@ -10,6 +10,7 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSlider;
+import javax.swing.SwingConstants;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.InternalFrameEvent;
@@ -45,10 +46,15 @@ public class DialogSoundVolume extends Dialog implements ChangeListener, ActionL
     fSlider = new JSlider();
     fSlider.setMinimum(10);
     fSlider.setMaximum(100);
-    fSlider.setValue(Math.max(10, fVolume));
+    fSlider.setValue(fVolume);
     fSlider.addChangeListener(this);
+    fSlider.setMinimumSize(fSlider.getPreferredSize());
+    fSlider.setMaximumSize(fSlider.getPreferredSize());
     
-    fSettingLabel = new JLabel(Integer.toString(fVolume));
+    fSettingLabel = new JLabel("-33.22 dB");
+    fSettingLabel.setMinimumSize(fSettingLabel.getPreferredSize());
+    fSettingLabel.setMaximumSize(fSettingLabel.getPreferredSize());
+    fSettingLabel.setHorizontalAlignment(SwingConstants.RIGHT);
     
     fTestButton = new JButton("Test");
     fTestButton.addActionListener(this);
@@ -56,6 +62,7 @@ public class DialogSoundVolume extends Dialog implements ChangeListener, ActionL
     JPanel settingPanel = new JPanel();
     settingPanel.setLayout(new BoxLayout(settingPanel, BoxLayout.X_AXIS));
     settingPanel.add(fSlider);
+    settingPanel.add(Box.createHorizontalStrut(5));
     settingPanel.add(fSettingLabel);
     settingPanel.add(Box.createHorizontalStrut(5));
     settingPanel.add(fTestButton);
@@ -68,6 +75,8 @@ public class DialogSoundVolume extends Dialog implements ChangeListener, ActionL
     
     setLocationToCenter();    
 
+    updateSettingLabel();
+
   }
 
   public DialogId getId() {
@@ -76,7 +85,13 @@ public class DialogSoundVolume extends Dialog implements ChangeListener, ActionL
   
   public void stateChanged(ChangeEvent pE) {
     fVolume = fSlider.getValue();
-    fSettingLabel.setText(Integer.toString(fVolume));
+    updateSettingLabel();
+  }
+  
+  private void updateSettingLabel() {
+    SoundEngine soundEngine = getClient().getUserInterface().getSoundEngine();
+    float gain = ((float) Math.round(soundEngine.findGain(fVolume) * 100)) / 100 ;
+    fSettingLabel.setText(gain + " dB");
   }
   
   public void actionPerformed(ActionEvent pE) {
