@@ -1,7 +1,7 @@
 package com.balancedbytes.games.ffb.server.step;
 
-import com.balancedbytes.games.ffb.Sound;
-import com.balancedbytes.games.ffb.SoundFactory;
+import com.balancedbytes.games.ffb.SoundId;
+import com.balancedbytes.games.ffb.SoundIdFactory;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.IByteArrayReadable;
 import com.balancedbytes.games.ffb.json.IJsonSerializable;
@@ -23,7 +23,7 @@ public class StepResult implements IByteArrayReadable, IJsonSerializable {
 	private String fNextActionParameter;
   private ReportList fReportList;
   private Animation fAnimation;
-  private Sound fSound;
+  private SoundId fSound;
   private boolean fSynchronize;
   
   public StepResult() {
@@ -60,11 +60,11 @@ public class StepResult implements IByteArrayReadable, IJsonSerializable {
     fAnimation = pAnimation;
   }
   
-  public Sound getSound() {
+  public SoundId getSound() {
     return fSound;
   }
   
-  public void setSound(Sound pSound) {
+  public void setSound(SoundId pSound) {
     fSound = pSound;
   }
   
@@ -109,7 +109,7 @@ public class StepResult implements IByteArrayReadable, IJsonSerializable {
   		setAnimation(new Animation());
   		getAnimation().initFrom(pByteArray);
   	}
-  	setSound(new SoundFactory().forId(pByteArray.getByte()));
+  	setSound(new SoundIdFactory().forId(pByteArray.getByte()));
   	setSynchronize(pByteArray.getBoolean());
   	return byteArraySerializationVersion;
   }
@@ -143,7 +143,7 @@ public class StepResult implements IByteArrayReadable, IJsonSerializable {
     if (animationObject != null) {
       fAnimation = new Animation().initFrom(animationObject);
     }
-    fSound = (Sound) IServerJsonOption.SOUND.getFrom(jsonObject);
+    fSound = (SoundId) IServerJsonOption.SOUND.getFrom(jsonObject);
     fSynchronize = IServerJsonOption.SYNCHRONIZE.getFrom(jsonObject);
     return this;
   }

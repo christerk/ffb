@@ -5,7 +5,7 @@ import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.InjuryType;
 import com.balancedbytes.games.ffb.PlayerChoiceMode;
 import com.balancedbytes.games.ffb.PlayerState;
-import com.balancedbytes.games.ffb.Sound;
+import com.balancedbytes.games.ffb.SoundId;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.dialog.DialogPlayerChoiceParameter;
 import com.balancedbytes.games.ffb.json.UtilJson;
@@ -157,7 +157,7 @@ public class StepInitFeeding extends AbstractStep {
         fEndTurn = UtilPlayer.hasBall(game, game.getDefender());  // turn end on biting the ball carrier
         publishParameter(new StepParameter(StepParameterKey.INJURY_RESULT, injuryResultFeeding));
         publishParameters(UtilServerInjury.dropPlayer(this, game.getDefender(), ApothecaryMode.FEEDING));
-        getResult().setSound(Sound.SLURP);
+        getResult().setSound(SoundId.SLURP);
         actingPlayer.setSufferingBloodLust(false);
         doNextStep = true;
       } else {

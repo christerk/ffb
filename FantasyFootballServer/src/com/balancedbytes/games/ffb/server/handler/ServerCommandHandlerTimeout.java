@@ -1,6 +1,6 @@
 package com.balancedbytes.games.ffb.server.handler;
 
-import com.balancedbytes.games.ffb.Sound;
+import com.balancedbytes.games.ffb.SoundId;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.net.NetCommandId;
 import com.balancedbytes.games.ffb.option.GameOptionId;
@@ -35,7 +35,7 @@ public class ServerCommandHandlerTimeout extends ServerCommandHandler {
       long turnTime = System.currentTimeMillis() - gameState.getTurnTimeStarted();
       if (turnTime >= clientTurnLimit - 1000) {
         game.setTimeoutPossible(true);
-        UtilServerGame.syncGameModel(gameState, null, null, Sound.WHISTLE);
+        UtilServerGame.syncGameModel(gameState, null, null, SoundId.WHISTLE);
       }
     }
     

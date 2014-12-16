@@ -12,7 +12,7 @@ import org.eclipse.jetty.websocket.api.WebSocketException;
 import com.balancedbytes.games.ffb.ClientMode;
 import com.balancedbytes.games.ffb.GameList;
 import com.balancedbytes.games.ffb.PlayerState;
-import com.balancedbytes.games.ffb.Sound;
+import com.balancedbytes.games.ffb.SoundId;
 import com.balancedbytes.games.ffb.TeamList;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.Animation;
@@ -431,13 +431,13 @@ public class ServerCommunication implements Runnable, IReceivedCommandHandler {
     sendAllSessions(pGameState, removePlayerCommand);
   }
 
-  public void sendSound(GameState pGameState, Sound pSound) {
+  public void sendSound(GameState pGameState, SoundId pSound) {
     ServerCommandSound soundCommand = new ServerCommandSound(pSound);
     soundCommand.setCommandNr(pGameState.generateCommandNr());
     sendAllSessions(pGameState, soundCommand);
   }
   
-  public void sendModelSync(GameState pGameState, ModelChangeList pModelChanges, ReportList pReports, Animation pAnimation, Sound pSound, long pGameTime, long pTurnTime) {
+  public void sendModelSync(GameState pGameState, ModelChangeList pModelChanges, ReportList pReports, Animation pAnimation, SoundId pSound, long pGameTime, long pTurnTime) {
     ServerCommandModelSync syncCommand = new ServerCommandModelSync(pModelChanges, pReports, pAnimation, pSound, pGameTime, pTurnTime);
     syncCommand.setCommandNr(pGameState.generateCommandNr());
     sendHomeAndSpectatorSessions(pGameState, syncCommand);

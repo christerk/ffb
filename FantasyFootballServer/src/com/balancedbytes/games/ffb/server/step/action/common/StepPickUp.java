@@ -9,7 +9,7 @@ import com.balancedbytes.games.ffb.PickupModifierFactory;
 import com.balancedbytes.games.ffb.ReRollSource;
 import com.balancedbytes.games.ffb.ReRolledAction;
 import com.balancedbytes.games.ffb.Skill;
-import com.balancedbytes.games.ffb.Sound;
+import com.balancedbytes.games.ffb.SoundId;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
@@ -106,7 +106,7 @@ public class StepPickUp extends AbstractStepWithReRoll {
         switch (pickUp()) {
 	        case SUCCESS:
 	          game.getFieldModel().setBallMoving(false);
-	          getResult().setSound(Sound.PICKUP);
+	          getResult().setSound(SoundId.PICKUP);
 	        	getResult().setNextAction(StepAction.NEXT_STEP);
 	          break;
 	        case FAILURE:

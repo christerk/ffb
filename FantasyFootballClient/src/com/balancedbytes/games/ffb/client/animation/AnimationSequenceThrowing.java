@@ -8,7 +8,7 @@ import java.awt.image.BufferedImage;
 import javax.swing.Timer;
 
 import com.balancedbytes.games.ffb.FieldCoordinate;
-import com.balancedbytes.games.ffb.Sound;
+import com.balancedbytes.games.ffb.SoundId;
 import com.balancedbytes.games.ffb.client.FantasyFootballClient;
 import com.balancedbytes.games.ffb.client.IClientProperty;
 import com.balancedbytes.games.ffb.client.IClientPropertyValue;
@@ -34,7 +34,7 @@ public class AnimationSequenceThrowing implements IAnimationSequence, ActionList
 			pAnimation.getStartCoordinate(),
 			pAnimation.getEndCoordinate(),
 			pAnimation.getInterceptorCoordinate(),
-			Sound.THROW
+			SoundId.THROW
 		);
 	}
 
@@ -45,7 +45,7 @@ public class AnimationSequenceThrowing implements IAnimationSequence, ActionList
 			pAnimation.getStartCoordinate(),
 			pAnimation.getEndCoordinate(),
 			pAnimation.getInterceptorCoordinate(),
-			Sound.THROW
+			SoundId.THROW
 		);
 	}
 
@@ -56,7 +56,7 @@ public class AnimationSequenceThrowing implements IAnimationSequence, ActionList
 			pAnimation.getStartCoordinate(),
 			pAnimation.getEndCoordinate(),
 			pAnimation.getInterceptorCoordinate(),
-			Sound.THROW
+			SoundId.THROW
 		);
 	}
 
@@ -67,7 +67,7 @@ public class AnimationSequenceThrowing implements IAnimationSequence, ActionList
 			pAnimation.getStartCoordinate(),
 			pAnimation.getEndCoordinate(),
 			pAnimation.getInterceptorCoordinate(),
-			Sound.KICK
+			SoundId.KICK
 		);
 	}
 
@@ -78,7 +78,7 @@ public class AnimationSequenceThrowing implements IAnimationSequence, ActionList
 			pAnimation.getStartCoordinate(),
 			pAnimation.getEndCoordinate(),
 			pAnimation.getInterceptorCoordinate(),
-			Sound.THROW
+			SoundId.THROW
 		);
 	}
 
@@ -89,7 +89,7 @@ public class AnimationSequenceThrowing implements IAnimationSequence, ActionList
 			pAnimation.getStartCoordinate(),
 			pAnimation.getEndCoordinate(),
 			pAnimation.getInterceptorCoordinate(),
-			Sound.THROW
+			SoundId.THROW
 		);
 	}
 	
@@ -104,7 +104,7 @@ public class AnimationSequenceThrowing implements IAnimationSequence, ActionList
 			pAnimation.getStartCoordinate(),
 			pAnimation.getEndCoordinate(),
 			null,
-			Sound.WOOOAAAH
+			SoundId.WOOOAAAH
 		);
 	}
 
@@ -113,7 +113,7 @@ public class AnimationSequenceThrowing implements IAnimationSequence, ActionList
   private FieldCoordinate fStartCoordinate;
   private FieldCoordinate fEndCoordinate;
   private FieldCoordinate fInterceptorCoordinate;
-  private Sound fSound;
+  private SoundId fSound;
   
   private int fStartX;
   private int fStartY;
@@ -134,7 +134,7 @@ public class AnimationSequenceThrowing implements IAnimationSequence, ActionList
   
   private Timer fTimer;
 	
-	protected AnimationSequenceThrowing(AnimationType pAnimationType, BufferedImage pAnimatedIcon, FieldCoordinate pStartCoordinate, FieldCoordinate pEndCoordinate, FieldCoordinate pInterceptorCoordinate, Sound pSound)  {
+	protected AnimationSequenceThrowing(AnimationType pAnimationType, BufferedImage pAnimatedIcon, FieldCoordinate pStartCoordinate, FieldCoordinate pEndCoordinate, FieldCoordinate pInterceptorCoordinate, SoundId pSound)  {
     fAnimationType = pAnimationType;
 		fAnimatedIcon = pAnimatedIcon;
     fStartCoordinate = pStartCoordinate;

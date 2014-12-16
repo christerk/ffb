@@ -5,7 +5,7 @@ import com.balancedbytes.games.ffb.BlockResultFactory;
 import com.balancedbytes.games.ffb.PlayerAction;
 import com.balancedbytes.games.ffb.ReRolledAction;
 import com.balancedbytes.games.ffb.Skill;
-import com.balancedbytes.games.ffb.Sound;
+import com.balancedbytes.games.ffb.SoundId;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.dialog.DialogBlockRollParameter;
 import com.balancedbytes.games.ffb.json.UtilJson;
@@ -98,7 +98,7 @@ public class StepBlockRoll extends AbstractStepWithReRoll {
         fNrOfDice = UtilBlock.findNrOfBlockDice(game, actingPlayer.getPlayer(), actingPlayer.getStrength(), game.getDefender(), (actingPlayer.getPlayerAction() == PlayerAction.MULTIPLE_BLOCK));
         fBlockRoll = getGameState().getDiceRoller().rollBlockDice(fNrOfDice);
         getResult().addReport(new ReportBlock(game.getDefenderId()));
-        getResult().setSound(Sound.BLOCK);
+        getResult().setSound(SoundId.BLOCK);
         showBlockRollDialog(doRoll);
       }
     } else {

@@ -5,7 +5,7 @@ import com.balancedbytes.games.ffb.PlayerAction;
 import com.balancedbytes.games.ffb.PlayerState;
 import com.balancedbytes.games.ffb.Skill;
 import com.balancedbytes.games.ffb.SkillUse;
-import com.balancedbytes.games.ffb.Sound;
+import com.balancedbytes.games.ffb.SoundId;
 import com.balancedbytes.games.ffb.TrackNumber;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.dialog.DialogFollowupChoiceParameter;
@@ -166,7 +166,7 @@ public class StepFollowup extends AbstractStep {
           trackNumber = new TrackNumber(fCoordinateFrom, actingPlayer.getCurrentMove() - 1);
           game.getFieldModel().add(trackNumber);
         }
-        getResult().setSound(Sound.STEP);
+        getResult().setSound(SoundId.STEP);
       } else {
       	publishParameter(new StepParameter(StepParameterKey.COORDINATE_FROM, null));
       }

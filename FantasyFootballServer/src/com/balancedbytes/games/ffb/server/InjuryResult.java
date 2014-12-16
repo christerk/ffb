@@ -17,8 +17,8 @@ import com.balancedbytes.games.ffb.SendToBoxReasonFactory;
 import com.balancedbytes.games.ffb.SeriousInjury;
 import com.balancedbytes.games.ffb.SeriousInjuryFactory;
 import com.balancedbytes.games.ffb.Skill;
-import com.balancedbytes.games.ffb.Sound;
-import com.balancedbytes.games.ffb.SoundFactory;
+import com.balancedbytes.games.ffb.SoundId;
+import com.balancedbytes.games.ffb.SoundIdFactory;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
 import com.balancedbytes.games.ffb.bytearray.IByteArrayReadable;
@@ -64,7 +64,7 @@ public class InjuryResult implements IByteArrayReadable, IJsonSerializable {
   private SendToBoxReason fSendToBoxReason;
   private int fSendToBoxTurn;
   private int fSendToBoxHalf;
-  private Sound fSound;
+  private SoundId fSound;
   private PlayerState fSufferedInjury;
   private ApothecaryMode fApothecaryMode;
 
@@ -273,11 +273,11 @@ public class InjuryResult implements IByteArrayReadable, IJsonSerializable {
     return fSendToBoxHalf;
   }
 
-  public void setSound(Sound pSound) {
+  public void setSound(SoundId pSound) {
     fSound = pSound;
   }
 
-  public Sound getSound() {
+  public SoundId getSound() {
     return fSound;
   }
 
@@ -475,7 +475,7 @@ public class InjuryResult implements IByteArrayReadable, IJsonSerializable {
     setSendToBoxReason(new SendToBoxReasonFactory().forId(pByteArray.getByte()));
     setSendToBoxTurn(pByteArray.getByte());
     setSendToBoxHalf(pByteArray.getByte());
-    setSound(new SoundFactory().forId(pByteArray.getByte()));
+    setSound(new SoundIdFactory().forId(pByteArray.getByte()));
     if (byteArraySerializationVersion > 1) {
     	setApothecaryMode(new ApothecaryModeFactory().forId(pByteArray.getByte()));
     }
@@ -545,7 +545,7 @@ public class InjuryResult implements IByteArrayReadable, IJsonSerializable {
     fSendToBoxReason = (SendToBoxReason) IServerJsonOption.SEND_TO_BOX_REASON.getFrom(jsonObject);
     fSendToBoxTurn = IServerJsonOption.SEND_TO_BOX_TURN.getFrom(jsonObject);
     fSendToBoxHalf = IServerJsonOption.SEND_TO_BOX_HALF.getFrom(jsonObject);
-    fSound = (Sound) IServerJsonOption.SOUND.getFrom(jsonObject);
+    fSound = (SoundId) IServerJsonOption.SOUND.getFrom(jsonObject);
     fApothecaryMode = (ApothecaryMode) IServerJsonOption.APOTHECARY_MODE.getFrom(jsonObject);
 
     fArmorModifiers.clear();

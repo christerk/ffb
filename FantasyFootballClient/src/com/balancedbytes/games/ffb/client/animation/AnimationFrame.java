@@ -4,7 +4,7 @@ import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 
 import com.balancedbytes.games.ffb.FieldCoordinate;
-import com.balancedbytes.games.ffb.Sound;
+import com.balancedbytes.games.ffb.SoundId;
 import com.balancedbytes.games.ffb.client.IconCache;
 import com.balancedbytes.games.ffb.client.layer.FieldLayer;
 import com.balancedbytes.games.ffb.util.StringTool;
@@ -26,7 +26,7 @@ public class AnimationFrame {
   private double fScaleY2;
 	private BufferedImage fIcon2;
 	private int fTime;
-	private Sound fSound;
+	private SoundId fSound;
 	
 	private FieldLayer fFieldLayer;
 	private Rectangle fUpdatedArea;
@@ -35,7 +35,7 @@ public class AnimationFrame {
 		this(pIconProperty, pAlpha, 1.0, 1.0, null, 1.0f, 1.0, 1.0, pTime, null);
 	}
 
-	public AnimationFrame(String pIconProperty, float pAlpha, int pTime, Sound pSound) {
+	public AnimationFrame(String pIconProperty, float pAlpha, int pTime, SoundId pSound) {
 		this(pIconProperty, pAlpha, 1.0, 1.0, null, 1.0f, 1.0, 1.0, pTime, pSound);
 	}
 
@@ -43,7 +43,7 @@ public class AnimationFrame {
 		this(pIconProperty, pAlpha, pScale, pScale, null, 1.0f, 1.0, 1.0, pTime, null);
 	}
 
-	public AnimationFrame(String pIconProperty, float pAlpha, double pScale, int pTime, Sound pSound) {
+	public AnimationFrame(String pIconProperty, float pAlpha, double pScale, int pTime, SoundId pSound) {
 		this(pIconProperty, pAlpha, pScale, pScale, null, 1.0f, 1.0, 1.0, pTime, pSound);
 	}
 
@@ -69,15 +69,15 @@ public class AnimationFrame {
 	  this(pIconProperty1, pAlpha1, 1.0, 1.0, pIconProperty2, pAlpha2, 1.0, 1.0, pTime, null);
 	}
 
-	public AnimationFrame(String pIconProperty1, float pAlpha1, String pIconProperty2, float pAlpha2, int pTime, Sound pSound) {
+	public AnimationFrame(String pIconProperty1, float pAlpha1, String pIconProperty2, float pAlpha2, int pTime, SoundId pSound) {
 		this(pIconProperty1, pAlpha1, 1.0, 1.0, pIconProperty2, pAlpha2, 1.0, 1.0, pTime, pSound);
 	}
 
-  public AnimationFrame(String pIconProperty1, float pAlpha1, double pScale1, String pIconProperty2, float pAlpha2, double pScale2, int pTime, Sound pSound) {
+  public AnimationFrame(String pIconProperty1, float pAlpha1, double pScale1, String pIconProperty2, float pAlpha2, double pScale2, int pTime, SoundId pSound) {
     this(pIconProperty1, pAlpha1, pScale1, pScale1, pIconProperty2, pAlpha2, pScale2, pScale2, pTime, pSound);
   }
 
-	public AnimationFrame(String pIconProperty1, float pAlpha1, double pScaleX1, double pScaleY1, String pIconProperty2, float pAlpha2, double pScaleX2, double pScaleY2, int pTime, Sound pSound) {
+	public AnimationFrame(String pIconProperty1, float pAlpha1, double pScaleX1, double pScaleY1, String pIconProperty2, float pAlpha2, double pScaleX2, double pScaleY2, int pTime, SoundId pSound) {
 		fIconProperty1 = pIconProperty1;
 		fAlpha1 = pAlpha1;
 		fScaleX1 = pScaleX1;
@@ -94,7 +94,7 @@ public class AnimationFrame {
 		return fTime;
 	}
 	
-	public Sound getSound() {
+	public SoundId getSound() {
 		return fSound;
 	}
 

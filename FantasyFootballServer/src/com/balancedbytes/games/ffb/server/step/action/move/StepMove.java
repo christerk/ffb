@@ -2,7 +2,7 @@ package com.balancedbytes.games.ffb.server.step.action.move;
 
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.PlayerState;
-import com.balancedbytes.games.ffb.Sound;
+import com.balancedbytes.games.ffb.SoundId;
 import com.balancedbytes.games.ffb.TrackNumber;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.json.UtilJson;
@@ -106,7 +106,7 @@ public class StepMove extends AbstractStep {
         UtilServerPlayerMove.updateMoveSquares(getGameState(), false);
       }
       UtilBlock.updateDiceDecorations(game);
-      getResult().setSound(actingPlayer.isDodging() ? Sound.DODGE : Sound.STEP);
+      getResult().setSound(actingPlayer.isDodging() ? SoundId.DODGE : SoundId.STEP);
     }
     getResult().setNextAction(StepAction.NEXT_STEP);
   }

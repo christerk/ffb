@@ -6,7 +6,7 @@ package com.balancedbytes.games.ffb;
  * @author Dominic Schabel
  * @author Kalimar
  */
-public enum Sound implements IEnumWithId, IEnumWithName {
+public enum SoundId implements IEnumWithId, IEnumWithName {
 
   BLOCK(1, "block", false),
   BLUNDER(2, "blunder", false),
@@ -59,7 +59,7 @@ public enum Sound implements IEnumWithId, IEnumWithName {
   private String fName;
   private boolean fSpectatorSound;
 
-  private Sound(int pId, String pName, boolean pSpectatorSound) {
+  private SoundId(int pId, String pName, boolean pSpectatorSound) {
     fId = pId;
     fName = pName;
     fSpectatorSound = pSpectatorSound;

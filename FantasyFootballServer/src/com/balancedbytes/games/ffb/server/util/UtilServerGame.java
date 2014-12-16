@@ -6,7 +6,7 @@ import com.balancedbytes.games.ffb.InducementType;
 import com.balancedbytes.games.ffb.LeaderState;
 import com.balancedbytes.games.ffb.PlayerAction;
 import com.balancedbytes.games.ffb.Skill;
-import com.balancedbytes.games.ffb.Sound;
+import com.balancedbytes.games.ffb.SoundId;
 import com.balancedbytes.games.ffb.model.Animation;
 import com.balancedbytes.games.ffb.model.FieldModel;
 import com.balancedbytes.games.ffb.model.Game;
@@ -37,7 +37,7 @@ public class UtilServerGame {
   	if ((pStep != null) && (pStep.getResult() != null) && pStep.getResult().isSynchronize()) {
 	    ReportList reportList = pStep.getResult().getReportList();
 	    Animation animation = pStep.getResult().getAnimation();
-	    Sound sound = pStep.getResult().getSound();
+	    SoundId sound = pStep.getResult().getSound();
 	    pStep.getResult().reset();
 	    return syncGameModel(pStep.getGameState(), reportList, animation, sound);
   	} else {
@@ -45,7 +45,7 @@ public class UtilServerGame {
   	}
   }
 
-  public static boolean syncGameModel(GameState pGameState, ReportList pReportList, Animation pAnimation, Sound pSound) {
+  public static boolean syncGameModel(GameState pGameState, ReportList pReportList, Animation pAnimation, SoundId pSound) {
     boolean synced = false;
     Game game = pGameState.getGame();
     FantasyFootballServer server = pGameState.getServer();
@@ -64,7 +64,7 @@ public class UtilServerGame {
     if (UtilActingPlayer.changeActingPlayer(game, pActingPlayerId, pPlayerAction, pLeaping) && (pPlayerAction != null)
         && ((oldPlayerAction == null) || (pPlayerAction.getType() != oldPlayerAction.getType()))) {
       if ((oldPlayerAction == null) && (pPlayerAction != null)) {
-        pStep.getResult().setSound(Sound.CLICK);
+        pStep.getResult().setSound(SoundId.CLICK);
       }
       pStep.getResult().addReport(new ReportPlayerAction(pActingPlayerId, pPlayerAction));
     }

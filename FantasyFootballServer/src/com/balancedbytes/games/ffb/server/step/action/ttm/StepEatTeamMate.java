@@ -3,7 +3,7 @@ package com.balancedbytes.games.ffb.server.step.action.ttm;
 import com.balancedbytes.games.ffb.CatchScatterThrowInMode;
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.InjuryType;
-import com.balancedbytes.games.ffb.Sound;
+import com.balancedbytes.games.ffb.SoundId;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.Game;
@@ -93,7 +93,7 @@ public final class StepEatTeamMate extends AbstractStep {
 	    InjuryResult injuryResultThrownPlayer = UtilServerInjury.handleInjury(this, InjuryType.EAT_PLAYER, null, thrownPlayer, fThrownPlayerCoordinate, null, ApothecaryMode.THROWN_PLAYER);
 	    publishParameter(new StepParameter(StepParameterKey.INJURY_RESULT, injuryResultThrownPlayer));
 	    publishParameter(new StepParameter(StepParameterKey.THROWN_PLAYER_COORDINATE, null));  // avoid reset in end step
-	    getResult().setSound(Sound.NOMNOM);
+	    getResult().setSound(SoundId.NOMNOM);
     }
     getResult().setNextAction(StepAction.NEXT_STEP);
   }

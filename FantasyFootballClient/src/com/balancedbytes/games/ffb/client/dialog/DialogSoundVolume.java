@@ -15,7 +15,7 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.InternalFrameEvent;
 
-import com.balancedbytes.games.ffb.Sound;
+import com.balancedbytes.games.ffb.SoundId;
 import com.balancedbytes.games.ffb.client.FantasyFootballClient;
 import com.balancedbytes.games.ffb.client.IClientProperty;
 import com.balancedbytes.games.ffb.client.sound.SoundEngine;
@@ -36,22 +36,22 @@ public class DialogSoundVolume extends Dialog implements ChangeListener, ActionL
     
     String volumeProperty = pClient.getProperty(IClientProperty.SETTING_SOUND_VOLUME);
     fVolume = StringTool.isProvided(volumeProperty) ? Integer.parseInt(volumeProperty) : 50;
-    if (fVolume < 10) {
-      fVolume = 10;
+    if (fVolume < 1) {
+      fVolume = 1;
     }
     if (fVolume > 100) {
       fVolume = 100;
     }
 
     fSlider = new JSlider();
-    fSlider.setMinimum(10);
+    fSlider.setMinimum(1);
     fSlider.setMaximum(100);
     fSlider.setValue(fVolume);
     fSlider.addChangeListener(this);
     fSlider.setMinimumSize(fSlider.getPreferredSize());
     fSlider.setMaximumSize(fSlider.getPreferredSize());
     
-    fSettingLabel = new JLabel("-33.22 dB");
+    fSettingLabel = new JLabel("100%");
     fSettingLabel.setMinimumSize(fSettingLabel.getPreferredSize());
     fSettingLabel.setMaximumSize(fSettingLabel.getPreferredSize());
     fSettingLabel.setHorizontalAlignment(SwingConstants.RIGHT);
@@ -89,15 +89,13 @@ public class DialogSoundVolume extends Dialog implements ChangeListener, ActionL
   }
   
   private void updateSettingLabel() {
-    SoundEngine soundEngine = getClient().getUserInterface().getSoundEngine();
-    float gain = ((float) Math.round(soundEngine.findGain(fVolume) * 100)) / 100 ;
-    fSettingLabel.setText(gain + " dB");
+    fSettingLabel.setText(fVolume + "%");
   }
   
   public void actionPerformed(ActionEvent pE) {
     SoundEngine soundEngine = getClient().getUserInterface().getSoundEngine();
     soundEngine.setVolume(getVolume());
-    soundEngine.playSound(Sound.DING);    
+    soundEngine.playSound(SoundId.DING);    
   }
   
   public void internalFrameClosing(InternalFrameEvent pE) {

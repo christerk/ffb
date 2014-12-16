@@ -2,7 +2,7 @@ package com.balancedbytes.games.ffb.server.step.action.foul;
 
 import com.balancedbytes.games.ffb.Card;
 import com.balancedbytes.games.ffb.Skill;
-import com.balancedbytes.games.ffb.Sound;
+import com.balancedbytes.games.ffb.SoundId;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
@@ -119,7 +119,7 @@ public class StepReferee extends AbstractStep {
 	    }
 	    getResult().addReport(new ReportReferee(refereeSpotsFoul));
 	    if (refereeSpotsFoul) {
-	    	getResult().setSound(Sound.WHISTLE);
+	    	getResult().setSound(SoundId.WHISTLE);
 	    	getResult().setNextAction(StepAction.NEXT_STEP);
 	    } else {
 	    	getResult().setNextAction(StepAction.GOTO_LABEL, fGotoLabelOnEnd);

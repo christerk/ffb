@@ -12,7 +12,7 @@ import com.balancedbytes.games.ffb.PlayerState;
 import com.balancedbytes.games.ffb.PlayerType;
 import com.balancedbytes.games.ffb.SendToBoxReason;
 import com.balancedbytes.games.ffb.Skill;
-import com.balancedbytes.games.ffb.Sound;
+import com.balancedbytes.games.ffb.SoundId;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.GameResult;
 import com.balancedbytes.games.ffb.model.Player;
@@ -410,18 +410,18 @@ public class UtilServerInjury {
     if ((injuryResult != null) && (injuryResult.getPlayerState() != null)) {
       switch (injuryResult.getPlayerState().getBase()) {
         case PlayerState.RIP:
-          injuryResult.setSound(Sound.RIP);
+          injuryResult.setSound(SoundId.RIP);
           break;
         case PlayerState.SERIOUS_INJURY:
         case PlayerState.BADLY_HURT:
-          injuryResult.setSound(Sound.INJURY);
+          injuryResult.setSound(SoundId.INJURY);
           break;
         case PlayerState.KNOCKED_OUT:
-          injuryResult.setSound(Sound.KO);
+          injuryResult.setSound(SoundId.KO);
           break;
         default:
           if (injuryResult.getInjuryType() != InjuryType.FOUL) {
-            injuryResult.setSound(Sound.FALL);
+            injuryResult.setSound(SoundId.FALL);
           }
           break;
       }
@@ -498,7 +498,7 @@ public class UtilServerInjury {
       // communicate raised player to clients
       gameState.getServer().getCommunication().sendAddPlayer(gameState, necroTeam.getId(), raisedPlayer, game.getFieldModel().getPlayerState(raisedPlayer), game.getGameResult().getPlayerResult(raisedPlayer));
       pStep.getResult().addReport(new ReportRaiseDead(raisedPlayer.getId(), nurglesRot));
-      pStep.getResult().setSound(Sound.ORGAN);
+      pStep.getResult().setSound(SoundId.ORGAN);
       
       return true;
       

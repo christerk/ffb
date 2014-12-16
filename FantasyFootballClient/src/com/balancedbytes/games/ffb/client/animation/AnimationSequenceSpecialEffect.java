@@ -6,7 +6,7 @@ import java.awt.event.ActionListener;
 import javax.swing.Timer;
 
 import com.balancedbytes.games.ffb.FieldCoordinate;
-import com.balancedbytes.games.ffb.Sound;
+import com.balancedbytes.games.ffb.SoundId;
 import com.balancedbytes.games.ffb.client.IClientProperty;
 import com.balancedbytes.games.ffb.client.IClientPropertyValue;
 import com.balancedbytes.games.ffb.client.IIconProperty;
@@ -23,7 +23,7 @@ public class AnimationSequenceSpecialEffect implements IAnimationSequence, Actio
     return new AnimationSequenceSpecialEffect(
       pCoordinate,
       new AnimationFrame[] {
-        new AnimationFrame(IIconProperty.ANIMATION_FIREBALL_EXPLOSION_1, 1.0f, 100, Sound.EXPLODE),
+        new AnimationFrame(IIconProperty.ANIMATION_FIREBALL_EXPLOSION_1, 1.0f, 100, SoundId.EXPLODE),
         new AnimationFrame(IIconProperty.ANIMATION_FIREBALL_EXPLOSION_2, 1.0f, 100),
         new AnimationFrame(IIconProperty.ANIMATION_FIREBALL_EXPLOSION_3, 1.0f, 100),
         new AnimationFrame(IIconProperty.ANIMATION_FIREBALL_EXPLOSION_4, 1.0f, 100),
@@ -40,7 +40,7 @@ public class AnimationSequenceSpecialEffect implements IAnimationSequence, Actio
     return new AnimationSequenceSpecialEffect(
   		pCoordinate,
   		new AnimationFrame[] {
-        new AnimationFrame(IIconProperty.ANIMATION_FIREBALL_EXPLOSION_1, 1.0f, 100, Sound.FIREBALL),
+        new AnimationFrame(IIconProperty.ANIMATION_FIREBALL_EXPLOSION_1, 1.0f, 100, SoundId.FIREBALL),
         new AnimationFrame(IIconProperty.ANIMATION_FIREBALL_EXPLOSION_2, 1.0f, 100),
         new AnimationFrame(IIconProperty.ANIMATION_FIREBALL_EXPLOSION_3, 1.0f, 100),
         new AnimationFrame(IIconProperty.ANIMATION_FIREBALL_EXPLOSION_4, 1.0f, 100),
@@ -64,9 +64,9 @@ public class AnimationSequenceSpecialEffect implements IAnimationSequence, Actio
         new AnimationFrame(IIconProperty.ANIMATION_LIGHTNING_02, 1.0f, 100), new AnimationFrame(IIconProperty.ANIMATION_LIGHTNING_03, 1.0f, 100),
         new AnimationFrame(IIconProperty.ANIMATION_LIGHTNING_04, 1.0f, 100), new AnimationFrame(IIconProperty.ANIMATION_LIGHTNING_05, 1.0f, 100),
         new AnimationFrame(IIconProperty.ANIMATION_LIGHTNING_06, 1.0f, 200),
-        new AnimationFrame(IIconProperty.ANIMATION_LIGHTNING_07, 1.0f, 200, Sound.LIGHTNING),
+        new AnimationFrame(IIconProperty.ANIMATION_LIGHTNING_07, 1.0f, 200, SoundId.LIGHTNING),
         new AnimationFrame(IIconProperty.ANIMATION_LIGHTNING_06, 1.0f, 200),
-        new AnimationFrame(IIconProperty.ANIMATION_LIGHTNING_07, 1.0f, 200, Sound.LIGHTNING),
+        new AnimationFrame(IIconProperty.ANIMATION_LIGHTNING_07, 1.0f, 200, SoundId.LIGHTNING),
         new AnimationFrame(IIconProperty.ANIMATION_LIGHTNING_06, 1.0f, 200), new AnimationFrame(IIconProperty.ANIMATION_LIGHTNING_08, 1.0f, 100),
         new AnimationFrame(IIconProperty.ANIMATION_LIGHTNING_09, 1.0f, 100), new AnimationFrame(IIconProperty.ANIMATION_LIGHTNING_10, 1.0f, 100),
         new AnimationFrame(IIconProperty.ANIMATION_LIGHTNING_11, 1.0f, 100), new AnimationFrame(IIconProperty.ANIMATION_LIGHTNING_12, 1.0f, 100)

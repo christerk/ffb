@@ -1,6 +1,6 @@
 package com.balancedbytes.games.ffb.client.dialog;
 
-import com.balancedbytes.games.ffb.Sound;
+import com.balancedbytes.games.ffb.SoundId;
 import com.balancedbytes.games.ffb.StatusType;
 import com.balancedbytes.games.ffb.client.ClientData;
 import com.balancedbytes.games.ffb.client.FantasyFootballClient;
@@ -64,7 +64,7 @@ public abstract class DialogHandler implements IDialogCloseListener {
     return ((pDialog != null) && (pDialog.getId() != null) && (pDialog.getId() == pDialogId));
   }
   
-  protected void playSound(Sound pSound) {
+  protected void playSound(SoundId pSound) {
     if (pSound != null) {
       SoundEngine soundEngine = getClient().getUserInterface().getSoundEngine();
       String soundSetting = getClient().getProperty(IClientProperty.SETTING_SOUND_MODE);

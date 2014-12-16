@@ -1,6 +1,6 @@
 package com.balancedbytes.games.ffb.server.step;
 
-import com.balancedbytes.games.ffb.Sound;
+import com.balancedbytes.games.ffb.SoundId;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.dialog.DialogConcedeGameParameter;
 import com.balancedbytes.games.ffb.json.UtilJson;
@@ -185,7 +185,7 @@ public abstract class AbstractStep implements IStep {
       reports.add(new ReportTimeoutEnforced(coach));
       game.setTimeoutEnforced(true);
       game.setTimeoutPossible(false);
-      UtilServerGame.syncGameModel(getGameState(), reports, null, Sound.WHISTLE);
+      UtilServerGame.syncGameModel(getGameState(), reports, null, SoundId.WHISTLE);
       commandStatus = StepCommandStatus.EXECUTE_STEP;
     }
     return commandStatus;

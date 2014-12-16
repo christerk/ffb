@@ -1,6 +1,6 @@
 package com.balancedbytes.games.ffb.client.handler;
 
-import com.balancedbytes.games.ffb.Sound;
+import com.balancedbytes.games.ffb.SoundId;
 import com.balancedbytes.games.ffb.client.FantasyFootballClient;
 import com.balancedbytes.games.ffb.client.GameTitle;
 import com.balancedbytes.games.ffb.client.IClientProperty;
@@ -30,17 +30,17 @@ public abstract class ClientCommandHandler {
     return fClient;
   }
 
-  protected void playSound(Sound pSound, ClientCommandHandlerMode pMode, boolean pWait) {
-    if (pSound != null) {
+  protected void playSound(SoundId pSoundId, ClientCommandHandlerMode pMode, boolean pWait) {
+    if (pSoundId != null) {
     	// System.out.println("play " + pSound.getName());
       SoundEngine soundEngine = getClient().getUserInterface().getSoundEngine();
       String soundSetting = getClient().getProperty(IClientProperty.SETTING_SOUND_MODE);
       if ((pMode == ClientCommandHandlerMode.PLAYING) || ((pMode == ClientCommandHandlerMode.REPLAYING) && getClient().getReplayer().isReplayingSingleSpeedForward())) {
-        if (IClientPropertyValue.SETTING_SOUND_ON.equals(soundSetting) || (IClientPropertyValue.SETTING_SOUND_MUTE_SPECTATORS.equals(soundSetting) && !pSound.isSpectatorSound())) {
-          soundEngine.playSound(pSound);
+        if (IClientPropertyValue.SETTING_SOUND_ON.equals(soundSetting) || (IClientPropertyValue.SETTING_SOUND_MUTE_SPECTATORS.equals(soundSetting) && !pSoundId.isSpectatorSound())) {
+          soundEngine.playSound(pSoundId);
         }
         if (pWait && (pMode == ClientCommandHandlerMode.PLAYING)) {
-          long soundLength = soundEngine.getSoundLength(pSound);
+          long soundLength = soundEngine.getSoundLength(pSoundId);
           if (soundLength > 0) {
             synchronized (this) {
               try {

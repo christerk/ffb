@@ -5,7 +5,7 @@ import com.balancedbytes.games.ffb.PlayerState;
 import com.balancedbytes.games.ffb.ReRolledAction;
 import com.balancedbytes.games.ffb.ReRolledActionFactory;
 import com.balancedbytes.games.ffb.Skill;
-import com.balancedbytes.games.ffb.Sound;
+import com.balancedbytes.games.ffb.SoundId;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
@@ -177,7 +177,7 @@ public class StepWildAnimal extends AbstractStepWithReRoll {
       game.getFieldModel().setPlayerState(actingPlayer.getPlayer(), playerState.changeBase(PlayerState.STANDING).changeActive(false));
     }
     game.setPassCoordinate(null);
-    getResult().setSound(Sound.ROAR);
+    getResult().setSound(SoundId.ROAR);
   }
   
   public int getByteArraySerializationVersion() {

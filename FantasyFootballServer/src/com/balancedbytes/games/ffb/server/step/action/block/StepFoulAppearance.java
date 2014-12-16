@@ -2,7 +2,7 @@ package com.balancedbytes.games.ffb.server.step.action.block;
 
 import com.balancedbytes.games.ffb.ReRolledAction;
 import com.balancedbytes.games.ffb.Skill;
-import com.balancedbytes.games.ffb.Sound;
+import com.balancedbytes.games.ffb.SoundId;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
@@ -107,7 +107,7 @@ public class StepFoulAppearance extends AbstractStepWithReRoll {
           }
         }
         if (!mayBlock && !reRolled) {
-          getResult().setSound(Sound.EW);
+          getResult().setSound(SoundId.EW);
         }
       }
     } else {

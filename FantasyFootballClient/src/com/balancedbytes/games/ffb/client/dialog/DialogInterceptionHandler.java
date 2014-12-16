@@ -1,7 +1,7 @@
 package com.balancedbytes.games.ffb.client.dialog;
 
 import com.balancedbytes.games.ffb.ClientMode;
-import com.balancedbytes.games.ffb.Sound;
+import com.balancedbytes.games.ffb.SoundId;
 import com.balancedbytes.games.ffb.StatusType;
 import com.balancedbytes.games.ffb.client.FantasyFootballClient;
 import com.balancedbytes.games.ffb.dialog.DialogId;
@@ -33,7 +33,7 @@ public class DialogInterceptionHandler extends DialogHandler {
       setDialog(new DialogInterception(getClient()));
       getDialog().showDialog(this);
       if (!game.isHomePlaying())  {
-          playSound(Sound.QUESTION);
+          playSound(SoundId.QUESTION);
       }
     }
     

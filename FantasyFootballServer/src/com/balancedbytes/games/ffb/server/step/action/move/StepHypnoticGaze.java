@@ -8,7 +8,7 @@ import com.balancedbytes.games.ffb.PlayerAction;
 import com.balancedbytes.games.ffb.PlayerState;
 import com.balancedbytes.games.ffb.ReRolledAction;
 import com.balancedbytes.games.ffb.Skill;
-import com.balancedbytes.games.ffb.Sound;
+import com.balancedbytes.games.ffb.SoundId;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
@@ -113,7 +113,7 @@ public class StepHypnoticGaze extends AbstractStepWithReRoll {
       boolean successful = DiceInterpreter.getInstance().isSkillRollSuccessful(roll, minimumRoll);
       boolean reRolled = ((getReRolledAction() == ReRolledAction.HYPNOTIC_GAZE) && (getReRollSource() != null));
       if (!reRolled) {
-        getResult().setSound(Sound.HYPNO);
+        getResult().setSound(SoundId.HYPNO);
       }
       getResult().addReport(new ReportSkillRoll(ReportId.HYPNOTIC_GAZE_ROLL, actingPlayer.getPlayerId(), successful, roll, minimumRoll, reRolled, modifierFactory.toArray(gazeModifiers)));
       if (successful) {

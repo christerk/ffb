@@ -18,7 +18,7 @@ import com.balancedbytes.games.ffb.ReRollSource;
 import com.balancedbytes.games.ffb.ReRolledAction;
 import com.balancedbytes.games.ffb.Skill;
 import com.balancedbytes.games.ffb.SkillUse;
-import com.balancedbytes.games.ffb.Sound;
+import com.balancedbytes.games.ffb.SoundId;
 import com.balancedbytes.games.ffb.TurnMode;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.dialog.DialogPlayerChoiceParameter;
@@ -339,7 +339,7 @@ public class StepCatchScatterThrowIn extends AbstractStepWithReRoll {
 			    game.getFieldModel().setBallCoordinate(catcherCoordinate);
 			    game.getFieldModel().setBallMoving(false);
 	    	}
-	      getResult().setSound(Sound.CATCH);
+	      getResult().setSound(SoundId.CATCH);
 	      setReRolledAction(null);
 	      if (((fCatchScatterThrowInMode == CatchScatterThrowInMode.CATCH_HAND_OFF) || (fCatchScatterThrowInMode == CatchScatterThrowInMode.CATCH_ACCURATE_PASS))
       		&& (game.getTurnMode() != TurnMode.DUMP_OFF)
@@ -394,7 +394,7 @@ public class StepCatchScatterThrowIn extends AbstractStepWithReRoll {
     FieldCoordinate ballCoordinateEnd = UtilServerCatchScatterThrowIn.findScatterCoordinate(ballCoordinateStart, direction, 1);
     FieldCoordinate lastValidCoordinate = fScatterBounds.isInBounds(ballCoordinateEnd) ? ballCoordinateEnd : ballCoordinateStart;
     getResult().addReport(new ReportScatterBall(new Direction[] { direction }, new int[] { roll }, false));
-    getResult().setSound(Sound.BOUNCE);
+    getResult().setSound(SoundId.BOUNCE);
     
     game.getFieldModel().setBallCoordinate(ballCoordinateEnd);
     game.getFieldModel().setBallMoving(true);

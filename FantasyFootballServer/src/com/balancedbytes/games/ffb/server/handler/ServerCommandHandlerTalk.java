@@ -2,6 +2,7 @@ package com.balancedbytes.games.ffb.server.handler;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
@@ -16,7 +17,8 @@ import com.balancedbytes.games.ffb.PlayerState;
 import com.balancedbytes.games.ffb.SeriousInjury;
 import com.balancedbytes.games.ffb.Skill;
 import com.balancedbytes.games.ffb.SkillFactory;
-import com.balancedbytes.games.ffb.Sound;
+import com.balancedbytes.games.ffb.SoundId;
+import com.balancedbytes.games.ffb.SoundIdFactory;
 import com.balancedbytes.games.ffb.Weather;
 import com.balancedbytes.games.ffb.WeatherFactory;
 import com.balancedbytes.games.ffb.model.Animation;
@@ -76,7 +78,9 @@ public class ServerCommandHandlerTalk extends ServerCommandHandler {
       String coach = sessionManager.getCoachForSession(pReceivedCommand.getSession());
       if ((gameState != null) && (sessionManager.getSessionOfHomeCoach(gameState) == pReceivedCommand.getSession())
         || (sessionManager.getSessionOfAwayCoach(gameState) == pReceivedCommand.getSession())) {
-        if (isTestMode(gameState) && talk.startsWith("/animation")) {
+        if (isTestMode(gameState) && talk.startsWith("/animations")) {
+          handleAnimationsCommand(gameState, talkCommand, pReceivedCommand.getSession());
+        } else if (isTestMode(gameState) && talk.startsWith("/animation")) {
           handleAnimationCommand(gameState, talkCommand);
         } else if (isTestMode(gameState) && talk.startsWith("/box")) {
           handleBoxCommand(gameState, talkCommand, pReceivedCommand.getSession());
@@ -88,6 +92,8 @@ public class ServerCommandHandlerTalk extends ServerCommandHandler {
           handleOptionsCommand(gameState, talkCommand);
         } else if (isTestMode(gameState) && talk.startsWith("/option")) {
           handleOptionCommand(gameState, talkCommand);
+        } else if (isTestMode(gameState) && talk.startsWith("/pitches")) {
+          handlePitchesCommand(gameState, talkCommand, pReceivedCommand.getSession());
         } else if (isTestMode(gameState) && talk.startsWith("/pitch")) {
           handlePitchCommand(gameState, talkCommand);
         } else if (isTestMode(gameState) && talk.startsWith("/prone")) {
@@ -96,6 +102,10 @@ public class ServerCommandHandlerTalk extends ServerCommandHandler {
           handleRollCommand(gameState, talkCommand);
         } else if (isTestMode(gameState) && talk.startsWith("/skill")) {
           handleSkillCommand(gameState, talkCommand, pReceivedCommand.getSession());
+        } else if (isTestMode(gameState) && talk.startsWith("/sounds")) {
+          handleSoundsCommand(gameState, talkCommand, pReceivedCommand.getSession());
+        } else if (isTestMode(gameState) && talk.startsWith("/sound")) {
+          handleSoundCommand(gameState, talkCommand);
         } else if (isTestMode(gameState) && talk.startsWith("/stat")) {
           handleStatCommand(gameState, talkCommand, pReceivedCommand.getSession());
         } else if (isTestMode(gameState) && talk.startsWith("/stun")) {
@@ -110,23 +120,23 @@ public class ServerCommandHandlerTalk extends ServerCommandHandler {
 
       } else {
         if (talk.startsWith("/aah")) {
-          playSoundAfterCooldown(gameState, coach, Sound.SPEC_AAH);
+          playSoundAfterCooldown(gameState, coach, SoundId.SPEC_AAH);
         } else if (talk.startsWith("/boo")) {
-          playSoundAfterCooldown(gameState, coach, Sound.SPEC_BOO);
+          playSoundAfterCooldown(gameState, coach, SoundId.SPEC_BOO);
         } else if (talk.startsWith("/cheer")) {
-          playSoundAfterCooldown(gameState, coach, Sound.SPEC_CHEER);
+          playSoundAfterCooldown(gameState, coach, SoundId.SPEC_CHEER);
         } else if (talk.startsWith("/clap")) {
-          playSoundAfterCooldown(gameState, coach, Sound.SPEC_CLAP);
+          playSoundAfterCooldown(gameState, coach, SoundId.SPEC_CLAP);
         } else if (talk.startsWith("/crickets")) {
-          playSoundAfterCooldown(gameState, coach, Sound.SPEC_CRICKETS);
+          playSoundAfterCooldown(gameState, coach, SoundId.SPEC_CRICKETS);
         } else if (talk.startsWith("/laugh")) {
-          playSoundAfterCooldown(gameState, coach, Sound.SPEC_LAUGH);
+          playSoundAfterCooldown(gameState, coach, SoundId.SPEC_LAUGH);
         } else if (talk.startsWith("/ooh")) {
-          playSoundAfterCooldown(gameState, coach, Sound.SPEC_OOH);
+          playSoundAfterCooldown(gameState, coach, SoundId.SPEC_OOH);
         } else if (talk.startsWith("/shock")) {
-          playSoundAfterCooldown(gameState, coach, Sound.SPEC_SHOCK);
+          playSoundAfterCooldown(gameState, coach, SoundId.SPEC_SHOCK);
         } else if (talk.startsWith("/stomp")) {
-          playSoundAfterCooldown(gameState, coach, Sound.SPEC_STOMP);
+          playSoundAfterCooldown(gameState, coach, SoundId.SPEC_STOMP);
         } else if (talk.startsWith("/spectators") || talk.startsWith("/specs")) {
           handleSpectatorsCommand(gameState, talkCommand, pReceivedCommand.getSession());
         } else {
@@ -161,7 +171,7 @@ public class ServerCommandHandlerTalk extends ServerCommandHandler {
     return spectatorArray;
   }
 
-  private void playSoundAfterCooldown(GameState pGameState, String pCoach, Sound pSound) {
+  private void playSoundAfterCooldown(GameState pGameState, String pCoach, SoundId pSound) {
     if ((pGameState != null) && (pCoach != null) && (pSound != null)) {
       if (StringTool.isProvided(getServer().getProperty(IServerProperty.SERVER_SPECTATOR_COOLDOWN))) {
         long spectatorCooldown = Long.parseLong(getServer().getProperty(IServerProperty.SERVER_SPECTATOR_COOLDOWN));
@@ -215,6 +225,27 @@ public class ServerCommandHandlerTalk extends ServerCommandHandler {
     getServer().getCommunication().sendPlayerTalk(pGameState, null, info.toString());
     UtilServerGame.syncGameModel(pGameState, null, animation, null);
   }
+  
+  private void handleAnimationsCommand(GameState pGameState, ClientCommandTalk pTalkCommand, Session pSession) {
+    String talk = pTalkCommand.getTalk();
+    String[] commands = talk.split(" +");
+    if ((commands != null) && (commands.length > 0)) {
+      List<String> animationNames = new ArrayList<String>();
+      for (AnimationType animationType : AnimationType.values()) {
+        animationNames.add(animationType.getName());
+      }
+      Collections.sort(animationNames);
+      String[] info = new String[animationNames.size() + 1];
+      for (int i = 0; i < info.length; i++) {
+        if (i > 0) {
+          info[i] = animationNames.get(i - 1);
+        } else {
+          info[i] = "Available animations:";
+        }
+      }
+      getServer().getCommunication().sendTalk(pSession, pGameState, null, info);
+    }
+  }
 
   private void handleOptionCommand(GameState pGameState, ClientCommandTalk pTalkCommand) {
     Game game = pGameState.getGame();
@@ -258,6 +289,65 @@ public class ServerCommandHandlerTalk extends ServerCommandHandler {
         getServer().getCommunication().sendPlayerTalk(pGameState, null, info.toString());
         UtilServerGame.syncGameModel(pGameState, null, null, null);
       }
+    }
+  }
+  
+  private void handlePitchesCommand(GameState pGameState, ClientCommandTalk pTalkCommand, Session pSession) {
+    String talk = pTalkCommand.getTalk();
+    String[] commands = talk.split(" +");
+    if ((commands != null) && (commands.length > 0)) {
+      List<String> pitchNames = new ArrayList<String>();
+      for (String property : getServer().getProperties()) {
+        if (property.startsWith("pitch.")) {
+          pitchNames.add(property.substring(6));
+        }
+      }
+      Collections.sort(pitchNames);
+      String[] info = new String[pitchNames.size() + 1];
+      for (int i = 0; i < info.length; i++) {
+        if (i > 0) {
+          info[i] = pitchNames.get(i - 1);
+        } else {
+          info[i] = "Available pitches:";
+        }
+      }
+      getServer().getCommunication().sendTalk(pSession, pGameState, null, info);
+    }
+  }
+
+  private void handleSoundCommand(GameState pGameState, ClientCommandTalk pTalkCommand) {
+    String talk = pTalkCommand.getTalk();
+    String[] commands = talk.split(" +");
+    if ((commands != null) && (commands.length > 1)) {
+      SoundId soundId = new SoundIdFactory().forName(commands[1]);
+      if (soundId == null) {
+        return;
+      }
+      StringBuilder info = new StringBuilder();
+      info.append("Playing sound ").append(soundId.getName());
+      getServer().getCommunication().sendPlayerTalk(pGameState, null, info.toString());
+      getServer().getCommunication().sendSound(pGameState, soundId);
+    }
+  }
+
+  private void handleSoundsCommand(GameState pGameState, ClientCommandTalk pTalkCommand, Session pSession) {
+    String talk = pTalkCommand.getTalk();
+    String[] commands = talk.split(" +");
+    if ((commands != null) && (commands.length > 0)) {
+      List<String> soundNames = new ArrayList<String>();
+      for (SoundId soundId : SoundId.values()) {
+        soundNames.add(soundId.getName());
+      }
+      Collections.sort(soundNames);
+      String[] info = new String[soundNames.size() + 1];
+      for (int i = 0; i < info.length; i++) {
+        if (i > 0) {
+          info[i] = soundNames.get(i - 1);
+        } else {
+          info[i] = "Available sounds:";
+        }
+      }
+      getServer().getCommunication().sendTalk(pSession, pGameState, null, info);
     }
   }
 
@@ -609,20 +699,20 @@ public class ServerCommandHandlerTalk extends ServerCommandHandler {
 
   private void handleSpectatorsCommand(GameState pGameState, ClientCommandTalk pTalkCommand, Session pSession) {
     String[] spectators = findSpectators(pGameState);
-    String[] spectatorTalk = null;
+    String[] info = null;
     StringBuilder spectatorMessage = new StringBuilder();
     if (spectators.length == 1) {
-      spectatorTalk = new String[1];
-      spectatorTalk[0] = "You are the only spectator of this game.";
+      info = new String[1];
+      info[0] = "You are the only spectator of this game.";
     } else {
-      spectatorTalk = new String[spectators.length + 1];
+      info = new String[spectators.length + 1];
       spectatorMessage.append(spectators.length).append(" spectators are watching this game:");
-      spectatorTalk[0] = spectatorMessage.toString();
+      info[0] = spectatorMessage.toString();
       for (int i = 0; i < spectators.length; i++) {
-        spectatorTalk[i + 1] = spectators[i];
+        info[i + 1] = spectators[i];
       }
     }
-    getServer().getCommunication().sendTalk(pSession, pGameState, null, spectatorTalk);
+    getServer().getCommunication().sendTalk(pSession, pGameState, null, info);
   }
 
 }

@@ -1,7 +1,7 @@
 package com.balancedbytes.games.ffb.client.dialog;
 
 import com.balancedbytes.games.ffb.ClientMode;
-import com.balancedbytes.games.ffb.Sound;
+import com.balancedbytes.games.ffb.SoundId;
 import com.balancedbytes.games.ffb.StatusType;
 import com.balancedbytes.games.ffb.client.FantasyFootballClient;
 import com.balancedbytes.games.ffb.client.IIconProperty;
@@ -28,7 +28,7 @@ public class DialogPassBlockHandler extends DialogHandler {
     	
       setDialog(new DialogInformation(getClient(), "Pass Block", new String[] { "You may move your players with PASS BLOCK skill up to 3 squares." , "The move must end in a square where the player can intercept or put a TZ on thrower or catcher."}, DialogInformation.OK_DIALOG, IIconProperty.GAME_REF));
       getDialog().showDialog(this);
-      playSound(Sound.QUESTION);
+      playSound(SoundId.QUESTION);
 
     }
 

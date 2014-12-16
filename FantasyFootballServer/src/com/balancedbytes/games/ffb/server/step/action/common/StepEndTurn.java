@@ -14,7 +14,7 @@ import com.balancedbytes.games.ffb.KnockoutRecovery;
 import com.balancedbytes.games.ffb.PlayerState;
 import com.balancedbytes.games.ffb.SendToBoxReason;
 import com.balancedbytes.games.ffb.Skill;
-import com.balancedbytes.games.ffb.Sound;
+import com.balancedbytes.games.ffb.SoundId;
 import com.balancedbytes.games.ffb.TurnMode;
 import com.balancedbytes.games.ffb.Weather;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
@@ -287,12 +287,12 @@ public class StepEndTurn extends AbstractStep {
           SequenceGenerator.getInstance().pushKickoffSequence(getGameState(), false);
           fRemoveUsedSecretWeapons = true;
         }
-        getResult().setSound(Sound.WHISTLE);
+        getResult().setSound(SoundId.WHISTLE);
       } else if (fTouchdown) {
         game.getFieldModel().setBallCoordinate(null);
         game.getFieldModel().setBallInPlay(false);
-        getGameState().getServer().getCommunication().sendSound(getGameState(), Sound.TOUCHDOWN);
-        getResult().setSound(Sound.WHISTLE);
+        getGameState().getServer().getCommunication().sendSound(getGameState(), SoundId.TOUCHDOWN);
+        getResult().setSound(SoundId.WHISTLE);
         if (game.getHalf() == 3) {
           SequenceGenerator.getInstance().pushEndGameSequence(getGameState(), false);
         } else {
@@ -301,11 +301,11 @@ public class StepEndTurn extends AbstractStep {
         }
       } else if (game.getTurnMode() != TurnMode.REGULAR) {
         UtilBox.refreshBoxes(game);
-        getResult().setSound(Sound.DING);
+        getResult().setSound(SoundId.DING);
         SequenceGenerator.getInstance().pushKickoffSequence(getGameState(), false);
         fRemoveUsedSecretWeapons = true;
       } else {
-        getResult().setSound(Sound.DING);
+        getResult().setSound(SoundId.DING);
        	SequenceGenerator.getInstance().pushInducementSequence(getGameState(), InducementPhase.START_OF_OWN_TURN, game.isHomePlaying());
       }
   

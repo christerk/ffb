@@ -3,7 +3,7 @@ package com.balancedbytes.games.ffb.server.step.action.block;
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.InjuryType;
 import com.balancedbytes.games.ffb.Skill;
-import com.balancedbytes.games.ffb.Sound;
+import com.balancedbytes.games.ffb.SoundId;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
@@ -104,7 +104,7 @@ public class StepStab extends AbstractStep {
   	Game game = getGameState().getGame();
     ActingPlayer actingPlayer = game.getActingPlayer();
     if (UtilCards.hasSkill(game, actingPlayer, Skill.STAB) && (fUsingStab != null) && fUsingStab) {
-      getResult().setSound(Sound.STAB);
+      getResult().setSound(SoundId.STAB);
       FieldCoordinate defenderCoordinate = game.getFieldModel().getPlayerCoordinate(game.getDefender());
       InjuryResult injuryResultDefender = UtilServerInjury.handleInjury(this, InjuryType.STAB, actingPlayer.getPlayer(), game.getDefender(), defenderCoordinate, null, ApothecaryMode.DEFENDER);
       if (injuryResultDefender.isArmorBroken()) {

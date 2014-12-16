@@ -24,7 +24,7 @@ import com.balancedbytes.games.ffb.SendToBoxReasonFactory;
 import com.balancedbytes.games.ffb.SeriousInjuryFactory;
 import com.balancedbytes.games.ffb.SkillFactory;
 import com.balancedbytes.games.ffb.SkillUseFactory;
-import com.balancedbytes.games.ffb.SoundFactory;
+import com.balancedbytes.games.ffb.SoundIdFactory;
 import com.balancedbytes.games.ffb.SpecialEffectFactory;
 import com.balancedbytes.games.ffb.TeamStatusFactory;
 import com.balancedbytes.games.ffb.TurnModeFactory;
@@ -359,7 +359,7 @@ public interface IJsonOption {
               JsonIntArrayOption SKILL_VALUES = new JsonIntArrayOption("skillValues");
                JsonBooleanOption SKILL_USED = new JsonBooleanOption("skillUsed");
               JsonIntArrayOption SLOTS = new JsonIntArrayOption("slots");
-          JsonEnumWithNameOption SOUND = new JsonEnumWithNameOption("sound", new SoundFactory());
+          JsonEnumWithNameOption SOUND = new JsonEnumWithNameOption("sound", new SoundIdFactory());
           JsonEnumWithNameOption SPECIAL_EFFECT = new JsonEnumWithNameOption("specialEffect", new SpecialEffectFactory());
               JsonIntArrayOption SPECTATOR_ROLL_AWAY = new JsonIntArrayOption("spectatorRollAway");
               JsonIntArrayOption SPECTATOR_ROLL_HOME = new JsonIntArrayOption("spectatorRollHome");

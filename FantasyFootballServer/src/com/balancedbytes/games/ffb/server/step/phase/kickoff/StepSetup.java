@@ -1,7 +1,7 @@
 package com.balancedbytes.games.ffb.server.step.phase.kickoff;
 
 import com.balancedbytes.games.ffb.InducementPhase;
-import com.balancedbytes.games.ffb.Sound;
+import com.balancedbytes.games.ffb.SoundId;
 import com.balancedbytes.games.ffb.TurnMode;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.json.UtilJson;
@@ -124,7 +124,7 @@ public final class StepSetup extends AbstractStep {
   		return;
   	}
     if (fEndSetup) {
-      getResult().setSound(Sound.DING);
+      getResult().setSound(SoundId.DING);
       if (UtilKickoffSequence.checkSetup(getGameState(), game.isHomePlaying())) {
 	      game.setHomePlaying(!game.isHomePlaying());
 	      game.getTurnData().setTurnStarted(false);

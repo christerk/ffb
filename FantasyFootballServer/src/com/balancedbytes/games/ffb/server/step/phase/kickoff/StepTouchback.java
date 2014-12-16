@@ -4,7 +4,7 @@ import com.balancedbytes.games.ffb.CatchScatterThrowInMode;
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.PlayerState;
 import com.balancedbytes.games.ffb.Skill;
-import com.balancedbytes.games.ffb.Sound;
+import com.balancedbytes.games.ffb.SoundId;
 import com.balancedbytes.games.ffb.TurnMode;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.dialog.DialogTouchbackParameter;
@@ -112,7 +112,7 @@ public final class StepTouchback extends AbstractStep {
         PlayerState playerState = game.getFieldModel().getPlayerState(player);
         if ((player != null) && !UtilCards.hasSkill(game, player, Skill.NO_HANDS) && playerState.hasTacklezones()) {
         	game.getFieldModel().setBallMoving(false);
-          getResult().setSound(Sound.CATCH);
+          getResult().setSound(SoundId.CATCH);
         } else {
           publishParameter(new StepParameter(StepParameterKey.CATCH_SCATTER_THROW_IN_MODE, CatchScatterThrowInMode.CATCH_KICKOFF));
         }

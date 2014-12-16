@@ -1,7 +1,7 @@
 package com.balancedbytes.games.ffb.net.commands;
 
-import com.balancedbytes.games.ffb.Sound;
-import com.balancedbytes.games.ffb.SoundFactory;
+import com.balancedbytes.games.ffb.SoundId;
+import com.balancedbytes.games.ffb.SoundIdFactory;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
@@ -22,7 +22,7 @@ public class ServerCommandModelSync extends ServerCommand {
   private ModelChangeList fModelChanges;
   private ReportList fReportList;
   private Animation fAnimation;
-  private Sound fSound;
+  private SoundId fSound;
   private long fGameTime;
   private long fTurnTime;
 
@@ -31,7 +31,7 @@ public class ServerCommandModelSync extends ServerCommand {
     fReportList = new ReportList();
   }
 
-  public ServerCommandModelSync(ModelChangeList pModelChanges, ReportList pReportList, Animation pAnimation, Sound pSound, long pGameTime, long pTurnTime) {
+  public ServerCommandModelSync(ModelChangeList pModelChanges, ReportList pReportList, Animation pAnimation, SoundId pSound, long pGameTime, long pTurnTime) {
     this();
     fModelChanges.add(pModelChanges);
     fReportList.add(pReportList);
@@ -57,7 +57,7 @@ public class ServerCommandModelSync extends ServerCommand {
     return fAnimation;
   }
 
-  public Sound getSound() {
+  public SoundId getSound() {
     return fSound;
   }
 
@@ -104,7 +104,7 @@ public class ServerCommandModelSync extends ServerCommand {
       fAnimation.initFrom(pByteArray);
     }
 
-    fSound = new SoundFactory().forId(pByteArray.getByte());
+    fSound = new SoundIdFactory().forId(pByteArray.getByte());
     fGameTime = pByteArray.getLong();
     fTurnTime = pByteArray.getLong();
 
@@ -152,7 +152,7 @@ public class ServerCommandModelSync extends ServerCommand {
     if (animationObject != null) {
       fAnimation = new Animation().initFrom(animationObject);
     }
-    fSound = (Sound) IJsonOption.SOUND.getFrom(jsonObject);
+    fSound = (SoundId) IJsonOption.SOUND.getFrom(jsonObject);
     fGameTime = IJsonOption.GAME_TIME.getFrom(jsonObject);
     fTurnTime = IJsonOption.TURN_TIME.getFrom(jsonObject);
     return this;

@@ -2,7 +2,7 @@ package com.balancedbytes.games.ffb.client.dialog;
 
 import com.balancedbytes.games.ffb.ClientMode;
 import com.balancedbytes.games.ffb.ReRolledAction;
-import com.balancedbytes.games.ffb.Sound;
+import com.balancedbytes.games.ffb.SoundId;
 import com.balancedbytes.games.ffb.StatusType;
 import com.balancedbytes.games.ffb.client.ClientData;
 import com.balancedbytes.games.ffb.client.FantasyFootballClient;
@@ -39,7 +39,7 @@ public class DialogBlockRollHandler extends DialogHandler {
         setDialog(new DialogBlockRoll(getClient(), fDialogParameter));
         getDialog().showDialog(this);
         if (!game.isHomePlaying())  {
-          playSound(Sound.QUESTION);
+          playSound(SoundId.QUESTION);
         }
       
       } else {

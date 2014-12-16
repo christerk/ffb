@@ -1,7 +1,7 @@
 package com.balancedbytes.games.ffb.net.commands;
 
-import com.balancedbytes.games.ffb.Sound;
-import com.balancedbytes.games.ffb.SoundFactory;
+import com.balancedbytes.games.ffb.SoundId;
+import com.balancedbytes.games.ffb.SoundIdFactory;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.bytearray.ByteList;
 import com.balancedbytes.games.ffb.json.IJsonOption;
@@ -18,13 +18,13 @@ import com.eclipsesource.json.JsonValue;
  */
 public class ServerCommandSound extends ServerCommand {
   
-  private Sound fSound;
+  private SoundId fSound;
   
   public ServerCommandSound() {
     super();
   }
 
-  public ServerCommandSound(Sound pSound) {
+  public ServerCommandSound(SoundId pSound) {
     fSound = pSound;
   }
   
@@ -32,7 +32,7 @@ public class ServerCommandSound extends ServerCommand {
     return NetCommandId.SERVER_SOUND;
   }
   
-  public Sound getSound() {
+  public SoundId getSound() {
     return fSound;
   }
   
@@ -55,7 +55,7 @@ public class ServerCommandSound extends ServerCommand {
   public int initFrom(ByteArray pByteArray) {
     int byteArraySerializationVersion = pByteArray.getSmallInt();
     setCommandNr(pByteArray.getSmallInt());
-    fSound = new SoundFactory().forId(pByteArray.getByte());
+    fSound = new SoundIdFactory().forId(pByteArray.getByte());
     return byteArraySerializationVersion;
   }
   
@@ -73,7 +73,7 @@ public class ServerCommandSound extends ServerCommand {
     JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
     UtilNetCommand.validateCommandId(this, (NetCommandId) IJsonOption.NET_COMMAND_ID.getFrom(jsonObject));
     setCommandNr(IJsonOption.COMMAND_NR.getFrom(jsonObject));
-    fSound = (Sound) IJsonOption.SOUND.getFrom(jsonObject);
+    fSound = (SoundId) IJsonOption.SOUND.getFrom(jsonObject);
     return this;
   }
     

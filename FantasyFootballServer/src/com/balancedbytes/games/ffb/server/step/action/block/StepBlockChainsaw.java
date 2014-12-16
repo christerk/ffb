@@ -4,7 +4,7 @@ import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.InjuryType;
 import com.balancedbytes.games.ffb.ReRolledAction;
 import com.balancedbytes.games.ffb.Skill;
-import com.balancedbytes.games.ffb.Sound;
+import com.balancedbytes.games.ffb.SoundId;
 import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
@@ -109,7 +109,7 @@ public class StepBlockChainsaw extends AbstractStepWithReRoll {
       if (!dropChainsawPlayer) {
         boolean reRolled = ((getReRolledAction() == ReRolledAction.CHAINSAW) && (getReRollSource() != null));
         if (!reRolled) {
-          getResult().setSound(Sound.CHAINSAW);
+          getResult().setSound(SoundId.CHAINSAW);
         }
         int roll = getGameState().getDiceRoller().rollChainsaw();
         int minimumRoll = DiceInterpreter.getInstance().minimumRollChainsaw();
