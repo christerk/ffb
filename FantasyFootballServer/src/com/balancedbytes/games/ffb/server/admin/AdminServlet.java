@@ -90,6 +90,7 @@ public class AdminServlet extends HttpServlet {
   private static final String _XML_ATTRIBUTE_TEAM_HOME_ID = "teamHomeId";
   private static final String _XML_ATTRIBUTE_TEAM_AWAY_ID = "teamAwayId";
   private static final String _XML_ATTRIBUTE_GAME_STATUS = "gameStatus";
+  private static final String _XML_ATTRIBUTE_SIZE = "size";
 
   private static final DateFormat _TIMESTAMP_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS"); // 2001-07-04T12:08:56.235
 
@@ -353,6 +354,7 @@ public class AdminServlet extends HttpServlet {
       DbAdminListByIdQuery listQuery = (DbAdminListByIdQuery) getServer().getDbQueryFactory().getStatement(DbStatementId.ADMIN_LIST_BY_ID_QUERY);
       listQuery.execute(adminList, gameId);
     }
+    UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_SIZE, adminList.size());
     if (adminList.size() > 0) {
       UtilXml.startElement(pHandler, _XML_TAG_LIST, attributes);
       for (AdminListEntry listEntry : adminList.getEntries()) {
