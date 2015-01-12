@@ -1,9 +1,6 @@
 package com.balancedbytes.games.ffb.net.commands;
 
 import com.balancedbytes.games.ffb.ClientStateId;
-import com.balancedbytes.games.ffb.ClientStateIdFactory;
-import com.balancedbytes.games.ffb.bytearray.ByteArray;
-import com.balancedbytes.games.ffb.bytearray.ByteList;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.net.NetCommand;
@@ -36,23 +33,6 @@ public class ClientCommandDebugClientState extends NetCommand {
   
   public ClientStateId getClientStateId() {
     return fClientStateId;
-  }
-  
-  // ByteArray serialization
-
-  public int getByteArraySerializationVersion() {
-    return 1;
-  }
-  
-  public void addTo(ByteList pByteList) {
-    pByteList.addSmallInt(getByteArraySerializationVersion());
-    pByteList.addByte((byte) ((getClientStateId() != null) ? getClientStateId().getId() : 0));
-  }
-  
-  public int initFrom(ByteArray pByteArray) {
-    int byteArraySerializationVersion = pByteArray.getSmallInt();
-    fClientStateId = new ClientStateIdFactory().forId(pByteArray.getByte());
-    return byteArraySerializationVersion;
   }
   
   // JSON serialization

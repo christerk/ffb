@@ -4,9 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.balancedbytes.games.ffb.PlayerChoiceMode;
-import com.balancedbytes.games.ffb.PlayerChoiceModeFactory;
-import com.balancedbytes.games.ffb.bytearray.ByteArray;
-import com.balancedbytes.games.ffb.bytearray.ByteList;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.Player;
@@ -70,25 +67,6 @@ public class ClientCommandPlayerChoice extends NetCommand {
 
   public PlayerChoiceMode getPlayerChoiceMode() {
     return fPlayerChoiceMode;
-  }
-  
-  // ByteArray serialization
-  
-  public int getByteArraySerializationVersion() {
-    return 1;
-  }
-  
-  public void addTo(ByteList pByteList) {
-    pByteList.addSmallInt(getByteArraySerializationVersion());
-    pByteList.addByte((byte) ((getPlayerChoiceMode() != null) ? getPlayerChoiceMode().getId() : 0));
-    pByteList.addStringArray(getPlayerIds());
-  }
-  
-  public int initFrom(ByteArray pByteArray) {
-    int byteArraySerializationVersion = pByteArray.getSmallInt();
-    fPlayerChoiceMode = new PlayerChoiceModeFactory().forId(pByteArray.getByte());
-    addPlayerIds(pByteArray.getStringArray());
-    return byteArraySerializationVersion;
   }
   
   // JSON serialization

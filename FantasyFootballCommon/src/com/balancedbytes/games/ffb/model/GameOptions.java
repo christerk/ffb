@@ -7,18 +7,14 @@ import javax.xml.transform.sax.TransformerHandler;
 
 import org.xml.sax.Attributes;
 
-import com.balancedbytes.games.ffb.bytearray.ByteArray;
-import com.balancedbytes.games.ffb.bytearray.IByteArrayReadable;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.IJsonSerializable;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.change.ModelChange;
 import com.balancedbytes.games.ffb.model.change.ModelChangeId;
-import com.balancedbytes.games.ffb.old.GameOptionValueOld;
 import com.balancedbytes.games.ffb.option.GameOptionBoolean;
 import com.balancedbytes.games.ffb.option.GameOptionFactory;
 import com.balancedbytes.games.ffb.option.GameOptionId;
-import com.balancedbytes.games.ffb.option.GameOptionIdFactory;
 import com.balancedbytes.games.ffb.option.IGameOption;
 import com.balancedbytes.games.ffb.xml.IXmlSerializable;
 import com.balancedbytes.games.ffb.xml.UtilXml;
@@ -30,7 +26,7 @@ import com.eclipsesource.json.JsonValue;
  * 
  * @author Kalimar
  */
-public class GameOptions implements IXmlSerializable, IByteArrayReadable, IJsonSerializable {
+public class GameOptions implements IXmlSerializable, IJsonSerializable {
 
   public static final String XML_TAG = "options";
 
@@ -156,25 +152,6 @@ public class GameOptions implements IXmlSerializable, IByteArrayReadable, IJsonS
 
   public boolean endXmlElement(String pXmlTag, String pValue) {
     return XML_TAG.equals(pXmlTag);
-  }
-
-  // ByteArray serialization
-
-  public int initFrom(ByteArray pByteArray) {
-    int byteArraySerializationVersion = pByteArray.getSmallInt();
-    int nrOfOptions = pByteArray.getSmallInt();
-    GameOptionIdFactory idFactory = new GameOptionIdFactory();
-    GameOptionFactory optionFactory = new GameOptionFactory();
-    for (int i = 0; i < nrOfOptions; i++) {
-      GameOptionValueOld gameOptionValue = new GameOptionValueOld();
-      gameOptionValue.initFrom(pByteArray);
-      // convert to new system
-      GameOptionId optionId = idFactory.forName(gameOptionValue.getOption().getName());
-      IGameOption gameOption = optionFactory.createGameOption(optionId);
-      gameOption.setValue(Integer.toString(gameOptionValue.getValue()));
-      addOption(gameOption);
-    }
-    return byteArraySerializationVersion;
   }
 
   // JSON serialization

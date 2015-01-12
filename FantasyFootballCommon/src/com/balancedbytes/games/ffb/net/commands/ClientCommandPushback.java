@@ -1,8 +1,6 @@
 package com.balancedbytes.games.ffb.net.commands;
 
 import com.balancedbytes.games.ffb.Pushback;
-import com.balancedbytes.games.ffb.bytearray.ByteArray;
-import com.balancedbytes.games.ffb.bytearray.ByteList;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.net.NetCommand;
@@ -37,24 +35,6 @@ public class ClientCommandPushback extends NetCommand {
   
   public Pushback getPushback() {
     return fPushback;
-  }
-  
-  // ByteArray serialization
-  
-  public int getByteArraySerializationVersion() {
-    return 1;
-  }
-  
-  public void addTo(ByteList pByteList) {
-    pByteList.addSmallInt(getByteArraySerializationVersion());
-    getPushback().addTo(pByteList);    
-  }
-  
-  public int initFrom(ByteArray pByteArray) {
-    int byteArraySerializationVersion = pByteArray.getSmallInt();
-    fPushback = new Pushback();
-    fPushback.initFrom(pByteArray);
-    return byteArraySerializationVersion;
   }
   
   // JSON serialization

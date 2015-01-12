@@ -20,9 +20,6 @@ import com.balancedbytes.games.ffb.Skill;
 import com.balancedbytes.games.ffb.SkillCategory;
 import com.balancedbytes.games.ffb.SkillCategoryFactory;
 import com.balancedbytes.games.ffb.SkillFactory;
-import com.balancedbytes.games.ffb.bytearray.ByteArray;
-import com.balancedbytes.games.ffb.bytearray.ByteList;
-import com.balancedbytes.games.ffb.bytearray.IByteArrayReadable;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.IJsonSerializable;
 import com.balancedbytes.games.ffb.json.UtilJson;
@@ -42,7 +39,7 @@ import com.eclipsesource.json.JsonValue;
  * 
  * @author Kalimar
  */
-public class RosterPosition implements IXmlSerializable, IByteArrayReadable, IJsonSerializable {
+public class RosterPosition implements IXmlSerializable, IJsonSerializable {
   
   public static final String XML_TAG = "position";
   
@@ -498,149 +495,6 @@ public class RosterPosition implements IXmlSerializable, IByteArrayReadable, IJs
     return complete;
   }
     
-  // ByteArray serialization
-  
-  public int getByteArraySerializationVersion() {
-    return 5;
-  }
-  
-  public void addTo(ByteList pByteList) {
-    
-    pByteList.addSmallInt(getByteArraySerializationVersion());
-    
-    pByteList.addString(getId());
-    pByteList.addString(getName());
-    pByteList.addString(getShorthand());
-    pByteList.addString(getDisplayName());
-    pByteList.addByte((byte) ((getType() != null) ? getType().getId() : 0));
-    pByteList.addByte((byte) ((getGender() != null) ? getGender().getId() : 0));
-    pByteList.addByte((byte) getQuantity());
-    pByteList.addByte((byte) getMovement());
-    pByteList.addByte((byte) getStrength());
-    pByteList.addByte((byte) getAgility());
-    pByteList.addByte((byte) getArmour());
-    pByteList.addInt(getCost());
-    pByteList.addString(getRace());
-
-    pByteList.addString(fUrlPortrait);
-    pByteList.addString(fUrlIconSet);
-    pByteList.addByte((byte) fNrOfIcons); 
-
-    // SkillCategories Normal
-    SkillCategory[] skillCategories = getSkillCategories(false);
-    byte[] idBytes = new byte[skillCategories.length];
-    for (int j = 0; j < skillCategories.length; j++) {
-      idBytes[j] = (byte) skillCategories[j].getId();
-    }
-    pByteList.addByteArray(idBytes);
-    
-    // SkillCategories Double
-    skillCategories = getSkillCategories(true);
-    idBytes = new byte[skillCategories.length];
-    for (int j = 0; j < skillCategories.length; j++) {
-      idBytes[j] = (byte) skillCategories[j].getId();
-    }
-    pByteList.addByteArray(idBytes);
-    
-    // Skills
-    Skill[] skills = getSkills();
-    idBytes = new byte[skills.length];
-    for (int j = 0; j < skills.length; j++) {
-      idBytes[j] = (byte) skills[j].getId();
-    }
-    pByteList.addByteArray(idBytes);
-    
-    pByteList.addByte((byte) skills.length);
-    for (int j = 0; j < skills.length; j++) {
-    	if (getSkillValue(skills[j]) > 0) {
-    		pByteList.addBoolean(true);
-    		pByteList.addSmallInt(getSkillValue(skills[j]));
-    	} else {
-    		pByteList.addBoolean(false);
-    	}
-    }
-    
-    pByteList.addBoolean(isUndead());
-    pByteList.addBoolean(isThrall());
-    pByteList.addString(getTeamWithPositionId());
-    
-  }
-  
-  public int initFrom(ByteArray pByteArray) {
-    
-    int byteArraySerializationVersion = pByteArray.getSmallInt(); 
-    
-    fId = pByteArray.getString();
-    setName(pByteArray.getString());
-    setShorthand(pByteArray.getString());
-    setDisplayName(pByteArray.getString());
-    setType(new PlayerTypeFactory().forId(pByteArray.getByte()));
-    setGender(new PlayerGenderFactory().forId(pByteArray.getByte()));
-    setQuantity(pByteArray.getByte());
-    setMovement(pByteArray.getByte());
-    setStrength(pByteArray.getByte());
-    setAgility(pByteArray.getByte());
-    setArmour(pByteArray.getByte());
-    setCost(pByteArray.getInt());
-    setRace(pByteArray.getString());
-    
-    fUrlPortrait = pByteArray.getString();
-    fUrlIconSet = pByteArray.getString();
-    fNrOfIcons = pByteArray.getByte();
-
-    SkillCategoryFactory skillCategoryFactory = new SkillCategoryFactory();
-    
-    // SkillCategories Normal
-    byte[] skillCategoryNormalIds = pByteArray.getByteArray();
-    for (int j = 0; j < skillCategoryNormalIds.length; j++) {
-      SkillCategory pSkillCategory = skillCategoryFactory.forId(skillCategoryNormalIds[j]);
-      if (pSkillCategory != null) {
-        fSkillCategoriesOnNormalRoll.add(pSkillCategory);
-      }
-    }
-
-    // SkillCategories Double
-    byte[] skillCategoryDoubleIds = pByteArray.getByteArray();
-    for (int j = 0; j < skillCategoryDoubleIds.length; j++) {
-      SkillCategory pSkillCategory = skillCategoryFactory.forId(skillCategoryDoubleIds[j]);
-      if (pSkillCategory != null) {
-        fSkillCategoriesOnDoubleRoll.add(pSkillCategory);
-      }
-    }
-    
-    // Skills
-    byte[] skillIds = pByteArray.getByteArray();
-    SkillFactory skillFactory = new SkillFactory();
-    for (int j = 0; j < skillIds.length; j++) {
-      Skill skill = skillFactory.forId(skillIds[j]);
-      if (skill != null) {
-        fSkillValues.put(skill, null);
-      }
-    }
-
-    if (byteArraySerializationVersion > 1) {
-    	int nrOfSkills = pByteArray.getByte();
-    	for (int j = 0; j < nrOfSkills; j++) {
-    		if (pByteArray.getBoolean()) {
-          Skill skill = skillFactory.forId(skillIds[j]);
-    			fSkillValues.put(skill, pByteArray.getSmallInt());
-    		}
-	    }
-    }
-    
-    if (byteArraySerializationVersion > 2) {
-    	setUndead(pByteArray.getBoolean());
-    	setThrall(pByteArray.getBoolean());
-    }
-    
-    if (byteArraySerializationVersion > 3) {
-    	setTeamWithPositionId(pByteArray.getString());
-    }
-    
-    return byteArraySerializationVersion;
-
-  }
-  
   // JSON serialization
   
   public JsonObject toJsonValue() {

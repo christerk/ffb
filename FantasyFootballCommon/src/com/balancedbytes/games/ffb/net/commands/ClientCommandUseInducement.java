@@ -4,11 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.balancedbytes.games.ffb.Card;
-import com.balancedbytes.games.ffb.CardFactory;
 import com.balancedbytes.games.ffb.InducementType;
-import com.balancedbytes.games.ffb.InducementTypeFactory;
-import com.balancedbytes.games.ffb.bytearray.ByteArray;
-import com.balancedbytes.games.ffb.bytearray.ByteList;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.net.NetCommand;
@@ -93,29 +89,6 @@ public class ClientCommandUseInducement extends NetCommand {
     }
   }
 
-  // ByteArray serialization
-  
-  public int getByteArraySerializationVersion() {
-    return 2;
-  }
-  
-  public void addTo(ByteList pByteList) {
-    pByteList.addSmallInt(getByteArraySerializationVersion());
-    pByteList.addByte((byte) ((getInducementType() != null) ? getInducementType().getId() : 0));
-    pByteList.addStringArray(getPlayerIds());
-    pByteList.addSmallInt((getCard() != null) ? getCard().getId() : 0);
-  }
-  
-  public int initFrom(ByteArray pByteArray) {
-    int byteArraySerializationVersion = pByteArray.getSmallInt();
-    fInducementType = new InducementTypeFactory().forId(pByteArray.getByte());
-    addPlayerIds(pByteArray.getStringArray());
-    if (byteArraySerializationVersion > 1) {
-    	fCard = new CardFactory().forId(pByteArray.getSmallInt());
-    }
-    return byteArraySerializationVersion;
-  }
-  
   // JSON serialization
 
   public JsonObject toJsonValue() {

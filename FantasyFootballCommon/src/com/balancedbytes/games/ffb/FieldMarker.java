@@ -1,8 +1,5 @@
 package com.balancedbytes.games.ffb;
 
-import com.balancedbytes.games.ffb.bytearray.ByteArray;
-import com.balancedbytes.games.ffb.bytearray.ByteList;
-import com.balancedbytes.games.ffb.bytearray.IByteArrayReadable;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.IJsonSerializable;
 import com.balancedbytes.games.ffb.json.UtilJson;
@@ -16,7 +13,7 @@ import com.eclipsesource.json.JsonValue;
  * 
  * @author Kalimar
  */
-public class FieldMarker implements IByteArrayReadable, IJsonSerializable {
+public class FieldMarker implements IJsonSerializable {
   
   private FieldCoordinate fCoordinate;
   private String fHomeText;
@@ -69,27 +66,6 @@ public class FieldMarker implements IByteArrayReadable, IJsonSerializable {
   
   public static FieldMarker transform(FieldMarker pFieldMarker) {
     return (pFieldMarker != null) ? pFieldMarker.transform() : null;
-  }
-  
-  // ByteArray serialization
-  
-  public int getByteArraySerializationVersion() {
-    return 1;
-  }
-  
-  public void addTo(ByteList pByteList) {
-    pByteList.addSmallInt(getByteArraySerializationVersion());
-    pByteList.addFieldCoordinate(getCoordinate());
-    pByteList.addString(getHomeText());
-    pByteList.addString(getAwayText());
-  }
-    
-  public int initFrom(ByteArray pByteArray) {
-    int byteArraySerializationVersion = pByteArray.getSmallInt();
-    fCoordinate = pByteArray.getFieldCoordinate();
-    fHomeText = pByteArray.getString();
-    fAwayText = pByteArray.getString();
-    return byteArraySerializationVersion;
   }
   
   // JSON serialization

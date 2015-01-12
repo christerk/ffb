@@ -2,8 +2,6 @@ package com.balancedbytes.games.ffb.report;
 
 import com.balancedbytes.games.ffb.PlayerState;
 import com.balancedbytes.games.ffb.SeriousInjury;
-import com.balancedbytes.games.ffb.SeriousInjuryFactory;
-import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.eclipsesource.json.JsonObject;
@@ -51,17 +49,6 @@ public class ReportApothecaryChoice implements IReport {
   
   public IReport transform() {
     return new ReportApothecaryChoice(getPlayerId(), getPlayerState(), getSeriousInjury());
-  }
-  
-  // ByteArray serialization
-    
-  public int initFrom(ByteArray pByteArray) {
-    UtilReport.validateReportId(this, new ReportIdFactory().forId(pByteArray.getSmallInt()));
-    int byteArraySerializationVersion = pByteArray.getSmallInt();
-    fPlayerId = pByteArray.getString();
-    fPlayerState = new PlayerState(pByteArray.getSmallInt());
-    fSeriousInjury = new SeriousInjuryFactory().forId(pByteArray.getByte());
-    return byteArraySerializationVersion;
   }
   
   // JSON serialization

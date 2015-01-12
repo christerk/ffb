@@ -1,8 +1,6 @@
 package com.balancedbytes.games.ffb.report;
 
 import com.balancedbytes.games.ffb.KickoffResult;
-import com.balancedbytes.games.ffb.KickoffResultFactory;
-import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.eclipsesource.json.JsonObject;
@@ -62,19 +60,6 @@ public class ReportKickoffExtraReRoll implements IReport {
   
   public IReport transform() {
     return new ReportKickoffExtraReRoll(getKickoffResult(), getRollAway(), isAwayGainsReRoll(), getRollHome(), isHomeGainsReRoll());
-  }
-  
-  // ByteArray serialization
-  
-  public int initFrom(ByteArray pByteArray) {
-    UtilReport.validateReportId(this, new ReportIdFactory().forId(pByteArray.getSmallInt()));
-    int byteArraySerializationVersion = pByteArray.getSmallInt();
-    fKickoffResult = new KickoffResultFactory().forId((int) pByteArray.getByte());
-    fRollHome = pByteArray.getByte();
-    fHomeGainsReRoll = pByteArray.getBoolean();
-    fRollAway = pByteArray.getByte();
-    fAwayGainsReRoll = pByteArray.getBoolean();
-    return byteArraySerializationVersion;
   }
   
   // JSON serialization

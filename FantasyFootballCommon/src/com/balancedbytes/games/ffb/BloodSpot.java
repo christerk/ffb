@@ -1,8 +1,5 @@
 package com.balancedbytes.games.ffb;
 
-import com.balancedbytes.games.ffb.bytearray.ByteArray;
-import com.balancedbytes.games.ffb.bytearray.ByteList;
-import com.balancedbytes.games.ffb.bytearray.IByteArrayReadable;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.IJsonSerializable;
 import com.balancedbytes.games.ffb.json.UtilJson;
@@ -16,7 +13,7 @@ import com.eclipsesource.json.JsonValue;
  * 
  * @author Kalimar
  */
-public class BloodSpot implements IByteArrayReadable, IJsonSerializable {
+public class BloodSpot implements IJsonSerializable {
   
   private PlayerState fInjury;
   private FieldCoordinate fCoordinate;
@@ -57,25 +54,6 @@ public class BloodSpot implements IByteArrayReadable, IJsonSerializable {
     return (pBloodspot != null) ? pBloodspot.transform() : null;
   }
 
-  // ByteArray serialization
-  
-  public int getByteArraySerializationVersion() {
-    return 1;
-  }
-  
-  public void addTo(ByteList pByteList) {
-    pByteList.addSmallInt(getByteArraySerializationVersion());
-    pByteList.addSmallInt((getInjury() != null) ? getInjury().getId() : 0);
-    pByteList.addFieldCoordinate(getCoordinate());
-  }
-  
-  public int initFrom(ByteArray pByteArray) {
-    int byteArraySerializationVersion = pByteArray.getSmallInt();
-    fInjury = new PlayerState(pByteArray.getSmallInt());
-    fCoordinate = pByteArray.getFieldCoordinate();
-    return byteArraySerializationVersion;
-  }
-  
   // JSON serialization
   
   public JsonObject toJsonValue() {

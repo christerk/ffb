@@ -17,9 +17,6 @@ import com.balancedbytes.games.ffb.SeriousInjuryFactory;
 import com.balancedbytes.games.ffb.Skill;
 import com.balancedbytes.games.ffb.SkillCategory;
 import com.balancedbytes.games.ffb.SkillFactory;
-import com.balancedbytes.games.ffb.bytearray.ByteArray;
-import com.balancedbytes.games.ffb.bytearray.ByteList;
-import com.balancedbytes.games.ffb.bytearray.IByteArrayReadable;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.IJsonSerializable;
 import com.balancedbytes.games.ffb.json.UtilJson;
@@ -35,7 +32,7 @@ import com.eclipsesource.json.JsonValue;
  * 
  * @author Kalimar
  */
-public class Player implements IXmlSerializable, IByteArrayReadable, IJsonSerializable {
+public class Player implements IXmlSerializable, IJsonSerializable {
   
   public static final String XML_TAG = "player";
   
@@ -507,52 +504,6 @@ public class Player implements IXmlSerializable, IByteArrayReadable, IJsonSerial
     }
     return complete;
   }
-    
-  // ByteArray serialization
-  
-  public int getByteArraySerializationVersion() {
-    return 2;
-  }
-    
-  public void addTo(ByteList pByteList) {
-    
-    pByteList.addString(getId());
-    pByteList.addSmallInt(getByteArraySerializationVersion());    
-    pByteList.addByte((byte) getNr());
-    pByteList.addString(getPositionId());
-    pByteList.addString(getName());
-    pByteList.addByte((byte) ((getPlayerGender() != null) ? getPlayerGender().getId() : 0));
-    pByteList.addByte((byte) ((getPlayerType() != null) ? getPlayerType().getId() : 0));
-
-    pByteList.addByte((byte) getMovement());
-    pByteList.addByte((byte) getStrength());
-    pByteList.addByte((byte) getAgility());
-    pByteList.addByte((byte) getArmour());
-    
-    pByteList.addByte((byte) fLastingInjuries.size());
-    if (fLastingInjuries.size() > 0) {
-      for (SeriousInjury injury : fLastingInjuries) {
-        pByteList.addByte((byte) injury.getId());
-      }
-    }
-    pByteList.addByte((byte) ((getRecoveringInjury() != null) ? getRecoveringInjury().getId() : 0));
-    
-    // pByteList.addString(getBaseIconPath());
-    pByteList.addString(fUrlPortrait);
-    pByteList.addByte((byte) getIconSetIndex());
-    // pByteList.addString(fIconUrlStandingHome);
-    // pByteList.addString(fIconUrlMovingHome);
-    // pByteList.addString(fIconUrlStandingAway);
-    // pByteList.addString(fIconUrlMovingAway);
-
-    Skill[] skills = getSkills();
-    byte[] idBytes = new byte[skills.length];
-    for (int j = 0; j < skills.length; j++) {
-      idBytes[j] = (byte) skills[j].getId();
-    }
-    pByteList.addByteArray(idBytes);
-    
-  }
   
   public void init(Player pPlayer) {
     
@@ -580,50 +531,6 @@ public class Player implements IXmlSerializable, IByteArrayReadable, IJsonSerial
       addSkill(skill);
     }
     
-  }
-      
-  public int initFrom(ByteArray pByteArray) {
-    
-    fId = pByteArray.getString();
-    int byteArraySerializationVersion = pByteArray.getSmallInt();
-    setNr(pByteArray.getByte());
-    setPositionId(pByteArray.getString());
-    setName(pByteArray.getString());
-    setGender(new PlayerGenderFactory().forId(pByteArray.getByte()));
-    setType(new PlayerTypeFactory().forId(pByteArray.getByte()));
-
-    setMovement(pByteArray.getByte());
-    setStrength(pByteArray.getByte());
-    setAgility(pByteArray.getByte());
-    setArmour(pByteArray.getByte());
-
-    int nrOfLastingInjuries = pByteArray.getByte();
-    SeriousInjuryFactory seriousInjuryFactory = new SeriousInjuryFactory();
-    for (int i = 0; i < nrOfLastingInjuries; i++) {
-      addLastingInjury(seriousInjuryFactory.forId(pByteArray.getByte()));
-    }
-    fRecoveringInjury = seriousInjuryFactory.forId(pByteArray.getByte());
-
-    if (byteArraySerializationVersion < 2) {
-      pByteArray.getString();  // old: baseIconPath
-    }
-    setUrlPortrait(pByteArray.getString());
-    fIconSetIndex = pByteArray.getByte();
-    if (byteArraySerializationVersion < 2) {
-      pByteArray.getString();  // old: iconUrlStandingHome
-      pByteArray.getString();  // old: iconUrlMovingHome
-      pByteArray.getString();  // old: iconUrlStandingAway
-      pByteArray.getString();  // old: iconUrlMovingAway
-    }
-
-    byte[] skillIds = pByteArray.getByteArray();
-    SkillFactory skillFactory = new SkillFactory();
-    for (int j = 0; j < skillIds.length; j++) {
-      addSkill(skillFactory.forId(skillIds[j]));
-    }
-    
-    return byteArraySerializationVersion;
-
   }
   
   // JSON serialization

@@ -1,6 +1,5 @@
 package com.balancedbytes.games.ffb.report;
 
-import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.eclipsesource.json.JsonObject;
@@ -36,15 +35,6 @@ public class ReportHandOver implements IReport {
   
   public IReport transform() {
     return new ReportHandOver(getCatcherId());
-  }
-  
-  // ByteArray serialization
-  
-  public int initFrom(ByteArray pByteArray) {
-    UtilReport.validateReportId(this, new ReportIdFactory().forId(pByteArray.getSmallInt()));
-    int byteArraySerializationVersion = pByteArray.getSmallInt();
-    fCatcherId = pByteArray.getString();
-    return byteArraySerializationVersion;
   }
   
   // JSON serialization

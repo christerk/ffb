@@ -10,9 +10,6 @@ import javax.xml.transform.sax.TransformerHandler;
 
 import org.xml.sax.Attributes;
 
-import com.balancedbytes.games.ffb.bytearray.ByteArray;
-import com.balancedbytes.games.ffb.bytearray.ByteList;
-import com.balancedbytes.games.ffb.bytearray.IByteArrayReadable;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.IJsonSerializable;
 import com.balancedbytes.games.ffb.json.UtilJson;
@@ -29,7 +26,7 @@ import com.eclipsesource.json.JsonValue;
  * 
  * @author Kalimar
  */
-public class GameList implements IXmlSerializable, IByteArrayReadable, IJsonSerializable {
+public class GameList implements IXmlSerializable, IJsonSerializable {
     
   // <gameList>
   //   <game id="4765261" started="2009-05-05T11:50:20.345">
@@ -117,32 +114,6 @@ public class GameList implements IXmlSerializable, IByteArrayReadable, IJsonSeri
   
   public boolean endXmlElement(String pXmlTag, String pValue) {
     return XML_TAG.equals(pXmlTag);
-  }
-  
-  // ByteArray serialization
-  
-  public int getByteArraySerializationVersion() {
-    return 1;
-  }
-  
-  public void addTo(ByteList pByteList) {
-    pByteList.addSmallInt(getByteArraySerializationVersion());
-    GameListEntry[] gameListEntries = getEntries();
-    pByteList.addByte((byte) gameListEntries.length);
-    for (GameListEntry gameListEntry : gameListEntries) {
-      gameListEntry.addTo(pByteList);
-    }
-  }
-  
-  public int initFrom(ByteArray pByteArray) {
-  	int byteArraySerializationVersion = pByteArray.getSmallInt();
-    int nrOfGameListEntries = pByteArray.getByte();
-    for (int i = 0; i < nrOfGameListEntries; i++) {
-      GameListEntry gameListEntry = new GameListEntry();
-      gameListEntry.initFrom(pByteArray);
-      add(gameListEntry);
-    }
-    return byteArraySerializationVersion;
   }
   
   // JSON serialization

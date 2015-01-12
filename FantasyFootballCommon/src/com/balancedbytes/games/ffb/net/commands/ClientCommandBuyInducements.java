@@ -5,8 +5,6 @@ import java.util.List;
 
 import com.balancedbytes.games.ffb.Skill;
 import com.balancedbytes.games.ffb.SkillFactory;
-import com.balancedbytes.games.ffb.bytearray.ByteArray;
-import com.balancedbytes.games.ffb.bytearray.ByteList;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.InducementSet;
@@ -105,61 +103,6 @@ public class ClientCommandBuyInducements extends NetCommand {
     return fAvailableGold;
   }
 
-  // ByteArray serialization
-
-  public int getByteArraySerializationVersion() {
-    return 3;
-  }
-
-  public void addTo(ByteList pByteList) {
-    pByteList.addSmallInt(getByteArraySerializationVersion());
-    pByteList.addString(getTeamId());
-    if (getInducementSet() != null) {
-      pByteList.addBoolean(true);
-      getInducementSet().addTo(pByteList);
-    } else {
-      pByteList.addBoolean(false);
-    }
-    pByteList.addStringArray(getStarPlayerPositionIds());
-    pByteList.addInt(getAvailableGold());
-    pByteList.addStringArray(getMercenaryPositionIds());
-    Skill[] mercenarySkills = getMercenarySkills();
-    byte[] mercenarySkillIds = new byte[mercenarySkills.length];
-    for (int i = 0; i < mercenarySkillIds.length; i++) {
-      if (mercenarySkills[i] != null) {
-        mercenarySkillIds[i] = (byte) mercenarySkills[i].getId();
-      } else {
-        mercenarySkillIds[i] = (byte) 0;
-      }
-    }
-    pByteList.addByteArray(mercenarySkillIds);
-  }
-
-  public int initFrom(ByteArray pByteArray) {
-    int byteArraySerializationVersion = pByteArray.getSmallInt();
-    fTeamId = pByteArray.getString();
-    if (pByteArray.getBoolean()) {
-      fInducementSet = new InducementSet();
-      fInducementSet.initFrom(pByteArray);
-    }
-    String[] starPlayerPositionIds = pByteArray.getStringArray();
-    for (int i = 0; i < starPlayerPositionIds.length; i++) {
-      addStarPlayerPositionId(starPlayerPositionIds[i]);
-    }
-    if (byteArraySerializationVersion > 1) {
-      fAvailableGold = pByteArray.getInt();
-    }
-    if (byteArraySerializationVersion > 2) {
-      String[] mercenaryPositionIds = pByteArray.getStringArray();
-      byte[] mercenarySkillIds = pByteArray.getByteArray();
-      SkillFactory skillFactory = new SkillFactory();
-      for (int i = 0; i < mercenaryPositionIds.length; i++) {
-        addMercenaryPosition(mercenaryPositionIds[i], skillFactory.forId(mercenarySkillIds[i]));
-      }
-    }
-    return byteArraySerializationVersion;
-  }
-  
   // JSON serialization
   
   public JsonObject toJsonValue() {

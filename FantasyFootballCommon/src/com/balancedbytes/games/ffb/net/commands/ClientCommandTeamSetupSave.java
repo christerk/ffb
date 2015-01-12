@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.balancedbytes.games.ffb.FieldCoordinate;
-import com.balancedbytes.games.ffb.bytearray.ByteArray;
-import com.balancedbytes.games.ffb.bytearray.ByteList;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.net.NetCommand;
@@ -82,33 +80,6 @@ public class ClientCommandTeamSetupSave extends NetCommand {
         addPlayerCoordinate(playerCoordinate);
       }
     }
-  }
-  
-  // ByteArray serialization
-  
-  public int getByteArraySerializationVersion() {
-    return 1;
-  }
-  
-  public void addTo(ByteList pByteList) {
-    pByteList.addSmallInt(getByteArraySerializationVersion());
-    pByteList.addString(getSetupName());
-    pByteList.addByteArray(getPlayerNumbers());
-    pByteList.addByte((byte) getPlayerCoordinates().length);
-    for (int i = 0; i < getPlayerCoordinates().length; i++) {
-      pByteList.addFieldCoordinate(getPlayerCoordinates()[i]);
-    }
-  }
-  
-  public int initFrom(ByteArray pByteArray) {
-    int byteArraySerializationVersion = pByteArray.getSmallInt();
-    fSetupName = pByteArray.getString();
-    addPlayerNumbers(pByteArray.getByteArrayAsIntArray());
-    int nrOfPlayerCoordinates = pByteArray.getByte();
-    for (int i = 0; i < nrOfPlayerCoordinates; i++) {
-      addPlayerCoordinate(pByteArray.getFieldCoordinate());
-    }
-    return byteArraySerializationVersion;
   }
   
   // JSON serialization

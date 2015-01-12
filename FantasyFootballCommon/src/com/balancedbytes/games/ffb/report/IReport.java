@@ -1,13 +1,12 @@
 package com.balancedbytes.games.ffb.report;
 
-import com.balancedbytes.games.ffb.bytearray.IByteArrayReadable;
 import com.balancedbytes.games.ffb.json.IJsonSerializable;
 
 /**
  * 
  * @author Kalimar
  */
-public interface IReport extends IByteArrayReadable, IJsonSerializable {
+public interface IReport extends IJsonSerializable {
   
   public static final String XML_TAG = "report";
   

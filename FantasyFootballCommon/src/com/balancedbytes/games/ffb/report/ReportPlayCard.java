@@ -1,8 +1,6 @@
 package com.balancedbytes.games.ffb.report;
 
 import com.balancedbytes.games.ffb.Card;
-import com.balancedbytes.games.ffb.CardFactory;
-import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.eclipsesource.json.JsonObject;
@@ -54,17 +52,6 @@ public class ReportPlayCard implements IReport {
   
   public IReport transform() {
     return new ReportPlayCard(getTeamId(), getCard(), getPlayerId());
-  }
-  
-  // ByteArray serialization
-  
-  public int initFrom(ByteArray pByteArray) {
-    UtilReport.validateReportId(this, new ReportIdFactory().forId(pByteArray.getSmallInt()));
-    int byteArraySerializationVersion = pByteArray.getSmallInt();
-    fTeamId = pByteArray.getString();
-    fCard = new CardFactory().forId(pByteArray.getSmallInt());
-    fPlayerId = pByteArray.getString();
-    return byteArraySerializationVersion;
   }
   
   // JSON serialization

@@ -1,6 +1,5 @@
 package com.balancedbytes.games.ffb.net.commands;
 
-import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.Game;
@@ -39,18 +38,6 @@ public class ServerCommandGameState extends ServerCommand {
   
   public boolean isReplayable() {
     return false;
-  }
-  
-  // ByteArray serialization
-  
-  public int initFrom(ByteArray pByteArray) {
-    int byteArraySerializationVersion = pByteArray.getSmallInt();
-    setCommandNr(pByteArray.getSmallInt());
-    if (pByteArray.getBoolean()) {
-      fGame = new Game();
-      fGame.initFrom(pByteArray);
-    }
-    return byteArraySerializationVersion;
   }
   
   // JSON serialization

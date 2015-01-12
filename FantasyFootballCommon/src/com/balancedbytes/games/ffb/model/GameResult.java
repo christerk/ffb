@@ -1,8 +1,5 @@
 package com.balancedbytes.games.ffb.model;
 
-import com.balancedbytes.games.ffb.bytearray.ByteArray;
-import com.balancedbytes.games.ffb.bytearray.ByteList;
-import com.balancedbytes.games.ffb.bytearray.IByteArrayReadable;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.IJsonSerializable;
 import com.balancedbytes.games.ffb.json.UtilJson;
@@ -14,7 +11,7 @@ import com.eclipsesource.json.JsonValue;
  * 
  * @author Kalimar
  */
-public class GameResult implements IByteArrayReadable, IJsonSerializable {
+public class GameResult implements IJsonSerializable {
   
   private TeamResult fTeamResultHome;
   private TeamResult fTeamResultAway;
@@ -75,25 +72,6 @@ public class GameResult implements IByteArrayReadable, IJsonSerializable {
     } else {
       return getTeamResultAway().getPlayerResult(pPlayer);
     }
-  }
-  
-  // ByteArray serialization
-
-  public int getByteArraySerializationVersion() {
-    return 1;
-  }  
-
-  public void addTo(ByteList pByteList) {
-    pByteList.addByte((byte) getByteArraySerializationVersion());
-    getTeamResultHome().addTo(pByteList);
-    getTeamResultAway().addTo(pByteList);
-  }
-
-  public int initFrom(ByteArray pByteArray) {
-    int byteArraySerializationVersion = pByteArray.getByte();
-    getTeamResultHome().initFrom(pByteArray);
-    getTeamResultAway().initFrom(pByteArray);
-    return byteArraySerializationVersion;
   }
   
   // JSON serialization

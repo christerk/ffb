@@ -5,7 +5,6 @@ import java.util.List;
 
 import com.balancedbytes.games.ffb.HeatExhaustion;
 import com.balancedbytes.games.ffb.KnockoutRecovery;
-import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.util.ArrayTool;
@@ -85,27 +84,6 @@ public class ReportTurnEnd implements IReport {
   
   public IReport transform() {
     return new ReportTurnEnd(getPlayerIdTouchdown(), getKnockoutRecoveries(), getHeatExhaustions());
-  }
-  
-  // ByteArray serialization
-  
-  public int initFrom(ByteArray pByteArray) {
-    UtilReport.validateReportId(this, new ReportIdFactory().forId(pByteArray.getSmallInt()));
-    int byteArraySerializationVersion = pByteArray.getSmallInt();
-    fPlayerIdTouchdown = pByteArray.getString();
-    int nrOfRecoveries = pByteArray.getByte();
-    for (int i = 0; i < nrOfRecoveries; i++) {
-      KnockoutRecovery knockoutRecovery = new KnockoutRecovery();
-      knockoutRecovery.initFrom(pByteArray);
-      add(knockoutRecovery);
-    }
-    int nrOfExhaustions = pByteArray.getByte();
-    for (int i = 0; i < nrOfExhaustions; i++) {
-      HeatExhaustion heatExhaustion = new HeatExhaustion();
-      heatExhaustion.initFrom(pByteArray);
-      add(heatExhaustion);
-    }
-    return byteArraySerializationVersion;
   }
   
   // JSON serialization

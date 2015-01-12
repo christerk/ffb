@@ -34,7 +34,6 @@ import com.balancedbytes.games.ffb.model.AnimationTypeFactory;
 import com.balancedbytes.games.ffb.model.change.ModelChangeIdFactory;
 import com.balancedbytes.games.ffb.net.NetCommandIdFactory;
 import com.balancedbytes.games.ffb.net.ServerStatusFactory;
-import com.balancedbytes.games.ffb.old.GameOptionFactoryOld;
 import com.balancedbytes.games.ffb.option.GameOptionIdFactory;
 import com.balancedbytes.games.ffb.report.ReportIdFactory;
 
@@ -161,7 +160,6 @@ public interface IJsonOption {
                 JsonObjectOption GAME_LIST = new JsonObjectOption("gameList");
                  JsonArrayOption GAME_LIST_ENTRIES = new JsonArrayOption("gameListEntries");
                 JsonStringOption GAME_NAME = new JsonStringOption("gameName");
-          JsonEnumWithNameOption GAME_OPTION = new JsonEnumWithNameOption("gameOption", new GameOptionFactoryOld());
                  JsonArrayOption GAME_OPTION_ARRAY = new JsonArrayOption("gameOptionArray");
           JsonEnumWithNameOption GAME_OPTION_ID = new JsonEnumWithNameOption("gameOptionId", new GameOptionIdFactory());
                 JsonStringOption GAME_OPTION_VALUE = new JsonStringOption("gameOptionValue");         

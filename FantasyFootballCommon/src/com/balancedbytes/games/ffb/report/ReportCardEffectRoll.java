@@ -2,7 +2,6 @@ package com.balancedbytes.games.ffb.report;
 
 import com.balancedbytes.games.ffb.Card;
 import com.balancedbytes.games.ffb.CardEffect;
-import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.eclipsesource.json.JsonObject;
@@ -55,13 +54,6 @@ public class ReportCardEffectRoll implements IReport {
     ReportCardEffectRoll transformedReport = new ReportCardEffectRoll(getCard(), getRoll());
     transformedReport.setCardEffect(getCardEffect());
     return transformedReport;
-  }
-  
-  // ByteArray serialization
-  
-  public int initFrom(ByteArray pByteArray) {
-    // nothing to do - will be deleted later on
-    return 0;
   }
   
   // JSON serialization

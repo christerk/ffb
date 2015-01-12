@@ -8,7 +8,6 @@ import com.balancedbytes.games.ffb.CardFactory;
 import com.balancedbytes.games.ffb.IDialogParameter;
 import com.balancedbytes.games.ffb.InducementType;
 import com.balancedbytes.games.ffb.InducementTypeFactory;
-import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.eclipsesource.json.JsonObject;
@@ -56,28 +55,6 @@ public class DialogUseInducementParameter implements IDialogParameter {
     return new DialogUseInducementParameter(getTeamId(), getInducementTypes(), getCards());
   }
 
-  // ByteArray serialization
-
-  public int initFrom(ByteArray pByteArray) {
-    int byteArraySerializationVersion = pByteArray.getSmallInt();
-    UtilDialogParameter.validateDialogId(this, new DialogIdFactory().forId(pByteArray.getByte()));
-    fTeamId = pByteArray.getString();
-    byte[] inducementIds = pByteArray.getByteArray();
-    fInducementTypes = new InducementType[inducementIds.length];
-    InducementTypeFactory inducementTypeFactory = new InducementTypeFactory();
-    for (int i = 0; i < fInducementTypes.length; i++) {
-      fInducementTypes[i] = inducementTypeFactory.forId(inducementIds[i]);
-    }
-    if (byteArraySerializationVersion > 1) {
-      fCards = new Card[pByteArray.getByte()];
-      CardFactory cardFactory = new CardFactory();
-      for (int i = 0; i < fCards.length; i++) {
-        fCards[i] = cardFactory.forId(pByteArray.getSmallInt());
-      }
-    }
-    return byteArraySerializationVersion;
-  }
-  
   // JSON serialization
   
   public JsonObject toJsonValue() {

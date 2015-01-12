@@ -6,7 +6,6 @@ import java.util.List;
 import com.balancedbytes.games.ffb.Direction;
 import com.balancedbytes.games.ffb.DirectionFactory;
 import com.balancedbytes.games.ffb.FieldCoordinate;
-import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.util.ArrayTool;
@@ -93,22 +92,6 @@ public class ReportScatterPlayer implements IReport {
   
   public IReport transform() {
     return new ReportScatterPlayer(FieldCoordinate.transform(getStartCoordinate()), FieldCoordinate.transform(getEndCoordinate()), new DirectionFactory().transform(getDirections()), getRolls());
-  }
-  
-  // ByteArray serialization
-  
-  public int initFrom(ByteArray pByteArray) {
-    UtilReport.validateReportId(this, new ReportIdFactory().forId(pByteArray.getSmallInt()));
-    int byteArraySerializationVersion = pByteArray.getSmallInt();
-    fStartCoordinate = pByteArray.getFieldCoordinate();
-    fEndCoordinate = pByteArray.getFieldCoordinate();
-    int nrOfDirections = pByteArray.getByte();
-    DirectionFactory directionFactory = new DirectionFactory();
-    for (int i = 0; i < nrOfDirections; i++) {
-      addDirection(directionFactory.forId(pByteArray.getByte()));
-    }
-    addRolls(pByteArray.getByteArrayAsIntArray());
-    return byteArraySerializationVersion;
   }
   
   // JSON serialization

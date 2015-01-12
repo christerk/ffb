@@ -1,6 +1,5 @@
 package com.balancedbytes.games.ffb.report;
 
-import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.eclipsesource.json.JsonObject;
@@ -42,16 +41,6 @@ public class ReportPassBlock implements IReport {
     return new ReportPassBlock(getTeamId(), isPassBlockAvailable());
   }
 
-  // ByteArray serialization
-
-  public int initFrom(ByteArray pByteArray) {
-    UtilReport.validateReportId(this, new ReportIdFactory().forId(pByteArray.getSmallInt()));
-    int byteArraySerializationVersion = pByteArray.getSmallInt();
-    fTeamId = pByteArray.getString();
-    fPassBlockAvailable = pByteArray.getBoolean();
-    return byteArraySerializationVersion;
-  }
-  
   // JSON serialization
   
   public JsonObject toJsonValue() {

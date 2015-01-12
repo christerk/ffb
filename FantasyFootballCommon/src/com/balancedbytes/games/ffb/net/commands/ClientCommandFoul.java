@@ -1,7 +1,5 @@
 package com.balancedbytes.games.ffb.net.commands;
 
-import com.balancedbytes.games.ffb.bytearray.ByteArray;
-import com.balancedbytes.games.ffb.bytearray.ByteList;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.net.NetCommand;
@@ -39,27 +37,6 @@ public class ClientCommandFoul extends NetCommand implements ICommandWithActingP
     return fDefenderId;
   }
 
-  // ByteArray serialization
-
-  public int getByteArraySerializationVersion() {
-    return 2;
-  }
-
-  public void addTo(ByteList pByteList) {
-    pByteList.addSmallInt(getByteArraySerializationVersion());
-    pByteList.addString(getActingPlayerId());
-    pByteList.addString(getDefenderId());
-  }
-
-  public int initFrom(ByteArray pByteArray) {
-    int byteArraySerializationVersion = pByteArray.getSmallInt();
-    if (byteArraySerializationVersion > 1) {
-      fActingPlayerId = pByteArray.getString();
-    }
-    fDefenderId = pByteArray.getString();
-    return byteArraySerializationVersion;
-  }
-  
   // JSON serialization
   
   public JsonObject toJsonValue() {

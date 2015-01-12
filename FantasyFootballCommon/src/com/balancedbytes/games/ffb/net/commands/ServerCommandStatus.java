@@ -1,12 +1,9 @@
 package com.balancedbytes.games.ffb.net.commands;
 
-import com.balancedbytes.games.ffb.bytearray.ByteArray;
-import com.balancedbytes.games.ffb.bytearray.ByteList;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.net.NetCommandId;
 import com.balancedbytes.games.ffb.net.ServerStatus;
-import com.balancedbytes.games.ffb.net.ServerStatusFactory;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
@@ -46,31 +43,6 @@ public class ServerCommandStatus extends ServerCommand {
     return false;
   }
 
-  // ByteArray serialization
-  
-  public int getByteArraySerializationVersion() {
-    return 1;
-  }
-  
-  public void addTo(ByteList pByteList) {
-    pByteList.addSmallInt(getByteArraySerializationVersion());
-    pByteList.addSmallInt(getCommandNr());
-    if (getServerStatus() != null) {
-      pByteList.addByte((byte) getServerStatus().getId());
-    } else {
-      pByteList.addByte((byte) 0);
-    }
-    pByteList.addString(getMessage());
-  }
-  
-  public int initFrom(ByteArray pByteArray) {
-    int byteArraySerializationVersion = pByteArray.getSmallInt();
-    setCommandNr(pByteArray.getSmallInt());
-    fServerStatus = new ServerStatusFactory().forId(pByteArray.getByte());
-    fMessage = pByteArray.getString();
-    return byteArraySerializationVersion;
-  }
-  
   // JSON serialization
 
   public JsonObject toJsonValue() {

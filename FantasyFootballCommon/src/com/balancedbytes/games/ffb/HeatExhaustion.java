@@ -1,8 +1,5 @@
 package com.balancedbytes.games.ffb;
 
-import com.balancedbytes.games.ffb.bytearray.ByteArray;
-import com.balancedbytes.games.ffb.bytearray.ByteList;
-import com.balancedbytes.games.ffb.bytearray.IByteArrayReadable;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.IJsonSerializable;
 import com.balancedbytes.games.ffb.json.UtilJson;
@@ -13,7 +10,7 @@ import com.eclipsesource.json.JsonValue;
  * 
  * @author Kalimar
  */
-public class HeatExhaustion implements IByteArrayReadable, IJsonSerializable {
+public class HeatExhaustion implements IJsonSerializable {
   
   private String fPlayerId;
   private boolean fExhausted;
@@ -40,28 +37,7 @@ public class HeatExhaustion implements IByteArrayReadable, IJsonSerializable {
   public int getRoll() {
     return fRoll;
   }
-  
-  // ByteArray serialization
-  
-  public int getByteArraySerializationVersion() {
-    return 1;
-  }
-  
-  public void addTo(ByteList pByteList) {
-    pByteList.addSmallInt(getByteArraySerializationVersion());
-    pByteList.addString(getPlayerId());
-    pByteList.addBoolean(isExhausted());
-    pByteList.addByte((byte) getRoll());
-  }
-  
-  public int initFrom(ByteArray pByteArray) {
-    int byteArraySerializationVersion = pByteArray.getSmallInt();
-    fPlayerId = pByteArray.getString();
-    fExhausted = pByteArray.getBoolean();
-    fRoll = pByteArray.getByte();
-    return byteArraySerializationVersion;
-  }
-  
+    
   // JSON serialization
   
   public JsonObject toJsonValue() {

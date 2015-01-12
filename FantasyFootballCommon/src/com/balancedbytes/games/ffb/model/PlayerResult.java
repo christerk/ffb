@@ -1,12 +1,7 @@
 package com.balancedbytes.games.ffb.model;
 
 import com.balancedbytes.games.ffb.SendToBoxReason;
-import com.balancedbytes.games.ffb.SendToBoxReasonFactory;
 import com.balancedbytes.games.ffb.SeriousInjury;
-import com.balancedbytes.games.ffb.SeriousInjuryFactory;
-import com.balancedbytes.games.ffb.bytearray.ByteArray;
-import com.balancedbytes.games.ffb.bytearray.ByteList;
-import com.balancedbytes.games.ffb.bytearray.IByteArrayReadable;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.IJsonSerializable;
 import com.balancedbytes.games.ffb.json.UtilJson;
@@ -20,7 +15,7 @@ import com.eclipsesource.json.JsonValue;
  * 
  * @author Kalimar
  */
-public class PlayerResult implements IByteArrayReadable, IJsonSerializable {
+public class PlayerResult implements IJsonSerializable {
   
   private int fCompletions;
   private int fTouchdowns;
@@ -335,60 +330,6 @@ public class PlayerResult implements IByteArrayReadable, IJsonSerializable {
   	}
   	ModelChange modelChange = new ModelChange(pModelChangeId, getPlayerId(), pValue);
   	getGame().notifyObservers(modelChange);
-  }
-  
-  // ByteArray serialization
-  
-  public int getByteArraySerializationVersion() {
-    return 1;
-  }
-  
-  public void addTo(ByteList pByteList) {
-    pByteList.addSmallInt(getByteArraySerializationVersion());
-    pByteList.addString(getPlayerId());
-    pByteList.addByte((byte) getCompletions());
-    pByteList.addByte((byte) getTouchdowns());
-    pByteList.addByte((byte) getInterceptions());
-    pByteList.addByte((byte) getCasualties());
-    pByteList.addByte((byte) getPlayerAwards());
-    pByteList.addByte((byte) getBlocks());
-    pByteList.addByte((byte) getFouls());
-    pByteList.addSmallInt(getRushing());
-    pByteList.addSmallInt(getPassing());
-    pByteList.addSmallInt(getCurrentSpps());
-    pByteList.addByte((byte) ((getSeriousInjury() != null) ? getSeriousInjury().getId() : 0));
-    pByteList.addByte((byte) ((getSendToBoxReason() != null) ? getSendToBoxReason().getId() : 0));
-    pByteList.addByte((byte) getSendToBoxTurn());
-    pByteList.addByte((byte) getSendToBoxHalf());
-    pByteList.addString(getSendToBoxByPlayerId());
-    pByteList.addByte((byte) getTurnsPlayed());
-    pByteList.addBoolean(hasUsedSecretWeapon());
-    pByteList.addBoolean(isDefecting());
-  }
-  
-  public int initFrom(ByteArray pByteArray) {
-    int byteArraySerializationVersion = pByteArray.getSmallInt();
-    String playerId = pByteArray.getString();
-    fPlayer = getTeamResult().getTeam().getPlayerById(playerId);
-    fCompletions = pByteArray.getByte();
-    fTouchdowns = pByteArray.getByte();
-    fInterceptions = pByteArray.getByte();
-    fCasualties = pByteArray.getByte();
-    fPlayerAwards = pByteArray.getByte();
-    fBlocks = pByteArray.getByte();
-    fFouls = pByteArray.getByte();
-    fRushing = pByteArray.getSmallInt();
-    fPassing = pByteArray.getSmallInt();
-    setCurrentSpps(pByteArray.getSmallInt());
-    fSeriousInjury = new SeriousInjuryFactory().forId(pByteArray.getByte());
-    fSendToBoxReason = new SendToBoxReasonFactory().forId(pByteArray.getByte());
-    fSendToBoxTurn = pByteArray.getByte();
-    fSendToBoxHalf = pByteArray.getByte();
-    fSendToBoxByPlayerId = pByteArray.getString();
-    fTurnsPlayed = pByteArray.getByte();
-    setHasUsedSecretWeapon(pByteArray.getBoolean());
-    setDefecting(pByteArray.getBoolean());
-    return byteArraySerializationVersion;
   }
   
   // JSON serialization

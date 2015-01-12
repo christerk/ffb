@@ -2,10 +2,6 @@ package com.balancedbytes.games.ffb.model;
 
 
 import com.balancedbytes.games.ffb.LeaderState;
-import com.balancedbytes.games.ffb.LeaderStateFactory;
-import com.balancedbytes.games.ffb.bytearray.ByteArray;
-import com.balancedbytes.games.ffb.bytearray.ByteList;
-import com.balancedbytes.games.ffb.bytearray.IByteArrayReadable;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.IJsonSerializable;
 import com.balancedbytes.games.ffb.json.UtilJson;
@@ -19,7 +15,7 @@ import com.eclipsesource.json.JsonValue;
  * 
  * @author Kalimar
  */
-public class TurnData implements IByteArrayReadable, IJsonSerializable {
+public class TurnData implements IJsonSerializable {
     
   private boolean fHomeData;
   private int fTurnNr;
@@ -232,47 +228,6 @@ public class TurnData implements IByteArrayReadable, IJsonSerializable {
   	String key = isHomeData() ? ModelChange.HOME : ModelChange.AWAY;
   	ModelChange modelChange = new ModelChange(pChangeId, key, pValue);
   	getGame().notifyObservers(modelChange);
-  }
-  
-  // ByteArray serialization
-  
-  public int getByteArraySerializationVersion() {
-  	return 1;
-  };
-  
-  public void addTo(ByteList pByteList) {
-    pByteList.addBoolean(isHomeData());
-    pByteList.addSmallInt(getByteArraySerializationVersion());
-    pByteList.addBoolean(isTurnStarted());
-    pByteList.addByte((byte) getTurnNr());
-    pByteList.addBoolean(isFirstTurnAfterKickoff());
-    pByteList.addByte((byte) getReRolls());
-    pByteList.addByte((byte) getApothecaries());
-    pByteList.addBoolean(isBlitzUsed());
-    pByteList.addBoolean(isFoulUsed());
-    pByteList.addBoolean(isReRollUsed());
-    pByteList.addBoolean(isHandOverUsed());
-    pByteList.addBoolean(isPassUsed());
-    pByteList.addByte((byte) ((getLeaderState() != null) ? getLeaderState().getId() : 0));
-    getInducementSet().addTo(pByteList);
-  }
-  
-  public int initFrom(ByteArray pByteArray) {
-    fHomeData = pByteArray.getBoolean();
-    int byteArraySerializationVersion = pByteArray.getSmallInt();
-    fTurnStarted = pByteArray.getBoolean();
-    fTurnNr = pByteArray.getByte();
-    fFirstTurnAfterKickoff = pByteArray.getBoolean();
-    fReRolls = pByteArray.getByte();
-    fApothecaries = pByteArray.getByte();
-    fBlitzUsed = pByteArray.getBoolean();
-    fFoulUsed = pByteArray.getBoolean();
-    fReRollUsed = pByteArray.getBoolean();
-    fHandOverUsed = pByteArray.getBoolean();
-    fPassUsed = pByteArray.getBoolean();
-    fLeaderState = new LeaderStateFactory().forId(pByteArray.getByte());
-    getInducementSet().initFrom(pByteArray);
-    return byteArraySerializationVersion;
   }
   
   // JSON serialization

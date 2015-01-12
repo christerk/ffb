@@ -3,8 +3,6 @@ package com.balancedbytes.games.ffb.report;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.balancedbytes.games.ffb.bytearray.ByteArray;
-import com.balancedbytes.games.ffb.bytearray.IByteArrayReadable;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.IJsonSerializable;
 import com.balancedbytes.games.ffb.json.UtilJson;
@@ -17,7 +15,7 @@ import com.eclipsesource.json.JsonValue;
  * 
  * @author Kalimar
  */
-public class ReportList implements IByteArrayReadable, IJsonSerializable {
+public class ReportList implements IJsonSerializable {
   
   private List<IReport> fReports;
   
@@ -81,23 +79,6 @@ public class ReportList implements IByteArrayReadable, IJsonSerializable {
     return transformedList;
   }
 
-  // ByteArray serialization
-  
-  public int initFrom(ByteArray pByteArray) {
-    int byteArraySerializationVersion = pByteArray.getSmallInt();  // byteArraySerializationVersion
-    int size = pByteArray.getSmallInt();
-    ReportIdFactory reportIdFactory = new ReportIdFactory();
-    for (int i = 0; i < size; i++) {
-      ReportId reportId = reportIdFactory.forId((pByteArray.getByte(pByteArray.getPosition()) & 0xff) * 256 + (pByteArray.getByte(pByteArray.getPosition() + 1) & 0xff));
-      if (reportId != null) {
-        IReport report = reportId.createReport();
-        report.initFrom(pByteArray);
-        add(report);
-      }
-    }
-    return byteArraySerializationVersion;
-  }
-  
   // JSON serialization
   
   public JsonObject toJsonValue() {

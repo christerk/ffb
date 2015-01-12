@@ -1,9 +1,6 @@
 package com.balancedbytes.games.ffb.net.commands;
 
 import com.balancedbytes.games.ffb.ConcedeGameStatus;
-import com.balancedbytes.games.ffb.ConcedeGameStatusFactory;
-import com.balancedbytes.games.ffb.bytearray.ByteArray;
-import com.balancedbytes.games.ffb.bytearray.ByteList;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.net.NetCommand;
@@ -35,23 +32,6 @@ public class ClientCommandConcedeGame extends NetCommand {
   
   public ConcedeGameStatus getConcedeGameStatus() {
     return fConcedeGameStatus;
-  }
-  
-  // ByteArray serialization
-  
-  public int getByteArraySerializationVersion() {
-    return 1;
-  }
-  
-  public void addTo(ByteList pByteList) {
-    pByteList.addSmallInt(getByteArraySerializationVersion());
-    pByteList.addByte((byte) ((getConcedeGameStatus() != null) ? getConcedeGameStatus().getId() : 0));
-  }
-  
-  public int initFrom(ByteArray pByteArray) {
-    int byteArraySerializationVersion = pByteArray.getSmallInt();
-    fConcedeGameStatus = new ConcedeGameStatusFactory().forId(pByteArray.getByte());
-    return byteArraySerializationVersion;
   }
   
   // JSON serialization

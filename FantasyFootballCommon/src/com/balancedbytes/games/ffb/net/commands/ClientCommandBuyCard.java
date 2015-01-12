@@ -1,9 +1,6 @@
 package com.balancedbytes.games.ffb.net.commands;
 
 import com.balancedbytes.games.ffb.CardType;
-import com.balancedbytes.games.ffb.CardTypeFactory;
-import com.balancedbytes.games.ffb.bytearray.ByteArray;
-import com.balancedbytes.games.ffb.bytearray.ByteList;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.net.NetCommand;
@@ -36,23 +33,6 @@ public class ClientCommandBuyCard extends NetCommand {
   
   public CardType getCardType() {
 	  return fCardType;
-  }
-  
-  // ByteArray serialization
-  
-  public int getByteArraySerializationVersion() {
-    return 1;
-  }
-  
-  public void addTo(ByteList pByteList) {
-    pByteList.addSmallInt(getByteArraySerializationVersion());
-    pByteList.addByte((byte) ((getCardType() != null) ? getCardType().getId() : 0));
-  }
-  
-  public int initFrom(ByteArray pByteArray) {
-    int byteArraySerializationVersion = pByteArray.getSmallInt();
-    fCardType = new CardTypeFactory().forId(pByteArray.getByte());
-    return byteArraySerializationVersion;
   }
   
   // JSON serialization

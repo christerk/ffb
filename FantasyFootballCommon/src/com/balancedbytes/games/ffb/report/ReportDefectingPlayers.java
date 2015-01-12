@@ -3,7 +3,6 @@ package com.balancedbytes.games.ffb.report;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.util.ArrayTool;
@@ -103,17 +102,6 @@ public class ReportDefectingPlayers implements IReport {
   
   public ReportDefectingPlayers transform() {
     return new ReportDefectingPlayers(getPlayerIds(), getRolls(), getDefectings());
-  }
-  
-  // ByteArray serialization
-  
-  public int initFrom(ByteArray pByteArray) {
-    UtilReport.validateReportId(this, new ReportIdFactory().forId(pByteArray.getSmallInt()));
-    int byteArraySerializationVersion = pByteArray.getSmallInt();
-    addPlayerIds(pByteArray.getStringArray());
-    addRolls(pByteArray.getByteArrayAsIntArray());
-    addDefectings(pByteArray.getBooleanArray());
-    return byteArraySerializationVersion;
   }
   
   // JSON serialization

@@ -1,7 +1,5 @@
 package com.balancedbytes.games.ffb.net.commands;
 
-import com.balancedbytes.games.ffb.bytearray.ByteArray;
-import com.balancedbytes.games.ffb.bytearray.ByteList;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.net.NetCommandId;
@@ -46,25 +44,6 @@ public class ServerCommandPing extends ServerCommand {
   
   public boolean isReplayable() {
     return false;
-  }
-  
-  // ByteArray serialization
-  
-  public int getByteArraySerializationVersion() {
-    return 1;
-  }
-  
-  public void addTo(ByteList pByteList) {
-    pByteList.addSmallInt(getByteArraySerializationVersion());
-    pByteList.addSmallInt(getCommandNr());
-    pByteList.addLong(getTimestamp());
-  }
-  
-  public int initFrom(ByteArray pByteArray) {
-    int byteArraySerializationVersion = pByteArray.getSmallInt();
-    setCommandNr(pByteArray.getSmallInt());
-    fTimestamp = pByteArray.getLong();
-    return byteArraySerializationVersion;
   }
   
   // JSON serialization

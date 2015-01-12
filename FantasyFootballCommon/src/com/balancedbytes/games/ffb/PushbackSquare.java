@@ -1,8 +1,5 @@
 package com.balancedbytes.games.ffb;
 
-import com.balancedbytes.games.ffb.bytearray.ByteArray;
-import com.balancedbytes.games.ffb.bytearray.ByteList;
-import com.balancedbytes.games.ffb.bytearray.IByteArrayReadable;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.IJsonSerializable;
 import com.balancedbytes.games.ffb.json.UtilJson;
@@ -14,7 +11,7 @@ import com.eclipsesource.json.JsonValue;
  * 
  * @author Kalimar
  */
-public final class PushbackSquare implements IByteArrayReadable, IJsonSerializable {
+public final class PushbackSquare implements IJsonSerializable {
 
   private FieldCoordinate fCoordinate;
   private Direction fDirection;
@@ -90,31 +87,6 @@ public final class PushbackSquare implements IByteArrayReadable, IJsonSerializab
       (pObj instanceof PushbackSquare)
       && getCoordinate().equals(((PushbackSquare) pObj).getCoordinate())
     );
-  }
-  
-  // ByteArray serialization
-
-  public int getByteArraySerializationVersion() {
-    return 1;
-  }
-  
-  public void addTo(ByteList pByteList) {
-    pByteList.addSmallInt(getByteArraySerializationVersion());
-    pByteList.addFieldCoordinate(getCoordinate());
-    pByteList.addByte((byte) getDirection().getId());
-    pByteList.addBoolean(isSelected());
-    pByteList.addBoolean(isLocked());
-    pByteList.addBoolean(isHomeChoice());
-  }
-  
-  public int initFrom(ByteArray pByteArray) {
-    int byteArraySerializationVersion = pByteArray.getSmallInt();
-    fCoordinate = pByteArray.getFieldCoordinate();
-    fDirection = new DirectionFactory().forId(pByteArray.getByte());
-    fSelected = pByteArray.getBoolean();
-    fLocked = pByteArray.getBoolean();
-    fHomeChoice = pByteArray.getBoolean();
-    return byteArraySerializationVersion;
   }
   
   // JSON serialization

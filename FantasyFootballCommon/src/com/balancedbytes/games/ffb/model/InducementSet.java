@@ -3,7 +3,6 @@ package com.balancedbytes.games.ffb.model;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -12,9 +11,6 @@ import com.balancedbytes.games.ffb.Card;
 import com.balancedbytes.games.ffb.CardFactory;
 import com.balancedbytes.games.ffb.Inducement;
 import com.balancedbytes.games.ffb.InducementType;
-import com.balancedbytes.games.ffb.bytearray.ByteArray;
-import com.balancedbytes.games.ffb.bytearray.ByteList;
-import com.balancedbytes.games.ffb.bytearray.IByteArrayReadable;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.IJsonSerializable;
 import com.balancedbytes.games.ffb.json.UtilJson;
@@ -28,7 +24,7 @@ import com.eclipsesource.json.JsonValue;
  * 
  * @author Kalimar
  */
-public class InducementSet implements IByteArrayReadable, IJsonSerializable {
+public class InducementSet implements IJsonSerializable {
   
   private Map<InducementType, Inducement> fInducements;
   private Set<Card> fCardsAvailable;
@@ -213,54 +209,6 @@ public class InducementSet implements IByteArrayReadable, IJsonSerializable {
   	String key = getTurnData().isHomeData() ? ModelChange.HOME : ModelChange.AWAY;
   	ModelChange modelChange = new ModelChange(pChangeId, key, pValue);
   	getTurnData().getGame().notifyObservers(modelChange);
-  }
-
-  // ByteArray serialization
-  
-  public int getByteArraySerializationVersion() {
-    return 2;
-  }
-  
-  public void addTo(ByteList pByteList) {
-    pByteList.addSmallInt(getByteArraySerializationVersion());
-    pByteList.addByte((byte) getNrOfInducements());
-    Iterator<Inducement> inducementIterator = fInducements.values().iterator();
-    while (inducementIterator.hasNext()) {
-      Inducement inducement = inducementIterator.next();
-      inducement.addTo(pByteList);
-    }
-    Card[] availableCards = getAvailableCards();
-    pByteList.addByte((byte) availableCards.length);
-    for (Card card : availableCards) {
-    	pByteList.addSmallInt(card.getId()); 
-    }
-    Card[] activeCards = getActiveCards();
-    pByteList.addByte((byte) activeCards.length);
-    for (Card card : activeCards) {
-    	pByteList.addSmallInt(card.getId());
-    }
-  }
-  
-  public int initFrom(ByteArray pByteArray) {
-    int byteArraySerializationVersion = pByteArray.getSmallInt();
-    int size = pByteArray.getByte();
-    for (int i = 0; i < size; i++) {
-      Inducement inducement = new Inducement();
-      inducement.initFrom(pByteArray);
-      addInducement(inducement);
-    }
-    if (byteArraySerializationVersion > 1) {
-    	int nrOfAvailableCards = pByteArray.getByte();
-    	CardFactory cardFactory = new CardFactory();
-    	for (int i = 0; i < nrOfAvailableCards; i++) {
-    		fCardsAvailable.add(cardFactory.forId(pByteArray.getSmallInt()));
-    	}
-    	int nrOfActiveCards = pByteArray.getByte();
-    	for (int i = 0; i < nrOfActiveCards; i++) {
-    		fCardsActive.add(cardFactory.forId(pByteArray.getSmallInt()));
-    	}
-    }
-    return byteArraySerializationVersion;
   }
 
   // JSON serialization

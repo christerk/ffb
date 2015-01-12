@@ -1,8 +1,6 @@
 package com.balancedbytes.games.ffb.net.commands;
 
 import com.balancedbytes.games.ffb.FieldCoordinate;
-import com.balancedbytes.games.ffb.bytearray.ByteArray;
-import com.balancedbytes.games.ffb.bytearray.ByteList;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.net.NetCommand;
@@ -40,27 +38,6 @@ public class ClientCommandPass extends NetCommand implements ICommandWithActingP
 
   public FieldCoordinate getTargetCoordinate() {
     return fTargetCoordinate;
-  }
-  
-  // ByteArray serialization
-  
-  public int getByteArraySerializationVersion() {
-    return 2;
-  }
-  
-  public void addTo(ByteList pByteList) {
-    pByteList.addSmallInt(getByteArraySerializationVersion());
-    pByteList.addString(getActingPlayerId());
-    pByteList.addFieldCoordinate(getTargetCoordinate());
-  }
-  
-  public int initFrom(ByteArray pByteArray) {
-    int byteArraySerializationVersion = pByteArray.getSmallInt();
-    if (byteArraySerializationVersion > 1) {
-    	fActingPlayerId = pByteArray.getString();
-    }
-    fTargetCoordinate = pByteArray.getFieldCoordinate();
-    return byteArraySerializationVersion;
   }
   
   // JSON serialization

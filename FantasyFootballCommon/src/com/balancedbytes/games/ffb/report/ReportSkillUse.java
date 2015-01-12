@@ -1,10 +1,7 @@
 package com.balancedbytes.games.ffb.report;
 
 import com.balancedbytes.games.ffb.Skill;
-import com.balancedbytes.games.ffb.SkillFactory;
 import com.balancedbytes.games.ffb.SkillUse;
-import com.balancedbytes.games.ffb.SkillUseFactory;
-import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.eclipsesource.json.JsonObject;
@@ -65,18 +62,6 @@ public class ReportSkillUse implements IReport {
     return new ReportSkillUse(getPlayerId(), getSkill(), isUsed(), getSkillUse());
   }
     
-  // ByteArray serialization
-  
-  public int initFrom(ByteArray pByteArray) {
-    UtilReport.validateReportId(this, new ReportIdFactory().forId(pByteArray.getSmallInt()));
-    int byteArraySerializationVersion = pByteArray.getSmallInt();
-    fPlayerId = pByteArray.getString();
-    fSkill = new SkillFactory().forId(pByteArray.getByte());
-    fUsed = pByteArray.getBoolean();
-    fSkillUse = new SkillUseFactory().forId(pByteArray.getByte());
-    return byteArraySerializationVersion;
-  }
-  
   // JSON serialization
   
   public JsonObject toJsonValue() {

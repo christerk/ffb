@@ -2,8 +2,6 @@ package com.balancedbytes.games.ffb.dialog;
 
 import com.balancedbytes.games.ffb.IDialogParameter;
 import com.balancedbytes.games.ffb.ReRolledAction;
-import com.balancedbytes.games.ffb.ReRolledActionFactory;
-import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.eclipsesource.json.JsonObject;
@@ -69,22 +67,6 @@ public class DialogReRollParameter implements IDialogParameter {
     return new DialogReRollParameter(getPlayerId(), getReRolledAction(), getMinimumRoll(), isTeamReRollOption(), isProReRollOption(), isFumble());
   }
     
-  // ByteArray serialization
-  
-  public int initFrom(ByteArray pByteArray) {
-    int byteArraySerializationVersion = pByteArray.getSmallInt();
-    UtilDialogParameter.validateDialogId(this, new DialogIdFactory().forId(pByteArray.getByte()));
-    fPlayerId = pByteArray.getString();
-    fReRolledAction = new ReRolledActionFactory().forId(pByteArray.getByte());
-    fMinimumRoll = pByteArray.getByte();
-    fTeamReRollOption = pByteArray.getBoolean();
-    fProReRollOption = pByteArray.getBoolean();
-    if (byteArraySerializationVersion > 1) {
-    	fFumble = pByteArray.getBoolean();
-    }
-    return byteArraySerializationVersion;
-  }
-  
   // JSON serialization
   
   public JsonObject toJsonValue() {

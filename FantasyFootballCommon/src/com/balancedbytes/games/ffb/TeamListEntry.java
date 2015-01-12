@@ -4,9 +4,6 @@ import javax.xml.transform.sax.TransformerHandler;
 
 import org.xml.sax.Attributes;
 
-import com.balancedbytes.games.ffb.bytearray.ByteArray;
-import com.balancedbytes.games.ffb.bytearray.ByteList;
-import com.balancedbytes.games.ffb.bytearray.IByteArrayReadable;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.IJsonSerializable;
 import com.balancedbytes.games.ffb.json.UtilJson;
@@ -22,7 +19,7 @@ import com.eclipsesource.json.JsonValue;
  * 
  * @author Kalimar
  */
-public class TeamListEntry implements IXmlSerializable, IByteArrayReadable, IJsonSerializable {
+public class TeamListEntry implements IXmlSerializable, IJsonSerializable {
     
 //  <teams coach="47257">
 //    <team>
@@ -176,35 +173,6 @@ public class TeamListEntry implements IXmlSerializable, IByteArrayReadable, IJso
       fTreasury = Integer.parseInt(pValue);
     }
     return XML_TAG.equals(pXmlTag);
-  }
-  
-  // ByteArray serialization
-  
-  public int getByteArraySerializationVersion() {
-    return 1;
-  }
-  
-  public void addTo(ByteList pByteList) {
-    pByteList.addSmallInt(getByteArraySerializationVersion());
-    pByteList.addString(getTeamId());
-    pByteList.addByte((byte) ((getTeamStatus() != null) ? getTeamStatus().getId() : 0));
-    pByteList.addString(getDivision());
-    pByteList.addString(getTeamName());
-    pByteList.addInt(getTeamValue());
-    pByteList.addString(getRace());
-    pByteList.addInt(getTreasury());
-  }
-  
-  public int initFrom(ByteArray pByteArray) {
-    int byteArraySerializationVersion = pByteArray.getSmallInt();
-    fTeamId = pByteArray.getString();
-    fTeamStatus = new TeamStatusFactory().forId(pByteArray.getByte());
-    fDivision = pByteArray.getString();
-    fTeamName = pByteArray.getString();
-    fTeamValue = pByteArray.getInt();
-    fRace = pByteArray.getString();
-    fTreasury = pByteArray.getInt();
-    return byteArraySerializationVersion;
   }
   
   // JSON serialization

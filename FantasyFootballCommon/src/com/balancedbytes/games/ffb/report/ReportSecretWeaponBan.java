@@ -3,7 +3,6 @@ package com.balancedbytes.games.ffb.report;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.eclipsesource.json.JsonObject;
@@ -94,26 +93,6 @@ public class ReportSecretWeaponBan implements IReport {
   		transformed.add(playerIds[i], rolls[i], banned[i]);
   	}
     return transformed;
-  }
-  
-  // ByteArray serialization
-  
-  public int initFrom(ByteArray pByteArray) {
-    UtilReport.validateReportId(this, new ReportIdFactory().forId(pByteArray.getSmallInt()));
-    int byteArraySerializationVersion = pByteArray.getSmallInt();
-    String[] playerIds = pByteArray.getStringArray();
-    if (byteArraySerializationVersion > 1) {
-    	int[] rolls = pByteArray.getByteArrayAsIntArray();
-    	boolean[] banned = pByteArray.getBooleanArray();
-    	for (int i = 0; i < playerIds.length; i++) {
-    		add(playerIds[i], rolls[i], banned[i]);
-    	}
-    } else {
-    	for (int i = 0; i < playerIds.length; i++) {
-    		add(playerIds[i], 0, true);
-    	}
-    }
-    return byteArraySerializationVersion;
   }
   
   // JSON serialization

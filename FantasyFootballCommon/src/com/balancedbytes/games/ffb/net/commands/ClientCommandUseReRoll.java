@@ -1,11 +1,7 @@
 package com.balancedbytes.games.ffb.net.commands;
 
 import com.balancedbytes.games.ffb.ReRollSource;
-import com.balancedbytes.games.ffb.ReRollSourceFactory;
 import com.balancedbytes.games.ffb.ReRolledAction;
-import com.balancedbytes.games.ffb.ReRolledActionFactory;
-import com.balancedbytes.games.ffb.bytearray.ByteArray;
-import com.balancedbytes.games.ffb.bytearray.ByteList;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.net.NetCommand;
@@ -41,33 +37,6 @@ public class ClientCommandUseReRoll extends NetCommand {
 
   public ReRollSource getReRollSource() {
     return fReRollSource;
-  }
-
-  // ByteArray serialization
-
-  public int getByteArraySerializationVersion() {
-    return 1;
-  }
-
-  public void addTo(ByteList pByteList) {
-    pByteList.addSmallInt(getByteArraySerializationVersion());
-    if (getReRolledAction() != null) {
-      pByteList.addByte((byte) getReRolledAction().getId());
-    } else {
-      pByteList.addByte((byte) 0);
-    }
-    if (getReRollSource() != null) {
-      pByteList.addByte((byte) getReRollSource().getId());
-    } else {
-      pByteList.addByte((byte) 0);
-    }
-  }
-
-  public int initFrom(ByteArray pByteArray) {
-    int byteArraySerializationVersion = pByteArray.getSmallInt();
-    fReRolledAction = new ReRolledActionFactory().forId(pByteArray.getByte());
-    fReRollSource = new ReRollSourceFactory().forId(pByteArray.getByte());
-    return byteArraySerializationVersion;
   }
 
   // JSON serialization

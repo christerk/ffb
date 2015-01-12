@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.balancedbytes.games.ffb.FieldCoordinate;
-import com.balancedbytes.games.ffb.bytearray.ByteArray;
-import com.balancedbytes.games.ffb.bytearray.ByteList;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.net.NetCommand;
@@ -65,36 +63,6 @@ public class ClientCommandMove extends NetCommand implements ICommandWithActingP
     return fCoordinateFrom;
   }
 
-  // ByteArray serialization
-
-  public int getByteArraySerializationVersion() {
-    return 2;
-  }
-
-  public void addTo(ByteList pByteList) {
-    pByteList.addSmallInt(getByteArraySerializationVersion());
-    pByteList.addString(getActingPlayerId());
-    pByteList.addFieldCoordinate(getCoordinateFrom());
-    FieldCoordinate[] coordinatesTo = getCoordinatesTo();
-    pByteList.addByte((byte) coordinatesTo.length);
-    for (FieldCoordinate coordinate : coordinatesTo) {
-      pByteList.addFieldCoordinate(coordinate);
-    }
-  }
-
-  public int initFrom(ByteArray pByteArray) {
-    int byteArraySerializationVersion = pByteArray.getSmallInt();
-    if (byteArraySerializationVersion > 1) {
-      fActingPlayerId = pByteArray.getString();
-      fCoordinateFrom = pByteArray.getFieldCoordinate();
-    }
-    int nrOfCoordinates = pByteArray.getByte();
-    for (int i = 0; i < nrOfCoordinates; i++) {
-      addCoordinateTo(pByteArray.getFieldCoordinate());
-    }
-    return byteArraySerializationVersion;
-  }
-  
   // JSON serialization
   
   public JsonObject toJsonValue() {

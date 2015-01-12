@@ -2,7 +2,6 @@ package com.balancedbytes.games.ffb.report;
 
 import com.balancedbytes.games.ffb.Direction;
 import com.balancedbytes.games.ffb.DirectionFactory;
-import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.eclipsesource.json.JsonObject;
@@ -49,17 +48,6 @@ public class ReportThrowIn implements IReport {
   
   public IReport transform() {
     return new ReportThrowIn(new DirectionFactory().transform(getDirection()), getDirectionRoll(), getDistanceRoll());
-  }
-  
-  // ByteArray serialization
-  
-  public int initFrom(ByteArray pByteArray) {
-    UtilReport.validateReportId(this, new ReportIdFactory().forId(pByteArray.getSmallInt()));
-    int byteArraySerializationVersion = pByteArray.getSmallInt();
-    fDirection = new DirectionFactory().forId(pByteArray.getByte());
-    fDirectionRoll = pByteArray.getByte();
-    fDistanceRoll = pByteArray.getByteArrayAsIntArray();
-    return byteArraySerializationVersion;
   }
   
   // JSON serialization

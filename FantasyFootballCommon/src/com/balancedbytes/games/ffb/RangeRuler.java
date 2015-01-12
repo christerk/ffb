@@ -5,9 +5,6 @@ import javax.xml.transform.sax.TransformerHandler;
 import org.xml.sax.Attributes;
 import org.xml.sax.helpers.AttributesImpl;
 
-import com.balancedbytes.games.ffb.bytearray.ByteArray;
-import com.balancedbytes.games.ffb.bytearray.ByteList;
-import com.balancedbytes.games.ffb.bytearray.IByteArrayReadable;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.IJsonSerializable;
 import com.balancedbytes.games.ffb.json.UtilJson;
@@ -24,7 +21,7 @@ import com.eclipsesource.json.JsonValue;
  * 
  * @author Kalimar
  */
-public class RangeRuler implements IXmlSerializable, IByteArrayReadable, IJsonSerializable {
+public class RangeRuler implements IXmlSerializable, IJsonSerializable {
   
   public static final String XML_TAG = "rangeRuler";
   
@@ -151,29 +148,6 @@ public class RangeRuler implements IXmlSerializable, IByteArrayReadable, IJsonSe
   
   public boolean endXmlElement(String pXmlTag, String pValue) {
     return XML_TAG.equals(pXmlTag);
-  }
-  
-  // ByteArray serialization
-  
-  public int getByteArraySerializationVersion() {
-    return 1;
-  }
-  
-  public void addTo(ByteList pByteList) {
-    pByteList.addSmallInt(getByteArraySerializationVersion());
-    pByteList.addString(getThrowerId());
-    pByteList.addFieldCoordinate(getTargetCoordinate());
-    pByteList.addByte((byte) getMinimumRoll());
-    pByteList.addBoolean(isThrowTeamMate());
-  }
-    
-  public int initFrom(ByteArray pByteArray) {
-    int byteArraySerializationVersion = pByteArray.getSmallInt();
-    fThrowerId = pByteArray.getString();
-    fTargetCoordinate = pByteArray.getFieldCoordinate();
-    fMinimumRoll = pByteArray.getByte();
-    fThrowTeamMate = pByteArray.getBoolean();
-    return byteArraySerializationVersion;
   }
   
   // JSON serialization

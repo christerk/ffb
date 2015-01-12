@@ -3,7 +3,6 @@ package com.balancedbytes.games.ffb.report;
 import com.balancedbytes.games.ffb.Direction;
 import com.balancedbytes.games.ffb.DirectionFactory;
 import com.balancedbytes.games.ffb.FieldCoordinate;
-import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.eclipsesource.json.JsonObject;
@@ -61,18 +60,6 @@ public class ReportKickoffScatter implements IReport {
   
   public IReport transform() {
     return new ReportKickoffScatter(FieldCoordinate.transform(getBallCoordinateEnd()), new DirectionFactory().transform(getScatterDirection()), getRollScatterDirection(), getRollScatterDistance());
-  }
-  
-  // ByteArray serialization
-  
-  public int initFrom(ByteArray pByteArray) {
-    UtilReport.validateReportId(this, new ReportIdFactory().forId(pByteArray.getSmallInt()));
-    int byteArraySerializationVersion = pByteArray.getSmallInt();
-    fBallCoordinateEnd = pByteArray.getFieldCoordinate();
-    fScatterDirection = new DirectionFactory().forId(pByteArray.getByte());
-    fRollScatterDirection = pByteArray.getByte();
-    fRollScatterDistance = pByteArray.getByte();
-    return byteArraySerializationVersion;
   }
   
   // JSON serialization

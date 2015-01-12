@@ -8,13 +8,9 @@ import javax.xml.transform.sax.TransformerHandler;
 import org.xml.sax.Attributes;
 import org.xml.sax.helpers.AttributesImpl;
 
-import com.balancedbytes.games.ffb.bytearray.ByteArray;
-import com.balancedbytes.games.ffb.bytearray.ByteList;
-import com.balancedbytes.games.ffb.bytearray.IByteArrayReadable;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.IJsonSerializable;
 import com.balancedbytes.games.ffb.json.UtilJson;
-import com.balancedbytes.games.ffb.util.ArrayTool;
 import com.balancedbytes.games.ffb.util.StringTool;
 import com.balancedbytes.games.ffb.xml.IXmlSerializable;
 import com.balancedbytes.games.ffb.xml.UtilXml;
@@ -26,7 +22,7 @@ import com.eclipsesource.json.JsonValue;
  * 
  * @author Kalimar
  */
-public class Roster implements IXmlSerializable, IByteArrayReadable, IJsonSerializable {
+public class Roster implements IXmlSerializable, IJsonSerializable {
 
   public static final String XML_TAG = "roster";
 
@@ -246,63 +242,6 @@ public class Roster implements IXmlSerializable, IByteArrayReadable, IJsonSerial
     return complete;
   }
 
-  // ByteArray serialization
-  
-  public int getByteArraySerializationVersion() {
-    return 1;
-  }
-
-  public void addTo(ByteList pByteList) {
-  	
-  	pByteList.addSmallInt(getByteArraySerializationVersion());
-    
-  	pByteList.addString(getId());
-    pByteList.addString(getName());
-    pByteList.addInt(getReRollCost());
-    pByteList.addByte((byte) getMaxReRolls());
-    pByteList.addString(getBaseIconPath());
-    pByteList.addString(getLogoUrl());
-    pByteList.addString(fRaisedPositionId);
-    RosterPosition[] positions = getPositions();
-    pByteList.addByte((byte) positions.length);
-    if (ArrayTool.isProvided(positions)) {
-      for (RosterPosition position : positions) {
-        position.addTo(pByteList);
-      }
-    }
-    
-    pByteList.addBoolean(hasApothecary());
-    pByteList.addBoolean(hasNecromancer());
-    pByteList.addBoolean(isUndead());
-    
-  }
-
-  public int initFrom(ByteArray pByteArray) {
-  	
-  	int byteArraySerializationVersion = pByteArray.getSmallInt();
-    
-  	fId = pByteArray.getString();
-    setName(pByteArray.getString());
-    setReRollCost(pByteArray.getInt());
-    setMaxReRolls(pByteArray.getByte());
-    setBaseIconPath(pByteArray.getString());
-    setLogoUrl(pByteArray.getString());
-    fRaisedPositionId = pByteArray.getString();
-    int nrOfPositions = pByteArray.getByte();
-    for (int i = 0; i < nrOfPositions; i++) {
-      RosterPosition position = new RosterPosition(null);
-      position.initFrom(pByteArray);
-      addPosition(position);
-    }
-    
-    setApothecary(pByteArray.getBoolean());
-    setNecromancer(pByteArray.getBoolean());
-    setUndead(pByteArray.getBoolean());
-    
-    return byteArraySerializationVersion;
-    
-  }
-  
   // JSON serialization
   
   public JsonObject toJsonValue() {

@@ -2,9 +2,6 @@ package com.balancedbytes.games.ffb.net.commands;
 
 import com.balancedbytes.games.ffb.PlayerState;
 import com.balancedbytes.games.ffb.SendToBoxReason;
-import com.balancedbytes.games.ffb.SendToBoxReasonFactory;
-import com.balancedbytes.games.ffb.bytearray.ByteArray;
-import com.balancedbytes.games.ffb.bytearray.ByteList;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.Player;
@@ -72,36 +69,6 @@ public class ServerCommandAddPlayer extends ServerCommand {
   public int getSendToBoxTurn() {
     return fSendToBoxTurn;
   }  
-  
-  // ByteArray serialization
-  
-  public int getByteArraySerializationVersion() {
-    return 1;
-  }
-  
-  public void addTo(ByteList pByteList) {
-    pByteList.addSmallInt(getByteArraySerializationVersion());
-    pByteList.addSmallInt(getCommandNr());
-    pByteList.addString(getTeamId());
-    getPlayer().addTo(pByteList);
-    pByteList.addSmallInt((getPlayerState() != null) ? getPlayerState().getId() : 0); 
-    pByteList.addByte((byte) ((getSendToBoxReason() != null) ? getSendToBoxReason().getId() : 0));
-    pByteList.addByte((byte) getSendToBoxTurn());
-    pByteList.addByte((byte) getSendToBoxHalf());
-  }
-    
-  public int initFrom(ByteArray pByteArray) {
-    int byteArraySerializationVersion = pByteArray.getSmallInt();
-    setCommandNr(pByteArray.getSmallInt());
-    fTeamId = pByteArray.getString();
-    fPlayer = new Player();
-    fPlayer.initFrom(pByteArray);
-    fPlayerState = new PlayerState(pByteArray.getSmallInt());
-    fSendToBoxReason = new SendToBoxReasonFactory().forId(pByteArray.getByte());
-    fSendToBoxTurn = pByteArray.getByte();
-    fSendToBoxHalf = pByteArray.getByte();
-    return byteArraySerializationVersion;
-  }
   
   // JSON serialization
   

@@ -1,6 +1,5 @@
 package com.balancedbytes.games.ffb.report;
 
-import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.eclipsesource.json.JsonObject;
@@ -66,20 +65,6 @@ public class ReportSpectators implements IReport {
   
   public IReport transform() {
     return new ReportSpectators(getSpectatorRollAway(), getSpectatorsAway(), getFameAway(), getSpectatorRollHome(), getSpectatorsHome(), getFameHome());
-  }
-  
-  // ByteArray serialization
-  
-  public int initFrom(ByteArray pByteArray) {
-    UtilReport.validateReportId(this, new ReportIdFactory().forId(pByteArray.getSmallInt()));
-    int byteArraySerializationVersion = pByteArray.getSmallInt();
-    fSpectatorRollHome = pByteArray.getByteArrayAsIntArray();
-    fSpectatorsHome = pByteArray.getInt();
-    fFameHome = pByteArray.getByte();
-    fSpectatorRollAway = pByteArray.getByteArrayAsIntArray();
-    fSpectatorsAway = pByteArray.getInt();
-    fFameAway = pByteArray.getByte();
-    return byteArraySerializationVersion;
   }
   
   // JSON serialization

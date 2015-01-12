@@ -1,7 +1,5 @@
 package com.balancedbytes.games.ffb.net.commands;
 
-import com.balancedbytes.games.ffb.bytearray.ByteArray;
-import com.balancedbytes.games.ffb.bytearray.ByteList;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.net.NetCommand;
@@ -23,24 +21,6 @@ public class ClientCommandEndTurn extends NetCommand {
 
   public NetCommandId getId() {
     return NetCommandId.CLIENT_END_TURN;
-  }
-  
-  // ByteArray serialization
-  
-  public int getByteArraySerializationVersion() {
-    return 3;
-  }
-  
-  public void addTo(ByteList pByteList) {
-    pByteList.addSmallInt(getByteArraySerializationVersion());
-  }
-  
-  public int initFrom(ByteArray pByteArray) {
-    int byteArraySerializationVersion = pByteArray.getSmallInt();
-    if (byteArraySerializationVersion == 2) {
-    	pByteArray.getByte(); // deprecated
-    }
-    return byteArraySerializationVersion;
   }
   
   // JSON serialization

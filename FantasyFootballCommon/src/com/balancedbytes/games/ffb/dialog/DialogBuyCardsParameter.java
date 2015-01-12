@@ -4,9 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.balancedbytes.games.ffb.CardType;
-import com.balancedbytes.games.ffb.CardTypeFactory;
 import com.balancedbytes.games.ffb.IDialogParameter;
-import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.eclipsesource.json.JsonArray;
@@ -68,25 +66,6 @@ public class DialogBuyCardsParameter implements IDialogParameter {
   		dialogParameter.put(type, getNrOfCards(type));
   	}
   	return dialogParameter;
-  }
-  
-  // ByteArray serialization
-  
-  public int initFrom(ByteArray pByteArray) {
-    int byteArraySerializationVersion = pByteArray.getSmallInt();
-    UtilDialogParameter.validateDialogId(this, new DialogIdFactory().forId(pByteArray.getByte()));
-    fTeamId = pByteArray.getString();
-    fAvailableCards = pByteArray.getByte();
-    fAvailableGold = pByteArray.getInt();
-    fNrOfCardsPerType.clear();
-    int nrOfEntries = pByteArray.getByte();
-    CardTypeFactory cardTypeFactory = new CardTypeFactory();
-    for (int i = 0; i < nrOfEntries; i++) {
-    	CardType type = cardTypeFactory.forId(pByteArray.getByte());
-    	int nrOfCards = pByteArray.getByte();
-    	put(type, nrOfCards);
-    }
-    return byteArraySerializationVersion;
   }
   
   // JSON serialization

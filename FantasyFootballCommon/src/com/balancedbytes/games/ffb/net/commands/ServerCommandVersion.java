@@ -1,12 +1,8 @@
 package com.balancedbytes.games.ffb.net.commands;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
-import com.balancedbytes.games.ffb.bytearray.ByteArray;
-import com.balancedbytes.games.ffb.bytearray.ByteList;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.net.NetCommandId;
@@ -63,41 +59,6 @@ public class ServerCommandVersion extends ServerCommand {
     
   public boolean isReplayable() {
     return false;
-  }
-  
-  // ByteArray serialization
-  
-  public int getByteArraySerializationVersion() {
-    return 1;
-  }
-
-  public void addTo(ByteList pByteList) {
-    pByteList.addSmallInt(getByteArraySerializationVersion());
-    pByteList.addSmallInt(getCommandNr());
-    pByteList.addString(getServerVersion());
-    pByteList.addString(getClientVersion());
-    String[] clientProperies = getClientProperties();
-    pByteList.addStringArray(clientProperies);
-    List<String> clientPropertyValues = new ArrayList<String>();
-    for (String clientProperty: clientProperies) {
-      clientPropertyValues.add(getClientPropertyValue(clientProperty));
-    }
-    pByteList.addStringArray(clientPropertyValues.toArray(new String[clientPropertyValues.size()]));
-  }
-  
-  public int initFrom(ByteArray pByteArray) {
-    int byteArraySerializationVersion = pByteArray.getSmallInt();
-    setCommandNr(pByteArray.getSmallInt());
-    fServerVersion = pByteArray.getString();
-    fClientVersion = pByteArray.getString();
-    String[] clientProperties = pByteArray.getStringArray();
-    String[] clientPropertyValues = pByteArray.getStringArray();
-    if (ArrayTool.isProvided(clientProperties) && ArrayTool.isProvided(clientPropertyValues)) {
-      for (int i = 0; i < clientProperties.length; i++) {
-        fClientProperties.put(clientProperties[i], clientPropertyValues[i]);
-      }
-    }
-    return byteArraySerializationVersion;
   }
   
   // JSON serialization

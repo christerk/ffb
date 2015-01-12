@@ -8,11 +8,8 @@ import com.balancedbytes.games.ffb.ArmorModifierFactory;
 import com.balancedbytes.games.ffb.InjuryModifier;
 import com.balancedbytes.games.ffb.InjuryModifierFactory;
 import com.balancedbytes.games.ffb.InjuryType;
-import com.balancedbytes.games.ffb.InjuryTypeFactory;
 import com.balancedbytes.games.ffb.PlayerState;
 import com.balancedbytes.games.ffb.SeriousInjury;
-import com.balancedbytes.games.ffb.SeriousInjuryFactory;
-import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.util.ArrayTool;
@@ -174,36 +171,6 @@ public class ReportInjury implements IReport {
     return new ReportInjury(getDefenderId(), getInjuryType(), isArmorBroken(), getArmorModifiers(), getArmorRoll(), getInjuryModifiers(), getInjuryRoll(), getCasualtyRoll(), getSeriousInjury(), getCasualtyRollDecay(), getSeriousInjuryDecay(), getInjury(), getInjuryDecay(), getAttackerId());
   }
     
-  // ByteArray serialization
-  
-  public int initFrom(ByteArray pByteArray) {
-    UtilReport.validateReportId(this, new ReportIdFactory().forId(pByteArray.getSmallInt()));
-    int byteArraySerializationVersion = pByteArray.getSmallInt();
-    fDefenderId = pByteArray.getString();
-    fInjuryType = new InjuryTypeFactory().forId(pByteArray.getByte());
-    fArmorBroken = pByteArray.getBoolean();
-    ArmorModifierFactory armorModifierFactory = new ArmorModifierFactory();
-    int nrOfArmorModifiers = pByteArray.getByte();
-    for (int i = 0; i < nrOfArmorModifiers; i++) {
-      add(armorModifierFactory.forId(pByteArray.getByte()));
-    }
-    fArmorRoll = pByteArray.getByteArrayAsIntArray();
-    InjuryModifierFactory injuryModifierFactory = new InjuryModifierFactory();
-    int nrOfInjuryModifiers = pByteArray.getByte();
-    for (int i = 0; i < nrOfInjuryModifiers; i++) {
-      add(injuryModifierFactory.forId(pByteArray.getByte()));
-    }
-    fInjuryRoll = pByteArray.getByteArrayAsIntArray();
-    fCasualtyRoll = pByteArray.getByteArrayAsIntArray();
-    fSeriousInjury = new SeriousInjuryFactory().forId(pByteArray.getByte());
-    fCasualtyRollDecay = pByteArray.getByteArrayAsIntArray();
-    fSeriousInjuryDecay = new SeriousInjuryFactory().forId(pByteArray.getByte());
-    fInjury = new PlayerState(pByteArray.getSmallInt());
-    fInjuryDecay = new PlayerState(pByteArray.getSmallInt());
-    fAttackerId = pByteArray.getString();
-    return byteArraySerializationVersion;
-  }
-  
   // JSON serialization
   
   public JsonObject toJsonValue() {

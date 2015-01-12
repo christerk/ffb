@@ -1,9 +1,6 @@
 package com.balancedbytes.games.ffb.net.commands;
 
 import com.balancedbytes.games.ffb.PlayerAction;
-import com.balancedbytes.games.ffb.PlayerActionFactory;
-import com.balancedbytes.games.ffb.bytearray.ByteArray;
-import com.balancedbytes.games.ffb.bytearray.ByteList;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.net.NetCommand;
@@ -45,31 +42,6 @@ public class ClientCommandActingPlayer extends NetCommand {
 
   public boolean isLeaping() {
     return fLeaping;
-  }
-
-  // ByteArray serialization
-
-  public int getByteArraySerializationVersion() {
-    return 1;
-  }
-
-  public void addTo(ByteList pByteList) {
-    pByteList.addSmallInt(getByteArraySerializationVersion());
-    pByteList.addString(getPlayerId());
-    if (getPlayerAction() != null) {
-      pByteList.addByte((byte) getPlayerAction().getId());
-    } else {
-      pByteList.addByte((byte) 0);
-    }
-    pByteList.addBoolean(isLeaping());
-  }
-
-  public int initFrom(ByteArray pByteArray) {
-    int byteArraySerializationVersion = pByteArray.getSmallInt();
-    fPlayerId = pByteArray.getString();
-    fPlayerAction = new PlayerActionFactory().forId(pByteArray.getByte());
-    fLeaping = pByteArray.getBoolean();
-    return byteArraySerializationVersion;
   }
 
   // JSON serialization

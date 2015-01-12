@@ -14,7 +14,6 @@ import com.balancedbytes.games.ffb.LeapModifierFactory;
 import com.balancedbytes.games.ffb.PassModifierFactory;
 import com.balancedbytes.games.ffb.PickupModifierFactory;
 import com.balancedbytes.games.ffb.RightStuffModifierFactory;
-import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.util.ArrayTool;
@@ -112,30 +111,6 @@ public class ReportSkillRoll implements IReport {
   
   public IReport transform() {
     return new ReportSkillRoll(getId(), getPlayerId(), isSuccessful(), getRoll(), getMinimumRoll(), isReRolled(), getRollModifiers());
-  }
-  
-  // ByteArray serialization
-  
-  public int initFrom(ByteArray pByteArray) {
-    UtilReport.validateReportId(this, new ReportIdFactory().forId(pByteArray.getSmallInt()));
-    int byteArraySerializationVersion = pByteArray.getSmallInt();
-    fPlayerId = pByteArray.getString();
-    fSuccessful = pByteArray.getBoolean();
-    fRoll = pByteArray.getByte();
-    fMinimumRoll = pByteArray.getByte();
-    fRollModifierList.clear();
-    int nrOfModifiers = pByteArray.getByte();
-    if (nrOfModifiers > 0) {
-      IRollModifierFactory modifierFactory = createRollModifierFactory();
-      for (int i = 0; i < nrOfModifiers; i++) {
-        int modifierId = pByteArray.getByte();
-        if (modifierFactory != null) {
-          fRollModifierList.add(modifierFactory.forId(modifierId));
-        }
-      }
-    }
-    fReRolled = pByteArray.getBoolean();
-    return byteArraySerializationVersion;
   }
   
   // JSON serialization

@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.balancedbytes.games.ffb.IDialogParameter;
-import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.util.ArrayTool;
@@ -61,16 +60,6 @@ public class DialogTeamSetupParameter implements IDialogParameter {
   
   public IDialogParameter transform() {
     return new DialogTeamSetupParameter(isLoadDialog(), getSetupNames());
-  }
-  
-  // ByteArray serialization
-  
-  public int initFrom(ByteArray pByteArray) {
-    int byteArraySerializationVersion = pByteArray.getSmallInt();
-    UtilDialogParameter.validateDialogId(this, new DialogIdFactory().forId(pByteArray.getByte()));
-    fLoadDialog = pByteArray.getBoolean();
-    add(pByteArray.getStringArray());
-    return byteArraySerializationVersion;
   }
   
   // JSON serialization

@@ -1,8 +1,6 @@
 package com.balancedbytes.games.ffb.report;
 
 import com.balancedbytes.games.ffb.Skill;
-import com.balancedbytes.games.ffb.SkillFactory;
-import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.eclipsesource.json.JsonObject;
@@ -68,20 +66,6 @@ public class ReportTentaclesShadowingRoll implements IReport {
   
   public IReport transform() {
     return new ReportTentaclesShadowingRoll(getSkill(), getDefenderId(), getRoll(), isSuccessful(), getMinimumRoll(), isReRolled());
-  }
-  
-  // ByteArray serialization
-  
-  public int initFrom(ByteArray pByteArray) {
-    UtilReport.validateReportId(this, new ReportIdFactory().forId(pByteArray.getSmallInt()));
-    int byteArraySerializationVersion = pByteArray.getSmallInt();
-    fSkill = new SkillFactory().forId(pByteArray.getByte());
-    fDefenderId = pByteArray.getString();
-    fRoll = pByteArray.getByteArrayAsIntArray();
-    fSuccessful = pByteArray.getBoolean();
-    fMinimumRoll = pByteArray.getByte();
-    fReRolled = pByteArray.getBoolean();
-    return byteArraySerializationVersion;
   }
   
   // JSON serialization

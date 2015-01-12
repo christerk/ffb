@@ -1,6 +1,5 @@
 package com.balancedbytes.games.ffb.report;
 
-import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.eclipsesource.json.JsonObject;
@@ -50,17 +49,6 @@ public class ReportCoinThrow implements IReport {
     return new ReportCoinThrow(isCoinThrowHeads(), getCoach(), isCoinChoiceHeads());
   }
   
-  // ByteArray serialization
-  
-  public int initFrom(ByteArray pByteArray) {
-    UtilReport.validateReportId(this, new ReportIdFactory().forId(pByteArray.getSmallInt()));
-    int byteArraySerializationVersion = pByteArray.getSmallInt();
-    fCoinThrowHeads = pByteArray.getBoolean();
-    fCoach = pByteArray.getString();
-    fCoinChoiceHeads = pByteArray.getBoolean();
-    return byteArraySerializationVersion;
-  }
-    
   // JSON serialization
   
   public JsonObject toJsonValue() {

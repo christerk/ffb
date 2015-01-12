@@ -4,12 +4,8 @@ import java.util.HashSet;
 import java.util.Set;
 
 import com.balancedbytes.games.ffb.PlayerAction;
-import com.balancedbytes.games.ffb.PlayerActionFactory;
 import com.balancedbytes.games.ffb.Skill;
 import com.balancedbytes.games.ffb.SkillFactory;
-import com.balancedbytes.games.ffb.bytearray.ByteArray;
-import com.balancedbytes.games.ffb.bytearray.ByteList;
-import com.balancedbytes.games.ffb.bytearray.IByteArrayReadable;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.IJsonSerializable;
 import com.balancedbytes.games.ffb.json.UtilJson;
@@ -25,7 +21,7 @@ import com.eclipsesource.json.JsonValue;
  * 
  * @author Kalimar
  */
-public class ActingPlayer implements IByteArrayReadable, IJsonSerializable {
+public class ActingPlayer implements IJsonSerializable {
     
   private String fPlayerId;
   private int fStrength;
@@ -300,72 +296,6 @@ public class ActingPlayer implements IByteArrayReadable, IJsonSerializable {
   	getGame().notifyObservers(new ModelChange(pChangeId, null, pValue));
   }
     
-  // ByteArray serialization
-  
-  public int getByteArraySerializationVersion() {
-  	return 2;
-  }
-  
-  public void addTo(ByteList pByteList) {
-    
-  	pByteList.addSmallInt(getByteArraySerializationVersion());
-  	
-    pByteList.addString(getPlayerId());
-    pByteList.addByte((byte) getCurrentMove());
-    pByteList.addBoolean(isGoingForIt());
-    pByteList.addBoolean(hasBlocked());
-    pByteList.addBoolean(hasFouled());
-    pByteList.addBoolean(hasPassed());
-    pByteList.addByte((byte) ((getPlayerAction() != null) ? getPlayerAction().getId() : 0));
-    pByteList.addBoolean(isStandingUp());
-    pByteList.addBoolean(isSufferingBloodLust());
-    pByteList.addBoolean(isSufferingAnimosity());
-    
-    Skill[] usedSkills = getUsedSkills();
-    pByteList.addByte((byte) usedSkills.length);
-    for (int i = 0; i < usedSkills.length; i++) {
-      pByteList.addByte((byte) usedSkills[i].getId());
-    }
-
-    pByteList.addBoolean(hasFed());
-
-  }
-  
-  public int initFrom(ByteArray pByteArray) {
-    
-  	int byteArraySerializationVersion = pByteArray.getSmallInt();
-  	
-    deprecatedInitFrom(pByteArray);
-
-    if (byteArraySerializationVersion > 1) {
-    	setHasFed(pByteArray.getBoolean());
-    }
-
-    return byteArraySerializationVersion;
-    
-  }
-  
-  // bad hack to cover up missing byteArraySerialization
-  public void deprecatedInitFrom(ByteArray pByteArray) {
-    setPlayerId(pByteArray.getString());
-    setCurrentMove(pByteArray.getByte());
-    setGoingForIt(pByteArray.getBoolean());
-    setHasBlocked(pByteArray.getBoolean());
-    setHasFouled(pByteArray.getBoolean());
-    setHasPassed(pByteArray.getBoolean());
-    setPlayerAction(new PlayerActionFactory().forId(pByteArray.getByte()));
-    setStandingUp(pByteArray.getBoolean());
-    setSufferingBloodLust(pByteArray.getBoolean());
-    setSufferingAnimosity(pByteArray.getBoolean());
-    
-    int nrOfUsedSkills = pByteArray.getByte();
-    SkillFactory skillFactory = new SkillFactory();
-    for (int i = 0; i < nrOfUsedSkills; i++) {
-      Skill usedSkill = skillFactory.forId(pByteArray.getByte());
-      markSkillUsed(usedSkill);
-    }
-  }
-
   // JSON serialization
   
   public JsonObject toJsonValue() {

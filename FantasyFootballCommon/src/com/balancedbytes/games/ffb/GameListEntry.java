@@ -7,9 +7,6 @@ import javax.xml.transform.sax.TransformerHandler;
 import org.xml.sax.Attributes;
 import org.xml.sax.helpers.AttributesImpl;
 
-import com.balancedbytes.games.ffb.bytearray.ByteArray;
-import com.balancedbytes.games.ffb.bytearray.ByteList;
-import com.balancedbytes.games.ffb.bytearray.IByteArrayReadable;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.IJsonSerializable;
 import com.balancedbytes.games.ffb.json.UtilJson;
@@ -25,7 +22,7 @@ import com.eclipsesource.json.JsonValue;
  * 
  * @author Kalimar
  */
-public class GameListEntry implements IXmlSerializable, IByteArrayReadable, IJsonSerializable {
+public class GameListEntry implements IXmlSerializable, IJsonSerializable {
     
 //  <gameList>
 //    <game id="4765261" started="2009-05-05T11:50:20.345">
@@ -185,42 +182,6 @@ public class GameListEntry implements IXmlSerializable, IByteArrayReadable, IJso
   
   public boolean endXmlElement(String pXmlTag, String pValue) {
     return XML_TAG.equals(pXmlTag);
-  }
-  
-  // ByteArray serialization
-  
-  public int getByteArraySerializationVersion() {
-    return 1;
-  }
-  
-  public void addTo(ByteList pByteList) {
-    pByteList.addSmallInt(getByteArraySerializationVersion());
-    pByteList.addLong(getGameId());
-    pByteList.addLong((long) ((getStarted() != null) ? getStarted().getTime() : 0));
-    pByteList.addString(getTeamHomeId());
-    pByteList.addString(getTeamHomeName());
-    pByteList.addString(getTeamHomeCoach());
-    pByteList.addString(getTeamAwayId());
-    pByteList.addString(getTeamAwayName());
-    pByteList.addString(getTeamAwayCoach());
-  }
-  
-  public int initFrom(ByteArray pByteArray) {
-    int byteArraySerializationVersion = pByteArray.getSmallInt();
-    fGameId = pByteArray.getLong();
-    long startedTime = pByteArray.getLong();
-    if (startedTime > 0) {
-      fStarted = new Date(startedTime);
-    } else {
-      fStarted = null;
-    }
-    fTeamHomeId = pByteArray.getString();
-    fTeamHomeName = pByteArray.getString();
-    fTeamHomeCoach = pByteArray.getString();
-    fTeamAwayId = pByteArray.getString();
-    fTeamAwayName = pByteArray.getString();
-    fTeamAwayCoach = pByteArray.getString();
-    return byteArraySerializationVersion;
   }
   
   // JSON serialization

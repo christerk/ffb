@@ -2,8 +2,6 @@ package com.balancedbytes.games.ffb.report;
 
 import com.balancedbytes.games.ffb.PassModifier;
 import com.balancedbytes.games.ffb.PassingDistance;
-import com.balancedbytes.games.ffb.PassingDistanceFactory;
-import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.eclipsesource.json.JsonObject;
@@ -50,16 +48,6 @@ public class ReportThrowTeamMateRoll extends ReportSkillRoll {
     return new ReportThrowTeamMateRoll(getPlayerId(), isSuccessful(), getRoll(), getMinimumRoll(), isReRolled(), getRollModifiers(), getPassingDistance(), getThrownPlayerId());
   }
     
-  // ByteArray serialization
-  
-  @Override
-  public int initFrom(ByteArray pByteArray) {
-    int byteArraySerializationVersion = super.initFrom(pByteArray);
-    fThrownPlayerId = pByteArray.getString();
-    fPassingDistance = new PassingDistanceFactory().forId(pByteArray.getByte());
-    return byteArraySerializationVersion;
-  }
-
   // JSON serialization
   
   @Override

@@ -1,7 +1,5 @@
 package com.balancedbytes.games.ffb.net.commands;
 
-import com.balancedbytes.games.ffb.bytearray.ByteArray;
-import com.balancedbytes.games.ffb.bytearray.ByteList;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.net.NetCommand;
@@ -45,32 +43,6 @@ public class ClientCommandBlock extends NetCommand implements ICommandWithActing
     return fUsingStab;
   }
 
-  // ByteArray serialization
-
-  public int getByteArraySerializationVersion() {
-    return 3;
-  }
-
-  public void addTo(ByteList pByteList) {
-    pByteList.addSmallInt(getByteArraySerializationVersion());
-    pByteList.addString(getActingPlayerId());
-    pByteList.addString(getDefenderId());
-    pByteList.addBoolean(isUsingStab());
-  }
-
-  public int initFrom(ByteArray pByteArray) {
-    int byteArraySerializationVersion = pByteArray.getSmallInt();
-    if (byteArraySerializationVersion > 2) {
-      fActingPlayerId = pByteArray.getString();
-    }
-    fDefenderId = pByteArray.getString();
-    fUsingStab = pByteArray.getBoolean();
-    if (byteArraySerializationVersion < 2) {
-      pByteArray.getByte(); // reRollSource obsolete since version 2
-    }
-    return byteArraySerializationVersion;
-  }
-  
   // JSON serialization
   
   public JsonObject toJsonValue() {

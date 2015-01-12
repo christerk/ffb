@@ -1,13 +1,10 @@
 package com.balancedbytes.games.ffb.net.commands;
 
 import com.balancedbytes.games.ffb.SoundId;
-import com.balancedbytes.games.ffb.SoundIdFactory;
-import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.Animation;
 import com.balancedbytes.games.ffb.model.change.ModelChangeList;
-import com.balancedbytes.games.ffb.model.change.old.ModelChangeListOld;
 import com.balancedbytes.games.ffb.net.NetCommandId;
 import com.balancedbytes.games.ffb.report.ReportList;
 import com.eclipsesource.json.JsonObject;
@@ -85,33 +82,6 @@ public class ServerCommandModelSync extends ServerCommand {
     return transformedCommand;
   }
 
-  // ByteArray serialization
-
-  public int initFrom(ByteArray pByteArray) {
-    int byteArraySerializationVersion = pByteArray.getSmallInt();
-    setCommandNr(pByteArray.getSmallInt());
-    
-    // TODO: this needs to init the OLD ModelChangeList and convert it
-
-    ModelChangeListOld changeListOld = new ModelChangeListOld();
-    changeListOld.initFrom(pByteArray);
-    fModelChanges = changeListOld.convert();
-    
-    fReportList.initFrom(pByteArray);
-
-    if (pByteArray.getBoolean()) {
-      fAnimation = new Animation();
-      fAnimation.initFrom(pByteArray);
-    }
-
-    fSound = new SoundIdFactory().forId(pByteArray.getByte());
-    fGameTime = pByteArray.getLong();
-    fTurnTime = pByteArray.getLong();
-
-    return byteArraySerializationVersion;
-
-  }
-  
   // JSON serialization
   
   public JsonObject toJsonValue() {

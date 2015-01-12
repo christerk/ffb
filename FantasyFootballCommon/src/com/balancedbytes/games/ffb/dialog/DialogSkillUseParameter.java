@@ -2,8 +2,6 @@ package com.balancedbytes.games.ffb.dialog;
 
 import com.balancedbytes.games.ffb.IDialogParameter;
 import com.balancedbytes.games.ffb.Skill;
-import com.balancedbytes.games.ffb.SkillFactory;
-import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.eclipsesource.json.JsonObject;
@@ -51,17 +49,6 @@ public class DialogSkillUseParameter implements IDialogParameter {
     return new DialogSkillUseParameter(getPlayerId(), getSkill(), getMinimumRoll());
   }
   
-  // ByteArray serialization
-  
-  public int initFrom(ByteArray pByteArray) {
-    int byteArraySerializationVersion = pByteArray.getSmallInt();
-    UtilDialogParameter.validateDialogId(this, new DialogIdFactory().forId(pByteArray.getByte()));
-    fPlayerId = pByteArray.getString();
-    fSkill = new SkillFactory().forId(pByteArray.getByte());
-    fMinimumRoll = pByteArray.getByte();
-    return byteArraySerializationVersion;
-  }
-
   // JSON serialization
   
   public JsonObject toJsonValue() {

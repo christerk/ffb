@@ -2,16 +2,13 @@ package com.balancedbytes.games.ffb;
 
 import java.util.LinkedList;
 
-import com.balancedbytes.games.ffb.bytearray.ByteArray;
-import com.balancedbytes.games.ffb.bytearray.ByteList;
-import com.balancedbytes.games.ffb.bytearray.IByteArrayReadable;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.IJsonSerializable;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
-public class FieldCoordinateBounds implements IByteArrayReadable, IJsonSerializable {
+public class FieldCoordinateBounds implements IJsonSerializable {
 
 	public static final FieldCoordinateBounds FIELD = new FieldCoordinateBounds(new FieldCoordinate(0, 0), new FieldCoordinate(25, 14));
 
@@ -143,24 +140,6 @@ public class FieldCoordinateBounds implements IByteArrayReadable, IJsonSerializa
 		return true;
 	}
 
-	public int getByteArraySerializationVersion() {
-		return 1;
-	}
-
-	public void addTo(ByteList pByteList) {
-		pByteList.addSmallInt(getByteArraySerializationVersion());
-		pByteList.addFieldCoordinate(fTopLeftCorner);
-		pByteList.addFieldCoordinate(fBottomRightCorner);
-	}
-	
-	public int initFrom(ByteArray pByteArray) {
-		int byteArraySerializationVersion = pByteArray.getSmallInt();
-		fTopLeftCorner = pByteArray.getFieldCoordinate();
-		fBottomRightCorner = pByteArray.getFieldCoordinate();
-		return byteArraySerializationVersion;
-	}
-	
-  
   // JSON serialization
   
   public JsonObject toJsonValue() {

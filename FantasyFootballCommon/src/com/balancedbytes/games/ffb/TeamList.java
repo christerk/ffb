@@ -8,9 +8,6 @@ import javax.xml.transform.sax.TransformerHandler;
 import org.xml.sax.Attributes;
 import org.xml.sax.helpers.AttributesImpl;
 
-import com.balancedbytes.games.ffb.bytearray.ByteArray;
-import com.balancedbytes.games.ffb.bytearray.ByteList;
-import com.balancedbytes.games.ffb.bytearray.IByteArrayReadable;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.IJsonSerializable;
 import com.balancedbytes.games.ffb.json.UtilJson;
@@ -28,7 +25,7 @@ import com.eclipsesource.json.JsonValue;
  * 
  * @author Kalimar
  */
-public class TeamList implements IXmlSerializable, IByteArrayReadable, IJsonSerializable {
+public class TeamList implements IXmlSerializable, IJsonSerializable {
     
 //  <teams coach="47257">
 //    <team>
@@ -147,34 +144,6 @@ public class TeamList implements IXmlSerializable, IByteArrayReadable, IJsonSeri
   
   public boolean endXmlElement(String pXmlTag, String pValue) {
     return XML_TAG.equals(pXmlTag);
-  }
-  
-  // ByteArray serialization
-  
-  public int getByteArraySerializationVersion() {
-    return 1;
-  }
-  
-  public void addTo(ByteList pByteList) {
-    pByteList.addSmallInt(getByteArraySerializationVersion());
-    pByteList.addString(getCoach());
-    TeamListEntry[] teamListEntries = getTeamListEntries();
-    pByteList.addByte((byte) teamListEntries.length);
-    for (TeamListEntry teamListEntry : teamListEntries) {
-      teamListEntry.addTo(pByteList);
-    }
-  }
-  
-  public int initFrom(ByteArray pByteArray) {
-    int byteArraySerializationVersion = pByteArray.getSmallInt();
-    fCoach = pByteArray.getString();
-    int nrOfTeamListEntries = pByteArray.getByte();
-    for (int i = 0; i < nrOfTeamListEntries; i++) {
-      TeamListEntry teamListEntry = new TeamListEntry();
-      teamListEntry.initFrom(pByteArray);
-      add(teamListEntry);
-    }
-    return byteArraySerializationVersion;
   }
   
   // JSON serialization

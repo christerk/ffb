@@ -1,7 +1,6 @@
 package com.balancedbytes.games.ffb.dialog;
 
 import com.balancedbytes.games.ffb.IDialogParameter;
-import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.eclipsesource.json.JsonObject;
@@ -61,19 +60,6 @@ public class DialogBlockRollParameter implements IDialogParameter {
     return new DialogBlockRollParameter(getChoosingTeamId(), getNrOfDice(), getBlockRoll(), hasTeamReRollOption(), hasProReRollOption());
   }
 
-  // ByteArray serialization
-  
-  public int initFrom(ByteArray pByteArray) {
-    int byteArraySerializationVersion = pByteArray.getSmallInt();
-    UtilDialogParameter.validateDialogId(this, new DialogIdFactory().forId(pByteArray.getByte()));
-    fChoosingTeamId = pByteArray.getString();
-    fNrOfDice = pByteArray.getByte();
-    fBlockRoll = pByteArray.getByteArrayAsIntArray();
-    fTeamReRollOption = pByteArray.getBoolean();
-    fProReRollOption = pByteArray.getBoolean();
-    return byteArraySerializationVersion;
-  }
-  
   // JSON serialization
   
   public JsonObject toJsonValue() {

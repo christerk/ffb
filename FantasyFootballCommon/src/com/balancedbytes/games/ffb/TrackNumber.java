@@ -1,8 +1,5 @@
 package com.balancedbytes.games.ffb;
 
-import com.balancedbytes.games.ffb.bytearray.ByteArray;
-import com.balancedbytes.games.ffb.bytearray.ByteList;
-import com.balancedbytes.games.ffb.bytearray.IByteArrayReadable;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.IJsonSerializable;
 import com.balancedbytes.games.ffb.json.UtilJson;
@@ -16,7 +13,7 @@ import com.eclipsesource.json.JsonValue;
  * 
  * @author Kalimar
  */
-public class TrackNumber implements IByteArrayReadable, IJsonSerializable {
+public class TrackNumber implements IJsonSerializable {
   
   private FieldCoordinate fCoordinate;
   private int fNumber;
@@ -57,25 +54,6 @@ public class TrackNumber implements IByteArrayReadable, IJsonSerializable {
     return (pTrackNumber != null) ? pTrackNumber.transform() : null;
   }
     
-  // ByteArray serialization
-  
-  public int getByteArraySerializationVersion() {
-    return 1;
-  };
-  
-  public void addTo(ByteList pByteList) {
-    pByteList.addSmallInt(getByteArraySerializationVersion());
-    pByteList.addByte((byte) getNumber());
-    pByteList.addFieldCoordinate(getCoordinate());
-  }
-    
-  public int initFrom(ByteArray pByteArray) {
-    int byteArraySerializationVersion = pByteArray.getSmallInt();
-    fNumber = pByteArray.getByte();
-    fCoordinate = pByteArray.getFieldCoordinate();
-    return byteArraySerializationVersion;
-  }
-  
   // JSON serialization
   
   public JsonObject toJsonValue() {

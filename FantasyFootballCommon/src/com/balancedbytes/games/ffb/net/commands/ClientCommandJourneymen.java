@@ -3,8 +3,6 @@ package com.balancedbytes.games.ffb.net.commands;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.balancedbytes.games.ffb.bytearray.ByteArray;
-import com.balancedbytes.games.ffb.bytearray.ByteList;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.net.NetCommand;
@@ -79,25 +77,6 @@ public class ClientCommandJourneymen extends NetCommand {
         fSlots.add(slots);
       }
     }
-  }
-
-  // ByteArray serialization
-
-  public int getByteArraySerializationVersion() {
-    return 1;
-  }
-
-  public void addTo(ByteList pByteList) {
-    pByteList.addSmallInt(getByteArraySerializationVersion());
-    pByteList.addStringArray(getPositionIds());
-    pByteList.addByteArray(getSlots());
-  }
-
-  public int initFrom(ByteArray pByteArray) {
-    int byteArraySerializationVersion = pByteArray.getSmallInt();
-    addPositionIds(pByteArray.getStringArray());
-    addSlots(pByteArray.getByteArrayAsIntArray());
-    return byteArraySerializationVersion;
   }
 
   // JSON serialization

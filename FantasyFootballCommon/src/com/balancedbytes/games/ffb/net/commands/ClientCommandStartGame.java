@@ -1,7 +1,5 @@
 package com.balancedbytes.games.ffb.net.commands;
 
-import com.balancedbytes.games.ffb.bytearray.ByteArray;
-import com.balancedbytes.games.ffb.bytearray.ByteList;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.net.NetCommand;
@@ -23,20 +21,6 @@ public class ClientCommandStartGame extends NetCommand {
   
   public NetCommandId getId() {
     return NetCommandId.CLIENT_START_GAME;
-  }
-  
-  // ByteArray serialization
-  
-  public int getByteArraySerializationVersion() {
-    return 1;
-  }
-  
-  public void addTo(ByteList pByteList) {
-    pByteList.addSmallInt(getByteArraySerializationVersion());
-  }
-  
-  public int initFrom(ByteArray pByteArray) {
-    return pByteArray.getSmallInt();
   }
   
   // JSON serialization

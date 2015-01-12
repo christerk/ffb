@@ -3,7 +3,6 @@ package com.balancedbytes.games.ffb.net.commands;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.net.NetCommandFactory;
@@ -84,29 +83,6 @@ public class ServerCommandReplay extends ServerCommand {
       }
     }
     return lowestCommandNr;
-  }
-  
-  // ByteArray serialization
-  
-  public int initFrom(ByteArray pByteArray) {
-    int byteArraySerializationVersion = pByteArray.getSmallInt();
-    int nrOfCommands = pByteArray.getSmallInt();
-    fTotalNrOfCommands = pByteArray.getSmallInt();
-    initFrom(pByteArray, nrOfCommands);
-    return byteArraySerializationVersion;
-  }
-
-  public void initFrom(ByteArray pByteArray, int pNrOfCommands) {
-    NetCommandFactory netCommandFactory = new NetCommandFactory();
-    for (int i = 0; i < pNrOfCommands; i++) {
-      byte[] commandBytes = new byte[pByteArray.getSmallInt(pByteArray.getPosition() + 2)];
-      for (int j = 0; j < commandBytes.length; j++) {
-        commandBytes[j] = pByteArray.getByte();
-      }
-      ServerCommand replayCommand = (ServerCommand) netCommandFactory.fromBytes(commandBytes);
-//      System.out.println("[" + (i + 1) + "] " + replayCommand.getId().getName());
-      add(replayCommand);
-    }
   }
   
   // JSON serialization

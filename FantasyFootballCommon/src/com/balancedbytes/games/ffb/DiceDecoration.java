@@ -1,8 +1,5 @@
 package com.balancedbytes.games.ffb;
 
-import com.balancedbytes.games.ffb.bytearray.ByteArray;
-import com.balancedbytes.games.ffb.bytearray.ByteList;
-import com.balancedbytes.games.ffb.bytearray.IByteArrayReadable;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.IJsonSerializable;
 import com.balancedbytes.games.ffb.json.UtilJson;
@@ -15,7 +12,7 @@ import com.eclipsesource.json.JsonValue;
  * 
  * @author Kalimar
  */
-public class DiceDecoration implements IByteArrayReadable, IJsonSerializable {
+public class DiceDecoration implements IJsonSerializable {
 
   private FieldCoordinate fCoordinate;
   private int fNrOfDice;
@@ -67,25 +64,6 @@ public class DiceDecoration implements IByteArrayReadable, IJsonSerializable {
       }
     }
     return transformedDiceDecorations;
-  }
-  
-  // ByteArray serialization
-  
-  public int getByteArraySerializationVersion() {
-    return 1;
-  }
-  
-  public void addTo(ByteList pByteList) {
-    pByteList.addSmallInt(getByteArraySerializationVersion());
-    pByteList.addFieldCoordinate(getCoordinate());
-    pByteList.addByte((byte) getNrOfDice());
-  }
-  
-  public int initFrom(ByteArray pByteArray) {
-    int byteArraySerializationVersion = pByteArray.getSmallInt(); 
-    fCoordinate = pByteArray.getFieldCoordinate();
-    fNrOfDice = pByteArray.getByte();
-    return byteArraySerializationVersion;
   }
   
   // JSON serialization

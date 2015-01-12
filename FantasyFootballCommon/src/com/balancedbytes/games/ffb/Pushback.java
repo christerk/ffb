@@ -1,8 +1,5 @@
 package com.balancedbytes.games.ffb;
 
-import com.balancedbytes.games.ffb.bytearray.ByteArray;
-import com.balancedbytes.games.ffb.bytearray.ByteList;
-import com.balancedbytes.games.ffb.bytearray.IByteArrayReadable;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.IJsonSerializable;
 import com.balancedbytes.games.ffb.json.UtilJson;
@@ -13,7 +10,7 @@ import com.eclipsesource.json.JsonValue;
  * 
  * @author Kalimar
  */
-public class Pushback implements IByteArrayReadable, IJsonSerializable {
+public class Pushback implements IJsonSerializable {
   
   private String fPlayerId;
   private FieldCoordinate fCoordinate;
@@ -39,25 +36,6 @@ public class Pushback implements IByteArrayReadable, IJsonSerializable {
   
   public Pushback transform() {
     return new Pushback(getPlayerId(), FieldCoordinate.transform(getCoordinate()));
-  }
-  
-  // ByteArray serialization
-  
-  public int getByteArraySerializationVersion() {
-    return 1;
-  }
-  
-  public void addTo(ByteList pByteList) {
-    pByteList.addSmallInt(getByteArraySerializationVersion());
-    pByteList.addString(getPlayerId());
-    pByteList.addFieldCoordinate(getCoordinate());
-  }
-  
-  public int initFrom(ByteArray pByteArray) {
-    int byteArraySerializationVersion = pByteArray.getSmallInt();
-    fPlayerId = pByteArray.getString();
-    fCoordinate = pByteArray.getFieldCoordinate();
-    return byteArraySerializationVersion;
   }
   
   // JSON serialization

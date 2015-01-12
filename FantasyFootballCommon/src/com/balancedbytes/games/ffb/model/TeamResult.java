@@ -4,9 +4,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.balancedbytes.games.ffb.PlayerState;
-import com.balancedbytes.games.ffb.bytearray.ByteArray;
-import com.balancedbytes.games.ffb.bytearray.ByteList;
-import com.balancedbytes.games.ffb.bytearray.IByteArrayReadable;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.IJsonSerializable;
 import com.balancedbytes.games.ffb.json.UtilJson;
@@ -20,7 +17,7 @@ import com.eclipsesource.json.JsonValue;
  * 
  * @author Kalimar
  */
-public class TeamResult implements IByteArrayReadable, IJsonSerializable {
+public class TeamResult implements IJsonSerializable {
 
   private int fScore;
   private int fFame;
@@ -369,64 +366,6 @@ public class TeamResult implements IByteArrayReadable, IJsonSerializable {
   	getGame().notifyObservers(modelChange);
   }
     
-  // ByteArray serialization
-  
-  public int getByteArraySerializationVersion() {
-    return 3;
-  }
-  
-  public void addTo(ByteList pByteList) {
-    pByteList.addSmallInt(getByteArraySerializationVersion());
-    pByteList.addByte((byte) getScore());
-    pByteList.addBoolean(hasConceded());
-    pByteList.addByte((byte) getRaisedDead());
-    pByteList.addInt(getSpectators());
-    pByteList.addByte((byte) getFame());
-    pByteList.addInt(getWinnings());
-    pByteList.addByte((byte) getFanFactorModifier());
-    pByteList.addByte((byte) getBadlyHurtSuffered());
-    pByteList.addByte((byte) getSeriousInjurySuffered());
-    pByteList.addByte((byte) getRipSuffered());
-    pByteList.addInt(getSpirallingExpenses());
-    Player[] players = getTeam().getPlayers();
-    pByteList.addByte((byte) players.length);
-    for (Player player : players) {
-      getPlayerResult(player).addTo(pByteList);
-    }
-    pByteList.addInt(getPettyCashTransferred());
-    pByteList.addInt(getPettyCashUsed());
-    pByteList.addInt(getTeamValue());
-  }
-  
-  public int initFrom(ByteArray pByteArray) {
-    int byteArraySerializationVersion = pByteArray.getSmallInt();
-    fScore = pByteArray.getByte();
-    fConceded = pByteArray.getBoolean();
-    fRaisedDead = pByteArray.getByte();
-    fSpectators = pByteArray.getInt();
-    fFame = pByteArray.getByte();
-    fWinnings = pByteArray.getInt();
-    fFanFactorModifier = pByteArray.getByte();
-    fBadlyHurtSuffered = pByteArray.getByte();
-    fSeriousInjurySuffered = pByteArray.getByte();
-    fRipSuffered = pByteArray.getByte();
-    fSpirallingExpenses = pByteArray.getInt();
-    int nrOfPlayers = pByteArray.getByte();
-    for (int i = 0; i < nrOfPlayers; i++) {
-      PlayerResult playerResult = new PlayerResult(this);
-      playerResult.initFrom(pByteArray);
-      fPlayerResultByPlayerId.put(playerResult.getPlayerId(), playerResult);
-    }
-    if (byteArraySerializationVersion > 1) {
-      fPettyCashTransferred = pByteArray.getInt();
-      fPettyCashUsed = pByteArray.getInt();
-    }
-    if (byteArraySerializationVersion > 2) {
-      fTeamValue = pByteArray.getInt();
-    }
-    return byteArraySerializationVersion;
-  }
-  
   // JSON serialization
   
   public JsonObject toJsonValue() {

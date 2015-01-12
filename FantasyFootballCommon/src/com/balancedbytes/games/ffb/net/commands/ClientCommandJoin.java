@@ -1,9 +1,6 @@
 package com.balancedbytes.games.ffb.net.commands;
 
 import com.balancedbytes.games.ffb.ClientMode;
-import com.balancedbytes.games.ffb.ClientModeFactory;
-import com.balancedbytes.games.ffb.bytearray.ByteArray;
-import com.balancedbytes.games.ffb.bytearray.ByteList;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.net.NetCommand;
@@ -92,35 +89,6 @@ public class ClientCommandJoin extends NetCommand {
   
   public void setTeamName(String pTeamName) {
     fTeamName = pTeamName;
-  }
-  
-  // ByteArray serialization
-  
-  public int getByteArraySerializationVersion() {
-    return 1;
-  }
-
-  public void addTo(ByteList pByteList) {
-    pByteList.addSmallInt(getByteArraySerializationVersion());
-    pByteList.addByte((byte) getClientMode().getId());
-    pByteList.addString(getCoach());
-    pByteList.addString(getPassword());
-    pByteList.addLong(getGameId());
-    pByteList.addString(getGameName());
-    pByteList.addString(getTeamId());
-    pByteList.addString(getTeamName());
-  }
-  
-  public int initFrom(ByteArray pByteArray) {
-    int byteArraySerializationVersion = pByteArray.getSmallInt();
-    fClientMode = new ClientModeFactory().forId(pByteArray.getByte());
-    fCoach = pByteArray.getString();
-    fPassword = pByteArray.getString();
-    fGameId = pByteArray.getLong();
-    fGameName = pByteArray.getString();
-    fTeamId = pByteArray.getString();
-    fTeamName = pByteArray.getString();
-    return byteArraySerializationVersion;
   }
   
   // JSON serialization

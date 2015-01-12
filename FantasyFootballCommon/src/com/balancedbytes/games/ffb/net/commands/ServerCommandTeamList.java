@@ -1,8 +1,6 @@
 package com.balancedbytes.games.ffb.net.commands;
 
 import com.balancedbytes.games.ffb.TeamList;
-import com.balancedbytes.games.ffb.bytearray.ByteArray;
-import com.balancedbytes.games.ffb.bytearray.ByteList;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.net.NetCommandId;
@@ -38,33 +36,6 @@ public class ServerCommandTeamList extends ServerCommand {
   
   public boolean isReplayable() {
     return false;
-  }
-  
-  // ByteArray serialization
-  
-  public int getByteArraySerializationVersion() {
-    return 1;
-  }
-  
-  public void addTo(ByteList pByteList) {
-    pByteList.addSmallInt(getByteArraySerializationVersion());
-    pByteList.addSmallInt(getCommandNr());
-    boolean hasTeamList = (getTeamList() != null);
-    pByteList.addBoolean(hasTeamList);
-    if (hasTeamList) {
-      getTeamList().addTo(pByteList);
-    }
-  }
-
-  public int initFrom(ByteArray pByteArray) {
-    int byteArraySerializationVersion = pByteArray.getSmallInt();
-    setCommandNr(pByteArray.getSmallInt());
-    boolean hasTeamList = pByteArray.getBoolean();
-    if (hasTeamList) {
-      fTeamList = new TeamList();
-      fTeamList.initFrom(pByteArray);
-    }
-    return byteArraySerializationVersion;
   }
   
   // JSON serialization

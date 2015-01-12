@@ -11,13 +11,9 @@ import org.xml.sax.Attributes;
 import org.xml.sax.helpers.AttributesImpl;
 
 import com.balancedbytes.games.ffb.PlayerType;
-import com.balancedbytes.games.ffb.bytearray.ByteArray;
-import com.balancedbytes.games.ffb.bytearray.ByteList;
-import com.balancedbytes.games.ffb.bytearray.IByteArrayReadable;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.IJsonSerializable;
 import com.balancedbytes.games.ffb.json.UtilJson;
-import com.balancedbytes.games.ffb.util.ArrayTool;
 import com.balancedbytes.games.ffb.xml.IXmlSerializable;
 import com.balancedbytes.games.ffb.xml.UtilXml;
 import com.eclipsesource.json.JsonArray;
@@ -28,7 +24,7 @@ import com.eclipsesource.json.JsonValue;
  * 
  * @author Kalimar
  */
-public class Team implements IXmlSerializable, IByteArrayReadable, IJsonSerializable {
+public class Team implements IXmlSerializable, IJsonSerializable {
 
   public static final String XML_TAG = "team";
 
@@ -400,76 +396,6 @@ public class Team implements IXmlSerializable, IByteArrayReadable, IJsonSerializ
     return complete;
   }
 
-  // ByteArray serialization
-  
-  public int getByteArraySerializationVersion() {
-    return 0;  // TODO implement serialization info for this object
-  }
-    
-  public void addTo(ByteList pByteList) {
-
-    getRoster().addTo(pByteList);
-
-    pByteList.addString(getId());
-    pByteList.addString(getName());
-    pByteList.addString(getCoach());
-    pByteList.addString(getRace());
-    pByteList.addByte((byte) getReRolls());
-    pByteList.addByte((byte) getApothecaries());
-    pByteList.addByte((byte) getCheerleaders());
-    pByteList.addByte((byte) getAssistantCoaches());
-    pByteList.addByte((byte) getFanFactor());
-    pByteList.addInt(getTeamValue());
-    pByteList.addInt(getTreasury());
-    pByteList.addString(getBaseIconPath());
-    pByteList.addString(getLogoUrl());
-
-    Player[] players = getPlayers();
-    if (ArrayTool.isProvided(players)) {
-      pByteList.addByte((byte) players.length);
-      for (Player player : players) {
-        player.addTo(pByteList);
-      }
-    } else {
-      pByteList.addByte((byte) 0);
-    }
-
-  }
-
-  public int initFrom(ByteArray pByteArray) {
-
-    Roster roster = new Roster();
-    roster.initFrom(pByteArray);
-
-    setId(pByteArray.getString());
-    setName(pByteArray.getString());
-    setCoach(pByteArray.getString());
-    setRace(pByteArray.getString());
-    setReRolls(pByteArray.getByte());
-    setApothecaries(pByteArray.getByte());
-    setCheerleaders(pByteArray.getByte());
-    setAssistantCoaches(pByteArray.getByte());
-    setFanFactor(pByteArray.getByte());
-    setTeamValue(pByteArray.getInt());
-    setTreasury(pByteArray.getInt());
-    setBaseIconPath(pByteArray.getString());
-    setLogoUrl(pByteArray.getString());
-
-    int nrOfPlayers = pByteArray.getByte();
-    
-    for (int i = 0; i < nrOfPlayers; i++) {
-      Player player = new Player();
-      player.initFrom(pByteArray);
-      addPlayer(player);
-    }
-
-    updateRoster(roster);
-    
-    // TODO implement serialization info for this object
-    return 0;
-
-  }
-  
   // JSON serialization
   
   public JsonObject toJsonValue() {

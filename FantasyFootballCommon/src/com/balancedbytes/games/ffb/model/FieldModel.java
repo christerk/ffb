@@ -23,9 +23,6 @@ import com.balancedbytes.games.ffb.PushbackSquare;
 import com.balancedbytes.games.ffb.RangeRuler;
 import com.balancedbytes.games.ffb.TrackNumber;
 import com.balancedbytes.games.ffb.Weather;
-import com.balancedbytes.games.ffb.WeatherFactory;
-import com.balancedbytes.games.ffb.bytearray.ByteArray;
-import com.balancedbytes.games.ffb.bytearray.IByteArrayReadable;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.IJsonSerializable;
 import com.balancedbytes.games.ffb.json.UtilJson;
@@ -42,7 +39,7 @@ import com.eclipsesource.json.JsonValue;
  * 
  * @author Kalimar
  */
-public class FieldModel implements IByteArrayReadable, IJsonSerializable {
+public class FieldModel implements IJsonSerializable {
     
   private boolean fBallMoving;
   private boolean fBallInPlay;
@@ -694,108 +691,6 @@ public class FieldModel implements IByteArrayReadable, IJsonSerializable {
   	getGame().notifyObservers(new ModelChange(pChangeId, pKey, pValue));
   }
 
-  // ByteArray serialization
-  
-  public int initFrom(ByteArray pByteArray) {
-    
-  	int byteArraySerializationVersion = pByteArray.getSmallInt();
-  	
-    deprecatedInitFrom(pByteArray, false);
-    
-    int nrOfPlayers = pByteArray.getByte();
-    for (int i = 0; i < nrOfPlayers; i++) {
-    	
-    	Player player = getGame().getPlayerById(pByteArray.getString());
-      setPlayerCoordinate(player, pByteArray.getFieldCoordinate());
-      setPlayerState(player, new PlayerState(pByteArray.getSmallInt()));
-      
-      if (byteArraySerializationVersion > 2) {
-      	int nrOfCards = pByteArray.getByte();
-      	CardFactory cardFactory = new CardFactory();
-      	for (int j = 0; j < nrOfCards; j++) {
-      		addCard(player, cardFactory.forId(pByteArray.getSmallInt()));
-      	}
-      }
-      
-    }
-
-    if (byteArraySerializationVersion > 1) {
-    	setBombCoordinate(pByteArray.getFieldCoordinate());
-    	setBombMoving(pByteArray.getBoolean());
-    }
-
-    return byteArraySerializationVersion;
-    
-  }
-  
-  // bad hack to cover up missing byteArraySerialization
-  public void deprecatedInitFrom(ByteArray pByteArray, boolean pWithPlayerStates) {
-
-    setWeather(new WeatherFactory().forId(pByteArray.getByte()));
-    setBallCoordinate(pByteArray.getFieldCoordinate());
-    setBallInPlay(pByteArray.getBoolean());
-    setBallMoving(pByteArray.getBoolean());
-
-    int nrOfBloodspots = pByteArray.getByte();
-    for (int i = 0; i < nrOfBloodspots; i++) {
-      BloodSpot bloodspot = new BloodSpot();
-      bloodspot.initFrom(pByteArray);
-      add(bloodspot);
-    }
-    
-    int nrOfPushbackSquares = pByteArray.getByte();
-    for (int i = 0; i < nrOfPushbackSquares; i++) {
-      PushbackSquare pushbackSquare = new PushbackSquare();
-      pushbackSquare.initFrom(pByteArray);
-      add(pushbackSquare);
-    }
-
-    int nrOfMoveSquares = pByteArray.getByte();
-    for (int i = 0; i < nrOfMoveSquares; i++) {
-      MoveSquare moveSquare = new MoveSquare();
-      moveSquare.initFrom(pByteArray);
-      add(moveSquare);
-    }
-
-    int nrOfTrackNumbers = pByteArray.getByte();
-    for (int i = 0; i < nrOfTrackNumbers; i++) {
-      TrackNumber trackNumber = new TrackNumber();
-      trackNumber.initFrom(pByteArray);
-      add(trackNumber);
-    }
-    
-    int nrOfDiceDecorations = pByteArray.getByte();
-    for (int i = 0; i < nrOfDiceDecorations; i++) {
-      DiceDecoration diceDecoration = new DiceDecoration();
-      diceDecoration.initFrom(pByteArray);
-      add(diceDecoration);
-    }
-
-    int nrOfFieldMarkers = pByteArray.getByte();
-    for (int i = 0; i < nrOfFieldMarkers; i++) {
-      FieldMarker fieldMarker = new FieldMarker();
-      fieldMarker.initFrom(pByteArray);
-      add(fieldMarker);
-    }
-
-    int nrOfPlayerMarkers = pByteArray.getByte();
-    for (int i = 0; i < nrOfPlayerMarkers; i++) {
-      PlayerMarker playerMarker = new PlayerMarker();
-      playerMarker.initFrom(pByteArray);
-      add(playerMarker);
-    }
-
-    if (pWithPlayerStates) {
-      int nrOfPlayers = pByteArray.getByte();
-      for (int i = 0; i < nrOfPlayers; i++) {
-      	Player player = getGame().getPlayerById(pByteArray.getString());
-        setPlayerCoordinate(player, pByteArray.getFieldCoordinate());
-        setPlayerState(player, new PlayerState(pByteArray.getSmallInt()));
-      }
-    }
-  
-  }
-  
   // JSON serialization
   
   public JsonObject toJsonValue() {

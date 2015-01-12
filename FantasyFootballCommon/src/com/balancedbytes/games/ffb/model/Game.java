@@ -7,13 +7,7 @@ import java.util.List;
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.IDialogParameter;
 import com.balancedbytes.games.ffb.PlayerAction;
-import com.balancedbytes.games.ffb.PlayerActionFactory;
 import com.balancedbytes.games.ffb.TurnMode;
-import com.balancedbytes.games.ffb.TurnModeFactory;
-import com.balancedbytes.games.ffb.bytearray.ByteArray;
-import com.balancedbytes.games.ffb.bytearray.IByteArrayReadable;
-import com.balancedbytes.games.ffb.dialog.DialogId;
-import com.balancedbytes.games.ffb.dialog.DialogIdFactory;
 import com.balancedbytes.games.ffb.dialog.DialogParameterFactory;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.IJsonSerializable;
@@ -31,7 +25,7 @@ import com.eclipsesource.json.JsonValue;
  * 
  * @author Kalimar
  */
-public class Game extends ModelChangeObservable implements IByteArrayReadable, IJsonSerializable {
+public class Game extends ModelChangeObservable implements IJsonSerializable {
   
   private long fId;
   private Date fScheduled;
@@ -527,84 +521,6 @@ public class Game extends ModelChangeObservable implements IByteArrayReadable, I
     return transformedGame;
 
   }  
-  
-  // ByteArray serialization
-
-  public int initFrom(ByteArray pByteArray) {
-
-    int byteArraySerializationVersion = pByteArray.getSmallInt();
-    
-    setId(pByteArray.getLong());
-    long scheduleTime = pByteArray.getLong();
-    setScheduled((scheduleTime > 0) ? new Date(scheduleTime) : null);
-    long startedTime = pByteArray.getLong();
-    setStarted((startedTime > 0) ? new Date(startedTime) : null);
-    long finishedTime = pByteArray.getLong();
-    setFinished((finishedTime > 0) ? new Date(finishedTime) : null);
-    setHomePlaying(pByteArray.getBoolean());
-    setHalf(pByteArray.getByte());
-    setHomeFirstOffense(pByteArray.getBoolean());
-    setSetupOffense(pByteArray.getBoolean());
-    setWaitingForOpponent(pByteArray.getBoolean());
-    setTurnTime(pByteArray.getLong());
-    setGameTime(pByteArray.getLong());
-    setTimeoutPossible(pByteArray.getBoolean());
-    setTimeoutEnforced(pByteArray.getBoolean());
-    setConcessionPossible(pByteArray.getBoolean());
-    setTesting(pByteArray.getBoolean());
-    
-    DialogId dialogId = new DialogIdFactory().forId(pByteArray.getByte());
-    IDialogParameter dialogParameter = new DialogParameterFactory().createDialogParameter(dialogId);
-    if (dialogParameter != null) {
-      dialogParameter.initFrom(pByteArray);
-    }
-    setDialogParameter(dialogParameter);
-    
-    setTurnMode(new TurnModeFactory().forId(pByteArray.getByte()));
-
-    // Defender
-    setDefenderId(pByteArray.getString());
-    setDefenderAction(new PlayerActionFactory().forId(pByteArray.getByte()));
-    
-    setPassCoordinate(pByteArray.getFieldCoordinate());
-
-    // Home Team Data
-    getTeamHome().initFrom(pByteArray);
-    getTurnDataHome().initFrom(pByteArray);
-
-    // Away Team Data
-    getTeamAway().initFrom(pByteArray);
-    getTurnDataAway().initFrom(pByteArray);
-
-    // Field Model
-    if (byteArraySerializationVersion < 2) {
-    	getFieldModel().deprecatedInitFrom(pByteArray, true);  // bad hack to cover up missing byteArraySerialization
-    } else {
-    	getFieldModel().initFrom(pByteArray);
-    }
-
-    // Acting Player
-    if (byteArraySerializationVersion < 2) {
-      getActingPlayer().deprecatedInitFrom(pByteArray);  // bad hack to cover up missing byteArraySerialization
-      pByteArray.getString();  // duplicate defenderId, removed
-    } else {
-      getActingPlayer().initFrom(pByteArray);
-    }
-    
-    // Game Result
-    getGameResult().initFrom(pByteArray);
-    
-    // Options
-    getOptions().initFrom(pByteArray);
-    
-    if (byteArraySerializationVersion > 1) {
-    	fThrowerId = pByteArray.getString();
-    	fThrowerAction = new PlayerActionFactory().forId(pByteArray.getByte());
-    }
-    
-    return byteArraySerializationVersion;
-    
-  }
   
   // JSON serialization
   

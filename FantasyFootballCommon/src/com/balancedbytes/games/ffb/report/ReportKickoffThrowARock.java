@@ -3,7 +3,6 @@ package com.balancedbytes.games.ffb.report;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.util.ArrayTool;
@@ -69,17 +68,6 @@ public class ReportKickoffThrowARock implements IReport {
   
   public IReport transform() {
     return new ReportKickoffThrowARock(getRollAway(), getRollHome(), getPlayersHit());
-  }
-  
-  // ByteArray serialization
-  
-  public int initFrom(ByteArray pByteArray) {
-    UtilReport.validateReportId(this, new ReportIdFactory().forId(pByteArray.getSmallInt()));
-    int byteArraySerializationVersion = pByteArray.getSmallInt();
-    fRollHome = pByteArray.getByte();
-    fRollAway = pByteArray.getByte();
-    addPlayerIds(pByteArray.getStringArray());
-    return byteArraySerializationVersion;
   }
   
   // JSON serialization

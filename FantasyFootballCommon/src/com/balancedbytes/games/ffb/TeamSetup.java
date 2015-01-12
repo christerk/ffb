@@ -8,16 +8,12 @@ import javax.xml.transform.sax.TransformerHandler;
 import org.xml.sax.Attributes;
 import org.xml.sax.helpers.AttributesImpl;
 
-import com.balancedbytes.games.ffb.bytearray.ByteArray;
-import com.balancedbytes.games.ffb.bytearray.ByteList;
-import com.balancedbytes.games.ffb.bytearray.IByteArrayReadable;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.IJsonSerializable;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.model.Team;
-import com.balancedbytes.games.ffb.util.ArrayTool;
 import com.balancedbytes.games.ffb.util.UtilBox;
 import com.balancedbytes.games.ffb.xml.IXmlReadable;
 import com.balancedbytes.games.ffb.xml.IXmlSerializable;
@@ -31,7 +27,7 @@ import com.eclipsesource.json.JsonValue;
  * 
  * @author Kalimar
  */
-public class TeamSetup implements IXmlSerializable, IByteArrayReadable, IJsonSerializable {
+public class TeamSetup implements IXmlSerializable, IJsonSerializable {
   
   public static final String XML_TAG = "teamSetup";
   
@@ -184,40 +180,6 @@ public class TeamSetup implements IXmlSerializable, IByteArrayReadable, IJsonSer
   
   public boolean endXmlElement(String pXmlTag, String pValue) {
     return XML_TAG.equals(pXmlTag);
-  }
-  
-  // ByteArray serialization
-  
-  public int getByteArraySerializationVersion() {
-    return 1;
-  }
-  
-  public void addTo(ByteList pByteList) {
-    pByteList.addSmallInt(getByteArraySerializationVersion());
-    pByteList.addString(getName());
-    pByteList.addString(getTeamId());
-    pByteList.addByteArray(getPlayerNumbers());
-    FieldCoordinate[] coordinates = getCoordinates();
-    if (ArrayTool.isProvided(coordinates)) {
-      pByteList.addByte((byte) coordinates.length);
-      for (FieldCoordinate coordinate : coordinates) {
-        pByteList.addFieldCoordinate(coordinate);
-      }
-    } else {
-      pByteList.addByte((byte) 0);
-    }
-  }
-  
-  public int initFrom(ByteArray pByteArray) {
-    int byteArraySerializationVersion = pByteArray.getSmallInt();
-    fName = pByteArray.getString();
-    fTeamId = pByteArray.getString();
-    int[] playerNumbers = pByteArray.getByteArrayAsIntArray();
-    int nrOfCoordinates = pByteArray.getByte();
-    for (int i = 0; i < nrOfCoordinates; i++) {
-      addCoordinate(pByteArray.getFieldCoordinate(), playerNumbers[i]);
-    }
-    return byteArraySerializationVersion;
   }
   
   // JSON serialization

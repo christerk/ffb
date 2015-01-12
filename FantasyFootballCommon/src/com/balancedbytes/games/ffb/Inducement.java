@@ -1,8 +1,5 @@
 package com.balancedbytes.games.ffb;
 
-import com.balancedbytes.games.ffb.bytearray.ByteArray;
-import com.balancedbytes.games.ffb.bytearray.ByteList;
-import com.balancedbytes.games.ffb.bytearray.IByteArrayReadable;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.IJsonSerializable;
 import com.balancedbytes.games.ffb.json.UtilJson;
@@ -13,7 +10,7 @@ import com.eclipsesource.json.JsonValue;
  * 
  * @author Kalimar
  */
-public class Inducement implements IByteArrayReadable, IJsonSerializable {
+public class Inducement implements IJsonSerializable {
   
   private InducementType fType;
   private int fValue;
@@ -50,30 +47,6 @@ public class Inducement implements IByteArrayReadable, IJsonSerializable {
   
   public int getUsesLeft() {
     return Math.max(0, getValue() - getUses());
-  }
-  
-  // ByteArray serialization
-  
-  public int getByteArraySerializationVersion() {
-    return 2;
-  }
-  
-  public void addTo(ByteList pByteList) {
-    pByteList.addSmallInt(getByteArraySerializationVersion());
-    pByteList.addByte((byte) ((getType() != null) ? getType().getId() : 0)); 
-    pByteList.addByte((byte) getValue()); 
-    pByteList.addByte((byte) getUses());
-  }
-  
-  public int initFrom(ByteArray pByteArray) {
-    int byteArraySerializationVersion = pByteArray.getSmallInt();
-    fType = new InducementTypeFactory().forId(pByteArray.getByte());
-    fValue = pByteArray.getByte();
-    fUses = pByteArray.getByte();
-    if (byteArraySerializationVersion < 2) {
-    	pByteArray.getByte();  // modifier is deprecated
-    }
-    return byteArraySerializationVersion;
   }
   
   // JSON serialization

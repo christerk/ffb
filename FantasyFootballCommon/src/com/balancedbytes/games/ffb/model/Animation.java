@@ -2,9 +2,6 @@ package com.balancedbytes.games.ffb.model;
 
 import com.balancedbytes.games.ffb.Card;
 import com.balancedbytes.games.ffb.FieldCoordinate;
-import com.balancedbytes.games.ffb.bytearray.ByteArray;
-import com.balancedbytes.games.ffb.bytearray.ByteList;
-import com.balancedbytes.games.ffb.bytearray.IByteArrayReadable;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.IJsonSerializable;
 import com.balancedbytes.games.ffb.json.UtilJson;
@@ -17,7 +14,7 @@ import com.eclipsesource.json.JsonValue;
  * 
  * @author Kalimar
  */
-public class Animation implements IByteArrayReadable, IJsonSerializable {
+public class Animation implements IJsonSerializable {
   
   private AnimationType fAnimationType;
   private String fThrownPlayerId;
@@ -95,35 +92,6 @@ public class Animation implements IByteArrayReadable, IJsonSerializable {
     return new Animation(getAnimationType(), getCard(), FieldCoordinate.transform(getStartCoordinate()), FieldCoordinate.transform(getEndCoordinate()), getThrownPlayerId(), isWithBall(), FieldCoordinate.transform(getInterceptorCoordinate()));
   }
 
-  // ByteArray serialization
-  
-  public int getByteArraySerializationVersion() {
-    return 3;
-  }
-  
-  public void addTo(ByteList pByteList) {
-    pByteList.addSmallInt(getByteArraySerializationVersion());
-    pByteList.addString(getThrownPlayerId());
-    pByteList.addBoolean(isWithBall());
-    pByteList.addFieldCoordinate(getStartCoordinate());
-    pByteList.addFieldCoordinate(getEndCoordinate());
-    pByteList.addFieldCoordinate(getInterceptorCoordinate());
-    pByteList.addByte((byte) ((getAnimationType() != null) ? getAnimationType().getId() : 0));
-  }
-  
-  public int initFrom(ByteArray pByteArray) {
-    int byteArraySerializationVersion = pByteArray.getSmallInt();
-    fThrownPlayerId = pByteArray.getString();
-    fWithBall = pByteArray.getBoolean();
-    fStartCoordinate = pByteArray.getFieldCoordinate();
-    fEndCoordinate = pByteArray.getFieldCoordinate();
-    fInterceptorCoordinate = pByteArray.getFieldCoordinate();
-    if (byteArraySerializationVersion > 1) {
-    	fAnimationType = new AnimationTypeFactory().forId(pByteArray.getByte());
-    }
-    return byteArraySerializationVersion;
-  }
-  
   // JSON serialization
   
   public JsonObject toJsonValue() {

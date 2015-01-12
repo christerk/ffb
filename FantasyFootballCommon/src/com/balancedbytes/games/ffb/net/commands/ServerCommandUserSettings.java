@@ -4,8 +4,6 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.balancedbytes.games.ffb.bytearray.ByteArray;
-import com.balancedbytes.games.ffb.bytearray.ByteList;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.net.NetCommandId;
@@ -64,33 +62,6 @@ public class ServerCommandUserSettings extends ServerCommand {
     return false;
   }
 
-  // ByteArray serialization
-  
-  public int getByteArraySerializationVersion() {
-    return 1;
-  }
-  
-  public void addTo(ByteList pByteList) {
-    pByteList.addSmallInt(getByteArraySerializationVersion());
-    pByteList.addSmallInt(getCommandNr());
-    String[] settingNames = getUserSettingNames();
-    String[] settingValues = new String[settingNames.length];
-    for (int i = 0; i < settingNames.length; i++) {
-      settingValues[i] = getUserSettingValue(settingNames[i]);
-    }
-    pByteList.addStringArray(settingNames);
-    pByteList.addStringArray(settingValues);
-  }
-  
-  public int initFrom(ByteArray pByteArray) {
-    int byteArraySerializationVersion = pByteArray.getSmallInt();
-    setCommandNr(pByteArray.getSmallInt());
-    String[] settingNames = pByteArray.getStringArray();
-    String[] settingValues = pByteArray.getStringArray();
-    init(settingNames, settingValues);
-    return byteArraySerializationVersion;
-  }
-  
   // JSON serialization
   
   public JsonObject toJsonValue() {
