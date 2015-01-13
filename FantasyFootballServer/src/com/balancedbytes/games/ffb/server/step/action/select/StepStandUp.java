@@ -2,7 +2,6 @@ package com.balancedbytes.games.ffb.server.step.action.select;
 
 import com.balancedbytes.games.ffb.PlayerState;
 import com.balancedbytes.games.ffb.ReRolledAction;
-import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.Game;
@@ -145,15 +144,6 @@ public final class StepStandUp extends AbstractStepWithReRoll {
     } else {
     	getResult().setNextAction(StepAction.NEXT_STEP);
     }
-  }
-  
-  // ByteArray serialization
-  
-  @Override
-  public int initFrom(ByteArray pByteArray) {
-  	int byteArraySerializationVersion = super.initFrom(pByteArray);
-  	fGotoLabelOnFailure = pByteArray.getString();
-  	return byteArraySerializationVersion;
   }
   
   // JSON serialization

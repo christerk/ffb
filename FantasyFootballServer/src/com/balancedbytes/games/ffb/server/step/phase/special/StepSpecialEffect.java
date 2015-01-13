@@ -3,9 +3,7 @@ package com.balancedbytes.games.ffb.server.step.phase.special;
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.InjuryType;
 import com.balancedbytes.games.ffb.SpecialEffect;
-import com.balancedbytes.games.ffb.SpecialEffectFactory;
 import com.balancedbytes.games.ffb.TurnMode;
-import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
@@ -151,18 +149,6 @@ public final class StepSpecialEffect extends AbstractStep {
 			
 		}
 		
-  }
-  
-  // ByteArray serialization
-    
-  @Override
-  public int initFrom(ByteArray pByteArray) {
-  	int byteArraySerializationVersion = super.initFrom(pByteArray);
-  	fGotoLabelOnFailure = pByteArray.getString();
-  	fPlayerId = pByteArray.getString();
-  	fRollForEffect = pByteArray.getBoolean();
-  	fSpecialEffect = new SpecialEffectFactory().forId(pByteArray.getByte());
-  	return byteArraySerializationVersion;
   }
   
   // JSON serialization

@@ -1,9 +1,6 @@
 package com.balancedbytes.games.ffb.server.step;
 
 import com.balancedbytes.games.ffb.SoundId;
-import com.balancedbytes.games.ffb.SoundIdFactory;
-import com.balancedbytes.games.ffb.bytearray.ByteArray;
-import com.balancedbytes.games.ffb.bytearray.IByteArrayReadable;
 import com.balancedbytes.games.ffb.json.IJsonSerializable;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.Animation;
@@ -17,7 +14,7 @@ import com.eclipsesource.json.JsonValue;
  * 
  * @author Kalimar
  */
-public class StepResult implements IByteArrayReadable, IJsonSerializable {
+public class StepResult implements IJsonSerializable {
 	
 	private StepAction fNextAction;
 	private String fNextActionParameter;
@@ -96,23 +93,6 @@ public class StepResult implements IByteArrayReadable, IJsonSerializable {
   public boolean isSynchronize() {
 		return fSynchronize;
 	}
-  
-  // ByteArray serialization
-  
-  public int initFrom(ByteArray pByteArray) {
-  	int byteArraySerializationVersion = pByteArray.getSmallInt();
-  	setNextAction(new StepActionFactory().forId(pByteArray.getByte()));
-  	setNextActionParameter(pByteArray.getString());
-  	setReportList(new ReportList());
-  	getReportList().initFrom(pByteArray);
-  	if (pByteArray.getBoolean()) {
-  		setAnimation(new Animation());
-  		getAnimation().initFrom(pByteArray);
-  	}
-  	setSound(new SoundIdFactory().forId(pByteArray.getByte()));
-  	setSynchronize(pByteArray.getBoolean());
-  	return byteArraySerializationVersion;
-  }
   
   // JSON serialization
   

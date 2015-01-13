@@ -1,7 +1,6 @@
 package com.balancedbytes.games.ffb.server.step;
 
 import com.balancedbytes.games.ffb.SoundId;
-import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.dialog.DialogConcedeGameParameter;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.Game;
@@ -104,17 +103,6 @@ public abstract class AbstractStep implements IStep {
         publishParameter(parameter);
       }
     }
-  }
-  
-  // ByteArray serialization
-
-  public int initFrom(ByteArray pByteArray) {
-    UtilServerSteps.validateStepId(this, new StepIdFactory().forId(pByteArray.getSmallInt()));
-    int byteArraySerializationVersion = pByteArray.getSmallInt();
-    setLabel(pByteArray.getString());
-    setStepResult(new StepResult());
-    getResult().initFrom(pByteArray);
-    return byteArraySerializationVersion;
   }
   
   // JSON serialization

@@ -5,7 +5,6 @@ import com.balancedbytes.games.ffb.PlayerChoiceMode;
 import com.balancedbytes.games.ffb.ReRolledAction;
 import com.balancedbytes.games.ffb.Skill;
 import com.balancedbytes.games.ffb.TurnMode;
-import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.dialog.DialogPlayerChoiceParameter;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
@@ -181,17 +180,6 @@ public class StepShadowing extends AbstractStepWithReRoll {
 	    getResult().setNextAction(StepAction.NEXT_STEP);
     }
   }  
-
-  // ByteArray serialization
-  
-  @Override
-  public int initFrom(ByteArray pByteArray) {
-  	int byteArraySerializationVersion = super.initFrom(pByteArray);
-  	fDefenderPosition = pByteArray.getFieldCoordinate();
-  	fCoordinateFrom = pByteArray.getFieldCoordinate();
-  	fUsingShadowing = pByteArray.getBoolean();
-  	return byteArraySerializationVersion;
-  }
   
   // JSON serialization
   

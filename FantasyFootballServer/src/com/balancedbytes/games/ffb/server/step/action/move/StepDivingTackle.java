@@ -9,7 +9,6 @@ import com.balancedbytes.games.ffb.PlayerChoiceMode;
 import com.balancedbytes.games.ffb.Skill;
 import com.balancedbytes.games.ffb.SkillUse;
 import com.balancedbytes.games.ffb.TurnMode;
-import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.dialog.DialogPlayerChoiceParameter;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
@@ -177,20 +176,6 @@ public class StepDivingTackle extends AbstractStep {
       	getResult().setNextAction(StepAction.NEXT_STEP);
       }
     }
-	}
-	
-	// ByteArray serialization
-
-	@Override
-	public int initFrom(ByteArray pByteArray) {
-		int byteArraySerializationVersion = super.initFrom(pByteArray);
-		fGotoLabelOnSuccess = pByteArray.getString();
-		fCoordinateFrom = pByteArray.getFieldCoordinate();
-		fCoordinateTo = pByteArray.getFieldCoordinate();
-		fDodgeRoll = pByteArray.getByte();
-		fUsingDivingTackle = pByteArray.getBoolean();
-		fUsingBreakTackle = pByteArray.getBoolean();
-		return byteArraySerializationVersion;
 	}
 	
   // JSON serialization

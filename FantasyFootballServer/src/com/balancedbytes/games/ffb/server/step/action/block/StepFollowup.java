@@ -7,7 +7,6 @@ import com.balancedbytes.games.ffb.Skill;
 import com.balancedbytes.games.ffb.SkillUse;
 import com.balancedbytes.games.ffb.SoundId;
 import com.balancedbytes.games.ffb.TrackNumber;
-import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.dialog.DialogFollowupChoiceParameter;
 import com.balancedbytes.games.ffb.dialog.DialogSkillUseParameter;
 import com.balancedbytes.games.ffb.json.UtilJson;
@@ -173,20 +172,6 @@ public class StepFollowup extends AbstractStep {
       publishParameter(new StepParameter(StepParameterKey.DEFENDER_POSITION, game.getFieldModel().getPlayerCoordinate(game.getDefender())));
       getResult().setNextAction(StepAction.NEXT_STEP);
     }
-  }
-  
-  // ByteArray serialization
-  
-  @Override
-  public int initFrom(ByteArray pByteArray) {
-  	int byteArraySerializationVersion = super.initFrom(pByteArray);
-  	fCoordinateFrom = pByteArray.getFieldCoordinate();
-  	fDefenderPosition = pByteArray.getFieldCoordinate();
-  	fUsingFend = pByteArray.getBoolean();
-  	fFollowupChoice = pByteArray.getBoolean();
-  	int oldDefenderStateId = pByteArray.getSmallInt();
-  	fOldDefenderState = (oldDefenderStateId > 0) ? new PlayerState(oldDefenderStateId) : null;
-  	return byteArraySerializationVersion;
   }
   
   // JSON serialization

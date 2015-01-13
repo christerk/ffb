@@ -3,8 +3,6 @@ package com.balancedbytes.games.ffb.server;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.balancedbytes.games.ffb.bytearray.ByteArray;
-import com.balancedbytes.games.ffb.bytearray.IByteArrayReadable;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.IJsonSerializable;
 import com.balancedbytes.games.ffb.json.UtilJson;
@@ -18,7 +16,7 @@ import com.eclipsesource.json.JsonValue;
  * 
  * @author Kalimar
  */
-public class GameLog implements IByteArrayReadable, IJsonSerializable {
+public class GameLog implements IJsonSerializable {
 
   private List<ServerCommand> fServerCommands;
 
@@ -96,26 +94,6 @@ public class GameLog implements IByteArrayReadable, IJsonSerializable {
     
   public GameState getGameState() {
     return fGameState;
-  }
-  
-  // ByteArray serialization
-  
-  public int initFrom(ByteArray pByteArray) {
-    int byteArraySerializationVersion = pByteArray.getSmallInt();
-    fServerCommands.clear();
-    int nrOfCommands = pByteArray.getSmallInt();
-    for (int i = 0; i < nrOfCommands; i++) {
-    	fServerCommands.add(initCommandFrom(pByteArray));
-    }
-    return byteArraySerializationVersion;
-  }
-  
-  private ServerCommand initCommandFrom(ByteArray pByteArray) {
-    byte[] commandBytes = new byte[pByteArray.getSmallInt(pByteArray.getPosition() + 2)];
-    for (int j = 0; j < commandBytes.length; j++) {
-      commandBytes[j] = pByteArray.getByte();
-    }
-    return (ServerCommand) new NetCommandFactory().fromBytes(commandBytes);
   }
   
   // JSON serialization

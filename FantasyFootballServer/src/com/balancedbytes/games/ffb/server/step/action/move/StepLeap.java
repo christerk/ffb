@@ -7,7 +7,6 @@ import com.balancedbytes.games.ffb.LeapModifier;
 import com.balancedbytes.games.ffb.LeapModifierFactory;
 import com.balancedbytes.games.ffb.ReRolledAction;
 import com.balancedbytes.games.ffb.Skill;
-import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.Game;
@@ -144,15 +143,6 @@ public class StepLeap extends AbstractStepWithReRoll {
       }
     }
     return status;
-  }
-  
-  // ByteArray serialization
-  
-  @Override
-  public int initFrom(ByteArray pByteArray) {
-  	int byteArraySerializationVersion = super.initFrom(pByteArray);
-  	fGotoLabelOnFailure = pByteArray.getString();
-  	return byteArraySerializationVersion;
   }
   
   // JSON serialization

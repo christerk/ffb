@@ -4,12 +4,8 @@ import java.util.HashSet;
 import java.util.Set;
 
 import com.balancedbytes.games.ffb.Card;
-import com.balancedbytes.games.ffb.CardFactory;
 import com.balancedbytes.games.ffb.InducementPhase;
-import com.balancedbytes.games.ffb.InducementPhaseFactory;
 import com.balancedbytes.games.ffb.InducementType;
-import com.balancedbytes.games.ffb.InducementTypeFactory;
-import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.dialog.DialogUseInducementParameter;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.Game;
@@ -179,19 +175,6 @@ public final class StepInitInducement extends AbstractStep {
 		return playableCards.toArray(new Card[playableCards.size()]);
 	}
 
-	// ByteArray serialization
-	
-  @Override
-  public int initFrom(ByteArray pByteArray) {
-  	int byteArraySerializationVersion = super.initFrom(pByteArray);
-  	fInducementPhase = new InducementPhaseFactory().forId(pByteArray.getByte());
-  	fHomeTeam = pByteArray.getBoolean();
-  	fInducementType = new InducementTypeFactory().forId(pByteArray.getByte());
-  	fCard = new CardFactory().forId(pByteArray.getSmallInt());
-  	return byteArraySerializationVersion;
-  }
-
-  
   // JSON serialization
   
   @Override

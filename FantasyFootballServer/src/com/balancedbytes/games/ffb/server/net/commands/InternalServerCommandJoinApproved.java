@@ -1,9 +1,6 @@
 package com.balancedbytes.games.ffb.server.net.commands;
 
 import com.balancedbytes.games.ffb.ClientMode;
-import com.balancedbytes.games.ffb.ClientModeFactory;
-import com.balancedbytes.games.ffb.bytearray.ByteArray;
-import com.balancedbytes.games.ffb.bytearray.ByteList;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.net.NetCommandId;
@@ -49,29 +46,6 @@ public class InternalServerCommandJoinApproved extends InternalServerCommand {
   
   public String getTeamId() {
     return fTeamId;
-  }
-  
-  // ByteArray serialization
-  
-  public int getByteArraySerializationVersion() {
-    return 1;
-  }
-  
-  public void addTo(ByteList pByteList) {
-    super.addTo(pByteList);
-    pByteList.addString(fCoach);
-    pByteList.addString(fGameName);
-    pByteList.addByte((byte) ((fClientMode != null) ? fClientMode.getId() : 0));
-    pByteList.addString(fTeamId);
-  }
-  
-  public int initFrom(ByteArray pByteArray) {
-    int byteArraySerializationVersion = super.initFrom(pByteArray);
-    fCoach = pByteArray.getString();
-    fGameName = pByteArray.getString();
-    fClientMode = new ClientModeFactory().forId(pByteArray.getByte());
-    fTeamId = pByteArray.getString();
-    return byteArraySerializationVersion;
   }
   
   // JSON serialization

@@ -1,7 +1,5 @@
 package com.balancedbytes.games.ffb.server.net.commands;
 
-import com.balancedbytes.games.ffb.bytearray.ByteArray;
-import com.balancedbytes.games.ffb.bytearray.ByteList;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.net.NetCommandId;
@@ -45,21 +43,6 @@ public class InternalServerCommandScheduleGame extends InternalServerCommand {
   
   public IGameIdListener getGameIdListener() {
 	  return fGameIdListener;
-  }
-  
-  // ByteArray serialization
-    
-  public void addTo(ByteList pByteList) {
-    super.addTo(pByteList);
-    pByteList.addString(fTeamHomeId);
-    pByteList.addString(fTeamAwayId);
-  }
-  
-  public int initFrom(ByteArray pByteArray) {
-    int byteArraySerializationVersion = super.initFrom(pByteArray);
-    fTeamHomeId = pByteArray.getString();
-    fTeamAwayId = pByteArray.getString();
-    return byteArraySerializationVersion;
   }
   
   // JSON serialization

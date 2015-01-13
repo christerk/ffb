@@ -9,7 +9,6 @@ import com.balancedbytes.games.ffb.PlayerAction;
 import com.balancedbytes.games.ffb.ReRollSource;
 import com.balancedbytes.games.ffb.ReRolledAction;
 import com.balancedbytes.games.ffb.Skill;
-import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.Game;
@@ -169,16 +168,6 @@ public class StepGoForIt extends AbstractStepWithReRoll {
         return ActionStatus.FAILURE;
       }
     }
-  }
-  
-  // ByteArray serialization
-  
-  @Override
-  public int initFrom(ByteArray pByteArray) {
-  	int byteArraySerializationVersion = super.initFrom(pByteArray);
-  	fGotoLabelOnFailure = pByteArray.getString();
-  	fSecondGoForIt = pByteArray.getBoolean();
-  	return byteArraySerializationVersion;
   }
   
   // JSON serialization

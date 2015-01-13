@@ -5,7 +5,6 @@ import com.balancedbytes.games.ffb.PlayerAction;
 import com.balancedbytes.games.ffb.PlayerState;
 import com.balancedbytes.games.ffb.Skill;
 import com.balancedbytes.games.ffb.SkillUse;
-import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.dialog.DialogSkillUseParameter;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
@@ -135,18 +134,6 @@ public class StepJuggernaut extends AbstractStep {
     } else {
       getResult().setNextAction(StepAction.NEXT_STEP);
     }
-  }
-  
-  // ByteArray serialization
-  
-  @Override
-  public int initFrom(ByteArray pByteArray) {
-  	int byteArraySerializationVersion = super.initFrom(pByteArray);
-  	fUsingJuggernaut = pByteArray.getBoolean();
-  	int playerStateId = pByteArray.getSmallInt();
-  	fOldDefenderState = (playerStateId > 0) ? new PlayerState(playerStateId) : null;
-  	fGotoLabelOnSuccess = pByteArray.getString();
-  	return byteArraySerializationVersion;
   }
   
   // JSON serialization

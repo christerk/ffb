@@ -54,12 +54,6 @@ public final class StepWeather extends AbstractStep {
     return new ReportWeather(weather, roll);
   }
   
-  // ByteArray serialization
-  
-  public int getByteArraySerializationVersion() {
-  	return 1;
-  }
-  
   // JSON serialization
   
   @Override

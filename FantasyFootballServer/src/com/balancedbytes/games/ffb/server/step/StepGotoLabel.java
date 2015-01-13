@@ -1,6 +1,5 @@
 package com.balancedbytes.games.ffb.server.step;
 
-import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.IServerJsonOption;
@@ -51,15 +50,6 @@ public class StepGotoLabel extends AbstractStep {
 		getResult().setNextAction(StepAction.GOTO_LABEL, fGotoLabel);
 	}
 
-	// ByteArray serialization
-	
-  @Override
-  public int initFrom(ByteArray pByteArray) {
-  	int byteArraySerializationVersion = super.initFrom(pByteArray);
-  	fGotoLabel = pByteArray.getString();
-  	return byteArraySerializationVersion;
-  }
-  
   // JSON serialization
   
   @Override

@@ -6,7 +6,6 @@ import com.balancedbytes.games.ffb.PlayerAction;
 import com.balancedbytes.games.ffb.PlayerState;
 import com.balancedbytes.games.ffb.Skill;
 import com.balancedbytes.games.ffb.SkillUse;
-import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.dialog.DialogSkillUseParameter;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
@@ -125,16 +124,6 @@ public class StepWrestle extends AbstractStep {
     }
   }
 
-  // ByteArray serialization
-  
-  @Override
-  public int initFrom(ByteArray pByteArray) {
-  	int byteArraySerializationVersion = super.initFrom(pByteArray);
-  	fUsingWrestleAttacker = pByteArray.getBoolean();
-  	fUsingWrestleDefender = pByteArray.getBoolean();
-  	return byteArraySerializationVersion;
-  }
-  
   // JSON serialization
   
   @Override

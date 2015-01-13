@@ -25,12 +25,6 @@ public class StepNextStep extends AbstractStep {
 		getResult().setNextAction(StepAction.NEXT_STEP);
 	}
 	
-	// ByteArray serialization
-
-  public int getByteArraySerializationVersion() {
-  	return 1;
-  }
-  
   // JSON serialization
   
   @Override

@@ -2,7 +2,6 @@ package com.balancedbytes.games.ffb.server.step.action.ttm;
 
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.PlayerState;
-import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
@@ -88,17 +87,6 @@ public final class StepFumbleTtmPass extends AbstractStep {
     getResult().setNextAction(StepAction.NEXT_STEP);
   }
 
-	// ByteArray serialization
-	
-  @Override
-  public int initFrom(ByteArray pByteArray) {
-  	int byteArraySerializationVersion = super.initFrom(pByteArray);
-  	fThrownPlayerCoordinate = pByteArray.getFieldCoordinate();
-  	fThrownPlayerId = pByteArray.getString();
-  	fThrownPlayerState = new PlayerState(pByteArray.getSmallInt());
-  	return byteArraySerializationVersion;
-  }
-  
   // JSON serialization
   
   @Override

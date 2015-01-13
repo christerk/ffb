@@ -92,12 +92,6 @@ public final class StepMvp extends AbstractStep {
     return players.toArray(new Player[players.size()]);
   }
 
-  // ByteArray serialization
-  
-	public int getByteArraySerializationVersion() {
-		return 1;
-	}
-	
   // JSON serialization
   
   @Override

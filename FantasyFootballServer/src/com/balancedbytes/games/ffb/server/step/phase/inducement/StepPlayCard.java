@@ -2,11 +2,9 @@ package com.balancedbytes.games.ffb.server.step.phase.inducement;
 
 import com.balancedbytes.games.ffb.Card;
 import com.balancedbytes.games.ffb.CardEffect;
-import com.balancedbytes.games.ffb.CardFactory;
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.PlayerChoiceMode;
 import com.balancedbytes.games.ffb.TurnMode;
-import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.dialog.DialogPlayerChoiceParameter;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.Game;
@@ -228,16 +226,6 @@ public final class StepPlayCard extends AbstractStep {
       publishParameters(UtilServerInjury.dropPlayer(this, player, ApothecaryMode.ATTACKER));
     }
     return doNextStep;
-  }
-
-  // ByteArray serialization
-
-  @Override
-  public int initFrom(ByteArray pByteArray) {
-    int byteArraySerializationVersion = super.initFrom(pByteArray);
-    fCard = new CardFactory().forId(pByteArray.getSmallInt());
-    fHomeTeam = pByteArray.getBoolean();
-    return byteArraySerializationVersion;
   }
 
   // JSON serialization

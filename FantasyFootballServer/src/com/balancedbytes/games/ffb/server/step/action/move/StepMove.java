@@ -4,7 +4,6 @@ import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.PlayerState;
 import com.balancedbytes.games.ffb.SoundId;
 import com.balancedbytes.games.ffb.TrackNumber;
-import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.Game;
@@ -111,17 +110,6 @@ public class StepMove extends AbstractStep {
     getResult().setNextAction(StepAction.NEXT_STEP);
   }
 
-  // ByteArray serialization
-    
-	@Override
-	public int initFrom(ByteArray pByteArray) {
-		int byteArraySerializationVersion = super.initFrom(pByteArray);
-		fCoordinateFrom = pByteArray.getFieldCoordinate();
-		fCoordinateTo = pByteArray.getFieldCoordinate();
-		fMoveStackSize = pByteArray.getByte();
-		return byteArraySerializationVersion;
-	}
-	
   // JSON serialization
   
   @Override

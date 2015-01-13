@@ -1,11 +1,9 @@
 package com.balancedbytes.games.ffb.server.step.action.block;
 
 import com.balancedbytes.games.ffb.BlockResult;
-import com.balancedbytes.games.ffb.BlockResultFactory;
 import com.balancedbytes.games.ffb.PlayerState;
 import com.balancedbytes.games.ffb.Skill;
 import com.balancedbytes.games.ffb.SkillUse;
-import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.Game;
@@ -189,23 +187,6 @@ public class StepBlockChoice extends AbstractStep {
       	break;
     }
     getResult().addReport(new ReportBlockChoice(fNrOfDice, fBlockRoll, fDiceIndex, fBlockResult, game.getDefenderId()));
-  }
-  
-  // ByteArray serialization
-  
-  @Override
-  public int initFrom(ByteArray pByteArray) {
-  	int byteArraySerializationVersion = super.initFrom(pByteArray);
-  	fGotoLabelOnDodge = pByteArray.getString();
-  	fGotoLabelOnJuggernaut = pByteArray.getString();
-  	fGotoLabelOnPushback = pByteArray.getString();
-  	fNrOfDice = pByteArray.getByte();
-  	fBlockRoll = pByteArray.getByteArrayAsIntArray();
-  	fDiceIndex = pByteArray.getByte();
-  	fBlockResult = new BlockResultFactory().forId(pByteArray.getByte());
-  	int defenderStateId = pByteArray.getSmallInt();
-  	fOldDefenderState = (defenderStateId > 0) ? new PlayerState(defenderStateId) : null;
-  	return byteArraySerializationVersion;
   }
   
   // JSON serialization

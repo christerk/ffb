@@ -1,6 +1,5 @@
 package com.balancedbytes.games.ffb.server.step.phase.kickoff;
 
-import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandReceiveChoice;
@@ -92,16 +91,6 @@ public final class StepReceiveChoice extends AbstractStep {
       game.setSetupOffense(false);
       getResult().setNextAction(StepAction.NEXT_STEP);
     }
-  }
-  
-  // ByteArray serialization
-    
-  @Override
-  public int initFrom(ByteArray pByteArray) {
-  	int byteArraySerializationVersion = super.initFrom(pByteArray);
-  	fChoosingTeamId = pByteArray.getString();
-  	fReceiveChoice = pByteArray.getBoolean();
-  	return byteArraySerializationVersion;
   }
   
   // JSON serialization

@@ -6,7 +6,6 @@ import com.balancedbytes.games.ffb.Card;
 import com.balancedbytes.games.ffb.CatchModifier;
 import com.balancedbytes.games.ffb.CatchModifierFactory;
 import com.balancedbytes.games.ffb.CatchScatterThrowInMode;
-import com.balancedbytes.games.ffb.CatchScatterThrowInModeFactory;
 import com.balancedbytes.games.ffb.Direction;
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.FieldCoordinateBounds;
@@ -20,7 +19,6 @@ import com.balancedbytes.games.ffb.Skill;
 import com.balancedbytes.games.ffb.SkillUse;
 import com.balancedbytes.games.ffb.SoundId;
 import com.balancedbytes.games.ffb.TurnMode;
-import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.dialog.DialogPlayerChoiceParameter;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.Animation;
@@ -47,11 +45,11 @@ import com.balancedbytes.games.ffb.server.step.StepCommandStatus;
 import com.balancedbytes.games.ffb.server.step.StepId;
 import com.balancedbytes.games.ffb.server.step.StepParameter;
 import com.balancedbytes.games.ffb.server.step.StepParameterKey;
+import com.balancedbytes.games.ffb.server.util.UtilServerCards;
 import com.balancedbytes.games.ffb.server.util.UtilServerCatchScatterThrowIn;
 import com.balancedbytes.games.ffb.server.util.UtilServerDialog;
 import com.balancedbytes.games.ffb.server.util.UtilServerInjury;
 import com.balancedbytes.games.ffb.server.util.UtilServerReRoll;
-import com.balancedbytes.games.ffb.server.util.UtilServerCards;
 import com.balancedbytes.games.ffb.util.ArrayTool;
 import com.balancedbytes.games.ffb.util.StringTool;
 import com.balancedbytes.games.ffb.util.UtilCards;
@@ -461,25 +459,6 @@ public class StepCatchScatterThrowIn extends AbstractStepWithReRoll {
     	return CatchScatterThrowInMode.THROW_IN;
     }
     
-  }
-  
-  // ByteArray serialization
-  
-  @Override
-  public int initFrom(ByteArray pByteArray) {
-  	int byteArraySerializationVersion = super.initFrom(pByteArray);
-  	fCatcherId = pByteArray.getString();
-  	if (pByteArray.getBoolean()) {
-  		fScatterBounds = new FieldCoordinateBounds();
-  		fScatterBounds.initFrom(pByteArray);
-  	} else {
-  		fScatterBounds = null;
-  	}
-  	fCatchScatterThrowInMode = new CatchScatterThrowInModeFactory().forId(pByteArray.getByte());
-  	fThrowInCoordinate = pByteArray.getFieldCoordinate();
-  	fDivingCatchChoice = pByteArray.getBoolean();
-  	fBombMode = pByteArray.getBoolean();
-  	return byteArraySerializationVersion;
   }
   
   // JSON serialization

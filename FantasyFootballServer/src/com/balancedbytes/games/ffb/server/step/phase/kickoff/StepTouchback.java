@@ -6,7 +6,6 @@ import com.balancedbytes.games.ffb.PlayerState;
 import com.balancedbytes.games.ffb.Skill;
 import com.balancedbytes.games.ffb.SoundId;
 import com.balancedbytes.games.ffb.TurnMode;
-import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.dialog.DialogTouchbackParameter;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.Game;
@@ -125,16 +124,6 @@ public final class StepTouchback extends AbstractStep {
       getResult().setNextAction(StepAction.NEXT_STEP);
     }
   	
-  }
-  
-  // ByteArray serialization
-  
-  @Override
-  public int initFrom(ByteArray pByteArray) {
-  	int byteArraySerializationVersion = super.initFrom(pByteArray);
-  	fTouchback = pByteArray.getBoolean();
-  	fTouchbackCoordinate = pByteArray.getFieldCoordinate();
-  	return byteArraySerializationVersion;
   }
   
   // JSON serialization

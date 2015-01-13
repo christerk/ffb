@@ -1,6 +1,5 @@
 package com.balancedbytes.games.ffb.server.step.action.foul;
 
-import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.IServerJsonOption;
@@ -62,16 +61,6 @@ public class StepEndFouling extends AbstractStep {
 	private void executeStep() {
 		SequenceGenerator.getInstance().pushEndPlayerActionSequence(getGameState(), true, fEndTurn);
     getResult().setNextAction(StepAction.NEXT_STEP);
-  }
-  
-	// ByteArray serialization
-	
-  @Override
-  public int initFrom(ByteArray pByteArray) {
-  	int byteArraySerializationVersion = super.initFrom(pByteArray);
-  	fEndTurn = pByteArray.getBoolean();
-  	fEndPlayerAction = pByteArray.getBoolean();
-  	return byteArraySerializationVersion;
   }
   
   // JSON serialization

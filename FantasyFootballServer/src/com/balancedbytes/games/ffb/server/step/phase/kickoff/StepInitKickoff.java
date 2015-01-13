@@ -2,7 +2,6 @@ package com.balancedbytes.games.ffb.server.step.phase.kickoff;
 
 import com.balancedbytes.games.ffb.InducementPhase;
 import com.balancedbytes.games.ffb.TurnMode;
-import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.net.ReceivedCommand;
@@ -57,23 +56,6 @@ public final class StepInitKickoff extends AbstractStep {
     getResult().setNextAction(StepAction.NEXT_STEP);
   }
   
-  // ByteArray serialization
-    
-  public int getByteArraySerializationVersion() {
-  	return 2;
-  }
-  
-  @Override
-  public int initFrom(ByteArray pByteArray) {
-  	int byteArraySerializationVersion = super.initFrom(pByteArray);
-  	if (byteArraySerializationVersion < 2) {
-    	pByteArray.getString();
-    	pByteArray.getFieldCoordinate();
-    	pByteArray.getBoolean();
-  	}
-  	return byteArraySerializationVersion;
-  }
-
   // JSON serialization
     
   @Override

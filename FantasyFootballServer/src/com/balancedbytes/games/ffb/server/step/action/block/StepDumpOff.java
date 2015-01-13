@@ -4,7 +4,6 @@ import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.PlayerAction;
 import com.balancedbytes.games.ffb.Skill;
 import com.balancedbytes.games.ffb.TurnMode;
-import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.dialog.DialogDefenderActionParameter;
 import com.balancedbytes.games.ffb.dialog.DialogSkillUseParameter;
 import com.balancedbytes.games.ffb.json.UtilJson;
@@ -122,16 +121,6 @@ public class StepDumpOff extends AbstractStep {
       getResult().setNextAction(StepAction.NEXT_STEP);
     }
     
-  }
-  
-  // ByteArray serialization
-  
-  @Override
-  public int initFrom(ByteArray pByteArray) {
-  	int byteArraySerializationVersion = super.initFrom(pByteArray);
-  	fUsingDumpOff = pByteArray.getBoolean();
-  	fDefenderPosition = pByteArray.getFieldCoordinate();
-  	return byteArraySerializationVersion;
   }
   
   // JSON serialization

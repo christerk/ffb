@@ -1,7 +1,6 @@
 package com.balancedbytes.games.ffb.server.step.game.end;
 
 import com.balancedbytes.games.ffb.ReRolledAction;
-import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.dialog.DialogWinningsReRollParameter;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.Game;
@@ -144,19 +143,6 @@ public final class StepWinnings extends AbstractStepWithReRoll {
       report = new ReportWinningsRoll(0, gameResult.getTeamResultHome().getWinnings(), 0, gameResult.getTeamResultAway().getWinnings());
     }
     return report;
-  }
-
-	public int getByteArraySerializationVersion() {
-		return 1;
-	}
-
-	// ByteArray serialization
-	
-  @Override
-  public int initFrom(ByteArray pByteArray) {
-  	int byteArraySerializationVersion = super.initFrom(pByteArray);
-  	fAutomaticReRoll = pByteArray.getBoolean();
-  	return byteArraySerializationVersion;
   }
   
   // JSON serialization

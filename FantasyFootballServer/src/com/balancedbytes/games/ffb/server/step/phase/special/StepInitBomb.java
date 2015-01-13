@@ -8,7 +8,6 @@ import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.FieldCoordinateBounds;
 import com.balancedbytes.games.ffb.PlayerState;
 import com.balancedbytes.games.ffb.SpecialEffect;
-import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.Animation;
 import com.balancedbytes.games.ffb.model.AnimationType;
@@ -147,18 +146,6 @@ public final class StepInitBomb extends AbstractStep {
 		} else {
 	  	getResult().setNextAction(StepAction.NEXT_STEP);
 		}
-  }
-  
-  // ByteArray serialization
-  
-  @Override
-  public int initFrom(ByteArray pByteArray) {
-  	int byteArraySerializationVersion = super.initFrom(pByteArray);
-  	fGotoLabelOnEnd = pByteArray.getString();
-  	fCatcherId = pByteArray.getString();
-  	fPassFumble = pByteArray.getBoolean();
-  	fBombCoordinate = pByteArray.getFieldCoordinate();
-  	return byteArraySerializationVersion;
   }
   
   // JSON serialization

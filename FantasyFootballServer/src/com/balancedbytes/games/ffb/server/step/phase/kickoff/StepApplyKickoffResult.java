@@ -10,12 +10,10 @@ import com.balancedbytes.games.ffb.Inducement;
 import com.balancedbytes.games.ffb.InducementType;
 import com.balancedbytes.games.ffb.InjuryType;
 import com.balancedbytes.games.ffb.KickoffResult;
-import com.balancedbytes.games.ffb.KickoffResultFactory;
 import com.balancedbytes.games.ffb.PlayerState;
 import com.balancedbytes.games.ffb.Skill;
 import com.balancedbytes.games.ffb.TurnMode;
 import com.balancedbytes.games.ffb.Weather;
-import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.Animation;
 import com.balancedbytes.games.ffb.model.AnimationType;
@@ -566,23 +564,6 @@ public final class StepApplyKickoffResult extends AbstractStep {
   private boolean isPlayerOnField(Game pGame, Player pPlayer) {
     FieldCoordinate playerCoordinate = pGame.getFieldModel().getPlayerCoordinate(pPlayer);
     return (FieldCoordinateBounds.FIELD.isInBounds(playerCoordinate));
-  }
-  
-  // ByteArray serialization
-
-  @Override
-  public int initFrom(ByteArray pByteArray) {
-  	int byteArraySerializationVersion = super.initFrom(pByteArray);
-  	fGotoLabelOnEnd = pByteArray.getString();
-  	fGotoLabelOnBlitz = pByteArray.getString();
-  	fKickoffResult = new KickoffResultFactory().forId((int) pByteArray.getByte());
-  	fTouchback = pByteArray.getBoolean();
-  	if (pByteArray.getBoolean()) {
-  		fKickoffBounds = new FieldCoordinateBounds();
-  		fKickoffBounds.initFrom(pByteArray);
-  	}
-  	fEndKickoff = pByteArray.getBoolean();
-  	return byteArraySerializationVersion;
   }
   
   // JSON serialization

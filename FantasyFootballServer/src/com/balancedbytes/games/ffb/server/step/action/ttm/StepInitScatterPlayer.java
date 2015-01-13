@@ -4,7 +4,6 @@ import com.balancedbytes.games.ffb.CatchScatterThrowInMode;
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.InjuryType;
 import com.balancedbytes.games.ffb.PlayerState;
-import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.Animation;
 import com.balancedbytes.games.ffb.model.Game;
@@ -179,19 +178,6 @@ public final class StepInitScatterPlayer extends AbstractStep {
     getResult().setNextAction(StepAction.NEXT_STEP);
   }
 	
-	// ByteArray serialization
-	
-  @Override
-  public int initFrom(ByteArray pByteArray) {
-  	int byteArraySerializationVersion = super.initFrom(pByteArray);
-  	fThrownPlayerId = pByteArray.getString();
-  	fThrownPlayerState = new PlayerState(pByteArray.getSmallInt());
-  	fThrownPlayerHasBall = pByteArray.getBoolean();
-  	fThrownPlayerCoordinate = pByteArray.getFieldCoordinate();
-  	fThrowScatter = pByteArray.getBoolean();
-  	return byteArraySerializationVersion;
-  }
-  
   // JSON serialization
   
   @Override

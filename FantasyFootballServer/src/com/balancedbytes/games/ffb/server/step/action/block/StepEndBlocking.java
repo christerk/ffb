@@ -4,7 +4,6 @@ import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.PlayerAction;
 import com.balancedbytes.games.ffb.PlayerState;
 import com.balancedbytes.games.ffb.Skill;
-import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.Game;
@@ -156,20 +155,6 @@ public class StepEndBlocking extends AbstractStep {
       }
     }
     getResult().setNextAction(StepAction.NEXT_STEP);
-  }
-  
-  // ByteArray serialization
-
-  @Override
-  public int initFrom(ByteArray pByteArray) {
-    int byteArraySerializationVersion = super.initFrom(pByteArray);
-    fEndTurn = pByteArray.getBoolean();
-    fEndPlayerAction = pByteArray.getBoolean();
-    fDefenderPushed = pByteArray.getBoolean();
-    fUsingStab = pByteArray.getBoolean();
-    int playerStateId = pByteArray.getSmallInt();
-    fOldDefenderState = (playerStateId > 0) ? new PlayerState(playerStateId) : null;
-    return byteArraySerializationVersion;
   }
   
   // JSON serialization

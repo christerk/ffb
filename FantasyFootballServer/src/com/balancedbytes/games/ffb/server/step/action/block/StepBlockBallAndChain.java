@@ -2,7 +2,6 @@ package com.balancedbytes.games.ffb.server.step.action.block;
 
 import com.balancedbytes.games.ffb.PlayerState;
 import com.balancedbytes.games.ffb.Skill;
-import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.Game;
@@ -94,17 +93,6 @@ public class StepBlockBallAndChain extends AbstractStep {
     } else {
       getResult().setNextAction(StepAction.NEXT_STEP);
     }
-  }
-
-  // ByteArray serialization
-  
-  @Override
-  public int initFrom(ByteArray pByteArray) {
-    int byteArraySerializationVersion = super.initFrom(pByteArray);
-    fGotoLabelOnPushback = pByteArray.getString();
-    int oldDefenderStateId = pByteArray.getSmallInt();
-    fOldDefenderState = (oldDefenderStateId > 0) ? new PlayerState(oldDefenderStateId) : null;
-    return byteArraySerializationVersion;
   }
 
   // JSON serialization

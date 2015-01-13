@@ -8,7 +8,6 @@ import com.balancedbytes.games.ffb.FieldCoordinateBounds;
 import com.balancedbytes.games.ffb.PlayerState;
 import com.balancedbytes.games.ffb.Skill;
 import com.balancedbytes.games.ffb.TurnMode;
-import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.dialog.DialogKickoffReturnParameter;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
@@ -170,17 +169,6 @@ public final class StepKickoffReturn extends AbstractStep {
 
     getResult().setNextAction(StepAction.NEXT_STEP);
 
-  }
-  
-  // ByteArray serialization
-    
-  @Override
-  public int initFrom(ByteArray pByteArray) {
-  	int byteArraySerializationVersion = super.initFrom(pByteArray);
-  	fTouchback = pByteArray.getBoolean();
-  	fEndPlayerAction = pByteArray.getBoolean();
-  	fEndTurn = pByteArray.getBoolean();
-  	return byteArraySerializationVersion;
   }
   
   // JSON serialization

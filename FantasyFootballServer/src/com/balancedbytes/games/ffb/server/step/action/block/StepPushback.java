@@ -13,7 +13,6 @@ import com.balancedbytes.games.ffb.PushbackMode;
 import com.balancedbytes.games.ffb.PushbackSquare;
 import com.balancedbytes.games.ffb.Skill;
 import com.balancedbytes.games.ffb.SkillUse;
-import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.dialog.DialogSkillUseParameter;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
@@ -337,25 +336,6 @@ public class StepPushback extends AbstractStep {
       publishParameter(new StepParameter(StepParameterKey.CATCH_SCATTER_THROW_IN_MODE,
           CatchScatterThrowInMode.SCATTER_BALL));
     }
-  }
-  
-  // ByteArray serialization
-
-  @Override
-  public int initFrom(ByteArray pByteArray) {
-    int byteArraySerializationVersion = super.initFrom(pByteArray);
-    int oldDefenderStateId = pByteArray.getSmallInt();
-    fOldDefenderState = (oldDefenderStateId > 0) ? new PlayerState(oldDefenderStateId) : null;
-    if (pByteArray.getBoolean()) {
-      fStartingPushbackSquare = new PushbackSquare();
-      fStartingPushbackSquare.initFrom(pByteArray);
-    } else {
-      fStartingPushbackSquare = null;
-    }
-    fUsingGrab = pByteArray.getBoolean();
-    fUsingSideStep = pByteArray.getBoolean();
-    fUsingStandFirm = pByteArray.getBoolean();
-    return byteArraySerializationVersion;
   }
   
   // JSON serialization

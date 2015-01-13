@@ -6,7 +6,6 @@ import com.balancedbytes.games.ffb.InjuryType;
 import com.balancedbytes.games.ffb.PlayerChoiceMode;
 import com.balancedbytes.games.ffb.PlayerState;
 import com.balancedbytes.games.ffb.SoundId;
-import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.dialog.DialogPlayerChoiceParameter;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
@@ -179,18 +178,6 @@ public class StepInitFeeding extends AbstractStep {
       actingPlayer.setHasFed(true);
     	getResult().setNextAction(StepAction.NEXT_STEP);
     }
-  }
-  
-  // ByteArray serialization
-  
-  @Override
-  public int initFrom(ByteArray pByteArray) {
-  	int byteArraySerializationVersion = super.initFrom(pByteArray);
-  	fGotoLabelOnEnd = pByteArray.getString();
-  	fFeedOnPlayerChoice = pByteArray.getBoolean();
-  	fFeedingAllowed = pByteArray.getBoolean();
-  	fEndTurn = pByteArray.getBoolean();
-  	return byteArraySerializationVersion;
   }
   
   // JSON serialization

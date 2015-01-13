@@ -4,9 +4,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.balancedbytes.games.ffb.GameStatus;
-import com.balancedbytes.games.ffb.GameStatusFactory;
-import com.balancedbytes.games.ffb.bytearray.ByteArray;
-import com.balancedbytes.games.ffb.bytearray.IByteArrayReadable;
 import com.balancedbytes.games.ffb.json.IJsonSerializable;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.Game;
@@ -17,8 +14,6 @@ import com.balancedbytes.games.ffb.server.net.ReceivedCommand;
 import com.balancedbytes.games.ffb.server.step.IStep;
 import com.balancedbytes.games.ffb.server.step.StepException;
 import com.balancedbytes.games.ffb.server.step.StepFactory;
-import com.balancedbytes.games.ffb.server.step.StepId;
-import com.balancedbytes.games.ffb.server.step.StepIdFactory;
 import com.balancedbytes.games.ffb.server.step.StepResult;
 import com.balancedbytes.games.ffb.server.step.StepStack;
 import com.balancedbytes.games.ffb.server.util.UtilServerGame;
@@ -29,7 +24,7 @@ import com.eclipsesource.json.JsonValue;
  * 
  * @author Kalimar
  */
-public class GameState implements IModelChangeObserver, IByteArrayReadable, IJsonSerializable {
+public class GameState implements IModelChangeObserver, IJsonSerializable {
 
   private Game fGame;
   private GameLog fGameLog;
@@ -226,35 +221,6 @@ public class GameState implements IModelChangeObserver, IByteArrayReadable, IJso
     if (pReceivedCommand != null) {
       handleCommand(pReceivedCommand);
     }
-  }
-
-  // ByteArray serialization
-
-  public int initFrom(ByteArray pByteArray) {
-    int byteArraySerializationVersion = pByteArray.getSmallInt();
-    fStatus = new GameStatusFactory().forId(pByteArray.getByte());
-    if (pByteArray.getBoolean()) {
-      fGame = new Game();
-      fGame.initFrom(pByteArray);
-    } else {
-      fGame = null;
-    }
-    if (pByteArray.getBoolean()) {
-      fCurrentStep = initStepFrom(pByteArray);
-    } else {
-      fCurrentStep = null;
-    }
-    fStepStack.initFrom(pByteArray);
-    fGameLog.initFrom(pByteArray);
-    initCommandNrGenerator(fGameLog.findMaxCommandNr());
-    return byteArraySerializationVersion;
-  }
-
-  private IStep initStepFrom(ByteArray pByteArray) {
-    StepId stepId = new StepIdFactory().forId(pByteArray.getSmallInt(pByteArray.getPosition()));
-    IStep step = new StepFactory(this).forStepId(stepId);
-    step.initFrom(pByteArray);
-    return step;
   }
 
   // JSON serialization

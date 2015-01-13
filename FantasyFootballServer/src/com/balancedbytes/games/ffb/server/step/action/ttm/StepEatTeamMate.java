@@ -4,7 +4,6 @@ import com.balancedbytes.games.ffb.CatchScatterThrowInMode;
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.InjuryType;
 import com.balancedbytes.games.ffb.SoundId;
-import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
@@ -96,16 +95,6 @@ public final class StepEatTeamMate extends AbstractStep {
 	    getResult().setSound(SoundId.NOMNOM);
     }
     getResult().setNextAction(StepAction.NEXT_STEP);
-  }
-  
-	// ByteArray serialization
-	
-  @Override
-  public int initFrom(ByteArray pByteArray) {
-  	int byteArraySerializationVersion = super.initFrom(pByteArray);
-  	fThrownPlayerCoordinate = pByteArray.getFieldCoordinate();
-  	fThrownPlayerId = pByteArray.getString();
-  	return byteArraySerializationVersion;
   }
   
   // JSON serialization

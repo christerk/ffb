@@ -82,12 +82,6 @@ public final class StepSpectators extends AbstractStep {
         teamResultAway.getFame());
   }
 
-  // ByteArray serialization
-
-  public int getByteArraySerializationVersion() {
-    return 1;
-  }
-
   // JSON serialization
 
   @Override

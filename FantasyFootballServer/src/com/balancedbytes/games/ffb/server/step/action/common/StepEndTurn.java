@@ -17,7 +17,6 @@ import com.balancedbytes.games.ffb.Skill;
 import com.balancedbytes.games.ffb.SoundId;
 import com.balancedbytes.games.ffb.TurnMode;
 import com.balancedbytes.games.ffb.Weather;
-import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.dialog.DialogBribesParameter;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.Game;
@@ -533,22 +532,6 @@ public class StepEndTurn extends AbstractStep {
       }
     }
   	return false;
-  }
-  
-  // ByteArray serialization
-  
-  @Override
-  public int initFrom(ByteArray pByteArray) {
-  	int byteArraySerializationVersion = super.initFrom(pByteArray);
-  	fHandleSecretWeapons = pByteArray.getBoolean();
-  	fTouchdown = pByteArray.getBoolean();
-  	fBribesChoiceHome = pByteArray.getBoolean();
-  	fBribesChoiceAway = pByteArray.getBoolean();
-  	fNextSequencePushed = pByteArray.getBoolean();
-  	fRemoveUsedSecretWeapons = pByteArray.getBoolean();
-  	fNewHalf = pByteArray.getBoolean();
-  	fEndGame = pByteArray.getBoolean();
-  	return byteArraySerializationVersion;
   }
   
   // JSON serialization

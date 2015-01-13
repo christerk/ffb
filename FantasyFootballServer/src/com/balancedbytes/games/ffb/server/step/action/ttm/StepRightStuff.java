@@ -9,7 +9,6 @@ import com.balancedbytes.games.ffb.PlayerState;
 import com.balancedbytes.games.ffb.ReRolledAction;
 import com.balancedbytes.games.ffb.RightStuffModifier;
 import com.balancedbytes.games.ffb.RightStuffModifierFactory;
-import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
@@ -161,16 +160,6 @@ public final class StepRightStuff extends AbstractStepWithReRoll {
     }
   }
   
-  // ByteArray serialization
-  
-	@Override
-	public int initFrom(ByteArray pByteArray) {
-		int byteArraySerializationVersion = super.initFrom(pByteArray);
-		fThrownPlayerHasBall = pByteArray.getBoolean();
-		fThrownPlayerId = pByteArray.getString();
-		return byteArraySerializationVersion;
-	}
-	
   // JSON serialization
   
   @Override

@@ -2,7 +2,6 @@ package com.balancedbytes.games.ffb.server.step.action.pass;
 
 import com.balancedbytes.games.ffb.CatchScatterThrowInMode;
 import com.balancedbytes.games.ffb.FieldCoordinate;
-import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
@@ -85,15 +84,6 @@ public final class StepHandOver extends AbstractStepWithReRoll {
     }
     publishParameter(new StepParameter(StepParameterKey.END_PLAYER_ACTION, true));
     getResult().setNextAction(StepAction.NEXT_STEP);
-  }
-
-  // ByteArray serialization
-
-  @Override
-  public int initFrom(ByteArray pByteArray) {
-    int byteArraySerializationVersion = super.initFrom(pByteArray);
-    fCatcherId = pByteArray.getString();
-    return byteArraySerializationVersion;
   }
 
   // JSON serialization

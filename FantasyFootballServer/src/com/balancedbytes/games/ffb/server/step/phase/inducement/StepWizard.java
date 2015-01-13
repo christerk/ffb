@@ -9,10 +9,7 @@ import com.balancedbytes.games.ffb.FieldCoordinateBounds;
 import com.balancedbytes.games.ffb.InducementType;
 import com.balancedbytes.games.ffb.PlayerState;
 import com.balancedbytes.games.ffb.SpecialEffect;
-import com.balancedbytes.games.ffb.SpecialEffectFactory;
 import com.balancedbytes.games.ffb.TurnMode;
-import com.balancedbytes.games.ffb.TurnModeFactory;
-import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.dialog.DialogWizardSpellParameter;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.Animation;
@@ -145,18 +142,6 @@ public final class StepWizard extends AbstractStep {
 		}
 	}
 	
-	// ByteArray serialization
-  
-  @Override
-  public int initFrom(ByteArray pByteArray) {
-  	int byteArraySerializationVersion = super.initFrom(pByteArray);
-  	fWizardSpell = new SpecialEffectFactory().forId(pByteArray.getByte());
-  	fTargetCoordinate = pByteArray.getFieldCoordinate();
-  	fEndInducement = pByteArray.getBoolean();
-  	fOldTurnMode = new TurnModeFactory().forId(pByteArray.getByte());
-  	return byteArraySerializationVersion;
-  }
-  
   // JSON serialization
   
   @Override

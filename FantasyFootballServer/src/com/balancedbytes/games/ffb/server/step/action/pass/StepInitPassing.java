@@ -3,7 +3,6 @@ package com.balancedbytes.games.ffb.server.step.action.pass;
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.PlayerAction;
 import com.balancedbytes.games.ffb.TurnMode;
-import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.Game;
@@ -223,18 +222,6 @@ public final class StepInitPassing extends AbstractStep {
         return;
 	    }
     }
-  }
-  
-  // ByteArray serialization
-  
-  @Override
-  public int initFrom(ByteArray pByteArray) {
-  	int byteArraySerializationVersion = super.initFrom(pByteArray);
-  	fGotoLabelOnEnd = pByteArray.getString();
-  	fCatcherId = pByteArray.getString();
-  	fEndTurn = pByteArray.getBoolean();
-  	fEndPlayerAction = pByteArray.getBoolean();
-  	return byteArraySerializationVersion;
   }
   
   // JSON serialization

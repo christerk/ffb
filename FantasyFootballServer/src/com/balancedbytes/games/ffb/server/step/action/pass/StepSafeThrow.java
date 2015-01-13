@@ -4,7 +4,6 @@ import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.PlayerAction;
 import com.balancedbytes.games.ffb.ReRolledAction;
 import com.balancedbytes.games.ffb.Skill;
-import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.Animation;
 import com.balancedbytes.games.ffb.model.AnimationType;
@@ -155,16 +154,6 @@ public class StepSafeThrow extends AbstractStepWithReRoll {
         getResult().setNextAction(StepAction.GOTO_LABEL, fGotoLabelOnFailure);
       }
     }
-  }
-  
-  // ByteArray serialization
-  
-  @Override
-  public int initFrom(ByteArray pByteArray) {
-  	int byteArraySerializationVersion = super.initFrom(pByteArray);
-  	fGotoLabelOnFailure = pByteArray.getString();
-  	fInterceptorId = pByteArray.getString();
-  	return byteArraySerializationVersion;
   }
   
   // JSON serialization

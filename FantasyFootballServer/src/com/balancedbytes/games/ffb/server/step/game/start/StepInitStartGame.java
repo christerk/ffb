@@ -3,7 +3,6 @@ package com.balancedbytes.games.ffb.server.step.game.start;
 import java.util.Date;
 
 import com.balancedbytes.games.ffb.GameStatus;
-import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.option.IGameOption;
@@ -123,15 +122,6 @@ public final class StepInitStartGame extends AbstractStep {
   		// <-- log start game
     }
 		getResult().setNextAction(StepAction.NEXT_STEP);
-  }
-  
-  // ByteArray serialization
-    
-  @Override
-  public int initFrom(ByteArray pByteArray) {
-  	int byteArraySerializationVersion = super.initFrom(pByteArray);
-  	fFumbblGameCreated = pByteArray.getBoolean();
-  	return byteArraySerializationVersion;
   }
   
   // JSON serialization

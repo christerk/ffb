@@ -1,7 +1,6 @@
 package com.balancedbytes.games.ffb.server.step.action.move;
 
 import com.balancedbytes.games.ffb.FieldCoordinate;
-import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.server.GameState;
@@ -84,16 +83,6 @@ public class StepDropDivingTackler extends AbstractStep {
 		// reset DivingTackle & Shadowing attributes
 		game.setDefenderId(null);
 		getResult().setNextAction(StepAction.NEXT_STEP);
-	}
-	
-	// ByteArray serialization
-
-	@Override
-	public int initFrom(ByteArray pByteArray) {
-		int byteArraySerializationVersion = super.initFrom(pByteArray);
-		fUsingDivingTackle = pByteArray.getBoolean();
-		fCoordinateFrom = pByteArray.getFieldCoordinate();
-		return byteArraySerializationVersion;
 	}
 	
   // JSON serialization

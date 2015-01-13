@@ -4,7 +4,6 @@ import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.FieldCoordinateBounds;
 import com.balancedbytes.games.ffb.MoveSquare;
 import com.balancedbytes.games.ffb.PlayerAction;
-import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.Game;
@@ -261,22 +260,6 @@ public class StepInitMoving extends AbstractStep {
   	publishParameter(new StepParameter(StepParameterKey.DISPATCH_PLAYER_ACTION, pPlayerAction));
   	getResult().setNextAction(StepAction.GOTO_LABEL_AND_REPEAT, fGotoLabelOnEnd);
   	return StepCommandStatus.SKIP_STEP;
-  }
-  
-  // ByteArray serialization
-    
-  @Override
-  public int initFrom(ByteArray pByteArray) {
-  	int byteArraySerializationVersion = super.initFrom(pByteArray);
-  	fGotoLabelOnEnd = pByteArray.getString();
-  	fGazeVictimId = pByteArray.getString();
-  	fMoveStack = new FieldCoordinate[pByteArray.getByte()];
-  	for (int i = 0; i < fMoveStack.length; i++) {
-  		fMoveStack[i] = pByteArray.getFieldCoordinate();
-  	}
-  	fEndTurn = pByteArray.getBoolean();
-  	fEndPlayerAction = pByteArray.getBoolean();
-  	return byteArraySerializationVersion;
   }
   
   // JSON serialization

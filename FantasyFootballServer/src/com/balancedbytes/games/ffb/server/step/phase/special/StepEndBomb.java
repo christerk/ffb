@@ -2,7 +2,6 @@ package com.balancedbytes.games.ffb.server.step.phase.special;
 
 import com.balancedbytes.games.ffb.PlayerAction;
 import com.balancedbytes.games.ffb.TurnMode;
-import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
@@ -90,16 +89,6 @@ public final class StepEndBomb extends AbstractStep {
   	getResult().setNextAction(StepAction.NEXT_STEP);
 	}
 
-  // ByteArray serialization
-  
-  @Override
-  public int initFrom(ByteArray pByteArray) {
-  	int byteArraySerializationVersion = super.initFrom(pByteArray);
-  	fCatcherId = pByteArray.getString();
-  	fEndTurn = pByteArray.getBoolean();
-  	return byteArraySerializationVersion;
-  }
-  
   // JSON serialization
   
   @Override

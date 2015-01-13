@@ -2,7 +2,6 @@ package com.balancedbytes.games.ffb.server.step.action.block;
 
 import com.balancedbytes.games.ffb.PlayerState;
 import com.balancedbytes.games.ffb.Skill;
-import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.Game;
@@ -80,16 +79,6 @@ public class StepBothDown extends AbstractStep {
       game.getFieldModel().setPlayerState(actingPlayer.getPlayer(), attackerState.changeBase(PlayerState.FALLING));
     }
     getResult().setNextAction(StepAction.NEXT_STEP);
-  }
-  
-  // ByteArray serialization
-  
-  @Override
-  public int initFrom(ByteArray pByteArray) {
-  	int byteArraySerializationVersion = super.initFrom(pByteArray);
-  	int playerStateId = pByteArray.getSmallInt();
-  	fOldDefenderState = (playerStateId > 0) ? new PlayerState(playerStateId) : null;
-  	return byteArraySerializationVersion;
   }
   
   // JSON serialization

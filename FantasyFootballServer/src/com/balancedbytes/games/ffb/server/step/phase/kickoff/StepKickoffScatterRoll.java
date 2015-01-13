@@ -4,12 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.balancedbytes.games.ffb.Direction;
-import com.balancedbytes.games.ffb.DirectionFactory;
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.FieldCoordinateBounds;
 import com.balancedbytes.games.ffb.Skill;
 import com.balancedbytes.games.ffb.SkillUse;
-import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.dialog.DialogKickSkillParameter;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.Game;
@@ -204,26 +202,6 @@ public final class StepKickoffScatterRoll extends AbstractStep {
       kickingPlayer = getGameState().getDiceRoller().randomPlayer(playersOnField.toArray(new Player[playersOnField.size()]));
     }
     return kickingPlayer;
-  }
-  
-  // ByteArray serialization
-  
-  @Override
-  public int initFrom(ByteArray pByteArray) {
-  	int byteArraySerializationVersion = super.initFrom(pByteArray);
-  	fKickoffStartCoordinate = pByteArray.getFieldCoordinate();
-  	fUseKickChoice = pByteArray.getBoolean();
-  	fScatterDirection = new DirectionFactory().forId(pByteArray.getByte());
-  	fScatterDistance = pByteArray.getByte();
-  	fKickingPlayerCoordinate = pByteArray.getFieldCoordinate();
-  	if (pByteArray.getBoolean()) {
-  		fKickoffBounds = new FieldCoordinateBounds();
-  		fKickoffBounds.initFrom(pByteArray);
-  	} else {
-  		fKickoffBounds = null;
-  	}
-  	fTouchback = pByteArray.getBoolean();
-  	return byteArraySerializationVersion;
   }
   
   // JSON serialization

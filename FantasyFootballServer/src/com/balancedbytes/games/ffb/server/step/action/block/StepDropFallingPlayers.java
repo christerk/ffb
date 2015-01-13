@@ -5,7 +5,6 @@ import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.InjuryType;
 import com.balancedbytes.games.ffb.PlayerState;
 import com.balancedbytes.games.ffb.Skill;
-import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.dialog.DialogPilingOnParameter;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
@@ -182,21 +181,6 @@ public class StepDropFallingPlayers extends AbstractStep {
     }
   }
   
-  // ByteArray serialization
-  
-  @Override
-  public int initFrom(ByteArray pByteArray) {
-  	int byteArraySerializationVersion = super.initFrom(pByteArray);
-  	if (pByteArray.getBoolean()) {
-  		fInjuryResultDefender = new InjuryResult();
-  		fInjuryResultDefender.initFrom(pByteArray);
-  	} else {
-  		fInjuryResultDefender = null;
-  	}
-  	fUsingPilingOn = pByteArray.getBoolean();
-  	return byteArraySerializationVersion;
-  }
-
   // JSON serialization
   
   @Override

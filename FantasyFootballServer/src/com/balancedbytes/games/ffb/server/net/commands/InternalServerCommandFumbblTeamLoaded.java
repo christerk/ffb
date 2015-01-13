@@ -1,7 +1,5 @@
 package com.balancedbytes.games.ffb.server.net.commands;
 
-import com.balancedbytes.games.ffb.bytearray.ByteArray;
-import com.balancedbytes.games.ffb.bytearray.ByteList;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.net.NetCommandId;
@@ -37,21 +35,6 @@ public class InternalServerCommandFumbblTeamLoaded extends InternalServerCommand
     return fHomeTeam;
   }
     
-  // ByteArray serialization
-  
-  public void addTo(ByteList pByteList) {
-    super.addTo(pByteList);
-    pByteList.addString(fCoach);
-    pByteList.addBoolean(fHomeTeam);
-  }
-  
-  public int initFrom(ByteArray pByteArray) {
-    int byteArraySerializationVersion = super.initFrom(pByteArray);
-    fCoach = pByteArray.getString();
-    fHomeTeam = pByteArray.getBoolean();
-    return byteArraySerializationVersion;
-  }
-  
   // JSON serialization
 
   public JsonObject toJsonValue() {

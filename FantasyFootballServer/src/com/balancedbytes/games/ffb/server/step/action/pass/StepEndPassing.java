@@ -2,7 +2,6 @@ package com.balancedbytes.games.ffb.server.step.action.pass;
 
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.PlayerAction;
-import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.Game;
@@ -166,20 +165,6 @@ public final class StepEndPassing extends AbstractStep {
   	getResult().setNextAction(StepAction.NEXT_STEP);
   }
 	
-	// ByteArray serialization
-	
-  @Override
-  public int initFrom(ByteArray pByteArray) {
-  	int byteArraySerializationVersion = super.initFrom(pByteArray);
-  	fInterceptorId = pByteArray.getString();
-  	fCatcherId = pByteArray.getString();
-  	fPassAccurate = pByteArray.getBoolean();
-  	fPassFumble = pByteArray.getBoolean();
-  	fEndTurn = pByteArray.getBoolean();
-  	fEndPlayerAction = pByteArray.getBoolean();
-  	return byteArraySerializationVersion;
-  }
-  
   // JSON serialization
   
   @Override

@@ -1,7 +1,5 @@
 package com.balancedbytes.games.ffb.server.net.commands;
 
-import com.balancedbytes.games.ffb.bytearray.ByteArray;
-import com.balancedbytes.games.ffb.bytearray.ByteList;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.net.NetCommandId;
@@ -29,23 +27,6 @@ public class InternalServerCommandReplayLoaded extends InternalServerCommand {
  
   public int getReplayToCommandNr() {
     return fReplayToCommandNr;
-  }
-  
-  // ByteArray serialization
-  
-  public int getByteArraySerializationVersion() {
-    return 1;
-  }
-  
-  public void addTo(ByteList pByteList) {
-    super.addTo(pByteList);
-    pByteList.addSmallInt(fReplayToCommandNr);
-  }
-  
-  public int initFrom(ByteArray pByteArray) {
-    int byteArraySerializationVersion = super.initFrom(pByteArray);
-    fReplayToCommandNr = pByteArray.getSmallInt();
-    return byteArraySerializationVersion;
   }
   
   // JSON serialization

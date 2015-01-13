@@ -9,8 +9,6 @@ import com.balancedbytes.games.ffb.PlayerAction;
 import com.balancedbytes.games.ffb.PlayerState;
 import com.balancedbytes.games.ffb.Skill;
 import com.balancedbytes.games.ffb.TurnMode;
-import com.balancedbytes.games.ffb.TurnModeFactory;
-import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.dialog.DialogPassBlockParameter;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
@@ -289,27 +287,6 @@ public class StepPassBlock extends AbstractStep {
   		}
   	}
   	return passBlockers;
-  }
-  
-  // ByteArray serialization
-  
-  @Override
-  public int initFrom(ByteArray pByteArray) {
-  	int byteArraySerializationVersion = super.initFrom(pByteArray);
-  	fGotoLabelOnEnd = pByteArray.getString();
-  	fOldTurnMode = new TurnModeFactory().forId(pByteArray.getByte());
-  	fEndPlayerAction = pByteArray.getBoolean();
-  	fEndTurn = pByteArray.getBoolean();
-  	fOldPlayerStates = new PlayerState[pByteArray.getByte()];
-  	for (int i = 0; i < fOldPlayerStates.length; i++) {
-  		int playerStateId = pByteArray.getSmallInt();
-  		if (playerStateId == 0) {
-  			fOldPlayerStates[i] = null;
-  		} else {
-  			fOldPlayerStates[i] = new PlayerState(playerStateId);
-  		}
-  	}
-  	return byteArraySerializationVersion;
   }
   
   // JSON serialization

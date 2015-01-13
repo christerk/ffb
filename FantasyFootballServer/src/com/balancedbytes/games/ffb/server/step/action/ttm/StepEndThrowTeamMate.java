@@ -2,7 +2,6 @@ package com.balancedbytes.games.ffb.server.step.action.ttm;
 
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.PlayerState;
-import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
@@ -124,21 +123,6 @@ public final class StepEndThrowTeamMate extends AbstractStep {
     getResult().setNextAction(StepAction.NEXT_STEP);
   }
 	
-	// ByteArray serialization
-  
-  @Override
-  public int initFrom(ByteArray pByteArray) {
-  	int byteArraySerializationVersion = super.initFrom(pByteArray);
-  	fEndTurn = pByteArray.getBoolean();
-  	fEndPlayerAction = pByteArray.getBoolean();
-  	fThrownPlayerCoordinate = pByteArray.getFieldCoordinate();
-  	fThrownPlayerHasBall = pByteArray.getBoolean();
-  	fThrownPlayerId = pByteArray.getString();
-  	int thrownPlayerStateId = pByteArray.getSmallInt();
-  	fThrownPlayerState = (thrownPlayerStateId > 0) ? new PlayerState(thrownPlayerStateId) : null;
-  	return byteArraySerializationVersion;
-  }
-  
   // JSON serialization
   
   @Override

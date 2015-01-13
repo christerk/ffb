@@ -1,7 +1,6 @@
 package com.balancedbytes.games.ffb.server.step.action.foul;
 
 import com.balancedbytes.games.ffb.InducementType;
-import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.dialog.DialogBribesParameter;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
@@ -143,17 +142,6 @@ public class StepBribes extends AbstractStep {
     } else {
     	fBribesChoice = false;
     }
-  }
-
-  // ByteArray serialization
-  
-  @Override
-  public int initFrom(ByteArray pByteArray) {
-  	int byteArraySerializationVersion = super.initFrom(pByteArray);
-  	fGotoLabelOnEnd = pByteArray.getString();
-  	fBribesChoice = pByteArray.getBoolean();
-  	fBribeSuccessful = pByteArray.getBoolean();
-  	return byteArraySerializationVersion;
   }
 
   // JSON serialization

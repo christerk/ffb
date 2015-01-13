@@ -11,7 +11,6 @@ import com.balancedbytes.games.ffb.InducementType;
 import com.balancedbytes.games.ffb.PlayerState;
 import com.balancedbytes.games.ffb.PlayerType;
 import com.balancedbytes.games.ffb.Skill;
-import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.dialog.DialogBuyInducementsParameter;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.Game;
@@ -328,20 +327,6 @@ public final class StepBuyInducements extends AbstractStep {
       
     }
     
-  }
-  
-  // ByteArray serialization
-
-  @Override
-  public int initFrom(ByteArray pByteArray) {
-  	int byteArraySerializationVersion = super.initFrom(pByteArray);
-  	fInducementGoldHome = pByteArray.getInt();
-  	fInducementGoldAway = pByteArray.getInt();
-  	fInducementsSelectedHome = pByteArray.getBoolean();
-  	fInducementsSelectedAway = pByteArray.getBoolean();
-  	fReportedHome = pByteArray.getBoolean();
-  	fReportedAway = pByteArray.getBoolean();
-  	return byteArraySerializationVersion;
   }
   
   // JSON serialization

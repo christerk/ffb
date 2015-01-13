@@ -1,6 +1,5 @@
 package com.balancedbytes.games.ffb.server.step.action.pass;
 
-import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.server.GameState;
@@ -128,18 +127,6 @@ public final class StepDispatchPassing extends AbstractStep {
         getResult().setNextAction(StepAction.GOTO_LABEL, fGotoLabelOnEnd);
         return;
     }
-  }
-  
-  // ByteArray serialization
-  
-  @Override
-  public int initFrom(ByteArray pByteArray) {
-  	int byteArraySerializationVersion = super.initFrom(pByteArray);
-  	fGotoLabelOnEnd = pByteArray.getString();
-  	fGotoLabelOnHailMaryPass = pByteArray.getString();
-  	fGotoLabelOnHandOver = pByteArray.getString();
-  	fCatcherId = pByteArray.getString();
-  	return byteArraySerializationVersion;
   }
   
   // JSON serialization

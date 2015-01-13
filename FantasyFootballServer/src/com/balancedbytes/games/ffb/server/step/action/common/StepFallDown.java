@@ -2,10 +2,8 @@ package com.balancedbytes.games.ffb.server.step.action.common;
 
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.InjuryType;
-import com.balancedbytes.games.ffb.InjuryTypeFactory;
 import com.balancedbytes.games.ffb.PlayerState;
 import com.balancedbytes.games.ffb.TurnMode;
-import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.Game;
@@ -92,15 +90,6 @@ public class StepFallDown extends AbstractStep {
     	publishParameter(new StepParameter(StepParameterKey.END_TURN, true));
     }
     getResult().setNextAction(StepAction.NEXT_STEP);
-	}
-	
-	// ByteArray serialization
-
-	@Override
-	public int initFrom(ByteArray pByteArray) {
-		int byteArraySerializationVersion = super.initFrom(pByteArray);
-		fInjuryType = new InjuryTypeFactory().forId(pByteArray.getByte());
-		return byteArraySerializationVersion;
 	}
 	
   // JSON serialization

@@ -10,18 +10,11 @@ import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.InjuryModifier;
 import com.balancedbytes.games.ffb.InjuryModifierFactory;
 import com.balancedbytes.games.ffb.InjuryType;
-import com.balancedbytes.games.ffb.InjuryTypeFactory;
 import com.balancedbytes.games.ffb.PlayerState;
 import com.balancedbytes.games.ffb.SendToBoxReason;
-import com.balancedbytes.games.ffb.SendToBoxReasonFactory;
 import com.balancedbytes.games.ffb.SeriousInjury;
-import com.balancedbytes.games.ffb.SeriousInjuryFactory;
 import com.balancedbytes.games.ffb.Skill;
 import com.balancedbytes.games.ffb.SoundId;
-import com.balancedbytes.games.ffb.SoundIdFactory;
-import com.balancedbytes.games.ffb.bytearray.ByteArray;
-import com.balancedbytes.games.ffb.bytearray.ByteList;
-import com.balancedbytes.games.ffb.bytearray.IByteArrayReadable;
 import com.balancedbytes.games.ffb.json.IJsonSerializable;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.Game;
@@ -31,7 +24,6 @@ import com.balancedbytes.games.ffb.model.PlayerResult;
 import com.balancedbytes.games.ffb.report.ReportInjury;
 import com.balancedbytes.games.ffb.server.step.IStep;
 import com.balancedbytes.games.ffb.server.step.action.common.ApothecaryMode;
-import com.balancedbytes.games.ffb.server.step.action.common.ApothecaryModeFactory;
 import com.balancedbytes.games.ffb.server.util.UtilServerGame;
 import com.balancedbytes.games.ffb.util.UtilBox;
 import com.balancedbytes.games.ffb.util.UtilCards;
@@ -43,7 +35,7 @@ import com.eclipsesource.json.JsonValue;
  * 
  * @author Kalimar
  */
-public class InjuryResult implements IByteArrayReadable, IJsonSerializable {
+public class InjuryResult implements IJsonSerializable {
 
   private InjuryType fInjuryType;
   private String fDefenderId;
@@ -407,81 +399,6 @@ public class InjuryResult implements IByteArrayReadable, IJsonSerializable {
     pStep.getResult().setSound(getSound());
   }
 
-  // ByteArray serialization
-
-  public int getByteArraySerializationVersion() {
-    return 2;
-  }
-
-  public void addTo(ByteList pByteList) {
-    pByteList.addSmallInt(getByteArraySerializationVersion());
-    pByteList.addByte((byte) ((getInjuryType() != null) ? getInjuryType().getId() : 0));
-    pByteList.addString(getDefenderId());
-    pByteList.addFieldCoordinate(getDefenderPosition());
-    pByteList.addString(getAttackerId());
-    ArmorModifier[] armorModifiers = getArmorModifiers();
-    pByteList.addByte((byte) armorModifiers.length);
-    for (ArmorModifier armorModifier : armorModifiers) {
-      pByteList.addByte((byte) ((armorModifier != null) ? armorModifier.getId() : 0));
-    }
-    pByteList.addByteArray(getArmorRoll());
-    pByteList.addBoolean(isArmorBroken());
-    InjuryModifier[] injuryModifiers = getInjuryModifiers();
-    pByteList.addByte((byte) injuryModifiers.length);
-    for (InjuryModifier injuryModifier : injuryModifiers) {
-      pByteList.addByte((byte) ((injuryModifier != null) ? injuryModifier.getId() : 0));
-    }
-    pByteList.addByteArray(getInjuryRoll());
-    pByteList.addSmallInt(((getInjury() != null) ? getInjury().getId() : 0));
-    pByteList.addSmallInt(((getInjuryDecay() != null) ? getInjuryDecay().getId() : 0));
-    pByteList.addByteArray(getCasualtyRoll());
-    pByteList.addByte((byte) ((getSeriousInjury() != null) ? getSeriousInjury().getId() : 0));
-    pByteList.addByteArray(getCasualtyRollDecay());
-    pByteList.addByte((byte) ((getSeriousInjuryDecay() != null) ? getSeriousInjuryDecay().getId() : 0));
-    pByteList.addByte((byte) ((getApothecaryStatus() != null) ? getApothecaryStatus().getId() : 0));
-    pByteList.addByte((byte) ((getSendToBoxReason() != null) ? getSendToBoxReason().getId() : 0));
-    pByteList.addByte((byte) getSendToBoxTurn());
-    pByteList.addByte((byte) getSendToBoxHalf());
-    pByteList.addByte((byte) ((getSound() != null) ? getSound().getId() : 0));
-    pByteList.addByte((byte) ((getApothecaryMode() != null) ? getApothecaryMode().getId() : 0));
-  }
-
-  public int initFrom(ByteArray pByteArray) {
-    int byteArraySerializationVersion = pByteArray.getSmallInt();
-    setInjuryType(new InjuryTypeFactory().forId(pByteArray.getByte()));
-    setDefenderId(pByteArray.getString());
-    setDefenderCoordinate(pByteArray.getFieldCoordinate());
-    setAttackerId(pByteArray.getString());
-    ArmorModifierFactory armorModifierFactory = new ArmorModifierFactory();
-    int nrOfArmorModifiers = pByteArray.getByte();
-    for (int i = 0; i < nrOfArmorModifiers; i++) {
-      addArmorModifier(armorModifierFactory.forId(pByteArray.getByte()));
-    }
-    setArmorRoll(pByteArray.getByteArrayAsIntArray());
-    setArmorBroken(pByteArray.getBoolean());
-    InjuryModifierFactory injuryModifierFactory = new InjuryModifierFactory();
-    int nrOfInjuryModifiers = pByteArray.getByte();
-    for (int i = 0; i < nrOfInjuryModifiers; i++) {
-      addInjuryModifier(injuryModifierFactory.forId(pByteArray.getByte()));
-    }
-    setInjuryRoll(pByteArray.getByteArrayAsIntArray());
-    setInjury(new PlayerState(pByteArray.getSmallInt()));
-    setInjuryDecay(new PlayerState(pByteArray.getSmallInt()));
-    setCasualtyRoll(pByteArray.getByteArrayAsIntArray());
-    setSeriousInjury(new SeriousInjuryFactory().forId(pByteArray.getByte()));
-    setCasualtyRollDecay(pByteArray.getByteArrayAsIntArray());
-    setSeriousInjuryDecay(new SeriousInjuryFactory().forId(pByteArray.getByte()));
-    setApothecaryStatus(new ApothecaryStatusFactory().forId(pByteArray.getByte()));
-    setSendToBoxReason(new SendToBoxReasonFactory().forId(pByteArray.getByte()));
-    setSendToBoxTurn(pByteArray.getByte());
-    setSendToBoxHalf(pByteArray.getByte());
-    setSound(new SoundIdFactory().forId(pByteArray.getByte()));
-    if (byteArraySerializationVersion > 1) {
-    	setApothecaryMode(new ApothecaryModeFactory().forId(pByteArray.getByte()));
-    }
-    return byteArraySerializationVersion;
-  }
-  
   // JSON serialization
   
   public JsonObject toJsonValue() {

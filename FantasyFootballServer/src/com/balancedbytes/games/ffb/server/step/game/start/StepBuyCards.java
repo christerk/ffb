@@ -5,7 +5,6 @@ import java.util.Map;
 
 import com.balancedbytes.games.ffb.Card;
 import com.balancedbytes.games.ffb.CardType;
-import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.dialog.DialogBuyCardsParameter;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.Game;
@@ -200,20 +199,6 @@ public final class StepBuyCards extends AbstractStep {
       dialogParameter.put(type, deck.size());
     }
     return dialogParameter;
-  }
-  
-  // ByteArray serialization
-
-  @Override
-  public int initFrom(ByteArray pByteArray) {
-    int byteArraySerializationVersion = super.initFrom(pByteArray);
-    fInducementGoldHome = pByteArray.getInt();
-    fInducementGoldAway = pByteArray.getInt();
-    fCardsSelectedHome = pByteArray.getBoolean();
-    fCardsSelectedAway = pByteArray.getBoolean();
-    fReportedHome = pByteArray.getBoolean();
-    fReportedAway = pByteArray.getBoolean();
-    return byteArraySerializationVersion;
   }
   
   // JSON serialization

@@ -12,7 +12,6 @@ import com.balancedbytes.games.ffb.PlayerState;
 import com.balancedbytes.games.ffb.ReRollSource;
 import com.balancedbytes.games.ffb.ReRolledAction;
 import com.balancedbytes.games.ffb.Skill;
-import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.dialog.DialogSkillUseParameter;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.Animation;
@@ -264,21 +263,6 @@ public class StepPass extends AbstractStepWithReRoll {
     	publishParameter(new StepParameter(StepParameterKey.CATCHER_ID, null));
      	getResult().setNextAction(StepAction.GOTO_LABEL, fGotoLabelOnMissedPass);
     }
-  }
-  
-  // ByteArray serialization
-  
-  @Override
-  public int initFrom(ByteArray pByteArray) {
-  	int byteArraySerializationVersion = super.initFrom(pByteArray);
-  	fGotoLabelOnEnd = pByteArray.getString();
-  	fGotoLabelOnMissedPass = pByteArray.getString();
-  	fCatcherId = pByteArray.getString();
-  	fSuccessful = pByteArray.getBoolean();
-  	fHoldingSafeThrow = pByteArray.getBoolean();
-  	fPassFumble = pByteArray.getBoolean();
-  	fPassSkillUsed = pByteArray.getBoolean();
-  	return byteArraySerializationVersion;
   }
   
   // JSON serialization

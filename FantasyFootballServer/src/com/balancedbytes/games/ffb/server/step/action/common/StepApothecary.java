@@ -6,7 +6,6 @@ import com.balancedbytes.games.ffb.PlayerState;
 import com.balancedbytes.games.ffb.PlayerType;
 import com.balancedbytes.games.ffb.SeriousInjury;
 import com.balancedbytes.games.ffb.Skill;
-import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.dialog.DialogApothecaryChoiceParameter;
 import com.balancedbytes.games.ffb.dialog.DialogUseApothecaryParameter;
 import com.balancedbytes.games.ffb.dialog.DialogUseIgorParameter;
@@ -278,22 +277,6 @@ public class StepApothecary extends AbstractStep {
     }
   }
 
-  // ByteArray serialization
-  
-  @Override
-  public int initFrom(ByteArray pByteArray) {
-  	int byteArraySerializationVersion = super.initFrom(pByteArray);
-  	fApothecaryMode = new ApothecaryModeFactory().forId(pByteArray.getByte());
-  	if (pByteArray.getBoolean()) {
-  		fInjuryResult = new InjuryResult();
-  		fInjuryResult.initFrom(pByteArray);
-  	} else {
-  		fInjuryResult = null;
-  	}
-  	fShowReport = pByteArray.getBoolean();
-  	return byteArraySerializationVersion;
-  }
-  
   // JSON serialization
   
   @Override

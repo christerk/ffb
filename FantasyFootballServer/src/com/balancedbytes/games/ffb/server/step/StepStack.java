@@ -3,8 +3,6 @@ package com.balancedbytes.games.ffb.server.step;
 import java.util.LinkedList;
 import java.util.List;
 
-import com.balancedbytes.games.ffb.bytearray.ByteArray;
-import com.balancedbytes.games.ffb.bytearray.IByteArrayReadable;
 import com.balancedbytes.games.ffb.json.IJsonSerializable;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.server.GameState;
@@ -17,7 +15,7 @@ import com.eclipsesource.json.JsonValue;
  * 
  * @author Kalimar
  */
-public class StepStack implements IByteArrayReadable, IJsonSerializable {
+public class StepStack implements IJsonSerializable {
 	
 	private List<IStep> fStack;
 
@@ -73,25 +71,6 @@ public class StepStack implements IByteArrayReadable, IJsonSerializable {
 		}
 	}
 	
-  // ByteArray serialization
-  
-  public int initFrom(ByteArray pByteArray) {
-    int byteArraySerializationVersion = pByteArray.getSmallInt();
-    fStack.clear();
-    int nrOfSteps = pByteArray.getSmallInt();
-    for (int i = 0; i < nrOfSteps; i++) {
-    	fStack.add(initStepFrom(pByteArray));
-    }
-    return byteArraySerializationVersion;
-  }
-  
-  private IStep initStepFrom(ByteArray pByteArray) {
-		StepId stepId = new StepIdFactory().forId(pByteArray.getSmallInt(0));
-		IStep step = new StepFactory(getGameState()).forStepId(stepId);
-		step.initFrom(pByteArray);
-		return step;
-  }
-  
   // JSON serialization
   
   public JsonObject toJsonValue() {

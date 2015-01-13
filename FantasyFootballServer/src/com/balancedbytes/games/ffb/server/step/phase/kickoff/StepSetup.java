@@ -3,7 +3,6 @@ package com.balancedbytes.games.ffb.server.step.phase.kickoff;
 import com.balancedbytes.games.ffb.InducementPhase;
 import com.balancedbytes.games.ffb.SoundId;
 import com.balancedbytes.games.ffb.TurnMode;
-import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
@@ -173,16 +172,6 @@ public final class StepSetup extends AbstractStep {
   	return false;
   }
   
-  // ByteArray serialization
-    
-  @Override
-  public int initFrom(ByteArray pByteArray) {
-  	int byteArraySerializationVersion = super.initFrom(pByteArray);
-  	fGotoLabelOnEnd = pByteArray.getString();
-  	fEndSetup = pByteArray.getBoolean();
-  	return byteArraySerializationVersion;
-  }
-
   // JSON serialization
   
   @Override

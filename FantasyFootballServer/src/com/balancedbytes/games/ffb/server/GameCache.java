@@ -19,8 +19,6 @@ import com.balancedbytes.games.ffb.PlayerState;
 import com.balancedbytes.games.ffb.SendToBoxReason;
 import com.balancedbytes.games.ffb.TurnMode;
 import com.balancedbytes.games.ffb.Weather;
-import com.balancedbytes.games.ffb.bytearray.ByteArray;
-import com.balancedbytes.games.ffb.bytearray.ByteList;
 import com.balancedbytes.games.ffb.dialog.DialogStartGameParameter;
 import com.balancedbytes.games.ffb.model.FieldModel;
 import com.balancedbytes.games.ffb.model.Game;
@@ -239,19 +237,7 @@ public class GameCache {
   }
   
   public Team getTeamById(String pTeamId) {
-    Team originalTeam = fTeamCache.getTeamById(pTeamId);
-    if (originalTeam != null) {
-	    // create a new team object by serializing & deserializing it
-	    ByteList byteList = new ByteList();
-	    originalTeam.addTo(byteList);
-	    ByteArray byteArray = new ByteArray(byteList.toBytes());
-	    Team team = new Team();
-	    team.initFrom(byteArray);
-	    team.setDivision(originalTeam.getDivision());  // non-serialized value
-	    return team;
-    } else {
-    	return null;
-    }
+    return fTeamCache.getTeamById(pTeamId);
   }
   
   public void refresh() {

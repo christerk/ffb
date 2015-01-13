@@ -3,7 +3,6 @@ package com.balancedbytes.games.ffb.server.step.action.foul;
 import com.balancedbytes.games.ffb.Card;
 import com.balancedbytes.games.ffb.Skill;
 import com.balancedbytes.games.ffb.SoundId;
-import com.balancedbytes.games.ffb.bytearray.ByteArray;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.Game;
@@ -125,21 +124,6 @@ public class StepReferee extends AbstractStep {
 	    	getResult().setNextAction(StepAction.GOTO_LABEL, fGotoLabelOnEnd);
 	    }
 		}
-  }
-  
-	// ByteArray serialization
-	
-  @Override
-  public int initFrom(ByteArray pByteArray) {
-  	int byteArraySerializationVersion = super.initFrom(pByteArray);
-  	fGotoLabelOnEnd = pByteArray.getString();
-  	if (pByteArray.getBoolean()) {
-  		fInjuryResultDefender = new InjuryResult();
-  		fInjuryResultDefender.initFrom(pByteArray);
-  	} else {
-  		fInjuryResultDefender = null;
-  	}
-  	return byteArraySerializationVersion;
   }
   
   // JSON serialization
