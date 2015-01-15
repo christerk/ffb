@@ -292,7 +292,7 @@ public final class StepBuyInducements extends AbstractStep {
       for (int i = 0; i < pPositionIds.length; i++) {
         RosterPosition position = roster.getPositionById(pPositionIds[i]);
         Player otherTeamStarPlayer = otherTeamStarPlayerByName.get(position.getName());
-        if (otherTeamStarPlayer != null) {
+        if (!UtilGameOption.isOptionEnabled(game, GameOptionId.ALLOW_STAR_ON_BOTH_TEAMS) && (otherTeamStarPlayer != null)) {
           removedPlayerList.add(otherTeamStarPlayer);
         } else {
           Player starPlayer = new Player();

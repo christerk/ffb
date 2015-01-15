@@ -16,6 +16,7 @@ import com.balancedbytes.games.ffb.json.IJsonSerializable;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.change.ModelChange;
 import com.balancedbytes.games.ffb.model.change.ModelChangeId;
+import com.balancedbytes.games.ffb.util.ArrayTool;
 import com.eclipsesource.json.JsonArray;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
@@ -241,23 +242,31 @@ public class InducementSet implements IJsonSerializable {
   public InducementSet initFrom(JsonValue pJsonValue) {
     JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
     JsonArray inducements = IJsonOption.INDUCEMENT_ARRAY.getFrom(jsonObject);
-    for (int i = 0; i < inducements.size(); i++) {
-      Inducement inducement = new Inducement();
-      inducement.initFrom(inducements.get(i));
-      addInducement(inducement);
+    if (inducements != null) {
+      for (int i = 0; i < inducements.size(); i++) {
+        Inducement inducement = new Inducement();
+        inducement.initFrom(inducements.get(i));
+        addInducement(inducement);
+      }
     }
     CardFactory cardFactory = new CardFactory();
     String[] cardsAvailable = IJsonOption.CARDS_AVAILABLE.getFrom(jsonObject);
-    for (String cardName : cardsAvailable) {
-      fCardsAvailable.add(cardFactory.forName(cardName));
+    if (ArrayTool.isProvided(cardsAvailable)) {
+      for (String cardName : cardsAvailable) {
+        fCardsAvailable.add(cardFactory.forName(cardName));
+      }
     }
     String[] cardsActive = IJsonOption.CARDS_ACTIVE.getFrom(jsonObject);
-    for (String cardName : cardsActive) {
-      fCardsActive.add(cardFactory.forName(cardName));
-    }    
+    if (ArrayTool.isProvided(cardsActive)) {
+      for (String cardName : cardsActive) {
+        fCardsActive.add(cardFactory.forName(cardName));
+      }
+    }
     String[] cardsDeactivated = IJsonOption.CARDS_DEACTIVATED.getFrom(jsonObject);
-    for (String cardName : cardsDeactivated) {
-      fCardsDeactivated.add(cardFactory.forName(cardName));
+    if (ArrayTool.isProvided(cardsDeactivated)) {
+      for (String cardName : cardsDeactivated) {
+        fCardsDeactivated.add(cardFactory.forName(cardName));
+      }
     }
     return this;
   }

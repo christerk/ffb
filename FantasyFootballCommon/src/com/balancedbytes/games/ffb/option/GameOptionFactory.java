@@ -19,6 +19,10 @@ public class GameOptionFactory {
       return null;
     }
     switch (pOptionId) {
+      case ALLOW_STAR_ON_BOTH_TEAMS:
+        return new GameOptionBoolean(GameOptionId.ALLOW_STAR_ON_BOTH_TEAMS)
+          .setDefault(false)
+          .setMessageTrue("A star player may play for both teams.");
       case CHECK_OWNERSHIP:
         return new GameOptionBoolean(GameOptionId.CHECK_OWNERSHIP)
           .setDefault(true)
@@ -31,6 +35,10 @@ public class GameOptionFactory {
         return new GameOptionBoolean(GameOptionId.EXTRA_MVP)
           .setDefault(false)
           .setMessageTrue("An extra MVP is awarded at the end of the match");
+      case FORCE_TREASURY_TO_PETTY_CASH:
+        return new GameOptionBoolean(GameOptionId.FORCE_TREASURY_TO_PETTY_CASH)
+          .setDefault(false)
+          .setMessageTrue("Treasury is automatically transferred to Petty Cash.");
       case FOUL_BONUS:
         return new GameOptionBoolean(GameOptionId.FOUL_BONUS)
           .setDefault(false)

@@ -77,12 +77,18 @@ public final class StepPettyCash extends AbstractStep {
     Game game = getGameState().getGame();
     GameResult gameResult = game.getGameResult();
     gameResult.getTeamResultHome().setTeamValue(Math.max(gameResult.getTeamResultHome().getTeamValue(), game.getTeamHome().getTeamValue())); 
-    gameResult.getTeamResultAway().setTeamValue(Math.max(gameResult.getTeamResultAway().getTeamValue(), game.getTeamAway().getTeamValue())); 
+    gameResult.getTeamResultAway().setTeamValue(Math.max(gameResult.getTeamResultAway().getTeamValue(), game.getTeamAway().getTeamValue()));
     if (UtilGameOption.isOptionEnabled(game, GameOptionId.PETTY_CASH)) {
-      if (game.getTeamHome().getTreasury() < 50000 || (fPettyCashSelectedAway && ((game.getTeamAway().getTeamValue() - game.getTeamHome().getTeamValue()) > game.getTeamHome().getTreasury())) ) {
+      if (UtilGameOption.isOptionEnabled(game, GameOptionId.FORCE_TREASURY_TO_PETTY_CASH)) {
+        gameResult.getTeamResultHome().setPettyCashTransferred(game.getTeamHome().getTreasury());
+        fPettyCashSelectedHome = true;
+        gameResult.getTeamResultAway().setPettyCashTransferred(game.getTeamAway().getTreasury());
+        fPettyCashSelectedAway = true;
+      }
+      if (!fPettyCashSelectedHome && ((game.getTeamHome().getTreasury() < 50000) || (fPettyCashSelectedAway && ((game.getTeamAway().getTeamValue() - game.getTeamHome().getTeamValue()) > game.getTeamHome().getTreasury())))) {
       	fPettyCashSelectedHome = true;
       }
-      if (game.getTeamAway().getTreasury() < 50000  || (fPettyCashSelectedHome && ((game.getTeamHome().getTeamValue() - game.getTeamAway().getTeamValue()) > game.getTeamAway().getTreasury()))) {
+      if (!fPettyCashSelectedAway && ((game.getTeamAway().getTreasury() < 50000) || (fPettyCashSelectedHome && ((game.getTeamHome().getTeamValue() - game.getTeamAway().getTeamValue()) > game.getTeamAway().getTreasury())))) {
       	fPettyCashSelectedAway = true;
       }    
       if (fPettyCashSelectedHome && !fReportedHome) {
