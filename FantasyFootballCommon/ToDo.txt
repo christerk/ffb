@@ -1,6 +1,5 @@
-2013-10-18
-  add toJsonValue() and initFromJsonValue() to all steps
-  (no problem shown currently because it is implemented in the superclass)
+2015-01-16
+check why the replay of game 669571 is broken (both in game and after the game)
 
 old stuff:
 
