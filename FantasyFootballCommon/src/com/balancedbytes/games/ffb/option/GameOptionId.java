@@ -22,6 +22,7 @@ public enum GameOptionId implements IEnumWithName {
   
   ALLOW_STAR_ON_BOTH_TEAMS("allowStarOnBothTeams"),
   FORCE_TREASURY_TO_PETTY_CASH("forceTreasuryToPettyCash"),
+  USE_PREDEFINED_INDUCEMENTS("usePredefinedInducements"),
 
   CLAW_DOES_NOT_STACK("clawDoesNotStack"),
   FOUL_BONUS("foulBonus"),

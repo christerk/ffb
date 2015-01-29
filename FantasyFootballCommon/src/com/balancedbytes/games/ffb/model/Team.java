@@ -14,6 +14,7 @@ import com.balancedbytes.games.ffb.PlayerType;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.IJsonSerializable;
 import com.balancedbytes.games.ffb.json.UtilJson;
+import com.balancedbytes.games.ffb.xml.IXmlReadable;
 import com.balancedbytes.games.ffb.xml.IXmlSerializable;
 import com.balancedbytes.games.ffb.xml.UtilXml;
 import com.eclipsesource.json.JsonArray;
@@ -62,6 +63,8 @@ public class Team implements IXmlSerializable, IJsonSerializable {
 
   private String fRosterId;
   private Roster fRoster;
+
+  private InducementSet fInducementSet;
 
   private transient Map<String, Player> fPlayerById;
   private transient Map<Integer, Player> fPlayerByNr;
@@ -289,6 +292,14 @@ public class Team implements IXmlSerializable, IJsonSerializable {
   public void setCoach(String coach) {
     fCoach = coach;
   }
+  
+  public InducementSet getInducementSet() {
+    return fInducementSet;
+  }
+  
+  public void setInducementSet(InducementSet pInducementSet) {
+    fInducementSet = pInducementSet;
+  }
 
   public static Comparator<Team> comparatorByName() {
     return new Comparator<Team>() {
@@ -320,11 +331,11 @@ public class Team implements IXmlSerializable, IJsonSerializable {
   	UtilXml.addValueElement(pHandler, _XML_TAG_TREASURY, getTreasury());
   	UtilXml.addValueElement(pHandler, _XML_TAG_BASE_ICON_PATH, getBaseIconPath());
   	UtilXml.addValueElement(pHandler, _XML_TAG_LOGO_URL, getLogoUrl());
-  	
+
     for (Player player : getPlayers()) {
     	player.addToXml(pHandler);
     }
-  	
+    
   	UtilXml.endElement(pHandler, XML_TAG);
   	
   }
@@ -333,8 +344,8 @@ public class Team implements IXmlSerializable, IJsonSerializable {
     return UtilXml.toXml(this, pIndent);
   }
 
-  public IXmlSerializable startXmlElement(String pXmlTag, Attributes pXmlAttributes) {
-    IXmlSerializable xmlElement = this;
+  public IXmlReadable startXmlElement(String pXmlTag, Attributes pXmlAttributes) {
+    IXmlReadable xmlElement = this;
     if (XML_TAG.equals(pXmlTag)) {
       setId(UtilXml.getStringAttribute(pXmlAttributes, _XML_ATTRIBUTE_ID));
     }
@@ -343,6 +354,12 @@ public class Team implements IXmlSerializable, IJsonSerializable {
       player.startXmlElement(pXmlTag, pXmlAttributes);
       addPlayer(player);
       xmlElement = player;
+    }
+    // when reading XML only
+    if (InducementSet.XML_TAG.equals(pXmlTag)) {
+      setInducementSet(new InducementSet());
+      getInducementSet().startXmlElement(pXmlTag, pXmlAttributes);
+      xmlElement = getInducementSet();
     }
     return xmlElement;
   }

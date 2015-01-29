@@ -1,8 +1,16 @@
 package com.balancedbytes.games.ffb;
 
+import javax.xml.transform.sax.TransformerHandler;
+
+import org.xml.sax.Attributes;
+import org.xml.sax.helpers.AttributesImpl;
+
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.IJsonSerializable;
 import com.balancedbytes.games.ffb.json.UtilJson;
+import com.balancedbytes.games.ffb.xml.IXmlReadable;
+import com.balancedbytes.games.ffb.xml.IXmlSerializable;
+import com.balancedbytes.games.ffb.xml.UtilXml;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
@@ -10,7 +18,13 @@ import com.eclipsesource.json.JsonValue;
  * 
  * @author Kalimar
  */
-public class Inducement implements IJsonSerializable {
+public class Inducement implements IXmlSerializable, IJsonSerializable {
+  
+  public static final String XML_TAG = "inducement";
+  
+  private static final String _XML_ATTRIBUTE_TYPE = "type";
+  private static final String _XML_ATTRIBUTE_VALUE = "value";
+  private static final String _XML_ATTRIBUTE_USES = "uses";
   
   private InducementType fType;
   private int fValue;
@@ -47,6 +61,36 @@ public class Inducement implements IJsonSerializable {
   
   public int getUsesLeft() {
     return Math.max(0, getValue() - getUses());
+  }
+  
+  // XML serialization
+  
+  public void addToXml(TransformerHandler pHandler) {
+    AttributesImpl attributes = new AttributesImpl();
+    String typeName = (fType != null) ? fType.getName() : null;
+    UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_TYPE, typeName);
+    UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_VALUE, fValue);
+    UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_USES, fUses);
+    UtilXml.addEmptyElement(pHandler, XML_TAG, attributes);
+  }
+  
+  public String toXml(boolean pIndent) {
+    return UtilXml.toXml(this, pIndent);
+  }
+
+  public IXmlReadable startXmlElement(String pXmlTag, Attributes pXmlAttributes) {
+    InducementTypeFactory typeFactory = new InducementTypeFactory();
+    if (XML_TAG.equals(pXmlTag)) {
+      String typeName = UtilXml.getStringAttribute(pXmlAttributes, _XML_ATTRIBUTE_TYPE);
+      fType = typeFactory.forName(typeName);
+      fValue = UtilXml.getIntAttribute(pXmlAttributes, _XML_ATTRIBUTE_VALUE);
+      fUses = UtilXml.getIntAttribute(pXmlAttributes, _XML_ATTRIBUTE_USES);
+    }
+    return this;
+  }
+  
+  public boolean endXmlElement(String pXmlTag, String pValue) {
+    return XML_TAG.equals(pXmlTag);
   }
   
   // JSON serialization

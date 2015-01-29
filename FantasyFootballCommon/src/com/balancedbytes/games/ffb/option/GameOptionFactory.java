@@ -130,6 +130,10 @@ public class GameOptionFactory {
         return new GameOptionInt(GameOptionId.TURNTIME)
           .setDefault(240)
           .setMessage("Turntime is $1 sec.");
+      case USE_PREDEFINED_INDUCEMENTS:
+        return new GameOptionBoolean(GameOptionId.USE_PREDEFINED_INDUCEMENTS)
+          .setDefault(false)
+          .setMessageTrue("Inducements are predefined.");
       default:
         return null;
     }    

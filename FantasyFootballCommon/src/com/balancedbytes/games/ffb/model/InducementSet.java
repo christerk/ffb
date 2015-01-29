@@ -7,6 +7,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.xml.transform.sax.TransformerHandler;
+
+import org.xml.sax.Attributes;
+import org.xml.sax.helpers.AttributesImpl;
+
 import com.balancedbytes.games.ffb.Card;
 import com.balancedbytes.games.ffb.CardFactory;
 import com.balancedbytes.games.ffb.Inducement;
@@ -17,6 +22,9 @@ import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.change.ModelChange;
 import com.balancedbytes.games.ffb.model.change.ModelChangeId;
 import com.balancedbytes.games.ffb.util.ArrayTool;
+import com.balancedbytes.games.ffb.xml.IXmlReadable;
+import com.balancedbytes.games.ffb.xml.IXmlSerializable;
+import com.balancedbytes.games.ffb.xml.UtilXml;
 import com.eclipsesource.json.JsonArray;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
@@ -25,12 +33,24 @@ import com.eclipsesource.json.JsonValue;
  * 
  * @author Kalimar
  */
-public class InducementSet implements IJsonSerializable {
+public class InducementSet implements IXmlSerializable, IJsonSerializable {
+  
+  public static final String XML_TAG = "inducementSet";
+
+  private static final String _XML_TAG_STAR_PLAYER_SET = "starPlayerSet";
+  private static final String _XML_TAG_STAR_PLAYER = "starPlayer";
+
+  private static final String _XML_TAG_CARD_SET = "cardSet";
+  private static final String _XML_TAG_CARD = "card";
+
+  private static final String _XML_ATTRIBUTE_POSITION_ID = "positionId";
+  private static final String _XML_ATTRIBUTE_NAME = "name";
   
   private Map<InducementType, Inducement> fInducements;
   private Set<Card> fCardsAvailable;
   private Set<Card> fCardsActive;
   private Set<Card> fCardsDeactivated;
+  private Set<String> fStarPlayerPositionIds;
   
   private transient TurnData fTurnData;
   
@@ -39,6 +59,7 @@ public class InducementSet implements IJsonSerializable {
     fCardsAvailable = new HashSet<Card>();
     fCardsActive = new HashSet<Card>();
     fCardsDeactivated = new HashSet<Card>();
+    fStarPlayerPositionIds = new HashSet<String>();
   }
   
   public InducementSet(TurnData pTurnData) {
@@ -162,6 +183,7 @@ public class InducementSet implements IJsonSerializable {
   	return fCardsActive.contains(pCard);
   }
   
+  // add cards and standard inducements from given inducementSet
   public void add(InducementSet pInducementSet) {
     if (pInducementSet != null) {
       for (Inducement inducement : pInducementSet.getInducements()) {
@@ -201,6 +223,16 @@ public class InducementSet implements IJsonSerializable {
     return total;
   }
   
+  // no change tracking (Fumbbl communication only)
+  public String[] getStarPlayerPositionIds() {
+    return fStarPlayerPositionIds.toArray(new String[fStarPlayerPositionIds.size()]);
+  }
+  
+  // no change tracking (Fumbbl communication only)
+  public void addStarPlayerPositionId(String pStarPlayerPositionId) {
+    fStarPlayerPositionIds.add(pStarPlayerPositionId);
+  }
+  
   // change tracking
   
   private void notifyObservers(ModelChangeId pChangeId, Object pValue) {
@@ -210,6 +242,74 @@ public class InducementSet implements IJsonSerializable {
   	String key = getTurnData().isHomeData() ? ModelChange.HOME : ModelChange.AWAY;
   	ModelChange modelChange = new ModelChange(pChangeId, key, pValue);
   	getTurnData().getGame().notifyObservers(modelChange);
+  }
+  
+  // XML serialization
+  
+  public void addToXml(TransformerHandler pHandler) {
+
+    UtilXml.startElement(pHandler, XML_TAG);
+    
+    for (Inducement inducement : fInducements.values()) {
+      inducement.addToXml(pHandler);
+    }
+
+    UtilXml.startElement(pHandler, _XML_TAG_STAR_PLAYER_SET);
+    for (String positionId : fStarPlayerPositionIds) {
+      AttributesImpl attributes = new AttributesImpl();
+      UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_POSITION_ID, positionId);
+      UtilXml.addEmptyElement(pHandler, _XML_TAG_STAR_PLAYER, attributes);
+    }
+    UtilXml.endElement(pHandler, _XML_TAG_STAR_PLAYER_SET);
+    
+    UtilXml.startElement(pHandler, _XML_TAG_CARD_SET);
+    for (Card card : fCardsAvailable) {
+      AttributesImpl attributes = new AttributesImpl();
+      UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_NAME, card.getName());
+      UtilXml.addEmptyElement(pHandler, _XML_TAG_CARD, attributes);
+    }
+    UtilXml.endElement(pHandler, _XML_TAG_CARD_SET);
+    
+    UtilXml.endElement(pHandler, XML_TAG);
+    
+  }
+  
+  public String toXml(boolean pIndent) {
+    return UtilXml.toXml(this, pIndent);
+  }
+  
+  public IXmlReadable startXmlElement(String pXmlTag, Attributes pXmlAttributes) {
+    IXmlReadable xmlElement = this;
+    if (Inducement.XML_TAG.equals(pXmlTag)) {
+      Inducement inducement = new Inducement();
+      inducement.startXmlElement(pXmlTag, pXmlAttributes);
+      addInducement(inducement);
+      xmlElement = inducement;
+    }
+    if (_XML_TAG_STAR_PLAYER_SET.equals(pXmlTag)) {
+      fStarPlayerPositionIds.clear();
+    }
+    if (_XML_TAG_STAR_PLAYER.equals(pXmlTag)) {
+      String positionId = pXmlAttributes.getValue(_XML_ATTRIBUTE_POSITION_ID).trim();
+      addStarPlayerPositionId(positionId);
+    }
+    if (_XML_TAG_CARD_SET.equals(pXmlTag)) {
+      fCardsAvailable.clear();
+      fCardsActive.clear();
+      fCardsDeactivated.clear();
+    }
+    if (_XML_TAG_CARD.equals(pXmlTag)) {
+      String cardName = pXmlAttributes.getValue(_XML_ATTRIBUTE_NAME).trim();
+      Card card = new CardFactory().forName(cardName);
+      if (card != null) {
+        fCardsAvailable.add(card);
+      }
+    }
+    return xmlElement;
+  }
+  
+  public boolean endXmlElement(String pXmlTag, String pValue) {
+    return XML_TAG.equals(pXmlTag);
   }
 
   // JSON serialization
@@ -236,6 +336,10 @@ public class InducementSet implements IJsonSerializable {
       cardsDeactivated.add(card.getName());
     }
     IJsonOption.CARDS_DEACTIVATED.addTo(jsonObject, cardsDeactivated);
+    String[] starPlayerPositionIds = getStarPlayerPositionIds();
+    if (ArrayTool.isProvided(starPlayerPositionIds)) {
+      IJsonOption.STAR_PLAYER_POSTION_IDS.addTo(jsonObject, starPlayerPositionIds);
+    }
     return jsonObject;
   }
   
@@ -266,6 +370,12 @@ public class InducementSet implements IJsonSerializable {
     if (ArrayTool.isProvided(cardsDeactivated)) {
       for (String cardName : cardsDeactivated) {
         fCardsDeactivated.add(cardFactory.forName(cardName));
+      }
+    }
+    String[] starPlayerPositionIds = IJsonOption.STAR_PLAYER_POSTION_IDS.getFrom(jsonObject);
+    if (ArrayTool.isProvided(starPlayerPositionIds)) {
+      for (String starPlayerPositionId : starPlayerPositionIds) {
+        fStarPlayerPositionIds.add(starPlayerPositionId);
       }
     }
     return this;

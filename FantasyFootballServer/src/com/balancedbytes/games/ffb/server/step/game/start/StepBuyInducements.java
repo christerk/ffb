@@ -143,11 +143,32 @@ public final class StepBuyInducements extends AbstractStep {
     int homeTV = gameResult.getTeamResultHome().getTeamValue();
     int awayTV = gameResult.getTeamResultAway().getTeamValue();
     if (UtilGameOption.isOptionEnabled(game, GameOptionId.INDUCEMENTS)) {
-      if (fInducementGoldHome < MINIMUM_PETTY_CASH_FOR_INDUCEMENTS) {
-        fInducementsSelectedHome = true;
-      }
-      if (fInducementGoldAway < MINIMUM_PETTY_CASH_FOR_INDUCEMENTS) {
-        fInducementsSelectedAway = true;
+      if (UtilGameOption.isOptionEnabled(game, GameOptionId.USE_PREDEFINED_INDUCEMENTS)) {
+        if (game.getTeamHome().getInducementSet() != null) {
+          game.getTurnDataHome().getInducementSet().add(game.getTeamHome().getInducementSet());
+          String[] starPlayerPositionIds = game.getTeamHome().getInducementSet().getStarPlayerPositionIds();
+          if (ArrayTool.isProvided(starPlayerPositionIds)) {
+            game.getTurnDataHome().getInducementSet().addInducement(new Inducement(InducementType.STAR_PLAYERS, starPlayerPositionIds.length));
+            addStarPlayers(game.getTeamHome(), starPlayerPositionIds);
+          }
+          fGoldUsedHome = fInducementGoldHome;
+        }
+        if (game.getTeamAway().getInducementSet() != null) {
+          game.getTurnDataAway().getInducementSet().add(game.getTeamAway().getInducementSet());
+          String[] starPlayerPositionIds = game.getTeamAway().getInducementSet().getStarPlayerPositionIds();
+          if (ArrayTool.isProvided(starPlayerPositionIds)) {
+            game.getTurnDataAway().getInducementSet().addInducement(new Inducement(InducementType.STAR_PLAYERS, starPlayerPositionIds.length));
+            addStarPlayers(game.getTeamAway(), starPlayerPositionIds);
+          }
+          fGoldUsedAway = fInducementGoldAway;
+        }
+      } else {
+        if (fInducementGoldHome < MINIMUM_PETTY_CASH_FOR_INDUCEMENTS) {
+          fInducementsSelectedHome = true;
+        }
+        if (fInducementGoldAway < MINIMUM_PETTY_CASH_FOR_INDUCEMENTS) {
+          fInducementsSelectedAway = true;
+        }
       }
       if (fInducementsSelectedHome && !fReportedHome) {
       	fReportedHome = true;
