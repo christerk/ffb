@@ -102,7 +102,8 @@ public final class StepBuyCards extends AbstractStep {
   private void executeStep() {
     Game game = getGameState().getGame();
     GameResult gameResult = game.getGameResult();
-    if (UtilGameOption.getIntOption(game, GameOptionId.MAX_NR_OF_CARDS) == 0) {
+    if ((UtilGameOption.getIntOption(game, GameOptionId.MAX_NR_OF_CARDS) == 0) 
+      || UtilGameOption.isOptionEnabled(game, GameOptionId.USE_PREDEFINED_INDUCEMENTS)) {
       int freeCash = UtilGameOption.getIntOption(game, GameOptionId.FREE_INDUCEMENT_CASH);
       fInducementGoldHome = UtilInducementSequence.calculateInducementGold(game, true) + freeCash;
       publishParameter(new StepParameter(StepParameterKey.INDUCEMENT_GOLD_HOME, fInducementGoldHome));
