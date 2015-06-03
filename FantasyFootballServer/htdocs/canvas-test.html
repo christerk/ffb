@@ -40,7 +40,7 @@
 	
 	var images = { };
 
-	loadImage('player1', '/icons/players/amazon/amblitzer1.gif');
+	loadImage('amblitzer1', '/icons/players/iconsets/amazon_blitzer.png');
 	
 	function loadImage(name, path) {
 		images[name] = new Image();
@@ -82,7 +82,12 @@
 		if ((xPos >= 720) || (xPos <= 32)) {
 			xInc *= -1;
 		}
-		contextPlayers.drawImage(images['player1'], xPos, yPos);
+		if (xInc > 0) {
+			contextPlayers.drawImage(images['amblitzer1'], 1 * 28, 0, 28, 28, xPos, yPos, 28, 28);
+		} else {
+			contextPlayers.drawImage(images['amblitzer1'], 3 * 28, 0, 28, 28, xPos, yPos, 28, 28);
+		}
+		 
 	}
 	
 
