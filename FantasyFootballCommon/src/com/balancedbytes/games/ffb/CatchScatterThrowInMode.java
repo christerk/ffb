@@ -6,35 +6,29 @@ package com.balancedbytes.games.ffb;
  * 
  * @author Kalimar
  */
-public enum CatchScatterThrowInMode implements IEnumWithId, IEnumWithName {
+public enum CatchScatterThrowInMode implements IEnumWithName {
   
-  CATCH_ACCURATE_PASS(1, "catchAccuratePass", false),
-  CATCH_HAND_OFF(2, "catchHandOff", false),
-  CATCH_SCATTER(3, "catchScatter", false),
-  SCATTER_BALL(4, "scatterBall", false),
-  THROW_IN(5, "throwIn", false),
-  CATCH_MISSED_PASS(6, "catchMissedPass", false),
-  CATCH_KICKOFF(7, "catchKickoff", false),
-  CATCH_THROW_IN(8, "catchThrowIn", false),
-  FAILED_CATCH(9, "failedCatch", false),
-  FAILED_PICK_UP(10, "failedPickUp", false),
-  CATCH_ACCURATE_BOMB(11, "catchAccurateBomb", true),
-  CATCH_BOMB(12, "catchBomb", true);
+  CATCH_ACCURATE_PASS("catchAccuratePass", false),
+  CATCH_HAND_OFF("catchHandOff", false),
+  CATCH_SCATTER("catchScatter", false),
+  SCATTER_BALL("scatterBall", false),
+  THROW_IN("throwIn", false),
+  CATCH_MISSED_PASS("catchMissedPass", false),
+  CATCH_KICKOFF("catchKickoff", false),
+  CATCH_THROW_IN("catchThrowIn", false),
+  FAILED_CATCH("failedCatch", false),
+  FAILED_PICK_UP("failedPickUp", false),
+  CATCH_ACCURATE_BOMB("catchAccurateBomb", true),
+  CATCH_BOMB("catchBomb", true);
   
-  private int fId;
   private String fName;
   private boolean fBomb;
   
-  private CatchScatterThrowInMode(int pValue, String pName, boolean pBomb) {
-    fId = pValue;
+  private CatchScatterThrowInMode(String pName, boolean pBomb) {
     fName = pName;
     fBomb = pBomb;
   }
 
-  public int getId() {
-    return fId;
-  }
-  
   public String getName() {
     return fName;
   }

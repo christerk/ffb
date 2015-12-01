@@ -16,15 +16,6 @@ import com.balancedbytes.games.ffb.util.UtilCards;
  */
 public class LeapModifierFactory implements IRollModifierFactory {
   
-  public LeapModifier forId(int pId) {
-    for (LeapModifier modifier : LeapModifier.values()) {
-      if (modifier.getId() == pId) {
-        return modifier;
-      }
-    }
-    return null;
-  }
-  
   public LeapModifier forName(String pName) {
     for (LeapModifier modifier : LeapModifier.values()) {
       if (modifier.getName().equalsIgnoreCase(pName)) {
@@ -50,7 +41,7 @@ public class LeapModifierFactory implements IRollModifierFactory {
         leapModifierArray,
         new Comparator<LeapModifier>() {
           public int compare(LeapModifier pO1, LeapModifier pO2) {
-            return (pO1.getId() - pO2.getId());
+            return pO1.getName().compareTo(pO2.getName());
           }
         }
       );

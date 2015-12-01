@@ -6,26 +6,20 @@ package com.balancedbytes.games.ffb;
  * 
  * @author Kalimar
  */
-public enum ClientMode implements IEnumWithId, IEnumWithName {
+public enum ClientMode implements IEnumWithName {
   
-  PLAYER(1, "player", "-player"),
-  SPECTATOR(2, "spectator", "-spectator"),
-  REPLAY(3, "replay", "-replay");
+  PLAYER("player", "-player"),
+  SPECTATOR("spectator", "-spectator"),
+  REPLAY("replay", "-replay");
   
-  private int fId;
   private String fName;
   private String fArgument;
   
-  private ClientMode(int pValue, String pName, String pArgument) {
-    fId = pValue;
+  private ClientMode(String pName, String pArgument) {
     fName = pName;
     fArgument = pArgument;
   }
 
-  public int getId() {
-    return fId;
-  }
-  
   public String getName() {
     return fName;
   }

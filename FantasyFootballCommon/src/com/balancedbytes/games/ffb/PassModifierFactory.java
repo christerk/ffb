@@ -27,15 +27,6 @@ public class PassModifierFactory implements IRollModifierFactory {
     return null;
   }
 
-  public PassModifier forId(int pId) {
-    for (PassModifier modifier : PassModifier.values()) {
-      if (modifier.getId() == pId) {
-        return modifier;
-      }
-    }
-    return null;
-  }
-
   public Set<PassModifier> findPassModifiers(Game pGame, Player pThrower, PassingDistance pPassingDistance, boolean pThrowTeamMate) {
     Set<PassModifier> passModifiers = new HashSet<PassModifier>();
     if (pThrower != null) {
@@ -83,7 +74,7 @@ public class PassModifierFactory implements IRollModifierFactory {
         passModifierArray,
         new Comparator<PassModifier>() {
           public int compare(PassModifier pO1, PassModifier pO2) {
-            return (pO1.getId() - pO2.getId());
+            return pO1.getName().compareTo(pO2.getName());
           }
         }
       );

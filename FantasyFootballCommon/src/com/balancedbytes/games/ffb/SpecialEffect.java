@@ -5,26 +5,20 @@ package com.balancedbytes.games.ffb;
  * 
  * @author Kalimar
  */
-public enum SpecialEffect implements IEnumWithId, IEnumWithName {
+public enum SpecialEffect implements IEnumWithName {
   
-  LIGHTNING(1, "lightning", true),
-  FIREBALL(2, "fireball", true),
-  BOMB(3, "bomb", false);
+  LIGHTNING("lightning", true),
+  FIREBALL("fireball", true),
+  BOMB("bomb", false);
   
-  private int fId;
   private String fName;
   private boolean fWizardSpell;
   
-  private SpecialEffect(int pValue, String pName, boolean pWizardSpell) {
-    fId = pValue;
+  private SpecialEffect(String pName, boolean pWizardSpell) {
     fName = pName;
     fWizardSpell = pWizardSpell;
   }
 
-  public int getId() {
-    return fId;
-  }
-  
   public String getName() {
     return fName;
   }

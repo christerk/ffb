@@ -6,7 +6,7 @@ import com.balancedbytes.games.ffb.util.StringTool;
  * 
  * @author Kalimar
  */
-public class InducementPhaseFactory implements IEnumWithIdFactory, IEnumWithNameFactory {
+public class InducementPhaseFactory implements IEnumWithNameFactory {
   
   public InducementPhase forName(String pName) {
     if (StringTool.isProvided(pName)) {
@@ -23,17 +23,6 @@ public class InducementPhaseFactory implements IEnumWithIdFactory, IEnumWithName
     return null;
   }
 
-  public InducementPhase forId(int pId) {
-    if (pId > 0) {
-      for (InducementPhase phase : InducementPhase.values()) {
-        if (phase.getId() == pId) {
-          return phase;
-        }
-      }
-    }
-    return null;
-  }
-  
   public String getDescription(InducementPhase[] pPhases) {
     StringBuilder description = new StringBuilder();
     description.append("Play ");

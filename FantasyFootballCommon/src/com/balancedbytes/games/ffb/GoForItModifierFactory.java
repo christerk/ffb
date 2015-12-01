@@ -24,15 +24,6 @@ public class GoForItModifierFactory implements IRollModifierFactory {
     return null;
   }
 
-  public GoForItModifier forId(int pId) {
-    for (GoForItModifier modifier : GoForItModifier.values()) {
-      if (modifier.getId() == pId) {
-        return modifier;
-      }
-    }
-    return null;
-  }
-  
   public Set<GoForItModifier> findGoForItModifiers(Game pGame) {
     Set<GoForItModifier> goForItModifiers = new HashSet<GoForItModifier>();
     if (Weather.BLIZZARD == pGame.getFieldModel().getWeather()) {
@@ -51,7 +42,7 @@ public class GoForItModifierFactory implements IRollModifierFactory {
         goForItModifierArray,
         new Comparator<GoForItModifier>() {
           public int compare(GoForItModifier pO1, GoForItModifier pO2) {
-            return (pO1.getId() - pO2.getId());
+            return pO1.getName().compareTo(pO2.getName());
           }
         }
       );

@@ -15,15 +15,6 @@ import com.balancedbytes.games.ffb.util.UtilPlayer;
  */
 public class RightStuffModifierFactory implements IRollModifierFactory {
   
-  public RightStuffModifier forId(int pId) {
-    for (RightStuffModifier modifier : RightStuffModifier.values()) {
-      if (modifier.getId() == pId) {
-        return modifier;
-      }
-    }
-    return null;
-  }
-  
   public RightStuffModifier forName(String pName) {
     for (RightStuffModifier modifier : RightStuffModifier.values()) {
       if (modifier.getName().equalsIgnoreCase(pName)) {
@@ -49,7 +40,7 @@ public class RightStuffModifierFactory implements IRollModifierFactory {
           rightStuffModifierArray,
         new Comparator<RightStuffModifier>() {
           public int compare(RightStuffModifier pO1, RightStuffModifier pO2) {
-            return (pO1.getId() - pO2.getId());
+            return pO1.getName().compareTo(pO2.getName());
           }
         }
       );

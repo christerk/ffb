@@ -895,7 +895,7 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
     Inducement[] inducements = pInducementSet.getInducements();
     Arrays.sort(inducements, new Comparator<Inducement>() {
       public int compare(Inducement pInducement1, Inducement pInducement2) {
-        return (pInducement1.getType().getId() - pInducement2.getType().getId());
+        return pInducement1.getType().getName().compareTo(pInducement2.getType().getName());
       }
     });
     for (Inducement inducement : inducements) {

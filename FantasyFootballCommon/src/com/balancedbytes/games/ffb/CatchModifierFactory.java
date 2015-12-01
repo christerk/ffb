@@ -26,15 +26,6 @@ public class CatchModifierFactory implements IRollModifierFactory {
     return null;
   }
 
-  public CatchModifier forId(int pId) {
-    for (CatchModifier modifier : CatchModifier.values()) {
-      if (modifier.getId() == pId) {
-        return modifier;
-      }
-    }
-    return null;
-  }
-  
   public Set<CatchModifier> findCatchModifiers(Game pGame, Player pPlayer, CatchScatterThrowInMode pCatchMode) {
     Set<CatchModifier> catchModifiers = new HashSet<CatchModifier>();
     if ((CatchScatterThrowInMode.CATCH_ACCURATE_PASS == pCatchMode) || (CatchScatterThrowInMode.CATCH_ACCURATE_BOMB == pCatchMode)) {
@@ -74,7 +65,7 @@ public class CatchModifierFactory implements IRollModifierFactory {
         catchModifierArray,
         new Comparator<CatchModifier>() {
           public int compare(CatchModifier pO1, CatchModifier pO2) {
-            return (pO1.getId() - pO2.getId());
+            return pO1.getName().compareTo(pO2.getName());
           }
         }
       );

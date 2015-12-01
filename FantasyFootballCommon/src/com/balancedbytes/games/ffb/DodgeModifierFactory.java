@@ -18,15 +18,6 @@ import com.balancedbytes.games.ffb.util.UtilPlayer;
  */
 public class DodgeModifierFactory implements IRollModifierFactory {
   
-  public DodgeModifier forId(int pId) {
-    for (DodgeModifier modifier : DodgeModifier.values()) {
-      if (modifier.getId() == pId) {
-        return modifier;
-      }
-    }
-    return null;
-  }
-  
   public DodgeModifier forName(String pName) {
     for (DodgeModifier modifier : DodgeModifier.values()) {
       if (modifier.getName().equalsIgnoreCase(pName)) {
@@ -70,7 +61,7 @@ public class DodgeModifierFactory implements IRollModifierFactory {
           dodgeModifierArray,
         new Comparator<DodgeModifier>() {
           public int compare(DodgeModifier pO1, DodgeModifier pO2) {
-            return (pO1.getId() - pO2.getId());
+            return pO1.getName().compareTo(pO2.getName());
           }
         }
       );

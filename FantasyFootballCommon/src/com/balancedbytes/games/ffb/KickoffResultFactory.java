@@ -4,7 +4,7 @@ package com.balancedbytes.games.ffb;
  * 
  * @author Kalimar
  */
-public class KickoffResultFactory implements IEnumWithIdFactory, IEnumWithNameFactory {
+public class KickoffResultFactory implements IEnumWithNameFactory {
   
   public KickoffResult forName(String pName) {
     for (KickoffResult kickoff : KickoffResult.values()) {
@@ -15,13 +15,33 @@ public class KickoffResultFactory implements IEnumWithIdFactory, IEnumWithNameFa
     return null;
   }
 
-  public KickoffResult forId(int pId) {
-    for (KickoffResult kickoff : KickoffResult.values()) {
-      if (kickoff.getId() == pId) {
-        return kickoff;
-      }
+  public KickoffResult forRoll(int pRoll) {
+    switch (pRoll) {
+      case 2:
+        return KickoffResult.GET_THE_REF;
+      case 3:
+        return KickoffResult.RIOT;
+      case 4:
+        return KickoffResult.PERFECT_DEFENCE;
+      case 5:
+        return KickoffResult.HIGH_KICK;
+      case 6:
+        return KickoffResult.CHEERING_FANS;
+      case 7:
+        return KickoffResult.WEATHER_CHANGE;
+      case 8:
+        return KickoffResult.BRILLIANT_COACHING;
+      case 9:
+        return KickoffResult.QUICK_SNAP;
+      case 10:
+        return KickoffResult.BLITZ;
+      case 11:
+        return KickoffResult.THROW_A_ROCK;
+      case 12:
+        return KickoffResult.PITCH_INVASION;
+      default:
+        return null;
     }
-    return null;
   }
   
 }

@@ -7,7 +7,7 @@ import java.util.Comparator;
  * 
  * @author Kalimar
  */
-public enum Card implements IEnumWithId, IEnumWithName {
+public enum Card implements IEnumWithName {
 
   // ------------------------
 	// 13x Miscellaneous Mayhem
@@ -21,7 +21,7 @@ public enum Card implements IEnumWithId, IEnumWithName {
 	// 13x Magic Item
   // --------------
 	
-  BEGUILING_BRACERS(27, "Beguiling Bracers", "Beguiling Bracers", CardType.MAGIC_ITEM, CardTarget.OWN_PLAYER, false,
+  BEGUILING_BRACERS("Beguiling Bracers", "Beguiling Bracers", CardType.MAGIC_ITEM, CardTarget.OWN_PLAYER, false,
   	new InducementPhase[] { InducementPhase.START_OF_OWN_TURN }, InducementDuration.UNTIL_END_OF_GAME,
   	"Player gets Hypnotic Gaze, Side Step & Bone-Head"),
   //  Description:
@@ -33,7 +33,7 @@ public enum Card implements IEnumWithId, IEnumWithName {
   //    Choose one player on your team. That player gains the skills
   //    Hypnotic Gaze, Side Step, and Bone-head for the remainder of this game.
 
-  BELT_OF_INVULNERABILITY(28, "Belt of Invulnerability", "Invulnerability Belt", CardType.MAGIC_ITEM, CardTarget.OWN_PLAYER, false,
+  BELT_OF_INVULNERABILITY("Belt of Invulnerability", "Invulnerability Belt", CardType.MAGIC_ITEM, CardTarget.OWN_PLAYER, false,
   	new InducementPhase[] { InducementPhase.END_OF_OWN_TURN, InducementPhase.AFTER_KICKOFF_TO_OPPONENT }, InducementDuration.UNTIL_END_OF_GAME,
   	"No modifiers or re-rolls on armour rolls"),
   //  Description:
@@ -47,7 +47,7 @@ public enum Card implements IEnumWithId, IEnumWithName {
   //    this game. This includes (but is not limited to) Claw, Mighty Blow,
   //    Dirty Player, Piling On, fouling assists and Chainsaw attacks.
   
-  FAWNDOUGHS_HEADBAND(29, "Fawndough's Headband", "Fawndough's Headband", CardType.MAGIC_ITEM, CardTarget.OWN_PLAYER, false,
+  FAWNDOUGHS_HEADBAND("Fawndough's Headband", "Fawndough's Headband", CardType.MAGIC_ITEM, CardTarget.OWN_PLAYER, false,
   	new InducementPhase[] { InducementPhase.START_OF_OWN_TURN }, InducementDuration.UNTIL_END_OF_TURN,
   	"Player gets Pass & Accurate, opponents get +1 to intercept"),
   //  Description:
@@ -61,7 +61,7 @@ public enum Card implements IEnumWithId, IEnumWithName {
   //    additional +1 modifier on any interception rolls against him is applied
   //    as well.
   
-  FORCE_SHIELD(30, "Force Shield", "Force Shield", CardType.MAGIC_ITEM, CardTarget.OWN_PLAYER, false,
+  FORCE_SHIELD("Force Shield", "Force Shield", CardType.MAGIC_ITEM, CardTarget.OWN_PLAYER, false,
    	new InducementPhase[] { InducementPhase.END_OF_OWN_TURN, InducementPhase.AFTER_KICKOFF_TO_OPPONENT }, InducementDuration.WHILE_HOLDING_THE_BALL,
    	"Player gets Sure Hands & Fend"),
   //  Description:
@@ -74,7 +74,7 @@ public enum Card implements IEnumWithId, IEnumWithName {
   //    Choose the player on your team holding the ball. That player gains
   //    the Sure Hands and Fend skills until he no longer has the ball.
 
-  GIKTAS_STRENGTH_OF_DA_BEAR(31, "Gikta's Strength of da Bear", "Gikta's Strength", CardType.MAGIC_ITEM, CardTarget.OWN_PLAYER, true,
+  GIKTAS_STRENGTH_OF_DA_BEAR("Gikta's Strength of da Bear", "Gikta's Strength", CardType.MAGIC_ITEM, CardTarget.OWN_PLAYER, true,
    	new InducementPhase[] { InducementPhase.START_OF_OWN_TURN }, InducementDuration.UNTIL_END_OF_DRIVE,
    	"Player gets +1 ST for this drive, then -1 ST for the remainder of the game"),
   //  Description:
@@ -87,7 +87,7 @@ public enum Card implements IEnumWithId, IEnumWithName {
   //    drive ends. After this the player has -1 Strength for the remainder of
   //    this game.
   
-  GLOVES_OF_HOLDING(32, "Gloves of Holding", "Gloves of Holding", CardType.MAGIC_ITEM, CardTarget.OWN_PLAYER, false,
+  GLOVES_OF_HOLDING("Gloves of Holding", "Gloves of Holding", CardType.MAGIC_ITEM, CardTarget.OWN_PLAYER, false,
   	new InducementPhase[] { InducementPhase.BEFORE_KICKOFF_SCATTER }, InducementDuration.UNTIL_END_OF_GAME,
   	"Player gets Catch & Sure Hands, but may not Pass or Hand-off"),
   //  Description:
@@ -101,7 +101,7 @@ public enum Card implements IEnumWithId, IEnumWithName {
   //    Hands skills, but may not take Pass or Hand-off Actions for the
   //    remainder of this game.
 
-  INERTIA_DAMPER(33, "Inertia Damper", "Inertia Damper", CardType.MAGIC_ITEM, CardTarget.OWN_PLAYER, false,
+  INERTIA_DAMPER("Inertia Damper", "Inertia Damper", CardType.MAGIC_ITEM, CardTarget.OWN_PLAYER, false,
     new InducementPhase[] { InducementPhase.END_OF_OWN_TURN, InducementPhase.AFTER_KICKOFF_TO_OPPONENT }, InducementDuration.UNTIL_END_OF_DRIVE,
     "Opponents get -1 ST to Blitzing from 1 or more squares away"),
   //  Description:
@@ -116,7 +116,7 @@ public enum Card implements IEnumWithId, IEnumWithName {
   //    player suffers a -1 modifier to his Strength (minimum Strength of 1)
   //    for the block attempt.
   
-  LUCKY_CHARM(34, "Lucky Charm", "Lucky Charm", CardType.MAGIC_ITEM, CardTarget.OWN_PLAYER, false,
+  LUCKY_CHARM("Lucky Charm", "Lucky Charm", CardType.MAGIC_ITEM, CardTarget.OWN_PLAYER, false,
   	new InducementPhase[] { InducementPhase.AFTER_INDUCEMENTS_PURCHASED }, InducementDuration.UNTIL_USED,
   	"Ignore first armour break roll"),
   //  Description:
@@ -129,7 +129,7 @@ public enum Card implements IEnumWithId, IEnumWithName {
   //  	and just be Placed Prone. Any roll that ignores armour, such as the
   //  	crowd or throw a rock, is not affected by a lucky charm.
   
-  MAGIC_GLOVES_OF_JARK_LONGARM(35, "Magic Gloves of Jark Longarm", "Magic Gloves", CardType.MAGIC_ITEM, CardTarget.OWN_PLAYER, false,
+  MAGIC_GLOVES_OF_JARK_LONGARM("Magic Gloves of Jark Longarm", "Magic Gloves", CardType.MAGIC_ITEM, CardTarget.OWN_PLAYER, false,
   	new InducementPhase[] { InducementPhase.END_OF_OWN_TURN, InducementPhase.AFTER_KICKOFF_TO_OPPONENT }, InducementDuration.UNTIL_END_OF_DRIVE,
   	"Player gets Pass Block & +1 to interception"),
   //  Description:
@@ -142,7 +142,7 @@ public enum Card implements IEnumWithId, IEnumWithName {
   //  	A player of your choice gains the Pass Block skill, and an additional +1
   //  	modifier to all interception rolls until the drive ends.
   
-	GOOD_OLD_MAGIC_CODPIECE(36, "Good Old Magic Codpiece", "Magic Codpiece", CardType.MAGIC_ITEM, CardTarget.OWN_PLAYER, false,
+	GOOD_OLD_MAGIC_CODPIECE("Good Old Magic Codpiece", "Magic Codpiece", CardType.MAGIC_ITEM, CardTarget.OWN_PLAYER, false,
   	new InducementPhase[] { InducementPhase.AFTER_INDUCEMENTS_PURCHASED }, InducementDuration.UNTIL_END_OF_GAME,
   	"Player cannot be fouled and no modifiers to injury rolls"),
   //  Description:
@@ -157,7 +157,7 @@ public enum Card implements IEnumWithId, IEnumWithName {
   //  	including (but not limited to) Dirty Player, Mighty Blow, Piling On, and
   //  	Stunty.
   
-	RABBITS_FOOT(37, "Rabbit's Foot", "Rabbit's Foot", CardType.MAGIC_ITEM, CardTarget.OWN_PLAYER, false,
+	RABBITS_FOOT("Rabbit's Foot", "Rabbit's Foot", CardType.MAGIC_ITEM, CardTarget.OWN_PLAYER, false,
   	new InducementPhase[] { InducementPhase.START_OF_OWN_TURN }, InducementDuration.UNTIL_END_OF_GAME,
   	"Player gets Pro (not playable on a Loner)"),
   //  Description:
@@ -169,7 +169,7 @@ public enum Card implements IEnumWithId, IEnumWithName {
   //  	A player of your choice without Loner gains the Pro skill for the
   //  	remainder of this game.
   
-//  RING_OF_TELEPORTATION(38, "Ring of Teleportation", CardType.MAGIC_ITEM, CardTarget.OWN_PLAYER, false,
+//  RING_OF_TELEPORTATION("Ring of Teleportation", CardType.MAGIC_ITEM, CardTarget.OWN_PLAYER, false,
 //  	new InducementPhase[] { InducementPhase.END_OF_TURN_NOT_HALF }, InducementDuration.INSTANTANEOUS),
   	
   //  Description:
@@ -187,7 +187,7 @@ public enum Card implements IEnumWithId, IEnumWithName {
   //  	The landing roll from the teleportation is automatically successful
   //  	unless he has bounced off another player.
   
-  WAND_OF_SMASHING(39, "Wand of Smashing", "Wand of Smashing", CardType.MAGIC_ITEM, CardTarget.OWN_PLAYER, false,
+  WAND_OF_SMASHING("Wand of Smashing", "Wand of Smashing", CardType.MAGIC_ITEM, CardTarget.OWN_PLAYER, false,
   	new InducementPhase[] { InducementPhase.START_OF_OWN_TURN }, InducementDuration.UNTIL_END_OF_TURN,
   	"Player gets +1 ST & Mighty Blow"),
   //  Description:
@@ -202,7 +202,7 @@ public enum Card implements IEnumWithId, IEnumWithName {
   // 13x Dirty Trick
   // ---------------
   
-  BLATANT_FOUL(40, "Blatant Foul", "Blatant Foul", CardType.DIRTY_TRICK, CardTarget.TURN, false,
+  BLATANT_FOUL("Blatant Foul", "Blatant Foul", CardType.DIRTY_TRICK, CardTarget.TURN, false,
    	new InducementPhase[] { InducementPhase.START_OF_OWN_TURN }, InducementDuration.UNTIL_END_OF_TURN,
    	"Next foul breaks armour automatically"),
   //	Description:
@@ -214,7 +214,7 @@ public enum Card implements IEnumWithId, IEnumWithName {
   //  	and is considered a non-doubles roll, however the injury roll for the
   //  	foul must be rolled as normal with the player sent off on doubles.
  
-  CHOP_BLOCK(41, "Chop Block", "Chop Block", CardType.DIRTY_TRICK, CardTarget.OWN_PLAYER, false,
+  CHOP_BLOCK("Chop Block", "Chop Block", CardType.DIRTY_TRICK, CardTarget.OWN_PLAYER, false,
 		new InducementPhase[] { InducementPhase.END_OF_OWN_TURN }, InducementDuration.UNTIL_END_OF_TURN,
 		"Unmoved player drops prone and stuns an adjacent player"),
   //	Description:
@@ -228,7 +228,7 @@ public enum Card implements IEnumWithId, IEnumWithName {
   //  	Prone and an opposing player in a square adjacent to him is now
   //  	considered Stunned.
 
-  CUSTARD_PIE(42, "Custard Pie", "Custard Pie", CardType.DIRTY_TRICK, CardTarget.OPPOSING_PLAYER, false,
+  CUSTARD_PIE("Custard Pie", "Custard Pie", CardType.DIRTY_TRICK, CardTarget.OPPOSING_PLAYER, false,
 		new InducementPhase[] { InducementPhase.START_OF_OWN_TURN }, InducementDuration.UNTIL_END_OF_TURN,
 		"Opponent distracted as per Hypnotic Gaze"),
   //	Description:
@@ -242,7 +242,7 @@ public enum Card implements IEnumWithId, IEnumWithName {
   //		flabbergasted by the pie hit that he loses his tackle zones for the
   //		remainder of this turn as per a successful Hypnotic Gaze roll.
 
-  DISTRACT(43, "Distract", "Distract", CardType.DIRTY_TRICK, CardTarget.OWN_PLAYER, false,
+  DISTRACT("Distract", "Distract", CardType.DIRTY_TRICK, CardTarget.OWN_PLAYER, false,
 		new InducementPhase[] { InducementPhase.END_OF_OWN_TURN, InducementPhase.AFTER_KICKOFF_TO_OPPONENT }, InducementDuration.UNTIL_END_OF_OPPONENTS_TURN,
 		"Player gets Disturbing Presence & opponents in 3 squares get Bone-head"),
   //	Description:
@@ -256,7 +256,7 @@ public enum Card implements IEnumWithId, IEnumWithName {
   //		player count as having Bone-head (lost Tackle Zones from failed
   //		Bone-head rolls return at the end of this turn).
 		
-  GREASED_SHOES(44, "Greased Shoes", "Greased Shoes", CardType.DIRTY_TRICK, CardTarget.TURN, false,
+  GREASED_SHOES("Greased Shoes", "Greased Shoes", CardType.DIRTY_TRICK, CardTarget.TURN, false,
 		new InducementPhase[] { InducementPhase.END_OF_OWN_TURN, InducementPhase.AFTER_KICKOFF_TO_OPPONENT }, InducementDuration.UNTIL_END_OF_OPPONENTS_TURN,
 		"Opposing players need to roll 5+ to Go For It"),
   //	Description:
@@ -268,7 +268,7 @@ public enum Card implements IEnumWithId, IEnumWithName {
   //		This turn all opposing players need to roll a 5+ to Go For It instead of
   //		the normal 2+.
 		
-  GROMSKULLS_EXPLODING_RUNES(45, "Gromskull's Exploding Runes", "Exploding Runes", CardType.DIRTY_TRICK, CardTarget.OWN_PLAYER, false,
+  GROMSKULLS_EXPLODING_RUNES("Gromskull's Exploding Runes", "Exploding Runes", CardType.DIRTY_TRICK, CardTarget.OWN_PLAYER, false,
 		new InducementPhase[] { InducementPhase.BEFORE_SETUP }, InducementDuration.UNTIL_END_OF_GAME,
 		"Player gets Bombardier, No Hands, Secret Weapon & -1 to pass"),
   //  Description:
@@ -282,7 +282,7 @@ public enum Card implements IEnumWithId, IEnumWithName {
   //  	Rune can be very volatile, any pass roll made with a Rune bomb is
   //  	performed with a -1 modifier to the pass roll.
   	
-	ILLEGAL_SUBSTITUTION(46, "Illegal Substitution", "Illegal Substitution", CardType.DIRTY_TRICK, CardTarget.TURN, false,
+	ILLEGAL_SUBSTITUTION("Illegal Substitution", "Illegal Substitution", CardType.DIRTY_TRICK, CardTarget.TURN, false,
     new InducementPhase[] { InducementPhase.START_OF_OWN_TURN }, InducementDuration.UNTIL_END_OF_TURN,
     "Place an extra player in your end zone"),
   //  Description:
@@ -295,7 +295,7 @@ public enum Card implements IEnumWithId, IEnumWithName {
   //  	a Move Action this turn. This may take your team to 12 players for
   //  	the remainder of the drive.
   	
-  KICKING_BOOTS(47, "Kicking Boots", "Kicking Boots", CardType.DIRTY_TRICK, CardTarget.OWN_PLAYER, false,
+  KICKING_BOOTS("Kicking Boots", "Kicking Boots", CardType.DIRTY_TRICK, CardTarget.OWN_PLAYER, false,
     new InducementPhase[] { InducementPhase.BEFORE_KICKOFF_SCATTER }, InducementDuration.UNTIL_END_OF_GAME,
     "Player gets Kick, Dirty Player & -1 MA"),
   //  Description:
@@ -307,7 +307,7 @@ public enum Card implements IEnumWithId, IEnumWithName {
   //		A player of your choice on your team gains the Kick and Dirty Player
   //		skills and a -1 MA for the remainder of this game.
 		
-  PIT_TRAP(48, "Pit Trap", "Pit Trap", CardType.DIRTY_TRICK, CardTarget.ANY_PLAYER, false,
+  PIT_TRAP("Pit Trap", "Pit Trap", CardType.DIRTY_TRICK, CardTarget.ANY_PLAYER, false,
     new InducementPhase[] { InducementPhase.END_OF_OWN_TURN }, InducementDuration.UNTIL_END_OF_TURN,
     "Player is placed prone, no armour roll"),
   //  Description:
@@ -319,7 +319,7 @@ public enum Card implements IEnumWithId, IEnumWithName {
   //  	Choose a player: that player is Placed Prone, no armour roll is made,
   //  	and if the player had the ball bounce it as normal.
 
-  SPIKED_BALL(49, "Spiked Ball", "Spiked Ball", CardType.DIRTY_TRICK, CardTarget.TURN, false,
+  SPIKED_BALL("Spiked Ball", "Spiked Ball", CardType.DIRTY_TRICK, CardTarget.TURN, false,
     new InducementPhase[] { InducementPhase.BEFORE_KICKOFF_SCATTER }, InducementDuration.UNTIL_END_OF_DRIVE,
     "Any failed pick up or catch roll results in being stabbed"),
   //  Description:
@@ -334,7 +334,7 @@ public enum Card implements IEnumWithId, IEnumWithName {
   //    roll) is treated as the player being attacked with the Stab skill by an
   //    opponent.
     
-  STOLEN_PLAYBOOK(50, "Stolen Playbook", "Stolen Playbook", CardType.DIRTY_TRICK, CardTarget.OWN_PLAYER, false,
+  STOLEN_PLAYBOOK("Stolen Playbook", "Stolen Playbook", CardType.DIRTY_TRICK, CardTarget.OWN_PLAYER, false,
     new InducementPhase[] { InducementPhase.END_OF_OWN_TURN }, InducementDuration.UNTIL_END_OF_DRIVE,
     "Player gets Pass Block and Shadowing"),
   //  Description:
@@ -347,7 +347,7 @@ public enum Card implements IEnumWithId, IEnumWithName {
   //    A player of your choice gains Pass Block and Shadowing until the drive
   //    ends.
     
-  //  TRAMPOLINE TRAP (51)
+  //  TRAMPOLINE TRAP
   //  Description:
   //  	Someone set up a deep pit trap...with a trampoline in it!
   //  Timing:
@@ -360,7 +360,7 @@ public enum Card implements IEnumWithId, IEnumWithName {
   //    own square (use the scatter template). The player will need to make a
   //    landing roll as normal if they land on the pitch.
     
-  WITCH_BREW(50, "Witch's Brew", "Witch Brew", CardType.DIRTY_TRICK, CardTarget.OPPOSING_PLAYER, false,
+  WITCH_BREW("Witch's Brew", "Witch Brew", CardType.DIRTY_TRICK, CardTarget.OPPOSING_PLAYER, false,
       new InducementPhase[] { InducementPhase.BEFORE_KICKOFF_SCATTER }, InducementDuration.UNTIL_END_OF_DRIVE,
       "Poison an opponent (random effect)");
   //  Description:
@@ -388,7 +388,6 @@ public enum Card implements IEnumWithId, IEnumWithName {
   // 8x Desperate Measure
   // --------------------
   
-  private int fId;
   private String fName;
   private String fShortName;
   private CardType fType;
@@ -398,8 +397,7 @@ public enum Card implements IEnumWithId, IEnumWithName {
   private InducementDuration fDuration;
   private String fDescription;
   
-  private Card(int pValue, String pName, String pShortName, CardType pType, CardTarget pTarget, boolean pRemainsInPlay, InducementPhase[] pPhases, InducementDuration pDuration, String pDescription) {
-    fId = pValue;
+  private Card(String pName, String pShortName, CardType pType, CardTarget pTarget, boolean pRemainsInPlay, InducementPhase[] pPhases, InducementDuration pDuration, String pDescription) {
     fName = pName;
     fShortName = pShortName;
     fType = pType;
@@ -410,10 +408,6 @@ public enum Card implements IEnumWithId, IEnumWithName {
     fDescription = pDescription;
   }
 
-  public int getId() {
-    return fId;
-  }
-  
   public String getName() {
     return fName;
   }

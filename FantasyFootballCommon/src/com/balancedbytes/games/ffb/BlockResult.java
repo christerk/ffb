@@ -1,23 +1,17 @@
 package com.balancedbytes.games.ffb;
 
-public enum BlockResult implements IEnumWithId, IEnumWithName {
+public enum BlockResult implements IEnumWithName {
   
-  SKULL(1, "SKULL"),
-  BOTH_DOWN(2, "BOTH DOWN"),
-  PUSHBACK(3, "PUSHBACK"),
-  POW_PUSHBACK(4, "POW/PUSH"),
-  POW(5, "POW");
+  SKULL("SKULL"),
+  BOTH_DOWN("BOTH DOWN"),
+  PUSHBACK("PUSHBACK"),
+  POW_PUSHBACK("POW/PUSH"),
+  POW("POW");
   
-  private int fId;
   private String fName;
   
-  private BlockResult(int pId, String pName) {
-    fId = pId;
+  private BlockResult(String pName) {
     fName = pName;
-  }
-  
-  public int getId() {
-    return fId;
   }
   
   public String getName() {

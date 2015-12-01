@@ -1,23 +1,17 @@
 package com.balancedbytes.games.ffb;
 
-public enum LeaderState implements IEnumWithId, IEnumWithName {
+public enum LeaderState implements IEnumWithName {
   
-  NONE(1, "none"),
-  AVAILABLE(2, "available"),
-  USED(3, "used");
+  NONE("none"),
+  AVAILABLE("available"),
+  USED("used");
   
-  private int fId;
   private String fName;
   
-  private LeaderState(int pValue, String pName) {
-    fId = pValue;
+  private LeaderState(String pName) {
     fName = pName;
   }
 
-  public int getId() {
-    return fId;
-  }
-  
   public String getName() {
     return fName;
   }

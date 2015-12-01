@@ -4,20 +4,11 @@ package com.balancedbytes.games.ffb;
  * 
  * @author Kalimar
  */
-public class BlockResultFactory implements IEnumWithIdFactory, IEnumWithNameFactory {
+public class BlockResultFactory implements IEnumWithNameFactory {
   
   public BlockResult forName(String pName) {
     for (BlockResult result : BlockResult.values()) {
       if (result.getName().equalsIgnoreCase(pName)) {
-        return result;
-      }
-    }
-    return null;
-  }
-
-  public BlockResult forId(int pId) {
-    for (BlockResult result : BlockResult.values()) {
-      if (result.getId() == pId) {
         return result;
       }
     }

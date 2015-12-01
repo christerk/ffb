@@ -5,26 +5,20 @@ package com.balancedbytes.games.ffb;
  * 
  * @author Kalimar
  */
-public enum PlayerType implements IEnumWithId, IEnumWithName {
+public enum PlayerType implements IEnumWithName {
   
-  REGULAR(1, "Regular"),
-  BIG_GUY(2, "Big Guy"),
-  STAR(3, "Star"),
-  IRREGULAR(4, "Irregular"),
-  JOURNEYMAN(5, "Journeyman"),
-  RAISED_FROM_DEAD(6, "RaisedFromDead"),
-  MERCENARY(7, "Mercenary");
+  REGULAR("Regular"),
+  BIG_GUY("Big Guy"),
+  STAR("Star"),
+  IRREGULAR("Irregular"),
+  JOURNEYMAN("Journeyman"),
+  RAISED_FROM_DEAD("RaisedFromDead"),
+  MERCENARY("Mercenary");
   
-  private int fId;
   private String fName;
   
-  private PlayerType(int pId, String pName) {
-    fId = pId;
+  private PlayerType(String pName) {
     fName = pName;
-  }
-  
-  public int getId() {
-    return fId;
   }
   
   public String getName() {

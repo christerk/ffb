@@ -6,29 +6,23 @@ package com.balancedbytes.games.ffb;
  * 
  * @author Kalimar
  */
-public enum SkillCategory implements IEnumWithId, IEnumWithName {
+public enum SkillCategory implements IEnumWithName {
   
-  GENERAL(1, "General", "G"),
-  AGILITY(2, "Agility", "A"),
-  PASSING(3, "Passing", "P"),
-  STRENGTH(4, "Strength", "S"),
-  MUTATION(5, "Mutation", "M"),
-  EXTRAORDINARY(6, "Extraordinary", "E"),
-  STAT_INCREASE(7, "Stat Increase", "+"),
-  STAT_DECREASE(8, "Stat Decrease", "-");
+  GENERAL("General", "G"),
+  AGILITY("Agility", "A"),
+  PASSING("Passing", "P"),
+  STRENGTH("Strength", "S"),
+  MUTATION("Mutation", "M"),
+  EXTRAORDINARY("Extraordinary", "E"),
+  STAT_INCREASE("Stat Increase", "+"),
+  STAT_DECREASE("Stat Decrease", "-");
   
-  private int fId;
   private String fName;
   private String fTypeString;
   
-  private SkillCategory(int pId, String pName, String pTypeString) {
-    fId = pId;
+  private SkillCategory(String pName, String pTypeString) {
     fName = pName;
     fTypeString = pTypeString;
-  }
-  
-  public int getId() {
-    return fId;
   }
   
   public String getName() {

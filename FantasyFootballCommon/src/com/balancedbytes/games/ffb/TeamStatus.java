@@ -4,7 +4,7 @@ package com.balancedbytes.games.ffb;
  * 
  * @author Kalimar
  */
-public enum TeamStatus implements IEnumWithId, IEnumWithName {
+public enum TeamStatus implements IEnumWithName {
   
   NEW(0, "New"),
   ACTIVE(1, "Active"),
@@ -22,6 +22,7 @@ public enum TeamStatus implements IEnumWithId, IEnumWithName {
     fName = pName;
   }
   
+  // TODO: this should be unnecessary
   public int getId() {
     return fId;
   }
@@ -30,13 +31,4 @@ public enum TeamStatus implements IEnumWithId, IEnumWithName {
     return fName;
   }
   
-  public static TeamStatus fromId(int pId) {
-    for (TeamStatus status : values()) {
-      if (status.getId() == pId) {
-        return status;
-      }
-    }
-    return null;
-  }
-
 }

@@ -5,30 +5,29 @@ package com.balancedbytes.games.ffb;
  * 
  * @author Kalimar
  */
-public enum ReRollSource implements IEnumWithId, IEnumWithName {
+public enum ReRollSource implements IEnumWithName {
   
-  TEAM_RE_ROLL(1, "Team ReRoll"),
-  DODGE(2, Skill.DODGE),
-  PRO(3, Skill.PRO),
-  SURE_FEET(4, Skill.SURE_FEET),
-  SURE_HANDS(5, Skill.SURE_HANDS),
-  CATCH(6, Skill.CATCH),
-  PASS(7, Skill.PASS),
-  WINNINGS(8, "Winnings"),
-  LONER(9, Skill.LONER),
-  LEADER(10, Skill.LEADER);
+  TEAM_RE_ROLL("Team ReRoll"),
+  DODGE(Skill.DODGE),
+  PRO(Skill.PRO),
+  SURE_FEET(Skill.SURE_FEET),
+  SURE_HANDS(Skill.SURE_HANDS),
+  CATCH(Skill.CATCH),
+  PASS(Skill.PASS),
+  WINNINGS("Winnings"),
+  LONER(Skill.LONER),
+  LEADER(Skill.LEADER);
 
   private int fId;
   private String fName;
   private Skill fSkill;
   
-  private ReRollSource(int pValue, String pName) {
-    fId = pValue;
+  private ReRollSource(String pName) {
     fName = pName;
   }
   
-  private ReRollSource(int pValue, Skill pSkill) {
-    this(pValue, pSkill.getName());
+  private ReRollSource(Skill pSkill) {
+    this(pSkill.getName());
     fSkill = pSkill;
   }
   

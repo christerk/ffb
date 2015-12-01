@@ -1,35 +1,28 @@
 package com.balancedbytes.games.ffb.server.step.action.common;
 
-import com.balancedbytes.games.ffb.IEnumWithId;
 import com.balancedbytes.games.ffb.IEnumWithName;
 
 /**
  * 
  * @author Kalimar
  */
-public enum ApothecaryMode implements IEnumWithId, IEnumWithName {
+public enum ApothecaryMode implements IEnumWithName {
 	
-	ATTACKER(1, "attacker"),
-	AWAY(2, "away"),
-	CROWD_PUSH(3, "crowdPush"),
-	DEFENDER(4, "defender"),
-	FEEDING(5, "feeding"),
-	HOME(6, "home"),
-	SPECIAL_EFFECT(7, "specialEffect"),
-	THROWN_PLAYER(8, "thrownPlayer"),
-	HIT_PLAYER(9, "hitPlayer"),
-	CATCHER(10, "catcher");
+	ATTACKER("attacker"),
+	AWAY("away"),
+	CROWD_PUSH("crowdPush"),
+	DEFENDER("defender"),
+	FEEDING("feeding"),
+	HOME("home"),
+	SPECIAL_EFFECT("specialEffect"),
+	THROWN_PLAYER("thrownPlayer"),
+	HIT_PLAYER("hitPlayer"),
+	CATCHER("catcher");
 	
-	private int fId;
 	private String fName;
 	
-	private ApothecaryMode(int pId, String pName) {
-		fId = pId;
+	private ApothecaryMode(String pName) {
 		fName = pName;
-	}
-	
-	public int getId() {
-		return fId;
 	}
 	
 	public String getName() {

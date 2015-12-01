@@ -11,23 +11,12 @@ import com.balancedbytes.games.ffb.model.Player;
  * 
  * @author Kalimar
  */
-public class InjuryModifierFactory implements IEnumWithIdFactory, IEnumWithNameFactory {
+public class InjuryModifierFactory implements IEnumWithNameFactory {
   
   public InjuryModifier forName(String pName) {
     for (InjuryModifier modifier : InjuryModifier.values()) {
       if (modifier.getName().equalsIgnoreCase(pName)) {
         return modifier;
-      }
-    }
-    return null;
-  }
-
-  public InjuryModifier forId(int pId) {
-    if (pId > 0) {
-      for (InjuryModifier modifier : InjuryModifier.values()) {
-        if (modifier.getId() == pId) {
-          return modifier;
-        }
       }
     }
     return null;
@@ -40,7 +29,7 @@ public class InjuryModifierFactory implements IEnumWithIdFactory, IEnumWithNameF
         modifierArray,
         new Comparator<InjuryModifier>() {
           public int compare(InjuryModifier pO1, InjuryModifier pO2) {
-            return (pO1.getId() - pO2.getId());
+            return pO1.getName().compareTo(pO2.getName());
           }
         }
       );

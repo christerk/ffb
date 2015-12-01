@@ -5,28 +5,22 @@ package com.balancedbytes.games.ffb;
  * 
  * @author Kalimar
  */
-public enum PlayerChoiceMode implements IEnumWithId, IEnumWithName {
+public enum PlayerChoiceMode implements IEnumWithName {
   
-  TENTACLES(1, "tentacles"),
-  SHADOWING(2, "shadowing"),
-  DIVING_TACKLE(3, "divingTackle"),
-  FEED(4, "feed"),
-  DIVING_CATCH(5, "divingCatch"),
-  CARD(6, "card"),
-  BLOCK(7, "block");
+  TENTACLES("tentacles"),
+  SHADOWING("shadowing"),
+  DIVING_TACKLE("divingTackle"),
+  FEED("feed"),
+  DIVING_CATCH("divingCatch"),
+  CARD("card"),
+  BLOCK("block");
   
-  private int fId;
   private String fName;
   
-  private PlayerChoiceMode(int pValue, String pName) {
-    fId = pValue;
+  private PlayerChoiceMode(String pName) {
     fName = pName;
   }
 
-  public int getId() {
-    return fId;
-  }
-  
   public String getName() {
     return fName;
   }

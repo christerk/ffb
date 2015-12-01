@@ -8,7 +8,7 @@ import java.util.Set;
  * 
  * @author Kalimar
  */
-public class ArmorModifierFactory implements IEnumWithIdFactory, IEnumWithNameFactory {
+public class ArmorModifierFactory implements IEnumWithNameFactory {
   
   public ArmorModifier forName(String pName) {
     for (ArmorModifier modifier : ArmorModifier.values()) {
@@ -19,17 +19,6 @@ public class ArmorModifierFactory implements IEnumWithIdFactory, IEnumWithNameFa
     return null;
   }
 
-  public ArmorModifier forId(int pId) {
-    if (pId > 0) {
-      for (ArmorModifier modifier : ArmorModifier.values()) {
-        if (modifier.getId() == pId) {
-          return modifier;
-        }
-      }
-    }
-    return null;
-  }
-  
   public ArmorModifier getFoulAssist(int pModifier) {
     for (ArmorModifier modifier : ArmorModifier.values()) {
       if (modifier.isFoulAssistModifier() && (modifier.getModifier() == pModifier)) {
@@ -46,7 +35,7 @@ public class ArmorModifierFactory implements IEnumWithIdFactory, IEnumWithNameFa
         modifierArray,
         new Comparator<ArmorModifier>() {
           public int compare(ArmorModifier pO1, ArmorModifier pO2) {
-            return (pO1.getId() - pO2.getId());
+            return pO1.getName().compareTo(pO2.getName());
           }
         }
       );

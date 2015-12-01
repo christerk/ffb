@@ -5,42 +5,36 @@ package com.balancedbytes.games.ffb;
  * 
  * @author Kalimar
  */
-public enum TurnMode implements IEnumWithId, IEnumWithName {
+public enum TurnMode implements IEnumWithName {
   
-  REGULAR(1, "regular"),
-  SETUP(2, "setup"),
-  KICKOFF(3, "kickoff"),
-  PERFECT_DEFENCE(4, "perfectDefence"),
-  QUICK_SNAP(5, "quickSnap"),
-  HIGH_KICK(6, "highKick"),
-  START_GAME(7, "startGame"),
-  BLITZ(8, "blitz"),
-  TOUCHBACK(9, "touchback"),
-  INTERCEPTION(10, "interception"),
-  END_GAME(11, "endGame"),
-  KICKOFF_RETURN(12, "kickoffReturn"),
-  WIZARD(13, "wizard"),
-  PASS_BLOCK(14, "passBlock"),
-  DUMP_OFF(15, "dumpOff"),
-  NO_PLAYERS_TO_FIELD(16, "noPlayersToField"),
-  BOMB_HOME(17, "bombHome"),
-  BOMB_AWAY(18, "bombAway"),
-  BOMB_HOME_BLITZ(19, "bombHomeBlitz"),
-  BOMB_AWAY_BLITZ(20, "bombAwayBlitz"),
-  ILLEGAL_SUBSTITUTION(21, "illegalSubstitution");
+  REGULAR("regular"),
+  SETUP("setup"),
+  KICKOFF("kickoff"),
+  PERFECT_DEFENCE("perfectDefence"),
+  QUICK_SNAP("quickSnap"),
+  HIGH_KICK("highKick"),
+  START_GAME("startGame"),
+  BLITZ("blitz"),
+  TOUCHBACK("touchback"),
+  INTERCEPTION("interception"),
+  END_GAME("endGame"),
+  KICKOFF_RETURN("kickoffReturn"),
+  WIZARD("wizard"),
+  PASS_BLOCK("passBlock"),
+  DUMP_OFF("dumpOff"),
+  NO_PLAYERS_TO_FIELD("noPlayersToField"),
+  BOMB_HOME("bombHome"),
+  BOMB_AWAY("bombAway"),
+  BOMB_HOME_BLITZ("bombHomeBlitz"),
+  BOMB_AWAY_BLITZ("bombAwayBlitz"),
+  ILLEGAL_SUBSTITUTION("illegalSubstitution");
   
-  private int fId;
   private String fName;
   
-  private TurnMode(int pValue, String pName) {
-    fId = pValue;
+  private TurnMode(String pName) {
     fName = pName;
   }
 
-  public int getId() {
-    return fId;
-  }
-  
   public String getName() {
     return fName;
   }

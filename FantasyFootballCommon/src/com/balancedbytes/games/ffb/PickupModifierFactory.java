@@ -16,15 +16,6 @@ import com.balancedbytes.games.ffb.util.UtilPlayer;
  */
 public class PickupModifierFactory implements IRollModifierFactory {
   
-  public PickupModifier forId(int pId) {
-    for (PickupModifier modifier : PickupModifier.values()) {
-      if (modifier.getId() == pId) {
-        return modifier;
-      }
-    }
-    return null;
-  }
-  
   public PickupModifier forName(String pName) {
     for (PickupModifier modifier : PickupModifier.values()) {
       if (modifier.getName().equalsIgnoreCase(pName)) {
@@ -63,7 +54,7 @@ public class PickupModifierFactory implements IRollModifierFactory {
         pickupModifierArray,
         new Comparator<PickupModifier>() {
           public int compare(PickupModifier pO1, PickupModifier pO2) {
-            return (pO1.getId() - pO2.getId());
+            return pO1.getName().compareTo(pO2.getName());
           }
         }
       );

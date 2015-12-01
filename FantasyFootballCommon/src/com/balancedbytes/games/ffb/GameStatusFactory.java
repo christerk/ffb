@@ -7,15 +7,6 @@ package com.balancedbytes.games.ffb;
  */
 public class GameStatusFactory implements IEnumWithNameFactory {
   
-  public GameStatus forId(int pId) {
-    for (GameStatus status : GameStatus.values()) {
-      if (status.getId() == pId) {
-        return status;
-      }
-    }
-    return null;
-  }
-
   public GameStatus forName(String pName) {
     for (GameStatus status : GameStatus.values()) {
       if (status.getName().equalsIgnoreCase(pName)) {

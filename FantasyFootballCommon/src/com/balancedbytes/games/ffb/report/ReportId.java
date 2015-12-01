@@ -1,6 +1,5 @@
 package com.balancedbytes.games.ffb.report;
 
-import com.balancedbytes.games.ffb.IEnumWithId;
 import com.balancedbytes.games.ffb.IEnumWithName;
 
 
@@ -10,103 +9,97 @@ import com.balancedbytes.games.ffb.IEnumWithName;
  * 
  * @author Kalimar
  */
-public enum ReportId implements IEnumWithId, IEnumWithName {
+public enum ReportId implements IEnumWithName {
   
-  ALWAYS_HUNGRY_ROLL(1, "alwaysHungryRoll"),
-  CATCH_ROLL(2, "catchRoll"),
-  CONFUSION_ROLL(3, "confusionRoll"),
-  DAUNTLESS_ROLL(4, "dauntlessRoll"),
-  DODGE_ROLL(5, "dodgeRoll"),
-  ESCAPE_ROLL(6, "escapeRoll"),
-  FOUL_APPEARANCE_ROLL(7, "foulAppearanceRoll"),
-  GO_FOR_IT_ROLL(8, "goForItRoll"),
-  INTERCEPTION_ROLL(9, "interceptionRoll"),
-  LEAP_ROLL(10, "leapRoll"),
-  PASS_ROLL(11, "passRoll"),
-  PICK_UP_ROLL(12, "pickUpRoll"),
-  RIGHT_STUFF_ROLL(13, "rightStuffRoll"),
-  REGENERATION_ROLL(14, "regenerationRoll"),
-  SAFE_THROW_ROLL(15, "safeThrowRoll"),
-  TENTACLES_SHADOWING_ROLL(16, "tentaclesShadowingRoll"),
-  SKILL_USE(17, "skillUse"),
-  RE_ROLL(18, "reRoll"),
-  TURN_END(19, "turnEnd"),
-  PLAYER_ACTION(20, "playerAction"),
-  FOUL(21, "foul"),
-  HAND_OVER(22, "handOver"),
-  INJURY(23, "injury"),
-  APOTHECARY_ROLL(24, "apothecaryRoll"),
-  APOTHECARY_CHOICE(25, "apothecaryChoice"),
-  THROW_IN(26, "throwIn"),
-  SCATTER_BALL(27, "scatterBall"),
-  BLOCK(28, "block"),
-  BLOCK_CHOICE(29, "blockChoice"),
-  SPECTATORS(30, "spectators"),
-  WEATHER(31, "weather"),
-  COIN_THROW(32, "coinThrow"),
-  RECEIVE_CHOICE(33, "receiveChoice"),
-  KICKOFF_RESULT(34, "kickoffResult"),
-  KICKOFF_SCATTER(35, "kickoffScatter"),
-  KICKOFF_EXTRA_REROLL(36, "extraReRoll"),
-  KICKOFF_RIOT(37, "kickoffRiot"),
-  KICKOFF_THROW_A_ROCK(38, "kickoffThrowARock"),
-  PUSHBACK(39, "pushback"),
-  REFEREE(40, "referee"),
-  KICKOFF_PITCH_INVASION(41, "kickoffPitchInvasion"),
-  THROW_TEAM_MATE_ROLL(42, "throwTeamMateRoll"),
-  SCATTER_PLAYER(43, "scatterPlayer"),
-  TIMEOUT_ENFORCED(44, "timeoutEnforced"),
-  WINNINGS_ROLL(45, "winningsRoll"),
-  FUMBBL_RESULT_UPLOAD(46, "fumbblResultUpload"),
-  FAN_FACTOR_ROLL(47, "fanFactorRoll"),
-  MOST_VALUABLE_PLAYERS(48, "mostValuablePlayers"),
-  DEFECTING_PLAYERS(49, "defectingPlayers"),
-  JUMP_UP_ROLL(51, "jumpUpRoll"),
-  STAND_UP_ROLL(52, "standUpRoll"),
-  BRIBES_ROLL(53, "bribesRoll"),
-  MASTER_CHEF_ROLL(54, "masterChefRoll"),
-  START_HALF(55, "startHalf"),
-  INDUCEMENT(56, "inducement"),
-  PILING_ON(57, "pilingOn"),
-  CHAINSAW_ROLL(58, "chainsawRoll"),
-  LEADER(59, "leader"),
-  SECRET_WEAPON_BAN(60, "secretWeaponBan"),
-  BLOOD_LUST_ROLL(61, "bloodLustRoll"),
-  HYPNOTIC_GAZE_ROLL(62, "hypnoticGazeRoll"),
-  BITE_SPECTATOR(63, "biteSpectator"),
-  ANIMOSITY_ROLL(64, "animosityRoll"),
-  RAISE_DEAD(65, "raiseDead"),
-  BLOCK_ROLL(66, "blockRoll"),
-  PENALTY_SHOOTOUT(67, "penaltyShootout"),
-  DOUBLE_HIRED_STAR_PLAYER(68, "doubleHiredStarPlayer"),
-  SPELL_EFFECT_ROLL(69, "spellEffectRoll"),
-  WIZARD_USE(70, "wizardUse"),
-  GAME_OPTIONS(71, "gameOptions"),  // only for conversion
-  PASS_BLOCK(72, "passBlock"),
-  NO_PLAYERS_TO_FIELD(73, "noPlayersToField"),
-  PLAY_CARD(74, "playCard"),
-  CARD_DEACTIVATED(75, "cardDeactivated"),
-  BOMB_OUT_OF_BOUNDS(76, "bombOutOfBounds"),
-  PETTY_CASH(77, "pettyCash"),
-  INDUCEMENTS_BOUGHT(78, "inducementsBought"),
-  CARDS_BOUGHT(79, "cardsBought"),
-  CARD_EFFECT_ROLL(80, "cardEffectRoll");
+  ALWAYS_HUNGRY_ROLL("alwaysHungryRoll"),
+  CATCH_ROLL("catchRoll"),
+  CONFUSION_ROLL("confusionRoll"),
+  DAUNTLESS_ROLL("dauntlessRoll"),
+  DODGE_ROLL("dodgeRoll"),
+  ESCAPE_ROLL("escapeRoll"),
+  FOUL_APPEARANCE_ROLL("foulAppearanceRoll"),
+  GO_FOR_IT_ROLL("goForItRoll"),
+  INTERCEPTION_ROLL("interceptionRoll"),
+  LEAP_ROLL("leapRoll"),
+  PASS_ROLL("passRoll"),
+  PICK_UP_ROLL("pickUpRoll"),
+  RIGHT_STUFF_ROLL("rightStuffRoll"),
+  REGENERATION_ROLL("regenerationRoll"),
+  SAFE_THROW_ROLL("safeThrowRoll"),
+  TENTACLES_SHADOWING_ROLL("tentaclesShadowingRoll"),
+  SKILL_USE("skillUse"),
+  RE_ROLL("reRoll"),
+  TURN_END("turnEnd"),
+  PLAYER_ACTION("playerAction"),
+  FOUL("foul"),
+  HAND_OVER("handOver"),
+  INJURY("injury"),
+  APOTHECARY_ROLL("apothecaryRoll"),
+  APOTHECARY_CHOICE("apothecaryChoice"),
+  THROW_IN("throwIn"),
+  SCATTER_BALL("scatterBall"),
+  BLOCK("block"),
+  BLOCK_CHOICE("blockChoice"),
+  SPECTATORS("spectators"),
+  WEATHER("weather"),
+  COIN_THROW("coinThrow"),
+  RECEIVE_CHOICE("receiveChoice"),
+  KICKOFF_RESULT("kickoffResult"),
+  KICKOFF_SCATTER("kickoffScatter"),
+  KICKOFF_EXTRA_REROLL("extraReRoll"),
+  KICKOFF_RIOT("kickoffRiot"),
+  KICKOFF_THROW_A_ROCK("kickoffThrowARock"),
+  PUSHBACK("pushback"),
+  REFEREE("referee"),
+  KICKOFF_PITCH_INVASION("kickoffPitchInvasion"),
+  THROW_TEAM_MATE_ROLL("throwTeamMateRoll"),
+  SCATTER_PLAYER("scatterPlayer"),
+  TIMEOUT_ENFORCED("timeoutEnforced"),
+  WINNINGS_ROLL("winningsRoll"),
+  FUMBBL_RESULT_UPLOAD("fumbblResultUpload"),
+  FAN_FACTOR_ROLL("fanFactorRoll"),
+  MOST_VALUABLE_PLAYERS("mostValuablePlayers"),
+  DEFECTING_PLAYERS("defectingPlayers"),
+  JUMP_UP_ROLL("jumpUpRoll"),
+  STAND_UP_ROLL("standUpRoll"),
+  BRIBES_ROLL("bribesRoll"),
+  MASTER_CHEF_ROLL("masterChefRoll"),
+  START_HALF("startHalf"),
+  INDUCEMENT("inducement"),
+  PILING_ON("pilingOn"),
+  CHAINSAW_ROLL("chainsawRoll"),
+  LEADER("leader"),
+  SECRET_WEAPON_BAN("secretWeaponBan"),
+  BLOOD_LUST_ROLL("bloodLustRoll"),
+  HYPNOTIC_GAZE_ROLL("hypnoticGazeRoll"),
+  BITE_SPECTATOR("biteSpectator"),
+  ANIMOSITY_ROLL("animosityRoll"),
+  RAISE_DEAD("raiseDead"),
+  BLOCK_ROLL("blockRoll"),
+  PENALTY_SHOOTOUT("penaltyShootout"),
+  DOUBLE_HIRED_STAR_PLAYER("doubleHiredStarPlayer"),
+  SPELL_EFFECT_ROLL("spellEffectRoll"),
+  WIZARD_USE("wizardUse"),
+  GAME_OPTIONS("gameOptions"),  // only for conversion
+  PASS_BLOCK("passBlock"),
+  NO_PLAYERS_TO_FIELD("noPlayersToField"),
+  PLAY_CARD("playCard"),
+  CARD_DEACTIVATED("cardDeactivated"),
+  BOMB_OUT_OF_BOUNDS("bombOutOfBounds"),
+  PETTY_CASH("pettyCash"),
+  INDUCEMENTS_BOUGHT("inducementsBought"),
+  CARDS_BOUGHT("cardsBought"),
+  CARD_EFFECT_ROLL("cardEffectRoll");
   
   // obsolete: 50 (spiralling expenses)
   // obsolete: 71 (game options)
   
-  private int fId;
   private String fName;
   
-  private ReportId(int pId, String pName) {
-    fId = pId;
+  private ReportId(String pName) {
     fName = pName;
   }
   
-  public int getId() {
-    return fId;
-  }
-
   public String getName() {
     return fName;
   }

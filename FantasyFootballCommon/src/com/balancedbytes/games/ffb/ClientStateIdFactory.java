@@ -4,7 +4,7 @@ package com.balancedbytes.games.ffb;
  * 
  * @author Kalimar
  */
-public class ClientStateIdFactory implements IEnumWithIdFactory, IEnumWithNameFactory {
+public class ClientStateIdFactory implements IEnumWithNameFactory {
   
   public ClientStateId forName(String pName) {
     for (ClientStateId state : ClientStateId.values()) {
@@ -15,13 +15,4 @@ public class ClientStateIdFactory implements IEnumWithIdFactory, IEnumWithNameFa
     return null;
   }
 
-  public ClientStateId forId(int pId) {
-    for (ClientStateId state : ClientStateId.values()) {
-      if (state.getId() == pId) {
-        return state;
-      }
-    }
-    return null;
-  }
-  
 }

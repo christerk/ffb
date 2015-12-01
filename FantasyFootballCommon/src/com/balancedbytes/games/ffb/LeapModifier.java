@@ -9,20 +9,14 @@ public enum LeapModifier implements IRollModifier {
   
   // TODO: create factory for this
   
-  VERY_LONG_LEGS(1, "Very Long Legs", -1);
+  VERY_LONG_LEGS("Very Long Legs", -1);
   
-  private int fId;
   private String fName;
   private int fModifier;
   
-  private LeapModifier(int pId, String pName, int pModifier) {
-    fId = pId;
+  private LeapModifier(String pName, int pModifier) {
     fName = pName;
     fModifier = pModifier;
-  }
-  
-  public int getId() {
-    return fId;
   }
   
   public int getModifier() {

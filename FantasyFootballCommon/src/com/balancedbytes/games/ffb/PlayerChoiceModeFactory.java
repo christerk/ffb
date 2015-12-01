@@ -4,7 +4,7 @@ package com.balancedbytes.games.ffb;
  * 
  * @author Kalimar
  */
-public class PlayerChoiceModeFactory implements IEnumWithIdFactory, IEnumWithNameFactory {
+public class PlayerChoiceModeFactory implements IEnumWithNameFactory {
   
   public PlayerChoiceMode forName(String pName) {
     for (PlayerChoiceMode type : PlayerChoiceMode.values()) {
@@ -15,13 +15,4 @@ public class PlayerChoiceModeFactory implements IEnumWithIdFactory, IEnumWithNam
     return null;
   }
 
-  public PlayerChoiceMode forId(int pId) {
-    for (PlayerChoiceMode type : PlayerChoiceMode.values()) {
-      if (type.getId() == pId) {
-        return type;
-      }
-    }
-    return null;
-  }
-  
 }

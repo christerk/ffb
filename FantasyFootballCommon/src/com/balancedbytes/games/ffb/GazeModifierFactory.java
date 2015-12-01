@@ -15,15 +15,6 @@ import com.balancedbytes.games.ffb.util.UtilPlayer;
  */
 public class GazeModifierFactory implements IRollModifierFactory {
   
-  public GazeModifier forId(int pId) {
-    for (GazeModifier modifier : GazeModifier.values()) {
-      if (modifier.getId() == pId) {
-        return modifier;
-      }
-    }
-    return null;
-  }
-  
   public GazeModifier forName(String pName) {
     for (GazeModifier modifier : GazeModifier.values()) {
       if (modifier.getName().equalsIgnoreCase(pName)) {
@@ -52,7 +43,7 @@ public class GazeModifierFactory implements IRollModifierFactory {
         gazeModifierArray,
         new Comparator<GazeModifier>() {
           public int compare(GazeModifier pO1, GazeModifier pO2) {
-            return (pO1.getId() - pO2.getId());
+            return pO1.getName().compareTo(pO2.getName());
           }
         }
       );

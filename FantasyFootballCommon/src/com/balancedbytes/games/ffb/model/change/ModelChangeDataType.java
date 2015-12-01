@@ -11,7 +11,6 @@ import com.balancedbytes.games.ffb.DiceDecoration;
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.FieldMarker;
 import com.balancedbytes.games.ffb.IDialogParameter;
-import com.balancedbytes.games.ffb.IEnumWithId;
 import com.balancedbytes.games.ffb.IEnumWithName;
 import com.balancedbytes.games.ffb.Inducement;
 import com.balancedbytes.games.ffb.LeaderState;
@@ -47,50 +46,44 @@ import com.eclipsesource.json.JsonValue;
  * 
  * @author Kalimar
  */
-public enum ModelChangeDataType implements IEnumWithId, IEnumWithName {
+public enum ModelChangeDataType implements IEnumWithName {
   
-  NULL(1, "null"),
-  BOOLEAN(2, "boolean"),
-  STRING(3, "string"),
-  PLAYER_ACTION(4, "playerAction"),
-  SKILL(5, "skill"),
-  LONG(6, "long"),
-  DATE(7, "date"),
-  TURN_MODE(8, "turnMode"),
-  FIELD_COORDINATE(9, "fieldCoordinate"),
-  DIALOG_ID(10, "dialogId"),
-  DIALOG_PARAMETER(11, "dialogParameter"),
-  INTEGER(12, "integer"),
-  PLAYER_STATE(13, "playerState"),
-  SERIOUS_INJURY(14, "seriousInjury"),
-  SEND_TO_BOX_REASON(15, "sendToBoxReason"),
-  BLOOD_SPOT(16, "bloodSpot"),
-  TRACK_NUMBER(17, "trackNumber"),
-  PUSHBACK_SQUARE(18, "pushbackSquare"),
-  MOVE_SQUARE(19, "moveSquare"),
-  WEATHER(20, "weather"),
-  RANGE_RULER(21, "rangeRuler"),
-  DICE_DECORATION(22, "diceDecoration"),
-  INDUCEMENT(23, "inducement"),
-  FIELD_MARKER(24, "fieldMarker"),
-  PLAYER_MARKER(25, "playerMarker"),
-  GAME_OPTION(26, "gameOption"),
-  CARD(27, "card"),
-  LEADER_STATE(28, "leaderState"),
-  CARD_EFFECT(29, "cardEffect");
+  NULL("null"),
+  BOOLEAN("boolean"),
+  STRING("string"),
+  PLAYER_ACTION("playerAction"),
+  SKILL("skill"),
+  LONG("long"),
+  DATE("date"),
+  TURN_MODE("turnMode"),
+  FIELD_COORDINATE("fieldCoordinate"),
+  DIALOG_ID("dialogId"),
+  DIALOG_PARAMETER("dialogParameter"),
+  INTEGER("integer"),
+  PLAYER_STATE("playerState"),
+  SERIOUS_INJURY("seriousInjury"),
+  SEND_TO_BOX_REASON("sendToBoxReason"),
+  BLOOD_SPOT("bloodSpot"),
+  TRACK_NUMBER("trackNumber"),
+  PUSHBACK_SQUARE("pushbackSquare"),
+  MOVE_SQUARE("moveSquare"),
+  WEATHER("weather"),
+  RANGE_RULER("rangeRuler"),
+  DICE_DECORATION("diceDecoration"),
+  INDUCEMENT("inducement"),
+  FIELD_MARKER("fieldMarker"),
+  PLAYER_MARKER("playerMarker"),
+  GAME_OPTION("gameOption"),
+  CARD("card"),
+  LEADER_STATE("leaderState"),
+  CARD_EFFECT("cardEffect");
   
-  private int fId;
   private String fName;
   
-  private ModelChangeDataType(int pValue, String pName) {
-    fId = pValue;
+  private ModelChangeDataType(String pName) {
     fName = pName;
   }
 
-  public int getId() {
-    return fId;
-  }
-  
   public String getName() {
     return fName;
   }

@@ -26,15 +26,6 @@ public class InterceptionModifierFactory implements IRollModifierFactory {
     return null;
   }
 
-  public InterceptionModifier forId(int pId) {
-    for (InterceptionModifier modifier : InterceptionModifier.values()) {
-      if (modifier.getId() == pId) {
-        return modifier;
-      }
-    }
-    return null;
-  }
-  
   public Set<InterceptionModifier> findInterceptionModifiers(Game pGame, Player pPlayer) {
     Set<InterceptionModifier> interceptionModifiers = new HashSet<InterceptionModifier>();
     if (Weather.POURING_RAIN == pGame.getFieldModel().getWeather()) {
@@ -74,7 +65,7 @@ public class InterceptionModifierFactory implements IRollModifierFactory {
         interceptionModifierArray,
         new Comparator<InterceptionModifier>() {
           public int compare(InterceptionModifier pO1, InterceptionModifier pO2) {
-            return (pO1.getId() - pO2.getId());
+            return pO1.getName().compareTo(pO2.getName());
           }
         }
       );

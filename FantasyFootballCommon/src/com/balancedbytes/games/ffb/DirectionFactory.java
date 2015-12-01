@@ -6,7 +6,7 @@ import com.balancedbytes.games.ffb.util.ArrayTool;
  * 
  * @author Kalimar
  */
-public class DirectionFactory implements IEnumWithIdFactory, IEnumWithNameFactory {
+public class DirectionFactory implements IEnumWithNameFactory {
   
   public Direction forName(String pName) {
     for (Direction direction : Direction.values()) {
@@ -16,21 +16,50 @@ public class DirectionFactory implements IEnumWithIdFactory, IEnumWithNameFactor
     }
     return null;
   }
-  
-  public Direction forId(int pId) {
-    for (Direction direction : Direction.values()) {
-      if (direction.getId() == pId) {
-        return direction;
-      }
+
+  public Direction forRoll(int pRoll) {
+    switch (pRoll) {
+      case 1:
+        return Direction.NORTH;
+      case 2:
+        return Direction.NORTHEAST;
+      case 3:
+        return Direction.EAST;
+      case 4:
+        return Direction.SOUTHEAST;
+      case 5:
+        return Direction.SOUTH;
+      case 6:
+        return Direction.SOUTHWEST;
+      case 7:
+        return Direction.WEST;
+      case 8:
+        return Direction.NORTHWEST;
+      default:
+        return null;
     }
-    return null;
   }
-  
+
   public Direction transform(Direction pDirection) {
     if (pDirection == null) {
       return null;
     }
-    return forId(pDirection.getTransformedValue());
+    switch (pDirection) {
+      case NORTHEAST:
+        return Direction.NORTHWEST;
+      case EAST:
+        return Direction.WEST;
+      case SOUTHEAST:
+        return Direction.SOUTHWEST;
+      case SOUTHWEST:
+        return Direction.SOUTHEAST;
+      case WEST:
+        return Direction.EAST;
+      case NORTHWEST:
+        return Direction.NORTHEAST;
+       default:
+        return pDirection;
+    }
   }
   
   public Direction[] transform(Direction[] pDirections) {

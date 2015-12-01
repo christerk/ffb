@@ -6,7 +6,7 @@ import com.balancedbytes.games.ffb.util.StringTool;
  * 
  * @author Kalimar
  */
-public class SendToBoxReasonFactory implements IEnumWithIdFactory, IEnumWithNameFactory {
+public class SendToBoxReasonFactory implements IEnumWithNameFactory {
   
   public SendToBoxReason forName(String pName) {
     if (StringTool.isProvided(pName)) {
@@ -18,15 +18,6 @@ public class SendToBoxReasonFactory implements IEnumWithIdFactory, IEnumWithName
       // backward compatibility (name change)
       if ("wrestle".equals(pName)) {
         return SendToBoxReason.BALL_AND_CHAIN;
-      }
-    }
-    return null;
-  }
-
-  public SendToBoxReason forId(int pId) {
-    for (SendToBoxReason reason : SendToBoxReason.values()) {
-      if (reason.getId() == pId) {
-        return reason;
       }
     }
     return null;

@@ -10,19 +10,8 @@ import com.balancedbytes.games.ffb.util.StringTool;
  * 
  * @author Kalimar
  */
-public class SkillCategoryFactory implements IEnumWithIdFactory, IEnumWithNameFactory {
+public class SkillCategoryFactory implements IEnumWithNameFactory {
 
-  public SkillCategory forId(int pId) {
-    if (pId > 0) {
-      for (SkillCategory skillCategory : SkillCategory.values()) {
-        if (pId == skillCategory.getId()) {
-          return skillCategory;
-        }
-      }
-    }
-    return null;
-  }
-  
   public SkillCategory forName(String pName) {
     if (StringTool.isProvided(pName)) {
       for (SkillCategory skillCategory : SkillCategory.values()) {

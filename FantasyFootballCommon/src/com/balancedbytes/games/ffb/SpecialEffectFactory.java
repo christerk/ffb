@@ -4,7 +4,7 @@ package com.balancedbytes.games.ffb;
  * 
  * @author Kalimar
  */
-public class SpecialEffectFactory implements IEnumWithIdFactory, IEnumWithNameFactory {
+public class SpecialEffectFactory implements IEnumWithNameFactory {
   
   public SpecialEffect forName(String pName) {
     for (SpecialEffect effect : SpecialEffect.values()) {
@@ -14,14 +14,5 @@ public class SpecialEffectFactory implements IEnumWithIdFactory, IEnumWithNameFa
     }
     return null;
   }
-
-  public SpecialEffect forId(int pId) {
-    for (SpecialEffect effect : SpecialEffect.values()) {
-      if (effect.getId() == pId) {
-        return effect;
-      }
-    }
-    return null;
-  }
-
+  
 }

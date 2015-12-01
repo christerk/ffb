@@ -25,8 +25,8 @@ import com.balancedbytes.games.ffb.PlayerState;
 import com.balancedbytes.games.ffb.RightStuffModifier;
 import com.balancedbytes.games.ffb.SeriousInjury;
 import com.balancedbytes.games.ffb.Skill;
-import com.balancedbytes.games.ffb.Weather;
 import com.balancedbytes.games.ffb.SpecialEffect;
+import com.balancedbytes.games.ffb.Weather;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.util.ArrayTool;
@@ -55,7 +55,7 @@ public class DiceInterpreter {
   
   public KickoffResult interpretRollKickoff(int[] pRoll) {
     int kickoffRoll = pRoll[0] + pRoll[1];
-    return new KickoffResultFactory().forId(kickoffRoll);
+    return new KickoffResultFactory().forRoll(kickoffRoll);
   }
   
   public Weather interpretRollWeather(int[] pRoll) {
@@ -452,7 +452,7 @@ public class DiceInterpreter {
   }
 
   public Direction interpretScatterDirectionRoll(int pRoll) {
-    return new DirectionFactory().forId(pRoll);
+    return new DirectionFactory().forRoll(pRoll);
   }
 
   public Direction interpretThrowInDirectionRoll(FieldCoordinate pStartCoordinate, int pRoll) {
