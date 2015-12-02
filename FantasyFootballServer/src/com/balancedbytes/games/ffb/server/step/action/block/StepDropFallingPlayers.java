@@ -108,13 +108,13 @@ public class StepDropFallingPlayers extends AbstractStep {
     FieldCoordinate defenderCoordinate = game.getFieldModel().getPlayerCoordinate(game.getDefender());
     PlayerState attackerState = game.getFieldModel().getPlayerState(actingPlayer.getPlayer());
     FieldCoordinate attackerCoordinate = game.getFieldModel().getPlayerCoordinate(actingPlayer.getPlayer());
-    if ((attackerState.getBase() == PlayerState.FALLING) && attackerState.isRooted()) {
+    if ((attackerState != null) && (attackerState.getBase() == PlayerState.FALLING) && attackerState.isRooted()) {
       attackerState = attackerState.changeRooted(false);
     }
-    if ((defenderState.getBase() == PlayerState.FALLING) && defenderState.isRooted()) {
+    if ((defenderState != null) && (defenderState.getBase() == PlayerState.FALLING) && defenderState.isRooted()) {
       defenderState = defenderState.changeRooted(false);
     }
-    if (((defenderState.getBase() == PlayerState.FALLING) && (defenderCoordinate != null)) || (fUsingPilingOn != null)) {
+    if (((defenderState != null) && (defenderState.getBase() == PlayerState.FALLING) && (defenderCoordinate != null)) || (fUsingPilingOn != null)) {
       if (fUsingPilingOn != null) {
         boolean reRollInjury = fInjuryResultDefender.isArmorBroken();
         getResult().addReport(new ReportPilingOn(actingPlayer.getPlayerId(), fUsingPilingOn, reRollInjury));
@@ -168,10 +168,10 @@ public class StepDropFallingPlayers extends AbstractStep {
     		publishParameter(new StepParameter(StepParameterKey.USING_PILING_ON, fUsingPilingOn));
     	}
     	// end turn if dropping a player of your own team
-    	if ((defenderState.getBase() == PlayerState.FALLING) && (game.getDefender().getTeam() == actingPlayer.getPlayer().getTeam()) && (fOldDefenderState != null) && !fOldDefenderState.isProne()) {
+    	if ((defenderState != null) && (defenderState.getBase() == PlayerState.FALLING) && (game.getDefender().getTeam() == actingPlayer.getPlayer().getTeam()) && (fOldDefenderState != null) && !fOldDefenderState.isProne()) {
       	publishParameter(new StepParameter(StepParameterKey.END_TURN, true));
     	}
-      if ((attackerState.getBase() == PlayerState.FALLING) && (attackerCoordinate != null)) {
+      if ((attackerState != null) && (attackerState.getBase() == PlayerState.FALLING) && (attackerCoordinate != null)) {
       	publishParameter(new StepParameter(StepParameterKey.END_TURN, true));
         publishParameters(UtilServerInjury.dropPlayer(this, actingPlayer.getPlayer(), ApothecaryMode.ATTACKER));
         publishParameter(new StepParameter(StepParameterKey.INJURY_RESULT,
