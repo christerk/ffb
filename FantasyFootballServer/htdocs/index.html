@@ -1,39 +1,18 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
 <head>
-<script type="text/javascript">
-var codebase = "http://localhost:2224/";
-function createJnlp(mode) {
-  
-  var jnlpDocument = document.open("application/x-java-jnlp-file", "replace");
-  
-  var content = "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n"
-  + "<jnlp codebase=\"" + codebase + "\" href=\"BloodBowlClient.jnlp\">\n"
-  + "  <information>\n"
-  + "    <title>BloodBowlClient</title>\n"
-  + "    <vendor>www.balancedbytes.com</vendor>\n"
-  + "  </information>\n"
-  + "  <resources>\n"
-  + "    <jar href=\"BloodBowlClient.jar\" />\n"
-  + "    <jar href=\"BloodBowlClientRessources.jar\" />\n"
-  + "    <j2se version=\"1.6+\" href=\"http://java.sun.com/products/autodl/j2se\" />\n"
-  + "  </resources>\n"
-  + "  <application-desc main-class=\"com.balancedbytes.games.bloodbowl.client.BloodBowlClient\">\n"
-  + "    <argument>" + mode + "</argument>\n"
-  + "  </application-desc>\n"
-  + "</jnlp>\n";
-  
-  jnlpDocument.write(content);
-  jnlpDocument.close();
-  
-}
-</script>
-<title>Start BloodBowlClient</title>
+<link rel="stylesheet" type="text/css" href="styles/main.css">
+<title>FFB Client Test</title>
 </head>
 <body>
-  <ul>
-    <li><a href="javascript:createJnlp('player')">Play</a></li>
-    <li><a href="javascript:createJnlp('spectator')">Spectate</a></li>
-  </ul>
+<div id="loading"></div>
+<canvas id="canvasClient" width="1014" height="712">Sorry, no canvas available</canvas>
+<canvas id="canvasPlayers" width="782" height="452"></canvas>
+<script src="scripts/lib/require.js"></script>
+<script>
+    require.config({
+        baseUrl: 'scripts'
+    });
+	require(['main']);
+</script>
 </body>
 </html>
