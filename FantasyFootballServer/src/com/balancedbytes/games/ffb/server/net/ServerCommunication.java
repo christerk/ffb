@@ -1,6 +1,5 @@
 package com.balancedbytes.games.ffb.server.net;
 
-import java.io.IOException;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
@@ -14,7 +13,7 @@ import com.balancedbytes.games.ffb.GameList;
 import com.balancedbytes.games.ffb.PlayerState;
 import com.balancedbytes.games.ffb.SoundId;
 import com.balancedbytes.games.ffb.TeamList;
-import com.balancedbytes.games.ffb.json.UtilJson;
+import com.balancedbytes.games.ffb.json.LZString;
 import com.balancedbytes.games.ffb.model.Animation;
 import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.model.PlayerResult;
@@ -215,22 +214,17 @@ public class ServerCommunication implements Runnable, IReceivedCommandHandler {
       return null;
     }
 
-    String textMessage = null;
-    
-    if (fCommandCompression || (NetCommandId.SERVER_REPLAY == pCommand.getId())) {
-      try {
-        textMessage = UtilJson.deflateToBase64(pCommand.toJsonValue());
-      } catch (IOException pIoException) {
-        // textMessage remains null
-      }
-    } else {
-      JsonValue jsonValue = pCommand.toJsonValue();
-      if (jsonValue != null) {
-        textMessage = jsonValue.toString();
-      }
+    JsonValue jsonValue = pCommand.toJsonValue();
+    if (jsonValue == null) {
+      return null;
     }
-
-    if (textMessage == null) {
+    
+    String textMessage = jsonValue.toString();
+    if (fCommandCompression) {
+      textMessage = LZString.compressToUTF16(textMessage);
+    }
+    
+    if (!StringTool.isProvided(textMessage)) {
       return null;
     }
     

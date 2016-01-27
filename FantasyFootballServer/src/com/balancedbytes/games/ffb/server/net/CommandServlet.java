@@ -7,6 +7,8 @@ import org.eclipse.jetty.websocket.servlet.WebSocketServlet;
 import org.eclipse.jetty.websocket.servlet.WebSocketServletFactory;
 
 import com.balancedbytes.games.ffb.server.FantasyFootballServer;
+import com.balancedbytes.games.ffb.server.IServerProperty;
+import com.balancedbytes.games.ffb.util.StringTool;
 
 /**
  * 
@@ -14,21 +16,29 @@ import com.balancedbytes.games.ffb.server.FantasyFootballServer;
  */
 @SuppressWarnings("serial")
 public class CommandServlet extends WebSocketServlet implements WebSocketCreator {
-  
+
   private FantasyFootballServer fServer;
-  
+
   public CommandServlet(FantasyFootballServer pServer) {
     fServer = pServer;
   }
-  
+
   @Override
   public void configure(WebSocketServletFactory factory) {
     factory.getPolicy().setIdleTimeout(10000);
     factory.setCreator(this);
   }
-  
+
   public Object createWebSocket(ServletUpgradeRequest pRequest, ServletUpgradeResponse pResponse) {
-    return new CommandSocket(fServer.getCommunication());
+    String commandCompressionProperty = null;
+    if (fServer != null) {
+      commandCompressionProperty = fServer.getProperty(IServerProperty.SERVER_COMMAND_COMPRESSION);
+    }
+    boolean commandCompression = false;
+    if (StringTool.isProvided(commandCompressionProperty)) {
+      commandCompression = Boolean.parseBoolean(commandCompressionProperty);
+    }
+    return new CommandSocket(fServer.getCommunication(), commandCompression);
   }
-  
+
 }

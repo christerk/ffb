@@ -8,7 +8,7 @@ import org.eclipse.jetty.websocket.WebSocket;
 
 import com.balancedbytes.games.ffb.client.FantasyFootballClient;
 import com.balancedbytes.games.ffb.client.IClientProperty;
-import com.balancedbytes.games.ffb.json.UtilJson;
+import com.balancedbytes.games.ffb.json.LZString;
 import com.balancedbytes.games.ffb.net.NetCommand;
 import com.balancedbytes.games.ffb.net.NetCommandFactory;
 import com.balancedbytes.games.ffb.net.NetCommandId;
@@ -28,17 +28,21 @@ public class CommandSocket implements WebSocket.OnTextMessage {
   private boolean fCommandCompression;
 
   private final CountDownLatch fCloseLatch;
-  
+
   public CommandSocket(FantasyFootballClient pClient) {
     fClient = pClient;
     fNetCommandFactory = new NetCommandFactory();
     fCloseLatch = new CountDownLatch(1);
-    String commandCompression = (fClient != null) ? fClient.getProperty(IClientProperty.CLIENT_COMMAND_COMPRESSION) : null; 
-    if (StringTool.isProvided(commandCompression)) {
-      fCommandCompression = Boolean.parseBoolean(commandCompression);
+    String commandCompressionProperty = null;
+    if (fClient != null) {
+      commandCompressionProperty = fClient.getProperty(IClientProperty.CLIENT_COMMAND_COMPRESSION);
+    }
+    fCommandCompression = false;
+    if (StringTool.isProvided(commandCompressionProperty)) {
+      fCommandCompression = Boolean.parseBoolean(commandCompressionProperty);
     }
   }
-  
+
   @Override
   public void onOpen(Connection pConnection) {
     fConnection = pConnection;
@@ -49,32 +53,28 @@ public class CommandSocket implements WebSocket.OnTextMessage {
 
   @Override
   public void onMessage(String pTextMessage) {
-    
+
     if (!StringTool.isProvided(pTextMessage) || !isOpen()) {
       return;
     }
-    
-    // inflate from base64 if necessary
-    JsonValue jsonValue;
-    try {
-      jsonValue = UtilJson.inflateFromBase64(pTextMessage);
-    } catch (IOException pIoException) {
-      jsonValue = null;
-    }
+
+    JsonValue jsonValue = JsonValue.readFrom(
+      fCommandCompression ? LZString.decompressFromUTF16(pTextMessage) : pTextMessage
+    );
 
     NetCommand netCommand = fNetCommandFactory.forJsonValue(jsonValue);
     if (netCommand == null) {
       return;
     }
-    
+
     if (NetCommandId.SERVER_PING == netCommand.getId()) {
       ServerCommandPing pingCommand = (ServerCommandPing) netCommand;
       pingCommand.setReceived(System.currentTimeMillis());
       fClient.getClientPingTask().setLastPingReceived(pingCommand.getReceived());
     }
-    
+
     fClient.getCommunication().handleCommand(netCommand);
-    
+
   }
 
   @Override
@@ -85,39 +85,33 @@ public class CommandSocket implements WebSocket.OnTextMessage {
     fCloseLatch.countDown();
   }
 
-
   public boolean awaitClose(int duration, TimeUnit unit) throws InterruptedException {
     return fCloseLatch.await(duration, unit);
   }
 
   public boolean send(NetCommand pCommand) throws IOException {
-    
+
     if ((pCommand == null) || !isOpen()) {
       return false;
     }
-    
-    String textMessage = null;
-    
+
+    JsonValue jsonValue = pCommand.toJsonValue();
+    if (jsonValue == null) {
+      return false;
+    }
+
+    String textMessage = jsonValue.toString();
     if (fCommandCompression) {
-      try {
-        textMessage = UtilJson.deflateToBase64(pCommand.toJsonValue());
-      } catch (IOException pIoException) {
-        // textMessage remains null
-      }
-    } else {
-      JsonValue jsonValue = pCommand.toJsonValue();
-      if (jsonValue != null) {
-        textMessage = jsonValue.toString();
-      }
+      textMessage = LZString.compressToUTF16(textMessage);
     }
 
     if (!StringTool.isProvided(textMessage)) {
       return false;
     }
-    
+
     fConnection.sendMessage(textMessage);
     return true;
-    
+
   }
 
   public boolean isOpen() {

@@ -1,14 +1,12 @@
 package com.balancedbytes.games.ffb.server.net;
 
-import java.io.IOException;
-
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketClose;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketConnect;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
 
-import com.balancedbytes.games.ffb.json.UtilJson;
+import com.balancedbytes.games.ffb.json.LZString;
 import com.balancedbytes.games.ffb.net.NetCommand;
 import com.balancedbytes.games.ffb.net.NetCommandFactory;
 import com.balancedbytes.games.ffb.server.handler.IReceivedCommandHandler;
@@ -24,10 +22,12 @@ public class CommandSocket {
   
   private IReceivedCommandHandler fCommandHandler;
   private NetCommandFactory fNetCommandFactory;
+  private boolean fCommandCompression;
     
-  public CommandSocket(IReceivedCommandHandler pCommandHandler) {
+  public CommandSocket(IReceivedCommandHandler pCommandHandler, boolean commandCompression) {
     fCommandHandler = pCommandHandler;
     fNetCommandFactory = new NetCommandFactory();
+    fCommandCompression = commandCompression;
   }
 
   @OnWebSocketMessage
@@ -37,13 +37,9 @@ public class CommandSocket {
       return;
     }
     
-    // inflate from base64 if necessary
-    JsonValue jsonValue;
-    try {
-      jsonValue = UtilJson.inflateFromBase64(pTextMessage);
-    } catch (IOException pIoException) {
-      jsonValue = null;
-    }
+    JsonValue jsonValue = JsonValue.readFrom(
+      fCommandCompression ? LZString.decompressFromUTF16(pTextMessage) : pTextMessage
+    );
         
     NetCommand netCommand = fNetCommandFactory.forJsonValue(jsonValue);
     if (netCommand == null) {
