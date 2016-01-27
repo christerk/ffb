@@ -1,7 +1,7 @@
-require(['lib/domReady'], function (domReady) {
+require(['lib/domReady', 'lib/lzString'], function (domReady, lzString) {
 	
-	//This function is called once the DOM is ready.
-	//It will be safe to query the DOM and manipulate DOM nodes in this function.
+	// This function is called once the DOM is ready.
+	// It will be safe to query the DOM and manipulate DOM nodes in this function.
 	domReady(function () {
 		
 		var images = { };
@@ -72,6 +72,8 @@ require(['lib/domReady'], function (domReady) {
 			ctxPlayers.clearRect(0, 0, 782, 452);
 			// start the game loop
 			gameLoop();
+			// open connection to FFB server
+			connect();
 		}
 		
 		function gameLoop() {
@@ -96,6 +98,33 @@ require(['lib/domReady'], function (domReady) {
 			}
 		}
 		
+		function connect() {
+			
+			var command = { "netCommandId" : "clientRequestVersion" };
+			
+			var connection = new WebSocket("ws://localhost:2224/command");
+			
+			connection.onopen = function() {
+				console.log('Connection open');
+				var jsonString = JSON.stringify(command);
+				connection.send(lzString.compressToUTF16(jsonString));
+			};
+			
+			connection.onclose = function() {
+				console.log('Connection closed');
+			};
+			
+			connection.onerror = function(error) {
+				console.log('WebSocket Error: ' + error);
+			};
+			
+			connection.onmessage = function(message) {
+				var jsonString = lzString.decompressFromUTF16(message.data);
+				console.log('Server: ' + jsonString);
+			};	
+					
+		}
+	
 	});
 	
 });
