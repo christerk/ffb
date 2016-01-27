@@ -105,24 +105,31 @@ require(['lib/domReady', 'lib/lzString'], function (domReady, lzString) {
 			var connection = new WebSocket("ws://localhost:2224/command");
 			
 			connection.onopen = function() {
-				console.log('Connection open');
+				addToLog('Connection open');
 				var jsonString = JSON.stringify(command);
 				connection.send(lzString.compressToUTF16(jsonString));
 			};
 			
 			connection.onclose = function() {
-				console.log('Connection closed');
+				addToLog('Connection closed');
 			};
 			
 			connection.onerror = function(error) {
-				console.log('WebSocket Error: ' + error);
+				addToLog('WebSocket Error: ' + error);
 			};
 			
 			connection.onmessage = function(message) {
 				var jsonString = lzString.decompressFromUTF16(message.data);
-				console.log('Server: ' + jsonString);
+				addToLog('Server: ' + jsonString);
 			};	
 					
+		}
+		
+		function addToLog(message) {
+			if (message) {
+				var log = document.getElementById('log');
+				log.insertAdjacentHTML('beforeend', '<p>' + message + '</p>');
+			}
 		}
 	
 	});

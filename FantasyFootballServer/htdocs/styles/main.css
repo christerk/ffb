@@ -35,3 +35,19 @@ body {
 	top: 0px;
 	z-index: 1;
 }
+#log {
+	position: absolute;
+	left: 116px;
+	top: 484px;
+	width: 392px;
+	height: 228px;
+	max-height: 228px;
+	overflow-x: hidden;
+    overflow-y: scroll;
+    word-break: break-all;
+    /* font-family: "Times New Roman", Times, serif; */
+    font-style: normal;
+    font-size: 12px;
+    background-color: #eeeeee;
+	z-index: 1;
+}
