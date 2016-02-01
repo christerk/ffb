@@ -6,8 +6,9 @@ require(['lib/domReady', 'lib/lzString'], function (domReady, lzString) {
 		
 		var images = { };
 
-		var ctxClient = document.getElementById('canvasClient').getContext("2d");
-		var ctxPlayers = document.getElementById('canvasPlayers').getContext("2d");
+		var ctxClient = document.getElementById('cvsClient').getContext("2d");
+		var ctxPitch = document.getElementById('cvsPitch').getContext("2d");
+		var ctxPlayers = document.getElementById('cvsPlayers').getContext("2d");
 
 		var imagesToBeLoaded = 11;
 
@@ -43,33 +44,46 @@ require(['lib/domReady', 'lib/lzString'], function (domReady, lzString) {
 			}
 		}
 
-		function drawImage(name, pos) {
-			if (name && pos) {
+		function drawImage(ctx, name, pos) {
+			if (ctx && name && pos) {
 				var img = images[name];
 				if (img) {
-					ctxClient.drawImage(img, pos.x, pos.y, img.width, img.height);
+					ctx.drawImage(img, pos.x, pos.y, img.width, img.height);
 				}
 			}
 		}
 		
 		function init() {
 			// fade-out via transition
-			document.getElementById('loading').style.opacity = 0; 
+			document.getElementById('divLoading').style.opacity = 0; 
 			// transition delayed to after fade-out
-			document.getElementById('loading').style.width = 0;
-			document.getElementById('loading').style.height = 0;
+			document.getElementById('divLoading').style.width = 0;
+			document.getElementById('divLoading').style.height = 0;
 			// init client
-			drawImage('playerDetailsRed', { x:0, y:0 });
-			drawImage('boxButtonsRed', { x:0, y:430 });
-			drawImage('turnDiceStatusRed', { x:0, y:452 });
-			drawImage('resourcesRed', { x:0, y:544 });
-			drawImage('pitch', { x:116, y:0 });
-			drawImage('scorebar', { x:116, y:452 });
-			drawImage('playerDetailsBlue', { x:897, y:0 });
-			drawImage('boxButtonsBlue', { x:897, y:430 });
-			drawImage('turnDiceStatusBlue', { x:897, y:452 });
-			drawImage('resourcesBlue', { x:897, y:544 });
+			drawImage(ctxClient, 'playerDetailsRed', { x:0, y:0 });
+			drawImage(ctxClient, 'boxButtonsRed', { x:0, y:430 });
+			drawImage(ctxClient, 'turnDiceStatusRed', { x:0, y:452 });
+			drawImage(ctxClient, 'resourcesRed', { x:0, y:544 });
+			drawImage(ctxClient, 'scorebar', { x:116, y:452 });
+			drawImage(ctxClient, 'playerDetailsBlue', { x:897, y:0 });
+			drawImage(ctxClient, 'boxButtonsBlue', { x:897, y:430 });
+			drawImage(ctxClient, 'turnDiceStatusBlue', { x:897, y:452 });
+			drawImage(ctxClient, 'resourcesBlue', { x:897, y:544 });
+			// init pitch layer
+			drawImage(ctxPitch, 'pitch', { x:0, y:0 });
+			// init player layer
 			ctxPlayers.clearRect(0, 0, 782, 452);
+			// init chat input
+			document.getElementById('inputChat').onkeypress = function(e) {
+			    var event = e || window.event;
+			    var charCode = event.which || event.keyCode;
+			    if (charCode == '13') {
+			    	var inputChat = document.getElementById('inputChat');
+			    	addToChat(inputChat.value);
+			    	inputChat.value = '';
+			    	return false;
+			    }
+			}
 			// start the game loop
 			gameLoop();
 			// open connection to FFB server
@@ -127,11 +141,18 @@ require(['lib/domReady', 'lib/lzString'], function (domReady, lzString) {
 		
 		function addToLog(message) {
 			if (message) {
-				var log = document.getElementById('log');
-				log.insertAdjacentHTML('beforeend', '<p>' + message + '</p>');
+				var divLog = document.getElementById('divLog');
+				divLog.insertAdjacentHTML('beforeend', '<div class="line">' + message + '</div>');
 			}
 		}
-	
+		
+		function addToChat(message) {
+			if (message) {
+				var divChat = document.getElementById('divChat');
+				divChat.insertAdjacentHTML('beforeend', '<div class="line">' + message + '</div>');
+			}
+		}
+
 	});
 	
 });

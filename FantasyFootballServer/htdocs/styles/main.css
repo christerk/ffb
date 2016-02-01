@@ -7,7 +7,7 @@ body {
 	width: 100%;
 	height: 100%; 
 }
-#loading {
+#divLoading {
 	opacity: 1;
 	position: fixed;
 	left: 0px;
@@ -22,32 +22,73 @@ body {
 	pointer-events: none;
 	*/
 }
-#canvasClient {
+#cvsClient {
 	display: block;  /* To remove the scrollbars */
 	position: absolute;
 	left: 0px;
 	top: 0px;
 	z-index: 0;
 }
-#canvasPlayers {
+#cvsPitch {
 	position: absolute;
 	left: 116px;
 	top: 0px;
 	z-index: 1;
 }
-#log {
+#cvsPlayers {
+	position: absolute;
+	left: 116px;
+	top: 0px;
+	z-index: 2;
+}
+#divLog {
 	position: absolute;
 	left: 116px;
 	top: 484px;
-	width: 392px;
+	width: 390px;
 	height: 228px;
 	max-height: 228px;
 	overflow-x: hidden;
     overflow-y: scroll;
     word-break: break-all;
     /* font-family: "Times New Roman", Times, serif; */
+    font-family: Arial, Helvetica, sans-serif;
     font-style: normal;
     font-size: 12px;
     background-color: #eeeeee;
+	z-index: 1;
+}
+.line {
+	padding: 2px 2px 0px 2px;
+}
+#divChat {
+	position: absolute;
+	left: 508px;
+	top: 484px;
+	width: 390px;
+	height: 208px;
+	max-height: 208px;
+	overflow-x: hidden;
+    overflow-y: scroll;
+    word-break: break-all;
+    /* font-family: "Times New Roman", Times, serif; */
+    font-family: Arial, Helvetica, sans-serif;
+    font-style: normal;
+    font-size: 12px;
+    background-color: #eeeeee;
+	z-index: 1;
+}
+#inputChat {
+	position: absolute;
+	left: 508px;
+	top: 694px;
+	width: 390px;
+	height: 18px;
+    /* font-family: "Times New Roman", Times, serif; */
+    font-family: Arial, Helvetica, sans-serif;
+    font-style: normal;
+    font-size: 12px;
+    background-color: #eeeeee;
+    border: 0px;
 	z-index: 1;
 }

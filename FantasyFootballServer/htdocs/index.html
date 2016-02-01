@@ -4,10 +4,15 @@
 <title>FFB Client Test</title>
 </head>
 <body>
-<div id="loading"></div>
-<canvas id="canvasClient" width="1014" height="712">Sorry, no canvas available</canvas>
-<canvas id="canvasPlayers" width="782" height="452"></canvas>
-<div id="log"></div>
+<div id="divLoading"></div>
+<div id="client">
+	<canvas id="cvsClient" width="1014" height="712">Sorry, no canvas available</canvas>
+	<canvas id="cvsPitch" width="782" height="452"></canvas>
+	<canvas id="cvsPlayers" width="782" height="452"></canvas>
+	<div id="divLog"></div>
+	<div id="divChat"></div>
+	<input id="inputChat" type="text"></input>
+</div>
 <script src="scripts/lib/require.js"></script>
 <script>
     require.config({
