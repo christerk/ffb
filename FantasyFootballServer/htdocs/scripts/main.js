@@ -1,52 +1,19 @@
-require(['lib/domReady', 'lib/lzString'], function (domReady, lzString) {
+require(['lib/domReady', 'lib/lzString', 'iconCache'], function (domReady, lzString, iconCache) {
+	'use strict';
 	
 	// This function is called once the DOM is ready.
 	// It will be safe to query the DOM and manipulate DOM nodes in this function.
 	domReady(function () {
 		
-		var images = { };
-
 		var ctxClient = document.getElementById('cvsClient').getContext("2d");
 		var ctxPitch = document.getElementById('cvsPitch').getContext("2d");
 		var ctxPlayers = document.getElementById('cvsPlayers').getContext("2d");
 
-		var imagesToBeLoaded = 11;
-
-		// client icons
-		loadImage('playerDetailsRed', '/icons/client/bg_player_details_red.png');
-		loadImage('boxButtonsRed', '/icons/client/bg_box_buttons_red.png');
-		loadImage('turnDiceStatusRed', '/icons/client/bg_turn_dice_status_red.png');
-		loadImage('resourcesRed', '/icons/client/bg_resources_red.png');
-		loadImage('scorebar', '/icons/client/bg_scorebar.png');
-		loadImage('playerDetailsBlue', '/icons/client/bg_player_details_blue.png');
-		loadImage('boxButtonsBlue', '/icons/client/bg_box_buttons_blue.png');
-		loadImage('turnDiceStatusBlue', '/icons/client/bg_turn_dice_status_blue.png');
-		loadImage('resourcesBlue', '/icons/client/bg_resources_blue.png');
-
-		// pitch
-		loadImage('pitch', '/icons/pitches/default/nice.jpg');
-
-		// player icon
-		loadImage('amblitzer1', '/icons/players/iconsets/amazon_blitzer.png');
-
-		function loadImage(name, path) {
-			images[name] = new Image();
-			images[name].onload = function() {
-				imageOnLoad();
-			}
-			images[name].src = path;
-		}
-
-		function imageOnLoad() {
-			imagesToBeLoaded--;
-			if (!imagesToBeLoaded) {
-				init();
-			}
-		}
-
+		iconCache.init(init);
+		
 		function drawImage(ctx, name, pos) {
 			if (ctx && name && pos) {
-				var img = images[name];
+				var img = iconCache.getImg(name);
 				if (img) {
 					ctx.drawImage(img, pos.x, pos.y, img.width, img.height);
 				}
@@ -54,6 +21,7 @@ require(['lib/domReady', 'lib/lzString'], function (domReady, lzString) {
 		}
 		
 		function init() {
+			// console.log('init');
 			// fade-out via transition
 			document.getElementById('divLoading').style.opacity = 0; 
 			// transition delayed to after fade-out
@@ -105,10 +73,11 @@ require(['lib/domReady', 'lib/lzString'], function (domReady, lzString) {
 			if ((xPos >= 720) || (xPos <= 32)) {
 				xInc *= -1;
 			}
+			var img = iconCache.getImg('amblitzer1');
 			if (xInc > 0) {
-				ctxPlayers.drawImage(images['amblitzer1'], 1 * 28, 0, 28, 28, xPos, yPos, 28, 28);
+				ctxPlayers.drawImage(img, 1 * 28, 0, 28, 28, xPos, yPos, 28, 28);
 			} else {
-				ctxPlayers.drawImage(images['amblitzer1'], 3 * 28, 0, 28, 28, xPos, yPos, 28, 28);
+				ctxPlayers.drawImage(img, 3 * 28, 0, 28, 28, xPos, yPos, 28, 28);
 			}
 		}
 		
