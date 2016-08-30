@@ -1,6 +1,7 @@
 <html>
 <head>
-<link rel="stylesheet" type="text/css" href="styles/main.css">
+<link rel="stylesheet" type="text/css" href="styles/client.css">
+<link rel="icon" type="image/png" href="data:;base64,iVBORw0KGgo=">
 <title>FFB Client Test</title>
 </head>
 <body>
@@ -13,12 +14,20 @@
 	<div id="divChat"></div>
 	<input id="inputChat" type="text"></input>
 </div>
-<script src="scripts/lib/require.js"></script>
+<script src="scripts/lib/require.min.js"></script>
 <script>
-    require.config({
-        baseUrl: 'scripts'
-    });
-	require(['main']);
+	require.config({
+    	baseUrl: "scripts",
+    	paths: {
+        	"domReady": "lib/domReady",
+			"lz-string": "lib/lz-string"
+    	}
+  	});
+  	require(["domReady", "lz-string", "Client"],
+  		function(domReady, lzString, Client) {
+			domReady(Client.start);
+		}	  
+    );
 </script>
 </body>
 </html>
