@@ -26,8 +26,12 @@
 	</target>
 
 	<target name="clean">
-		<delete dir="${bin.dir}" />
-		<delete dir="${build.dir}" />
+		<delete includeemptydirs="true">
+			<fileset dir="${bin.dir}" includes="**/*"/>
+		</delete>
+		<delete includeemptydirs="true">
+			<fileset dir="${build.dir}" includes="**/*"/>
+		</delete>
 	</target>
 	
 	<target name="prepare">
@@ -46,7 +50,7 @@
 		</path>
 		<property name="myClasspath" refid="classpath" />
 		<echo message="Classpath = ${myClasspath}" />
-		<javac srcdir="${src.dir}" destdir="${bin.dir}" target="1.7" source="1.7" debug="on">
+		<javac srcdir="${src.dir}" destdir="${bin.dir}" includeantruntime="false" target="1.8" source="1.8" debug="on">
 			<classpath refid="classpath" />
 		</javac>
 	</target>
@@ -60,19 +64,42 @@
             <manifest>
               <attribute name="Built-By" value="${user.name}" />
               <attribute name="Main-Class" value="com.balancedbytes.games.ffb.server.FantasyFootballServer" />
-              <attribute name="Class-Path" value="${manifest-classpath}" />
+              <!-- attribute name="Class-Path" value="${manifest-classpath}" /-->
             </manifest>
             <zipfileset dir="${bin.dir}" includes="**/*.class" />
             <zipfileset dir="../FantasyFootballCommon/${bin.dir}" includes="**/*.class" />
+        	<restrict>
+        	  <archives>
+        	    <zips>
+        	      <fileset dir="${lib.dir}">
+        	        <include name="**/*.jar" />
+        	      </fileset>
+        	    </zips>
+        	  </archives>
+        	  <not>
+        	    <name name="META-INF/*"/>
+        	  </not>
+        	</restrict>
         </jar>
     </target>
 
     <target name="buildStandalone" depends="jar">
     	<copy file="server-standalone.ini" tofile="${build.dir}/server.ini" />
+    	<copy file="pitches-standalone.ini" tofile="${build.dir}/pitches.ini" />
+    	<copy todir="${build.dir}/rosters">
+    		<fileset dir="rosters" />
+    	</copy>
+    	<copy todir="${build.dir}/teams">
+    		<fileset dir="teams" />
+    	</copy>
+    	<copy todir="${build.dir}/htdocs">
+    		<fileset dir="htdocs" />
+    	</copy>
    	</target>
 	
     <target name="buildFumbblLive" depends="jar">
     	<copy file="server-fumbbl-live.ini" tofile="${build.dir}/server.ini" />
+    	<copy file="pitches-fumbbl-live.ini" tofile="${build.dir}/pitches.ini" />
     	<!--
     	<tar destfile="${build.dir}/${ant.project.name}.tar.gz" compression="gzip">
 	  		<fileset dir="." excludes="src/**, bin/**, build/**, doc/**, lib/*.zip, **/build.xml, **/.*" />
@@ -84,6 +111,7 @@
 
     <target name="buildFumbblTest" depends="jar">
     	<copy file="server-fumbbl-test.ini" tofile="${build.dir}/server.ini" />
+    	<copy file="pitches-fumbbl-test.ini" tofile="${build.dir}/pitches.ini" />
     	<!--
     	<tar destfile="${build.dir}/${ant.project.name}.tar.gz" compression="gzip">
 	  		<fileset dir="." excludes="src/**, bin/**, build/**, doc/**, lib/*.zip, **/build.xml, **/.*" />

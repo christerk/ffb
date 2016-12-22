@@ -16,15 +16,6 @@ define(["require", "exports", './Icon'], function (require, exports, Icon_1) {
             return false;
         };
         IconCache.prototype.init = function (callback) {
-            this.addIcon('playerDetailsRed', '/icons/client/bg_player_details_red.png');
-            this.addIcon('boxButtonsRed', '/icons/client/bg_box_buttons_red.png');
-            this.addIcon('turnDiceStatusRed', '/icons/client/bg_turn_dice_status_red.png');
-            this.addIcon('resourcesRed', '/icons/client/bg_resources_red.png');
-            this.addIcon('scorebar', '/icons/client/bg_scorebar.png');
-            this.addIcon('playerDetailsBlue', '/icons/client/bg_player_details_blue.png');
-            this.addIcon('boxButtonsBlue', '/icons/client/bg_box_buttons_blue.png');
-            this.addIcon('turnDiceStatusBlue', '/icons/client/bg_turn_dice_status_blue.png');
-            this.addIcon('resourcesBlue', '/icons/client/bg_resources_blue.png');
             this.addIcon('pitch', '/icons/pitches/default/nice.jpg');
             this.addIcon('amblitzer1', '/icons/players/iconsets/amazon_blitzer.png');
             this.refresh(callback);
@@ -53,4 +44,3 @@ define(["require", "exports", './Icon'], function (require, exports, Icon_1) {
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.default = IconCache;
 });
-//# sourceMappingURL=IconCache.js.map

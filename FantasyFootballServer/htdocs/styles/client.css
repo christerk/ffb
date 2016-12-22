@@ -7,88 +7,347 @@ body {
 	width: 100%;
 	height: 100%; 
 }
-#divLoading {
+#loading {
 	opacity: 1;
 	position: fixed;
 	left: 0px;
 	top: 0px;
+	width: 1014px;
+	height: 712px;
+	/*
+	margin: 2px;
 	width: 100%;
 	height: 100%;
+	*/
 	z-index: 9999;
-	background: url(../icons/loading.gif) center no-repeat #fff;
-	transition: opacity 1.5s, height 0s linear 1.5s, width 0s linear 1.5s;
+	background: url(/icons/splash_screen.png) center no-repeat #555557;
+	transition: opacity 3s, height 0s linear 3s, width 0s linear 3s;
 	/*
 	alternatively use:
 	pointer-events: none;
 	*/
 }
-#cvsClient {
-	display: block;  /* To remove the scrollbars */
+#loading #acknowledgments {
+	position: absolute;
+	top: 220px;
+	left: 120px;
+	color: #ffffff;
+	text-shadow: 2px 2px 2px #000000;
+}
+#client {
+	position: absolute;
+	left: 0px;
+	top: 0px;
+	width: 1014px;
+	height: 712px;
+	/*
+	margin: 2px;
+	*/
+}
+#redSidebar {
+	position: absolute;
+	left: 0px;
+	top: 0px;
+}
+#scorebar {
+	position: absolute;
+	left: 116px;
+	top: 452px;
+	width: 782px;
+	height: 32px;
+	background: url(/icons/client/bg_scorebar.png) no-repeat center;
+	vertical-align: middle;
+	line-height: 32px;
+    font-family: Arial, Helvetica, sans-serif;
+    font-style: normal;
+    font-size: 24px;
+	font-weight: bold;
+	color: #ffffff;
+	text-shadow: 2px 2px 2px #000000;
+}
+#scorebar #home {
+	position: absolute;
+	text-align: left;
+	left: 345px;
+}
+#scorebar #away {
+	position: absolute;
+	text-align: right;
+	right: 345px;
+}
+#blueSidebar {
+	position: absolute;
+	left: 898px;
+	top: 0px;
+}
+#playerDetails {
+	position: absolute;
+	left: 0px;
+	top: 0px;
+	width: 116px;
+	height: 430px;
+}
+#boxButtons {
+	position: absolute;
+	left: 0px;
+	top: 430px;
+	width: 116px;
+	height: 22px;
+}
+#turnDiceStatus {
+	position: absolute;
+	left: 0px;
+	top: 452px;
+	width: 116px;
+	height: 92px;
+}
+#resources {
+	position: absolute;
+	left: 0px;
+	top: 544px;
+	width: 116px;
+	height: 168px;
+}
+#resource0,
+#resource1,
+#resource2,
+#resource3,
+#resource4,
+#resource5,
+#resource6,
+#resource7 {
+	position: absolute;
+	width: 52px;
+	height: 39px;
+	/*
+	border: 1px solid #ffffff;
+	*/
+}
+#resources .apothecary {
+	background: url(/icons/client/resources/apothecary_38x38.png) no-repeat;		
+}
+#resources .bloodweiser {
+	background: url(/icons/client/resources/bloodweiser_38x38.png) no-repeat;		
+}
+#resources .bribe {
+	background: url(/icons/client/resources/bribe_38x38.png) no-repeat;		
+}
+#resources .card {
+	background: url(/icons/client/resources/card_38x38.png) no-repeat;		
+}
+#resources .chef {
+	background: url(/icons/client/resources/chef_38x38.png) no-repeat;		
+}
+#resources .igor {
+	background: url(/icons/client/resources/igor_38x38.png) no-repeat;		
+}
+#resources .reroll {
+	background: url(/icons/client/resources/reroll_38x38.png) no-repeat;		
+}
+#resources .wizard {
+	background: url(/icons/client/resources/wizard_38x38.png) no-repeat;		
+}
+#redSidebar #playerDetails {
+	background: url(/icons/client/red/bg_player_details.png) no-repeat;	
+}
+#redSidebar #boxButtons {
+	background: url(/icons/client/red/bg_box_buttons.png) no-repeat;	
+}
+#redSidebar #turnDiceStatus {
+	background: url(/icons/client/red/bg_turn_dice_status.png) no-repeat;	
+}
+#redSidebar #resources {
+	background: url(/icons/client/red/bg_resources.png) no-repeat center;
+	text-align: left;
+	vertical-align: middle;
+	line-height: 40px;
+ 	font-family: Arial, Helvetica, sans-serif;
+    font-style: normal;
+    font-size: 18px;
+	font-weight: bold;
+	color: #ffffff;
+	text-shadow: 2px 2px 2px #000000;
+}
+#redSidebar #resources .apothecary,
+#redSidebar #resources .bloodweiser,
+#redSidebar #resources .bribe,
+#redSidebar #resources .card,
+#redSidebar #resources .chef,
+#redSidebar #resources .igor,
+#redSidebar #resources .reroll,
+#redSidebar #resources .wizard {
+	background-position: right;
+}
+#redSidebar #resources #resource0 {
+	left: 4px;
+	top: 126px;
+}
+#redSidebar #resources #resource1 {
+	left: 60px;
+	top: 126px;
+}
+#redSidebar #resources #resource2 {
+	left: 4px;
+	top: 84px;
+}
+#redSidebar #resources #resource3 {
+	left: 60px;
+	top: 84px;
+}
+#redSidebar #resources #resource4 {
+	left: 4px;
+	top: 42px;
+}
+#redSidebar #resources #resource5 {
+	left: 60px;
+	top: 42px;
+}
+#redSidebar #resources #resource6 {
+	left: 4px;
+	top: 0px;
+}
+#redSidebar #resources #resource7 {
+	left: 60px;
+	top: 0px;
+}
+#blueSidebar #resources #resource0 {
+	left: 58px;
+	top: 126px;
+}
+#blueSidebar #resources #resource1 {
+	left: 2px;
+	top: 126px;
+}
+#blueSidebar #resources #resource2 {
+	left: 58px;
+	top: 84px;
+}
+#blueSidebar #resources #resource3 {
+	left: 2px;
+	top: 84px;
+}
+#blueSidebar #resources #resource4 {
+	left: 58px;
+	top: 42px;
+}
+#blueSidebar #resources #resource5 {
+	left: 2px;
+	top: 42px;
+}
+#blueSidebar #resources #resource6 {
+	left: 58px;
+	top: 0px;
+}
+#blueSidebar #resources #resource7 {
+	left: 2px;
+	top: 0px;
+}
+#blueSidebar #playerDetails {
+	background: url(/icons/client/blue/bg_player_details.png) no-repeat center;	
+}
+#blueSidebar #boxButtons {
+	background: url(/icons/client/blue/bg_box_buttons.png) no-repeat center;	
+}
+#blueSidebar #turnDiceStatus {
+	background: url(/icons/client/blue/bg_turn_dice_status.png) no-repeat center;	
+}
+#blueSidebar #resources {
+	background: url(/icons/client/blue/bg_resources.png) no-repeat center;		
+	text-align: right;
+	vertical-align: middle;
+	line-height: 40px;
+	text-indent: -3px;		
+    font-family: Arial, Helvetica, sans-serif;
+    font-style: normal;
+    font-size: 18px;
+	font-weight: bold;
+	color: #ffffff;
+	text-shadow: 2px 2px 2px #000000;
+}
+#blueSidebar #resources .apothecary,
+#blueSidebar #resources .bloodweiser,
+#blueSidebar #resources .bribe,
+#blueSidebar #resources .card,
+#blueSidebar #resources .chef,
+#blueSidebar #resources .igor,
+#blueSidebar #resources .reroll,
+#blueSidebar #resources .wizard {
+	background-position: left;
+}
+#field {
+	position: absolute;
+	left: 116px;
+	top: 0px;
+}
+#field #pitch {
 	position: absolute;
 	left: 0px;
 	top: 0px;
 	z-index: 0;
 }
-#cvsPitch {
+#field #players {
 	position: absolute;
-	left: 116px;
+	left: 0px;
 	top: 0px;
 	z-index: 1;
-}
-#cvsPlayers {
-	position: absolute;
-	left: 116px;
-	top: 0px;
-	z-index: 2;
 }
 #divLog {
 	position: absolute;
 	left: 116px;
 	top: 484px;
-	width: 390px;
-	height: 228px;
-	max-height: 228px;
+	width: 381px; /* - border */
+	height: 222px;
+	max-height: 222px;
 	overflow-x: hidden;
     overflow-y: scroll;
     word-break: break-all;
+    border-width: 3px;  
+    border-style: inset;
     /* font-family: "Times New Roman", Times, serif; */
     font-family: Arial, Helvetica, sans-serif;
     font-style: normal;
     font-size: 12px;
     background-color: #eeeeee;
 	z-index: 1;
+	padding-left: 2px;
+	padding-right: 2px;
 }
 .line {
-	padding: 2px 2px 0px 2px;
+	padding-top: 2px;
 }
 #divChat {
 	position: absolute;
 	left: 508px;
 	top: 484px;
-	width: 390px;
-	height: 208px;
-	max-height: 208px;
+	width: 380px;  /* -border */
+	height: 199px;
+	max-height: 199px;
 	overflow-x: hidden;
     overflow-y: scroll;
     word-break: break-all;
+    border-width: 3px;  
+    border-style: inset;
     /* font-family: "Times New Roman", Times, serif; */
     font-family: Arial, Helvetica, sans-serif;
     font-style: normal;
     font-size: 12px;
     background-color: #eeeeee;
 	z-index: 1;
+	padding-left: 2px;
+	padding-right: 2px;
 }
 #inputChat {
 	position: absolute;
 	left: 508px;
-	top: 694px;
+	top: 690px;
 	width: 390px;
-	height: 18px;
+	height: 22px;
+    border-width: 3px;  
+    border-style: inset;
     /* font-family: "Times New Roman", Times, serif; */
     font-family: Arial, Helvetica, sans-serif;
     font-style: normal;
     font-size: 12px;
     background-color: #eeeeee;
-    border: 0px;
 	z-index: 1;
 }

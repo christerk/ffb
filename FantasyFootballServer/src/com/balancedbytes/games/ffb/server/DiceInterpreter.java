@@ -443,8 +443,8 @@ public class DiceInterpreter {
     return (pRoll > 1);
   }
 
-  public boolean isStandUpSuccessful(int pRoll) {
-    return (pRoll > 3);
+  public boolean isStandUpSuccessful(int pRoll, int pModifier) {
+    return (pRoll > 1 && pRoll + pModifier > 3);
   }
   
   public boolean isPlayerDefecting(int pRoll) {

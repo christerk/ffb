@@ -4,9 +4,14 @@ import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.apache.commons.httpclient.HttpClient;
-import org.apache.commons.httpclient.HttpMethod;
-import org.apache.commons.httpclient.methods.GetMethod;
+import org.apache.http.client.config.RequestConfig;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.mime.MultipartEntityBuilder;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.util.EntityUtils;
 
 /**
  * 
@@ -27,27 +32,73 @@ public class UtilServerHttpClient {
     return result;
   }
 
-  public static String fetchPage(String pUrl) throws IOException {
-    HttpClient client = new HttpClient();
-    client.getHttpConnectionManager().getParams().setConnectionTimeout(CONNECTION_TIMEOUT);
-    HttpMethod method = new GetMethod(pUrl);
-    method.setFollowRedirects(true);
-    client.executeMethod(method);
-    String responseBody = new String(method.getResponseBody(), CHARACTER_ENCODING);
-    method.releaseConnection();
-    return responseBody;
+  public static String fetchPage(String url) throws IOException {
+    
+    RequestConfig.Builder requestBuilder = RequestConfig.custom();
+    requestBuilder.setConnectTimeout(CONNECTION_TIMEOUT);
+    requestBuilder.setRedirectsEnabled(true);
+    
+    HttpClientBuilder clientBuilder = HttpClientBuilder.create();
+    clientBuilder.setDefaultRequestConfig(requestBuilder.build());
+    
+    try (CloseableHttpClient client = clientBuilder.build()) {
+
+      HttpGet request = new HttpGet(url);
+      
+      try (CloseableHttpResponse response = client.execute(request)) {
+        return EntityUtils.toString(response.getEntity(), CHARACTER_ENCODING);
+      }
+
+    }
+    
   }
   
-  public static byte[] fetchGzippedPage(String pUrl) throws IOException {
-    HttpClient client = new HttpClient();
-    client.getHttpConnectionManager().getParams().setConnectionTimeout(CONNECTION_TIMEOUT);
-    HttpMethod method = new GetMethod(pUrl);
-    method.setFollowRedirects(true);
-    method.addRequestHeader("Accept-Encoding", "gzip");
-    client.executeMethod(method);
-    byte[] responseBody = method.getResponseBody();
-    method.releaseConnection();
-    return responseBody;
+  public static byte[] fetchGzippedPage(String url) throws IOException {
+    
+    RequestConfig.Builder requestBuilder = RequestConfig.custom();
+    requestBuilder.setConnectTimeout(CONNECTION_TIMEOUT);
+    requestBuilder.setRedirectsEnabled(true);
+    
+    HttpClientBuilder clientBuilder = HttpClientBuilder.create();
+    clientBuilder.setDefaultRequestConfig(requestBuilder.build());
+    
+    try (CloseableHttpClient client = clientBuilder.build()) {
+      
+      HttpGet request = new HttpGet(url);
+      request.addHeader("Accept-Encoding", "gzip");
+      
+      try (CloseableHttpResponse response = client.execute(request)) {
+        return EntityUtils.toByteArray(response.getEntity());
+      }
+    
+    }
+
+  }
+
+  public static String postMultipartXml(String url, String challengeResponse, String resultXml) throws IOException {
+
+    RequestConfig.Builder requestBuilder = RequestConfig.custom();
+    requestBuilder.setConnectTimeout(CONNECTION_TIMEOUT);
+    requestBuilder.setRedirectsEnabled(true);
+    
+    HttpClientBuilder clientBuilder = HttpClientBuilder.create();
+    clientBuilder.setDefaultRequestConfig(requestBuilder.build());
+    
+    MultipartEntityBuilder entityBuilder = MultipartEntityBuilder.create();
+    entityBuilder.addTextBody("response", challengeResponse);
+    entityBuilder.addBinaryBody("result.xml", resultXml.getBytes(CHARACTER_ENCODING));
+    
+    try (CloseableHttpClient client = clientBuilder.build()) {    
+
+      HttpPost request = new HttpPost(url);
+      request.setEntity(entityBuilder.build());
+  
+      try (CloseableHttpResponse response = client.execute(request)) {
+        return EntityUtils.toString(response.getEntity(), CHARACTER_ENCODING);
+      }
+
+    }
+      
   }
   
 }

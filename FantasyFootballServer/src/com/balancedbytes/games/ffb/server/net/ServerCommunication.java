@@ -114,7 +114,7 @@ public class ServerCommunication implements Runnable, IReceivedCommandHandler {
           try {
             long gameId = getServer().getSessionManager().getGameIdForSession(receivedCommand.getSession());
             gameState = getServer().getGameCache().getGameStateById(gameId);
-          } catch (Exception _) { }
+          } catch (Exception ignored) { }
           
           getServer().getDebugLog().log((gameState != null) ? gameState.getId() : -1, any);
           
@@ -162,14 +162,14 @@ public class ServerCommunication implements Runnable, IReceivedCommandHandler {
     try {
       ServerCommandAdminMessage messageCommand = new ServerCommandAdminMessage(new String[] { "This match has entered an invalid state and is shutting down." });
       send(getServer().getSessionManager().getSessionsForGameId(gameState.getId()), messageCommand, false);
-    } catch (Exception _) { }
+    } catch (Exception ignored) { }
 
     // Disconnect clients
     try {
       for (Session session : getServer().getSessionManager().getSessionsForGameId(gameState.getId())) {
         getServer().getCommunication().close(session);
       }
-    } catch (Exception _) { }
+    } catch (Exception ignored) { }
 
   }
   

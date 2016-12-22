@@ -5,15 +5,6 @@ import java.io.StringReader;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.apache.commons.httpclient.HttpClient;
-import org.apache.commons.httpclient.methods.PostMethod;
-import org.apache.commons.httpclient.methods.multipart.ByteArrayPartSource;
-import org.apache.commons.httpclient.methods.multipart.FilePart;
-import org.apache.commons.httpclient.methods.multipart.MultipartRequestEntity;
-import org.apache.commons.httpclient.methods.multipart.Part;
-import org.apache.commons.httpclient.methods.multipart.StringPart;
-import org.apache.commons.httpclient.params.HttpMethodParams;
-
 import com.balancedbytes.games.ffb.FantasyFootballException;
 import com.balancedbytes.games.ffb.GameStatus;
 import com.balancedbytes.games.ffb.report.ReportFumbblResultUpload;
@@ -26,6 +17,7 @@ import com.balancedbytes.games.ffb.server.IServerProperty;
 import com.balancedbytes.games.ffb.server.request.ServerRequest;
 import com.balancedbytes.games.ffb.server.request.ServerRequestProcessor;
 import com.balancedbytes.games.ffb.server.util.UtilServerGame;
+import com.balancedbytes.games.ffb.server.util.UtilServerHttpClient;
 import com.balancedbytes.games.ffb.util.StringTool;
 
 
@@ -68,20 +60,9 @@ public class FumbblRequestUploadResults extends ServerRequest {
     server.getDebugLog().log(IServerLogLevel.DEBUG, getGameState().getId(), resultXml);
     setRequestUrl(server.getProperty(IServerProperty.FUMBBL_RESULT));
     server.getDebugLog().log(IServerLogLevel.DEBUG, DebugLog.FUMBBL_REQUEST, getRequestUrl());
-    PostMethod multipartPost = new PostMethod(getRequestUrl());
-    multipartPost.getParams().setBooleanParameter(HttpMethodParams.USE_EXPECT_CONTINUE, true);
-    
     try {
-      
-      Part[] parts = {
-        new StringPart("response", challengeResponse),
-        new FilePart("f", new ByteArrayPartSource("result.xml", resultXml.getBytes("UTF-8")))
-      };
-      multipartPost.setRequestEntity(new MultipartRequestEntity(parts, multipartPost.getParams()));
-      HttpClient client = new HttpClient();
-      client.getHttpConnectionManager().getParams().setConnectionTimeout(5000);
-      client.executeMethod(multipartPost);
-      String responseXml = new String(multipartPost.getResponseBody(), "UTF-8");
+
+      String responseXml = UtilServerHttpClient.postMultipartXml(getRequestUrl(), challengeResponse, resultXml);
       server.getDebugLog().log(IServerLogLevel.DEBUG, DebugLog.FUMBBL_RESPONSE, responseXml);
 
       if (StringTool.isProvided(responseXml)) {
@@ -112,8 +93,6 @@ public class FumbblRequestUploadResults extends ServerRequest {
       
     } catch (Exception ex) {
       throw new FantasyFootballException(ex);
-    } finally {
-      multipartPost.releaseConnection();
     }
     
   }

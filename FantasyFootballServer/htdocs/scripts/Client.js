@@ -1,4 +1,3 @@
-/// <reference path="./lib/lz-string.d.ts" />
 define(["require", "exports", './IconCache'], function (require, exports, IconCache_1) {
     "use strict";
     var Client = (function () {
@@ -8,11 +7,12 @@ define(["require", "exports", './IconCache'], function (require, exports, IconCa
             this.xInc = 2;
         }
         Client.prototype.start = function () {
-            this.ctxClient = document.getElementById('cvsClient').getContext("2d");
-            this.ctxPitch = document.getElementById('cvsPitch').getContext("2d");
-            this.ctxPlayers = document.getElementById('cvsPlayers').getContext("2d");
+            this.ctxPitch = $('#field #pitch')[0].getContext("2d");
+            this.ctxPlayers = $('#field #players')[0].getContext("2d");
             this.iconCache = new IconCache_1.default();
-            this.iconCache.init(this.init.bind(this));
+            setTimeout(function () {
+                this.iconCache.init(this.init.bind(this));
+            }.bind(this), 10000);
         };
         Client.prototype.drawImage = function (ctx, name, pos) {
             if (ctx && name && pos) {
@@ -25,38 +25,22 @@ define(["require", "exports", './IconCache'], function (require, exports, IconCa
         Client.prototype.init = function () {
             var _this = this;
             console.log('init');
-            // fade-out via transition
-            document.getElementById('divLoading').style.opacity = '0';
-            // transition delayed to after fade-out
-            document.getElementById('divLoading').style.width = '0';
-            document.getElementById('divLoading').style.height = '0';
-            // init client
-            this.drawImage(this.ctxClient, 'playerDetailsRed', { x: 0, y: 0 });
-            this.drawImage(this.ctxClient, 'boxButtonsRed', { x: 0, y: 430 });
-            this.drawImage(this.ctxClient, 'turnDiceStatusRed', { x: 0, y: 452 });
-            this.drawImage(this.ctxClient, 'resourcesRed', { x: 0, y: 544 });
-            this.drawImage(this.ctxClient, 'scorebar', { x: 116, y: 452 });
-            this.drawImage(this.ctxClient, 'playerDetailsBlue', { x: 897, y: 0 });
-            this.drawImage(this.ctxClient, 'boxButtonsBlue', { x: 897, y: 430 });
-            this.drawImage(this.ctxClient, 'turnDiceStatusBlue', { x: 897, y: 452 });
-            this.drawImage(this.ctxClient, 'resourcesBlue', { x: 897, y: 544 });
-            // init pitch layer
+            setTimeout(2000);
+            $('#loading')[0].style.opacity = '0';
+            $('#loading')[0].style.width = '0';
+            $('#loading')[0].style.height = '0';
             this.drawImage(this.ctxPitch, 'pitch', { x: 0, y: 0 });
-            // init player layer
             this.ctxPlayers.clearRect(0, 0, 782, 452);
-            // init chat input
-            document.getElementById('inputChat').onkeypress = function (event) {
+            $('#inputChat')[0].onkeypress = function (event) {
                 var charCode = event.which || event.keyCode;
                 if (charCode === 13) {
-                    var inputChat = document.getElementById('inputChat');
+                    var inputChat = $('#inputChat')[0];
                     _this.addToChat(inputChat.value);
                     inputChat.value = '';
                     return false;
                 }
             };
-            // start the game loop
             this.gameLoop();
-            // open connection to FFB server
             this.connect();
         };
         Client.prototype.gameLoop = function () {
@@ -99,14 +83,15 @@ define(["require", "exports", './IconCache'], function (require, exports, IconCa
         };
         Client.prototype.addToLog = function (message) {
             if (message) {
-                var divLog = document.getElementById('divLog');
-                divLog.insertAdjacentHTML('beforeend', '<div class="line">' + message + '</div>');
+                var divLog = $('#divLog');
+                divLog.append($('<div class="line">')).append(message);
             }
         };
         Client.prototype.addToChat = function (message) {
             if (message) {
-                var divChat = document.getElementById('divChat');
-                divChat.insertAdjacentHTML('beforeend', '<div class="line">' + message + '</div>');
+                var divChat = $('#divChat');
+                divChat.append($('<div class="line">')).append(message);
+                divChat[0].scrollTop = divChat[0].scrollHeight;
             }
         };
         return Client;
@@ -116,4 +101,3 @@ define(["require", "exports", './IconCache'], function (require, exports, IconCa
     }
     exports.start = start;
 });
-//# sourceMappingURL=Client.js.map

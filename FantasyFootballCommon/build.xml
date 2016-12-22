@@ -6,8 +6,12 @@
     <property name="build.dir" value="build" />
 
 	<target name="clean">
-		<delete dir="${bin.dir}" />
-		<delete dir="${build.dir}" />
+		<delete includeemptydirs="true">
+			<fileset dir="${bin.dir}" includes="**/*"/>
+		</delete>
+		<delete includeemptydirs="true">
+			<fileset dir="${build.dir}" includes="**/*"/>
+		</delete>
 	</target>
 	
 	<target name="prepare" depends="clean">
@@ -16,7 +20,7 @@
 	</target>
 
 	<target name="compile" depends="prepare">
-		<javac srcdir="${src.dir}" destdir="${bin.dir}" target="1.6" source="1.6" debug="on" />
+		<javac srcdir="${src.dir}" destdir="${bin.dir}" includeantruntime="false" target="1.6" source="1.6" debug="on" />
 	</target>
 
     <target name="build">

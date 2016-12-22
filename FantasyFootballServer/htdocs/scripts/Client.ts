@@ -1,10 +1,15 @@
-/// <reference path="./lib/lz-string.d.ts" />
+/// <reference path="./lib/jquery.d.ts" />
+/// <reference path="./lib/lzstring.d.ts" />
 
 import IconCache from './IconCache';
 
+interface Position {
+	x: number;
+	y: number;
+}
+
 class Client {
 
-	ctxClient: CanvasRenderingContext2D;
 	ctxPitch: CanvasRenderingContext2D;
 	ctxPlayers: CanvasRenderingContext2D;
 	iconCache: IconCache;
@@ -14,16 +19,20 @@ class Client {
 
 	start(): void {
 
-		this.ctxClient = (<HTMLCanvasElement> document.getElementById('cvsClient')).getContext("2d");
-		this.ctxPitch = (<HTMLCanvasElement> document.getElementById('cvsPitch')).getContext("2d");
-		this.ctxPlayers = (<HTMLCanvasElement> document.getElementById('cvsPlayers')).getContext("2d");
-
+		this.ctxPitch = (<HTMLCanvasElement> $('#field #pitch')[0]).getContext("2d");
+		this.ctxPlayers = (<HTMLCanvasElement> $('#field #players')[0]).getContext("2d");
 		this.iconCache = new IconCache();
-		this.iconCache.init(this.init.bind(this));
+
+		setTimeout(
+			function() {
+				this.iconCache.init(this.init.bind(this));
+			}.bind(this),
+			10000
+		);
 
 	}
 
-	drawImage(ctx, name, pos): void {
+	drawImage(ctx: CanvasRenderingContext2D, name: string, pos: Position): void {
 		if (ctx && name && pos) {
 			var img = this.iconCache.getImg(name);
 			if (img) {
@@ -35,29 +44,19 @@ class Client {
 	init(): void {
 		console.log('init');
 		// fade-out via transition
-		document.getElementById('divLoading').style.opacity = '0'; 
+		$('#loading')[0].style.opacity = '0';
 		// transition delayed to after fade-out
-		document.getElementById('divLoading').style.width = '0';
-		document.getElementById('divLoading').style.height = '0';
-		// init client
-		this.drawImage(this.ctxClient, 'playerDetailsRed', { x:0, y:0 });
-		this.drawImage(this.ctxClient, 'boxButtonsRed', { x:0, y:430 });
-		this.drawImage(this.ctxClient, 'turnDiceStatusRed', { x:0, y:452 });
-		this.drawImage(this.ctxClient, 'resourcesRed', { x:0, y:544 });
-		this.drawImage(this.ctxClient, 'scorebar', { x:116, y:452 });
-		this.drawImage(this.ctxClient, 'playerDetailsBlue', { x:897, y:0 });
-		this.drawImage(this.ctxClient, 'boxButtonsBlue', { x:897, y:430 });
-		this.drawImage(this.ctxClient, 'turnDiceStatusBlue', { x:897, y:452 });
-		this.drawImage(this.ctxClient, 'resourcesBlue', { x:897, y:544 });
+		$('#loading')[0].style.width = '0';
+		$('#loading')[0].style.height = '0';
 		// init pitch layer
 		this.drawImage(this.ctxPitch, 'pitch', { x:0, y:0 });
 		// init player layer
 		this.ctxPlayers.clearRect(0, 0, 782, 452);
 		// init chat input
-		document.getElementById('inputChat').onkeypress = (event: KeyboardEvent) => {
+		$('#inputChat')[0].onkeypress = (event: KeyboardEvent) => {
 			var charCode: number = event.which || event.keyCode;
 			if (charCode === 13) {
-				let inputChat = <HTMLInputElement> document.getElementById('inputChat');
+				var inputChat = <HTMLInputElement> $('#inputChat')[0];
 				this.addToChat(inputChat.value);
 				inputChat.value = '';
 				return false;
@@ -89,42 +88,43 @@ class Client {
 	}
 
 	connect(): void {
-		
-		var command = { "netCommandId" : "clientRequestVersion" };		
+
+		var command = { "netCommandId" : "clientRequestVersion" };
 		var connection = new WebSocket("ws://localhost:2224/command");
-		
+
 		connection.onopen = () => {
 			this.addToLog('Connection open');
 			var jsonString = JSON.stringify(command);
 			connection.send(LZString.compressToUTF16(jsonString));
 		};
-		
+
 		connection.onclose = () => {
 			this.addToLog('Connection closed');
 		};
-		
+
 		connection.onerror = (error) => {
 			this.addToLog('WebSocket Error: ' + error);
 		};
-		
+
 		connection.onmessage = (message) => {
 			var jsonString = LZString.decompressFromUTF16(message.data);
 			this.addToLog('Server: ' + jsonString);
-		};	
-				
+		};
+
 	}
 
 	addToLog(message: string): void {
 		if (message) {
-			var divLog = document.getElementById('divLog');
-			divLog.insertAdjacentHTML('beforeend', '<div class="line">' + message + '</div>');
+			var divLog = $('#divLog');
+			divLog.append($('<div class="line">')).append(message);
 		}
 	}
 
 	addToChat(message: string): void {
 		if (message) {
-			var divChat = document.getElementById('divChat');
-			divChat.insertAdjacentHTML('beforeend', '<div class="line">' + message + '</div>');
+			var divChat = $('#divChat');
+			divChat.append($('<div class="line">')).append(message);
+			divChat[0].scrollTop = divChat[0].scrollHeight;
 		}
 	}
 

@@ -5,6 +5,7 @@
     <property name="bin.dir" value="bin" />
     <property name="lib.dir" value="lib" />
     <property name="build.dir" value="build" />
+    <property name="metainf.dir" value="META-INF" />
 
 	<path id="libraries">
 		<fileset dir="${lib.dir}" includes="*.jar" />
@@ -23,8 +24,12 @@
 	</target>
 	
 	<target name="clean">
-		<delete dir="${bin.dir}" />
-		<delete dir="${build.dir}" />
+		<delete includeemptydirs="true">
+			<fileset dir="${bin.dir}" includes="**/*"/>
+		</delete>
+		<delete includeemptydirs="true">
+			<fileset dir="${build.dir}" includes="**/*"/>
+		</delete>
 	</target>
 	
 	<target name="prepare" depends="clean">
@@ -43,7 +48,7 @@
 		</path>
 		<property name="myClasspath" refid="classpath" />
 		<echo message="Classpath = ${myClasspath}" />
-		<javac srcdir="${src.dir}" destdir="${bin.dir}" target="1.6" source="1.6" debug="on">
+		<javac srcdir="${src.dir}" destdir="${bin.dir}" target="1.6" source="1.6" includeantruntime="false" debug="on">
 			<classpath refid="classpath" />
 		</javac>
 	</target>
@@ -51,16 +56,28 @@
     <target name="jarCommon" depends="compile">
     	<!-- add compress="false" attribute to jar tag for no compression -->
         <jar destfile="${build.dir}/${ant.project.name}.jar" update="false">
-            <manifest>
-              <attribute name="Built-By" value="${user.name}" />
-              <attribute name="Main-Class" value="com.balancedbytes.games.ffb.client.FantasyFootballClient" />
-              <attribute name="Permissions" value="all-permissions" />
-              <attribute name="Application-Name" value="Fantasy Football Client" />
-              <attribute name="Codebase" value="www.fumbbl.com fumbbl.com" />
+        	<metainf dir="${metainf.dir}" />
+			<manifest>
+        		<attribute name="Built-By" value="${user.name}" />
+            	<attribute name="Main-Class" value="com.balancedbytes.games.ffb.client.FantasyFootballClient" />
+            	<attribute name="Permissions" value="all-permissions" />
+            	<attribute name="Application-Name" value="Fantasy Football Client" />
+            	<attribute name="Codebase" value="www.fumbbl.com fumbbl.com" />
             </manifest>
             <zipfileset dir="${bin.dir}" includes="**/*.class" />
             <zipfileset dir="../FantasyFootballCommon/${bin.dir}" includes="**/*.class" />
-        	<!-- zipgroupfileset dir="${lib.dir}" includes="*.jar" -->
+        	<restrict>
+        		<archives>
+        	    	<zips>
+        	      		<fileset dir="${lib.dir}">
+        	        		<include name="**/*.jar" />
+        	     		</fileset>
+        	    	</zips>
+        	  	</archives>
+        	  	<not>
+        	    	<name name="META-INF/*"/>
+        	  	</not>
+        	</restrict>
         </jar>
         <jar destfile="${build.dir}/${ant.project.name}Resources.jar">
         	<zipfileset dir="." includes="icons/**, sounds/**" excludes="**/Thumbs.db, **/.cvsignore, icons/alternatives/**" />

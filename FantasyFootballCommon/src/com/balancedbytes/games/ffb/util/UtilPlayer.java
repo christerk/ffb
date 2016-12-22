@@ -208,6 +208,20 @@ public class UtilPlayer {
     return foulAssists;
   }
 
+  public static int findTimmmberAssists(Game pGame, Player timmmberPlayer) {
+    int assists = 0;
+    Team opposingTeam = findOtherTeam(pGame, timmmberPlayer);
+    FieldCoordinate coordinatePlayer = pGame.getFieldModel().getPlayerCoordinate(timmmberPlayer);
+    for (Player assist : findAdjacentPlayersWithTacklezones(pGame, timmmberPlayer.getTeam(), coordinatePlayer, false)) {
+      FieldCoordinate assistCoordinate = pGame.getFieldModel().getPlayerCoordinate(assist);
+      Player[] opponents = findAdjacentPlayersWithTacklezones(pGame, opposingTeam, assistCoordinate, false);
+      if (opponents.length == 0) {
+        assists++;
+      }
+    }
+    return assists;
+  }
+
   public static Team findOtherTeam(Game pGame, Player pPlayer) {
     Team ownTeam = pPlayer.getTeam();
     if (pGame.getTeamHome() == ownTeam) {

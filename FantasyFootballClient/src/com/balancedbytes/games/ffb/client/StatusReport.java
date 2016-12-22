@@ -1281,7 +1281,7 @@ public class StatusReport {
       status.append(" stands up.");
       println(getIndent() + 1, status.toString());
       if (!pReport.isReRolled() && fShowModifiersOnSuccess) {
-        neededRoll = new StringBuilder().append("Succeeded on a roll of 4+.");
+        neededRoll = new StringBuilder().append("Succeeded on a roll of ").append(pReport.getMinimumRoll()).append("+.");
       }
     } else {
       status = new StringBuilder();
@@ -1289,7 +1289,7 @@ public class StatusReport {
       println(getIndent() + 1, status.toString());
       status = new StringBuilder();
       if (!pReport.isReRolled() && fShowModifiersOnFailure) {
-        neededRoll = new StringBuilder().append("Roll a 4+ to succeed.");
+        neededRoll = new StringBuilder().append("Roll a ").append(pReport.getMinimumRoll()).append("+ to succeed.");
       }
     }
     if (neededRoll != null) {

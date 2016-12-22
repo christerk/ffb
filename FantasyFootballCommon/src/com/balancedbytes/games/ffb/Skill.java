@@ -699,6 +699,17 @@ public enum Skill implements IEnumWithName {
   //  player). See the Right Stuff entry to see if the player lands on his feet or
   //  head-down in a crumpled heap!
 
+  TIMMMBER("Timmm-ber!", SkillCategory.EXTRAORDINARY),
+  // This player spends so much time on the floor that their team-mates have
+  // developed a knack for helping them up. If a player with this skill attempts
+  // to stand up after being knocked over, other players from their team can
+  // assist if they are adjacent, standing and not in any enemy tackle zones.
+  // Each player that assists in this way adds 1 to the result of the dice roll
+  // to see whether the player stands up, but remember that a 1 is always a
+  // failure, no matter how many players are helping! Assisting a player to stand
+  // up does not count as an Action, and a player can assist regardless of whether
+  // they have taken an Action.
+
   TITCHY("Titchy", SkillCategory.EXTRAORDINARY),
   //  Titchy players tend to be even smaller and more nimble than other
   //  Stunty players. To represent this, the player may add 1 to any Dodge roll

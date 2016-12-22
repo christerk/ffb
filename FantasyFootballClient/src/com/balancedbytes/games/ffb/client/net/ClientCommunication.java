@@ -147,7 +147,7 @@ public class ClientCommunication implements Runnable, INetCommandHandler {
   
   protected void send(NetCommand pNetCommand) {
     try {
-      getClient().getCommandSocket().send(pNetCommand);
+      getClient().getCommandEndpoint().send(pNetCommand);
     } catch (IOException pIoException) {
       throw new FantasyFootballException(pIoException);
     }

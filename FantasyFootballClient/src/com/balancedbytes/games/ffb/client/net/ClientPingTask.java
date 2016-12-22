@@ -35,7 +35,7 @@ public class ClientPingTask extends TimerTask {
   }
   
   public void run() {
-    if (getClient().getCommandSocket().isOpen()) {
+    if (getClient().getCommandEndpoint().isOpen()) {
       long currentTimeMillis = System.currentTimeMillis();
       long lastPingReceived = getLastPingReceived();
       if (_TRACE) {

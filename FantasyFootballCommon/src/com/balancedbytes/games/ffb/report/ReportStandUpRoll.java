@@ -16,16 +16,18 @@ public class ReportStandUpRoll implements IReport {
   private String fPlayerId;
   private boolean fSuccessful;
   private int fRoll;
+  private int fModifier;
   private boolean fReRolled;
   
   public ReportStandUpRoll() {
     super();
   }
 
-  public ReportStandUpRoll(String pPlayerId, boolean pSuccessful, int pRoll, boolean pReRolled) {
+  public ReportStandUpRoll(String pPlayerId, boolean pSuccessful, int pRoll, int pModifier, boolean pReRolled) {
     fPlayerId = pPlayerId;
     fSuccessful = pSuccessful;
     fRoll = pRoll;
+    fModifier = pModifier;
     fReRolled = pReRolled;
   }
   
@@ -44,7 +46,15 @@ public class ReportStandUpRoll implements IReport {
   public int getRoll() {
     return fRoll;
   }
+
+  public int getModifier() {
+    return fModifier;
+  }
   
+  public int getMinimumRoll() {
+    return Math.max(2, 4 - fModifier);
+  }
+
   public boolean isReRolled() {
     return fReRolled;
   }
@@ -52,7 +62,7 @@ public class ReportStandUpRoll implements IReport {
   // transformation
   
   public IReport transform() {
-    return new ReportStandUpRoll(getPlayerId(), isSuccessful(), getRoll(), isReRolled());
+    return new ReportStandUpRoll(getPlayerId(), isSuccessful(), getRoll(), getModifier(), isReRolled());
   }
   
   // JSON serialization
@@ -63,6 +73,7 @@ public class ReportStandUpRoll implements IReport {
     IJsonOption.PLAYER_ID.addTo(jsonObject, fPlayerId);
     IJsonOption.SUCCESSFUL.addTo(jsonObject, fSuccessful);
     IJsonOption.ROLL.addTo(jsonObject, fRoll);
+    IJsonOption.MODIFIER.addTo(jsonObject, fModifier);
     IJsonOption.RE_ROLLED.addTo(jsonObject, fReRolled);
     return jsonObject;
   }
@@ -73,6 +84,7 @@ public class ReportStandUpRoll implements IReport {
     fPlayerId = IJsonOption.PLAYER_ID.getFrom(jsonObject);
     fSuccessful = IJsonOption.SUCCESSFUL.getFrom(jsonObject);
     fRoll = IJsonOption.ROLL.getFrom(jsonObject);
+    fModifier = IJsonOption.MODIFIER.getFrom(jsonObject);
     fReRolled = IJsonOption.RE_ROLLED.getFrom(jsonObject);
     return this;
   }  

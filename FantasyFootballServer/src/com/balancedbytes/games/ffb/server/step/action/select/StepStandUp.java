@@ -2,6 +2,7 @@ package com.balancedbytes.games.ffb.server.step.action.select;
 
 import com.balancedbytes.games.ffb.PlayerState;
 import com.balancedbytes.games.ffb.ReRolledAction;
+import com.balancedbytes.games.ffb.Skill;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.Game;
@@ -22,6 +23,7 @@ import com.balancedbytes.games.ffb.server.step.StepParameterSet;
 import com.balancedbytes.games.ffb.server.util.UtilServerReRoll;
 import com.balancedbytes.games.ffb.util.StringTool;
 import com.balancedbytes.games.ffb.util.UtilCards;
+import com.balancedbytes.games.ffb.util.UtilPlayer;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
@@ -95,9 +97,15 @@ public final class StepStandUp extends AbstractStepWithReRoll {
         }
         if (rollStandUp) {
           int roll = getGameState().getDiceRoller().rollSkill();
-          boolean successful = DiceInterpreter.getInstance().isStandUpSuccessful(roll);
+
+          int modifier = 0;
+          if (UtilCards.hasSkill(game, actingPlayer, Skill.TIMMMBER)) {
+            modifier = UtilPlayer.findTimmmberAssists(game, actingPlayer.getPlayer());
+          }
+
+          boolean successful = DiceInterpreter.getInstance().isStandUpSuccessful(roll, modifier);
           boolean reRolled = ((getReRolledAction() == ReRolledAction.STAND_UP) && (getReRollSource() != null));
-          getResult().addReport(new ReportStandUpRoll(actingPlayer.getPlayerId(), successful, roll, reRolled));
+          getResult().addReport(new ReportStandUpRoll(actingPlayer.getPlayerId(), successful, roll, modifier, reRolled));
           if (successful) {
             actingPlayer.setStandingUp(false);
             if (playerState.isRooted()) {
@@ -106,7 +114,7 @@ public final class StepStandUp extends AbstractStepWithReRoll {
             	getResult().setNextAction(StepAction.NEXT_STEP);
             }
           } else {
-            if ((getReRolledAction() == ReRolledAction.STAND_UP) || !UtilServerReRoll.askForReRollIfAvailable(getGameState(), actingPlayer.getPlayer(), ReRolledAction.STAND_UP, 4, false)) {
+            if ((getReRolledAction() == ReRolledAction.STAND_UP) || !UtilServerReRoll.askForReRollIfAvailable(getGameState(), actingPlayer.getPlayer(), ReRolledAction.STAND_UP, Math.max(2, 4 - modifier), false)) {
               rollStandUp = false;
               switch (actingPlayer.getPlayerAction()) {
                 case BLITZ:
