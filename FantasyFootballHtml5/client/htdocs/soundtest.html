@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <link rel="stylesheet" href="/style/site.css" type="text/css"/>
+        <script src="js/libraries/es6-shim.min.js"></script>
+        <script src="js/libraries/howler.min.js"></script>
+        <script src="js/ffb.min.js"></script>
+        <script src="js/libraries/jquery-3.1.1.min.js"></script>
+        <script>
+            $(function() { soundTest(); });
+        </script>
+    </head>
+    <body>
+        <div class="background"></div>
+        <div class="content">
+            <h1>Sound Engine Test</h1>
+
+        <div>Sounds</div>
+        <div>
+            <button class="soundbutton" file="Aaah">Aaah</button>
+            <button class="soundbutton" file="Booing">Booing</button>
+            <button class="soundbutton" file="Cheering">Cheering</button>
+            <button class="soundbutton" file="ClapBoo">ClapBoo</button>
+            <button class="soundbutton" file="Clapping">Clapping</button>
+            <button class="soundbutton" file="Crickets">Crickets</button>
+            <button class="soundbutton" file="Giggling">Giggling</button>
+            <button class="soundbutton" file="Hysterical">Hysterical</button>
+            <button class="soundbutton" file="Laughter">Laughter</button>
+            <button class="soundbutton" file="Oooh">Oooh</button>
+            <button class="soundbutton" file="Shocked">Shocked</button>
+            <button class="soundbutton" file="Stomping">Stomping</button>
+        </div>
+        <div>Global Volume</div>
+        <input type="range" id="globalvolume" min="0" max="100" />
+        <div>
+            <button id="preloadSoundsSerial">Preload Serial</button>
+            <button id="preloadSoundsParallel">Preload Parallell</button>
+            <button id="stopbutton">Stop</button>
+        </div>
+        <div>
+            <div class="progressbar">
+                <div class="progress" id="soundprogress"></div>
+            </div>
+        </div>
+    </body>
+</html>

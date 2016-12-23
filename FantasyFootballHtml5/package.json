@@ -1,0 +1,35 @@
+{
+  "name": "ffb",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "bin": {
+    "ffb": "app.js"
+  },
+  "dependencies": {
+    "@types/es6-shim": "^0.31.32",
+    "@types/express": "^4.0.34",
+    "@types/jquery": "^2.0.34",
+    "es6-shim": "^0.35.2",
+    "express": "^4.14.0",
+    "express-serve-static-core": "^0.1.1",
+    "serve-static": "^1.11.1"
+  },
+  "devDependencies": {
+    "browserify": "^13.1.1",
+    "gulp": "^3.9.1",
+    "gulp-less": "^3.3.0",
+    "gulp-sourcemaps": "^1.9.1",
+    "gulp-uglify": "^2.0.0",
+    "run-sequence": "^1.2.2",
+    "tsify": "^2.0.7",
+    "typescript": "^2.1.4",
+    "vinyl-buffer": "^1.0.0",
+    "vinyl-source-stream": "^1.1.0"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC"
+}
