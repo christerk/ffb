@@ -38,6 +38,8 @@ public enum GameOptionId implements IEnumWithName {
   SNEAKY_GIT_BAN_TO_KO("sneakyGitBanToKo"),
   STAND_FIRM_NO_DROP_ON_FAILED_DODGE("standFirmNoDropOnFailedDodge"),
   SPIKED_BALL("spikedBall"),
+  
+  ARGUE_THE_CALL("argueTheCall"),
 
   EXTRA_MVP("extraMvp"),
   

@@ -12,6 +12,7 @@ import com.balancedbytes.games.ffb.IEnumWithName;
 public enum ReportId implements IEnumWithName {
   
   ALWAYS_HUNGRY_ROLL("alwaysHungryRoll"),
+  ARGUE_THE_CALL("argueTheCall"),
   CATCH_ROLL("catchRoll"),
   CONFUSION_ROLL("confusionRoll"),
   DAUNTLESS_ROLL("dauntlessRoll"),

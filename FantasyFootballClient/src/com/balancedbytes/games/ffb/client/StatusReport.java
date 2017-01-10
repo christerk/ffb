@@ -45,6 +45,7 @@ import com.balancedbytes.games.ffb.net.commands.ServerCommandLeave;
 import com.balancedbytes.games.ffb.report.IReport;
 import com.balancedbytes.games.ffb.report.ReportApothecaryChoice;
 import com.balancedbytes.games.ffb.report.ReportApothecaryRoll;
+import com.balancedbytes.games.ffb.report.ReportArgueTheCallRoll;
 import com.balancedbytes.games.ffb.report.ReportBiteSpectator;
 import com.balancedbytes.games.ffb.report.ReportBlock;
 import com.balancedbytes.games.ffb.report.ReportBlockChoice;
@@ -1167,13 +1168,41 @@ public class StatusReport {
     println(getIndent() + 1, TextStyle.NONE, status.toString());
   }
   
-  public void reportBribes(ReportBribesRoll pReport) {
+  public void reportArgueTheCall(ReportArgueTheCallRoll report) {
     Game game = getClient().getGame();
-    Player player = game.getPlayerById(pReport.getPlayerId()); 
+    Player player = game.getPlayerById(report.getPlayerId()); 
     StringBuilder status = new StringBuilder();
-    status.append("Bribes Roll [ ").append(pReport.getRoll()).append(" ]");
+    status.append("Argue the Call Roll [ ").append(report.getRoll()).append(" ]");
     println(getIndent(), TextStyle.ROLL, status.toString());
-    if (pReport.isSuccessful()) {
+    if (report.isSuccessful()) {
+      print(getIndent() + 1, TextStyle.NONE, "The ref refrains from penalizing ");
+      print(getIndent() + 1, false, player);
+      status = new StringBuilder();
+      status.append(" and ").append(player.getPlayerGender().getNominative()).append(" remains in the game.");
+      println(getIndent() + 1, TextStyle.NONE, status.toString());
+    } else {
+      print(getIndent() + 1, TextStyle.NONE, "The ref appears to be unimpressed and ");
+      print(getIndent() + 1, false, player);
+      println(getIndent() + 1, TextStyle.NONE, " must leave the game.");
+    }
+    if (report.isCoachBanned()) {
+      print(getIndent() + 1, TextStyle.NONE, "Coach ");
+      if (game.getTeamHome().hasPlayer(player)) {
+        print(getIndent() + 1, TextStyle.HOME, game.getTeamHome().getCoach());
+      } else {
+        print(getIndent() + 1, TextStyle.AWAY, game.getTeamAway().getCoach());
+      }
+      println(getIndent() + 1, TextStyle.NONE, " is banned from the game.");
+    }
+  }
+
+  public void reportBribes(ReportBribesRoll report) {
+    Game game = getClient().getGame();
+    Player player = game.getPlayerById(report.getPlayerId()); 
+    StringBuilder status = new StringBuilder();
+    status.append("Bribes Roll [ ").append(report.getRoll()).append(" ]");
+    println(getIndent(), TextStyle.ROLL, status.toString());
+    if (report.isSuccessful()) {
       print(getIndent() + 1, TextStyle.NONE, "The ref refrains from penalizing ");
       print(getIndent() + 1, false, player);
       status = new StringBuilder();
@@ -1185,7 +1214,7 @@ public class StatusReport {
       println(getIndent() + 1, TextStyle.NONE, " must leave the game.");
     }
   }
-  
+
   public void reportEscape(ReportSkillRoll pReport) {
     Game game = getClient().getGame();
     Player thrownPlayer = game.getPlayerById(pReport.getPlayerId());
@@ -2605,6 +2634,9 @@ public class StatusReport {
       switch(report.getId()) {
         case ALWAYS_HUNGRY_ROLL:
           reportAlwaysHungry((ReportSkillRoll) report);
+          break; 
+        case ARGUE_THE_CALL:
+          reportArgueTheCall((ReportArgueTheCallRoll) report);
           break;
         case CATCH_ROLL:
           reportCatch((ReportCatchRoll) report);

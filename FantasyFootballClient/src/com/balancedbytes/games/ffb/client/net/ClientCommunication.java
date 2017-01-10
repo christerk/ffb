@@ -29,6 +29,7 @@ import com.balancedbytes.games.ffb.net.INetCommandHandler;
 import com.balancedbytes.games.ffb.net.NetCommand;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandActingPlayer;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandApothecaryChoice;
+import com.balancedbytes.games.ffb.net.commands.ClientCommandArgueTheCall;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandBlock;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandBlockChoice;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandBuyCard;
@@ -307,6 +308,14 @@ public class ClientCommunication implements Runnable, INetCommandHandler {
 
   public void sendUseInducement(InducementType pInducement, String[] pPlayerIds) {
     send(new ClientCommandUseInducement(pInducement, pPlayerIds));
+  }
+
+  public void sendArgueTheCall(String playerId) {
+    send(new ClientCommandArgueTheCall(playerId));
+  }
+
+  public void sendArgueTheCall(String[] playerIds) {
+    send(new ClientCommandArgueTheCall(playerIds));
   }
 
   public void sendPushback(Pushback pPushback) {

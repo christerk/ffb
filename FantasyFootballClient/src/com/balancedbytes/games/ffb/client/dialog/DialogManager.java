@@ -132,6 +132,9 @@ public class DialogManager {
           case BUY_CARDS:
           	setDialogHandler(new DialogBuyCardsHandler(getClient()));
           	break;
+          case ARGUE_THE_CALL:
+            setDialogHandler(new DialogArgueTheCallHandler(getClient()));
+            break;
         	default:
         		break;
         }

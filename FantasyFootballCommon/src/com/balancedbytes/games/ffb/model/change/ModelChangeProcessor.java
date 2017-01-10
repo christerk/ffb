@@ -396,7 +396,9 @@ public class ModelChangeProcessor {
   		case TURN_DATA_SET_TURN_STARTED:
   			getTurnData(pGame, isHomeData(pModelChange)).setTurnStarted((Boolean) pModelChange.getValue());
   			return true;
-  			
+  		case TURN_DATA_SET_COACH_BANNED:
+        getTurnData(pGame, isHomeData(pModelChange)).setCoachBanned((Boolean) pModelChange.getValue());
+        return true;
 		}
 
 		return false;

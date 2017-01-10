@@ -51,6 +51,7 @@ public interface IJsonOption {
                    JsonIntOption APOTHECARIES = new JsonIntOption("apothecaries");
                JsonBooleanOption APOTHECARY = new JsonBooleanOption("apothecary");
                JsonBooleanOption APOTHECARY_USED = new JsonBooleanOption("apothecaryUsed");
+               JsonBooleanOption ARGUE_THE_CALL = new JsonBooleanOption("argueTheCall");
                JsonBooleanOption ARMOR_BROKEN = new JsonBooleanOption("armorBroken");
                  JsonArrayOption ARMOR_MODIFIERS = new JsonArrayOption("armorModifiers");
               JsonIntArrayOption ARMOR_ROLL = new JsonIntArrayOption("armorRoll");
@@ -103,6 +104,7 @@ public interface IJsonOption {
           JsonEnumWithNameOption CLIENT_STATE_ID = new JsonEnumWithNameOption("clientStateId", new ClientStateIdFactory());
                 JsonStringOption CLIENT_VERSION = new JsonStringOption("clientVersion");
                 JsonStringOption COACH = new JsonStringOption("coach");
+               JsonBooleanOption COACH_BANNED = new JsonBooleanOption("coachBanned");
                JsonBooleanOption COIN_CHOICE_HEADS = new JsonBooleanOption("coinChoiceHeads");
                JsonBooleanOption COIN_THROW_HEADS = new JsonBooleanOption("coinThrowHeads");
                  JsonArrayOption COMMAND_ARRAY = new JsonArrayOption("commandArray");

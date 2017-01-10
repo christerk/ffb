@@ -99,6 +99,8 @@ public interface IIconProperty {
   // Scorebar
   String SCOREBAR_BACKGROUND = "scorebar.background";
   String SCOREBAR_SPECTATORS = "scorebar.spectators";
+  String SCOREBAR_COACH_BANNED_HOME = "scorebar.coachBanned.home";
+  String SCOREBAR_COACH_BANNED_AWAY = "scorebar.coachBanned.away";
   
   // Weather
   String WEATHER_BLIZZARD = "weather.blizzard";

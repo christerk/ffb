@@ -28,6 +28,7 @@ public class TurnData implements IJsonSerializable {
   private boolean fReRollUsed;
   private boolean fHandOverUsed;
   private boolean fPassUsed;
+  private boolean fCoachBanned;
   private InducementSet fInducementSet;
   private LeaderState fLeaderState;
   
@@ -152,6 +153,18 @@ public class TurnData implements IJsonSerializable {
     notifyObservers(ModelChangeId.TURN_DATA_SET_PASS_USED, fPassUsed);
   }
   
+  public boolean isCoachBanned() {
+    return fCoachBanned;
+  }
+  
+  public void setCoachBanned(boolean coachBanned) {
+    if (coachBanned == fCoachBanned) {
+      return;
+    }
+    fCoachBanned = coachBanned;
+    notifyObservers(ModelChangeId.TURN_DATA_SET_PASS_USED, fPassUsed);
+  }
+  
   public int getApothecaries() {
     return fApothecaries;
   }
@@ -245,6 +258,7 @@ public class TurnData implements IJsonSerializable {
     IJsonOption.RE_ROLL_USED.addTo(jsonObject, fReRollUsed);
     IJsonOption.HAND_OVER_USED.addTo(jsonObject, fHandOverUsed);
     IJsonOption.PASS_USED.addTo(jsonObject, fPassUsed);
+    IJsonOption.COACH_BANNED.addTo(jsonObject, fCoachBanned);
     IJsonOption.LEADER_STATE.addTo(jsonObject, fLeaderState);
     if (fInducementSet != null) {
       IJsonOption.INDUCEMENT_SET.addTo(jsonObject, fInducementSet.toJsonValue());
@@ -265,6 +279,7 @@ public class TurnData implements IJsonSerializable {
     fReRollUsed = IJsonOption.RE_ROLL_USED.getFrom(jsonObject);
     fHandOverUsed = IJsonOption.HAND_OVER_USED.getFrom(jsonObject);
     fPassUsed = IJsonOption.PASS_USED.getFrom(jsonObject);
+    fCoachBanned = IJsonOption.COACH_BANNED.getFrom(jsonObject);
     fLeaderState = (LeaderState) IJsonOption.LEADER_STATE.getFrom(jsonObject);
     fInducementSet = new InducementSet(this);
     fInducementSet.initFrom(IJsonOption.INDUCEMENT_SET.getFrom(jsonObject));

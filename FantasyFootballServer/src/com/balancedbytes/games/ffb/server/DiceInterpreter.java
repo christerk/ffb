@@ -53,13 +53,13 @@ public class DiceInterpreter {
     super();
   }
   
-  public KickoffResult interpretRollKickoff(int[] pRoll) {
-    int kickoffRoll = pRoll[0] + pRoll[1];
+  public KickoffResult interpretRollKickoff(int[] roll) {
+    int kickoffRoll = roll[0] + roll[1];
     return new KickoffResultFactory().forRoll(kickoffRoll);
   }
   
-  public Weather interpretRollWeather(int[] pRoll) {
-    int total = pRoll[0] + pRoll[1];
+  public Weather interpretRollWeather(int[] roll) {
+    int total = roll[0] + roll[1];
     switch (total) {
     case 2:
       return Weather.SWELTERING_HEAT;
@@ -159,80 +159,80 @@ public class DiceInterpreter {
     return Math.max(2, getAgilityRollBase(pPlayer.getAgility()) + modifierTotal);
   }
 
-  public boolean isPassFumble(int pRoll, Player pThrower, PassingDistance pPassingDistance, Set<PassModifier> pPassModifiers) {
-  	if (pRoll == 1) {
+  public boolean isPassFumble(int roll, Player pThrower, PassingDistance pPassingDistance, Set<PassModifier> pPassModifiers) {
+  	if (roll == 1) {
   		return true;
-  	} else if (pRoll == 6) {
+  	} else if (roll == 6) {
   		return false;
   	} else {
 	    int modifierTotal = 0;
 	    for (PassModifier passModifier : pPassModifiers) {
 	      modifierTotal += passModifier.getModifier();
 	    }
-	    return ((pRoll + pPassingDistance.getModifier() - modifierTotal) <= 1);
+	    return ((roll + pPassingDistance.getModifier() - modifierTotal) <= 1);
   	}
   }
   
-  public boolean isSkillRollSuccessful(int pRoll, int pMinimumRoll) {
-    return ((pRoll == 6) || ((pRoll != 1) && (pRoll >= pMinimumRoll)));
+  public boolean isSkillRollSuccessful(int roll, int pMinimumRoll) {
+    return ((roll == 6) || ((roll != 1) && (roll >= pMinimumRoll)));
   }
 
   public boolean isThickSkullUsed(int[] pInjuryRoll) {
     return (ArrayTool.isProvided(pInjuryRoll) && (pInjuryRoll[0] + pInjuryRoll[1] == 8));
   }
   
-  public boolean isSpecialEffectSuccesful(SpecialEffect pSpecialEffect, int pRoll) {
+  public boolean isSpecialEffectSuccesful(SpecialEffect pSpecialEffect, int roll) {
   	if (pSpecialEffect == SpecialEffect.LIGHTNING) {
-  		return (pRoll >= 2);
+  		return (roll >= 2);
   	} else if ((pSpecialEffect == SpecialEffect.FIREBALL) || (pSpecialEffect == SpecialEffect.BOMB)) {
-    	return (pRoll >= 4);
+    	return (roll >= 4);
   	} else {
   		return false;
   	}
   }
 
-  public boolean isRegenerationSuccessful(int pRoll) {
-    return (pRoll >= 4);
+  public boolean isRegenerationSuccessful(int roll) {
+    return (roll >= 4);
   }
 
-  public boolean isLonerSuccessful(int pRoll) {
-    return (pRoll >= 4);
+  public boolean isLonerSuccessful(int roll) {
+    return (roll >= 4);
   }
 
-  public boolean isProSuccessful(int pRoll) {
-    return (pRoll >= 4);
+  public boolean isProSuccessful(int roll) {
+    return (roll >= 4);
   }
   
-  public boolean isAffectedByPitchInvasion(int pRoll, int pFameOtherTeam) {
-    return ((pRoll > 1) && (pRoll + pFameOtherTeam >= 6));
+  public boolean isAffectedByPitchInvasion(int roll, int pFameOtherTeam) {
+    return ((roll > 1) && (roll + pFameOtherTeam >= 6));
   }
 
-  public boolean isRecoveringFromKnockout(int pRoll, int pBloodweiserBabes) {
-    return ((pRoll > 1) && ((pRoll + pBloodweiserBabes) > 3));
+  public boolean isRecoveringFromKnockout(int roll, int pBloodweiserBabes) {
+    return ((roll > 1) && ((roll + pBloodweiserBabes) > 3));
   }
   
-  public boolean isAlwaysHungrySuccessful(int pRoll) {
-    return (pRoll >= 2);
+  public boolean isAlwaysHungrySuccessful(int roll) {
+    return (roll >= 2);
   }
 
-  public boolean isEscapeFromAlwaysHungrySuccessful(int pRoll) {
-    return (pRoll >= 2);
+  public boolean isEscapeFromAlwaysHungrySuccessful(int roll) {
+    return (roll >= 2);
   }
   
-  public boolean isExhausted(int pRoll) {
-    return (pRoll == 1);
+  public boolean isExhausted(int roll) {
+    return (roll == 1);
   }
   
-  public boolean isTentaclesEscapeSuccessful(int[] pRoll, int pTentaclePlayerStrength, int pDodgingPlayerStrength) {
-    return (ArrayTool.isProvided(pRoll) && (pRoll.length > 1) && ((pRoll[0] + pRoll[1]) >= minimumRollTentaclesEscape(pTentaclePlayerStrength, pDodgingPlayerStrength)));
+  public boolean isTentaclesEscapeSuccessful(int[] roll, int pTentaclePlayerStrength, int pDodgingPlayerStrength) {
+    return (ArrayTool.isProvided(roll) && (roll.length > 1) && ((roll[0] + roll[1]) >= minimumRollTentaclesEscape(pTentaclePlayerStrength, pDodgingPlayerStrength)));
   }
   
   public int minimumRollTentaclesEscape(int pTentaclePlayerStrength, int pDodgingPlayerStrength) {
     return (6 + pTentaclePlayerStrength - pDodgingPlayerStrength); 
   }
   
-  public boolean isShadowingEscapeSuccessful(int[] pRoll, int pShadowingPlayerMovement, int pDodgingPlayerMovement) {
-    return (ArrayTool.isProvided(pRoll) && (pRoll.length > 1) && ((pRoll[0] + pRoll[1]) >= minimumRollShadowingEscape(pShadowingPlayerMovement, pDodgingPlayerMovement)));
+  public boolean isShadowingEscapeSuccessful(int[] roll, int pShadowingPlayerMovement, int pDodgingPlayerMovement) {
+    return (ArrayTool.isProvided(roll) && (roll.length > 1) && ((roll[0] + roll[1]) >= minimumRollShadowingEscape(pShadowingPlayerMovement, pDodgingPlayerMovement)));
   }
 
   public int minimumRollShadowingEscape(int pShadowingPlayerMovement, int pDodgingPlayerMovement) {
@@ -435,49 +435,57 @@ public class DiceInterpreter {
     return (armour < (armourRoll[0] + armourRoll[1] + pInjuryResult.getArmorModifierTotal()));
   }
   
-  public boolean isApothecarySuccessful(int pRoll) {
-    return (pRoll > 1);
+  public boolean isApothecarySuccessful(int roll) {
+    return (roll > 1);
   }
   
-  public boolean isBribesSuccessful(int pRoll) {
-    return (pRoll > 1);
+  public boolean isBribesSuccessful(int roll) {
+    return (roll > 1);
   }
 
-  public boolean isStandUpSuccessful(int pRoll, int pModifier) {
-    return (pRoll > 1 && pRoll + pModifier > 3);
+  public boolean isArgueTheCallSuccessful(int roll) {
+    return (roll > 5);
+  }
+
+  public boolean isCoachBanned(int roll) {
+    return (roll < 2);
+  }
+
+  public boolean isStandUpSuccessful(int roll, int pModifier) {
+    return (roll > 1 && roll + pModifier > 3);
   }
   
-  public boolean isPlayerDefecting(int pRoll) {
-    return ((pRoll > 0) && (pRoll < 4));
+  public boolean isPlayerDefecting(int roll) {
+    return ((roll > 0) && (roll < 4));
   }
 
-  public Direction interpretScatterDirectionRoll(int pRoll) {
-    return new DirectionFactory().forRoll(pRoll);
+  public Direction interpretScatterDirectionRoll(int roll) {
+    return new DirectionFactory().forRoll(roll);
   }
 
-  public Direction interpretThrowInDirectionRoll(FieldCoordinate pStartCoordinate, int pRoll) {
+  public Direction interpretThrowInDirectionRoll(FieldCoordinate pStartCoordinate, int roll) {
     // Endzone Home Team
     if (pStartCoordinate.getX() < 1) {
-    	return interpretThrowInDirectionRoll(Direction.EAST, pRoll);
+    	return interpretThrowInDirectionRoll(Direction.EAST, roll);
     }
     // Endzone Away Team
     if (pStartCoordinate.getX() > 24) {
-    	return interpretThrowInDirectionRoll(Direction.WEST, pRoll);
+    	return interpretThrowInDirectionRoll(Direction.WEST, roll);
     }
     // Lower Sideline
     if (pStartCoordinate.getY() > 13) {
-    	return interpretThrowInDirectionRoll(Direction.NORTH, pRoll);
+    	return interpretThrowInDirectionRoll(Direction.NORTH, roll);
     }
     // Upper Sideline
     if (pStartCoordinate.getY() < 1) {
-    	return interpretThrowInDirectionRoll(Direction.SOUTH, pRoll);
+    	return interpretThrowInDirectionRoll(Direction.SOUTH, roll);
     }
     throw new IllegalStateException("Unable to determine throwInDirection.");
   }
 
-  public Direction interpretThrowInDirectionRoll(Direction pTemplateDirection, int pRoll) {
+  public Direction interpretThrowInDirectionRoll(Direction pTemplateDirection, int roll) {
     if (pTemplateDirection == Direction.EAST) {
-      switch (pRoll) {
+      switch (roll) {
         case 1:
         case 2:
           return Direction.NORTHEAST;
@@ -490,7 +498,7 @@ public class DiceInterpreter {
       }
     }
     if (pTemplateDirection == Direction.WEST) {
-      switch (pRoll) {
+      switch (roll) {
         case 1:
         case 2:
           return Direction.SOUTHWEST;
@@ -503,7 +511,7 @@ public class DiceInterpreter {
       }
     }
     if (pTemplateDirection == Direction.NORTH) {
-      switch (pRoll) {
+      switch (roll) {
         case 1:
         case 2:
           return Direction.NORTHWEST;
@@ -516,7 +524,7 @@ public class DiceInterpreter {
       }
     }
     if (pTemplateDirection == Direction.SOUTH) {
-      switch (pRoll) {
+      switch (roll) {
         case 1:
         case 2:
           return Direction.SOUTHEAST; 
@@ -535,12 +543,12 @@ public class DiceInterpreter {
     return ((pRiotRoll < 4) ? 1 : -1);
   }
   
-  public boolean isDouble(int[] pRoll) {
-  	return ((pRoll != null) && (pRoll.length == 2) && (pRoll[0] == pRoll[1]));
+  public boolean isDouble(int[] roll) {
+  	return ((roll != null) && (roll.length == 2) && (roll[0] == roll[1]));
   }
   
-  public CardEffect interpretWitchBrewRoll(int pRoll) {
-    switch (pRoll) {
+  public CardEffect interpretWitchBrewRoll(int roll) {
+    switch (roll) {
       case 1:
         return CardEffect.MAD_CAP_MUSHROOM_POTION;
       case 3:

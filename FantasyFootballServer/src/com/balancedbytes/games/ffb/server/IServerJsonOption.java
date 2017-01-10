@@ -28,6 +28,8 @@ public interface IServerJsonOption extends IJsonOption {
   
           JsonEnumWithNameOption APOTHECARY_MODE = new JsonEnumWithNameOption("apothecaryMode", new ApothecaryModeFactory());
           JsonEnumWithNameOption APOTHECARY_STATUS = new JsonEnumWithNameOption("apothecaryStatus", new ApothecaryStatusFactory());
+               JsonBooleanOption ARGUE_THE_CALL_CHOICE_AWAY = new JsonBooleanOption("argueTheCallChoiceAway");
+               JsonBooleanOption ARGUE_THE_CALL_CHOICE_HOME = new JsonBooleanOption("argueTheCallChoiceHome");
                JsonBooleanOption AUTOMATIC_RE_ROLL = new JsonBooleanOption("automaticReRoll");
                 JsonStringOption BLOCK_DEFENDER_ID = new JsonStringOption("blockDefenderId");
                JsonBooleanOption BOMB_MODE = new JsonBooleanOption("bombMode");

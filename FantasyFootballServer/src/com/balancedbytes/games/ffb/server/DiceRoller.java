@@ -89,6 +89,10 @@ public class DiceRoller {
   public int rollBribes() {
     return rollDice(6);
   }
+
+  public int rollArgueTheCall() {
+    return rollDice(6);
+  }
   
   public int rollGoingForIt() {
     return rollDice(6);

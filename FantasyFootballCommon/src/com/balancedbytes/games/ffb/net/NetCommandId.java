@@ -3,6 +3,7 @@ package com.balancedbytes.games.ffb.net;
 import com.balancedbytes.games.ffb.IEnumWithName;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandActingPlayer;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandApothecaryChoice;
+import com.balancedbytes.games.ffb.net.commands.ClientCommandArgueTheCall;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandBlock;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandBlockChoice;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandBuyCard;
@@ -150,7 +151,8 @@ public enum NetCommandId implements IEnumWithName {
   INTERNAL_SERVER_UPLOAD_GAME("internalServerUploadGame"),
   INTERNAL_SERVER_SCHEDULE_GAME("internalServerScheduleGame"),
   INTERNAL_SERVER_BACKUP_GAME("internalServerBackupGame"),
-  CLIENT_CLOSE_SESSION("clientCloseSession");
+  CLIENT_CLOSE_SESSION("clientCloseSession"),
+  CLIENT_ARGUE_THE_CALL("clientArgueTheCall");
   
   private String fName;
   
@@ -294,6 +296,8 @@ public enum NetCommandId implements IEnumWithName {
       	return new ClientCommandBuyCard();
       case CLIENT_CLOSE_SESSION:
         return new ClientCommandCloseSession();
+      case CLIENT_ARGUE_THE_CALL:
+        return new ClientCommandArgueTheCall();
       default:
         throw new IllegalStateException("Unhandled netCommandId " + this + ".");
     }

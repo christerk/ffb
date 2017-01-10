@@ -46,6 +46,8 @@ public class ScoreBarComponent extends JPanel implements MouseMotionListener {
   
   private Rectangle _WEATHER_LOCATION = new Rectangle(WIDTH - 101, 0, 100, 32);
   private Rectangle _SPECTATOR_LOCATION = new Rectangle((WIDTH / 2 + 145), 0, 130, 32);
+  private Rectangle _COACH_BANNED_HOME = new Rectangle((WIDTH / 2 - 130 - 36), 0, 36, 32);
+  private Rectangle _COACH_BANNED_AWAY = new Rectangle((WIDTH / 2 + 130), 0, 36, 32);
   
   private FantasyFootballClient fClient;
   private BufferedImage fImage;
@@ -57,6 +59,8 @@ public class ScoreBarComponent extends JPanel implements MouseMotionListener {
   private int fScoreAway;
   private int fSpectators;
   private Weather fWeather;
+  private boolean fCoachBannedHome;
+  private boolean fCoachBannedAway;
   private boolean fRefreshNecessary;
   
   public ScoreBarComponent(FantasyFootballClient pClient) {
@@ -140,7 +144,23 @@ public class ScoreBarComponent extends JPanel implements MouseMotionListener {
       g2d.dispose();
     }
   }
-  
+
+  private void drawBannedCoaches() {
+    if (fCoachBannedHome || fCoachBannedAway) {
+      Graphics2D g2d = fImage.createGraphics();
+      IconCache iconCache = getClient().getUserInterface().getIconCache();
+      if (fCoachBannedHome) {
+        BufferedImage coachBannedImage = iconCache.getIconByProperty(IIconProperty.SCOREBAR_COACH_BANNED_HOME); 
+        g2d.drawImage(coachBannedImage, _COACH_BANNED_HOME.x, _COACH_BANNED_HOME.y, null);
+      }
+      if (fCoachBannedAway) {
+        BufferedImage coachBannedImage = iconCache.getIconByProperty(IIconProperty.SCOREBAR_COACH_BANNED_AWAY); 
+        g2d.drawImage(coachBannedImage, _COACH_BANNED_AWAY.x, _COACH_BANNED_AWAY.y, null);
+      }
+      g2d.dispose();
+    }
+  }
+
   private void drawWeather() {
     if (fWeather != null) {
       String weatherIconProperty = null;
@@ -202,6 +222,9 @@ public class ScoreBarComponent extends JPanel implements MouseMotionListener {
       if (!fRefreshNecessary) {
         fRefreshNecessary = (fWeather != game.getFieldModel().getWeather());
       }
+      if (!fRefreshNecessary) {
+        fRefreshNecessary = (fCoachBannedHome != game.getTurnDataHome().isCoachBanned()) || (fCoachBannedAway != game.getTurnDataAway().isCoachBanned());
+      }
       if (fRefreshNecessary) {
         fTurnHome = game.getTurnDataHome().getTurnNr();
         fTurnAway = game.getTurnDataAway().getTurnNr();
@@ -210,11 +233,14 @@ public class ScoreBarComponent extends JPanel implements MouseMotionListener {
         fScoreAway = game.getGameResult().getTeamResultAway().getScore();
         fSpectators = clientData.getSpectators();
         fWeather = game.getFieldModel().getWeather();
+        fCoachBannedHome = game.getTurnDataHome().isCoachBanned();
+        fCoachBannedAway = game.getTurnDataAway().isCoachBanned();
         drawBackground();
         drawTurn();
         drawScore();
         drawSpectators();
         drawWeather();
+        drawBannedCoaches();
         repaint();
         fRefreshNecessary = false;
       }
