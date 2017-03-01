@@ -20,6 +20,7 @@ public interface IServerProperty {
   
   String FUMBBL_USER = "fumbbl.user";
   String FUMBBL_PASSWORD = "fumbbl.password";
+  String FUMBBL_BACKUP_SERVICE = "fumbbl.backup.service";
   String FUMBBL_AUTH_CHALLENGE = "fumbbl.auth.challenge";
   String FUMBBL_AUTH_RESPONSE = "fumbbl.auth.response";
   String FUMBBL_TEAMS = "fumbbl.teams";

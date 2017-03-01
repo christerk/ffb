@@ -18,13 +18,21 @@ import org.xml.sax.helpers.AttributesImpl;
 
 import com.balancedbytes.games.ffb.FantasyFootballException;
 import com.balancedbytes.games.ffb.PasswordChallenge;
+import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.server.FantasyFootballServer;
 import com.balancedbytes.games.ffb.server.GameState;
+import com.balancedbytes.games.ffb.server.IServerLogLevel;
 import com.balancedbytes.games.ffb.server.IServerProperty;
+import com.balancedbytes.games.ffb.server.ServerMode;
 import com.balancedbytes.games.ffb.server.net.commands.InternalServerCommandBackupGame;
 import com.balancedbytes.games.ffb.util.ArrayTool;
 import com.balancedbytes.games.ffb.util.StringTool;
 import com.balancedbytes.games.ffb.xml.UtilXml;
+
+import zmq.Ctx;
+import zmq.Msg;
+import zmq.SocketBase;
+import zmq.ZMQ;
 
 /**
  * 
@@ -63,8 +71,9 @@ public class BackupServlet extends HttpServlet {
   }
 
   @Override
-  protected void doGet(HttpServletRequest pRequest, HttpServletResponse pResponse) throws ServletException, IOException {
-    
+  protected void doGet(HttpServletRequest pRequest, HttpServletResponse pResponse)
+      throws ServletException, IOException {
+
     String command = pRequest.getPathInfo();
     if ((command != null) && (command.length() > 1) && command.startsWith("/")) {
       command = command.substring(1);
@@ -77,7 +86,7 @@ public class BackupServlet extends HttpServlet {
     if (LOAD.equals(command)) {
       executeLoad(pRequest, pResponse);
     }
-    
+
     if (SAVE.equals(command)) {
       executeSave(pRequest, pResponse);
     }
@@ -85,7 +94,7 @@ public class BackupServlet extends HttpServlet {
   }
 
   private void executeChallenge(HttpServletRequest pRequest, HttpServletResponse pResponse) throws IOException {
-    
+
     pResponse.setContentType("text/xml;charset=UTF-8");
 
     TransformerHandler handler = UtilXml.createTransformerHandler(pResponse.getWriter(), true);
@@ -94,11 +103,12 @@ public class BackupServlet extends HttpServlet {
     } catch (SAXException pSaxException) {
       throw new FantasyFootballException(pSaxException);
     }
-    
+
     UtilXml.startElement(handler, _XML_TAG_BACKUP);
 
     boolean isOk = true;
-    String challenge = new StringBuilder().append(fServer.getProperty(IServerProperty.BACKUP_SALT)).append(System.currentTimeMillis()).toString();
+    String challenge = new StringBuilder().append(fServer.getProperty(IServerProperty.BACKUP_SALT))
+        .append(System.currentTimeMillis()).toString();
     try {
       fLastChallenge = PasswordChallenge.toHexString(PasswordChallenge.md5Encode(challenge.getBytes()));
     } catch (NoSuchAlgorithmException pE) {
@@ -109,11 +119,11 @@ public class BackupServlet extends HttpServlet {
     } else {
       isOk = false;
     }
-    
-    UtilXml.addValueElement(handler, _XML_TAG_STATUS, isOk ? _STATUS_OK : _STATUS_FAIL); 
-    
+
+    UtilXml.addValueElement(handler, _XML_TAG_STATUS, isOk ? _STATUS_OK : _STATUS_FAIL);
+
     UtilXml.endElement(handler, _XML_TAG_BACKUP);
-    
+
     try {
       handler.endDocument();
     } catch (SAXException pSaxException) {
@@ -138,9 +148,9 @@ public class BackupServlet extends HttpServlet {
     fLastChallenge = null;
     return isOk;
   }
-  
+
   private void executeSave(HttpServletRequest pRequest, HttpServletResponse pResponse) throws IOException {
-    
+
     pResponse.setContentType("text/xml;charset=UTF-8");
     Map<String, String[]> parameters = pRequest.getParameterMap();
     String gameIdString = ArrayTool.firstElement(parameters.get(_PARAMETER_GAME_ID));
@@ -152,11 +162,11 @@ public class BackupServlet extends HttpServlet {
     } catch (SAXException pSaxException) {
       throw new FantasyFootballException(pSaxException);
     }
-    
+
     UtilXml.startElement(handler, _XML_TAG_BACKUP);
-    
+
     boolean isOk = checkResponse(response);
-    
+
     if (isOk) {
       AttributesImpl attributes = new AttributesImpl();
       UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_GAME_ID, gameIdString);
@@ -169,11 +179,11 @@ public class BackupServlet extends HttpServlet {
         isOk = false;
       }
     }
-    
-    UtilXml.addValueElement(handler, _XML_TAG_STATUS, isOk ? _STATUS_OK : _STATUS_FAIL); 
-    
+
+    UtilXml.addValueElement(handler, _XML_TAG_STATUS, isOk ? _STATUS_OK : _STATUS_FAIL);
+
     UtilXml.endElement(handler, _XML_TAG_BACKUP);
-    
+
     try {
       handler.endDocument();
     } catch (SAXException pSaxException) {
@@ -181,7 +191,7 @@ public class BackupServlet extends HttpServlet {
     }
 
   }
-  
+
   private void executeLoad(HttpServletRequest pRequest, HttpServletResponse pResponse) throws IOException {
 
     Map<String, String[]> parameters = pRequest.getParameterMap();
@@ -192,42 +202,57 @@ public class BackupServlet extends HttpServlet {
     if (StringTool.isProvided(acceptEncoding) && acceptEncoding.contains("gzip")) {
       doGzip = true;
     }
-    
+
     pResponse.setContentType("application/json;charset=UTF-8");
 
     Closeable out = null;
     try {
-    
+
+      GameState gameState = loadGameState(gameId);
+      if (gameState == null) {
+        return;
+      }
+
       if (doGzip) {
-        
+
         pResponse.addHeader("Content-Encoding", "gzip");
 
         out = new BufferedOutputStream(pResponse.getOutputStream());
-        
-        byte[] gzippedJson = UtilBackup.loadAsGzip(getServer(), gameId);
+
+        byte[] gzippedJson = UtilJson.gzip(gameState.toJsonValue());
+
         if (gzippedJson != null) {
           ((BufferedOutputStream) out).write(gzippedJson, 0, gzippedJson.length);
         }
-        
-      } else {
-        
-        out = new BufferedWriter(pResponse.getWriter());
 
-        GameState gameState = UtilBackup.load(getServer(), gameId);
-        if (gameState != null) {
-          ((BufferedWriter) out).write(gameState.toJsonValue().toString());
-        }
-        
+      } else {
+
+        out = new BufferedWriter(pResponse.getWriter());
+        ((BufferedWriter) out).write(gameState.toJsonValue().toString());
+
       }
-                  
+
     } finally {
       if (out != null) {
         out.close();
       }
     }
-    
+
   }
-  
+
+  private GameState loadGameState(long gameId) {
+    GameState gameState = UtilBackup.load(getServer(), gameId);
+    if (gameState == null) {
+      // fallback: try to load gameState from db
+      gameState = fServer.getGameCache().queryFromDb(gameId);
+    }
+    if ((gameState == null) && (getServer().getMode() == ServerMode.FUMBBL)) {
+      // fallback in fumbbl mode
+      gameState = loadFromFumbblBackupService(gameId);
+    }
+    return gameState;
+  }
+
   private long parseGameId(String pGameStateId) {
     if (StringTool.isProvided(pGameStateId)) {
       try {
@@ -237,6 +262,72 @@ public class BackupServlet extends HttpServlet {
       }
     }
     return 0;
+  }
+
+  private GameState loadFromFumbblBackupService(long gameId) {
+    
+    // Prepare a JSON request to fetch a replay
+    String json = String.format("{ \"cmd\": \"get\", \"replayId\":%d }", gameId);
+    Msg request = new Msg(json.getBytes());
+
+    byte[] data = null;
+    String msgType = null;
+    SocketBase socket = null;
+    try {
+
+      // Set up ZeroMQ connection
+      Ctx ctx = ZMQ.init(1);
+      socket = ZMQ.socket(ctx, ZMQ.ZMQ_REQ);
+      socket.connect(fServer.getProperty(IServerProperty.FUMBBL_BACKUP_SERVICE));
+
+      // Send the request over the ZeroMQ socket
+      socket.send(request, 0);
+
+      // Receive response
+      Msg response = socket.recv(0);
+      data = response.data();
+
+      if (data.length < 100) {
+        msgType = new String(data);
+      } else {
+        throw new Exception("Protocol violation. Message type frame too large.");
+      }
+
+      if (response.hasMore()) {
+        // Fetch data frame
+        data = socket.recv(0).data();
+      } else {
+        throw new Exception("Protocol violation. No payload frame available.");
+      }
+
+    } catch (Exception e) {
+      fServer.getDebugLog().log(gameId, e);
+      data = null;
+    } finally {
+      // Make sure we close the socket to not leak resources.
+      if (socket != null) {
+        socket.close();
+      }
+    }
+
+    if (data != null) {
+      if ("DATA".equals(msgType)) {
+        try {
+          GameState gameState = new GameState(fServer);
+          gameState.initFrom(UtilJson.gunzip(data));
+          return gameState;
+        } catch (IOException ioE) {
+          fServer.getDebugLog().log(gameId, ioE);
+        }
+      } else {
+        // Deal with the error in some way..
+        // the "data" variable should have a JSON encoded error message  structure at this point.
+        fServer.getDebugLog().log(IServerLogLevel.ERROR, gameId, new String(data));
+      }
+    }
+    
+    return null;
+    
   }
 
 }
