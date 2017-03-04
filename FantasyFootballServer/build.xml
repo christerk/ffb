@@ -79,6 +79,15 @@
         	  <not>
         	    <name name="META-INF/*"/>
         	  </not>
+          	  <not>
+          	    <name name="about_files/*"/>
+          	  </not>
+          	  <not>
+          	    <name name="about.html"/>
+          	  </not>
+          	  <not>
+          	    <name name="plugin.properties"/>
+          	  </not>
         	</restrict>
         </jar>
     </target>
