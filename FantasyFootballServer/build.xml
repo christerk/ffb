@@ -50,7 +50,7 @@
 		</path>
 		<property name="myClasspath" refid="classpath" />
 		<echo message="Classpath = ${myClasspath}" />
-		<javac srcdir="${src.dir}" destdir="${bin.dir}" includeantruntime="false" target="1.8" source="1.8" debug="on">
+		<javac encoding="UTF-8" srcdir="${src.dir}" destdir="${bin.dir}" includeantruntime="false" target="1.8" source="1.8" debug="on">
 			<classpath refid="classpath" />
 		</javac>
 	</target>
