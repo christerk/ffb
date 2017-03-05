@@ -64,7 +64,7 @@
             <manifest>
               <attribute name="Built-By" value="${user.name}" />
               <attribute name="Main-Class" value="com.balancedbytes.games.ffb.server.FantasyFootballServer" />
-              <!-- attribute name="Class-Path" value="${manifest-classpath}" /-->
+              <attribute name="Class-Path" value="${manifest-classpath}" />
             </manifest>
             <zipfileset dir="${bin.dir}" includes="**/*.class" />
             <zipfileset dir="../FantasyFootballCommon/${bin.dir}" includes="**/*.class" />
