@@ -68,6 +68,7 @@
             </manifest>
             <zipfileset dir="${bin.dir}" includes="**/*.class" />
             <zipfileset dir="../FantasyFootballCommon/${bin.dir}" includes="**/*.class" />
+        	<!--
         	<restrict>
         	  <archives>
         	    <zips>
@@ -89,6 +90,7 @@
           	    <name name="plugin.properties"/>
           	  </not>
         	</restrict>
+        	-->
         </jar>
     </target>
 
