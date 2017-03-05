@@ -242,13 +242,22 @@ public class BackupServlet extends HttpServlet {
 
   private GameState loadGameState(long gameId) {
     GameState gameState = UtilBackup.load(getServer(), gameId);
+    if (gameState != null) {
+      fServer.getDebugLog().log(IServerLogLevel.INFO, gameId, "Replay loaded from file system."); 
+    }
     if (gameState == null) {
       // fallback: try to load gameState from db
       gameState = fServer.getGameCache().queryFromDb(gameId);
+      if (gameState != null) {
+        fServer.getDebugLog().log(IServerLogLevel.INFO, gameId, "Replay loaded from database."); 
+      }
     }
     if ((gameState == null) && (getServer().getMode() == ServerMode.FUMBBL)) {
       // fallback in fumbbl mode
       gameState = loadFromFumbblBackupService(gameId);
+      if (gameState != null) {
+        fServer.getDebugLog().log(IServerLogLevel.INFO, gameId, "Replay loaded from fumbbl backup service."); 
+      }
     }
     return gameState;
   }

@@ -641,7 +641,7 @@ public enum Skill implements IEnumWithName {
   //  pick up the ball. In addition, the Strip Ball skill will not work against a
   //  player with this skill.
 
-  TACKLE("Tckle", SkillCategory.GENERAL),
+  TACKLE("Tackle", SkillCategory.GENERAL),
   //  Opposing players who are standing in any of this player's tackle zones
   //  are not allowed to use their Dodge skill if they attempt to dodge out of
   //  any of the player's tackle zones, nor may they use their Dodge skill if the
