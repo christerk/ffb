@@ -94,9 +94,11 @@
         	<zipfileset file="client-fumbbl-test.ini" fullpath="client.ini" />
         	<zipfileset file="icons-fumbbl-test.ini" fullpath="icons.ini" />
         </jar>
+		<!--
 		<copy todir="${build.dir}">
 			<fileset dir="${lib.dir}" includes="*.jar" />
 		</copy>
+		-->
 		<!--
 		<signjar keystore="../FantasyFootballCommon/keystore.jks" storepass="dragon" alias="Kalimar" keypass="dragon">
 			<fileset dir="${build.dir}" includes="*.jar" />
@@ -109,9 +111,11 @@
         	<zipfileset file="client-fumbbl-live.ini" fullpath="client.ini" />
         	<zipfileset file="icons-fumbbl-live.ini" fullpath="icons.ini" />
         </jar>
+		<!--
 		<copy todir="${build.dir}">
 			<fileset dir="${lib.dir}" includes="*.jar" />
 		</copy>
+		-->
 	</target>
 	
 	<target name="jarStandalone" depends="jarCommon">
