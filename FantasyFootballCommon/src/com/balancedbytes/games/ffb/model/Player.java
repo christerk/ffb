@@ -226,21 +226,23 @@ public class Player implements IXmlSerializable, IJsonSerializable {
         addSkill(skill);
       }
       for (Skill skill : getSkills()) {
-        switch (skill) {
-          case MOVEMENT_INCREASE:
-            fMovement++;
-            break;
-          case STRENGTH_INCREASE:
-            fStrength++;
-            break;
-          case AGILITY_INCREASE:
-            fAgility++;
-            break;
-          case ARMOUR_INCREASE:
-            fArmour++;
-            break;
-          default:
-          	break;
+        if (skill != null) {
+          switch (skill) {
+            case MOVEMENT_INCREASE:
+              fMovement++;
+              break;
+            case STRENGTH_INCREASE:
+              fStrength++;
+              break;
+            case AGILITY_INCREASE:
+              fAgility++;
+              break;
+            case ARMOUR_INCREASE:
+              fArmour++;
+              break;
+            default:
+            	break;
+          }
         }
       }
       int oldMovement = getMovement();

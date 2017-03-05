@@ -279,7 +279,8 @@ public class TurnData implements IJsonSerializable {
     fReRollUsed = IJsonOption.RE_ROLL_USED.getFrom(jsonObject);
     fHandOverUsed = IJsonOption.HAND_OVER_USED.getFrom(jsonObject);
     fPassUsed = IJsonOption.PASS_USED.getFrom(jsonObject);
-    fCoachBanned = IJsonOption.COACH_BANNED.getFrom(jsonObject);
+    Boolean coachBanned =  IJsonOption.COACH_BANNED.getFrom(jsonObject); 
+    fCoachBanned = (coachBanned != null) ? coachBanned : false;
     fLeaderState = (LeaderState) IJsonOption.LEADER_STATE.getFrom(jsonObject);
     fInducementSet = new InducementSet(this);
     fInducementSet.initFrom(IJsonOption.INDUCEMENT_SET.getFrom(jsonObject));
