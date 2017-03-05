@@ -202,6 +202,8 @@ public class BackupServlet extends HttpServlet {
     if (StringTool.isProvided(acceptEncoding) && acceptEncoding.contains("gzip")) {
       doGzip = true;
     }
+    
+    fServer.getDebugLog().log(IServerLogLevel.WARN, gameId, doGzip ? "Requesting gzipped replay." : "Requesting plain replay.");
 
     pResponse.setContentType("application/json;charset=UTF-8");
 
