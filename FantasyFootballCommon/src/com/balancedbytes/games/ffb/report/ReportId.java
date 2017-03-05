@@ -107,6 +107,8 @@ public enum ReportId implements IEnumWithName {
   
   public IReport createReport() {
     switch(this) {
+      case ARGUE_THE_CALL:
+        return new ReportArgueTheCallRoll();
       case ALWAYS_HUNGRY_ROLL:
         return new ReportSkillRoll(ALWAYS_HUNGRY_ROLL);
       case CARD_EFFECT_ROLL:
