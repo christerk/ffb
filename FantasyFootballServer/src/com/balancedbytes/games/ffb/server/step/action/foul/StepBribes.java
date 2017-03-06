@@ -9,8 +9,8 @@ import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Team;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandArgueTheCall;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandUseInducement;
-import com.balancedbytes.games.ffb.option.GameOptionBoolean;
 import com.balancedbytes.games.ffb.option.GameOptionId;
+import com.balancedbytes.games.ffb.option.UtilGameOption;
 import com.balancedbytes.games.ffb.report.ReportArgueTheCallRoll;
 import com.balancedbytes.games.ffb.report.ReportBribesRoll;
 import com.balancedbytes.games.ffb.server.DiceInterpreter;
@@ -172,7 +172,7 @@ public class StepBribes extends AbstractStep {
   
   private void askForArgueTheCall() {
     Game game = getGameState().getGame();
-    if (!((GameOptionBoolean) game.getOptions().getOptionWithDefault(GameOptionId.ARGUE_THE_CALL)).isEnabled()) {
+    if (!UtilGameOption.isOptionEnabled(game, GameOptionId.ARGUE_THE_CALL)) {
       fArgueTheCallChoice = false;
       return;
     }

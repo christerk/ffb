@@ -592,7 +592,7 @@ public class StepEndTurn extends AbstractStep {
 
   private boolean askForArgueTheCall(Team pTeam) {
     Game game = getGameState().getGame();
-    if (!((GameOptionBoolean) game.getOptions().getOptionWithDefault(GameOptionId.ARGUE_THE_CALL)).isEnabled()) {
+    if (!UtilGameOption.isOptionEnabled(game, GameOptionId.ARGUE_THE_CALL)) {
       return false;
     }
     List<String> playerIds = new ArrayList<String>();
