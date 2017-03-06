@@ -9,6 +9,7 @@ import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.mime.MultipartEntityBuilder;
+import org.apache.http.entity.ContentType;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.util.EntityUtils;
@@ -89,7 +90,7 @@ public class UtilServerHttpClient {
     
     MultipartEntityBuilder entityBuilder = MultipartEntityBuilder.create();
     entityBuilder.addTextBody("response", challengeResponse);
-    entityBuilder.addBinaryBody("result.xml", resultXml.getBytes(CHARACTER_ENCODING));
+    entityBuilder.addBinaryBody("f", resultXml.getBytes(CHARACTER_ENCODING), ContentType.TEXT_XML, "result.xml");
     
     try (CloseableHttpClient client = clientBuilder.build()) {    
 
