@@ -29,7 +29,6 @@ import com.balancedbytes.games.ffb.model.Team;
 import com.balancedbytes.games.ffb.model.TurnData;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandArgueTheCall;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandUseInducement;
-import com.balancedbytes.games.ffb.option.GameOptionBoolean;
 import com.balancedbytes.games.ffb.option.GameOptionId;
 import com.balancedbytes.games.ffb.option.UtilGameOption;
 import com.balancedbytes.games.ffb.report.ReportArgueTheCallRoll;

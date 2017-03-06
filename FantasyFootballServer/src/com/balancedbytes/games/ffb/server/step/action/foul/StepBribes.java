@@ -172,11 +172,7 @@ public class StepBribes extends AbstractStep {
   
   private void askForArgueTheCall() {
     Game game = getGameState().getGame();
-    if (!UtilGameOption.isOptionEnabled(game, GameOptionId.ARGUE_THE_CALL)) {
-      fArgueTheCallChoice = false;
-      return;
-    }
-    if (game.getTurnData().isCoachBanned()) {
+    if (!UtilGameOption.isOptionEnabled(game, GameOptionId.ARGUE_THE_CALL) || game.getTurnData().isCoachBanned()) {
       fArgueTheCallChoice = false;
       return;
     }
