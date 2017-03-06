@@ -203,7 +203,7 @@ public class BackupServlet extends HttpServlet {
       doGzip = true;
     }
     
-    fServer.getDebugLog().log(IServerLogLevel.WARN, gameId, doGzip ? "Requesting gzipped replay." : "Requesting plain replay.");
+    // fServer.getDebugLog().log(IServerLogLevel.WARN, gameId, doGzip ? "Requesting gzipped replay." : "Requesting plain replay.");
 
     pResponse.setContentType("application/json;charset=UTF-8");
 

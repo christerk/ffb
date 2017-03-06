@@ -5,7 +5,6 @@ import java.io.IOException;
 import org.eclipse.jetty.websocket.api.Session;
 
 import com.balancedbytes.games.ffb.FantasyFootballException;
-import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.server.FantasyFootballServer;
 import com.balancedbytes.games.ffb.server.GameCacheMode;
 import com.balancedbytes.games.ffb.server.GameState;
@@ -59,8 +58,7 @@ public class ServerRequestLoadReplay extends ServerRequest {
     GameState gameState = null;
     try {
       String loadUrl = StringTool.bind(server.getProperty(IServerProperty.BACKUP_URL_LOAD), getGameId());
-      byte[] gzippedJson = UtilServerHttpClient.fetchGzippedPage(loadUrl);
-      JsonValue jsonValue = UtilJson.gunzip(gzippedJson);
+      JsonValue jsonValue = JsonValue.readFrom(UtilServerHttpClient.fetchPage(loadUrl));
       if ((jsonValue != null) && !jsonValue.isNull()) {
         gameState = new GameState(server);
         gameState.initFrom(jsonValue);

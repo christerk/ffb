@@ -44,6 +44,7 @@ public class UtilServerHttpClient {
     try (CloseableHttpClient client = clientBuilder.build()) {
 
       HttpGet request = new HttpGet(url);
+      request.addHeader("Accept-Encoding", "gzip");
       
       try (CloseableHttpResponse response = client.execute(request)) {
         return EntityUtils.toString(response.getEntity(), CHARACTER_ENCODING);
@@ -52,7 +53,8 @@ public class UtilServerHttpClient {
     }
     
   }
-  
+
+  /*
   public static byte[] fetchGzippedPage(String url) throws IOException {
     
     RequestConfig.Builder requestBuilder = RequestConfig.custom();
@@ -74,6 +76,7 @@ public class UtilServerHttpClient {
     }
 
   }
+  */
 
   public static String postMultipartXml(String url, String challengeResponse, String resultXml) throws IOException {
 
