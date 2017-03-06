@@ -47,7 +47,7 @@ public class DialogPlayerChoiceHandler extends DialogHandler {
           }
           dialogCoordinate = new FieldCoordinate(maxX, maxY);
         }
-        setDialog(new DialogPlayerChoice(getClient(), dialogHeader, playerIds, fDialogPlayerChoiceParameter.getDescriptions(), fDialogPlayerChoiceParameter.getMaxSelects(), dialogCoordinate));
+        setDialog(new DialogPlayerChoice(getClient(), dialogHeader, playerIds, fDialogPlayerChoiceParameter.getDescriptions(), fDialogPlayerChoiceParameter.getMaxSelects(), dialogCoordinate, false));
         getDialog().showDialog(this);
         
       } else {

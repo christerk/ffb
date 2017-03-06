@@ -8,6 +8,7 @@ package com.balancedbytes.games.ffb.server.step;
 public enum StepParameterKey {
 
 	APOTHECARY_MODE,              // ApothecaryMode
+	ARGUE_THE_CALL_SUCCESFUL,     // Boolean
 	AUTOMATIC_RE_ROLL,            // Boolean
 	BLOCK_DEFENDER_ID,            // String
 	BLOCK_RESULT,                 // BlockResult

@@ -41,7 +41,7 @@ public class DialogBribesHandler extends DialogHandler {
           } else {
             header.append("Select a player to use a Bribe for");
           }
-          setDialog(new DialogPlayerChoice(getClient(), header.toString(), dialogBribesParameter.getPlayerIds(), null, dialogBribesParameter.getMaxNrOfBribes(), null));
+          setDialog(new DialogPlayerChoice(getClient(), header.toString(), dialogBribesParameter.getPlayerIds(), null, dialogBribesParameter.getMaxNrOfBribes(), null, false));
         }
 
         getDialog().showDialog(this);

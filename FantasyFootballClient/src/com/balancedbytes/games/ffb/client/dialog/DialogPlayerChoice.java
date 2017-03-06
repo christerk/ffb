@@ -30,7 +30,7 @@ public class DialogPlayerChoice extends Dialog implements ActionListener {
   private JButton fButtonCancel;
   private Player[] fSelectedPlayers;
 
-  public DialogPlayerChoice(FantasyFootballClient pClient, String pHeader, String[] pPlayerIds, String[] pDescriptions, int pMaxSelects, FieldCoordinate pPlayerCoordinate) {    
+  public DialogPlayerChoice(FantasyFootballClient pClient, String pHeader, String[] pPlayerIds, String[] pDescriptions, int pMaxSelects, FieldCoordinate pPlayerCoordinate, boolean preSelected) {    
     
   	super(pClient, "Player Choice", false);
     
@@ -44,7 +44,7 @@ public class DialogPlayerChoice extends Dialog implements ActionListener {
     fButtonCancel.addActionListener(this);
     fButtonCancel.setMnemonic((int) 'C'); 
 
-    fList = new PlayerCheckList(pClient, pPlayerIds, pDescriptions, pMaxSelects);
+    fList = new PlayerCheckList(pClient, pPlayerIds, pDescriptions, pMaxSelects, preSelected);
     fList.setVisibleRowCount(Math.min(pPlayerIds.length, 5));
     fList.addMouseMotionListener(new MouseMotionAdapter() {
       public void mouseMoved(MouseEvent pMouseEvent) {

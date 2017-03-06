@@ -35,6 +35,7 @@ import com.eclipsesource.json.JsonValue;
  * Needs to be initialized with stepParameter GOTO_LABEL_ON_END.
  * 
  * Expects stepParameter FOULER_HAS_BALL to be set by a preceding step.
+ * Expects stepParameter ARGUE_THE_CALL_SUCCESFUL to be set by a preceding step.
  * 
  * Sets stepParameter CATCH_SCATTER_THROW_IN_MODE for all steps on the stack.
  * Sets stepParameter END_TURN for all steps on the stack.
@@ -45,6 +46,7 @@ public class StepEjectPlayer extends AbstractStep {
 	
 	private String fGotoLabelOnEnd;
 	private Boolean fFoulerHasBall;
+	private Boolean fArgueTheCallSuccessful;
 	
 	public StepEjectPlayer(GameState pGameState) {
 		super(pGameState);
@@ -79,6 +81,9 @@ public class StepEjectPlayer extends AbstractStep {
 				case FOULER_HAS_BALL:
 					fFoulerHasBall = (Boolean) pParameter.getValue();
 					return true;
+				case ARGUE_THE_CALL_SUCCESFUL:
+				  fArgueTheCallSuccessful = (Boolean) pParameter.getValue();
+				  return true;
 				default:
 					break;
 			}
@@ -110,14 +115,18 @@ public class StepEjectPlayer extends AbstractStep {
     if (UtilCards.hasSkill(game, actingPlayer, Skill.SNEAKY_GIT) && UtilGameOption.isOptionEnabled(game, GameOptionId.SNEAKY_GIT_BAN_TO_KO)) {
     	game.getFieldModel().setPlayerState(actingPlayer.getPlayer(), playerState.changeBase(PlayerState.KNOCKED_OUT));
     } else {
-    	game.getFieldModel().setPlayerState(actingPlayer.getPlayer(), playerState.changeBase(PlayerState.BANNED));
+      if ((fArgueTheCallSuccessful != null) && fArgueTheCallSuccessful) {
+        game.getFieldModel().setPlayerState(actingPlayer.getPlayer(), playerState.changeBase(PlayerState.RESERVE));
+      } else {
+        game.getFieldModel().setPlayerState(actingPlayer.getPlayer(), playerState.changeBase(PlayerState.BANNED));
+        attackerResult.setSendToBoxReason(SendToBoxReason.FOUL_BAN);
+        attackerResult.setSendToBoxTurn(game.getTurnData().getTurnNr());
+        attackerResult.setSendToBoxHalf(game.getHalf());
+      }
+      UtilBox.putPlayerIntoBox(game, actingPlayer.getPlayer());
+      UtilBox.refreshBoxes(game);
+      UtilServerGame.updateLeaderReRolls(this);
     }
-    attackerResult.setSendToBoxReason(SendToBoxReason.FOUL_BAN);
-    attackerResult.setSendToBoxTurn(game.getTurnData().getTurnNr());
-    attackerResult.setSendToBoxHalf(game.getHalf());
-    UtilBox.putPlayerIntoBox(game, actingPlayer.getPlayer());
-    UtilBox.refreshBoxes(game);
-    UtilServerGame.updateLeaderReRolls(this);
   	publishParameter(new StepParameter(StepParameterKey.END_TURN, true));
     if ((fFoulerHasBall != null) && fFoulerHasBall) {
     	publishParameter(new StepParameter(StepParameterKey.CATCH_SCATTER_THROW_IN_MODE, CatchScatterThrowInMode.SCATTER_BALL));

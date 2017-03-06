@@ -230,7 +230,7 @@ public interface IJsonOption {
                 JsonStringOption MODEL_CHANGE_KEY = new JsonStringOption("modelChangeKey");
                 JsonObjectOption MODEL_CHANGE_LIST = new JsonObjectOption("modelChangeList");
                  JsonValueOption MODEL_CHANGE_VALUE = new JsonValueOption("modelChangeValue");
-                   JsonIntOption MODIFIER = new JsonIntOption("roll");
+                   JsonIntOption MODIFIER = new JsonIntOption("modifier");
                  JsonArrayOption MOVE_SQUARE_ARRAY = new JsonArrayOption("moveSquareArray");
                    JsonIntOption MOVEMENT = new JsonIntOption("movement");
                 JsonStringOption NAME = new JsonStringOption("name");

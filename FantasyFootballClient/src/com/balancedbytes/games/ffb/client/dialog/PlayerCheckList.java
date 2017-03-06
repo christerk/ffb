@@ -98,27 +98,27 @@ public class PlayerCheckList extends JList {
 
   }
   
-  public PlayerCheckList(FantasyFootballClient pClient, String[] pPlayerIds, String[] pDescriptions, int pMaxSelects) {
+  public PlayerCheckList(FantasyFootballClient client, String[] playerIds, String[] descriptions, int maxSelects, boolean preSelected) {
     
-    if (!ArrayTool.isProvided(pPlayerIds)) {
+    if (!ArrayTool.isProvided(playerIds)) {
       throw new IllegalArgumentException("Argument players must not be empty or null.");
     }
     
-    Game game = pClient.getGame();
+    Game game = client.getGame();
     List<PlayerCheckListItem> checkListItems = new ArrayList<PlayerCheckListItem>();
-    PlayerIconFactory playerIconFactory = pClient.getUserInterface().getPlayerIconFactory();
-    for (int i = 0; i < pPlayerIds.length; i++) {
-      Player player = game.getPlayerById(pPlayerIds[i]);
+    PlayerIconFactory playerIconFactory = client.getUserInterface().getPlayerIconFactory();
+    for (int i = 0; i < playerIds.length; i++) {
+      Player player = game.getPlayerById(playerIds[i]);
       if (player != null) {
         boolean homePlayer = game.getTeamHome().hasPlayer(player);
-        BufferedImage playerIcon = playerIconFactory.getBasicIcon(pClient, player, homePlayer, false, false, false);
+        BufferedImage playerIcon = playerIconFactory.getBasicIcon(client, player, homePlayer, false, false, false);
         StringBuilder text = new StringBuilder();
         text.append(player.getName());
-        if (ArrayTool.isProvided(pDescriptions)) {
-          text.append(" ").append(pDescriptions[i]);
+        if (ArrayTool.isProvided(descriptions)) {
+          text.append(" ").append(descriptions[i]);
         }
         PlayerCheckListItem checkListItem = new PlayerCheckListItem(player, new ImageIcon(playerIcon), text.toString());
-        checkListItem.setSelected(pPlayerIds.length == 1);
+        checkListItem.setSelected((playerIds.length == 1) || preSelected);
         checkListItems.add(checkListItem);
       }
     }
@@ -129,7 +129,7 @@ public class PlayerCheckList extends JList {
     setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
     // Add a mouse listener to handle changing selection
-    addMouseListener(new PlayerCheckListMouseAdapter(pMaxSelects));
+    addMouseListener(new PlayerCheckListMouseAdapter(maxSelects));
     
   }
   

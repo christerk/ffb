@@ -1,37 +1,10 @@
 
-[size=18][b]Release Notes Version 1.2.0[/b][/size]
+[size=18][b]Release Notes Version 1.2.7[/b][/size]
 
 [b]Improvements:[/b]
 
-- Dirty Tricks card deck available for inducements (with the exception of Trampoline Trap)
-- Card playing animation when using a card in the game
-- Player Markers saved by team - upon starting a new game your players will be marked the same as in the last game
-- New way to store replays, drastically reducing database size (making it much easier for Christer to do backups)
-- Custom pitches
-- New test commands (/weather, /card, /pitch)
-- In-game replay for spectators working again
+[b]Bugfixes:[/b]
 
-[b]Some of the contained Bugfixes:[/b]
-
-[url=http://www.fumbbl.com/FUMBBL.php?page=bugs&op=view&id=1305]#1305[/url] Wizard fireballing own team clarification 
-[url=http://www.fumbbl.com/FUMBBL.php?page=bugs&op=view&id=1311]#1311[/url] REPLAY: controls broken after switch from spec mode
-[url=http://www.fumbbl.com/FUMBBL.php?page=bugs&op=view&id=1316]#1316[/url] FREEZE: Animosity on Hand Off causes freeze
-[url=http://www.fumbbl.com/FUMBBL.php?page=bugs&op=view&id=1323]#1323[/url] MULTIPLE FOULS: Back to back fouling
-[url=http://www.fumbbl.com/FUMBBL.php?page=bugs&op=view&id=1324]#1324[/url] Problems with Leap in new client
-[url=http://www.fumbbl.com/FUMBBL.php?page=bugs&op=view&id=1327]#1327[/url] Teleporting player
-[url=http://www.fumbbl.com/FUMBBL.php?page=bugs&op=view&id=1336]#1336[/url] BLOCKING: Wrong player blocked/multiple blocks/etc
-[url=http://www.fumbbl.com/FUMBBL.php?page=bugs&op=view&id=1344]#1344[/url] Can't Leap on a hand over action
-[url=http://www.fumbbl.com/FUMBBL.php?page=bugs&op=view&id=1348]#1348[/url] Server disconnect during setup corrupts game (?)
-[url=http://www.fumbbl.com/FUMBBL.php?page=bugs&op=view&id=1350]#1350[/url] NO MA ISSUES: Can't leap
-[url=http://www.fumbbl.com/FUMBBL.php?page=bugs&op=view&id=1351]#1351[/url] FREEZE: Dump Off
-[url=http://www.fumbbl.com/FUMBBL.php?page=bugs&op=view&id=1354]#1354[/url] After using Chainsaw freeze 
-[url=http://www.fumbbl.com/FUMBBL.php?page=bugs&op=view&id=1361]#1361[/url] Won't let me leap
-[url=http://www.fumbbl.com/FUMBBL.php?page=bugs&op=view&id=1363]#1363[/url] NO MA ISSUES: Tree cant make TTM After 2 GFI
-[url=http://www.fumbbl.com/FUMBBL.php?page=bugs&op=view&id=1365]#1365[/url] NO MA ISSUES: Passing with MA 0
-[url=http://www.fumbbl.com/FUMBBL.php?page=bugs&op=view&id=1366]#1366[/url] Game freezes when attempt to Throw
-[url=http://www.fumbbl.com/FUMBBL.php?page=bugs&op=view&id=1367]#1367[/url] Halflings cannot foul
-[url=http://www.fumbbl.com/FUMBBL.php?page=bugs&op=view&id=1369]#1369[/url] pass to area equalled crash?
-[url=http://www.fumbbl.com/FUMBBL.php?page=bugs&op=view&id=1371]#1371[/url] Problem with Pass
-[url=http://www.fumbbl.com/FUMBBL.php?page=bugs&op=view&id=1371]#1372[/url] Unable to handoff
-[url=http://www.fumbbl.com/FUMBBL.php?page=bugs&op=view&id=1379]#1379[/url] Stats: 1 yard passing with 0 CP
-[url=http://www.fumbbl.com/FUMBBL.php?page=bugs&op=view&id=1399]#1399[/url] BALL&CHAIN: Chainsaw and Stab ignore armour
+- Stand Up Dice Roll for a tree showing 0
+- Sneaky Git not working with Argue the Call
+- Succesful Argue the call keeping the player on the field instead of sending him to the Reserve Box

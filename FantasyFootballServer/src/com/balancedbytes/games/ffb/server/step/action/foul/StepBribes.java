@@ -37,6 +37,7 @@ import com.eclipsesource.json.JsonValue;
  * Needs to be initialized with stepParameter GOTO_LABEL_ON_END.
  * 
  * Sets stepParameter FOULER_HAS_BALL for all steps on the stack.
+ * Sets stepParameter ARGUE_THE_CALL_SUCCESSFUL for all steps on the stack.
  * 
  * @author Kalimar
  */
@@ -146,11 +147,12 @@ public class StepBribes extends AbstractStep {
 		  	}
       }
     }
-    if (((fArgueTheCallSuccessful != null) && fArgueTheCallSuccessful) || ((fBribeSuccessful != null) && fBribeSuccessful)) {
+    if (((fBribeSuccessful != null) && fBribeSuccessful)) {
       getResult().setNextAction(StepAction.GOTO_LABEL, fGotoLabelOnEnd);
       return;
     }
     if ((fArgueTheCallChoice != null) && (fBribesChoice != null)) {
+      publishParameter(new StepParameter(StepParameterKey.ARGUE_THE_CALL_SUCCESFUL, (fArgueTheCallSuccessful != null) ? fArgueTheCallSuccessful : false));
     	getResult().setNextAction(StepAction.NEXT_STEP);
     }
   }
@@ -174,6 +176,7 @@ public class StepBribes extends AbstractStep {
     Game game = getGameState().getGame();
     if (!UtilGameOption.isOptionEnabled(game, GameOptionId.ARGUE_THE_CALL) || game.getTurnData().isCoachBanned()) {
       fArgueTheCallChoice = false;
+      fArgueTheCallSuccessful = false;
       return;
     }
     ActingPlayer actingPlayer = game.getActingPlayer();

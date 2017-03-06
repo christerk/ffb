@@ -25,8 +25,8 @@ public class GameOptionFactory {
           .setMessageTrue("A star player may play for both teams.");
       case ARGUE_THE_CALL:
         return new GameOptionBoolean(GameOptionId.ARGUE_THE_CALL)
-          .setDefault(false)
-          .setMessageTrue("Calls may be argued.");
+          .setDefault(true)
+          .setMessageTrue("Calls may not be argued.");
       case CHECK_OWNERSHIP:
         return new GameOptionBoolean(GameOptionId.CHECK_OWNERSHIP)
           .setDefault(true)
