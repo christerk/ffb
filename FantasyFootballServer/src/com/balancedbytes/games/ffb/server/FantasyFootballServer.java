@@ -29,278 +29,286 @@ import com.balancedbytes.games.ffb.util.ArrayTool;
 import com.balancedbytes.games.ffb.util.StringTool;
 import com.fumbbl.rng.Fortuna;
 
-
 /**
  * 
  * @author Kalimar
  */
 public class FantasyFootballServer {
-  
-  public static final String SERVER_VERSION = "1.2.6";
-  public static final String CLIENT_VERSION = "1.2.6";
 
-  private static final String _USAGE = "java -jar FantasyFootballServer.jar standalone\n"
-                                     + "java -jar FantasyFootballServer.jar standalone initDb\n"
-                                     + "java -jar FantasyFootballServer.jar fumbbl\n"
-                                     + "java -jar FantasyFootballServer.jar fumbbl initDb\n";
-  
-  private ServerMode fMode;
-  private DbQueryFactory fDbQueryFactory;
-  private DbUpdateFactory fDbUpdateFactory;
-  private DbUpdater fDbUpdater;
-  private Thread fPersistenceUpdaterThread;
-  private ServerCommunication fCommunication;
-  private Thread fCommunicationThread;
-  private ServerCommandHandlerFactory fCommandHandlerFactory;
-  private GameCache fGameCache;
-  private SessionManager fSessionManager;
-  private Properties fProperties;
-  private Fortuna fFortuna;
-  private Timer fPingTimer;
-  private DebugLog fDebugLog;
-  private ServerReplayer fReplayer;
-  private ServerRequestProcessor fServerRequestProcessor;
-  private boolean fBlockingNewGames;
-  
-  public FantasyFootballServer(ServerMode pMode, Properties pProperties) {
-    fMode = pMode;
-    fProperties = pProperties;
-  }
-  
-  public ServerMode getMode() {
-    return fMode;
-  }
-  
-  public DebugLog getDebugLog() {
-    return fDebugLog;
-  }
-  
-  public void run() throws Exception {
+	public static final String SERVER_VERSION = "1.2.6";
+	public static final String CLIENT_VERSION = "1.2.6";
 
-    fPingTimer = new Timer(true);
-    fFortuna = new Fortuna();
+	private static final String _USAGE = "java -jar FantasyFootballServer.jar standalone\n"
+	        + "java -jar FantasyFootballServer.jar standalone initDb\n"
+	        + "java -jar FantasyFootballServer.jar fumbbl\n"
+	        + "java -jar FantasyFootballServer.jar fumbbl initDb\n";
 
-    File logDir = null;
-    String logDirProperty = getProperty(IServerProperty.SERVER_LOG_DIR);
-    if (StringTool.isProvided(logDirProperty)) {
-      logDir = new File(logDirProperty);
-    }
-    int logLevel = IServerLogLevel.ERROR;
-    String logLevelProperty = getProperty(IServerProperty.SERVER_LOG_LEVEL);
-    if (StringTool.isProvided(logLevelProperty)) {
-      try {
-        logLevel = Integer.parseInt(logLevelProperty);
-      } catch (NumberFormatException pNumberFormatException) {
-        // logLevel remains at ERROR
-      }
-    }
-    fDebugLog = new DebugLog(this, logDir, logLevel);
+	private ServerMode fMode;
+	private DbQueryFactory fDbQueryFactory;
+	private DbUpdateFactory fDbUpdateFactory;
+	private DbUpdater fDbUpdater;
+	private Thread fPersistenceUpdaterThread;
+	private ServerCommunication fCommunication;
+	private Thread fCommunicationThread;
+	private ServerCommandHandlerFactory fCommandHandlerFactory;
+	private GameCache fGameCache;
+	private SessionManager fSessionManager;
+	private Properties fProperties;
+	private Fortuna fFortuna;
+	private Timer fPingTimer;
+	private DebugLog fDebugLog;
+	private ServerReplayer fReplayer;
+	private ServerRequestProcessor fServerRequestProcessor;
+	private boolean fBlockingNewGames;
 
-    try {
-      Class.forName(getProperty(IServerProperty.DB_DRIVER));
-    } catch (ClassNotFoundException cnfe) {
-      throw new SQLException("JDBCDriver Class not found");
-    }
+	public FantasyFootballServer(ServerMode pMode, Properties pProperties) {
+		fMode = pMode;
+		fProperties = pProperties;
+	}
 
-    DbConnectionManager dbConnectionManager = new DbConnectionManager(this);
-    dbConnectionManager.setDbUrl(getProperty(IServerProperty.DB_URL));
-    dbConnectionManager.setDbUser(getProperty(IServerProperty.DB_USER));
-    dbConnectionManager.setDbPassword(getProperty(IServerProperty.DB_PASSWORD));
-    
-    if (fMode.isInitDb()) {
-      
-      System.err.println("FantasyFootballServer " + SERVER_VERSION + " initializing database.");
+	public ServerMode getMode() {
+		return fMode;
+	}
 
-      DbInitializer dbInitializer = new DbInitializer(dbConnectionManager);
-      dbInitializer.initDb();
+	public DebugLog getDebugLog() {
+		return fDebugLog;
+	}
 
-    } else {
+	public void run() throws Exception {
 
-      fDbQueryFactory = new DbQueryFactory(dbConnectionManager);
-      fDbQueryFactory.prepareStatements();
+		fPingTimer = new Timer(true);
+		fFortuna = new Fortuna();
 
-      fDbUpdateFactory = new DbUpdateFactory(dbConnectionManager);
-      fDbUpdateFactory.prepareStatements();
+		File logDir = null;
+		String logDirProperty = getProperty(IServerProperty.SERVER_LOG_DIR);
+		if (StringTool.isProvided(logDirProperty)) {
+			logDir = new File(logDirProperty);
+		}
+		int logLevel = IServerLogLevel.ERROR;
+		String logLevelProperty = getProperty(IServerProperty.SERVER_LOG_LEVEL);
+		if (StringTool.isProvided(logLevelProperty)) {
+			try {
+				logLevel = Integer.parseInt(logLevelProperty);
+			} catch (NumberFormatException pNumberFormatException) {
+				// logLevel remains at ERROR
+			}
+		}
+		fDebugLog = new DebugLog(this, logDir, logLevel);
 
-      fGameCache = new GameCache(this);
-      fGameCache.init();
-      
-      fDbUpdater = new DbUpdater(this);
-      fPersistenceUpdaterThread = new Thread(fDbUpdater);
-      fPersistenceUpdaterThread.start();
-              
-      fSessionManager = new SessionManager();
+		try {
+			Class.forName(getProperty(IServerProperty.DB_DRIVER));
+		} catch (ClassNotFoundException cnfe) {
+			throw new SQLException("JDBCDriver Class not found");
+		}
 
-      fCommandHandlerFactory = new ServerCommandHandlerFactory(this); 
+		DbConnectionManager dbConnectionManager = new DbConnectionManager(this);
+		dbConnectionManager.setDbUrl(getProperty(IServerProperty.DB_URL));
+		dbConnectionManager.setDbUser(getProperty(IServerProperty.DB_USER));
+		dbConnectionManager.setDbPassword(getProperty(IServerProperty.DB_PASSWORD));
 
-      fCommunication = new ServerCommunication(this);
-      fCommunicationThread = new Thread(fCommunication);
-      fCommunicationThread.start();
-      
-      String httpPortProperty = getProperty(IServerProperty.SERVER_PORT);
-      String httpDirProperty = getProperty(IServerProperty.SERVER_BASE_DIR);
-      if (StringTool.isProvided(httpPortProperty) && StringTool.isProvided(httpDirProperty)) {
-        Server server = new Server(Integer.parseInt(httpPortProperty));
-        ServletContextHandler context = new ServletContextHandler();
-        context.setContextPath("/");
-        server.setHandler(context);
-        File httpDir = new File(httpDirProperty);
-        context.addServlet(new ServletHolder(new AdminServlet(this)), "/admin/*");
-        context.addServlet(new ServletHolder(new BackupServlet(this)), "/backup/*");
-        context.addServlet(new ServletHolder(new CommandServlet(this)), "/command/*");
-        ServletHolder fileServletHolder = new ServletHolder(new FileServlet(this));
-        fileServletHolder.setInitParameter("resourceBase", httpDir.getAbsolutePath());
-        fileServletHolder.setInitParameter("pathInfoOnly", "true");
-        context.addServlet(fileServletHolder, "/*");
-        server.start();
-      }
-      
-      String pingIntervalProperty = getProperty(IServerProperty.SERVER_PING_INTERVAL);
-      if (StringTool.isProvided(pingIntervalProperty)) {
-        int pingInterval = Integer.parseInt(pingIntervalProperty);
-        String pingMaxDelayProperty = getProperty(IServerProperty.SERVER_PING_MAX_DELAY);
-        int pingMaxDelay = StringTool.isProvided(pingMaxDelayProperty) ? Integer.parseInt(pingMaxDelayProperty) : 0;
-        String dbKeepAliveProperty = getProperty(IServerProperty.DB_KEEP_ALIVE);
-        int dbKeepAlive = StringTool.isProvided(dbKeepAliveProperty) ? Integer.parseInt(dbKeepAliveProperty) : 0;
-        ServerPingTask serverPingTask = new ServerPingTask(this, pingInterval, pingMaxDelay, dbKeepAlive);
-        serverPingTask.setDbConnectionManager(dbConnectionManager);
-        fPingTimer.schedule(serverPingTask, 0, pingInterval);
-      }
-      
-      fReplayer = new ServerReplayer(this);
-      Thread replayerThread = new Thread(fReplayer);
-      replayerThread.setPriority(replayerThread.getPriority() - 1);
-      replayerThread.start();
-      
-      fServerRequestProcessor = new ServerRequestProcessor(this);
-      fServerRequestProcessor.start();
+		if (fMode.isInitDb()) {
 
-      System.err.println("FantasyFootballServer " + SERVER_VERSION + " running on port " + httpPortProperty + ".");
-      
-    }
-    
-  }
-  
-  public DbQueryFactory getDbQueryFactory() {
-    return fDbQueryFactory;
-  }
-    
-  public ServerCommunication getCommunication() {
-    return fCommunication;
-  }
-  
-  public ServerCommandHandlerFactory getCommandHandlerFactory() {
-    return fCommandHandlerFactory;
-  }
-  
-  public GameCache getGameCache() {
-    return fGameCache;
-  }
-  
-  public SessionManager getSessionManager() {
-    return fSessionManager;
-  }
-  
-  public Fortuna getFortuna() {
-    return fFortuna;
-  }
-  
-  public void stop(int pStatus) {
-    fPingTimer = null;
-    if (fReplayer != null) {
-      fReplayer.stop();
-    }
-    if (getCommunication() != null) {
-      getCommunication().stop();
-      try {
-        fCommunicationThread.join();
-      } catch (InterruptedException ie) {
-      }
-      getDebugLog().log(IServerLogLevel.ERROR, "Communication Thread stopped.");
-    }
-    if (getDbUpdater() != null) {
-      getDbUpdater().stop();
-      try {
-        fPersistenceUpdaterThread.join();
-      } catch (InterruptedException ie) {
-      }
-      getDebugLog().log(IServerLogLevel.ERROR, "PersistenceUpdater Thread stopped.");
-    }
-    
-    // TODO: stop jetty?
-    
-    getDebugLog().close();
-    System.exit(pStatus);
-    
-  }
-  
-  public String getProperty(String pProperty) {
-    return fProperties.getProperty(pProperty);
-  }
-  
-  public void setProperty(String pProperty, String pValue) {
-    fProperties.setProperty(pProperty, pValue);
-  }
-  
-  public String removeProperty(String pProperty) {
-    return (String) fProperties.remove(pProperty);
-  }
-  
-  public String[] getProperties() {
-    return fProperties.keySet().toArray(new String[fProperties.size()]);
-  }
-  
-  public DbUpdater getDbUpdater() {
-    return fDbUpdater;
-  }
-  
-  public DbUpdateFactory getDbUpdateFactory() {
-    return fDbUpdateFactory;
-  }
-    
-  public ServerReplayer getReplayer() {
-    return fReplayer;
-  }
-  
-  public ServerRequestProcessor getRequestProcessor() {
-    return fServerRequestProcessor;
-  }
-  
-  public boolean isBlockingNewGames() {
-	  return fBlockingNewGames;
-  }
-  
-  public void setBlockingNewGames(boolean pBlockingNewGames) {
-	  fBlockingNewGames = pBlockingNewGames;
-  }
-  
-  public static void main(String[] args) throws IOException, SQLException {
-    
-    if (!ArrayTool.isProvided(args)) {
+			System.err.println("FantasyFootballServer " + SERVER_VERSION + " initializing database.");
 
-      System.err.println(_USAGE);
-      System.exit(0);
-      
-    } else {
+			DbInitializer dbInitializer = new DbInitializer(dbConnectionManager);
+			dbInitializer.initDb();
 
-      ServerMode serverMode = ServerMode.fromArguments(args);
+		} else {
 
-      BufferedInputStream propertyInputStream = new BufferedInputStream(new FileInputStream("server.ini"));
-      Properties properties = new Properties();
-      properties.load(propertyInputStream);
-      propertyInputStream.close();
+			fDbQueryFactory = new DbQueryFactory(dbConnectionManager);
+			fDbQueryFactory.prepareStatements();
 
-      FantasyFootballServer server = new FantasyFootballServer(serverMode, properties);
+			fDbUpdateFactory = new DbUpdateFactory(dbConnectionManager);
+			fDbUpdateFactory.prepareStatements();
 
-      try {
-        server.run();
-      } catch (Exception all) {
-        server.getDebugLog().log(all);
-        server.stop(99);
-      }
-      
-    }
-            
-  }
-  
+			fGameCache = new GameCache(this);
+			fGameCache.init();
+
+			fDbUpdater = new DbUpdater(this);
+			fPersistenceUpdaterThread = new Thread(fDbUpdater);
+			fPersistenceUpdaterThread.start();
+
+			fSessionManager = new SessionManager();
+
+			fCommandHandlerFactory = new ServerCommandHandlerFactory(this);
+
+			fCommunication = new ServerCommunication(this);
+			fCommunicationThread = new Thread(fCommunication);
+			fCommunicationThread.start();
+
+			String httpPortProperty = getProperty(IServerProperty.SERVER_PORT);
+			String httpDirProperty = getProperty(IServerProperty.SERVER_BASE_DIR);
+			if (StringTool.isProvided(httpPortProperty) && StringTool.isProvided(httpDirProperty)) {
+				Server server = new Server(Integer.parseInt(httpPortProperty));
+				ServletContextHandler context = new ServletContextHandler();
+				context.setContextPath("/");
+				server.setHandler(context);
+				File httpDir = new File(httpDirProperty);
+				context.addServlet(new ServletHolder(new AdminServlet(this)), "/admin/*");
+				context.addServlet(new ServletHolder(new BackupServlet(this)), "/backup/*");
+				context.addServlet(new ServletHolder(new CommandServlet(this)), "/command/*");
+				ServletHolder fileServletHolder = new ServletHolder(new FileServlet(this));
+				fileServletHolder.setInitParameter("resourceBase", httpDir.getAbsolutePath());
+				fileServletHolder.setInitParameter("pathInfoOnly", "true");
+				context.addServlet(fileServletHolder, "/*");
+				server.start();
+			}
+
+			String pingIntervalProperty = getProperty(IServerProperty.SERVER_PING_INTERVAL);
+			if (StringTool.isProvided(pingIntervalProperty)) {
+				int pingInterval = Integer.parseInt(pingIntervalProperty);
+				String pingMaxDelayProperty = getProperty(IServerProperty.SERVER_PING_MAX_DELAY);
+				int pingMaxDelay = StringTool.isProvided(pingMaxDelayProperty) ? Integer.parseInt(pingMaxDelayProperty)
+				        : 0;
+				String dbKeepAliveProperty = getProperty(IServerProperty.DB_KEEP_ALIVE);
+				int dbKeepAlive = StringTool.isProvided(dbKeepAliveProperty) ? Integer.parseInt(dbKeepAliveProperty)
+				        : 0;
+				ServerPingTask serverPingTask = new ServerPingTask(this, pingInterval, pingMaxDelay, dbKeepAlive);
+				serverPingTask.setDbConnectionManager(dbConnectionManager);
+				fPingTimer.schedule(serverPingTask, 0, pingInterval);
+			}
+
+			fReplayer = new ServerReplayer(this);
+			Thread replayerThread = new Thread(fReplayer);
+			replayerThread.setPriority(replayerThread.getPriority() - 1);
+			replayerThread.start();
+
+			fServerRequestProcessor = new ServerRequestProcessor(this);
+			fServerRequestProcessor.start();
+
+			System.err
+			        .println("FantasyFootballServer " + SERVER_VERSION + " running on port " + httpPortProperty + ".");
+
+		}
+
+	}
+
+	public DbQueryFactory getDbQueryFactory() {
+		return fDbQueryFactory;
+	}
+
+	public ServerCommunication getCommunication() {
+		return fCommunication;
+	}
+
+	public ServerCommandHandlerFactory getCommandHandlerFactory() {
+		return fCommandHandlerFactory;
+	}
+
+	public GameCache getGameCache() {
+		return fGameCache;
+	}
+
+	public SessionManager getSessionManager() {
+		return fSessionManager;
+	}
+
+	public Fortuna getFortuna() {
+		return fFortuna;
+	}
+
+	public void stop(int pStatus) {
+		fPingTimer = null;
+		if (fReplayer != null) {
+			fReplayer.stop();
+		}
+		if (getCommunication() != null) {
+			getCommunication().stop();
+			try {
+				fCommunicationThread.join();
+			} catch (InterruptedException ie) {
+			}
+			getDebugLog().log(IServerLogLevel.ERROR, "Communication Thread stopped.");
+		}
+		if (getDbUpdater() != null) {
+			getDbUpdater().stop();
+			try {
+				fPersistenceUpdaterThread.join();
+			} catch (InterruptedException ie) {
+			}
+			getDebugLog().log(IServerLogLevel.ERROR, "PersistenceUpdater Thread stopped.");
+		}
+		try {
+			getDbQueryFactory().closeDbConnection();
+		} catch (SQLException sqlE) {
+			getDebugLog().log(IServerLogLevel.ERROR, sqlE);
+		}
+		try {
+			getDbUpdateFactory().closeDbConnection();
+		} catch (SQLException sqlE) {
+			getDebugLog().log(IServerLogLevel.ERROR, sqlE);
+		}
+		getDebugLog().close();
+		System.exit(pStatus);
+	}
+
+	public String getProperty(String pProperty) {
+		return fProperties.getProperty(pProperty);
+	}
+
+	public void setProperty(String pProperty, String pValue) {
+		fProperties.setProperty(pProperty, pValue);
+	}
+
+	public String removeProperty(String pProperty) {
+		return (String) fProperties.remove(pProperty);
+	}
+
+	public String[] getProperties() {
+		return fProperties.keySet().toArray(new String[fProperties.size()]);
+	}
+
+	public DbUpdater getDbUpdater() {
+		return fDbUpdater;
+	}
+
+	public DbUpdateFactory getDbUpdateFactory() {
+		return fDbUpdateFactory;
+	}
+
+	public ServerReplayer getReplayer() {
+		return fReplayer;
+	}
+
+	public ServerRequestProcessor getRequestProcessor() {
+		return fServerRequestProcessor;
+	}
+
+	public boolean isBlockingNewGames() {
+		return fBlockingNewGames;
+	}
+
+	public void setBlockingNewGames(boolean pBlockingNewGames) {
+		fBlockingNewGames = pBlockingNewGames;
+	}
+
+	public static void main(String[] args) throws IOException, SQLException {
+
+		if (!ArrayTool.isProvided(args)) {
+
+			System.err.println(_USAGE);
+			System.exit(0);
+
+		} else {
+
+			ServerMode serverMode = ServerMode.fromArguments(args);
+
+			BufferedInputStream propertyInputStream = new BufferedInputStream(new FileInputStream("server.ini"));
+			Properties properties = new Properties();
+			properties.load(propertyInputStream);
+			propertyInputStream.close();
+
+			FantasyFootballServer server = new FantasyFootballServer(serverMode, properties);
+
+			try {
+				server.run();
+			} catch (Exception all) {
+				server.getDebugLog().log(all);
+				server.stop(99);
+			}
+
+		}
+
+	}
+
 }

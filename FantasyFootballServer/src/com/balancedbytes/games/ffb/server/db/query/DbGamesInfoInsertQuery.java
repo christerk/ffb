@@ -34,7 +34,22 @@ public class DbGamesInfoInsertQuery extends DbStatement {
   public void prepare(Connection pConnection) {
     try {
       StringBuilder sql = new StringBuilder();
-      sql.append("INSERT INTO ").append(IDbTableGamesInfo.TABLE_NAME).append(" VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+      sql.append("INSERT INTO ").append(IDbTableGamesInfo.TABLE_NAME);
+      sql.append("(").append(IDbTableGamesInfo.COLUMN_SCHEDULED).append(","); // 1
+      sql.append(IDbTableGamesInfo.COLUMN_STARTED).append(",");  // 2
+      sql.append(IDbTableGamesInfo.COLUMN_FINISHED).append(",");  // 3
+      sql.append(IDbTableGamesInfo.COLUMN_COACH_HOME).append(",");  // 4)
+      sql.append(IDbTableGamesInfo.COLUMN_TEAM_HOME_ID).append(",");  // 5
+      sql.append(IDbTableGamesInfo.COLUMN_TEAM_HOME_NAME).append(",");  // 6
+      sql.append(IDbTableGamesInfo.COLUMN_COACH_AWAY).append(",");  // 7
+      sql.append(IDbTableGamesInfo.COLUMN_TEAM_AWAY_ID).append(",");  // 8
+      sql.append(IDbTableGamesInfo.COLUMN_TEAM_AWAY_NAME).append(",");  // 9
+      sql.append(IDbTableGamesInfo.COLUMN_HALF).append(",");  // 10
+      sql.append(IDbTableGamesInfo.COLUMN_TURN).append(",");  // 11
+      sql.append(IDbTableGamesInfo.COLUMN_HOME_PLAYING).append(",");  // 12
+      sql.append(IDbTableGamesInfo.COLUMN_STATUS).append(",");  // 13
+      sql.append(IDbTableGamesInfo.COLUMN_TESTING).append(")");  // 14
+	  sql.append(" VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
       fStatement = pConnection.prepareStatement(sql.toString(), Statement.RETURN_GENERATED_KEYS);
     } catch (SQLException sqlE) {
       throw new FantasyFootballException(sqlE);
@@ -48,22 +63,20 @@ public class DbGamesInfoInsertQuery extends DbStatement {
     try {
       Game game = pGameState.getGame();
       int col = 1;
-      fStatement.setLong(col++, game.getId());                                                                              // 1
-      fStatement.setTimestamp(col++, (game.getScheduled() != null) ? new Timestamp(game.getScheduled().getTime()) : null);  // 2
-      fStatement.setTimestamp(col++, (game.getStarted() != null) ? new Timestamp(game.getStarted().getTime()) : null);      // 3
-      fStatement.setTimestamp(col++, (game.getFinished() != null) ? new Timestamp(game.getFinished().getTime()) : null);    // 4
-      fStatement.setString(col++, (game.getTeamHome() != null) ? game.getTeamHome().getCoach() : null);                     // 5
-      fStatement.setString(col++, (game.getTeamHome() != null) ? game.getTeamHome().getId() : null);                        // 6
-      fStatement.setString(col++, (game.getTeamHome() != null) ? game.getTeamHome().getName() : null);                      // 7
-      fStatement.setString(col++, (game.getTeamAway() != null) ? game.getTeamAway().getCoach() : null);                     // 8
-      fStatement.setString(col++, (game.getTeamAway() != null) ? game.getTeamAway().getId() : null);                        // 9
-      fStatement.setString(col++, (game.getTeamAway() != null) ? game.getTeamAway().getName() : null);                      // 10
-      fStatement.setByte(col++, (byte) game.getHalf());                                                                     // 11
-      fStatement.setByte(col++, (byte) Math.min(game.getTurnDataHome().getTurnNr(), game.getTurnDataAway().getTurnNr()));   // 12
-      fStatement.setBoolean(col++, game.isHomePlaying());                                                                   // 13
-      fStatement.setString(col++,(pGameState.getStatus() != null) ? pGameState.getStatus().getTypeString() : " ");          // 14
-      fStatement.setBoolean(col++, game.isTesting());                                                                       // 15
-      fStatement.setTimestamp(col++, null);                                                                                 // 16
+      fStatement.setTimestamp(col++, (game.getScheduled() != null) ? new Timestamp(game.getScheduled().getTime()) : null);  // 1
+      fStatement.setTimestamp(col++, (game.getStarted() != null) ? new Timestamp(game.getStarted().getTime()) : null);      // 2
+      fStatement.setTimestamp(col++, (game.getFinished() != null) ? new Timestamp(game.getFinished().getTime()) : null);    // 3
+      fStatement.setString(col++, (game.getTeamHome() != null) ? game.getTeamHome().getCoach() : null);                     // 4
+      fStatement.setString(col++, (game.getTeamHome() != null) ? game.getTeamHome().getId() : null);                        // 5
+      fStatement.setString(col++, (game.getTeamHome() != null) ? game.getTeamHome().getName() : null);                      // 6
+      fStatement.setString(col++, (game.getTeamAway() != null) ? game.getTeamAway().getCoach() : null);                     // 7
+      fStatement.setString(col++, (game.getTeamAway() != null) ? game.getTeamAway().getId() : null);                        // 8
+      fStatement.setString(col++, (game.getTeamAway() != null) ? game.getTeamAway().getName() : null);                      // 9
+      fStatement.setByte(col++, (byte) game.getHalf());                                                                     // 10
+      fStatement.setByte(col++, (byte) Math.min(game.getTurnDataHome().getTurnNr(), game.getTurnDataAway().getTurnNr()));   // 11
+      fStatement.setBoolean(col++, game.isHomePlaying());                                                                   // 12
+      fStatement.setString(col++,(pGameState.getStatus() != null) ? pGameState.getStatus().getTypeString() : " ");          // 13
+      fStatement.setBoolean(col++, game.isTesting());                                                                       // 14
       fStatement.executeUpdate();
       ResultSet rs = fStatement.getGeneratedKeys();
       if (rs.next()) {

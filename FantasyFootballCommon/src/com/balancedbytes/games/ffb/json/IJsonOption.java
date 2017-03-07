@@ -52,6 +52,7 @@ public interface IJsonOption {
                JsonBooleanOption APOTHECARY = new JsonBooleanOption("apothecary");
                JsonBooleanOption APOTHECARY_USED = new JsonBooleanOption("apothecaryUsed");
                JsonBooleanOption ARGUE_THE_CALL = new JsonBooleanOption("argueTheCall");
+               JsonBooleanOption ARGUE_THE_CALL_SUCCESSFUL = new JsonBooleanOption("argueTheCallSuccessful");
                JsonBooleanOption ARMOR_BROKEN = new JsonBooleanOption("armorBroken");
                  JsonArrayOption ARMOR_MODIFIERS = new JsonArrayOption("armorModifiers");
               JsonIntArrayOption ARMOR_ROLL = new JsonIntArrayOption("armorRoll");

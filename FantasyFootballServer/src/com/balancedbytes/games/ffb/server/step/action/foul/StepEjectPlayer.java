@@ -143,6 +143,7 @@ public class StepEjectPlayer extends AbstractStep {
     JsonObject jsonObject = super.toJsonValue();
     IServerJsonOption.GOTO_LABEL_ON_END.addTo(jsonObject, fGotoLabelOnEnd);
     IServerJsonOption.FOULER_HAS_BALL.addTo(jsonObject, fFoulerHasBall);
+    IServerJsonOption.ARGUE_THE_CALL_SUCCESSFUL.addTo(jsonObject, fArgueTheCallSuccessful);
     return jsonObject;
   }
   
@@ -152,6 +153,7 @@ public class StepEjectPlayer extends AbstractStep {
     JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
     fGotoLabelOnEnd = IServerJsonOption.GOTO_LABEL_ON_END.getFrom(jsonObject);
     fFoulerHasBall = IServerJsonOption.FOULER_HAS_BALL.getFrom(jsonObject);
+    fArgueTheCallSuccessful = IServerJsonOption.ARGUE_THE_CALL_SUCCESSFUL.getFrom(jsonObject);
     return this;
   }
 
