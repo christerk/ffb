@@ -16,6 +16,7 @@ import com.balancedbytes.games.ffb.server.net.commands.InternalServerCommandUplo
 import com.balancedbytes.games.ffb.server.util.UtilServerHttpClient;
 import com.balancedbytes.games.ffb.util.StringTool;
 import com.eclipsesource.json.JsonValue;
+import com.eclipsesource.json.ParseException;
 
 
 /**
@@ -63,8 +64,11 @@ public class ServerRequestLoadReplay extends ServerRequest {
         gameState = new GameState(server);
         gameState.initFrom(jsonValue);
       }
-    } catch (IOException pIoException) {
-      server.getDebugLog().log(getGameId(), new FantasyFootballException("Unable to load Replay", pIoException));
+    } catch (ParseException parseException) {
+      server.getDebugLog().log(getGameId(), new FantasyFootballException("Unable to load Replay", parseException));
+      return;
+    } catch (IOException ioException) {
+      server.getDebugLog().log(getGameId(), new FantasyFootballException("Unable to load Replay", ioException));
       return;
     }
     if (gameState != null) {
