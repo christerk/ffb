@@ -45,7 +45,7 @@ public class ScoreBarComponent extends JPanel implements MouseMotionListener {
   private static final Font _SPECTATOR_FONT = new Font("Sans Serif", Font.BOLD, 14);
   
   private Rectangle _WEATHER_LOCATION = new Rectangle(WIDTH - 101, 0, 100, 32);
-  private Rectangle _SPECTATOR_LOCATION = new Rectangle((WIDTH / 2 + 145), 0, 130, 32);
+  private Rectangle _SPECTATOR_LOCATION = new Rectangle((WIDTH / 2 + 160), 0, 130, 32);
   private Rectangle _COACH_BANNED_HOME = new Rectangle((WIDTH / 2 - 130 - 36), 0, 36, 32);
   private Rectangle _COACH_BANNED_AWAY = new Rectangle((WIDTH / 2 + 130), 0, 36, 32);
   

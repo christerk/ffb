@@ -198,6 +198,14 @@ public class DiceRoller {
     return randomPlayer;
   }
   
+  public String randomPlayerId(String[] playerIds) {
+    String randomPlayerId = null;
+    if (ArrayTool.isProvided(playerIds)) {
+      randomPlayerId = playerIds[rollDice(playerIds.length) - 1];
+    }
+    return randomPlayerId;
+  }
+  
   public Card drawCard(CardDeck pDeck) {
   	return pDeck.draw(rollDice(pDeck.size()) - 1);
   }

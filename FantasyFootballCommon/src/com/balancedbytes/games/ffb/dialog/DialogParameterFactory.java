@@ -84,6 +84,8 @@ public class DialogParameterFactory {
         return new DialogPassBlockParameter();
       case BUY_CARDS:
         return new DialogBuyCardsParameter();
+      case ARGUE_THE_CALL:
+        return new DialogArgueTheCallParameter();
       default:
         return null;
     }

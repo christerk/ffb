@@ -7,9 +7,9 @@ package com.balancedbytes.games.ffb.server.step;
  */
 public enum StepParameterKey {
 
+    ADMIN_MODE,                   // Boolean
 	APOTHECARY_MODE,              // ApothecaryMode
 	ARGUE_THE_CALL_SUCCESFUL,     // Boolean
-	AUTOMATIC_RE_ROLL,            // Boolean
 	BLOCK_DEFENDER_ID,            // String
 	BLOCK_RESULT,                 // BlockResult
 	BLOCK_ROLL,                   // int[]
@@ -22,11 +22,11 @@ public enum StepParameterKey {
 	COORDINATE_TO,                // FieldCoordinate
 	DEFENDER_POSITION,            // FieldCoordinate
 	DEFENDER_PUSHED,              // Boolean
-  DICE_INDEX,                   // Integer
+    DICE_INDEX,                   // Integer
 	DISPATCH_PLAYER_ACTION,       // PlayerAction
 	DODGE_ROLL,                   // Integer
 	DROP_THROWN_PLAYER,           // Boolean
-	END_INDUCEMENT_PHASE,   	    // Boolean
+	END_INDUCEMENT_PHASE,   	  // Boolean
 	END_PLAYER_ACTION,            // Boolean
 	END_TURN,                     // Boolean
 	FEEDING_ALLOWED,              // Boolean
@@ -54,7 +54,7 @@ public enum StepParameterKey {
 	INDUCEMENT_GOLD_HOME,         // Integer
 	INDUCEMENT_PHASE,             // InducementPhase
 	INDUCEMENT_USE,               // InducementUse
-	INJURY_RESULT,					      // InjuryResult
+	INJURY_RESULT,			      // InjuryResult
 	INJURY_TYPE,                  // InjuryType
 	INTERCEPTOR_ID,               // String
 	KICKING_PLAYER_COORDINATE,    // FieldCoordinate

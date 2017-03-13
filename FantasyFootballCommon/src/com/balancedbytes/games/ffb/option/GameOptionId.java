@@ -33,6 +33,7 @@ public enum GameOptionId implements IEnumWithName {
   PILING_ON_INJURY_ONLY("pilingOnInjuryOnly"),
   PILING_ON_ARMOR_ONLY("pilingOnArmorOnly"),
   PILING_ON_TO_KO_ON_DOUBLE("pilingOnToKoOnDouble"),
+  PILING_ON_USES_A_TEAM_REROLL("pilingOnUsesATeamReroll"),
   RIGHT_STUFF_CANCELS_TACKLE("rightStuffCancelsTackle"),
   SNEAKY_GIT_AS_FOUL_GUARD("sneakyGitAsFoulGuard"),
   SNEAKY_GIT_BAN_TO_KO("sneakyGitBanToKo"),
@@ -40,6 +41,7 @@ public enum GameOptionId implements IEnumWithName {
   SPIKED_BALL("spikedBall"),
   
   ARGUE_THE_CALL("argueTheCall"),
+  MVP_NOMINATIONS("mvpNominations"),
 
   EXTRA_MVP("extraMvp"),
   

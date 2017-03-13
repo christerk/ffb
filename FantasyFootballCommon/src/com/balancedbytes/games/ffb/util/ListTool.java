@@ -11,5 +11,23 @@ public class ListTool {
       return list.get(0);
     }
   }
+  
+  public static boolean addAll(List<String> list, String[] array) {
+    if ((list == null) || (array == null) || (array.length == 0)) {
+      return false;
+    }
+    for (String element : array) {
+      list.add(element);
+    }
+    return true;
+  }
+
+  public static boolean replaceAll(List<String> list, String[] array) {
+    if (list == null) {
+      return false;
+    }
+    list.clear();
+    return addAll(list, array);
+  }
 
 }

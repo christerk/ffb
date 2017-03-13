@@ -3,8 +3,14 @@
 
 [b]Improvements:[/b]
 
+- BB2016 Rule: nominate 3 players at the end of the game, 1 of these gets the MVP award 
+- Option "mvpNominations" determines how many players must be nominated for an MVP
+  0 = random choice, 1 = you can choose which player gets the MVP, 3 = default
+- BB2016 Rule: Piling On not being available is handled by Fumbbl directly
+- Option "pilingOnUsesATeamReroll" (true/false) makes Piling On cost a Team ReRoll
+- Games are marked as such in the database when they have been conceded or ended by the Admins
+
 [b]Bugfixes:[/b]
 
-- Stand Up Dice Roll for a tree showing 0
-- Sneaky Git not working with Argue the Call
-- Succesful Argue the call keeping the player on the field instead of sending him to the Reserve Box
+- BB2016 Rule: Argue the Call fixed and activated by default
+- Sneaky Git not breaking armor & rolling a double breaks the client

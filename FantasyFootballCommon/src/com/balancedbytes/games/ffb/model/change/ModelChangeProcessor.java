@@ -217,6 +217,9 @@ public class ModelChangeProcessor {
   		case GAME_SET_TESTING:
   			pGame.setTesting((Boolean) pModelChange.getValue());
   			return true;
+        case GAME_SET_ADMIN_MODE:
+            pGame.setAdminMode((Boolean) pModelChange.getValue());
+            return true;
   		case GAME_SET_THROWER_ID:
   			pGame.setThrowerId(pModelChange.getKey());
   			return true;

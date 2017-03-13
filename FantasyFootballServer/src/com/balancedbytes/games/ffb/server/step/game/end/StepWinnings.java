@@ -23,44 +23,44 @@ import com.eclipsesource.json.JsonValue;
 /**
  * Step in end game sequence to roll winnings.
  * 
- * Needs to be initialized with stepParameter AUTOMATIC_RE_ROLL.
+ * Needs to be initialized with stepParameter ADMIN_MODE.
  * 
  * @author Kalimar
  */
 public final class StepWinnings extends AbstractStepWithReRoll {
-	
-	private boolean fAutomaticReRoll;
 
-	public StepWinnings(GameState pGameState) {
-		super(pGameState);
-	}
+  private boolean fAdminMode;
 
-	public StepId getId() {
-		return StepId.WINNINGS;
-	}
-	
-  @Override
-  public void init(StepParameterSet pParameterSet) {
-  	if (pParameterSet != null) {
-  		for (StepParameter parameter : pParameterSet.values()) {
-  			switch (parameter.getKey()) {
-  				// mandatory
-  				case AUTOMATIC_RE_ROLL:
-  					fAutomaticReRoll = (parameter.getValue() != null) ? (Boolean) parameter.getValue() : false;
-  					break;
-					default:
-						break;
-  			}
-  		}
-  	}
+  public StepWinnings(GameState pGameState) {
+    super(pGameState);
   }
 
-	@Override
-	public void start() {
-		super.start();
-		executeStep();
-	}
-	
+  public StepId getId() {
+    return StepId.WINNINGS;
+  }
+
+  @Override
+  public void init(StepParameterSet pParameterSet) {
+    if (pParameterSet != null) {
+      for (StepParameter parameter : pParameterSet.values()) {
+        switch (parameter.getKey()) {
+        // mandatory
+        case ADMIN_MODE:
+          fAdminMode = (parameter.getValue() != null) ? (Boolean) parameter.getValue() : false;
+          break;
+        default:
+          break;
+        }
+      }
+    }
+  }
+
+  @Override
+  public void start() {
+    super.start();
+    executeStep();
+  }
+
   @Override
   public StepCommandStatus handleCommand(ReceivedCommand pReceivedCommand) {
     StepCommandStatus commandStatus = super.handleCommand(pReceivedCommand);
@@ -75,27 +75,30 @@ public final class StepWinnings extends AbstractStepWithReRoll {
     Game game = getGameState().getGame();
     if ((getReRolledAction() == null) || ((getReRolledAction() == ReRolledAction.WINNINGS) && (getReRollSource() != null))) {
       ReportWinningsRoll reportWinnings = rollWinnings();
-      if (fAutomaticReRoll) {
-      	// roll winnings, reroll on a 1 or 2 -->
+      if (fAdminMode) {
+        // roll winnings, reroll on a 1 or 2 -->
         GameResult gameResult = game.getGameResult();
         int scoreDiffHome = gameResult.getTeamResultHome().getScore() - gameResult.getTeamResultAway().getScore();
         if (((scoreDiffHome > 0) && (reportWinnings.getWinningsRollHome() < 3)) || ((scoreDiffHome < 0) && (reportWinnings.getWinningsRollAway() < 3))) {
-        	reportWinnings = rollWinnings();
+          reportWinnings = rollWinnings();
         }
         // <--
-      	UtilServerDialog.hideDialog(getGameState());
+        UtilServerDialog.hideDialog(getGameState());
       }
       getResult().addReport(reportWinnings);
     }
     if (game.getDialogParameter() == null) {
       getResult().addReport(concedeWinnings());
+      if (fAdminMode) {
+        game.setAdminMode(true);
+      }
       getResult().setNextAction(StepAction.NEXT_STEP);
     }
   }
-  
+
   private ReportWinningsRoll rollWinnings() {
     Game game = getGameState().getGame();
-    GameResult gameResult = game.getGameResult(); 
+    GameResult gameResult = game.getGameResult();
     int scoreDiffHome = gameResult.getTeamResultHome().getScore() - gameResult.getTeamResultAway().getScore();
     int winningsHome = 0;
     int rollHome = 0;
@@ -127,11 +130,11 @@ public final class StepWinnings extends AbstractStepWithReRoll {
     }
     return new ReportWinningsRoll(rollHome, gameResult.getTeamResultHome().getWinnings(), rollAway, gameResult.getTeamResultAway().getWinnings());
   }
-  
+
   private ReportWinningsRoll concedeWinnings() {
     ReportWinningsRoll report = null;
     Game game = getGameState().getGame();
-    GameResult gameResult = game.getGameResult(); 
+    GameResult gameResult = game.getGameResult();
     if (gameResult.getTeamResultHome().hasConceded() && (UtilPlayer.findPlayersInReserveOrField(game, game.getTeamHome()).length > 2)) {
       gameResult.getTeamResultAway().setWinnings(gameResult.getTeamResultAway().getWinnings() + gameResult.getTeamResultHome().getWinnings());
       gameResult.getTeamResultHome().setWinnings(0);
@@ -144,21 +147,21 @@ public final class StepWinnings extends AbstractStepWithReRoll {
     }
     return report;
   }
-  
+
   // JSON serialization
-  
+
   @Override
   public JsonObject toJsonValue() {
     JsonObject jsonObject = super.toJsonValue();
-    IServerJsonOption.AUTOMATIC_RE_ROLL.addTo(jsonObject, fAutomaticReRoll);
+    IServerJsonOption.ADMIN_MODE.addTo(jsonObject, fAdminMode);
     return jsonObject;
   }
-  
+
   @Override
   public StepWinnings initFrom(JsonValue pJsonValue) {
     super.initFrom(pJsonValue);
     JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-    fAutomaticReRoll = IServerJsonOption.AUTOMATIC_RE_ROLL.getFrom(jsonObject);
+    fAdminMode = IServerJsonOption.ADMIN_MODE.getFrom(jsonObject);
     return this;
   }
 

@@ -26,7 +26,7 @@ public class DialogArgueTheCallParameter implements IDialogParameter {
 
   public DialogArgueTheCallParameter(String teamId) {
     this();
-    fTeamId = teamId;
+    setTeamId(teamId);
   }
   
   public DialogId getId() {
@@ -35,6 +35,10 @@ public class DialogArgueTheCallParameter implements IDialogParameter {
 
   public String getTeamId() {
     return fTeamId;
+  }
+  
+  public void setTeamId(String teamId) {
+    fTeamId = teamId;
   }
   
   public void addPlayerId(String pPlayerId) {
@@ -68,7 +72,7 @@ public class DialogArgueTheCallParameter implements IDialogParameter {
   public JsonObject toJsonValue() {
     JsonObject jsonObject = new JsonObject();
     IJsonOption.DIALOG_ID.addTo(jsonObject, getId());
-    IJsonOption.TEAM_ID.addTo(jsonObject, fTeamId);
+    IJsonOption.TEAM_ID.addTo(jsonObject, getTeamId());
     IJsonOption.PLAYER_IDS.addTo(jsonObject, getPlayerIds());
     return jsonObject;
   }
@@ -76,7 +80,7 @@ public class DialogArgueTheCallParameter implements IDialogParameter {
   public DialogArgueTheCallParameter initFrom(JsonValue pJsonValue) {
     JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
     UtilDialogParameter.validateDialogId(this, (DialogId) IJsonOption.DIALOG_ID.getFrom(jsonObject));
-    fTeamId = IJsonOption.TEAM_ID.getFrom(jsonObject);
+    setTeamId(IJsonOption.TEAM_ID.getFrom(jsonObject));
     addPlayerIds(IJsonOption.PLAYER_IDS.getFrom(jsonObject));
     return this;
   }

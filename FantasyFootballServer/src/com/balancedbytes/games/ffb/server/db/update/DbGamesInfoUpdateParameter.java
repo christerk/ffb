@@ -30,6 +30,7 @@ public class DbGamesInfoUpdateParameter extends DefaultDbUpdateParameter {
   private boolean fHomePlaying;
   private String fStatus;
   private boolean fTesting;
+  private boolean fAdminMode;
 
   public DbGamesInfoUpdateParameter(GameState pGameState) {
     if (pGameState != null) {
@@ -49,6 +50,7 @@ public class DbGamesInfoUpdateParameter extends DefaultDbUpdateParameter {
       fHomePlaying = game.isHomePlaying();
       fStatus = (pGameState.getStatus() != null) ? pGameState.getStatus().getTypeString() : " ";
       fTesting = game.isTesting();
+      fAdminMode = game.isAdminMode();
     }
   }
   
@@ -110,6 +112,10 @@ public class DbGamesInfoUpdateParameter extends DefaultDbUpdateParameter {
   
   public boolean isTesting() {
     return fTesting;
+  }
+  
+  public boolean isAdminMode() {
+    return fAdminMode;
   }
   
   public DbUpdateStatement getDbUpdateStatement(FantasyFootballServer pServer) {

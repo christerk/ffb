@@ -36,51 +36,51 @@ import com.eclipsesource.json.JsonValue;
  * 
  * Needs to be initialized with stepParameter GOTO_LABEL_ON_END.
  * 
- * Sets stepParameter FOULER_HAS_BALL for all steps on the stack.
- * Sets stepParameter ARGUE_THE_CALL_SUCCESSFUL for all steps on the stack.
+ * Sets stepParameter FOULER_HAS_BALL for all steps on the stack. Sets
+ * stepParameter ARGUE_THE_CALL_SUCCESSFUL for all steps on the stack.
  * 
  * @author Kalimar
  */
 public class StepBribes extends AbstractStep {
-	
-	private String fGotoLabelOnEnd;
-	private Boolean fArgueTheCallChoice;
-	private Boolean fArgueTheCallSuccessful;
+
+  private String fGotoLabelOnEnd;
+  private Boolean fArgueTheCallChoice;
+  private Boolean fArgueTheCallSuccessful;
   private Boolean fBribesChoice;
   private Boolean fBribeSuccessful;
 
-	public StepBribes(GameState pGameState) {
-		super(pGameState);
-	}
-	
-	public StepId getId() {
-		return StepId.BRIBES;
-	}
-	
+  public StepBribes(GameState pGameState) {
+    super(pGameState);
+  }
+
+  public StepId getId() {
+    return StepId.BRIBES;
+  }
+
   @Override
   public void init(StepParameterSet pParameterSet) {
-  	if (pParameterSet != null) {
-  		for (StepParameter parameter : pParameterSet.values()) {
-  			switch (parameter.getKey()) {
-  				case GOTO_LABEL_ON_END:
-  					fGotoLabelOnEnd = (String) parameter.getValue();
-  					break;
-					default:
-						break;
-  			}
-  		}
-  	}
-  	if (!StringTool.isProvided(fGotoLabelOnEnd)) {
-			throw new StepException("StepParameter " + StepParameterKey.GOTO_LABEL_ON_END + " is not initialized.");
-  	}
+    if (pParameterSet != null) {
+      for (StepParameter parameter : pParameterSet.values()) {
+        switch (parameter.getKey()) {
+        case GOTO_LABEL_ON_END:
+          fGotoLabelOnEnd = (String) parameter.getValue();
+          break;
+        default:
+          break;
+        }
+      }
+    }
+    if (!StringTool.isProvided(fGotoLabelOnEnd)) {
+      throw new StepException("StepParameter " + StepParameterKey.GOTO_LABEL_ON_END + " is not initialized.");
+    }
   }
-	
-	@Override
-	public void start() {
-		super.start();
-		executeStep();
-	}
-	
+
+  @Override
+  public void start() {
+    super.start();
+    executeStep();
+  }
+
   @Override
   public StepCommandStatus handleCommand(ReceivedCommand pReceivedCommand) {
     StepCommandStatus commandStatus = super.handleCommand(pReceivedCommand);
@@ -88,22 +88,24 @@ public class StepBribes extends AbstractStep {
       Game game = getGameState().getGame();
       ActingPlayer actingPlayer = game.getActingPlayer();
       switch (pReceivedCommand.getId()) {
-        case CLIENT_ARGUE_THE_CALL:
-          ClientCommandArgueTheCall argueTheCallCommand = (ClientCommandArgueTheCall) pReceivedCommand.getCommand();
-          fArgueTheCallChoice = argueTheCallCommand.hasPlayerId(actingPlayer.getPlayerId());
-          fArgueTheCallSuccessful = null;
-          commandStatus = StepCommandStatus.EXECUTE_STEP;
-          break;
-        case CLIENT_USE_INDUCEMENT:
-          ClientCommandUseInducement inducementCommand = (ClientCommandUseInducement) pReceivedCommand.getCommand();
-          if (InducementType.BRIBES == inducementCommand.getInducementType()) {
-            fBribesChoice = inducementCommand.hasPlayerId(actingPlayer.getPlayerId());
-            fBribeSuccessful = null;
-          }
-          commandStatus = StepCommandStatus.EXECUTE_STEP;
-          break;
-        default:
-          break;
+      case CLIENT_ARGUE_THE_CALL:
+        ClientCommandArgueTheCall argueTheCallCommand = (ClientCommandArgueTheCall) pReceivedCommand
+            .getCommand();
+        fArgueTheCallChoice = argueTheCallCommand.hasPlayerId(actingPlayer.getPlayerId());
+        fArgueTheCallSuccessful = null;
+        commandStatus = StepCommandStatus.EXECUTE_STEP;
+        break;
+      case CLIENT_USE_INDUCEMENT:
+        ClientCommandUseInducement inducementCommand = (ClientCommandUseInducement) pReceivedCommand
+            .getCommand();
+        if (InducementType.BRIBES == inducementCommand.getInducementType()) {
+          fBribesChoice = inducementCommand.hasPlayerId(actingPlayer.getPlayerId());
+          fBribeSuccessful = null;
+        }
+        commandStatus = StepCommandStatus.EXECUTE_STEP;
+        break;
+      default:
+        break;
       }
     }
     if (commandStatus == StepCommandStatus.EXECUTE_STEP) {
@@ -112,7 +114,7 @@ public class StepBribes extends AbstractStep {
     return commandStatus;
   }
 
-	private void executeStep() {
+  private void executeStep() {
     Game game = getGameState().getGame();
     ActingPlayer actingPlayer = game.getActingPlayer();
     if (fArgueTheCallChoice == null) {
@@ -120,7 +122,7 @@ public class StepBribes extends AbstractStep {
       publishParameter(new StepParameter(StepParameterKey.FOULER_HAS_BALL, foulerHasBall));
       askForArgueTheCall();
     }
-    if ((fArgueTheCallChoice != null) && (fArgueTheCallSuccessful == null)) {
+    if ((fArgueTheCallChoice != null) && fArgueTheCallChoice) {
       int roll = getGameState().getDiceRoller().rollArgueTheCall();
       fArgueTheCallSuccessful = DiceInterpreter.getInstance().isArgueTheCallSuccessful(roll);
       boolean coachBanned = DiceInterpreter.getInstance().isCoachBanned(roll);
@@ -129,22 +131,22 @@ public class StepBribes extends AbstractStep {
         game.getTurnData().setCoachBanned(true);
       }
     }
-    if ((fBribesChoice == null) && ((fArgueTheCallSuccessful == null) || !fArgueTheCallSuccessful)) {
+    if ((fBribesChoice == null) && (fArgueTheCallChoice != null)) {
       askForBribes();
     }
     if ((fArgueTheCallChoice != null) && (fBribesChoice != null)) {
-    	if (fBribesChoice) {
-		  	if (fBribeSuccessful == null) {
-		      Team team = game.isHomePlaying() ? game.getTeamHome() : game.getTeamAway();
-		      if (UtilServerInducementUse.useInducement(getGameState(), team, InducementType.BRIBES, 1)) {
-		        int roll = getGameState().getDiceRoller().rollBribes();
-		        fBribeSuccessful = DiceInterpreter.getInstance().isBribesSuccessful(roll);
-		        getResult().addReport(new ReportBribesRoll(actingPlayer.getPlayerId(), fBribeSuccessful, roll));
-		        if (!fBribeSuccessful) {
-		        	askForBribes();
-		        }
-		      }
-		  	}
+      if (fBribesChoice) {
+        if (fBribeSuccessful == null) {
+          Team team = game.isHomePlaying() ? game.getTeamHome() : game.getTeamAway();
+          if (UtilServerInducementUse.useInducement(getGameState(), team, InducementType.BRIBES, 1)) {
+            int roll = getGameState().getDiceRoller().rollBribes();
+            fBribeSuccessful = DiceInterpreter.getInstance().isBribesSuccessful(roll);
+            getResult().addReport(new ReportBribesRoll(actingPlayer.getPlayerId(), fBribeSuccessful, roll));
+            if (!fBribeSuccessful) {
+              askForBribes();
+            }
+          }
+        }
       }
     }
     if (((fBribeSuccessful != null) && fBribeSuccessful)) {
@@ -153,42 +155,40 @@ public class StepBribes extends AbstractStep {
     }
     if ((fArgueTheCallChoice != null) && (fBribesChoice != null)) {
       publishParameter(new StepParameter(StepParameterKey.ARGUE_THE_CALL_SUCCESFUL, (fArgueTheCallSuccessful != null) ? fArgueTheCallSuccessful : false));
-    	getResult().setNextAction(StepAction.NEXT_STEP);
+      getResult().setNextAction(StepAction.NEXT_STEP);
     }
   }
-	
+
   private void askForBribes() {
+    fBribesChoice = false;
+    if ((fArgueTheCallSuccessful == null) || !fArgueTheCallSuccessful) {
+      Game game = getGameState().getGame();
+      ActingPlayer actingPlayer = game.getActingPlayer();
+      if (game.getTurnData().getInducementSet().hasUsesLeft(InducementType.BRIBES)) {
+        Team team = game.isHomePlaying() ? game.getTeamHome() : game.getTeamAway();
+        DialogBribesParameter dialogParameter = new DialogBribesParameter(team.getId(), 1);
+        dialogParameter.addPlayerId(actingPlayer.getPlayerId());
+        UtilServerDialog.showDialog(getGameState(), dialogParameter);
+        fBribesChoice = null;
+      }
+    }
+  }
+
+  private void askForArgueTheCall() {
+    fArgueTheCallChoice = false;
     Game game = getGameState().getGame();
-    ActingPlayer actingPlayer = game.getActingPlayer();
-    if (game.getTurnData().getInducementSet().hasUsesLeft(InducementType.BRIBES)) {
+    if (UtilGameOption.isOptionEnabled(game, GameOptionId.ARGUE_THE_CALL) && !game.getTurnData().isCoachBanned()) {
+      ActingPlayer actingPlayer = game.getActingPlayer();
       Team team = game.isHomePlaying() ? game.getTeamHome() : game.getTeamAway();
-      DialogBribesParameter dialogParameter = new DialogBribesParameter(team.getId() , 1);
+      DialogArgueTheCallParameter dialogParameter = new DialogArgueTheCallParameter(team.getId());
       dialogParameter.addPlayerId(actingPlayer.getPlayerId());
       UtilServerDialog.showDialog(getGameState(), dialogParameter);
-    	fBribesChoice = null;
-    } else {
-    	fBribesChoice = false;
+      fArgueTheCallChoice = null;
     }
-  }
-  
-  
-  private void askForArgueTheCall() {
-    Game game = getGameState().getGame();
-    if (!UtilGameOption.isOptionEnabled(game, GameOptionId.ARGUE_THE_CALL) || game.getTurnData().isCoachBanned()) {
-      fArgueTheCallChoice = false;
-      fArgueTheCallSuccessful = false;
-      return;
-    }
-    ActingPlayer actingPlayer = game.getActingPlayer();
-    Team team = game.isHomePlaying() ? game.getTeamHome() : game.getTeamAway();
-    DialogArgueTheCallParameter dialogParameter = new DialogArgueTheCallParameter(team.getId()); 
-    dialogParameter.addPlayerId(actingPlayer.getPlayerId());
-    UtilServerDialog.showDialog(getGameState(), dialogParameter);
-    fArgueTheCallChoice = null;
   }
 
   // JSON serialization
-  
+
   @Override
   public JsonObject toJsonValue() {
     JsonObject jsonObject = super.toJsonValue();
@@ -197,7 +197,7 @@ public class StepBribes extends AbstractStep {
     IServerJsonOption.BRIBE_SUCCESSFUL.addTo(jsonObject, fBribeSuccessful);
     return jsonObject;
   }
-  
+
   @Override
   public StepBribes initFrom(JsonValue pJsonValue) {
     super.initFrom(pJsonValue);

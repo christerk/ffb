@@ -119,7 +119,11 @@ public class PlayerState {
   }
   
   public boolean isCasualty() {
-    return ((BADLY_HURT == getBase()) || (SERIOUS_INJURY == getBase()) || (RIP == getBase()));
+    return ((BADLY_HURT == getBase()) || (SERIOUS_INJURY == getBase()) || isKilled());
+  }
+  
+  public boolean isKilled() {
+    return (RIP == getBase());
   }
   
   public boolean canBeSetUp() {

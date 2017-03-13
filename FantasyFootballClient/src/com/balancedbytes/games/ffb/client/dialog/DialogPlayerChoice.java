@@ -29,11 +29,22 @@ public class DialogPlayerChoice extends Dialog implements ActionListener {
   private JButton fButtonSelect;
   private JButton fButtonCancel;
   private Player[] fSelectedPlayers;
+  private int fMinSelects;
 
-  public DialogPlayerChoice(FantasyFootballClient pClient, String pHeader, String[] pPlayerIds, String[] pDescriptions, int pMaxSelects, FieldCoordinate pPlayerCoordinate, boolean preSelected) {    
+  public DialogPlayerChoice(
+    FantasyFootballClient client,
+    String header,
+    String[] playerIds,
+    String[] descriptions,
+    int minSelects,
+    int maxSelects,
+    FieldCoordinate playerCoordinate,
+    boolean preSelected
+ ) {    
     
-  	super(pClient, "Player Choice", false);
-    
+  	super(client, "Player Choice", false);
+    fMinSelects = minSelects;
+  	
     fButtonSelect = new JButton("Select");
     fButtonSelect.setToolTipText("Select the checked player(s)");
     fButtonSelect.addActionListener(this);
@@ -44,8 +55,8 @@ public class DialogPlayerChoice extends Dialog implements ActionListener {
     fButtonCancel.addActionListener(this);
     fButtonCancel.setMnemonic((int) 'C'); 
 
-    fList = new PlayerCheckList(pClient, pPlayerIds, pDescriptions, pMaxSelects, preSelected);
-    fList.setVisibleRowCount(Math.min(pPlayerIds.length, 5));
+    fList = new PlayerCheckList(client, playerIds, descriptions, maxSelects, preSelected);
+    fList.setVisibleRowCount(Math.min(playerIds.length, 5));
     fList.addMouseMotionListener(new MouseMotionAdapter() {
       public void mouseMoved(MouseEvent pMouseEvent) {
         int index = fList.locationToIndex(pMouseEvent.getPoint());
@@ -68,7 +79,7 @@ public class DialogPlayerChoice extends Dialog implements ActionListener {
 
     JPanel headerPanel = new JPanel();
     headerPanel.setLayout(new BoxLayout(headerPanel, BoxLayout.X_AXIS));
-    JLabel headerLabel = new JLabel(pHeader);
+    JLabel headerLabel = new JLabel(header);
     headerLabel.setFont(new Font(headerLabel.getFont().getName(), Font.BOLD, headerLabel.getFont().getSize()));
     headerPanel.add(headerLabel);
     headerPanel.add(Box.createHorizontalGlue());
@@ -82,8 +93,10 @@ public class DialogPlayerChoice extends Dialog implements ActionListener {
     JPanel buttonPanel = new JPanel();
     buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.X_AXIS));
     buttonPanel.add(fButtonSelect);
-    buttonPanel.add(Box.createHorizontalStrut(5));
-    buttonPanel.add(fButtonCancel);
+    if (minSelects == 0) {
+      buttonPanel.add(Box.createHorizontalStrut(5));
+      buttonPanel.add(fButtonCancel);
+    }
     buttonPanel.setBorder(BorderFactory.createEmptyBorder(0, 5, 5, 5));    
     
     JPanel centerPane = new JPanel();
@@ -96,9 +109,9 @@ public class DialogPlayerChoice extends Dialog implements ActionListener {
 
     pack();
     
-    if (pPlayerCoordinate != null) {
-      int x = SideBarComponent.WIDTH + ((pPlayerCoordinate.getX() + 1) * FieldLayer.FIELD_SQUARE_SIZE);
-      int y = (pPlayerCoordinate.getY() + 1) * FieldLayer.FIELD_SQUARE_SIZE;
+    if (playerCoordinate != null) {
+      int x = SideBarComponent.WIDTH + ((playerCoordinate.getX() + 1) * FieldLayer.FIELD_SQUARE_SIZE);
+      int y = (playerCoordinate.getY() + 1) * FieldLayer.FIELD_SQUARE_SIZE;
       setLocation(x, y);
     } else {
       setLocationToCenter();
@@ -121,7 +134,7 @@ public class DialogPlayerChoice extends Dialog implements ActionListener {
     }
     if (pActionEvent.getSource() == fButtonSelect) {
       fSelectedPlayers = fList.getSelectedPlayers();
-      if (fSelectedPlayers.length > 0) {
+      if (fSelectedPlayers.length >= fMinSelects) {
         closeDialog();
       }
     }

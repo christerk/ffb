@@ -79,6 +79,10 @@ public class GameOptionFactory {
         return new GameOptionInt(GameOptionId.MIN_PLAYERS_ON_LOS)
           .setDefault(3)
           .setMessage("A minimum of $1 players must be set up on the line of scrimmage.");
+      case MVP_NOMINATIONS:
+        return new GameOptionInt(GameOptionId.MVP_NOMINATIONS)
+          .setDefault(3)
+          .setMessage("$1 players may be nominated to receice the MVP award.");
       case OVERTIME:
         return new GameOptionBoolean(GameOptionId.OVERTIME)
           .setDefault(false)
@@ -91,6 +95,10 @@ public class GameOptionFactory {
         return new GameOptionBoolean(GameOptionId.PILING_ON_ARMOR_ONLY)
           .setDefault(false)
           .setMessageTrue("Piling On lets you re-roll armour-rolls only.");
+      case PILING_ON_USES_A_TEAM_REROLL:
+        return new GameOptionBoolean(GameOptionId.PILING_ON_USES_A_TEAM_REROLL)
+          .setDefault(false)
+          .setMessageTrue("Piling On costs a Team Re-roll to use.");
       case PILING_ON_DOES_NOT_STACK:
         return new GameOptionBoolean(GameOptionId.PILING_ON_DOES_NOT_STACK)
           .setDefault(false)

@@ -14,14 +14,16 @@ public class DialogPilingOnParameter implements IDialogParameter {
   
   private String fPlayerId;
   private boolean fReRollInjury;
+  private boolean fUsesATeamReroll;
 
   public DialogPilingOnParameter() {
     super();
   }
   
-  public DialogPilingOnParameter(String pPlayerId, boolean pReRollInjury) {
-    fPlayerId = pPlayerId;
-    fReRollInjury = pReRollInjury;
+  public DialogPilingOnParameter(String playerId, boolean reRollInjury, boolean usesATeamReroll) {
+    fPlayerId = playerId;
+    fReRollInjury = reRollInjury;
+    fUsesATeamReroll = usesATeamReroll;
   }
   
   public DialogId getId() {
@@ -36,10 +38,14 @@ public class DialogPilingOnParameter implements IDialogParameter {
     return fReRollInjury;
   }
   
+  public boolean isUsesATeamReroll() {
+    return fUsesATeamReroll;
+  }
+  
   // transformation
   
   public IDialogParameter transform() {
-    return new DialogPilingOnParameter(getPlayerId(), isReRollInjury());
+    return new DialogPilingOnParameter(getPlayerId(), isReRollInjury(), isUsesATeamReroll());
   }
   
   // JSON serialization
@@ -49,6 +55,7 @@ public class DialogPilingOnParameter implements IDialogParameter {
     IJsonOption.DIALOG_ID.addTo(jsonObject, getId());
     IJsonOption.PLAYER_ID.addTo(jsonObject, fPlayerId);
     IJsonOption.RE_ROLL_INJURY.addTo(jsonObject, fReRollInjury);
+    IJsonOption.USES_A_TEAM_REROLL.addTo(jsonObject, fUsesATeamReroll);
     return jsonObject;
   }
   
@@ -57,6 +64,8 @@ public class DialogPilingOnParameter implements IDialogParameter {
     UtilDialogParameter.validateDialogId(this, (DialogId) IJsonOption.DIALOG_ID.getFrom(jsonObject));
     fPlayerId = IJsonOption.PLAYER_ID.getFrom(jsonObject);
     fReRollInjury = IJsonOption.RE_ROLL_INJURY.getFrom(jsonObject);
+    Boolean usesATeamReroll = IJsonOption.USES_A_TEAM_REROLL.getFrom(jsonObject);
+    fUsesATeamReroll = (usesATeamReroll != null) ? usesATeamReroll : false;
     return this;
   }
 

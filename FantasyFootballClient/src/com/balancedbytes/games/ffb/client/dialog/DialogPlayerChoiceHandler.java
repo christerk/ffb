@@ -16,7 +16,7 @@ import com.balancedbytes.games.ffb.model.Player;
  */
 public class DialogPlayerChoiceHandler extends DialogHandler {
   
-  private DialogPlayerChoiceParameter fDialogPlayerChoiceParameter;
+  private DialogPlayerChoiceParameter fDialogParameter;
   
   public DialogPlayerChoiceHandler(FantasyFootballClient pClient) {
     super(pClient);
@@ -25,15 +25,15 @@ public class DialogPlayerChoiceHandler extends DialogHandler {
   public void showDialog() {
     
     Game game = getClient().getGame();
-    fDialogPlayerChoiceParameter = (DialogPlayerChoiceParameter) game.getDialogParameter();
+    fDialogParameter = (DialogPlayerChoiceParameter) game.getDialogParameter();
 
-    if (fDialogPlayerChoiceParameter != null) {
+    if (fDialogParameter != null) {
     
-      if ((ClientMode.PLAYER == getClient().getMode()) && game.getTeamHome().getId().equals(fDialogPlayerChoiceParameter.getTeamId())) {
-        String dialogHeader = fDialogPlayerChoiceParameter.getPlayerChoiceMode().getDialogHeader(fDialogPlayerChoiceParameter.getMaxSelects());
+      if ((ClientMode.PLAYER == getClient().getMode()) && game.getTeamHome().getId().equals(fDialogParameter.getTeamId())) {
+        String dialogHeader = fDialogParameter.getPlayerChoiceMode().getDialogHeader(fDialogParameter.getMaxSelects());
         FieldCoordinate dialogCoordinate = null;
-        String[] playerIds = fDialogPlayerChoiceParameter.getPlayerIds();
-        if (fDialogPlayerChoiceParameter.getPlayerChoiceMode() != PlayerChoiceMode.CARD) {
+        String[] playerIds = fDialogParameter.getPlayerIds();
+        if (fDialogParameter.getPlayerChoiceMode() != PlayerChoiceMode.CARD) {
           int maxX = 0, maxY = 0;
           for (int i = 0; i < playerIds.length; i++) {
             Player player = game.getPlayerById(playerIds[i]);
@@ -47,11 +47,15 @@ public class DialogPlayerChoiceHandler extends DialogHandler {
           }
           dialogCoordinate = new FieldCoordinate(maxX, maxY);
         }
-        setDialog(new DialogPlayerChoice(getClient(), dialogHeader, playerIds, fDialogPlayerChoiceParameter.getDescriptions(), fDialogPlayerChoiceParameter.getMaxSelects(), dialogCoordinate, false));
+        int minSelects = 0;
+        if (fDialogParameter.getPlayerChoiceMode() == PlayerChoiceMode.MVP) {
+          minSelects = fDialogParameter.getMaxSelects();
+        }
+        setDialog(new DialogPlayerChoice(getClient(), dialogHeader, playerIds, fDialogParameter.getDescriptions(), minSelects, fDialogParameter.getMaxSelects(), dialogCoordinate, false));
         getDialog().showDialog(this);
         
       } else {
-        showStatus(fDialogPlayerChoiceParameter.getPlayerChoiceMode().getStatusTitle(), fDialogPlayerChoiceParameter.getPlayerChoiceMode().getStatusMessage(), StatusType.WAITING);
+        showStatus(fDialogParameter.getPlayerChoiceMode().getStatusTitle(), fDialogParameter.getPlayerChoiceMode().getStatusMessage(), StatusType.WAITING);
       }
       
     }
@@ -62,7 +66,7 @@ public class DialogPlayerChoiceHandler extends DialogHandler {
     hideDialog();
     if (testDialogHasId(pDialog, DialogId.PLAYER_CHOICE)) {
       DialogPlayerChoice playerChoiceDialog = (DialogPlayerChoice) pDialog;
-      getClient().getCommunication().sendPlayerChoice(fDialogPlayerChoiceParameter.getPlayerChoiceMode(), playerChoiceDialog.getSelectedPlayers());
+      getClient().getCommunication().sendPlayerChoice(fDialogParameter.getPlayerChoiceMode(), playerChoiceDialog.getSelectedPlayers());
     }
   }
 

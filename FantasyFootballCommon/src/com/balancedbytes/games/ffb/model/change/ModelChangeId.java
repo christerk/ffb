@@ -54,6 +54,7 @@ public enum ModelChangeId implements IEnumWithName {
   FIELD_MODEL_SET_RANGE_RULER("fieldModelSetRangeRuler", ModelChangeDataType.RANGE_RULER),
   FIELD_MODEL_SET_WEATHER("fieldModelSetWeather", ModelChangeDataType.WEATHER),
 
+  GAME_SET_ADMIN_MODE("gameSetAdminMode", ModelChangeDataType.BOOLEAN),
   GAME_SET_CONCESSION_POSSIBLE("gameSetConcessionPossible", ModelChangeDataType.BOOLEAN),
   GAME_SET_DEFENDER_ACTION("gameSetDefenderAction", ModelChangeDataType.PLAYER_ACTION),
   GAME_SET_DEFENDER_ID("gameSetDefenderId", ModelChangeDataType.STRING),

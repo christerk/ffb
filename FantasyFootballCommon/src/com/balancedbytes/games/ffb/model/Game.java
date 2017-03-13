@@ -47,6 +47,7 @@ public class Game extends ModelChangeObservable implements IJsonSerializable {
   private boolean fTimeoutEnforced;
   private boolean fConcessionPossible;
   private boolean fTesting;
+  private boolean fAdminMode;
 
   private IDialogParameter fDialogParameter;
   
@@ -446,7 +447,19 @@ public class Game extends ModelChangeObservable implements IJsonSerializable {
   public boolean isTesting() {
     return fTesting;
   }
+
+  public void setAdminMode(boolean adminMode) {
+    if (adminMode == fAdminMode) {
+        return;
+    }
+    fAdminMode = adminMode;
+    notifyObservers(ModelChangeId.GAME_SET_ADMIN_MODE, null, fAdminMode);
+  }
   
+  public boolean isAdminMode() {
+    return fAdminMode;
+  }
+
   public GameOptions getOptions() {
     return fOptions;
   }

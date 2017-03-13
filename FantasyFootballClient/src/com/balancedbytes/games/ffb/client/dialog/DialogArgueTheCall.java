@@ -22,11 +22,11 @@ public class DialogArgueTheCall extends DialogYesOrNoQuestion {
   private static String[] createMessages(Player pPlayer) {
     String[] messages;
     if (pPlayer != null) {
-      messages = new String[2];
+      messages = new String[3];
       StringBuilder message = new StringBuilder();
-      message.append("On a roll of 6 the ref will refrain from ejecting ").append(pPlayer.getName()).append(".");
+      message.append("On a roll of 6 the ref will refrain from banning ").append(pPlayer.getName()).append(".");
       messages[1] = message.toString();
-      messages[2] = "On a roll of 1 the ref will ban the coach for the rest of the game.";
+      messages[2] = "On a roll of 1 the ref will ban the coach for the rest of the game instead.";
     } else {
       messages = new String[1];
     }

@@ -20,7 +20,7 @@ public class ServerCommandHandlerUploadGame extends ServerCommandHandler {
   protected ServerCommandHandlerUploadGame(FantasyFootballServer pServer) {
     super(pServer);
   }
-  
+
   public NetCommandId getId() {
     return NetCommandId.INTERNAL_SERVER_UPLOAD_GAME;
   }
@@ -30,21 +30,23 @@ public class ServerCommandHandlerUploadGame extends ServerCommandHandler {
     GameCache gameCache = getServer().getGameCache();
     GameState gameState = gameCache.closeGame(uploadGameCommand.getGameId());
     if (gameState == null) {
-    	gameState = gameCache.queryFromDb(uploadGameCommand.getGameId());
+      gameState = gameCache.queryFromDb(uploadGameCommand.getGameId());
     }
     if (gameState == null) {
       // game has been moved out of the db - request it from the backup service
-      getServer().getRequestProcessor().add(new ServerRequestLoadReplay(uploadGameCommand.getGameId(), 0, pReceivedCommand.getSession(), ServerRequestLoadReplay.UPLOAD_GAME));
+      getServer().getRequestProcessor().add(
+          new ServerRequestLoadReplay(uploadGameCommand.getGameId(), 0, pReceivedCommand.getSession(), ServerRequestLoadReplay.UPLOAD_GAME)
+      );
     } else {
-    	gameState.getStepStack().clear();
+      gameState.getStepStack().clear();
       Game game = gameState.getGame();
       if (StringTool.isProvided(uploadGameCommand.getConcedingTeamId())) {
         game.getGameResult().getTeamResultHome().setConceded(game.getTeamHome().getId().equals(uploadGameCommand.getConcedingTeamId()));
         game.getGameResult().getTeamResultAway().setConceded(game.getTeamAway().getId().equals(uploadGameCommand.getConcedingTeamId()));
       }
       SequenceGenerator.getInstance().pushEndGameSequence(gameState, true);
-    	gameState.findNextStep(null);
+      gameState.findNextStep(null);
     }
   }
-  
+
 }

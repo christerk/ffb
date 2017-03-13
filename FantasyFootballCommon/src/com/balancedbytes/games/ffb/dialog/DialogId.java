@@ -53,7 +53,7 @@ public enum DialogId implements IEnumWithName {
   USE_INDUCEMENT("useInducement", false),
   PASS_BLOCK("passBlock", false),
   BUY_CARDS("buyCards", true),
-  ARGUE_THE_CALL("argueTheCall", true);
+  ARGUE_THE_CALL("argueTheCall", false);
   
   private String fName;
   private boolean fWaitingDialog;

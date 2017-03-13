@@ -49,7 +49,8 @@ public class DbGamesInfoInsertQuery extends DbStatement {
       sql.append(IDbTableGamesInfo.COLUMN_HOME_PLAYING).append(",");  // 12
       sql.append(IDbTableGamesInfo.COLUMN_STATUS).append(",");  // 13
       sql.append(IDbTableGamesInfo.COLUMN_TESTING).append(")");  // 14
-	  sql.append(" VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+      sql.append(IDbTableGamesInfo.COLUMN_ADMIN_MODE).append(")");  // 15
+	  sql.append(" VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
       fStatement = pConnection.prepareStatement(sql.toString(), Statement.RETURN_GENERATED_KEYS);
     } catch (SQLException sqlE) {
       throw new FantasyFootballException(sqlE);
@@ -77,6 +78,7 @@ public class DbGamesInfoInsertQuery extends DbStatement {
       fStatement.setBoolean(col++, game.isHomePlaying());                                                                   // 12
       fStatement.setString(col++,(pGameState.getStatus() != null) ? pGameState.getStatus().getTypeString() : " ");          // 13
       fStatement.setBoolean(col++, game.isTesting());                                                                       // 14
+      fStatement.setBoolean(col++, game.isAdminMode());                                                                     // 15
       fStatement.executeUpdate();
       ResultSet rs = fStatement.getGeneratedKeys();
       if (rs.next()) {

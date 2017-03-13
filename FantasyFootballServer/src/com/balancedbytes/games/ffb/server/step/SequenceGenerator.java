@@ -399,7 +399,7 @@ public class SequenceGenerator {
 
 	}
 
-	public void pushEndGameSequence(GameState pGameState, boolean pAutomaticWinnings) {
+	public void pushEndGameSequence(GameState pGameState, boolean adminMode) {
 		
 		pGameState.getServer().getDebugLog().log(IServerLogLevel.DEBUG, pGameState.getId(), "push endGameSequence onto stack");
 
@@ -408,8 +408,8 @@ public class SequenceGenerator {
 		add(endGameSequence, StepId.INIT_END_GAME, pGameState, createParameterSet(StepParameterKey.GOTO_LABEL_ON_END, IStepLabel.END_GAME));
 		
 		add(endGameSequence, StepId.PENALTY_SHOOTOUT, pGameState);
-		add(endGameSequence, StepId.MVP, pGameState);
-		add(endGameSequence, StepId.WINNINGS, pGameState, createParameterSet(StepParameterKey.AUTOMATIC_RE_ROLL, pAutomaticWinnings));
+		add(endGameSequence, StepId.MVP, pGameState, createParameterSet(StepParameterKey.ADMIN_MODE, adminMode));
+		add(endGameSequence, StepId.WINNINGS, pGameState, createParameterSet(StepParameterKey.ADMIN_MODE, adminMode));
 		add(endGameSequence, StepId.FAN_FACTOR, pGameState);
 		add(endGameSequence, StepId.PLAYER_LOSS, pGameState);
 		

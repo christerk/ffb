@@ -1175,15 +1175,15 @@ public class StatusReport {
     status.append("Argue the Call Roll [ ").append(report.getRoll()).append(" ]");
     println(getIndent(), TextStyle.ROLL, status.toString());
     if (report.isSuccessful()) {
-      print(getIndent() + 1, TextStyle.NONE, "The ref refrains from penalizing ");
+      print(getIndent() + 1, TextStyle.NONE, "The ref refrains from banning ");
       print(getIndent() + 1, false, player);
       status = new StringBuilder();
-      status.append(" and ").append(player.getPlayerGender().getNominative()).append(" remains in the game.");
+      status.append(" and ").append(player.getPlayerGender().getNominative()).append(" is send to the reserve instead.");
       println(getIndent() + 1, TextStyle.NONE, status.toString());
     } else {
       print(getIndent() + 1, TextStyle.NONE, "The ref appears to be unimpressed and ");
       print(getIndent() + 1, false, player);
-      println(getIndent() + 1, TextStyle.NONE, " must leave the game.");
+      println(getIndent() + 1, TextStyle.NONE, " is banned from the game.");
     }
     if (report.isCoachBanned()) {
       print(getIndent() + 1, TextStyle.NONE, "Coach ");

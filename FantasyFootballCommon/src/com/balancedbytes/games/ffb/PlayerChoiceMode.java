@@ -13,7 +13,8 @@ public enum PlayerChoiceMode implements IEnumWithName {
   FEED("feed"),
   DIVING_CATCH("divingCatch"),
   CARD("card"),
-  BLOCK("block");
+  BLOCK("block"),
+  MVP("mvp");
   
   private String fName;
   
@@ -25,7 +26,7 @@ public enum PlayerChoiceMode implements IEnumWithName {
     return fName;
   }
   
-  public String getDialogHeader(int pNrOfPlayers) {
+  public String getDialogHeader(int nrOfPlayers) {
     StringBuilder header = new StringBuilder();
     switch (this) {
       case DIVING_TACKLE:
@@ -48,6 +49,9 @@ public enum PlayerChoiceMode implements IEnumWithName {
       	break;
       case BLOCK:
         header.append("Select a player to block");
+        break;
+      case MVP:
+        header.append("Nominate " + nrOfPlayers + " for the MVP");
         break;
       default:
       	break;
@@ -79,6 +83,9 @@ public enum PlayerChoiceMode implements IEnumWithName {
       case BLOCK:
         title.append("Block");
         break;
+      case MVP:
+        title.append("MVP");
+        break;
       default:
       	break;
     }
@@ -108,6 +115,9 @@ public enum PlayerChoiceMode implements IEnumWithName {
       	break;
       case BLOCK:
         message.append("Waiting for coach to choose player to block.");
+        break;
+      case MVP:
+        message.append("Waiting for coach to nominate players for the MVP.");
         break;
       default:
       	break;

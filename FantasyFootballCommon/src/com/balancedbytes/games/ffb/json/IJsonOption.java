@@ -62,6 +62,8 @@ public interface IJsonOption {
                    JsonIntOption AVAILABLE_CARDS = new JsonIntOption("availableCards");
                    JsonIntOption AVAILABLE_GOLD = new JsonIntOption("availableGold");
                JsonBooleanOption AWAY_GAINS_RE_ROLL = new JsonBooleanOption("awayGainsReRoll");
+           JsonStringArrayOption AWAY_PLAYERS_MVP = new JsonStringArrayOption("awayPlayersMvp");
+           JsonStringArrayOption AWAY_PLAYERS_NOMINATED = new JsonStringArrayOption("awayPlayersNominated");
                 JsonStringOption AWAY_TEXT = new JsonStringOption("awayText");
                    JsonIntOption BADLY_HURT_SUFFERED = new JsonIntOption("badlyHurtSuffered");
        JsonFieldCoordinateOption BALL_COORDINATE = new JsonFieldCoordinateOption("ballCoordinate");         
@@ -187,6 +189,8 @@ public interface IJsonOption {
                JsonBooleanOption HOME_DATA = new JsonBooleanOption("homeData");
                JsonBooleanOption HOME_FIRST_OFFENSE = new JsonBooleanOption("homeFirstOffense");
                JsonBooleanOption HOME_GAINS_RE_ROLL = new JsonBooleanOption("homeGainsReRoll");
+           JsonStringArrayOption HOME_PLAYERS_MVP = new JsonStringArrayOption("homePlayersMvp");
+           JsonStringArrayOption HOME_PLAYERS_NOMINATED = new JsonStringArrayOption("homePlayersNominated");
                JsonBooleanOption HOME_PLAYING = new JsonBooleanOption("homePlaying");
                JsonBooleanOption HOME_TEAM = new JsonBooleanOption("homeTeam");
                 JsonStringOption HOME_TEXT = new JsonStringOption("homeText");
@@ -237,9 +241,13 @@ public interface IJsonOption {
                 JsonStringOption NAME = new JsonStringOption("name");
                JsonBooleanOption NECROMANCER = new JsonBooleanOption("necromancer");
           JsonEnumWithNameOption NET_COMMAND_ID = new JsonEnumWithNameOption("netCommandId", new NetCommandIdFactory());
+                   JsonIntOption NR_OF_AWAY_CHOICES = new JsonIntOption("nrOfAwayChoices");
+                   JsonIntOption NR_OF_AWAY_MVPS = new JsonIntOption("nrOfAwayMvps");
                  JsonArrayOption NR_OF_CARDS_PER_TYPE = new JsonArrayOption("nrOfCardsPerType");
                    JsonIntOption NR_OF_CARDS = new JsonIntOption("nrOfCards");
                    JsonIntOption NR_OF_DICE = new JsonIntOption("nrOfDice");
+                   JsonIntOption NR_OF_HOME_CHOICES = new JsonIntOption("nrOfHomeChoices");
+                   JsonIntOption NR_OF_HOME_MVPS = new JsonIntOption("nrOfHomeMvps");
                    JsonIntOption NR_OF_ICONS = new JsonIntOption("nrOfIcons");
                    JsonIntOption NR_OF_INDUCEMENTS = new JsonIntOption("nrOfInducements");
                    JsonIntOption NR_OF_MERCENARIES = new JsonIntOption("nrOfMercenaries");
@@ -432,6 +440,7 @@ public interface IJsonOption {
            JsonStringArrayOption USER_SETTING_VALUES = new JsonStringArrayOption("userSettingValues");
                JsonBooleanOption USED = new JsonBooleanOption("used");
                    JsonIntOption USES = new JsonIntOption("uses");
+               JsonBooleanOption USES_A_TEAM_REROLL = new JsonBooleanOption("usesATeamReroll");
                JsonBooleanOption USING_STAB = new JsonBooleanOption("usingStab");
                    JsonIntOption VALUE = new JsonIntOption("value");
                 JsonStringOption VICTIM_ID = new JsonStringOption("victimId");
