@@ -81,7 +81,7 @@ public class StepEjectPlayer extends AbstractStep {
 				case FOULER_HAS_BALL:
 					fFoulerHasBall = (Boolean) pParameter.getValue();
 					return true;
-				case ARGUE_THE_CALL_SUCCESFUL:
+				case ARGUE_THE_CALL_SUCCESSFUL:
 				  fArgueTheCallSuccessful = (Boolean) pParameter.getValue();
 				  return true;
 				default:

@@ -9,7 +9,7 @@ public enum StepParameterKey {
 
     ADMIN_MODE,                   // Boolean
 	APOTHECARY_MODE,              // ApothecaryMode
-	ARGUE_THE_CALL_SUCCESFUL,     // Boolean
+	ARGUE_THE_CALL_SUCCESSFUL,    // Boolean
 	BLOCK_DEFENDER_ID,            // String
 	BLOCK_RESULT,                 // BlockResult
 	BLOCK_ROLL,                   // int[]

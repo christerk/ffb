@@ -1190,12 +1190,12 @@ public class StatusReport {
       print(getIndent() + 1, TextStyle.NONE, "The ref refrains from banning ");
       print(getIndent() + 1, false, player);
       status = new StringBuilder();
-      status.append(" and ").append(player.getPlayerGender().getNominative()).append(" is send to the reserve instead.");
+      status.append(" and ").append(player.getPlayerGender().getNominative()).append(" is sent to the reserve instead.");
       println(getIndent() + 1, TextStyle.NONE, status.toString());
     } else {
-      print(getIndent() + 1, TextStyle.NONE, "The ref appears to be unimpressed and ");
+      print(getIndent() + 1, TextStyle.NONE, "The ref bans ");
       print(getIndent() + 1, false, player);
-      println(getIndent() + 1, TextStyle.NONE, " is banned from the game.");
+      println(getIndent() + 1, TextStyle.NONE, " from the game.");
     }
     if (report.isCoachBanned()) {
       print(getIndent() + 1, TextStyle.NONE, "Coach ");
@@ -1204,7 +1204,7 @@ public class StatusReport {
       } else {
         print(getIndent() + 1, TextStyle.AWAY, game.getTeamAway().getCoach());
       }
-      println(getIndent() + 1, TextStyle.NONE, " is banned from the game.");
+      println(getIndent() + 1, TextStyle.NONE, " is also banned from the game.");
     }
   }
 

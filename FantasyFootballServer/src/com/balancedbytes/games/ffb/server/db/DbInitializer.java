@@ -149,7 +149,7 @@ public class DbInitializer {
 		sql.append(IDbTableGamesInfo.COLUMN_HOME_PLAYING).append(" BOOLEAN NOT NULL,"); // 13
 		sql.append(IDbTableGamesInfo.COLUMN_STATUS).append(" CHAR(1) NOT NULL,"); // 14
 		sql.append(IDbTableGamesInfo.COLUMN_TESTING).append(" BOOLEAN NOT NULL,"); // 15
-        sql.append(IDbTableGamesInfo.COLUMN_TESTING).append(" BOOLEAN NOT NULL,"); // 16
+        sql.append(IDbTableGamesInfo.COLUMN_ADMIN_MODE).append(" BOOLEAN NOT NULL,"); // 16
 		sql.append(IDbTableGamesInfo.COLUMN_LAST_UPDATED).append(" TIMESTAMP,"); // 17
 		sql.append("PRIMARY KEY(").append(IDbTableGamesInfo.COLUMN_ID).append(")");
 		if (fDbConnectionManager.isStandalone()) {

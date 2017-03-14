@@ -154,7 +154,7 @@ public class StepBribes extends AbstractStep {
       return;
     }
     if ((fArgueTheCallChoice != null) && (fBribesChoice != null)) {
-      publishParameter(new StepParameter(StepParameterKey.ARGUE_THE_CALL_SUCCESFUL, (fArgueTheCallSuccessful != null) ? fArgueTheCallSuccessful : false));
+      publishParameter(new StepParameter(StepParameterKey.ARGUE_THE_CALL_SUCCESSFUL, (fArgueTheCallSuccessful != null) ? fArgueTheCallSuccessful : false));
       getResult().setNextAction(StepAction.NEXT_STEP);
     }
   }

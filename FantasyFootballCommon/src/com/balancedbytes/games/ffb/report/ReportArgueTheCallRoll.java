@@ -25,6 +25,7 @@ public class ReportArgueTheCallRoll implements IReport {
   public ReportArgueTheCallRoll(String playerId, boolean successful, boolean coachBanned, int roll) {
     fPlayerId = playerId;
     fSuccessful = successful;
+    fCoachBanned = coachBanned;
     fRoll = roll;
   }
   

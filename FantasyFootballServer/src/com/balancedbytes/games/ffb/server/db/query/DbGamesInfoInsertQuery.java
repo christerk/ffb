@@ -48,7 +48,7 @@ public class DbGamesInfoInsertQuery extends DbStatement {
       sql.append(IDbTableGamesInfo.COLUMN_TURN).append(",");  // 11
       sql.append(IDbTableGamesInfo.COLUMN_HOME_PLAYING).append(",");  // 12
       sql.append(IDbTableGamesInfo.COLUMN_STATUS).append(",");  // 13
-      sql.append(IDbTableGamesInfo.COLUMN_TESTING).append(")");  // 14
+      sql.append(IDbTableGamesInfo.COLUMN_TESTING).append(",");  // 14
       sql.append(IDbTableGamesInfo.COLUMN_ADMIN_MODE).append(")");  // 15
 	  sql.append(" VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
       fStatement = pConnection.prepareStatement(sql.toString(), Statement.RETURN_GENERATED_KEYS);

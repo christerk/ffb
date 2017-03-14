@@ -44,7 +44,7 @@ public class DbGamesInfoUpdate extends DbUpdateStatement {
       sql.append(IDbTableGamesInfo.COLUMN_TURN).append("=?,");                 // 12
       sql.append(IDbTableGamesInfo.COLUMN_HOME_PLAYING).append("=?,");         // 13
       sql.append(IDbTableGamesInfo.COLUMN_STATUS).append("=?,");               // 14
-      sql.append(IDbTableGamesInfo.COLUMN_TESTING).append("=?");               // 15
+      sql.append(IDbTableGamesInfo.COLUMN_TESTING).append("=?,");              // 15
       sql.append(IDbTableGamesInfo.COLUMN_ADMIN_MODE).append("=?");            // 16
       sql.append(" WHERE ").append(IDbTableGamesInfo.COLUMN_ID).append("=?");  // 1
       fStatement = pConnection.prepareStatement(sql.toString());    

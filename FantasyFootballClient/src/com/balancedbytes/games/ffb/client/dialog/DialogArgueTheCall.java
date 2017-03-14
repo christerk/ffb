@@ -24,9 +24,9 @@ public class DialogArgueTheCall extends DialogYesOrNoQuestion {
     if (pPlayer != null) {
       messages = new String[3];
       StringBuilder message = new StringBuilder();
-      message.append("On a roll of 6 the ref will refrain from banning ").append(pPlayer.getName()).append(".");
+      message.append("On a roll of 6 the ref sends ").append(pPlayer.getName()).append(" to the reserves instead.");
       messages[1] = message.toString();
-      messages[2] = "On a roll of 1 the ref will ban the coach for the rest of the game instead.";
+      messages[2] = "On a roll of 1 the ref will ban the coach for the rest of the game.";
     } else {
       messages = new String[1];
     }

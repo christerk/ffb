@@ -145,11 +145,11 @@ public class TurnData implements IJsonSerializable {
     return fPassUsed;
   }
 
-  public void setPassUsed(boolean pPassUsed) {
-    if (pPassUsed == fPassUsed) {
+  public void setPassUsed(boolean passUsed) {
+    if (passUsed == fPassUsed) {
       return;
     }
-    fPassUsed = pPassUsed;
+    fPassUsed = passUsed;
     notifyObservers(ModelChangeId.TURN_DATA_SET_PASS_USED, fPassUsed);
   }
   
@@ -162,18 +162,18 @@ public class TurnData implements IJsonSerializable {
       return;
     }
     fCoachBanned = coachBanned;
-    notifyObservers(ModelChangeId.TURN_DATA_SET_PASS_USED, fPassUsed);
+    notifyObservers(ModelChangeId.TURN_DATA_SET_COACH_BANNED, fCoachBanned);
   }
   
   public int getApothecaries() {
     return fApothecaries;
   }
   
-  public void setApothecaries(int pApothecaries) {
-    if (pApothecaries == fApothecaries) {
+  public void setApothecaries(int apothecaries) {
+    if (apothecaries == fApothecaries) {
       return;
     }
-    fApothecaries = pApothecaries;
+    fApothecaries = apothecaries;
     notifyObservers(ModelChangeId.TURN_DATA_SET_APOTHECARIES, fApothecaries);
   }
   
