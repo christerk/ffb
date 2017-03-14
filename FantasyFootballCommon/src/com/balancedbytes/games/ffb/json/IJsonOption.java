@@ -214,6 +214,7 @@ public interface IJsonOption {
               JsonIntArrayOption KICKOFF_ROLL = new JsonIntArrayOption("kickoffRoll");
                  JsonArrayOption KNOCKOUT_RECOVERY_ARRAY = new JsonArrayOption("knockoutRecoveryArray");
                  JsonArrayOption LASTING_INJURIES = new JsonArrayOption("lastingInjuries");
+          JsonEnumWithNameOption LAST_TURN_MODE = new JsonEnumWithNameOption("turnMode", new TurnModeFactory());
           JsonEnumWithNameOption LEADER_STATE = new JsonEnumWithNameOption("leaderState", new LeaderStateFactory());
                JsonBooleanOption LEAPING = new JsonBooleanOption("leaping");
                JsonBooleanOption LOAD_DIALOG = new JsonBooleanOption("loadDialog");

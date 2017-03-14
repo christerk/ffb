@@ -14,4 +14,5 @@
 [b]Bugfixes:[/b]
 
 - BB2016 Rule: Argue the Call fixed and activated by default
-- Sneaky Git not breaking armor & rolling a double breaks the client
+- #17 Sneaky Git player inactive after foul
+- #14 Team ReRoll on catch on blitz! kickoff

@@ -73,49 +73,49 @@ import com.eclipsesource.json.JsonValue;
  * @author Kalimar
  */
 public class StepEndTurn extends AbstractStep {
-	
-	private boolean fHandleSecretWeapons;
-	private Boolean fTouchdown;
-	private Boolean fBribesChoiceHome;
-	private Boolean fBribesChoiceAway;
-	private Boolean fArgueTheCallChoiceHome;
+
+  private boolean fHandleSecretWeapons;
+  private Boolean fTouchdown;
+  private Boolean fBribesChoiceHome;
+  private Boolean fBribesChoiceAway;
+  private Boolean fArgueTheCallChoiceHome;
   private Boolean fArgueTheCallChoiceAway;
-	private boolean fNextSequencePushed;
-	private boolean fRemoveUsedSecretWeapons;
-	private boolean fNewHalf;
-	private boolean fEndGame;
-	
-	public StepEndTurn(GameState pGameState) {
-		super(pGameState);
-		fHandleSecretWeapons = true;
-	}
-	
-	public StepId getId() {
-		return StepId.END_TURN;
-	}
-	
+  private boolean fNextSequencePushed;
+  private boolean fRemoveUsedSecretWeapons;
+  private boolean fNewHalf;
+  private boolean fEndGame;
+
+  public StepEndTurn(GameState pGameState) {
+    super(pGameState);
+    fHandleSecretWeapons = true;
+  }
+
+  public StepId getId() {
+    return StepId.END_TURN;
+  }
+
   @Override
   public void init(StepParameterSet pParameterSet) {
-  	if (pParameterSet != null) {
-  		for (StepParameter parameter : pParameterSet.values()) {
-  			switch (parameter.getKey()) {
-  			  // optional
-  				case HANDLE_SECRET_WEAPONS:
-  					fHandleSecretWeapons = (Boolean) parameter.getValue();
-  					break;
-					default:
-						break;
-  			}
-  		}
-  	}
+    if (pParameterSet != null) {
+      for (StepParameter parameter : pParameterSet.values()) {
+        switch (parameter.getKey()) {
+        // optional
+          case HANDLE_SECRET_WEAPONS:
+            fHandleSecretWeapons = (Boolean) parameter.getValue();
+            break;
+          default:
+            break;
+        }
+      }
+    }
   }
-  	
-	@Override
-	public void start() {
-		super.start();
-		executeStep();
-	}
-	
+
+  @Override
+  public void start() {
+    super.start();
+    executeStep();
+  }
+
   @Override
   public StepCommandStatus handleCommand(ReceivedCommand pReceivedCommand) {
     StepCommandStatus commandStatus = super.handleCommand(pReceivedCommand);
@@ -148,70 +148,71 @@ public class StepEndTurn extends AbstractStep {
     return commandStatus;
   }
 
-	private void executeStep() {
-    
+  private void executeStep() {
+
     Game game = getGameState().getGame();
-		UtilServerDialog.hideDialog(getGameState());
-    
-    if ((game.getTurnMode() == TurnMode.BLITZ) || (game.getTurnMode() == TurnMode.KICKOFF_RETURN) || (game.getTurnMode() == TurnMode.PASS_BLOCK) || (game.getTurnMode() == TurnMode.ILLEGAL_SUBSTITUTION)) {
-    	publishParameter(new StepParameter(StepParameterKey.END_TURN, true));
+    UtilServerDialog.hideDialog(getGameState());
+
+    if ((game.getTurnMode() == TurnMode.BLITZ) || (game.getTurnMode() == TurnMode.KICKOFF_RETURN) || (game.getTurnMode() == TurnMode.PASS_BLOCK)
+        || (game.getTurnMode() == TurnMode.ILLEGAL_SUBSTITUTION)) {
+      publishParameter(new StepParameter(StepParameterKey.END_TURN, true));
       getResult().setNextAction(StepAction.NEXT_STEP);
       return;
     }
-    
+
     if (fTouchdown == null) {
-    	fTouchdown = UtilServerSteps.checkTouchdown(getGameState());
+      fTouchdown = UtilServerSteps.checkTouchdown(getGameState());
     }
-    
+
     if (fHandleSecretWeapons) {
       markPlayedAndSecretWeapons();
     }
-    
+
     fEndGame = false;
     fNewHalf = UtilServerSteps.checkEndOfHalf(getGameState());
 
     if (!fNextSequencePushed) {
-      
+
       fNextSequencePushed = true;
-      
+
       Player touchdownPlayer = null;
       if (fTouchdown) {
-        
+
         touchdownPlayer = game.getFieldModel().getPlayer(game.getFieldModel().getBallCoordinate());
         boolean offTurnTouchDown = false;
         if (touchdownPlayer != null) {
-          
-        	GameResult gameResult = game.getGameResult();
+
+          GameResult gameResult = game.getGameResult();
           PlayerResult touchdownPlayerResult = gameResult.getPlayerResult(touchdownPlayer);
           touchdownPlayerResult.setTouchdowns(touchdownPlayerResult.getTouchdowns() + 1);
 
           if (game.getTeamHome().hasPlayer(touchdownPlayer)) {
             gameResult.getTeamResultHome().setScore(gameResult.getTeamResultHome().getScore() + 1);
             offTurnTouchDown |= !game.isHomePlaying();
-          
+
           } else {
             gameResult.getTeamResultAway().setScore(gameResult.getTeamResultAway().getScore() + 1);
             offTurnTouchDown |= game.isHomePlaying();
           }
 
-          offTurnTouchDown |= (game.getTurnMode() == TurnMode.KICKOFF);  // in the case of a caught kick-off that results in a TD
-          
+          // in the case of a caught kick-off that results in a TD
+          offTurnTouchDown |= (game.getTurnMode() == TurnMode.KICKOFF); 
           game.setHomePlaying(game.getTeamHome().hasPlayer(touchdownPlayer));
 
           if (offTurnTouchDown) {
-          	game.getTurnData().setTurnNr(game.getTurnData().getTurnNr() + 1); 
+            game.getTurnData().setTurnNr(game.getTurnData().getTurnNr() + 1);
             fNewHalf = UtilServerSteps.checkEndOfHalf(getGameState());
           }
-          
+
         }
 
         game.setTurnMode(TurnMode.SETUP);
         game.setSetupOffense(false);
 
       } else {
-        
+
         switch (game.getTurnMode()) {
-        	case NO_PLAYERS_TO_FIELD:
+          case NO_PLAYERS_TO_FIELD:
             game.getTurnDataHome().setTurnNr(game.getTurnDataHome().getTurnNr() + 2);
             game.getTurnDataAway().setTurnNr(game.getTurnDataAway().getTurnNr() + 2);
             fNewHalf = UtilServerSteps.checkEndOfHalf(getGameState());
@@ -238,16 +239,16 @@ public class StepEndTurn extends AbstractStep {
             game.getTurnData().setFirstTurnAfterKickoff(false);
             break;
           default:
-          	break;
+            break;
         }
-        
+
       }
-  
+
       UtilPlayer.refreshPlayersForTurnStart(game);
       game.getFieldModel().clearMoveSquares();
       game.getFieldModel().clearTrackNumbers();
       game.getFieldModel().clearDiceDecorations();
-  
+
       List<KnockoutRecovery> knockoutRecoveries = new ArrayList<KnockoutRecovery>();
       List<HeatExhaustion> heatExhaustions = new ArrayList<HeatExhaustion>();
       if (fNewHalf || fTouchdown) {
@@ -269,7 +270,7 @@ public class StepEndTurn extends AbstractStep {
           }
           if (Weather.SWELTERING_HEAT == game.getFieldModel().getWeather()) {
             if ((playerCoordinate != null) && !playerCoordinate.isBoxCoordinate()) {
-              HeatExhaustion heatExhaustion = heatExhaust(player); 
+              HeatExhaustion heatExhaustion = heatExhaust(player);
               heatExhaustions.add(heatExhaustion);
               if (heatExhaustion.isExhausted()) {
                 game.getFieldModel().setPlayerState(player, playerState.changeBase(PlayerState.EXHAUSTED));
@@ -280,17 +281,18 @@ public class StepEndTurn extends AbstractStep {
         }
         UtilBox.putAllPlayersIntoBox(game);
       }
-      
+
       if (fNewHalf) {
         if (game.getHalf() > 2) {
-        	fEndGame = true;
+          fEndGame = true;
         } else if (game.getHalf() > 1) {
           GameResult gameResult = game.getGameResult();
-          if (UtilGameOption.isOptionEnabled(game, GameOptionId.OVERTIME) && (gameResult.getTeamResultHome().getScore() == gameResult.getTeamResultAway().getScore())) {
+          if (UtilGameOption.isOptionEnabled(game, GameOptionId.OVERTIME)
+              && (gameResult.getTeamResultHome().getScore() == gameResult.getTeamResultAway().getScore())) {
             UtilServerGame.startHalf(this, game.getHalf() + 1);
             SequenceGenerator.getInstance().pushKickoffSequence(getGameState(), true);
           } else {
-          	fEndGame = true;
+            fEndGame = true;
           }
         } else {
           UtilServerGame.startHalf(this, game.getHalf() + 1);
@@ -316,9 +318,9 @@ public class StepEndTurn extends AbstractStep {
         fRemoveUsedSecretWeapons = true;
       } else {
         getResult().setSound(SoundId.DING);
-       	SequenceGenerator.getInstance().pushInducementSequence(getGameState(), InducementPhase.START_OF_OWN_TURN, game.isHomePlaying());
+        SequenceGenerator.getInstance().pushInducementSequence(getGameState(), InducementPhase.START_OF_OWN_TURN, game.isHomePlaying());
       }
-  
+
       KnockoutRecovery[] knockoutRecoveryArray = knockoutRecoveries.toArray(new KnockoutRecovery[knockoutRecoveries.size()]);
       HeatExhaustion[] heatExhaustionArray = heatExhaustions.toArray(new HeatExhaustion[heatExhaustions.size()]);
       String touchdownPlayerId = (touchdownPlayer != null) ? touchdownPlayer.getId() : null;
@@ -328,18 +330,18 @@ public class StepEndTurn extends AbstractStep {
         UtilServerTimer.stopTurnTimer(getGameState());
         game.setTurnTime(0);
       }
-      
+
       deactivateCards(InducementDuration.UNTIL_END_OF_TURN);
       deactivateCards(InducementDuration.UNTIL_END_OF_OPPONENTS_TURN);
-      
+
       if (fNewHalf || fTouchdown) {
         deactivateCards(InducementDuration.UNTIL_END_OF_DRIVE);
         if (fHandleSecretWeapons) {
           reportSecretWeaponsUsed();
         }
       }
-      
-    }    
+
+    }
 
     if (fArgueTheCallChoiceAway == null) {
       fArgueTheCallChoiceAway = false;
@@ -347,61 +349,61 @@ public class StepEndTurn extends AbstractStep {
         fArgueTheCallChoiceAway = null;
       }
     }
-      
+
     if ((fArgueTheCallChoiceHome == null) && (fArgueTheCallChoiceAway != null)) {
       fArgueTheCallChoiceHome = false;
       if (!fEndGame && fHandleSecretWeapons && (fNewHalf || fTouchdown) && askForArgueTheCall(game.getTeamHome())) {
         fArgueTheCallChoiceHome = null;
       }
     }
-    
+
     if (fBribesChoiceAway == null) {
-    	fBribesChoiceAway = false;
+      fBribesChoiceAway = false;
       if (!fEndGame && fHandleSecretWeapons && (fNewHalf || fTouchdown) && askForSecretWeaponBribes(game.getTeamAway())) {
-      	fBribesChoiceAway = null;
+        fBribesChoiceAway = null;
       }
     }
-    	
+
     if ((fBribesChoiceHome == null) && (fBribesChoiceAway != null)) {
-  		fBribesChoiceHome = false;
+      fBribesChoiceHome = false;
       if (!fEndGame && fHandleSecretWeapons && (fNewHalf || fTouchdown) && askForSecretWeaponBribes(game.getTeamHome())) {
-      	fBribesChoiceHome = null;
+        fBribesChoiceHome = null;
       }
     }
-    
+
     if (fEndGame || ((fArgueTheCallChoiceHome != null) && (fArgueTheCallChoiceAway != null) && (fBribesChoiceHome != null) && (fBribesChoiceAway != null))) {
-      
+
       if (!fEndGame && fRemoveUsedSecretWeapons) {
         removeUsedSecretWeapons();
       }
-        
+
       game.startTurn();
       UtilServerGame.updateLeaderReRolls(this);
-      
+
       if (fEndGame) {
-      	SequenceGenerator.getInstance().pushEndGameSequence(getGameState(), false);
+        SequenceGenerator.getInstance().pushEndGameSequence(getGameState(), false);
       }
-      
+
       if (!fEndGame && game.isTurnTimeEnabled()) {
         UtilServerTimer.startTurnTimer(getGameState());
       }
-      
+
       updateFumbblGame(getGameState(), fNewHalf, fTouchdown);
 
       getResult().setNextAction(StepAction.NEXT_STEP);
-      
+
     }
-    
+
   }
-	
+
   private void markPlayedAndSecretWeapons() {
-  	Game game = getGameState().getGame();
+    Game game = getGameState().getGame();
     if (game.getTurnMode() == TurnMode.REGULAR) {
       for (Player player : game.getPlayers()) {
         PlayerState playerState = game.getFieldModel().getPlayerState(player);
         if (playerState.canBeSetUp() && (playerState.getBase() != PlayerState.RESERVE)) {
           PlayerResult playerResult = game.getGameResult().getPlayerResult(player);
-          if (UtilCards.hasSkill(game, player, Skill.SECRET_WEAPON))  {
+          if (UtilCards.hasSkill(game, player, Skill.SECRET_WEAPON)) {
             playerResult.setHasUsedSecretWeapon(true);
           }
           if ((game.isHomePlaying() && game.getTeamHome().hasPlayer(player)) || (!game.isHomePlaying() && game.getTeamAway().hasPlayer(player))) {
@@ -411,35 +413,35 @@ public class StepEndTurn extends AbstractStep {
       }
     }
   }
-  
+
   private void reportSecretWeaponsUsed() {
     ReportSecretWeaponBan reportBan = new ReportSecretWeaponBan();
     Game game = getGameState().getGame();
-    for (Player player: game.getPlayers()) {
+    for (Player player : game.getPlayers()) {
       PlayerResult playerResult = game.getGameResult().getPlayerResult(player);
       if (playerResult.hasUsedSecretWeapon()) {
-      	// special for stunty leeg -> roll for secret weapon ban
-      	Integer penalty = player.getPosition().getSkillValue(Skill.SECRET_WEAPON);
-      	if ((penalty != null) && (penalty > 0)) {
-      		int[] roll = getGameState().getDiceRoller().rollSecretWeapon();
-      		int total = roll[0] + roll[1];
-      		boolean banned = (total >= penalty);
-      		reportBan.add(player.getId(), total, banned);
-    			playerResult.setHasUsedSecretWeapon(banned);
-    		// lrb6 secret weapon use (auto-ban)
-      	} else {
-      		reportBan.add(player.getId(), 0, true);
-      	}
+        // special for stunty leeg -> roll for secret weapon ban
+        Integer penalty = player.getPosition().getSkillValue(Skill.SECRET_WEAPON);
+        if ((penalty != null) && (penalty > 0)) {
+          int[] roll = getGameState().getDiceRoller().rollSecretWeapon();
+          int total = roll[0] + roll[1];
+          boolean banned = (total >= penalty);
+          reportBan.add(player.getId(), total, banned);
+          playerResult.setHasUsedSecretWeapon(banned);
+          // lrb6 secret weapon use (auto-ban)
+        } else {
+          reportBan.add(player.getId(), 0, true);
+        }
       }
     }
     if (ArrayTool.isProvided(reportBan.getPlayerIds())) {
       getResult().addReport(reportBan);
     }
   }
-  
+
   private void removeUsedSecretWeapons() {
-  	Game game = getGameState().getGame();
-    for (Player player: game.getPlayers()) {
+    Game game = getGameState().getGame();
+    for (Player player : game.getPlayers()) {
       PlayerResult playerResult = game.getGameResult().getPlayerResult(player);
       if (playerResult.hasUsedSecretWeapon()) {
         PlayerState playerState = game.getFieldModel().getPlayerState(player);
@@ -460,7 +462,8 @@ public class StepEndTurn extends AbstractStep {
       String playerId = (pPlayer != null) ? pPlayer.getId() : null;
       int recoveryRoll = getGameState().getDiceRoller().rollKnockoutRecovery();
       Game game = getGameState().getGame();
-      InducementSet inducementSet = (pPlayer.getTeam() == game.getTeamHome()) ? game.getTurnDataHome().getInducementSet() : game.getTurnDataAway().getInducementSet();
+      InducementSet inducementSet = (pPlayer.getTeam() == game.getTeamHome()) ? game.getTurnDataHome().getInducementSet() : game.getTurnDataAway()
+          .getInducementSet();
       Inducement bloodweiserBabes = inducementSet.get(InducementType.BLOODWEISER_BABES);
       int bloodweiserBabeValue = (bloodweiserBabes != null) ? bloodweiserBabes.getValue() : 0;
       boolean isRecovering = DiceInterpreter.getInstance().isRecoveringFromKnockout(recoveryRoll, bloodweiserBabeValue);
@@ -469,14 +472,14 @@ public class StepEndTurn extends AbstractStep {
       return null;
     }
   }
-  
+
   private HeatExhaustion heatExhaust(Player pPlayer) {
     String playerId = (pPlayer != null) ? pPlayer.getId() : null;
     int exhaustionRoll = getGameState().getDiceRoller().rollKnockoutRecovery();
     boolean isExhausted = DiceInterpreter.getInstance().isExhausted(exhaustionRoll);
     return new HeatExhaustion(playerId, isExhausted, exhaustionRoll);
   }
-  
+
   private static boolean updateFumbblGame(GameState pGameState, boolean pNewHalf, boolean pTouchdown) {
     boolean isOk = true;
     FantasyFootballServer server = pGameState.getServer();
@@ -520,12 +523,12 @@ public class StepEndTurn extends AbstractStep {
   }
 
   private boolean useSecretWeaponBribes(Team pTeam, String[] pPlayerIds) {
-  	boolean allSuccessful = true;
+    boolean allSuccessful = true;
     Game game = getGameState().getGame();
     if (game.getTeamHome() == pTeam) {
-    	fBribesChoiceHome = ArrayTool.isProvided(pPlayerIds);
+      fBribesChoiceHome = ArrayTool.isProvided(pPlayerIds);
     } else {
-    	fBribesChoiceAway = ArrayTool.isProvided(pPlayerIds);
+      fBribesChoiceAway = ArrayTool.isProvided(pPlayerIds);
     }
     if (ArrayTool.isProvided(pPlayerIds) && UtilServerInducementUse.useInducement(getGameState(), pTeam, InducementType.BRIBES, pPlayerIds.length)) {
       for (String playerId : pPlayerIds) {
@@ -538,26 +541,26 @@ public class StepEndTurn extends AbstractStep {
             PlayerResult playerResult = game.getGameResult().getPlayerResult(player);
             playerResult.setHasUsedSecretWeapon(false);
           } else {
-          	allSuccessful = false;
+            allSuccessful = false;
           }
         }
       }
     }
     return allSuccessful;
   }
-  
+
   private void deactivateCards(InducementDuration pDuration) {
-  	if (pDuration == null) {
-  		return;
-  	}
+    if (pDuration == null) {
+      return;
+    }
     Game game = getGameState().getGame();
-  	for (Card card : game.getTurnDataHome().getInducementSet().getActiveCards()) {
-    	if (pDuration == card.getDuration()) {
-    	  if ((pDuration != InducementDuration.UNTIL_END_OF_OPPONENTS_TURN) || game.isHomePlaying()) {
+    for (Card card : game.getTurnDataHome().getInducementSet().getActiveCards()) {
+      if (pDuration == card.getDuration()) {
+        if ((pDuration != InducementDuration.UNTIL_END_OF_OPPONENTS_TURN) || game.isHomePlaying()) {
           UtilServerCards.deactivateCard(this, card);
-    	  }
-    	}
-  	}
+        }
+      }
+    }
     for (Card card : game.getTurnDataAway().getInducementSet().getActiveCards()) {
       if (pDuration == card.getDuration()) {
         if ((pDuration != InducementDuration.UNTIL_END_OF_OPPONENTS_TURN) || !game.isHomePlaying()) {
@@ -566,7 +569,7 @@ public class StepEndTurn extends AbstractStep {
       }
     }
   }
-  
+
   private boolean askForSecretWeaponBribes(Team pTeam) {
     Game game = getGameState().getGame();
     List<String> playerIds = new ArrayList<String>();
@@ -580,13 +583,13 @@ public class StepEndTurn extends AbstractStep {
       InducementSet inducementSet = (game.getTeamHome() == pTeam) ? game.getTurnDataHome().getInducementSet() : game.getTurnDataAway().getInducementSet();
       if (inducementSet.hasUsesLeft(InducementType.BRIBES)) {
         Inducement bribes = inducementSet.get(InducementType.BRIBES);
-        DialogBribesParameter dialogParameter = new DialogBribesParameter(pTeam.getId(), bribes.getUsesLeft()); 
+        DialogBribesParameter dialogParameter = new DialogBribesParameter(pTeam.getId(), bribes.getUsesLeft());
         dialogParameter.addPlayerIds(playerIds.toArray(new String[playerIds.size()]));
         UtilServerDialog.showDialog(getGameState(), dialogParameter);
         return true;
       }
     }
-  	return false;
+    return false;
   }
 
   private boolean askForArgueTheCall(Team pTeam) {
@@ -604,7 +607,7 @@ public class StepEndTurn extends AbstractStep {
     if (playerIds.size() > 0) {
       TurnData turnData = (game.getTeamHome() == pTeam) ? game.getTurnDataHome() : game.getTurnDataAway();
       if (!turnData.isCoachBanned()) {
-        DialogArgueTheCallParameter dialogParameter = new DialogArgueTheCallParameter(pTeam.getId()); 
+        DialogArgueTheCallParameter dialogParameter = new DialogArgueTheCallParameter(pTeam.getId());
         dialogParameter.addPlayerIds(playerIds.toArray(new String[playerIds.size()]));
         UtilServerDialog.showDialog(getGameState(), dialogParameter);
         return true;
@@ -614,7 +617,7 @@ public class StepEndTurn extends AbstractStep {
   }
 
   // JSON serialization
-  
+
   @Override
   public JsonObject toJsonValue() {
     JsonObject jsonObject = super.toJsonValue();
@@ -630,7 +633,7 @@ public class StepEndTurn extends AbstractStep {
     IServerJsonOption.END_GAME.addTo(jsonObject, fEndGame);
     return jsonObject;
   }
-  
+
   @Override
   public StepEndTurn initFrom(JsonValue pJsonValue) {
     super.initFrom(pJsonValue);

@@ -34,62 +34,62 @@ import com.eclipsesource.json.JsonValue;
  * Step in kickoff sequence to handle KICKOFF_RETURN skill.
  * 
  * Expects stepParameter END_PLAYER_ACTION to be set by a preceding step.
- *   (parameter is consumed on TurnMode.KICKOFF_RETURN)
- * Expects stepParameter END_TURN to be set by a preceding step.
- *   (parameter is consumed on TurnMode.KICKOFF_RETURN)
- * Expects stepParameter TOUCHBACK to be set by a preceding step.
+ * (parameter is consumed on TurnMode.KICKOFF_RETURN) Expects stepParameter
+ * END_TURN to be set by a preceding step. (parameter is consumed on
+ * TurnMode.KICKOFF_RETURN) Expects stepParameter TOUCHBACK to be set by a
+ * preceding step.
  * 
  * May push new select sequence on the stack.
  * 
  * @author Kalimar
  */
 public final class StepKickoffReturn extends AbstractStep {
-	
+
   private boolean fTouchback;
   private boolean fEndPlayerAction;
   private boolean fEndTurn;
-  
-	public StepKickoffReturn(GameState pGameState) {
-		super(pGameState);
-	}
-	
-	public StepId getId() {
-		return StepId.KICKOFF_RETURN;
-	}
-	
-	@Override
-	public boolean setParameter(StepParameter pParameter) {
+
+  public StepKickoffReturn(GameState pGameState) {
+    super(pGameState);
+  }
+
+  public StepId getId() {
+    return StepId.KICKOFF_RETURN;
+  }
+
+  @Override
+  public boolean setParameter(StepParameter pParameter) {
     Game game = getGameState().getGame();
-		if ((pParameter != null) && !super.setParameter(pParameter)) {
-			switch (pParameter.getKey()) {
-				case END_PLAYER_ACTION:
-					fEndPlayerAction = (pParameter.getValue() != null) ? (Boolean) pParameter.getValue() : false;
-					if (game.getTurnMode() == TurnMode.KICKOFF_RETURN) {
-						pParameter.consume();
-					}
-					return true;
-				case END_TURN:
-					fEndTurn = (pParameter.getValue() != null) ? (Boolean) pParameter.getValue() : false;
-					if (game.getTurnMode() == TurnMode.KICKOFF_RETURN) {
-						pParameter.consume();
-					}
-					return true;
-				case TOUCHBACK:
-					fTouchback = (Boolean) pParameter.getValue();
-					return true;
-				default:
-					break;
-			}
-		}
-		return false;
-	}
-	
-	@Override
-	public void start() {
-		super.start();
-		executeStep();
-	}
-	
+    if ((pParameter != null) && !super.setParameter(pParameter)) {
+      switch (pParameter.getKey()) {
+        case END_PLAYER_ACTION:
+          fEndPlayerAction = (pParameter.getValue() != null) ? (Boolean) pParameter.getValue() : false;
+          if (game.getTurnMode() == TurnMode.KICKOFF_RETURN) {
+            pParameter.consume();
+          }
+          return true;
+        case END_TURN:
+          fEndTurn = (pParameter.getValue() != null) ? (Boolean) pParameter.getValue() : false;
+          if (game.getTurnMode() == TurnMode.KICKOFF_RETURN) {
+            pParameter.consume();
+          }
+          return true;
+        case TOUCHBACK:
+          fTouchback = (Boolean) pParameter.getValue();
+          return true;
+        default:
+          break;
+      }
+    }
+    return false;
+  }
+
+  @Override
+  public void start() {
+    super.start();
+    executeStep();
+  }
+
   @Override
   public StepCommandStatus handleCommand(ReceivedCommand pReceivedCommand) {
     StepCommandStatus commandStatus = super.handleCommand(pReceivedCommand);
@@ -103,29 +103,28 @@ public final class StepKickoffReturn extends AbstractStep {
 
     Game game = getGameState().getGame();
     ActingPlayer actingPlayer = game.getActingPlayer();
-    
+
     if (game.getTurnMode() == TurnMode.KICKOFF_RETURN) {
-    	
-    	if (fEndPlayerAction && !actingPlayer.hasActed()) {
+
+      if (fEndPlayerAction && !actingPlayer.hasActed()) {
         UtilServerSteps.changePlayerAction(this, null, null, false);
         getGameState().pushCurrentStepOnStack();
         SequenceGenerator.getInstance().pushSelectSequence(getGameState(), false);
-        
-    	} else {
-    		
-      	if (fEndPlayerAction || fEndTurn) {
+
+      } else {
+
+        if (fEndPlayerAction || fEndTurn) {
           UtilServerSteps.changePlayerAction(this, null, null, false);
-  	    	game.setHomePlaying(!game.isHomePlaying());
-  	      game.setTurnMode(TurnMode.KICKOFF);
-  	      UtilPlayer.refreshPlayersForTurnStart(game);
-  	      game.getFieldModel().clearTrackNumbers();
-      	}
-      	
-    	}
-    	
-    
+          game.setHomePlaying(!game.isHomePlaying());
+          game.setTurnMode(TurnMode.KICKOFF);
+          UtilPlayer.refreshPlayersForTurnStart(game);
+          game.getFieldModel().clearTrackNumbers();
+        }
+
+      }
+
     } else {
-    
+
       Team kickoffReturnTeam = game.isHomePlaying() ? game.getTeamAway() : game.getTeamHome();
       Team otherTeam = game.isHomePlaying() ? game.getTeamHome() : game.getTeamAway();
       Player kickoffReturnPlayer = null;
@@ -149,9 +148,9 @@ public final class StepKickoffReturn extends AbstractStep {
           }
         }
       }
-      
+
       if ((kickoffReturnPlayer != null) && !fTouchback) {
-      	
+
         for (Player player : passivePlayers) {
           PlayerState playerState = game.getFieldModel().getPlayerState(player);
           game.getFieldModel().setPlayerState(player, playerState.changeActive(false));
@@ -159,10 +158,10 @@ public final class StepKickoffReturn extends AbstractStep {
         game.setHomePlaying(!game.isHomePlaying());
         game.setTurnMode(TurnMode.KICKOFF_RETURN);
         UtilServerDialog.showDialog(getGameState(), new DialogKickoffReturnParameter());
-        
+
         getGameState().pushCurrentStepOnStack();
         SequenceGenerator.getInstance().pushSelectSequence(getGameState(), false);
-        
+
       }
 
     }
@@ -170,9 +169,9 @@ public final class StepKickoffReturn extends AbstractStep {
     getResult().setNextAction(StepAction.NEXT_STEP);
 
   }
-  
+
   // JSON serialization
-  
+
   @Override
   public JsonObject toJsonValue() {
     JsonObject jsonObject = super.toJsonValue();
@@ -181,7 +180,7 @@ public final class StepKickoffReturn extends AbstractStep {
     IServerJsonOption.END_TURN.addTo(jsonObject, fEndTurn);
     return jsonObject;
   }
-  
+
   @Override
   public StepKickoffReturn initFrom(JsonValue pJsonValue) {
     super.initFrom(pJsonValue);

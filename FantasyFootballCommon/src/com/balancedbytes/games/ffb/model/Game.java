@@ -33,6 +33,7 @@ public class Game extends ModelChangeObservable implements IJsonSerializable {
   private Date fFinished;
   private int fHalf;
   private TurnMode fTurnMode;
+  private TurnMode fLastTurnMode;
   private FieldCoordinate fPassCoordinate;
   private boolean fHomePlaying;
   private boolean fHomeFirstOffense;
@@ -122,12 +123,28 @@ public class Game extends ModelChangeObservable implements IJsonSerializable {
     return fTurnMode;
   }
 
-  public void setTurnMode(TurnMode pTurnMode) {
-  	if (pTurnMode == fTurnMode)  {
+  public void setTurnMode(TurnMode turnMode) {
+  	if (turnMode == fTurnMode)  {
   		return;
   	}
-  	fTurnMode = pTurnMode;
+  	TurnMode lastTurnMode = fTurnMode;
+  	fTurnMode = turnMode;
+  	if ((lastTurnMode != null) && !lastTurnMode.isStoreLast()) { 
+  	  setLastTurnMode(lastTurnMode);
+  	}
   	notifyObservers(ModelChangeId.GAME_SET_TURN_MODE, null, fTurnMode);
+  }
+  
+  public TurnMode getLastTurnMode() {
+    return fLastTurnMode;
+  }
+  
+  public void setLastTurnMode(TurnMode lastTurnMode) {
+    if (lastTurnMode == fTurnMode) {
+      return;
+    }
+    fLastTurnMode = lastTurnMode;
+    notifyObservers(ModelChangeId.GAME_SET_LAST_TURN_MODE, null, fLastTurnMode);
   }
 
   public ActingPlayer getActingPlayer() {
@@ -494,6 +511,7 @@ public class Game extends ModelChangeObservable implements IJsonSerializable {
 
     transformedGame.setId(getId());
     transformedGame.setTurnMode(getTurnMode());
+    transformedGame.setLastTurnMode(getLastTurnMode());
     transformedGame.setHalf(getHalf());
     transformedGame.fActingPlayer = getActingPlayer();
     transformedGame.setScheduled(getScheduled());
@@ -556,6 +574,7 @@ public class Game extends ModelChangeObservable implements IJsonSerializable {
     IJsonOption.CONCESSION_POSSIBLE.addTo(jsonObject, fConcessionPossible);
     IJsonOption.TESTING.addTo(jsonObject, fTesting);
     IJsonOption.TURN_MODE.addTo(jsonObject, fTurnMode);
+    IJsonOption.LAST_TURN_MODE.addTo(jsonObject, fLastTurnMode);
     IJsonOption.DEFENDER_ID.addTo(jsonObject, fDefenderId);
     IJsonOption.DEFENDER_ACTION.addTo(jsonObject, fDefenderAction);
     IJsonOption.PASS_COORDINATE.addTo(jsonObject, fPassCoordinate);
@@ -599,6 +618,7 @@ public class Game extends ModelChangeObservable implements IJsonSerializable {
     fConcessionPossible = IJsonOption.CONCESSION_POSSIBLE.getFrom(jsonObject);
     fTesting = IJsonOption.TESTING.getFrom(jsonObject);
     fTurnMode = (TurnMode) IJsonOption.TURN_MODE.getFrom(jsonObject);
+    fLastTurnMode = (TurnMode) IJsonOption.LAST_TURN_MODE.getFrom(jsonObject);
     fDefenderId = IJsonOption.DEFENDER_ID.getFrom(jsonObject);
     fDefenderAction = (PlayerAction) IJsonOption.DEFENDER_ACTION.getFrom(jsonObject);
     fPassCoordinate = IJsonOption.PASS_COORDINATE.getFrom(jsonObject);

@@ -64,6 +64,7 @@ public enum ModelChangeId implements IEnumWithName {
   GAME_SET_HOME_FIRST_OFFENSE("gameSetHomeFirstOffense", ModelChangeDataType.BOOLEAN),
   GAME_SET_HOME_PLAYING("gameSetHomePlaying", ModelChangeDataType.BOOLEAN),
   GAME_SET_ID("gameSetId", ModelChangeDataType.LONG),
+  GAME_SET_LAST_TURN_MODE("gameSetLastTurnMode", ModelChangeDataType.TURN_MODE),
   GAME_SET_PASS_COORDINATE("gameSetPassCoordinate", ModelChangeDataType.FIELD_COORDINATE),
   GAME_SET_SCHEDULED("gameSetScheduled", ModelChangeDataType.DATE),
   GAME_SET_SETUP_OFFENSE("gameSetSetupOffense", ModelChangeDataType.BOOLEAN),

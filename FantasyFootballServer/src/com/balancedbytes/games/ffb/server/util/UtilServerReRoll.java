@@ -106,6 +106,7 @@ public class UtilServerReRoll {
       && ((game.getTurnMode() != TurnMode.BOMB_HOME_BLITZ) || game.getTeamHome().hasPlayer(pPlayer))
       && ((game.getTurnMode() != TurnMode.BOMB_AWAY) || game.getTeamAway().hasPlayer(pPlayer))
       && ((game.getTurnMode() != TurnMode.BOMB_AWAY_BLITZ) || game.getTeamAway().hasPlayer(pPlayer))
+      && (game.getLastTurnMode() != TurnMode.BLITZ)
     );
   }
   
