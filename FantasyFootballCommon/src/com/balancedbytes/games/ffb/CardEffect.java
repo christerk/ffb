@@ -12,7 +12,8 @@ public enum CardEffect implements IEnumWithName {
   DISTRACTED("Distracted"),
   ILLEGALLY_SUBSTITUTED("IllegallySubstituted"),
   MAD_CAP_MUSHROOM_POTION("MadCapMushroomPotion"),
-  SEDATIVE("Sedative");
+  SEDATIVE("Sedative"),
+  POISONED("Poisoned");
 
   private String fName;
   

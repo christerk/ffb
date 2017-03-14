@@ -21,7 +21,8 @@ public enum SeriousInjury implements IEnumWithName {
   FRACTURED_SKULL("Fractured Skull (-AV)", "Fractured Skull (-1 AV)", "has got a fractured skull (-1 AV)", "is recovering from a fractured skull (-1 AV)", true, InjuryAttribute.AV),
   BROKEN_NECK("Broken Neck (-AG)", "Broken Neck (-1 AG)", "has got a broken neck (-1 AG)", "is recovering from a broken neck (-1 AG)", true, InjuryAttribute.AG),
   SMASHED_COLLAR_BONE("Smashed Collar Bone (-ST)", "Smashed Collar Bone (-1 ST)", "has got a smashed collar bone (-1 ST)", "is recovering from a smashed collar bone (-1 ST)", true, InjuryAttribute.ST),
-  DEAD("Dead (RIP)", "Dead (RIP)", "is dead", "is dead", true, null);
+  DEAD("Dead (RIP)", "Dead (RIP)", "is dead", "is dead", true, null),
+  POISONED("Poisoned (MNG)", "Poisoned (Miss next game)", "has been poisoned (Miss next game)", "is recovering from being poisoned", false, null);
 
   private String fName;
   private String fButtonText;

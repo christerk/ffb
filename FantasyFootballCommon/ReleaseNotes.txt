@@ -9,6 +9,7 @@
 - BB2016 Rule: Piling On not being available is handled by Fumbbl directly
 - Option "pilingOnUsesATeamReroll" (true/false) makes Piling On cost a Team ReRoll
 - Games are marked as such in the database when they have been conceded or ended by the Admins
+- BB2016 Rule: Skill "Weeping Dagger" has been implemented - poisoned players miss the next game
 
 [b]Bugfixes:[/b]
 

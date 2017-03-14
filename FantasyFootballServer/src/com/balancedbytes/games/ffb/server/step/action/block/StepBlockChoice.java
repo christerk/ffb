@@ -31,77 +31,77 @@ import com.eclipsesource.json.JsonValue;
 /**
  * Step in block sequence to handle the block choice.
  * 
- * Needs to be initialized with stepParameter GOTO_LABEL_ON_DODGE.
- * Needs to be initialized with stepParameter GOTO_LABEL_ON_JUGGERNAUT.
- * Needs to be initialized with stepParameter GOTO_LABEL_ON_PUSHBACK.
+ * Needs to be initialized with stepParameter GOTO_LABEL_ON_DODGE. Needs to be
+ * initialized with stepParameter GOTO_LABEL_ON_JUGGERNAUT. Needs to be
+ * initialized with stepParameter GOTO_LABEL_ON_PUSHBACK.
  *
- * Expects stepParameter BLOCK_DICE_INDEX to be set by a preceding step.
- * Expects stepParameter BLOCK_RESULT to be set by a preceding step.
- * Expects stepParameter BLOCK_ROLL to be set by a preceding step.
- * Expects stepParameter NR_OF_BLOCK_DICE to be set by a preceding step.
- * Expects stepParameter OLD_DEFENDER_STATE to be set by a preceding step.
- *  
+ * Expects stepParameter BLOCK_DICE_INDEX to be set by a preceding step. Expects
+ * stepParameter BLOCK_RESULT to be set by a preceding step. Expects
+ * stepParameter BLOCK_ROLL to be set by a preceding step. Expects stepParameter
+ * NR_OF_BLOCK_DICE to be set by a preceding step. Expects stepParameter
+ * OLD_DEFENDER_STATE to be set by a preceding step.
+ * 
  * @author Kalimar
  */
 public class StepBlockChoice extends AbstractStep {
-	
-	private String fGotoLabelOnDodge;
-	private String fGotoLabelOnJuggernaut;
-	private String fGotoLabelOnPushback;
-	
+
+  private String fGotoLabelOnDodge;
+  private String fGotoLabelOnJuggernaut;
+  private String fGotoLabelOnPushback;
+
   private int fNrOfDice;
   private int[] fBlockRoll;
   private int fDiceIndex;
   private BlockResult fBlockResult;
   private PlayerState fOldDefenderState;
-	
-	public StepBlockChoice(GameState pGameState) {
-		super(pGameState);
-	}
-	
-	public StepId getId() {
-		return StepId.BLOCK_CHOICE;
-	}
-	
+
+  public StepBlockChoice(GameState pGameState) {
+    super(pGameState);
+  }
+
+  public StepId getId() {
+    return StepId.BLOCK_CHOICE;
+  }
+
   @Override
   public void init(StepParameterSet pParameterSet) {
-  	if (pParameterSet != null) {
-  		for (StepParameter parameter : pParameterSet.values()) {
-  			switch (parameter.getKey()) {
-  				// mandatory
-  				case GOTO_LABEL_ON_DODGE:
-  					fGotoLabelOnDodge = (String) parameter.getValue();
-  					break;
-  				// mandatory
-  				case GOTO_LABEL_ON_JUGGERNAUT:
-  					fGotoLabelOnJuggernaut = (String) parameter.getValue();
-  					break;
-  				// mandatory
-  				case GOTO_LABEL_ON_PUSHBACK:
-  					fGotoLabelOnPushback = (String) parameter.getValue();
-  					break;
-					default:
-						break;
-  			}
-  		}
-  	}
-  	if (!StringTool.isProvided(fGotoLabelOnDodge)) {
-			throw new StepException("StepParameter " + StepParameterKey.GOTO_LABEL_ON_DODGE + " is not initialized.");
-  	}
-  	if (!StringTool.isProvided(fGotoLabelOnJuggernaut)) {
-			throw new StepException("StepParameter " + StepParameterKey.GOTO_LABEL_ON_JUGGERNAUT + " is not initialized.");
-  	}
-  	if (!StringTool.isProvided(fGotoLabelOnPushback)) {
-			throw new StepException("StepParameter " + StepParameterKey.GOTO_LABEL_ON_PUSHBACK + " is not initialized.");
-  	}
+    if (pParameterSet != null) {
+      for (StepParameter parameter : pParameterSet.values()) {
+        switch (parameter.getKey()) {
+        // mandatory
+          case GOTO_LABEL_ON_DODGE:
+            fGotoLabelOnDodge = (String) parameter.getValue();
+            break;
+          // mandatory
+          case GOTO_LABEL_ON_JUGGERNAUT:
+            fGotoLabelOnJuggernaut = (String) parameter.getValue();
+            break;
+          // mandatory
+          case GOTO_LABEL_ON_PUSHBACK:
+            fGotoLabelOnPushback = (String) parameter.getValue();
+            break;
+          default:
+            break;
+        }
+      }
+    }
+    if (!StringTool.isProvided(fGotoLabelOnDodge)) {
+      throw new StepException("StepParameter " + StepParameterKey.GOTO_LABEL_ON_DODGE + " is not initialized.");
+    }
+    if (!StringTool.isProvided(fGotoLabelOnJuggernaut)) {
+      throw new StepException("StepParameter " + StepParameterKey.GOTO_LABEL_ON_JUGGERNAUT + " is not initialized.");
+    }
+    if (!StringTool.isProvided(fGotoLabelOnPushback)) {
+      throw new StepException("StepParameter " + StepParameterKey.GOTO_LABEL_ON_PUSHBACK + " is not initialized.");
+    }
   }
-	
-	@Override
-	public void start() {
-		super.start();
-		executeStep();
-	}
-	
+
+  @Override
+  public void start() {
+    super.start();
+    executeStep();
+  }
+
   @Override
   public StepCommandStatus handleCommand(ReceivedCommand pReceivedCommand) {
     StepCommandStatus commandStatus = super.handleCommand(pReceivedCommand);
@@ -111,32 +111,32 @@ public class StepBlockChoice extends AbstractStep {
     return commandStatus;
   }
 
-	@Override
-	public boolean setParameter(StepParameter pParameter) {
-		if ((pParameter != null) && !super.setParameter(pParameter)) {
-			switch (pParameter.getKey()) {
-				case DICE_INDEX:
-					fDiceIndex = (Integer) pParameter.getValue();
-					return true;
-				case BLOCK_RESULT:
-					fBlockResult = (BlockResult) pParameter.getValue();
-					return true;
-				case BLOCK_ROLL:
-					fBlockRoll = (int[]) pParameter.getValue();
-					return true;
-				case NR_OF_DICE:
-					fNrOfDice = (Integer) pParameter.getValue();
-					return true;
-				case OLD_DEFENDER_STATE:
-					fOldDefenderState = (PlayerState) pParameter.getValue();
-					return true;
-				default:
-					break;
-			}
-		}
-		return false;
-	}
-		
+  @Override
+  public boolean setParameter(StepParameter pParameter) {
+    if ((pParameter != null) && !super.setParameter(pParameter)) {
+      switch (pParameter.getKey()) {
+        case DICE_INDEX:
+          fDiceIndex = (Integer) pParameter.getValue();
+          return true;
+        case BLOCK_RESULT:
+          fBlockResult = (BlockResult) pParameter.getValue();
+          return true;
+        case BLOCK_ROLL:
+          fBlockRoll = (int[]) pParameter.getValue();
+          return true;
+        case NR_OF_DICE:
+          fNrOfDice = (Integer) pParameter.getValue();
+          return true;
+        case OLD_DEFENDER_STATE:
+          fOldDefenderState = (PlayerState) pParameter.getValue();
+          return true;
+        default:
+          break;
+      }
+    }
+    return false;
+  }
+
   private void executeStep() {
     Game game = getGameState().getGame();
     ActingPlayer actingPlayer = game.getActingPlayer();
@@ -144,53 +144,55 @@ public class StepBlockChoice extends AbstractStep {
     PlayerState attackerState = game.getFieldModel().getPlayerState(actingPlayer.getPlayer());
     PlayerState defenderState = game.getFieldModel().getPlayerState(game.getDefender());
     switch (fBlockResult) {
-	    case SKULL:
-	      game.getFieldModel().setPlayerState(actingPlayer.getPlayer(), attackerState.changeBase(PlayerState.FALLING));
-	      game.getFieldModel().setPlayerState(game.getDefender(), fOldDefenderState);
-	      getResult().setNextAction(StepAction.NEXT_STEP);
-	      break;
-	    case BOTH_DOWN:
-	      getResult().setNextAction(StepAction.GOTO_LABEL, fGotoLabelOnJuggernaut);
-	      break;
-	    case POW_PUSHBACK:
-	      if (UtilCards.hasSkill(game, game.getDefender(), Skill.DODGE)) {
-	        if (UtilCards.hasSkill(game, actingPlayer, Skill.TACKLE) && (!UtilCards.hasSkill(game, actingPlayer, Skill.BALL_AND_CHAIN) || actingPlayer.getPlayer().getTeam() != game.getDefender().getTeam())) {
-	        	if (UtilGameOption.isOptionEnabled(game, GameOptionId.RIGHT_STUFF_CANCELS_TACKLE) && UtilCards.hasSkill(game, game.getDefender(), Skill.RIGHT_STUFF)) {
-		          getResult().addReport(new ReportSkillUse(game.getDefenderId(), Skill.RIGHT_STUFF, true, SkillUse.CANCEL_TACKLE));
-		        	getResult().setNextAction(StepAction.GOTO_LABEL, fGotoLabelOnDodge);
-	        	} else {
-		          getResult().addReport(new ReportSkillUse(actingPlayer.getPlayerId(), Skill.TACKLE, true, SkillUse.CANCEL_DODGE));
-		          game.getFieldModel().setPlayerState(game.getDefender(), defenderState.changeBase(PlayerState.FALLING));
-			        publishParameters(UtilBlockSequence.initPushback(this));
-		        	getResult().setNextAction(StepAction.GOTO_LABEL, fGotoLabelOnPushback);
-	        	}
-	        } else {
-	        	getResult().setNextAction(StepAction.GOTO_LABEL, fGotoLabelOnDodge);
-	        }
-	      } else {
-	        game.getFieldModel().setPlayerState(game.getDefender(), defenderState.changeBase(PlayerState.FALLING));
-	        publishParameters(UtilBlockSequence.initPushback(this));
-	        getResult().setNextAction(StepAction.GOTO_LABEL, fGotoLabelOnPushback);
-	      }
-	      break;
-	    case POW:
-	      game.getFieldModel().setPlayerState(game.getDefender(), defenderState.changeBase(PlayerState.FALLING));
-	      publishParameters(UtilBlockSequence.initPushback(this));
-	      getResult().setNextAction(StepAction.GOTO_LABEL, fGotoLabelOnPushback);
-	      break;
-	    case PUSHBACK:
-	      game.getFieldModel().setPlayerState(game.getDefender(), fOldDefenderState);
-	      publishParameters(UtilBlockSequence.initPushback(this));
-	      getResult().setNextAction(StepAction.GOTO_LABEL, fGotoLabelOnPushback);
-	      break;
+      case SKULL:
+        game.getFieldModel().setPlayerState(actingPlayer.getPlayer(), attackerState.changeBase(PlayerState.FALLING));
+        game.getFieldModel().setPlayerState(game.getDefender(), fOldDefenderState);
+        getResult().setNextAction(StepAction.NEXT_STEP);
+        break;
+      case BOTH_DOWN:
+        getResult().setNextAction(StepAction.GOTO_LABEL, fGotoLabelOnJuggernaut);
+        break;
+      case POW_PUSHBACK:
+        if (UtilCards.hasSkill(game, game.getDefender(), Skill.DODGE)) {
+          if (UtilCards.hasSkill(game, actingPlayer, Skill.TACKLE)
+              && (!UtilCards.hasSkill(game, actingPlayer, Skill.BALL_AND_CHAIN) || actingPlayer.getPlayer().getTeam() != game.getDefender().getTeam())) {
+            if (UtilGameOption.isOptionEnabled(game, GameOptionId.RIGHT_STUFF_CANCELS_TACKLE)
+                && UtilCards.hasSkill(game, game.getDefender(), Skill.RIGHT_STUFF)) {
+              getResult().addReport(new ReportSkillUse(game.getDefenderId(), Skill.RIGHT_STUFF, true, SkillUse.CANCEL_TACKLE));
+              getResult().setNextAction(StepAction.GOTO_LABEL, fGotoLabelOnDodge);
+            } else {
+              getResult().addReport(new ReportSkillUse(actingPlayer.getPlayerId(), Skill.TACKLE, true, SkillUse.CANCEL_DODGE));
+              game.getFieldModel().setPlayerState(game.getDefender(), defenderState.changeBase(PlayerState.FALLING));
+              publishParameters(UtilBlockSequence.initPushback(this));
+              getResult().setNextAction(StepAction.GOTO_LABEL, fGotoLabelOnPushback);
+            }
+          } else {
+            getResult().setNextAction(StepAction.GOTO_LABEL, fGotoLabelOnDodge);
+          }
+        } else {
+          game.getFieldModel().setPlayerState(game.getDefender(), defenderState.changeBase(PlayerState.FALLING));
+          publishParameters(UtilBlockSequence.initPushback(this));
+          getResult().setNextAction(StepAction.GOTO_LABEL, fGotoLabelOnPushback);
+        }
+        break;
+      case POW:
+        game.getFieldModel().setPlayerState(game.getDefender(), defenderState.changeBase(PlayerState.FALLING));
+        publishParameters(UtilBlockSequence.initPushback(this));
+        getResult().setNextAction(StepAction.GOTO_LABEL, fGotoLabelOnPushback);
+        break;
+      case PUSHBACK:
+        game.getFieldModel().setPlayerState(game.getDefender(), fOldDefenderState);
+        publishParameters(UtilBlockSequence.initPushback(this));
+        getResult().setNextAction(StepAction.GOTO_LABEL, fGotoLabelOnPushback);
+        break;
       default:
-      	break;
+        break;
     }
     getResult().addReport(new ReportBlockChoice(fNrOfDice, fBlockRoll, fDiceIndex, fBlockResult, game.getDefenderId()));
   }
-  
+
   // JSON serialization
-  
+
   @Override
   public JsonObject toJsonValue() {
     JsonObject jsonObject = super.toJsonValue();
@@ -204,7 +206,7 @@ public class StepBlockChoice extends AbstractStep {
     IServerJsonOption.OLD_DEFENDER_STATE.addTo(jsonObject, fOldDefenderState);
     return jsonObject;
   }
-  
+
   @Override
   public StepBlockChoice initFrom(JsonValue pJsonValue) {
     super.initFrom(pJsonValue);

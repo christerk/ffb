@@ -90,7 +90,8 @@ public enum ReportId implements IEnumWithName {
   PETTY_CASH("pettyCash"),
   INDUCEMENTS_BOUGHT("inducementsBought"),
   CARDS_BOUGHT("cardsBought"),
-  CARD_EFFECT_ROLL("cardEffectRoll");
+  CARD_EFFECT_ROLL("cardEffectRoll"),
+  WEEPING_DAGGER_ROLL("weepingDaggerRoll");
   
   // obsolete: 50 (spiralling expenses)
   // obsolete: 71 (game options)

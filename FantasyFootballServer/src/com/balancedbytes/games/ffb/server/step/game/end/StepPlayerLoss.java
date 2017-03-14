@@ -26,20 +26,20 @@ import com.eclipsesource.json.JsonValue;
  */
 public final class StepPlayerLoss extends AbstractStep {
 
-	public StepPlayerLoss(GameState pGameState) {
-		super(pGameState);
-	}
+  public StepPlayerLoss(GameState pGameState) {
+    super(pGameState);
+  }
 
-	public StepId getId() {
-		return StepId.PLAYER_LOSS;
-	}
+  public StepId getId() {
+    return StepId.PLAYER_LOSS;
+  }
 
-	@Override
-	public void start() {
-		super.start();
-		executeStep();
-	}
-	
+  @Override
+  public void start() {
+    super.start();
+    executeStep();
+  }
+
   private void executeStep() {
     Game game = getGameState().getGame();
     GameResult gameResult = game.getGameResult();
@@ -60,25 +60,27 @@ public final class StepPlayerLoss extends AbstractStep {
           defectingPlayerIds.add(player.getId());
           int defectingRoll = getGameState().getDiceRoller().rollPlayerLoss();
           defectingRolls.add(defectingRoll);
-          boolean playerDefecting = DiceInterpreter.getInstance().isPlayerDefecting(defectingRoll); 
+          boolean playerDefecting = DiceInterpreter.getInstance().isPlayerDefecting(defectingRoll);
           defectingFlags.add(playerDefecting);
           playerResult.setDefecting(playerDefecting);
         }
       }
       if (defectingPlayerIds.size() > 0) {
-      	getResult().addReport(new ReportDefectingPlayers(defectingPlayerIds.toArray(new String[defectingPlayerIds.size()]), ArrayTool.toIntArray(defectingRolls), ArrayTool.toBooleanArray(defectingFlags)));
+        getResult().addReport(
+            new ReportDefectingPlayers(defectingPlayerIds.toArray(new String[defectingPlayerIds.size()]), ArrayTool.toIntArray(defectingRolls), ArrayTool
+                .toBooleanArray(defectingFlags)));
       }
     }
     getResult().setNextAction(StepAction.NEXT_STEP);
   }
-  
+
   // JSON serialization
-  
+
   @Override
   public JsonObject toJsonValue() {
     return super.toJsonValue();
   }
-  
+
   @Override
   public StepPlayerLoss initFrom(JsonValue pJsonValue) {
     super.initFrom(pJsonValue);

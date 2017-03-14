@@ -1,6 +1,5 @@
 package com.balancedbytes.games.ffb.client;
 
-
 import java.net.InetAddress;
 import java.net.URL;
 import java.util.ArrayList;
@@ -119,12 +118,12 @@ import com.balancedbytes.games.ffb.util.UtilPlayer;
  * @author Kalimar
  */
 public class StatusReport {
-  
+
   private FantasyFootballClient fClient;
   private int fIndent;
   private boolean fShowModifiersOnSuccess;
   private boolean fShowModifiersOnFailure;
-  
+
   private boolean fPettyCashReportReceived;
   private boolean fCardsBoughtReportReceived;
   private boolean fInducmentsBoughtReportReceived;
@@ -138,46 +137,47 @@ public class StatusReport {
   public FantasyFootballClient getClient() {
     return fClient;
   }
-  
+
   public int getIndent() {
     return fIndent;
   }
-  
+
   public void setIndent(int pIndent) {
     fIndent = pIndent;
   }
-  
+
   public void reportVersion() {
     StringBuilder status = new StringBuilder();
     status.append("FantasyFootballClient Version ").append(FantasyFootballClient.CLIENT_VERSION);
     println(0, status.toString());
-//    status = new StringBuilder();
-//    status.append("FantasyFootball Version expected ").append(FantasyFootballClient.SERVER_VERSION);
-//    println(0, status.toString());    
+    // status = new StringBuilder();
+    // status.append("FantasyFootball Version expected ").append(FantasyFootballClient.SERVER_VERSION);
+    // println(0, status.toString());
   }
 
   public void reportConnecting(InetAddress pInetAddress, int pPort) {
     StringBuilder status = new StringBuilder();
     status.append("Connecting to ").append(pInetAddress).append(":").append(pPort).append(" ...");
-    println(0, status.toString());    
+    println(0, status.toString());
   }
-  
+
   public void reportIconLoadFailure(URL pIconUrl) {
     StringBuilder status = new StringBuilder();
     status.append("Unable to load icon from URL ").append(pIconUrl).append(".");
-    println(0, status.toString());    
+    println(0, status.toString());
   }
 
   public void reportRetrying() {
-    println(0, "Retrying ...");    
+    println(0, "Retrying ...");
   }
-  
+
   public void reportTimeout() {
     println(ParagraphStyle.SPACE_ABOVE_BELOW, TextStyle.BOLD, "The timelimit has been reached for this turn.");
   }
-  
+
   public void reportFumbblResultUpload(ReportFumbblResultUpload pReport) {
-    StringBuilder status = new StringBuilder();;
+    StringBuilder status = new StringBuilder();
+    ;
     status.append("Fumbbl Result Upload ");
     if (pReport.isSuccessful()) {
       status.append("ok");
@@ -195,7 +195,7 @@ public class StatusReport {
       println(0, status.toString());
     }
   }
-  
+
   public void reportSocketClosed() {
     if (getClient().getMode() != ClientMode.REPLAY) {
       println(ParagraphStyle.SPACE_ABOVE, TextStyle.NONE, "The connection to the server has been closed.");
@@ -209,7 +209,7 @@ public class StatusReport {
     } else {
       println(0, "Cannot connect to the server.");
     }
-  }  
+  }
 
   public void reportInducement(ReportInducement pReport) {
     Game game = getClient().getGame();
@@ -219,7 +219,7 @@ public class StatusReport {
       } else {
         print(getIndent(), TextStyle.AWAY, game.getTeamAway().getName());
       }
-      StringBuilder status = new StringBuilder();      
+      StringBuilder status = new StringBuilder();
       switch (pReport.getInducementType()) {
         case EXTRA_TEAM_TRAINING:
           print(getIndent(), " use ");
@@ -239,11 +239,11 @@ public class StatusReport {
           println(getIndent(), " to re-roll the failed Regeneration.");
           break;
         default:
-        	break;
+          break;
       }
     }
   }
-  
+
   public void reportStartHalf(ReportStartHalf pReport) {
     StringBuilder status = new StringBuilder();
     status.append("Starting ");
@@ -298,7 +298,7 @@ public class StatusReport {
     }
     println(getIndent() + 1, ".");
   }
-  
+
   public void reportScatterBall(ReportScatterBall pReport) {
     StringBuilder status = new StringBuilder();
     if (pReport.isGustOfWind()) {
@@ -310,9 +310,9 @@ public class StatusReport {
     int[] rolls = pReport.getRolls();
     if (ArrayTool.isProvided(rolls)) {
       if (rolls.length > 1) {
-        status.append("Scatter Rolls [ ");  
+        status.append("Scatter Rolls [ ");
       } else {
-        status.append("Scatter Roll [ ");        
+        status.append("Scatter Roll [ ");
       }
       for (int i = 0; i < rolls.length; i++) {
         if (i > 0) {
@@ -336,7 +336,7 @@ public class StatusReport {
   }
 
   public void reportBombOutOfBounds(ReportBombOutOfBounds pReport) {
-  	println(getIndent(), TextStyle.BOLD, "Bomb scattered out of bounds.");
+    println(getIndent(), TextStyle.BOLD, "Bomb scattered out of bounds.");
   }
 
   public void reportThrowIn(ReportThrowIn pReport) {
@@ -403,7 +403,7 @@ public class StatusReport {
       println(0, "A spectator leaves the game.");
     }
   }
-  
+
   public void reportTimeoutEnforced(ReportTimeoutEnforced pReport) {
     Game game = getClient().getGame();
     StringBuilder status = new StringBuilder();
@@ -415,7 +415,7 @@ public class StatusReport {
     }
     println(ParagraphStyle.SPACE_BELOW, TextStyle.NONE, "The turn will end after the Acting Player has finished moving.");
   }
-  
+
   public void reportDoubleHiredStarPlayer(ReportDoubleHiredStarPlayer pReport) {
     StringBuilder status = new StringBuilder();
     status.append("Star Player ").append(pReport.getStarPlayerName());
@@ -447,7 +447,7 @@ public class StatusReport {
       println(getIndent() + 1, TextStyle.NEEDED_ROLL, neededRoll.toString());
     }
   }
-  
+
   private String formatRollModifiers(IRollModifier[] pRollModifiers) {
     StringBuilder modifiers = new StringBuilder();
     if (ArrayTool.isProvided(pRollModifiers)) {
@@ -467,7 +467,7 @@ public class StatusReport {
     }
     return modifiers.toString();
   }
-  
+
   public void reportSpectators(ReportSpectators pReport) {
     setIndent(0);
     Game game = getClient().getGame();
@@ -528,22 +528,22 @@ public class StatusReport {
   public void reportPettyCash(ReportPettyCash pReport) {
     Game game = getClient().getGame();
     if (!fPettyCashReportReceived) {
-    	fPettyCashReportReceived = true;
-    	println(getIndent(), TextStyle.BOLD, "Transfer Petty Cash");
+      fPettyCashReportReceived = true;
+      println(getIndent(), TextStyle.BOLD, "Transfer Petty Cash");
     }
-  	print(getIndent() + 1, "Team ");
+    print(getIndent() + 1, "Team ");
     if (game.getTeamHome().getId().equals(pReport.getTeamId())) {
-    	print(getIndent() + 1, TextStyle.HOME, game.getTeamHome().getName());
+      print(getIndent() + 1, TextStyle.HOME, game.getTeamHome().getName());
     } else {
-    	print(getIndent() + 1, TextStyle.AWAY, game.getTeamAway().getName());
+      print(getIndent() + 1, TextStyle.AWAY, game.getTeamAway().getName());
     }
     StringBuilder status = new StringBuilder();
     status.append(" transfers ");
     if (pReport.getGold() > 0) {
-    	status.append(StringTool.formatThousands(pReport.getGold()));
-    	status.append(" gold");
+      status.append(StringTool.formatThousands(pReport.getGold()));
+      status.append(" gold");
     } else {
-    	status.append("nothing");
+      status.append("nothing");
     }
     status.append(" from the Treasury into Petty Cash.");
     println(getIndent() + 1, status.toString());
@@ -552,44 +552,44 @@ public class StatusReport {
   public void reportInducementsBought(ReportInducementsBought pReport) {
     Game game = getClient().getGame();
     if (!fInducmentsBoughtReportReceived) {
-    	fInducmentsBoughtReportReceived = true;
+      fInducmentsBoughtReportReceived = true;
       println(getIndent(), TextStyle.BOLD, "Buy Inducements");
     }
-  	print(getIndent() + 1, "Team ");
+    print(getIndent() + 1, "Team ");
     if (game.getTeamHome().getId().equals(pReport.getTeamId())) {
-    	print(getIndent() + 1, TextStyle.HOME, game.getTeamHome().getName());
+      print(getIndent() + 1, TextStyle.HOME, game.getTeamHome().getName());
     } else {
-    	print(getIndent() + 1, TextStyle.AWAY, game.getTeamAway().getName());
+      print(getIndent() + 1, TextStyle.AWAY, game.getTeamAway().getName());
     }
     StringBuilder status = new StringBuilder();
     status.append(" buys ");
     if ((pReport.getNrOfInducements() == 0) && (pReport.getNrOfStars() == 0) && (pReport.getNrOfMercenaries() == 0)) {
-    	status.append("no Inducements.");
+      status.append("no Inducements.");
     } else {
-    	List<String> itemList = new ArrayList<String>();
-    	if (pReport.getNrOfInducements() > 0) {
-    		if (pReport.getNrOfInducements() == 1) {
-    			itemList.add("1 Inducement");
-    		} else {
-    			itemList.add(StringTool.bind("$1 Inducements", pReport.getNrOfInducements()));
-    		}
-    	}
-    	if (pReport.getNrOfStars() > 0) {
-    		if (pReport.getNrOfStars() == 1) {
-    			itemList.add("1 Star");
-    		} else {
-    			itemList.add(StringTool.bind("$1 Stars", pReport.getNrOfStars()));
-    		}
-    	}
-    	if (pReport.getNrOfMercenaries() > 0) {
-    		if (pReport.getNrOfMercenaries() == 1) {
-    			itemList.add("1 Mercenary");
-    		} else {
-    			itemList.add(StringTool.bind("$1 Mercenaries", pReport.getNrOfMercenaries()));
-    		}
-    	}
-    	status.append(StringTool.buildEnumeration(itemList.toArray(new String[itemList.size()])));
-    	status.append(" for ").append(StringTool.formatThousands(pReport.getGold())).append(" gold total.");
+      List<String> itemList = new ArrayList<String>();
+      if (pReport.getNrOfInducements() > 0) {
+        if (pReport.getNrOfInducements() == 1) {
+          itemList.add("1 Inducement");
+        } else {
+          itemList.add(StringTool.bind("$1 Inducements", pReport.getNrOfInducements()));
+        }
+      }
+      if (pReport.getNrOfStars() > 0) {
+        if (pReport.getNrOfStars() == 1) {
+          itemList.add("1 Star");
+        } else {
+          itemList.add(StringTool.bind("$1 Stars", pReport.getNrOfStars()));
+        }
+      }
+      if (pReport.getNrOfMercenaries() > 0) {
+        if (pReport.getNrOfMercenaries() == 1) {
+          itemList.add("1 Mercenary");
+        } else {
+          itemList.add(StringTool.bind("$1 Mercenaries", pReport.getNrOfMercenaries()));
+        }
+      }
+      status.append(StringTool.buildEnumeration(itemList.toArray(new String[itemList.size()])));
+      status.append(" for ").append(StringTool.formatThousands(pReport.getGold())).append(" gold total.");
     }
     println(getIndent() + 1, status.toString());
   }
@@ -597,26 +597,26 @@ public class StatusReport {
   public void reportCardsBought(ReportCardsBought pReport) {
     Game game = getClient().getGame();
     if (!fCardsBoughtReportReceived) {
-    	fCardsBoughtReportReceived = true;
-    	println(getIndent(), TextStyle.BOLD, "Buy Cards");
+      fCardsBoughtReportReceived = true;
+      println(getIndent(), TextStyle.BOLD, "Buy Cards");
     }
-  	print(getIndent() + 1, "Team ");
+    print(getIndent() + 1, "Team ");
     if (game.getTeamHome().getId().equals(pReport.getTeamId())) {
-    	print(getIndent() + 1, TextStyle.HOME, game.getTeamHome().getName());
+      print(getIndent() + 1, TextStyle.HOME, game.getTeamHome().getName());
     } else {
-    	print(getIndent() + 1, TextStyle.AWAY, game.getTeamAway().getName());
+      print(getIndent() + 1, TextStyle.AWAY, game.getTeamAway().getName());
     }
     StringBuilder status = new StringBuilder();
     status.append(" buys ");
     if (pReport.getNrOfCards() == 0) {
-    	status.append("no Cards.");
+      status.append("no Cards.");
     } else {
-    	if (pReport.getNrOfCards() == 1) {
-    		status.append("1 Card");
-    	} else {
-    		status.append(pReport.getNrOfCards()).append(" Cards");
-    	}
-    	status.append(" for ").append(StringTool.formatThousands(pReport.getGold())).append(" gold total.");
+      if (pReport.getNrOfCards() == 1) {
+        status.append("1 Card");
+      } else {
+        status.append(pReport.getNrOfCards()).append(" Cards");
+      }
+      status.append(" for ").append(StringTool.formatThousands(pReport.getGold())).append(" gold total.");
     }
     println(getIndent() + 1, status.toString());
   }
@@ -673,7 +673,7 @@ public class StatusReport {
       status.append(" + ").append(game.getTeamAway().getAssistantCoaches()).append(" Assistant Coaches");
       status.append(" = ").append(totalAway).append(".");
       println(getIndent() + 1, status.toString());
-    } 
+    }
     if (pReport.isHomeGainsReRoll()) {
       print(getIndent(), "Team ");
       print(getIndent(), TextStyle.HOME, game.getTeamHome().getName());
@@ -685,7 +685,7 @@ public class StatusReport {
       println(getIndent(), " gains a Re-Roll.");
     }
   }
-  
+
   public void reportKickoffThrowARock(ReportKickoffThrowARock pReport) {
     Game game = getClient().getGame();
     GameResult gameResult = game.getGameResult();
@@ -717,53 +717,53 @@ public class StatusReport {
       println(getIndent(), " is hit by a rock.");
     }
   }
-  
+
   public void reportSpecialEffectRoll(ReportSpecialEffectRoll pReport) {
-  	Game game = getClient().getGame();
+    Game game = getClient().getGame();
     StringBuilder status = new StringBuilder();
     if (pReport.getSpecialEffect() == SpecialEffect.LIGHTNING) {
-	    status.append("Lightning Spell Effect Roll [ ").append(pReport.getRoll()).append(" ]");
+      status.append("Lightning Spell Effect Roll [ ").append(pReport.getRoll()).append(" ]");
     }
     if (pReport.getSpecialEffect() == SpecialEffect.FIREBALL) {
-	    status.append("Fireball Spell Effect Roll [ ").append(pReport.getRoll()).append(" ]");
+      status.append("Fireball Spell Effect Roll [ ").append(pReport.getRoll()).append(" ]");
     }
     if (pReport.getSpecialEffect() == SpecialEffect.BOMB) {
-	    status.append("Bomb Effect Roll [ ");
-	    status.append((pReport.getRoll() > 0) ? pReport.getRoll() : "automatic success");
-	    status.append(" ]");
+      status.append("Bomb Effect Roll [ ");
+      status.append((pReport.getRoll() > 0) ? pReport.getRoll() : "automatic success");
+      status.append(" ]");
     }
     println(getIndent(), TextStyle.ROLL, status.toString());
-	  print(getIndent() + 1, false, game.getPlayerById(pReport.getPlayerId()));
-	  if (pReport.isSuccessful()) {
-	  	if (pReport.getSpecialEffect().isWizardSpell()) {
-	  		println(getIndent() + 1, " is hit by the spell.");
-	  	} else {
-	  		println(getIndent() + 1, " is hit by the explosion.");
-	  	}
-	  } else {
-	  	if (pReport.getSpecialEffect().isWizardSpell()) {
-	  		println(getIndent() + 1, " escapes the spell effect.");
-	  	} else {
-	  		println(getIndent() + 1, " escapes the explosion.");
-	  	}
-	  }
+    print(getIndent() + 1, false, game.getPlayerById(pReport.getPlayerId()));
+    if (pReport.isSuccessful()) {
+      if (pReport.getSpecialEffect().isWizardSpell()) {
+        println(getIndent() + 1, " is hit by the spell.");
+      } else {
+        println(getIndent() + 1, " is hit by the explosion.");
+      }
+    } else {
+      if (pReport.getSpecialEffect().isWizardSpell()) {
+        println(getIndent() + 1, " escapes the spell effect.");
+      } else {
+        println(getIndent() + 1, " escapes the explosion.");
+      }
+    }
   }
-  
+
   public void reportWizardUse(ReportWizardUse pReport) {
-  	Game game = getClient().getGame();
-  	print(getIndent(), TextStyle.BOLD, "The team wizard of ");
-  	if (game.getTeamHome().getId().equals(pReport.getTeamId())) {
-  		print(getIndent(), TextStyle.HOME_BOLD, game.getTeamHome().getName());
-  	} else {
-  		print(getIndent(), TextStyle.AWAY_BOLD, game.getTeamAway().getName());
-  	}
-  	if (pReport.getWizardSpell() == SpecialEffect.LIGHTNING) {
-  		println(getIndent(), TextStyle.BOLD, " casts a Lightning spell.");
-  	} else {
-  		println(getIndent(), TextStyle.BOLD, " casts a Fireball spell.");
-  	}
+    Game game = getClient().getGame();
+    print(getIndent(), TextStyle.BOLD, "The team wizard of ");
+    if (game.getTeamHome().getId().equals(pReport.getTeamId())) {
+      print(getIndent(), TextStyle.HOME_BOLD, game.getTeamHome().getName());
+    } else {
+      print(getIndent(), TextStyle.AWAY_BOLD, game.getTeamAway().getName());
+    }
+    if (pReport.getWizardSpell() == SpecialEffect.LIGHTNING) {
+      println(getIndent(), TextStyle.BOLD, " casts a Lightning spell.");
+    } else {
+      println(getIndent(), TextStyle.BOLD, " casts a Fireball spell.");
+    }
   }
-  
+
   public void reportKickoffPitchInvasion(ReportKickoffPitchInvasion pReport) {
     Game game = getClient().getGame();
     GameResult gameResult = game.getGameResult();
@@ -837,7 +837,7 @@ public class StatusReport {
       }
     }
   }
-  
+
   public void reportSecretWeaponBan(ReportSecretWeaponBan pReport) {
     Game game = getClient().getGame();
     reportSecretWeaponBan(pReport, game.getTeamHome());
@@ -848,29 +848,29 @@ public class StatusReport {
     Game game = getClient().getGame();
     String[] playerIds = pReport.getPlayerIds();
     if (ArrayTool.isProvided(playerIds)) {
-    	int[] rolls = pReport.getRolls();
-    	boolean[] banned = pReport.getBans();
-	  	for (int i = 0; i < playerIds.length; i++) {
-	  		Player player = game.getPlayerById(playerIds[i]);
-	      if (pTeam.hasPlayer(player)) {
-	      	if (banned[i]) {        	
-		        print(getIndent(), "The ref bans ");
-		        print(getIndent(), false, player);
-		        println(getIndent(), " for using a Secret Weapon.");
-	      	} else {
-		        print(getIndent(), "The ref overlooks ");
-		        print(getIndent(), false, player);
-		        println(getIndent(), " using a Secret Weapon.");
-	      	}
-	    		Integer secretWeaponValue = player.getPosition().getSkillValue(Skill.SECRET_WEAPON);
-	      	if ((rolls[i] > 0) && (secretWeaponValue != null)) {
-	      		StringBuilder penalty = new StringBuilder();
-	      		penalty.append("Penalty roll was ").append(rolls[i]);
-	      		penalty.append(", banned on a ").append(secretWeaponValue).append("+");
-	          println(getIndent() + 1, TextStyle.NEEDED_ROLL, penalty.toString());
-	      	}
-	      }
-	  	}
+      int[] rolls = pReport.getRolls();
+      boolean[] banned = pReport.getBans();
+      for (int i = 0; i < playerIds.length; i++) {
+        Player player = game.getPlayerById(playerIds[i]);
+        if (pTeam.hasPlayer(player)) {
+          if (banned[i]) {
+            print(getIndent(), "The ref bans ");
+            print(getIndent(), false, player);
+            println(getIndent(), " for using a Secret Weapon.");
+          } else {
+            print(getIndent(), "The ref overlooks ");
+            print(getIndent(), false, player);
+            println(getIndent(), " using a Secret Weapon.");
+          }
+          Integer secretWeaponValue = player.getPosition().getSkillValue(Skill.SECRET_WEAPON);
+          if ((rolls[i] > 0) && (secretWeaponValue != null)) {
+            StringBuilder penalty = new StringBuilder();
+            penalty.append("Penalty roll was ").append(rolls[i]);
+            penalty.append(", banned on a ").append(secretWeaponValue).append("+");
+            println(getIndent() + 1, TextStyle.NEEDED_ROLL, penalty.toString());
+          }
+        }
+      }
     }
   }
 
@@ -926,10 +926,9 @@ public class StatusReport {
       status.append("Re-Roll using ").append(pReport.getReRollSource().getName().toUpperCase());
       println(getIndent() + 1, status.toString());
     }
-    
-    
+
   }
-  
+
   public void reportDauntless(ReportDauntlessRoll pReport) {
     Game game = getClient().getGame();
     Player player = game.getActingPlayer().getPlayer();
@@ -946,7 +945,6 @@ public class StatusReport {
     println(getIndent() + 1, status.toString());
   }
 
-  
   public void reportChainsaw(ReportSkillRoll pReport) {
     Game game = getClient().getGame();
     Player player = game.getActingPlayer().getPlayer();
@@ -962,7 +960,7 @@ public class StatusReport {
     }
     println(getIndent() + 1, status.toString());
   }
-  
+
   public void reportFoulAppearance(ReportSkillRoll pReport) {
     Game game = getClient().getGame();
     Player player = game.getActingPlayer().getPlayer();
@@ -976,7 +974,21 @@ public class StatusReport {
       println(getIndent() + 1, " cannot overcome the Foul Appearance.");
     }
   }
-  
+
+  public void reportWeepingDagger(ReportSkillRoll pReport) {
+    Game game = getClient().getGame();
+    Player player = game.getActingPlayer().getPlayer();
+    StringBuilder status = new StringBuilder();
+    status.append("Weeping Dagger Roll [ ").append(pReport.getRoll()).append(" ]");
+    println(getIndent(), TextStyle.ROLL, status.toString());
+    print(getIndent() + 1, false, player);
+    if (pReport.isSuccessful()) {
+      println(getIndent() + 1, " poisons " + player.getPlayerGender().getGenitive() + " opponent.");
+    } else {
+      println(getIndent() + 1, " fails to poison " + player.getPlayerGender().getGenitive() + " opponent.");
+    }
+  }
+
   public void reportRaiseDead(ReportRaiseDead pReport) {
     Game game = getClient().getGame();
     Player raisedPlayer = game.getPlayerById(pReport.getPlayerId());
@@ -1070,7 +1082,7 @@ public class StatusReport {
       println(getIndent() + 1, TextStyle.NEEDED_ROLL, neededRoll.toString());
     }
   }
-  
+
   public void reportThrowTeamMateRoll(ReportThrowTeamMateRoll pReport) {
     StringBuilder status = new StringBuilder();
     StringBuilder neededRoll = null;
@@ -1117,15 +1129,15 @@ public class StatusReport {
     }
     setIndent(getIndent() + 1);
   }
-  
+
   public void reportScatterPlayer(ReportScatterPlayer pReport) {
     int[] rolls = pReport.getRolls();
     if (ArrayTool.isProvided(rolls)) {
       StringBuilder status = new StringBuilder();
       if (rolls.length > 1) {
-        status.append("Scatter Rolls [ ");  
+        status.append("Scatter Rolls [ ");
       } else {
-        status.append("Scatter Roll [ ");        
+        status.append("Scatter Roll [ ");
       }
       for (int i = 0; i < rolls.length; i++) {
         if (i > 0) {
@@ -1167,10 +1179,10 @@ public class StatusReport {
     }
     println(getIndent() + 1, TextStyle.NONE, status.toString());
   }
-  
+
   public void reportArgueTheCall(ReportArgueTheCallRoll report) {
     Game game = getClient().getGame();
-    Player player = game.getPlayerById(report.getPlayerId()); 
+    Player player = game.getPlayerById(report.getPlayerId());
     StringBuilder status = new StringBuilder();
     status.append("Argue the Call Roll [ ").append(report.getRoll()).append(" ]");
     println(getIndent(), TextStyle.ROLL, status.toString());
@@ -1198,7 +1210,7 @@ public class StatusReport {
 
   public void reportBribes(ReportBribesRoll report) {
     Game game = getClient().getGame();
-    Player player = game.getPlayerById(report.getPlayerId()); 
+    Player player = game.getPlayerById(report.getPlayerId());
     StringBuilder status = new StringBuilder();
     status.append("Bribes Roll [ ").append(report.getRoll()).append(" ]");
     println(getIndent(), TextStyle.ROLL, status.toString());
@@ -1266,7 +1278,7 @@ public class StatusReport {
       println(getIndent(), TextStyle.BOLD, " heads off to the spectator ranks to bite some beautiful maiden.");
     }
   }
-  
+
   public void reportJumpUp(ReportSkillRoll pReport) {
     StringBuilder status = new StringBuilder();
     StringBuilder neededRoll = null;
@@ -1296,7 +1308,7 @@ public class StatusReport {
       println(getIndent() + 1, TextStyle.NEEDED_ROLL, neededRoll.toString());
     }
   }
-  
+
   public void reportStandUp(ReportStandUpRoll pReport) {
     StringBuilder status = new StringBuilder();
     StringBuilder neededRoll = null;
@@ -1350,7 +1362,7 @@ public class StatusReport {
       println(getIndent() + 2, TextStyle.NEEDED_ROLL, neededRoll.toString());
     }
   }
-  
+
   public void reportBloodLust(ReportSkillRoll pReport) {
     StringBuilder status = new StringBuilder();
     StringBuilder neededRoll = null;
@@ -1376,7 +1388,7 @@ public class StatusReport {
       println(getIndent() + 1, TextStyle.NEEDED_ROLL, neededRoll.toString());
     }
   }
-  
+
   public void reportCardEffectRoll(ReportCardEffectRoll pReport) {
     StringBuilder status = new StringBuilder();
     if (Card.WITCH_BREW == pReport.getCard()) {
@@ -1448,7 +1460,7 @@ public class StatusReport {
       println(getIndent() + 1, TextStyle.NEEDED_ROLL, neededRoll.toString());
     }
   }
-  
+
   public void reportConfusion(ReportConfusionRoll pReport) {
     if (pReport.getConfusionSkill() != null) {
       StringBuilder status = new StringBuilder();
@@ -1505,9 +1517,9 @@ public class StatusReport {
     if (!pReport.isReRolled()) {
       print(getIndent(), true, player);
       if (pReport.isBomb()) {
-      	println(getIndent(), TextStyle.BOLD, " tries to catch the bomb:");
+        println(getIndent(), TextStyle.BOLD, " tries to catch the bomb:");
       } else {
-      	println(getIndent(), TextStyle.BOLD, " tries to catch the ball:");
+        println(getIndent(), TextStyle.BOLD, " tries to catch the ball:");
       }
       if (pReport.hasRollModifier(CatchModifier.NERVES_OF_STEEL)) {
         reportNervesOfSteel(player, "catch");
@@ -1517,20 +1529,20 @@ public class StatusReport {
     println(getIndent() + 1, TextStyle.ROLL, status.toString());
     print(getIndent() + 2, false, player);
     if (pReport.isSuccessful()) {
-    	if (pReport.isBomb()) {
-    		println(getIndent() + 2, " catches the bomb.");
-    	} else {
-    		println(getIndent() + 2, " catches the ball.");
-    	}
+      if (pReport.isBomb()) {
+        println(getIndent() + 2, " catches the bomb.");
+      } else {
+        println(getIndent() + 2, " catches the ball.");
+      }
       if (!pReport.isReRolled() && fShowModifiersOnSuccess) {
         neededRoll = new StringBuilder().append("Succeeded on a roll of ").append(pReport.getMinimumRoll()).append("+");
       }
     } else {
-    	if (pReport.isBomb()) {
-    		println(getIndent() + 2, " drops the bomb.");
-    	} else {
-    		println(getIndent() + 2, " drops the ball.");
-    	}
+      if (pReport.isBomb()) {
+        println(getIndent() + 2, " drops the bomb.");
+      } else {
+        println(getIndent() + 2, " drops the ball.");
+      }
       if (!pReport.isReRolled() && fShowModifiersOnFailure) {
         neededRoll = new StringBuilder().append("Roll a ").append(pReport.getMinimumRoll()).append("+ to succeed");
       }
@@ -1549,9 +1561,9 @@ public class StatusReport {
     if (!pReport.isReRolled()) {
       print(getIndent(), true, player);
       if (pReport.isBomb()) {
-      	println(getIndent(), TextStyle.BOLD, " tries to intercept the bomb:");
+        println(getIndent(), TextStyle.BOLD, " tries to intercept the bomb:");
       } else {
-      	println(getIndent(), TextStyle.BOLD, " tries to intercept the ball:");
+        println(getIndent(), TextStyle.BOLD, " tries to intercept the ball:");
       }
       if (pReport.hasRollModifier(InterceptionModifier.NERVES_OF_STEEL)) {
         reportNervesOfSteel(player, "intercept");
@@ -1561,26 +1573,27 @@ public class StatusReport {
     println(getIndent() + 1, TextStyle.ROLL, status.toString());
     print(getIndent() + 2, false, player);
     if (pReport.isSuccessful()) {
-    	if (pReport.isBomb()) {
-    		println(getIndent() + 2, " intercepts the bomb.");
-    	} else {
-    		println(getIndent() + 2, " intercepts the ball.");
-    	}
+      if (pReport.isBomb()) {
+        println(getIndent() + 2, " intercepts the bomb.");
+      } else {
+        println(getIndent() + 2, " intercepts the ball.");
+      }
       if (!pReport.isReRolled() && fShowModifiersOnSuccess) {
         neededRoll = new StringBuilder().append("Succeeded on a roll of ").append(pReport.getMinimumRoll()).append("+");
       }
     } else {
-    	if (pReport.isBomb()) {
-    		println(getIndent() + 2, " fails to intercept the bomb.");
-    	} else {
-    		println(getIndent() + 2, " fails to intercept the ball.");
-    	}
+      if (pReport.isBomb()) {
+        println(getIndent() + 2, " fails to intercept the bomb.");
+      } else {
+        println(getIndent() + 2, " fails to intercept the ball.");
+      }
       if (!pReport.isReRolled() && fShowModifiersOnFailure) {
         neededRoll = new StringBuilder().append("Roll a ").append(pReport.getMinimumRoll()).append("+ to succeed");
       }
     }
     if (neededRoll != null) {
-      neededRoll.append(" (AG ").append(Math.min(6, player.getAgility())).append(" - 2 Interception").append(formatRollModifiers(pReport.getRollModifiers())).append(" + Roll > 6).");
+      neededRoll.append(" (AG ").append(Math.min(6, player.getAgility())).append(" - 2 Interception").append(formatRollModifiers(pReport.getRollModifiers()))
+          .append(" + Roll > 6).");
       println(getIndent() + 2, TextStyle.NEEDED_ROLL, neededRoll.toString());
     }
   }
@@ -1647,7 +1660,8 @@ public class StatusReport {
       }
     }
     if (neededRoll != null) {
-      neededRoll.append(" (AG ").append(Math.min(6, player.getAgility())).append(" + 1 Pickup").append(formatRollModifiers(pReport.getRollModifiers())).append(" + Roll > 6).");
+      neededRoll.append(" (AG ").append(Math.min(6, player.getAgility())).append(" + 1 Pickup").append(formatRollModifiers(pReport.getRollModifiers()))
+          .append(" + Roll > 6).");
       println(getIndent() + 2, TextStyle.NEEDED_ROLL, neededRoll.toString());
     }
   }
@@ -1783,25 +1797,25 @@ public class StatusReport {
     StringBuilder status = new StringBuilder();
     status.append("Card ").append(pReport.getCard().getName());
     if (StringTool.isProvided(pReport.getPlayerId())) {
-    	status.append(" is played on ");
+      status.append(" is played on ");
     } else {
-    	status.append(" is played.");
+      status.append(" is played.");
     }
-  	print(getIndent(), TextStyle.BOLD, status.toString());
+    print(getIndent(), TextStyle.BOLD, status.toString());
     if (StringTool.isProvided(pReport.getPlayerId())) {
-    	Player player = game.getPlayerById(pReport.getPlayerId());
-    	print(getIndent(), true, player);
-    	println(getIndent(), TextStyle.BOLD, ".");
+      Player player = game.getPlayerById(pReport.getPlayerId());
+      print(getIndent(), true, player);
+      println(getIndent(), TextStyle.BOLD, ".");
     } else {
-    	println();
+      println();
     }
   }
-  
+
   public void reportCardDeactivated(ReportCardDeactivated pReport) {
     StringBuilder status = new StringBuilder();
     status.append("Card ").append(pReport.getCard().getName());
     status.append(" effect ended.");
-  	println(getIndent(), TextStyle.BOLD, status.toString());
+    println(getIndent(), TextStyle.BOLD, status.toString());
   }
 
   public void reportHandOver(ReportHandOver pReport) {
@@ -1823,25 +1837,25 @@ public class StatusReport {
       print(getIndent(), true, thrower);
       Player catcher = game.getFieldModel().getPlayer(game.getPassCoordinate());
       if (pReport.isHailMaryPass()) {
-      	if (pReport.isBomb()) {
-      		println(getIndent(), TextStyle.BOLD, " throws a Hail Mary bomb:");
-      	} else {
-      		println(getIndent(), TextStyle.BOLD, " throws a Hail Mary pass:");
-      	}
+        if (pReport.isBomb()) {
+          println(getIndent(), TextStyle.BOLD, " throws a Hail Mary bomb:");
+        } else {
+          println(getIndent(), TextStyle.BOLD, " throws a Hail Mary pass:");
+        }
       } else if (catcher != null) {
-      	if (pReport.isBomb()) {
-      		print(getIndent(), TextStyle.BOLD, " throws a bomb at ");
-      	} else {
-      		print(getIndent(), TextStyle.BOLD, " passes the ball to ");
-      	}
+        if (pReport.isBomb()) {
+          print(getIndent(), TextStyle.BOLD, " throws a bomb at ");
+        } else {
+          print(getIndent(), TextStyle.BOLD, " passes the ball to ");
+        }
         print(getIndent(), true, catcher);
         println(getIndent(), TextStyle.BOLD, ":");
       } else {
-      	if (pReport.isBomb()) {
-      		println(getIndent(), TextStyle.BOLD, " throws a bomb to an empty field:");
-      	} else {
-      		println(getIndent(), TextStyle.BOLD, " passes the ball to an empty field:");
-      	}
+        if (pReport.isBomb()) {
+          println(getIndent(), TextStyle.BOLD, " throws a bomb to an empty field:");
+        } else {
+          println(getIndent(), TextStyle.BOLD, " passes the ball to an empty field:");
+        }
       }
     }
     if (pReport.hasRollModifier(PassModifier.NERVES_OF_STEEL)) {
@@ -1852,54 +1866,54 @@ public class StatusReport {
     println(getIndent() + 1, TextStyle.ROLL, status.toString());
     print(getIndent() + 2, false, thrower);
     if (pReport.isSuccessful()) {
-    	if (pReport.isBomb()) {
-    		println(getIndent() + 2, " throws the bomb successfully.");
-    	} else {
-    		println(getIndent() + 2, " passes the ball.");
-    	}
+      if (pReport.isBomb()) {
+        println(getIndent() + 2, " throws the bomb successfully.");
+      } else {
+        println(getIndent() + 2, " passes the ball.");
+      }
       if (!pReport.isReRolled() && fShowModifiersOnSuccess) {
         neededRoll = new StringBuilder().append("Succeeded on a roll of ").append(pReport.getMinimumRoll()).append("+");
       }
     } else {
-    	if (pReport.isHeldBySafeThrow()) {
-      	println(getIndent() + 2, " holds on to the ball.");
+      if (pReport.isHeldBySafeThrow()) {
+        println(getIndent() + 2, " holds on to the ball.");
       } else if (pReport.isFumble()) {
-      	if (pReport.isBomb()) {
-      		println(getIndent() + 2, " fumbles the bomb.");
-      	} else {
-      		println(getIndent() + 2, " fumbles the ball.");
-      	}
+        if (pReport.isBomb()) {
+          println(getIndent() + 2, " fumbles the bomb.");
+        } else {
+          println(getIndent() + 2, " fumbles the ball.");
+        }
       } else {
-      	println(getIndent() + 2, " misses the throw.");
+        println(getIndent() + 2, " misses the throw.");
       }
       if (!pReport.isReRolled() && fShowModifiersOnFailure) {
         neededRoll = new StringBuilder().append("Roll a ").append(pReport.getMinimumRoll()).append("+ to succeed");
       }
     }
     if (neededRoll != null) {
-    	if (!pReport.isHailMaryPass()) {
-	      neededRoll.append(" (AG").append(Math.min(6, thrower.getAgility()));
-	      PassingDistance passingDistance = pReport.getPassingDistance();
-	      if (passingDistance.getModifier() >= 0) {
-	        neededRoll.append(" + ");
-	      } else {
-	        neededRoll.append(" - ");
-	      }
-	      neededRoll.append(Math.abs(passingDistance.getModifier())).append(" ").append(passingDistance.getName());
-	      neededRoll.append(formatRollModifiers(pReport.getRollModifiers())).append(" + Roll > 6).");
-    	}
+      if (!pReport.isHailMaryPass()) {
+        neededRoll.append(" (AG").append(Math.min(6, thrower.getAgility()));
+        PassingDistance passingDistance = pReport.getPassingDistance();
+        if (passingDistance.getModifier() >= 0) {
+          neededRoll.append(" + ");
+        } else {
+          neededRoll.append(" - ");
+        }
+        neededRoll.append(Math.abs(passingDistance.getModifier())).append(" ").append(passingDistance.getName());
+        neededRoll.append(formatRollModifiers(pReport.getRollModifiers())).append(" + Roll > 6).");
+      }
       println(getIndent() + 2, TextStyle.NEEDED_ROLL, neededRoll.toString());
     }
   }
 
   public void reportGameEnd() {
-    
+
     setIndent(0);
-    
+
     Game game = getClient().getGame();
     GameResult gameResult = game.getGameResult();
     int scoreDiffHome = gameResult.getTeamResultHome().getScore() - gameResult.getTeamResultAway().getScore();
-    
+
     StringBuilder status = new StringBuilder();
     if (gameResult.getTeamResultHome().hasConceded()) {
       status.append("Coach ").append(game.getTeamHome().getCoach()).append(" concedes the game.");
@@ -1917,17 +1931,17 @@ public class StatusReport {
       status.append("The game ends in a tie.");
       println(ParagraphStyle.SPACE_ABOVE_BELOW, TextStyle.TURN, status.toString());
     }
-        
+
   }
-  
+
   public void reportMostValuablePlayers(ReportMostValuablePlayers pReport) {
 
     reportGameEnd();
-    
+
     Game game = getClient().getGame();
 
     println(getIndent(), TextStyle.BOLD, "Most Valuable Players");
-    
+
     for (String playerId : pReport.getPlayerIdsHome()) {
       Player player = game.getPlayerById(playerId);
       print(getIndent() + 1, TextStyle.NONE, "The jury voted ");
@@ -1945,30 +1959,29 @@ public class StatusReport {
       print(getIndent() + 1, TextStyle.NONE, player.getPlayerGender().getGenitive());
       println(getIndent() + 1, TextStyle.NONE, " team.");
     }
-    
+
   }
-  
-/*  public void reportSpirallingExpenses(ReportSpirallingExpenses pReport) {
-    Game game = getClient().getGame();
-    if ((pReport.getExpensesHomeTeam() > 0) || (pReport.getExpensesAwayTeam() > 0)) {
-      println(getIndent(), TextStyle.ROLL, "Spiralling Expenses");
-      if (pReport.getExpensesHomeTeam() > 0) {
-        print(getIndent() + 1, TextStyle.HOME, game.getTeamHome().getName());
-        StringBuilder status = new StringBuilder();
-        status.append(" must pay ").append(pReport.getExpensesHomeTeam()).append(" in expenses.");
-        println(getIndent() + 1, TextStyle.NONE, status.toString());
-      }
-      if (pReport.getExpensesAwayTeam() > 0) {
-        print(getIndent() + 1, TextStyle.AWAY, game.getTeamAway().getName());
-        StringBuilder status = new StringBuilder();
-        status.append(" must pay ").append(pReport.getExpensesAwayTeam()).append(" in expenses.");
-        println(getIndent() + 1, TextStyle.NONE, status.toString());
-      }
-    }
-  } */
-  
+
+  /*
+   * public void reportSpirallingExpenses(ReportSpirallingExpenses pReport) {
+   * Game game = getClient().getGame(); if ((pReport.getExpensesHomeTeam() > 0)
+   * || (pReport.getExpensesAwayTeam() > 0)) { println(getIndent(),
+   * TextStyle.ROLL, "Spiralling Expenses"); if (pReport.getExpensesHomeTeam() >
+   * 0) { print(getIndent() + 1, TextStyle.HOME, game.getTeamHome().getName());
+   * StringBuilder status = new StringBuilder();
+   * status.append(" must pay ").append
+   * (pReport.getExpensesHomeTeam()).append(" in expenses.");
+   * println(getIndent() + 1, TextStyle.NONE, status.toString()); } if
+   * (pReport.getExpensesAwayTeam() > 0) { print(getIndent() + 1,
+   * TextStyle.AWAY, game.getTeamAway().getName()); StringBuilder status = new
+   * StringBuilder();
+   * status.append(" must pay ").append(pReport.getExpensesAwayTeam
+   * ()).append(" in expenses."); println(getIndent() + 1, TextStyle.NONE,
+   * status.toString()); } } }
+   */
+
   public void reportWinningsRoll(ReportWinningsRoll pReport) {
-    
+
     Game game = getClient().getGame();
     if ((pReport.getWinningsRollAway() == 0) && (pReport.getWinningsRollHome() > 0)) {
       print(getIndent(), TextStyle.NONE, "Coach ");
@@ -1980,7 +1993,7 @@ public class StatusReport {
       print(getIndent(), TextStyle.AWAY, game.getTeamAway().getCoach());
       println(getIndent(), TextStyle.NONE, " re-rolls winnings.");
     }
-    
+
     if (pReport.getWinningsRollHome() > 0) {
       StringBuilder status = new StringBuilder();
       status.append("Winnings Roll Home Team [ ").append(pReport.getWinningsRollHome()).append(" ]");
@@ -1990,7 +2003,7 @@ public class StatusReport {
       status.append(" earn ").append(StringTool.formatThousands(pReport.getWinningsHome())).append(" goldcoins.");
       println(getIndent() + 1, TextStyle.NONE, status.toString());
     }
-    
+
     if (pReport.getWinningsRollAway() > 0) {
       StringBuilder status = new StringBuilder();
       status.append("Winnings Roll Away Team [ ").append(pReport.getWinningsRollAway()).append(" ]");
@@ -2000,7 +2013,7 @@ public class StatusReport {
       status.append(" earn ").append(StringTool.formatThousands(pReport.getWinningsAway())).append(" in gold.");
       println(getIndent() + 1, TextStyle.NONE, status.toString());
     }
-    
+
     if ((pReport.getWinningsRollHome() == 0) && (pReport.getWinningsRollAway() == 0)) {
       if (pReport.getWinningsHome() > 0) {
         println(getIndent(), TextStyle.BOLD, "Winnings: Concession of Away Team");
@@ -2021,9 +2034,9 @@ public class StatusReport {
         println(getIndent() + 1, TextStyle.NONE, " get nothing.");
       }
     }
-    
+
   }
-  
+
   public void reportFanFactorRoll(ReportFanFactorRoll pReport) {
 
     Game game = getClient().getGame();
@@ -2056,7 +2069,7 @@ public class StatusReport {
     } else {
       println(getIndent() + 1, TextStyle.NONE, " keep their fans.");
     }
-      
+
     status = new StringBuilder();
     if (ArrayTool.isProvided(pReport.getFanFactorRollAway())) {
       status.append("Fan Factor Roll Away Team ");
@@ -2085,32 +2098,32 @@ public class StatusReport {
     } else {
       println(getIndent() + 1, TextStyle.NONE, " keep their fans.");
     }
-    
+
     // System.out.println(game.getGameResult().toUploadXml(0));
 
   }
-  
+
   public void reportNoPlayersToField(ReportNoPlayersToField pReport) {
-  	setIndent(0);
+    setIndent(0);
     Game game = getClient().getGame();
     if (StringTool.isProvided(pReport.getTeamId())) {
-    	StringBuilder status = new StringBuilder();
-    	if (game.getTeamHome().getId().equals(pReport.getTeamId())) {
-    		status.append(game.getTeamHome().getName()).append(" can field no players.");
-    		println(ParagraphStyle.SPACE_ABOVE_BELOW, TextStyle.TURN_HOME, status.toString());
-    	} else {
-    		status.append(game.getTeamAway().getName()).append(" can field no players.");
-    		println(ParagraphStyle.SPACE_ABOVE_BELOW, TextStyle.TURN_AWAY, status.toString());
-    	}
+      StringBuilder status = new StringBuilder();
+      if (game.getTeamHome().getId().equals(pReport.getTeamId())) {
+        status.append(game.getTeamHome().getName()).append(" can field no players.");
+        println(ParagraphStyle.SPACE_ABOVE_BELOW, TextStyle.TURN_HOME, status.toString());
+      } else {
+        status.append(game.getTeamAway().getName()).append(" can field no players.");
+        println(ParagraphStyle.SPACE_ABOVE_BELOW, TextStyle.TURN_AWAY, status.toString());
+      }
     } else {
-    	println(ParagraphStyle.SPACE_ABOVE_BELOW, TextStyle.TURN, "Both teams can field no players.");
+      println(ParagraphStyle.SPACE_ABOVE_BELOW, TextStyle.TURN, "Both teams can field no players.");
     }
     if (StringTool.isProvided(pReport.getTeamId())) {
-    	println(getIndent(), TextStyle.BOLD, "The opposing team is awarded a touchdown.");
+      println(getIndent(), TextStyle.BOLD, "The opposing team is awarded a touchdown.");
     }
-  	println(ParagraphStyle.SPACE_BELOW, TextStyle.BOLD, "The turn counter is advanced 2 steps.");
+    println(ParagraphStyle.SPACE_BELOW, TextStyle.BOLD, "The turn counter is advanced 2 steps.");
   }
-  
+
   public void reportTurnEnd(ReportTurnEnd pReport) {
     setIndent(0);
     Game game = getClient().getGame();
@@ -2163,9 +2176,9 @@ public class StatusReport {
       }
     }
   }
-  
+
   public void reportBlock(ReportBlock pReport) {
-    
+
     Game game = getClient().getGame();
     ActingPlayer actingPlayer = game.getActingPlayer();
     Player attacker = actingPlayer.getPlayer();
@@ -2180,12 +2193,21 @@ public class StatusReport {
     print(getIndent(), true, defender);
     println(getIndent(), TextStyle.BOLD, ":");
     setIndent(getIndent() + 1);
-    
+
   }
-  
+
   public void reportBlockRoll(ReportBlockRoll pReport) {
-    if (ArrayTool.isProvided(pReport.getBlockRoll()))// && ((game.isHomePlaying() && game.getTeamHome().getId().equals(pReport.getChoosingTeamId())) || (!game.isHomePlaying() && game.getTeamAway().getId().equals(pReport.getChoosingTeamId())))) {
-    {   StringBuilder status = new StringBuilder();
+    if (ArrayTool.isProvided(pReport.getBlockRoll()))// &&
+                                                     // ((game.isHomePlaying()
+                                                     // &&
+                                                     // game.getTeamHome().getId().equals(pReport.getChoosingTeamId()))
+                                                     // ||
+                                                     // (!game.isHomePlaying()
+                                                     // &&
+                                                     // game.getTeamAway().getId().equals(pReport.getChoosingTeamId()))))
+                                                     // {
+    {
+      StringBuilder status = new StringBuilder();
       status.append("Block Roll");
       BlockResultFactory blockResultFactory = new BlockResultFactory();
       for (int i = 0; i < pReport.getBlockRoll().length; i++) {
@@ -2225,7 +2247,7 @@ public class StatusReport {
         }
         break;
       default:
-      	break;
+        break;
     }
   }
 
@@ -2246,7 +2268,7 @@ public class StatusReport {
       println(indent, status.toString());
     }
   }
-  
+
   public void reportRegeneration(ReportSkillRoll pReport) {
     if (pReport.getRoll() > 0) {
       StringBuilder status = new StringBuilder();
@@ -2263,28 +2285,28 @@ public class StatusReport {
   }
 
   public void reportInjury(ReportInjury pReport) {
-    
+
     Game game = getClient().getGame();
     Player defender = game.getPlayerById(pReport.getDefenderId());
     Player attacker = game.getPlayerById(pReport.getAttackerId());
     StringBuilder status = new StringBuilder();
-    
+
     // report injury type
-    
+
     switch (pReport.getInjuryType()) {
       case CROWDPUSH:
         print(getIndent() + 1, false, defender);
         println(getIndent() + 1, " is pushed into the crowd.");
         break;
       case STAB:
-      	if (attacker != null) {
-      		print(getIndent(), true, attacker);
+        if (attacker != null) {
+          print(getIndent(), true, attacker);
           print(getIndent(), TextStyle.BOLD, " stabs ");
           print(getIndent(), true, defender);
-      	} else {
+        } else {
           print(getIndent(), true, defender);
-      		print(getIndent(), TextStyle.BOLD, " is stabbed");
-      	}
+          print(getIndent(), TextStyle.BOLD, " is stabbed");
+        }
         println(getIndent(), TextStyle.BOLD, ":");
         setIndent(getIndent() + 1);
         break;
@@ -2304,11 +2326,11 @@ public class StatusReport {
         status = new StringBuilder();
         break;
       default:
-      	break;
+        break;
     }
 
     // report armour roll
-    
+
     int[] armorRoll = pReport.getArmorRoll();
     if (ArrayTool.isProvided(armorRoll)) {
       status.append("Armour Roll [ ").append(armorRoll[0]).append(" ][ ").append(armorRoll[1]).append(" ]");
@@ -2424,9 +2446,9 @@ public class StatusReport {
           reportInjury(defender, pReport.getInjury(), pReport.getSeriousInjury());
         }
       }
-    }    
+    }
   }
-  
+
   private void reportInjury(Player pDefender, PlayerState pInjury, SeriousInjury pSeriousInjury) {
     StringBuilder status = new StringBuilder();
     print(getIndent() + 1, false, pDefender);
@@ -2459,15 +2481,15 @@ public class StatusReport {
       println(getIndent(), status.toString());
     }
   }
-  
+
   public void reportPassBlock(ReportPassBlock pReport) {
     Game game = getClient().getGame();
     if (!pReport.isPassBlockAvailable()) {
-    	TextStyle textStyle = game.getTeamHome().getId().equals(pReport.getTeamId()) ? TextStyle.HOME : TextStyle.AWAY;
-   		println(getIndent(), textStyle, "No pass blockers in range to intercept.");
+      TextStyle textStyle = game.getTeamHome().getId().equals(pReport.getTeamId()) ? TextStyle.HOME : TextStyle.AWAY;
+      println(getIndent(), textStyle, "No pass blockers in range to intercept.");
     }
   }
-  
+
   // call before setting acting player
   public void reportPlayerAction(ReportPlayerAction pReport) {
     setIndent(0);
@@ -2483,7 +2505,7 @@ public class StatusReport {
     }
     setIndent(getIndent() + 1);
   }
-  
+
   public void reportApothecaryRoll(ReportApothecaryRoll pReport) {
     int[] casualtyRoll = pReport.getCasualtyRoll();
     if (ArrayTool.isProvided(casualtyRoll)) {
@@ -2570,7 +2592,7 @@ public class StatusReport {
       }
     }
   }
-  
+
   public void reportPilingOn(ReportPilingOn pReport) {
     Game game = getClient().getGame();
     Player player = game.getPlayerById(pReport.getPlayerId());
@@ -2593,7 +2615,7 @@ public class StatusReport {
     println(0, TextStyle.BOLD, "Server unreachable - Communication stopped.");
     println();
   }
-  
+
   public void reportServerMessage(ServerStatus pServerStatus) {
     println(getIndent(), TextStyle.NONE, pServerStatus.getMessage());
   }
@@ -2609,7 +2631,7 @@ public class StatusReport {
       println(getIndent(), "The referee didn't spot the foul.");
     }
   }
-  
+
   public void reportPenaltyShootout(ReportPenaltyShootout pReport) {
     int penaltyScoreHome = pReport.getRollHome() + pReport.getReRollsLeftHome();
     print(0, TextStyle.ROLL, "Penalty Shootout Roll Home [" + pReport.getRollHome() + "]");
@@ -2628,13 +2650,13 @@ public class StatusReport {
       println(1, TextStyle.NONE, " win the penalty shootout.");
     }
   }
-  
+
   public void report(ReportList pReportList) {
     for (IReport report : pReportList.getReports()) {
-      switch(report.getId()) {
+      switch (report.getId()) {
         case ALWAYS_HUNGRY_ROLL:
           reportAlwaysHungry((ReportSkillRoll) report);
-          break; 
+          break;
         case ARGUE_THE_CALL:
           reportArgueTheCall((ReportArgueTheCallRoll) report);
           break;
@@ -2776,9 +2798,9 @@ public class StatusReport {
         case MOST_VALUABLE_PLAYERS:
           reportMostValuablePlayers((ReportMostValuablePlayers) report);
           break;
- //       case SPIRALLING_EXPENSES:
- //         reportSpirallingExpenses((ReportSpirallingExpenses) report);
- //         break;
+        // case SPIRALLING_EXPENSES:
+        // reportSpirallingExpenses((ReportSpirallingExpenses) report);
+        // break;
         case JUMP_UP_ROLL:
           reportJumpUp((ReportSkillRoll) report);
           break;
@@ -2840,40 +2862,44 @@ public class StatusReport {
           reportDoubleHiredStarPlayer((ReportDoubleHiredStarPlayer) report);
           break;
         case SPELL_EFFECT_ROLL:
-        	reportSpecialEffectRoll((ReportSpecialEffectRoll) report);
-        	break;
+          reportSpecialEffectRoll((ReportSpecialEffectRoll) report);
+          break;
         case WIZARD_USE:
-        	reportWizardUse((ReportWizardUse) report);
-        	break;
+          reportWizardUse((ReportWizardUse) report);
+          break;
         case PASS_BLOCK:
-        	reportPassBlock((ReportPassBlock) report);
-        	break;
+          reportPassBlock((ReportPassBlock) report);
+          break;
         case NO_PLAYERS_TO_FIELD:
-        	reportNoPlayersToField((ReportNoPlayersToField) report);
-        	break;
+          reportNoPlayersToField((ReportNoPlayersToField) report);
+          break;
         case PLAY_CARD:
-        	reportPlayCard((ReportPlayCard) report);
-        	break;
+          reportPlayCard((ReportPlayCard) report);
+          break;
         case CARD_DEACTIVATED:
-        	reportCardDeactivated((ReportCardDeactivated) report);
-        	break;
+          reportCardDeactivated((ReportCardDeactivated) report);
+          break;
         case BOMB_OUT_OF_BOUNDS:
-        	reportBombOutOfBounds((ReportBombOutOfBounds) report);
-        	break;
+          reportBombOutOfBounds((ReportBombOutOfBounds) report);
+          break;
         case PETTY_CASH:
-        	reportPettyCash((ReportPettyCash) report);
-        	break;
+          reportPettyCash((ReportPettyCash) report);
+          break;
         case INDUCEMENTS_BOUGHT:
-        	reportInducementsBought((ReportInducementsBought) report);
-        	break;
+          reportInducementsBought((ReportInducementsBought) report);
+          break;
         case CARDS_BOUGHT:
-        	reportCardsBought((ReportCardsBought) report);
-        	break;
+          reportCardsBought((ReportCardsBought) report);
+          break;
         case CARD_EFFECT_ROLL:
           reportCardEffectRoll((ReportCardEffectRoll) report);
+          break;
+        case WEEPING_DAGGER_ROLL:
+          reportWeepingDagger((ReportSkillRoll) report);
+          break;
         case GAME_OPTIONS:
-        	// deprecated, do nothing
-        	break;
+          // deprecated, do nothing
+          break;
         default:
           throw new IllegalStateException("Unhandled report id " + report.getId().getName() + ".");
       }
@@ -2907,7 +2933,7 @@ public class StatusReport {
     }
     return paragraphStyle;
   }
-  
+
   private void print(int pIndent, TextStyle pTextStyle, String pText) {
     print(findParagraphStyle(pIndent), pTextStyle, pText);
   }
@@ -2915,7 +2941,7 @@ public class StatusReport {
   private void print(int pIndent, String pText) {
     print(findParagraphStyle(pIndent), null, pText);
   }
-  
+
   private void print(ParagraphStyle pParagraphStyle, TextStyle pTextStyle, String pText) {
     getClient().getUserInterface().getLog().append(pParagraphStyle, pTextStyle, pText);
   }
@@ -2927,11 +2953,11 @@ public class StatusReport {
   private void println(int pIndent, String pText) {
     println(findParagraphStyle(pIndent), null, pText);
   }
-  
+
   private void println() {
     println(findParagraphStyle(0), null, null);
   }
-  
+
   private void println(ParagraphStyle pParagraphStyle, TextStyle pTextStyle, String pText) {
     print(pParagraphStyle, pTextStyle, pText);
     getClient().getUserInterface().getLog().append(null, null, null);
@@ -2958,18 +2984,18 @@ public class StatusReport {
 
   private void printTeamName(Game pGame, boolean pBold, String pTeamId) {
     if (pGame.getTeamHome().getId().equals(pTeamId)) {
-    	if (pBold) {
-    		print(getIndent() + 1, TextStyle.HOME_BOLD, pGame.getTeamHome().getName());
-    	} else {
-    		print(getIndent() + 1, TextStyle.HOME, pGame.getTeamHome().getName());
-    	}
+      if (pBold) {
+        print(getIndent() + 1, TextStyle.HOME_BOLD, pGame.getTeamHome().getName());
+      } else {
+        print(getIndent() + 1, TextStyle.HOME, pGame.getTeamHome().getName());
+      }
     } else {
-    	if (pBold) {
-    		print(getIndent() + 1, TextStyle.AWAY_BOLD, pGame.getTeamAway().getName());
-    	} else {
-    		print(getIndent() + 1, TextStyle.AWAY, pGame.getTeamAway().getName());
-    	}
+      if (pBold) {
+        print(getIndent() + 1, TextStyle.AWAY_BOLD, pGame.getTeamAway().getName());
+      } else {
+        print(getIndent() + 1, TextStyle.AWAY, pGame.getTeamAway().getName());
+      }
     }
   }
-  
+
 }

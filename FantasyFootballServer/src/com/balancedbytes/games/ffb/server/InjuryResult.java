@@ -217,6 +217,10 @@ public class InjuryResult implements IJsonSerializable {
     fSeriousInjury = pSeriousInjury;
   }
 
+  public boolean isBadlyHurt() {
+    return ((getPlayerState() != null) && (getPlayerState().getBase() == PlayerState.BADLY_HURT));
+  }
+  
   public boolean isCasualty() {
     return ((getPlayerState() != null) && getPlayerState().isCasualty());
   }

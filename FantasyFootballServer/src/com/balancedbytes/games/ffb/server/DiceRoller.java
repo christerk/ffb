@@ -110,6 +110,10 @@ public class DiceRoller {
     return rollDice(6);
   }
   
+  public int rollWeepingDagger() {
+    return rollDice(6);
+  }
+  
   public boolean throwCoin() {
     return (rollDice(2) == 1);
   }

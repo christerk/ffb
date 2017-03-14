@@ -727,7 +727,10 @@ public enum Skill implements IEnumWithName {
   //  The player is allowed to add 1 to the D6 roll whenever he attempts to
   //  intercept or uses the Leap skill. In addition, the Safe Throw skill may not
   //  be used to affect any Interception rolls made by this player.
-
+  
+  WEEPING_DAGGER("Weeping Dagger", SkillCategory.EXTRAORDINARY),
+  // TODO: exact wording
+  
   WILD_ANIMAL("Wild Animal", SkillCategory.EXTRAORDINARY),
   //  Wild Animals are uncontrollable creatures that rarely do exactly what a
   //  coach wants of them. In fact, just about all you can really rely on them to

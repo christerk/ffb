@@ -33,55 +33,54 @@ import com.balancedbytes.games.ffb.util.ArrayTool;
 import com.balancedbytes.games.ffb.util.UtilCards;
 import com.balancedbytes.games.ffb.util.UtilRangeRuler;
 
-
 /**
  * 
  * @author Kalimar
  */
 public class DiceInterpreter {
-	
-	private static DiceInterpreter _INSTANCE = new DiceInterpreter();
-	
-	/**
-	 * @return the only instance of this class.
-	 */
-	public static DiceInterpreter getInstance() {
-		return _INSTANCE;
-	}	
+
+  private static DiceInterpreter _INSTANCE = new DiceInterpreter();
+
+  /**
+   * @return the only instance of this class.
+   */
+  public static DiceInterpreter getInstance() {
+    return _INSTANCE;
+  }
 
   private DiceInterpreter() {
     super();
   }
-  
+
   public KickoffResult interpretRollKickoff(int[] roll) {
     int kickoffRoll = roll[0] + roll[1];
     return new KickoffResultFactory().forRoll(kickoffRoll);
   }
-  
+
   public Weather interpretRollWeather(int[] roll) {
     int total = roll[0] + roll[1];
     switch (total) {
-    case 2:
-      return Weather.SWELTERING_HEAT;
-    case 3:
-      return Weather.VERY_SUNNY;
-    case 11:
-      return Weather.POURING_RAIN;
-    case 12:
-      return Weather.BLIZZARD;
-    default: // 4 - 10
-      return Weather.NICE;
+      case 2:
+        return Weather.SWELTERING_HEAT;
+      case 3:
+        return Weather.VERY_SUNNY;
+      case 11:
+        return Weather.POURING_RAIN;
+      case 12:
+        return Weather.BLIZZARD;
+      default: // 4 - 10
+        return Weather.NICE;
     }
   }
-  
+
   private int getAgilityRollBase(int agility) {
-	  return 7 - Math.min(agility, 6);
+    return 7 - Math.min(agility, 6);
   }
-  
+
   public int minimumRollJumpUp(Player pPlayer) {
     return Math.max(2, getAgilityRollBase(pPlayer.getAgility()) - 2);
   }
-  
+
   public int minimumRollGoingForIt(Set<GoForItModifier> pGoForItModifiers) {
     int modifierTotal = 0;
     for (GoForItModifier goForItModifier : pGoForItModifiers) {
@@ -114,7 +113,7 @@ public class DiceInterpreter {
     }
     return Math.max(2, getAgilityRollBase(pPlayer.getAgility()) + 2 + modifierTotal);
   }
-  
+
   public int minimumRollLeap(Player pPlayer, Set<LeapModifier> pLeapModifiers) {
     int modifierTotal = 0;
     for (LeapModifier leapModifier : pLeapModifiers) {
@@ -122,7 +121,7 @@ public class DiceInterpreter {
     }
     return Math.max(2, getAgilityRollBase(pPlayer.getAgility()) + modifierTotal);
   }
-  
+
   public int minimumRollHypnoticGaze(Player pPlayer, Set<GazeModifier> pGazeModifiers) {
     int modifierTotal = 0;
     for (GazeModifier gazeModifier : pGazeModifiers) {
@@ -142,7 +141,7 @@ public class DiceInterpreter {
   public int minimumRollResistingFoulAppearance() {
     return 2;
   }
-  
+
   public int minimumRollPass(Player pThrower, PassingDistance pPassingDistance, Set<PassModifier> pPassModifiers) {
     return UtilRangeRuler.minimumRollPass(pThrower, pPassingDistance, pPassModifiers);
   }
@@ -150,7 +149,7 @@ public class DiceInterpreter {
   public int minimumRollThrowTeamMate(Player pThrower, PassingDistance pPassingDistance, Set<PassModifier> pPassModifiers) {
     return UtilRangeRuler.minimumRollThrowTeamMate(pThrower, pPassingDistance, pPassModifiers);
   }
-  
+
   public int minimumRollRightStuff(Player pPlayer, Set<RightStuffModifier> pRightStuffModifiers) {
     int modifierTotal = 0;
     for (RightStuffModifier rightStuffModifier : pRightStuffModifiers) {
@@ -160,19 +159,19 @@ public class DiceInterpreter {
   }
 
   public boolean isPassFumble(int roll, Player pThrower, PassingDistance pPassingDistance, Set<PassModifier> pPassModifiers) {
-  	if (roll == 1) {
-  		return true;
-  	} else if (roll == 6) {
-  		return false;
-  	} else {
-	    int modifierTotal = 0;
-	    for (PassModifier passModifier : pPassModifiers) {
-	      modifierTotal += passModifier.getModifier();
-	    }
-	    return ((roll + pPassingDistance.getModifier() - modifierTotal) <= 1);
-  	}
+    if (roll == 1) {
+      return true;
+    } else if (roll == 6) {
+      return false;
+    } else {
+      int modifierTotal = 0;
+      for (PassModifier passModifier : pPassModifiers) {
+        modifierTotal += passModifier.getModifier();
+      }
+      return ((roll + pPassingDistance.getModifier() - modifierTotal) <= 1);
+    }
   }
-  
+
   public boolean isSkillRollSuccessful(int roll, int pMinimumRoll) {
     return ((roll == 6) || ((roll != 1) && (roll >= pMinimumRoll)));
   }
@@ -180,15 +179,15 @@ public class DiceInterpreter {
   public boolean isThickSkullUsed(int[] pInjuryRoll) {
     return (ArrayTool.isProvided(pInjuryRoll) && (pInjuryRoll[0] + pInjuryRoll[1] == 8));
   }
-  
+
   public boolean isSpecialEffectSuccesful(SpecialEffect pSpecialEffect, int roll) {
-  	if (pSpecialEffect == SpecialEffect.LIGHTNING) {
-  		return (roll >= 2);
-  	} else if ((pSpecialEffect == SpecialEffect.FIREBALL) || (pSpecialEffect == SpecialEffect.BOMB)) {
-    	return (roll >= 4);
-  	} else {
-  		return false;
-  	}
+    if (pSpecialEffect == SpecialEffect.LIGHTNING) {
+      return (roll >= 2);
+    } else if ((pSpecialEffect == SpecialEffect.FIREBALL) || (pSpecialEffect == SpecialEffect.BOMB)) {
+      return (roll >= 4);
+    } else {
+      return false;
+    }
   }
 
   public boolean isRegenerationSuccessful(int roll) {
@@ -202,7 +201,7 @@ public class DiceInterpreter {
   public boolean isProSuccessful(int roll) {
     return (roll >= 4);
   }
-  
+
   public boolean isAffectedByPitchInvasion(int roll, int pFameOtherTeam) {
     return ((roll > 1) && (roll + pFameOtherTeam >= 6));
   }
@@ -210,7 +209,7 @@ public class DiceInterpreter {
   public boolean isRecoveringFromKnockout(int roll, int pBloodweiserBabes) {
     return ((roll > 1) && ((roll + pBloodweiserBabes) > 3));
   }
-  
+
   public boolean isAlwaysHungrySuccessful(int roll) {
     return (roll >= 2);
   }
@@ -218,39 +217,41 @@ public class DiceInterpreter {
   public boolean isEscapeFromAlwaysHungrySuccessful(int roll) {
     return (roll >= 2);
   }
-  
+
   public boolean isExhausted(int roll) {
     return (roll == 1);
   }
-  
+
   public boolean isTentaclesEscapeSuccessful(int[] roll, int pTentaclePlayerStrength, int pDodgingPlayerStrength) {
-    return (ArrayTool.isProvided(roll) && (roll.length > 1) && ((roll[0] + roll[1]) >= minimumRollTentaclesEscape(pTentaclePlayerStrength, pDodgingPlayerStrength)));
+    return (ArrayTool.isProvided(roll) && (roll.length > 1) && ((roll[0] + roll[1]) >= minimumRollTentaclesEscape(pTentaclePlayerStrength,
+        pDodgingPlayerStrength)));
   }
-  
+
   public int minimumRollTentaclesEscape(int pTentaclePlayerStrength, int pDodgingPlayerStrength) {
-    return (6 + pTentaclePlayerStrength - pDodgingPlayerStrength); 
+    return (6 + pTentaclePlayerStrength - pDodgingPlayerStrength);
   }
-  
+
   public boolean isShadowingEscapeSuccessful(int[] roll, int pShadowingPlayerMovement, int pDodgingPlayerMovement) {
-    return (ArrayTool.isProvided(roll) && (roll.length > 1) && ((roll[0] + roll[1]) >= minimumRollShadowingEscape(pShadowingPlayerMovement, pDodgingPlayerMovement)));
+    return (ArrayTool.isProvided(roll) && (roll.length > 1) && ((roll[0] + roll[1]) >= minimumRollShadowingEscape(pShadowingPlayerMovement,
+        pDodgingPlayerMovement)));
   }
 
   public int minimumRollShadowingEscape(int pShadowingPlayerMovement, int pDodgingPlayerMovement) {
-    return (8 + pShadowingPlayerMovement - pDodgingPlayerMovement); 
+    return (8 + pShadowingPlayerMovement - pDodgingPlayerMovement);
   }
-  
-  public int minimumRollDauntless(int  pAttackerStrength, int pDefenderStrength) {
+
+  public int minimumRollDauntless(int pAttackerStrength, int pDefenderStrength) {
     return (pDefenderStrength - pAttackerStrength + 1);
   }
-  
+
   public int minimumRollChainsaw() {
     return 2;
   }
-  
+
   public int minimumRollConfusion(boolean pGoodConditions) {
     return pGoodConditions ? 2 : 4;
   }
-  
+
   public int minimumRollBloodLust() {
     return 2;
   }
@@ -259,10 +260,14 @@ public class DiceInterpreter {
     return 2;
   }
 
+  public int minimumRollWeepingDagger() {
+    return 4;
+  }
+
   public int minimumRollSafeThrow(Player pPlayer) {
     return Math.max(2, getAgilityRollBase(pPlayer.getAgility()));
   }
-  
+
   public int interpretFanFactorRoll(int[] pFanFactorRoll, int pFanFactor, int pScoreDiff) {
     int fanFactorModifier = 0;
     int fanFactorTotal = 0;
@@ -279,7 +284,7 @@ public class DiceInterpreter {
     }
     return fanFactorModifier;
   }
-  
+
   public int interpretMasterChefRoll(int[] pMasterChefRoll) {
     int reRollsStolen = 0;
     if (ArrayTool.isProvided(pMasterChefRoll)) {
@@ -291,7 +296,7 @@ public class DiceInterpreter {
     }
     return reRollsStolen;
   }
-  
+
   public PlayerState interpretRollInjury(GameState pGameState, InjuryResult pInjuryResult) {
     PlayerState playerState = null;
     if ((pGameState != null) && (pInjuryResult != null)) {
@@ -299,16 +304,18 @@ public class DiceInterpreter {
       int[] injuryRoll = pInjuryResult.getInjuryRoll();
       Player defender = game.getPlayerById(pInjuryResult.getDefenderId());
       if ((defender != null) && UtilCards.hasCard(game, defender, Card.GOOD_OLD_MAGIC_CODPIECE)) {
-      	pInjuryResult.clearInjuryModifiers();
+        pInjuryResult.clearInjuryModifiers();
       }
       int total = injuryRoll[0] + injuryRoll[1] + pInjuryResult.getInjuryModifierTotal();
       if ((total == 8) && (defender != null) && UtilCards.hasSkill(game, defender, Skill.THICK_SKULL)) {
         playerState = new PlayerState(PlayerState.STUNNED);
         pInjuryResult.addInjuryModifier(InjuryModifier.THICK_SKULL);
-      } else if ((total == 7) && (defender != null) && UtilCards.hasSkill(game, defender, Skill.STUNTY) && (pInjuryResult.getInjuryType() != InjuryType.STAB) && !UtilCards.hasCard(game, defender, Card.GOOD_OLD_MAGIC_CODPIECE)) {
+      } else if ((total == 7) && (defender != null) && UtilCards.hasSkill(game, defender, Skill.STUNTY) && (pInjuryResult.getInjuryType() != InjuryType.STAB)
+          && !UtilCards.hasCard(game, defender, Card.GOOD_OLD_MAGIC_CODPIECE)) {
         playerState = new PlayerState(PlayerState.KNOCKED_OUT);
         pInjuryResult.addInjuryModifier(InjuryModifier.STUNTY);
-      } else if ((total == 9) && (defender != null) && UtilCards.hasSkill(game, defender, Skill.STUNTY) && (pInjuryResult.getInjuryType() != InjuryType.STAB) && !UtilCards.hasCard(game, defender, Card.GOOD_OLD_MAGIC_CODPIECE)) {
+      } else if ((total == 9) && (defender != null) && UtilCards.hasSkill(game, defender, Skill.STUNTY) && (pInjuryResult.getInjuryType() != InjuryType.STAB)
+          && !UtilCards.hasCard(game, defender, Card.GOOD_OLD_MAGIC_CODPIECE)) {
         playerState = new PlayerState(PlayerState.BADLY_HURT);
         pInjuryResult.addInjuryModifier(InjuryModifier.STUNTY);
       } else if (total > 9) {
@@ -330,7 +337,7 @@ public class DiceInterpreter {
         case 5:
         case 4:
           return new PlayerState(PlayerState.SERIOUS_INJURY);
-        default:  // 1 - 3
+        default: // 1 - 3
           return new PlayerState(PlayerState.BADLY_HURT);
       }
     } else {
@@ -340,25 +347,25 @@ public class DiceInterpreter {
 
   public SeriousInjury interpretRollSeriousInjury(int[] pCasualtyRoll) {
 
-    //    11-38 Badly Hurt No long term effect
-    //    41 Broken Ribs Miss next game
-    //    42 Groin Strain Miss next game
-    //    43 Gouged Eye Miss next game
-    //    44 Broken Jaw Miss next game
-    //    45 Fractured Arm Miss next game
-    //    46 Fractured Leg Miss next game
-    //    47 Smashed Hand Miss next game
-    //    48 Pinched Nerve Miss next game
-    //    51 Damaged Back Niggling Injury
-    //    52 Smashed Knee Niggling Injury
-    //    53 Smashed Hip -1 MA
-    //    54 Smashed Ankle -1 MA
-    //    55 Serious Concussion -1 AV
-    //    56 Fractured Skull -1 AV
-    //    57 Broken Neck -1 AG
-    //    58 Smashed Collar Bone -1 ST
-    //    61-68 DEAD Dead!
-    
+    // 11-38 Badly Hurt No long term effect
+    // 41 Broken Ribs Miss next game
+    // 42 Groin Strain Miss next game
+    // 43 Gouged Eye Miss next game
+    // 44 Broken Jaw Miss next game
+    // 45 Fractured Arm Miss next game
+    // 46 Fractured Leg Miss next game
+    // 47 Smashed Hand Miss next game
+    // 48 Pinched Nerve Miss next game
+    // 51 Damaged Back Niggling Injury
+    // 52 Smashed Knee Niggling Injury
+    // 53 Smashed Hip -1 MA
+    // 54 Smashed Ankle -1 MA
+    // 55 Serious Concussion -1 AV
+    // 56 Fractured Skull -1 AV
+    // 57 Broken Neck -1 AG
+    // 58 Smashed Collar Bone -1 ST
+    // 61-68 DEAD Dead!
+
     SeriousInjury seriousInjury = null;
     switch (pCasualtyRoll[0]) {
       case 4:
@@ -391,32 +398,32 @@ public class DiceInterpreter {
         break;
       case 5:
         switch (pCasualtyRoll[1]) {
-        case 1:
-          seriousInjury = SeriousInjury.DAMAGED_BACK;
-          break;
-        case 2:
-          seriousInjury = SeriousInjury.SMASHED_KNEE;
-          break;
-        case 3:
-          seriousInjury = SeriousInjury.SMASHED_HIP;
-          break;
-        case 4:
-          seriousInjury = SeriousInjury.SMASHED_ANKLE;
-          break;
-        case 5:
-          seriousInjury = SeriousInjury.SERIOUS_CONCUSSION;
-          break;
-        case 6:
-          seriousInjury = SeriousInjury.FRACTURED_SKULL;
-          break;
-        case 7:
-          seriousInjury = SeriousInjury.BROKEN_NECK;
-          break;
-        case 8:
-          seriousInjury = SeriousInjury.SMASHED_COLLAR_BONE;
-          break;
-      }
-      break;
+          case 1:
+            seriousInjury = SeriousInjury.DAMAGED_BACK;
+            break;
+          case 2:
+            seriousInjury = SeriousInjury.SMASHED_KNEE;
+            break;
+          case 3:
+            seriousInjury = SeriousInjury.SMASHED_HIP;
+            break;
+          case 4:
+            seriousInjury = SeriousInjury.SMASHED_ANKLE;
+            break;
+          case 5:
+            seriousInjury = SeriousInjury.SERIOUS_CONCUSSION;
+            break;
+          case 6:
+            seriousInjury = SeriousInjury.FRACTURED_SKULL;
+            break;
+          case 7:
+            seriousInjury = SeriousInjury.BROKEN_NECK;
+            break;
+          case 8:
+            seriousInjury = SeriousInjury.SMASHED_COLLAR_BONE;
+            break;
+        }
+        break;
     }
     return seriousInjury;
   }
@@ -427,18 +434,18 @@ public class DiceInterpreter {
     Player defender = game.getPlayerById(pInjuryResult.getDefenderId());
     int armour = defender.getArmour();
     if (UtilCards.hasCard(game, defender, Card.BELT_OF_INVULNERABILITY)) {
-    	pInjuryResult.clearArmorModifiers();
+      pInjuryResult.clearArmorModifiers();
     }
     if ((armour > 7) && pInjuryResult.hasArmorModifier(ArmorModifier.CLAWS)) {
       armour = 7;
     }
     return (armour < (armourRoll[0] + armourRoll[1] + pInjuryResult.getArmorModifierTotal()));
   }
-  
+
   public boolean isApothecarySuccessful(int roll) {
     return (roll > 1);
   }
-  
+
   public boolean isBribesSuccessful(int roll) {
     return (roll > 1);
   }
@@ -454,7 +461,7 @@ public class DiceInterpreter {
   public boolean isStandUpSuccessful(int roll, int pModifier) {
     return (roll > 1 && roll + pModifier > 3);
   }
-  
+
   public boolean isPlayerDefecting(int roll) {
     return ((roll > 0) && (roll < 4));
   }
@@ -466,19 +473,19 @@ public class DiceInterpreter {
   public Direction interpretThrowInDirectionRoll(FieldCoordinate pStartCoordinate, int roll) {
     // Endzone Home Team
     if (pStartCoordinate.getX() < 1) {
-    	return interpretThrowInDirectionRoll(Direction.EAST, roll);
+      return interpretThrowInDirectionRoll(Direction.EAST, roll);
     }
     // Endzone Away Team
     if (pStartCoordinate.getX() > 24) {
-    	return interpretThrowInDirectionRoll(Direction.WEST, roll);
+      return interpretThrowInDirectionRoll(Direction.WEST, roll);
     }
     // Lower Sideline
     if (pStartCoordinate.getY() > 13) {
-    	return interpretThrowInDirectionRoll(Direction.NORTH, roll);
+      return interpretThrowInDirectionRoll(Direction.NORTH, roll);
     }
     // Upper Sideline
     if (pStartCoordinate.getY() < 1) {
-    	return interpretThrowInDirectionRoll(Direction.SOUTH, roll);
+      return interpretThrowInDirectionRoll(Direction.SOUTH, roll);
     }
     throw new IllegalStateException("Unable to determine throwInDirection.");
   }
@@ -491,7 +498,7 @@ public class DiceInterpreter {
           return Direction.NORTHEAST;
         case 3:
         case 4:
-          return Direction.EAST; 
+          return Direction.EAST;
         case 5:
         case 6:
           return Direction.SOUTHEAST;
@@ -504,7 +511,7 @@ public class DiceInterpreter {
           return Direction.SOUTHWEST;
         case 3:
         case 4:
-          return Direction.WEST; 
+          return Direction.WEST;
         case 5:
         case 6:
           return Direction.NORTHWEST;
@@ -517,7 +524,7 @@ public class DiceInterpreter {
           return Direction.NORTHWEST;
         case 3:
         case 4:
-          return Direction.NORTH; 
+          return Direction.NORTH;
         case 5:
         case 6:
           return Direction.NORTHEAST;
@@ -527,26 +534,26 @@ public class DiceInterpreter {
       switch (roll) {
         case 1:
         case 2:
-          return Direction.SOUTHEAST; 
+          return Direction.SOUTHEAST;
         case 3:
         case 4:
-          return Direction.SOUTH; 
+          return Direction.SOUTH;
         case 5:
         case 6:
-          return Direction.SOUTHWEST; 
+          return Direction.SOUTHWEST;
       }
     }
     throw new IllegalStateException("Unable to determine throwInDirection.");
   }
-  
+
   public int interpretRiotRoll(int pRiotRoll) {
     return ((pRiotRoll < 4) ? 1 : -1);
   }
-  
+
   public boolean isDouble(int[] roll) {
-  	return ((roll != null) && (roll.length == 2) && (roll[0] == roll[1]));
+    return ((roll != null) && (roll.length == 2) && (roll[0] == roll[1]));
   }
-  
+
   public CardEffect interpretWitchBrewRoll(int roll) {
     switch (roll) {
       case 1:
@@ -560,5 +567,5 @@ public class DiceInterpreter {
         return null;
     }
   }
- 
+
 }

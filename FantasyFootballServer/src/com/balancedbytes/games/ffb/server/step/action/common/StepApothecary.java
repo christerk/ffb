@@ -43,57 +43,58 @@ import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
 /**
- * Step in any sequence to handle the apothecary.
- * Offers different modes (ATTACKER, CROWDPUSH, DEFENDER) to modify the behavior.
+ * Step in any sequence to handle the apothecary. Offers different modes
+ * (ATTACKER, CROWDPUSH, DEFENDER) to modify the behavior.
  * 
  * Needs to be initialized with stepParameter APOTHECARY_MODE.
  * 
  * Expects stepParameter INJURY_RESULT to be set by a preceding step.
- *   (InjuryResult.getApothecaryMode() must match ApothecaryMode of this step)
- * Expects stepParameter USING_PILING_ON to be set by a preceding step (mode DEFENDER).
+ * (InjuryResult.getApothecaryMode() must match ApothecaryMode of this step)
+ * Expects stepParameter USING_PILING_ON to be set by a preceding step (mode
+ * DEFENDER).
  * 
  * @author Kalimar
  */
 public class StepApothecary extends AbstractStep {
-	
-	private ApothecaryMode fApothecaryMode;
-	private InjuryResult fInjuryResult;
-	private boolean fShowReport;
-	
+
+  private ApothecaryMode fApothecaryMode;
+  private InjuryResult fInjuryResult;
+  private boolean fShowReport;
+
   public StepApothecary(GameState pGameState) {
-		super(pGameState);
-		fShowReport = true;
-	}
-  
-  public StepId getId() {
-  	return StepId.APOTHECARY;
+    super(pGameState);
+    fShowReport = true;
   }
-  
+
+  public StepId getId() {
+    return StepId.APOTHECARY;
+  }
+
   @Override
   public void init(StepParameterSet pParameterSet) {
-  	if (pParameterSet != null) {
-  		for (StepParameter parameter : pParameterSet.values()) {
-  			switch (parameter.getKey()) {
-  			  // mandatory
-  				case APOTHECARY_MODE:
-  					fApothecaryMode = (ApothecaryMode) parameter.getValue();
-  					break;
-					default:
-						break;
-  			}
-  		}
-  	}
-  	if (fApothecaryMode == null) {
-			throw new StepException("StepParameter " + StepParameterKey.APOTHECARY_MODE + " is not initialized.");
-  	}
+    if (pParameterSet != null) {
+      for (StepParameter parameter : pParameterSet.values()) {
+        switch (parameter.getKey()) {
+        // mandatory
+          case APOTHECARY_MODE:
+            fApothecaryMode = (ApothecaryMode) parameter.getValue();
+            break;
+          default:
+            break;
+        }
+      }
+    }
+    if (fApothecaryMode == null) {
+      throw new StepException("StepParameter " + StepParameterKey.APOTHECARY_MODE + " is not initialized.");
+    }
   }
-  
-	@Override
-	public void start() {
-		super.start();
-		executeStep();
-	}
-	
+
+  @Override
+  public void start() {
+    super.start();
+    executeStep();
+  }
+
   @Override
   public StepCommandStatus handleCommand(ReceivedCommand pReceivedCommand) {
     StepCommandStatus commandStatus = super.handleCommand(pReceivedCommand);
@@ -109,7 +110,8 @@ public class StepApothecary extends AbstractStep {
         case CLIENT_USE_APOTHECARY:
           ClientCommandUseApothecary useApothecaryCommand = (ClientCommandUseApothecary) pReceivedCommand.getCommand();
           if ((fInjuryResult != null) && StringTool.isEqual(useApothecaryCommand.getPlayerId(), fInjuryResult.getDefenderId())) {
-            fInjuryResult.setApothecaryStatus(useApothecaryCommand.isApothecaryUsed() ? ApothecaryStatus.USE_APOTHECARY : ApothecaryStatus.DO_NOT_USE_APOTHECARY);
+            fInjuryResult.setApothecaryStatus(useApothecaryCommand.isApothecaryUsed() ? ApothecaryStatus.USE_APOTHECARY
+                : ApothecaryStatus.DO_NOT_USE_APOTHECARY);
             commandStatus = StepCommandStatus.EXECUTE_STEP;
           }
           break;
@@ -136,34 +138,34 @@ public class StepApothecary extends AbstractStep {
     return commandStatus;
   }
 
-	@Override
-	public boolean setParameter(StepParameter pParameter) {
-		if ((pParameter != null) && !super.setParameter(pParameter)) {
-			switch (pParameter.getKey()) {
-				case INJURY_RESULT:
-					InjuryResult injuryResult = (InjuryResult) pParameter.getValue();
-					if ((injuryResult != null) && (fApothecaryMode == injuryResult.getApothecaryMode())) { 
-						fInjuryResult = injuryResult;
-						return true;
-					}
-					return false;
-				case USING_PILING_ON:
-					Boolean usingPilingOn = (Boolean) pParameter.getValue();
-					if ((ApothecaryMode.DEFENDER == fApothecaryMode) && (usingPilingOn != null) && !usingPilingOn) {
-						fShowReport = false;
-						return true;
-					}
-					return false;
-				default:
-					break;
-			}
-		}
-		return false;
-	}
-	
-	private void executeStep() {
+  @Override
+  public boolean setParameter(StepParameter pParameter) {
+    if ((pParameter != null) && !super.setParameter(pParameter)) {
+      switch (pParameter.getKey()) {
+        case INJURY_RESULT:
+          InjuryResult injuryResult = (InjuryResult) pParameter.getValue();
+          if ((injuryResult != null) && (fApothecaryMode == injuryResult.getApothecaryMode())) {
+            fInjuryResult = injuryResult;
+            return true;
+          }
+          return false;
+        case USING_PILING_ON:
+          Boolean usingPilingOn = (Boolean) pParameter.getValue();
+          if ((ApothecaryMode.DEFENDER == fApothecaryMode) && (usingPilingOn != null) && !usingPilingOn) {
+            fShowReport = false;
+            return true;
+          }
+          return false;
+        default:
+          break;
+      }
+    }
+    return false;
+  }
+
+  private void executeStep() {
     if (fInjuryResult == null) {
-	  	getResult().setNextAction(StepAction.NEXT_STEP);
+      getResult().setNextAction(StepAction.NEXT_STEP);
     } else {
       boolean doNextStep = true;
       Game game = getGameState().getGame();
@@ -173,16 +175,17 @@ public class StepApothecary extends AbstractStep {
             if (fShowReport) {
               fInjuryResult.report(this);
             }
-            UtilServerDialog.showDialog(getGameState(), new DialogUseApothecaryParameter(fInjuryResult.getDefenderId(), fInjuryResult.getPlayerState(), fInjuryResult.getSeriousInjury()));
+            UtilServerDialog.showDialog(getGameState(), new DialogUseApothecaryParameter(fInjuryResult.getDefenderId(), fInjuryResult.getPlayerState(),
+                fInjuryResult.getSeriousInjury()));
             fInjuryResult.setApothecaryStatus(ApothecaryStatus.WAIT_FOR_APOTHECARY_USE);
             doNextStep = false;
             break;
           case USE_APOTHECARY:
             if (rollApothecary()) {
-            	fInjuryResult.setApothecaryStatus(ApothecaryStatus.WAIT_FOR_APOTHECARY_USE);
+              fInjuryResult.setApothecaryStatus(ApothecaryStatus.WAIT_FOR_APOTHECARY_USE);
               doNextStep = false;
             } else {
-            	fInjuryResult.setApothecaryStatus(ApothecaryStatus.RESULT_CHOICE);
+              fInjuryResult.setApothecaryStatus(ApothecaryStatus.RESULT_CHOICE);
             }
             break;
           case DO_NOT_USE_APOTHECARY:
@@ -190,11 +193,11 @@ public class StepApothecary extends AbstractStep {
             break;
           case NO_APOTHECARY:
             if (fShowReport) {
-            	fInjuryResult.report(this);
+              fInjuryResult.report(this);
             }
             break;
           default:
-          	break;
+            break;
         }
       }
       if (doNextStep) {
@@ -211,9 +214,11 @@ public class StepApothecary extends AbstractStep {
           default:
             fInjuryResult.applyTo(this);
             PlayerState playerState = game.getFieldModel().getPlayerState(player);
-            if ((playerState != null) && playerState.isCasualty() && UtilCards.hasSkill(game, player, Skill.REGENERATION) && (fInjuryResult.getInjuryType() != InjuryType.EAT_PLAYER)) {
+            if ((playerState != null) && playerState.isCasualty() && UtilCards.hasSkill(game, player, Skill.REGENERATION)
+                && (fInjuryResult.getInjuryType() != InjuryType.EAT_PLAYER)) {
               if (!UtilServerInjury.handleRegeneration(this, player)) {
-                InducementSet inducementSet = game.getTeamHome().hasPlayer(player) ? game.getTurnDataHome().getInducementSet() : game.getTurnDataAway().getInducementSet();
+                InducementSet inducementSet = game.getTeamHome().hasPlayer(player) ? game.getTurnDataHome().getInducementSet() : game.getTurnDataAway()
+                    .getInducementSet();
                 if (inducementSet.hasUsesLeft(InducementType.IGOR) && player.getPlayerType() != PlayerType.STAR) {
                   game.setDialogParameter(new DialogUseIgorParameter(player.getId()));
                   fInjuryResult.setApothecaryStatus(ApothecaryStatus.WAIT_FOR_IGOR_USE);
@@ -226,11 +231,11 @@ public class StepApothecary extends AbstractStep {
       }
       if (doNextStep) {
         UtilServerInjury.handleRaiseDead(this, fInjuryResult);
-  	  	getResult().setNextAction(StepAction.NEXT_STEP);
+        getResult().setNextAction(StepAction.NEXT_STEP);
       }
     }
-	}
-	
+  }
+
   private boolean rollApothecary() {
     Game game = getGameState().getGame();
     Player defender = game.getPlayerById(fInjuryResult.getDefenderId());
@@ -247,9 +252,13 @@ public class StepApothecary extends AbstractStep {
       newInjuryResult.setInjury(DiceInterpreter.getInstance().interpretRollCasualty(newInjuryResult.getCasualtyRoll()));
       newInjuryResult.setSeriousInjury(DiceInterpreter.getInstance().interpretRollSeriousInjury(newInjuryResult.getCasualtyRoll()));
       apothecaryChoice = (newInjuryResult.getPlayerState().getBase() != PlayerState.BADLY_HURT);
-      getResult().addReport(new ReportApothecaryRoll(defender.getId(), newInjuryResult.getCasualtyRoll(), newInjuryResult.getPlayerState(), newInjuryResult.getSeriousInjury()));
+      getResult().addReport(
+          new ReportApothecaryRoll(defender.getId(), newInjuryResult.getCasualtyRoll(), newInjuryResult.getPlayerState(), newInjuryResult.getSeriousInjury()));
       if (apothecaryChoice) {
-        UtilServerDialog.showDialog(getGameState(), new DialogApothecaryChoiceParameter(defender.getId(), fInjuryResult.getPlayerState(), fInjuryResult.getSeriousInjury(), newInjuryResult.getPlayerState(), newInjuryResult.getSeriousInjury()));
+        UtilServerDialog.showDialog(
+            getGameState(),
+            new DialogApothecaryChoiceParameter(defender.getId(), fInjuryResult.getPlayerState(), fInjuryResult.getSeriousInjury(), newInjuryResult
+                .getPlayerState(), newInjuryResult.getSeriousInjury()));
       }
     }
     if (!apothecaryChoice) {
@@ -263,7 +272,7 @@ public class StepApothecary extends AbstractStep {
     }
     return apothecaryChoice;
   }
-  
+
   private void handleApothecaryChoice(PlayerState pPlayerState, SeriousInjury pSeriousInjury) {
     if (fInjuryResult != null) {
       if (pPlayerState.getBase() == PlayerState.BADLY_HURT) {
@@ -278,7 +287,7 @@ public class StepApothecary extends AbstractStep {
   }
 
   // JSON serialization
-  
+
   @Override
   public JsonObject toJsonValue() {
     JsonObject jsonObject = super.toJsonValue();
@@ -289,7 +298,7 @@ public class StepApothecary extends AbstractStep {
     IServerJsonOption.SHOW_REPORT.addTo(jsonObject, fShowReport);
     return jsonObject;
   }
-  
+
   @Override
   public StepApothecary initFrom(JsonValue pJsonValue) {
     super.initFrom(pJsonValue);
@@ -302,5 +311,5 @@ public class StepApothecary extends AbstractStep {
     fShowReport = IServerJsonOption.SHOW_REPORT.getFrom(jsonObject);
     return this;
   }
-  
+
 }

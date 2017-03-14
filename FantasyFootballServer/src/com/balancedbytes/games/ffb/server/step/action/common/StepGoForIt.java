@@ -39,48 +39,48 @@ import com.eclipsesource.json.JsonValue;
  * 
  * Needs to be initialized with stepParameter GOTO_LABEL_ON_FAILURE.
  * 
- * Sets stepParameter END_TURN for all steps on the stack.
- * Sets stepParameter INJURY_TYPE for all steps on the stack.
+ * Sets stepParameter END_TURN for all steps on the stack. Sets stepParameter
+ * INJURY_TYPE for all steps on the stack.
  * 
  * @author Kalimar
  */
 public class StepGoForIt extends AbstractStepWithReRoll {
-	
-	private boolean fSecondGoForIt;
-	private String fGotoLabelOnFailure;
 
-	public StepGoForIt(GameState pGameState) {
-		super(pGameState);
-	}
-	
-	public StepId getId() {
-		return StepId.GO_FOR_IT;
-	}
-	
+  private boolean fSecondGoForIt;
+  private String fGotoLabelOnFailure;
+
+  public StepGoForIt(GameState pGameState) {
+    super(pGameState);
+  }
+
+  public StepId getId() {
+    return StepId.GO_FOR_IT;
+  }
+
   @Override
   public void init(StepParameterSet pParameterSet) {
-  	if (pParameterSet != null) {
-  		for (StepParameter parameter : pParameterSet.values()) {
-  			switch (parameter.getKey()) {
-  				case GOTO_LABEL_ON_FAILURE:
-  					fGotoLabelOnFailure = (String) parameter.getValue();
-  					break;
-					default:
-						break;
-  			}
-  		}
-  	}
-  	if (!StringTool.isProvided(fGotoLabelOnFailure)) {
-			throw new StepException("StepParameter " + StepParameterKey.GOTO_LABEL_ON_FAILURE + " is not initialized.");
-  	}
+    if (pParameterSet != null) {
+      for (StepParameter parameter : pParameterSet.values()) {
+        switch (parameter.getKey()) {
+          case GOTO_LABEL_ON_FAILURE:
+            fGotoLabelOnFailure = (String) parameter.getValue();
+            break;
+          default:
+            break;
+        }
+      }
+    }
+    if (!StringTool.isProvided(fGotoLabelOnFailure)) {
+      throw new StepException("StepParameter " + StepParameterKey.GOTO_LABEL_ON_FAILURE + " is not initialized.");
+    }
   }
-	
-	@Override
-	public void start() {
-		super.start();
-		executeStep();
-	}
-	
+
+  @Override
+  public void start() {
+    super.start();
+    executeStep();
+  }
+
   @Override
   public StepCommandStatus handleCommand(ReceivedCommand pReceivedCommand) {
     StepCommandStatus commandStatus = super.handleCommand(pReceivedCommand);
@@ -89,13 +89,13 @@ public class StepGoForIt extends AbstractStepWithReRoll {
     }
     return commandStatus;
   }
-		
+
   private void executeStep() {
     Game game = getGameState().getGame();
     ActingPlayer actingPlayer = game.getActingPlayer();
     if ((PlayerAction.BLITZ == actingPlayer.getPlayerAction()) && (getReRolledAction() == null)) {
       game.getTurnData().setBlitzUsed(true);
-    	actingPlayer.setCurrentMove(actingPlayer.getCurrentMove() + 1);
+      actingPlayer.setCurrentMove(actingPlayer.getCurrentMove() + 1);
       actingPlayer.setGoingForIt(UtilPlayer.isNextMoveGoingForIt(game));
     }
     if (actingPlayer.isGoingForIt() && (actingPlayer.getCurrentMove() > UtilCards.getPlayerMovement(game, actingPlayer.getPlayer()))) {
@@ -107,36 +107,36 @@ public class StepGoForIt extends AbstractStepWithReRoll {
       }
       switch (goForIt()) {
         case SUCCESS:
-        	succeedGfi();
+          succeedGfi();
           return;
         case FAILURE:
-        	failGfi();
-        	return;
-      	default:
-        	getResult().setNextAction(StepAction.CONTINUE);
-        	return;
+          failGfi();
+          return;
+        default:
+          getResult().setNextAction(StepAction.CONTINUE);
+          return;
       }
     }
     getResult().setNextAction(StepAction.NEXT_STEP);
   }
-  
+
   private void succeedGfi() {
     Game game = getGameState().getGame();
     ActingPlayer actingPlayer = game.getActingPlayer();
-  	if (actingPlayer.isLeaping() && (actingPlayer.getCurrentMove() > UtilCards.getPlayerMovement(game, actingPlayer.getPlayer()) + 1) && !fSecondGoForIt) {
-  		fSecondGoForIt = true;
-  		setReRolledAction(null);
-  		getGameState().pushCurrentStepOnStack();
-  	}
+    if (actingPlayer.isLeaping() && (actingPlayer.getCurrentMove() > UtilCards.getPlayerMovement(game, actingPlayer.getPlayer()) + 1) && !fSecondGoForIt) {
+      fSecondGoForIt = true;
+      setReRolledAction(null);
+      getGameState().pushCurrentStepOnStack();
+    }
     getResult().setNextAction(StepAction.NEXT_STEP);
   }
-  
+
   private void failGfi() {
     publishParameter(new StepParameter(StepParameterKey.END_TURN, true));
     publishParameter(new StepParameter(StepParameterKey.INJURY_TYPE, InjuryType.DROP_GFI));
     getResult().setNextAction(StepAction.GOTO_LABEL, fGotoLabelOnFailure);
   }
-  
+
   private ActionStatus goForIt() {
     Game game = getGameState().getGame();
     ActingPlayer actingPlayer = game.getActingPlayer();
@@ -147,7 +147,8 @@ public class StepGoForIt extends AbstractStepWithReRoll {
     boolean successful = DiceInterpreter.getInstance().isSkillRollSuccessful(roll, minimumRoll);
     GoForItModifier[] goForItModifierArray = modifierFactory.toArray(goForItModifiers);
     boolean reRolled = ((getReRolledAction() == ReRolledAction.GO_FOR_IT) && (getReRollSource() != null));
-    getResult().addReport(new ReportSkillRoll(ReportId.GO_FOR_IT_ROLL, actingPlayer.getPlayerId(), successful, roll, minimumRoll, reRolled, goForItModifierArray));
+    getResult().addReport(
+        new ReportSkillRoll(ReportId.GO_FOR_IT_ROLL, actingPlayer.getPlayerId(), successful, roll, minimumRoll, reRolled, goForItModifierArray));
     if (successful) {
       return ActionStatus.SUCCESS;
     } else {
@@ -169,9 +170,9 @@ public class StepGoForIt extends AbstractStepWithReRoll {
       }
     }
   }
-  
+
   // JSON serialization
-  
+
   @Override
   public JsonObject toJsonValue() {
     JsonObject jsonObject = super.toJsonValue();
@@ -179,7 +180,7 @@ public class StepGoForIt extends AbstractStepWithReRoll {
     IServerJsonOption.GOTO_LABEL_ON_FAILURE.addTo(jsonObject, fGotoLabelOnFailure);
     return jsonObject;
   }
-  
+
   @Override
   public StepGoForIt initFrom(JsonValue pJsonValue) {
     super.initFrom(pJsonValue);
