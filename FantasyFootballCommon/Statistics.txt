@@ -1,0 +1,6 @@
+find LOC by using Eclipse File Search with a \s+\n pattern (non-empty lines) on *.java
+find Type declarations by using Eclipse Java Search with * pattern on type declarations
+
+14.03.2017:
+31.643 lines of code
+1.226 type declarations
