@@ -155,14 +155,19 @@ public final class StepMvp extends AbstractStep {
       if (fNrOfHomeChoices < fNrOfHomeMvps) {
         String[] playersForMvp = findPlayerIdsForMvp(game.getTeamHome());
         if (ArrayTool.isProvided(playersForMvp)) {
-          DialogPlayerChoiceParameter dialogParameter = new DialogPlayerChoiceParameter(
-            game.getTeamHome().getId(),
-            PlayerChoiceMode.MVP,
-            findPlayerIdsForMvp(game.getTeamHome()),
-            null,
-            Math.min(mvpNominations, playersForMvp.length)
-          );
-          UtilServerDialog.showDialog(getGameState(), dialogParameter);
+          if (playersForMvp.length == 1) {
+            fHomePlayersMvp.add(playersForMvp[0]);
+            fNrOfHomeChoices++;
+          } else {
+            DialogPlayerChoiceParameter dialogParameter = new DialogPlayerChoiceParameter(
+              game.getTeamHome().getId(),
+              PlayerChoiceMode.MVP,
+              findPlayerIdsForMvp(game.getTeamHome()),
+              null,
+              Math.min(mvpNominations, playersForMvp.length)
+            );
+            UtilServerDialog.showDialog(getGameState(), dialogParameter);
+          }
         } else {
           fNrOfHomeMvps = 0;
         }
@@ -172,7 +177,11 @@ public final class StepMvp extends AbstractStep {
       if (fNrOfAwayChoices < fNrOfAwayMvps) {
         String[] playersForMvp = findPlayerIdsForMvp(game.getTeamAway());
         if (ArrayTool.isProvided(playersForMvp)) {
-          DialogPlayerChoiceParameter dialogParameter = new DialogPlayerChoiceParameter(
+          if (playersForMvp.length == 1) {
+            fAwayPlayersMvp.add(playersForMvp[0]);
+            fNrOfAwayChoices++;
+          } else {
+            DialogPlayerChoiceParameter dialogParameter = new DialogPlayerChoiceParameter(
               game.getTeamAway().getId(),
               PlayerChoiceMode.MVP,
               playersForMvp,
@@ -180,6 +189,7 @@ public final class StepMvp extends AbstractStep {
               Math.min(mvpNominations, playersForMvp.length)
             );
             UtilServerDialog.showDialog(getGameState(), dialogParameter);
+          }
         } else {
           fNrOfAwayMvps = 0;
         }
