@@ -28,6 +28,7 @@ import com.balancedbytes.games.ffb.server.step.StepParameter;
 import com.balancedbytes.games.ffb.server.step.StepParameterSet;
 import com.balancedbytes.games.ffb.server.step.UtilServerSteps;
 import com.balancedbytes.games.ffb.server.util.UtilServerDialog;
+import com.balancedbytes.games.ffb.util.ArrayTool;
 import com.balancedbytes.games.ffb.util.ListTool;
 import com.balancedbytes.games.ffb.util.UtilPlayer;
 import com.eclipsesource.json.JsonObject;
@@ -152,26 +153,36 @@ public final class StepMvp extends AbstractStep {
       }
 
       if (fNrOfHomeChoices < fNrOfHomeMvps) {
-        DialogPlayerChoiceParameter dialogParameter = new DialogPlayerChoiceParameter(
-          game.getTeamHome().getId(),
-          PlayerChoiceMode.MVP,
-          findPlayerIdsForMvp(game.getTeamHome()),
-          null,
-          mvpNominations
-        );
-        UtilServerDialog.showDialog(getGameState(), dialogParameter);
+        String[] playersForMvp = findPlayerIdsForMvp(game.getTeamHome());
+        if (ArrayTool.isProvided(playersForMvp)) {
+          DialogPlayerChoiceParameter dialogParameter = new DialogPlayerChoiceParameter(
+            game.getTeamHome().getId(),
+            PlayerChoiceMode.MVP,
+            findPlayerIdsForMvp(game.getTeamHome()),
+            null,
+            Math.min(mvpNominations, playersForMvp.length)
+          );
+          UtilServerDialog.showDialog(getGameState(), dialogParameter);
+        } else {
+          fNrOfHomeMvps = 0;
+        }
         return;
       }
 
       if (fNrOfAwayChoices < fNrOfAwayMvps) {
-        DialogPlayerChoiceParameter dialogParameter = new DialogPlayerChoiceParameter(
-          game.getTeamAway().getId(),
-          PlayerChoiceMode.MVP,
-          findPlayerIdsForMvp(game.getTeamAway()),
-          null,
-          mvpNominations
-        );
-        UtilServerDialog.showDialog(getGameState(), dialogParameter);
+        String[] playersForMvp = findPlayerIdsForMvp(game.getTeamAway());
+        if (ArrayTool.isProvided(playersForMvp)) {
+          DialogPlayerChoiceParameter dialogParameter = new DialogPlayerChoiceParameter(
+              game.getTeamAway().getId(),
+              PlayerChoiceMode.MVP,
+              playersForMvp,
+              null,
+              Math.min(mvpNominations, playersForMvp.length)
+            );
+            UtilServerDialog.showDialog(getGameState(), dialogParameter);
+        } else {
+          fNrOfAwayMvps = 0;
+        }
         return;
       }
       
@@ -212,7 +223,7 @@ public final class StepMvp extends AbstractStep {
     }
 
   }
-
+  
   private String[] findPlayerIdsForMvp(Team pTeam) {
     List<String> playerIds = new ArrayList<String>();
     Game game = getGameState().getGame();
@@ -223,7 +234,7 @@ public final class StepMvp extends AbstractStep {
         continue;
       }
       PlayerResult playerResult = gameResult.getPlayerResult(player);
-      if (SendToBoxReason.NURGLES_ROT == playerResult.getSendToBoxReason()) {
+      if ((player.getRecoveringInjury() != null) || (SendToBoxReason.NURGLES_ROT == playerResult.getSendToBoxReason())) {
         continue;
       }
       playerIds.add(player.getId());
