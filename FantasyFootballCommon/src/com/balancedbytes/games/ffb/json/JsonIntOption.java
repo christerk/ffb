@@ -14,7 +14,11 @@ public class JsonIntOption extends JsonAbstractOption {
   }
   
   public int getFrom(JsonObject pJsonObject) {
-    return getValueFrom(pJsonObject).asInt();
+    JsonValue value = getValueFrom(pJsonObject);
+    if ((value == null) || value.isNull()) {
+      return 0;
+    }
+    return value.asInt();
   }
   
   public void addTo(JsonObject pJsonObject, int pValue) {
