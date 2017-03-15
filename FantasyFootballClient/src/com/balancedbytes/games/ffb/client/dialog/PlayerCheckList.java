@@ -9,6 +9,7 @@ import java.util.List;
 
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JList;
@@ -58,10 +59,14 @@ public class PlayerCheckList extends JList {
   
   private class PlayerCheckListMouseAdapter extends MouseAdapter {
     
+    private int fMinSelects;
     private int fMaxSelects;
+    private JButton fSelectButton;
     
-    public PlayerCheckListMouseAdapter(int pMaxSelects) {
-      fMaxSelects = pMaxSelects;
+    public PlayerCheckListMouseAdapter(int minSelects, int maxSelects, JButton selectButton) {
+      fMinSelects = minSelects;
+      fMaxSelects = maxSelects;
+      fSelectButton = selectButton;
     }
 
     public void mouseReleased(MouseEvent event) {
@@ -70,13 +75,7 @@ public class PlayerCheckList extends JList {
       PlayerCheckListItem selectedItem = (PlayerCheckListItem) list.getModel().getElementAt(index);
       if (!selectedItem.isSelected()) {
         if (fMaxSelects > 1) {
-          int nrOfSelectedItems = 0;
-          for (int i = 0; i < list.getModel().getSize(); i++) {
-            PlayerCheckListItem item = (PlayerCheckListItem) list.getModel().getElementAt(i); 
-            if (item.isSelected()) {
-              nrOfSelectedItems++;
-            }
-          }
+          int nrOfSelectedItems = findNrOfSelectedItems();
           if (nrOfSelectedItems < fMaxSelects) {
             selectedItem.setSelected(true);
           }
@@ -93,12 +92,14 @@ public class PlayerCheckList extends JList {
       } else {
         selectedItem.setSelected(false);
       }
+      int nrOfSelectedItems = findNrOfSelectedItems();
+      fSelectButton.setEnabled(nrOfSelectedItems >= fMinSelects);
       list.repaint(list.getCellBounds(index, index));
     }
 
   }
   
-  public PlayerCheckList(FantasyFootballClient client, String[] playerIds, String[] descriptions, int maxSelects, boolean preSelected) {
+  public PlayerCheckList(FantasyFootballClient client, String[] playerIds, String[] descriptions, int minSelects, int maxSelects, boolean preSelected, JButton selectButton) {
     
     if (!ArrayTool.isProvided(playerIds)) {
       throw new IllegalArgumentException("Argument players must not be empty or null.");
@@ -129,7 +130,7 @@ public class PlayerCheckList extends JList {
     setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
     // Add a mouse listener to handle changing selection
-    addMouseListener(new PlayerCheckListMouseAdapter(maxSelects));
+    addMouseListener(new PlayerCheckListMouseAdapter(maxSelects, minSelects, selectButton));
     
   }
   
@@ -151,6 +152,17 @@ public class PlayerCheckList extends JList {
       }
     }
     return selectedPlayers.toArray(new Player[selectedPlayers.size()]);
+  }
+  
+  private int findNrOfSelectedItems() {
+    int nrOfSelectedItems = 0;
+    for (int i = 0; i < getModel().getSize(); i++) {
+      PlayerCheckListItem item = (PlayerCheckListItem) getModel().getElementAt(i); 
+      if (item.isSelected()) {
+        nrOfSelectedItems++;
+      }
+    }
+    return nrOfSelectedItems;
   }
   
 }

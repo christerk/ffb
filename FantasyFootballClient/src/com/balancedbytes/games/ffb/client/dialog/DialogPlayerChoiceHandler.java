@@ -33,23 +33,24 @@ public class DialogPlayerChoiceHandler extends DialogHandler {
         String dialogHeader = fDialogParameter.getPlayerChoiceMode().getDialogHeader(fDialogParameter.getMaxSelects());
         FieldCoordinate dialogCoordinate = null;
         String[] playerIds = fDialogParameter.getPlayerIds();
-        if (fDialogParameter.getPlayerChoiceMode() != PlayerChoiceMode.CARD) {
-          int maxX = 0, maxY = 0;
-          for (int i = 0; i < playerIds.length; i++) {
-            Player player = game.getPlayerById(playerIds[i]);
-            FieldCoordinate playerCoordinate = game.getFieldModel().getPlayerCoordinate(player);
-            if (playerCoordinate.getX() > maxX) {
-              maxX = playerCoordinate.getX();
-            }
-            if (playerCoordinate.getY() > maxY) {
-              maxY = playerCoordinate.getY();
-            }
-          }
-          dialogCoordinate = new FieldCoordinate(maxX, maxY);
-        }
         int minSelects = 0;
         if (fDialogParameter.getPlayerChoiceMode() == PlayerChoiceMode.MVP) {
           minSelects = fDialogParameter.getMaxSelects();
+        } else {
+          if (fDialogParameter.getPlayerChoiceMode() != PlayerChoiceMode.CARD) {
+            int maxX = 0, maxY = 0;
+            for (int i = 0; i < playerIds.length; i++) {
+              Player player = game.getPlayerById(playerIds[i]);
+              FieldCoordinate playerCoordinate = game.getFieldModel().getPlayerCoordinate(player);
+              if (playerCoordinate.getX() > maxX) {
+                maxX = playerCoordinate.getX();
+              }
+              if (playerCoordinate.getY() > maxY) {
+                maxY = playerCoordinate.getY();
+              }
+            }
+            dialogCoordinate = new FieldCoordinate(maxX, maxY);
+          }
         }
         setDialog(new DialogPlayerChoice(getClient(), dialogHeader, playerIds, fDialogParameter.getDescriptions(), minSelects, fDialogParameter.getMaxSelects(), dialogCoordinate, false));
         getDialog().showDialog(this);

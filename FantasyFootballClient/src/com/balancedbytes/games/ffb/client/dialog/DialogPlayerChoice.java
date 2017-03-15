@@ -49,13 +49,14 @@ public class DialogPlayerChoice extends Dialog implements ActionListener {
     fButtonSelect.setToolTipText("Select the checked player(s)");
     fButtonSelect.addActionListener(this);
     fButtonSelect.setMnemonic((int) 'S'); 
+    fButtonSelect.setEnabled((playerIds.length == 1) || preSelected);
     
     fButtonCancel = new JButton("Cancel");
     fButtonCancel.setToolTipText("Do not select any player");
     fButtonCancel.addActionListener(this);
     fButtonCancel.setMnemonic((int) 'C'); 
 
-    fList = new PlayerCheckList(client, playerIds, descriptions, maxSelects, preSelected);
+    fList = new PlayerCheckList(client, playerIds, descriptions, minSelects, maxSelects, preSelected, fButtonSelect);
     fList.setVisibleRowCount(Math.min(playerIds.length, 5));
     fList.addMouseMotionListener(new MouseMotionAdapter() {
       public void mouseMoved(MouseEvent pMouseEvent) {
