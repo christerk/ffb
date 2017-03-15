@@ -91,11 +91,13 @@ public final class StepInitEndGame extends AbstractStep {
   private void handlePoisonedPlayers() {
     Game game = getGameState().getGame();
     for (Player player : game.getPlayers()) {
-      PlayerResult playerResult = game.getGameResult().getPlayerResult(player);
-      if (playerResult.getSeriousInjury() == null) {
-        playerResult.setSeriousInjury(SeriousInjury.POISONED);
+      if (game.getFieldModel().hasCardEffect(player, CardEffect.POISONED)) {
+        PlayerResult playerResult = game.getGameResult().getPlayerResult(player);
+        if (playerResult.getSeriousInjury() == null) {
+          playerResult.setSeriousInjury(SeriousInjury.POISONED);
+        }
+        game.getFieldModel().removeCardEffect(player, CardEffect.POISONED);
       }
-      game.getFieldModel().removeCardEffect(player, CardEffect.POISONED);
     }
   }
 
