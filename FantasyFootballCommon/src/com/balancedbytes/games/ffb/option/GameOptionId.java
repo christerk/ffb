@@ -42,6 +42,8 @@ public enum GameOptionId implements IEnumWithName {
   
   ARGUE_THE_CALL("argueTheCall"),
   MVP_NOMINATIONS("mvpNominations"),
+  PETTY_CASH_AFFECTS_TV("pettyCashAffectsTv"),
+  EXPENSIVE_MISTAKES("expensiveMistakes"),
 
   EXTRA_MVP("extraMvp"),
   

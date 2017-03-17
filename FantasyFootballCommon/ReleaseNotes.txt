@@ -1,18 +1,11 @@
 
-[size=18][b]Release Notes Version 1.2.7[/b][/size]
+[size=18][b]Release Notes Version 1.2.8[/b][/size]
 
 [b]Improvements:[/b]
 
-- BB2016 Rule: nominate 3 players at the end of the game, 1 of those gets the MVP award 
-- Option "mvpNominations" determines how many players must be nominated for an MVP
-  0 = random choice, 1 = you can choose which player gets the MVP, 3 = default
-- BB2016 Rule: Piling On not being available is handled by Fumbbl directly
-- Option "pilingOnUsesATeamReroll" (true/false) makes Piling On cost a Team ReRoll
-- Games are marked as such in the database when they have been conceded or ended by the Admins
-- BB2016 Rule: Skill "Weeping Dagger" has been implemented - poisoned players miss the next game
+- BB2016 Rule: Petty Cash does not affect TV (default forceTreasuryToPettyCash=true, pettyCashAffectsTv=false)
+- BB2016 Rule: Expensive Mistakes (default expensiveMistakes=true)
 
 [b]Bugfixes:[/b]
 
-- BB2016 Rule: Argue the Call fixed and activated by default
-- #17 Sneaky Git player inactive after foul
-- #14 Team ReRoll on catch on blitz! kickoff
+- switched order of "Argue the Call" and "Bribes" around (first Bribes, then Argue)

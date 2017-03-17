@@ -13,7 +13,16 @@ import com.eclipsesource.json.JsonValue;
  * @author Kalimar
  */
 public class GameOptionFactory {
-  
+
+  // LRB6 ------------------------------
+  // ARGUE_THE_CALL false
+  // EXPENSIVE_MISTAKES false
+  // FORCE_TREASURY_TO_PETTY_CASH false
+  // MVP_NOMINATIONS 0
+  // PETTY_CASH_AFFECTS_TV true
+  // PILING_ON_USES_A_TEAM_REROLL false
+  // -----------------------------------
+
   public IGameOption createGameOption(GameOptionId pOptionId) {
     if (pOptionId == null) {
       return null;
@@ -35,14 +44,18 @@ public class GameOptionFactory {
         return new GameOptionBoolean(GameOptionId.CLAW_DOES_NOT_STACK)
           .setDefault(false)
           .setMessageTrue("Claw does not stack with other skills that modify armour rolls.");
+      case EXPENSIVE_MISTAKES:
+        return new GameOptionBoolean(GameOptionId.EXPENSIVE_MISTAKES)
+          .setDefault(true)
+          .setMessageFalse("There are no expensive mistakes");
       case EXTRA_MVP:
         return new GameOptionBoolean(GameOptionId.EXTRA_MVP)
           .setDefault(false)
           .setMessageTrue("An extra MVP is awarded at the end of the match");
       case FORCE_TREASURY_TO_PETTY_CASH:
         return new GameOptionBoolean(GameOptionId.FORCE_TREASURY_TO_PETTY_CASH)
-          .setDefault(false)
-          .setMessageTrue("Treasury is automatically transferred to Petty Cash.");
+          .setDefault(true)
+          .setMessageTrue("Treasury is not automatically transferred to Petty Cash.");
       case FOUL_BONUS:
         return new GameOptionBoolean(GameOptionId.FOUL_BONUS)
           .setDefault(false)
@@ -91,14 +104,14 @@ public class GameOptionFactory {
         return new GameOptionBoolean(GameOptionId.PETTY_CASH)
           .setDefault(true)
           .setMessageFalse("Petty Cash is not available.");
+      case PETTY_CASH_AFFECTS_TV:
+        return new GameOptionBoolean(GameOptionId.PETTY_CASH_AFFECTS_TV)
+          .setDefault(false)
+          .setMessageTrue("Petty Cash affects Team Value.");
       case PILING_ON_ARMOR_ONLY:
         return new GameOptionBoolean(GameOptionId.PILING_ON_ARMOR_ONLY)
           .setDefault(false)
           .setMessageTrue("Piling On lets you re-roll armour-rolls only.");
-      case PILING_ON_USES_A_TEAM_REROLL:
-        return new GameOptionBoolean(GameOptionId.PILING_ON_USES_A_TEAM_REROLL)
-          .setDefault(false)
-          .setMessageTrue("Piling On costs a Team Re-roll to use.");
       case PILING_ON_DOES_NOT_STACK:
         return new GameOptionBoolean(GameOptionId.PILING_ON_DOES_NOT_STACK)
           .setDefault(false)
@@ -111,6 +124,10 @@ public class GameOptionFactory {
         return new GameOptionBoolean(GameOptionId.PILING_ON_TO_KO_ON_DOUBLE)
           .setDefault(false)
           .setMessageTrue("Piling On player knocks himself out when rolling a double on armour or injury.");
+      case PILING_ON_USES_A_TEAM_REROLL:
+        return new GameOptionBoolean(GameOptionId.PILING_ON_USES_A_TEAM_REROLL)
+          .setDefault(true)
+          .setMessageTrue("Piling On does not cost a Team Re-roll to use.");
       case PITCH_URL:
         return new GameOptionString(GameOptionId.PITCH_URL)
           .setMessage("Custom pitch set.");
@@ -148,11 +165,11 @@ public class GameOptionFactory {
           .setMessageTrue("Inducements are predefined.");
       default:
         return null;
-    }    
+    }
   }
-  
+
   // JSON serialization
-  
+
   public IGameOption fromJsonValue(JsonValue pJsonValue) {
     JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
     GameOptionId optionId = (GameOptionId) IJsonOption.GAME_OPTION_ID.getFrom(jsonObject);
@@ -162,9 +179,9 @@ public class GameOptionFactory {
     }
     return gameOption;
   }
-  
+
   // XML serialization
-  
+
   public IGameOption fromXmlElement(String pXmlTag, Attributes pXmlAttributes) {
     IGameOption option = null;
     if (IGameOption.XML_TAG.equals(pXmlTag)) {

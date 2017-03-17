@@ -35,13 +35,14 @@ import com.fumbbl.rng.Fortuna;
  */
 public class FantasyFootballServer {
 
-  public static final String SERVER_VERSION = "1.2.7";
-  public static final String CLIENT_VERSION = "1.2.7";
+  public static final String SERVER_VERSION = "1.2.8";
+  public static final String CLIENT_VERSION = "1.2.8";
 
-  private static final String _USAGE = "java -jar FantasyFootballServer.jar standalone\n"
-      + "java -jar FantasyFootballServer.jar standalone initDb\n"
-      + "java -jar FantasyFootballServer.jar fumbbl\n"
-      + "java -jar FantasyFootballServer.jar fumbbl initDb\n";
+  private static final String _USAGE =
+    "java -jar FantasyFootballServer.jar standalone\n"
+    + "java -jar FantasyFootballServer.jar standalone initDb\n"
+    + "java -jar FantasyFootballServer.jar fumbbl\n"
+    + "java -jar FantasyFootballServer.jar fumbbl initDb\n";
 
   private ServerMode fMode;
   private DbQueryFactory fDbQueryFactory;

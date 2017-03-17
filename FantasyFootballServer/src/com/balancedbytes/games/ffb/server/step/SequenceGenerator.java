@@ -411,11 +411,13 @@ public class SequenceGenerator {
 
     List<IStep> endGameSequence = new ArrayList<IStep>();
 
-    add(endGameSequence, StepId.INIT_END_GAME, pGameState, createParameterSet(StepParameterKey.GOTO_LABEL_ON_END, IStepLabel.END_GAME));
+    StepParameterSet initEndGameParameters = createParameterSet(StepParameterKey.GOTO_LABEL_ON_END, IStepLabel.END_GAME);
+    addParameter(initEndGameParameters, StepParameterKey.ADMIN_MODE, adminMode);
+    add(endGameSequence, StepId.INIT_END_GAME, pGameState, initEndGameParameters);
 
     add(endGameSequence, StepId.PENALTY_SHOOTOUT, pGameState);
-    add(endGameSequence, StepId.MVP, pGameState, createParameterSet(StepParameterKey.ADMIN_MODE, adminMode));
-    add(endGameSequence, StepId.WINNINGS, pGameState, createParameterSet(StepParameterKey.ADMIN_MODE, adminMode));
+    add(endGameSequence, StepId.MVP, pGameState);
+    add(endGameSequence, StepId.WINNINGS, pGameState);
     add(endGameSequence, StepId.FAN_FACTOR, pGameState);
     add(endGameSequence, StepId.PLAYER_LOSS, pGameState);
 

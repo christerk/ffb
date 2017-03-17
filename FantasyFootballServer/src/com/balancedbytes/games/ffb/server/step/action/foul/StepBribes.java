@@ -36,8 +36,7 @@ import com.eclipsesource.json.JsonValue;
  * 
  * Needs to be initialized with stepParameter GOTO_LABEL_ON_END.
  * 
- * Sets stepParameter FOULER_HAS_BALL for all steps on the stack. Sets
- * stepParameter ARGUE_THE_CALL_SUCCESSFUL for all steps on the stack.
+ * Sets stepParameter FOULER_HAS_BALL for all steps on the stack. Sets stepParameter ARGUE_THE_CALL_SUCCESSFUL for all steps on the stack.
  * 
  * @author Kalimar
  */
@@ -62,11 +61,11 @@ public class StepBribes extends AbstractStep {
     if (pParameterSet != null) {
       for (StepParameter parameter : pParameterSet.values()) {
         switch (parameter.getKey()) {
-        case GOTO_LABEL_ON_END:
-          fGotoLabelOnEnd = (String) parameter.getValue();
-          break;
-        default:
-          break;
+          case GOTO_LABEL_ON_END:
+            fGotoLabelOnEnd = (String) parameter.getValue();
+            break;
+          default:
+            break;
         }
       }
     }
@@ -88,24 +87,22 @@ public class StepBribes extends AbstractStep {
       Game game = getGameState().getGame();
       ActingPlayer actingPlayer = game.getActingPlayer();
       switch (pReceivedCommand.getId()) {
-      case CLIENT_ARGUE_THE_CALL:
-        ClientCommandArgueTheCall argueTheCallCommand = (ClientCommandArgueTheCall) pReceivedCommand
-            .getCommand();
-        fArgueTheCallChoice = argueTheCallCommand.hasPlayerId(actingPlayer.getPlayerId());
-        fArgueTheCallSuccessful = null;
-        commandStatus = StepCommandStatus.EXECUTE_STEP;
-        break;
-      case CLIENT_USE_INDUCEMENT:
-        ClientCommandUseInducement inducementCommand = (ClientCommandUseInducement) pReceivedCommand
-            .getCommand();
-        if (InducementType.BRIBES == inducementCommand.getInducementType()) {
-          fBribesChoice = inducementCommand.hasPlayerId(actingPlayer.getPlayerId());
-          fBribeSuccessful = null;
-        }
-        commandStatus = StepCommandStatus.EXECUTE_STEP;
-        break;
-      default:
-        break;
+        case CLIENT_ARGUE_THE_CALL:
+          ClientCommandArgueTheCall argueTheCallCommand = (ClientCommandArgueTheCall) pReceivedCommand.getCommand();
+          fArgueTheCallChoice = argueTheCallCommand.hasPlayerId(actingPlayer.getPlayerId());
+          fArgueTheCallSuccessful = null;
+          commandStatus = StepCommandStatus.EXECUTE_STEP;
+          break;
+        case CLIENT_USE_INDUCEMENT:
+          ClientCommandUseInducement inducementCommand = (ClientCommandUseInducement) pReceivedCommand.getCommand();
+          if (InducementType.BRIBES == inducementCommand.getInducementType()) {
+            fBribesChoice = inducementCommand.hasPlayerId(actingPlayer.getPlayerId());
+            fBribeSuccessful = null;
+          }
+          commandStatus = StepCommandStatus.EXECUTE_STEP;
+          break;
+        default:
+          break;
       }
     }
     if (commandStatus == StepCommandStatus.EXECUTE_STEP) {
@@ -117,12 +114,30 @@ public class StepBribes extends AbstractStep {
   private void executeStep() {
     Game game = getGameState().getGame();
     ActingPlayer actingPlayer = game.getActingPlayer();
-    if (fArgueTheCallChoice == null) {
+    if (fBribesChoice == null) {
+      askForBribes();
+    }
+    if ((fBribesChoice != null) && fBribesChoice && (fBribeSuccessful == null)) {
+      Team team = game.isHomePlaying() ? game.getTeamHome() : game.getTeamAway();
+      if (UtilServerInducementUse.useInducement(getGameState(), team, InducementType.BRIBES, 1)) {
+        int roll = getGameState().getDiceRoller().rollBribes();
+        fBribeSuccessful = DiceInterpreter.getInstance().isBribesSuccessful(roll);
+        getResult().addReport(new ReportBribesRoll(actingPlayer.getPlayerId(), fBribeSuccessful, roll));
+        if (!fBribeSuccessful) {
+          askForBribes();
+        }
+      }
+    }
+    if (((fBribeSuccessful != null) && fBribeSuccessful)) {
+      getResult().setNextAction(StepAction.GOTO_LABEL, fGotoLabelOnEnd);
+      return;
+    }
+    if ((fBribesChoice != null) && (fArgueTheCallChoice == null)) {
       boolean foulerHasBall = game.getFieldModel().getBallCoordinate().equals(game.getFieldModel().getPlayerCoordinate(actingPlayer.getPlayer()));
       publishParameter(new StepParameter(StepParameterKey.FOULER_HAS_BALL, foulerHasBall));
       askForArgueTheCall();
     }
-    if ((fArgueTheCallChoice != null) && fArgueTheCallChoice) {
+    if ((fBribesChoice != null) && (fArgueTheCallChoice != null) && fArgueTheCallChoice) {
       int roll = getGameState().getDiceRoller().rollArgueTheCall();
       fArgueTheCallSuccessful = DiceInterpreter.getInstance().isArgueTheCallSuccessful(roll);
       boolean coachBanned = DiceInterpreter.getInstance().isCoachBanned(roll);
@@ -131,29 +146,7 @@ public class StepBribes extends AbstractStep {
         game.getTurnData().setCoachBanned(true);
       }
     }
-    if ((fBribesChoice == null) && (fArgueTheCallChoice != null)) {
-      askForBribes();
-    }
-    if ((fArgueTheCallChoice != null) && (fBribesChoice != null)) {
-      if (fBribesChoice) {
-        if (fBribeSuccessful == null) {
-          Team team = game.isHomePlaying() ? game.getTeamHome() : game.getTeamAway();
-          if (UtilServerInducementUse.useInducement(getGameState(), team, InducementType.BRIBES, 1)) {
-            int roll = getGameState().getDiceRoller().rollBribes();
-            fBribeSuccessful = DiceInterpreter.getInstance().isBribesSuccessful(roll);
-            getResult().addReport(new ReportBribesRoll(actingPlayer.getPlayerId(), fBribeSuccessful, roll));
-            if (!fBribeSuccessful) {
-              askForBribes();
-            }
-          }
-        }
-      }
-    }
-    if (((fBribeSuccessful != null) && fBribeSuccessful)) {
-      getResult().setNextAction(StepAction.GOTO_LABEL, fGotoLabelOnEnd);
-      return;
-    }
-    if ((fArgueTheCallChoice != null) && (fBribesChoice != null)) {
+    if ((fBribesChoice != null) && (fArgueTheCallChoice != null)) {
       publishParameter(new StepParameter(StepParameterKey.ARGUE_THE_CALL_SUCCESSFUL, (fArgueTheCallSuccessful != null) ? fArgueTheCallSuccessful : false));
       getResult().setNextAction(StepAction.NEXT_STEP);
     }
@@ -161,16 +154,14 @@ public class StepBribes extends AbstractStep {
 
   private void askForBribes() {
     fBribesChoice = false;
-    if ((fArgueTheCallSuccessful == null) || !fArgueTheCallSuccessful) {
-      Game game = getGameState().getGame();
-      ActingPlayer actingPlayer = game.getActingPlayer();
-      if (game.getTurnData().getInducementSet().hasUsesLeft(InducementType.BRIBES)) {
-        Team team = game.isHomePlaying() ? game.getTeamHome() : game.getTeamAway();
-        DialogBribesParameter dialogParameter = new DialogBribesParameter(team.getId(), 1);
-        dialogParameter.addPlayerId(actingPlayer.getPlayerId());
-        UtilServerDialog.showDialog(getGameState(), dialogParameter);
-        fBribesChoice = null;
-      }
+    Game game = getGameState().getGame();
+    ActingPlayer actingPlayer = game.getActingPlayer();
+    if (game.getTurnData().getInducementSet().hasUsesLeft(InducementType.BRIBES)) {
+      Team team = game.isHomePlaying() ? game.getTeamHome() : game.getTeamAway();
+      DialogBribesParameter dialogParameter = new DialogBribesParameter(team.getId(), 1);
+      dialogParameter.addPlayerId(actingPlayer.getPlayerId());
+      UtilServerDialog.showDialog(getGameState(), dialogParameter);
+      fBribesChoice = null;
     }
   }
 

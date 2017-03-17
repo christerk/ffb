@@ -2,19 +2,15 @@ package com.balancedbytes.games.ffb.server.step.game.end;
 
 import com.balancedbytes.games.ffb.ReRolledAction;
 import com.balancedbytes.games.ffb.dialog.DialogWinningsReRollParameter;
-import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.GameResult;
 import com.balancedbytes.games.ffb.report.ReportWinningsRoll;
 import com.balancedbytes.games.ffb.server.GameState;
-import com.balancedbytes.games.ffb.server.IServerJsonOption;
 import com.balancedbytes.games.ffb.server.net.ReceivedCommand;
 import com.balancedbytes.games.ffb.server.step.AbstractStepWithReRoll;
 import com.balancedbytes.games.ffb.server.step.StepAction;
 import com.balancedbytes.games.ffb.server.step.StepCommandStatus;
 import com.balancedbytes.games.ffb.server.step.StepId;
-import com.balancedbytes.games.ffb.server.step.StepParameter;
-import com.balancedbytes.games.ffb.server.step.StepParameterSet;
 import com.balancedbytes.games.ffb.server.util.UtilServerDialog;
 import com.balancedbytes.games.ffb.util.UtilPlayer;
 import com.eclipsesource.json.JsonObject;
@@ -29,30 +25,12 @@ import com.eclipsesource.json.JsonValue;
  */
 public final class StepWinnings extends AbstractStepWithReRoll {
 
-  private boolean fAdminMode;
-
   public StepWinnings(GameState pGameState) {
     super(pGameState);
   }
 
   public StepId getId() {
     return StepId.WINNINGS;
-  }
-
-  @Override
-  public void init(StepParameterSet pParameterSet) {
-    if (pParameterSet != null) {
-      for (StepParameter parameter : pParameterSet.values()) {
-        switch (parameter.getKey()) {
-        // mandatory
-        case ADMIN_MODE:
-          fAdminMode = (parameter.getValue() != null) ? (Boolean) parameter.getValue() : false;
-          break;
-        default:
-          break;
-        }
-      }
-    }
   }
 
   @Override
@@ -75,7 +53,7 @@ public final class StepWinnings extends AbstractStepWithReRoll {
     Game game = getGameState().getGame();
     if ((getReRolledAction() == null) || ((getReRolledAction() == ReRolledAction.WINNINGS) && (getReRollSource() != null))) {
       ReportWinningsRoll reportWinnings = rollWinnings();
-      if (fAdminMode) {
+      if (game.isAdminMode()) {
         // roll winnings, reroll on a 1 or 2 -->
         GameResult gameResult = game.getGameResult();
         int scoreDiffHome = gameResult.getTeamResultHome().getScore() - gameResult.getTeamResultAway().getScore();
@@ -89,9 +67,6 @@ public final class StepWinnings extends AbstractStepWithReRoll {
     }
     if (game.getDialogParameter() == null) {
       getResult().addReport(concedeWinnings());
-      if (fAdminMode) {
-        game.setAdminMode(true);
-      }
       getResult().setNextAction(StepAction.NEXT_STEP);
     }
   }
@@ -153,15 +128,12 @@ public final class StepWinnings extends AbstractStepWithReRoll {
   @Override
   public JsonObject toJsonValue() {
     JsonObject jsonObject = super.toJsonValue();
-    IServerJsonOption.ADMIN_MODE.addTo(jsonObject, fAdminMode);
     return jsonObject;
   }
 
   @Override
   public StepWinnings initFrom(JsonValue pJsonValue) {
     super.initFrom(pJsonValue);
-    JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-    fAdminMode = IServerJsonOption.ADMIN_MODE.getFrom(jsonObject);
     return this;
   }
 

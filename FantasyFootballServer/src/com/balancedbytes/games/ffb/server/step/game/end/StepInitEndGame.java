@@ -24,11 +24,15 @@ import com.eclipsesource.json.JsonValue;
 /**
  * Initialization step in end game sequence.
  * 
+ * Needs to be initialized with stepParameter GOTO_LABEL_ON_END.
+ * May be initialized with stepParameter ADMIN_MODE.
+ * 
  * @author Kalimar
  */
 public final class StepInitEndGame extends AbstractStep {
 
   private String fGotoLabelOnEnd;
+  private boolean fAdminMode;
 
   public StepInitEndGame(GameState pGameState) {
     super(pGameState);
@@ -43,9 +47,13 @@ public final class StepInitEndGame extends AbstractStep {
     if (pParameterSet != null) {
       for (StepParameter parameter : pParameterSet.values()) {
         switch (parameter.getKey()) {
-        // mandatory
+          // mandatory
           case GOTO_LABEL_ON_END:
             fGotoLabelOnEnd = (String) parameter.getValue();
+            break;
+          // optional
+          case ADMIN_MODE:
+            fAdminMode = (parameter.getValue() != null) ? (Boolean) parameter.getValue() : false;
             break;
           default:
             break;
@@ -84,6 +92,7 @@ public final class StepInitEndGame extends AbstractStep {
     }
     game.setTurnMode(TurnMode.END_GAME);
     game.setConcessionPossible(false);
+    game.setAdminMode(fAdminMode);
     handlePoisonedPlayers();
     getResult().setNextAction(StepAction.NEXT_STEP);
   }
@@ -106,6 +115,7 @@ public final class StepInitEndGame extends AbstractStep {
   @Override
   public JsonObject toJsonValue() {
     JsonObject jsonObject = super.toJsonValue();
+    IServerJsonOption.ADMIN_MODE.addTo(jsonObject, fAdminMode);
     IServerJsonOption.GOTO_LABEL_ON_END.addTo(jsonObject, fGotoLabelOnEnd);
     return jsonObject;
   }
@@ -114,6 +124,8 @@ public final class StepInitEndGame extends AbstractStep {
   public StepInitEndGame initFrom(JsonValue pJsonValue) {
     super.initFrom(pJsonValue);
     JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
+    Boolean adminMode = IServerJsonOption.ADMIN_MODE.getFrom(jsonObject);
+    fAdminMode = (adminMode != null) ? adminMode : false;
     fGotoLabelOnEnd = IServerJsonOption.GOTO_LABEL_ON_END.getFrom(jsonObject);
     return this;
   }

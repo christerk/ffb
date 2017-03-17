@@ -24,8 +24,6 @@ import com.balancedbytes.games.ffb.server.step.AbstractStep;
 import com.balancedbytes.games.ffb.server.step.StepAction;
 import com.balancedbytes.games.ffb.server.step.StepCommandStatus;
 import com.balancedbytes.games.ffb.server.step.StepId;
-import com.balancedbytes.games.ffb.server.step.StepParameter;
-import com.balancedbytes.games.ffb.server.step.StepParameterSet;
 import com.balancedbytes.games.ffb.server.step.UtilServerSteps;
 import com.balancedbytes.games.ffb.server.util.UtilServerDialog;
 import com.balancedbytes.games.ffb.util.ArrayTool;
@@ -36,8 +34,6 @@ import com.eclipsesource.json.JsonValue;
 
 /**
  * Step in end game sequence to determine the MVP.
- * 
- * Needs to be initialized with stepParameter ADMIN_MODE.
  * 
  * @author Kalimar
  */
@@ -51,7 +47,6 @@ public final class StepMvp extends AbstractStep {
   private int fNrOfAwayChoices;
   private String[] fAwayPlayersNominated;
   private List<String> fAwayPlayersMvp;
-  private boolean fAdminMode;
   
   public StepMvp(GameState pGameState) {
     super(pGameState);
@@ -61,22 +56,6 @@ public final class StepMvp extends AbstractStep {
 
   public StepId getId() {
     return StepId.MVP;
-  }
-  
-  @Override
-  public void init(StepParameterSet pParameterSet) {
-    if (pParameterSet != null) {
-      for (StepParameter parameter : pParameterSet.values()) {
-        switch (parameter.getKey()) {
-        // mandatory
-        case ADMIN_MODE:
-          fAdminMode = (parameter.getValue() != null) ? (Boolean) parameter.getValue() : false;
-          break;
-        default:
-          break;
-        }
-      }
-    }
   }
 
   @Override
@@ -138,7 +117,7 @@ public final class StepMvp extends AbstractStep {
     }
     
     int mvpNominations = UtilGameOption.getIntOption(game, GameOptionId.MVP_NOMINATIONS);
-    if ((mvpNominations > 0) || fAdminMode) {
+    if ((mvpNominations > 0) || game.isAdminMode()) {
       
       if (fHomePlayersNominated != null) {
         fHomePlayersMvp.add(getGameState().getDiceRoller().randomPlayerId(fHomePlayersNominated));
@@ -226,9 +205,6 @@ public final class StepMvp extends AbstractStep {
         mvpReport.addPlayerIdAway(playerIdAway);
       }
       getResult().addReport(mvpReport);
-      if (fAdminMode) {
-        game.setAdminMode(true);
-      }
       getResult().setNextAction(StepAction.NEXT_STEP);
     }
 
@@ -257,7 +233,6 @@ public final class StepMvp extends AbstractStep {
   @Override
   public JsonObject toJsonValue() {
     JsonObject jsonObject = super.toJsonValue();
-    IServerJsonOption.ADMIN_MODE.addTo(jsonObject, fAdminMode);
     IServerJsonOption.NR_OF_AWAY_CHOICES.addTo(jsonObject, fNrOfAwayChoices);
     IServerJsonOption.NR_OF_AWAY_MVPS.addTo(jsonObject, fNrOfAwayMvps);
     IServerJsonOption.NR_OF_HOME_CHOICES.addTo(jsonObject, fNrOfHomeChoices);
@@ -273,7 +248,6 @@ public final class StepMvp extends AbstractStep {
   public StepMvp initFrom(JsonValue pJsonValue) {
     super.initFrom(pJsonValue);
     JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-    fAdminMode = IServerJsonOption.ADMIN_MODE.getFrom(jsonObject);
     fNrOfAwayChoices = IServerJsonOption.NR_OF_AWAY_CHOICES.getFrom(jsonObject);
     fNrOfAwayMvps = IServerJsonOption.NR_OF_AWAY_MVPS.getFrom(jsonObject);
     fNrOfHomeChoices = IServerJsonOption.NR_OF_HOME_CHOICES.getFrom(jsonObject);
