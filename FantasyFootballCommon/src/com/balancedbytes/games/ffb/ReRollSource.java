@@ -16,7 +16,8 @@ public enum ReRollSource implements IEnumWithName {
   PASS(Skill.PASS),
   WINNINGS("Winnings"),
   LONER(Skill.LONER),
-  LEADER(Skill.LEADER);
+  LEADER(Skill.LEADER),
+  MONSTROUS_MOUTH(Skill.MOUNSTROUS_MOUTH);
 
   private int fId;
   private String fName;

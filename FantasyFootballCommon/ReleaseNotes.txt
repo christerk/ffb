@@ -5,6 +5,7 @@
 
 - BB2016 Rule: Petty Cash does not affect TV (default options forceTreasuryToPettyCash=true, pettyCashAffectsTv=false)
 - BB2016 Rule: No wizard available (default option wizardAvailable=false)
+- BB2016 Rule: Skill "Monstrous Mouth" implemented
 
 [b]Bugfixes:[/b]
 

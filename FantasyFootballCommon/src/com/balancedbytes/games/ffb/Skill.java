@@ -399,6 +399,8 @@ public enum Skill implements IEnumWithName {
   //  you only modify one of the dice rolls, so if you decide to use Mighty Blow
   //  to modify the Armour roll, you may not modify the Injury roll as well.
   //  Mighty Blow cannot be used with the Stab or Chainsaw skills.
+  
+  MOUNSTROUS_MOUTH("Monstrous Mouth", SkillCategory.EXTRAORDINARY),
 
   MULTIPLE_BLOCK("Multiple Block", SkillCategory.STRENGTH),
   //  At the start of a Block Action a player who is adjacent to at least two
