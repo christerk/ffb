@@ -5,7 +5,6 @@ import org.eclipse.jetty.websocket.api.Session;
 import com.balancedbytes.games.ffb.net.NetCommandId;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandReplay;
 import com.balancedbytes.games.ffb.server.FantasyFootballServer;
-import com.balancedbytes.games.ffb.server.GameCacheMode;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.net.ReceivedCommand;
 import com.balancedbytes.games.ffb.server.net.SessionManager;
@@ -58,7 +57,7 @@ public class ServerCommandHandlerReplay extends ServerCommandHandler {
     GameState gameState = getServer().getGameCache().getGameStateById(gameId);
     if (gameState == null) {
       gameState = getServer().getGameCache().queryFromDb(gameId);
-      getServer().getGameCache().add(gameState, GameCacheMode.REPLAY_GAME);
+      getServer().getGameCache().addGame(gameState);
     }
     
     if (gameState != null) {

@@ -5,8 +5,8 @@ import java.io.IOException;
 import org.eclipse.jetty.websocket.api.Session;
 
 import com.balancedbytes.games.ffb.FantasyFootballException;
+import com.balancedbytes.games.ffb.GameStatus;
 import com.balancedbytes.games.ffb.server.FantasyFootballServer;
-import com.balancedbytes.games.ffb.server.GameCacheMode;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.IServerProperty;
 import com.balancedbytes.games.ffb.server.net.ReceivedCommand;
@@ -73,7 +73,8 @@ public class ServerRequestLoadReplay extends ServerRequest {
     }
     if (gameState != null) {
       if (fMode == LOAD_GAME) {
-        server.getGameCache().add(gameState, GameCacheMode.REPLAY_GAME);
+        gameState.setStatus(GameStatus.LOADING);
+        server.getGameCache().addGame(gameState);
         InternalServerCommandReplayLoaded replayLoadedCommand = new InternalServerCommandReplayLoaded(getGameId(), getReplayToCommandNr());
         server.getCommunication().handleCommand(new ReceivedCommand(replayLoadedCommand, getSession()));
       }
@@ -81,8 +82,9 @@ public class ServerRequestLoadReplay extends ServerRequest {
         server.getCommunication().handleCommand(new InternalServerCommandDeleteGame(getGameId(), false));
       }
       if (fMode == UPLOAD_GAME) {
-        server.getGameCache().add(gameState, GameCacheMode.REPLAY_GAME);
-        InternalServerCommandUploadGame uploadCommand = new InternalServerCommandUploadGame(gameState.getId());
+        gameState.setStatus(GameStatus.LOADING);
+        server.getGameCache().addGame(gameState);
+        InternalServerCommandUploadGame uploadCommand = new InternalServerCommandUploadGame(getGameId());
         server.getCommunication().handleCommand(new ReceivedCommand(uploadCommand, getSession()));
       }
     }

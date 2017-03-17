@@ -18,11 +18,16 @@ public class DialogBuyInducementsHandler extends DialogHandler {
   public void showDialog() {
 
     Game game = getClient().getGame();
-    DialogBuyInducementsParameter dialogBuyInducementsParameter = (DialogBuyInducementsParameter) game.getDialogParameter();
+    DialogBuyInducementsParameter dialogParameter = (DialogBuyInducementsParameter) game.getDialogParameter();
 
-    if (dialogBuyInducementsParameter != null) {
-      if ((ClientMode.PLAYER == getClient().getMode()) && (game.getTeamHome().getId().equals(dialogBuyInducementsParameter.getTeamId()))) {
-        setDialog(new DialogBuyInducements(getClient(), dialogBuyInducementsParameter.getTeamId(), dialogBuyInducementsParameter.getAvailableGold()));
+    if (dialogParameter != null) {
+      if ((ClientMode.PLAYER == getClient().getMode()) && (game.getTeamHome().getId().equals(dialogParameter.getTeamId()))) {
+        setDialog(new DialogBuyInducements(
+          getClient(),
+          dialogParameter.getTeamId(),
+          dialogParameter.getAvailableGold(),
+          dialogParameter.isWizardAvailable()
+        ));
         getDialog().showDialog(this);
       } else {
         showStatus("Buy Inducements", "Waiting for coach to buy Inducements.", StatusType.WAITING);

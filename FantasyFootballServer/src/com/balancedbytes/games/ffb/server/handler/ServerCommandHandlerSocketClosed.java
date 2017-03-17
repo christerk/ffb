@@ -69,7 +69,7 @@ public class ServerCommandHandlerSocketClosed extends ServerCommandHandler {
     	if (ArrayTool.isProvided(sessions)) {
     		getServer().getCommunication().sendLeave(sessions, coach, mode, spectators);
     	} else {
-        getServer().getGameCache().removeGameStateFromCache(gameState);
+        getServer().getGameCache().removeGame(gameState);
     	}
 
     }

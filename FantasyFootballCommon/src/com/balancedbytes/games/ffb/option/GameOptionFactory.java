@@ -15,12 +15,12 @@ import com.eclipsesource.json.JsonValue;
 public class GameOptionFactory {
 
   // LRB6 ------------------------------
-  // ARGUE_THE_CALL false
-  // EXPENSIVE_MISTAKES false
-  // FORCE_TREASURY_TO_PETTY_CASH false
-  // MVP_NOMINATIONS 0
-  // PETTY_CASH_AFFECTS_TV true
-  // PILING_ON_USES_A_TEAM_REROLL false
+  // ARGUE_THE_CALL                false
+  // FORCE_TREASURY_TO_PETTY_CASH  false
+  // MVP_NOMINATIONS               0
+  // PETTY_CASH_AFFECTS_TV         true
+  // PILING_ON_USES_A_TEAM_REROLL  false
+  // WIZARD_AVAILABLE              true
   // -----------------------------------
 
   public IGameOption createGameOption(GameOptionId pOptionId) {
@@ -44,10 +44,6 @@ public class GameOptionFactory {
         return new GameOptionBoolean(GameOptionId.CLAW_DOES_NOT_STACK)
           .setDefault(false)
           .setMessageTrue("Claw does not stack with other skills that modify armour rolls.");
-      case EXPENSIVE_MISTAKES:
-        return new GameOptionBoolean(GameOptionId.EXPENSIVE_MISTAKES)
-          .setDefault(true)
-          .setMessageFalse("There are no expensive mistakes");
       case EXTRA_MVP:
         return new GameOptionBoolean(GameOptionId.EXTRA_MVP)
           .setDefault(false)
@@ -163,6 +159,10 @@ public class GameOptionFactory {
         return new GameOptionBoolean(GameOptionId.USE_PREDEFINED_INDUCEMENTS)
           .setDefault(false)
           .setMessageTrue("Inducements are predefined.");
+      case WIZARD_AVAILABLE:
+        return new GameOptionBoolean(GameOptionId.WIZARD_AVAILABLE)
+          .setDefault(false)
+          .setMessageTrue("A wizard may be bought as an inducement.");
       default:
         return null;
     }

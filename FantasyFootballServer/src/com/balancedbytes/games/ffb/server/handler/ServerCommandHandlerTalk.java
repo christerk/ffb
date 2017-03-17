@@ -369,13 +369,16 @@ public class ServerCommandHandlerTalk extends ServerCommandHandler {
 
   private void handleOptionsCommand(GameState pGameState, ClientCommandTalk pTalkCommand) {
     Game game = pGameState.getGame();
-    IGameOption[] gameOptions = game.getOptions().getOptions();
-    Arrays.sort(gameOptions, new Comparator<IGameOption>() {
+    List<IGameOption> optionList = new ArrayList<IGameOption>();
+    for (GameOptionId optionId : GameOptionId.values()) {
+      optionList.add(game.getOptions().getOptionWithDefault(optionId));
+    }
+    Collections.sort(optionList, new Comparator<IGameOption>() {
       public int compare(IGameOption pO1, IGameOption pO2) {
         return pO1.getId().getName().compareTo(pO2.getId().getName());
       }
     });
-    for (IGameOption option : gameOptions) {
+    for (IGameOption option : optionList) {
       StringBuilder info = new StringBuilder();
       info.append("Option ").append(option.getId().getName()).append(" = ").append(option.getValueAsString());
       getServer().getCommunication().sendPlayerTalk(pGameState, null, info.toString());
@@ -390,8 +393,7 @@ public class ServerCommandHandlerTalk extends ServerCommandHandler {
     if ((commands == null) || (commands.length <= 2)) {
       return;
     }
-    Team team = (sessionManager.getSessionOfHomeCoach(pGameState) == pSession) ? game.getTeamHome() : game
-        .getTeamAway();
+    Team team = (sessionManager.getSessionOfHomeCoach(pGameState) == pSession) ? game.getTeamHome() : game.getTeamAway();
     for (Player player : findPlayersInCommand(team, commands, 2)) {
       if ("rsv".equalsIgnoreCase(commands[1])) {
         putPlayerIntoBox(pGameState, player, new PlayerState(PlayerState.RESERVE), "Reserve", null);

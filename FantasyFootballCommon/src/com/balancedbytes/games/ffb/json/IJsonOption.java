@@ -454,6 +454,7 @@ public interface IJsonOption {
                    JsonIntOption WINNINGS_ROLL_AWAY = new JsonIntOption("winningsRollAway");
                    JsonIntOption WINNINGS_ROLL_HOME = new JsonIntOption("winningsRollHome");
                JsonBooleanOption WITH_BALL = new JsonBooleanOption("withBall");
+               JsonBooleanOption WIZARD_AVAILABLE = new JsonBooleanOption("wizardAvailable");
           JsonEnumWithNameOption WIZARD_SPELL = new JsonEnumWithNameOption("wizardSpell", new SpecialEffectFactory());
           
 }

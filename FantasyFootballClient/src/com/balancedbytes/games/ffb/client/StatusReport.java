@@ -532,10 +532,13 @@ public class StatusReport {
       println(getIndent(), TextStyle.BOLD, "Transfer Petty Cash");
     }
     print(getIndent() + 1, "Team ");
+    Team team = null;
     if (game.getTeamHome().getId().equals(pReport.getTeamId())) {
       print(getIndent() + 1, TextStyle.HOME, game.getTeamHome().getName());
+      team = game.getTeamHome();
     } else {
       print(getIndent() + 1, TextStyle.AWAY, game.getTeamAway().getName());
+      team = game.getTeamAway();
     }
     StringBuilder status = new StringBuilder();
     status.append(" transfers ");
@@ -547,6 +550,14 @@ public class StatusReport {
     }
     status.append(" from the Treasury into Petty Cash.");
     println(getIndent() + 1, status.toString());
+    if (pReport.getGold() > team.getTreasury()) {
+      status = new StringBuilder();
+      status.append("They received an extra ");
+      status.append(StringTool.formatThousands(pReport.getGold() - team.getTreasury()));
+      status.append(" gold for being the underdog.");
+      println(getIndent() + 1, status.toString());
+    }
+
   }
 
   public void reportInducementsBought(ReportInducementsBought pReport) {

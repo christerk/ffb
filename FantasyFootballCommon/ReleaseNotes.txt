@@ -1,11 +1,14 @@
 
 [size=18][b]Release Notes Version 1.2.8[/b][/size]
 
-[b]Improvements:[/b]
+[b]Changes:[/b]
 
-- BB2016 Rule: Petty Cash does not affect TV (default forceTreasuryToPettyCash=true, pettyCashAffectsTv=false)
-- BB2016 Rule: Expensive Mistakes (default expensiveMistakes=true)
+- BB2016 Rule: Petty Cash does not affect TV (default options forceTreasuryToPettyCash=true, pettyCashAffectsTv=false)
+- BB2016 Rule: No wizard available (default option wizardAvailable=false)
 
 [b]Bugfixes:[/b]
 
+- #31 /options doesn't return list of options
+- #46 MNG eligible for the MVP
 - switched order of "Argue the Call" and "Bribes" around (first Bribes, then Argue)
+- admin commands concede and upload have no effect

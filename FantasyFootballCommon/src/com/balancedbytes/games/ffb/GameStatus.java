@@ -14,7 +14,10 @@ public enum GameStatus implements IEnumWithName {
   ACTIVE("active", "A"),
   PAUSED("paused", "P"),
   FINISHED("finished", "F"),
-  UPLOADED("uploaded", "U");
+  UPLOADED("uploaded", "U"),
+  
+  LOADING("loading", "L"),  // not written to db
+  REPLAYING("replaying", "R");  // not written to db
   
   private String fName;
   private String fTypeString;

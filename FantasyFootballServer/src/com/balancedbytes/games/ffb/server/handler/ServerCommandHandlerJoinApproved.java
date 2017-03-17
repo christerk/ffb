@@ -60,8 +60,7 @@ public class ServerCommandHandlerJoinApproved extends ServerCommandHandler {
         boolean testing = (joinApprovedCommand.getGameName().startsWith(_TEST_PREFIX) || getServer().getMode() == ServerMode.STANDALONE);
         gameState = gameCache.createGameState(testing ? GameCacheMode.START_TEST_GAME : GameCacheMode.START_GAME);
         gameCache.mapGameNameToId(joinApprovedCommand.getGameName(), gameState.getId());
-      }
-      
+      }      
     }
 
     if (gameState != null) {
@@ -173,7 +172,7 @@ public class ServerCommandHandlerJoinApproved extends ServerCommandHandler {
     if (gameState == null) {
       return null;
     }
-    gameCache.add(gameState, GameCacheMode.LOAD_GAME);
+    gameCache.addGame(gameState);
     gameCache.queueDbUpdate(gameState, true);  // persist status update
     return gameState;
   }

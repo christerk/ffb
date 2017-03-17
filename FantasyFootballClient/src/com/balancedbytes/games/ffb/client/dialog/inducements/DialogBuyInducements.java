@@ -59,20 +59,20 @@ public class DialogBuyInducements extends Dialog implements ActionListener, KeyL
 	private MercenaryTableModel fTableModelMercenaries;
 	private Team fTeam;
 
-	public DialogBuyInducements(FantasyFootballClient pClient, String pTeamId, int pAvailableGold) {
+	public DialogBuyInducements(FantasyFootballClient client, String teamId, int availableGold, boolean wizardAvailable) {
 
-		super(pClient, "Buy Inducements", true);
+		super(client, "Buy Inducements", true);
 
-		fTeamId = pTeamId;
+		fTeamId = teamId;
 
-		if (pClient.getGame().getTeamHome().getId().equals(fTeamId)) {
-			fRoster = pClient.getGame().getTeamHome().getRoster();
-			fTeam = pClient.getGame().getTeamHome();
+		if (client.getGame().getTeamHome().getId().equals(fTeamId)) {
+			fRoster = client.getGame().getTeamHome().getRoster();
+			fTeam = client.getGame().getTeamHome();
 		} else {
-			fRoster = pClient.getGame().getTeamAway().getRoster();
-			fTeam = pClient.getGame().getTeamAway();
+			fRoster = client.getGame().getTeamAway().getRoster();
+			fTeam = client.getGame().getTeamAway();
 		}
-		fStartGold = fAvailableGold = pAvailableGold;
+		fStartGold = fAvailableGold = availableGold;
 		
 		fGoldPanel = new JPanel();
 		fGoldPanel.setLayout(new BoxLayout(fGoldPanel, BoxLayout.X_AXIS));
@@ -91,7 +91,7 @@ public class DialogBuyInducements extends Dialog implements ActionListener, KeyL
 
 		fGoldPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 0, 10));
 		
-		JPanel leftPanel = buildLeftPanel();
+		JPanel leftPanel = buildLeftPanel(wizardAvailable);
 		JPanel rightPanel = buildRightPanel();
 
 		JPanel centerPanel = new JPanel();
@@ -142,7 +142,7 @@ public class DialogBuyInducements extends Dialog implements ActionListener, KeyL
 		return freeSlots;
 	}
 
-	private JPanel buildLeftPanel() {
+	private JPanel buildLeftPanel(boolean wizardAvailable) {
 
 		int verticalStrut = 10;
 
@@ -163,7 +163,9 @@ public class DialogBuyInducements extends Dialog implements ActionListener, KeyL
 		createPanel(InducementType.MASTER_CHEF, leftPanel, verticalStrut);
 		createPanel(InducementType.IGOR, leftPanel, verticalStrut);
 		createPanel(InducementType.WANDERING_APOTHECARIES, leftPanel, verticalStrut);
-		createPanel(InducementType.WIZARD, leftPanel, 0);
+		if (wizardAvailable) {
+		  createPanel(InducementType.WIZARD, leftPanel, 0);
+		}
 
 		leftPanel.add(Box.createVerticalGlue());
 

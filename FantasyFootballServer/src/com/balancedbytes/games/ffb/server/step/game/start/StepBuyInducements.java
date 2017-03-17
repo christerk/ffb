@@ -47,97 +47,96 @@ import com.eclipsesource.json.JsonValue;
 /**
  * Step in start game sequence to buy inducements.
  * 
- * Expects stepParameter INDUCEMENT_GOLD_AWAY to be set by a preceding step.
- * Expects stepParameter INDUCEMENT_GOLD_HOME to be set by a preceding step.
+ * Expects stepParameter INDUCEMENT_GOLD_AWAY to be set by a preceding step. Expects stepParameter INDUCEMENT_GOLD_HOME to be set by a preceding step.
  *
  * Pushes inducement sequence on the stack.
  * 
  * @author Kalimar
  */
 public final class StepBuyInducements extends AbstractStep {
-	
+
   protected static final int MINIMUM_PETTY_CASH_FOR_INDUCEMENTS = 50000;
-  
+
   private int fInducementGoldHome;
   private int fInducementGoldAway;
-  
+
   private boolean fInducementsSelectedHome;
   private boolean fInducementsSelectedAway;
-  
+
   private int fGoldUsedHome;
   private int fGoldUsedAway;
-  
+
   private boolean fReportedHome;
   private boolean fReportedAway;
-  
-	public StepBuyInducements(GameState pGameState) {
-		super(pGameState);
-	}
-	
-	public StepId getId() {
-		return StepId.BUY_INDUCEMENTS;
-	}
-	
+
+  public StepBuyInducements(GameState pGameState) {
+    super(pGameState);
+  }
+
+  public StepId getId() {
+    return StepId.BUY_INDUCEMENTS;
+  }
+
   @Override
   public boolean setParameter(StepParameter pParameter) {
-		if ((pParameter != null) && !super.setParameter(pParameter)) {
-	  	switch (pParameter.getKey()) {
-				case INDUCEMENT_GOLD_AWAY:
-					fInducementGoldAway = (pParameter.getValue() != null) ? (Integer) pParameter.getValue() : 0;
-					return true;
-				case INDUCEMENT_GOLD_HOME:
-					fInducementGoldHome = (pParameter.getValue() != null) ? (Integer) pParameter.getValue() : 0;
-					return true;
-				default:
-					break;
-	  	}
-		}
-		return false;
+    if ((pParameter != null) && !super.setParameter(pParameter)) {
+      switch (pParameter.getKey()) {
+        case INDUCEMENT_GOLD_AWAY:
+          fInducementGoldAway = (pParameter.getValue() != null) ? (Integer) pParameter.getValue() : 0;
+          return true;
+        case INDUCEMENT_GOLD_HOME:
+          fInducementGoldHome = (pParameter.getValue() != null) ? (Integer) pParameter.getValue() : 0;
+          return true;
+        default:
+          break;
+      }
+    }
+    return false;
   }
-		
-	@Override
-	public void start() {
-		super.start();
-		executeStep();
-	}
-	
-	@Override
+
+  @Override
+  public void start() {
+    super.start();
+    executeStep();
+  }
+
+  @Override
   public StepCommandStatus handleCommand(ReceivedCommand pReceivedCommand) {
     StepCommandStatus commandStatus = super.handleCommand(pReceivedCommand);
-		if (commandStatus == StepCommandStatus.UNHANDLED_COMMAND) {
-			Game game = getGameState().getGame();
-			switch (pReceivedCommand.getId()) {
-	      case CLIENT_BUY_INDUCEMENTS:
-	        ClientCommandBuyInducements buyInducementsCommand = (ClientCommandBuyInducements) pReceivedCommand.getCommand();
-	        if (game.getTeamHome().getId().equals(buyInducementsCommand.getTeamId())) {
-	          game.getTurnDataHome().getInducementSet().add(buyInducementsCommand.getInducementSet());
-	          addStarPlayers(game.getTeamHome(), buyInducementsCommand.getStarPlayerPositionIds());
-	          addMercenaries(game.getTeamHome(), buyInducementsCommand.getMercenaryPositionIds(), buyInducementsCommand.getMercenarySkills());
-	          fGoldUsedHome = fInducementGoldHome - buyInducementsCommand.getAvailableGold();
-	          fInducementsSelectedHome = true;
-	        } else {
-	          game.getTurnDataAway().getInducementSet().add(buyInducementsCommand.getInducementSet());
-	          addStarPlayers(game.getTeamAway(), buyInducementsCommand.getStarPlayerPositionIds());
-	          addMercenaries(game.getTeamAway(), buyInducementsCommand.getMercenaryPositionIds(), buyInducementsCommand.getMercenarySkills());
-	          fGoldUsedAway = fInducementGoldAway - buyInducementsCommand.getAvailableGold();
-	          fInducementsSelectedAway = true;
-	        }
-	        commandStatus = StepCommandStatus.EXECUTE_STEP;
-	        break;
+    if (commandStatus == StepCommandStatus.UNHANDLED_COMMAND) {
+      Game game = getGameState().getGame();
+      switch (pReceivedCommand.getId()) {
+        case CLIENT_BUY_INDUCEMENTS:
+          ClientCommandBuyInducements buyInducementsCommand = (ClientCommandBuyInducements) pReceivedCommand.getCommand();
+          if (game.getTeamHome().getId().equals(buyInducementsCommand.getTeamId())) {
+            game.getTurnDataHome().getInducementSet().add(buyInducementsCommand.getInducementSet());
+            addStarPlayers(game.getTeamHome(), buyInducementsCommand.getStarPlayerPositionIds());
+            addMercenaries(game.getTeamHome(), buyInducementsCommand.getMercenaryPositionIds(), buyInducementsCommand.getMercenarySkills());
+            fGoldUsedHome = fInducementGoldHome - buyInducementsCommand.getAvailableGold();
+            fInducementsSelectedHome = true;
+          } else {
+            game.getTurnDataAway().getInducementSet().add(buyInducementsCommand.getInducementSet());
+            addStarPlayers(game.getTeamAway(), buyInducementsCommand.getStarPlayerPositionIds());
+            addMercenaries(game.getTeamAway(), buyInducementsCommand.getMercenaryPositionIds(), buyInducementsCommand.getMercenarySkills());
+            fGoldUsedAway = fInducementGoldAway - buyInducementsCommand.getAvailableGold();
+            fInducementsSelectedAway = true;
+          }
+          commandStatus = StepCommandStatus.EXECUTE_STEP;
+          break;
         default:
-        	break;
-			}
-		}
-		if (commandStatus == StepCommandStatus.EXECUTE_STEP) {
-			executeStep();
-		}
-		return commandStatus;
-	}
+          break;
+      }
+    }
+    if (commandStatus == StepCommandStatus.EXECUTE_STEP) {
+      executeStep();
+    }
+    return commandStatus;
+  }
 
   private void executeStep() {
-  	if (getGameState() == null) {
-  		return;
-  	}
+    if (getGameState() == null) {
+      return;
+    }
     Game game = getGameState().getGame();
     GameResult gameResult = game.getGameResult();
     int homeTV = gameResult.getTeamResultHome().getTeamValue();
@@ -171,81 +170,95 @@ public final class StepBuyInducements extends AbstractStep {
         }
       }
       if (fInducementsSelectedHome && !fReportedHome) {
-      	fReportedHome = true;
-      	getResult().addReport(generateReport(game.getTeamHome()));
+        fReportedHome = true;
+        getResult().addReport(generateReport(game.getTeamHome()));
       }
       if (fInducementsSelectedAway && !fReportedAway) {
-      	fReportedAway = true;
-      	getResult().addReport(generateReport(game.getTeamAway()));
+        fReportedAway = true;
+        getResult().addReport(generateReport(game.getTeamAway()));
       }
+      boolean wizardAvailable = UtilGameOption.isOptionEnabled(game, GameOptionId.WIZARD_AVAILABLE);
       if (!fInducementsSelectedHome && !fInducementsSelectedAway) {
         if (homeTV > awayTV) {
-          UtilServerDialog.showDialog(getGameState(), new DialogBuyInducementsParameter(game.getTeamHome().getId(), fInducementGoldHome));
+          UtilServerDialog.showDialog(
+            getGameState(),
+            new DialogBuyInducementsParameter(game.getTeamHome().getId(), fInducementGoldHome, wizardAvailable)
+          );
         } else {
-          UtilServerDialog.showDialog(getGameState(), new DialogBuyInducementsParameter(game.getTeamAway().getId(), fInducementGoldAway));
+          UtilServerDialog.showDialog(
+            getGameState(),
+            new DialogBuyInducementsParameter(game.getTeamAway().getId(), fInducementGoldAway, wizardAvailable)
+          );
         }
       } else if (!fInducementsSelectedHome) {
-        UtilServerDialog.showDialog(getGameState(), new DialogBuyInducementsParameter(game.getTeamHome().getId(), fInducementGoldHome));
+        UtilServerDialog.showDialog(
+          getGameState(),
+          new DialogBuyInducementsParameter(game.getTeamHome().getId(), fInducementGoldHome, wizardAvailable)
+        );
       } else if (!fInducementsSelectedAway) {
-        UtilServerDialog.showDialog(getGameState(), new DialogBuyInducementsParameter(game.getTeamAway().getId(), fInducementGoldAway));
+        UtilServerDialog.showDialog(
+          getGameState(),
+          new DialogBuyInducementsParameter(game.getTeamAway().getId(), fInducementGoldAway, wizardAvailable)
+        );
       } else {
-      	leaveStep(homeTV, awayTV);
+        leaveStep(homeTV, awayTV);
       }
     } else {
-    	leaveStep(homeTV, awayTV);
+      leaveStep(homeTV, awayTV);
     }
   }
-  
+
   private ReportInducementsBought generateReport(Team pTeam) {
-  	Game game = getGameState().getGame();
-  	InducementSet inducementSet = (game.getTeamHome() == pTeam) ? game.getTurnDataHome().getInducementSet() : game.getTurnDataAway().getInducementSet();
-  	int nrOfInducements = 0, nrOfStars = 0, nrOfMercenaries = 0;
-  	for (Inducement inducement : inducementSet.getInducements()) {
-  		switch (inducement.getType()) {
-    		case STAR_PLAYERS:
-    			nrOfStars = inducement.getValue();
-    			break;
-    		case MERCENARIES:
-    			nrOfMercenaries = inducement.getValue();
-    			break;
-  			default:
-  				nrOfInducements += inducement.getValue();
-  				break;
-  		}
-  	}
-  	int gold = (game.getTeamHome() == pTeam) ? fGoldUsedHome : fGoldUsedAway;
-  	return new ReportInducementsBought(pTeam.getId(), nrOfInducements, nrOfStars, nrOfMercenaries, gold);
+    Game game = getGameState().getGame();
+    InducementSet inducementSet = (game.getTeamHome() == pTeam) ?
+      game.getTurnDataHome().getInducementSet() : game.getTurnDataAway().getInducementSet();
+    int nrOfInducements = 0, nrOfStars = 0, nrOfMercenaries = 0;
+    for (Inducement inducement : inducementSet.getInducements()) {
+      switch (inducement.getType()) {
+        case STAR_PLAYERS:
+          nrOfStars = inducement.getValue();
+          break;
+        case MERCENARIES:
+          nrOfMercenaries = inducement.getValue();
+          break;
+        default:
+          nrOfInducements += inducement.getValue();
+          break;
+      }
+    }
+    int gold = (game.getTeamHome() == pTeam) ? fGoldUsedHome : fGoldUsedAway;
+    return new ReportInducementsBought(pTeam.getId(), nrOfInducements, nrOfStars, nrOfMercenaries, gold);
   }
-  
-  private void leaveStep(int pHomeTV, int pAwayTV) { 
-  	if (pHomeTV > pAwayTV) {
-  		SequenceGenerator.getInstance().pushInducementSequence(getGameState(), InducementPhase.AFTER_INDUCEMENTS_PURCHASED, true);
-  		SequenceGenerator.getInstance().pushInducementSequence(getGameState(), InducementPhase.AFTER_INDUCEMENTS_PURCHASED, false);
-  	} else {
-  		SequenceGenerator.getInstance().pushInducementSequence(getGameState(), InducementPhase.AFTER_INDUCEMENTS_PURCHASED, false);
-  		SequenceGenerator.getInstance().pushInducementSequence(getGameState(), InducementPhase.AFTER_INDUCEMENTS_PURCHASED, true);
-  	}
-  	Game game = getGameState().getGame();
-  	int restGoldHome = Math.max(0, fInducementGoldHome - fGoldUsedHome);
-  	int maxInducementGoldHome = UtilInducementSequence.calculateInducementGold(game, true);
-  	game.getGameResult().getTeamResultHome().setPettyCashUsed(Math.max(0, maxInducementGoldHome - restGoldHome));
+
+  private void leaveStep(int pHomeTV, int pAwayTV) {
+    if (pHomeTV > pAwayTV) {
+      SequenceGenerator.getInstance().pushInducementSequence(getGameState(), InducementPhase.AFTER_INDUCEMENTS_PURCHASED, true);
+      SequenceGenerator.getInstance().pushInducementSequence(getGameState(), InducementPhase.AFTER_INDUCEMENTS_PURCHASED, false);
+    } else {
+      SequenceGenerator.getInstance().pushInducementSequence(getGameState(), InducementPhase.AFTER_INDUCEMENTS_PURCHASED, false);
+      SequenceGenerator.getInstance().pushInducementSequence(getGameState(), InducementPhase.AFTER_INDUCEMENTS_PURCHASED, true);
+    }
+    Game game = getGameState().getGame();
+    int restGoldHome = Math.max(0, fInducementGoldHome - fGoldUsedHome);
+    int maxInducementGoldHome = UtilInducementSequence.calculateInducementGold(game, true);
+    game.getGameResult().getTeamResultHome().setPettyCashUsed(Math.max(0, maxInducementGoldHome - restGoldHome));
     int restGoldAway = Math.max(0, fInducementGoldAway - fGoldUsedAway);
     int maxInducementGoldAway = UtilInducementSequence.calculateInducementGold(game, false);
     game.getGameResult().getTeamResultAway().setPettyCashUsed(Math.max(0, maxInducementGoldAway - restGoldAway));
-  	getResult().setNextAction(StepAction.NEXT_STEP);
+    getResult().setNextAction(StepAction.NEXT_STEP);
   }
-    
+
   private void addMercenaries(Team pTeam, String[] pPositionIds, Skill[] pSkills) {
-    
-  	if (!ArrayTool.isProvided(pPositionIds) || !ArrayTool.isProvided(pSkills)) {
-  		return;
-  	}
-      
+
+    if (!ArrayTool.isProvided(pPositionIds) || !ArrayTool.isProvided(pSkills)) {
+      return;
+    }
+
     Roster roster = pTeam.getRoster();
     Game game = getGameState().getGame();
     List<Player> addedPlayerList = new ArrayList<Player>();
     Map<RosterPosition, Integer> nrByPosition = new HashMap<RosterPosition, Integer>();
-    
+
     for (int i = 0; i < pPositionIds.length; i++) {
       RosterPosition position = roster.getPositionById(pPositionIds[i]);
       Player mercenary = new Player();
@@ -255,9 +268,9 @@ public final class StepBuyInducements extends AbstractStep {
       mercenary.updatePosition(position);
       Integer mercNr = nrByPosition.get(position);
       if (mercNr == null) {
-      	mercNr = 1;
+        mercNr = 1;
       } else {
-      	mercNr = mercNr + 1;
+        mercNr = mercNr + 1;
       }
       nrByPosition.put(position, mercNr);
       StringBuilder name = new StringBuilder();
@@ -267,20 +280,20 @@ public final class StepBuyInducements extends AbstractStep {
       mercenary.setType(PlayerType.MERCENARY);
       mercenary.addSkill(Skill.LONER);
       if (pSkills[i] != null) {
-      	mercenary.addSkill(pSkills[i]);
+        mercenary.addSkill(pSkills[i]);
       }
       pTeam.addPlayer(mercenary);
       game.getFieldModel().setPlayerState(mercenary, new PlayerState(PlayerState.RESERVE));
       UtilBox.putPlayerIntoBox(game, mercenary);
     }
-    
+
     if (addedPlayerList.size() > 0) {
       Player[] addedPlayers = addedPlayerList.toArray(new Player[addedPlayerList.size()]);
       UtilServerSteps.sendAddedPlayers(getGameState(), pTeam, addedPlayers);
     }
-    
+
   }
-  
+
   private void removeStarPlayerInducements(TurnData pTurnData, int pRemoved) {
     Inducement starPlayerInducement = pTurnData.getInducementSet().get(InducementType.STAR_PLAYERS);
     if (starPlayerInducement != null) {
@@ -295,11 +308,11 @@ public final class StepBuyInducements extends AbstractStep {
 
   private void addStarPlayers(Team pTeam, String[] pPositionIds) {
     if (ArrayTool.isProvided(pPositionIds)) {
-      
+
       Roster roster = pTeam.getRoster();
       Game game = getGameState().getGame();
       FantasyFootballServer server = getGameState().getServer();
-      
+
       Map<String, Player> otherTeamStarPlayerByName = new HashMap<String, Player>();
       Team otherTeam = (game.getTeamHome() == pTeam) ? game.getTeamAway() : game.getTeamHome();
       for (Player otherPlayer : otherTeam.getPlayers()) {
@@ -328,7 +341,7 @@ public final class StepBuyInducements extends AbstractStep {
           UtilBox.putPlayerIntoBox(game, starPlayer);
         }
       }
-      
+
       if (removedPlayerList.size() > 0) {
         removeStarPlayerInducements(game.getTurnDataHome(), removedPlayerList.size());
         removeStarPlayerInducements(game.getTurnDataAway(), removedPlayerList.size());
@@ -339,19 +352,19 @@ public final class StepBuyInducements extends AbstractStep {
         }
         server.getDbUpdater().add(transaction);
       }
-      
+
       if (addedPlayerList.size() > 0) {
         Player[] addedPlayers = addedPlayerList.toArray(new Player[addedPlayerList.size()]);
         UtilServerSteps.sendAddedPlayers(getGameState(), pTeam, addedPlayers);
         // TODO: update persistence?
       }
-      
+
     }
-    
+
   }
-  
+
   // JSON serialization
-  
+
   @Override
   public JsonObject toJsonValue() {
     JsonObject jsonObject = super.toJsonValue();
@@ -365,7 +378,7 @@ public final class StepBuyInducements extends AbstractStep {
     IServerJsonOption.REPORTED_HOME.addTo(jsonObject, fReportedHome);
     return jsonObject;
   }
-  
+
   @Override
   public StepBuyInducements initFrom(JsonValue pJsonValue) {
     super.initFrom(pJsonValue);
@@ -380,5 +393,5 @@ public final class StepBuyInducements extends AbstractStep {
     fReportedHome = IServerJsonOption.REPORTED_HOME.getFrom(jsonObject);
     return this;
   }
-  
+
 }
