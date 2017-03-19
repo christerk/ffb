@@ -25,8 +25,8 @@ public class ServerCommandHandlerUploadGame extends ServerCommandHandler {
     return NetCommandId.INTERNAL_SERVER_UPLOAD_GAME;
   }
 
-  public void handleCommand(ReceivedCommand pReceivedCommand) {
-    InternalServerCommandUploadGame uploadGameCommand = (InternalServerCommandUploadGame) pReceivedCommand.getCommand();
+  public void handleCommand(ReceivedCommand receivedCommand) {
+    InternalServerCommandUploadGame uploadGameCommand = (InternalServerCommandUploadGame) receivedCommand.getCommand();
     GameCache gameCache = getServer().getGameCache();
     GameState gameState = gameCache.closeGame(uploadGameCommand.getGameId());
     if (gameState == null) {
@@ -35,12 +35,12 @@ public class ServerCommandHandlerUploadGame extends ServerCommandHandler {
     if (gameState == null) {
       // game has been moved out of the db - request it from the backup service
       getServer().getRequestProcessor().add(
-        new ServerRequestLoadReplay(uploadGameCommand.getGameId(), 0, pReceivedCommand.getSession(), ServerRequestLoadReplay.UPLOAD_GAME)
+        new ServerRequestLoadReplay(uploadGameCommand.getGameId(), 0, receivedCommand.getSession(), ServerRequestLoadReplay.UPLOAD_GAME)
       );
     } else {
       gameState.getStepStack().clear();
-      Game game = gameState.getGame();
       if (StringTool.isProvided(uploadGameCommand.getConcedingTeamId())) {
+        Game game = gameState.getGame();
         game.getGameResult().getTeamResultHome().setConceded(game.getTeamHome().getId().equals(uploadGameCommand.getConcedingTeamId()));
         game.getGameResult().getTeamResultAway().setConceded(game.getTeamAway().getId().equals(uploadGameCommand.getConcedingTeamId()));
       }

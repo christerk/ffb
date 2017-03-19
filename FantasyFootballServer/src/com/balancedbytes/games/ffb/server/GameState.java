@@ -159,15 +159,15 @@ public class GameState implements IModelChangeObserver, IJsonSerializable {
     }
   }
 
-  public void findNextStep(ReceivedCommand pReceivedCommand) {
+  public void findNextStep(ReceivedCommand receivedCommand) {
     fCurrentStep = getStepStack().pop();
     if (fCurrentStep != null) {
       getServer().getDebugLog().logCurrentStep(IServerLogLevel.DEBUG, this);
-      if (pReceivedCommand == null) {
+      if (receivedCommand == null) {
         fCurrentStep.start();
         UtilServerGame.syncGameModel(fCurrentStep);
       }
-      progressStepStack(pReceivedCommand);
+      progressStepStack(receivedCommand);
     }
   }
 

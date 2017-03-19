@@ -51,7 +51,7 @@ public class GameOptionFactory {
       case FORCE_TREASURY_TO_PETTY_CASH:
         return new GameOptionBoolean(GameOptionId.FORCE_TREASURY_TO_PETTY_CASH)
           .setDefault(true)
-          .setMessageTrue("Treasury is not automatically transferred to Petty Cash.");
+          .setMessageFalse("Treasury is not automatically transferred to Petty Cash.");
       case FOUL_BONUS:
         return new GameOptionBoolean(GameOptionId.FOUL_BONUS)
           .setDefault(false)

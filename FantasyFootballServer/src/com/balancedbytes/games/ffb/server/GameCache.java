@@ -123,7 +123,7 @@ public class GameCache {
     for (Long gameId : fGameStateById.keySet()) {
       GameStatus status = fGameStateById.get(gameId).getStatus();
       if ((gameId != null) && (gameId != gameState.getId()) && (status != GameStatus.LOADING) && !checkGameOpen(gameId)) {
-        closeGame(gameId);
+        removeGame(gameId);
       }
     }
   }
@@ -133,27 +133,24 @@ public class GameCache {
     return (gameId != null) ? getGameStateById(gameId) : null;
   }
 
-  public synchronized void removeGame(GameState pGameState) {
-    if (pGameState != null) {
-      GameState cachedGameState = fGameStateById.remove(pGameState.getId());
-      if (cachedGameState != null) {
-        Game game = pGameState.getGame();
-        removeMappingForGameId(pGameState.getId());
-        // log game cache size -->
-        FantasyFootballServer server = pGameState.getServer();
-        server.getDebugLog().log(IServerLogLevel.WARN, cachedGameState.getId(),
-          StringTool.bind("REMOVE GAME cache decreases to $1 games.", fGameStateById.size()));
-        // <-- log game cache size
-        if (pGameState.getGame().getFinished() != null) {
-          server.getCommunication().handleCommand(new InternalServerCommandBackupGame(pGameState.getId()));
-          queueDbPlayerMarkersUpdate(pGameState);
-        }
-        // remove gameState from db if only one team has joined
-        // or the game hasn't even started yet (and isn't scheduled)
-        if (!StringTool.isProvided(game.getTeamHome().getId()) || !StringTool.isProvided(game.getTeamAway().getId())
-          || ((game.getScheduled() == null) && ((game.getStarted() == null) || DateTool.isEqual(new Date(0), game.getStarted())))) {
-          queueDbDelete(pGameState.getId(), true);
-        }
+  public synchronized void removeGame(long gameId) {
+    GameState cachedGameState = fGameStateById.remove(gameId);
+    if (cachedGameState != null) {
+      Game game = cachedGameState.getGame();
+      removeMappingForGameId(cachedGameState.getId());
+      // log game cache size -->
+      getServer().getDebugLog().log(IServerLogLevel.WARN, cachedGameState.getId(),
+        StringTool.bind("REMOVE GAME cache decreases to $1 games.", fGameStateById.size()));
+      // <-- log game cache size
+      if (cachedGameState.getGame().getFinished() != null) {
+        getServer().getCommunication().handleCommand(new InternalServerCommandBackupGame(cachedGameState.getId()));
+        queueDbPlayerMarkersUpdate(cachedGameState);
+      }
+      // remove gameState from db if only one team has joined
+      // or the game hasn't even started yet (and isn't scheduled)
+      if (!StringTool.isProvided(game.getTeamHome().getId()) || !StringTool.isProvided(game.getTeamAway().getId())
+        || ((game.getScheduled() == null) && ((game.getStarted() == null) || DateTool.isEqual(new Date(0), game.getStarted())))) {
+        queueDbDelete(cachedGameState.getId(), true);
       }
     }
   }
@@ -203,17 +200,17 @@ public class GameCache {
     return gameList;
   }
 
-  public GameState createGameState(GameCacheMode pMode) {
+  public GameState createGameState(GameStartMode pMode) {
     Game game = new Game();
     game.setId(0L); // id is unknown - will be determined by the db
-    game.setTesting(GameCacheMode.START_TEST_GAME == pMode);
+    game.setTesting(GameStartMode.START_TEST_GAME == pMode);
     game.setHomePlaying(true);
     game.setTurnMode(TurnMode.START_GAME);
     game.setDialogParameter(new DialogStartGameParameter());
     game.getFieldModel().setWeather(Weather.NICE);
     GameState gameState = new GameState(getServer());
     gameState.setGame(game);
-    if (GameCacheMode.SCHEDULE_GAME == pMode) {
+    if (GameStartMode.SCHEDULE_GAME == pMode) {
       gameState.setStatus(GameStatus.SCHEDULED);
       gameState.getGame().setScheduled(new Date());
     } else {
@@ -222,7 +219,7 @@ public class GameCache {
     // insert the games info directly and generate an id
     DbGamesInfoInsertQuery insertQuery = (DbGamesInfoInsertQuery) getServer().getDbQueryFactory().getStatement(DbStatementId.GAMES_INFO_INSERT_QUERY);
     insertQuery.execute(gameState);
-    if (GameCacheMode.SCHEDULE_GAME != pMode) {
+    if (GameStartMode.SCHEDULE_GAME != pMode) {
       addGame(gameState);
     }
     // queue the game serialization
@@ -354,7 +351,6 @@ public class GameCache {
       for (Session session : sessions) {
         getServer().getCommunication().close(session);
       }
-      removeGame(gameState);
       if (getServer().getMode() == ServerMode.FUMBBL) {
         getServer().getRequestProcessor().add(new FumbblRequestRemoveGamestate(gameState));
       }

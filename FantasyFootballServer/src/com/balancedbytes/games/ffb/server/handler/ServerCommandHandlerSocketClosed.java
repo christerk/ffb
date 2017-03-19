@@ -24,13 +24,13 @@ public class ServerCommandHandlerSocketClosed extends ServerCommandHandler {
   protected ServerCommandHandlerSocketClosed(FantasyFootballServer pServer) {
     super(pServer);
   }
-  
+
   public NetCommandId getId() {
     return NetCommandId.INTERNAL_SERVER_SOCKET_CLOSED;
   }
 
   public void handleCommand(ReceivedCommand pReceivedCommand) {
-    
+
     SessionManager sessionManager = getServer().getSessionManager();
     String coach = sessionManager.getCoachForSession(pReceivedCommand.getSession());
     ClientMode mode = sessionManager.getModeForSession(pReceivedCommand.getSession());
@@ -42,20 +42,20 @@ public class ServerCommandHandlerSocketClosed extends ServerCommandHandler {
     GameCache gameCache = getServer().getGameCache();
     GameState gameState = gameCache.getGameStateById(gameId);
     if (gameState != null) {
-      
+
       int spectators = 0;
       for (int i = 0; i < sessions.length; i++) {
         if (sessionManager.getModeForSession(sessions[i]) == ClientMode.SPECTATOR) {
           spectators++;
         }
       }
-      
+
       // stop timer whenever a player drops out
-    	if (ClientMode.PLAYER == mode) {
-      	UtilServerTimer.syncTime(gameState);
+      if (ClientMode.PLAYER == mode) {
+        UtilServerTimer.syncTime(gameState);
         UtilServerTimer.stopTurnTimer(gameState);
-    	}
-      
+      }
+
       Session homeSession = sessionManager.getSessionOfHomeCoach(gameState);
       Session awaySession = sessionManager.getSessionOfAwayCoach(gameState);
 
@@ -63,19 +63,16 @@ public class ServerCommandHandlerSocketClosed extends ServerCommandHandler {
         gameState.setStatus(GameStatus.PAUSED);
         gameCache.queueDbUpdate(gameState, true);
         removeFumbblGame(gameState);
-        gameState.fetchChanges();  // remove all changes from queue
+        gameState.fetchChanges(); // remove all changes from queue
       }
 
-    	if (ArrayTool.isProvided(sessions)) {
-    		getServer().getCommunication().sendLeave(sessions, coach, mode, spectators);
-    	} else {
-        getServer().getGameCache().removeGame(gameState);
-    	}
-
+      if (ArrayTool.isProvided(sessions)) {
+        getServer().getCommunication().sendLeave(sessions, coach, mode, spectators);
+      }
     }
-    
+
   }
-  
+
   private void removeFumbblGame(GameState pGameState) {
     if (!pGameState.getGame().isTesting() && (getServer().getMode() == ServerMode.FUMBBL)) {
       getServer().getRequestProcessor().add(new FumbblRequestRemoveGamestate(pGameState));

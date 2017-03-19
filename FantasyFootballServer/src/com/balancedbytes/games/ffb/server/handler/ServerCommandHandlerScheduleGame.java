@@ -4,7 +4,7 @@ import com.balancedbytes.games.ffb.model.Team;
 import com.balancedbytes.games.ffb.net.NetCommandId;
 import com.balancedbytes.games.ffb.server.FantasyFootballServer;
 import com.balancedbytes.games.ffb.server.GameCache;
-import com.balancedbytes.games.ffb.server.GameCacheMode;
+import com.balancedbytes.games.ffb.server.GameStartMode;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.ServerMode;
 import com.balancedbytes.games.ffb.server.net.ReceivedCommand;
@@ -28,7 +28,7 @@ public class ServerCommandHandlerScheduleGame extends ServerCommandHandler {
   public void handleCommand(ReceivedCommand pReceivedCommand) {
     InternalServerCommandScheduleGame scheduleGameCommand = (InternalServerCommandScheduleGame) pReceivedCommand.getCommand();
     GameCache gameCache = getServer().getGameCache();
-    GameState gameState = gameCache.createGameState(GameCacheMode.SCHEDULE_GAME);
+    GameState gameState = gameCache.createGameState(GameStartMode.SCHEDULE_GAME);
     if (ServerMode.FUMBBL == getServer().getMode()) {
       FumbblRequestLoadTeam requestHomeTeam = new FumbblRequestLoadTeam(gameState, null, scheduleGameCommand.getTeamHomeId(), true, null);
       getServer().getRequestProcessor().add(requestHomeTeam);

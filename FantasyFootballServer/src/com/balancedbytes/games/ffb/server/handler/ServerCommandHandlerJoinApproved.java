@@ -12,7 +12,7 @@ import com.balancedbytes.games.ffb.net.NetCommandId;
 import com.balancedbytes.games.ffb.net.ServerStatus;
 import com.balancedbytes.games.ffb.server.FantasyFootballServer;
 import com.balancedbytes.games.ffb.server.GameCache;
-import com.balancedbytes.games.ffb.server.GameCacheMode;
+import com.balancedbytes.games.ffb.server.GameStartMode;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.ServerMode;
 import com.balancedbytes.games.ffb.server.net.ReceivedCommand;
@@ -58,7 +58,7 @@ public class ServerCommandHandlerJoinApproved extends ServerCommandHandler {
       gameState = gameCache.getGameStateByName(joinApprovedCommand.getGameName(), true);
       if ((gameState == null) && !getServer().isBlockingNewGames()) {
         boolean testing = (joinApprovedCommand.getGameName().startsWith(_TEST_PREFIX) || getServer().getMode() == ServerMode.STANDALONE);
-        gameState = gameCache.createGameState(testing ? GameCacheMode.START_TEST_GAME : GameCacheMode.START_GAME);
+        gameState = gameCache.createGameState(testing ? GameStartMode.START_TEST_GAME : GameStartMode.START_GAME);
         gameCache.mapGameNameToId(joinApprovedCommand.getGameName(), gameState.getId());
       }      
     }

@@ -24,36 +24,36 @@ public class ServerRequestProcessor extends Thread {
   public FantasyFootballServer getServer() {
     return fServer;
   }
-  
+
   public boolean add(ServerRequest pServerRequest) {
     return fRequestQueue.offer(pServerRequest);
   }
 
   @Override
   public void run() {
-    while (true) { 
+    while (true) {
       ServerRequest serverRequest = null;
       try {
-      	serverRequest = fRequestQueue.take();
+        serverRequest = fRequestQueue.take();
       } catch (InterruptedException pInterruptedException) {
-      	// continue with fumbblRequest == null
+        // continue with fumbblRequest == null
       }
-    	boolean sent = false;
-    	do {
-    		try {
-	        serverRequest.process(this);
-	  			sent = true;
-	    	} catch (Exception pAnyException) {
-	    		getServer().getDebugLog().log(IServerLogLevel.ERROR, StringTool.print(serverRequest.getRequestUrl()));
-	    		getServer().getDebugLog().log(pAnyException);
-	    		try {
-	    			Thread.sleep(1000);
-	    		} catch (InterruptedException pInterruptedException) {
-	    			// just continue
-	    		}
-	    	}
-    	} while (!sent);
+      boolean sent = false;
+      do {
+        try {
+          serverRequest.process(this);
+          sent = true;
+        } catch (Exception pAnyException) {
+          getServer().getDebugLog().log(IServerLogLevel.ERROR, StringTool.print(serverRequest.getRequestUrl()));
+          getServer().getDebugLog().log(pAnyException);
+          try {
+            Thread.sleep(1000);
+          } catch (InterruptedException pInterruptedException) {
+            // just continue
+          }
+        }
+      } while (!sent);
     }
   }
-      
+
 }
