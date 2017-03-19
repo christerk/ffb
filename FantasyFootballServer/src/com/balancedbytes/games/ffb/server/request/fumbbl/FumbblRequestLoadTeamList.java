@@ -19,17 +19,16 @@ import com.balancedbytes.games.ffb.server.util.UtilServerHttpClient;
 import com.balancedbytes.games.ffb.util.StringTool;
 import com.balancedbytes.games.ffb.xml.XmlHandler;
 
-
 /**
  * 
  * @author Kalimar
  */
 public class FumbblRequestLoadTeamList extends ServerRequest {
-  
+
   private String fCoach;
   private GameState fGameState;
   private Session fSession;
-  
+
   public FumbblRequestLoadTeamList(GameState pGameState, String pCoach, Session pSession) {
     fGameState = pGameState;
     fCoach = pCoach;
@@ -39,21 +38,21 @@ public class FumbblRequestLoadTeamList extends ServerRequest {
   public GameState getGameState() {
     return fGameState;
   }
-  
+
   public String getCoach() {
     return fCoach;
   }
-    
+
   public Session getSession() {
     return fSession;
   }
-  
+
   @Override
   public void process(ServerRequestProcessor pRequestProcessor) {
     FantasyFootballServer server = pRequestProcessor.getServer();
     TeamList teamList = null;
     try {
-    	setRequestUrl(StringTool.bind(server.getProperty(IServerProperty.FUMBBL_TEAMS), URLEncoder.encode(getCoach(), UtilFumbblRequest.CHARACTER_ENCODING)));
+      setRequestUrl(StringTool.bind(server.getProperty(IServerProperty.FUMBBL_TEAMS), URLEncoder.encode(getCoach(), UtilFumbblRequest.CHARACTER_ENCODING)));
       String teamsXml = UtilServerHttpClient.fetchPage(getRequestUrl());
       if (StringTool.isProvided(teamsXml)) {
         BufferedReader xmlReader = new BufferedReader(new StringReader(teamsXml));
@@ -69,5 +68,5 @@ public class FumbblRequestLoadTeamList extends ServerRequest {
       server.getCommunication().sendTeamList(getSession(), teamList);
     }
   }
-  
+
 }

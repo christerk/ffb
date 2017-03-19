@@ -227,10 +227,15 @@ public class BackupServlet extends HttpServlet {
           ((BufferedOutputStream) out).write(gzippedJson, 0, gzippedJson.length);
         }
 
+        getServer().getDebugLog().log(IServerLogLevel.WARN, gameId, "Replay size " + gzippedJson.length + " gzipped.");
+
       } else {
 
         out = new BufferedWriter(pResponse.getWriter());
-        ((BufferedWriter) out).write(gameState.toJsonValue().toString());
+        String jsonString = gameState.toJsonValue().toString();
+        ((BufferedWriter) out).write(jsonString);
+        
+        getServer().getDebugLog().log(IServerLogLevel.WARN, gameId, "Replay size " + jsonString.length() + " unzipped.");
 
       }
 
