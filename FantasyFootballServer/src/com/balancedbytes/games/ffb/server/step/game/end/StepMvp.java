@@ -117,7 +117,7 @@ public final class StepMvp extends AbstractStep {
     }
     
     int mvpNominations = UtilGameOption.getIntOption(game, GameOptionId.MVP_NOMINATIONS);
-    if ((mvpNominations > 0) || game.isAdminMode()) {
+    if ((mvpNominations > 0) && !game.isAdminMode()) {
       
       if (fHomePlayersNominated != null) {
         fHomePlayersMvp.add(getGameState().getDiceRoller().randomPlayerId(fHomePlayersNominated));
