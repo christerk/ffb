@@ -343,20 +343,6 @@ public class StepEndTurn extends AbstractStep {
 
     }
 
-    if (fArgueTheCallChoiceAway == null) {
-      fArgueTheCallChoiceAway = false;
-      if (!fEndGame && fHandleSecretWeapons && (fNewHalf || fTouchdown) && askForArgueTheCall(game.getTeamAway())) {
-        fArgueTheCallChoiceAway = null;
-      }
-    }
-
-    if ((fArgueTheCallChoiceHome == null) && (fArgueTheCallChoiceAway != null)) {
-      fArgueTheCallChoiceHome = false;
-      if (!fEndGame && fHandleSecretWeapons && (fNewHalf || fTouchdown) && askForArgueTheCall(game.getTeamHome())) {
-        fArgueTheCallChoiceHome = null;
-      }
-    }
-
     if (fBribesChoiceAway == null) {
       fBribesChoiceAway = false;
       if (!fEndGame && fHandleSecretWeapons && (fNewHalf || fTouchdown) && askForSecretWeaponBribes(game.getTeamAway())) {
@@ -368,6 +354,20 @@ public class StepEndTurn extends AbstractStep {
       fBribesChoiceHome = false;
       if (!fEndGame && fHandleSecretWeapons && (fNewHalf || fTouchdown) && askForSecretWeaponBribes(game.getTeamHome())) {
         fBribesChoiceHome = null;
+      }
+    }
+
+    if ((fBribesChoiceHome != null) && (fBribesChoiceAway != null) && (fArgueTheCallChoiceAway == null)) {
+      fArgueTheCallChoiceAway = false;
+      if (!fEndGame && fHandleSecretWeapons && (fNewHalf || fTouchdown) && askForArgueTheCall(game.getTeamAway())) {
+        fArgueTheCallChoiceAway = null;
+      }
+    }
+
+    if ((fBribesChoiceHome != null) && (fBribesChoiceAway != null) && (fArgueTheCallChoiceHome == null) && (fArgueTheCallChoiceAway != null)) {
+      fArgueTheCallChoiceHome = false;
+      if (!fEndGame && fHandleSecretWeapons && (fNewHalf || fTouchdown) && askForArgueTheCall(game.getTeamHome())) {
+        fArgueTheCallChoiceHome = null;
       }
     }
 

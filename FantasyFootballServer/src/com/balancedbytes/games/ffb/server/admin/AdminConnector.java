@@ -22,19 +22,20 @@ import com.balancedbytes.games.ffb.util.StringTool;
  */
 public class AdminConnector {
 
-  private static final String _USAGE = "java com.balancedbytes.games.ffb.server.admin.AdminConnector block\n"
-  		+ "java com.balancedbytes.games.ffb.server.admin.AdminConnector close <gameId>\n"
-      + "java com.balancedbytes.games.ffb.server.admin.AdminConnector concede <gameId> <teamId>\n"
-      + "java com.balancedbytes.games.ffb.server.admin.AdminConnector delete <gameId>\n"
-      + "java com.balancedbytes.games.ffb.server.admin.AdminConnector list <status>\n"
-      + "  [status being one of: scheduled, starting, active, paused, finished or uploaded]\n"
-      + "java com.balancedbytes.games.ffb.server.admin.AdminConnector list <gameId>\n"
-      + "java com.balancedbytes.games.ffb.server.admin.AdminConnector message <message>\n"
-      + "java com.balancedbytes.games.ffb.server.admin.AdminConnector refresh\n"
-      + "java com.balancedbytes.games.ffb.server.admin.AdminConnector shutdown\n"
-      + "java com.balancedbytes.games.ffb.server.admin.AdminConnector schedule <teamHomeId> <teamAwayId>\n"
-      + "java com.balancedbytes.games.ffb.server.admin.AdminConnector unblock\n"
-      + "java com.balancedbytes.games.ffb.server.admin.AdminConnector upload <gameId>";
+  private static final String _USAGE =
+     "java com.balancedbytes.games.ffb.server.admin.AdminConnector block\n"
+  	+ "java com.balancedbytes.games.ffb.server.admin.AdminConnector close <gameId>\n"
+    + "java com.balancedbytes.games.ffb.server.admin.AdminConnector concede <gameId> <teamId>\n"
+    + "java com.balancedbytes.games.ffb.server.admin.AdminConnector delete <gameId>\n"
+    + "java com.balancedbytes.games.ffb.server.admin.AdminConnector list <status>\n"
+    + "  [status being one of: scheduled, starting, active, paused, finished or uploaded]\n"
+    + "java com.balancedbytes.games.ffb.server.admin.AdminConnector list <gameId>\n"
+    + "java com.balancedbytes.games.ffb.server.admin.AdminConnector message <message>\n"
+    + "java com.balancedbytes.games.ffb.server.admin.AdminConnector refresh\n"
+    + "java com.balancedbytes.games.ffb.server.admin.AdminConnector shutdown\n"
+    + "java com.balancedbytes.games.ffb.server.admin.AdminConnector schedule <teamHomeId> <teamAwayId>\n"
+    + "java com.balancedbytes.games.ffb.server.admin.AdminConnector unblock\n"
+    + "java com.balancedbytes.games.ffb.server.admin.AdminConnector upload <gameId>";
 
   private static final Pattern _PATTERN_CHALLENGE = Pattern.compile("<challenge>([^<]+)</challenge>");
 
