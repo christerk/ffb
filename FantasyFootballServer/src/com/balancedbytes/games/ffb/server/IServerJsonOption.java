@@ -13,7 +13,6 @@ import com.balancedbytes.games.ffb.json.JsonFieldCoordinateArrayOption;
 import com.balancedbytes.games.ffb.json.JsonFieldCoordinateOption;
 import com.balancedbytes.games.ffb.json.JsonIntArrayOption;
 import com.balancedbytes.games.ffb.json.JsonIntOption;
-import com.balancedbytes.games.ffb.json.JsonLongOption;
 import com.balancedbytes.games.ffb.json.JsonObjectOption;
 import com.balancedbytes.games.ffb.json.JsonPlayerStateOption;
 import com.balancedbytes.games.ffb.json.JsonStringOption;
@@ -92,7 +91,6 @@ public interface IServerJsonOption extends IJsonOption {
                 JsonObjectOption KICKOFF_BOUNDS = new JsonObjectOption("kickoffBounds");
        JsonFieldCoordinateOption KICKOFF_START_COORDINATE = new JsonFieldCoordinateOption("kickoffStartCoordinate");
                 JsonStringOption LABEL = new JsonStringOption("label");
-                  JsonLongOption LAST_UPDATED = new JsonLongOption("lastUpdated");
   JsonFieldCoordinateArrayOption MOVE_STACK = new JsonFieldCoordinateArrayOption("moveStack");
                    JsonIntOption MOVE_STACK_SIZE = new JsonIntOption("moveStackSize");
                 JsonStringOption MULTI_BLOCK_DEFENDER_ID = new JsonStringOption("multiBlockDefenderId");

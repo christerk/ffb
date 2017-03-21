@@ -15,87 +15,87 @@ import com.eclipsesource.json.JsonValue;
  * @author Kalimar
  */
 public class StepResult implements IJsonSerializable {
-	
-	private StepAction fNextAction;
-	private String fNextActionParameter;
+
+  private StepAction fNextAction;
+  private String fNextActionParameter;
   private ReportList fReportList;
   private Animation fAnimation;
   private SoundId fSound;
   private boolean fSynchronize;
-  
+
   public StepResult() {
     setNextAction(StepAction.CONTINUE);
     setSynchronize(true);
-  	reset();
+    reset();
   }
-  
+
   public void reset() {
     setReportList(new ReportList());
     setAnimation(null);
     setSound(null);
   }
-  
+
   public void addReport(IReport pReport) {
     if (pReport != null) {
       fReportList.add(pReport);
     }
   }
-  
+
   private void setReportList(ReportList pReportList) {
-  	fReportList = pReportList;
+    fReportList = pReportList;
   }
-  
+
   public ReportList getReportList() {
     return fReportList;
   }
-  
+
   public Animation getAnimation() {
     return fAnimation;
   }
-  
+
   public void setAnimation(Animation pAnimation) {
     fAnimation = pAnimation;
   }
-  
+
   public SoundId getSound() {
     return fSound;
   }
-  
+
   public void setSound(SoundId pSound) {
     fSound = pSound;
   }
-  
+
   public StepAction getNextAction() {
-		return fNextAction;
-	}
-  
+    return fNextAction;
+  }
+
   public void setNextAction(StepAction pNextAction) {
-		fNextAction = pNextAction;
-	}
-  
+    fNextAction = pNextAction;
+  }
+
   public void setNextAction(StepAction pNextAction, String pNextActionParameter) {
-		setNextAction(pNextAction);
-		setNextActionParameter(pNextActionParameter);
-	}
+    setNextAction(pNextAction);
+    setNextActionParameter(pNextActionParameter);
+  }
 
   public String getNextActionParameter() {
-		return fNextActionParameter;
-	}
-  
+    return fNextActionParameter;
+  }
+
   public void setNextActionParameter(String pNextActionParameter) {
-		fNextActionParameter = pNextActionParameter;
-	}
-  
+    fNextActionParameter = pNextActionParameter;
+  }
+
   public void setSynchronize(boolean pSynchronize) {
-		fSynchronize = pSynchronize;
-	}
-  
+    fSynchronize = pSynchronize;
+  }
+
   public boolean isSynchronize() {
-		return fSynchronize;
-	}
-  
+    return fSynchronize;
+  }
+
   // JSON serialization
-  
+
   public JsonObject toJsonValue() {
     JsonObject jsonObject = new JsonObject();
     IServerJsonOption.NEXT_ACTION.addTo(jsonObject, fNextAction);
@@ -108,7 +108,7 @@ public class StepResult implements IJsonSerializable {
     IServerJsonOption.SYNCHRONIZE.addTo(jsonObject, fSynchronize);
     return jsonObject;
   }
-  
+
   public StepResult initFrom(JsonValue pJsonValue) {
     JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
     fNextAction = (StepAction) IServerJsonOption.NEXT_ACTION.getFrom(jsonObject);
@@ -116,7 +116,7 @@ public class StepResult implements IJsonSerializable {
     fReportList.clear();
     JsonObject reportListObject = IServerJsonOption.REPORT_LIST.getFrom(jsonObject);
     if (reportListObject != null) {
-      fReportList.initFrom(reportListObject); 
+      fReportList.initFrom(reportListObject);
     }
     fAnimation = null;
     JsonObject animationObject = IServerJsonOption.ANIMATION.getFrom(jsonObject);
@@ -127,5 +127,5 @@ public class StepResult implements IJsonSerializable {
     fSynchronize = IServerJsonOption.SYNCHRONIZE.getFrom(jsonObject);
     return this;
   }
-  
+
 }

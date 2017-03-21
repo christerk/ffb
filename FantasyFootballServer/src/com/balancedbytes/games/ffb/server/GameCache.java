@@ -62,7 +62,6 @@ public class GameCache {
 
   private static final String _PITCHES_INI = "pitches.ini";
   private static final String _PITCH_PROPERTY_PREFIX = "pitch.";
-  private static final long _LAST_UPDATE_TIMEOUT = 1000 * 60 * 60; // 1h
 
   public GameCache(FantasyFootballServer pServer) {
     fServer = pServer;
@@ -123,15 +122,8 @@ public class GameCache {
     // or there has been no update for an hour (disconnection detection fails sometimes)
     for (Long gameId : fGameStateById.keySet()) {
       GameStatus status = fGameStateById.get(gameId).getStatus();
-      if ((gameId != null) && (gameId != gameState.getId()) && (status != GameStatus.LOADING)) {
-        if (checkGameOpen(gameId)) {
-          if ((gameState.getLastUpdated() > 0) && (gameState.getLastUpdated() < System.currentTimeMillis() - _LAST_UPDATE_TIMEOUT)) {
-            getServer().getDebugLog().log(IServerLogLevel.WARN, gameId, "Closing game due to inactivity.");
-            closeGame(gameId);
-          }
-        } else {
-          removeGame(gameId);
-        }
+      if ((gameId != null) && (gameId != gameState.getId()) && (status != GameStatus.LOADING) && !checkGameOpen(gameId)) {
+        removeGame(gameId);
       }
     }
   }

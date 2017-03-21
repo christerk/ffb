@@ -31,7 +31,6 @@ public class GameState implements IModelChangeObserver, IJsonSerializable {
   private GameStatus fStatus;
   private StepStack fStepStack;
   private IStep fCurrentStep;
-  private long fLastUpdated;
 
   private transient FantasyFootballServer fServer;
   private transient DiceRoller fDiceRoller;
@@ -84,13 +83,8 @@ public class GameState implements IModelChangeObserver, IJsonSerializable {
     if (change != null) {
       fChangeList.add(change);
     }
-    fLastUpdated = System.currentTimeMillis();
   }
   
-  public long getLastUpdated() {
-    return fLastUpdated;
-  }
-
   public DiceRoller getDiceRoller() {
     return fDiceRoller;
   }
@@ -184,21 +178,21 @@ public class GameState implements IModelChangeObserver, IJsonSerializable {
     if (fCurrentStep != null) {
       StepResult stepResult = fCurrentStep.getResult();
       switch (stepResult.getNextAction()) {
-      case NEXT_STEP:
-        handleStepResultNextStep(null);
-        break;
-      case NEXT_STEP_AND_REPEAT:
-        handleStepResultNextStep(pReceivedCommand);
-        break;
-      case GOTO_LABEL:
-        handleStepResultGotoLabel((String) stepResult.getNextActionParameter(), null);
-        break;
-      case GOTO_LABEL_AND_REPEAT:
-        handleStepResultGotoLabel((String) stepResult.getNextActionParameter(), pReceivedCommand);
-        break;
-      default:
-        break;
-      }
+        case NEXT_STEP:
+          handleStepResultNextStep(null);
+          break;
+        case NEXT_STEP_AND_REPEAT:
+          handleStepResultNextStep(pReceivedCommand);
+          break;
+        case GOTO_LABEL:
+          handleStepResultGotoLabel((String) stepResult.getNextActionParameter(), null);
+          break;
+        case GOTO_LABEL_AND_REPEAT:
+          handleStepResultGotoLabel((String) stepResult.getNextActionParameter(), pReceivedCommand);
+          break;
+        default:
+          break;
+        }
     }
   }
 
@@ -211,7 +205,8 @@ public class GameState implements IModelChangeObserver, IJsonSerializable {
 
   private void handleStepResultGotoLabel(String pGotoLabel, ReceivedCommand pReceivedCommand) {
     if (pGotoLabel == null) {
-      throw new StepException("No goto label set.");
+      String stepName = (fCurrentStep != null) ? fCurrentStep.getId().getName() : "unknown";
+      throw new StepException("Step " + stepName + ": No goto label set.");
     }
     fCurrentStep = null;
     IStep nextStep = getStepStack().pop();
@@ -237,7 +232,6 @@ public class GameState implements IModelChangeObserver, IJsonSerializable {
   public JsonObject toJsonValue() {
     JsonObject jsonObject = new JsonObject();
     IServerJsonOption.GAME_STATUS.addTo(jsonObject, fStatus);
-    IServerJsonOption.LAST_UPDATED.addTo(jsonObject, fLastUpdated);
     IServerJsonOption.STEP_STACK.addTo(jsonObject, fStepStack.toJsonValue());
     IServerJsonOption.GAME_LOG.addTo(jsonObject, fGameLog.toJsonValue());
     if (fCurrentStep != null) {
@@ -252,7 +246,6 @@ public class GameState implements IModelChangeObserver, IJsonSerializable {
   public GameState initFrom(JsonValue pJsonValue) {
     JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
     fStatus = (GameStatus) IServerJsonOption.GAME_STATUS.getFrom(jsonObject);
-    fLastUpdated = IServerJsonOption.LAST_UPDATED.getFrom(jsonObject);
     fStepStack.clear();
     JsonObject stepStackObject = IServerJsonOption.STEP_STACK.getFrom(jsonObject);
     if (stepStackObject != null) {

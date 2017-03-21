@@ -271,6 +271,8 @@ public enum ReportId implements IEnumWithName {
       	return new ReportCardsBought();
       case GAME_OPTIONS:
       	return new ReportGameOptions();
+      case WEEPING_DAGGER_ROLL:
+        return new ReportSkillRoll(ReportId.WEEPING_DAGGER_ROLL);
       default:
         throw new IllegalStateException("Unhandled report id "+ getName() + ".");
     }
