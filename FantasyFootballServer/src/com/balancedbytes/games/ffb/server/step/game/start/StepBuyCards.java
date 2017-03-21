@@ -32,8 +32,7 @@ import com.eclipsesource.json.JsonValue;
 /**
  * Step in start game sequence to buy cards.
  * 
- * Sets stepParameter INDUCEMENT_GOLD_AWAY for all steps on the stack. Sets
- * stepParameter INDUCEMENT_GOLD_HOME for all steps on the stack.
+ * Sets stepParameter INDUCEMENT_GOLD_AWAY for all steps on the stack. Sets stepParameter INDUCEMENT_GOLD_HOME for all steps on the stack.
  * 
  * @author Kalimar
  */
@@ -74,23 +73,23 @@ public final class StepBuyCards extends AbstractStep {
     StepCommandStatus commandStatus = super.handleCommand(pReceivedCommand);
     if (commandStatus == StepCommandStatus.UNHANDLED_COMMAND) {
       switch (pReceivedCommand.getId()) {
-      case CLIENT_BUY_CARD:
-        ClientCommandBuyCard buyCardCommand = (ClientCommandBuyCard) pReceivedCommand.getCommand();
-        if (UtilServerSteps.checkCommandIsFromHomePlayer(getGameState(), pReceivedCommand)) {
-          fBuyCardHome = buyCardCommand.getCardType();
-          if (fBuyCardHome == null) {
-            fCardsSelectedHome = true;
+        case CLIENT_BUY_CARD:
+          ClientCommandBuyCard buyCardCommand = (ClientCommandBuyCard) pReceivedCommand.getCommand();
+          if (UtilServerSteps.checkCommandIsFromHomePlayer(getGameState(), pReceivedCommand)) {
+            fBuyCardHome = buyCardCommand.getCardType();
+            if (fBuyCardHome == null) {
+              fCardsSelectedHome = true;
+            }
+          } else {
+            fBuyCardAway = buyCardCommand.getCardType();
+            if (fBuyCardAway == null) {
+              fCardsSelectedAway = true;
+            }
           }
-        } else {
-          fBuyCardAway = buyCardCommand.getCardType();
-          if (fBuyCardAway == null) {
-            fCardsSelectedAway = true;
-          }
-        }
-        commandStatus = StepCommandStatus.EXECUTE_STEP;
-        break;
-      default:
-        break;
+          commandStatus = StepCommandStatus.EXECUTE_STEP;
+          break;
+        default:
+          break;
       }
     }
     if (commandStatus == StepCommandStatus.EXECUTE_STEP) {
@@ -102,8 +101,8 @@ public final class StepBuyCards extends AbstractStep {
   private void executeStep() {
     Game game = getGameState().getGame();
     GameResult gameResult = game.getGameResult();
-    if ((UtilGameOption.getIntOption(game, GameOptionId.MAX_NR_OF_CARDS) == 0) 
-      || UtilGameOption.isOptionEnabled(game, GameOptionId.USE_PREDEFINED_INDUCEMENTS)) {
+    if ((UtilGameOption.getIntOption(game, GameOptionId.MAX_NR_OF_CARDS) == 0)
+        || UtilGameOption.isOptionEnabled(game, GameOptionId.USE_PREDEFINED_INDUCEMENTS)) {
       int freeCash = UtilGameOption.getIntOption(game, GameOptionId.FREE_INDUCEMENT_CASH);
       fInducementGoldHome = UtilInducementSequence.calculateInducementGold(game, true) + freeCash;
       publishParameter(new StepParameter(StepParameterKey.INDUCEMENT_GOLD_HOME, fInducementGoldHome));
@@ -171,7 +170,7 @@ public final class StepBuyCards extends AbstractStep {
       }
     }
   }
-  
+
   private int calculateTotalCost(Card[] pCards) {
     int totalCost = 0;
     if (ArrayTool.isProvided(pCards)) {
@@ -201,9 +200,9 @@ public final class StepBuyCards extends AbstractStep {
     }
     return dialogParameter;
   }
-  
+
   // JSON serialization
-  
+
   @Override
   public JsonObject toJsonValue() {
     JsonObject jsonObject = super.toJsonValue();
@@ -215,7 +214,7 @@ public final class StepBuyCards extends AbstractStep {
     IServerJsonOption.REPORTED_HOME.addTo(jsonObject, fReportedHome);
     return jsonObject;
   }
-  
+
   @Override
   public StepBuyCards initFrom(JsonValue pJsonValue) {
     super.initFrom(pJsonValue);

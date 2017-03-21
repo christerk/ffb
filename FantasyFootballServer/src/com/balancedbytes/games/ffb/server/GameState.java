@@ -31,6 +31,7 @@ public class GameState implements IModelChangeObserver, IJsonSerializable {
   private GameStatus fStatus;
   private StepStack fStepStack;
   private IStep fCurrentStep;
+  private long fLastUpdated;
 
   private transient FantasyFootballServer fServer;
   private transient DiceRoller fDiceRoller;
@@ -79,8 +80,15 @@ public class GameState implements IModelChangeObserver, IJsonSerializable {
     return changeList;
   }
 
-  public void update(ModelChange pChange) {
-    fChangeList.add(pChange);
+  public void update(ModelChange change) {
+    if (change != null) {
+      fChangeList.add(change);
+    }
+    fLastUpdated = System.currentTimeMillis();
+  }
+  
+  public long getLastUpdated() {
+    return fLastUpdated;
   }
 
   public DiceRoller getDiceRoller() {
@@ -117,6 +125,7 @@ public class GameState implements IModelChangeObserver, IJsonSerializable {
 
   public void setStatus(GameStatus pStatus) {
     fStatus = pStatus;
+    update(null);
   }
 
   public long getSpectatorCooldownTime(String pCoach) {
@@ -228,6 +237,7 @@ public class GameState implements IModelChangeObserver, IJsonSerializable {
   public JsonObject toJsonValue() {
     JsonObject jsonObject = new JsonObject();
     IServerJsonOption.GAME_STATUS.addTo(jsonObject, fStatus);
+    IServerJsonOption.LAST_UPDATED.addTo(jsonObject, fLastUpdated);
     IServerJsonOption.STEP_STACK.addTo(jsonObject, fStepStack.toJsonValue());
     IServerJsonOption.GAME_LOG.addTo(jsonObject, fGameLog.toJsonValue());
     if (fCurrentStep != null) {
@@ -242,6 +252,7 @@ public class GameState implements IModelChangeObserver, IJsonSerializable {
   public GameState initFrom(JsonValue pJsonValue) {
     JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
     fStatus = (GameStatus) IServerJsonOption.GAME_STATUS.getFrom(jsonObject);
+    fLastUpdated = IServerJsonOption.LAST_UPDATED.getFrom(jsonObject);
     fStepStack.clear();
     JsonObject stepStackObject = IServerJsonOption.STEP_STACK.getFrom(jsonObject);
     if (stepStackObject != null) {
