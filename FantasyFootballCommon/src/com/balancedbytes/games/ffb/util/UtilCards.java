@@ -145,8 +145,8 @@ public final class UtilCards {
       return 0;
     }
     int movement = pPlayer.getMovement();
-    InducementSet inducementSet = (pPlayer.getTeam() == pGame.getTeamHome()) ? pGame.getTurnDataHome().getInducementSet() : pGame.getTurnDataAway()
-        .getInducementSet();
+    InducementSet inducementSet = (pPlayer.getTeam() == pGame.getTeamHome()) ?
+      pGame.getTurnDataHome().getInducementSet() : pGame.getTurnDataAway().getInducementSet();
     for (Card card : pGame.getFieldModel().getCards(pPlayer)) {
       switch (card) {
         case KICKING_BOOTS:

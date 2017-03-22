@@ -33,150 +33,150 @@ import com.eclipsesource.json.JsonValue;
 /**
  * Step to init the inducement sequence.
  * 
- * Needs to be initialized with stepParameter HOME_TEAM.
- * Needs to be initialized with stepParameter INDUCEMENT_PHASE.
+ * Needs to be initialized with stepParameter HOME_TEAM. Needs to be initialized
+ * with stepParameter INDUCEMENT_PHASE.
  * 
- * Sets stepParameter HOME_TEAM for all steps on the stack.
- * Sets stepParameter INDUCEMENT_PHASE for all steps on the stack.
- * Sets stepParameter END_INDUCEMENT_PHASE for all steps on the stack.
+ * Sets stepParameter HOME_TEAM for all steps on the stack. Sets stepParameter
+ * INDUCEMENT_PHASE for all steps on the stack. Sets stepParameter
+ * END_INDUCEMENT_PHASE for all steps on the stack.
  *
  * @author Kalimar
  */
 public final class StepInitInducement extends AbstractStep {
-	
+
   private InducementPhase fInducementPhase;
   private boolean fHomeTeam;
   private InducementType fInducementType;
   private Card fCard;
-	
-	private transient boolean fEndInducementPhase;
-	private transient boolean fTouchdownOrEndOfHalf;
-	
-	public StepInitInducement(GameState pGameState) {
-		super(pGameState);
-	}
-	
-	public StepId getId() {
-		return StepId.INIT_INDUCEMENT;
-	}
-	
+
+  private transient boolean fEndInducementPhase;
+  private transient boolean fTouchdownOrEndOfHalf;
+
+  public StepInitInducement(GameState pGameState) {
+    super(pGameState);
+  }
+
+  public StepId getId() {
+    return StepId.INIT_INDUCEMENT;
+  }
+
   @Override
   public void init(StepParameterSet pParameterSet) {
-  	if (pParameterSet != null) {
-  		for (StepParameter parameter : pParameterSet.values()) {
-  			switch (parameter.getKey()) {
-  				// mandatory
-  				case INDUCEMENT_PHASE:
-  					fInducementPhase = (InducementPhase) parameter.getValue();
-  					break;
-  				// mandatory
-  				case HOME_TEAM:
-  					fHomeTeam = (parameter.getValue() != null) ? (Boolean) parameter.getValue() : false;
-  					break;
-					default:
-						break;
-  			}
-  		}
-  	}
-  	if (fInducementPhase == null) {
-			throw new StepException("StepParameter " + StepParameterKey.INDUCEMENT_PHASE + " is not initialized.");
-  	}
+    if (pParameterSet != null) {
+      for (StepParameter parameter : pParameterSet.values()) {
+        switch (parameter.getKey()) {
+          // mandatory
+          case INDUCEMENT_PHASE:
+            fInducementPhase = (InducementPhase) parameter.getValue();
+            break;
+          // mandatory
+          case HOME_TEAM:
+            fHomeTeam = (parameter.getValue() != null) ? (Boolean) parameter.getValue() : false;
+            break;
+          default:
+            break;
+        }
+      }
+    }
+    if (fInducementPhase == null) {
+      throw new StepException("StepParameter " + StepParameterKey.INDUCEMENT_PHASE + " is not initialized.");
+    }
   }
-	
-	@Override
-	public void start() {
-		super.start();
-		executeStep();
-	}
-	
-	@Override
+
+  @Override
+  public void start() {
+    super.start();
+    executeStep();
+  }
+
+  @Override
   public StepCommandStatus handleCommand(ReceivedCommand pReceivedCommand) {
     StepCommandStatus commandStatus = super.handleCommand(pReceivedCommand);
-		if (commandStatus == StepCommandStatus.UNHANDLED_COMMAND) {
-			switch (pReceivedCommand.getId()) {
-	      case CLIENT_USE_INDUCEMENT:
-	      	ClientCommandUseInducement useInducementCommand = (ClientCommandUseInducement) pReceivedCommand.getCommand();
-	      	fInducementType = useInducementCommand.getInducementType();
-	      	fCard = useInducementCommand.getCard();
-	      	fEndInducementPhase = ((fInducementType == null) && (fCard == null)); 
+    if (commandStatus == StepCommandStatus.UNHANDLED_COMMAND) {
+      switch (pReceivedCommand.getId()) {
+        case CLIENT_USE_INDUCEMENT:
+          ClientCommandUseInducement useInducementCommand = (ClientCommandUseInducement) pReceivedCommand.getCommand();
+          fInducementType = useInducementCommand.getInducementType();
+          fCard = useInducementCommand.getCard();
+          fEndInducementPhase = ((fInducementType == null) && (fCard == null));
           commandStatus = StepCommandStatus.EXECUTE_STEP;
-	        break;
+          break;
         default:
-        	break;
-			}
-		}
-		if (commandStatus == StepCommandStatus.EXECUTE_STEP) {
-			executeStep();
-		}
-		return commandStatus;
-	}
+          break;
+      }
+    }
+    if (commandStatus == StepCommandStatus.EXECUTE_STEP) {
+      executeStep();
+    }
+    return commandStatus;
+  }
 
   private void executeStep() {
-  	Game game = getGameState().getGame();
-		if (fEndInducementPhase) {
-			leaveStep(true);
-		} else if ((fCard == null) && (fInducementType == null)) {
-			fTouchdownOrEndOfHalf = UtilServerSteps.checkTouchdown(getGameState());
-  		Card[] playableCards = findPlayableCards();
-  		InducementType[] useableInducements = findUseableInducements();
-  		if (ArrayTool.isProvided(useableInducements) || ArrayTool.isProvided(playableCards)) {
-  			String teamId = fHomeTeam ? game.getTeamHome().getId() : game.getTeamAway().getId();
-  			game.setDialogParameter(new DialogUseInducementParameter(teamId, useableInducements, playableCards));
-  		} else {
-				leaveStep(true);
-  		}
-  	} else if (InducementType.WIZARD == fInducementType) {
-			SequenceGenerator.getInstance().pushWizardSequence(getGameState());
-			leaveStep(false);
-  	} else if (fCard != null) {
-  		SequenceGenerator.getInstance().pushCardSequence(getGameState(), fCard, fHomeTeam);
-			leaveStep(false);
-		} else {
-			leaveStep(true);
-		}
+    Game game = getGameState().getGame();
+    if (fEndInducementPhase) {
+      leaveStep(true);
+    } else if ((fCard == null) && (fInducementType == null)) {
+      fTouchdownOrEndOfHalf = UtilServerSteps.checkTouchdown(getGameState());
+      Card[] playableCards = findPlayableCards();
+      InducementType[] useableInducements = findUseableInducements();
+      if (ArrayTool.isProvided(useableInducements) || ArrayTool.isProvided(playableCards)) {
+        String teamId = fHomeTeam ? game.getTeamHome().getId() : game.getTeamAway().getId();
+        game.setDialogParameter(new DialogUseInducementParameter(teamId, useableInducements, playableCards));
+      } else {
+        leaveStep(true);
+      }
+    } else if (InducementType.WIZARD == fInducementType) {
+      SequenceGenerator.getInstance().pushWizardSequence(getGameState());
+      leaveStep(false);
+    } else if (fCard != null) {
+      SequenceGenerator.getInstance().pushCardSequence(getGameState(), fCard, fHomeTeam);
+      leaveStep(false);
+    } else {
+      leaveStep(true);
+    }
   }
-  
+
   private void leaveStep(boolean pEndInducementPhase) {
-  	publishParameter(new StepParameter(StepParameterKey.END_INDUCEMENT_PHASE, pEndInducementPhase));
-		publishParameter(new StepParameter(StepParameterKey.HOME_TEAM, fHomeTeam));
-		publishParameter(new StepParameter(StepParameterKey.INDUCEMENT_PHASE, fInducementPhase));
-		getResult().setNextAction(StepAction.NEXT_STEP);
+    publishParameter(new StepParameter(StepParameterKey.END_INDUCEMENT_PHASE, pEndInducementPhase));
+    publishParameter(new StepParameter(StepParameterKey.HOME_TEAM, fHomeTeam));
+    publishParameter(new StepParameter(StepParameterKey.INDUCEMENT_PHASE, fInducementPhase));
+    getResult().setNextAction(StepAction.NEXT_STEP);
   }
-  
+
   private InducementType[] findUseableInducements() {
-		Set<InducementType> useableInducements = new HashSet<InducementType>();
-  	Game game = getGameState().getGame();
-		TurnData turnData = fHomeTeam ? game.getTurnDataHome() : game.getTurnDataAway();
-		if (InducementPhase.END_OF_OWN_TURN == fInducementPhase) {
-			if (!fTouchdownOrEndOfHalf && (turnData.getInducementSet().hasUsesLeft(InducementType.WIZARD))) {
-				useableInducements.add(InducementType.WIZARD);
-			}
-		}
-		if (InducementPhase.START_OF_OWN_TURN == fInducementPhase) {
-			if (turnData.getInducementSet().hasUsesLeft(InducementType.WIZARD)) {
-				useableInducements.add(InducementType.WIZARD);
-			}
-		}
-		return useableInducements.toArray(new InducementType[useableInducements.size()]);
+    Set<InducementType> useableInducements = new HashSet<InducementType>();
+    Game game = getGameState().getGame();
+    TurnData turnData = fHomeTeam ? game.getTurnDataHome() : game.getTurnDataAway();
+    if (InducementPhase.END_OF_OWN_TURN == fInducementPhase) {
+      if (!fTouchdownOrEndOfHalf && (turnData.getInducementSet().hasUsesLeft(InducementType.WIZARD))) {
+        useableInducements.add(InducementType.WIZARD);
+      }
+    }
+    if (InducementPhase.START_OF_OWN_TURN == fInducementPhase) {
+      if (turnData.getInducementSet().hasUsesLeft(InducementType.WIZARD)) {
+        useableInducements.add(InducementType.WIZARD);
+      }
+    }
+    return useableInducements.toArray(new InducementType[useableInducements.size()]);
   }
-  
-	private Card[] findPlayableCards() {
-  	Game game = getGameState().getGame();
-		Set<Card> playableCards = new HashSet<Card>();
-		InducementSet inducementSet = fHomeTeam ? game.getTurnDataHome().getInducementSet() : game.getTurnDataAway().getInducementSet();
-		for (Card card : inducementSet.getAvailableCards()) {
-			boolean playable = (!card.getTarget().isPlayedOnPlayer() || ArrayTool.isProvided(UtilServerCards.findAllowedPlayersForCard(game, card)));
-			for (InducementPhase phase : card.getPhases()) {
-				if (playable && (phase == fInducementPhase) && (!fTouchdownOrEndOfHalf || (phase != InducementPhase.END_OF_OWN_TURN))) {
-					playableCards.add(card);
-				}
-			}
-		}
-		return playableCards.toArray(new Card[playableCards.size()]);
-	}
+
+  private Card[] findPlayableCards() {
+    Game game = getGameState().getGame();
+    Set<Card> playableCards = new HashSet<Card>();
+    InducementSet inducementSet = fHomeTeam ? game.getTurnDataHome().getInducementSet() : game.getTurnDataAway().getInducementSet();
+    for (Card card : inducementSet.getAvailableCards()) {
+      boolean playable = (!card.getTarget().isPlayedOnPlayer() || ArrayTool.isProvided(UtilServerCards.findAllowedPlayersForCard(game, card)));
+      for (InducementPhase phase : card.getPhases()) {
+        if (playable && (phase == fInducementPhase) && (!fTouchdownOrEndOfHalf || (phase != InducementPhase.END_OF_OWN_TURN))) {
+          playableCards.add(card);
+        }
+      }
+    }
+    return playableCards.toArray(new Card[playableCards.size()]);
+  }
 
   // JSON serialization
-  
+
   @Override
   public JsonObject toJsonValue() {
     JsonObject jsonObject = super.toJsonValue();
@@ -186,7 +186,7 @@ public final class StepInitInducement extends AbstractStep {
     IServerJsonOption.CARD.addTo(jsonObject, fCard);
     return jsonObject;
   }
-  
+
   @Override
   public StepInitInducement initFrom(JsonValue pJsonValue) {
     super.initFrom(pJsonValue);
@@ -197,5 +197,5 @@ public final class StepInitInducement extends AbstractStep {
     fCard = (Card) IServerJsonOption.CARD.getFrom(jsonObject);
     return this;
   }
-  
+
 }

@@ -38,42 +38,42 @@ import com.eclipsesource.json.JsonValue;
  * @author Kalimar
  */
 public class StepWildAnimal extends AbstractStepWithReRoll {
-	
-	private String fGotoLabelOnFailure;
-	
-	public StepWildAnimal(GameState pGameState) {
-		super(pGameState);
-	}
-	
-	public StepId getId() {
-		return StepId.WILD_ANIMAL;
-	}
-	
-  @Override
-  public void init(StepParameterSet pParameterSet) {
-  	if (pParameterSet != null) {
-  		for (StepParameter parameter : pParameterSet.values()) {
-  			switch (parameter.getKey()) {
-  				// mandatory
-  				case GOTO_LABEL_ON_FAILURE:
-  					fGotoLabelOnFailure = (String) parameter.getValue();
-  					break;
-					default:
-						break;
-  			}
-  		}
-  	}
-  	if (fGotoLabelOnFailure == null) {
-			throw new StepException("StepParameter " + StepParameterKey.GOTO_LABEL_ON_FAILURE + " is not initialized.");
-  	}
+
+  private String fGotoLabelOnFailure;
+
+  public StepWildAnimal(GameState pGameState) {
+    super(pGameState);
   }
 
-	@Override
-	public void start() {
-		super.start();
-		executeStep();
-	}
-	
+  public StepId getId() {
+    return StepId.WILD_ANIMAL;
+  }
+
+  @Override
+  public void init(StepParameterSet pParameterSet) {
+    if (pParameterSet != null) {
+      for (StepParameter parameter : pParameterSet.values()) {
+        switch (parameter.getKey()) {
+          // mandatory
+          case GOTO_LABEL_ON_FAILURE:
+            fGotoLabelOnFailure = (String) parameter.getValue();
+            break;
+          default:
+            break;
+        }
+      }
+    }
+    if (fGotoLabelOnFailure == null) {
+      throw new StepException("StepParameter " + StepParameterKey.GOTO_LABEL_ON_FAILURE + " is not initialized.");
+    }
+  }
+
+  @Override
+  public void start() {
+    super.start();
+    executeStep();
+  }
+
   @Override
   public StepCommandStatus handleCommand(ReceivedCommand pReceivedCommand) {
     StepCommandStatus commandStatus = super.handleCommand(pReceivedCommand);
@@ -82,25 +82,25 @@ public class StepWildAnimal extends AbstractStepWithReRoll {
     }
     return commandStatus;
   }
-	
+
   private void executeStep() {
-  	ActionStatus status = ActionStatus.SUCCESS;
+    ActionStatus status = ActionStatus.SUCCESS;
     Game game = getGameState().getGame();
     if (!game.getTurnMode().checkNegatraits()) {
-    	getResult().setNextAction(StepAction.NEXT_STEP);
-    	return;
+      getResult().setNextAction(StepAction.NEXT_STEP);
+      return;
     }
     ActingPlayer actingPlayer = game.getActingPlayer();
     PlayerState playerState = game.getFieldModel().getPlayerState(actingPlayer.getPlayer());
     if (playerState.isConfused()) {
-    	game.getFieldModel().setPlayerState(actingPlayer.getPlayer() , playerState.changeConfused(false));
+      game.getFieldModel().setPlayerState(actingPlayer.getPlayer(), playerState.changeConfused(false));
     }
     if (playerState.isHypnotized()) {
-    	game.getFieldModel().setPlayerState(actingPlayer.getPlayer() , playerState.changeHypnotized(false));
+      game.getFieldModel().setPlayerState(actingPlayer.getPlayer(), playerState.changeHypnotized(false));
     }
     if (UtilCards.hasSkill(game, actingPlayer, Skill.WILD_ANIMAL)) {
       boolean doRoll = true;
-      ReRolledAction reRolledAction = new ReRolledActionFactory().forSkill(Skill.WILD_ANIMAL); 
+      ReRolledAction reRolledAction = new ReRolledActionFactory().forSkill(Skill.WILD_ANIMAL);
       if ((reRolledAction != null) && (reRolledAction == getReRolledAction())) {
         if ((getReRollSource() == null) || !UtilServerReRoll.useReRoll(this, getReRollSource(), actingPlayer.getPlayer())) {
           doRoll = false;
@@ -112,19 +112,18 @@ public class StepWildAnimal extends AbstractStepWithReRoll {
       }
       if (doRoll) {
         int roll = getGameState().getDiceRoller().rollSkill();
-        boolean goodConditions = (
-        	(actingPlayer.getPlayerAction() == PlayerAction.BLITZ_MOVE)
-      		|| (actingPlayer.getPlayerAction() == PlayerAction.BLITZ)
-      		|| (actingPlayer.getPlayerAction() == PlayerAction.BLOCK)
-      		|| (actingPlayer.getPlayerAction() == PlayerAction.MULTIPLE_BLOCK)
-      		|| (actingPlayer.getPlayerAction() == PlayerAction.STAND_UP_BLITZ)
-      	);
+        boolean goodConditions = ((actingPlayer.getPlayerAction() == PlayerAction.BLITZ_MOVE)
+            || (actingPlayer.getPlayerAction() == PlayerAction.BLITZ)
+            || (actingPlayer.getPlayerAction() == PlayerAction.BLOCK)
+            || (actingPlayer.getPlayerAction() == PlayerAction.MULTIPLE_BLOCK)
+            || (actingPlayer.getPlayerAction() == PlayerAction.STAND_UP_BLITZ));
         int minimumRoll = DiceInterpreter.getInstance().minimumRollConfusion(goodConditions);
         boolean successful = DiceInterpreter.getInstance().isSkillRollSuccessful(roll, minimumRoll);
         actingPlayer.markSkillUsed(Skill.WILD_ANIMAL);
         if (!successful) {
           status = ActionStatus.FAILURE;
-          if (((reRolledAction == null) || (reRolledAction != getReRolledAction())) && UtilServerReRoll.askForReRollIfAvailable(getGameState(), actingPlayer.getPlayer(), reRolledAction, minimumRoll, false)) {
+          if (((reRolledAction == null) || (reRolledAction != getReRolledAction()))
+              && UtilServerReRoll.askForReRollIfAvailable(getGameState(), actingPlayer.getPlayer(), reRolledAction, minimumRoll, false)) {
             status = ActionStatus.WAITING_FOR_RE_ROLL;
           } else {
             cancelPlayerAction();
@@ -135,15 +134,15 @@ public class StepWildAnimal extends AbstractStepWithReRoll {
       }
     }
     if (status == ActionStatus.SUCCESS) {
-    	getResult().setNextAction(StepAction.NEXT_STEP);
+      getResult().setNextAction(StepAction.NEXT_STEP);
     } else {
-    	if (status == ActionStatus.FAILURE) {
-  			publishParameter(new StepParameter(StepParameterKey.END_PLAYER_ACTION, true));
-    		getResult().setNextAction(StepAction.GOTO_LABEL, fGotoLabelOnFailure);
-    	}
+      if (status == ActionStatus.FAILURE) {
+        publishParameter(new StepParameter(StepParameterKey.END_PLAYER_ACTION, true));
+        getResult().setNextAction(StepAction.GOTO_LABEL, fGotoLabelOnFailure);
+      }
     }
   }
-  
+
   private void cancelPlayerAction() {
     Game game = getGameState().getGame();
     ActingPlayer actingPlayer = game.getActingPlayer();
@@ -167,7 +166,7 @@ public class StepWildAnimal extends AbstractStepWithReRoll {
         game.getTurnData().setFoulUsed(true);
         break;
       default:
-      	break;
+        break;
     }
     PlayerState playerState = game.getFieldModel().getPlayerState(actingPlayer.getPlayer());
     if (actingPlayer.isStandingUp()) {
@@ -178,26 +177,26 @@ public class StepWildAnimal extends AbstractStepWithReRoll {
     game.setPassCoordinate(null);
     getResult().setSound(SoundId.ROAR);
   }
-  
+
   public int getByteArraySerializationVersion() {
-  	return 1;
+    return 1;
   }
-  
+
   // JSON serialization
-  
+
   @Override
   public JsonObject toJsonValue() {
     JsonObject jsonObject = super.toJsonValue();
     IServerJsonOption.GOTO_LABEL_ON_FAILURE.addTo(jsonObject, fGotoLabelOnFailure);
     return jsonObject;
   }
-  
+
   @Override
   public StepWildAnimal initFrom(JsonValue pJsonValue) {
     super.initFrom(pJsonValue);
     JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-    fGotoLabelOnFailure = IServerJsonOption.GOTO_LABEL_ON_PUSHBACK.getFrom(jsonObject);
+    fGotoLabelOnFailure = IServerJsonOption.GOTO_LABEL_ON_FAILURE.getFrom(jsonObject);
     return this;
   }
-	
+
 }
