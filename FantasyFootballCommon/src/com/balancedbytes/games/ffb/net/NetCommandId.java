@@ -150,7 +150,6 @@ public enum NetCommandId implements IEnumWithName {
   INTERNAL_SERVER_DELETE_GAME("internalServerDeleteGame"),
   INTERNAL_SERVER_UPLOAD_GAME("internalServerUploadGame"),
   INTERNAL_SERVER_SCHEDULE_GAME("internalServerScheduleGame"),
-  INTERNAL_SERVER_BACKUP_GAME("internalServerBackupGame"),
   CLIENT_CLOSE_SESSION("clientCloseSession"),
   CLIENT_ARGUE_THE_CALL("clientArgueTheCall");
   

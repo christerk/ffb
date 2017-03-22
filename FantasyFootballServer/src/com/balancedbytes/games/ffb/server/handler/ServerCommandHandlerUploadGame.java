@@ -5,7 +5,6 @@ import com.balancedbytes.games.ffb.net.NetCommandId;
 import com.balancedbytes.games.ffb.server.FantasyFootballServer;
 import com.balancedbytes.games.ffb.server.GameCache;
 import com.balancedbytes.games.ffb.server.GameState;
-import com.balancedbytes.games.ffb.server.IServerLogLevel;
 import com.balancedbytes.games.ffb.server.net.ReceivedCommand;
 import com.balancedbytes.games.ffb.server.net.commands.InternalServerCommandUploadGame;
 import com.balancedbytes.games.ffb.server.request.ServerRequestLoadReplay;
@@ -32,9 +31,9 @@ public class ServerCommandHandlerUploadGame extends ServerCommandHandler {
     GameState gameState = gameCache.closeGame(uploadGameCommand.getGameId());
     if (gameState == null) {
       gameState = gameCache.queryFromDb(uploadGameCommand.getGameId());
-      if (gameState != null) {
-        getServer().getDebugLog().log(IServerLogLevel.WARN, uploadGameCommand.getGameId(), "ServerCommandUploadGame loaded from db");
-      }
+//      if (gameState != null) {
+//        getServer().getDebugLog().log(IServerLogLevel.WARN, uploadGameCommand.getGameId(), "ServerCommandUploadGame loaded from db");
+//      }
     }
     if (gameState == null) {
       // game has been moved out of the db - request it from the backup service

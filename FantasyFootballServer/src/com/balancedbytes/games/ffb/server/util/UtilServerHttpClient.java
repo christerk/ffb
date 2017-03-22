@@ -55,30 +55,6 @@ public class UtilServerHttpClient {
     
   }
 
-  /*
-  public static byte[] fetchGzippedPage(String url) throws IOException {
-    
-    RequestConfig.Builder requestBuilder = RequestConfig.custom();
-    requestBuilder.setConnectTimeout(CONNECTION_TIMEOUT);
-    requestBuilder.setRedirectsEnabled(true);
-    
-    HttpClientBuilder clientBuilder = HttpClientBuilder.create();
-    clientBuilder.setDefaultRequestConfig(requestBuilder.build());
-    
-    try (CloseableHttpClient client = clientBuilder.build()) {
-      
-      HttpGet request = new HttpGet(url);
-      request.addHeader("Accept-Encoding", "gzip");
-      
-      try (CloseableHttpResponse response = client.execute(request)) {
-        return EntityUtils.toByteArray(response.getEntity());
-      }
-    
-    }
-
-  }
-  */
-
   public static String postMultipartXml(String url, String challengeResponse, String resultXml) throws IOException {
 
     RequestConfig.Builder requestBuilder = RequestConfig.custom();

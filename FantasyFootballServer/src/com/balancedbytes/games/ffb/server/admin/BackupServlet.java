@@ -24,7 +24,7 @@ import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.IServerLogLevel;
 import com.balancedbytes.games.ffb.server.IServerProperty;
 import com.balancedbytes.games.ffb.server.ServerMode;
-import com.balancedbytes.games.ffb.server.net.commands.InternalServerCommandBackupGame;
+import com.balancedbytes.games.ffb.server.request.ServerRequestSaveReplay;
 import com.balancedbytes.games.ffb.util.ArrayTool;
 import com.balancedbytes.games.ffb.util.StringTool;
 import com.balancedbytes.games.ffb.xml.UtilXml;
@@ -173,7 +173,7 @@ public class BackupServlet extends HttpServlet {
       UtilXml.addEmptyElement(handler, _XML_TAG_SAVE, attributes);
       long gameId = parseGameId(gameIdString);
       if (gameId > 0) {
-        getServer().getCommunication().handleCommand(new InternalServerCommandBackupGame(gameId));
+        getServer().getRequestProcessor().add(new ServerRequestSaveReplay(gameId));
       } else {
         UtilXml.addValueElement(handler, _XML_TAG_ERROR, "Invalid or missing gameId parameter");
         isOk = false;

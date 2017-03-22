@@ -39,7 +39,7 @@ import com.balancedbytes.games.ffb.server.db.query.DbGamesSerializedQuery;
 import com.balancedbytes.games.ffb.server.db.update.DbGamesInfoUpdateParameter;
 import com.balancedbytes.games.ffb.server.db.update.DbGamesSerializedUpdateParameter;
 import com.balancedbytes.games.ffb.server.net.SessionManager;
-import com.balancedbytes.games.ffb.server.net.commands.InternalServerCommandBackupGame;
+import com.balancedbytes.games.ffb.server.request.ServerRequestSaveReplay;
 import com.balancedbytes.games.ffb.server.request.fumbbl.FumbblRequestRemoveGamestate;
 import com.balancedbytes.games.ffb.server.util.UtilServerTimer;
 import com.balancedbytes.games.ffb.util.ArrayTool;
@@ -62,7 +62,8 @@ public class GameCache {
 
   private static final String _PITCHES_INI = "pitches.ini";
   private static final String _PITCH_PROPERTY_PREFIX = "pitch.";
-
+  private static final long _MAX_CLIENT_PING_DELAY = 1000 * 60;
+  
   public GameCache(FantasyFootballServer pServer) {
     fServer = pServer;
     fGameStateById = new HashMap<Long, GameState>();
@@ -118,12 +119,23 @@ public class GameCache {
       log.append("ADD GAME cache increases to ").append(fGameStateById.size()).append(" games.");
       server.getDebugLog().log(IServerLogLevel.WARN, gameState.getId(), log.toString());
     }
-    // remove dead games from cache: either there are no connections to the session
-    // or there has been no update for an hour (disconnection detection fails sometimes)
+    // remove dead games from cache if there are no connections to the session
+    // if the last client ping is older than a minute close the session
+    long currentTime = System.currentTimeMillis();
     for (Long gameId : fGameStateById.keySet()) {
       GameStatus status = fGameStateById.get(gameId).getStatus();
-      if ((gameId != null) && (gameId != gameState.getId()) && (status != GameStatus.LOADING) && !checkGameOpen(gameId)) {
-        removeGame(gameId);
+      if ((gameId != null) && (gameId != gameState.getId()) && (status != GameStatus.LOADING)) {
+        if (!checkGameOpen(gameId)) {
+          removeGame(gameId);
+        } else {
+          Session[] sessions = getServer().getSessionManager().getSessionsForGameId(gameId);
+          for (Session session : sessions) {
+            long lastClientPing = getServer().getSessionManager().getLastPing(session);
+            if (currentTime > lastClientPing + _MAX_CLIENT_PING_DELAY) {
+              getServer().getCommunication().close(session);
+            }
+          }
+        }
       }
     }
   }
@@ -143,7 +155,7 @@ public class GameCache {
         StringTool.bind("REMOVE GAME cache decreases to $1 games.", fGameStateById.size()));
       // <-- log game cache size
       if (cachedGameState.getGame().getFinished() != null) {
-        getServer().getCommunication().handleCommand(new InternalServerCommandBackupGame(cachedGameState.getId()));
+        getServer().getRequestProcessor().add(new ServerRequestSaveReplay(cachedGameState.getId()));
         queueDbPlayerMarkersUpdate(cachedGameState);
       }
       // remove gameState from db if only one team has joined
