@@ -24,7 +24,7 @@ after the ball has scattered and ended in an unoccupied square in your half.
 Effect:
 Pick one of your players on the pitch that is not on the line of scrimmage,
 and move them to the same square as the ball. Roll to see if they catch the 
-all with an additional +1 modifier.
+ball with an additional +1 modifier.
 
 ------------------------------------------------------------------------------
 Die Hard

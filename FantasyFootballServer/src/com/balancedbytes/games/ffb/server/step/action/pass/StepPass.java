@@ -56,69 +56,69 @@ import com.eclipsesource.json.JsonValue;
  * @author Kalimar
  */
 public class StepPass extends AbstractStepWithReRoll {
-	
-	private String fGotoLabelOnEnd;
-	private String fGotoLabelOnMissedPass;
-	private String fCatcherId;
-	private boolean fSuccessful;
-	private boolean fHoldingSafeThrow;
-	private boolean fPassFumble;
-	private boolean fPassSkillUsed;
-	
-	public StepPass(GameState pGameState) {
-		super(pGameState);
-	}
-	
-	public StepId getId() {
-		return StepId.PASS;
-	}
-	
-  @Override
-  public void init(StepParameterSet pParameterSet) {
-  	if (pParameterSet != null) {
-  		for (StepParameter parameter : pParameterSet.values()) {
-  			switch (parameter.getKey()) {
-  			  // mandatory
-  				case GOTO_LABEL_ON_END:
-  					fGotoLabelOnEnd = (String) parameter.getValue();
-  					break;
-  			  // mandatory
-  				case GOTO_LABEL_ON_MISSED_PASS:
-  					fGotoLabelOnMissedPass = (String) parameter.getValue();
-  					break;
-  				default:
-  					break;
-  			}
-  		}
-  	}
-  	if (!StringTool.isProvided(fGotoLabelOnEnd)) {
-			throw new StepException("StepParameter " + StepParameterKey.GOTO_LABEL_ON_END + " is not initialized.");
-  	}
-  	if (!StringTool.isProvided(fGotoLabelOnMissedPass)) {
-			throw new StepException("StepParameter " + StepParameterKey.GOTO_LABEL_ON_MISSED_PASS + " is not initialized.");
-  	}
-  }
-  
-  @Override
-  public boolean setParameter(StepParameter pParameter) {
-		if ((pParameter != null) && !super.setParameter(pParameter)) {
-	  	switch (pParameter.getKey()) {
-				case CATCHER_ID:
-					fCatcherId = (String) pParameter.getValue();
-					return true;
-				default:
-					break;
-	  	}
-		}
-		return false;
+
+  private String fGotoLabelOnEnd;
+  private String fGotoLabelOnMissedPass;
+  private String fCatcherId;
+  private boolean fSuccessful;
+  private boolean fHoldingSafeThrow;
+  private boolean fPassFumble;
+  private boolean fPassSkillUsed;
+
+  public StepPass(GameState pGameState) {
+    super(pGameState);
   }
 
-	@Override
-	public void start() {
-		super.start();
-		executeStep();
-	}
-	
+  public StepId getId() {
+    return StepId.PASS;
+  }
+
+  @Override
+  public void init(StepParameterSet pParameterSet) {
+    if (pParameterSet != null) {
+      for (StepParameter parameter : pParameterSet.values()) {
+        switch (parameter.getKey()) {
+          // mandatory
+          case GOTO_LABEL_ON_END:
+            fGotoLabelOnEnd = (String) parameter.getValue();
+            break;
+          // mandatory
+          case GOTO_LABEL_ON_MISSED_PASS:
+            fGotoLabelOnMissedPass = (String) parameter.getValue();
+            break;
+          default:
+            break;
+        }
+      }
+    }
+    if (!StringTool.isProvided(fGotoLabelOnEnd)) {
+      throw new StepException("StepParameter " + StepParameterKey.GOTO_LABEL_ON_END + " is not initialized.");
+    }
+    if (!StringTool.isProvided(fGotoLabelOnMissedPass)) {
+      throw new StepException("StepParameter " + StepParameterKey.GOTO_LABEL_ON_MISSED_PASS + " is not initialized.");
+    }
+  }
+
+  @Override
+  public boolean setParameter(StepParameter pParameter) {
+    if ((pParameter != null) && !super.setParameter(pParameter)) {
+      switch (pParameter.getKey()) {
+        case CATCHER_ID:
+          fCatcherId = (String) pParameter.getValue();
+          return true;
+        default:
+          break;
+      }
+    }
+    return false;
+  }
+
+  @Override
+  public void start() {
+    super.start();
+    executeStep();
+  }
+
   @Override
   public StepCommandStatus handleCommand(ReceivedCommand pReceivedCommand) {
     StepCommandStatus commandStatus = super.handleCommand(pReceivedCommand);
@@ -145,16 +145,16 @@ public class StepPass extends AbstractStepWithReRoll {
   private void executeStep() {
     Game game = getGameState().getGame();
     if ((game.getThrower() == null) || (game.getThrowerAction() == null)) {
-    	return;
+      return;
     }
     if (PlayerAction.THROW_BOMB == game.getThrowerAction()) {
-    	game.getFieldModel().setBombMoving(true);
+      game.getFieldModel().setBombMoving(true);
     } else {
-    	game.getFieldModel().setBallMoving(true);
+      game.getFieldModel().setBallMoving(true);
     }
     if (ReRolledAction.PASS == getReRolledAction()) {
       if ((getReRollSource() == null) || !UtilServerReRoll.useReRoll(this, getReRollSource(), game.getThrower())) {
-    	  handleFailedPass();
+        handleFailedPass();
         return;
       }
     }
@@ -164,109 +164,110 @@ public class StepPass extends AbstractStepWithReRoll {
     int minimumRoll = DiceInterpreter.getInstance().minimumRollPass(game.getThrower(), passingDistance, passModifiers);
     int roll = getGameState().getDiceRoller().rollSkill();
     if (roll == 6) {
-    	fSuccessful = true;
-    	fPassFumble = false;
-    	fHoldingSafeThrow = false;
+      fSuccessful = true;
+      fPassFumble = false;
+      fHoldingSafeThrow = false;
     } else if (roll == 1) {
-    	fSuccessful = false;
-    	fPassFumble = true;
-    	fHoldingSafeThrow = false;
+      fSuccessful = false;
+      fPassFumble = true;
+      fHoldingSafeThrow = false;
     } else {
-    	fPassFumble = DiceInterpreter.getInstance().isPassFumble(roll, game.getThrower(), passingDistance, passModifiers); 
-			if (fPassFumble) {
-				fSuccessful = false;
-				fHoldingSafeThrow = (UtilCards.hasSkill(game, game.getThrower(), Skill.SAFE_THROW) && (PlayerAction.THROW_BOMB != game.getThrowerAction()));
-			} else {
-				fSuccessful = DiceInterpreter.getInstance().isSkillRollSuccessful(roll, minimumRoll);
-				fHoldingSafeThrow = false;
-			}
-		}
+      fPassFumble = DiceInterpreter.getInstance().isPassFumble(roll, game.getThrower(), passingDistance, passModifiers);
+      if (fPassFumble) {
+        fSuccessful = false;
+        fHoldingSafeThrow = (UtilCards.hasSkill(game, game.getThrower(), Skill.SAFE_THROW) && (PlayerAction.THROW_BOMB != game.getThrowerAction()));
+      } else {
+        fSuccessful = DiceInterpreter.getInstance().isSkillRollSuccessful(roll, minimumRoll);
+        fHoldingSafeThrow = false;
+      }
+    }
     PassModifier[] passModifierArray = new PassModifierFactory().toArray(passModifiers);
     boolean reRolled = ((getReRolledAction() == ReRolledAction.PASS) && (getReRollSource() != null));
-    getResult().addReport(new ReportPassRoll(game.getThrowerId(), fSuccessful, roll, minimumRoll, reRolled, passModifierArray, passingDistance, fPassFumble, fHoldingSafeThrow, (PlayerAction.THROW_BOMB == game.getThrowerAction())));
+    getResult().addReport(new ReportPassRoll(game.getThrowerId(), fSuccessful, roll, minimumRoll, reRolled, passModifierArray, passingDistance, fPassFumble,
+        fHoldingSafeThrow, (PlayerAction.THROW_BOMB == game.getThrowerAction())));
     if (fSuccessful) {
       game.getFieldModel().setRangeRuler(null);
-    	publishParameter(new StepParameter(StepParameterKey.PASS_FUMBLE, fPassFumble));
+      publishParameter(new StepParameter(StepParameterKey.PASS_FUMBLE, fPassFumble));
       FieldCoordinate startCoordinate = game.getFieldModel().getPlayerCoordinate(game.getThrower());
       if (PlayerAction.THROW_BOMB == game.getThrowerAction()) {
-      	getResult().setAnimation(new Animation(AnimationType.THROW_BOMB, startCoordinate, game.getPassCoordinate(), null));
+        getResult().setAnimation(new Animation(AnimationType.THROW_BOMB, startCoordinate, game.getPassCoordinate(), null));
       } else {
-      	getResult().setAnimation(new Animation(AnimationType.PASS, startCoordinate, game.getPassCoordinate(), null));
+        getResult().setAnimation(new Animation(AnimationType.PASS, startCoordinate, game.getPassCoordinate(), null));
       }
       UtilServerGame.syncGameModel(this);
       Player catcher = game.getPlayerById(fCatcherId);
       PlayerState catcherState = game.getFieldModel().getPlayerState(catcher);
       if ((catcher == null) || (catcherState == null) || !catcherState.hasTacklezones()) {
         if (PlayerAction.THROW_BOMB == game.getThrowerAction()) {
-        	game.getFieldModel().setBombCoordinate(game.getPassCoordinate());
-        	publishParameter(new StepParameter(StepParameterKey.CATCH_SCATTER_THROW_IN_MODE, CatchScatterThrowInMode.CATCH_BOMB));
+          game.getFieldModel().setBombCoordinate(game.getPassCoordinate());
+          publishParameter(new StepParameter(StepParameterKey.CATCH_SCATTER_THROW_IN_MODE, CatchScatterThrowInMode.CATCH_BOMB));
         } else {
-        	game.getFieldModel().setBallCoordinate(game.getPassCoordinate());
-        	publishParameter(new StepParameter(StepParameterKey.CATCH_SCATTER_THROW_IN_MODE, CatchScatterThrowInMode.CATCH_MISSED_PASS));
+          game.getFieldModel().setBallCoordinate(game.getPassCoordinate());
+          publishParameter(new StepParameter(StepParameterKey.CATCH_SCATTER_THROW_IN_MODE, CatchScatterThrowInMode.CATCH_MISSED_PASS));
         }
-       	getResult().setNextAction(StepAction.NEXT_STEP);
+        getResult().setNextAction(StepAction.NEXT_STEP);
       } else {
         if (PlayerAction.THROW_BOMB == game.getThrowerAction()) {
-        	game.getFieldModel().setBombCoordinate(game.getPassCoordinate());
-	      	publishParameter(new StepParameter(StepParameterKey.CATCH_SCATTER_THROW_IN_MODE, CatchScatterThrowInMode.CATCH_ACCURATE_BOMB));
+          game.getFieldModel().setBombCoordinate(game.getPassCoordinate());
+          publishParameter(new StepParameter(StepParameterKey.CATCH_SCATTER_THROW_IN_MODE, CatchScatterThrowInMode.CATCH_ACCURATE_BOMB));
         } else {
-        	game.getFieldModel().setBallCoordinate(game.getPassCoordinate());
-	      	publishParameter(new StepParameter(StepParameterKey.PASS_ACCURATE, true));
-	      	publishParameter(new StepParameter(StepParameterKey.CATCH_SCATTER_THROW_IN_MODE, CatchScatterThrowInMode.CATCH_ACCURATE_PASS));
+          game.getFieldModel().setBallCoordinate(game.getPassCoordinate());
+          publishParameter(new StepParameter(StepParameterKey.PASS_ACCURATE, true));
+          publishParameter(new StepParameter(StepParameterKey.CATCH_SCATTER_THROW_IN_MODE, CatchScatterThrowInMode.CATCH_ACCURATE_PASS));
         }
-       	getResult().setNextAction(StepAction.NEXT_STEP);
+        getResult().setNextAction(StepAction.NEXT_STEP);
       }
     } else {
-    	boolean doNextStep = true;
+      boolean doNextStep = true;
       if (getReRolledAction() != ReRolledAction.PASS) {
         setReRolledAction(ReRolledAction.PASS);
         if (UtilCards.hasSkill(game, game.getThrower(), Skill.PASS) && !fPassSkillUsed) {
-        	doNextStep = false;
-        	fPassSkillUsed = true;
+          doNextStep = false;
+          fPassSkillUsed = true;
           UtilServerDialog.showDialog(getGameState(), new DialogSkillUseParameter(game.getThrowerId(), Skill.PASS, minimumRoll));
         } else {
           if (UtilServerReRoll.askForReRollIfAvailable(getGameState(), game.getThrower(), ReRolledAction.PASS, minimumRoll, fPassFumble)) {
-          	doNextStep = false;
+            doNextStep = false;
           }
         }
       }
       if (doNextStep) {
-      	handleFailedPass();
+        handleFailedPass();
       }
     }
   }
-  
+
   private void handleFailedPass() {
-  	Game game = getGameState().getGame();
+    Game game = getGameState().getGame();
     game.getFieldModel().setRangeRuler(null);
     FieldCoordinate throwerCoordinate = game.getFieldModel().getPlayerCoordinate(game.getThrower());
-  	publishParameter(new StepParameter(StepParameterKey.PASS_FUMBLE, fPassFumble));
-	  if (fHoldingSafeThrow){
-		  game.getFieldModel().setBallCoordinate(throwerCoordinate);
-		  game.getFieldModel().setBallMoving(false);
-     	getResult().setNextAction(StepAction.GOTO_LABEL, fGotoLabelOnEnd);     	
-	  } else if (fPassFumble) {
+    publishParameter(new StepParameter(StepParameterKey.PASS_FUMBLE, fPassFumble));
+    if (fHoldingSafeThrow) {
+      game.getFieldModel().setBallCoordinate(throwerCoordinate);
+      game.getFieldModel().setBallMoving(false);
+      getResult().setNextAction(StepAction.GOTO_LABEL, fGotoLabelOnEnd);
+    } else if (fPassFumble) {
       if (PlayerAction.THROW_BOMB == game.getThrowerAction()) {
-	      game.getFieldModel().setBombCoordinate(game.getFieldModel().getPlayerCoordinate(game.getThrower()));
+        game.getFieldModel().setBombCoordinate(game.getFieldModel().getPlayerCoordinate(game.getThrower()));
       } else {
-	      game.getFieldModel().setBallCoordinate(game.getFieldModel().getPlayerCoordinate(game.getThrower()));
-	    	publishParameter(new StepParameter(StepParameterKey.CATCH_SCATTER_THROW_IN_MODE, CatchScatterThrowInMode.SCATTER_BALL));
+        game.getFieldModel().setBallCoordinate(game.getFieldModel().getPlayerCoordinate(game.getThrower()));
+        publishParameter(new StepParameter(StepParameterKey.CATCH_SCATTER_THROW_IN_MODE, CatchScatterThrowInMode.SCATTER_BALL));
       }
-    	publishParameter(new StepParameter(StepParameterKey.CATCHER_ID, null));
-     	getResult().setNextAction(StepAction.NEXT_STEP);
+      publishParameter(new StepParameter(StepParameterKey.CATCHER_ID, null));
+      getResult().setNextAction(StepAction.NEXT_STEP);
     } else {
       if (PlayerAction.THROW_BOMB == game.getThrowerAction()) {
-      	game.getFieldModel().setBombCoordinate(game.getPassCoordinate());
+        game.getFieldModel().setBombCoordinate(game.getPassCoordinate());
       } else {
-      	game.getFieldModel().setBallCoordinate(game.getPassCoordinate());
+        game.getFieldModel().setBallCoordinate(game.getPassCoordinate());
       }
-    	publishParameter(new StepParameter(StepParameterKey.CATCHER_ID, null));
-     	getResult().setNextAction(StepAction.GOTO_LABEL, fGotoLabelOnMissedPass);
+      publishParameter(new StepParameter(StepParameterKey.CATCHER_ID, null));
+      getResult().setNextAction(StepAction.GOTO_LABEL, fGotoLabelOnMissedPass);
     }
   }
-  
+
   // JSON serialization
-  
+
   @Override
   public JsonObject toJsonValue() {
     JsonObject jsonObject = super.toJsonValue();
@@ -279,7 +280,7 @@ public class StepPass extends AbstractStepWithReRoll {
     IServerJsonOption.PASS_SKILL_USED.addTo(jsonObject, fPassSkillUsed);
     return jsonObject;
   }
-  
+
   @Override
   public StepPass initFrom(JsonValue pJsonValue) {
     super.initFrom(pJsonValue);
@@ -293,5 +294,5 @@ public class StepPass extends AbstractStepWithReRoll {
     fPassSkillUsed = IServerJsonOption.PASS_SKILL_USED.getFrom(jsonObject);
     return this;
   }
-  
+
 }

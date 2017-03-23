@@ -136,7 +136,7 @@ public class ServerCommunication implements Runnable, IReceivedCommandHandler {
                 gameState.handleCommand(receivedCommand);
               }
             } catch (Exception any) {
-              getServer().getDebugLog().log(any);
+              getServer().getDebugLog().log(gameState.getId(), any);
               shutdownGame(gameState);
             }
           }

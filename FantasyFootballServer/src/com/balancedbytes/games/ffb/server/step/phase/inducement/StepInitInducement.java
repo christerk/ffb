@@ -33,12 +33,12 @@ import com.eclipsesource.json.JsonValue;
 /**
  * Step to init the inducement sequence.
  * 
- * Needs to be initialized with stepParameter HOME_TEAM. Needs to be initialized
- * with stepParameter INDUCEMENT_PHASE.
+ * Needs to be initialized with stepParameter HOME_TEAM.
+ * Needs to be initialized with stepParameter INDUCEMENT_PHASE.
  * 
- * Sets stepParameter HOME_TEAM for all steps on the stack. Sets stepParameter
- * INDUCEMENT_PHASE for all steps on the stack. Sets stepParameter
- * END_INDUCEMENT_PHASE for all steps on the stack.
+ * Sets stepParameter HOME_TEAM for all steps on the stack.
+ * Sets stepParameter INDUCEMENT_PHASE for all steps on the stack.
+ * Sets stepParameter END_INDUCEMENT_PHASE for all steps on the stack.
  *
  * @author Kalimar
  */
