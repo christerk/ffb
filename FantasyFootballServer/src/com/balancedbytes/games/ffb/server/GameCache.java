@@ -62,7 +62,6 @@ public class GameCache {
 
   private static final String _PITCHES_INI = "pitches.ini";
   private static final String _PITCH_PROPERTY_PREFIX = "pitch.";
-  private static final long _MAX_CLIENT_PING_DELAY = 1000 * 60;
   
   public GameCache(FantasyFootballServer pServer) {
     fServer = pServer;
@@ -120,22 +119,10 @@ public class GameCache {
       server.getDebugLog().log(IServerLogLevel.WARN, gameState.getId(), log.toString());
     }
     // remove dead games from cache if there are no connections to the session
-    // if the last client ping is older than a minute close the session
-    long currentTime = System.currentTimeMillis();
     for (Long gameId : fGameStateById.keySet()) {
       GameStatus status = fGameStateById.get(gameId).getStatus();
-      if ((gameId != null) && (gameId != gameState.getId()) && (status != GameStatus.LOADING)) {
-        if (!checkGameOpen(gameId)) {
-          removeGame(gameId);
-        } else {
-          Session[] sessions = getServer().getSessionManager().getSessionsForGameId(gameId);
-          for (Session session : sessions) {
-            long lastClientPing = getServer().getSessionManager().getLastPing(session);
-            if (currentTime > lastClientPing + _MAX_CLIENT_PING_DELAY) {
-              getServer().getCommunication().close(session);
-            }
-          }
-        }
+      if ((gameId != null) && (gameId != gameState.getId()) && (status != GameStatus.LOADING) && !checkGameOpen(gameId)) {
+        removeGame(gameId);
       }
     }
   }

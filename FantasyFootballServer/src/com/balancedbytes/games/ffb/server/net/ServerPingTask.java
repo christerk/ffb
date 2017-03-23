@@ -12,15 +12,15 @@ import com.balancedbytes.games.ffb.server.db.DbConnectionManager;
 import com.fumbbl.rng.NetworkEntropySource;
 
 public class ServerPingTask extends TimerTask {
-  
+
   private FantasyFootballServer fServer;
   private DbConnectionManager fDbConnectionManager;
-  private int fPingInterval; 
+  private int fPingInterval;
   private int fMaxPingDelay;
   private int fDbKeepAlive;
   private int fDbKeepAliveCounter;
   private NetworkEntropySource fNetworkEntropySource;
-  
+
   public ServerPingTask(FantasyFootballServer pServer, int pPingInterval, int pMaxPingDelay, int pDbKeepAlive) {
     fServer = pServer;
     fPingInterval = pPingInterval;
@@ -42,7 +42,7 @@ public class ServerPingTask extends TimerTask {
       for (Session session : sessionManager.getAllSessions()) {
         long lastPing = sessionManager.getLastPing(session);
         if ((fMaxPingDelay > 0) && (lastPing > 0) && (currentTimeMillis - lastPing > fMaxPingDelay)) {
-        	if (getServer().getDebugLog().isLogging(IServerLogLevel.WARN)) {
+          if (getServer().getDebugLog().isLogging(IServerLogLevel.WARN)) {
             StringBuilder logMessage = new StringBuilder();
             String coach = sessionManager.getCoachForSession(session);
             GameState gameState = getServer().getGameCache().getGameStateById(sessionManager.getGameIdForSession(session));
@@ -52,8 +52,8 @@ public class ServerPingTask extends TimerTask {
             logMessage.append(coach);
             logMessage.append(" (Ping Timeout).");
             getServer().getDebugLog().log(IServerLogLevel.WARN, (gameState != null) ? gameState.getId() : -1, logMessage.toString());
-        	}
-        	getServer().getCommunication().close(session);  // sends an internalCommandSocketClosed
+          }
+          getServer().getCommunication().close(session); // sends an internalCommandSocketClosed
         }
       }
       if (fNetworkEntropySource.hasEnoughEntropy()) {
@@ -71,15 +71,15 @@ public class ServerPingTask extends TimerTask {
       System.exit(99);
     }
   }
-  
+
   public FantasyFootballServer getServer() {
     return fServer;
   }
-  
+
   public void setDbConnectionManager(DbConnectionManager pDbConnectionManager) {
     fDbConnectionManager = pDbConnectionManager;
   }
-  
+
   public DbConnectionManager getDbConnectionManager() {
     return fDbConnectionManager;
   }
