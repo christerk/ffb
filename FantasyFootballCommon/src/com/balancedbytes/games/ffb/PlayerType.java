@@ -5,7 +5,7 @@ package com.balancedbytes.games.ffb;
  * 
  * @author Kalimar
  */
-public enum PlayerType implements IEnumWithName {
+public enum PlayerType implements INamedObject {
   
   REGULAR("Regular"),
   BIG_GUY("Big Guy"),

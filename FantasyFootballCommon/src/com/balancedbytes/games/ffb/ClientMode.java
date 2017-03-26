@@ -6,7 +6,7 @@ package com.balancedbytes.games.ffb;
  * 
  * @author Kalimar
  */
-public enum ClientMode implements IEnumWithName {
+public enum ClientMode implements INamedObject {
   
   PLAYER("player", "-player"),
   SPECTATOR("spectator", "-spectator"),

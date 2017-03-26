@@ -1,13 +1,13 @@
 package com.balancedbytes.games.ffb.option;
 
-import com.balancedbytes.games.ffb.IEnumWithNameFactory;
+import com.balancedbytes.games.ffb.INamedObjectFactory;
 import com.balancedbytes.games.ffb.util.StringTool;
 
 /**
  * 
  * @author Kalimar
  */
-public class GameOptionIdFactory implements IEnumWithNameFactory {
+public class GameOptionIdFactory implements INamedObjectFactory {
   
   public GameOptionId forName(String pName) {
     if (StringTool.isProvided(pName)) {

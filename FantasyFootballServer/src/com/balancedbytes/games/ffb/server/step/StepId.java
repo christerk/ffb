@@ -1,12 +1,12 @@
 package com.balancedbytes.games.ffb.server.step;
 
-import com.balancedbytes.games.ffb.IEnumWithName;
+import com.balancedbytes.games.ffb.INamedObject;
 
 /**
  * 
  * @author Kalimar
  */
-public enum StepId implements IEnumWithName {
+public enum StepId implements INamedObject {
 	
 	ALWAYS_HUNGRY("alwaysHungry"),                  // action.ttm
 	ANIMOSITY("animosity"),                         // action.pass

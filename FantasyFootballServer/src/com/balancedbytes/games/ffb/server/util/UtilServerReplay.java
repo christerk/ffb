@@ -19,7 +19,7 @@ public class UtilServerReplay {
     }
     FantasyFootballServer server = pGameState.getServer();
     if (server.getSessionManager().getGameIdForSession(pSession) != pGameState.getId()) {
-      server.getSessionManager().addSession(pSession, pGameState, null, ClientMode.REPLAY, false);
+      server.getSessionManager().addSession(pSession, pGameState.getId(), null, ClientMode.REPLAY, false);
       server.getCommunication().sendGameState(pSession, pGameState);
     }
     server.getReplayer().add(new ServerReplay(pGameState, pReplayToCommandNr, pSession));

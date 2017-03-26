@@ -4,7 +4,7 @@ package com.balancedbytes.games.ffb;
  * 
  * @author Kalimar
  */
-public class BlockResultFactory implements IEnumWithNameFactory {
+public class BlockResultFactory implements INamedObjectFactory {
   
   public BlockResult forName(String pName) {
     for (BlockResult result : BlockResult.values()) {

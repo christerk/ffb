@@ -5,7 +5,7 @@ package com.balancedbytes.games.ffb;
  * 
  * @author Kalimar
  */
-public class InjuryTypeFactory implements IEnumWithNameFactory {
+public class InjuryTypeFactory implements INamedObjectFactory {
   
   public InjuryType forName(String pName) {
     for (InjuryType type : InjuryType.values()) {

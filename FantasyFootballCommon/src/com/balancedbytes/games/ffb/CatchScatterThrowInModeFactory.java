@@ -5,7 +5,7 @@ package com.balancedbytes.games.ffb;
  * 
  * @author Kalimar
  */
-public class CatchScatterThrowInModeFactory implements IEnumWithNameFactory {
+public class CatchScatterThrowInModeFactory implements INamedObjectFactory {
   
   public CatchScatterThrowInMode forName(String pName) {
     for (CatchScatterThrowInMode mode : CatchScatterThrowInMode.values()) {

@@ -4,7 +4,7 @@ package com.balancedbytes.games.ffb;
  * 
  * @author Kalimar
  */
-public class PlayerActionFactory implements IEnumWithNameFactory {
+public class PlayerActionFactory implements INamedObjectFactory {
   
   public PlayerAction forName(String pName) {
     for (PlayerAction action : PlayerAction.values()) {

@@ -167,9 +167,9 @@ public class DebugLog {
           if (gameId > 0) {
           	gameState = getServer().getGameCache().getGameStateById(gameId);
             if ((gameState != null) && (gameState.getGame().getStarted() != null)) {
-              if (session == sessionManager.getSessionOfHomeCoach(gameState)) {
+              if (session == sessionManager.getSessionOfHomeCoach(gameState.getId())) {
                 commandFlag = COMMAND_CLIENT_HOME;
-              } else if (session == sessionManager.getSessionOfAwayCoach(gameState)) {
+              } else if (session == sessionManager.getSessionOfAwayCoach(gameState.getId())) {
                 commandFlag = COMMAND_CLIENT_AWAY;
               } else {
                 commandFlag = COMMAND_CLIENT_SPECTATOR;
@@ -204,9 +204,9 @@ public class DebugLog {
       if (gameId > 0) {
         GameState gameState = getServer().getGameCache().getGameStateById(gameId);
         if ((gameState != null) && (gameState.getGame().getStarted() != null)) {
-          if (sessionManager.getSessionOfHomeCoach(gameState) == pSession) {
+          if (sessionManager.getSessionOfHomeCoach(gameState.getId()) == pSession) {
             commandFlag = COMMAND_SERVER_HOME;
-          } else if (sessionManager.getSessionOfAwayCoach(gameState) == pSession) {
+          } else if (sessionManager.getSessionOfAwayCoach(gameState.getId()) == pSession) {
             commandFlag = COMMAND_SERVER_AWAY;
           } else {
             if (sessionManager.getCoachForSession(pSession) != null) {

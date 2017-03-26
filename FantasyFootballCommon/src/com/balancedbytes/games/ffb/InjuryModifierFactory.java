@@ -11,7 +11,7 @@ import com.balancedbytes.games.ffb.model.Player;
  * 
  * @author Kalimar
  */
-public class InjuryModifierFactory implements IEnumWithNameFactory {
+public class InjuryModifierFactory implements INamedObjectFactory {
   
   public InjuryModifier forName(String pName) {
     for (InjuryModifier modifier : InjuryModifier.values()) {

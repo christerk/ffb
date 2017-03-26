@@ -1,12 +1,12 @@
 package com.balancedbytes.games.ffb.server.step.action.common;
 
-import com.balancedbytes.games.ffb.IEnumWithNameFactory;
+import com.balancedbytes.games.ffb.INamedObjectFactory;
 
 /**
  * 
  * @author Kalimar
  */
-public class ApothecaryModeFactory implements IEnumWithNameFactory {
+public class ApothecaryModeFactory implements INamedObjectFactory {
   
   public ApothecaryMode forName(String pName) {
     for (ApothecaryMode mode : ApothecaryMode.values()) {

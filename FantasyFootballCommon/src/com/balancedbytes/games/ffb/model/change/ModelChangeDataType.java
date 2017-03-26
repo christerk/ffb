@@ -11,7 +11,7 @@ import com.balancedbytes.games.ffb.DiceDecoration;
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.FieldMarker;
 import com.balancedbytes.games.ffb.IDialogParameter;
-import com.balancedbytes.games.ffb.IEnumWithName;
+import com.balancedbytes.games.ffb.INamedObject;
 import com.balancedbytes.games.ffb.Inducement;
 import com.balancedbytes.games.ffb.LeaderState;
 import com.balancedbytes.games.ffb.LeaderStateFactory;
@@ -46,7 +46,7 @@ import com.eclipsesource.json.JsonValue;
  * 
  * @author Kalimar
  */
-public enum ModelChangeDataType implements IEnumWithName {
+public enum ModelChangeDataType implements INamedObject {
   
   NULL("null"),
   BOOLEAN("boolean"),

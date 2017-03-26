@@ -4,7 +4,7 @@ package com.balancedbytes.games.ffb;
  * 
  * @author Kalimar
  */
-public class TeamStatusFactory implements IEnumWithNameFactory {
+public class TeamStatusFactory implements INamedObjectFactory {
 
   // TODO: this method should no longer be necessary
   public TeamStatus forId(int pId) {

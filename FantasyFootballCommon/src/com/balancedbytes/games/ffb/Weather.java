@@ -5,7 +5,7 @@ package com.balancedbytes.games.ffb;
  * 
  * @author Kalimar
  */
-public enum Weather implements IEnumWithName {
+public enum Weather implements INamedObject {
   
   SWELTERING_HEAT("Sweltering Heat", "heat", "Each player on the pitch may suffer from heat exhaustion on a roll of 1 before the next kick-off."),
   VERY_SUNNY("Very Sunny", "sunny", "A -1 modifier applies to all passing rolls."),

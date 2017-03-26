@@ -1,6 +1,6 @@
 package com.balancedbytes.games.ffb.report;
 
-import com.balancedbytes.games.ffb.IEnumWithName;
+import com.balancedbytes.games.ffb.INamedObject;
 
 
 
@@ -9,7 +9,7 @@ import com.balancedbytes.games.ffb.IEnumWithName;
  * 
  * @author Kalimar
  */
-public enum ReportId implements IEnumWithName {
+public enum ReportId implements INamedObject {
   
   ALWAYS_HUNGRY_ROLL("alwaysHungryRoll"),
   ARGUE_THE_CALL("argueTheCall"),

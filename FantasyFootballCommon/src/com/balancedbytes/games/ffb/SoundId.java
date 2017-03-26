@@ -6,7 +6,7 @@ package com.balancedbytes.games.ffb;
  * @author Dominic Schabel
  * @author Kalimar
  */
-public enum SoundId implements IEnumWithName {
+public enum SoundId implements INamedObject {
 
   BLOCK("block", false),
   BLUNDER("blunder", false),

@@ -1,6 +1,6 @@
 package com.balancedbytes.games.ffb;
 
-public enum KickoffResult implements IEnumWithName {
+public enum KickoffResult implements INamedObject {
   
   GET_THE_REF("Get the Ref", "Get the Ref", "Each coach receives a free bribe."),
 	RIOT("Riot", "Riot", "The referee adjusts the clock after the riot clears."),

@@ -8,13 +8,14 @@ import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.db.DbStatementId;
 import com.balancedbytes.games.ffb.server.db.DbUpdateStatement;
 import com.balancedbytes.games.ffb.server.db.DefaultDbUpdateParameter;
+import com.balancedbytes.games.ffb.server.db.IDbUpdateWithGameState;
 import com.eclipsesource.json.JsonObject;
 
 /**
  * 
  * @author Kalimar
  */
-public class DbGamesSerializedUpdateParameter extends DefaultDbUpdateParameter {
+public class DbGamesSerializedUpdateParameter extends DefaultDbUpdateParameter implements IDbUpdateWithGameState {
 
   private long fId;
   private JsonObject fJsonObject;

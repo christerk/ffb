@@ -6,7 +6,7 @@ import com.balancedbytes.games.ffb.util.StringTool;
  * 
  * @author Kalimar
  */
-public class SendToBoxReasonFactory implements IEnumWithNameFactory {
+public class SendToBoxReasonFactory implements INamedObjectFactory {
   
   public SendToBoxReason forName(String pName) {
     if (StringTool.isProvided(pName)) {

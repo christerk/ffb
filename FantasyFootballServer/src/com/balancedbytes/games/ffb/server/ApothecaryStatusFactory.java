@@ -1,12 +1,12 @@
 package com.balancedbytes.games.ffb.server;
 
-import com.balancedbytes.games.ffb.IEnumWithNameFactory;
+import com.balancedbytes.games.ffb.INamedObjectFactory;
 
 /**
  * 
  * @author Kalimar
  */
-public class ApothecaryStatusFactory implements IEnumWithNameFactory {
+public class ApothecaryStatusFactory implements INamedObjectFactory {
   
   public ApothecaryStatus forName(String pName) {
     for (ApothecaryStatus status : ApothecaryStatus.values()) {

@@ -1,12 +1,12 @@
 package com.balancedbytes.games.ffb.server.step;
 
-import com.balancedbytes.games.ffb.IEnumWithName;
+import com.balancedbytes.games.ffb.INamedObject;
 
 /**
  * 
  * @author Kalimar
  */
-public enum StepAction implements IEnumWithName {
+public enum StepAction implements INamedObject {
 
 	CONTINUE("continue"),
 	NEXT_STEP("nextStep"),

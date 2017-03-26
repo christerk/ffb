@@ -55,10 +55,6 @@ public class ServerCommandHandlerReplay extends ServerCommandHandler {
     */
     
     GameState gameState = getServer().getGameCache().getGameStateById(gameId);
-    if (gameState == null) {
-      gameState = getServer().getGameCache().queryFromDb(gameId);
-      getServer().getGameCache().addGame(gameState);
-    }
     
     if (gameState != null) {
       UtilServerReplay.startServerReplay(gameState, replayToCommandNr, pReceivedCommand.getSession());

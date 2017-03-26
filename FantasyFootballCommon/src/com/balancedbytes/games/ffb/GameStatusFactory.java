@@ -5,7 +5,7 @@ package com.balancedbytes.games.ffb;
  * 
  * @author Kalimar
  */
-public class GameStatusFactory implements IEnumWithNameFactory {
+public class GameStatusFactory implements INamedObjectFactory {
   
   public GameStatus forName(String pName) {
     for (GameStatus status : GameStatus.values()) {

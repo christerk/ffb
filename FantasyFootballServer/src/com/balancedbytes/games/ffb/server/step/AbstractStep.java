@@ -136,8 +136,8 @@ public abstract class AbstractStep implements IStep {
     GameResult gameResult = game.getGameResult();
     if (concedeGameCommand.getConcedeGameStatus() != null) {
       SessionManager sessionManager = getGameState().getServer().getSessionManager();
-      boolean homeCommand = (sessionManager.getSessionOfHomeCoach(getGameState()) == pReceivedCommand.getSession());
-      boolean awayCommand = (sessionManager.getSessionOfAwayCoach(getGameState()) == pReceivedCommand.getSession());
+      boolean homeCommand = (sessionManager.getSessionOfHomeCoach(getGameState().getId()) == pReceivedCommand.getSession());
+      boolean awayCommand = (sessionManager.getSessionOfAwayCoach(getGameState().getId()) == pReceivedCommand.getSession());
       switch (concedeGameCommand.getConcedeGameStatus()) {
       case REQUESTED:
         if (game.isConcessionPossible() && ((game.isHomePlaying() && homeCommand) || (!game.isHomePlaying() && awayCommand))) {

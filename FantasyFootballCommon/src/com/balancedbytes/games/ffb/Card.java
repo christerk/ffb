@@ -7,7 +7,7 @@ import java.util.Comparator;
  * 
  * @author Kalimar
  */
-public enum Card implements IEnumWithName {
+public enum Card implements INamedObject {
 
   // ------------------------
 	// 13x Miscellaneous Mayhem

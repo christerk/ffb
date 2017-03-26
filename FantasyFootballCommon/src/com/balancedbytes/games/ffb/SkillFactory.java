@@ -4,7 +4,7 @@ package com.balancedbytes.games.ffb;
  * 
  * @author Kalimar
  */
-public class SkillFactory implements IEnumWithNameFactory {
+public class SkillFactory implements INamedObjectFactory {
   
   public Skill forName(String pName) {
     for (Skill skill : Skill.values()) {

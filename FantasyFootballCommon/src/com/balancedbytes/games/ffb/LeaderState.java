@@ -1,6 +1,6 @@
 package com.balancedbytes.games.ffb;
 
-public enum LeaderState implements IEnumWithName {
+public enum LeaderState implements INamedObject {
   
   NONE("none"),
   AVAILABLE("available"),

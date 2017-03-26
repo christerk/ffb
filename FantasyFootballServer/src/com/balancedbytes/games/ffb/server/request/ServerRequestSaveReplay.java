@@ -29,9 +29,6 @@ public class ServerRequestSaveReplay extends ServerRequest {
     GameCache gameCache = server.getGameCache();
     GameState gameState = gameCache.getGameStateById(getGameId());
     if (gameState == null) {
-      gameState = gameCache.queryFromDb(getGameId());
-    }
-    if (gameState == null) {
       // game already backed up - nothing to be done
       return;
     }

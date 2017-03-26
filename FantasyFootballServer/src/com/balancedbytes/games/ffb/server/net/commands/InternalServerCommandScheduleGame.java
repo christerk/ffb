@@ -8,17 +8,16 @@ import com.balancedbytes.games.ffb.server.IGameIdListener;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
-
 /**
  * 
  * @author Kalimar
  */
 public class InternalServerCommandScheduleGame extends InternalServerCommand {
-  
-	private String fTeamHomeId;
-	private String fTeamAwayId;
-	
-	private transient IGameIdListener fGameIdListener;
+
+  private String fTeamHomeId;
+  private String fTeamAwayId;
+
+  private transient IGameIdListener fGameIdListener;
 
   public InternalServerCommandScheduleGame(String pTeamHomeId, String pTeamAwayId) {
     fTeamHomeId = pTeamHomeId;
@@ -28,23 +27,23 @@ public class InternalServerCommandScheduleGame extends InternalServerCommand {
   public NetCommandId getId() {
     return NetCommandId.INTERNAL_SERVER_SCHEDULE_GAME;
   }
-  
+
   public String getTeamHomeId() {
-	  return fTeamHomeId;
+    return fTeamHomeId;
   }
-  
+
   public String getTeamAwayId() {
-	  return fTeamAwayId;
+    return fTeamAwayId;
   }
-  
+
   public void setGameIdListener(IGameIdListener pGameIdListener) {
-	  fGameIdListener = pGameIdListener;
+    fGameIdListener = pGameIdListener;
   }
-  
+
   public IGameIdListener getGameIdListener() {
-	  return fGameIdListener;
+    return fGameIdListener;
   }
-  
+
   // JSON serialization
 
   public JsonObject toJsonValue() {

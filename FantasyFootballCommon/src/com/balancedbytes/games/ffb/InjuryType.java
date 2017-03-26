@@ -5,7 +5,7 @@ package com.balancedbytes.games.ffb;
  * 
  * @author Kalimar
  */
-public enum InjuryType implements IEnumWithName {
+public enum InjuryType implements INamedObject {
   
   DROP_DODGE("dropDodge", false),
   DROP_GFI("dropGfi", false),

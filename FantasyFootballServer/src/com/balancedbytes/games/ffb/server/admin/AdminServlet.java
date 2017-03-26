@@ -28,6 +28,7 @@ import com.balancedbytes.games.ffb.server.IServerProperty;
 import com.balancedbytes.games.ffb.server.db.DbStatementId;
 import com.balancedbytes.games.ffb.server.db.query.DbAdminListByIdQuery;
 import com.balancedbytes.games.ffb.server.db.query.DbAdminListByStatusQuery;
+import com.balancedbytes.games.ffb.server.net.commands.InternalServerCommandClearCache;
 import com.balancedbytes.games.ffb.server.net.commands.InternalServerCommandCloseGame;
 import com.balancedbytes.games.ffb.server.net.commands.InternalServerCommandDeleteGame;
 import com.balancedbytes.games.ffb.server.net.commands.InternalServerCommandScheduleGame;
@@ -46,6 +47,7 @@ public class AdminServlet extends HttpServlet {
   public static final String CHALLENGE = "challenge";
   public static final String LIST = "list";
   public static final String SHUTDOWN = "shutdown";
+  public static final String CLEAR = "clear";
   public static final String CLOSE = "close";
   public static final String CONCEDE = "concede";
   public static final String UPLOAD = "upload";
@@ -72,6 +74,7 @@ public class AdminServlet extends HttpServlet {
   private static final String _XML_TAG_CONCEDE = "concede";
   private static final String _XML_TAG_LIST = "list";
   private static final String _XML_TAG_SHUTDOWN = "shutdown";
+  private static final String _XML_TAG_CLEAR = "clear";
   private static final String _XML_TAG_CLOSE = "close";
   private static final String _XML_TAG_UPLOAD = "upload";
   private static final String _XML_TAG_DELETE = "delete";
@@ -140,6 +143,8 @@ public class AdminServlet extends HttpServlet {
           isOk = handleBlock(handler, true);
         } else if (UNBLOCK.equals(command)) {
           isOk = handleBlock(handler, false);
+        } else if (CLEAR.equals(command)) {
+          isOk = handleClear(handler);
         } else if (CLOSE.equals(command)) {
           isOk = handleClose(handler, parameters);
         } else if (CONCEDE.equals(command)) {
@@ -239,6 +244,12 @@ public class AdminServlet extends HttpServlet {
       UtilXml.addValueElement(pHandler, _XML_TAG_ERROR, "Invalid or missing gameId parameter");
       return false;
     }
+  }
+
+  private boolean handleClear(TransformerHandler handler) {
+    UtilXml.addEmptyElement(handler, _XML_TAG_CLEAR);
+    getServer().getCommunication().handleCommand(new InternalServerCommandClearCache());
+    return true;
   }
 
   private boolean handleBlock(TransformerHandler pHandler, boolean pBlockingNewGames) {

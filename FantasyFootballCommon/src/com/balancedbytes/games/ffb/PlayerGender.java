@@ -4,7 +4,7 @@ package com.balancedbytes.games.ffb;
  * 
  * @author Kalimar
  */
-public enum PlayerGender implements IEnumWithName {
+public enum PlayerGender implements INamedObject {
   
   MALE("male", "M", "he", "his", "him", "himself"),
   FEMALE("female", "F", "she", "her", "her", "herself"),

@@ -6,7 +6,7 @@ import com.balancedbytes.games.ffb.util.ArrayTool;
  * 
  * @author Kalimar
  */
-public class DirectionFactory implements IEnumWithNameFactory {
+public class DirectionFactory implements INamedObjectFactory {
   
   public Direction forName(String pName) {
     for (Direction direction : Direction.values()) {

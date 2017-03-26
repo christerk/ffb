@@ -1,6 +1,6 @@
 package com.balancedbytes.games.ffb.net;
 
-import com.balancedbytes.games.ffb.IEnumWithName;
+import com.balancedbytes.games.ffb.INamedObject;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandActingPlayer;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandApothecaryChoice;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandArgueTheCall;
@@ -73,7 +73,7 @@ import com.balancedbytes.games.ffb.net.commands.ServerCommandVersion;
  * 
  * @author Kalimar
  */
-public enum NetCommandId implements IEnumWithName {
+public enum NetCommandId implements INamedObject {
   
   INTERNAL_SERVER_SOCKET_CLOSED("internalServerSocketClosed"),
   CLIENT_JOIN("clientJoin"),
@@ -150,6 +150,7 @@ public enum NetCommandId implements IEnumWithName {
   INTERNAL_SERVER_DELETE_GAME("internalServerDeleteGame"),
   INTERNAL_SERVER_UPLOAD_GAME("internalServerUploadGame"),
   INTERNAL_SERVER_SCHEDULE_GAME("internalServerScheduleGame"),
+  INTERNAL_SERVER_CLEAR_CACHE("internalServerClearCache"),
   CLIENT_CLOSE_SESSION("clientCloseSession"),
   CLIENT_ARGUE_THE_CALL("clientArgueTheCall");
   

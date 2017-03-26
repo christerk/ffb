@@ -5,7 +5,7 @@ package com.balancedbytes.games.ffb;
  * 
  * @author Kalimar
  */
-public enum ClientStateId implements IEnumWithName {
+public enum ClientStateId implements INamedObject {
 
   LOGIN("login"),
   RE_ROLL("reRoll"),

@@ -7,7 +7,7 @@ package com.balancedbytes.games.ffb;
  * 
  * @author Kalimar
  */
-public enum GameStatus implements IEnumWithName {
+public enum GameStatus implements INamedObject {
   
   SCHEDULED("scheduled", "O"),
   STARTING("starting", "S"),

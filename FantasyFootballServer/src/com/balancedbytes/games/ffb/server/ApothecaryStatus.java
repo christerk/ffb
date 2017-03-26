@@ -1,9 +1,9 @@
 package com.balancedbytes.games.ffb.server;
 
-import com.balancedbytes.games.ffb.IEnumWithName;
+import com.balancedbytes.games.ffb.INamedObject;
 
 
-public enum ApothecaryStatus implements IEnumWithName {
+public enum ApothecaryStatus implements INamedObject {
   
   NO_APOTHECARY("noApothecary"),
   DO_REQUEST("doRequest"),

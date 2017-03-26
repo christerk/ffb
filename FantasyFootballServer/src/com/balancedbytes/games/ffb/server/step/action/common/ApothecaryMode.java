@@ -1,12 +1,12 @@
 package com.balancedbytes.games.ffb.server.step.action.common;
 
-import com.balancedbytes.games.ffb.IEnumWithName;
+import com.balancedbytes.games.ffb.INamedObject;
 
 /**
  * 
  * @author Kalimar
  */
-public enum ApothecaryMode implements IEnumWithName {
+public enum ApothecaryMode implements INamedObject {
 	
 	ATTACKER("attacker"),
 	AWAY("away"),

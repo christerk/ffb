@@ -7,7 +7,7 @@ import com.balancedbytes.games.ffb.model.Player;
  * 
  * @author Kalimar
  */
-public enum SkillUse implements IEnumWithName {
+public enum SkillUse implements INamedObject {
   
   WOULD_NOT_HELP("wouldNotHelp", "because it would not help"),
   NO_TEAM_MATE_IN_RANGE("noTeamMateInRange", "because no team-mate is in range"),

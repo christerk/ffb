@@ -5,7 +5,7 @@ package com.balancedbytes.games.ffb;
  * 
  * @author Kalimar
  */
-public enum ArmorModifier implements IEnumWithName {
+public enum ArmorModifier implements INamedObject {
   
   CLAWS("Claws", 0, false),
   MIGHTY_BLOW("Mighty Blow", 1, false),

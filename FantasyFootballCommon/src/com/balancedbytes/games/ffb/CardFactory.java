@@ -4,7 +4,7 @@ package com.balancedbytes.games.ffb;
  * 
  * @author Kalimar
  */
-public class CardFactory implements IEnumWithNameFactory {
+public class CardFactory implements INamedObjectFactory {
 
   public Card forName(String pName) {
     for (Card card : Card.values()) {

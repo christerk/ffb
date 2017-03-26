@@ -6,7 +6,7 @@ import com.balancedbytes.games.ffb.util.StringTool;
  * 
  * @author Kalimar
  */
-public class PlayerTypeFactory implements IEnumWithNameFactory {
+public class PlayerTypeFactory implements INamedObjectFactory {
   
   public PlayerType forName(String pName) {
     if (StringTool.isProvided(pName)) {

@@ -4,7 +4,7 @@ package com.balancedbytes.games.ffb;
  * 
  * @author Kalimar
  */
-public class SpecialEffectFactory implements IEnumWithNameFactory {
+public class SpecialEffectFactory implements INamedObjectFactory {
   
   public SpecialEffect forName(String pName) {
     for (SpecialEffect effect : SpecialEffect.values()) {

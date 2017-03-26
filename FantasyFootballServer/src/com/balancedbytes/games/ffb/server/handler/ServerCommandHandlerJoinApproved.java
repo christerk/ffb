@@ -96,7 +96,7 @@ public class ServerCommandHandlerJoinApproved extends ServerCommandHandler {
         if (checkForLoggedInCoach(gameState, joinApprovedCommand.getCoach(), session)) {
           getServer().getCommunication().sendStatus(session, ServerStatus.ERROR_ALREADY_LOGGED_IN, null);
         } else {
-          sessionManager.addSession(session, gameState, joinApprovedCommand.getCoach(), joinApprovedCommand.getClientMode(), false);
+          sessionManager.addSession(session, gameState.getId(), joinApprovedCommand.getCoach(), joinApprovedCommand.getClientMode(), false);
           UtilServerStartGame.sendServerJoin(gameState, session, joinApprovedCommand.getCoach(), false, ClientMode.SPECTATOR);
           if (gameState.getGame().getStarted() != null) {
             UtilServerTimer.syncTime(gameState);
@@ -165,14 +165,6 @@ public class ServerCommandHandlerJoinApproved extends ServerCommandHandler {
   private GameState loadGameStateById(InternalServerCommandJoinApproved pJoinApprovedCommand, Session pSession) {
     GameCache gameCache = getServer().getGameCache();
     GameState gameState = gameCache.getGameStateById(pJoinApprovedCommand.getGameId());
-    if (gameState != null) {
-      return gameState;
-    }
-    gameState = gameCache.queryFromDb(pJoinApprovedCommand.getGameId());
-    if (gameState == null) {
-      return null;
-    }
-    gameCache.addGame(gameState);
     gameCache.queueDbUpdate(gameState, true);  // persist status update
     return gameState;
   }

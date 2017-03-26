@@ -6,7 +6,7 @@ package com.balancedbytes.games.ffb;
  * 
  * @author Kalimar
  */
-public enum CatchScatterThrowInMode implements IEnumWithName {
+public enum CatchScatterThrowInMode implements INamedObject {
   
   CATCH_ACCURATE_PASS("catchAccuratePass", false),
   CATCH_HAND_OFF("catchHandOff", false),

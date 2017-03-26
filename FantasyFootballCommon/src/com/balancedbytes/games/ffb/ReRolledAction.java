@@ -4,7 +4,7 @@ package com.balancedbytes.games.ffb;
  * 
  * @author Kalimar
  */
-public enum ReRolledAction implements IEnumWithName {
+public enum ReRolledAction implements INamedObject {
   
   GO_FOR_IT("Go For It"),
   DODGE("Dodge"),

@@ -9,7 +9,6 @@ import java.util.Set;
 import org.eclipse.jetty.websocket.api.Session;
 
 import com.balancedbytes.games.ffb.ClientMode;
-import com.balancedbytes.games.ffb.server.GameState;
 
 /**
  * 
@@ -95,68 +94,62 @@ public class SessionManager {
     }
   }
   
-  public Session getSessionOfHomeCoach(GameState pGameState) {
+  public Session getSessionOfHomeCoach(long gameId) {
     Session sessionHomeCoach = null;
-    if (pGameState != null) {
-      Set<Session> sessions = fSessionsByGameId.get(pGameState.getId());
-      if (sessions != null) {
-        Iterator<Session> sessionIterator = sessions.iterator();
-        while ((sessionHomeCoach == null) && sessionIterator.hasNext()) {
-          Session session = sessionIterator.next();
-          JoinedClient client = fClientBySession.get(session);
-          if ((client != null) && (client.getMode() == ClientMode.PLAYER) && client.isHomeCoach()) {
-            sessionHomeCoach = session;            
-          }
+    Set<Session> sessions = fSessionsByGameId.get(gameId);
+    if (sessions != null) {
+      Iterator<Session> sessionIterator = sessions.iterator();
+      while ((sessionHomeCoach == null) && sessionIterator.hasNext()) {
+        Session session = sessionIterator.next();
+        JoinedClient client = fClientBySession.get(session);
+        if ((client != null) && (client.getMode() == ClientMode.PLAYER) && client.isHomeCoach()) {
+          sessionHomeCoach = session;            
         }
       }
     }
     return sessionHomeCoach;
   }
 
-  public boolean isHomeCoach(GameState pGameState, String pCoach) {
-    JoinedClient clientHomeCoach = fClientBySession.get(getSessionOfHomeCoach(pGameState));
+  public boolean isHomeCoach(long gameId, String pCoach) {
+    JoinedClient clientHomeCoach = fClientBySession.get(getSessionOfHomeCoach(gameId));
     return ((clientHomeCoach != null) && clientHomeCoach.getCoach().equals(pCoach));
   }
   
-  public Session getSessionOfAwayCoach(GameState pGameState) {
+  public Session getSessionOfAwayCoach(long gameId) {
     Session sessionAwayCoach = null;
-    if (pGameState != null) {
-      Set<Session> sessions = fSessionsByGameId.get(pGameState.getId());
-      if (sessions != null) {
-        Iterator<Session> sessionIterator = sessions.iterator();
-        while ((sessionAwayCoach == null) && sessionIterator.hasNext()) {
-          Session session = sessionIterator.next();
-          JoinedClient client = fClientBySession.get(session);
-          if ((client != null) && (client.getMode() == ClientMode.PLAYER) && !client.isHomeCoach()) {
-            sessionAwayCoach = session;            
-          }
+    Set<Session> sessions = fSessionsByGameId.get(gameId);
+    if (sessions != null) {
+      Iterator<Session> sessionIterator = sessions.iterator();
+      while ((sessionAwayCoach == null) && sessionIterator.hasNext()) {
+        Session session = sessionIterator.next();
+        JoinedClient client = fClientBySession.get(session);
+        if ((client != null) && (client.getMode() == ClientMode.PLAYER) && !client.isHomeCoach()) {
+          sessionAwayCoach = session;            
         }
       }
     }
     return sessionAwayCoach;
   }
 
-  public boolean isAwayCoach(GameState pGameState, String pCoach) {
-    JoinedClient clientAwayCoach = fClientBySession.get(getSessionOfAwayCoach(pGameState));
+  public boolean isAwayCoach(long gameId, String pCoach) {
+    JoinedClient clientAwayCoach = fClientBySession.get(getSessionOfAwayCoach(gameId));
     return ((clientAwayCoach != null) && clientAwayCoach.getCoach().equals(pCoach));
   }
 
-  public Session[] getSessionsWithoutAwayCoach(GameState pGameState) {
+  public Session[] getSessionsWithoutAwayCoach(long gameId) {
     Session[] filteredSessions = new Session[0];
-    if (pGameState != null) {
-      Set<Session> sessions = fSessionsByGameId.get(pGameState.getId());
-      if ((sessions != null) && (sessions.size() > 0)) {
-        Session sessionAwayCoach = getSessionOfAwayCoach(pGameState);
-        if (sessionAwayCoach != null) {
-          int i = 0;
-          filteredSessions = new Session[sessions.size() - 1];
-          Iterator<Session> sessionIterator = sessions.iterator();
-          while (sessionIterator.hasNext()) {
-            Session session = sessionIterator.next();
-            if (session != sessionAwayCoach) {
-              filteredSessions[i] = session;
-              i++;
-            }
+    Set<Session> sessions = fSessionsByGameId.get(gameId);
+    if ((sessions != null) && (sessions.size() > 0)) {
+      Session sessionAwayCoach = getSessionOfAwayCoach(gameId);
+      if (sessionAwayCoach != null) {
+        int i = 0;
+        filteredSessions = new Session[sessions.size() - 1];
+        Iterator<Session> sessionIterator = sessions.iterator();
+        while (sessionIterator.hasNext()) {
+          Session session = sessionIterator.next();
+          if (session != sessionAwayCoach) {
+            filteredSessions[i] = session;
+            i++;
           }
         }
       }
@@ -164,22 +157,20 @@ public class SessionManager {
     return filteredSessions;
   }
 
-  public Session[] getSessionsWithoutHomeCoach(GameState pGameState) {
+  public Session[] getSessionsWithoutHomeCoach(long gameId) {
     Session[] filteredSessions = new Session[0];
-    if (pGameState != null) {
-      Set<Session> sessions = fSessionsByGameId.get(pGameState.getId());
-      if ((sessions != null) && (sessions.size() > 0)) {
-        Session sessionHomeCoach = getSessionOfHomeCoach(pGameState);
-        if (sessionHomeCoach != null) {
-          int i = 0;
-          filteredSessions = new Session[sessions.size() - 1];
-          Iterator<Session> sessionIterator = sessions.iterator();
-          while (sessionIterator.hasNext()) {
-            Session session = sessionIterator.next();
-            if (session != sessionHomeCoach) {
-              filteredSessions[i] = session;
-              i++;
-            }
+    Set<Session> sessions = fSessionsByGameId.get(gameId);
+    if ((sessions != null) && (sessions.size() > 0)) {
+      Session sessionHomeCoach = getSessionOfHomeCoach(gameId);
+      if (sessionHomeCoach != null) {
+        int i = 0;
+        filteredSessions = new Session[sessions.size() - 1];
+        Iterator<Session> sessionIterator = sessions.iterator();
+        while (sessionIterator.hasNext()) {
+          Session session = sessionIterator.next();
+          if (session != sessionHomeCoach) {
+            filteredSessions[i] = session;
+            i++;
           }
         }
       }
@@ -187,23 +178,21 @@ public class SessionManager {
     return filteredSessions;
   }
 
-  public Session[] getSessionsOfSpectators(GameState pGameState) {
+  public Session[] getSessionsOfSpectators(long gameId) {
     Session[] filteredSessions = new Session[0];
-    if (pGameState != null) {
-      Set<Session> sessions = fSessionsByGameId.get(pGameState.getId());
-      if ((sessions != null) && (sessions.size() > 0)) {
-        Session sessionAwayCoach = getSessionOfAwayCoach(pGameState);
-        Session sessionHomeCoach = getSessionOfHomeCoach(pGameState);
-        if ((sessionHomeCoach != null) && (sessionAwayCoach != null)) {
-          int i = 0;
-          filteredSessions = new Session[sessions.size() - 2];
-          Iterator<Session> sessionIterator = sessions.iterator();
-          while (sessionIterator.hasNext()) {
-            Session session = sessionIterator.next();
-            if ((session != sessionAwayCoach) && (session != sessionHomeCoach)) {
-              filteredSessions[i] = session;
-              i++;
-            }
+    Set<Session> sessions = fSessionsByGameId.get(gameId);
+    if ((sessions != null) && (sessions.size() > 0)) {
+      Session sessionAwayCoach = getSessionOfAwayCoach(gameId);
+      Session sessionHomeCoach = getSessionOfHomeCoach(gameId);
+      if ((sessionHomeCoach != null) && (sessionAwayCoach != null)) {
+        int i = 0;
+        filteredSessions = new Session[sessions.size() - 2];
+        Iterator<Session> sessionIterator = sessions.iterator();
+        while (sessionIterator.hasNext()) {
+          Session session = sessionIterator.next();
+          if ((session != sessionAwayCoach) && (session != sessionHomeCoach)) {
+            filteredSessions[i] = session;
+            i++;
           }
         }
       }
@@ -211,17 +200,15 @@ public class SessionManager {
     return filteredSessions;
   }
 
-  public void addSession(Session pSession, GameState pGameState, String pCoach, ClientMode pMode, boolean pHomeCoach) {
-    if (pGameState != null) {
-      JoinedClient client = new JoinedClient(pGameState.getId(), pCoach, pMode, pHomeCoach);
-      fClientBySession.put(pSession, client);
-      Set<Session> sessions = fSessionsByGameId.get(pGameState.getId());
-      if (sessions == null) {
-        sessions = new HashSet<Session>();
-        fSessionsByGameId.put(pGameState.getId(), sessions);
-      }
-      sessions.add(pSession);
+  public void addSession(Session pSession, long gameId, String pCoach, ClientMode pMode, boolean pHomeCoach) {
+    JoinedClient client = new JoinedClient(gameId, pCoach, pMode, pHomeCoach);
+    fClientBySession.put(pSession, client);
+    Set<Session> sessions = fSessionsByGameId.get(gameId);
+    if (sessions == null) {
+      sessions = new HashSet<Session>();
+      fSessionsByGameId.put(gameId, sessions);
     }
+    sessions.add(pSession);
   }
   
   public void removeSession(Session pSession) {

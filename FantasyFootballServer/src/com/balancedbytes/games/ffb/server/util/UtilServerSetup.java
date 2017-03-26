@@ -28,17 +28,17 @@ import com.balancedbytes.games.ffb.util.UtilBox;
  */
 public class UtilServerSetup {
   
-  public static void loadTeamSetup(GameState pGameState, String pSetupName) {
+  public static void loadTeamSetup(GameState gameState, String setupName) {
     
-    if (pGameState != null) {
+    if (gameState != null) {
     
-      FantasyFootballServer server = pGameState.getServer();
-      Game game = pGameState.getGame();
+      FantasyFootballServer server = gameState.getServer();
+      Game game = gameState.getGame();
       Team team = game.isHomePlaying() ? game.getTeamHome() : game.getTeamAway();
   
-      if (StringTool.isProvided(pSetupName)) {
+      if (StringTool.isProvided(setupName)) {
         DbTeamSetupsQuery teamSetupQuery = (DbTeamSetupsQuery) server.getDbQueryFactory().getStatement(DbStatementId.TEAM_SETUPS_QUERY);
-        TeamSetup teamSetup = teamSetupQuery.execute(team.getId(), pSetupName);
+        TeamSetup teamSetup = teamSetupQuery.execute(team.getId(), setupName);
         if (teamSetup != null) {
           teamSetup.applyTo(game);
           UtilBox.refreshBoxes(game);
@@ -47,7 +47,8 @@ public class UtilServerSetup {
       } else {
         DbTeamSetupsForTeamQuery allSetupNamesQuery = (DbTeamSetupsForTeamQuery) server.getDbQueryFactory().getStatement(DbStatementId.TEAM_SETUPS_QUERY_ALL_FOR_A_TEAM);
         String[] setupNames = allSetupNamesQuery.execute(team);
-        Session session = game.isHomePlaying() ? server.getSessionManager().getSessionOfHomeCoach(pGameState) : server.getSessionManager().getSessionOfAwayCoach(pGameState);
+        Session session = game.isHomePlaying() ? server.getSessionManager().getSessionOfHomeCoach(game.getId())
+          : server.getSessionManager().getSessionOfAwayCoach(game.getId());
         server.getCommunication().sendTeamSetupList(session, setupNames);
       }
       
@@ -55,12 +56,12 @@ public class UtilServerSetup {
             
   }
   
-  public static void saveTeamSetup(GameState pGameState, String pSetupName, int[] pPlayerNumbers, FieldCoordinate[] pPlayerCoordinates) {
+  public static void saveTeamSetup(GameState gameState, String pSetupName, int[] pPlayerNumbers, FieldCoordinate[] pPlayerCoordinates) {
     
-    if ((pGameState != null) && StringTool.isProvided(pSetupName)) {
+    if ((gameState != null) && StringTool.isProvided(pSetupName)) {
     
-      FantasyFootballServer server = pGameState.getServer();
-      Game game = pGameState.getGame();
+      FantasyFootballServer server = gameState.getServer();
+      Game game = gameState.getGame();
       Team team = game.isHomePlaying() ? game.getTeamHome() : game.getTeamAway();
   
       TeamSetup teamSetup = new TeamSetup();
@@ -85,12 +86,12 @@ public class UtilServerSetup {
             
   }
   
-  public static void deleteTeamSetup(GameState pGameState, String pSetupName) {
+  public static void deleteTeamSetup(GameState gameState, String pSetupName) {
     
-    if (pGameState != null) {
+    if (gameState != null) {
 
-      FantasyFootballServer server = pGameState.getServer();
-      Game game = pGameState.getGame();
+      FantasyFootballServer server = gameState.getServer();
+      Game game = gameState.getGame();
       Team team = game.isHomePlaying() ? game.getTeamHome() : game.getTeamAway();
 
       if (StringTool.isProvided(pSetupName)) {
@@ -101,18 +102,19 @@ public class UtilServerSetup {
   
       DbTeamSetupsForTeamQuery allSetupNamesQuery = (DbTeamSetupsForTeamQuery) server.getDbQueryFactory().getStatement(DbStatementId.TEAM_SETUPS_QUERY_ALL_FOR_A_TEAM);
       String[] setupNames = allSetupNamesQuery.execute(team);
-      Session session = game.isHomePlaying() ? server.getSessionManager().getSessionOfHomeCoach(pGameState) : server.getSessionManager().getSessionOfAwayCoach(pGameState);
+      Session session = game.isHomePlaying() ? server.getSessionManager().getSessionOfHomeCoach(game.getId())
+        : server.getSessionManager().getSessionOfAwayCoach(game.getId());
       server.getCommunication().sendTeamSetupList(session, setupNames);
       
     }
 
   }
   
-  public static void setupPlayer(GameState pGameState, String pPlayerId, FieldCoordinate pCoordinate) {
+  public static void setupPlayer(GameState gameState, String pPlayerId, FieldCoordinate pCoordinate) {
     
-    if ((pGameState != null) && StringTool.isProvided(pPlayerId) && (pCoordinate != null)) {
+    if ((gameState != null) && StringTool.isProvided(pPlayerId) && (pCoordinate != null)) {
       
-      Game game = pGameState.getGame();
+      Game game = gameState.getGame();
       Player player = game.getPlayerById(pPlayerId);
       if (player == null) {
         return;

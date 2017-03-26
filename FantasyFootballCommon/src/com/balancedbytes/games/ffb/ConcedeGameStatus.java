@@ -6,7 +6,7 @@ package com.balancedbytes.games.ffb;
  * 
  * @author Kalimar
  */
-public enum ConcedeGameStatus implements IEnumWithName {
+public enum ConcedeGameStatus implements INamedObject {
   
   REQUESTED("requested"),
   CONFIRMED("confirmed"),

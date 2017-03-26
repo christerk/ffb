@@ -1,12 +1,12 @@
 package com.balancedbytes.games.ffb.dialog;
 
-import com.balancedbytes.games.ffb.IEnumWithNameFactory;
+import com.balancedbytes.games.ffb.INamedObjectFactory;
 
 /**
  * 
  * @author Kalimar
  */
-public class DialogIdFactory implements IEnumWithNameFactory {
+public class DialogIdFactory implements INamedObjectFactory {
 
   public DialogId forName(String pName) {
     for (DialogId dialogId : DialogId.values()) {

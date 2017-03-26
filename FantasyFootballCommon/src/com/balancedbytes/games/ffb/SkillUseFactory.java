@@ -7,7 +7,7 @@ import com.balancedbytes.games.ffb.util.StringTool;
  * 
  * @author Kalimar
  */
-public class SkillUseFactory implements IEnumWithNameFactory {
+public class SkillUseFactory implements INamedObjectFactory {
 
   public SkillUse forName(String pName) {
     if (StringTool.isProvided(pName)) {

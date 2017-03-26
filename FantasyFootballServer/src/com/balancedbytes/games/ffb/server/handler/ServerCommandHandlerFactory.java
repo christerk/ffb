@@ -36,6 +36,7 @@ public class ServerCommandHandlerFactory {
     register(new ServerCommandHandlerUploadGame(pServer));
     register(new ServerCommandHandlerUserSettings(pServer));
     register(new ServerCommandHandlerCloseSession(pServer));
+    register(new ServerCommandHandlerClearCache(pServer));
   }
   
   public void handleCommand(ReceivedCommand pReceivedCommand) {

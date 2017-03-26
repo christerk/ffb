@@ -1,12 +1,12 @@
 package com.balancedbytes.games.ffb.server.step;
 
-import com.balancedbytes.games.ffb.IEnumWithNameFactory;
+import com.balancedbytes.games.ffb.INamedObjectFactory;
 
 /**
  * 
  * @author Kalimar
  */
-public class StepIdFactory implements IEnumWithNameFactory {
+public class StepIdFactory implements INamedObjectFactory {
   
   public StepId forName(String pName) {
     for (StepId stepId : StepId.values()) {

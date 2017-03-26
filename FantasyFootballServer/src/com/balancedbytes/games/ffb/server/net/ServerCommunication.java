@@ -132,7 +132,8 @@ public class ServerCommunication implements Runnable, IReceivedCommandHandler {
           GameState gameState = getServer().getGameCache().getGameStateById(gameId);
           if (gameState != null) {
             try {
-              if (receivedCommand.isInternal() || (getServer().getSessionManager().getSessionOfHomeCoach(gameState) == receivedCommand.getSession()) || (getServer().getSessionManager().getSessionOfAwayCoach(gameState) == receivedCommand.getSession())) {
+              if (receivedCommand.isInternal() || (getServer().getSessionManager().getSessionOfHomeCoach(gameId) == receivedCommand.getSession())
+                || (getServer().getSessionManager().getSessionOfAwayCoach(gameId) == receivedCommand.getSession())) {
                 gameState.handleCommand(receivedCommand);
               }
             } catch (Exception any) {
@@ -192,29 +193,29 @@ public class ServerCommunication implements Runnable, IReceivedCommandHandler {
     handleCommand(new ReceivedCommand(new InternalServerCommandSocketClosed(), pSession));
   }
 
-  public void send(Session pSession, NetCommand pCommand, boolean pLog) {
-    if (pLog && (pSession != null) && (pCommand != null)) {
-      getServer().getDebugLog().logServerCommand(IServerLogLevel.INFO, pCommand, pSession);
+  public void send(Session pSession, NetCommand command, boolean pLog) {
+    if (pLog && (pSession != null) && (command != null)) {
+      getServer().getDebugLog().logServerCommand(IServerLogLevel.INFO, command, pSession);
     }
-    send(pSession, pCommand);
+    send(pSession, command);
   }
   
-  protected void send(Session[] pSessions, NetCommand pCommand, boolean pLog) {
-    if (pLog && ArrayTool.isProvided(pSessions) && (pCommand != null)) {
-      getServer().getDebugLog().logServerCommand(IServerLogLevel.INFO, pCommand, pSessions);
+  protected void send(Session[] pSessions, NetCommand command, boolean pLog) {
+    if (pLog && ArrayTool.isProvided(pSessions) && (command != null)) {
+      getServer().getDebugLog().logServerCommand(IServerLogLevel.INFO, command, pSessions);
     }
     for (int i = 0; i < pSessions.length; i++) {
-      send(pSessions[i], pCommand);
+      send(pSessions[i], command);
     }
   }
   
-  private Future<Void> send(Session pSession, NetCommand pCommand) {
+  private Future<Void> send(Session pSession, NetCommand command) {
     
-    if ((pSession == null) || (pCommand == null) || !pSession.isOpen()) {
+    if ((pSession == null) || (command == null) || !pSession.isOpen()) {
       return null;
     }
 
-    JsonValue jsonValue = pCommand.toJsonValue();
+    JsonValue jsonValue = command.toJsonValue();
     if (jsonValue == null) {
       return null;
     }
@@ -239,70 +240,70 @@ public class ServerCommunication implements Runnable, IReceivedCommandHandler {
 
   }
 
-  protected void sendAllSessions(GameState pGameState, NetCommand pCommand) {
-    if ((pGameState == null) || (pCommand == null)) {
+  protected void sendAllSessions(GameState gameState, NetCommand command) {
+    if ((gameState == null) || (command == null)) {
       return;
     }
-    getServer().getDebugLog().logServerCommand(IServerLogLevel.INFO, pGameState.getId(), pCommand, DebugLog.COMMAND_SERVER_ALL_CLIENTS);
-    if (pGameState != null) {
+    getServer().getDebugLog().logServerCommand(IServerLogLevel.INFO, gameState.getId(), command, DebugLog.COMMAND_SERVER_ALL_CLIENTS);
+    if (gameState != null) {
       SessionManager sessionManager = getServer().getSessionManager();
-      Session[] allSessions = sessionManager.getSessionsForGameId(pGameState.getId());
-      send(allSessions, pCommand, false);
-      pGameState.getGameLog().add((ServerCommand) pCommand);
+      Session[] allSessions = sessionManager.getSessionsForGameId(gameState.getId());
+      send(allSessions, command, false);
+      gameState.getGameLog().add((ServerCommand) command);
     }
   }
 
-  protected void sendHomeSession(GameState pGameState, NetCommand pCommand) {
-    if ((pGameState == null) || (pCommand == null)) {
+  protected void sendHomeSession(GameState gameState, NetCommand command) {
+    if ((gameState == null) || (command == null)) {
       return;
     }
-    getServer().getDebugLog().logServerCommand(IServerLogLevel.INFO, pGameState.getId(), pCommand, DebugLog.COMMAND_SERVER_HOME);
+    getServer().getDebugLog().logServerCommand(IServerLogLevel.INFO, gameState.getId(), command, DebugLog.COMMAND_SERVER_HOME);
     SessionManager sessionManager = getServer().getSessionManager();
-    Session homeSession = sessionManager.getSessionOfHomeCoach(pGameState);
-    send(homeSession, pCommand, false);
+    Session homeSession = sessionManager.getSessionOfHomeCoach(gameState.getId());
+    send(homeSession, command, false);
   }
 
-  protected void sendHomeAndSpectatorSessions(GameState pGameState, NetCommand pCommand) {
-    if ((pGameState == null) || (pCommand == null)) {
+  protected void sendHomeAndSpectatorSessions(GameState gameState, NetCommand command) {
+    if ((gameState == null) || (command == null)) {
       return;
     }
-    getServer().getDebugLog().logServerCommand(IServerLogLevel.INFO, pGameState.getId(), pCommand, DebugLog.COMMAND_SERVER_HOME_SPECTATORS);
+    getServer().getDebugLog().logServerCommand(IServerLogLevel.INFO, gameState.getId(), command, DebugLog.COMMAND_SERVER_HOME_SPECTATORS);
     SessionManager sessionManager = getServer().getSessionManager();
-    Session[] sessions = sessionManager.getSessionsWithoutAwayCoach(pGameState);
-    send(sessions, pCommand, false);
-    pGameState.getGameLog().add((ServerCommand) pCommand);
+    Session[] sessions = sessionManager.getSessionsWithoutAwayCoach(gameState.getId());
+    send(sessions, command, false);
+    gameState.getGameLog().add((ServerCommand) command);
   }
 
-  protected void sendAwaySession(GameState pGameState, NetCommand pCommand) {
-    if ((pGameState == null) || (pCommand == null)) {
+  protected void sendAwaySession(GameState gameState, NetCommand command) {
+    if ((gameState == null) || (command == null)) {
       return;
     }
-    getServer().getDebugLog().logServerCommand(IServerLogLevel.INFO, pGameState.getId(), pCommand, DebugLog.COMMAND_SERVER_AWAY);
+    getServer().getDebugLog().logServerCommand(IServerLogLevel.INFO, gameState.getId(), command, DebugLog.COMMAND_SERVER_AWAY);
     SessionManager sessionManager = getServer().getSessionManager();
-    Session awaySession = sessionManager.getSessionOfAwayCoach(pGameState);
-    send(awaySession, pCommand, false);
+    Session awaySession = sessionManager.getSessionOfAwayCoach(gameState.getId());
+    send(awaySession, command, false);
   }
   
-  protected void sendAwayAndSpectatorSessions(GameState pGameState, NetCommand pCommand) {
-    if ((pGameState == null) || (pCommand == null)) {
+  protected void sendAwayAndSpectatorSessions(GameState gameState, NetCommand command) {
+    if ((gameState == null) || (command == null)) {
       return;
     }
-    getServer().getDebugLog().logServerCommand(IServerLogLevel.INFO, pGameState.getId(), pCommand, DebugLog.COMMAND_SERVER_AWAY_SPECTATORS);
+    getServer().getDebugLog().logServerCommand(IServerLogLevel.INFO, gameState.getId(), command, DebugLog.COMMAND_SERVER_AWAY_SPECTATORS);
     SessionManager sessionManager = getServer().getSessionManager();
-    Session[] sessions = sessionManager.getSessionsWithoutHomeCoach(pGameState);
-    send(sessions, pCommand, false);
-    pGameState.getGameLog().add((ServerCommand) pCommand);
+    Session[] sessions = sessionManager.getSessionsWithoutHomeCoach(gameState.getId());
+    send(sessions, command, false);
+    gameState.getGameLog().add((ServerCommand) command);
   }
 
-  protected void sendSpectatorSessions(GameState pGameState, NetCommand pCommand) {
-    if ((pGameState == null) || (pCommand == null)) {
+  protected void sendSpectatorSessions(GameState gameState, NetCommand command) {
+    if ((gameState == null) || (command == null)) {
       return;
     }
-    getServer().getDebugLog().logServerCommand(IServerLogLevel.INFO, pGameState.getId(), pCommand, DebugLog.COMMAND_SERVER_SPECTATOR);
+    getServer().getDebugLog().logServerCommand(IServerLogLevel.INFO, gameState.getId(), command, DebugLog.COMMAND_SERVER_SPECTATOR);
     SessionManager sessionManager = getServer().getSessionManager();
-    Session[] spectatorSessions = sessionManager.getSessionsOfSpectators(pGameState);
-    send(spectatorSessions, pCommand, false);
-    pGameState.getGameLog().add((ServerCommand) pCommand);
+    Session[] spectatorSessions = sessionManager.getSessionsOfSpectators(gameState.getId());
+    send(spectatorSessions, command, false);
+    gameState.getGameLog().add((ServerCommand) command);
   }
 
   // Server Commands
@@ -330,10 +331,10 @@ public class ServerCommunication implements Runnable, IReceivedCommandHandler {
     send(allSessions, messageCommand, false);
   }
   
-  public void sendStatus(GameState pGameState, ServerStatus pStatus, String pMessage) {
+  public void sendStatus(GameState gameState, ServerStatus pStatus, String pMessage) {
     ServerCommandStatus statusCommand = new ServerCommandStatus(pStatus, pMessage);
-    statusCommand.setCommandNr(pGameState.generateCommandNr());
-    sendAllSessions(pGameState, statusCommand);
+    statusCommand.setCommandNr(gameState.generateCommandNr());
+    sendAllSessions(gameState, statusCommand);
   }
 
   public void sendTeamList(Session pSession, TeamList pTeamList) {
@@ -378,27 +379,27 @@ public class ServerCommunication implements Runnable, IReceivedCommandHandler {
     // not logged in Game Log
   }
 
-  public void sendGameState(Session pSession, GameState pGameState) {
-    ServerCommandGameState gameStateCommand = new ServerCommandGameState(pGameState.getGame());
+  public void sendGameState(Session pSession, GameState gameState) {
+    ServerCommandGameState gameStateCommand = new ServerCommandGameState(gameState.getGame());
     send(pSession, gameStateCommand, true);
     // not logged in Game Log
   }
   
-  public void sendTalk(Session pSession, GameState pGameState, String pCoach, String[] pTalk) {
+  public void sendTalk(Session pSession, GameState gameState, String pCoach, String[] pTalk) {
     ServerCommandTalk talkCommand = new ServerCommandTalk(pCoach, pTalk);
     send(pSession, talkCommand, true);
     // not logged in Game Log
   }
     
-  public void sendPlayerTalk(GameState pGameState, String pCoach, String pTalk) {
+  public void sendPlayerTalk(GameState gameState, String pCoach, String pTalk) {
     ServerCommandTalk talkCommand = new ServerCommandTalk(pCoach, pTalk);
-    sendAllSessions(pGameState, talkCommand);
+    sendAllSessions(gameState, talkCommand);
     // not logged in Game Log
   }
 
-  public void sendSpectatorTalk(GameState pGameState, String pCoach, String pTalk) {
+  public void sendSpectatorTalk(GameState gameState, String pCoach, String pTalk) {
     ServerCommandTalk talkCommand = new ServerCommandTalk(pCoach, pTalk);
-    sendSpectatorSessions(pGameState, talkCommand);    // not logged in Game Log
+    sendSpectatorSessions(gameState, talkCommand);    // not logged in Game Log
   }
 
   public void sendTeamSetupList(Session pSession, String[] pSetupNames) {
@@ -407,35 +408,35 @@ public class ServerCommunication implements Runnable, IReceivedCommandHandler {
     // not logged in Game Log
   }
             
-  public void sendGameState(GameState pGameState) {
-    ServerCommandGameState gameStateCommand = new ServerCommandGameState(pGameState.getGame());
-    sendHomeAndSpectatorSessions(pGameState, gameStateCommand);
-    sendAwaySession(pGameState, gameStateCommand.transform());
+  public void sendGameState(GameState gameState) {
+    ServerCommandGameState gameStateCommand = new ServerCommandGameState(gameState.getGame());
+    sendHomeAndSpectatorSessions(gameState, gameStateCommand);
+    sendAwaySession(gameState, gameStateCommand.transform());
   }
   
-  public void sendAddPlayer(GameState pGameState, String pTeamId, Player pPlayer, PlayerState pPlayerState, PlayerResult pPlayerResult) {
+  public void sendAddPlayer(GameState gameState, String pTeamId, Player pPlayer, PlayerState pPlayerState, PlayerResult pPlayerResult) {
     ServerCommandAddPlayer addPlayersCommand = new ServerCommandAddPlayer(pTeamId, pPlayer, pPlayerState, pPlayerResult);
-    addPlayersCommand.setCommandNr(pGameState.generateCommandNr());
-    sendAllSessions(pGameState, addPlayersCommand);
+    addPlayersCommand.setCommandNr(gameState.generateCommandNr());
+    sendAllSessions(gameState, addPlayersCommand);
   }
   
-  public void sendRemovePlayer(GameState pGameState, String pPlayerId) {
+  public void sendRemovePlayer(GameState gameState, String pPlayerId) {
     ServerCommandRemovePlayer removePlayerCommand = new ServerCommandRemovePlayer(pPlayerId);
-    removePlayerCommand.setCommandNr(pGameState.generateCommandNr());
-    sendAllSessions(pGameState, removePlayerCommand);
+    removePlayerCommand.setCommandNr(gameState.generateCommandNr());
+    sendAllSessions(gameState, removePlayerCommand);
   }
 
-  public void sendSound(GameState pGameState, SoundId pSound) {
+  public void sendSound(GameState gameState, SoundId pSound) {
     ServerCommandSound soundCommand = new ServerCommandSound(pSound);
-    soundCommand.setCommandNr(pGameState.generateCommandNr());
-    sendAllSessions(pGameState, soundCommand);
+    soundCommand.setCommandNr(gameState.generateCommandNr());
+    sendAllSessions(gameState, soundCommand);
   }
   
-  public void sendModelSync(GameState pGameState, ModelChangeList pModelChanges, ReportList pReports, Animation pAnimation, SoundId pSound, long pGameTime, long pTurnTime) {
+  public void sendModelSync(GameState gameState, ModelChangeList pModelChanges, ReportList pReports, Animation pAnimation, SoundId pSound, long pGameTime, long pTurnTime) {
     ServerCommandModelSync syncCommand = new ServerCommandModelSync(pModelChanges, pReports, pAnimation, pSound, pGameTime, pTurnTime);
-    syncCommand.setCommandNr(pGameState.generateCommandNr());
-    sendHomeAndSpectatorSessions(pGameState, syncCommand);
-    sendAwaySession(pGameState, syncCommand.transform());
+    syncCommand.setCommandNr(gameState.generateCommandNr());
+    sendHomeAndSpectatorSessions(gameState, syncCommand);
+    sendAwaySession(gameState, syncCommand.transform());
   }
   
 }

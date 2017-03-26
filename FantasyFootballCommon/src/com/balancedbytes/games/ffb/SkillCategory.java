@@ -6,7 +6,7 @@ package com.balancedbytes.games.ffb;
  * 
  * @author Kalimar
  */
-public enum SkillCategory implements IEnumWithName {
+public enum SkillCategory implements INamedObject {
   
   GENERAL("General", "G"),
   AGILITY("Agility", "A"),

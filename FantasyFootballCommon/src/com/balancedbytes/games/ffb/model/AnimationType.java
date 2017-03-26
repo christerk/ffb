@@ -1,6 +1,6 @@
 package com.balancedbytes.games.ffb.model;
 
-import com.balancedbytes.games.ffb.IEnumWithName;
+import com.balancedbytes.games.ffb.INamedObject;
 
 
 
@@ -9,7 +9,7 @@ import com.balancedbytes.games.ffb.IEnumWithName;
  * 
  * @author Kalimar
  */
-public enum AnimationType implements IEnumWithName {
+public enum AnimationType implements INamedObject {
   
   PASS("pass"),
   THROW_TEAM_MATE("throwTeamMate"),

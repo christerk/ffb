@@ -4,7 +4,7 @@ package com.balancedbytes.games.ffb;
  * 
  * @author Kalimar
  */
-public enum PlayerAction implements IEnumWithName {
+public enum PlayerAction implements INamedObject {
   
   MOVE("move", 1, "starts a Move Action"),
   BLOCK("block", 2, "starts a Block Action"),

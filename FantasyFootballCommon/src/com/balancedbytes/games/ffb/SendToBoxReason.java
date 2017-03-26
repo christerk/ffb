@@ -5,7 +5,7 @@ package com.balancedbytes.games.ffb;
  * 
  * @author Kalimar
  */
-public enum SendToBoxReason implements IEnumWithName {
+public enum SendToBoxReason implements INamedObject {
   
   MNG("mng", "is recovering from a Serious Injury"),
   FOUL_BAN("foulBan", "was banned for fouling"),

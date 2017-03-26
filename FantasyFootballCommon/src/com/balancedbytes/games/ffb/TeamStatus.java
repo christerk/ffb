@@ -4,7 +4,7 @@ package com.balancedbytes.games.ffb;
  * 
  * @author Kalimar
  */
-public enum TeamStatus implements IEnumWithName {
+public enum TeamStatus implements INamedObject {
   
   NEW(0, "New"),
   ACTIVE(1, "Active"),

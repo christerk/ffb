@@ -5,7 +5,7 @@ package com.balancedbytes.games.ffb;
  * 
  * @author Kalimar
  */
-public enum PlayerChoiceMode implements IEnumWithName {
+public enum PlayerChoiceMode implements INamedObject {
   
   TENTACLES("tentacles"),
   SHADOWING("shadowing"),

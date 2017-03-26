@@ -4,7 +4,7 @@ package com.balancedbytes.games.ffb;
  * 
  * @author Kalimar
  */
-public class ReRolledActionFactory implements IEnumWithNameFactory {
+public class ReRolledActionFactory implements INamedObjectFactory {
   
   public ReRolledAction forName(String pName) {
     for (ReRolledAction action : ReRolledAction.values()) {

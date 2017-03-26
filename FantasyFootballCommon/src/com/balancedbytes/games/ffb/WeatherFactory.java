@@ -4,7 +4,7 @@ package com.balancedbytes.games.ffb;
  * 
  * @author Kalimar
  */
-public class WeatherFactory implements IEnumWithNameFactory {
+public class WeatherFactory implements INamedObjectFactory {
 
   public Weather forName(String pName) {
     for (Weather weather : Weather.values()) {

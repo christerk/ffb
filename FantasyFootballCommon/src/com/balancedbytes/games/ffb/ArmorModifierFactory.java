@@ -8,7 +8,7 @@ import java.util.Set;
  * 
  * @author Kalimar
  */
-public class ArmorModifierFactory implements IEnumWithNameFactory {
+public class ArmorModifierFactory implements INamedObjectFactory {
   
   public ArmorModifier forName(String pName) {
     for (ArmorModifier modifier : ArmorModifier.values()) {

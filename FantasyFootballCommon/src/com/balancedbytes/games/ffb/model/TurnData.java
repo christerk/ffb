@@ -229,6 +229,7 @@ public class TurnData implements IJsonSerializable {
       fInducementSet.add(pTurnData.getInducementSet());
       fLeaderState = pTurnData.getLeaderState();
       fFirstTurnAfterKickoff = pTurnData.isFirstTurnAfterKickoff();
+      fTurnStarted = pTurnData.isTurnStarted();
     }
   }
   

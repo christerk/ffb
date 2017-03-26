@@ -5,7 +5,7 @@ package com.balancedbytes.games.ffb;
  * 
  * @author Kalimar
  */
-public enum SpecialEffect implements IEnumWithName {
+public enum SpecialEffect implements INamedObject {
   
   LIGHTNING("lightning", true),
   FIREBALL("fireball", true),

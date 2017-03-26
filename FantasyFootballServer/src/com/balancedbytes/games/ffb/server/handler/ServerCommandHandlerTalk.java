@@ -56,62 +56,62 @@ public class ServerCommandHandlerTalk extends ServerCommandHandler {
   private static final String _ADD = "add";
   private static final String _REMOVE = "remove";
 
-  protected ServerCommandHandlerTalk(FantasyFootballServer pServer) {
-    super(pServer);
+  protected ServerCommandHandlerTalk(FantasyFootballServer server) {
+    super(server);
   }
 
   public NetCommandId getId() {
     return NetCommandId.CLIENT_TALK;
   }
 
-  public void handleCommand(ReceivedCommand pReceivedCommand) {
+  public void handleCommand(ReceivedCommand receivedCommand) {
 
-    ClientCommandTalk talkCommand = (ClientCommandTalk) pReceivedCommand.getCommand();
+    ClientCommandTalk talkCommand = (ClientCommandTalk) receivedCommand.getCommand();
     SessionManager sessionManager = getServer().getSessionManager();
     ServerCommunication communication = getServer().getCommunication();
-    long gameId = sessionManager.getGameIdForSession(pReceivedCommand.getSession());
+    long gameId = sessionManager.getGameIdForSession(receivedCommand.getSession());
     GameState gameState = getServer().getGameCache().getGameStateById(gameId);
     String talk = talkCommand.getTalk();
 
     if (talk != null) {
 
-      String coach = sessionManager.getCoachForSession(pReceivedCommand.getSession());
-      if ((gameState != null) && (sessionManager.getSessionOfHomeCoach(gameState) == pReceivedCommand.getSession())
-        || (sessionManager.getSessionOfAwayCoach(gameState) == pReceivedCommand.getSession())) {
+      String coach = sessionManager.getCoachForSession(receivedCommand.getSession());
+      if ((gameState != null) && (sessionManager.getSessionOfHomeCoach(gameId) == receivedCommand.getSession())
+        || (sessionManager.getSessionOfAwayCoach(gameId) == receivedCommand.getSession())) {
         if (isTestMode(gameState) && talk.startsWith("/animations")) {
-          handleAnimationsCommand(gameState, talkCommand, pReceivedCommand.getSession());
+          handleAnimationsCommand(gameState, talkCommand, receivedCommand.getSession());
         } else if (isTestMode(gameState) && talk.startsWith("/animation")) {
           handleAnimationCommand(gameState, talkCommand);
         } else if (isTestMode(gameState) && talk.startsWith("/box")) {
-          handleBoxCommand(gameState, talkCommand, pReceivedCommand.getSession());
+          handleBoxCommand(gameState, talkCommand, receivedCommand.getSession());
         } else if (isTestMode(gameState) && talk.startsWith("/card")) {
-          handleCardCommand(gameState, talkCommand, pReceivedCommand.getSession());
+          handleCardCommand(gameState, talkCommand, receivedCommand.getSession());
         } else if (isTestMode(gameState) && talk.startsWith("/injury")) {
-          handleInjuryCommand(gameState, talkCommand, pReceivedCommand.getSession());
+          handleInjuryCommand(gameState, talkCommand, receivedCommand.getSession());
         } else if (isTestMode(gameState) && talk.startsWith("/options")) {
           handleOptionsCommand(gameState, talkCommand);
         } else if (isTestMode(gameState) && talk.startsWith("/option")) {
           handleOptionCommand(gameState, talkCommand);
         } else if (isTestMode(gameState) && talk.startsWith("/pitches")) {
-          handlePitchesCommand(gameState, talkCommand, pReceivedCommand.getSession());
+          handlePitchesCommand(gameState, talkCommand, receivedCommand.getSession());
         } else if (isTestMode(gameState) && talk.startsWith("/pitch")) {
           handlePitchCommand(gameState, talkCommand);
         } else if (isTestMode(gameState) && talk.startsWith("/prone")) {
-          handleProneOrStunCommand(gameState, talkCommand, false, pReceivedCommand.getSession());
+          handleProneOrStunCommand(gameState, talkCommand, false, receivedCommand.getSession());
         } else if (isTestMode(gameState) && talk.startsWith("/roll")) {
           handleRollCommand(gameState, talkCommand);
         } else if (isTestMode(gameState) && talk.startsWith("/skill")) {
-          handleSkillCommand(gameState, talkCommand, pReceivedCommand.getSession());
+          handleSkillCommand(gameState, talkCommand, receivedCommand.getSession());
         } else if (isTestMode(gameState) && talk.startsWith("/sounds")) {
-          handleSoundsCommand(gameState, talkCommand, pReceivedCommand.getSession());
+          handleSoundsCommand(gameState, talkCommand, receivedCommand.getSession());
         } else if (isTestMode(gameState) && talk.startsWith("/sound")) {
           handleSoundCommand(gameState, talkCommand);
         } else if (isTestMode(gameState) && talk.startsWith("/stat")) {
-          handleStatCommand(gameState, talkCommand, pReceivedCommand.getSession());
+          handleStatCommand(gameState, talkCommand, receivedCommand.getSession());
         } else if (isTestMode(gameState) && talk.startsWith("/stun")) {
-          handleProneOrStunCommand(gameState, talkCommand, true, pReceivedCommand.getSession());
+          handleProneOrStunCommand(gameState, talkCommand, true, receivedCommand.getSession());
         } else if (isTestMode(gameState) && talk.startsWith("/turn")) {
-          handleTurnCommand(gameState, talkCommand, pReceivedCommand.getSession());
+          handleTurnCommand(gameState, talkCommand, receivedCommand.getSession());
         } else if (isTestMode(gameState) && talk.startsWith("/weather")) {
           handleWeatherCommand(gameState, talkCommand);
         } else {
@@ -138,7 +138,7 @@ public class ServerCommandHandlerTalk extends ServerCommandHandler {
         } else if (talk.startsWith("/stomp")) {
           playSoundAfterCooldown(gameState, coach, SoundId.SPEC_STOMP);
         } else if (talk.startsWith("/spectators") || talk.startsWith("/specs")) {
-          handleSpectatorsCommand(gameState, talkCommand, pReceivedCommand.getSession());
+          handleSpectatorsCommand(gameState, talkCommand, receivedCommand.getSession());
         } else {
           getServer().getCommunication().sendSpectatorTalk(gameState, coach, talk);
         }
@@ -156,10 +156,10 @@ public class ServerCommandHandlerTalk extends ServerCommandHandler {
     return (pGameState.getGame().isTesting() || (StringTool.isProvided(testSetting) && Boolean.parseBoolean(testSetting)));
   }
 
-  private String[] findSpectators(GameState pGameState) {
+  private String[] findSpectators(GameState gameState) {
     List<String> spectatorList = new ArrayList<String>();
     SessionManager sessionManager = getServer().getSessionManager();
-    Session[] sessions = sessionManager.getSessionsOfSpectators(pGameState);
+    Session[] sessions = sessionManager.getSessionsOfSpectators(gameState.getId());
     for (Session session : sessions) {
       String spectator = sessionManager.getCoachForSession(session);
       if (spectator != null) {
@@ -385,43 +385,43 @@ public class ServerCommandHandlerTalk extends ServerCommandHandler {
     }
   }
 
-  private void handleBoxCommand(GameState pGameState, ClientCommandTalk pTalkCommand, Session pSession) {
-    Game game = pGameState.getGame();
+  private void handleBoxCommand(GameState gameState, ClientCommandTalk talkCommand, Session session) {
+    Game game = gameState.getGame();
     SessionManager sessionManager = getServer().getSessionManager();
-    String talk = pTalkCommand.getTalk();
+    String talk = talkCommand.getTalk();
     String[] commands = talk.split(" +");
     if ((commands == null) || (commands.length <= 2)) {
       return;
     }
-    Team team = (sessionManager.getSessionOfHomeCoach(pGameState) == pSession) ? game.getTeamHome() : game.getTeamAway();
+    Team team = (sessionManager.getSessionOfHomeCoach(game.getId()) == session) ? game.getTeamHome() : game.getTeamAway();
     for (Player player : findPlayersInCommand(team, commands, 2)) {
       if ("rsv".equalsIgnoreCase(commands[1])) {
-        putPlayerIntoBox(pGameState, player, new PlayerState(PlayerState.RESERVE), "Reserve", null);
+        putPlayerIntoBox(gameState, player, new PlayerState(PlayerState.RESERVE), "Reserve", null);
       } else if ("ko".equalsIgnoreCase(commands[1])) {
-        putPlayerIntoBox(pGameState, player, new PlayerState(PlayerState.KNOCKED_OUT), "Knocked Out", null);
+        putPlayerIntoBox(gameState, player, new PlayerState(PlayerState.KNOCKED_OUT), "Knocked Out", null);
       } else if ("bh".equalsIgnoreCase(commands[1])) {
-        putPlayerIntoBox(pGameState, player, new PlayerState(PlayerState.BADLY_HURT), "Badly Hurt", null);
+        putPlayerIntoBox(gameState, player, new PlayerState(PlayerState.BADLY_HURT), "Badly Hurt", null);
       } else if ("si".equalsIgnoreCase(commands[1])) {
-        int[] roll = { pGameState.getServer().getFortuna().getDieRoll(6),
-            pGameState.getServer().getFortuna().getDieRoll(6) };
+        int[] roll = { gameState.getServer().getFortuna().getDieRoll(6),
+            gameState.getServer().getFortuna().getDieRoll(6) };
         SeriousInjury seriousInjury = DiceInterpreter.getInstance().interpretRollSeriousInjury(roll);
-        putPlayerIntoBox(pGameState, player, new PlayerState(PlayerState.SERIOUS_INJURY), "Serious Injury",
+        putPlayerIntoBox(gameState, player, new PlayerState(PlayerState.SERIOUS_INJURY), "Serious Injury",
             seriousInjury);
       } else if ("rip".equalsIgnoreCase(commands[1])) {
-        putPlayerIntoBox(pGameState, player, new PlayerState(PlayerState.RIP), "RIP", SeriousInjury.DEAD);
+        putPlayerIntoBox(gameState, player, new PlayerState(PlayerState.RIP), "RIP", SeriousInjury.DEAD);
       } else if ("ban".equalsIgnoreCase(commands[1])) {
-        putPlayerIntoBox(pGameState, player, new PlayerState(PlayerState.BANNED), "Banned", null);
+        putPlayerIntoBox(gameState, player, new PlayerState(PlayerState.BANNED), "Banned", null);
       } else {
         break;
       }
     }
-    UtilServerGame.syncGameModel(pGameState, null, null, null);
+    UtilServerGame.syncGameModel(gameState, null, null, null);
   }
 
-  private void handleCardCommand(GameState pGameState, ClientCommandTalk pTalkCommand, Session pSession) {
-    Game game = pGameState.getGame();
+  private void handleCardCommand(GameState gameState, ClientCommandTalk talkCommand, Session session) {
+    Game game = gameState.getGame();
     SessionManager sessionManager = getServer().getSessionManager();
-    String talk = pTalkCommand.getTalk();
+    String talk = talkCommand.getTalk();
     String[] commands = talk.split(" +");
     if ((commands == null) || (commands.length <= 2)) {
       return;
@@ -430,52 +430,50 @@ public class ServerCommandHandlerTalk extends ServerCommandHandler {
     if (card == null) {
       return;
     }
-    boolean homeCoach = (sessionManager.getSessionOfHomeCoach(pGameState) == pSession);
+    boolean homeCoach = (sessionManager.getSessionOfHomeCoach(game.getId()) == session);
     TurnData turnData = homeCoach ? game.getTurnDataHome() : game.getTurnDataAway();
     if (_ADD.equals(commands[1])) {
       turnData.getInducementSet().addAvailableCard(card);
       StringBuilder info = new StringBuilder();
       info.append("Added card ").append(card.getName()).append(" for coach ")
           .append(homeCoach ? game.getTeamHome().getCoach() : game.getTeamAway().getCoach()).append(".");
-      getServer().getCommunication().sendPlayerTalk(pGameState, null, info.toString());
+      getServer().getCommunication().sendPlayerTalk(gameState, null, info.toString());
     }
     if (_REMOVE.equals(commands[1])) {
       turnData.getInducementSet().removeAvailableCard(card);
       StringBuilder info = new StringBuilder();
       info.append("Removed card ").append(card.getName()).append(" for coach ")
           .append(homeCoach ? game.getTeamHome().getCoach() : game.getTeamAway().getCoach()).append(".");
-      getServer().getCommunication().sendPlayerTalk(pGameState, null, info.toString());
+      getServer().getCommunication().sendPlayerTalk(gameState, null, info.toString());
     }
-    UtilServerGame.syncGameModel(pGameState, null, null, null);
+    UtilServerGame.syncGameModel(gameState, null, null, null);
   }
 
-  private void handleProneOrStunCommand(GameState pGameState, ClientCommandTalk pTalkCommand, boolean pStun,
-      Session pSession) {
-    Game game = pGameState.getGame();
+  private void handleProneOrStunCommand(GameState gameState, ClientCommandTalk talkCommand, boolean stun, Session session) {
+    Game game = gameState.getGame();
     SessionManager sessionManager = getServer().getSessionManager();
-    String talk = pTalkCommand.getTalk();
+    String talk = talkCommand.getTalk();
     String[] commands = talk.split(" +");
     if ((commands == null) || (commands.length <= 1)) {
       return;
     }
-    Team team = (sessionManager.getSessionOfHomeCoach(pGameState) == pSession) ? game.getTeamHome() : game
-        .getTeamAway();
+    Team team = (sessionManager.getSessionOfHomeCoach(game.getId()) == session) ? game.getTeamHome() : game.getTeamAway();
     for (Player player : findPlayersInCommand(team, commands, 1)) {
       FieldCoordinate playerCoordinate = game.getFieldModel().getPlayerCoordinate(player);
       if (!playerCoordinate.isBoxCoordinate()) {
         StringBuilder info = new StringBuilder();
         info.append("Player ").append(player.getName());
-        if (pStun) {
+        if (stun) {
           info.append(" stunned.");
           game.getFieldModel().setPlayerState(player, new PlayerState(PlayerState.STUNNED).changeActive(true));
         } else {
           info.append(" placed prone.");
           game.getFieldModel().setPlayerState(player, new PlayerState(PlayerState.PRONE).changeActive(true));
         }
-        getServer().getCommunication().sendPlayerTalk(pGameState, null, info.toString());
+        getServer().getCommunication().sendPlayerTalk(gameState, null, info.toString());
       }
     }
-    UtilServerGame.syncGameModel(pGameState, null, null, null);
+    UtilServerGame.syncGameModel(gameState, null, null, null);
   }
 
   private Player[] findPlayersInCommand(Team pTeam, String[] pCommands, int pIndex) {
@@ -545,10 +543,10 @@ public class ServerCommandHandlerTalk extends ServerCommandHandler {
     }
   }
 
-  private void handleSkillCommand(GameState pGameState, ClientCommandTalk pTalkCommand, Session pSession) {
-    Game game = pGameState.getGame();
+  private void handleSkillCommand(GameState gameState, ClientCommandTalk talkCommand, Session session) {
+    Game game = gameState.getGame();
     SessionManager sessionManager = getServer().getSessionManager();
-    String talk = pTalkCommand.getTalk();
+    String talk = talkCommand.getTalk();
     String[] commands = talk.split(" +");
     if ((commands == null) || (commands.length <= 3)) {
       return;
@@ -557,49 +555,47 @@ public class ServerCommandHandlerTalk extends ServerCommandHandler {
     if (skill == null) {
       return;
     }
-    Team team = (sessionManager.getSessionOfHomeCoach(pGameState) == pSession) ? game.getTeamHome() : game
-        .getTeamAway();
+    Team team = (sessionManager.getSessionOfHomeCoach(game.getId()) == session) ? game.getTeamHome() : game.getTeamAway();
     for (Player player : findPlayersInCommand(team, commands, 3)) {
       if (_ADD.equals(commands[1])) {
         player.addSkill(skill);
-        getServer().getCommunication().sendAddPlayer(pGameState, team.getId(), player,
+        getServer().getCommunication().sendAddPlayer(gameState, team.getId(), player,
             game.getFieldModel().getPlayerState(player), game.getGameResult().getPlayerResult(player));
         StringBuilder info = new StringBuilder();
         info.append("Added skill ").append(skill.getName()).append(" to player ").append(player.getName()).append(".");
-        getServer().getCommunication().sendPlayerTalk(pGameState, null, info.toString());
+        getServer().getCommunication().sendPlayerTalk(gameState, null, info.toString());
       }
       if (_REMOVE.equals(commands[1])) {
         player.removeSkill(skill);
-        getServer().getCommunication().sendAddPlayer(pGameState, team.getId(), player,
+        getServer().getCommunication().sendAddPlayer(gameState, team.getId(), player,
             game.getFieldModel().getPlayerState(player), game.getGameResult().getPlayerResult(player));
         StringBuilder info = new StringBuilder();
         info.append("Removed skill ").append(skill.getName()).append(" from player ").append(player.getName())
             .append(".");
-        getServer().getCommunication().sendPlayerTalk(pGameState, null, info.toString());
+        getServer().getCommunication().sendPlayerTalk(gameState, null, info.toString());
       }
     }
   }
 
-  private void handleInjuryCommand(GameState pGameState, ClientCommandTalk pTalkCommand, Session pSession) {
-    Game game = pGameState.getGame();
+  private void handleInjuryCommand(GameState gameState, ClientCommandTalk talkCommand, Session session) {
+    Game game = gameState.getGame();
     SessionManager sessionManager = getServer().getSessionManager();
-    String talk = pTalkCommand.getTalk();
+    String talk = talkCommand.getTalk();
     String[] commands = talk.split(" +");
     if ((commands == null) || (commands.length <= 2)) {
       return;
     }
-    Team team = (sessionManager.getSessionOfHomeCoach(pGameState) == pSession) ? game.getTeamHome() : game
-        .getTeamAway();
+    Team team = (sessionManager.getSessionOfHomeCoach(game.getId()) == session) ? game.getTeamHome() : game.getTeamAway();
     for (Player player : findPlayersInCommand(team, commands, 2)) {
       SeriousInjury lastingInjury;
       if ("ni".equalsIgnoreCase(commands[1])) {
-        lastingInjury = (pGameState.getServer().getFortuna().getDieRoll(6) > 3) ? SeriousInjury.DAMAGED_BACK
+        lastingInjury = (gameState.getServer().getFortuna().getDieRoll(6) > 3) ? SeriousInjury.DAMAGED_BACK
             : SeriousInjury.SMASHED_KNEE;
       } else if ("-ma".equalsIgnoreCase(commands[1])) {
-        lastingInjury = (pGameState.getServer().getFortuna().getDieRoll(6) > 3) ? SeriousInjury.SMASHED_HIP
+        lastingInjury = (gameState.getServer().getFortuna().getDieRoll(6) > 3) ? SeriousInjury.SMASHED_HIP
             : SeriousInjury.SMASHED_ANKLE;
       } else if ("-av".equalsIgnoreCase(commands[1])) {
-        lastingInjury = (pGameState.getServer().getFortuna().getDieRoll(6) > 3) ? SeriousInjury.SERIOUS_CONCUSSION
+        lastingInjury = (gameState.getServer().getFortuna().getDieRoll(6) > 3) ? SeriousInjury.SERIOUS_CONCUSSION
             : SeriousInjury.FRACTURED_SKULL;
       } else if ("-ag".equalsIgnoreCase(commands[1])) {
         lastingInjury = SeriousInjury.BROKEN_NECK;
@@ -610,20 +606,20 @@ public class ServerCommandHandlerTalk extends ServerCommandHandler {
       }
       if ((player != null) && (lastingInjury != null)) {
         player.addLastingInjury(lastingInjury);
-        getServer().getCommunication().sendAddPlayer(pGameState, team.getId(), player,
+        getServer().getCommunication().sendAddPlayer(gameState, team.getId(), player,
             game.getFieldModel().getPlayerState(player), game.getGameResult().getPlayerResult(player));
         StringBuilder info = new StringBuilder();
         info.append("Player ").append(player.getName()).append(" suffers injury ").append(lastingInjury.getName())
             .append(".");
-        getServer().getCommunication().sendPlayerTalk(pGameState, null, info.toString());
+        getServer().getCommunication().sendPlayerTalk(gameState, null, info.toString());
       }
     }
   }
 
-  private void handleStatCommand(GameState pGameState, ClientCommandTalk pTalkCommand, Session pSession) {
-    Game game = pGameState.getGame();
+  private void handleStatCommand(GameState gameState, ClientCommandTalk talkCommand, Session session) {
+    Game game = gameState.getGame();
     SessionManager sessionManager = getServer().getSessionManager();
-    String talk = pTalkCommand.getTalk();
+    String talk = talkCommand.getTalk();
     String[] commands = talk.split(" +");
     if ((commands == null) || (commands.length <= 2)) {
       return;
@@ -634,25 +630,24 @@ public class ServerCommandHandlerTalk extends ServerCommandHandler {
     } catch (NumberFormatException nfe) {
       return;
     }
-    Team team = (sessionManager.getSessionOfHomeCoach(pGameState) == pSession) ? game.getTeamHome() : game
-        .getTeamAway();
+    Team team = (sessionManager.getSessionOfHomeCoach(game.getId()) == session) ? game.getTeamHome() : game.getTeamAway();
     for (Player player : findPlayersInCommand(team, commands, 3)) {
       if ((player != null) && (stat >= 0)) {
         if ("ma".equalsIgnoreCase(commands[1])) {
           player.setMovement(stat);
-          reportStatChange(pGameState, player, "MA", stat);
+          reportStatChange(gameState, player, "MA", stat);
         }
         if ("st".equalsIgnoreCase(commands[1])) {
           player.setStrength(stat);
-          reportStatChange(pGameState, player, "ST", stat);
+          reportStatChange(gameState, player, "ST", stat);
         }
         if ("ag".equalsIgnoreCase(commands[1])) {
           player.setAgility(stat);
-          reportStatChange(pGameState, player, "AG", stat);
+          reportStatChange(gameState, player, "AG", stat);
         }
         if ("av".equalsIgnoreCase(commands[1])) {
           player.setArmour(stat);
-          reportStatChange(pGameState, player, "AV", stat);
+          reportStatChange(gameState, player, "AV", stat);
         }
       }
     }
@@ -671,10 +666,10 @@ public class ServerCommandHandlerTalk extends ServerCommandHandler {
     }
   }
 
-  private void handleTurnCommand(GameState pGameState, ClientCommandTalk pTalkCommand, Session pSession) {
-    Game game = pGameState.getGame();
+  private void handleTurnCommand(GameState gameState, ClientCommandTalk talkCommand, Session session) {
+    Game game = gameState.getGame();
     SessionManager sessionManager = getServer().getSessionManager();
-    String talk = pTalkCommand.getTalk();
+    String talk = talkCommand.getTalk();
     String[] commands = talk.split(" +");
     if ((commands != null) && (commands.length > 1)) {
       int newTurnNr = -1;
@@ -684,7 +679,7 @@ public class ServerCommandHandlerTalk extends ServerCommandHandler {
       }
       if (newTurnNr >= 0) {
         int turnDiff = 0;
-        if (sessionManager.getSessionOfHomeCoach(pGameState) == pSession) {
+        if (sessionManager.getSessionOfHomeCoach(game.getId()) == session) {
           turnDiff = newTurnNr - game.getTurnDataHome().getTurnNr();
         } else {
           turnDiff = newTurnNr - game.getTurnDataAway().getTurnNr();
@@ -693,8 +688,8 @@ public class ServerCommandHandlerTalk extends ServerCommandHandler {
         game.getTurnDataAway().setTurnNr(game.getTurnDataAway().getTurnNr() + turnDiff);
         StringBuilder info = new StringBuilder();
         info.append("Jumping to turn ").append(newTurnNr).append(".");
-        getServer().getCommunication().sendPlayerTalk(pGameState, null, info.toString());
-        UtilServerGame.syncGameModel(pGameState, null, null, null);
+        getServer().getCommunication().sendPlayerTalk(gameState, null, info.toString());
+        UtilServerGame.syncGameModel(gameState, null, null, null);
       }
     }
   }

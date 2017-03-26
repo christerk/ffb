@@ -5,7 +5,7 @@ package com.balancedbytes.games.ffb;
  * 
  * @author Kalimar
  */
-public enum InducementPhase implements IEnumWithName {
+public enum InducementPhase implements INamedObject {
   
   END_OF_OWN_TURN("endOfOwnTurn", "at end of own turn"),
   START_OF_OWN_TURN("startOfOwnTurn","at start of own turn"), 

@@ -5,7 +5,7 @@ package com.balancedbytes.games.ffb;
  * 
  * @author Kalimar
  */
-public enum ReRollSource implements IEnumWithName {
+public enum ReRollSource implements INamedObject {
   
   TEAM_RE_ROLL("Team ReRoll"),
   DODGE(Skill.DODGE),

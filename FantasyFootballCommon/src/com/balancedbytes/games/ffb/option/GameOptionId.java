@@ -1,12 +1,12 @@
 package com.balancedbytes.games.ffb.option;
 
-import com.balancedbytes.games.ffb.IEnumWithName;
+import com.balancedbytes.games.ffb.INamedObject;
 
 /**
  * 
  * @author Kalimar
  */
-public enum GameOptionId implements IEnumWithName {
+public enum GameOptionId implements INamedObject {
   
   OVERTIME("overtime"), 
   TURNTIME("turntime"),

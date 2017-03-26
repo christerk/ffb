@@ -5,7 +5,7 @@ package com.balancedbytes.games.ffb;
  * 
  * @author Kalimar
  */
-public enum CardType implements IEnumWithName {
+public enum CardType implements INamedObject {
 
   MISCELLANEOUS_MAYHEM("miscellaneousMayhem", 50000, "Miscellaneous Mayhem Deck", "Miscellaneous Mayhem Card", "Miscellaneous Mayhem Cards"),
   SPECIAL_TEAM_PLAY("specialTeamPlay", 50000, "Special Team Plays Deck", "Special Team Play Card", "Special Team Play Cards"),

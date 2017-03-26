@@ -5,6 +5,8 @@ import java.util.LinkedList;
 import java.util.List;
 
 import com.balancedbytes.games.ffb.server.db.DbTransaction;
+import com.balancedbytes.games.ffb.server.db.IDbUpdateParameter;
+import com.balancedbytes.games.ffb.server.db.IDbUpdateWithGameState;
 
 /**
  * 
@@ -57,6 +59,24 @@ public class DbUpdater implements Runnable {
     fStopped = true;
     synchronized (fUpdateQueue) {
       fUpdateQueue.notifyAll();
+    }
+  }
+  
+  public GameState findGameState(long gameId) {
+    synchronized (fUpdateQueue) {
+      // find latest update first
+      for (int i = fUpdateQueue.size() - 1; i >= 0; i--) {
+        DbTransaction transaction = fUpdateQueue.get(i);
+        for (IDbUpdateParameter parameter : transaction.getDbUpdateParameters()) {
+          if (parameter instanceof IDbUpdateWithGameState) {
+            IDbUpdateWithGameState update = (IDbUpdateWithGameState) parameter;
+            if (update.getId() == gameId) {
+              return update.getGameState();
+            }
+          }
+        }
+      }
+      return null;
     }
   }
 

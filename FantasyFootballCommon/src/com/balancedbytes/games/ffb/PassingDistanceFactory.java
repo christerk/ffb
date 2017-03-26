@@ -4,7 +4,7 @@ package com.balancedbytes.games.ffb;
  * 
  * @author Kalimar
  */
-public class PassingDistanceFactory implements IEnumWithNameFactory {
+public class PassingDistanceFactory implements INamedObjectFactory {
   
   public PassingDistance forName(String pName) {
     for (PassingDistance distance : PassingDistance.values()) {

@@ -8,7 +8,7 @@ import java.util.Comparator;
  * 
  * @author Kalimar
  */
-public enum Skill implements IEnumWithName {
+public enum Skill implements INamedObject {
   
   ACCURATE("Accurate", SkillCategory.PASSING),
   //  The player may add 1 to the D6 roll when he passes.

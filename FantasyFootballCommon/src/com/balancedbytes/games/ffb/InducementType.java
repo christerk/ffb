@@ -4,7 +4,7 @@ package com.balancedbytes.games.ffb;
  * 
  * @author Kalimar
  */
-public enum InducementType implements IEnumWithName {
+public enum InducementType implements INamedObject {
 
   BLOODWEISER_BABES("bloodweiserBabes", "Bloodweiser Babes", "Bloodweiser Babe", "Bloodweiser Babes"),
   BRIBES("bribes", "Bribes", "Bribe", "Bribes"),

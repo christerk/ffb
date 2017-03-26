@@ -56,8 +56,8 @@ public class ServerCommandHandlerSocketClosed extends ServerCommandHandler {
         UtilServerTimer.stopTurnTimer(gameState);
       }
 
-      Session homeSession = sessionManager.getSessionOfHomeCoach(gameState);
-      Session awaySession = sessionManager.getSessionOfAwayCoach(gameState);
+      Session homeSession = sessionManager.getSessionOfHomeCoach(gameId);
+      Session awaySession = sessionManager.getSessionOfAwayCoach(gameId);
 
       if ((homeSession == null) && (awaySession == null) && ((GameStatus.STARTING == gameState.getStatus()) || (GameStatus.ACTIVE == gameState.getStatus()))) {
         gameState.setStatus(GameStatus.PAUSED);

@@ -1,6 +1,6 @@
 package com.balancedbytes.games.ffb;
 
-public enum BlockResult implements IEnumWithName {
+public enum BlockResult implements INamedObject {
   
   SKULL("SKULL"),
   BOTH_DOWN("BOTH DOWN"),

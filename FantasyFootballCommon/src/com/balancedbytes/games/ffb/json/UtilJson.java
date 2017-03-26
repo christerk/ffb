@@ -15,8 +15,8 @@ import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
 import com.balancedbytes.games.ffb.FieldCoordinate;
-import com.balancedbytes.games.ffb.IEnumWithName;
-import com.balancedbytes.games.ffb.IEnumWithNameFactory;
+import com.balancedbytes.games.ffb.INamedObject;
+import com.balancedbytes.games.ffb.INamedObjectFactory;
 import com.balancedbytes.games.ffb.PlayerState;
 import com.balancedbytes.games.ffb.util.ArrayTool;
 import com.eclipsesource.json.JsonArray;
@@ -100,7 +100,7 @@ public class UtilJson {
     return JsonValue.valueOf(pPlayerState.getId());
   }
   
-  public static IEnumWithName toEnumWithName(IEnumWithNameFactory pFactory, JsonValue pJsonValue) {
+  public static INamedObject toEnumWithName(INamedObjectFactory pFactory, JsonValue pJsonValue) {
     if (pFactory == null) {
       throw new IllegalArgumentException("Parameter factory must not be null.");
     }
@@ -110,7 +110,7 @@ public class UtilJson {
     return pFactory.forName(pJsonValue.asString());
   }
 
-  public static JsonValue toJsonValue(IEnumWithName pEnumWithName) {
+  public static JsonValue toJsonValue(INamedObject pEnumWithName) {
     if (pEnumWithName == null) {
       return JsonValue.NULL;
     }

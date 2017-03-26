@@ -4,7 +4,7 @@ package com.balancedbytes.games.ffb;
  * 
  * @author Kalimar
  */
-public class KickoffResultFactory implements IEnumWithNameFactory {
+public class KickoffResultFactory implements INamedObjectFactory {
   
   public KickoffResult forName(String pName) {
     for (KickoffResult kickoff : KickoffResult.values()) {

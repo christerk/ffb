@@ -6,7 +6,7 @@ import com.balancedbytes.games.ffb.util.StringTool;
  * 
  * @author Kalimar
  */
-public class InducementPhaseFactory implements IEnumWithNameFactory {
+public class InducementPhaseFactory implements INamedObjectFactory {
   
   public InducementPhase forName(String pName) {
     if (StringTool.isProvided(pName)) {

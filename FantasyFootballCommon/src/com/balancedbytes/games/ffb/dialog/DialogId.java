@@ -1,12 +1,12 @@
 package com.balancedbytes.games.ffb.dialog;
 
-import com.balancedbytes.games.ffb.IEnumWithName;
+import com.balancedbytes.games.ffb.INamedObject;
 
 /**
  * 
  * @author Kalimar
  */
-public enum DialogId implements IEnumWithName {
+public enum DialogId implements INamedObject {
   
   INFORMATION("information", false),
   YES_OR_NO_QUESTION("yesOrNoQuestion", true),

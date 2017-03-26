@@ -6,7 +6,7 @@ package com.balancedbytes.games.ffb;
  * 
  * @author Kalimar
  */
-public enum PassingDistance implements IEnumWithName {
+public enum PassingDistance implements INamedObject {
   
   QUICK_PASS("Quick Pass", 1, 'Q'),
   SHORT_PASS("Short Pass", 0, 'S'),

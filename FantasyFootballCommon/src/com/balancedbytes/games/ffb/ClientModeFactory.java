@@ -4,7 +4,7 @@ package com.balancedbytes.games.ffb;
  * 
  * @author Kalimar
  */
-public class ClientModeFactory implements IEnumWithNameFactory {
+public class ClientModeFactory implements INamedObjectFactory {
   
   public ClientMode forName(String pName) {
     for (ClientMode mode : ClientMode.values()) {

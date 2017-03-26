@@ -4,7 +4,7 @@ package com.balancedbytes.games.ffb;
  * 
  * @author Kalimar
  */
-public class InducementTypeFactory implements IEnumWithNameFactory {
+public class InducementTypeFactory implements INamedObjectFactory {
   
   public InducementType forName(String pName) {
     for (InducementType type : InducementType.values()) {

@@ -1,12 +1,12 @@
 package com.balancedbytes.games.ffb.model.change;
 
-import com.balancedbytes.games.ffb.IEnumWithNameFactory;
+import com.balancedbytes.games.ffb.INamedObjectFactory;
 
 /**
  * 
  * @author Kalimar
  */
-public class ModelChangeIdFactory implements IEnumWithNameFactory {
+public class ModelChangeIdFactory implements INamedObjectFactory {
   
   public ModelChangeId forName(String pName) {
     for (ModelChangeId changeId : ModelChangeId.values()) {

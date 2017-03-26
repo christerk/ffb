@@ -1,7 +1,7 @@
 package com.balancedbytes.games.ffb.json;
 
-import com.balancedbytes.games.ffb.IEnumWithName;
-import com.balancedbytes.games.ffb.IEnumWithNameFactory;
+import com.balancedbytes.games.ffb.INamedObject;
+import com.balancedbytes.games.ffb.INamedObjectFactory;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
@@ -11,9 +11,9 @@ import com.eclipsesource.json.JsonValue;
  */
 public class JsonEnumWithNameOption extends JsonAbstractOption {
   
-  private IEnumWithNameFactory fFactory;
+  private INamedObjectFactory fFactory;
 
-  public JsonEnumWithNameOption(String pKey, IEnumWithNameFactory pFactory) {
+  public JsonEnumWithNameOption(String pKey, INamedObjectFactory pFactory) {
     super(pKey);
     fFactory = pFactory;
     if (fFactory == null) {
@@ -21,22 +21,22 @@ public class JsonEnumWithNameOption extends JsonAbstractOption {
     }
   }
   
-  public IEnumWithName getFrom(JsonObject pJsonObject) {
+  public INamedObject getFrom(JsonObject pJsonObject) {
     return asEnumWithName(getValueFrom(pJsonObject));
   }
   
-  public void addTo(JsonObject pJsonObject, IEnumWithName pValue) {
+  public void addTo(JsonObject pJsonObject, INamedObject pValue) {
     addValueTo(pJsonObject, asJsonValue(pValue));
   }
   
-  private IEnumWithName asEnumWithName(JsonValue pJsonValue) {
+  private INamedObject asEnumWithName(JsonValue pJsonValue) {
     if ((pJsonValue == null) || pJsonValue.isNull()) {
       return null;
     }
     return fFactory.forName(pJsonValue.asString());
   }
   
-  private JsonValue asJsonValue(IEnumWithName pEnumWithName) {
+  private JsonValue asJsonValue(INamedObject pEnumWithName) {
     if (pEnumWithName == null) {
       return JsonValue.NULL;
     }

@@ -5,7 +5,7 @@ package com.balancedbytes.games.ffb;
  * 
  * @author Kalimar
  */
-public enum InjuryModifier implements IEnumWithName {
+public enum InjuryModifier implements INamedObject {
   
   MIGHTY_BLOW("Mighty Blow", 1, false),
   DIRTY_PLAYER("Dirty Player", 1, false),

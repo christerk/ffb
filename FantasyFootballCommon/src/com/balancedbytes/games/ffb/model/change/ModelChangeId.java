@@ -1,13 +1,13 @@
 package com.balancedbytes.games.ffb.model.change;
 
-import com.balancedbytes.games.ffb.IEnumWithName;
+import com.balancedbytes.games.ffb.INamedObject;
 import com.eclipsesource.json.JsonValue;
 
 /**
  * 
  * @author Kalimar
  */
-public enum ModelChangeId implements IEnumWithName {
+public enum ModelChangeId implements INamedObject {
 
 	ACTING_PLAYER_MARK_SKILL_USED("actingPlayerMarkSkillUsed", ModelChangeDataType.SKILL),
 	ACTING_PLAYER_SET_CURRENT_MOVE("actingPlayerSetCurrentMove", ModelChangeDataType.INTEGER),

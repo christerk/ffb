@@ -4,7 +4,7 @@ package com.balancedbytes.games.ffb;
  * 
  * @author Kalimar
  */
-public class PushbackModeFactory implements IEnumWithNameFactory {
+public class PushbackModeFactory implements INamedObjectFactory {
   
   public PushbackMode forName(String pName) {
     for (PushbackMode mode : PushbackMode.values()) {

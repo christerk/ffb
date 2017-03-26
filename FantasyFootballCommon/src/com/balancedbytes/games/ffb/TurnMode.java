@@ -5,7 +5,7 @@ package com.balancedbytes.games.ffb;
  * 
  * @author Kalimar
  */
-public enum TurnMode implements IEnumWithName {
+public enum TurnMode implements INamedObject {
   
   REGULAR("regular", true),
   SETUP("setup", true),

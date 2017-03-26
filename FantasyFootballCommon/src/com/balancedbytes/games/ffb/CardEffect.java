@@ -7,7 +7,7 @@ package com.balancedbytes.games.ffb;
  * 
  * @author Kalimar
  */
-public enum CardEffect implements IEnumWithName {
+public enum CardEffect implements INamedObject {
   
   DISTRACTED("Distracted"),
   ILLEGALLY_SUBSTITUTED("IllegallySubstituted"),

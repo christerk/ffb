@@ -35,8 +35,8 @@ public class ServerCommandHandlerSetMarker extends ServerCommandHandler {
     SessionManager sessionManager = getServer().getSessionManager();
     long gameId = sessionManager.getGameIdForSession(pReceivedCommand.getSession());
     GameState gameState = getServer().getGameCache().getGameStateById(gameId);
-    boolean homeMarker = (sessionManager.getSessionOfHomeCoach(gameState) == pReceivedCommand.getSession());
-    boolean awayMarker = (sessionManager.getSessionOfAwayCoach(gameState) == pReceivedCommand.getSession());
+    boolean homeMarker = (sessionManager.getSessionOfHomeCoach(gameId) == pReceivedCommand.getSession());
+    boolean awayMarker = (sessionManager.getSessionOfAwayCoach(gameId) == pReceivedCommand.getSession());
 
     if (homeMarker || awayMarker) {
       

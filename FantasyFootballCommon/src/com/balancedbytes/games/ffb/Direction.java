@@ -7,7 +7,7 @@ package com.balancedbytes.games.ffb;
  * 
  * @author Kalimar
  */
-public enum Direction implements IEnumWithName {
+public enum Direction implements INamedObject {
   
   NORTH("North"),
   NORTHEAST("Northeast"),

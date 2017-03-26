@@ -47,7 +47,7 @@ public class UtilServerStartGame {
 
     FantasyFootballServer server = pGameState.getServer();
     SessionManager sessionManager = server.getSessionManager();
-    sessionManager.addSession(pSession, pGameState, pCoach, pMode, pHomeTeam);
+    sessionManager.addSession(pSession, pGameState.getId(), pCoach, pMode, pHomeTeam);
 
     List<String> playerList = new ArrayList<String>();
 
@@ -56,7 +56,7 @@ public class UtilServerStartGame {
       String coach = sessionManager.getCoachForSession(sessions[i]);
       ClientMode mode = sessionManager.getModeForSession(sessions[i]);
       if (mode == ClientMode.PLAYER) {
-        if (sessions[i] == sessionManager.getSessionOfHomeCoach(pGameState)) {
+        if (sessions[i] == sessionManager.getSessionOfHomeCoach(pGameState.getId())) {
           playerList.add(0, coach);
         } else {
           playerList.add(coach);
@@ -104,13 +104,13 @@ public class UtilServerStartGame {
     FantasyFootballServer server = pGameState.getServer();
     boolean ownershipOk = true;
     if (!game.isTesting() && UtilGameOption.isOptionEnabled(game, GameOptionId.CHECK_OWNERSHIP)) {
-      if (!server.getSessionManager().isHomeCoach(pGameState, game.getTeamHome().getCoach())) {
+      if (!server.getSessionManager().isHomeCoach(game.getId(), game.getTeamHome().getCoach())) {
         ownershipOk = false;
-        server.getCommunication().sendStatus(server.getSessionManager().getSessionOfHomeCoach(pGameState), ServerStatus.ERROR_NOT_YOUR_TEAM, null);
+        server.getCommunication().sendStatus(server.getSessionManager().getSessionOfHomeCoach(game.getId()), ServerStatus.ERROR_NOT_YOUR_TEAM, null);
       }
-      if (!server.getSessionManager().isAwayCoach(pGameState, game.getTeamAway().getCoach())) {
+      if (!server.getSessionManager().isAwayCoach(game.getId(), game.getTeamAway().getCoach())) {
         ownershipOk = false;
-        server.getCommunication().sendStatus(server.getSessionManager().getSessionOfAwayCoach(pGameState), ServerStatus.ERROR_NOT_YOUR_TEAM, null);
+        server.getCommunication().sendStatus(server.getSessionManager().getSessionOfAwayCoach(game.getId()), ServerStatus.ERROR_NOT_YOUR_TEAM, null);
       }
     }
     if (ownershipOk) {

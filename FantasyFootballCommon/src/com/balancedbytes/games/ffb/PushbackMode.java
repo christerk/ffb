@@ -4,7 +4,7 @@ package com.balancedbytes.games.ffb;
  * 
  * @author Kalimar
  */
-public enum PushbackMode implements IEnumWithName {
+public enum PushbackMode implements INamedObject {
   
   REGULAR("regular"),
   SIDE_STEP("sideStep"),

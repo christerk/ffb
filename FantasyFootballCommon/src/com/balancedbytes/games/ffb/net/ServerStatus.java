@@ -1,6 +1,6 @@
 package com.balancedbytes.games.ffb.net;
 
-import com.balancedbytes.games.ffb.IEnumWithName;
+import com.balancedbytes.games.ffb.INamedObject;
 
 
 
@@ -8,7 +8,7 @@ import com.balancedbytes.games.ffb.IEnumWithName;
  * 
  * @author Kalimar
  */
-public enum ServerStatus implements IEnumWithName {
+public enum ServerStatus implements INamedObject {
   
   ERROR_UNKNOWN_COACH("Unknown Coach", "Unknown Coach!"),
   ERROR_WRONG_PASSWORD("Wrong Password", "Wrong Password!"),

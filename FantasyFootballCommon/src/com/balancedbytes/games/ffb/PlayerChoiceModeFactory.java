@@ -4,7 +4,7 @@ package com.balancedbytes.games.ffb;
  * 
  * @author Kalimar
  */
-public class PlayerChoiceModeFactory implements IEnumWithNameFactory {
+public class PlayerChoiceModeFactory implements INamedObjectFactory {
   
   public PlayerChoiceMode forName(String pName) {
     for (PlayerChoiceMode type : PlayerChoiceMode.values()) {

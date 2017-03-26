@@ -3,7 +3,7 @@ package com.balancedbytes.games.ffb;
 /**
  * @author Dominic Schabel
  */
-public enum SeriousInjury implements IEnumWithName {
+public enum SeriousInjury implements INamedObject {
 
   BROKEN_RIBS("Broken Ribs (MNG)", "Broken Ribs (Miss next game)", "has broken some ribs (Miss next game)", "is recovering from broken ribs", false, null),
   GROIN_STRAIN("Groin Strain (MNG)", "Groin Strain (Miss next game)", "has got a groin strain (Miss next game)", "is recovering from a groin strain", false, null),

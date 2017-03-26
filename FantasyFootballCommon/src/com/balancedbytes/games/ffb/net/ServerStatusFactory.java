@@ -1,12 +1,12 @@
 package com.balancedbytes.games.ffb.net;
 
-import com.balancedbytes.games.ffb.IEnumWithNameFactory;
+import com.balancedbytes.games.ffb.INamedObjectFactory;
 
 /**
  * 
  * @author Kalimar
  */
-public class ServerStatusFactory implements IEnumWithNameFactory {
+public class ServerStatusFactory implements INamedObjectFactory {
   
   public ServerStatus forName(String pName) {
     for (ServerStatus serverStatus : ServerStatus.values()) {
