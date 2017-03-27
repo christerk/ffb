@@ -31,6 +31,7 @@ public class AdminConnector {
     + "java com.balancedbytes.games.ffb.server.admin.AdminConnector list <status>\n"
     + "  [status being one of: scheduled, starting, active, paused, finished or uploaded]\n"
     + "java com.balancedbytes.games.ffb.server.admin.AdminConnector list <gameId>\n"
+    + "java com.balancedbytes.games.ffb.server.admin.AdminConnector loglevel <value>\n"
     + "java com.balancedbytes.games.ffb.server.admin.AdminConnector message <message>\n"
     + "java com.balancedbytes.games.ffb.server.admin.AdminConnector refresh\n"
     + "java com.balancedbytes.games.ffb.server.admin.AdminConnector shutdown\n"
@@ -112,6 +113,13 @@ public class AdminConnector {
         System.out.println(clearUrl);
         String clearXml = UtilServerHttpClient.fetchPage(clearUrl);
         System.out.println(clearXml);
+      }
+
+      if (AdminServlet.LOGLEVEL.equals(args[0])) {
+        String logLevelUrl = StringTool.bind(serverProperties.getProperty(IServerProperty.ADMIN_URL_LOGLEVEL), response);
+        System.out.println(logLevelUrl);
+        String logLevelXml = UtilServerHttpClient.fetchPage(logLevelUrl);
+        System.out.println(logLevelXml);
       }
 
       if (AdminServlet.LIST.equals(args[0])) {

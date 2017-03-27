@@ -44,19 +44,20 @@ import com.balancedbytes.games.ffb.xml.UtilXml;
 @SuppressWarnings("serial")
 public class AdminServlet extends HttpServlet {
 
+  public static final String BLOCK = "block";
   public static final String CHALLENGE = "challenge";
-  public static final String LIST = "list";
-  public static final String SHUTDOWN = "shutdown";
   public static final String CLEAR = "clear";
   public static final String CLOSE = "close";
   public static final String CONCEDE = "concede";
-  public static final String UPLOAD = "upload";
   public static final String DELETE = "delete";
+  public static final String LIST = "list";
+  public static final String LOGLEVEL = "loglevel";
   public static final String MESSAGE = "message";
   public static final String REFRESH = "refresh";
   public static final String SCHEDULE = "schedule";
-  public static final String BLOCK = "block";
+  public static final String SHUTDOWN = "shutdown";
   public static final String UNBLOCK = "unblock";
+  public static final String UPLOAD = "upload";
 
   private static final String _STATUS_OK = "ok";
   private static final String _STATUS_FAIL = "fail";
@@ -68,6 +69,7 @@ public class AdminServlet extends HttpServlet {
   private static final String _PARAMETER_MESSSAGE = "message";
   private static final String _PARAMETER_TEAM_HOME_ID = "teamHomeId";
   private static final String _PARAMETER_TEAM_AWAY_ID = "teamAwayId";
+  private static final String _PARAMETER_VALUE = "value";
 
   private static final String _XML_TAG_ADMIN = "admin";
   private static final String _XML_TAG_CHALLENGE = "challenge";
@@ -86,6 +88,7 @@ public class AdminServlet extends HttpServlet {
   private static final String _XML_TAG_BLOCK = "block";
   private static final String _XML_TAG_UNBLOCK = "unblock";
   private static final String _XML_TAG_STATUS = "status";
+  private static final String _XML_TAG_LOGLEVEL = "loglevel";
 
   private static final String _XML_ATTRIBUTE_INITIATED = "initiated";
   private static final String _XML_ATTRIBUTE_GAME_ID = "gameId";
@@ -94,6 +97,7 @@ public class AdminServlet extends HttpServlet {
   private static final String _XML_ATTRIBUTE_TEAM_AWAY_ID = "teamAwayId";
   private static final String _XML_ATTRIBUTE_GAME_STATUS = "gameStatus";
   private static final String _XML_ATTRIBUTE_SIZE = "size";
+  private static final String _XML_ATTRIBUTE_VALUE = "value";
 
   private static final DateFormat _TIMESTAMP_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS"); // 2001-07-04T12:08:56.235
 
@@ -145,6 +149,8 @@ public class AdminServlet extends HttpServlet {
           isOk = handleBlock(handler, false);
         } else if (CLEAR.equals(command)) {
           isOk = handleClear(handler);
+        } else if (LOGLEVEL.equals(command)) {
+          isOk = handleLogLevel(handler, parameters);
         } else if (CLOSE.equals(command)) {
           isOk = handleClose(handler, parameters);
         } else if (CONCEDE.equals(command)) {
@@ -244,6 +250,15 @@ public class AdminServlet extends HttpServlet {
       UtilXml.addValueElement(pHandler, _XML_TAG_ERROR, "Invalid or missing gameId parameter");
       return false;
     }
+  }
+
+  private boolean handleLogLevel(TransformerHandler pHandler, Map<String, String[]> pParameters) {
+    String valueString = ArrayTool.firstElement(pParameters.get(_PARAMETER_VALUE));
+    AttributesImpl attributes = new AttributesImpl();
+    UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_VALUE, valueString);
+    UtilXml.addEmptyElement(pHandler, _XML_TAG_LOGLEVEL, attributes);
+    getServer().setProperty(IServerProperty.SERVER_LOG_LEVEL, valueString);
+    return true;
   }
 
   private boolean handleClear(TransformerHandler handler) {
