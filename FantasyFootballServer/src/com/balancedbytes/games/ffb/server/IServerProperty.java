@@ -9,7 +9,7 @@ public interface IServerProperty {
   String SERVER_PORT = "server.port";
   String SERVER_BASE_DIR = "server.base.dir";
 
-  String SERVER_LOG_DIR = "server.log.dir";
+  String SERVER_LOG_FILE = "server.log.file";
   String SERVER_LOG_LEVEL = "server.log.level";
   String SERVER_PING_INTERVAL = "server.ping.interval";
   String SERVER_PING_MAX_DELAY = "server.ping.maxDelay";

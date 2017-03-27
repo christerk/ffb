@@ -80,10 +80,10 @@ public class FantasyFootballServer {
     fPingTimer = new Timer(true);
     fFortuna = new Fortuna();
 
-    File logDir = null;
-    String logDirProperty = getProperty(IServerProperty.SERVER_LOG_DIR);
-    if (StringTool.isProvided(logDirProperty)) {
-      logDir = new File(logDirProperty);
+    File logFile = null;
+    String logFileProperty = getProperty(IServerProperty.SERVER_LOG_FILE);
+    if (StringTool.isProvided(logFileProperty)) {
+      logFile = new File(logFileProperty);
     }
     int logLevel = IServerLogLevel.ERROR;
     String logLevelProperty = getProperty(IServerProperty.SERVER_LOG_LEVEL);
@@ -94,7 +94,7 @@ public class FantasyFootballServer {
         // logLevel remains at ERROR
       }
     }
-    fDebugLog = new DebugLog(this, logDir, logLevel);
+    fDebugLog = new DebugLog(this, logFile, logLevel);
 
     try {
       Class.forName(getProperty(IServerProperty.DB_DRIVER));

@@ -20,8 +20,6 @@ import com.balancedbytes.games.ffb.util.StringTool;
 
 public class DebugLog {
   
-  public static final String LOG_FILENAME = "ffbServer.log";
-  
   public static final String COMMAND_CLIENT_HOME = " H->";
   public static final String COMMAND_SERVER_HOME = " ->H";
   public static final String COMMAND_SERVER_HOME_SPECTATORS = "->HS";
@@ -49,13 +47,9 @@ public class DebugLog {
   private File fLogFile;
   private int fLogLevel; 
   
-  public DebugLog(FantasyFootballServer server, File logDir, int logLevel) {
+  public DebugLog(FantasyFootballServer server, File logFile, int logLevel) {
     fServer = server;
-    if (logDir != null) {
-      fLogFile = new File(logDir, LOG_FILENAME);
-    } else {
-      fLogFile = new File(LOG_FILENAME);
-    }
+    fLogFile = logFile;
     setLogLevel(logLevel);
   }
   
@@ -223,9 +217,6 @@ public class DebugLog {
     synchronized (this) {
       PrintWriter out = null;
       try {
-//        if (!getLogFile().exists()) {
-//          getLogFile().createNewFile();
-//        }
         out = new PrintWriter(new FileWriter(getLogFile(), true));
         while (tokenizer.hasMoreTokens()) {
           String line = tokenizer.nextToken();
