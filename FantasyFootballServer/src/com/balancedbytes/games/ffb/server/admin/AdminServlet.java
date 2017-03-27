@@ -254,10 +254,11 @@ public class AdminServlet extends HttpServlet {
 
   private boolean handleLogLevel(TransformerHandler pHandler, Map<String, String[]> pParameters) {
     String valueString = ArrayTool.firstElement(pParameters.get(_PARAMETER_VALUE));
+    int logLevel = StringTool.isProvided(valueString) ? Integer.valueOf(valueString) : 0;
     AttributesImpl attributes = new AttributesImpl();
     UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_VALUE, valueString);
     UtilXml.addEmptyElement(pHandler, _XML_TAG_LOGLEVEL, attributes);
-    getServer().setProperty(IServerProperty.SERVER_LOG_LEVEL, valueString);
+    getServer().getDebugLog().setLogLevel(logLevel);
     return true;
   }
 

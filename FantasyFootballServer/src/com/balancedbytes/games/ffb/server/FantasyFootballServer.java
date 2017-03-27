@@ -240,7 +240,6 @@ public class FantasyFootballServer {
         getDebugLog().log(IServerLogLevel.ERROR, sqlE);
       }
     }
-    getDebugLog().close();
     System.exit(pStatus);
   }
 

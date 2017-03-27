@@ -1,8 +1,6 @@
 package com.balancedbytes.games.ffb.server;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -11,7 +9,6 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.StringTokenizer;
-import java.util.zip.GZIPOutputStream;
 
 import org.eclipse.jetty.websocket.api.Session;
 
@@ -23,7 +20,7 @@ import com.balancedbytes.games.ffb.util.StringTool;
 
 public class DebugLog {
   
-  public static final int FILE_SIZE_LIMIT = 10 * 1024 * 1024;
+  public static final String LOG_FILENAME = "ffbServer.log";
   
   public static final String COMMAND_CLIENT_HOME = " H->";
   public static final String COMMAND_SERVER_HOME = " ->H";
@@ -45,108 +42,33 @@ public class DebugLog {
   private static final String _ZEROES = "00000000000000000000";  // length = _GAME_NAME_MAX_LENGTH
   private static final String _LINES = "--------------------";  // length = _GAME_NAME_MAX_LENGTH
   private static final DateFormat _HEADER_TIMESTAMP_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS");  // 2001-07-04T12:08:56.235
-  private static final DateFormat _FILE_TIMESTAMP_FORMAT = new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss");  // 2001-07-04-12-08-56
   private static final int _TIMESTAMP_LENGTH = 23;
   private static final int _COMMAND_FLAG_LENGTH = 4;
 
   private FantasyFootballServer fServer;
-  private File fLogDir;
   private File fLogFile;
-  private int fSize;
-  private PrintWriter fOut;
   private int fLogLevel; 
-
-  private class LogFilePacker implements Runnable {
-    
-    private String fLogFileName;
-    
-    public LogFilePacker(String pLogFileName) {
-      fLogFileName = pLogFileName;
+  
+  public DebugLog(FantasyFootballServer server, File logDir, int logLevel) {
+    fServer = server;
+    if (logDir != null) {
+      fLogFile = new File(logDir, LOG_FILENAME);
+    } else {
+      fLogFile = new File(LOG_FILENAME);
     }
-    
-    public void run() {
-
-      try {
-        
-        // Create the GZIP output stream
-        StringBuilder outFilename = new StringBuilder().append(fLogFileName).append(".gz");
-        GZIPOutputStream out = new GZIPOutputStream(new FileOutputStream(outFilename.toString()));
-        
-        // Open the input file
-        FileInputStream in = new FileInputStream(fLogFileName);
-        
-        // Transfer bytes from the input file to the GZIP output stream
-        byte[] buf = new byte[1024];
-        int len;
-        while ((len = in.read(buf)) > 0) {
-          out.write(buf, 0, len);
-        }
-        in.close();
-        
-        // Complete the GZIP file
-        out.finish();
-        out.close();
-        
-        // delete the old logfile
-        File oldFile = new File(fLogFileName);
-        oldFile.delete();
-      
-      } catch (IOException pIoe) {
-        log(pIoe);
-      }     
-
-    }
-    
+    setLogLevel(logLevel);
   }
   
-  public DebugLog(FantasyFootballServer pServer, File pLogDir, int pLogLevel) {
-    fServer = pServer;
-    fLogDir = pLogDir;
-    fLogLevel = pLogLevel;
-    openNewLogFile();
+  public int getLogLevel() {
+    return fLogLevel;
   }
   
-  public File getLogDir() {
-    return fLogDir;
+  public void setLogLevel(int logLevel) {
+    fLogLevel = logLevel;
   }
   
   public File getLogFile() {
     return fLogFile;
-  }
-  
-  public int getSize() {
-    return fSize;
-  }
-  
-  private void openNewLogFile() {
-    
-    // compress old logfile in a separate thread if specified 
-    String compressionSetting = getServer().getProperty(IServerProperty.SERVER_DEBUG_COMPRESSION);
-    if (StringTool.isProvided(compressionSetting) && Boolean.parseBoolean(compressionSetting) && (fLogFile != null)) {
-      Thread packerThread = new Thread(new LogFilePacker(fLogFile.getAbsolutePath()));
-      packerThread.start();
-    }
-    
-    fSize = 0;
-    StringBuilder logName = new StringBuilder();
-    logName.append("ffbServer-");
-    logName.append(_FILE_TIMESTAMP_FORMAT.format(new Date()));
-    logName.append(".log");
-    // logName.append(".log.gz");
-    if (getLogDir() != null) {
-      fLogFile = new File(getLogDir(), logName.toString());
-    } else {
-      fLogFile = new File(logName.toString());
-    }
-    try {
-      fLogFile.getParentFile().mkdirs();
-      fOut = new PrintWriter(new FileWriter(getLogFile()));
-      // fOut = new PrintWriter(new GZIPOutputStream(new FileOutputStream(getLogFile())));
-    } catch (IOException ioe) {
-      fOut = new PrintWriter(System.out);
-      log(ioe);
-    }
-    
   }
   
   public FantasyFootballServer getServer() {
@@ -299,26 +221,30 @@ public class DebugLog {
     StringTokenizer tokenizer = new StringTokenizer(pLogString, "\r\n");
     // write synchronized to the log, create a new one if necessary 
     synchronized (this) {
-      while (tokenizer.hasMoreTokens()) {
-        String line = tokenizer.nextToken();
-        fOut.print(header);
-        fOut.println(line);
-        fOut.flush();
-        fSize += header.length() + line.length() + 1;
-      }
-      if (getSize() >= FILE_SIZE_LIMIT) {
-        close();
-        openNewLogFile();
+      PrintWriter out = null;
+      try {
+//        if (!getLogFile().exists()) {
+//          getLogFile().createNewFile();
+//        }
+        out = new PrintWriter(new FileWriter(getLogFile(), true));
+        while (tokenizer.hasMoreTokens()) {
+          String line = tokenizer.nextToken();
+          out.print(header);
+          out.println(line);
+        }
+        out.flush();
+      } catch (IOException ioe) {
+        ioe.printStackTrace();
+      } finally {
+        if (out != null) {
+          out.close();
+        }
       }
     }
   }
   
-  public void close() {
-    fOut.close();
-  }
-  
   public boolean isLogging(int pLogLevel) {
-  	return (fLogLevel >= pLogLevel);
+  	return (getLogLevel() >= pLogLevel);
   }
 
 }

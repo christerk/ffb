@@ -135,7 +135,7 @@ public class StepCatchScatterThrowIn extends AbstractStepWithReRoll {
     getResult().reset();
     Game game = getGameState().getGame();
     UtilServerDialog.hideDialog(getGameState());
-    getGameState().getServer().getDebugLog().log(IServerLogLevel.DEBUG, "executeStep(" + fCatchScatterThrowInMode + ")");
+    // getGameState().getServer().getDebugLog().log(IServerLogLevel.DEBUG, "executeStep(" + fCatchScatterThrowInMode + ")");
     if (fCatchScatterThrowInMode == null) {
       getResult().setNextAction(StepAction.NEXT_STEP);
       return;

@@ -116,7 +116,7 @@ public class AdminConnector {
       }
 
       if (AdminServlet.LOGLEVEL.equals(args[0])) {
-        String logLevelUrl = StringTool.bind(serverProperties.getProperty(IServerProperty.ADMIN_URL_LOGLEVEL), response);
+        String logLevelUrl = StringTool.bind(serverProperties.getProperty(IServerProperty.ADMIN_URL_LOGLEVEL), response, args[1]);
         System.out.println(logLevelUrl);
         String logLevelXml = UtilServerHttpClient.fetchPage(logLevelUrl);
         System.out.println(logLevelXml);
