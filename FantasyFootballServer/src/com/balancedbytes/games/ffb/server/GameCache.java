@@ -141,7 +141,8 @@ public class GameCache {
   
   public void clearCache() {
     synchronized (fGameStateById) {
-      for (long gameId : fGameStateById.keySet()) {
+      Long[] gameIds = fGameStateById.keySet().toArray(new Long[fGameStateById.size()]);
+      for (long gameId : gameIds) {
         removeGameIntern(gameId);
       }
     }
