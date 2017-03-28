@@ -330,12 +330,16 @@ public class GameCache {
     getServer().getDbUpdater().add(deleteTransaction);
   }
 
-  public GameState queryFromDb(long pGameId) {
-    if (pGameId <= 0) {
+  public GameState queryFromDb(long gameId) {
+    if (gameId <= 0) {
       return null;
     }
-    DbGamesSerializedQuery gameQuery = (DbGamesSerializedQuery) getServer().getDbQueryFactory().getStatement(DbStatementId.GAMES_SERIALIZED_QUERY);
-    return gameQuery.execute(getServer(), pGameId);
+    GameState gameState = getServer().getDbUpdater().findGameState(gameId);
+    if (gameState == null) {
+      DbGamesSerializedQuery gameQuery = (DbGamesSerializedQuery) getServer().getDbQueryFactory().getStatement(DbStatementId.GAMES_SERIALIZED_QUERY);
+      gameState = gameQuery.execute(getServer(), gameId);
+    }
+    return gameState;
   }
 
   public GameState closeGame(long pGameId) {
