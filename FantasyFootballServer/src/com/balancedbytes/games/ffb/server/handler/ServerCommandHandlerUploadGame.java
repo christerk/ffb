@@ -28,7 +28,8 @@ public class ServerCommandHandlerUploadGame extends ServerCommandHandler {
   public void handleCommand(ReceivedCommand receivedCommand) {
     InternalServerCommandUploadGame uploadGameCommand = (InternalServerCommandUploadGame) receivedCommand.getCommand();
     GameCache gameCache = getServer().getGameCache();
-    GameState gameState = gameCache.closeGame(uploadGameCommand.getGameId());
+    GameState gameState = gameCache.getGameStateById(uploadGameCommand.getGameId());
+    // GameState gameState = gameCache.closeGame(uploadGameCommand.getGameId());
     if (gameState == null) {
       // game has been moved out of the db - request it from the backup service
       getServer().getRequestProcessor().add(

@@ -28,7 +28,6 @@ import com.balancedbytes.games.ffb.server.IServerProperty;
 import com.balancedbytes.games.ffb.server.db.DbStatementId;
 import com.balancedbytes.games.ffb.server.db.query.DbAdminListByIdQuery;
 import com.balancedbytes.games.ffb.server.db.query.DbAdminListByStatusQuery;
-import com.balancedbytes.games.ffb.server.net.commands.InternalServerCommandClearCache;
 import com.balancedbytes.games.ffb.server.net.commands.InternalServerCommandCloseGame;
 import com.balancedbytes.games.ffb.server.net.commands.InternalServerCommandDeleteGame;
 import com.balancedbytes.games.ffb.server.net.commands.InternalServerCommandScheduleGame;
@@ -287,6 +286,7 @@ public class AdminServlet extends HttpServlet {
     UtilXml.addEmptyElement(pHandler, _XML_TAG_DELETE, attributes);
     long gameId = parseGameId(gameIdString);
     if (gameId > 0) {
+      getServer().getCommunication().handleCommand(new InternalServerCommandCloseGame(gameId));
       getServer().getCommunication().handleCommand(new InternalServerCommandDeleteGame(gameId, true));
       return true;
     } else {

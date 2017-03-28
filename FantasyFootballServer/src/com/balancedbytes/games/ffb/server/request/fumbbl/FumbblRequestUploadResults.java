@@ -87,6 +87,7 @@ public class FumbblRequestUploadResults extends ServerRequest {
         server.getGameCache().queueDbUpdate(getGameState(), false);
         server.getDebugLog().log(IServerLogLevel.WARN, getGameState().getId(), "GAME UPLOADED");
         server.getRequestProcessor().add(new ServerRequestSaveReplay(getGameState().getId()));
+        server.getRequestProcessor().add(new FumbblRequestRemoveGamestate(getGameState()));
       }
 
       ReportList reportList = new ReportList();

@@ -103,6 +103,10 @@ public class GameCache {
     if (gameState == null) {
       return;
     }
+    GameState oldState = fGameStateById.put(gameState.getId(), gameState);
+    if (oldState != null) {
+      return;
+    }
     if (GameStatus.PAUSED == gameState.getStatus()) {
       gameState.setStatus(GameStatus.ACTIVE);
     }
@@ -110,7 +114,6 @@ public class GameCache {
       UtilServerTimer.syncTime(gameState);
       UtilServerTimer.startTurnTimer(gameState);
     }
-    fGameStateById.put(gameState.getId(), gameState);
     // log game cache size
     FantasyFootballServer server = gameState.getServer();
     if (server.getDebugLog().isLogging(IServerLogLevel.WARN)) {
@@ -126,7 +129,8 @@ public class GameCache {
       server.getDebugLog().log(IServerLogLevel.WARN, gameState.getId(), log.toString());
     }
     // remove dead games from cache if there are no connections to the session
-    for (Long gameId : fGameStateById.keySet()) {
+    Long[] gameIds = fGameStateById.keySet().toArray(new Long[fGameStateById.size()]);
+    for (Long gameId : gameIds) {
       GameStatus status = fGameStateById.get(gameId).getStatus();
       if ((gameId != null) && (gameId != gameState.getId()) && (status != GameStatus.LOADING) && !checkGameOpen(gameId)) {
         removeGame(gameId);
@@ -139,7 +143,7 @@ public class GameCache {
     return (gameId != null) ? getGameStateById(gameId) : null;
   }
 
-  public void removeGame(long gameId) {
+  private void removeGame(long gameId) {
     GameState cachedGameState = fGameStateById.remove(gameId);
     if (cachedGameState != null) {
       Game game = cachedGameState.getGame();
@@ -342,17 +346,18 @@ public class GameCache {
     return gameState;
   }
 
-  public GameState closeGame(long pGameId) {
-    if (pGameId <= 0) {
+  public GameState closeGame(long gameId) {
+    if (gameId <= 0) {
       return null;
     }
-    GameState gameState = getGameStateById(pGameId);
+    GameState gameState = getGameStateById(gameId);
     if (gameState != null) {
       SessionManager sessionManager = getServer().getSessionManager();
       Session[] sessions = sessionManager.getSessionsForGameId(gameState.getId());
       for (Session session : sessions) {
         getServer().getCommunication().close(session);
       }
+      removeGame(gameId);
       if (getServer().getMode() == ServerMode.FUMBBL) {
         getServer().getRequestProcessor().add(new FumbblRequestRemoveGamestate(gameState));
       }
