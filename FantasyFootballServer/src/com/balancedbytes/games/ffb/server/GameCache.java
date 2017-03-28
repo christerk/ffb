@@ -118,10 +118,10 @@ public class GameCache {
       StringBuilder log = new StringBuilder();
       log.append("ADD GAME");
       if (gameState.getGame().isTesting()) {
-        log.append(" [test mode]");
+        log.append(" [test]");
       }
       if (gameState.getGame().isAdminMode()) {
-        log.append(" [admin mode]");
+        log.append(" [admin]");
       }
       log.append(" cache increases to ").append(fGameStateById.size()).append(" games.");
       server.getDebugLog().log(IServerLogLevel.WARN, gameState.getId(), log.toString());
