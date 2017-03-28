@@ -36,9 +36,9 @@ public class DebugLog {
   public static final String FUMBBL_REQUEST = "->F";
   public static final String FUMBBL_RESPONSE = "F->";
   
-  private static final int _GAME_ID_MAX_LENGTH = 7;
-  private static final String _ZEROES = "00000000000000000000";  // length = _GAME_NAME_MAX_LENGTH
-  private static final String _LINES = "--------------------";  // length = _GAME_NAME_MAX_LENGTH
+  private static final int _GAME_ID_MAX_LENGTH = 8;
+  private static final String _ZEROES = "000000000000000000000";
+  private static final String _LINES = "---------------------";
   private static final DateFormat _HEADER_TIMESTAMP_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS");  // 2001-07-04T12:08:56.235
   private static final int _TIMESTAMP_LENGTH = 23;
   private static final int _COMMAND_FLAG_LENGTH = 4;
