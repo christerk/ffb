@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.Date;
 import java.util.Properties;
 import java.util.Timer;
 
@@ -26,6 +27,7 @@ import com.balancedbytes.games.ffb.server.net.ServerPingTask;
 import com.balancedbytes.games.ffb.server.net.SessionManager;
 import com.balancedbytes.games.ffb.server.request.ServerRequestProcessor;
 import com.balancedbytes.games.ffb.util.ArrayTool;
+import com.balancedbytes.games.ffb.util.DateTool;
 import com.balancedbytes.games.ffb.util.StringTool;
 import com.fumbbl.rng.Fortuna;
 
@@ -175,7 +177,9 @@ public class FantasyFootballServer {
       fServerRequestProcessor = new ServerRequestProcessor(this);
       fServerRequestProcessor.start();
 
-      System.err.println("FantasyFootballServer " + SERVER_VERSION + " running on port " + httpPortProperty + ".");
+      System.err.print(DateTool.formatTimestamp(new Date()));
+      System.err.print(" FantasyFootballServer " + SERVER_VERSION);
+      System.err.println(" running on port " + httpPortProperty);
 
     }
 
