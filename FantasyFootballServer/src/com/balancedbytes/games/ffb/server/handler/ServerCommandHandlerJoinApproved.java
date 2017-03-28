@@ -165,6 +165,14 @@ public class ServerCommandHandlerJoinApproved extends ServerCommandHandler {
   private GameState loadGameStateById(InternalServerCommandJoinApproved pJoinApprovedCommand, Session pSession) {
     GameCache gameCache = getServer().getGameCache();
     GameState gameState = gameCache.getGameStateById(pJoinApprovedCommand.getGameId());
+    if (gameState != null) {
+      return gameState;
+    }
+    gameState = gameCache.queryFromDb(pJoinApprovedCommand.getGameId());
+    if (gameState == null) {
+      return null;
+    }
+    gameCache.addGame(gameState);
     gameCache.queueDbUpdate(gameState, true);  // persist status update
     return gameState;
   }

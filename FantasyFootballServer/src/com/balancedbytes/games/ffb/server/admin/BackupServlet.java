@@ -254,7 +254,7 @@ public class BackupServlet extends HttpServlet {
     }
     if (gameState == null) {
       // fallback: try to load gameState from db
-      gameState = fServer.getGameCache().getGameStateById(gameId);
+      gameState = fServer.getGameCache().queryFromDb(gameId);
       if (gameState != null) {
         fServer.getDebugLog().log(IServerLogLevel.WARN, gameId, "Replay loaded from database."); 
       }

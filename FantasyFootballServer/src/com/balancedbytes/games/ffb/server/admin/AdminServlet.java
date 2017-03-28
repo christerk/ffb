@@ -46,7 +46,6 @@ public class AdminServlet extends HttpServlet {
 
   public static final String BLOCK = "block";
   public static final String CHALLENGE = "challenge";
-  public static final String CLEAR = "clear";
   public static final String CLOSE = "close";
   public static final String CONCEDE = "concede";
   public static final String DELETE = "delete";
@@ -76,7 +75,6 @@ public class AdminServlet extends HttpServlet {
   private static final String _XML_TAG_CONCEDE = "concede";
   private static final String _XML_TAG_LIST = "list";
   private static final String _XML_TAG_SHUTDOWN = "shutdown";
-  private static final String _XML_TAG_CLEAR = "clear";
   private static final String _XML_TAG_CLOSE = "close";
   private static final String _XML_TAG_UPLOAD = "upload";
   private static final String _XML_TAG_DELETE = "delete";
@@ -147,8 +145,6 @@ public class AdminServlet extends HttpServlet {
           isOk = handleBlock(handler, true);
         } else if (UNBLOCK.equals(command)) {
           isOk = handleBlock(handler, false);
-        } else if (CLEAR.equals(command)) {
-          isOk = handleClear(handler);
         } else if (LOGLEVEL.equals(command)) {
           isOk = handleLogLevel(handler, parameters);
         } else if (CLOSE.equals(command)) {
@@ -259,12 +255,6 @@ public class AdminServlet extends HttpServlet {
     UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_VALUE, valueString);
     UtilXml.addEmptyElement(pHandler, _XML_TAG_LOGLEVEL, attributes);
     getServer().getDebugLog().setLogLevel(logLevel);
-    return true;
-  }
-
-  private boolean handleClear(TransformerHandler handler) {
-    UtilXml.addEmptyElement(handler, _XML_TAG_CLEAR);
-    getServer().getCommunication().handleCommand(new InternalServerCommandClearCache());
     return true;
   }
 

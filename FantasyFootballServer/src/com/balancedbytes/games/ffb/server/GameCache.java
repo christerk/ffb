@@ -4,6 +4,7 @@ import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -65,8 +66,8 @@ public class GameCache {
   
   public GameCache(FantasyFootballServer pServer) {
     fServer = pServer;
-    fGameStateById = new HashMap<Long, GameState>();
-    fGameIdByName = new HashMap<String, Long>();
+    fGameStateById = Collections.synchronizedMap(new HashMap<Long, GameState>());
+    fGameIdByName = Collections.synchronizedMap(new HashMap<String, Long>());
     fRosterCache = new RosterCache();
     fTeamCache = new TeamCache();
   }
@@ -95,13 +96,8 @@ public class GameCache {
     return fServer;
   }
 
-  public GameState getGameStateById(long gameId) {
-    GameState gameState = fGameStateById.get(gameId);
-    if (gameState == null) {
-      gameState = queryFromDb(gameId);
-      addGame(gameState);
-    }
-    return gameState;
+  public GameState getGameStateById(long pGameId) {
+    return fGameStateById.get(pGameId);
   }
 
   public void addGame(GameState gameState) {
@@ -115,21 +111,19 @@ public class GameCache {
       UtilServerTimer.syncTime(gameState);
       UtilServerTimer.startTurnTimer(gameState);
     }
-    synchronized (fGameStateById) {
-      fGameStateById.put(gameState.getId(), gameState);
-      // log game cache size
-      FantasyFootballServer server = gameState.getServer();
-      if (server.getDebugLog().isLogging(IServerLogLevel.WARN)) {
-        StringBuilder log = new StringBuilder();
-        log.append("ADD GAME cache increases to ").append(fGameStateById.size()).append(" games.");
-        server.getDebugLog().log(IServerLogLevel.WARN, gameState.getId(), log.toString());
-      }
-      // remove dead games from cache if there are no connections to the session
-      for (Long gameId : fGameStateById.keySet()) {
-        GameStatus status = fGameStateById.get(gameId).getStatus();
-        if ((gameId != null) && (gameId != gameState.getId()) && (status != GameStatus.LOADING) && !checkGameOpen(gameId)) {
-          removeGame(gameId);
-        }
+    fGameStateById.put(gameState.getId(), gameState);
+    // log game cache size
+    FantasyFootballServer server = gameState.getServer();
+    if (server.getDebugLog().isLogging(IServerLogLevel.WARN)) {
+      StringBuilder log = new StringBuilder();
+      log.append("ADD GAME cache increases to ").append(fGameStateById.size()).append(" games.");
+      server.getDebugLog().log(IServerLogLevel.WARN, gameState.getId(), log.toString());
+    }
+    // remove dead games from cache if there are no connections to the session
+    for (Long gameId : fGameStateById.keySet()) {
+      GameStatus status = fGameStateById.get(gameId).getStatus();
+      if ((gameId != null) && (gameId != gameState.getId()) && (status != GameStatus.LOADING) && !checkGameOpen(gameId)) {
+        removeGame(gameId);
       }
     }
   }
@@ -138,45 +132,25 @@ public class GameCache {
     Long gameId = fGameIdByName.get(pGameName);
     return (gameId != null) ? getGameStateById(gameId) : null;
   }
-  
-  public void clearCache() {
-    synchronized (fGameStateById) {
-      Long[] gameIds = fGameStateById.keySet().toArray(new Long[fGameStateById.size()]);
-      for (long gameId : gameIds) {
-        removeGameIntern(gameId);
-      }
-    }
-  }
 
   public void removeGame(long gameId) {
-    if (gameId <= 0) {
-      return;
-    }
-    synchronized (fGameStateById) {
-      removeGameIntern(gameId);
-    }
-  }
-
-  private void removeGameIntern(long gameId) {
     GameState cachedGameState = fGameStateById.remove(gameId);
     if (cachedGameState != null) {
       Game game = cachedGameState.getGame();
       removeMappingForGameId(cachedGameState.getId());
       // log game cache size -->
       getServer().getDebugLog().log(IServerLogLevel.WARN, cachedGameState.getId(),
-      StringTool.bind("REMOVE GAME cache decreases to $1 games.", fGameStateById.size()));
+        StringTool.bind("REMOVE GAME cache decreases to $1 games.", fGameStateById.size()));
       // <-- log game cache size
+      if (cachedGameState.getGame().getFinished() != null) {
+        getServer().getRequestProcessor().add(new ServerRequestSaveReplay(cachedGameState.getId()));
+        queueDbPlayerMarkersUpdate(cachedGameState);
+      }
       // remove gameState from db if only one team has joined
       // or the game hasn't even started yet (and isn't scheduled)
       if (!StringTool.isProvided(game.getTeamHome().getId()) || !StringTool.isProvided(game.getTeamAway().getId())
         || ((game.getScheduled() == null) && ((game.getStarted() == null) || DateTool.isEqual(new Date(0), game.getStarted())))) {
         queueDbDelete(cachedGameState.getId(), true);
-      } else {
-        queueDbUpdate(cachedGameState, true);
-        if (cachedGameState.getGame().getFinished() != null) {
-          getServer().getRequestProcessor().add(new ServerRequestSaveReplay(cachedGameState.getId()));
-          queueDbPlayerMarkersUpdate(cachedGameState);
-        }
       }
     }
   }
@@ -355,15 +329,14 @@ public class GameCache {
     getServer().getDbUpdater().add(deleteTransaction);
   }
 
-  private GameState queryFromDb(long gameId) {
-    if (gameId <= 0) {
+  public GameState queryFromDb(long pGameId) {
+    if (pGameId <= 0) {
       return null;
     }
-    GameState gameState = getServer().getDbUpdater().findGameState(gameId);
-    if (gameState == null) {
-      DbGamesSerializedQuery gameQuery = (DbGamesSerializedQuery) getServer().getDbQueryFactory().getStatement(DbStatementId.GAMES_SERIALIZED_QUERY);
-      gameState = gameQuery.execute(getServer(), gameId);
-    }
+    DbGamesSerializedQuery gameQuery = (DbGamesSerializedQuery) getServer().getDbQueryFactory().getStatement(DbStatementId.GAMES_SERIALIZED_QUERY);
+    GameState gameState = gameQuery.execute(getServer(), pGameId);
+    // the old way to do this:
+    // gameState = DbQueryScript.readGameState(getServer(), pGameId);
     return gameState;
   }
 

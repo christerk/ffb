@@ -48,7 +48,6 @@ public interface IServerProperty {
   String ADMIN_URL_SCHEDULE = "admin.url.schedule";
   String ADMIN_URL_BLOCK = "admin.url.block";
   String ADMIN_URL_UNBLOCK = "admin.url.unblock";
-  String ADMIN_URL_CLEAR = "admin.url.clear";
   String ADMIN_URL_LOGLEVEL = "admin.url.loglevel";
 
   String BACKUP_DIR = "backup.dir";
