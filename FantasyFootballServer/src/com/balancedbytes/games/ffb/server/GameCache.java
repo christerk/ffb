@@ -116,7 +116,14 @@ public class GameCache {
     FantasyFootballServer server = gameState.getServer();
     if (server.getDebugLog().isLogging(IServerLogLevel.WARN)) {
       StringBuilder log = new StringBuilder();
-      log.append("ADD GAME cache increases to ").append(fGameStateById.size()).append(" games.");
+      log.append("ADD GAME");
+      if (gameState.getGame().isTesting()) {
+        log.append(" [test mode]");
+      }
+      if (gameState.getGame().isAdminMode()) {
+        log.append(" [admin mode]");
+      }
+      log.append(" cache increases to ").append(fGameStateById.size()).append(" games.");
       server.getDebugLog().log(IServerLogLevel.WARN, gameState.getId(), log.toString());
     }
     // remove dead games from cache if there are no connections to the session
