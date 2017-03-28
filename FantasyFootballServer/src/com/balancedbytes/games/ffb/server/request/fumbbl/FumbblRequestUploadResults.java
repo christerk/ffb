@@ -16,6 +16,7 @@ import com.balancedbytes.games.ffb.server.IServerLogLevel;
 import com.balancedbytes.games.ffb.server.IServerProperty;
 import com.balancedbytes.games.ffb.server.request.ServerRequest;
 import com.balancedbytes.games.ffb.server.request.ServerRequestProcessor;
+import com.balancedbytes.games.ffb.server.request.ServerRequestSaveReplay;
 import com.balancedbytes.games.ffb.server.util.UtilServerGame;
 import com.balancedbytes.games.ffb.server.util.UtilServerHttpClient;
 import com.balancedbytes.games.ffb.util.StringTool;
@@ -83,8 +84,9 @@ public class FumbblRequestUploadResults extends ServerRequest {
       
       if (isUploadSuccessful()) {
         getGameState().setStatus(GameStatus.UPLOADED);
-        server.getGameCache().queueDbUpdate(getGameState(), true);
+        server.getGameCache().queueDbUpdate(getGameState(), false);
         server.getDebugLog().log(IServerLogLevel.WARN, getGameState().getId(), "GAME UPLOADED");
+        server.getRequestProcessor().add(new ServerRequestSaveReplay(getGameState().getId()));
       }
 
       ReportList reportList = new ReportList();

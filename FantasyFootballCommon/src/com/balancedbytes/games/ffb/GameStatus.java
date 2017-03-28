@@ -15,6 +15,7 @@ public enum GameStatus implements INamedObject {
   PAUSED("paused", "P"),
   FINISHED("finished", "F"),
   UPLOADED("uploaded", "U"),
+  BACKUPED("backuped", "B"),
   
   LOADING("loading", "L"),  // not written to db
   REPLAYING("replaying", "R");  // not written to db

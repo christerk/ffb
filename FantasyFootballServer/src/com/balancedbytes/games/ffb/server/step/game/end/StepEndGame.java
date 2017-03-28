@@ -11,6 +11,7 @@ import com.balancedbytes.games.ffb.server.FantasyFootballServer;
 import com.balancedbytes.games.ffb.server.GameCache;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.ServerMode;
+import com.balancedbytes.games.ffb.server.request.ServerRequestSaveReplay;
 import com.balancedbytes.games.ffb.server.request.fumbbl.FumbblRequestUploadResults;
 import com.balancedbytes.games.ffb.server.step.AbstractStep;
 import com.balancedbytes.games.ffb.server.step.StepAction;
@@ -52,8 +53,12 @@ public final class StepEndGame extends AbstractStep {
       UtilServerDialog.showDialog(getGameState(), gameStatistics);
     }
     FantasyFootballServer server = getGameState().getServer();
-    if ((server.getMode() == ServerMode.FUMBBL) && !game.isTesting()) {
-      server.getRequestProcessor().add(new FumbblRequestUploadResults(getGameState()));
+    if (!game.isTesting()) {
+      if (server.getMode() == ServerMode.FUMBBL) {
+        server.getRequestProcessor().add(new FumbblRequestUploadResults(getGameState()));
+      } else {
+        server.getRequestProcessor().add(new ServerRequestSaveReplay(getGameState().getId()));
+      }
     }
     getResult().setNextAction(StepAction.NEXT_STEP);
   }

@@ -40,7 +40,6 @@ import com.balancedbytes.games.ffb.server.db.query.DbGamesSerializedQuery;
 import com.balancedbytes.games.ffb.server.db.update.DbGamesInfoUpdateParameter;
 import com.balancedbytes.games.ffb.server.db.update.DbGamesSerializedUpdateParameter;
 import com.balancedbytes.games.ffb.server.net.SessionManager;
-import com.balancedbytes.games.ffb.server.request.ServerRequestSaveReplay;
 import com.balancedbytes.games.ffb.server.request.fumbbl.FumbblRequestRemoveGamestate;
 import com.balancedbytes.games.ffb.server.util.UtilServerTimer;
 import com.balancedbytes.games.ffb.util.ArrayTool;
@@ -145,14 +144,9 @@ public class GameCache {
     if (cachedGameState != null) {
       Game game = cachedGameState.getGame();
       removeMappingForGameId(cachedGameState.getId());
-      // log game cache size -->
+      // log game cache size
       getServer().getDebugLog().log(IServerLogLevel.WARN, cachedGameState.getId(),
         StringTool.bind("REMOVE GAME cache decreases to $1 games.", fGameStateById.size()));
-      // <-- log game cache size
-      if (cachedGameState.getGame().getFinished() != null) {
-        getServer().getRequestProcessor().add(new ServerRequestSaveReplay(cachedGameState.getId()));
-        queueDbPlayerMarkersUpdate(cachedGameState);
-      }
       // remove gameState from db if only one team has joined
       // or the game hasn't even started yet (and isn't scheduled)
       if (!StringTool.isProvided(game.getTeamHome().getId()) || !StringTool.isProvided(game.getTeamAway().getId())
@@ -341,10 +335,7 @@ public class GameCache {
       return null;
     }
     DbGamesSerializedQuery gameQuery = (DbGamesSerializedQuery) getServer().getDbQueryFactory().getStatement(DbStatementId.GAMES_SERIALIZED_QUERY);
-    GameState gameState = gameQuery.execute(getServer(), pGameId);
-    // the old way to do this:
-    // gameState = DbQueryScript.readGameState(getServer(), pGameId);
-    return gameState;
+    return gameQuery.execute(getServer(), pGameId);
   }
 
   public GameState closeGame(long pGameId) {
@@ -384,7 +375,7 @@ public class GameCache {
     return false;
   }
 
-  private void queueDbPlayerMarkersUpdate(GameState pGameState) {
+  public void queueDbPlayerMarkersUpdate(GameState pGameState) {
     if (pGameState == null) {
       return;
     }

@@ -1,5 +1,6 @@
 package com.balancedbytes.games.ffb.server.request;
 
+import com.balancedbytes.games.ffb.GameStatus;
 import com.balancedbytes.games.ffb.server.FantasyFootballServer;
 import com.balancedbytes.games.ffb.server.GameCache;
 import com.balancedbytes.games.ffb.server.GameState;
@@ -37,6 +38,9 @@ public class ServerRequestSaveReplay extends ServerRequest {
     }
     boolean backupOk = UtilBackup.save(gameState);
     if (backupOk) {
+      gameState.setStatus(GameStatus.BACKUPED);
+      server.getGameCache().queueDbUpdate(gameState, false);
+      server.getGameCache().queueDbPlayerMarkersUpdate(gameState);
       server.getDebugLog().log(IServerLogLevel.WARN, getGameId(), "Replay stored in file system");
       // request replay to see if backup has been successful, queue delete command
       server.getRequestProcessor().add(new ServerRequestLoadReplay(gameState.getId(), 0, null, ServerRequestLoadReplay.DELETE_GAME));
