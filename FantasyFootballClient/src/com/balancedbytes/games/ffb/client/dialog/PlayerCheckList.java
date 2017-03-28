@@ -93,7 +93,11 @@ public class PlayerCheckList extends JList {
         selectedItem.setSelected(false);
       }
       int nrOfSelectedItems = findNrOfSelectedItems();
-      fSelectButton.setEnabled(nrOfSelectedItems >= fMinSelects);
+      if (fMinSelects > 0) {
+        fSelectButton.setEnabled(nrOfSelectedItems >= fMinSelects);
+      } else {
+        fSelectButton.setEnabled(nrOfSelectedItems > 0);
+      }
       list.repaint(list.getCellBounds(index, index));
     }
 
@@ -130,7 +134,7 @@ public class PlayerCheckList extends JList {
     setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
     // Add a mouse listener to handle changing selection
-    addMouseListener(new PlayerCheckListMouseAdapter(maxSelects, minSelects, selectButton));
+    addMouseListener(new PlayerCheckListMouseAdapter(minSelects, maxSelects, selectButton));
     
   }
   

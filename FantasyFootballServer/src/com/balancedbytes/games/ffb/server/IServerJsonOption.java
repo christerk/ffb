@@ -149,5 +149,6 @@ public interface IServerJsonOption extends IJsonOption {
                JsonBooleanOption USING_WRESTLE_ATTACKER = new JsonBooleanOption("usingWrestleAttacker");
                JsonBooleanOption USING_WRESTLE_DEFENDER = new JsonBooleanOption("usingWrestleDefender");
                JsonBooleanOption WITH_GAMES_INFO = new JsonBooleanOption("withGamesInfo"); 
+               JsonBooleanOption WITHIN_SECRET_WEAPON_HANDLING = new JsonBooleanOption("withinSecretWeaponHandling");
                
 }

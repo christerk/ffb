@@ -84,6 +84,7 @@ public class StepEndTurn extends AbstractStep {
   private boolean fRemoveUsedSecretWeapons;
   private boolean fNewHalf;
   private boolean fEndGame;
+  private boolean fWithinSecretWeaponHandling;
 
   public StepEndTurn(GameState pGameState) {
     super(pGameState);
@@ -99,7 +100,7 @@ public class StepEndTurn extends AbstractStep {
     if (pParameterSet != null) {
       for (StepParameter parameter : pParameterSet.values()) {
         switch (parameter.getKey()) {
-        // optional
+          // optional
           case HANDLE_SECRET_WEAPONS:
             fHandleSecretWeapons = (Boolean) parameter.getValue();
             break;
@@ -126,17 +127,22 @@ public class StepEndTurn extends AbstractStep {
         case CLIENT_ARGUE_THE_CALL:
           ClientCommandArgueTheCall argueTheCallCommand = (ClientCommandArgueTheCall) pReceivedCommand.getCommand();
           argueTheCall(team, argueTheCallCommand.getPlayerIds());
+          fWithinSecretWeaponHandling = true;
           commandStatus = StepCommandStatus.EXECUTE_STEP;
           break;
         case CLIENT_USE_INDUCEMENT:
           ClientCommandUseInducement inducementCommand = (ClientCommandUseInducement) pReceivedCommand.getCommand();
           if (InducementType.BRIBES == inducementCommand.getInducementType()) {
-            if (useSecretWeaponBribes(team, inducementCommand.getPlayerIds()) || !askForSecretWeaponBribes(team)) {
-              commandStatus = StepCommandStatus.EXECUTE_STEP;
-            } else {
-              commandStatus = StepCommandStatus.SKIP_STEP;
+            fWithinSecretWeaponHandling = true;
+            if (!useSecretWeaponBribes(team, inducementCommand.getPlayerIds())) {
+              if (UtilServerSteps.checkCommandIsFromHomePlayer(getGameState(), pReceivedCommand)) {
+                fBribesChoiceHome = null;
+              } else {
+                fBribesChoiceHome = null;
+              }
             }
           }
+          commandStatus = StepCommandStatus.EXECUTE_STEP;
           break;
         default:
           break;
@@ -152,195 +158,199 @@ public class StepEndTurn extends AbstractStep {
 
     Game game = getGameState().getGame();
     UtilServerDialog.hideDialog(getGameState());
+    
+    if (!fWithinSecretWeaponHandling) {
 
-    if ((game.getTurnMode() == TurnMode.BLITZ) || (game.getTurnMode() == TurnMode.KICKOFF_RETURN) || (game.getTurnMode() == TurnMode.PASS_BLOCK)
-        || (game.getTurnMode() == TurnMode.ILLEGAL_SUBSTITUTION)) {
-      publishParameter(new StepParameter(StepParameterKey.END_TURN, true));
-      getResult().setNextAction(StepAction.NEXT_STEP);
-      return;
-    }
-
-    if (fTouchdown == null) {
-      fTouchdown = UtilServerSteps.checkTouchdown(getGameState());
-    }
-
-    if (fHandleSecretWeapons) {
-      markPlayedAndSecretWeapons();
-    }
-
-    fEndGame = false;
-    fNewHalf = UtilServerSteps.checkEndOfHalf(getGameState());
-
-    if (!fNextSequencePushed) {
-
-      fNextSequencePushed = true;
-
-      Player touchdownPlayer = null;
-      if (fTouchdown) {
-
-        touchdownPlayer = game.getFieldModel().getPlayer(game.getFieldModel().getBallCoordinate());
-        boolean offTurnTouchDown = false;
-        if (touchdownPlayer != null) {
-
-          GameResult gameResult = game.getGameResult();
-          PlayerResult touchdownPlayerResult = gameResult.getPlayerResult(touchdownPlayer);
-          touchdownPlayerResult.setTouchdowns(touchdownPlayerResult.getTouchdowns() + 1);
-
-          if (game.getTeamHome().hasPlayer(touchdownPlayer)) {
-            gameResult.getTeamResultHome().setScore(gameResult.getTeamResultHome().getScore() + 1);
-            offTurnTouchDown |= !game.isHomePlaying();
-
-          } else {
-            gameResult.getTeamResultAway().setScore(gameResult.getTeamResultAway().getScore() + 1);
-            offTurnTouchDown |= game.isHomePlaying();
+      if ((game.getTurnMode() == TurnMode.BLITZ) || (game.getTurnMode() == TurnMode.KICKOFF_RETURN) || (game.getTurnMode() == TurnMode.PASS_BLOCK)
+          || (game.getTurnMode() == TurnMode.ILLEGAL_SUBSTITUTION)) {
+        publishParameter(new StepParameter(StepParameterKey.END_TURN, true));
+        getResult().setNextAction(StepAction.NEXT_STEP);
+        return;
+      }
+  
+      if (fTouchdown == null) {
+        fTouchdown = UtilServerSteps.checkTouchdown(getGameState());
+      }
+  
+      if (fHandleSecretWeapons) {
+        markPlayedAndSecretWeapons();
+      }
+  
+      fEndGame = false;
+      fNewHalf = UtilServerSteps.checkEndOfHalf(getGameState());
+  
+      if (!fNextSequencePushed) {
+  
+        fNextSequencePushed = true;
+  
+        Player touchdownPlayer = null;
+        if (fTouchdown) {
+  
+          touchdownPlayer = game.getFieldModel().getPlayer(game.getFieldModel().getBallCoordinate());
+          boolean offTurnTouchDown = false;
+          if (touchdownPlayer != null) {
+  
+            GameResult gameResult = game.getGameResult();
+            PlayerResult touchdownPlayerResult = gameResult.getPlayerResult(touchdownPlayer);
+            touchdownPlayerResult.setTouchdowns(touchdownPlayerResult.getTouchdowns() + 1);
+  
+            if (game.getTeamHome().hasPlayer(touchdownPlayer)) {
+              gameResult.getTeamResultHome().setScore(gameResult.getTeamResultHome().getScore() + 1);
+              offTurnTouchDown |= !game.isHomePlaying();
+  
+            } else {
+              gameResult.getTeamResultAway().setScore(gameResult.getTeamResultAway().getScore() + 1);
+              offTurnTouchDown |= game.isHomePlaying();
+            }
+  
+            // in the case of a caught kick-off that results in a TD
+            offTurnTouchDown |= (game.getTurnMode() == TurnMode.KICKOFF); 
+            game.setHomePlaying(game.getTeamHome().hasPlayer(touchdownPlayer));
+  
+            if (offTurnTouchDown) {
+              game.getTurnData().setTurnNr(game.getTurnData().getTurnNr() + 1);
+              fNewHalf = UtilServerSteps.checkEndOfHalf(getGameState());
+            }
+  
           }
-
-          // in the case of a caught kick-off that results in a TD
-          offTurnTouchDown |= (game.getTurnMode() == TurnMode.KICKOFF); 
-          game.setHomePlaying(game.getTeamHome().hasPlayer(touchdownPlayer));
-
-          if (offTurnTouchDown) {
-            game.getTurnData().setTurnNr(game.getTurnData().getTurnNr() + 1);
-            fNewHalf = UtilServerSteps.checkEndOfHalf(getGameState());
-          }
-
-        }
-
-        game.setTurnMode(TurnMode.SETUP);
-        game.setSetupOffense(false);
-
-      } else {
-
-        switch (game.getTurnMode()) {
-          case NO_PLAYERS_TO_FIELD:
-            game.getTurnDataHome().setTurnNr(game.getTurnDataHome().getTurnNr() + 2);
-            game.getTurnDataAway().setTurnNr(game.getTurnDataAway().getTurnNr() + 2);
-            fNewHalf = UtilServerSteps.checkEndOfHalf(getGameState());
-            game.setTurnMode(TurnMode.SETUP);
-            game.setSetupOffense(false);
-            fTouchdown = true;
-            break;
-          case KICKOFF:
-            game.setHomePlaying(!game.isHomePlaying());
-            game.getTurnData().setTurnNr(game.getTurnData().getTurnNr() + 1);
-            game.getTurnData().setTurnStarted(false);
-            game.getTurnData().setFirstTurnAfterKickoff(true);
-            game.setTurnMode(TurnMode.REGULAR);
-            break;
-          case REGULAR:
-            if (fNewHalf) {
+  
+          game.setTurnMode(TurnMode.SETUP);
+          game.setSetupOffense(false);
+  
+        } else {
+  
+          switch (game.getTurnMode()) {
+            case NO_PLAYERS_TO_FIELD:
+              game.getTurnDataHome().setTurnNr(game.getTurnDataHome().getTurnNr() + 2);
+              game.getTurnDataAway().setTurnNr(game.getTurnDataAway().getTurnNr() + 2);
+              fNewHalf = UtilServerSteps.checkEndOfHalf(getGameState());
               game.setTurnMode(TurnMode.SETUP);
               game.setSetupOffense(false);
-            } else {
+              fTouchdown = true;
+              break;
+            case KICKOFF:
               game.setHomePlaying(!game.isHomePlaying());
               game.getTurnData().setTurnNr(game.getTurnData().getTurnNr() + 1);
-            }
-            game.getTurnData().setTurnStarted(false);
-            game.getTurnData().setFirstTurnAfterKickoff(false);
-            break;
-          default:
-            break;
+              game.getTurnData().setTurnStarted(false);
+              game.getTurnData().setFirstTurnAfterKickoff(true);
+              game.setTurnMode(TurnMode.REGULAR);
+              break;
+            case REGULAR:
+              if (fNewHalf) {
+                game.setTurnMode(TurnMode.SETUP);
+                game.setSetupOffense(false);
+              } else {
+                game.setHomePlaying(!game.isHomePlaying());
+                game.getTurnData().setTurnNr(game.getTurnData().getTurnNr() + 1);
+              }
+              game.getTurnData().setTurnStarted(false);
+              game.getTurnData().setFirstTurnAfterKickoff(false);
+              break;
+            default:
+              break;
+          }
+  
         }
-
-      }
-
-      UtilPlayer.refreshPlayersForTurnStart(game);
-      game.getFieldModel().clearMoveSquares();
-      game.getFieldModel().clearTrackNumbers();
-      game.getFieldModel().clearDiceDecorations();
-
-      List<KnockoutRecovery> knockoutRecoveries = new ArrayList<KnockoutRecovery>();
-      List<HeatExhaustion> heatExhaustions = new ArrayList<HeatExhaustion>();
-      if (fNewHalf || fTouchdown) {
-        for (Player player : game.getPlayers()) {
-          PlayerState playerState = game.getFieldModel().getPlayerState(player);
-          FieldCoordinate playerCoordinate = game.getFieldModel().getPlayerCoordinate(player);
-          if (playerState.getBase() == PlayerState.KNOCKED_OUT) {
-            KnockoutRecovery knockoutRecovery = recoverKnockout(player);
-            if (knockoutRecovery != null) {
-              knockoutRecoveries.add(knockoutRecovery);
-              if (knockoutRecovery.isRecovering()) {
-                game.getFieldModel().setPlayerState(player, playerState.changeBase(PlayerState.RESERVE));
-                UtilBox.putPlayerIntoBox(game, player);
+  
+        UtilPlayer.refreshPlayersForTurnStart(game);
+        game.getFieldModel().clearMoveSquares();
+        game.getFieldModel().clearTrackNumbers();
+        game.getFieldModel().clearDiceDecorations();
+  
+        List<KnockoutRecovery> knockoutRecoveries = new ArrayList<KnockoutRecovery>();
+        List<HeatExhaustion> heatExhaustions = new ArrayList<HeatExhaustion>();
+        if (fNewHalf || fTouchdown) {
+          for (Player player : game.getPlayers()) {
+            PlayerState playerState = game.getFieldModel().getPlayerState(player);
+            FieldCoordinate playerCoordinate = game.getFieldModel().getPlayerCoordinate(player);
+            if (playerState.getBase() == PlayerState.KNOCKED_OUT) {
+              KnockoutRecovery knockoutRecovery = recoverKnockout(player);
+              if (knockoutRecovery != null) {
+                knockoutRecoveries.add(knockoutRecovery);
+                if (knockoutRecovery.isRecovering()) {
+                  game.getFieldModel().setPlayerState(player, playerState.changeBase(PlayerState.RESERVE));
+                  UtilBox.putPlayerIntoBox(game, player);
+                }
+              }
+            }
+            if (playerState.getBase() == PlayerState.EXHAUSTED) {
+              game.getFieldModel().setPlayerState(player, playerState.changeBase(PlayerState.RESERVE));
+            }
+            if (Weather.SWELTERING_HEAT == game.getFieldModel().getWeather()) {
+              if ((playerCoordinate != null) && !playerCoordinate.isBoxCoordinate()) {
+                HeatExhaustion heatExhaustion = heatExhaust(player);
+                heatExhaustions.add(heatExhaustion);
+                if (heatExhaustion.isExhausted()) {
+                  game.getFieldModel().setPlayerState(player, playerState.changeBase(PlayerState.EXHAUSTED));
+                  UtilBox.putPlayerIntoBox(game, player);
+                }
               }
             }
           }
-          if (playerState.getBase() == PlayerState.EXHAUSTED) {
-            game.getFieldModel().setPlayerState(player, playerState.changeBase(PlayerState.RESERVE));
-          }
-          if (Weather.SWELTERING_HEAT == game.getFieldModel().getWeather()) {
-            if ((playerCoordinate != null) && !playerCoordinate.isBoxCoordinate()) {
-              HeatExhaustion heatExhaustion = heatExhaust(player);
-              heatExhaustions.add(heatExhaustion);
-              if (heatExhaustion.isExhausted()) {
-                game.getFieldModel().setPlayerState(player, playerState.changeBase(PlayerState.EXHAUSTED));
-                UtilBox.putPlayerIntoBox(game, player);
-              }
-            }
-          }
+          UtilBox.putAllPlayersIntoBox(game);
         }
-        UtilBox.putAllPlayersIntoBox(game);
-      }
-
-      if (fNewHalf) {
-        if (game.getHalf() > 2) {
-          fEndGame = true;
-        } else if (game.getHalf() > 1) {
-          GameResult gameResult = game.getGameResult();
-          if (UtilGameOption.isOptionEnabled(game, GameOptionId.OVERTIME)
-              && (gameResult.getTeamResultHome().getScore() == gameResult.getTeamResultAway().getScore())) {
-            UtilServerGame.startHalf(this, game.getHalf() + 1);
-            SequenceGenerator.getInstance().pushKickoffSequence(getGameState(), true);
-          } else {
+  
+        if (fNewHalf) {
+          if (game.getHalf() > 2) {
             fEndGame = true;
+          } else if (game.getHalf() > 1) {
+            GameResult gameResult = game.getGameResult();
+            if (UtilGameOption.isOptionEnabled(game, GameOptionId.OVERTIME)
+                && (gameResult.getTeamResultHome().getScore() == gameResult.getTeamResultAway().getScore())) {
+              UtilServerGame.startHalf(this, game.getHalf() + 1);
+              SequenceGenerator.getInstance().pushKickoffSequence(getGameState(), true);
+            } else {
+              fEndGame = true;
+            }
+          } else {
+            UtilServerGame.startHalf(this, game.getHalf() + 1);
+            SequenceGenerator.getInstance().pushKickoffSequence(getGameState(), false);
+            fRemoveUsedSecretWeapons = true;
           }
-        } else {
-          UtilServerGame.startHalf(this, game.getHalf() + 1);
+          getResult().setSound(SoundId.WHISTLE);
+        } else if (fTouchdown) {
+          game.getFieldModel().setBallCoordinate(null);
+          game.getFieldModel().setBallInPlay(false);
+          getGameState().getServer().getCommunication().sendSound(getGameState(), SoundId.TOUCHDOWN);
+          getResult().setSound(SoundId.WHISTLE);
+          if (game.getHalf() == 3) {
+            SequenceGenerator.getInstance().pushEndGameSequence(getGameState(), false);
+          } else {
+            SequenceGenerator.getInstance().pushKickoffSequence(getGameState(), false);
+            fRemoveUsedSecretWeapons = true;
+          }
+        } else if (game.getTurnMode() != TurnMode.REGULAR) {
+          UtilBox.refreshBoxes(game);
+          getResult().setSound(SoundId.DING);
           SequenceGenerator.getInstance().pushKickoffSequence(getGameState(), false);
           fRemoveUsedSecretWeapons = true;
-        }
-        getResult().setSound(SoundId.WHISTLE);
-      } else if (fTouchdown) {
-        game.getFieldModel().setBallCoordinate(null);
-        game.getFieldModel().setBallInPlay(false);
-        getGameState().getServer().getCommunication().sendSound(getGameState(), SoundId.TOUCHDOWN);
-        getResult().setSound(SoundId.WHISTLE);
-        if (game.getHalf() == 3) {
-          SequenceGenerator.getInstance().pushEndGameSequence(getGameState(), false);
         } else {
-          SequenceGenerator.getInstance().pushKickoffSequence(getGameState(), false);
-          fRemoveUsedSecretWeapons = true;
+          getResult().setSound(SoundId.DING);
+          SequenceGenerator.getInstance().pushInducementSequence(getGameState(), InducementPhase.START_OF_OWN_TURN, game.isHomePlaying());
         }
-      } else if (game.getTurnMode() != TurnMode.REGULAR) {
-        UtilBox.refreshBoxes(game);
-        getResult().setSound(SoundId.DING);
-        SequenceGenerator.getInstance().pushKickoffSequence(getGameState(), false);
-        fRemoveUsedSecretWeapons = true;
-      } else {
-        getResult().setSound(SoundId.DING);
-        SequenceGenerator.getInstance().pushInducementSequence(getGameState(), InducementPhase.START_OF_OWN_TURN, game.isHomePlaying());
-      }
-
-      KnockoutRecovery[] knockoutRecoveryArray = knockoutRecoveries.toArray(new KnockoutRecovery[knockoutRecoveries.size()]);
-      HeatExhaustion[] heatExhaustionArray = heatExhaustions.toArray(new HeatExhaustion[heatExhaustions.size()]);
-      String touchdownPlayerId = (touchdownPlayer != null) ? touchdownPlayer.getId() : null;
-      getResult().addReport(new ReportTurnEnd(touchdownPlayerId, knockoutRecoveryArray, heatExhaustionArray));
-
-      if (game.isTurnTimeEnabled()) {
-        UtilServerTimer.stopTurnTimer(getGameState());
-        game.setTurnTime(0);
-      }
-
-      deactivateCards(InducementDuration.UNTIL_END_OF_TURN);
-      deactivateCards(InducementDuration.UNTIL_END_OF_OPPONENTS_TURN);
-
-      if (fNewHalf || fTouchdown) {
-        deactivateCards(InducementDuration.UNTIL_END_OF_DRIVE);
-        if (fHandleSecretWeapons) {
-          reportSecretWeaponsUsed();
+  
+        KnockoutRecovery[] knockoutRecoveryArray = knockoutRecoveries.toArray(new KnockoutRecovery[knockoutRecoveries.size()]);
+        HeatExhaustion[] heatExhaustionArray = heatExhaustions.toArray(new HeatExhaustion[heatExhaustions.size()]);
+        String touchdownPlayerId = (touchdownPlayer != null) ? touchdownPlayer.getId() : null;
+        getResult().addReport(new ReportTurnEnd(touchdownPlayerId, knockoutRecoveryArray, heatExhaustionArray));
+  
+        if (game.isTurnTimeEnabled()) {
+          UtilServerTimer.stopTurnTimer(getGameState());
+          game.setTurnTime(0);
         }
+  
+        deactivateCards(InducementDuration.UNTIL_END_OF_TURN);
+        deactivateCards(InducementDuration.UNTIL_END_OF_OPPONENTS_TURN);
+  
+        if (fNewHalf || fTouchdown) {
+          deactivateCards(InducementDuration.UNTIL_END_OF_DRIVE);
+          if (fHandleSecretWeapons) {
+            reportSecretWeaponsUsed();
+          }
+        }
+  
       }
-
+      
     }
 
     if (fBribesChoiceAway == null) {
@@ -631,6 +641,7 @@ public class StepEndTurn extends AbstractStep {
     IServerJsonOption.REMOVE_USED_SECRET_WEAPONS.addTo(jsonObject, fRemoveUsedSecretWeapons);
     IServerJsonOption.NEW_HALF.addTo(jsonObject, fNewHalf);
     IServerJsonOption.END_GAME.addTo(jsonObject, fEndGame);
+    IServerJsonOption.WITHIN_SECRET_WEAPON_HANDLING.addTo(jsonObject, fWithinSecretWeaponHandling);
     return jsonObject;
   }
 
@@ -648,6 +659,8 @@ public class StepEndTurn extends AbstractStep {
     fRemoveUsedSecretWeapons = IServerJsonOption.REMOVE_USED_SECRET_WEAPONS.getFrom(jsonObject);
     fNewHalf = IServerJsonOption.NEW_HALF.getFrom(jsonObject);
     fEndGame = IServerJsonOption.END_GAME.getFrom(jsonObject);
+    Boolean withinSecretWeaponHandling = IServerJsonOption.WITHIN_SECRET_WEAPON_HANDLING.getFrom(jsonObject);
+    fWithinSecretWeaponHandling = (withinSecretWeaponHandling != null) ? withinSecretWeaponHandling : false;
     return this;
   }
 
