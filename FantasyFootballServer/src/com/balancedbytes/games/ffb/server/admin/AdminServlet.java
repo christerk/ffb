@@ -32,6 +32,7 @@ import com.balancedbytes.games.ffb.server.net.commands.InternalServerCommandClos
 import com.balancedbytes.games.ffb.server.net.commands.InternalServerCommandDeleteGame;
 import com.balancedbytes.games.ffb.server.net.commands.InternalServerCommandScheduleGame;
 import com.balancedbytes.games.ffb.server.net.commands.InternalServerCommandUploadGame;
+import com.balancedbytes.games.ffb.server.request.ServerRequestSaveReplay;
 import com.balancedbytes.games.ffb.util.ArrayTool;
 import com.balancedbytes.games.ffb.util.StringTool;
 import com.balancedbytes.games.ffb.xml.UtilXml;
@@ -43,6 +44,7 @@ import com.balancedbytes.games.ffb.xml.UtilXml;
 @SuppressWarnings("serial")
 public class AdminServlet extends HttpServlet {
 
+  public static final String BACKUP = "backup";
   public static final String BLOCK = "block";
   public static final String CHALLENGE = "challenge";
   public static final String CLOSE = "close";
@@ -70,6 +72,7 @@ public class AdminServlet extends HttpServlet {
   private static final String _PARAMETER_VALUE = "value";
 
   private static final String _XML_TAG_ADMIN = "admin";
+  private static final String _XML_TAG_BACKUP = "challenge";
   private static final String _XML_TAG_CHALLENGE = "challenge";
   private static final String _XML_TAG_CONCEDE = "concede";
   private static final String _XML_TAG_LIST = "list";
@@ -140,6 +143,8 @@ public class AdminServlet extends HttpServlet {
           isOk = handleShutdown(handler);
         } else if (LIST.equals(command)) {
           isOk = handleList(handler, parameters);
+        } else if (BACKUP.equals(command)) {
+          isOk = handleBackup(handler, parameters);
         } else if (BLOCK.equals(command)) {
           isOk = handleBlock(handler, true);
         } else if (UNBLOCK.equals(command)) {
@@ -315,6 +320,21 @@ public class AdminServlet extends HttpServlet {
     long gameId = parseGameId(gameIdString);
     if (gameId > 0) {
       getServer().getCommunication().handleCommand(new InternalServerCommandUploadGame(gameId));
+      return true;
+    } else {
+      UtilXml.addValueElement(pHandler, _XML_TAG_ERROR, "Invalid or missing gameId parameter");
+      return false;
+    }
+  }
+
+  private boolean handleBackup(TransformerHandler pHandler, Map<String, String[]> pParameters) {
+    String gameIdString = ArrayTool.firstElement(pParameters.get(_PARAMETER_GAME_ID));
+    AttributesImpl attributes = new AttributesImpl();
+    UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_GAME_ID, gameIdString);
+    UtilXml.addEmptyElement(pHandler, _XML_TAG_BACKUP, attributes);
+    long gameId = parseGameId(gameIdString);
+    if (gameId > 0) {
+      getServer().getRequestProcessor().add(new ServerRequestSaveReplay(gameId));
       return true;
     } else {
       UtilXml.addValueElement(pHandler, _XML_TAG_ERROR, "Invalid or missing gameId parameter");

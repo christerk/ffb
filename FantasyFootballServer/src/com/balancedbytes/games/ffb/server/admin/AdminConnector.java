@@ -23,7 +23,8 @@ import com.balancedbytes.games.ffb.util.StringTool;
 public class AdminConnector {
 
   private static final String _USAGE =
-    "java com.balancedbytes.games.ffb.server.admin.AdminConnector block\n"
+    "java com.balancedbytes.games.ffb.server.admin.AdminConnector backup <gameId>\n"
+    + "java com.balancedbytes.games.ffb.server.admin.AdminConnector block\n"
   	+ "java com.balancedbytes.games.ffb.server.admin.AdminConnector close <gameId>\n"
     + "java com.balancedbytes.games.ffb.server.admin.AdminConnector concede <gameId> <teamId>\n"
     + "java com.balancedbytes.games.ffb.server.admin.AdminConnector delete <gameId>\n"
@@ -151,6 +152,13 @@ public class AdminConnector {
         System.out.println(uploadUrl);
         String uploadXml = UtilServerHttpClient.fetchPage(uploadUrl);
         System.out.println(uploadXml);
+      }
+
+      if (AdminServlet.BACKUP.equals(args[0])) {
+        String backupUrl = StringTool.bind(serverProperties.getProperty(IServerProperty.ADMIN_URL_BACKUP), response, args[1]);
+        System.out.println(backupUrl);
+        String backupXml = UtilServerHttpClient.fetchPage(backupUrl);
+        System.out.println(backupXml);
       }
 
       if (AdminServlet.DELETE.equals(args[0])) {
