@@ -502,6 +502,7 @@ public class ModelChangeProcessor {
       case TURN_DATA_SET_RE_ROLL_USED:
       case TURN_DATA_SET_TURN_NR:
       case TURN_DATA_SET_TURN_STARTED:
+      case TURN_DATA_SET_COACH_BANNED:
         return new ModelChange(pModelChange.getChangeId(), isHomeData(pModelChange) ? ModelChange.AWAY : ModelChange.HOME, pModelChange.getValue());
 
       default:
