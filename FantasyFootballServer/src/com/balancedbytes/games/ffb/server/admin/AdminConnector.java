@@ -28,7 +28,7 @@ public class AdminConnector {
     + "java com.balancedbytes.games.ffb.server.admin.AdminConnector concede <gameId> <teamId>\n"
     + "java com.balancedbytes.games.ffb.server.admin.AdminConnector delete <gameId>\n"
     + "java com.balancedbytes.games.ffb.server.admin.AdminConnector list <status>\n"
-    + "  [status being one of: scheduled, starting, active, paused, finished or uploaded]\n"
+    + "  [status being one of: scheduled, starting, active, paused, finished, uploaded or backuped]\n"
     + "java com.balancedbytes.games.ffb.server.admin.AdminConnector list <gameId>\n"
     + "java com.balancedbytes.games.ffb.server.admin.AdminConnector loglevel <value>\n"
     + "java com.balancedbytes.games.ffb.server.admin.AdminConnector message <message>\n"
