@@ -230,6 +230,7 @@ public class TurnData implements IJsonSerializable {
       fLeaderState = pTurnData.getLeaderState();
       fFirstTurnAfterKickoff = pTurnData.isFirstTurnAfterKickoff();
       fTurnStarted = pTurnData.isTurnStarted();
+      fCoachBanned = pTurnData.isCoachBanned();
     }
   }
   
