@@ -35,7 +35,7 @@ public class GameOptionFactory {
       case ARGUE_THE_CALL:
         return new GameOptionBoolean(GameOptionId.ARGUE_THE_CALL)
           .setDefault(true)
-          .setMessageTrue("Calls may not be argued.");
+          .setMessageFalse("Calls may not be argued.");
       case CHECK_OWNERSHIP:
         return new GameOptionBoolean(GameOptionId.CHECK_OWNERSHIP)
           .setDefault(true)
