@@ -123,7 +123,7 @@ public class GameOptionFactory {
       case PILING_ON_USES_A_TEAM_REROLL:
         return new GameOptionBoolean(GameOptionId.PILING_ON_USES_A_TEAM_REROLL)
           .setDefault(true)
-          .setMessageTrue("Piling On does not cost a Team Re-roll to use.");
+          .setMessageFalse("Piling On does not cost a Team Re-roll to use.");
       case PITCH_URL:
         return new GameOptionString(GameOptionId.PITCH_URL)
           .setMessage("Custom pitch set.");
