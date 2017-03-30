@@ -59,10 +59,13 @@ public class ServerRequestLoadReplay extends ServerRequest {
     GameState gameState = null;
     try {
       String loadUrl = StringTool.bind(server.getProperty(IServerProperty.BACKUP_URL_LOAD), getGameId());
-      JsonValue jsonValue = JsonValue.readFrom(UtilServerHttpClient.fetchPage(loadUrl));
-      if ((jsonValue != null) && !jsonValue.isNull()) {
-        gameState = new GameState(server);
-        gameState.initFrom(jsonValue);
+      String jsonString = UtilServerHttpClient.fetchPage(loadUrl);
+      if (StringTool.isProvided(jsonString)) {
+        JsonValue jsonValue = JsonValue.readFrom(jsonString);
+        if ((jsonValue != null) && !jsonValue.isNull()) {
+          gameState = new GameState(server);
+          gameState.initFrom(jsonValue);
+        }
       }
     } catch (ParseException parseException) {
       server.getDebugLog().log(getGameId(), new FantasyFootballException("Unable to load Replay", parseException));
