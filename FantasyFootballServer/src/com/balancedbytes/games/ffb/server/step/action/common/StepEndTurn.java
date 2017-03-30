@@ -49,7 +49,6 @@ import com.balancedbytes.games.ffb.server.step.StepCommandStatus;
 import com.balancedbytes.games.ffb.server.step.StepId;
 import com.balancedbytes.games.ffb.server.step.StepParameter;
 import com.balancedbytes.games.ffb.server.step.StepParameterKey;
-import com.balancedbytes.games.ffb.server.step.StepParameterSet;
 import com.balancedbytes.games.ffb.server.step.UtilServerSteps;
 import com.balancedbytes.games.ffb.server.util.UtilServerCards;
 import com.balancedbytes.games.ffb.server.util.UtilServerDialog;
@@ -66,15 +65,12 @@ import com.eclipsesource.json.JsonValue;
 /**
  * Step in any sequence to end a turn.
  * 
- * Needs to be initialized with stepParameter HANDLE_SECRET_WEAPONS.
- * 
  * May push another sequence on the stack (endGame, startGame or kickoff)
  *
  * @author Kalimar
  */
 public class StepEndTurn extends AbstractStep {
 
-  private boolean fHandleSecretWeapons;
   private Boolean fTouchdown;
   private Boolean fBribesChoiceHome;
   private Boolean fBribesChoiceAway;
@@ -88,27 +84,10 @@ public class StepEndTurn extends AbstractStep {
 
   public StepEndTurn(GameState pGameState) {
     super(pGameState);
-    fHandleSecretWeapons = true;
   }
 
   public StepId getId() {
     return StepId.END_TURN;
-  }
-
-  @Override
-  public void init(StepParameterSet pParameterSet) {
-    if (pParameterSet != null) {
-      for (StepParameter parameter : pParameterSet.values()) {
-        switch (parameter.getKey()) {
-          // optional
-          case HANDLE_SECRET_WEAPONS:
-            fHandleSecretWeapons = (Boolean) parameter.getValue();
-            break;
-          default:
-            break;
-        }
-      }
-    }
   }
 
   @Override
@@ -172,9 +151,7 @@ public class StepEndTurn extends AbstractStep {
         fTouchdown = UtilServerSteps.checkTouchdown(getGameState());
       }
   
-      if (fHandleSecretWeapons) {
-        markPlayedAndSecretWeapons();
-      }
+      markPlayedAndSecretWeapons();
   
       fEndGame = false;
       fNewHalf = UtilServerSteps.checkEndOfHalf(getGameState());
@@ -299,6 +276,7 @@ public class StepEndTurn extends AbstractStep {
                 && (gameResult.getTeamResultHome().getScore() == gameResult.getTeamResultAway().getScore())) {
               UtilServerGame.startHalf(this, game.getHalf() + 1);
               SequenceGenerator.getInstance().pushKickoffSequence(getGameState(), true);
+              fRemoveUsedSecretWeapons = true;
             } else {
               fEndGame = true;
             }
@@ -344,9 +322,7 @@ public class StepEndTurn extends AbstractStep {
   
         if (fNewHalf || fTouchdown) {
           deactivateCards(InducementDuration.UNTIL_END_OF_DRIVE);
-          if (fHandleSecretWeapons) {
-            reportSecretWeaponsUsed();
-          }
+          reportSecretWeaponsUsed();
         }
   
       }
@@ -355,28 +331,28 @@ public class StepEndTurn extends AbstractStep {
 
     if (fBribesChoiceAway == null) {
       fBribesChoiceAway = false;
-      if (!fEndGame && fHandleSecretWeapons && (fNewHalf || fTouchdown) && askForSecretWeaponBribes(game.getTeamAway())) {
+      if (!fEndGame && (fNewHalf || fTouchdown) && askForSecretWeaponBribes(game.getTeamAway())) {
         fBribesChoiceAway = null;
       }
     }
 
     if ((fBribesChoiceHome == null) && (fBribesChoiceAway != null)) {
       fBribesChoiceHome = false;
-      if (!fEndGame && fHandleSecretWeapons && (fNewHalf || fTouchdown) && askForSecretWeaponBribes(game.getTeamHome())) {
+      if (!fEndGame && (fNewHalf || fTouchdown) && askForSecretWeaponBribes(game.getTeamHome())) {
         fBribesChoiceHome = null;
       }
     }
 
     if ((fBribesChoiceHome != null) && (fBribesChoiceAway != null) && (fArgueTheCallChoiceAway == null)) {
       fArgueTheCallChoiceAway = false;
-      if (!fEndGame && fHandleSecretWeapons && (fNewHalf || fTouchdown) && askForArgueTheCall(game.getTeamAway())) {
+      if (!fEndGame && (fNewHalf || fTouchdown) && askForArgueTheCall(game.getTeamAway())) {
         fArgueTheCallChoiceAway = null;
       }
     }
 
     if ((fBribesChoiceHome != null) && (fBribesChoiceAway != null) && (fArgueTheCallChoiceHome == null) && (fArgueTheCallChoiceAway != null)) {
       fArgueTheCallChoiceHome = false;
-      if (!fEndGame && fHandleSecretWeapons && (fNewHalf || fTouchdown) && askForArgueTheCall(game.getTeamHome())) {
+      if (!fEndGame && (fNewHalf || fTouchdown) && askForArgueTheCall(game.getTeamHome())) {
         fArgueTheCallChoiceHome = null;
       }
     }
@@ -631,7 +607,6 @@ public class StepEndTurn extends AbstractStep {
   @Override
   public JsonObject toJsonValue() {
     JsonObject jsonObject = super.toJsonValue();
-    IServerJsonOption.HANDLE_SECRET_WEAPONS.addTo(jsonObject, fHandleSecretWeapons);
     IServerJsonOption.TOUCHDOWN.addTo(jsonObject, fTouchdown);
     IServerJsonOption.ARGUE_THE_CALL_CHOICE_HOME.addTo(jsonObject, fArgueTheCallChoiceHome);
     IServerJsonOption.ARGUE_THE_CALL_CHOICE_AWAY.addTo(jsonObject, fArgueTheCallChoiceAway);
@@ -649,7 +624,6 @@ public class StepEndTurn extends AbstractStep {
   public StepEndTurn initFrom(JsonValue pJsonValue) {
     super.initFrom(pJsonValue);
     JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-    fHandleSecretWeapons = IServerJsonOption.HANDLE_SECRET_WEAPONS.getFrom(jsonObject);
     fTouchdown = IServerJsonOption.TOUCHDOWN.getFrom(jsonObject);
     fArgueTheCallChoiceHome = IServerJsonOption.ARGUE_THE_CALL_CHOICE_HOME.getFrom(jsonObject);
     fArgueTheCallChoiceAway = IServerJsonOption.ARGUE_THE_CALL_CHOICE_AWAY.getFrom(jsonObject);

@@ -76,7 +76,6 @@ public interface IServerJsonOption extends IJsonOption {
                 JsonStringOption GOTO_LABEL_ON_MISSED_PASS = new JsonStringOption("gotoLabelOnMissedPass");
                 JsonStringOption GOTO_LABEL_ON_PUSHBACK = new JsonStringOption("gotoLabelOnPushback");
                 JsonStringOption GOTO_LABEL_ON_SUCCESS = new JsonStringOption("gotoLabelOnSuccess");
-               JsonBooleanOption HANDLE_SECRET_WEAPONS = new JsonBooleanOption("handleSecretWeapons");
                JsonBooleanOption HOLDING_SAFE_THROW = new JsonBooleanOption("holdingSafeThrow");
                JsonBooleanOption ILLEGAL_SUBSTITUTION = new JsonBooleanOption("illegalSubstitution");
                    JsonIntOption INDUCEMENT_GOLD_AWAY = new JsonIntOption("inducementGoldAway");
