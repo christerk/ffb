@@ -57,10 +57,9 @@ public class ServerReplayer implements Runnable {
           serverReplay.setComplete(true);
 
           ServerCommandReplay replayCommand = new ServerCommandReplay();
+          replayCommand.setTotalNrOfCommands(serverReplay.size());
 
           ServerCommand[] serverCommands = serverReplay.findRelevantCommandsInLog();
-          replayCommand.setTotalNrOfCommands(serverCommands.length);
-
           for (ServerCommand serverCommand : serverCommands) {
             replayCommand.add(serverCommand);
             if (replayCommand.getNrOfCommands() >= ServerCommandReplay.MAX_NR_OF_COMMANDS) {

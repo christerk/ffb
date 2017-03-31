@@ -55,6 +55,10 @@ public class ServerReplay {
   public Session getSession() {
     return fSession;
   }
+  
+  public int size() {
+    return fServerCommands.length;
+  }
 
   public void setComplete(boolean pComplete) {
     fComplete = pComplete;
@@ -71,8 +75,7 @@ public class ServerReplay {
       }
     }
   }
-  
-  
+
   public ServerCommand[] findRelevantCommandsInLog() {
     List<ServerCommand> replayCommands = new ArrayList<ServerCommand>();
     if (fServerCommands != null) {
