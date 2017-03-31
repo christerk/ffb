@@ -43,77 +43,77 @@ import com.eclipsesource.json.JsonValue;
  * @author Kalimar
  */
 public class StepEjectPlayer extends AbstractStep {
-	
-	private String fGotoLabelOnEnd;
-	private Boolean fFoulerHasBall;
-	private Boolean fArgueTheCallSuccessful;
-	
-	public StepEjectPlayer(GameState pGameState) {
-		super(pGameState);
-	}
-	
-	public StepId getId() {
-		return StepId.EJECT_PLAYER;
-	}
-	
+
+  private String fGotoLabelOnEnd;
+  private Boolean fFoulerHasBall;
+  private Boolean fArgueTheCallSuccessful;
+
+  public StepEjectPlayer(GameState pGameState) {
+    super(pGameState);
+  }
+
+  public StepId getId() {
+    return StepId.EJECT_PLAYER;
+  }
+
   @Override
   public void init(StepParameterSet pParameterSet) {
-  	if (pParameterSet != null) {
-  		for (StepParameter parameter : pParameterSet.values()) {
-  			switch (parameter.getKey()) {
-  				case GOTO_LABEL_ON_END:
-  					fGotoLabelOnEnd = (String) parameter.getValue();
-  					break;
-					default:
-						break;
-  			}
-  		}
-  	}
-  	if (!StringTool.isProvided(fGotoLabelOnEnd)) {
-			throw new StepException("StepParameter " + StepParameterKey.GOTO_LABEL_ON_END + " is not initialized.");
-  	}
+    if (pParameterSet != null) {
+      for (StepParameter parameter : pParameterSet.values()) {
+        switch (parameter.getKey()) {
+          case GOTO_LABEL_ON_END:
+            fGotoLabelOnEnd = (String) parameter.getValue();
+            break;
+          default:
+            break;
+        }
+      }
+    }
+    if (!StringTool.isProvided(fGotoLabelOnEnd)) {
+      throw new StepException("StepParameter " + StepParameterKey.GOTO_LABEL_ON_END + " is not initialized.");
+    }
   }
-  
-	@Override
-	public boolean setParameter(StepParameter pParameter) {
-		if ((pParameter != null) && !super.setParameter(pParameter)) {
-			switch (pParameter.getKey()) {
-				case FOULER_HAS_BALL:
-					fFoulerHasBall = (Boolean) pParameter.getValue();
-					return true;
-				case ARGUE_THE_CALL_SUCCESSFUL:
-				  fArgueTheCallSuccessful = (Boolean) pParameter.getValue();
-				  return true;
-				default:
-					break;
-			}
-		}
-		return false;
-	}
-	
-	@Override
-	public void start() {
-		super.start();
-		executeStep();
-	}
-	
-	@Override
-	public StepCommandStatus handleCommand(ReceivedCommand pReceivedCommand) {
-		StepCommandStatus commandStatus = super.handleCommand(pReceivedCommand);
-		if (commandStatus == StepCommandStatus.EXECUTE_STEP) {
-			executeStep();
-		}
-		return commandStatus;
-	}
 
-	private void executeStep() {
+  @Override
+  public boolean setParameter(StepParameter pParameter) {
+    if ((pParameter != null) && !super.setParameter(pParameter)) {
+      switch (pParameter.getKey()) {
+        case FOULER_HAS_BALL:
+          fFoulerHasBall = (Boolean) pParameter.getValue();
+          return true;
+        case ARGUE_THE_CALL_SUCCESSFUL:
+          fArgueTheCallSuccessful = (Boolean) pParameter.getValue();
+          return true;
+        default:
+          break;
+      }
+    }
+    return false;
+  }
+
+  @Override
+  public void start() {
+    super.start();
+    executeStep();
+  }
+
+  @Override
+  public StepCommandStatus handleCommand(ReceivedCommand pReceivedCommand) {
+    StepCommandStatus commandStatus = super.handleCommand(pReceivedCommand);
+    if (commandStatus == StepCommandStatus.EXECUTE_STEP) {
+      executeStep();
+    }
+    return commandStatus;
+  }
+
+  private void executeStep() {
     Game game = getGameState().getGame();
     GameResult gameResult = game.getGameResult();
     ActingPlayer actingPlayer = game.getActingPlayer();
     PlayerState playerState = game.getFieldModel().getPlayerState(actingPlayer.getPlayer());
-    PlayerResult attackerResult = gameResult.getPlayerResult(actingPlayer.getPlayer()); 
+    PlayerResult attackerResult = gameResult.getPlayerResult(actingPlayer.getPlayer());
     if (UtilCards.hasSkill(game, actingPlayer, Skill.SNEAKY_GIT) && UtilGameOption.isOptionEnabled(game, GameOptionId.SNEAKY_GIT_BAN_TO_KO)) {
-    	game.getFieldModel().setPlayerState(actingPlayer.getPlayer(), playerState.changeBase(PlayerState.KNOCKED_OUT));
+      game.getFieldModel().setPlayerState(actingPlayer.getPlayer(), playerState.changeBase(PlayerState.KNOCKED_OUT));
     } else {
       if ((fArgueTheCallSuccessful != null) && fArgueTheCallSuccessful) {
         game.getFieldModel().setPlayerState(actingPlayer.getPlayer(), playerState.changeBase(PlayerState.RESERVE));
@@ -127,17 +127,17 @@ public class StepEjectPlayer extends AbstractStep {
       UtilBox.refreshBoxes(game);
       UtilServerGame.updateLeaderReRolls(this);
     }
-  	publishParameter(new StepParameter(StepParameterKey.END_TURN, true));
+    publishParameter(new StepParameter(StepParameterKey.END_TURN, true));
     if ((fFoulerHasBall != null) && fFoulerHasBall) {
-    	publishParameter(new StepParameter(StepParameterKey.CATCH_SCATTER_THROW_IN_MODE, CatchScatterThrowInMode.SCATTER_BALL));
-    	getResult().setNextAction(StepAction.NEXT_STEP);
-    } else  {
-    	getResult().setNextAction(StepAction.GOTO_LABEL, fGotoLabelOnEnd);
+      publishParameter(new StepParameter(StepParameterKey.CATCH_SCATTER_THROW_IN_MODE, CatchScatterThrowInMode.SCATTER_BALL));
+      getResult().setNextAction(StepAction.NEXT_STEP);
+    } else {
+      getResult().setNextAction(StepAction.GOTO_LABEL, fGotoLabelOnEnd);
     }
   }
-	
+
   // JSON serialization
-  
+
   @Override
   public JsonObject toJsonValue() {
     JsonObject jsonObject = super.toJsonValue();
@@ -146,7 +146,7 @@ public class StepEjectPlayer extends AbstractStep {
     IServerJsonOption.ARGUE_THE_CALL_SUCCESSFUL.addTo(jsonObject, fArgueTheCallSuccessful);
     return jsonObject;
   }
-  
+
   @Override
   public StepEjectPlayer initFrom(JsonValue pJsonValue) {
     super.initFrom(pJsonValue);

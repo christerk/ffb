@@ -561,7 +561,8 @@ public class StepEndTurn extends AbstractStep {
     List<String> playerIds = new ArrayList<String>();
     for (Player player : pTeam.getPlayers()) {
       PlayerResult playerResult = game.getGameResult().getPlayerResult(player);
-      if (playerResult.hasUsedSecretWeapon()) {
+      PlayerState playerState = game.getFieldModel().getPlayerState(player);
+      if (playerResult.hasUsedSecretWeapon() && (playerState.getBase() != PlayerState.BANNED)) {
         playerIds.add(player.getId());
       }
     }
@@ -586,7 +587,8 @@ public class StepEndTurn extends AbstractStep {
     List<String> playerIds = new ArrayList<String>();
     for (Player player : pTeam.getPlayers()) {
       PlayerResult playerResult = game.getGameResult().getPlayerResult(player);
-      if (playerResult.hasUsedSecretWeapon()) {
+      PlayerState playerState = game.getFieldModel().getPlayerState(player);
+      if (playerResult.hasUsedSecretWeapon() && (playerState.getBase() != PlayerState.BANNED)) {
         playerIds.add(player.getId());
       }
     }
