@@ -9,12 +9,16 @@ import com.balancedbytes.games.ffb.client.ActionKey;
 import com.balancedbytes.games.ffb.client.ClientReplayer;
 import com.balancedbytes.games.ffb.client.FantasyFootballClient;
 import com.balancedbytes.games.ffb.client.IProgressListener;
+import com.balancedbytes.games.ffb.client.StatusReport;
+import com.balancedbytes.games.ffb.client.dialog.DialogInformation;
 import com.balancedbytes.games.ffb.client.dialog.DialogProgressBar;
 import com.balancedbytes.games.ffb.client.dialog.IDialog;
 import com.balancedbytes.games.ffb.client.dialog.IDialogCloseListener;
 import com.balancedbytes.games.ffb.net.NetCommand;
+import com.balancedbytes.games.ffb.net.ServerStatus;
 import com.balancedbytes.games.ffb.net.commands.ServerCommand;
 import com.balancedbytes.games.ffb.net.commands.ServerCommandReplay;
+import com.balancedbytes.games.ffb.net.commands.ServerCommandStatus;
 
 /**
  * 
@@ -86,6 +90,13 @@ public class ClientStateReplay extends ClientState implements IDialogCloseListen
         if (ClientMode.REPLAY == getClient().getMode()) {
           fReplayList = new ArrayList<ServerCommand>();
           showProgressDialog();
+        }
+        break;
+      case  SERVER_STATUS:
+        ServerCommandStatus statusCommand = (ServerCommandStatus) pNetCommand;
+        if ((ServerStatus.REPLAY_UNAVAILABLE == statusCommand.getServerStatus()) && (ClientMode.REPLAY == getClient().getMode())) {
+          getClient().getUserInterface().getStatusReport().reportStatus(statusCommand.getServerStatus());
+          getClient().getCommunication().sendCloseSession();
         }
         break;
       default:

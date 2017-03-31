@@ -17,7 +17,8 @@ public enum ServerStatus implements INamedObject {
   ERROR_NOT_YOUR_TEAM("Not Your Team", "The team you wanted to join with is not yours!"),
   ERROR_UNKNOWN_GAME_ID("Unknown Game Id", "There is no game with the given id!"),
   ERROR_SAME_TEAM("Same Team", "You cannot play a team against itself!"),
-  FUMBBL_ERROR("Fumbbl Error", "Fumbbl Error");
+  FUMBBL_ERROR("Fumbbl Error", "Fumbbl Error"),
+  REPLAY_UNAVAILABLE("Replay Unavailable", "The replay for this game is currently unavailable.");
   
   private String fName;
   private String fMessage;

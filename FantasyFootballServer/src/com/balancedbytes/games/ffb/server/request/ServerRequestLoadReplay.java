@@ -6,6 +6,7 @@ import org.eclipse.jetty.websocket.api.Session;
 
 import com.balancedbytes.games.ffb.FantasyFootballException;
 import com.balancedbytes.games.ffb.GameStatus;
+import com.balancedbytes.games.ffb.net.ServerStatus;
 import com.balancedbytes.games.ffb.server.FantasyFootballServer;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.IServerProperty;
@@ -74,22 +75,24 @@ public class ServerRequestLoadReplay extends ServerRequest {
       server.getDebugLog().log(getGameId(), new FantasyFootballException("Unable to load Replay", ioException));
       return;
     }
-    if (gameState != null) {
-      if (fMode == LOAD_GAME) {
+    if (fMode == LOAD_GAME) {
+      if (gameState != null) {
         gameState.setStatus(GameStatus.LOADING);
         server.getGameCache().addGame(gameState);
         InternalServerCommandReplayLoaded replayLoadedCommand = new InternalServerCommandReplayLoaded(getGameId(), getReplayToCommandNr());
         server.getCommunication().handleCommand(new ReceivedCommand(replayLoadedCommand, getSession()));
-      }
-      if (fMode == DELETE_GAME) {
-        server.getCommunication().handleCommand(new InternalServerCommandDeleteGame(getGameId(), false));
-      }
-      if (fMode == UPLOAD_GAME) {
-        gameState.setStatus(GameStatus.LOADING);
-        server.getGameCache().addGame(gameState);
-        InternalServerCommandUploadGame uploadCommand = new InternalServerCommandUploadGame(getGameId());
-        server.getCommunication().handleCommand(new ReceivedCommand(uploadCommand, getSession()));
-      }
+      } else {
+        server.getCommunication().sendStatus(getSession(), ServerStatus.REPLAY_UNAVAILABLE, "");
+      }      
+    }
+    if ((fMode == DELETE_GAME) && (gameState != null)) {
+      server.getCommunication().handleCommand(new InternalServerCommandDeleteGame(getGameId(), false));
+    }
+    if ((fMode == UPLOAD_GAME) && (gameState != null)) {
+      gameState.setStatus(GameStatus.LOADING);
+      server.getGameCache().addGame(gameState);
+      InternalServerCommandUploadGame uploadCommand = new InternalServerCommandUploadGame(getGameId());
+      server.getCommunication().handleCommand(new ReceivedCommand(uploadCommand, getSession()));
     }
   }
   

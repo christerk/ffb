@@ -2627,6 +2627,12 @@ public class StatusReport {
     println();
   }
 
+  public void reportStatus(ServerStatus status) {
+    println();
+    println(0, TextStyle.BOLD, status.getMessage());
+    println();
+  }
+
   public void reportServerMessage(ServerStatus pServerStatus) {
     println(getIndent(), TextStyle.NONE, pServerStatus.getMessage());
   }
