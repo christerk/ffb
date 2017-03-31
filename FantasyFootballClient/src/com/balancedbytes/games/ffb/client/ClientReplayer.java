@@ -31,19 +31,18 @@ import com.balancedbytes.games.ffb.net.commands.ServerCommandModelSync;
 import com.balancedbytes.games.ffb.report.ReportId;
 import com.balancedbytes.games.ffb.util.UtilBox;
 
-
 /**
  * 
  * @author Kalimar
  */
 public class ClientReplayer implements ActionListener {
-  
+
   private FantasyFootballClient fClient;
-  
+
   private static final int[] _TIMER_SETTINGS = { 800, 400, 200, 100, 50, 25, 10 };
-  
+
   private int fFirstCommandNr;
-  
+
   private List<ServerCommand> fReplayList;
   private List<ServerCommand> fUnseenList;
   private int fLastReplayPosition;
@@ -52,9 +51,9 @@ public class ClientReplayer implements ActionListener {
   private boolean fStopping;
   private int fUnseenPosition;
   private boolean fSkipping;
-  
+
   private Timer fTimer;
-  
+
   public ClientReplayer(FantasyFootballClient pClient) {
     fClient = pClient;
     fReplayList = new ArrayList<ServerCommand>();
@@ -64,23 +63,23 @@ public class ClientReplayer implements ActionListener {
     fTimer = new Timer(1000, this);
     fTimer.setInitialDelay(0);
   }
-  
+
   public ReplayControl getReplayControl() {
     return getClient().getUserInterface().getChat().getReplayControl();
   }
-  
+
   public boolean isReplaying() {
     return getClient().getUserInterface().getChat().isReplayShown();
   }
-  
+
   public boolean isReplayingSingleSpeedForward() {
-  	return (isReplaying() && isReplayDirectionForward() && (getReplaySpeed() <= 1) && !fSkipping);
+    return (isReplaying() && isReplayDirectionForward() && (getReplaySpeed() <= 1) && !fSkipping);
   }
-  
+
   public FantasyFootballClient getClient() {
     return fClient;
   }
-  
+
   public void add(ServerCommand pServerCommand) {
     if (pServerCommand != null) {
       if (isReplaying() || fStopping) {
@@ -101,7 +100,7 @@ public class ClientReplayer implements ActionListener {
       }
     }
   }
-  
+
   public void init(ServerCommand[] pServerCommands, IProgressListener pProgressListener) {
     List<ServerCommand> oldReplayList = fReplayList;
     fReplayList = new ArrayList<ServerCommand>();
@@ -118,29 +117,29 @@ public class ClientReplayer implements ActionListener {
     replayTo(getReplaySize(), ClientCommandHandlerMode.INITIALIZING, pProgressListener);
     getClient().getUserInterface().getLog().attachLogDocument();
   }
-  
+
   private void setReplaySpeed(int pReplaySpeed) {
     fReplaySpeed = pReplaySpeed;
     fTimer.setDelay(_TIMER_SETTINGS[fReplaySpeed]);
     fTimer.setInitialDelay(_TIMER_SETTINGS[fReplaySpeed]);
   }
-  
+
   public int getReplaySpeed() {
     return fReplaySpeed;
   }
-  
+
   public void increaseReplaySpeed() {
     if (fReplaySpeed < _TIMER_SETTINGS.length - 1) {
       setReplaySpeed(fReplaySpeed + 1);
     }
   }
-  
+
   public void decreaseReplaySpeed() {
     if (fReplaySpeed > 0) {
       setReplaySpeed(fReplaySpeed - 1);
     }
   }
-  
+
   public void play(boolean pDirectionForward) {
     fReplayDirectionForward = pDirectionForward;
     setReplaySpeed(1);
@@ -148,17 +147,17 @@ public class ClientReplayer implements ActionListener {
       if (fReplayDirectionForward) {
         fLastReplayPosition = 0;
       } else {
-        fLastReplayPosition = Math.max(getReplaySize() , 0);
+        fLastReplayPosition = Math.max(getReplaySize(), 0);
       }
     }
     resume();
   }
-  
+
   public void skip(boolean pDirectionForward) {
     boolean oldReplayDirectionForward = fReplayDirectionForward;
     boolean running = fTimer.isRunning();
     if (running) {
-    	pause();
+      pause();
     }
     int position;
     if (pDirectionForward) {
@@ -167,7 +166,7 @@ public class ClientReplayer implements ActionListener {
         if (isRegularEndTurnCommand(getReplayCommand(i))) {
           position = i;
           break;
-        }        
+        }
       }
     } else {
       position = 0;
@@ -175,7 +174,7 @@ public class ClientReplayer implements ActionListener {
         if (isRegularEndTurnCommand(getReplayCommand(i))) {
           position = i;
           break;
-        }        
+        }
       }
     }
     fReplayDirectionForward = pDirectionForward;
@@ -184,21 +183,22 @@ public class ClientReplayer implements ActionListener {
     fSkipping = false;
     fReplayDirectionForward = oldReplayDirectionForward;
     if (running) {
-    	resume();
+      resume();
     }
   }
-  
+
   private boolean isRegularEndTurnCommand(ServerCommand pServerCommand) {
-    if ((NetCommandId.SERVER_MODEL_SYNC == pServerCommand.getId()) && (((ServerCommandModelSync) pServerCommand).getReportList().hasReport(ReportId.TURN_END))) {
+    if ((NetCommandId.SERVER_MODEL_SYNC == pServerCommand.getId())
+        && (((ServerCommandModelSync) pServerCommand).getReportList().hasReport(ReportId.TURN_END))) {
       return getClient().getUserInterface().getLog().hasCommandHighlight(pServerCommand.getCommandNr());
     }
     return false;
   }
-  
+
   public boolean isRunning() {
     return fTimer.isRunning();
   }
-    
+
   public void actionPerformed(ActionEvent pE) {
     if (fStopping) {
       if (fUnseenPosition < getUnseenSize()) {
@@ -227,7 +227,7 @@ public class ClientReplayer implements ActionListener {
       }
     } else if (fReplayDirectionForward) {
       if (fLastReplayPosition < getReplaySize()) {
-      	replayTo(fLastReplayPosition + 1, ClientCommandHandlerMode.REPLAYING, null);
+        replayTo(fLastReplayPosition + 1, ClientCommandHandlerMode.REPLAYING, null);
       } else {
         pause();
         getReplayControl().showPause();
@@ -241,37 +241,37 @@ public class ClientReplayer implements ActionListener {
       }
     }
   }
-   
+
   private int getReplaySize() {
     synchronized (fReplayList) {
       return fReplayList.size();
     }
   }
-  
+
   private int getUnseenSize() {
     synchronized (fUnseenList) {
       return fUnseenList.size();
     }
   }
-  
+
   public ServerCommand getReplayCommand(int pPosition) {
     synchronized (fReplayList) {
       return fReplayList.get(pPosition);
     }
   }
-  
+
   public void pause() {
-  	if (isRunning()) {
-  		fTimer.stop();
-  	}
+    if (isRunning()) {
+      fTimer.stop();
+    }
   }
-  
+
   public void resume() {
-  	if (!isRunning()) {
-  		fTimer.start();
-  	}
+    if (!isRunning()) {
+      fTimer.start();
+    }
   }
-  
+
   private void replayTo(int pReplayPosition, ClientCommandHandlerMode pMode, IProgressListener pProgressListener) {
     int start = 0;
     if ((fLastReplayPosition >= 0) && (fLastReplayPosition < pReplayPosition)) {
@@ -285,7 +285,7 @@ public class ClientReplayer implements ActionListener {
     for (int i = start; i < pReplayPosition; i++) {
       serverCommand = getReplayCommand(i);
       if (serverCommand != null) {
-      	// System.out.println(serverCommand.toXml(0));
+        // System.out.println(serverCommand.toXml(0));
         getClient().getCommandHandlerFactory().handleNetCommand(serverCommand, pMode);
       }
       if (pProgressListener != null) {
@@ -298,7 +298,7 @@ public class ClientReplayer implements ActionListener {
     }
     refreshUserInterface();
   }
-  
+
   public void replayToCommand(int pCommandNr) {
     pause();
     getClient().getUserInterface().getChat().getReplayControl().showPause();
@@ -306,12 +306,12 @@ public class ClientReplayer implements ActionListener {
     if (position >= 0) {
       fLastReplayPosition = 0;
       fReplayDirectionForward = true;
-    	fSkipping = true;
+      fSkipping = true;
       replayTo(position + 1, ClientCommandHandlerMode.REPLAYING, null);
-    	fSkipping = false;
+      fSkipping = false;
     }
   }
-  
+
   private int findPositionForCommand(int pCommandNr) {
     int position = -1;
     for (int i = 0; i < getReplaySize(); i++) {
@@ -323,18 +323,18 @@ public class ClientReplayer implements ActionListener {
     }
     return position;
   }
-  
+
   private void highlightCommand(int pCommandNr) {
     LogComponent log = getClient().getUserInterface().getLog();
     boolean commandShown = log.highlightCommand(pCommandNr, fReplayDirectionForward);
     if (!commandShown && !fReplayDirectionForward) {
       int commandNr = pCommandNr;
       while (!commandShown && (commandNr > log.getMinimumCommandNr())) {
-        commandShown = log.highlightCommand(--commandNr, fReplayDirectionForward); 
+        commandShown = log.highlightCommand(--commandNr, fReplayDirectionForward);
       }
     }
   }
-  
+
   private Game createGame() {
     Game oldGame = getClient().getGame();
     Game game = new Game();
@@ -351,7 +351,7 @@ public class ClientReplayer implements ActionListener {
     addTeam(game, oldGame.getTeamAway(), oldGameResult.getTeamResultAway(), false);
     return game;
   }
-  
+
   private void addTeam(Game pGame, Team pTeam, TeamResult pOldTeamResult, boolean pHomeTeam) {
     Player[] players = pTeam.getPlayers();
     if (pHomeTeam) {
@@ -363,12 +363,12 @@ public class ClientReplayer implements ActionListener {
     }
     FieldModel fieldModel = pGame.getFieldModel();
     for (int i = 0; i < players.length; i++) {
-  		// remove mercs, stars and raised players, they will be added via command later
-    	PlayerType playerType = players[i].getPlayerType();
-    	if ((playerType == null) || (playerType == PlayerType.MERCENARY) || (playerType == PlayerType.STAR) || (playerType == PlayerType.RAISED_FROM_DEAD)) {
-    		fieldModel.remove(players[i]);
-    		pTeam.removePlayer(players[i]);
-    	} else {
+      // remove mercs, stars and raised players, they will be added via command later
+      PlayerType playerType = players[i].getPlayerType();
+      if ((playerType == null) || (playerType == PlayerType.MERCENARY) || (playerType == PlayerType.STAR) || (playerType == PlayerType.RAISED_FROM_DEAD)) {
+        fieldModel.remove(players[i]);
+        pTeam.removePlayer(players[i]);
+      } else {
         PlayerResult playerResult = pGame.getGameResult().getPlayerResult(players[i]);
         if (players[i].getRecoveringInjury() != null) {
           fieldModel.setPlayerState(players[i], new PlayerState(PlayerState.MISSING));
@@ -378,21 +378,21 @@ public class ClientReplayer implements ActionListener {
         }
         playerResult.setCurrentSpps(pOldTeamResult.getPlayerResult(players[i]).getCurrentSpps());
         UtilBox.putPlayerIntoBox(pGame, players[i]);
-    	}
+      }
     }
   }
-  
+
   private void refreshUserInterface() {
     UserInterface userInterface = getClient().getUserInterface();
     userInterface.refresh();
     getClient().updateClientState();
     userInterface.getDialogManager().updateDialog();
   }
-  
+
   public boolean isReplayDirectionForward() {
     return fReplayDirectionForward;
   }
-  
+
   public void start() {
     setReplaySpeed(0);
     getClient().getUserInterface().getChat().showReplay(true);
@@ -400,7 +400,7 @@ public class ClientReplayer implements ActionListener {
     getReplayControl().showPause();
     getReplayControl().setActive(false);
   }
-  
+
   public void positionOnFirstCommand() {
     LogComponent log = getClient().getUserInterface().getLog();
     replayToCommand(log.findCommandNr(1));
@@ -414,7 +414,7 @@ public class ClientReplayer implements ActionListener {
       throw new FantasyFootballException(pE);
     }
   }
-  
+
   public void positionOnLastCommand() {
     fReplayDirectionForward = false;
     fLastReplayPosition = Math.max(getReplaySize() - 1, 0);
@@ -436,7 +436,7 @@ public class ClientReplayer implements ActionListener {
       throw new FantasyFootballException(pE);
     }
   }
-  
+
   public void stop() {
     pause();
     replayTo(getReplaySize(), ClientCommandHandlerMode.REPLAYING, null);
@@ -448,9 +448,9 @@ public class ClientReplayer implements ActionListener {
     getClient().getUserInterface().getChat().showReplay(false);
     fTimer.start();
   }
-  
+
   public int getFirstCommandNr() {
     return fFirstCommandNr;
   }
-  
+
 }

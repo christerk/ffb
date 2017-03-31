@@ -39,7 +39,7 @@ public class FantasyFootballClient implements IConnectionListener, IDialogCloseL
 
   public static final String CLIENT_VERSION = "1.2.8";
   public static final String SERVER_VERSION = "1.2.8";
-  
+
   private Game fGame;
   private UserInterface fUserInterface;
   private ClientCommunication fCommunication;
@@ -57,19 +57,19 @@ public class FantasyFootballClient implements IConnectionListener, IDialogCloseL
   private ClientReplayer fReplayer;
   private ClientParameters fParameters;
   private ClientMode fMode;
-  
+
   private Session fSession;
   private CommandEndpoint fCommandEndpoint;
-  
+
   private transient ClientData fClientData;
 
   public FantasyFootballClient(ClientParameters pParameters) throws IOException {
 
-  	fParameters = pParameters;
+    fParameters = pParameters;
     setMode(fParameters.getMode());
 
     fClientData = new ClientData();
-    
+
     loadProperties();
 
     fActionKeyBindings = new ActionKeyBindings(this);
@@ -77,7 +77,7 @@ public class FantasyFootballClient implements IConnectionListener, IDialogCloseL
     try {
       UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
       // UIManager.setLookAndFeel(NimbusLookAndFeel.class.getName());
-      UIManager.put("TabbedPane.contentBorderInsets", new Insets(0,0,0,0));      
+      UIManager.put("TabbedPane.contentBorderInsets", new Insets(0, 0, 0, 0));
     } catch (Exception all) {
       all.printStackTrace();
     }
@@ -85,22 +85,22 @@ public class FantasyFootballClient implements IConnectionListener, IDialogCloseL
     setGame(new Game());
     fStateFactory = new ClientStateFactory(this);
     fCommandHandlerFactory = new ClientCommandHandlerFactory(this);
-    
+
     fReplayer = new ClientReplayer(this);
 
     fUserInterface = new UserInterface(this);
     fUserInterface.refreshSideBars();
     fUserInterface.getScoreBar().refresh();
-    
+
     fCommandEndpoint = new CommandEndpoint(this);
-    
+
     fCommunication = new ClientCommunication(this);
     fCommunicationThread = new Thread(fCommunication);
     fCommunicationThread.start();
 
     fPingTimer = new Timer(true);
     fTurnTimer = new Timer(true);
-    
+
   }
 
   public UserInterface getUserInterface() {
@@ -139,9 +139,9 @@ public class FantasyFootballClient implements IConnectionListener, IDialogCloseL
     pDialog.hideDialog();
     startClient();
   }
-  
+
   public void startClient() {
-    
+
     getUserInterface().getStatusReport().reportVersion();
     try {
       getUserInterface().getStatusReport().reportConnecting(getServerHost(), getServerPort());
@@ -152,7 +152,7 @@ public class FantasyFootballClient implements IConnectionListener, IDialogCloseL
     boolean connectionEstablished = false;
 
     try {
-      
+
       URI uri = new URI("ws", null, getServerHost().getCanonicalHostName(), getServerPort(), "/command", null, null);
       WebSocketContainer container = ContainerProvider.getWebSocketContainer();
       container.setDefaultMaxSessionIdleTimeout(Integer.MAX_VALUE);
@@ -160,7 +160,7 @@ public class FantasyFootballClient implements IConnectionListener, IDialogCloseL
       fCommandEndpoint = new CommandEndpoint(this);
       fSession = container.connectToServer(fCommandEndpoint, uri);
       connectionEstablished = (fSession != null);
-      
+
     } catch (Exception pAnyException) {
       pAnyException.printStackTrace();
     }
@@ -171,11 +171,11 @@ public class FantasyFootballClient implements IConnectionListener, IDialogCloseL
       fTurnTimerTask = new TurnTimerTask(this);
       fTurnTimer.scheduleAtFixedRate(fTurnTimerTask, 0, 1000);
     }
-      
+
     updateClientState();
-    
+
   }
-  
+
   public void stopClient() {
     fPingTimer = null;
     fTurnTimer = null;
@@ -189,20 +189,20 @@ public class FantasyFootballClient implements IConnectionListener, IDialogCloseL
     getUserInterface().setVisible(false);
     System.exit(0);
   }
-  
+
   public String getProperty(String pProperty) {
     return fProperties.getProperty(pProperty);
   }
 
   public void setProperty(String pProperty, String pValue) {
-    
+
     if ((fProperties == null) || (pProperty == null) || (pValue == null)) {
       return;
     }
-    
+
     fProperties.setProperty(pProperty, pValue);
     // System.out.println("setProperty(" + pProperty + "=" + pValue + ")");
-    
+
     if (IClientProperty.CLIENT_PING_INTERVAL.equals(pProperty) && StringTool.isProvided(pValue)) {
       int pingInterval = Integer.parseInt(pValue);
       String pingMaxDelayProperty = getProperty(IClientProperty.CLIENT_PING_MAX_DELAY);
@@ -236,26 +236,26 @@ public class FantasyFootballClient implements IConnectionListener, IDialogCloseL
   public ClientCommandHandlerFactory getCommandHandlerFactory() {
     return fCommandHandlerFactory;
   }
-  
+
   public ClientPingTask getClientPingTask() {
     return fClientPingTask;
   }
-  
+
   public boolean isConnectionEstablished() {
     return fConnectionEstablished;
   }
-  
+
   public static void main(String[] args) {
 
     try {
-    	ClientParameters parameters = new ClientParameters();
-    	parameters.initFrom(args);
-    	if (!parameters.validate()) {
-    		System.out.println(ClientParameters.USAGE);
-    		return;
-    	}
-  		FantasyFootballClient client = new FantasyFootballClient(parameters);
-  		client.showUserInterface();
+      ClientParameters parameters = new ClientParameters();
+      parameters.initFrom(args);
+      if (!parameters.validate()) {
+        System.out.println(ClientParameters.USAGE);
+        return;
+      }
+      FantasyFootballClient client = new FantasyFootballClient(parameters);
+      client.showUserInterface();
     } catch (Exception all) {
       all.printStackTrace(System.err);
     }
@@ -265,48 +265,48 @@ public class FantasyFootballClient implements IConnectionListener, IDialogCloseL
   public ActionKeyBindings getActionKeyBindings() {
     return fActionKeyBindings;
   }
-  
+
   public ClientReplayer getReplayer() {
     return fReplayer;
   }
-  
+
   public void loadProperties() throws IOException {
     fProperties = new Properties();
     InputStream propertyInputStream = getClass().getResourceAsStream("/client.ini");
     fProperties.load(propertyInputStream);
     propertyInputStream.close();
   }
-  
+
   public ClientData getClientData() {
     return fClientData;
   }
 
   public ClientParameters getParameters() {
-		return fParameters;
-	}
-  
+    return fParameters;
+  }
+
   public int getServerPort() {
-  	if (getParameters().getPort() > 0) {
-  		return getParameters().getPort();
-  	} else {
-  		return Integer.parseInt(getProperty(IClientProperty.SERVER_PORT));
-  	}
+    if (getParameters().getPort() > 0) {
+      return getParameters().getPort();
+    } else {
+      return Integer.parseInt(getProperty(IClientProperty.SERVER_PORT));
+    }
   }
-  
+
   public InetAddress getServerHost() throws UnknownHostException {
-	  return InetAddress.getByName(getProperty(IClientProperty.SERVER_HOST));
+    return InetAddress.getByName(getProperty(IClientProperty.SERVER_HOST));
   }
-  
+
   public ClientMode getMode() {
-		return fMode;
-	}
-  
+    return fMode;
+  }
+
   public void setMode(ClientMode pMode) {
-		fMode = pMode;
-	}
-  
+    fMode = pMode;
+  }
+
   public CommandEndpoint getCommandEndpoint() {
     return fCommandEndpoint;
   }
-  
+
 }

@@ -21,18 +21,18 @@ import com.balancedbytes.games.ffb.net.commands.ServerCommandReplay;
  * @author Kalimar
  */
 public class ClientStateReplay extends ClientState implements IDialogCloseListener, IProgressListener {
-  
+
   private DialogProgressBar fDialogProgress;
   private List<ServerCommand> fReplayList;
-  
+
   protected ClientStateReplay(FantasyFootballClient pClient) {
     super(pClient);
   }
-  
+
   public ClientStateId getId() {
     return ClientStateId.REPLAY;
   }
-    
+
   public void enterState() {
     super.enterState();
     setSelectable(true);
@@ -52,7 +52,7 @@ public class ClientStateReplay extends ClientState implements IDialogCloseListen
       }
     }
   }
-  
+
   public void handleCommand(NetCommand pNetCommand) {
     ClientReplayer replayer = getClient().getReplayer();
     switch (pNetCommand.getId()) {
@@ -64,27 +64,22 @@ public class ClientStateReplay extends ClientState implements IDialogCloseListen
           updateProgress(fReplayList.size(), "Received Step %d of %d.");
         }
         if (fReplayList.size() >= replayCommand.getTotalNrOfCommands()) {
-          
-        	fDialogProgress.hideDialog();
-        	
-        	// signal server that we've received the full replay and the session can be closed
-        	if (ClientMode.REPLAY == getClient().getMode()) {
-        	  getClient().getCommunication().sendCloseSession();
-        	}
-
+          fDialogProgress.hideDialog();
+          // signal server that we've received the full replay and the session can be closed
+          if (ClientMode.REPLAY == getClient().getMode()) {
+            getClient().getCommunication().sendCloseSession();
+          }
           ServerCommand[] replayCommands = fReplayList.toArray(new ServerCommand[fReplayList.size()]);
           fDialogProgress = new DialogProgressBar(getClient(), "Initializing Replay");
           fDialogProgress.showDialog(this);
           replayer.init(replayCommands, this);
           fDialogProgress.hideDialog();
-          
           if (ClientMode.REPLAY == getClient().getMode()) {
             replayer.positionOnFirstCommand();
           } else {
             replayer.positionOnLastCommand();
           }
           replayer.getReplayControl().setActive(true);
-
         }
         break;
       case SERVER_GAME_STATE:
@@ -94,27 +89,27 @@ public class ClientStateReplay extends ClientState implements IDialogCloseListen
         }
         break;
       default:
-      	break;
+        break;
     }
   }
-  
+
   public void dialogClosed(IDialog pDialog) {
   }
-  
+
   public void updateProgress(int pProgress) {
     updateProgress(pProgress, "Initialized Frame %d of %d.");
   }
-  
+
   private void updateProgress(int pProgress, String pFormat) {
     String message = String.format(pFormat, pProgress, fDialogProgress.getMaximum());
     fDialogProgress.updateProgress(pProgress, message);
   }
-  
+
   public void initProgress(int pMinimum, int pMaximum) {
     fDialogProgress.setMinimum(pMinimum);
     fDialogProgress.setMaximum(pMaximum);
   }
-  
+
   public boolean actionKeyPressed(ActionKey pActionKey) {
     boolean actionHandled = false;
     if ((ClientMode.SPECTATOR == getClient().getMode()) && (pActionKey == ActionKey.MENU_REPLAY)) {
@@ -125,10 +120,10 @@ public class ClientStateReplay extends ClientState implements IDialogCloseListen
     }
     return actionHandled;
   }
-    
+
   private void showProgressDialog() {
     fDialogProgress = new DialogProgressBar(getClient(), "Receiving Replay");
     fDialogProgress.showDialog(this);
   }
-        
+
 }

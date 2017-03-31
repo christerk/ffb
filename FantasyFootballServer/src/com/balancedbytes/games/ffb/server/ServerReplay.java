@@ -12,76 +12,77 @@ import com.balancedbytes.games.ffb.net.commands.ServerCommand;
  * @author Kalimar
  */
 public class ServerReplay {
-  
-  private GameState fGameState;
+
+  private ServerCommand[] fServerCommands;
+  private long fGameId;
   private int fFromCommandNr;
   private int fToCommandNr;
   private Session fSession;
   private boolean fComplete;
-  private int fTotalNrOfCommands;
-  
-  public ServerReplay(GameState pGameState, int pToCommandNr, Session pSession) {
-    fGameState = pGameState;
-    fToCommandNr = pToCommandNr;
-    fSession = pSession;
+
+  public ServerReplay(GameState gameState, int toCommandNr, Session session) {
+    fToCommandNr = toCommandNr;
+    fSession = session;
+    if (gameState != null) {
+      fGameId = gameState.getId();
+      if (gameState.getGameLog() != null) {
+        fServerCommands = gameState.getGameLog().getServerCommands();
+      }
+    }
+    orderCommands();
   }
-  
+
   public void setFromCommandNr(int pFromCommandNr) {
     fFromCommandNr = pFromCommandNr;
   }
-  
+
   public int getFromCommandNr() {
     return fFromCommandNr;
   }
-  
+
   public int getToCommandNr() {
     return fToCommandNr;
   }
-  
-  public GameState getGameState() {
-    return fGameState;
+
+  public ServerCommand[] getServerCommands() {
+    return fServerCommands;
   }
   
+  public long getGameId() {
+    return fGameId;
+  }
+
   public Session getSession() {
     return fSession;
   }
-  
+
   public void setComplete(boolean pComplete) {
     fComplete = pComplete;
   }
-  
+
   public boolean isComplete() {
     return fComplete;
   }
 
-  public ServerCommand[] findRelevantCommandsInLog() {
-  	List<ServerCommand> replayCommands = new ArrayList<ServerCommand>();
-  	ServerCommand[] logCommands = getGameState().getGameLog().getServerCommands();
-  	for (ServerCommand serverCommand : logCommands) {
-  		if ((serverCommand.getCommandNr() >= getFromCommandNr()) && ((getToCommandNr() == 0) || (serverCommand.getCommandNr() < getToCommandNr()))) {
-  			replayCommands.add(serverCommand);
-  		}
-  	}
-    return replayCommands.toArray(new ServerCommand[replayCommands.size()]);
-  }
-
-  public int findTotalNrOfCommands() {
-    int nrOfCommands = 0;
-    ServerCommand[] logCommands = getGameState().getGameLog().getServerCommands();
-    for (ServerCommand serverCommand : logCommands) {
-      if ((serverCommand.getCommandNr() >= getFromCommandNr()) && ((getToCommandNr() == 0) || (serverCommand.getCommandNr() < getToCommandNr()))) {
-        nrOfCommands++;
+  private void orderCommands() {
+    if (fServerCommands != null) {
+      for (int i = 0; i < fServerCommands.length; i++) {
+        fServerCommands[i].setCommandNr(i + 1);
       }
     }
-    return nrOfCommands;
-  }
-
-  public void setTotalNrOfCommands(int pTotalNrOfCommands) {
-    fTotalNrOfCommands = pTotalNrOfCommands;
   }
   
-  public int getTotalNrOfCommands() {
-    return fTotalNrOfCommands;
+  
+  public ServerCommand[] findRelevantCommandsInLog() {
+    List<ServerCommand> replayCommands = new ArrayList<ServerCommand>();
+    if (fServerCommands != null) {
+      for (ServerCommand serverCommand : fServerCommands) {
+        if ((serverCommand.getCommandNr() >= getFromCommandNr()) && ((getToCommandNr() == 0) || (serverCommand.getCommandNr() < getToCommandNr()))) {
+          replayCommands.add(serverCommand);
+        }
+      }
+    }
+    return replayCommands.toArray(new ServerCommand[replayCommands.size()]);
   }
 
 }

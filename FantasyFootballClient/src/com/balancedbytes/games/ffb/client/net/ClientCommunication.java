@@ -95,7 +95,6 @@ public class ClientCommunication implements Runnable, INetCommandHandler {
   public void handleCommand(NetCommand pNetCommand) {
     synchronized (fCommandQueue) {
       fCommandQueue.add(pNetCommand);
-//      System.out.println("queued " + pNetCommand.toXml(-1));
       fCommandQueue.notify();
     }
   }
