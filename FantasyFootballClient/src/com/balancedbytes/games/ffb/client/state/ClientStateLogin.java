@@ -35,14 +35,14 @@ import com.balancedbytes.games.ffb.util.StringTool;
  * @author Kalimar
  */
 public class ClientStateLogin extends ClientState implements IDialogCloseListener {
-  
+
   private static final Pattern _PATTERN_VERSION = Pattern.compile("([0-9]+)\\.([0-9]+)\\.([0-9]+)");
-  
+
   // this state changes after synchronizing
-  
+
   private DialogInformation fWaitingDialog;
   private ServerStatus fLastServerError;
-  
+
   private String fGameName;
   private String fTeamHomeId;
   private String fTeamHomeName;
@@ -51,31 +51,31 @@ public class ClientStateLogin extends ClientState implements IDialogCloseListene
   private int fPasswordLength;
   private boolean fListGames;
   private long fGameId;
-  
+
   protected ClientStateLogin(FantasyFootballClient pClient) {
     super(pClient);
   }
-  
+
   public ClientStateId getId() {
     return ClientStateId.LOGIN;
   }
-  
+
   public void enterState() {
     super.enterState();
     setSelectable(false);
     setClickable(false);
     if (StringTool.isProvided(getClient().getParameters().getTeamId())) {
-    	fTeamHomeId = getClient().getParameters().getTeamId();
-    	fTeamHomeName = getClient().getParameters().getTeamName();
-    	fTeamAwayName = null;
+      fTeamHomeId = getClient().getParameters().getTeamId();
+      fTeamHomeName = getClient().getParameters().getTeamName();
+      fTeamAwayName = null;
     } else {
-    	fTeamHomeId = null;
-    	fTeamHomeName = getClient().getParameters().getTeamHome();
-    	fTeamAwayName = getClient().getParameters().getTeamAway();
+      fTeamHomeId = null;
+      fTeamHomeName = getClient().getParameters().getTeamHome();
+      fTeamAwayName = getClient().getParameters().getTeamAway();
     }
     getClient().getCommunication().sendRequestVersion();
   }
-  
+
   public void dialogClosed(IDialog pDialog) {
     pDialog.hideDialog();
     switch (pDialog.getId()) {
@@ -110,7 +110,7 @@ public class ClientStateLogin extends ClientState implements IDialogCloseListene
         DialogGameChoice gameChoiceDialog = (DialogGameChoice) pDialog;
         GameListEntry selectedGameEntry = gameChoiceDialog.getSelectedGameEntry();
         if (selectedGameEntry != null) {
-        	fGameId = selectedGameEntry.getGameId();
+          fGameId = selectedGameEntry.getGameId();
           fListGames = false;
           sendChallenge();
         } else {
@@ -118,10 +118,10 @@ public class ClientStateLogin extends ClientState implements IDialogCloseListene
         }
         break;
       default:
-      	break;
+        break;
     }
   }
-  
+
   public void handleCommand(NetCommand pNetCommand) {
     Game game = getClient().getGame();
     UserInterface userInterface = getClient().getUserInterface();
@@ -159,7 +159,8 @@ public class ClientStateLogin extends ClientState implements IDialogCloseListene
           DialogGameChoice gameChoiceDialog = new DialogGameChoice(getClient(), gameListCommand.getGameList());
           gameChoiceDialog.showDialog(this);
         } else {
-          DialogInformation noGamesDialog = new DialogInformation(getClient(), "No Open Games", "You do not have any open games to join.", DialogInformation.OK_DIALOG);
+          DialogInformation noGamesDialog = new DialogInformation(getClient(), "No Open Games", "You do not have any open games to join.",
+              DialogInformation.OK_DIALOG);
           noGamesDialog.showDialog(this);
         }
         break;
@@ -177,7 +178,7 @@ public class ClientStateLogin extends ClientState implements IDialogCloseListene
         break;
       case SERVER_PASSWORD_CHALLENGE:
         ServerCommandPasswordChallenge passwordChallengeCommand = (ServerCommandPasswordChallenge) pNetCommand;
-        String response = createResponse(passwordChallengeCommand.getChallenge()); 
+        String response = createResponse(passwordChallengeCommand.getChallenge());
         sendJoin(response);
         break;
       default:
@@ -185,9 +186,9 @@ public class ClientStateLogin extends ClientState implements IDialogCloseListene
         break;
     }
   }
-  
+
   private boolean checkVersion(String pServerVersion, String pClientVersion) {
-    
+
     if (checkVersionConflict(pClientVersion, FantasyFootballClient.CLIENT_VERSION)) {
       String[] messages = new String[3];
       messages[0] = "Server expects client version " + pClientVersion + " or newer.";
@@ -197,7 +198,7 @@ public class ClientStateLogin extends ClientState implements IDialogCloseListene
       fWaitingDialog.showDialog(this);
       return false;
     }
-    
+
     if (checkVersionConflict(FantasyFootballClient.SERVER_VERSION, pServerVersion)) {
       String[] messages = new String[3];
       messages[0] = "Client expects server version " + FantasyFootballClient.SERVER_VERSION + " or newer.";
@@ -207,13 +208,13 @@ public class ClientStateLogin extends ClientState implements IDialogCloseListene
       fWaitingDialog.showDialog(this);
       return false;
     }
-    
+
     return true;
-    
+
   }
-  
+
   private boolean checkVersionConflict(String pVersionExpected, String pVersionIs) {
-    
+
     int majorVersionExpected = 0;
     int minorVersionExpected = 0;
     int releaseExpected = 0;
@@ -223,7 +224,7 @@ public class ClientStateLogin extends ClientState implements IDialogCloseListene
       minorVersionExpected = Integer.parseInt(versionExpectedMatcher.group(2));
       releaseExpected = Integer.parseInt(versionExpectedMatcher.group(3));
     }
-    
+
     int majorVersionIs = 0;
     int minorVersionIs = 0;
     int releaseIs = 0;
@@ -233,11 +234,11 @@ public class ClientStateLogin extends ClientState implements IDialogCloseListene
       minorVersionIs = Integer.parseInt(versionIsMatcher.group(2));
       releaseIs = Integer.parseInt(versionIsMatcher.group(3));
     }
-    
+
     return ((majorVersionIs < majorVersionExpected) || (minorVersionIs < minorVersionExpected) || (releaseIs < releaseExpected));
 
   }
-  
+
   private String createResponse(String pChallenge) {
     String response;
     try {
@@ -249,48 +250,46 @@ public class ClientStateLogin extends ClientState implements IDialogCloseListene
     }
     return response;
   }
-  
+
   private void sendChallenge() {
-  	String authentication = getClient().getParameters().getAuthentication();
-  	if (StringTool.isProvided(authentication)) {
-  		sendJoin(authentication);
-  	} else {
-  		getClient().getCommunication().sendPasswordChallenge();
-  	}
+    String authentication = getClient().getParameters().getAuthentication();
+    if (StringTool.isProvided(authentication)) {
+      sendJoin(authentication);
+    } else {
+      getClient().getCommunication().sendPasswordChallenge();
+    }
   }
-  
+
   private void sendJoin(String pResponse) {
     if (fListGames) {
       getClient().getCommunication().sendJoin(
-        getClient().getParameters().getCoach(),
-        pResponse,
-        0,
-        null,
-        null,
-        null
-      );
+          getClient().getParameters().getCoach(),
+          pResponse,
+          0,
+          null,
+          null,
+          null);
 
     } else {
       getClient().getCommunication().sendJoin(
-        getClient().getParameters().getCoach(),
-        pResponse,
-        (fGameId > 0L) ? fGameId : getClient().getParameters().getGameId(),
-        fGameName,
-        fTeamHomeId,
-        fTeamHomeName
-      );
+          getClient().getParameters().getCoach(),
+          pResponse,
+          (fGameId > 0L) ? fGameId : getClient().getParameters().getGameId(),
+          fGameName,
+          fTeamHomeId,
+          fTeamHomeName);
     }
   }
-  
+
   private void showLoginDialog() {
-  	boolean hasGameId = (getClient().getParameters().getGameId() > 0);
-  	if (StringTool.isProvided(getClient().getParameters().getAuthentication())) {
-  		fPasswordLength = -1;
-  	}
-  	DialogLogin loginDialog = new DialogLogin(getClient(), fEncodedPassword, fPasswordLength, fTeamHomeName, fTeamAwayName, !hasGameId);
-  	if (hasGameId && (fPasswordLength < 0)) {
-  		dialogClosed(loginDialog);  // close dialog right away if no game name or password is necessary
-  	} else if (fLastServerError == ServerStatus.ERROR_GAME_IN_USE) {
+    boolean hasGameId = (getClient().getParameters().getGameId() > 0);
+    if (StringTool.isProvided(getClient().getParameters().getAuthentication())) {
+      fPasswordLength = -1;
+    }
+    DialogLogin loginDialog = new DialogLogin(getClient(), fEncodedPassword, fPasswordLength, fTeamHomeName, fTeamAwayName, !hasGameId);
+    if (hasGameId && (fPasswordLength < 0)) {
+      dialogClosed(loginDialog); // close dialog right away if no game name or password is necessary
+    } else if (fLastServerError == ServerStatus.ERROR_GAME_IN_USE) {
       loginDialog.showDialogWithError(this, DialogLogin.FIELD_GAME);
     } else if (fLastServerError == ServerStatus.ERROR_UNKNOWN_COACH) {
       loginDialog.showDialogWithError(this, DialogLogin.FIELD_COACH);
@@ -301,5 +300,5 @@ public class ClientStateLogin extends ClientState implements IDialogCloseListene
       loginDialog.showDialog(this);
     }
   }
-  
+
 }

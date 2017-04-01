@@ -37,8 +37,8 @@ import com.balancedbytes.games.ffb.util.StringTool;
  */
 public class FantasyFootballClient implements IConnectionListener, IDialogCloseListener {
 
-  public static final String CLIENT_VERSION = "1.2.8";
-  public static final String SERVER_VERSION = "1.2.8";
+  public static final String CLIENT_VERSION = "1.2.9";
+  public static final String SERVER_VERSION = "1.2.9";
 
   private Game fGame;
   private UserInterface fUserInterface;
