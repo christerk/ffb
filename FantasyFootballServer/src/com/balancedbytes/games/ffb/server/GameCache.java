@@ -125,9 +125,6 @@ public class GameCache {
     if (oldState != null) {
       return;
     }
-    if (GameStatus.PAUSED == gameState.getStatus()) {
-      gameState.setStatus(GameStatus.ACTIVE);
-    }
     if (GameStatus.STARTING != gameState.getStatus()) {
       UtilServerTimer.syncTime(gameState);
       UtilServerTimer.startTurnTimer(gameState);

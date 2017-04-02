@@ -425,10 +425,10 @@ public class AdminServlet extends HttpServlet {
       if (gameState.getStatus() != null) {
         UtilXml.addValueElement(handler, "status", gameState.getStatus().getName());
       }
-      if (game.getTeamHome() != null) {
+      if (StringTool.isProvided(game.getTeamHome())) {
         UtilXml.addValueElement(handler, "teamHome", game.getTeamHome().getName());
       }
-      if (game.getTeamAway() != null) {
+      if (StringTool.isProvided(game.getTeamAway())) {
         UtilXml.addValueElement(handler, "teamAway", game.getTeamAway().getName());
       }
       if (game.getStarted() != null) {

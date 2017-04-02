@@ -6,6 +6,7 @@ import java.util.List;
 import org.eclipse.jetty.websocket.api.Session;
 
 import com.balancedbytes.games.ffb.ClientMode;
+import com.balancedbytes.games.ffb.GameStatus;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.net.ServerStatus;
 import com.balancedbytes.games.ffb.option.GameOptionFactory;
@@ -100,9 +101,9 @@ public class UtilServerStartGame {
     }
   }
 
-  public static boolean startGame(GameState pGameState) {
-    Game game = pGameState.getGame();
-    FantasyFootballServer server = pGameState.getServer();
+  public static boolean startGame(GameState gameState) {
+    Game game = gameState.getGame();
+    FantasyFootballServer server = gameState.getServer();
     boolean ownershipOk = true;
     if (!game.isTesting() && UtilGameOption.isOptionEnabled(game, GameOptionId.CHECK_OWNERSHIP)) {
       if (!server.getSessionManager().isHomeCoach(game.getId(), game.getTeamHome().getCoach())) {
@@ -115,18 +116,21 @@ public class UtilServerStartGame {
       }
     }
     if (ownershipOk) {
-      addDefaultGameOptions(pGameState);
-      if ((game.getFinished() == null) && (pGameState.getStepStack().size() == 0)) {
-        SequenceGenerator.getInstance().pushStartGameSequence(pGameState);
+      addDefaultGameOptions(gameState);
+      if ((game.getFinished() == null) && (gameState.getStepStack().size() == 0)) {
+        SequenceGenerator.getInstance().pushStartGameSequence(gameState);
       } else {
         if (server.getMode() == ServerMode.FUMBBL) {
-          server.getRequestProcessor().add(new FumbblRequestResumeGamestate(pGameState));
+          server.getRequestProcessor().add(new FumbblRequestResumeGamestate(gameState));
         }
       }
+      if (GameStatus.PAUSED == gameState.getStatus()) {
+        gameState.setStatus(GameStatus.ACTIVE);
+      }
       DbPlayerMarkersQuery dbPlayerMarkersQuery = (DbPlayerMarkersQuery) server.getDbQueryFactory().getStatement(DbStatementId.PLAYER_MARKERS_QUERY);
-      dbPlayerMarkersQuery.execute(pGameState);
-      server.getCommunication().sendGameState(pGameState);
-      pGameState.fetchChanges(); // clear changes after sending the whole model
+      dbPlayerMarkersQuery.execute(gameState);
+      server.getCommunication().sendGameState(gameState);
+      gameState.fetchChanges(); // clear changes after sending the whole model
       return true;
     } else {
       return false;
