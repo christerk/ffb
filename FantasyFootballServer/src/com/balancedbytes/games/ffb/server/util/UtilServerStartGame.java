@@ -20,6 +20,7 @@ import com.balancedbytes.games.ffb.server.db.IDbStatementFactory;
 import com.balancedbytes.games.ffb.server.db.query.DbPlayerMarkersQuery;
 import com.balancedbytes.games.ffb.server.db.query.DbUserSettingsQuery;
 import com.balancedbytes.games.ffb.server.net.SessionManager;
+import com.balancedbytes.games.ffb.server.request.fumbbl.FumbblRequestResumeGamestate;
 import com.balancedbytes.games.ffb.server.step.SequenceGenerator;
 import com.balancedbytes.games.ffb.util.StringTool;
 
@@ -117,6 +118,10 @@ public class UtilServerStartGame {
       addDefaultGameOptions(pGameState);
       if ((game.getFinished() == null) && (pGameState.getStepStack().size() == 0)) {
         SequenceGenerator.getInstance().pushStartGameSequence(pGameState);
+      } else {
+        if (server.getMode() == ServerMode.FUMBBL) {
+          server.getRequestProcessor().add(new FumbblRequestResumeGamestate(pGameState));
+        }
       }
       DbPlayerMarkersQuery dbPlayerMarkersQuery = (DbPlayerMarkersQuery) server.getDbQueryFactory().getStatement(DbStatementId.PLAYER_MARKERS_QUERY);
       dbPlayerMarkersQuery.execute(pGameState);

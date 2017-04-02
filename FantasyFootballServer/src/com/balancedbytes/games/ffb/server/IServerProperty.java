@@ -29,6 +29,7 @@ public interface IServerProperty {
   String FUMBBL_ROSTER_TEAM = "fumbbl.roster.team";
   String FUMBBL_GAMESTATE_CHECK = "fumbbl.gamestate.check";
   String FUMBBL_GAMESTATE_CREATE = "fumbbl.gamestate.create";
+  String FUMBBL_GAMESTATE_RESUME = "fumbbl.gamestate.resume";
   String FUMBBL_GAMESTATE_UPDATE = "fumbbl.gamestate.update";
   String FUMBBL_GAMESTATE_REMOVE = "fumbbl.gamestate.remove";
   String FUMBBL_RESULT = "fumbbl.result";
@@ -39,6 +40,7 @@ public interface IServerProperty {
   String ADMIN_URL_LIST_ID = "admin.url.list.id";
   String ADMIN_URL_LIST_STATUS = "admin.url.list.status";
   String ADMIN_URL_BACKUP = "admin.url.backup";
+  String ADMIN_URL_CACHE = "admin.url.cache";
   String ADMIN_URL_CLOSE = "admin.url.close";
   String ADMIN_URL_CONCEDE = "admin.url.concede";
   String ADMIN_URL_SHUTDOWN = "admin.url.shutdown";

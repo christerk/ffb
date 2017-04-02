@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.xml.transform.sax.TransformerHandler;
 
+import org.eclipse.jetty.websocket.api.Session;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributesImpl;
 
@@ -22,7 +23,9 @@ import com.balancedbytes.games.ffb.FantasyFootballException;
 import com.balancedbytes.games.ffb.GameStatus;
 import com.balancedbytes.games.ffb.GameStatusFactory;
 import com.balancedbytes.games.ffb.PasswordChallenge;
+import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.server.FantasyFootballServer;
+import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.IGameIdListener;
 import com.balancedbytes.games.ffb.server.IServerProperty;
 import com.balancedbytes.games.ffb.server.db.DbStatementId;
@@ -34,6 +37,7 @@ import com.balancedbytes.games.ffb.server.net.commands.InternalServerCommandSche
 import com.balancedbytes.games.ffb.server.net.commands.InternalServerCommandUploadGame;
 import com.balancedbytes.games.ffb.server.request.ServerRequestSaveReplay;
 import com.balancedbytes.games.ffb.util.ArrayTool;
+import com.balancedbytes.games.ffb.util.DateTool;
 import com.balancedbytes.games.ffb.util.StringTool;
 import com.balancedbytes.games.ffb.xml.UtilXml;
 
@@ -46,6 +50,7 @@ public class AdminServlet extends HttpServlet {
 
   public static final String BACKUP = "backup";
   public static final String BLOCK = "block";
+  public static final String CACHE = "cache";
   public static final String CHALLENGE = "challenge";
   public static final String CLOSE = "close";
   public static final String CONCEDE = "concede";
@@ -147,6 +152,8 @@ public class AdminServlet extends HttpServlet {
           isOk = handleBackup(handler, parameters);
         } else if (BLOCK.equals(command)) {
           isOk = handleBlock(handler, true);
+        } else if (CACHE.equals(command)) {
+          isOk = handleCache(handler);
         } else if (UNBLOCK.equals(command)) {
           isOk = handleBlock(handler, false);
         } else if (LOGLEVEL.equals(command)) {
@@ -401,6 +408,44 @@ public class AdminServlet extends HttpServlet {
     } else {
       UtilXml.addEmptyElement(pHandler, _XML_TAG_LIST, attributes);
     }
+    return isOk;
+  }
+
+  private boolean handleCache(TransformerHandler handler) {
+    boolean isOk = true;
+    GameState[] gameStates = getServer().getGameCache().allGameStates();
+    AttributesImpl cacheAttributes = new AttributesImpl();
+    UtilXml.addAttribute(cacheAttributes, "size", gameStates.length);
+    UtilXml.startElement(handler, "cache", cacheAttributes);
+    for (GameState gameState : gameStates) {
+      Game game = gameState.getGame();
+      AttributesImpl gameAttributes = new AttributesImpl();
+      UtilXml.addAttribute(gameAttributes, "id", gameState.getId());
+      UtilXml.startElement(handler, "game", gameAttributes);
+      if (gameState.getStatus() != null) {
+        UtilXml.addValueElement(handler, "status", gameState.getStatus().getName());
+      }
+      if (game.getTeamHome() != null) {
+        UtilXml.addValueElement(handler, "teamHome", game.getTeamHome().getName());
+      }
+      if (game.getTeamAway() != null) {
+        UtilXml.addValueElement(handler, "teamAway", game.getTeamAway().getName());
+      }
+      if (game.getStarted() != null) {
+        UtilXml.addValueElement(handler, "started", DateTool.formatTimestamp(game.getStarted()));
+      }
+      if (game.getFinished() != null) {
+        UtilXml.addValueElement(handler, "finished", DateTool.formatTimestamp(game.getFinished()));
+      }
+      Session[] allSessions = getServer().getSessionManager().getSessionsForGameId(game.getId());
+      Session[] spectatorSessions = getServer().getSessionManager().getSessionsOfSpectators(game.getId());
+      AttributesImpl connectionAttributes = new AttributesImpl();
+      UtilXml.addAttribute(connectionAttributes, "players", allSessions.length - spectatorSessions.length);
+      UtilXml.addAttribute(connectionAttributes, "spectators", spectatorSessions.length);
+      UtilXml.addEmptyElement(handler, "connections", connectionAttributes);
+      UtilXml.endElement(handler, "game");
+    }
+    UtilXml.endElement(handler, "cache");
     return isOk;
   }
 

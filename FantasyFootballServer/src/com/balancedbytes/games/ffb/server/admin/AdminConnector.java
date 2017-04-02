@@ -25,6 +25,7 @@ public class AdminConnector {
   private static final String _USAGE =
     "java com.balancedbytes.games.ffb.server.admin.AdminConnector backup <gameId>\n"
     + "java com.balancedbytes.games.ffb.server.admin.AdminConnector block\n"
+    + "java com.balancedbytes.games.ffb.server.admin.AdminConnector cache\n"
   	+ "java com.balancedbytes.games.ffb.server.admin.AdminConnector close <gameId>\n"
     + "java com.balancedbytes.games.ffb.server.admin.AdminConnector concede <gameId> <teamId>\n"
     + "java com.balancedbytes.games.ffb.server.admin.AdminConnector delete <gameId>\n"
@@ -131,6 +132,13 @@ public class AdminConnector {
         System.out.println(adminListUrl);
         String adminListXml = UtilServerHttpClient.fetchPage(adminListUrl);
         System.out.println(adminListXml);
+      }
+
+      if (AdminServlet.CACHE.equals(args[0])) {
+        String cacheUrl = StringTool.bind(serverProperties.getProperty(IServerProperty.ADMIN_URL_CACHE), response, args[1]);
+        System.out.println(cacheUrl);
+        String cacheXml = UtilServerHttpClient.fetchPage(cacheUrl);
+        System.out.println(cacheXml);
       }
 
       if (AdminServlet.CLOSE.equals(args[0])) {
