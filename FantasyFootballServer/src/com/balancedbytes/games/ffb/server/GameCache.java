@@ -43,7 +43,6 @@ import com.balancedbytes.games.ffb.server.db.update.DbGamesInfoUpdateParameter;
 import com.balancedbytes.games.ffb.server.db.update.DbGamesSerializedUpdateParameter;
 import com.balancedbytes.games.ffb.server.net.SessionManager;
 import com.balancedbytes.games.ffb.server.request.fumbbl.FumbblRequestRemoveGamestate;
-import com.balancedbytes.games.ffb.server.util.UtilServerTimer;
 import com.balancedbytes.games.ffb.util.ArrayTool;
 import com.balancedbytes.games.ffb.util.DateTool;
 import com.balancedbytes.games.ffb.util.StringTool;
@@ -124,10 +123,6 @@ public class GameCache {
     GameState oldState = fGameStateById.put(gameState.getId(), gameState);
     if (oldState != null) {
       return;
-    }
-    if (GameStatus.STARTING != gameState.getStatus()) {
-      UtilServerTimer.syncTime(gameState);
-      UtilServerTimer.startTurnTimer(gameState);
     }
     // log game cache size
     FantasyFootballServer server = gameState.getServer();

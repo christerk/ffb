@@ -127,6 +127,8 @@ public class UtilServerStartGame {
       if (GameStatus.PAUSED == gameState.getStatus()) {
         gameState.setStatus(GameStatus.ACTIVE);
       }
+      UtilServerTimer.syncTime(gameState);
+      UtilServerTimer.startTurnTimer(gameState);
       DbPlayerMarkersQuery dbPlayerMarkersQuery = (DbPlayerMarkersQuery) server.getDbQueryFactory().getStatement(DbStatementId.PLAYER_MARKERS_QUERY);
       dbPlayerMarkersQuery.execute(gameState);
       server.getCommunication().sendGameState(gameState);
