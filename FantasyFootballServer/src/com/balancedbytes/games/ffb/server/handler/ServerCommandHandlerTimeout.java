@@ -24,7 +24,7 @@ public class ServerCommandHandlerTimeout extends ServerCommandHandler {
     return NetCommandId.CLIENT_TIMEOUT_POSSIBLE;
   }
 
-  public void handleCommand(ReceivedCommand pReceivedCommand) {
+  public boolean handleCommand(ReceivedCommand pReceivedCommand) {
     
     long gameId = getServer().getSessionManager().getGameIdForSession(pReceivedCommand.getSession());
     GameState gameState = getServer().getGameCache().getGameStateById(gameId);
@@ -38,6 +38,8 @@ public class ServerCommandHandlerTimeout extends ServerCommandHandler {
         UtilServerGame.syncGameModel(gameState, null, null, SoundId.WHISTLE);
       }
     }
+    
+    return true;
     
   }
 

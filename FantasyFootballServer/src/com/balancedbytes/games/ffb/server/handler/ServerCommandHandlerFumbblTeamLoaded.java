@@ -22,15 +22,16 @@ public class ServerCommandHandlerFumbblTeamLoaded extends ServerCommandHandler {
     return NetCommandId.INTERNAL_SERVER_FUMBBL_TEAM_LOADED;
   }
 
-  public void handleCommand(ReceivedCommand pReceivedCommand) {
+  public boolean handleCommand(ReceivedCommand pReceivedCommand) {
     InternalServerCommandFumbblTeamLoaded teamLoadedCommand = (InternalServerCommandFumbblTeamLoaded) pReceivedCommand.getCommand();
     GameState gameState = getServer().getGameCache().getGameStateById(teamLoadedCommand.getGameId());
     if (gameState == null) {
-    	return;
+    	return false;
     }
     if (UtilServerStartGame.joinGameAsPlayerAndCheckIfReadyToStart(gameState, pReceivedCommand.getSession(), teamLoadedCommand.getCoach(), teamLoadedCommand.isHomeTeam())) {
       getServer().getRequestProcessor().add(new FumbblRequestCheckGamestate(gameState));
     }
+    return true;
   }
 
 }

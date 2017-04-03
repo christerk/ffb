@@ -1,12 +1,11 @@
 package com.balancedbytes.games.ffb.server;
 
-import java.util.Collections;
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 
 import com.balancedbytes.games.ffb.server.db.DbTransaction;
-import com.balancedbytes.games.ffb.server.db.IDbUpdateParameter;
-import com.balancedbytes.games.ffb.server.db.IDbUpdateWithGameState;
 
 /**
  * 
@@ -16,67 +15,51 @@ public class DbUpdater implements Runnable {
 
   private FantasyFootballServer fServer;
   private boolean fStopped;
-  private List<DbTransaction> fUpdateQueue;
+  private final BlockingQueue<DbTransaction> fUpdateQueue;
 
   public DbUpdater(FantasyFootballServer pServer) {
     fServer = pServer;
-    fUpdateQueue = Collections.synchronizedList(new LinkedList<DbTransaction>());
+    fUpdateQueue = new LinkedBlockingQueue<DbTransaction>();
   }
 
-  public void add(DbTransaction pDbTransaction) {
-    synchronized (fUpdateQueue) {
-      fUpdateQueue.add(pDbTransaction);
-      fUpdateQueue.notify();
+  public boolean add(DbTransaction dbTransaction) {
+    if (fStopped) {
+      return false;
     }
+    return fUpdateQueue.offer(dbTransaction);
   }
 
+  @Override
   public void run() {
     try {
-      while (true) {
-        DbTransaction dbTransaction = null;
-        synchronized (fUpdateQueue) {
-          try {
-            while (fUpdateQueue.isEmpty() && !fStopped) {
-              fUpdateQueue.wait();
-            }
-          } catch (InterruptedException e) {
-            break;
-          }
-          if (fStopped) {
-            break;
-          }
-          dbTransaction = fUpdateQueue.remove(0);
+      while (!fStopped) {
+        DbTransaction update = null;
+        try {
+          update = fUpdateQueue.take();
+        } catch (InterruptedException pInterruptedException) {
+          // continue with dbTransaction == null
         }
-        dbTransaction.executeUpdate(getServer());
+        handleUpdateInternal(update);
       }
     } catch (Exception pException) {
       getServer().getDebugLog().log(pException);
       System.exit(99);
     }
   }
-
-  public void stop() {
-    fStopped = true;
-    synchronized (fUpdateQueue) {
-      fUpdateQueue.notifyAll();
-    }
-  }
   
-  public GameState findGameState(long gameId) {
-    synchronized (fUpdateQueue) {
-      // find latest update first
-      for (int i = fUpdateQueue.size() - 1; i >= 0; i--) {
-        DbTransaction transaction = fUpdateQueue.get(i);
-        for (IDbUpdateParameter parameter : transaction.getDbUpdateParameters()) {
-          if (parameter instanceof IDbUpdateWithGameState) {
-            IDbUpdateWithGameState update = (IDbUpdateWithGameState) parameter;
-            if (update.getId() == gameId) {
-              return update.getGameState();
-            }
-          }
-        }
-      }
-      return null;
+  private void handleUpdateInternal(DbTransaction update) {
+    if (update == null) {
+      return;
+    }
+    update.executeUpdate(getServer());
+  }
+
+  public void shutdown() {
+    fStopped = true;
+    List<DbTransaction> updates = new ArrayList<DbTransaction>(); 
+    fUpdateQueue.drainTo(updates);
+    for (DbTransaction update : updates) {
+      handleUpdateInternal(update);
     }
   }
 

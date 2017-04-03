@@ -21,7 +21,7 @@ public class ServerCommandHandlerRequestVersion extends ServerCommandHandler {
     return NetCommandId.CLIENT_REQUEST_VERSION;
   }
 
-  public void handleCommand(ReceivedCommand pReceivedCommand) {
+  public boolean handleCommand(ReceivedCommand pReceivedCommand) {
     String[] properties = getServer().getProperties();
     List<String> clientProperties = new ArrayList<String>();
     List<String> clientPropertyValues = new ArrayList<String>();
@@ -38,6 +38,7 @@ public class ServerCommandHandlerRequestVersion extends ServerCommandHandler {
       clientProperties.toArray(new String[clientProperties.size()]),
       clientPropertyValues.toArray(new String[clientPropertyValues.size()])
     );
+    return true;
   }
 
 }

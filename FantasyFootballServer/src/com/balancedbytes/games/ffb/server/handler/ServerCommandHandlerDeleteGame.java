@@ -20,10 +20,11 @@ public class ServerCommandHandlerDeleteGame extends ServerCommandHandler {
     return NetCommandId.INTERNAL_SERVER_DELETE_GAME;
   }
 
-  public void handleCommand(ReceivedCommand pReceivedCommand) {
+  public boolean handleCommand(ReceivedCommand pReceivedCommand) {
     InternalServerCommandDeleteGame deleteGameCommand = (InternalServerCommandDeleteGame) pReceivedCommand.getCommand();
     getServer().getGameCache().queueDbDelete(deleteGameCommand.getGameId(), deleteGameCommand.isWithGamesInfo());
     getServer().getDebugLog().log(IServerLogLevel.WARN, deleteGameCommand.getGameId(), "GameState deleted from db");
+    return true;
   }
   
 }

@@ -31,7 +31,7 @@ public class ServerCommandHandlerJoin extends ServerCommandHandler {
     return NetCommandId.CLIENT_JOIN;
   }
 
-  public void handleCommand(ReceivedCommand pReceivedCommand) {
+  public boolean handleCommand(ReceivedCommand pReceivedCommand) {
     
     ClientCommandJoin joinCommand = (ClientCommandJoin) pReceivedCommand.getCommand();
     ServerCommunication communication = getServer().getCommunication();
@@ -87,6 +87,8 @@ public class ServerCommandHandlerJoin extends ServerCommandHandler {
       communication.sendGameList(pReceivedCommand.getSession(), gameList);
   	
     }
+    
+    return true;
     
   }
     

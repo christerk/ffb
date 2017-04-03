@@ -28,7 +28,7 @@ public class ServerCommandHandlerSetMarker extends ServerCommandHandler {
     return NetCommandId.CLIENT_SET_MARKER;
   }
 
-  public void handleCommand(ReceivedCommand pReceivedCommand) {
+  public boolean handleCommand(ReceivedCommand pReceivedCommand) {
 
     ClientCommandSetMarker setMarkerCommand = (ClientCommandSetMarker) pReceivedCommand.getCommand();
     
@@ -86,6 +86,8 @@ public class ServerCommandHandlerSetMarker extends ServerCommandHandler {
       UtilServerGame.syncGameModel(gameState, null, null, null);
       
     }
+    
+    return true;
     
   }
       

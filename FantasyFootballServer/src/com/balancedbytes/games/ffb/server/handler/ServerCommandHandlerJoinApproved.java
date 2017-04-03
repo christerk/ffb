@@ -42,14 +42,14 @@ public class ServerCommandHandlerJoinApproved extends ServerCommandHandler {
     return NetCommandId.INTERNAL_SERVER_JOIN_APPROVED;
   }
 
-  public void handleCommand(ReceivedCommand pReceivedCommand) {
+  public boolean handleCommand(ReceivedCommand receivedCommand) {
     
-    InternalServerCommandJoinApproved joinApprovedCommand = (InternalServerCommandJoinApproved) pReceivedCommand.getCommand();
+    InternalServerCommandJoinApproved joinApprovedCommand = (InternalServerCommandJoinApproved) receivedCommand.getCommand();
     ServerCommunication communication = getServer().getCommunication();
     SessionManager sessionManager = getServer().getSessionManager();
     GameCache gameCache = getServer().getGameCache();
     GameState gameState = null;
-    Session session = pReceivedCommand.getSession();
+    Session session = receivedCommand.getSession();
 
     if (joinApprovedCommand.getGameId() > 0) {
       gameState = loadGameStateById(joinApprovedCommand, session);
@@ -107,6 +107,8 @@ public class ServerCommandHandlerJoinApproved extends ServerCommandHandler {
       }
       
     }
+    
+    return true;
     
   }
   

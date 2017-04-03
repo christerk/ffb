@@ -22,7 +22,7 @@ public class ServerCommandHandlerUserSettings extends ServerCommandHandler {
     return NetCommandId.CLIENT_USER_SETTINGS;
   }
 
-  public void handleCommand(ReceivedCommand pReceivedCommand) {
+  public boolean handleCommand(ReceivedCommand pReceivedCommand) {
     
     ClientCommandUserSettings userSettingsCommand = (ClientCommandUserSettings) pReceivedCommand.getCommand();        
     String coach = getServer().getSessionManager().getCoachForSession(pReceivedCommand.getSession());
@@ -43,6 +43,8 @@ public class ServerCommandHandlerUserSettings extends ServerCommandHandler {
       getServer().getDbUpdater().add(dbTransaction);
     
     }
+    
+    return true;
     
   }
 

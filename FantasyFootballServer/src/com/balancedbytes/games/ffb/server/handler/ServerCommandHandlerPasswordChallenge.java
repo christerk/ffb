@@ -22,7 +22,7 @@ public class ServerCommandHandlerPasswordChallenge extends ServerCommandHandler 
     return NetCommandId.CLIENT_PASSWORD_CHALLENGE;
   }
 
-  public void handleCommand(ReceivedCommand pReceivedCommand) {
+  public boolean handleCommand(ReceivedCommand pReceivedCommand) {
     
     ClientCommandPasswordChallenge passwordChallengeCommand = (ClientCommandPasswordChallenge) pReceivedCommand.getCommand();
 
@@ -32,6 +32,8 @@ public class ServerCommandHandlerPasswordChallenge extends ServerCommandHandler 
     } else {
       getServer().getCommunication().sendPasswordChallenge(pReceivedCommand.getSession(), challenge);
     }
+    
+    return true;
     
   }
 

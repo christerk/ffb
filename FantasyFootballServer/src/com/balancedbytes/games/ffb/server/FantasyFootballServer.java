@@ -210,25 +210,26 @@ public class FantasyFootballServer {
   }
 
   public void stop(int pStatus) {
+    setBlockingNewGames(true);
     fPingTimer = null;
     if (fReplayer != null) {
       fReplayer.stop();
     }
+    if (getGameCache() != null) {
+      getGameCache().closeAllGames();
+      getDebugLog().log(IServerLogLevel.ERROR, "All games closed.");
+    }
+    if (getRequestProcessor() != null) {
+      getRequestProcessor().shutdown();
+      getDebugLog().log(IServerLogLevel.ERROR, "RequestProcessor shut down.");
+    }
     if (getCommunication() != null) {
-      getCommunication().stop();
-      try {
-        fCommunicationThread.join();
-      } catch (InterruptedException ie) {
-      }
-      getDebugLog().log(IServerLogLevel.ERROR, "Communication Thread stopped.");
+      getCommunication().shutdown();
+      getDebugLog().log(IServerLogLevel.ERROR, "Communication shut down.");
     }
     if (getDbUpdater() != null) {
-      getDbUpdater().stop();
-      try {
-        fPersistenceUpdaterThread.join();
-      } catch (InterruptedException ie) {
-      }
-      getDebugLog().log(IServerLogLevel.ERROR, "PersistenceUpdater Thread stopped.");
+      getDbUpdater().shutdown();
+      getDebugLog().log(IServerLogLevel.ERROR, "DbUpdater shut down.");
     }
     if (getDbQueryFactory() != null) {
       try {

@@ -8,6 +8,6 @@ import com.balancedbytes.games.ffb.server.net.ReceivedCommand;
  */
 public interface IReceivedCommandHandler {
   
-  public void handleCommand(ReceivedCommand pReceivedCommand);
+  public boolean handleCommand(ReceivedCommand receivedCommand);
 
 }

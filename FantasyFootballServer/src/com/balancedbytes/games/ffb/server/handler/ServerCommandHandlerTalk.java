@@ -64,7 +64,7 @@ public class ServerCommandHandlerTalk extends ServerCommandHandler {
     return NetCommandId.CLIENT_TALK;
   }
 
-  public void handleCommand(ReceivedCommand receivedCommand) {
+  public boolean handleCommand(ReceivedCommand receivedCommand) {
 
     ClientCommandTalk talkCommand = (ClientCommandTalk) receivedCommand.getCommand();
     SessionManager sessionManager = getServer().getSessionManager();
@@ -145,6 +145,8 @@ public class ServerCommandHandlerTalk extends ServerCommandHandler {
       }
 
     }
+    
+    return true;
 
   }
   

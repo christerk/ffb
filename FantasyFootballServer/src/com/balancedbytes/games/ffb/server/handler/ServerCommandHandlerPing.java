@@ -19,7 +19,7 @@ public class ServerCommandHandlerPing extends ServerCommandHandler {
     return NetCommandId.CLIENT_PING;
   }
 
-  public void handleCommand(ReceivedCommand pReceivedCommand) {
+  public boolean handleCommand(ReceivedCommand pReceivedCommand) {
     
     ClientCommandPing pingCommand = (ClientCommandPing) pReceivedCommand.getCommand();
 
@@ -28,6 +28,8 @@ public class ServerCommandHandlerPing extends ServerCommandHandler {
     if (pingCommand.hasEntropy()) {
       getServer().getFortuna().addEntropy(pingCommand.getEntropy());
     }
+    
+    return true;
     
   }
 

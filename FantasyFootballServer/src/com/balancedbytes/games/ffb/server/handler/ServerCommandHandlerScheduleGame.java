@@ -25,7 +25,7 @@ public class ServerCommandHandlerScheduleGame extends ServerCommandHandler {
     return NetCommandId.INTERNAL_SERVER_SCHEDULE_GAME;
   }
 
-  public void handleCommand(ReceivedCommand pReceivedCommand) {
+  public boolean handleCommand(ReceivedCommand pReceivedCommand) {
     InternalServerCommandScheduleGame scheduleGameCommand = (InternalServerCommandScheduleGame) pReceivedCommand.getCommand();
     GameCache gameCache = getServer().getGameCache();
     GameState gameState = gameCache.createGameState(GameStartMode.SCHEDULE_GAME);
@@ -43,6 +43,7 @@ public class ServerCommandHandlerScheduleGame extends ServerCommandHandler {
     if (scheduleGameCommand.getGameIdListener() != null) {
       scheduleGameCommand.getGameIdListener().setGameId(gameState.getId());
     }
+    return true;
   }
   
 }

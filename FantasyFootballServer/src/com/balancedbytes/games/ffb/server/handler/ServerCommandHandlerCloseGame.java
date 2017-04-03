@@ -19,9 +19,10 @@ public class ServerCommandHandlerCloseGame extends ServerCommandHandler {
     return NetCommandId.INTERNAL_SERVER_CLOSE_GAME;
   }
 
-  public void handleCommand(ReceivedCommand pReceivedCommand) {
+  public boolean handleCommand(ReceivedCommand pReceivedCommand) {
     InternalServerCommandCloseGame closeGameCommand = (InternalServerCommandCloseGame) pReceivedCommand.getCommand();
     getServer().getGameCache().closeGame(closeGameCommand.getGameId());
+    return true;
   }
   
 }

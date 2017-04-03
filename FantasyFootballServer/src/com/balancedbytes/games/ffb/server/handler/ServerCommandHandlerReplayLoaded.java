@@ -23,7 +23,7 @@ public class ServerCommandHandlerReplayLoaded extends ServerCommandHandler {
     return NetCommandId.INTERNAL_SERVER_REPLAY_LOADED;
   }
 
-  public void handleCommand(ReceivedCommand pReceivedCommand) {
+  public boolean handleCommand(ReceivedCommand pReceivedCommand) {
 
     InternalServerCommandReplayLoaded replayCommand = (InternalServerCommandReplayLoaded) pReceivedCommand.getCommand();
     
@@ -36,6 +36,8 @@ public class ServerCommandHandlerReplayLoaded extends ServerCommandHandler {
         getServer().getCommunication().sendStatus(pReceivedCommand.getSession(), ServerStatus.ERROR_UNKNOWN_GAME_ID, null);
       }
     }
+    
+    return true;
     
   }
   

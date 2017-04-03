@@ -25,7 +25,7 @@ public class ServerCommandHandlerReplay extends ServerCommandHandler {
     return NetCommandId.CLIENT_REPLAY;
   }
 
-  public void handleCommand(ReceivedCommand pReceivedCommand) {
+  public boolean handleCommand(ReceivedCommand pReceivedCommand) {
 
     ClientCommandReplay replayCommand = (ClientCommandReplay) pReceivedCommand.getCommand();
     Session session = pReceivedCommand.getSession();
@@ -39,7 +39,7 @@ public class ServerCommandHandlerReplay extends ServerCommandHandler {
     }
     
     if (gameId == 0) {
-      return;
+      return false;
     }
     
     // client signals that it has received the complete replay - socket can be closed
@@ -67,6 +67,8 @@ public class ServerCommandHandlerReplay extends ServerCommandHandler {
       // game has been moved out of the db - request it from the backup service
       getServer().getRequestProcessor().add(new ServerRequestLoadReplay(replayCommand.getGameId(), replayToCommandNr, session, ServerRequestLoadReplay.LOAD_GAME));
     }
+    
+    return true;
     
   }
     

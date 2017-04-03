@@ -25,7 +25,7 @@ public class ServerCommandHandlerUploadGame extends ServerCommandHandler {
     return NetCommandId.INTERNAL_SERVER_UPLOAD_GAME;
   }
 
-  public void handleCommand(ReceivedCommand receivedCommand) {
+  public boolean handleCommand(ReceivedCommand receivedCommand) {
     InternalServerCommandUploadGame uploadGameCommand = (InternalServerCommandUploadGame) receivedCommand.getCommand();
     GameCache gameCache = getServer().getGameCache();
     GameState gameState = gameCache.getGameStateById(uploadGameCommand.getGameId());
@@ -45,6 +45,7 @@ public class ServerCommandHandlerUploadGame extends ServerCommandHandler {
       SequenceGenerator.getInstance().pushEndGameSequence(gameState, true);
       gameState.findNextStep(null);
     }
+    return true;
   }
 
 }

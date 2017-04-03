@@ -18,8 +18,9 @@ public class ServerCommandHandlerCloseSession extends ServerCommandHandler {
     return NetCommandId.CLIENT_CLOSE_SESSION;
   }
 
-  public void handleCommand(ReceivedCommand pReceivedCommand) {
+  public boolean handleCommand(ReceivedCommand pReceivedCommand) {
     getServer().getCommunication().close(pReceivedCommand.getSession());
+    return true;
   }
   
 }

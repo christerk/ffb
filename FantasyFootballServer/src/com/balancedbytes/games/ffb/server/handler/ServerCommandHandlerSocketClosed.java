@@ -27,7 +27,7 @@ public class ServerCommandHandlerSocketClosed extends ServerCommandHandler {
     return NetCommandId.INTERNAL_SERVER_SOCKET_CLOSED;
   }
 
-  public void handleCommand(ReceivedCommand pReceivedCommand) {
+  public boolean handleCommand(ReceivedCommand pReceivedCommand) {
 
     SessionManager sessionManager = getServer().getSessionManager();
     String coach = sessionManager.getCoachForSession(pReceivedCommand.getSession());
@@ -70,6 +70,8 @@ public class ServerCommandHandlerSocketClosed extends ServerCommandHandler {
       }
       
     }
+    
+    return true;
 
   }
 
