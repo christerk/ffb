@@ -49,7 +49,7 @@ public class FumbblRequestResumeGamestate extends ServerRequest {
           spectators
         }
       ));
-      server.getDebugLog().log(IServerLogLevel.WARN, DebugLog.FUMBBL_REQUEST, getRequestUrl());
+      server.getDebugLog().log(IServerLogLevel.WARN, game.getId(), DebugLog.FUMBBL_REQUEST, getRequestUrl());
       FumbblGameState fumbblGameState = UtilFumbblRequest.processFumbblGameStateRequest(server, getRequestUrl());
       if ((fumbblGameState == null) || !fumbblGameState.isOk()) {
         UtilFumbblRequest.reportFumbblError(getGameState(), fumbblGameState);
