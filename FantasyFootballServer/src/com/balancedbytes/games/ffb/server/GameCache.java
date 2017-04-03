@@ -368,7 +368,8 @@ public class GameCache {
         getServer().getCommunication().close(session);
       }
       removeGame(gameId);
-      if (getServer().getMode() == ServerMode.FUMBBL) {
+      if ((getServer().getMode() == ServerMode.FUMBBL)
+        && (gameState.getStatus() != GameStatus.REPLAYING) && (gameState.getStatus() != GameStatus.LOADING)) {
         getServer().getRequestProcessor().add(new FumbblRequestRemoveGamestate(gameState));
       }
     }
