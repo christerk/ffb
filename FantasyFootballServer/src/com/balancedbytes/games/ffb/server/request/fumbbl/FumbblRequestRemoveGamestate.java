@@ -33,7 +33,7 @@ public class FumbblRequestRemoveGamestate extends ServerRequest {
     Game game = getGameState().getGame();
     String challengeResponse = UtilFumbblRequest.getFumbblAuthChallengeResponseForFumbblUser(server);
     setRequestUrl(StringTool.bind(server.getProperty(IServerProperty.FUMBBL_GAMESTATE_REMOVE), new Object[] { challengeResponse, game.getId() }));
-    server.getDebugLog().log(IServerLogLevel.DEBUG, DebugLog.FUMBBL_REQUEST, getRequestUrl());
+    server.getDebugLog().log(IServerLogLevel.WARN, DebugLog.FUMBBL_REQUEST, getRequestUrl());
     FumbblGameState fumbblGameState = UtilFumbblRequest.processFumbblGameStateRequest(server, getRequestUrl());
     if ((fumbblGameState == null) || !fumbblGameState.isOk()) {
       UtilFumbblRequest.reportFumbblError(getGameState(), fumbblGameState);
