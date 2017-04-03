@@ -245,6 +245,7 @@ public class FantasyFootballServer {
         getDebugLog().log(IServerLogLevel.ERROR, sqlE);
       }
     }
+    getDebugLog().log(IServerLogLevel.ERROR, "FantasyFootballServer shut down.");
     System.exit(pStatus);
   }
 
