@@ -33,8 +33,8 @@ public class DebugLog {
   public static final String COMMAND_SERVER_ALL_CLIENTS = "->AC";
   public static final String COMMAND_NO_COMMAND = "----";
   
-  public static final String FUMBBL_REQUEST = "->F";
-  public static final String FUMBBL_RESPONSE = "F->";
+  public static final String FUMBBL_REQUEST = " ->F";
+  public static final String FUMBBL_RESPONSE = " F->";
   
   private static final int _GAME_ID_MAX_LENGTH = 8;
   private static final String _ZEROES = "000000000000000000000";
