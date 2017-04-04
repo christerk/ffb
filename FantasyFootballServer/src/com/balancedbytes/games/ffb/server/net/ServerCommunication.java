@@ -199,14 +199,14 @@ public class ServerCommunication implements Runnable, IReceivedCommandHandler {
 
   public void send(Session pSession, NetCommand command, boolean pLog) {
     if (pLog && (pSession != null) && (command != null)) {
-      getServer().getDebugLog().logServerCommand(IServerLogLevel.INFO, command, pSession);
+      getServer().getDebugLog().logServerCommand(IServerLogLevel.DEBUG, command, pSession);
     }
     send(pSession, command);
   }
 
   protected void send(Session[] pSessions, NetCommand command, boolean pLog) {
     if (pLog && ArrayTool.isProvided(pSessions) && (command != null)) {
-      getServer().getDebugLog().logServerCommand(IServerLogLevel.INFO, command, pSessions);
+      getServer().getDebugLog().logServerCommand(IServerLogLevel.DEBUG, command, pSessions);
     }
     for (int i = 0; i < pSessions.length; i++) {
       send(pSessions[i], command);
@@ -249,7 +249,7 @@ public class ServerCommunication implements Runnable, IReceivedCommandHandler {
     if ((gameState == null) || (command == null)) {
       return;
     }
-    getServer().getDebugLog().logServerCommand(IServerLogLevel.INFO, gameState.getId(), command, DebugLog.COMMAND_SERVER_ALL_CLIENTS);
+    getServer().getDebugLog().logServerCommand(IServerLogLevel.DEBUG, gameState.getId(), command, DebugLog.COMMAND_SERVER_ALL_CLIENTS);
     if (gameState != null) {
       SessionManager sessionManager = getServer().getSessionManager();
       Session[] allSessions = sessionManager.getSessionsForGameId(gameState.getId());
@@ -262,7 +262,7 @@ public class ServerCommunication implements Runnable, IReceivedCommandHandler {
     if ((gameState == null) || (command == null)) {
       return;
     }
-    getServer().getDebugLog().logServerCommand(IServerLogLevel.INFO, gameState.getId(), command, DebugLog.COMMAND_SERVER_HOME);
+    getServer().getDebugLog().logServerCommand(IServerLogLevel.DEBUG, gameState.getId(), command, DebugLog.COMMAND_SERVER_HOME);
     SessionManager sessionManager = getServer().getSessionManager();
     Session homeSession = sessionManager.getSessionOfHomeCoach(gameState.getId());
     send(homeSession, command, false);
@@ -272,7 +272,7 @@ public class ServerCommunication implements Runnable, IReceivedCommandHandler {
     if ((gameState == null) || (command == null)) {
       return;
     }
-    getServer().getDebugLog().logServerCommand(IServerLogLevel.INFO, gameState.getId(), command, DebugLog.COMMAND_SERVER_HOME_SPECTATORS);
+    getServer().getDebugLog().logServerCommand(IServerLogLevel.DEBUG, gameState.getId(), command, DebugLog.COMMAND_SERVER_HOME_SPECTATORS);
     SessionManager sessionManager = getServer().getSessionManager();
     Session[] sessions = sessionManager.getSessionsWithoutAwayCoach(gameState.getId());
     send(sessions, command, false);
@@ -283,7 +283,7 @@ public class ServerCommunication implements Runnable, IReceivedCommandHandler {
     if ((gameState == null) || (command == null)) {
       return;
     }
-    getServer().getDebugLog().logServerCommand(IServerLogLevel.INFO, gameState.getId(), command, DebugLog.COMMAND_SERVER_AWAY);
+    getServer().getDebugLog().logServerCommand(IServerLogLevel.DEBUG, gameState.getId(), command, DebugLog.COMMAND_SERVER_AWAY);
     SessionManager sessionManager = getServer().getSessionManager();
     Session awaySession = sessionManager.getSessionOfAwayCoach(gameState.getId());
     send(awaySession, command, false);
@@ -293,7 +293,7 @@ public class ServerCommunication implements Runnable, IReceivedCommandHandler {
     if ((gameState == null) || (command == null)) {
       return;
     }
-    getServer().getDebugLog().logServerCommand(IServerLogLevel.INFO, gameState.getId(), command, DebugLog.COMMAND_SERVER_AWAY_SPECTATORS);
+    getServer().getDebugLog().logServerCommand(IServerLogLevel.DEBUG, gameState.getId(), command, DebugLog.COMMAND_SERVER_AWAY_SPECTATORS);
     SessionManager sessionManager = getServer().getSessionManager();
     Session[] sessions = sessionManager.getSessionsWithoutHomeCoach(gameState.getId());
     send(sessions, command, false);
@@ -304,7 +304,7 @@ public class ServerCommunication implements Runnable, IReceivedCommandHandler {
     if ((gameState == null) || (command == null)) {
       return;
     }
-    getServer().getDebugLog().logServerCommand(IServerLogLevel.INFO, gameState.getId(), command, DebugLog.COMMAND_SERVER_SPECTATOR);
+    getServer().getDebugLog().logServerCommand(IServerLogLevel.DEBUG, gameState.getId(), command, DebugLog.COMMAND_SERVER_SPECTATOR);
     SessionManager sessionManager = getServer().getSessionManager();
     Session[] spectatorSessions = sessionManager.getSessionsOfSpectators(gameState.getId());
     send(spectatorSessions, command, false);
