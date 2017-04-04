@@ -14,6 +14,7 @@ import java.util.Properties;
 
 import org.eclipse.jetty.websocket.api.Session;
 
+import com.balancedbytes.games.ffb.ClientMode;
 import com.balancedbytes.games.ffb.FantasyFootballException;
 import com.balancedbytes.games.ffb.GameList;
 import com.balancedbytes.games.ffb.GameListEntry;
@@ -43,7 +44,6 @@ import com.balancedbytes.games.ffb.server.db.update.DbGamesInfoUpdateParameter;
 import com.balancedbytes.games.ffb.server.db.update.DbGamesSerializedUpdateParameter;
 import com.balancedbytes.games.ffb.server.net.SessionManager;
 import com.balancedbytes.games.ffb.server.request.fumbbl.FumbblRequestRemoveGamestate;
-import com.balancedbytes.games.ffb.util.ArrayTool;
 import com.balancedbytes.games.ffb.util.DateTool;
 import com.balancedbytes.games.ffb.util.StringTool;
 import com.balancedbytes.games.ffb.util.UtilBox;
@@ -139,11 +139,17 @@ public class GameCache {
       server.getDebugLog().log(IServerLogLevel.WARN, gameState.getId(), log.toString());
     }
     // remove dead games from cache if there are no connections to the session
+    SessionManager sessionManager = getServer().getSessionManager();
     Long[] gameIds = fGameStateById.keySet().toArray(new Long[fGameStateById.size()]);
     for (Long gameId : gameIds) {
       GameStatus status = fGameStateById.get(gameId).getStatus();
-      if ((gameId != null) && (gameId != gameState.getId()) && (status != GameStatus.LOADING) && !checkGameOpen(gameId)) {
-        removeGame(gameId);
+      if ((gameId == null) || (gameId == gameState.getId()) || (status == GameStatus.LOADING)) {
+        continue;
+      }
+      Session[] sessions = sessionManager.getSessionsForGameId(gameId);
+      if ((sessions.length == 0) || ((sessions.length == 1)
+        && ((ClientMode.SPECTATOR == sessionManager.getModeForSession(sessions[0])) || (status == GameStatus.BACKUPED)))) {
+        closeGame(gameId);
       }
     }
   }
@@ -376,25 +382,6 @@ public class GameCache {
       }
     }
     return gameState;
-  }
-
-  private boolean checkGameOpen(long pGameId) {
-    GameState gameState = getGameStateById(pGameId);
-    if (gameState != null) {
-      SessionManager sessionManager = getServer().getSessionManager();
-      Session[] sessions = sessionManager.getSessionsForGameId(gameState.getId());
-      // no sessions connected yet - game starting
-      if (!ArrayTool.isProvided(sessions)) {
-        return true;
-      }
-      // check connected sessions and find an open one
-      for (Session session : sessions) {
-        if ((session != null) && session.isOpen()) {
-          return true;
-        }
-      }
-    }
-    return false;
   }
 
   public void queueDbPlayerMarkersUpdate(GameState pGameState) {

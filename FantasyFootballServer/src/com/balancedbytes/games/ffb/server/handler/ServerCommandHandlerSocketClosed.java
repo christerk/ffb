@@ -57,7 +57,7 @@ public class ServerCommandHandlerSocketClosed extends ServerCommandHandler {
       Session homeSession = sessionManager.getSessionOfHomeCoach(gameId);
       Session awaySession = sessionManager.getSessionOfAwayCoach(gameId);
 
-      if ((homeSession == null) && (awaySession == null) && (GameStatus.ACTIVE == gameState.getStatus())) {
+      if ((GameStatus.ACTIVE == gameState.getStatus()) && ((homeSession == null) || (awaySession == null))) {
         gameState.setStatus(GameStatus.PAUSED);
         gameCache.queueDbUpdate(gameState, true);
         gameState.fetchChanges(); // remove all changes from queue

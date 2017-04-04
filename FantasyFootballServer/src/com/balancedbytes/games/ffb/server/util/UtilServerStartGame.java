@@ -126,6 +126,7 @@ public class UtilServerStartGame {
       }
       if (GameStatus.PAUSED == gameState.getStatus()) {
         gameState.setStatus(GameStatus.ACTIVE);
+        server.getGameCache().queueDbUpdate(gameState, true);
       }
       UtilServerTimer.syncTime(gameState);
       UtilServerTimer.startTurnTimer(gameState);
