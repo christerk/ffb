@@ -416,6 +416,13 @@ public class AdminServlet extends HttpServlet {
     GameState[] gameStates = getServer().getGameCache().allGameStates();
     AttributesImpl cacheAttributes = new AttributesImpl();
     UtilXml.addAttribute(cacheAttributes, "size", gameStates.length);
+    int activeGames = 0;
+    for (GameState gameState : gameStates) {
+      if (gameState.getStatus() == GameStatus.ACTIVE) {
+        activeGames++;
+      }
+    }
+    UtilXml.addAttribute(cacheAttributes, "activeGames", activeGames);
     UtilXml.startElement(handler, "cache", cacheAttributes);
     for (GameState gameState : gameStates) {
       Game game = gameState.getGame();
