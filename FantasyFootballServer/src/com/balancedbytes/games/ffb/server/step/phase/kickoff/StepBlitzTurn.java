@@ -86,10 +86,11 @@ public final class StepBlitzTurn extends AbstractStep {
       game.setTurnMode(TurnMode.BLITZ);
       Team blitzingTeam = game.isHomePlaying() ? game.getTeamHome() : game.getTeamAway();
       UtilKickoffSequence.pinPlayersInTacklezones(getGameState(), blitzingTeam);
+      long currentTimeMillis = System.currentTimeMillis();
       if (game.isTurnTimeEnabled()) {
-        UtilServerTimer.stopTurnTimer(getGameState());
+        UtilServerTimer.stopTurnTimer(getGameState(), currentTimeMillis);
         game.setTurnTime(0);
-        UtilServerTimer.startTurnTimer(getGameState());
+        UtilServerTimer.startTurnTimer(getGameState(), currentTimeMillis);
       }
       game.startTurn();
       UtilServerGame.updateLeaderReRolls(this);

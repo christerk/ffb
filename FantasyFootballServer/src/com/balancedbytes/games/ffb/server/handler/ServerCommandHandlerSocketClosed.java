@@ -50,8 +50,9 @@ public class ServerCommandHandlerSocketClosed extends ServerCommandHandler {
 
       // stop timer whenever a player drops out
       if (ClientMode.PLAYER == mode) {
-        UtilServerTimer.syncTime(gameState);
-        UtilServerTimer.stopTurnTimer(gameState);
+        long currentTimeMillis = System.currentTimeMillis();
+        UtilServerTimer.syncTime(gameState, currentTimeMillis);
+        UtilServerTimer.stopTurnTimer(gameState, currentTimeMillis);
       }
 
       Session homeSession = sessionManager.getSessionOfHomeCoach(gameId);

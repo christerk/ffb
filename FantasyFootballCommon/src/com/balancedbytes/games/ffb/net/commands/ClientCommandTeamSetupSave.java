@@ -6,7 +6,6 @@ import java.util.List;
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
-import com.balancedbytes.games.ffb.net.NetCommand;
 import com.balancedbytes.games.ffb.net.NetCommandId;
 import com.balancedbytes.games.ffb.util.ArrayTool;
 import com.eclipsesource.json.JsonObject;
@@ -18,7 +17,7 @@ import com.eclipsesource.json.JsonValue;
  * 
  * @author Kalimar
  */
-public class ClientCommandTeamSetupSave extends NetCommand {
+public class ClientCommandTeamSetupSave extends ClientCommand {
   
   private String fSetupName;
   private List<Integer> fPlayerNumbers;
@@ -85,17 +84,16 @@ public class ClientCommandTeamSetupSave extends NetCommand {
   // JSON serialization
 
   public JsonObject toJsonValue() {
-    JsonObject jsonObject = new JsonObject();
-    IJsonOption.NET_COMMAND_ID.addTo(jsonObject, getId());
+    JsonObject jsonObject = super.toJsonValue();
     IJsonOption.SETUP_NAME.addTo(jsonObject, fSetupName);
     IJsonOption.PLAYER_NUMBERS.addTo(jsonObject, fPlayerNumbers);
     IJsonOption.PLAYER_COORDINATES.addTo(jsonObject, fPlayerCoordinates);
     return jsonObject;
   }
 
-  public ClientCommandTeamSetupSave initFrom(JsonValue pJsonValue) {
-    JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-    UtilNetCommand.validateCommandId(this, (NetCommandId) IJsonOption.NET_COMMAND_ID.getFrom(jsonObject));
+  public ClientCommandTeamSetupSave initFrom(JsonValue jsonValue) {
+    super.initFrom(jsonValue);
+    JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
     fSetupName = IJsonOption.SETUP_NAME.getFrom(jsonObject);
     addPlayerNumbers(IJsonOption.PLAYER_NUMBERS.getFrom(jsonObject));
     addPlayerCoordinates(IJsonOption.PLAYER_COORDINATES.getFrom(jsonObject));

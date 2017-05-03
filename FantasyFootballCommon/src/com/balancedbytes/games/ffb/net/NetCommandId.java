@@ -27,7 +27,6 @@ import com.balancedbytes.games.ffb.net.commands.ClientCommandMove;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandPass;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandPasswordChallenge;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandPettyCash;
-import com.balancedbytes.games.ffb.net.commands.ClientCommandPing;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandPlayerChoice;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandPushback;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandReceiveChoice;
@@ -41,7 +40,6 @@ import com.balancedbytes.games.ffb.net.commands.ClientCommandTeamSetupDelete;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandTeamSetupLoad;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandTeamSetupSave;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandThrowTeamMate;
-import com.balancedbytes.games.ffb.net.commands.ClientCommandTimeoutPossible;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandTouchback;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandUseApothecary;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandUseInducement;
@@ -53,11 +51,11 @@ import com.balancedbytes.games.ffb.net.commands.ServerCommandAddPlayer;
 import com.balancedbytes.games.ffb.net.commands.ServerCommandAdminMessage;
 import com.balancedbytes.games.ffb.net.commands.ServerCommandGameList;
 import com.balancedbytes.games.ffb.net.commands.ServerCommandGameState;
+import com.balancedbytes.games.ffb.net.commands.ServerCommandGameTime;
 import com.balancedbytes.games.ffb.net.commands.ServerCommandJoin;
 import com.balancedbytes.games.ffb.net.commands.ServerCommandLeave;
 import com.balancedbytes.games.ffb.net.commands.ServerCommandModelSync;
 import com.balancedbytes.games.ffb.net.commands.ServerCommandPasswordChallenge;
-import com.balancedbytes.games.ffb.net.commands.ServerCommandPing;
 import com.balancedbytes.games.ffb.net.commands.ServerCommandRemovePlayer;
 import com.balancedbytes.games.ffb.net.commands.ServerCommandReplay;
 import com.balancedbytes.games.ffb.net.commands.ServerCommandSound;
@@ -111,8 +109,6 @@ public enum NetCommandId implements INamedObject {
   CLIENT_USE_APOTHECARY("clientUseApothecary"),
   CLIENT_APOTHECARY_CHOICE("clientApothecaryChoice"),
   CLIENT_PASSWORD_CHALLENGE("clientPasswordChallenge"),
-  CLIENT_PING("clientPing"),
-  SERVER_PING("serverPing"),
   SERVER_PASSWORD_CHALLENGE("serverPasswordChallenge"),
   SERVER_MODEL_SYNC("serverModelSync"),
   SERVER_VERSION("serverVersion"),
@@ -125,8 +121,6 @@ public enum NetCommandId implements INamedObject {
   SERVER_REPLAY("serverReplay"),
   CLIENT_THROW_TEAM_MATE("clientThrowTeamMate"),
   CLIENT_PLAYER_CHOICE("clientPlayerChoice"),
-  // 51 is obsolete (CLIENT_DUMP_OFF)
-  CLIENT_TIMEOUT_POSSIBLE("clientTimeoutPossible"),
   CLIENT_ILLEGAL_PROCEDURE("clientIllegalProcedure"),
   CLIENT_CONCEDE_GAME("clientConcedeGame"),
   SERVER_ADMIN_MESSAGE("serverAdminMessage"),
@@ -152,7 +146,8 @@ public enum NetCommandId implements INamedObject {
   INTERNAL_SERVER_SCHEDULE_GAME("internalServerScheduleGame"),
   INTERNAL_SERVER_CLEAR_CACHE("internalServerClearCache"),
   CLIENT_CLOSE_SESSION("clientCloseSession"),
-  CLIENT_ARGUE_THE_CALL("clientArgueTheCall");
+  CLIENT_ARGUE_THE_CALL("clientArgueTheCall"),
+  SERVER_GAME_TIME("serverGameTime");
   
   private String fName;
   
@@ -182,6 +177,8 @@ public enum NetCommandId implements INamedObject {
         return new ServerCommandJoin();
       case SERVER_LEAVE:
         return new ServerCommandLeave();
+      case SERVER_GAME_TIME:
+        return new ServerCommandGameTime();
       case CLIENT_SETUP_PLAYER:
         return new ClientCommandSetupPlayer();
       case CLIENT_START_GAME:
@@ -234,10 +231,6 @@ public enum NetCommandId implements INamedObject {
         return new ClientCommandUseApothecary();
       case CLIENT_APOTHECARY_CHOICE:
         return new ClientCommandApothecaryChoice();
-      case CLIENT_PING:
-        return new ClientCommandPing();
-      case SERVER_PING:
-        return new ServerCommandPing();
       case CLIENT_PASSWORD_CHALLENGE:
         return new ClientCommandPasswordChallenge();
       case SERVER_PASSWORD_CHALLENGE:
@@ -264,8 +257,6 @@ public enum NetCommandId implements INamedObject {
         return new ClientCommandPlayerChoice();
       case SERVER_MODEL_SYNC:
         return new ServerCommandModelSync();
-      case CLIENT_TIMEOUT_POSSIBLE:
-        return new ClientCommandTimeoutPossible();
       case CLIENT_ILLEGAL_PROCEDURE:
         return new ClientCommandIllegalProcedure();
       case CLIENT_CONCEDE_GAME:

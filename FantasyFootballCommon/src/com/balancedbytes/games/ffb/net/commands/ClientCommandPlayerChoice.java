@@ -7,7 +7,6 @@ import com.balancedbytes.games.ffb.PlayerChoiceMode;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.Player;
-import com.balancedbytes.games.ffb.net.NetCommand;
 import com.balancedbytes.games.ffb.net.NetCommandId;
 import com.balancedbytes.games.ffb.util.ArrayTool;
 import com.balancedbytes.games.ffb.util.StringTool;
@@ -20,7 +19,7 @@ import com.eclipsesource.json.JsonValue;
  * 
  * @author Kalimar
  */
-public class ClientCommandPlayerChoice extends NetCommand {
+public class ClientCommandPlayerChoice extends ClientCommand {
   
   private PlayerChoiceMode fPlayerChoiceMode;
   private List<String> fPlayerIds;
@@ -72,16 +71,15 @@ public class ClientCommandPlayerChoice extends NetCommand {
   // JSON serialization
 
   public JsonObject toJsonValue() {
-    JsonObject jsonObject = new JsonObject();
-    IJsonOption.NET_COMMAND_ID.addTo(jsonObject, getId());
+    JsonObject jsonObject = super.toJsonValue();
     IJsonOption.PLAYER_CHOICE_MODE.addTo(jsonObject, fPlayerChoiceMode);
     IJsonOption.PLAYER_IDS.addTo(jsonObject, fPlayerIds);
     return jsonObject;
   }
 
   public ClientCommandPlayerChoice initFrom(JsonValue pJsonValue) {
+    super.initFrom(pJsonValue);
     JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-    UtilNetCommand.validateCommandId(this, (NetCommandId) IJsonOption.NET_COMMAND_ID.getFrom(jsonObject));
     fPlayerChoiceMode = (PlayerChoiceMode) IJsonOption.PLAYER_CHOICE_MODE.getFrom(jsonObject);
     addPlayerIds(IJsonOption.PLAYER_IDS.getFrom(jsonObject));
     return this;

@@ -168,16 +168,12 @@ public class UserInterface extends JFrame implements WindowListener, IDialogClos
   }
   
   public GameTitle getGameTitle() {
-    synchronized (this) {
-      return fGameTitle;
-    }
+    return fGameTitle;
   }
   
   public void setGameTitle(GameTitle pGameTitle) {
-    synchronized (this) {
-      fGameTitle = pGameTitle;
-      setTitle(fGameTitle.toString());
-    }
+    fGameTitle = pGameTitle;
+    setTitle(fGameTitle.toString());
   }
 
   public void refreshSideBars() {
@@ -248,7 +244,11 @@ public class UserInterface extends JFrame implements WindowListener, IDialogClos
       throw new FantasyFootballException(e);
     }
   }
-  
+
+  public void invokeLater(Runnable pRunnable) {
+    SwingUtilities.invokeLater(pRunnable);
+  }
+
   public MouseEntropySource getMouseEntropySource() {
     return fMouseEntropySource;
   }

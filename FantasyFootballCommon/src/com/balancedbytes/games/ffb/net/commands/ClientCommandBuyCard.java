@@ -3,7 +3,6 @@ package com.balancedbytes.games.ffb.net.commands;
 import com.balancedbytes.games.ffb.CardType;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
-import com.balancedbytes.games.ffb.net.NetCommand;
 import com.balancedbytes.games.ffb.net.NetCommandId;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
@@ -15,7 +14,7 @@ import com.eclipsesource.json.JsonValue;
  * 
  * @author Kalimar
  */
-public class ClientCommandBuyCard extends NetCommand {
+public class ClientCommandBuyCard extends ClientCommand {
   
   private CardType fCardType;
   
@@ -38,15 +37,14 @@ public class ClientCommandBuyCard extends NetCommand {
   // JSON serialization
   
   public JsonObject toJsonValue() {
-    JsonObject jsonObject = new JsonObject();
-    IJsonOption.NET_COMMAND_ID.addTo(jsonObject, getId());
+    JsonObject jsonObject = super.toJsonValue();
     IJsonOption.CARD_TYPE.addTo(jsonObject, fCardType);
     return jsonObject;
   }
   
-  public ClientCommandBuyCard initFrom(JsonValue pJsonValue) {
-    JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-    UtilNetCommand.validateCommandId(this, (NetCommandId) IJsonOption.NET_COMMAND_ID.getFrom(jsonObject));
+  public ClientCommandBuyCard initFrom(JsonValue jsonValue) {
+    super.initFrom(jsonValue);
+    JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
     fCardType = (CardType) IJsonOption.CARD_TYPE.getFrom(jsonObject);
     return this;
   }

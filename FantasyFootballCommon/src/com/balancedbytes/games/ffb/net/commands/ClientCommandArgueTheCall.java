@@ -5,7 +5,6 @@ import java.util.List;
 
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
-import com.balancedbytes.games.ffb.net.NetCommand;
 import com.balancedbytes.games.ffb.net.NetCommandId;
 import com.balancedbytes.games.ffb.util.ArrayTool;
 import com.balancedbytes.games.ffb.util.StringTool;
@@ -18,7 +17,7 @@ import com.eclipsesource.json.JsonValue;
  * 
  * @author Kalimar
  */
-public class ClientCommandArgueTheCall extends NetCommand {
+public class ClientCommandArgueTheCall extends ClientCommand {
   
   private List<String> fPlayerIds;
   
@@ -65,15 +64,14 @@ public class ClientCommandArgueTheCall extends NetCommand {
   // JSON serialization
 
   public JsonObject toJsonValue() {
-    JsonObject jsonObject = new JsonObject();
-    IJsonOption.NET_COMMAND_ID.addTo(jsonObject, getId());
+    JsonObject jsonObject = super.toJsonValue();
     IJsonOption.PLAYER_IDS.addTo(jsonObject, fPlayerIds);
     return jsonObject;
   }
 
-  public ClientCommandArgueTheCall initFrom(JsonValue pJsonValue) {
-    JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-    UtilNetCommand.validateCommandId(this, (NetCommandId) IJsonOption.NET_COMMAND_ID.getFrom(jsonObject));
+  public ClientCommandArgueTheCall initFrom(JsonValue jsonValue) {
+    super.initFrom(jsonValue);
+    JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
     addPlayerIds(IJsonOption.PLAYER_IDS.getFrom(jsonObject));
     return this;
   }

@@ -4,6 +4,7 @@ import org.eclipse.jetty.websocket.api.Session;
 
 import com.balancedbytes.games.ffb.net.NetCommand;
 import com.balancedbytes.games.ffb.net.NetCommandId;
+import com.balancedbytes.games.ffb.net.commands.ClientCommand;
 
 /**
  * 
@@ -27,14 +28,16 @@ public class ReceivedCommand {
     return fSession;
   }
   
-  // convenience methods ...
-  
   public NetCommandId getId() {
     return getCommand().getId();
   }
   
-  public boolean isInternal() {
+  public boolean isInternalCommand() {
     return getCommand().isInternal();
+  }
+  
+  public boolean isClientCommand() {
+    return (getCommand() instanceof ClientCommand);
   }
 
 }

@@ -27,6 +27,7 @@ import com.balancedbytes.games.ffb.model.InducementSet;
 import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.net.INetCommandHandler;
 import com.balancedbytes.games.ffb.net.NetCommand;
+import com.balancedbytes.games.ffb.net.commands.ClientCommand;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandActingPlayer;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandApothecaryChoice;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandArgueTheCall;
@@ -53,7 +54,6 @@ import com.balancedbytes.games.ffb.net.commands.ClientCommandMove;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandPass;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandPasswordChallenge;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandPettyCash;
-import com.balancedbytes.games.ffb.net.commands.ClientCommandPing;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandPlayerChoice;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandPushback;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandReceiveChoice;
@@ -67,7 +67,6 @@ import com.balancedbytes.games.ffb.net.commands.ClientCommandTeamSetupDelete;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandTeamSetupLoad;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandTeamSetupSave;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandThrowTeamMate;
-import com.balancedbytes.games.ffb.net.commands.ClientCommandTimeoutPossible;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandTouchback;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandUseApothecary;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandUseInducement;
@@ -76,6 +75,7 @@ import com.balancedbytes.games.ffb.net.commands.ClientCommandUseSkill;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandUserSettings;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandWizardSpell;
 import com.balancedbytes.games.ffb.net.commands.ServerCommand;
+import com.fumbbl.rng.MouseEntropySource;
 
 /**
  * 
@@ -128,7 +128,6 @@ public class ClientCommunication implements Runnable, INetCommandHandler {
       }
 
       switch (netCommand.getId()) {
-        case SERVER_PING:
         case SERVER_TALK:
         case SERVER_SOUND:
         case SERVER_REPLAY:
@@ -145,9 +144,18 @@ public class ClientCommunication implements Runnable, INetCommandHandler {
     
   }
   
-  protected void send(NetCommand pNetCommand) {
+  protected void send(ClientCommand clientCommand) {
+    if (clientCommand == null) {
+      return;
+    }
     try {
-      getClient().getCommandEndpoint().send(pNetCommand);
+      // add entropy payload if available
+      MouseEntropySource entropySource = getClient().getUserInterface().getMouseEntropySource();
+      if (entropySource.hasEnoughEntropy()) {
+        clientCommand.setEntropy(entropySource.getEntropy());
+      }
+      // send command
+      getClient().getCommandEndpoint().send(clientCommand);
     } catch (IOException pIoException) {
       throw new FantasyFootballException(pIoException);
     }
@@ -178,10 +186,6 @@ public class ClientCommunication implements Runnable, INetCommandHandler {
   
   public void sendPasswordChallenge() {
     send(new ClientCommandPasswordChallenge(getClient().getParameters().getCoach()));
-  }
-  
-  public void sendPing(long pPing, boolean pHasEntropy, byte pEntropy) {
-    send(new ClientCommandPing(pPing, pHasEntropy, pEntropy));
   }
   
   public void sendSetupPlayer(Player pPlayer, FieldCoordinate pCoordinate) {
@@ -216,10 +220,6 @@ public class ClientCommunication implements Runnable, INetCommandHandler {
     send(new ClientCommandConcedeGame(pStatus));
   }
   
-  public void sendTimeoutPossible() {
-    send(new ClientCommandTimeoutPossible());
-  }
-
   public void sendIllegalProcedure() {
     send(new ClientCommandIllegalProcedure());
   }

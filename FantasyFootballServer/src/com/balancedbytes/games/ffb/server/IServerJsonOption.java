@@ -116,6 +116,8 @@ public interface IServerJsonOption extends IJsonOption {
        JsonFieldCoordinateOption SETUP_PLAYER_COORDINATE = new JsonFieldCoordinateOption("setupPlayerCoordinate");
                 JsonStringOption SETUP_PLAYER_ID = new JsonStringOption("setupPlayerId");
                JsonBooleanOption SHOW_REPORT = new JsonBooleanOption("showReport");
+               JsonBooleanOption STARTED_AWAY = new JsonBooleanOption("startedAway");
+               JsonBooleanOption STARTED_HOME = new JsonBooleanOption("startedHome");
                 JsonObjectOption STARTING_PUSHBACK_SQUARE = new JsonObjectOption("startingPushbackSquare");
           JsonEnumWithNameOption STEP_ID = new JsonEnumWithNameOption("stepId", new StepIdFactory());
                 JsonObjectOption STEP_RESULT = new JsonObjectOption("stepResult");

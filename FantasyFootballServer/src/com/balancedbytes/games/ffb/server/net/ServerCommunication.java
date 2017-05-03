@@ -16,22 +16,24 @@ import com.balancedbytes.games.ffb.SoundId;
 import com.balancedbytes.games.ffb.TeamList;
 import com.balancedbytes.games.ffb.json.LZString;
 import com.balancedbytes.games.ffb.model.Animation;
+import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.model.PlayerResult;
 import com.balancedbytes.games.ffb.model.change.ModelChangeList;
 import com.balancedbytes.games.ffb.net.NetCommand;
 import com.balancedbytes.games.ffb.net.NetCommandId;
 import com.balancedbytes.games.ffb.net.ServerStatus;
+import com.balancedbytes.games.ffb.net.commands.ClientCommand;
 import com.balancedbytes.games.ffb.net.commands.ServerCommand;
 import com.balancedbytes.games.ffb.net.commands.ServerCommandAddPlayer;
 import com.balancedbytes.games.ffb.net.commands.ServerCommandAdminMessage;
 import com.balancedbytes.games.ffb.net.commands.ServerCommandGameList;
 import com.balancedbytes.games.ffb.net.commands.ServerCommandGameState;
+import com.balancedbytes.games.ffb.net.commands.ServerCommandGameTime;
 import com.balancedbytes.games.ffb.net.commands.ServerCommandJoin;
 import com.balancedbytes.games.ffb.net.commands.ServerCommandLeave;
 import com.balancedbytes.games.ffb.net.commands.ServerCommandModelSync;
 import com.balancedbytes.games.ffb.net.commands.ServerCommandPasswordChallenge;
-import com.balancedbytes.games.ffb.net.commands.ServerCommandPing;
 import com.balancedbytes.games.ffb.net.commands.ServerCommandRemovePlayer;
 import com.balancedbytes.games.ffb.net.commands.ServerCommandSound;
 import com.balancedbytes.games.ffb.net.commands.ServerCommandStatus;
@@ -108,13 +110,21 @@ public class ServerCommunication implements Runnable, IReceivedCommandHandler {
     }
     
     getServer().getDebugLog().logClientCommand(IServerLogLevel.DEBUG, command);
+
+    // fetch entropy payload
+    if (command.isClientCommand()) {
+      ClientCommand clientCommand = (ClientCommand) command.getCommand();
+      if (clientCommand.hasEntropy()) {
+        getServer().getFortuna().addEntropy(clientCommand.getEntropy());
+      }
+    }
     
     try {
       getServer().getCommandHandlerFactory().handleCommand(command);
     } catch (Exception any) {
       GameState gameState = null;
 
-      // Fetch the game state if available
+      // fetch the game state if available
       try {
         long gameId = getServer().getSessionManager().getGameIdForSession(command.getSession());
         gameState = getServer().getGameCache().getGameStateById(gameId);
@@ -127,10 +137,9 @@ public class ServerCommunication implements Runnable, IReceivedCommandHandler {
       shutdownGame(gameState);
     }
 
-    if ((command.getId() != NetCommandId.CLIENT_PING)
-        && (command.getId() != NetCommandId.CLIENT_DEBUG_CLIENT_STATE)) {
+    if (command.getId() != NetCommandId.CLIENT_DEBUG_CLIENT_STATE) {
       long gameId = 0;
-      if (command.isInternal()) {
+      if (command.isInternalCommand()) {
         gameId = ((InternalServerCommand) command.getCommand()).getGameId();
       } else {
         gameId = getServer().getSessionManager().getGameIdForSession(command.getSession());
@@ -138,7 +147,7 @@ public class ServerCommunication implements Runnable, IReceivedCommandHandler {
       GameState gameState = getServer().getGameCache().getGameStateById(gameId);
       if (gameState != null) {
         try {
-          if (command.isInternal() || (getServer().getSessionManager().getSessionOfHomeCoach(gameId) == command.getSession())
+          if (command.isInternalCommand() || (getServer().getSessionManager().getSessionOfHomeCoach(gameId) == command.getSession())
               || (getServer().getSessionManager().getSessionOfAwayCoach(gameId) == command.getSession())) {
             gameState.handleCommand(command);
           }
@@ -235,9 +244,8 @@ public class ServerCommunication implements Runnable, IReceivedCommandHandler {
 
     try {
       return pSession.getRemote().sendStringByFuture(textMessage);
-    } catch (WebSocketException pWebSocketException) {
-      // getServer().getDebugLog().log(IServerLogLevel.WARN,
-      // pWebSocketException.getMessage());
+    } catch (WebSocketException webSocketException) {
+      // getServer().getDebugLog().log(IServerLogLevel.WARN, webSocketException.getMessage());
       close(pSession);
     }
 
@@ -245,17 +253,17 @@ public class ServerCommunication implements Runnable, IReceivedCommandHandler {
 
   }
 
-  protected void sendAllSessions(GameState gameState, NetCommand command) {
+  protected void sendAllSessions(GameState gameState, NetCommand command, boolean addToLog) {
     if ((gameState == null) || (command == null)) {
       return;
     }
-    getServer().getDebugLog().logServerCommand(IServerLogLevel.DEBUG, gameState.getId(), command, DebugLog.COMMAND_SERVER_ALL_CLIENTS);
-    if (gameState != null) {
-      SessionManager sessionManager = getServer().getSessionManager();
-      Session[] allSessions = sessionManager.getSessionsForGameId(gameState.getId());
-      send(allSessions, command, false);
-      gameState.getGameLog().add((ServerCommand) command);
+    if (addToLog) {
+      getServer().getDebugLog().logServerCommand(IServerLogLevel.DEBUG, gameState.getId(), command, DebugLog.COMMAND_SERVER_ALL_CLIENTS);
     }
+    SessionManager sessionManager = getServer().getSessionManager();
+    Session[] allSessions = sessionManager.getSessionsForGameId(gameState.getId());
+    send(allSessions, command, false);
+    gameState.getGameLog().add((ServerCommand) command);
   }
 
   protected void sendHomeSession(GameState gameState, NetCommand command) {
@@ -339,7 +347,7 @@ public class ServerCommunication implements Runnable, IReceivedCommandHandler {
   public void sendStatus(GameState gameState, ServerStatus pStatus, String pMessage) {
     ServerCommandStatus statusCommand = new ServerCommandStatus(pStatus, pMessage);
     statusCommand.setCommandNr(gameState.generateCommandNr());
-    sendAllSessions(gameState, statusCommand);
+    sendAllSessions(gameState, statusCommand, true);
   }
 
   public void sendTeamList(Session pSession, TeamList pTeamList) {
@@ -378,10 +386,13 @@ public class ServerCommunication implements Runnable, IReceivedCommandHandler {
     // not logged in Game Log
   }
 
-  public void sendPing(Session pSession, long pClientTime) {
-    ServerCommandPing pingCommand = new ServerCommandPing(pClientTime);
-    send(pSession, pingCommand, false);
-    // not logged in Game Log
+  public void sendGameTime(GameState gameState) {
+    if (gameState != null) {
+      Game game = gameState.getGame();
+      ServerCommandGameTime gameTimeCommand = new ServerCommandGameTime(game.getGameTime(), game.getTurnTime());
+      sendAllSessions(gameState, gameTimeCommand, false);
+      // not logged in Game Log
+    }
   }
 
   public void sendGameState(Session pSession, GameState gameState) {
@@ -398,7 +409,7 @@ public class ServerCommunication implements Runnable, IReceivedCommandHandler {
 
   public void sendPlayerTalk(GameState gameState, String pCoach, String pTalk) {
     ServerCommandTalk talkCommand = new ServerCommandTalk(pCoach, pTalk);
-    sendAllSessions(gameState, talkCommand);
+    sendAllSessions(gameState, talkCommand, true);
     // not logged in Game Log
   }
 
@@ -422,19 +433,19 @@ public class ServerCommunication implements Runnable, IReceivedCommandHandler {
   public void sendAddPlayer(GameState gameState, String pTeamId, Player pPlayer, PlayerState pPlayerState, PlayerResult pPlayerResult) {
     ServerCommandAddPlayer addPlayersCommand = new ServerCommandAddPlayer(pTeamId, pPlayer, pPlayerState, pPlayerResult);
     addPlayersCommand.setCommandNr(gameState.generateCommandNr());
-    sendAllSessions(gameState, addPlayersCommand);
+    sendAllSessions(gameState, addPlayersCommand, true);
   }
 
   public void sendRemovePlayer(GameState gameState, String pPlayerId) {
     ServerCommandRemovePlayer removePlayerCommand = new ServerCommandRemovePlayer(pPlayerId);
     removePlayerCommand.setCommandNr(gameState.generateCommandNr());
-    sendAllSessions(gameState, removePlayerCommand);
+    sendAllSessions(gameState, removePlayerCommand, true);
   }
 
   public void sendSound(GameState gameState, SoundId pSound) {
     ServerCommandSound soundCommand = new ServerCommandSound(pSound);
     soundCommand.setCommandNr(gameState.generateCommandNr());
-    sendAllSessions(gameState, soundCommand);
+    sendAllSessions(gameState, soundCommand, true);
   }
 
   public void sendModelSync(GameState gameState, ModelChangeList pModelChanges, ReportList pReports, Animation pAnimation, SoundId pSound, long pGameTime,

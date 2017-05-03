@@ -49,7 +49,7 @@ public class UtilServerGame {
     boolean synced = false;
     Game game = pGameState.getGame();
     FantasyFootballServer server = pGameState.getServer();
-    UtilServerTimer.syncTime(pGameState);
+    UtilServerTimer.syncTime(pGameState, System.currentTimeMillis());
     ModelChangeList modelChanges = pGameState.fetchChanges();
     if ((modelChanges.size() > 0) || ((pReportList != null) && (pReportList.size() > 0)) || (pAnimation != null) || (pSound != null)) {
       server.getCommunication().sendModelSync(pGameState, modelChanges, pReportList, pAnimation, pSound, game.getGameTime(), game.getTurnTime());

@@ -8,7 +8,6 @@ import com.balancedbytes.games.ffb.SkillFactory;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.InducementSet;
-import com.balancedbytes.games.ffb.net.NetCommand;
 import com.balancedbytes.games.ffb.net.NetCommandId;
 import com.balancedbytes.games.ffb.util.ArrayTool;
 import com.balancedbytes.games.ffb.util.StringTool;
@@ -19,7 +18,7 @@ import com.eclipsesource.json.JsonValue;
  * 
  * @author Kalimar
  */
-public class ClientCommandBuyInducements extends NetCommand {
+public class ClientCommandBuyInducements extends ClientCommand {
 
   private String fTeamId;
   private int fAvailableGold;
@@ -106,8 +105,7 @@ public class ClientCommandBuyInducements extends NetCommand {
   // JSON serialization
   
   public JsonObject toJsonValue() {
-    JsonObject jsonObject = new JsonObject();
-    IJsonOption.NET_COMMAND_ID.addTo(jsonObject, getId());
+    JsonObject jsonObject = super.toJsonValue();
     IJsonOption.TEAM_ID.addTo(jsonObject, fTeamId);
     if (fInducementSet != null) {
       IJsonOption.INDUCEMENT_SET.addTo(jsonObject, fInducementSet.toJsonValue());
@@ -124,9 +122,9 @@ public class ClientCommandBuyInducements extends NetCommand {
     return jsonObject;
   }
   
-  public ClientCommandBuyInducements initFrom(JsonValue pJsonValue) {
-    JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-    UtilNetCommand.validateCommandId(this, (NetCommandId) IJsonOption.NET_COMMAND_ID.getFrom(jsonObject));
+  public ClientCommandBuyInducements initFrom(JsonValue jsonValue) {
+    super.initFrom(jsonValue);
+    JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
     fTeamId = IJsonOption.TEAM_ID.getFrom(jsonObject);
     fInducementSet = new InducementSet();
     JsonObject inducementSetObject = IJsonOption.INDUCEMENT_SET.getFrom(jsonObject);

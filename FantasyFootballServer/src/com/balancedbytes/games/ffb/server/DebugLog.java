@@ -71,30 +71,24 @@ public class DebugLog {
   
   public void logClientCommand(int pLogLevel, ReceivedCommand pReceivedCommand) {
     if (isLogging(pLogLevel) && (pReceivedCommand != null) && (pReceivedCommand.getId() != null)) {
-      switch (pReceivedCommand.getId()) {
-        case CLIENT_PING:
-          break;
-        default:
-        	GameState gameState = null;
-          String commandFlag = COMMAND_CLIENT_UNKNOWN;
-          Session session = pReceivedCommand.getSession();
-          SessionManager sessionManager = getServer().getSessionManager();
-          long gameId = sessionManager.getGameIdForSession(session);
-          if (gameId > 0) {
-          	gameState = getServer().getGameCache().getGameStateById(gameId);
-            if ((gameState != null) && (gameState.getGame().getStarted() != null)) {
-              if (session == sessionManager.getSessionOfHomeCoach(gameState.getId())) {
-                commandFlag = COMMAND_CLIENT_HOME;
-              } else if (session == sessionManager.getSessionOfAwayCoach(gameState.getId())) {
-                commandFlag = COMMAND_CLIENT_AWAY;
-              } else {
-                commandFlag = COMMAND_CLIENT_SPECTATOR;
-              }
-            }
+      GameState gameState = null;
+      String commandFlag = COMMAND_CLIENT_UNKNOWN;
+      Session session = pReceivedCommand.getSession();
+      SessionManager sessionManager = getServer().getSessionManager();
+      long gameId = sessionManager.getGameIdForSession(session);
+      if (gameId > 0) {
+        gameState = getServer().getGameCache().getGameStateById(gameId);
+        if ((gameState != null) && (gameState.getGame().getStarted() != null)) {
+          if (session == sessionManager.getSessionOfHomeCoach(gameState.getId())) {
+            commandFlag = COMMAND_CLIENT_HOME;
+          } else if (session == sessionManager.getSessionOfAwayCoach(gameState.getId())) {
+            commandFlag = COMMAND_CLIENT_AWAY;
+          } else {
+            commandFlag = COMMAND_CLIENT_SPECTATOR;
           }
-          logInternal(gameId, commandFlag, pReceivedCommand.getCommand().toJsonValue().toString());
-          break;
+        }
       }
+      logInternal(gameId, commandFlag, pReceivedCommand.getCommand().toJsonValue().toString());
     }
   }
   

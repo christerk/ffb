@@ -7,7 +7,6 @@ import com.balancedbytes.games.ffb.Card;
 import com.balancedbytes.games.ffb.InducementType;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
-import com.balancedbytes.games.ffb.net.NetCommand;
 import com.balancedbytes.games.ffb.net.NetCommandId;
 import com.balancedbytes.games.ffb.util.ArrayTool;
 import com.balancedbytes.games.ffb.util.StringTool;
@@ -20,7 +19,7 @@ import com.eclipsesource.json.JsonValue;
  * 
  * @author Kalimar
  */
-public class ClientCommandUseInducement extends NetCommand {
+public class ClientCommandUseInducement extends ClientCommand {
   
   private InducementType fInducementType;
   private Card fCard;
@@ -92,17 +91,16 @@ public class ClientCommandUseInducement extends NetCommand {
   // JSON serialization
 
   public JsonObject toJsonValue() {
-    JsonObject jsonObject = new JsonObject();
-    IJsonOption.NET_COMMAND_ID.addTo(jsonObject, getId());
+    JsonObject jsonObject = super.toJsonValue();
     IJsonOption.INDUCEMENT_TYPE.addTo(jsonObject, fInducementType);
     IJsonOption.PLAYER_IDS.addTo(jsonObject, fPlayerIds);
     IJsonOption.CARD.addTo(jsonObject, fCard);
     return jsonObject;
   }
 
-  public ClientCommandUseInducement initFrom(JsonValue pJsonValue) {
-    JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-    UtilNetCommand.validateCommandId(this, (NetCommandId) IJsonOption.NET_COMMAND_ID.getFrom(jsonObject));
+  public ClientCommandUseInducement initFrom(JsonValue jsonValue) {
+    super.initFrom(jsonValue);
+    JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
     fInducementType = (InducementType) IJsonOption.INDUCEMENT_TYPE.getFrom(jsonObject);
     addPlayerIds(IJsonOption.PLAYER_IDS.getFrom(jsonObject));
     fCard = (Card) IJsonOption.CARD.getFrom(jsonObject);

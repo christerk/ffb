@@ -4,7 +4,6 @@ import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.SpecialEffect;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
-import com.balancedbytes.games.ffb.net.NetCommand;
 import com.balancedbytes.games.ffb.net.NetCommandId;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
@@ -15,7 +14,7 @@ import com.eclipsesource.json.JsonValue;
  * 
  * @author Kalimar
  */
-public class ClientCommandWizardSpell extends NetCommand {
+public class ClientCommandWizardSpell extends ClientCommand {
   
   private SpecialEffect fWizardSpell;
   private FieldCoordinate fTargetCoordinate;
@@ -48,16 +47,15 @@ public class ClientCommandWizardSpell extends NetCommand {
   // JSON serialization
   
   public JsonObject toJsonValue() {
-    JsonObject jsonObject = new JsonObject();
-    IJsonOption.NET_COMMAND_ID.addTo(jsonObject, getId());
+    JsonObject jsonObject = super.toJsonValue();
     IJsonOption.WIZARD_SPELL.addTo(jsonObject, fWizardSpell);
     IJsonOption.TARGET_COORDINATE.addTo(jsonObject, fTargetCoordinate);
     return jsonObject;
   }
   
-  public ClientCommandWizardSpell initFrom(JsonValue pJsonValue) {
-    JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-    UtilNetCommand.validateCommandId(this, (NetCommandId) IJsonOption.NET_COMMAND_ID.getFrom(jsonObject));
+  public ClientCommandWizardSpell initFrom(JsonValue jsonValue) {
+    super.initFrom(jsonValue);
+    JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
     fWizardSpell = (SpecialEffect) IJsonOption.WIZARD_SPELL.getFrom(jsonObject);
     fTargetCoordinate = IJsonOption.TARGET_COORDINATE.getFrom(jsonObject);
     return this;

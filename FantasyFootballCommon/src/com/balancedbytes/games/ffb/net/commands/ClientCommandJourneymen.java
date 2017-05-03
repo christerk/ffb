@@ -5,7 +5,6 @@ import java.util.List;
 
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
-import com.balancedbytes.games.ffb.net.NetCommand;
 import com.balancedbytes.games.ffb.net.NetCommandId;
 import com.balancedbytes.games.ffb.util.ArrayTool;
 import com.balancedbytes.games.ffb.util.StringTool;
@@ -16,7 +15,7 @@ import com.eclipsesource.json.JsonValue;
  * 
  * @author Kalimar
  */
-public class ClientCommandJourneymen extends NetCommand {
+public class ClientCommandJourneymen extends ClientCommand {
 
   private List<Integer> fSlots;
   private List<String> fPositionIds;
@@ -82,16 +81,15 @@ public class ClientCommandJourneymen extends NetCommand {
   // JSON serialization
 
   public JsonObject toJsonValue() {
-    JsonObject jsonObject = new JsonObject();
-    IJsonOption.NET_COMMAND_ID.addTo(jsonObject, getId());
+    JsonObject jsonObject = super.toJsonValue();
     IJsonOption.POSITION_IDS.addTo(jsonObject, fPositionIds);
     IJsonOption.SLOTS.addTo(jsonObject, fSlots);
     return jsonObject;
   }
 
-  public ClientCommandJourneymen initFrom(JsonValue pJsonValue) {
-    JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-    UtilNetCommand.validateCommandId(this, (NetCommandId) IJsonOption.NET_COMMAND_ID.getFrom(jsonObject));
+  public ClientCommandJourneymen initFrom(JsonValue jsonValue) {
+    super.initFrom(jsonValue);
+    JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
     addPositionIds(IJsonOption.POSITION_IDS.getFrom(jsonObject));
     addSlots(IJsonOption.SLOTS.getFrom(jsonObject));
     return this;

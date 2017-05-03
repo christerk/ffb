@@ -6,7 +6,6 @@ import java.util.Map;
 
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
-import com.balancedbytes.games.ffb.net.NetCommand;
 import com.balancedbytes.games.ffb.net.NetCommandId;
 import com.balancedbytes.games.ffb.util.ArrayTool;
 import com.eclipsesource.json.JsonObject;
@@ -19,7 +18,7 @@ import com.eclipsesource.json.JsonValue;
  * 
  * @author Kalimar
  */
-public class ClientCommandUserSettings extends NetCommand {
+public class ClientCommandUserSettings extends ClientCommand {
   
   private Map<String, String> fSettings;
   
@@ -61,8 +60,7 @@ public class ClientCommandUserSettings extends NetCommand {
   // JSON serialization
 
   public JsonObject toJsonValue() {
-    JsonObject jsonObject = new JsonObject();
-    IJsonOption.NET_COMMAND_ID.addTo(jsonObject, getId());
+    JsonObject jsonObject = super.toJsonValue();
     String[] settingNames = getSettingNames();
     IJsonOption.SETTING_NAMES.addTo(jsonObject, settingNames);
     String[] settingValues = new String[settingNames.length];
@@ -73,9 +71,9 @@ public class ClientCommandUserSettings extends NetCommand {
     return jsonObject;
   }
 
-  public ClientCommandUserSettings initFrom(JsonValue pJsonValue) {
-    JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-    UtilNetCommand.validateCommandId(this, (NetCommandId) IJsonOption.NET_COMMAND_ID.getFrom(jsonObject));
+  public ClientCommandUserSettings initFrom(JsonValue jsonValue) {
+    super.initFrom(jsonValue);
+    JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
     init(
         IJsonOption.SETTING_NAMES.getFrom(jsonObject),
         IJsonOption.SETTING_VALUES.getFrom(jsonObject)

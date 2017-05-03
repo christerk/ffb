@@ -99,7 +99,7 @@ public class ServerCommandHandlerJoinApproved extends ServerCommandHandler {
           sessionManager.addSession(session, gameState.getId(), joinApprovedCommand.getCoach(), joinApprovedCommand.getClientMode(), false);
           UtilServerStartGame.sendServerJoin(gameState, session, joinApprovedCommand.getCoach(), false, ClientMode.SPECTATOR);
           if (gameState.getGame().getStarted() != null) {
-            UtilServerTimer.syncTime(gameState);
+            UtilServerTimer.syncTime(gameState, System.currentTimeMillis());
             communication.sendGameState(session, gameState);
           }
         }

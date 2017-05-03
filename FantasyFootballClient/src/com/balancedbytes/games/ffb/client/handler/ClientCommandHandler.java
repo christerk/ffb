@@ -96,7 +96,7 @@ public abstract class ClientCommandHandler {
   }
   
   protected void updateGameTitle(GameTitle pGameTitle) {
-    getClient().getUserInterface().invokeAndWait(
+    getClient().getUserInterface().invokeLater(
       new GameTitleUpdateTask(getClient(), pGameTitle)
     );
   }

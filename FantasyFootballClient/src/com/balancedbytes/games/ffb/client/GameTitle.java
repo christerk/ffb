@@ -9,8 +9,7 @@ import com.balancedbytes.games.ffb.util.StringTool;
  */
 public class GameTitle {
   
-  private static final long _MILLISECONDS = 1;
-  private static final long _SECONDS = 1000 * _MILLISECONDS;
+  private static final long _SECONDS = 1000;  // milliseconds
   private static final long _MINUTES = 60 * _SECONDS;
   private static final long _HOURS = 60 * _MINUTES;
   private static final long _DAYS = 24 * _HOURS;
@@ -152,7 +151,6 @@ public class GameTitle {
     appendMin2Digits(pBuffer, minutes).append("m");
     
     int seconds = (int) (milliseconds / _SECONDS);
-    milliseconds -= seconds * _SECONDS;
     appendMin2Digits(pBuffer, seconds).append("s");
 
   }

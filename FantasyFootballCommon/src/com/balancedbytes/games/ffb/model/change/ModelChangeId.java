@@ -9,22 +9,22 @@ import com.eclipsesource.json.JsonValue;
  */
 public enum ModelChangeId implements INamedObject {
 
-	ACTING_PLAYER_MARK_SKILL_USED("actingPlayerMarkSkillUsed", ModelChangeDataType.SKILL),
-	ACTING_PLAYER_SET_CURRENT_MOVE("actingPlayerSetCurrentMove", ModelChangeDataType.INTEGER),
-	ACTING_PLAYER_SET_DODGING("actingPlayerSetDodging", ModelChangeDataType.BOOLEAN),
-	ACTING_PLAYER_SET_GOING_FOR_IT("actingPlayerSetGoingForIt", ModelChangeDataType.BOOLEAN),
-	ACTING_PLAYER_SET_HAS_BLOCKED("actingPlayerSetHasBlocked", ModelChangeDataType.BOOLEAN),
-	ACTING_PLAYER_SET_HAS_FED("actingPlayerSetHasFed", ModelChangeDataType.BOOLEAN),
-	ACTING_PLAYER_SET_HAS_FOULED("actingPlayerSetHasFouled", ModelChangeDataType.BOOLEAN),
-	ACTING_PLAYER_SET_HAS_MOVED("actingPlayerSetHasMoved", ModelChangeDataType.BOOLEAN),
-	ACTING_PLAYER_SET_HAS_PASSED("actingPlayerSetHasPassed", ModelChangeDataType.BOOLEAN),
-	ACTING_PLAYER_SET_LEAPING("actingPlayerSetLeaping", ModelChangeDataType.BOOLEAN),
-	ACTING_PLAYER_SET_PLAYER_ACTION("actingPlayerSetPlayerAction", ModelChangeDataType.PLAYER_ACTION),
-	ACTING_PLAYER_SET_PLAYER_ID("actingPlayerSetPlayerId", ModelChangeDataType.STRING),
-	ACTING_PLAYER_SET_STANDING_UP("actingPlayerSetStandingUp", ModelChangeDataType.BOOLEAN),
-	ACTING_PLAYER_SET_STRENGTH("actingPlayerSetStrength", ModelChangeDataType.INTEGER),
-	ACTING_PLAYER_SET_SUFFERING_ANIMOSITY("actingPlayerSetSufferingAnimosity", ModelChangeDataType.BOOLEAN),
-	ACTING_PLAYER_SET_SUFFERING_BLOOD_LUST("actingPlayerSetSufferingBloodLust", ModelChangeDataType.BOOLEAN),
+  ACTING_PLAYER_MARK_SKILL_USED("actingPlayerMarkSkillUsed", ModelChangeDataType.SKILL),
+  ACTING_PLAYER_SET_CURRENT_MOVE("actingPlayerSetCurrentMove", ModelChangeDataType.INTEGER),
+  ACTING_PLAYER_SET_DODGING("actingPlayerSetDodging", ModelChangeDataType.BOOLEAN),
+  ACTING_PLAYER_SET_GOING_FOR_IT("actingPlayerSetGoingForIt", ModelChangeDataType.BOOLEAN),
+  ACTING_PLAYER_SET_HAS_BLOCKED("actingPlayerSetHasBlocked", ModelChangeDataType.BOOLEAN),
+  ACTING_PLAYER_SET_HAS_FED("actingPlayerSetHasFed", ModelChangeDataType.BOOLEAN),
+  ACTING_PLAYER_SET_HAS_FOULED("actingPlayerSetHasFouled", ModelChangeDataType.BOOLEAN),
+  ACTING_PLAYER_SET_HAS_MOVED("actingPlayerSetHasMoved", ModelChangeDataType.BOOLEAN),
+  ACTING_PLAYER_SET_HAS_PASSED("actingPlayerSetHasPassed", ModelChangeDataType.BOOLEAN),
+  ACTING_PLAYER_SET_LEAPING("actingPlayerSetLeaping", ModelChangeDataType.BOOLEAN),
+  ACTING_PLAYER_SET_PLAYER_ACTION("actingPlayerSetPlayerAction", ModelChangeDataType.PLAYER_ACTION),
+  ACTING_PLAYER_SET_PLAYER_ID("actingPlayerSetPlayerId", ModelChangeDataType.STRING),
+  ACTING_PLAYER_SET_STANDING_UP("actingPlayerSetStandingUp", ModelChangeDataType.BOOLEAN),
+  ACTING_PLAYER_SET_STRENGTH("actingPlayerSetStrength", ModelChangeDataType.INTEGER),
+  ACTING_PLAYER_SET_SUFFERING_ANIMOSITY("actingPlayerSetSufferingAnimosity", ModelChangeDataType.BOOLEAN),
+  ACTING_PLAYER_SET_SUFFERING_BLOOD_LUST("actingPlayerSetSufferingBloodLust", ModelChangeDataType.BOOLEAN),
 	
   FIELD_MODEL_ADD_BLOOD_SPOT("fieldModelAddBloodSpot", ModelChangeDataType.BLOOD_SPOT),
   FIELD_MODEL_ADD_CARD("fieldModelAddCard", ModelChangeDataType.CARD),
@@ -75,7 +75,6 @@ public enum ModelChangeId implements INamedObject {
   GAME_SET_TIMEOUT_ENFORCED("gameSetTimeoutEnforced", ModelChangeDataType.BOOLEAN),
   GAME_SET_TIMEOUT_POSSIBLE("gameSetTimeoutPossible", ModelChangeDataType.BOOLEAN),
   GAME_SET_TURN_MODE("gameSetTurnMode", ModelChangeDataType.TURN_MODE),
-  GAME_SET_TURN_TIME("gameSetTurnTime", ModelChangeDataType.LONG),
   GAME_SET_WAITING_FOR_OPPONENT("gameSetWaitingForOpponent", ModelChangeDataType.BOOLEAN),
 	
   GAME_OPTIONS_ADD_OPTION("gameOptionsAddOption", ModelChangeDataType.GAME_OPTION),
@@ -107,7 +106,7 @@ public enum ModelChangeId implements INamedObject {
   PLAYER_RESULT_SET_TOUCHDOWNS("playerResultSetTouchdowns", ModelChangeDataType.INTEGER),
   PLAYER_RESULT_SET_TURNS_PLAYED("playerResultSetTurnsPlayed", ModelChangeDataType.INTEGER),
 
-	TEAM_RESULT_SET_CONCEDED("teamResultSetConceded", ModelChangeDataType.BOOLEAN),
+  TEAM_RESULT_SET_CONCEDED("teamResultSetConceded", ModelChangeDataType.BOOLEAN),
   TEAM_RESULT_SET_FAME("teamResultSetFame", ModelChangeDataType.INTEGER),
   TEAM_RESULT_SET_BADLY_HURT_SUFFERED("teamResultSetBadlyHurtSuffered", ModelChangeDataType.INTEGER),
   TEAM_RESULT_SET_FAN_FACTOR_MODIFIER("teamResultSetFanFactorModifier", ModelChangeDataType.INTEGER),
@@ -135,7 +134,7 @@ public enum ModelChangeId implements INamedObject {
   TURN_DATA_SET_TURN_STARTED("turnDataSetTurnStarted", ModelChangeDataType.BOOLEAN),
   TURN_DATA_SET_COACH_BANNED("turnDataSetCoachBanned", ModelChangeDataType.BOOLEAN);
 	
-	private String fName;
+  private String fName;
   private ModelChangeDataType fDataType;
 
   private ModelChangeId(String pName, ModelChangeDataType pDataType) {
@@ -160,5 +159,5 @@ public enum ModelChangeId implements INamedObject {
   public Object fromJsonValue(JsonValue pJsonValue) {
     return getDataType().fromJsonValue(pJsonValue);
   }
-      
+
 }

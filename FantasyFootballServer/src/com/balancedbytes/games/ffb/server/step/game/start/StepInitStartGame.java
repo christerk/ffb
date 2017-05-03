@@ -13,6 +13,7 @@ import com.balancedbytes.games.ffb.server.IServerJsonOption;
 import com.balancedbytes.games.ffb.server.IServerLogLevel;
 import com.balancedbytes.games.ffb.server.ServerMode;
 import com.balancedbytes.games.ffb.server.net.ReceivedCommand;
+import com.balancedbytes.games.ffb.server.net.SessionManager;
 import com.balancedbytes.games.ffb.server.request.fumbbl.FumbblRequestCreateGamestate;
 import com.balancedbytes.games.ffb.server.step.AbstractStep;
 import com.balancedbytes.games.ffb.server.step.StepAction;
@@ -30,6 +31,8 @@ import com.eclipsesource.json.JsonValue;
 public final class StepInitStartGame extends AbstractStep {
 
   private boolean fFumbblGameCreated;
+  private boolean fStartedHome;
+  private boolean fStartedAway;
 
   public StepInitStartGame(GameState pGameState) {
     super(pGameState);
@@ -47,19 +50,24 @@ public final class StepInitStartGame extends AbstractStep {
   }
 
   @Override
-  public StepCommandStatus handleCommand(ReceivedCommand pReceivedCommand) {
-    StepCommandStatus commandStatus = super.handleCommand(pReceivedCommand);
+  public StepCommandStatus handleCommand(ReceivedCommand receivedCommand) {
+    StepCommandStatus commandStatus = super.handleCommand(receivedCommand);
     if (commandStatus == StepCommandStatus.UNHANDLED_COMMAND) {
       Game game = getGameState().getGame();
-      switch (pReceivedCommand.getId()) {
+      switch (receivedCommand.getId()) {
         case INTERNAL_SERVER_FUMBBL_GAME_CREATED:
           fFumbblGameCreated = true;
           commandStatus = StepCommandStatus.EXECUTE_STEP;
           break;
         case CLIENT_START_GAME:
-          if (game.getStarted() == null) {
-            game.setStarted(new Date(0));
-          } else {
+          SessionManager sessionManager = getGameState().getServer().getSessionManager();
+          if (receivedCommand.getSession() == sessionManager.getSessionOfHomeCoach(getGameState().getId())) {
+            fStartedHome = true;
+          }
+          if (receivedCommand.getSession() == sessionManager.getSessionOfAwayCoach(getGameState().getId())) {
+            fStartedAway = true;
+          }
+          if (fStartedHome && fStartedAway && (game.getStarted() == null)) {
             game.setStarted(new Date());
           }
           commandStatus = StepCommandStatus.EXECUTE_STEP;
@@ -78,7 +86,7 @@ public final class StepInitStartGame extends AbstractStep {
     Game game = getGameState().getGame();
     FantasyFootballServer server = getGameState().getServer();
     GameCache gameCache = server.getGameCache();
-    if ((game.getStarted() != null) && (game.getStarted().getTime() > 0)) {
+    if (game.getStarted() != null) {
       gameCache.removeMappingForGameId(getGameState().getId());
       if (server.getMode() == ServerMode.FUMBBL) {
         if (fFumbblGameCreated) {

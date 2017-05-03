@@ -3,7 +3,6 @@ package com.balancedbytes.games.ffb.net.commands;
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
-import com.balancedbytes.games.ffb.net.NetCommand;
 import com.balancedbytes.games.ffb.net.NetCommandId;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
@@ -13,7 +12,7 @@ import com.eclipsesource.json.JsonValue;
  * 
  * @author Kalimar
  */
-public class ClientCommandSetMarker extends NetCommand {
+public class ClientCommandSetMarker extends ClientCommand {
   
   private String fPlayerId;
   private FieldCoordinate fCoordinate;
@@ -52,17 +51,16 @@ public class ClientCommandSetMarker extends NetCommand {
   // JSON serialization
   
   public JsonObject toJsonValue() {
-    JsonObject jsonObject = new JsonObject();
-    IJsonOption.NET_COMMAND_ID.addTo(jsonObject, getId());
+    JsonObject jsonObject = super.toJsonValue();
     IJsonOption.COORDINATE.addTo(jsonObject, fCoordinate);
     IJsonOption.PLAYER_ID.addTo(jsonObject, fPlayerId);
     IJsonOption.TEXT.addTo(jsonObject, fText);
     return jsonObject;
   }
   
-  public ClientCommandSetMarker initFrom(JsonValue pJsonValue) {
-    JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-    UtilNetCommand.validateCommandId(this, (NetCommandId) IJsonOption.NET_COMMAND_ID.getFrom(jsonObject));
+  public ClientCommandSetMarker initFrom(JsonValue jsonValue) {
+    super.initFrom(jsonValue);
+    JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
     fCoordinate = IJsonOption.COORDINATE.getFrom(jsonObject);
     fPlayerId = IJsonOption.PLAYER_ID.getFrom(jsonObject);
     fText = IJsonOption.TEXT.getFrom(jsonObject);

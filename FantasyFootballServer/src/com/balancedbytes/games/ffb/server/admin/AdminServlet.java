@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.Map;
 import java.util.concurrent.CountDownLatch;
@@ -414,6 +416,17 @@ public class AdminServlet extends HttpServlet {
   private boolean handleCache(TransformerHandler handler) {
     boolean isOk = true;
     GameState[] gameStates = getServer().getGameCache().allGameStates();
+    Arrays.sort(gameStates, new Comparator<GameState>() {
+      public int compare(GameState o1, GameState o2) {
+        if (o1.getId() == o2.getId()) {
+          return 0;
+        } else if (o1.getId() > o2.getId()) {
+          return 1;
+        } else {
+          return -1;
+        }
+      }
+    });
     AttributesImpl cacheAttributes = new AttributesImpl();
     UtilXml.addAttribute(cacheAttributes, "size", gameStates.length);
     int activeGames = 0;

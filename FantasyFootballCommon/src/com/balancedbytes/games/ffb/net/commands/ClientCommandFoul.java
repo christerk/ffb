@@ -2,7 +2,6 @@ package com.balancedbytes.games.ffb.net.commands;
 
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
-import com.balancedbytes.games.ffb.net.NetCommand;
 import com.balancedbytes.games.ffb.net.NetCommandId;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
@@ -11,7 +10,7 @@ import com.eclipsesource.json.JsonValue;
  * 
  * @author Kalimar
  */
-public class ClientCommandFoul extends NetCommand implements ICommandWithActingPlayer {
+public class ClientCommandFoul extends ClientCommand implements ICommandWithActingPlayer {
 
   private String fActingPlayerId;
   private String fDefenderId;
@@ -40,16 +39,15 @@ public class ClientCommandFoul extends NetCommand implements ICommandWithActingP
   // JSON serialization
   
   public JsonObject toJsonValue() {
-    JsonObject jsonObject = new JsonObject();
-    IJsonOption.NET_COMMAND_ID.addTo(jsonObject, getId());
+    JsonObject jsonObject = super.toJsonValue();
     IJsonOption.ACTING_PLAYER_ID.addTo(jsonObject, fActingPlayerId);
     IJsonOption.DEFENDER_ID.addTo(jsonObject, fDefenderId);
     return jsonObject;
   }
   
-  public ClientCommandFoul initFrom(JsonValue pJsonValue) {
-    JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-    UtilNetCommand.validateCommandId(this, (NetCommandId) IJsonOption.NET_COMMAND_ID.getFrom(jsonObject));
+  public ClientCommandFoul initFrom(JsonValue jsonValue) {
+    super.initFrom(jsonValue);
+    JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
     fActingPlayerId = IJsonOption.ACTING_PLAYER_ID.getFrom(jsonObject);
     fDefenderId = IJsonOption.DEFENDER_ID.getFrom(jsonObject);
     return this;

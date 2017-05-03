@@ -23,7 +23,9 @@ import com.balancedbytes.games.ffb.server.handler.ServerCommandHandlerFactory;
 import com.balancedbytes.games.ffb.server.net.CommandServlet;
 import com.balancedbytes.games.ffb.server.net.FileServlet;
 import com.balancedbytes.games.ffb.server.net.ServerCommunication;
-import com.balancedbytes.games.ffb.server.net.ServerPingTask;
+import com.balancedbytes.games.ffb.server.net.ServerDbKeepAliveTask;
+import com.balancedbytes.games.ffb.server.net.ServerGameTimeTask;
+import com.balancedbytes.games.ffb.server.net.ServerNetworkEntropyTask;
 import com.balancedbytes.games.ffb.server.net.SessionManager;
 import com.balancedbytes.games.ffb.server.request.ServerRequestProcessor;
 import com.balancedbytes.games.ffb.util.ArrayTool;
@@ -37,8 +39,8 @@ import com.fumbbl.rng.Fortuna;
  */
 public class FantasyFootballServer {
 
-  public static final String SERVER_VERSION = "1.2.9";
-  public static final String CLIENT_VERSION = "1.2.9";
+  public static final String SERVER_VERSION = "1.2.10";
+  public static final String CLIENT_VERSION = "1.2.10";
 
   private static final String _USAGE =
     "java -jar FantasyFootballServer.jar standalone\n"
@@ -58,11 +60,14 @@ public class FantasyFootballServer {
   private SessionManager fSessionManager;
   private Properties fProperties;
   private Fortuna fFortuna;
-  private Timer fPingTimer;
   private DebugLog fDebugLog;
   private ServerReplayer fReplayer;
   private ServerRequestProcessor fServerRequestProcessor;
   private boolean fBlockingNewGames;
+
+  private Timer fServerGameTimeTimer;
+  private Timer fDbKeepAliveTimer;
+  private Timer fNetworkEntropyTimer;
 
   public FantasyFootballServer(ServerMode pMode, Properties pProperties) {
     fMode = pMode;
@@ -79,7 +84,7 @@ public class FantasyFootballServer {
 
   public void run() throws Exception {
 
-    fPingTimer = new Timer(true);
+    fServerGameTimeTimer = new Timer(true);
     fFortuna = new Fortuna();
 
     File logFile = null;
@@ -157,17 +162,22 @@ public class FantasyFootballServer {
         server.start();
       }
 
-      String pingIntervalProperty = getProperty(IServerProperty.SERVER_PING_INTERVAL);
-      if (StringTool.isProvided(pingIntervalProperty)) {
-        int pingInterval = Integer.parseInt(pingIntervalProperty);
-        String pingMaxDelayProperty = getProperty(IServerProperty.SERVER_PING_MAX_DELAY);
-        int pingMaxDelay = StringTool.isProvided(pingMaxDelayProperty) ? Integer.parseInt(pingMaxDelayProperty) : 0;
-        String dbKeepAliveProperty = getProperty(IServerProperty.DB_KEEP_ALIVE);
-        int dbKeepAlive = StringTool.isProvided(dbKeepAliveProperty) ? Integer.parseInt(dbKeepAliveProperty) : 0;
-        ServerPingTask serverPingTask = new ServerPingTask(this, pingInterval, pingMaxDelay, dbKeepAlive);
-        serverPingTask.setDbConnectionManager(dbConnectionManager);
-        fPingTimer.schedule(serverPingTask, 0, pingInterval);
+      String dbKeepAliveProperty = getProperty(IServerProperty.TIMER_DB_KEEP_ALIVE);
+      int dbKeepAlivePeriod = StringTool.isProvided(dbKeepAliveProperty) && (getMode() != ServerMode.STANDALONE) ? Integer.parseInt(dbKeepAliveProperty) : 0;
+      if (dbKeepAlivePeriod > 0) {
+        fDbKeepAliveTimer = new Timer(true);
+        fDbKeepAliveTimer.schedule(new ServerDbKeepAliveTask(this, dbConnectionManager), 0, dbKeepAlivePeriod);
       }
+
+      String networkEntropyProperty = getProperty(IServerProperty.TIMER_NETWORK_ENTROPY);
+      int networkEntropyPeriod = StringTool.isProvided(networkEntropyProperty) ? Integer.parseInt(networkEntropyProperty) : 0;
+      if (networkEntropyPeriod > 0) {
+        fNetworkEntropyTimer = new Timer(true);
+        fNetworkEntropyTimer.schedule(new ServerNetworkEntropyTask(this), 0, networkEntropyPeriod);
+      }
+      
+      fServerGameTimeTimer = new Timer(true);
+      fServerGameTimeTimer.scheduleAtFixedRate(new ServerGameTimeTask(this), 0, 1000);
 
       fReplayer = new ServerReplayer(this);
       Thread replayerThread = new Thread(fReplayer);
@@ -211,7 +221,9 @@ public class FantasyFootballServer {
 
   public void stop(int pStatus) {
     setBlockingNewGames(true);
-    fPingTimer = null;
+    fDbKeepAliveTimer = null;
+    fNetworkEntropyTimer = null;
+    fServerGameTimeTimer = null;
     if (fReplayer != null) {
       fReplayer.stop();
     }

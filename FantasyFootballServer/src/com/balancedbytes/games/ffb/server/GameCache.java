@@ -4,9 +4,7 @@ import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -101,19 +99,7 @@ public class GameCache {
   }
   
   public GameState[] allGameStates() {
-    GameState[] gameStates = fGameStateById.values().toArray(new GameState[fGameStateById.size()]);
-    Arrays.sort(gameStates, new Comparator<GameState>() {
-      public int compare(GameState o1, GameState o2) {
-        if (o1.getId() == o2.getId()) {
-          return 0;
-        } else if (o1.getId() > o2.getId()) {
-          return 1;
-        } else {
-          return -1;
-        }
-      }
-    });
-    return gameStates;
+    return fGameStateById.values().toArray(new GameState[fGameStateById.size()]);
   }
 
   public void addGame(GameState gameState) {

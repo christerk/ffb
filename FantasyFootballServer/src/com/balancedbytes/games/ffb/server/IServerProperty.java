@@ -11,8 +11,6 @@ public interface IServerProperty {
 
   String SERVER_LOG_FILE = "server.log.file";
   String SERVER_LOG_LEVEL = "server.log.level";
-  String SERVER_PING_INTERVAL = "server.ping.interval";
-  String SERVER_PING_MAX_DELAY = "server.ping.maxDelay";
   String SERVER_SPECTATOR_COOLDOWN = "server.spectator.cooldown";
   String SERVER_DEBUG_COMPRESSION = "server.debug.compression";
   String SERVER_COMMAND_COMPRESSION = "server.command.compression";
@@ -65,6 +63,8 @@ public interface IServerProperty {
   String DB_URL = "db.url";
   String DB_USER = "db.user";
   String DB_PASSWORD = "db.password";
-  String DB_KEEP_ALIVE = "db.keepAlive";
+  
+  String TIMER_DB_KEEP_ALIVE = "timer.dbKeepAlive";
+  String TIMER_NETWORK_ENTROPY = "timer.networkEntropy";
 
 }

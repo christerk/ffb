@@ -17,8 +17,6 @@ import com.balancedbytes.games.ffb.client.IClientProperty;
 import com.balancedbytes.games.ffb.json.LZString;
 import com.balancedbytes.games.ffb.net.NetCommand;
 import com.balancedbytes.games.ffb.net.NetCommandFactory;
-import com.balancedbytes.games.ffb.net.NetCommandId;
-import com.balancedbytes.games.ffb.net.commands.ServerCommandPing;
 import com.balancedbytes.games.ffb.util.StringTool;
 import com.eclipsesource.json.JsonValue;
 
@@ -71,11 +69,13 @@ public class CommandEndpoint {
       return;
     }
 
+    /*
     if (NetCommandId.SERVER_PING == netCommand.getId()) {
       ServerCommandPing pingCommand = (ServerCommandPing) netCommand;
       pingCommand.setReceived(System.currentTimeMillis());
       fClient.getClientPingTask().setLastPingReceived(pingCommand.getReceived());
     }
+    */
 
     fClient.getCommunication().handleCommand(netCommand);
 

@@ -43,7 +43,8 @@ public class Game extends ModelChangeObservable implements IJsonSerializable {
   private PlayerAction fDefenderAction;
   private String fThrowerId;
   private PlayerAction fThrowerAction;
-  private long fTurnTime;
+  private long fTurnTime;  // no notification for observers
+  private long fGameTime;  // no notification for observers
   private boolean fTimeoutPossible;
   private boolean fTimeoutEnforced;
   private boolean fConcessionPossible;
@@ -61,8 +62,6 @@ public class Game extends ModelChangeObservable implements IJsonSerializable {
   private GameResult fGameResult;
   private GameOptions fOptions;
   
-  private transient long fGameTime;  // transferred to client but not persisted
-
   public Game() {
     
   	setFieldModel(new FieldModel(this));
@@ -414,7 +413,7 @@ public class Game extends ModelChangeObservable implements IJsonSerializable {
   }
   
   public boolean isTurnTimeEnabled() {
-    return ((getFinished() == null) && ((TurnMode.REGULAR == getTurnMode()) || (TurnMode.BLITZ == getTurnMode())));
+    return ((getStarted() != null) && (getFinished() == null) && ((TurnMode.REGULAR == getTurnMode()) || (TurnMode.BLITZ == getTurnMode())));
   }
   
   public boolean isTimeoutPossible() {

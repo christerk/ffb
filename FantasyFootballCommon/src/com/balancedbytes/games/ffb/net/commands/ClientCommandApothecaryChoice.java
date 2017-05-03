@@ -4,7 +4,6 @@ import com.balancedbytes.games.ffb.PlayerState;
 import com.balancedbytes.games.ffb.SeriousInjury;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
-import com.balancedbytes.games.ffb.net.NetCommand;
 import com.balancedbytes.games.ffb.net.NetCommandId;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
@@ -14,7 +13,7 @@ import com.eclipsesource.json.JsonValue;
  * 
  * @author Kalimar
  */
-public class ClientCommandApothecaryChoice extends NetCommand {
+public class ClientCommandApothecaryChoice extends ClientCommand {
    
   private String fPlayerId;
   private PlayerState fPlayerState;
@@ -49,17 +48,16 @@ public class ClientCommandApothecaryChoice extends NetCommand {
   // JSON serialization
   
   public JsonObject toJsonValue() {
-    JsonObject jsonObject = new JsonObject();
-    IJsonOption.NET_COMMAND_ID.addTo(jsonObject, getId());
+    JsonObject jsonObject = super.toJsonValue();
     IJsonOption.PLAYER_ID.addTo(jsonObject, fPlayerId);
     IJsonOption.PLAYER_STATE.addTo(jsonObject, fPlayerState);
     IJsonOption.SERIOUS_INJURY.addTo(jsonObject, fSeriousInjury);
     return jsonObject;
   }
   
-  public ClientCommandApothecaryChoice initFrom(JsonValue pJsonValue) {
-    JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-    UtilNetCommand.validateCommandId(this, (NetCommandId) IJsonOption.NET_COMMAND_ID.getFrom(jsonObject));
+  public ClientCommandApothecaryChoice initFrom(JsonValue jsonValue) {
+    super.initFrom(jsonValue);
+    JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
     fPlayerId = IJsonOption.PLAYER_ID.getFrom(jsonObject);
     fPlayerState = IJsonOption.PLAYER_STATE.getFrom(jsonObject);
     fSeriousInjury = (SeriousInjury) IJsonOption.SERIOUS_INJURY.getFrom(jsonObject);

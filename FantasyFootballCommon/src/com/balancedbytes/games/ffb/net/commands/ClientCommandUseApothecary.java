@@ -2,7 +2,6 @@ package com.balancedbytes.games.ffb.net.commands;
 
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
-import com.balancedbytes.games.ffb.net.NetCommand;
 import com.balancedbytes.games.ffb.net.NetCommandId;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
@@ -11,7 +10,7 @@ import com.eclipsesource.json.JsonValue;
  * 
  * @author Kalimar
  */
-public class ClientCommandUseApothecary extends NetCommand {
+public class ClientCommandUseApothecary extends ClientCommand {
 
   private String fPlayerId;
   private boolean fApothecaryUsed;
@@ -40,16 +39,15 @@ public class ClientCommandUseApothecary extends NetCommand {
   // JSON serialization
 
   public JsonObject toJsonValue() {
-    JsonObject jsonObject = new JsonObject();
-    IJsonOption.NET_COMMAND_ID.addTo(jsonObject, getId());
+    JsonObject jsonObject = super.toJsonValue();
     IJsonOption.PLAYER_ID.addTo(jsonObject, fPlayerId);
     IJsonOption.APOTHECARY_USED.addTo(jsonObject, fApothecaryUsed);
     return jsonObject;
   }
 
-  public ClientCommandUseApothecary initFrom(JsonValue pJsonValue) {
-    JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-    UtilNetCommand.validateCommandId(this, (NetCommandId) IJsonOption.NET_COMMAND_ID.getFrom(jsonObject));
+  public ClientCommandUseApothecary initFrom(JsonValue jsonValue) {
+    super.initFrom(jsonValue);
+    JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
     fPlayerId = IJsonOption.PLAYER_ID.getFrom(jsonObject);
     fApothecaryUsed = IJsonOption.APOTHECARY_USED.getFrom(jsonObject);
     return this;

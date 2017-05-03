@@ -238,9 +238,6 @@ public class ModelChangeProcessor {
       case GAME_SET_LAST_TURN_MODE:
         pGame.setLastTurnMode((TurnMode) pModelChange.getValue());
         return true;
-      case GAME_SET_TURN_TIME:
-        pGame.setTurnTime((Long) pModelChange.getValue());
-        return true;
       case GAME_SET_WAITING_FOR_OPPONENT:
         pGame.setWaitingForOpponent((Boolean) pModelChange.getValue());
         return true;

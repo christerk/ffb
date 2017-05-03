@@ -11,8 +11,6 @@ import com.balancedbytes.games.ffb.net.NetCommand;
  */
 public abstract class ServerCommand extends NetCommand {
 
-  protected static final String XML_ATTRIBUTE_COMMAND_NR = "cmdNr";
-  
   private int fCommandNr;
   
   public int getCommandNr() {

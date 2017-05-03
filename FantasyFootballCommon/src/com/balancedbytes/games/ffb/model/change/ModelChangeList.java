@@ -28,8 +28,23 @@ public class ModelChangeList implements IJsonSerializable {
   	fChanges = new ArrayList<ModelChange>(pInitialCapacity);
   }
 
-  public void add(ModelChange pChange) {
-    fChanges.add(pChange);
+  public void add(ModelChange newChange) {
+    if (newChange != null) {
+      fChanges.add(newChange);
+    }
+  }
+  
+  public void replace(ModelChange newChange) {
+    if ((newChange == null) ||  (newChange.getChangeId() == null)) {
+      return;
+    }
+    for (int i = 0; i < fChanges.size(); i++) {
+      if (newChange.getChangeId() == fChanges.get(i).getChangeId()) {
+        fChanges.set(i, newChange);
+        return;
+      }
+    }
+    add(newChange);
   }
   
   public void add(ModelChangeList pChangeList) {

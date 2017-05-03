@@ -128,8 +128,9 @@ public class UtilServerStartGame {
         gameState.setStatus(GameStatus.ACTIVE);
         server.getGameCache().queueDbUpdate(gameState, true);
       }
-      UtilServerTimer.syncTime(gameState);
-      UtilServerTimer.startTurnTimer(gameState);
+//      long currentTimeMillis = System.currentTimeMillis();
+//      UtilServerTimer.syncTime(gameState, currentTimeMillis);
+//      UtilServerTimer.startTurnTimer(gameState, currentTimeMillis);
       DbPlayerMarkersQuery dbPlayerMarkersQuery = (DbPlayerMarkersQuery) server.getDbQueryFactory().getStatement(DbStatementId.PLAYER_MARKERS_QUERY);
       dbPlayerMarkersQuery.execute(gameState);
       server.getCommunication().sendGameState(gameState);

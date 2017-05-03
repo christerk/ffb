@@ -3,7 +3,6 @@ package com.balancedbytes.games.ffb.net.commands;
 import com.balancedbytes.games.ffb.PlayerAction;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
-import com.balancedbytes.games.ffb.net.NetCommand;
 import com.balancedbytes.games.ffb.net.NetCommandId;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
@@ -12,7 +11,7 @@ import com.eclipsesource.json.JsonValue;
  * 
  * @author Kalimar
  */
-public class ClientCommandActingPlayer extends NetCommand {
+public class ClientCommandActingPlayer extends ClientCommand {
 
   private String fPlayerId;
   private PlayerAction fPlayerAction;
@@ -47,17 +46,16 @@ public class ClientCommandActingPlayer extends NetCommand {
   // JSON serialization
 
   public JsonObject toJsonValue() {
-    JsonObject jsonObject = new JsonObject();
-    IJsonOption.NET_COMMAND_ID.addTo(jsonObject, getId());
+    JsonObject jsonObject = super.toJsonValue();
     IJsonOption.PLAYER_ID.addTo(jsonObject, fPlayerId);
     IJsonOption.PLAYER_ACTION.addTo(jsonObject, fPlayerAction);
     IJsonOption.LEAPING.addTo(jsonObject, fLeaping);
     return jsonObject;
   }
 
-  public ClientCommandActingPlayer initFrom(JsonValue pJsonValue) {
-    JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-    UtilNetCommand.validateCommandId(this, (NetCommandId) IJsonOption.NET_COMMAND_ID.getFrom(jsonObject));
+  public ClientCommandActingPlayer initFrom(JsonValue jsonValue) {
+    super.initFrom(jsonValue);
+    JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
     fPlayerId = IJsonOption.PLAYER_ID.getFrom(jsonObject);
     fPlayerAction = (PlayerAction) IJsonOption.PLAYER_ACTION.getFrom(jsonObject);
     fLeaping = IJsonOption.LEAPING.getFrom(jsonObject);

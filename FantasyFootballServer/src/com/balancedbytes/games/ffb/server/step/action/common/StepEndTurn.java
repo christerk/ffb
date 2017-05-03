@@ -313,7 +313,7 @@ public class StepEndTurn extends AbstractStep {
         getResult().addReport(new ReportTurnEnd(touchdownPlayerId, knockoutRecoveryArray, heatExhaustionArray));
   
         if (game.isTurnTimeEnabled()) {
-          UtilServerTimer.stopTurnTimer(getGameState());
+          UtilServerTimer.stopTurnTimer(getGameState(), System.currentTimeMillis());
           game.setTurnTime(0);
         }
   
@@ -371,7 +371,7 @@ public class StepEndTurn extends AbstractStep {
       }
 
       if (!fEndGame && game.isTurnTimeEnabled()) {
-        UtilServerTimer.startTurnTimer(getGameState());
+        UtilServerTimer.startTurnTimer(getGameState(), System.currentTimeMillis());
       }
 
       updateFumbblGame(getGameState(), fNewHalf, fTouchdown);

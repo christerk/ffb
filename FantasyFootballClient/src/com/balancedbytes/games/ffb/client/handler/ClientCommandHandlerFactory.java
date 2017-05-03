@@ -26,32 +26,30 @@ public class ClientCommandHandlerFactory {
     register(new ClientCommandHandlerTalk(getClient()));
     register(new ClientCommandHandlerGameState(getClient()));
     register(new ClientCommandHandlerSound(getClient()));
-    register(new ClientCommandHandlerPing(getClient()));
     register(new ClientCommandHandlerUserSettings(getClient()));
     register(new ClientCommandHandlerAdminMessage(getClient()));
     register(new ClientCommandHandlerModelSync(getClient()));
     register(new ClientCommandHandlerSocketClosed(getClient()));
     register(new ClientCommandHandlerAddPlayer(getClient()));
     register(new ClientCommandHandlerRemovePlayer(getClient()));
+    register(new ClientCommandHandlerGameTime(getClient()));
   }
   
   public void handleNetCommand(NetCommand pNetCommand, ClientCommandHandlerMode pMode) {
     if (pNetCommand != null) {
       ClientCommandHandler commandHandler = getCommandHandler(pNetCommand.getId());
       if (commandHandler != null) {
-        if (NetCommandId.SERVER_PING != pNetCommand.getId()) {
-          boolean completed = commandHandler.handleNetCommand(pNetCommand, pMode);
-          if (completed) {
-            updateClientState(pNetCommand, pMode, false);
-          } else {
-          	if (pMode == ClientCommandHandlerMode.PLAYING) {
-              synchronized (this) {
-                try {
-                  wait();
-                } catch (InterruptedException ie) {
-                }
+        boolean completed = commandHandler.handleNetCommand(pNetCommand, pMode);
+        if (completed) {
+          updateClientState(pNetCommand, pMode, false);
+        } else {
+          if (pMode == ClientCommandHandlerMode.PLAYING) {
+            synchronized (this) {
+              try {
+                wait();
+              } catch (InterruptedException ie) {
               }
-          	}
+            }
           }
         }
       } else {

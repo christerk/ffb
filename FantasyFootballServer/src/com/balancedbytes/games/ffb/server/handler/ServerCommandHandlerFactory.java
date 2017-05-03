@@ -24,7 +24,6 @@ public class ServerCommandHandlerFactory {
     register(new ServerCommandHandlerJoin(pServer));
     register(new ServerCommandHandlerJoinApproved(pServer));
     register(new ServerCommandHandlerPasswordChallenge(pServer));
-    register(new ServerCommandHandlerPing(pServer));
     register(new ServerCommandHandlerReplay(pServer));
     register(new ServerCommandHandlerReplayLoaded(pServer));
     register(new ServerCommandHandlerRequestVersion(pServer));
@@ -32,7 +31,6 @@ public class ServerCommandHandlerFactory {
     register(new ServerCommandHandlerSetMarker(pServer));
     register(new ServerCommandHandlerSocketClosed(pServer));
     register(new ServerCommandHandlerTalk(pServer));
-    register(new ServerCommandHandlerTimeout(pServer));
     register(new ServerCommandHandlerUploadGame(pServer));
     register(new ServerCommandHandlerUserSettings(pServer));
     register(new ServerCommandHandlerCloseSession(pServer));

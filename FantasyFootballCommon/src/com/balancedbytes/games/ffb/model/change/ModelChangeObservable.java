@@ -1,5 +1,6 @@
 package com.balancedbytes.games.ffb.model.change;
 
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -12,53 +13,41 @@ public abstract class ModelChangeObservable {
   private transient Set<IModelChangeObserver> fObservers;
 
   public ModelChangeObservable() {
-    fObservers = new HashSet<IModelChangeObserver>();
+    fObservers = Collections.synchronizedSet(new HashSet<IModelChangeObserver>());
   }
 
-  public void addObserver(IModelChangeObserver pObserver) {
+  public boolean addObserver(IModelChangeObserver pObserver) {
     if (pObserver == null) {
-      return;
+      return false;
     }
-    synchronized (fObservers) {
-      fObservers.add(pObserver);
-    }
+    return fObservers.add(pObserver);
   }
 
   public boolean removeObserver(IModelChangeObserver pObserver) {
     if (pObserver == null) {
       return false;
     }
-    synchronized (fObservers) {
-      return fObservers.remove(pObserver);
-    }
+    return fObservers.remove(pObserver);
   }
 
   public IModelChangeObserver[] getObservers() {
-    synchronized (fObservers) {
-      return fObservers.toArray(new IModelChangeObserver[fObservers.size()]);
-    }
+    return fObservers.toArray(new IModelChangeObserver[fObservers.size()]);
   }
 
   public int countObservers() {
-    synchronized (fObservers) {
-      return fObservers.size();
-    }
+    return fObservers.size();
   }
 
   public void clearObservers() {
-    synchronized (fObservers) {
-      fObservers.clear();
-    }
+    fObservers.clear();
   }
 
   public void notifyObservers(ModelChange pModelChange) {
     if ((pModelChange == null) || (pModelChange.getChangeId() == null)) {
       return;
     }
-    synchronized (fObservers) {
-      for (IModelChangeObserver observer : fObservers) {
-        observer.update(pModelChange);
-      }
+    for (IModelChangeObserver observer : fObservers) {
+      observer.update(pModelChange);
     }
   }
 
