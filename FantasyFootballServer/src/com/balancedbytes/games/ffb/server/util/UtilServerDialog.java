@@ -11,20 +11,19 @@ import com.balancedbytes.games.ffb.server.GameState;
  */
 public class UtilServerDialog {
   
-  public static void showDialog(GameState gameState, IDialogParameter dialogParameter) {
+  public static void showDialog(GameState gameState, IDialogParameter dialogParameter, boolean stopTurnTimer) {
     Game game = gameState.getGame();
     game.setDialogParameter(dialogParameter);
-    UtilServerTimer.waitForOpponent(
-      gameState,
-      System.currentTimeMillis(),
-      (dialogParameter != null) && dialogParameter.getId().isWaitingDialog()
-    );
+    if (stopTurnTimer) {
+      UtilServerTimer.stopTurnTimer(gameState, System.currentTimeMillis());;
+    }
   }
 
   public static void hideDialog(GameState gameState) {
     Game game = gameState.getGame();
     if (game.getDialogParameter() != null) {
-      showDialog(gameState, null);
+      game.setDialogParameter(null);
+      UtilServerTimer.startTurnTimer(gameState, System.currentTimeMillis());
     }
   }
 

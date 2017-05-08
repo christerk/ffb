@@ -34,36 +34,36 @@ import com.eclipsesource.json.JsonValue;
  * Step in block sequence to handle followup.
  * 
  * Expects stepParameter DEFENDER_POSITION to be set by a preceding step.
- * Expects stepParameter FOLLOWUP_CHOICE to be set by a preceding step.
- * Expects stepParameter OLD_DEFENDER_STATE to be set by a preceding step.
+ * Expects stepParameter FOLLOWUP_CHOICE to be set by a preceding step. Expects
+ * stepParameter OLD_DEFENDER_STATE to be set by a preceding step.
  * 
- * Sets stepParameter COORDINATE_FROM for all steps on the stack.
- * Sets stepParameter FOLLOWUP_CHOICE for all steps on the stack.
+ * Sets stepParameter COORDINATE_FROM for all steps on the stack. Sets
+ * stepParameter FOLLOWUP_CHOICE for all steps on the stack.
  * 
  * @author Kalimar
  */
 public class StepFollowup extends AbstractStep {
-	
-	private FieldCoordinate fCoordinateFrom;
-	private FieldCoordinate fDefenderPosition;
-	private Boolean fUsingFend;
-	private Boolean fFollowupChoice;
-	private PlayerState fOldDefenderState;
-	
-	public StepFollowup(GameState pGameState) {
-		super(pGameState);
-	}
-	
-	public StepId getId() {
-		return StepId.FOLLOWUP;
-	}
-	
-	@Override
-	public void start() {
-		super.start();
-		executeStep();
-	}
-	
+
+  private FieldCoordinate fCoordinateFrom;
+  private FieldCoordinate fDefenderPosition;
+  private Boolean fUsingFend;
+  private Boolean fFollowupChoice;
+  private PlayerState fOldDefenderState;
+
+  public StepFollowup(GameState pGameState) {
+    super(pGameState);
+  }
+
+  public StepId getId() {
+    return StepId.FOLLOWUP;
+  }
+
+  @Override
+  public void start() {
+    super.start();
+    executeStep();
+  }
+
   @Override
   public StepCommandStatus handleCommand(ReceivedCommand pReceivedCommand) {
     StepCommandStatus commandStatus = super.handleCommand(pReceivedCommand);
@@ -91,66 +91,66 @@ public class StepFollowup extends AbstractStep {
     return commandStatus;
   }
 
-	@Override
-	public boolean setParameter(StepParameter pParameter) {
-		if ((pParameter != null) && !super.setParameter(pParameter)) {
-			switch (pParameter.getKey()) {
-				case COORDINATE_FROM:
-					fCoordinateFrom = (FieldCoordinate) pParameter.getValue();
-					return true;
-				case DEFENDER_POSITION:
-					fDefenderPosition = (FieldCoordinate) pParameter.getValue();
-					return true;
-				case FOLLOWUP_CHOICE:
-					fFollowupChoice = (Boolean) pParameter.getValue();
-					return true;
-				case OLD_DEFENDER_STATE:
-					fOldDefenderState = (PlayerState) pParameter.getValue();
-					return true;
-				default:
-					break;
-			}
-		}
-		return false;
-	}
-	
+  @Override
+  public boolean setParameter(StepParameter pParameter) {
+    if ((pParameter != null) && !super.setParameter(pParameter)) {
+      switch (pParameter.getKey()) {
+        case COORDINATE_FROM:
+          fCoordinateFrom = (FieldCoordinate) pParameter.getValue();
+          return true;
+        case DEFENDER_POSITION:
+          fDefenderPosition = (FieldCoordinate) pParameter.getValue();
+          return true;
+        case FOLLOWUP_CHOICE:
+          fFollowupChoice = (Boolean) pParameter.getValue();
+          return true;
+        case OLD_DEFENDER_STATE:
+          fOldDefenderState = (PlayerState) pParameter.getValue();
+          return true;
+        default:
+          break;
+      }
+    }
+    return false;
+  }
+
   private void executeStep() {
     Game game = getGameState().getGame();
     ActingPlayer actingPlayer = game.getActingPlayer();
     PlayerState attackerState = game.getFieldModel().getPlayerState(actingPlayer.getPlayer());
     if (attackerState.isRooted()) {
-  		publishParameter(new StepParameter(StepParameterKey.FOLLOWUP_CHOICE, false));
+      publishParameter(new StepParameter(StepParameterKey.FOLLOWUP_CHOICE, false));
     }
     if (actingPlayer.getPlayerAction() == PlayerAction.MULTIPLE_BLOCK) {
-  		publishParameter(new StepParameter(StepParameterKey.FOLLOWUP_CHOICE, false));
+      publishParameter(new StepParameter(StepParameterKey.FOLLOWUP_CHOICE, false));
     }
     if (fFollowupChoice == null) {
-    	PlayerState defenderState = game.getFieldModel().getPlayerState(game.getDefender());
-//    	FieldCoordinate defenderCoordinate = game.getFieldModel().getPlayerCoordinate(game.getDefender());
-//      if (UtilCards.hasSkill(game, game.getDefender(), Skill.FEND) && FieldCoordinateBounds.FIELD.isInBounds(defenderCoordinate) && !defenderState.isProne() && !((fOldDefenderState != null) && fOldDefenderState.isProne())) {
-      if (UtilCards.hasSkill(game, game.getDefender(), Skill.FEND) && !defenderState.isProne() && !((fOldDefenderState != null) && fOldDefenderState.isProne())) {
+      PlayerState defenderState = game.getFieldModel().getPlayerState(game.getDefender());
+      if (UtilCards.hasSkill(game, game.getDefender(), Skill.FEND) && !defenderState.isProne()
+          && !((fOldDefenderState != null) && fOldDefenderState.isProne())) {
         if (fUsingFend == null) {
-				  if ((PlayerAction.BLITZ == actingPlayer.getPlayerAction()) && UtilCards.hasSkill(game, actingPlayer, Skill.JUGGERNAUT)) {
-				  	fUsingFend = false;
-				    getResult().addReport(new ReportSkillUse(actingPlayer.getPlayerId(), Skill.JUGGERNAUT, true, SkillUse.CANCEL_FEND));
-				  }
-				}
+          if ((PlayerAction.BLITZ == actingPlayer.getPlayerAction()) && UtilCards.hasSkill(game, actingPlayer, Skill.JUGGERNAUT)) {
+            fUsingFend = false;
+            getResult().addReport(new ReportSkillUse(actingPlayer.getPlayerId(), Skill.JUGGERNAUT, true, SkillUse.CANCEL_FEND));
+          }
+        }
         if (fUsingFend == null) {
-          UtilServerDialog.showDialog(getGameState(), new DialogSkillUseParameter(game.getDefenderId(), Skill.FEND, 0));
+          UtilServerDialog.showDialog(getGameState(), new DialogSkillUseParameter(game.getDefenderId(), Skill.FEND, 0), true);
         } else {
           if (fUsingFend) {
-          	publishParameter(new StepParameter(StepParameterKey.FOLLOWUP_CHOICE, false));
+            publishParameter(new StepParameter(StepParameterKey.FOLLOWUP_CHOICE, false));
           }
           getResult().addReport(new ReportSkillUse(game.getDefenderId(), Skill.FEND, fUsingFend, SkillUse.STAY_AWAY_FROM_OPPONENT));
         }
       } else {
-      	fUsingFend = false;
+        fUsingFend = false;
       }
-      if ((fUsingFend != null) && !fUsingFend && (UtilCards.hasSkill(game, actingPlayer, Skill.FRENZY) || UtilCards.hasSkill(game, actingPlayer, Skill.BALL_AND_CHAIN))) {
-      	publishParameter(new StepParameter(StepParameterKey.FOLLOWUP_CHOICE, true));
+      if ((fUsingFend != null) && !fUsingFend
+          && (UtilCards.hasSkill(game, actingPlayer, Skill.FRENZY) || UtilCards.hasSkill(game, actingPlayer, Skill.BALL_AND_CHAIN))) {
+        publishParameter(new StepParameter(StepParameterKey.FOLLOWUP_CHOICE, true));
       }
       if ((fFollowupChoice == null) && (fUsingFend != null)) {
-        UtilServerDialog.showDialog(getGameState(), new DialogFollowupChoiceParameter());
+        UtilServerDialog.showDialog(getGameState(), new DialogFollowupChoiceParameter(), false);
       }
     }
     if (fFollowupChoice != null) {
@@ -167,15 +167,15 @@ public class StepFollowup extends AbstractStep {
         }
         getResult().setSound(SoundId.STEP);
       } else {
-      	publishParameter(new StepParameter(StepParameterKey.COORDINATE_FROM, null));
+        publishParameter(new StepParameter(StepParameterKey.COORDINATE_FROM, null));
       }
       publishParameter(new StepParameter(StepParameterKey.DEFENDER_POSITION, game.getFieldModel().getPlayerCoordinate(game.getDefender())));
       getResult().setNextAction(StepAction.NEXT_STEP);
     }
   }
-  
+
   // JSON serialization
-  
+
   @Override
   public JsonObject toJsonValue() {
     JsonObject jsonObject = super.toJsonValue();
@@ -186,7 +186,7 @@ public class StepFollowup extends AbstractStep {
     IServerJsonOption.OLD_DEFENDER_STATE.addTo(jsonObject, fOldDefenderState);
     return jsonObject;
   }
-  
+
   @Override
   public StepFollowup initFrom(JsonValue pJsonValue) {
     super.initFrom(pJsonValue);

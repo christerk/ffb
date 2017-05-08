@@ -146,6 +146,7 @@ public final class StepThrowTeamMate extends AbstractStepWithReRoll {
     actingPlayer.setHasPassed(true);
     game.setConcessionPossible(false);
     game.getTurnData().setPassUsed(true);
+    UtilServerDialog.hideDialog(getGameState());
     Player thrower = game.getActingPlayer().getPlayer();
     boolean doRoll = true;
     if (ReRolledAction.THROW_TEAM_MATE == getReRolledAction()) {
@@ -172,7 +173,7 @@ public final class StepThrowTeamMate extends AbstractStepWithReRoll {
         if (getReRolledAction() != ReRolledAction.THROW_TEAM_MATE) {
           setReRolledAction(ReRolledAction.THROW_TEAM_MATE);
           if (UtilCards.hasSkill(game, thrower, Skill.PASS)) {
-            UtilServerDialog.showDialog(getGameState(), new DialogSkillUseParameter(thrower.getId(), Skill.PASS, minimumRoll));
+            UtilServerDialog.showDialog(getGameState(), new DialogSkillUseParameter(thrower.getId(), Skill.PASS, minimumRoll), false);
           } else {
             if (!UtilServerReRoll.askForReRollIfAvailable(getGameState(), actingPlayer.getPlayer(), ReRolledAction.THROW_TEAM_MATE, minimumRoll, false)) {
             	getResult().setNextAction(StepAction.GOTO_LABEL, fGotoLabelOnFailure);

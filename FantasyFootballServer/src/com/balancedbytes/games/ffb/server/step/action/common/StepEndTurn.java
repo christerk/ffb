@@ -556,10 +556,10 @@ public class StepEndTurn extends AbstractStep {
     }
   }
 
-  private boolean askForSecretWeaponBribes(Team pTeam) {
+  private boolean askForSecretWeaponBribes(Team team) {
     Game game = getGameState().getGame();
     List<String> playerIds = new ArrayList<String>();
-    for (Player player : pTeam.getPlayers()) {
+    for (Player player : team.getPlayers()) {
       PlayerResult playerResult = game.getGameResult().getPlayerResult(player);
       PlayerState playerState = game.getFieldModel().getPlayerState(player);
       if (playerResult.hasUsedSecretWeapon() && (playerState.getBase() != PlayerState.BANNED)) {
@@ -567,25 +567,29 @@ public class StepEndTurn extends AbstractStep {
       }
     }
     if (playerIds.size() > 0) {
-      InducementSet inducementSet = (game.getTeamHome() == pTeam) ? game.getTurnDataHome().getInducementSet() : game.getTurnDataAway().getInducementSet();
+      InducementSet inducementSet = (game.getTeamHome() == team) ? game.getTurnDataHome().getInducementSet() : game.getTurnDataAway().getInducementSet();
       if (inducementSet.hasUsesLeft(InducementType.BRIBES)) {
         Inducement bribes = inducementSet.get(InducementType.BRIBES);
-        DialogBribesParameter dialogParameter = new DialogBribesParameter(pTeam.getId(), bribes.getUsesLeft());
+        DialogBribesParameter dialogParameter = new DialogBribesParameter(team.getId(), bribes.getUsesLeft());
         dialogParameter.addPlayerIds(playerIds.toArray(new String[playerIds.size()]));
-        UtilServerDialog.showDialog(getGameState(), dialogParameter);
+        UtilServerDialog.showDialog(
+            getGameState(),
+            dialogParameter,
+            (game.isHomePlaying() && (team != game.getTeamHome())) || (!game.isHomePlaying() && (team != game.getTeamAway()))
+        );
         return true;
       }
     }
     return false;
   }
 
-  private boolean askForArgueTheCall(Team pTeam) {
+  private boolean askForArgueTheCall(Team team) {
     Game game = getGameState().getGame();
     if (!UtilGameOption.isOptionEnabled(game, GameOptionId.ARGUE_THE_CALL)) {
       return false;
     }
     List<String> playerIds = new ArrayList<String>();
-    for (Player player : pTeam.getPlayers()) {
+    for (Player player : team.getPlayers()) {
       PlayerResult playerResult = game.getGameResult().getPlayerResult(player);
       PlayerState playerState = game.getFieldModel().getPlayerState(player);
       if (playerResult.hasUsedSecretWeapon() && (playerState.getBase() != PlayerState.BANNED)) {
@@ -593,11 +597,15 @@ public class StepEndTurn extends AbstractStep {
       }
     }
     if (playerIds.size() > 0) {
-      TurnData turnData = (game.getTeamHome() == pTeam) ? game.getTurnDataHome() : game.getTurnDataAway();
+      TurnData turnData = (game.getTeamHome() == team) ? game.getTurnDataHome() : game.getTurnDataAway();
       if (!turnData.isCoachBanned()) {
-        DialogArgueTheCallParameter dialogParameter = new DialogArgueTheCallParameter(pTeam.getId());
+        DialogArgueTheCallParameter dialogParameter = new DialogArgueTheCallParameter(team.getId());
         dialogParameter.addPlayerIds(playerIds.toArray(new String[playerIds.size()]));
-        UtilServerDialog.showDialog(getGameState(), dialogParameter);
+        UtilServerDialog.showDialog(
+            getGameState(),
+            dialogParameter,
+            (game.isHomePlaying() && (team != game.getTeamHome())) || (!game.isHomePlaying() && (team != game.getTeamAway()))
+        );
         return true;
       }
     }

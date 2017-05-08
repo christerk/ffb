@@ -116,9 +116,10 @@ public class StepJuggernaut extends AbstractStep {
   private void executeStep() {
     Game game = getGameState().getGame();
     ActingPlayer actingPlayer = game.getActingPlayer();
+    UtilServerDialog.hideDialog(getGameState());
     if ((PlayerAction.BLITZ == actingPlayer.getPlayerAction()) && UtilCards.hasSkill(game, actingPlayer, Skill.JUGGERNAUT) && !fOldDefenderState.isRooted()) {
       if (fUsingJuggernaut == null) {
-        UtilServerDialog.showDialog(getGameState(), new DialogSkillUseParameter(actingPlayer.getPlayer().getId(), Skill.JUGGERNAUT, 0));
+        UtilServerDialog.showDialog(getGameState(), new DialogSkillUseParameter(actingPlayer.getPlayer().getId(), Skill.JUGGERNAUT, 0), false);
       } else {
         if (fUsingJuggernaut) {
           getResult().addReport(new ReportSkillUse(actingPlayer.getPlayerId(), Skill.JUGGERNAUT, true, SkillUse.PUSH_BACK_OPPONENT));

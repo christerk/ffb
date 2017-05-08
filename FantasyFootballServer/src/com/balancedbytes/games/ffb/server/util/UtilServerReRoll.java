@@ -77,17 +77,22 @@ public class UtilServerReRoll {
     return successful;
   }
 
-  public static boolean askForReRollIfAvailable(GameState pGameState, Player pPlayer, ReRolledAction pReRolledAction, int pMinimumRoll, boolean pFumble) {
+  public static boolean askForReRollIfAvailable(GameState gameState, Player player, ReRolledAction reRolledAction, int minimumRoll, boolean fumble) {
     boolean reRollAvailable = false;
-    Game game = pGameState.getGame();
-    if (pMinimumRoll >= 0) {
-      boolean teamReRollOption = isTeamReRollAvailable(pGameState, pPlayer);
-      PlayerState playerState = game.getFieldModel().getPlayerState(pPlayer);
-      boolean proOption = (UtilCards.hasSkill(game, pPlayer, Skill.PRO) && !playerState.hasUsedPro());
+    Game game = gameState.getGame();
+    if (minimumRoll >= 0) {
+      boolean teamReRollOption = isTeamReRollAvailable(gameState, player);
+      PlayerState playerState = game.getFieldModel().getPlayerState(player);
+      boolean proOption = (UtilCards.hasSkill(game, player, Skill.PRO) && !playerState.hasUsedPro());
       reRollAvailable = (teamReRollOption || proOption);
       if (reRollAvailable) {
-        String playerId = (pPlayer != null) ? pPlayer.getId() : null;
-        UtilServerDialog.showDialog(pGameState, new DialogReRollParameter(playerId, pReRolledAction, pMinimumRoll, teamReRollOption, proOption, pFumble));
+        Team actingTeam = game.isHomePlaying() ? game.getTeamHome() : game.getTeamAway();
+        String playerId = (player != null) ? player.getId() : null;
+        UtilServerDialog.showDialog(
+            gameState,
+            new DialogReRollParameter(playerId, reRolledAction, minimumRoll, teamReRollOption, proOption, fumble),
+            !actingTeam.hasPlayer(player)
+        );
       }
     }
     return reRollAvailable;

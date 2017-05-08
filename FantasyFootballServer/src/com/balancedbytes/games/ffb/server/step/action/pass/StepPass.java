@@ -18,6 +18,7 @@ import com.balancedbytes.games.ffb.model.Animation;
 import com.balancedbytes.games.ffb.model.AnimationType;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
+import com.balancedbytes.games.ffb.model.Team;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandUseSkill;
 import com.balancedbytes.games.ffb.report.ReportPassRoll;
 import com.balancedbytes.games.ffb.server.DiceInterpreter;
@@ -224,7 +225,12 @@ public class StepPass extends AbstractStepWithReRoll {
         if (UtilCards.hasSkill(game, game.getThrower(), Skill.PASS) && !fPassSkillUsed) {
           doNextStep = false;
           fPassSkillUsed = true;
-          UtilServerDialog.showDialog(getGameState(), new DialogSkillUseParameter(game.getThrowerId(), Skill.PASS, minimumRoll));
+          Team actingTeam = game.isHomePlaying() ? game.getTeamHome() : game.getTeamAway();
+          UtilServerDialog.showDialog(
+              getGameState(),
+              new DialogSkillUseParameter(game.getThrowerId(), Skill.PASS, minimumRoll),
+              actingTeam.hasPlayer(game.getThrower())
+          );
         } else {
           if (UtilServerReRoll.askForReRollIfAvailable(getGameState(), game.getThrower(), ReRolledAction.PASS, minimumRoll, fPassFumble)) {
             doNextStep = false;

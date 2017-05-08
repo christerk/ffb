@@ -8,67 +8,61 @@ import com.balancedbytes.games.ffb.INamedObject;
  */
 public enum DialogId implements INamedObject {
   
-  INFORMATION("information", false),
-  YES_OR_NO_QUESTION("yesOrNoQuestion", true),
-  GAME_COACH_PASSWORD("gameCoachPassword", false),
-  TEAM_CHOICE("teamChoice", false),
-  COIN_CHOICE("coinChoice", true),
-  RE_ROLL("reRoll", true),
-  SKILL_USE("skillUse", true),
-  PROGRESS_BAR("progressBar", false),
-  TEAM_SETUP("teamSetup", false),
-  USE_APOTHECARY("useApothecary", true),
-  RECEIVE_CHOICE("receiveChoice", true),
-  FOLLOWUP_CHOICE("followupChoice", false),
-  START_GAME("startGame", false),
-  APOTHECARY_CHOICE("apothecaryChoice", true),
-  TOUCHBACK("touchback", true),
-  INTERCEPTION("interception", true),
-  SETUP_ERROR("setupError", false),
-  GAME_STATISTICS("gameStatistics", false),
-  WINNINGS_RE_ROLL("winningsReRoll", true),
-  GAME_CHOICE("gameChoice", false),
-  KEY_BINDINGS("keyBindings", false),
-  BLOCK_ROLL("blockRoll", true),
-  PLAYER_CHOICE("playerChoice", true),
-  DEFENDER_ACTION("defenderAction", true),
-  JOIN("join", true),
-  CONCEDE_GAME("concedeGame", false),
-  ABOUT("about", false),
-  END_TURN("endTurn", false),
-  LEAVE_GAME("leaveGame", false),
-  BRIBES("bribes", true),
-  PILING_ON("pilingOn", true),
-  BUY_INDUCEMENTS("buyInducements", true),
-  TRANSFER_PETTY_CASH("transferPettyCash", true),
-  SOUND_VOLUME("soundVolume", false),
-  JOURNEYMEN("journeymen", true),
-  KICKOFF_RESULT("kickoffResult", false),
-  CHAT_COMMANDS("chatCommands", false),
-  KICK_SKILL("kickSkill", true),
-  USE_IGOR("useIgor", true),
-  KICKOFF_RETURN("kickoffReturn", false),
-  PETTY_CASH("pettyCash", true),
-  WIZARD_SPELL("wizardSpell", false),  
-  USE_INDUCEMENT("useInducement", false),
-  PASS_BLOCK("passBlock", false),
-  BUY_CARDS("buyCards", true),
-  ARGUE_THE_CALL("argueTheCall", false);
+  INFORMATION("information"),
+  YES_OR_NO_QUESTION("yesOrNoQuestion"),
+  GAME_COACH_PASSWORD("gameCoachPassword"),
+  TEAM_CHOICE("teamChoice"),
+  COIN_CHOICE("coinChoice"),
+  RE_ROLL("reRoll"),
+  SKILL_USE("skillUse"),
+  PROGRESS_BAR("progressBar"),
+  TEAM_SETUP("teamSetup"),
+  USE_APOTHECARY("useApothecary"),
+  RECEIVE_CHOICE("receiveChoice"),
+  FOLLOWUP_CHOICE("followupChoice"),
+  START_GAME("startGame"),
+  APOTHECARY_CHOICE("apothecaryChoice"),
+  TOUCHBACK("touchback"),
+  INTERCEPTION("interception"),
+  SETUP_ERROR("setupError"),
+  GAME_STATISTICS("gameStatistics"),
+  WINNINGS_RE_ROLL("winningsReRoll"),
+  GAME_CHOICE("gameChoice"),
+  KEY_BINDINGS("keyBindings"),
+  BLOCK_ROLL("blockRoll"),
+  PLAYER_CHOICE("playerChoice"),
+  DEFENDER_ACTION("defenderAction"),
+  JOIN("join"),
+  CONCEDE_GAME("concedeGame"),
+  ABOUT("about"),
+  END_TURN("endTurn"),
+  LEAVE_GAME("leaveGame"),
+  BRIBES("bribes"),
+  PILING_ON("pilingOn"),
+  BUY_INDUCEMENTS("buyInducements"),
+  TRANSFER_PETTY_CASH("transferPettyCash"),
+  SOUND_VOLUME("soundVolume"),
+  JOURNEYMEN("journeymen"),
+  KICKOFF_RESULT("kickoffResult"),
+  CHAT_COMMANDS("chatCommands"),
+  KICK_SKILL("kickSkill"),
+  USE_IGOR("useIgor"),
+  KICKOFF_RETURN("kickoffReturn"),
+  PETTY_CASH("pettyCash"),
+  WIZARD_SPELL("wizardSpell"),  
+  USE_INDUCEMENT("useInducement"),
+  PASS_BLOCK("passBlock"),
+  BUY_CARDS("buyCards"),
+  ARGUE_THE_CALL("argueTheCall");
   
   private String fName;
-  private boolean fWaitingDialog;
   
-  private DialogId(String pName, boolean pWaitingDialog) {
+  private DialogId(String pName) {
     fName = pName;
-    fWaitingDialog = pWaitingDialog;
   }
   
   public String getName() {
     return fName;
-  }
-  
-  public boolean isWaitingDialog() {
-    return fWaitingDialog;
   }
     
 }

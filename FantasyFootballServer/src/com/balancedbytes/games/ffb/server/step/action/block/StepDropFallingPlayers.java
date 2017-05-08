@@ -167,7 +167,7 @@ public class StepDropFallingPlayers extends AbstractStep {
             && !UtilCards.hasCard(game, game.getDefender(), Card.GOOD_OLD_MAGIC_CODPIECE)) {
           fInjuryResultDefender.report(this);
           UtilServerDialog.showDialog(getGameState(), new DialogPilingOnParameter(actingPlayer.getPlayerId(), fInjuryResultDefender.isArmorBroken(),
-              usesATeamReroll));
+              usesATeamReroll), false);
           doNextStep = false;
         }
       }

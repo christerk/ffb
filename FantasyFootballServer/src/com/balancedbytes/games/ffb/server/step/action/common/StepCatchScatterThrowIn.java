@@ -277,11 +277,17 @@ public class StepCatchScatterThrowIn extends AbstractStepWithReRoll {
         fDivingCatchChoice = false;
         getResult().addReport(new ReportSkillUse(Skill.DIVING_CATCH, false, SkillUse.CANCEL_DIVING_CATCH));
       } else if (ArrayTool.isProvided(divingCatchersHome)) {
-        UtilServerDialog.showDialog(getGameState(),
-            new DialogPlayerChoiceParameter(game.getTeamHome().getId(), PlayerChoiceMode.DIVING_CATCH, divingCatchersHome, null, 1));
+        UtilServerDialog.showDialog(
+            getGameState(),
+            new DialogPlayerChoiceParameter(game.getTeamHome().getId(), PlayerChoiceMode.DIVING_CATCH, divingCatchersHome, null, 1),
+            !game.isHomePlaying()
+        );
       } else if (ArrayTool.isProvided(divingCatchersAway)) {
-        UtilServerDialog.showDialog(getGameState(),
-            new DialogPlayerChoiceParameter(game.getTeamAway().getId(), PlayerChoiceMode.DIVING_CATCH, divingCatchersAway, null, 1));
+        UtilServerDialog.showDialog(
+            getGameState(),
+            new DialogPlayerChoiceParameter(game.getTeamAway().getId(), PlayerChoiceMode.DIVING_CATCH, divingCatchersAway, null, 1),
+            game.isHomePlaying()
+        );
       } else {
         fDivingCatchChoice = false;
       }

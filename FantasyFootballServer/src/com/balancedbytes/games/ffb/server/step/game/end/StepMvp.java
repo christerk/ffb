@@ -145,7 +145,7 @@ public final class StepMvp extends AbstractStep {
               null,
               Math.min(mvpNominations, playersForMvp.length)
             );
-            UtilServerDialog.showDialog(getGameState(), dialogParameter);
+            UtilServerDialog.showDialog(getGameState(), dialogParameter, false);
           }
         } else {
           fNrOfHomeMvps = 0;
@@ -167,7 +167,7 @@ public final class StepMvp extends AbstractStep {
               null,
               Math.min(mvpNominations, playersForMvp.length)
             );
-            UtilServerDialog.showDialog(getGameState(), dialogParameter);
+            UtilServerDialog.showDialog(getGameState(), dialogParameter, false);
           }
         } else {
           fNrOfAwayMvps = 0;

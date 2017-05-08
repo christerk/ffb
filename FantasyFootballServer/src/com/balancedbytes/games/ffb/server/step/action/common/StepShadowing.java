@@ -10,6 +10,7 @@ import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
+import com.balancedbytes.games.ffb.model.Team;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandPlayerChoice;
 import com.balancedbytes.games.ffb.report.ReportTentaclesShadowingRoll;
 import com.balancedbytes.games.ffb.server.DiceInterpreter;
@@ -109,6 +110,7 @@ public class StepShadowing extends AbstractStepWithReRoll {
   private void executeStep() {
   	Game game = getGameState().getGame();
     ActingPlayer actingPlayer = game.getActingPlayer();
+    UtilServerDialog.hideDialog(getGameState());
     boolean doNextStep = true;
     boolean doShadowing = (!fUsingDivingTackle && (game.getTurnMode() != TurnMode.KICKOFF_RETURN) && (game.getTurnMode() != TurnMode.PASS_BLOCK));
     if (doShadowing && (fCoordinateFrom != null) && (fUsingShadowing == null)) {
@@ -134,7 +136,12 @@ public class StepShadowing extends AbstractStepWithReRoll {
           }
           descriptionArray[i] = description.toString();
         } 
-        UtilServerDialog.showDialog(getGameState(), new DialogPlayerChoiceParameter(teamId, PlayerChoiceMode.SHADOWING, shadowers, descriptionArray, 1));
+        Team actingTeam = game.isHomePlaying() ? game.getTeamHome() : game.getTeamAway();
+        UtilServerDialog.showDialog(
+            getGameState(),
+            new DialogPlayerChoiceParameter(teamId, PlayerChoiceMode.SHADOWING, shadowers, descriptionArray, 1),
+            !actingTeam.getId().equals(teamId)
+        );
         doNextStep = false;
       } else {
       	fUsingShadowing = false;

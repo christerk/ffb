@@ -68,7 +68,7 @@ public final class StepCoinChoice extends AbstractStep {
   private void executeStep() {
     Game game = getGameState().getGame();
     if (fCoinChoiceHeads == null) {
-      UtilServerDialog.showDialog(getGameState(), new DialogCoinChoiceParameter());
+      UtilServerDialog.showDialog(getGameState(), new DialogCoinChoiceParameter(), false);
     } else {
       boolean coinThrowHeads = getGameState().getDiceRoller().throwCoin();
       Team choosingTeam = game.isHomePlaying() ? game.getTeamHome() : game.getTeamAway();
@@ -79,7 +79,7 @@ public final class StepCoinChoice extends AbstractStep {
         choosingTeam = game.getTeamHome();
       }
       publishParameter(new StepParameter(StepParameterKey.CHOOSING_TEAM_ID, choosingTeam.getId()));
-      UtilServerDialog.showDialog(getGameState(), new DialogReceiveChoiceParameter(choosingTeam.getId()));
+      UtilServerDialog.showDialog(getGameState(), new DialogReceiveChoiceParameter(choosingTeam.getId()), false);
       getResult().setNextAction(StepAction.NEXT_STEP);
     }
   }

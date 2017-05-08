@@ -9,6 +9,7 @@ import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
+import com.balancedbytes.games.ffb.model.Team;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandPlayerChoice;
 import com.balancedbytes.games.ffb.report.ReportTentaclesShadowingRoll;
 import com.balancedbytes.games.ffb.server.DiceInterpreter;
@@ -44,59 +45,58 @@ import com.eclipsesource.json.JsonValue;
  * @author Kalimar
  */
 public class StepTentacles extends AbstractStepWithReRoll {
-	
-	private String fGotoLabelOnSuccess;
-	private FieldCoordinate fCoordinateFrom;
-	private Boolean fUsingTentacles;
-	
-	public StepTentacles(GameState pGameState) {
-		super(pGameState);
-	}
-	
-	public StepId getId() {
-		return StepId.TENTACLES;
-	}
-	
+
+  private String fGotoLabelOnSuccess;
+  private FieldCoordinate fCoordinateFrom;
+  private Boolean fUsingTentacles;
+
+  public StepTentacles(GameState pGameState) {
+    super(pGameState);
+  }
+
+  public StepId getId() {
+    return StepId.TENTACLES;
+  }
+
   @Override
   public void init(StepParameterSet pParameterSet) {
-  	if (pParameterSet != null) {
-  		for (StepParameter parameter : pParameterSet.values()) {
-  			switch (parameter.getKey()) {
-  				// mandatory
-  				case GOTO_LABEL_ON_SUCCESS:
-  					fGotoLabelOnSuccess = (String) parameter.getValue();
-  					break;
-					default:
-						break;
-  			}
-  		}
-  	}
-  	if (fGotoLabelOnSuccess == null) {
-			throw new StepException("StepParameter " + StepParameterKey.GOTO_LABEL_ON_SUCCESS + " is not initialized.");
-  	}
+    if (pParameterSet != null) {
+      for (StepParameter parameter : pParameterSet.values()) {
+        switch (parameter.getKey()) {
+          // mandatory
+          case GOTO_LABEL_ON_SUCCESS:
+            fGotoLabelOnSuccess = (String) parameter.getValue();
+            break;
+          default:
+            break;
+        }
+      }
+    }
+    if (fGotoLabelOnSuccess == null) {
+      throw new StepException("StepParameter " + StepParameterKey.GOTO_LABEL_ON_SUCCESS + " is not initialized.");
+    }
   }
-  
-	@Override
-	public boolean setParameter(StepParameter pParameter) {
-		if ((pParameter != null) && !super.setParameter(pParameter)) {
-			switch (pParameter.getKey()) {
-				case COORDINATE_FROM:
-					fCoordinateFrom = (FieldCoordinate) pParameter.getValue();
-					return true;
-				default:
-					break;
-			}
-		}
-		return false;
-	}
-	
-	@Override
-	public void start() {
-		super.start();
-		executeStep();
-	}
-	
-	
+
+  @Override
+  public boolean setParameter(StepParameter pParameter) {
+    if ((pParameter != null) && !super.setParameter(pParameter)) {
+      switch (pParameter.getKey()) {
+        case COORDINATE_FROM:
+          fCoordinateFrom = (FieldCoordinate) pParameter.getValue();
+          return true;
+        default:
+          break;
+      }
+    }
+    return false;
+  }
+
+  @Override
+  public void start() {
+    super.start();
+    executeStep();
+  }
+
   @Override
   public StepCommandStatus handleCommand(ReceivedCommand pReceivedCommand) {
     StepCommandStatus commandStatus = super.handleCommand(pReceivedCommand);
@@ -119,13 +119,14 @@ public class StepTentacles extends AbstractStepWithReRoll {
     }
     return commandStatus;
   }
-	
+
   private void executeStep() {
     Game game = getGameState().getGame();
     ActingPlayer actingPlayer = game.getActingPlayer();
+    UtilServerDialog.hideDialog(getGameState());
     if (fUsingTentacles == null) {
       if (actingPlayer.isDodging() || actingPlayer.isLeaping()) {
-        Player[] playerArray = UtilPlayer.findAdjacentOpposingPlayersWithSkill(game, fCoordinateFrom, Skill.TENTACLES, false) ;
+        Player[] playerArray = UtilPlayer.findAdjacentOpposingPlayersWithSkill(game, fCoordinateFrom, Skill.TENTACLES, false);
         if (ArrayTool.isProvided(playerArray)) {
           String teamId = game.isHomePlaying() ? game.getTeamAway().getId() : game.getTeamHome().getId();
           String[] descriptionArray = new String[playerArray.length];
@@ -142,13 +143,18 @@ public class StepTentacles extends AbstractStepWithReRoll {
               description.append("(").append(Math.abs(attributeDiff)).append(" ST disadavantage)");
             }
             descriptionArray[i] = description.toString();
-          } 
-          UtilServerDialog.showDialog(getGameState(), new DialogPlayerChoiceParameter(teamId, PlayerChoiceMode.TENTACLES, playerArray, descriptionArray, 1));
+          }
+          Team actingTeam = game.isHomePlaying() ? game.getTeamHome() : game.getTeamAway();
+          UtilServerDialog.showDialog(
+              getGameState(),
+              new DialogPlayerChoiceParameter(teamId, PlayerChoiceMode.TENTACLES, playerArray, descriptionArray, 1),
+              !actingTeam.getId().equals(teamId)
+          );
         } else {
-        	fUsingTentacles = false;
+          fUsingTentacles = false;
         }
       } else {
-      	fUsingTentacles = false;
+        fUsingTentacles = false;
       }
     }
     if (fUsingTentacles != null) {
@@ -162,12 +168,14 @@ public class StepTentacles extends AbstractStepWithReRoll {
         }
         if (rollTentacles) {
           int[] rollEscape = getGameState().getDiceRoller().rollTentaclesEscape();
-          boolean successful = DiceInterpreter.getInstance().isTentaclesEscapeSuccessful(rollEscape, UtilCards.getPlayerStrength(game, game.getDefender()), actingPlayer.getStrength());
-          int minimumRoll = DiceInterpreter.getInstance().minimumRollTentaclesEscape(UtilCards.getPlayerStrength(game, game.getDefender()), actingPlayer.getStrength());
+          boolean successful = DiceInterpreter.getInstance().isTentaclesEscapeSuccessful(rollEscape, UtilCards.getPlayerStrength(game, game.getDefender()),
+              actingPlayer.getStrength());
+          int minimumRoll = DiceInterpreter.getInstance().minimumRollTentaclesEscape(UtilCards.getPlayerStrength(game, game.getDefender()),
+              actingPlayer.getStrength());
           boolean reRolled = ((getReRolledAction() == ReRolledAction.TENTACLES_ESCAPE) && (getReRollSource() != null));
           getResult().addReport(new ReportTentaclesShadowingRoll(Skill.TENTACLES, game.getDefenderId(), rollEscape, successful, minimumRoll, reRolled));
           if (successful) {
-          	fUsingTentacles = false;
+            fUsingTentacles = false;
           } else {
             if (getReRolledAction() != ReRolledAction.TENTACLES_ESCAPE) {
               if (UtilServerReRoll.askForReRollIfAvailable(getGameState(), actingPlayer.getPlayer(), ReRolledAction.TENTACLES_ESCAPE, minimumRoll, false)) {
@@ -182,16 +190,16 @@ public class StepTentacles extends AbstractStepWithReRoll {
           game.getFieldModel().updatePlayerAndBallPosition(actingPlayer.getPlayer(), fCoordinateFrom);
           publishParameter(new StepParameter(StepParameterKey.FEEDING_ALLOWED, false));
           publishParameter(new StepParameter(StepParameterKey.END_PLAYER_ACTION, true));
-        	getResult().setNextAction(StepAction.GOTO_LABEL, fGotoLabelOnSuccess);
+          getResult().setNextAction(StepAction.GOTO_LABEL, fGotoLabelOnSuccess);
         } else {
-        	getResult().setNextAction(StepAction.NEXT_STEP);
+          getResult().setNextAction(StepAction.NEXT_STEP);
         }
       }
     }
   }
-  
+
   // JSON serialization
-  
+
   @Override
   public JsonObject toJsonValue() {
     JsonObject jsonObject = super.toJsonValue();
@@ -200,7 +208,7 @@ public class StepTentacles extends AbstractStepWithReRoll {
     IServerJsonOption.USING_TENTACLES.addTo(jsonObject, fUsingTentacles);
     return jsonObject;
   }
-  
+
   @Override
   public StepTentacles initFrom(JsonValue pJsonValue) {
     super.initFrom(pJsonValue);
@@ -210,5 +218,5 @@ public class StepTentacles extends AbstractStepWithReRoll {
     fUsingTentacles = IServerJsonOption.USING_TENTACLES.getFrom(jsonObject);
     return this;
   }
-  	
+
 }

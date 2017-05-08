@@ -121,7 +121,7 @@ public final class StepKickoffScatterRoll extends AbstractStep {
       	fKickingPlayerCoordinate = game.getFieldModel().getPlayerCoordinate(kickingPlayer);
         if (UtilCards.hasSkill(game, kickingPlayer, Skill.KICK) && ((game.isHomePlaying()&& FieldCoordinateBounds.CENTER_FIELD_HOME.isInBounds(game.getFieldModel().getPlayerCoordinate(kickingPlayer))) || (!game.isHomePlaying() && FieldCoordinateBounds.CENTER_FIELD_AWAY.isInBounds(game.getFieldModel().getPlayerCoordinate(kickingPlayer))))) {
           FieldCoordinate ballCoordinateEndWithKick = UtilServerCatchScatterThrowIn.findScatterCoordinate(fKickoffStartCoordinate, fScatterDirection, fScatterDistance / 2);
-          UtilServerDialog.showDialog(getGameState(), new DialogKickSkillParameter(kickingPlayer.getId(),ballCoordinateEnd, ballCoordinateEndWithKick));
+          UtilServerDialog.showDialog(getGameState(), new DialogKickSkillParameter(kickingPlayer.getId(), ballCoordinateEnd, ballCoordinateEndWithKick), false);
         } else {
         	fUseKickChoice = false;
         }

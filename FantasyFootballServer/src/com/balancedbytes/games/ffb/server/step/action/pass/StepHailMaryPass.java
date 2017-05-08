@@ -8,6 +8,7 @@ import com.balancedbytes.games.ffb.Skill;
 import com.balancedbytes.games.ffb.dialog.DialogSkillUseParameter;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.Game;
+import com.balancedbytes.games.ffb.model.Team;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandUseSkill;
 import com.balancedbytes.games.ffb.report.ReportPassRoll;
 import com.balancedbytes.games.ffb.server.GameState;
@@ -101,6 +102,7 @@ public final class StepHailMaryPass extends AbstractStepWithReRoll {
 
   private void executeStep() {
     Game game = getGameState().getGame();
+    UtilServerDialog.hideDialog(getGameState());
     if (game.getThrower() == null) {
     	return;
     }
@@ -129,7 +131,12 @@ public final class StepHailMaryPass extends AbstractStepWithReRoll {
           if (UtilCards.hasSkill(game, game.getThrower(), Skill.PASS) && !fPassSkillUsed) {
           	doNextStep = false;
           	fPassSkillUsed = true;
-            UtilServerDialog.showDialog(getGameState(), new DialogSkillUseParameter(game.getThrowerId(), Skill.PASS, 2));
+          	Team actingTeam = game.isHomePlaying() ? game.getTeamHome() : game.getTeamAway();
+            UtilServerDialog.showDialog(
+                getGameState(),
+                new DialogSkillUseParameter(game.getThrowerId(), Skill.PASS, 2),
+                actingTeam.hasPlayer(game.getThrower())
+            );
           } else {
             if (UtilServerReRoll.askForReRollIfAvailable(getGameState(), game.getThrower(), ReRolledAction.PASS, 2, false)) {
             	doNextStep = false;

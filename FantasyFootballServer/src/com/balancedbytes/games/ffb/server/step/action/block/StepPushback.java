@@ -206,7 +206,7 @@ public class StepPushback extends AbstractStep {
       // handle stand firm
       if (UtilCards.hasSkill(game, defender, Skill.STAND_FIRM) && ((fUsingStandFirm == null) || fUsingStandFirm)) {
         if (fUsingStandFirm == null) {
-          UtilServerDialog.showDialog(getGameState(), new DialogSkillUseParameter(defender.getId(), Skill.STAND_FIRM, 0));
+          UtilServerDialog.showDialog(getGameState(), new DialogSkillUseParameter(defender.getId(), Skill.STAND_FIRM, 0), true);
         }
         if (fUsingStandFirm != null) {
           if (fUsingStandFirm) {
@@ -232,7 +232,7 @@ public class StepPushback extends AbstractStep {
           && ((fOldDefenderState == null) || !fOldDefenderState.isProne())
       ) {
         if (fUsingSideStep == null) {
-          UtilServerDialog.showDialog(getGameState(), new DialogSkillUseParameter(defender.getId(), Skill.SIDE_STEP, 0));
+          UtilServerDialog.showDialog(getGameState(), new DialogSkillUseParameter(defender.getId(), Skill.SIDE_STEP, 0), true);
         } else {
           if (fUsingSideStep) {
             pushbackMode = PushbackMode.SIDE_STEP;
@@ -273,7 +273,7 @@ public class StepPushback extends AbstractStep {
           }
         }
         if (fUsingGrab == null) {
-          UtilServerDialog.showDialog(getGameState(), new DialogSkillUseParameter(actingPlayer.getPlayerId(), Skill.GRAB, 0));
+          UtilServerDialog.showDialog(getGameState(), new DialogSkillUseParameter(actingPlayer.getPlayerId(), Skill.GRAB, 0), false);
           fUsingGrab = null;
         } else {
           if (fUsingGrab) {

@@ -80,7 +80,7 @@ public class UtilKickoffSequence {
       }
     }
     if (messageList.size() > 0) {
-      UtilServerDialog.showDialog(pGameState, new DialogSetupErrorParameter(team.getId(), messageList.toArray(new String[messageList.size()])));
+      UtilServerDialog.showDialog(pGameState, new DialogSetupErrorParameter(team.getId(), messageList.toArray(new String[messageList.size()])), false);
       return false;
     } else {
       return true;

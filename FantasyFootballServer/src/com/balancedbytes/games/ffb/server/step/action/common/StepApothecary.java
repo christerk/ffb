@@ -167,6 +167,7 @@ public class StepApothecary extends AbstractStep {
     if (fInjuryResult == null) {
       getResult().setNextAction(StepAction.NEXT_STEP);
     } else {
+      UtilServerDialog.hideDialog(getGameState());
       boolean doNextStep = true;
       Game game = getGameState().getGame();
       if (fInjuryResult.getApothecaryStatus() != null) {
@@ -176,7 +177,7 @@ public class StepApothecary extends AbstractStep {
               fInjuryResult.report(this);
             }
             UtilServerDialog.showDialog(getGameState(), new DialogUseApothecaryParameter(fInjuryResult.getDefenderId(), fInjuryResult.getPlayerState(),
-                fInjuryResult.getSeriousInjury()));
+                fInjuryResult.getSeriousInjury()), true);
             fInjuryResult.setApothecaryStatus(ApothecaryStatus.WAIT_FOR_APOTHECARY_USE);
             doNextStep = false;
             break;
@@ -258,7 +259,7 @@ public class StepApothecary extends AbstractStep {
         UtilServerDialog.showDialog(
             getGameState(),
             new DialogApothecaryChoiceParameter(defender.getId(), fInjuryResult.getPlayerState(), fInjuryResult.getSeriousInjury(), newInjuryResult
-                .getPlayerState(), newInjuryResult.getSeriousInjury()));
+                .getPlayerState(), newInjuryResult.getSeriousInjury()), true);
       }
     }
     if (!apothecaryChoice) {

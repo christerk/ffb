@@ -141,7 +141,11 @@ public abstract class AbstractStep implements IStep {
       switch (concedeGameCommand.getConcedeGameStatus()) {
       case REQUESTED:
         if (game.isConcessionPossible() && ((game.isHomePlaying() && homeCommand) || (!game.isHomePlaying() && awayCommand))) {
-          UtilServerDialog.showDialog(getGameState(), new DialogConcedeGameParameter());
+          UtilServerDialog.showDialog(
+              getGameState(),
+              new DialogConcedeGameParameter(),
+              false
+          );
         }
         break;
       case CONFIRMED:

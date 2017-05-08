@@ -127,7 +127,7 @@ public final class StepIntercept extends AbstractStepWithReRoll {
       }
       if (doIntercept) {
         if (!fInterceptorChosen) {
-          UtilServerDialog.showDialog(getGameState(), new DialogInterceptionParameter(game.getThrowerId()));
+          UtilServerDialog.showDialog(getGameState(), new DialogInterceptionParameter(game.getThrowerId()), true);
           fOldTurnMode = game.getTurnMode();
           game.setTurnMode(TurnMode.INTERCEPTION);
           doNextStep = false;

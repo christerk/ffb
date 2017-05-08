@@ -182,23 +182,27 @@ public final class StepBuyInducements extends AbstractStep {
         if (homeTV > awayTV) {
           UtilServerDialog.showDialog(
             getGameState(),
-            new DialogBuyInducementsParameter(game.getTeamHome().getId(), fInducementGoldHome, wizardAvailable)
+            new DialogBuyInducementsParameter(game.getTeamHome().getId(), fInducementGoldHome, wizardAvailable),
+            false
           );
         } else {
           UtilServerDialog.showDialog(
             getGameState(),
-            new DialogBuyInducementsParameter(game.getTeamAway().getId(), fInducementGoldAway, wizardAvailable)
+            new DialogBuyInducementsParameter(game.getTeamAway().getId(), fInducementGoldAway, wizardAvailable),
+            false
           );
         }
       } else if (!fInducementsSelectedHome) {
         UtilServerDialog.showDialog(
           getGameState(),
-          new DialogBuyInducementsParameter(game.getTeamHome().getId(), fInducementGoldHome, wizardAvailable)
+          new DialogBuyInducementsParameter(game.getTeamHome().getId(), fInducementGoldHome, wizardAvailable),
+          false
         );
       } else if (!fInducementsSelectedAway) {
         UtilServerDialog.showDialog(
           getGameState(),
-          new DialogBuyInducementsParameter(game.getTeamAway().getId(), fInducementGoldAway, wizardAvailable)
+          new DialogBuyInducementsParameter(game.getTeamAway().getId(), fInducementGoldAway, wizardAvailable),
+          false
         );
       } else {
         leaveStep(homeTV, awayTV);

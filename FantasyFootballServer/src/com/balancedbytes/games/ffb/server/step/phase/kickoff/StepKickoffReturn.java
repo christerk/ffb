@@ -157,7 +157,7 @@ public final class StepKickoffReturn extends AbstractStep {
         }
         game.setHomePlaying(!game.isHomePlaying());
         game.setTurnMode(TurnMode.KICKOFF_RETURN);
-        UtilServerDialog.showDialog(getGameState(), new DialogKickoffReturnParameter());
+        UtilServerDialog.showDialog(getGameState(), new DialogKickoffReturnParameter(), false);
 
         getGameState().pushCurrentStepOnStack();
         SequenceGenerator.getInstance().pushSelectSequence(getGameState(), false);

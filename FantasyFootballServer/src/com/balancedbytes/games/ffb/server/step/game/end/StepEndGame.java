@@ -50,7 +50,7 @@ public final class StepEndGame extends AbstractStep {
       getGameState().getStepStack().clear();  // clean up after ourselves
       gameCache.queueDbUpdate(getGameState(), true);
       IDialogParameter gameStatistics = new DialogParameterFactory().createDialogParameter(DialogId.GAME_STATISTICS);
-      UtilServerDialog.showDialog(getGameState(), gameStatistics);
+      UtilServerDialog.showDialog(getGameState(), gameStatistics, false);
     }
     FantasyFootballServer server = getGameState().getServer();
     if (!game.isTesting()) {

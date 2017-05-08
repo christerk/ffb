@@ -121,7 +121,7 @@ public class StepBlockRoll extends AbstractStepWithReRoll {
       proReRollOption = false;
     }
     getResult().addReport(new ReportBlockRoll(teamId, fBlockRoll));
-    UtilServerDialog.showDialog(getGameState(), new DialogBlockRollParameter(teamId, fNrOfDice, fBlockRoll, teamReRollOption, proReRollOption));
+    UtilServerDialog.showDialog(getGameState(), new DialogBlockRollParameter(teamId, fNrOfDice, fBlockRoll, teamReRollOption, proReRollOption), (fNrOfDice < 0));
   }
   
   // JSON serialization

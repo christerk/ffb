@@ -32,25 +32,25 @@ import com.eclipsesource.json.JsonValue;
  * @author Kalimar
  */
 public class StepDumpOff extends AbstractStep {
-	
-	private Boolean fUsingDumpOff;
-	private FieldCoordinate fDefenderPosition;
-	private TurnMode fOldTurnMode;
 
-	public StepDumpOff(GameState pGameState) {
-		super(pGameState);
-	}
-	
-	public StepId getId() {
-		return StepId.DUMP_OFF;
-	}
-	
-	@Override
-	public void start() {
-		super.start();
-		executeStep();
-	}
-	
+  private Boolean fUsingDumpOff;
+  private FieldCoordinate fDefenderPosition;
+  private TurnMode fOldTurnMode;
+
+  public StepDumpOff(GameState pGameState) {
+    super(pGameState);
+  }
+
+  public StepId getId() {
+    return StepId.DUMP_OFF;
+  }
+
+  @Override
+  public void start() {
+    super.start();
+    executeStep();
+  }
+
   @Override
   public StepCommandStatus handleCommand(ReceivedCommand pReceivedCommand) {
     StepCommandStatus commandStatus = super.handleCommand(pReceivedCommand);
@@ -72,59 +72,65 @@ public class StepDumpOff extends AbstractStep {
     }
     return commandStatus;
   }
-	
-	@Override
-	public boolean setParameter(StepParameter pParameter) {
-		if ((pParameter != null) && !super.setParameter(pParameter)) {
-			switch (pParameter.getKey()) {
-				case DEFENDER_POSITION:
-					fDefenderPosition = (FieldCoordinate) pParameter.getValue();
-					return true;
-				default:
-					break;
-			}
-		}
-		return false;
-	}
-	
+
+  @Override
+  public boolean setParameter(StepParameter pParameter) {
+    if ((pParameter != null) && !super.setParameter(pParameter)) {
+      switch (pParameter.getKey()) {
+        case DEFENDER_POSITION:
+          fDefenderPosition = (FieldCoordinate) pParameter.getValue();
+          return true;
+        default:
+          break;
+      }
+    }
+    return false;
+  }
+
   private void executeStep() {
-    
-  	Game game = getGameState().getGame();
-    
+
+    Game game = getGameState().getGame();
+
     if (game.getTurnMode() == TurnMode.DUMP_OFF) {
-    	game.setTurnMode(fOldTurnMode);
+      game.setTurnMode(fOldTurnMode);
       getResult().setNextAction(StepAction.NEXT_STEP);
-    	
+
     } else if (fUsingDumpOff == null) {
-      if (UtilCards.hasSkill(game, game.getDefender(), Skill.DUMP_OFF) && (fDefenderPosition != null) && fDefenderPosition.equals(game.getFieldModel().getBallCoordinate())
-        && !(game.getFieldModel().getPlayerState(game.getDefender()).isConfused() || game.getFieldModel().getPlayerState(game.getDefender()).isHypnotized())) {
-        UtilServerDialog.showDialog(getGameState(), new DialogSkillUseParameter(game.getDefenderId(), Skill.DUMP_OFF, 0));
+      if (UtilCards.hasSkill(game, game.getDefender(), Skill.DUMP_OFF) && (fDefenderPosition != null)
+          && fDefenderPosition.equals(game.getFieldModel().getBallCoordinate())
+          && !(game.getFieldModel().getPlayerState(game.getDefender()).isConfused()
+              || game.getFieldModel().getPlayerState(game.getDefender()).isHypnotized())) {
+        UtilServerDialog.showDialog(
+            getGameState(),
+            new DialogSkillUseParameter(game.getDefenderId(), Skill.DUMP_OFF, 0),
+            true
+        );
         getResult().setNextAction(StepAction.CONTINUE);
       } else {
-      	fUsingDumpOff = false;
+        fUsingDumpOff = false;
         getResult().setNextAction(StepAction.NEXT_STEP);
       }
 
     } else if (fUsingDumpOff) {
-    	fOldTurnMode = game.getTurnMode();
-    	game.setTurnMode(TurnMode.DUMP_OFF);
-    	game.setThrowerId(game.getDefenderId());
-    	game.setThrowerAction(PlayerAction.DUMP_OFF);
-    	game.setDefenderAction(PlayerAction.DUMP_OFF);
-      UtilServerDialog.showDialog(getGameState(), new DialogDefenderActionParameter());
-    	getGameState().pushCurrentStepOnStack();
+      fOldTurnMode = game.getTurnMode();
+      game.setTurnMode(TurnMode.DUMP_OFF);
+      game.setThrowerId(game.getDefenderId());
+      game.setThrowerAction(PlayerAction.DUMP_OFF);
+      game.setDefenderAction(PlayerAction.DUMP_OFF);
+      UtilServerDialog.showDialog(getGameState(), new DialogDefenderActionParameter(), true);
+      getGameState().pushCurrentStepOnStack();
       SequenceGenerator.getInstance().pushPassSequence(getGameState());
       getResult().setNextAction(StepAction.NEXT_STEP);
-    
+
     } else {
       getResult().addReport(new ReportSkillUse(game.getDefenderId(), Skill.DUMP_OFF, false, null));
       getResult().setNextAction(StepAction.NEXT_STEP);
     }
-    
+
   }
-  
+
   // JSON serialization
-  
+
   @Override
   public JsonObject toJsonValue() {
     JsonObject jsonObject = super.toJsonValue();
@@ -133,7 +139,7 @@ public class StepDumpOff extends AbstractStep {
     IServerJsonOption.OLD_TURN_MODE.addTo(jsonObject, fOldTurnMode);
     return jsonObject;
   }
-  
+
   @Override
   public StepDumpOff initFrom(JsonValue pJsonValue) {
     super.initFrom(pJsonValue);

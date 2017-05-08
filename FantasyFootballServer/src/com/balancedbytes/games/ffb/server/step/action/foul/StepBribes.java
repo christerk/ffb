@@ -114,6 +114,7 @@ public class StepBribes extends AbstractStep {
   private void executeStep() {
     Game game = getGameState().getGame();
     ActingPlayer actingPlayer = game.getActingPlayer();
+    UtilServerDialog.hideDialog(getGameState());
     if (fBribesChoice == null) {
       askForBribes();
     }
@@ -160,7 +161,7 @@ public class StepBribes extends AbstractStep {
       Team team = game.isHomePlaying() ? game.getTeamHome() : game.getTeamAway();
       DialogBribesParameter dialogParameter = new DialogBribesParameter(team.getId(), 1);
       dialogParameter.addPlayerId(actingPlayer.getPlayerId());
-      UtilServerDialog.showDialog(getGameState(), dialogParameter);
+      UtilServerDialog.showDialog(getGameState(), dialogParameter, false);
       fBribesChoice = null;
     }
   }
@@ -173,7 +174,7 @@ public class StepBribes extends AbstractStep {
       Team team = game.isHomePlaying() ? game.getTeamHome() : game.getTeamAway();
       DialogArgueTheCallParameter dialogParameter = new DialogArgueTheCallParameter(team.getId());
       dialogParameter.addPlayerId(actingPlayer.getPlayerId());
-      UtilServerDialog.showDialog(getGameState(), dialogParameter);
+      UtilServerDialog.showDialog(getGameState(), dialogParameter, false);
       fArgueTheCallChoice = null;
     }
   }

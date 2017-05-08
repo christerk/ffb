@@ -144,7 +144,7 @@ public class StepInitFeeding extends AbstractStep {
       Team team = game.isHomePlaying() ? game.getTeamHome() : game.getTeamAway();
       Player[] victims = UtilPlayer.findAdjacentPlayersToFeedOn(game, team, playerCoordinate);
       if (ArrayTool.isProvided(victims)) {
-        UtilServerDialog.showDialog(getGameState(), new DialogPlayerChoiceParameter(team.getId(), PlayerChoiceMode.FEED, victims, null, 1));
+        UtilServerDialog.showDialog(getGameState(), new DialogPlayerChoiceParameter(team.getId(), PlayerChoiceMode.FEED, victims, null, 1), false);
       } else {
       	fFeedOnPlayerChoice = false;
       }

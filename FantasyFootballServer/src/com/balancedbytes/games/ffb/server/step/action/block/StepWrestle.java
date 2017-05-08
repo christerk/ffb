@@ -87,7 +87,7 @@ public class StepWrestle extends AbstractStep {
     PlayerState defenderState = game.getFieldModel().getPlayerState(game.getDefender());
     if (fUsingWrestleAttacker == null) {
       if (UtilCards.hasSkill(game, actingPlayer, Skill.WRESTLE) && !attackerState.isRooted() && !UtilCards.hasSkill(game, actingPlayer, Skill.BALL_AND_CHAIN)) {
-        UtilServerDialog.showDialog(getGameState(), new DialogSkillUseParameter(actingPlayer.getPlayer().getId(), Skill.WRESTLE, 0));
+        UtilServerDialog.showDialog(getGameState(), new DialogSkillUseParameter(actingPlayer.getPlayer().getId(), Skill.WRESTLE, 0), false);
       } else {
       	fUsingWrestleAttacker = false;
       }
@@ -95,7 +95,7 @@ public class StepWrestle extends AbstractStep {
     if ((fUsingWrestleAttacker != null) && (fUsingWrestleDefender == null)) {
       if (!fUsingWrestleAttacker && UtilCards.hasSkill(game, game.getDefender(), Skill.WRESTLE) && !defenderState.isRooted()
           && !(actingPlayer.getPlayerAction() == PlayerAction.BLITZ && UtilCards.hasSkill(game, actingPlayer, Skill.JUGGERNAUT))) {
-        UtilServerDialog.showDialog(getGameState(), new DialogSkillUseParameter(game.getDefenderId(), Skill.WRESTLE, 0));
+        UtilServerDialog.showDialog(getGameState(), new DialogSkillUseParameter(game.getDefenderId(), Skill.WRESTLE, 0), true);
       } else {
       	fUsingWrestleDefender = false;
       }

@@ -97,10 +97,10 @@ public final class StepWinnings extends AbstractStepWithReRoll {
     }
     if (getReRolledAction() == null) {
       if (scoreDiffHome > 0) {
-        UtilServerDialog.showDialog(getGameState(), new DialogWinningsReRollParameter(game.getTeamHome().getId(), rollHome));
+        UtilServerDialog.showDialog(getGameState(), new DialogWinningsReRollParameter(game.getTeamHome().getId(), rollHome), false);
       }
       if (scoreDiffHome < 0) {
-        UtilServerDialog.showDialog(getGameState(), new DialogWinningsReRollParameter(game.getTeamAway().getId(), rollAway));
+        UtilServerDialog.showDialog(getGameState(), new DialogWinningsReRollParameter(game.getTeamAway().getId(), rollAway), false);
       }
     }
     return new ReportWinningsRoll(rollHome, gameResult.getTeamResultHome().getWinnings(), rollAway, gameResult.getTeamResultAway().getWinnings());

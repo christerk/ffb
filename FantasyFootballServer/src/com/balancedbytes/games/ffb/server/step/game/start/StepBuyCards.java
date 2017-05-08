@@ -152,14 +152,14 @@ public final class StepBuyCards extends AbstractStep {
         int homeTV = gameResult.getTeamResultHome().getTeamValue();
         int awayTV = gameResult.getTeamResultAway().getTeamValue();
         if (homeTV > awayTV) {
-          UtilServerDialog.showDialog(getGameState(), createDialogParameter(game.getTeamHome().getId(), fInducementGoldHome));
+          UtilServerDialog.showDialog(getGameState(), createDialogParameter(game.getTeamHome().getId(), fInducementGoldHome), false);
         } else {
-          UtilServerDialog.showDialog(getGameState(), createDialogParameter(game.getTeamAway().getId(), fInducementGoldAway));
+          UtilServerDialog.showDialog(getGameState(), createDialogParameter(game.getTeamAway().getId(), fInducementGoldAway), false);
         }
       } else if (!fCardsSelectedHome) {
-        UtilServerDialog.showDialog(getGameState(), createDialogParameter(game.getTeamHome().getId(), fInducementGoldHome));
+        UtilServerDialog.showDialog(getGameState(), createDialogParameter(game.getTeamHome().getId(), fInducementGoldHome), false);
       } else if (!fCardsSelectedAway) {
-        UtilServerDialog.showDialog(getGameState(), createDialogParameter(game.getTeamAway().getId(), fInducementGoldAway));
+        UtilServerDialog.showDialog(getGameState(), createDialogParameter(game.getTeamAway().getId(), fInducementGoldAway), false);
       } else {
         int freeCash = UtilGameOption.getIntOption(game, GameOptionId.FREE_INDUCEMENT_CASH);
         int maxInducementGoldHome = UtilInducementSequence.calculateInducementGold(game, true) + freeCash;

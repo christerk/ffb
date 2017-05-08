@@ -159,7 +159,7 @@ public class StepDivingTackle extends AbstractStep {
           int minimumRoll = DiceInterpreter.getInstance().minimumRollDodge(game, actingPlayer.getPlayer(), dodgeModifiers);
           if (!DiceInterpreter.getInstance().isSkillRollSuccessful(fDodgeRoll, minimumRoll)) {
             String teamId = game.isHomePlaying() ? game.getTeamAway().getId() : game.getTeamHome().getId();
-            UtilServerDialog.showDialog(getGameState(), new DialogPlayerChoiceParameter(teamId, PlayerChoiceMode.DIVING_TACKLE, divingTacklers, null, 1));
+            UtilServerDialog.showDialog(getGameState(), new DialogPlayerChoiceParameter(teamId, PlayerChoiceMode.DIVING_TACKLE, divingTacklers, null, 1), true);
             fUsingDivingTackle = null;
           } else {
             getResult().addReport(new ReportSkillUse(null, Skill.DIVING_TACKLE, false, SkillUse.WOULD_NOT_HELP));

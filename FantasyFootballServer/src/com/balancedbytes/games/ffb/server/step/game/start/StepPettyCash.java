@@ -86,15 +86,13 @@ public final class StepPettyCash extends AbstractStep {
       gameResult.getTeamResultHome().setPettyCashTransferred(game.getTeamHome().getTreasury());
       if (game.getTeamAway().getTeamValue() > game.getTeamHome().getTeamValue()) {
         gameResult.getTeamResultHome().setPettyCashTransferred(
-          gameResult.getTeamResultHome().getPettyCashTransferred() + (game.getTeamAway().getTeamValue() - game.getTeamHome().getTeamValue())
-        );
+            gameResult.getTeamResultHome().getPettyCashTransferred() + (game.getTeamAway().getTeamValue() - game.getTeamHome().getTeamValue()));
       }
       fPettyCashSelectedHome = true;
       gameResult.getTeamResultAway().setPettyCashTransferred(game.getTeamAway().getTreasury());
       if (game.getTeamHome().getTeamValue() > game.getTeamAway().getTeamValue()) {
         gameResult.getTeamResultAway().setPettyCashTransferred(
-          gameResult.getTeamResultAway().getPettyCashTransferred() + (game.getTeamHome().getTeamValue() - game.getTeamAway().getTeamValue())
-        );
+            gameResult.getTeamResultAway().getPettyCashTransferred() + (game.getTeamHome().getTeamValue() - game.getTeamAway().getTeamValue()));
       }
       fPettyCashSelectedAway = true;
     }
@@ -122,19 +120,43 @@ public final class StepPettyCash extends AbstractStep {
     }
     if (!fPettyCashSelectedHome && !fPettyCashSelectedAway) {
       if (game.getTeamHome().getTeamValue() >= game.getTeamAway().getTeamValue()) {
-        UtilServerDialog.showDialog(getGameState(), new DialogPettyCashParameter(game.getTeamHome().getId(), game.getTeamHome().getTeamValue(),
-            game.getTeamHome().getTreasury(), game.getTeamAway().getTeamValue()));
+        UtilServerDialog.showDialog(
+            getGameState(),
+            new DialogPettyCashParameter(
+                game.getTeamHome().getId(),
+                game.getTeamHome().getTeamValue(),
+                game.getTeamHome().getTreasury(),
+                game.getTeamAway().getTeamValue()),
+            false);
       }
       if (game.getTeamAway().getTeamValue() > game.getTeamHome().getTeamValue()) {
-        UtilServerDialog.showDialog(getGameState(), new DialogPettyCashParameter(game.getTeamAway().getId(), game.getTeamAway().getTeamValue(),
-            game.getTeamAway().getTreasury(), game.getTeamHome().getTeamValue()));
+        UtilServerDialog.showDialog(
+            getGameState(),
+            new DialogPettyCashParameter(
+                game.getTeamAway().getId(),
+                game.getTeamAway().getTeamValue(),
+                game.getTeamAway().getTreasury(),
+                game.getTeamHome().getTeamValue()),
+            false);
       }
     } else if (!fPettyCashSelectedHome) {
-      UtilServerDialog.showDialog(getGameState(), new DialogPettyCashParameter(game.getTeamHome().getId(), gameResult.getTeamResultHome().getTeamValue(),
-          game.getTeamHome().getTreasury(), gameResult.getTeamResultAway().getTeamValue()));
+      UtilServerDialog.showDialog(
+          getGameState(),
+          new DialogPettyCashParameter(
+              game.getTeamHome().getId(),
+              gameResult.getTeamResultHome().getTeamValue(),
+              game.getTeamHome().getTreasury(),
+              gameResult.getTeamResultAway().getTeamValue()),
+          false);
     } else if (!fPettyCashSelectedAway) {
-      UtilServerDialog.showDialog(getGameState(), new DialogPettyCashParameter(game.getTeamAway().getId(), gameResult.getTeamResultAway().getTeamValue(),
-          game.getTeamAway().getTreasury(), gameResult.getTeamResultHome().getTeamValue()));
+      UtilServerDialog.showDialog(
+          getGameState(),
+          new DialogPettyCashParameter(
+              game.getTeamAway().getId(),
+              gameResult.getTeamResultAway().getTeamValue(),
+              game.getTeamAway().getTreasury(),
+              gameResult.getTeamResultHome().getTeamValue()),
+          false);
     } else {
       getResult().setNextAction(StepAction.NEXT_STEP);
     }

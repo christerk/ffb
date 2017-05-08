@@ -38,24 +38,24 @@ import com.eclipsesource.json.JsonValue;
  * @author Kalimar
  */
 public class StepBlockDodge extends AbstractStep {
-	
-	private Boolean fUsingDodge;
-	private PlayerState fOldDefenderState;
-	
-	public StepBlockDodge(GameState pGameState) {
-		super(pGameState);
-	}
-	
-	public StepId getId() {
-		return StepId.BLOCK_DODGE;
-	}
-	
-	@Override
-	public void start() {
-		super.start();
-		executeStep();
-	}
-	
+
+  private Boolean fUsingDodge;
+  private PlayerState fOldDefenderState;
+
+  public StepBlockDodge(GameState pGameState) {
+    super(pGameState);
+  }
+
+  public StepId getId() {
+    return StepId.BLOCK_DODGE;
+  }
+
+  @Override
+  public void start() {
+    super.start();
+    executeStep();
+  }
+
   @Override
   public StepCommandStatus handleCommand(ReceivedCommand pReceivedCommand) {
     StepCommandStatus commandStatus = super.handleCommand(pReceivedCommand);
@@ -77,26 +77,27 @@ public class StepBlockDodge extends AbstractStep {
     }
     return commandStatus;
   }
-	
-	@Override
-	public boolean setParameter(StepParameter pParameter) {
-		if ((pParameter != null) && !super.setParameter(pParameter)) {
-			switch (pParameter.getKey()) {
-				case OLD_DEFENDER_STATE:
-					fOldDefenderState = (PlayerState) pParameter.getValue();
-					return true;
-				default:
-					break;
-			}
-		}
-		return false;
-	}
-		
+
+  @Override
+  public boolean setParameter(StepParameter pParameter) {
+    if ((pParameter != null) && !super.setParameter(pParameter)) {
+      switch (pParameter.getKey()) {
+        case OLD_DEFENDER_STATE:
+          fOldDefenderState = (PlayerState) pParameter.getValue();
+          return true;
+        default:
+          break;
+      }
+    }
+    return false;
+  }
+
   private void executeStep() {
     findDodgeChoice();
+    UtilServerDialog.hideDialog(getGameState());
     Game game = getGameState().getGame();
     if (fUsingDodge == null) {
-      UtilServerDialog.showDialog(getGameState(), new DialogSkillUseParameter(game.getDefenderId(), Skill.DODGE, 0));
+      UtilServerDialog.showDialog(getGameState(), new DialogSkillUseParameter(game.getDefenderId(), Skill.DODGE, 0), true);
     } else {
       getResult().addReport(new ReportSkillUse(game.getDefenderId(), Skill.DODGE, fUsingDodge, SkillUse.AVOID_FALLING));
       if (fUsingDodge) {
@@ -111,29 +112,29 @@ public class StepBlockDodge extends AbstractStep {
   }
 
   private void findDodgeChoice() {
-    
+
     // ask for dodge only when:
     // 1: The push is a potential chainpush, the three "opposite" squares are
-    //    occupied.
+    // occupied.
     // 2: It is the first turn after kickoff and a defending player has the
-    //    potential to be pushed over the middle-line into the attackers half
+    // potential to be pushed over the middle-line into the attackers half
     // 3: There is a possibility that you would be pushed next to the sideline.
-    //    Which is you are standing one square away from sideline and the opponent
-    //    is pushing from the same row or from the row more infield.
+    // Which is you are standing one square away from sideline and the opponent
+    // is pushing from the same row or from the row more infield.
 
     if (fUsingDodge == null) {
-    
+
       boolean chainPush = false;
       boolean sidelinePush = false;
       boolean attackerHalfPush = false;
       Game game = getGameState().getGame();
       ActingPlayer actingPlayer = game.getActingPlayer();
-     
+
       Player attacker = actingPlayer.getPlayer();
       FieldCoordinate attackerCoordinate = game.getFieldModel().getPlayerCoordinate(attacker);
-      FieldCoordinate defenderCoordinate = game.getFieldModel().getPlayerCoordinate(game.getDefender());    
+      FieldCoordinate defenderCoordinate = game.getFieldModel().getPlayerCoordinate(game.getDefender());
       PushbackSquare startingSquare = UtilServerPushback.findStartingSquare(attackerCoordinate, defenderCoordinate, game.isHomePlaying());
-      
+
       PushbackSquare[] regularPushbackSquares = UtilServerPushback.findPushbackSquares(game, startingSquare, PushbackMode.REGULAR);
       if (ArrayTool.isProvided(regularPushbackSquares)) {
         for (PushbackSquare pushbackSquare : regularPushbackSquares) {
@@ -143,33 +144,38 @@ public class StepBlockDodge extends AbstractStep {
           }
         }
       }
-  
+
       PushbackSquare[] grabPushbackSquares = regularPushbackSquares;
-      if ((actingPlayer.getPlayerAction() == PlayerAction.BLOCK) && UtilCards.hasSkill(game, attacker, Skill.GRAB) && !UtilCards.hasSkill(game, game.getDefender(), Skill.SIDE_STEP)) {
+      if ((actingPlayer.getPlayerAction() == PlayerAction.BLOCK) && UtilCards.hasSkill(game, attacker, Skill.GRAB)
+          && !UtilCards.hasSkill(game, game.getDefender(), Skill.SIDE_STEP)) {
         grabPushbackSquares = UtilServerPushback.findPushbackSquares(game, startingSquare, PushbackMode.GRAB);
       }
       if (ArrayTool.isProvided(regularPushbackSquares)) {
         for (PushbackSquare pushbackSquare : grabPushbackSquares) {
           FieldCoordinate coordinate = pushbackSquare.getCoordinate();
-          if (FieldCoordinateBounds.SIDELINE_LOWER.isInBounds(coordinate) || FieldCoordinateBounds.SIDELINE_UPPER.isInBounds(coordinate) || FieldCoordinateBounds.ENDZONE_HOME.isInBounds(coordinate) || FieldCoordinateBounds.ENDZONE_AWAY.isInBounds(coordinate)) {
+          if (FieldCoordinateBounds.SIDELINE_LOWER.isInBounds(coordinate) || FieldCoordinateBounds.SIDELINE_UPPER.isInBounds(coordinate)
+              || FieldCoordinateBounds.ENDZONE_HOME.isInBounds(coordinate) || FieldCoordinateBounds.ENDZONE_AWAY.isInBounds(coordinate)) {
             sidelinePush = true;
           }
-          if ((game.getTeamHome().hasPlayer(attacker) && FieldCoordinateBounds.HALF_HOME.isInBounds(coordinate) && game.getTurnDataHome().isFirstTurnAfterKickoff()) || (game.getTeamAway().hasPlayer(attacker) && FieldCoordinateBounds.HALF_AWAY.isInBounds(coordinate) && game.getTurnDataAway().isFirstTurnAfterKickoff())) {
+          if ((game.getTeamHome().hasPlayer(attacker) && FieldCoordinateBounds.HALF_HOME.isInBounds(coordinate)
+              && game.getTurnDataHome().isFirstTurnAfterKickoff())
+              || (game.getTeamAway().hasPlayer(attacker) && FieldCoordinateBounds.HALF_AWAY.isInBounds(coordinate)
+                  && game.getTurnDataAway().isFirstTurnAfterKickoff())) {
             attackerHalfPush = true;
           }
         }
       }
-      
+
       if (!chainPush && !sidelinePush && !attackerHalfPush) {
-      	fUsingDodge = true;
+        fUsingDodge = true;
       }
-      
+
     }
-    
+
   }
-  
+
   // JSON serialization
-  
+
   @Override
   public JsonObject toJsonValue() {
     JsonObject jsonObject = super.toJsonValue();
@@ -177,7 +183,7 @@ public class StepBlockDodge extends AbstractStep {
     IServerJsonOption.OLD_DEFENDER_STATE.addTo(jsonObject, fOldDefenderState);
     return jsonObject;
   }
-  
+
   @Override
   public StepBlockDodge initFrom(JsonValue pJsonValue) {
     super.initFrom(pJsonValue);
