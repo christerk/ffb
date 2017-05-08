@@ -23,17 +23,17 @@ public class UtilServerTimer {
 
   public static void startTurnTimer(GameState gameState, long currentTimeMillis) {
     Game game = gameState.getGame();
-    if (gameState.getTurnTimeStarted() == 0) {
+    if ((gameState.getTurnTimeStarted() == 0) && game.isTurnTimeEnabled()) {
       gameState.setTurnTimeStarted(currentTimeMillis - game.getTurnTime());
     }
   }
 
   public static void stopTurnTimer(GameState gameState, long currentTimeMillis) {
-    if (gameState.getTurnTimeStarted() > 0) {
-      Game game = gameState.getGame();
+    Game game = gameState.getGame();
+    if ((gameState.getTurnTimeStarted() > 0) && game.isTurnTimeEnabled()) {
       game.setTurnTime(currentTimeMillis - gameState.getTurnTimeStarted());
-      gameState.setTurnTimeStarted(0);
     }
+    gameState.setTurnTimeStarted(0);
   }
 
   public static void syncTime(GameState gameState, long currentTimeMillis) {

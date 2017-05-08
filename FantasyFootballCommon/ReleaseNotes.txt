@@ -1,15 +1,12 @@
 
-[size=18][b]Release Notes Version 1.2.8[/b][/size]
+[size=18][b]Release Notes Version 1.2.10[/b][/size]
 
 [b]Changes:[/b]
 
-- BB2016 Rule: Petty Cash does not affect TV (default options forceTreasuryToPettyCash=true, pettyCashAffectsTv=false)
-- BB2016 Rule: No wizard available (default option wizardAvailable=false)
-- BB2016 Rule: Skill "Monstrous Mouth" implemented
+- (Technical) Turn Timers are now fully controlled by the server (Server Pings)
+- (Technical) Client generated entropy now transmitted within each client command 
+- If and when the turn timer stops to wait for opponent input has been greatly improved
 
 [b]Bugfixes:[/b]
 
-- #31 /options doesn't return list of options
-- #46 MNG eligible for the MVP
-- switched order of "Argue the Call" and "Bribes" around (first Bribes, then Argue)
-- admin commands concede and upload have no effect
+- #13 Skill reroll and team reroll against diving tackle
