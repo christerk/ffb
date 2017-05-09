@@ -12,3 +12,5 @@
 
 - #13 Skill reroll and team reroll against diving tackle
 - #47 Failed animosity on handoff causes turnover
+- #8 Vampire bloodlust ends team turn early
+
