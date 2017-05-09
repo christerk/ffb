@@ -146,9 +146,9 @@ public class StepMoveDodge extends AbstractStepWithReRoll {
       }
       if (doDodge) {
         boolean doRoll = (((getReRolledAction() == ReRolledAction.DODGE) && (getReRollSource() != null)) || (fUsingDivingTackle == null));
-        actingPlayer.markSkillUsed(Skill.DODGE);
         switch (dodge(doRoll)) {
           case SUCCESS:
+            actingPlayer.markSkillUsed(Skill.DODGE);
             getResult().setNextAction(StepAction.NEXT_STEP);
             break;
           case FAILURE:
