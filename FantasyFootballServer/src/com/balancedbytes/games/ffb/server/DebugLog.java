@@ -13,6 +13,7 @@ import java.util.StringTokenizer;
 import org.eclipse.jetty.websocket.api.Session;
 
 import com.balancedbytes.games.ffb.net.NetCommand;
+import com.balancedbytes.games.ffb.net.NetCommandId;
 import com.balancedbytes.games.ffb.server.net.ReceivedCommand;
 import com.balancedbytes.games.ffb.server.net.SessionManager;
 import com.balancedbytes.games.ffb.util.ArrayTool;
@@ -70,26 +71,30 @@ public class DebugLog {
   }
   
   public void logClientCommand(int pLogLevel, ReceivedCommand pReceivedCommand) {
-    if (isLogging(pLogLevel) && (pReceivedCommand != null) && (pReceivedCommand.getId() != null)) {
-      GameState gameState = null;
-      String commandFlag = COMMAND_CLIENT_UNKNOWN;
-      Session session = pReceivedCommand.getSession();
-      SessionManager sessionManager = getServer().getSessionManager();
-      long gameId = sessionManager.getGameIdForSession(session);
-      if (gameId > 0) {
-        gameState = getServer().getGameCache().getGameStateById(gameId);
-        if ((gameState != null) && (gameState.getGame().getStarted() != null)) {
-          if (session == sessionManager.getSessionOfHomeCoach(gameState.getId())) {
-            commandFlag = COMMAND_CLIENT_HOME;
-          } else if (session == sessionManager.getSessionOfAwayCoach(gameState.getId())) {
-            commandFlag = COMMAND_CLIENT_AWAY;
-          } else {
-            commandFlag = COMMAND_CLIENT_SPECTATOR;
-          }
+    if (!isLogging(pLogLevel)
+      || (pReceivedCommand == null)
+      || (pReceivedCommand.getId() == null)
+      || (pReceivedCommand.getId() == NetCommandId.CLIENT_PING)) {
+      return;
+    }
+    GameState gameState = null;
+    String commandFlag = COMMAND_CLIENT_UNKNOWN;
+    Session session = pReceivedCommand.getSession();
+    SessionManager sessionManager = getServer().getSessionManager();
+    long gameId = sessionManager.getGameIdForSession(session);
+    if (gameId > 0) {
+      gameState = getServer().getGameCache().getGameStateById(gameId);
+      if ((gameState != null) && (gameState.getGame().getStarted() != null)) {
+        if (session == sessionManager.getSessionOfHomeCoach(gameState.getId())) {
+          commandFlag = COMMAND_CLIENT_HOME;
+        } else if (session == sessionManager.getSessionOfAwayCoach(gameState.getId())) {
+          commandFlag = COMMAND_CLIENT_AWAY;
+        } else {
+          commandFlag = COMMAND_CLIENT_SPECTATOR;
         }
       }
-      logInternal(gameId, commandFlag, pReceivedCommand.getCommand().toJsonValue().toString());
     }
+    logInternal(gameId, commandFlag, pReceivedCommand.getCommand().toJsonValue().toString());
   }
   
   public void logServerCommand(int pLogLevel, long pGameId, NetCommand pNetCommand, String pCommandFlag) {
