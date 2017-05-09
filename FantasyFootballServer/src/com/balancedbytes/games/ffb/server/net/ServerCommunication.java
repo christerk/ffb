@@ -224,9 +224,14 @@ public class ServerCommunication implements Runnable, IReceivedCommandHandler {
     }
   }
 
-  private Future<Void> send(Session pSession, NetCommand command) {
+  private Future<Void> send(Session session, NetCommand command) {
 
-    if ((pSession == null) || (command == null) || !pSession.isOpen()) {
+    if ((session == null) || (command == null)) {
+      return null;
+    }
+    
+    if (!session.isOpen()) {
+      close(session);
       return null;
     }
 
@@ -245,10 +250,10 @@ public class ServerCommunication implements Runnable, IReceivedCommandHandler {
     }
 
     try {
-      return pSession.getRemote().sendStringByFuture(textMessage);
+      return session.getRemote().sendStringByFuture(textMessage);
     } catch (WebSocketException webSocketException) {
       // getServer().getDebugLog().log(IServerLogLevel.WARN, webSocketException.getMessage());
-      close(pSession);
+      close(session);
     }
 
     return null;
