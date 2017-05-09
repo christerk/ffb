@@ -142,7 +142,7 @@ public final class StepAnimosity extends AbstractStepWithReRoll {
           doRoll = true;
         }
       } else {
-        if (catcher != null) {
+        if ((catcher != null) && (catcher.getRace() != null) && (thrower != null) && (thrower.getRace() != null)) {
           doRoll = (UtilCards.hasSkill(game, thrower, Skill.ANIMOSITY) && !(thrower.getRace().equalsIgnoreCase(catcher.getRace())));
         }
       }
