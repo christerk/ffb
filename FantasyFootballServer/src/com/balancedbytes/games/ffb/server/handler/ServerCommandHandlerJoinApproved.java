@@ -93,15 +93,12 @@ public class ServerCommandHandlerJoinApproved extends ServerCommandHandler {
       // ClientMode.SPECTATOR
       } else {
         
-        if (checkForLoggedInCoach(gameState, joinApprovedCommand.getCoach(), session)) {
-          getServer().getCommunication().sendStatus(session, ServerStatus.ERROR_ALREADY_LOGGED_IN, null);
-        } else {
-          sessionManager.addSession(session, gameState.getId(), joinApprovedCommand.getCoach(), joinApprovedCommand.getClientMode(), false);
-          UtilServerStartGame.sendServerJoin(gameState, session, joinApprovedCommand.getCoach(), false, ClientMode.SPECTATOR);
-          if (gameState.getGame().getStarted() != null) {
-            UtilServerTimer.syncTime(gameState, System.currentTimeMillis());
-            communication.sendGameState(session, gameState);
-          }
+        closeOtherSessionWithThisCoach(gameState, joinApprovedCommand.getCoach(), session);
+        sessionManager.addSession(session, gameState.getId(), joinApprovedCommand.getCoach(), joinApprovedCommand.getClientMode(), false);
+        UtilServerStartGame.sendServerJoin(gameState, session, joinApprovedCommand.getCoach(), false, ClientMode.SPECTATOR);
+        if (gameState.getGame().getStarted() != null) {
+          UtilServerTimer.syncTime(gameState, System.currentTimeMillis());
+          communication.sendGameState(session, gameState);
         }
         
       }
@@ -115,16 +112,15 @@ public class ServerCommandHandlerJoinApproved extends ServerCommandHandler {
   private void joinWithoutTeam(GameState pGameState, InternalServerCommandJoinApproved pJoinApprovedCommand, Session pSession) {
     Game game = pGameState.getGame();
     if (pJoinApprovedCommand.getCoach().equalsIgnoreCase(game.getTeamHome().getCoach()) || pJoinApprovedCommand.getCoach().equalsIgnoreCase(game.getTeamAway().getCoach())) {
-      if (!game.isTesting() && checkForLoggedInCoach(pGameState, pJoinApprovedCommand.getCoach(), pSession)) {
-        getServer().getCommunication().sendStatus(pSession, ServerStatus.ERROR_ALREADY_LOGGED_IN, null);
-      } else {
-        boolean homeTeam = pJoinApprovedCommand.getCoach().equalsIgnoreCase(game.getTeamHome().getCoach());
-        if (UtilServerStartGame.joinGameAsPlayerAndCheckIfReadyToStart(pGameState, pSession, pJoinApprovedCommand.getCoach(), homeTeam)) {
-          if (getServer().getMode() == ServerMode.FUMBBL) {
-            getServer().getRequestProcessor().add(new FumbblRequestCheckGamestate(pGameState));
-          } else {
-            UtilServerStartGame.startGame(pGameState);
-          }
+      if (!game.isTesting()) {
+        closeOtherSessionWithThisCoach(pGameState, pJoinApprovedCommand.getCoach(), pSession);
+      }
+      boolean homeTeam = pJoinApprovedCommand.getCoach().equalsIgnoreCase(game.getTeamHome().getCoach());
+      if (UtilServerStartGame.joinGameAsPlayerAndCheckIfReadyToStart(pGameState, pSession, pJoinApprovedCommand.getCoach(), homeTeam)) {
+        if (getServer().getMode() == ServerMode.FUMBBL) {
+          getServer().getRequestProcessor().add(new FumbblRequestCheckGamestate(pGameState));
+        } else {
+          UtilServerStartGame.startGame(pGameState);
         }
       }
     }
@@ -133,35 +129,31 @@ public class ServerCommandHandlerJoinApproved extends ServerCommandHandler {
   private void joinWithTeam(GameState pGameState, InternalServerCommandJoinApproved pJoinApprovedCommand, Session pSession) {
     if ((pGameState != null) && StringTool.isProvided(pJoinApprovedCommand.getTeamId())) {
       Game game = pGameState.getGame();
-      if (!game.isTesting() && checkForLoggedInCoach(pGameState, pJoinApprovedCommand.getCoach(), pSession)) {
-        getServer().getCommunication().sendStatus(pSession, ServerStatus.ERROR_ALREADY_LOGGED_IN, null);
+      if (!game.isTesting()) {
+        closeOtherSessionWithThisCoach(pGameState, pJoinApprovedCommand.getCoach(), pSession);
+      }
+      boolean homeTeam = (!StringTool.isProvided(game.getTeamHome().getId()) || pJoinApprovedCommand.getTeamId().equals(game.getTeamHome().getId()));
+      if (getServer().getMode() == ServerMode.FUMBBL) {
+        getServer().getRequestProcessor().add(new FumbblRequestLoadTeam(pGameState, pJoinApprovedCommand.getCoach(), pJoinApprovedCommand.getTeamId(), homeTeam, pSession));
       } else {
-        boolean homeTeam = (!StringTool.isProvided(game.getTeamHome().getId()) || pJoinApprovedCommand.getTeamId().equals(game.getTeamHome().getId()));
-        if (getServer().getMode() == ServerMode.FUMBBL) {
-          getServer().getRequestProcessor().add(new FumbblRequestLoadTeam(pGameState, pJoinApprovedCommand.getCoach(), pJoinApprovedCommand.getTeamId(), homeTeam, pSession));
-        } else {
-          Team team = getServer().getGameCache().getTeamById(pJoinApprovedCommand.getTeamId());
-          getServer().getGameCache().addTeamToGame(pGameState, team, homeTeam);
-          if (UtilServerStartGame.joinGameAsPlayerAndCheckIfReadyToStart(pGameState, pSession, pJoinApprovedCommand.getCoach(), homeTeam)) {
-            UtilServerStartGame.startGame(pGameState);
-          }
+        Team team = getServer().getGameCache().getTeamById(pJoinApprovedCommand.getTeamId());
+        getServer().getGameCache().addTeamToGame(pGameState, team, homeTeam);
+        if (UtilServerStartGame.joinGameAsPlayerAndCheckIfReadyToStart(pGameState, pSession, pJoinApprovedCommand.getCoach(), homeTeam)) {
+          UtilServerStartGame.startGame(pGameState);
         }
       }
     }
   }
   
-  private boolean checkForLoggedInCoach(GameState pGameState, String pCoach, Session pSession) {
+  private void closeOtherSessionWithThisCoach(GameState gameState, String coach, Session session) {
     SessionManager sessionManager = getServer().getSessionManager(); 
-    Session[] allSessions = sessionManager.getSessionsForGameId(pGameState.getId());
+    Session[] allSessions = sessionManager.getSessionsForGameId(gameState.getId());
     for (int i = 0; i < allSessions.length; i++) {
-      if (pSession != allSessions[i]) {
-        String coach = sessionManager.getCoachForSession(allSessions[i]);
-        if (pCoach.equalsIgnoreCase(coach)) {
-          return true;
-        }
+      if ((session != allSessions[i]) && coach.equalsIgnoreCase(sessionManager.getCoachForSession(allSessions[i]))) {
+        getServer().getCommunication().close(allSessions[i]);
+        break;
       }
     }
-    return false;
   }
   
   private GameState loadGameStateById(InternalServerCommandJoinApproved pJoinApprovedCommand, Session pSession) {

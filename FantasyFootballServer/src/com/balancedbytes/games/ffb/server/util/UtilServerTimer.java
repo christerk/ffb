@@ -15,7 +15,6 @@ public class UtilServerTimer {
     Game game = gameState.getGame();
     if ((gameState.getTurnTimeStarted() == 0) && game.isTurnTimeEnabled()) {
       gameState.setTurnTimeStarted(currentTimeMillis - game.getTurnTime());
-      game.setWaitingForOpponent(false);
     }
   }
 
@@ -23,7 +22,6 @@ public class UtilServerTimer {
     Game game = gameState.getGame();
     if ((gameState.getTurnTimeStarted() > 0) && game.isTurnTimeEnabled()) {
       game.setTurnTime(currentTimeMillis - gameState.getTurnTimeStarted());
-      game.setWaitingForOpponent(true);
     }
     gameState.setTurnTimeStarted(0);
   }

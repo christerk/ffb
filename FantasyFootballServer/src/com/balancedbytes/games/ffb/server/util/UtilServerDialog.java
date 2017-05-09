@@ -15,16 +15,16 @@ public class UtilServerDialog {
     Game game = gameState.getGame();
     game.setDialogParameter(dialogParameter);
     if (stopTurnTimer) {
+      game.setWaitingForOpponent(true);
       UtilServerTimer.stopTurnTimer(gameState, System.currentTimeMillis());;
     }
   }
 
   public static void hideDialog(GameState gameState) {
     Game game = gameState.getGame();
-    if (game.getDialogParameter() != null) {
-      game.setDialogParameter(null);
-      UtilServerTimer.startTurnTimer(gameState, System.currentTimeMillis());
-    }
+    game.setDialogParameter(null);
+    game.setWaitingForOpponent(false);
+    UtilServerTimer.startTurnTimer(gameState, System.currentTimeMillis());
   }
 
 }
