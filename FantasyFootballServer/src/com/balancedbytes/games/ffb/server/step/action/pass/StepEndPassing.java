@@ -140,7 +140,7 @@ public final class StepEndPassing extends AbstractStep {
       throwerResult.setPassing(throwerResult.getPassing() + deltaX);
     }
     if (fEndTurn || fEndPlayerAction || ((game.getThrower() == actingPlayer.getPlayer()) && actingPlayer.isSufferingBloodLust() && !actingPlayer.hasFed())) {
-      fEndTurn |= (UtilServerSteps.checkTouchdown(getGameState()) || ((catcher != null) && UtilPlayer.findOtherTeam(game, game.getThrower()).hasPlayer(catcher))
+      fEndTurn |= (UtilServerSteps.checkTouchdown(getGameState()) || ((catcher == null) && !actingPlayer.isSufferingAnimosity()) || UtilPlayer.findOtherTeam(game, game.getThrower()).hasPlayer(catcher)
           || fPassFumble);
       SequenceGenerator.getInstance().pushEndPlayerActionSequence(getGameState(), true, fEndTurn);
     } else {
@@ -156,7 +156,7 @@ public final class StepEndPassing extends AbstractStep {
         catcher = game.getFieldModel().getPlayer(game.getFieldModel().getBallCoordinate());
       }
       if (game.getThrower() == actingPlayer.getPlayer()) {
-        fEndTurn |= (UtilServerSteps.checkTouchdown(getGameState()) || ((catcher != null) && UtilPlayer.findOtherTeam(game, game.getThrower()).hasPlayer(catcher))
+        fEndTurn |= (UtilServerSteps.checkTouchdown(getGameState()) || ((catcher == null) && !actingPlayer.isSufferingAnimosity()) || UtilPlayer.findOtherTeam(game, game.getThrower()).hasPlayer(catcher)
             || fPassFumble);
         SequenceGenerator.getInstance().pushEndPlayerActionSequence(getGameState(), true, fEndTurn);
       } else {
