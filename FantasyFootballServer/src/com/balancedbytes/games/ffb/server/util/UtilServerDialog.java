@@ -14,6 +14,7 @@ public class UtilServerDialog {
   public static void showDialog(GameState gameState, IDialogParameter dialogParameter, boolean stopTurnTimer) {
     Game game = gameState.getGame();
     game.setDialogParameter(dialogParameter);
+    game.setWaitingForOpponent(stopTurnTimer);
     if (stopTurnTimer) {
       UtilServerTimer.stopTurnTimer(gameState, System.currentTimeMillis());;
     }
