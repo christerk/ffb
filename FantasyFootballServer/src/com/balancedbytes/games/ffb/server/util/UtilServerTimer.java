@@ -11,20 +11,11 @@ import com.balancedbytes.games.ffb.server.GameState;
  */
 public class UtilServerTimer {
   
-  public static void waitForOpponent(GameState pGameState, long currentTimeMillis, boolean pWaiting) {
-    Game game = pGameState.getGame();
-    game.setWaitingForOpponent(pWaiting);
-    if (pWaiting) {
-      stopTurnTimer(pGameState, currentTimeMillis);
-    } else {
-      startTurnTimer(pGameState, currentTimeMillis);
-    }
-  }
-
   public static void startTurnTimer(GameState gameState, long currentTimeMillis) {
     Game game = gameState.getGame();
     if ((gameState.getTurnTimeStarted() == 0) && game.isTurnTimeEnabled()) {
       gameState.setTurnTimeStarted(currentTimeMillis - game.getTurnTime());
+      game.setWaitingForOpponent(false);
     }
   }
 
@@ -32,6 +23,7 @@ public class UtilServerTimer {
     Game game = gameState.getGame();
     if ((gameState.getTurnTimeStarted() > 0) && game.isTurnTimeEnabled()) {
       game.setTurnTime(currentTimeMillis - gameState.getTurnTimeStarted());
+      game.setWaitingForOpponent(true);
     }
     gameState.setTurnTimeStarted(0);
   }
