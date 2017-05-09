@@ -496,6 +496,7 @@ public class SequenceGenerator {
     StepParameterSet initParameters = createParameterSet(StepParameterKey.GOTO_LABEL_ON_END, IStepLabel.END_FEEDING);
     initParameters.add(new StepParameter(StepParameterKey.FEEDING_ALLOWED, pFeedingAllowed));
     initParameters.add(new StepParameter(StepParameterKey.END_TURN, pEndTurn));
+    initParameters.add(new StepParameter(StepParameterKey.END_PLAYER_ACTION, true));
     add(feedSequence, StepId.INIT_FEEDING, pGameState, initParameters);
 
     add(feedSequence, StepId.APOTHECARY, pGameState, createParameterSet(StepParameterKey.APOTHECARY_MODE, ApothecaryMode.FEEDING));

@@ -31,82 +31,83 @@ import com.eclipsesource.json.JsonValue;
 /**
  * Initialization step of the pass sequence.
  * 
- * Needs to be initialized with stepParameter GOTO_LABEL_ON_END.
- * May be initialized with stepParameter CATCHER_ID.
- * May be initialized with stepParameter HAIL_MARY_PASS.
- * May be initialized with stepParameter TARGET_COORDINATE.
+ * Needs to be initialized with stepParameter GOTO_LABEL_ON_END. May be
+ * initialized with stepParameter CATCHER_ID. May be initialized with
+ * stepParameter HAIL_MARY_PASS. May be initialized with stepParameter
+ * TARGET_COORDINATE.
  * 
- * Sets stepParameter CATCHER_ID for all steps on the stack.
- * Sets stepParameter END_PLAYER_ACTION for all steps on the stack.
- * Sets stepParameter END_TURN for all steps on the stack.
- * Sets stepParameter TARGET_COORDINATE for all steps on the stack.
+ * Sets stepParameter CATCHER_ID for all steps on the stack. Sets stepParameter
+ * END_PLAYER_ACTION for all steps on the stack. Sets stepParameter END_TURN for
+ * all steps on the stack. Sets stepParameter TARGET_COORDINATE for all steps on
+ * the stack.
  * 
  * @author Kalimar
  */
 public final class StepInitPassing extends AbstractStep {
-	
+
   private String fGotoLabelOnEnd;
   private String fCatcherId;
   private boolean fEndTurn;
   private boolean fEndPlayerAction;
-	
-	public StepInitPassing(GameState pGameState) {
-		super(pGameState);
-	}
-	
-	public StepId getId() {
-		return StepId.INIT_PASSING;
-	}
-		
-  @Override
-  public void init(StepParameterSet pParameterSet) {
-  	if (pParameterSet != null) {
-    	Game game = getGameState().getGame();
-    	ActingPlayer actingPlayer = game.getActingPlayer();
-  		for (StepParameter parameter : pParameterSet.values()) {
-  			switch (parameter.getKey()) {
-  			  // mandatory
-  				case GOTO_LABEL_ON_END:
-  					fGotoLabelOnEnd = (String) parameter.getValue();
-  					break;
-					// optional
-  				case TARGET_COORDINATE:
-  					if (parameter.getValue() != null) {
-	  					FieldCoordinate targetCoordinate = (FieldCoordinate) parameter.getValue();
-  	          game.setPassCoordinate(targetCoordinate);
-    	        Player catcher = game.getFieldModel().getPlayer(game.getPassCoordinate());
-    	        fCatcherId = ((catcher != null) ? catcher.getId() : null);
-    	        if ((game.getDefender() != null) && (game.getDefenderAction() == PlayerAction.DUMP_OFF)) {
-    	        	game.setThrowerId(game.getDefenderId());
-    	        	game.setThrowerAction(game.getDefenderAction());
-    	        } else {
-    						game.setThrowerId(actingPlayer.getPlayerId());
-    						game.setThrowerAction(actingPlayer.getPlayerAction());
-    	        }
-  	        }
-  	        break;
-	        default:
-	        	break;
-  			}
-  		}
-  	}
-  	if (!StringTool.isProvided(fGotoLabelOnEnd)) {
-			throw new StepException("StepParameter " + StepParameterKey.GOTO_LABEL_ON_END + " is not initialized.");
-  	}
+
+  public StepInitPassing(GameState pGameState) {
+    super(pGameState);
+  }
+
+  public StepId getId() {
+    return StepId.INIT_PASSING;
   }
 
   @Override
-	public void start() {
-		super.start();
-		executeStep();
-	}
-  
+  public void init(StepParameterSet pParameterSet) {
+    if (pParameterSet != null) {
+      Game game = getGameState().getGame();
+      ActingPlayer actingPlayer = game.getActingPlayer();
+      for (StepParameter parameter : pParameterSet.values()) {
+        switch (parameter.getKey()) {
+          // mandatory
+          case GOTO_LABEL_ON_END:
+            fGotoLabelOnEnd = (String) parameter.getValue();
+            break;
+          // optional
+          case TARGET_COORDINATE:
+            if (parameter.getValue() != null) {
+              FieldCoordinate targetCoordinate = (FieldCoordinate) parameter.getValue();
+              game.setPassCoordinate(targetCoordinate);
+              Player catcher = game.getFieldModel().getPlayer(game.getPassCoordinate());
+              fCatcherId = ((catcher != null) ? catcher.getId() : null);
+              if ((game.getDefender() != null) && (game.getDefenderAction() == PlayerAction.DUMP_OFF)) {
+                game.setThrowerId(game.getDefenderId());
+                game.setThrowerAction(game.getDefenderAction());
+              } else {
+                game.setThrowerId(actingPlayer.getPlayerId());
+                game.setThrowerAction(actingPlayer.getPlayerAction());
+              }
+            }
+            break;
+          default:
+            break;
+        }
+      }
+    }
+    if (!StringTool.isProvided(fGotoLabelOnEnd)) {
+      throw new StepException("StepParameter " + StepParameterKey.GOTO_LABEL_ON_END + " is not initialized.");
+    }
+  }
+
+  @Override
+  public void start() {
+    super.start();
+    executeStep();
+  }
+
   @Override
   public StepCommandStatus handleCommand(ReceivedCommand pReceivedCommand) {
     StepCommandStatus commandStatus = super.handleCommand(pReceivedCommand);
     Game game = getGameState().getGame();
     ActingPlayer actingPlayer = game.getActingPlayer();
-    if ((pReceivedCommand != null) && (commandStatus == StepCommandStatus.UNHANDLED_COMMAND) && (UtilServerSteps.checkCommandIsFromCurrentPlayer(getGameState(), pReceivedCommand) || (game.getTurnMode() == TurnMode.DUMP_OFF))) {
+    if ((pReceivedCommand != null) && (commandStatus == StepCommandStatus.UNHANDLED_COMMAND)
+        && (UtilServerSteps.checkCommandIsFromCurrentPlayer(getGameState(), pReceivedCommand) || (game.getTurnMode() == TurnMode.DUMP_OFF))) {
       switch (pReceivedCommand.getId()) {
         case CLIENT_PASS:
           ClientCommandPass passCommand = (ClientCommandPass) pReceivedCommand.getCommand();
@@ -165,23 +166,23 @@ public final class StepInitPassing extends AbstractStep {
   private void executeStep() {
     Game game = getGameState().getGame();
     if ((game.getThrower() == null) || (game.getThrowerAction() == null)) {
-    	return;
+      return;
     }
     Player catcher = game.getPlayerById(fCatcherId);
     if (catcher != null) {
-    	publishParameter(new StepParameter(StepParameterKey.CATCHER_ID, catcher.getId()));
+      publishParameter(new StepParameter(StepParameterKey.CATCHER_ID, catcher.getId()));
     }
     ActingPlayer actingPlayer = game.getActingPlayer();
     if (fEndTurn) {
-    	publishParameter(new StepParameter(StepParameterKey.END_TURN, true));
-    	getResult().setNextAction(StepAction.GOTO_LABEL, fGotoLabelOnEnd);
+      publishParameter(new StepParameter(StepParameterKey.END_TURN, true));
+      getResult().setNextAction(StepAction.GOTO_LABEL, fGotoLabelOnEnd);
     } else if (fEndPlayerAction) {
-    	publishParameter(new StepParameter(StepParameterKey.END_PLAYER_ACTION, true));
-    	getResult().setNextAction(StepAction.GOTO_LABEL, fGotoLabelOnEnd);
+      publishParameter(new StepParameter(StepParameterKey.END_PLAYER_ACTION, true));
+      getResult().setNextAction(StepAction.GOTO_LABEL, fGotoLabelOnEnd);
     } else if ((game.getThrower() == actingPlayer.getPlayer()) && actingPlayer.isSufferingBloodLust() && !actingPlayer.hasFed()) {
-    	getResult().setNextAction(StepAction.GOTO_LABEL, fGotoLabelOnEnd);
+      getResult().setNextAction(StepAction.GOTO_LABEL, fGotoLabelOnEnd);
     } else {
-	    FieldCoordinate throwerCoordinate = game.getFieldModel().getPlayerCoordinate(game.getThrower());
+      FieldCoordinate throwerCoordinate = game.getFieldModel().getPlayerCoordinate(game.getThrower());
       if ((PlayerAction.HAND_OVER == game.getThrowerAction()) && (game.getThrower() == actingPlayer.getPlayer()) && (catcher != null)) {
         actingPlayer.setHasPassed(true);
         game.setConcessionPossible(false);
@@ -190,42 +191,51 @@ public final class StepInitPassing extends AbstractStep {
         getResult().setNextAction(StepAction.NEXT_STEP);
         return;
       }
-      if ((game.getPassCoordinate() != null) && (game.getThrower() == actingPlayer.getPlayer()) && ((PlayerAction.THROW_BOMB == game.getThrowerAction()) && (UtilPassing.findPassingDistance(game, throwerCoordinate, game.getPassCoordinate(), false) != null)) || (PlayerAction.HAIL_MARY_BOMB == game.getThrowerAction())) {
+      if ((game.getPassCoordinate() != null) && (game.getThrower() == actingPlayer.getPlayer())
+          && ((PlayerAction.THROW_BOMB == game.getThrowerAction())
+              && (UtilPassing.findPassingDistance(game, throwerCoordinate, game.getPassCoordinate(), false) != null))
+          || (PlayerAction.HAIL_MARY_BOMB == game.getThrowerAction())) {
         actingPlayer.setHasPassed(true);
         game.getTurnData().setTurnStarted(true);
         game.setConcessionPossible(false);
         if (PlayerAction.THROW_BOMB == game.getThrowerAction()) {
-        	game.getFieldModel().setRangeRuler(UtilRangeRuler.createRangeRuler(game, game.getThrower(), game.getPassCoordinate(), false));
+          game.getFieldModel().setRangeRuler(UtilRangeRuler.createRangeRuler(game, game.getThrower(), game.getPassCoordinate(), false));
         }
         getResult().setNextAction(StepAction.NEXT_STEP);
         return;
       }
-      if ((game.getPassCoordinate() != null) && (game.getThrower() == actingPlayer.getPlayer()) && ((PlayerAction.PASS == game.getThrowerAction()) && (UtilPassing.findPassingDistance(game, throwerCoordinate, game.getPassCoordinate(), false) != null)) || (PlayerAction.HAIL_MARY_PASS == game.getThrowerAction())) {
+      if ((game.getPassCoordinate() != null) && (game.getThrower() == actingPlayer.getPlayer())
+          && ((PlayerAction.PASS == game.getThrowerAction())
+              && (UtilPassing.findPassingDistance(game, throwerCoordinate, game.getPassCoordinate(), false) != null))
+          || (PlayerAction.HAIL_MARY_PASS == game.getThrowerAction())) {
         actingPlayer.setHasPassed(true);
         game.getTurnData().setTurnStarted(true);
         game.setConcessionPossible(false);
         game.getTurnData().setPassUsed(true);
         if (PlayerAction.PASS == game.getThrowerAction()) {
-        	game.getFieldModel().setRangeRuler(UtilRangeRuler.createRangeRuler(game, game.getThrower(), game.getPassCoordinate(), false));
+          game.getFieldModel().setRangeRuler(UtilRangeRuler.createRangeRuler(game, game.getThrower(), game.getPassCoordinate(), false));
         }
         getResult().setNextAction(StepAction.NEXT_STEP);
         return;
       }
-      if ((game.getPassCoordinate() != null) && (((PlayerAction.THROW_BOMB == game.getThrowerAction()) || (PlayerAction.DUMP_OFF == game.getThrowerAction())) && (UtilPassing.findPassingDistance(game, throwerCoordinate, game.getPassCoordinate(), false) != null)) || (PlayerAction.HAIL_MARY_BOMB == game.getThrowerAction())) {
-      	if (game.getThrower() == actingPlayer.getPlayer()) {
-      		actingPlayer.setHasPassed(true);
-      	}
-      	if (PlayerAction.HAIL_MARY_BOMB != game.getThrowerAction()) {
-        	game.getFieldModel().setRangeRuler(UtilRangeRuler.createRangeRuler(game, game.getThrower(), game.getPassCoordinate(), false));
+      if ((game.getPassCoordinate() != null)
+          && (((PlayerAction.THROW_BOMB == game.getThrowerAction()) || (PlayerAction.DUMP_OFF == game.getThrowerAction()))
+              && (UtilPassing.findPassingDistance(game, throwerCoordinate, game.getPassCoordinate(), false) != null))
+          || (PlayerAction.HAIL_MARY_BOMB == game.getThrowerAction())) {
+        if (game.getThrower() == actingPlayer.getPlayer()) {
+          actingPlayer.setHasPassed(true);
+        }
+        if (PlayerAction.HAIL_MARY_BOMB != game.getThrowerAction()) {
+          game.getFieldModel().setRangeRuler(UtilRangeRuler.createRangeRuler(game, game.getThrower(), game.getPassCoordinate(), false));
         }
         getResult().setNextAction(StepAction.NEXT_STEP);
         return;
-	    }
+      }
     }
   }
-  
+
   // JSON serialization
-  
+
   @Override
   public JsonObject toJsonValue() {
     JsonObject jsonObject = super.toJsonValue();
@@ -235,7 +245,7 @@ public final class StepInitPassing extends AbstractStep {
     IServerJsonOption.END_PLAYER_ACTION.addTo(jsonObject, fEndPlayerAction);
     return jsonObject;
   }
-  
+
   @Override
   public StepInitPassing initFrom(JsonValue pJsonValue) {
     super.initFrom(pJsonValue);
@@ -246,5 +256,5 @@ public final class StepInitPassing extends AbstractStep {
     fEndPlayerAction = IServerJsonOption.END_PLAYER_ACTION.getFrom(jsonObject);
     return this;
   }
-  
+
 }

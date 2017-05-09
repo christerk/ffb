@@ -67,14 +67,14 @@ public abstract class AbstractStep implements IStep {
   public StepCommandStatus handleCommand(ReceivedCommand pReceivedCommand) {
     StepCommandStatus commandStatus = StepCommandStatus.UNHANDLED_COMMAND;
     switch (pReceivedCommand.getId()) {
-    case CLIENT_CONCEDE_GAME:
-      commandStatus = handleConcedeGame(pReceivedCommand);
-      break;
-    case CLIENT_ILLEGAL_PROCEDURE:
-      commandStatus = handleIllegalProcedure(pReceivedCommand);
-      break;
-    default:
-      break;
+      case CLIENT_CONCEDE_GAME:
+        commandStatus = handleConcedeGame(pReceivedCommand);
+        break;
+      case CLIENT_ILLEGAL_PROCEDURE:
+        commandStatus = handleIllegalProcedure(pReceivedCommand);
+        break;
+      default:
+        break;
     }
     return commandStatus;
   }
@@ -104,9 +104,9 @@ public abstract class AbstractStep implements IStep {
       }
     }
   }
-  
+
   // JSON serialization
-  
+
   public JsonObject toJsonValue() {
     JsonObject jsonObject = new JsonObject();
     IServerJsonOption.STEP_ID.addTo(jsonObject, getId());
@@ -114,7 +114,7 @@ public abstract class AbstractStep implements IStep {
     IServerJsonOption.STEP_RESULT.addTo(jsonObject, fStepResult.toJsonValue());
     return jsonObject;
   }
-  
+
   public AbstractStep initFrom(JsonValue pJsonValue) {
     JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
     UtilServerSteps.validateStepId(this, (StepId) IServerJsonOption.STEP_ID.getFrom(jsonObject));
@@ -126,7 +126,7 @@ public abstract class AbstractStep implements IStep {
     }
     return this;
   }
-  
+
   // Helper methods
 
   private StepCommandStatus handleConcedeGame(ReceivedCommand pReceivedCommand) {
@@ -139,23 +139,22 @@ public abstract class AbstractStep implements IStep {
       boolean homeCommand = (sessionManager.getSessionOfHomeCoach(getGameState().getId()) == pReceivedCommand.getSession());
       boolean awayCommand = (sessionManager.getSessionOfAwayCoach(getGameState().getId()) == pReceivedCommand.getSession());
       switch (concedeGameCommand.getConcedeGameStatus()) {
-      case REQUESTED:
-        if (game.isConcessionPossible() && ((game.isHomePlaying() && homeCommand) || (!game.isHomePlaying() && awayCommand))) {
-          UtilServerDialog.showDialog(
-              getGameState(),
-              new DialogConcedeGameParameter(),
-              false
-          );
-        }
-        break;
-      case CONFIRMED:
-        game.setConcessionPossible(false);
-        gameResult.getTeamResultHome().setConceded(game.isHomePlaying() && homeCommand);
-        gameResult.getTeamResultAway().setConceded(!game.isHomePlaying() && awayCommand);
-        break;
-      case DENIED:
-        UtilServerDialog.hideDialog(getGameState());
-        break;
+        case REQUESTED:
+          if (game.isConcessionPossible() && ((game.isHomePlaying() && homeCommand) || (!game.isHomePlaying() && awayCommand))) {
+            UtilServerDialog.showDialog(
+                getGameState(),
+                new DialogConcedeGameParameter(),
+                false);
+          }
+          break;
+        case CONFIRMED:
+          game.setConcessionPossible(false);
+          gameResult.getTeamResultHome().setConceded(game.isHomePlaying() && homeCommand);
+          gameResult.getTeamResultAway().setConceded(!game.isHomePlaying() && awayCommand);
+          break;
+        case DENIED:
+          UtilServerDialog.hideDialog(getGameState());
+          break;
       }
       if (gameResult.getTeamResultHome().hasConceded() || gameResult.getTeamResultAway().hasConceded()) {
         getGameState().getStepStack().clear();

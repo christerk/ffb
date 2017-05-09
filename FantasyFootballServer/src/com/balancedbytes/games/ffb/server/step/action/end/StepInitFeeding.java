@@ -41,6 +41,7 @@ import com.eclipsesource.json.JsonValue;
  * 
  * Needs to be initialized with stepParameter GOTO_LABEL_ON_END.
  * Needs to be initialized with stepParameter FEEDING_ALLOWED.
+ * May be initialized with stepParameter END_PLAYER_ACTION.
  * May be initialized with stepParameter END_TURN.
  * 
  * Sets stepParameter END_PLAYER_ACTION for all steps on the stack.
@@ -49,92 +50,97 @@ import com.eclipsesource.json.JsonValue;
  * @author Kalimar
  */
 public class StepInitFeeding extends AbstractStep {
-	
-	private String fGotoLabelOnEnd;
-	private Boolean fFeedOnPlayerChoice;
-	private Boolean fFeedingAllowed;
-	private boolean fEndTurn;
-	
-	public StepInitFeeding(GameState pGameState) {
-		super(pGameState);
-	}
-	
-	public StepId getId() {
-		return StepId.INIT_FEEDING;
-	}
-	
-  @Override
-  public void init(StepParameterSet pParameterSet) {
-  	if (pParameterSet != null) {
-  		for (StepParameter parameter : pParameterSet.values()) {
-  			switch (parameter.getKey()) {
-  			  // mandatory
-  				case GOTO_LABEL_ON_END:
-  					fGotoLabelOnEnd = (String) parameter.getValue();
-  					break;
-  			  // mandatory
-  				case FEEDING_ALLOWED:
-						fFeedingAllowed = (Boolean) parameter.getValue();
-  					break;
-					// optional
-  				case END_TURN:
-						fEndTurn = (parameter.getValue() != null) ? (Boolean) parameter.getValue() : false;
-  					break;
-					default:
-						break;
-  			}
-  		}
-  	}
-  	if (!StringTool.isProvided(fGotoLabelOnEnd)) {
-			throw new StepException("StepParameter " + StepParameterKey.GOTO_LABEL_ON_END + " is not initialized.");
-  	}
-  	if (fFeedingAllowed == null) {
-			throw new StepException("StepParameter " + StepParameterKey.FEEDING_ALLOWED + " is not initialized.");
-  	}
+
+  private String fGotoLabelOnEnd;
+  private Boolean fFeedOnPlayerChoice;
+  private Boolean fFeedingAllowed;
+  private boolean fEndPlayerAction;
+  private boolean fEndTurn;
+
+  public StepInitFeeding(GameState pGameState) {
+    super(pGameState);
+  }
+
+  public StepId getId() {
+    return StepId.INIT_FEEDING;
   }
 
   @Override
-	public void start() {
-		super.start();
-		executeStep();
-	}
+  public void init(StepParameterSet pParameterSet) {
+    if (pParameterSet != null) {
+      for (StepParameter parameter : pParameterSet.values()) {
+        switch (parameter.getKey()) {
+          // mandatory
+          case GOTO_LABEL_ON_END:
+            fGotoLabelOnEnd = (String) parameter.getValue();
+            break;
+          // mandatory
+          case FEEDING_ALLOWED:
+            fFeedingAllowed = (Boolean) parameter.getValue();
+            break;
+          // optional
+          case END_PLAYER_ACTION:
+            fEndPlayerAction = (parameter.getValue() != null) ? (Boolean) parameter.getValue() : false;
+            break;
+          // optional
+          case END_TURN:
+            fEndTurn = (parameter.getValue() != null) ? (Boolean) parameter.getValue() : false;
+            break;
+          default:
+            break;
+        }
+      }
+    }
+    if (!StringTool.isProvided(fGotoLabelOnEnd)) {
+      throw new StepException("StepParameter " + StepParameterKey.GOTO_LABEL_ON_END + " is not initialized.");
+    }
+    if (fFeedingAllowed == null) {
+      throw new StepException("StepParameter " + StepParameterKey.FEEDING_ALLOWED + " is not initialized.");
+    }
+  }
 
-	@Override
-	public StepCommandStatus handleCommand(ReceivedCommand pReceivedCommand) {
-		StepCommandStatus commandStatus = super.handleCommand(pReceivedCommand);
-		if (commandStatus == StepCommandStatus.UNHANDLED_COMMAND) {
-			Game game = getGameState().getGame();
-			switch (pReceivedCommand.getId()) {
-	      case CLIENT_PLAYER_CHOICE:
-	        ClientCommandPlayerChoice playerChoiceCommand = (ClientCommandPlayerChoice) pReceivedCommand.getCommand();
-	        if (PlayerChoiceMode.FEED == playerChoiceCommand.getPlayerChoiceMode()) {
-	        	fFeedOnPlayerChoice = StringTool.isProvided(playerChoiceCommand.getPlayerId());
-		        game.setDefenderId(playerChoiceCommand.getPlayerId());
-		        commandStatus = StepCommandStatus.EXECUTE_STEP;
-	        }
-	        break;
+  @Override
+  public void start() {
+    super.start();
+    executeStep();
+  }
+
+  @Override
+  public StepCommandStatus handleCommand(ReceivedCommand pReceivedCommand) {
+    StepCommandStatus commandStatus = super.handleCommand(pReceivedCommand);
+    if (commandStatus == StepCommandStatus.UNHANDLED_COMMAND) {
+      Game game = getGameState().getGame();
+      switch (pReceivedCommand.getId()) {
+        case CLIENT_PLAYER_CHOICE:
+          ClientCommandPlayerChoice playerChoiceCommand = (ClientCommandPlayerChoice) pReceivedCommand.getCommand();
+          if (PlayerChoiceMode.FEED == playerChoiceCommand.getPlayerChoiceMode()) {
+            fFeedOnPlayerChoice = StringTool.isProvided(playerChoiceCommand.getPlayerId());
+            game.setDefenderId(playerChoiceCommand.getPlayerId());
+            commandStatus = StepCommandStatus.EXECUTE_STEP;
+          }
+          break;
         default:
-        	break;
-				}
-		}
-		if (commandStatus == StepCommandStatus.EXECUTE_STEP) {
-			executeStep();
-		}
-		return commandStatus;
-	}
+          break;
+      }
+    }
+    if (commandStatus == StepCommandStatus.EXECUTE_STEP) {
+      executeStep();
+    }
+    return commandStatus;
+  }
 
   private void executeStep() {
     UtilServerDialog.hideDialog(getGameState());
     Game game = getGameState().getGame();
     ActingPlayer actingPlayer = game.getActingPlayer();
-    if (actingPlayer.isSufferingBloodLust() && !actingPlayer.hasFed() && !fFeedingAllowed) {
-    	fFeedOnPlayerChoice = false;
-    }
     if ((actingPlayer.getPlayer() == null) || !actingPlayer.isSufferingBloodLust() || actingPlayer.hasFed()) {
-    	publishParameter(new StepParameter(StepParameterKey.END_PLAYER_ACTION, true));
-    	publishParameter(new StepParameter(StepParameterKey.END_TURN, fEndTurn));
-    	getResult().setNextAction(StepAction.GOTO_LABEL, fGotoLabelOnEnd);
-    	return;
+      publishParameter(new StepParameter(StepParameterKey.END_PLAYER_ACTION, fEndPlayerAction));
+      publishParameter(new StepParameter(StepParameterKey.END_TURN, fEndTurn));
+      getResult().setNextAction(StepAction.GOTO_LABEL, fGotoLabelOnEnd);
+      return;
+    }
+    if (actingPlayer.isSufferingBloodLust() && !actingPlayer.hasFed() && !fFeedingAllowed) {
+      fFeedOnPlayerChoice = false;
     }
     boolean doNextStep = false;
     PlayerState playerState = game.getFieldModel().getPlayerState(actingPlayer.getPlayer());
@@ -146,21 +152,22 @@ public class StepInitFeeding extends AbstractStep {
       if (ArrayTool.isProvided(victims)) {
         UtilServerDialog.showDialog(getGameState(), new DialogPlayerChoiceParameter(team.getId(), PlayerChoiceMode.FEED, victims, null, 1), false);
       } else {
-      	fFeedOnPlayerChoice = false;
+        fFeedOnPlayerChoice = false;
       }
     }
     if (!playerState.hasTacklezones() || (fFeedOnPlayerChoice != null)) {
       if ((fFeedOnPlayerChoice != null) && fFeedOnPlayerChoice && (game.getDefender() != null)) {
         FieldCoordinate feedOnPlayerCoordinate = game.getFieldModel().getPlayerCoordinate(game.getDefender());
-        InjuryResult injuryResultFeeding = UtilServerInjury.handleInjury(this, InjuryType.BITTEN, actingPlayer.getPlayer(), game.getDefender(), feedOnPlayerCoordinate, null, ApothecaryMode.FEEDING);
-        fEndTurn = UtilPlayer.hasBall(game, game.getDefender());  // turn end on biting the ball carrier
+        InjuryResult injuryResultFeeding = UtilServerInjury.handleInjury(this, InjuryType.BITTEN, actingPlayer.getPlayer(), game.getDefender(),
+            feedOnPlayerCoordinate, null, ApothecaryMode.FEEDING);
+        fEndTurn = UtilPlayer.hasBall(game, game.getDefender()); // turn end on biting the ball carrier
         publishParameter(new StepParameter(StepParameterKey.INJURY_RESULT, injuryResultFeeding));
         publishParameters(UtilServerInjury.dropPlayer(this, game.getDefender(), ApothecaryMode.FEEDING));
         getResult().setSound(SoundId.SLURP);
         actingPlayer.setSufferingBloodLust(false);
         doNextStep = true;
       } else {
-      	fEndTurn = true;
+        fEndTurn = true;
         if (!playerState.isCasualty() && (playerState.getBase() != PlayerState.KNOCKED_OUT) && (playerState.getBase() != PlayerState.RESERVE)) {
           if (playerCoordinate.equals(game.getFieldModel().getBallCoordinate())) {
             game.getFieldModel().setBallMoving(true);
@@ -174,14 +181,15 @@ public class StepInitFeeding extends AbstractStep {
       }
     }
     if (doNextStep) {
-    	publishParameter(new StepParameter(StepParameterKey.END_TURN, fEndTurn));
       actingPlayer.setHasFed(true);
-    	getResult().setNextAction(StepAction.NEXT_STEP);
+      publishParameter(new StepParameter(StepParameterKey.END_PLAYER_ACTION, fEndPlayerAction));
+      publishParameter(new StepParameter(StepParameterKey.END_TURN, fEndTurn));
+      getResult().setNextAction(StepAction.NEXT_STEP);
     }
   }
-  
+
   // JSON serialization
-  
+
   @Override
   public JsonObject toJsonValue() {
     JsonObject jsonObject = super.toJsonValue();
@@ -191,7 +199,7 @@ public class StepInitFeeding extends AbstractStep {
     IServerJsonOption.END_TURN.addTo(jsonObject, fEndTurn);
     return jsonObject;
   }
-  
+
   @Override
   public StepInitFeeding initFrom(JsonValue pJsonValue) {
     super.initFrom(pJsonValue);

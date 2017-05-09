@@ -39,8 +39,8 @@ import com.fumbbl.rng.Fortuna;
  */
 public class FantasyFootballServer {
 
-  public static final String SERVER_VERSION = "1.2.10";
-  public static final String CLIENT_VERSION = "1.2.10";
+  public static final String SERVER_VERSION = "1.3.0";
+  public static final String CLIENT_VERSION = "1.3.0";
 
   private static final String _USAGE =
     "java -jar FantasyFootballServer.jar standalone\n"
