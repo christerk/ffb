@@ -15,40 +15,41 @@ public class ServerCommandHandlerFactory {
   
   private Map<NetCommandId,ServerCommandHandler> fCommandHandlerById;
   
-  public ServerCommandHandlerFactory(FantasyFootballServer pServer) {
+  public ServerCommandHandlerFactory(FantasyFootballServer server) {
     fCommandHandlerById = new HashMap<NetCommandId,ServerCommandHandler>();
-    register(new ServerCommandHandlerCloseGame(pServer));
-    register(new ServerCommandHandlerDeleteGame(pServer));
-    register(new ServerCommandHandlerFumbblGameChecked(pServer));
-    register(new ServerCommandHandlerFumbblTeamLoaded(pServer));
-    register(new ServerCommandHandlerJoin(pServer));
-    register(new ServerCommandHandlerJoinApproved(pServer));
-    register(new ServerCommandHandlerPasswordChallenge(pServer));
-    register(new ServerCommandHandlerReplay(pServer));
-    register(new ServerCommandHandlerReplayLoaded(pServer));
-    register(new ServerCommandHandlerRequestVersion(pServer));
-    register(new ServerCommandHandlerScheduleGame(pServer));
-    register(new ServerCommandHandlerSetMarker(pServer));
-    register(new ServerCommandHandlerSocketClosed(pServer));
-    register(new ServerCommandHandlerTalk(pServer));
-    register(new ServerCommandHandlerUploadGame(pServer));
-    register(new ServerCommandHandlerUserSettings(pServer));
-    register(new ServerCommandHandlerCloseSession(pServer));
+    register(new ServerCommandHandlerCloseGame(server));
+    register(new ServerCommandHandlerDeleteGame(server));
+    register(new ServerCommandHandlerFumbblGameChecked(server));
+    register(new ServerCommandHandlerFumbblTeamLoaded(server));
+    register(new ServerCommandHandlerJoin(server));
+    register(new ServerCommandHandlerJoinApproved(server));
+    register(new ServerCommandHandlerPasswordChallenge(server));
+    register(new ServerCommandHandlerReplay(server));
+    register(new ServerCommandHandlerReplayLoaded(server));
+    register(new ServerCommandHandlerRequestVersion(server));
+    register(new ServerCommandHandlerScheduleGame(server));
+    register(new ServerCommandHandlerSetMarker(server));
+    register(new ServerCommandHandlerSocketClosed(server));
+    register(new ServerCommandHandlerTalk(server));
+    register(new ServerCommandHandlerUploadGame(server));
+    register(new ServerCommandHandlerUserSettings(server));
+    register(new ServerCommandHandlerCloseSession(server));
+    register(new ServerCommandHandlerPing(server));
   }
   
-  public void handleCommand(ReceivedCommand pReceivedCommand) {
-    ServerCommandHandler commandHandler = getCommandHandler(pReceivedCommand.getId());
+  public void handleCommand(ReceivedCommand receivedCommand) {
+    ServerCommandHandler commandHandler = getCommandHandler(receivedCommand.getId());
     if (commandHandler != null) {
-      commandHandler.handleCommand(pReceivedCommand);
+      commandHandler.handleCommand(receivedCommand);
     }
   }
   
-  public ServerCommandHandler getCommandHandler(NetCommandId pType) {
-    return fCommandHandlerById.get(pType);
+  public ServerCommandHandler getCommandHandler(NetCommandId commandId) {
+    return fCommandHandlerById.get(commandId);
   }
 
-  private void register(ServerCommandHandler pCommandHandler) {
-    fCommandHandlerById.put(pCommandHandler.getId(), pCommandHandler);
+  private void register(ServerCommandHandler commandHandler) {
+    fCommandHandlerById.put(commandHandler.getId(), commandHandler);
   }
   
 }

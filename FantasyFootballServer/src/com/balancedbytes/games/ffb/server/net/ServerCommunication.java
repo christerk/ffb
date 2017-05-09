@@ -34,6 +34,7 @@ import com.balancedbytes.games.ffb.net.commands.ServerCommandJoin;
 import com.balancedbytes.games.ffb.net.commands.ServerCommandLeave;
 import com.balancedbytes.games.ffb.net.commands.ServerCommandModelSync;
 import com.balancedbytes.games.ffb.net.commands.ServerCommandPasswordChallenge;
+import com.balancedbytes.games.ffb.net.commands.ServerCommandPong;
 import com.balancedbytes.games.ffb.net.commands.ServerCommandRemovePlayer;
 import com.balancedbytes.games.ffb.net.commands.ServerCommandSound;
 import com.balancedbytes.games.ffb.net.commands.ServerCommandStatus;
@@ -137,7 +138,8 @@ public class ServerCommunication implements Runnable, IReceivedCommandHandler {
       shutdownGame(gameState);
     }
 
-    if (command.getId() != NetCommandId.CLIENT_DEBUG_CLIENT_STATE) {
+    if ((command.getId() != NetCommandId.CLIENT_PING)
+        && (command.getId() != NetCommandId.CLIENT_DEBUG_CLIENT_STATE)) {
       long gameId = 0;
       if (command.isInternalCommand()) {
         gameId = ((InternalServerCommand) command.getCommand()).getGameId();
@@ -393,6 +395,12 @@ public class ServerCommunication implements Runnable, IReceivedCommandHandler {
       sendAllSessions(gameState, gameTimeCommand, false);
       // not logged in Game Log
     }
+  }
+  
+  public void sendPong(Session pSession, long pClientTime) {
+    ServerCommandPong pongCommand = new ServerCommandPong(pClientTime);
+    send(pSession, pongCommand, false);
+    // not logged in Game Log
   }
 
   public void sendGameState(Session pSession, GameState gameState) {

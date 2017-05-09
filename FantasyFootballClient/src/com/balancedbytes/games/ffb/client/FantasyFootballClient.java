@@ -7,6 +7,7 @@ import java.net.InetAddress;
 import java.net.URI;
 import java.net.UnknownHostException;
 import java.util.Properties;
+import java.util.Timer;
 import java.util.concurrent.TimeUnit;
 
 import javax.swing.UIManager;
@@ -22,11 +23,13 @@ import com.balancedbytes.games.ffb.client.dialog.IDialog;
 import com.balancedbytes.games.ffb.client.dialog.IDialogCloseListener;
 import com.balancedbytes.games.ffb.client.handler.ClientCommandHandlerFactory;
 import com.balancedbytes.games.ffb.client.net.ClientCommunication;
+import com.balancedbytes.games.ffb.client.net.ClientPingTask;
 import com.balancedbytes.games.ffb.client.net.CommandEndpoint;
 import com.balancedbytes.games.ffb.client.state.ClientState;
 import com.balancedbytes.games.ffb.client.state.ClientStateFactory;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.net.IConnectionListener;
+import com.balancedbytes.games.ffb.util.StringTool;
 
 /**
  * 
@@ -41,6 +44,8 @@ public class FantasyFootballClient implements IConnectionListener, IDialogCloseL
   private UserInterface fUserInterface;
   private ClientCommunication fCommunication;
   private Thread fCommunicationThread;
+  private Timer fPingTimer;
+  private ClientPingTask fClientPingTask;
   private Properties fProperties;
   private ClientState fState;
   private ClientStateFactory fStateFactory;
@@ -90,6 +95,8 @@ public class FantasyFootballClient implements IConnectionListener, IDialogCloseL
     fCommunication = new ClientCommunication(this);
     fCommunicationThread = new Thread(fCommunication);
     fCommunicationThread.start();
+
+    fPingTimer = new Timer(true);
 
   }
 
@@ -154,6 +161,15 @@ public class FantasyFootballClient implements IConnectionListener, IDialogCloseL
     } catch (Exception pAnyException) {
       pAnyException.printStackTrace();
     }
+    
+    String pingIntervalProperty = getProperty(IClientProperty.CLIENT_PING_INTERVAL);
+    if (StringTool.isProvided(pingIntervalProperty) && (ClientMode.REPLAY != getMode())) {
+      int pingInterval = Integer.parseInt(pingIntervalProperty);
+      String pingMaxDelayProperty = getProperty(IClientProperty.CLIENT_PING_MAX_DELAY);
+      int pingMaxDelay = StringTool.isProvided(pingMaxDelayProperty) ? Integer.parseInt(pingMaxDelayProperty) : 0;
+      fClientPingTask = new ClientPingTask(this, pingMaxDelay);
+      fPingTimer.schedule(fClientPingTask, 0, pingInterval);
+    }
 
     getUserInterface().getStatusReport().reportConnectionEstablished(connectionEstablished);
 
@@ -162,6 +178,7 @@ public class FantasyFootballClient implements IConnectionListener, IDialogCloseL
   }
 
   public void stopClient() {
+    fPingTimer = null;
     try {
       fSession.close();
       fCommandEndpoint.awaitClose(10, TimeUnit.SECONDS);
@@ -178,24 +195,10 @@ public class FantasyFootballClient implements IConnectionListener, IDialogCloseL
   }
 
   public void setProperty(String pProperty, String pValue) {
-
     if ((fProperties == null) || (pProperty == null) || (pValue == null)) {
       return;
     }
-
     fProperties.setProperty(pProperty, pValue);
-    // System.out.println("setProperty(" + pProperty + "=" + pValue + ")");
-
-    /*
-    if (IClientProperty.CLIENT_PING_INTERVAL.equals(pProperty) && StringTool.isProvided(pValue)) {
-      int pingInterval = Integer.parseInt(pValue);
-      String pingMaxDelayProperty = getProperty(IClientProperty.CLIENT_PING_MAX_DELAY);
-      int pingMaxDelay = StringTool.isProvided(pingMaxDelayProperty) ? Integer.parseInt(pingMaxDelayProperty) : 0;
-      fClientPingTask = new ClientPingTask(this, pingMaxDelay);
-      fPingTimer.schedule(fClientPingTask, 0, pingInterval);
-    }
-    */
-
   }
 
   public ClientState updateClientState() {
@@ -220,6 +223,10 @@ public class FantasyFootballClient implements IConnectionListener, IDialogCloseL
 
   public ClientCommandHandlerFactory getCommandHandlerFactory() {
     return fCommandHandlerFactory;
+  }
+
+  public ClientPingTask getClientPingTask() {
+    return fClientPingTask;
   }
 
   public boolean isConnectionEstablished() {

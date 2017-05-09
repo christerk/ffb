@@ -27,6 +27,7 @@ import com.balancedbytes.games.ffb.net.commands.ClientCommandMove;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandPass;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandPasswordChallenge;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandPettyCash;
+import com.balancedbytes.games.ffb.net.commands.ClientCommandPing;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandPlayerChoice;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandPushback;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandReceiveChoice;
@@ -56,6 +57,7 @@ import com.balancedbytes.games.ffb.net.commands.ServerCommandJoin;
 import com.balancedbytes.games.ffb.net.commands.ServerCommandLeave;
 import com.balancedbytes.games.ffb.net.commands.ServerCommandModelSync;
 import com.balancedbytes.games.ffb.net.commands.ServerCommandPasswordChallenge;
+import com.balancedbytes.games.ffb.net.commands.ServerCommandPong;
 import com.balancedbytes.games.ffb.net.commands.ServerCommandRemovePlayer;
 import com.balancedbytes.games.ffb.net.commands.ServerCommandReplay;
 import com.balancedbytes.games.ffb.net.commands.ServerCommandSound;
@@ -147,7 +149,9 @@ public enum NetCommandId implements INamedObject {
   INTERNAL_SERVER_CLEAR_CACHE("internalServerClearCache"),
   CLIENT_CLOSE_SESSION("clientCloseSession"),
   CLIENT_ARGUE_THE_CALL("clientArgueTheCall"),
-  SERVER_GAME_TIME("serverGameTime");
+  SERVER_GAME_TIME("serverGameTime"),
+  CLIENT_PING("clientPing"),
+  SERVER_PONG("serverPong");
   
   private String fName;
   
@@ -289,6 +293,10 @@ public enum NetCommandId implements INamedObject {
         return new ClientCommandCloseSession();
       case CLIENT_ARGUE_THE_CALL:
         return new ClientCommandArgueTheCall();
+      case CLIENT_PING:
+        return new ClientCommandPing();
+      case SERVER_PONG:
+        return new ServerCommandPong();
       default:
         throw new IllegalStateException("Unhandled netCommandId " + this + ".");
     }

@@ -45,7 +45,7 @@ public class ClientCommandHandlerJoin extends ClientCommandHandler {
         awayCoach = players[1];
       }
 
-      GameTitle gameTitle = userInterface.getGameTitle();
+      GameTitle gameTitle = new GameTitle();
       gameTitle.setClientMode(getClient().getMode());
       gameTitle.setHomeCoach(homeCoach);
       gameTitle.setAwayCoach(awayCoach);

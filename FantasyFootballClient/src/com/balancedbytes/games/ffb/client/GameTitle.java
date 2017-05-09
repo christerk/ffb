@@ -15,7 +15,7 @@ public class GameTitle {
   private static final long _DAYS = 24 * _HOURS;
   
   private ClientMode fClientMode;
-  private boolean fTesting;
+  private Boolean fTesting;
   private String fHomeCoach;
   private String fAwayCoach;
   private long fPingTime;
@@ -24,17 +24,33 @@ public class GameTitle {
   
   public GameTitle() {
     setPingTime(-1);
+    setTurnTime(-1);
+    setGameTime(-1);
   }
   
-  public GameTitle(GameTitle pGameTitle) {
-    if (pGameTitle != null) {
-      setClientMode(pGameTitle.getClientMode());
-      setTesting(pGameTitle.isTesting());
-      setHomeCoach(pGameTitle.getHomeCoach());
-      setAwayCoach(pGameTitle.getAwayCoach());
-      setPingTime(pGameTitle.getPingTime());
-      setTurnTime(pGameTitle.getTurnTime());
-      setGameTime(pGameTitle.getGameTime());
+  public void update(GameTitle gameTitle) {
+    if (gameTitle != null) {
+      if (gameTitle.getClientMode() != null) {
+        setClientMode(gameTitle.getClientMode());
+      }
+      if (gameTitle.getTesting() != null) {
+        setTesting(gameTitle.isTesting());
+      }
+      if (StringTool.isProvided(gameTitle.getHomeCoach())) {
+        setHomeCoach(gameTitle.getHomeCoach());
+      }
+      if (StringTool.isProvided(gameTitle.getAwayCoach())) {
+        setAwayCoach(gameTitle.getAwayCoach());
+      }
+      if (gameTitle.getPingTime() >= 0) {
+        setPingTime(gameTitle.getPingTime());
+      }
+      if (gameTitle.getGameTime() >= 0) {
+        setGameTime(gameTitle.getGameTime());
+      }
+      if (gameTitle.getTurnTime() >= 0) {
+        setTurnTime(gameTitle.getTurnTime());
+      }
     }
   }
   
@@ -43,6 +59,10 @@ public class GameTitle {
   }
   
   public boolean isTesting() {
+    return (fTesting != null) ? fTesting : false;
+  }
+  
+  private Boolean getTesting() {
     return fTesting;
   }
   
@@ -123,36 +143,40 @@ public class GameTitle {
     }
     if (getPingTime() >= 0) {
       title.append(" - Ping ");
-      title.append(getPingTime()).append("ms");
+      appendPing(title);
     }
     return title.toString();
   }
   
-  private void appendTime(StringBuilder pBuffer, long pMilliseconds, boolean pShowHours) {
+  private void appendTime(StringBuilder builder, long milliseconds, boolean showHours) {
     
-    long milliseconds = pMilliseconds;
+    long myMilliseconds = (milliseconds > 0) ? milliseconds : 0;
     
     int days = 0;
-    if (milliseconds >= _DAYS) {
-      days = (int) (milliseconds / _DAYS);
-      milliseconds -= days * _DAYS;
-      pBuffer.append(days).append("d");
+    if (myMilliseconds >= _DAYS) {
+      days = (int) (myMilliseconds / _DAYS);
+      myMilliseconds -= days * _DAYS;
+      builder.append(days).append("d");
     }
     
     int hours = 0;
-    if (pShowHours || (days > 0) || (milliseconds >= _HOURS)) {
-      hours = (int) (milliseconds / _HOURS);
-      milliseconds -= hours * _HOURS;
-      appendMin2Digits(pBuffer, hours).append("h");
+    if (showHours || (days > 0) || (myMilliseconds >= _HOURS)) {
+      hours = (int) (myMilliseconds / _HOURS);
+      myMilliseconds -= hours * _HOURS;
+      appendMin2Digits(builder, hours).append("h");
     }
     
-    int minutes = (int) (milliseconds / _MINUTES);
-    milliseconds -= minutes * _MINUTES;
-    appendMin2Digits(pBuffer, minutes).append("m");
+    int minutes = (int) (myMilliseconds / _MINUTES);
+    myMilliseconds -= minutes * _MINUTES;
+    appendMin2Digits(builder, minutes).append("m");
     
-    int seconds = (int) (milliseconds / _SECONDS);
-    appendMin2Digits(pBuffer, seconds).append("s");
+    int seconds = (int) (myMilliseconds / _SECONDS);
+    appendMin2Digits(builder, seconds).append("s");
 
+  }
+  
+  private void appendPing(StringBuilder builder) {
+    builder.append(StringTool.formatThousands(getPingTime())).append("ms");
   }
   
   private StringBuilder appendMin2Digits(StringBuilder pBuffer, int pValue) {

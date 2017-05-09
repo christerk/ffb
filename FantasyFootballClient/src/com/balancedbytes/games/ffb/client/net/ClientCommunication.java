@@ -54,6 +54,7 @@ import com.balancedbytes.games.ffb.net.commands.ClientCommandMove;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandPass;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandPasswordChallenge;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandPettyCash;
+import com.balancedbytes.games.ffb.net.commands.ClientCommandPing;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandPlayerChoice;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandPushback;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandReceiveChoice;
@@ -128,6 +129,7 @@ public class ClientCommunication implements Runnable, INetCommandHandler {
       }
 
       switch (netCommand.getId()) {
+        case SERVER_PONG:
         case SERVER_TALK:
         case SERVER_SOUND:
         case SERVER_REPLAY:
@@ -186,6 +188,10 @@ public class ClientCommunication implements Runnable, INetCommandHandler {
   
   public void sendPasswordChallenge() {
     send(new ClientCommandPasswordChallenge(getClient().getParameters().getCoach()));
+  }
+  
+  public void sendPing(long timestamp) {
+    send(new ClientCommandPing(timestamp));
   }
   
   public void sendSetupPlayer(Player pPlayer, FieldCoordinate pCoordinate) {

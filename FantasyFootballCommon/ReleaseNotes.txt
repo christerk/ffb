@@ -6,6 +6,7 @@
 - (Technical) Turn Timers are now fully controlled by the server (Server Pings)
 - (Technical) Client generated entropy now transmitted within each client command 
 - If and when the turn timer stops to wait for opponent input has been greatly improved
+- Ping Time (Server Lag) once again shown in the client
 
 [b]Bugfixes:[/b]
 

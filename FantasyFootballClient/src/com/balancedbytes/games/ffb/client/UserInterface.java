@@ -173,7 +173,11 @@ public class UserInterface extends JFrame implements WindowListener, IDialogClos
   
   public void setGameTitle(GameTitle pGameTitle) {
     fGameTitle = pGameTitle;
-    setTitle(fGameTitle.toString());
+    refreshTitle();
+  }
+  
+  public void refreshTitle() {
+    setTitle((fGameTitle != null) ? fGameTitle.toString() : "FantasyFootball");
   }
 
   public void refreshSideBars() {
@@ -197,7 +201,7 @@ public class UserInterface extends JFrame implements WindowListener, IDialogClos
     getGameMenuBar().init();
     
     Game game = getClient().getGame();
-    GameTitle gameTitle = new GameTitle(getGameTitle());
+    GameTitle gameTitle = new GameTitle();
     gameTitle.setClientMode(getClient().getMode());
     gameTitle.setHomeCoach(game.getTeamHome().getCoach());
     gameTitle.setAwayCoach(game.getTeamAway().getCoach());
