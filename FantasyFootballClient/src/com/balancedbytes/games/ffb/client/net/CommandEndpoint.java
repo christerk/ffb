@@ -13,7 +13,9 @@ import javax.websocket.OnOpen;
 import javax.websocket.Session;
 
 import com.balancedbytes.games.ffb.client.FantasyFootballClient;
+import com.balancedbytes.games.ffb.client.GameTitle;
 import com.balancedbytes.games.ffb.client.IClientProperty;
+import com.balancedbytes.games.ffb.client.ui.GameTitleUpdateTask;
 import com.balancedbytes.games.ffb.json.LZString;
 import com.balancedbytes.games.ffb.net.NetCommand;
 import com.balancedbytes.games.ffb.net.NetCommandFactory;
@@ -66,19 +68,10 @@ public class CommandEndpoint {
       fCommandCompression ? LZString.decompressFromUTF16(pTextMessage) : pTextMessage
     );
 
-    NetCommand netCommand = fNetCommandFactory.forJsonValue(jsonValue);
-    if (netCommand == null) {
-      return;
-    }
-
-    if (NetCommandId.SERVER_PONG == netCommand.getId()) {
-      ((ServerCommandPong) netCommand).setReceived(System.currentTimeMillis());
-    }
-
-    fClient.getCommunication().handleCommand(netCommand);
+    handleNetCommand(fNetCommandFactory.forJsonValue(jsonValue));
 
   }
-
+  
   @OnClose
   public void onClose(Session session, CloseReason closeReason) {
     fClient.getUserInterface().getStatusReport().reportSocketClosed();
@@ -116,6 +109,25 @@ public class CommandEndpoint {
 
   public boolean isOpen() {
     return ((fSession != null) && fSession.isOpen());
+  }
+  
+  private void handleNetCommand(NetCommand netCommand) {
+   if (netCommand == null) {
+      return;
+    } else if (NetCommandId.SERVER_PONG == netCommand.getId()) {
+      ServerCommandPong pongCommand = (ServerCommandPong) netCommand;
+      if (pongCommand.getTimestamp() > 0) {
+        long received = System.currentTimeMillis();
+        fClient.getClientPingTask().setLastPingReceived(received);
+        GameTitle gameTitle = new GameTitle();
+        gameTitle.setPingTime(received - pongCommand.getTimestamp());
+        fClient.getUserInterface().invokeLater(
+          new GameTitleUpdateTask(fClient, gameTitle)
+        );
+      }
+    } else {
+      fClient.getCommunication().handleCommand(netCommand);
+    }
   }
 
 }

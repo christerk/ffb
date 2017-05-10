@@ -33,7 +33,6 @@ public class ClientCommandHandlerFactory {
     register(new ClientCommandHandlerAddPlayer(getClient()));
     register(new ClientCommandHandlerRemovePlayer(getClient()));
     register(new ClientCommandHandlerGameTime(getClient()));
-    register(new ClientCommandHandlerPong(getClient()));
   }
   
   public void handleNetCommand(NetCommand pNetCommand, ClientCommandHandlerMode pMode) {
