@@ -118,7 +118,6 @@ public class CommandEndpoint {
       ServerCommandPong pongCommand = (ServerCommandPong) netCommand;
       if (pongCommand.getTimestamp() > 0) {
         long received = System.currentTimeMillis();
-        fClient.getClientPingTask().setLastPingReceived(received);
         GameTitle gameTitle = new GameTitle();
         gameTitle.setPingTime(received - pongCommand.getTimestamp());
         fClient.getUserInterface().invokeLater(

@@ -16,13 +16,6 @@ public class DialogStartGameHandler extends DialogHandler {
   }
   
   public void showDialog() {
-
-//    Game game = getClient().getGame();
-//    UserInterface userInterface = getClient().getUserInterface();
-//    if (ClientMode.SPECTATOR == getClient().getLoginMode()) {
-//      userInterface.getDialogManager().showStatus("Waiting for game to start.", !game.isHomePlaying(), false);
-//    }
-    
     if (ClientMode.PLAYER == getClient().getMode()) {
       if (getClient().getGame().getScheduled() != null) {
         getClient().getCommunication().sendStartGame();
@@ -31,9 +24,7 @@ public class DialogStartGameHandler extends DialogHandler {
         getDialog().showDialog(this);
       }
     }
-    
   }
-  
   
   public void dialogClosed(IDialog pDialog) {
     hideDialog();
@@ -43,7 +34,7 @@ public class DialogStartGameHandler extends DialogHandler {
         getClient().getCommunication().sendStartGame();
         showStatus("Start game", "Waiting for coach to start the game.", StatusType.WAITING);
       } else {
-        getClient().stopClient();
+        getClient().exitClient();
       }
     }
   }

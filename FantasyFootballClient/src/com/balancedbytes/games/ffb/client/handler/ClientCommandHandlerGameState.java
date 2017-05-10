@@ -119,7 +119,7 @@ public class ClientCommandHandlerGameState extends ClientCommandHandler implemen
   }
   
   public void dialogClosed(IDialog pDialog) {
-    getClient().stopClient();
+    getClient().exitClient();
   }
   
   private void addIconUrl(Set<String> pIconUrls, String pIconUrl) {
