@@ -248,6 +248,7 @@ public class StepPushback extends AbstractStep {
             }
             fieldModel.add(pushbackSquares);
             if ((sideStepHomePlayer && !game.isHomePlaying()) || (!sideStepHomePlayer && game.isHomePlaying())) {
+              game.setWaitingForOpponent(true);
               UtilServerTimer.stopTurnTimer(getGameState(), System.currentTimeMillis());
             }
           }
