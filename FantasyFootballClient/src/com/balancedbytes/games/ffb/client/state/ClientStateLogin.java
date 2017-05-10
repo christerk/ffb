@@ -92,7 +92,7 @@ public class ClientStateLogin extends ClientState implements IDialogCloseListene
         if (informationDialog.getOptionType() == DialogInformation.OK_DIALOG) {
           showLoginDialog();
         } else {
-          getClient().stopClient();
+          getClient().exitClient();
         }
         break;
       case TEAM_CHOICE:

@@ -1,2 +1,3 @@
 add ArrestedDevelopment to credits thank for the hats
 pricing inducements via option
+next server release: remove unneeded transient field from ServerCommandPong
