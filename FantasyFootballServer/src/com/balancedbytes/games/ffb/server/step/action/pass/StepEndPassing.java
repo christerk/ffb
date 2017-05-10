@@ -102,7 +102,7 @@ public final class StepEndPassing extends AbstractStep {
     ActingPlayer actingPlayer = game.getActingPlayer();
     // failed confusion roll on throw bomb -> end player action
     if (fEndPlayerAction && ((actingPlayer.getPlayerAction() == PlayerAction.THROW_BOMB) || (actingPlayer.getPlayerAction() == PlayerAction.HAIL_MARY_BOMB))) {
-      SequenceGenerator.getInstance().pushEndPlayerActionSequence(getGameState(), true, fEndTurn);
+      SequenceGenerator.getInstance().pushEndPlayerActionSequence(getGameState(), true, true, fEndTurn);
       getResult().setNextAction(StepAction.NEXT_STEP);
       return;
     }
@@ -142,7 +142,7 @@ public final class StepEndPassing extends AbstractStep {
     if (fEndTurn || fEndPlayerAction || ((game.getThrower() == actingPlayer.getPlayer()) && actingPlayer.isSufferingBloodLust() && !actingPlayer.hasFed())) {
       fEndTurn |= (UtilServerSteps.checkTouchdown(getGameState()) || ((catcher == null) && !actingPlayer.isSufferingAnimosity()) || UtilPlayer.findOtherTeam(game, game.getThrower()).hasPlayer(catcher)
           || fPassFumble);
-      SequenceGenerator.getInstance().pushEndPlayerActionSequence(getGameState(), true, fEndTurn);
+      SequenceGenerator.getInstance().pushEndPlayerActionSequence(getGameState(), true, fEndPlayerAction, fEndTurn);
     } else {
       if (StringTool.isProvided(fInterceptorId)) {
         catcher = game.getPlayerById(fInterceptorId);
@@ -158,7 +158,7 @@ public final class StepEndPassing extends AbstractStep {
       if (game.getThrower() == actingPlayer.getPlayer()) {
         fEndTurn |= (UtilServerSteps.checkTouchdown(getGameState()) || ((catcher == null) && !actingPlayer.isSufferingAnimosity()) || UtilPlayer.findOtherTeam(game, game.getThrower()).hasPlayer(catcher)
             || fPassFumble);
-        SequenceGenerator.getInstance().pushEndPlayerActionSequence(getGameState(), true, fEndTurn);
+        SequenceGenerator.getInstance().pushEndPlayerActionSequence(getGameState(), true, true, fEndTurn);
       } else {
         game.setDefenderAction(null); // reset dump-off action
       }

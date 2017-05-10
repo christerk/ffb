@@ -130,7 +130,7 @@ public final class StepEndSelecting extends AbstractStep {
     Game game = getGameState().getGame();
     ActingPlayer actingPlayer = game.getActingPlayer();
     if (fEndTurn || fEndPlayerAction) {
-  		SequenceGenerator.getInstance().pushEndPlayerActionSequence(getGameState(), true, fEndTurn);
+  		SequenceGenerator.getInstance().pushEndPlayerActionSequence(getGameState(), true, true, fEndTurn);
     } else if (actingPlayer.isSufferingBloodLust()) {
     	if (fDispatchPlayerAction != null) {
     		if (!fDispatchPlayerAction.isMoving()) {
@@ -208,18 +208,18 @@ public final class StepEndSelecting extends AbstractStep {
         break;
       case REMOVE_CONFUSION:
         actingPlayer.setHasMoved(true);
-    		SequenceGenerator.getInstance().pushEndPlayerActionSequence(getGameState(), true, false);
+    		SequenceGenerator.getInstance().pushEndPlayerActionSequence(getGameState(), true, true, false);
         break;
       case STAND_UP:
       	if (actingPlayer.getPlayer().hasSkill(Skill.HYPNOTIC_GAZE)) {     		
       		SequenceGenerator.getInstance().pushMoveSequence(getGameState());
       	} else {
-      		SequenceGenerator.getInstance().pushEndPlayerActionSequence(getGameState(), true, false);
+      		SequenceGenerator.getInstance().pushEndPlayerActionSequence(getGameState(), true, true, false);
       	}
         break;
       case STAND_UP_BLITZ:
         game.getTurnData().setBlitzUsed(true);
-    		SequenceGenerator.getInstance().pushEndPlayerActionSequence(getGameState(), true, false);
+    		SequenceGenerator.getInstance().pushEndPlayerActionSequence(getGameState(), true, true, false);
         break;
       default:
         throw new IllegalStateException("Unhandled player action " + pPlayerAction.getName() + ".");

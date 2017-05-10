@@ -487,25 +487,25 @@ public class SequenceGenerator {
 
   }
 
-  public void pushEndPlayerActionSequence(GameState pGameState, boolean pFeedingAllowed, boolean pEndTurn) {
+  public void pushEndPlayerActionSequence(GameState gameState, boolean feedingAllowed, boolean endPlayerAction, boolean endTurn) {
 
-    pGameState.getServer().getDebugLog().log(IServerLogLevel.DEBUG, pGameState.getId(), "push endPlayerActionSequence onto stack");
+    gameState.getServer().getDebugLog().log(IServerLogLevel.DEBUG, gameState.getId(), "push endPlayerActionSequence onto stack");
 
     List<IStep> feedSequence = new ArrayList<IStep>();
 
     StepParameterSet initParameters = createParameterSet(StepParameterKey.GOTO_LABEL_ON_END, IStepLabel.END_FEEDING);
-    initParameters.add(new StepParameter(StepParameterKey.FEEDING_ALLOWED, pFeedingAllowed));
-    initParameters.add(new StepParameter(StepParameterKey.END_TURN, pEndTurn));
-    initParameters.add(new StepParameter(StepParameterKey.END_PLAYER_ACTION, true));
-    add(feedSequence, StepId.INIT_FEEDING, pGameState, initParameters);
+    initParameters.add(new StepParameter(StepParameterKey.FEEDING_ALLOWED, feedingAllowed));
+    initParameters.add(new StepParameter(StepParameterKey.END_PLAYER_ACTION, endPlayerAction));
+    initParameters.add(new StepParameter(StepParameterKey.END_TURN, endTurn));
+    add(feedSequence, StepId.INIT_FEEDING, gameState, initParameters);
 
-    add(feedSequence, StepId.APOTHECARY, pGameState, createParameterSet(StepParameterKey.APOTHECARY_MODE, ApothecaryMode.FEEDING));
-    add(feedSequence, StepId.CATCH_SCATTER_THROW_IN, pGameState);
+    add(feedSequence, StepId.APOTHECARY, gameState, createParameterSet(StepParameterKey.APOTHECARY_MODE, ApothecaryMode.FEEDING));
+    add(feedSequence, StepId.CATCH_SCATTER_THROW_IN, gameState);
 
-    add(feedSequence, StepId.END_FEEDING, pGameState, IStepLabel.END_FEEDING);
+    add(feedSequence, StepId.END_FEEDING, gameState, IStepLabel.END_FEEDING);
     // inserts select or inducement sequence at this point
 
-    pGameState.getStepStack().push(feedSequence);
+    gameState.getStepStack().push(feedSequence);
 
   }
 

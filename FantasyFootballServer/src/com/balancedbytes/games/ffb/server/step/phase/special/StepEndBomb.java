@@ -75,7 +75,7 @@ public final class StepEndBomb extends AbstractStep {
     	} else {
     		game.setTurnMode(TurnMode.REGULAR);
     	}
-    	SequenceGenerator.getInstance().pushEndPlayerActionSequence(getGameState(), false, fEndTurn);
+    	SequenceGenerator.getInstance().pushEndPlayerActionSequence(getGameState(), false, true, fEndTurn);
     } else {
     	Player catcher = game.getPlayerById(fCatcherId);
     	game.setHomePlaying(game.getTeamHome().hasPlayer(catcher));

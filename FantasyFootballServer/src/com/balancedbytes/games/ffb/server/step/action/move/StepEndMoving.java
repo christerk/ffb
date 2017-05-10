@@ -138,7 +138,7 @@ public class StepEndMoving extends AbstractStep {
     Game game = getGameState().getGame();
     ActingPlayer actingPlayer = game.getActingPlayer();
     if (fEndTurn || fEndPlayerAction) {
-    	SequenceGenerator.getInstance().pushEndPlayerActionSequence(getGameState(), fFeedingAllowed, fEndTurn);
+    	SequenceGenerator.getInstance().pushEndPlayerActionSequence(getGameState(), fFeedingAllowed, true, fEndTurn);
     // block defender set by ball and chain
     } else if (StringTool.isProvided(fBlockDefenderId)) {
     	SequenceGenerator.getInstance().pushBlockSequence(getGameState(), fBlockDefenderId, false, null);
@@ -156,7 +156,7 @@ public class StepEndMoving extends AbstractStep {
       UtilServerPlayerMove.updateMoveSquares(getGameState(), actingPlayer.isLeaping());
     	SequenceGenerator.getInstance().pushMoveSequence(getGameState());
     } else {
-    	SequenceGenerator.getInstance().pushEndPlayerActionSequence(getGameState(), fFeedingAllowed, fEndTurn);
+    	SequenceGenerator.getInstance().pushEndPlayerActionSequence(getGameState(), fFeedingAllowed, true, fEndTurn);
     }
   	getResult().setNextAction(StepAction.NEXT_STEP);
   }

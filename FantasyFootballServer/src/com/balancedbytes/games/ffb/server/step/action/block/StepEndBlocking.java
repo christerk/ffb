@@ -97,7 +97,7 @@ public class StepEndBlocking extends AbstractStep {
     fEndTurn |= UtilServerSteps.checkTouchdown(getGameState());
     if (fEndTurn || fEndPlayerAction) {
       game.setDefenderId(null); // clear defender for next multi block
-      SequenceGenerator.getInstance().pushEndPlayerActionSequence(getGameState(), true, fEndTurn);
+      SequenceGenerator.getInstance().pushEndPlayerActionSequence(getGameState(), true, true, fEndTurn);
     } else {
       FieldCoordinate defenderPosition = game.getFieldModel().getPlayerCoordinate(game.getDefender());
       FieldCoordinate attackerPositon = game.getFieldModel().getPlayerCoordinate(actingPlayer.getPlayer());
@@ -150,7 +150,7 @@ public class StepEndBlocking extends AbstractStep {
           SequenceGenerator.getInstance().pushBlockSequence(getGameState());
         } else {
           game.setDefenderId(null); // clear defender for next multi block
-          SequenceGenerator.getInstance().pushEndPlayerActionSequence(getGameState(), true, false);
+          SequenceGenerator.getInstance().pushEndPlayerActionSequence(getGameState(), true, true, false);
         }
       }
     }

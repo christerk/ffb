@@ -59,7 +59,7 @@ public class StepEndFouling extends AbstractStep {
 	}
 	
 	private void executeStep() {
-		SequenceGenerator.getInstance().pushEndPlayerActionSequence(getGameState(), true, fEndTurn);
+		SequenceGenerator.getInstance().pushEndPlayerActionSequence(getGameState(), true, true, fEndTurn);
     getResult().setNextAction(StepAction.NEXT_STEP);
   }
   
