@@ -268,7 +268,9 @@ public class ServerCommandHandlerTalk extends ServerCommandHandler {
       info.append("Setting game option ").append(gameOption.getId().getName()).append(" to value ")
           .append(gameOption.getValueAsString()).append(".");
       getServer().getCommunication().sendPlayerTalk(pGameState, null, info.toString());
-      UtilServerGame.syncGameModel(pGameState, null, null, null);
+      if (game.getStarted() != null) {
+        UtilServerGame.syncGameModel(pGameState, null, null, null);
+      }
     }
   }
 

@@ -152,11 +152,7 @@ public final class StepWizard extends AbstractStep {
         fOldTurnMode = game.getTurnMode();
       }
       game.setTurnMode(TurnMode.WIZARD);
-      UtilServerDialog.showDialog(
-          getGameState(),
-          new DialogWizardSpellParameter(),
-          (game.isHomePlaying() && !fHomeTeam) || (!game.isHomePlaying() && fHomeTeam)
-      );
+      UtilServerDialog.showDialog(getGameState(), new DialogWizardSpellParameter(), false);
     }
   }
 
