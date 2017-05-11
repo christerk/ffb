@@ -50,70 +50,69 @@ import com.eclipsesource.json.JsonValue;
  */
 public class StepDivingTackle extends AbstractStep {
 
-	private String fGotoLabelOnSuccess;
-	private FieldCoordinate fCoordinateFrom;
-	private FieldCoordinate fCoordinateTo;
-	private int fDodgeRoll;
-	private Boolean fUsingDivingTackle;
-	private boolean fUsingBreakTackle;
+  private String fGotoLabelOnSuccess;
+  private FieldCoordinate fCoordinateFrom;
+  private FieldCoordinate fCoordinateTo;
+  private int fDodgeRoll;
+  private Boolean fUsingDivingTackle;
+  private boolean fUsingBreakTackle;
 
-	public StepDivingTackle(GameState pGameState) {
-		super(pGameState);
-	}
+  public StepDivingTackle(GameState pGameState) {
+    super(pGameState);
+  }
 
-	public StepId getId() {
-		return StepId.DIVING_TACKLE;
-	}
-	
-	@Override
-	public void init(StepParameterSet pParameterSet) {
-		if (pParameterSet != null) {
-			for (StepParameter parameter : pParameterSet.values()) {
-				switch (parameter.getKey()) {
-				  // mandatory
-					case GOTO_LABEL_ON_SUCCESS:
-						fGotoLabelOnSuccess = (String) parameter.getValue();
-						break;
-					default:
-						break;
-				}
-			}
-		}
-		if (!StringTool.isProvided(fGotoLabelOnSuccess)) {
-			throw new StepException("StepParameter " + StepParameterKey.GOTO_LABEL_ON_SUCCESS + " is not initialized.");
-		}
-	}
-	
-	@Override
-	public boolean setParameter(StepParameter pParameter) {
-		if ((pParameter != null) && !super.setParameter(pParameter)) {
-			switch (pParameter.getKey()) {
-				case COORDINATE_FROM:
-					fCoordinateFrom = (FieldCoordinate) pParameter.getValue();
-					return true;
-				case COORDINATE_TO:
-					fCoordinateTo = (FieldCoordinate) pParameter.getValue();
-					return true;
-				case DODGE_ROLL:
-					fDodgeRoll = (Integer) pParameter.getValue();
-					return true;
-				case USING_BREAK_TACKLE:
-					fUsingBreakTackle = (pParameter.getValue() != null) ? (Boolean) pParameter.getValue() : false;
-					return true;
-				default:
-					break;
-			}
-		}
-		return false;
-	}
-	
-	@Override
-	public void start() {
-		super.start();
-		executeStep();
-	}
+  public StepId getId() {
+    return StepId.DIVING_TACKLE;
+  }
 
-	
+  @Override
+  public void init(StepParameterSet pParameterSet) {
+    if (pParameterSet != null) {
+      for (StepParameter parameter : pParameterSet.values()) {
+        switch (parameter.getKey()) {
+          // mandatory
+          case GOTO_LABEL_ON_SUCCESS:
+            fGotoLabelOnSuccess = (String) parameter.getValue();
+            break;
+          default:
+            break;
+        }
+      }
+    }
+    if (!StringTool.isProvided(fGotoLabelOnSuccess)) {
+      throw new StepException("StepParameter " + StepParameterKey.GOTO_LABEL_ON_SUCCESS + " is not initialized.");
+    }
+  }
+
+  @Override
+  public boolean setParameter(StepParameter pParameter) {
+    if ((pParameter != null) && !super.setParameter(pParameter)) {
+      switch (pParameter.getKey()) {
+        case COORDINATE_FROM:
+          fCoordinateFrom = (FieldCoordinate) pParameter.getValue();
+          return true;
+        case COORDINATE_TO:
+          fCoordinateTo = (FieldCoordinate) pParameter.getValue();
+          return true;
+        case DODGE_ROLL:
+          fDodgeRoll = (Integer) pParameter.getValue();
+          return true;
+        case USING_BREAK_TACKLE:
+          fUsingBreakTackle = (pParameter.getValue() != null) ? (Boolean) pParameter.getValue() : false;
+          return true;
+        default:
+          break;
+      }
+    }
+    return false;
+  }
+
+  @Override
+  public void start() {
+    super.start();
+    executeStep();
+  }
+
   @Override
   public StepCommandStatus handleCommand(ReceivedCommand pReceivedCommand) {
     StepCommandStatus commandStatus = super.handleCommand(pReceivedCommand);
@@ -137,24 +136,24 @@ public class StepDivingTackle extends AbstractStep {
     return commandStatus;
   }
 
-	private void executeStep() {
-		Game game = getGameState().getGame();
+  private void executeStep() {
+    Game game = getGameState().getGame();
     ActingPlayer actingPlayer = game.getActingPlayer();
     if (fUsingDivingTackle == null) {
       game.setDefenderId(null);
       fUsingDivingTackle = false;
       if (game.getFieldModel().getPlayer(fCoordinateFrom) == null) {
-      	Player[] divingTacklers = UtilPlayer.findAdjacentOpposingPlayersWithSkill(game, fCoordinateFrom, Skill.DIVING_TACKLE, true);
-      	divingTacklers = UtilPlayer.filterThrower(game, divingTacklers);
-      	if (game.getTurnMode() == TurnMode.DUMP_OFF) {
-      		divingTacklers = UtilPlayer.filterAttackerAndDefender(game, divingTacklers);
-      	}
+        Player[] divingTacklers = UtilPlayer.findAdjacentOpposingPlayersWithSkill(game, fCoordinateFrom, Skill.DIVING_TACKLE, true);
+        divingTacklers = UtilPlayer.filterThrower(game, divingTacklers);
+        if (game.getTurnMode() == TurnMode.DUMP_OFF) {
+          divingTacklers = UtilPlayer.filterAttackerAndDefender(game, divingTacklers);
+        }
         if (ArrayTool.isProvided(divingTacklers) && (fDodgeRoll > 0)) {
           DodgeModifierFactory modifierFactory = new DodgeModifierFactory();
           Set<DodgeModifier> dodgeModifiers = modifierFactory.findDodgeModifiers(game, fCoordinateFrom, fCoordinateTo, 0);
           dodgeModifiers.add(DodgeModifier.DIVING_TACKLE);
           if (fUsingBreakTackle) {
-          	dodgeModifiers.add(DodgeModifier.BREAK_TACKLE);
+            dodgeModifiers.add(DodgeModifier.BREAK_TACKLE);
           }
           int minimumRoll = DiceInterpreter.getInstance().minimumRollDodge(game, actingPlayer.getPlayer(), dodgeModifiers);
           if (!DiceInterpreter.getInstance().isSkillRollSuccessful(fDodgeRoll, minimumRoll)) {
@@ -168,18 +167,18 @@ public class StepDivingTackle extends AbstractStep {
       }
     }
     if (fUsingDivingTackle != null) {
-    	publishParameter(new StepParameter(StepParameterKey.USING_DIVING_TACKLE, fUsingDivingTackle));
+      publishParameter(new StepParameter(StepParameterKey.USING_DIVING_TACKLE, fUsingDivingTackle));
       if (fUsingDivingTackle) {
         getResult().addReport(new ReportSkillUse(game.getDefender().getId(), Skill.DIVING_TACKLE, true, SkillUse.STOP_OPPONENT));
         getResult().setNextAction(StepAction.GOTO_LABEL, fGotoLabelOnSuccess);
       } else {
-      	getResult().setNextAction(StepAction.NEXT_STEP);
+        getResult().setNextAction(StepAction.NEXT_STEP);
       }
     }
-	}
-	
+  }
+
   // JSON serialization
-  
+
   @Override
   public JsonObject toJsonValue() {
     JsonObject jsonObject = super.toJsonValue();
@@ -191,7 +190,7 @@ public class StepDivingTackle extends AbstractStep {
     IServerJsonOption.USING_BREAK_TACKLE.addTo(jsonObject, fUsingBreakTackle);
     return jsonObject;
   }
-  
+
   @Override
   public StepDivingTackle initFrom(JsonValue pJsonValue) {
     super.initFrom(pJsonValue);

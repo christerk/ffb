@@ -46,10 +46,13 @@ import com.eclipsesource.json.JsonValue;
  * 
  * Expects stepParameter COORDINATE_FROM to be set by a preceding step.
  * Expects stepParameter COORDINATE_TO to be set by a preceding step.
- * Expects stepParameter DODGE_ROLL to be set by a preceding step.
  * Expects stepParameter USING_BREAK_TACKLE to be set by a preceding step.
  * Expects stepParameter USING_DIVING_TACKLE to be set by a preceding step.
  * 
+ * StepParameter RE_ROLL_USED may be set by a preceding step.
+ * StepParameter DODGE_ROLL may be set by a preceding step.
+ * 
+ * Sets stepParameter RE_ROLL_USED for all steps on the stack.
  * Sets stepParameter DODGE_ROLL for all steps on the stack.
  * Sets stepParameter INJURY_TYPE for all steps on the stack.
  * Sets stepParameter USING_BREAK_TACKLE for all steps on the stack.
@@ -64,6 +67,7 @@ public class StepMoveDodge extends AbstractStepWithReRoll {
   private int fDodgeRoll;
   private Boolean fUsingDivingTackle;
   private boolean fUsingBreakTackle;
+  private boolean fReRollUsed;
 
   public StepMoveDodge(GameState pGameState) {
     super(pGameState);
@@ -93,23 +97,26 @@ public class StepMoveDodge extends AbstractStepWithReRoll {
   }
 
   @Override
-  public boolean setParameter(StepParameter pParameter) {
-    if ((pParameter != null) && !super.setParameter(pParameter)) {
-      switch (pParameter.getKey()) {
+  public boolean setParameter(StepParameter parameter) {
+    if ((parameter != null) && !super.setParameter(parameter)) {
+      switch (parameter.getKey()) {
         case COORDINATE_FROM:
-          fCoordinateFrom = (FieldCoordinate) pParameter.getValue();
+          fCoordinateFrom = (FieldCoordinate) parameter.getValue();
           return true;
         case COORDINATE_TO:
-          fCoordinateTo = (FieldCoordinate) pParameter.getValue();
+          fCoordinateTo = (FieldCoordinate) parameter.getValue();
           return true;
         case DODGE_ROLL:
-          fDodgeRoll = (Integer) pParameter.getValue();
+          fDodgeRoll = (Integer) parameter.getValue();
           return true;
         case USING_BREAK_TACKLE:
-          fUsingBreakTackle = (pParameter.getValue() != null) ? (Boolean) pParameter.getValue() : false;
+          fUsingBreakTackle = (parameter.getValue() != null) ? (Boolean) parameter.getValue() : false;
           return true;
         case USING_DIVING_TACKLE:
-          fUsingDivingTackle = (Boolean) pParameter.getValue();
+          fUsingDivingTackle = (Boolean) parameter.getValue();
+          return true;
+        case RE_ROLL_USED:
+          fReRollUsed = (parameter.getValue() != null) ? (Boolean) parameter.getValue() : false;
           return true;
         default:
           break;
@@ -136,34 +143,33 @@ public class StepMoveDodge extends AbstractStepWithReRoll {
   private void executeStep() {
     Game game = getGameState().getGame();
     ActingPlayer actingPlayer = game.getActingPlayer();
-    boolean doDodge = actingPlayer.isDodging();
-    if (doDodge) {
-      if (ReRolledAction.DODGE == getReRolledAction()) {
-        if ((getReRollSource() == null) || !UtilServerReRoll.useReRoll(this, getReRollSource(), actingPlayer.getPlayer())) {
-          failDodge();
-          doDodge = false;
-        }
-      }
-      if (doDodge) {
-        boolean doRoll = (((getReRolledAction() == ReRolledAction.DODGE) && (getReRollSource() != null)) || (fUsingDivingTackle == null));
-        switch (dodge(doRoll)) {
-          case SUCCESS:
-            getResult().setNextAction(StepAction.NEXT_STEP);
-            break;
-          case FAILURE:
-            if (UtilGameOption.isOptionEnabled(game, GameOptionId.STAND_FIRM_NO_DROP_ON_FAILED_DODGE)) {
-              publishParameter(new StepParameter(StepParameterKey.END_PLAYER_ACTION, true));
-              getResult().setNextAction(StepAction.NEXT_STEP);
-            } else {
-              failDodge();
-            }
-            break;
-          default:
-            break;
-        }
-      }
-    } else {
+    if (!actingPlayer.isDodging()) {
       getResult().setNextAction(StepAction.NEXT_STEP);
+      return;
+    }
+    if (ReRolledAction.DODGE == getReRolledAction()) {
+      if ((getReRollSource() == null) || !UtilServerReRoll.useReRoll(this, getReRollSource(), actingPlayer.getPlayer())) {
+        failDodge();
+        return;
+      }
+    }
+    boolean reRolledAction = (getReRolledAction() == ReRolledAction.DODGE) && (getReRollSource() != null);
+    boolean doRoll = reRolledAction || (fUsingDivingTackle == null);
+    switch (dodge(doRoll)) {
+      case SUCCESS:
+        publishParameter(new StepParameter(StepParameterKey.RE_ROLL_USED, fReRollUsed || reRolledAction));
+        getResult().setNextAction(StepAction.NEXT_STEP);
+        break;
+      case FAILURE:
+        if (UtilGameOption.isOptionEnabled(game, GameOptionId.STAND_FIRM_NO_DROP_ON_FAILED_DODGE)) {
+          publishParameter(new StepParameter(StepParameterKey.END_PLAYER_ACTION, true));
+          getResult().setNextAction(StepAction.NEXT_STEP);
+        } else {
+          failDodge();
+        }
+        break;
+      default:
+        break;
     }
   }
 
@@ -220,7 +226,7 @@ public class StepMoveDodge extends AbstractStepWithReRoll {
       status = ActionStatus.SUCCESS;
     } else {
       status = ActionStatus.FAILURE;
-      if (getReRolledAction() != ReRolledAction.DODGE) {
+      if (!fReRollUsed && (getReRolledAction() != ReRolledAction.DODGE)) {
         setReRolledAction(ReRolledAction.DODGE);
         boolean useDodgeSkill = UtilCards.hasUnusedSkill(game, game.getActingPlayer(), Skill.DODGE);
         if (useDodgeSkill) {
@@ -238,8 +244,7 @@ public class StepMoveDodge extends AbstractStepWithReRoll {
           UtilServerReRoll.useReRoll(this, getReRollSource(), actingPlayer.getPlayer());
           status = dodge(true);
         } else {
-          if (!actingPlayer.isSkillUsed(Skill.DODGE)
-              && UtilServerReRoll.askForReRollIfAvailable(getGameState(), actingPlayer.getPlayer(), ReRolledAction.DODGE, minimumRoll, false)) {
+          if (UtilServerReRoll.askForReRollIfAvailable(getGameState(), actingPlayer.getPlayer(), ReRolledAction.DODGE, minimumRoll, false)) {
             status = ActionStatus.WAITING_FOR_RE_ROLL;
           }
         }
@@ -267,6 +272,7 @@ public class StepMoveDodge extends AbstractStepWithReRoll {
     IServerJsonOption.DODGE_ROLL.addTo(jsonObject, fDodgeRoll);
     IServerJsonOption.USING_DIVING_TACKLE.addTo(jsonObject, fUsingDivingTackle);
     IServerJsonOption.USING_BREAK_TACKLE.addTo(jsonObject, fUsingBreakTackle);
+    IServerJsonOption.RE_ROLL_USED.addTo(jsonObject, fReRollUsed);
     return jsonObject;
   }
 
@@ -280,6 +286,8 @@ public class StepMoveDodge extends AbstractStepWithReRoll {
     fDodgeRoll = IServerJsonOption.DODGE_ROLL.getFrom(jsonObject);
     fUsingDivingTackle = IServerJsonOption.USING_DIVING_TACKLE.getFrom(jsonObject);
     fUsingBreakTackle = IServerJsonOption.USING_BREAK_TACKLE.getFrom(jsonObject);
+    Boolean reRollUsed = IServerJsonOption.RE_ROLL_USED.getFrom(jsonObject);
+    fReRollUsed = (reRollUsed != null) ? reRollUsed : false;
     return this;
   }
 

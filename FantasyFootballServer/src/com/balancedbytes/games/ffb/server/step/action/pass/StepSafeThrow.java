@@ -41,57 +41,57 @@ import com.eclipsesource.json.JsonValue;
  * @author Kalimar
  */
 public class StepSafeThrow extends AbstractStepWithReRoll {
-	
-	private String fGotoLabelOnFailure;
-	private String fInterceptorId;
-	
-	public StepSafeThrow(GameState pGameState) {
-		super(pGameState);
-	}
-	
-	public StepId getId() {
-		return StepId.SAFE_THROW;
-	}
-	
-  @Override
-  public void init(StepParameterSet pParameterSet) {
-  	if (pParameterSet != null) {
-  		for (StepParameter parameter : pParameterSet.values()) {
-  			switch (parameter.getKey()) {
-  			  // mandatory
-  				case GOTO_LABEL_ON_FAILURE:
-  					fGotoLabelOnFailure = (String) parameter.getValue();
-  					break;
-					default:
-						break;
-  			}
-  		}
-  	}
-  	if (fGotoLabelOnFailure == null) {
-			throw new StepException("StepParameter " + StepParameterKey.GOTO_LABEL_ON_FAILURE + " is not initialized.");
-  	}
-  }
-  
-  @Override
-  public boolean setParameter(StepParameter pParameter) {
-		if ((pParameter != null) && !super.setParameter(pParameter)) {
-	  	switch (pParameter.getKey()) {
-				case INTERCEPTOR_ID:
-					fInterceptorId = (String) pParameter.getValue();
-					return true;
-				default:
-					break;
-	  	}
-		}
-		return false;
+
+  private String fGotoLabelOnFailure;
+  private String fInterceptorId;
+
+  public StepSafeThrow(GameState pGameState) {
+    super(pGameState);
   }
 
-	@Override
-	public void start() {
-		super.start();
-		executeStep();
-	}
-	
+  public StepId getId() {
+    return StepId.SAFE_THROW;
+  }
+
+  @Override
+  public void init(StepParameterSet pParameterSet) {
+    if (pParameterSet != null) {
+      for (StepParameter parameter : pParameterSet.values()) {
+        switch (parameter.getKey()) {
+          // mandatory
+          case GOTO_LABEL_ON_FAILURE:
+            fGotoLabelOnFailure = (String) parameter.getValue();
+            break;
+          default:
+            break;
+        }
+      }
+    }
+    if (fGotoLabelOnFailure == null) {
+      throw new StepException("StepParameter " + StepParameterKey.GOTO_LABEL_ON_FAILURE + " is not initialized.");
+    }
+  }
+
+  @Override
+  public boolean setParameter(StepParameter pParameter) {
+    if ((pParameter != null) && !super.setParameter(pParameter)) {
+      switch (pParameter.getKey()) {
+        case INTERCEPTOR_ID:
+          fInterceptorId = (String) pParameter.getValue();
+          return true;
+        default:
+          break;
+      }
+    }
+    return false;
+  }
+
+  @Override
+  public void start() {
+    super.start();
+    executeStep();
+  }
+
   @Override
   public StepCommandStatus handleCommand(ReceivedCommand pReceivedCommand) {
     StepCommandStatus commandStatus = super.handleCommand(pReceivedCommand);
@@ -105,7 +105,7 @@ public class StepSafeThrow extends AbstractStepWithReRoll {
     Game game = getGameState().getGame();
     Player interceptor = game.getPlayerById(fInterceptorId);
     if ((game.getThrower() == null) || (interceptor == null)) {
-    	return;
+      return;
     }
     boolean doNextStep = true;
     boolean safeThrowSuccessful = false;
@@ -122,15 +122,16 @@ public class StepSafeThrow extends AbstractStepWithReRoll {
         safeThrowSuccessful = DiceInterpreter.getInstance().isSkillRollSuccessful(roll, minimumRoll);
         boolean reRolled = ((getReRolledAction() == ReRolledAction.SAFE_THROW) && (getReRollSource() != null));
         getResult().addReport(new ReportSkillRoll(ReportId.SAFE_THROW_ROLL, game.getThrowerId(), safeThrowSuccessful, roll, minimumRoll, reRolled));
-        if (!safeThrowSuccessful && (getReRolledAction() != ReRolledAction.SAFE_THROW) && UtilServerReRoll.askForReRollIfAvailable(getGameState(), game.getThrower(), ReRolledAction.SAFE_THROW, minimumRoll, false)) {
+        if (!safeThrowSuccessful && (getReRolledAction() != ReRolledAction.SAFE_THROW)
+            && UtilServerReRoll.askForReRollIfAvailable(getGameState(), game.getThrower(), ReRolledAction.SAFE_THROW, minimumRoll, false)) {
           doNextStep = false;
         }
       }
     }
     if (doNextStep) {
       if (safeThrowSuccessful) {
-      	publishParameter(new StepParameter(StepParameterKey.INTERCEPTOR_ID, null));
-      	getResult().setNextAction(StepAction.NEXT_STEP);
+        publishParameter(new StepParameter(StepParameterKey.INTERCEPTOR_ID, null));
+        getResult().setNextAction(StepAction.NEXT_STEP);
       } else {
         game.getFieldModel().setRangeRuler(null);
         FieldCoordinate startCoordinate = game.getFieldModel().getPlayerCoordinate(game.getThrower());
@@ -139,25 +140,25 @@ public class StepSafeThrow extends AbstractStepWithReRoll {
           interceptorCoordinate = game.getFieldModel().getPlayerCoordinate(interceptor);
         }
         if (PlayerAction.THROW_BOMB == game.getThrowerAction()) {
-        	getResult().setAnimation(new Animation(AnimationType.THROW_BOMB, startCoordinate, game.getPassCoordinate(), interceptorCoordinate));
+          getResult().setAnimation(new Animation(AnimationType.THROW_BOMB, startCoordinate, game.getPassCoordinate(), interceptorCoordinate));
         } else {
-        	getResult().setAnimation(new Animation(AnimationType.PASS, startCoordinate, game.getPassCoordinate(), interceptorCoordinate));
+          getResult().setAnimation(new Animation(AnimationType.PASS, startCoordinate, game.getPassCoordinate(), interceptorCoordinate));
         }
         UtilServerGame.syncGameModel(this);
         if (PlayerAction.THROW_BOMB == game.getThrowerAction()) {
-        	game.getFieldModel().setBombCoordinate(interceptorCoordinate);
-        	game.getFieldModel().setBombMoving(false);
+          game.getFieldModel().setBombCoordinate(interceptorCoordinate);
+          game.getFieldModel().setBombMoving(false);
         } else {
-        	game.getFieldModel().setBallCoordinate(interceptorCoordinate);
-        	game.getFieldModel().setBallMoving(false);
+          game.getFieldModel().setBallCoordinate(interceptorCoordinate);
+          game.getFieldModel().setBallMoving(false);
         }
         getResult().setNextAction(StepAction.GOTO_LABEL, fGotoLabelOnFailure);
       }
     }
   }
-  
+
   // JSON serialization
-  
+
   @Override
   public JsonObject toJsonValue() {
     JsonObject jsonObject = super.toJsonValue();
@@ -165,7 +166,7 @@ public class StepSafeThrow extends AbstractStepWithReRoll {
     IServerJsonOption.INTERCEPTOR_ID.addTo(jsonObject, fInterceptorId);
     return jsonObject;
   }
-  
+
   @Override
   public StepSafeThrow initFrom(JsonValue pJsonValue) {
     super.initFrom(pJsonValue);
@@ -174,5 +175,5 @@ public class StepSafeThrow extends AbstractStepWithReRoll {
     fInterceptorId = IServerJsonOption.INTERCEPTOR_ID.getFrom(jsonObject);
     return this;
   }
-  
+
 }

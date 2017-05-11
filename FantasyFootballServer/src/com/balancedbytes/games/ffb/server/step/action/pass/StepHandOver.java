@@ -23,8 +23,8 @@ import com.eclipsesource.json.JsonValue;
  * 
  * Expects stepParameter CATCHER_ID to be set by a preceding step.
  * 
- * Sets stepParameter CATCH_SCATTER_THROW_IN_MODE for all steps on the stack. Sets stepParameter END_PLAYER_ACTION for
- * all steps on the stack.
+ * Sets stepParameter CATCH_SCATTER_THROW_IN_MODE for all steps on the stack.
+ * Sets stepParameter END_PLAYER_ACTION for all steps on the stack.
  * 
  * @author Kalimar
  */

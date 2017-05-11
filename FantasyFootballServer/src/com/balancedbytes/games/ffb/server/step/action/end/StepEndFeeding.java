@@ -79,6 +79,7 @@ public class StepEndFeeding extends AbstractStep {
     } else if ((game.getTurnMode() == TurnMode.KICKOFF_RETURN) || (game.getTurnMode() == TurnMode.PASS_BLOCK)) {
       publishParameter(new StepParameter(StepParameterKey.END_PLAYER_ACTION, true));
     } else {
+      game.setPassCoordinate(null);
       UtilServerSteps.changePlayerAction(this, null, null, false);
       SequenceGenerator.getInstance().pushSelectSequence(getGameState(), false);
     }

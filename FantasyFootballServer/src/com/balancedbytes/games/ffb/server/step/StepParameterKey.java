@@ -67,6 +67,7 @@ public enum StepParameterKey {
 	PASS_ACCURATE,                // Boolean
 	PASS_FUMBLE,                  // Boolean
 	PLAYER_ID,                    // String
+	RE_ROLL_USED,                 // Boolean
 	ROLL_FOR_EFFECT,              // Boolean
 	SPECIAL_EFFECT,               // SpecialEffect
 	STARTING_PUSHBACK_SQUARE,     // PushbackSquare
