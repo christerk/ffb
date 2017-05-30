@@ -1,5 +1,6 @@
-define(["require", "exports", './Icon'], function (require, exports, Icon_1) {
+define(["require", "exports", "./Icon"], function (require, exports, Icon_1) {
     "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
     var IconCache = (function () {
         function IconCache() {
             this.icons = {};
@@ -41,6 +42,5 @@ define(["require", "exports", './Icon'], function (require, exports, Icon_1) {
         };
         return IconCache;
     }());
-    Object.defineProperty(exports, "__esModule", { value: true });
     exports.default = IconCache;
 });

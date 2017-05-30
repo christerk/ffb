@@ -1,5 +1,6 @@
-define(["require", "exports", './IconCache'], function (require, exports, IconCache_1) {
+define(["require", "exports", "./IconCache"], function (require, exports, IconCache_1) {
     "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
     var Client = (function () {
         function Client() {
             this.xPos = 32;
@@ -25,7 +26,6 @@ define(["require", "exports", './IconCache'], function (require, exports, IconCa
         Client.prototype.init = function () {
             var _this = this;
             console.log('init');
-            setTimeout(2000);
             $('#loading')[0].style.opacity = '0';
             $('#loading')[0].style.width = '0';
             $('#loading')[0].style.height = '0';

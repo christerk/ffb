@@ -1,5 +1,6 @@
 define(["require", "exports"], function (require, exports) {
     "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
     var Icon = (function () {
         function Icon(name, url) {
             this.name = null;
@@ -25,6 +26,5 @@ define(["require", "exports"], function (require, exports) {
         };
         return Icon;
     }());
-    Object.defineProperty(exports, "__esModule", { value: true });
     exports.default = Icon;
 });

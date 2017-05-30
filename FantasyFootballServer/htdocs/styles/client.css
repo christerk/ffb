@@ -295,13 +295,13 @@ body {
 	position: absolute;
 	left: 116px;
 	top: 484px;
-	width: 381px; /* - border */
-	height: 222px;
-	max-height: 222px;
+	width: 382px; /* - border */
+	height: 223px;
+	max-height: 223px;
 	overflow-x: hidden;
     overflow-y: scroll;
     word-break: break-all;
-    border-width: 3px;  
+    border-width: 2px;  
     border-style: inset;
     /* font-family: "Times New Roman", Times, serif; */
     font-family: Arial, Helvetica, sans-serif;
@@ -317,15 +317,15 @@ body {
 }
 #divChat {
 	position: absolute;
-	left: 508px;
+	left: 507px;
 	top: 484px;
-	width: 380px;  /* -border */
-	height: 199px;
-	max-height: 199px;
+	width: 382px;  /* -border */
+	height: 200px;
+	max-height: 200px;
 	overflow-x: hidden;
     overflow-y: scroll;
     word-break: break-all;
-    border-width: 3px;  
+    border-width: 2px;  
     border-style: inset;
     /* font-family: "Times New Roman", Times, serif; */
     font-family: Arial, Helvetica, sans-serif;
@@ -338,11 +338,11 @@ body {
 }
 #inputChat {
 	position: absolute;
-	left: 508px;
-	top: 690px;
+	left: 507px;
+	top: 689px;
 	width: 390px;
 	height: 22px;
-    border-width: 3px;  
+    border-width: 2px;  
     border-style: inset;
     /* font-family: "Times New Roman", Times, serif; */
     font-family: Arial, Helvetica, sans-serif;
