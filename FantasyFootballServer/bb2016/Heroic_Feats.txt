@@ -2,8 +2,6 @@
 ------------------------------------------------------------------------------
 Burst of Speed
 ------------------------------------------------------------------------------
-"Somebody's had their Wheaten Bricks this morning!"
-
 Timing:
 Play at the start of any of your turns,
 before any of your players takes an Action.
@@ -15,8 +13,6 @@ they add 1 to their MA and also have the Sprint skill.
 ------------------------------------------------------------------------------
 Catcher's Instincts
 ------------------------------------------------------------------------------
-"It's like he knew where the ball was going before it even went there!"
-
 Timing:
 Play during any kick-off where you are receiving,
 after the ball has scattered and ended in an unoccupied square in your half.
@@ -29,8 +25,6 @@ all with an additional +1 modifier.
 ------------------------------------------------------------------------------
 Die Hard
 ------------------------------------------------------------------------------
-"That player just took a beating, but that's not gonna stop him!"
-
 Timing:
 Play at the start of any of your turns,
 before any of your players takes an Action.
@@ -42,8 +36,6 @@ and turn them over so they are Prone.
 ------------------------------------------------------------------------------
 Fancy Footwork
 ------------------------------------------------------------------------------
-"Hey, where's he going?"
-
 Timing:
 Play at the start of any of your turns,
 before any of your players takes an Action.
@@ -55,8 +47,6 @@ by 2 but you can add 1 to the result of any Dodge rolls for them.
 ------------------------------------------------------------------------------
 Go the Extra Mile
 ------------------------------------------------------------------------------
-"He's moving like a halfling at a half-time buffet!"
-
 Timing:
 Play at the start of any of your turns,
 before any of your players takes an Action.
@@ -70,8 +60,6 @@ to see whether they fall.
 ------------------------------------------------------------------------------
 Golden Boy
 ------------------------------------------------------------------------------
-"I met him once. Nice guy!"
- 
 Timing:
 Play at the start of the game,
 immediately before the first kick-off.
@@ -83,8 +71,6 @@ you have a FAME of +2 - this does not affect your opponent's FAME.
 ------------------------------------------------------------------------------
 Inch-Perfect Kick
 ------------------------------------------------------------------------------
-"Come along, now. That's just showing off!"
-
 Timing:
 Play after all players have been set up for a kick-off,
 immediately after the ball is placed.
@@ -98,8 +84,6 @@ three times if it is not caught.
 ------------------------------------------------------------------------------
 In the Zone
 ------------------------------------------------------------------------------
-"Did you see the look in that player's eye? Nothing's going to get in his way!"
-
 Timing:
 Play at the start of any of your turns,
 before any of your players takes an Action.
@@ -111,9 +95,6 @@ suffer penalties to any dice rolls as a result of enemy tackle zones.
 ------------------------------------------------------------------------------
 Mighty Leap
 ------------------------------------------------------------------------------
-"I haven't seen a jump like that since before Spring-Heeled Skrog had
-the accident!"
-
 Timing:
 Play at the start of any of your turns,
 before any of your players takes an Action.
@@ -125,8 +106,6 @@ that player has the Leap skill. When they use it, add 1 to the D6 roll.
 ------------------------------------------------------------------------------
 Perfect Throw
 ------------------------------------------------------------------------------
-"Magic, skill or plain dumb luck? You decide!"
-
 Timing:
 Play when one of your players throws the ball,
 before making the Throw roll.
@@ -138,8 +117,6 @@ between the thrower and the target.
 ------------------------------------------------------------------------------
 Punt
 ------------------------------------------------------------------------------
-"I guess he didn't want the ball after all."
-
 Timing:
 Play at the end of any of your turns, as long as one of your players is
 holding the ball.
@@ -152,8 +129,6 @@ If it is not caught, it will bounce as normal.
 ------------------------------------------------------------------------------
 Spectacular Catch
 ------------------------------------------------------------------------------
-"Hey, where did he learn to catch like that all of a sudden?"
-
 Timing:
 Play at the start of any of your turns,
 before any of your players takes an Action.
@@ -165,8 +140,6 @@ that player has the Catch and Diving Catch skills.
 ------------------------------------------------------------------------------
 Star Ascendant
 ------------------------------------------------------------------------------
-"That player's going places... if they don't get him first!"
-
 Timing:
 Play at the start of the game, immediately before the first kick-off.
 
@@ -179,8 +152,6 @@ a non-league game, discard it and draw another.
 ------------------------------------------------------------------------------
 Suicide Blitz
 ------------------------------------------------------------------------------
-"The ball's barely left the ground, but that maniac's already punching!"
-
 Timing:
 Play after a kick-off to your opponent has been fully resolved (including the
 ball landing), but before their turn begins.
@@ -193,8 +164,6 @@ No Hands skill.
 ------------------------------------------------------------------------------
 Unlikely Interception
 ------------------------------------------------------------------------------
-"What just happened? Get a wizard in here, we need to see that again!"
-
 Timing:
 play when one of your players attempts to make an interception,
 before rolling the dice.
@@ -206,8 +175,6 @@ succeed on a roll of 3+.
 ------------------------------------------------------------------------------
 Up Like a Shot
 ------------------------------------------------------------------------------
-"He barely even hit the ground, and he's already up!"
-
 Timing:
 Play at the start of any of your turns,
 before any of your players takes an Action.
