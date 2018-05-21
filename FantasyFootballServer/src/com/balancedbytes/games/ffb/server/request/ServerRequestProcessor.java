@@ -32,7 +32,7 @@ public class ServerRequestProcessor extends Thread {
     if (fStopped) {
       return false;
     }
-    getServer().getDebugLog().log(IServerLogLevel.DEBUG, "Adding request to request processor queue: " + pServerRequest.getRequestUrl());
+    getServer().getDebugLog().log(IServerLogLevel.DEBUG, "Adding request to request processor queue: " + pServerRequest.getClass().getName());
     return fRequestQueue.offer(pServerRequest);
   }
 
@@ -65,7 +65,7 @@ public class ServerRequestProcessor extends Thread {
     do {
       try {
         if (request != null) {
-          getServer().getDebugLog().log(IServerLogLevel.DEBUG, "Processing request from request processor queue: " + request.getRequestUrl());
+          getServer().getDebugLog().log(IServerLogLevel.DEBUG, "Processing request from request processor queue: " + request.getClass().getName());
           request.process(this);
         }
         sent = true;
