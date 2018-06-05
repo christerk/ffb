@@ -17,7 +17,7 @@ public class ServerNetworkEntropyTask extends TimerTask {
     fNetworkEntropySource = new NetworkEntropySource();
     fNetworkEntropySource.addEndpoint("www.google.com");
     fNetworkEntropySource.addEndpoint("slashdot.org");
-    fNetworkEntropySource.addEndpoint("192.168.0.1");
+    fNetworkEntropySource.addEndpoint("192.168.0.18");
   }
 
   public void run() {

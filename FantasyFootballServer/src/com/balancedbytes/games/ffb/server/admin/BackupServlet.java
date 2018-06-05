@@ -294,6 +294,8 @@ public class BackupServlet extends HttpServlet {
       // Set up ZeroMQ connection
       Ctx ctx = ZMQ.init(1);
       socket = ZMQ.socket(ctx, ZMQ.ZMQ_REQ);
+      ZMQ.setSocketOption(socket, ZMQ.ZMQ_RCVTIMEO, 5000);
+
       socket.connect(fServer.getProperty(IServerProperty.FUMBBL_BACKUP_SERVICE));
 
       // Send the request over the ZeroMQ socket
@@ -301,6 +303,11 @@ public class BackupServlet extends HttpServlet {
 
       // Receive response
       Msg response = socket.recv(0);
+      
+      if (response == null) {
+    	  throw new Exception("Backup file not available.");
+      }
+      
       data = response.data();
 
       if (data.length < 100) {

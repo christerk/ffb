@@ -61,7 +61,7 @@
 	<classpathentry kind="lib" path="lib/websocket-common-9.4.0.v20161208.jar"/>
 	<classpathentry kind="lib" path="lib/websocket-server-9.4.0.v20161208.jar"/>
 	<classpathentry kind="lib" path="lib/websocket-servlet-9.4.0.v20161208.jar"/>
-	<classpathentry kind="lib" path="lib/jeromq-0.3.6.jar" sourcepath="lib/jeromq-0.3.6-sources.zip"/>
 	<classpathentry kind="lib" path="lib/hsqldb-2.3.4.jar" sourcepath="lib/hsqldb-2.3.4-sources.zip"/>
+	<classpathentry kind="lib" path="lib/jeromq-0.4.3.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>
