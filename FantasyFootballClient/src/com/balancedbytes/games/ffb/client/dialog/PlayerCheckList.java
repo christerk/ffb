@@ -24,11 +24,11 @@ import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.util.ArrayTool;
 
 @SuppressWarnings("serial")
-public class PlayerCheckList extends JList {
+public class PlayerCheckList extends JList<PlayerCheckListItem> {
   
   // Handles rendering cells in the list using a check box
 
-  private class PlayerCheckListRenderer extends JPanel implements ListCellRenderer {
+  private class PlayerCheckListRenderer extends JPanel implements ListCellRenderer<PlayerCheckListItem> {
     
     private JCheckBox fCheckBox;
     private JLabel fLabel;
@@ -42,7 +42,7 @@ public class PlayerCheckList extends JList {
       add(fLabel);
     }
     
-    public Component getListCellRendererComponent(JList pList, Object pValue, int pIndex, boolean pIsSelected, boolean pCellHasFocus) {
+    public Component getListCellRendererComponent(JList<? extends PlayerCheckListItem> pList, PlayerCheckListItem pValue, int pIndex, boolean pIsSelected, boolean pCellHasFocus) {
       setEnabled(pList.isEnabled());
       setFont(pList.getFont());
       setBackground(pList.getBackground());
@@ -54,7 +54,6 @@ public class PlayerCheckList extends JList {
       fLabel.setText(listItem.getText());
       return this;
     }
-    
   }
   
   private class PlayerCheckListMouseAdapter extends MouseAdapter {

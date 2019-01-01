@@ -36,7 +36,7 @@ public class DialogJourneymen extends Dialog implements ActionListener, KeyListe
   private int fSlotsAvailable;
   private String[] fPositionIds;
   
-  private List<JComboBox> fBoxes;
+  private List<JComboBox<String>> fBoxes;
   private int[] fSlotsSelected;
   
   private int fOldTeamValue;
@@ -54,9 +54,9 @@ public class DialogJourneymen extends Dialog implements ActionListener, KeyListe
 
     fSlotsSelected = new int[fPositionIds.length];
 
-    fBoxes = new ArrayList<JComboBox>();
+    fBoxes = new ArrayList<JComboBox<String>>();
     for (int i = 0; i < fPositionIds.length; i++) {
-      fBoxes.add(new JComboBox());
+      fBoxes.add(new JComboBox<String>());
     }
     refreshModels();
 
@@ -163,9 +163,9 @@ public class DialogJourneymen extends Dialog implements ActionListener, KeyListe
       for (int j = 0; j < selection.length; j++) {
         selection[j] = Integer.toString(j);
       }
-      JComboBox box = fBoxes.get(i);
+      JComboBox<String> box = fBoxes.get(i);
       box.removeActionListener(this);
-      box.setModel(new DefaultComboBoxModel(selection));
+      box.setModel(new DefaultComboBoxModel<String>(selection));
       box.setSelectedIndex(fSlotsSelected[i]);
       box.setPreferredSize(box.getMinimumSize());
       box.addActionListener(this);

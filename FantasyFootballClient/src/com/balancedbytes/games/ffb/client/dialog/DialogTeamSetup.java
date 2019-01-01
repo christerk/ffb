@@ -41,8 +41,8 @@ public class DialogTeamSetup extends Dialog implements ActionListener, ListSelec
   private JButton fButtonDelete;
   private JTextField fTextfieldSetupName;
   private boolean fLoadDialog;
-  private JList fSetupList;
-  private DefaultListModel fSetupListModel;
+  private JList<String> fSetupList;
+  private DefaultListModel<String> fSetupListModel;
   private int fUserChoice;
   private String fSetupName;
 
@@ -66,14 +66,14 @@ public class DialogTeamSetup extends Dialog implements ActionListener, ListSelec
     fButtonDelete = new JButton(new ImageIcon(deleteIcon));
     fButtonDelete.addActionListener(this);
     
-    fSetupListModel = new DefaultListModel();
+    fSetupListModel = new DefaultListModel<String>();
     if (ArrayTool.isProvided(pSetups)) {
       for (int i = 0; i < pSetups.length; i++) {
         fSetupListModel.addElement(pSetups[i]);
       }
     }
     
-    fSetupList = new JList(fSetupListModel);
+    fSetupList = new JList<String>(fSetupListModel);
     fSetupList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
     fSetupList.setVisibleRowCount(Math.min(7, Math.max(3, pSetups.length)));
     fSetupList.addListSelectionListener(this);
@@ -144,7 +144,7 @@ public class DialogTeamSetup extends Dialog implements ActionListener, ListSelec
         fButtonLoadSave.setEnabled(false);
       } else {
         fButtonLoadSave.setEnabled(true);
-        fSetupName = (String) fSetupList.getSelectedValue();
+        fSetupName = fSetupList.getSelectedValue();
         fTextfieldSetupName.setText(fSetupName);
       }
     }
