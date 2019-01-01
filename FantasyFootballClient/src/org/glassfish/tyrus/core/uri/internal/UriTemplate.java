@@ -218,7 +218,6 @@ public class UriTemplate {
      * @throws IllegalArgumentException if the template is {@code null} or
      *                                  an empty string.
      */
-    @SuppressWarnings("DuplicateThrows")
     public UriTemplate(String template) throws PatternSyntaxException, IllegalArgumentException {
         this(new UriTemplateParser(template));
     }
@@ -238,7 +237,6 @@ public class UriTemplate {
      * @throws IllegalArgumentException if the template is {@code null} or
      *                                  an empty string.
      */
-    @SuppressWarnings("DuplicateThrows")
     protected UriTemplate(UriTemplateParser templateParser) throws PatternSyntaxException, IllegalArgumentException {
         this.template = templateParser.getTemplate();
 
@@ -429,7 +427,6 @@ public class UriTemplate {
      *
      * @return {@code true} if the template ends in a '/', otherwise false.
      */
-    @SuppressWarnings("UnusedDeclaration")
     public final boolean endsWithSlash() {
         return endsWithSlash;
     }
@@ -450,7 +447,6 @@ public class UriTemplate {
      * @param name name The template variable.
      * @return {@code true} if the template variable is a member of the template, otherwise {@code false}.
      */
-    @SuppressWarnings("UnusedDeclaration")
     public final boolean isTemplateVariablePresent(String name) {
         for (String s : templateVariables) {
             if (s.equals(name)) {

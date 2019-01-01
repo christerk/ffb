@@ -371,7 +371,7 @@ public abstract class TyrusRemoteEndpoint implements javax.websocket.RemoteEndpo
         }
     }
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({ "resource" })
     Future<?> sendSyncObject(Object o) {
         Object toSend;
         try {
@@ -425,7 +425,7 @@ public abstract class TyrusRemoteEndpoint implements javax.websocket.RemoteEndpo
     }
 
     // TODO: naming
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({ "resource" })
     void sendSyncObject(Object o, SendHandler handler) {
         if (o instanceof String) {
             webSocket.sendText((String) o, handler);

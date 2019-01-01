@@ -1544,7 +1544,8 @@ public class TyrusEndpointWrapper {
      *
      * @return {@link List} of registered {@link Decoder}s.
      */
-    List<Decoder> getDecoders() {
+    @SuppressWarnings("unchecked")
+	List<Decoder> getDecoders() {
         return (List<Decoder>) (List<?>) decoders;
     }
 

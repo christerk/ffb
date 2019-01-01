@@ -48,7 +48,11 @@ package org.glassfish.tyrus.core;
  */
 public class HandshakeException extends Exception {
 
-    private final int httpStatusCode;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = -4231040386246325101L;
+	private final int httpStatusCode;
 
     /**
      * Construct a HandshakeException. HTTP status code will be set to {@code 500}.

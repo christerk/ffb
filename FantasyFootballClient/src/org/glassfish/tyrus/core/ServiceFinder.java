@@ -489,7 +489,7 @@ public final class ServiceFinder<T> implements Iterable<T> {
      * @throws ServiceConfigurationError If an I/O error occurs while reading from the given URL, or
      *                                   if a configuration-file format error is detected
      */
-    @SuppressWarnings({"StatementWithEmptyBody"})
+    @SuppressWarnings({})
     private static Iterator<String> parse(String serviceName, URL u, Set<String> returned)
             throws ServiceConfigurationError {
         InputStream in = null;

@@ -550,7 +550,6 @@ public class UriComponent {
         return queryParameters;
     }
 
-    @SuppressWarnings("StatementWithEmptyBody")
     private static void decodeQueryParam(final MultivaluedMap<String, String> params, final String param,
                                          final boolean decodeNames, final boolean decodeValues) {
         try {
@@ -711,7 +710,6 @@ public class UriComponent {
         return matrixMap;
     }
 
-    @SuppressWarnings("StatementWithEmptyBody")
     private static void decodeMatrixParam(final MultivaluedMap<String, String> params, final String param,
                                           final boolean decode) {
         final int equals = param.indexOf('=');

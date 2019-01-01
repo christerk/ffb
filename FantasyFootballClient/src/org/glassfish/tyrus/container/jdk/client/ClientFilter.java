@@ -355,7 +355,8 @@ class ClientFilter extends Filter {
     }
 
 
-    private static Map<String, String> getProxyHeaders(Map<String, Object> properties) throws DeploymentException {
+    @SuppressWarnings("unchecked")
+	private static Map<String, String> getProxyHeaders(Map<String, Object> properties) throws DeploymentException {
         //noinspection unchecked
         Map<String, String> proxyHeaders = Utils.getProperty(properties, ClientProperties.PROXY_HEADERS, Map.class);
 

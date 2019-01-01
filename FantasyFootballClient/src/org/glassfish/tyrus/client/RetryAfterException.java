@@ -57,7 +57,11 @@ import org.glassfish.tyrus.spi.UpgradeResponse;
  */
 public class RetryAfterException extends HandshakeException {
 
-    private final Long delay;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = -908228087617455913L;
+	private final Long delay;
 
     /**
      * Constructor.

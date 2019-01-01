@@ -83,7 +83,6 @@ public abstract class UpgradeRequest implements HandshakeRequest {
      * <p>
      * Keeping here only for backwards compatibility, not used anymore.
      */
-    @SuppressWarnings("UnusedDeclaration")
     public static final String SEC_WS_ORIGIN_HEADER = "Sec-WebSocket-Origin";
 
     /**

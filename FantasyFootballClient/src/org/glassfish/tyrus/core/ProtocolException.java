@@ -49,7 +49,11 @@ import javax.websocket.CloseReason;
  */
 public class ProtocolException extends WebSocketException {
 
-    private final String reasonPhrase;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 7634371135749746363L;
+	private final String reasonPhrase;
 
     public ProtocolException(String reasonPhrase) {
         super(reasonPhrase);

@@ -175,7 +175,8 @@ class AnnotatedClassValidityChecker {
         }
     }
 
-    private String getPrefix(String methodName) {
+    @SuppressWarnings("unused")
+	private String getPrefix(String methodName) {
         return String.format("Method:  %s.%s:", annotatedClass.getName(), methodName);
     }
 

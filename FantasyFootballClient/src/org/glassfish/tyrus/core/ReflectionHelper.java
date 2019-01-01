@@ -773,7 +773,8 @@ public class ReflectionHelper {
      * @param m the method to find
      * @return the found public method.
      */
-    public static Method findMethodOnClass(Class c, Method m) {
+    @SuppressWarnings("unchecked")
+	public static Method findMethodOnClass(Class c, Method m) {
         try {
             return c.getMethod(m.getName(), m.getParameterTypes());
         } catch (NoSuchMethodException ex) {

@@ -48,6 +48,11 @@ package javax.websocket;
 public class DeploymentException extends Exception {
 
     /**
+	 * 
+	 */
+	private static final long serialVersionUID = 7576860738144220015L;
+
+	/**
      * Creates a deployment exception with the given reason for the deployment
      * failure.
      *

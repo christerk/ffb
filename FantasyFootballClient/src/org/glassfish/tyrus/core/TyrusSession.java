@@ -544,7 +544,8 @@ public class TyrusSession implements Session, DistributedSession {
         }
     }
 
-    void notifyMessageHandlers(Object message, List<CoderWrapper<Decoder>> availableDecoders) throws DecodeException,
+    @SuppressWarnings("unchecked")
+	void notifyMessageHandlers(Object message, List<CoderWrapper<Decoder>> availableDecoders) throws DecodeException,
             IOException {
         boolean decoded = false;
 
@@ -586,7 +587,8 @@ public class TyrusSession implements Session, DistributedSession {
         }
     }
 
-    <T> MessageHandler.Whole<T> getMessageHandler(Class<T> c) {
+    @SuppressWarnings("unchecked")
+	<T> MessageHandler.Whole<T> getMessageHandler(Class<T> c) {
         List<Map.Entry<Class<?>, MessageHandler>> orderedMessageHandlers;
         synchronized (handlerManager) {
             orderedMessageHandlers = handlerManager.getOrderedWholeMessageHandlers();
@@ -601,7 +603,8 @@ public class TyrusSession implements Session, DistributedSession {
         return null;
     }
 
-    void notifyMessageHandlers(Object message, boolean last) {
+    @SuppressWarnings("unchecked")
+	void notifyMessageHandlers(Object message, boolean last) {
         boolean handled = false;
 
         for (MessageHandler handler : getMessageHandlers()) {
@@ -631,7 +634,8 @@ public class TyrusSession implements Session, DistributedSession {
         }
     }
 
-    void notifyPongHandler(PongMessage pongMessage) {
+    @SuppressWarnings("unchecked")
+	void notifyPongHandler(PongMessage pongMessage) {
         final Set<MessageHandler> messageHandlers = getMessageHandlers();
         for (MessageHandler handler : messageHandlers) {
             if (MessageHandlerManager.getHandlerType(handler).equals(PongMessage.class)) {
@@ -811,7 +815,8 @@ public class TyrusSession implements Session, DistributedSession {
 
     private class HeartbeatCommand implements Runnable {
 
-        @Override
+        @SuppressWarnings("resource")
+		@Override
         public void run() {
             TyrusSession session = TyrusSession.this;
             if (session.isOpen() && session.getHeartbeatInterval() > 0) {

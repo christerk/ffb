@@ -637,7 +637,8 @@ public class TyrusWebSocketEngine implements WebSocketEngine {
         endpointEventListenerWrapper.setEndpointEventListener(endpointEventListener);
     }
 
-    @Override
+    @SuppressWarnings("unchecked")
+	@Override
     public void register(ServerEndpointConfig serverConfig, String contextPath) throws DeploymentException {
 
         TyrusEndpointWrapper endpointWrapper;

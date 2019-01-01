@@ -139,7 +139,8 @@ public final class OsgiRegistry implements SynchronousBundleListener {
                         return it.hasNext();
                     }
 
-                    @Override
+                    @SuppressWarnings("unchecked")
+					@Override
                     public T next() {
                         Class<T> nextClass = (Class<T>) it.next();
                         try {
@@ -279,7 +280,6 @@ public final class OsgiRegistry implements SynchronousBundleListener {
         }
     }
 
-    @SuppressWarnings("unchecked")
     public Enumeration<URL> getPackageResources(final String packagePath, final ClassLoader classLoader) {
         List<URL> result = new LinkedList<URL>();
         classToBundleMapping.clear();

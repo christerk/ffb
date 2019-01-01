@@ -222,7 +222,7 @@ public abstract class BaseContainer extends ExecutorServiceProvider implements W
         }
 
         @Override
-        public Thread newThread(@SuppressWarnings("NullableProblems") Runnable r) {
+        public Thread newThread(Runnable r) {
             Thread t = new Thread(null, r, namePrefix + threadNumber.getAndIncrement(), 0);
             if (!t.isDaemon()) {
                 t.setDaemon(true);

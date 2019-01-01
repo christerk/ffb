@@ -69,11 +69,7 @@ public abstract class ContainerProvider {
                 return wsc;
             } 
         }
-        if (wsc == null) {
-            throw new RuntimeException("Could not find an implementation class.");
-        } else {
-            throw new RuntimeException("Could not find an implementation class with a non-null WebSocketContainer.");
-        }
+        throw new RuntimeException("Could not find an implementation class.");
     }
  
     /**

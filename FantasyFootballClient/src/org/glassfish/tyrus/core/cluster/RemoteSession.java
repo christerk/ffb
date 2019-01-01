@@ -295,7 +295,8 @@ public class RemoteSession implements Session, DistributedSession {
                 clusterContext.sendPong(sessionId, Utils.getRemainingArray(applicationData));
             }
 
-            @Override
+            @SuppressWarnings("resource")
+			@Override
             public void sendObject(Object data) throws IOException, EncodeException {
 
                 // TODO 1: where should we handle encoding?
@@ -467,7 +468,8 @@ public class RemoteSession implements Session, DistributedSession {
                 clusterContext.sendBinary(sessionId, Utils.getRemainingArray(data), handler);
             }
 
-            @Override
+            @SuppressWarnings({ "resource" })
+			@Override
             public Future<Void> sendObject(Object data) {
 
                 // TODO 1: where should we handle encoding?
@@ -532,7 +534,8 @@ public class RemoteSession implements Session, DistributedSession {
                 return future;
             }
 
-            @Override
+            @SuppressWarnings("resource")
+			@Override
             public void sendObject(Object data, SendHandler handler) {
 
                 // TODO 1: where should we handle encoding?
@@ -632,7 +635,8 @@ public class RemoteSession implements Session, DistributedSession {
      *
      * @return the negotiated extensions.
      */
-    @Override
+    @SuppressWarnings("unchecked")
+	@Override
     public List<Extension> getNegotiatedExtensions() {
         //noinspection unchecked
         return (List<Extension>) distributedPropertyMap.get(DistributedMapKey.NEGOTIATED_EXTENSIONS);
@@ -776,7 +780,8 @@ public class RemoteSession implements Session, DistributedSession {
      *
      * @return the unmodifiable map of the request parameters.
      */
-    @Override
+    @SuppressWarnings("unchecked")
+	@Override
     public Map<String, List<String>> getRequestParameterMap() {
         //noinspection unchecked
         return (Map<String, List<String>>) distributedPropertyMap.get(DistributedMapKey.REQUEST_PARAMETER_MAP);
@@ -800,7 +805,8 @@ public class RemoteSession implements Session, DistributedSession {
      * @return the unmodifiable map of path parameters. The key of the map is the parameter name,
      * the values in the map are the parameter values.
      */
-    @Override
+    @SuppressWarnings("unchecked")
+	@Override
     public Map<String, String> getPathParameters() {
         //noinspection unchecked
         return (Map<String, String>) distributedPropertyMap.get(DistributedMapKey.PATH_PARAMETERS);

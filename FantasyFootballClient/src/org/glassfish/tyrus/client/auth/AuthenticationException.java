@@ -83,6 +83,11 @@ import org.glassfish.tyrus.spi.UpgradeResponse;
 public class AuthenticationException extends HandshakeException {
 
     /**
+	 * 
+	 */
+	private static final long serialVersionUID = -2865434926000784083L;
+
+	/**
      * Constructor.
      *
      * @param message the detail message. The detail message is saved for later retrieval by the {@link #getMessage()}

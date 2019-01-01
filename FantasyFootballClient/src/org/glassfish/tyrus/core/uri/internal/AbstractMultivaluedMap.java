@@ -112,7 +112,6 @@ public abstract class AbstractMultivaluedMap<K, V> implements MultivaluedMap<K, 
      * @param values value list where the {@code null} value addition is being
      *               requested.
      */
-    @SuppressWarnings("UnusedParameters")
     protected void addNull(List<V> values) {
         // do nothing in the default implementation; ignore the null value
     }
@@ -128,7 +127,6 @@ public abstract class AbstractMultivaluedMap<K, V> implements MultivaluedMap<K, 
      * @param values value list where the {@code null} value addition is being
      *               requested.
      */
-    @SuppressWarnings("UnusedParameters")
     protected void addFirstNull(List<V> values) {
         // do nothing in the default implementation; ignore the null value
     }
@@ -307,7 +305,6 @@ public abstract class AbstractMultivaluedMap<K, V> implements MultivaluedMap<K, 
      * [key, multi-value] store, {@code false} otherwise.
      */
     @Override
-    @SuppressWarnings("EqualsWhichDoesntCheckParameterClass")
     public boolean equals(Object o) {
         return store.equals(o);
     }

@@ -216,7 +216,8 @@ public class JdkClientContainer implements ClientContainer {
         }
     }
 
-    private SslFilter createSslFilter(ClientEndpointConfig cec, Map<String, Object> properties,
+    @SuppressWarnings("unchecked")
+	private SslFilter createSslFilter(ClientEndpointConfig cec, Map<String, Object> properties,
                                       TransportFilter transportFilter, URI uri) {
         Object sslEngineConfiguratorObject = properties.get(ClientProperties.SSL_ENGINE_CONFIGURATOR);
 

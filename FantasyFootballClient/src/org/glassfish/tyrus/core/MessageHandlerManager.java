@@ -113,7 +113,8 @@ public class MessageHandlerManager {
      *
      * @param decoders registered {@link Decoder}s.
      */
-    static MessageHandlerManager fromDecoderInstances(List<Decoder> decoders) {
+    @SuppressWarnings("unchecked")
+	static MessageHandlerManager fromDecoderInstances(List<Decoder> decoders) {
         List<Class<? extends Decoder>> decoderList = new ArrayList<Class<? extends Decoder>>();
         for (Decoder decoder : decoders) {
             if (decoder instanceof CoderWrapper) {
@@ -141,7 +142,8 @@ public class MessageHandlerManager {
      *
      * @param handler {@link MessageHandler} to be added to the manager.
      */
-    public void addMessageHandler(MessageHandler handler) throws IllegalStateException {
+    @SuppressWarnings("unchecked")
+	public void addMessageHandler(MessageHandler handler) throws IllegalStateException {
 
         final Class<?> handlerClass = getHandlerType(handler);
 

@@ -288,7 +288,8 @@ class SslFilter extends Filter {
         };
     }
 
-    @Override
+    @SuppressWarnings("incomplete-switch")
+	@Override
     synchronized void close() {
         if (state == State.NOT_STARTED) {
             downstreamFilter.close();
@@ -433,7 +434,8 @@ class SslFilter extends Filter {
         return true;
     }
 
-    private boolean doHandshakeStep(ByteBuffer networkData) {
+    @SuppressWarnings("incomplete-switch")
+	private boolean doHandshakeStep(ByteBuffer networkData) {
         /* Buffer used to store application data read during this handshake step.
         Application data can be interleaved with handshake messages only during re-handshake.
         We don't use applicationInputBuffer, because we might want to store more than one packet */

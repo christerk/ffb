@@ -78,7 +78,8 @@ public class CoderWrapper<T> extends CoderAdapter implements Decoder, Encoder {
      * @param coder cannot be {@code null}.
      * @param type  return type provided by the encode / decode method. Cannot be {@code null}.
      */
-    public CoderWrapper(T coder, Class<?> type) {
+    @SuppressWarnings("unchecked")
+	public CoderWrapper(T coder, Class<?> type) {
         this.coder = coder;
         this.coderClass = (Class<T>) coder.getClass();
         this.type = type;

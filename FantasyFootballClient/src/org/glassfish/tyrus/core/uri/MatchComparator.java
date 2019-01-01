@@ -54,7 +54,11 @@ import org.glassfish.tyrus.core.DebugContext;
  */
 class MatchComparator implements Comparator<Match>, Serializable {
 
-    private final transient Logger LOGGER = Logger.getLogger(MatchComparator.class.getName());
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = -725084792604145174L;
+	private final transient Logger LOGGER = Logger.getLogger(MatchComparator.class.getName());
     private final transient DebugContext debugContext;
 
     MatchComparator(DebugContext debugContext) {

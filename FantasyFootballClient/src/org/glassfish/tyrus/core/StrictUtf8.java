@@ -408,7 +408,8 @@ public class StrictUtf8 extends Charset {
 
         // returns -1 if there is/are malformed byte(s) and the
         // "action" for malformed input is not REPLACE.
-        public int decode(byte[] sa, int sp, int len, char[] da) {
+        @SuppressWarnings("unused")
+		public int decode(byte[] sa, int sp, int len, char[] da) {
             final int sl = sp + len;
             int dp = 0;
             int dlASCII = Math.min(len, da.length);
