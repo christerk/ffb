@@ -663,25 +663,34 @@ public class StatusReport {
       println(getIndent() + 1, status.toString());
     }
     if (kickoffResult == KickoffResult.BRILLIANT_COACHING) {
+      boolean homeBanned = game.getTurnDataHome().isCoachBanned();
+      boolean awayBanned = game.getTurnDataAway().isCoachBanned();
+      
       status.append("Brilliant Coaching Roll Home Team [ ").append(pReport.getRollHome()).append(" ]");
       println(getIndent(), TextStyle.ROLL, status.toString());
-      int totalHome = pReport.getRollHome() + gameResult.getTeamResultHome().getFame() + fanFavouritesHome + game.getTeamHome().getAssistantCoaches();
+      int totalHome = pReport.getRollHome() + gameResult.getTeamResultHome().getFame() + fanFavouritesHome + game.getTeamHome().getAssistantCoaches() - (homeBanned ? 1 : 0);
       status = new StringBuilder();
       status.append("Rolled ").append(pReport.getRollHome());
       status.append(" + ").append(gameResult.getTeamResultHome().getFame()).append(" FAME");
       status.append(" + ").append(fanFavouritesHome).append(" Fan Favourites");
       status.append(" + ").append(game.getTeamHome().getAssistantCoaches()).append(" Assistant Coaches");
+      if (homeBanned) {
+    	  status.append(" - 1 Banned Coach");
+      }
       status.append(" = ").append(totalHome).append(".");
       println(getIndent() + 1, status.toString());
       status = new StringBuilder();
       status.append("Brilliant Coaching Roll Away Team [ ").append(pReport.getRollAway()).append(" ]");
       println(getIndent(), TextStyle.ROLL, status.toString());
-      int totalAway = pReport.getRollAway() + gameResult.getTeamResultAway().getFame() + fanFavouritesAway + game.getTeamAway().getAssistantCoaches();
+      int totalAway = pReport.getRollAway() + gameResult.getTeamResultAway().getFame() + fanFavouritesAway + game.getTeamAway().getAssistantCoaches() - (awayBanned ? 1 : 0);
       status = new StringBuilder();
       status.append("Rolled ").append(pReport.getRollAway());
       status.append(" + ").append(gameResult.getTeamResultAway().getFame()).append(" FAME");
       status.append(" + ").append(fanFavouritesAway).append(" Fan Favourites");
       status.append(" + ").append(game.getTeamAway().getAssistantCoaches()).append(" Assistant Coaches");
+      if (awayBanned) {
+    	  status.append(" - 1 Banned Coach");
+      }
       status.append(" = ").append(totalAway).append(".");
       println(getIndent() + 1, status.toString());
     }
