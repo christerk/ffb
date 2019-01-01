@@ -101,7 +101,7 @@ public class FieldModel implements IJsonSerializable {
     if (pTeam != null) {
       for (Player player : pTeam.getPlayers()) {
         remove(player);
-        fStateByPlayerId.remove(player);
+        fStateByPlayerId.remove(player.getId());
       }
     }
   }
