@@ -674,9 +674,7 @@ public class StatusReport {
       status.append(" + ").append(gameResult.getTeamResultHome().getFame()).append(" FAME");
       status.append(" + ").append(fanFavouritesHome).append(" Fan Favourites");
       status.append(" + ").append(game.getTeamHome().getAssistantCoaches()).append(" Assistant Coaches");
-      if (homeBanned) {
-    	  status.append(" - 1 Banned Coach");
-      }
+      status.append(" ").append(homeBanned ? "- 1 Banned" : " + 0 Head").append(" Coach");
       status.append(" = ").append(totalHome).append(".");
       println(getIndent() + 1, status.toString());
       status = new StringBuilder();
@@ -688,9 +686,7 @@ public class StatusReport {
       status.append(" + ").append(gameResult.getTeamResultAway().getFame()).append(" FAME");
       status.append(" + ").append(fanFavouritesAway).append(" Fan Favourites");
       status.append(" + ").append(game.getTeamAway().getAssistantCoaches()).append(" Assistant Coaches");
-      if (awayBanned) {
-    	  status.append(" - 1 Banned Coach");
-      }
+      status.append(" ").append(awayBanned ? "- 1 Banned" : " + 0 Head").append(" Coach");
       status.append(" = ").append(totalAway).append(".");
       println(getIndent() + 1, status.toString());
     }
