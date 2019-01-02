@@ -34,8 +34,9 @@ public class UtilBlockSequence {
     game.getFieldModel().clearPushbackSquares();
     parameterSet.add(new StepParameter(StepParameterKey.STARTING_PUSHBACK_SQUARE,
       UtilServerPushback.findStartingSquare(attackerCoordinate, defenderCoordinate, game.isHomePlaying())));
-    if (UtilCards.hasUnusedSkill(game, actingPlayer, Skill.STRIP_BALL) && (defenderCoordinate != null)
-      && defenderCoordinate.equals(game.getFieldModel().getBallCoordinate()) && (game.getDefender().getTeam() != actingPlayer.getPlayer().getTeam())) {
+    if (defenderCoordinate != null
+      && defenderCoordinate.equals(game.getFieldModel().getBallCoordinate())
+      && (game.getDefender().getTeam() != actingPlayer.getPlayer().getTeam())) {
       if ((game.getDefender() != null) && UtilCards.hasSkill(game, game.getDefender(), Skill.SURE_HANDS)) {
         pStep.getResult().addReport(new ReportSkillUse(game.getDefenderId(), Skill.SURE_HANDS, true, SkillUse.CANCEL_STRIP_BALL));
       } else if ((game.getDefender() != null) && UtilCards.hasSkill(game, game.getDefender(), Skill.MOUNSTROUS_MOUTH)) {
