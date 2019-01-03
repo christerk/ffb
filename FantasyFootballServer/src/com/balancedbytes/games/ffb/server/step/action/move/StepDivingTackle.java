@@ -156,10 +156,22 @@ public class StepDivingTackle extends AbstractStep {
             dodgeModifiers.add(DodgeModifier.BREAK_TACKLE);
           }
           int minimumRoll = DiceInterpreter.getInstance().minimumRollDodge(game, actingPlayer.getPlayer(), dodgeModifiers);
+          int minimumRollWithoutBreakTackle = minimumRoll;
+          if (dodgeModifiers.contains(DodgeModifier.BREAK_TACKLE)) {
+        	  dodgeModifiers.remove(DodgeModifier.BREAK_TACKLE);
+        	  minimumRollWithoutBreakTackle = DiceInterpreter.getInstance().minimumRollDodge(game, actingPlayer.getPlayer(), dodgeModifiers);
+        	  dodgeModifiers.add(DodgeModifier.BREAK_TACKLE);
+          }
           if (!DiceInterpreter.getInstance().isSkillRollSuccessful(fDodgeRoll, minimumRoll)) {
             String teamId = game.isHomePlaying() ? game.getTeamAway().getId() : game.getTeamHome().getId();
             UtilServerDialog.showDialog(getGameState(), new DialogPlayerChoiceParameter(teamId, PlayerChoiceMode.DIVING_TACKLE, divingTacklers, null, 1), true);
             fUsingDivingTackle = null;
+          } else if (!DiceInterpreter.getInstance().isSkillRollSuccessful(fDodgeRoll, minimumRollWithoutBreakTackle)) {
+        	  // Ask if Diving tackle is going to be used strictly to trigger Break Tackle. The dodge will still succeed.
+              String teamId = game.isHomePlaying() ? game.getTeamAway().getId() : game.getTeamHome().getId();
+              String[] descriptions = new String[] { "This will NOT trip the dodger, but will force the use of BREAK TACKLE." };
+              UtilServerDialog.showDialog(getGameState(), new DialogPlayerChoiceParameter(teamId, PlayerChoiceMode.DIVING_TACKLE, divingTacklers, descriptions, 1), true);
+              fUsingDivingTackle = null;
           } else {
             getResult().addReport(new ReportSkillUse(null, Skill.DIVING_TACKLE, false, SkillUse.WOULD_NOT_HELP));
           }
@@ -169,6 +181,19 @@ public class StepDivingTackle extends AbstractStep {
     if (fUsingDivingTackle != null) {
       publishParameter(new StepParameter(StepParameterKey.USING_DIVING_TACKLE, fUsingDivingTackle));
       if (fUsingDivingTackle) {
+    	// Implicitly, a DT use is normally only triggered if it makes the dodge fail.
+    	  
+    	// Check if the dodge is successful with BT (ie. DT was used only to trigger BT)
+    	DodgeModifierFactory modifierFactory = new DodgeModifierFactory();
+    	Set<DodgeModifier> dodgeModifiers = modifierFactory.findDodgeModifiers(game, fCoordinateFrom, fCoordinateTo, 0);
+    	int minimumRoll = DiceInterpreter.getInstance().minimumRollDodge(game, actingPlayer.getPlayer(), dodgeModifiers);
+    	if (dodgeModifiers.contains(DodgeModifier.BREAK_TACKLE) && DiceInterpreter.getInstance().isSkillRollSuccessful(fDodgeRoll, minimumRoll)) {
+    		// This dodge will be successful with Break Tackle triggered, so mark it as used.
+    		  fUsingBreakTackle = true;
+    	      actingPlayer.markSkillUsed(Skill.BREAK_TACKLE);
+    	      publishParameter(new StepParameter(StepParameterKey.USING_BREAK_TACKLE, fUsingBreakTackle));
+    	}
+    	
         getResult().addReport(new ReportSkillUse(game.getDefender().getId(), Skill.DIVING_TACKLE, true, SkillUse.STOP_OPPONENT));
         getResult().setNextAction(StepAction.GOTO_LABEL, fGotoLabelOnSuccess);
       } else {
