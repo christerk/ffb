@@ -34,7 +34,8 @@ public class UtilBlockSequence {
     game.getFieldModel().clearPushbackSquares();
     parameterSet.add(new StepParameter(StepParameterKey.STARTING_PUSHBACK_SQUARE,
       UtilServerPushback.findStartingSquare(attackerCoordinate, defenderCoordinate, game.isHomePlaying())));
-    if (defenderCoordinate != null
+    if (UtilCards.hasSkill(game, actingPlayer, Skill.STRIP_BALL)
+	  && defenderCoordinate != null
       && defenderCoordinate.equals(game.getFieldModel().getBallCoordinate())
       && (game.getDefender().getTeam() != actingPlayer.getPlayer().getTeam())) {
       if ((game.getDefender() != null) && UtilCards.hasSkill(game, game.getDefender(), Skill.SURE_HANDS)) {
