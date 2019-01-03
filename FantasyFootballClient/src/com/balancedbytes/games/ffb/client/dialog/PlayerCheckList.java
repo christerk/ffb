@@ -123,7 +123,7 @@ public class PlayerCheckList extends JList<PlayerCheckListItem> {
           if (descriptionIndex > descriptions.length) {
         	  descriptionIndex = descriptions.length - 1;
           }
-          text.append(" ").append(descriptions[i]);
+          text.append(" ").append(descriptions[descriptionIndex]);
         }
         PlayerCheckListItem checkListItem = new PlayerCheckListItem(player, new ImageIcon(playerIcon), text.toString());
         checkListItem.setSelected((playerIds.length == 1) || preSelected);
