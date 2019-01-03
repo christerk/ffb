@@ -120,7 +120,7 @@ public class PlayerCheckList extends JList<PlayerCheckListItem> {
         text.append(player.getName());
         if (ArrayTool.isProvided(descriptions)) {
           int descriptionIndex = i;
-          if (descriptionIndex > descriptions.length) {
+          if (descriptionIndex >= descriptions.length) {
         	  descriptionIndex = descriptions.length - 1;
           }
           text.append(" ").append(descriptions[descriptionIndex]);
