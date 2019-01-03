@@ -169,7 +169,8 @@ public class StepDivingTackle extends AbstractStep {
           } else if (!DiceInterpreter.getInstance().isSkillRollSuccessful(fDodgeRoll, minimumRollWithoutBreakTackle)) {
         	  // Ask if Diving tackle is going to be used strictly to trigger Break Tackle. The dodge will still succeed.
               String teamId = game.isHomePlaying() ? game.getTeamAway().getId() : game.getTeamHome().getId();
-              UtilServerDialog.showDialog(getGameState(), new DialogPlayerChoiceParameter(teamId, PlayerChoiceMode.DIVING_TACKLE, divingTacklers, null, 1), true);
+              String[] descriptions = new String[] { "This will NOT trip the dodger, but will force the use of BREAK TACKLE." };
+              UtilServerDialog.showDialog(getGameState(), new DialogPlayerChoiceParameter(teamId, PlayerChoiceMode.DIVING_TACKLE, divingTacklers, descriptions, 1), true);
               fUsingDivingTackle = null;
           } else {
             getResult().addReport(new ReportSkillUse(null, Skill.DIVING_TACKLE, false, SkillUse.WOULD_NOT_HELP));
