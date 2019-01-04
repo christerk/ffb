@@ -5,7 +5,12 @@
     <property name="bin.dir" value="bin" />
     <property name="build.dir" value="build" />
 
-	<target name="clean">
+	<target name="prepare">
+		<mkdir dir="${bin.dir}" />
+		<mkdir dir="${build.dir}" />
+	</target>
+
+	<target name="clean" depends="prepare">
 		<delete includeemptydirs="true">
 			<fileset dir="${bin.dir}" includes="**/*"/>
 		</delete>
@@ -14,11 +19,6 @@
 		</delete>
 	</target>
 	
-	<target name="prepare" depends="clean">
-		<mkdir dir="${bin.dir}" />
-		<mkdir dir="${build.dir}" />
-	</target>
-
 	<target name="compile" depends="prepare">
 		<javac encoding="UTF-8" srcdir="${src.dir}" destdir="${bin.dir}" includeantruntime="false" target="1.6" source="1.6" debug="on" />
 	</target>

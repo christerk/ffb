@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<project name="FantasyFootballClient" default="buildFumbblLive" basedir=".">
+<project name="FantasyFootballClient" default="buildFumbblTest" basedir=".">
 
     <property name="src.dir" value="src" />
     <property name="bin.dir" value="bin" />
@@ -11,7 +11,12 @@
 		<fileset dir="${lib.dir}" includes="*.jar" />
 	</path>
 
-	<target name="prepareTest">
+	<target name="prepare">
+		<mkdir dir="${bin.dir}" />
+		<mkdir dir="${build.dir}" />
+	</target>
+
+	<target name="prepareTest" depends="prepare">
 		<copy todir="${bin.dir}/icons">
 			<fileset dir="icons" />
 		</copy>
@@ -23,7 +28,7 @@
 		</copy>
 	</target>
 	
-	<target name="clean">
+	<target name="clean" depends="prepare">
 		<delete includeemptydirs="true">
 			<fileset dir="${bin.dir}" includes="**/*"/>
 		</delete>
@@ -32,11 +37,6 @@
 		</delete>
 	</target>
 	
-	<target name="prepare" depends="clean">
-		<mkdir dir="${bin.dir}" />
-		<mkdir dir="${build.dir}" />
-	</target>
-
 	<target name="FantasyFootballCommon">
 		<ant antfile="build.xml" dir="../FantasyFootballCommon" target="build" />
 	</target>
@@ -96,7 +96,7 @@
         	<zipfileset file="client-fumbbl-test.ini" fullpath="client.ini" />
         	<zipfileset file="icons-fumbbl-test.ini" fullpath="icons.ini" />
         </jar>
-		<copy todir="${build.dir}">
+		<copy todir="${build.dir}/lib">
 			<fileset dir="${lib.dir}" includes="*.jar" />
 		</copy>
 		<!--

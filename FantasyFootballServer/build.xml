@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<project name="FantasyFootballServer" default="buildFumbblLive" basedir=".">
+<project name="FantasyFootballServer" default="buildFumbblTest" basedir=".">
 
     <property name="src.dir" value="src" />
     <property name="bin.dir" value="bin" />
@@ -25,7 +25,12 @@
 		<copy file="server.ini" todir="${bin.dir}" />
 	</target>
 
-	<target name="clean">
+	<target name="prepare">
+		<mkdir dir="${bin.dir}" />
+		<mkdir dir="${build.dir}" />
+	</target>
+
+	<target name="clean" depends="prepare">
 		<delete includeemptydirs="true">
 			<fileset dir="${bin.dir}" includes="**/*"/>
 		</delete>
@@ -33,12 +38,7 @@
 			<fileset dir="${build.dir}" includes="**/*"/>
 		</delete>
 	</target>
-	
-	<target name="prepare">
-		<mkdir dir="${bin.dir}" />
-		<mkdir dir="${build.dir}" />
-	</target>
-
+		
 	<target name="FantasyFootballCommon">
 		<ant antfile="build.xml" dir="../FantasyFootballCommon" target="build" />
 	</target>
@@ -123,6 +123,11 @@
     <target name="buildFumbblTest" depends="jar">
     	<copy file="server-fumbbl-test.ini" tofile="${build.dir}/server.ini" />
     	<copy file="pitches-fumbbl-test.ini" tofile="${build.dir}/pitches.ini" />
+    	<copy todir="${build.dir}/lib">
+    		<fileset dir="lib" />
+    	</copy>
+		<mkdir dir="${build.dir}/log" />
+    	
     	<!--
     	<tar destfile="${build.dir}/${ant.project.name}.tar.gz" compression="gzip">
 	  		<fileset dir="." excludes="src/**, bin/**, build/**, doc/**, lib/*.zip, **/build.xml, **/.*" />
