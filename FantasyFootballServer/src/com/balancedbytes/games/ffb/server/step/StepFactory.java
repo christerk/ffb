@@ -77,6 +77,7 @@ import com.balancedbytes.games.ffb.server.step.action.ttm.StepFumbleTtmPass;
 import com.balancedbytes.games.ffb.server.step.action.ttm.StepInitScatterPlayer;
 import com.balancedbytes.games.ffb.server.step.action.ttm.StepInitThrowTeamMate;
 import com.balancedbytes.games.ffb.server.step.action.ttm.StepRightStuff;
+import com.balancedbytes.games.ffb.server.step.action.ttm.StepSwoop;
 import com.balancedbytes.games.ffb.server.step.action.ttm.StepThrowTeamMate;
 import com.balancedbytes.games.ffb.server.step.game.end.StepEndGame;
 import com.balancedbytes.games.ffb.server.step.game.end.StepFanFactor;
@@ -440,6 +441,9 @@ public class StepFactory {
 				break;
 			case STAND_UP:
 				step = new StepStandUp(fGameState);
+				break;
+			case SWOOP:
+				step = new StepSwoop(fGameState);
 				break;
 			case TAKE_ROOT:
 				step = new StepTakeRoot(fGameState);

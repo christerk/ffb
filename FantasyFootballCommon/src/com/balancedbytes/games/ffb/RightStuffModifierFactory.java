@@ -30,6 +30,9 @@ public class RightStuffModifierFactory implements IRollModifierFactory {
     if (tacklezoneModifier != null) {
       rightStuffModifiers.add(tacklezoneModifier);
     }
+    if (pPlayer.hasSkill(Skill.SWOOP)) {
+    	rightStuffModifiers.add(RightStuffModifier.SWOOP);
+    }
     return rightStuffModifiers;
   }
   

@@ -223,18 +223,27 @@ public class SequenceGenerator {
 	}
 
 	public void pushScatterPlayerSequence(GameState pGameState, String pThrownPlayerId, PlayerState pThrownPlayerState,
-			boolean pThrownPlayerHasBall, FieldCoordinate pThrownPlayerCoordinate, boolean pThrowScatter) {
+			boolean pThrownPlayerHasBall, FieldCoordinate pThrownPlayerCoordinate, boolean hasSwoop, boolean pThrowScatter) {
 
 		pGameState.getServer().getDebugLog().log(IServerLogLevel.DEBUG, pGameState.getId(),
 				"push scatterPlayerSequence onto stack");
 
 		Sequence sequence = new Sequence(pGameState);
 
-		sequence.add(StepId.INIT_SCATTER_PLAYER,	param(StepParameterKey.THROWN_PLAYER_ID, pThrownPlayerId),
+		if (hasSwoop) {
+			sequence.add(StepId.SWOOP,param(StepParameterKey.THROWN_PLAYER_ID, pThrownPlayerId),
+					param(StepParameterKey.THROWN_PLAYER_STATE, pThrownPlayerState),
+					param(StepParameterKey.THROWN_PLAYER_HAS_BALL, pThrownPlayerHasBall),
+					param(StepParameterKey.THROWN_PLAYER_COORDINATE, pThrownPlayerCoordinate),
+					param(StepParameterKey.THROW_SCATTER, pThrowScatter),
+					param(StepParameterKey.GOTO_LABEL_ON_FALL_DOWN, IStepLabel.APOTHECARY_HIT_PLAYER));
+		} else {
+			sequence.add(StepId.INIT_SCATTER_PLAYER,param(StepParameterKey.THROWN_PLAYER_ID, pThrownPlayerId),
 													param(StepParameterKey.THROWN_PLAYER_STATE, pThrownPlayerState),
 													param(StepParameterKey.THROWN_PLAYER_HAS_BALL, pThrownPlayerHasBall),
 													param(StepParameterKey.THROWN_PLAYER_COORDINATE, pThrownPlayerCoordinate),
 													param(StepParameterKey.THROW_SCATTER, pThrowScatter));
+		}
 		sequence.add(StepId.APOTHECARY,				IStepLabel.APOTHECARY_HIT_PLAYER,
 													param(StepParameterKey.APOTHECARY_MODE, ApothecaryMode.HIT_PLAYER));
 		sequence.add(StepId.CATCH_SCATTER_THROW_IN);

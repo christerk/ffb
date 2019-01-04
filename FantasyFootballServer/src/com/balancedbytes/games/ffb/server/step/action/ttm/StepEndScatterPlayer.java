@@ -2,6 +2,7 @@ package com.balancedbytes.games.ffb.server.step.action.ttm;
 
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.PlayerState;
+import com.balancedbytes.games.ffb.Skill;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
@@ -91,7 +92,8 @@ public final class StepEndScatterPlayer extends AbstractStep {
     Game game = getGameState().getGame();
     Player thrownPlayer = game.getPlayerById(fThrownPlayerId);
     if ((thrownPlayer != null)  && (fThrownPlayerState != null) && (fThrownPlayerCoordinate != null)) {
-  		SequenceGenerator.getInstance().pushScatterPlayerSequence(getGameState(), fThrownPlayerId, fThrownPlayerState, fThrownPlayerHasBall, fThrownPlayerCoordinate, false);
+  		boolean hasSwoop = thrownPlayer != null && thrownPlayer.hasSkill(Skill.SWOOP);
+  		SequenceGenerator.getInstance().pushScatterPlayerSequence(getGameState(), fThrownPlayerId, fThrownPlayerState, fThrownPlayerHasBall, fThrownPlayerCoordinate, hasSwoop, false);
     }
   	getResult().setNextAction(StepAction.NEXT_STEP);
   }

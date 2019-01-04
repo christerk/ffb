@@ -55,6 +55,7 @@ public enum ReportId implements INamedObject {
   KICKOFF_PITCH_INVASION("kickoffPitchInvasion"),
   THROW_TEAM_MATE_ROLL("throwTeamMateRoll"),
   SCATTER_PLAYER("scatterPlayer"),
+  SWOOP_PLAYER("swoopPlayer"),
   TIMEOUT_ENFORCED("timeoutEnforced"),
   WINNINGS_ROLL("winningsRoll"),
   FUMBBL_RESULT_UPLOAD("fumbblResultUpload"),
@@ -209,6 +210,8 @@ public enum ReportId implements INamedObject {
         return new ReportThrowTeamMateRoll();
       case SCATTER_PLAYER:
         return new ReportScatterPlayer();
+      case SWOOP_PLAYER:
+          return new ReportSwoopPlayer();
       case TIMEOUT_ENFORCED:
         return new ReportTimeoutEnforced();
       case WINNINGS_ROLL:

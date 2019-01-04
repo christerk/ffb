@@ -100,6 +100,7 @@ import com.balancedbytes.games.ffb.report.ReportSpecialEffectRoll;
 import com.balancedbytes.games.ffb.report.ReportSpectators;
 import com.balancedbytes.games.ffb.report.ReportStandUpRoll;
 import com.balancedbytes.games.ffb.report.ReportStartHalf;
+import com.balancedbytes.games.ffb.report.ReportSwoopPlayer;
 import com.balancedbytes.games.ffb.report.ReportTentaclesShadowingRoll;
 import com.balancedbytes.games.ffb.report.ReportThrowIn;
 import com.balancedbytes.games.ffb.report.ReportThrowTeamMateRoll;
@@ -1180,6 +1181,39 @@ public class StatusReport {
     }
   }
 
+  public void reportSwoopPlayer(ReportSwoopPlayer pReport) {
+	    int[] rolls = pReport.getRolls();
+	    if (ArrayTool.isProvided(rolls)) {
+	      StringBuilder status = new StringBuilder();
+	      if (rolls.length > 1) {
+	        status.append("Swoop Rolls [ ");
+	      } else {
+	        status.append("Swoop Roll [ ");
+	      }
+	      for (int i = 0; i < rolls.length; i++) {
+	        if (i > 0) {
+	          status.append(", ");
+	        }
+	        status.append(rolls[i]);
+	      }
+	      status.append(" ] ");
+	      Direction[] directions = pReport.getDirections();
+	      for (int i = 0; i < directions.length; i++) {
+	        if (i > 0) {
+	          status.append(", ");
+	        }
+	        status.append(directions[i].getName());
+	      }
+	      println(getIndent(), TextStyle.ROLL, status.toString());
+	      status = new StringBuilder();
+	      status.append("Player swoops from square (");
+	      status.append(pReport.getStartCoordinate().getX()).append(",").append(pReport.getStartCoordinate().getY());
+	      status.append(") to square (");
+	      status.append(pReport.getEndCoordinate().getX()).append(",").append(pReport.getEndCoordinate().getY());
+	      status.append(").");
+	      println(getIndent() + 1, status.toString());
+	    }
+	  }  
   public void reportAlwaysHungry(ReportSkillRoll pReport) {
     Game game = getClient().getGame();
     Player thrower = game.getActingPlayer().getPlayer();
@@ -2808,6 +2842,9 @@ public class StatusReport {
         case SCATTER_PLAYER:
           reportScatterPlayer((ReportScatterPlayer) report);
           break;
+        case SWOOP_PLAYER:
+            reportSwoopPlayer((ReportSwoopPlayer) report);
+            break;
         case TIMEOUT_ENFORCED:
           reportTimeoutEnforced((ReportTimeoutEnforced) report);
           break;

@@ -42,7 +42,10 @@ public class DodgeModifierFactory implements IRollModifierFactory {
     }
     DodgeModifier tacklezoneModifier = findTacklezoneModifier(pGame, pCoordinateTo, pTacklezoneModifier);
     if (tacklezoneModifier != null) {
-      if (UtilCards.hasSkill(pGame, actingPlayer, Skill.STUNTY) && (!UtilCards.hasSkill(pGame, actingPlayer, Skill.SECRET_WEAPON))) {
+    	boolean hasStunty = UtilCards.hasSkill(pGame, actingPlayer, Skill.STUNTY);
+    	boolean hasSecretWeapon = UtilCards.hasSkill(pGame, actingPlayer, Skill.SECRET_WEAPON);
+    	boolean hasSwoop = UtilCards.hasSkill(pGame, actingPlayer, Skill.SWOOP);
+      if (hasStunty && !hasSecretWeapon && !hasSwoop) {
         dodgeModifiers.add(DodgeModifier.STUNTY);
       } else {
         dodgeModifiers.add(tacklezoneModifier);

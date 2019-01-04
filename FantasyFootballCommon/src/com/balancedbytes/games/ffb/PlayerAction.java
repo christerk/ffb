@@ -26,7 +26,8 @@ public enum PlayerAction implements INamedObject {
   DUMP_OFF("dumpOff", 7, null),
   STAND_UP_BLITZ("standUpBlitz", 3, "stands up with Blitz"),
   THROW_BOMB("throwBomb", 20, "starts a Bomb Action"),
-  HAIL_MARY_BOMB("hailMaryBomb", 21, null);
+  HAIL_MARY_BOMB("hailMaryBomb", 21, null),
+  SWOOP("swoop", 30, null);
   
   private String fName;
   private int fType;

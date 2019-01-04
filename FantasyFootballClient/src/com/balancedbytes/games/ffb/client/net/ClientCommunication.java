@@ -63,6 +63,7 @@ import com.balancedbytes.games.ffb.net.commands.ClientCommandRequestVersion;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandSetMarker;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandSetupPlayer;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandStartGame;
+import com.balancedbytes.games.ffb.net.commands.ClientCommandSwoop;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandTalk;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandTeamSetupDelete;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandTeamSetupLoad;
@@ -370,6 +371,10 @@ public class ClientCommunication implements Runnable, INetCommandHandler {
   
   public void sendThrowTeamMate(String pActingPlayerId, String pPlayerId) {
     send(new ClientCommandThrowTeamMate(pActingPlayerId, pPlayerId));
+  }
+  
+  public void sendSwoop(String pActingPlayerId, FieldCoordinate pTargetCoordinate) {
+	    send(new ClientCommandSwoop(pActingPlayerId, pTargetCoordinate));
   }
   
   public void sendBuyInducements(String pTeamId, int pAvailableGold, InducementSet pInducementSet, String[] pStarPlayerPositionIds, String[] pMercenaryPositionIds, Skill[] pMercenarySkills) {

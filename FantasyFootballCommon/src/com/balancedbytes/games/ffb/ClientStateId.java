@@ -28,6 +28,7 @@ public enum ClientStateId implements INamedObject {
   WAIT_FOR_OPPONENT("waitForOpponent"),
   REPLAY("replay"),
   THROW_TEAM_MATE("throwTeamMate"),
+  SWOOP("swoop"),
   DUMP_OFF("dumpOff"),
   WAIT_FOR_SETUP("waitForSetup"),
   GAZE("gaze"),

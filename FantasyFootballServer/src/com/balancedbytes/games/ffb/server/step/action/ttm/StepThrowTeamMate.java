@@ -167,7 +167,9 @@ public final class StepThrowTeamMate extends AbstractStepWithReRoll {
       boolean reRolled = ((getReRolledAction() == ReRolledAction.THROW_TEAM_MATE) && (getReRollSource() != null));
       getResult().addReport(new ReportThrowTeamMateRoll(thrower.getId(), successful, roll, minimumRoll, reRolled, passModifierArray, passingDistance, fThrownPlayerId));
       if (successful) {
-      	SequenceGenerator.getInstance().pushScatterPlayerSequence(getGameState(), fThrownPlayerId, fThrownPlayerState, fThrownPlayerHasBall, throwerCoordinate, true);
+  		Player thrownPlayer = game.getPlayerById(fThrownPlayerId);
+  		boolean hasSwoop = thrownPlayer != null && thrownPlayer.hasSkill(Skill.SWOOP);
+      	SequenceGenerator.getInstance().pushScatterPlayerSequence(getGameState(), fThrownPlayerId, fThrownPlayerState, fThrownPlayerHasBall, throwerCoordinate, hasSwoop, true);
       	getResult().setNextAction(StepAction.NEXT_STEP);
       } else {
         if (getReRolledAction() != ReRolledAction.THROW_TEAM_MATE) {
