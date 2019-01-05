@@ -23,6 +23,10 @@ public class StepParameterSet {
 		return fParameterById.get(pKey);
 	}
 	
+	public boolean remove(StepParameterKey pKey) {
+		return fParameterById.remove(pKey) != null;
+	}
+	
 	public int getSize() {
 		return fParameterById.size();
 	}
