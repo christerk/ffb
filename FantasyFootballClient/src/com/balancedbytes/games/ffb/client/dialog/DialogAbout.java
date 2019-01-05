@@ -67,7 +67,13 @@ public class DialogAbout extends Dialog {
   	g2d.setColor(Color.WHITE);
   	
   	g2d.setFont(new Font("Sans Serif", Font.BOLD, 17));
-  	String versionInfo = "Java Client Version " + FantasyFootballClient.CLIENT_VERSION;
+
+  	String versionInfo = getClient().getParameters().getBuild();
+  	if (versionInfo == null) {
+  		versionInfo = "Version " + FantasyFootballClient.CLIENT_VERSION;
+  	} else {
+  		versionInfo = "Build " + versionInfo;
+  	}
   	Rectangle2D versionBounds = g2d.getFontMetrics().getStringBounds(versionInfo, g2d);
   	g2d.drawString(versionInfo, _WIDTH - 25 - (int) versionBounds.getWidth(), 155);
   	

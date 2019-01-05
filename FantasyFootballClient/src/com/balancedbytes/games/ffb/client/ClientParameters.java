@@ -28,6 +28,7 @@ public class ClientParameters {
 	private static final String _ARGUMENT_TEAM_AWAY = "-teamAway";
 	private static final String _ARGUMENT_AUTHENTICATION = "-auth";
 	private static final String _ARGUMENT_PORT = "-port";
+	private static final String _ARGUMENT_BUILD = "-build";
 	
   private ClientMode fMode;
   private String fCoach;
@@ -38,6 +39,7 @@ public class ClientParameters {
   private String fTeamAway;
   private String fAuthentication;
   private int fPort;
+  private String fBuild;
   	
   public ClientMode getMode() {
 		return fMode;
@@ -79,6 +81,10 @@ public class ClientParameters {
 		return fPort;
 	}
 	
+	public String getBuild() {
+		return fBuild;
+	}
+	
 	public void initFrom(String[] pArguments) {
 		if (ArrayTool.isProvided(pArguments)) {
 		  ClientModeFactory clientModeFactory = new ClientModeFactory();
@@ -111,6 +117,8 @@ public class ClientParameters {
 					} catch (NumberFormatException pNfe) {
 						throw new FantasyFootballException("Port must be numeric.");
 					}
+				} else if (_ARGUMENT_BUILD.equalsIgnoreCase(argument)) {
+					fBuild = fetchArgument(pArguments, pos++);
 				} else {
 					throw new FantasyFootballException("Unknown argument " + argument);
 				}
