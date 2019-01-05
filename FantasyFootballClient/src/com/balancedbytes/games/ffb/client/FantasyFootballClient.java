@@ -134,7 +134,6 @@ public class FantasyFootballClient implements IConnectionListener, IDialogCloseL
 
   public void dialogClosed(IDialog pDialog) {
     pDialog.hideDialog();
-    startClient();
   }
 
   public void startClient() {

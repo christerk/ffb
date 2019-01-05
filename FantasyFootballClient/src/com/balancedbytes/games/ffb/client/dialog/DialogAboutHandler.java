@@ -69,13 +69,13 @@ public class DialogAboutHandler extends DialogHandler {
       },
       5 * 1000
     );
+    getClient().startClient();
   }
   
   public void dialogClosed(IDialog pDialog) {
     if (getDialog().isVisible()) {
       hideDialog();
       getClient().getUserInterface().getGlassPane().setVisible(false);
-      getClient().startClient();
     }
   }
 
