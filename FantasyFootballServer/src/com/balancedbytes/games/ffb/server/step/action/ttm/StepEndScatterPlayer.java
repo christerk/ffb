@@ -92,9 +92,8 @@ public final class StepEndScatterPlayer extends AbstractStep {
     Game game = getGameState().getGame();
     Player thrownPlayer = game.getPlayerById(fThrownPlayerId);
     if ((thrownPlayer != null)  && (fThrownPlayerState != null) && (fThrownPlayerCoordinate != null)) {
-  		//boolean hasSwoop = thrownPlayer != null && thrownPlayer.hasSkill(Skill.SWOOP);
-    	boolean hasSwoop = false;
-  		SequenceGenerator.getInstance().pushScatterPlayerSequence(getGameState(), fThrownPlayerId, fThrownPlayerState, fThrownPlayerHasBall, fThrownPlayerCoordinate, hasSwoop, false);
+  		boolean hasSwoop = thrownPlayer != null && thrownPlayer.hasSkill(Skill.SWOOP);
+		SequenceGenerator.getInstance().pushScatterPlayerSequence(getGameState(), fThrownPlayerId, fThrownPlayerState, fThrownPlayerHasBall, fThrownPlayerCoordinate, false, false);
     }
   	getResult().setNextAction(StepAction.NEXT_STEP);
   }

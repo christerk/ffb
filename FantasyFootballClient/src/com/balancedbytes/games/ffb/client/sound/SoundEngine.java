@@ -59,6 +59,7 @@ public class SoundEngine {
     _SOUND_PROPERTY_KEYS.put(SoundId.SPEC_STOMP, ISoundProperty.SPEC_STOMP);
     _SOUND_PROPERTY_KEYS.put(SoundId.STEP, ISoundProperty.STEP);
     _SOUND_PROPERTY_KEYS.put(SoundId.STAB, ISoundProperty.STAB);
+    _SOUND_PROPERTY_KEYS.put(SoundId.SWOOP, ISoundProperty.SWOOP);
     _SOUND_PROPERTY_KEYS.put(SoundId.THROW, ISoundProperty.THROW);
     _SOUND_PROPERTY_KEYS.put(SoundId.TOUCHDOWN, ISoundProperty.TOUCHDOWN);
     _SOUND_PROPERTY_KEYS.put(SoundId.WHISTLE, ISoundProperty.WHISTLE);

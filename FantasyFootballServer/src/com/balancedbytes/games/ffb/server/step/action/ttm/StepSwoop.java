@@ -10,6 +10,7 @@ import com.balancedbytes.games.ffb.InjuryType;
 import com.balancedbytes.games.ffb.PlayerAction;
 import com.balancedbytes.games.ffb.PlayerState;
 import com.balancedbytes.games.ffb.Skill;
+import com.balancedbytes.games.ffb.SoundId;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.Animation;
@@ -167,7 +168,7 @@ public class StepSwoop extends AbstractStep {
 				if (!UtilServerSteps.checkCommandIsFromHomePlayer(getGameState(), pReceivedCommand)) {
 					fCoordinateTo = fCoordinateTo.transform();
 				}
-				
+
 				executeSwoop();
 				break;
 			default:
@@ -184,12 +185,12 @@ public class StepSwoop extends AbstractStep {
 		Game game = gameState.getGame();
 		ActingPlayer actingPlayer = game.getActingPlayer();
 		Player swoopingPlayer = actingPlayer.getPlayer();
-		
+
 		if (UtilCards.hasSkill(game, swoopingPlayer, Skill.SWOOP)) {
 			// Send animation moving the player to the initial target square
 
 			fCoordinateFrom = game.getFieldModel().getPlayerCoordinate(swoopingPlayer);
-			
+
 			Direction playerScatter = null;
 			int scatterRoll = getGameState().getDiceRoller().rollThrowInDirection();
 			if (fCoordinateFrom.getX() < fCoordinateTo.getX()) {
@@ -216,10 +217,11 @@ public class StepSwoop extends AbstractStep {
 				}
 				// end loop
 				publishParameter(new StepParameter(StepParameterKey.THROWN_PLAYER_COORDINATE, null));
-	          	getResult().setNextAction(StepAction.GOTO_LABEL, fGotoLabelOnFallDown);
+				getResult().setNextAction(StepAction.GOTO_LABEL, fGotoLabelOnFallDown);
 			} else {
 				// Move player
 				game.getFieldModel().setPlayerCoordinate(swoopingPlayer, fCoordinateTo);
+		        getResult().setSound(SoundId.SWOOP);
 				if (fThrownPlayerHasBall) {
 					game.getFieldModel().setBallCoordinate(fCoordinateTo);
 				}
@@ -230,37 +232,44 @@ public class StepSwoop extends AbstractStep {
 					UtilServerPlayerSwoop.updateSwoopSquares(gameState, swoopingPlayer);
 				} else {
 					// Landing
-				    List<Player> playersInSquare = game.getFieldModel().getPlayers(fCoordinateTo);
-				    boolean crashed = false;
-				    for(Player p : playersInSquare) {
-				    	if (p != swoopingPlayer) {
-				    		// Landed on another player
-				            publishParameter(new StepParameter(StepParameterKey.DROP_THROWN_PLAYER, true));
-				          	InjuryResult injuryResultHitPlayer = UtilServerInjury.handleInjury(this, InjuryType.TTM_HIT_PLAYER, null, p, fCoordinateTo, null, ApothecaryMode.HIT_PLAYER);
-				          	publishParameter(new StepParameter(StepParameterKey.INJURY_RESULT, injuryResultHitPlayer));
-				            if ((game.isHomePlaying() && game.getTeamHome().hasPlayer(p)) || (!game.isHomePlaying() && game.getTeamAway().hasPlayer(p))) {
-				            	publishParameter(new StepParameter(StepParameterKey.END_TURN, true));
-				            }
+					List<Player> playersInSquare = game.getFieldModel().getPlayers(fCoordinateTo);
+					boolean crashed = false;
+					for(Player p : playersInSquare) {
+						if (p != swoopingPlayer) {
+							// Landed on another player
+							publishParameter(new StepParameter(StepParameterKey.DROP_THROWN_PLAYER, true));
+							InjuryResult injuryResultHitPlayer = UtilServerInjury.handleInjury(this, InjuryType.TTM_HIT_PLAYER, null, p, fCoordinateTo, null, ApothecaryMode.HIT_PLAYER);
+							publishParameter(new StepParameter(StepParameterKey.INJURY_RESULT, injuryResultHitPlayer));
+							if ((game.isHomePlaying() && game.getTeamHome().hasPlayer(p)) || (!game.isHomePlaying() && game.getTeamAway().hasPlayer(p))) {
+								publishParameter(new StepParameter(StepParameterKey.END_TURN, true));
+							}
 
-				            publishParameters(UtilServerInjury.dropPlayer(this, p, ApothecaryMode.HIT_PLAYER));
+							game.getFieldModel().setBallCoordinate(null);
+							
+							publishParameters(UtilServerInjury.dropPlayer(this, p, ApothecaryMode.HIT_PLAYER));
 
-				            publishParameter(new StepParameter(StepParameterKey.THROWN_PLAYER_COORDINATE, fCoordinateTo));
-				          	crashed = true;
-				            break; // Stop looking for more players to crash on
-				    	}
-				    }
-				    if (crashed) {
-				    	getResult().setNextAction(StepAction.GOTO_LABEL, fGotoLabelOnFallDown);
-				    } else {
-				    	getResult().setNextAction(StepAction.NEXT_STEP);
-				    }
+						    publishParameter(new StepParameter(StepParameterKey.THROWN_PLAYER_ID, fThrownPlayerId));
+						    publishParameter(new StepParameter(StepParameterKey.THROWN_PLAYER_STATE, fThrownPlayerState));
+						    publishParameter(new StepParameter(StepParameterKey.THROWN_PLAYER_HAS_BALL, fThrownPlayerHasBall));
+							
+							publishParameter(new StepParameter(StepParameterKey.THROWN_PLAYER_COORDINATE, fCoordinateTo));
+							crashed = true;
+							break; // Stop looking for more players to crash on
+						}
+					}
+					if (crashed) {
+						getResult().setNextAction(StepAction.NEXT_STEP);
+						//getResult().setNextAction(StepAction.GOTO_LABEL, fGotoLabelOnFallDown);
+					} else {
+						getResult().setNextAction(StepAction.NEXT_STEP);
+					}
 				}
 			}
-			publishParameter(new StepParameter(StepParameterKey.COORDINATE_TO, fCoordinateTo));
+			//publishParameter(new StepParameter(StepParameterKey.COORDINATE_TO, fCoordinateTo));
 		}		
-		
+
 	}
-	
+
 	private void executeStep() {
 		GameState gameState = getGameState();
 		Game game = gameState.getGame();
@@ -288,10 +297,10 @@ public class StepSwoop extends AbstractStep {
 			}
 			game.getActingPlayer().setCurrentMove(thrownPlayer.getMovement()-3);
 
-		    publishParameter(new StepParameter(StepParameterKey.THROWN_PLAYER_ID, fThrownPlayerId));
-		    publishParameter(new StepParameter(StepParameterKey.THROWN_PLAYER_STATE, fThrownPlayerState));
-		    publishParameter(new StepParameter(StepParameterKey.THROWN_PLAYER_HAS_BALL, fThrownPlayerHasBall));
-			
+			publishParameter(new StepParameter(StepParameterKey.THROWN_PLAYER_ID, fThrownPlayerId));
+			publishParameter(new StepParameter(StepParameterKey.THROWN_PLAYER_STATE, fThrownPlayerState));
+			publishParameter(new StepParameter(StepParameterKey.THROWN_PLAYER_HAS_BALL, fThrownPlayerHasBall));
+
 			UtilServerGame.syncGameModel(this);
 		}
 

@@ -41,6 +41,7 @@ public enum SoundId implements INamedObject {
   SLURP("slurp", false),
   STAB("stab", false),
   STEP("step", false),
+  SWOOP("swoop", false),
   THROW("throw", false),
   TOUCHDOWN("touchdown", false),
   WHISTLE("whistle", false),

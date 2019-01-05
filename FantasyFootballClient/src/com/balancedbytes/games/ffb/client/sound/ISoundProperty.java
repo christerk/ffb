@@ -38,6 +38,7 @@ public interface ISoundProperty {
   String SLURP = "sound.slurp";
   String STAB = "sound.stab";
   String STEP = "sound.step";
+  String SWOOP = "sound.swoop";
   String THROW = "sound.throw";
   String TOUCHDOWN = "sound.touchdown";
   String WHISTLE = "sound.whistle";
