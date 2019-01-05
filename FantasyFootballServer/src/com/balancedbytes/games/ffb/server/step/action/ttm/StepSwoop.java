@@ -218,6 +218,9 @@ public class StepSwoop extends AbstractStep {
 			} else {
 				// Move player
 				game.getFieldModel().setPlayerCoordinate(swoopingPlayer, fCoordinateTo);
+				if (fThrownPlayerHasBall) {
+					game.getFieldModel().setBallCoordinate(fCoordinateTo);
+				}
 				int currentMove = actingPlayer.getCurrentMove() - 1;
 				actingPlayer.setCurrentMove(currentMove);
 				if (currentMove > 0) {
@@ -253,8 +256,15 @@ public class StepSwoop extends AbstractStep {
 			// Move player
 			game.getFieldModel().setPlayerCoordinate(thrownPlayer, passCoordinate);
 			UtilActingPlayer.changeActingPlayer(game, fThrownPlayerId, PlayerAction.SWOOP, false);
+			if (fThrownPlayerHasBall) {
+				game.getFieldModel().setBallCoordinate(passCoordinate);
+			}
 			game.getActingPlayer().setCurrentMove(3);
 
+		    publishParameter(new StepParameter(StepParameterKey.THROWN_PLAYER_ID, fThrownPlayerId));
+		    publishParameter(new StepParameter(StepParameterKey.THROWN_PLAYER_STATE, fThrownPlayerState));
+		    publishParameter(new StepParameter(StepParameterKey.THROWN_PLAYER_HAS_BALL, fThrownPlayerHasBall));
+			
 			UtilServerGame.syncGameModel(this);
 		}
 

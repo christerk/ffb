@@ -62,13 +62,13 @@ public class FieldModel implements IJsonSerializable {
   private Map<String, Set<Card>> fCardsByPlayerId;
   private Map<String, Set<CardEffect>> fCardEffectsByPlayerId;
 
-  private transient Map<FieldCoordinate, String> fPlayerIdByCoordinate;  // no need to serialize this, as it can be reconstructed
+  private transient Map<FieldCoordinate, List<String>> fPlayerIdByCoordinate;  // no need to serialize this, as it can be reconstructed
 
   private transient Game fGame;
 
   public FieldModel(Game pGame) {
     fGame = pGame;
-    fPlayerIdByCoordinate = new HashMap<FieldCoordinate, String>();
+    fPlayerIdByCoordinate = new HashMap<FieldCoordinate, List<String>>();
     fCoordinateByPlayerId = new HashMap<String ,FieldCoordinate>();
     fBloodspots = new ArrayList<BloodSpot>();
     fPushbackSquares = new HashSet<PushbackSquare>();
@@ -83,7 +83,19 @@ public class FieldModel implements IJsonSerializable {
   }
 
   public Player getPlayer(FieldCoordinate pPlayerPosition) {
-  	String playerId = ((pPlayerPosition != null) ? fPlayerIdByCoordinate.get(pPlayerPosition) : null);
+	String playerId = null;
+	if (pPlayerPosition != null) {
+		List<String> playersAtCoordinate = fPlayerIdByCoordinate.get(pPlayerPosition);
+		if (playersAtCoordinate != null) {
+			int numPlayers = playersAtCoordinate.size();
+			if (numPlayers > 0) {
+				playerId = playersAtCoordinate.get(numPlayers-1);
+			}
+		}
+	}
+	if (playerId == null) {
+		return null;
+	}
   	return getGame().getPlayerById(playerId);
   }
   
@@ -92,7 +104,10 @@ public class FieldModel implements IJsonSerializable {
     	return;
     }
     FieldCoordinate coordinate = getPlayerCoordinate(pPlayer);
-    fPlayerIdByCoordinate.remove(coordinate);
+    List<String> playersAtCoordinate =fPlayerIdByCoordinate.get(coordinate);
+    if (playersAtCoordinate != null) {
+    	playersAtCoordinate.remove(pPlayer.getId());
+    }
     fCoordinateByPlayerId.remove(pPlayer.getId());
     notifyObservers(ModelChangeId.FIELD_MODEL_REMOVE_PLAYER, pPlayer.getId(), coordinate);
   }
@@ -120,20 +135,45 @@ public class FieldModel implements IJsonSerializable {
     FieldCoordinate oldCoordinate = getPlayerCoordinate(pPlayer);
     if (!FieldCoordinate.equals(pCoordinate, oldCoordinate)) {
       fCoordinateByPlayerId.put(pPlayer.getId(), pCoordinate);
+      
+      // Remove player from old coordinate
       if (oldCoordinate != null) {
-        fPlayerIdByCoordinate.remove(oldCoordinate);
+    	  List<String> playerList = fPlayerIdByCoordinate.get(oldCoordinate);
+    	  if (playerList != null) {
+    		  playerList.remove(pPlayer.getId());
+    	  }
       }
-      String oldPlayerId = fPlayerIdByCoordinate.get(pCoordinate);
-      if (StringTool.isProvided(oldPlayerId)) {
-        fCoordinateByPlayerId.remove(oldPlayerId);
+      // Add player to new coordinate
+      List<String> playerList = fPlayerIdByCoordinate.get(pCoordinate);
+      if (playerList == null) {
+    	  playerList = new ArrayList<String>();
+    	  fPlayerIdByCoordinate.put(pCoordinate, playerList);
       }
-      fPlayerIdByCoordinate.put(pCoordinate, pPlayer.getId());
+      playerList.add(pPlayer.getId());
       notifyObservers(ModelChangeId.FIELD_MODEL_SET_PLAYER_COORDINATE, pPlayer.getId(), pCoordinate);
     }
   }
   
   public FieldCoordinate[] getPlayerCoordinates() {
-    return fPlayerIdByCoordinate.keySet().toArray(new FieldCoordinate[fPlayerIdByCoordinate.size()]);
+	  ArrayList<FieldCoordinate> coordinates = new ArrayList<FieldCoordinate>();
+	  for (FieldCoordinate c : fPlayerIdByCoordinate.keySet()) {
+		  if (fPlayerIdByCoordinate.get(c).size() > 0) {
+			  coordinates.add(c);
+		  }
+	  }
+      return coordinates.toArray(new FieldCoordinate[coordinates.size()]);
+  }
+  
+  public void sendPosition(Player pPlayer) {
+	  if (pPlayer == null) {
+		  return;
+	  }
+
+	  PlayerState oldState = fStateByPlayerId.get(pPlayer.getId());
+	  FieldCoordinate oldCoordinate = fCoordinateByPlayerId.get(pPlayer.getId());
+
+	  notifyObservers(ModelChangeId.FIELD_MODEL_SET_PLAYER_STATE, pPlayer.getId(), oldState);
+      notifyObservers(ModelChangeId.FIELD_MODEL_SET_PLAYER_COORDINATE, pPlayer.getId(), oldCoordinate);
   }
   
   public void setPlayerState(Player pPlayer, PlayerState pState) {

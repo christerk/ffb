@@ -139,8 +139,13 @@ public class UtilServerSetup {
           fieldModel.setPlayerState(player, playerState.changeBase(PlayerState.STANDING).changeActive(true));
         }
       }
-      fieldModel.setPlayerCoordinate(player, coordinate);
-  
+      if (fieldModel.getPlayer(coordinate) != null) {
+    	  // Client is confused and tried to put a player in a square that already had a player.
+    	  // Force an update of the position and state.
+    	  fieldModel.sendPosition(player);
+      } else {
+    	  fieldModel.setPlayerCoordinate(player, coordinate);
+      }
     }
     
   }
