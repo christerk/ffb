@@ -1,6 +1,7 @@
 package com.balancedbytes.games.ffb.server.net;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.Future;
@@ -66,6 +67,7 @@ public class ServerCommunication implements Runnable, IReceivedCommandHandler {
   private final BlockingQueue<ReceivedCommand> fCommandQueue;
   private FantasyFootballServer fServer;
   private boolean fCommandCompression;
+  private LinkedList<TrackedFuture> trackedFutures;
 
   public ServerCommunication(FantasyFootballServer pServer) {
     fServer = pServer;
@@ -74,6 +76,7 @@ public class ServerCommunication implements Runnable, IReceivedCommandHandler {
     if (StringTool.isProvided(commandCompression)) {
       fCommandCompression = Boolean.parseBoolean(commandCompression);
     }
+    trackedFutures = new LinkedList<TrackedFuture>();
   }
 
   public boolean handleCommand(ReceivedCommand command) {
@@ -87,6 +90,7 @@ public class ServerCommunication implements Runnable, IReceivedCommandHandler {
     return handleCommand(new ReceivedCommand(internalCommand, null));
   }
 
+  long lastTimeForValidation = 0;
   public void run() {
     try {
       while (!fStopped) {
@@ -97,6 +101,12 @@ public class ServerCommunication implements Runnable, IReceivedCommandHandler {
           // continue with receivedCommand == null
         }
         handleCommandInternal(command);
+        
+        long currentTime = System.currentTimeMillis();
+        if (currentTime - lastTimeForValidation > 1000) {
+        	checkTrackedFutures(currentTime - 4000);
+        	lastTimeForValidation = currentTime;
+        }
       }
     } catch (Exception pException) {
       getServer().getDebugLog().log(pException);
@@ -220,10 +230,42 @@ public class ServerCommunication implements Runnable, IReceivedCommandHandler {
       getServer().getDebugLog().logServerCommand(IServerLogLevel.DEBUG, command, pSessions);
     }
     for (int i = 0; i < pSessions.length; i++) {
-      send(pSessions[i], command);
+    	send(pSessions[i], command);
     }
   }
 
+  private void track(Session session, Future<Void> future) {
+	  if (session.isOpen() && !future.isDone()) {
+		  TrackedFuture trackData = new TrackedFuture();
+		  trackData.future = future;
+		  trackData.millis = System.currentTimeMillis();
+		  trackData.session = session;
+		  trackedFutures.add(trackData);
+	  }
+  }
+  
+  private void checkTrackedFutures(long limit) {
+	  TrackedFuture f = trackedFutures.peekFirst();
+	  while (f != null && f.millis < limit) {
+		  f = trackedFutures.removeFirst();
+		  if (f.future.isDone()) {
+			  try {
+				  f.future.get();
+			  } catch (Exception e) {
+				  if (f.session.isOpen()) {
+					  close(f.session);
+				  }
+			  }
+		  } else {
+			  // Sending the message took too long. Close the session
+			  if (f.session.isOpen()) {
+				  close(f.session);
+			  }
+		  }
+		  f = trackedFutures.peekFirst();
+	  }
+  }
+  
   private Future<Void> send(Session session, NetCommand command) {
 
     if ((session == null) || (command == null)) {
@@ -250,14 +292,15 @@ public class ServerCommunication implements Runnable, IReceivedCommandHandler {
     }
 
     try {
-      return session.getRemote().sendStringByFuture(textMessage);
+   	  Future<Void> future = session.getRemote().sendStringByFuture(textMessage);
+   	  track(session, future);
+      return future;
     } catch (WebSocketException webSocketException) {
       // getServer().getDebugLog().log(IServerLogLevel.WARN, webSocketException.getMessage());
       close(session);
     }
 
     return null;
-
   }
 
   protected void sendAllSessions(GameState gameState, NetCommand command, boolean addToLog) {
@@ -469,4 +512,9 @@ public class ServerCommunication implements Runnable, IReceivedCommandHandler {
     sendAwaySession(gameState, syncCommand.transform());
   }
 
+  private class TrackedFuture {
+	  public long millis;
+	  public Future<Void> future;
+	  public Session session;
+  }
 }
