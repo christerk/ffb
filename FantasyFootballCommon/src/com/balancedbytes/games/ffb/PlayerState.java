@@ -57,6 +57,10 @@ public class PlayerState {
     fId = pId;
   }
   
+  public String toString() {
+	  return String.valueOf(fId);
+  }
+  
   public int getId() {
     return fId;
   }

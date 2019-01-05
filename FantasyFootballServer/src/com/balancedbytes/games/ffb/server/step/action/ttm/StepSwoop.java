@@ -1,5 +1,7 @@
 package com.balancedbytes.games.ffb.server.step.action.ttm;
 
+import java.util.List;
+
 import com.balancedbytes.games.ffb.CatchScatterThrowInMode;
 import com.balancedbytes.games.ffb.Direction;
 import com.balancedbytes.games.ffb.FieldCoordinate;
@@ -224,9 +226,34 @@ public class StepSwoop extends AbstractStep {
 				int currentMove = actingPlayer.getCurrentMove() + 1;
 				actingPlayer.setCurrentMove(currentMove);
 				if (currentMove < actingPlayer.getPlayer().getMovement()) {
+					// Still swooping
 					UtilServerPlayerSwoop.updateSwoopSquares(gameState, swoopingPlayer);
 				} else {
-					getResult().setNextAction(StepAction.NEXT_STEP);
+					// Landing
+				    List<Player> playersInSquare = game.getFieldModel().getPlayers(fCoordinateTo);
+				    boolean crashed = false;
+				    for(Player p : playersInSquare) {
+				    	if (p != swoopingPlayer) {
+				    		// Landed on another player
+				            publishParameter(new StepParameter(StepParameterKey.DROP_THROWN_PLAYER, true));
+				          	InjuryResult injuryResultHitPlayer = UtilServerInjury.handleInjury(this, InjuryType.TTM_HIT_PLAYER, null, p, fCoordinateTo, null, ApothecaryMode.HIT_PLAYER);
+				          	publishParameter(new StepParameter(StepParameterKey.INJURY_RESULT, injuryResultHitPlayer));
+				            if ((game.isHomePlaying() && game.getTeamHome().hasPlayer(p)) || (!game.isHomePlaying() && game.getTeamAway().hasPlayer(p))) {
+				            	publishParameter(new StepParameter(StepParameterKey.END_TURN, true));
+				            }
+
+				            publishParameters(UtilServerInjury.dropPlayer(this, p, ApothecaryMode.HIT_PLAYER));
+
+				            publishParameter(new StepParameter(StepParameterKey.THROWN_PLAYER_COORDINATE, fCoordinateTo));
+				          	crashed = true;
+				            break; // Stop looking for more players to crash on
+				    	}
+				    }
+				    if (crashed) {
+				    	getResult().setNextAction(StepAction.GOTO_LABEL, fGotoLabelOnFallDown);
+				    } else {
+				    	getResult().setNextAction(StepAction.NEXT_STEP);
+				    }
 				}
 			}
 			publishParameter(new StepParameter(StepParameterKey.COORDINATE_TO, fCoordinateTo));

@@ -293,7 +293,7 @@ public class ServerCommunication implements Runnable, IReceivedCommandHandler {
 
     try {
    	  Future<Void> future = session.getRemote().sendStringByFuture(textMessage);
-   	  track(session, future);
+   	  //track(session, future);
       return future;
     } catch (WebSocketException webSocketException) {
       // getServer().getDebugLog().log(IServerLogLevel.WARN, webSocketException.getMessage());

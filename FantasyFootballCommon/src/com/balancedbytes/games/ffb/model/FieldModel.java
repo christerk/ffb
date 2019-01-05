@@ -98,6 +98,20 @@ public class FieldModel implements IJsonSerializable {
 	}
   	return getGame().getPlayerById(playerId);
   }
+
+  public List<Player> getPlayers(FieldCoordinate pPlayerPosition) {
+	List<Player> players = null;
+	if (pPlayerPosition != null) {
+		List<String> playersAtCoordinate = fPlayerIdByCoordinate.get(pPlayerPosition);
+		if (playersAtCoordinate != null && playersAtCoordinate.size() > 0) {
+			players = new ArrayList<Player>();
+			for (String playerId : playersAtCoordinate) {
+				players.add(getGame().getPlayerById(playerId));
+			}
+		}
+	}
+	return players;
+  }
   
   public void remove(Player pPlayer) {
     if (pPlayer == null) {
