@@ -244,7 +244,10 @@ public class StepSwoop extends AbstractStep {
 								publishParameter(new StepParameter(StepParameterKey.END_TURN, true));
 							}
 
-							game.getFieldModel().setBallCoordinate(null);
+							if (fThrownPlayerHasBall) {
+								// Hide the ball from the play while scatters are dealt with.
+								game.getFieldModel().setBallCoordinate(null);
+							}
 							
 							publishParameters(UtilServerInjury.dropPlayer(this, p, ApothecaryMode.HIT_PLAYER));
 
