@@ -44,6 +44,7 @@ public final class StepEndPassing extends AbstractStep {
   private boolean fPassFumble;
   private boolean fEndTurn;
   private boolean fEndPlayerAction;
+  private boolean fBombOutOfBounds;
 
   public StepEndPassing(GameState pGameState) {
     super(pGameState);
@@ -81,6 +82,10 @@ public final class StepEndPassing extends AbstractStep {
           fPassFumble = (pParameter.getValue() != null) ? (Boolean) pParameter.getValue() : false;
           consume(pParameter);
           return true;
+        case BOMB_OUT_OF_BOUNDS:
+        	fBombOutOfBounds = (pParameter.getValue() != null) ? (Boolean) pParameter.getValue() : false;
+            consume(pParameter);
+            return true;
         default:
           break;
       }
@@ -114,7 +119,9 @@ public final class StepEndPassing extends AbstractStep {
       } else {
         SequenceGenerator.getInstance().pushBombSequence(getGameState(), fCatcherId, fPassFumble);
       }
-      publishParameter(new StepParameter(StepParameterKey.BOMB_OUT_OF_BOUNDS, true));
+      if (fBombOutOfBounds) {
+			publishParameter(new StepParameter(StepParameterKey.BOMB_OUT_OF_BOUNDS, true));
+      }
       getResult().setNextAction(StepAction.NEXT_STEP);
       return;
     }

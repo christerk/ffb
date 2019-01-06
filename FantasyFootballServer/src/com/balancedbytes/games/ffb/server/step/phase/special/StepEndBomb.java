@@ -82,10 +82,10 @@ public final class StepEndBomb extends AbstractStep {
     	UtilServerSteps.changePlayerAction(this, fCatcherId, PlayerAction.THROW_BOMB, false);
     	SequenceGenerator.getInstance().pushPassSequence(getGameState());
       // stop immediate re-throwing of the bomb
-      game.setPassCoordinate(null);
-      game.setThrowerId(null);
-      game.setThrowerAction(null);
     }
+    game.setPassCoordinate(null);
+    game.setThrowerId(null);
+    game.setThrowerAction(null);
   	getResult().setNextAction(StepAction.NEXT_STEP);
 	}
 
