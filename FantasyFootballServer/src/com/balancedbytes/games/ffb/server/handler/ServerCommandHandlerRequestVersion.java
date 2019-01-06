@@ -3,6 +3,7 @@ package com.balancedbytes.games.ffb.server.handler;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.balancedbytes.games.ffb.FantasyFootballConstants;
 import com.balancedbytes.games.ffb.net.NetCommandId;
 import com.balancedbytes.games.ffb.server.FantasyFootballServer;
 import com.balancedbytes.games.ffb.server.net.ReceivedCommand;
@@ -33,8 +34,8 @@ public class ServerCommandHandlerRequestVersion extends ServerCommandHandler {
     }
     getServer().getCommunication().sendVersion(
       pReceivedCommand.getSession(),
-      FantasyFootballServer.SERVER_VERSION,
-      FantasyFootballServer.CLIENT_VERSION,
+      FantasyFootballConstants.SERVER_VERSION,
+      FantasyFootballConstants.CLIENT_VERSION,
       clientProperties.toArray(new String[clientProperties.size()]),
       clientPropertyValues.toArray(new String[clientPropertyValues.size()])
     );

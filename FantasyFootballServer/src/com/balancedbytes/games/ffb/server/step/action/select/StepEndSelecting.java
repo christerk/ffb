@@ -76,47 +76,47 @@ public final class StepEndSelecting extends AbstractStep {
 			switch (pParameter.getKey()) {
 				case BLOCK_DEFENDER_ID:
 					fBlockDefenderId = (String) pParameter.getValue();
-					pParameter.consume();
+					consume(pParameter);
 					return true;
 				case DISPATCH_PLAYER_ACTION:
 					fDispatchPlayerAction = (PlayerAction) pParameter.getValue();
-					pParameter.consume();
+					consume(pParameter);
 					return true;
 				case END_PLAYER_ACTION:
 					fEndPlayerAction = (pParameter.getValue() != null) ? (Boolean) pParameter.getValue() : false; 
-					pParameter.consume();
+					consume(pParameter);
 					return true;
 				case END_TURN:
 					fEndTurn = (pParameter.getValue() != null) ? (Boolean) pParameter.getValue() : false; 
-					pParameter.consume();
+					consume(pParameter);
 					return true;
 				case FOUL_DEFENDER_ID:
 					fFoulDefenderId = (String) pParameter.getValue();
-					pParameter.consume();
+					consume(pParameter);
 					return true;
 				case GAZE_VICTIM_ID:
 					fGazeVictimId = (String) pParameter.getValue();
-					pParameter.consume();
+					consume(pParameter);
 					return true;
 				case HAIL_MARY_PASS:
 					fHailMaryPass = (pParameter.getValue() != null) ? (Boolean) pParameter.getValue() : false;
-					pParameter.consume();
+					consume(pParameter);
 					return true;
 				case MOVE_STACK:
 					fMoveStack = (FieldCoordinate[]) pParameter.getValue();
-					pParameter.consume();
+					consume(pParameter);
 					return true;
 				case TARGET_COORDINATE:
 					fTargetCoordinate = (FieldCoordinate) pParameter.getValue();
-					pParameter.consume();
+					consume(pParameter);
 					return true;
 				case THROWN_PLAYER_ID:
 					fThrownPlayerId = (String) pParameter.getValue();
-					pParameter.consume();
+					consume(pParameter);
 					return true;
 				case USING_STAB:
 					fUsingStab = (pParameter.getValue() != null) ? (Boolean) pParameter.getValue() : false; 
-					pParameter.consume();
+					consume(pParameter);
 					return true;
 				default:
 					break;

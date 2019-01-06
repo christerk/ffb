@@ -14,6 +14,7 @@ public enum StepParameterKey {
 	BLOCK_RESULT,                 // BlockResult
 	BLOCK_ROLL,                   // int[]
 	BOMB_EXPLODES,                // Boolean
+	BOMB_OUT_OF_BOUNDS,           // Boolean
 	CARD,                         // Card
 	CATCH_SCATTER_THROW_IN_MODE,  // CatchScatterThrowinMode
 	CATCHER_ID,                   // String

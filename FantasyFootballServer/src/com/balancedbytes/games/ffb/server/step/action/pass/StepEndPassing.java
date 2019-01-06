@@ -15,6 +15,7 @@ import com.balancedbytes.games.ffb.server.step.SequenceGenerator;
 import com.balancedbytes.games.ffb.server.step.StepAction;
 import com.balancedbytes.games.ffb.server.step.StepId;
 import com.balancedbytes.games.ffb.server.step.StepParameter;
+import com.balancedbytes.games.ffb.server.step.StepParameterKey;
 import com.balancedbytes.games.ffb.server.step.UtilServerSteps;
 import com.balancedbytes.games.ffb.server.util.UtilServerDialog;
 import com.balancedbytes.games.ffb.util.StringTool;
@@ -58,27 +59,27 @@ public final class StepEndPassing extends AbstractStep {
       switch (pParameter.getKey()) {
         case CATCHER_ID:
           fCatcherId = (String) pParameter.getValue();
-          pParameter.consume();
+          consume(pParameter);
           return true;
         case END_PLAYER_ACTION:
           fEndPlayerAction = (pParameter.getValue() != null) ? (Boolean) pParameter.getValue() : false;
-          pParameter.consume();
+          consume(pParameter);
           return true;
         case END_TURN:
           fEndTurn = (pParameter.getValue() != null) ? (Boolean) pParameter.getValue() : false;
-          pParameter.consume();
+          consume(pParameter);
           return true;
         case INTERCEPTOR_ID:
           fInterceptorId = (String) pParameter.getValue();
-          pParameter.consume();
+          consume(pParameter);
           return true;
         case PASS_ACCURATE:
           fPassAccurate = (pParameter.getValue() != null) ? (Boolean) pParameter.getValue() : false;
-          pParameter.consume();
+          consume(pParameter);
           return true;
         case PASS_FUMBLE:
           fPassFumble = (pParameter.getValue() != null) ? (Boolean) pParameter.getValue() : false;
-          pParameter.consume();
+          consume(pParameter);
           return true;
         default:
           break;
@@ -113,6 +114,7 @@ public final class StepEndPassing extends AbstractStep {
       } else {
         SequenceGenerator.getInstance().pushBombSequence(getGameState(), fCatcherId, fPassFumble);
       }
+      publishParameter(new StepParameter(StepParameterKey.BOMB_OUT_OF_BOUNDS, true));
       getResult().setNextAction(StepAction.NEXT_STEP);
       return;
     }

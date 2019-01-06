@@ -14,6 +14,7 @@ import com.balancedbytes.games.ffb.CatchModifier;
 import com.balancedbytes.games.ffb.ClientMode;
 import com.balancedbytes.games.ffb.Direction;
 import com.balancedbytes.games.ffb.DodgeModifier;
+import com.balancedbytes.games.ffb.FantasyFootballConstants;
 import com.balancedbytes.games.ffb.HeatExhaustion;
 import com.balancedbytes.games.ffb.IRollModifier;
 import com.balancedbytes.games.ffb.InjuryModifier;
@@ -149,7 +150,7 @@ public class StatusReport {
 
   public void reportVersion() {
     StringBuilder status = new StringBuilder();
-    status.append("FantasyFootballClient Version ").append(FantasyFootballClient.CLIENT_VERSION);
+    status.append("FantasyFootballClient Version ").append(FantasyFootballConstants.CLIENT_VERSION);
     println(0, status.toString());
     // status = new StringBuilder();
     // status.append("FantasyFootball Version expected ").append(FantasyFootballClient.SERVER_VERSION);

@@ -39,11 +39,11 @@ public class StepEndFouling extends AbstractStep {
 	  	switch (pParameter.getKey()) {
 				case END_PLAYER_ACTION:
 					fEndPlayerAction = (pParameter.getValue() != null) ? (Boolean) pParameter.getValue() : false;
-					pParameter.consume();
+					consume(pParameter);
 					return true;
 				case END_TURN:
 					fEndTurn = (pParameter.getValue() != null) ? (Boolean) pParameter.getValue() : false;
-					pParameter.consume();
+					consume(pParameter);
 					return true;
 				default:
 					break;

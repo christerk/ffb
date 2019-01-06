@@ -44,24 +44,24 @@ public final class StepEndInducement extends AbstractStep {
 	public boolean setParameter(StepParameter pParameter) {
 		if ((pParameter != null) && !super.setParameter(pParameter)) {
 			switch (pParameter.getKey()) {
-  			case HOME_TEAM:
-  				fHomeTeam = (pParameter.getValue() != null) ? (Boolean) pParameter.getValue() : false;
-  				pParameter.consume();
-  				return true;
-				case INDUCEMENT_PHASE:
-					fInducementPhase = (InducementPhase) pParameter.getValue();
-					pParameter.consume();
-					return true;
-				case END_INDUCEMENT_PHASE:
-					fEndInducementPhase = (pParameter.getValue() != null) ? (Boolean) pParameter.getValue() : false;
-					pParameter.consume();
-					return true;
-				case END_TURN:
-					fEndTurn = (pParameter.getValue() != null) ? (Boolean) pParameter.getValue() : false;
-					pParameter.consume();
-					return true;
-				default:
-					break;
+			case HOME_TEAM:
+				fHomeTeam = (pParameter.getValue() != null) ? (Boolean) pParameter.getValue() : false;
+				consume(pParameter);
+				return true;
+			case INDUCEMENT_PHASE:
+				fInducementPhase = (InducementPhase) pParameter.getValue();
+				consume(pParameter);
+				return true;
+			case END_INDUCEMENT_PHASE:
+				fEndInducementPhase = (pParameter.getValue() != null) ? (Boolean) pParameter.getValue() : false;
+				consume(pParameter);
+				return true;
+			case END_TURN:
+				fEndTurn = (pParameter.getValue() != null) ? (Boolean) pParameter.getValue() : false;
+				consume(pParameter);
+				return true;
+			default:
+				break;
 			}
 		}
 		return false;

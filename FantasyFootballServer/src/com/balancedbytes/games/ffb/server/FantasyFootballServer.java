@@ -13,6 +13,7 @@ import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
 
+import com.balancedbytes.games.ffb.FantasyFootballConstants;
 import com.balancedbytes.games.ffb.server.admin.AdminServlet;
 import com.balancedbytes.games.ffb.server.admin.BackupServlet;
 import com.balancedbytes.games.ffb.server.db.DbConnectionManager;
@@ -38,9 +39,6 @@ import com.fumbbl.rng.Fortuna;
  * @author Kalimar
  */
 public class FantasyFootballServer {
-
-  public static final String SERVER_VERSION = "1.3.2";
-  public static final String CLIENT_VERSION = "1.3.2";
 
   private static final String _USAGE =
     "java -jar FantasyFootballServer.jar standalone\n"
@@ -116,7 +114,7 @@ public class FantasyFootballServer {
 
     if (fMode.isInitDb()) {
 
-      System.err.println("FantasyFootballServer " + SERVER_VERSION + " initializing database.");
+      System.err.println("FantasyFootballServer " + FantasyFootballConstants.SERVER_VERSION + " initializing database.");
 
       DbInitializer dbInitializer = new DbInitializer(dbConnectionManager);
       dbInitializer.initDb();
@@ -188,7 +186,7 @@ public class FantasyFootballServer {
       fServerRequestProcessor.start();
 
       System.err.print(DateTool.formatTimestamp(new Date()));
-      System.err.print(" FantasyFootballServer " + SERVER_VERSION);
+      System.err.print(" FantasyFootballServer " + FantasyFootballConstants.SERVER_VERSION);
       System.err.println(" running on port " + httpPortProperty);
 
     }

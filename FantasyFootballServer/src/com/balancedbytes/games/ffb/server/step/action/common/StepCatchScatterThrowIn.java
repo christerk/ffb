@@ -118,11 +118,11 @@ public class StepCatchScatterThrowIn extends AbstractStepWithReRoll {
       switch (pParameter.getKey()) {
         case CATCH_SCATTER_THROW_IN_MODE:
           fCatchScatterThrowInMode = (CatchScatterThrowInMode) pParameter.getValue();
-          pParameter.consume();
+          consume(pParameter);
           return true;
         case THROW_IN_COORDINATE:
           fThrowInCoordinate = (FieldCoordinate) pParameter.getValue();
-          pParameter.consume();
+          consume(pParameter);
           return true;
         default:
           break;

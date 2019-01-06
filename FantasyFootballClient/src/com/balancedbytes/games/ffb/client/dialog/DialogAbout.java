@@ -12,6 +12,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.event.InternalFrameEvent;
 
+import com.balancedbytes.games.ffb.FantasyFootballConstants;
 import com.balancedbytes.games.ffb.client.FantasyFootballClient;
 import com.balancedbytes.games.ffb.client.IIconProperty;
 import com.balancedbytes.games.ffb.dialog.DialogId;
@@ -70,7 +71,7 @@ public class DialogAbout extends Dialog {
 
   	String versionInfo = getClient().getParameters().getBuild();
   	if (versionInfo == null) {
-  		versionInfo = "Version " + FantasyFootballClient.CLIENT_VERSION;
+  		versionInfo = "Version " + FantasyFootballConstants.CLIENT_VERSION;
   	} else {
   		versionInfo = "Build " + versionInfo;
   	}

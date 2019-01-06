@@ -35,11 +35,11 @@ import com.eclipsesource.json.JsonValue;
  * @author Kalimar
  */
 public class StepMissedPass extends AbstractStep {
-	
+
 	public StepMissedPass(GameState pGameState) {
 		super(pGameState);
 	}
-	
+
 	public StepId getId() {
 		return StepId.MISSED_PASS;
 	}
@@ -49,95 +49,96 @@ public class StepMissedPass extends AbstractStep {
 		super.start();
 		executeStep();
 	}
-	
-  @Override
-  public StepCommandStatus handleCommand(ReceivedCommand pReceivedCommand) {
-    StepCommandStatus commandStatus = super.handleCommand(pReceivedCommand);
-    if (commandStatus == StepCommandStatus.EXECUTE_STEP) {
-      executeStep();
-    }
-    return commandStatus;
-  }
 
-  private void executeStep() {
-    
-    Game game = getGameState().getGame();
-    FieldCoordinate coordinateEnd = null;
-    FieldCoordinate lastValidCoordinate = null;
-    List<Integer> rollList = new ArrayList<Integer>();
-    List<Direction> directionList = new ArrayList<Direction>();
-    
-    FieldCoordinate coordinateStart = game.getPassCoordinate();
-    while (FieldCoordinateBounds.FIELD.isInBounds(coordinateStart) && (rollList.size() < 3)) {
-      int roll = getGameState().getDiceRoller().rollScatterDirection();
-      rollList.add(roll);
-      Direction direction = DiceInterpreter.getInstance().interpretScatterDirectionRoll(roll);
-      directionList.add(direction);
-      coordinateEnd = UtilServerCatchScatterThrowIn.findScatterCoordinate(coordinateStart, direction, 1);
-      lastValidCoordinate = FieldCoordinateBounds.FIELD.isInBounds(coordinateEnd) ? coordinateEnd : coordinateStart;
-      coordinateStart = coordinateEnd;
-    }
-    int[] rolls = new int[rollList.size()];
-    for (int i = 0; i < rolls.length; i++) {
-      rolls[i] = rollList.get(i);
-    }
+	@Override
+	public StepCommandStatus handleCommand(ReceivedCommand pReceivedCommand) {
+		StepCommandStatus commandStatus = super.handleCommand(pReceivedCommand);
+		if (commandStatus == StepCommandStatus.EXECUTE_STEP) {
+			executeStep();
+		}
+		return commandStatus;
+	}
 
-    Direction[] directions = directionList.toArray(new Direction[directionList.size()]);
-    getResult().addReport(new ReportScatterBall(directions, rolls, false));
-    
-    game.getFieldModel().setRangeRuler(null);
-    FieldCoordinate throwerCoordinate = game.getFieldModel().getPlayerCoordinate(game.getThrower());
-    if (PlayerAction.HAIL_MARY_PASS == game.getThrowerAction()) {
-    	getResult().setAnimation(new Animation(AnimationType.HAIL_MARY_PASS, throwerCoordinate, lastValidCoordinate, null));
-    } else if (PlayerAction.HAIL_MARY_BOMB == game.getThrowerAction()) {
-    	getResult().setAnimation(new Animation(AnimationType.HAIL_MARY_BOMB, throwerCoordinate, lastValidCoordinate, null));
-    } else if (PlayerAction.THROW_BOMB == game.getThrowerAction()) {
-    	getResult().setAnimation(new Animation(AnimationType.THROW_BOMB, throwerCoordinate, lastValidCoordinate, null));
-    } else {
-    	getResult().setAnimation(new Animation(AnimationType.PASS, throwerCoordinate, lastValidCoordinate, null));
-    }
-    UtilServerGame.syncGameModel(this);
-    if (!FieldCoordinateBounds.FIELD.isInBounds(coordinateEnd)) {
-    	if ((PlayerAction.HAIL_MARY_BOMB == game.getThrowerAction()) || (PlayerAction.THROW_BOMB == game.getThrowerAction())) {
-    		game.getFieldModel().setBombCoordinate(null);
-    	} else {
-	    	publishParameter(new StepParameter(StepParameterKey.CATCH_SCATTER_THROW_IN_MODE, CatchScatterThrowInMode.THROW_IN));
-	    	publishParameter(new StepParameter(StepParameterKey.THROW_IN_COORDINATE, lastValidCoordinate));
-        game.getFieldModel().setBallMoving(true);
-    	}
-    } else {
-    	if ((PlayerAction.HAIL_MARY_BOMB == game.getThrowerAction()) || (PlayerAction.THROW_BOMB == game.getThrowerAction())) {
-    		publishParameter(new StepParameter(StepParameterKey.CATCH_SCATTER_THROW_IN_MODE, CatchScatterThrowInMode.CATCH_BOMB));
-        game.getFieldModel().setBombCoordinate(coordinateEnd);
-        game.getFieldModel().setBombMoving(true);
-    	} else {
-    		publishParameter(new StepParameter(StepParameterKey.CATCH_SCATTER_THROW_IN_MODE, CatchScatterThrowInMode.CATCH_MISSED_PASS));
-        game.getFieldModel().setBallCoordinate(coordinateEnd);
-        game.getFieldModel().setBallMoving(true);
-    	}
-    }
-    
-    getResult().setNextAction(StepAction.NEXT_STEP);
-    
-  }
-  
-  // ByteArray serialization
-  
-  public int getByteArraySerializationVersion() {
-  	return 1;
-  }
-  
-  // JSON serialization
-  
-  @Override
-  public JsonObject toJsonValue() {
-    return super.toJsonValue();
-  }
-  
-  @Override
-  public StepMissedPass initFrom(JsonValue pJsonValue) {
-    super.initFrom(pJsonValue);
-    return this;
-  }
-  
+	private void executeStep() {
+
+		Game game = getGameState().getGame();
+		FieldCoordinate coordinateEnd = null;
+		FieldCoordinate lastValidCoordinate = null;
+		List<Integer> rollList = new ArrayList<Integer>();
+		List<Direction> directionList = new ArrayList<Direction>();
+
+		FieldCoordinate coordinateStart = game.getPassCoordinate();
+		while (FieldCoordinateBounds.FIELD.isInBounds(coordinateStart) && (rollList.size() < 3)) {
+			int roll = getGameState().getDiceRoller().rollScatterDirection();
+			rollList.add(roll);
+			Direction direction = DiceInterpreter.getInstance().interpretScatterDirectionRoll(roll);
+			directionList.add(direction);
+			coordinateEnd = UtilServerCatchScatterThrowIn.findScatterCoordinate(coordinateStart, direction, 1);
+			lastValidCoordinate = FieldCoordinateBounds.FIELD.isInBounds(coordinateEnd) ? coordinateEnd : coordinateStart;
+			coordinateStart = coordinateEnd;
+		}
+		int[] rolls = new int[rollList.size()];
+		for (int i = 0; i < rolls.length; i++) {
+			rolls[i] = rollList.get(i);
+		}
+
+		Direction[] directions = directionList.toArray(new Direction[directionList.size()]);
+		getResult().addReport(new ReportScatterBall(directions, rolls, false));
+
+		game.getFieldModel().setRangeRuler(null);
+		FieldCoordinate throwerCoordinate = game.getFieldModel().getPlayerCoordinate(game.getThrower());
+		if (PlayerAction.HAIL_MARY_PASS == game.getThrowerAction()) {
+			getResult().setAnimation(new Animation(AnimationType.HAIL_MARY_PASS, throwerCoordinate, lastValidCoordinate, null));
+		} else if (PlayerAction.HAIL_MARY_BOMB == game.getThrowerAction()) {
+			getResult().setAnimation(new Animation(AnimationType.HAIL_MARY_BOMB, throwerCoordinate, lastValidCoordinate, null));
+		} else if (PlayerAction.THROW_BOMB == game.getThrowerAction()) {
+			getResult().setAnimation(new Animation(AnimationType.THROW_BOMB, throwerCoordinate, lastValidCoordinate, null));
+		} else {
+			getResult().setAnimation(new Animation(AnimationType.PASS, throwerCoordinate, lastValidCoordinate, null));
+		}
+		UtilServerGame.syncGameModel(this);
+		if (!FieldCoordinateBounds.FIELD.isInBounds(coordinateEnd)) {
+			if ((PlayerAction.HAIL_MARY_BOMB == game.getThrowerAction()) || (PlayerAction.THROW_BOMB == game.getThrowerAction())) {
+				game.getFieldModel().setBombCoordinate(null);
+				publishParameter(new StepParameter(StepParameterKey.BOMB_OUT_OF_BOUNDS, true));
+			} else {
+				publishParameter(new StepParameter(StepParameterKey.CATCH_SCATTER_THROW_IN_MODE, CatchScatterThrowInMode.THROW_IN));
+				publishParameter(new StepParameter(StepParameterKey.THROW_IN_COORDINATE, lastValidCoordinate));
+				game.getFieldModel().setBallMoving(true);
+			}
+		} else {
+			if ((PlayerAction.HAIL_MARY_BOMB == game.getThrowerAction()) || (PlayerAction.THROW_BOMB == game.getThrowerAction())) {
+				publishParameter(new StepParameter(StepParameterKey.CATCH_SCATTER_THROW_IN_MODE, CatchScatterThrowInMode.CATCH_BOMB));
+				game.getFieldModel().setBombCoordinate(coordinateEnd);
+				game.getFieldModel().setBombMoving(true);
+			} else {
+				publishParameter(new StepParameter(StepParameterKey.CATCH_SCATTER_THROW_IN_MODE, CatchScatterThrowInMode.CATCH_MISSED_PASS));
+				game.getFieldModel().setBallCoordinate(coordinateEnd);
+				game.getFieldModel().setBallMoving(true);
+			}
+		}
+
+		getResult().setNextAction(StepAction.NEXT_STEP);
+
+	}
+
+	// ByteArray serialization
+
+	public int getByteArraySerializationVersion() {
+		return 1;
+	}
+
+	// JSON serialization
+
+	@Override
+	public JsonObject toJsonValue() {
+		return super.toJsonValue();
+	}
+
+	@Override
+	public StepMissedPass initFrom(JsonValue pJsonValue) {
+		super.initFrom(pJsonValue);
+		return this;
+	}
+
 }

@@ -5,28 +5,28 @@ package com.balancedbytes.games.ffb.server.step;
  * @author Kalimar
  */
 public final class StepParameter {
-	
+
 	private StepParameterKey fKey;
 	private Object fValue;
 	private boolean fConsumed;
-	
+
 	public StepParameter(StepParameterKey pKey, Object pValue) {
 		fKey = pKey;
 		fValue = pValue;
 	}
-	
+
 	public StepParameterKey getKey() {
 		return fKey;
 	}
-	
+
 	public Object getValue() {
 		return fValue;
 	}
-	
+
 	public boolean isConsumed() {
 		return fConsumed;
 	}
-	
+
 	public void consume() {
 		fConsumed = true;
 	}

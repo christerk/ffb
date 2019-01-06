@@ -54,23 +54,23 @@ public final class StepEndThrowTeamMate extends AbstractStep {
 	  	switch (pParameter.getKey()) {
 				case END_TURN:
 					fEndTurn = (pParameter.getValue() != null) ? (Boolean) pParameter.getValue() : false;
-					pParameter.consume();
+					consume(pParameter);
 					return true;
 				case THROWN_PLAYER_COORDINATE:
 					fThrownPlayerCoordinate = (FieldCoordinate) pParameter.getValue();
-					pParameter.consume();
+					consume(pParameter);
 					return true;
 				case THROWN_PLAYER_HAS_BALL:
 					fThrownPlayerHasBall = (pParameter.getValue() != null) ? (Boolean) pParameter.getValue() : false;
-					pParameter.consume();
+					consume(pParameter);
 					return true;
 				case THROWN_PLAYER_ID:
 					fThrownPlayerId = (String) pParameter.getValue();
-					pParameter.consume();
+					consume(pParameter);
 					return true;
 				case THROWN_PLAYER_STATE:
 					fThrownPlayerState = (PlayerState) pParameter.getValue();
-					pParameter.consume();
+					consume(pParameter);
 					return true;
 				default:
 					break;

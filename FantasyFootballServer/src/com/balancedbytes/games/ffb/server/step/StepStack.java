@@ -5,8 +5,10 @@ import java.util.List;
 
 import com.balancedbytes.games.ffb.json.IJsonSerializable;
 import com.balancedbytes.games.ffb.json.UtilJson;
+import com.balancedbytes.games.ffb.server.DebugLog;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.IServerJsonOption;
+import com.balancedbytes.games.ffb.server.IServerLogLevel;
 import com.eclipsesource.json.JsonArray;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
@@ -64,7 +66,15 @@ public class StepStack implements IJsonSerializable {
 	
 	public void publishStepParameter(StepParameter pParameter) {
 		for (IStep step : fStack) {
+			DebugLog debugLog = getGameState().getServer().getDebugLog();
+			if (debugLog.isLogging(IServerLogLevel.TRACE)) {
+				StringBuilder trace = new StringBuilder();
+				trace.append(step.getId()).append(" receives ").append(pParameter.getKey()).append("=").append(pParameter.getValue());
+				debugLog.log(IServerLogLevel.TRACE, trace.toString());
+			}
+			
 			step.setParameter(pParameter);
+			
 			if (pParameter.isConsumed()) {
 				break;
 			}

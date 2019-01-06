@@ -46,7 +46,7 @@ public final class StepBlitzTurn extends AbstractStep {
         case END_TURN:
           fEndTurn = (pParameter.getValue() != null) ? (Boolean) pParameter.getValue() : false;
           if (game.getTurnMode() == TurnMode.BLITZ) {
-            pParameter.consume();
+            consume(pParameter);
           }
           return true;
         default:

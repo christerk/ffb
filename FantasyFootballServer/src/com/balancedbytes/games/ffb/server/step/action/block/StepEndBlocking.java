@@ -59,23 +59,23 @@ public class StepEndBlocking extends AbstractStep {
       switch (pParameter.getKey()) {
       case DEFENDER_PUSHED:
         fDefenderPushed = (pParameter.getValue() != null) ? (Boolean) pParameter.getValue() : false;
-        pParameter.consume();
+        consume(pParameter);
         return true;
       case END_PLAYER_ACTION:
         fEndPlayerAction = (pParameter.getValue() != null) ? (Boolean) pParameter.getValue() : false;
-        pParameter.consume();
+        consume(pParameter);
         return true;
       case END_TURN:
         fEndTurn = (pParameter.getValue() != null) ? (Boolean) pParameter.getValue() : false;
-        pParameter.consume();
+        consume(pParameter);
         return true;
       case OLD_DEFENDER_STATE:
         fOldDefenderState = (PlayerState) pParameter.getValue();
-        pParameter.consume();
+        consume(pParameter);
         return true;
       case USING_STAB:
         fUsingStab = (pParameter.getValue() != null) ? (Boolean) pParameter.getValue() : false;
-        pParameter.consume();
+        consume(pParameter);
         return true;
       default:
         break;

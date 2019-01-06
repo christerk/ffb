@@ -61,27 +61,27 @@ public class StepEndMoving extends AbstractStep {
 			switch (pParameter.getKey()) {
 				case BLOCK_DEFENDER_ID:
 					fBlockDefenderId = (String) pParameter.getValue();
-					pParameter.consume();
+					consume(pParameter);
 					return true;
 				case DISPATCH_PLAYER_ACTION:
 					fDispatchPlayerAction = (PlayerAction) pParameter.getValue();
-					pParameter.consume();
+					consume(pParameter);
 					return true;
 				case END_PLAYER_ACTION:
 					fEndPlayerAction = (pParameter.getValue() != null) ? (Boolean) pParameter.getValue() : false;
-					pParameter.consume();
+					consume(pParameter);
 					return true;
 				case END_TURN:
 					fEndTurn = (pParameter.getValue() != null) ? (Boolean) pParameter.getValue() : false;
-					pParameter.consume();
+					consume(pParameter);
 					return true;
 				case FEEDING_ALLOWED:
 					fFeedingAllowed = (pParameter.getValue() != null) ? (Boolean) pParameter.getValue() : false;
-					pParameter.consume();
+					consume(pParameter);
 					return true;
 				case MOVE_STACK:
 					fMoveStack = (FieldCoordinate[]) pParameter.getValue();
-					pParameter.consume();
+					consume(pParameter);
 					return true;
 				default:
 					break;

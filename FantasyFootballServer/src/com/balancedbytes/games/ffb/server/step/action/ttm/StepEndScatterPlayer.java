@@ -2,7 +2,6 @@ package com.balancedbytes.games.ffb.server.step.action.ttm;
 
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.PlayerState;
-import com.balancedbytes.games.ffb.Skill;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
@@ -52,19 +51,19 @@ public final class StepEndScatterPlayer extends AbstractStep {
 	  	switch (pParameter.getKey()) {
 				case THROWN_PLAYER_ID:
 					fThrownPlayerId = (String) pParameter.getValue();
-					pParameter.consume();
+					consume(pParameter);
 					return true;
 				case THROWN_PLAYER_HAS_BALL:
 					fThrownPlayerHasBall = (pParameter.getValue() != null) ? (Boolean) pParameter.getValue() : false;
-					pParameter.consume();
+					consume(pParameter);
 					return true;
 				case THROWN_PLAYER_STATE:
 					fThrownPlayerState = (PlayerState) pParameter.getValue();
-					pParameter.consume();
+					consume(pParameter);
 					return true;
 				case THROWN_PLAYER_COORDINATE:
 					fThrownPlayerCoordinate = (FieldCoordinate) pParameter.getValue();
-					pParameter.consume();
+					consume(pParameter);
 					return true;
 				default:
 					break;
@@ -92,7 +91,6 @@ public final class StepEndScatterPlayer extends AbstractStep {
     Game game = getGameState().getGame();
     Player thrownPlayer = game.getPlayerById(fThrownPlayerId);
     if ((thrownPlayer != null)  && (fThrownPlayerState != null) && (fThrownPlayerCoordinate != null)) {
-  		boolean hasSwoop = thrownPlayer != null && thrownPlayer.hasSkill(Skill.SWOOP);
 		SequenceGenerator.getInstance().pushScatterPlayerSequence(getGameState(), fThrownPlayerId, fThrownPlayerState, fThrownPlayerHasBall, fThrownPlayerCoordinate, false, false);
     }
   	getResult().setNextAction(StepAction.NEXT_STEP);

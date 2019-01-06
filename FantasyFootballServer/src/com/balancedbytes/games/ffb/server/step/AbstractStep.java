@@ -105,6 +105,16 @@ public abstract class AbstractStep implements IStep {
     }
   }
 
+  public void consume(StepParameter pParameter) {
+	  DebugLog debugLog = fGameState.getServer().getDebugLog();
+	  if (debugLog.isLogging(IServerLogLevel.TRACE)) {
+		  StringBuilder trace = new StringBuilder();
+		  trace.append(getId()).append(" consumes ").append(pParameter.getKey()).append("=").append(pParameter.getValue());
+		  debugLog.log(IServerLogLevel.TRACE, trace.toString());
+	  }
+	  pParameter.consume();
+  }
+  
   // JSON serialization
 
   public JsonObject toJsonValue() {

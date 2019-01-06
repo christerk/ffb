@@ -88,13 +88,13 @@ public class StepPassBlock extends AbstractStep {
 			case END_PLAYER_ACTION:
 				fEndPlayerAction = (pParameter.getValue() != null) ? (Boolean) pParameter.getValue() : false;
 				if (game.getTurnMode() == TurnMode.PASS_BLOCK) {
-					pParameter.consume();
+					consume(pParameter);
 				}
 				return true;
 			case END_TURN:
 				fEndTurn = (pParameter.getValue() != null) ? (Boolean) pParameter.getValue() : false;
 				if (game.getTurnMode() == TurnMode.PASS_BLOCK) {
-					pParameter.consume();
+					consume(pParameter);
 				}
 				return true;
 			default:

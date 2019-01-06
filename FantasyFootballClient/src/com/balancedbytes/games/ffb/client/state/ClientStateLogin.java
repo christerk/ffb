@@ -6,6 +6,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.balancedbytes.games.ffb.ClientStateId;
+import com.balancedbytes.games.ffb.FantasyFootballConstants;
 import com.balancedbytes.games.ffb.GameList;
 import com.balancedbytes.games.ffb.GameListEntry;
 import com.balancedbytes.games.ffb.PasswordChallenge;
@@ -189,19 +190,19 @@ public class ClientStateLogin extends ClientState implements IDialogCloseListene
 
   private boolean checkVersion(String pServerVersion, String pClientVersion) {
 
-    if (checkVersionConflict(pClientVersion, FantasyFootballClient.CLIENT_VERSION)) {
+    if (checkVersionConflict(pClientVersion, FantasyFootballConstants.CLIENT_VERSION)) {
       String[] messages = new String[3];
       messages[0] = "Server expects client version " + pClientVersion + " or newer.";
-      messages[1] = "Client version is " + FantasyFootballClient.CLIENT_VERSION + ".";
+      messages[1] = "Client version is " + FantasyFootballConstants.CLIENT_VERSION + ".";
       messages[2] = "Please update your client!";
       fWaitingDialog = new DialogInformation(getClient(), "Client Version Conflict", messages, DialogInformation.CANCEL_DIALOG, false);
       fWaitingDialog.showDialog(this);
       return false;
     }
 
-    if (checkVersionConflict(FantasyFootballClient.SERVER_VERSION, pServerVersion)) {
+    if (checkVersionConflict(FantasyFootballConstants.SERVER_VERSION, pServerVersion)) {
       String[] messages = new String[3];
-      messages[0] = "Client expects server version " + FantasyFootballClient.SERVER_VERSION + " or newer.";
+      messages[0] = "Client expects server version " + FantasyFootballConstants.SERVER_VERSION + " or newer.";
       messages[1] = "Server version is " + pServerVersion + ".";
       messages[2] = "Please wait for a server update!";
       fWaitingDialog = new DialogInformation(getClient(), "Server Version Conflict", messages, DialogInformation.CANCEL_DIALOG, false);

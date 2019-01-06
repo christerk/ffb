@@ -65,13 +65,13 @@ public final class StepKickoffReturn extends AbstractStep {
         case END_PLAYER_ACTION:
           fEndPlayerAction = (pParameter.getValue() != null) ? (Boolean) pParameter.getValue() : false;
           if (game.getTurnMode() == TurnMode.KICKOFF_RETURN) {
-            pParameter.consume();
+            consume(pParameter);
           }
           return true;
         case END_TURN:
           fEndTurn = (pParameter.getValue() != null) ? (Boolean) pParameter.getValue() : false;
           if (game.getTurnMode() == TurnMode.KICKOFF_RETURN) {
-            pParameter.consume();
+            consume(pParameter);
           }
           return true;
         case TOUCHBACK:
