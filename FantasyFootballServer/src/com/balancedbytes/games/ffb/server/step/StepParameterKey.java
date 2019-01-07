@@ -13,7 +13,7 @@ public enum StepParameterKey {
 	BLOCK_DEFENDER_ID,            // String
 	BLOCK_RESULT,                 // BlockResult
 	BLOCK_ROLL,                   // int[]
-	BOMB_EXPLODES,                // Boolean
+	BOMB_EXPLODED,                // Boolean
 	BOMB_OUT_OF_BOUNDS,           // Boolean
 	CARD,                         // Card
 	CATCH_SCATTER_THROW_IN_MODE,  // CatchScatterThrowinMode

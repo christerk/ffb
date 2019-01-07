@@ -154,6 +154,7 @@ public final class StepInitBomb extends AbstractStep {
 						SequenceGenerator.getInstance().pushSpecialEffectSequence(getGameState(), SpecialEffect.BOMB, player.getId(), rollForEffect);
 					}
 				}
+				publishParameter(new StepParameter(StepParameterKey.BOMB_EXPLODED, true));
 			}
 			leaveStep(null);
 		} else {

@@ -93,6 +93,7 @@ public class StepDumpOff extends AbstractStep {
 
     if (game.getTurnMode() == TurnMode.DUMP_OFF) {
       game.setTurnMode(fOldTurnMode);
+      game.setThrowerId(null);
       getResult().setNextAction(StepAction.NEXT_STEP);
 
     } else if (fUsingDumpOff == null) {

@@ -29,6 +29,7 @@ public final class StepEndBomb extends AbstractStep {
 
 	private String fCatcherId;
 	private boolean fEndTurn;
+	private boolean fBombExploded;
 	
 	public StepEndBomb(GameState pGameState) {
 		super(pGameState);
@@ -51,6 +52,10 @@ public final class StepEndBomb extends AbstractStep {
   				fEndTurn = (pParameter.getValue() != null) ? (Boolean) pParameter.getValue() : false;
 	  			consume(pParameter);
 	  			return true;
+		  	case BOMB_EXPLODED:
+  				fBombExploded = (pParameter.getValue() != null) ? (Boolean) pParameter.getValue() : false;
+	  			consume(pParameter);
+	  			return true;
   			default:
   				break;
 	  	}
@@ -68,7 +73,7 @@ public final class StepEndBomb extends AbstractStep {
     Game game = getGameState().getGame();
 		game.setPassCoordinate(null);
   	fEndTurn |= UtilServerSteps.checkTouchdown(getGameState());
-    if (fEndTurn || (fCatcherId == null)) {
+    if (fEndTurn || (fCatcherId == null) || fBombExploded) {
   		game.setHomePlaying((TurnMode.BOMB_HOME == game.getTurnMode()) || (TurnMode.BOMB_HOME_BLITZ == game.getTurnMode()));
     	if ((TurnMode.BOMB_HOME_BLITZ == game.getTurnMode()) || (TurnMode.BOMB_AWAY_BLITZ == game.getTurnMode())) {
     		game.setTurnMode(TurnMode.BLITZ);
@@ -81,8 +86,8 @@ public final class StepEndBomb extends AbstractStep {
     	game.setHomePlaying(game.getTeamHome().hasPlayer(catcher));
     	UtilServerSteps.changePlayerAction(this, fCatcherId, PlayerAction.THROW_BOMB, false);
     	SequenceGenerator.getInstance().pushPassSequence(getGameState());
-      // stop immediate re-throwing of the bomb
     }
+    // stop immediate re-throwing of the bomb
     game.setPassCoordinate(null);
     game.setThrowerId(null);
     game.setThrowerAction(null);
