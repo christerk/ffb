@@ -45,7 +45,7 @@ import com.eclipsesource.json.JsonValue;
  * @author Kalimar
  */
 public class StepGoForIt extends AbstractStepWithReRoll {
-
+  private boolean fBallandChainGfi;
   private boolean fSecondGoForIt;
   private String fGotoLabelOnFailure;
 
@@ -65,6 +65,9 @@ public class StepGoForIt extends AbstractStepWithReRoll {
           case GOTO_LABEL_ON_FAILURE:
             fGotoLabelOnFailure = (String) parameter.getValue();
             break;
+          case BALL_AND_CHAIN_GFI:
+              fBallandChainGfi = (parameter.getValue() != null) ? (Boolean) parameter.getValue() : false;
+              break;
           default:
             break;
         }
@@ -98,7 +101,9 @@ public class StepGoForIt extends AbstractStepWithReRoll {
       actingPlayer.setCurrentMove(actingPlayer.getCurrentMove() + 1);
       actingPlayer.setGoingForIt(UtilPlayer.isNextMoveGoingForIt(game));
     }
-    if (actingPlayer.isGoingForIt() && (actingPlayer.getCurrentMove() > UtilCards.getPlayerMovement(game, actingPlayer.getPlayer()))) {
+    boolean hasBallAndChain = actingPlayer.getPlayer().hasSkill(Skill.BALL_AND_CHAIN);
+    boolean runGfi = (hasBallAndChain == fBallandChainGfi);
+    if (actingPlayer.isGoingForIt() && runGfi && (actingPlayer.getCurrentMove() > UtilCards.getPlayerMovement(game, actingPlayer.getPlayer()))) {
       if (ReRolledAction.GO_FOR_IT == getReRolledAction()) {
         if ((getReRollSource() == null) || !UtilServerReRoll.useReRoll(this, getReRollSource(), actingPlayer.getPlayer())) {
           failGfi();
