@@ -143,7 +143,10 @@ public class StepEndMoving extends AbstractStep {
     } else if (StringTool.isProvided(fBlockDefenderId)) {
     	SequenceGenerator.getInstance().pushBlockSequence(getGameState(), fBlockDefenderId, false, null);
     // this may happen on a failed TAKE_ROOT roll
-    } else if (StringTool.isProvided(actingPlayer.getPlayerId()) && (actingPlayer.getPlayerAction() != null) && !actingPlayer.getPlayerAction().isMoving()) {
+    } else if (StringTool.isProvided(actingPlayer.getPlayerId())
+    		&& (actingPlayer.getPlayerAction() != null)
+    		&& !actingPlayer.getPlayerAction().isMoving()
+    		&& !(actingPlayer.getPlayerAction() == PlayerAction.PASS && !UtilPlayer.hasBall(game, actingPlayer.getPlayer())) ) {
     	pushSequenceForPlayerAction(actingPlayer.getPlayerAction());
     } else if (ArrayTool.isProvided(fMoveStack)) {
     	SequenceGenerator.getInstance().pushMoveSequence(getGameState(), fMoveStack, null);
