@@ -325,7 +325,6 @@ public class ClientStateSelect extends ClientState {
       && !game.getFieldModel().hasCardEffect(pPlayer, CardEffect.ILLEGALLY_SUBSTITUTED)
       && playerState.isActive()
       && !game.getTurnData().isFoulUsed()
-      && (game.getTurnMode() != TurnMode.BLITZ)
       && !UtilCards.hasSkill(game, pPlayer, Skill.BALL_AND_CHAIN)) {
 	    for (Player opponent: game.getTeamAway().getPlayers()) {
 	      PlayerState opponentState = game.getFieldModel().getPlayerState(opponent);
