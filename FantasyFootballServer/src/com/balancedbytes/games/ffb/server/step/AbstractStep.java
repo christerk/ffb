@@ -187,7 +187,6 @@ public abstract class AbstractStep implements IStep {
       game.setTimeoutEnforced(true);
       game.setTimeoutPossible(false);
       UtilServerGame.syncGameModel(getGameState(), reports, null, SoundId.WHISTLE);
-      commandStatus = StepCommandStatus.EXECUTE_STEP;
     }
     return commandStatus;
   }
