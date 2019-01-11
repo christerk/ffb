@@ -143,7 +143,7 @@ public class StepPassBlock extends AbstractStep {
 			// check if actingPlayer has dropped (failed dodge)
 			if (actingPlayer.getPlayer() != null) {
 				PlayerState playerState = game.getFieldModel().getPlayerState(actingPlayer.getPlayer());
-				if (!playerState.hasTacklezones()) {
+				if (!playerState.hasTacklezones() || fEndPlayerAction) {
 					UtilServerSteps.changePlayerAction(this, null, null, false);
 					fEndTurn = true;
 					fEndPlayerAction = false;
