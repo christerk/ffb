@@ -137,6 +137,7 @@ public class StepEndTurn extends AbstractStep {
 
     Game game = getGameState().getGame();
     UtilServerDialog.hideDialog(getGameState());
+    boolean isHomeTurnEnding = game.isHomePlaying();
     
     if (!fWithinSecretWeaponHandling) {
 
@@ -317,11 +318,11 @@ public class StepEndTurn extends AbstractStep {
           game.setTurnTime(0);
         }
   
-        deactivateCards(InducementDuration.UNTIL_END_OF_TURN);
-        deactivateCards(InducementDuration.UNTIL_END_OF_OPPONENTS_TURN);
+        deactivateCards(InducementDuration.UNTIL_END_OF_TURN, isHomeTurnEnding);
+        deactivateCards(InducementDuration.UNTIL_END_OF_OPPONENTS_TURN, isHomeTurnEnding);
   
         if (fNewHalf || fTouchdown) {
-          deactivateCards(InducementDuration.UNTIL_END_OF_DRIVE);
+          deactivateCards(InducementDuration.UNTIL_END_OF_DRIVE, isHomeTurnEnding);
           reportSecretWeaponsUsed();
         }
   
@@ -535,23 +536,25 @@ public class StepEndTurn extends AbstractStep {
     return allSuccessful;
   }
 
-  private void deactivateCards(InducementDuration pDuration) {
+  private void deactivateCards(InducementDuration pDuration, boolean pIsHomeTurnEnding) {
     if (pDuration == null) {
       return;
     }
     Game game = getGameState().getGame();
     for (Card card : game.getTurnDataHome().getInducementSet().getActiveCards()) {
       if (pDuration == card.getDuration()) {
-        if ((pDuration != InducementDuration.UNTIL_END_OF_OPPONENTS_TURN) || game.isHomePlaying()) {
+    	  if (pDuration == InducementDuration.UNTIL_END_OF_OPPONENTS_TURN && pIsHomeTurnEnding) {
+    		  continue;
+    	  }
           UtilServerCards.deactivateCard(this, card);
-        }
       }
     }
     for (Card card : game.getTurnDataAway().getInducementSet().getActiveCards()) {
       if (pDuration == card.getDuration()) {
-        if ((pDuration != InducementDuration.UNTIL_END_OF_OPPONENTS_TURN) || !game.isHomePlaying()) {
+    	  if (pDuration == InducementDuration.UNTIL_END_OF_OPPONENTS_TURN && !pIsHomeTurnEnding) {
+    		  continue;
+    	  }
           UtilServerCards.deactivateCard(this, card);
-        }
       }
     }
   }
