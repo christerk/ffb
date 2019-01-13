@@ -96,31 +96,35 @@ public class StepGoForIt extends AbstractStepWithReRoll {
   private void executeStep() {
     Game game = getGameState().getGame();
     ActingPlayer actingPlayer = game.getActingPlayer();
-    if ((PlayerAction.BLITZ == actingPlayer.getPlayerAction()) && (getReRolledAction() == null)) {
-      game.getTurnData().setBlitzUsed(true);
-      actingPlayer.setCurrentMove(actingPlayer.getCurrentMove() + 1);
-      actingPlayer.setGoingForIt(UtilPlayer.isNextMoveGoingForIt(game));
-    }
+
     boolean hasBallAndChain = actingPlayer.getPlayer().hasSkill(Skill.BALL_AND_CHAIN);
     boolean runGfi = (hasBallAndChain == fBallandChainGfi);
-    if (actingPlayer.isGoingForIt() && runGfi && (actingPlayer.getCurrentMove() > UtilCards.getPlayerMovement(game, actingPlayer.getPlayer()))) {
-      if (ReRolledAction.GO_FOR_IT == getReRolledAction()) {
-        if ((getReRollSource() == null) || !UtilServerReRoll.useReRoll(this, getReRollSource(), actingPlayer.getPlayer())) {
-          failGfi();
-          return;
-        }
-      }
-      switch (goForIt()) {
-        case SUCCESS:
-          succeedGfi();
-          return;
-        case FAILURE:
-          failGfi();
-          return;
-        default:
-          getResult().setNextAction(StepAction.CONTINUE);
-          return;
-      }
+
+    if (runGfi) {
+	    if ((PlayerAction.BLITZ == actingPlayer.getPlayerAction()) && (getReRolledAction() == null)) {
+	      game.getTurnData().setBlitzUsed(true);
+	      actingPlayer.setCurrentMove(actingPlayer.getCurrentMove() + 1);
+	      actingPlayer.setGoingForIt(UtilPlayer.isNextMoveGoingForIt(game));
+	    }
+	    if (actingPlayer.isGoingForIt() && (actingPlayer.getCurrentMove() > UtilCards.getPlayerMovement(game, actingPlayer.getPlayer()))) {
+	      if (ReRolledAction.GO_FOR_IT == getReRolledAction()) {
+	        if ((getReRollSource() == null) || !UtilServerReRoll.useReRoll(this, getReRollSource(), actingPlayer.getPlayer())) {
+	          failGfi();
+	          return;
+	        }
+	      }
+	      switch (goForIt()) {
+	        case SUCCESS:
+	          succeedGfi();
+	          return;
+	        case FAILURE:
+	          failGfi();
+	          return;
+	        default:
+	          getResult().setNextAction(StepAction.CONTINUE);
+	          return;
+	      }
+	    }
     }
     getResult().setNextAction(StepAction.NEXT_STEP);
   }

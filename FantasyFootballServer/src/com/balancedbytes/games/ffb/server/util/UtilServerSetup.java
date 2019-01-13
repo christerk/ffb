@@ -143,6 +143,8 @@ public class UtilServerSetup {
     	  // Client is confused and tried to put a player in a square that already had a player.
     	  // Force an update of the position and state.
     	  fieldModel.sendPosition(player);
+    	  Player otherPlayer = fieldModel.getPlayer(coordinate);
+    	  fieldModel.sendPosition(otherPlayer);
       } else {
     	  fieldModel.setPlayerCoordinate(player, coordinate);
       }
