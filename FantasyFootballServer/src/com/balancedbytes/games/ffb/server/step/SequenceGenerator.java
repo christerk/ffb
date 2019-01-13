@@ -95,7 +95,7 @@ public class SequenceGenerator {
 													param(StepParameterKey.APOTHECARY_MODE, ApothecaryMode.DEFENDER));
 		
 		// GFI for ball & chain should go here.
-		sequence.add(StepId.GO_FOR_IT,				param(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.FALL_DOWN),
+		sequence.add(StepId.GO_FOR_IT,				param(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.APOTHECARY_ATTACKER),
 				                                    param(StepParameterKey.BALL_AND_CHAIN_GFI, true));
 		
 		sequence.add(StepId.APOTHECARY,				IStepLabel.APOTHECARY_ATTACKER,
@@ -390,7 +390,10 @@ public class SequenceGenerator {
 		sequence.add(StepId.MOVE_BALL_AND_CHAIN,	param(StepParameterKey.GOTO_LABEL_ON_END, IStepLabel.END_MOVING),
 													param(StepParameterKey.GOTO_LABEL_ON_FALL_DOWN, IStepLabel.FALL_DOWN));
 		sequence.add(StepId.MOVE);
+		// Do GFI twice to deal with Ball and Chain separately.
 		sequence.add(StepId.GO_FOR_IT,				param(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.FALL_DOWN));
+		sequence.add(StepId.GO_FOR_IT,				param(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.FALL_DOWN),
+													param(StepParameterKey.BALL_AND_CHAIN_GFI, true));
 		sequence.add(StepId.TENTACLES,				param(StepParameterKey.GOTO_LABEL_ON_SUCCESS, IStepLabel.END_MOVING));
 		sequence.add(StepId.LEAP,					param(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.FALL_DOWN));
 		sequence.add(StepId.MOVE_DODGE,				param(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.FALL_DOWN));
