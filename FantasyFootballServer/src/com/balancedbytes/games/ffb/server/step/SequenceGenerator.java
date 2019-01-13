@@ -95,8 +95,11 @@ public class SequenceGenerator {
 													param(StepParameterKey.APOTHECARY_MODE, ApothecaryMode.DEFENDER));
 		
 		// GFI for ball & chain should go here.
-		sequence.add(StepId.GO_FOR_IT,				param(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.APOTHECARY_ATTACKER),
+		sequence.add(StepId.GO_FOR_IT,				param(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.DROP_FALLING_PLAYERS),
 				                                    param(StepParameterKey.BALL_AND_CHAIN_GFI, true));
+		sequence.jump(IStepLabel.APOTHECARY_ATTACKER);
+		sequence.add(StepId.DROP_FALLING_PLAYERS,	IStepLabel.DROP_FALLING_PLAYERS);
+		sequence.add(StepId.FALL_DOWN);
 		
 		sequence.add(StepId.APOTHECARY,				IStepLabel.APOTHECARY_ATTACKER,
 													param(StepParameterKey.APOTHECARY_MODE, ApothecaryMode.ATTACKER));
