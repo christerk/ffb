@@ -1,5 +1,6 @@
 package com.balancedbytes.games.ffb.server.step.action.common;
 
+import com.balancedbytes.games.ffb.CardEffect;
 import com.balancedbytes.games.ffb.InducementType;
 import com.balancedbytes.games.ffb.InjuryType;
 import com.balancedbytes.games.ffb.PlayerState;
@@ -60,6 +61,7 @@ public class StepApothecary extends AbstractStep {
   private ApothecaryMode fApothecaryMode;
   private InjuryResult fInjuryResult;
   private boolean fShowReport;
+  private boolean fPoisoned;
 
   public StepApothecary(GameState pGameState) {
     super(pGameState);
@@ -156,6 +158,9 @@ public class StepApothecary extends AbstractStep {
             return true;
           }
           return false;
+        case POISONED:
+        	fPoisoned = pParameter != null ? (Boolean) pParameter.getValue() : false;
+        	return true;
         default:
           break;
       }
@@ -267,6 +272,9 @@ public class StepApothecary extends AbstractStep {
       if ((fInjuryResult.getPlayerState().getBase() == PlayerState.KNOCKED_OUT) && (fInjuryResult.getInjuryType() != InjuryType.CROWDPUSH)) {
         fInjuryResult.setInjury(new PlayerState(PlayerState.STUNNED));
       } else {
+    	if (fPoisoned) {
+    		game.getFieldModel().removeCardEffect(game.getDefender(), CardEffect.POISONED);
+    	}
         fInjuryResult.setInjury(new PlayerState(PlayerState.RESERVE));
       }
       getResult().addReport(new ReportApothecaryChoice(defender.getId(), fInjuryResult.getPlayerState(), null));

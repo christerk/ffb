@@ -211,6 +211,7 @@ public class StepDropFallingPlayers extends AbstractStep {
     getResult().addReport(
       new ReportSkillRoll(ReportId.WEEPING_DAGGER_ROLL, actingPlayer.getPlayerId(), successful, roll, minimumRoll, false, null)
     );
+    publishParameter(new StepParameter(StepParameterKey.POISONED, true));
   }
 
   // JSON serialization
