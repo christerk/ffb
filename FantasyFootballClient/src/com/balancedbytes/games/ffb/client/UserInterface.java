@@ -121,12 +121,12 @@ public class UserInterface extends JFrame implements WindowListener, IDialogClos
 
     getContentPane().add(fDesktop, BorderLayout.CENTER);
     
-    pack();
-    
     setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
     addWindowListener(this);
     setResizable(false);
 
+    pack();
+    
     getChat().requestChatInputFocus();
     
   }
