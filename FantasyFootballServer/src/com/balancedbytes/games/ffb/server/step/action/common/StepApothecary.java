@@ -215,7 +215,10 @@ public class StepApothecary extends AbstractStep {
             Team team = game.getTeamHome().hasPlayer(player) ? game.getTeamHome() : game.getTeamAway();
             UtilServerInducementUse.useInducement(getGameState(), team, InducementType.IGOR, 1);
             getResult().addReport(new ReportInducement(team.getId(), InducementType.IGOR, 0));
-            UtilServerInjury.handleRegeneration(this, player);
+            boolean success = UtilServerInjury.handleRegeneration(this, player);
+            if (success && fPoisoned) {
+        		game.getFieldModel().removeCardEffect(player, CardEffect.POISONED);
+            }
             break;
           default:
             fInjuryResult.applyTo(this);
@@ -230,6 +233,8 @@ public class StepApothecary extends AbstractStep {
                   fInjuryResult.setApothecaryStatus(ApothecaryStatus.WAIT_FOR_IGOR_USE);
                   doNextStep = false;
                 }
+              } else {
+          		game.getFieldModel().removeCardEffect(player, CardEffect.POISONED);
               }
             }
             break;
