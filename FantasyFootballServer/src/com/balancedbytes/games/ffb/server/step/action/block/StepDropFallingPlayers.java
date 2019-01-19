@@ -207,11 +207,11 @@ public class StepDropFallingPlayers extends AbstractStep {
     boolean successful = DiceInterpreter.getInstance().isSkillRollSuccessful(roll, minimumRoll);
     if (successful) {
       game.getFieldModel().addCardEffect(game.getDefender(), CardEffect.POISONED);
+      publishParameter(new StepParameter(StepParameterKey.POISONED, true));
     }
     getResult().addReport(
       new ReportSkillRoll(ReportId.WEEPING_DAGGER_ROLL, actingPlayer.getPlayerId(), successful, roll, minimumRoll, false, null)
     );
-    publishParameter(new StepParameter(StepParameterKey.POISONED, true));
   }
 
   // JSON serialization

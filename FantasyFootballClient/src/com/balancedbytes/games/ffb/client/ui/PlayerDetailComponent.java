@@ -21,6 +21,7 @@ import java.util.Set;
 import javax.swing.JPanel;
 
 import com.balancedbytes.games.ffb.Card;
+import com.balancedbytes.games.ffb.CardEffect;
 import com.balancedbytes.games.ffb.InjuryAttribute;
 import com.balancedbytes.games.ffb.PlayerState;
 import com.balancedbytes.games.ffb.PlayerType;
@@ -399,6 +400,7 @@ public class PlayerDetailComponent extends JPanel {
       List<String> cardSkills = new ArrayList<String>();
       List<String> acquiredSkills = new ArrayList<String>();
       List<String> rosterSkills = new ArrayList<String>();
+      List<String> cardEffects = new ArrayList<String>();
       Set<String> usedSkills = new HashSet<String>();
       for (Skill skill : skills) {
         if (getPlayer().getPosition().hasSkill(skill)) {
@@ -419,7 +421,14 @@ public class PlayerDetailComponent extends JPanel {
       for (Card card : game.getFieldModel().getCards(getPlayer())) {
       	cardSkills.add(card.getShortName());
       }
+      for (CardEffect cardEffect : game.getFieldModel().getCardEffects(getPlayer())) {
+    	  cardEffects.add(cardEffect.getName());
+      }
       int height = 0;
+      if (cardEffects.size() > 0) {
+          g2d.setColor(new Color(220, 0, 0));
+          height += drawPlayerSkills(g2d, x, y + height, cardEffects, usedSkills) + 2;
+      }
       if (cardSkills.size() > 0) {
         g2d.setColor(new Color(220, 0, 0));
         height += drawPlayerSkills(g2d, x, y + height, cardSkills, usedSkills) + 2;
