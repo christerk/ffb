@@ -45,6 +45,7 @@ public class StepHorns extends AbstractStep {
     fUsingHorns = (UtilCards.hasSkill(game, actingPlayer, Skill.HORNS) && (PlayerAction.BLITZ == actingPlayer.getPlayerAction()));
     if (fUsingHorns) {
       actingPlayer.setStrength(actingPlayer.getStrength() + 1);
+      actingPlayer.markSkillUsed(Skill.HORNS);
       getResult().addReport(new ReportSkillUse(actingPlayer.getPlayerId(), Skill.HORNS, true, SkillUse.INCREASE_STRENGTH_BY_1));
     }
     getResult().setNextAction(StepAction.NEXT_STEP);
