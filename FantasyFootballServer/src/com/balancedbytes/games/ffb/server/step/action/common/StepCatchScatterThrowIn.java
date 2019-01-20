@@ -199,7 +199,6 @@ public class StepCatchScatterThrowIn extends AbstractStepWithReRoll {
         if (playerUnderBall != null) {
           fCatchScatterThrowInMode = CatchScatterThrowInMode.CATCH_SCATTER;
         } else {
-          CatchScatterThrowInMode mode = fCatchScatterThrowInMode;
           fCatchScatterThrowInMode = divingCatch(game.getFieldModel().getBallCoordinate());
         }
         break;

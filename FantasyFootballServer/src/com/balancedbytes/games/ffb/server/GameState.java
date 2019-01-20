@@ -12,6 +12,7 @@ import com.balancedbytes.games.ffb.model.change.ModelChange;
 import com.balancedbytes.games.ffb.model.change.ModelChangeList;
 import com.balancedbytes.games.ffb.server.net.ReceivedCommand;
 import com.balancedbytes.games.ffb.server.step.IStep;
+import com.balancedbytes.games.ffb.server.step.StepAction;
 import com.balancedbytes.games.ffb.server.step.StepException;
 import com.balancedbytes.games.ffb.server.step.StepFactory;
 import com.balancedbytes.games.ffb.server.step.StepResult;
@@ -175,35 +176,26 @@ public class GameState implements IModelChangeObserver, IJsonSerializable {
   }
 
   private void progressStepStack(ReceivedCommand pReceivedCommand) {
-    if (fCurrentStep != null) {
-      StepResult stepResult = fCurrentStep.getResult();
-      switch (stepResult.getNextAction()) {
-        case NEXT_STEP:
-          handleStepResultNextStep(null);
-          break;
-        case NEXT_STEP_AND_REPEAT:
-          handleStepResultNextStep(pReceivedCommand);
-          break;
-        case GOTO_LABEL:
-          handleStepResultGotoLabel((String) stepResult.getNextActionParameter(), null);
-          break;
-        case GOTO_LABEL_AND_REPEAT:
-          handleStepResultGotoLabel((String) stepResult.getNextActionParameter(), pReceivedCommand);
-          break;
-        default:
-          break;
-        }
-    }
+	  if (fCurrentStep != null) {
+		  StepResult stepResult = fCurrentStep.getResult();
+		  StepAction action = stepResult.getNextAction();
+
+		  if (action.triggerGoto()) {
+			  handleStepResultGotoLabel((String) stepResult.getNextActionParameter());
+		  }
+		  
+		  if (action.triggerNextStep()) {
+			  ReceivedCommand forwardedCommand = action.forwardCommand() ? pReceivedCommand : null;
+
+			  findNextStep(forwardedCommand);
+			  if (action.forwardCommand()) {
+				  handleCommand(forwardedCommand);
+			  }
+		  }
+	  }
   }
 
-  private void handleStepResultNextStep(ReceivedCommand pReceivedCommand) {
-    findNextStep(pReceivedCommand);
-    if (pReceivedCommand != null) {
-      handleCommand(pReceivedCommand);
-    }
-  }
-
-  private void handleStepResultGotoLabel(String pGotoLabel, ReceivedCommand pReceivedCommand) {
+  private void handleStepResultGotoLabel(String pGotoLabel) {
     if (pGotoLabel == null) {
       String stepName = (fCurrentStep != null) ? fCurrentStep.getId().getName() : "unknown";
       throw new StepException("Step " + stepName + ": No goto label set.");
@@ -220,10 +212,6 @@ public class GameState implements IModelChangeObserver, IJsonSerializable {
     }
     if (nextStep == null) {
       throw new StepException("Goto unknown label " + pGotoLabel);
-    }
-    findNextStep(pReceivedCommand);
-    if (pReceivedCommand != null) {
-      handleCommand(pReceivedCommand);
     }
   }
 
