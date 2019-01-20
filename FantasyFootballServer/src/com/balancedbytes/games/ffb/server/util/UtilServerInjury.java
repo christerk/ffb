@@ -564,7 +564,7 @@ public class UtilServerInjury {
 				playerState = playerState.changeRooted(false);
 				game.getFieldModel().setPlayerState(pPlayer, playerState);
 			}
-			if (playerCoordinate.equals(game.getFieldModel().getBallCoordinate())) {
+			if (playerCoordinate.equals(game.getFieldModel().getBallCoordinate()) && !game.getFieldModel().isBallMoving()) {
 				game.getFieldModel().setBallMoving(true);
 				stepParameters.add(new StepParameter(StepParameterKey.CATCH_SCATTER_THROW_IN_MODE, CatchScatterThrowInMode.SCATTER_BALL));
 				// check for turnover
