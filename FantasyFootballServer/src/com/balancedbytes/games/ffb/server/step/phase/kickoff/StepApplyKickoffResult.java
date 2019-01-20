@@ -333,8 +333,8 @@ public final class StepApplyKickoffResult extends AbstractStep {
       totalHome += game.getTeamHome().getAssistantCoaches();
       totalAway += game.getTeamAway().getAssistantCoaches();
 
-      totalHome -= homeCoachBanned ? -1 : 0;
-      totalAway -= awayCoachBanned ? -1 : 0;
+      totalHome += homeCoachBanned ? -1 : 0;
+      totalAway += awayCoachBanned ? -1 : 0;
       
       getResult().setAnimation(new Animation(AnimationType.KICKOFF_BRILLIANT_COACHING));
     }
