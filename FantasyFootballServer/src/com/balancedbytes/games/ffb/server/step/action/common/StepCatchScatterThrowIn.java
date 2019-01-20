@@ -199,6 +199,7 @@ public class StepCatchScatterThrowIn extends AbstractStepWithReRoll {
         if (playerUnderBall != null) {
           fCatchScatterThrowInMode = CatchScatterThrowInMode.CATCH_SCATTER;
         } else {
+          CatchScatterThrowInMode mode = fCatchScatterThrowInMode;
           fCatchScatterThrowInMode = divingCatch(game.getFieldModel().getBallCoordinate());
         }
         break;
@@ -251,6 +252,12 @@ public class StepCatchScatterThrowIn extends AbstractStepWithReRoll {
         }
         publishParameter(new StepParameter(StepParameterKey.CATCHER_ID, (catcher != null) ? catcher.getId() : null));
         deactivateCards();
+        
+        // Diving Catch during kickoff might take the ball out of bounds
+        if (game.getTurnMode() == TurnMode.KICKOFF && !fScatterBounds.isInBounds(game.getFieldModel().getBallCoordinate())) {
+            publishParameter(new StepParameter(StepParameterKey.TOUCHBACK, true));
+        }
+        
       }
       getResult().setNextAction(StepAction.NEXT_STEP);
     }
