@@ -99,9 +99,9 @@ public class StepEndBlocking extends AbstractStep {
       game.setDefenderId(null); // clear defender for next multi block
       SequenceGenerator.getInstance().pushEndPlayerActionSequence(getGameState(), true, true, fEndTurn);
     } else {
-   	  // Revert back strength gained from HORNS to avoid interaction with tentacles.
-      if (actingPlayer.isSkillUsed(Skill.HORNS)) {
-    	actingPlayer.setStrength(actingPlayer.getStrength() - 1);
+   	  // Revert back strength gained from HORNS and DAUNTLESS to avoid interaction with tentacles.
+      if (actingPlayer.isSkillUsed(Skill.HORNS) || actingPlayer.isSkillUsed(Skill.DAUNTLESS)) {
+    	actingPlayer.setStrength(UtilCards.getPlayerStrength(game, actingPlayer.getPlayer()));
       }
 
       FieldCoordinate defenderPosition = game.getFieldModel().getPlayerCoordinate(game.getDefender());

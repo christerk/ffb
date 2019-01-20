@@ -87,6 +87,7 @@ public class StepDauntless extends AbstractStepWithReRoll {
         getResult().addReport(new ReportDauntlessRoll(actingPlayer.getPlayerId(), successful, dauntlessRoll, minimumRoll, reRolled, UtilCards.getPlayerStrength(game, game.getDefender())));
         if (successful) {
           actingPlayer.setStrength(UtilCards.getPlayerStrength(game, game.getDefender()));
+          actingPlayer.markSkillUsed(Skill.DAUNTLESS);
         } else {
           if (UtilServerReRoll.askForReRollIfAvailable(getGameState(), actingPlayer.getPlayer(), ReRolledAction.DAUNTLESS, minimumRoll, false)) {
             doNextStep = false;
