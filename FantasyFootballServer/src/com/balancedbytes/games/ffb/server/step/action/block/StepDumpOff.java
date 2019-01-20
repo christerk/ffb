@@ -99,6 +99,7 @@ public class StepDumpOff extends AbstractStep {
     } else if (fUsingDumpOff == null) {
       if (UtilCards.hasSkill(game, game.getDefender(), Skill.DUMP_OFF) && (fDefenderPosition != null)
           && fDefenderPosition.equals(game.getFieldModel().getBallCoordinate())
+          && !game.getFieldModel().isBallMoving()
           && !(game.getFieldModel().getPlayerState(game.getDefender()).isConfused()
               || game.getFieldModel().getPlayerState(game.getDefender()).isHypnotized())) {
         UtilServerDialog.showDialog(
