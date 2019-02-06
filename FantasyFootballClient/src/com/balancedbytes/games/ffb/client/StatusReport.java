@@ -994,8 +994,13 @@ public class StatusReport {
   }
 
   public void reportWeepingDagger(ReportSkillRoll pReport) {
+	  
     Game game = getClient().getGame();
-    Player player = game.getActingPlayer().getPlayer();
+
+    String playerId = pReport.getPlayerId();
+    
+    Player player = game.getPlayerById(playerId);
+    
     StringBuilder status = new StringBuilder();
     status.append("Weeping Dagger Roll [ ").append(pReport.getRoll()).append(" ]");
     println(getIndent(), TextStyle.ROLL, status.toString());

@@ -152,7 +152,10 @@ public class StepDropFallingPlayers extends AbstractStep {
               ApothecaryMode.DEFENDER);
         }
         if (UtilCards.hasSkill(game, actingPlayer, Skill.WEEPING_DAGGER) && fInjuryResultDefender.isBadlyHurt()) {
-          rollWeepingDagger(actingPlayer.getPlayer(), game.getDefender());
+          boolean success = rollWeepingDagger(actingPlayer.getPlayer(), game.getDefender());
+          if (success) {
+        	  publishParameter(new StepParameter(StepParameterKey.DEFENDER_POISONED, true));
+          }
         }
         boolean usesATeamReroll = UtilGameOption.isOptionEnabled(game, GameOptionId.PILING_ON_USES_A_TEAM_REROLL);
         if ((attackerState.getBase() != PlayerState.FALLING)
@@ -193,26 +196,29 @@ public class StepDropFallingPlayers extends AbstractStep {
         publishParameters(UtilServerInjury.dropPlayer(this, actingPlayer.getPlayer(), ApothecaryMode.ATTACKER));
         InjuryResult injuryResultAttacker = UtilServerInjury.handleInjury(this, InjuryType.BLOCK, game.getDefender(), actingPlayer.getPlayer(), attackerCoordinate, null, ApothecaryMode.ATTACKER);
         if (UtilCards.hasSkill(game, game.getDefender(), Skill.WEEPING_DAGGER) && injuryResultAttacker.isBadlyHurt()) {
-            rollWeepingDagger(game.getDefender(), actingPlayer.getPlayer());
-          }
+            boolean success = rollWeepingDagger(game.getDefender(), actingPlayer.getPlayer());
+            if (success) {
+          	  publishParameter(new StepParameter(StepParameterKey.ATTACKER_POISONED, true));
+            }
+        }
         publishParameter(new StepParameter(StepParameterKey.INJURY_RESULT, injuryResultAttacker));
       }
       getResult().setNextAction(StepAction.NEXT_STEP);
     }
   }
   
-  private void rollWeepingDagger(Player source, Player target) {
+  private boolean rollWeepingDagger(Player source, Player target) {
     Game game = getGameState().getGame();
     int minimumRoll = DiceInterpreter.getInstance().minimumRollWeepingDagger();
     int roll = getGameState().getDiceRoller().rollWeepingDagger();
     boolean successful = DiceInterpreter.getInstance().isSkillRollSuccessful(roll, minimumRoll);
     if (successful) {
       game.getFieldModel().addCardEffect(target, CardEffect.POISONED);
-      publishParameter(new StepParameter(StepParameterKey.POISONED, true));
     }
     getResult().addReport(
       new ReportSkillRoll(ReportId.WEEPING_DAGGER_ROLL, source.getId(), successful, roll, minimumRoll, false, null)
     );
+    return successful;
   }
 
   // JSON serialization

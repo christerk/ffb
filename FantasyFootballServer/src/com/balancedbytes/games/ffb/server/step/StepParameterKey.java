@@ -69,7 +69,8 @@ public enum StepParameterKey {
 	PASS_ACCURATE,                // Boolean
 	PASS_FUMBLE,                  // Boolean
 	PLAYER_ID,                    // String
-	POISONED,                     // Boolean
+	ATTACKER_POISONED,                     // Boolean
+	DEFENDER_POISONED,                     // Boolean
 	RE_ROLL_USED,                 // Boolean
 	ROLL_FOR_EFFECT,              // Boolean
 	SPECIAL_EFFECT,               // SpecialEffect

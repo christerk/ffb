@@ -61,7 +61,8 @@ public class StepApothecary extends AbstractStep {
   private ApothecaryMode fApothecaryMode;
   private InjuryResult fInjuryResult;
   private boolean fShowReport;
-  private boolean fPoisoned;
+  private boolean fDefenderPoisoned;
+  private boolean fAttackerPoisoned;
 
   public StepApothecary(GameState pGameState) {
     super(pGameState);
@@ -158,9 +159,12 @@ public class StepApothecary extends AbstractStep {
             return true;
           }
           return false;
-        case POISONED:
-        	fPoisoned = pParameter != null ? (Boolean) pParameter.getValue() : false;
-        	return true;
+        case DEFENDER_POISONED:
+        	fDefenderPoisoned = pParameter != null ? (Boolean) pParameter.getValue() : false;
+        	return fApothecaryMode == ApothecaryMode.DEFENDER;
+        case ATTACKER_POISONED:
+        	fAttackerPoisoned = pParameter != null ? (Boolean) pParameter.getValue() : false;
+        	return fApothecaryMode == ApothecaryMode.ATTACKER;
         default:
           break;
       }
@@ -216,8 +220,8 @@ public class StepApothecary extends AbstractStep {
             UtilServerInducementUse.useInducement(getGameState(), team, InducementType.IGOR, 1);
             getResult().addReport(new ReportInducement(team.getId(), InducementType.IGOR, 0));
             boolean success = UtilServerInjury.handleRegeneration(this, player);
-            if (success && fPoisoned) {
-        		game.getFieldModel().removeCardEffect(player, CardEffect.POISONED);
+            if (success) {
+            	curePoison(player);
             }
             break;
           default:
@@ -234,7 +238,7 @@ public class StepApothecary extends AbstractStep {
                   doNextStep = false;
                 }
               } else {
-          		game.getFieldModel().removeCardEffect(player, CardEffect.POISONED);
+            	  curePoison(player);
               }
             }
             break;
@@ -277,9 +281,7 @@ public class StepApothecary extends AbstractStep {
       if ((fInjuryResult.getPlayerState().getBase() == PlayerState.KNOCKED_OUT) && (fInjuryResult.getInjuryType() != InjuryType.CROWDPUSH)) {
         fInjuryResult.setInjury(new PlayerState(PlayerState.STUNNED));
       } else {
-    	if (fPoisoned) {
-    		game.getFieldModel().removeCardEffect(game.getDefender(), CardEffect.POISONED);
-    	}
+    	curePoison(game.getDefender());
         fInjuryResult.setInjury(new PlayerState(PlayerState.RESERVE));
       }
       getResult().addReport(new ReportApothecaryChoice(defender.getId(), fInjuryResult.getPlayerState(), null));
@@ -287,6 +289,15 @@ public class StepApothecary extends AbstractStep {
     return apothecaryChoice;
   }
 
+  private void curePoison(Player player) {
+	  Game game = getGameState().getGame();
+	  if (fDefenderPoisoned && fApothecaryMode == ApothecaryMode.DEFENDER) {
+		  game.getFieldModel().removeCardEffect(player, CardEffect.POISONED);
+	  } else if (fAttackerPoisoned && fApothecaryMode == ApothecaryMode.ATTACKER) {
+		  game.getFieldModel().removeCardEffect(player, CardEffect.POISONED);
+	  }
+  }
+  
   private void handleApothecaryChoice(PlayerState pPlayerState, SeriousInjury pSeriousInjury) {
     if (fInjuryResult != null) {
       if (pPlayerState.getBase() == PlayerState.BADLY_HURT) {
