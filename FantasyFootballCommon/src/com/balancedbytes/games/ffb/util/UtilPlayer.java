@@ -287,7 +287,11 @@ public class UtilPlayer {
   public static boolean canGaze(Game pGame, Player pPlayer) {
     FieldCoordinate playerCoordinate = pGame.getFieldModel().getPlayerCoordinate(pPlayer);
     Team otherTeam = UtilPlayer.findOtherTeam(pGame, pPlayer);
+    PlayerState playerState = pGame.getFieldModel().getPlayerState(pPlayer);
+    
     if (!UtilCards.hasSkill(pGame, pPlayer, Skill.HYPNOTIC_GAZE)){
+    	return false;
+    } else if (!playerState.isActive()) {
     	return false;
     } else {
     	return (UtilPlayer.findAdjacentPlayersWithTacklezones(pGame, otherTeam, playerCoordinate, false).length > 0);
