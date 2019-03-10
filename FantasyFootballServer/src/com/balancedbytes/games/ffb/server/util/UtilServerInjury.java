@@ -13,6 +13,7 @@ import com.balancedbytes.games.ffb.PlayerType;
 import com.balancedbytes.games.ffb.SendToBoxReason;
 import com.balancedbytes.games.ffb.Skill;
 import com.balancedbytes.games.ffb.SoundId;
+import com.balancedbytes.games.ffb.TurnMode;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.GameResult;
 import com.balancedbytes.games.ffb.model.Player;
@@ -564,7 +565,7 @@ public class UtilServerInjury {
 				playerState = playerState.changeRooted(false);
 				game.getFieldModel().setPlayerState(pPlayer, playerState);
 			}
-			if (playerCoordinate.equals(game.getFieldModel().getBallCoordinate()) && !game.getFieldModel().isBallMoving()) {
+			if (playerCoordinate.equals(game.getFieldModel().getBallCoordinate()) && game.getTurnMode() != TurnMode.BLITZ) {
 				game.getFieldModel().setBallMoving(true);
 				stepParameters.add(new StepParameter(StepParameterKey.CATCH_SCATTER_THROW_IN_MODE, CatchScatterThrowInMode.SCATTER_BALL));
 				// check for turnover
