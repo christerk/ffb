@@ -115,7 +115,7 @@ public class ServerCommandHandlerTalk extends ServerCommandHandler {
         } else if (isTestMode(gameState) && talk.startsWith("/weather")) {
           handleWeatherCommand(gameState, talkCommand);
         } else if (talk.startsWith("/spectators") || talk.startsWith("/specs")) {
-          handleSpectatorsCommand(gameState, talkCommand, receivedCommand.getSession());
+          handleSpectatorsCommand(gameState, receivedCommand.getSession());
         } else {
           communication.sendPlayerTalk(gameState, coach, talk);
         }
@@ -140,7 +140,7 @@ public class ServerCommandHandlerTalk extends ServerCommandHandler {
         } else if (talk.startsWith("/stomp")) {
           playSoundAfterCooldown(gameState, coach, SoundId.SPEC_STOMP);
         } else if (talk.startsWith("/spectators") || talk.startsWith("/specs")) {
-          handleSpectatorsCommand(gameState, talkCommand, receivedCommand.getSession());
+          handleSpectatorsCommand(gameState, receivedCommand.getSession());
         } else {
           getServer().getCommunication().sendSpectatorTalk(gameState, coach, talk);
         }
@@ -700,7 +700,7 @@ public class ServerCommandHandlerTalk extends ServerCommandHandler {
     }
   }
 
-  private void handleSpectatorsCommand(GameState pGameState, ClientCommandTalk pTalkCommand, Session pSession) {
+  private void handleSpectatorsCommand(GameState pGameState, Session pSession) {
     String[] spectators = findSpectators(pGameState);
     Arrays.sort(spectators, new SpecsComparator());
     String[] info;
