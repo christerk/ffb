@@ -114,6 +114,8 @@ public class ServerCommandHandlerTalk extends ServerCommandHandler {
           handleTurnCommand(gameState, talkCommand, receivedCommand.getSession());
         } else if (isTestMode(gameState) && talk.startsWith("/weather")) {
           handleWeatherCommand(gameState, talkCommand);
+        } else if (talk.startsWith("/spectators") || talk.startsWith("/specs")) {
+          handleSpectatorsCommand(gameState, talkCommand, receivedCommand.getSession());
         } else {
           communication.sendPlayerTalk(gameState, coach, talk);
         }
