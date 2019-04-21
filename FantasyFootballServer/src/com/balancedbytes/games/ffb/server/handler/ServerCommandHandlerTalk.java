@@ -702,7 +702,8 @@ public class ServerCommandHandlerTalk extends ServerCommandHandler {
 
   private void handleSpectatorsCommand(GameState pGameState, ClientCommandTalk pTalkCommand, Session pSession) {
     String[] spectators = findSpectators(pGameState);
-    String[] info = null;
+    Arrays.sort(spectators, new SpecsComparator());
+    String[] info;
     StringBuilder spectatorMessage = new StringBuilder();
     if (spectators.length == 1) {
       info = new String[1];
@@ -711,11 +712,23 @@ public class ServerCommandHandlerTalk extends ServerCommandHandler {
       info = new String[spectators.length + 1];
       spectatorMessage.append(spectators.length).append(" spectators are watching this game:");
       info[0] = spectatorMessage.toString();
-      for (int i = 0; i < spectators.length; i++) {
-        info[i + 1] = spectators[i];
-      }
+      System.arraycopy(spectators, 0, info, 1, spectators.length);
     }
     getServer().getCommunication().sendTalk(pSession, pGameState, null, info);
+  }
+
+  private static class SpecsComparator implements Comparator<String> {
+
+    @Override
+    public int compare(String o1, String o2) {
+      if (o1 == null) {
+        return o2 == null ? 0 : -1;
+      } else if (o2 == null) {
+          return 1;
+      }
+
+      return o1.compareToIgnoreCase(o2);
+    }
   }
 
 }
