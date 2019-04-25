@@ -115,7 +115,7 @@ public class ServerCommandHandlerTalk extends ServerCommandHandler {
         } else if (isTestMode(gameState) && talk.startsWith("/weather")) {
           handleWeatherCommand(gameState, talkCommand);
         } else if (talk.startsWith("/spectators") || talk.startsWith("/specs")) {
-          handleSpectatorsCommand(gameState, receivedCommand.getSession());
+          handleSpectatorsCommand(gameState, receivedCommand.getSession(), false);
         } else {
           communication.sendPlayerTalk(gameState, coach, talk);
         }
@@ -140,7 +140,7 @@ public class ServerCommandHandlerTalk extends ServerCommandHandler {
         } else if (talk.startsWith("/stomp")) {
           playSoundAfterCooldown(gameState, coach, SoundId.SPEC_STOMP);
         } else if (talk.startsWith("/spectators") || talk.startsWith("/specs")) {
-          handleSpectatorsCommand(gameState, receivedCommand.getSession());
+          handleSpectatorsCommand(gameState, receivedCommand.getSession(), true);
         } else {
           getServer().getCommunication().sendSpectatorTalk(gameState, coach, talk);
         }
@@ -700,12 +700,15 @@ public class ServerCommandHandlerTalk extends ServerCommandHandler {
     }
   }
 
-  private void handleSpectatorsCommand(GameState pGameState, Session pSession) {
+  private void handleSpectatorsCommand(GameState pGameState, Session pSession, boolean issuedBySpec) {
     String[] spectators = findSpectators(pGameState);
     Arrays.sort(spectators, new SpecsComparator());
     String[] info;
     StringBuilder spectatorMessage = new StringBuilder();
-    if (spectators.length == 1) {
+    if (spectators.length == 0) {
+      info = new String[1];
+      info[0] = "There are no spectators.";
+    } else if (issuedBySpec && spectators.length == 1) {
       info = new String[1];
       info[0] = "You are the only spectator of this game.";
     } else {
