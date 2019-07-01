@@ -25,9 +25,9 @@ public class DialogAbout extends Dialog {
     "Clarkin, Cmelchior, Cyrus-Havoc, Don Tomaso, DanTitan76, DukeTyrion, Dynamo380, Ebenezer, Ehlers, Flix, Floppeditbackwards,",
     "Freak_in_a_Frock, Freppa, Gandresch, Garaygos, Gjopie, Hangar18, Happygrue, Hitonagashi, Howlett, Janekt, JanMattys, Janzki,",
     "Jarvis_Pants, JoeMalik, Koigokoro, LeBlanc, Lerysh, Lewdgrip, Loraxwolfsbane, Louky, LoxleyAndy, Magistern, Malitrius, Mickael, Mtknight,",
-    "MxFr, Nazgob, Nighteye, On1, PhrollikK, Purplegoo, RamonSalazar, Ravenmore, Razin, RedDevilCG, Reisender, Relezite, Shadow46x2, Sl8,",
-    "Stej, Steve, Svemole, SvenS, Tarabaralla, Teluriel, Tensai, Thul, Tortured-Robot, Treborius, Ulrik, Ultwe, Uomotigre3, Uuni, Vesikannu,",
-    "Woodstock, XZCion, Zakatan"
+    "MxFr, Nazgob, Nighteye, On1, PhrollikK, Purplegoo, RamonSalazar, Ravenmore, Razin, RedDevilCG, Reisender, Relezite, Shadow46x2,",
+    "Sl8, Stej, Steve, Svemole, SvenS, Tarabaralla, Teluriel, Tensai, Thul, Tortured-Robot, Treborius, Ulrik, Ultwe, Uomotigre3, Uuni,",
+    "Vesikannu, Woodstock, XZCion, Zakatan"
   };
 
   private static final int _WIDTH = 813;
