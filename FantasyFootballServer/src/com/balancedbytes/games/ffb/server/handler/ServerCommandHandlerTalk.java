@@ -114,6 +114,8 @@ public class ServerCommandHandlerTalk extends ServerCommandHandler {
           handleTurnCommand(gameState, talkCommand, receivedCommand.getSession());
         } else if (isTestMode(gameState) && talk.startsWith("/weather")) {
           handleWeatherCommand(gameState, talkCommand);
+        } else if (talk.startsWith("/spectators") || talk.startsWith("/specs")) {
+          handleSpectatorsCommand(gameState, receivedCommand.getSession(), false);
         } else {
           communication.sendPlayerTalk(gameState, coach, talk);
         }
@@ -138,7 +140,7 @@ public class ServerCommandHandlerTalk extends ServerCommandHandler {
         } else if (talk.startsWith("/stomp")) {
           playSoundAfterCooldown(gameState, coach, SoundId.SPEC_STOMP);
         } else if (talk.startsWith("/spectators") || talk.startsWith("/specs")) {
-          handleSpectatorsCommand(gameState, talkCommand, receivedCommand.getSession());
+          handleSpectatorsCommand(gameState, receivedCommand.getSession(), true);
         } else {
           getServer().getCommunication().sendSpectatorTalk(gameState, coach, talk);
         }
@@ -698,22 +700,38 @@ public class ServerCommandHandlerTalk extends ServerCommandHandler {
     }
   }
 
-  private void handleSpectatorsCommand(GameState pGameState, ClientCommandTalk pTalkCommand, Session pSession) {
+  private void handleSpectatorsCommand(GameState pGameState, Session pSession, boolean issuedBySpec) {
     String[] spectators = findSpectators(pGameState);
-    String[] info = null;
+    Arrays.sort(spectators, new SpecsComparator());
+    String[] info;
     StringBuilder spectatorMessage = new StringBuilder();
-    if (spectators.length == 1) {
+    if (spectators.length == 0) {
+      info = new String[1];
+      info[0] = "There are no spectators.";
+    } else if (issuedBySpec && spectators.length == 1) {
       info = new String[1];
       info[0] = "You are the only spectator of this game.";
     } else {
       info = new String[spectators.length + 1];
       spectatorMessage.append(spectators.length).append(" spectators are watching this game:");
       info[0] = spectatorMessage.toString();
-      for (int i = 0; i < spectators.length; i++) {
-        info[i + 1] = spectators[i];
-      }
+      System.arraycopy(spectators, 0, info, 1, spectators.length);
     }
     getServer().getCommunication().sendTalk(pSession, pGameState, null, info);
+  }
+
+  private static class SpecsComparator implements Comparator<String> {
+
+    @Override
+    public int compare(String o1, String o2) {
+      if (o1 == null) {
+        return o2 == null ? 0 : -1;
+      } else if (o2 == null) {
+          return 1;
+      }
+
+      return o1.compareToIgnoreCase(o2);
+    }
   }
 
 }
