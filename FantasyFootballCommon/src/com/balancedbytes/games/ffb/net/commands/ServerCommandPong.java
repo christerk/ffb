@@ -16,8 +16,7 @@ import com.eclipsesource.json.JsonValue;
 public class ServerCommandPong extends ServerCommand {
 
   private long fTimestamp;
-  private transient long fReceived;  // set by client
-  
+
   public ServerCommandPong() {
     super();
   }
@@ -32,14 +31,6 @@ public class ServerCommandPong extends ServerCommand {
   
   public long getTimestamp() {
     return fTimestamp;
-  }
-  
-  public void setReceived(long pReceived) {
-    fReceived = pReceived;
-  }
-  
-  public long getReceived() {
-    return fReceived;
   }
   
   public boolean isReplayable() {
