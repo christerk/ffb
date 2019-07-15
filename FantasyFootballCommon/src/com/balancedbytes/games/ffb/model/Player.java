@@ -214,9 +214,6 @@ public class Player implements IXmlSerializable, IJsonSerializable {
       if (getPlayerType() == null) {
         setType(fPosition.getType());
       }
-      if (fPosition.getGender() != null) {
-        setGender(fPosition.getGender());
-      }
       setMovement(fPosition.getMovement());
       setStrength(fPosition.getStrength());
       setAgility(fPosition.getAgility());
