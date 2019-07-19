@@ -63,7 +63,8 @@ public interface IServerProperty {
   String DB_URL = "db.url";
   String DB_USER = "db.user";
   String DB_PASSWORD = "db.password";
-  
+  String DB_TYPE = "db.type";
+
   String TIMER_DB_KEEP_ALIVE = "timer.dbKeepAlive";
   String TIMER_NETWORK_ENTROPY = "timer.networkEntropy";
 
