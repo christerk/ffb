@@ -8,7 +8,7 @@ class InifileParamFilterTest {
 
     private static final String OTHER_PARAM_1 = "otherParam1";
     private static final String OTHER_PARAM_2 = "otherParam2";
-    private static final String INIFILE_PARAM = "inifile";
+    private static final String INIFILE_PARAM = "-inifile";
     private static final String INIFILE_VALUE = "inifile_value";
     private static final String DEFAULT_INIFUILE_VALUE = "server.ini";
 

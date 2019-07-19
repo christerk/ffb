@@ -7,7 +7,7 @@ import java.util.List;
 
 public class InifileParamFilter {
     private static final String DEFAULT_VALUE = "server.ini";
-    private static final String INIFILE_PARAM = "inifile";
+    private static final String INIFILE_PARAM = "-inifile";
 
     public InifileParamFilterResult filterForInifile(String[] argsToFilter) {
         String inifileName = DEFAULT_VALUE;
