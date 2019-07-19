@@ -86,4 +86,8 @@ public class DbConnectionManager {
   public void setDbType(String pDbType) {
     fDbType = pDbType;
   }
+
+  public boolean useMysqlDialect() {
+    return "mysql".equalsIgnoreCase(fDbType);
+  }
 }
