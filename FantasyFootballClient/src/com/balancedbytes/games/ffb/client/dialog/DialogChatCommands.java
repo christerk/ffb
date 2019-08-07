@@ -114,7 +114,8 @@ public class DialogChatCommands extends Dialog {
     html.append("</tr>\n");
     html.append("<tr>\n");
     html.append("<td>").append(_FONT_BOLD_OPEN).append("/specs").append(_FONT_BOLD_CLOSE).append("</td>\n");
-    html.append("<td>").append(_FONT_OPEN).append("shows all logged in spectators by name").append(_FONT_CLOSE).append("</td>\n");
+    html.append("<td>").append(_FONT_OPEN).append("shows all logged in spectators by name - can also be used by ").append(_FONT_CLOSE)
+            .append(_FONT_BOLD_OPEN).append("playing coaches").append(_FONT_BOLD_CLOSE).append("</td>\n");
     html.append("</tr>\n");
     html.append("</table>\n");
 
