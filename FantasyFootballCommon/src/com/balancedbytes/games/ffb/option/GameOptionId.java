@@ -46,7 +46,26 @@ public enum GameOptionId implements INamedObject {
   WIZARD_AVAILABLE("wizardAvailable"),
 
   EXTRA_MVP("extraMvp"),
-  
+
+  INDUCEMENT_BABES_MAX("inducementBabesMax"),
+  INDUCEMENT_BRIBES_MAX("inducementBribesMax"),
+  INDUCEMENT_CHEFS_MAX("inducementChefsMax"),
+  INDUCEMENT_IGORS_MAX("inducementIgorsMax"),
+  INDUCEMENT_APOS_MAX("inducementAposMax"),
+  INDUCEMENT_WIZARDS_MAX("inducementWizardsMax"),
+  INDUCEMENT_STARS_MAX("inducementStarsMax"),
+
+  INDUCEMENT_BABE_COST("inducementBabeCost"),
+  INDUCEMENT_BRIBE_COST("inducementBribeCost"),
+  INDUCEMENT_BRIBE_REDUCED_COST("inducementBribeReducedCost"),
+  INDUCEMENT_CHEF_COST("inducementChefCost"),
+  INDUCEMENT_CHEF_REDUCED_COST("inducementChefReducedCost"),
+  INDUCEMENT_IGOR_COST("inducementIgorCost"),
+  INDUCEMENT_APO_COST("inducementApoCost"),
+  INDUCEMENT_WIZARD_COST("inducementWizardCost"),
+  INDUCEMENT_MERCENARY_EXTRA_COST("inducementMercenaryExtraCost"),
+  INDUCEMENT_MERCENARY_SKILL_COST("inducementMercenarySkillCost"),
+
   PITCH_URL("pitchUrl");
   
   private String fName;
