@@ -62,7 +62,7 @@ public enum GameOptionId implements INamedObject {
   INDUCEMENT_MERCENARY_EXTRA_COST("inducementMercenaryExtraCost"),
   INDUCEMENT_MERCENARY_SKILL_COST("inducementMercenarySkillCost"),
   INDUCEMENT_REROLL_COST("inducementRerollCost"),
-  INDUCEMENT_REROLL_MAX("inducementRerollsMax"),
+  INDUCEMENT_REROLLS_MAX("inducementRerollsMax"),
   INDUCEMENT_STARS_MAX("inducementStarsMax"),
   INDUCEMENT_WIZARD_COST("inducementWizardCost"),
   INDUCEMENT_WIZARDS_MAX("inducementWizardsMax"),
