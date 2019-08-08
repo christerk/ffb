@@ -72,6 +72,82 @@ public class GameOptionFactory {
         return new GameOptionBoolean(pOptionId)
           .setDefault(true)
           .setMessageFalse("Inducements are not available.");
+      case INDUCEMENT_APO_COST:
+        return new GameOptionInt(pOptionId)
+          .setDefault(100000)
+          .setMessage("Wandering apothecaries can be purchased for $1 gps each.");
+      case INDUCEMENT_APOS_MAX:
+        return new GameOptionInt(pOptionId)
+          .setDefault(2)
+          .setMessage("Coaches may purchase up to $1 wandering apothecarie(s).");
+      case INDUCEMENT_BRIBE_COST:
+        return new GameOptionInt(pOptionId)
+          .setDefault(100000)
+          .setMessage("Bribes can be purchased for $1 gps each.");
+      case INDUCEMENT_BRIBE_REDUCED_COST:
+        return new GameOptionInt(pOptionId)
+          .setDefault(50000)
+          .setMessage("Bribes for reduced price can be purchased for $1 gps each.");
+      case INDUCEMENT_BRIBES_MAX:
+        return new GameOptionInt(pOptionId)
+          .setDefault(3)
+          .setMessage("Coaches may purchase up to $1 bribe(s).");
+      case INDUCEMENT_CHEF_COST:
+        return new GameOptionInt(pOptionId)
+          .setDefault(300000)
+          .setMessage("Halfling Master Chefs can be purchased for $1 gps each.");
+      case INDUCEMENT_CHEF_REDUCED_COST:
+        return new GameOptionInt(pOptionId)
+          .setDefault(100000)
+          .setMessage("Halfling Master Chefs for reduced price can be purchased for $1 gps each.");
+      case INDUCEMENT_CHEFS_MAX:
+        return new GameOptionInt(pOptionId)
+          .setDefault(1)
+          .setMessage("Coaches may purchase up to $1 Halfling Master Chef(s).");
+      case INDUCEMENT_IGOR_COST:
+        return new GameOptionInt(pOptionId)
+          .setDefault(100000)
+          .setMessage("Igors can be purchased for $1 gps each.");
+      case INDUCEMENT_IGORS_MAX:
+        return new GameOptionInt(pOptionId)
+          .setDefault(1)
+          .setMessage("Coaches may purchase up to $1 Igor(s).");
+      case INDUCEMENT_KEG_COST:
+        return new GameOptionInt(pOptionId)
+          .setDefault(50000)
+          .setMessage("Bloodweiser Kegs can be purchased for $1 gps each.");
+      case INDUCEMENT_KEGS_MAX:
+        return new GameOptionInt(pOptionId)
+          .setDefault(2)
+          .setMessage("Coaches may purchase up to $1 Bloodweiser Keg(s).");
+      case INDUCEMENT_MERCENARY_EXTRA_COST:
+        return new GameOptionInt(pOptionId)
+          .setDefault(30000)
+          .setMessage("Mercenaries can be purchased for an extra $1 gps each.");
+      case INDUCEMENT_MERCENARY_SKILL_COST:
+        return new GameOptionInt(pOptionId)
+          .setDefault(50000)
+          .setMessage("Mercenaries can can gain an extra skill for $1 gps.");
+      case INDUCEMENT_REROLL_COST:
+        return new GameOptionInt(pOptionId)
+          .setDefault(100000)
+          .setMessage("Rerolls can be purchased for $1 gps each.");
+      case INDUCEMENT_REROLLS_MAX:
+        return new GameOptionInt(pOptionId)
+          .setDefault(4)
+          .setMessage("Coaches may purchase up to $1 reroll(s).");
+      case INDUCEMENT_STARS_MAX:
+        return new GameOptionInt(pOptionId)
+          .setDefault(2)
+          .setMessage("Coaches may purchase up to $1 star(s).");
+      case INDUCEMENT_WIZARD_COST:
+        return new GameOptionInt(pOptionId)
+          .setDefault(150000)
+          .setMessage("Wizards can be purchased for $1 gps each.");
+      case INDUCEMENT_WIZARDS_MAX:
+        return new GameOptionInt(pOptionId)
+          .setDefault(0)
+          .setMessage("Coaches may purchase up to $1 wizard(s).");
       case MAX_NR_OF_CARDS:
         return new GameOptionInt(pOptionId)
           .setDefault(5)
