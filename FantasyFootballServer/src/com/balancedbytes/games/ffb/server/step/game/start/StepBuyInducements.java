@@ -177,31 +177,31 @@ public final class StepBuyInducements extends AbstractStep {
         fReportedAway = true;
         getResult().addReport(generateReport(game.getTeamAway()));
       }
-      boolean wizardAvailable = UtilGameOption.isOptionEnabled(game, GameOptionId.WIZARD_AVAILABLE);
+
       if (!fInducementsSelectedHome && !fInducementsSelectedAway) {
         if (homeTV > awayTV) {
           UtilServerDialog.showDialog(
             getGameState(),
-            new DialogBuyInducementsParameter(game.getTeamHome().getId(), fInducementGoldHome, wizardAvailable),
+            new DialogBuyInducementsParameter(game.getTeamHome().getId(), fInducementGoldHome),
             false
           );
         } else {
           UtilServerDialog.showDialog(
             getGameState(),
-            new DialogBuyInducementsParameter(game.getTeamAway().getId(), fInducementGoldAway, wizardAvailable),
+            new DialogBuyInducementsParameter(game.getTeamAway().getId(), fInducementGoldAway),
             false
           );
         }
       } else if (!fInducementsSelectedHome) {
         UtilServerDialog.showDialog(
           getGameState(),
-          new DialogBuyInducementsParameter(game.getTeamHome().getId(), fInducementGoldHome, wizardAvailable),
+          new DialogBuyInducementsParameter(game.getTeamHome().getId(), fInducementGoldHome),
           false
         );
       } else if (!fInducementsSelectedAway) {
         UtilServerDialog.showDialog(
           getGameState(),
-          new DialogBuyInducementsParameter(game.getTeamAway().getId(), fInducementGoldAway, wizardAvailable),
+          new DialogBuyInducementsParameter(game.getTeamAway().getId(), fInducementGoldAway),
           false
         );
       } else {
