@@ -34,14 +34,16 @@ import com.balancedbytes.games.ffb.client.PlayerIconFactory;
 import com.balancedbytes.games.ffb.client.dialog.Dialog;
 import com.balancedbytes.games.ffb.dialog.DialogId;
 import com.balancedbytes.games.ffb.model.*;
+import com.balancedbytes.games.ffb.option.GameOptionId;
+import com.balancedbytes.games.ffb.option.GameOptionInt;
 import com.balancedbytes.games.ffb.util.UtilInducements;
 import com.balancedbytes.games.ffb.util.StringTool;
 
 @SuppressWarnings("serial")
 public class DialogBuyInducements extends Dialog implements ActionListener, KeyListener {
 
-	private final int mercExtraCost = 30000;
-	private final int mercSkillCost = 50000;
+	private final int mercExtraCost;
+	private final int mercSkillCost;
 
 	private Set<DropDownPanel> fPanels = new HashSet<DropDownPanel>();
 	private int fAvailableGold = 0;
@@ -89,9 +91,14 @@ public class DialogBuyInducements extends Dialog implements ActionListener, KeyL
 		fGoldPanel.add(Box.createHorizontalGlue());
 
 		fGoldPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 0, 10));
-		
-		JPanel leftPanel = buildLeftPanel(client.getGame().getOptions());
-		JPanel rightPanel = buildRightPanel();
+
+		GameOptions gameOptions = client.getGame().getOptions();
+
+		mercExtraCost = ((GameOptionInt)gameOptions.getOptionWithDefault(GameOptionId.INDUCEMENT_MERCENARY_EXTRA_COST)).getValue();
+		mercSkillCost = ((GameOptionInt)gameOptions.getOptionWithDefault(GameOptionId.INDUCEMENT_MERCENARY_SKILL_COST)).getValue();
+
+		JPanel leftPanel = buildLeftPanel(gameOptions);
+		JPanel rightPanel = buildRightPanel(gameOptions);
 
 		JPanel centerPanel = new JPanel();
 		centerPanel.setLayout(new BoxLayout(centerPanel, BoxLayout.X_AXIS));
@@ -238,7 +245,7 @@ public class DialogBuyInducements extends Dialog implements ActionListener, KeyL
 		return fRoster;
 	}
 	
-	private JPanel buildRightPanel() {
+	private JPanel buildRightPanel(GameOptions gameOptions) {
 
 		// Right Panel
 		JPanel rightPanel = new JPanel();
@@ -281,7 +288,7 @@ public class DialogBuyInducements extends Dialog implements ActionListener, KeyL
 		rightPanel.add(scrollPaneStarPlayer);
 		rightPanel.add(Box.createVerticalGlue());
 
-		fTableModelMercenaries = new MercenaryTableModel(this);
+		fTableModelMercenaries = new MercenaryTableModel(this, gameOptions);
 		fTableMercenaries = new MercenaryTable(fTableModelMercenaries);
 		fTableMercenaries.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		fTableMercenaries.getSelectionModel().addListSelectionListener(

@@ -10,21 +10,27 @@ import javax.swing.table.AbstractTableModel;
 
 import com.balancedbytes.games.ffb.PlayerType;
 import com.balancedbytes.games.ffb.client.PlayerIconFactory;
+import com.balancedbytes.games.ffb.model.GameOptions;
 import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.model.RosterPosition;
+import com.balancedbytes.games.ffb.option.GameOptionId;
+import com.balancedbytes.games.ffb.option.GameOptionInt;
 import com.balancedbytes.games.ffb.util.StringTool;
 
 @SuppressWarnings("serial")
 public class MercenaryTableModel extends AbstractTableModel {
 
-	private final int mercExtraCost = 30000;
-	private final int mercSkillCost = 50000;
+	private final int mercExtraCost;
+	private final int mercSkillCost;
 	private String[] fColumnNames;
 	private Object[][] fRowData;
 	private DialogBuyInducements fDialog;
 
 
-	public MercenaryTableModel(DialogBuyInducements pDialog) {
+	public MercenaryTableModel(DialogBuyInducements pDialog, GameOptions gameOptions) {
+		mercExtraCost = ((GameOptionInt)gameOptions.getOptionWithDefault(GameOptionId.INDUCEMENT_MERCENARY_EXTRA_COST)).getValue();
+		mercSkillCost = ((GameOptionInt)gameOptions.getOptionWithDefault(GameOptionId.INDUCEMENT_MERCENARY_SKILL_COST)).getValue();
+
 		fDialog = pDialog;
 		fColumnNames = new String[] { "", "Icon", "Name", "Gold", "Skill" };
 		fRowData = buildRowData();
