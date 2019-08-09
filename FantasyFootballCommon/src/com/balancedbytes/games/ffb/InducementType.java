@@ -43,6 +43,7 @@ public enum InducementType implements INamedObject {
     fSingular = pSingular;
     fPlural = pPlural;
     this.maxId = maxId;
+    this.costId = costId;
     this.reducedCostId = reducedCostId;
   }
 
