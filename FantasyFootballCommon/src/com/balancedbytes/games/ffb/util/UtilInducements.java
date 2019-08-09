@@ -8,25 +8,25 @@ import com.balancedbytes.games.ffb.option.*;
 public final class UtilInducements {
 
 	public static int findInducementCost(Roster pRoster, InducementType pInducement, GameOptions gameOptions) {
-		switch (pInducement) {
-			case BLOODWEISER_BABES:
-				return 50000;
-			case BRIBES:
-				return (pRoster.getName().equals("Goblin") ? 50000 : 100000);
-			case EXTRA_TEAM_TRAINING:
-				return 100000;
-			case IGOR:
-				return 100000;
-			case MASTER_CHEF:
-				return (pRoster.getName().equals("Halfling") ? 100000 : 300000);
-			case WANDERING_APOTHECARIES:
-				return 100000;
-			case WIZARD:
-				return 150000;
-			default:
-				return 0;
+
+		IGameOption gameOption = gameOptions.getOptionWithDefault(inducementCostOption(pRoster.getName(), pInducement));
+
+		if (gameOption instanceof GameOptionInt) {
+			return ((GameOptionInt)gameOption).getValue();
 		}
+
+		return 0;
 	}
+
+	private static GameOptionId inducementCostOption(String rosterName, InducementType inducementType) {
+		if ((InducementType.BRIBES == inducementType && "Goblin".equals(rosterName)) ||
+			(InducementType.MASTER_CHEF == inducementType && "Halfling".equals(rosterName))) {
+			return inducementType.getReducedCostId();
+		}
+
+		return inducementType.getCostId();
+	}
+
 
 	public static int findInducementsAvailable(Roster pRoster, InducementType pInducement, GameOptions gameOptions) {
 		if (InducementType.WIZARD == pInducement) {
