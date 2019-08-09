@@ -1,11 +1,12 @@
 package com.balancedbytes.games.ffb.util;
 
 import com.balancedbytes.games.ffb.InducementType;
+import com.balancedbytes.games.ffb.model.GameOptions;
 import com.balancedbytes.games.ffb.model.Roster;
 
 public final class UtilInducements {
 
-	public static int findInducementCost(Roster pRoster, InducementType pInducement) {
+	public static int findInducementCost(Roster pRoster, InducementType pInducement, GameOptions gameOptions) {
 		switch (pInducement) {
 			case BLOODWEISER_BABES:
 				return 50000;
@@ -26,7 +27,7 @@ public final class UtilInducements {
 		}
 	}
 
-	public static int findInducementsAvailable(Roster pRoster, InducementType pInducement) {
+	public static int findInducementsAvailable(Roster pRoster, InducementType pInducement, GameOptions gameOptions) {
 		switch (pInducement) {
 			case BLOODWEISER_BABES:
 				return 2;
