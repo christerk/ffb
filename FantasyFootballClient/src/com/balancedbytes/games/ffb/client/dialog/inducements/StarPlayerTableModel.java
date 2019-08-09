@@ -10,8 +10,11 @@ import javax.swing.table.AbstractTableModel;
 
 import com.balancedbytes.games.ffb.PlayerType;
 import com.balancedbytes.games.ffb.client.PlayerIconFactory;
+import com.balancedbytes.games.ffb.model.GameOptions;
 import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.model.RosterPosition;
+import com.balancedbytes.games.ffb.option.GameOptionId;
+import com.balancedbytes.games.ffb.option.GameOptionInt;
 import com.balancedbytes.games.ffb.util.StringTool;
 
 @SuppressWarnings("serial")
@@ -23,11 +26,11 @@ public class StarPlayerTableModel extends AbstractTableModel {
 	private int fMaxNrOfStars;
 	private DialogBuyInducements fDialog;
 
-	public StarPlayerTableModel(DialogBuyInducements pDialog) {
+	public StarPlayerTableModel(DialogBuyInducements pDialog, GameOptions gameOptions) {
 		fDialog = pDialog;
 		fColumnNames = new String[] { "", "Icon", "Name", "Gold" };
 		fRowData = buildRowData();
-		setMaxNrOfStars(2);
+		fMaxNrOfStars = ((GameOptionInt)gameOptions.getOptionWithDefault(GameOptionId.INDUCEMENT_STARS_MAX)).getValue();
 	}
 
 	public int getColumnCount() {

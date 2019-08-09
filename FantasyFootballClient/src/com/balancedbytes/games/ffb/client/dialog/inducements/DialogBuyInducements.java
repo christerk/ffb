@@ -251,7 +251,7 @@ public class DialogBuyInducements extends Dialog implements ActionListener, KeyL
 		JPanel rightPanel = new JPanel();
 		rightPanel.setLayout(new BoxLayout(rightPanel, BoxLayout.Y_AXIS));
 
-		fTableModelStarPlayers = new StarPlayerTableModel(this);
+		fTableModelStarPlayers = new StarPlayerTableModel(this, gameOptions);
 		fTableStarPlayers = new StarPlayerTable(fTableModelStarPlayers);
 		fTableStarPlayers.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		fTableStarPlayers.getSelectionModel().addListSelectionListener(
