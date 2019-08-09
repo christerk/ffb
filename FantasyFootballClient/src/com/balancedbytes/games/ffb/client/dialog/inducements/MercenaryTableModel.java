@@ -17,9 +17,12 @@ import com.balancedbytes.games.ffb.util.StringTool;
 @SuppressWarnings("serial")
 public class MercenaryTableModel extends AbstractTableModel {
 
+	private final int mercExtraCost = 30000;
+	private final int mercSkillCost = 50000;
 	private String[] fColumnNames;
 	private Object[][] fRowData;
 	private DialogBuyInducements fDialog;
+
 
 	public MercenaryTableModel(DialogBuyInducements pDialog) {
 		fDialog = pDialog;
@@ -52,20 +55,20 @@ public class MercenaryTableModel extends AbstractTableModel {
 	}
 
 	public int getCheckedRows() {
-		int noBoughtStarPlayers = 0;
+		int noBoughtMercs = 0;
 		for (int i = 0; i < getRowCount(); i++) {
 			if ((Boolean) getValueAt(i, 0)) {
-				noBoughtStarPlayers++;
+				noBoughtMercs++;
 			}
 		}
-		return noBoughtStarPlayers;
+		return noBoughtMercs;
 	}
 
 	public void setValueAt(Object pValue, int pRowIndex, int pColumnIndex) {
 		Player player = (Player) fRowData[pRowIndex][5];
-		int playerCost = player.getPosition().getCost() + 30000;
+		int playerCost = player.getPosition().getCost() + mercExtraCost;
 		if (pColumnIndex == 0) {
-			int skillCost = StringTool.isProvided(fRowData[pRowIndex][4]) ? 50000 : 0;
+			int skillCost = StringTool.isProvided(fRowData[pRowIndex][4]) ? mercSkillCost : 0;
 			if ((Boolean) pValue) {
 				if ((playerCost + skillCost <= fDialog.getAvailableGold()) && (fDialog.getFreeSlotsInRoster() > 0)) {
 					fRowData[pRowIndex][pColumnIndex] = pValue;
@@ -80,7 +83,7 @@ public class MercenaryTableModel extends AbstractTableModel {
 		if (pColumnIndex == 4) {
 			fRowData[pRowIndex][pColumnIndex] = pValue;
 			fireTableCellUpdated(pRowIndex, pColumnIndex);
-			int skillCost = StringTool.isProvided(fRowData[pRowIndex][4]) ? 50000 : 0;
+			int skillCost = StringTool.isProvided(fRowData[pRowIndex][4]) ? mercSkillCost : 0;
 			setValueAt(fDialog.formatGold(playerCost + skillCost), pRowIndex, 3);
 			if ((Boolean) fRowData[pRowIndex][0]) {
 				if (skillCost > fDialog.getAvailableGold()) {
@@ -109,7 +112,7 @@ public class MercenaryTableModel extends AbstractTableModel {
 					mecenary[0] = new Boolean(false);
 					mecenary[1] = new ImageIcon(playerIconFactory.getBasicIcon(fDialog.getClient(), player, true, false, false, false));
 					mecenary[2] = pos.getName();
-					mecenary[3] = fDialog.formatGold(pos.getCost() + 30000);
+					mecenary[3] = fDialog.formatGold(pos.getCost() + mercExtraCost);
 					mecenary[4] = "";
 					mecenary[5] = player;
 					mercenaryList.add(mecenary);

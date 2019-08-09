@@ -39,7 +39,9 @@ import com.balancedbytes.games.ffb.util.StringTool;
 
 @SuppressWarnings("serial")
 public class DialogBuyInducements extends Dialog implements ActionListener, KeyListener {
-//	public class DialogBuyInducements extends Dialog implements ActionListener, KeyListener, ListSelectionListener {
+
+	private final int mercExtraCost = 30000;
+	private final int mercSkillCost = 50000;
 
 	private Set<DropDownPanel> fPanels = new HashSet<DropDownPanel>();
 	private int fAvailableGold = 0;
@@ -56,7 +58,7 @@ public class DialogBuyInducements extends Dialog implements ActionListener, KeyL
 	private MercenaryTableModel fTableModelMercenaries;
 	private Team fTeam;
 
-	public DialogBuyInducements(FantasyFootballClient client, String teamId, int availableGold, boolean wizardAvailable) {
+	public DialogBuyInducements(FantasyFootballClient client, String teamId, int availableGold) {
 
 		super(client, "Buy Inducements", true);
 
@@ -381,11 +383,10 @@ public class DialogBuyInducements extends Dialog implements ActionListener, KeyL
 		for (int i = 0; i < fTableModelMercenaries.getRowCount(); i++) {
 			if ((Boolean) fTableModelMercenaries.getValueAt(i, 0)) {
 				cost += ((Player) fTableModelMercenaries.getValueAt(i, 5)).getPosition().getCost();
+				cost += mercExtraCost;
 				String skillSlot = ((String) fTableModelMercenaries.getValueAt(i, 4));
 				if (StringTool.isProvided(skillSlot)) {
-					cost += 80000;
-				} else {
-					cost += 30000;
+					cost += mercSkillCost;
 				}
 			}
 		}

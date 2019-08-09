@@ -14,16 +14,14 @@ public class DialogBuyInducementsParameter implements IDialogParameter {
 
   private String fTeamId;
   private int fAvailableGold;
-  private boolean fWizardAvailable;
 
   public DialogBuyInducementsParameter() {
     super();
   }
   
-  public DialogBuyInducementsParameter(String pTeamId, int pAvailableGold, boolean wizardAvailable) {
+  public DialogBuyInducementsParameter(String pTeamId, int pAvailableGold) {
     fTeamId = pTeamId;
     fAvailableGold = pAvailableGold;
-    fWizardAvailable = wizardAvailable;
   }
   
   public DialogId getId() {
@@ -37,15 +35,11 @@ public class DialogBuyInducementsParameter implements IDialogParameter {
   public int getAvailableGold() {
     return fAvailableGold;
   }
-  
-  public boolean isWizardAvailable() {
-    return fWizardAvailable;
-  }
-  
+
   // transformation
   
   public IDialogParameter transform() {
-    return new DialogBuyInducementsParameter(getTeamId(), getAvailableGold(), isWizardAvailable());
+    return new DialogBuyInducementsParameter(getTeamId(), getAvailableGold());
   }
   
   // JSON serialization
@@ -55,7 +49,6 @@ public class DialogBuyInducementsParameter implements IDialogParameter {
     IJsonOption.DIALOG_ID.addTo(jsonObject, getId());
     IJsonOption.TEAM_ID.addTo(jsonObject, fTeamId);
     IJsonOption.AVAILABLE_GOLD.addTo(jsonObject, fAvailableGold);
-    IJsonOption.WIZARD_AVAILABLE.addTo(jsonObject, fWizardAvailable);
     return jsonObject;
   }
   
@@ -64,8 +57,6 @@ public class DialogBuyInducementsParameter implements IDialogParameter {
     UtilDialogParameter.validateDialogId(this, (DialogId) IJsonOption.DIALOG_ID.getFrom(jsonObject));
     fTeamId = IJsonOption.TEAM_ID.getFrom(jsonObject);
     fAvailableGold = IJsonOption.AVAILABLE_GOLD.getFrom(jsonObject);
-    Boolean wizardAvailable = IJsonOption.WIZARD_AVAILABLE.getFrom(jsonObject);
-    fWizardAvailable = (wizardAvailable != null) ? wizardAvailable : false;
     return this;
   }
 
