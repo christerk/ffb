@@ -55,7 +55,7 @@ public enum CardType implements INamedObject {
   public String getInducementNameMultiple() {
 	  return fInducementNameMultiple;
   }
-  
+
   public GameOptionId getMaxId() {
     return maxId;
   }

@@ -31,6 +31,7 @@ import com.balancedbytes.games.ffb.client.ui.ChatLogTextPane;
 import com.balancedbytes.games.ffb.dialog.DialogBuyCardsParameter;
 import com.balancedbytes.games.ffb.dialog.DialogId;
 import com.balancedbytes.games.ffb.model.InducementSet;
+import com.balancedbytes.games.ffb.option.GameOptionInt;
 import com.balancedbytes.games.ffb.util.StringTool;
 
 /**
@@ -42,6 +43,7 @@ public class DialogBuyCards extends Dialog implements ActionListener, KeyListene
 
   private Map<CardType, Integer> fNrOfCardsPerType;
   private Map<CardType, JButton> fButtonPerType;
+  private Map<CardType, Integer> cardPrices;
 
   private int fAvailableGold;
   private JLabel fLabelAvailableGold;
@@ -92,8 +94,14 @@ public class DialogBuyCards extends Dialog implements ActionListener, KeyListene
     panelMain.add(panelCards);
     panelMain.add(Box.createVerticalStrut(10));
 
-    fNrOfCardsPerType = new HashMap<CardType, Integer>();
-    fButtonPerType = new HashMap<CardType, JButton>();
+    fNrOfCardsPerType = new HashMap<>();
+    fButtonPerType = new HashMap<>();
+    cardPrices = new HashMap<>();
+
+    for (CardType cardType: CardType.values()) {
+      int price = ((GameOptionInt)pClient.getGame().getOptions().getOptionWithDefault(cardType.getCostId())).getValue();
+      cardPrices.put(cardType, price);
+    }
 
     // Icon cardIcon = new ImageIcon(pClient.getUserInterface().getIconCache().getIconByProperty(IIconProperty.SIDEBAR_OVERLAY_PLAYER_CARD));
 
@@ -246,12 +254,13 @@ public class DialogBuyCards extends Dialog implements ActionListener, KeyListene
     label.append("<br>");
 
     int nrOfCards = (fNrOfCardsPerType.get(pType) != null) ? fNrOfCardsPerType.get(pType) : 0;
-    label.append(nrOfCards).append(" cards for ").append(StringTool.formatThousands(pType.getPrice())).append(" gold each");
+    int cardPrice = cardPrices.getOrDefault(pType, 0);
+    label.append(nrOfCards).append(" cards for ").append(StringTool.formatThousands(cardPrice)).append(" gold each");
 
     label.append("</center></html>");
 
     button.setText(label.toString());
-    button.setEnabled((nrOfCards > 0) && (fAvailableGold >= pType.getPrice()) && (fAvailableCards > 0));
+    button.setEnabled((nrOfCards > 0) && (fAvailableGold >= cardPrice) && (fAvailableCards > 0));
 
     return button;
 
@@ -303,7 +312,7 @@ public class DialogBuyCards extends Dialog implements ActionListener, KeyListene
     fAvailableCards--;
     updateAvailableCardsLabel();
 
-    fAvailableGold -= pType.getPrice();
+    fAvailableGold -= cardPrices.getOrDefault(pType, 0);
     updateAvailableGoldLabel();
 
     // updateDeckButton(CardType.MISCELLANEOUS_MAYHEM);
