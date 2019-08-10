@@ -1,32 +1,43 @@
 package com.balancedbytes.games.ffb;
 
 
+import com.balancedbytes.games.ffb.option.GameOptionId;
+
 /**
  * 
  * @author Kalimar
  */
 public enum CardType implements INamedObject {
 
-  MISCELLANEOUS_MAYHEM("miscellaneousMayhem", 50000, "Miscellaneous Mayhem Deck", "Miscellaneous Mayhem Card", "Miscellaneous Mayhem Cards"),
-  SPECIAL_TEAM_PLAY("specialTeamPlay", 50000, "Special Team Plays Deck", "Special Team Play Card", "Special Team Play Cards"),
-  MAGIC_ITEM("magicItem", 50000, "Magic Items Deck", "Magic Item Card", "Magic Item Cards"),
-  DIRTY_TRICK("dirtyTrick", 50000, "Dirty Tricks Deck", "Dirty Trick Card", "Dirty Trick Cards"),
-  GOOD_KARMA("goodKarma", 100000, "Good Karma Deck", "Good Karma Card", "Good Karma Cards"),
-  RANDOM_EVENT("randomEvent", 200000, "Random Events Deck", "Random Event Card", "Random Event Cards"),
-  DESPERATE_MEASURE("desperateMeasure", 400000, "Desperate Measures Deck", "Desperate Measure Card", "Desperate Measure Cards");
+  MISCELLANEOUS_MAYHEM("miscellaneousMayhem", "Miscellaneous Mayhem Deck", "Miscellaneous Mayhem Card",
+    "Miscellaneous Mayhem Cards", GameOptionId.CARDS_MISCELLANEOUS_MAYHEM_MAX, GameOptionId.CARDS_MISCELLANEOUS_MAYHEM_COST),
+  SPECIAL_TEAM_PLAY("specialTeamPlay", "Special Team Plays Deck", "Special Team Play Card",
+    "Special Team Play Cards", GameOptionId.CARDS_SPECIAL_TEAM_PLAY_MAX, GameOptionId.CARDS_SPECIAL_TEAM_PLAY_COST),
+  MAGIC_ITEM("magicItem", "Magic Items Deck", "Magic Item Card",
+    "Magic Item Cards", GameOptionId.CARDS_MAGIC_ITEM_MAX, GameOptionId.CARDS_MAGIC_ITEM_COST),
+  DIRTY_TRICK("dirtyTrick", "Dirty Tricks Deck", "Dirty Trick Card",
+    "Dirty Trick Cards", GameOptionId.CARDS_DIRTY_TRICK_MAX, GameOptionId.CARDS_DIRTY_TRICK_COST),
+  GOOD_KARMA("goodKarma", "Good Karma Deck", "Good Karma Card",
+    "Good Karma Cards", GameOptionId.CARDS_GOOD_KARMA_MAX, GameOptionId.CARDS_GOOD_KARMA_COST),
+  RANDOM_EVENT("randomEvent", "Random Events Deck", "Random Event Card",
+    "Random Event Cards", GameOptionId.CARDS_RANDOM_EVENT_MAX, GameOptionId.CARDS_RANDOM_EVENT_COST),
+  DESPERATE_MEASURE("desperateMeasure", "Desperate Measures Deck", "Desperate Measure Card",
+    "Desperate Measure Cards", GameOptionId.CARDS_DESPERATE_MEASURE_MAX, GameOptionId.CARDS_DESPERATE_MEASURE_COST);
   
   private String fName;
   private String fDeckName;
   private String fInducementNameSingle;
   private String fInducementNameMultiple;
-  private int fPrice;
-  
-  private CardType(String pName, int pPrice, String pDeckName, String pInducementNameSingle, String pInducementNameMultiple) {
+  private GameOptionId maxId;
+  private GameOptionId costId;
+
+  private CardType(String pName, String pDeckName, String pInducementNameSingle, String pInducementNameMultiple, GameOptionId maxId, GameOptionId costId) {
     fName = pName;
-    fPrice = pPrice;
     fDeckName = pDeckName;
     fInducementNameSingle = pInducementNameSingle;
     fInducementNameMultiple = pInducementNameMultiple;
+    this.maxId = maxId;
+    this.costId = costId;
   }
   
   public String getName() {
@@ -45,14 +56,14 @@ public enum CardType implements INamedObject {
 	  return fInducementNameMultiple;
   }
   
-  public int getPrice() {
-	  return fPrice;
+  public GameOptionId getMaxId() {
+    return maxId;
   }
-  
-  public static int getMinimumPrice() {
-  	return 50000;
+
+  public GameOptionId getCostId() {
+    return costId;
   }
-  
+
   public String toString() {
     return getName();
   }
