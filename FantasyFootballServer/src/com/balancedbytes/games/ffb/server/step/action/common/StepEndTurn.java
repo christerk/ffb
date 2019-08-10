@@ -451,7 +451,7 @@ public class StepEndTurn extends AbstractStep {
       Game game = getGameState().getGame();
       InducementSet inducementSet = (pPlayer.getTeam() == game.getTeamHome()) ? game.getTurnDataHome().getInducementSet() : game.getTurnDataAway()
           .getInducementSet();
-      Inducement bloodweiserBabes = inducementSet.get(InducementType.BLOODWEISER_BABES);
+      Inducement bloodweiserBabes = inducementSet.get(InducementType.BLOODWEISER_KEGS);
       int bloodweiserBabeValue = (bloodweiserBabes != null) ? bloodweiserBabes.getValue() : 0;
       boolean isRecovering = DiceInterpreter.getInstance().isRecoveringFromKnockout(recoveryRoll, bloodweiserBabeValue);
       return new KnockoutRecovery(playerId, isRecovering, recoveryRoll, bloodweiserBabeValue);

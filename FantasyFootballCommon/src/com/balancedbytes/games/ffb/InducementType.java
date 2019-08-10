@@ -8,8 +8,8 @@ import com.balancedbytes.games.ffb.option.GameOptionId;
  */
 public enum InducementType implements INamedObject {
 
-  BLOODWEISER_BABES("bloodweiserBabes", "Bloodweiser Babes", "Bloodweiser Babe",
-    "Bloodweiser Babes", GameOptionId.INDUCEMENT_KEGS_MAX, GameOptionId.INDUCEMENT_KEGS_COST),
+  BLOODWEISER_KEGS("bloodweiserBabes", "Bloodweiser Kegs", "Bloodweiser Keg",
+    "Bloodweiser Kegs", GameOptionId.INDUCEMENT_KEGS_MAX, GameOptionId.INDUCEMENT_KEGS_COST),
   BRIBES("bribes", "Bribes", "Bribe", "Bribes", GameOptionId.INDUCEMENT_BRIBES_MAX,
     GameOptionId.INDUCEMENT_BRIBES_COST, GameOptionId.INDUCEMENT_BRIBES_REDUCED_COST),
   EXTRA_TEAM_TRAINING("extraTeamTraining", "Extra Training", "Extra Team Training",

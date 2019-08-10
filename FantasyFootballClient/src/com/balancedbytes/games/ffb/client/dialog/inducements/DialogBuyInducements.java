@@ -163,7 +163,7 @@ public class DialogBuyInducements extends Dialog implements ActionListener, KeyL
 		leftPanel.add(labelPanel);
 		leftPanel.add(Box.createVerticalStrut(10));
 
-		createPanel(InducementType.BLOODWEISER_BABES, leftPanel, verticalStrut, gameOptions);
+		createPanel(InducementType.BLOODWEISER_KEGS, leftPanel, verticalStrut, gameOptions);
 		createPanel(InducementType.BRIBES, leftPanel, verticalStrut, gameOptions);
 		createPanel(InducementType.EXTRA_TEAM_TRAINING, leftPanel, verticalStrut, gameOptions);
 		createPanel(InducementType.MASTER_CHEF, leftPanel, verticalStrut, gameOptions);

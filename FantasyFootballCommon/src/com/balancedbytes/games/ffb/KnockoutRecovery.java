@@ -51,7 +51,7 @@ public class KnockoutRecovery implements IJsonSerializable {
     IJsonOption.PLAYER_ID.addTo(jsonObject, fPlayerId);
     IJsonOption.RECOVERING.addTo(jsonObject, fRecovering);
     IJsonOption.ROLL.addTo(jsonObject, fRoll);
-    IJsonOption.BLOODWEISER_BABES.addTo(jsonObject, fBloodweiserBabes);
+    IJsonOption.BLOODWEISER_KEGS.addTo(jsonObject, fBloodweiserBabes);
     return jsonObject;
   }
   
@@ -60,7 +60,7 @@ public class KnockoutRecovery implements IJsonSerializable {
     fPlayerId = IJsonOption.PLAYER_ID.getFrom(jsonObject);
     fRecovering = IJsonOption.RECOVERING.getFrom(jsonObject);
     fRoll = IJsonOption.ROLL.getFrom(jsonObject);
-    fBloodweiserBabes = IJsonOption.BLOODWEISER_BABES.getFrom(jsonObject);
+    fBloodweiserBabes = IJsonOption.BLOODWEISER_KEGS.getFrom(jsonObject);
     return this;
   }
 
