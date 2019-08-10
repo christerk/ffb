@@ -28,8 +28,8 @@ public class MercenaryTableModel extends AbstractTableModel {
 
 
 	public MercenaryTableModel(DialogBuyInducements pDialog, GameOptions gameOptions) {
-		mercExtraCost = ((GameOptionInt)gameOptions.getOptionWithDefault(GameOptionId.INDUCEMENT_MERCENARY_EXTRA_COST)).getValue();
-		mercSkillCost = ((GameOptionInt)gameOptions.getOptionWithDefault(GameOptionId.INDUCEMENT_MERCENARY_SKILL_COST)).getValue();
+		mercExtraCost = ((GameOptionInt)gameOptions.getOptionWithDefault(GameOptionId.INDUCEMENT_MERCENARIES_EXTRA_COST)).getValue();
+		mercSkillCost = ((GameOptionInt)gameOptions.getOptionWithDefault(GameOptionId.INDUCEMENT_MERCENARIES_SKILL_COST)).getValue();
 
 		fDialog = pDialog;
 		fColumnNames = new String[] { "", "Icon", "Name", "Gold", "Skill" };

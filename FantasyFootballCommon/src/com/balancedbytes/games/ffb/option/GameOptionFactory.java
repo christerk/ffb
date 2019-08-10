@@ -72,7 +72,7 @@ public class GameOptionFactory {
         return new GameOptionBoolean(pOptionId)
           .setDefault(true)
           .setMessageFalse("Inducements are not available.");
-      case INDUCEMENT_APO_COST:
+      case INDUCEMENT_APOS_COST:
         return new GameOptionInt(pOptionId)
           .setDefault(100000)
           .setMessage("Wandering apothecaries can be purchased for $1 gps each.");
@@ -80,11 +80,11 @@ public class GameOptionFactory {
         return new GameOptionInt(pOptionId)
           .setDefault(2)
           .setMessage("Coaches may purchase up to $1 wandering apothecarie(s).");
-      case INDUCEMENT_BRIBE_COST:
+      case INDUCEMENT_BRIBES_COST:
         return new GameOptionInt(pOptionId)
           .setDefault(100000)
           .setMessage("Bribes can be purchased for $1 gps each.");
-      case INDUCEMENT_BRIBE_REDUCED_COST:
+      case INDUCEMENT_BRIBES_REDUCED_COST:
         return new GameOptionInt(pOptionId)
           .setDefault(50000)
           .setMessage("Bribes for reduced price can be purchased for $1 gps each.");
@@ -92,11 +92,11 @@ public class GameOptionFactory {
         return new GameOptionInt(pOptionId)
           .setDefault(3)
           .setMessage("Coaches may purchase up to $1 bribe(s).");
-      case INDUCEMENT_CHEF_COST:
+      case INDUCEMENT_CHEFS_COST:
         return new GameOptionInt(pOptionId)
           .setDefault(300000)
           .setMessage("Halfling Master Chefs can be purchased for $1 gps each.");
-      case INDUCEMENT_CHEF_REDUCED_COST:
+      case INDUCEMENT_CHEFS_REDUCED_COST:
         return new GameOptionInt(pOptionId)
           .setDefault(100000)
           .setMessage("Halfling Master Chefs for reduced price can be purchased for $1 gps each.");
@@ -104,7 +104,7 @@ public class GameOptionFactory {
         return new GameOptionInt(pOptionId)
           .setDefault(1)
           .setMessage("Coaches may purchase up to $1 Halfling Master Chef(s).");
-      case INDUCEMENT_IGOR_COST:
+      case INDUCEMENT_IGORS_COST:
         return new GameOptionInt(pOptionId)
           .setDefault(100000)
           .setMessage("Igors can be purchased for $1 gps each.");
@@ -112,7 +112,7 @@ public class GameOptionFactory {
         return new GameOptionInt(pOptionId)
           .setDefault(1)
           .setMessage("Coaches may purchase up to $1 Igor(s).");
-      case INDUCEMENT_KEG_COST:
+      case INDUCEMENT_KEGS_COST:
         return new GameOptionInt(pOptionId)
           .setDefault(50000)
           .setMessage("Bloodweiser Kegs can be purchased for $1 gps each.");
@@ -120,19 +120,19 @@ public class GameOptionFactory {
         return new GameOptionInt(pOptionId)
           .setDefault(2)
           .setMessage("Coaches may purchase up to $1 Bloodweiser Keg(s).");
-      case INDUCEMENT_MERCENARY_EXTRA_COST:
+      case INDUCEMENT_MERCENARIES_EXTRA_COST:
         return new GameOptionInt(pOptionId)
           .setDefault(30000)
           .setMessage("Mercenaries can be purchased for an extra $1 gps each.");
-      case INDUCEMENT_MERCENARY_SKILL_COST:
+      case INDUCEMENT_MERCENARIES_SKILL_COST:
         return new GameOptionInt(pOptionId)
           .setDefault(50000)
           .setMessage("Mercenaries can can gain an extra skill for $1 gps.");
-      case INDUCEMENT_REROLL_COST:
+      case INDUCEMENT_EXTRA_TRAINING_COST:
         return new GameOptionInt(pOptionId)
           .setDefault(100000)
           .setMessage("Rerolls can be purchased for $1 gps each.");
-      case INDUCEMENT_REROLLS_MAX:
+      case INDUCEMENT_EXTRA_TRAINING_MAX:
         return new GameOptionInt(pOptionId)
           .setDefault(4)
           .setMessage("Coaches may purchase up to $1 reroll(s).");
@@ -140,7 +140,7 @@ public class GameOptionFactory {
         return new GameOptionInt(pOptionId)
           .setDefault(2)
           .setMessage("Coaches may purchase up to $1 star(s).");
-      case INDUCEMENT_WIZARD_COST:
+      case INDUCEMENT_WIZARDS_COST:
         return new GameOptionInt(pOptionId)
           .setDefault(150000)
           .setMessage("Wizards can be purchased for $1 gps each.");

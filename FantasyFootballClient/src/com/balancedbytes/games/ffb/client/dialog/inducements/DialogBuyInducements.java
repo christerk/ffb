@@ -94,8 +94,8 @@ public class DialogBuyInducements extends Dialog implements ActionListener, KeyL
 
 		GameOptions gameOptions = client.getGame().getOptions();
 
-		mercExtraCost = ((GameOptionInt)gameOptions.getOptionWithDefault(GameOptionId.INDUCEMENT_MERCENARY_EXTRA_COST)).getValue();
-		mercSkillCost = ((GameOptionInt)gameOptions.getOptionWithDefault(GameOptionId.INDUCEMENT_MERCENARY_SKILL_COST)).getValue();
+		mercExtraCost = ((GameOptionInt)gameOptions.getOptionWithDefault(GameOptionId.INDUCEMENT_MERCENARIES_EXTRA_COST)).getValue();
+		mercSkillCost = ((GameOptionInt)gameOptions.getOptionWithDefault(GameOptionId.INDUCEMENT_MERCENARIES_SKILL_COST)).getValue();
 
 		JPanel leftPanel = buildLeftPanel(gameOptions);
 		JPanel rightPanel = buildRightPanel(gameOptions);
