@@ -36,6 +36,66 @@ public class GameOptionFactory {
         return new GameOptionBoolean(pOptionId)
           .setDefault(true)
           .setMessageFalse("Calls may not be argued.");
+      case CARDS_DESPERATE_MEASURE_COST:
+        return new GameOptionInt(pOptionId)
+          .setDefault(400000)
+          .setMessage("Desperate Measure cards can be bought for $1 gps each.");
+      case CARDS_DESPERATE_MEASURE_MAX:
+        return new GameOptionInt(pOptionId)
+          .setDefault(Integer.MAX_VALUE)
+          .setMessage("Coaches may purchase up to $1 Desperate Measure cards.");
+      case CARDS_DIRTY_TRICK_COST:
+        return new GameOptionInt(pOptionId)
+          .setDefault(50000)
+          .setMessage("Dirty Trick cards can be bought for $1 gps each.");
+      case CARDS_DIRTY_TRICK_MAX:
+        return new GameOptionInt(pOptionId)
+          .setDefault(Integer.MAX_VALUE)
+          .setMessage("Coaches may purchase up to $1 Dirty Trick cards.");
+      case CARDS_GOOD_KARMA_COST:
+        return new GameOptionInt(pOptionId)
+          .setDefault(100000)
+          .setMessage("Good Karma cards can be bought for $1 gps each.");
+      case CARDS_GOOD_KARMA_MAX:
+        return new GameOptionInt(pOptionId)
+          .setDefault(Integer.MAX_VALUE)
+          .setMessage("Coaches may purchase up to $1 Good Karma cards.");
+      case CARDS_MAGIC_ITEM_COST:
+        return new GameOptionInt(pOptionId)
+          .setDefault(50000)
+          .setMessage("Magic Item cards can be bought for $1 gps each.");
+      case CARDS_MAGIC_ITEM_MAX:
+        return new GameOptionInt(pOptionId)
+          .setDefault(Integer.MAX_VALUE)
+          .setMessage("Coaches may purchase up to $1 Magic Item cards.");
+      case CARDS_MISCELLANEOUS_MAYHEM_COST:
+        return new GameOptionInt(pOptionId)
+          .setDefault(50000)
+          .setMessage("Miscellaneous Mayhem cards can be bought for $1 gps each.");
+      case CARDS_MISCELLANEOUS_MAYHEM_MAX:
+        return new GameOptionInt(pOptionId)
+          .setDefault(Integer.MAX_VALUE)
+          .setMessage("Coaches may purchase up to $1 Miscellaneous Mayhem cards.");
+      case CARDS_RANDOM_EVENT_COST:
+        return new GameOptionInt(pOptionId)
+          .setDefault(200000)
+          .setMessage("Random Event cards can be bought for $1 gps each.");
+      case CARDS_RANDOM_EVENT_MAX:
+        return new GameOptionInt(pOptionId)
+          .setDefault(Integer.MAX_VALUE)
+          .setMessage("Coaches may purchase up to $1 Random Event cards.");
+      case CARDS_SPECIAL_TEAM_PLAY_COST:
+        return new GameOptionInt(pOptionId)
+          .setDefault(50000)
+          .setMessage("Special Team Play cards can be bought for $1 gps each.");
+      case CARDS_SPECIAL_TEAM_PLAY_MAX:
+        return new GameOptionInt(pOptionId)
+          .setDefault(Integer.MAX_VALUE)
+          .setMessage("Coaches may purchase up to $1 Special Team Play cards.");
+      case CARDS_OVERALL_MAX:
+        return new GameOptionInt(pOptionId)
+          .setDefault(Integer.MAX_VALUE)
+          .setMessage("Coaches may purchase up to $1 cards in total.");
       case CHECK_OWNERSHIP:
         return new GameOptionBoolean(pOptionId)
           .setDefault(true)
@@ -128,6 +188,10 @@ public class GameOptionFactory {
         return new GameOptionInt(pOptionId)
           .setDefault(50000)
           .setMessage("Mercenaries can can gain an extra skill for $1 gps.");
+      case INDUCEMENT_MERCENARIES_MAX:
+        return new GameOptionInt(pOptionId)
+          .setDefault(Integer.MAX_VALUE)
+          .setMessage("Coaches may purchase up to $1 Mercenaries.");
       case INDUCEMENT_EXTRA_TRAINING_COST:
         return new GameOptionInt(pOptionId)
           .setDefault(100000)
