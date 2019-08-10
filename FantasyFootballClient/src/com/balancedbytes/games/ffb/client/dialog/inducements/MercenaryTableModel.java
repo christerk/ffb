@@ -25,11 +25,14 @@ public class MercenaryTableModel extends AbstractTableModel {
 	private String[] fColumnNames;
 	private Object[][] fRowData;
 	private DialogBuyInducements fDialog;
+	private int checkedRows = 0;
+	private int maxMercs;
 
 
 	public MercenaryTableModel(DialogBuyInducements pDialog, GameOptions gameOptions) {
 		mercExtraCost = ((GameOptionInt)gameOptions.getOptionWithDefault(GameOptionId.INDUCEMENT_MERCENARIES_EXTRA_COST)).getValue();
 		mercSkillCost = ((GameOptionInt)gameOptions.getOptionWithDefault(GameOptionId.INDUCEMENT_MERCENARIES_SKILL_COST)).getValue();
+		maxMercs =  ((GameOptionInt)gameOptions.getOptionWithDefault(GameOptionId.INDUCEMENT_MERCENARIES_MAX)).getValue();
 
 		fDialog = pDialog;
 		fColumnNames = new String[] { "", "Icon", "Name", "Gold", "Skill" };
@@ -76,13 +79,15 @@ public class MercenaryTableModel extends AbstractTableModel {
 		if (pColumnIndex == 0) {
 			int skillCost = StringTool.isProvided(fRowData[pRowIndex][4]) ? mercSkillCost : 0;
 			if ((Boolean) pValue) {
-				if ((playerCost + skillCost <= fDialog.getAvailableGold()) && (fDialog.getFreeSlotsInRoster() > 0)) {
+				if ((playerCost + skillCost <= fDialog.getAvailableGold()) && (fDialog.getFreeSlotsInRoster() > 0) && checkedRows < maxMercs) {
 					fRowData[pRowIndex][pColumnIndex] = pValue;
 					fireTableCellUpdated(pRowIndex, pColumnIndex);
+					checkedRows = getCheckedRows();
 				}
 			} else {
 				fRowData[pRowIndex][pColumnIndex] = pValue;
 				fireTableCellUpdated(pRowIndex, pColumnIndex);
+				checkedRows = getCheckedRows();
 			}
 			fDialog.recalculateGold();
 		}
