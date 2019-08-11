@@ -7,7 +7,10 @@
 	<reRollCost>70000</reRollCost>	
 	<maxReRolls>8</maxReRolls>
 	<baseIconPath>http://localhost:2224/icons/players/</baseIconPath>
-	<raisedPositionId>necromantic.zombie</raisedPositionId>  
+	<raisedPositionId>necromantic.zombie</raisedPositionId>
+	<apothecary>false</apothecary>
+	<necromancer>true</necromancer>
+	<undead>true</undead>
   
 	<position id="necromantic.werewolf">
 		<quantity>2</quantity>

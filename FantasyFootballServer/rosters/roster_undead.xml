@@ -8,6 +8,9 @@
 	<maxReRolls>8</maxReRolls>	
 	<baseIconPath>http://localhost:2224/icons/players/</baseIconPath>
 	<raisedPositionId>undead.zombie</raisedPositionId>
+	<apothecary>false</apothecary>
+	<necromancer>true</necromancer>
+	<undead>true</undead>
 
 	<position id="undead.mummy">
 		<quantity>2</quantity>
