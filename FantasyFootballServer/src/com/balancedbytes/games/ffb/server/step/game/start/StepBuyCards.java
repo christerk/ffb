@@ -116,7 +116,7 @@ public final class StepBuyCards extends AbstractStep {
     }
     buildDecks();
 
-
+    cardPrices = new HashMap<>();
     for (CardType cardType: CardType.values()) {
       int price = ((GameOptionInt)game.getOptions().getOptionWithDefault(cardType.getCostId())).getValue();
       cardPrices.put(cardType, price);
