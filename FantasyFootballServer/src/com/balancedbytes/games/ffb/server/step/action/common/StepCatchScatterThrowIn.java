@@ -194,6 +194,7 @@ public class StepCatchScatterThrowIn extends AbstractStepWithReRoll {
         break;
       case CATCH_KICKOFF:
       case CATCH_THROW_IN:
+      case CATCH_ACCURATE_PASS_EMPTY_SQUARE:
       case CATCH_MISSED_PASS:
         fBombMode = false;
         if (playerUnderBall != null) {

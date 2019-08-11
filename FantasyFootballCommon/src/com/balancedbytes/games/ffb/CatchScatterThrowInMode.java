@@ -9,6 +9,7 @@ package com.balancedbytes.games.ffb;
 public enum CatchScatterThrowInMode implements INamedObject {
   
   CATCH_ACCURATE_PASS("catchAccuratePass", false),
+  CATCH_ACCURATE_PASS_EMPTY_SQUARE("catchAccuratePassEmptySquare", false),
   CATCH_HAND_OFF("catchHandOff", false),
   CATCH_SCATTER("catchScatter", false),
   SCATTER_BALL("scatterBall", false),
