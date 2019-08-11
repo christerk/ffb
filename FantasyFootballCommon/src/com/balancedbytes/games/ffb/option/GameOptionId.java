@@ -61,7 +61,6 @@ public enum GameOptionId implements INamedObject {
   CARDS_RANDOM_EVENT_MAX("cardsRandomEventMax"),
   CARDS_DESPERATE_MEASURE_COST("cardsDesperateMeasureCost"),
   CARDS_DESPERATE_MEASURE_MAX("cardsDesperateMeasureMax"),
-  CARDS_OVERALL_MAX("cardsOverallMax"),
 
   INDUCEMENT_APOS_COST("inducementAposCost"),
   INDUCEMENT_APOS_MAX("inducementAposMax"),

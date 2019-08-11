@@ -92,10 +92,6 @@ public class GameOptionFactory {
         return new GameOptionInt(pOptionId)
           .setDefault(Integer.MAX_VALUE)
           .setMessage("Coaches may purchase up to $1 Special Team Play cards.");
-      case CARDS_OVERALL_MAX:
-        return new GameOptionInt(pOptionId)
-          .setDefault(Integer.MAX_VALUE)
-          .setMessage("Coaches may purchase up to $1 cards in total.");
       case CHECK_OWNERSHIP:
         return new GameOptionBoolean(pOptionId)
           .setDefault(true)
