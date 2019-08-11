@@ -252,81 +252,89 @@ public class DialogBuyInducements extends Dialog implements ActionListener, KeyL
 		rightPanel.setLayout(new BoxLayout(rightPanel, BoxLayout.Y_AXIS));
 
 		fTableModelStarPlayers = new StarPlayerTableModel(this, gameOptions);
-		fTableStarPlayers = new StarPlayerTable(fTableModelStarPlayers);
-		fTableStarPlayers.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		fTableStarPlayers.getSelectionModel().addListSelectionListener(
-			new ListSelectionListener() {
-				public void valueChanged(ListSelectionEvent pE) {
-					if (!pE.getValueIsAdjusting()) {
-						int selectedRowIndex = fTableStarPlayers.getSelectionModel().getLeadSelectionIndex();
-						if (selectedRowIndex >= 0) {
-							getClient().getClientData().setSelectedPlayer((Player) fTableModelStarPlayers.getValueAt(selectedRowIndex, 4));
-							getClient().getUserInterface().refreshSideBars();
+		int maxStars = ((GameOptionInt) gameOptions.getOptionWithDefault(GameOptionId.INDUCEMENT_STARS_MAX)).getValue();
+
+		if (maxStars > 0) {
+
+			fTableStarPlayers = new StarPlayerTable(fTableModelStarPlayers);
+			fTableStarPlayers.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+			fTableStarPlayers.getSelectionModel().addListSelectionListener(
+				new ListSelectionListener() {
+					public void valueChanged(ListSelectionEvent pE) {
+						if (!pE.getValueIsAdjusting()) {
+							int selectedRowIndex = fTableStarPlayers.getSelectionModel().getLeadSelectionIndex();
+							if (selectedRowIndex >= 0) {
+								getClient().getClientData().setSelectedPlayer((Player) fTableModelStarPlayers.getValueAt(selectedRowIndex, 4));
+								getClient().getUserInterface().refreshSideBars();
+							}
 						}
 					}
 				}
-			}
-		);
-		DefaultTableCellRenderer rightAlignedRenderer = new DefaultTableCellRenderer();
-		rightAlignedRenderer.setHorizontalAlignment(JLabel.RIGHT);
-		fTableStarPlayers.getColumnModel().getColumn(3).setCellRenderer(rightAlignedRenderer);
-		fTableStarPlayers.getColumnModel().getColumn(0).setPreferredWidth(30);
-		fTableStarPlayers.getColumnModel().getColumn(1).setPreferredWidth(50);
-		fTableStarPlayers.getColumnModel().getColumn(2).setPreferredWidth(270);
-		fTableStarPlayers.getColumnModel().getColumn(3).setPreferredWidth(100);
-		fTableStarPlayers.setRowHeight(PlayerIconFactory.MAX_ICON_HEIGHT + 2);
-		fTableStarPlayers.setPreferredScrollableViewportSize(new Dimension(350, 148));
-		JScrollPane scrollPaneStarPlayer = new JScrollPane(fTableStarPlayers);
+			);
+			DefaultTableCellRenderer rightAlignedRenderer = new DefaultTableCellRenderer();
+			rightAlignedRenderer.setHorizontalAlignment(JLabel.RIGHT);
+			fTableStarPlayers.getColumnModel().getColumn(3).setCellRenderer(rightAlignedRenderer);
+			fTableStarPlayers.getColumnModel().getColumn(0).setPreferredWidth(30);
+			fTableStarPlayers.getColumnModel().getColumn(1).setPreferredWidth(50);
+			fTableStarPlayers.getColumnModel().getColumn(2).setPreferredWidth(270);
+			fTableStarPlayers.getColumnModel().getColumn(3).setPreferredWidth(100);
+			fTableStarPlayers.setRowHeight(PlayerIconFactory.MAX_ICON_HEIGHT + 2);
+			fTableStarPlayers.setPreferredScrollableViewportSize(new Dimension(350, 148));
+			JScrollPane scrollPaneStarPlayer = new JScrollPane(fTableStarPlayers);
 
-		JPanel starLabel = new JPanel();
-		starLabel.setLayout(new BoxLayout(starLabel, BoxLayout.X_AXIS));
-		starLabel.add(new JLabel("Star Players (varying Gold 0-2):"));
-		starLabel.add(Box.createHorizontalGlue());
+			JPanel starLabel = new JPanel();
+			starLabel.setLayout(new BoxLayout(starLabel, BoxLayout.X_AXIS));
+			starLabel.add(new JLabel("Star Players (varying Gold 0-2):"));
+			starLabel.add(Box.createHorizontalGlue());
 
-		rightPanel.add(starLabel);
-		rightPanel.add(Box.createVerticalStrut(10));
-		rightPanel.add(scrollPaneStarPlayer);
-		rightPanel.add(Box.createVerticalGlue());
+			rightPanel.add(starLabel);
+			rightPanel.add(Box.createVerticalStrut(10));
+			rightPanel.add(scrollPaneStarPlayer);
+			rightPanel.add(Box.createVerticalGlue());
+		}
 
 		fTableModelMercenaries = new MercenaryTableModel(this, gameOptions);
-		fTableMercenaries = new MercenaryTable(fTableModelMercenaries);
-		fTableMercenaries.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		fTableMercenaries.getSelectionModel().addListSelectionListener(
-			new ListSelectionListener() {
-				public void valueChanged(ListSelectionEvent pE) {
-					if (!pE.getValueIsAdjusting()) {
-						int selectedRowIndex = fTableMercenaries.getSelectionModel().getLeadSelectionIndex();
-						if (selectedRowIndex >= 0) {
-							getClient().getClientData().setSelectedPlayer((Player) fTableModelMercenaries.getValueAt(selectedRowIndex, 5));
-							getClient().getUserInterface().refreshSideBars();
+
+		int maxMercs = ((GameOptionInt) gameOptions.getOptionWithDefault(GameOptionId.INDUCEMENT_MERCENARIES_MAX)).getValue();
+		if (maxMercs > 0) {
+			fTableMercenaries = new MercenaryTable(fTableModelMercenaries);
+			fTableMercenaries.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+			fTableMercenaries.getSelectionModel().addListSelectionListener(
+				new ListSelectionListener() {
+					public void valueChanged(ListSelectionEvent pE) {
+						if (!pE.getValueIsAdjusting()) {
+							int selectedRowIndex = fTableMercenaries.getSelectionModel().getLeadSelectionIndex();
+							if (selectedRowIndex >= 0) {
+								getClient().getClientData().setSelectedPlayer((Player) fTableModelMercenaries.getValueAt(selectedRowIndex, 5));
+								getClient().getUserInterface().refreshSideBars();
+							}
 						}
 					}
 				}
-			}
-		);
-		DefaultTableCellRenderer mercAlignedRenderer = new DefaultTableCellRenderer();
-		mercAlignedRenderer.setHorizontalAlignment(JLabel.RIGHT);
-		fTableMercenaries.getColumnModel().getColumn(3).setCellRenderer(mercAlignedRenderer);
-		fTableMercenaries.getColumnModel().getColumn(0).setPreferredWidth(30);
-		fTableMercenaries.getColumnModel().getColumn(1).setPreferredWidth(50);
-		fTableMercenaries.getColumnModel().getColumn(2).setPreferredWidth(150);
-		fTableMercenaries.getColumnModel().getColumn(3).setPreferredWidth(100);
-		fTableMercenaries.getColumnModel().getColumn(4).setPreferredWidth(120);
-		fTableMercenaries.setRowHeight(PlayerIconFactory.MAX_ICON_HEIGHT + 2);
-		fTableMercenaries.setPreferredScrollableViewportSize(new Dimension(350, 148));
-		JScrollPane scrollPaneMec = new JScrollPane(fTableMercenaries);
-		JPanel mecLabel = new JPanel();
-		mecLabel.setLayout(new BoxLayout(mecLabel, BoxLayout.X_AXIS));
-		mecLabel.add(new JLabel("Mercenaries (varying Gold):"));
-		mecLabel.add(Box.createHorizontalGlue());
+			);
+			DefaultTableCellRenderer mercAlignedRenderer = new DefaultTableCellRenderer();
+			mercAlignedRenderer.setHorizontalAlignment(JLabel.RIGHT);
+			fTableMercenaries.getColumnModel().getColumn(3).setCellRenderer(mercAlignedRenderer);
+			fTableMercenaries.getColumnModel().getColumn(0).setPreferredWidth(30);
+			fTableMercenaries.getColumnModel().getColumn(1).setPreferredWidth(50);
+			fTableMercenaries.getColumnModel().getColumn(2).setPreferredWidth(150);
+			fTableMercenaries.getColumnModel().getColumn(3).setPreferredWidth(100);
+			fTableMercenaries.getColumnModel().getColumn(4).setPreferredWidth(120);
+			fTableMercenaries.setRowHeight(PlayerIconFactory.MAX_ICON_HEIGHT + 2);
+			fTableMercenaries.setPreferredScrollableViewportSize(new Dimension(350, 148));
+			JScrollPane scrollPaneMec = new JScrollPane(fTableMercenaries);
+			JPanel mecLabel = new JPanel();
+			mecLabel.setLayout(new BoxLayout(mecLabel, BoxLayout.X_AXIS));
+			mecLabel.add(new JLabel("Mercenaries (varying Gold):"));
+			mecLabel.add(Box.createHorizontalGlue());
 
-		rightPanel.add(Box.createVerticalStrut(10));
+			rightPanel.add(Box.createVerticalStrut(10));
 
-		rightPanel.add(mecLabel);
-		rightPanel.add(Box.createVerticalStrut(10));
-		rightPanel.add(scrollPaneMec);
-		rightPanel.add(Box.createVerticalGlue());
-		
+			rightPanel.add(mecLabel);
+			rightPanel.add(Box.createVerticalStrut(10));
+			rightPanel.add(scrollPaneMec);
+			rightPanel.add(Box.createVerticalGlue());
+		}
 		return rightPanel;
 
 	}
