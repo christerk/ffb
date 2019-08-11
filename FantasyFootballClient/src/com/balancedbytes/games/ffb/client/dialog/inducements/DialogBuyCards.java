@@ -258,11 +258,18 @@ public class DialogBuyCards extends Dialog implements ActionListener, KeyListene
 
     int nrOfCards = (fNrOfCardsPerType.get(pType) != null) ? fNrOfCardsPerType.get(pType) : 0;
     int cardPrice = cardPrices.getOrDefault(pType, 0);
-    label.append(nrOfCards).append(" cards for ").append(StringTool.formatThousands(cardPrice)).append(" gold each");
+    label.append(nrOfCards).append(" cards for ").append(StringTool.formatThousands(cardPrice))
+      .append(" gold each").append(" ( max. ");
 
-    limit.ifPresent(integer -> label.append(" ( max. ").append(integer).append(" more can be purchased )"));
+    int nrAvailableCards = Math.min(nrOfCards, fAvailableCards);
 
-    label.append("</center></html>");
+    if (limit.isPresent()) {
+      label.append(Math.min(limit.get(), nrAvailableCards));
+    } else {
+      label.append(nrAvailableCards);
+    }
+
+    label.append(" more can be purchased )").append("</center></html>");
 
     button.setText(label.toString());
     button.setEnabled((nrOfCards > 0) && (fAvailableGold >= cardPrice) && (fAvailableCards > 0) && (!limit.isPresent() || limit.get() > 0));
