@@ -20,6 +20,7 @@ public enum CatchScatterThrowInMode implements INamedObject {
   FAILED_CATCH("failedCatch", false),
   FAILED_PICK_UP("failedPickUp", false),
   CATCH_ACCURATE_BOMB("catchAccurateBomb", true),
+  CATCH_ACCURATE_BOMB_EMPTY_SQUARE("catchAccurateBombEmptySquare", true),
   CATCH_BOMB("catchBomb", true);
   
   private String fName;

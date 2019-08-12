@@ -201,7 +201,7 @@ public class StepPass extends AbstractStepWithReRoll {
       if ((catcher == null) || (catcherState == null) || !catcherState.hasTacklezones()) {
         if (PlayerAction.THROW_BOMB == game.getThrowerAction()) {
           game.getFieldModel().setBombCoordinate(game.getPassCoordinate());
-          publishParameter(new StepParameter(StepParameterKey.CATCH_SCATTER_THROW_IN_MODE, CatchScatterThrowInMode.CATCH_BOMB));
+          publishParameter(new StepParameter(StepParameterKey.CATCH_SCATTER_THROW_IN_MODE, fCatcherId == null ? CatchScatterThrowInMode.CATCH_ACCURATE_BOMB_EMPTY_SQUARE : CatchScatterThrowInMode.CATCH_BOMB));
         } else {
           game.getFieldModel().setBallCoordinate(game.getPassCoordinate());
           publishParameter(new StepParameter(StepParameterKey.CATCH_SCATTER_THROW_IN_MODE, fCatcherId == null ? CatchScatterThrowInMode.CATCH_ACCURATE_PASS_EMPTY_SQUARE : CatchScatterThrowInMode.CATCH_MISSED_PASS));
