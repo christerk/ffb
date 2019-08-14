@@ -277,7 +277,7 @@ public class FantasyFootballClient implements IConnectionListener, IDialogCloseL
   }
 
   public InetAddress getServerHost() throws UnknownHostException {
-    String serverName = StringTool.isProvided(getParameters().getServer()) ?
+    String serverName = StringTool.isProvided(getParameters().getTeamHome()) ?
             getParameters().getServer() :
             getProperty(IClientProperty.SERVER_HOST);
 
