@@ -17,14 +17,16 @@ public class ClientCommandUseSkill extends ClientCommand {
   
   private Skill fSkill;
   private boolean fSkillUsed;
+  private String playerId;
   
   public ClientCommandUseSkill() {
     super();
   }
 
-  public ClientCommandUseSkill(Skill pSkill, boolean pSkillUsed) {
+  public ClientCommandUseSkill(Skill pSkill, boolean pSkillUsed, String playerId) {
     fSkill = pSkill;
     fSkillUsed = pSkillUsed;
+    this.playerId = playerId;
   }
   
   public NetCommandId getId() {
@@ -38,7 +40,11 @@ public class ClientCommandUseSkill extends ClientCommand {
   public Skill getSkill() {
     return fSkill;
   }
-   
+
+  public String getPlayerId() {
+    return playerId;
+  }
+
   // JSON serialization
   
   public JsonObject toJsonValue() {
@@ -55,5 +61,4 @@ public class ClientCommandUseSkill extends ClientCommand {
     fSkillUsed = IJsonOption.SKILL_USED.getFrom(jsonObject);
     return this;
   }
-    
 }
