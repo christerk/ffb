@@ -51,6 +51,7 @@ public class ClientCommandUseSkill extends ClientCommand {
     JsonObject jsonObject = super.toJsonValue();
     IJsonOption.SKILL.addTo(jsonObject, fSkill);
     IJsonOption.SKILL_USED.addTo(jsonObject, fSkillUsed);
+    IJsonOption.PLAYER_ID.addTo(jsonObject, playerId);
     return jsonObject;
   }
   
@@ -59,6 +60,7 @@ public class ClientCommandUseSkill extends ClientCommand {
     JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
     fSkill = (Skill) IJsonOption.SKILL.getFrom(jsonObject);
     fSkillUsed = IJsonOption.SKILL_USED.getFrom(jsonObject);
+    playerId = IJsonOption.PLAYER_ID.getFrom(jsonObject); 
     return this;
   }
 }
