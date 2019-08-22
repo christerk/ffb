@@ -123,10 +123,10 @@ public class StepEjectPlayer extends AbstractStep {
         attackerResult.setSendToBoxTurn(game.getTurnData().getTurnNr());
         attackerResult.setSendToBoxHalf(game.getHalf());
       }
-      UtilBox.putPlayerIntoBox(game, actingPlayer.getPlayer());
-      UtilBox.refreshBoxes(game);
-      UtilServerGame.updateLeaderReRolls(this);
     }
+    UtilBox.putPlayerIntoBox(game, actingPlayer.getPlayer());
+    UtilBox.refreshBoxes(game);
+    UtilServerGame.updateLeaderReRolls(this);
     publishParameter(new StepParameter(StepParameterKey.END_TURN, true));
     if ((fFoulerHasBall != null) && fFoulerHasBall) {
       publishParameter(new StepParameter(StepParameterKey.CATCH_SCATTER_THROW_IN_MODE, CatchScatterThrowInMode.SCATTER_BALL));
