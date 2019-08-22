@@ -13,9 +13,17 @@ public class JsonBooleanMapOption extends JsonAbstractOption {
 
   public Map<String, Boolean> getFrom(JsonObject jsonObject) {
     Map<String, Boolean> map = new HashMap<>();
-    for (String name: jsonObject.names()) {
-      Boolean value = jsonObject.get(name).asBoolean();
-      map.put(name, value);
+
+    if (isDefinedIn(jsonObject)) {
+      JsonValue jsonValue = getValueFrom(jsonObject);
+      if (jsonValue instanceof JsonObject) {
+        JsonObject wrappedObject = (JsonObject) jsonValue;
+        for (String name : wrappedObject.names()) {
+          Boolean value = wrappedObject.get(name).asBoolean();
+          map.put(name, value);
+        }
+      }
+
     }
     return map;
   }
