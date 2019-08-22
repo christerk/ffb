@@ -114,6 +114,9 @@ public class StepEjectPlayer extends AbstractStep {
     PlayerResult attackerResult = gameResult.getPlayerResult(actingPlayer.getPlayer());
     if (UtilCards.hasSkill(game, actingPlayer, Skill.SNEAKY_GIT) && UtilGameOption.isOptionEnabled(game, GameOptionId.SNEAKY_GIT_BAN_TO_KO)) {
       game.getFieldModel().setPlayerState(actingPlayer.getPlayer(), playerState.changeBase(PlayerState.KNOCKED_OUT));
+      attackerResult.setSendToBoxReason(SendToBoxReason.FOUL_BAN);
+      attackerResult.setSendToBoxTurn(game.getTurnData().getTurnNr());
+      attackerResult.setSendToBoxHalf(game.getHalf());
     } else {
       if ((fArgueTheCallSuccessful != null) && fArgueTheCallSuccessful) {
         game.getFieldModel().setPlayerState(actingPlayer.getPlayer(), playerState.changeBase(PlayerState.RESERVE));
