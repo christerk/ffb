@@ -37,6 +37,8 @@ import com.balancedbytes.games.ffb.model.InducementSet;
 import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.model.Roster;
 import com.balancedbytes.games.ffb.model.Team;
+import com.balancedbytes.games.ffb.option.GameOptionBoolean;
+import com.balancedbytes.games.ffb.option.GameOptionId;
 import com.balancedbytes.games.ffb.util.UtilInducements;
 import com.balancedbytes.games.ffb.util.StringTool;
 
@@ -283,8 +285,10 @@ public class DialogBuyInducements extends Dialog implements ActionListener, KeyL
 		rightPanel.add(scrollPaneStarPlayer);
 		rightPanel.add(Box.createVerticalGlue());
 
+		GameOptionBoolean pilingOnAllowed = (GameOptionBoolean) getClient().getGame().getOptions().getOptionWithDefault(GameOptionId.PILING_ON_ALLOWED_FOR_MERCS);
+
 		fTableModelMercenaries = new MercenaryTableModel(this);
-		fTableMercenaries = new MercenaryTable(fTableModelMercenaries);
+		fTableMercenaries = new MercenaryTable(fTableModelMercenaries, pilingOnAllowed.isEnabled());
 		fTableMercenaries.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		fTableMercenaries.getSelectionModel().addListSelectionListener(
 			new ListSelectionListener() {
