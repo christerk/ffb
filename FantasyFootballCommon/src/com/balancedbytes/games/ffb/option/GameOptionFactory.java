@@ -104,6 +104,10 @@ public class GameOptionFactory {
         return new GameOptionBoolean(GameOptionId.PETTY_CASH_AFFECTS_TV)
           .setDefault(false)
           .setMessageTrue("Petty Cash affects Team Value.");
+      case PILING_ON_ALLOWED_FOR_MERCS:
+        return new GameOptionBoolean(pOptionId)
+          .setDefault(false)
+          .setMessageTrue("Mercenaries with S access are allowed to take Piling On.");
       case PILING_ON_ARMOR_ONLY:
         return new GameOptionBoolean(GameOptionId.PILING_ON_ARMOR_ONLY)
           .setDefault(false)
