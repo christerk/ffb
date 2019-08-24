@@ -15,8 +15,11 @@ import com.balancedbytes.games.ffb.model.Player;
 @SuppressWarnings("serial")
 public class MercenaryTable extends JTable {
 
-	public MercenaryTable(MercenaryTableModel ab) {
+	private final boolean pilingOnAllowed;
+
+	public MercenaryTable(MercenaryTableModel ab, boolean pilingOnAllowed) {
 		super(ab);
+		this.pilingOnAllowed = pilingOnAllowed;
 	}
 
 	@Override
