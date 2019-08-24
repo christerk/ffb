@@ -31,7 +31,7 @@ public class MercenaryTable extends JTable {
 			skills.add("");
 			for (Skill skill : Skill.values()) {
 				if (cat.contains(skill.getCategory())) {
-					if (!player.hasSkill(skill)) {
+					if (!player.hasSkill(skill) && (Skill.PILING_ON != skill || pilingOnAllowed)) {
 						skills.add(skill.getName());
 					}
 				}
