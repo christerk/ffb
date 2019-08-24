@@ -29,6 +29,7 @@ public enum GameOptionId implements INamedObject {
   FOUL_BONUS_OUTSIDE_TACKLEZONE("foulBonusOutsideTacklezone"),
   FREE_INDUCEMENT_CASH("freeInducementCash"),
   FREE_CARD_CASH("freeCardCash"),
+  PILING_ON_ALLOWED_FOR_MERCS("pilingOnAllowedForMercs"),
   PILING_ON_DOES_NOT_STACK("pilingOnDoesNotStack"),
   PILING_ON_INJURY_ONLY("pilingOnInjuryOnly"),
   PILING_ON_ARMOR_ONLY("pilingOnArmorOnly"),
