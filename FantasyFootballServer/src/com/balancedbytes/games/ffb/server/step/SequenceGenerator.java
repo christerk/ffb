@@ -545,6 +545,15 @@ public class SequenceGenerator {
 
 	}
 
+	public void pushSpikedBallApoSequence(GameState gameState) {
+		gameState.getServer().getDebugLog().log(IServerLogLevel.DEBUG, gameState.getId(),
+			"push spikedBallApoSequence onto stack");
+
+		Sequence sequence = new Sequence(gameState);
+		sequence.add(StepId.APOTHECARY, param(StepParameterKey.APOTHECARY_MODE, ApothecaryMode.CATCHER));
+		gameState.getStepStack().push(sequence.getSequence());
+	}
+
 	private class Sequence {
 		private GameState gameState;
 		private List<IStep> sequence;
