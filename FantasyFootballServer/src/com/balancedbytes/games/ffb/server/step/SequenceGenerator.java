@@ -104,7 +104,6 @@ public class SequenceGenerator {
 		sequence.add(StepId.APOTHECARY,				IStepLabel.APOTHECARY_ATTACKER,
 													param(StepParameterKey.APOTHECARY_MODE, ApothecaryMode.ATTACKER));
 		sequence.add(StepId.CATCH_SCATTER_THROW_IN,	IStepLabel.SCATTER_BALL);
-		sequence.add(StepId.APOTHECARY,				param(StepParameterKey.APOTHECARY_MODE, ApothecaryMode.CATCHER));
 		sequence.add(StepId.END_BLOCKING,			IStepLabel.END_BLOCKING);
 		// may insert endTurn sequence add this point
 
@@ -148,7 +147,6 @@ public class SequenceGenerator {
 		sequence.jump(IStepLabel.SCATTER_BALL);
 		sequence.add(StepId.HAND_OVER,				IStepLabel.HAND_OVER);
 		sequence.add(StepId.CATCH_SCATTER_THROW_IN,	IStepLabel.SCATTER_BALL);
-		sequence.add(StepId.APOTHECARY,				param(StepParameterKey.APOTHECARY_MODE, ApothecaryMode.CATCHER));
 
 		sequence.add(StepId.END_PASSING,			IStepLabel.END_PASSING);
 		// may insert bomb or endPlayerAction sequence add this point
@@ -223,7 +221,6 @@ public class SequenceGenerator {
 		sequence.add(StepId.APOTHECARY,				IStepLabel.APOTHECARY_THROWN_PLAYER,
 													param(StepParameterKey.APOTHECARY_MODE, ApothecaryMode.THROWN_PLAYER));
 		sequence.add(StepId.CATCH_SCATTER_THROW_IN);
-		sequence.add(StepId.APOTHECARY,				param(StepParameterKey.APOTHECARY_MODE, ApothecaryMode.CATCHER));
 		sequence.add(StepId.END_THROW_TEAM_MATE, IStepLabel.END_THROW_TEAM_MATE);
 
 		pGameState.getStepStack().push(sequence.getSequence());
@@ -255,7 +252,6 @@ public class SequenceGenerator {
 		sequence.add(StepId.APOTHECARY,				IStepLabel.APOTHECARY_HIT_PLAYER,
 													param(StepParameterKey.APOTHECARY_MODE, ApothecaryMode.HIT_PLAYER));
 		sequence.add(StepId.CATCH_SCATTER_THROW_IN);
-		sequence.add(StepId.APOTHECARY,				param(StepParameterKey.APOTHECARY_MODE, ApothecaryMode.CATCHER));
 		sequence.add(StepId.END_SCATTER_PLAYER);
 		// may insert a new scatterPlayerSequence at this point
 
@@ -315,7 +311,6 @@ public class SequenceGenerator {
 		// may insert selectSequence at this point
 		sequence.add(StepId.KICKOFF_ANIMATION,		IStepLabel.KICKOFF_ANIMATION);
 		sequence.add(StepId.CATCH_SCATTER_THROW_IN);
-		sequence.add(StepId.APOTHECARY,				param(StepParameterKey.APOTHECARY_MODE, ApothecaryMode.CATCHER));
 		sequence.add(StepId.TOUCHBACK);
 		sequence.add(StepId.CATCH_SCATTER_THROW_IN);
 		sequence.add(StepId.END_KICKOFF, IStepLabel.END_KICKOFF);
@@ -414,7 +409,6 @@ public class SequenceGenerator {
 		sequence.add(StepId.APOTHECARY,				param(StepParameterKey.APOTHECARY_MODE, ApothecaryMode.DEFENDER));
 		sequence.add(StepId.APOTHECARY,				param(StepParameterKey.APOTHECARY_MODE, ApothecaryMode.ATTACKER));
 		sequence.add(StepId.CATCH_SCATTER_THROW_IN,	IStepLabel.SCATTER_BALL);
-		sequence.add(StepId.APOTHECARY,				param(StepParameterKey.APOTHECARY_MODE, ApothecaryMode.CATCHER));
 		sequence.add(StepId.END_MOVING,				IStepLabel.END_MOVING);
 		// may insert endTurn or block sequence add this point
 
@@ -456,7 +450,6 @@ public class SequenceGenerator {
 		sequence.add(StepId.APOTHECARY,				param(StepParameterKey.APOTHECARY_MODE, ApothecaryMode.DEFENDER));
 		sequence.add(StepId.APOTHECARY,				param(StepParameterKey.APOTHECARY_MODE, ApothecaryMode.ATTACKER));
 		sequence.add(StepId.CATCH_SCATTER_THROW_IN);
-		sequence.add(StepId.APOTHECARY,				param(StepParameterKey.APOTHECARY_MODE, ApothecaryMode.CATCHER));
 		sequence.add(StepId.END_INDUCEMENT);
 		// may insert endTurn or inducement sequence at this point
 
@@ -488,7 +481,6 @@ public class SequenceGenerator {
 		sequence.add(StepId.WIZARD);
 		// may insert multiple specialEffect sequences at this point
 		sequence.add(StepId.CATCH_SCATTER_THROW_IN);
-		sequence.add(StepId.APOTHECARY,				param(StepParameterKey.APOTHECARY_MODE, ApothecaryMode.CATCHER));
 
 		pGameState.getStepStack().push(sequence.getSequence());
 
@@ -506,7 +498,6 @@ public class SequenceGenerator {
 													param(StepParameterKey.PASS_FUMBLE, pPassFumble));
 		// may insert multiple specialEffect sequences add this point
 		sequence.add(StepId.CATCH_SCATTER_THROW_IN);
-		sequence.add(StepId.APOTHECARY,				param(StepParameterKey.APOTHECARY_MODE, ApothecaryMode.CATCHER));
 		sequence.add(StepId.END_BOMB,				IStepLabel.END_BOMB);
 		// may insert endPlayerAction or pass sequence add this point
 		pGameState.getStepStack().push(sequence.getSequence());
