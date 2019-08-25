@@ -129,6 +129,7 @@ public class UtilServerInjury {
 				injuryResult.addArmorModifier(ArmorModifier.CHAINSAW);
 				injuryResult.setArmorBroken(diceInterpreter.isArmourBroken(gameState, injuryResult));
 				break;
+			case BLOCK_STUNNED:
 			case BLOCK_PRONE:
 				injuryResult.setArmorRoll(diceRoller.rollArmour());
 				injuryResult.setArmorBroken(diceInterpreter.isArmourBroken(gameState, injuryResult));
@@ -244,6 +245,7 @@ public class UtilServerInjury {
 				case BITTEN:
 				case BOMB:
 				case BLOCK_PRONE:
+				case BLOCK_STUNNED:
 					injuryResult.setInjury(diceInterpreter.interpretRollInjury(gameState, injuryResult));
 					break;
 				case BLOCK:
@@ -354,6 +356,7 @@ public class UtilServerInjury {
 				break;
 			case BLOCK:
 			case BLOCK_PRONE:
+			case BLOCK_STUNNED:
 				injuryResult.setSendToBoxReason(SendToBoxReason.BLOCKED);
 				break;
 			case FOUL:
