@@ -300,12 +300,17 @@ public class UtilServerInjury {
 
 		} else {
 
-			if ((pInjuryType == InjuryType.STAB) || (pInjuryType == InjuryType.CHAINSAW)) {
-				injuryResult.setInjury(null);
-			} else {
-				injuryResult.setInjury(new PlayerState(PlayerState.PRONE));
+			switch (pInjuryType) {
+				case STAB:
+				case CHAINSAW:
+					injuryResult.setInjury(null);
+					break;
+				case BLOCK_STUNNED:
+					injuryResult.setInjury(new PlayerState(PlayerState.STUNNED));
+					break;
+				default:
+					injuryResult.setInjury(new PlayerState(PlayerState.PRONE));
 			}
-
 		}
 
 		if (injuryResult.isSeriousInjury()) {
