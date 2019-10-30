@@ -34,6 +34,10 @@ public class CatchModifierFactory implements IRollModifierFactory {
         catchModifiers.add(CatchModifier.DIVING_CATCH);
       }
     }
+    if ((CatchScatterThrowInMode.CATCH_ACCURATE_PASS_EMPTY_SQUARE == pCatchMode || CatchScatterThrowInMode.CATCH_ACCURATE_BOMB_EMPTY_SQUARE == pCatchMode)
+      && UtilCards.hasSkill(pGame, pPlayer, Skill.DIVING_CATCH)) {
+      catchModifiers.add(CatchModifier.ACCURATE);
+    }
     if (CatchScatterThrowInMode.CATCH_HAND_OFF == pCatchMode) {
       catchModifiers.add(CatchModifier.HAND_OFF);
     }

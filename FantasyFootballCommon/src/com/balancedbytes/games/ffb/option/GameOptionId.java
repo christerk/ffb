@@ -46,7 +46,43 @@ public enum GameOptionId implements INamedObject {
   WIZARD_AVAILABLE("wizardAvailable"),
 
   EXTRA_MVP("extraMvp"),
-  
+
+  CARDS_MISCELLANEOUS_MAYHEM_COST("cardsMiscellaneousMayhemCost"),
+  CARDS_MISCELLANEOUS_MAYHEM_MAX("cardsMiscellaneousMayhemMax"),
+  CARDS_SPECIAL_TEAM_PLAY_COST("cardsSpecialTeamPlayCost"),
+  CARDS_SPECIAL_TEAM_PLAY_MAX("cardsSpecialTeamPlayMax"),
+  CARDS_MAGIC_ITEM_COST("cardsMagicItemCost"),
+  CARDS_MAGIC_ITEM_MAX("cardsMagicItemMax"),
+  CARDS_DIRTY_TRICK_COST("cardsDirtyTrickCost"),
+  CARDS_DIRTY_TRICK_MAX("cardsDirtyTrickMax"),
+  CARDS_GOOD_KARMA_COST("cardsGoodKarmaCost"),
+  CARDS_GOOD_KARMA_MAX("cardsGoodKarmaMax"),
+  CARDS_RANDOM_EVENT_COST("cardsRandomEventCost"),
+  CARDS_RANDOM_EVENT_MAX("cardsRandomEventMax"),
+  CARDS_DESPERATE_MEASURE_COST("cardsDesperateMeasureCost"),
+  CARDS_DESPERATE_MEASURE_MAX("cardsDesperateMeasureMax"),
+
+  INDUCEMENT_APOS_COST("inducementAposCost"),
+  INDUCEMENT_APOS_MAX("inducementAposMax"),
+  INDUCEMENT_BRIBES_COST("inducementBribesCost"),
+  INDUCEMENT_BRIBES_REDUCED_COST("inducementBribesReducedCost"),
+  INDUCEMENT_BRIBES_MAX("inducementBribesMax"),
+  INDUCEMENT_CHEFS_COST("inducementChefsCost"),
+  INDUCEMENT_CHEFS_REDUCED_COST("inducementChefsReducedCost"),
+  INDUCEMENT_CHEFS_MAX("inducementChefsMax"),
+  INDUCEMENT_EXTRA_TRAINING_COST("inducementExtraTrainingCost"),
+  INDUCEMENT_EXTRA_TRAINING_MAX("inducementExtraTrainingMax"),
+  INDUCEMENT_IGORS_COST("inducementIgorsCost"),
+  INDUCEMENT_IGORS_MAX("inducementIgorsMax"),
+  INDUCEMENT_KEGS_COST("inducementKegsCost"),
+  INDUCEMENT_KEGS_MAX("inducementKegsMax"),
+  INDUCEMENT_MERCENARIES_EXTRA_COST("inducementMercenariesExtraCost"),
+  INDUCEMENT_MERCENARIES_SKILL_COST("inducementMercenariesSkillCost"),
+  INDUCEMENT_MERCENARIES_MAX("inducementMercenariesMax"),
+  INDUCEMENT_STARS_MAX("inducementStarsMax"),
+  INDUCEMENT_WIZARDS_COST("inducementWizardsCost"),
+  INDUCEMENT_WIZARDS_MAX("inducementWizardsMax"),
+
   PITCH_URL("pitchUrl");
   
   private String fName;

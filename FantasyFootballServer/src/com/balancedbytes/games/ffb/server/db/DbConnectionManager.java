@@ -20,6 +20,7 @@ public class DbConnectionManager {
   private String fDbUrl;
   private String fDbUser;
   private String fDbPassword;
+  private String fDbType;
 
   public DbConnectionManager(FantasyFootballServer pServer) {
     fServer = pServer;
@@ -82,4 +83,11 @@ public class DbConnectionManager {
     return fServer.getMode().isStandalone();
   }
 
+  public void setDbType(String pDbType) {
+    fDbType = pDbType;
+  }
+
+  public boolean useMysqlDialect() {
+    return "mysql".equalsIgnoreCase(fDbType);
+  }
 }

@@ -152,6 +152,7 @@ public class StepCatchScatterThrowIn extends AbstractStepWithReRoll {
     Player playerUnderBall = game.getFieldModel().getPlayer(game.getFieldModel().getBallCoordinate());
     switch (fCatchScatterThrowInMode) {
       case CATCH_BOMB:
+      case CATCH_ACCURATE_BOMB_EMPTY_SQUARE:
       case CATCH_ACCURATE_BOMB:
         fBombMode = true;
         if (!StringTool.isProvided(fCatcherId)) {
@@ -166,7 +167,9 @@ public class StepCatchScatterThrowIn extends AbstractStepWithReRoll {
             fCatchScatterThrowInMode = CatchScatterThrowInMode.SCATTER_BALL;
           }
         } else {
-          fCatchScatterThrowInMode = CatchScatterThrowInMode.CATCH_BOMB;
+          if (CatchScatterThrowInMode.CATCH_ACCURATE_BOMB == fCatchScatterThrowInMode) {
+            fCatchScatterThrowInMode = CatchScatterThrowInMode.CATCH_BOMB;
+          }
           fCatchScatterThrowInMode = divingCatch(game.getFieldModel().getBombCoordinate());
         }
         if ((fCatchScatterThrowInMode == CatchScatterThrowInMode.FAILED_CATCH) || (fCatchScatterThrowInMode == CatchScatterThrowInMode.SCATTER_BALL)) {
@@ -194,6 +197,7 @@ public class StepCatchScatterThrowIn extends AbstractStepWithReRoll {
         break;
       case CATCH_KICKOFF:
       case CATCH_THROW_IN:
+      case CATCH_ACCURATE_PASS_EMPTY_SQUARE:
       case CATCH_MISSED_PASS:
         fBombMode = false;
         if (playerUnderBall != null) {

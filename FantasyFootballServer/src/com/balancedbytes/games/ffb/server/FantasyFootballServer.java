@@ -113,6 +113,7 @@ public class FantasyFootballServer {
     dbConnectionManager.setDbUrl(getProperty(IServerProperty.DB_URL));
     dbConnectionManager.setDbUser(getProperty(IServerProperty.DB_USER));
     dbConnectionManager.setDbPassword(getProperty(IServerProperty.DB_PASSWORD));
+    dbConnectionManager.setDbType(getProperty(IServerProperty.DB_TYPE));
 
     if (fMode.isInitDb()) {
 
