@@ -68,4 +68,7 @@ public interface IServerProperty {
   String TIMER_DB_KEEP_ALIVE = "timer.dbKeepAlive";
   String TIMER_NETWORK_ENTROPY = "timer.networkEntropy";
 
+  String TIMER_SESSION_TIMEOUT_ENABLED = "timer.sessionTimeoutEnabled";
+  String TIMER_SESSION_TIMEOUT_SCHEDULE = "timer.sessionTimeoutSchedule";
+  String SESSION_TIMEOUT_VALUE = "session.timeoutValue";
 }
