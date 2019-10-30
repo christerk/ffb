@@ -12,7 +12,7 @@ public class JsonBooleanMapOption extends JsonAbstractOption {
   }
 
   public Map<String, Boolean> getFrom(JsonObject jsonObject) {
-    Map<String, Boolean> map = new HashMap<>();
+    Map<String, Boolean> map = new HashMap<String, Boolean>();
 
     if (isDefinedIn(jsonObject)) {
       JsonValue jsonValue = getValueFrom(jsonObject);
