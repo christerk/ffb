@@ -88,10 +88,10 @@ public class DialogBuyCards extends Dialog implements ActionListener, KeyListene
     panelMain.add(panelCards);
     panelMain.add(Box.createVerticalStrut(10));
 
-    fNrOfCardsPerType = new HashMap<>();
-    fButtonPerType = new HashMap<>();
-    cardPrices = new HashMap<>();
-    cardLimits = new HashMap<>();
+    fNrOfCardsPerType = new HashMap<CardType, Integer>();
+    fButtonPerType = new HashMap<CardType, JButton>();
+    cardPrices = new HashMap<CardType, Integer>();
+    cardLimits = new HashMap<CardType, Integer>();
 
     for (CardType cardType: CardType.values()) {
       int price = ((GameOptionInt)pClient.getGame().getOptions().getOptionWithDefault(cardType.getCostId())).getValue();
