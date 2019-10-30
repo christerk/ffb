@@ -27,6 +27,7 @@ public enum InjuryType implements INamedObject {
   PILING_ON_KNOCKED_OUT("pilingOnKnockedOut", false),
   BALL_AND_CHAIN("ballAndChain", false),
   BLOCK_PRONE("blockProne", false),
+  BLOCK_STUNNED("blockStunned", false),
   BOMB("bomb", false);
   
   private String fName;

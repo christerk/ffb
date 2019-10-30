@@ -144,13 +144,19 @@ public class StepDropFallingPlayers extends AbstractStep {
         }
       } else {
         publishParameters(UtilServerInjury.dropPlayer(this, game.getDefender(), ApothecaryMode.DEFENDER));
-        if ((fOldDefenderState != null) && fOldDefenderState.isProne()) {
-          fInjuryResultDefender = UtilServerInjury.handleInjury(this, InjuryType.BLOCK_PRONE, actingPlayer.getPlayer(), game.getDefender(), defenderCoordinate,
-              null, ApothecaryMode.DEFENDER);
-        } else {
-          fInjuryResultDefender = UtilServerInjury.handleInjury(this, InjuryType.BLOCK, actingPlayer.getPlayer(), game.getDefender(), defenderCoordinate, null,
-              ApothecaryMode.DEFENDER);
+        InjuryType injuryType = InjuryType.BLOCK;
+
+        if (fOldDefenderState != null) {
+          if (fOldDefenderState.isStunned()){
+            injuryType = InjuryType.BLOCK_STUNNED;
+          } else if (fOldDefenderState.isProne()) {
+            injuryType = InjuryType.BLOCK_PRONE;
+          }
         }
+
+        fInjuryResultDefender = UtilServerInjury.handleInjury(this, injuryType, actingPlayer.getPlayer(), game.getDefender(), defenderCoordinate,
+          null, ApothecaryMode.DEFENDER);
+
         if (UtilCards.hasSkill(game, actingPlayer, Skill.WEEPING_DAGGER) && fInjuryResultDefender.isBadlyHurt()) {
           boolean success = rollWeepingDagger(actingPlayer.getPlayer(), game.getDefender());
           if (success) {
@@ -179,9 +185,6 @@ public class StepDropFallingPlayers extends AbstractStep {
     if (doNextStep) {
       if (fInjuryResultDefender != null) {
         publishParameter(new StepParameter(StepParameterKey.INJURY_RESULT, fInjuryResultDefender));
-        // if (fOldDefenderState != null) {
-        //   game.getFieldModel().setPlayerState(game.getDefender(), fOldDefenderState);
-        // }
       }
       if (fUsingPilingOn != null) {
         publishParameter(new StepParameter(StepParameterKey.USING_PILING_ON, fUsingPilingOn));
