@@ -9,6 +9,8 @@ import java.util.Date;
 import java.util.Properties;
 import java.util.Timer;
 
+import com.balancedbytes.games.ffb.server.commandline.InifileParamFilter;
+import com.balancedbytes.games.ffb.server.commandline.InifileParamFilterResult;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
@@ -299,7 +301,11 @@ public class FantasyFootballServer {
     fBlockingNewGames = pBlockingNewGames;
   }
 
-  public static void main(String[] args) throws IOException, SQLException {
+  public static void main(String[] origArgs) throws IOException, SQLException {
+
+    InifileParamFilterResult filterResult = new InifileParamFilter().filterForInifile(origArgs);
+
+    String[] args = filterResult.getFilteredArgs();
 
     if (!ArrayTool.isProvided(args)) {
 
@@ -310,7 +316,7 @@ public class FantasyFootballServer {
 
       ServerMode serverMode = ServerMode.fromArguments(args);
 
-      BufferedInputStream propertyInputStream = new BufferedInputStream(new FileInputStream("server.ini"));
+      BufferedInputStream propertyInputStream = new BufferedInputStream(new FileInputStream(filterResult.getInifileName()));
       Properties properties = new Properties();
       properties.load(propertyInputStream);
       propertyInputStream.close();

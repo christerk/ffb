@@ -12,6 +12,8 @@ import java.util.regex.Pattern;
 
 import com.balancedbytes.games.ffb.PasswordChallenge;
 import com.balancedbytes.games.ffb.server.IServerProperty;
+import com.balancedbytes.games.ffb.server.commandline.InifileParamFilter;
+import com.balancedbytes.games.ffb.server.commandline.InifileParamFilterResult;
 import com.balancedbytes.games.ffb.server.util.UtilServerHttpClient;
 import com.balancedbytes.games.ffb.util.ArrayTool;
 import com.balancedbytes.games.ffb.util.StringTool;
@@ -42,7 +44,11 @@ public class AdminConnector {
 
   private static final Pattern _PATTERN_CHALLENGE = Pattern.compile("<challenge>([^<]+)</challenge>");
 
-  public static void main(String[] args) throws NoSuchAlgorithmException, IOException {
+  public static void main(String[] origArgs) throws NoSuchAlgorithmException, IOException {
+
+      InifileParamFilterResult filterResult = new InifileParamFilter().filterForInifile(origArgs);
+
+      String[] args = filterResult.getFilteredArgs();
 
     if (!ArrayTool.isProvided(args) || !StringTool.isProvided(args[0])) {
 
@@ -53,7 +59,7 @@ public class AdminConnector {
       Properties serverProperties = new Properties();
       BufferedInputStream in = null;
       try {
-        in = new BufferedInputStream(AdminConnector.class.getResourceAsStream("/server.ini")); 
+        in = new BufferedInputStream(AdminConnector.class.getResourceAsStream("/" + filterResult.getInifileName()));
         serverProperties.load(in);
       } finally {
         if (in != null) {
