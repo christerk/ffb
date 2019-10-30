@@ -39,12 +39,7 @@ import com.balancedbytes.games.ffb.server.IServerJsonOption;
 import com.balancedbytes.games.ffb.server.IServerLogLevel;
 import com.balancedbytes.games.ffb.server.InjuryResult;
 import com.balancedbytes.games.ffb.server.net.ReceivedCommand;
-import com.balancedbytes.games.ffb.server.step.AbstractStepWithReRoll;
-import com.balancedbytes.games.ffb.server.step.StepAction;
-import com.balancedbytes.games.ffb.server.step.StepCommandStatus;
-import com.balancedbytes.games.ffb.server.step.StepId;
-import com.balancedbytes.games.ffb.server.step.StepParameter;
-import com.balancedbytes.games.ffb.server.step.StepParameterKey;
+import com.balancedbytes.games.ffb.server.step.*;
 import com.balancedbytes.games.ffb.server.util.UtilServerCards;
 import com.balancedbytes.games.ffb.server.util.UtilServerCatchScatterThrowIn;
 import com.balancedbytes.games.ffb.server.util.UtilServerDialog;
@@ -218,9 +213,14 @@ public class StepCatchScatterThrowIn extends AbstractStepWithReRoll {
           InjuryResult injuryResultCatcher = UtilServerInjury.handleInjury(this, InjuryType.STAB, null, playerUnderBall,
               game.getFieldModel().getBallCoordinate(), null, ApothecaryMode.CATCHER);
           if (injuryResultCatcher.isArmorBroken()) {
+            getGameState().pushCurrentStepOnStack();
+            SequenceGenerator.getInstance().pushSpikedBallApoSequence(getGameState());
+            fCatchScatterThrowInMode = CatchScatterThrowInMode.SCATTER_BALL;
+            getResult().setNextAction(StepAction.NEXT_STEP);
             publishParameters(UtilServerInjury.dropPlayer(this, playerUnderBall, ApothecaryMode.CATCHER));
+            publishParameter(new StepParameter(StepParameterKey.INJURY_RESULT, injuryResultCatcher));
+            return;
           }
-          publishParameter(new StepParameter(StepParameterKey.INJURY_RESULT, injuryResultCatcher));
         }
         // drop through to regular scatter
       case SCATTER_BALL:
