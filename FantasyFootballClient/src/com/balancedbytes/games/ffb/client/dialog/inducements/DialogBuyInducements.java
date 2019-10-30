@@ -33,16 +33,17 @@ import com.balancedbytes.games.ffb.client.FantasyFootballClient;
 import com.balancedbytes.games.ffb.client.PlayerIconFactory;
 import com.balancedbytes.games.ffb.client.dialog.Dialog;
 import com.balancedbytes.games.ffb.dialog.DialogId;
-import com.balancedbytes.games.ffb.model.InducementSet;
-import com.balancedbytes.games.ffb.model.Player;
-import com.balancedbytes.games.ffb.model.Roster;
-import com.balancedbytes.games.ffb.model.Team;
+import com.balancedbytes.games.ffb.model.*;
+import com.balancedbytes.games.ffb.option.GameOptionId;
+import com.balancedbytes.games.ffb.option.GameOptionInt;
 import com.balancedbytes.games.ffb.util.UtilInducements;
 import com.balancedbytes.games.ffb.util.StringTool;
 
 @SuppressWarnings("serial")
 public class DialogBuyInducements extends Dialog implements ActionListener, KeyListener {
-//	public class DialogBuyInducements extends Dialog implements ActionListener, KeyListener, ListSelectionListener {
+
+	private final int mercExtraCost;
+	private final int mercSkillCost;
 
 	private Set<DropDownPanel> fPanels = new HashSet<DropDownPanel>();
 	private int fAvailableGold = 0;
@@ -59,7 +60,7 @@ public class DialogBuyInducements extends Dialog implements ActionListener, KeyL
 	private MercenaryTableModel fTableModelMercenaries;
 	private Team fTeam;
 
-	public DialogBuyInducements(FantasyFootballClient client, String teamId, int availableGold, boolean wizardAvailable) {
+	public DialogBuyInducements(FantasyFootballClient client, String teamId, int availableGold) {
 
 		super(client, "Buy Inducements", true);
 
@@ -90,9 +91,14 @@ public class DialogBuyInducements extends Dialog implements ActionListener, KeyL
 		fGoldPanel.add(Box.createHorizontalGlue());
 
 		fGoldPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 0, 10));
-		
-		JPanel leftPanel = buildLeftPanel(wizardAvailable);
-		JPanel rightPanel = buildRightPanel();
+
+		GameOptions gameOptions = client.getGame().getOptions();
+
+		mercExtraCost = ((GameOptionInt)gameOptions.getOptionWithDefault(GameOptionId.INDUCEMENT_MERCENARIES_EXTRA_COST)).getValue();
+		mercSkillCost = ((GameOptionInt)gameOptions.getOptionWithDefault(GameOptionId.INDUCEMENT_MERCENARIES_SKILL_COST)).getValue();
+
+		JPanel leftPanel = buildLeftPanel(gameOptions);
+		JPanel rightPanel = buildRightPanel(gameOptions);
 
 		JPanel centerPanel = new JPanel();
 		centerPanel.setLayout(new BoxLayout(centerPanel, BoxLayout.X_AXIS));
@@ -142,7 +148,7 @@ public class DialogBuyInducements extends Dialog implements ActionListener, KeyL
 		return freeSlots;
 	}
 
-	private JPanel buildLeftPanel(boolean wizardAvailable) {
+	private JPanel buildLeftPanel(GameOptions gameOptions) {
 
 		int verticalStrut = 10;
 
@@ -157,15 +163,14 @@ public class DialogBuyInducements extends Dialog implements ActionListener, KeyL
 		leftPanel.add(labelPanel);
 		leftPanel.add(Box.createVerticalStrut(10));
 
-		createPanel(InducementType.BLOODWEISER_BABES, leftPanel, verticalStrut);
-		createPanel(InducementType.BRIBES, leftPanel, verticalStrut);
-		createPanel(InducementType.EXTRA_TEAM_TRAINING, leftPanel, verticalStrut);
-		createPanel(InducementType.MASTER_CHEF, leftPanel, verticalStrut);
-		createPanel(InducementType.IGOR, leftPanel, verticalStrut);
-		createPanel(InducementType.WANDERING_APOTHECARIES, leftPanel, verticalStrut);
-		if (wizardAvailable) {
-		  createPanel(InducementType.WIZARD, leftPanel, 0);
-		}
+		createPanel(InducementType.BLOODWEISER_KEGS, leftPanel, verticalStrut, gameOptions);
+		createPanel(InducementType.BRIBES, leftPanel, verticalStrut, gameOptions);
+		createPanel(InducementType.EXTRA_TEAM_TRAINING, leftPanel, verticalStrut, gameOptions);
+		createPanel(InducementType.MASTER_CHEF, leftPanel, verticalStrut, gameOptions);
+		createPanel(InducementType.IGOR, leftPanel, verticalStrut, gameOptions);
+		createPanel(InducementType.WANDERING_APOTHECARIES, leftPanel, verticalStrut, gameOptions);
+		createPanel(InducementType.WIZARD, leftPanel, 0, gameOptions);
+
 
 		leftPanel.add(Box.createVerticalGlue());
 
@@ -240,88 +245,96 @@ public class DialogBuyInducements extends Dialog implements ActionListener, KeyL
 		return fRoster;
 	}
 	
-	private JPanel buildRightPanel() {
+	private JPanel buildRightPanel(GameOptions gameOptions) {
 
 		// Right Panel
 		JPanel rightPanel = new JPanel();
 		rightPanel.setLayout(new BoxLayout(rightPanel, BoxLayout.Y_AXIS));
 
-		fTableModelStarPlayers = new StarPlayerTableModel(this);
-		fTableStarPlayers = new StarPlayerTable(fTableModelStarPlayers);
-		fTableStarPlayers.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		fTableStarPlayers.getSelectionModel().addListSelectionListener(
-			new ListSelectionListener() {
-				public void valueChanged(ListSelectionEvent pE) {
-					if (!pE.getValueIsAdjusting()) {
-						int selectedRowIndex = fTableStarPlayers.getSelectionModel().getLeadSelectionIndex();
-						if (selectedRowIndex >= 0) {
-							getClient().getClientData().setSelectedPlayer((Player) fTableModelStarPlayers.getValueAt(selectedRowIndex, 4));
-							getClient().getUserInterface().refreshSideBars();
+		fTableModelStarPlayers = new StarPlayerTableModel(this, gameOptions);
+		int maxStars = ((GameOptionInt) gameOptions.getOptionWithDefault(GameOptionId.INDUCEMENT_STARS_MAX)).getValue();
+
+		if (maxStars > 0) {
+
+			fTableStarPlayers = new StarPlayerTable(fTableModelStarPlayers);
+			fTableStarPlayers.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+			fTableStarPlayers.getSelectionModel().addListSelectionListener(
+				new ListSelectionListener() {
+					public void valueChanged(ListSelectionEvent pE) {
+						if (!pE.getValueIsAdjusting()) {
+							int selectedRowIndex = fTableStarPlayers.getSelectionModel().getLeadSelectionIndex();
+							if (selectedRowIndex >= 0) {
+								getClient().getClientData().setSelectedPlayer((Player) fTableModelStarPlayers.getValueAt(selectedRowIndex, 4));
+								getClient().getUserInterface().refreshSideBars();
+							}
 						}
 					}
 				}
-			}
-		);
-		DefaultTableCellRenderer rightAlignedRenderer = new DefaultTableCellRenderer();
-		rightAlignedRenderer.setHorizontalAlignment(JLabel.RIGHT);
-		fTableStarPlayers.getColumnModel().getColumn(3).setCellRenderer(rightAlignedRenderer);
-		fTableStarPlayers.getColumnModel().getColumn(0).setPreferredWidth(30);
-		fTableStarPlayers.getColumnModel().getColumn(1).setPreferredWidth(50);
-		fTableStarPlayers.getColumnModel().getColumn(2).setPreferredWidth(270);
-		fTableStarPlayers.getColumnModel().getColumn(3).setPreferredWidth(100);
-		fTableStarPlayers.setRowHeight(PlayerIconFactory.MAX_ICON_HEIGHT + 2);
-		fTableStarPlayers.setPreferredScrollableViewportSize(new Dimension(350, 148));
-		JScrollPane scrollPaneStarPlayer = new JScrollPane(fTableStarPlayers);
+			);
+			DefaultTableCellRenderer rightAlignedRenderer = new DefaultTableCellRenderer();
+			rightAlignedRenderer.setHorizontalAlignment(JLabel.RIGHT);
+			fTableStarPlayers.getColumnModel().getColumn(3).setCellRenderer(rightAlignedRenderer);
+			fTableStarPlayers.getColumnModel().getColumn(0).setPreferredWidth(30);
+			fTableStarPlayers.getColumnModel().getColumn(1).setPreferredWidth(50);
+			fTableStarPlayers.getColumnModel().getColumn(2).setPreferredWidth(270);
+			fTableStarPlayers.getColumnModel().getColumn(3).setPreferredWidth(100);
+			fTableStarPlayers.setRowHeight(PlayerIconFactory.MAX_ICON_HEIGHT + 2);
+			fTableStarPlayers.setPreferredScrollableViewportSize(new Dimension(350, 148));
+			JScrollPane scrollPaneStarPlayer = new JScrollPane(fTableStarPlayers);
 
-		JPanel starLabel = new JPanel();
-		starLabel.setLayout(new BoxLayout(starLabel, BoxLayout.X_AXIS));
-		starLabel.add(new JLabel("Star Players (varying Gold 0-2):"));
-		starLabel.add(Box.createHorizontalGlue());
+			JPanel starLabel = new JPanel();
+			starLabel.setLayout(new BoxLayout(starLabel, BoxLayout.X_AXIS));
+			starLabel.add(new JLabel("Star Players (varying Gold 0-2):"));
+			starLabel.add(Box.createHorizontalGlue());
 
-		rightPanel.add(starLabel);
-		rightPanel.add(Box.createVerticalStrut(10));
-		rightPanel.add(scrollPaneStarPlayer);
-		rightPanel.add(Box.createVerticalGlue());
+			rightPanel.add(starLabel);
+			rightPanel.add(Box.createVerticalStrut(10));
+			rightPanel.add(scrollPaneStarPlayer);
+			rightPanel.add(Box.createVerticalGlue());
+		}
 
-		fTableModelMercenaries = new MercenaryTableModel(this);
-		fTableMercenaries = new MercenaryTable(fTableModelMercenaries);
-		fTableMercenaries.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		fTableMercenaries.getSelectionModel().addListSelectionListener(
-			new ListSelectionListener() {
-				public void valueChanged(ListSelectionEvent pE) {
-					if (!pE.getValueIsAdjusting()) {
-						int selectedRowIndex = fTableMercenaries.getSelectionModel().getLeadSelectionIndex();
-						if (selectedRowIndex >= 0) {
-							getClient().getClientData().setSelectedPlayer((Player) fTableModelMercenaries.getValueAt(selectedRowIndex, 5));
-							getClient().getUserInterface().refreshSideBars();
+		fTableModelMercenaries = new MercenaryTableModel(this, gameOptions);
+
+		int maxMercs = ((GameOptionInt) gameOptions.getOptionWithDefault(GameOptionId.INDUCEMENT_MERCENARIES_MAX)).getValue();
+		if (maxMercs > 0) {
+			fTableMercenaries = new MercenaryTable(fTableModelMercenaries);
+			fTableMercenaries.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+			fTableMercenaries.getSelectionModel().addListSelectionListener(
+				new ListSelectionListener() {
+					public void valueChanged(ListSelectionEvent pE) {
+						if (!pE.getValueIsAdjusting()) {
+							int selectedRowIndex = fTableMercenaries.getSelectionModel().getLeadSelectionIndex();
+							if (selectedRowIndex >= 0) {
+								getClient().getClientData().setSelectedPlayer((Player) fTableModelMercenaries.getValueAt(selectedRowIndex, 5));
+								getClient().getUserInterface().refreshSideBars();
+							}
 						}
 					}
 				}
-			}
-		);
-		DefaultTableCellRenderer mercAlignedRenderer = new DefaultTableCellRenderer();
-		mercAlignedRenderer.setHorizontalAlignment(JLabel.RIGHT);
-		fTableMercenaries.getColumnModel().getColumn(3).setCellRenderer(mercAlignedRenderer);
-		fTableMercenaries.getColumnModel().getColumn(0).setPreferredWidth(30);
-		fTableMercenaries.getColumnModel().getColumn(1).setPreferredWidth(50);
-		fTableMercenaries.getColumnModel().getColumn(2).setPreferredWidth(150);
-		fTableMercenaries.getColumnModel().getColumn(3).setPreferredWidth(100);
-		fTableMercenaries.getColumnModel().getColumn(4).setPreferredWidth(120);
-		fTableMercenaries.setRowHeight(PlayerIconFactory.MAX_ICON_HEIGHT + 2);
-		fTableMercenaries.setPreferredScrollableViewportSize(new Dimension(350, 148));
-		JScrollPane scrollPaneMec = new JScrollPane(fTableMercenaries);
-		JPanel mecLabel = new JPanel();
-		mecLabel.setLayout(new BoxLayout(mecLabel, BoxLayout.X_AXIS));
-		mecLabel.add(new JLabel("Mercenaries (varying Gold):"));
-		mecLabel.add(Box.createHorizontalGlue());
+			);
+			DefaultTableCellRenderer mercAlignedRenderer = new DefaultTableCellRenderer();
+			mercAlignedRenderer.setHorizontalAlignment(JLabel.RIGHT);
+			fTableMercenaries.getColumnModel().getColumn(3).setCellRenderer(mercAlignedRenderer);
+			fTableMercenaries.getColumnModel().getColumn(0).setPreferredWidth(30);
+			fTableMercenaries.getColumnModel().getColumn(1).setPreferredWidth(50);
+			fTableMercenaries.getColumnModel().getColumn(2).setPreferredWidth(150);
+			fTableMercenaries.getColumnModel().getColumn(3).setPreferredWidth(100);
+			fTableMercenaries.getColumnModel().getColumn(4).setPreferredWidth(120);
+			fTableMercenaries.setRowHeight(PlayerIconFactory.MAX_ICON_HEIGHT + 2);
+			fTableMercenaries.setPreferredScrollableViewportSize(new Dimension(350, 148));
+			JScrollPane scrollPaneMec = new JScrollPane(fTableMercenaries);
+			JPanel mecLabel = new JPanel();
+			mecLabel.setLayout(new BoxLayout(mecLabel, BoxLayout.X_AXIS));
+			mecLabel.add(new JLabel("Mercenaries (varying Gold):"));
+			mecLabel.add(Box.createHorizontalGlue());
 
-		rightPanel.add(Box.createVerticalStrut(10));
+			rightPanel.add(Box.createVerticalStrut(10));
 
-		rightPanel.add(mecLabel);
-		rightPanel.add(Box.createVerticalStrut(10));
-		rightPanel.add(scrollPaneMec);
-		rightPanel.add(Box.createVerticalGlue());
-		
+			rightPanel.add(mecLabel);
+			rightPanel.add(Box.createVerticalStrut(10));
+			rightPanel.add(scrollPaneMec);
+			rightPanel.add(Box.createVerticalGlue());
+		}
 		return rightPanel;
 
 	}
@@ -346,16 +359,18 @@ public class DialogBuyInducements extends Dialog implements ActionListener, KeyL
 		return result.toString();
 	}
 
-	private DropDownPanel createPanel(InducementType pInducementType, JPanel pAddToPanel, int pVertStrut) {
-		int maxCount = UtilInducements.findInducementsAvailable(fRoster, pInducementType);
-		int cost = UtilInducements.findInducementCost(fRoster, pInducementType);
+	private void createPanel(InducementType pInducementType, JPanel pAddToPanel, int pVertStrut, GameOptions gameOptions) {
+		int maxCount = UtilInducements.findInducementsAvailable(fRoster, pInducementType, gameOptions);
+		if (maxCount <= 0) {
+			return;
+		}
+		int cost = UtilInducements.findInducementCost(fRoster, pInducementType, gameOptions);
 		DropDownPanel panel = new DropDownPanel(pInducementType, maxCount, pInducementType.getDescription(), cost, this, fAvailableGold);
 		pAddToPanel.add(panel);
 		if (pVertStrut > 0) {
 			pAddToPanel.add(Box.createVerticalStrut(pVertStrut));
 		}
 		fPanels.add(panel);
-		return panel;
 	}
 
 	public void actionPerformed(ActionEvent pActionEvent) {
@@ -383,11 +398,10 @@ public class DialogBuyInducements extends Dialog implements ActionListener, KeyL
 		for (int i = 0; i < fTableModelMercenaries.getRowCount(); i++) {
 			if ((Boolean) fTableModelMercenaries.getValueAt(i, 0)) {
 				cost += ((Player) fTableModelMercenaries.getValueAt(i, 5)).getPosition().getCost();
+				cost += mercExtraCost;
 				String skillSlot = ((String) fTableModelMercenaries.getValueAt(i, 4));
 				if (StringTool.isProvided(skillSlot)) {
-					cost += 80000;
-				} else {
-					cost += 30000;
+					cost += mercSkillCost;
 				}
 			}
 		}

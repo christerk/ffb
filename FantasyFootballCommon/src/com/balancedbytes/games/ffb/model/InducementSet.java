@@ -55,11 +55,11 @@ public class InducementSet implements IXmlSerializable, IJsonSerializable {
   private transient TurnData fTurnData;
   
   public InducementSet() {
-    fInducements = new HashMap<InducementType, Inducement>();
-    fCardsAvailable = new HashSet<Card>();
-    fCardsActive = new HashSet<Card>();
-    fCardsDeactivated = new HashSet<Card>();
-    fStarPlayerPositionIds = new HashSet<String>();
+    fInducements = new HashMap<>();
+    fCardsAvailable = new HashSet<>();
+    fCardsActive = new HashSet<>();
+    fCardsDeactivated = new HashSet<>();
+    fStarPlayerPositionIds = new HashSet<>();
   }
   
   public InducementSet(TurnData pTurnData) {

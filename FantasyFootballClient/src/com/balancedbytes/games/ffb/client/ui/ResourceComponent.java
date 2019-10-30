@@ -200,7 +200,7 @@ public class ResourceComponent extends JPanel {
 	    }
     }
 
-    Inducement bloodweiserBabes = turnData.getInducementSet().get(InducementType.BLOODWEISER_BABES);
+    Inducement bloodweiserBabes = turnData.getInducementSet().get(InducementType.BLOODWEISER_KEGS);
     if (bloodweiserBabes != null) {
 	    fRefreshNecessary |= ((bloodweiserBabes.getValue() - bloodweiserBabes.getUses()) != fCurrentBloodweiserBabes);
 	    fCurrentBloodweiserBabes = bloodweiserBabes.getValue() - bloodweiserBabes.getUses();

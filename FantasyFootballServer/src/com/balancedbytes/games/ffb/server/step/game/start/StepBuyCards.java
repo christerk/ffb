@@ -11,6 +11,7 @@ import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.GameResult;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandBuyCard;
 import com.balancedbytes.games.ffb.option.GameOptionId;
+import com.balancedbytes.games.ffb.option.GameOptionInt;
 import com.balancedbytes.games.ffb.option.UtilGameOption;
 import com.balancedbytes.games.ffb.report.ReportCardsBought;
 import com.balancedbytes.games.ffb.server.CardDeck;
@@ -50,6 +51,8 @@ public final class StepBuyCards extends AbstractStep {
   private transient Map<CardType, CardDeck> fDeckByType;
   private transient CardType fBuyCardHome;
   private transient CardType fBuyCardAway;
+  private transient Map<CardType, Integer> cardPrices;
+  private transient int minimumCardPrice = Integer.MAX_VALUE;
 
   public StepBuyCards(GameState pGameState) {
     super(pGameState);
@@ -112,14 +115,25 @@ public final class StepBuyCards extends AbstractStep {
       return;
     }
     buildDecks();
+
+    cardPrices = new HashMap<>();
+    for (CardType cardType: CardType.values()) {
+      int price = ((GameOptionInt)game.getOptions().getOptionWithDefault(cardType.getCostId())).getValue();
+      cardPrices.put(cardType, price);
+      CardDeck deck = fDeckByType.get(cardType);
+      if (deck != null && deck.size() > 0) {
+        minimumCardPrice = Math.min(minimumCardPrice, price);
+      }
+    }
+
     if (fBuyCardHome != null) {
-      fInducementGoldHome -= fBuyCardHome.getPrice();
+      fInducementGoldHome -= cardPrices.getOrDefault(fBuyCardHome, 0);
       CardDeck deck = fDeckByType.get(fBuyCardHome);
       Card card = getGameState().getDiceRoller().drawCard(deck);
       game.getTurnDataHome().getInducementSet().addAvailableCard(card);
       fBuyCardHome = null;
     } else if (fBuyCardAway != null) {
-      fInducementGoldAway -= fBuyCardAway.getPrice();
+      fInducementGoldAway -= cardPrices.getOrDefault(fBuyCardAway, 0);
       CardDeck deck = fDeckByType.get(fBuyCardAway);
       Card card = getGameState().getDiceRoller().drawCard(deck);
       game.getTurnDataAway().getInducementSet().addAvailableCard(card);
@@ -130,10 +144,10 @@ public final class StepBuyCards extends AbstractStep {
         fInducementGoldHome = UtilInducementSequence.calculateInducementGold(game, true) + freeCash;
         fInducementGoldAway = UtilInducementSequence.calculateInducementGold(game, false) + freeCash;
       }
-      if (fInducementGoldHome < CardType.getMinimumPrice()) {
+      if (fInducementGoldHome < minimumCardPrice) {
         fCardsSelectedHome = true;
       }
-      if (fInducementGoldAway < CardType.getMinimumPrice()) {
+      if (fInducementGoldAway < minimumCardPrice) {
         fCardsSelectedAway = true;
       }
       if (fCardsSelectedHome && !fReportedHome) {
@@ -175,7 +189,7 @@ public final class StepBuyCards extends AbstractStep {
     int totalCost = 0;
     if (ArrayTool.isProvided(pCards)) {
       for (Card card : pCards) {
-        totalCost += card.getType().getPrice();
+        totalCost += cardPrices.getOrDefault(card.getType(), 0);
       }
     }
     return totalCost;
