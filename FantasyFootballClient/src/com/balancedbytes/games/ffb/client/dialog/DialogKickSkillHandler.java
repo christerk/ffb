@@ -64,7 +64,8 @@ public class DialogKickSkillHandler extends DialogHandler {
       userInterface.getFieldComponent().getLayerRangeRuler().clearMarkedCoordinates();
       userInterface.getFieldComponent().refresh();
       DialogSkillUse skillUseDialog = (DialogSkillUse) pDialog;
-      getClient().getCommunication().sendUseSkill(skillUseDialog.getSkill(), skillUseDialog.isChoiceYes());
+      String playerId = ((DialogKickSkillParameter)getClient().getGame().getDialogParameter()).getPlayerId();
+      getClient().getCommunication().sendUseSkill(skillUseDialog.getSkill(), skillUseDialog.isChoiceYes(), playerId);
     }
   }
 

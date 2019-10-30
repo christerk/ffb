@@ -260,8 +260,8 @@ public class ClientCommunication implements Runnable, INetCommandHandler {
     send(new ClientCommandUseReRoll(pReRolledAction, pReRollSource));
   }
   
-  public void sendUseSkill(Skill pSkill, boolean pSkillUsed) {
-    send(new ClientCommandUseSkill(pSkill, pSkillUsed));
+  public void sendUseSkill(Skill pSkill, boolean pSkillUsed, String playerId) {
+    send(new ClientCommandUseSkill(pSkill, pSkillUsed, playerId));
   }
   
   public void sendKickoff(FieldCoordinate pBallCoordinate) {

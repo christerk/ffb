@@ -55,7 +55,8 @@ public class DialogSkillUseHandler extends DialogHandler {
     hideDialog();
     if (testDialogHasId(pDialog, DialogId.SKILL_USE)) {
       DialogSkillUse skillUseDialog = (DialogSkillUse) pDialog;
-      getClient().getCommunication().sendUseSkill(skillUseDialog.getSkill(), skillUseDialog.isChoiceYes());
+      String playerId = ((DialogSkillUseParameter)getClient().getGame().getDialogParameter()).getPlayerId();
+      getClient().getCommunication().sendUseSkill(skillUseDialog.getSkill(), skillUseDialog.isChoiceYes(), playerId);
     }
   }
 
