@@ -9,6 +9,7 @@ package com.balancedbytes.games.ffb;
 public enum CatchScatterThrowInMode implements INamedObject {
   
   CATCH_ACCURATE_PASS("catchAccuratePass", false),
+  CATCH_ACCURATE_PASS_EMPTY_SQUARE("catchAccuratePassEmptySquare", false),
   CATCH_HAND_OFF("catchHandOff", false),
   CATCH_SCATTER("catchScatter", false),
   SCATTER_BALL("scatterBall", false),
@@ -19,6 +20,7 @@ public enum CatchScatterThrowInMode implements INamedObject {
   FAILED_CATCH("failedCatch", false),
   FAILED_PICK_UP("failedPickUp", false),
   CATCH_ACCURATE_BOMB("catchAccurateBomb", true),
+  CATCH_ACCURATE_BOMB_EMPTY_SQUARE("catchAccurateBombEmptySquare", true),
   CATCH_BOMB("catchBomb", true);
   
   private String fName;
