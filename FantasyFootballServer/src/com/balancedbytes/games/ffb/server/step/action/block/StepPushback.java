@@ -1,5 +1,7 @@
 package com.balancedbytes.games.ffb.server.step.action.block;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Stack;
 
 import com.balancedbytes.games.ffb.CatchScatterThrowInMode;
@@ -63,14 +65,16 @@ public class StepPushback extends AbstractStep {
 	private PlayerState fOldDefenderState;
 	private PushbackSquare fStartingPushbackSquare;
 	private Boolean fUsingGrab;
-	private Boolean fUsingSideStep;
-	private Boolean fUsingStandFirm;
+	private Map<String, Boolean> fUsingSideStep;
+	private Map<String, Boolean> fUsingStandFirm;
 
 	private Stack<Pushback> fPushbackStack;
 
 	public StepPushback(GameState pGameState) {
 		super(pGameState);
-		fPushbackStack = new Stack<Pushback>();
+		fPushbackStack = new Stack<>();
+		fUsingSideStep = new HashMap<>();
+		fUsingStandFirm = new HashMap<>();
 	}
 
 	public StepId getId() {
@@ -92,11 +96,11 @@ public class StepPushback extends AbstractStep {
 				ClientCommandUseSkill useSkillCommand = (ClientCommandUseSkill) pReceivedCommand.getCommand();
 				switch (useSkillCommand.getSkill()) {
 				case STAND_FIRM:
-					fUsingStandFirm = useSkillCommand.isSkillUsed();
+					fUsingStandFirm.put(useSkillCommand.getPlayerId(), useSkillCommand.isSkillUsed());
 					commandStatus = StepCommandStatus.EXECUTE_STEP;
 					break;
 				case SIDE_STEP:
-					fUsingSideStep = useSkillCommand.isSkillUsed();
+					fUsingSideStep.put(useSkillCommand.getPlayerId(), useSkillCommand.isSkillUsed());
 					commandStatus = StepCommandStatus.EXECUTE_STEP;
 					break;
 				case GRAB:
@@ -191,25 +195,25 @@ public class StepPushback extends AbstractStep {
 			// handle auto-stand firm
 			PlayerState playerState = game.getFieldModel().getPlayerState(defender);
 			if (playerState.isRooted()) {
-				fUsingStandFirm = true;
+				fUsingStandFirm.put(defender.getId(), true);
 			} else if (playerState.isProne() || ((fOldDefenderState != null) && fOldDefenderState.isProne())) {
-				fUsingStandFirm = false;
+				fUsingStandFirm.put(defender.getId(), false);
 			} else if ((PlayerAction.BLITZ == actingPlayer.getPlayerAction())
 					&& UtilCards.hasSkill(game, actingPlayer, Skill.JUGGERNAUT)
 					&& game.getFieldModel().getPlayerCoordinate(actingPlayer.getPlayer())
 					.isAdjacent(game.getFieldModel().getPlayerCoordinate(defender))) {
-				fUsingStandFirm = false;
+				fUsingStandFirm.put(defender.getId(), false);
 				getResult().addReport(
 						new ReportSkillUse(actingPlayer.getPlayerId(), Skill.JUGGERNAUT, true, SkillUse.CANCEL_STAND_FIRM));
 			}
 
 			// handle stand firm
-			if (UtilCards.hasSkill(game, defender, Skill.STAND_FIRM) && ((fUsingStandFirm == null) || fUsingStandFirm)) {
-				if (fUsingStandFirm == null) {
+			if (UtilCards.hasSkill(game, defender, Skill.STAND_FIRM) && fUsingStandFirm.getOrDefault(defender.getId(), true)) {
+				if (!fUsingStandFirm.containsKey(defender.getId())) {
 					UtilServerDialog.showDialog(getGameState(), new DialogSkillUseParameter(defender.getId(), Skill.STAND_FIRM, 0), true);
 				}
-				if (fUsingStandFirm != null) {
-					if (fUsingStandFirm) {
+				if (fUsingStandFirm.containsKey(defender.getId())) {
+					if (fUsingStandFirm.containsKey(defender.getId())) {
 						doPush = true;
 						fPushbackStack.clear();
 						publishParameter(new StepParameter(StepParameterKey.STARTING_PUSHBACK_SQUARE, null));
@@ -222,7 +226,7 @@ public class StepPushback extends AbstractStep {
 				}
 
 				// handle side step
-			} else if (((fUsingSideStep == null) || fUsingSideStep)
+			} else if (fUsingSideStep.getOrDefault(defender.getId(), true)
 					&& freeSquareAroundDefender
 					&& UtilCards.hasSkill(game, defender, Skill.SIDE_STEP)
 					&& !(UtilCards.hasSkill(game, actingPlayer, Skill.GRAB) && game.getFieldModel()
@@ -231,10 +235,10 @@ public class StepPushback extends AbstractStep {
 					&& !playerState.isProne()
 					&& ((fOldDefenderState == null) || !fOldDefenderState.isProne())
 					) {
-				if (fUsingSideStep == null) {
+				if (!fUsingSideStep.containsKey(defender.getId())) {
 					UtilServerDialog.showDialog(getGameState(), new DialogSkillUseParameter(defender.getId(), Skill.SIDE_STEP, 0), true);
 				} else {
-					if (fUsingSideStep) {
+					if (fUsingSideStep.get(defender.getId())) {
 						pushbackMode = PushbackMode.SIDE_STEP;
 						for (int i = 0; i < pushbackSquares.length; i++) {
 							if (!pushbackSquares[i].isSelected()) {

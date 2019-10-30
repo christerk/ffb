@@ -157,6 +157,7 @@ public class StepMoveDodge extends AbstractStepWithReRoll {
     boolean doRoll = reRolledAction || (fUsingDivingTackle == null);
     switch (dodge(doRoll)) {
       case SUCCESS:
+        reRolledAction = (getReRolledAction() == ReRolledAction.DODGE) && (getReRollSource() != null);
         publishParameter(new StepParameter(StepParameterKey.RE_ROLL_USED, fReRollUsed || reRolledAction));
         getResult().setNextAction(StepAction.NEXT_STEP);
         break;

@@ -28,11 +28,7 @@ public class StringTool {
   public static boolean isEqual(String pString1, String pString2) {
     if (pString1 != null) {
       return pString1.equals(pString2);
-    } else if (pString2 != null) {
-      return pString2.equals(pString1);
-    } else {
-      return true;
-    }
+    } else return pString2 == null;
   }
 
   public static String bind(String pTemplate, Object pParameter) {
