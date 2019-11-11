@@ -1,6 +1,8 @@
 package com.balancedbytes.games.ffb.client.net;
 
 import java.io.IOException;
+import java.nio.ByteBuffer;
+import java.nio.charset.Charset;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
@@ -58,6 +60,11 @@ public class CommandEndpoint {
   }
 
   @OnMessage
+  public void onBinary(byte[] buf, boolean last, Session session) {
+	  this.onMessage(new String(buf, 0, buf.length, Charset.forName("UTF8")));
+  }
+  
+  @OnMessage
   public void onMessage(String pTextMessage) {
 
     if (!StringTool.isProvided(pTextMessage) || !isOpen()) {
@@ -102,7 +109,8 @@ public class CommandEndpoint {
       return false;
     }
 
-    fSession.getAsyncRemote().sendText(textMessage);
+    //fSession.getAsyncRemote().sendText(textMessage);
+    fSession.getAsyncRemote().sendBinary(ByteBuffer.wrap(textMessage.getBytes(Charset.forName("UTF8"))));
     return true;
 
   }
