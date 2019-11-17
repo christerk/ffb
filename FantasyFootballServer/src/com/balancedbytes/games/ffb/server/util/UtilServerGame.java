@@ -193,18 +193,21 @@ public class UtilServerGame {
   }
 
   private static int rollMasterChef(IStep pStep, boolean pHomeTeam) {
-    int reRollsStolen = 0;
+    int reRollsStolenTotal = 0;
     GameState gameState = pStep.getGameState();
     Game game = gameState.getGame();
     InducementSet inducementSet = pHomeTeam ? game.getTurnDataHome().getInducementSet() : game.getTurnDataAway().getInducementSet();
     Inducement masterChef = inducementSet.get(InducementType.MASTER_CHEF);
     if ((masterChef != null) && (masterChef.getValue() > 0)) {
-      Team team = pHomeTeam ? game.getTeamHome() : game.getTeamAway();
-      int[] masterChefRoll = gameState.getDiceRoller().rollMasterChef();
-      reRollsStolen = DiceInterpreter.getInstance().interpretMasterChefRoll(masterChefRoll);
-      pStep.getResult().addReport(new ReportMasterChefRoll(team.getId(), masterChefRoll, reRollsStolen));
+      for (int i = 0; i < masterChef.getValue(); i++) {
+        Team team = pHomeTeam ? game.getTeamHome() : game.getTeamAway();
+        int[] masterChefRoll = gameState.getDiceRoller().rollMasterChef();
+        int reRollsStolen = DiceInterpreter.getInstance().interpretMasterChefRoll(masterChefRoll);
+        pStep.getResult().addReport(new ReportMasterChefRoll(team.getId(), masterChefRoll, reRollsStolen));
+        reRollsStolenTotal += reRollsStolen;
+      }
     }
-    return reRollsStolen;
+    return reRollsStolenTotal;
   }
 
 }

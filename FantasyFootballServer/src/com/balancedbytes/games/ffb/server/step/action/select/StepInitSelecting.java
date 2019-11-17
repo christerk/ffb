@@ -106,7 +106,8 @@ public final class StepInitSelecting extends AbstractStep {
       switch (pReceivedCommand.getId()) {
         case CLIENT_ACTING_PLAYER:
           ClientCommandActingPlayer actingPlayerCommand = (ClientCommandActingPlayer) pReceivedCommand.getCommand();
-          if (StringTool.isProvided(actingPlayerCommand.getPlayerId())) {
+          Player selectedPlayer = game.getPlayerById(actingPlayerCommand.getPlayerId());
+          if (StringTool.isProvided(actingPlayerCommand.getPlayerId()) && game.getActingTeam() == selectedPlayer.getTeam()) {
             UtilServerSteps.changePlayerAction(this, actingPlayerCommand.getPlayerId(), actingPlayerCommand.getPlayerAction(), actingPlayerCommand.isLeaping());
           } else {
             fEndPlayerAction = true;

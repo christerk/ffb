@@ -1,7 +1,5 @@
 package com.balancedbytes.games.ffb.server.step.action.common;
 
-import java.util.Set;
-
 import com.balancedbytes.games.ffb.Card;
 import com.balancedbytes.games.ffb.CatchModifier;
 import com.balancedbytes.games.ffb.CatchModifierFactory;
@@ -40,6 +38,7 @@ import com.balancedbytes.games.ffb.server.IServerLogLevel;
 import com.balancedbytes.games.ffb.server.InjuryResult;
 import com.balancedbytes.games.ffb.server.net.ReceivedCommand;
 import com.balancedbytes.games.ffb.server.step.AbstractStepWithReRoll;
+import com.balancedbytes.games.ffb.server.step.SequenceGenerator;
 import com.balancedbytes.games.ffb.server.step.StepAction;
 import com.balancedbytes.games.ffb.server.step.StepCommandStatus;
 import com.balancedbytes.games.ffb.server.step.StepId;
@@ -56,6 +55,8 @@ import com.balancedbytes.games.ffb.util.UtilCards;
 import com.balancedbytes.games.ffb.util.UtilPlayer;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
+
+import java.util.Set;
 
 /**
  * Step in any sequence to handle scattering the ball and throw-ins. Consumes all expected stepParameters.
@@ -152,6 +153,7 @@ public class StepCatchScatterThrowIn extends AbstractStepWithReRoll {
     Player playerUnderBall = game.getFieldModel().getPlayer(game.getFieldModel().getBallCoordinate());
     switch (fCatchScatterThrowInMode) {
       case CATCH_BOMB:
+      case CATCH_ACCURATE_BOMB_EMPTY_SQUARE:
       case CATCH_ACCURATE_BOMB:
         fBombMode = true;
         if (!StringTool.isProvided(fCatcherId)) {
@@ -166,7 +168,9 @@ public class StepCatchScatterThrowIn extends AbstractStepWithReRoll {
             fCatchScatterThrowInMode = CatchScatterThrowInMode.SCATTER_BALL;
           }
         } else {
-          fCatchScatterThrowInMode = CatchScatterThrowInMode.CATCH_BOMB;
+          if (CatchScatterThrowInMode.CATCH_ACCURATE_BOMB == fCatchScatterThrowInMode) {
+            fCatchScatterThrowInMode = CatchScatterThrowInMode.CATCH_BOMB;
+          }
           fCatchScatterThrowInMode = divingCatch(game.getFieldModel().getBombCoordinate());
         }
         if ((fCatchScatterThrowInMode == CatchScatterThrowInMode.FAILED_CATCH) || (fCatchScatterThrowInMode == CatchScatterThrowInMode.SCATTER_BALL)) {
@@ -194,6 +198,7 @@ public class StepCatchScatterThrowIn extends AbstractStepWithReRoll {
         break;
       case CATCH_KICKOFF:
       case CATCH_THROW_IN:
+      case CATCH_ACCURATE_PASS_EMPTY_SQUARE:
       case CATCH_MISSED_PASS:
         fBombMode = false;
         if (playerUnderBall != null) {
@@ -214,13 +219,18 @@ public class StepCatchScatterThrowIn extends AbstractStepWithReRoll {
       case FAILED_PICK_UP:
         fBombMode = false;
         if ((playerUnderBall != null) && game.getFieldModel().isBallInPlay()
-            && (UtilGameOption.isOptionEnabled(game, GameOptionId.SPIKED_BALL) || UtilCards.isCardActive(game, Card.SPIKED_BALL))) {
+          && (UtilGameOption.isOptionEnabled(game, GameOptionId.SPIKED_BALL) || UtilCards.isCardActive(game, Card.SPIKED_BALL))) {
           InjuryResult injuryResultCatcher = UtilServerInjury.handleInjury(this, InjuryType.STAB, null, playerUnderBall,
-              game.getFieldModel().getBallCoordinate(), null, ApothecaryMode.CATCHER);
+            game.getFieldModel().getBallCoordinate(), null, ApothecaryMode.CATCHER);
+          getGameState().pushCurrentStepOnStack();
+          SequenceGenerator.getInstance().pushSpikedBallApoSequence(getGameState());
+          fCatchScatterThrowInMode = CatchScatterThrowInMode.SCATTER_BALL;
+          getResult().setNextAction(StepAction.NEXT_STEP);
           if (injuryResultCatcher.isArmorBroken()) {
             publishParameters(UtilServerInjury.dropPlayer(this, playerUnderBall, ApothecaryMode.CATCHER));
           }
           publishParameter(new StepParameter(StepParameterKey.INJURY_RESULT, injuryResultCatcher));
+          return;
         }
         // drop through to regular scatter
       case SCATTER_BALL:

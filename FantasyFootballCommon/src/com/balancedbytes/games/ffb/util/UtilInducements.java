@@ -1,50 +1,55 @@
 package com.balancedbytes.games.ffb.util;
 
 import com.balancedbytes.games.ffb.InducementType;
+import com.balancedbytes.games.ffb.model.GameOptions;
 import com.balancedbytes.games.ffb.model.Roster;
+import com.balancedbytes.games.ffb.option.*;
 
 public final class UtilInducements {
 
-	public static int findInducementCost(Roster pRoster, InducementType pInducement) {
-		switch (pInducement) {
-			case BLOODWEISER_BABES:
-				return 50000;
-			case BRIBES:
-				return (pRoster.getName().equals("Goblin") ? 50000 : 100000);
-			case EXTRA_TEAM_TRAINING:
-				return 100000;
-			case IGOR:
-				return 100000;
-			case MASTER_CHEF:
-				return (pRoster.getName().equals("Halfling") ? 100000 : 300000);
-			case WANDERING_APOTHECARIES:
-				return 100000;
-			case WIZARD:
-				return 150000;
-			default:
-				return 0;
+	public static int findInducementCost(Roster pRoster, InducementType pInducement, GameOptions gameOptions) {
+
+		IGameOption gameOption = gameOptions.getOptionWithDefault(inducementCostOption(pRoster.getName(), pInducement));
+
+		if (gameOption instanceof GameOptionInt) {
+			return ((GameOptionInt)gameOption).getValue();
 		}
+
+		return 0;
 	}
 
-	public static int findInducementsAvailable(Roster pRoster, InducementType pInducement) {
-		switch (pInducement) {
-			case BLOODWEISER_BABES:
-				return 2;
-			case BRIBES:
-				return 3;
-			case EXTRA_TEAM_TRAINING:
-				return 4;
-			case IGOR:
-				return (!pRoster.hasApothecary() ? 1 : 0);
-			case MASTER_CHEF:
-				return 1;
-			case WANDERING_APOTHECARIES:
-				return (!pRoster.hasApothecary() ? 0 : 2);
-			case WIZARD:
-				return 1;
-			default:
-				return 0;
+	private static GameOptionId inducementCostOption(String rosterName, InducementType inducementType) {
+		if ((InducementType.BRIBES == inducementType && "Goblin".equals(rosterName)) ||
+			(InducementType.MASTER_CHEF == inducementType && "Halfling".equals(rosterName))) {
+			return inducementType.getReducedCostId();
 		}
+
+		return inducementType.getCostId();
 	}
 
+
+	public static int findInducementsAvailable(Roster pRoster, InducementType pInducement, GameOptions gameOptions) {
+		if (InducementType.WIZARD == pInducement) {
+			IGameOption wizardOption = gameOptions.getOptionWithDefault(InducementType.WIZARD.getMaxId());
+			if (!wizardOption.isChanged()) {
+				return ((GameOptionBoolean)gameOptions.getOptionWithDefault(GameOptionId.WIZARD_AVAILABLE)).isEnabled() ? 1 : 0;
+			}
+		}
+
+		if (InducementType.IGOR == pInducement && pRoster.hasApothecary()) {
+			return 0;
+		}
+
+		if (InducementType.WANDERING_APOTHECARIES == pInducement && !pRoster.hasApothecary()) {
+			return 0;
+		}
+
+		IGameOption gameOption = gameOptions.getOptionWithDefault(pInducement.getMaxId());
+
+		if (gameOption instanceof GameOptionInt) {
+			return ((GameOptionInt) gameOption).getValue();
+		}
+
+		return 0;
+	}
 }

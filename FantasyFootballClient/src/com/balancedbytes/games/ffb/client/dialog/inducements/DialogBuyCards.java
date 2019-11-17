@@ -1,24 +1,5 @@
 package com.balancedbytes.games.ffb.client.dialog.inducements;
 
-import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.swing.BorderFactory;
-import javax.swing.Box;
-import javax.swing.BoxLayout;
-import javax.swing.JButton;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
-
 import com.balancedbytes.games.ffb.Card;
 import com.balancedbytes.games.ffb.CardType;
 import com.balancedbytes.games.ffb.InducementPhaseFactory;
@@ -31,7 +12,20 @@ import com.balancedbytes.games.ffb.client.ui.ChatLogTextPane;
 import com.balancedbytes.games.ffb.dialog.DialogBuyCardsParameter;
 import com.balancedbytes.games.ffb.dialog.DialogId;
 import com.balancedbytes.games.ffb.model.InducementSet;
+import com.balancedbytes.games.ffb.option.GameOptionInt;
 import com.balancedbytes.games.ffb.util.StringTool;
+
+import javax.swing.*;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
 
 /**
  * 
@@ -42,6 +36,8 @@ public class DialogBuyCards extends Dialog implements ActionListener, KeyListene
 
   private Map<CardType, Integer> fNrOfCardsPerType;
   private Map<CardType, JButton> fButtonPerType;
+  private Map<CardType, Integer> cardPrices;
+  private Map<CardType, Integer> cardLimits;
 
   private int fAvailableGold;
   private JLabel fLabelAvailableGold;
@@ -94,6 +90,19 @@ public class DialogBuyCards extends Dialog implements ActionListener, KeyListene
 
     fNrOfCardsPerType = new HashMap<CardType, Integer>();
     fButtonPerType = new HashMap<CardType, JButton>();
+    cardPrices = new HashMap<CardType, Integer>();
+    cardLimits = new HashMap<CardType, Integer>();
+
+    for (CardType cardType: CardType.values()) {
+      int price = ((GameOptionInt)pClient.getGame().getOptions().getOptionWithDefault(cardType.getCostId())).getValue();
+      cardPrices.put(cardType, price);
+
+      GameOptionInt gameOption = (GameOptionInt)pClient.getGame().getOptions().getOptionWithDefault(cardType.getMaxId());
+      if (gameOption.isChanged()) {
+        int limit = gameOption.getValue();
+        cardLimits.put(cardType, limit);
+      }
+    }
 
     // Icon cardIcon = new ImageIcon(pClient.getUserInterface().getIconCache().getIconByProperty(IIconProperty.SIDEBAR_OVERLAY_PLAYER_CARD));
 
@@ -239,6 +248,8 @@ public class DialogBuyCards extends Dialog implements ActionListener, KeyListene
       return null;
     }
 
+    Optional<Integer> limit = Optional.ofNullable(cardLimits.get(pType));
+
     StringBuilder label = new StringBuilder();
     label.append("<html><center>");
 
@@ -246,12 +257,22 @@ public class DialogBuyCards extends Dialog implements ActionListener, KeyListene
     label.append("<br>");
 
     int nrOfCards = (fNrOfCardsPerType.get(pType) != null) ? fNrOfCardsPerType.get(pType) : 0;
-    label.append(nrOfCards).append(" cards for ").append(StringTool.formatThousands(pType.getPrice())).append(" gold each");
+    int cardPrice = cardPrices.getOrDefault(pType, 0);
+    label.append(nrOfCards).append(" cards for ").append(StringTool.formatThousands(cardPrice))
+      .append(" gold each").append(" ( max. ");
 
-    label.append("</center></html>");
+    int nrAvailableCards = Math.min(nrOfCards, fAvailableCards);
+
+    if (limit.isPresent()) {
+      label.append(Math.min(limit.get(), nrAvailableCards));
+    } else {
+      label.append(nrAvailableCards);
+    }
+
+    label.append(" more can be purchased )").append("</center></html>");
 
     button.setText(label.toString());
-    button.setEnabled((nrOfCards > 0) && (fAvailableGold >= pType.getPrice()) && (fAvailableCards > 0));
+    button.setEnabled((nrOfCards > 0) && (fAvailableGold >= cardPrice) && (fAvailableCards > 0) && (!limit.isPresent() || limit.get() > 0));
 
     return button;
 
@@ -303,8 +324,12 @@ public class DialogBuyCards extends Dialog implements ActionListener, KeyListene
     fAvailableCards--;
     updateAvailableCardsLabel();
 
-    fAvailableGold -= pType.getPrice();
+    fAvailableGold -= cardPrices.getOrDefault(pType, 0);
     updateAvailableGoldLabel();
+
+    if (cardLimits.containsKey(pType)) {
+      cardLimits.put(pType, cardLimits.get(pType) -1 );
+    }
 
     // updateDeckButton(CardType.MISCELLANEOUS_MAYHEM);
     // updateDeckButton(CardType.SPECIAL_TEAM_PLAY);

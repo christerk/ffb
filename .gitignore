@@ -3,3 +3,5 @@ FantasyFootballHtml5/node/build/
 .metadata/
 FantasyFootballServer/.externalToolBuilders/org.eclipse.wst.validation.validationbuilder.launch
 FantasyFootballClient/.settings/org.eclipse.jdt.launching.prefs
+.idea/
+**/*.iml

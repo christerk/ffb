@@ -9,6 +9,9 @@ import java.util.Date;
 import java.util.Properties;
 import java.util.Timer;
 
+import com.balancedbytes.games.ffb.server.commandline.InifileParamFilter;
+import com.balancedbytes.games.ffb.server.commandline.InifileParamFilterResult;
+import com.balancedbytes.games.ffb.server.net.*;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
@@ -21,13 +24,6 @@ import com.balancedbytes.games.ffb.server.db.DbInitializer;
 import com.balancedbytes.games.ffb.server.db.DbQueryFactory;
 import com.balancedbytes.games.ffb.server.db.DbUpdateFactory;
 import com.balancedbytes.games.ffb.server.handler.ServerCommandHandlerFactory;
-import com.balancedbytes.games.ffb.server.net.CommandServlet;
-import com.balancedbytes.games.ffb.server.net.FileServlet;
-import com.balancedbytes.games.ffb.server.net.ServerCommunication;
-import com.balancedbytes.games.ffb.server.net.ServerDbKeepAliveTask;
-import com.balancedbytes.games.ffb.server.net.ServerGameTimeTask;
-import com.balancedbytes.games.ffb.server.net.ServerNetworkEntropyTask;
-import com.balancedbytes.games.ffb.server.net.SessionManager;
 import com.balancedbytes.games.ffb.server.request.ServerRequestProcessor;
 import com.balancedbytes.games.ffb.util.ArrayTool;
 import com.balancedbytes.games.ffb.util.DateTool;
@@ -66,6 +62,8 @@ public class FantasyFootballServer {
   private Timer fServerGameTimeTimer;
   private Timer fDbKeepAliveTimer;
   private Timer fNetworkEntropyTimer;
+  private Timer sessionTimeoutTimer;
+
 
   public FantasyFootballServer(ServerMode pMode, Properties pProperties) {
     fMode = pMode;
@@ -111,6 +109,7 @@ public class FantasyFootballServer {
     dbConnectionManager.setDbUrl(getProperty(IServerProperty.DB_URL));
     dbConnectionManager.setDbUser(getProperty(IServerProperty.DB_USER));
     dbConnectionManager.setDbPassword(getProperty(IServerProperty.DB_PASSWORD));
+    dbConnectionManager.setDbType(getProperty(IServerProperty.DB_TYPE));
 
     if (fMode.isInitDb()) {
 
@@ -184,6 +183,15 @@ public class FantasyFootballServer {
 
       fServerRequestProcessor = new ServerRequestProcessor(this);
       fServerRequestProcessor.start();
+
+      String timerEnabledProperty = getProperty(IServerProperty.TIMER_SESSION_TIMEOUT_ENABLED);
+
+      if (Boolean.parseBoolean(timerEnabledProperty)) {
+        sessionTimeoutTimer = new Timer(true);
+        int timerSchedule = Integer.parseInt(getProperty(IServerProperty.TIMER_SESSION_TIMEOUT_SCHEDULE));
+        int sessionTimeout = Integer.parseInt(getProperty(IServerProperty.SESSION_TIMEOUT_VALUE));
+        sessionTimeoutTimer.scheduleAtFixedRate(new SessionTimeoutTask(fSessionManager, fCommunication, sessionTimeout), 0, timerSchedule);
+      }
 
       System.err.print(DateTool.formatTimestamp(new Date()));
       System.err.print(" FantasyFootballServer " + FantasyFootballConstants.SERVER_VERSION);
@@ -299,7 +307,11 @@ public class FantasyFootballServer {
     fBlockingNewGames = pBlockingNewGames;
   }
 
-  public static void main(String[] args) throws IOException, SQLException {
+  public static void main(String[] origArgs) throws IOException, SQLException {
+
+    InifileParamFilterResult filterResult = new InifileParamFilter().filterForInifile(origArgs);
+
+    String[] args = filterResult.getFilteredArgs();
 
     if (!ArrayTool.isProvided(args)) {
 
@@ -310,7 +322,7 @@ public class FantasyFootballServer {
 
       ServerMode serverMode = ServerMode.fromArguments(args);
 
-      BufferedInputStream propertyInputStream = new BufferedInputStream(new FileInputStream("server.ini"));
+      BufferedInputStream propertyInputStream = new BufferedInputStream(new FileInputStream(filterResult.getInifileName()));
       Properties properties = new Properties();
       properties.load(propertyInputStream);
       propertyInputStream.close();

@@ -45,7 +45,8 @@ public class DialogPilingOnHandler extends DialogHandler {
     hideDialog();
     if (testDialogHasId(pDialog, DialogId.PILING_ON)) {
       DialogPilingOn pilingOnDialog = (DialogPilingOn) pDialog;
-      getClient().getCommunication().sendUseSkill(Skill.PILING_ON, pilingOnDialog.isChoiceYes());
+      String playerId = ((DialogPilingOnParameter)getClient().getGame().getDialogParameter()).getPlayerId();
+      getClient().getCommunication().sendUseSkill(Skill.PILING_ON, pilingOnDialog.isChoiceYes(), playerId);
     }
   }
 

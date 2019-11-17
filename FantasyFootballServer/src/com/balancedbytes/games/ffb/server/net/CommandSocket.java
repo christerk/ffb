@@ -1,5 +1,7 @@
 package com.balancedbytes.games.ffb.server.net;
 
+import java.nio.charset.Charset;
+
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketClose;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketConnect;
@@ -31,15 +33,19 @@ public class CommandSocket {
   }
 
   @OnWebSocketMessage
+  public void onBinaryMessage(Session pSession, byte buf[], int offset, int length) {
+	  this.onTextMessage(pSession, new String(buf, offset, length, Charset.forName("UTF8")));
+  }
+  
+  @OnWebSocketMessage
   public void onTextMessage(Session pSession, String pTextMessage) {
     
     if ((pSession == null) || (pTextMessage == null) || !pSession.isOpen()) {
       return;
     }
     
-    JsonValue jsonValue = JsonValue.readFrom(
-      fCommandCompression ? LZString.decompressFromUTF16(pTextMessage) : pTextMessage
-    );
+    String decompressed = fCommandCompression ? LZString.decompressFromUTF16(pTextMessage) : pTextMessage;
+    JsonValue jsonValue = JsonValue.readFrom(decompressed);
         
     NetCommand netCommand = fNetCommandFactory.forJsonValue(jsonValue);
     if (netCommand == null) {

@@ -364,45 +364,37 @@ public class StatusReport {
     Game game = getClient().getGame();
     if (ClientMode.PLAYER == pJoinCommand.getClientMode()) {
       print(0, TextStyle.BOLD, "Player ");
-      if (StringTool.isProvided(game.getTeamHome().getCoach())) {
-        if (game.getTeamHome().getCoach().equals(pJoinCommand.getCoach())) {
+      if (game.getTeamHome() != null &&
+        StringTool.isProvided(game.getTeamHome().getCoach()) &&
+        game.getTeamHome().getCoach().equals(pJoinCommand.getCoach())) {
           print(0, TextStyle.HOME_BOLD, pJoinCommand.getCoach());
         } else {
           print(0, TextStyle.AWAY_BOLD, pJoinCommand.getCoach());
         }
-      } else {
-        print(0, TextStyle.BOLD, pJoinCommand.getCoach());
-      }
       println(0, TextStyle.BOLD, " joins the game.");
-    } else if (ClientMode.SPECTATOR == getClient().getMode()) {
+    } else if (ClientMode.SPECTATOR == pJoinCommand.getClientMode()) {
       print(0, "Spectator ");
       print(0, pJoinCommand.getCoach());
       println(0, " joins the game.");
-    } else {
-      println(0, "A spectator joins the game.");
     }
   }
 
   public void reportLeave(ServerCommandLeave pLeaveCommand) {
     Game game = getClient().getGame();
     if (ClientMode.PLAYER == pLeaveCommand.getClientMode()) {
-      if ((game.getTeamHome() != null) && StringTool.isProvided(game.getTeamHome().getCoach())) {
-        print(0, TextStyle.BOLD, "Player ");
-        if (game.getTeamHome().getCoach().equals(pLeaveCommand.getCoach())) {
+      print(0, TextStyle.BOLD, "Player ");
+      if (game.getTeamHome() != null &&
+        StringTool.isProvided(game.getTeamHome().getCoach()) &&
+        game.getTeamHome().getCoach().equals(pLeaveCommand.getCoach())) {
           print(0, TextStyle.HOME_BOLD, pLeaveCommand.getCoach());
         } else {
           print(0, TextStyle.AWAY_BOLD, pLeaveCommand.getCoach());
         }
-        println(0, TextStyle.BOLD, " leaves the game.");
-      } else {
-        println(0, TextStyle.BOLD, "The other player leaves the game.");
-      }
-    } else if (ClientMode.SPECTATOR == getClient().getMode()) {
+      println(0, TextStyle.BOLD, " leaves the game.");
+    } else if (ClientMode.SPECTATOR == pLeaveCommand.getClientMode()) {
       print(0, "Spectator ");
       print(0, pLeaveCommand.getCoach());
       println(0, " leaves the game.");
-    } else {
-      println(0, "A spectator leaves the game.");
     }
   }
 

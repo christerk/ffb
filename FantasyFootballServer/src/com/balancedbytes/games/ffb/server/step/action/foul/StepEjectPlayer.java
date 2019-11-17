@@ -112,21 +112,23 @@ public class StepEjectPlayer extends AbstractStep {
     ActingPlayer actingPlayer = game.getActingPlayer();
     PlayerState playerState = game.getFieldModel().getPlayerState(actingPlayer.getPlayer());
     PlayerResult attackerResult = gameResult.getPlayerResult(actingPlayer.getPlayer());
-    if (UtilCards.hasSkill(game, actingPlayer, Skill.SNEAKY_GIT) && UtilGameOption.isOptionEnabled(game, GameOptionId.SNEAKY_GIT_BAN_TO_KO)) {
+
+    if ((fArgueTheCallSuccessful != null) && fArgueTheCallSuccessful) {
+      game.getFieldModel().setPlayerState(actingPlayer.getPlayer(), playerState.changeBase(PlayerState.RESERVE));
+    } else if (UtilCards.hasSkill(game, actingPlayer, Skill.SNEAKY_GIT) && UtilGameOption.isOptionEnabled(game, GameOptionId.SNEAKY_GIT_BAN_TO_KO)) {
       game.getFieldModel().setPlayerState(actingPlayer.getPlayer(), playerState.changeBase(PlayerState.KNOCKED_OUT));
+      attackerResult.setSendToBoxReason(SendToBoxReason.FOUL_BAN);
+      attackerResult.setSendToBoxTurn(game.getTurnData().getTurnNr());
+      attackerResult.setSendToBoxHalf(game.getHalf());
     } else {
-      if ((fArgueTheCallSuccessful != null) && fArgueTheCallSuccessful) {
-        game.getFieldModel().setPlayerState(actingPlayer.getPlayer(), playerState.changeBase(PlayerState.RESERVE));
-      } else {
-        game.getFieldModel().setPlayerState(actingPlayer.getPlayer(), playerState.changeBase(PlayerState.BANNED));
-        attackerResult.setSendToBoxReason(SendToBoxReason.FOUL_BAN);
-        attackerResult.setSendToBoxTurn(game.getTurnData().getTurnNr());
-        attackerResult.setSendToBoxHalf(game.getHalf());
-      }
-      UtilBox.putPlayerIntoBox(game, actingPlayer.getPlayer());
-      UtilBox.refreshBoxes(game);
-      UtilServerGame.updateLeaderReRolls(this);
+      game.getFieldModel().setPlayerState(actingPlayer.getPlayer(), playerState.changeBase(PlayerState.BANNED));
+      attackerResult.setSendToBoxReason(SendToBoxReason.FOUL_BAN);
+      attackerResult.setSendToBoxTurn(game.getTurnData().getTurnNr());
+      attackerResult.setSendToBoxHalf(game.getHalf());
     }
+    UtilBox.putPlayerIntoBox(game, actingPlayer.getPlayer());
+    UtilBox.refreshBoxes(game);
+    UtilServerGame.updateLeaderReRolls(this);
     publishParameter(new StepParameter(StepParameterKey.END_TURN, true));
     if ((fFoulerHasBall != null) && fFoulerHasBall) {
       publishParameter(new StepParameter(StepParameterKey.CATCH_SCATTER_THROW_IN_MODE, CatchScatterThrowInMode.SCATTER_BALL));

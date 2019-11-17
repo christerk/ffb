@@ -25,8 +25,7 @@ public class DialogBuyInducementsHandler extends DialogHandler {
         setDialog(new DialogBuyInducements(
           getClient(),
           dialogParameter.getTeamId(),
-          dialogParameter.getAvailableGold(),
-          dialogParameter.isWizardAvailable()
+          dialogParameter.getAvailableGold()
         ));
         getDialog().showDialog(this);
       } else {
