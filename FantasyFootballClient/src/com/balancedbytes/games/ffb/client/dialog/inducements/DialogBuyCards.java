@@ -15,17 +15,23 @@ import com.balancedbytes.games.ffb.model.InducementSet;
 import com.balancedbytes.games.ffb.option.GameOptionInt;
 import com.balancedbytes.games.ffb.util.StringTool;
 
-import javax.swing.*;
+import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 
 /**
  * 
@@ -248,7 +254,7 @@ public class DialogBuyCards extends Dialog implements ActionListener, KeyListene
       return null;
     }
 
-    Optional<Integer> limit = Optional.ofNullable(cardLimits.get(pType));
+    Integer limit = cardLimits.get(pType);
 
     StringBuilder label = new StringBuilder();
     label.append("<html><center>");
@@ -257,14 +263,14 @@ public class DialogBuyCards extends Dialog implements ActionListener, KeyListene
     label.append("<br>");
 
     int nrOfCards = (fNrOfCardsPerType.get(pType) != null) ? fNrOfCardsPerType.get(pType) : 0;
-    int cardPrice = cardPrices.getOrDefault(pType, 0);
+    int cardPrice = cardPrices.get(pType) != null ? cardPrices.get(pType) : 0;
     label.append(nrOfCards).append(" cards for ").append(StringTool.formatThousands(cardPrice))
       .append(" gold each").append(" ( max. ");
 
     int nrAvailableCards = Math.min(nrOfCards, fAvailableCards);
 
-    if (limit.isPresent()) {
-      label.append(Math.min(limit.get(), nrAvailableCards));
+    if (limit != null) {
+      label.append(Math.min(limit, nrAvailableCards));
     } else {
       label.append(nrAvailableCards);
     }
@@ -272,7 +278,7 @@ public class DialogBuyCards extends Dialog implements ActionListener, KeyListene
     label.append(" more can be purchased )").append("</center></html>");
 
     button.setText(label.toString());
-    button.setEnabled((nrOfCards > 0) && (fAvailableGold >= cardPrice) && (fAvailableCards > 0) && (!limit.isPresent() || limit.get() > 0));
+    button.setEnabled((nrOfCards > 0) && (fAvailableGold >= cardPrice) && (fAvailableCards > 0) && (limit == null || limit > 0));
 
     return button;
 
@@ -324,7 +330,8 @@ public class DialogBuyCards extends Dialog implements ActionListener, KeyListene
     fAvailableCards--;
     updateAvailableCardsLabel();
 
-    fAvailableGold -= cardPrices.getOrDefault(pType, 0);
+    int price = cardPrices.get(pType) != null ? cardPrices.get(pType) : 0 ;
+    fAvailableGold -= price;
     updateAvailableGoldLabel();
 
     if (cardLimits.containsKey(pType)) {
