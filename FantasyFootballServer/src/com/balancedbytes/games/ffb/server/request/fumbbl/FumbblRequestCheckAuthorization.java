@@ -83,28 +83,30 @@ public class FumbblRequestCheckAuthorization extends ServerRequest {
     boolean passwordOk = false;
     FantasyFootballServer server = pRequestProcessor.getServer();
     try {
-    	setRequestUrl(StringTool.bind(
-  	    server.getProperty(IServerProperty.FUMBBL_AUTH_RESPONSE),
-  	    new String[] {
-  	      URLEncoder.encode(getCoach(), UtilFumbblRequest.CHARACTER_ENCODING),
-  	      URLEncoder.encode(getPassword(), UtilFumbblRequest.CHARACTER_ENCODING)
-  	    }
-    	));
-    	server.getDebugLog().log(IServerLogLevel.DEBUG, DebugLog.FUMBBL_REQUEST, getRequestUrl());
-      String responseXml = UtilServerHttpClient.fetchPage(getRequestUrl());
-    	server.getDebugLog().log(IServerLogLevel.DEBUG, DebugLog.FUMBBL_RESPONSE, responseXml);
-      if (StringTool.isProvided(responseXml)) {
-        BufferedReader xmlReader = new BufferedReader(new StringReader(responseXml));
-        String line = null;
-        String response = null;
-        while ((line = xmlReader.readLine()) != null) {
-          Matcher responseMatcher = _PATTERN_RESPONSE.matcher(line);
-          if (responseMatcher.find()) {
-            response = responseMatcher.group(1);
+      if (getCoach() != null && getPassword() != null) {
+      	setRequestUrl(StringTool.bind(
+    	    server.getProperty(IServerProperty.FUMBBL_AUTH_RESPONSE),
+    	    new String[] {
+    	      URLEncoder.encode(getCoach(), UtilFumbblRequest.CHARACTER_ENCODING),
+    	      URLEncoder.encode(getPassword(), UtilFumbblRequest.CHARACTER_ENCODING)
+    	    }
+      	));
+      	server.getDebugLog().log(IServerLogLevel.DEBUG, DebugLog.FUMBBL_REQUEST, getRequestUrl());
+        String responseXml = UtilServerHttpClient.fetchPage(getRequestUrl());
+      	server.getDebugLog().log(IServerLogLevel.DEBUG, DebugLog.FUMBBL_RESPONSE, responseXml);
+        if (StringTool.isProvided(responseXml)) {
+          BufferedReader xmlReader = new BufferedReader(new StringReader(responseXml));
+          String line = null;
+          String response = null;
+          while ((line = xmlReader.readLine()) != null) {
+            Matcher responseMatcher = _PATTERN_RESPONSE.matcher(line);
+            if (responseMatcher.find()) {
+              response = responseMatcher.group(1);
+            }
           }
+          xmlReader.close();
+          passwordOk = (StringTool.isProvided(response) && response.startsWith("OK"));
         }
-        xmlReader.close();
-        passwordOk = (StringTool.isProvided(response) && response.startsWith("OK"));
       }
     } catch (IOException ioe) {
       throw new FantasyFootballException(ioe);
