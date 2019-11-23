@@ -180,6 +180,7 @@ public class SessionManager {
     fClientBySession.put(pSession, client);
     Set<Session> sessions = fSessionsByGameId.computeIfAbsent(gameId, k -> new HashSet<>());
     sessions.add(pSession);
+    fLastPingBySession.put(pSession, System.currentTimeMillis());
   }
   
   public void removeSession(Session pSession) {
