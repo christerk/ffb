@@ -433,7 +433,7 @@ public class ClientStateSelect extends ClientState {
       }
     }
     
-    return (!game.getTurnData().isPassUsed()
+    return (!game.getTurnData().isBlitzUsed()
       && !game.getFieldModel().hasCardEffect(pPlayer, CardEffect.ILLEGALLY_SUBSTITUTED)
       && UtilCards.hasSkill(game, pPlayer, Skill.KICK_TEAM_MATE)
       && rightStuffAvailable
