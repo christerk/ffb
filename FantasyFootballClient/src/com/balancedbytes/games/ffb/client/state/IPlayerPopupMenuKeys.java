@@ -20,6 +20,7 @@ public interface IPlayerPopupMenuKeys {
   int KEY_STAND_UP_BLITZ = KeyEvent.VK_W;
   int KEY_PASS = KeyEvent.VK_P;
   int KEY_THROW_TEAM_MATE = KeyEvent.VK_T;
+  int KEY_KICK_TEAM_MATE = KeyEvent.VK_K;
   int KEY_LEAP = KeyEvent.VK_L;
   int KEY_FOUL = KeyEvent.VK_F;
   int KEY_DESELECT = KeyEvent.VK_ESCAPE;
@@ -28,5 +29,7 @@ public interface IPlayerPopupMenuKeys {
   int KEY_RANGE_GRID = KeyEvent.VK_R;
   int KEY_HAIL_MARY_PASS = KeyEvent.VK_H;
   int KEY_HAIL_MARY_BOMB = KeyEvent.VK_H;
+  int KEY_SHORT = KeyEvent.VK_S;
+  int KEY_LONG= KeyEvent.VK_L;
   
 }

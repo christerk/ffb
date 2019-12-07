@@ -76,7 +76,6 @@ public class CommandEndpoint {
     );
 
     handleNetCommand(fNetCommandFactory.forJsonValue(jsonValue));
-
   }
   
   @OnClose

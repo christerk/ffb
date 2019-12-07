@@ -137,6 +137,7 @@ public interface IJsonOption {
                  JsonArrayOption DIRECTION_ARRAY = new JsonArrayOption("directionArray");
                    JsonIntOption DIRECTION_ROLL = new JsonIntOption("directionRoll");
                 JsonStringOption DISPLAY_NAME = new JsonStringOption("displayName");
+                   JsonIntOption DISTANCE = new JsonIntOption("distance");
               JsonIntArrayOption DISTANCE_ROLL = new JsonIntArrayOption("distanceRoll");
                 JsonStringOption DIVISION = new JsonStringOption("division");
                JsonBooleanOption DODGING = new JsonBooleanOption("dodging"); 
@@ -210,6 +211,7 @@ public interface IJsonOption {
                    JsonIntOption INTERCEPTIONS = new JsonIntOption("interceptions");
        JsonFieldCoordinateOption INTERCEPTOR_COORDINATE = new JsonFieldCoordinateOption("interceptorCoordinate");
                 JsonStringOption INTERCEPTOR_ID = new JsonStringOption("interceptorId");
+                JsonStringOption KICKED_PLAYER_ID = new JsonStringOption("kickedPlayerId");
           JsonEnumWithNameOption KICKOFF_RESULT = new JsonEnumWithNameOption("kickoffResult", new KickoffResultFactory());
               JsonIntArrayOption KICKOFF_ROLL = new JsonIntArrayOption("kickoffRoll");
                  JsonArrayOption KNOCKOUT_RECOVERY_ARRAY = new JsonArrayOption("knockoutRecoveryArray");

@@ -16,6 +16,7 @@ public enum ApothecaryMode implements INamedObject {
 	HOME("home"),
 	SPECIAL_EFFECT("specialEffect"),
 	THROWN_PLAYER("thrownPlayer"),
+	KICKED_PLAYER("kickedPlayer"),
 	HIT_PLAYER("hitPlayer"),
 	CATCHER("catcher");
 	

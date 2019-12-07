@@ -58,10 +58,16 @@ public enum StepParameterKey {
 	INJURY_RESULT,			      // InjuryResult
 	INJURY_TYPE,                  // InjuryType
 	INTERCEPTOR_ID,               // String
+	IS_KICKED_PLAYER,            // Boolean
+  KICKED_PLAYER_ID,             // String
+  KICKED_PLAYER_STATE,          // PlayerState
+  KICKED_PLAYER_HAS_BALL,       // Boolean
+  KICKED_PLAYER_COORDINATE,     // FieldCoordinate
 	KICKING_PLAYER_COORDINATE,    // FieldCoordinate
 	KICKOFF_BOUNDS,               // FieldCoordinateBounds
 	KICKOFF_RESULT,               // KickoffResult
 	KICKOFF_START_COORDINATE,     // FieldCoordinate
+  KTM_MODIFIER,                 // Integer
 	MOVE_STACK,                   // FieldCoordinate[]
 	MULTI_BLOCK_DEFENDER_ID,      // String
 	NR_OF_DICE,                   // Integer

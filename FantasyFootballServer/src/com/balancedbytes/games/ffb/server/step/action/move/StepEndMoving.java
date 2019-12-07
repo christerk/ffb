@@ -118,6 +118,9 @@ public class StepEndMoving extends AbstractStep {
         case CLIENT_THROW_TEAM_MATE:
           commandStatus = dispatchPlayerAction(fDispatchPlayerAction);
           break;
+        case CLIENT_KICK_TEAM_MATE:
+          commandStatus = dispatchPlayerAction(fDispatchPlayerAction);
+          break;
         default:
           break;
         // <--
@@ -155,6 +158,7 @@ public class StepEndMoving extends AbstractStep {
       || ((PlayerAction.PASS_MOVE == actingPlayer.getPlayerAction()) && UtilPlayer.hasBall(game, actingPlayer.getPlayer()))
       || ((PlayerAction.FOUL_MOVE == actingPlayer.getPlayerAction()) && UtilPlayer.canFoul(game, actingPlayer.getPlayer()))
       || ((PlayerAction.MOVE == actingPlayer.getPlayerAction()) && UtilPlayer.canGaze(game, actingPlayer.getPlayer()))
+      || ((PlayerAction.KICK_TEAM_MATE_MOVE == actingPlayer.getPlayerAction()) && UtilPlayer.canKickTeamMate(game, actingPlayer.getPlayer(), false))
       || ((PlayerAction.THROW_TEAM_MATE_MOVE == actingPlayer.getPlayerAction()) && UtilPlayer.canThrowTeamMate(game, actingPlayer.getPlayer(), false))) {
       UtilServerPlayerMove.updateMoveSquares(getGameState(), actingPlayer.isLeaping());
     	SequenceGenerator.getInstance().pushMoveSequence(getGameState());
@@ -197,6 +201,10 @@ public class StepEndMoving extends AbstractStep {
 				case THROW_TEAM_MATE_MOVE:
   	      SequenceGenerator.getInstance().pushThrowTeamMateSequence(getGameState());
   	      return true;
+        case KICK_TEAM_MATE:
+        case KICK_TEAM_MATE_MOVE:
+          SequenceGenerator.getInstance().pushKickTeamMateSequence(getGameState());
+          return true;
 				case GAZE:
   	      SequenceGenerator.getInstance().pushMoveSequence(getGameState());
   	      return true;

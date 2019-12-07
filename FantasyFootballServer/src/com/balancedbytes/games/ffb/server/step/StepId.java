@@ -48,6 +48,7 @@ public enum StepId implements INamedObject {
 	END_SCATTER_PLAYER("endScatterPlayer"), // action.ttm
 	END_SELECTING("endSelecting"), // action.select
 	END_THROW_TEAM_MATE("endThrowTeamMate"), // action.ttm
+	END_KICK_TEAM_MATE("endKickTeamMate"), // action.kickTeamMate
 	END_TURN("endTurn"), // action.common
 	FALL_DOWN("fallDown"), // action.common
 	FAN_FACTOR("fanFactor"), // game.end
@@ -75,9 +76,12 @@ public enum StepId implements INamedObject {
 	INIT_SELECTING("initSelecting"), // action.select
 	INIT_START_GAME("initStartGame"), // game.start
 	INIT_THROW_TEAM_MATE("initThrowTeamMate"), // action.ttm
+	INIT_KICK_TEAM_MATE("initKickTeamMate"), // action.kickTeamMate
 	INTERCEPT("intercept"), // action.pass
 	JUGGERNAUT("juggernaut"), // action.block
 	JUMP_UP("jumpUp"), // action.select
+	KICK_TEAM_MATE("kickTeamMate"), // action.kickTeamMate
+	KICK_TM_DOUBLE_ROLLED("kickTeamMateDoubleRolled"), // action.kickTeamMate
 	KICKOFF("kickoff"), // phase.kickoff
 	KICKOFF_ANIMATION("kickoffAnimation"), // phase.kickoff
 	KICKOFF_RESULT_ROLL("kickoffResultRoll"), // phase.kickoff

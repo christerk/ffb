@@ -46,6 +46,7 @@ public class ClientStateFactory {
     register(new ClientStateWaitForOpponent(pClient));
     register(new ClientStateReplay(pClient));
     register(new ClientStateThrowTeamMate(pClient));
+    register(new ClientStateKickTeamMate(pClient));
     register(new ClientStateSwoop(pClient));
     register(new ClientStateDumpOff(pClient));
     register(new ClientStateWaitForSetup(pClient));
@@ -137,6 +138,10 @@ public class ClientStateFactory {
                 case THROW_TEAM_MATE:
                 case THROW_TEAM_MATE_MOVE:
                   clientStateId = ClientStateId.THROW_TEAM_MATE;
+                  break;
+                case KICK_TEAM_MATE:
+                case KICK_TEAM_MATE_MOVE:
+                  clientStateId = ClientStateId.KICK_TEAM_MATE;
                   break;
                 case SWOOP:
                   clientStateId = ClientStateId.SWOOP;

@@ -116,7 +116,8 @@ public class StepReallyStupid extends AbstractStepWithReRoll {
       if (doRoll) {
         int roll = getGameState().getDiceRoller().rollSkill();
         boolean goodConditions = true;
-        if (actingPlayer.getPlayerAction() != PlayerAction.THROW_TEAM_MATE) {
+        if (actingPlayer.getPlayerAction() != PlayerAction.THROW_TEAM_MATE
+            && actingPlayer.getPlayerAction() != PlayerAction.KICK_TEAM_MATE) {
           FieldCoordinate playerCoordinate = game.getFieldModel().getPlayerCoordinate(actingPlayer.getPlayer());
           Player[] teamMates = UtilPlayer.findAdjacentBlockablePlayers(game, actingPlayer.getPlayer().getTeam(), playerCoordinate);
           goodConditions = false;
@@ -158,6 +159,8 @@ public class StepReallyStupid extends AbstractStepWithReRoll {
     switch (actingPlayer.getPlayerAction()) {
       case BLITZ:
       case BLITZ_MOVE:
+      case KICK_TEAM_MATE:
+      case KICK_TEAM_MATE_MOVE:
         game.getTurnData().setBlitzUsed(true);
         break;
       case PASS:

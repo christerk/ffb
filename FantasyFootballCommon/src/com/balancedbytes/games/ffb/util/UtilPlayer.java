@@ -329,8 +329,25 @@ public class UtilPlayer {
     return throwablePlayers.toArray(new Player[throwablePlayers.size()]);
   }
   
+  public static Player[] findKickableTeamMates(Game pGame, Player pKicker) {
+    List<Player> kickablePlayers = new ArrayList<Player>();
+    FieldModel fieldModel = pGame.getFieldModel();
+    FieldCoordinate kickerCoordinate = fieldModel.getPlayerCoordinate(pKicker);
+    Player[] adjacentPlayers = findAdjacentPlayersWithTacklezones(pGame, pKicker.getTeam(), kickerCoordinate, false);
+    for (Player adjacentPlayer : adjacentPlayers) {
+      if (UtilCards.hasSkill(pGame, adjacentPlayer, Skill.RIGHT_STUFF)) {
+        kickablePlayers.add(adjacentPlayer);
+      }
+    }
+    return kickablePlayers.toArray(new Player[kickablePlayers.size()]);
+  }
+  
   public static boolean canThrowTeamMate(Game pGame, Player pThrower, boolean pCheckPassUsed) {
     return ((pThrower != null) && (!pCheckPassUsed || !pGame.getTurnData().isPassUsed()) && UtilCards.hasSkill(pGame, pThrower, Skill.THROW_TEAM_MATE) && (UtilPlayer.findThrowableTeamMates(pGame, pThrower).length > 0));
+  }
+  
+  public static boolean canKickTeamMate(Game pGame, Player pKicker, boolean pCheckBlitzUsed) {
+    return ((pKicker != null) && (!pCheckBlitzUsed || !pGame.getTurnData().isBlitzUsed()) && UtilCards.hasSkill(pGame, pKicker, Skill.KICK_TEAM_MATE) && (UtilPlayer.findKickableTeamMates(pGame, pKicker).length > 0));
   }
   
   public static boolean isBlockable(Game pGame, Player pPlayer) {

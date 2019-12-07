@@ -78,5 +78,28 @@ public class UtilThrowTeamMateSequence {
     return new ScatterResult(lastValidCoordinate, inBounds);
 
   }
+
+  public static ScatterResult kickPlayer(IStep pStep, FieldCoordinate pKickedPlayerCoordinate, FieldCoordinate pTargetCoordinate) {
+    FieldCoordinate lastValidCoordinate = pKickedPlayerCoordinate;
+    FieldCoordinate currentCoordinate = pKickedPlayerCoordinate;
+
+    boolean inBounds = true;
+    int dx = Integer.signum(pTargetCoordinate.getX() - pKickedPlayerCoordinate.getX());
+    int dy = Integer.signum(pTargetCoordinate.getY() - pKickedPlayerCoordinate.getY());
+    while (inBounds && !currentCoordinate.equals(pTargetCoordinate)) {
+      currentCoordinate = currentCoordinate.add(dx, dy);
+      if (FieldCoordinateBounds.FIELD.isInBounds(currentCoordinate)) {
+        lastValidCoordinate = currentCoordinate;
+      } else {
+        inBounds = false;
+      }
+    }
+    
+    if (inBounds) {
+      return scatterPlayer(pStep, lastValidCoordinate, true);
+    }
+    
+    return new ScatterResult(lastValidCoordinate, inBounds);
+  }
   	
 }

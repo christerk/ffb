@@ -49,18 +49,22 @@ public final class StepEndScatterPlayer extends AbstractStep {
   public boolean setParameter(StepParameter pParameter) {
 		if ((pParameter != null) && !super.setParameter(pParameter)) {
 	  	switch (pParameter.getKey()) {
+	  	  case KICKED_PLAYER_ID:
 				case THROWN_PLAYER_ID:
 					fThrownPlayerId = (String) pParameter.getValue();
 					consume(pParameter);
 					return true;
+				case KICKED_PLAYER_HAS_BALL:
 				case THROWN_PLAYER_HAS_BALL:
 					fThrownPlayerHasBall = (pParameter.getValue() != null) ? (Boolean) pParameter.getValue() : false;
 					consume(pParameter);
 					return true;
+				case KICKED_PLAYER_STATE:
 				case THROWN_PLAYER_STATE:
 					fThrownPlayerState = (PlayerState) pParameter.getValue();
 					consume(pParameter);
 					return true;
+				case KICKED_PLAYER_COORDINATE:
 				case THROWN_PLAYER_COORDINATE:
 					fThrownPlayerCoordinate = (FieldCoordinate) pParameter.getValue();
 					consume(pParameter);

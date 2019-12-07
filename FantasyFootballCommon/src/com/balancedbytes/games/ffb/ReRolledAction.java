@@ -22,6 +22,7 @@ public enum ReRolledAction implements INamedObject {
   WINNINGS("Winnings"),
   ALWAYS_HUNGRY(Skill.ALWAYS_HUNGRY),
   THROW_TEAM_MATE(Skill.THROW_TEAM_MATE),
+  KICK_TEAM_MATE(Skill.KICK_TEAM_MATE),
   RIGHT_STUFF(Skill.RIGHT_STUFF),
   SHADOWING_ESCAPE("Shadowing Escape"),
   TENTACLES_ESCAPE("Tentacles Escape"),

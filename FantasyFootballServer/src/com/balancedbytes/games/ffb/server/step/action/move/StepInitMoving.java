@@ -12,6 +12,7 @@ import com.balancedbytes.games.ffb.net.commands.ClientCommandBlock;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandFoul;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandGaze;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandHandOver;
+import com.balancedbytes.games.ffb.net.commands.ClientCommandKickTeamMate;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandMove;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandPass;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandThrowTeamMate;
@@ -19,6 +20,7 @@ import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.IServerJsonOption;
 import com.balancedbytes.games.ffb.server.net.ReceivedCommand;
 import com.balancedbytes.games.ffb.server.step.AbstractStep;
+import com.balancedbytes.games.ffb.server.step.SequenceGenerator;
 import com.balancedbytes.games.ffb.server.step.StepAction;
 import com.balancedbytes.games.ffb.server.step.StepCommandStatus;
 import com.balancedbytes.games.ffb.server.step.StepException;
@@ -61,6 +63,9 @@ public class StepInitMoving extends AbstractStep {
   private String fGazeVictimId;
 	private boolean fEndTurn;
 	private boolean fEndPlayerAction;
+	
+	private String fKickedPlayerId;
+	private int fNumDice;
 		
 	public StepInitMoving(GameState pGameState) {
 		super(pGameState);
@@ -167,6 +172,14 @@ public class StepInitMoving extends AbstractStep {
             commandStatus = dispatchPlayerAction(PlayerAction.THROW_TEAM_MATE);
           }
           break;
+        case CLIENT_KICK_TEAM_MATE:
+          ClientCommandKickTeamMate kickTeamMateCommand = (ClientCommandKickTeamMate) pReceivedCommand.getCommand();
+          if (UtilServerSteps.checkCommandWithActingPlayer(getGameState(), kickTeamMateCommand) && (actingPlayer.getPlayerAction() == PlayerAction.KICK_TEAM_MATE_MOVE)) {
+            fKickedPlayerId = kickTeamMateCommand.getKickedPlayerId();
+            fNumDice = kickTeamMateCommand.getNumDice();
+            commandStatus = StepCommandStatus.EXECUTE_STEP;
+          }
+          break;
         case CLIENT_GAZE:
           ClientCommandGaze gazeCommand = (ClientCommandGaze) pReceivedCommand.getCommand();
           if (UtilServerSteps.checkCommandWithActingPlayer(getGameState(), gazeCommand)) {
@@ -212,6 +225,11 @@ public class StepInitMoving extends AbstractStep {
       game.setDefenderId(fGazeVictimId);
       actingPlayer.setPlayerAction(PlayerAction.GAZE);
       getResult().setNextAction(StepAction.NEXT_STEP);
+  	} else if (StringTool.isProvided(fKickedPlayerId)) {
+  	  SequenceGenerator.getInstance().pushKickTeamMateSequence(getGameState(), fNumDice, fKickedPlayerId);
+      publishParameter(new StepParameter(StepParameterKey.KICKED_PLAYER_ID, fKickedPlayerId));
+      publishParameter(new StepParameter(StepParameterKey.NR_OF_DICE, fNumDice));
+      getResult().setNextAction(StepAction.NEXT_STEP);
   	} else {
 	    if (ArrayTool.isProvided(fMoveStack)) {
 	    	FieldCoordinate coordinateTo = fMoveStack[0];
@@ -234,6 +252,7 @@ public class StepInitMoving extends AbstractStep {
 	        game.getTurnData().setTurnStarted(true);
 	        switch (actingPlayer.getPlayerAction()) {
 	          case BLITZ_MOVE:
+	          case KICK_TEAM_MATE_MOVE:
 	            game.getTurnData().setBlitzUsed(true);
 	            break;
 	          case FOUL_MOVE:

@@ -87,6 +87,9 @@ public class ClientStateSelect extends ClientState {
         case IPlayerPopupMenuKeys.KEY_THROW_TEAM_MATE:
           communication.sendActingPlayer(pPlayer, PlayerAction.THROW_TEAM_MATE_MOVE, false);
           break;        
+        case IPlayerPopupMenuKeys.KEY_KICK_TEAM_MATE:
+          communication.sendActingPlayer(pPlayer, PlayerAction.KICK_TEAM_MATE_MOVE, false);
+          break;        
         case IPlayerPopupMenuKeys.KEY_RECOVER:
           communication.sendActingPlayer(pPlayer, PlayerAction.REMOVE_CONFUSION, false);
           break;
@@ -159,6 +162,12 @@ public class ClientStateSelect extends ClientState {
       throwTeamMateAction.setMnemonic(IPlayerPopupMenuKeys.KEY_THROW_TEAM_MATE);
       throwTeamMateAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_THROW_TEAM_MATE, 0));
       menuItemList.add(throwTeamMateAction);
+    }
+    if (isKickTeamMateActionAvailable(pPlayer)) {
+      JMenuItem kickTeamMateAction = new JMenuItem("Kick Team-Mate Action", new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_BLITZ)));
+      kickTeamMateAction.setMnemonic(IPlayerPopupMenuKeys.KEY_KICK_TEAM_MATE);
+      kickTeamMateAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_KICK_TEAM_MATE, 0));
+      menuItemList.add(kickTeamMateAction);
     }
     if (isRecoverFromConfusionActionAvailable(pPlayer)) {
       JMenuItem confusionAction = new JMenuItem("Recover from Confusion & End Move", new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_STAND_UP)));
@@ -362,7 +371,6 @@ public class ClientStateSelect extends ClientState {
   }
   
   private boolean isThrowTeamMateActionAvailable(Player pPlayer) {
-    
   	Game game = getClient().getGame();
   	PlayerState playerState = game.getFieldModel().getPlayerState(pPlayer);
   	if ((playerState == null) || UtilCards.hasSkill(game, pPlayer, Skill.BALL_AND_CHAIN)) {
@@ -395,7 +403,41 @@ public class ClientStateSelect extends ClientState {
       && UtilCards.hasSkill(game, pPlayer, Skill.THROW_TEAM_MATE)
       && rightStuffAvailable
       && (playerState.isAbleToMove() || rightStuffAdjacent));
+  }
+  
+  private boolean isKickTeamMateActionAvailable(Player pPlayer) {
+    Game game = getClient().getGame();
+    PlayerState playerState = game.getFieldModel().getPlayerState(pPlayer);
+    if ((playerState == null) || UtilCards.hasSkill(game, pPlayer, Skill.BALL_AND_CHAIN)) {
+      return false;
+    }
+
+    boolean rightStuffAvailable = false;
+    FieldModel fieldModel = getClient().getGame().getFieldModel();
+    Player[] teamPlayers = pPlayer.getTeam().getPlayers();
+    for (int i = 0; i < teamPlayers.length; i++) {
+      FieldCoordinate playerCoordinate = fieldModel.getPlayerCoordinate(teamPlayers[i]);
+      if (UtilCards.hasSkill(game, teamPlayers[i], Skill.RIGHT_STUFF) && !playerCoordinate.isBoxCoordinate()) {
+        rightStuffAvailable = true;
+        break;
+      }
+    }
     
+    boolean rightStuffAdjacent = false;
+    FieldCoordinate playerCoordinate = game.getFieldModel().getPlayerCoordinate(pPlayer);
+    Player[] adjacentTeamPlayers = UtilPlayer.findAdjacentPlayersWithTacklezones(game, pPlayer.getTeam(), playerCoordinate, false);
+    for (int i = 0; i < adjacentTeamPlayers.length; i++) {
+      if (UtilCards.hasSkill(game, adjacentTeamPlayers[i], Skill.RIGHT_STUFF)) {
+        rightStuffAdjacent = true;
+        break;
+      }
+    }
+    
+    return (!game.getTurnData().isPassUsed()
+      && !game.getFieldModel().hasCardEffect(pPlayer, CardEffect.ILLEGALLY_SUBSTITUTED)
+      && UtilCards.hasSkill(game, pPlayer, Skill.KICK_TEAM_MATE)
+      && rightStuffAvailable
+      && (playerState.isAbleToMove() || rightStuffAdjacent));
   }
   
   private boolean isStandUpActionAvailable(Player pPlayer) {

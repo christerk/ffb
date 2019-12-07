@@ -22,6 +22,7 @@ import com.balancedbytes.games.ffb.net.commands.ClientCommandIllegalProcedure;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandInterceptorChoice;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandJoin;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandJourneymen;
+import com.balancedbytes.games.ffb.net.commands.ClientCommandKickTeamMate;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandKickoff;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandMove;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandPass;
@@ -123,6 +124,7 @@ public enum NetCommandId implements INamedObject {
   CLIENT_REPLAY("clientReplay"),
   SERVER_REPLAY("serverReplay"),
   CLIENT_THROW_TEAM_MATE("clientThrowTeamMate"),
+  CLIENT_KICK_TEAM_MATE("clientKickTeamMate"),
   CLIENT_SWOOP("clientSwoop"),
   CLIENT_PLAYER_CHOICE("clientPlayerChoice"),
   CLIENT_ILLEGAL_PROCEDURE("clientIllegalProcedure"),
@@ -259,6 +261,8 @@ public enum NetCommandId implements INamedObject {
         return new ClientCommandReplay();
       case CLIENT_THROW_TEAM_MATE:
         return new ClientCommandThrowTeamMate();
+      case CLIENT_KICK_TEAM_MATE:
+        return new ClientCommandKickTeamMate();
       case CLIENT_SWOOP:
           return new ClientCommandSwoop();
       case CLIENT_PLAYER_CHOICE:

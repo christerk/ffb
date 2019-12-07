@@ -96,6 +96,8 @@ public class UtilServerInjury {
 		if (!injuryResult.isArmorBroken()) {
 
 			switch (pInjuryType) {
+			case KTM_CROWD:
+			case KTM_INJURY:
 			case CROWDPUSH:
 			case THROW_A_ROCK:
 			case EAT_PLAYER:
@@ -221,6 +223,8 @@ public class UtilServerInjury {
 				injuryResult.setInjury(new PlayerState(PlayerState.RIP));
 			} else if (pInjuryType == InjuryType.PILING_ON_KNOCKED_OUT) {
 				injuryResult.setInjury(new PlayerState(PlayerState.KNOCKED_OUT));
+			} else if (pInjuryType == InjuryType.KTM_CROWD) {
+        injuryResult.setInjury(new PlayerState(PlayerState.KNOCKED_OUT));
 			} else if (UtilCards.hasCard(game, pDefender, Card.LUCKY_CHARM) && (injuryResult.getArmorRoll() != null)) {
 				injuryResult.setArmorBroken(false);
 				injuryResult.setInjury(new PlayerState(PlayerState.PRONE));
@@ -233,6 +237,7 @@ public class UtilServerInjury {
 					injuryResult.addInjuryModifier(new InjuryModifierFactory().getNigglingInjuryModifier(pDefender));
 				}
 				switch (pInjuryType) {
+				case KTM_INJURY:
 				case CROWDPUSH:
 				case THROW_A_ROCK:
 				case DROP_DODGE:
@@ -326,6 +331,13 @@ public class UtilServerInjury {
 			injuryResult.setInjury(new PlayerState(PlayerState.KNOCKED_OUT));
 		}
 
+		// Kick Team-Mate injuries get KO'd instead of Stunned
+		if ((pInjuryType == InjuryType.KTM_INJURY) 
+		    && (injuryResult.getInjury() != null) 
+		    && injuryResult.getInjury().getBase() == PlayerState.STUNNED) {
+		  injuryResult.setInjury(new PlayerState(PlayerState.KNOCKED_OUT));
+		}
+		
 		// crowdpush to reserve
 		if ((pInjuryType == InjuryType.CROWDPUSH) && !injuryResult.isCasualty() && !injuryResult.isKnockedOut()) {
 			injuryResult.setInjury(new PlayerState(PlayerState.RESERVE));

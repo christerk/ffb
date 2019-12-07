@@ -43,6 +43,10 @@ import com.balancedbytes.games.ffb.server.step.action.foul.StepFoul;
 import com.balancedbytes.games.ffb.server.step.action.foul.StepFoulChainsaw;
 import com.balancedbytes.games.ffb.server.step.action.foul.StepInitFouling;
 import com.balancedbytes.games.ffb.server.step.action.foul.StepReferee;
+import com.balancedbytes.games.ffb.server.step.action.ktm.StepEndKickTeamMate;
+import com.balancedbytes.games.ffb.server.step.action.ktm.StepInitKickTeamMate;
+import com.balancedbytes.games.ffb.server.step.action.ktm.StepKickTeamMate;
+import com.balancedbytes.games.ffb.server.step.action.ktm.StepKickTeamMateDoubleRolled;
 import com.balancedbytes.games.ffb.server.step.action.move.StepDivingTackle;
 import com.balancedbytes.games.ffb.server.step.action.move.StepDropDivingTackler;
 import com.balancedbytes.games.ffb.server.step.action.move.StepEndMoving;
@@ -241,6 +245,9 @@ public class StepFactory {
 			case END_INDUCEMENT:
 				step = new StepEndInducement(fGameState);
 				break;
+      case END_KICK_TEAM_MATE:
+        step = new StepEndKickTeamMate(fGameState);
+        break;
 			case END_KICKOFF:
 				step = new StepEndKickoff(fGameState);
 				break;
@@ -322,6 +329,9 @@ public class StepFactory {
 			case INIT_INDUCEMENT:
 				step = new StepInitInducement(fGameState);
 				break;
+      case INIT_KICK_TEAM_MATE:
+        step = new StepInitKickTeamMate(fGameState);
+        break;
 			case INIT_KICKOFF:
 				step = new StepInitKickoff(fGameState);
 				break;
@@ -352,6 +362,12 @@ public class StepFactory {
 			case JUMP_UP:
 				step = new StepJumpUp(fGameState);
 				break;
+      case KICK_TEAM_MATE:
+        step = new StepKickTeamMate(fGameState);
+        break;
+      case KICK_TM_DOUBLE_ROLLED:
+        step = new StepKickTeamMateDoubleRolled(fGameState);
+        break;
 			case KICKOFF:
 				step = new StepKickoff(fGameState);
 				break;

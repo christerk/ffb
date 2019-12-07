@@ -18,6 +18,8 @@ public enum InjuryType implements INamedObject {
   STAB("stab", false),
   TTM_LANDING("ttmLanding", false),
   TTM_HIT_PLAYER("ttmHitPlayer", false),
+  KTM_CROWD("ktmCrowd", false),
+  KTM_INJURY("ktmInjury", false),
   PILING_ON_INJURY("pilingOnInjury", true),
   CHAINSAW("chainsaw", false),
   BITTEN("bitten", false),

@@ -10,6 +10,7 @@ public interface IStepLabel {
 	String APOTHECARY_DEFENDER = "apothecaryDefender";
 	String APOTHECARY_HIT_PLAYER = "apothecaryHitPlayer";
 	String APOTHECARY_THROWN_PLAYER = "apothecaryThrownPlayer";
+	String APOTHECARY_KICKED_PLAYER = "apothecaryKickedPlayer";
 	String BLITZ_TURN = "blitzTurn";
 	String DODGE_BLOCK = "dodgeBlock";
 	String DROP_FALLING_PLAYERS = "dropFallingPlayers";
@@ -19,6 +20,7 @@ public interface IStepLabel {
 	String END_FEEDING = "endFeeding";
 	String END_FOULING = "endFouling";
   String END_GAME = "endGame";
+  String END_KICK_TEAM_MATE = "endKickTeamMate";
 	String END_KICKOFF = "endKickoff";
 	String END_MOVING = "endMoving";
 	String END_PASSING = "endPassing";
@@ -33,6 +35,7 @@ public interface IStepLabel {
 	String HYPNOTIC_GAZE = "hypnoticGaze";
 	String JUGGERNAUT = "juggernaut";
 	String KICKOFF_ANIMATION = "kickoffAnimation";
+	String KICK_TM_DOUBLE_ROLLED = "kickTeamMateDoubleRolled";
 	String MISSED_PASS = "missedPass";
 	String PASS = "pass";
 	String PUSHBACK = "pushback";

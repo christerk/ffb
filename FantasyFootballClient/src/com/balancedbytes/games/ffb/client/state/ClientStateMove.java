@@ -135,7 +135,9 @@ public class ClientStateMove extends ClientState {
       	|| ((actingPlayer.getPlayerAction() == PlayerAction.PASS_MOVE) && UtilPlayer.hasBall(game, pPlayer))
       	|| ((actingPlayer.getPlayerAction() == PlayerAction.HAND_OVER_MOVE) && UtilPlayer.hasBall(game, pPlayer))
       	|| (actingPlayer.getPlayerAction() == PlayerAction.THROW_TEAM_MATE_MOVE)
-      	|| (actingPlayer.getPlayerAction() == PlayerAction.THROW_TEAM_MATE)) {
+      	|| (actingPlayer.getPlayerAction() == PlayerAction.THROW_TEAM_MATE)
+      	|| (actingPlayer.getPlayerAction() == PlayerAction.KICK_TEAM_MATE_MOVE)
+        || (actingPlayer.getPlayerAction() == PlayerAction.KICK_TEAM_MATE)) {
         createAndShowPopupMenuForActingPlayer();
       } else {
         getClient().getCommunication().sendActingPlayer(null, null, false);
@@ -178,6 +180,9 @@ public class ClientStateMove extends ClientState {
         case IPlayerPopupMenuKeys.KEY_THROW_TEAM_MATE:
           communication.sendActingPlayer(pPlayer, PlayerAction.THROW_TEAM_MATE, actingPlayer.isLeaping());
           break;
+        case IPlayerPopupMenuKeys.KEY_KICK_TEAM_MATE:
+          communication.sendActingPlayer(pPlayer, PlayerAction.KICK_TEAM_MATE, actingPlayer.isLeaping());
+          break;
         case IPlayerPopupMenuKeys.KEY_MOVE:
           if (PlayerAction.GAZE == actingPlayer.getPlayerAction()) {
             communication.sendActingPlayer(pPlayer, PlayerAction.MOVE, actingPlayer.isLeaping());
@@ -187,6 +192,9 @@ public class ClientStateMove extends ClientState {
           }
           if (PlayerAction.THROW_TEAM_MATE == actingPlayer.getPlayerAction()) {
             communication.sendActingPlayer(pPlayer, PlayerAction.THROW_TEAM_MATE_MOVE, actingPlayer.isLeaping());
+          }
+          if (PlayerAction.KICK_TEAM_MATE == actingPlayer.getPlayerAction()) {
+            communication.sendActingPlayer(pPlayer, PlayerAction.KICK_TEAM_MATE_MOVE, actingPlayer.isLeaping());
           }
           break;
         case IPlayerPopupMenuKeys.KEY_GAZE:

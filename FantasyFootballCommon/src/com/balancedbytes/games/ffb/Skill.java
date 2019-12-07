@@ -238,6 +238,16 @@ public enum Skill implements INamedObject {
     * both the -2 modifier and tackle zone still apply to the Dodge re-roll.
     */
   DIVING_TACKLE("Diving Tackle", SkillCategory.AGILITY),
+  /**
+   * Some teams field players of great skill and ability. Other teams, however,
+   * do not. Whilst most teams will hire capable players and pay them a fair wage,
+   * some teams will happily take on the most useless of players to fill out their
+   * ranks. Readily available, easily replaceable and usually willing to work for a
+   * pittance, such players fill gaps in the rosters, but rarely do much more!
+   * When calculating Team Value, the amount of gold pieces spent to purchase a player
+   * with this skill is not included in the total.
+   */
+  DISPOSABLE("Disposable", SkillCategory.EXTRAORDINARY),
     /**
     * A player with the Dodge skill is adept at slipping away from opponents,
     * and is allowed to re-roll the D6 if he fails to dodge out of any of an
@@ -390,6 +400,39 @@ public enum Skill implements INamedObject {
     * opponent's half of the pitch.
     */
   KICK_OFF_RETURN("Kick-Off Return", SkillCategory.GENERAL),
+  /**
+   * When a player with this skill makes a Blitz Action, they can kick an adjacent
+   * team-mate (who must have the Right Stuff skill) instead of throwing a Block.
+   * No Block roll is made; instead, the target player is kicked as though they were
+   * a ball! The coach declares whether they will roll a D6 for a short kick or 2D6
+   * for a riskier long kick. If they rolled 2D6 and scored a double, the kicker has
+   * been a little too enthusiastic; make an Injury roll for the target player,
+   * treating Stunned results as KO'd (if they were carrying the ball it bounces from
+   * the square they were in).
+   * 
+   * Otherwise, the kicked player is moved (in a straight line) directly away from the
+   * kicking player's square a number of squares equal to the total that was rolled on
+   * the dice. Then they scatter three times. The kicked player does not count as
+   * entering any square they move through except the one they end up in after scattering.
+   * If the kicked player moves off the pitch, they land among the crowd (never a
+   * pleasant fate!) and are sent to the KO'd box of the team's Dugout. If they were
+   * carrying the ball, it will be thrown back on as normal, starting from the last
+   * square the player moved through before leaving play.
+   * 
+   * If the final square they scatter into is occupied by another player, treat the
+   * player landed on as Knocked Down and roll for Armour (even is already Prone or
+   * Stunned), and then the player being kicked will scatter one more square. If this
+   * moves them onto another player, continue to scatter them until they end up in an
+   * empty square or off the pitch. Note that only the first player they land on is
+   * Knocked Down.
+   * 
+   * Then see the Right Stuff entry to determine how gracefully the player lands - where
+   * that skill refers to thrown players, it should be read as also referring to kicked
+   * players. If the player moved 6, 7 or 8 squares (before scattering), the Landing
+   * roll has a -1 modifier; if they moved 9 or more (before scattering), the Landing
+   * roll has a -2 modifier.
+   */
+  KICK_TEAM_MATE("Kick Team-Mate", SkillCategory.EXTRAORDINARY),
     /**
     * The player is a natural leader and commands the rest of
     * the team from the back-field as he prepares to throw the

@@ -60,7 +60,7 @@ public final class StepKickoffAnimation extends AbstractStep {
 	public boolean setParameter(StepParameter pParameter) {
 		if ((pParameter != null) && !super.setParameter(pParameter)) {
 			switch (pParameter.getKey()) {
-				case KICKING_PLAYER_COORDINATE:
+				case KICKED_PLAYER_COORDINATE:
 					fKickingPlayerCoordinate = (FieldCoordinate) pParameter.getValue();
 					return true;
 				case TOUCHBACK:

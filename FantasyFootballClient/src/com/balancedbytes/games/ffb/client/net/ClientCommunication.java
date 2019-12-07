@@ -49,6 +49,7 @@ import com.balancedbytes.games.ffb.net.commands.ClientCommandIllegalProcedure;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandInterceptorChoice;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandJoin;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandJourneymen;
+import com.balancedbytes.games.ffb.net.commands.ClientCommandKickTeamMate;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandKickoff;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandMove;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandPass;
@@ -368,6 +369,11 @@ public class ClientCommunication implements Runnable, INetCommandHandler {
   public void sendThrowTeamMate(String pActingPlayerId, FieldCoordinate pTargetCoordinate) {
     send(new ClientCommandThrowTeamMate(pActingPlayerId, pTargetCoordinate));
   }
+
+  public void sendKickTeamMate(String pActingPlayerId, String pPlayerId, int numDice) {
+    send(new ClientCommandKickTeamMate(pActingPlayerId, pPlayerId, numDice));
+  }
+  
   
   public void sendThrowTeamMate(String pActingPlayerId, String pPlayerId) {
     send(new ClientCommandThrowTeamMate(pActingPlayerId, pPlayerId));

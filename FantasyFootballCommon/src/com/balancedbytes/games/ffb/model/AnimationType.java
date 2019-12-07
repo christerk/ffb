@@ -13,6 +13,7 @@ public enum AnimationType implements INamedObject {
   
   PASS("pass"),
   THROW_TEAM_MATE("throwTeamMate"),
+  KICK_TEAM_MATE("kickTeamMate"),
   KICK("kick"),
   SPELL_FIREBALL("spellFireball"),
   SPELL_LIGHTNING("spellLightning"),

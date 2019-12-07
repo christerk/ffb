@@ -189,6 +189,41 @@ public class SequenceGenerator {
 
 	}
 
+	public void pushKickTeamMateSequence(GameState pGameState) {
+    pushKickTeamMateSequence(pGameState, 0, null);
+	}
+	
+  public void pushKickTeamMateSequence(GameState pGameState, int numDice, String pKickedPlayerId) {
+
+    pGameState.getServer().getDebugLog().log(IServerLogLevel.DEBUG, pGameState.getId(),
+        "push kickTeamMateSequence onto stack");
+
+    Sequence sequence = new Sequence(pGameState);
+
+    sequence.add(StepId.INIT_KICK_TEAM_MATE, param(StepParameterKey.GOTO_LABEL_ON_END, IStepLabel.END_KICK_TEAM_MATE),
+                          param(StepParameterKey.KICKED_PLAYER_ID, pKickedPlayerId),
+                          param(StepParameterKey.NR_OF_DICE, numDice));
+    sequence.add(StepId.BONE_HEAD,        param(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.END_KICK_TEAM_MATE));
+    sequence.add(StepId.REALLY_STUPID,      param(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.END_KICK_TEAM_MATE));
+    sequence.add(StepId.TAKE_ROOT,        param(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.END_KICK_TEAM_MATE));
+    sequence.add(StepId.WILD_ANIMAL,      param(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.END_KICK_TEAM_MATE));
+    sequence.add(StepId.BLOOD_LUST);
+    sequence.add(StepId.KICK_TEAM_MATE,    param(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.KICK_TM_DOUBLE_ROLLED));
+    // insert scatterPlayerSequence at this point
+    sequence.jump(IStepLabel.RIGHT_STUFF);
+    sequence.add(StepId.KICK_TM_DOUBLE_ROLLED,    IStepLabel.KICK_TM_DOUBLE_ROLLED);
+    sequence.jump(IStepLabel.APOTHECARY_KICKED_PLAYER);
+    sequence.add(StepId.RIGHT_STUFF,      IStepLabel.RIGHT_STUFF);
+    sequence.jump(IStepLabel.APOTHECARY_KICKED_PLAYER);
+    sequence.add(StepId.APOTHECARY,       IStepLabel.APOTHECARY_KICKED_PLAYER,
+                                          param(StepParameterKey.APOTHECARY_MODE, ApothecaryMode.THROWN_PLAYER));
+    sequence.add(StepId.CATCH_SCATTER_THROW_IN);
+    sequence.add(StepId.END_KICK_TEAM_MATE, IStepLabel.END_KICK_TEAM_MATE);
+
+    pGameState.getStepStack().push(sequence.getSequence());
+
+  }
+  
 	public void pushThrowTeamMateSequence(GameState pGameState) {
 		pushThrowTeamMateSequence(pGameState, null, null);
 	}

@@ -51,6 +51,7 @@ public final class StepRightStuff extends AbstractStepWithReRoll {
 	private Boolean fThrownPlayerHasBall;
 	private String fThrownPlayerId;
 	private boolean fDropThrownPlayer;
+	private int fKtmModifier;
 	
 	public StepRightStuff(GameState pGameState) {
 		super(pGameState);
@@ -64,15 +65,20 @@ public final class StepRightStuff extends AbstractStepWithReRoll {
 	public boolean setParameter(StepParameter pParameter) {
 		if ((pParameter != null) && !super.setParameter(pParameter)) {
 			switch (pParameter.getKey()) {
-				case THROWN_PLAYER_HAS_BALL:				
+				case KICKED_PLAYER_HAS_BALL:				
+        case THROWN_PLAYER_HAS_BALL:        
 					fThrownPlayerHasBall = (Boolean) pParameter.getValue();
 					return true;
+        case KICKED_PLAYER_ID:
 				case THROWN_PLAYER_ID:
 					fThrownPlayerId = (String) pParameter.getValue();
 					return true;
 				case DROP_THROWN_PLAYER:
 				  fDropThrownPlayer = (pParameter.getValue() != null) ? (Boolean) pParameter.getValue() : false;
 				  return true;
+        case KTM_MODIFIER:
+          fKtmModifier = (pParameter.getValue() != null) ? (Integer) pParameter.getValue() : 0;
+          return true;
 				default:
 					break;
 			}
@@ -120,6 +126,11 @@ public final class StepRightStuff extends AbstractStepWithReRoll {
     if (doRoll) {
       RightStuffModifierFactory modifierFactory = new RightStuffModifierFactory();
       Set<RightStuffModifier> rightStuffModifiers = modifierFactory.findRightStuffModifiers(game, thrownPlayer);
+      if (fKtmModifier == -1) {
+        rightStuffModifiers.add(RightStuffModifier.KTM_MEDIUM);
+      } else if (fKtmModifier == -2) {
+        rightStuffModifiers.add(RightStuffModifier.KTM_LONG);
+      }
       int minimumRoll = DiceInterpreter.getInstance().minimumRollRightStuff(thrownPlayer, rightStuffModifiers);
       int roll = getGameState().getDiceRoller().rollSkill();
       boolean successful = DiceInterpreter.getInstance().isSkillRollSuccessful(roll, minimumRoll);

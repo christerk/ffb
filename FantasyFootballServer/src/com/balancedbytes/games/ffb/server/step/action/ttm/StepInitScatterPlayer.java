@@ -54,7 +54,8 @@ public final class StepInitScatterPlayer extends AbstractStep {
   private boolean fThrownPlayerHasBall;
   private FieldCoordinate fThrownPlayerCoordinate;
   private boolean fThrowScatter;
-
+  private boolean fIsKickedPlayer;
+  
 	public StepInitScatterPlayer(GameState pGameState) {
 		super(pGameState);
 	}
@@ -69,18 +70,22 @@ public final class StepInitScatterPlayer extends AbstractStep {
   		for (StepParameter parameter : pParameterSet.values()) {
   			switch (parameter.getKey()) {
   			  // mandatory
+  			  case KICKED_PLAYER_ID:
   				case THROWN_PLAYER_ID:
   					fThrownPlayerId = (String) parameter.getValue();
   					break;
   			  // mandatory
+  				case KICKED_PLAYER_HAS_BALL:
   				case THROWN_PLAYER_HAS_BALL:
   					fThrownPlayerHasBall = (parameter.getValue() != null) ? (Boolean) parameter.getValue() : false;
   					break;
   			  // mandatory
+  				case KICKED_PLAYER_COORDINATE:
   				case THROWN_PLAYER_COORDINATE:
   					fThrownPlayerCoordinate = (FieldCoordinate) parameter.getValue();
   					break;
   			  // mandatory
+  				case KICKED_PLAYER_STATE:
   				case THROWN_PLAYER_STATE:
   					fThrownPlayerState = (PlayerState) parameter.getValue();
   					break;
@@ -88,6 +93,9 @@ public final class StepInitScatterPlayer extends AbstractStep {
   				case THROW_SCATTER:
   					fThrowScatter = (parameter.getValue() != null) ? (Boolean) parameter.getValue() : false;
   					break;
+  				case IS_KICKED_PLAYER:
+            fIsKickedPlayer = (parameter.getValue() != null) ? (Boolean) parameter.getValue() : false;
+  				  break;
 					default:
 						break;
   			}
@@ -104,6 +112,20 @@ public final class StepInitScatterPlayer extends AbstractStep {
   	}
   }
 	
+  @Override
+  public boolean setParameter(StepParameter pParameter) {
+    if ((pParameter != null) && !super.setParameter(pParameter)) {
+      switch (pParameter.getKey()) {
+        case IS_KICKED_PLAYER:
+          fIsKickedPlayer = (pParameter.getValue() != null) ? (Boolean) pParameter.getValue() : false;
+          return true;
+        default:
+          break;
+      }
+    }
+    return false;
+  }
+  
 	@Override
 	public void start() {
 		super.start();
@@ -132,7 +154,12 @@ public final class StepInitScatterPlayer extends AbstractStep {
 	    game.getFieldModel().clearMoveSquares();
 	    startCoordinate = game.getPassCoordinate();
     }
-    UtilThrowTeamMateSequence.ScatterResult scatterResult = UtilThrowTeamMateSequence.scatterPlayer(this, startCoordinate, fThrowScatter);
+    UtilThrowTeamMateSequence.ScatterResult scatterResult;
+    if (fIsKickedPlayer && fThrowScatter) {
+      scatterResult = UtilThrowTeamMateSequence.kickPlayer(this, fThrownPlayerCoordinate, startCoordinate);
+    } else {
+      scatterResult = UtilThrowTeamMateSequence.scatterPlayer(this, startCoordinate, fThrowScatter);
+    }
     FieldCoordinate endCoordinate = scatterResult.getLastValidCoordinate();
     // send animation before sending player coordinate and state change (otherwise thrown player will be displayed in landing square first)
     getResult().setAnimation(new Animation(fThrownPlayerCoordinate, endCoordinate, fThrownPlayerId, fThrownPlayerHasBall));
@@ -159,8 +186,13 @@ public final class StepInitScatterPlayer extends AbstractStep {
     } else {
     	// throw player out of bounds
     	game.getFieldModel().setPlayerState(thrownPlayer, new PlayerState(PlayerState.FALLING));
-      InjuryResult injuryResultThrownPlayer = UtilServerInjury.handleInjury(this, InjuryType.CROWDPUSH, null, thrownPlayer, endCoordinate, null, ApothecaryMode.THROWN_PLAYER);
-      publishParameter(new StepParameter(StepParameterKey.INJURY_RESULT, injuryResultThrownPlayer));
+    	if (fIsKickedPlayer) {
+        InjuryResult injuryResultKickedPlayer = UtilServerInjury.handleInjury(this, InjuryType.KTM_CROWD, null, thrownPlayer, endCoordinate, null, ApothecaryMode.THROWN_PLAYER);
+        publishParameter(new StepParameter(StepParameterKey.INJURY_RESULT, injuryResultKickedPlayer));
+    	} else {
+        InjuryResult injuryResultThrownPlayer = UtilServerInjury.handleInjury(this, InjuryType.CROWDPUSH, null, thrownPlayer, endCoordinate, null, ApothecaryMode.THROWN_PLAYER);
+        publishParameter(new StepParameter(StepParameterKey.INJURY_RESULT, injuryResultThrownPlayer));
+    	}
       if (fThrownPlayerHasBall) {
       	publishParameter(new StepParameter(StepParameterKey.CATCH_SCATTER_THROW_IN_MODE, CatchScatterThrowInMode.THROW_IN));
       	publishParameter(new StepParameter(StepParameterKey.THROW_IN_COORDINATE, endCoordinate));

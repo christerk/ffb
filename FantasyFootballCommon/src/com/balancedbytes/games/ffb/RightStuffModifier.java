@@ -8,6 +8,8 @@ package com.balancedbytes.games.ffb;
 public enum RightStuffModifier implements IRollModifier {
   
   SWOOP("Swoop", -1, false),
+  KTM_MEDIUM("Medium Kick", 1, false),
+  KTM_LONG("Long Kick", 2, false),
   TACKLEZONES_1("1 Tacklezone", 1, true),
   TACKLEZONES_2("2 Tacklezones", 2, true),
   TACKLEZONES_3("3 Tacklezones", 3, true),

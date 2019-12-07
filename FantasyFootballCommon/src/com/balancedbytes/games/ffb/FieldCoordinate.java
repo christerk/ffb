@@ -172,5 +172,60 @@ public class FieldCoordinate {
       return true;
     }
   }
+
+  public static Direction GetDirection(FieldCoordinate from, FieldCoordinate to) {
+    int dx = to.getX() - from.getX();
+    int dy = to.getY() - from.getY();
+    
+    if (dx < 0) {
+      if (dy < 0) {
+        return Direction.SOUTHWEST;
+      } else if (dy > 0) {
+        return Direction.NORTHWEST;
+      } else {
+        return Direction.WEST;
+      }
+    } else if (dx > 0) {
+      if (dy < 0) {
+        return Direction.SOUTHEAST;
+      } else if (dy > 0) {
+        return Direction.NORTHEAST;
+      } else {
+        return Direction.EAST;
+      }
+    } else {
+      if (dy < 0) {
+        return Direction.SOUTH;
+      } else if (dy > 0) {
+        return Direction.NORTH;
+      }
+    }
+    return null;
+  }
+
+  public FieldCoordinate move(Direction d, int distance) {
+    FieldCoordinate result = new FieldCoordinate(this.fX, this.fY);
+    
+    int dy = 0;
+    int dx = 0;
+
+    switch(d) {
+      case NORTH:     dx= 0; dy= 1; break;
+      case NORTHEAST: dx= 1; dy= 1; break;
+      case EAST:      dx= 1; dy= 0; break;
+      case SOUTHEAST: dx= 1; dy=-1; break;
+      case SOUTH:     dx= 0; dy=-1; break;
+      case SOUTHWEST: dx=-1; dy=-1; break;
+      case WEST:      dx=-1; dy= 0; break;
+      case NORTHWEST: dx=-1; dy= 1; break;
+    }
+    
+    for (int i=0; i<distance; i++) {
+      result.fX += dx;
+      result.fY += dy;
+    }
+    
+    return result;
+  }
   
 }

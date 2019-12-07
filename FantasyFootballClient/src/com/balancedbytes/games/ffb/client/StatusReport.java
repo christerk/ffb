@@ -69,6 +69,7 @@ import com.balancedbytes.games.ffb.report.ReportInducement;
 import com.balancedbytes.games.ffb.report.ReportInducementsBought;
 import com.balancedbytes.games.ffb.report.ReportInjury;
 import com.balancedbytes.games.ffb.report.ReportInterceptionRoll;
+import com.balancedbytes.games.ffb.report.ReportKickTeamMateRoll;
 import com.balancedbytes.games.ffb.report.ReportKickoffExtraReRoll;
 import com.balancedbytes.games.ffb.report.ReportKickoffPitchInvasion;
 import com.balancedbytes.games.ffb.report.ReportKickoffResult;
@@ -1098,6 +1099,37 @@ public class StatusReport {
     }
   }
 
+  public void reportKickTeamMateRoll(ReportKickTeamMateRoll pReport) {
+    StringBuilder status = new StringBuilder();
+    Game game = getClient().getGame();
+    Player kicker = game.getActingPlayer().getPlayer();
+    Player kickedPlayer = game.getPlayerById(pReport.getKickedPlayerId());
+    if (!pReport.isReRolled()) {
+      print(getIndent(), true, kicker);
+      print(getIndent(), TextStyle.BOLD, " tries to kick ");
+      print(getIndent(), true, kickedPlayer);
+      println(getIndent(), TextStyle.BOLD, ":");
+    }
+
+    int[] roll = pReport.getRoll();
+    if (roll.length > 1) {
+      status.append("Kick Team-Mate Roll [ ").append(roll[0]).append(" ][ ").append(roll[1]).append(" ]");
+    } else {
+      status.append("Kick Team-Mate Roll [ ").append(roll[0]).append(" ]");
+    }
+    println(getIndent() + 1, TextStyle.ROLL, status.toString());
+    
+    print(getIndent() + 2, false, kicker);
+    if (pReport.isSuccessful()) {
+      status = new StringBuilder();
+      status.append(" kicks ").append(kicker.getPlayerGender().getGenitive()).append(" team-mate successfully.");
+      println(getIndent() + 2, status.toString());
+    } else {
+      println(getIndent() + 2, " is a bit too enthusiastic.");
+    }
+    
+  }
+  
   public void reportThrowTeamMateRoll(ReportThrowTeamMateRoll pReport) {
     StringBuilder status = new StringBuilder();
     StringBuilder neededRoll = null;
@@ -2342,6 +2374,10 @@ public class StatusReport {
     // report injury type
 
     switch (pReport.getInjuryType()) {
+      case KTM_CROWD:
+        print(getIndent() + 1, false, defender);
+        println(getIndent() + 1, " is kicked into the crowd and is knocked out.");
+        break;
       case CROWDPUSH:
         print(getIndent() + 1, false, defender);
         println(getIndent() + 1, " is pushed into the crowd.");
@@ -2836,6 +2872,9 @@ public class StatusReport {
           break;
         case THROW_TEAM_MATE_ROLL:
           reportThrowTeamMateRoll((ReportThrowTeamMateRoll) report);
+          break;
+        case KICK_TEAM_MATE_ROLL:
+          reportKickTeamMateRoll((ReportKickTeamMateRoll) report);
           break;
         case SCATTER_PLAYER:
           reportScatterPlayer((ReportScatterPlayer) report);

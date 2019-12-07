@@ -55,6 +55,8 @@ public final class StepEndSelecting extends AbstractStep {
   private FieldCoordinate fTargetCoordinate;
   private boolean fHailMaryPass;
   private String fThrownPlayerId;
+  private String fKickedPlayerId;
+  private int fNumDice;
   
 	public StepEndSelecting(GameState pGameState) {
 		super(pGameState);
@@ -114,6 +116,14 @@ public final class StepEndSelecting extends AbstractStep {
 					fThrownPlayerId = (String) pParameter.getValue();
 					consume(pParameter);
 					return true;
+        case KICKED_PLAYER_ID:
+          fKickedPlayerId = (String) pParameter.getValue();
+          consume(pParameter);
+          return true;
+        case NR_OF_DICE:
+          fNumDice = (pParameter.getValue() != null) ? (Integer) pParameter.getValue() : 0;
+          consume(pParameter);
+          return true;
 				case USING_STAB:
 					fUsingStab = (pParameter.getValue() != null) ? (Boolean) pParameter.getValue() : false; 
 					consume(pParameter);
@@ -177,6 +187,13 @@ public final class StepEndSelecting extends AbstractStep {
       		SequenceGenerator.getInstance().pushThrowTeamMateSequence(getGameState());
       	}
         break;
+      case KICK_TEAM_MATE:
+        if (pWithParameter) {
+          SequenceGenerator.getInstance().pushKickTeamMateSequence(getGameState(), fNumDice, fKickedPlayerId);
+        } else {
+          SequenceGenerator.getInstance().pushKickTeamMateSequence(getGameState());
+        }
+        break;
       case BLITZ:
       case BLOCK:
       case MULTIPLE_BLOCK:
@@ -197,6 +214,7 @@ public final class StepEndSelecting extends AbstractStep {
       case FOUL_MOVE:
       case PASS_MOVE:
       case THROW_TEAM_MATE_MOVE:
+      case KICK_TEAM_MATE_MOVE:
       case HAND_OVER_MOVE:
       case GAZE:
       case BLITZ_MOVE:
@@ -242,6 +260,8 @@ public final class StepEndSelecting extends AbstractStep {
     IServerJsonOption.TARGET_COORDINATE.addTo(jsonObject, fTargetCoordinate);
     IServerJsonOption.HAIL_MARY_PASS.addTo(jsonObject, fHailMaryPass);
     IServerJsonOption.THROWN_PLAYER_ID.addTo(jsonObject, fThrownPlayerId);
+    IServerJsonOption.KICKED_PLAYER_ID.addTo(jsonObject, fKickedPlayerId);
+    IServerJsonOption.NR_OF_DICE.addTo(jsonObject, fNumDice);
     return jsonObject;
   }
   
@@ -260,6 +280,8 @@ public final class StepEndSelecting extends AbstractStep {
     fTargetCoordinate = IServerJsonOption.TARGET_COORDINATE.getFrom(jsonObject);
     fHailMaryPass = IServerJsonOption.HAIL_MARY_PASS.getFrom(jsonObject);
     fThrownPlayerId = IServerJsonOption.THROWN_PLAYER_ID.getFrom(jsonObject);
+    fKickedPlayerId = IServerJsonOption.KICKED_PLAYER_ID.getFrom(jsonObject);
+    fNumDice = IServerJsonOption.NR_OF_DICE.getFrom(jsonObject);
     return this;
   }
   
