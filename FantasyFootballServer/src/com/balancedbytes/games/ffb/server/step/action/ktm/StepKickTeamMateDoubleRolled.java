@@ -1,5 +1,6 @@
 package com.balancedbytes.games.ffb.server.step.action.ktm;
 
+import com.balancedbytes.games.ffb.CatchScatterThrowInMode;
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.InjuryType;
 import com.balancedbytes.games.ffb.PlayerState;
@@ -78,6 +79,12 @@ public class StepKickTeamMateDoubleRolled extends AbstractStep {
       game.setDefenderId(null);
       InjuryResult injury = UtilServerInjury.handleInjury(this, InjuryType.KTM_INJURY, null, kickedPlayer, fKickedPlayerCoordinate, null, ApothecaryMode.THROWN_PLAYER);
       publishParameter(new StepParameter(StepParameterKey.INJURY_RESULT, injury));
+      
+      if (fKickedPlayerCoordinate.equals(game.getFieldModel().getBallCoordinate())) {
+        game.getFieldModel().setBallMoving(true);
+        publishParameter(new StepParameter(StepParameterKey.END_TURN, true));
+        publishParameter(new StepParameter(StepParameterKey.CATCH_SCATTER_THROW_IN_MODE, CatchScatterThrowInMode.SCATTER_BALL));
+      }
       
     }
     publishParameter(new StepParameter(StepParameterKey.KICKED_PLAYER_COORDINATE, null));  // avoid reset in end step
