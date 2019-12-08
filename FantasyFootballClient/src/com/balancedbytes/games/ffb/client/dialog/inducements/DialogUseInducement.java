@@ -94,7 +94,7 @@ public class DialogUseInducement extends Dialog implements ActionListener {
   		StringBuilder buttonText = new StringBuilder();
   		buttonText.append("<html>");
   		buttonText.append("<b>Wizard</b>");
-  		buttonText.append("<br>Cast Fireball or Lightning spell");
+  		buttonText.append("<br>Cast a spell");
   		buttonText.append("</html>");
 	    fButtonWizard = new JButton(buttonText.toString());
 	    fButtonWizard.setHorizontalAlignment(SwingConstants.LEFT);
