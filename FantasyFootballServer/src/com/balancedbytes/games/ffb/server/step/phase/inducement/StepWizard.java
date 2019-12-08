@@ -122,13 +122,14 @@ public final class StepWizard extends AbstractStep {
       }
       getResult().setNextAction(StepAction.NEXT_STEP);
     } else if ((fWizardSpell != null) && (fTargetCoordinate != null) && (game.getTurnMode() == TurnMode.WIZARD)) {
+      
       Team team = game.isHomePlaying() ? game.getTeamHome() : game.getTeamAway();
       getResult().addReport(new ReportWizardUse(team.getId(), fWizardSpell));
       UtilServerInducementUse.useInducement(getGameState(), team, InducementType.WIZARD, 1);
       List<Player> affectedPlayers = new ArrayList<Player>();
       if (fWizardSpell == SpecialEffect.LIGHTNING) {
-        getResult().setAnimation(new Animation(AnimationType.SPELL_LIGHTNING, fTargetCoordinate));
-        addToAffectedPlayers(affectedPlayers, game.getFieldModel().getPlayer(fTargetCoordinate));
+        //getResult().setAnimation(new Animation(AnimationType.SPELL_LIGHTNING, fTargetCoordinate));
+        //addToAffectedPlayers(affectedPlayers, game.getFieldModel().getPlayer(fTargetCoordinate));
       }
       if (fWizardSpell == SpecialEffect.FIREBALL) {
         getResult().setAnimation(new Animation(AnimationType.SPELL_FIREBALL, fTargetCoordinate));
@@ -152,7 +153,11 @@ public final class StepWizard extends AbstractStep {
         fOldTurnMode = game.getTurnMode();
       }
       game.setTurnMode(TurnMode.WIZARD);
-      UtilServerDialog.showDialog(getGameState(), new DialogWizardSpellParameter(), false);
+
+      // For now, we force the fireball spell to avoid clever clients from sending lightning commands...
+      fWizardSpell = SpecialEffect.FIREBALL;
+      
+      //UtilServerDialog.showDialog(getGameState(), new DialogWizardSpellParameter(), false);
     }
   }
 
