@@ -28,6 +28,10 @@ public class GameOptionFactory {
       return null;
     }
     switch (pOptionId) {
+      case ALLOW_KTM_REROLL:
+        return new GameOptionBoolean(pOptionId)
+          .setDefault(false)
+          .setMessageTrue("Kick Team-Mate can be rerolled.");
       case ALLOW_STAR_ON_BOTH_TEAMS:
         return new GameOptionBoolean(pOptionId)
           .setDefault(false)

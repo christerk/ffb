@@ -14,6 +14,7 @@ import com.balancedbytes.games.ffb.server.step.StepAction;
 import com.balancedbytes.games.ffb.server.step.StepCommandStatus;
 import com.balancedbytes.games.ffb.server.step.StepId;
 import com.balancedbytes.games.ffb.server.step.StepParameter;
+import com.balancedbytes.games.ffb.server.step.StepParameterKey;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
@@ -36,6 +37,7 @@ public final class StepEndScatterPlayer extends AbstractStep {
   private boolean fThrownPlayerHasBall;
   private PlayerState fThrownPlayerState;
   private FieldCoordinate fThrownPlayerCoordinate;
+  private boolean fIsKickedPlayer;
 
 	public StepEndScatterPlayer(GameState pGameState) {
 		super(pGameState);
@@ -69,6 +71,9 @@ public final class StepEndScatterPlayer extends AbstractStep {
 					fThrownPlayerCoordinate = (FieldCoordinate) pParameter.getValue();
 					consume(pParameter);
 					return true;
+        case IS_KICKED_PLAYER:
+          fIsKickedPlayer = (pParameter.getValue() != null) ? (Boolean) pParameter.getValue() : false;
+          return true;
 				default:
 					break;
 	  	}
@@ -95,7 +100,10 @@ public final class StepEndScatterPlayer extends AbstractStep {
     Game game = getGameState().getGame();
     Player thrownPlayer = game.getPlayerById(fThrownPlayerId);
     if ((thrownPlayer != null)  && (fThrownPlayerState != null) && (fThrownPlayerCoordinate != null)) {
-		SequenceGenerator.getInstance().pushScatterPlayerSequence(getGameState(), fThrownPlayerId, fThrownPlayerState, fThrownPlayerHasBall, fThrownPlayerCoordinate, false, false);
+  		SequenceGenerator.getInstance().pushScatterPlayerSequence(getGameState(), fThrownPlayerId, fThrownPlayerState, fThrownPlayerHasBall, fThrownPlayerCoordinate, false, false);
+  		if (fIsKickedPlayer) {
+  		  publishParameter(new StepParameter(StepParameterKey.IS_KICKED_PLAYER, true));
+  		}
     }
   	getResult().setNextAction(StepAction.NEXT_STEP);
   }

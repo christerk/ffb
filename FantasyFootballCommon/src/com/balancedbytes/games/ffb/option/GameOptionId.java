@@ -24,6 +24,7 @@ public enum GameOptionId implements INamedObject {
   FORCE_TREASURY_TO_PETTY_CASH("forceTreasuryToPettyCash"),
   USE_PREDEFINED_INDUCEMENTS("usePredefinedInducements"),
 
+  ALLOW_KTM_REROLL("allowKtmReroll"),
   CLAW_DOES_NOT_STACK("clawDoesNotStack"),
   FOUL_BONUS("foulBonus"),
   FOUL_BONUS_OUTSIDE_TACKLEZONE("foulBonusOutsideTacklezone"),

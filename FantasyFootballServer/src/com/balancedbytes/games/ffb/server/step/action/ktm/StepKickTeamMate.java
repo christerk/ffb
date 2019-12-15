@@ -17,6 +17,8 @@ import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandUseSkill;
+import com.balancedbytes.games.ffb.option.GameOptionId;
+import com.balancedbytes.games.ffb.option.UtilGameOption;
 import com.balancedbytes.games.ffb.report.ReportKickTeamMateRoll;
 import com.balancedbytes.games.ffb.report.ReportThrowTeamMateRoll;
 import com.balancedbytes.games.ffb.server.DiceInterpreter;
@@ -166,11 +168,14 @@ public final class StepKickTeamMate extends AbstractStepWithReRoll {
       targetCoordinate = targetCoordinate.move(d, fDistance);
       game.setPassCoordinate(targetCoordinate);
       
-      boolean reRolled = ((getReRolledAction() == ReRolledAction.THROW_TEAM_MATE) && (getReRollSource() != null));
+      boolean reRolled = ((getReRolledAction() == ReRolledAction.KICK_TEAM_MATE) && (getReRollSource() != null));
       getResult().addReport(new ReportKickTeamMateRoll(kicker.getId(), kickedPlayer.getId(), successful, fRolls, reRolled, fDistance));
 
       boolean act = false;
-      if (getReRolledAction() != ReRolledAction.KICK_TEAM_MATE) {
+      
+      boolean allowKtmReroll = UtilGameOption.isOptionEnabled(game, GameOptionId.ALLOW_KTM_REROLL);
+      
+      if (allowKtmReroll && getReRolledAction() != ReRolledAction.KICK_TEAM_MATE) {
         setReRolledAction(ReRolledAction.KICK_TEAM_MATE);
         if (!UtilServerReRoll.askForReRollIfAvailable(getGameState(), actingPlayer.getPlayer(), ReRolledAction.KICK_TEAM_MATE, 0, false)) {
           act = true;
@@ -182,24 +187,6 @@ public final class StepKickTeamMate extends AbstractStepWithReRoll {
       if (act) {
         executeKick(kickedPlayer, kickerCoordinate, successful);
       }
-      
-      /*
-      if (successful) {
-        boolean hasSwoop = kickedPlayer != null && kickedPlayer.hasSkill(Skill.SWOOP);
-      	SequenceGenerator.getInstance().pushScatterPlayerSequence(getGameState(), fKickedPlayerId, fKickedPlayerState, fKickedPlayerHasBall, kickerCoordinate, hasSwoop, true);
-        publishParameter(new StepParameter(StepParameterKey.IS_KICKED_PLAYER, true));
-      	getResult().setNextAction(StepAction.NEXT_STEP);
-      } else {
-        if (getReRolledAction() != ReRolledAction.KICK_TEAM_MATE) {
-          setReRolledAction(ReRolledAction.KICK_TEAM_MATE);
-          if (!UtilServerReRoll.askForReRollIfAvailable(getGameState(), actingPlayer.getPlayer(), ReRolledAction.KICK_TEAM_MATE, 0, false)) {
-          	getResult().setNextAction(StepAction.GOTO_LABEL, fGotoLabelOnFailure);
-          }
-        } else {
-        	getResult().setNextAction(StepAction.GOTO_LABEL, fGotoLabelOnFailure);
-        }
-      }
-      */
     }
   }
 
