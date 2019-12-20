@@ -98,7 +98,7 @@ public class ClientStateWizard extends ClientState {
 	  	SpecialEffect wizardSpell = getClient().getClientData().getWizardSpell();
 			FieldComponent fieldComponent = getClient().getUserInterface().getFieldComponent();
 	  	if (SpecialEffect.LIGHTNING == wizardSpell) {
-    		fieldComponent.getLayerOverPlayers().clearLightningMarker();
+    		fieldComponent.getLayerOverPlayers().clearSpellMarker();
     		fieldComponent.refresh();
 	  		if (isValidLightningTarget(pCoordinate)) {
 	  			getClient().getCommunication().sendWizardSpell(wizardSpell, pCoordinate);
