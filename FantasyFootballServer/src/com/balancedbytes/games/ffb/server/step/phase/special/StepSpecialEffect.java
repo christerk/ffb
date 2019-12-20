@@ -105,7 +105,7 @@ public final class StepSpecialEffect extends AbstractStep {
 			
 			if (fRollForEffect) {
 				int roll = getGameState().getDiceRoller().rollWizardSpell();
-				successful = DiceInterpreter.getInstance().isSpecialEffectSuccesful(fSpecialEffect, roll);
+				successful = DiceInterpreter.getInstance().isSpecialEffectSuccesful(fSpecialEffect, player, roll);
 				getResult().addReport(new ReportSpecialEffectRoll(fSpecialEffect, player.getId(), roll, successful));
 			} else {
 				getResult().addReport(new ReportSpecialEffectRoll(fSpecialEffect, player.getId(), 0, true));
@@ -117,6 +117,9 @@ public final class StepSpecialEffect extends AbstractStep {
 				if (fSpecialEffect == SpecialEffect.LIGHTNING) {
 					publishParameter(new StepParameter(StepParameterKey.INJURY_RESULT,
 						UtilServerInjury.handleInjury(this, InjuryType.LIGHTNING, null, player, playerCoordinate, null, ApothecaryMode.SPECIAL_EFFECT)));
+				}
+				if (fSpecialEffect == SpecialEffect.ZAP) {
+					//TODO handle effect
 				}
 				if (fSpecialEffect == SpecialEffect.FIREBALL) {
 					publishParameter(new StepParameter(StepParameterKey.INJURY_RESULT,

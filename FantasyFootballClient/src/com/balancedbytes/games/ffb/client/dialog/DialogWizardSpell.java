@@ -23,6 +23,7 @@ import com.balancedbytes.games.ffb.dialog.DialogId;
 public class DialogWizardSpell extends Dialog implements ActionListener, KeyListener {
   
   private JButton fButtonLightning;
+  private JButton buttonZap;
   private JButton fButtonFireball;
   private JButton fButtonCancel;
   private SpecialEffect fWizardSpell;
@@ -49,7 +50,12 @@ public class DialogWizardSpell extends Dialog implements ActionListener, KeyList
     fButtonFireball.addActionListener(this);
     fButtonFireball.addKeyListener(this);
     panelButtons.add(fButtonFireball);
-    
+
+    buttonZap = new JButton("Zap");
+    buttonZap.addActionListener(this);
+    buttonZap.addKeyListener(this);
+    panelButtons.add(buttonZap);
+
     fButtonCancel = new JButton("Cancel");
     fButtonCancel.addActionListener(this);
     fButtonCancel.addKeyListener(this);
@@ -76,6 +82,9 @@ public class DialogWizardSpell extends Dialog implements ActionListener, KeyList
     if (pActionEvent.getSource() == fButtonLightning) {
     	fWizardSpell = SpecialEffect.LIGHTNING;
     }
+    if (pActionEvent.getSource() == buttonZap) {
+      fWizardSpell = SpecialEffect.ZAP;
+    }
     if (pActionEvent.getSource() == fButtonFireball) {
     	fWizardSpell = SpecialEffect.FIREBALL;
     }
@@ -95,6 +104,8 @@ public class DialogWizardSpell extends Dialog implements ActionListener, KeyList
     switch (pKeyEvent.getKeyCode()) {
       case KeyEvent.VK_L:
         fWizardSpell = SpecialEffect.LIGHTNING;
+      case KeyEvent.VK_Z:
+        fWizardSpell = SpecialEffect.ZAP;
         break;
       case KeyEvent.VK_F:
         fWizardSpell = SpecialEffect.FIREBALL;

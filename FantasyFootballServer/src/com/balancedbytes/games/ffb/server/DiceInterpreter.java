@@ -180,9 +180,11 @@ public class DiceInterpreter {
     return (ArrayTool.isProvided(pInjuryRoll) && (pInjuryRoll[0] + pInjuryRoll[1] == 8));
   }
 
-  public boolean isSpecialEffectSuccesful(SpecialEffect pSpecialEffect, int roll) {
+  public boolean isSpecialEffectSuccesful(SpecialEffect pSpecialEffect, Player targetPlayer, int roll) {
     if (pSpecialEffect == SpecialEffect.LIGHTNING) {
       return (roll >= 2);
+    } else if (pSpecialEffect == SpecialEffect.ZAP) {
+      return (roll >= targetPlayer.getStrength());
     } else if ((pSpecialEffect == SpecialEffect.FIREBALL) || (pSpecialEffect == SpecialEffect.BOMB)) {
       return (roll >= 4);
     } else {

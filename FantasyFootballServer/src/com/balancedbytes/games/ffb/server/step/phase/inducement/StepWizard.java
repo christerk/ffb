@@ -127,6 +127,10 @@ public final class StepWizard extends AbstractStep {
       getResult().addReport(new ReportWizardUse(team.getId(), fWizardSpell));
       UtilServerInducementUse.useInducement(getGameState(), team, InducementType.WIZARD, 1);
       List<Player> affectedPlayers = new ArrayList<Player>();
+      if (fWizardSpell == SpecialEffect.ZAP) {
+        getResult().setAnimation(new Animation(AnimationType.SPELL_ZAP, fTargetCoordinate));
+        addToAffectedPlayers(affectedPlayers, game.getFieldModel().getPlayer(fTargetCoordinate));
+      }
       if (fWizardSpell == SpecialEffect.LIGHTNING) {
         //getResult().setAnimation(new Animation(AnimationType.SPELL_LIGHTNING, fTargetCoordinate));
         //addToAffectedPlayers(affectedPlayers, game.getFieldModel().getPlayer(fTargetCoordinate));
