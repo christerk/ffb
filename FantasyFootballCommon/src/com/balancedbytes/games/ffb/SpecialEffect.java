@@ -9,6 +9,7 @@ public enum SpecialEffect implements INamedObject {
   
   LIGHTNING("lightning", true),
   FIREBALL("fireball", true),
+  ZAP("zap", true),
   BOMB("bomb", false);
   
   private String fName;

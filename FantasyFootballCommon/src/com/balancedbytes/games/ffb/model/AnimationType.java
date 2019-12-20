@@ -17,6 +17,7 @@ public enum AnimationType implements INamedObject {
   KICK("kick"),
   SPELL_FIREBALL("spellFireball"),
   SPELL_LIGHTNING("spellLightning"),
+	SPELL_ZAP("spellZap"),
   KICKOFF_BLITZ("kickoffBlitz"),
 	KICKOFF_BLIZZARD("kickoffBlizzard"),
 	KICKOFF_BRILLIANT_COACHING("kickoffBrilliantCoaching"),

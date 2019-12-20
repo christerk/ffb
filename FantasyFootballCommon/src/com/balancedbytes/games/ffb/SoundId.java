@@ -30,6 +30,7 @@ public enum SoundId implements INamedObject {
   KICK("kick", false),
   KO("ko", false),
   LIGHTNING("lightning", false),
+  ZAP("zap", false),
   METAL("metal", false),
   NOMNOM("nomnom", false),
   ORGAN("organ", false),
