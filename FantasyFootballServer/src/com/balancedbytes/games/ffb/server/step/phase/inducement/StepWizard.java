@@ -157,11 +157,8 @@ public final class StepWizard extends AbstractStep {
         fOldTurnMode = game.getTurnMode();
       }
       game.setTurnMode(TurnMode.WIZARD);
-
-      // For now, we force the fireball spell to avoid clever clients from sending lightning commands...
-      fWizardSpell = SpecialEffect.FIREBALL;
       
-      //UtilServerDialog.showDialog(getGameState(), new DialogWizardSpellParameter(), false);
+      UtilServerDialog.showDialog(getGameState(), new DialogWizardSpellParameter(), false);
     }
   }
 
