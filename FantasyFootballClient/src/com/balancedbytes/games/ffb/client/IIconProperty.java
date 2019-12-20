@@ -192,7 +192,7 @@ public interface IIconProperty {
   String ANIMATION_FIREBALL_SMOKE_1  = "animation.fireball.smoke.1";
   String ANIMATION_FIREBALL_SMOKE_2  = "animation.fireball.smoke.2";
   String ANIMATION_FIREBALL_SMOKE_3  = "animation.fireball.smoke.3";
-  String ANIMATION_FIREBALL_SMOKE_4  = "animation.fireball.smoke.4"; 
+  String ANIMATION_FIREBALL_SMOKE_4  = "animation.fireball.smoke.4"; // TODO delete or use
  
   String ANIMATION_LIGHTNING_01  = "animation.lightning.01";
   String ANIMATION_LIGHTNING_02  = "animation.lightning.02";

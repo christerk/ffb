@@ -40,7 +40,7 @@ public class DialogWizardSpell extends Dialog implements ActionListener, KeyList
     panelButtons.setLayout(new BoxLayout(panelButtons, BoxLayout.X_AXIS));
 
     panelButtons.add(Box.createHorizontalGlue());
-    
+    //TODO only show buttons if spell is available
     fButtonLightning = new JButton("Lightning");
     fButtonLightning.addActionListener(this);
     fButtonLightning.addKeyListener(this);
