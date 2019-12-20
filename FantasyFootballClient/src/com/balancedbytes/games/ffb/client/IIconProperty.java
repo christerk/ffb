@@ -51,6 +51,7 @@ public interface IIconProperty {
   String GAME_DICE_SMALL = "game.dice.small";
   String GAME_FIREBALL_SMALL = "game.fireball.small";
   String GAME_LIGHTNING_SMALL = "game.lightning.small";
+  String GAME_ZAP_SMALL = "game.zap.small";
   String GAME_ROCK = "game.rock";
   String GAME_BOMB = "game.bomb";
   String GAME_BOMB_BIG = "game.bomb.big";
@@ -205,6 +206,19 @@ public interface IIconProperty {
   String ANIMATION_LIGHTNING_10  = "animation.lightning.10";
   String ANIMATION_LIGHTNING_11  = "animation.lightning.11";
   String ANIMATION_LIGHTNING_12  = "animation.lightning.12";
+
+  String ANIMATION_ZAP_01 = "animation.zap.01";
+  String ANIMATION_ZAP_02 = "animation.zap.02";
+  String ANIMATION_ZAP_03 = "animation.zap.03";
+  String ANIMATION_ZAP_04 = "animation.zap.04";
+  String ANIMATION_ZAP_05 = "animation.zap.05";
+  String ANIMATION_ZAP_06 = "animation.zap.06";
+  String ANIMATION_ZAP_07 = "animation.zap.07";
+  String ANIMATION_ZAP_08 = "animation.zap.08";
+  String ANIMATION_ZAP_09 = "animation.zap.09";
+  String ANIMATION_ZAP_10 = "animation.zap.10";
+  String ANIMATION_ZAP_11 = "animation.zap.11";
+  String ANIMATION_ZAP_12 = "animation.zap.12";
   
   String ANIMATION_KICKOFF_BLITZ = "animation.kickoff.blitz";
   String ANIMATION_KICKOFF_BLIZZARD = "animation.kickoff.blizzard";

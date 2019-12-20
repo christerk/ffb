@@ -27,6 +27,7 @@ public interface ISoundProperty {
   String KICK = "sound.kick";
   String KO = "sound.ko";
   String LIGHTNING = "sound.lightning";
+  String ZAP = "sound.zap";
   String METAL = "sound.metal";
   String NOMNOM = "sound.nomnom";
   String ORGAN = "sound.organ";
