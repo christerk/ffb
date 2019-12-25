@@ -6,6 +6,7 @@ import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.model.PlayerResult;
+import com.balancedbytes.games.ffb.model.RosterPlayer;
 import com.balancedbytes.games.ffb.net.NetCommandId;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
@@ -94,7 +95,7 @@ public class ServerCommandAddPlayer extends ServerCommand {
     fTeamId = IJsonOption.TEAM_ID.getFrom(jsonObject);
     JsonObject playerObject = IJsonOption.PLAYER.getFrom(jsonObject);
     if (playerObject != null) {
-      fPlayer = new Player().initFrom(playerObject);
+      fPlayer = new RosterPlayer().initFrom(playerObject);
     }
     fPlayerState = IJsonOption.PLAYER_STATE.getFrom(jsonObject);
     fSendToBoxReason = (SendToBoxReason) IJsonOption.SEND_TO_BOX_REASON.getFrom(jsonObject);

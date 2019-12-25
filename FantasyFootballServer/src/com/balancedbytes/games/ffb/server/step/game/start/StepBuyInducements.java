@@ -18,6 +18,7 @@ import com.balancedbytes.games.ffb.model.GameResult;
 import com.balancedbytes.games.ffb.model.InducementSet;
 import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.model.Roster;
+import com.balancedbytes.games.ffb.model.RosterPlayer;
 import com.balancedbytes.games.ffb.model.RosterPosition;
 import com.balancedbytes.games.ffb.model.Team;
 import com.balancedbytes.games.ffb.model.TurnData;
@@ -265,7 +266,7 @@ public final class StepBuyInducements extends AbstractStep {
 
     for (int i = 0; i < pPositionIds.length; i++) {
       RosterPosition position = roster.getPositionById(pPositionIds[i]);
-      Player mercenary = new Player();
+      Player mercenary = new RosterPlayer();
       addedPlayerList.add(mercenary);
       StringBuilder playerId = new StringBuilder().append(pTeam.getId()).append("M").append(addedPlayerList.size());
       mercenary.setId(playerId.toString());
@@ -333,7 +334,7 @@ public final class StepBuyInducements extends AbstractStep {
         if (!UtilGameOption.isOptionEnabled(game, GameOptionId.ALLOW_STAR_ON_BOTH_TEAMS) && (otherTeamStarPlayer != null)) {
           removedPlayerList.add(otherTeamStarPlayer);
         } else {
-          Player starPlayer = new Player();
+          Player starPlayer = new RosterPlayer();
           addedPlayerList.add(starPlayer);
           StringBuilder playerId = new StringBuilder().append(pTeam.getId()).append("S").append(addedPlayerList.size());
           starPlayer.setId(playerId.toString());

@@ -12,6 +12,7 @@ import com.balancedbytes.games.ffb.PlayerType;
 import com.balancedbytes.games.ffb.client.PlayerIconFactory;
 import com.balancedbytes.games.ffb.model.GameOptions;
 import com.balancedbytes.games.ffb.model.Player;
+import com.balancedbytes.games.ffb.model.RosterPlayer;
 import com.balancedbytes.games.ffb.model.RosterPosition;
 import com.balancedbytes.games.ffb.option.GameOptionId;
 import com.balancedbytes.games.ffb.option.GameOptionInt;
@@ -130,7 +131,7 @@ public class StarPlayerTableModel extends AbstractTableModel {
 		List<Object[]> starPlayerList = new ArrayList<Object[]>();
 		for (RosterPosition pos : fDialog.getRoster().getPositions()) {
 			if (PlayerType.STAR == pos.getType()) {
-				Player player = new Player();
+				Player player = new RosterPlayer();
 				player.updatePosition(pos);
 				player.setName(pos.getName());
 				Object[] star = new Object[5];

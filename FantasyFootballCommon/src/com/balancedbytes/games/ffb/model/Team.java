@@ -350,7 +350,7 @@ public class Team implements IXmlSerializable, IJsonSerializable {
       setId(UtilXml.getStringAttribute(pXmlAttributes, _XML_ATTRIBUTE_ID));
     }
     if (Player.XML_TAG.equals(pXmlTag)) {
-      Player player = new Player();
+      Player player = new RosterPlayer();
       player.startXmlElement(pXmlTag, pXmlAttributes);
       addPlayer(player);
       xmlElement = player;
@@ -470,7 +470,7 @@ public class Team implements IXmlSerializable, IJsonSerializable {
     
     JsonArray playerArray = IJsonOption.PLAYER_ARRAY.getFrom(jsonObject);
     for (int i = 0; i < playerArray.size(); i++) {
-      addPlayer(new Player().initFrom(playerArray.get(i)));
+      addPlayer(new RosterPlayer().initFrom(playerArray.get(i)));
     }
 
     Roster roster = null;

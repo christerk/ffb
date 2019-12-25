@@ -18,6 +18,7 @@ import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.GameResult;
 import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.model.PlayerResult;
+import com.balancedbytes.games.ffb.model.RosterPlayer;
 import com.balancedbytes.games.ffb.model.RosterPosition;
 import com.balancedbytes.games.ffb.model.Team;
 import com.balancedbytes.games.ffb.model.TeamResult;
@@ -530,7 +531,7 @@ public class UtilServerInjury {
 		RosterPosition zombiePosition = pNecroTeam.getRoster().getRaisedRosterPosition();
 		if (zombiePosition != null) {
 			pNecroTeamResult.setRaisedDead(pNecroTeamResult.getRaisedDead() + 1);
-			raisedPlayer = new Player();
+			raisedPlayer = new RosterPlayer();
 			StringBuilder raisedPlayerId = new StringBuilder().append(killedId).append("R").append(pNecroTeamResult.getRaisedDead());
 			raisedPlayer.setId(raisedPlayerId.toString());
 			raisedPlayer.updatePosition(zombiePosition);

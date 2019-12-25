@@ -12,6 +12,7 @@ import com.balancedbytes.games.ffb.PlayerType;
 import com.balancedbytes.games.ffb.client.PlayerIconFactory;
 import com.balancedbytes.games.ffb.model.GameOptions;
 import com.balancedbytes.games.ffb.model.Player;
+import com.balancedbytes.games.ffb.model.RosterPlayer;
 import com.balancedbytes.games.ffb.model.RosterPosition;
 import com.balancedbytes.games.ffb.option.GameOptionId;
 import com.balancedbytes.games.ffb.option.GameOptionInt;
@@ -116,7 +117,7 @@ public class MercenaryTableModel extends AbstractTableModel {
 			if (PlayerType.STAR != pos.getType()) {
 				int playerInPosition = fDialog.getTeam().getNrOfAvailablePlayersInPosition(pos);
 				for (int i = 0; i < pos.getQuantity() - playerInPosition; i++) {
-					Player player = new Player();
+					Player player = new RosterPlayer();
 					player.updatePosition(pos);
 					player.setName(pos.getName());
 					Object[] mecenary = new Object[6];
