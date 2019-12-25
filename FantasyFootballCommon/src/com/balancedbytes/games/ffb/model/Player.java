@@ -32,586 +32,125 @@ import com.eclipsesource.json.JsonValue;
  * 
  * @author Kalimar
  */
-public class Player implements IXmlSerializable, IJsonSerializable {
+public interface Player extends IXmlSerializable, IJsonSerializable {
   
-  public static final String XML_TAG = "player";
+  static final String XML_TAG = "player";
   
-  private static final String _XML_ATTRIBUTE_ID = "id";
-  private static final String _XML_ATTRIBUTE_NR = "nr";
-  private static final String _XML_ATTRIBUTE_SIZE = "size";
-  
-  private static final String _XML_TAG_NAME = "name";
-  private static final String _XML_TAG_TYPE = "type";
-  private static final String _XML_TAG_GENDER = "gender";
-  private static final String _XML_TAG_POSITION_ID = "positionId";
-  
-  private static final String _XML_TAG_SKILL_LIST = "skillList";
-  private static final String _XML_TAG_SKILL = "skill";
-  
-  private static final String _XML_TAG_ICON_SET = "iconSet";
-  private static final String _XML_TAG_PORTRAIT = "portrait";
-  
-  private static final String _XML_TAG_INJURY_LIST = "injuryList";
-  private static final String _XML_TAG_INJURY = "injury";
-  private static final String _XML_ATTRIBUTE_RECOVERING = "recovering";
-  
-  private static final String _XML_TAG_PLAYER_STATISTICS = "playerStatistics";
-  private static final String _XML_ATTRIBUTE_CURRENT_SPPS = "currentSpps";
+  static final String _XML_ATTRIBUTE_ID = "id";
 
-  private static final String _XML_TAG_MOVEMENT = "movement";
-  private static final String _XML_TAG_STRENGTH = "strength";
-  private static final String _XML_TAG_AGILITY = "agility";
-  private static final String _XML_TAG_ARMOUR = "armour";
-  private static final String _XML_TAG_SHORTHAND = "shorthand";
-  private static final String _XML_TAG_RACE = "race";
+  static final String _XML_ATTRIBUTE_NR = "nr";
+  static final String _XML_ATTRIBUTE_SIZE = "size";
   
-  private String fId;
-  private int fNr;
-  private Team fTeam;
-  private String fName;
-  private PlayerType fPlayerType;
-  private PlayerGender fPlayerGender;
-  private int fMovement;
-  private int fStrength;
-  private int fAgility;
-  private int fArmour;
+  static final String _XML_TAG_NAME = "name";
+  static final String _XML_TAG_TYPE = "type";
+  static final String _XML_TAG_GENDER = "gender";
+  static final String _XML_TAG_POSITION_ID = "positionId";
   
-  private String fUrlPortrait;
-  private String fUrlIconSet;
-  private int fNrOfIcons;
+  static final String _XML_TAG_SKILL_LIST = "skillList";
+  static final String _XML_TAG_SKILL = "skill";
   
-  private String fPositionId;
-  private transient int fIconSetIndex;
+  static final String _XML_TAG_ICON_SET = "iconSet";
+  static final String _XML_TAG_PORTRAIT = "portrait";
+  
+  static final String _XML_TAG_INJURY_LIST = "injuryList";
+  static final String _XML_TAG_INJURY = "injury";
+  static final String _XML_ATTRIBUTE_RECOVERING = "recovering";
+  
+  static final String _XML_TAG_PLAYER_STATISTICS = "playerStatistics";
+  static final String _XML_ATTRIBUTE_CURRENT_SPPS = "currentSpps";
 
-  private List<Skill> fSkills;
-  private List<SeriousInjury> fLastingInjuries;
-  private SeriousInjury fRecoveringInjury;
+  static final String _XML_TAG_MOVEMENT = "movement";
+  static final String _XML_TAG_STRENGTH = "strength";
+  static final String _XML_TAG_AGILITY = "agility";
+  static final String _XML_TAG_ARMOUR = "armour";
+  static final String _XML_TAG_SHORTHAND = "shorthand";
+  static final String _XML_TAG_RACE = "race";
 
-  private transient RosterPosition fPosition;
-  private transient int fCurrentSpps;
+  String getName();
   
-  // attributes used for parsing
-  private transient boolean fInsideSkillList;
-  private transient boolean fInsideInjuryList;
-  private transient boolean fInjuryCurrent;
-    
-  public Player() {
-    fLastingInjuries = new ArrayList<SeriousInjury>();
-    fSkills = new ArrayList<Skill>();
-    setGender(PlayerGender.MALE);
-    fIconSetIndex = 0;
-    fPosition = new RosterPosition(null);
-  }
-    
-  public String getName() {
-    return fName;
-  }
+  PlayerType getPlayerType();
   
-  public PlayerType getPlayerType() {
-    return fPlayerType;
-  }
+  void setType(PlayerType pType);
   
-  public void setType(PlayerType pType) {
-    fPlayerType = pType;
-  }
+  int getNr();
   
-  public int getNr() {
-    return fNr;
-  }
-  
-  public int getAgility() {
-    return fAgility;
-  }
-  
-  public void setAgility(int pAgility) {
-    fAgility = pAgility;
-  }
-  
-  public int getArmour() {
-    return fArmour;
-  }
-  
-  public void setArmour(int pArmour) {
-    fArmour = pArmour;
-  }
+  int getAgility();
 
-  public int getMovement() {
-    return fMovement;
-  }
+  void setAgility(int pAgility);
   
-  public void setMovement(int pMovement) {
-    fMovement = pMovement;
-  }
+  int getArmour();
+  
+  void setArmour(int pArmour);
 
-  public int getStrength() {
-    return fStrength;
-  }
-  
-  public void setStrength(int pStrength) {
-    fStrength = pStrength;
-  }
+  int getMovement();
 
-  public void addLastingInjury(SeriousInjury pLastingInjury) {
-  	if (pLastingInjury != null) {
-  		fLastingInjuries.add(pLastingInjury);
-  	}
-  }
+  void setMovement(int pMovement);
+
+  int getStrength();
   
-  public SeriousInjury[] getLastingInjuries() {
-    return fLastingInjuries.toArray(new SeriousInjury[fLastingInjuries.size()]);
-  }
+  void setStrength(int pStrength);
+
+  void addLastingInjury(SeriousInjury pLastingInjury) ;
   
-  public void addSkill(Skill pSkill) {
-    if ((pSkill != null) && ((pSkill.getCategory() == SkillCategory.STAT_INCREASE) || (pSkill.getCategory() == SkillCategory.STAT_DECREASE) || !fSkills.contains(pSkill))) {
-      fSkills.add(pSkill);
-    }
-  }
+  SeriousInjury[] getLastingInjuries();
   
-  public boolean removeSkill(Skill pSkill) {
-    return fSkills.remove(pSkill);
-  }
+  void addSkill(Skill pSkill);
+  
+  boolean removeSkill(Skill pSkill);
  
-  public boolean hasSkill(Skill pSkill) {
-    return fSkills.contains(pSkill);
-  }
+  boolean hasSkill(Skill pSkill);
 
-  public Skill[] getSkills() {
-    return fSkills.toArray(new Skill[fSkills.size()]);
-  }
+  Skill[] getSkills();
   
-  public String getUrlPortrait() {
-    return fUrlPortrait;
-  }
+  String getUrlPortrait();
   
-  public void setUrlPortrait(String pUrlPortrait) {
-    fUrlPortrait = pUrlPortrait;
-  }
+  void setUrlPortrait(String pUrlPortrait);
   
-  public String getUrlIconSet() {
-    return fUrlIconSet;
-  }
+  String getUrlIconSet();
   
-  public void setUrlIconSet(String pUrlIconSet) {
-    fUrlIconSet = pUrlIconSet;
-  }
+  void setUrlIconSet(String pUrlIconSet);
   
-  public int getNrOfIcons() {
-    return fNrOfIcons;
-  }
+  int getNrOfIcons();
   
-  public void setNrOfIcons(int pNrOfIcons) {
-    fNrOfIcons = pNrOfIcons;
-  }
+  void setNrOfIcons(int pNrOfIcons);
 
-  public RosterPosition getPosition() {
-    return fPosition;
-  }
+  RosterPosition getPosition();
   
-  public void updatePosition(RosterPosition pPosition) {
-    fPosition = pPosition;
-    if (fPosition != null) {
-      setPositionId(fPosition.getId());
-      if (getPlayerType() == null) {
-        setType(fPosition.getType());
-      }
-      setMovement(fPosition.getMovement());
-      setStrength(fPosition.getStrength());
-      setAgility(fPosition.getAgility());
-      setArmour(fPosition.getArmour());
-      fIconSetIndex = pPosition.findNextIconSetIndex();
-      for (Skill skill : fPosition.getSkills()) {
-        addSkill(skill);
-      }
-      for (Skill skill : getSkills()) {
-        if (skill != null) {
-          switch (skill) {
-            case MOVEMENT_INCREASE:
-              fMovement++;
-              break;
-            case STRENGTH_INCREASE:
-              fStrength++;
-              break;
-            case AGILITY_INCREASE:
-              fAgility++;
-              break;
-            case ARMOUR_INCREASE:
-              fArmour++;
-              break;
-            default:
-            	break;
-          }
-        }
-      }
-      int oldMovement = getMovement();
-      int oldArmour = getArmour();
-      int oldAgility = getAgility();
-      int oldStrength = getStrength();
-      for (SeriousInjury injury : getLastingInjuries()) {
-        switch (injury) {
-          case SMASHED_HIP:
-          case SMASHED_ANKLE:
-            if ((fMovement > 1) && ((oldMovement - fMovement) < 2)) {
-              fMovement--;
-            }
-            break;
-          case SERIOUS_CONCUSSION:
-          case FRACTURED_SKULL:
-            if ((fArmour > 1) && ((oldArmour - fArmour) < 2)) {
-              fArmour--;
-            }
-            break;
-          case BROKEN_NECK:
-            if ((fAgility > 1) && ((oldAgility - fAgility) < 2)) {
-              fAgility--;
-            }
-            break;
-          case SMASHED_COLLAR_BONE:
-            if ((fStrength > 1) && ((oldStrength - fStrength) < 2)) {
-              fStrength--;
-            }
-            break;
-          default:
-          	break;
-        }
-      }
-    }
-  }
+  void updatePosition(RosterPosition pPosition) ;
   
-  public Team getTeam() {
-    return fTeam;
-  }
+  Team getTeam();
   
-  public void setTeam(Team pTeam) {
-    fTeam = pTeam;
-  }
+  void setTeam(Team pTeam);
   
-  public String getId() {
-    return fId;
-  }
+  String getId();
   
-  public void setId(String pId) {
-    fId = pId;
-  }
+  void setId(String pId);
   
-  public PlayerGender getPlayerGender() {
-    return fPlayerGender;
-  }
+  PlayerGender getPlayerGender();
   
-  public SeriousInjury getRecoveringInjury() {
-    return fRecoveringInjury;
-  }
+  SeriousInjury getRecoveringInjury();
   
-  public void setRecoveringInjury(SeriousInjury pCurrentInjury) {
-    fRecoveringInjury = pCurrentInjury;
-  }
+  void setRecoveringInjury(SeriousInjury pCurrentInjury);
   
-  public int getCurrentSpps() {
-    return fCurrentSpps;
-  }
+  int getCurrentSpps();
   
-  public void setCurrentSpps(int pCurrentSpps) {
-    fCurrentSpps = pCurrentSpps;
-  }
-  
+  void setCurrentSpps(int pCurrentSpps);
 
-  public void setName(String name) {
-    fName = name;
-  }
+  void setName(String name);
 
-  public void setGender(PlayerGender gender) {
-    fPlayerGender = gender;
-  }
+  void setGender(PlayerGender gender);
 
-  public void setNr(int nr) {
-    fNr = nr;
-  }
+  void setNr(int nr);
 
-  public int getIconSetIndex() {
-    return fIconSetIndex;
-  }
+  int getIconSetIndex();
   
-  public String getPositionId() {
-    return fPositionId;
-  }
+  String getPositionId();
   
-  public void setPositionId(String pPositionId) {
-    fPositionId = pPositionId;
-  }
+  void setPositionId(String pPositionId);
   
-  public String getRace() {
-    return getPosition().getRace();
-  }
+  String getRace();
   
-  public boolean equals(Object obj) {
-    if (this == obj) {
-      return true;
-    }
-    if (obj == null) {
-      return false;
-    }
-    if (getClass() != obj.getClass()) {
-      return false;
-    }
-    Player other = (Player) obj;
-    return getId().equals(other.getId());
-  }
-  
-  // XML serialization
-  
-  public void addToXml(TransformerHandler pHandler) {
+  void init(Player pPlayer);
 
-  	AttributesImpl attributes = new AttributesImpl();
-  	UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_ID, getId());
-  	UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_NR, getNr());
-  	UtilXml.startElement(pHandler, XML_TAG, attributes);
-
-    UtilXml.addValueElement(pHandler, _XML_TAG_NAME, getName());
-    UtilXml.addValueElement(pHandler, _XML_TAG_GENDER, (getPlayerGender() != null) ? getPlayerGender().getName() : null); 
-    UtilXml.addValueElement(pHandler, _XML_TAG_POSITION_ID, getPositionId());
-    UtilXml.addValueElement(pHandler, _XML_TAG_TYPE, (getPlayerType() != null) ? getPlayerType().getName() : null);
-    
-    UtilXml.addValueElement(pHandler, _XML_TAG_PORTRAIT, getUrlPortrait());
-    
-    attributes = new AttributesImpl();
-    UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_SIZE, getNrOfIcons());
-    UtilXml.startElement(pHandler, _XML_TAG_ICON_SET, attributes);
-    UtilXml.addCharacters(pHandler, getUrlIconSet());
-    UtilXml.endElement(pHandler, _XML_TAG_ICON_SET);
-
-    UtilXml.startElement(pHandler, _XML_TAG_SKILL_LIST);
-    if (fSkills.size() > 0) {
-      for (Skill skill : fSkills) {
-        UtilXml.addValueElement(pHandler, _XML_TAG_SKILL, skill.getName());
-      }
-    }
-    UtilXml.endElement(pHandler, _XML_TAG_SKILL_LIST);
-    
-    UtilXml.startElement(pHandler, _XML_TAG_INJURY_LIST);
-    if (fLastingInjuries.size() > 0) {
-      for (SeriousInjury lastingInjury : fLastingInjuries) {
-        UtilXml.addValueElement(pHandler, _XML_TAG_INJURY, lastingInjury.getName());
-      }
-    }
-    UtilXml.endElement(pHandler, _XML_TAG_INJURY_LIST);
-    
-    UtilXml.endElement(pHandler, XML_TAG);
-    
-  }
-  
-  public String toXml(boolean pIndent) {
-    return UtilXml.toXml(this, pIndent);
-  }
-  
-  public IXmlSerializable startXmlElement(String pXmlTag, Attributes pXmlAttributes) {
-    IXmlSerializable xmlElement = this;
-    if (fInsideInjuryList) {
-      if (_XML_TAG_INJURY.equals(pXmlTag)) {
-        fInjuryCurrent = UtilXml.getBooleanAttribute(pXmlAttributes, _XML_ATTRIBUTE_RECOVERING);
-      }
-    } else {
-      if (XML_TAG.equals(pXmlTag)) {
-        fId = UtilXml.getStringAttribute(pXmlAttributes, _XML_ATTRIBUTE_ID);
-        setNr(UtilXml.getIntAttribute(pXmlAttributes, _XML_ATTRIBUTE_NR));
-      }
-      if (_XML_TAG_INJURY_LIST.equals(pXmlTag)) {
-        fInsideInjuryList = true;
-      }
-      if (_XML_TAG_ICON_SET.equals(pXmlTag)) {
-        setNrOfIcons(UtilXml.getIntAttribute(pXmlAttributes, _XML_ATTRIBUTE_SIZE));
-      }
-      if (_XML_TAG_SKILL_LIST.equals(pXmlTag)) {
-        fInsideSkillList = true;
-      }
-      if (_XML_TAG_PLAYER_STATISTICS.equals(pXmlTag)) {
-        setCurrentSpps(UtilXml.getIntAttribute(pXmlAttributes, _XML_ATTRIBUTE_CURRENT_SPPS));
-      }
-    }
-    return xmlElement;
-  }
-  
-  public boolean endXmlElement(String pXmlTag, String pValue) {
-    boolean complete = XML_TAG.equals(pXmlTag);
-    if (!complete) {
-      if (fInsideSkillList) {
-        if (_XML_TAG_SKILL_LIST.equals(pXmlTag)) {
-          fInsideSkillList = false;
-        }
-        if (_XML_TAG_SKILL.equals(pXmlTag)) {
-          Skill skill = new SkillFactory().forName(pValue);
-          if (skill != null) {
-            fSkills.add(skill);
-          }
-        }
-      } else if (fInsideInjuryList) {
-        if (_XML_TAG_INJURY_LIST.equals(pXmlTag)) {
-          fInsideInjuryList = false;
-        }
-        if (_XML_TAG_INJURY.equals(pXmlTag)) {
-          SeriousInjury injury = new SeriousInjuryFactory().forName(pValue);
-          if (injury != null) {
-            fLastingInjuries.add(injury);
-            if (fInjuryCurrent) {
-              fRecoveringInjury = injury;
-            }
-          }
-        }
-      } else {
-        if (_XML_TAG_PORTRAIT.equals(pXmlTag)) {
-          setUrlPortrait(pValue);
-        }
-        if (_XML_TAG_ICON_SET.equals(pXmlTag)) {
-          setUrlIconSet(pValue);
-          if (getNrOfIcons() < 1) {
-            setNrOfIcons(1);
-          }
-        }
-        if (_XML_TAG_NAME.equals(pXmlTag)) {
-          setName(pValue);
-        }
-        if (_XML_TAG_GENDER.equals(pXmlTag)) {
-          setGender(new PlayerGenderFactory().forName(pValue));
-          if (getPlayerGender() == null) {
-            setGender(PlayerGender.MALE);
-          }
-        }
-        if (_XML_TAG_POSITION_ID.equals(pXmlTag)) {
-          setPositionId(pValue);
-        }
-        if (_XML_TAG_TYPE.equals(pXmlTag)) {
-          setType(new PlayerTypeFactory().forName(pValue));
-        }
-        // attributes for special player definitions (without rosterPosition)
-        if (_XML_TAG_MOVEMENT.equals(pXmlTag)) {
-          setMovement(Integer.parseInt(pValue));
-        }
-        if (_XML_TAG_STRENGTH.equals(pXmlTag)) {
-          setStrength(Integer.parseInt(pValue));
-        }
-        if (_XML_TAG_AGILITY.equals(pXmlTag)) {
-          setAgility(Integer.parseInt(pValue));
-        }
-        if (_XML_TAG_ARMOUR.equals(pXmlTag)) {
-          setArmour(Integer.parseInt(pValue));
-        }
-        if (_XML_TAG_RACE.equals(pXmlTag)) {
-        	getPosition().setRace(pValue);
-        }
-        if (_XML_TAG_SHORTHAND.equals(pXmlTag)) {
-        	getPosition().setShorthand(pValue);
-        }
-      }
-    }
-    return complete;
-  }
-  
-  public void init(Player pPlayer) {
-    
-    if (pPlayer == null) {
-      return;
-    }
-    
-    setMovement(pPlayer.getMovement());
-    setStrength(pPlayer.getStrength());
-    setAgility(pPlayer.getAgility());
-    setArmour(pPlayer.getArmour());
-      
-    fLastingInjuries.clear();
-    for (SeriousInjury injury : pPlayer.getLastingInjuries()) {
-      addLastingInjury(injury);
-    }
-    setRecoveringInjury(pPlayer.getRecoveringInjury());
-
-    setUrlPortrait(pPlayer.getUrlPortrait());
-    setUrlIconSet(pPlayer.getUrlIconSet());
-    setNrOfIcons(pPlayer.getNrOfIcons());
-
-    fSkills.clear();
-    for (Skill skill : pPlayer.getSkills()) {
-      addSkill(skill);
-    }
-    
-  }
-  
-  // JSON serialization
-  
-  public JsonObject toJsonValue() {
-
-    JsonObject jsonObject = new JsonObject();
-    
-    IJsonOption.PLAYER_ID.addTo(jsonObject, fId);
-    IJsonOption.PLAYER_NR.addTo(jsonObject, fNr);
-    IJsonOption.POSITION_ID.addTo(jsonObject, fPositionId);
-    IJsonOption.PLAYER_NAME.addTo(jsonObject, fName);
-    IJsonOption.PLAYER_GENDER.addTo(jsonObject, fPlayerGender);
-    IJsonOption.PLAYER_TYPE.addTo(jsonObject, fPlayerType);
-
-    IJsonOption.MOVEMENT.addTo(jsonObject, fMovement);
-    IJsonOption.STRENGTH.addTo(jsonObject, fStrength);
-    IJsonOption.AGILITY.addTo(jsonObject, fAgility);
-    IJsonOption.ARMOUR.addTo(jsonObject, fArmour);
-    
-    JsonArray lastingInjuries = new JsonArray();
-    for (SeriousInjury injury : fLastingInjuries) {
-      lastingInjuries.add(UtilJson.toJsonValue(injury));
-    }
-    IJsonOption.LASTING_INJURIES.addTo(jsonObject, lastingInjuries);
-    IJsonOption.RECOVERING_INJURY.addTo(jsonObject, fRecoveringInjury);
-
-    IJsonOption.URL_PORTRAIT.addTo(jsonObject, fUrlPortrait);
-    IJsonOption.URL_ICON_SET.addTo(jsonObject, fUrlIconSet);
-    IJsonOption.NR_OF_ICONS.addTo(jsonObject, fNrOfIcons);
-    IJsonOption.POSITION_ICON_INDEX.addTo(jsonObject, fIconSetIndex);
-    
-    JsonArray skillArray = new JsonArray();
-    for (Skill skill : fSkills) {
-      skillArray.add(UtilJson.toJsonValue(skill));
-    }
-    IJsonOption.SKILL_ARRAY.addTo(jsonObject, skillArray);
-
-    return jsonObject;
-    
-  }
-  
-  public Player initFrom(JsonValue pJsonValue) {
-    
-    JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-
-    fId = IJsonOption.PLAYER_ID.getFrom(jsonObject);
-    fNr = IJsonOption.PLAYER_NR.getFrom(jsonObject);
-    fPositionId = IJsonOption.POSITION_ID.getFrom(jsonObject);
-    fName = IJsonOption.PLAYER_NAME.getFrom(jsonObject);
-    fPlayerGender = (PlayerGender) IJsonOption.PLAYER_GENDER.getFrom(jsonObject);
-    fPlayerType = (PlayerType) IJsonOption.PLAYER_TYPE.getFrom(jsonObject);
-
-    fMovement = IJsonOption.MOVEMENT.getFrom(jsonObject);
-    fStrength = IJsonOption.STRENGTH.getFrom(jsonObject);
-    fAgility = IJsonOption.AGILITY.getFrom(jsonObject);
-    fArmour = IJsonOption.ARMOUR.getFrom(jsonObject);
-    
-    SeriousInjuryFactory seriousInjuryFactory = new SeriousInjuryFactory();
-    
-    fLastingInjuries.clear();
-    JsonArray lastingInjuries = IJsonOption.LASTING_INJURIES.getFrom(jsonObject);
-    for (int i = 0; i < lastingInjuries.size(); i++) {
-      fLastingInjuries.add((SeriousInjury) UtilJson.toEnumWithName(seriousInjuryFactory, lastingInjuries.get(i)));
-    }
-    fRecoveringInjury = (SeriousInjury) IJsonOption.RECOVERING_INJURY.getFrom(jsonObject);
-    
-    fUrlPortrait = IJsonOption.URL_PORTRAIT.getFrom(jsonObject);
-    fUrlIconSet = IJsonOption.URL_ICON_SET.getFrom(jsonObject);
-    fNrOfIcons = IJsonOption.NR_OF_ICONS.getFrom(jsonObject);
-    fIconSetIndex = IJsonOption.POSITION_ICON_INDEX.getFrom(jsonObject);
-
-    SkillFactory skillFactory = new SkillFactory();
-    
-    fSkills.clear();
-    JsonArray skillArray = IJsonOption.SKILL_ARRAY.getFrom(jsonObject);
-    for (int i = 0; i < skillArray.size(); i++) {
-      fSkills.add((Skill) UtilJson.toEnumWithName(skillFactory, skillArray.get(i)));
-    }
-
-    return this;
-    
-  }
-    
+  JsonObject toJsonValue();
 }
