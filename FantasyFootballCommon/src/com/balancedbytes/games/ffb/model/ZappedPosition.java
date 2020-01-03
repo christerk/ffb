@@ -23,7 +23,11 @@ public class ZappedPosition implements Position {
   private String race = "Transmogrified Frog";
   private String shortHand = "zf";
 
-  //TODO add delegate
+  private Position originalPosition;
+
+  public ZappedPosition(Position originalPosition) {
+    this.originalPosition = originalPosition;
+  }
 
   @Override
   public PlayerType getType() {
