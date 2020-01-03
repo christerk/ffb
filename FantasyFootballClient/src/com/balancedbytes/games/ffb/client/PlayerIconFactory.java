@@ -1,13 +1,5 @@
 package com.balancedbytes.games.ffb.client;
 
-import java.awt.AlphaComposite;
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.FontMetrics;
-import java.awt.Graphics2D;
-import java.awt.geom.Rectangle2D;
-import java.awt.image.BufferedImage;
-
 import com.balancedbytes.games.ffb.ClientMode;
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.FieldCoordinateBounds;
@@ -18,28 +10,34 @@ import com.balancedbytes.games.ffb.Skill;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
+import com.balancedbytes.games.ffb.model.Position;
 import com.balancedbytes.games.ffb.model.Roster;
-import com.balancedbytes.games.ffb.model.RosterPosition;
 import com.balancedbytes.games.ffb.model.Team;
 import com.balancedbytes.games.ffb.util.StringTool;
 import com.balancedbytes.games.ffb.util.UtilCards;
 import com.balancedbytes.games.ffb.util.UtilUrl;
 
+import java.awt.AlphaComposite;
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.FontMetrics;
+import java.awt.Graphics2D;
+import java.awt.geom.Rectangle2D;
+import java.awt.image.BufferedImage;
 
 
 /**
- * 
  * @author Kalimar
  */
 public class PlayerIconFactory {
-  
+
   private static Color _MARK_COLOR = new Color(1.0f, 1.0f, 0.0f, 1.0f);
-  
+
   public static final int MAX_ICON_WIDTH = 40;
   public static final int MAX_ICON_HEIGHT = 40;
 
   public BufferedImage getBasicIcon(FantasyFootballClient pClient, Player pPlayer, boolean pHomePlayer, boolean pMoving, boolean pWithBall, boolean pWithBomb) {
-    
+
     if ((pClient == null) || (pPlayer == null)) {
       return null;
     }
@@ -49,11 +47,11 @@ public class PlayerIconFactory {
     String settingIcons = pClient.getProperty(IClientProperty.SETTING_ICONS);
     BufferedImage icon = null;
     String iconSetUrl = null;
-    
+
     if (!StringTool.isProvided(settingIcons) || IClientPropertyValue.SETTING_ICONS_TEAM.equals(settingIcons) || (pHomePlayer && IClientPropertyValue.SETTING_ICONS_ROSTER_OPPONENT.equals(settingIcons))) {
       iconSetUrl = getIconSetUrl(pPlayer);
     }
-    
+
     if (!StringTool.isProvided(iconSetUrl) || IClientPropertyValue.SETTING_ICONS_ROSTER_BOTH.equals(settingIcons) || (!pHomePlayer && IClientPropertyValue.SETTING_ICONS_ROSTER_OPPONENT.equals(settingIcons))) {
       iconSetUrl = getIconSetUrl(pPlayer.getPosition());
     }
@@ -111,53 +109,53 @@ public class PlayerIconFactory {
         icon = new BufferedImage(playerIcon.getWidth() + 2, playerIcon.getHeight() + 2, BufferedImage.TYPE_INT_ARGB);
         String shorthand = (pPlayer.getPosition() != null) ? pPlayer.getPosition().getShorthand() : "?";
         if (StringTool.isProvided(shorthand)) {
-	        Graphics2D g2d = icon.createGraphics();
-	        g2d.drawImage(playerIcon, 2, 2, null);
-	        g2d.setFont(new Font("Sans Serif", Font.BOLD, fontSize));
-	        FontMetrics metrics = g2d.getFontMetrics();
-	        Rectangle2D stringBounds = metrics.getStringBounds(shorthand, g2d);
-	        int baselineX = (icon.getWidth() - (int) stringBounds.getWidth()) / 2; 
-	        int baselineY = ((icon.getHeight() - metrics.getHeight()) / 2) + metrics.getAscent();
-	        if (shadowColor != null) {
-	          g2d.setColor(shadowColor);
-	          g2d.drawString(shorthand, baselineX + 2, baselineY + 2);
-	        }
-	        g2d.setColor(fontColor);
-	        g2d.drawString(shorthand, baselineX + 1, baselineY + 1);
-	        g2d.dispose();
+          Graphics2D g2d = icon.createGraphics();
+          g2d.drawImage(playerIcon, 2, 2, null);
+          g2d.setFont(new Font("Sans Serif", Font.BOLD, fontSize));
+          FontMetrics metrics = g2d.getFontMetrics();
+          Rectangle2D stringBounds = metrics.getStringBounds(shorthand, g2d);
+          int baselineX = (icon.getWidth() - (int) stringBounds.getWidth()) / 2;
+          int baselineY = ((icon.getHeight() - metrics.getHeight()) / 2) + metrics.getAscent();
+          if (shadowColor != null) {
+            g2d.setColor(shadowColor);
+            g2d.drawString(shorthand, baselineX + 2, baselineY + 2);
+          }
+          g2d.setColor(fontColor);
+          g2d.drawString(shorthand, baselineX + 1, baselineY + 1);
+          g2d.dispose();
         }
       }
     }
-    
+
     icon = decorateIcon(icon, null);
 
     if (pWithBomb) {
       if (pMoving) {
-        icon = decorateIcon(icon, iconCache.getIconByProperty(IIconProperty.DECORATION_BOMB_SELECTED)); 
+        icon = decorateIcon(icon, iconCache.getIconByProperty(IIconProperty.DECORATION_BOMB_SELECTED));
       } else {
-        icon = decorateIcon(icon, iconCache.getIconByProperty(IIconProperty.DECORATION_BOMB)); 
+        icon = decorateIcon(icon, iconCache.getIconByProperty(IIconProperty.DECORATION_BOMB));
       }
     }
 
     if (pWithBall && !pWithBomb) {
       if (pMoving) {
-        icon = decorateIcon(icon, iconCache.getIconByProperty(IIconProperty.DECORATION_BALL_SELECTED)); 
+        icon = decorateIcon(icon, iconCache.getIconByProperty(IIconProperty.DECORATION_BALL_SELECTED));
       } else {
-        icon = decorateIcon(icon, iconCache.getIconByProperty(IIconProperty.DECORATION_BALL)); 
+        icon = decorateIcon(icon, iconCache.getIconByProperty(IIconProperty.DECORATION_BALL));
       }
     }
 
-    return icon;    
+    return icon;
 
   }
 
-  
+
   public BufferedImage getIcon(FantasyFootballClient pClient, Player pPlayer) {
-    
+
     BufferedImage icon = null;
     IconCache iconCache = pClient.getUserInterface().getIconCache();
     Game game = pClient.getGame();
-    
+
     PlayerState playerState = game.getFieldModel().getPlayerState(pPlayer);
     FieldCoordinate playerCoordinate = game.getFieldModel().getPlayerCoordinate(pPlayer);
     boolean withBomb = (FieldCoordinateBounds.FIELD.isInBounds(playerCoordinate) && playerCoordinate.equals(game.getFieldModel().getBombCoordinate()) && !game.getFieldModel().isBombMoving());
@@ -171,7 +169,7 @@ public class PlayerIconFactory {
     boolean fadeIcon = false;
     String decorationProperty1 = null;
     String decorationProperty2 = null;
-    
+
     if ((playerState != null) && (icon != null)) {
       switch (playerState.getBase()) {
         case PlayerState.BEING_DRAGGED:
@@ -198,7 +196,7 @@ public class PlayerIconFactory {
           break;
       }
     }
-    
+
     if (playerState.isHypnotized()) {
       decorationProperty1 = IIconProperty.DECORATION_HYPNOTIZED;
     }
@@ -209,10 +207,10 @@ public class PlayerIconFactory {
       decorationProperty1 = IIconProperty.DECORATION_ROOTED;
     }
     ActingPlayer actingPlayer = game.getActingPlayer();
-    if ((actingPlayer.getPlayer() == pPlayer) && actingPlayer.isSufferingBloodLust())  {
+    if ((actingPlayer.getPlayer() == pPlayer) && actingPlayer.isSufferingBloodLust()) {
       decorationProperty1 = IIconProperty.DECORATION_BLOOD_LUST;
     }
-    
+
     if (decorationProperty1 != null) {
       icon = decorateIcon(icon, iconCache.getIconByProperty(decorationProperty1));
     }
@@ -226,9 +224,9 @@ public class PlayerIconFactory {
     if ((playerMarker != null) && (ClientMode.PLAYER == pClient.getMode())) {
       markIcon(icon, playerMarker.getHomeText());
     }
-    
+
     return icon;
-    
+
   }
 
   public static BufferedImage fadeIcon(BufferedImage pIcon) {
@@ -259,7 +257,7 @@ public class PlayerIconFactory {
     g2d.dispose();
     return resultingIcon;
   }
-  
+
   public static void markIcon(BufferedImage pIcon, String pText) {
     if ((pIcon != null) && StringTool.isProvided(pText)) {
       Graphics2D g2d = pIcon.createGraphics();
@@ -285,7 +283,7 @@ public class PlayerIconFactory {
     return null;
   }
 
-  public static String getPortraitUrl(RosterPosition pPosition) {
+  public static String getPortraitUrl(Position pPosition) {
     if (pPosition != null) {
       return getIconUrl(pPosition, pPosition.getUrlPortrait());
     }
@@ -303,7 +301,7 @@ public class PlayerIconFactory {
     return null;
   }
 
-  public static String getIconSetUrl(RosterPosition pPosition) {
+  public static String getIconSetUrl(Position pPosition) {
     if (pPosition != null) {
       return getIconUrl(pPosition, pPosition.getUrlIconSet());
     }
@@ -319,8 +317,8 @@ public class PlayerIconFactory {
     }
     return pRelativeUrl;
   }
-  
-  private static String getIconUrl(RosterPosition pPosition, String pRelativeUrl) {
+
+  private static String getIconUrl(Position pPosition, String pRelativeUrl) {
     if ((pPosition != null) && StringTool.isProvided(pRelativeUrl)) {
       Roster roster = pPosition.getRoster();
       if (roster != null) {
@@ -329,5 +327,5 @@ public class PlayerIconFactory {
     }
     return pRelativeUrl;
   }
-  
+
 }

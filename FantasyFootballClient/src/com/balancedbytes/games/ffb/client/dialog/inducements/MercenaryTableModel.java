@@ -1,22 +1,22 @@
 package com.balancedbytes.games.ffb.client.dialog.inducements;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.List;
-
-import javax.swing.ImageIcon;
-import javax.swing.table.AbstractTableModel;
-
 import com.balancedbytes.games.ffb.PlayerType;
 import com.balancedbytes.games.ffb.client.PlayerIconFactory;
 import com.balancedbytes.games.ffb.model.GameOptions;
 import com.balancedbytes.games.ffb.model.Player;
+import com.balancedbytes.games.ffb.model.Position;
 import com.balancedbytes.games.ffb.model.RosterPlayer;
 import com.balancedbytes.games.ffb.model.RosterPosition;
 import com.balancedbytes.games.ffb.option.GameOptionId;
 import com.balancedbytes.games.ffb.option.GameOptionInt;
 import com.balancedbytes.games.ffb.util.StringTool;
+
+import javax.swing.ImageIcon;
+import javax.swing.table.AbstractTableModel;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.List;
 
 @SuppressWarnings("serial")
 public class MercenaryTableModel extends AbstractTableModel {
@@ -134,8 +134,8 @@ public class MercenaryTableModel extends AbstractTableModel {
 		Object[][] mercenaries = mercenaryList.toArray(new Object[mercenaryList.size()][]);
 		Arrays.sort(mercenaries, new Comparator<Object[]>() {
 			public int compare(Object[] o1, Object[] o2) {
-				RosterPosition position1 = ((Player) o1[5]).getPosition();
-				RosterPosition position2 = ((Player) o2[5]).getPosition();
+				Position position1 = ((Player) o1[5]).getPosition();
+				Position position2 = ((Player) o2[5]).getPosition();
 				return position1.getCost() - position2.getCost();
 			}
 		});

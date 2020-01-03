@@ -2,8 +2,8 @@ package com.balancedbytes.games.ffb.util;
 
 import com.balancedbytes.games.ffb.Skill;
 import com.balancedbytes.games.ffb.model.Player;
+import com.balancedbytes.games.ffb.model.Position;
 import com.balancedbytes.games.ffb.model.Roster;
-import com.balancedbytes.games.ffb.model.RosterPosition;
 import com.balancedbytes.games.ffb.model.Team;
 
 /**
@@ -35,7 +35,7 @@ public class UtilTeamValue {
   private static int findPlayerValue(Player pPlayer) {
     int playerValue = 0;
     if (pPlayer != null) {
-      RosterPosition position = pPlayer.getPosition();
+      Position position = pPlayer.getPosition();
       if (position != null) {
         playerValue += position.getCost();
         for (Skill skill : pPlayer.getSkills()) {
