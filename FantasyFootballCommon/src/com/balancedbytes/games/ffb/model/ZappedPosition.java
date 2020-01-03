@@ -36,7 +36,7 @@ public class ZappedPosition implements Position {
 
   @Override
   public PlayerGender getGender() {
-    return PlayerGender.NEUTRAL;
+    return originalPosition.getGender();
   }
 
   @Override
@@ -56,12 +56,12 @@ public class ZappedPosition implements Position {
 
   @Override
   public int getCost() {
-    return 0;
+    return originalPosition.getCost();
   }
 
   @Override
   public String getName() {
-    return race;
+    return originalPosition.getName();
   }
 
   @Override
@@ -91,17 +91,17 @@ public class ZappedPosition implements Position {
 
   @Override
   public String getUrlPortrait() {
-    return null;
+    return originalPosition.getUrlPortrait();
   }
 
   @Override
   public void setUrlPortrait(String pUrlPortrait) {
-
+    // NOOP
   }
 
   @Override
   public String getUrlIconSet() {
-    return null;
+    return originalPosition.getUrlIconSet();
   }
 
   @Override
@@ -111,32 +111,32 @@ public class ZappedPosition implements Position {
 
   @Override
   public Roster getRoster() {
-    return null;
+    return originalPosition.getRoster();
   }
 
   @Override
   public String getId() {
-    return null;
+    return originalPosition.getId();
   }
 
   @Override
   public int getNrOfIcons() {
-    return 0;
+    return originalPosition.getNrOfIcons();
   }
 
   @Override
   public int findNextIconSetIndex() {
-    return 0;
+    return originalPosition.findNextIconSetIndex();
   }
 
   @Override
   public String getDisplayName() {
-    return null;
+    return originalPosition.getDisplayName();
   }
 
   @Override
   public String getRace() {
-    return null;
+    return race;
   }
 
   @Override
@@ -151,7 +151,7 @@ public class ZappedPosition implements Position {
 
   @Override
   public String getTeamWithPositionId() {
-    return null;
+    return originalPosition.getTeamWithPositionId();
   }
 
   @Override

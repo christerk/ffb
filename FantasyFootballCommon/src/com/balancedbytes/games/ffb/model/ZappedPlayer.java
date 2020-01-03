@@ -13,8 +13,8 @@ import javax.xml.transform.sax.TransformerHandler;
 
 public class ZappedPlayer implements Player<ZappedPosition> {
 
-  private Player originalPlayer;
-  private Position position;
+  private RosterPlayer originalPlayer;
+  private ZappedPosition position;
 
   @Override
   public String getName() {
@@ -108,8 +108,7 @@ public class ZappedPlayer implements Player<ZappedPosition> {
 
   @Override
   public String getUrlPortrait() {
-    //TODO
-    return null;
+    return originalPlayer.getUrlPortrait();
   }
 
   @Override
@@ -119,8 +118,7 @@ public class ZappedPlayer implements Player<ZappedPosition> {
 
   @Override
   public String getUrlIconSet() {
-    // TODO
-    return null;
+    return originalPlayer.getUrlIconSet();
   }
 
   @Override
@@ -130,8 +128,7 @@ public class ZappedPlayer implements Player<ZappedPosition> {
 
   @Override
   public int getNrOfIcons() {
-    // TODO
-    return 1;
+    return originalPlayer.getNrOfIcons();
   }
 
   @Override
@@ -141,13 +138,12 @@ public class ZappedPlayer implements Player<ZappedPosition> {
 
   @Override
   public ZappedPosition getPosition() {
-    // TODO
-    return null;
+    return position;
   }
 
   @Override
   public void updatePosition(ZappedPosition pPosition) {
-    // NOOE
+    // NOOP
   }
 
   @Override
@@ -212,8 +208,7 @@ public class ZappedPlayer implements Player<ZappedPosition> {
 
   @Override
   public int getIconSetIndex() {
-    // TODO
-    return 0;
+    return originalPlayer.getIconSetIndex();
   }
 
   @Override
