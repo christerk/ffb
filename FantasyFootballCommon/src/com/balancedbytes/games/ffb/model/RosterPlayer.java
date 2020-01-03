@@ -513,7 +513,7 @@ public class RosterPlayer implements Player<RosterPosition> {
   }
   
   @Override
-  public void init(Player pPlayer) {
+  public void init(RosterPlayer pPlayer) {
     
     if (pPlayer == null) {
       return;

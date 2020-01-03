@@ -132,7 +132,7 @@ public interface Player<T extends Position> extends IXmlSerializable, IJsonSeria
   
   String getRace();
   
-  void init(Player pPlayer);
+  void init(RosterPlayer pPlayer);
 
   JsonObject toJsonValue();
 }

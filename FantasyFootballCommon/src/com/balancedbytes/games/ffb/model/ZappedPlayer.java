@@ -231,7 +231,7 @@ public class ZappedPlayer implements Player<ZappedPosition> {
   }
 
   @Override
-  public void init(Player pPlayer) {
+  public void init(RosterPlayer pPlayer) {
     this.originalPlayer = pPlayer;
   }
 
