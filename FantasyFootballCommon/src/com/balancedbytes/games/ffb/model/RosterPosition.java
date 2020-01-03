@@ -1,17 +1,5 @@
 package com.balancedbytes.games.ffb.model;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import javax.xml.transform.sax.TransformerHandler;
-
-import org.xml.sax.Attributes;
-import org.xml.sax.helpers.AttributesImpl;
-
 import com.balancedbytes.games.ffb.PlayerGender;
 import com.balancedbytes.games.ffb.PlayerGenderFactory;
 import com.balancedbytes.games.ffb.PlayerType;
@@ -31,6 +19,16 @@ import com.balancedbytes.games.ffb.xml.UtilXml;
 import com.eclipsesource.json.JsonArray;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
+import org.xml.sax.Attributes;
+import org.xml.sax.helpers.AttributesImpl;
+
+import javax.xml.transform.sax.TransformerHandler;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 
 
@@ -39,7 +37,7 @@ import com.eclipsesource.json.JsonValue;
  * 
  * @author Kalimar
  */
-public class RosterPosition implements IXmlSerializable, IJsonSerializable {
+public class RosterPosition implements IXmlSerializable, IJsonSerializable, Position {
   
   public static final String XML_TAG = "position";
   
@@ -117,6 +115,7 @@ public class RosterPosition implements IXmlSerializable, IJsonSerializable {
     fCurrentIconSetIndex = -1;
   }
     
+  @Override
   public PlayerType getType() {
     return fType;
   }
@@ -125,26 +124,32 @@ public class RosterPosition implements IXmlSerializable, IJsonSerializable {
     fGender = pGender;
   }
   
+  @Override
   public PlayerGender getGender() {
     return fGender;
   }
   
+  @Override
   public int getAgility() {
     return fAgility;
   }
 
+  @Override
   public int getArmour() {
     return fArmour;
   }
 
+  @Override
   public int getMovement() {
     return fMovement;
   }
 
+  @Override
   public int getCost() {
     return fCost;
   }
   
+  @Override
   public String getName() {
     return fName;
   }
@@ -157,14 +162,17 @@ public class RosterPosition implements IXmlSerializable, IJsonSerializable {
     fShorthand = pShorthand;
   }
   
+  @Override
   public String getShorthand() {
     return fShorthand;
   }
 
+  @Override
   public int getStrength() {
     return fStrength;
   }
 
+  @Override
   public SkillCategory[] getSkillCategories(boolean pOnDouble) {
     if (pOnDouble) {
       return fSkillCategoriesOnDoubleRoll.toArray(new SkillCategory[fSkillCategoriesOnDoubleRoll.size()]);
@@ -172,32 +180,39 @@ public class RosterPosition implements IXmlSerializable, IJsonSerializable {
       return fSkillCategoriesOnNormalRoll.toArray(new SkillCategory[fSkillCategoriesOnNormalRoll.size()]);
     }
   }
-  
+
+  @Override
   public boolean isDoubleCategory(SkillCategory pSkillCategory) {
     return fSkillCategoriesOnDoubleRoll.contains(pSkillCategory);
   }
 
+  @Override
   public boolean hasSkill(Skill pSkill) {
     return fSkillValues.containsKey(pSkill);
   }
   
+  @Override
   public Skill[] getSkills() {
     return fSkillValues.keySet().toArray(new Skill[fSkillValues.size()]);
   }
   
+  @Override
   public int getSkillValue(Skill pSkill) {
     Integer value = fSkillValues.get(pSkill);
     return (value != null) ? value : 0; 
   }
 
+  @Override
   public String getUrlPortrait() {
     return fUrlPortrait;
   }
 
+  @Override
   public void setUrlPortrait(String pUrlPortrait) {
     fUrlPortrait = pUrlPortrait;
   }
   
+  @Override
   public String getUrlIconSet() {
     return fUrlIconSet;
   }
@@ -206,10 +221,12 @@ public class RosterPosition implements IXmlSerializable, IJsonSerializable {
     fUrlIconSet = pUrlIconSet;
   }
 
+  @Override
   public int getQuantity() {
     return fQuantity;
   }
   
+  @Override
   public Roster getRoster() {
     return fRoster;
   }
@@ -218,10 +235,12 @@ public class RosterPosition implements IXmlSerializable, IJsonSerializable {
     fRoster = pRoster;
   }
   
+  @Override
   public String getId() {
     return fId;
   }
   
+  @Override
   public int getNrOfIcons() {
     return fNrOfIcons;
   }
@@ -230,6 +249,7 @@ public class RosterPosition implements IXmlSerializable, IJsonSerializable {
     fNrOfIcons = pNrOfIcons;
   }
   
+  @Override
   public int findNextIconSetIndex() {
     if (fNrOfIcons > 0) {
       fCurrentIconSetIndex++;
@@ -268,6 +288,7 @@ public class RosterPosition implements IXmlSerializable, IJsonSerializable {
     fQuantity = quantity;
   }
   
+  @Override
   public String getDisplayName() {
     return fDisplayName;
   }
@@ -276,6 +297,7 @@ public class RosterPosition implements IXmlSerializable, IJsonSerializable {
     fDisplayName = pDisplayName;
   }
   
+  @Override
   public String getRace() {
     return fRace;
   }
@@ -284,6 +306,7 @@ public class RosterPosition implements IXmlSerializable, IJsonSerializable {
     fRace = pRace;
   }
   
+  @Override
   public boolean isUndead() {
 		return fUndead;
 	}
@@ -292,6 +315,7 @@ public class RosterPosition implements IXmlSerializable, IJsonSerializable {
   	fUndead = pUndead;
   }
   
+  @Override
   public boolean isThrall() {
 		return fThrall;
 	}
@@ -304,6 +328,7 @@ public class RosterPosition implements IXmlSerializable, IJsonSerializable {
 	  fTeamWithPositionId = pTeamWithPositionId;
   }
   
+  @Override
   public String getTeamWithPositionId() {
 	  return fTeamWithPositionId;
   }
