@@ -14,6 +14,7 @@ import javax.xml.transform.sax.TransformerHandler;
 public class ZappedPlayer implements Player<ZappedPosition> {
 
   private Player originalPlayer;
+  private Position position;
 
   @Override
   public String getName() {
@@ -233,6 +234,7 @@ public class ZappedPlayer implements Player<ZappedPosition> {
   @Override
   public void init(RosterPlayer pPlayer) {
     this.originalPlayer = pPlayer;
+    this.position = new ZappedPosition(pPlayer.getPosition());
   }
 
   @Override
