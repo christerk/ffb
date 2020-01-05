@@ -349,8 +349,15 @@ public class Team implements IXmlSerializable, IJsonSerializable {
     if (XML_TAG.equals(pXmlTag)) {
       setId(UtilXml.getStringAttribute(pXmlAttributes, _XML_ATTRIBUTE_ID));
     }
-    if (Player.XML_TAG.equals(pXmlTag)) {
-      Player player = new RosterPlayer();
+    if (RosterPlayer.XML_TAG.equals(pXmlTag)) {
+      RosterPlayer player = new RosterPlayer();
+      player.startXmlElement(pXmlTag, pXmlAttributes);
+      addPlayer(player);
+      xmlElement = player;
+    }
+
+    if (ZappedPlayer.XML_TAG.equals(pXmlTag)) {
+      ZappedPlayer player = new ZappedPlayer();
       player.startXmlElement(pXmlTag, pXmlAttributes);
       addPlayer(player);
       xmlElement = player;

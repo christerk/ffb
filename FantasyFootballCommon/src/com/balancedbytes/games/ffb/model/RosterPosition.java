@@ -37,7 +37,7 @@ import java.util.Set;
  * 
  * @author Kalimar
  */
-public class RosterPosition implements IXmlSerializable, IJsonSerializable, Position {
+public class RosterPosition implements Position {
   
   public static final String XML_TAG = "position";
   

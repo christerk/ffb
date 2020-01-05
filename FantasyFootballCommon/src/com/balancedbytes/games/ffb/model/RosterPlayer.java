@@ -31,6 +31,8 @@ import java.util.List;
  */
 public class RosterPlayer implements Player<RosterPosition> {
 
+  static final String XML_TAG = "player";
+
   private String fId;
   private int fNr;
   private Team fTeam;

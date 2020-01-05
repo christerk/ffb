@@ -4,8 +4,10 @@ import com.balancedbytes.games.ffb.PlayerGender;
 import com.balancedbytes.games.ffb.PlayerType;
 import com.balancedbytes.games.ffb.Skill;
 import com.balancedbytes.games.ffb.SkillCategory;
+import com.balancedbytes.games.ffb.json.IJsonSerializable;
+import com.balancedbytes.games.ffb.xml.IXmlSerializable;
 
-public interface Position {
+public interface Position extends IXmlSerializable, IJsonSerializable {
   PlayerType getType();
 
   PlayerGender getGender();

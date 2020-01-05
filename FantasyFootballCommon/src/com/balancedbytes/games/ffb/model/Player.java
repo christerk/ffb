@@ -15,9 +15,7 @@ import com.eclipsesource.json.JsonObject;
  * @author Kalimar
  */
 public interface Player<T extends Position> extends IXmlSerializable, IJsonSerializable {
-  
-  static final String XML_TAG = "player";
-  
+
   static final String _XML_ATTRIBUTE_ID = "id";
 
   static final String _XML_ATTRIBUTE_NR = "nr";

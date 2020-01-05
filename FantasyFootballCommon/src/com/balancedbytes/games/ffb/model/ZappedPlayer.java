@@ -4,14 +4,20 @@ import com.balancedbytes.games.ffb.PlayerGender;
 import com.balancedbytes.games.ffb.PlayerType;
 import com.balancedbytes.games.ffb.SeriousInjury;
 import com.balancedbytes.games.ffb.Skill;
+import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.xml.IXmlReadable;
+import com.balancedbytes.games.ffb.xml.IXmlSerializable;
+import com.balancedbytes.games.ffb.xml.UtilXml;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 import org.xml.sax.Attributes;
+import org.xml.sax.helpers.AttributesImpl;
 
 import javax.xml.transform.sax.TransformerHandler;
 
 public class ZappedPlayer implements Player<ZappedPosition> {
+
+  static final String XML_TAG = "zappedPlayer";
 
   private RosterPlayer originalPlayer;
   private ZappedPosition position;
@@ -234,37 +240,48 @@ public class ZappedPlayer implements Player<ZappedPosition> {
 
   @Override
   public JsonObject toJsonValue() {
-    // TODO
-    return null;
+    JsonObject jsonObject = new JsonObject();
+    IJsonOption.PLAYER.addTo(jsonObject, originalPlayer.toJsonValue());
+    return jsonObject;
   }
 
   @Override
-  public Object initFrom(JsonValue pJsonValue) {
-    // TODO
-    return null;
+  public ZappedPlayer initFrom(JsonValue pJsonValue) {
+    originalPlayer = new RosterPlayer().initFrom(IJsonOption.PLAYER.getFrom((JsonObject) pJsonValue));
+    return this;
   }
 
   @Override
-  public IXmlReadable startXmlElement(String pXmlTag, Attributes pXmlAttributes) {
-    // TODO
-    return null;
+  public IXmlSerializable startXmlElement(String pXmlTag, Attributes pXmlAttributes) {
+    IXmlSerializable xmlElement = this;
+    if (RosterPlayer.XML_TAG.equals(pXmlTag)) {
+      RosterPlayer player = new RosterPlayer();
+      player.startXmlElement(pXmlTag, pXmlAttributes);
+      init(player);
+    }
+    return xmlElement;
   }
 
   @Override
   public boolean endXmlElement(String pXmlTag, String pValue) {
-    // TODO
-    return false;
+    return XML_TAG.equals(pXmlTag);
   }
 
   @Override
   public void addToXml(TransformerHandler pHandler) {
-    // TODO
+
+    AttributesImpl attributes = new AttributesImpl();
+
+    UtilXml.startElement(pHandler, XML_TAG, attributes);
+
+    originalPlayer.addToXml(pHandler);
+
+    UtilXml.endElement(pHandler, XML_TAG);
 
   }
 
   @Override
   public String toXml(boolean pIndent) {
-    // TODO
-    return null;
+    return UtilXml.toXml(this, pIndent);
   }
 }

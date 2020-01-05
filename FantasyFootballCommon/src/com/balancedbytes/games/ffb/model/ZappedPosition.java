@@ -1,14 +1,33 @@
 package com.balancedbytes.games.ffb.model;
 
 import com.balancedbytes.games.ffb.PlayerGender;
+import com.balancedbytes.games.ffb.PlayerGenderFactory;
 import com.balancedbytes.games.ffb.PlayerType;
+import com.balancedbytes.games.ffb.PlayerTypeFactory;
 import com.balancedbytes.games.ffb.Skill;
 import com.balancedbytes.games.ffb.SkillCategory;
+import com.balancedbytes.games.ffb.SkillCategoryFactory;
+import com.balancedbytes.games.ffb.SkillFactory;
+import com.balancedbytes.games.ffb.json.IJsonOption;
+import com.balancedbytes.games.ffb.json.UtilJson;
+import com.balancedbytes.games.ffb.util.ArrayTool;
+import com.balancedbytes.games.ffb.util.StringTool;
+import com.balancedbytes.games.ffb.xml.IXmlReadable;
+import com.balancedbytes.games.ffb.xml.UtilXml;
+import com.eclipsesource.json.JsonArray;
+import com.eclipsesource.json.JsonObject;
+import com.eclipsesource.json.JsonValue;
+import org.xml.sax.Attributes;
+import org.xml.sax.helpers.AttributesImpl;
 
+import javax.xml.transform.sax.TransformerHandler;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 public class ZappedPosition implements Position {
+
+  public static final String XML_TAG = "zappedPosition";
 
   private int move = 5;
   private int strength = 1;
@@ -23,9 +42,9 @@ public class ZappedPosition implements Position {
   private String race = "Transmogrified Frog";
   private String shortHand = "zf";
 
-  private Position originalPosition;
+  private RosterPosition originalPosition;
 
-  public ZappedPosition(Position originalPosition) {
+  public ZappedPosition(RosterPosition originalPosition) {
     this.originalPosition = originalPosition;
   }
 
@@ -162,5 +181,42 @@ public class ZappedPosition implements Position {
   @Override
   public SkillCategory[] getSkillCategories(boolean b) {
     return new SkillCategory[0];
+  }
+
+  public void addToXml(TransformerHandler pHandler) {
+
+    AttributesImpl attributes = new AttributesImpl();
+    UtilXml.startElement(pHandler, XML_TAG, attributes);
+    originalPosition.addToXml(pHandler);
+    UtilXml.endElement(pHandler, XML_TAG);
+  }
+
+  public String toXml(boolean pIndent) {
+    return UtilXml.toXml(this, pIndent);
+  }
+
+  public IXmlReadable startXmlElement(String pXmlTag, Attributes pXmlAttributes) {
+
+    if (RosterPosition.XML_TAG.equals(pXmlTag)) {
+      originalPosition = new RosterPosition();
+      originalPosition.startXmlElement(pXmlTag, pXmlAttributes);
+    }
+    return this;
+  }
+
+  public boolean endXmlElement(String pTag, String pValue) {
+    return XML_TAG.equals(pTag);
+  }
+
+  public JsonObject toJsonValue() {
+    JsonObject jsonObject = new JsonObject();
+    IJsonOption.ROSTER_POSITION.addTo(jsonObject, originalPosition.toJsonValue());
+    return jsonObject;
+  }
+
+  public ZappedPosition initFrom(JsonValue pJsonValue) {
+    JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
+    originalPosition = new RosterPosition().initFrom(IJsonOption.ROSTER_POSITION.getFrom(jsonObject));
+    return this;
   }
 }

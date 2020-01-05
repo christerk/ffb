@@ -298,7 +298,8 @@ public interface IJsonOption {
           JsonBooleanArrayOption PLAYERS_AFFECTED_AWAY = new JsonBooleanArrayOption("playersAffectedAway");
           JsonBooleanArrayOption PLAYERS_AFFECTED_HOME = new JsonBooleanArrayOption("playersAffectedHome");
                  JsonArrayOption POSITION_ARRAY = new JsonArrayOption("positionArray");
-                   JsonIntOption POSITION_ICON_INDEX = new JsonIntOption("positionIconIndex"); 
+                JsonObjectOption ROSTER_POSITION = new JsonObjectOption("rosterPosition");
+                   JsonIntOption POSITION_ICON_INDEX = new JsonIntOption("positionIconIndex");
                 JsonStringOption POSITION_ID = new JsonStringOption("positionId"); 
            JsonStringArrayOption POSITION_IDS = new JsonStringArrayOption("positionIds"); 
                 JsonStringOption POSITION_NAME = new JsonStringOption("positionName"); 
