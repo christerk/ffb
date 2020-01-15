@@ -154,6 +154,7 @@ public class ServerCommunication implements Runnable, IReceivedCommandHandler {
           if (command.isInternalCommand()
               || (getServer().getSessionManager().getSessionOfHomeCoach(gameId) == command.getSession())
               || (getServer().getSessionManager().getSessionOfAwayCoach(gameId) == command.getSession())) {
+            getServer().getSessionManager().setLastPing(command.getSession(), System.currentTimeMillis());
             gameState.handleCommand(command);
           }
         } catch (Exception any) {
