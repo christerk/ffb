@@ -184,7 +184,7 @@ public class DiceInterpreter {
     if (pSpecialEffect == SpecialEffect.LIGHTNING) {
       return (roll >= 2);
     } else if (pSpecialEffect == SpecialEffect.ZAP) {
-      return (roll >= targetPlayer.getStrength());
+      return (roll == 6 || (roll > 1 && roll >= targetPlayer.getStrength()));
     } else if ((pSpecialEffect == SpecialEffect.FIREBALL) || (pSpecialEffect == SpecialEffect.BOMB)) {
       return (roll >= 4);
     } else {
