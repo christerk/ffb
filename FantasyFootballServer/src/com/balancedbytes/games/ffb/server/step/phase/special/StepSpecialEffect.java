@@ -7,7 +7,9 @@ import com.balancedbytes.games.ffb.TurnMode;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
+import com.balancedbytes.games.ffb.model.RosterPlayer;
 import com.balancedbytes.games.ffb.model.Team;
+import com.balancedbytes.games.ffb.model.ZappedPlayer;
 import com.balancedbytes.games.ffb.report.ReportSpecialEffectRoll;
 import com.balancedbytes.games.ffb.server.DiceInterpreter;
 import com.balancedbytes.games.ffb.server.GameState;
@@ -118,8 +120,14 @@ public final class StepSpecialEffect extends AbstractStep {
 					publishParameter(new StepParameter(StepParameterKey.INJURY_RESULT,
 						UtilServerInjury.handleInjury(this, InjuryType.LIGHTNING, null, player, playerCoordinate, null, ApothecaryMode.SPECIAL_EFFECT)));
 				}
-				if (fSpecialEffect == SpecialEffect.ZAP) {
-					//TODO handle effect
+				if (fSpecialEffect == SpecialEffect.ZAP && player instanceof RosterPlayer) {
+					ZappedPlayer zappedPlayer = new ZappedPlayer();
+					zappedPlayer.init((RosterPlayer) player);
+					player = zappedPlayer;
+					Team team = game.findTeam(player);
+					team.addPlayer(player);
+					getGameState().getServer().getCommunication().sendAddPlayer(getGameState(), team.getId(), player,  game.getFieldModel().getPlayerState(player), game.getGameResult().getPlayerResult(player));
+
 				}
 				if (fSpecialEffect == SpecialEffect.FIREBALL) {
 					publishParameter(new StepParameter(StepParameterKey.INJURY_RESULT,
