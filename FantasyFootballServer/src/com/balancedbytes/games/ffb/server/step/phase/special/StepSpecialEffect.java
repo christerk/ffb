@@ -119,6 +119,7 @@ public final class StepSpecialEffect extends AbstractStep {
 				if (fSpecialEffect == SpecialEffect.LIGHTNING) {
 					publishParameter(new StepParameter(StepParameterKey.INJURY_RESULT,
 						UtilServerInjury.handleInjury(this, InjuryType.LIGHTNING, null, player, playerCoordinate, null, ApothecaryMode.SPECIAL_EFFECT)));
+					publishParameters(UtilServerInjury.dropPlayer(this, player, ApothecaryMode.SPECIAL_EFFECT));
 				}
 				if (fSpecialEffect == SpecialEffect.ZAP && player instanceof RosterPlayer) {
 					ZappedPlayer zappedPlayer = new ZappedPlayer();
@@ -132,13 +133,13 @@ public final class StepSpecialEffect extends AbstractStep {
 				if (fSpecialEffect == SpecialEffect.FIREBALL) {
 					publishParameter(new StepParameter(StepParameterKey.INJURY_RESULT,
 						UtilServerInjury.handleInjury(this, InjuryType.FIREBALL, null, player, playerCoordinate, null, ApothecaryMode.SPECIAL_EFFECT)));
+					publishParameters(UtilServerInjury.dropPlayer(this, player, ApothecaryMode.SPECIAL_EFFECT));
 				}
 				if (fSpecialEffect == SpecialEffect.BOMB) {
 					publishParameter(new StepParameter(StepParameterKey.INJURY_RESULT,
 						UtilServerInjury.handleInjury(this, InjuryType.BOMB, null, player, playerCoordinate, null, ApothecaryMode.SPECIAL_EFFECT)));
+					publishParameters(UtilServerInjury.dropPlayer(this, player, ApothecaryMode.SPECIAL_EFFECT));
 				}
-
-				publishParameters(UtilServerInjury.dropPlayer(this, player, ApothecaryMode.SPECIAL_EFFECT));
 
 				// check end turn
 				Team actingTeam = game.isHomePlaying() ? game.getTeamHome() : game.getTeamAway();
