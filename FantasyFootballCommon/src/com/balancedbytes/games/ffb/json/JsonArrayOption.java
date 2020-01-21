@@ -17,7 +17,7 @@ public class JsonArrayOption extends JsonAbstractOption {
   public JsonArray getFrom(JsonObject pJsonObject) {
     JsonValue jsonValue = getValueFrom(pJsonObject);
     if ((jsonValue == null) || jsonValue.isNull()) {
-      return null;
+      return new JsonArray();
     }
     return jsonValue.asArray();
   }
