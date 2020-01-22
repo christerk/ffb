@@ -28,10 +28,14 @@ public class ClientCommandHandlerAddPlayer extends ClientCommandHandler {
     Game game = getClient().getGame();
     
     Team team = game.getTeamHome().getId().equals(addPlayerCommand.getTeamId()) ? game.getTeamHome() : game.getTeamAway();
-    team.addPlayer(addPlayerCommand.getPlayer());
-    RosterPosition rosterPosition = team.getRoster().getPositionById(addPlayerCommand.getPlayer().getPositionId());
-    addPlayerCommand.getPlayer().updatePosition(rosterPosition);
-
+    Player oldPlayer = team.getPlayerById(addPlayerCommand.getPlayer().getId()); 
+    if (oldPlayer != null) {
+      oldPlayer.init(addPlayerCommand.getPlayer());
+    } else {
+      team.addPlayer(addPlayerCommand.getPlayer());
+      RosterPosition rosterPosition = team.getRoster().getPositionById(addPlayerCommand.getPlayer().getPositionId());
+      addPlayerCommand.getPlayer().updatePosition(rosterPosition);
+    }
     
     game.getFieldModel().setPlayerState(addPlayerCommand.getPlayer(), addPlayerCommand.getPlayerState());
     UtilBox.putPlayerIntoBox(game, addPlayerCommand.getPlayer());
