@@ -7,6 +7,7 @@ import com.balancedbytes.games.ffb.PlayerState;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
+import com.balancedbytes.games.ffb.model.RosterPlayer;
 import com.balancedbytes.games.ffb.model.Team;
 import com.balancedbytes.games.ffb.net.commands.ICommandWithActingPlayer;
 import com.balancedbytes.games.ffb.server.FantasyFootballServer;
@@ -66,11 +67,11 @@ public class UtilServerSteps {
     }
   }
 
-  public static void sendAddedPlayers(GameState gameState, Team pTeam, Player[] pAddedPlayers) {
+  public static void sendAddedPlayers(GameState gameState, Team pTeam, RosterPlayer[] pAddedPlayers) {
     if (ArrayTool.isProvided(pAddedPlayers) && (pTeam != null)) {
       Game game = gameState.getGame();
       FantasyFootballServer server = gameState.getServer();
-      for (Player addedPlayer : pAddedPlayers) {
+      for (RosterPlayer addedPlayer : pAddedPlayers) {
         server.getCommunication().sendAddPlayer(gameState, pTeam.getId(), addedPlayer, game.getFieldModel().getPlayerState(addedPlayer),
             game.getGameResult().getPlayerResult(addedPlayer));
       }

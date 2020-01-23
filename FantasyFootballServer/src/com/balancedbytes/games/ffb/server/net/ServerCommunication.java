@@ -8,6 +8,7 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.Future;
 import java.util.concurrent.LinkedBlockingQueue;
 
+import com.balancedbytes.games.ffb.model.RosterPlayer;
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.WebSocketException;
 
@@ -457,8 +458,8 @@ public class ServerCommunication implements Runnable, IReceivedCommandHandler {
     sendAwaySession(gameState, gameStateCommand.transform());
   }
 
-  public void sendAddPlayer(GameState gameState, String pTeamId, Player pPlayer, PlayerState pPlayerState,
-      PlayerResult pPlayerResult) {
+  public void sendAddPlayer(GameState gameState, String pTeamId, RosterPlayer pPlayer, PlayerState pPlayerState,
+                            PlayerResult pPlayerResult) {
     ServerCommandAddPlayer addPlayersCommand = new ServerCommandAddPlayer(pTeamId, pPlayer, pPlayerState,
         pPlayerResult);
     addPlayersCommand.setCommandNr(gameState.generateCommandNr());

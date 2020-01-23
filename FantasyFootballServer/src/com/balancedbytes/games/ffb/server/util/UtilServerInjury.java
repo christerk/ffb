@@ -483,7 +483,7 @@ public class UtilServerInjury {
 
 	public static boolean handleRaiseDead(IStep pStep, InjuryResult pInjuryResult) {
 
-		Player raisedPlayer = null;
+		RosterPlayer raisedPlayer = null;
 		boolean nurglesRot = false;
 		GameState gameState = pStep.getGameState();
 		Game game = gameState.getGame();
@@ -526,8 +526,8 @@ public class UtilServerInjury {
 
 	}
 
-	private static Player raisePlayer(Game pGame, Team pNecroTeam, TeamResult pNecroTeamResult, String pPlayerName, boolean pNurglesRot, String killedId) {
-		Player raisedPlayer = null;
+	private static RosterPlayer raisePlayer(Game pGame, Team pNecroTeam, TeamResult pNecroTeamResult, String pPlayerName, boolean pNurglesRot, String killedId) {
+		RosterPlayer raisedPlayer = null;
 		RosterPosition zombiePosition = pNecroTeam.getRoster().getRaisedRosterPosition();
 		if (zombiePosition != null) {
 			pNecroTeamResult.setRaisedDead(pNecroTeamResult.getRaisedDead() + 1);

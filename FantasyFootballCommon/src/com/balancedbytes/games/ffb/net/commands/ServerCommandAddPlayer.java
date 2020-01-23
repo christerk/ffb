@@ -18,7 +18,7 @@ import com.eclipsesource.json.JsonValue;
 public class ServerCommandAddPlayer extends ServerCommand {
   
   private String fTeamId;
-  private Player fPlayer;
+  private RosterPlayer fPlayer;
   private PlayerState fPlayerState;
   private SendToBoxReason fSendToBoxReason;
   private int fSendToBoxTurn;
@@ -28,7 +28,7 @@ public class ServerCommandAddPlayer extends ServerCommand {
     super();
   }
 
-  public ServerCommandAddPlayer(String pTeamId, Player pPlayer, PlayerState pPlayerState, PlayerResult pPlayerResult) {
+  public ServerCommandAddPlayer(String pTeamId, RosterPlayer pPlayer, PlayerState pPlayerState, PlayerResult pPlayerResult) {
     this();
     if (pPlayer == null) {
       throw new IllegalArgumentException("Parameter player must not be null.");
@@ -51,7 +51,7 @@ public class ServerCommandAddPlayer extends ServerCommand {
     return fTeamId;
   }
 
-  public Player getPlayer() {
+  public RosterPlayer getPlayer() {
     return fPlayer;
   }
   

@@ -8,6 +8,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import com.balancedbytes.games.ffb.model.RosterPlayer;
 import org.eclipse.jetty.websocket.api.Session;
 
 import com.balancedbytes.games.ffb.Card;
@@ -563,9 +564,12 @@ public class ServerCommandHandlerTalk extends ServerCommandHandler {
     }
     Team team = (sessionManager.getSessionOfHomeCoach(game.getId()) == session) ? game.getTeamHome() : game.getTeamAway();
     for (Player player : findPlayersInCommand(team, commands, 3)) {
+      if (!(player instanceof RosterPlayer)) {
+        continue;
+      }
       if (_ADD.equals(commands[1])) {
         player.addSkill(skill);
-        getServer().getCommunication().sendAddPlayer(gameState, team.getId(), player,
+        getServer().getCommunication().sendAddPlayer(gameState, team.getId(), (RosterPlayer) player,
             game.getFieldModel().getPlayerState(player), game.getGameResult().getPlayerResult(player));
         StringBuilder info = new StringBuilder();
         info.append("Added skill ").append(skill.getName()).append(" to player ").append(player.getName()).append(".");
@@ -573,7 +577,7 @@ public class ServerCommandHandlerTalk extends ServerCommandHandler {
       }
       if (_REMOVE.equals(commands[1])) {
         player.removeSkill(skill);
-        getServer().getCommunication().sendAddPlayer(gameState, team.getId(), player,
+        getServer().getCommunication().sendAddPlayer(gameState, team.getId(), (RosterPlayer) player,
             game.getFieldModel().getPlayerState(player), game.getGameResult().getPlayerResult(player));
         StringBuilder info = new StringBuilder();
         info.append("Removed skill ").append(skill.getName()).append(" from player ").append(player.getName())
@@ -610,9 +614,9 @@ public class ServerCommandHandlerTalk extends ServerCommandHandler {
       } else {
         lastingInjury = null;
       }
-      if ((player != null) && (lastingInjury != null)) {
+      if ((player instanceof RosterPlayer) && (lastingInjury != null)) {
         player.addLastingInjury(lastingInjury);
-        getServer().getCommunication().sendAddPlayer(gameState, team.getId(), player,
+        getServer().getCommunication().sendAddPlayer(gameState, team.getId(), (RosterPlayer) player,
             game.getFieldModel().getPlayerState(player), game.getGameResult().getPlayerResult(player));
         StringBuilder info = new StringBuilder();
         info.append("Player ").append(player.getName()).append(" suffers injury ").append(lastingInjury.getName())
@@ -637,8 +641,9 @@ public class ServerCommandHandlerTalk extends ServerCommandHandler {
       return;
     }
     Team team = (sessionManager.getSessionOfHomeCoach(game.getId()) == session) ? game.getTeamHome() : game.getTeamAway();
-    for (Player player : findPlayersInCommand(team, commands, 3)) {
-      if ((player != null) && (stat >= 0)) {
+    for (Player genericPlayer : findPlayersInCommand(team, commands, 3)) {
+      if ((genericPlayer instanceof RosterPlayer) && (stat >= 0)) {
+        RosterPlayer player = (RosterPlayer) genericPlayer;
         if ("ma".equalsIgnoreCase(commands[1])) {
           player.setMovement(stat);
           reportStatChange(gameState, player, "MA", stat);
@@ -659,7 +664,7 @@ public class ServerCommandHandlerTalk extends ServerCommandHandler {
     }
   }
 
-  private void reportStatChange(GameState pGameState, Player pPlayer, String pStat, int pValue) {
+  private void reportStatChange(GameState pGameState, RosterPlayer pPlayer, String pStat, int pValue) {
     if ((pGameState != null) && (pPlayer != null)) {
       Game game = pGameState.getGame();
       Team team = game.getTeamHome().hasPlayer(pPlayer) ? game.getTeamHome() : game.getTeamAway();

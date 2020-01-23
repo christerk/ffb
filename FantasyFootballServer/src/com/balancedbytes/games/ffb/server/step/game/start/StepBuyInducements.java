@@ -261,12 +261,12 @@ public final class StepBuyInducements extends AbstractStep {
 
     Roster roster = pTeam.getRoster();
     Game game = getGameState().getGame();
-    List<Player> addedPlayerList = new ArrayList<Player>();
+    List<RosterPlayer> addedPlayerList = new ArrayList<RosterPlayer>();
     Map<RosterPosition, Integer> nrByPosition = new HashMap<RosterPosition, Integer>();
 
     for (int i = 0; i < pPositionIds.length; i++) {
       RosterPosition position = roster.getPositionById(pPositionIds[i]);
-      Player mercenary = new RosterPlayer();
+      RosterPlayer mercenary = new RosterPlayer();
       addedPlayerList.add(mercenary);
       StringBuilder playerId = new StringBuilder().append(pTeam.getId()).append("M").append(addedPlayerList.size());
       mercenary.setId(playerId.toString());
@@ -293,7 +293,7 @@ public final class StepBuyInducements extends AbstractStep {
     }
 
     if (addedPlayerList.size() > 0) {
-      Player[] addedPlayers = addedPlayerList.toArray(new Player[addedPlayerList.size()]);
+      RosterPlayer[] addedPlayers = addedPlayerList.toArray(new RosterPlayer[0]);
       UtilServerSteps.sendAddedPlayers(getGameState(), pTeam, addedPlayers);
     }
 
@@ -326,15 +326,17 @@ public final class StepBuyInducements extends AbstractStep {
         }
       }
 
-      List<Player> addedPlayerList = new ArrayList<Player>();
-      List<Player> removedPlayerList = new ArrayList<Player>();
+      List<RosterPlayer> addedPlayerList = new ArrayList<RosterPlayer>();
+      List<RosterPlayer> removedPlayerList = new ArrayList<RosterPlayer>();
       for (int i = 0; i < pPositionIds.length; i++) {
         RosterPosition position = roster.getPositionById(pPositionIds[i]);
         Player otherTeamStarPlayer = otherTeamStarPlayerByName.get(position.getName());
         if (!UtilGameOption.isOptionEnabled(game, GameOptionId.ALLOW_STAR_ON_BOTH_TEAMS) && (otherTeamStarPlayer != null)) {
-          removedPlayerList.add(otherTeamStarPlayer);
+          if (otherTeamStarPlayer instanceof RosterPlayer) {
+            removedPlayerList.add((RosterPlayer) otherTeamStarPlayer);
+          }
         } else {
-          Player starPlayer = new RosterPlayer();
+          RosterPlayer starPlayer = new RosterPlayer();
           addedPlayerList.add(starPlayer);
           StringBuilder playerId = new StringBuilder().append(pTeam.getId()).append("S").append(addedPlayerList.size());
           starPlayer.setId(playerId.toString());
@@ -359,7 +361,7 @@ public final class StepBuyInducements extends AbstractStep {
       }
 
       if (addedPlayerList.size() > 0) {
-        Player[] addedPlayers = addedPlayerList.toArray(new Player[addedPlayerList.size()]);
+        RosterPlayer[] addedPlayers = addedPlayerList.toArray(new RosterPlayer[0]);
         UtilServerSteps.sendAddedPlayers(getGameState(), pTeam, addedPlayers);
         // TODO: update persistence?
       }

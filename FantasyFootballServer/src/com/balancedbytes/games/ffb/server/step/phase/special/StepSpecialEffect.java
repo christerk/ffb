@@ -127,7 +127,7 @@ public final class StepSpecialEffect extends AbstractStep {
 					player = zappedPlayer;
 					Team team = game.findTeam(player);
 					team.addPlayer(player);
-					getGameState().getServer().getCommunication().sendAddPlayer(getGameState(), team.getId(), player,  game.getFieldModel().getPlayerState(player), game.getGameResult().getPlayerResult(player));
+					//getGameState().getServer().getCommunication().sendAddPlayer(getGameState(), team.getId(), player,  game.getFieldModel().getPlayerState(player), game.getGameResult().getPlayerResult(player));
 
 				}
 				if (fSpecialEffect == SpecialEffect.FIREBALL) {
