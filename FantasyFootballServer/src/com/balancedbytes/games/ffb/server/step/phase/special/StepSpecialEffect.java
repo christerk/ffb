@@ -124,11 +124,9 @@ public final class StepSpecialEffect extends AbstractStep {
 				if (fSpecialEffect == SpecialEffect.ZAP && player instanceof RosterPlayer) {
 					ZappedPlayer zappedPlayer = new ZappedPlayer();
 					zappedPlayer.init((RosterPlayer) player);
-					player = zappedPlayer;
 					Team team = game.findTeam(player);
-					team.addPlayer(player);
-					//getGameState().getServer().getCommunication().sendAddPlayer(getGameState(), team.getId(), player,  game.getFieldModel().getPlayerState(player), game.getGameResult().getPlayerResult(player));
-
+					team.addPlayer(zappedPlayer);
+					getGameState().getServer().getCommunication().sendZapPlayer(getGameState(), (RosterPlayer) player);
 				}
 				if (fSpecialEffect == SpecialEffect.FIREBALL) {
 					publishParameter(new StepParameter(StepParameterKey.INJURY_RESULT,
