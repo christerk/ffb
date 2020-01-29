@@ -1,17 +1,5 @@
 package com.balancedbytes.games.ffb.server.net;
 
-import java.nio.ByteBuffer;
-import java.nio.charset.Charset;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.Future;
-import java.util.concurrent.LinkedBlockingQueue;
-
-import com.balancedbytes.games.ffb.model.RosterPlayer;
-import org.eclipse.jetty.websocket.api.Session;
-import org.eclipse.jetty.websocket.api.WebSocketException;
-
 import com.balancedbytes.games.ffb.ClientMode;
 import com.balancedbytes.games.ffb.GameList;
 import com.balancedbytes.games.ffb.PlayerState;
@@ -20,8 +8,9 @@ import com.balancedbytes.games.ffb.TeamList;
 import com.balancedbytes.games.ffb.json.LZString;
 import com.balancedbytes.games.ffb.model.Animation;
 import com.balancedbytes.games.ffb.model.Game;
-import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.model.PlayerResult;
+import com.balancedbytes.games.ffb.model.RosterPlayer;
+import com.balancedbytes.games.ffb.model.Team;
 import com.balancedbytes.games.ffb.model.change.ModelChangeList;
 import com.balancedbytes.games.ffb.net.NetCommand;
 import com.balancedbytes.games.ffb.net.NetCommandId;
@@ -46,6 +35,7 @@ import com.balancedbytes.games.ffb.net.commands.ServerCommandTeamList;
 import com.balancedbytes.games.ffb.net.commands.ServerCommandTeamSetupList;
 import com.balancedbytes.games.ffb.net.commands.ServerCommandUserSettings;
 import com.balancedbytes.games.ffb.net.commands.ServerCommandVersion;
+import com.balancedbytes.games.ffb.net.commands.ServerCommandZapPlayer;
 import com.balancedbytes.games.ffb.report.ReportList;
 import com.balancedbytes.games.ffb.server.DebugLog;
 import com.balancedbytes.games.ffb.server.FantasyFootballServer;
@@ -58,6 +48,16 @@ import com.balancedbytes.games.ffb.server.net.commands.InternalServerCommandSock
 import com.balancedbytes.games.ffb.util.ArrayTool;
 import com.balancedbytes.games.ffb.util.StringTool;
 import com.eclipsesource.json.JsonValue;
+import org.eclipse.jetty.websocket.api.Session;
+import org.eclipse.jetty.websocket.api.WebSocketException;
+
+import java.nio.ByteBuffer;
+import java.nio.charset.Charset;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.Future;
+import java.util.concurrent.LinkedBlockingQueue;
 
 /**
  * 
@@ -485,5 +485,10 @@ public class ServerCommunication implements Runnable, IReceivedCommandHandler {
     syncCommand.setCommandNr(gameState.generateCommandNr());
     sendHomeAndSpectatorSessions(gameState, syncCommand);
     sendAwaySession(gameState, syncCommand.transform());
+  }
+
+  public void sendZapPlayer(GameState gameState, RosterPlayer player) {
+    ServerCommandZapPlayer commandZapPlayer = new ServerCommandZapPlayer(player.getId(), player.getTeam().getId());
+    sendAllSessions(gameState, commandZapPlayer, true);
   }
 }
