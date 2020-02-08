@@ -568,7 +568,7 @@ public class ServerCommandHandlerTalk extends ServerCommandHandler {
         continue;
       }
       if (_ADD.equals(commands[1])) {
-        player.addSkill(skill);
+        ((RosterPlayer) player).addSkill(skill);
         getServer().getCommunication().sendAddPlayer(gameState, team.getId(), (RosterPlayer) player,
             game.getFieldModel().getPlayerState(player), game.getGameResult().getPlayerResult(player));
         StringBuilder info = new StringBuilder();
@@ -576,7 +576,7 @@ public class ServerCommandHandlerTalk extends ServerCommandHandler {
         getServer().getCommunication().sendPlayerTalk(gameState, null, info.toString());
       }
       if (_REMOVE.equals(commands[1])) {
-        player.removeSkill(skill);
+        ((RosterPlayer) player).removeSkill(skill);
         getServer().getCommunication().sendAddPlayer(gameState, team.getId(), (RosterPlayer) player,
             game.getFieldModel().getPlayerState(player), game.getGameResult().getPlayerResult(player));
         StringBuilder info = new StringBuilder();
@@ -615,7 +615,7 @@ public class ServerCommandHandlerTalk extends ServerCommandHandler {
         lastingInjury = null;
       }
       if ((player instanceof RosterPlayer) && (lastingInjury != null)) {
-        player.addLastingInjury(lastingInjury);
+        ((RosterPlayer) player).addLastingInjury(lastingInjury);
         getServer().getCommunication().sendAddPlayer(gameState, team.getId(), (RosterPlayer) player,
             game.getFieldModel().getPlayerState(player), game.getGameResult().getPlayerResult(player));
         StringBuilder info = new StringBuilder();
