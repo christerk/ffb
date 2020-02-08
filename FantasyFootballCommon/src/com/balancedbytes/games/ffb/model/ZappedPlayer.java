@@ -5,7 +5,6 @@ import com.balancedbytes.games.ffb.PlayerType;
 import com.balancedbytes.games.ffb.SeriousInjury;
 import com.balancedbytes.games.ffb.Skill;
 import com.balancedbytes.games.ffb.json.IJsonOption;
-import com.balancedbytes.games.ffb.xml.IXmlReadable;
 import com.balancedbytes.games.ffb.xml.IXmlSerializable;
 import com.balancedbytes.games.ffb.xml.UtilXml;
 import com.eclipsesource.json.JsonObject;
@@ -15,7 +14,7 @@ import org.xml.sax.helpers.AttributesImpl;
 
 import javax.xml.transform.sax.TransformerHandler;
 
-public class ZappedPlayer implements Player<ZappedPosition> {
+public class ZappedPlayer extends Player<ZappedPosition> {
 
   static final String XML_TAG = "zappedPlayer";
   public static final String KIND = "zappedPlayer";

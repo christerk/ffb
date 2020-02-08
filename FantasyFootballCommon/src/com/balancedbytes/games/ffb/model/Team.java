@@ -477,7 +477,7 @@ public class Team implements IXmlSerializable, IJsonSerializable {
     
     JsonArray playerArray = IJsonOption.PLAYER_ARRAY.getFrom(jsonObject);
     for (int i = 0; i < playerArray.size(); i++) {
-      addPlayer(new RosterPlayer().initFrom(playerArray.get(i)));
+      addPlayer(Player.getFrom(playerArray.get(i)));
     }
 
     Roster roster = null;

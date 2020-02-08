@@ -29,7 +29,7 @@ import java.util.List;
  * 
  * @author Kalimar
  */
-public class RosterPlayer implements Player<RosterPosition> {
+public class RosterPlayer extends Player<RosterPosition> {
 
   static final String XML_TAG = "player";
   public static final String KIND = "rosterPlayer";
