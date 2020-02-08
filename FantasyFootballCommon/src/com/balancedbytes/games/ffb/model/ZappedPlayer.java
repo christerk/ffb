@@ -18,6 +18,7 @@ import javax.xml.transform.sax.TransformerHandler;
 public class ZappedPlayer implements Player<ZappedPosition> {
 
   static final String XML_TAG = "zappedPlayer";
+  public static final String KIND = "zappedPlayer";
 
   private RosterPlayer originalPlayer;
   private ZappedPosition position;
@@ -241,6 +242,7 @@ public class ZappedPlayer implements Player<ZappedPosition> {
   @Override
   public JsonObject toJsonValue() {
     JsonObject jsonObject = new JsonObject();
+    IJsonOption.PLAYER_KIND.addTo(jsonObject, KIND);
     IJsonOption.PLAYER.addTo(jsonObject, originalPlayer.toJsonValue());
     return jsonObject;
   }

@@ -32,6 +32,7 @@ import java.util.List;
 public class RosterPlayer implements Player<RosterPosition> {
 
   static final String XML_TAG = "player";
+  public static final String KIND = "rosterPlayer";
 
   private String fId;
   private int fNr;
@@ -548,7 +549,8 @@ public class RosterPlayer implements Player<RosterPosition> {
   public JsonObject toJsonValue() {
 
     JsonObject jsonObject = new JsonObject();
-    
+    IJsonOption.PLAYER_KIND.addTo(jsonObject, KIND);
+
     IJsonOption.PLAYER_ID.addTo(jsonObject, fId);
     IJsonOption.PLAYER_NR.addTo(jsonObject, fNr);
     IJsonOption.POSITION_ID.addTo(jsonObject, fPositionId);
