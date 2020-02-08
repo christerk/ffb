@@ -31,8 +31,8 @@ public class ClientCommandHandlerZapPlayer extends ClientCommandHandler {
       ZappedPlayer zappedPlayer = new ZappedPlayer();
       zappedPlayer.init(rosterPlayer);
       team.addPlayer(zappedPlayer);
+      getClient().getGame().getFieldModel().sendPosition(player);
     }
-
     return true;
   }
 }
