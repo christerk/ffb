@@ -148,8 +148,9 @@ public class ZappedPlayer extends Player<ZappedPosition> {
   }
 
   @Override
-  public void updatePosition(ZappedPosition pPosition) {
-    // NOOP
+  public void updatePosition(RosterPosition pPosition) {
+    position = new ZappedPosition(pPosition);
+    originalPlayer.updatePosition(pPosition);
   }
 
   @Override
