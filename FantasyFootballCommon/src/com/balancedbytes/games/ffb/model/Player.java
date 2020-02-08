@@ -4,17 +4,18 @@ import com.balancedbytes.games.ffb.PlayerGender;
 import com.balancedbytes.games.ffb.PlayerType;
 import com.balancedbytes.games.ffb.SeriousInjury;
 import com.balancedbytes.games.ffb.Skill;
+import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.IJsonSerializable;
 import com.balancedbytes.games.ffb.xml.IXmlSerializable;
 import com.eclipsesource.json.JsonObject;
-
+import com.eclipsesource.json.JsonValue;
 
 
 /**
  * 
  * @author Kalimar
  */
-public interface Player<T extends Position> extends IXmlSerializable, IJsonSerializable {
+public abstract class Player<T extends Position> implements IXmlSerializable, IJsonSerializable {
 
   static final String _XML_ATTRIBUTE_ID = "id";
 
@@ -46,91 +47,92 @@ public interface Player<T extends Position> extends IXmlSerializable, IJsonSeria
   static final String _XML_TAG_SHORTHAND = "shorthand";
   static final String _XML_TAG_RACE = "race";
 
-  String getName();
-  
-  PlayerType getPlayerType();
-  
-  void setType(PlayerType pType);
-  
-  int getNr();
-  
-  int getAgility();
+  public abstract String getName();
 
-  void setAgility(int pAgility);
-  
-  int getArmour();
-  
-  void setArmour(int pArmour);
+  public abstract PlayerType getPlayerType();
 
-  int getMovement();
+  abstract void setType(PlayerType pType);
+  
+  public abstract int getNr();
+  
+  public abstract int getAgility();
 
-  void setMovement(int pMovement);
+  abstract void setAgility(int pAgility);
+  
+  public abstract int getArmour();
+  
+  abstract void setArmour(int pArmour);
 
-  int getStrength();
-  
-  void setStrength(int pStrength);
+  public abstract int getMovement();
 
-  void addLastingInjury(SeriousInjury pLastingInjury) ;
+  abstract void setMovement(int pMovement);
+
+  public abstract int getStrength();
   
-  SeriousInjury[] getLastingInjuries();
+  abstract void setStrength(int pStrength);
+
+  abstract void addLastingInjury(SeriousInjury pLastingInjury) ;
   
-  void addSkill(Skill pSkill);
+  public abstract SeriousInjury[] getLastingInjuries();
   
-  boolean removeSkill(Skill pSkill);
+  abstract void addSkill(Skill pSkill);
+  
+  abstract boolean removeSkill(Skill pSkill);
  
-  boolean hasSkill(Skill pSkill);
+  public abstract boolean hasSkill(Skill pSkill);
 
-  Skill[] getSkills();
+  public abstract Skill[] getSkills();
   
-  String getUrlPortrait();
+  public abstract String getUrlPortrait();
   
-  void setUrlPortrait(String pUrlPortrait);
+  abstract void setUrlPortrait(String pUrlPortrait);
   
-  String getUrlIconSet();
+  public abstract String getUrlIconSet();
   
-  void setUrlIconSet(String pUrlIconSet);
+  abstract void setUrlIconSet(String pUrlIconSet);
   
-  int getNrOfIcons();
+  abstract int getNrOfIcons();
   
-  void setNrOfIcons(int pNrOfIcons);
+  abstract void setNrOfIcons(int pNrOfIcons);
 
-  T getPosition();
+  public abstract T getPosition();
   
-  void updatePosition(T pPosition) ;
+  abstract void updatePosition(RosterPosition pPosition) ;
   
-  Team getTeam();
+  public abstract Team getTeam();
   
-  void setTeam(Team pTeam);
+  public abstract void setTeam(Team pTeam);
   
-  String getId();
+  public abstract String getId();
   
-  void setId(String pId);
+  abstract void setId(String pId);
   
-  PlayerGender getPlayerGender();
+  public abstract PlayerGender getPlayerGender();
   
-  SeriousInjury getRecoveringInjury();
+  public abstract SeriousInjury getRecoveringInjury();
   
-  void setRecoveringInjury(SeriousInjury pCurrentInjury);
+  abstract void setRecoveringInjury(SeriousInjury pCurrentInjury);
   
-  int getCurrentSpps();
+  public abstract int getCurrentSpps();
   
-  void setCurrentSpps(int pCurrentSpps);
+  abstract void setCurrentSpps(int pCurrentSpps);
 
-  void setName(String name);
+  abstract void setName(String name);
 
-  void setGender(PlayerGender gender);
+  abstract void setGender(PlayerGender gender);
 
-  void setNr(int nr);
+  abstract void setNr(int nr);
 
-  int getIconSetIndex();
+  public abstract int getIconSetIndex();
   
-  String getPositionId();
+  public abstract String getPositionId();
   
-  void setPositionId(String pPositionId);
+  abstract void setPositionId(String pPositionId);
   
-  String getRace();
+  public abstract String getRace();
   
-  void init(RosterPlayer pPlayer);
+  public abstract void init(RosterPlayer pPlayer);
 
-  JsonObject toJsonValue();
+  public abstract JsonObject toJsonValue();
+
 }
