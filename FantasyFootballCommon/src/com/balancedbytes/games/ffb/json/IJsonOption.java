@@ -274,6 +274,7 @@ public interface IJsonOption {
                  JsonArrayOption PLAYER_ARRAY = new JsonArrayOption("playerArray");
                    JsonIntOption PLAYER_AWARDS = new JsonIntOption("playerAwards");
           JsonEnumWithNameOption PLAYER_CHOICE_MODE = new JsonEnumWithNameOption("playerChoiceMode", new PlayerChoiceModeFactory());
+                JsonStringOption PLAYER_KIND = new JsonStringOption("playerKind");
        JsonFieldCoordinateOption PLAYER_COORDINATE = new JsonFieldCoordinateOption("playerCoordinate");
   JsonFieldCoordinateArrayOption PLAYER_COORDINATES = new JsonFieldCoordinateArrayOption("playerCoordinates");
                  JsonArrayOption PLAYER_DATA_ARRAY = new JsonArrayOption("playerDataArray");
