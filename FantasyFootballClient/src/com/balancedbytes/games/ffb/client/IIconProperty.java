@@ -159,6 +159,7 @@ public interface IIconProperty {
   String PLAYER_SMALL_AWAY = "players.small.away";
   String PLAYER_NORMAL_AWAY = "players.normal.away";
   String PLAYER_LARGE_AWAY = "players.large.away";
+  String ZAPPEDPLAYER_ICONSET_PATH = "zappedplayer.iconset.path";
   
   // Mouse cursors
   String CURSOR_MOVE = "cursor.move";
