@@ -13,6 +13,7 @@ import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.model.Position;
 import com.balancedbytes.games.ffb.model.Roster;
 import com.balancedbytes.games.ffb.model.Team;
+import com.balancedbytes.games.ffb.model.ZappedPlayer;
 import com.balancedbytes.games.ffb.util.StringTool;
 import com.balancedbytes.games.ffb.util.UtilCards;
 import com.balancedbytes.games.ffb.util.UtilUrl;
@@ -49,11 +50,19 @@ public class PlayerIconFactory {
     String iconSetUrl = null;
 
     if (!StringTool.isProvided(settingIcons) || IClientPropertyValue.SETTING_ICONS_TEAM.equals(settingIcons) || (pHomePlayer && IClientPropertyValue.SETTING_ICONS_ROSTER_OPPONENT.equals(settingIcons))) {
-      iconSetUrl = getIconSetUrl(pPlayer);
+      if (pPlayer instanceof ZappedPlayer) {
+        iconSetUrl = pClient.getProperty(IIconProperty.ZAPPEDPLAYER_ICONSET_PATH);
+      } else {
+        iconSetUrl = getIconSetUrl(pPlayer);
+      }
     }
 
     if (!StringTool.isProvided(iconSetUrl) || IClientPropertyValue.SETTING_ICONS_ROSTER_BOTH.equals(settingIcons) || (!pHomePlayer && IClientPropertyValue.SETTING_ICONS_ROSTER_OPPONENT.equals(settingIcons))) {
-      iconSetUrl = getIconSetUrl(pPlayer.getPosition());
+      if (pPlayer instanceof ZappedPlayer) {
+        iconSetUrl = pClient.getProperty(IIconProperty.ZAPPEDPLAYER_ICONSET_PATH);
+      } else {
+        iconSetUrl = getIconSetUrl(pPlayer.getPosition());
+      }
     }
 
     if (StringTool.isProvided(iconSetUrl)) {
