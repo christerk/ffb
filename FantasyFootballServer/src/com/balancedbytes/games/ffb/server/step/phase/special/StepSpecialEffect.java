@@ -1,5 +1,6 @@
 package com.balancedbytes.games.ffb.server.step.phase.special;
 
+import com.balancedbytes.games.ffb.CatchScatterThrowInMode;
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.InjuryType;
 import com.balancedbytes.games.ffb.SpecialEffect;
@@ -22,6 +23,7 @@ import com.balancedbytes.games.ffb.server.step.StepParameter;
 import com.balancedbytes.games.ffb.server.step.StepParameterKey;
 import com.balancedbytes.games.ffb.server.step.StepParameterSet;
 import com.balancedbytes.games.ffb.server.step.action.common.ApothecaryMode;
+import com.balancedbytes.games.ffb.server.step.action.common.StepCatchScatterThrowIn;
 import com.balancedbytes.games.ffb.server.util.UtilServerInjury;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
@@ -127,6 +129,10 @@ public final class StepSpecialEffect extends AbstractStep {
 					Team team = game.findTeam(player);
 					team.addPlayer(zappedPlayer);
 					getGameState().getServer().getCommunication().sendZapPlayer(getGameState(), (RosterPlayer) player);
+					if (FieldCoordinate.equals(game.getFieldModel().getBallCoordinate(), playerCoordinate)) {
+						getGameState().getStepStack().push(new StepCatchScatterThrowIn(getGameState()));
+						publishParameter(new StepParameter(StepParameterKey.CATCH_SCATTER_THROW_IN_MODE, CatchScatterThrowInMode.SCATTER_BALL));
+					}
 				}
 				if (fSpecialEffect == SpecialEffect.FIREBALL) {
 					publishParameter(new StepParameter(StepParameterKey.INJURY_RESULT,
