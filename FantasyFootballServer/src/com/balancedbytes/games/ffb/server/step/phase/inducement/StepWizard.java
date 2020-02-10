@@ -132,8 +132,8 @@ public final class StepWizard extends AbstractStep {
         affectedPlayers.add(game.getFieldModel().getPlayer(fTargetCoordinate));
       }
       if (fWizardSpell == SpecialEffect.LIGHTNING) {
-        //getResult().setAnimation(new Animation(AnimationType.SPELL_LIGHTNING, fTargetCoordinate));
-        //addToAffectedPlayers(affectedPlayers, game.getFieldModel().getPlayer(fTargetCoordinate));
+        getResult().setAnimation(new Animation(AnimationType.SPELL_LIGHTNING, fTargetCoordinate));
+        addToAffectedPlayers(affectedPlayers, game.getFieldModel().getPlayer(fTargetCoordinate));
       }
       if (fWizardSpell == SpecialEffect.FIREBALL) {
         getResult().setAnimation(new Animation(AnimationType.SPELL_FIREBALL, fTargetCoordinate));
