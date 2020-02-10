@@ -10,6 +10,7 @@ import com.balancedbytes.games.ffb.client.FieldComponent;
 import com.balancedbytes.games.ffb.client.IIconProperty;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
+import com.balancedbytes.games.ffb.model.RosterPlayer;
 
 /**
  * 
@@ -150,7 +151,7 @@ public class ClientStateWizard extends ClientState {
 	private boolean isValidZapTarget(FieldCoordinate pCoordinate) {
 		Game game = getClient().getGame();
 		Player player = game.getFieldModel().getPlayer(pCoordinate);
-		return ((player != null) && game.getTeamAway().hasPlayer(player));
+		return ((player instanceof RosterPlayer) && game.getTeamAway().hasPlayer(player));
 	}
 
   private boolean isValidFireballTarget(FieldCoordinate pCoordinate) {
