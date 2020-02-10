@@ -114,6 +114,7 @@ public class DialogWizardSpell extends Dialog implements ActionListener, KeyList
     switch (pKeyEvent.getKeyCode()) {
       case KeyEvent.VK_L:
         fWizardSpell = SpecialEffect.LIGHTNING;
+        break;
       case KeyEvent.VK_Z:
         fWizardSpell = SpecialEffect.ZAP;
         break;
