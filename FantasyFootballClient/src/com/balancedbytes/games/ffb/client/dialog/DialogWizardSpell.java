@@ -42,21 +42,27 @@ public class DialogWizardSpell extends Dialog implements ActionListener, KeyList
     panelButtons.setLayout(new BoxLayout(panelButtons, BoxLayout.X_AXIS));
 
     panelButtons.add(Box.createHorizontalGlue());
-    //TODO only show buttons if spell is available
-    fButtonLightning = new JButton("Lightning");
-    fButtonLightning.addActionListener(this);
-    fButtonLightning.addKeyListener(this);
-    panelButtons.add(fButtonLightning);
-    
+
+    if (spellEnabled(SpecialEffect.LIGHTNING)) {
+      fButtonLightning = new JButton("Lightning");
+      fButtonLightning.addActionListener(this);
+      fButtonLightning.addKeyListener(this);
+      panelButtons.add(fButtonLightning);
+    }
+
+    if (spellEnabled(SpecialEffect.FIREBALL)) {
     fButtonFireball = new JButton("Fireball");
     fButtonFireball.addActionListener(this);
     fButtonFireball.addKeyListener(this);
     panelButtons.add(fButtonFireball);
+    }
 
-    buttonZap = new JButton("Zap");
-    buttonZap.addActionListener(this);
-    buttonZap.addKeyListener(this);
-    panelButtons.add(buttonZap);
+    if (spellEnabled(SpecialEffect.ZAP)) {
+      buttonZap = new JButton("Zap");
+      buttonZap.addActionListener(this);
+      buttonZap.addKeyListener(this);
+      panelButtons.add(buttonZap);
+    }
 
     fButtonCancel = new JButton("Cancel");
     fButtonCancel.addActionListener(this);
