@@ -129,7 +129,7 @@ public final class StepWizard extends AbstractStep {
       List<Player> affectedPlayers = new ArrayList<Player>();
       if (fWizardSpell == SpecialEffect.ZAP) {
         getResult().setAnimation(new Animation(AnimationType.SPELL_ZAP, fTargetCoordinate));
-        addToAffectedPlayers(affectedPlayers, game.getFieldModel().getPlayer(fTargetCoordinate));
+        affectedPlayers.add(game.getFieldModel().getPlayer(fTargetCoordinate));
       }
       if (fWizardSpell == SpecialEffect.LIGHTNING) {
         //getResult().setAnimation(new Animation(AnimationType.SPELL_LIGHTNING, fTargetCoordinate));
