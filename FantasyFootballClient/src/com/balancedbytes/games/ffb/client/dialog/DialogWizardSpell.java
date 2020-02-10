@@ -128,6 +128,12 @@ public class DialogWizardSpell extends Dialog implements ActionListener, KeyList
         keyHandled = false;
         break;
     }
+
+    if (fWizardSpell != null && !spellEnabled(fWizardSpell)) {
+      fWizardSpell = null;
+      keyHandled = false;
+    }
+
     if (keyHandled) {
       if (getCloseListener() != null) {
         getCloseListener().dialogClosed(this);
