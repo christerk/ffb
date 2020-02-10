@@ -2247,6 +2247,13 @@ public class StatusReport {
         }
       }
     }
+    List<Player> unzappedPlayers = pReport.getUnzappedPlayers();
+    if (unzappedPlayers != null) {
+      for (Player player: unzappedPlayers) {
+          print(getIndent(), true, player);
+          println(getIndent(), " recovers from Zap spell effect.");
+      }
+    }
     if (TurnMode.REGULAR == game.getTurnMode()) {
       StringBuilder status = new StringBuilder();
       if (game.isHomePlaying()) {

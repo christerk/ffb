@@ -22,6 +22,10 @@ public class ZappedPlayer extends Player<ZappedPosition> {
   private RosterPlayer originalPlayer;
   private ZappedPosition position;
 
+  public RosterPlayer getOriginalPlayer() {
+    return originalPlayer;
+  }
+
   @Override
   public String getName() {
     return originalPlayer.getName();

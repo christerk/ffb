@@ -11,6 +11,7 @@ import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.PlayerResult;
 import com.balancedbytes.games.ffb.model.RosterPlayer;
 import com.balancedbytes.games.ffb.model.Team;
+import com.balancedbytes.games.ffb.model.ZappedPlayer;
 import com.balancedbytes.games.ffb.model.change.ModelChangeList;
 import com.balancedbytes.games.ffb.net.NetCommand;
 import com.balancedbytes.games.ffb.net.NetCommandId;
@@ -33,6 +34,7 @@ import com.balancedbytes.games.ffb.net.commands.ServerCommandStatus;
 import com.balancedbytes.games.ffb.net.commands.ServerCommandTalk;
 import com.balancedbytes.games.ffb.net.commands.ServerCommandTeamList;
 import com.balancedbytes.games.ffb.net.commands.ServerCommandTeamSetupList;
+import com.balancedbytes.games.ffb.net.commands.ServerCommandUnzapPlayer;
 import com.balancedbytes.games.ffb.net.commands.ServerCommandUserSettings;
 import com.balancedbytes.games.ffb.net.commands.ServerCommandVersion;
 import com.balancedbytes.games.ffb.net.commands.ServerCommandZapPlayer;
@@ -490,5 +492,10 @@ public class ServerCommunication implements Runnable, IReceivedCommandHandler {
   public void sendZapPlayer(GameState gameState, RosterPlayer player) {
     ServerCommandZapPlayer commandZapPlayer = new ServerCommandZapPlayer(player.getId(), player.getTeam().getId());
     sendAllSessions(gameState, commandZapPlayer, true);
+  }
+
+  public void sendUnzapPlayer(GameState gameState, ZappedPlayer player) {
+    ServerCommandUnzapPlayer commandUnzapPlayer = new ServerCommandUnzapPlayer(player.getId(), player.getTeam().getId());
+    sendAllSessions(gameState, commandUnzapPlayer, true);
   }
 }
