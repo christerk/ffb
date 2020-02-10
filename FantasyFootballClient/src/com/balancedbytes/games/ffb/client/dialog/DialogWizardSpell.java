@@ -87,17 +87,19 @@ public class DialogWizardSpell extends Dialog implements ActionListener, KeyList
   }
   
   public void actionPerformed(ActionEvent pActionEvent) {
-    if (pActionEvent.getSource() == fButtonLightning) {
-    	fWizardSpell = SpecialEffect.LIGHTNING;
-    }
-    if (pActionEvent.getSource() == buttonZap) {
-      fWizardSpell = SpecialEffect.ZAP;
-    }
-    if (pActionEvent.getSource() == fButtonFireball) {
-    	fWizardSpell = SpecialEffect.FIREBALL;
-    }
-    if (pActionEvent.getSource() == fButtonCancel) {
-    	fWizardSpell = null;
+    if (pActionEvent.getSource() != null) {
+      if (pActionEvent.getSource() == fButtonLightning) {
+        fWizardSpell = SpecialEffect.LIGHTNING;
+      }
+      if (pActionEvent.getSource() == buttonZap) {
+        fWizardSpell = SpecialEffect.ZAP;
+      }
+      if (pActionEvent.getSource() == fButtonFireball) {
+        fWizardSpell = SpecialEffect.FIREBALL;
+      }
+      if (pActionEvent.getSource() == fButtonCancel) {
+        fWizardSpell = null;
+      }
     }
     if (getCloseListener() != null) {
       getCloseListener().dialogClosed(this);
