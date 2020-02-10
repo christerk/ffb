@@ -247,6 +247,7 @@ public class StepEndTurn extends AbstractStep {
               player = ((ZappedPlayer)player).getOriginalPlayer();
               team.addPlayer(player);
               unzappedPlayers.add(player);
+              getGameState().removeZappedPlayer(player);
             }
             PlayerState playerState = game.getFieldModel().getPlayerState(player);
             FieldCoordinate playerCoordinate = game.getFieldModel().getPlayerCoordinate(player);

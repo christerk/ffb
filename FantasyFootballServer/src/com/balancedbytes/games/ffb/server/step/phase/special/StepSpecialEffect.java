@@ -128,6 +128,7 @@ public final class StepSpecialEffect extends AbstractStep {
 					zappedPlayer.init((RosterPlayer) player);
 					Team team = game.findTeam(player);
 					team.addPlayer(zappedPlayer);
+					getGameState().addZappedPlayer(player);
 					getGameState().getServer().getCommunication().sendZapPlayer(getGameState(), (RosterPlayer) player);
 					if (FieldCoordinate.equals(game.getFieldModel().getBallCoordinate(), playerCoordinate)) {
 						getGameState().getStepStack().push(new StepCatchScatterThrowIn(getGameState()));
