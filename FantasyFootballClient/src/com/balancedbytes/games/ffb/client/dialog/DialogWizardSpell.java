@@ -11,7 +11,9 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+import com.balancedbytes.games.ffb.InducementType;
 import com.balancedbytes.games.ffb.SpecialEffect;
+import com.balancedbytes.games.ffb.SpellCollection;
 import com.balancedbytes.games.ffb.client.FantasyFootballClient;
 import com.balancedbytes.games.ffb.dialog.DialogId;
 
@@ -130,5 +132,8 @@ public class DialogWizardSpell extends Dialog implements ActionListener, KeyList
   public SpecialEffect getWizardSpell() {
 		return fWizardSpell;
 	}
-  
+
+  private boolean spellEnabled(SpecialEffect effect) {
+    return SpellCollection.spells(InducementType.WIZARD).contains(effect);
+  }
 }
