@@ -50,8 +50,8 @@ public class AnimationSequenceSpecialEffect implements IAnimationSequence, Actio
         new AnimationFrame(IIconProperty.ANIMATION_FIREBALL_EXPLOSION_8, 1.0f, IIconProperty.ANIMATION_FIREBALL_SMOKE_1, 1.0f, 100),
         new AnimationFrame(IIconProperty.ANIMATION_FIREBALL_EXPLOSION_8, 0.7f, IIconProperty.ANIMATION_FIREBALL_SMOKE_2, 1.0f, 100),
         new AnimationFrame(IIconProperty.ANIMATION_FIREBALL_EXPLOSION_8, 0.5f, IIconProperty.ANIMATION_FIREBALL_SMOKE_3, 1.0f, 100),
-        new AnimationFrame(IIconProperty.ANIMATION_FIREBALL_SMOKE_3, 1.0f, 100), new AnimationFrame(IIconProperty.ANIMATION_FIREBALL_SMOKE_3, 0.7f, 100),
-        new AnimationFrame(IIconProperty.ANIMATION_FIREBALL_SMOKE_3, 0.5f, 100)
+        new AnimationFrame(IIconProperty.ANIMATION_FIREBALL_SMOKE_3, 1.0f, 100), new AnimationFrame(IIconProperty.ANIMATION_FIREBALL_SMOKE_4, 0.7f, 100),
+        new AnimationFrame(IIconProperty.ANIMATION_FIREBALL_SMOKE_4, 0.5f, 100)
       }
     );
   }
