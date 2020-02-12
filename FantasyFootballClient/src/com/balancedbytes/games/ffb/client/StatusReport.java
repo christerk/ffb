@@ -732,6 +732,9 @@ public class StatusReport {
   public void reportSpecialEffectRoll(ReportSpecialEffectRoll pReport) {
     Game game = getClient().getGame();
     StringBuilder status = new StringBuilder();
+    if (pReport.getSpecialEffect() == SpecialEffect.LIGHTNING) {
+      status.append("Lightning Spell Effect Roll [ ").append(pReport.getRoll()).append(" ]");
+    }
     if (pReport.getSpecialEffect() == SpecialEffect.ZAP) {
       status.append("Zap Spell Effect Roll [ ").append(pReport.getRoll()).append(" ]");
     }
