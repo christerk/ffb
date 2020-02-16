@@ -7,6 +7,7 @@ import com.balancedbytes.games.ffb.HeatExhaustion;
 import com.balancedbytes.games.ffb.KnockoutRecovery;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
+import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.util.ArrayTool;
 import com.eclipsesource.json.JsonArray;
 import com.eclipsesource.json.JsonObject;
@@ -23,17 +24,20 @@ public class ReportTurnEnd implements IReport {
   private String fPlayerIdTouchdown;
   private List<KnockoutRecovery> fKnockoutRecoveries;
   private List<HeatExhaustion> fHeatExhaustions;
+  private List<Player> unzappedPlayers;
   
   public ReportTurnEnd() {
     fKnockoutRecoveries = new ArrayList<KnockoutRecovery>();
     fHeatExhaustions = new ArrayList<HeatExhaustion>();
+    unzappedPlayers = new ArrayList<Player>();
   }
 
-  public ReportTurnEnd(String pPlayerIdTouchdown, KnockoutRecovery[] pKnockoutRecoveries, HeatExhaustion[] pHeatExhaustions) {
+  public ReportTurnEnd(String pPlayerIdTouchdown, KnockoutRecovery[] pKnockoutRecoveries, HeatExhaustion[] pHeatExhaustions, List<Player> unzappedPlayers) {
     this();
     fPlayerIdTouchdown = pPlayerIdTouchdown;
     add(pKnockoutRecoveries);
     add(pHeatExhaustions);
+    this.unzappedPlayers.addAll(unzappedPlayers);
   }
   
   public ReportId getId() {
@@ -61,7 +65,11 @@ public class ReportTurnEnd implements IReport {
       }
     }
   }
-  
+
+  public List<Player> getUnzappedPlayers() {
+    return new ArrayList<Player>(unzappedPlayers);
+  }
+
   public HeatExhaustion[] getHeatExhaustions() {
     return fHeatExhaustions.toArray(new HeatExhaustion[fHeatExhaustions.size()]);
   }
@@ -83,7 +91,7 @@ public class ReportTurnEnd implements IReport {
   // transformation
   
   public IReport transform() {
-    return new ReportTurnEnd(getPlayerIdTouchdown(), getKnockoutRecoveries(), getHeatExhaustions());
+    return new ReportTurnEnd(getPlayerIdTouchdown(), getKnockoutRecoveries(), getHeatExhaustions(), getUnzappedPlayers());
   }
   
   // JSON serialization
@@ -102,6 +110,11 @@ public class ReportTurnEnd implements IReport {
       heatExhaustionArray.add(heatExhaustion.toJsonValue());
     }
     IJsonOption.HEAT_EXHAUSTION_ARRAY.addTo(jsonObject, heatExhaustionArray);
+    JsonArray unzappedArray = new JsonArray();
+    for (Player unzappedPlayer: unzappedPlayers) {
+      unzappedArray.add(unzappedPlayer.toJsonValue());
+    }
+    IJsonOption.UNZAP_ARRAY.addTo(jsonObject, unzappedArray);
     return jsonObject;
   }
   
@@ -121,6 +134,14 @@ public class ReportTurnEnd implements IReport {
         add(new HeatExhaustion().initFrom(heatExhaustionArray.get(i)));
       }
     }
+
+    JsonArray unzappedArray = IJsonOption.UNZAP_ARRAY.getFrom(jsonObject);
+    if (unzappedArray != null) {
+      for (int i = 0; i < unzappedArray.size(); i++) {
+        unzappedPlayers.add(Player.getFrom(unzappedArray.get(i)));
+      }
+    }
+
     return this;
   }  
   

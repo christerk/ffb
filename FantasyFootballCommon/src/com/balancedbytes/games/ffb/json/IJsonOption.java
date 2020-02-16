@@ -185,7 +185,8 @@ public interface IJsonOption {
                JsonBooleanOption HAS_MOVED = new JsonBooleanOption("hasMoved");
                JsonBooleanOption HAS_PASSED = new JsonBooleanOption("hasPassed");
                JsonBooleanOption HAS_USED_SECRET_WEAPON = new JsonBooleanOption("hasUsedSecretWeapon");
-                 JsonArrayOption HEAT_EXHAUSTION_ARRAY = new JsonArrayOption("heatExhaustionArray"); 
+                 JsonArrayOption HEAT_EXHAUSTION_ARRAY = new JsonArrayOption("heatExhaustionArray");
+                 JsonArrayOption UNZAP_ARRAY = new JsonArrayOption("unzapArray");
                JsonBooleanOption HOME_CHOICE = new JsonBooleanOption("homeChoice");
                JsonBooleanOption HOME_DATA = new JsonBooleanOption("homeData");
                JsonBooleanOption HOME_FIRST_OFFENSE = new JsonBooleanOption("homeFirstOffense");
@@ -274,6 +275,7 @@ public interface IJsonOption {
                  JsonArrayOption PLAYER_ARRAY = new JsonArrayOption("playerArray");
                    JsonIntOption PLAYER_AWARDS = new JsonIntOption("playerAwards");
           JsonEnumWithNameOption PLAYER_CHOICE_MODE = new JsonEnumWithNameOption("playerChoiceMode", new PlayerChoiceModeFactory());
+                JsonStringOption PLAYER_KIND = new JsonStringOption("playerKind");
        JsonFieldCoordinateOption PLAYER_COORDINATE = new JsonFieldCoordinateOption("playerCoordinate");
   JsonFieldCoordinateArrayOption PLAYER_COORDINATES = new JsonFieldCoordinateArrayOption("playerCoordinates");
                  JsonArrayOption PLAYER_DATA_ARRAY = new JsonArrayOption("playerDataArray");
@@ -298,7 +300,8 @@ public interface IJsonOption {
           JsonBooleanArrayOption PLAYERS_AFFECTED_AWAY = new JsonBooleanArrayOption("playersAffectedAway");
           JsonBooleanArrayOption PLAYERS_AFFECTED_HOME = new JsonBooleanArrayOption("playersAffectedHome");
                  JsonArrayOption POSITION_ARRAY = new JsonArrayOption("positionArray");
-                   JsonIntOption POSITION_ICON_INDEX = new JsonIntOption("positionIconIndex"); 
+                JsonObjectOption ROSTER_POSITION = new JsonObjectOption("rosterPosition");
+                   JsonIntOption POSITION_ICON_INDEX = new JsonIntOption("positionIconIndex");
                 JsonStringOption POSITION_ID = new JsonStringOption("positionId"); 
            JsonStringArrayOption POSITION_IDS = new JsonStringArrayOption("positionIds"); 
                 JsonStringOption POSITION_NAME = new JsonStringOption("positionName"); 

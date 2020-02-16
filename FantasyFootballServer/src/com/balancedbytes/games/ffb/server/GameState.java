@@ -1,12 +1,16 @@
 package com.balancedbytes.games.ffb.server;
 
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 import com.balancedbytes.games.ffb.GameStatus;
 import com.balancedbytes.games.ffb.json.IJsonSerializable;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.Game;
+import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.model.change.IModelChangeObserver;
 import com.balancedbytes.games.ffb.model.change.ModelChange;
 import com.balancedbytes.games.ffb.model.change.ModelChangeList;
@@ -18,6 +22,7 @@ import com.balancedbytes.games.ffb.server.step.StepFactory;
 import com.balancedbytes.games.ffb.server.step.StepResult;
 import com.balancedbytes.games.ffb.server.step.StepStack;
 import com.balancedbytes.games.ffb.server.util.UtilServerGame;
+import com.eclipsesource.json.JsonArray;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
@@ -32,6 +37,7 @@ public class GameState implements IModelChangeObserver, IJsonSerializable {
   private GameStatus fStatus;
   private StepStack fStepStack;
   private IStep fCurrentStep;
+  private Set<String> zappedPlayerIds = new HashSet<String>();
 
   private transient FantasyFootballServer fServer;
   private transient DiceRoller fDiceRoller;
@@ -215,6 +221,17 @@ public class GameState implements IModelChangeObserver, IJsonSerializable {
     }
   }
 
+  public void addZappedPlayer(Player player) {
+    zappedPlayerIds.add(player.getId());
+  }
+
+  public void removeZappedPlayer(Player player) {
+    zappedPlayerIds.remove(player.getId());
+  }
+
+  public boolean isZapped(Player player) {
+    return zappedPlayerIds.contains(player.getId());
+  }
   // JSON serialization
 
   public JsonObject toJsonValue() {
@@ -228,6 +245,7 @@ public class GameState implements IModelChangeObserver, IJsonSerializable {
     if (fGame != null) {
       IServerJsonOption.GAME.addTo(jsonObject, fGame.toJsonValue());
     }
+    IServerJsonOption.PLAYER_IDS.addTo(jsonObject, zappedPlayerIds);
     return jsonObject;
   }
 
@@ -253,6 +271,10 @@ public class GameState implements IModelChangeObserver, IJsonSerializable {
     JsonObject gameObject = IServerJsonOption.GAME.getFrom(jsonObject);
     if (gameObject != null) {
       setGame(new Game().initFrom(gameObject));
+    }
+    String[] ids = IServerJsonOption.PLAYER_IDS.getFrom(jsonObject);
+    if (ids != null) {
+      zappedPlayerIds.addAll(Arrays.asList(ids));
     }
     return this;
   }

@@ -4,6 +4,7 @@ import com.balancedbytes.games.ffb.client.FantasyFootballClient;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.model.PlayerResult;
+import com.balancedbytes.games.ffb.model.RosterPlayer;
 import com.balancedbytes.games.ffb.model.RosterPosition;
 import com.balancedbytes.games.ffb.model.Team;
 import com.balancedbytes.games.ffb.net.NetCommand;
@@ -28,15 +29,17 @@ public class ClientCommandHandlerAddPlayer extends ClientCommandHandler {
     Game game = getClient().getGame();
     
     Team team = game.getTeamHome().getId().equals(addPlayerCommand.getTeamId()) ? game.getTeamHome() : game.getTeamAway();
-    Player oldPlayer = team.getPlayerById(addPlayerCommand.getPlayer().getId()); 
-    if (oldPlayer != null) {
-      oldPlayer.init(addPlayerCommand.getPlayer());
-    } else {
+    Player oldPlayer = team.getPlayerById(addPlayerCommand.getPlayer().getId());
+    if (oldPlayer == null) {
       team.addPlayer(addPlayerCommand.getPlayer());
       RosterPosition rosterPosition = team.getRoster().getPositionById(addPlayerCommand.getPlayer().getPositionId());
       addPlayerCommand.getPlayer().updatePosition(rosterPosition);
+    } else if (oldPlayer instanceof RosterPlayer) {
+      oldPlayer.init(addPlayerCommand.getPlayer());
+    } else {
+      return false;
     }
-    
+
     game.getFieldModel().setPlayerState(addPlayerCommand.getPlayer(), addPlayerCommand.getPlayerState());
     UtilBox.putPlayerIntoBox(game, addPlayerCommand.getPlayer());
     

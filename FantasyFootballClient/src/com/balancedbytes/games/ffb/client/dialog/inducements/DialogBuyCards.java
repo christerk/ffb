@@ -352,26 +352,6 @@ public class DialogBuyCards extends Dialog implements ActionListener, KeyListene
   }
 
   public void keyReleased(KeyEvent pKeyEvent) {
-    // boolean keyHandled = true;
-    // switch (pKeyEvent.getKeyCode()) {
-    // case KeyEvent.VK_L:
-    // fWizardSpell = SpecialEffect.LIGHTNING;
-    // break;
-    // case KeyEvent.VK_F:
-    // fWizardSpell = SpecialEffect.FIREBALL;
-    // break;
-    // case KeyEvent.VK_C:
-    // fWizardSpell = null;
-    // break;
-    // default:
-    // keyHandled = false;
-    // break;
-    // }
-    // if (keyHandled) {
-    // if (getCloseListener() != null) {
-    // getCloseListener().dialogClosed(this);
-    // }
-    // }
   }
 
   public void keyTyped(KeyEvent pKeyEvent) {

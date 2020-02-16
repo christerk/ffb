@@ -3,6 +3,7 @@ package com.balancedbytes.games.ffb.server.util;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.balancedbytes.games.ffb.option.GameOptionBoolean;
 import org.eclipse.jetty.websocket.api.Session;
 
 import com.balancedbytes.games.ffb.ClientMode;
@@ -149,6 +150,9 @@ public class UtilServerStartGame {
       GameOptionString pitchUrl = (GameOptionString) optionFactory.createGameOption(GameOptionId.PITCH_URL);
       pitchUrl.setValue("http://localhost:2224/icons/pitches/fumbblcup.zip");
       game.getOptions().addOption(pitchUrl);
+      GameOptionBoolean wizard = (GameOptionBoolean) optionFactory.createGameOption(GameOptionId.WIZARD_AVAILABLE);
+      wizard.setDefault(true);
+      game.getOptions().addOption(wizard);
     }
   }
 

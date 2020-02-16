@@ -11,7 +11,9 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+import com.balancedbytes.games.ffb.InducementType;
 import com.balancedbytes.games.ffb.SpecialEffect;
+import com.balancedbytes.games.ffb.SpellCollection;
 import com.balancedbytes.games.ffb.client.FantasyFootballClient;
 import com.balancedbytes.games.ffb.dialog.DialogId;
 
@@ -23,6 +25,7 @@ import com.balancedbytes.games.ffb.dialog.DialogId;
 public class DialogWizardSpell extends Dialog implements ActionListener, KeyListener {
   
   private JButton fButtonLightning;
+  private JButton buttonZap;
   private JButton fButtonFireball;
   private JButton fButtonCancel;
   private SpecialEffect fWizardSpell;
@@ -39,17 +42,28 @@ public class DialogWizardSpell extends Dialog implements ActionListener, KeyList
     panelButtons.setLayout(new BoxLayout(panelButtons, BoxLayout.X_AXIS));
 
     panelButtons.add(Box.createHorizontalGlue());
-    
-    fButtonLightning = new JButton("Lightning");
-    fButtonLightning.addActionListener(this);
-    fButtonLightning.addKeyListener(this);
-    panelButtons.add(fButtonLightning);
-    
+
+    if (spellEnabled(SpecialEffect.LIGHTNING)) {
+      fButtonLightning = new JButton("Lightning");
+      fButtonLightning.addActionListener(this);
+      fButtonLightning.addKeyListener(this);
+      panelButtons.add(fButtonLightning);
+    }
+
+    if (spellEnabled(SpecialEffect.FIREBALL)) {
     fButtonFireball = new JButton("Fireball");
     fButtonFireball.addActionListener(this);
     fButtonFireball.addKeyListener(this);
     panelButtons.add(fButtonFireball);
-    
+    }
+
+    if (spellEnabled(SpecialEffect.ZAP)) {
+      buttonZap = new JButton("Zap");
+      buttonZap.addActionListener(this);
+      buttonZap.addKeyListener(this);
+      panelButtons.add(buttonZap);
+    }
+
     fButtonCancel = new JButton("Cancel");
     fButtonCancel.addActionListener(this);
     fButtonCancel.addKeyListener(this);
@@ -73,14 +87,19 @@ public class DialogWizardSpell extends Dialog implements ActionListener, KeyList
   }
   
   public void actionPerformed(ActionEvent pActionEvent) {
-    if (pActionEvent.getSource() == fButtonLightning) {
-    	fWizardSpell = SpecialEffect.LIGHTNING;
-    }
-    if (pActionEvent.getSource() == fButtonFireball) {
-    	fWizardSpell = SpecialEffect.FIREBALL;
-    }
-    if (pActionEvent.getSource() == fButtonCancel) {
-    	fWizardSpell = null;
+    if (pActionEvent.getSource() != null) {
+      if (pActionEvent.getSource() == fButtonLightning) {
+        fWizardSpell = SpecialEffect.LIGHTNING;
+      }
+      if (pActionEvent.getSource() == buttonZap) {
+        fWizardSpell = SpecialEffect.ZAP;
+      }
+      if (pActionEvent.getSource() == fButtonFireball) {
+        fWizardSpell = SpecialEffect.FIREBALL;
+      }
+      if (pActionEvent.getSource() == fButtonCancel) {
+        fWizardSpell = null;
+      }
     }
     if (getCloseListener() != null) {
       getCloseListener().dialogClosed(this);
@@ -96,6 +115,9 @@ public class DialogWizardSpell extends Dialog implements ActionListener, KeyList
       case KeyEvent.VK_L:
         fWizardSpell = SpecialEffect.LIGHTNING;
         break;
+      case KeyEvent.VK_Z:
+        fWizardSpell = SpecialEffect.ZAP;
+        break;
       case KeyEvent.VK_F:
         fWizardSpell = SpecialEffect.FIREBALL;
         break;
@@ -106,6 +128,12 @@ public class DialogWizardSpell extends Dialog implements ActionListener, KeyList
         keyHandled = false;
         break;
     }
+
+    if (fWizardSpell != null && !spellEnabled(fWizardSpell)) {
+      fWizardSpell = null;
+      keyHandled = false;
+    }
+
     if (keyHandled) {
       if (getCloseListener() != null) {
         getCloseListener().dialogClosed(this);
@@ -119,5 +147,8 @@ public class DialogWizardSpell extends Dialog implements ActionListener, KeyList
   public SpecialEffect getWizardSpell() {
 		return fWizardSpell;
 	}
-  
+
+  private boolean spellEnabled(SpecialEffect effect) {
+    return SpellCollection.spells(InducementType.WIZARD).contains(effect);
+  }
 }

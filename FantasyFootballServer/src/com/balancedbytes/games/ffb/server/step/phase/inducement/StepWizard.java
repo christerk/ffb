@@ -127,9 +127,13 @@ public final class StepWizard extends AbstractStep {
       getResult().addReport(new ReportWizardUse(team.getId(), fWizardSpell));
       UtilServerInducementUse.useInducement(getGameState(), team, InducementType.WIZARD, 1);
       List<Player> affectedPlayers = new ArrayList<Player>();
+      if (fWizardSpell == SpecialEffect.ZAP) {
+        getResult().setAnimation(new Animation(AnimationType.SPELL_ZAP, fTargetCoordinate));
+        affectedPlayers.add(game.getFieldModel().getPlayer(fTargetCoordinate));
+      }
       if (fWizardSpell == SpecialEffect.LIGHTNING) {
-        //getResult().setAnimation(new Animation(AnimationType.SPELL_LIGHTNING, fTargetCoordinate));
-        //addToAffectedPlayers(affectedPlayers, game.getFieldModel().getPlayer(fTargetCoordinate));
+        getResult().setAnimation(new Animation(AnimationType.SPELL_LIGHTNING, fTargetCoordinate));
+        addToAffectedPlayers(affectedPlayers, game.getFieldModel().getPlayer(fTargetCoordinate));
       }
       if (fWizardSpell == SpecialEffect.FIREBALL) {
         getResult().setAnimation(new Animation(AnimationType.SPELL_FIREBALL, fTargetCoordinate));
@@ -153,11 +157,8 @@ public final class StepWizard extends AbstractStep {
         fOldTurnMode = game.getTurnMode();
       }
       game.setTurnMode(TurnMode.WIZARD);
-
-      // For now, we force the fireball spell to avoid clever clients from sending lightning commands...
-      fWizardSpell = SpecialEffect.FIREBALL;
       
-      //UtilServerDialog.showDialog(getGameState(), new DialogWizardSpellParameter(), false);
+      UtilServerDialog.showDialog(getGameState(), new DialogWizardSpellParameter(), false);
     }
   }
 

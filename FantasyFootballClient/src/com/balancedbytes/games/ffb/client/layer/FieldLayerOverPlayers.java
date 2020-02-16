@@ -196,8 +196,8 @@ public class FieldLayerOverPlayers extends FieldLayer {
       clear(pMoveSquare.getCoordinate(), true);
     }
   }
-  
-  public boolean drawLightningMarker(FieldCoordinate pMarkerCoordinate, boolean pFaded) {
+
+  public boolean drawSpellMarker(FieldCoordinate pMarkerCoordinate, String iconProperty, boolean pFaded) {
     if ((pMarkerCoordinate != null) && !pMarkerCoordinate.equals(fMarkerCoordinate)) {
       fMarkerCoordinate = pMarkerCoordinate;
       clear(fMarkerCoordinate, true);
@@ -205,19 +205,19 @@ public class FieldLayerOverPlayers extends FieldLayer {
       int y = fMarkerCoordinate.getY() * FIELD_SQUARE_SIZE;
       Graphics2D g2d = getImage().createGraphics();
       IconCache iconCache = getClient().getUserInterface().getIconCache();
-      BufferedImage lightningIcon = iconCache.getIconByProperty(IIconProperty.GAME_LIGHTNING_SMALL);
+      BufferedImage spellIcon = iconCache.getIconByProperty(iconProperty);
       if (pFaded) {
         g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.5f));
       }
-      g2d.drawImage(lightningIcon, x, y, null);
+      g2d.drawImage(spellIcon, x, y, null);
       g2d.dispose();
     	return true;
     } else {
     	return false;
     }
   }
-  
-  public boolean clearLightningMarker() {
+
+  public boolean clearSpellMarker() {
   	if (fMarkerCoordinate != null) {
   		clear(fMarkerCoordinate, true);
   		fMarkerCoordinate = null;
@@ -235,11 +235,11 @@ public class FieldLayerOverPlayers extends FieldLayer {
       int y = fMarkerCoordinate.getY() * FIELD_SQUARE_SIZE;
       Graphics2D g2d = getImage().createGraphics();
       IconCache iconCache = getClient().getUserInterface().getIconCache();
-      BufferedImage lightningIcon = iconCache.getIconByProperty(IIconProperty.GAME_FIREBALL_SMALL);
+      BufferedImage fireballIcon = iconCache.getIconByProperty(IIconProperty.GAME_FIREBALL_SMALL);
       if (pFaded) {
         g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.6f));
       }
-      g2d.drawImage(lightningIcon, x, y, null);
+      g2d.drawImage(fireballIcon, x, y, null);
       Game game = getClient().getGame();
       FieldCoordinate[] markedSquares = game.getFieldModel().findAdjacentCoordinates(fMarkerCoordinate, FieldCoordinateBounds.FIELD, 1, false);
       for (FieldCoordinate markedSquare : markedSquares) {

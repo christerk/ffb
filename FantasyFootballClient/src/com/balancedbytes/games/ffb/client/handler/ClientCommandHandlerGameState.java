@@ -59,8 +59,10 @@ public class ClientCommandHandlerGameState extends ClientCommandHandler implemen
       addIconUrl(iconUrls, PlayerIconFactory.getPortraitUrl(player));
       addIconUrl(iconUrls, PlayerIconFactory.getIconSetUrl(player));
     }
-    
-    // load pitches for default, basic and custom (if defined)
+
+    addIconUrl(iconUrls, getClient().getProperty(IIconProperty.ZAPPEDPLAYER_ICONSET_PATH));
+
+      // load pitches for default, basic and custom (if defined)
     addIconUrl(iconUrls, iconCache.buildPitchUrl(getClient().getProperty(IIconProperty.PITCH_URL_DEFAULT), Weather.NICE));
     addIconUrl(iconUrls, iconCache.buildPitchUrl(getClient().getProperty(IIconProperty.PITCH_URL_BASIC), Weather.NICE));
     String pitchUrl = game.getOptions().getOptionWithDefault(GameOptionId.PITCH_URL).getValueAsString();

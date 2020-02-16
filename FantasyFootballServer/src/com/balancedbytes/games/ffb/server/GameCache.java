@@ -10,6 +10,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
+import com.balancedbytes.games.ffb.model.RosterPlayer;
+import com.balancedbytes.games.ffb.model.ZappedPlayer;
 import org.eclipse.jetty.websocket.api.Session;
 
 import com.balancedbytes.games.ffb.ClientMode;
@@ -292,17 +294,31 @@ public class GameCache {
       game.setTeamAway(pTeam);
     }
     FieldModel fieldModel = pGameState.getGame().getFieldModel();
-    for (int i = 0; i < players.length; i++) {
-      if (players[i].getRecoveringInjury() != null) {
-        fieldModel.setPlayerState(players[i], new PlayerState(PlayerState.MISSING));
-        game.getGameResult().getPlayerResult(players[i]).setSendToBoxReason(SendToBoxReason.MNG);
-      } else {
-        fieldModel.setPlayerState(players[i], new PlayerState(PlayerState.RESERVE));
+    for (Player player : players) {
+      if (player instanceof ZappedPlayer) {
+        if (!pGameState.isZapped(player)) {
+          player = ((ZappedPlayer) player).getOriginalPlayer();
+          pTeam.addPlayer(player);
+        }
+      } else if (player instanceof RosterPlayer) {
+        if (pGameState.isZapped(player)) {
+          ZappedPlayer zappedPlayer = new ZappedPlayer();
+          zappedPlayer.init((RosterPlayer) player);
+          player = zappedPlayer;
+          pTeam.addPlayer(player);
+        }
       }
-      UtilBox.putPlayerIntoBox(game, players[i]);
-      if (players[i].getCurrentSpps() > 0) {
-        PlayerResult playerResult = game.getGameResult().getPlayerResult(players[i]);
-        playerResult.setCurrentSpps(players[i].getCurrentSpps());
+
+      if (player.getRecoveringInjury() != null) {
+        fieldModel.setPlayerState(player, new PlayerState(PlayerState.MISSING));
+        game.getGameResult().getPlayerResult(player).setSendToBoxReason(SendToBoxReason.MNG);
+      } else {
+        fieldModel.setPlayerState(player, new PlayerState(PlayerState.RESERVE));
+      }
+      UtilBox.putPlayerIntoBox(game, player);
+      if (player.getCurrentSpps() > 0) {
+        PlayerResult playerResult = game.getGameResult().getPlayerResult(player);
+        playerResult.setCurrentSpps(player.getCurrentSpps());
       }
     }
     queueDbUpdate(pGameState, true);

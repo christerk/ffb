@@ -58,6 +58,8 @@ public class AnimationSequenceFactory {
 				return AnimationSequenceSpecialEffect.createAnimationSequenceFireball(pAnimation.getStartCoordinate());
 			case SPELL_LIGHTNING:
 				return AnimationSequenceSpecialEffect.createAnimationSequenceLightning(pAnimation.getStartCoordinate());
+			case SPELL_ZAP:
+				return AnimationSequenceSpecialEffect.createAnimationSequenceZap(pAnimation.getStartCoordinate());
 			case BOMB_EXLOSION:
 				return AnimationSequenceSpecialEffect.createAnimationSequenceBomb(pAnimation.getStartCoordinate());
 			case PASS:

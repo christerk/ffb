@@ -33,8 +33,10 @@ public class ClientCommandHandlerFactory {
     register(new ClientCommandHandlerAddPlayer(getClient()));
     register(new ClientCommandHandlerRemovePlayer(getClient()));
     register(new ClientCommandHandlerGameTime(getClient()));
+    register(new ClientCommandHandlerZapPlayer(getClient()));
+    register(new ClientCommandHandlerUnzapPlayer(getClient()));
   }
-  
+
   public void handleNetCommand(NetCommand pNetCommand, ClientCommandHandlerMode pMode) {
     if (pNetCommand != null) {
       ClientCommandHandler commandHandler = getCommandHandler(pNetCommand.getId());

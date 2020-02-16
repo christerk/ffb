@@ -67,8 +67,10 @@ import com.balancedbytes.games.ffb.net.commands.ServerCommandStatus;
 import com.balancedbytes.games.ffb.net.commands.ServerCommandTalk;
 import com.balancedbytes.games.ffb.net.commands.ServerCommandTeamList;
 import com.balancedbytes.games.ffb.net.commands.ServerCommandTeamSetupList;
+import com.balancedbytes.games.ffb.net.commands.ServerCommandUnzapPlayer;
 import com.balancedbytes.games.ffb.net.commands.ServerCommandUserSettings;
 import com.balancedbytes.games.ffb.net.commands.ServerCommandVersion;
+import com.balancedbytes.games.ffb.net.commands.ServerCommandZapPlayer;
 
 
 /**
@@ -133,6 +135,8 @@ public enum NetCommandId implements INamedObject {
   CLIENT_USE_INDUCEMENT("clientUseInducement"),
   CLIENT_BUY_INDUCEMENTS("clientBuyInducements"),
   SERVER_ADD_PLAYER("serverAddPlayer"),
+  SERVER_ZAP_PLAYER("serverZapPlayer"),
+  SERVER_UNZAP_PLAYER("serverUnzapPlayer"),
   CLIENT_JOURNEYMEN("clientJourneymen"),
   CLIENT_GAZE("clientGaze"),
   CLIENT_CONFIRM("clientConfirm"),
@@ -159,7 +163,7 @@ public enum NetCommandId implements INamedObject {
   
   private String fName;
   
-  private NetCommandId(String pName) {
+  NetCommandId(String pName) {
     fName = pName;
   }
   
@@ -281,7 +285,11 @@ public enum NetCommandId implements INamedObject {
         return new ClientCommandBuyInducements();
       case SERVER_ADD_PLAYER:
         return new ServerCommandAddPlayer();
-      case CLIENT_JOURNEYMEN:
+      case SERVER_ZAP_PLAYER:
+        return new ServerCommandZapPlayer();
+      case SERVER_UNZAP_PLAYER:
+        return new ServerCommandUnzapPlayer();
+        case CLIENT_JOURNEYMEN:
         return new ClientCommandJourneymen();
       case CLIENT_GAZE:
         return new ClientCommandGaze();

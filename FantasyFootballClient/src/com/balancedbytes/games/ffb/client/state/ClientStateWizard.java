@@ -7,8 +7,10 @@ import com.balancedbytes.games.ffb.PlayerState;
 import com.balancedbytes.games.ffb.SpecialEffect;
 import com.balancedbytes.games.ffb.client.FantasyFootballClient;
 import com.balancedbytes.games.ffb.client.FieldComponent;
+import com.balancedbytes.games.ffb.client.IIconProperty;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
+import com.balancedbytes.games.ffb.model.RosterPlayer;
 
 /**
  * 
@@ -63,10 +65,15 @@ public class ClientStateWizard extends ClientState {
 	  	SpecialEffect wizardSpell = getClient().getClientData().getWizardSpell();
 			FieldComponent fieldComponent = getClient().getUserInterface().getFieldComponent();
 	  	if (SpecialEffect.LIGHTNING == wizardSpell) {
-	  		fieldComponent.getLayerOverPlayers().clearLightningMarker();
-	  		fieldComponent.getLayerOverPlayers().drawLightningMarker(pCoordinate, !isValidLightningTarget(pCoordinate));
+	  		fieldComponent.getLayerOverPlayers().clearSpellMarker();
+	  		fieldComponent.getLayerOverPlayers().drawSpellMarker(pCoordinate, IIconProperty.GAME_LIGHTNING_SMALL, !isValidLightningTarget(pCoordinate));
 	  		fieldComponent.refresh();
 	  	}
+			if (SpecialEffect.ZAP == wizardSpell) {
+				fieldComponent.getLayerOverPlayers().clearSpellMarker();
+				fieldComponent.getLayerOverPlayers().drawSpellMarker(pCoordinate, IIconProperty.GAME_ZAP_SMALL, !isValidZapTarget(pCoordinate));
+				fieldComponent.refresh();
+			}
 	  	if (SpecialEffect.FIREBALL == wizardSpell) {
 	  		fieldComponent.getLayerOverPlayers().clearFireballMarker();
 	  		fieldComponent.getLayerOverPlayers().drawFireballMarker(pCoordinate, !isValidFireballTarget(pCoordinate));
@@ -92,7 +99,7 @@ public class ClientStateWizard extends ClientState {
 	  	SpecialEffect wizardSpell = getClient().getClientData().getWizardSpell();
 			FieldComponent fieldComponent = getClient().getUserInterface().getFieldComponent();
 	  	if (SpecialEffect.LIGHTNING == wizardSpell) {
-    		fieldComponent.getLayerOverPlayers().clearLightningMarker();
+    		fieldComponent.getLayerOverPlayers().clearSpellMarker();
     		fieldComponent.refresh();
 	  		if (isValidLightningTarget(pCoordinate)) {
 	  			getClient().getCommunication().sendWizardSpell(wizardSpell, pCoordinate);
@@ -101,6 +108,16 @@ public class ClientStateWizard extends ClientState {
 	  			redisplaySpellDialog();
 	  		}
 	  	}
+			if (SpecialEffect.ZAP == wizardSpell) {
+				fieldComponent.getLayerOverPlayers().clearSpellMarker();
+				fieldComponent.refresh();
+				if (isValidZapTarget(pCoordinate)) {
+					getClient().getCommunication().sendWizardSpell(wizardSpell, pCoordinate);
+					fShowMarker = false;
+				} else {
+					redisplaySpellDialog();
+				}
+			}
 	  	if (SpecialEffect.FIREBALL == wizardSpell) {
     		fieldComponent.getLayerOverPlayers().clearFireballMarker();
     		fieldComponent.refresh();
@@ -130,7 +147,13 @@ public class ClientStateWizard extends ClientState {
   	}
   	return valid;
   }
-  
+
+	private boolean isValidZapTarget(FieldCoordinate pCoordinate) {
+		Game game = getClient().getGame();
+		Player player = game.getFieldModel().getPlayer(pCoordinate);
+		return ((player instanceof RosterPlayer) && game.getTeamAway().hasPlayer(player));
+	}
+
   private boolean isValidFireballTarget(FieldCoordinate pCoordinate) {
   	boolean valid = false;
   	Game game = getClient().getGame();

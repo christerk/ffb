@@ -50,8 +50,8 @@ public class AnimationSequenceSpecialEffect implements IAnimationSequence, Actio
         new AnimationFrame(IIconProperty.ANIMATION_FIREBALL_EXPLOSION_8, 1.0f, IIconProperty.ANIMATION_FIREBALL_SMOKE_1, 1.0f, 100),
         new AnimationFrame(IIconProperty.ANIMATION_FIREBALL_EXPLOSION_8, 0.7f, IIconProperty.ANIMATION_FIREBALL_SMOKE_2, 1.0f, 100),
         new AnimationFrame(IIconProperty.ANIMATION_FIREBALL_EXPLOSION_8, 0.5f, IIconProperty.ANIMATION_FIREBALL_SMOKE_3, 1.0f, 100),
-        new AnimationFrame(IIconProperty.ANIMATION_FIREBALL_SMOKE_3, 1.0f, 100), new AnimationFrame(IIconProperty.ANIMATION_FIREBALL_SMOKE_3, 0.7f, 100),
-        new AnimationFrame(IIconProperty.ANIMATION_FIREBALL_SMOKE_3, 0.5f, 100)
+        new AnimationFrame(IIconProperty.ANIMATION_FIREBALL_SMOKE_3, 1.0f, 100), new AnimationFrame(IIconProperty.ANIMATION_FIREBALL_SMOKE_4, 0.7f, 100),
+        new AnimationFrame(IIconProperty.ANIMATION_FIREBALL_SMOKE_4, 0.5f, 100)
       }
     );
   }
@@ -74,6 +74,28 @@ public class AnimationSequenceSpecialEffect implements IAnimationSequence, Actio
     );
   }
 
+  public static final AnimationSequenceSpecialEffect createAnimationSequenceZap(FieldCoordinate pCoordinate) {
+    return new AnimationSequenceSpecialEffect(
+      pCoordinate,
+      new AnimationFrame[] {
+        new AnimationFrame(IIconProperty.ANIMATION_ZAP_01, 1.0f, 100),
+        new AnimationFrame(IIconProperty.ANIMATION_ZAP_02, 1.0f, 100),
+        new AnimationFrame(IIconProperty.ANIMATION_ZAP_03, 1.0f, 100),
+        new AnimationFrame(IIconProperty.ANIMATION_ZAP_04, 1.0f, 100),
+        new AnimationFrame(IIconProperty.ANIMATION_ZAP_05, 1.0f, 100),
+        new AnimationFrame(IIconProperty.ANIMATION_ZAP_06, 1.0f, 200),
+        new AnimationFrame(IIconProperty.ANIMATION_ZAP_07, 1.0f, 200, SoundId.ZAP),
+        new AnimationFrame(IIconProperty.ANIMATION_ZAP_06, 1.0f, 200),
+        new AnimationFrame(IIconProperty.ANIMATION_ZAP_07, 1.0f, 200, SoundId.ZAP),
+        new AnimationFrame(IIconProperty.ANIMATION_ZAP_06, 1.0f, 200),
+        new AnimationFrame(IIconProperty.ANIMATION_ZAP_08, 1.0f, 100),
+        new AnimationFrame(IIconProperty.ANIMATION_ZAP_09, 1.0f, 100),
+        new AnimationFrame(IIconProperty.ANIMATION_ZAP_10, 1.0f, 100),
+        new AnimationFrame(IIconProperty.ANIMATION_ZAP_11, 1.0f, 100),
+        new AnimationFrame(IIconProperty.ANIMATION_ZAP_12, 1.0f, 100)
+      }
+    );
+  }
   private static final int _TIMER_DELAY = 100;
 
   private AnimationFrame[] fFrames;

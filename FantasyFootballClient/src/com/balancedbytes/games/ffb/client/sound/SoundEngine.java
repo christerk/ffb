@@ -39,6 +39,7 @@ public class SoundEngine {
     _SOUND_PROPERTY_KEYS.put(SoundId.KICK, ISoundProperty.KICK);
     _SOUND_PROPERTY_KEYS.put(SoundId.KO, ISoundProperty.KO);
     _SOUND_PROPERTY_KEYS.put(SoundId.LIGHTNING, ISoundProperty.LIGHTNING);
+    _SOUND_PROPERTY_KEYS.put(SoundId.ZAP, ISoundProperty.ZAP);
     _SOUND_PROPERTY_KEYS.put(SoundId.METAL, ISoundProperty.METAL);
     _SOUND_PROPERTY_KEYS.put(SoundId.NOMNOM, ISoundProperty.NOMNOM);
     _SOUND_PROPERTY_KEYS.put(SoundId.ORGAN, ISoundProperty.ORGAN);

@@ -27,6 +27,7 @@ import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.model.PlayerResult;
 import com.balancedbytes.games.ffb.model.Team;
 import com.balancedbytes.games.ffb.model.TurnData;
+import com.balancedbytes.games.ffb.model.ZappedPlayer;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandArgueTheCall;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandUseInducement;
 import com.balancedbytes.games.ffb.option.GameOptionId;
@@ -237,8 +238,17 @@ public class StepEndTurn extends AbstractStep {
   
         List<KnockoutRecovery> knockoutRecoveries = new ArrayList<KnockoutRecovery>();
         List<HeatExhaustion> heatExhaustions = new ArrayList<HeatExhaustion>();
+        List<Player> unzappedPlayers = new ArrayList<Player>();
         if (fNewHalf || fTouchdown) {
           for (Player player : game.getPlayers()) {
+            if (player instanceof ZappedPlayer) {
+              getGameState().getServer().getCommunication().sendUnzapPlayer(getGameState(), (ZappedPlayer) player);
+              Team team = game.findTeam(player);
+              player = ((ZappedPlayer)player).getOriginalPlayer();
+              team.addPlayer(player);
+              unzappedPlayers.add(player);
+              getGameState().removeZappedPlayer(player);
+            }
             PlayerState playerState = game.getFieldModel().getPlayerState(player);
             FieldCoordinate playerCoordinate = game.getFieldModel().getPlayerCoordinate(player);
             if (playerState.getBase() == PlayerState.KNOCKED_OUT) {
@@ -311,7 +321,7 @@ public class StepEndTurn extends AbstractStep {
         KnockoutRecovery[] knockoutRecoveryArray = knockoutRecoveries.toArray(new KnockoutRecovery[knockoutRecoveries.size()]);
         HeatExhaustion[] heatExhaustionArray = heatExhaustions.toArray(new HeatExhaustion[heatExhaustions.size()]);
         String touchdownPlayerId = (touchdownPlayer != null) ? touchdownPlayer.getId() : null;
-        getResult().addReport(new ReportTurnEnd(touchdownPlayerId, knockoutRecoveryArray, heatExhaustionArray));
+        getResult().addReport(new ReportTurnEnd(touchdownPlayerId, knockoutRecoveryArray, heatExhaustionArray, unzappedPlayers));
   
         if (game.isTurnTimeEnabled()) {
           UtilServerTimer.stopTurnTimer(getGameState(), System.currentTimeMillis());

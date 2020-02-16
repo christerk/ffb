@@ -735,6 +735,9 @@ public class StatusReport {
     if (pReport.getSpecialEffect() == SpecialEffect.LIGHTNING) {
       status.append("Lightning Spell Effect Roll [ ").append(pReport.getRoll()).append(" ]");
     }
+    if (pReport.getSpecialEffect() == SpecialEffect.ZAP) {
+      status.append("Zap Spell Effect Roll [ ").append(pReport.getRoll()).append(" ]");
+    }
     if (pReport.getSpecialEffect() == SpecialEffect.FIREBALL) {
       status.append("Fireball Spell Effect Roll [ ").append(pReport.getRoll()).append(" ]");
     }
@@ -770,6 +773,8 @@ public class StatusReport {
     }
     if (pReport.getWizardSpell() == SpecialEffect.LIGHTNING) {
       println(getIndent(), TextStyle.BOLD, " casts a Lightning spell.");
+    } else if (pReport.getWizardSpell() == SpecialEffect.ZAP) {
+      println(getIndent(), TextStyle.BOLD, " casts a Zap spell.");
     } else {
       println(getIndent(), TextStyle.BOLD, " casts a Fireball spell.");
     }
@@ -2243,6 +2248,13 @@ public class StatusReport {
         } else {
           println(getIndent() + 1, " is unaffected.");
         }
+      }
+    }
+    List<Player> unzappedPlayers = pReport.getUnzappedPlayers();
+    if (unzappedPlayers != null) {
+      for (Player player: unzappedPlayers) {
+          print(getIndent(), true, player);
+          println(getIndent(), " recovers from Zap spell effect.");
       }
     }
     if (TurnMode.REGULAR == game.getTurnMode()) {
