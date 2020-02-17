@@ -33,10 +33,6 @@ public class ClientStateWizard extends ClientState {
     setSelectable(true);
     setClickable(true);
     fShowMarker = true;
-
-    // Force fireball spell for now.
-    getClient().getClientData().setWizardSpell(SpecialEffect.FIREBALL);
-
   }
   
   @Override
