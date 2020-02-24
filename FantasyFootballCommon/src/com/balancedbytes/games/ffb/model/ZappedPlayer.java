@@ -138,7 +138,7 @@ public class ZappedPlayer extends Player<ZappedPosition> {
 
   @Override
   public int getNrOfIcons() {
-    return originalPlayer.getNrOfIcons();
+    return 1;
   }
 
   @Override
@@ -219,7 +219,7 @@ public class ZappedPlayer extends Player<ZappedPosition> {
 
   @Override
   public int getIconSetIndex() {
-    return originalPlayer.getIconSetIndex();
+    return 0;
   }
 
   @Override
