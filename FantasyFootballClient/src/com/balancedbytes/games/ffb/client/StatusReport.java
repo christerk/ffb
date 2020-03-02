@@ -39,6 +39,7 @@ import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.GameResult;
 import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.model.Team;
+import com.balancedbytes.games.ffb.model.ZappedPlayer;
 import com.balancedbytes.games.ffb.net.ServerStatus;
 import com.balancedbytes.games.ffb.net.commands.ServerCommandJoin;
 import com.balancedbytes.games.ffb.net.commands.ServerCommandLeave;
@@ -2483,63 +2484,71 @@ public class StatusReport {
         status.append("Injury Roll [ ").append(injuryRoll[0]).append(" ][ ").append(injuryRoll[1]).append(" ]");
         println(getIndent(), TextStyle.ROLL, status.toString());
         status = new StringBuilder();
-        int rolledTotal = injuryRoll[0] + injuryRoll[1];
-        status.append("Rolled Total of ").append(rolledTotal);
-        int injuryModifierTotal = 0;
-        for (InjuryModifier injuryModifier : pReport.getInjuryModifiers()) {
-          injuryModifierTotal += injuryModifier.getModifier();
-          if (injuryModifier.getModifier() == 0) {
-            if (injuryModifier == InjuryModifier.THICK_SKULL) {
-              thickSkullUsed = true;
+        if (defender instanceof ZappedPlayer) {
+          status.append(defender.getName())
+            .append(" is badly hurt automatically because ")
+            .append(defender.getPlayerGender().getNominative())
+            .append(" has been zapped");
+          println(getIndent(), TextStyle.NONE, status.toString());
+        } else {
+          int rolledTotal = injuryRoll[0] + injuryRoll[1];
+          status.append("Rolled Total of ").append(rolledTotal);
+          int injuryModifierTotal = 0;
+          for (InjuryModifier injuryModifier : pReport.getInjuryModifiers()) {
+            injuryModifierTotal += injuryModifier.getModifier();
+            if (injuryModifier.getModifier() == 0) {
+              if (injuryModifier == InjuryModifier.THICK_SKULL) {
+                thickSkullUsed = true;
+              }
+              if (injuryModifier == InjuryModifier.STUNTY) {
+                stuntyUsed = true;
+              }
+            } else if (injuryModifier.isNigglingInjuryModifier()) {
+              status.append(" +").append(injuryModifier.getName());
+            } else if (injuryModifier.getModifier() > 0) {
+              status.append(" +").append(injuryModifier.getModifier()).append(" ").append(injuryModifier.getName());
+            } else {
+              status.append(" ").append(injuryModifier.getModifier()).append(" ").append(injuryModifier.getName());
             }
-            if (injuryModifier == InjuryModifier.STUNTY) {
-              stuntyUsed = true;
-            }
-          } else if (injuryModifier.isNigglingInjuryModifier()) {
-            status.append(" +").append(injuryModifier.getName());
-          } else if (injuryModifier.getModifier() > 0) {
-            status.append(" +").append(injuryModifier.getModifier()).append(" ").append(injuryModifier.getName());
-          } else {
-            status.append(" ").append(injuryModifier.getModifier()).append(" ").append(injuryModifier.getName());
           }
-        }
-        if (injuryModifierTotal != 0) {
-          status.append(" = ").append(rolledTotal + injuryModifierTotal);
-        }
-        println(getIndent() + 1, status.toString());
-        if (stuntyUsed) {
-          print(getIndent() + 1, false, defender);
-          status = new StringBuilder();
-          status.append(" is Stunty and more easily hurt because of that.");
+          if (injuryModifierTotal != 0) {
+            status.append(" = ").append(rolledTotal + injuryModifierTotal);
+          }
           println(getIndent() + 1, status.toString());
-        }
-        if (thickSkullUsed) {
-          print(getIndent() + 1, false, defender);
-          status = new StringBuilder();
-          status.append("'s Thick Skull helps ").append(defender.getPlayerGender().getDative()).append(" to stay on the pitch.");
-          println(getIndent() + 1, status.toString());
-        }
-        if (ArrayTool.isProvided(pReport.getCasualtyRoll())) {
-          print(getIndent() + 1, false, defender);
-          println(getIndent() + 1, " suffers a casualty.");
-          int[] casualtyRoll = pReport.getCasualtyRoll();
-          status = new StringBuilder();
-          status.append("Casualty Roll [ ").append(casualtyRoll[0]).append(" ][ ").append(casualtyRoll[1]).append(" ]");
-          println(getIndent(), TextStyle.ROLL, status.toString());
-          reportInjury(defender, pReport.getInjury(), pReport.getSeriousInjury());
-          if (ArrayTool.isProvided(pReport.getCasualtyRollDecay())) {
+          if (stuntyUsed) {
             print(getIndent() + 1, false, defender);
             status = new StringBuilder();
-            status.append("'s body is decaying and ").append(defender.getPlayerGender().getNominative()).append(" suffers a 2nd casualty.");
+            status.append(" is Stunty and more easily hurt because of that.");
             println(getIndent() + 1, status.toString());
-            status = new StringBuilder();
-            int[] casualtyRollDecay = pReport.getCasualtyRollDecay();
-            status.append("Casualty Roll [ ").append(casualtyRollDecay[0]).append(" ][ ").append(casualtyRollDecay[1]).append(" ]");
-            println(getIndent(), TextStyle.ROLL, status.toString());
-            reportInjury(defender, pReport.getInjuryDecay(), pReport.getSeriousInjuryDecay());
           }
-        } else {
-          reportInjury(defender, pReport.getInjury(), pReport.getSeriousInjury());
+          if (thickSkullUsed) {
+            print(getIndent() + 1, false, defender);
+            status = new StringBuilder();
+            status.append("'s Thick Skull helps ").append(defender.getPlayerGender().getDative()).append(" to stay on the pitch.");
+            println(getIndent() + 1, status.toString());
+          }
+          if (ArrayTool.isProvided(pReport.getCasualtyRoll())) {
+            print(getIndent() + 1, false, defender);
+            println(getIndent() + 1, " suffers a casualty.");
+            int[] casualtyRoll = pReport.getCasualtyRoll();
+            status = new StringBuilder();
+            status.append("Casualty Roll [ ").append(casualtyRoll[0]).append(" ][ ").append(casualtyRoll[1]).append(" ]");
+            println(getIndent(), TextStyle.ROLL, status.toString());
+            reportInjury(defender, pReport.getInjury(), pReport.getSeriousInjury());
+            if (ArrayTool.isProvided(pReport.getCasualtyRollDecay())) {
+              print(getIndent() + 1, false, defender);
+              status = new StringBuilder();
+              status.append("'s body is decaying and ").append(defender.getPlayerGender().getNominative()).append(" suffers a 2nd casualty.");
+              println(getIndent() + 1, status.toString());
+              status = new StringBuilder();
+              int[] casualtyRollDecay = pReport.getCasualtyRollDecay();
+              status.append("Casualty Roll [ ").append(casualtyRollDecay[0]).append(" ][ ").append(casualtyRollDecay[1]).append(" ]");
+              println(getIndent(), TextStyle.ROLL, status.toString());
+              reportInjury(defender, pReport.getInjuryDecay(), pReport.getSeriousInjuryDecay());
+            }
+          } else {
+            reportInjury(defender, pReport.getInjury(), pReport.getSeriousInjury());
+          }
         }
       }
     }
