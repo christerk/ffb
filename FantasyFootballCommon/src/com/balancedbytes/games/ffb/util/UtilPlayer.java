@@ -17,6 +17,7 @@ import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.FieldModel;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
+import com.balancedbytes.games.ffb.model.RosterPlayer;
 import com.balancedbytes.games.ffb.model.Team;
 import com.balancedbytes.games.ffb.option.GameOptionId;
 import com.balancedbytes.games.ffb.option.UtilGameOption;
@@ -124,7 +125,7 @@ public class UtilPlayer {
     FieldCoordinate[] adjacentCoordinates = fieldModel.findAdjacentCoordinates(pCoordinate, FieldCoordinateBounds.FIELD, 1, false);
     for (int i = 0; i < adjacentCoordinates.length; i++) {
       Player player = fieldModel.getPlayer(adjacentCoordinates[i]);
-      if ((player != null) && (player.getTeam() == pTeam) && player.getPosition().isThrall()) {
+      if ((player != null) && (player.getTeam() == pTeam) && (player instanceof RosterPlayer) && ((RosterPlayer)player).getPosition().isThrall()) {
         adjacentPlayers.add(player);
       }
     }
