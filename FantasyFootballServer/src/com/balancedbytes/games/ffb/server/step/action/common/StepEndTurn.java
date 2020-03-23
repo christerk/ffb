@@ -399,7 +399,7 @@ public class StepEndTurn extends AbstractStep {
       for (Player player : game.getPlayers()) {
         PlayerState playerState = game.getFieldModel().getPlayerState(player);
         PlayerResult playerResult = game.getGameResult().getPlayerResult(player);
-        if (playerState.canBeSetUp() && ((playerState.getBase() != PlayerState.RESERVE) || playerResult.getSendToBoxReason() != null)) {
+        if (playerState.canBeSetUp() && playerState.getBase() != PlayerState.RESERVE) {
           boolean hasSecretWeapon = UtilCards.hasSkill(game, player, Skill.SECRET_WEAPON);
           if (!hasSecretWeapon && player instanceof ZappedPlayer) {
             hasSecretWeapon = UtilCards.hasSkill(game, ((ZappedPlayer) player).getOriginalPlayer(), Skill.SECRET_WEAPON);
