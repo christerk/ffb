@@ -206,13 +206,11 @@ public class GameState implements IModelChangeObserver, IJsonSerializable {
   public void cleanupStepStack(String pGotoLabel) {
     if (StringTool.isProvided(pGotoLabel)) {
       List<IStep> poppedSteps = new ArrayList<>();
-      IStep nextStep = getStepStack().peek();
-      while (nextStep != null) {
-        if (pGotoLabel.equals(nextStep.getLabel())) {
+      while (getStepStack().peek() != null) {
+        if (pGotoLabel.equals(getStepStack().peek().getLabel())) {
           return;
         } else {
           poppedSteps.add(getStepStack().pop());
-          nextStep = getStepStack().peek();
         }
       }
 
@@ -226,18 +224,14 @@ public class GameState implements IModelChangeObserver, IJsonSerializable {
       throw new StepException("Step " + stepName + ": No goto label set.");
     }
     fCurrentStep = null;
-    IStep nextStep = getStepStack().peek();
-    while (nextStep != null) {
-      if (pGotoLabel.equals(nextStep.getLabel())) {
-        break;
+    while (getStepStack().peek() != null) {
+      if (pGotoLabel.equals(getStepStack().peek().getLabel())) {
+        return;
       } else {
         getStepStack().pop();
-        nextStep = getStepStack().peek();
       }
     }
-    if (nextStep == null) {
-      throw new StepException("Goto unknown label " + pGotoLabel);
-    }
+    throw new StepException("Goto unknown label " + pGotoLabel);
   }
 
   public void addZappedPlayer(Player player) {
