@@ -51,7 +51,15 @@ public class StepStack implements IJsonSerializable {
 			return null;
 		}
 	}
-	
+
+	public IStep peek() {
+		if (size() > 0) {
+			return fStack.get(0);
+		} else {
+			return null;
+		}
+	}
+
 	public int size() {
 		return fStack.size();
 	}
