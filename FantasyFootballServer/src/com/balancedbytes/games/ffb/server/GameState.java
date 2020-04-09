@@ -1,11 +1,5 @@
 package com.balancedbytes.games.ffb.server;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-
 import com.balancedbytes.games.ffb.GameStatus;
 import com.balancedbytes.games.ffb.json.IJsonSerializable;
 import com.balancedbytes.games.ffb.json.UtilJson;
@@ -22,9 +16,17 @@ import com.balancedbytes.games.ffb.server.step.StepFactory;
 import com.balancedbytes.games.ffb.server.step.StepResult;
 import com.balancedbytes.games.ffb.server.step.StepStack;
 import com.balancedbytes.games.ffb.server.util.UtilServerGame;
-import com.eclipsesource.json.JsonArray;
+import com.balancedbytes.games.ffb.util.StringTool;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * 
@@ -201,24 +203,35 @@ public class GameState implements IModelChangeObserver, IJsonSerializable {
 	  }
   }
 
+  public void cleanupStepStack(String pGotoLabel) {
+    if (StringTool.isProvided(pGotoLabel)) {
+      List<IStep> poppedSteps = new ArrayList<>();
+      while (getStepStack().peek() != null) {
+        if (pGotoLabel.equals(getStepStack().peek().getLabel())) {
+          return;
+        } else {
+          poppedSteps.add(getStepStack().pop());
+        }
+      }
+
+      getStepStack().push(poppedSteps);
+    }
+  }
+
   private void handleStepResultGotoLabel(String pGotoLabel) {
     if (pGotoLabel == null) {
       String stepName = (fCurrentStep != null) ? fCurrentStep.getId().getName() : "unknown";
       throw new StepException("Step " + stepName + ": No goto label set.");
     }
     fCurrentStep = null;
-    IStep nextStep = getStepStack().pop();
-    while (nextStep != null) {
-      if (pGotoLabel.equals(nextStep.getLabel())) {
-        getStepStack().push(nextStep); // push back onto stack
-        break;
+    while (getStepStack().peek() != null) {
+      if (pGotoLabel.equals(getStepStack().peek().getLabel())) {
+        return;
       } else {
-        nextStep = getStepStack().pop();
+        getStepStack().pop();
       }
     }
-    if (nextStep == null) {
-      throw new StepException("Goto unknown label " + pGotoLabel);
-    }
+    throw new StepException("Goto unknown label " + pGotoLabel);
   }
 
   public void addZappedPlayer(Player player) {
