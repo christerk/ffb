@@ -33,6 +33,7 @@ import com.balancedbytes.games.ffb.server.IServerProperty;
 import com.balancedbytes.games.ffb.server.db.DbStatementId;
 import com.balancedbytes.games.ffb.server.db.query.DbAdminListByIdQuery;
 import com.balancedbytes.games.ffb.server.db.query.DbAdminListByStatusQuery;
+import com.balancedbytes.games.ffb.server.net.ServerCommunication;
 import com.balancedbytes.games.ffb.server.net.commands.InternalServerCommandCloseGame;
 import com.balancedbytes.games.ffb.server.net.commands.InternalServerCommandDeleteGame;
 import com.balancedbytes.games.ffb.server.net.commands.InternalServerCommandScheduleGame;
@@ -42,6 +43,7 @@ import com.balancedbytes.games.ffb.util.ArrayTool;
 import com.balancedbytes.games.ffb.util.DateTool;
 import com.balancedbytes.games.ffb.util.StringTool;
 import com.balancedbytes.games.ffb.xml.UtilXml;
+import com.fumbbl.rng.Fortuna;
 
 /**
  * 
@@ -63,6 +65,7 @@ public class AdminServlet extends HttpServlet {
   public static final String REFRESH = "refresh";
   public static final String SCHEDULE = "schedule";
   public static final String SHUTDOWN = "shutdown";
+  public static final String STATS = "upload";
   public static final String UNBLOCK = "unblock";
   public static final String UPLOAD = "upload";
 
@@ -174,6 +177,8 @@ public class AdminServlet extends HttpServlet {
           isOk = handleRefresh(handler);
         } else if (SCHEDULE.equals(command)) {
           isOk = handleSchedule(handler, parameters);
+        } else if (STATS.equals(command)) {
+          isOk = handleStats(handler);
         } else {
           isOk = false;
         }
@@ -469,6 +474,67 @@ public class AdminServlet extends HttpServlet {
     return isOk;
   }
 
+  private boolean handleStats(TransformerHandler handler) {
+    boolean isOk = true;
+
+    Session[] sessions = getServer().getSessionManager().getAllSessions();
+    int openSessions = 0;
+    int closedSessions = 0;
+    for (Session session : sessions) {
+      if (session.isOpen()) {
+        openSessions++;
+      } else {
+        closedSessions++;
+      }
+    }
+    
+    GameState[] gameStates = getServer().getGameCache().allGameStates();
+    int activeGames = 0;
+    int inactiveGames = 0;
+    for (GameState gameState : gameStates) {
+      if (gameState.getStatus() == GameStatus.ACTIVE) {
+        activeGames++;
+      } else {
+        inactiveGames++;
+      }
+    }
+
+    Fortuna fortuna = getServer().getFortuna();
+    
+    ServerCommunication comms = getServer().getCommunication();
+    
+    UtilXml.startElement(handler, "stats");
+    
+    AttributesImpl commAttributes = new AttributesImpl();
+    UtilXml.addAttribute(commAttributes, "queueLength", comms.getQueueLength());
+    UtilXml.startElement(handler,  "communication", commAttributes);
+    UtilXml.endElement(handler, "communication");
+    
+    AttributesImpl fortunaAttributes = new AttributesImpl();
+    UtilXml.addAttribute(fortunaAttributes, "rekeyings", fortuna.getRekeyings());
+    UtilXml.addAttribute(fortunaAttributes, "numBytes", fortuna.getNumberOfBytes());
+    UtilXml.startElement(handler, "fortuna", fortunaAttributes);
+    UtilXml.endElement(handler, "fortuna");
+    
+    AttributesImpl cacheAttributes = new AttributesImpl();
+    UtilXml.addAttribute(cacheAttributes, "size", gameStates.length);
+    UtilXml.addAttribute(cacheAttributes, "active", activeGames);
+    UtilXml.addAttribute(cacheAttributes, "inactive", inactiveGames);
+    UtilXml.startElement(handler, "cache", cacheAttributes);
+    UtilXml.endElement(handler, "cache");
+    
+    AttributesImpl sessionAttributes = new AttributesImpl();
+    UtilXml.addAttribute(sessionAttributes, "size", sessions.length);
+    UtilXml.addAttribute(cacheAttributes, "open", openSessions);
+    UtilXml.addAttribute(cacheAttributes, "closed", closedSessions);
+    UtilXml.startElement(handler, "sessions", sessionAttributes);
+    UtilXml.endElement(handler, "sessions");
+    
+    UtilXml.endElement(handler, "stats");
+    
+    return isOk;
+  }
+  
   private boolean handleShutdown(TransformerHandler pHandler) {
     AttributesImpl attributes = new AttributesImpl();
     UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_INITIATED, _TIMESTAMP_FORMAT.format(new Date()));

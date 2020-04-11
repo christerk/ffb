@@ -34,23 +34,24 @@ public interface IServerProperty {
   
   String ADMIN_SALT = "admin.salt";
   String ADMIN_PASSWORD = "admin.password";
-  String ADMIN_URL_CHALLENGE = "admin.url.challenge";
-  String ADMIN_URL_LIST_ID = "admin.url.list.id";
-  String ADMIN_URL_LIST_STATUS = "admin.url.list.status";
   String ADMIN_URL_BACKUP = "admin.url.backup";
+  String ADMIN_URL_BLOCK = "admin.url.block";
   String ADMIN_URL_CACHE = "admin.url.cache";
+  String ADMIN_URL_CHALLENGE = "admin.url.challenge";
   String ADMIN_URL_CLOSE = "admin.url.close";
   String ADMIN_URL_CONCEDE = "admin.url.concede";
-  String ADMIN_URL_SHUTDOWN = "admin.url.shutdown";
-  String ADMIN_URL_REFRESH = "admin.url.refresh";
-  String ADMIN_URL_UPLOAD = "admin.url.upload";
   String ADMIN_URL_DELETE = "admin.url.delete";
-  String ADMIN_URL_MESSAGE = "admin.url.message";
-  String ADMIN_URL_SCHEDULE = "admin.url.schedule";
-  String ADMIN_URL_BLOCK = "admin.url.block";
-  String ADMIN_URL_UNBLOCK = "admin.url.unblock";
+  String ADMIN_URL_LIST_ID = "admin.url.list.id";
+  String ADMIN_URL_LIST_STATUS = "admin.url.list.status";
   String ADMIN_URL_LOGLEVEL = "admin.url.loglevel";
-
+  String ADMIN_URL_MESSAGE = "admin.url.message";
+  String ADMIN_URL_REFRESH = "admin.url.refresh";
+  String ADMIN_URL_SCHEDULE = "admin.url.schedule";
+  String ADMIN_URL_SHUTDOWN = "admin.url.shutdown";
+  String ADMIN_URL_STATS = "admin.url.stats";
+  String ADMIN_URL_UNBLOCK = "admin.url.unblock";
+  String ADMIN_URL_UPLOAD = "admin.url.upload";
+  
   String BACKUP_DIR = "backup.dir";
   String BACKUP_EXTENSION = "backup.extension";
   String BACKUP_SALT = "backup.salt";

@@ -499,4 +499,8 @@ public class ServerCommunication implements Runnable, IReceivedCommandHandler {
     ServerCommandUnzapPlayer commandUnzapPlayer = new ServerCommandUnzapPlayer(player.getId(), player.getTeam().getId());
     sendAllSessions(gameState, commandUnzapPlayer, true);
   }
+  
+  public int getQueueLength() {
+    return fCommandQueue.size();
+  }
 }

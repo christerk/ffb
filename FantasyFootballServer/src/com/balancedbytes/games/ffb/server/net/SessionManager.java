@@ -204,7 +204,7 @@ public class SessionManager {
     return (lastPing != null) ? lastPing : 0;
   }
   
-  Session[] getAllSessions() {
+  public Session[] getAllSessions() {
     synchronized (fClientBySession) {
       return fClientBySession.keySet().toArray(new Session[0]);
     }

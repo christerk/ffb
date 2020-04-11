@@ -85,6 +85,14 @@ public class Fortuna {
 		System.out.println("Bits per rekeying: "+(8*numberOfBytes) / numberOfRekeyings);
 	}
 	
+	public long getRekeyings() {
+	  return numberOfRekeyings;
+	}
+	
+	public long getNumberOfBytes() {
+	  return numberOfBytes;
+	}
+	
 	public int getByte() {
 		numberOfBytes++;
 		int result = randomData[byteOffset];
