@@ -65,7 +65,7 @@ public class AdminServlet extends HttpServlet {
   public static final String REFRESH = "refresh";
   public static final String SCHEDULE = "schedule";
   public static final String SHUTDOWN = "shutdown";
-  public static final String STATS = "upload";
+  public static final String STATS = "stats";
   public static final String UNBLOCK = "unblock";
   public static final String UPLOAD = "upload";
 

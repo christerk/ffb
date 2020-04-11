@@ -149,10 +149,10 @@ public class AdminConnector {
       }
 
       if (AdminServlet.STATS.equals(args[0])) {
-        String cacheUrl = StringTool.bind(serverProperties.getProperty(IServerProperty.ADMIN_URL_STATS), response, args[1]);
-        System.out.println(cacheUrl);
-        String cacheXml = UtilServerHttpClient.fetchPage(cacheUrl);
-        System.out.println(cacheXml);
+        String statsUrl = StringTool.bind(serverProperties.getProperty(IServerProperty.ADMIN_URL_STATS), response, args[1]);
+        System.out.println(statsUrl);
+        String statsXml = UtilServerHttpClient.fetchPage(statsUrl);
+        System.out.println(statsXml);
       }
 
       
