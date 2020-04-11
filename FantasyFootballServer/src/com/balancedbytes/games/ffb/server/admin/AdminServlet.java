@@ -525,8 +525,8 @@ public class AdminServlet extends HttpServlet {
     
     AttributesImpl sessionAttributes = new AttributesImpl();
     UtilXml.addAttribute(sessionAttributes, "size", sessions.length);
-    UtilXml.addAttribute(cacheAttributes, "open", openSessions);
-    UtilXml.addAttribute(cacheAttributes, "closed", closedSessions);
+    UtilXml.addAttribute(sessionAttributes, "open", openSessions);
+    UtilXml.addAttribute(sessionAttributes, "closed", closedSessions);
     UtilXml.startElement(handler, "sessions", sessionAttributes);
     UtilXml.endElement(handler, "sessions");
     
