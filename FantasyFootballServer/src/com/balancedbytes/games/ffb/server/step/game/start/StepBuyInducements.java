@@ -343,6 +343,7 @@ public final class StepBuyInducements extends AbstractStep {
           starPlayer.updatePosition(position);
           starPlayer.setName(position.getName());
           starPlayer.setNr(pTeam.getMaxPlayerNr() + 1);
+          starPlayer.setGender(position.getGender());
           pTeam.addPlayer(starPlayer);
           game.getFieldModel().setPlayerState(starPlayer, new PlayerState(PlayerState.RESERVE));
           UtilBox.putPlayerIntoBox(game, starPlayer);
