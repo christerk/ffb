@@ -106,6 +106,7 @@ public class UtilServerReRoll {
       actingTeam.hasPlayer(pPlayer)
       && !game.getTurnData().isReRollUsed()
       && (game.getTurnData().getReRolls() > 0)
+      && game.getTurnMode() != TurnMode.KICKOFF
       && (game.getTurnMode() != TurnMode.PASS_BLOCK)
       && ((game.getTurnMode() != TurnMode.BOMB_HOME) || game.getTeamHome().hasPlayer(pPlayer))
       && ((game.getTurnMode() != TurnMode.BOMB_HOME_BLITZ) || game.getTeamHome().hasPlayer(pPlayer))
