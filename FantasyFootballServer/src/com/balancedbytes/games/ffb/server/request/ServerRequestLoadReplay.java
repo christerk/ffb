@@ -34,12 +34,18 @@ public class ServerRequestLoadReplay extends ServerRequest {
   private int fReplayToCommandNr;
   private Session fSession;
   private int fMode;
+  private String teamId;
 
   public ServerRequestLoadReplay(long pGameId, int pReplayToCommandNr, Session pSession, int pMode) {
+    this(pGameId, pReplayToCommandNr, pSession, pMode, null);
+  }
+  
+  public ServerRequestLoadReplay(long pGameId, int pReplayToCommandNr, Session pSession, int pMode, String teamId) {
     fGameId = pGameId;
     fReplayToCommandNr = pReplayToCommandNr;
     fSession = pSession;
     fMode = pMode;
+    this.teamId = teamId;
   }
 
   public long getGameId() {
@@ -91,7 +97,7 @@ public class ServerRequestLoadReplay extends ServerRequest {
     if ((fMode == UPLOAD_GAME) && (gameState != null)) {
       gameState.setStatus(GameStatus.LOADING);
       server.getGameCache().addGame(gameState);
-      InternalServerCommandUploadGame uploadCommand = new InternalServerCommandUploadGame(getGameId());
+      InternalServerCommandUploadGame uploadCommand = new InternalServerCommandUploadGame(getGameId(), teamId);
       server.getCommunication().handleCommand(new ReceivedCommand(uploadCommand, getSession()));
     }
   }
