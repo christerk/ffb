@@ -186,6 +186,7 @@ public class SessionManager {
   public void removeSession(Session pSession) {
     long gameId = getGameIdForSession(pSession);
     fClientBySession.remove(pSession);
+    fLastPingBySession.remove(pSession);
     Set<Session> sessions = fSessionsByGameId.get(gameId);
     if (sessions != null) {
       sessions.remove(pSession);
