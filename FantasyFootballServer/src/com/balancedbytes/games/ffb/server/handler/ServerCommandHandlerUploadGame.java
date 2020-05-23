@@ -33,7 +33,7 @@ public class ServerCommandHandlerUploadGame extends ServerCommandHandler {
     if (gameState == null) {
       // game has been moved out of the db - request it from the backup service
       getServer().getRequestProcessor().add(
-        new ServerRequestLoadReplay(uploadGameCommand.getGameId(), 0, receivedCommand.getSession(), ServerRequestLoadReplay.UPLOAD_GAME)
+        new ServerRequestLoadReplay(uploadGameCommand.getGameId(), 0, receivedCommand.getSession(), ServerRequestLoadReplay.UPLOAD_GAME, uploadGameCommand.getConcedingTeamId())
       );
     } else {
       gameState.getStepStack().clear();
