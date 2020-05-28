@@ -197,7 +197,7 @@ public class EntropyServer implements Runnable, EntropySource {
 		connected = false;
 	}
 
-	public boolean hasEnoughEntropy() {
+	public synchronized boolean hasEnoughEntropy() {
 		return bEnd != bStart;
 	}
 

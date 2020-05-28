@@ -111,7 +111,7 @@ public class Fortuna {
 		return 1 + (result % sides);
 	}
 	
-	public void rekeyGenerator(byte[] newKey) {
+	public synchronized void rekeyGenerator(byte[] newKey) {
 		lastRekeying = System.currentTimeMillis();
 		numberOfRekeyings++;
 		sKeySpec = new SecretKeySpec(newKey, "AES");
