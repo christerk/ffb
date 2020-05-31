@@ -58,9 +58,7 @@ public class TeamCache {
     FileIterator fileIterator = new FileIterator(
       pTeamDirectory,
       false,
-      new FileFilter() {
-        public boolean accept(File pathname) { return pathname.getName().endsWith(".xml"); };
-      }
+      pathname -> pathname.getName().endsWith(".xml")
     );
     while (fileIterator.hasNext()) {
       File file = fileIterator.next();
