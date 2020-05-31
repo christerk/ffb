@@ -82,7 +82,7 @@ public class TeamSetupCache {
   public void add(TeamSetup pSetup) {
     fSetupBySetupKey.put(new TeamSetupKey(pSetup), pSetup);
   }
-  
+
   public TeamSetup[] getTeamSetups() {
     return fSetupBySetupKey.values().toArray(new TeamSetup[fSetupBySetupKey.size()]);
   }
@@ -95,16 +95,17 @@ public class TeamSetupCache {
     );
     while (fileIterator.hasNext()) {
       File file = fileIterator.next();
-      BufferedReader xmlIn = new BufferedReader(new FileReader(file));
-      InputSource xmlSource = new InputSource(xmlIn);
-      TeamSetup setup = new TeamSetup();
-      try {
-        XmlHandler.parse(xmlSource, setup);
-      } catch (FantasyFootballException pFfe) {
-        throw new FantasyFootballException("Error on initializing team setup " + file.getAbsolutePath(), pFfe);
+      try (FileReader fileReader = new FileReader(file);
+           BufferedReader xmlIn = new BufferedReader(fileReader)) {
+        InputSource xmlSource = new InputSource(xmlIn);
+        TeamSetup setup = new TeamSetup();
+        try {
+          XmlHandler.parse(xmlSource, setup);
+          add(setup);
+        } catch (FantasyFootballException pFfe) {
+          throw new FantasyFootballException("Error on initializing team setup " + file.getAbsolutePath(), pFfe);
+        }
       }
-      xmlIn.close();
-      add(setup);
     }
   }
   
