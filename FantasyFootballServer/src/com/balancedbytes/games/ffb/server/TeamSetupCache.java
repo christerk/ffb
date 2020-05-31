@@ -82,11 +82,7 @@ public class TeamSetupCache {
   public void add(TeamSetup pSetup) {
     fSetupBySetupKey.put(new TeamSetupKey(pSetup), pSetup);
   }
-    
-  public TeamSetup getTeamSetup(String pTeamId, String pName) {
-    return fSetupBySetupKey.get(new TeamSetupKey(pTeamId, pName));
-  }
-
+  
   public TeamSetup[] getTeamSetups() {
     return fSetupBySetupKey.values().toArray(new TeamSetup[fSetupBySetupKey.size()]);
   }
