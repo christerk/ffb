@@ -55,16 +55,14 @@ public class RosterCache {
     );
     while (fileIterator.hasNext()) {
       File file = fileIterator.next();
-      BufferedReader xmlIn = new BufferedReader(new FileReader(file));
-      InputSource xmlSource = new InputSource(xmlIn);
-      Roster roster = new Roster();
-      try {
-        XmlHandler.parse(xmlSource, roster);
+      try (BufferedReader xmlIn = new BufferedReader(new FileReader(file))) {
+        InputSource xmlSource = new InputSource(xmlIn);
+        Roster roster = new Roster();
+          XmlHandler.parse(xmlSource, roster);
+          add(roster);
       } catch (FantasyFootballException pFfe) {
-        throw new FantasyFootballException("Error initializing roster " + file.getAbsolutePath(), pFfe);
+      throw new FantasyFootballException("Error initializing roster " + file.getAbsolutePath(), pFfe);
       }
-      xmlIn.close();
-      add(roster);
     }
   }
   
