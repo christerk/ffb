@@ -35,12 +35,13 @@ public class DbConnectionManager {
   }
 
   public void closeDbConnection(Connection pConnection) throws SQLException {
-    if (pConnection != null) {
-      if (!pConnection.getAutoCommit()) {
-        pConnection.commit();
+    try (Connection connection = pConnection){
+      if (connection != null) {
+        if (!connection.getAutoCommit()) {
+          connection.commit();
+        }
+        fConnections.remove(connection);
       }
-      pConnection.close();
-      fConnections.remove(pConnection);
     }
   }
 
@@ -50,8 +51,9 @@ public class DbConnectionManager {
 
   public void doKeepAlivePing() throws SQLException {
     for (Connection connection : fConnections) {
-      Statement statement = connection.createStatement();
-      statement.executeQuery("SELECT 1;");
+      try (Statement statement = connection.createStatement()) {
+        statement.executeQuery("SELECT 1;");
+      }
     }
   }
 
