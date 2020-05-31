@@ -146,31 +146,29 @@ public class EntropyServer implements Runnable, EntropySource {
 	}
 
 	public void run() {
-		InputStream socketInputStream;
 
 		byte[] entropyBuffer = new byte[this.buffer.length];
 
-		ServerSocket serverSocket = null;
-		
 		while (runControl) {
-			try {
-				serverSocket = new ServerSocket(this.port);
+			try (ServerSocket serverSocket = new ServerSocket(this.port)) {
+
 				serverSocket.setSoTimeout(1000);
 				while (runControl) {
-					try {
-						Socket socket = serverSocket.accept();
+					try (Socket socket = serverSocket.accept();) {
+
 						socket.setSoTimeout(1000);
 						System.out.println("Entropy client connected");
 
-						socketInputStream = socket.getInputStream();
-						while (runControl && socket.isConnected()) {
-							connected = true;
+						try (InputStream socketInputStream = socket.getInputStream()) {
+							while (runControl && socket.isConnected()) {
+								connected = true;
 
-							try {
-								int bytes = socketInputStream.read(entropyBuffer);
-								put(entropyBuffer, bytes);
-							} catch (SocketTimeoutException ste) {
-								// Socket read timed out, do nothing but wait for next batch of data.
+								try {
+									int bytes = socketInputStream.read(entropyBuffer);
+									put(entropyBuffer, bytes);
+								} catch (SocketTimeoutException ste) {
+									// Socket read timed out, do nothing but wait for next batch of data.
+								}
 							}
 						}
 					} catch (SocketTimeoutException ste) {
@@ -183,11 +181,6 @@ public class EntropyServer implements Runnable, EntropySource {
 			} catch (IOException ioe) {
 				System.out.println(ioe.toString());
 				System.out.println("Entropy client disconnected");
-				try {
-					serverSocket.close();
-					serverSocket = null;
-				} catch (Exception e) { }
-				
 				connected = false;
 				// Some weirdness on the network. Wait a second and set up the
 				// server again.
