@@ -41,9 +41,10 @@ public class DbPasswordForCoachQuery extends DbStatement {
     String password = null;
     try {
       fStatement.setString(1, pCoach);
-      ResultSet resultSet = fStatement.executeQuery();
-      while (resultSet.next()) {
-        password = resultSet.getString(1);
+      try (ResultSet resultSet = fStatement.executeQuery()) {
+        while (resultSet.next()) {
+          password = resultSet.getString(1);
+        }
       }
     } catch (SQLException sqlE) {
       throw new FantasyFootballException(sqlE);
