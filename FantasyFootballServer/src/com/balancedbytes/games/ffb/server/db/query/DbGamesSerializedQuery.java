@@ -49,21 +49,19 @@ public class DbGamesSerializedQuery extends DbStatement {
     GameState gameState = null;
     try {
       fStatement.setLong(1, pGameStateId);
-      ResultSet resultSet = fStatement.executeQuery();
-      while (resultSet.next()) {
-        Blob blob = resultSet.getBlob(1);
-        JsonValue jsonValue = UtilJson.gunzip(blob.getBytes(1, (int) blob.length()));
-        gameState = new GameState(pServer).initFrom(jsonValue);
-        if (getServer().getDebugLog().isLogging(IServerLogLevel.TRACE) && (gameState.getCurrentStep() != null)) {
-          String currentStepName = (gameState.getCurrentStep() != null) ? gameState.getCurrentStep().getId().getName() : "null";
-          getServer().getDebugLog().log(IServerLogLevel.TRACE, StringTool.bind("loaded CurrentStep $1", currentStepName));
+      try (ResultSet resultSet = fStatement.executeQuery()) {
+        while (resultSet.next()) {
+          Blob blob = resultSet.getBlob(1);
+          JsonValue jsonValue = UtilJson.gunzip(blob.getBytes(1, (int) blob.length()));
+          gameState = new GameState(pServer).initFrom(jsonValue);
+          if (getServer().getDebugLog().isLogging(IServerLogLevel.TRACE) && (gameState.getCurrentStep() != null)) {
+            String currentStepName = (gameState.getCurrentStep() != null) ? gameState.getCurrentStep().getId().getName() : "null";
+            getServer().getDebugLog().log(IServerLogLevel.TRACE, StringTool.bind("loaded CurrentStep $1", currentStepName));
+          }
         }
       }
-      resultSet.close();
-    } catch (IOException pIOException) {
+    } catch (IOException | SQLException pIOException) {
       throw new FantasyFootballException(pIOException);
-    } catch (SQLException pSqlException) {
-      throw new FantasyFootballException(pSqlException);
     }
     return gameState;
   }
