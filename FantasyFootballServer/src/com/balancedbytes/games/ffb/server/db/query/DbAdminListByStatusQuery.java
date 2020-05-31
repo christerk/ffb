@@ -68,35 +68,35 @@ public class DbAdminListByStatusQuery extends DbStatement {
     }
     try {
       fStatement.setString(1, pStatus.getTypeString());
-      ResultSet resultSet = fStatement.executeQuery();
-      while (resultSet.next()) {
-        int col = 1;
-        AdminListEntry entry = new AdminListEntry();
-        entry.setGameId(resultSet.getLong(col++));
-        Timestamp started = resultSet.getTimestamp(col++);
-        if (started != null) {
-          entry.setStarted(new Date(started.getTime()));
+      try (ResultSet resultSet = fStatement.executeQuery()) {
+        while (resultSet.next()) {
+          int col = 1;
+          AdminListEntry entry = new AdminListEntry();
+          entry.setGameId(resultSet.getLong(col++));
+          Timestamp started = resultSet.getTimestamp(col++);
+          if (started != null) {
+            entry.setStarted(new Date(started.getTime()));
+          }
+          Timestamp finished = resultSet.getTimestamp(col++);
+          if (finished != null) {
+            entry.setFinished(new Date(finished.getTime()));
+          }
+          Timestamp lastUpdated = resultSet.getTimestamp(col++);
+          if (lastUpdated != null) {
+            entry.setLastUpdated(new Date(lastUpdated.getTime()));
+          }
+          entry.setTeamHomeCoach(resultSet.getString(col++));
+          entry.setTeamHomeId(resultSet.getString(col++));
+          entry.setTeamHomeName(resultSet.getString(col++));
+          entry.setTeamAwayCoach(resultSet.getString(col++));
+          entry.setTeamAwayId(resultSet.getString(col++));
+          entry.setTeamAwayName(resultSet.getString(col++));
+          entry.setHalf(resultSet.getInt(col++));
+          entry.setTurn(resultSet.getInt(col++));
+          entry.setStatus(new GameStatusFactory().forTypeString(resultSet.getString(col++)));
+          pAdminList.add(entry);
         }
-        Timestamp finished = resultSet.getTimestamp(col++);
-        if (finished != null) {
-          entry.setFinished(new Date(finished.getTime()));
-        }
-        Timestamp lastUpdated = resultSet.getTimestamp(col++);
-        if (lastUpdated != null) {
-          entry.setLastUpdated(new Date(lastUpdated.getTime()));
-        }
-        entry.setTeamHomeCoach(resultSet.getString(col++));
-        entry.setTeamHomeId(resultSet.getString(col++));
-        entry.setTeamHomeName(resultSet.getString(col++));
-        entry.setTeamAwayCoach(resultSet.getString(col++));
-        entry.setTeamAwayId(resultSet.getString(col++));
-        entry.setTeamAwayName(resultSet.getString(col++));
-        entry.setHalf(resultSet.getInt(col++));
-        entry.setTurn(resultSet.getInt(col++));
-        entry.setStatus(new GameStatusFactory().forTypeString(resultSet.getString(col++)));
-        pAdminList.add(entry);
       }
-      resultSet.close();
     } catch (SQLException pSqlE) {
       throw new FantasyFootballException(pSqlE);
     }
