@@ -37,7 +37,8 @@ public class CollectRosters {
       DivisionContentHandler divisionHandler = new DivisionContentHandler(rosterIdByName);
       xmlReader.setContentHandler(divisionHandler);
       
-      try (BufferedReader xmlIn = new BufferedReader(new StringReader(responseXml))) {
+      try (StringReader stringReader = new StringReader(responseXml);
+           BufferedReader xmlIn = new BufferedReader(stringReader)) {
         InputSource inputSource = new InputSource(xmlIn);
         xmlReader.parse(inputSource);
       }
@@ -52,7 +53,8 @@ public class CollectRosters {
 
         File targetFile = new File(pDownloadDir, rosterName.toLowerCase().replace(' ', '_') + ".xml");
         System.out.println(targetFile.getAbsolutePath());
-      	try (BufferedWriter out = new BufferedWriter(new FileWriter(targetFile))) {
+      	try (FileWriter fileWriter = new FileWriter(targetFile);
+             BufferedWriter out = new BufferedWriter(fileWriter)) {
           out.write(responseXml);
         }
       }

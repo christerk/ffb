@@ -49,7 +49,8 @@ public class BuildStandaloneIconCache {
     fIconIniProperties.setProperty("http://localhost:2224/icons/pitches/basic.zip", "pitches/basic.zip");
     fIconIniProperties.setProperty("http://localhost:2224/icons/pitches/default.zip", "pitches/default.zip");
     if (fIconIniProperties.size() > 0) {
-      try (Writer out = new OutputStreamWriter(new FileOutputStream(pIconsIniFile), StandardCharsets.UTF_8)) {
+      try (FileOutputStream fileOutputStream = new FileOutputStream(pIconsIniFile);
+           Writer out = new OutputStreamWriter(fileOutputStream, StandardCharsets.UTF_8)) {
         fIconIniProperties.store(out, null);
       }
     }
