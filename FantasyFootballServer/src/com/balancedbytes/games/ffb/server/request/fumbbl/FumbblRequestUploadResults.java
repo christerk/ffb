@@ -67,19 +67,19 @@ public class FumbblRequestUploadResults extends ServerRequest {
       server.getDebugLog().log(IServerLogLevel.DEBUG, DebugLog.FUMBBL_RESPONSE, responseXml);
 
       if (StringTool.isProvided(responseXml)) {
-        BufferedReader xmlReader = new BufferedReader(new StringReader(responseXml));
-        String line = null;
-        while ((line = xmlReader.readLine()) != null) {
-          Matcher resultMatcher = _PATTERN_RESULT.matcher(line);
-          if (resultMatcher.find()) {
-            fUploadSuccessful = "success".equalsIgnoreCase(resultMatcher.group(1));
-          }
-          Matcher descriptionMatcher = _PATTERN_DESCRIPTION.matcher(line);
-          if (descriptionMatcher.find()) {
-            fUploadStatus = descriptionMatcher.group(1);
+        try (BufferedReader xmlReader = new BufferedReader(new StringReader(responseXml))) {
+          String line = null;
+          while ((line = xmlReader.readLine()) != null) {
+            Matcher resultMatcher = _PATTERN_RESULT.matcher(line);
+            if (resultMatcher.find()) {
+              fUploadSuccessful = "success".equalsIgnoreCase(resultMatcher.group(1));
+            }
+            Matcher descriptionMatcher = _PATTERN_DESCRIPTION.matcher(line);
+            if (descriptionMatcher.find()) {
+              fUploadStatus = descriptionMatcher.group(1);
+            }
           }
         }
-        xmlReader.close();
       }
       
       if (isUploadSuccessful()) {
