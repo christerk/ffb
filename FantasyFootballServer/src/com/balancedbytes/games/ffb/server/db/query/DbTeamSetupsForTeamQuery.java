@@ -46,11 +46,12 @@ public class DbTeamSetupsForTeamQuery extends DbStatement {
       try {
         fStatement.setString(1, pTeam.getId());
         List<String> nameList = new ArrayList<String>();
-        ResultSet resultSet = fStatement.executeQuery();
-        while (resultSet.next()) {
-          nameList.add(resultSet.getString(1));
+        try (ResultSet resultSet = fStatement.executeQuery()) {
+          while (resultSet.next()) {
+            nameList.add(resultSet.getString(1));
+          }
+          names = nameList.toArray(new String[nameList.size()]);
         }
-        names = nameList.toArray(new String[nameList.size()]);
       } catch (SQLException sqlE) {
         throw new FantasyFootballException(sqlE);
       }
