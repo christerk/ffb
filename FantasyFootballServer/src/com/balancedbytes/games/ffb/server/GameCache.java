@@ -257,11 +257,9 @@ public class GameCache {
 
   private void loadPitchProperties() {
     Properties pitchProperties = new Properties();
-    try {
+    try (BufferedInputStream propertyInputStream = new BufferedInputStream(new FileInputStream(_PITCHES_INI))) {
       // load pitch properties
-      BufferedInputStream propertyInputStream = new BufferedInputStream(new FileInputStream(_PITCHES_INI));
       pitchProperties.load(propertyInputStream);
-      propertyInputStream.close();
     } catch (IOException pIoException) {
       getServer().getDebugLog().log(pIoException);
     }
