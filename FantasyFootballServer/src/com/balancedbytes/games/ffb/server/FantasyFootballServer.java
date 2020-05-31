@@ -321,11 +321,12 @@ public class FantasyFootballServer {
     } else {
 
       ServerMode serverMode = ServerMode.fromArguments(args);
-
-      BufferedInputStream propertyInputStream = new BufferedInputStream(new FileInputStream(filterResult.getInifileName()));
       Properties properties = new Properties();
-      properties.load(propertyInputStream);
-      propertyInputStream.close();
+
+      try (FileInputStream fileInputStream = new FileInputStream(filterResult.getInifileName());
+        BufferedInputStream propertyInputStream = new BufferedInputStream(fileInputStream)) {
+        properties.load(propertyInputStream);
+      }
 
       FantasyFootballServer server = new FantasyFootballServer(serverMode, properties);
 
@@ -335,9 +336,6 @@ public class FantasyFootballServer {
         server.getDebugLog().log(all);
         server.stop(99);
       }
-
     }
-
   }
-
 }
