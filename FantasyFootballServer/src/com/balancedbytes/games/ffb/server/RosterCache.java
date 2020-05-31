@@ -24,7 +24,7 @@ public class RosterCache {
   private Map<String, Roster> fRosterById;
   
   public RosterCache() {
-    fRosterById = new HashMap<String, Roster>();
+    fRosterById = new HashMap<>();
   }
   
   public void add(Roster pRoster) {
@@ -37,10 +37,6 @@ public class RosterCache {
     return fRosterById.get(pRosterId);
   }
 
-  public Roster[] getRosters() {
-    return fRosterById.values().toArray(new Roster[fRosterById.size()]);
-  }
-  
   public void clear() {
     fRosterById.clear();
   }
