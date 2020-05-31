@@ -255,9 +255,15 @@ public class FantasyFootballClient implements IConnectionListener, IDialogCloseL
 
   public void loadProperties() throws IOException {
     fProperties = new Properties();
-    InputStream propertyInputStream = getClass().getResourceAsStream("/client.ini");
-    fProperties.load(propertyInputStream);
-    propertyInputStream.close();
+    InputStream propertyInputStream = null;
+    try {
+      propertyInputStream = getClass().getResourceAsStream("/client.ini");
+      fProperties.load(propertyInputStream);
+    } finally {
+      if (propertyInputStream != null) {
+        propertyInputStream.close();
+      }
+    }
   }
 
   public ClientData getClientData() {
