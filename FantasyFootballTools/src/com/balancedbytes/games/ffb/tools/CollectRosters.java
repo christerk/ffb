@@ -37,10 +37,11 @@ public class CollectRosters {
       DivisionContentHandler divisionHandler = new DivisionContentHandler(rosterIdByName);
       xmlReader.setContentHandler(divisionHandler);
       
-      BufferedReader xmlIn = new BufferedReader(new StringReader(responseXml));
-      InputSource inputSource = new InputSource(xmlIn);
-      xmlReader.parse(inputSource);
-
+      try (StringReader stringReader = new StringReader(responseXml);
+           BufferedReader xmlIn = new BufferedReader(stringReader)) {
+        InputSource inputSource = new InputSource(xmlIn);
+        xmlReader.parse(inputSource);
+      }
     }
     
     for (String rosterName : rosterIdByName.keySet()) {
@@ -50,14 +51,12 @@ public class CollectRosters {
       
       if (StringTool.isProvided(responseXml)) {
 
-      	StringBuilder fileName = new StringBuilder();
-      	fileName.append(rosterName.toLowerCase().replace(' ', '_')).append(".xml");
-      	File targetFile = new File(pDownloadDir, fileName.toString());
+        File targetFile = new File(pDownloadDir, rosterName.toLowerCase().replace(' ', '_') + ".xml");
         System.out.println(targetFile.getAbsolutePath());
-      	BufferedWriter out = new BufferedWriter(new FileWriter(targetFile));
-      	out.write(responseXml);
-      	out.close();
-      	
+      	try (FileWriter fileWriter = new FileWriter(targetFile);
+             BufferedWriter out = new BufferedWriter(fileWriter)) {
+          out.write(responseXml);
+        }
       }
       
     }

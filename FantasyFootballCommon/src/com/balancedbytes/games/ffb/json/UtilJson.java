@@ -121,12 +121,31 @@ public class UtilJson {
     if (pJsonValue == null) {
       return new byte[0];
     }
-    ByteArrayOutputStream byteOut = new ByteArrayOutputStream();
-    GZIPOutputStream gzipOut = new GZIPOutputStream(byteOut);
-    BufferedWriter out = new BufferedWriter(new OutputStreamWriter(gzipOut, _CHARSET));
-    out.write(pJsonValue.toString());
-    out.close();
-    return byteOut.toByteArray();
+    ByteArrayOutputStream byteOut = null;
+    GZIPOutputStream gzipOut = null;
+    BufferedWriter out = null;
+    OutputStreamWriter outWriter = null;
+    try {
+      byteOut = new ByteArrayOutputStream();
+      gzipOut = new GZIPOutputStream(byteOut);
+      outWriter = new OutputStreamWriter(gzipOut, _CHARSET);
+      out = new BufferedWriter(outWriter);
+      out.write(pJsonValue.toString());
+      return byteOut.toByteArray();
+    } finally {
+      if (byteOut != null) {
+        byteOut.close();
+      }
+      if (gzipOut != null) {
+        gzipOut.close();
+      }
+      if (outWriter != null) {
+        outWriter.close();
+      }
+      if (out != null) {
+        out.close();
+      }
+    }
   }
   
   public static JsonValue gunzip(byte[] pGzippedJson) throws IOException {

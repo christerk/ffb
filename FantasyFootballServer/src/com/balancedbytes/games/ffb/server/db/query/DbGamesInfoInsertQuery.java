@@ -80,9 +80,10 @@ public class DbGamesInfoInsertQuery extends DbStatement {
       fStatement.setBoolean(col++, game.isTesting());                                                                       // 14
       fStatement.setBoolean(col++, game.isAdminMode());                                                                     // 15
       fStatement.executeUpdate();
-      ResultSet rs = fStatement.getGeneratedKeys();
-      if (rs.next()) {
-        pGameState.getGame().setId(rs.getLong(1));
+      try (ResultSet rs = fStatement.getGeneratedKeys()) {
+        if (rs.next()) {
+          pGameState.getGame().setId(rs.getLong(1));
+        }
       }
     } catch (SQLException pSqlException) {
       throw new FantasyFootballException(pSqlException);

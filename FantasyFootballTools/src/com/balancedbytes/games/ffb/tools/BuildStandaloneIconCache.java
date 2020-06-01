@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.Properties;
 
 /**
@@ -48,9 +49,10 @@ public class BuildStandaloneIconCache {
     fIconIniProperties.setProperty("http://localhost:2224/icons/pitches/basic.zip", "pitches/basic.zip");
     fIconIniProperties.setProperty("http://localhost:2224/icons/pitches/default.zip", "pitches/default.zip");
     if (fIconIniProperties.size() > 0) {
-      Writer out = new OutputStreamWriter(new FileOutputStream(pIconsIniFile), Charset.forName("utf-8"));
-      fIconIniProperties.store(out, null);
-      out.close();
+      try (FileOutputStream fileOutputStream = new FileOutputStream(pIconsIniFile);
+           Writer out = new OutputStreamWriter(fileOutputStream, StandardCharsets.UTF_8)) {
+        fIconIniProperties.store(out, null);
+      }
     }
     UtilFile.sortPropertyFile(pIconsIniFile);
   }

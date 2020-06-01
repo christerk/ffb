@@ -74,16 +74,16 @@ public class AdminConnector {
       System.out.println(adminChallengeXml);
 
       String challenge = null;
-      BufferedReader xmlReader = new BufferedReader(new StringReader(adminChallengeXml));
-      String line = null;
-      while ((line = xmlReader.readLine()) != null) {
-        Matcher challengeMatcher = _PATTERN_CHALLENGE.matcher(line);
-        if (challengeMatcher.find()) {
-          challenge = challengeMatcher.group(1);
-          break;
+      try (BufferedReader xmlReader = new BufferedReader(new StringReader(adminChallengeXml))) {
+        String line = null;
+        while ((line = xmlReader.readLine()) != null) {
+          Matcher challengeMatcher = _PATTERN_CHALLENGE.matcher(line);
+          if (challengeMatcher.find()) {
+            challenge = challengeMatcher.group(1);
+            break;
+          }
         }
       }
-      xmlReader.close();
 
       byte[] md5Password = PasswordChallenge.fromHexString(serverProperties.getProperty(IServerProperty.ADMIN_PASSWORD));
       String response = PasswordChallenge.createResponse(challenge, md5Password);

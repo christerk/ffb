@@ -74,10 +74,11 @@ public class DbUserSettingsQuery extends DbStatement {
     fSettings.clear();
     try {
       fStatement.setString(1, pCoach);
-      ResultSet resultSet = fStatement.executeQuery();
-      while (resultSet.next()) {
-        QueryResult queryResult = new QueryResult(resultSet);
-        fSettings.put(queryResult.getSettingName(), queryResult.getSettingValue());
+      try (ResultSet resultSet = fStatement.executeQuery()) {
+        while (resultSet.next()) {
+          QueryResult queryResult = new QueryResult(resultSet);
+          fSettings.put(queryResult.getSettingName(), queryResult.getSettingValue());
+        }
       }
     } catch (SQLException sqlE) {
       throw new FantasyFootballException(sqlE);

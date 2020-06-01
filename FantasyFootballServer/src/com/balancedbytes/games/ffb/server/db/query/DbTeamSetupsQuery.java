@@ -46,15 +46,16 @@ public class DbTeamSetupsQuery extends DbStatement {
     try {
       fStatement.setString(1, teamSetup.getTeamId());
       fStatement.setString(2, teamSetup.getName());
-      ResultSet resultSet = fStatement.executeQuery();
-      while (resultSet.next()) {
-        for (int i = 0; i < 11; i++) {
-          int playerNr = resultSet.getByte(3 * i + 3);
-          int coordinateX = resultSet.getByte((3 * i) + 4);
-          int coordinateY = resultSet.getByte((3 * i) + 5);
-          if (playerNr > 0) {
-            FieldCoordinate playerCoordinate = new FieldCoordinate(coordinateX, coordinateY);
-            teamSetup.addCoordinate(playerCoordinate, playerNr);
+      try (ResultSet resultSet = fStatement.executeQuery()) {
+        while (resultSet.next()) {
+          for (int i = 0; i < 11; i++) {
+            int playerNr = resultSet.getByte(3 * i + 3);
+            int coordinateX = resultSet.getByte((3 * i) + 4);
+            int coordinateY = resultSet.getByte((3 * i) + 5);
+            if (playerNr > 0) {
+              FieldCoordinate playerCoordinate = new FieldCoordinate(coordinateX, coordinateY);
+              teamSetup.addCoordinate(playerCoordinate, playerNr);
+            }
           }
         }
       }

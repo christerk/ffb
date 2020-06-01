@@ -11,6 +11,7 @@ import java.io.OutputStreamWriter;
 import java.io.StringReader;
 import java.net.URL;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
@@ -52,10 +53,11 @@ public class BuildFumbblIconCache {
       DivisionContentHandler divisionHandler = new DivisionContentHandler(rosterIdByName);
       xmlReader.setContentHandler(divisionHandler);
       
-      BufferedReader xmlIn = new BufferedReader(new StringReader(responseXml));
-      InputSource inputSource = new InputSource(xmlIn);
-      xmlReader.parse(inputSource);
-
+      try (StringReader stringReader = new StringReader(responseXml);
+           BufferedReader xmlIn = new BufferedReader(stringReader)) {
+        InputSource inputSource = new InputSource(xmlIn);
+        xmlReader.parse(inputSource);
+      }
     }
     
     return rosterIdByName;
@@ -74,15 +76,16 @@ public class BuildFumbblIconCache {
       return;
     }
 
-    BufferedReader xmlIn = new BufferedReader(new StringReader(responseXml));
-    InputSource inputSource = new InputSource(xmlIn);
     Roster roster = new Roster();
-    try {
-      XmlHandler.parse(inputSource, roster);
-    } catch (FantasyFootballException pFfe) {
-      throw new FantasyFootballException("Error initializing roster id " + pRosterId, pFfe);
+    try (StringReader stringReader = new StringReader(responseXml);
+         BufferedReader xmlIn = new BufferedReader(stringReader)) {
+      InputSource inputSource = new InputSource(xmlIn);
+      try {
+        XmlHandler.parse(inputSource, roster);
+      } catch (FantasyFootballException pFfe) {
+        throw new FantasyFootballException("Error initializing roster id " + pRosterId, pFfe);
+      }
     }
-    xmlIn.close();
     
     for (RosterPosition position : roster.getPositions()) {
       StringBuilder iconName = new StringBuilder();
@@ -147,10 +150,10 @@ public class BuildFumbblIconCache {
     
     File iniFile = new File(pDownloadDir, "icons.ini");
     System.out.println("save " + iniFile.getAbsolutePath());
-    BufferedWriter iniWriter = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(iniFile), Charset.forName("utf-8"))); 
-    pIconCache.store(iniWriter, null);
-    iniWriter.close();
-    
+    try (BufferedWriter iniWriter = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(iniFile), StandardCharsets.UTF_8))) {
+      pIconCache.store(iniWriter, null);
+    }
+
     UtilFile.sortPropertyFile(iniFile);
     
     for (Object key : pIconCache.keySet()) {

@@ -58,19 +58,20 @@ public class DbGameListQueryOpenGamesByCoach extends DbStatement {
     try {
       fStatement.setString(1, pCoach);
       fStatement.setString(2, pCoach);
-      ResultSet resultSet = fStatement.executeQuery();
-      while (resultSet.next()) {
-        int col = 1;
-      	GameListEntry gameListEntry = new GameListEntry();
-        gameListEntry.setGameId(resultSet.getLong(col++));
-        gameListEntry.setStarted(resultSet.getTimestamp(col++));
-        gameListEntry.setTeamHomeId(resultSet.getString(col++));
-        gameListEntry.setTeamHomeName(resultSet.getString(col++));
-        gameListEntry.setTeamHomeCoach(resultSet.getString(col++));
-        gameListEntry.setTeamAwayId(resultSet.getString(col++));
-        gameListEntry.setTeamAwayName(resultSet.getString(col++));
-        gameListEntry.setTeamAwayCoach(resultSet.getString(col++));
-      	pGameList.add(gameListEntry);
+      try (ResultSet resultSet = fStatement.executeQuery()) {
+        while (resultSet.next()) {
+          int col = 1;
+          GameListEntry gameListEntry = new GameListEntry();
+          gameListEntry.setGameId(resultSet.getLong(col++));
+          gameListEntry.setStarted(resultSet.getTimestamp(col++));
+          gameListEntry.setTeamHomeId(resultSet.getString(col++));
+          gameListEntry.setTeamHomeName(resultSet.getString(col++));
+          gameListEntry.setTeamHomeCoach(resultSet.getString(col++));
+          gameListEntry.setTeamAwayId(resultSet.getString(col++));
+          gameListEntry.setTeamAwayName(resultSet.getString(col++));
+          gameListEntry.setTeamAwayCoach(resultSet.getString(col++));
+          pGameList.add(gameListEntry);
+        }
       }
     } catch (SQLException sqlE) {
       throw new FantasyFootballException(sqlE);

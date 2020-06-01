@@ -60,21 +60,22 @@ public class DbPlayerMarkersQuery extends DbStatement {
     }
     try {
       fStatement.setString(1, team.getId());
-      ResultSet resultSet = fStatement.executeQuery();
-      while (resultSet.next()) {
-        String playerId = resultSet.getString(1);
-        String text = resultSet.getString(2);
-        Player player = game.getPlayerById(playerId);
-        if ((player != null) && StringTool.isProvided(text)) {
-          PlayerMarker playerMarker = game.getFieldModel().getPlayerMarker(player.getId());
-          if (playerMarker == null) {
-            playerMarker = new PlayerMarker(player.getId());
-            game.getFieldModel().add(playerMarker);
-          }
-          if (pHomeTeam) {
-            playerMarker.setHomeText(text);
-          } else {
-            playerMarker.setAwayText(text);
+      try (ResultSet resultSet = fStatement.executeQuery()) {
+        while (resultSet.next()) {
+          String playerId = resultSet.getString(1);
+          String text = resultSet.getString(2);
+          Player player = game.getPlayerById(playerId);
+          if ((player != null) && StringTool.isProvided(text)) {
+            PlayerMarker playerMarker = game.getFieldModel().getPlayerMarker(player.getId());
+            if (playerMarker == null) {
+              playerMarker = new PlayerMarker(player.getId());
+              game.getFieldModel().add(playerMarker);
+            }
+            if (pHomeTeam) {
+              playerMarker.setHomeText(text);
+            } else {
+              playerMarker.setAwayText(text);
+            }
           }
         }
       }

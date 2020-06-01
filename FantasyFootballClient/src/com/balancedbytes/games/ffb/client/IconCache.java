@@ -52,12 +52,20 @@ public class IconCache {
   
   public void init() {
     fIconUrlProperties = new Properties();
+    InputStream propertyInputStream = null;
     try {
-      InputStream propertyInputStream = getClass().getResourceAsStream("/icons.ini");
+      propertyInputStream = getClass().getResourceAsStream("/icons.ini");
       fIconUrlProperties.load(propertyInputStream);
-      propertyInputStream.close();
     } catch (IOException pIoException) {
       // empty properties
+    } finally {
+      if (propertyInputStream != null) {
+        try {
+          propertyInputStream.close();
+        } catch (IOException e) {
+          // NOOP
+        }
+      }
     }
   }
   
@@ -98,12 +106,15 @@ public class IconCache {
       }
     }
     */
-    
+
+    InputStream iconInputStream = null;
+    ZipInputStream zipStream = null;
     try {
-      InputStream iconInputStream = getClass().getResourceAsStream(iconPath);
+      iconInputStream = getClass().getResourceAsStream(iconPath);
       if (iconInputStream != null) {
         if (pitchWeather != null) {
-          return loadPitchFromStream(new ZipInputStream(iconInputStream), myUrl);
+          zipStream = new ZipInputStream(iconInputStream);
+          return loadPitchFromStream(zipStream, myUrl);
         } else {
           BufferedImage icon = ImageIO.read(iconInputStream);
           iconInputStream.close();
@@ -115,6 +126,22 @@ public class IconCache {
       }
     } catch (IOException ioe) {
       // just skip precaching
+    } finally {
+      if (zipStream != null) {
+        try {
+          zipStream.close();
+        } catch (IOException e) {
+          // NOOP
+        }
+      }
+
+      if (iconInputStream != null) {
+        try {
+          iconInputStream.close();
+        } catch (IOException e) {
+          // NOOP
+        }
+      }
     }
     
     return false;
@@ -313,14 +340,24 @@ public class IconCache {
   
   private void loadPitchFromUrl(String pUrl) {
     URL pitchUrl = null;
+    ZipInputStream zipStream = null;
     try {
       pitchUrl = new URL(pUrl);
       HttpURLConnection connection = (HttpURLConnection) pitchUrl.openConnection();
       connection.setRequestMethod("GET");
-      loadPitchFromStream(new ZipInputStream(connection.getInputStream()), pUrl);
+      zipStream = new ZipInputStream(connection.getInputStream());
+      loadPitchFromStream(zipStream, pUrl);
     } catch (Exception pAny) {
       // This should catch issues where the image is broken...
       getClient().getUserInterface().getStatusReport().reportIconLoadFailure(pitchUrl);
+    } finally {
+      if (zipStream != null) {
+        try {
+          zipStream.close();
+        } catch (IOException e) {
+          e.printStackTrace();
+        }
+      }
     }
   }
   
@@ -339,7 +376,6 @@ public class IconCache {
           iconByName.put(entry.getName(), ImageIO.read(pZipIn));
         }
       }
-      pZipIn.close();
       for (Weather weather : Weather.values()) {
         String iconName = pitchProperties.getProperty(weather.getShortName());
         if (!StringTool.isProvided(iconName)) { 

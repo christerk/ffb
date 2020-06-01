@@ -24,7 +24,7 @@ public class RosterCache {
   private Map<String, Roster> fRosterById;
   
   public RosterCache() {
-    fRosterById = new HashMap<String, Roster>();
+    fRosterById = new HashMap<>();
   }
   
   public void add(Roster pRoster) {
@@ -37,10 +37,6 @@ public class RosterCache {
     return fRosterById.get(pRosterId);
   }
 
-  public Roster[] getRosters() {
-    return fRosterById.values().toArray(new Roster[fRosterById.size()]);
-  }
-  
   public void clear() {
     fRosterById.clear();
   }
@@ -49,22 +45,18 @@ public class RosterCache {
     FileIterator fileIterator = new FileIterator(
       pRosterDirectory,
       false,
-      new FileFilter() {
-        public boolean accept(File pathname) { return pathname.getName().endsWith(".xml"); };
-      }
+      pathname -> pathname.getName().endsWith(".xml")
     );
     while (fileIterator.hasNext()) {
       File file = fileIterator.next();
-      BufferedReader xmlIn = new BufferedReader(new FileReader(file));
-      InputSource xmlSource = new InputSource(xmlIn);
-      Roster roster = new Roster();
-      try {
-        XmlHandler.parse(xmlSource, roster);
+      try (BufferedReader xmlIn = new BufferedReader(new FileReader(file))) {
+        InputSource xmlSource = new InputSource(xmlIn);
+        Roster roster = new Roster();
+          XmlHandler.parse(xmlSource, roster);
+          add(roster);
       } catch (FantasyFootballException pFfe) {
-        throw new FantasyFootballException("Error initializing roster " + file.getAbsolutePath(), pFfe);
+      throw new FantasyFootballException("Error initializing roster " + file.getAbsolutePath(), pFfe);
       }
-      xmlIn.close();
-      add(roster);
     }
   }
   
