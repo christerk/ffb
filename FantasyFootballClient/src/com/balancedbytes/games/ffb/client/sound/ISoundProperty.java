@@ -50,6 +50,7 @@ public interface ISoundProperty {
   String SPEC_CHEER = "sound.specCheer";
   String SPEC_CLAP = "sound.specClap";
   String SPEC_CRICKETS = "sound.specCrickets";
+  String SPEC_HURT = "sound.specHurt";
   String SPEC_LAUGH = "sound.specLaugh";
   String SPEC_OOH = "sound.specOoh";
   String SPEC_SHOCK = "sound.specShock";

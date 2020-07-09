@@ -54,6 +54,7 @@ public class SoundEngine {
     _SOUND_PROPERTY_KEYS.put(SoundId.SPEC_CHEER, ISoundProperty.SPEC_CHEER);
     _SOUND_PROPERTY_KEYS.put(SoundId.SPEC_CLAP, ISoundProperty.SPEC_CLAP);
     _SOUND_PROPERTY_KEYS.put(SoundId.SPEC_CRICKETS, ISoundProperty.SPEC_CRICKETS);
+    _SOUND_PROPERTY_KEYS.put(SoundId.SPEC_HURT, ISoundProperty.SPEC_HURT);
     _SOUND_PROPERTY_KEYS.put(SoundId.SPEC_LAUGH, ISoundProperty.SPEC_LAUGH);
     _SOUND_PROPERTY_KEYS.put(SoundId.SPEC_OOH, ISoundProperty.SPEC_OOH);
     _SOUND_PROPERTY_KEYS.put(SoundId.SPEC_SHOCK, ISoundProperty.SPEC_SHOCK);

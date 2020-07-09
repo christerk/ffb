@@ -52,6 +52,7 @@ public enum SoundId implements INamedObject {
   SPEC_CHEER("specCheer", true),
   SPEC_CLAP("specClap", true),
   SPEC_CRICKETS("specCrickets", true),
+  SPEC_HURT("specHurt", true),
   SPEC_LAUGH("specLaugh", true),
   SPEC_OOH("specOoh", true),
   SPEC_SHOCK("specShock", true),

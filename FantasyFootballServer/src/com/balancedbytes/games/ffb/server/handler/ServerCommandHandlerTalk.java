@@ -132,6 +132,8 @@ public class ServerCommandHandlerTalk extends ServerCommandHandler {
           playSoundAfterCooldown(gameState, coach, SoundId.SPEC_CLAP);
         } else if (talk.startsWith("/crickets")) {
           playSoundAfterCooldown(gameState, coach, SoundId.SPEC_CRICKETS);
+        } else if (talk.startsWith("/hurt")) {
+          playSoundAfterCooldown(gameState, coach, SoundId.SPEC_HURT);
         } else if (talk.startsWith("/laugh")) {
           playSoundAfterCooldown(gameState, coach, SoundId.SPEC_LAUGH);
         } else if (talk.startsWith("/ooh")) {
