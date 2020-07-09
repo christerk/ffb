@@ -53,16 +53,16 @@ public class FumbblRequestPasswordChallenge extends ServerRequest {
       String responseXml = UtilServerHttpClient.fetchPage(getRequestUrl());
       if (StringTool.isProvided(responseXml)) {
         server.getDebugLog().log(IServerLogLevel.DEBUG, DebugLog.FUMBBL_RESPONSE, responseXml);
-        BufferedReader xmlReader = new BufferedReader(new StringReader(responseXml));
-        String line = null;
-        while ((line = xmlReader.readLine()) != null) {
-          Matcher challengeMatcher = _PATTERN_CHALLENGE.matcher(line);
-          if (challengeMatcher.find()) {
-            challenge = challengeMatcher.group(1);
-            break;
+        try (BufferedReader xmlReader = new BufferedReader(new StringReader(responseXml))) {
+          String line;
+          while ((line = xmlReader.readLine()) != null) {
+            Matcher challengeMatcher = _PATTERN_CHALLENGE.matcher(line);
+            if (challengeMatcher.find()) {
+              challenge = challengeMatcher.group(1);
+              break;
+            }
           }
         }
-        xmlReader.close();
       }
     } catch (IOException pIoException) {
       throw new FantasyFootballException(pIoException);

@@ -42,34 +42,33 @@ public class DbInitializer {
 
 	public void initDb() throws SQLException {
 
-		Connection connection = fDbConnectionManager.openDbConnection();
-		Statement statement = connection.createStatement();
+		try (Connection connection = fDbConnectionManager.openDbConnection();
+			Statement statement = connection.createStatement();) {
 
-		dropTable(statement, IDbTablePlayerMarkers.TABLE_NAME);
-		dropTable(statement, IDbTableTeamSetups.TABLE_NAME);
-		dropTable(statement, IDbTableUserSettings.TABLE_NAME);
-		dropTable(statement, IDbTableGamesInfo.TABLE_NAME);
-		dropTable(statement, IDbTableGamesSerialized.TABLE_NAME);
+			dropTable(statement, IDbTablePlayerMarkers.TABLE_NAME);
+			dropTable(statement, IDbTableTeamSetups.TABLE_NAME);
+			dropTable(statement, IDbTableUserSettings.TABLE_NAME);
+			dropTable(statement, IDbTableGamesInfo.TABLE_NAME);
+			dropTable(statement, IDbTableGamesSerialized.TABLE_NAME);
 
-		if (fDbConnectionManager.isStandalone()) {
-			dropTable(statement, IDbTableCoaches.TABLE_NAME);
-			createTableCoaches(statement);
+			if (fDbConnectionManager.isStandalone()) {
+				dropTable(statement, IDbTableCoaches.TABLE_NAME);
+				createTableCoaches(statement);
+			}
+
+			createTablePlayerMarkers(statement);
+			createTableUserSettings(statement);
+			createTableTeamSetups(statement);
+			createTableGamesInfo(statement);
+			createTableGamesSerialized(statement);
+
+			if (fDbConnectionManager.isStandalone()) {
+				initTableCoaches(statement);
+				initTableTeamSetups(statement);
+			}
+
+			connection.commit();
 		}
-
-		createTablePlayerMarkers(statement);
-		createTableUserSettings(statement);
-		createTableTeamSetups(statement);
-		createTableGamesInfo(statement);
-		createTableGamesSerialized(statement);
-
-		if (fDbConnectionManager.isStandalone()) {
-			initTableCoaches(statement);
-			initTableTeamSetups(statement);
-		}
-
-		connection.commit();
-		connection.close();
-
 	}
 
 	private int dropTable(Statement pStatement, String pTableName) throws SQLException {

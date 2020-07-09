@@ -59,13 +59,11 @@ public class UtilFumbblRequest {
     if ((pServer == null) || !StringTool.isProvided(pResponseXml)) {
       return null;
     }
-    FumbblGameState gameState = null;
-    try {
-      BufferedReader xmlReader = new BufferedReader(new StringReader(pResponseXml));
+    FumbblGameState gameState;
+    try (BufferedReader xmlReader = new BufferedReader(new StringReader(pResponseXml));) {
       InputSource xmlSource = new InputSource(xmlReader);
       gameState = new FumbblGameState(pRequestUrl);
       XmlHandler.parse(xmlSource, gameState);
-      xmlReader.close();
     } catch (IOException ioe) {
       throw new FantasyFootballException(ioe);
     }
@@ -108,16 +106,16 @@ public class UtilFumbblRequest {
       String responseXml = UtilServerHttpClient.fetchPage(challengeUrl);
       if (StringTool.isProvided(responseXml)) {
         pServer.getDebugLog().log(IServerLogLevel.DEBUG, DebugLog.FUMBBL_RESPONSE, responseXml);
-        BufferedReader xmlReader = new BufferedReader(new StringReader(responseXml));
-        String line = null;
-        while ((line = xmlReader.readLine()) != null) {
-          Matcher challengeMatcher = _PATTERN_CHALLENGE.matcher(line);
-          if (challengeMatcher.find()) {
-            challenge = challengeMatcher.group(1);
-            break;
+        try (BufferedReader xmlReader = new BufferedReader(new StringReader(responseXml))) {
+          String line = null;
+          while ((line = xmlReader.readLine()) != null) {
+            Matcher challengeMatcher = _PATTERN_CHALLENGE.matcher(line);
+            if (challengeMatcher.find()) {
+              challenge = challengeMatcher.group(1);
+              break;
+            }
           }
         }
-        xmlReader.close();
       }
       return challenge;
     } catch (IOException pIoE) {
@@ -150,10 +148,10 @@ public class UtilFumbblRequest {
       String teamXml = UtilServerHttpClient.fetchPage(teamUrl);
       if (StringTool.isProvided(teamXml)) {
         team = new Team();
-        BufferedReader xmlReader = new BufferedReader(new StringReader(teamXml));
-        InputSource xmlSource = new InputSource(xmlReader);
-        XmlHandler.parse(xmlSource, team);
-        xmlReader.close();
+        try (BufferedReader xmlReader = new BufferedReader(new StringReader(teamXml))) {
+          InputSource xmlSource = new InputSource(xmlReader);
+          XmlHandler.parse(xmlSource, team);
+        }
       }
     } catch (IOException ioe) {
       throw new FantasyFootballException(ioe);
@@ -171,10 +169,10 @@ public class UtilFumbblRequest {
       String rosterXml = UtilServerHttpClient.fetchPage(rosterUrl);
       if (StringTool.isProvided(rosterXml)) {
         roster = new Roster();
-        BufferedReader xmlReader = new BufferedReader(new StringReader(rosterXml));
-        InputSource xmlSource = new InputSource(xmlReader);
-        XmlHandler.parse(xmlSource, roster);
-        xmlReader.close();
+        try (BufferedReader xmlReader = new BufferedReader(new StringReader(rosterXml))) {
+          InputSource xmlSource = new InputSource(xmlReader);
+          XmlHandler.parse(xmlSource, roster);
+        }
       }
     } catch (IOException ioe) {
       throw new FantasyFootballException(ioe);
@@ -183,13 +181,12 @@ public class UtilFumbblRequest {
   }
   
   public static void main(String[] args) {
-    
-    try {
-      
-      BufferedInputStream propertyInputStream = new BufferedInputStream(new FileInputStream(args[0]));
+
+    try(FileInputStream fileStream = new FileInputStream(args[0]);
+        BufferedInputStream propertyInputStream = new BufferedInputStream(fileStream)) {
+
       Properties properties = new Properties();
       properties.load(propertyInputStream);
-      propertyInputStream.close();
       
       FantasyFootballServer server = new FantasyFootballServer(ServerMode.STANDALONE, properties);
       

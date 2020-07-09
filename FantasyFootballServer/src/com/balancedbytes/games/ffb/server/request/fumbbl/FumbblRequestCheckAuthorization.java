@@ -95,17 +95,17 @@ public class FumbblRequestCheckAuthorization extends ServerRequest {
         String responseXml = UtilServerHttpClient.fetchPage(getRequestUrl());
       	server.getDebugLog().log(IServerLogLevel.DEBUG, DebugLog.FUMBBL_RESPONSE, responseXml);
         if (StringTool.isProvided(responseXml)) {
-          BufferedReader xmlReader = new BufferedReader(new StringReader(responseXml));
-          String line = null;
-          String response = null;
-          while ((line = xmlReader.readLine()) != null) {
-            Matcher responseMatcher = _PATTERN_RESPONSE.matcher(line);
-            if (responseMatcher.find()) {
-              response = responseMatcher.group(1);
+          try (BufferedReader xmlReader = new BufferedReader(new StringReader(responseXml))) {
+            String line;
+            String response = null;
+            while ((line = xmlReader.readLine()) != null) {
+              Matcher responseMatcher = _PATTERN_RESPONSE.matcher(line);
+              if (responseMatcher.find()) {
+                response = responseMatcher.group(1);
+              }
             }
+            passwordOk = (StringTool.isProvided(response) && response.startsWith("OK"));
           }
-          xmlReader.close();
-          passwordOk = (StringTool.isProvided(response) && response.startsWith("OK"));
         }
       }
     } catch (IOException ioe) {

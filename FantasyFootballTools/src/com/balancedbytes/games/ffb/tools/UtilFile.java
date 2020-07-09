@@ -21,33 +21,33 @@ public class UtilFile {
     List<String> header = new ArrayList<String>();
     List<String> body = new ArrayList<String>();
     
-    BufferedReader in = new BufferedReader(new FileReader(pFile));
-    boolean insideHeader = true;
-    String lineIn = null;
-    while ((lineIn = in.readLine()) != null) {
-      if (insideHeader) {
-        if (lineIn.startsWith("#")) {
-          header.add(lineIn);
-          continue;
-        } else {
-          insideHeader = false;
+    try (BufferedReader in = new BufferedReader(new FileReader(pFile))) {
+      boolean insideHeader = true;
+      String lineIn;
+      while ((lineIn = in.readLine()) != null) {
+        if (insideHeader) {
+          if (lineIn.startsWith("#")) {
+            header.add(lineIn);
+            continue;
+          } else {
+            insideHeader = false;
+          }
         }
+        body.add(lineIn);
       }
-      body.add(lineIn);
     }
-    in.close();
     
-    BufferedWriter out = new BufferedWriter(new FileWriter(pFile));
-    for (String lineOut : header) {
-      out.write(lineOut);
-      out.newLine();
+    try (BufferedWriter out = new BufferedWriter(new FileWriter(pFile))) {
+      for (String lineOut : header) {
+        out.write(lineOut);
+        out.newLine();
+      }
+      Collections.sort(body);
+      for (String lineOut : body) {
+        out.write(lineOut);
+        out.newLine();
+      }
     }
-    Collections.sort(body);
-    for (String lineOut : body) {
-      out.write(lineOut);
-      out.newLine();
-    }
-    out.close();
     
   }
 

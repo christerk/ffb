@@ -208,12 +208,12 @@ public final class OsgiRegistry implements SynchronousBundleListener {
 
         @Override
         public List<Class<?>> call() throws Exception {
+            BufferedReader br = null;
             try {
                 if (LOGGER.isLoggable(Level.FINEST)) {
                     LOGGER.log(Level.FINEST, "Loading providers for SPI: {0}", spi);
                 }
-                final BufferedReader br =
-                        new BufferedReader(new InputStreamReader(spiRegistryUri.toURL().openStream(), "UTF-8"));
+                br = new BufferedReader(new InputStreamReader(spiRegistryUri.toURL().openStream(), "UTF-8"));
                 String providerClassName;
                 final List<Class<?>> providerClasses = new ArrayList<Class<?>>();
                 while ((providerClassName = br.readLine()) != null) {
@@ -225,7 +225,6 @@ public final class OsgiRegistry implements SynchronousBundleListener {
                     }
                     providerClasses.add(bundle.loadClass(providerClassName));
                 }
-                br.close();
                 return providerClasses;
             } catch (Exception e) {
                 LOGGER.log(Level.WARNING, LocalizationMessages.EXCEPTION_CAUGHT_WHILE_LOADING_SPI_PROVIDERS(), e);
@@ -233,6 +232,10 @@ public final class OsgiRegistry implements SynchronousBundleListener {
             } catch (Error e) {
                 LOGGER.log(Level.WARNING, LocalizationMessages.ERROR_CAUGHT_WHILE_LOADING_SPI_PROVIDERS(), e);
                 throw e;
+            } finally {
+                if (br != null) {
+                    br.close();
+                }
             }
         }
 
@@ -310,17 +313,20 @@ public final class OsgiRegistry implements SynchronousBundleListener {
             if (jars != null) {
                 while (jars.hasMoreElements()) {
                     JarInputStream jarInputStream = null;
+                    InputStream inputStream = null;
                     try {
-                        final InputStream inputStream = classLoader.getResourceAsStream(jars.nextElement().getPath());
-                        jarInputStream = new JarInputStream(inputStream);
+                        inputStream = classLoader.getResourceAsStream(jars.nextElement().getPath());
+                        if (inputStream != null) {
+                            jarInputStream = new JarInputStream(inputStream);
 
-                        JarEntry jarEntry;
-                        while ((jarEntry = jarInputStream.getNextJarEntry()) != null) {
-                            final String jarEntryName = jarEntry.getName();
+                            JarEntry jarEntry;
+                            while ((jarEntry = jarInputStream.getNextJarEntry()) != null) {
+                                final String jarEntryName = jarEntry.getName();
 
-                            if (jarEntryName.endsWith(".class") && jarEntryName.contains(packagePath)) {
-                                classToBundleMapping.put(jarEntryName.replace(".class", "").replace('/', '.'), bundle);
-                                result.add(bundle.getResource(jarEntryName));
+                                if (jarEntryName.endsWith(".class") && jarEntryName.contains(packagePath)) {
+                                    classToBundleMapping.put(jarEntryName.replace(".class", "").replace('/', '.'), bundle);
+                                    result.add(bundle.getResource(jarEntryName));
+                                }
                             }
                         }
                     } catch (Exception e) {
@@ -330,6 +336,14 @@ public final class OsgiRegistry implements SynchronousBundleListener {
                             try {
                                 jarInputStream.close();
                             } catch (IOException ioe) {
+                                // ignore
+                            }
+                        }
+
+                        if (inputStream != null) {
+                            try {
+                                inputStream.close();
+                            } catch (IOException e) {
                                 // ignore
                             }
                         }

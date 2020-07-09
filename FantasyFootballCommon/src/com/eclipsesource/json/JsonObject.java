@@ -620,14 +620,6 @@ public class JsonObject extends JsonValue implements Iterable<Member> {
     return names.lastIndexOf( name );
   }
 
-  private synchronized void readObject( ObjectInputStream inputStream ) throws IOException,
-      ClassNotFoundException
-  {
-    inputStream.defaultReadObject();
-    table = new HashIndexTable();
-    updateHashIndex();
-  }
-
   private void updateHashIndex() {
     int size = names.size();
     for( int i = 0; i < size; i++ ) {

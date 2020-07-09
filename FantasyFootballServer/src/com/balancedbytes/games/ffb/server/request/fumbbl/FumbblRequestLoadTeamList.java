@@ -55,11 +55,11 @@ public class FumbblRequestLoadTeamList extends ServerRequest {
       setRequestUrl(StringTool.bind(server.getProperty(IServerProperty.FUMBBL_TEAMS), URLEncoder.encode(getCoach(), UtilFumbblRequest.CHARACTER_ENCODING)));
       String teamsXml = UtilServerHttpClient.fetchPage(getRequestUrl());
       if (StringTool.isProvided(teamsXml)) {
-        BufferedReader xmlReader = new BufferedReader(new StringReader(teamsXml));
-        InputSource xmlSource = new InputSource(xmlReader);
-        teamList = new TeamList();
-        XmlHandler.parse(xmlSource, teamList);
-        xmlReader.close();
+        try (BufferedReader xmlReader = new BufferedReader(new StringReader(teamsXml))) {
+          InputSource xmlSource = new InputSource(xmlReader);
+          teamList = new TeamList();
+          XmlHandler.parse(xmlSource, teamList);
+        }
       }
     } catch (IOException ioe) {
       throw new FantasyFootballException(ioe);

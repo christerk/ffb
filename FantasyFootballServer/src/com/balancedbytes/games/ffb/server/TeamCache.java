@@ -58,25 +58,21 @@ public class TeamCache {
     FileIterator fileIterator = new FileIterator(
       pTeamDirectory,
       false,
-      new FileFilter() {
-        public boolean accept(File pathname) { return pathname.getName().endsWith(".xml"); };
-      }
+      pathname -> pathname.getName().endsWith(".xml")
     );
     while (fileIterator.hasNext()) {
       File file = fileIterator.next();
-      BufferedReader xmlIn = new BufferedReader(new FileReader(file));
-      InputSource xmlSource = new InputSource(xmlIn);
-      Team team = new Team();
-      try {
+      try (BufferedReader xmlIn = new BufferedReader(new FileReader(file))) {
+        InputSource xmlSource = new InputSource(xmlIn);
+        Team team = new Team();
         XmlHandler.parse(xmlSource, team);
+        for (Player player : team.getPlayers()) {
+          player.setTeam(team);
+        }
+        add(team);
       } catch (FantasyFootballException pFfe) {
         throw new FantasyFootballException("Error initializing team " + file.getAbsolutePath(), pFfe);
       }
-      xmlIn.close();
-      for (Player player : team.getPlayers()) {
-        player.setTeam(team);
-      }
-      add(team);
     }
   }
   
