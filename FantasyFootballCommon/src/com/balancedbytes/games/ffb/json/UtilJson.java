@@ -131,6 +131,7 @@ public class UtilJson {
       outWriter = new OutputStreamWriter(gzipOut, _CHARSET);
       out = new BufferedWriter(outWriter);
       out.write(pJsonValue.toString());
+      out.flush();
       byte[] data = byteOut.toByteArray();
       return data;
     } finally {

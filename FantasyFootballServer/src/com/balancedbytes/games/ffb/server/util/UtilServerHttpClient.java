@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.apache.http.HttpEntity;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
@@ -13,6 +14,9 @@ import org.apache.http.entity.ContentType;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.util.EntityUtils;
+
+import com.balancedbytes.games.ffb.server.FantasyFootballServer;
+import com.balancedbytes.games.ffb.server.IServerLogLevel;
 
 /**
  * 
@@ -48,7 +52,8 @@ public class UtilServerHttpClient {
       request.addHeader("Accept-Encoding", "gzip");
       
       try (CloseableHttpResponse response = client.execute(request)) {
-        return EntityUtils.toString(response.getEntity(), CHARACTER_ENCODING);
+        HttpEntity entity = response.getEntity();
+        return EntityUtils.toString(entity, CHARACTER_ENCODING);
       }
 
     }
