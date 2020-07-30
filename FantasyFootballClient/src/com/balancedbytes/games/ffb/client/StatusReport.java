@@ -2488,7 +2488,7 @@ public class StatusReport {
           status.append(defender.getName())
             .append(" is badly hurt automatically because ")
             .append(defender.getPlayerGender().getNominative())
-            .append(" has been zapped");
+            .append(" has been zapped.");
           println(getIndent(), TextStyle.NONE, status.toString());
         } else {
           int rolledTotal = injuryRoll[0] + injuryRoll[1];
