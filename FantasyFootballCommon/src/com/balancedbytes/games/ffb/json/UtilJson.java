@@ -135,6 +135,7 @@ public class UtilJson {
       outWriter.flush();
       gzipOut.flush();
       byteOut.flush();
+      out.close();
       byte[] data = byteOut.toByteArray();
       return data;
     } finally {
