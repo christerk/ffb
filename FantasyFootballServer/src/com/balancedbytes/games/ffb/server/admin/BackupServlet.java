@@ -223,6 +223,9 @@ public class BackupServlet extends HttpServlet {
 
         byte[] gzippedJson = UtilJson.gzip(gameState.toJsonValue());
 
+        String logMessage = "Compressing json " + gameState.toJsonValue().toString().length() + " --> " + gzippedJson.length;
+        fServer.getDebugLog().log(IServerLogLevel.DEBUG, logMessage);
+        
         if (gzippedJson != null) {
           ((BufferedOutputStream) out).write(gzippedJson, 0, gzippedJson.length);
         }
