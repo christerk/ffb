@@ -133,17 +133,17 @@ public class UtilJson {
       out.write(pJsonValue.toString());
       return byteOut.toByteArray();
     } finally {
-      if (byteOut != null) {
-        byteOut.close();
-      }
-      if (gzipOut != null) {
-        gzipOut.close();
+      if (out != null) {
+        out.close();
       }
       if (outWriter != null) {
         outWriter.close();
       }
-      if (out != null) {
-        out.close();
+      if (gzipOut != null) {
+        gzipOut.close();
+      }
+      if (byteOut != null) {
+        byteOut.close();
       }
     }
   }
