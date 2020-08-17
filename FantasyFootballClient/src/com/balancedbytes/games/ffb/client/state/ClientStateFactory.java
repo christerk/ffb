@@ -175,6 +175,13 @@ public class ClientStateFactory {
             clientStateId = ClientStateId.WAIT_FOR_OPPONENT;
           }
           break;
+        case SWARMING:
+          if (game.isHomePlaying()) {
+            clientStateId = ClientStateId.SWARMING;
+          } else {
+            clientStateId = ClientStateId.WAIT_FOR_OPPONENT;
+          }
+          break;
         case PASS_BLOCK:
           if (game.isHomePlaying()) {
             clientStateId = ClientStateId.PASS_BLOCK;

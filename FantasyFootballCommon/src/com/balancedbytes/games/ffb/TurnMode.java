@@ -18,6 +18,7 @@ public enum TurnMode implements INamedObject {
   TOUCHBACK("touchback", true),
   INTERCEPTION("interception", true),
   END_GAME("endGame", true),
+  SWARMING("swarming", true),
   KICKOFF_RETURN("kickoffReturn", true),
   WIZARD("wizard", true),
   PASS_BLOCK("passBlock", true),

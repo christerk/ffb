@@ -66,6 +66,7 @@ public class ClientStateMove extends ClientState {
       	&& !IClientPropertyValue.SETTING_AUTOMOVE_OFF.equals(automoveProperty)
       	&& (game.getTurnMode() != TurnMode.PASS_BLOCK)
       	&& (game.getTurnMode() != TurnMode.KICKOFF_RETURN)
+        && (game.getTurnMode() != TurnMode.SWARMING)
       	&& !UtilCards.hasSkill(game, actingPlayer, Skill.BALL_AND_CHAIN)
       ) {
         FieldCoordinate[] shortestPath = PathFinderWithPassBlockSupport.getShortestPath(game, pCoordinate);
