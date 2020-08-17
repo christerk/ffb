@@ -2224,7 +2224,7 @@ public class StatusReport {
         StringBuilder status = new StringBuilder();
         status.append("Knockout Recovery Roll [ ").append(knockoutRecovery.getRoll()).append(" ] ");
         if (knockoutRecovery.getBloodweiserBabes() > 0) {
-          status.append(" + ").append(knockoutRecovery.getBloodweiserBabes()).append(" Bloodweiser Babes");
+          status.append(" + ").append(knockoutRecovery.getBloodweiserBabes()).append(" Bloodweiser Kegs");
         }
         println(getIndent(), TextStyle.ROLL, status.toString());
         Player player = game.getPlayerById(knockoutRecovery.getPlayerId());
