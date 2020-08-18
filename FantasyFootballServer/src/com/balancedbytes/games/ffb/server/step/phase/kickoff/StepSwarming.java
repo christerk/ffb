@@ -7,6 +7,9 @@ import com.balancedbytes.games.ffb.server.step.AbstractStep;
 import com.balancedbytes.games.ffb.server.step.StepAction;
 import com.balancedbytes.games.ffb.server.step.StepCommandStatus;
 import com.balancedbytes.games.ffb.server.step.StepId;
+import com.balancedbytes.games.ffb.server.step.StepParameter;
+import com.balancedbytes.games.ffb.server.step.StepParameterKey;
+import com.balancedbytes.games.ffb.server.step.StepParameterSet;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
@@ -27,6 +30,18 @@ public class StepSwarming extends AbstractStep {
   @Override
   public StepId getId() {
     return StepId.SWARMING;
+  }
+
+  @Override
+  public void init(StepParameterSet pParameterSet) {
+    super.init(pParameterSet);
+    if (pParameterSet != null) {
+      for (StepParameter parameter: pParameterSet.values()) {
+        if (parameter.getKey() == StepParameterKey.HANDLE_KICKING_TEAM) {
+          handleKickingTeam = (boolean) parameter.getValue();
+        }
+      }
+    }
   }
 
   @Override
