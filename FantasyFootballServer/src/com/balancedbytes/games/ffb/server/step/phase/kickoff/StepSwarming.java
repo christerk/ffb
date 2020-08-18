@@ -1,5 +1,7 @@
 package com.balancedbytes.games.ffb.server.step.phase.kickoff;
 
+import com.balancedbytes.games.ffb.json.UtilJson;
+import com.balancedbytes.games.ffb.net.NetCommandId;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.IServerJsonOption;
 import com.balancedbytes.games.ffb.server.net.ReceivedCommand;
@@ -47,7 +49,8 @@ public class StepSwarming extends AbstractStep {
   @Override
   public StepCommandStatus handleCommand(ReceivedCommand pReceivedCommand) {
     StepCommandStatus commandStatus = super.handleCommand(pReceivedCommand);
-    if (commandStatus == StepCommandStatus.EXECUTE_STEP) {
+    if (pReceivedCommand.getCommand().getId() == NetCommandId.CLIENT_END_TURN) {
+      fEndTurn = true;
       executeStep();
     }
     return commandStatus;
