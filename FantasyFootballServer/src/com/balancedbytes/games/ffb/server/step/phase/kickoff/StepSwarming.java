@@ -1,6 +1,14 @@
 package com.balancedbytes.games.ffb.server.step.phase.kickoff;
 
+import com.balancedbytes.games.ffb.FieldCoordinate;
+import com.balancedbytes.games.ffb.FieldCoordinateBounds;
+import com.balancedbytes.games.ffb.PlayerState;
+import com.balancedbytes.games.ffb.Skill;
+import com.balancedbytes.games.ffb.TurnMode;
 import com.balancedbytes.games.ffb.json.UtilJson;
+import com.balancedbytes.games.ffb.model.Game;
+import com.balancedbytes.games.ffb.model.Player;
+import com.balancedbytes.games.ffb.model.Team;
 import com.balancedbytes.games.ffb.net.NetCommandId;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.IServerJsonOption;
@@ -12,8 +20,13 @@ import com.balancedbytes.games.ffb.server.step.StepId;
 import com.balancedbytes.games.ffb.server.step.StepParameter;
 import com.balancedbytes.games.ffb.server.step.StepParameterKey;
 import com.balancedbytes.games.ffb.server.step.StepParameterSet;
+import com.balancedbytes.games.ffb.util.UtilCards;
+import com.balancedbytes.games.ffb.util.UtilPlayer;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
+
+import java.util.HashSet;
+import java.util.Set;
 
 public class StepSwarming extends AbstractStep {
 
@@ -57,6 +70,52 @@ public class StepSwarming extends AbstractStep {
   }
 
   private void executeStep() {
+    Game game = getGameState().getGame();
+    boolean hasSwarmingReserves = false;
+
+    if (game.getTurnMode() == TurnMode.SWARMING) {
+      if (fEndTurn) {
+        game.setTurnMode(TurnMode.KICKOFF);
+        UtilPlayer.refreshPlayersForTurnStart(game);
+        game.getFieldModel().clearTrackNumbers();
+        if (!handleKickingTeam) {
+          game.setHomePlaying(!game.isHomePlaying());
+        }
+        getGameState().getStepStack().pop();
+        getResult().setNextAction(StepAction.NEXT_STEP);
+      }
+    } else {
+      Team swarmingTeam = (handleKickingTeam && game.isHomePlaying()) ? game.getTeamHome() : game.getTeamAway();
+      Set<Player> passivePlayers = new HashSet<>();
+      for (Player player: swarmingTeam.getPlayers()) {
+        FieldCoordinate playerCoordinate = game.getFieldModel().getPlayerCoordinate(player);
+        if (FieldCoordinateBounds.FIELD.isInBounds(playerCoordinate)) {
+          passivePlayers.add(player);
+        } else if (game.getFieldModel().getPlayerState(player).getBase() == PlayerState.RESERVE) {
+          if (UtilCards.hasSkill(game, player, Skill.SWARMING)) {
+            hasSwarmingReserves = true;
+          } else {
+            passivePlayers.add(player);
+          }
+        }
+      }
+
+      if (hasSwarmingReserves) {
+        for (Player player : passivePlayers) {
+          PlayerState playerState = game.getFieldModel().getPlayerState(player);
+          game.getFieldModel().setPlayerState(player, playerState.changeActive(false));
+        }
+
+        if (!handleKickingTeam) {
+          game.setHomePlaying(!game.isHomePlaying());
+        }
+
+        game.setTurnMode(TurnMode.SWARMING);
+        getGameState().pushCurrentStepOnStack();
+      } else {
+        getResult().setNextAction(StepAction.NEXT_STEP);
+      }
+    }
 
   }
 
