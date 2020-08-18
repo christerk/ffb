@@ -52,6 +52,7 @@ public class ClientStateFactory {
     register(new ClientStateWaitForSetup(pClient));
     register(new ClientStateGaze(pClient));
     register(new ClientStateKickoffReturn(pClient));
+    register(new ClientStateSwarming(pClient));
     register(new ClientStateWizard(pClient));
     register(new ClientStatePassBlock(pClient));
     register(new ClientStateBomb(pClient));
