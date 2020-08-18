@@ -85,7 +85,7 @@ public class StepSwarming extends AbstractStep {
         getResult().setNextAction(StepAction.NEXT_STEP);
       }
     } else {
-      Team swarmingTeam = (handleKickingTeam && game.isHomePlaying()) ? game.getTeamHome() : game.getTeamAway();
+      Team swarmingTeam = homeTeamSwarms(game) ? game.getTeamHome() : game.getTeamAway();
       Set<Player> passivePlayers = new HashSet<>();
       for (Player player: swarmingTeam.getPlayers()) {
         FieldCoordinate playerCoordinate = game.getFieldModel().getPlayerCoordinate(player);
@@ -134,5 +134,13 @@ public class StepSwarming extends AbstractStep {
     fEndTurn = IServerJsonOption.END_TURN.getFrom(jsonObject);
     handleKickingTeam = IServerJsonOption.HANDLE_KICKING_TEAM.getFrom(jsonObject);
     return this;
+  }
+
+  private boolean homeTeamSwarms(Game game) {
+    boolean isHomePlaying = game.isHomePlaying();
+    if (!handleKickingTeam) {
+      isHomePlaying = !isHomePlaying;
+    }
+    return isHomePlaying;
   }
 }
