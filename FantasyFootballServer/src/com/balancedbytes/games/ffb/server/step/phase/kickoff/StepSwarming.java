@@ -33,6 +33,7 @@ public class StepSwarming extends AbstractStep {
 
   private boolean fEndTurn;
   private boolean handleKickingTeam;
+  private int amount;
 
   public StepSwarming(GameState pGameState) {
     super(pGameState);
@@ -122,6 +123,9 @@ public class StepSwarming extends AbstractStep {
 
         game.setTurnMode(TurnMode.SWARMING);
         getGameState().pushCurrentStepOnStack();
+
+        amount = getGameState().getDiceRoller().rollSwarmingPlayers();
+        getResult().addReport(new ReportSwarmingRoll(swarmingTeam.getId(), amount));
       } else {
         getResult().setNextAction(StepAction.NEXT_STEP);
       }
@@ -134,6 +138,7 @@ public class StepSwarming extends AbstractStep {
     JsonObject jsonObject = super.toJsonValue();
     IServerJsonOption.END_TURN.addTo(jsonObject, fEndTurn);
     IServerJsonOption.HANDLE_KICKING_TEAM.addTo(jsonObject, handleKickingTeam);
+    IServerJsonOption.SWARMING_PLAYER_AMOUT.addTo(jsonObject, amount);
     return jsonObject;
   }
 
@@ -143,6 +148,7 @@ public class StepSwarming extends AbstractStep {
     JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
     fEndTurn = IServerJsonOption.END_TURN.getFrom(jsonObject);
     handleKickingTeam = IServerJsonOption.HANDLE_KICKING_TEAM.getFrom(jsonObject);
+    amount = IServerJsonOption.SWARMING_PLAYER_AMOUT.getFrom(jsonObject);
     return this;
   }
 
