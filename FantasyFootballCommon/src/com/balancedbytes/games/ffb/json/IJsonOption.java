@@ -392,6 +392,8 @@ public interface IJsonOption {
                JsonBooleanOption SUCCESSFUL = new JsonBooleanOption("successful");
                JsonBooleanOption SUFFERING_ANIMOSITY = new JsonBooleanOption("sufferingAnimosity");
                JsonBooleanOption SUFFERING_BLOODLUST = new JsonBooleanOption("sufferingBloodlust");
+                   JsonIntOption SWARMING_PLAYER_ACTUAL = new JsonIntOption("swarmingPlayerActual");
+                   JsonIntOption SWARMING_PLAYER_ALLOWED = new JsonIntOption("swarmingPlayerAllowed");
                    JsonIntOption SWARMING_PLAYER_AMOUNT = new JsonIntOption("swarmingPlayerAmount");
                 JsonStringOption TALK = new JsonStringOption("talk");
            JsonStringArrayOption TALKS = new JsonStringArrayOption("talks");

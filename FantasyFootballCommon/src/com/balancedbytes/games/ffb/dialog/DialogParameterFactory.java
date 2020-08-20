@@ -88,6 +88,8 @@ public class DialogParameterFactory {
         return new DialogArgueTheCallParameter();
       case SWARMING:
         return new DialogSwarmingPlayersParameter();
+      case SWARMING_ERROR:
+        return new DialogSwarmingErrorParameter();
       default:
         return null;
     }

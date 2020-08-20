@@ -4,7 +4,9 @@ import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.FieldCoordinateBounds;
 import com.balancedbytes.games.ffb.PlayerState;
 import com.balancedbytes.games.ffb.Skill;
+import com.balancedbytes.games.ffb.SoundId;
 import com.balancedbytes.games.ffb.TurnMode;
+import com.balancedbytes.games.ffb.dialog.DialogSwarmingErrorParameter;
 import com.balancedbytes.games.ffb.dialog.DialogSwarmingPlayersParameter;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.Game;
@@ -36,7 +38,8 @@ public class StepSwarming extends AbstractStep {
 
   private boolean fEndTurn;
   private boolean handleKickingTeam;
-  private int amount;
+  private int allowedAmount;
+  private String teamId;
 
   public StepSwarming(GameState pGameState) {
     super(pGameState);
@@ -59,6 +62,8 @@ public class StepSwarming extends AbstractStep {
       for (StepParameter parameter: pParameterSet.values()) {
         if (parameter.getKey() == StepParameterKey.HANDLE_KICKING_TEAM) {
           handleKickingTeam = (boolean) parameter.getValue();
+          Game game = getGameState().getGame();
+          teamId = (homeTeamSwarms(game) ? game.getTeamHome() : game.getTeamAway()).getId();
         }
       }
     }
@@ -87,21 +92,37 @@ public class StepSwarming extends AbstractStep {
     Game game = getGameState().getGame();
     boolean hasSwarmingReserves = false;
 
+
     if (game.getTurnMode() == TurnMode.SWARMING) {
       if (fEndTurn) {
-        game.setTurnMode(TurnMode.KICKOFF);
-        UtilPlayer.refreshPlayersForTurnStart(game);
-        game.getFieldModel().clearTrackNumbers();
-        if (!handleKickingTeam) {
-          game.setHomePlaying(!game.isHomePlaying());
+        fEndTurn = false;
+        int placedSwarmingPlayers = 0;
+        for (Player player: game.getTeamById(teamId).getPlayers()) {
+          PlayerState playerState = game.getFieldModel().getPlayerState(player);
+          FieldCoordinate playerCoordinate = game.getFieldModel().getPlayerCoordinate(player);
+          if (playerState.isActive() && !playerCoordinate.isBoxCoordinate()) {
+            placedSwarmingPlayers++;
+          }
         }
-        getGameState().getStepStack().pop();
-        getResult().setNextAction(StepAction.NEXT_STEP);
+
+        if (placedSwarmingPlayers > allowedAmount) {
+          getResult().setSound(SoundId.DING);
+          UtilServerDialog.showDialog(getGameState(), new DialogSwarmingErrorParameter(allowedAmount, placedSwarmingPlayers), false);
+        } else {
+
+          game.setTurnMode(TurnMode.KICKOFF);
+          UtilPlayer.refreshPlayersForTurnStart(game);
+          game.getFieldModel().clearTrackNumbers();
+          if (!handleKickingTeam) {
+            game.setHomePlaying(!game.isHomePlaying());
+          }
+          getGameState().getStepStack().pop();
+          getResult().setNextAction(StepAction.NEXT_STEP);
+        }
       }
     } else {
-      Team swarmingTeam = homeTeamSwarms(game) ? game.getTeamHome() : game.getTeamAway();
       Set<Player> passivePlayers = new HashSet<>();
-      for (Player player: swarmingTeam.getPlayers()) {
+      for (Player player: game.getTeamById(teamId).getPlayers()) {
         FieldCoordinate playerCoordinate = game.getFieldModel().getPlayerCoordinate(player);
         if (FieldCoordinateBounds.FIELD.isInBounds(playerCoordinate)) {
           passivePlayers.add(player);
@@ -127,9 +148,9 @@ public class StepSwarming extends AbstractStep {
         game.setTurnMode(TurnMode.SWARMING);
         getGameState().pushCurrentStepOnStack();
 
-        amount = getGameState().getDiceRoller().rollSwarmingPlayers();
-        getResult().addReport(new ReportSwarmingRoll(swarmingTeam.getId(), amount));
-        UtilServerDialog.showDialog(getGameState(), new DialogSwarmingPlayersParameter(amount), false);
+        allowedAmount = getGameState().getDiceRoller().rollSwarmingPlayers();
+        getResult().addReport(new ReportSwarmingRoll(teamId, allowedAmount));
+        UtilServerDialog.showDialog(getGameState(), new DialogSwarmingPlayersParameter(allowedAmount), false);
       } else {
         getResult().setNextAction(StepAction.NEXT_STEP);
       }
@@ -142,7 +163,8 @@ public class StepSwarming extends AbstractStep {
     JsonObject jsonObject = super.toJsonValue();
     IServerJsonOption.END_TURN.addTo(jsonObject, fEndTurn);
     IServerJsonOption.HANDLE_KICKING_TEAM.addTo(jsonObject, handleKickingTeam);
-    IServerJsonOption.SWARMING_PLAYER_AMOUT.addTo(jsonObject, amount);
+    IServerJsonOption.SWARMING_PLAYER_AMOUT.addTo(jsonObject, allowedAmount);
+    IServerJsonOption.TEAM_ID.addTo(jsonObject, teamId);
     return jsonObject;
   }
 
@@ -152,15 +174,16 @@ public class StepSwarming extends AbstractStep {
     JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
     fEndTurn = IServerJsonOption.END_TURN.getFrom(jsonObject);
     handleKickingTeam = IServerJsonOption.HANDLE_KICKING_TEAM.getFrom(jsonObject);
-    amount = IServerJsonOption.SWARMING_PLAYER_AMOUT.getFrom(jsonObject);
+    allowedAmount = IServerJsonOption.SWARMING_PLAYER_AMOUT.getFrom(jsonObject);
+    teamId = IServerJsonOption.TEAM_ID.getFrom(jsonObject);
     return this;
   }
 
   private boolean homeTeamSwarms(Game game) {
     boolean isHomePlaying = game.isHomePlaying();
-    if (!handleKickingTeam) {
-      isHomePlaying = !isHomePlaying;
+    if (handleKickingTeam) {
+       return isHomePlaying;
     }
-    return isHomePlaying;
+    return !isHomePlaying;
   }
 }

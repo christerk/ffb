@@ -137,6 +137,10 @@ public class DialogManager {
 						break;
 					case SWARMING:
 						setDialogHandler(new DialogSwarmingPlayersHandler(getClient()));
+						break;
+					case SWARMING_ERROR:
+						setDialogHandler(new DialogSwarmingErrorParameterHandler(getClient()));
+						break;
 					default:
 						break;
 				}
