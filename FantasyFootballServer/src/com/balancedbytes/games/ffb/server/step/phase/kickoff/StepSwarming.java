@@ -5,6 +5,7 @@ import com.balancedbytes.games.ffb.FieldCoordinateBounds;
 import com.balancedbytes.games.ffb.PlayerState;
 import com.balancedbytes.games.ffb.Skill;
 import com.balancedbytes.games.ffb.TurnMode;
+import com.balancedbytes.games.ffb.dialog.DialogSwarmingPlayersParameter;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
@@ -21,6 +22,7 @@ import com.balancedbytes.games.ffb.server.step.StepId;
 import com.balancedbytes.games.ffb.server.step.StepParameter;
 import com.balancedbytes.games.ffb.server.step.StepParameterKey;
 import com.balancedbytes.games.ffb.server.step.StepParameterSet;
+import com.balancedbytes.games.ffb.server.util.UtilServerDialog;
 import com.balancedbytes.games.ffb.server.util.UtilServerSetup;
 import com.balancedbytes.games.ffb.util.UtilCards;
 import com.balancedbytes.games.ffb.util.UtilPlayer;
@@ -127,6 +129,7 @@ public class StepSwarming extends AbstractStep {
 
         amount = getGameState().getDiceRoller().rollSwarmingPlayers();
         getResult().addReport(new ReportSwarmingRoll(swarmingTeam.getId(), amount));
+        UtilServerDialog.showDialog(getGameState(), new DialogSwarmingPlayersParameter(amount), false);
       } else {
         getResult().setNextAction(StepAction.NEXT_STEP);
       }
