@@ -52,6 +52,7 @@ public class ClientStateFactory {
     register(new ClientStateWaitForSetup(pClient));
     register(new ClientStateGaze(pClient));
     register(new ClientStateKickoffReturn(pClient));
+    register(new ClientStateSwarming(pClient));
     register(new ClientStateWizard(pClient));
     register(new ClientStatePassBlock(pClient));
     register(new ClientStateBomb(pClient));
@@ -171,6 +172,13 @@ public class ClientStateFactory {
         case KICKOFF_RETURN:
           if (game.isHomePlaying()) {
             clientStateId = ClientStateId.KICKOFF_RETURN;
+          } else {
+            clientStateId = ClientStateId.WAIT_FOR_OPPONENT;
+          }
+          break;
+        case SWARMING:
+          if (game.isHomePlaying()) {
+            clientStateId = ClientStateId.SWARMING;
           } else {
             clientStateId = ClientStateId.WAIT_FOR_OPPONENT;
           }

@@ -103,6 +103,7 @@ import com.balancedbytes.games.ffb.report.ReportSpecialEffectRoll;
 import com.balancedbytes.games.ffb.report.ReportSpectators;
 import com.balancedbytes.games.ffb.report.ReportStandUpRoll;
 import com.balancedbytes.games.ffb.report.ReportStartHalf;
+import com.balancedbytes.games.ffb.report.ReportSwarmingRoll;
 import com.balancedbytes.games.ffb.report.ReportSwoopPlayer;
 import com.balancedbytes.games.ffb.report.ReportTentaclesShadowingRoll;
 import com.balancedbytes.games.ffb.report.ReportThrowIn;
@@ -2224,7 +2225,7 @@ public class StatusReport {
         StringBuilder status = new StringBuilder();
         status.append("Knockout Recovery Roll [ ").append(knockoutRecovery.getRoll()).append(" ] ");
         if (knockoutRecovery.getBloodweiserBabes() > 0) {
-          status.append(" + ").append(knockoutRecovery.getBloodweiserBabes()).append(" Bloodweiser Babes");
+          status.append(" + ").append(knockoutRecovery.getBloodweiserBabes()).append(" Bloodweiser Kegs");
         }
         println(getIndent(), TextStyle.ROLL, status.toString());
         Player player = game.getPlayerById(knockoutRecovery.getPlayerId());
@@ -2762,6 +2763,13 @@ public class StatusReport {
     }
   }
 
+  public void reportSwarmingPlayerRoll(ReportSwarmingRoll report) {
+    Team team = getClient().getGame().getTeamById(report.getTeamId());
+    TextStyle style = getClient().getGame().getTeamHome() == team ? TextStyle.HOME_BOLD : TextStyle.AWAY_BOLD;
+    print(0, style, team.getName());
+    println(0, TextStyle.NONE, " is allowed to place " + report.getAmount() + " swarming players.");
+  }
+
   public void report(ReportList pReportList) {
     for (IReport report : pReportList.getReports()) {
       switch (report.getId()) {
@@ -3013,6 +3021,9 @@ public class StatusReport {
           break;
         case WEEPING_DAGGER_ROLL:
           reportWeepingDagger((ReportSkillRoll) report);
+          break;
+        case SWARMING_PLAYERS_ROLL:
+          reportSwarmingPlayerRoll((ReportSwarmingRoll) report);
           break;
         case GAME_OPTIONS:
           // deprecated, do nothing

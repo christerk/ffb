@@ -143,7 +143,7 @@ public class StepEndTurn extends AbstractStep {
     if (!fWithinSecretWeaponHandling) {
 
       if ((game.getTurnMode() == TurnMode.BLITZ) || (game.getTurnMode() == TurnMode.KICKOFF_RETURN) || (game.getTurnMode() == TurnMode.PASS_BLOCK)
-          || (game.getTurnMode() == TurnMode.ILLEGAL_SUBSTITUTION)) {
+          || (game.getTurnMode() == TurnMode.ILLEGAL_SUBSTITUTION) || game.getTurnMode() == TurnMode.SWARMING) {
         publishParameter(new StepParameter(StepParameterKey.END_TURN, true));
         getResult().setNextAction(StepAction.NEXT_STEP);
         return;
