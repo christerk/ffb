@@ -108,6 +108,13 @@ public class StepSwarming extends AbstractStep {
           UtilServerDialog.showDialog(getGameState(), new DialogSwarmingErrorParameter(allowedAmount, placedSwarmingPlayers), false);
         } else {
 
+          for (Player player: game.getTeamById(teamId).getPlayers()) {
+            PlayerState playerState = game.getFieldModel().getPlayerState(player);
+            if (playerState.getBase() == PlayerState.PRONE) {
+              game.getFieldModel().setPlayerState(player, playerState.changeBase(PlayerState.RESERVE));
+            }
+          }
+          
           game.setTurnMode(TurnMode.KICKOFF);
           UtilPlayer.refreshPlayersForTurnStart(game);
           game.getFieldModel().clearTrackNumbers();
@@ -120,24 +127,30 @@ public class StepSwarming extends AbstractStep {
       }
     } else {
       teamId = swarmingTeam(game).getId();
-      Set<Player> passivePlayers = new HashSet<>();
+      Set<Player> playersOnPitch = new HashSet<>();
+      Set<Player> playersReserveNoSwarming = new HashSet<>();
       for (Player player: game.getTeamById(teamId).getPlayers()) {
         FieldCoordinate playerCoordinate = game.getFieldModel().getPlayerCoordinate(player);
         if (FieldCoordinateBounds.FIELD.isInBounds(playerCoordinate)) {
-          passivePlayers.add(player);
+          playersOnPitch.add(player);
         } else if (game.getFieldModel().getPlayerState(player).getBase() == PlayerState.RESERVE) {
           if (UtilCards.hasSkill(game, player, Skill.SWARMING)) {
             hasSwarmingReserves = true;
           } else {
-            passivePlayers.add(player);
+            playersReserveNoSwarming.add(player);
           }
         }
       }
 
       if (hasSwarmingReserves) {
-        for (Player player : passivePlayers) {
+        for (Player player : playersOnPitch) {
           PlayerState playerState = game.getFieldModel().getPlayerState(player);
           game.getFieldModel().setPlayerState(player, playerState.changeActive(false));
+        }
+
+        for (Player player : playersReserveNoSwarming) {
+          PlayerState playerState = game.getFieldModel().getPlayerState(player);
+          game.getFieldModel().setPlayerState(player, playerState.changeBase(PlayerState.PRONE));
         }
 
         if (handleReceivingTeam) {
