@@ -37,7 +37,7 @@ import java.util.Set;
 public class StepSwarming extends AbstractStep {
 
   private boolean fEndTurn;
-  private boolean handleKickingTeam;
+  private boolean handleReceivingTeam;
   private int allowedAmount;
   private String teamId;
 
@@ -60,10 +60,8 @@ public class StepSwarming extends AbstractStep {
     super.init(pParameterSet);
     if (pParameterSet != null) {
       for (StepParameter parameter: pParameterSet.values()) {
-        if (parameter.getKey() == StepParameterKey.HANDLE_KICKING_TEAM) {
-          handleKickingTeam = (boolean) parameter.getValue();
-          Game game = getGameState().getGame();
-          teamId = (homeTeamSwarms(game) ? game.getTeamHome() : game.getTeamAway()).getId();
+        if (parameter.getKey() == StepParameterKey.HANDLE_RECEIVING_TEAM) {
+          handleReceivingTeam = (boolean) parameter.getValue();
         }
       }
     }
@@ -113,7 +111,7 @@ public class StepSwarming extends AbstractStep {
           game.setTurnMode(TurnMode.KICKOFF);
           UtilPlayer.refreshPlayersForTurnStart(game);
           game.getFieldModel().clearTrackNumbers();
-          if (!handleKickingTeam) {
+          if (handleReceivingTeam) {
             game.setHomePlaying(!game.isHomePlaying());
           }
           getGameState().getStepStack().pop();
@@ -121,6 +119,7 @@ public class StepSwarming extends AbstractStep {
         }
       }
     } else {
+      teamId = swarmingTeam(game).getId();
       Set<Player> passivePlayers = new HashSet<>();
       for (Player player: game.getTeamById(teamId).getPlayers()) {
         FieldCoordinate playerCoordinate = game.getFieldModel().getPlayerCoordinate(player);
@@ -141,7 +140,7 @@ public class StepSwarming extends AbstractStep {
           game.getFieldModel().setPlayerState(player, playerState.changeActive(false));
         }
 
-        if (!handleKickingTeam) {
+        if (handleReceivingTeam) {
           game.setHomePlaying(!game.isHomePlaying());
         }
 
@@ -162,7 +161,7 @@ public class StepSwarming extends AbstractStep {
   public JsonObject toJsonValue() {
     JsonObject jsonObject = super.toJsonValue();
     IServerJsonOption.END_TURN.addTo(jsonObject, fEndTurn);
-    IServerJsonOption.HANDLE_KICKING_TEAM.addTo(jsonObject, handleKickingTeam);
+    IServerJsonOption.HANDLE_RECEIVING_TEAM.addTo(jsonObject, handleReceivingTeam);
     IServerJsonOption.SWARMING_PLAYER_AMOUT.addTo(jsonObject, allowedAmount);
     IServerJsonOption.TEAM_ID.addTo(jsonObject, teamId);
     return jsonObject;
@@ -173,17 +172,16 @@ public class StepSwarming extends AbstractStep {
     super.initFrom(pJsonValue);
     JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
     fEndTurn = IServerJsonOption.END_TURN.getFrom(jsonObject);
-    handleKickingTeam = IServerJsonOption.HANDLE_KICKING_TEAM.getFrom(jsonObject);
+    handleReceivingTeam = IServerJsonOption.HANDLE_RECEIVING_TEAM.getFrom(jsonObject);
     allowedAmount = IServerJsonOption.SWARMING_PLAYER_AMOUT.getFrom(jsonObject);
     teamId = IServerJsonOption.TEAM_ID.getFrom(jsonObject);
     return this;
   }
 
-  private boolean homeTeamSwarms(Game game) {
-    boolean isHomePlaying = game.isHomePlaying();
-    if (handleKickingTeam) {
-       return isHomePlaying;
+  private Team swarmingTeam(Game game) {
+    if (handleReceivingTeam) {
+      return game.isHomePlaying() ? game.getTeamAway() : game.getTeamHome();
     }
-    return !isHomePlaying;
+    return game.isHomePlaying() ? game.getTeamHome() : game.getTeamAway();
   }
 }
