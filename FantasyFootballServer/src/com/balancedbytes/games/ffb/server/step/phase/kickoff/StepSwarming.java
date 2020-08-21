@@ -94,6 +94,7 @@ public class StepSwarming extends AbstractStep {
     if (game.getTurnMode() == TurnMode.SWARMING) {
       if (fEndTurn) {
         fEndTurn = false;
+        getResult().setSound(SoundId.DING);
         int placedSwarmingPlayers = 0;
         for (Player player: game.getTeamById(teamId).getPlayers()) {
           PlayerState playerState = game.getFieldModel().getPlayerState(player);
@@ -104,7 +105,6 @@ public class StepSwarming extends AbstractStep {
         }
 
         if (placedSwarmingPlayers > allowedAmount) {
-          getResult().setSound(SoundId.DING);
           UtilServerDialog.showDialog(getGameState(), new DialogSwarmingErrorParameter(allowedAmount, placedSwarmingPlayers), false);
         } else {
 
