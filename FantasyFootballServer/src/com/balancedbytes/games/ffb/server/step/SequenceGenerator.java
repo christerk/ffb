@@ -334,6 +334,8 @@ public class SequenceGenerator {
 				param(StepParameterKey.GOTO_LABEL_ON_END, IStepLabel.END_KICKOFF));
 		sequence.add(StepId.KICKOFF);
 		sequence.add(StepId.KICKOFF_SCATTER_ROLL);
+		sequence.add(StepId.SWARMING, param(StepParameterKey.HANDLE_RECEIVING_TEAM, false));
+		sequence.add(StepId.SWARMING, param(StepParameterKey.HANDLE_RECEIVING_TEAM, true));
 		sequence.add(StepId.KICKOFF_RETURN);
 		// may insert select sequence at this point
 		sequence.add(StepId.KICKOFF_RESULT_ROLL);

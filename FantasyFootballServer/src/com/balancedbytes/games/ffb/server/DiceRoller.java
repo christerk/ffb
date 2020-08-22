@@ -193,7 +193,11 @@ public class DiceRoller {
   public int rollXCoordinate() {
   	return rollDice(26) - 1;
   }
-  
+
+  public int rollSwarmingPlayers() {
+    return rollDice(3);
+  }
+
   public Player randomPlayer(Player[] pPlayers) {
     Player randomPlayer = null;
     if (ArrayTool.isProvided(pPlayers)) {

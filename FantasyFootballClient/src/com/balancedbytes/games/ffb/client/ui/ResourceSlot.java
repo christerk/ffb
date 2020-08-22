@@ -76,7 +76,7 @@ public class ResourceSlot {
           toolTip.append((getValue() == 1) ? "Bribe" : "Bribes");
           break;
         case TYPE_BLOODWEISER_BABE:
-          toolTip.append((getValue() == 1) ? "Bloodweiser Babe" : "Bloodweiser Babes");
+          toolTip.append((getValue() == 1) ? "Bloodweiser Keg" : "Bloodweiser Kegs");
           break;
         case TYPE_MASTER_CHEF:
           toolTip.append((getValue() == 1) ? "Master Chef" : "Master Chefs");
