@@ -25,7 +25,7 @@ public class DialogSwarmingPlayersHandler extends DialogHandler {
 
     if ((ClientMode.PLAYER == getClient().getMode()) && game.isHomePlaying()) {
       setDialog(new DialogInformation(getClient(), "Place swarming players", new String[] { "You may place up to " +
-        amount + " players with the Swarming skill in your half. They cannot be placed at the Line of Scrimmage or in the wide zones." },
+        amount + " players with the Swarming skill in your half.", "They cannot be placed at the Line of Scrimmage or in the wide zones." },
         DialogInformation.OK_DIALOG, IIconProperty.GAME_REF));
       getDialog().showDialog(this);
         
