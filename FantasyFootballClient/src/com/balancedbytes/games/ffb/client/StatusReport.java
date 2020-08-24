@@ -2766,8 +2766,9 @@ public class StatusReport {
   public void reportSwarmingPlayerRoll(ReportSwarmingRoll report) {
     Team team = getClient().getGame().getTeamById(report.getTeamId());
     TextStyle style = getClient().getGame().getTeamHome() == team ? TextStyle.HOME_BOLD : TextStyle.AWAY_BOLD;
-    print(0, style, team.getName());
-    println(0, TextStyle.NONE, " is allowed to place " + report.getAmount() + " swarming players.");
+    println(0, TextStyle.ROLL, "Swarming Roll [" + report.getAmount() + "]");
+    print(1, style, team.getName());
+    println(1, TextStyle.NONE, " are allowed to place " + report.getAmount() + " swarming players.");
   }
 
   public void report(ReportList pReportList) {
