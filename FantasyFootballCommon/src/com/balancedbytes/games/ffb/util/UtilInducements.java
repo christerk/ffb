@@ -5,7 +5,14 @@ import com.balancedbytes.games.ffb.model.GameOptions;
 import com.balancedbytes.games.ffb.model.Roster;
 import com.balancedbytes.games.ffb.option.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public final class UtilInducements {
+	private static final List<String> ROSTERS_WITH_CHEAP_BRIBES = new ArrayList<String>() {{
+		add("Goblin");
+		add("Snotling");
+	}};
 
 	public static int findInducementCost(Roster pRoster, InducementType pInducement, GameOptions gameOptions) {
 
@@ -19,7 +26,7 @@ public final class UtilInducements {
 	}
 
 	private static GameOptionId inducementCostOption(String rosterName, InducementType inducementType) {
-		if ((InducementType.BRIBES == inducementType && "Goblin".equals(rosterName)) ||
+		if ((InducementType.BRIBES == inducementType && ROSTERS_WITH_CHEAP_BRIBES.contains(rosterName)) ||
 			(InducementType.MASTER_CHEF == inducementType && "Halfling".equals(rosterName))) {
 			return inducementType.getReducedCostId();
 		}
