@@ -38,6 +38,7 @@ public class Roster implements IXmlSerializable, IJsonSerializable {
   private static final String _XML_TAG_APOTHECARY = "apothecary";
   private static final String _XML_TAG_NECROMANCER = "necromancer";
   private static final String _XML_TAG_UNDEAD = "undead";
+  private static final String _XML_TAG_RIOTOUS_POSITION_ID = "riotousPositionId";
 
   private String fId;
   private String fName;
@@ -49,6 +50,7 @@ public class Roster implements IXmlSerializable, IJsonSerializable {
   private boolean fApothecary;
   private boolean fNecromancer;
   private boolean fUndead;
+  private String riotousPositionId;
 
   private RosterPosition fCurrentlyParsedRosterPosition;
   
@@ -156,7 +158,15 @@ public class Roster implements IXmlSerializable, IJsonSerializable {
   public void setUndead(boolean pUndead) {
 		fUndead = pUndead;
 	}
-  
+
+  public String getRiotousPositionId() {
+    return riotousPositionId;
+  }
+
+  public void setRiotousPositionId(String riotousPositionId) {
+    this.riotousPositionId = riotousPositionId;
+  }
+
   // XML serialization
 
   public void addToXml(TransformerHandler pHandler) {
@@ -174,6 +184,7 @@ public class Roster implements IXmlSerializable, IJsonSerializable {
     UtilXml.addValueElement(pHandler, _XML_TAG_APOTHECARY, hasApothecary());
     UtilXml.addValueElement(pHandler, _XML_TAG_NECROMANCER, hasNecromancer());
     UtilXml.addValueElement(pHandler, _XML_TAG_UNDEAD, isUndead());
+    UtilXml.addValueElement(pHandler, _XML_TAG_RIOTOUS_POSITION_ID, getRiotousPositionId());
  
     for (RosterPosition position : getPositions()) {
     	position.addToXml(pHandler);
@@ -238,6 +249,9 @@ public class Roster implements IXmlSerializable, IJsonSerializable {
       if (_XML_TAG_UNDEAD.equals(pXmlTag)) {
       	setUndead(Boolean.parseBoolean(pValue));
       }
+      if (_XML_TAG_RIOTOUS_POSITION_ID.equals(pXmlTag)) {
+        riotousPositionId = pValue;
+      }
     }
     return complete;
   }
@@ -258,6 +272,7 @@ public class Roster implements IXmlSerializable, IJsonSerializable {
     IJsonOption.APOTHECARY.addTo(jsonObject, fApothecary);
     IJsonOption.NECROMANCER.addTo(jsonObject, fNecromancer);
     IJsonOption.UNDEAD.addTo(jsonObject, fUndead);
+    IJsonOption.RIOTOUS_POSITION_ID.addTo(jsonObject, riotousPositionId);
 
     JsonArray positionArray = new JsonArray();
     for (RosterPosition position : getPositions()) {
@@ -283,6 +298,7 @@ public class Roster implements IXmlSerializable, IJsonSerializable {
     fApothecary = IJsonOption.APOTHECARY.getFrom(jsonObject);
     fNecromancer = IJsonOption.NECROMANCER.getFrom(jsonObject);
     fUndead = IJsonOption.UNDEAD.getFrom(jsonObject);
+    riotousPositionId = IJsonOption.RIOTOUS_POSITION_ID.getFrom(jsonObject);
 
     fRosterPositionById.clear();
     fRosterPositionByName.clear();

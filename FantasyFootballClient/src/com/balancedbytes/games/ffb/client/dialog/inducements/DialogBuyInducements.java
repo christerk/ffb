@@ -169,7 +169,8 @@ public class DialogBuyInducements extends Dialog implements ActionListener, KeyL
 		createPanel(InducementType.MASTER_CHEF, leftPanel, verticalStrut, gameOptions);
 		createPanel(InducementType.IGOR, leftPanel, verticalStrut, gameOptions);
 		createPanel(InducementType.WANDERING_APOTHECARIES, leftPanel, verticalStrut, gameOptions);
-		createPanel(InducementType.WIZARD, leftPanel, 0, gameOptions);
+		createPanel(InducementType.WIZARD, leftPanel, verticalStrut, gameOptions);
+		createPanel(InducementType.RIOTOUS_ROOKIES, leftPanel, verticalStrut, gameOptions);
 
 
 		leftPanel.add(Box.createVerticalGlue());

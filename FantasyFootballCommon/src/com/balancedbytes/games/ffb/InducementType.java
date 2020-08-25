@@ -22,7 +22,8 @@ public enum InducementType implements INamedObject {
   WIZARD("wizard", "Wizard", "Wizard", "Wizards", GameOptionId.INDUCEMENT_WIZARDS_MAX, GameOptionId.INDUCEMENT_WIZARDS_COST),
   STAR_PLAYERS("starPlayers", "Star Players", "Star Player", "Star Players", GameOptionId.INDUCEMENT_STARS_MAX, null),
   MERCENARIES("mercenaries", "Mercenaries", "Mercenary", "Mercenaries", null, null),
- 
+  RIOTOUS_ROOKIES("riotousRookies", "Riotous Rookies", "Riotous Rookies", "Riotous Rookies", GameOptionId.INDUCEMENT_RIOTOUS_ROOKIES_MAX, GameOptionId.INDUCEMENT_RIOTOUS_ROOKIES_COST),
+
   CARD("card", null, null, null, null, null);
   
   private String fName;
