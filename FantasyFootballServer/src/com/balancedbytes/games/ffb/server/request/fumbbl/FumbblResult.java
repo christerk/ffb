@@ -7,6 +7,7 @@ import java.util.Set;
 
 import javax.xml.transform.sax.TransformerHandler;
 
+import com.balancedbytes.games.ffb.PlayerGender;
 import org.xml.sax.helpers.AttributesImpl;
 
 import com.balancedbytes.games.ffb.Card;
@@ -80,6 +81,8 @@ public class FumbblResult implements IXmlWriteable {
 
   private static final String _XML_ATTRIBUTE_PLAYER_ID = "playerId";
   private static final String _XML_ATTRIBUTE_PLAYER_TYPE = "playerType";
+  private static final String _XML_ATTRIBUTE_PLAYER_NAME = "name";
+  private static final String _XML_ATTRIBUTE_PLAYER_GENDER = "gender";
 
   private static final String _XML_TAG_STAR_PLAYER_POINTS = "starPlayerPoints";
   private static final String _XML_ATTRIBUTE_CURRENT = "current";
@@ -185,7 +188,7 @@ public class FumbblResult implements IXmlWriteable {
       UtilXml.startElement(pHandler, _XML_TAG_PLAYER_RESULT_LIST);
       Player[] players = pTeamResult.getTeam().getPlayers();
       for (Player player : players) {
-        addToXml(pHandler, pTeamResult.getPlayerResult(player));
+        addToXml(pHandler, pTeamResult.getPlayerResult(player), player);
       }
       UtilXml.endElement(pHandler, _XML_TAG_PLAYER_RESULT_LIST);
 
@@ -280,7 +283,7 @@ public class FumbblResult implements IXmlWriteable {
 
   }
 
-  private void addToXml(TransformerHandler pHandler, PlayerResult pPlayerResult) {
+  private void addToXml(TransformerHandler pHandler, PlayerResult pPlayerResult, Player player) {
 
     if ((getGame() != null) && (pPlayerResult != null)) {
 
@@ -289,8 +292,11 @@ public class FumbblResult implements IXmlWriteable {
       AttributesImpl attributes = new AttributesImpl();
       UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_PLAYER_ID, pPlayerResult.getPlayerId());
       UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_PLAYER_TYPE, playerTypeName);
+      PlayerGender gender = player.getPlayerGender() != null ? player.getPlayerGender() : PlayerGender.NEUTRAL;
+      UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_PLAYER_GENDER, gender.getName());
+      UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_PLAYER_NAME, player.getName());
       UtilXml.startElement(pHandler, _XML_TAG_PLAYER_RESULT, attributes);
-      
+
       UtilXml.addValueElement(pHandler, _XML_TAG_DEFECTING, pPlayerResult.isDefecting());
 
       if (pPlayerResult.totalEarnedSpps() > 0) {
