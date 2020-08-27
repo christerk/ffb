@@ -11,7 +11,8 @@
 	<apothecary>false</apothecary>
 	<necromancer>true</necromancer>
 	<undead>true</undead>
-  
+	<nameGenerator>default</nameGenerator>
+
 	<position id="necromantic.werewolf">
 		<quantity>2</quantity>
 		<name>Werewolf</name>

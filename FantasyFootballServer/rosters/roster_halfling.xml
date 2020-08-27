@@ -6,8 +6,9 @@
 	<type>Regular</type>
 	<reRollCost>60000</reRollCost>	
 	<maxReRolls>8</maxReRolls>
-	<baseIconPath>http://localhost:2224/icons/players/</baseIconPath>	
-  
+	<baseIconPath>http://localhost:2224/icons/players/</baseIconPath>
+	<nameGenerator>default</nameGenerator>
+
 	<position id="halfling.treeman">
 		<quantity>2</quantity>
 		<name>Treeman</name>
@@ -47,6 +48,7 @@
 		<armour>6</armour>
 		<portrait>portraits/halfling_halfling.png</portrait>
 		<iconSet size="16">iconsets/halfling_halfling.png</iconSet>
+		<nameGenerator>halflingpos</nameGenerator>
 		<skillList>
 			<skill>Dodge</skill>
 			<skill>Right Stuff</skill>

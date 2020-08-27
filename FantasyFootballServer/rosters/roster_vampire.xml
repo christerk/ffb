@@ -10,6 +10,7 @@
 	<apothecary>false</apothecary>
 	<necromancer>false</necromancer>
 	<undead>true</undead>
+	<nameGenerator>vampire</nameGenerator>
 
 	<position id="vampire.vampire">
 		<quantity>6</quantity>

@@ -6,7 +6,8 @@
 	<type>Regular</type>
 	<reRollCost>40000</reRollCost>	
 	<maxReRolls>8</maxReRolls>	
-	<baseIconPath>http://localhost:2224/icons/players/</baseIconPath>	
+	<baseIconPath>http://localhost:2224/icons/players/</baseIconPath>
+	<nameGenerator>default</nameGenerator>
 
 	<position id="dwarf.blocker">
 		<quantity>12</quantity>
