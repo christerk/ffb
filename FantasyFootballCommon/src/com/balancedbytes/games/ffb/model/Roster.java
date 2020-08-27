@@ -172,7 +172,10 @@ public class Roster implements IXmlSerializable, IJsonSerializable {
   }
 
   public String getNameGenerator() {
-    return nameGenerator;
+    if (StringTool.isProvided(nameGenerator)) {
+      return nameGenerator;
+    }
+    return "default";
   }
 // XML serialization
 

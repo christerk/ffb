@@ -336,7 +336,7 @@ public class RosterPosition implements Position {
   }
 
   public String getNameGenerator() {
-    if (nameGenerator != null) {
+    if (StringTool.isProvided(nameGenerator)) {
       return nameGenerator;
     }
     return getRoster().getNameGenerator();
