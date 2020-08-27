@@ -46,7 +46,7 @@ public class StepRiotousRookies extends AbstractStep {
     Inducement riotousRookies = turnData.getInducementSet().get(InducementType.RIOTOUS_ROOKIES);
     if (riotousRookies != null) {
       int[] rookiesRoll = getGameState().getDiceRoller().rollRiotousRookies();
-      int rookies = rookiesRoll[0] + rookiesRoll[1] + 2;
+      int rookies = rookiesRoll[0] + rookiesRoll[1] + 1;
       RosterPosition position = team.getRoster().getRiotousPosition();
       for (int i = 0; i < rookies; i++) {
         riotousPlayer(getGameState().getGame(), team, i, position);

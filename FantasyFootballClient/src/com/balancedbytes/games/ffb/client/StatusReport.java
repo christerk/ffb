@@ -2766,7 +2766,7 @@ public class StatusReport {
 
 
   public void reportRiotousRookies(ReportRiotousRookies report) {
-    println(0, TextStyle.ROLL, "Riotous Rookies Roll [ " + report.getRoll()[0] + " ][ " + report.getRoll()[1] + " ] + 2");
+    println(0, TextStyle.ROLL, "Riotous Rookies Roll [ " + report.getRoll()[0] + " ][ " + report.getRoll()[1] + " ] + 1");
     if (report.isHomeTeam()) {
       print(1, TextStyle.HOME, getClient().getGame().getTeamHome().getName());
     } else {
