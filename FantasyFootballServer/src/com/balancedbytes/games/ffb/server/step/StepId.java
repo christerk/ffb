@@ -106,6 +106,7 @@ public enum StepId implements INamedObject {
 	RECEIVE_CHOICE("receiveChoice"), // game.start
 	REFEREE("referee"), // action.foul
 	RIGHT_STUFF("rightStuff"), // action.ttm
+	RIOTOUS_ROOKIES("riotousRookies"),
 	SAFE_THROW("safeThrow"), // action.pass
 	SETUP("setup"), // phase.kickoff
 	SHADOWING("shadowing"), // action.common
