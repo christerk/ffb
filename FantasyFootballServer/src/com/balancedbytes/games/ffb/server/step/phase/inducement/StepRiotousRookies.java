@@ -76,9 +76,15 @@ public class StepRiotousRookies extends AbstractStep {
   }
 
   private String rookieName(String generator, PlayerGender gender, String fallback) {
-    String url = getGameState().getServer().getProperty(IServerProperty.FUMBBL_NAMEGENERATOR_BASE) + "/" + generator + "/" + gender.getName();
+    StringBuilder url = new StringBuilder(getGameState().getServer().getProperty(IServerProperty.FUMBBL_NAMEGENERATOR_BASE));
+
+    if (!url.toString().endsWith("/")) {
+      url.append("/");
+    }
+    url.append(generator).append("/").append(gender.getName());
+
     try {
-      String name = unquote(UtilServerHttpClient.fetchPage(url));
+      String name = unquote(UtilServerHttpClient.fetchPage(url.toString()));
       if (StringTool.isProvided(name)) {
         return name;
       }
