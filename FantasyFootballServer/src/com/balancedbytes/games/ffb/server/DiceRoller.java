@@ -193,6 +193,8 @@ public class DiceRoller {
   public int rollXCoordinate() {
   	return rollDice(26) - 1;
   }
+
+  public int[] rollRiotousRookies() { return new int[] { rollDice(3), rollDice(3) }; }
   
   public Player randomPlayer(Player[] pPlayers) {
     Player randomPlayer = null;
