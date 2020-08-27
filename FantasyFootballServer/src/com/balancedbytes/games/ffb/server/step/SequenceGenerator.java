@@ -11,6 +11,7 @@ import com.balancedbytes.games.ffb.SpecialEffect;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.IServerLogLevel;
 import com.balancedbytes.games.ffb.server.step.action.common.ApothecaryMode;
+import com.balancedbytes.games.ffb.server.step.phase.inducement.StepRiotousRookies;
 
 /**
  * Generator class adding sequences of steps to the stepStack of a gameState.
@@ -490,6 +491,13 @@ public class SequenceGenerator {
 
 		pGameState.getStepStack().push(sequence.getSequence());
 
+	}
+
+	public void pushRiotousRookies(GameState pGameState) {
+		pGameState.getServer().getDebugLog().log(IServerLogLevel.DEBUG, pGameState.getId(),
+			"push riotous rookies step onto stack");
+
+		pGameState.getStepStack().push(new StepRiotousRookies(pGameState));
 	}
 
 	public void pushCardSequence(GameState pGameState, Card pCard, boolean pHomeTeam) {
