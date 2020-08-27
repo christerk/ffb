@@ -331,6 +331,8 @@ public interface IJsonOption {
                    JsonIntOption RE_ROLLS_LEFT_HOME = new JsonIntOption("reRollsLeftHome");
                    JsonIntOption RE_ROLLS_STOLEN = new JsonIntOption("reRollsStolen");
                 JsonStringOption RIOTOUS_POSITION_ID = new JsonStringOption("riotousPositionId");
+                   JsonIntOption RIOTOUS_AMOUNT = new JsonIntOption("riotousAmount");
+              JsonIntArrayOption RIOTOUS_ROLL = new JsonIntArrayOption("riotousRoll");
                    JsonIntOption RIP_SUFFERED = new JsonIntOption("ripSuffered");
                    JsonIntOption ROLL = new JsonIntOption("roll");
                    JsonIntOption ROLL_SCATTER_DIRECTION = new JsonIntOption("rollScatterDirection");
