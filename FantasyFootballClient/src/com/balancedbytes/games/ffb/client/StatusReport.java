@@ -94,6 +94,7 @@ import com.balancedbytes.games.ffb.report.ReportRaiseDead;
 import com.balancedbytes.games.ffb.report.ReportReRoll;
 import com.balancedbytes.games.ffb.report.ReportReceiveChoice;
 import com.balancedbytes.games.ffb.report.ReportReferee;
+import com.balancedbytes.games.ffb.report.ReportRiotousRookies;
 import com.balancedbytes.games.ffb.report.ReportScatterBall;
 import com.balancedbytes.games.ffb.report.ReportScatterPlayer;
 import com.balancedbytes.games.ffb.report.ReportSecretWeaponBan;
@@ -2762,6 +2763,16 @@ public class StatusReport {
     }
   }
 
+  public void reportRiotousRookies(ReportRiotousRookies report) {
+    println(0, TextStyle.ROLL, "Riotous Rookies Roll [ " + report.getRoll()[0] + " ][ " + report.getRoll()[1] + " ] + 2");
+    if (report.isHomeTeam()) {
+      print(1, TextStyle.HOME, getClient().getGame().getTeamHome().getName());
+    } else {
+      print(1, TextStyle.AWAY, getClient().getGame().getTeamAway().getName());
+    }
+    println(1, TextStyle.NONE, " hires " + report.getAmount() + " Riotous Rookies for this game");
+  }
+
   public void report(ReportList pReportList) {
     for (IReport report : pReportList.getReports()) {
       switch (report.getId()) {
@@ -3016,6 +3027,9 @@ public class StatusReport {
           break;
         case GAME_OPTIONS:
           // deprecated, do nothing
+          break;
+        case RIOTOUS_ROOKIES:
+          reportRiotousRookies((ReportRiotousRookies) report);
           break;
         default:
           throw new IllegalStateException("Unhandled report id " + report.getId().getName() + ".");
