@@ -12,6 +12,7 @@ public enum PlayerType implements INamedObject {
   STAR("Star"),
   IRREGULAR("Irregular"),
   JOURNEYMAN("Journeyman"),
+  RIOTOUS_ROOKIE("RiotousRookie"),
   RAISED_FROM_DEAD("RaisedFromDead"),
   MERCENARY("Mercenary");
   

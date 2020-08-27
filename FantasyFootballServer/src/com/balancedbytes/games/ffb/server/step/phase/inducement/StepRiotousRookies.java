@@ -55,7 +55,7 @@ public class StepRiotousRookies extends AbstractStep {
     riotousPlayer.updatePosition(position);
     riotousPlayer.setName("RiotousRookie #" + index);
     riotousPlayer.setNr(team.getMaxPlayerNr() + 1);
-    riotousPlayer.setType(PlayerType.JOURNEYMAN);
+    riotousPlayer.setType(PlayerType.RIOTOUS_ROOKIE);
     riotousPlayer.addSkill(Skill.LONER);
     team.addPlayer(riotousPlayer);
     game.getFieldModel().setPlayerState(riotousPlayer, new PlayerState(PlayerState.RESERVE));
