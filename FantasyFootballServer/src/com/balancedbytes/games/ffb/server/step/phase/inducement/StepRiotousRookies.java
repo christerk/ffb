@@ -2,6 +2,7 @@ package com.balancedbytes.games.ffb.server.step.phase.inducement;
 
 import com.balancedbytes.games.ffb.Inducement;
 import com.balancedbytes.games.ffb.InducementType;
+import com.balancedbytes.games.ffb.PlayerGender;
 import com.balancedbytes.games.ffb.PlayerState;
 import com.balancedbytes.games.ffb.PlayerType;
 import com.balancedbytes.games.ffb.Skill;
@@ -50,11 +51,13 @@ public class StepRiotousRookies extends AbstractStep {
   }
 
   private void riotousPlayer(Game game, Team team, int index, RosterPosition position) {
+    int genderOrdinal = getGameState().getDiceRoller().rollGender();
     RosterPlayer riotousPlayer = new RosterPlayer();
     riotousPlayer.setId(team.getId() + "Riotous" + index);
     riotousPlayer.updatePosition(position);
     riotousPlayer.setName("RiotousRookie #" + index);
     riotousPlayer.setNr(team.getMaxPlayerNr() + 1);
+    riotousPlayer.setGender(PlayerGender.fromOrdinal(genderOrdinal));
     riotousPlayer.setType(PlayerType.RIOTOUS_ROOKIE);
     riotousPlayer.addSkill(Skill.LONER);
     team.addPlayer(riotousPlayer);
