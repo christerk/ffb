@@ -243,6 +243,7 @@ public interface IJsonOption {
                  JsonArrayOption MOVE_SQUARE_ARRAY = new JsonArrayOption("moveSquareArray");
                    JsonIntOption MOVEMENT = new JsonIntOption("movement");
                 JsonStringOption NAME = new JsonStringOption("name");
+                JsonStringOption NAME_GENERATOR = new JsonStringOption("nameGenerator");
                JsonBooleanOption NECROMANCER = new JsonBooleanOption("necromancer");
           JsonEnumWithNameOption NET_COMMAND_ID = new JsonEnumWithNameOption("netCommandId", new NetCommandIdFactory());
                    JsonIntOption NR_OF_AWAY_CHOICES = new JsonIntOption("nrOfAwayChoices");
