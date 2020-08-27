@@ -223,8 +223,12 @@ public class BackupServlet extends HttpServlet {
 
         byte[] gzippedJson = UtilJson.gzip(gameState.toJsonValue());
 
+        String logMessage = "Compressing json " + gameState.toJsonValue().toString().length() + " --> " + gzippedJson.length;
+        fServer.getDebugLog().log(IServerLogLevel.DEBUG, logMessage);
+        
         if (gzippedJson != null) {
           ((BufferedOutputStream) out).write(gzippedJson, 0, gzippedJson.length);
+          ((BufferedOutputStream) out).flush();
         }
 
         // getServer().getDebugLog().log(IServerLogLevel.WARN, gameId, "Replay size " + StringTool.formatThousands(gzippedJson.length) + " gzipped.");
@@ -234,6 +238,7 @@ public class BackupServlet extends HttpServlet {
         out = new BufferedWriter(pResponse.getWriter());
         String jsonString = gameState.toJsonValue().toString();
         ((BufferedWriter) out).write(jsonString);
+        ((BufferedWriter) out).flush();
         
         // getServer().getDebugLog().log(IServerLogLevel.WARN, gameId, "Replay size " + StringTool.formatThousands(jsonString.length()) + " unzipped.");
 

@@ -114,6 +114,7 @@ public enum StepId implements INamedObject {
 	SPECIAL_EFFECT("specialEffect"), // phase.special
 	STAB("stab"), // action.block
 	STAND_UP("standUp"), // action.select
+	SWARMING("swarming"), // phase.kickoff
 	SWOOP("swoop"), // action.ttm
 	TAKE_ROOT("takeRoot"), // action.common
 	TENTACLES("tentacles"), // action.move

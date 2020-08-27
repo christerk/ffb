@@ -135,6 +135,12 @@ public class DialogManager {
 					case ARGUE_THE_CALL:
 						setDialogHandler(new DialogArgueTheCallHandler(getClient()));
 						break;
+					case SWARMING:
+						setDialogHandler(new DialogSwarmingPlayersHandler(getClient()));
+						break;
+					case SWARMING_ERROR:
+						setDialogHandler(new DialogSwarmingErrorParameterHandler(getClient()));
+						break;
 					default:
 						break;
 				}

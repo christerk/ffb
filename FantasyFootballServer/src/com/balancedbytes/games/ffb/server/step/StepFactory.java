@@ -113,6 +113,7 @@ import com.balancedbytes.games.ffb.server.step.phase.kickoff.StepKickoffReturn;
 import com.balancedbytes.games.ffb.server.step.phase.kickoff.StepKickoffScatterRoll;
 import com.balancedbytes.games.ffb.server.step.phase.kickoff.StepReceiveChoice;
 import com.balancedbytes.games.ffb.server.step.phase.kickoff.StepSetup;
+import com.balancedbytes.games.ffb.server.step.phase.kickoff.StepSwarming;
 import com.balancedbytes.games.ffb.server.step.phase.kickoff.StepTouchback;
 import com.balancedbytes.games.ffb.server.step.phase.special.StepEndBomb;
 import com.balancedbytes.games.ffb.server.step.phase.special.StepInitBomb;
@@ -461,6 +462,9 @@ public class StepFactory {
 				break;
 			case STAND_UP:
 				step = new StepStandUp(fGameState);
+				break;
+			case SWARMING:
+				step = new StepSwarming(fGameState);
 				break;
 			case SWOOP:
 				step = new StepSwoop(fGameState);

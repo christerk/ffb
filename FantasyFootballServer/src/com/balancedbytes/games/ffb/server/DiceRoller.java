@@ -196,6 +196,10 @@ public class DiceRoller {
 
   public int[] rollRiotousRookies() { return new int[] { rollDice(3), rollDice(3) }; }
   
+  public int rollSwarmingPlayers() {
+    return rollDice(3);
+  }
+
   public Player randomPlayer(Player[] pPlayers) {
     Player randomPlayer = null;
     if (ArrayTool.isProvided(pPlayers)) {

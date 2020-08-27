@@ -3,7 +3,7 @@ package com.balancedbytes.games.ffb.report;
 import com.balancedbytes.games.ffb.INamedObject;
 
 /**
- * 
+ *
  * @author Kalimar
  */
 public enum ReportId implements INamedObject {
@@ -33,7 +33,8 @@ public enum ReportId implements INamedObject {
   PASS_BLOCK("passBlock"), NO_PLAYERS_TO_FIELD("noPlayersToField"), PLAY_CARD("playCard"),
   CARD_DEACTIVATED("cardDeactivated"), BOMB_OUT_OF_BOUNDS("bombOutOfBounds"), PETTY_CASH("pettyCash"),
   INDUCEMENTS_BOUGHT("inducementsBought"), CARDS_BOUGHT("cardsBought"), CARD_EFFECT_ROLL("cardEffectRoll"),
-  WEEPING_DAGGER_ROLL("weepingDaggerRoll"), KICK_TEAM_MATE_ROLL("kickTeamMateRoll"), RIOTOUS_ROOKIES("riotousRookies");
+  WEEPING_DAGGER_ROLL("weepingDaggerRoll"), KICK_TEAM_MATE_ROLL("kickTeamMateRoll"), RIOTOUS_ROOKIES("riotousRookies"),
+  SWARMING_PLAYERS_ROLL("swarmingPlayersRoll");
 
   // obsolete: 50 (spiralling expenses)
   // obsolete: 71 (game options)
@@ -221,6 +222,8 @@ public enum ReportId implements INamedObject {
       return new ReportSkillRoll(ReportId.WEEPING_DAGGER_ROLL);
     case RIOTOUS_ROOKIES:
       return new ReportRiotousRookies();
+    case SWARMING_PLAYERS_ROLL:
+      return new ReportSwarmingRoll();
     default:
       throw new IllegalStateException("Unhandled report id " + getName() + ".");
     }

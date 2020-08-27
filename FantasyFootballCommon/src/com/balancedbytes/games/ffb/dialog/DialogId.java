@@ -48,6 +48,8 @@ public enum DialogId implements INamedObject {
   KICK_SKILL("kickSkill"),
   USE_IGOR("useIgor"),
   KICKOFF_RETURN("kickoffReturn"),
+  SWARMING("swarming"),
+  SWARMING_ERROR("swarmingError"),
   PETTY_CASH("pettyCash"),
   WIZARD_SPELL("wizardSpell"),  
   USE_INDUCEMENT("useInducement"),

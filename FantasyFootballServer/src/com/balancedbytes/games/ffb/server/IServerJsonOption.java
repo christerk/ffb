@@ -66,6 +66,7 @@ public interface IServerJsonOption extends IJsonOption {
                 JsonStringOption GOTO_LABEL_ON_MISSED_PASS = new JsonStringOption("gotoLabelOnMissedPass");
                 JsonStringOption GOTO_LABEL_ON_PUSHBACK = new JsonStringOption("gotoLabelOnPushback");
                 JsonStringOption GOTO_LABEL_ON_SUCCESS = new JsonStringOption("gotoLabelOnSuccess");
+               JsonBooleanOption HANDLE_RECEIVING_TEAM = new JsonBooleanOption("handleReceivingTeam");
                JsonBooleanOption HOLDING_SAFE_THROW = new JsonBooleanOption("holdingSafeThrow");
                JsonBooleanOption ILLEGAL_SUBSTITUTION = new JsonBooleanOption("illegalSubstitution");
                    JsonIntOption INDUCEMENT_GOLD_AWAY = new JsonIntOption("inducementGoldAway");
@@ -116,6 +117,7 @@ public interface IServerJsonOption extends IJsonOption {
                 JsonObjectOption STEP_RESULT = new JsonObjectOption("stepResult");
                 JsonObjectOption STEP_STACK = new JsonObjectOption("stepStack");
                  JsonArrayOption STEPS = new JsonArrayOption("steps");
+                   JsonIntOption SWARMING_PLAYER_AMOUT = new JsonIntOption("swarmingPlayerAmount");
                JsonBooleanOption SYNCHRONIZE = new JsonBooleanOption("synchronize");
        JsonFieldCoordinateOption THROW_IN_COORDINATE = new JsonFieldCoordinateOption("throwInCoordinate");
                JsonBooleanOption THROW_SCATTER = new JsonBooleanOption("throwScatter");

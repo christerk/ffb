@@ -131,19 +131,25 @@ public class UtilJson {
       outWriter = new OutputStreamWriter(gzipOut, _CHARSET);
       out = new BufferedWriter(outWriter);
       out.write(pJsonValue.toString());
-      return byteOut.toByteArray();
+      out.flush();
+      outWriter.flush();
+      gzipOut.flush();
+      byteOut.flush();
+      out.close();
+      byte[] data = byteOut.toByteArray();
+      return data;
     } finally {
-      if (byteOut != null) {
-        byteOut.close();
-      }
-      if (gzipOut != null) {
-        gzipOut.close();
+      if (out != null) {
+        out.close();
       }
       if (outWriter != null) {
         outWriter.close();
       }
-      if (out != null) {
-        out.close();
+      if (gzipOut != null) {
+        gzipOut.close();
+      }
+      if (byteOut != null) {
+        byteOut.close();
       }
     }
   }

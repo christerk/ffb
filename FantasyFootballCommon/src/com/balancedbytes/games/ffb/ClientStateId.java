@@ -34,6 +34,7 @@ public enum ClientStateId implements INamedObject {
   WAIT_FOR_SETUP("waitForSetup"),
   GAZE("gaze"),
   KICKOFF_RETURN("kickoffReturn"),
+  SWARMING("swarming"),
   WIZARD("wizard"),
   PASS_BLOCK("passBlock"),
   BOMB("bomb"),

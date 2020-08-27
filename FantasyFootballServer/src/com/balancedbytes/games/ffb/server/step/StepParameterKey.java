@@ -50,6 +50,7 @@ public enum StepParameterKey {
 	GOTO_LABEL_ON_PUSHBACK,       // String
 	GOTO_LABEL_ON_SUCCESS,        // String
 	HAIL_MARY_PASS,               // Boolean
+	HANDLE_RECEIVING_TEAM,          // Boolean
 	HOME_TEAM,                    // Boolean
 	INDUCEMENT_GOLD_AWAY,         // Integer
 	INDUCEMENT_GOLD_HOME,         // Integer

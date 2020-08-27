@@ -86,6 +86,10 @@ public class DialogParameterFactory {
         return new DialogBuyCardsParameter();
       case ARGUE_THE_CALL:
         return new DialogArgueTheCallParameter();
+      case SWARMING:
+        return new DialogSwarmingPlayersParameter();
+      case SWARMING_ERROR:
+        return new DialogSwarmingErrorParameter();
       default:
         return null;
     }
