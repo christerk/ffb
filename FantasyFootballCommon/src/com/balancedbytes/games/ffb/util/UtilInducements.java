@@ -51,7 +51,8 @@ public final class UtilInducements {
 			return 0;
 		}
 
-		if (InducementType.RIOTOUS_ROOKIES == pInducement && pRoster.getRiotousPositionId() == null) {
+		if (InducementType.RIOTOUS_ROOKIES == pInducement
+			&& (!StringTool.isProvided(pRoster.getRiotousPositionId()) || "0".equals(pRoster.getRiotousPositionId()))) {
 			return 0;
 		}
 
