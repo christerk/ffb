@@ -194,6 +194,10 @@ public class DiceRoller {
   	return rollDice(26) - 1;
   }
 
+  public int[] rollRiotousRookies() { return new int[] { rollDice(3), rollDice(3) }; }
+
+  public int rollGender() { return rollDice(3); }
+  
   public int rollSwarmingPlayers() {
     return rollDice(3);
   }

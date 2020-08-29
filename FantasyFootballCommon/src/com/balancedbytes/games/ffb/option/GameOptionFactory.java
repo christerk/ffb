@@ -303,6 +303,14 @@ public class GameOptionFactory {
         return new GameOptionBoolean(pOptionId)
           .setDefault(false)
           .setMessageTrue("A wizard may be bought as an inducement.");
+      case INDUCEMENT_RIOTOUS_ROOKIES_MAX:
+        return new GameOptionInt(pOptionId)
+          .setDefault(1)
+          .setMessage("Coaches my hire $1 groups of Riotous Rookies.");
+      case INDUCEMENT_RIOTOUS_ROOKIES_COST:
+        return new GameOptionInt(pOptionId)
+          .setDefault(100000)
+          .setMessage("Groups of Riotous Rookies can be purchased for $1 gps each.");
       default:
         return null;
     }

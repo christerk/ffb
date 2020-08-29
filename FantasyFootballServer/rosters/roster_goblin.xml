@@ -6,7 +6,8 @@
 	<reRollCost>60000</reRollCost>
 	<maxReRolls>8</maxReRolls>
 	<baseIconPath>http://localhost:2224/icons/players/</baseIconPath>
-  
+	<nameGenerator>default</nameGenerator>
+
 	<position id="goblin.goblin">
 		<quantity>16</quantity>
 		<name>Goblin</name>

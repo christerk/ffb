@@ -51,6 +51,10 @@ public final class UtilInducements {
 			return 0;
 		}
 
+		if (InducementType.RIOTOUS_ROOKIES == pInducement && pRoster.getRiotousPositionId() == null) {
+			return 0;
+		}
+
 		IGameOption gameOption = gameOptions.getOptionWithDefault(pInducement.getMaxId());
 
 		if (gameOption instanceof GameOptionInt) {

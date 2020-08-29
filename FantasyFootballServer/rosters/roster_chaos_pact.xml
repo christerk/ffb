@@ -6,8 +6,9 @@
 	<type>Regular</type>
 	<reRollCost>70000</reRollCost>
 	<maxReRolls>8</maxReRolls>
-	<baseIconPath>http://localhost:2224/icons/players/</baseIconPath>	
-  
+	<baseIconPath>http://localhost:2224/icons/players/</baseIconPath>
+	<nameGenerator>default</nameGenerator>
+
 	<position id="chaospact.marauder">
 		<quantity>12</quantity>
 		<name>Marauder</name>

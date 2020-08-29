@@ -50,4 +50,12 @@ public enum PlayerGender implements INamedObject {
     return fSelf;
   }
 
+  public static PlayerGender fromOrdinal(int ordinal) {
+    switch (ordinal)  {
+      case 1: return MALE;
+      case 2: return FEMALE;
+      default: return NEUTRAL;
+    }
+  }
+
 }

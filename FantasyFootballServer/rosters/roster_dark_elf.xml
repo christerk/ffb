@@ -7,7 +7,8 @@
 	<reRollCost>50000</reRollCost>
 	<maxReRolls>8</maxReRolls>
 	<baseIconPath>http://localhost:2224/icons/players/</baseIconPath>
-  
+	<nameGenerator>default</nameGenerator>
+
 	<position id="darkelf.lineman">
 		<quantity>16</quantity>
 		<name>Lineman</name>

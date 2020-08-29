@@ -164,16 +164,6 @@ public class Team implements IXmlSerializable, IJsonSerializable {
 	    return nrOfPlayersInPosition;	  
   }
   
-  public int getNrOfRegularPlayers() {
-    int nrOfRegularPlayers = 0;
-    for (Player player : getPlayers()) {
-      if ((player.getPlayerType() != PlayerType.JOURNEYMAN) && (player.getPlayerType() != PlayerType.STAR)) {
-        nrOfRegularPlayers++;
-      }
-    }
-    return nrOfRegularPlayers;
-  }
-  
   public int getNrOfAvailablePlayers() {
 	    int nrOfAvailablePlayers = 0;
 	    for (Player player : getPlayers()) {

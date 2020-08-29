@@ -70,7 +70,8 @@ public class RosterPosition implements Position {
   
   private static final String _XML_TAG_PORTRAIT = "portrait";
   private static final String _XML_TAG_ICON_SET = "iconSet";
-  
+  private static final String _XML_TAG_NAME_GENERATOR = "nameGenerator";
+
   private String fId;
   private Roster fRoster;
   private String fName;
@@ -93,7 +94,8 @@ public class RosterPosition implements Position {
   private String fUrlIconSet;
   private int fNrOfIcons;
   private int fCurrentIconSetIndex;
-  
+  private String nameGenerator;
+
   private Map<Skill, Integer> fSkillValues;
   private Set<SkillCategory> fSkillCategoriesOnNormalRoll;
   private Set<SkillCategory> fSkillCategoriesOnDoubleRoll;
@@ -332,7 +334,13 @@ public class RosterPosition implements Position {
   public String getTeamWithPositionId() {
 	  return fTeamWithPositionId;
   }
-    
+
+  public String getNameGenerator() {
+    if (StringTool.isProvided(nameGenerator)) {
+      return nameGenerator;
+    }
+    return getRoster().getNameGenerator();
+  }
   // XML serialization
   
   public void addToXml(TransformerHandler pHandler) {
@@ -356,6 +364,7 @@ public class RosterPosition implements Position {
   	UtilXml.addValueElement(pHandler, _XML_TAG_UNDEAD, isUndead());
   	UtilXml.addValueElement(pHandler, _XML_TAG_THRALL, isThrall());
   	UtilXml.addValueElement(pHandler, _XML_TAG_TEAM_WITH_POSITION_ID, getTeamWithPositionId());
+    UtilXml.addValueElement(pHandler, _XML_TAG_NAME_GENERATOR, nameGenerator);
 
   	UtilXml.addValueElement(pHandler, _XML_TAG_PORTRAIT, getUrlPortrait());
     
@@ -516,6 +525,9 @@ public class RosterPosition implements Position {
       if (_XML_TAG_TEAM_WITH_POSITION_ID.equals(pTag)) {
       	setTeamWithPositionId(pValue);
       }
+      if (_XML_TAG_NAME_GENERATOR.equals(pTag)) {
+        nameGenerator = pValue;
+      }
     }
     return complete;
   }
@@ -542,7 +554,8 @@ public class RosterPosition implements Position {
     IJsonOption.UNDEAD.addTo(jsonObject, fUndead);
     IJsonOption.THRALL.addTo(jsonObject, fThrall);
     IJsonOption.TEAM_WITH_POSITION_ID.addTo(jsonObject, fTeamWithPositionId);
-    
+    IJsonOption.NAME_GENERATOR.addTo(jsonObject, nameGenerator);
+
     IJsonOption.URL_PORTRAIT.addTo(jsonObject, fUrlPortrait);
     IJsonOption.URL_ICON_SET.addTo(jsonObject, fUrlIconSet);
     IJsonOption.NR_OF_ICONS.addTo(jsonObject, fNrOfIcons);
@@ -596,6 +609,7 @@ public class RosterPosition implements Position {
     fUndead = IJsonOption.UNDEAD.getFrom(jsonObject);
     fThrall = IJsonOption.THRALL.getFrom(jsonObject);
     fTeamWithPositionId = IJsonOption.TEAM_WITH_POSITION_ID.getFrom(jsonObject);
+    nameGenerator = IJsonOption.NAME_GENERATOR.getFrom(jsonObject);
 
     fUrlPortrait = IJsonOption.URL_PORTRAIT.getFrom(jsonObject);
     fUrlIconSet = IJsonOption.URL_ICON_SET.getFrom(jsonObject);

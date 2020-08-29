@@ -99,6 +99,7 @@ import com.balancedbytes.games.ffb.server.step.game.start.StepWeather;
 import com.balancedbytes.games.ffb.server.step.phase.inducement.StepEndInducement;
 import com.balancedbytes.games.ffb.server.step.phase.inducement.StepPlayCard;
 import com.balancedbytes.games.ffb.server.step.phase.inducement.StepInitInducement;
+import com.balancedbytes.games.ffb.server.step.phase.inducement.StepRiotousRookies;
 import com.balancedbytes.games.ffb.server.step.phase.inducement.StepWizard;
 import com.balancedbytes.games.ffb.server.step.phase.kickoff.StepApplyKickoffResult;
 import com.balancedbytes.games.ffb.server.step.phase.kickoff.StepBlitzTurn;
@@ -437,6 +438,9 @@ public class StepFactory {
 				break;
 			case RIGHT_STUFF:
 				step = new StepRightStuff(fGameState);
+				break;
+		  case RIOTOUS_ROOKIES:
+				step = new StepRiotousRookies(fGameState);
 				break;
 			case SAFE_THROW:
 				step = new StepSafeThrow(fGameState);

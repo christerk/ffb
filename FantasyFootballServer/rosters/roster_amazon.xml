@@ -6,7 +6,8 @@
 	<type>Regular</type>
 	<reRollCost>50000</reRollCost>	
 	<maxReRolls>8</maxReRolls>
-	<baseIconPath>http://localhost:2224/icons/players/</baseIconPath>	
+	<baseIconPath>http://localhost:2224/icons/players/</baseIconPath>
+	<nameGenerator>amazon</nameGenerator>
 
 	<position id="amazon.blitzer">
 		<quantity>4</quantity>

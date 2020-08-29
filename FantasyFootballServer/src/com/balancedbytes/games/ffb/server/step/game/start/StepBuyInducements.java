@@ -243,6 +243,7 @@ public final class StepBuyInducements extends AbstractStep {
       SequenceGenerator.getInstance().pushInducementSequence(getGameState(), InducementPhase.AFTER_INDUCEMENTS_PURCHASED, false);
       SequenceGenerator.getInstance().pushInducementSequence(getGameState(), InducementPhase.AFTER_INDUCEMENTS_PURCHASED, true);
     }
+    SequenceGenerator.getInstance().pushRiotousRookies(getGameState());
     Game game = getGameState().getGame();
     int restGoldHome = Math.max(0, fInducementGoldHome - fGoldUsedHome);
     int maxInducementGoldHome = UtilInducementSequence.calculateInducementGold(game, true);

@@ -31,7 +31,8 @@ public interface IServerProperty {
   String FUMBBL_GAMESTATE_UPDATE = "fumbbl.gamestate.update";
   String FUMBBL_GAMESTATE_REMOVE = "fumbbl.gamestate.remove";
   String FUMBBL_RESULT = "fumbbl.result";
-  
+  String FUMBBL_NAMEGENERATOR_BASE = "fumbbl.namegenerator.base";
+
   String ADMIN_SALT = "admin.salt";
   String ADMIN_PASSWORD = "admin.password";
   String ADMIN_URL_BACKUP = "admin.url.backup";
