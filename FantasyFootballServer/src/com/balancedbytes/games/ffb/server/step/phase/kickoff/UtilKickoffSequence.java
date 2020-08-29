@@ -65,18 +65,19 @@ public class UtilKickoffSequence {
       }
     }
     int maxPlayersOnField = UtilGameOption.getIntOption(game, GameOptionId.MAX_PLAYERS_ON_FIELD);
+    int allPlayersOnField = playersOnField + swarmersOnField;
     if (playersOnField > maxPlayersOnField) {
       messageList.add("You placed " + playersOnField + " regular Players on the field. Maximum are " + maxPlayersOnField + " players.");
     }
-    if (additionalSwarmers > 0 && playersOnField + swarmersOnField > maxPlayersOnField + additionalSwarmers) {
-      messageList.add("You placed " + (playersOnField + swarmersOnField) + " Players on the field. Maximum are " + (maxPlayersOnField + additionalSwarmers) + " players.");
+    if (additionalSwarmers > 0 && allPlayersOnField > maxPlayersOnField + additionalSwarmers) {
+      messageList.add("You placed " + allPlayersOnField + " Players on the field. Maximum are " + (maxPlayersOnField + additionalSwarmers) + " players.");
       messageList.add("Maximum " + maxPlayersOnField + " regular Players and maximum " + additionalSwarmers + " Swarming Players.");
     }
-    if ((playersOnField < maxPlayersOnField) && (availablePlayers >= maxPlayersOnField)) {
-      messageList.add("You placed " + playersOnField + " Players on the field. You have to put " + maxPlayersOnField + " players on the field.");
+    if ((allPlayersOnField < maxPlayersOnField) && (availablePlayers >= maxPlayersOnField)) {
+      messageList.add("You placed " + allPlayersOnField + " Players on the field. You have to put " + maxPlayersOnField + " players on the field.");
     } else {
-      if ((playersOnField < maxPlayersOnField) && (playersOnField < availablePlayers)) {
-        messageList.add("You placed " + playersOnField + " Players on the field. You have to put all players on the field.");
+      if ((allPlayersOnField < maxPlayersOnField) && (allPlayersOnField < availablePlayers)) {
+        messageList.add("You placed " + allPlayersOnField + " Players on the field. You have to put all players on the field.");
       }
     }
     int maxPlayersInWideZone = UtilGameOption.getIntOption(game, GameOptionId.MAX_PLAYERS_IN_WIDE_ZONE);
