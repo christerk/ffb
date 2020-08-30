@@ -171,7 +171,7 @@ public class StepSafeThrow extends AbstractStepWithReRoll {
   public StepSafeThrow initFrom(JsonValue pJsonValue) {
     super.initFrom(pJsonValue);
     JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-    fGotoLabelOnFailure = IServerJsonOption.GOTO_LABEL_ON_PUSHBACK.getFrom(jsonObject);
+    fGotoLabelOnFailure = IServerJsonOption.GOTO_LABEL_ON_FAILURE.getFrom(jsonObject);
     fInterceptorId = IServerJsonOption.INTERCEPTOR_ID.getFrom(jsonObject);
     return this;
   }

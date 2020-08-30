@@ -195,7 +195,7 @@ public class StepGoForIt extends AbstractStepWithReRoll {
     super.initFrom(pJsonValue);
     JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
     fSecondGoForIt = IServerJsonOption.SECOND_GO_FOR_IT.getFrom(jsonObject);
-    fGotoLabelOnFailure = IServerJsonOption.GOTO_LABEL_ON_PUSHBACK.getFrom(jsonObject);
+    fGotoLabelOnFailure = IServerJsonOption.GOTO_LABEL_ON_FAILURE.getFrom(jsonObject);
     return this;
   }
 
