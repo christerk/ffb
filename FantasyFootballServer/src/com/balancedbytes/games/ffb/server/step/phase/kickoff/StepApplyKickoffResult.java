@@ -232,7 +232,8 @@ public final class StepApplyKickoffResult extends AbstractStep {
     Game game = getGameState().getGame();
     if (game.getTurnMode() == TurnMode.PERFECT_DEFENCE) {
       if (fEndKickoff) {
-        if (UtilKickoffSequence.checkSetup(getGameState(), game.isHomePlaying())) {
+        if (UtilKickoffSequence.checkSetup(getGameState(), game.isHomePlaying(), getGameState().getKickingSwarmers())) {
+          getGameState().setKickingSwarmers(0);
           game.setTurnMode(TurnMode.KICKOFF);
           getResult().setNextAction(StepAction.NEXT_STEP);
         } else {

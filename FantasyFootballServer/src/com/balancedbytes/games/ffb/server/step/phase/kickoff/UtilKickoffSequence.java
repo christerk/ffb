@@ -6,6 +6,7 @@ import java.util.List;
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.FieldCoordinateBounds;
 import com.balancedbytes.games.ffb.PlayerState;
+import com.balancedbytes.games.ffb.Skill;
 import com.balancedbytes.games.ffb.dialog.DialogSetupErrorParameter;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
@@ -14,6 +15,7 @@ import com.balancedbytes.games.ffb.option.GameOptionId;
 import com.balancedbytes.games.ffb.option.UtilGameOption;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.util.UtilServerDialog;
+import com.balancedbytes.games.ffb.util.UtilCards;
 import com.balancedbytes.games.ffb.util.UtilPlayer;
 
 /**
@@ -21,11 +23,16 @@ import com.balancedbytes.games.ffb.util.UtilPlayer;
  * @author Kalimar
  */
 public class UtilKickoffSequence {
-	
+
   public static boolean checkSetup(GameState pGameState, boolean pHomeTeam) {
+    return checkSetup(pGameState, pHomeTeam, 0);
+  }
+
+  public static boolean checkSetup(GameState pGameState, boolean pHomeTeam, int additionalSwarmers) {
   	if (pGameState == null) {
   		throw new IllegalArgumentException("Parameter gameState must not be null.");
   	}
+    int swarmersOnField = 0;
     int playersOnField = 0;
     int playersInUpperWideZone = 0;
     int playersInLowerWideZone = 0;
@@ -41,7 +48,11 @@ public class UtilKickoffSequence {
       }
       FieldCoordinate playerCoordinate = game.getFieldModel().getPlayerCoordinate(player);
       if ((pHomeTeam && FieldCoordinateBounds.HALF_HOME.isInBounds(playerCoordinate)) || (!pHomeTeam && FieldCoordinateBounds.HALF_AWAY.isInBounds(playerCoordinate))) {
-        playersOnField++;
+        if (UtilCards.hasSkill(game, player, Skill.SWARMING)) {
+          swarmersOnField++;
+        } else {
+          playersOnField++;
+        }
       }
       if ((pHomeTeam && FieldCoordinateBounds.UPPER_WIDE_ZONE_HOME.isInBounds(playerCoordinate)) || (!pHomeTeam && FieldCoordinateBounds.UPPER_WIDE_ZONE_AWAY.isInBounds(playerCoordinate))) {
         playersInUpperWideZone++;
@@ -54,14 +65,19 @@ public class UtilKickoffSequence {
       }
     }
     int maxPlayersOnField = UtilGameOption.getIntOption(game, GameOptionId.MAX_PLAYERS_ON_FIELD);
+    int allPlayersOnField = playersOnField + swarmersOnField;
     if (playersOnField > maxPlayersOnField) {
-      messageList.add("You placed " + playersOnField + " Players on the field. Maximum are " + maxPlayersOnField + " players.");
+      messageList.add("You placed " + playersOnField + " regular Players on the field. Maximum are " + maxPlayersOnField + " players.");
     }
-    if ((playersOnField < maxPlayersOnField) && (availablePlayers >= maxPlayersOnField)) {
-      messageList.add("You placed " + playersOnField + " Players on the field. You have to put " + maxPlayersOnField + " players on the field.");
+    if (additionalSwarmers > 0 && allPlayersOnField > maxPlayersOnField + additionalSwarmers) {
+      messageList.add("You placed " + allPlayersOnField + " Players on the field. Maximum are " + (maxPlayersOnField + additionalSwarmers) + " players.");
+      messageList.add("Maximum " + maxPlayersOnField + " regular Players and maximum " + additionalSwarmers + " Swarming Players.");
+    }
+    if ((allPlayersOnField < maxPlayersOnField) && (availablePlayers >= maxPlayersOnField)) {
+      messageList.add("You placed " + allPlayersOnField + " Players on the field. You have to put " + maxPlayersOnField + " players on the field.");
     } else {
-      if ((playersOnField < maxPlayersOnField) && (playersOnField < availablePlayers)) {
-        messageList.add("You placed " + playersOnField + " Players on the field. You have to put all players on the field.");
+      if ((allPlayersOnField < maxPlayersOnField) && (allPlayersOnField < availablePlayers)) {
+        messageList.add("You placed " + allPlayersOnField + " Players on the field. You have to put all players on the field.");
       }
     }
     int maxPlayersInWideZone = UtilGameOption.getIntOption(game, GameOptionId.MAX_PLAYERS_IN_WIDE_ZONE);

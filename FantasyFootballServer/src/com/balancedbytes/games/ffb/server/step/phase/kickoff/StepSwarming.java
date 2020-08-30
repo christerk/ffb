@@ -120,12 +120,17 @@ public class StepSwarming extends AbstractStep {
           game.getFieldModel().clearTrackNumbers();
           if (handleReceivingTeam) {
             game.setHomePlaying(!game.isHomePlaying());
+          } else {
+            getGameState().setKickingSwarmers(placedSwarmingPlayers);
           }
           getGameState().getStepStack().pop();
           getResult().setNextAction(StepAction.NEXT_STEP);
         }
       }
     } else {
+      if (!handleReceivingTeam) {
+        getGameState().setKickingSwarmers(0);
+      }
       teamId = swarmingTeam(game).getId();
       Set<Player> playersOnPitch = new HashSet<>();
       Set<Player> playersReserveNoSwarming = new HashSet<>();

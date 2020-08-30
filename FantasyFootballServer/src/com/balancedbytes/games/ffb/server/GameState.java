@@ -40,6 +40,7 @@ public class GameState implements IModelChangeObserver, IJsonSerializable {
   private StepStack fStepStack;
   private IStep fCurrentStep;
   private Set<String> zappedPlayerIds = new HashSet<String>();
+  private int kickingSwarmers;
 
   private transient FantasyFootballServer fServer;
   private transient DiceRoller fDiceRoller;
@@ -245,6 +246,14 @@ public class GameState implements IModelChangeObserver, IJsonSerializable {
   public boolean isZapped(Player player) {
     return zappedPlayerIds.contains(player.getId());
   }
+
+  public int getKickingSwarmers() {
+    return kickingSwarmers;
+  }
+
+  public void setKickingSwarmers(int kickingSwarmers) {
+    this.kickingSwarmers = kickingSwarmers;
+  }
   // JSON serialization
 
   public JsonObject toJsonValue() {
@@ -259,6 +268,7 @@ public class GameState implements IModelChangeObserver, IJsonSerializable {
       IServerJsonOption.GAME.addTo(jsonObject, fGame.toJsonValue());
     }
     IServerJsonOption.PLAYER_IDS.addTo(jsonObject, zappedPlayerIds);
+    IServerJsonOption.SWARMING_PLAYER_ACTUAL.addTo(jsonObject, kickingSwarmers);
     return jsonObject;
   }
 
@@ -289,6 +299,9 @@ public class GameState implements IModelChangeObserver, IJsonSerializable {
     if (ids != null) {
       zappedPlayerIds.addAll(Arrays.asList(ids));
     }
+
+    kickingSwarmers = IServerJsonOption.SWARMING_PLAYER_ACTUAL.getFrom(jsonObject);
+
     return this;
   }
 
