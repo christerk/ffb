@@ -9,15 +9,15 @@ public class ReportRiotousRookies implements IReport {
 
   private int[] roll;
   private int amount;
-  private boolean homeTeam;
+  private String teamId;
 
   public ReportRiotousRookies() {
   }
 
-  public ReportRiotousRookies(int[] roll, int amount, boolean homeTeam) {
+  public ReportRiotousRookies(int[] roll, int amount, String teamId) {
     this.roll = roll;
     this.amount = amount;
-    this.homeTeam = homeTeam;
+    this.teamId = teamId;
   }
 
   @Override
@@ -27,7 +27,7 @@ public class ReportRiotousRookies implements IReport {
 
   @Override
   public IReport transform() {
-    return new ReportRiotousRookies(roll, amount, homeTeam);
+    return new ReportRiotousRookies(roll, amount, teamId);
   }
 
   public int[] getRoll() {
@@ -38,8 +38,8 @@ public class ReportRiotousRookies implements IReport {
     return amount;
   }
 
-  public boolean isHomeTeam() {
-    return homeTeam;
+  public String getTeamId() {
+    return teamId;
   }
 
   public JsonObject toJsonValue() {
@@ -47,7 +47,7 @@ public class ReportRiotousRookies implements IReport {
     IJsonOption.REPORT_ID.addTo(jsonObject, getId());
     IJsonOption.RIOTOUS_ROLL.addTo(jsonObject, roll);
     IJsonOption.RIOTOUS_AMOUNT.addTo(jsonObject, amount);
-    IJsonOption.HOME_TEAM.addTo(jsonObject, homeTeam);
+    IJsonOption.TEAM_ID.addTo(jsonObject, teamId);
     return jsonObject;
   }
 
@@ -56,7 +56,7 @@ public class ReportRiotousRookies implements IReport {
     UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(jsonObject));
     roll = IJsonOption.RIOTOUS_ROLL.getFrom(jsonObject);
     amount = IJsonOption.RIOTOUS_AMOUNT.getFrom(jsonObject);
-    homeTeam = IJsonOption.HOME_TEAM.getFrom(jsonObject);
+    teamId = IJsonOption.TEAM_ID.getFrom(jsonObject);
     return this;
   }
 }

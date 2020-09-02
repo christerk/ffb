@@ -51,7 +51,7 @@ public class StepRiotousRookies extends AbstractStep {
       for (int i = 0; i < rookies; i++) {
         riotousPlayer(getGameState().getGame(), team, i, position);
       }
-      getResult().addReport(new ReportRiotousRookies(rookiesRoll, rookies, team == getGameState().getGame().getTeamHome()));
+      getResult().addReport(new ReportRiotousRookies(rookiesRoll, rookies, team.getId()));
     }
   }
 
