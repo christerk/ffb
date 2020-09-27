@@ -66,12 +66,11 @@ public class UtilKickoffSequence {
     }
     int maxPlayersOnField = UtilGameOption.getIntOption(game, GameOptionId.MAX_PLAYERS_ON_FIELD);
     int allPlayersOnField = playersOnField + swarmersOnField;
-    if (playersOnField > maxPlayersOnField) {
-      messageList.add("You placed " + playersOnField + " regular Players on the field. Maximum are " + maxPlayersOnField + " players.");
-    }
-    if (additionalSwarmers > 0 && allPlayersOnField > maxPlayersOnField + additionalSwarmers) {
+    if (allPlayersOnField > maxPlayersOnField + additionalSwarmers) {
       messageList.add("You placed " + allPlayersOnField + " Players on the field. Maximum are " + (maxPlayersOnField + additionalSwarmers) + " players.");
-      messageList.add("Maximum " + maxPlayersOnField + " regular Players and maximum " + additionalSwarmers + " Swarming Players.");
+      if (additionalSwarmers > 0) {
+        messageList.add("Maximum " + maxPlayersOnField + " regular Players and maximum " + additionalSwarmers + " Swarming Players.");
+      }
     }
     if ((allPlayersOnField < maxPlayersOnField) && (availablePlayers >= maxPlayersOnField)) {
       messageList.add("You placed " + allPlayersOnField + " Players on the field. You have to put " + maxPlayersOnField + " players on the field.");
