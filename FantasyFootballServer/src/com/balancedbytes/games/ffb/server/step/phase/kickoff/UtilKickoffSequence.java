@@ -66,7 +66,7 @@ public class UtilKickoffSequence {
     }
     int maxPlayersOnField = UtilGameOption.getIntOption(game, GameOptionId.MAX_PLAYERS_ON_FIELD);
     int allPlayersOnField = playersOnField + swarmersOnField;
-    if (allPlayersOnField > maxPlayersOnField + additionalSwarmers) {
+    if (allPlayersOnField > maxPlayersOnField + additionalSwarmers || playersOnField > maxPlayersOnField) {
       messageList.add("You placed " + allPlayersOnField + " Players on the field. Maximum are " + (maxPlayersOnField + additionalSwarmers) + " players.");
       if (additionalSwarmers > 0) {
         messageList.add("Maximum " + maxPlayersOnField + " regular Players and maximum " + additionalSwarmers + " Swarming Players.");
