@@ -3,7 +3,6 @@ package com.balancedbytes.games.ffb.model;
 import com.balancedbytes.games.ffb.PlayerGender;
 import com.balancedbytes.games.ffb.PlayerType;
 import com.balancedbytes.games.ffb.SeriousInjury;
-import com.balancedbytes.games.ffb.Skill;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.IJsonSerializable;
 import com.balancedbytes.games.ffb.xml.IXmlSerializable;
@@ -57,19 +56,19 @@ public abstract class Player<T extends Position> implements IXmlSerializable, IJ
   
   public abstract int getAgility();
 
-  abstract void setAgility(int pAgility);
+  public abstract void setAgility(int pAgility);
   
   public abstract int getArmour();
   
-  abstract void setArmour(int pArmour);
+  public abstract void setArmour(int pArmour);
 
   public abstract int getMovement();
 
-  abstract void setMovement(int pMovement);
+  public abstract void setMovement(int pMovement);
 
   public abstract int getStrength();
   
-  abstract void setStrength(int pStrength);
+  public abstract void setStrength(int pStrength);
 
   abstract void addLastingInjury(SeriousInjury pLastingInjury) ;
   

@@ -6,7 +6,6 @@ import com.balancedbytes.games.ffb.PlayerType;
 import com.balancedbytes.games.ffb.PlayerTypeFactory;
 import com.balancedbytes.games.ffb.SeriousInjury;
 import com.balancedbytes.games.ffb.SeriousInjuryFactory;
-import com.balancedbytes.games.ffb.Skill;
 import com.balancedbytes.games.ffb.SkillCategory;
 import com.balancedbytes.games.ffb.SkillFactory;
 import com.balancedbytes.games.ffb.json.IJsonOption;
@@ -33,7 +32,7 @@ public class RosterPlayer extends Player<RosterPosition> {
 
   static final String XML_TAG = "player";
   public static final String KIND = "rosterPlayer";
-
+  
   private String fId;
   private int fNr;
   private Team fTeam;
@@ -63,6 +62,7 @@ public class RosterPlayer extends Player<RosterPosition> {
   private transient boolean fInsideSkillList;
   private transient boolean fInsideInjuryList;
   private transient boolean fInjuryCurrent;
+  private SkillFactory skillFactory;
     
   public RosterPlayer() {
     fLastingInjuries = new ArrayList<SeriousInjury>();
@@ -70,6 +70,7 @@ public class RosterPlayer extends Player<RosterPosition> {
     setGender(PlayerGender.MALE);
     fIconSetIndex = 0;
     fPosition = new RosterPosition(null);
+    skillFactory = new SkillFactory();
   }
     
   @Override
@@ -219,21 +220,8 @@ public class RosterPlayer extends Player<RosterPosition> {
       }
       for (Skill skill : getSkills()) {
         if (skill != null) {
-          switch (skill) {
-            case MOVEMENT_INCREASE:
-              fMovement++;
-              break;
-            case STRENGTH_INCREASE:
-              fStrength++;
-              break;
-            case AGILITY_INCREASE:
-              fAgility++;
-              break;
-            case ARMOUR_INCREASE:
-              fArmour++;
-              break;
-            default:
-            	break;
+          for (PlayerModifier modifier : skill.getModifiers()) {
+            modifier.apply(this);
           }
         }
       }
@@ -448,7 +436,7 @@ public class RosterPlayer extends Player<RosterPosition> {
           fInsideSkillList = false;
         }
         if (_XML_TAG_SKILL.equals(pXmlTag)) {
-          Skill skill = new SkillFactory().forName(pValue);
+          Skill skill = skillFactory.forName(pValue);
           if (skill != null) {
             fSkills.add(skill);
           }

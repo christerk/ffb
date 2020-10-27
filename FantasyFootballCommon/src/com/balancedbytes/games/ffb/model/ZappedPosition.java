@@ -1,29 +1,23 @@
 package com.balancedbytes.games.ffb.model;
 
-import com.balancedbytes.games.ffb.PlayerGender;
-import com.balancedbytes.games.ffb.PlayerGenderFactory;
-import com.balancedbytes.games.ffb.PlayerType;
-import com.balancedbytes.games.ffb.PlayerTypeFactory;
-import com.balancedbytes.games.ffb.Skill;
-import com.balancedbytes.games.ffb.SkillCategory;
-import com.balancedbytes.games.ffb.SkillCategoryFactory;
-import com.balancedbytes.games.ffb.SkillFactory;
-import com.balancedbytes.games.ffb.json.IJsonOption;
-import com.balancedbytes.games.ffb.json.UtilJson;
-import com.balancedbytes.games.ffb.util.ArrayTool;
-import com.balancedbytes.games.ffb.util.StringTool;
-import com.balancedbytes.games.ffb.xml.IXmlReadable;
-import com.balancedbytes.games.ffb.xml.UtilXml;
-import com.eclipsesource.json.JsonArray;
-import com.eclipsesource.json.JsonObject;
-import com.eclipsesource.json.JsonValue;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.xml.transform.sax.TransformerHandler;
+
 import org.xml.sax.Attributes;
 import org.xml.sax.helpers.AttributesImpl;
 
-import javax.xml.transform.sax.TransformerHandler;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import com.balancedbytes.games.ffb.PlayerGender;
+import com.balancedbytes.games.ffb.PlayerType;
+import com.balancedbytes.games.ffb.SkillCategory;
+import com.balancedbytes.games.ffb.SkillFactory;
+import com.balancedbytes.games.ffb.json.IJsonOption;
+import com.balancedbytes.games.ffb.json.UtilJson;
+import com.balancedbytes.games.ffb.xml.IXmlReadable;
+import com.balancedbytes.games.ffb.xml.UtilXml;
+import com.eclipsesource.json.JsonObject;
+import com.eclipsesource.json.JsonValue;
 
 public class ZappedPosition implements Position {
 
@@ -33,12 +27,8 @@ public class ZappedPosition implements Position {
   private int strength = 1;
   private int agility = 4;
   private int armour = 4;
-  private List<Skill> skills = Arrays.asList(Skill.DODGE,
-      Skill.NO_HANDS,
-      Skill.TITCHY,
-      Skill.STUNTY,
-      Skill.VERY_LONG_LEGS,
-      Skill.LEAP);
+  private List<Skill> skills = new ArrayList<Skill>();
+  
   private String race = "Transmogrified Frog";
   private String shortHand = "zf";
 
@@ -46,6 +36,14 @@ public class ZappedPosition implements Position {
 
   public ZappedPosition(RosterPosition originalPosition) {
     this.originalPosition = originalPosition;
+    
+    SkillFactory factory = new SkillFactory();
+    skills.add(SkillConstants.DODGE);
+    skills.add(SkillConstants.NO_HANDS);
+    skills.add(SkillConstants.TITCHY);
+    skills.add(SkillConstants.STUNTY);
+    skills.add(SkillConstants.VERY_LONG_LEGS);
+    skills.add(SkillConstants.LEAP);
   }
 
   @Override

@@ -7,11 +7,12 @@ import java.util.Set;
 
 import com.balancedbytes.games.ffb.Card;
 import com.balancedbytes.games.ffb.CardEffect;
-import com.balancedbytes.games.ffb.Skill;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.InducementSet;
 import com.balancedbytes.games.ffb.model.Player;
+import com.balancedbytes.games.ffb.model.Skill;
+import com.balancedbytes.games.ffb.model.SkillConstants;
 
 /**
  * 
@@ -50,46 +51,46 @@ public final class UtilCards {
     for (Card card : cards) {
       switch (card) {
         case BEGUILING_BRACERS:
-          cardSkills.add(Skill.BONE_HEAD);
-          cardSkills.add(Skill.HYPNOTIC_GAZE);
-          cardSkills.add(Skill.SIDE_STEP);
+          cardSkills.add(SkillConstants.BONE_HEAD);
+          cardSkills.add(SkillConstants.HYPNOTIC_GAZE);
+          cardSkills.add(SkillConstants.SIDE_STEP);
           break;
         case FAWNDOUGHS_HEADBAND:
-          cardSkills.add(Skill.ACCURATE);
-          cardSkills.add(Skill.PASS);
+          cardSkills.add(SkillConstants.ACCURATE);
+          cardSkills.add(SkillConstants.PASS);
           break;
         case FORCE_SHIELD:
-          cardSkills.add(Skill.FEND);
-          cardSkills.add(Skill.SURE_HANDS);
+          cardSkills.add(SkillConstants.FEND);
+          cardSkills.add(SkillConstants.SURE_HANDS);
           break;
         case GLOVES_OF_HOLDING:
-          cardSkills.add(Skill.CATCH);
-          cardSkills.add(Skill.SURE_HANDS);
+          cardSkills.add(SkillConstants.CATCH);
+          cardSkills.add(SkillConstants.SURE_HANDS);
           break;
         case MAGIC_GLOVES_OF_JARK_LONGARM:
-          cardSkills.add(Skill.PASS_BLOCK);
+          cardSkills.add(SkillConstants.PASS_BLOCK);
           break;
         case RABBITS_FOOT:
-          cardSkills.add(Skill.PRO);
+          cardSkills.add(SkillConstants.PRO);
           break;
         case WAND_OF_SMASHING:
-          cardSkills.add(Skill.MIGHTY_BLOW);
+          cardSkills.add(SkillConstants.MIGHTY_BLOW);
           break;
         case GROMSKULLS_EXPLODING_RUNES:
-          cardSkills.add(Skill.BOMBARDIER);
-          cardSkills.add(Skill.NO_HANDS);
-          cardSkills.add(Skill.SECRET_WEAPON);
+          cardSkills.add(SkillConstants.BOMBARDIER);
+          cardSkills.add(SkillConstants.NO_HANDS);
+          cardSkills.add(SkillConstants.SECRET_WEAPON);
           break;
         case DISTRACT:
-          cardSkills.add(Skill.DISTURBING_PRESENCE);
+          cardSkills.add(SkillConstants.DISTURBING_PRESENCE);
           break;
         case STOLEN_PLAYBOOK:
-          cardSkills.add(Skill.PASS_BLOCK);
-          cardSkills.add(Skill.SHADOWING);
+          cardSkills.add(SkillConstants.PASS_BLOCK);
+          cardSkills.add(SkillConstants.SHADOWING);
           break;
         case KICKING_BOOTS:
-          cardSkills.add(Skill.KICK);
-          cardSkills.add(Skill.DIRTY_PLAYER);
+          cardSkills.add(SkillConstants.KICK);
+          cardSkills.add(SkillConstants.DIRTY_PLAYER);
         default:
           break;
       }
@@ -98,14 +99,14 @@ public final class UtilCards {
     for (CardEffect cardEffect : cardEffects) {
       switch (cardEffect) {
         case DISTRACTED:
-          cardSkills.add(Skill.BONE_HEAD);
+          cardSkills.add(SkillConstants.BONE_HEAD);
           break;
         case SEDATIVE:
-          cardSkills.add(Skill.REALLY_STUPID);
+          cardSkills.add(SkillConstants.REALLY_STUPID);
           break;
         case MAD_CAP_MUSHROOM_POTION:
-          cardSkills.add(Skill.JUMP_UP);
-          cardSkills.add(Skill.NO_HANDS);
+          cardSkills.add(SkillConstants.JUMP_UP);
+          cardSkills.add(SkillConstants.NO_HANDS);
           break;
         default:
           break;

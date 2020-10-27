@@ -9,6 +9,8 @@ import java.util.List;
 import java.util.Set;
 
 import com.balancedbytes.games.ffb.model.RosterPlayer;
+import com.balancedbytes.games.ffb.model.Skill;
+
 import org.eclipse.jetty.websocket.api.Session;
 
 import com.balancedbytes.games.ffb.Card;
@@ -16,7 +18,6 @@ import com.balancedbytes.games.ffb.CardFactory;
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.PlayerState;
 import com.balancedbytes.games.ffb.SeriousInjury;
-import com.balancedbytes.games.ffb.Skill;
 import com.balancedbytes.games.ffb.SkillFactory;
 import com.balancedbytes.games.ffb.SoundId;
 import com.balancedbytes.games.ffb.SoundIdFactory;
@@ -56,9 +57,12 @@ public class ServerCommandHandlerTalk extends ServerCommandHandler {
 
   private static final String _ADD = "add";
   private static final String _REMOVE = "remove";
+  private SkillFactory skillFactory;
 
   protected ServerCommandHandlerTalk(FantasyFootballServer server) {
     super(server);
+    
+    skillFactory = new SkillFactory();
   }
 
   public NetCommandId getId() {
@@ -560,7 +564,7 @@ public class ServerCommandHandlerTalk extends ServerCommandHandler {
     if ((commands == null) || (commands.length <= 3)) {
       return;
     }
-    Skill skill = new SkillFactory().forName(commands[2].replace('_', ' '));
+    Skill skill = skillFactory.forName(commands[2].replace('_', ' '));
     if (skill == null) {
       return;
     }

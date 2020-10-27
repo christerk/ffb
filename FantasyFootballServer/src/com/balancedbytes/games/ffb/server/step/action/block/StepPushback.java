@@ -13,7 +13,6 @@ import com.balancedbytes.games.ffb.PlayerState;
 import com.balancedbytes.games.ffb.Pushback;
 import com.balancedbytes.games.ffb.PushbackMode;
 import com.balancedbytes.games.ffb.PushbackSquare;
-import com.balancedbytes.games.ffb.Skill;
 import com.balancedbytes.games.ffb.SkillUse;
 import com.balancedbytes.games.ffb.dialog.DialogSkillUseParameter;
 import com.balancedbytes.games.ffb.json.UtilJson;

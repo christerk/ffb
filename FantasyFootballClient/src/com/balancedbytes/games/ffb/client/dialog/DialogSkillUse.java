@@ -1,9 +1,9 @@
 package com.balancedbytes.games.ffb.client.dialog;
 
-import com.balancedbytes.games.ffb.Skill;
 import com.balancedbytes.games.ffb.client.FantasyFootballClient;
 import com.balancedbytes.games.ffb.dialog.DialogId;
 import com.balancedbytes.games.ffb.dialog.DialogSkillUseParameter;
+import com.balancedbytes.games.ffb.model.Skill;
 
 /**
  * 
@@ -30,32 +30,21 @@ public class DialogSkillUse extends DialogYesOrNoQuestion {
   private static String[] createMessages(DialogSkillUseParameter pDialogParameter) {
     String[] messages = new String[0];
     if ((pDialogParameter != null) && (pDialogParameter.getSkill() != null)) {
-      switch (pDialogParameter.getSkill()) {
-        case SIDE_STEP:
+      Skill skill = pDialogParameter.getSkill();
+      
+      String[] customMessages = skill.getSkillUseDescription();
+      if (customMessages != null) {
+        messages = new String[customMessages.length + 1];
+        messages[0] = createDefaultQuestion(pDialogParameter);
+        System.arraycopy(customMessages, 0, messages, 1, customMessages.length);
+      } else {
+        if (pDialogParameter.getMinimumRoll() > 0) {
           messages = new String[2];
-          messages[0] = createDefaultQuestion(pDialogParameter);
-          messages[1] = "Using SideStep will allow you to chose the square you are pushed to.";
-          break;
-        case JUGGERNAUT:
-          messages = new String[2];
-          messages[0] = createDefaultQuestion(pDialogParameter);
-          messages[1] = "Using Juggernaut will convert the BOTH DOWN Block Result into a PUSHBACK.";
-          break;
-        case WRESTLE:
-          messages = new String[3];
-          messages[0] = createDefaultQuestion(pDialogParameter);
-          messages[1] = "Using Wrestle will put down both you and your opponent.";
-          messages[2] = "No Armor Roll is made. The ball carrier drops the ball.";
-          break;
-        default:
-          if (pDialogParameter.getMinimumRoll() > 0) {
-            messages = new String[2];
-            messages[1] = createDefaultMinimumRoll(pDialogParameter);
-          } else {
-            messages = new String[1];
-          }
-          messages[0] = createDefaultQuestion(pDialogParameter);
-          break;
+          messages[1] = createDefaultMinimumRoll(pDialogParameter);
+        } else {
+          messages = new String[1];
+        }
+        messages[0] = createDefaultQuestion(pDialogParameter);
       }
     }
     return messages;

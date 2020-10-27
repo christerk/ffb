@@ -1,5 +1,7 @@
 package com.balancedbytes.games.ffb;
 
+import com.balancedbytes.games.ffb.model.Skill;
+
 /**
  * 
  * @author Kalimar

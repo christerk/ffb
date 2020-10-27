@@ -1,9 +1,9 @@
 package com.balancedbytes.games.ffb.util;
 
-import com.balancedbytes.games.ffb.Skill;
 import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.model.Position;
 import com.balancedbytes.games.ffb.model.Roster;
+import com.balancedbytes.games.ffb.model.Skill;
 import com.balancedbytes.games.ffb.model.Team;
 
 /**
@@ -39,27 +39,7 @@ public class UtilTeamValue {
       if (position != null) {
         playerValue += position.getCost();
         for (Skill skill : pPlayer.getSkills()) {
-          if (!position.hasSkill(skill) && (skill != Skill.LONER)) {
-            switch (skill) {
-              case AGILITY_INCREASE:
-                playerValue += 40000;
-                break;
-              case STRENGTH_INCREASE:
-                playerValue += 50000;
-                break;
-              case MOVEMENT_INCREASE:
-              case ARMOUR_INCREASE:
-                playerValue += 30000;
-                break;
-              default:
-                if (position.isDoubleCategory(skill.getCategory())) {
-                  playerValue += 30000;
-                } else {
-                  playerValue += 20000;
-                }
-                break;
-            }
-          }
+          playerValue += skill.getCost(pPlayer);
         }
       }
     }

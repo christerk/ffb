@@ -3,11 +3,11 @@ package com.balancedbytes.games.ffb.net.commands;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.balancedbytes.games.ffb.Skill;
 import com.balancedbytes.games.ffb.SkillFactory;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.InducementSet;
+import com.balancedbytes.games.ffb.model.Skill;
 import com.balancedbytes.games.ffb.net.NetCommandId;
 import com.balancedbytes.games.ffb.util.ArrayTool;
 import com.balancedbytes.games.ffb.util.StringTool;
