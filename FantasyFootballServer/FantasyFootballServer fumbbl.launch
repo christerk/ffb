@@ -11,6 +11,7 @@
 </listAttribute>
 <listAttribute key="org.eclipse.eclemma.core.SCOPE_IDS"/>
 <stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="com.balancedbytes.games.ffb.server.FantasyFootballServer"/>
+<stringAttribute key="org.eclipse.jdt.launching.MODULE_NAME" value="FantasyFootballServer"/>
 <stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="fumbbl"/>
 <stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="FantasyFootballServer"/>
 </launchConfiguration>
