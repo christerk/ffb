@@ -1,7 +1,7 @@
 package com.balancedbytes.games.ffb.server.skill;
 
 import com.balancedbytes.games.ffb.SkillCategory;
-import com.balancedbytes.games.ffb.server.model.FanaticSkillProperty;
+import com.balancedbytes.games.ffb.server.model.GrabOutsideBlockProperty;
 import com.balancedbytes.games.ffb.server.model.ServerSkill;
 
 /**
@@ -32,7 +32,7 @@ public class BallAndChain extends ServerSkill {
   public BallAndChain() {
     super("Ball and Chain", SkillCategory.EXTRAORDINARY);
     
-    registerProperty(new FanaticSkillProperty());
+    registerProperty(new GrabOutsideBlockProperty());
   }
 
 }
