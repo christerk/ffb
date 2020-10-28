@@ -9,7 +9,6 @@ import com.balancedbytes.games.ffb.PassingDistance;
 import com.balancedbytes.games.ffb.PlayerState;
 import com.balancedbytes.games.ffb.ReRollSource;
 import com.balancedbytes.games.ffb.ReRolledAction;
-import com.balancedbytes.games.ffb.Skill;
 import com.balancedbytes.games.ffb.dialog.DialogSkillUseParameter;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
@@ -20,6 +19,7 @@ import com.balancedbytes.games.ffb.report.ReportThrowTeamMateRoll;
 import com.balancedbytes.games.ffb.server.DiceInterpreter;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.IServerJsonOption;
+import com.balancedbytes.games.ffb.server.model.ServerSkill;
 import com.balancedbytes.games.ffb.server.net.ReceivedCommand;
 import com.balancedbytes.games.ffb.server.step.AbstractStepWithReRoll;
 import com.balancedbytes.games.ffb.server.step.SequenceGenerator;
@@ -51,14 +51,19 @@ import com.eclipsesource.json.JsonValue;
  * @author Kalimar
  */
 public final class StepThrowTeamMate extends AbstractStepWithReRoll {
+	public class StepState {
+	  
+	}
 	
   private String fGotoLabelOnFailure;
   private String fThrownPlayerId;
   private PlayerState fThrownPlayerState;
   private boolean fThrownPlayerHasBall;
-	
+	private StepState state;
+  
 	public StepThrowTeamMate(GameState pGameState) {
 		super(pGameState);
+		state = new StepState();
 	}
 	
 	public StepId getId() {
@@ -117,18 +122,15 @@ public final class StepThrowTeamMate extends AbstractStepWithReRoll {
 			switch (pReceivedCommand.getId()) {
 			  case CLIENT_USE_SKILL:
 			    ClientCommandUseSkill useSkillCommand = (ClientCommandUseSkill) pReceivedCommand.getCommand();
-			    switch (useSkillCommand.getSkill()) {
-			      case PASS:
-			        if (useSkillCommand.isSkillUsed()) {
-			          setReRollSource(ReRollSource.PASS);
-			        } else {
-			          setReRollSource(null);
-			        }
-			        break;
-		        default:
-		        	break;
-			    }
-			    commandStatus = StepCommandStatus.EXECUTE_STEP;
+	        ServerSkill usedSkill = (ServerSkill) useSkillCommand.getSkill();
+	        
+	        if (usedSkill != null) {
+	          StepCommandStatus newStatus = usedSkill.applyUseSkillCommandHooks(this, state, useSkillCommand);
+	          if (newStatus != null) {
+	            commandStatus = newStatus;
+	          }
+	        }
+
 			    break;
 		    default:
 		    	break;

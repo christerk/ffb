@@ -1,8 +1,9 @@
 package com.balancedbytes.games.ffb.server.skill;
 
 import com.balancedbytes.games.ffb.SkillCategory;
-import com.balancedbytes.games.ffb.server.model.GrabOutsideBlockProperty;
 import com.balancedbytes.games.ffb.server.model.ServerSkill;
+import com.balancedbytes.games.ffb.server.model.modifier.GrabOutsideBlockProperty;
+import com.balancedbytes.games.ffb.server.model.modifier.NamedProperties;
 
 /**
 * Players armed with a Ball & Chain can only take Move Actions. To move
@@ -32,7 +33,8 @@ public class BallAndChain extends ServerSkill {
   public BallAndChain() {
     super("Ball and Chain", SkillCategory.EXTRAORDINARY);
     
-    registerProperty(new GrabOutsideBlockProperty());
+    registerProperty(NamedProperties.grabOutsideBlock);
+    registerProperty(NamedProperties.flipSameTeamOpponentToOtherTeam);
   }
 
 }

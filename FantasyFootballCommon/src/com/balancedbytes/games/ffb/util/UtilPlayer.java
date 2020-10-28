@@ -156,35 +156,6 @@ public class UtilPlayer {
   	return playerList.toArray(new Player[playerList.size()]);
   }
 
-  public static int findBlockStrength(Game pGame, Player pAttacker, int pAttackerStrength, Player pDefender) {
-  	Team defenderTeam = pDefender.getTeam();
-  	// team-mates assist b&c if attacker is on the same team as defender to gain maximum block dice (more choice)
-  	// opposing teams tries to hinder
-  	if (UtilCards.hasSkill(pGame, pAttacker, Skill.BALL_AND_CHAIN) && (pAttacker.getTeam() == pDefender.getTeam())) {
-    	defenderTeam = UtilPlayer.findOtherTeam(pGame, pDefender);
-    }
-    int blockStrength = pAttackerStrength;
-    FieldCoordinate coordinateDefender = pGame.getFieldModel().getPlayerCoordinate(pDefender);
-    Player[] offensiveAssists = findAdjacentPlayersWithTacklezones(pGame, pAttacker.getTeam(), coordinateDefender, false);
-    for (int i = 0; i < offensiveAssists.length; i++) {
-      if (offensiveAssists[i] != pAttacker) {
-        FieldCoordinate coordinateAssist = pGame.getFieldModel().getPlayerCoordinate(offensiveAssists[i]);
-        Player[] defensiveAssists = findAdjacentPlayersWithTacklezones(pGame, defenderTeam, coordinateAssist, false);        
-        // Check to see if the assisting player is not close to anyone else but the defending blocker
-        int defendingPlayersOtherThanBlocker = 0; 
-        for (int y= 0; y < defensiveAssists.length; y++){
-        	if (defensiveAssists[y] != pDefender)
-        		defendingPlayersOtherThanBlocker++;
-        }
-        if (UtilCards.hasSkill(pGame, offensiveAssists[i], Skill.GUARD) || (defendingPlayersOtherThanBlocker == 0)) {
-          // System.out.println(offensiveAssists[i].getName() + " assists " + pAttacker.getName());
-          blockStrength++;
-        }
-      }
-    }
-    return blockStrength;
-  }
-
   public static int findFoulAssists(Game pGame, Player pAttacker, Player pDefender) {
     int foulAssists = 0;
     FieldCoordinate coordinateDefender = pGame.getFieldModel().getPlayerCoordinate(pDefender);

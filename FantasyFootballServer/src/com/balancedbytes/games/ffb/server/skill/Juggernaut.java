@@ -2,8 +2,8 @@ package com.balancedbytes.games.ffb.server.skill;
 
 import com.balancedbytes.games.ffb.SkillCategory;
 import com.balancedbytes.games.ffb.server.ServerSkillConstants;
-import com.balancedbytes.games.ffb.server.model.CancelSkillProperty;
 import com.balancedbytes.games.ffb.server.model.ServerSkill;
+import com.balancedbytes.games.ffb.server.model.modifier.CancelSkillProperty;
 
 /**
 * A player with this skill is virtually impossible to stop once he is in motion.

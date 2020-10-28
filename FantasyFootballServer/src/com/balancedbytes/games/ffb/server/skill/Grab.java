@@ -11,10 +11,10 @@ import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.net.NetCommand;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandUseSkill;
 import com.balancedbytes.games.ffb.server.ServerSkillConstants;
-import com.balancedbytes.games.ffb.server.model.CancelSkillProperty;
-import com.balancedbytes.games.ffb.server.model.GrabOutsideBlockProperty;
 import com.balancedbytes.games.ffb.server.model.ServerSkill;
 import com.balancedbytes.games.ffb.server.model.StepModifier;
+import com.balancedbytes.games.ffb.server.model.modifier.CancelSkillProperty;
+import com.balancedbytes.games.ffb.server.model.modifier.NamedProperties;
 import com.balancedbytes.games.ffb.server.step.StepCommandStatus;
 import com.balancedbytes.games.ffb.server.step.StepParameter;
 import com.balancedbytes.games.ffb.server.step.StepParameterKey;
@@ -48,9 +48,7 @@ public class Grab extends ServerSkill {
     registerModifier(new StepModifier<StepPushback, StepPushback.StepState>(3) {
 
       @Override
-      public StepCommandStatus handleCommandHook(StepPushback step, StepPushback.StepState state, NetCommand netCommand) {
-        ClientCommandUseSkill useSkillCommand = (ClientCommandUseSkill) netCommand;
-        
+      public StepCommandStatus handleCommandHook(StepPushback step, StepPushback.StepState state, ClientCommandUseSkill useSkillCommand) {
         state.grabbing = useSkillCommand.isSkillUsed();
         return StepCommandStatus.EXECUTE_STEP;
       }
@@ -63,14 +61,14 @@ public class Grab extends ServerSkill {
         FieldCoordinate attackerCoordinate = fieldModel.getPlayerCoordinate(actingPlayer.getPlayer());
         FieldCoordinate defenderCoordinate = state.startingPushbackSquare.getCoordinate();
         ServerSkill cancellingSkill = UtilServerCards.getSkillCancelling(game, state.defender, Grab.this);
-        ServerSkill allowGrabOutsideBlockSkill = UtilServerCards.getSkillWithProperty(game, actingPlayer.getPlayer(), GrabOutsideBlockProperty.class);
+        boolean allowGrabOutsideBlock = UtilServerCards.hasSkillWithProperty(actingPlayer.getPlayer(), NamedProperties.grabOutsideBlock);
         
         if (((state.grabbing == null) || state.grabbing) && state.freeSquareAroundDefender
             && UtilCards.hasSkill(game, actingPlayer, Grab.this) && attackerCoordinate.isAdjacent(defenderCoordinate)
             && cancellingSkill == null
             && ((actingPlayer.getPlayerAction() == PlayerAction.BLOCK)
                 || (actingPlayer.getPlayerAction() == PlayerAction.MULTIPLE_BLOCK)
-                || allowGrabOutsideBlockSkill != null)) {
+                || allowGrabOutsideBlock)) {
           if ((state.grabbing == null) && ArrayTool.isProvided(state.pushbackSquares)) {
             state.grabbing = true;
             for (int i = 0; i < state.pushbackSquares.length; i++) {

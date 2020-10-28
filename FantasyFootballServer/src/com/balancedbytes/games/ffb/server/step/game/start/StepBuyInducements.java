@@ -30,6 +30,7 @@ import com.balancedbytes.games.ffb.report.ReportInducementsBought;
 import com.balancedbytes.games.ffb.server.FantasyFootballServer;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.IServerJsonOption;
+import com.balancedbytes.games.ffb.server.ServerSkillConstants;
 import com.balancedbytes.games.ffb.server.db.DbTransaction;
 import com.balancedbytes.games.ffb.server.net.ReceivedCommand;
 import com.balancedbytes.games.ffb.server.step.AbstractStep;
@@ -284,7 +285,7 @@ public final class StepBuyInducements extends AbstractStep {
       mercenary.setName(name.toString());
       mercenary.setNr(pTeam.getMaxPlayerNr() + 1);
       mercenary.setType(PlayerType.MERCENARY);
-      mercenary.addSkill(Skill.LONER);
+      mercenary.addSkill(ServerSkillConstants.LONER);
       if (pSkills[i] != null) {
         mercenary.addSkill(pSkills[i]);
       }

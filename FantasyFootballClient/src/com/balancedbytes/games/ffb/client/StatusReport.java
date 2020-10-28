@@ -2321,13 +2321,13 @@ public class StatusReport {
     Player defender = game.getPlayerById(pReport.getDefenderId());
     switch (pReport.getBlockResult()) {
       case BOTH_DOWN:
-        if (UtilCards.hasSkill(game, attacker, Skill.BLOCK)) {
+        if (UtilCards.hasSkill(game, attacker, ClientSkillConstants.BLOCK)) {
           print(getIndent() + 1, false, attacker);
           status = new StringBuilder();
           status.append(" has been saved by ").append(attacker.getPlayerGender().getGenitive()).append(" Block skill.");
           println(getIndent() + 1, status.toString());
         }
-        if (UtilCards.hasSkill(game, defender, Skill.BLOCK)) {
+        if (UtilCards.hasSkill(game, defender, ClientSkillConstants.BLOCK)) {
           print(getIndent() + 1, false, defender);
           status = new StringBuilder();
           status.append(" has been saved by ").append(defender.getPlayerGender().getGenitive()).append(" Block skill.");
@@ -2335,7 +2335,7 @@ public class StatusReport {
         }
         break;
       case POW_PUSHBACK:
-        if (UtilCards.hasSkill(game, defender, Skill.DODGE) && UtilCards.hasSkill(game, attacker, Skill.TACKLE)) {
+        if (UtilCards.hasSkill(game, defender, ClientSkillConstants.DODGE) && UtilCards.hasSkill(game, attacker, ClientSkillConstants.TACKLE)) {
           print(getIndent() + 1, false, attacker);
           println(getIndent() + 1, " uses Tackle to bring opponent down.");
         }

@@ -2,6 +2,7 @@ package com.balancedbytes.games.ffb.server.skill;
 
 import com.balancedbytes.games.ffb.SkillCategory;
 import com.balancedbytes.games.ffb.server.model.ServerSkill;
+import com.balancedbytes.games.ffb.server.model.modifier.NamedProperties;
 
 /**
 * The player is not noted for his intelligence. Because of this you must roll
@@ -19,6 +20,8 @@ public class BoneHead extends ServerSkill {
 
   public BoneHead() {
     super("Bone-Head", SkillCategory.EXTRAORDINARY);
+    
+    registerProperty(NamedProperties.appliesConfusion);
   }
 
 }

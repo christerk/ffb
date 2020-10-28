@@ -114,7 +114,7 @@ public class StepPushback extends AbstractStep {
         ServerSkill usedSkill = (ServerSkill) useSkillCommand.getSkill();
 
         if (usedSkill != null) {
-          StepCommandStatus newStatus = usedSkill.applySkillCommandHooks(this, state, pReceivedCommand.getCommand());
+          StepCommandStatus newStatus = usedSkill.applyUseSkillCommandHooks(this, state, useSkillCommand);
           if (newStatus != null) {
             commandStatus = newStatus;
           }

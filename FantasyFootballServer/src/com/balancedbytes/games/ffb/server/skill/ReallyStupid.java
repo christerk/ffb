@@ -2,6 +2,7 @@ package com.balancedbytes.games.ffb.server.skill;
 
 import com.balancedbytes.games.ffb.SkillCategory;
 import com.balancedbytes.games.ffb.server.model.ServerSkill;
+import com.balancedbytes.games.ffb.server.model.modifier.NamedProperties;
 
 /**
 * This player is without doubt one of the dimmest creatures to ever take to
@@ -24,6 +25,8 @@ public class ReallyStupid extends ServerSkill {
 
   public ReallyStupid() {
     super("Really Stupid", SkillCategory.EXTRAORDINARY);
+    
+    registerProperty(NamedProperties.appliesConfusion);
   }
 
 }

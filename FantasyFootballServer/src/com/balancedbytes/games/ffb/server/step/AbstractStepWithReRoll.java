@@ -52,7 +52,7 @@ public abstract class AbstractStepWithReRoll extends AbstractStep {
     return fReRollSource;
   }
 
-  protected void setReRollSource(ReRollSource pReRollSource) {
+  public void setReRollSource(ReRollSource pReRollSource) {
     fReRollSource = pReRollSource;
   }
 

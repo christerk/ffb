@@ -10,6 +10,8 @@ import com.balancedbytes.games.ffb.model.PlayerModifier;
 import com.balancedbytes.games.ffb.model.Position;
 import com.balancedbytes.games.ffb.model.Skill;
 import com.balancedbytes.games.ffb.net.NetCommand;
+import com.balancedbytes.games.ffb.net.commands.ClientCommandUseSkill;
+import com.balancedbytes.games.ffb.server.model.modifier.CancelSkillProperty;
 import com.balancedbytes.games.ffb.server.step.IStep;
 import com.balancedbytes.games.ffb.server.step.StepCommandStatus;
 
@@ -80,10 +82,10 @@ public abstract class ServerSkill extends Skill {
     return null;
   }
 
-  public StepCommandStatus applySkillCommandHooks(IStep step, Object state, NetCommand netCommand) {
+  public StepCommandStatus applyUseSkillCommandHooks(IStep step, Object state, ClientCommandUseSkill useSkillCommand) {
     for (StepModifier<?,?> modifier : stepModifiers) {
       if (modifier.appliesTo(step)) {
-        return modifier.handleCommand(step, state, netCommand);
+        return modifier.handleCommand(step, state, useSkillCommand);
       }
     }
     return null;
@@ -98,9 +100,9 @@ public abstract class ServerSkill extends Skill {
     return false;
   }
 
-  public boolean hasSkillProperty(Class property) {
+  public boolean hasSkillProperty(ISkillProperty property) {
     for (ISkillProperty skillProperty : skillProperties) {
-      if (skillProperty.getClass().equals(property)) {
+      if (property.matches(skillProperty)) {
         return true;
       }
     }

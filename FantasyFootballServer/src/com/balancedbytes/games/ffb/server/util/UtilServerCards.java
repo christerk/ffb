@@ -20,7 +20,9 @@ import com.balancedbytes.games.ffb.report.ReportCardDeactivated;
 import com.balancedbytes.games.ffb.report.ReportCardEffectRoll;
 import com.balancedbytes.games.ffb.report.ReportPlayCard;
 import com.balancedbytes.games.ffb.server.DiceInterpreter;
+import com.balancedbytes.games.ffb.server.model.ISkillProperty;
 import com.balancedbytes.games.ffb.server.model.ServerSkill;
+import com.balancedbytes.games.ffb.server.model.modifier.NamedProperties;
 import com.balancedbytes.games.ffb.server.step.IStep;
 import com.balancedbytes.games.ffb.server.step.action.common.ApothecaryMode;
 import com.balancedbytes.games.ffb.util.StringTool;
@@ -180,7 +182,7 @@ public class UtilServerCards {
     for (Player player : players) {
       game.getFieldModel().removeCardEffect(player, CardEffect.DISTRACTED);
       PlayerState playerState = game.getFieldModel().getPlayerState(player);
-      if (!player.hasSkill(ServerSkill.BONE_HEAD) && playerState.isConfused()) {
+      if (!hasSkillWithProperty(player, NamedProperties.appliesConfusion) && playerState.isConfused()) {
         game.getFieldModel().setPlayerState(player, playerState.changeConfused(false));
       }
     }
@@ -247,7 +249,7 @@ public class UtilServerCards {
     return null;
   }
 
-  public static ServerSkill getSkillWithProperty(Game game, Player player, Class property) {
+  public static ServerSkill getSkillWithProperty(Player player, ISkillProperty property) {
     for (Skill playerSkill : player.getSkills()) {
       ServerSkill serverSkill = (ServerSkill)playerSkill;
       if (serverSkill.hasSkillProperty(property)) {
@@ -257,4 +259,7 @@ public class UtilServerCards {
     return null;
   }
   
+  public static boolean hasSkillWithProperty(Player player, ISkillProperty property) {
+    return getSkillWithProperty(player, property) != null;
+  }
 }
