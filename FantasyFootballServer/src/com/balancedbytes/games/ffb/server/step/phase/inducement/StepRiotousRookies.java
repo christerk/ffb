@@ -66,7 +66,7 @@ public class StepRiotousRookies extends AbstractStep {
     riotousPlayer.setNr(team.getMaxPlayerNr() + 1);
     riotousPlayer.setGender(gender);
     riotousPlayer.setType(PlayerType.RIOTOUS_ROOKIE);
-    riotousPlayer.addSkill(Skill.LONER);
+    riotousPlayer.addSkill(ServerSkill.LONER);
     team.addPlayer(riotousPlayer);
     game.getFieldModel().setPlayerState(riotousPlayer, new PlayerState(PlayerState.RESERVE));
     UtilBox.putPlayerIntoBox(game, riotousPlayer);

@@ -132,7 +132,7 @@ public final class StepKickoffReturn extends AbstractStep {
       for (Player player : kickoffReturnTeam.getPlayers()) {
         FieldCoordinate playerCoordinate = game.getFieldModel().getPlayerCoordinate(player);
         if ((playerCoordinate != null) && !playerCoordinate.isBoxCoordinate()) {
-          if (UtilCards.hasSkill(game, player, Skill.KICK_OFF_RETURN)) {
+          if (UtilCards.hasSkill(game, player, ServerSkill.KICK_OFF_RETURN)) {
             FieldCoordinateBounds losBounds = game.isHomePlaying() ? FieldCoordinateBounds.LOS_AWAY : FieldCoordinateBounds.LOS_HOME;
             if (losBounds.isInBounds(playerCoordinate)) {
               passivePlayers.add(player);

@@ -100,7 +100,7 @@ public class StepEndBlocking extends AbstractStep {
       SequenceGenerator.getInstance().pushEndPlayerActionSequence(getGameState(), true, true, fEndTurn);
     } else {
    	  // Revert back strength gained from HORNS and DAUNTLESS to avoid interaction with tentacles.
-      if (actingPlayer.isSkillUsed(Skill.HORNS) || actingPlayer.isSkillUsed(Skill.DAUNTLESS)) {
+      if (actingPlayer.isSkillUsed(ServerSkill.HORNS) || actingPlayer.isSkillUsed(ServerSkill.DAUNTLESS)) {
     	actingPlayer.setStrength(UtilCards.getPlayerStrength(game, actingPlayer.getPlayer()));
       }
 
@@ -108,26 +108,26 @@ public class StepEndBlocking extends AbstractStep {
       FieldCoordinate attackerPositon = game.getFieldModel().getPlayerCoordinate(actingPlayer.getPlayer());
       PlayerState attackerState = game.getFieldModel().getPlayerState(actingPlayer.getPlayer());
       PlayerState defenderState = game.getFieldModel().getPlayerState(game.getDefender());
-      if (UtilCards.hasSkill(game, actingPlayer, Skill.FRENZY)) {
+      if (UtilCards.hasSkill(game, actingPlayer, ServerSkill.FRENZY)) {
         actingPlayer.setGoingForIt(true);
       }
       if ((actingPlayer.getPlayerAction() == PlayerAction.MULTIPLE_BLOCK)
-          && UtilCards.hasUnusedSkill(game, actingPlayer, Skill.MULTIPLE_BLOCK) && attackerState.hasTacklezones()
-          && !UtilCards.hasSkill(game, actingPlayer, Skill.CHAINSAW) && !attackerState.isConfused()
+          && UtilCards.hasUnusedSkill(game, actingPlayer, ServerSkill.MULTIPLE_BLOCK) && attackerState.hasTacklezones()
+          && !UtilCards.hasSkill(game, actingPlayer, ServerSkill.CHAINSAW) && !attackerState.isConfused()
           && actingPlayer.hasBlocked()) {
-        actingPlayer.markSkillUsed(Skill.MULTIPLE_BLOCK);
+        actingPlayer.markSkillUsed(ServerSkill.MULTIPLE_BLOCK);
         actingPlayer.setHasBlocked(false);
         UtilBlock.updateDiceDecorations(game);
         SequenceGenerator.getInstance().pushBlockSequence(getGameState(), null, false, game.getDefenderId());
         game.setDefenderId(null);
         getResult().setNextAction(StepAction.NEXT_STEP);
-      } else if (UtilCards.hasUnusedSkill(game, actingPlayer, Skill.FRENZY) && (defenderState != null)
+      } else if (UtilCards.hasUnusedSkill(game, actingPlayer, ServerSkill.FRENZY) && (defenderState != null)
           && defenderState.canBeBlocked() && attackerPositon.isAdjacent(defenderPosition)
           && attackerState.hasTacklezones() && fDefenderPushed
           && (actingPlayer.getPlayerAction() != PlayerAction.MULTIPLE_BLOCK)
           && UtilPlayer.isNextMovePossible(game, false)) {
         actingPlayer.setGoingForIt(true);
-        actingPlayer.markSkillUsed(Skill.FRENZY);
+        actingPlayer.markSkillUsed(ServerSkill.FRENZY);
         SequenceGenerator.getInstance().pushBlockSequence(getGameState(), game.getDefenderId(), fUsingStab, null);
       } else {
         UtilBlock.removePlayerBlockStates(game);
@@ -135,7 +135,7 @@ public class StepEndBlocking extends AbstractStep {
         actingPlayer.setGoingForIt(UtilPlayer.isNextMoveGoingForIt(game)); // auto
                                                                            // go-for-it
         if ((actingPlayer.getPlayerAction() == PlayerAction.BLITZ) && !fUsingStab
-            && !UtilCards.hasSkill(game, actingPlayer, Skill.CHAINSAW) && attackerState.hasTacklezones()
+            && !UtilCards.hasSkill(game, actingPlayer, ServerSkill.CHAINSAW) && attackerState.hasTacklezones()
             && UtilPlayer.isNextMovePossible(game, false)) {
           String actingPlayerId = actingPlayer.getPlayer().getId();
           UtilServerGame.changeActingPlayer(this, actingPlayerId, PlayerAction.BLITZ_MOVE, actingPlayer.isLeaping());

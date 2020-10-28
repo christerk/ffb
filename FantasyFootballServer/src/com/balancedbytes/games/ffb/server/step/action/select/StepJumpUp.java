@@ -87,10 +87,10 @@ public final class StepJumpUp extends AbstractStepWithReRoll {
     Game game = getGameState().getGame();
     ActingPlayer actingPlayer = game.getActingPlayer();
     PlayerState playerState = game.getFieldModel().getPlayerState(actingPlayer.getPlayer());
-    if ((actingPlayer.isStandingUp() && !actingPlayer.hasMoved() && UtilCards.hasUnusedSkill(game, actingPlayer, Skill.JUMP_UP)) || (ReRolledAction.JUMP_UP == getReRolledAction())) {
+    if ((actingPlayer.isStandingUp() && !actingPlayer.hasMoved() && UtilCards.hasUnusedSkill(game, actingPlayer, ServerSkill.JUMP_UP)) || (ReRolledAction.JUMP_UP == getReRolledAction())) {
       actingPlayer.setHasMoved(true);
       game.setConcessionPossible(false);
-      actingPlayer.markSkillUsed(Skill.JUMP_UP);
+      actingPlayer.markSkillUsed(ServerSkill.JUMP_UP);
       if ((PlayerAction.BLOCK == actingPlayer.getPlayerAction()) || (PlayerAction.MULTIPLE_BLOCK == actingPlayer.getPlayerAction())) {
         if (ReRolledAction.JUMP_UP == getReRolledAction()) {
           if ((getReRollSource() == null) || !UtilServerReRoll.useReRoll(this, getReRollSource(), actingPlayer.getPlayer())) {

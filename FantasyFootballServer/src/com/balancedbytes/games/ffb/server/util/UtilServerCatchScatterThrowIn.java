@@ -24,7 +24,7 @@ public class UtilServerCatchScatterThrowIn {
     Game game = pGameState.getGame();
     Player[] adjacentPlayers = UtilPlayer.findAdjacentPlayersWithTacklezones(game, pTeam, pCoordinate, false);
     for (Player player : adjacentPlayers) {
-      if (UtilCards.hasSkill(game, player, Skill.DIVING_CATCH)) {
+      if (UtilCards.hasSkill(game, player, ServerSkill.DIVING_CATCH)) {
       	divingCatchPlayers.add(player);
       }
     }

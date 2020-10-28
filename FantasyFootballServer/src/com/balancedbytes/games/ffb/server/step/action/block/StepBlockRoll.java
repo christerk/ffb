@@ -113,7 +113,7 @@ public class StepBlockRoll extends AbstractStepWithReRoll {
     Game game = getGameState().getGame();
     ActingPlayer actingPlayer = game.getActingPlayer();
     boolean teamReRollOption = (getReRollSource() == null) && !game.getTurnData().isReRollUsed() && (game.getTurnData().getReRolls() > 0);
-    boolean proReRollOption = (getReRollSource() == null) && UtilCards.hasUnusedSkill(game, actingPlayer, Skill.PRO);
+    boolean proReRollOption = (getReRollSource() == null) && UtilCards.hasUnusedSkill(game, actingPlayer, ServerSkill.PRO);
     String teamId = game.isHomePlaying() ? game.getTeamHome().getId() : game.getTeamAway().getId();
     if ((fNrOfDice < 0) && (!pDoRoll || (getReRollSource() != null) || (!teamReRollOption && !proReRollOption))) {
       teamId = game.isHomePlaying() ? game.getTeamAway().getId() : game.getTeamHome().getId();

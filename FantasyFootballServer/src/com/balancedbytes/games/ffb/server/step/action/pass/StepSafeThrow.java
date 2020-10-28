@@ -109,7 +109,7 @@ public class StepSafeThrow extends AbstractStepWithReRoll {
     }
     boolean doNextStep = true;
     boolean safeThrowSuccessful = false;
-    boolean doSafeThrow = (UtilCards.hasSkill(game, game.getThrower(), Skill.SAFE_THROW) && !UtilCards.hasSkill(game, interceptor, Skill.VERY_LONG_LEGS));
+    boolean doSafeThrow = (UtilCards.hasSkill(game, game.getThrower(), ServerSkill.SAFE_THROW) && !UtilCards.hasSkill(game, interceptor, ServerSkill.VERY_LONG_LEGS));
     if (doSafeThrow) {
       if (ReRolledAction.SAFE_THROW == getReRolledAction()) {
         if ((getReRollSource() == null) || !UtilServerReRoll.useReRoll(this, getReRollSource(), game.getThrower())) {

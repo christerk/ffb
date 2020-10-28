@@ -126,7 +126,7 @@ public class StepMoveBallAndChain extends AbstractStep {
   private void executeStep() {
     Game game = getGameState().getGame();
     ActingPlayer actingPlayer = game.getActingPlayer();
-    if (UtilCards.hasSkill(game, actingPlayer, Skill.BALL_AND_CHAIN)) {
+    if (UtilCards.hasSkill(game, actingPlayer, ServerSkill.BALL_AND_CHAIN)) {
     	Direction playerScatter = null;
     	int scatterRoll = getGameState().getDiceRoller().rollThrowInDirection();
     	if (fCoordinateFrom.getX() < fCoordinateTo.getX()) {

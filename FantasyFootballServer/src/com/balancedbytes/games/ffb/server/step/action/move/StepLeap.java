@@ -88,7 +88,7 @@ public class StepLeap extends AbstractStepWithReRoll {
   private void executeStep() {
     Game game = getGameState().getGame();
     ActingPlayer actingPlayer = game.getActingPlayer();
-    boolean doLeap = (actingPlayer.isLeaping() && UtilCards.hasUnusedSkill(game, actingPlayer, Skill.LEAP));
+    boolean doLeap = (actingPlayer.isLeaping() && UtilCards.hasUnusedSkill(game, actingPlayer, ServerSkill.LEAP));
     if (doLeap) {
       if (ReRolledAction.LEAP == getReRolledAction()) {
         if ((getReRollSource() == null) || !UtilServerReRoll.useReRoll(this, getReRollSource(), actingPlayer.getPlayer())) {
@@ -101,12 +101,12 @@ public class StepLeap extends AbstractStepWithReRoll {
         switch (leap()) {
           case SUCCESS:
             actingPlayer.setLeaping(false);
-            actingPlayer.markSkillUsed(Skill.LEAP);
+            actingPlayer.markSkillUsed(ServerSkill.LEAP);
           	getResult().setNextAction(StepAction.NEXT_STEP);
             break;
           case FAILURE:
             actingPlayer.setLeaping(false);
-            actingPlayer.markSkillUsed(Skill.LEAP);
+            actingPlayer.markSkillUsed(ServerSkill.LEAP);
           	publishParameter(new StepParameter(StepParameterKey.INJURY_TYPE, InjuryType.DROP_LEAP));
           	getResult().setNextAction(StepAction.GOTO_LABEL, fGotoLabelOnFailure);
             break;

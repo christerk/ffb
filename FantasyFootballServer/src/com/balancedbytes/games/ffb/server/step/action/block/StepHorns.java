@@ -42,11 +42,11 @@ public class StepHorns extends AbstractStep {
   private void executeStep() {
     Game game = getGameState().getGame();
     ActingPlayer actingPlayer = game.getActingPlayer();
-    fUsingHorns = (UtilCards.hasSkill(game, actingPlayer, Skill.HORNS) && (PlayerAction.BLITZ == actingPlayer.getPlayerAction()));
+    fUsingHorns = (UtilCards.hasSkill(game, actingPlayer, ServerSkill.HORNS) && (PlayerAction.BLITZ == actingPlayer.getPlayerAction()));
     if (fUsingHorns) {
       actingPlayer.setStrength(actingPlayer.getStrength() + 1);
-      actingPlayer.markSkillUsed(Skill.HORNS);
-      getResult().addReport(new ReportSkillUse(actingPlayer.getPlayerId(), Skill.HORNS, true, SkillUse.INCREASE_STRENGTH_BY_1));
+      actingPlayer.markSkillUsed(ServerSkill.HORNS);
+      getResult().addReport(new ReportSkillUse(actingPlayer.getPlayerId(), ServerSkill.HORNS, true, SkillUse.INCREASE_STRENGTH_BY_1));
     }
     getResult().setNextAction(StepAction.NEXT_STEP);
   }

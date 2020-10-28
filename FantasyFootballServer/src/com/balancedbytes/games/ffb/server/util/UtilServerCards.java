@@ -9,16 +9,18 @@ import com.balancedbytes.games.ffb.CardTarget;
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.FieldCoordinateBounds;
 import com.balancedbytes.games.ffb.PlayerState;
-import com.balancedbytes.games.ffb.Skill;
+import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.Animation;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.InducementSet;
 import com.balancedbytes.games.ffb.model.Player;
+import com.balancedbytes.games.ffb.model.Skill;
 import com.balancedbytes.games.ffb.model.Team;
 import com.balancedbytes.games.ffb.report.ReportCardDeactivated;
 import com.balancedbytes.games.ffb.report.ReportCardEffectRoll;
 import com.balancedbytes.games.ffb.report.ReportPlayCard;
 import com.balancedbytes.games.ffb.server.DiceInterpreter;
+import com.balancedbytes.games.ffb.server.model.ServerSkill;
 import com.balancedbytes.games.ffb.server.step.IStep;
 import com.balancedbytes.games.ffb.server.step.action.common.ApothecaryMode;
 import com.balancedbytes.games.ffb.util.StringTool;
@@ -54,7 +56,7 @@ public class UtilServerCards {
           playerAllowed &= UtilPlayer.hasBall(pGame, player);
           break;
         case RABBITS_FOOT:
-          playerAllowed &= !UtilCards.hasSkill(pGame, player, Skill.LONER);
+          playerAllowed &= !UtilCards.hasSkill(pGame, player, ServerSkill.LONER);
           break;
         case CHOP_BLOCK:
           playerAllowed &= playerState.isActive() && !playerState.isProne()
@@ -178,7 +180,7 @@ public class UtilServerCards {
     for (Player player : players) {
       game.getFieldModel().removeCardEffect(player, CardEffect.DISTRACTED);
       PlayerState playerState = game.getFieldModel().getPlayerState(player);
-      if (!player.hasSkill(Skill.BONE_HEAD) && playerState.isConfused()) {
+      if (!player.hasSkill(ServerSkill.BONE_HEAD) && playerState.isConfused()) {
         game.getFieldModel().setPlayerState(player, playerState.changeConfused(false));
       }
     }
@@ -235,4 +237,24 @@ public class UtilServerCards {
     pStep.getResult().addReport(cardEffectReport);
   }
 
+  public static ServerSkill getSkillCancelling(Game game, Player player, ServerSkill skill) {
+    for (Skill playerSkill : player.getSkills()) {
+      ServerSkill serverSkill = (ServerSkill)playerSkill;
+      if (serverSkill.canCancel(skill)) {
+        return serverSkill;
+      }
+    }
+    return null;
+  }
+
+  public static ServerSkill getSkillWithProperty(Game game, Player player, Class property) {
+    for (Skill playerSkill : player.getSkills()) {
+      ServerSkill serverSkill = (ServerSkill)playerSkill;
+      if (serverSkill.hasSkillProperty(property)) {
+        return serverSkill;
+      }
+    }
+    return null;
+  }
+  
 }

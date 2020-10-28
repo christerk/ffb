@@ -317,10 +317,10 @@ public final class StepApplyKickoffResult extends AbstractStep {
     GameResult gameResult = game.getGameResult();
     
     int rollHome = getGameState().getDiceRoller().rollExtraReRoll();
-    int fanFavouritesHome = UtilPlayer.findPlayersOnPitchWithSkill(game, game.getTeamHome(), Skill.FAN_FAVOURITE).length;
+    int fanFavouritesHome = UtilPlayer.findPlayersOnPitchWithSkill(game, game.getTeamHome(), ServerSkill.FAN_FAVOURITE).length;
     int totalHome = rollHome + gameResult.getTeamResultHome().getFame() + fanFavouritesHome;
     int rollAway = getGameState().getDiceRoller().rollExtraReRoll();
-    int fanFavouritesAway = UtilPlayer.findPlayersOnPitchWithSkill(game, game.getTeamAway(), Skill.FAN_FAVOURITE).length;
+    int fanFavouritesAway = UtilPlayer.findPlayersOnPitchWithSkill(game, game.getTeamAway(), ServerSkill.FAN_FAVOURITE).length;
     int totalAway = rollAway + gameResult.getTeamResultAway().getFame() + fanFavouritesAway;
     if (fKickoffResult == KickoffResult.CHEERING_FANS) {
       totalHome += game.getTeamHome().getCheerleaders();
@@ -438,10 +438,10 @@ public final class StepApplyKickoffResult extends AbstractStep {
     GameResult gameResult = game.getGameResult();
     
     int rollHome = getGameState().getDiceRoller().rollThrowARock();
-    int fanFavouritesHome = UtilPlayer.findPlayersOnPitchWithSkill(game, game.getTeamHome(), Skill.FAN_FAVOURITE).length;
+    int fanFavouritesHome = UtilPlayer.findPlayersOnPitchWithSkill(game, game.getTeamHome(), ServerSkill.FAN_FAVOURITE).length;
     int totalHome = rollHome + gameResult.getTeamResultHome().getFame() + fanFavouritesHome;
     int rollAway = getGameState().getDiceRoller().rollThrowARock();
-    int fanFavouritesAway = UtilPlayer.findPlayersOnPitchWithSkill(game, game.getTeamAway(), Skill.FAN_FAVOURITE).length;
+    int fanFavouritesAway = UtilPlayer.findPlayersOnPitchWithSkill(game, game.getTeamAway(), ServerSkill.FAN_FAVOURITE).length;
     int totalAway = rollAway + gameResult.getTeamResultAway().getFame() + fanFavouritesAway;
 
     String hitPlayerIdHome = null;
@@ -522,8 +522,8 @@ public final class StepApplyKickoffResult extends AbstractStep {
     Game game = getGameState().getGame();
     GameResult gameResult = game.getGameResult();
 
-    int fanFavouritesHome = UtilPlayer.findPlayersOnPitchWithSkill(game, game.getTeamHome(), Skill.FAN_FAVOURITE).length;
-    int fanFavouritesAway = UtilPlayer.findPlayersOnPitchWithSkill(game, game.getTeamAway(), Skill.FAN_FAVOURITE).length;
+    int fanFavouritesHome = UtilPlayer.findPlayersOnPitchWithSkill(game, game.getTeamHome(), ServerSkill.FAN_FAVOURITE).length;
+    int fanFavouritesAway = UtilPlayer.findPlayersOnPitchWithSkill(game, game.getTeamAway(), ServerSkill.FAN_FAVOURITE).length;
 
     Player[] playersHome = game.getTeamHome().getPlayers();
     int[] rollsHome = new int[playersHome.length];

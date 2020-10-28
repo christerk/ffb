@@ -97,9 +97,9 @@ public class StepBoneHead extends AbstractStepWithReRoll {
     if (playerState.isHypnotized()) {
     	game.getFieldModel().setPlayerState(actingPlayer.getPlayer() , playerState.changeHypnotized(false));
     }
-    if (UtilCards.hasSkill(game, actingPlayer, Skill.BONE_HEAD)) {
+    if (UtilCards.hasSkill(game, actingPlayer, ServerSkill.BONE_HEAD)) {
       boolean doRoll = true;
-      ReRolledAction reRolledAction = new ReRolledActionFactory().forSkill(Skill.BONE_HEAD); 
+      ReRolledAction reRolledAction = new ReRolledActionFactory().forSkill(ServerSkill.BONE_HEAD); 
       if ((reRolledAction != null) && (reRolledAction == getReRolledAction())) {
         if ((getReRollSource() == null) || !UtilServerReRoll.useReRoll(this, getReRollSource(), actingPlayer.getPlayer())) {
           doRoll = false;
@@ -107,13 +107,13 @@ public class StepBoneHead extends AbstractStepWithReRoll {
           cancelPlayerAction();
         }
       } else {
-        doRoll = UtilCards.hasUnusedSkill(game, actingPlayer, Skill.BONE_HEAD);
+        doRoll = UtilCards.hasUnusedSkill(game, actingPlayer, ServerSkill.BONE_HEAD);
       }
       if (doRoll) {
         int roll = getGameState().getDiceRoller().rollSkill();
         int minimumRoll = DiceInterpreter.getInstance().minimumRollConfusion(true);
         boolean successful = DiceInterpreter.getInstance().isSkillRollSuccessful(roll, minimumRoll);
-        actingPlayer.markSkillUsed(Skill.BONE_HEAD);
+        actingPlayer.markSkillUsed(ServerSkill.BONE_HEAD);
         if (!successful) {
           status = ActionStatus.FAILURE;
           if (((reRolledAction == null) || (reRolledAction != getReRolledAction())) && UtilServerReRoll.askForReRollIfAvailable(getGameState(), actingPlayer.getPlayer(), reRolledAction, minimumRoll, false)) {
@@ -123,7 +123,7 @@ public class StepBoneHead extends AbstractStepWithReRoll {
           }
         }
         boolean reRolled = ((reRolledAction != null) && (reRolledAction == getReRolledAction()) && (getReRollSource() != null));
-        getResult().addReport(new ReportConfusionRoll(actingPlayer.getPlayerId(), successful, roll, minimumRoll, reRolled, Skill.BONE_HEAD));
+        getResult().addReport(new ReportConfusionRoll(actingPlayer.getPlayerId(), successful, roll, minimumRoll, reRolled, ServerSkill.BONE_HEAD));
       }
     }
     if (status == ActionStatus.SUCCESS) {

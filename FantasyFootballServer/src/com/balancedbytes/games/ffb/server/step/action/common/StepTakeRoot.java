@@ -100,9 +100,9 @@ public class StepTakeRoot extends AbstractStepWithReRoll {
     if (playerState.isHypnotized()) {
     	game.getFieldModel().setPlayerState(actingPlayer.getPlayer() , playerState.changeHypnotized(false));
     }
-    if (UtilCards.hasSkill(game, actingPlayer, Skill.TAKE_ROOT) && !playerState.isRooted()) {
+    if (UtilCards.hasSkill(game, actingPlayer, ServerSkill.TAKE_ROOT) && !playerState.isRooted()) {
       boolean doRoll = true;
-      ReRolledAction reRolledAction = new ReRolledActionFactory().forSkill(Skill.TAKE_ROOT); 
+      ReRolledAction reRolledAction = new ReRolledActionFactory().forSkill(ServerSkill.TAKE_ROOT); 
       if ((reRolledAction != null) && (reRolledAction == getReRolledAction())) {
         if ((getReRollSource() == null) || !UtilServerReRoll.useReRoll(this, getReRollSource(), actingPlayer.getPlayer())) {
           doRoll = false;
@@ -110,13 +110,13 @@ public class StepTakeRoot extends AbstractStepWithReRoll {
           continueOnFailure = cancelPlayerAction();
         }
       } else {
-        doRoll = UtilCards.hasUnusedSkill(game, actingPlayer, Skill.TAKE_ROOT);
+        doRoll = UtilCards.hasUnusedSkill(game, actingPlayer, ServerSkill.TAKE_ROOT);
       }
       if (doRoll) {
         int roll = getGameState().getDiceRoller().rollSkill();
         int minimumRoll = DiceInterpreter.getInstance().minimumRollConfusion(true);
         boolean successful = DiceInterpreter.getInstance().isSkillRollSuccessful(roll, minimumRoll);
-        actingPlayer.markSkillUsed(Skill.TAKE_ROOT);
+        actingPlayer.markSkillUsed(ServerSkill.TAKE_ROOT);
         if (!successful) {
           status = ActionStatus.FAILURE;
           if (((reRolledAction == null) || (reRolledAction != getReRolledAction())) && UtilServerReRoll.askForReRollIfAvailable(getGameState(), actingPlayer.getPlayer(), reRolledAction, minimumRoll, false)) {
@@ -126,7 +126,7 @@ public class StepTakeRoot extends AbstractStepWithReRoll {
           }
         }
         boolean reRolled = ((reRolledAction != null) && (reRolledAction == getReRolledAction()) && (getReRollSource() != null));
-        getResult().addReport(new ReportConfusionRoll(actingPlayer.getPlayerId(), successful, roll, minimumRoll, reRolled, Skill.TAKE_ROOT));
+        getResult().addReport(new ReportConfusionRoll(actingPlayer.getPlayerId(), successful, roll, minimumRoll, reRolled, ServerSkill.TAKE_ROOT));
       }
     }
     if (status == ActionStatus.SUCCESS) {

@@ -63,7 +63,7 @@ public class StepBlockDodge extends AbstractStep {
       switch (pReceivedCommand.getId()) {
         case CLIENT_USE_SKILL:
           ClientCommandUseSkill useSkillCommand = (ClientCommandUseSkill) pReceivedCommand.getCommand();
-          if (Skill.DODGE == useSkillCommand.getSkill()) {
+          if (ServerSkill.DODGE == useSkillCommand.getSkill()) {
             fUsingDodge = useSkillCommand.isSkillUsed();
             commandStatus = StepCommandStatus.EXECUTE_STEP;
           }
@@ -97,9 +97,9 @@ public class StepBlockDodge extends AbstractStep {
     UtilServerDialog.hideDialog(getGameState());
     Game game = getGameState().getGame();
     if (fUsingDodge == null) {
-      UtilServerDialog.showDialog(getGameState(), new DialogSkillUseParameter(game.getDefenderId(), Skill.DODGE, 0), true);
+      UtilServerDialog.showDialog(getGameState(), new DialogSkillUseParameter(game.getDefenderId(), ServerSkill.DODGE, 0), true);
     } else {
-      getResult().addReport(new ReportSkillUse(game.getDefenderId(), Skill.DODGE, fUsingDodge, SkillUse.AVOID_FALLING));
+      getResult().addReport(new ReportSkillUse(game.getDefenderId(), ServerSkill.DODGE, fUsingDodge, SkillUse.AVOID_FALLING));
       if (fUsingDodge) {
         game.getFieldModel().setPlayerState(game.getDefender(), fOldDefenderState);
       } else {
@@ -146,8 +146,8 @@ public class StepBlockDodge extends AbstractStep {
       }
 
       PushbackSquare[] grabPushbackSquares = regularPushbackSquares;
-      if ((actingPlayer.getPlayerAction() == PlayerAction.BLOCK) && UtilCards.hasSkill(game, attacker, Skill.GRAB)
-          && !UtilCards.hasSkill(game, game.getDefender(), Skill.SIDE_STEP)) {
+      if ((actingPlayer.getPlayerAction() == PlayerAction.BLOCK) && UtilCards.hasSkill(game, attacker, ServerSkill.GRAB)
+          && !UtilCards.hasSkill(game, game.getDefender(), ServerSkill.SIDE_STEP)) {
         grabPushbackSquares = UtilServerPushback.findPushbackSquares(game, startingSquare, PushbackMode.GRAB);
       }
       if (ArrayTool.isProvided(regularPushbackSquares)) {

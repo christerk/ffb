@@ -56,7 +56,7 @@ public class UtilServerPlayerMove {
       fieldModel.clearMoveSquares();
       FieldCoordinate playerCoordinate = fieldModel.getPlayerCoordinate(actingPlayer.getPlayer());
       if (actingPlayer.getPlayerAction().isMoving() && UtilPlayer.isNextMovePossible(game, pLeaping) && FieldCoordinateBounds.FIELD.isInBounds(playerCoordinate)) {
-      	if (UtilCards.hasSkill(game, actingPlayer, Skill.BALL_AND_CHAIN)) {
+      	if (UtilCards.hasSkill(game, actingPlayer, ServerSkill.BALL_AND_CHAIN)) {
       		for (int x = -1; x < 2; x += 2) {
     				FieldCoordinate moveCoordinate = playerCoordinate.add(x, 0);
     				if (FieldCoordinateBounds.FIELD.isInBounds(moveCoordinate)) {
@@ -77,7 +77,7 @@ public class UtilServerPlayerMove {
 	          if (fieldModel.getPlayer(coordinate) == null) {
 		        	if (game.getTurnMode() == TurnMode.PASS_BLOCK) {
 		          	int distance = coordinate.distanceInSteps(playerCoordinate);
-		          	if (validPassBlockCoordinates.contains(coordinate) || ArrayTool.isProvided(PathFinderWithPassBlockSupport.allowPassBlockMove(game, actingPlayer.getPlayer(), coordinate, 3 - distance - actingPlayer.getCurrentMove(), UtilCards.hasUnusedSkill(game, actingPlayer, Skill.LEAP)))) {
+		          	if (validPassBlockCoordinates.contains(coordinate) || ArrayTool.isProvided(PathFinderWithPassBlockSupport.allowPassBlockMove(game, actingPlayer.getPlayer(), coordinate, 3 - distance - actingPlayer.getCurrentMove(), UtilCards.hasUnusedSkill(game, actingPlayer, ServerSkill.LEAP)))) {
 			          	addMoveSquare(pGameState, pLeaping, coordinate);
 		          	}
 		        	} else if (game.getTurnMode() == TurnMode.KICKOFF_RETURN) {
@@ -102,12 +102,12 @@ public class UtilServerPlayerMove {
     FieldCoordinate playerCoordinate = fieldModel.getPlayerCoordinate(actingPlayer.getPlayer());
   	boolean goForIt = false;
     int minimumRollDodge = 0;
-    boolean dodging = !UtilCards.hasSkill(game, actingPlayer, Skill.BALL_AND_CHAIN) && (UtilPlayer.findTacklezones(game, actingPlayer.getPlayer()) > 0);
+    boolean dodging = !UtilCards.hasSkill(game, actingPlayer, ServerSkill.BALL_AND_CHAIN) && (UtilPlayer.findTacklezones(game, actingPlayer.getPlayer()) > 0);
     if (pLeaping) {
       LeapModifierFactory modifierFactory = new LeapModifierFactory();
       Set<LeapModifier> leapModifiers = modifierFactory.findLeapModifiers(game);
       minimumRollDodge = DiceInterpreter.getInstance().minimumRollLeap(actingPlayer.getPlayer(), leapModifiers);
-      if (actingPlayer.isStandingUp() && !actingPlayer.hasActed() && !UtilCards.hasSkill(game, actingPlayer, Skill.JUMP_UP)) {
+      if (actingPlayer.isStandingUp() && !actingPlayer.hasActed() && !UtilCards.hasSkill(game, actingPlayer, ServerSkill.JUMP_UP)) {
         goForIt = ((3 + playerCoordinate.distanceInSteps(pCoordinate)) > UtilCards.getPlayerMovement(game, actingPlayer.getPlayer()));
       } else {
         goForIt = ((actingPlayer.getCurrentMove() + playerCoordinate.distanceInSteps(pCoordinate)) > UtilCards.getPlayerMovement(game, actingPlayer.getPlayer()));

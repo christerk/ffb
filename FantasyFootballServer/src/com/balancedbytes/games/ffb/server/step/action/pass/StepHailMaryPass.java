@@ -84,7 +84,7 @@ public final class StepHailMaryPass extends AbstractStepWithReRoll {
       switch (pReceivedCommand.getId()) {
         case CLIENT_USE_SKILL:
           ClientCommandUseSkill useSkillCommand = (ClientCommandUseSkill) pReceivedCommand.getCommand();
-          if (Skill.PASS == useSkillCommand.getSkill()) {
+          if (ServerSkill.PASS == useSkillCommand.getSkill()) {
             setReRolledAction(ReRolledAction.PASS);
             setReRollSource(useSkillCommand.isSkillUsed() ? ReRollSource.PASS : null);
             commandStatus = StepCommandStatus.EXECUTE_STEP;
@@ -128,13 +128,13 @@ public final class StepHailMaryPass extends AbstractStepWithReRoll {
       if (fPassFumble) {
         if (getReRolledAction() != ReRolledAction.PASS) {
           setReRolledAction(ReRolledAction.PASS);
-          if (UtilCards.hasSkill(game, game.getThrower(), Skill.PASS) && !fPassSkillUsed) {
+          if (UtilCards.hasSkill(game, game.getThrower(), ServerSkill.PASS) && !fPassSkillUsed) {
           	doNextStep = false;
           	fPassSkillUsed = true;
           	Team actingTeam = game.isHomePlaying() ? game.getTeamHome() : game.getTeamAway();
             UtilServerDialog.showDialog(
                 getGameState(),
-                new DialogSkillUseParameter(game.getThrowerId(), Skill.PASS, 2),
+                new DialogSkillUseParameter(game.getThrowerId(), ServerSkill.PASS, 2),
                 actingTeam.hasPlayer(game.getThrower())
             );
           } else {

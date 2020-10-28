@@ -101,10 +101,10 @@ public class StepHypnoticGaze extends AbstractStepWithReRoll {
         doGaze = false;
       }
     } else {
-      doGaze = UtilCards.hasUnusedSkill(game, actingPlayer, Skill.HYPNOTIC_GAZE) && !UtilCards.hasSkill(game, actingPlayer, Skill.BALL_AND_CHAIN);
+      doGaze = UtilCards.hasUnusedSkill(game, actingPlayer, ServerSkill.HYPNOTIC_GAZE) && !UtilCards.hasSkill(game, actingPlayer, ServerSkill.BALL_AND_CHAIN);
     }
     if (doGaze) {
-      actingPlayer.markSkillUsed(Skill.HYPNOTIC_GAZE);
+      actingPlayer.markSkillUsed(ServerSkill.HYPNOTIC_GAZE);
       int roll = getGameState().getDiceRoller().rollSkill();
       GazeModifierFactory modifierFactory = new GazeModifierFactory();
       Set<GazeModifier> gazeModifiers = modifierFactory.findGazeModifiers(game);

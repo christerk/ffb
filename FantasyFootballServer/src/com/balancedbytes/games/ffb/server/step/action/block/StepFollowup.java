@@ -71,7 +71,7 @@ public class StepFollowup extends AbstractStep {
       switch (pReceivedCommand.getId()) {
         case CLIENT_USE_SKILL:
           ClientCommandUseSkill useSkillCommand = (ClientCommandUseSkill) pReceivedCommand.getCommand();
-          if (Skill.FEND == useSkillCommand.getSkill()) {
+          if (ServerSkill.FEND == useSkillCommand.getSkill()) {
             fUsingFend = useSkillCommand.isSkillUsed();
             commandStatus = StepCommandStatus.EXECUTE_STEP;
           }
@@ -126,27 +126,27 @@ public class StepFollowup extends AbstractStep {
     }
     if (fFollowupChoice == null) {
       PlayerState defenderState = game.getFieldModel().getPlayerState(game.getDefender());
-      if (UtilCards.hasSkill(game, game.getDefender(), Skill.FEND) && !defenderState.isProne()
+      if (UtilCards.hasSkill(game, game.getDefender(), ServerSkill.FEND) && !defenderState.isProne()
           && !((fOldDefenderState != null) && fOldDefenderState.isProne())) {
         if (fUsingFend == null) {
-          if ((PlayerAction.BLITZ == actingPlayer.getPlayerAction()) && UtilCards.hasSkill(game, actingPlayer, Skill.JUGGERNAUT)) {
+          if ((PlayerAction.BLITZ == actingPlayer.getPlayerAction()) && UtilCards.hasSkill(game, actingPlayer, ServerSkill.JUGGERNAUT)) {
             fUsingFend = false;
-            getResult().addReport(new ReportSkillUse(actingPlayer.getPlayerId(), Skill.JUGGERNAUT, true, SkillUse.CANCEL_FEND));
+            getResult().addReport(new ReportSkillUse(actingPlayer.getPlayerId(), ServerSkill.JUGGERNAUT, true, SkillUse.CANCEL_FEND));
           }
         }
         if (fUsingFend == null) {
-          UtilServerDialog.showDialog(getGameState(), new DialogSkillUseParameter(game.getDefenderId(), Skill.FEND, 0), true);
+          UtilServerDialog.showDialog(getGameState(), new DialogSkillUseParameter(game.getDefenderId(), ServerSkill.FEND, 0), true);
         } else {
           if (fUsingFend) {
             publishParameter(new StepParameter(StepParameterKey.FOLLOWUP_CHOICE, false));
           }
-          getResult().addReport(new ReportSkillUse(game.getDefenderId(), Skill.FEND, fUsingFend, SkillUse.STAY_AWAY_FROM_OPPONENT));
+          getResult().addReport(new ReportSkillUse(game.getDefenderId(), ServerSkill.FEND, fUsingFend, SkillUse.STAY_AWAY_FROM_OPPONENT));
         }
       } else {
         fUsingFend = false;
       }
       if ((fUsingFend != null) && !fUsingFend
-          && (UtilCards.hasSkill(game, actingPlayer, Skill.FRENZY) || UtilCards.hasSkill(game, actingPlayer, Skill.BALL_AND_CHAIN))) {
+          && (UtilCards.hasSkill(game, actingPlayer, ServerSkill.FRENZY) || UtilCards.hasSkill(game, actingPlayer, ServerSkill.BALL_AND_CHAIN))) {
         publishParameter(new StepParameter(StepParameterKey.FOLLOWUP_CHOICE, true));
       }
       if ((fFollowupChoice == null) && (fUsingFend != null)) {

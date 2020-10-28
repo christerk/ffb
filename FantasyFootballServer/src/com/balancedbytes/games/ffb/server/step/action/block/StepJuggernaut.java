@@ -84,7 +84,7 @@ public class StepJuggernaut extends AbstractStep {
       switch (pReceivedCommand.getId()) {
         case CLIENT_USE_SKILL:
           ClientCommandUseSkill useSkillCommand = (ClientCommandUseSkill) pReceivedCommand.getCommand();
-          if (Skill.JUGGERNAUT == useSkillCommand.getSkill()) {
+          if (ServerSkill.JUGGERNAUT == useSkillCommand.getSkill()) {
             fUsingJuggernaut = useSkillCommand.isSkillUsed();
             commandStatus = StepCommandStatus.EXECUTE_STEP;
           }
@@ -117,18 +117,18 @@ public class StepJuggernaut extends AbstractStep {
     Game game = getGameState().getGame();
     ActingPlayer actingPlayer = game.getActingPlayer();
     UtilServerDialog.hideDialog(getGameState());
-    if ((PlayerAction.BLITZ == actingPlayer.getPlayerAction()) && UtilCards.hasSkill(game, actingPlayer, Skill.JUGGERNAUT) && !fOldDefenderState.isRooted()) {
+    if ((PlayerAction.BLITZ == actingPlayer.getPlayerAction()) && UtilCards.hasSkill(game, actingPlayer, ServerSkill.JUGGERNAUT) && !fOldDefenderState.isRooted()) {
       if (fUsingJuggernaut == null) {
-        UtilServerDialog.showDialog(getGameState(), new DialogSkillUseParameter(actingPlayer.getPlayer().getId(), Skill.JUGGERNAUT, 0), false);
+        UtilServerDialog.showDialog(getGameState(), new DialogSkillUseParameter(actingPlayer.getPlayer().getId(), ServerSkill.JUGGERNAUT, 0), false);
       } else {
         if (fUsingJuggernaut) {
-          getResult().addReport(new ReportSkillUse(actingPlayer.getPlayerId(), Skill.JUGGERNAUT, true, SkillUse.PUSH_BACK_OPPONENT));
+          getResult().addReport(new ReportSkillUse(actingPlayer.getPlayerId(), ServerSkill.JUGGERNAUT, true, SkillUse.PUSH_BACK_OPPONENT));
           publishParameter(new StepParameter(StepParameterKey.BLOCK_RESULT, BlockResult.PUSHBACK));
           game.getFieldModel().setPlayerState(game.getDefender(), fOldDefenderState);
           publishParameters(UtilBlockSequence.initPushback(this));
           getResult().setNextAction(StepAction.GOTO_LABEL, fGotoLabelOnSuccess);
         } else {
-          getResult().addReport(new ReportSkillUse(actingPlayer.getPlayerId(), Skill.JUGGERNAUT, false, null));
+          getResult().addReport(new ReportSkillUse(actingPlayer.getPlayerId(), ServerSkill.JUGGERNAUT, false, null));
           getResult().setNextAction(StepAction.NEXT_STEP);
         }
       }

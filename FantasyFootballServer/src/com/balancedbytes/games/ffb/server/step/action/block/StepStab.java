@@ -102,7 +102,7 @@ public class StepStab extends AbstractStep {
   private void executeStep() {
   	Game game = getGameState().getGame();
     ActingPlayer actingPlayer = game.getActingPlayer();
-    if (UtilCards.hasSkill(game, actingPlayer, Skill.STAB) && (fUsingStab != null) && fUsingStab) {
+    if (UtilCards.hasSkill(game, actingPlayer, ServerSkill.STAB) && (fUsingStab != null) && fUsingStab) {
       getResult().setSound(SoundId.STAB);
       FieldCoordinate defenderCoordinate = game.getFieldModel().getPlayerCoordinate(game.getDefender());
       InjuryResult injuryResultDefender = UtilServerInjury.handleInjury(this, InjuryType.STAB, actingPlayer.getPlayer(), game.getDefender(), defenderCoordinate, null, ApothecaryMode.DEFENDER);

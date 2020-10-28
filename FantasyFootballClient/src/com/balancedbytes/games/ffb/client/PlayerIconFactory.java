@@ -95,7 +95,7 @@ public class PlayerIconFactory {
         } else {
           playerIcon = iconCache.getIconByProperty(IIconProperty.PLAYER_LARGE_AWAY);
         }
-      } else if (UtilCards.hasSkill(game, pPlayer, Skill.STUNTY)) {
+      } else if (UtilCards.hasSkill(game, pPlayer, ClientSkillConstants.STUNTY)) {
         fontSize = 13;
         if (pHomePlayer) {
           playerIcon = iconCache.getIconByProperty(IIconProperty.PLAYER_SMALL_HOME);

@@ -93,13 +93,13 @@ public class StepBloodLust extends AbstractStepWithReRoll {
 	      actingPlayer.setSufferingBloodLust(true);
 	    }
 	  } else {
-	    doRoll = UtilCards.hasUnusedSkill(game, actingPlayer, Skill.BLOOD_LUST);
+	    doRoll = UtilCards.hasUnusedSkill(game, actingPlayer, ServerSkill.BLOOD_LUST);
 	  }
     if (doRoll) {
       int roll = getGameState().getDiceRoller().rollSkill();
       int minimumRoll = DiceInterpreter.getInstance().minimumRollBloodLust();
       boolean successful = DiceInterpreter.getInstance().isSkillRollSuccessful(roll, minimumRoll);
-      actingPlayer.markSkillUsed(Skill.BLOOD_LUST);
+      actingPlayer.markSkillUsed(ServerSkill.BLOOD_LUST);
       if (!successful) {
         status = ActionStatus.FAILURE;
         if ((ReRolledAction.BLOOD_LUST != getReRolledAction()) && UtilServerReRoll.askForReRollIfAvailable(getGameState(), actingPlayer.getPlayer(), ReRolledAction.BLOOD_LUST, minimumRoll, false)) {

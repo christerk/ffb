@@ -90,7 +90,7 @@ public class StepDropFallingPlayers extends AbstractStep {
       switch (pReceivedCommand.getId()) {
         case CLIENT_USE_SKILL:
           ClientCommandUseSkill useSkillCommand = (ClientCommandUseSkill) pReceivedCommand.getCommand();
-          if (Skill.PILING_ON == useSkillCommand.getSkill()) {
+          if (ServerSkill.PILING_ON == useSkillCommand.getSkill()) {
             fUsingPilingOn = useSkillCommand.isSkillUsed();
             commandStatus = StepCommandStatus.EXECUTE_STEP;
           }
@@ -125,7 +125,7 @@ public class StepDropFallingPlayers extends AbstractStep {
         getResult().addReport(new ReportPilingOn(actingPlayer.getPlayerId(), fUsingPilingOn, reRollInjury));
         boolean usesATeamReroll = UtilGameOption.isOptionEnabled(game, GameOptionId.PILING_ON_USES_A_TEAM_REROLL);
         if (fUsingPilingOn && (!usesATeamReroll || UtilServerReRoll.useReRoll(this, ReRollSource.TEAM_RE_ROLL, actingPlayer.getPlayer()))) {
-          actingPlayer.markSkillUsed(Skill.PILING_ON);
+          actingPlayer.markSkillUsed(ServerSkill.PILING_ON);
           publishParameters(UtilServerInjury.dropPlayer(this, actingPlayer.getPlayer(), ApothecaryMode.ATTACKER));
           boolean rolledDouble;
           if (reRollInjury) {
@@ -157,7 +157,7 @@ public class StepDropFallingPlayers extends AbstractStep {
         fInjuryResultDefender = UtilServerInjury.handleInjury(this, injuryType, actingPlayer.getPlayer(), game.getDefender(), defenderCoordinate,
           null, ApothecaryMode.DEFENDER);
 
-        if (UtilCards.hasSkill(game, actingPlayer, Skill.WEEPING_DAGGER) && fInjuryResultDefender.isBadlyHurt()) {
+        if (UtilCards.hasSkill(game, actingPlayer, ServerSkill.WEEPING_DAGGER) && fInjuryResultDefender.isBadlyHurt()) {
           boolean success = rollWeepingDagger(actingPlayer.getPlayer(), game.getDefender());
           if (success) {
         	  publishParameter(new StepParameter(StepParameterKey.DEFENDER_POISONED, true));
@@ -165,7 +165,7 @@ public class StepDropFallingPlayers extends AbstractStep {
         }
         boolean usesATeamReroll = UtilGameOption.isOptionEnabled(game, GameOptionId.PILING_ON_USES_A_TEAM_REROLL);
         if ((attackerState.getBase() != PlayerState.FALLING)
-            && UtilCards.hasUnusedSkill(game, actingPlayer, Skill.PILING_ON)
+            && UtilCards.hasUnusedSkill(game, actingPlayer, ServerSkill.PILING_ON)
             && (!usesATeamReroll || UtilServerReRoll.isTeamReRollAvailable(getGameState(), actingPlayer.getPlayer()))
             && attackerCoordinate.isAdjacent(defenderCoordinate)
             && !fInjuryResultDefender.isCasualty()
@@ -173,7 +173,7 @@ public class StepDropFallingPlayers extends AbstractStep {
             && (!UtilGameOption.isOptionEnabled(game, GameOptionId.PILING_ON_INJURY_ONLY) || fInjuryResultDefender.isArmorBroken())
             && (!UtilGameOption.isOptionEnabled(game, GameOptionId.PILING_ON_ARMOR_ONLY) || !fInjuryResultDefender.isArmorBroken())
             && (!UtilCards.hasCard(game, game.getDefender(), Card.BELT_OF_INVULNERABILITY) || fInjuryResultDefender.isArmorBroken())
-            && !UtilCards.hasSkill(game, actingPlayer, Skill.BALL_AND_CHAIN)
+            && !UtilCards.hasSkill(game, actingPlayer, ServerSkill.BALL_AND_CHAIN)
             && !UtilCards.hasCard(game, game.getDefender(), Card.GOOD_OLD_MAGIC_CODPIECE)) {
           fInjuryResultDefender.report(this);
           UtilServerDialog.showDialog(getGameState(), new DialogPilingOnParameter(actingPlayer.getPlayerId(), fInjuryResultDefender.isArmorBroken(),
@@ -198,7 +198,7 @@ public class StepDropFallingPlayers extends AbstractStep {
         publishParameter(new StepParameter(StepParameterKey.END_TURN, true));
         publishParameters(UtilServerInjury.dropPlayer(this, actingPlayer.getPlayer(), ApothecaryMode.ATTACKER));
         InjuryResult injuryResultAttacker = UtilServerInjury.handleInjury(this, InjuryType.BLOCK, game.getDefender(), actingPlayer.getPlayer(), attackerCoordinate, null, ApothecaryMode.ATTACKER);
-        if (UtilCards.hasSkill(game, game.getDefender(), Skill.WEEPING_DAGGER) && injuryResultAttacker.isBadlyHurt()) {
+        if (UtilCards.hasSkill(game, game.getDefender(), ServerSkill.WEEPING_DAGGER) && injuryResultAttacker.isBadlyHurt()) {
             boolean success = rollWeepingDagger(game.getDefender(), actingPlayer.getPlayer());
             if (success) {
           	  publishParameter(new StepParameter(StepParameterKey.ATTACKER_POISONED, true));

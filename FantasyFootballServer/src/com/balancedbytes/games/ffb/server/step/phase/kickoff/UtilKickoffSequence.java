@@ -48,7 +48,7 @@ public class UtilKickoffSequence {
       }
       FieldCoordinate playerCoordinate = game.getFieldModel().getPlayerCoordinate(player);
       if ((pHomeTeam && FieldCoordinateBounds.HALF_HOME.isInBounds(playerCoordinate)) || (!pHomeTeam && FieldCoordinateBounds.HALF_AWAY.isInBounds(playerCoordinate))) {
-        if (UtilCards.hasSkill(game, player, Skill.SWARMING)) {
+        if (UtilCards.hasSkill(game, player, ServerSkill.SWARMING)) {
           swarmersOnField++;
         } else {
           playersOnField++;

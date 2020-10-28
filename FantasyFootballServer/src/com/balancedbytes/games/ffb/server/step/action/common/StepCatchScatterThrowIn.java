@@ -291,7 +291,7 @@ public class StepCatchScatterThrowIn extends AbstractStepWithReRoll {
       Player[] divingCatchersAway = UtilServerCatchScatterThrowIn.findDivingCatchers(getGameState(), game.getTeamAway(), pCoordinate);
       if (ArrayTool.isProvided(divingCatchersHome) && ArrayTool.isProvided(divingCatchersAway)) {
         fDivingCatchChoice = false;
-        getResult().addReport(new ReportSkillUse(Skill.DIVING_CATCH, false, SkillUse.CANCEL_DIVING_CATCH));
+        getResult().addReport(new ReportSkillUse(ServerSkill.DIVING_CATCH, false, SkillUse.CANCEL_DIVING_CATCH));
       } else if (ArrayTool.isProvided(divingCatchersHome)) {
         UtilServerDialog.showDialog(
             getGameState(),
@@ -312,7 +312,7 @@ public class StepCatchScatterThrowIn extends AbstractStepWithReRoll {
       if (fDivingCatchChoice) {
         Player divingCatcher = game.getPlayerById(fCatcherId);
         if (getReRollSource() == null) {
-          getResult().addReport(new ReportSkillUse(divingCatcher.getId(), Skill.DIVING_CATCH, true, SkillUse.CATCH_BALL));
+          getResult().addReport(new ReportSkillUse(divingCatcher.getId(), ServerSkill.DIVING_CATCH, true, SkillUse.CATCH_BALL));
         }
         return catchBall();
       } else {
@@ -328,7 +328,7 @@ public class StepCatchScatterThrowIn extends AbstractStepWithReRoll {
 
     Game game = getGameState().getGame();
     Player catcher = game.getPlayerById(fCatcherId);
-    if ((catcher == null) || UtilCards.hasSkill(game, catcher, Skill.NO_HANDS)) {
+    if ((catcher == null) || UtilCards.hasSkill(game, catcher, ServerSkill.NO_HANDS)) {
       return CatchScatterThrowInMode.SCATTER_BALL;
     }
     FieldCoordinate catcherCoordinate = game.getFieldModel().getPlayerCoordinate(catcher);
@@ -371,11 +371,11 @@ public class StepCatchScatterThrowIn extends AbstractStepWithReRoll {
 
       } else {
         if (getReRolledAction() != ReRolledAction.CATCH) {
-          if (UtilCards.hasSkill(game, catcher, Skill.CATCH)) {
+          if (UtilCards.hasSkill(game, catcher, ServerSkill.CATCH)) {
             setReRolledAction(ReRolledAction.CATCH);
             setReRollSource(ReRollSource.CATCH);
             return catchBall();
-          } else if (UtilCards.hasSkill(game, catcher, Skill.MOUNSTROUS_MOUTH)) {
+          } else if (UtilCards.hasSkill(game, catcher, ServerSkill.MOUNSTROUS_MOUTH)) {
             setReRolledAction(ReRolledAction.CATCH);
             setReRollSource(ReRollSource.MONSTROUS_MOUTH);
             return catchBall();

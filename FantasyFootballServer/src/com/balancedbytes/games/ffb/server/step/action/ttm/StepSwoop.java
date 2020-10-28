@@ -183,7 +183,7 @@ public class StepSwoop extends AbstractStep {
 		ActingPlayer actingPlayer = game.getActingPlayer();
 		Player swoopingPlayer = actingPlayer.getPlayer();
 
-		if (UtilCards.hasSkill(game, swoopingPlayer, Skill.SWOOP)) {
+		if (UtilCards.hasSkill(game, swoopingPlayer, ServerSkill.SWOOP)) {
 			// Send animation moving the player to the initial target square
 
 			fCoordinateFrom = game.getFieldModel().getPlayerCoordinate(swoopingPlayer);

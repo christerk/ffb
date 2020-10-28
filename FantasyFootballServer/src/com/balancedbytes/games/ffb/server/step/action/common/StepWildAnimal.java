@@ -98,9 +98,9 @@ public class StepWildAnimal extends AbstractStepWithReRoll {
     if (playerState.isHypnotized()) {
       game.getFieldModel().setPlayerState(actingPlayer.getPlayer(), playerState.changeHypnotized(false));
     }
-    if (UtilCards.hasSkill(game, actingPlayer, Skill.WILD_ANIMAL)) {
+    if (UtilCards.hasSkill(game, actingPlayer, ServerSkill.WILD_ANIMAL)) {
       boolean doRoll = true;
-      ReRolledAction reRolledAction = new ReRolledActionFactory().forSkill(Skill.WILD_ANIMAL);
+      ReRolledAction reRolledAction = new ReRolledActionFactory().forSkill(ServerSkill.WILD_ANIMAL);
       if ((reRolledAction != null) && (reRolledAction == getReRolledAction())) {
         if ((getReRollSource() == null) || !UtilServerReRoll.useReRoll(this, getReRollSource(), actingPlayer.getPlayer())) {
           doRoll = false;
@@ -108,7 +108,7 @@ public class StepWildAnimal extends AbstractStepWithReRoll {
           cancelPlayerAction();
         }
       } else {
-        doRoll = UtilCards.hasUnusedSkill(game, actingPlayer, Skill.WILD_ANIMAL);
+        doRoll = UtilCards.hasUnusedSkill(game, actingPlayer, ServerSkill.WILD_ANIMAL);
       }
       if (doRoll) {
         int roll = getGameState().getDiceRoller().rollSkill();
@@ -119,7 +119,7 @@ public class StepWildAnimal extends AbstractStepWithReRoll {
             || (actingPlayer.getPlayerAction() == PlayerAction.STAND_UP_BLITZ));
         int minimumRoll = DiceInterpreter.getInstance().minimumRollConfusion(goodConditions);
         boolean successful = DiceInterpreter.getInstance().isSkillRollSuccessful(roll, minimumRoll);
-        actingPlayer.markSkillUsed(Skill.WILD_ANIMAL);
+        actingPlayer.markSkillUsed(ServerSkill.WILD_ANIMAL);
         if (!successful) {
           status = ActionStatus.FAILURE;
           if (((reRolledAction == null) || (reRolledAction != getReRolledAction()))
@@ -130,7 +130,7 @@ public class StepWildAnimal extends AbstractStepWithReRoll {
           }
         }
         boolean reRolled = ((reRolledAction != null) && (reRolledAction == getReRolledAction()) && (getReRollSource() != null));
-        getResult().addReport(new ReportConfusionRoll(actingPlayer.getPlayerId(), successful, roll, minimumRoll, reRolled, Skill.WILD_ANIMAL));
+        getResult().addReport(new ReportConfusionRoll(actingPlayer.getPlayerId(), successful, roll, minimumRoll, reRolled, ServerSkill.WILD_ANIMAL));
       }
     }
     if (status == ActionStatus.SUCCESS) {

@@ -70,12 +70,12 @@ public class StepBothDown extends AbstractStep {
     ActingPlayer actingPlayer = game.getActingPlayer();
     PlayerState attackerState = game.getFieldModel().getPlayerState(actingPlayer.getPlayer());
     PlayerState defenderState = game.getFieldModel().getPlayerState(game.getDefender());
-    if (!UtilCards.hasSkill(game, game.getDefender(), Skill.BLOCK)) {
+    if (!UtilCards.hasSkill(game, game.getDefender(), ServerSkill.BLOCK)) {
       game.getFieldModel().setPlayerState(game.getDefender(), defenderState.changeBase(PlayerState.FALLING));
     } else {
       game.getFieldModel().setPlayerState(game.getDefender(), fOldDefenderState);
     }
-    if (!UtilCards.hasSkill(game, actingPlayer, Skill.BLOCK)) {
+    if (!UtilCards.hasSkill(game, actingPlayer, ServerSkill.BLOCK)) {
       game.getFieldModel().setPlayerState(actingPlayer.getPlayer(), attackerState.changeBase(PlayerState.FALLING));
     }
     getResult().setNextAction(StepAction.NEXT_STEP);

@@ -106,9 +106,9 @@ public class StepReferee extends AbstractStep {
 	    ActingPlayer actingPlayer = game.getActingPlayer();
 	    boolean refereeSpotsFoul = false;
 	    if (!UtilCards.isCardActive(game, Card.BLATANT_FOUL)
-	      && (!UtilCards.hasSkill(game, actingPlayer, Skill.SNEAKY_GIT)
+	      && (!UtilCards.hasSkill(game, actingPlayer, ServerSkill.SNEAKY_GIT)
 	    	|| fInjuryResultDefender.isArmorBroken()
-	    	|| ((UtilCards.hasSkill(game, actingPlayer, Skill.SNEAKY_GIT) && UtilGameOption.isOptionEnabled(game, GameOptionId.SNEAKY_GIT_BAN_TO_KO))))) {
+	    	|| ((UtilCards.hasSkill(game, actingPlayer, ServerSkill.SNEAKY_GIT) && UtilGameOption.isOptionEnabled(game, GameOptionId.SNEAKY_GIT_BAN_TO_KO))))) {
 	      int[] armorRoll = fInjuryResultDefender.getArmorRoll();
 	      refereeSpotsFoul = (armorRoll[0] == armorRoll[1]);
 	    }

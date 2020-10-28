@@ -97,7 +97,7 @@ public class StepGoForIt extends AbstractStepWithReRoll {
     Game game = getGameState().getGame();
     ActingPlayer actingPlayer = game.getActingPlayer();
 
-    boolean hasBallAndChain = actingPlayer.getPlayer().hasSkill(Skill.BALL_AND_CHAIN);
+    boolean hasBallAndChain = actingPlayer.getPlayer().hasSkill(ServerSkill.BALL_AND_CHAIN);
     boolean runGfi = (hasBallAndChain == fBallandChainGfi);
 
     if (runGfi) {
@@ -163,7 +163,7 @@ public class StepGoForIt extends AbstractStepWithReRoll {
     } else {
       if (getReRolledAction() != ReRolledAction.GO_FOR_IT) {
         setReRolledAction(ReRolledAction.GO_FOR_IT);
-        if (UtilCards.hasUnusedSkill(game, actingPlayer, Skill.SURE_FEET)) {
+        if (UtilCards.hasUnusedSkill(game, actingPlayer, ServerSkill.SURE_FEET)) {
           setReRollSource(ReRollSource.SURE_FEET);
           UtilServerReRoll.useReRoll(this, getReRollSource(), actingPlayer.getPlayer());
           return goForIt();

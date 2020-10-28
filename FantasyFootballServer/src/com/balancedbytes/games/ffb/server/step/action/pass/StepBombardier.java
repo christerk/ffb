@@ -50,7 +50,7 @@ public final class StepBombardier extends AbstractStep {
     if (!game.getTurnMode().isBombTurn()
       && ((actingPlayer.getPlayerAction() == PlayerAction.THROW_BOMB) || (actingPlayer.getPlayerAction() == PlayerAction.HAIL_MARY_BOMB))) {
       // mark skill used to set active=false when changing players
-      actingPlayer.markSkillUsed(Skill.BOMBARDIER); 
+      actingPlayer.markSkillUsed(ServerSkill.BOMBARDIER); 
       if (game.getTeamHome().hasPlayer(actingPlayer.getPlayer())) {
         if (TurnMode.BLITZ == game.getTurnMode()) {
           game.setTurnMode(TurnMode.BOMB_HOME_BLITZ);

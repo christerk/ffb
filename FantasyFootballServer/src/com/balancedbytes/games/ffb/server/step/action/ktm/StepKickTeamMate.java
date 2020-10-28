@@ -193,7 +193,7 @@ public final class StepKickTeamMate extends AbstractStepWithReRoll {
   private void executeKick(Player kickedPlayer, FieldCoordinate kickerCoordinate, boolean successful) {
     if (successful) {
       Game game = getGameState().getGame();
-      boolean hasSwoop = kickedPlayer != null && kickedPlayer.hasSkill(Skill.SWOOP);
+      boolean hasSwoop = kickedPlayer != null && kickedPlayer.hasSkill(ServerSkill.SWOOP);
       game.getFieldModel().setPlayerState(game.getDefender(), fKickedPlayerState.changeBase(PlayerState.PICKED_UP));
       SequenceGenerator.getInstance().pushScatterPlayerSequence(getGameState(), fKickedPlayerId, fKickedPlayerState, fKickedPlayerHasBall, kickerCoordinate, hasSwoop, true);
       publishParameter(new StepParameter(StepParameterKey.IS_KICKED_PLAYER, true));

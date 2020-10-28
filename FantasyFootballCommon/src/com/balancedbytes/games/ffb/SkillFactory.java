@@ -2,6 +2,7 @@ package com.balancedbytes.games.ffb;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
+import java.util.Collection;
 import java.util.Hashtable;
 
 import com.balancedbytes.games.ffb.model.Skill;
@@ -13,11 +14,11 @@ import com.balancedbytes.games.ffb.model.Skill;
 public class SkillFactory implements INamedObjectFactory {
   private Hashtable<String, Skill> skills;
   
-  public SkillFactory() {
+  public SkillFactory(boolean isServer) {
     skills = new Hashtable<String, Skill>();
     
     try {
-      Class constants = Class.forName("SkillConstants");
+      Class constants = Class.forName(isServer ? "ServerSkillConstants" : "ClientSkillConstants");
       Field[] fields = constants.getFields();
       for (Field field : fields) {
         int modifiers = field.getModifiers();
@@ -36,6 +37,10 @@ public class SkillFactory implements INamedObjectFactory {
     }
   }
   
+  public Collection<Skill> getSkills() {
+    return skills.values();
+  }
+  
   private void addSkill(Skill skill) {
     skills.put(skill.getName(), skill);
   }
@@ -50,5 +55,4 @@ public class SkillFactory implements INamedObjectFactory {
     }
     return null;
   }
-
 }

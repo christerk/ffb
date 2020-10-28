@@ -127,7 +127,7 @@ public class StepPass extends AbstractStepWithReRoll {
       switch (pReceivedCommand.getId()) {
         case CLIENT_USE_SKILL:
           ClientCommandUseSkill useSkillCommand = (ClientCommandUseSkill) pReceivedCommand.getCommand();
-          if (Skill.PASS == useSkillCommand.getSkill()) {
+          if (ServerSkill.PASS == useSkillCommand.getSkill()) {
             setReRolledAction(ReRolledAction.PASS);
             setReRollSource(useSkillCommand.isSkillUsed() ? ReRollSource.PASS : null);
             commandStatus = StepCommandStatus.EXECUTE_STEP;
@@ -176,7 +176,7 @@ public class StepPass extends AbstractStepWithReRoll {
       fPassFumble = DiceInterpreter.getInstance().isPassFumble(roll, game.getThrower(), passingDistance, passModifiers);
       if (fPassFumble) {
         fSuccessful = false;
-        fHoldingSafeThrow = (UtilCards.hasSkill(game, game.getThrower(), Skill.SAFE_THROW) && (PlayerAction.THROW_BOMB != game.getThrowerAction()));
+        fHoldingSafeThrow = (UtilCards.hasSkill(game, game.getThrower(), ServerSkill.SAFE_THROW) && (PlayerAction.THROW_BOMB != game.getThrowerAction()));
       } else {
         fSuccessful = DiceInterpreter.getInstance().isSkillRollSuccessful(roll, minimumRoll);
         fHoldingSafeThrow = false;
@@ -222,13 +222,13 @@ public class StepPass extends AbstractStepWithReRoll {
       boolean doNextStep = true;
       if (getReRolledAction() != ReRolledAction.PASS) {
         setReRolledAction(ReRolledAction.PASS);
-        if (UtilCards.hasSkill(game, game.getThrower(), Skill.PASS) && !fPassSkillUsed) {
+        if (UtilCards.hasSkill(game, game.getThrower(), ServerSkill.PASS) && !fPassSkillUsed) {
           doNextStep = false;
           fPassSkillUsed = true;
           Team actingTeam = game.isHomePlaying() ? game.getTeamHome() : game.getTeamAway();
           UtilServerDialog.showDialog(
               getGameState(),
-              new DialogSkillUseParameter(game.getThrowerId(), Skill.PASS, minimumRoll),
+              new DialogSkillUseParameter(game.getThrowerId(), ServerSkill.PASS, minimumRoll),
               actingTeam.hasPlayer(game.getThrower())
           );
         } else {

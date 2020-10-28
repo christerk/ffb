@@ -59,7 +59,7 @@ public class StepFoul extends AbstractStep {
     Game game = getGameState().getGame();
     ActingPlayer actingPlayer = game.getActingPlayer();
     getResult().addReport(new ReportFoul(game.getDefenderId()));
-    if (!UtilCards.hasSkill(game, actingPlayer, Skill.CHAINSAW)) {
+    if (!UtilCards.hasSkill(game, actingPlayer, ServerSkill.CHAINSAW)) {
       getResult().setSound(SoundId.FOUL);
     }
     UtilServerGame.syncGameModel(this);

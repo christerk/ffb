@@ -315,7 +315,7 @@ public class InjuryResult implements IJsonSerializable {
     Player defender = game.getPlayerById(getDefenderId());
 
     PlayerResult playerResult = gameResult.getPlayerResult(defender);
-    if (UtilCards.hasSkill(game, defender, Skill.SECRET_WEAPON)) {
+    if (UtilCards.hasSkill(game, defender, ServerSkill.SECRET_WEAPON)) {
       playerResult.setHasUsedSecretWeapon(true);
     }
 

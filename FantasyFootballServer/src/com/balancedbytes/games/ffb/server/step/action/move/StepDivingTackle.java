@@ -143,7 +143,7 @@ public class StepDivingTackle extends AbstractStep {
       game.setDefenderId(null);
       fUsingDivingTackle = false;
       if (game.getFieldModel().getPlayer(fCoordinateFrom) == null) {
-        Player[] divingTacklers = UtilPlayer.findAdjacentOpposingPlayersWithSkill(game, fCoordinateFrom, Skill.DIVING_TACKLE, true);
+        Player[] divingTacklers = UtilPlayer.findAdjacentOpposingPlayersWithSkill(game, fCoordinateFrom, ServerSkill.DIVING_TACKLE, true);
         divingTacklers = UtilPlayer.filterThrower(game, divingTacklers);
         if (game.getTurnMode() == TurnMode.DUMP_OFF) {
           divingTacklers = UtilPlayer.filterAttackerAndDefender(game, divingTacklers);
@@ -173,7 +173,7 @@ public class StepDivingTackle extends AbstractStep {
               UtilServerDialog.showDialog(getGameState(), new DialogPlayerChoiceParameter(teamId, PlayerChoiceMode.DIVING_TACKLE, divingTacklers, descriptions, 1), true);
               fUsingDivingTackle = null;
           } else {
-            getResult().addReport(new ReportSkillUse(null, Skill.DIVING_TACKLE, false, SkillUse.WOULD_NOT_HELP));
+            getResult().addReport(new ReportSkillUse(null, ServerSkill.DIVING_TACKLE, false, SkillUse.WOULD_NOT_HELP));
           }
         }
       }
@@ -190,11 +190,11 @@ public class StepDivingTackle extends AbstractStep {
     	if (dodgeModifiers.contains(DodgeModifier.BREAK_TACKLE) && DiceInterpreter.getInstance().isSkillRollSuccessful(fDodgeRoll, minimumRoll)) {
     		// This dodge will be successful with Break Tackle triggered, so mark it as used.
     		  fUsingBreakTackle = true;
-    	      actingPlayer.markSkillUsed(Skill.BREAK_TACKLE);
+    	      actingPlayer.markSkillUsed(ServerSkill.BREAK_TACKLE);
     	      publishParameter(new StepParameter(StepParameterKey.USING_BREAK_TACKLE, fUsingBreakTackle));
     	}
     	
-        getResult().addReport(new ReportSkillUse(game.getDefender().getId(), Skill.DIVING_TACKLE, true, SkillUse.STOP_OPPONENT));
+        getResult().addReport(new ReportSkillUse(game.getDefender().getId(), ServerSkill.DIVING_TACKLE, true, SkillUse.STOP_OPPONENT));
         getResult().setNextAction(StepAction.GOTO_LABEL, fGotoLabelOnSuccess);
       } else {
         getResult().setNextAction(StepAction.NEXT_STEP);

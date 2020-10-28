@@ -213,7 +213,7 @@ public class StepMoveDodge extends AbstractStepWithReRoll {
       if (pDoRoll && dodgeModifiers.remove(DodgeModifier.BREAK_TACKLE)) {
         minimumRoll = DiceInterpreter.getInstance().minimumRollDodge(game, actingPlayer.getPlayer(), dodgeModifiers);
         if (!fUsingBreakTackle) {
-          getResult().addReport(new ReportSkillUse(null, Skill.BREAK_TACKLE, false, SkillUse.WOULD_NOT_HELP));
+          getResult().addReport(new ReportSkillUse(null, ServerSkill.BREAK_TACKLE, false, SkillUse.WOULD_NOT_HELP));
         }
       }
     }
@@ -229,12 +229,12 @@ public class StepMoveDodge extends AbstractStepWithReRoll {
       status = ActionStatus.FAILURE;
       if (!fReRollUsed && (getReRolledAction() != ReRolledAction.DODGE)) {
         setReRolledAction(ReRolledAction.DODGE);
-        boolean useDodgeSkill = UtilCards.hasUnusedSkill(game, game.getActingPlayer(), Skill.DODGE);
+        boolean useDodgeSkill = UtilCards.hasUnusedSkill(game, game.getActingPlayer(), ServerSkill.DODGE);
         if (useDodgeSkill) {
           Team otherTeam = UtilPlayer.findOtherTeam(game, actingPlayer.getPlayer());
           Player[] opponents = UtilPlayer.findAdjacentPlayersWithTacklezones(game, otherTeam, fCoordinateFrom, false);
           for (int i = 0; i < opponents.length; i++) {
-            if (UtilCards.hasSkill(game, opponents[i], Skill.TACKLE)) {
+            if (UtilCards.hasSkill(game, opponents[i], ServerSkill.TACKLE)) {
               useDodgeSkill = false;
               break;
             }
@@ -254,7 +254,7 @@ public class StepMoveDodge extends AbstractStepWithReRoll {
 
     if (dodgeModifiers.contains(DodgeModifier.BREAK_TACKLE) && ((status == ActionStatus.SUCCESS))) {
       fUsingBreakTackle = true;
-      actingPlayer.markSkillUsed(Skill.BREAK_TACKLE);
+      actingPlayer.markSkillUsed(ServerSkill.BREAK_TACKLE);
       publishParameter(new StepParameter(StepParameterKey.USING_BREAK_TACKLE, fUsingBreakTackle));
     }
 

@@ -309,14 +309,14 @@ public class DiceInterpreter {
         pInjuryResult.clearInjuryModifiers();
       }
       int total = injuryRoll[0] + injuryRoll[1] + pInjuryResult.getInjuryModifierTotal();
-      if ((total == 8) && (defender != null) && UtilCards.hasSkill(game, defender, Skill.THICK_SKULL)) {
+      if ((total == 8) && (defender != null) && UtilCards.hasSkill(game, defender, ServerSkill.THICK_SKULL)) {
         playerState = new PlayerState(PlayerState.STUNNED);
         pInjuryResult.addInjuryModifier(InjuryModifier.THICK_SKULL);
-      } else if ((total == 7) && (defender != null) && UtilCards.hasSkill(game, defender, Skill.STUNTY) && (pInjuryResult.getInjuryType() != InjuryType.STAB)
+      } else if ((total == 7) && (defender != null) && UtilCards.hasSkill(game, defender, ServerSkill.STUNTY) && (pInjuryResult.getInjuryType() != InjuryType.STAB)
           && !UtilCards.hasCard(game, defender, Card.GOOD_OLD_MAGIC_CODPIECE)) {
         playerState = new PlayerState(PlayerState.KNOCKED_OUT);
         pInjuryResult.addInjuryModifier(InjuryModifier.STUNTY);
-      } else if ((total == 9) && (defender != null) && UtilCards.hasSkill(game, defender, Skill.STUNTY) && (pInjuryResult.getInjuryType() != InjuryType.STAB)
+      } else if ((total == 9) && (defender != null) && UtilCards.hasSkill(game, defender, ServerSkill.STUNTY) && (pInjuryResult.getInjuryType() != InjuryType.STAB)
           && !UtilCards.hasCard(game, defender, Card.GOOD_OLD_MAGIC_CODPIECE)) {
         playerState = new PlayerState(PlayerState.BADLY_HURT);
         pInjuryResult.addInjuryModifier(InjuryModifier.STUNTY);

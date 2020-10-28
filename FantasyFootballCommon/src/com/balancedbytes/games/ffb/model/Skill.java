@@ -1,8 +1,6 @@
 package com.balancedbytes.games.ffb.model;
 
-import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.List;
 
 import com.balancedbytes.games.ffb.INamedObject;
 import com.balancedbytes.games.ffb.SkillCategory;
@@ -11,12 +9,10 @@ public class Skill implements INamedObject {
 
   private String name;
   private SkillCategory category;
-  private List<PlayerModifier> playerModifiers;
   
   public Skill(String name, SkillCategory category) {
     this.name = name;
     this.category = category;
-    playerModifiers = new ArrayList<PlayerModifier>();
   }
   
   @Override
@@ -40,14 +36,6 @@ public class Skill implements INamedObject {
     };
   }
   
-  protected void registerModifier(PlayerModifier modifier) {
-    playerModifiers.add(modifier);
-  }
-
-  public List<PlayerModifier> getModifiers() {
-    return playerModifiers;
-  }
-
   public int getCost(Player player) {
     Position position = player.getPosition();
     if (position.hasSkill(this)) {
@@ -63,4 +51,5 @@ public class Skill implements INamedObject {
   public String[] getSkillUseDescription() {
     return null;
   }
+
 }

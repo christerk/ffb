@@ -80,7 +80,7 @@ public class StepFoulAppearance extends AbstractStepWithReRoll {
   private void executeStep() {
     Game game = getGameState().getGame();
     ActingPlayer actingPlayer = game.getActingPlayer();
-    if ((game.getDefender() != null) && UtilCards.hasSkill(game, game.getDefender(), Skill.FOUL_APPEARANCE) && !UtilCards.hasSkill(game, actingPlayer, Skill.BALL_AND_CHAIN)) {
+    if ((game.getDefender() != null) && UtilCards.hasSkill(game, game.getDefender(), ServerSkill.FOUL_APPEARANCE) && !UtilCards.hasSkill(game, actingPlayer, ServerSkill.BALL_AND_CHAIN)) {
       boolean doRoll = true;
       if (ReRolledAction.FOUL_APPEARANCE == getReRolledAction()) {
         if ((getReRollSource() == null) || !UtilServerReRoll.useReRoll(this, getReRollSource(), actingPlayer.getPlayer())) {

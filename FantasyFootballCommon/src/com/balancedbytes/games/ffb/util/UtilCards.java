@@ -7,12 +7,12 @@ import java.util.Set;
 
 import com.balancedbytes.games.ffb.Card;
 import com.balancedbytes.games.ffb.CardEffect;
+import com.balancedbytes.games.ffb.client.SkillConstants;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.InducementSet;
 import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.model.Skill;
-import com.balancedbytes.games.ffb.model.SkillConstants;
 
 /**
  * 
@@ -51,7 +51,7 @@ public final class UtilCards {
     for (Card card : cards) {
       switch (card) {
         case BEGUILING_BRACERS:
-          cardSkills.add(SkillConstants.BONE_HEAD);
+          cardSkills.add(ClientSkillConstants.BONE_HEAD);
           cardSkills.add(SkillConstants.HYPNOTIC_GAZE);
           cardSkills.add(SkillConstants.SIDE_STEP);
           break;
@@ -201,5 +201,4 @@ public final class UtilCards {
     }
     return false;
   }
-
 }

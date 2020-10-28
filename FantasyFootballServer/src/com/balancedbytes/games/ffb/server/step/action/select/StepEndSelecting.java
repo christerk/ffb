@@ -229,7 +229,7 @@ public final class StepEndSelecting extends AbstractStep {
     		SequenceGenerator.getInstance().pushEndPlayerActionSequence(getGameState(), true, true, false);
         break;
       case STAND_UP:
-      	if (actingPlayer.getPlayer().hasSkill(Skill.HYPNOTIC_GAZE)) {     		
+      	if (actingPlayer.getPlayer().hasSkill(ServerSkill.HYPNOTIC_GAZE)) {     		
       		SequenceGenerator.getInstance().pushMoveSequence(getGameState());
       	} else {
       		SequenceGenerator.getInstance().pushEndPlayerActionSequence(getGameState(), true, true, false);

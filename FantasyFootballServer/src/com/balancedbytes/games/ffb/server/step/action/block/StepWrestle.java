@@ -61,7 +61,7 @@ public class StepWrestle extends AbstractStep {
       switch (pReceivedCommand.getId()) {
         case CLIENT_USE_SKILL:
           ClientCommandUseSkill useSkillCommand = (ClientCommandUseSkill) pReceivedCommand.getCommand();
-          if (Skill.WRESTLE == useSkillCommand.getSkill()) {
+          if (ServerSkill.WRESTLE == useSkillCommand.getSkill()) {
             if (fUsingWrestleAttacker == null) {
               fUsingWrestleAttacker = useSkillCommand.isSkillUsed();
             } else {
@@ -86,34 +86,34 @@ public class StepWrestle extends AbstractStep {
     PlayerState attackerState = game.getFieldModel().getPlayerState(actingPlayer.getPlayer());
     PlayerState defenderState = game.getFieldModel().getPlayerState(game.getDefender());
     if (fUsingWrestleAttacker == null) {
-      if (UtilCards.hasSkill(game, actingPlayer, Skill.WRESTLE) && !attackerState.isRooted() && !UtilCards.hasSkill(game, actingPlayer, Skill.BALL_AND_CHAIN)) {
-        UtilServerDialog.showDialog(getGameState(), new DialogSkillUseParameter(actingPlayer.getPlayer().getId(), Skill.WRESTLE, 0), false);
+      if (UtilCards.hasSkill(game, actingPlayer, ServerSkill.WRESTLE) && !attackerState.isRooted() && !UtilCards.hasSkill(game, actingPlayer, ServerSkill.BALL_AND_CHAIN)) {
+        UtilServerDialog.showDialog(getGameState(), new DialogSkillUseParameter(actingPlayer.getPlayer().getId(), ServerSkill.WRESTLE, 0), false);
       } else {
       	fUsingWrestleAttacker = false;
       }
     }
     if ((fUsingWrestleAttacker != null) && (fUsingWrestleDefender == null)) {
-      if (!fUsingWrestleAttacker && UtilCards.hasSkill(game, game.getDefender(), Skill.WRESTLE) && !defenderState.isRooted()
-          && !(actingPlayer.getPlayerAction() == PlayerAction.BLITZ && UtilCards.hasSkill(game, actingPlayer, Skill.JUGGERNAUT))) {
-        UtilServerDialog.showDialog(getGameState(), new DialogSkillUseParameter(game.getDefenderId(), Skill.WRESTLE, 0), true);
+      if (!fUsingWrestleAttacker && UtilCards.hasSkill(game, game.getDefender(), ServerSkill.WRESTLE) && !defenderState.isRooted()
+          && !(actingPlayer.getPlayerAction() == PlayerAction.BLITZ && UtilCards.hasSkill(game, actingPlayer, ServerSkill.JUGGERNAUT))) {
+        UtilServerDialog.showDialog(getGameState(), new DialogSkillUseParameter(game.getDefenderId(), ServerSkill.WRESTLE, 0), true);
       } else {
       	fUsingWrestleDefender = false;
       }
     }
     if (fUsingWrestleDefender != null) {
       if (fUsingWrestleAttacker) {
-        getResult().addReport(new ReportSkillUse(actingPlayer.getPlayerId(), Skill.WRESTLE, true, SkillUse.BRING_DOWN_OPPONENT));
+        getResult().addReport(new ReportSkillUse(actingPlayer.getPlayerId(), ServerSkill.WRESTLE, true, SkillUse.BRING_DOWN_OPPONENT));
       } else if (fUsingWrestleDefender) {
-        getResult().addReport(new ReportSkillUse(game.getDefenderId(), Skill.WRESTLE, true, SkillUse.BRING_DOWN_OPPONENT));
+        getResult().addReport(new ReportSkillUse(game.getDefenderId(), ServerSkill.WRESTLE, true, SkillUse.BRING_DOWN_OPPONENT));
       } else {
-        if (UtilCards.hasSkill(game, actingPlayer, Skill.WRESTLE) || UtilCards.hasSkill(game, game.getDefender(), Skill.WRESTLE)) {
-          getResult().addReport(new ReportSkillUse(null, Skill.WRESTLE, false, null));
+        if (UtilCards.hasSkill(game, actingPlayer, ServerSkill.WRESTLE) || UtilCards.hasSkill(game, game.getDefender(), ServerSkill.WRESTLE)) {
+          getResult().addReport(new ReportSkillUse(null, ServerSkill.WRESTLE, false, null));
         }
       }
       if (fUsingWrestleAttacker || fUsingWrestleDefender) {
         publishParameters(UtilServerInjury.dropPlayer(this, game.getDefender(), ApothecaryMode.DEFENDER));
         publishParameters(UtilServerInjury.dropPlayer(this, actingPlayer.getPlayer(), ApothecaryMode.ATTACKER));
-        if (UtilCards.hasSkill(game, game.getDefender(), Skill.BALL_AND_CHAIN)) {
+        if (UtilCards.hasSkill(game, game.getDefender(), ServerSkill.BALL_AND_CHAIN)) {
         	FieldCoordinate defenderCoordinate = game.getFieldModel().getPlayerCoordinate(game.getDefender());
           publishParameter(new StepParameter(StepParameterKey.INJURY_RESULT,
           	UtilServerInjury.handleInjury(this, InjuryType.BALL_AND_CHAIN, actingPlayer.getPlayer(), game.getDefender(), defenderCoordinate, null, ApothecaryMode.DEFENDER))

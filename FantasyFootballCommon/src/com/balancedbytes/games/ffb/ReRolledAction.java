@@ -1,5 +1,6 @@
 package com.balancedbytes.games.ffb;
 
+import com.balancedbytes.games.ffb.client.SkillConstants;
 import com.balancedbytes.games.ffb.model.Skill;
 
 /**
@@ -12,31 +13,31 @@ public enum ReRolledAction implements INamedObject {
   DODGE("Dodge"),
   CATCH("Catch"),
   PICK_UP("Pick Up"),
-  PASS(Skill.PASS),
-  DAUNTLESS(Skill.DAUNTLESS),
-  LEAP(Skill.LEAP),
-  FOUL_APPEARANCE(Skill.FOUL_APPEARANCE),
+  PASS(SkillConstants.PASS),
+  DAUNTLESS(SkillConstants.DAUNTLESS),
+  LEAP(SkillConstants.LEAP),
+  FOUL_APPEARANCE(SkillConstants.FOUL_APPEARANCE),
   BLOCK("Block"),
-  REALLY_STUPID(Skill.REALLY_STUPID),
-  BONE_HEAD(Skill.BONE_HEAD),
-  WILD_ANIMAL(Skill.WILD_ANIMAL),
-  TAKE_ROOT(Skill.TAKE_ROOT),
+  REALLY_STUPID(SkillConstants.REALLY_STUPID),
+  BONE_HEAD(SkillConstants.BONE_HEAD),
+  WILD_ANIMAL(SkillConstants.WILD_ANIMAL),
+  TAKE_ROOT(SkillConstants.TAKE_ROOT),
   WINNINGS("Winnings"),
-  ALWAYS_HUNGRY(Skill.ALWAYS_HUNGRY),
-  THROW_TEAM_MATE(Skill.THROW_TEAM_MATE),
-  KICK_TEAM_MATE(Skill.KICK_TEAM_MATE),
-  RIGHT_STUFF(Skill.RIGHT_STUFF),
+  ALWAYS_HUNGRY(SkillConstants.ALWAYS_HUNGRY),
+  THROW_TEAM_MATE(SkillConstants.THROW_TEAM_MATE),
+  KICK_TEAM_MATE(SkillConstants.KICK_TEAM_MATE),
+  RIGHT_STUFF(SkillConstants.RIGHT_STUFF),
   SHADOWING_ESCAPE("Shadowing Escape"),
   TENTACLES_ESCAPE("Tentacles Escape"),
   ESCAPE("Escape"),
-  SAFE_THROW(Skill.SAFE_THROW),
+  SAFE_THROW(SkillConstants.SAFE_THROW),
   INTERCEPTION("Interception"),
-  JUMP_UP(Skill.JUMP_UP),
+  JUMP_UP(SkillConstants.JUMP_UP),
   STAND_UP("standUp"),
-  CHAINSAW(Skill.CHAINSAW),
-  BLOOD_LUST(Skill.BLOOD_LUST),
-  HYPNOTIC_GAZE(Skill.HYPNOTIC_GAZE),
-  ANIMOSITY(Skill.ANIMOSITY);
+  CHAINSAW(SkillConstants.CHAINSAW),
+  BLOOD_LUST(SkillConstants.BLOOD_LUST),
+  HYPNOTIC_GAZE(SkillConstants.HYPNOTIC_GAZE),
+  ANIMOSITY(SkillConstants.ANIMOSITY);
 
   private String fName;
   private Skill fSkill;

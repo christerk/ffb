@@ -218,38 +218,20 @@ public class PlayerDetailComponent extends JPanel {
         }
       }
       
-      int maIncreases = findStatIncreases(Skill.MOVEMENT_INCREASE);
-      int maDecreases = findStatDecreases(InjuryAttribute.MA) + findStatDecreases(Skill.MOVEMENT_DECREASE);
-      if ((maIncreases > 0) && (maDecreases > 0)) {
-        maIncreases = 1;
-        maDecreases = 1;
-      }
-      drawStatBox(g2d, x, y, moveLeft, moveIsRed, maIncreases, maDecreases);
+      Player player = getPlayer();
+      Position position = player.getPosition();
+      int movementModifier = player.getMovement() - position.getMovement();
+      drawStatBox(g2d, x, y, moveLeft, moveIsRed, movementModifier);
       
-      int stIncreases = findStatIncreases(Skill.STRENGTH_INCREASE);
-      int stDecreases = findStatDecreases(InjuryAttribute.ST) + findStatDecreases(Skill.STRENGTH_DECREASE);
-      if ((stIncreases > 0) && (stDecreases > 0)) {
-        stIncreases = 1;
-        stDecreases = 1;
-      }
+      int strengthModifier = player.getStrength() - position.getStrength();
       boolean strengthIsRed = (getPlayer().getStrength() != UtilCards.getPlayerStrength(game, getPlayer()));
-      drawStatBox(g2d, x + _STAT_BOX_WIDTH, y, strength, strengthIsRed, stIncreases, stDecreases);
+      drawStatBox(g2d, x + _STAT_BOX_WIDTH, y, strength, strengthIsRed, strengthModifier);
 
-      int agIncreases = findStatIncreases(Skill.AGILITY_INCREASE);
-      int agDecreases = findStatDecreases(InjuryAttribute.AG) + findStatDecreases(Skill.AGILITY_DECREASE);
-      if ((agIncreases > 0) && (agDecreases > 0)) {
-        agIncreases = 1;
-        agDecreases = 1;
-      }
-      drawStatBox(g2d, x + (_STAT_BOX_WIDTH * 2), y, agility, false, agIncreases, agDecreases);
+      int agilityModifier = player.getAgility() - position.getAgility();
+      drawStatBox(g2d, x + (_STAT_BOX_WIDTH * 2), y, agility, false, agilityModifier);
       
-      int avIncreases = findStatIncreases(Skill.ARMOUR_INCREASE);
-      int avDecreases = findStatDecreases(InjuryAttribute.AV) + findStatDecreases(Skill.ARMOUR_DECREASE);
-      if ((avIncreases > 0) && (avDecreases > 0)) {
-        avIncreases = 1;
-        avDecreases = 1;
-      }
-      drawStatBox(g2d, x + (_STAT_BOX_WIDTH * 3), y, armour, false, avIncreases, avDecreases);
+      int armourModifier = player.getArmour() - position.getArmour();
+      drawStatBox(g2d, x + (_STAT_BOX_WIDTH * 3), y, armour, false, armourModifier);
       
       g2d.dispose();
       
@@ -465,13 +447,13 @@ public class PlayerDetailComponent extends JPanel {
     return height;
   }
 
-  private void drawStatBox(Graphics2D pG2d, int pX, int pY, int pValue, boolean pStatIsRed, int pStatIncreases, int pStatDecreases) {
+  private void drawStatBox(Graphics2D pG2d, int pX, int pY, int pValue, boolean pStatIsRed, int statModifier) {
     if (fPlayer != null) {
       pG2d.setColor(Color.BLACK);
       pG2d.setFont(_STAT_FONT);
-      if (pStatIncreases > 0) {
+      if (statModifier > 0) {
         pG2d.setColor(Color.GREEN);
-        if (pStatIncreases > 1) {
+        if (statModifier > 1) {
           pG2d.fillRect(pX + 2, pY + _STAT_BOX_HEIGHT - _STAT_BOX_INNER_HEIGHT - 2, _STAT_BOX_WIDTH - 6, _STAT_BOX_INNER_HEIGHT);
           // pG2d.fillRect(pX + 2, pY + _STAT_BOX_HEIGHT - (_STAT_BOX_INNER_HEIGHT / 2) - 2, _STAT_BOX_WIDTH - 6, _STAT_BOX_INNER_HEIGHT / 2);
         } else {
@@ -479,9 +461,9 @@ public class PlayerDetailComponent extends JPanel {
           // pG2d.fillRect(pX + 2, pY + _STAT_BOX_HEIGHT - (_STAT_BOX_INNER_HEIGHT / 4) - 2, _STAT_BOX_WIDTH - 6, _STAT_BOX_INNER_HEIGHT / 4);
         }
       }
-      if (pStatDecreases > 0) {
+      if (statModifier < 0) {
         pG2d.setColor(Color.RED);
-        if (pStatDecreases > 1) {
+        if (statModifier < -1) {
           pG2d.fillRect(pX + 2, pY + _STAT_BOX_HEIGHT - _STAT_BOX_INNER_HEIGHT - 2, _STAT_BOX_WIDTH - 6, _STAT_BOX_INNER_HEIGHT);
           // pG2d.fillRect(pX + _STAT_BOX_WIDTH - 7, pY + _STAT_BOX_HEIGHT - 7, 4, 4);
         } else {

@@ -72,7 +72,7 @@ public class StepDauntless extends AbstractStepWithReRoll {
     boolean doNextStep = true;
     Game game = getGameState().getGame();
     ActingPlayer actingPlayer = game.getActingPlayer();
-    if (UtilCards.hasSkill(game, actingPlayer, Skill.DAUNTLESS) && (actingPlayer.getStrength() < UtilCards.getPlayerStrength(game, game.getDefender())) && ((fUsingStab == null) || !fUsingStab) && !UtilCards.hasSkill(game, actingPlayer, Skill.CHAINSAW)) {
+    if (UtilCards.hasSkill(game, actingPlayer, ServerSkill.DAUNTLESS) && (actingPlayer.getStrength() < UtilCards.getPlayerStrength(game, game.getDefender())) && ((fUsingStab == null) || !fUsingStab) && !UtilCards.hasSkill(game, actingPlayer, ServerSkill.CHAINSAW)) {
       boolean doDauntless = true;
       if (ReRolledAction.DAUNTLESS == getReRolledAction()) {
         if ((getReRollSource() == null) || !UtilServerReRoll.useReRoll(this, getReRollSource(), actingPlayer.getPlayer())) {
@@ -87,7 +87,7 @@ public class StepDauntless extends AbstractStepWithReRoll {
         getResult().addReport(new ReportDauntlessRoll(actingPlayer.getPlayerId(), successful, dauntlessRoll, minimumRoll, reRolled, UtilCards.getPlayerStrength(game, game.getDefender())));
         if (successful) {
           actingPlayer.setStrength(UtilCards.getPlayerStrength(game, game.getDefender()));
-          actingPlayer.markSkillUsed(Skill.DAUNTLESS);
+          actingPlayer.markSkillUsed(ServerSkill.DAUNTLESS);
         } else {
           if (UtilServerReRoll.askForReRollIfAvailable(getGameState(), actingPlayer.getPlayer(), ReRolledAction.DAUNTLESS, minimumRoll, false)) {
             doNextStep = false;

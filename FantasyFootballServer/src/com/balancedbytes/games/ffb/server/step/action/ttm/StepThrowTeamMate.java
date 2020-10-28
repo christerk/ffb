@@ -168,14 +168,14 @@ public final class StepThrowTeamMate extends AbstractStepWithReRoll {
       getResult().addReport(new ReportThrowTeamMateRoll(thrower.getId(), successful, roll, minimumRoll, reRolled, passModifierArray, passingDistance, fThrownPlayerId));
       if (successful) {
         Player thrownPlayer = game.getPlayerById(fThrownPlayerId);
-        boolean hasSwoop = thrownPlayer != null && thrownPlayer.hasSkill(Skill.SWOOP);
+        boolean hasSwoop = thrownPlayer != null && thrownPlayer.hasSkill(ServerSkill.SWOOP);
       	SequenceGenerator.getInstance().pushScatterPlayerSequence(getGameState(), fThrownPlayerId, fThrownPlayerState, fThrownPlayerHasBall, throwerCoordinate, hasSwoop, true);
       	getResult().setNextAction(StepAction.NEXT_STEP);
       } else {
         if (getReRolledAction() != ReRolledAction.THROW_TEAM_MATE) {
           setReRolledAction(ReRolledAction.THROW_TEAM_MATE);
-          if (UtilCards.hasSkill(game, thrower, Skill.PASS)) {
-            UtilServerDialog.showDialog(getGameState(), new DialogSkillUseParameter(thrower.getId(), Skill.PASS, minimumRoll), false);
+          if (UtilCards.hasSkill(game, thrower, ServerSkill.PASS)) {
+            UtilServerDialog.showDialog(getGameState(), new DialogSkillUseParameter(thrower.getId(), ServerSkill.PASS, minimumRoll), false);
           } else {
             if (!UtilServerReRoll.askForReRollIfAvailable(getGameState(), actingPlayer.getPlayer(), ReRolledAction.THROW_TEAM_MATE, minimumRoll, false)) {
             	getResult().setNextAction(StepAction.GOTO_LABEL, fGotoLabelOnFailure);

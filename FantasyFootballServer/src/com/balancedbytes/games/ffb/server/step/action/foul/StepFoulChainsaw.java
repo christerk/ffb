@@ -89,7 +89,7 @@ public class StepFoulChainsaw extends AbstractStepWithReRoll {
   private void executeStep() {
     Game game = getGameState().getGame();
     ActingPlayer actingPlayer = game.getActingPlayer();
-    if (UtilCards.hasSkill(game, actingPlayer, Skill.CHAINSAW)) {
+    if (UtilCards.hasSkill(game, actingPlayer, ServerSkill.CHAINSAW)) {
       boolean dropChainsawPlayer = false;
       if (ReRolledAction.CHAINSAW == getReRolledAction()) {
         if ((getReRollSource() == null) || !UtilServerReRoll.useReRoll(this, getReRollSource(), actingPlayer.getPlayer())) {

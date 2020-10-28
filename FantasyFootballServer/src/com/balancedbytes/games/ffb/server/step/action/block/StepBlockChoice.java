@@ -153,15 +153,15 @@ public class StepBlockChoice extends AbstractStep {
         getResult().setNextAction(StepAction.GOTO_LABEL, fGotoLabelOnJuggernaut);
         break;
       case POW_PUSHBACK:
-        if (UtilCards.hasSkill(game, game.getDefender(), Skill.DODGE)) {
-          if (UtilCards.hasSkill(game, actingPlayer, Skill.TACKLE)
-              && (!UtilCards.hasSkill(game, actingPlayer, Skill.BALL_AND_CHAIN) || actingPlayer.getPlayer().getTeam() != game.getDefender().getTeam())) {
+        if (UtilCards.hasSkill(game, game.getDefender(), ServerSkill.DODGE)) {
+          if (UtilCards.hasSkill(game, actingPlayer, ServerSkill.TACKLE)
+              && (!UtilCards.hasSkill(game, actingPlayer, ServerSkill.BALL_AND_CHAIN) || actingPlayer.getPlayer().getTeam() != game.getDefender().getTeam())) {
             if (UtilGameOption.isOptionEnabled(game, GameOptionId.RIGHT_STUFF_CANCELS_TACKLE)
-                && UtilCards.hasSkill(game, game.getDefender(), Skill.RIGHT_STUFF)) {
-              getResult().addReport(new ReportSkillUse(game.getDefenderId(), Skill.RIGHT_STUFF, true, SkillUse.CANCEL_TACKLE));
+                && UtilCards.hasSkill(game, game.getDefender(), ServerSkill.RIGHT_STUFF)) {
+              getResult().addReport(new ReportSkillUse(game.getDefenderId(), ServerSkill.RIGHT_STUFF, true, SkillUse.CANCEL_TACKLE));
               getResult().setNextAction(StepAction.GOTO_LABEL, fGotoLabelOnDodge);
             } else {
-              getResult().addReport(new ReportSkillUse(actingPlayer.getPlayerId(), Skill.TACKLE, true, SkillUse.CANCEL_DODGE));
+              getResult().addReport(new ReportSkillUse(actingPlayer.getPlayerId(), ServerSkill.TACKLE, true, SkillUse.CANCEL_DODGE));
               game.getFieldModel().setPlayerState(game.getDefender(), defenderState.changeBase(PlayerState.FALLING));
               publishParameters(UtilBlockSequence.initPushback(this));
               getResult().setNextAction(StepAction.GOTO_LABEL, fGotoLabelOnPushback);

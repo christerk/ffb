@@ -279,12 +279,12 @@ public class StepPassBlock extends AbstractStep {
 		Game game = getGameState().getGame();
 		Player[] players = pTeam.getPlayers();
 		for (Player player : players) {
-			if (UtilCards.hasSkill(game, player, Skill.PASS_BLOCK)) {
+			if (UtilCards.hasSkill(game, player, ServerSkill.PASS_BLOCK)) {
 				PlayerState playerState = game.getFieldModel().getPlayerState(player);
 				FieldCoordinate startPosition = game.getFieldModel().getPlayerCoordinate(player);
 				if (!pCheckCanReach || (playerState.hasTacklezones()
 						&& ArrayTool.isProvided(PathFinderWithPassBlockSupport.allowPassBlockMove(game, player,
-								startPosition, 3, UtilCards.hasSkill(game, player, Skill.LEAP))))) {
+								startPosition, 3, UtilCards.hasSkill(game, player, ServerSkill.LEAP))))) {
 					passBlockers.add(player);
 				}
 			}

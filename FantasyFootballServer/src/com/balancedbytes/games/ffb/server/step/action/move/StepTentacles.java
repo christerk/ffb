@@ -126,7 +126,7 @@ public class StepTentacles extends AbstractStepWithReRoll {
     UtilServerDialog.hideDialog(getGameState());
     if (fUsingTentacles == null) {
       if (actingPlayer.isDodging() || actingPlayer.isLeaping()) {
-        Player[] playerArray = UtilPlayer.findAdjacentOpposingPlayersWithSkill(game, fCoordinateFrom, Skill.TENTACLES, false);
+        Player[] playerArray = UtilPlayer.findAdjacentOpposingPlayersWithSkill(game, fCoordinateFrom, ServerSkill.TENTACLES, false);
         if (ArrayTool.isProvided(playerArray)) {
           String teamId = game.isHomePlaying() ? game.getTeamAway().getId() : game.getTeamHome().getId();
           String[] descriptionArray = new String[playerArray.length];
@@ -173,7 +173,7 @@ public class StepTentacles extends AbstractStepWithReRoll {
           int minimumRoll = DiceInterpreter.getInstance().minimumRollTentaclesEscape(UtilCards.getPlayerStrength(game, game.getDefender()),
               actingPlayer.getStrength());
           boolean reRolled = ((getReRolledAction() == ReRolledAction.TENTACLES_ESCAPE) && (getReRollSource() != null));
-          getResult().addReport(new ReportTentaclesShadowingRoll(Skill.TENTACLES, game.getDefenderId(), rollEscape, successful, minimumRoll, reRolled));
+          getResult().addReport(new ReportTentaclesShadowingRoll(ServerSkill.TENTACLES, game.getDefenderId(), rollEscape, successful, minimumRoll, reRolled));
           if (successful) {
             fUsingTentacles = false;
           } else {

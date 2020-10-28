@@ -114,7 +114,7 @@ public class StepShadowing extends AbstractStepWithReRoll {
     boolean doNextStep = true;
     boolean doShadowing = (!fUsingDivingTackle && (game.getTurnMode() != TurnMode.KICKOFF_RETURN) && (game.getTurnMode() != TurnMode.PASS_BLOCK));
     if (doShadowing && (fCoordinateFrom != null) && (fUsingShadowing == null)) {
-      Player[] shadowers = UtilPlayer.findAdjacentOpposingPlayersWithSkill(game, fCoordinateFrom, Skill.SHADOWING, true);
+      Player[] shadowers = UtilPlayer.findAdjacentOpposingPlayersWithSkill(game, fCoordinateFrom, ServerSkill.SHADOWING, true);
       shadowers = UtilPlayer.filterThrower(game, shadowers);
     	if (game.getTurnMode() == TurnMode.DUMP_OFF) {
     		shadowers = UtilPlayer.filterAttackerAndDefender(game, shadowers);
@@ -161,7 +161,7 @@ public class StepShadowing extends AbstractStepWithReRoll {
           boolean successful = DiceInterpreter.getInstance().isShadowingEscapeSuccessful(rollEscape, UtilCards.getPlayerMovement(game, game.getDefender()), UtilCards.getPlayerMovement(game, actingPlayer.getPlayer()));
           int minimumRoll = DiceInterpreter.getInstance().minimumRollShadowingEscape(UtilCards.getPlayerMovement(game, game.getDefender()), UtilCards.getPlayerMovement(game, actingPlayer.getPlayer()));
           boolean reRolled = ((getReRolledAction() == ReRolledAction.SHADOWING_ESCAPE) && (getReRollSource() != null));
-          getResult().addReport(new ReportTentaclesShadowingRoll(Skill.SHADOWING, game.getDefenderId(), rollEscape, successful, minimumRoll, reRolled));
+          getResult().addReport(new ReportTentaclesShadowingRoll(ServerSkill.SHADOWING, game.getDefenderId(), rollEscape, successful, minimumRoll, reRolled));
           if (successful) {
           	fUsingShadowing = false;
           } else {

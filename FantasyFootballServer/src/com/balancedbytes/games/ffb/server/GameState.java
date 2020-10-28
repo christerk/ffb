@@ -1,13 +1,25 @@
 package com.balancedbytes.games.ffb.server;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 import com.balancedbytes.games.ffb.GameStatus;
+import com.balancedbytes.games.ffb.SkillFactory;
 import com.balancedbytes.games.ffb.json.IJsonSerializable;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
+import com.balancedbytes.games.ffb.model.Skill;
 import com.balancedbytes.games.ffb.model.change.IModelChangeObserver;
 import com.balancedbytes.games.ffb.model.change.ModelChange;
 import com.balancedbytes.games.ffb.model.change.ModelChangeList;
+import com.balancedbytes.games.ffb.server.model.ServerSkill;
+import com.balancedbytes.games.ffb.server.model.StepModifier;
 import com.balancedbytes.games.ffb.server.net.ReceivedCommand;
 import com.balancedbytes.games.ffb.server.step.IStep;
 import com.balancedbytes.games.ffb.server.step.StepAction;
@@ -19,14 +31,6 @@ import com.balancedbytes.games.ffb.server.util.UtilServerGame;
 import com.balancedbytes.games.ffb.util.StringTool;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 /**
  * 
@@ -48,9 +52,11 @@ public class GameState implements IModelChangeObserver, IJsonSerializable {
   private transient long fTurnTimeStarted;
   private transient ModelChangeList fChangeList;
   private transient Map<String, Long> fSpectatorCooldownTime;
+  private transient SkillFactory skillFactory;
 
   public GameState(FantasyFootballServer pServer) {
     fServer = pServer;
+    skillFactory = new SkillFactory(true);
     fGameLog = new GameLog(this);
     fDiceRoller = new DiceRoller(this);
     fSpectatorCooldownTime = new HashMap<String, Long>();
@@ -303,6 +309,34 @@ public class GameState implements IModelChangeObserver, IJsonSerializable {
     kickingSwarmers = IServerJsonOption.SWARMING_PLAYER_ACTUAL.getFrom(jsonObject);
 
     return this;
+  }
+
+  public SkillFactory getSkillFactory() {
+    return skillFactory;
+  }
+
+  public boolean executeStepHooks(IStep step, Object state) {
+    List<StepModifier> modifiers = new ArrayList<StepModifier>();
+    
+    for (Skill skill : skillFactory.getSkills()) {
+      ServerSkill serverSkill = (ServerSkill) skill;
+      
+      for (StepModifier modifier : serverSkill.getStepModifiers()) {
+        if (modifier.appliesTo(step)) {
+          modifiers.add(modifier);
+        }
+      }
+    }
+    
+    modifiers.sort(StepModifier.Comparator);
+    
+    for (StepModifier modifier : modifiers) {
+      boolean stopProcessing = modifier.handleExecuteStep(step, state);
+      if (stopProcessing) {
+        return true;
+      }
+    }
+    return false;
   }
 
 }

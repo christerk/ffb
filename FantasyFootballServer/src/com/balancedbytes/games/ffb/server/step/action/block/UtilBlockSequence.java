@@ -34,18 +34,18 @@ public class UtilBlockSequence {
     game.getFieldModel().clearPushbackSquares();
     parameterSet.add(new StepParameter(StepParameterKey.STARTING_PUSHBACK_SQUARE,
       UtilServerPushback.findStartingSquare(attackerCoordinate, defenderCoordinate, game.isHomePlaying())));
-    if (UtilCards.hasSkill(game, actingPlayer, Skill.STRIP_BALL)
+    if (UtilCards.hasSkill(game, actingPlayer, ServerSkill.STRIP_BALL)
 	  && defenderCoordinate != null
       && defenderCoordinate.equals(game.getFieldModel().getBallCoordinate())
       && (game.getDefender().getTeam() != actingPlayer.getPlayer().getTeam())) {
-      if ((game.getDefender() != null) && UtilCards.hasSkill(game, game.getDefender(), Skill.SURE_HANDS)) {
-        pStep.getResult().addReport(new ReportSkillUse(game.getDefenderId(), Skill.SURE_HANDS, true, SkillUse.CANCEL_STRIP_BALL));
-      } else if ((game.getDefender() != null) && UtilCards.hasSkill(game, game.getDefender(), Skill.MOUNSTROUS_MOUTH)) {
-        pStep.getResult().addReport(new ReportSkillUse(game.getDefenderId(), Skill.MOUNSTROUS_MOUTH, true, SkillUse.CANCEL_STRIP_BALL));
+      if ((game.getDefender() != null) && UtilCards.hasSkill(game, game.getDefender(), ServerSkill.SURE_HANDS)) {
+        pStep.getResult().addReport(new ReportSkillUse(game.getDefenderId(), ServerSkill.SURE_HANDS, true, SkillUse.CANCEL_STRIP_BALL));
+      } else if ((game.getDefender() != null) && UtilCards.hasSkill(game, game.getDefender(), ServerSkill.MOUNSTROUS_MOUTH)) {
+        pStep.getResult().addReport(new ReportSkillUse(game.getDefenderId(), ServerSkill.MOUNSTROUS_MOUTH, true, SkillUse.CANCEL_STRIP_BALL));
       } else {
-        pStep.getResult().addReport(new ReportSkillUse(actingPlayer.getPlayerId(), Skill.STRIP_BALL, true, SkillUse.STEAL_BALL));
+        pStep.getResult().addReport(new ReportSkillUse(actingPlayer.getPlayerId(), ServerSkill.STRIP_BALL, true, SkillUse.STEAL_BALL));
         parameterSet.add(new StepParameter(StepParameterKey.CATCH_SCATTER_THROW_IN_MODE, CatchScatterThrowInMode.SCATTER_BALL));
-        actingPlayer.markSkillUsed(Skill.STRIP_BALL);
+        actingPlayer.markSkillUsed(ServerSkill.STRIP_BALL);
       }
     }
     return parameterSet;

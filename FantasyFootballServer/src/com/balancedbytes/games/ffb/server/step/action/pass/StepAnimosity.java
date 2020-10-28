@@ -143,14 +143,14 @@ public final class StepAnimosity extends AbstractStepWithReRoll {
         }
       } else {
         if ((catcher != null) && (catcher.getRace() != null) && (thrower != null) && (thrower.getRace() != null)) {
-          doRoll = (UtilCards.hasSkill(game, thrower, Skill.ANIMOSITY) && !(thrower.getRace().equalsIgnoreCase(catcher.getRace())));
+          doRoll = (UtilCards.hasSkill(game, thrower, ServerSkill.ANIMOSITY) && !(thrower.getRace().equalsIgnoreCase(catcher.getRace())));
         }
       }
       if (doRoll) {
         int roll = getGameState().getDiceRoller().rollSkill();
         int minimumRoll = DiceInterpreter.getInstance().minimumRollAnimosity();
         boolean successful = DiceInterpreter.getInstance().isSkillRollSuccessful(roll, minimumRoll);
-        actingPlayer.markSkillUsed(Skill.ANIMOSITY);
+        actingPlayer.markSkillUsed(ServerSkill.ANIMOSITY);
         if (successful) {
           actingPlayer.setSufferingAnimosity(false);
           getResult().setNextAction(StepAction.NEXT_STEP);

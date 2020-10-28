@@ -139,7 +139,7 @@ public class StepSwarming extends AbstractStep {
         if (FieldCoordinateBounds.FIELD.isInBounds(playerCoordinate)) {
           playersOnPitch.add(player);
         } else if (game.getFieldModel().getPlayerState(player).getBase() == PlayerState.RESERVE) {
-          if (UtilCards.hasSkill(game, player, Skill.SWARMING)) {
+          if (UtilCards.hasSkill(game, player, ServerSkill.SWARMING)) {
             hasSwarmingReserves = true;
           } else {
             playersReserveNoSwarming.add(player);

@@ -58,7 +58,7 @@ public class StepDumpOff extends AbstractStep {
       switch (pReceivedCommand.getId()) {
         case CLIENT_USE_SKILL:
           ClientCommandUseSkill useSkillCommand = (ClientCommandUseSkill) pReceivedCommand.getCommand();
-          if (Skill.DUMP_OFF == useSkillCommand.getSkill()) {
+          if (ServerSkill.DUMP_OFF == useSkillCommand.getSkill()) {
             fUsingDumpOff = useSkillCommand.isSkillUsed();
             commandStatus = StepCommandStatus.EXECUTE_STEP;
           }
@@ -97,14 +97,14 @@ public class StepDumpOff extends AbstractStep {
       getResult().setNextAction(StepAction.NEXT_STEP);
 
     } else if (fUsingDumpOff == null) {
-      if (UtilCards.hasSkill(game, game.getDefender(), Skill.DUMP_OFF) && (fDefenderPosition != null)
+      if (UtilCards.hasSkill(game, game.getDefender(), ServerSkill.DUMP_OFF) && (fDefenderPosition != null)
           && fDefenderPosition.equals(game.getFieldModel().getBallCoordinate())
           && !game.getFieldModel().isBallMoving()
           && !(game.getFieldModel().getPlayerState(game.getDefender()).isConfused()
               || game.getFieldModel().getPlayerState(game.getDefender()).isHypnotized())) {
         UtilServerDialog.showDialog(
             getGameState(),
-            new DialogSkillUseParameter(game.getDefenderId(), Skill.DUMP_OFF, 0),
+            new DialogSkillUseParameter(game.getDefenderId(), ServerSkill.DUMP_OFF, 0),
             true
         );
         getResult().setNextAction(StepAction.CONTINUE);
@@ -125,7 +125,7 @@ public class StepDumpOff extends AbstractStep {
       getResult().setNextAction(StepAction.NEXT_STEP);
 
     } else {
-      getResult().addReport(new ReportSkillUse(game.getDefenderId(), Skill.DUMP_OFF, false, null));
+      getResult().addReport(new ReportSkillUse(game.getDefenderId(), ServerSkill.DUMP_OFF, false, null));
       getResult().setNextAction(StepAction.NEXT_STEP);
     }
 

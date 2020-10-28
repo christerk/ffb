@@ -133,7 +133,7 @@ public class StepPickUp extends AbstractStepWithReRoll {
   private ActionStatus pickUp() {
     Game game = getGameState().getGame();
     ActingPlayer actingPlayer = game.getActingPlayer();
-    if (UtilCards.hasSkill(game, actingPlayer, Skill.NO_HANDS)) {
+    if (UtilCards.hasSkill(game, actingPlayer, ServerSkill.NO_HANDS)) {
       return ActionStatus.FAILURE;
     } else {
       PickupModifierFactory modifierFactory = new PickupModifierFactory();
@@ -149,7 +149,7 @@ public class StepPickUp extends AbstractStepWithReRoll {
       } else {
         if (getReRolledAction() != ReRolledAction.PICK_UP) {
           setReRolledAction(ReRolledAction.PICK_UP);
-          if (UtilCards.hasUnusedSkill(game, actingPlayer, Skill.SURE_HANDS)) {
+          if (UtilCards.hasUnusedSkill(game, actingPlayer, ServerSkill.SURE_HANDS)) {
             setReRollSource(ReRollSource.SURE_HANDS);
             UtilServerReRoll.useReRoll(this, getReRollSource(), actingPlayer.getPlayer());
             return pickUp();

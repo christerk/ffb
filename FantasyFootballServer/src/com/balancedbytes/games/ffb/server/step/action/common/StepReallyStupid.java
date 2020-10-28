@@ -101,9 +101,9 @@ public class StepReallyStupid extends AbstractStepWithReRoll {
     if (playerState.isHypnotized()) {
     	game.getFieldModel().setPlayerState(actingPlayer.getPlayer() , playerState.changeHypnotized(false));
     }
-    if (UtilCards.hasSkill(game, actingPlayer, Skill.REALLY_STUPID)) {
+    if (UtilCards.hasSkill(game, actingPlayer, ServerSkill.REALLY_STUPID)) {
       boolean doRoll = true;
-      ReRolledAction reRolledAction = new ReRolledActionFactory().forSkill(Skill.REALLY_STUPID); 
+      ReRolledAction reRolledAction = new ReRolledActionFactory().forSkill(ServerSkill.REALLY_STUPID); 
       if ((reRolledAction != null) && (reRolledAction == getReRolledAction())) {
         if ((getReRollSource() == null) || !UtilServerReRoll.useReRoll(this, getReRollSource(), actingPlayer.getPlayer())) {
           doRoll = false;
@@ -111,7 +111,7 @@ public class StepReallyStupid extends AbstractStepWithReRoll {
           cancelPlayerAction();
         }
       } else {
-        doRoll = UtilCards.hasUnusedSkill(game, actingPlayer, Skill.REALLY_STUPID);
+        doRoll = UtilCards.hasUnusedSkill(game, actingPlayer, ServerSkill.REALLY_STUPID);
       }
       if (doRoll) {
         int roll = getGameState().getDiceRoller().rollSkill();
@@ -122,7 +122,7 @@ public class StepReallyStupid extends AbstractStepWithReRoll {
           Player[] teamMates = UtilPlayer.findAdjacentBlockablePlayers(game, actingPlayer.getPlayer().getTeam(), playerCoordinate);
           goodConditions = false;
           for (Player teamMate : teamMates) {
-            if (!UtilCards.hasSkill(game, teamMate, Skill.REALLY_STUPID)) {
+            if (!UtilCards.hasSkill(game, teamMate, ServerSkill.REALLY_STUPID)) {
               goodConditions = true;
               break;
             }
@@ -130,7 +130,7 @@ public class StepReallyStupid extends AbstractStepWithReRoll {
         }
         int minimumRoll = DiceInterpreter.getInstance().minimumRollConfusion(goodConditions);
         boolean successful = DiceInterpreter.getInstance().isSkillRollSuccessful(roll, minimumRoll);
-        actingPlayer.markSkillUsed(Skill.REALLY_STUPID);
+        actingPlayer.markSkillUsed(ServerSkill.REALLY_STUPID);
         if (!successful) {
           status = ActionStatus.FAILURE;
           if (((reRolledAction == null) || (reRolledAction != getReRolledAction())) && UtilServerReRoll.askForReRollIfAvailable(getGameState(), actingPlayer.getPlayer(), reRolledAction, minimumRoll, false)) {
@@ -140,7 +140,7 @@ public class StepReallyStupid extends AbstractStepWithReRoll {
           }
         }
         boolean reRolled = ((reRolledAction != null) && (reRolledAction == getReRolledAction()) && (getReRollSource() != null));
-        getResult().addReport(new ReportConfusionRoll(actingPlayer.getPlayerId(), successful, roll, minimumRoll, reRolled, Skill.REALLY_STUPID));
+        getResult().addReport(new ReportConfusionRoll(actingPlayer.getPlayerId(), successful, roll, minimumRoll, reRolled, ServerSkill.REALLY_STUPID));
       }
     }
     if (status == ActionStatus.SUCCESS) {

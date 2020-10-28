@@ -1,5 +1,6 @@
 package com.balancedbytes.games.ffb.server.step;
 
+import com.balancedbytes.games.ffb.SkillFactory;
 import com.balancedbytes.games.ffb.SoundId;
 import com.balancedbytes.games.ffb.dialog.DialogConcedeGameParameter;
 import com.balancedbytes.games.ffb.json.UtilJson;
@@ -29,10 +30,12 @@ public abstract class AbstractStep implements IStep {
   private GameState fGameState;
   private StepResult fStepResult;
   private String fLabel;
+  protected SkillFactory skillFactory;
 
   protected AbstractStep(GameState pGameState) {
     fGameState = pGameState;
     setStepResult(new StepResult());
+    skillFactory = pGameState.getSkillFactory();
   }
 
   public void setLabel(String pLabel) {

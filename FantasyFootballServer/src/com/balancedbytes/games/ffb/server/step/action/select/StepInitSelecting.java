@@ -274,7 +274,7 @@ public final class StepInitSelecting extends AbstractStep {
         UtilBlock.updateDiceDecorations(game);
       }
       if (actingPlayer.getPlayerAction().isMoving()) {
-        if (actingPlayer.isStandingUp() && !UtilCards.hasSkill(game, actingPlayer, Skill.JUMP_UP)) {
+        if (actingPlayer.isStandingUp() && !UtilCards.hasSkill(game, actingPlayer, ServerSkill.JUMP_UP)) {
           actingPlayer.setCurrentMove(Math.min(IServerConstant.MINIMUM_MOVE_TO_STAND_UP, UtilCards.getPlayerMovement(game, actingPlayer.getPlayer())));
           actingPlayer.setGoingForIt(UtilPlayer.isNextMoveGoingForIt(game)); // auto
                                                                              // go-for-it

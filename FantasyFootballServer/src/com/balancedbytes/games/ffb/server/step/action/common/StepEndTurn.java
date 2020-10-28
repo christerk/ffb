@@ -400,9 +400,9 @@ public class StepEndTurn extends AbstractStep {
         PlayerState playerState = game.getFieldModel().getPlayerState(player);
         PlayerResult playerResult = game.getGameResult().getPlayerResult(player);
         if (playerState.canBeSetUp() && playerState.getBase() != PlayerState.RESERVE) {
-          boolean hasSecretWeapon = UtilCards.hasSkill(game, player, Skill.SECRET_WEAPON);
+          boolean hasSecretWeapon = UtilCards.hasSkill(game, player, ServerSkill.SECRET_WEAPON);
           if (!hasSecretWeapon && player instanceof ZappedPlayer) {
-            hasSecretWeapon = UtilCards.hasSkill(game, ((ZappedPlayer) player).getOriginalPlayer(), Skill.SECRET_WEAPON);
+            hasSecretWeapon = UtilCards.hasSkill(game, ((ZappedPlayer) player).getOriginalPlayer(), ServerSkill.SECRET_WEAPON);
           }
           if (hasSecretWeapon) {
             playerResult.setHasUsedSecretWeapon(true);
@@ -422,7 +422,7 @@ public class StepEndTurn extends AbstractStep {
       PlayerResult playerResult = game.getGameResult().getPlayerResult(player);
       if (playerResult.hasUsedSecretWeapon()) {
         // special for stunty leeg -> roll for secret weapon ban
-        Integer penalty = player.getPosition().getSkillValue(Skill.SECRET_WEAPON);
+        Integer penalty = player.getPosition().getSkillValue(ServerSkill.SECRET_WEAPON);
         if ((penalty != null) && (penalty > 0)) {
           int[] roll = getGameState().getDiceRoller().rollSecretWeapon();
           int total = roll[0] + roll[1];
