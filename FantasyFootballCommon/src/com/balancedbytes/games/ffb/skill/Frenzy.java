@@ -2,6 +2,7 @@ package com.balancedbytes.games.ffb.skill;
 
 import com.balancedbytes.games.ffb.SkillCategory;
 import com.balancedbytes.games.ffb.model.Skill;
+import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
 
 /**
 * A player with this skill is a slavering psychopath who attacks his
@@ -19,6 +20,8 @@ public class Frenzy extends Skill {
 
   public Frenzy() {
     super("Frenzy", SkillCategory.GENERAL);
+    
+    registerProperty(NamedProperties.forceFollowup);
   }
 
 }

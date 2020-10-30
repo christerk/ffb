@@ -11,7 +11,6 @@ import org.xml.sax.helpers.AttributesImpl;
 import com.balancedbytes.games.ffb.PlayerGender;
 import com.balancedbytes.games.ffb.PlayerType;
 import com.balancedbytes.games.ffb.SkillCategory;
-import com.balancedbytes.games.ffb.SkillFactory;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.xml.IXmlReadable;
@@ -37,7 +36,6 @@ public class ZappedPosition implements Position {
   public ZappedPosition(RosterPosition originalPosition) {
     this.originalPosition = originalPosition;
     
-    SkillFactory factory = new SkillFactory();
     skills.add(SkillConstants.DODGE);
     skills.add(SkillConstants.NO_HANDS);
     skills.add(SkillConstants.TITCHY);

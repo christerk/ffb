@@ -4,9 +4,9 @@ import com.balancedbytes.games.ffb.PlayerState;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.Game;
+import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.IServerJsonOption;
-import com.balancedbytes.games.ffb.server.model.ServerSkill;
 import com.balancedbytes.games.ffb.server.net.ReceivedCommand;
 import com.balancedbytes.games.ffb.server.step.AbstractStep;
 import com.balancedbytes.games.ffb.server.step.StepAction;
@@ -70,12 +70,12 @@ public class StepBothDown extends AbstractStep {
     ActingPlayer actingPlayer = game.getActingPlayer();
     PlayerState attackerState = game.getFieldModel().getPlayerState(actingPlayer.getPlayer());
     PlayerState defenderState = game.getFieldModel().getPlayerState(game.getDefender());
-    if (!UtilCards.hasSkill(game, game.getDefender(), ServerSkill.BLOCK)) {
+    if (!UtilCards.hasSkillWithProperty(game.getDefender(), NamedProperties.preventFallOnBothDown)) {
       game.getFieldModel().setPlayerState(game.getDefender(), defenderState.changeBase(PlayerState.FALLING));
     } else {
       game.getFieldModel().setPlayerState(game.getDefender(), fOldDefenderState);
     }
-    if (!UtilCards.hasSkill(game, actingPlayer, ServerSkill.BLOCK)) {
+    if (!UtilCards.hasSkillWithProperty(actingPlayer.getPlayer(), NamedProperties.preventFallOnBothDown)) {
       game.getFieldModel().setPlayerState(actingPlayer.getPlayer(), attackerState.changeBase(PlayerState.FALLING));
     }
     getResult().setNextAction(StepAction.NEXT_STEP);

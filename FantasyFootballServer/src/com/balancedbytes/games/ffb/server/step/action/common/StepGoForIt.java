@@ -11,6 +11,7 @@ import com.balancedbytes.games.ffb.ReRolledAction;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.Game;
+import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
 import com.balancedbytes.games.ffb.report.ReportId;
 import com.balancedbytes.games.ffb.report.ReportSkillRoll;
 import com.balancedbytes.games.ffb.server.ActionStatus;
@@ -97,8 +98,8 @@ public class StepGoForIt extends AbstractStepWithReRoll {
     Game game = getGameState().getGame();
     ActingPlayer actingPlayer = game.getActingPlayer();
 
-    boolean hasBallAndChain = actingPlayer.getPlayer().hasSkill(ServerSkill.BALL_AND_CHAIN);
-    boolean runGfi = (hasBallAndChain == fBallandChainGfi);
+    boolean goForItAfterBlock = UtilCards.hasSkillWithProperty(actingPlayer.getPlayer(), NamedProperties.goForItAfterBlock);
+    boolean runGfi = (goForItAfterBlock == fBallandChainGfi);
 
     if (runGfi) {
 	    if ((PlayerAction.BLITZ == actingPlayer.getPlayerAction()) && (getReRolledAction() == null)) {

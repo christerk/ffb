@@ -6,6 +6,7 @@ import com.balancedbytes.games.ffb.SkillUse;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.Game;
+import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
 import com.balancedbytes.games.ffb.option.GameOptionId;
 import com.balancedbytes.games.ffb.option.UtilGameOption;
 import com.balancedbytes.games.ffb.report.ReportBlockChoice;
@@ -155,7 +156,7 @@ public class StepBlockChoice extends AbstractStep {
       case POW_PUSHBACK:
         if (UtilCards.hasSkill(game, game.getDefender(), ServerSkill.DODGE)) {
           if (UtilCards.hasSkill(game, actingPlayer, ServerSkill.TACKLE)
-              && (!UtilCards.hasSkill(game, actingPlayer, ServerSkill.BALL_AND_CHAIN) || actingPlayer.getPlayer().getTeam() != game.getDefender().getTeam())) {
+              && (!UtilCards.hasSkillWithProperty(actingPlayer.getPlayer(), NamedProperties.canBlockSameTeamPlayer) || actingPlayer.getPlayer().getTeam() != game.getDefender().getTeam())) {
             if (UtilGameOption.isOptionEnabled(game, GameOptionId.RIGHT_STUFF_CANCELS_TACKLE)
                 && UtilCards.hasSkill(game, game.getDefender(), ServerSkill.RIGHT_STUFF)) {
               getResult().addReport(new ReportSkillUse(game.getDefenderId(), ServerSkill.RIGHT_STUFF, true, SkillUse.CANCEL_TACKLE));

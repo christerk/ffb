@@ -2,6 +2,7 @@ package com.balancedbytes.games.ffb.skill;
 
 import com.balancedbytes.games.ffb.SkillCategory;
 import com.balancedbytes.games.ffb.model.Skill;
+import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
 
 /**
 * A player with the Block skill is proficient at knocking opponents down.
@@ -12,6 +13,8 @@ public class Block extends Skill {
 
   public Block() {
     super("Block", SkillCategory.GENERAL);
+    
+    registerProperty(NamedProperties.preventFallOnBothDown);
   }
 
 }

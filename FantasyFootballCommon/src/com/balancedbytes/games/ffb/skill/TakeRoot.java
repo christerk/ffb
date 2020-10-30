@@ -22,4 +22,8 @@ public class TakeRoot extends Skill {
     super("Take Root", SkillCategory.EXTRAORDINARY);
   }
 
+  @Override
+  public String getConfusionMessage() {
+    return "takes root";
+  }
 }

@@ -7,7 +7,7 @@ import java.util.Set;
 
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
-import com.balancedbytes.games.ffb.model.Skill;
+import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
 import com.balancedbytes.games.ffb.util.UtilCards;
 import com.balancedbytes.games.ffb.util.UtilPlayer;
 
@@ -30,18 +30,19 @@ public class PickupModifierFactory implements IRollModifierFactory {
     Set<PickupModifier> pickupModifiers = new HashSet<PickupModifier>();
     Player player = pGame.getActingPlayer().getPlayer();
     if (player != null) {
-      if (UtilCards.hasSkill(pGame, player, Skill.EXTRA_ARMS)) {
-        pickupModifiers.add(PickupModifier.EXTRA_ARMS);
-      }
-      if (UtilCards.hasSkill(pGame, player, Skill.BIG_HAND)) {
-        pickupModifiers.add(PickupModifier.BIG_HAND);
-      } else {
-        if (Weather.POURING_RAIN == pGame.getFieldModel().getWeather()) {
-          pickupModifiers.add(PickupModifier.POURING_RAIN);
-        }
+      
+      pickupModifiers.addAll(UtilCards.getPickupModifiers(player, null));
+      
+      if (!UtilCards.hasSkillWithProperty(player, NamedProperties.ignoreTacklezonesWhenPickingUp)) {
         PickupModifier tacklezoneModifier = getTacklezoneModifier(pGame, player);
         if (tacklezoneModifier != null) {
           pickupModifiers.add(tacklezoneModifier);
+        }
+      }
+      
+      if (!UtilCards.hasSkillWithProperty(player, NamedProperties.ignoreWeatherWhenPickingUp)) {
+        if (Weather.POURING_RAIN == pGame.getFieldModel().getWeather()) {
+          pickupModifiers.add(PickupModifiers.POURING_RAIN);
         }
       }
     }

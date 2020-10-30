@@ -11,6 +11,7 @@ import com.balancedbytes.games.ffb.SoundId;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.Game;
+import com.balancedbytes.games.ffb.model.SkillConstants;
 import com.balancedbytes.games.ffb.report.ReportId;
 import com.balancedbytes.games.ffb.report.ReportSkillRoll;
 import com.balancedbytes.games.ffb.server.DiceInterpreter;
@@ -101,7 +102,7 @@ public class StepHypnoticGaze extends AbstractStepWithReRoll {
         doGaze = false;
       }
     } else {
-      doGaze = UtilCards.hasUnusedSkill(game, actingPlayer, ServerSkill.HYPNOTIC_GAZE) && !UtilCards.hasSkill(game, actingPlayer, ServerSkill.BALL_AND_CHAIN);
+      doGaze = UtilCards.hasUnusedSkill(game, actingPlayer, ServerSkill.HYPNOTIC_GAZE) && !UtilCards.cancelsSkill(actingPlayer.getPlayer(), SkillConstants.HYPNOTIC_GAZE);
     }
     if (doGaze) {
       actingPlayer.markSkillUsed(ServerSkill.HYPNOTIC_GAZE);

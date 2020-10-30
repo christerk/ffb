@@ -10,6 +10,7 @@ import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.model.Skill;
 import com.balancedbytes.games.ffb.model.Team;
+import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
 import com.balancedbytes.games.ffb.util.UtilCards;
 import com.balancedbytes.games.ffb.util.UtilPlayer;
 
@@ -17,12 +18,18 @@ public class ServerUtilBlock {
   public static boolean updateDiceDecorations(Game pGame) {
     boolean diceDecorationsDrawn = false;
     ActingPlayer actingPlayer = pGame.getActingPlayer();
-    if ((actingPlayer.getPlayer() != null) && (UtilCards.hasSkill(pGame, actingPlayer, Skill.BALL_AND_CHAIN) || (!actingPlayer.hasBlocked() && ((PlayerAction.BLITZ_MOVE == actingPlayer.getPlayerAction()) || (PlayerAction.BLOCK == actingPlayer.getPlayerAction()) || (PlayerAction.MULTIPLE_BLOCK == actingPlayer.getPlayerAction()))))) {
+    
+    boolean isBlitz = PlayerAction.BLITZ_MOVE == actingPlayer.getPlayerAction();
+    boolean isBlock = PlayerAction.BLOCK == actingPlayer.getPlayerAction();
+    boolean isMultiBlock = (PlayerAction.MULTIPLE_BLOCK == actingPlayer.getPlayerAction());
+    boolean canBlockMoreThanOnce = UtilCards.hasSkillWithProperty(actingPlayer.getPlayer(), NamedProperties.canBlockMoreThanOnce);
+    
+    if ((actingPlayer.getPlayer() != null) && (canBlockMoreThanOnce || (!actingPlayer.hasBlocked() && (isBlitz || isBlock || isMultiBlock)))) {
       pGame.getFieldModel().clearDiceDecorations();
       FieldCoordinate coordinateAttacker = pGame.getFieldModel().getPlayerCoordinate(actingPlayer.getPlayer());
       Team otherTeam = UtilPlayer.findOtherTeam(pGame, actingPlayer.getPlayer());
       addDiceDecorations(pGame, UtilPlayer.findAdjacentBlockablePlayers(pGame, otherTeam, coordinateAttacker));
-      if (UtilCards.hasSkill(pGame, actingPlayer, Skill.BALL_AND_CHAIN)) {
+      if (canBlockMoreThanOnce) {
         addDiceDecorations(pGame, UtilPlayer.findAdjacentBlockablePlayers(pGame, actingPlayer.getPlayer().getTeam(), coordinateAttacker));
       }
     }
@@ -84,8 +91,10 @@ public class ServerUtilBlock {
       if ((blockStrengthAttacker * 2) < blockStrengthDefender) {
         nrOfDice = -3;
       }
-      if (UtilCards.hasSkill(pGame, pAttacker, Skill.BALL_AND_CHAIN) && (pAttacker.getTeam() == pDefender.getTeam())) {
-        nrOfDice = Math.abs(nrOfDice);  // the choice is always for the coach of the b&c team in that case
+      
+      if (pAttacker.getTeam() == pDefender.getTeam()) {
+        // This can happen with Ball & Chain for example.
+        nrOfDice = Math.abs(nrOfDice);  // the choice is always for the coach of the attacker
       }
     }
     return nrOfDice;

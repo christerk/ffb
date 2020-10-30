@@ -155,6 +155,10 @@ public class ClientCommandHandlerModelSync extends ClientCommandHandler implemen
         Player thrownPlayer = game.getPlayerById(animation.getThrownPlayerId());
         game.getFieldModel().setPlayerCoordinate(thrownPlayer, fThrownPlayerCoordinate);
         break;
+      case KICK_TEAM_MATE:
+        Player kickedPlayer = game.getPlayerById(animation.getThrownPlayerId());
+        game.getFieldModel().setPlayerCoordinate(kickedPlayer, fKickedPlayerCoordinate);
+        break;
       default:
       	break;
   	}

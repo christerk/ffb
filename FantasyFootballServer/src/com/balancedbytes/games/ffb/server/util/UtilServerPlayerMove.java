@@ -16,6 +16,7 @@ import com.balancedbytes.games.ffb.TurnMode;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.FieldModel;
 import com.balancedbytes.games.ffb.model.Game;
+import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandMove;
 import com.balancedbytes.games.ffb.server.DebugLog;
 import com.balancedbytes.games.ffb.server.DiceInterpreter;
@@ -56,7 +57,7 @@ public class UtilServerPlayerMove {
       fieldModel.clearMoveSquares();
       FieldCoordinate playerCoordinate = fieldModel.getPlayerCoordinate(actingPlayer.getPlayer());
       if (actingPlayer.getPlayerAction().isMoving() && UtilPlayer.isNextMovePossible(game, pLeaping) && FieldCoordinateBounds.FIELD.isInBounds(playerCoordinate)) {
-      	if (UtilCards.hasSkill(game, actingPlayer, ServerSkill.BALL_AND_CHAIN)) {
+      	if (UtilCards.hasSkillWithProperty(actingPlayer.getPlayer(), NamedProperties.movesRandomly)) {
       		for (int x = -1; x < 2; x += 2) {
     				FieldCoordinate moveCoordinate = playerCoordinate.add(x, 0);
     				if (FieldCoordinateBounds.FIELD.isInBounds(moveCoordinate)) {
@@ -102,7 +103,7 @@ public class UtilServerPlayerMove {
     FieldCoordinate playerCoordinate = fieldModel.getPlayerCoordinate(actingPlayer.getPlayer());
   	boolean goForIt = false;
     int minimumRollDodge = 0;
-    boolean dodging = !UtilCards.hasSkill(game, actingPlayer, ServerSkill.BALL_AND_CHAIN) && (UtilPlayer.findTacklezones(game, actingPlayer.getPlayer()) > 0);
+    boolean dodging = !UtilCards.hasSkillWithProperty(actingPlayer.getPlayer(), NamedProperties.ignoreTacklezonesWhenMoving) && (UtilPlayer.findTacklezones(game, actingPlayer.getPlayer()) > 0);
     if (pLeaping) {
       LeapModifierFactory modifierFactory = new LeapModifierFactory();
       Set<LeapModifier> leapModifiers = modifierFactory.findLeapModifiers(game);

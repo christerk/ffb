@@ -56,7 +56,6 @@ public class CommandSocket {
       ReceivedCommand receivedCommand = new ReceivedCommand(netCommand, pSession);
       fCommandHandler.handleCommand(receivedCommand);
     } catch (Exception e) {
-      int x = 0;
     }
 
   }

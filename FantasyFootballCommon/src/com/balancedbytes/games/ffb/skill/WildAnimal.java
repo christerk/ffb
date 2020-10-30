@@ -18,4 +18,8 @@ public class WildAnimal extends Skill {
     super("Wild Animal", SkillCategory.EXTRAORDINARY);
   }
 
+  @Override
+  public String getConfusionMessage() {
+    return "roars in rage";
+  }
 }

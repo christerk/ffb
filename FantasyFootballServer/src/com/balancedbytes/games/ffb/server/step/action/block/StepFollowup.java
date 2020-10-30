@@ -11,6 +11,7 @@ import com.balancedbytes.games.ffb.dialog.DialogSkillUseParameter;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.Game;
+import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandFollowupChoice;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandUseSkill;
 import com.balancedbytes.games.ffb.report.ReportSkillUse;
@@ -146,7 +147,7 @@ public class StepFollowup extends AbstractStep {
         fUsingFend = false;
       }
       if ((fUsingFend != null) && !fUsingFend
-          && (UtilCards.hasSkill(game, actingPlayer, ServerSkill.FRENZY) || UtilCards.hasSkill(game, actingPlayer, ServerSkill.BALL_AND_CHAIN))) {
+          && UtilCards.hasSkillWithProperty(actingPlayer.getPlayer(), NamedProperties.forceFollowup)) {
         publishParameter(new StepParameter(StepParameterKey.FOLLOWUP_CHOICE, true));
       }
       if ((fFollowupChoice == null) && (fUsingFend != null)) {

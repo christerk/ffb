@@ -24,7 +24,7 @@ import com.balancedbytes.games.ffb.KnockoutRecovery;
 import com.balancedbytes.games.ffb.LeaderState;
 import com.balancedbytes.games.ffb.PassModifier;
 import com.balancedbytes.games.ffb.PassingDistance;
-import com.balancedbytes.games.ffb.PickupModifier;
+import com.balancedbytes.games.ffb.PickupModifiers;
 import com.balancedbytes.games.ffb.PlayerAction;
 import com.balancedbytes.games.ffb.PlayerState;
 import com.balancedbytes.games.ffb.PushbackMode;
@@ -1565,13 +1565,10 @@ public class StatusReport {
           neededRoll = new StringBuilder().append("Succeeded on a roll of ").append(pReport.getMinimumRoll()).append("+");
         }
       } else {
-        if (Skill.WILD_ANIMAL == pReport.getConfusionSkill()) {
-          println(getIndent() + 1, " roars in rage.");
-        } else if (Skill.TAKE_ROOT == pReport.getConfusionSkill()) {
-          println(getIndent() + 1, " takes root.");
-        } else {
-          println(getIndent() + 1, " is confused.");
-        }
+        Skill confusionSkill = pReport.getConfusionSkill();
+        String confusionMessage = confusionSkill.getConfusionMessage();
+        println(getIndent() + 1, " " + confusionMessage + ".");
+        
         status = new StringBuilder();
         if (!pReport.isReRolled() && fShowModifiersOnFailure) {
           neededRoll = new StringBuilder().append("Roll a ").append(pReport.getMinimumRoll()).append("+ to succeed");
@@ -1729,7 +1726,7 @@ public class StatusReport {
     if (!pReport.isReRolled()) {
       print(getIndent(), true, player);
       println(getIndent(), TextStyle.BOLD, " tries to pick up the ball:");
-      if (pReport.hasRollModifier(PickupModifier.BIG_HAND)) {
+      if (pReport.hasRollModifier(PickupModifiers.BIG_HAND)) {
         print(getIndent() + 1, false, player);
         println(getIndent() + 1, " is using Big Hand to ignore any tacklezones on the ball.");
       }
