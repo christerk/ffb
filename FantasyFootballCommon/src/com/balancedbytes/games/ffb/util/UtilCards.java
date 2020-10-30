@@ -1,18 +1,22 @@
 package com.balancedbytes.games.ffb.util;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 import com.balancedbytes.games.ffb.Card;
 import com.balancedbytes.games.ffb.CardEffect;
-import com.balancedbytes.games.ffb.client.SkillConstants;
+import com.balancedbytes.games.ffb.PassModifier;
+import com.balancedbytes.games.ffb.PassingModifiers.PassContext;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.Game;
+import com.balancedbytes.games.ffb.model.ISkillProperty;
 import com.balancedbytes.games.ffb.model.InducementSet;
 import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.model.Skill;
+import com.balancedbytes.games.ffb.model.SkillConstants;
 
 /**
  * 
@@ -42,6 +46,20 @@ public final class UtilCards {
     return (hasSkill(pGame, pActingPlayer.getPlayer(), pSkill) && !pActingPlayer.isSkillUsed(pSkill));
   }
 
+  public static Collection<PassModifier> getPassModifiers(Player thrower, PassContext context) {
+    Set<PassModifier> result = new HashSet<PassModifier>();
+    
+    for (Skill skill : thrower.getSkills()) {
+      for (PassModifier modifier : skill.getPassModifiers()) {
+        if (modifier.appliesToContext(context)) {
+          result.add(modifier);
+        }
+      }
+    }
+    
+    return result;
+  }
+  
   private static Set<Skill> findSkillsProvidedByCardsAndEffects(Game pGame, Player pPlayer) {
     Set<Skill> cardSkills = new HashSet<Skill>();
     if ((pGame == null) || (pPlayer == null)) {
@@ -51,7 +69,7 @@ public final class UtilCards {
     for (Card card : cards) {
       switch (card) {
         case BEGUILING_BRACERS:
-          cardSkills.add(ClientSkillConstants.BONE_HEAD);
+          cardSkills.add(SkillConstants.BONE_HEAD);
           cardSkills.add(SkillConstants.HYPNOTIC_GAZE);
           cardSkills.add(SkillConstants.SIDE_STEP);
           break;
@@ -201,4 +219,17 @@ public final class UtilCards {
     }
     return false;
   }
+  
+  public static Skill getSkillWithProperty(Player player, ISkillProperty property) {
+    for (Skill playerSkill : player.getSkills()) {
+      if (playerSkill.hasSkillProperty(property)) {
+        return playerSkill;
+      }
+    }
+    return null;
+  }
+  
+  public static boolean hasSkillWithProperty(Player player, ISkillProperty property) {
+    return getSkillWithProperty(player, property) != null;
+  }  
 }

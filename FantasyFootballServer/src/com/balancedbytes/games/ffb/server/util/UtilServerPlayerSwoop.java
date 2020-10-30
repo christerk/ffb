@@ -3,11 +3,11 @@ package com.balancedbytes.games.ffb.server.util;
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.FieldCoordinateBounds;
 import com.balancedbytes.games.ffb.MoveSquare;
-import com.balancedbytes.games.ffb.Skill;
 import com.balancedbytes.games.ffb.model.FieldModel;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.server.GameState;
+import com.balancedbytes.games.ffb.server.model.ServerSkill;
 
 public class UtilServerPlayerSwoop {
 	public static void updateSwoopSquares(GameState pGameState, Player swoopingPlayer) {

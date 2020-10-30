@@ -3,7 +3,6 @@ package com.balancedbytes.games.ffb.server.model;
 import java.lang.reflect.ParameterizedType;
 import java.util.Comparator;
 
-import com.balancedbytes.games.ffb.net.NetCommand;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandUseSkill;
 import com.balancedbytes.games.ffb.server.step.IStep;
 import com.balancedbytes.games.ffb.server.step.StepCommandStatus;

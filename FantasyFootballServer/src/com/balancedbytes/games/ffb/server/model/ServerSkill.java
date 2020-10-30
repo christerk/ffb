@@ -5,13 +5,13 @@ import java.util.Collection;
 import java.util.List;
 
 import com.balancedbytes.games.ffb.SkillCategory;
+import com.balancedbytes.games.ffb.model.ISkillProperty;
 import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.model.PlayerModifier;
 import com.balancedbytes.games.ffb.model.Position;
 import com.balancedbytes.games.ffb.model.Skill;
-import com.balancedbytes.games.ffb.net.NetCommand;
+import com.balancedbytes.games.ffb.model.modifier.CancelSkillProperty;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandUseSkill;
-import com.balancedbytes.games.ffb.server.model.modifier.CancelSkillProperty;
 import com.balancedbytes.games.ffb.server.step.IStep;
 import com.balancedbytes.games.ffb.server.step.StepCommandStatus;
 
@@ -21,7 +21,6 @@ public abstract class ServerSkill extends Skill {
   private SkillCategory category;
   private List<PlayerModifier> playerModifiers;
   private List<StepModifier> stepModifiers;
-  private List<ISkillProperty> skillProperties;
   
   public ServerSkill(String name, SkillCategory category) {
     super(name, category);
@@ -29,7 +28,6 @@ public abstract class ServerSkill extends Skill {
     this.category = category;
     playerModifiers = new ArrayList<PlayerModifier>();
     stepModifiers = new ArrayList<StepModifier>();
-    skillProperties = new ArrayList<ISkillProperty>();
   }
   
   @Override
@@ -51,10 +49,6 @@ public abstract class ServerSkill extends Skill {
   
   protected void registerModifier(StepModifier modifier) {
     stepModifiers.add(modifier);
-  }
-
-  protected void registerProperty(ISkillProperty property) {
-    skillProperties.add(property);
   }
 
   
@@ -90,22 +84,5 @@ public abstract class ServerSkill extends Skill {
     }
     return null;
   }
-  
-  public boolean canCancel(Skill skill) {
-    for (ISkillProperty skillProperty : skillProperties) {
-      if (skillProperty instanceof CancelSkillProperty && ((CancelSkillProperty) skillProperty).cancelsSkill(skill)) {
-        return true;
-      }
-    }
-    return false;
-  }
 
-  public boolean hasSkillProperty(ISkillProperty property) {
-    for (ISkillProperty skillProperty : skillProperties) {
-      if (property.matches(skillProperty)) {
-        return true;
-      }
-    }
-    return false;
-  }
 }

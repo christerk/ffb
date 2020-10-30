@@ -3,13 +3,13 @@ package com.balancedbytes.games.ffb.server.util;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.balancedbytes.games.ffb.option.GameOptionBoolean;
 import org.eclipse.jetty.websocket.api.Session;
 
 import com.balancedbytes.games.ffb.ClientMode;
 import com.balancedbytes.games.ffb.GameStatus;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.net.ServerStatus;
+import com.balancedbytes.games.ffb.option.GameOptionBoolean;
 import com.balancedbytes.games.ffb.option.GameOptionFactory;
 import com.balancedbytes.games.ffb.option.GameOptionId;
 import com.balancedbytes.games.ffb.option.GameOptionString;

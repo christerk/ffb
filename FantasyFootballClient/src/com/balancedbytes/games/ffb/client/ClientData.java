@@ -1,8 +1,8 @@
 package com.balancedbytes.games.ffb.client;
 
 import com.balancedbytes.games.ffb.FieldCoordinate;
-import com.balancedbytes.games.ffb.StatusType;
 import com.balancedbytes.games.ffb.SpecialEffect;
+import com.balancedbytes.games.ffb.StatusType;
 import com.balancedbytes.games.ffb.model.Player;
 
 

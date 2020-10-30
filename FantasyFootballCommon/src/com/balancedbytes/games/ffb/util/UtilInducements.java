@@ -1,12 +1,15 @@
 package com.balancedbytes.games.ffb.util;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.balancedbytes.games.ffb.InducementType;
 import com.balancedbytes.games.ffb.model.GameOptions;
 import com.balancedbytes.games.ffb.model.Roster;
-import com.balancedbytes.games.ffb.option.*;
-
-import java.util.ArrayList;
-import java.util.List;
+import com.balancedbytes.games.ffb.option.GameOptionBoolean;
+import com.balancedbytes.games.ffb.option.GameOptionId;
+import com.balancedbytes.games.ffb.option.GameOptionInt;
+import com.balancedbytes.games.ffb.option.IGameOption;
 
 public final class UtilInducements {
 	private static final List<String> ROSTERS_WITH_CHEAP_BRIBES = new ArrayList<String>() {{

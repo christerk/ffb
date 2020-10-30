@@ -1,11 +1,12 @@
 package com.balancedbytes.games.ffb.server.step.phase.inducement;
 
+import java.io.IOException;
+
 import com.balancedbytes.games.ffb.Inducement;
 import com.balancedbytes.games.ffb.InducementType;
 import com.balancedbytes.games.ffb.PlayerGender;
 import com.balancedbytes.games.ffb.PlayerState;
 import com.balancedbytes.games.ffb.PlayerType;
-import com.balancedbytes.games.ffb.Skill;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.RosterPlayer;
 import com.balancedbytes.games.ffb.model.RosterPosition;
@@ -14,14 +15,13 @@ import com.balancedbytes.games.ffb.model.TurnData;
 import com.balancedbytes.games.ffb.report.ReportRiotousRookies;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.IServerProperty;
+import com.balancedbytes.games.ffb.server.model.ServerSkill;
 import com.balancedbytes.games.ffb.server.step.AbstractStep;
 import com.balancedbytes.games.ffb.server.step.StepAction;
 import com.balancedbytes.games.ffb.server.step.StepId;
 import com.balancedbytes.games.ffb.server.util.UtilServerHttpClient;
 import com.balancedbytes.games.ffb.util.StringTool;
 import com.balancedbytes.games.ffb.util.UtilBox;
-
-import java.io.IOException;
 
 public class StepRiotousRookies extends AbstractStep {
 

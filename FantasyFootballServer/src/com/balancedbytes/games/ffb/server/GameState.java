@@ -15,6 +15,7 @@ import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.model.Skill;
+import com.balancedbytes.games.ffb.model.SkillConstants;
 import com.balancedbytes.games.ffb.model.change.IModelChangeObserver;
 import com.balancedbytes.games.ffb.model.change.ModelChange;
 import com.balancedbytes.games.ffb.model.change.ModelChangeList;
@@ -28,6 +29,7 @@ import com.balancedbytes.games.ffb.server.step.StepFactory;
 import com.balancedbytes.games.ffb.server.step.StepResult;
 import com.balancedbytes.games.ffb.server.step.StepStack;
 import com.balancedbytes.games.ffb.server.util.UtilServerGame;
+import com.balancedbytes.games.ffb.server.util.UtilSkillBehaviours;
 import com.balancedbytes.games.ffb.util.StringTool;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
@@ -56,7 +58,8 @@ public class GameState implements IModelChangeObserver, IJsonSerializable {
 
   public GameState(FantasyFootballServer pServer) {
     fServer = pServer;
-    skillFactory = new SkillFactory(true);
+    skillFactory = new SkillFactory();
+    UtilSkillBehaviours.RegisterBehaviours(skillFactory);
     fGameLog = new GameLog(this);
     fDiceRoller = new DiceRoller(this);
     fSpectatorCooldownTime = new HashMap<String, Long>();
@@ -319,7 +322,7 @@ public class GameState implements IModelChangeObserver, IJsonSerializable {
     List<StepModifier> modifiers = new ArrayList<StepModifier>();
     
     for (Skill skill : skillFactory.getSkills()) {
-      ServerSkill serverSkill = (ServerSkill) skill;
+      Skill serverSkill = (Skill) skill;
       
       for (StepModifier modifier : serverSkill.getStepModifiers()) {
         if (modifier.appliesTo(step)) {

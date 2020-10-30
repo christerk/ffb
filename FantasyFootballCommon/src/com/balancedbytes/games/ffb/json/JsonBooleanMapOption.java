@@ -1,10 +1,10 @@
 package com.balancedbytes.games.ffb.json;
 
-import com.eclipsesource.json.JsonObject;
-import com.eclipsesource.json.JsonValue;
-
 import java.util.HashMap;
 import java.util.Map;
+
+import com.eclipsesource.json.JsonObject;
+import com.eclipsesource.json.JsonValue;
 
 public class JsonBooleanMapOption extends JsonAbstractOption {
   public JsonBooleanMapOption(String pKey) {

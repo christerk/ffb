@@ -4,7 +4,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 import com.balancedbytes.games.ffb.PlayerAction;
-import com.balancedbytes.games.ffb.Skill;
 import com.balancedbytes.games.ffb.SkillFactory;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.IJsonSerializable;

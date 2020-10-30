@@ -1,5 +1,13 @@
 package com.balancedbytes.games.ffb.client.dialog.inducements;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.List;
+
+import javax.swing.ImageIcon;
+import javax.swing.table.AbstractTableModel;
+
 import com.balancedbytes.games.ffb.PlayerType;
 import com.balancedbytes.games.ffb.client.PlayerIconFactory;
 import com.balancedbytes.games.ffb.model.GameOptions;
@@ -10,13 +18,6 @@ import com.balancedbytes.games.ffb.model.RosterPosition;
 import com.balancedbytes.games.ffb.option.GameOptionId;
 import com.balancedbytes.games.ffb.option.GameOptionInt;
 import com.balancedbytes.games.ffb.util.StringTool;
-
-import javax.swing.ImageIcon;
-import javax.swing.table.AbstractTableModel;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.List;
 
 @SuppressWarnings("serial")
 public class MercenaryTableModel extends AbstractTableModel {

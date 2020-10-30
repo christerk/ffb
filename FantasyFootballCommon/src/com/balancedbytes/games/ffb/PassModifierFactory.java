@@ -5,8 +5,10 @@ import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.balancedbytes.games.ffb.PassingModifiers.PassContext;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
+import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
 import com.balancedbytes.games.ffb.util.UtilCards;
 import com.balancedbytes.games.ffb.util.UtilDisturbingPresence;
 import com.balancedbytes.games.ffb.util.UtilPlayer;
@@ -30,32 +32,25 @@ public class PassModifierFactory implements IRollModifierFactory {
   public Set<PassModifier> findPassModifiers(Game pGame, Player pThrower, PassingDistance pPassingDistance, boolean pThrowTeamMate) {
     Set<PassModifier> passModifiers = new HashSet<PassModifier>();
     if (pThrower != null) {
-      if (pThrowTeamMate) {
-        passModifiers.add(PassModifier.THROW_TEAM_MATE);
-      }
       if (Weather.VERY_SUNNY == pGame.getFieldModel().getWeather()) {
-        passModifiers.add(PassModifier.VERY_SUNNY);
+        passModifiers.add(PassingModifiers.VERY_SUNNY);
       }
       if (Weather.BLIZZARD == pGame.getFieldModel().getWeather()) {
-        passModifiers.add(PassModifier.BLIZZARD);
+        passModifiers.add(PassingModifiers.BLIZZARD);
       }
-      if (UtilCards.hasSkill(pGame, pThrower, Skill.NERVES_OF_STEEL)) {
-        passModifiers.add(PassModifier.NERVES_OF_STEEL);
-      } else {
+
+      if (!UtilCards.hasSkillWithProperty(pThrower, NamedProperties.ignoreTacklezonesWhenPassing)) {
         PassModifier tacklezoneModifier = getTacklezoneModifier(pGame, pThrower);
         if (tacklezoneModifier != null) {
           passModifiers.add(tacklezoneModifier);
         }
       }
-      if (UtilCards.hasSkill(pGame, pThrower, Skill.STRONG_ARM) && (pPassingDistance != PassingDistance.QUICK_PASS)) {
-        passModifiers.add(PassModifier.STRONG_ARM);
-      }
-      if (UtilCards.hasSkill(pGame, pThrower, Skill.STUNTY)) {
-        passModifiers.add(PassModifier.STUNTY);
-      }
-      if (UtilCards.hasSkill(pGame, pThrower, Skill.ACCURATE)) {
-        passModifiers.add(PassModifier.ACCURATE);
-      }
+
+      PassContext context = new PassContext(pPassingDistance, pThrowTeamMate);
+      
+      passModifiers.addAll(UtilCards.getPassModifiers(pThrower, context));
+      
+      
       if (UtilCards.hasCard(pGame, pThrower, Card.GROMSKULLS_EXPLODING_RUNES)) {
         passModifiers.add(PassModifier.GROMSKULLS_EXPLODING_RUNES);
       }
@@ -86,7 +81,7 @@ public class PassModifierFactory implements IRollModifierFactory {
 
   private PassModifier getTacklezoneModifier(Game pGame, Player pPlayer) {
     int tacklezones = UtilPlayer.findTacklezones(pGame, pPlayer);
-    for (PassModifier modifier : PassModifier.values()) {
+    for (PassModifier modifier : PassingModifiers.tackleZoneModifiers) {
       if (modifier.isTacklezoneModifier() && (modifier.getModifier() == tacklezones)) {
         return modifier;
       }
@@ -96,7 +91,7 @@ public class PassModifierFactory implements IRollModifierFactory {
   
   private PassModifier getDisturbingPresenceModifier(Game pGame, Player pPlayer) {
     int disturbingPresences = UtilDisturbingPresence.findOpposingDisturbingPresences(pGame, pPlayer);
-    for (PassModifier modifier : PassModifier.values()) {
+    for (PassModifier modifier : PassingModifiers.disturbingPresenceModifiers) {
       if (modifier.isDisturbingPresenceModifier() && (modifier.getModifier() == disturbingPresences)) {
         return modifier;
       }

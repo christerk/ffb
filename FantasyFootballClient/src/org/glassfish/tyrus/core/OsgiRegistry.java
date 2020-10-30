@@ -66,7 +66,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.glassfish.tyrus.core.l10n.LocalizationMessages;
-
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.BundleEvent;

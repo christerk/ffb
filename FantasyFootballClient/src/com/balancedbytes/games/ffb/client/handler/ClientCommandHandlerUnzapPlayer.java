@@ -8,7 +8,6 @@ import com.balancedbytes.games.ffb.model.ZappedPlayer;
 import com.balancedbytes.games.ffb.net.NetCommand;
 import com.balancedbytes.games.ffb.net.NetCommandId;
 import com.balancedbytes.games.ffb.net.commands.ServerCommandUnzapPlayer;
-import com.balancedbytes.games.ffb.net.commands.ServerCommandZapPlayer;
 
 public class ClientCommandHandlerUnzapPlayer extends ClientCommandHandler {
 

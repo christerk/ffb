@@ -1,34 +1,33 @@
 package com.balancedbytes.games.ffb.model;
 
-import com.balancedbytes.games.ffb.PlayerGender;
-import com.balancedbytes.games.ffb.PlayerGenderFactory;
-import com.balancedbytes.games.ffb.PlayerType;
-import com.balancedbytes.games.ffb.PlayerTypeFactory;
-import com.balancedbytes.games.ffb.Skill;
-import com.balancedbytes.games.ffb.SkillCategory;
-import com.balancedbytes.games.ffb.SkillCategoryFactory;
-import com.balancedbytes.games.ffb.SkillFactory;
-import com.balancedbytes.games.ffb.json.IJsonOption;
-import com.balancedbytes.games.ffb.json.IJsonSerializable;
-import com.balancedbytes.games.ffb.json.UtilJson;
-import com.balancedbytes.games.ffb.util.ArrayTool;
-import com.balancedbytes.games.ffb.util.StringTool;
-import com.balancedbytes.games.ffb.xml.IXmlReadable;
-import com.balancedbytes.games.ffb.xml.IXmlSerializable;
-import com.balancedbytes.games.ffb.xml.UtilXml;
-import com.eclipsesource.json.JsonArray;
-import com.eclipsesource.json.JsonObject;
-import com.eclipsesource.json.JsonValue;
-import org.xml.sax.Attributes;
-import org.xml.sax.helpers.AttributesImpl;
-
-import javax.xml.transform.sax.TransformerHandler;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import javax.xml.transform.sax.TransformerHandler;
+
+import org.xml.sax.Attributes;
+import org.xml.sax.helpers.AttributesImpl;
+
+import com.balancedbytes.games.ffb.PlayerGender;
+import com.balancedbytes.games.ffb.PlayerGenderFactory;
+import com.balancedbytes.games.ffb.PlayerType;
+import com.balancedbytes.games.ffb.PlayerTypeFactory;
+import com.balancedbytes.games.ffb.SkillCategory;
+import com.balancedbytes.games.ffb.SkillCategoryFactory;
+import com.balancedbytes.games.ffb.SkillFactory;
+import com.balancedbytes.games.ffb.json.IJsonOption;
+import com.balancedbytes.games.ffb.json.UtilJson;
+import com.balancedbytes.games.ffb.util.ArrayTool;
+import com.balancedbytes.games.ffb.util.StringTool;
+import com.balancedbytes.games.ffb.xml.IXmlReadable;
+import com.balancedbytes.games.ffb.xml.UtilXml;
+import com.eclipsesource.json.JsonArray;
+import com.eclipsesource.json.JsonObject;
+import com.eclipsesource.json.JsonValue;
 
 
 

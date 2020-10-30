@@ -27,17 +27,21 @@ import javax.swing.table.DefaultTableCellRenderer;
 
 import com.balancedbytes.games.ffb.Inducement;
 import com.balancedbytes.games.ffb.InducementType;
-import com.balancedbytes.games.ffb.Skill;
 import com.balancedbytes.games.ffb.SkillFactory;
 import com.balancedbytes.games.ffb.client.FantasyFootballClient;
 import com.balancedbytes.games.ffb.client.PlayerIconFactory;
 import com.balancedbytes.games.ffb.client.dialog.Dialog;
 import com.balancedbytes.games.ffb.dialog.DialogId;
-import com.balancedbytes.games.ffb.model.*;
+import com.balancedbytes.games.ffb.model.GameOptions;
+import com.balancedbytes.games.ffb.model.InducementSet;
+import com.balancedbytes.games.ffb.model.Player;
+import com.balancedbytes.games.ffb.model.Roster;
+import com.balancedbytes.games.ffb.model.Skill;
+import com.balancedbytes.games.ffb.model.Team;
 import com.balancedbytes.games.ffb.option.GameOptionId;
 import com.balancedbytes.games.ffb.option.GameOptionInt;
-import com.balancedbytes.games.ffb.util.UtilInducements;
 import com.balancedbytes.games.ffb.util.StringTool;
+import com.balancedbytes.games.ffb.util.UtilInducements;
 
 @SuppressWarnings("serial")
 public class DialogBuyInducements extends Dialog implements ActionListener, KeyListener {
@@ -228,7 +232,7 @@ public class DialogBuyInducements extends Dialog implements ActionListener, KeyL
 		SkillFactory skillFactory = new SkillFactory();
 		for (int i = 0; i < fTableModelMercenaries.getRowCount(); i++) {
 			if ((Boolean) fTableModelMercenaries.getValueAt(i, 0)) {
-				Skill mercenarySkill = skillFactory.forName((String) fTableModelMercenaries.getValueAt(i, 4));
+				Skill mercenarySkill = getClient().getSkillFactory().forName((String) fTableModelMercenaries.getValueAt(i, 4));
 				mercenarySkills.add(mercenarySkill);
 			}
 		}

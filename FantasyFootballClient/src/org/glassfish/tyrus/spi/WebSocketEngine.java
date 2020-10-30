@@ -42,7 +42,7 @@ package org.glassfish.tyrus.spi;
 import javax.websocket.DeploymentException;
 import javax.websocket.server.ServerEndpointConfig;
 
-import static org.glassfish.tyrus.spi.Connection.CloseListener;
+import org.glassfish.tyrus.spi.Connection.CloseListener;
 
 /**
  * WebSocket engine is used for upgrading HTTP requests into websocket connections. A transport gets hold of the engine

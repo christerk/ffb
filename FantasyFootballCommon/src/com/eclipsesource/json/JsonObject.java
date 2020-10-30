@@ -11,7 +11,6 @@
 package com.eclipsesource.json;
 
 import java.io.IOException;
-import java.io.ObjectInputStream;
 import java.io.Reader;
 import java.util.ArrayList;
 import java.util.Collections;

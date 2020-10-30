@@ -4,12 +4,12 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-import kuusisto.tinysound.Sound;
-import kuusisto.tinysound.TinySound;
-
 import com.balancedbytes.games.ffb.SoundId;
 import com.balancedbytes.games.ffb.client.FantasyFootballClient;
 import com.balancedbytes.games.ffb.util.StringTool;
+
+import kuusisto.tinysound.Sound;
+import kuusisto.tinysound.TinySound;
 
 /**
  * 

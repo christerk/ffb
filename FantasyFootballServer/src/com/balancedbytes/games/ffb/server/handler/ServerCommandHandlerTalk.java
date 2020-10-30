@@ -8,9 +8,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import com.balancedbytes.games.ffb.model.RosterPlayer;
-import com.balancedbytes.games.ffb.model.Skill;
-
 import org.eclipse.jetty.websocket.api.Session;
 
 import com.balancedbytes.games.ffb.Card;
@@ -29,6 +26,8 @@ import com.balancedbytes.games.ffb.model.AnimationTypeFactory;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.model.PlayerResult;
+import com.balancedbytes.games.ffb.model.RosterPlayer;
+import com.balancedbytes.games.ffb.model.Skill;
 import com.balancedbytes.games.ffb.model.Team;
 import com.balancedbytes.games.ffb.model.TurnData;
 import com.balancedbytes.games.ffb.net.NetCommandId;

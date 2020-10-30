@@ -40,6 +40,8 @@
 
 package org.glassfish.tyrus.core.cluster;
 
+import static org.glassfish.tyrus.core.Utils.checkNotNull;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -69,8 +71,6 @@ import javax.websocket.WebSocketContainer;
 
 import org.glassfish.tyrus.core.TyrusEndpointWrapper;
 import org.glassfish.tyrus.core.Utils;
-
-import static org.glassfish.tyrus.core.Utils.checkNotNull;
 
 /**
  * Remote session represents session originating from another node.

@@ -6,6 +6,7 @@ import java.util.Collection;
 import java.util.Hashtable;
 
 import com.balancedbytes.games.ffb.model.Skill;
+import com.balancedbytes.games.ffb.model.SkillConstants;
 
 /**
  * 
@@ -13,21 +14,20 @@ import com.balancedbytes.games.ffb.model.Skill;
  */
 public class SkillFactory implements INamedObjectFactory {
   private Hashtable<String, Skill> skills;
+  private Hashtable<Class<? extends Skill>, Skill> skillMap;
   
-  public SkillFactory(boolean isServer) {
+  public SkillFactory() {
     skills = new Hashtable<String, Skill>();
+    skillMap = new Hashtable<Class<? extends Skill>, Skill>();
     
     try {
-      Class constants = Class.forName(isServer ? "ServerSkillConstants" : "ClientSkillConstants");
-      Field[] fields = constants.getFields();
+      Field[] fields = SkillConstants.class.getFields();
       for (Field field : fields) {
         int modifiers = field.getModifiers();
         if (Modifier.isStatic(modifiers) && Skill.class.isAssignableFrom(field.getType())) {
           addSkill((Skill) field.get(null));
         }
       }
-    } catch (ClassNotFoundException e) {
-      e.printStackTrace();
     } catch (IllegalArgumentException e) {
       // TODO Auto-generated catch block
       e.printStackTrace();
@@ -43,6 +43,7 @@ public class SkillFactory implements INamedObjectFactory {
   
   private void addSkill(Skill skill) {
     skills.put(skill.getName(), skill);
+    skillMap.put(skill.getClass(), skill);
   }
 
   public Skill forName(String name) {
@@ -54,5 +55,9 @@ public class SkillFactory implements INamedObjectFactory {
       return skills.get("Ball and Chain");
     }
     return null;
+  }
+  
+  public Skill forClass(Class<? extends Skill> c) {
+    return skillMap.get(c);
   }
 }

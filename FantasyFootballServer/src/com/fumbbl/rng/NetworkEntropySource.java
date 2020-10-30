@@ -6,8 +6,6 @@ import java.net.UnknownHostException;
 import java.util.HashSet;
 import java.util.Set;
 
-import com.fumbbl.rng.EntropySource;
-
 /**
  * 
  * @author Christer Kaivo-oja

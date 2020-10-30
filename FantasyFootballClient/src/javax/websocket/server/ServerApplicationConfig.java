@@ -40,6 +40,7 @@
 package javax.websocket.server;
 
 import java.util.Set;
+
 import javax.websocket.Endpoint;
 
 /**

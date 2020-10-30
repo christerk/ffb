@@ -31,12 +31,14 @@ import com.balancedbytes.games.ffb.PushbackMode;
 import com.balancedbytes.games.ffb.ReRollSource;
 import com.balancedbytes.games.ffb.SeriousInjury;
 import com.balancedbytes.games.ffb.SpecialEffect;
+import com.balancedbytes.games.ffb.TurnMode;
 import com.balancedbytes.games.ffb.Weather;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.GameResult;
 import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.model.Skill;
+import com.balancedbytes.games.ffb.model.SkillConstants;
 import com.balancedbytes.games.ffb.model.Team;
 import com.balancedbytes.games.ffb.model.ZappedPlayer;
 import com.balancedbytes.games.ffb.net.ServerStatus;
@@ -2321,13 +2323,13 @@ public class StatusReport {
     Player defender = game.getPlayerById(pReport.getDefenderId());
     switch (pReport.getBlockResult()) {
       case BOTH_DOWN:
-        if (UtilCards.hasSkill(game, attacker, ClientSkillConstants.BLOCK)) {
+        if (UtilCards.hasSkill(game, attacker, SkillConstants.BLOCK)) {
           print(getIndent() + 1, false, attacker);
           status = new StringBuilder();
           status.append(" has been saved by ").append(attacker.getPlayerGender().getGenitive()).append(" Block skill.");
           println(getIndent() + 1, status.toString());
         }
-        if (UtilCards.hasSkill(game, defender, ClientSkillConstants.BLOCK)) {
+        if (UtilCards.hasSkill(game, defender, SkillConstants.BLOCK)) {
           print(getIndent() + 1, false, defender);
           status = new StringBuilder();
           status.append(" has been saved by ").append(defender.getPlayerGender().getGenitive()).append(" Block skill.");
@@ -2335,7 +2337,7 @@ public class StatusReport {
         }
         break;
       case POW_PUSHBACK:
-        if (UtilCards.hasSkill(game, defender, ClientSkillConstants.DODGE) && UtilCards.hasSkill(game, attacker, ClientSkillConstants.TACKLE)) {
+        if (UtilCards.hasSkill(game, defender, SkillConstants.DODGE) && UtilCards.hasSkill(game, attacker, SkillConstants.TACKLE)) {
           print(getIndent() + 1, false, attacker);
           println(getIndent() + 1, " uses Tackle to bring opponent down.");
         }

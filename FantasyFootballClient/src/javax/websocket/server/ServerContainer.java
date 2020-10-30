@@ -39,7 +39,8 @@
  */
 package javax.websocket.server;
 
-import javax.websocket.*;
+import javax.websocket.DeploymentException;
+import javax.websocket.WebSocketContainer;
 /**
  * The ServerContainer is the specialized view of the WebSocketContainer available
  * in server-side deployments. There is one ServerContainer instance per

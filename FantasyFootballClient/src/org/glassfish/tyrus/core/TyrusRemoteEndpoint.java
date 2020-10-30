@@ -39,6 +39,8 @@
  */
 package org.glassfish.tyrus.core;
 
+import static org.glassfish.tyrus.core.Utils.checkNotNull;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -58,8 +60,6 @@ import javax.websocket.SendHandler;
 import javax.websocket.SendResult;
 
 import org.glassfish.tyrus.core.l10n.LocalizationMessages;
-
-import static org.glassfish.tyrus.core.Utils.checkNotNull;
 
 /**
  * Wraps the {@link javax.websocket.RemoteEndpoint} and represents the other side of the websocket connection.

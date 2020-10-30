@@ -39,7 +39,7 @@
  */
 package javax.websocket;
 
-import java.io.*;
+import java.io.IOException;
 import java.net.URI;
 import java.util.Set;
 

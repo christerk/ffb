@@ -1,5 +1,13 @@
 package com.balancedbytes.games.ffb.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.xml.transform.sax.TransformerHandler;
+
+import org.xml.sax.Attributes;
+import org.xml.sax.helpers.AttributesImpl;
+
 import com.balancedbytes.games.ffb.PlayerGender;
 import com.balancedbytes.games.ffb.PlayerGenderFactory;
 import com.balancedbytes.games.ffb.PlayerType;
@@ -15,12 +23,6 @@ import com.balancedbytes.games.ffb.xml.UtilXml;
 import com.eclipsesource.json.JsonArray;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
-import org.xml.sax.Attributes;
-import org.xml.sax.helpers.AttributesImpl;
-
-import javax.xml.transform.sax.TransformerHandler;
-import java.util.ArrayList;
-import java.util.List;
 
 
 
@@ -220,7 +222,7 @@ public class RosterPlayer extends Player<RosterPosition> {
       }
       for (Skill skill : getSkills()) {
         if (skill != null) {
-          for (PlayerModifier modifier : skill.getModifiers()) {
+          for (PlayerModifier modifier : skill.getPlayerModifiers()) {
             modifier.apply(this);
           }
         }

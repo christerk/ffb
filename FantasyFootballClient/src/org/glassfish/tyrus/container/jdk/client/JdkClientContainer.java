@@ -55,10 +55,9 @@ import java.util.concurrent.atomic.AtomicReference;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javax.net.ssl.HostnameVerifier;
 import javax.websocket.ClientEndpointConfig;
 import javax.websocket.DeploymentException;
-
-import javax.net.ssl.HostnameVerifier;
 
 import org.glassfish.tyrus.client.ClientManager;
 import org.glassfish.tyrus.client.ClientProperties;

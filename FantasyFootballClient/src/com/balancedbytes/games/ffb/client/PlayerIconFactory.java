@@ -1,23 +1,5 @@
 package com.balancedbytes.games.ffb.client;
 
-import com.balancedbytes.games.ffb.ClientMode;
-import com.balancedbytes.games.ffb.FieldCoordinate;
-import com.balancedbytes.games.ffb.FieldCoordinateBounds;
-import com.balancedbytes.games.ffb.PlayerMarker;
-import com.balancedbytes.games.ffb.PlayerState;
-import com.balancedbytes.games.ffb.PlayerType;
-import com.balancedbytes.games.ffb.Skill;
-import com.balancedbytes.games.ffb.model.ActingPlayer;
-import com.balancedbytes.games.ffb.model.Game;
-import com.balancedbytes.games.ffb.model.Player;
-import com.balancedbytes.games.ffb.model.Position;
-import com.balancedbytes.games.ffb.model.Roster;
-import com.balancedbytes.games.ffb.model.Team;
-import com.balancedbytes.games.ffb.model.ZappedPlayer;
-import com.balancedbytes.games.ffb.util.StringTool;
-import com.balancedbytes.games.ffb.util.UtilCards;
-import com.balancedbytes.games.ffb.util.UtilUrl;
-
 import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.Font;
@@ -25,6 +7,24 @@ import java.awt.FontMetrics;
 import java.awt.Graphics2D;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
+
+import com.balancedbytes.games.ffb.ClientMode;
+import com.balancedbytes.games.ffb.FieldCoordinate;
+import com.balancedbytes.games.ffb.FieldCoordinateBounds;
+import com.balancedbytes.games.ffb.PlayerMarker;
+import com.balancedbytes.games.ffb.PlayerState;
+import com.balancedbytes.games.ffb.PlayerType;
+import com.balancedbytes.games.ffb.model.ActingPlayer;
+import com.balancedbytes.games.ffb.model.Game;
+import com.balancedbytes.games.ffb.model.Player;
+import com.balancedbytes.games.ffb.model.Position;
+import com.balancedbytes.games.ffb.model.Roster;
+import com.balancedbytes.games.ffb.model.SkillConstants;
+import com.balancedbytes.games.ffb.model.Team;
+import com.balancedbytes.games.ffb.model.ZappedPlayer;
+import com.balancedbytes.games.ffb.util.StringTool;
+import com.balancedbytes.games.ffb.util.UtilCards;
+import com.balancedbytes.games.ffb.util.UtilUrl;
 
 
 /**
@@ -95,7 +95,7 @@ public class PlayerIconFactory {
         } else {
           playerIcon = iconCache.getIconByProperty(IIconProperty.PLAYER_LARGE_AWAY);
         }
-      } else if (UtilCards.hasSkill(game, pPlayer, ClientSkillConstants.STUNTY)) {
+      } else if (UtilCards.hasSkill(game, pPlayer, SkillConstants.STUNTY)) {
         fontSize = 13;
         if (pHomePlayer) {
           playerIcon = iconCache.getIconByProperty(IIconProperty.PLAYER_SMALL_HOME);
