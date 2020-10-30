@@ -231,5 +231,18 @@ public final class UtilCards {
   
   public static boolean hasSkillWithProperty(Player player, ISkillProperty property) {
     return getSkillWithProperty(player, property) != null;
-  }  
+  }
+  
+  public static Skill getSkillCancelling(Player player, Skill skill) {
+    for (Skill playerSkill : player.getSkills()) {
+      if (playerSkill.canCancel(skill)) {
+        return skill;
+      }
+    }
+    return null;
+  }
+
+  public static boolean cancelsSkill(Player player, Skill skill) {
+    return getSkillCancelling(player, skill) != null;
+  }
 }

@@ -11,19 +11,14 @@ import com.balancedbytes.games.ffb.FieldCoordinateBounds;
 import com.balancedbytes.games.ffb.PlayerState;
 import com.balancedbytes.games.ffb.model.Animation;
 import com.balancedbytes.games.ffb.model.Game;
-import com.balancedbytes.games.ffb.model.ISkillBehaviour;
-import com.balancedbytes.games.ffb.model.ISkillProperty;
 import com.balancedbytes.games.ffb.model.InducementSet;
 import com.balancedbytes.games.ffb.model.Player;
-import com.balancedbytes.games.ffb.model.Skill;
 import com.balancedbytes.games.ffb.model.Team;
 import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
 import com.balancedbytes.games.ffb.report.ReportCardDeactivated;
 import com.balancedbytes.games.ffb.report.ReportCardEffectRoll;
 import com.balancedbytes.games.ffb.report.ReportPlayCard;
 import com.balancedbytes.games.ffb.server.DiceInterpreter;
-import com.balancedbytes.games.ffb.server.model.ServerSkill;
-import com.balancedbytes.games.ffb.server.model.SkillBehaviour;
 import com.balancedbytes.games.ffb.server.step.IStep;
 import com.balancedbytes.games.ffb.server.step.action.common.ApothecaryMode;
 import com.balancedbytes.games.ffb.util.StringTool;
@@ -59,7 +54,7 @@ public class UtilServerCards {
           playerAllowed &= UtilPlayer.hasBall(pGame, player);
           break;
         case RABBITS_FOOT:
-          playerAllowed &= !UtilServerCards.hasSkillWithProperty(player, NamedProperties.preventCardRabbitsFoot);
+          playerAllowed &= !UtilCards.hasSkillWithProperty(player, NamedProperties.preventCardRabbitsFoot);
           break;
         case CHOP_BLOCK:
           playerAllowed &= playerState.isActive() && !playerState.isProne()
@@ -183,7 +178,7 @@ public class UtilServerCards {
     for (Player player : players) {
       game.getFieldModel().removeCardEffect(player, CardEffect.DISTRACTED);
       PlayerState playerState = game.getFieldModel().getPlayerState(player);
-      if (!hasSkillWithProperty(player, NamedProperties.appliesConfusion) && playerState.isConfused()) {
+      if (!UtilCards.hasSkillWithProperty(player, NamedProperties.appliesConfusion) && playerState.isConfused()) {
         game.getFieldModel().setPlayerState(player, playerState.changeConfused(false));
       }
     }
@@ -238,14 +233,5 @@ public class UtilServerCards {
     ReportCardEffectRoll cardEffectReport = new ReportCardEffectRoll(Card.WITCH_BREW, roll);
     cardEffectReport.setCardEffect(cardEffect);
     pStep.getResult().addReport(cardEffectReport);
-  }
-
-  public static Skill getSkillCancelling(Game game, Player player, Skill skill) {
-    for (Skill playerSkill : player.getSkills()) {
-      if (playerSkill.canCancel(skill)) {
-        return skill;
-      }
-    }
-    return null;
   }
 }

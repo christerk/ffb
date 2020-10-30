@@ -16,7 +16,6 @@ import com.balancedbytes.games.ffb.server.step.StepParameter;
 import com.balancedbytes.games.ffb.server.step.StepParameterKey;
 import com.balancedbytes.games.ffb.server.step.action.block.StepPushback;
 import com.balancedbytes.games.ffb.server.step.action.block.StepPushback.StepState;
-import com.balancedbytes.games.ffb.server.util.UtilServerCards;
 import com.balancedbytes.games.ffb.server.util.UtilServerDialog;
 import com.balancedbytes.games.ffb.server.util.UtilServerPushback;
 import com.balancedbytes.games.ffb.server.util.UtilServerTimer;
@@ -39,7 +38,7 @@ public class SideStepBehaviour extends SkillBehaviour<SideStep> {
       public boolean handleExecuteStepHook(StepPushback step, StepState state) {
         Game game = step.getGameState().getGame();
         ActingPlayer actingPlayer = game.getActingPlayer();
-        Skill cancellingSkill = UtilServerCards.getSkillCancelling(game, actingPlayer.getPlayer(), skill);
+        Skill cancellingSkill = UtilCards.getSkillCancelling(actingPlayer.getPlayer(), skill);
         PlayerState playerState = game.getFieldModel().getPlayerState(state.defender);
         FieldModel fieldModel = game.getFieldModel();
         

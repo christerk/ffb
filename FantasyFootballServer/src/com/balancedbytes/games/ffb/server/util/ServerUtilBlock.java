@@ -65,13 +65,13 @@ public class ServerUtilBlock {
     int nrOfDice = 0;
     if ((pAttacker != null) && (pDefender != null)) {
       nrOfDice = 1;
-      int blockStrengthAttacker = UtilPlayer.findBlockStrength(pGame, pAttacker, pAttackerStrength, pDefender);
+      int blockStrengthAttacker = ServerUtilPlayer.findBlockStrength(pGame, pAttacker, pAttackerStrength, pDefender);
       ActingPlayer actingPlayer = pGame.getActingPlayer();
       if ((pAttacker == actingPlayer.getPlayer()) && ((actingPlayer.getPlayerAction() == PlayerAction.BLITZ) || (actingPlayer.getPlayerAction() == PlayerAction.BLITZ_MOVE)) && actingPlayer.hasMoved() && UtilCards.hasCard(pGame, pDefender, Card.INERTIA_DAMPER)) {
         blockStrengthAttacker -= 1;
       }
       int defenderStrength = pUsingMultiBlock ? UtilCards.getPlayerStrength(pGame, pDefender) + 2 : UtilCards.getPlayerStrength(pGame, pDefender);
-      int blockStrengthDefender = UtilPlayer.findBlockStrength(pGame, pDefender, defenderStrength, pAttacker);
+      int blockStrengthDefender = ServerUtilPlayer.findBlockStrength(pGame, pDefender, defenderStrength, pAttacker);
       if (blockStrengthAttacker > blockStrengthDefender) {
         nrOfDice = 2;
       }

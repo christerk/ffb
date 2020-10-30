@@ -1,15 +1,12 @@
 package com.balancedbytes.games.ffb.server.model;
 
 import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
 import com.balancedbytes.games.ffb.model.ISkillBehaviour;
-import com.balancedbytes.games.ffb.model.ISkillProperty;
 import com.balancedbytes.games.ffb.model.PlayerModifier;
 import com.balancedbytes.games.ffb.model.Skill;
-import com.balancedbytes.games.ffb.model.modifier.CancelSkillProperty;
 
 public class SkillBehaviour<T extends Skill> implements ISkillBehaviour {
 
@@ -39,5 +36,9 @@ public class SkillBehaviour<T extends Skill> implements ISkillBehaviour {
 
   protected void registerModifier(PlayerModifier playerModifier) {
     playerModifiers.add(playerModifier);
+  }
+  
+  public List<StepModifier> getStepModifiers() {
+    return stepModifiers;
   }
 }

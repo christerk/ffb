@@ -25,6 +25,8 @@ import com.balancedbytes.games.ffb.model.FieldModel;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.model.Skill;
+import com.balancedbytes.games.ffb.model.SkillConstants;
+import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
 import com.balancedbytes.games.ffb.util.UtilCards;
 import com.balancedbytes.games.ffb.util.UtilPlayer;
 
@@ -275,7 +277,7 @@ public class ClientStateSelect extends ClientState {
     if ((playerState != null)
       && !game.getFieldModel().hasCardEffect(pPlayer, CardEffect.ILLEGALLY_SUBSTITUTED)
       && playerState.isActive()
-      && !UtilCards.hasSkill(game, pPlayer, Skill.BALL_AND_CHAIN)
+      && !UtilCards.hasSkillWithProperty(pPlayer, NamedProperties.preventRegularBlockAction)
       && ((playerState.getBase() != PlayerState.PRONE) || ((playerState.getBase() == PlayerState.PRONE) && UtilCards.hasSkill(game, pPlayer, Skill.JUMP_UP)))) {
      	FieldCoordinate playerCoordinate = game.getFieldModel().getPlayerCoordinate(pPlayer);
       int blockablePlayers = UtilPlayer.findAdjacentBlockablePlayers(game, game.getTeamAway(), playerCoordinate).length;
@@ -290,8 +292,8 @@ public class ClientStateSelect extends ClientState {
     if ((playerState != null)
       && !game.getFieldModel().hasCardEffect(pPlayer, CardEffect.ILLEGALLY_SUBSTITUTED)
       && playerState.isActive()
-      && UtilCards.hasSkill(game, pPlayer, Skill.MULTIPLE_BLOCK)
-      && !UtilCards.hasSkill(game, pPlayer, Skill.BALL_AND_CHAIN)
+      && UtilCards.hasSkill(game, pPlayer, SkillConstants.MULTIPLE_BLOCK)
+      && !UtilCards.cancelsSkill(pPlayer, SkillConstants.MULTIPLE_BLOCK)
       && ((playerState.getBase() != PlayerState.PRONE) || ((playerState.getBase() == PlayerState.PRONE) && UtilCards.hasSkill(game, pPlayer, Skill.JUMP_UP)))) {
      	FieldCoordinate playerCoordinate = game.getFieldModel().getPlayerCoordinate(pPlayer);
       int blockablePlayers = UtilPlayer.findAdjacentBlockablePlayers(game, game.getTeamAway(), playerCoordinate).length;
@@ -323,7 +325,7 @@ public class ClientStateSelect extends ClientState {
   	  && (playerState != null)
   	  && playerState.isActive()
   	  && playerState.isAbleToMove()
-  	  && !UtilCards.hasSkill(game, pPlayer, Skill.BALL_AND_CHAIN));
+  	  && !UtilCards.hasSkillWithProperty(pPlayer, NamedProperties.preventRegularBlitzAction));
   }
 
   private boolean isFoulActionAvailable(Player pPlayer) {
@@ -333,7 +335,7 @@ public class ClientStateSelect extends ClientState {
       && !game.getFieldModel().hasCardEffect(pPlayer, CardEffect.ILLEGALLY_SUBSTITUTED)
       && playerState.isActive()
       && !game.getTurnData().isFoulUsed()
-      && !UtilCards.hasSkill(game, pPlayer, Skill.BALL_AND_CHAIN)) {
+      && !UtilCards.hasSkillWithProperty(pPlayer, NamedProperties.preventRegularFoulAction)) {
 	    for (Player opponent: game.getTeamAway().getPlayers()) {
 	      PlayerState opponentState = game.getFieldModel().getPlayerState(opponent);
 	      if (opponentState.canBeFouled()) {
@@ -351,7 +353,7 @@ public class ClientStateSelect extends ClientState {
       && !game.getFieldModel().hasCardEffect(pPlayer, CardEffect.ILLEGALLY_SUBSTITUTED)
   		&& UtilPlayer.isBallAvailable(game, pPlayer)
   		&& (playerState != null)
-  		&& !UtilCards.hasSkill(game, pPlayer, Skill.BALL_AND_CHAIN)
+  		&& !UtilCards.hasSkillWithProperty(pPlayer, NamedProperties.preventRegularPassAction)
   		&& (playerState.isAbleToMove() || UtilPlayer.hasBall(game, pPlayer))
   		&& !UtilCards.hasCard(game, pPlayer, Card.GLOVES_OF_HOLDING)
   	);
@@ -364,7 +366,7 @@ public class ClientStateSelect extends ClientState {
       && !game.getFieldModel().hasCardEffect(pPlayer, CardEffect.ILLEGALLY_SUBSTITUTED)
   		&& UtilPlayer.isBallAvailable(game, pPlayer)
   		&& (playerState != null)
-  		&& !UtilCards.hasSkill(game, pPlayer, Skill.BALL_AND_CHAIN)
+  		&& !UtilCards.hasSkillWithProperty(pPlayer, NamedProperties.preventRegularHandOverAction)
   		&& (playerState.isAbleToMove() || UtilPlayer.hasBall(game, pPlayer))
   		&& !UtilCards.hasCard(game, pPlayer, Card.GLOVES_OF_HOLDING)
   	);
@@ -373,7 +375,7 @@ public class ClientStateSelect extends ClientState {
   private boolean isThrowTeamMateActionAvailable(Player pPlayer) {
   	Game game = getClient().getGame();
   	PlayerState playerState = game.getFieldModel().getPlayerState(pPlayer);
-  	if ((playerState == null) || UtilCards.hasSkill(game, pPlayer, Skill.BALL_AND_CHAIN)) {
+  	if ((playerState == null) || UtilCards.cancelsSkill(pPlayer, SkillConstants.THROW_TEAM_MATE)) {
     	return false;
     }
 
@@ -408,7 +410,7 @@ public class ClientStateSelect extends ClientState {
   private boolean isKickTeamMateActionAvailable(Player pPlayer) {
     Game game = getClient().getGame();
     PlayerState playerState = game.getFieldModel().getPlayerState(pPlayer);
-    if ((playerState == null) || UtilCards.hasSkill(game, pPlayer, Skill.BALL_AND_CHAIN)) {
+    if ((playerState == null) || UtilCards.cancelsSkill(pPlayer, SkillConstants.KICK_TEAM_MATE)) {
       return false;
     }
 
@@ -443,19 +445,19 @@ public class ClientStateSelect extends ClientState {
   private boolean isStandUpActionAvailable(Player pPlayer) {
   	Game game = getClient().getGame();
   	PlayerState playerState = game.getFieldModel().getPlayerState(pPlayer);
-    return ((playerState != null) && (playerState.getBase() == PlayerState.PRONE) && playerState.isActive() && !UtilCards.hasSkill(game, pPlayer, Skill.BALL_AND_CHAIN));
+    return ((playerState != null) && (playerState.getBase() == PlayerState.PRONE) && playerState.isActive() && !UtilCards.hasSkillWithProperty(pPlayer, NamedProperties.preventStandUpAction));
   }
   
   private boolean isRecoverFromConfusionActionAvailable(Player pPlayer) {
   	Game game = getClient().getGame();
   	PlayerState playerState = game.getFieldModel().getPlayerState(pPlayer);
-    return ((playerState != null) && playerState.isConfused() && playerState.isActive() && (playerState.getBase() != PlayerState.PRONE) && !UtilCards.hasSkill(game, pPlayer, Skill.BALL_AND_CHAIN));
+    return ((playerState != null) && playerState.isConfused() && playerState.isActive() && (playerState.getBase() != PlayerState.PRONE) && !UtilCards.hasSkillWithProperty(pPlayer, NamedProperties.preventRecoverFromConcusionAction));
   }
 
   private boolean isRecoverFromGazeActionAvailable(Player pPlayer) {
   	Game game = getClient().getGame();
   	PlayerState playerState = game.getFieldModel().getPlayerState(pPlayer);
-    return ((playerState != null) && playerState.isHypnotized() && (playerState.getBase() != PlayerState.PRONE) && !UtilCards.hasSkill(game, pPlayer, Skill.BALL_AND_CHAIN));
+    return ((playerState != null) && playerState.isHypnotized() && (playerState.getBase() != PlayerState.PRONE) && !UtilCards.hasSkillWithProperty(pPlayer, NamedProperties.preventRecoverFromGazeAction));
   }
   
 }

@@ -29,6 +29,7 @@ import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.model.Skill;
+import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
 import com.balancedbytes.games.ffb.util.ArrayTool;
 import com.balancedbytes.games.ffb.util.UtilCards;
 import com.balancedbytes.games.ffb.util.UtilPlayer;
@@ -67,7 +68,7 @@ public class ClientStateMove extends ClientState {
       	&& (game.getTurnMode() != TurnMode.PASS_BLOCK)
       	&& (game.getTurnMode() != TurnMode.KICKOFF_RETURN)
         && (game.getTurnMode() != TurnMode.SWARMING)
-      	&& !UtilCards.hasSkill(game, actingPlayer, Skill.BALL_AND_CHAIN)
+      	&& !UtilCards.hasSkillWithProperty(actingPlayer.getPlayer(), NamedProperties.preventAutoMove)
       ) {
         FieldCoordinate[] shortestPath = PathFinderWithPassBlockSupport.getShortestPath(game, pCoordinate);
         if (ArrayTool.isProvided(shortestPath)) {
@@ -339,7 +340,7 @@ public class ClientStateMove extends ClientState {
   private boolean isEndPlayerActionAvailable() {
   	Game game = getClient().getGame();
   	ActingPlayer actingPlayer = game.getActingPlayer();
-  	return (!actingPlayer.hasActed() || !UtilCards.hasSkill(game, actingPlayer, Skill.BALL_AND_CHAIN) || (actingPlayer.getCurrentMove() >= UtilCards.getPlayerMovement(game, actingPlayer.getPlayer())));
+  	return (!actingPlayer.hasActed() || !UtilCards.hasSkillWithProperty(actingPlayer.getPlayer(), NamedProperties.forceFullMovement) || (actingPlayer.getCurrentMove() >= UtilCards.getPlayerMovement(game, actingPlayer.getPlayer())));
   }
 
   private boolean isHypnoticGazeActionAvailable() {

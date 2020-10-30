@@ -22,12 +22,12 @@ import com.balancedbytes.games.ffb.server.step.StepAction;
 import com.balancedbytes.games.ffb.server.step.StepCommandStatus;
 import com.balancedbytes.games.ffb.server.step.StepId;
 import com.balancedbytes.games.ffb.server.step.StepParameter;
+import com.balancedbytes.games.ffb.server.util.ServerUtilBlock;
 import com.balancedbytes.games.ffb.server.util.UtilServerDialog;
 import com.balancedbytes.games.ffb.server.util.UtilServerPlayerMove;
 import com.balancedbytes.games.ffb.server.util.UtilServerReRoll;
 import com.balancedbytes.games.ffb.util.ArrayTool;
 import com.balancedbytes.games.ffb.util.StringTool;
-import com.balancedbytes.games.ffb.util.UtilBlock;
 import com.balancedbytes.games.ffb.util.UtilCards;
 import com.balancedbytes.games.ffb.util.UtilPlayer;
 import com.eclipsesource.json.JsonObject;
@@ -176,7 +176,7 @@ public class StepShadowing extends AbstractStepWithReRoll {
       if (doNextStep && fUsingShadowing) {
         game.getFieldModel().updatePlayerAndBallPosition(game.getDefender(), fCoordinateFrom);
         UtilServerPlayerMove.updateMoveSquares(getGameState(), actingPlayer.isLeaping());
-        UtilBlock.updateDiceDecorations(game);
+        ServerUtilBlock.updateDiceDecorations(game);
       }
     }
     if (doNextStep) {

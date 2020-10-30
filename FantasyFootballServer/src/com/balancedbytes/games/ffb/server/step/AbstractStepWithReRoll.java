@@ -44,7 +44,7 @@ public abstract class AbstractStepWithReRoll extends AbstractStep {
     return fReRolledAction;
   }
 
-  protected void setReRolledAction(ReRolledAction pReRolledAction) {
+  public void setReRolledAction(ReRolledAction pReRolledAction) {
     fReRolledAction = pReRolledAction;
   }
 

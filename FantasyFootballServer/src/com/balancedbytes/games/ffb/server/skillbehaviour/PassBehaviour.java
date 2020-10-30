@@ -15,10 +15,8 @@ import com.balancedbytes.games.ffb.server.step.StepCommandStatus;
 import com.balancedbytes.games.ffb.server.step.StepParameter;
 import com.balancedbytes.games.ffb.server.step.StepParameterKey;
 import com.balancedbytes.games.ffb.server.step.action.block.StepPushback;
-import com.balancedbytes.games.ffb.server.util.UtilServerCards;
 import com.balancedbytes.games.ffb.server.util.UtilServerDialog;
 import com.balancedbytes.games.ffb.skill.Pass;
-import com.balancedbytes.games.ffb.skill.StandFirm;
 import com.balancedbytes.games.ffb.util.UtilCards;
 
 public class PassBehaviour extends SkillBehaviour<Pass> {
@@ -38,7 +36,7 @@ public class PassBehaviour extends SkillBehaviour<Pass> {
         Game game = step.getGameState().getGame();
         ActingPlayer actingPlayer = game.getActingPlayer();
         
-        Skill cancellingSkill = UtilServerCards.getSkillCancelling(game, actingPlayer.getPlayer(), skill);
+        Skill cancellingSkill = UtilCards.getSkillCancelling(actingPlayer.getPlayer(), skill);
         // handle auto-stand firm
         PlayerState playerState = game.getFieldModel().getPlayerState(state.defender);
         if (playerState.isRooted()) {

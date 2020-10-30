@@ -30,9 +30,9 @@ import com.balancedbytes.games.ffb.server.step.StepParameter;
 import com.balancedbytes.games.ffb.server.step.StepParameterKey;
 import com.balancedbytes.games.ffb.server.step.StepParameterSet;
 import com.balancedbytes.games.ffb.server.step.UtilServerSteps;
+import com.balancedbytes.games.ffb.server.util.ServerUtilBlock;
 import com.balancedbytes.games.ffb.server.util.UtilServerPlayerMove;
 import com.balancedbytes.games.ffb.util.StringTool;
-import com.balancedbytes.games.ffb.util.UtilBlock;
 import com.balancedbytes.games.ffb.util.UtilCards;
 import com.balancedbytes.games.ffb.util.UtilPlayer;
 import com.eclipsesource.json.JsonObject;
@@ -271,7 +271,7 @@ public final class StepInitSelecting extends AbstractStep {
     if ((actingPlayer.getPlayer() != null) && (actingPlayer.getPlayerAction() != null)) {
       if ((actingPlayer.getPlayerAction() == PlayerAction.BLITZ) || (actingPlayer.getPlayerAction() == PlayerAction.BLITZ_MOVE)
           || (actingPlayer.getPlayerAction() == PlayerAction.BLOCK) || (actingPlayer.getPlayerAction() == PlayerAction.MULTIPLE_BLOCK)) {
-        UtilBlock.updateDiceDecorations(game);
+        ServerUtilBlock.updateDiceDecorations(game);
       }
       if (actingPlayer.getPlayerAction().isMoving()) {
         if (actingPlayer.isStandingUp() && !UtilCards.hasSkill(game, actingPlayer, ServerSkill.JUMP_UP)) {

@@ -47,7 +47,6 @@ public class PassModifierFactory implements IRollModifierFactory {
       }
 
       PassContext context = new PassContext(pPassingDistance, pThrowTeamMate);
-      
       passModifiers.addAll(UtilCards.getPassModifiers(pThrower, context));
       
       

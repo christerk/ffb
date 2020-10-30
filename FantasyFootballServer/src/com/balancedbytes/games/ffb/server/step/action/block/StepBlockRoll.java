@@ -22,9 +22,9 @@ import com.balancedbytes.games.ffb.server.step.StepCommandStatus;
 import com.balancedbytes.games.ffb.server.step.StepId;
 import com.balancedbytes.games.ffb.server.step.StepParameter;
 import com.balancedbytes.games.ffb.server.step.StepParameterKey;
+import com.balancedbytes.games.ffb.server.util.ServerUtilBlock;
 import com.balancedbytes.games.ffb.server.util.UtilServerDialog;
 import com.balancedbytes.games.ffb.server.util.UtilServerReRoll;
-import com.balancedbytes.games.ffb.util.UtilBlock;
 import com.balancedbytes.games.ffb.util.UtilCards;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
@@ -94,7 +94,7 @@ public class StepBlockRoll extends AbstractStepWithReRoll {
       }
       if (doRoll) {
         game.getFieldModel().clearDiceDecorations();
-        fNrOfDice = UtilBlock.findNrOfBlockDice(game, actingPlayer.getPlayer(), actingPlayer.getStrength(), game.getDefender(), (actingPlayer.getPlayerAction() == PlayerAction.MULTIPLE_BLOCK));
+        fNrOfDice = ServerUtilBlock.findNrOfBlockDice(game, actingPlayer.getPlayer(), actingPlayer.getStrength(), game.getDefender(), (actingPlayer.getPlayerAction() == PlayerAction.MULTIPLE_BLOCK));
         fBlockRoll = getGameState().getDiceRoller().rollBlockDice(fNrOfDice);
         getResult().addReport(new ReportBlock(game.getDefenderId()));
         getResult().setSound(SoundId.BLOCK);

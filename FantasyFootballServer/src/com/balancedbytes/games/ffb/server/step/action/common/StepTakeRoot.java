@@ -2,18 +2,13 @@ package com.balancedbytes.games.ffb.server.step.action.common;
 
 import com.balancedbytes.games.ffb.PlayerAction;
 import com.balancedbytes.games.ffb.PlayerState;
-import com.balancedbytes.games.ffb.ReRolledAction;
-import com.balancedbytes.games.ffb.ReRolledActionFactory;
 import com.balancedbytes.games.ffb.SoundId;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.Game;
-import com.balancedbytes.games.ffb.report.ReportConfusionRoll;
 import com.balancedbytes.games.ffb.server.ActionStatus;
-import com.balancedbytes.games.ffb.server.DiceInterpreter;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.IServerJsonOption;
-import com.balancedbytes.games.ffb.server.model.ServerSkill;
 import com.balancedbytes.games.ffb.server.net.ReceivedCommand;
 import com.balancedbytes.games.ffb.server.step.AbstractStepWithReRoll;
 import com.balancedbytes.games.ffb.server.step.StepAction;
@@ -23,7 +18,6 @@ import com.balancedbytes.games.ffb.server.step.StepId;
 import com.balancedbytes.games.ffb.server.step.StepParameter;
 import com.balancedbytes.games.ffb.server.step.StepParameterKey;
 import com.balancedbytes.games.ffb.server.step.StepParameterSet;
-import com.balancedbytes.games.ffb.server.util.UtilServerReRoll;
 import com.balancedbytes.games.ffb.util.UtilActingPlayer;
 import com.balancedbytes.games.ffb.util.UtilCards;
 import com.eclipsesource.json.JsonObject;
@@ -40,10 +34,19 @@ import com.eclipsesource.json.JsonValue;
  */
 public class StepTakeRoot extends AbstractStepWithReRoll {
 	
+  public class StepState {
+
+    public ActionStatus status;
+    public boolean continueOnFailure;
+    
+  }
+  
+  private StepState state;
 	private String fGotoLabelOnFailure;
 	
 	public StepTakeRoot(GameState pGameState) {
 		super(pGameState);
+		state = new StepState();
 	}
 	
 	public StepId getId() {
@@ -85,7 +88,7 @@ public class StepTakeRoot extends AbstractStepWithReRoll {
   }
 	
   private void executeStep() {
-  	ActionStatus status = ActionStatus.SUCCESS;
+  	state.status = ActionStatus.SUCCESS;
   	boolean continueOnFailure = false;
     Game game = getGameState().getGame();
     if (!game.getTurnMode().checkNegatraits()) {
@@ -100,39 +103,13 @@ public class StepTakeRoot extends AbstractStepWithReRoll {
     if (playerState.isHypnotized()) {
     	game.getFieldModel().setPlayerState(actingPlayer.getPlayer() , playerState.changeHypnotized(false));
     }
-    if (UtilCards.hasSkill(game, actingPlayer, ServerSkill.TAKE_ROOT) && !playerState.isRooted()) {
-      boolean doRoll = true;
-      ReRolledAction reRolledAction = new ReRolledActionFactory().forSkill(ServerSkill.TAKE_ROOT); 
-      if ((reRolledAction != null) && (reRolledAction == getReRolledAction())) {
-        if ((getReRollSource() == null) || !UtilServerReRoll.useReRoll(this, getReRollSource(), actingPlayer.getPlayer())) {
-          doRoll = false;
-          status = ActionStatus.FAILURE;
-          continueOnFailure = cancelPlayerAction();
-        }
-      } else {
-        doRoll = UtilCards.hasUnusedSkill(game, actingPlayer, ServerSkill.TAKE_ROOT);
-      }
-      if (doRoll) {
-        int roll = getGameState().getDiceRoller().rollSkill();
-        int minimumRoll = DiceInterpreter.getInstance().minimumRollConfusion(true);
-        boolean successful = DiceInterpreter.getInstance().isSkillRollSuccessful(roll, minimumRoll);
-        actingPlayer.markSkillUsed(ServerSkill.TAKE_ROOT);
-        if (!successful) {
-          status = ActionStatus.FAILURE;
-          if (((reRolledAction == null) || (reRolledAction != getReRolledAction())) && UtilServerReRoll.askForReRollIfAvailable(getGameState(), actingPlayer.getPlayer(), reRolledAction, minimumRoll, false)) {
-            status = ActionStatus.WAITING_FOR_RE_ROLL;
-          } else {
-            continueOnFailure = cancelPlayerAction();
-          }
-        }
-        boolean reRolled = ((reRolledAction != null) && (reRolledAction == getReRolledAction()) && (getReRollSource() != null));
-        getResult().addReport(new ReportConfusionRoll(actingPlayer.getPlayerId(), successful, roll, minimumRoll, reRolled, ServerSkill.TAKE_ROOT));
-      }
-    }
-    if (status == ActionStatus.SUCCESS) {
+    
+    getGameState().executeStepHooks(this, state);
+
+    if (state.status == ActionStatus.SUCCESS) {
     	getResult().setNextAction(StepAction.NEXT_STEP);
     } else {
-    	if (status == ActionStatus.FAILURE) {
+    	if (state.status == ActionStatus.FAILURE) {
     		if (continueOnFailure) {
     			getResult().setNextAction(StepAction.NEXT_STEP);
     		} else {
@@ -142,7 +119,7 @@ public class StepTakeRoot extends AbstractStepWithReRoll {
     }
   }
   
-  private boolean cancelPlayerAction() {
+  public boolean cancelPlayerAction() {
   	boolean continueOnFailure = false;
     Game game = getGameState().getGame();
     ActingPlayer actingPlayer = game.getActingPlayer();

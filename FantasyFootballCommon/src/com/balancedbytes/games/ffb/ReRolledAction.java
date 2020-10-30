@@ -1,7 +1,7 @@
 package com.balancedbytes.games.ffb;
 
-import com.balancedbytes.games.ffb.client.SkillConstants;
 import com.balancedbytes.games.ffb.model.Skill;
+import com.balancedbytes.games.ffb.model.SkillConstants;
 
 /**
  * 

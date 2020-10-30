@@ -2,6 +2,7 @@ package com.balancedbytes.games.ffb.skill;
 
 import com.balancedbytes.games.ffb.SkillCategory;
 import com.balancedbytes.games.ffb.model.Skill;
+import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
 
 /**
 * The player is unable to pick up, intercept or carry the ball and will fail any
@@ -13,6 +14,8 @@ public class NoHands extends Skill {
 
   public NoHands() {
     super("No Hands", SkillCategory.EXTRAORDINARY);
+    
+    registerProperty(NamedProperties.preventCatch);
   }
 
 }

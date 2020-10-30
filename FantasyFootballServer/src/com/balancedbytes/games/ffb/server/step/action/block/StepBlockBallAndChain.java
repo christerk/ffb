@@ -4,9 +4,9 @@ import com.balancedbytes.games.ffb.PlayerState;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.Game;
+import com.balancedbytes.games.ffb.model.SkillConstants;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.IServerJsonOption;
-import com.balancedbytes.games.ffb.server.model.ServerSkill;
 import com.balancedbytes.games.ffb.server.step.AbstractStep;
 import com.balancedbytes.games.ffb.server.step.StepAction;
 import com.balancedbytes.games.ffb.server.step.StepException;
@@ -86,7 +86,7 @@ public class StepBlockBallAndChain extends AbstractStep {
   private void executeStep() {
     Game game = getGameState().getGame();
     ActingPlayer actingPlayer = game.getActingPlayer();
-    if (UtilCards.hasSkill(game, actingPlayer, ServerSkill.BALL_AND_CHAIN) && (fOldDefenderState != null) && fOldDefenderState.isProne()) {
+    if (UtilCards.hasSkill(game, actingPlayer, SkillConstants.BALL_AND_CHAIN) && (fOldDefenderState != null) && fOldDefenderState.isProne()) {
       publishParameters(UtilBlockSequence.initPushback(this));
       game.getFieldModel().setPlayerState(game.getDefender(), fOldDefenderState.changeBase(PlayerState.FALLING));
       getResult().setNextAction(StepAction.GOTO_LABEL, fGotoLabelOnPushback);

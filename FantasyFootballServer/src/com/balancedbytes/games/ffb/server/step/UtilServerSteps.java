@@ -13,11 +13,11 @@ import com.balancedbytes.games.ffb.net.commands.ICommandWithActingPlayer;
 import com.balancedbytes.games.ffb.server.FantasyFootballServer;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.net.ReceivedCommand;
+import com.balancedbytes.games.ffb.server.util.ServerUtilBlock;
 import com.balancedbytes.games.ffb.server.util.UtilServerGame;
 import com.balancedbytes.games.ffb.server.util.UtilServerPlayerMove;
 import com.balancedbytes.games.ffb.util.ArrayTool;
 import com.balancedbytes.games.ffb.util.StringTool;
-import com.balancedbytes.games.ffb.util.UtilBlock;
 
 /**
  * 
@@ -63,7 +63,7 @@ public class UtilServerSteps {
     UtilServerGame.changeActingPlayer(pStep, pPlayerId, pPlayerAction, pLeaping);
     if (StringTool.isProvided(pPlayerId)) {
       UtilServerPlayerMove.updateMoveSquares(pStep.getGameState(), actingPlayer.isLeaping());
-      UtilBlock.updateDiceDecorations(pStep.getGameState().getGame());
+      ServerUtilBlock.updateDiceDecorations(pStep.getGameState().getGame());
     }
   }
 

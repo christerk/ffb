@@ -13,13 +13,13 @@ import com.balancedbytes.games.ffb.SkillFactory;
 import com.balancedbytes.games.ffb.json.IJsonSerializable;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.Game;
+import com.balancedbytes.games.ffb.model.ISkillBehaviour;
 import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.model.Skill;
-import com.balancedbytes.games.ffb.model.SkillConstants;
 import com.balancedbytes.games.ffb.model.change.IModelChangeObserver;
 import com.balancedbytes.games.ffb.model.change.ModelChange;
 import com.balancedbytes.games.ffb.model.change.ModelChangeList;
-import com.balancedbytes.games.ffb.server.model.ServerSkill;
+import com.balancedbytes.games.ffb.server.model.SkillBehaviour;
 import com.balancedbytes.games.ffb.server.model.StepModifier;
 import com.balancedbytes.games.ffb.server.net.ReceivedCommand;
 import com.balancedbytes.games.ffb.server.step.IStep;
@@ -322,11 +322,14 @@ public class GameState implements IModelChangeObserver, IJsonSerializable {
     List<StepModifier> modifiers = new ArrayList<StepModifier>();
     
     for (Skill skill : skillFactory.getSkills()) {
-      Skill serverSkill = (Skill) skill;
-      
-      for (StepModifier modifier : serverSkill.getStepModifiers()) {
-        if (modifier.appliesTo(step)) {
-          modifiers.add(modifier);
+
+      for (ISkillBehaviour behaviour : skill.getSkillBehaviours()) {
+        @SuppressWarnings("unchecked")
+        List<StepModifier> skillModifiers = ((SkillBehaviour) behaviour).getStepModifiers();
+        for (StepModifier modifier : skillModifiers) {
+          if (modifier.appliesTo(step)) {
+            modifiers.add(modifier);
+          }
         }
       }
     }

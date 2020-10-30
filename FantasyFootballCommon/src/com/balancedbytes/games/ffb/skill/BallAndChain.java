@@ -2,6 +2,8 @@ package com.balancedbytes.games.ffb.skill;
 
 import com.balancedbytes.games.ffb.SkillCategory;
 import com.balancedbytes.games.ffb.model.Skill;
+import com.balancedbytes.games.ffb.model.SkillConstants;
+import com.balancedbytes.games.ffb.model.modifier.CancelSkillProperty;
 import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
 
 /**
@@ -34,6 +36,20 @@ public class BallAndChain extends Skill {
     
     registerProperty(NamedProperties.grabOutsideBlock);
     registerProperty(NamedProperties.flipSameTeamOpponentToOtherTeam);
+    registerProperty(NamedProperties.preventAutoMove);
+    
+    registerProperty(NamedProperties.preventRegularBlitzAction);
+    registerProperty(NamedProperties.preventRegularBlockAction);
+    registerProperty(NamedProperties.preventRegularFoulAction);
+    registerProperty(NamedProperties.preventRegularHandOverAction);
+    registerProperty(NamedProperties.preventRegularPassAction);
+    registerProperty(NamedProperties.preventRecoverFromConcusionAction);
+    registerProperty(NamedProperties.preventRecoverFromGazeAction);
+    registerProperty(NamedProperties.preventStandUpAction);
+    registerProperty(new CancelSkillProperty(SkillConstants.MULTIPLE_BLOCK));
+    registerProperty(new CancelSkillProperty(SkillConstants.THROW_TEAM_MATE));
+    registerProperty(new CancelSkillProperty(SkillConstants.KICK_TEAM_MATE));
+    registerProperty(new CancelSkillProperty(SkillConstants.PILING_ON));
   }
 
 }

@@ -13,7 +13,6 @@ import com.balancedbytes.games.ffb.InducementDuration;
 import com.balancedbytes.games.ffb.InjuryType;
 import com.balancedbytes.games.ffb.PlayerChoiceMode;
 import com.balancedbytes.games.ffb.PlayerState;
-import com.balancedbytes.games.ffb.ReRollSource;
 import com.balancedbytes.games.ffb.ReRolledAction;
 import com.balancedbytes.games.ffb.SkillUse;
 import com.balancedbytes.games.ffb.SoundId;
@@ -24,6 +23,8 @@ import com.balancedbytes.games.ffb.model.Animation;
 import com.balancedbytes.games.ffb.model.AnimationType;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
+import com.balancedbytes.games.ffb.model.SkillConstants;
+import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandPlayerChoice;
 import com.balancedbytes.games.ffb.option.GameOptionId;
 import com.balancedbytes.games.ffb.option.UtilGameOption;
@@ -37,7 +38,6 @@ import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.IServerJsonOption;
 import com.balancedbytes.games.ffb.server.IServerLogLevel;
 import com.balancedbytes.games.ffb.server.InjuryResult;
-import com.balancedbytes.games.ffb.server.model.ServerSkill;
 import com.balancedbytes.games.ffb.server.net.ReceivedCommand;
 import com.balancedbytes.games.ffb.server.step.AbstractStepWithReRoll;
 import com.balancedbytes.games.ffb.server.step.SequenceGenerator;
@@ -69,6 +69,13 @@ import com.eclipsesource.json.JsonValue;
  */
 public class StepCatchScatterThrowIn extends AbstractStepWithReRoll {
 
+  public class StepState {
+    public boolean actionRerolled;
+  }
+  
+  private StepState state;
+  
+  
   private String fCatcherId;
   private FieldCoordinateBounds fScatterBounds;
   private CatchScatterThrowInMode fCatchScatterThrowInMode;
@@ -78,6 +85,7 @@ public class StepCatchScatterThrowIn extends AbstractStepWithReRoll {
 
   public StepCatchScatterThrowIn(GameState pGameState) {
     super(pGameState);
+    state = new StepState();
   }
 
   public StepId getId() {
@@ -291,7 +299,7 @@ public class StepCatchScatterThrowIn extends AbstractStepWithReRoll {
       Player[] divingCatchersAway = UtilServerCatchScatterThrowIn.findDivingCatchers(getGameState(), game.getTeamAway(), pCoordinate);
       if (ArrayTool.isProvided(divingCatchersHome) && ArrayTool.isProvided(divingCatchersAway)) {
         fDivingCatchChoice = false;
-        getResult().addReport(new ReportSkillUse(ServerSkill.DIVING_CATCH, false, SkillUse.CANCEL_DIVING_CATCH));
+        getResult().addReport(new ReportSkillUse(SkillConstants.DIVING_CATCH, false, SkillUse.CANCEL_DIVING_CATCH));
       } else if (ArrayTool.isProvided(divingCatchersHome)) {
         UtilServerDialog.showDialog(
             getGameState(),
@@ -312,7 +320,7 @@ public class StepCatchScatterThrowIn extends AbstractStepWithReRoll {
       if (fDivingCatchChoice) {
         Player divingCatcher = game.getPlayerById(fCatcherId);
         if (getReRollSource() == null) {
-          getResult().addReport(new ReportSkillUse(divingCatcher.getId(), ServerSkill.DIVING_CATCH, true, SkillUse.CATCH_BALL));
+          getResult().addReport(new ReportSkillUse(divingCatcher.getId(), SkillConstants.DIVING_CATCH, true, SkillUse.CATCH_BALL));
         }
         return catchBall();
       } else {
@@ -328,7 +336,7 @@ public class StepCatchScatterThrowIn extends AbstractStepWithReRoll {
 
     Game game = getGameState().getGame();
     Player catcher = game.getPlayerById(fCatcherId);
-    if ((catcher == null) || UtilCards.hasSkill(game, catcher, ServerSkill.NO_HANDS)) {
+    if ((catcher == null) || UtilCards.hasSkillWithProperty(catcher, NamedProperties.preventCatch)) {
       return CatchScatterThrowInMode.SCATTER_BALL;
     }
     FieldCoordinate catcherCoordinate = game.getFieldModel().getPlayerCoordinate(catcher);
@@ -371,15 +379,12 @@ public class StepCatchScatterThrowIn extends AbstractStepWithReRoll {
 
       } else {
         if (getReRolledAction() != ReRolledAction.CATCH) {
-          if (UtilCards.hasSkill(game, catcher, ServerSkill.CATCH)) {
-            setReRolledAction(ReRolledAction.CATCH);
-            setReRollSource(ReRollSource.CATCH);
+          
+          boolean stopProcessing = getGameState().executeStepHooks(this, state);
+          if (state.actionRerolled) {
             return catchBall();
-          } else if (UtilCards.hasSkill(game, catcher, ServerSkill.MOUNSTROUS_MOUTH)) {
-            setReRolledAction(ReRolledAction.CATCH);
-            setReRollSource(ReRollSource.MONSTROUS_MOUTH);
-            return catchBall();
-          } else {
+          }
+          if (!stopProcessing) {
             if (UtilServerReRoll.askForReRollIfAvailable(getGameState(), catcher, ReRolledAction.CATCH, minimumRoll, false)) {
               setReRolledAction(ReRolledAction.CATCH);
               return fCatchScatterThrowInMode;

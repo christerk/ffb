@@ -11,6 +11,7 @@ import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
+import com.balancedbytes.games.ffb.model.SkillConstants;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandUseSkill;
 import com.balancedbytes.games.ffb.option.GameOptionId;
 import com.balancedbytes.games.ffb.option.UtilGameOption;
@@ -165,7 +166,7 @@ public class StepDropFallingPlayers extends AbstractStep {
         }
         boolean usesATeamReroll = UtilGameOption.isOptionEnabled(game, GameOptionId.PILING_ON_USES_A_TEAM_REROLL);
         if ((attackerState.getBase() != PlayerState.FALLING)
-            && UtilCards.hasUnusedSkill(game, actingPlayer, ServerSkill.PILING_ON)
+            && UtilCards.hasUnusedSkill(game, actingPlayer, SkillConstants.PILING_ON)
             && (!usesATeamReroll || UtilServerReRoll.isTeamReRollAvailable(getGameState(), actingPlayer.getPlayer()))
             && attackerCoordinate.isAdjacent(defenderCoordinate)
             && !fInjuryResultDefender.isCasualty()
@@ -173,7 +174,7 @@ public class StepDropFallingPlayers extends AbstractStep {
             && (!UtilGameOption.isOptionEnabled(game, GameOptionId.PILING_ON_INJURY_ONLY) || fInjuryResultDefender.isArmorBroken())
             && (!UtilGameOption.isOptionEnabled(game, GameOptionId.PILING_ON_ARMOR_ONLY) || !fInjuryResultDefender.isArmorBroken())
             && (!UtilCards.hasCard(game, game.getDefender(), Card.BELT_OF_INVULNERABILITY) || fInjuryResultDefender.isArmorBroken())
-            && !UtilCards.hasSkill(game, actingPlayer, ServerSkill.BALL_AND_CHAIN)
+            && !UtilCards.cancelsSkill(actingPlayer.getPlayer(), SkillConstants.PILING_ON)
             && !UtilCards.hasCard(game, game.getDefender(), Card.GOOD_OLD_MAGIC_CODPIECE)) {
           fInjuryResultDefender.report(this);
           UtilServerDialog.showDialog(getGameState(), new DialogPilingOnParameter(actingPlayer.getPlayerId(), fInjuryResultDefender.isArmorBroken(),

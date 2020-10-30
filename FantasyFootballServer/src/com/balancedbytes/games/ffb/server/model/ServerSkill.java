@@ -5,12 +5,10 @@ import java.util.Collection;
 import java.util.List;
 
 import com.balancedbytes.games.ffb.SkillCategory;
-import com.balancedbytes.games.ffb.model.ISkillProperty;
 import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.model.PlayerModifier;
 import com.balancedbytes.games.ffb.model.Position;
 import com.balancedbytes.games.ffb.model.Skill;
-import com.balancedbytes.games.ffb.model.modifier.CancelSkillProperty;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandUseSkill;
 import com.balancedbytes.games.ffb.server.step.IStep;
 import com.balancedbytes.games.ffb.server.step.StepCommandStatus;

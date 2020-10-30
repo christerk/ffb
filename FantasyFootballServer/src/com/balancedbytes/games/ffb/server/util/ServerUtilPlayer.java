@@ -13,7 +13,7 @@ public class ServerUtilPlayer {
 
   public static int findBlockStrength(Game game, Player attacker, int attackerStrength, Player defender) {
     Team defenderTeam = defender.getTeam();
-    boolean flipOpponentIfSameTeam = UtilServerCards.hasSkillWithProperty(attacker, NamedProperties.flipSameTeamOpponentToOtherTeam);
+    boolean flipOpponentIfSameTeam = UtilCards.hasSkillWithProperty(attacker, NamedProperties.flipSameTeamOpponentToOtherTeam);
 
     // team-mates assist b&c if attacker is on the same team as defender to gain maximum block dice (more choice)
     // opposing teams tries to hinder
