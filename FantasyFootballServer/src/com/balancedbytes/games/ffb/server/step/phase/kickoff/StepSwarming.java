@@ -59,7 +59,7 @@ public class StepSwarming extends AbstractStep {
   public void init(StepParameterSet pParameterSet) {
     super.init(pParameterSet);
     if (pParameterSet != null) {
-      for (StepParameter parameter: pParameterSet.values()) {
+      for (StepParameter parameter : pParameterSet.values()) {
         if (parameter.getKey() == StepParameterKey.HANDLE_RECEIVING_TEAM) {
           handleReceivingTeam = (boolean) parameter.getValue();
         }
@@ -72,16 +72,17 @@ public class StepSwarming extends AbstractStep {
     StepCommandStatus commandStatus = super.handleCommand(pReceivedCommand);
 
     switch (pReceivedCommand.getId()) {
-      case CLIENT_END_TURN:
-        fEndTurn = true;
-        executeStep();
-        break;
+    case CLIENT_END_TURN:
+      fEndTurn = true;
+      executeStep();
+      break;
 
-      case CLIENT_SETUP_PLAYER:
-        ClientCommandSetupPlayer setupPlayerCommand = (ClientCommandSetupPlayer) pReceivedCommand.getCommand();
-        UtilServerSetup.setupPlayer(getGameState(), setupPlayerCommand.getPlayerId(), setupPlayerCommand.getCoordinate());
-        break;
-
+    case CLIENT_SETUP_PLAYER:
+      ClientCommandSetupPlayer setupPlayerCommand = (ClientCommandSetupPlayer) pReceivedCommand.getCommand();
+      UtilServerSetup.setupPlayer(getGameState(), setupPlayerCommand.getPlayerId(), setupPlayerCommand.getCoordinate());
+      break;
+    default:
+      break;
     }
     return commandStatus;
   }
@@ -90,13 +91,12 @@ public class StepSwarming extends AbstractStep {
     Game game = getGameState().getGame();
     boolean hasSwarmingReserves = false;
 
-
     if (game.getTurnMode() == TurnMode.SWARMING) {
       if (fEndTurn) {
         fEndTurn = false;
         getResult().setSound(SoundId.DING);
         int placedSwarmingPlayers = 0;
-        for (Player player: game.getTeamById(teamId).getPlayers()) {
+        for (Player player : game.getTeamById(teamId).getPlayers()) {
           PlayerState playerState = game.getFieldModel().getPlayerState(player);
           FieldCoordinate playerCoordinate = game.getFieldModel().getPlayerCoordinate(player);
           if (playerState.isActive() && !playerCoordinate.isBoxCoordinate()) {
@@ -105,16 +105,17 @@ public class StepSwarming extends AbstractStep {
         }
 
         if (placedSwarmingPlayers > allowedAmount) {
-          UtilServerDialog.showDialog(getGameState(), new DialogSwarmingErrorParameter(allowedAmount, placedSwarmingPlayers), false);
+          UtilServerDialog.showDialog(getGameState(),
+              new DialogSwarmingErrorParameter(allowedAmount, placedSwarmingPlayers), false);
         } else {
 
-          for (Player player: game.getTeamById(teamId).getPlayers()) {
+          for (Player player : game.getTeamById(teamId).getPlayers()) {
             PlayerState playerState = game.getFieldModel().getPlayerState(player);
             if (playerState.getBase() == PlayerState.PRONE) {
               game.getFieldModel().setPlayerState(player, playerState.changeBase(PlayerState.RESERVE));
             }
           }
-          
+
           game.setTurnMode(TurnMode.KICKOFF);
           UtilPlayer.refreshPlayersForTurnStart(game);
           game.getFieldModel().clearTrackNumbers();
@@ -134,7 +135,7 @@ public class StepSwarming extends AbstractStep {
       teamId = swarmingTeam(game).getId();
       Set<Player> playersOnPitch = new HashSet<>();
       Set<Player> playersReserveNoSwarming = new HashSet<>();
-      for (Player player: game.getTeamById(teamId).getPlayers()) {
+      for (Player player : game.getTeamById(teamId).getPlayers()) {
         FieldCoordinate playerCoordinate = game.getFieldModel().getPlayerCoordinate(player);
         if (FieldCoordinateBounds.FIELD.isInBounds(playerCoordinate)) {
           playersOnPitch.add(player);

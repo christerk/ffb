@@ -240,32 +240,6 @@ public class PlayerDetailComponent extends JPanel {
     
   }
   
-  private int findStatIncreases(Skill pSkill) {
-    int increases = 0;
-    if ((getPlayer() != null) && (pSkill != null)) {
-    	Game game = getSideBar().getClient().getGame();
-      for (Skill skill: UtilCards.findAllSkills(game, getPlayer())) { 
-        if (skill == pSkill) {
-          increases++;
-        }
-      }
-    }
-    return Math.min(2, increases);
-  }
-  
-  private int findStatDecreases(Skill pSkill) {
-    int decreases = 0;
-    if ((getPlayer() != null) && (pSkill != null)) {
-      Game game = getSideBar().getClient().getGame();
-      for (Skill skill: UtilCards.findAllSkills(game, getPlayer())) { 
-        if (skill == pSkill) {
-          decreases++;
-        }
-      }
-    }
-    return decreases;
-  }
-  
   private int findNewStatDecreases(PlayerResult pPlayerResult, InjuryAttribute pInjuryAttribute) {
     int decreases = 0;
     if (pPlayerResult != null) {

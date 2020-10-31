@@ -4,7 +4,6 @@ import com.balancedbytes.games.ffb.SkillCategory;
 import com.balancedbytes.games.ffb.model.Skill;
 import com.balancedbytes.games.ffb.model.SkillConstants;
 import com.balancedbytes.games.ffb.model.modifier.CancelSkillProperty;
-import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
 
 /**
 * A player with this skill is virtually impossible to stop once he is in motion.
