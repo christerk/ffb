@@ -2,6 +2,7 @@ package com.balancedbytes.games.ffb.skill;
 
 import com.balancedbytes.games.ffb.SkillCategory;
 import com.balancedbytes.games.ffb.model.Skill;
+import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
 
 /**
 * This player keeps a wapstone-tainted dagger hidden in their kit, and is
@@ -15,6 +16,8 @@ public class WeepingDagger extends Skill {
 
   public WeepingDagger() {
     super("Weeping Dagger", SkillCategory.EXTRAORDINARY);
+    
+    registerProperty(NamedProperties.appliesPoisonOnBadlyHurt);
   }
 
 }

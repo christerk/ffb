@@ -6,6 +6,7 @@ import java.util.List;
 
 import com.balancedbytes.games.ffb.INamedObject;
 import com.balancedbytes.games.ffb.PassModifier;
+import com.balancedbytes.games.ffb.PickupModifier;
 import com.balancedbytes.games.ffb.SkillCategory;
 import com.balancedbytes.games.ffb.model.modifier.CancelSkillProperty;
 
@@ -15,6 +16,7 @@ public class Skill implements INamedObject {
   private SkillCategory category;
   private List<PlayerModifier> playerModifiers;
   private List<PassModifier> passModifiers;
+  private List<PickupModifier> pickupModifiers;
   private List<ISkillBehaviour> behaviours;
   private List<ISkillProperty> skillProperties;
   
@@ -25,6 +27,7 @@ public class Skill implements INamedObject {
     skillProperties = new ArrayList<ISkillProperty>();
     playerModifiers = new ArrayList<PlayerModifier>();
     passModifiers = new ArrayList<PassModifier>();
+    pickupModifiers = new ArrayList<PickupModifier>();
   }
   
   @Override
@@ -51,6 +54,11 @@ public class Skill implements INamedObject {
   protected void registerModifier(PassModifier modifier) {
     passModifiers.add(modifier);
   }
+
+  protected void registerModifier(PickupModifier modifier) {
+    pickupModifiers.add(modifier);
+  }
+  
   
   protected void registerModifier(PlayerModifier modifier) {
     playerModifiers.add(modifier);
@@ -71,6 +79,10 @@ public class Skill implements INamedObject {
   
   public List<PassModifier> getPassModifiers() {
     return passModifiers;
+  }
+
+  public List<PickupModifier> getPickupModifiers() {
+    return pickupModifiers;
   }
   
   public void addBehaviour(ISkillBehaviour behaviour) {
@@ -109,6 +121,10 @@ public class Skill implements INamedObject {
       }
     }
     return false;
+  }
+
+  public String getConfusionMessage() {
+    return "is confused";
   }
   
 }

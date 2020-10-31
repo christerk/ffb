@@ -8,11 +8,11 @@ import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
+import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
 import com.balancedbytes.games.ffb.report.ReportScatterPlayer;
 import com.balancedbytes.games.ffb.server.DiceInterpreter;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.IServerJsonOption;
-import com.balancedbytes.games.ffb.server.model.ServerSkill;
 import com.balancedbytes.games.ffb.server.net.ReceivedCommand;
 import com.balancedbytes.games.ffb.server.step.AbstractStep;
 import com.balancedbytes.games.ffb.server.step.StepAction;
@@ -126,7 +126,7 @@ public class StepMoveBallAndChain extends AbstractStep {
   private void executeStep() {
     Game game = getGameState().getGame();
     ActingPlayer actingPlayer = game.getActingPlayer();
-    if (UtilCards.hasSkill(game, actingPlayer, ServerSkill.BALL_AND_CHAIN)) {
+    if (UtilCards.hasSkillWithProperty(actingPlayer.getPlayer(), NamedProperties.movesRandomly)) {
     	Direction playerScatter = null;
     	int scatterRoll = getGameState().getDiceRoller().rollThrowInDirection();
     	if (fCoordinateFrom.getX() < fCoordinateTo.getX()) {

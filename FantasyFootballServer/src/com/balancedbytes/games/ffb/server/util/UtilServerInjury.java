@@ -144,8 +144,8 @@ public class UtilServerInjury {
 					injuryResult.addArmorModifier(ArmorModifier.CHAINSAW);
 				}
 				injuryResult.setArmorBroken(diceInterpreter.isArmourBroken(gameState, injuryResult));
-				// do not use armorModifiers on blocking own team-mate with b&c
-				if (!UtilCards.hasSkill(game, pAttacker, ServerSkill.BALL_AND_CHAIN) || (pAttacker.getTeam() != pDefender.getTeam())) {
+				// do not use armorModifiers on blocking own team-mate
+				if (pAttacker.getTeam() != pDefender.getTeam()) {
 					if (UtilCards.hasSkill(game, pAttacker, ServerSkill.CLAW) && (pDefender.getArmour() > 7) && !UtilCards.hasSkill(game, pAttacker, ServerSkill.CHAINSAW)) {
 						injuryResult.addArmorModifier(ArmorModifier.CLAWS);
 					}

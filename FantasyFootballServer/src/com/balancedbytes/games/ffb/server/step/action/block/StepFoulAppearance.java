@@ -5,6 +5,7 @@ import com.balancedbytes.games.ffb.SoundId;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.Game;
+import com.balancedbytes.games.ffb.model.SkillConstants;
 import com.balancedbytes.games.ffb.report.ReportId;
 import com.balancedbytes.games.ffb.report.ReportSkillRoll;
 import com.balancedbytes.games.ffb.server.DiceInterpreter;
@@ -80,7 +81,7 @@ public class StepFoulAppearance extends AbstractStepWithReRoll {
   private void executeStep() {
     Game game = getGameState().getGame();
     ActingPlayer actingPlayer = game.getActingPlayer();
-    if ((game.getDefender() != null) && UtilCards.hasSkill(game, game.getDefender(), ServerSkill.FOUL_APPEARANCE) && !UtilCards.hasSkill(game, actingPlayer, ServerSkill.BALL_AND_CHAIN)) {
+    if ((game.getDefender() != null) && UtilCards.hasSkill(game, game.getDefender(), ServerSkill.FOUL_APPEARANCE) && !UtilCards.cancelsSkill(actingPlayer.getPlayer(), SkillConstants.FOUL_APPEARANCE)) {
       boolean doRoll = true;
       if (ReRolledAction.FOUL_APPEARANCE == getReRolledAction()) {
         if ((getReRollSource() == null) || !UtilServerReRoll.useReRoll(this, getReRollSource(), actingPlayer.getPlayer())) {

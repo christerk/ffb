@@ -375,7 +375,7 @@ public class ClientStateSelect extends ClientState {
   private boolean isThrowTeamMateActionAvailable(Player pPlayer) {
   	Game game = getClient().getGame();
   	PlayerState playerState = game.getFieldModel().getPlayerState(pPlayer);
-  	if ((playerState == null) || UtilCards.cancelsSkill(pPlayer, SkillConstants.THROW_TEAM_MATE)) {
+  	if ((playerState == null) || UtilCards.hasSkillWithProperty(pPlayer, NamedProperties.preventThrowTeamMateAction)) { 
     	return false;
     }
 
@@ -410,7 +410,7 @@ public class ClientStateSelect extends ClientState {
   private boolean isKickTeamMateActionAvailable(Player pPlayer) {
     Game game = getClient().getGame();
     PlayerState playerState = game.getFieldModel().getPlayerState(pPlayer);
-    if ((playerState == null) || UtilCards.cancelsSkill(pPlayer, SkillConstants.KICK_TEAM_MATE)) {
+    if ((playerState == null) || UtilCards.hasSkillWithProperty(pPlayer, NamedProperties.preventKickTeamMateAction)) {
       return false;
     }
 

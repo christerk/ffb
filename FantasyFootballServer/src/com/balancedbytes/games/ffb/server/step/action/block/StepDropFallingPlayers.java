@@ -12,6 +12,7 @@ import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.model.SkillConstants;
+import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandUseSkill;
 import com.balancedbytes.games.ffb.option.GameOptionId;
 import com.balancedbytes.games.ffb.option.UtilGameOption;
@@ -158,7 +159,7 @@ public class StepDropFallingPlayers extends AbstractStep {
         fInjuryResultDefender = UtilServerInjury.handleInjury(this, injuryType, actingPlayer.getPlayer(), game.getDefender(), defenderCoordinate,
           null, ApothecaryMode.DEFENDER);
 
-        if (UtilCards.hasSkill(game, actingPlayer, ServerSkill.WEEPING_DAGGER) && fInjuryResultDefender.isBadlyHurt()) {
+        if (UtilCards.hasSkillWithProperty(actingPlayer.getPlayer(), NamedProperties.appliesPoisonOnBadlyHurt) && fInjuryResultDefender.isBadlyHurt()) {
           boolean success = rollWeepingDagger(actingPlayer.getPlayer(), game.getDefender());
           if (success) {
         	  publishParameter(new StepParameter(StepParameterKey.DEFENDER_POISONED, true));
@@ -199,7 +200,7 @@ public class StepDropFallingPlayers extends AbstractStep {
         publishParameter(new StepParameter(StepParameterKey.END_TURN, true));
         publishParameters(UtilServerInjury.dropPlayer(this, actingPlayer.getPlayer(), ApothecaryMode.ATTACKER));
         InjuryResult injuryResultAttacker = UtilServerInjury.handleInjury(this, InjuryType.BLOCK, game.getDefender(), actingPlayer.getPlayer(), attackerCoordinate, null, ApothecaryMode.ATTACKER);
-        if (UtilCards.hasSkill(game, game.getDefender(), ServerSkill.WEEPING_DAGGER) && injuryResultAttacker.isBadlyHurt()) {
+        if (UtilCards.hasSkillWithProperty(game.getDefender(), NamedProperties.appliesPoisonOnBadlyHurt) && injuryResultAttacker.isBadlyHurt()) {
             boolean success = rollWeepingDagger(game.getDefender(), actingPlayer.getPlayer());
             if (success) {
           	  publishParameter(new StepParameter(StepParameterKey.ATTACKER_POISONED, true));

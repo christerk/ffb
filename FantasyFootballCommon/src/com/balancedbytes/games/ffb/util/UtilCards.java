@@ -10,6 +10,8 @@ import com.balancedbytes.games.ffb.Card;
 import com.balancedbytes.games.ffb.CardEffect;
 import com.balancedbytes.games.ffb.PassModifier;
 import com.balancedbytes.games.ffb.PassingModifiers.PassContext;
+import com.balancedbytes.games.ffb.PickupModifier;
+import com.balancedbytes.games.ffb.PickupModifiers.PickupContext;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.ISkillProperty;
@@ -51,6 +53,20 @@ public final class UtilCards {
     
     for (Skill skill : thrower.getSkills()) {
       for (PassModifier modifier : skill.getPassModifiers()) {
+        if (modifier.appliesToContext(context)) {
+          result.add(modifier);
+        }
+      }
+    }
+    
+    return result;
+  }
+
+  public static Collection<PickupModifier> getPickupModifiers(Player player, PickupContext context) {
+    Set<PickupModifier> result = new HashSet<PickupModifier>();
+    
+    for (Skill skill : player.getSkills()) {
+      for (PickupModifier modifier : skill.getPickupModifiers()) {
         if (modifier.appliesToContext(context)) {
           result.add(modifier);
         }

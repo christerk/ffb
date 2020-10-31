@@ -38,7 +38,6 @@ public class BallAndChain extends Skill {
     registerProperty(NamedProperties.placedProneCausesInjuryRoll);
     registerProperty(NamedProperties.flipSameTeamOpponentToOtherTeam);
     registerProperty(NamedProperties.preventAutoMove);
-    
     registerProperty(NamedProperties.preventRegularBlitzAction);
     registerProperty(NamedProperties.preventRegularBlockAction);
     registerProperty(NamedProperties.preventRegularFoulAction);
@@ -47,10 +46,18 @@ public class BallAndChain extends Skill {
     registerProperty(NamedProperties.preventRecoverFromConcusionAction);
     registerProperty(NamedProperties.preventRecoverFromGazeAction);
     registerProperty(NamedProperties.preventStandUpAction);
+    registerProperty(NamedProperties.canBlockMoreThanOnce);
+    registerProperty(NamedProperties.forceFollowup);
+    registerProperty(NamedProperties.canBlockSameTeamPlayer);
+    registerProperty(NamedProperties.preventThrowTeamMateAction);
+    registerProperty(NamedProperties.preventKickTeamMateAction);
+    registerProperty(NamedProperties.goForItAfterBlock);
+    registerProperty(NamedProperties.movesRandomly);
+    registerProperty(NamedProperties.ignoreTacklezonesWhenMoving);
     registerProperty(new CancelSkillProperty(SkillConstants.MULTIPLE_BLOCK));
-    registerProperty(new CancelSkillProperty(SkillConstants.THROW_TEAM_MATE));
-    registerProperty(new CancelSkillProperty(SkillConstants.KICK_TEAM_MATE));
     registerProperty(new CancelSkillProperty(SkillConstants.PILING_ON));
+    registerProperty(new CancelSkillProperty(SkillConstants.FOUL_APPEARANCE));
+    registerProperty(new CancelSkillProperty(SkillConstants.HYPNOTIC_GAZE));
   }
 
 }
