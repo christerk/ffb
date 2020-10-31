@@ -22,6 +22,7 @@ import com.balancedbytes.games.ffb.model.RosterPosition;
 import com.balancedbytes.games.ffb.model.Team;
 import com.balancedbytes.games.ffb.model.TeamResult;
 import com.balancedbytes.games.ffb.model.ZappedPlayer;
+import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
 import com.balancedbytes.games.ffb.option.GameOptionId;
 import com.balancedbytes.games.ffb.option.UtilGameOption;
 import com.balancedbytes.games.ffb.report.ReportId;
@@ -85,7 +86,8 @@ public class UtilServerInjury {
 		}
 
 		// ball and chain always breaks armor on being knocked down
-		if ((pInjuryType == InjuryType.BALL_AND_CHAIN) || (UtilCards.hasSkill(game, pDefender, ServerSkill.BALL_AND_CHAIN)
+		if (pInjuryType == InjuryType.BALL_AND_CHAIN
+		    || (UtilCards.hasSkillWithProperty(pDefender, NamedProperties.placedProneCausesInjuryRoll)
 				&& (pInjuryType != InjuryType.STAB) && (pInjuryType != InjuryType.CHAINSAW))) {
 			injuryResult.setArmorBroken(true);
 		}
@@ -240,7 +242,7 @@ public class UtilServerInjury {
 				switch (pInjuryType) {
 					case BLOCK:
 						// do not use injuryModifiers on blocking own team-mate with b&c
-						if (!UtilCards.hasSkill(game, pAttacker, ServerSkill.BALL_AND_CHAIN) || (pAttacker.getTeam() != pDefender.getTeam())) {
+						if (pAttacker.getTeam() != pDefender.getTeam()) {
 							if (UtilCards.hasSkill(game, pAttacker, ServerSkill.MIGHTY_BLOW) && !injuryResult.hasArmorModifier(ArmorModifier.MIGHTY_BLOW)) {
 								injuryResult.addInjuryModifier(InjuryModifier.MIGHTY_BLOW);
 							}
@@ -305,8 +307,7 @@ public class UtilServerInjury {
 			}
 		}
 
-		// ball and chain is never stunned, but always knocked out instead
-		if (UtilCards.hasSkill(game, pDefender, ServerSkill.BALL_AND_CHAIN) && (injuryResult.getInjury() != null)
+		if (UtilCards.hasSkillWithProperty(pDefender, NamedProperties.convertStunToKO) && (injuryResult.getInjury() != null)
 				&& (injuryResult.getInjury().getBase() == PlayerState.STUNNED)) {
 			injuryResult.setInjury(new PlayerState(PlayerState.KNOCKED_OUT));
 		}
@@ -327,7 +328,7 @@ public class UtilServerInjury {
 			if (injuryResult.isCasualty() || injuryResult.isKnockedOut()) {
 				injuryResult.setSufferedInjury(injuryResult.getPlayerState());
 				if ((pInjuryType == InjuryType.EAT_PLAYER) || (pInjuryType == InjuryType.PILING_ON_KNOCKED_OUT)
-						|| (injuryResult.isKnockedOut() && UtilCards.hasSkill(game, pDefender, ServerSkill.BALL_AND_CHAIN))) {
+						|| (injuryResult.isKnockedOut() && UtilCards.hasSkillWithProperty(pDefender, NamedProperties.placedProneCausesInjuryRoll))) {
 					injuryResult.setApothecaryStatus(ApothecaryStatus.NO_APOTHECARY);
 				} else if ((game.getTeamHome().hasPlayer(pDefender) && (game.getTurnDataHome().getApothecaries() > 0) && pDefender.getPlayerType() != PlayerType.STAR)
 						|| (game.getTeamAway().hasPlayer(pDefender) && (game.getTurnDataAway().getApothecaries() > 0) && pDefender.getPlayerType() != PlayerType.STAR)) {
@@ -558,7 +559,7 @@ public class UtilServerInjury {
 		FieldCoordinate playerCoordinate = game.getFieldModel().getPlayerCoordinate(pPlayer);
 		PlayerState playerState = game.getFieldModel().getPlayerState(pPlayer);
 		if ((playerCoordinate != null) && (playerState != null)) {
-			if (UtilCards.hasSkill(game, pPlayer, ServerSkill.BALL_AND_CHAIN)) {
+			if (UtilCards.hasSkillWithProperty(pPlayer, NamedProperties.placedProneCausesInjuryRoll)) {
 				pStep.publishParameter(new StepParameter(StepParameterKey.INJURY_RESULT,
 						UtilServerInjury.handleInjury(pStep, InjuryType.BALL_AND_CHAIN, null, pPlayer, playerCoordinate, null, pApothecaryMode))
 						);

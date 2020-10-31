@@ -1,11 +1,6 @@
 package com.balancedbytes.games.ffb.server.step.action.pass;
 
-import com.balancedbytes.games.ffb.PlayerAction;
-import com.balancedbytes.games.ffb.TurnMode;
-import com.balancedbytes.games.ffb.model.ActingPlayer;
-import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.server.GameState;
-import com.balancedbytes.games.ffb.server.model.ServerSkill;
 import com.balancedbytes.games.ffb.server.net.ReceivedCommand;
 import com.balancedbytes.games.ffb.server.step.AbstractStep;
 import com.balancedbytes.games.ffb.server.step.StepAction;
@@ -21,8 +16,16 @@ import com.eclipsesource.json.JsonValue;
  */
 public final class StepBombardier extends AbstractStep {
 
+  public class StepState {
+    
+  }
+  
+  private StepState state;
+  
   public StepBombardier(GameState pGameState) {
     super(pGameState);
+    
+    state = new StepState();
   }
 
   public StepId getId() {
@@ -45,26 +48,9 @@ public final class StepBombardier extends AbstractStep {
   }
 
   private void executeStep() {
-    Game game = getGameState().getGame();
-    ActingPlayer actingPlayer = game.getActingPlayer();
-    if (!game.getTurnMode().isBombTurn()
-      && ((actingPlayer.getPlayerAction() == PlayerAction.THROW_BOMB) || (actingPlayer.getPlayerAction() == PlayerAction.HAIL_MARY_BOMB))) {
-      // mark skill used to set active=false when changing players
-      actingPlayer.markSkillUsed(ServerSkill.BOMBARDIER); 
-      if (game.getTeamHome().hasPlayer(actingPlayer.getPlayer())) {
-        if (TurnMode.BLITZ == game.getTurnMode()) {
-          game.setTurnMode(TurnMode.BOMB_HOME_BLITZ);
-        } else {
-          game.setTurnMode(TurnMode.BOMB_HOME);
-        }
-      } else {
-        if (TurnMode.BLITZ == game.getTurnMode()) {
-          game.setTurnMode(TurnMode.BOMB_AWAY_BLITZ);
-        } else {
-          game.setTurnMode(TurnMode.BOMB_AWAY);
-        }
-      }
-    }
+    
+    getGameState().executeStepHooks(this, state);
+    
     getResult().setNextAction(StepAction.NEXT_STEP);
   }
 

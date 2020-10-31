@@ -14,6 +14,7 @@ import com.balancedbytes.games.ffb.CatchModifier;
 import com.balancedbytes.games.ffb.ClientMode;
 import com.balancedbytes.games.ffb.Direction;
 import com.balancedbytes.games.ffb.DodgeModifier;
+import com.balancedbytes.games.ffb.DodgeModifiers;
 import com.balancedbytes.games.ffb.FantasyFootballConstants;
 import com.balancedbytes.games.ffb.HeatExhaustion;
 import com.balancedbytes.games.ffb.IRollModifier;
@@ -1074,11 +1075,11 @@ public class StatusReport {
     }
     println(getIndent(), TextStyle.ROLL, status.toString());
     if (!pReport.isReRolled()) {
-      if (pReport.hasRollModifier(DodgeModifier.STUNTY)) {
+      if (pReport.hasRollModifier(DodgeModifiers.STUNTY)) {
         print(getIndent() + 1, false, actingPlayer.getPlayer());
         println(getIndent() + 1, " is Stunty and ignores tacklezones.");
       }
-      if (pReport.hasRollModifier(DodgeModifier.BREAK_TACKLE)) {
+      if (pReport.hasRollModifier(DodgeModifiers.BREAK_TACKLE)) {
         print(getIndent() + 1, false, actingPlayer.getPlayer());
         println(getIndent() + 1, " uses Break Tackle to break free.");
       }
@@ -1098,7 +1099,7 @@ public class StatusReport {
       }
     }
     if (neededRoll != null) {
-      if (pReport.hasRollModifier(DodgeModifier.BREAK_TACKLE)) {
+      if (pReport.hasRollModifier(DodgeModifiers.BREAK_TACKLE)) {
         neededRoll.append(" using Break Tackle (ST ").append(Math.min(6, actingPlayer.getStrength()));
       } else {
         neededRoll.append(" (AG ").append(Math.min(6, actingPlayer.getPlayer().getAgility()));

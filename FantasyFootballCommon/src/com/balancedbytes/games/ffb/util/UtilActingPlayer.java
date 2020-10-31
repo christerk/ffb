@@ -7,6 +7,7 @@ import com.balancedbytes.games.ffb.model.FieldModel;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.model.Skill;
+import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
 
 /**
  * 
@@ -28,7 +29,11 @@ public class UtilActingPlayer {
       changed = true;
       PlayerState currentState = pGame.getFieldModel().getPlayerState(oldPlayer);
       if (currentState.getBase() == PlayerState.MOVING) {
-        if (actingPlayer.hasActed() && (((PlayerAction.THROW_BOMB != actingPlayer.getPlayerAction()) && (PlayerAction.HAIL_MARY_BOMB != actingPlayer.getPlayerAction())) || actingPlayer.isSkillUsed(Skill.BOMBARDIER))) {
+        boolean isThrowBombAction = PlayerAction.THROW_BOMB == actingPlayer.getPlayerAction(); 
+        boolean isHailMaryBombAction = PlayerAction.HAIL_MARY_BOMB == actingPlayer.getPlayerAction();
+        if (actingPlayer.hasActed() && 
+            ((!isThrowBombAction && !isHailMaryBombAction) 
+                || UtilCards.hasUnusedSkillWithProperty(actingPlayer, NamedProperties.enableThrowBombAction))) {
           pGame.getFieldModel().setPlayerState(oldPlayer, currentState.changeBase(PlayerState.STANDING).changeActive(false));
       	} else if (actingPlayer.isStandingUp()) {
           pGame.getFieldModel().setPlayerState(oldPlayer, currentState.changeBase(PlayerState.PRONE));

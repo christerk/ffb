@@ -8,6 +8,8 @@ import java.util.Set;
 
 import com.balancedbytes.games.ffb.Card;
 import com.balancedbytes.games.ffb.CardEffect;
+import com.balancedbytes.games.ffb.DodgeModifier;
+import com.balancedbytes.games.ffb.DodgeModifiers.DodgeContext;
 import com.balancedbytes.games.ffb.PassModifier;
 import com.balancedbytes.games.ffb.PassingModifiers.PassContext;
 import com.balancedbytes.games.ffb.PickupModifier;
@@ -68,6 +70,20 @@ public final class UtilCards {
     for (Skill skill : player.getSkills()) {
       for (PickupModifier modifier : skill.getPickupModifiers()) {
         if (modifier.appliesToContext(context)) {
+          result.add(modifier);
+        }
+      }
+    }
+    
+    return result;
+  }
+  
+  public static Collection<DodgeModifier> getDodgeModifiers(ActingPlayer player, DodgeContext context) {
+    Set<DodgeModifier> result = new HashSet<DodgeModifier>();
+    
+    for (Skill skill : player.getPlayer().getSkills()) {
+      for (DodgeModifier modifier : skill.getDodgeModifiers()) {
+        if (modifier.appliesToContext(skill, context)) {
           result.add(modifier);
         }
       }
@@ -260,5 +276,14 @@ public final class UtilCards {
 
   public static boolean cancelsSkill(Player player, Skill skill) {
     return getSkillCancelling(player, skill) != null;
+  }
+
+  public static boolean hasUnusedSkillWithProperty(ActingPlayer actingPlayer, ISkillProperty property) {
+    for (Skill playerSkill : actingPlayer.getPlayer().getSkills()) {
+      if (playerSkill.hasSkillProperty(property) && !actingPlayer.isSkillUsed(playerSkill)) {
+        return true;
+      }
+    }
+    return false;
   }
 }

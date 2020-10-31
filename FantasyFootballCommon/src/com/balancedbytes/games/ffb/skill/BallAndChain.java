@@ -54,6 +54,7 @@ public class BallAndChain extends Skill {
     registerProperty(NamedProperties.goForItAfterBlock);
     registerProperty(NamedProperties.movesRandomly);
     registerProperty(NamedProperties.ignoreTacklezonesWhenMoving);
+    registerProperty(NamedProperties.convertStunToKO);
     registerProperty(new CancelSkillProperty(SkillConstants.MULTIPLE_BLOCK));
     registerProperty(new CancelSkillProperty(SkillConstants.PILING_ON));
     registerProperty(new CancelSkillProperty(SkillConstants.FOUL_APPEARANCE));

@@ -4,6 +4,7 @@ import java.util.Set;
 
 import com.balancedbytes.games.ffb.DodgeModifier;
 import com.balancedbytes.games.ffb.DodgeModifierFactory;
+import com.balancedbytes.games.ffb.DodgeModifiers;
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.PlayerChoiceMode;
 import com.balancedbytes.games.ffb.SkillUse;
@@ -13,6 +14,7 @@ import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
+import com.balancedbytes.games.ffb.model.SkillConstants;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandPlayerChoice;
 import com.balancedbytes.games.ffb.report.ReportSkillUse;
 import com.balancedbytes.games.ffb.server.DiceInterpreter;
@@ -151,16 +153,16 @@ public class StepDivingTackle extends AbstractStep {
         if (ArrayTool.isProvided(divingTacklers) && (fDodgeRoll > 0)) {
           DodgeModifierFactory modifierFactory = new DodgeModifierFactory();
           Set<DodgeModifier> dodgeModifiers = modifierFactory.findDodgeModifiers(game, fCoordinateFrom, fCoordinateTo, 0);
-          dodgeModifiers.add(DodgeModifier.DIVING_TACKLE);
+          dodgeModifiers.add(DodgeModifiers.DIVING_TACKLE);
           if (fUsingBreakTackle) {
-            dodgeModifiers.add(DodgeModifier.BREAK_TACKLE);
+            dodgeModifiers.add(DodgeModifiers.BREAK_TACKLE);
           }
           int minimumRoll = DiceInterpreter.getInstance().minimumRollDodge(game, actingPlayer.getPlayer(), dodgeModifiers);
           int minimumRollWithoutBreakTackle = minimumRoll;
-          if (dodgeModifiers.contains(DodgeModifier.BREAK_TACKLE)) {
-        	  dodgeModifiers.remove(DodgeModifier.BREAK_TACKLE);
+          if (dodgeModifiers.contains(DodgeModifiers.BREAK_TACKLE)) {
+        	  dodgeModifiers.remove(DodgeModifiers.BREAK_TACKLE);
         	  minimumRollWithoutBreakTackle = DiceInterpreter.getInstance().minimumRollDodge(game, actingPlayer.getPlayer(), dodgeModifiers);
-        	  dodgeModifiers.add(DodgeModifier.BREAK_TACKLE);
+        	  dodgeModifiers.add(DodgeModifiers.BREAK_TACKLE);
           }
           if (!DiceInterpreter.getInstance().isSkillRollSuccessful(fDodgeRoll, minimumRoll)) {
             String teamId = game.isHomePlaying() ? game.getTeamAway().getId() : game.getTeamHome().getId();
@@ -187,10 +189,10 @@ public class StepDivingTackle extends AbstractStep {
     	DodgeModifierFactory modifierFactory = new DodgeModifierFactory();
     	Set<DodgeModifier> dodgeModifiers = modifierFactory.findDodgeModifiers(game, fCoordinateFrom, fCoordinateTo, 0);
     	int minimumRoll = DiceInterpreter.getInstance().minimumRollDodge(game, actingPlayer.getPlayer(), dodgeModifiers);
-    	if (dodgeModifiers.contains(DodgeModifier.BREAK_TACKLE) && DiceInterpreter.getInstance().isSkillRollSuccessful(fDodgeRoll, minimumRoll)) {
+    	if (dodgeModifiers.contains(DodgeModifiers.BREAK_TACKLE) && DiceInterpreter.getInstance().isSkillRollSuccessful(fDodgeRoll, minimumRoll)) {
     		// This dodge will be successful with Break Tackle triggered, so mark it as used.
     		  fUsingBreakTackle = true;
-    	      actingPlayer.markSkillUsed(ServerSkill.BREAK_TACKLE);
+    	      actingPlayer.markSkillUsed(SkillConstants.BREAK_TACKLE);
     	      publishParameter(new StepParameter(StepParameterKey.USING_BREAK_TACKLE, fUsingBreakTackle));
     	}
     	

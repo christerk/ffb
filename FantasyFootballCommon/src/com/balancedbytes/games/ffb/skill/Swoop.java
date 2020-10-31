@@ -2,6 +2,7 @@ package com.balancedbytes.games.ffb.skill;
 
 import com.balancedbytes.games.ffb.SkillCategory;
 import com.balancedbytes.games.ffb.model.Skill;
+import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
 
 /**
 * This player is equipped with a rudimentary set of wings, either natural or
@@ -22,6 +23,8 @@ public class Swoop extends Skill {
 
   public Swoop() {
     super("Swoop", SkillCategory.EXTRAORDINARY);
+    
+    registerProperty(NamedProperties.preventStuntyDodgeModifier);
   }
 
 }

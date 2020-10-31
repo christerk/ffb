@@ -1,5 +1,6 @@
 package com.balancedbytes.games.ffb.skill;
 
+import com.balancedbytes.games.ffb.DodgeModifiers;
 import com.balancedbytes.games.ffb.SkillCategory;
 import com.balancedbytes.games.ffb.model.Skill;
 
@@ -13,6 +14,8 @@ public class BreakTackle extends Skill {
 
   public BreakTackle() {
     super("Break Tackle", SkillCategory.STRENGTH);
+    
+    registerModifier(DodgeModifiers.BREAK_TACKLE);
   }
 
 }

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
+import com.balancedbytes.games.ffb.DodgeModifier;
 import com.balancedbytes.games.ffb.INamedObject;
 import com.balancedbytes.games.ffb.PassModifier;
 import com.balancedbytes.games.ffb.PickupModifier;
@@ -17,6 +18,7 @@ public class Skill implements INamedObject {
   private List<PlayerModifier> playerModifiers;
   private List<PassModifier> passModifiers;
   private List<PickupModifier> pickupModifiers;
+  private List<DodgeModifier> dodgeModifiers;
   private List<ISkillBehaviour> behaviours;
   private List<ISkillProperty> skillProperties;
   
@@ -28,6 +30,7 @@ public class Skill implements INamedObject {
     playerModifiers = new ArrayList<PlayerModifier>();
     passModifiers = new ArrayList<PassModifier>();
     pickupModifiers = new ArrayList<PickupModifier>();
+    dodgeModifiers = new ArrayList<DodgeModifier>();
   }
   
   @Override
@@ -59,6 +62,9 @@ public class Skill implements INamedObject {
     pickupModifiers.add(modifier);
   }
   
+  protected void registerModifier(DodgeModifier modifier) {
+    dodgeModifiers.add(modifier);
+  }
   
   protected void registerModifier(PlayerModifier modifier) {
     playerModifiers.add(modifier);
@@ -84,6 +90,11 @@ public class Skill implements INamedObject {
   public List<PickupModifier> getPickupModifiers() {
     return pickupModifiers;
   }
+
+  public List<DodgeModifier> getDodgeModifiers() {
+    return dodgeModifiers;
+  }
+  
   
   public void addBehaviour(ISkillBehaviour behaviour) {
     behaviours.add(behaviour);
@@ -126,5 +137,4 @@ public class Skill implements INamedObject {
   public String getConfusionMessage() {
     return "is confused";
   }
-  
 }

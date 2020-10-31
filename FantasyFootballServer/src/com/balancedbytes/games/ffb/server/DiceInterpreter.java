@@ -9,6 +9,7 @@ import com.balancedbytes.games.ffb.CatchModifier;
 import com.balancedbytes.games.ffb.Direction;
 import com.balancedbytes.games.ffb.DirectionFactory;
 import com.balancedbytes.games.ffb.DodgeModifier;
+import com.balancedbytes.games.ffb.DodgeModifiers;
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.GazeModifier;
 import com.balancedbytes.games.ffb.GoForItModifier;
@@ -94,7 +95,7 @@ public class DiceInterpreter {
     for (DodgeModifier dodgeModifier : pDodgeModifiers) {
       modifierTotal += dodgeModifier.getModifier();
     }
-    int statistic = pDodgeModifiers.contains(DodgeModifier.BREAK_TACKLE) ? UtilCards.getPlayerStrength(pGame, pPlayer) : pPlayer.getAgility();
+    int statistic = pDodgeModifiers.contains(DodgeModifiers.BREAK_TACKLE) ? UtilCards.getPlayerStrength(pGame, pPlayer) : pPlayer.getAgility();
     return Math.max(2, getAgilityRollBase(statistic) - 1 + modifierTotal);
   }
 

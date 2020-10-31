@@ -1,5 +1,6 @@
 package com.balancedbytes.games.ffb.skill;
 
+import com.balancedbytes.games.ffb.DodgeModifiers;
 import com.balancedbytes.games.ffb.SkillCategory;
 import com.balancedbytes.games.ffb.model.Skill;
 
@@ -12,6 +13,15 @@ public class PrehensileTail extends Skill {
 
   public PrehensileTail() {
     super("Prehensile Tail", SkillCategory.MUTATION);
+    
+    registerModifier(DodgeModifiers.PREHENSILE_TAIL_1);
+    registerModifier(DodgeModifiers.PREHENSILE_TAIL_2);
+    registerModifier(DodgeModifiers.PREHENSILE_TAIL_3);
+    registerModifier(DodgeModifiers.PREHENSILE_TAIL_4);
+    registerModifier(DodgeModifiers.PREHENSILE_TAIL_5);
+    registerModifier(DodgeModifiers.PREHENSILE_TAIL_6);
+    registerModifier(DodgeModifiers.PREHENSILE_TAIL_7);
+    registerModifier(DodgeModifiers.PREHENSILE_TAIL_8);
   }
 
 }

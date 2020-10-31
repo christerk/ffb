@@ -2,6 +2,7 @@ package com.balancedbytes.games.ffb.skill;
 
 import com.balancedbytes.games.ffb.SkillCategory;
 import com.balancedbytes.games.ffb.model.Skill;
+import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
 
 /**
 * Some players are armed with special pieces of equipment that are called
@@ -18,6 +19,8 @@ public class SecretWeapon extends Skill {
 
   public SecretWeapon() {
     super("Secret Weapon", SkillCategory.EXTRAORDINARY);
+    
+    registerProperty(NamedProperties.preventStuntyDodgeModifier);
   }
 
 }

@@ -180,7 +180,7 @@ public class UtilPlayer {
     return foulAssists;
   }
 
-  public static int findTimmmberAssists(Game pGame, Player timmmberPlayer) {
+  public static int findStandUpAssists(Game pGame, Player timmmberPlayer) {
     int assists = 0;
     Team opposingTeam = findOtherTeam(pGame, timmmberPlayer);
     FieldCoordinate coordinatePlayer = pGame.getFieldModel().getPlayerCoordinate(timmmberPlayer);

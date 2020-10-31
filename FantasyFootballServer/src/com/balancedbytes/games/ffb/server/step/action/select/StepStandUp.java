@@ -5,12 +5,12 @@ import com.balancedbytes.games.ffb.ReRolledAction;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.Game;
+import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
 import com.balancedbytes.games.ffb.report.ReportStandUpRoll;
 import com.balancedbytes.games.ffb.server.DiceInterpreter;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.IServerConstant;
 import com.balancedbytes.games.ffb.server.IServerJsonOption;
-import com.balancedbytes.games.ffb.server.model.ServerSkill;
 import com.balancedbytes.games.ffb.server.net.ReceivedCommand;
 import com.balancedbytes.games.ffb.server.step.AbstractStepWithReRoll;
 import com.balancedbytes.games.ffb.server.step.StepAction;
@@ -99,8 +99,8 @@ public final class StepStandUp extends AbstractStepWithReRoll {
           int roll = getGameState().getDiceRoller().rollSkill();
 
           int modifier = 0;
-          if (UtilCards.hasSkill(game, actingPlayer, ServerSkill.TIMMMBER)) {
-            modifier = UtilPlayer.findTimmmberAssists(game, actingPlayer.getPlayer());
+          if (UtilCards.hasSkillWithProperty(actingPlayer.getPlayer(), NamedProperties.allowStandupAssists)) {
+            modifier = UtilPlayer.findStandUpAssists(game, actingPlayer.getPlayer());
           }
 
           boolean successful = DiceInterpreter.getInstance().isStandUpSuccessful(roll, modifier);

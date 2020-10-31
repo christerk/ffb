@@ -308,7 +308,7 @@ public class ClientStateSelect extends ClientState {
   	return ((playerState != null)
       && !game.getFieldModel().hasCardEffect(pPlayer, CardEffect.ILLEGALLY_SUBSTITUTED)
   	  && !playerState.isProne()
-  	  && UtilCards.hasSkill(game, pPlayer, Skill.BOMBARDIER));
+  	  && UtilCards.hasSkillWithProperty(pPlayer, NamedProperties.enableThrowBombAction));
   }
 
   private boolean isMoveActionAvailable(Player pPlayer) {

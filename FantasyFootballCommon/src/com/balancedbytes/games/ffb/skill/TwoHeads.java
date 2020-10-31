@@ -1,5 +1,6 @@
 package com.balancedbytes.games.ffb.skill;
 
+import com.balancedbytes.games.ffb.DodgeModifiers;
 import com.balancedbytes.games.ffb.SkillCategory;
 import com.balancedbytes.games.ffb.model.Skill;
 
@@ -12,6 +13,7 @@ public class TwoHeads extends Skill {
 
   public TwoHeads() {
     super("Two Heads", SkillCategory.MUTATION);
+    
+    registerModifier(DodgeModifiers.TWO_HEADS);
   }
-
 }

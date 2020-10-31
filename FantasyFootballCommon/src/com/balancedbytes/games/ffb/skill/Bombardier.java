@@ -2,6 +2,7 @@ package com.balancedbytes.games.ffb.skill;
 
 import com.balancedbytes.games.ffb.SkillCategory;
 import com.balancedbytes.games.ffb.model.Skill;
+import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
 
 /**
 * A coach may choose to have a Bombardier who is not Prone or Stunned
@@ -30,6 +31,8 @@ public class Bombardier extends Skill {
 
   public Bombardier() {
     super("Bombardier", SkillCategory.EXTRAORDINARY);
+    
+    registerProperty(NamedProperties.enableThrowBombAction);
   }
 
 }

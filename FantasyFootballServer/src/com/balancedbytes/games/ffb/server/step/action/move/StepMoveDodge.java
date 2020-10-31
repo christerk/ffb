@@ -4,6 +4,7 @@ import java.util.Set;
 
 import com.balancedbytes.games.ffb.DodgeModifier;
 import com.balancedbytes.games.ffb.DodgeModifierFactory;
+import com.balancedbytes.games.ffb.DodgeModifiers;
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.InjuryType;
 import com.balancedbytes.games.ffb.ReRollSource;
@@ -13,6 +14,7 @@ import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
+import com.balancedbytes.games.ffb.model.SkillConstants;
 import com.balancedbytes.games.ffb.model.Team;
 import com.balancedbytes.games.ffb.option.GameOptionId;
 import com.balancedbytes.games.ffb.option.UtilGameOption;
@@ -191,7 +193,7 @@ public class StepMoveDodge extends AbstractStepWithReRoll {
     DodgeModifierFactory modifierFactory = new DodgeModifierFactory();
     Set<DodgeModifier> dodgeModifiers = modifierFactory.findDodgeModifiers(game, fCoordinateFrom, fCoordinateTo, 0);
     if (fUsingBreakTackle) {
-      dodgeModifiers.add(DodgeModifier.BREAK_TACKLE);
+      dodgeModifiers.add(DodgeModifiers.BREAK_TACKLE);
     }
     if ((fUsingDivingTackle != null) && fUsingDivingTackle) {
       dodgeModifiers.add(DodgeModifier.DIVING_TACKLE);
@@ -201,19 +203,19 @@ public class StepMoveDodge extends AbstractStepWithReRoll {
     boolean successful = DiceInterpreter.getInstance().isSkillRollSuccessful(fDodgeRoll, minimumRoll);
 
     if (successful) {
-      if (dodgeModifiers.remove(DodgeModifier.BREAK_TACKLE)) {
+      if (dodgeModifiers.remove(DodgeModifiers.BREAK_TACKLE)) {
         int minimumRollWithoutBreakTackle = DiceInterpreter.getInstance().minimumRollDodge(game, actingPlayer.getPlayer(), dodgeModifiers);
         if (!DiceInterpreter.getInstance().isSkillRollSuccessful(fDodgeRoll, minimumRollWithoutBreakTackle)) {
-          dodgeModifiers.add(DodgeModifier.BREAK_TACKLE);
+          dodgeModifiers.add(DodgeModifiers.BREAK_TACKLE);
         } else {
           minimumRoll = minimumRollWithoutBreakTackle;
         }
       }
     } else {
-      if (pDoRoll && dodgeModifiers.remove(DodgeModifier.BREAK_TACKLE)) {
+      if (pDoRoll && dodgeModifiers.remove(DodgeModifiers.BREAK_TACKLE)) {
         minimumRoll = DiceInterpreter.getInstance().minimumRollDodge(game, actingPlayer.getPlayer(), dodgeModifiers);
         if (!fUsingBreakTackle) {
-          getResult().addReport(new ReportSkillUse(null, ServerSkill.BREAK_TACKLE, false, SkillUse.WOULD_NOT_HELP));
+          getResult().addReport(new ReportSkillUse(null, SkillConstants.BREAK_TACKLE, false, SkillUse.WOULD_NOT_HELP));
         }
       }
     }
@@ -252,9 +254,9 @@ public class StepMoveDodge extends AbstractStepWithReRoll {
       }
     }
 
-    if (dodgeModifiers.contains(DodgeModifier.BREAK_TACKLE) && ((status == ActionStatus.SUCCESS))) {
+    if (dodgeModifiers.contains(DodgeModifiers.BREAK_TACKLE) && ((status == ActionStatus.SUCCESS))) {
       fUsingBreakTackle = true;
-      actingPlayer.markSkillUsed(ServerSkill.BREAK_TACKLE);
+      actingPlayer.markSkillUsed(SkillConstants.BREAK_TACKLE);
       publishParameter(new StepParameter(StepParameterKey.USING_BREAK_TACKLE, fUsingBreakTackle));
     }
 

@@ -2,6 +2,7 @@ package com.balancedbytes.games.ffb.skill;
 
 import com.balancedbytes.games.ffb.SkillCategory;
 import com.balancedbytes.games.ffb.model.Skill;
+import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
 
 /**
 * This player spends so much time on the floor that their team-mates have
@@ -18,6 +19,8 @@ public class Timmmber extends Skill {
 
   public Timmmber() {
     super("Timmm-ber!", SkillCategory.EXTRAORDINARY);
+    
+    registerProperty(NamedProperties.allowStandupAssists);
   }
 
 }

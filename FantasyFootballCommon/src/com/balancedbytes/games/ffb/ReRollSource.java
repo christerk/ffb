@@ -1,6 +1,7 @@
 package com.balancedbytes.games.ffb;
 
 import com.balancedbytes.games.ffb.model.Skill;
+import com.balancedbytes.games.ffb.model.SkillConstants;
 
 /**
  * 
@@ -9,16 +10,16 @@ import com.balancedbytes.games.ffb.model.Skill;
 public enum ReRollSource implements INamedObject {
   
   TEAM_RE_ROLL("Team ReRoll"),
-  DODGE(Skill.DODGE),
-  PRO(Skill.PRO),
-  SURE_FEET(Skill.SURE_FEET),
-  SURE_HANDS(Skill.SURE_HANDS),
-  CATCH(Skill.CATCH),
-  PASS(Skill.PASS),
+  DODGE(SkillConstants.DODGE),
+  PRO(SkillConstants.PRO),
+  SURE_FEET(SkillConstants.SURE_FEET),
+  SURE_HANDS(SkillConstants.SURE_HANDS),
+  CATCH(SkillConstants.CATCH),
+  PASS(SkillConstants.PASS),
   WINNINGS("Winnings"),
-  LONER(Skill.LONER),
-  LEADER(Skill.LEADER),
-  MONSTROUS_MOUTH(Skill.MOUNSTROUS_MOUTH);
+  LONER(SkillConstants.LONER),
+  LEADER(SkillConstants.LEADER),
+  MONSTROUS_MOUTH(SkillConstants.MONSTROUS_MOUTH);
 
   private int fId;
   private String fName;

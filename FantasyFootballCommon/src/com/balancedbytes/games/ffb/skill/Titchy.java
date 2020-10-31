@@ -1,7 +1,9 @@
 package com.balancedbytes.games.ffb.skill;
 
+import com.balancedbytes.games.ffb.DodgeModifiers;
 import com.balancedbytes.games.ffb.SkillCategory;
 import com.balancedbytes.games.ffb.model.Skill;
+import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
 
 /**
 * Titchy players tend to be even smaller and more nimble than other
@@ -15,6 +17,9 @@ public class Titchy extends Skill {
 
   public Titchy() {
     super("Titchy", SkillCategory.EXTRAORDINARY);
+    
+    registerProperty(NamedProperties.hasNoTacklezone);
+    registerModifier(DodgeModifiers.TITCHY);
   }
 
 }
