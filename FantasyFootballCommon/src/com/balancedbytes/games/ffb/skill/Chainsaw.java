@@ -2,6 +2,7 @@ package com.balancedbytes.games.ffb.skill;
 
 import com.balancedbytes.games.ffb.SkillCategory;
 import com.balancedbytes.games.ffb.model.Skill;
+import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
 
 /**
 * A player armed with a chainsaw must attack with it instead of making a
@@ -29,6 +30,8 @@ public class Chainsaw extends Skill {
 
   public Chainsaw() {
     super("Chainsaw", SkillCategory.EXTRAORDINARY);
+    
+    registerProperty(NamedProperties.useSpecialBlockRules);
   }
 
 }

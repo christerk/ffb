@@ -183,7 +183,7 @@ public class ClientStateSelect extends ClientState {
       confusionAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_RECOVER, 0));
       menuItemList.add(confusionAction);
     }
-    if (isStandUpActionAvailable(pPlayer) && UtilCards.hasSkill(game, pPlayer, Skill.WILD_ANIMAL) && !game.getTurnData().isBlitzUsed()) {
+    if (isStandUpActionAvailable(pPlayer) && UtilCards.hasSkillWithProperty(pPlayer, NamedProperties.enableStandUpAndEndBlitzAction) && !game.getTurnData().isBlitzUsed()) {
       JMenuItem standUpAction = new JMenuItem("Stand Up & End Move (using Blitz)", new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_STAND_UP)));
       standUpAction.setMnemonic(IPlayerPopupMenuKeys.KEY_STAND_UP_BLITZ);
       standUpAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_STAND_UP_BLITZ, 0));

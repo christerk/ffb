@@ -29,6 +29,7 @@ import com.balancedbytes.games.ffb.SpecialEffect;
 import com.balancedbytes.games.ffb.Weather;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
+import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
 import com.balancedbytes.games.ffb.server.model.ServerSkill;
 import com.balancedbytes.games.ffb.util.ArrayTool;
 import com.balancedbytes.games.ffb.util.UtilCards;
@@ -310,7 +311,7 @@ public class DiceInterpreter {
         pInjuryResult.clearInjuryModifiers();
       }
       int total = injuryRoll[0] + injuryRoll[1] + pInjuryResult.getInjuryModifierTotal();
-      if ((total == 8) && (defender != null) && UtilCards.hasSkill(game, defender, ServerSkill.THICK_SKULL)) {
+      if ((total == 8) && (defender != null) && UtilCards.hasSkillWithProperty(defender, NamedProperties.convertKOToStunOn8)) {
         playerState = new PlayerState(PlayerState.STUNNED);
         pInjuryResult.addInjuryModifier(InjuryModifier.THICK_SKULL);
       } else if ((total == 7) && (defender != null) && UtilCards.hasSkill(game, defender, ServerSkill.STUNTY) && (pInjuryResult.getInjuryType() != InjuryType.STAB)

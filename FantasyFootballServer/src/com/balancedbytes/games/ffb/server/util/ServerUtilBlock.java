@@ -8,7 +8,6 @@ import com.balancedbytes.games.ffb.PlayerState;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
-import com.balancedbytes.games.ffb.model.Skill;
 import com.balancedbytes.games.ffb.model.Team;
 import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
 import com.balancedbytes.games.ffb.util.UtilCards;
@@ -49,14 +48,14 @@ public class ServerUtilBlock {
     ActingPlayer actingPlayer = pGame.getActingPlayer();
     if (pPlayers.length > 0) {
       int attackerStrength = actingPlayer.getStrength();
-      if (UtilCards.hasSkill(pGame, actingPlayer, Skill.HORNS) && ((actingPlayer.getPlayerAction() == PlayerAction.BLITZ) || (actingPlayer.getPlayerAction() == PlayerAction.BLITZ_MOVE))) {
+      if (UtilCards.hasSkillWithProperty(actingPlayer.getPlayer(), NamedProperties.addStrengthOnBlitz) && ((actingPlayer.getPlayerAction() == PlayerAction.BLITZ) || (actingPlayer.getPlayerAction() == PlayerAction.BLITZ_MOVE))) {
         attackerStrength++;
       }
       boolean usingMultiBlock = (actingPlayer.getPlayerAction() == PlayerAction.MULTIPLE_BLOCK);
       for (int i = 0; i < pPlayers.length; i++) {
         if (!usingMultiBlock || (pPlayers[i] != pGame.getDefender())) {
           int nrOfDice = 0;
-          if (!UtilCards.hasSkill(pGame, actingPlayer, Skill.CHAINSAW)) {
+          if (!UtilCards.hasSkillWithProperty(actingPlayer.getPlayer(), NamedProperties.useSpecialBlockRules)) {
             nrOfDice = findNrOfBlockDice(pGame, actingPlayer.getPlayer(), attackerStrength, pPlayers[i], usingMultiBlock);
           }
           FieldCoordinate coordinateOpponent = pGame.getFieldModel().getPlayerCoordinate(pPlayers[i]);

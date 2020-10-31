@@ -3,13 +3,16 @@ package com.balancedbytes.games.ffb.model.modifier;
 import com.balancedbytes.games.ffb.model.ISkillProperty;
 
 public class NamedProperties {
+  public static final ISkillProperty addStrengthOnBlitz = new NamedProperty("Add Strength on Blitz");
   public static final ISkillProperty allowStandupAssists = new NamedProperty("Allow Stand Up Assists");
   public static final ISkillProperty appliesConfusion = new NamedProperty("Applies Confusion");
   public static final ISkillProperty appliesPoisonOnBadlyHurt = new NamedProperty("Applies Poison on Badly Hurt");
   public static final ISkillProperty assistInTacklezones = new NamedProperty("Assist in Tacklezones");
   public static final ISkillProperty canBlockMoreThanOnce = new NamedProperty("Can Block More Than Once");
   public static final ISkillProperty canBlockSameTeamPlayer = new NamedProperty("Can Block Same Team Player");
+  public static final ISkillProperty convertKOToStunOn8 = new NamedProperty("Convert KO to Stun on a roll of 8");
   public static final ISkillProperty convertStunToKO = new NamedProperty("Convert Stun to KO");
+  public static final ISkillProperty enableStandUpAndEndBlitzAction = new NamedProperty("Enable Stand Up and End Blitz Action");
   public static final ISkillProperty enableThrowBombAction = new NamedProperty("Enable Throw Bomb Action");
   public static final ISkillProperty flipSameTeamOpponentToOtherTeam = new NamedProperty("Flip Same Team Opponent to Other Team");
   public static final ISkillProperty forceFollowup = new NamedProperty("Force Followup");
@@ -38,4 +41,5 @@ public class NamedProperties {
   public static final ISkillProperty preventStandUpAction = new NamedProperty("Prevent Regular Stand Up Action");
   public static final ISkillProperty preventStuntyDodgeModifier = new NamedProperty("Prevent Stunty Dodge Modifier");
   public static final ISkillProperty preventThrowTeamMateAction = new NamedProperty("Prevent Throw Team Mate Action");
+  public static final ISkillProperty useSpecialBlockRules = new NamedProperty("Use Special Block Rules");
 }

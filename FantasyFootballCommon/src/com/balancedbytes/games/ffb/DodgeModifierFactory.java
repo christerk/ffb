@@ -90,7 +90,7 @@ public class DodgeModifierFactory implements IRollModifierFactory {
     int nrOfPrehensileTails = 0;
     Player[] opponents = UtilPlayer.findAdjacentPlayersWithTacklezones(pGame, otherTeam, pCoordinateFrom, true);
     for (Player opponent : opponents) {
-      if (UtilCards.hasSkill(pGame, opponent, Skill.PREHENSILE_TAIL)) {
+      if (UtilCards.hasSkill(pGame, opponent, SkillConstants.PREHENSILE_TAIL)) {
         nrOfPrehensileTails++;
       }
     }

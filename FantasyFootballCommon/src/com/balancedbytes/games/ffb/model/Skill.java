@@ -2,12 +2,15 @@ package com.balancedbytes.games.ffb.model;
 
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.Hashtable;
 import java.util.List;
 
 import com.balancedbytes.games.ffb.DodgeModifier;
 import com.balancedbytes.games.ffb.INamedObject;
 import com.balancedbytes.games.ffb.PassModifier;
 import com.balancedbytes.games.ffb.PickupModifier;
+import com.balancedbytes.games.ffb.ReRollSource;
+import com.balancedbytes.games.ffb.ReRolledAction;
 import com.balancedbytes.games.ffb.SkillCategory;
 import com.balancedbytes.games.ffb.model.modifier.CancelSkillProperty;
 
@@ -21,16 +24,18 @@ public class Skill implements INamedObject {
   private List<DodgeModifier> dodgeModifiers;
   private List<ISkillBehaviour> behaviours;
   private List<ISkillProperty> skillProperties;
+  private Hashtable<ReRolledAction, ReRollSource> rerollSources;
   
   public Skill(String name, SkillCategory category) {
     this.name = name;
     this.category = category;
-    behaviours = new ArrayList<ISkillBehaviour>();
-    skillProperties = new ArrayList<ISkillProperty>();
-    playerModifiers = new ArrayList<PlayerModifier>();
-    passModifiers = new ArrayList<PassModifier>();
-    pickupModifiers = new ArrayList<PickupModifier>();
-    dodgeModifiers = new ArrayList<DodgeModifier>();
+    behaviours = new ArrayList<>();
+    skillProperties = new ArrayList<>();
+    playerModifiers = new ArrayList<>();
+    passModifiers = new ArrayList<>();
+    pickupModifiers = new ArrayList<>();
+    dodgeModifiers = new ArrayList<>();
+    rerollSources = new Hashtable<>();
   }
   
   @Override
@@ -74,6 +79,9 @@ public class Skill implements INamedObject {
     skillProperties.add(property);
   }
 
+  protected void registerRerollSource(ReRolledAction action, ReRollSource source) {
+    rerollSources.put(action, source);
+  }
   
   public List<ISkillBehaviour> getSkillBehaviours() {
     return behaviours;
@@ -136,5 +144,12 @@ public class Skill implements INamedObject {
 
   public String getConfusionMessage() {
     return "is confused";
+  }
+
+  public ReRollSource getRerollSource(ReRolledAction action) {
+    if (rerollSources.containsKey(action)) {
+      return rerollSources.get(action);
+    }
+    return null;
   }
 }

@@ -2,6 +2,7 @@ package com.balancedbytes.games.ffb.skill;
 
 import com.balancedbytes.games.ffb.SkillCategory;
 import com.balancedbytes.games.ffb.model.Skill;
+import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
 
 /**
 * Wild Animals are uncontrollable creatures that rarely do exactly what a
@@ -16,6 +17,8 @@ public class WildAnimal extends Skill {
 
   public WildAnimal() {
     super("Wild Animal", SkillCategory.EXTRAORDINARY);
+    
+    registerProperty(NamedProperties.enableStandUpAndEndBlitzAction);
   }
 
   @Override

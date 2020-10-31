@@ -14,6 +14,8 @@ import com.balancedbytes.games.ffb.PassModifier;
 import com.balancedbytes.games.ffb.PassingModifiers.PassContext;
 import com.balancedbytes.games.ffb.PickupModifier;
 import com.balancedbytes.games.ffb.PickupModifiers.PickupContext;
+import com.balancedbytes.games.ffb.ReRollSource;
+import com.balancedbytes.games.ffb.ReRolledAction;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.ISkillProperty;
@@ -285,5 +287,25 @@ public final class UtilCards {
       }
     }
     return false;
+  }
+
+  public static ReRollSource getRerollSource(Player player, ReRolledAction action) {
+    for (Skill playerSkill : player.getSkills()) {
+      ReRollSource source = playerSkill.getRerollSource(action);
+      if (source != null) {
+        return source;
+      }
+    }    
+    return null;
+  }
+
+  public static ReRollSource getUnusedRerollSource(ActingPlayer actingPlayer, ReRolledAction action) {
+    for (Skill playerSkill : actingPlayer.getPlayer().getSkills()) {
+      ReRollSource source = playerSkill.getRerollSource(action);
+      if (source != null && !actingPlayer.isSkillUsed(playerSkill)) {
+        return source;
+      }
+    }    
+    return null;
   }
 }

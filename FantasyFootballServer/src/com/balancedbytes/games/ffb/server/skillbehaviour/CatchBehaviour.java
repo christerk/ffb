@@ -1,6 +1,5 @@
 package com.balancedbytes.games.ffb.server.skillbehaviour;
 
-import com.balancedbytes.games.ffb.ReRollSource;
 import com.balancedbytes.games.ffb.ReRolledAction;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandUseSkill;
 import com.balancedbytes.games.ffb.server.model.SkillBehaviour;
@@ -25,7 +24,7 @@ public class CatchBehaviour extends SkillBehaviour<Catch> {
       @Override
       public boolean handleExecuteStepHook(StepCatchScatterThrowIn step, StepState state) {
         step.setReRolledAction(ReRolledAction.CATCH);
-        step.setReRollSource(ReRollSource.CATCH);
+        step.setReRollSource(skill.getRerollSource(ReRolledAction.CATCH));
 
         return true;
       }

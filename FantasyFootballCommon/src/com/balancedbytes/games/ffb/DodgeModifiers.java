@@ -33,7 +33,7 @@ public class DodgeModifiers {
 
   public static final DodgeModifier STUNTY = new DodgeModifier("Stunty", 0, false, false) {
     @Override
-    public boolean appliesToContext(DodgeContext context) {
+    public boolean appliesToContext(Skill skill, DodgeContext context) {
       boolean applies = !UtilCards.hasSkillWithProperty(context.actingPlayer.getPlayer(), NamedProperties.preventStuntyDodgeModifier);
       if (applies) {
         context.addTackleZoneModifier = false;
@@ -59,7 +59,7 @@ public class DodgeModifiers {
     }
 
     @Override
-    public boolean appliesToContext(DodgeContext context) {
+    public boolean appliesToContext(Skill skill, DodgeContext context) {
       int number = findNumberOfPrehensileTails(context.actingPlayer.getGame(), context.sourceCoordinate);
       return number == this.getModifier();
     }

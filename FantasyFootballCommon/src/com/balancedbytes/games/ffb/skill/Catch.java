@@ -1,5 +1,7 @@
 package com.balancedbytes.games.ffb.skill;
 
+import com.balancedbytes.games.ffb.ReRollSource;
+import com.balancedbytes.games.ffb.ReRolledAction;
 import com.balancedbytes.games.ffb.SkillCategory;
 import com.balancedbytes.games.ffb.model.Skill;
 
@@ -12,7 +14,8 @@ public class Catch extends Skill {
 
   public Catch() {
     super("Catch", SkillCategory.AGILITY);
-    // TODO Auto-generated constructor stub
+
+    registerRerollSource(ReRolledAction.CATCH, ReRollSource.CATCH);
   }
 
 }

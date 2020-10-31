@@ -2,6 +2,7 @@ package com.balancedbytes.games.ffb.skill;
 
 import com.balancedbytes.games.ffb.SkillCategory;
 import com.balancedbytes.games.ffb.model.Skill;
+import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
 
 /**
 * A player with horns may use them to butt an opponent. This adds 1 to
@@ -15,6 +16,8 @@ public class Horns extends Skill {
 
   public Horns() {
     super("Horns", SkillCategory.MUTATION);
+    
+    registerProperty(NamedProperties.addStrengthOnBlitz);
   }
 
 }

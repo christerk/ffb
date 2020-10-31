@@ -18,7 +18,6 @@ import com.balancedbytes.games.ffb.server.ActionStatus;
 import com.balancedbytes.games.ffb.server.DiceInterpreter;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.IServerJsonOption;
-import com.balancedbytes.games.ffb.server.model.ServerSkill;
 import com.balancedbytes.games.ffb.server.net.ReceivedCommand;
 import com.balancedbytes.games.ffb.server.step.AbstractStepWithReRoll;
 import com.balancedbytes.games.ffb.server.step.StepAction;
@@ -179,8 +178,9 @@ public final class StepIntercept extends AbstractStepWithReRoll {
       status = ActionStatus.FAILURE;
       if (getReRolledAction() != ReRolledAction.CATCH) {
         setReRolledAction(ReRolledAction.CATCH);
-        if (UtilCards.hasSkill(game, pInterceptor, ServerSkill.CATCH)) {
-          setReRollSource(ReRollSource.CATCH);
+        ReRollSource catchRerollSource = UtilCards.getRerollSource(pInterceptor, ReRolledAction.CATCH);
+        if (catchRerollSource != null) {
+          setReRollSource(catchRerollSource);
           UtilServerReRoll.useReRoll(this, getReRollSource(), pInterceptor);
           status = intercept(pInterceptor);
         } else {

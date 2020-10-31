@@ -18,7 +18,6 @@ import com.balancedbytes.games.ffb.server.ActionStatus;
 import com.balancedbytes.games.ffb.server.DiceInterpreter;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.IServerJsonOption;
-import com.balancedbytes.games.ffb.server.model.ServerSkill;
 import com.balancedbytes.games.ffb.server.net.ReceivedCommand;
 import com.balancedbytes.games.ffb.server.step.AbstractStepWithReRoll;
 import com.balancedbytes.games.ffb.server.step.StepAction;
@@ -164,8 +163,10 @@ public class StepGoForIt extends AbstractStepWithReRoll {
     } else {
       if (getReRolledAction() != ReRolledAction.GO_FOR_IT) {
         setReRolledAction(ReRolledAction.GO_FOR_IT);
-        if (UtilCards.hasUnusedSkill(game, actingPlayer, ServerSkill.SURE_FEET)) {
-          setReRollSource(ReRollSource.SURE_FEET);
+        ReRollSource gfiRerollSource = UtilCards.getUnusedRerollSource(actingPlayer, ReRolledAction.GO_FOR_IT);
+        
+        if (gfiRerollSource != null) {
+          setReRollSource(gfiRerollSource);
           UtilServerReRoll.useReRoll(this, getReRollSource(), actingPlayer.getPlayer());
           return goForIt();
         } else {
