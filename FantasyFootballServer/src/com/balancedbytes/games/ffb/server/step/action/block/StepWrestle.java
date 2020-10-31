@@ -1,30 +1,15 @@
 package com.balancedbytes.games.ffb.server.step.action.block;
 
-import com.balancedbytes.games.ffb.FieldCoordinate;
-import com.balancedbytes.games.ffb.InjuryType;
-import com.balancedbytes.games.ffb.PlayerAction;
-import com.balancedbytes.games.ffb.PlayerState;
-import com.balancedbytes.games.ffb.SkillUse;
-import com.balancedbytes.games.ffb.dialog.DialogSkillUseParameter;
 import com.balancedbytes.games.ffb.json.UtilJson;
-import com.balancedbytes.games.ffb.model.ActingPlayer;
-import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandUseSkill;
-import com.balancedbytes.games.ffb.report.ReportSkillUse;
+import com.balancedbytes.games.ffb.server.ActionStatus;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.IServerJsonOption;
 import com.balancedbytes.games.ffb.server.model.ServerSkill;
 import com.balancedbytes.games.ffb.server.net.ReceivedCommand;
 import com.balancedbytes.games.ffb.server.step.AbstractStep;
-import com.balancedbytes.games.ffb.server.step.StepAction;
 import com.balancedbytes.games.ffb.server.step.StepCommandStatus;
 import com.balancedbytes.games.ffb.server.step.StepId;
-import com.balancedbytes.games.ffb.server.step.StepParameter;
-import com.balancedbytes.games.ffb.server.step.StepParameterKey;
-import com.balancedbytes.games.ffb.server.step.action.common.ApothecaryMode;
-import com.balancedbytes.games.ffb.server.util.UtilServerDialog;
-import com.balancedbytes.games.ffb.server.util.UtilServerInjury;
-import com.balancedbytes.games.ffb.util.UtilCards;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
@@ -36,12 +21,22 @@ import com.eclipsesource.json.JsonValue;
  * @author Kalimar
  */
 public class StepWrestle extends AbstractStep {
+		
+	public class StepState {
+	    public ActionStatus status;
+	    public Boolean continueOnFailure;
+	    
+	    public Boolean usingWrestleDefender;
+		public Boolean usingWrestleAttacker;
+
+
+	  }
 	
-	private Boolean fUsingWrestleAttacker;
-	private Boolean fUsingWrestleDefender;
+	private StepState state;
 	
 	public StepWrestle(GameState pGameState) {
 		super(pGameState);
+		state = new StepState();
 	}
 	
 	public StepId getId() {
@@ -59,15 +54,14 @@ public class StepWrestle extends AbstractStep {
     StepCommandStatus commandStatus = super.handleCommand(pReceivedCommand);
     if (commandStatus == StepCommandStatus.UNHANDLED_COMMAND) {
       switch (pReceivedCommand.getId()) {
-        case CLIENT_USE_SKILL:
+        case CLIENT_USE_SKILL:          
           ClientCommandUseSkill useSkillCommand = (ClientCommandUseSkill) pReceivedCommand.getCommand();
-          if (ServerSkill.WRESTLE == useSkillCommand.getSkill()) {
-            if (fUsingWrestleAttacker == null) {
-              fUsingWrestleAttacker = useSkillCommand.isSkillUsed();
-            } else {
-              fUsingWrestleDefender = useSkillCommand.isSkillUsed();
+          ServerSkill usedSkill = (ServerSkill) useSkillCommand.getSkill();
+          if (usedSkill != null) {
+            StepCommandStatus newStatus = usedSkill.applyUseSkillCommandHooks(this, state, useSkillCommand);
+            if (newStatus != null) {
+              commandStatus = newStatus;
             }
-            commandStatus = StepCommandStatus.EXECUTE_STEP;
           }
           break;
         default:
@@ -81,47 +75,7 @@ public class StepWrestle extends AbstractStep {
   }
 	
   private void executeStep() {
-    Game game = getGameState().getGame();
-    ActingPlayer actingPlayer = game.getActingPlayer();
-    PlayerState attackerState = game.getFieldModel().getPlayerState(actingPlayer.getPlayer());
-    PlayerState defenderState = game.getFieldModel().getPlayerState(game.getDefender());
-    if (fUsingWrestleAttacker == null) {
-      if (UtilCards.hasSkill(game, actingPlayer, ServerSkill.WRESTLE) && !attackerState.isRooted() && !UtilCards.hasSkill(game, actingPlayer, ServerSkill.BALL_AND_CHAIN)) {
-        UtilServerDialog.showDialog(getGameState(), new DialogSkillUseParameter(actingPlayer.getPlayer().getId(), ServerSkill.WRESTLE, 0), false);
-      } else {
-      	fUsingWrestleAttacker = false;
-      }
-    }
-    if ((fUsingWrestleAttacker != null) && (fUsingWrestleDefender == null)) {
-      if (!fUsingWrestleAttacker && UtilCards.hasSkill(game, game.getDefender(), ServerSkill.WRESTLE) && !defenderState.isRooted()
-          && !(actingPlayer.getPlayerAction() == PlayerAction.BLITZ && UtilCards.hasSkill(game, actingPlayer, ServerSkill.JUGGERNAUT))) {
-        UtilServerDialog.showDialog(getGameState(), new DialogSkillUseParameter(game.getDefenderId(), ServerSkill.WRESTLE, 0), true);
-      } else {
-      	fUsingWrestleDefender = false;
-      }
-    }
-    if (fUsingWrestleDefender != null) {
-      if (fUsingWrestleAttacker) {
-        getResult().addReport(new ReportSkillUse(actingPlayer.getPlayerId(), ServerSkill.WRESTLE, true, SkillUse.BRING_DOWN_OPPONENT));
-      } else if (fUsingWrestleDefender) {
-        getResult().addReport(new ReportSkillUse(game.getDefenderId(), ServerSkill.WRESTLE, true, SkillUse.BRING_DOWN_OPPONENT));
-      } else {
-        if (UtilCards.hasSkill(game, actingPlayer, ServerSkill.WRESTLE) || UtilCards.hasSkill(game, game.getDefender(), ServerSkill.WRESTLE)) {
-          getResult().addReport(new ReportSkillUse(null, ServerSkill.WRESTLE, false, null));
-        }
-      }
-      if (fUsingWrestleAttacker || fUsingWrestleDefender) {
-        publishParameters(UtilServerInjury.dropPlayer(this, game.getDefender(), ApothecaryMode.DEFENDER));
-        publishParameters(UtilServerInjury.dropPlayer(this, actingPlayer.getPlayer(), ApothecaryMode.ATTACKER));
-        if (UtilCards.hasSkill(game, game.getDefender(), ServerSkill.BALL_AND_CHAIN)) {
-        	FieldCoordinate defenderCoordinate = game.getFieldModel().getPlayerCoordinate(game.getDefender());
-          publishParameter(new StepParameter(StepParameterKey.INJURY_RESULT,
-          	UtilServerInjury.handleInjury(this, InjuryType.BALL_AND_CHAIN, actingPlayer.getPlayer(), game.getDefender(), defenderCoordinate, null, ApothecaryMode.DEFENDER))
-          );
-        }
-      }
-    	getResult().setNextAction(StepAction.NEXT_STEP);
-    }
+	  getGameState().executeStepHooks(this, state);
   }
 
   // JSON serialization
@@ -129,8 +83,8 @@ public class StepWrestle extends AbstractStep {
   @Override
   public JsonObject toJsonValue() {
     JsonObject jsonObject = super.toJsonValue();
-    IServerJsonOption.USING_WRESTLE_ATTACKER.addTo(jsonObject, fUsingWrestleAttacker);
-    IServerJsonOption.USING_WRESTLE_DEFENDER.addTo(jsonObject, fUsingWrestleDefender);
+    IServerJsonOption.USING_WRESTLE_ATTACKER.addTo(jsonObject, state.usingWrestleAttacker);
+    IServerJsonOption.USING_WRESTLE_DEFENDER.addTo(jsonObject, state.usingWrestleDefender);
     return jsonObject;
   }
   
@@ -138,8 +92,8 @@ public class StepWrestle extends AbstractStep {
   public StepWrestle initFrom(JsonValue pJsonValue) {
     super.initFrom(pJsonValue);
     JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-    fUsingWrestleAttacker = IServerJsonOption.USING_WRESTLE_ATTACKER.getFrom(jsonObject);
-    fUsingWrestleDefender = IServerJsonOption.USING_WRESTLE_DEFENDER.getFrom(jsonObject);
+    state.usingWrestleAttacker = IServerJsonOption.USING_WRESTLE_ATTACKER.getFrom(jsonObject);
+    state.usingWrestleDefender = IServerJsonOption.USING_WRESTLE_DEFENDER.getFrom(jsonObject);
     return this;
   }
 

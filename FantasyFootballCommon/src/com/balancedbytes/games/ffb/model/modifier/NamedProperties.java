@@ -11,6 +11,7 @@ public class NamedProperties {
   public static final ISkillProperty ignoreTacklezonesWhenPassing = new NamedProperty("Ignore Tacklezones when Passing");
   public static final ISkillProperty preventAutoMove = new NamedProperty("Prevent AutoMove");
   public static final ISkillProperty forceFullMovement = new NamedProperty("Force Full Movement");
+  public static final ISkillProperty placedProneCausesInjuryRoll = new NamedProperty("Placed Prone Requires Injury Roll");
   public static final ISkillProperty preventRegularBlockAction = new NamedProperty("Prevent Regular Block Action");
   public static final ISkillProperty preventRegularBlitzAction = new NamedProperty("Prevent Regular Blitz Action");
   public static final ISkillProperty preventRegularFoulAction = new NamedProperty("Prevent Regular Foul Action");
