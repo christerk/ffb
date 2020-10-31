@@ -32,8 +32,7 @@ import com.balancedbytes.games.ffb.util.UtilCards;
 				@Override
 				public StepCommandStatus handleCommandHook(StepBoneHead step, StepState state,
 						ClientCommandUseSkill useSkillCommand) {
-					// TODO Auto-generated method stub
-					return null;
+					return StepCommandStatus.EXECUTE_STEP;
 				}
 
 				@Override
