@@ -35,6 +35,7 @@ public class BallAndChain extends Skill {
     super("Ball and Chain", SkillCategory.EXTRAORDINARY);
     
     registerProperty(NamedProperties.grabOutsideBlock);
+    registerProperty(NamedProperties.placedProneCausesInjuryRoll);
     registerProperty(NamedProperties.flipSameTeamOpponentToOtherTeam);
     registerProperty(NamedProperties.preventAutoMove);
     registerProperty(NamedProperties.preventRegularBlitzAction);

@@ -18,6 +18,7 @@ public class NamedProperties {
   public static final ISkillProperty ignoreTacklezonesWhenPickingUp = new NamedProperty("Ignore Tacklezones When Picking Up");
   public static final ISkillProperty ignoreWeatherWhenPickingUp = new NamedProperty("Ignore Weather when Picking Up");
   public static final ISkillProperty movesRandomly = new NamedProperty("Moves Randomly");
+  public static final ISkillProperty placedProneCausesInjuryRoll = new NamedProperty("Placed Prone Causes Injury Roll");
   public static final ISkillProperty preventAutoMove = new NamedProperty("Prevent AutoMove");
   public static final ISkillProperty preventCardRabbitsFoot = new NamedProperty("Prevent Rabbit's Foot Card");
   public static final ISkillProperty preventCatch = new NamedProperty("Prevent Catch");

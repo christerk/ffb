@@ -4,6 +4,7 @@ import com.balancedbytes.games.ffb.SkillCategory;
 import com.balancedbytes.games.ffb.model.Skill;
 import com.balancedbytes.games.ffb.model.SkillConstants;
 import com.balancedbytes.games.ffb.model.modifier.CancelSkillProperty;
+import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
 
 /**
 * A player with this skill is virtually impossible to stop once he is in motion.
@@ -18,6 +19,10 @@ public class Juggernaut extends Skill {
     super("Juggernaut", SkillCategory.STRENGTH);
     
     registerProperty(new CancelSkillProperty(SkillConstants.JUGGERNAUT));
+    registerProperty(new CancelSkillProperty(SkillConstants.WRESTLE));
+    registerProperty(new CancelSkillProperty(SkillConstants.STAND_FIRM));
+    registerProperty(new CancelSkillProperty(SkillConstants.FEND));
+    
   }
 
   @Override
