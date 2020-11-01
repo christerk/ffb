@@ -11,7 +11,9 @@ import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.model.Team;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandPlayerChoice;
+import com.balancedbytes.games.ffb.net.commands.ClientCommandUseSkill;
 import com.balancedbytes.games.ffb.report.ReportTentaclesShadowingRoll;
+import com.balancedbytes.games.ffb.server.ActionStatus;
 import com.balancedbytes.games.ffb.server.DiceInterpreter;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.IServerJsonOption;
@@ -22,6 +24,7 @@ import com.balancedbytes.games.ffb.server.step.StepAction;
 import com.balancedbytes.games.ffb.server.step.StepCommandStatus;
 import com.balancedbytes.games.ffb.server.step.StepId;
 import com.balancedbytes.games.ffb.server.step.StepParameter;
+import com.balancedbytes.games.ffb.server.step.action.common.StepReallyStupid.StepState;
 import com.balancedbytes.games.ffb.server.util.ServerUtilBlock;
 import com.balancedbytes.games.ffb.server.util.UtilServerDialog;
 import com.balancedbytes.games.ffb.server.util.UtilServerPlayerMove;
@@ -44,10 +47,17 @@ import com.eclipsesource.json.JsonValue;
  */
 public class StepShadowing extends AbstractStepWithReRoll {
 	
-	private FieldCoordinate fDefenderPosition;
-	private FieldCoordinate fCoordinateFrom;
-	private boolean fUsingDivingTackle;
-	private Boolean fUsingShadowing;
+
+	public class StepState {
+	    public ActionStatus status;
+		
+		public FieldCoordinate defenderPosition;
+		public FieldCoordinate coordinateFrom;
+		public boolean usingDivingTackle;
+		public Boolean usingShadowing;
+	  }
+	
+	private StepState state;
 	
 	public StepShadowing(GameState pGameState) {
 		super(pGameState);
@@ -68,13 +78,13 @@ public class StepShadowing extends AbstractStepWithReRoll {
 		if ((pParameter != null) && !super.setParameter(pParameter)) {
 			switch (pParameter.getKey()) {
 				case COORDINATE_FROM:
-					fCoordinateFrom = (FieldCoordinate) pParameter.getValue();
+					state.coordinateFrom = (FieldCoordinate) pParameter.getValue();
 					return true;
 				case DEFENDER_POSITION:
-					fDefenderPosition = (FieldCoordinate) pParameter.getValue();
+					state.defenderPosition = (FieldCoordinate) pParameter.getValue();
 					return true;
 				case USING_DIVING_TACKLE:
-					fUsingDivingTackle = (pParameter.getValue() != null) ? (Boolean) pParameter.getValue() : false;
+					state.usingDivingTackle = (pParameter.getValue() != null) ? (Boolean) pParameter.getValue() : false;
 					return true;
 				default:
 					break;
@@ -87,14 +97,13 @@ public class StepShadowing extends AbstractStepWithReRoll {
   public StepCommandStatus handleCommand(ReceivedCommand pReceivedCommand) {
     StepCommandStatus commandStatus = super.handleCommand(pReceivedCommand);
     if (commandStatus == StepCommandStatus.UNHANDLED_COMMAND) {
-      Game game = getGameState().getGame();
       switch (pReceivedCommand.getId()) {
         case CLIENT_PLAYER_CHOICE:
-          ClientCommandPlayerChoice playerChoiceCommand = (ClientCommandPlayerChoice) pReceivedCommand.getCommand();
-          if (PlayerChoiceMode.SHADOWING == playerChoiceCommand.getPlayerChoiceMode()) {
-            fUsingShadowing = StringTool.isProvided(playerChoiceCommand.getPlayerId());
-            game.setDefenderId(playerChoiceCommand.getPlayerId());
-            commandStatus = StepCommandStatus.EXECUTE_STEP;
+          ClientCommandUseSkill useSkillCommand = (ClientCommandUseSkill) pReceivedCommand.getCommand();
+          ServerSkill usedSkill = (ServerSkill) useSkillCommand.getSkill();
+          if (usedSkill != null) { 
+        	  commandStatus = usedSkill.applyUseSkillCommandHooks(this, state, useSkillCommand);
+        	  
           }
           break;
         default:
@@ -108,84 +117,7 @@ public class StepShadowing extends AbstractStepWithReRoll {
   }
 
   private void executeStep() {
-  	Game game = getGameState().getGame();
-    ActingPlayer actingPlayer = game.getActingPlayer();
-    UtilServerDialog.hideDialog(getGameState());
-    boolean doNextStep = true;
-    boolean doShadowing = (!fUsingDivingTackle && (game.getTurnMode() != TurnMode.KICKOFF_RETURN) && (game.getTurnMode() != TurnMode.PASS_BLOCK));
-    if (doShadowing && (fCoordinateFrom != null) && (fUsingShadowing == null)) {
-      Player[] shadowers = UtilPlayer.findAdjacentOpposingPlayersWithSkill(game, fCoordinateFrom, ServerSkill.SHADOWING, true);
-      shadowers = UtilPlayer.filterThrower(game, shadowers);
-    	if (game.getTurnMode() == TurnMode.DUMP_OFF) {
-    		shadowers = UtilPlayer.filterAttackerAndDefender(game, shadowers);
-    	}
-      if (ArrayTool.isProvided(shadowers)) {
-        String teamId = game.isHomePlaying() ? game.getTeamAway().getId() : game.getTeamHome().getId();
-        String[] descriptionArray = new String[shadowers.length];
-        for (int i = 0; i < shadowers.length; i++) {
-          int attributeDiff = shadowers[i].getMovement() - actingPlayer.getPlayer().getMovement();
-          StringBuilder description = new StringBuilder();
-          if (attributeDiff > 0) {
-            description.append("(").append(attributeDiff).append(" MA advantage)");
-          }
-          if (attributeDiff == 0) {
-            description.append("(equal MA)");
-          }
-          if (attributeDiff < 0) {
-            description.append("(").append(Math.abs(attributeDiff)).append(" MA disadavantage)");
-          }
-          descriptionArray[i] = description.toString();
-        } 
-        Team actingTeam = game.isHomePlaying() ? game.getTeamHome() : game.getTeamAway();
-        UtilServerDialog.showDialog(
-            getGameState(),
-            new DialogPlayerChoiceParameter(teamId, PlayerChoiceMode.SHADOWING, shadowers, descriptionArray, 1),
-            !actingTeam.getId().equals(teamId)
-        );
-        doNextStep = false;
-      } else {
-      	fUsingShadowing = false;
-      }
-    }
-    if (doShadowing && (fCoordinateFrom != null) && (fUsingShadowing != null)) {
-      doNextStep = true;
-      if (fUsingShadowing && (game.getDefender() != null)) {
-        boolean rollShadowing = true;
-        if (ReRolledAction.SHADOWING_ESCAPE == getReRolledAction()) {
-          if ((getReRollSource() == null) || !UtilServerReRoll.useReRoll(this, getReRollSource(), actingPlayer.getPlayer())) {
-            rollShadowing = false;
-          }
-        }
-        if (rollShadowing) {
-          int[] rollEscape = getGameState().getDiceRoller().rollShadowingEscape();
-          boolean successful = DiceInterpreter.getInstance().isShadowingEscapeSuccessful(rollEscape, UtilCards.getPlayerMovement(game, game.getDefender()), UtilCards.getPlayerMovement(game, actingPlayer.getPlayer()));
-          int minimumRoll = DiceInterpreter.getInstance().minimumRollShadowingEscape(UtilCards.getPlayerMovement(game, game.getDefender()), UtilCards.getPlayerMovement(game, actingPlayer.getPlayer()));
-          boolean reRolled = ((getReRolledAction() == ReRolledAction.SHADOWING_ESCAPE) && (getReRollSource() != null));
-          getResult().addReport(new ReportTentaclesShadowingRoll(ServerSkill.SHADOWING, game.getDefenderId(), rollEscape, successful, minimumRoll, reRolled));
-          if (successful) {
-          	fUsingShadowing = false;
-          } else {
-            if (getReRolledAction() != ReRolledAction.SHADOWING_ESCAPE) {
-              if (UtilServerReRoll.askForReRollIfAvailable(getGameState(), actingPlayer.getPlayer(), ReRolledAction.SHADOWING_ESCAPE, minimumRoll, false)) {
-                doNextStep = false;
-              }
-            }
-          }
-        }
-      }
-      if (doNextStep && fUsingShadowing) {
-        game.getFieldModel().updatePlayerAndBallPosition(game.getDefender(), fCoordinateFrom);
-        UtilServerPlayerMove.updateMoveSquares(getGameState(), actingPlayer.isLeaping());
-        ServerUtilBlock.updateDiceDecorations(game);
-      }
-    }
-    if (doNextStep) {
-    	if (fDefenderPosition != null) {
-    		Player defender = game.getFieldModel().getPlayer(fDefenderPosition);
-    		game.setDefenderId((defender != null) ? defender.getId() : null);
-    	}
-	    getResult().setNextAction(StepAction.NEXT_STEP);
-    }
+	  getGameState().executeStepHooks(this, state);
   }  
   
   // JSON serialization
@@ -193,10 +125,10 @@ public class StepShadowing extends AbstractStepWithReRoll {
   @Override
   public JsonObject toJsonValue() {
     JsonObject jsonObject = super.toJsonValue();
-    IServerJsonOption.DEFENDER_POSITION.addTo(jsonObject, fDefenderPosition);
-    IServerJsonOption.COORDINATE_FROM.addTo(jsonObject, fCoordinateFrom);
-    IServerJsonOption.USING_DIVING_TACKLE.addTo(jsonObject, fUsingDivingTackle);
-    IServerJsonOption.USING_SHADOWING.addTo(jsonObject, fUsingDivingTackle);
+    IServerJsonOption.DEFENDER_POSITION.addTo(jsonObject, state.defenderPosition);
+    IServerJsonOption.COORDINATE_FROM.addTo(jsonObject, state.coordinateFrom);
+    IServerJsonOption.USING_DIVING_TACKLE.addTo(jsonObject, state.usingDivingTackle);
+    IServerJsonOption.USING_SHADOWING.addTo(jsonObject, state.usingDivingTackle);
     return jsonObject;
   }
   
@@ -204,10 +136,10 @@ public class StepShadowing extends AbstractStepWithReRoll {
   public StepShadowing initFrom(JsonValue pJsonValue) {
     super.initFrom(pJsonValue);
     JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-    fDefenderPosition = IServerJsonOption.DEFENDER_POSITION.getFrom(jsonObject);
-    fCoordinateFrom = IServerJsonOption.COORDINATE_FROM.getFrom(jsonObject);
-    fUsingDivingTackle = IServerJsonOption.USING_DIVING_TACKLE.getFrom(jsonObject);
-    fUsingDivingTackle = IServerJsonOption.USING_SHADOWING.getFrom(jsonObject);
+    state.defenderPosition = IServerJsonOption.DEFENDER_POSITION.getFrom(jsonObject);
+    state.coordinateFrom = IServerJsonOption.COORDINATE_FROM.getFrom(jsonObject);
+    state.usingDivingTackle = IServerJsonOption.USING_DIVING_TACKLE.getFrom(jsonObject);
+    state.usingDivingTackle = IServerJsonOption.USING_SHADOWING.getFrom(jsonObject);
     return this;
   }
 
