@@ -23,7 +23,6 @@ import com.balancedbytes.games.ffb.server.util.UtilServerPlayerMove;
 import com.balancedbytes.games.ffb.server.util.UtilServerReRoll;
 import com.balancedbytes.games.ffb.skill.Shadowing;
 import com.balancedbytes.games.ffb.util.ArrayTool;
-import com.balancedbytes.games.ffb.util.StringTool;
 import com.balancedbytes.games.ffb.util.UtilCards;
 import com.balancedbytes.games.ffb.util.UtilPlayer;
 
@@ -36,8 +35,6 @@ public class ShadowingBehaviour extends SkillBehaviour<Shadowing> {
 			@Override
 			public StepCommandStatus handleCommandHook(StepShadowing step, StepState state,
 					ClientCommandUseSkill useSkillCommand) {
-				state.usingShadowing = StringTool.isProvided(useSkillCommand.getPlayerId());
-	        	step.getGameState().getGame().setDefenderId(useSkillCommand.getPlayerId());
 				return StepCommandStatus.EXECUTE_STEP;
 			}
 
