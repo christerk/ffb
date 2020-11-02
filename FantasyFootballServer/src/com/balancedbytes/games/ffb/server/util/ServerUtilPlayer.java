@@ -33,7 +33,8 @@ public class ServerUtilPlayer {
           if (defensiveAssists[y] != defender)
             defendingPlayersOtherThanBlocker++;
         }
-        if (UtilCards.hasSkill(game, offensiveAssists[i], Skill.GUARD) || (defendingPlayersOtherThanBlocker == 0)) {
+
+        if (UtilCards.hasSkillWithProperty(offensiveAssists[i], NamedProperties.assistInTacklezones) || (defendingPlayersOtherThanBlocker == 0)) {
           // System.out.println(offensiveAssists[i].getName() + " assists " + pAttacker.getName());
           blockStrength++;
         }

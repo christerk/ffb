@@ -10,6 +10,7 @@ public class NamedProperties {
   public static final ISkillProperty assistInTacklezones = new NamedProperty("Assist in Tacklezones");
   public static final ISkillProperty canBlockMoreThanOnce = new NamedProperty("Can Block More Than Once");
   public static final ISkillProperty canBlockSameTeamPlayer = new NamedProperty("Can Block Same Team Player");
+  public static final ISkillProperty canRerollOncePerTurn = new NamedProperty("Can Reroll Once Per Turn");
   public static final ISkillProperty convertKOToStunOn8 = new NamedProperty("Convert KO to Stun on a roll of 8");
   public static final ISkillProperty convertStunToKO = new NamedProperty("Convert Stun to KO");
   public static final ISkillProperty enableStandUpAndEndBlitzAction = new NamedProperty("Enable Stand Up and End Blitz Action");
@@ -20,6 +21,7 @@ public class NamedProperties {
   public static final ISkillProperty goForItAfterBlock = new NamedProperty("Go For It After Block");
   public static final ISkillProperty grabOutsideBlock = new NamedProperty("Grab Outside Block");
   public static final ISkillProperty hasNoTacklezone = new NamedProperty("Has No Tacklezone");
+  public static final ISkillProperty hasToRollToUseTeamReroll = new NamedProperty("Has To Roll To Use Team Reroll");
   public static final ISkillProperty ignoreTacklezonesWhenMoving = new NamedProperty("Ignore Tacklezones When Moving");
   public static final ISkillProperty ignoreTacklezonesWhenPassing = new NamedProperty("Ignore Tacklezones when Passing");
   public static final ISkillProperty ignoreTacklezonesWhenPickingUp = new NamedProperty("Ignore Tacklezones When Picking Up");

@@ -1,26 +1,18 @@
 package com.balancedbytes.games.ffb.server.step.action.block;
 
 import com.balancedbytes.games.ffb.FieldCoordinate;
-import com.balancedbytes.games.ffb.PlayerAction;
 import com.balancedbytes.games.ffb.TurnMode;
-import com.balancedbytes.games.ffb.dialog.DialogDefenderActionParameter;
-import com.balancedbytes.games.ffb.dialog.DialogSkillUseParameter;
 import com.balancedbytes.games.ffb.json.UtilJson;
-import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandUseSkill;
-import com.balancedbytes.games.ffb.report.ReportSkillUse;
+import com.balancedbytes.games.ffb.server.ActionStatus;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.IServerJsonOption;
 import com.balancedbytes.games.ffb.server.model.ServerSkill;
 import com.balancedbytes.games.ffb.server.net.ReceivedCommand;
 import com.balancedbytes.games.ffb.server.step.AbstractStep;
-import com.balancedbytes.games.ffb.server.step.SequenceGenerator;
-import com.balancedbytes.games.ffb.server.step.StepAction;
 import com.balancedbytes.games.ffb.server.step.StepCommandStatus;
 import com.balancedbytes.games.ffb.server.step.StepId;
 import com.balancedbytes.games.ffb.server.step.StepParameter;
-import com.balancedbytes.games.ffb.server.util.UtilServerDialog;
-import com.balancedbytes.games.ffb.util.UtilCards;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
@@ -33,9 +25,14 @@ import com.eclipsesource.json.JsonValue;
  */
 public class StepDumpOff extends AbstractStep {
 
-  private Boolean fUsingDumpOff;
-  private FieldCoordinate fDefenderPosition;
-  private TurnMode fOldTurnMode;
+  public class StepState {
+		public ActionStatus status;
+		public Boolean usingDumpOff;
+		public FieldCoordinate defenderPosition;
+		public TurnMode oldTurnMode;
+	  }
+	
+	private StepState state;
 
   public StepDumpOff(GameState pGameState) {
     super(pGameState);
@@ -57,11 +54,14 @@ public class StepDumpOff extends AbstractStep {
     if (commandStatus == StepCommandStatus.UNHANDLED_COMMAND) {
       switch (pReceivedCommand.getId()) {
         case CLIENT_USE_SKILL:
-          ClientCommandUseSkill useSkillCommand = (ClientCommandUseSkill) pReceivedCommand.getCommand();
-          if (ServerSkill.DUMP_OFF == useSkillCommand.getSkill()) {
-            fUsingDumpOff = useSkillCommand.isSkillUsed();
-            commandStatus = StepCommandStatus.EXECUTE_STEP;
-          }
+        	ClientCommandUseSkill useSkillCommand = (ClientCommandUseSkill) pReceivedCommand.getCommand();
+            ServerSkill usedSkill = (ServerSkill) useSkillCommand.getSkill();
+            if (usedSkill != null) {
+              StepCommandStatus newStatus = usedSkill.applyUseSkillCommandHooks(this, state, useSkillCommand);
+              if (newStatus != null) {
+                commandStatus = newStatus;
+              }
+            }
           break;
         default:
           break;
@@ -78,7 +78,7 @@ public class StepDumpOff extends AbstractStep {
     if ((pParameter != null) && !super.setParameter(pParameter)) {
       switch (pParameter.getKey()) {
         case DEFENDER_POSITION:
-          fDefenderPosition = (FieldCoordinate) pParameter.getValue();
+          state.defenderPosition = (FieldCoordinate) pParameter.getValue();
           return true;
         default:
           break;
@@ -88,47 +88,7 @@ public class StepDumpOff extends AbstractStep {
   }
 
   private void executeStep() {
-
-    Game game = getGameState().getGame();
-
-    if (game.getTurnMode() == TurnMode.DUMP_OFF) {
-      game.setTurnMode(fOldTurnMode);
-      game.setThrowerId(null);
-      getResult().setNextAction(StepAction.NEXT_STEP);
-
-    } else if (fUsingDumpOff == null) {
-      if (UtilCards.hasSkill(game, game.getDefender(), ServerSkill.DUMP_OFF) && (fDefenderPosition != null)
-          && fDefenderPosition.equals(game.getFieldModel().getBallCoordinate())
-          && !game.getFieldModel().isBallMoving()
-          && !(game.getFieldModel().getPlayerState(game.getDefender()).isConfused()
-              || game.getFieldModel().getPlayerState(game.getDefender()).isHypnotized())) {
-        UtilServerDialog.showDialog(
-            getGameState(),
-            new DialogSkillUseParameter(game.getDefenderId(), ServerSkill.DUMP_OFF, 0),
-            true
-        );
-        getResult().setNextAction(StepAction.CONTINUE);
-      } else {
-        fUsingDumpOff = false;
-        getResult().setNextAction(StepAction.NEXT_STEP);
-      }
-
-    } else if (fUsingDumpOff) {
-      fOldTurnMode = game.getTurnMode();
-      game.setTurnMode(TurnMode.DUMP_OFF);
-      game.setThrowerId(game.getDefenderId());
-      game.setThrowerAction(PlayerAction.DUMP_OFF);
-      game.setDefenderAction(PlayerAction.DUMP_OFF);
-      UtilServerDialog.showDialog(getGameState(), new DialogDefenderActionParameter(), true);
-      getGameState().pushCurrentStepOnStack();
-      SequenceGenerator.getInstance().pushPassSequence(getGameState());
-      getResult().setNextAction(StepAction.NEXT_STEP);
-
-    } else {
-      getResult().addReport(new ReportSkillUse(game.getDefenderId(), ServerSkill.DUMP_OFF, false, null));
-      getResult().setNextAction(StepAction.NEXT_STEP);
-    }
-
+	  getGameState().executeStepHooks(this, state);
   }
 
   // JSON serialization
@@ -136,9 +96,9 @@ public class StepDumpOff extends AbstractStep {
   @Override
   public JsonObject toJsonValue() {
     JsonObject jsonObject = super.toJsonValue();
-    IServerJsonOption.USING_DUMP_OFF.addTo(jsonObject, fUsingDumpOff);
-    IServerJsonOption.DEFENDER_POSITION.addTo(jsonObject, fDefenderPosition);
-    IServerJsonOption.OLD_TURN_MODE.addTo(jsonObject, fOldTurnMode);
+    IServerJsonOption.USING_DUMP_OFF.addTo(jsonObject, state.usingDumpOff);
+    IServerJsonOption.DEFENDER_POSITION.addTo(jsonObject, state.defenderPosition);
+    IServerJsonOption.OLD_TURN_MODE.addTo(jsonObject, state.oldTurnMode);
     return jsonObject;
   }
 
@@ -146,9 +106,9 @@ public class StepDumpOff extends AbstractStep {
   public StepDumpOff initFrom(JsonValue pJsonValue) {
     super.initFrom(pJsonValue);
     JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-    fUsingDumpOff = IServerJsonOption.USING_DUMP_OFF.getFrom(jsonObject);
-    fDefenderPosition = IServerJsonOption.DEFENDER_POSITION.getFrom(jsonObject);
-    fOldTurnMode = (TurnMode) IServerJsonOption.OLD_TURN_MODE.getFrom(jsonObject);
+    state.usingDumpOff = IServerJsonOption.USING_DUMP_OFF.getFrom(jsonObject);
+    state.defenderPosition = IServerJsonOption.DEFENDER_POSITION.getFrom(jsonObject);
+    state.oldTurnMode = (TurnMode) IServerJsonOption.OLD_TURN_MODE.getFrom(jsonObject);
     return this;
   }
 

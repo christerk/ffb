@@ -1,28 +1,16 @@
 package com.balancedbytes.games.ffb.server.step.action.block;
 
-import com.balancedbytes.games.ffb.ReRolledAction;
-import com.balancedbytes.games.ffb.SoundId;
 import com.balancedbytes.games.ffb.json.UtilJson;
-import com.balancedbytes.games.ffb.model.ActingPlayer;
-import com.balancedbytes.games.ffb.model.Game;
-import com.balancedbytes.games.ffb.model.SkillConstants;
-import com.balancedbytes.games.ffb.report.ReportId;
-import com.balancedbytes.games.ffb.report.ReportSkillRoll;
-import com.balancedbytes.games.ffb.server.DiceInterpreter;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.IServerJsonOption;
-import com.balancedbytes.games.ffb.server.model.ServerSkill;
 import com.balancedbytes.games.ffb.server.net.ReceivedCommand;
 import com.balancedbytes.games.ffb.server.step.AbstractStepWithReRoll;
-import com.balancedbytes.games.ffb.server.step.StepAction;
 import com.balancedbytes.games.ffb.server.step.StepCommandStatus;
 import com.balancedbytes.games.ffb.server.step.StepException;
 import com.balancedbytes.games.ffb.server.step.StepId;
 import com.balancedbytes.games.ffb.server.step.StepParameter;
 import com.balancedbytes.games.ffb.server.step.StepParameterKey;
 import com.balancedbytes.games.ffb.server.step.StepParameterSet;
-import com.balancedbytes.games.ffb.server.util.UtilServerReRoll;
-import com.balancedbytes.games.ffb.util.UtilCards;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
@@ -35,7 +23,11 @@ import com.eclipsesource.json.JsonValue;
  */
 public class StepFoulAppearance extends AbstractStepWithReRoll {
 	
-	private String fGotoLabelOnFailure;
+	public class StepState {
+		public String goToLabelOnFailure;
+	  }
+	
+	private StepState state;
 
 	public StepFoulAppearance(GameState pGameState) {
 		super(pGameState);
@@ -51,14 +43,14 @@ public class StepFoulAppearance extends AbstractStepWithReRoll {
   		for (StepParameter parameter : pParameterSet.values()) {
   			switch (parameter.getKey()) {
   				case GOTO_LABEL_ON_FAILURE:
-  					fGotoLabelOnFailure = (String) parameter.getValue();
+  					state.goToLabelOnFailure = (String) parameter.getValue();
   					break;
 					default:
 						break;
   			}
   		}
   	}
-  	if (fGotoLabelOnFailure == null) {
+  	if (state.goToLabelOnFailure == null) {
 			throw new StepException("StepParameter " + StepParameterKey.GOTO_LABEL_ON_FAILURE + " is not initialized.");
   	}
   }
@@ -79,40 +71,7 @@ public class StepFoulAppearance extends AbstractStepWithReRoll {
   }
 	
   private void executeStep() {
-    Game game = getGameState().getGame();
-    ActingPlayer actingPlayer = game.getActingPlayer();
-    if ((game.getDefender() != null) && UtilCards.hasSkill(game, game.getDefender(), ServerSkill.FOUL_APPEARANCE) && !UtilCards.cancelsSkill(actingPlayer.getPlayer(), SkillConstants.FOUL_APPEARANCE)) {
-      boolean doRoll = true;
-      if (ReRolledAction.FOUL_APPEARANCE == getReRolledAction()) {
-        if ((getReRollSource() == null) || !UtilServerReRoll.useReRoll(this, getReRollSource(), actingPlayer.getPlayer())) {
-          doRoll = false;
-          actingPlayer.setHasBlocked(true);
-        	game.getTurnData().setTurnStarted(true);
-        	getResult().setNextAction(StepAction.GOTO_LABEL, fGotoLabelOnFailure);
-        }
-      }
-      if (doRoll) {
-        int foulAppearanceRoll = getGameState().getDiceRoller().rollSkill();
-        int minimumRoll = DiceInterpreter.getInstance().minimumRollResistingFoulAppearance();
-        boolean mayBlock = DiceInterpreter.getInstance().isSkillRollSuccessful(foulAppearanceRoll, minimumRoll);
-        boolean reRolled = ((getReRolledAction() == ReRolledAction.FOUL_APPEARANCE) && (getReRollSource() != null));
-        getResult().addReport(new ReportSkillRoll(ReportId.FOUL_APPEARANCE_ROLL, actingPlayer.getPlayerId(), mayBlock, foulAppearanceRoll, minimumRoll, reRolled));
-        if (mayBlock) {
-        	getResult().setNextAction(StepAction.NEXT_STEP);
-        } else {
-          if (!UtilServerReRoll.askForReRollIfAvailable(getGameState(), actingPlayer.getPlayer(), ReRolledAction.FOUL_APPEARANCE, minimumRoll, false)) {
-            actingPlayer.setHasBlocked(true);
-          	game.getTurnData().setTurnStarted(true);
-          	getResult().setNextAction(StepAction.GOTO_LABEL, fGotoLabelOnFailure);
-          }
-        }
-        if (!mayBlock && !reRolled) {
-          getResult().setSound(SoundId.EW);
-        }
-      }
-    } else {
-    	getResult().setNextAction(StepAction.NEXT_STEP);
-    }
+	  getGameState().executeStepHooks(this, state);
   }
   
   // JSON serialization
@@ -120,7 +79,7 @@ public class StepFoulAppearance extends AbstractStepWithReRoll {
   @Override
   public JsonObject toJsonValue() {
     JsonObject jsonObject = super.toJsonValue();
-    IServerJsonOption.GOTO_LABEL_ON_FAILURE.addTo(jsonObject, fGotoLabelOnFailure);
+    IServerJsonOption.GOTO_LABEL_ON_FAILURE.addTo(jsonObject, state.goToLabelOnFailure);
     return jsonObject;
   }
   
@@ -128,7 +87,7 @@ public class StepFoulAppearance extends AbstractStepWithReRoll {
   public StepFoulAppearance initFrom(JsonValue pJsonValue) {
     super.initFrom(pJsonValue);
     JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-    fGotoLabelOnFailure = IServerJsonOption.GOTO_LABEL_ON_FAILURE.getFrom(jsonObject);
+    state.goToLabelOnFailure = IServerJsonOption.GOTO_LABEL_ON_FAILURE.getFrom(jsonObject);
     return this;
   }
 

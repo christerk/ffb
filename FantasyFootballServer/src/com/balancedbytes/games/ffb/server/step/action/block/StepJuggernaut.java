@@ -1,30 +1,21 @@
 package com.balancedbytes.games.ffb.server.step.action.block;
 
-import com.balancedbytes.games.ffb.BlockResult;
-import com.balancedbytes.games.ffb.PlayerAction;
 import com.balancedbytes.games.ffb.PlayerState;
-import com.balancedbytes.games.ffb.SkillUse;
-import com.balancedbytes.games.ffb.dialog.DialogSkillUseParameter;
 import com.balancedbytes.games.ffb.json.UtilJson;
-import com.balancedbytes.games.ffb.model.ActingPlayer;
-import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandUseSkill;
-import com.balancedbytes.games.ffb.report.ReportSkillUse;
+import com.balancedbytes.games.ffb.server.ActionStatus;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.IServerJsonOption;
 import com.balancedbytes.games.ffb.server.model.ServerSkill;
 import com.balancedbytes.games.ffb.server.net.ReceivedCommand;
 import com.balancedbytes.games.ffb.server.step.AbstractStep;
-import com.balancedbytes.games.ffb.server.step.StepAction;
 import com.balancedbytes.games.ffb.server.step.StepCommandStatus;
 import com.balancedbytes.games.ffb.server.step.StepException;
 import com.balancedbytes.games.ffb.server.step.StepId;
 import com.balancedbytes.games.ffb.server.step.StepParameter;
 import com.balancedbytes.games.ffb.server.step.StepParameterKey;
 import com.balancedbytes.games.ffb.server.step.StepParameterSet;
-import com.balancedbytes.games.ffb.server.util.UtilServerDialog;
 import com.balancedbytes.games.ffb.util.StringTool;
-import com.balancedbytes.games.ffb.util.UtilCards;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
@@ -41,9 +32,14 @@ import com.eclipsesource.json.JsonValue;
  */
 public class StepJuggernaut extends AbstractStep {
 	
-	private Boolean fUsingJuggernaut;
-	private PlayerState fOldDefenderState;
-	private String fGotoLabelOnSuccess;
+	public class StepState {
+		public ActionStatus status;
+		public Boolean usingJuggernaut;
+		public PlayerState oldDefenderState;
+		public String goToLabelOnSuccess;
+	  }
+	
+	private StepState state;
 	
 	public StepJuggernaut(GameState pGameState) {
 		super(pGameState);
@@ -59,14 +55,14 @@ public class StepJuggernaut extends AbstractStep {
 			for (StepParameter parameter : pParameterSet.values()) {
 				switch (parameter.getKey()) {
 					case GOTO_LABEL_ON_SUCCESS:
-						fGotoLabelOnSuccess = (String) parameter.getValue();
+						state.goToLabelOnSuccess = (String) parameter.getValue();
 						break;
 					default:
 						break;
 				}
 			}
 		}
-		if (!StringTool.isProvided(fGotoLabelOnSuccess)) {
+		if (!StringTool.isProvided(state.goToLabelOnSuccess)) {
 			throw new StepException("StepParameter " + StepParameterKey.GOTO_LABEL_ON_SUCCESS + " is not initialized.");
 		}
 	}
@@ -83,11 +79,14 @@ public class StepJuggernaut extends AbstractStep {
     if (commandStatus == StepCommandStatus.UNHANDLED_COMMAND) {
       switch (pReceivedCommand.getId()) {
         case CLIENT_USE_SKILL:
-          ClientCommandUseSkill useSkillCommand = (ClientCommandUseSkill) pReceivedCommand.getCommand();
-          if (ServerSkill.JUGGERNAUT == useSkillCommand.getSkill()) {
-            fUsingJuggernaut = useSkillCommand.isSkillUsed();
-            commandStatus = StepCommandStatus.EXECUTE_STEP;
-          }
+        	 ClientCommandUseSkill useSkillCommand = (ClientCommandUseSkill) pReceivedCommand.getCommand();
+             ServerSkill usedSkill = (ServerSkill) useSkillCommand.getSkill();
+             if (usedSkill != null) {
+               StepCommandStatus newStatus = usedSkill.applyUseSkillCommandHooks(this, state, useSkillCommand);
+               if (newStatus != null) {
+                 commandStatus = newStatus;
+               }
+             }
           break;
         default:
           break;
@@ -104,7 +103,7 @@ public class StepJuggernaut extends AbstractStep {
 		if ((pParameter != null) && !super.setParameter(pParameter)) {
 			switch (pParameter.getKey()) {
 				case OLD_DEFENDER_STATE:
-					fOldDefenderState = (PlayerState) pParameter.getValue();
+					state.oldDefenderState = (PlayerState) pParameter.getValue();
 					return true;
 				default:
 					break;
@@ -114,27 +113,7 @@ public class StepJuggernaut extends AbstractStep {
 	}
 	
   private void executeStep() {
-    Game game = getGameState().getGame();
-    ActingPlayer actingPlayer = game.getActingPlayer();
-    UtilServerDialog.hideDialog(getGameState());
-    if ((PlayerAction.BLITZ == actingPlayer.getPlayerAction()) && UtilCards.hasSkill(game, actingPlayer, ServerSkill.JUGGERNAUT) && !fOldDefenderState.isRooted()) {
-      if (fUsingJuggernaut == null) {
-        UtilServerDialog.showDialog(getGameState(), new DialogSkillUseParameter(actingPlayer.getPlayer().getId(), ServerSkill.JUGGERNAUT, 0), false);
-      } else {
-        if (fUsingJuggernaut) {
-          getResult().addReport(new ReportSkillUse(actingPlayer.getPlayerId(), ServerSkill.JUGGERNAUT, true, SkillUse.PUSH_BACK_OPPONENT));
-          publishParameter(new StepParameter(StepParameterKey.BLOCK_RESULT, BlockResult.PUSHBACK));
-          game.getFieldModel().setPlayerState(game.getDefender(), fOldDefenderState);
-          publishParameters(UtilBlockSequence.initPushback(this));
-          getResult().setNextAction(StepAction.GOTO_LABEL, fGotoLabelOnSuccess);
-        } else {
-          getResult().addReport(new ReportSkillUse(actingPlayer.getPlayerId(), ServerSkill.JUGGERNAUT, false, null));
-          getResult().setNextAction(StepAction.NEXT_STEP);
-        }
-      }
-    } else {
-      getResult().setNextAction(StepAction.NEXT_STEP);
-    }
+	  getGameState().executeStepHooks(this, state);
   }
   
   // JSON serialization
@@ -142,9 +121,9 @@ public class StepJuggernaut extends AbstractStep {
   @Override
   public JsonObject toJsonValue() {
     JsonObject jsonObject = super.toJsonValue();
-    IServerJsonOption.USING_JUGGERNAUT.addTo(jsonObject, fUsingJuggernaut);
-    IServerJsonOption.OLD_DEFENDER_STATE.addTo(jsonObject, fOldDefenderState);
-    IServerJsonOption.GOTO_LABEL_ON_SUCCESS.addTo(jsonObject, fGotoLabelOnSuccess);
+    IServerJsonOption.USING_JUGGERNAUT.addTo(jsonObject, state.usingJuggernaut);
+    IServerJsonOption.OLD_DEFENDER_STATE.addTo(jsonObject, state.oldDefenderState);
+    IServerJsonOption.GOTO_LABEL_ON_SUCCESS.addTo(jsonObject, state.goToLabelOnSuccess);
     return jsonObject;
   }
   
@@ -152,9 +131,9 @@ public class StepJuggernaut extends AbstractStep {
   public StepJuggernaut initFrom(JsonValue pJsonValue) {
     super.initFrom(pJsonValue);
     JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-    fUsingJuggernaut = IServerJsonOption.USING_JUGGERNAUT.getFrom(jsonObject);
-    fOldDefenderState = IServerJsonOption.OLD_DEFENDER_STATE.getFrom(jsonObject);
-    fGotoLabelOnSuccess = IServerJsonOption.GOTO_LABEL_ON_SUCCESS.getFrom(jsonObject);
+    state.usingJuggernaut = IServerJsonOption.USING_JUGGERNAUT.getFrom(jsonObject);
+    state.oldDefenderState = IServerJsonOption.OLD_DEFENDER_STATE.getFrom(jsonObject);
+    state.goToLabelOnSuccess = IServerJsonOption.GOTO_LABEL_ON_SUCCESS.getFrom(jsonObject);
     return this;
   }
 
