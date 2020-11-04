@@ -28,8 +28,6 @@ public class StepWrestle extends AbstractStep {
 	    
 	    public Boolean usingWrestleDefender;
 		public Boolean usingWrestleAttacker;
-
-
 	  }
 	
 	private StepState state;

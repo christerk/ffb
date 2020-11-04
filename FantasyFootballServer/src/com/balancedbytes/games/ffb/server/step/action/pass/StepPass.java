@@ -20,6 +20,7 @@ import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.model.Team;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandUseSkill;
 import com.balancedbytes.games.ffb.report.ReportPassRoll;
+import com.balancedbytes.games.ffb.server.ActionStatus;
 import com.balancedbytes.games.ffb.server.DiceInterpreter;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.IServerJsonOption;
@@ -33,6 +34,7 @@ import com.balancedbytes.games.ffb.server.step.StepId;
 import com.balancedbytes.games.ffb.server.step.StepParameter;
 import com.balancedbytes.games.ffb.server.step.StepParameterKey;
 import com.balancedbytes.games.ffb.server.step.StepParameterSet;
+import com.balancedbytes.games.ffb.server.step.action.block.StepWrestle.StepState;
 import com.balancedbytes.games.ffb.server.util.UtilServerDialog;
 import com.balancedbytes.games.ffb.server.util.UtilServerGame;
 import com.balancedbytes.games.ffb.server.util.UtilServerReRoll;
@@ -58,16 +60,22 @@ import com.eclipsesource.json.JsonValue;
  */
 public class StepPass extends AbstractStepWithReRoll {
 
-  private String fGotoLabelOnEnd;
-  private String fGotoLabelOnMissedPass;
-  private String fCatcherId;
-  private boolean fSuccessful;
-  private boolean fHoldingSafeThrow;
-  private boolean fPassFumble;
-  private boolean fPassSkillUsed;
+  public class StepState {
+	  public String goToLabelOnEnd;
+	  public String goToLabelOnMissedPass;
+	  public String CatcherId;
+	  public boolean successful;
+	  public boolean holdingSafeThrow;
+	  public boolean passFumble;
+	  public boolean passSkillUsed;;
+  }
+
+  private StepState state;
 
   public StepPass(GameState pGameState) {
     super(pGameState);
+    
+	state = new StepState();
   }
 
   public StepId getId() {
@@ -81,21 +89,21 @@ public class StepPass extends AbstractStepWithReRoll {
         switch (parameter.getKey()) {
           // mandatory
           case GOTO_LABEL_ON_END:
-            fGotoLabelOnEnd = (String) parameter.getValue();
+            state.goToLabelOnEnd = (String) parameter.getValue();
             break;
           // mandatory
           case GOTO_LABEL_ON_MISSED_PASS:
-            fGotoLabelOnMissedPass = (String) parameter.getValue();
+        	 state.goToLabelOnMissedPass = (String) parameter.getValue();
             break;
           default:
             break;
         }
       }
     }
-    if (!StringTool.isProvided(fGotoLabelOnEnd)) {
+    if (!StringTool.isProvided(state.goToLabelOnEnd)) {
       throw new StepException("StepParameter " + StepParameterKey.GOTO_LABEL_ON_END + " is not initialized.");
     }
-    if (!StringTool.isProvided(fGotoLabelOnMissedPass)) {
+    if (!StringTool.isProvided(state.goToLabelOnMissedPass)) {
       throw new StepException("StepParameter " + StepParameterKey.GOTO_LABEL_ON_MISSED_PASS + " is not initialized.");
     }
   }
@@ -105,7 +113,7 @@ public class StepPass extends AbstractStepWithReRoll {
     if ((pParameter != null) && !super.setParameter(pParameter)) {
       switch (pParameter.getKey()) {
         case CATCHER_ID:
-          fCatcherId = (String) pParameter.getValue();
+        	state.CatcherId = (String) pParameter.getValue();
           return true;
         default:
           break;
@@ -126,12 +134,14 @@ public class StepPass extends AbstractStepWithReRoll {
     if (commandStatus == StepCommandStatus.UNHANDLED_COMMAND) {
       switch (pReceivedCommand.getId()) {
         case CLIENT_USE_SKILL:
-          ClientCommandUseSkill useSkillCommand = (ClientCommandUseSkill) pReceivedCommand.getCommand();
-          if (ServerSkill.PASS == useSkillCommand.getSkill()) {
-            setReRolledAction(ReRolledAction.PASS);
-            setReRollSource(useSkillCommand.isSkillUsed() ? ReRollSource.PASS : null);
-            commandStatus = StepCommandStatus.EXECUTE_STEP;
-          }
+        	 ClientCommandUseSkill useSkillCommand = (ClientCommandUseSkill) pReceivedCommand.getCommand();
+             ServerSkill usedSkill = (ServerSkill) useSkillCommand.getSkill();
+             if (usedSkill != null) {
+               StepCommandStatus newStatus = usedSkill.applyUseSkillCommandHooks(this, state, useSkillCommand);
+               if (newStatus != null) {
+                 commandStatus = newStatus;
+               }
+             }
           break;
         default:
           break;
@@ -165,30 +175,30 @@ public class StepPass extends AbstractStepWithReRoll {
     int minimumRoll = DiceInterpreter.getInstance().minimumRollPass(game.getThrower(), passingDistance, passModifiers);
     int roll = getGameState().getDiceRoller().rollSkill();
     if (roll == 6) {
-      fSuccessful = true;
-      fPassFumble = false;
-      fHoldingSafeThrow = false;
+    	state.successful = true;
+    	state.passFumble = false;
+    	state.holdingSafeThrow = false;
     } else if (roll == 1) {
-      fSuccessful = false;
-      fPassFumble = true;
-      fHoldingSafeThrow = false;
+    	state.successful = false;
+    	state.passFumble = true;
+    	state.holdingSafeThrow = false;
     } else {
-      fPassFumble = DiceInterpreter.getInstance().isPassFumble(roll, game.getThrower(), passingDistance, passModifiers);
-      if (fPassFumble) {
-        fSuccessful = false;
-        fHoldingSafeThrow = (UtilCards.hasSkill(game, game.getThrower(), ServerSkill.SAFE_THROW) && (PlayerAction.THROW_BOMB != game.getThrowerAction()));
+    	state.passFumble = DiceInterpreter.getInstance().isPassFumble(roll, game.getThrower(), passingDistance, passModifiers);
+      if (state.passFumble) {
+    	  state.successful = false;
+    	  state.holdingSafeThrow = (UtilCards.hasSkill(game, game.getThrower(), ServerSkill.SAFE_THROW) && (PlayerAction.THROW_BOMB != game.getThrowerAction()));
       } else {
-        fSuccessful = DiceInterpreter.getInstance().isSkillRollSuccessful(roll, minimumRoll);
-        fHoldingSafeThrow = false;
+    	  state.successful = DiceInterpreter.getInstance().isSkillRollSuccessful(roll, minimumRoll);
+    	  state.holdingSafeThrow = false;
       }
     }
     PassModifier[] passModifierArray = new PassModifierFactory().toArray(passModifiers);
     boolean reRolled = ((getReRolledAction() == ReRolledAction.PASS) && (getReRollSource() != null));
-    getResult().addReport(new ReportPassRoll(game.getThrowerId(), fSuccessful, roll, minimumRoll, reRolled, passModifierArray, passingDistance, fPassFumble,
-        fHoldingSafeThrow, (PlayerAction.THROW_BOMB == game.getThrowerAction())));
-    if (fSuccessful) {
+    getResult().addReport(new ReportPassRoll(game.getThrowerId(), state.successful, roll, minimumRoll, reRolled, passModifierArray, passingDistance, state.passFumble,
+    		state.holdingSafeThrow, (PlayerAction.THROW_BOMB == game.getThrowerAction())));
+    if (state.successful) {
       game.getFieldModel().setRangeRuler(null);
-      publishParameter(new StepParameter(StepParameterKey.PASS_FUMBLE, fPassFumble));
+      publishParameter(new StepParameter(StepParameterKey.PASS_FUMBLE, state.passFumble));
       FieldCoordinate startCoordinate = game.getFieldModel().getPlayerCoordinate(game.getThrower());
       if (PlayerAction.THROW_BOMB == game.getThrowerAction()) {
         getResult().setAnimation(new Animation(AnimationType.THROW_BOMB, startCoordinate, game.getPassCoordinate(), null));
@@ -196,15 +206,15 @@ public class StepPass extends AbstractStepWithReRoll {
         getResult().setAnimation(new Animation(AnimationType.PASS, startCoordinate, game.getPassCoordinate(), null));
       }
       UtilServerGame.syncGameModel(this);
-      Player catcher = game.getPlayerById(fCatcherId);
+      Player catcher = game.getPlayerById(state.CatcherId);
       PlayerState catcherState = game.getFieldModel().getPlayerState(catcher);
       if ((catcher == null) || (catcherState == null) || !catcherState.hasTacklezones()) {
         if (PlayerAction.THROW_BOMB == game.getThrowerAction()) {
           game.getFieldModel().setBombCoordinate(game.getPassCoordinate());
-          publishParameter(new StepParameter(StepParameterKey.CATCH_SCATTER_THROW_IN_MODE, fCatcherId == null ? CatchScatterThrowInMode.CATCH_ACCURATE_BOMB_EMPTY_SQUARE : CatchScatterThrowInMode.CATCH_BOMB));
+          publishParameter(new StepParameter(StepParameterKey.CATCH_SCATTER_THROW_IN_MODE, state.CatcherId == null ? CatchScatterThrowInMode.CATCH_ACCURATE_BOMB_EMPTY_SQUARE : CatchScatterThrowInMode.CATCH_BOMB));
         } else {
           game.getFieldModel().setBallCoordinate(game.getPassCoordinate());
-          publishParameter(new StepParameter(StepParameterKey.CATCH_SCATTER_THROW_IN_MODE, fCatcherId == null ? CatchScatterThrowInMode.CATCH_ACCURATE_PASS_EMPTY_SQUARE : CatchScatterThrowInMode.CATCH_MISSED_PASS));
+          publishParameter(new StepParameter(StepParameterKey.CATCH_SCATTER_THROW_IN_MODE, state.CatcherId == null ? CatchScatterThrowInMode.CATCH_ACCURATE_PASS_EMPTY_SQUARE : CatchScatterThrowInMode.CATCH_MISSED_PASS));
         }
         getResult().setNextAction(StepAction.NEXT_STEP);
       } else {
@@ -222,9 +232,10 @@ public class StepPass extends AbstractStepWithReRoll {
       boolean doNextStep = true;
       if (getReRolledAction() != ReRolledAction.PASS) {
         setReRolledAction(ReRolledAction.PASS);
-        if (UtilCards.hasSkill(game, game.getThrower(), ServerSkill.PASS) && !fPassSkillUsed) {
+        
+        if (UtilCards.hasSkill(game, game.getThrower(), ServerSkill.PASS) && !state.passSkillUsed) {
           doNextStep = false;
-          fPassSkillUsed = true;
+          state.passSkillUsed = true;
           Team actingTeam = game.isHomePlaying() ? game.getTeamHome() : game.getTeamAway();
           UtilServerDialog.showDialog(
               getGameState(),
@@ -232,7 +243,7 @@ public class StepPass extends AbstractStepWithReRoll {
               actingTeam.hasPlayer(game.getThrower())
           );
         } else {
-          if (UtilServerReRoll.askForReRollIfAvailable(getGameState(), game.getThrower(), ReRolledAction.PASS, minimumRoll, fPassFumble)) {
+          if (UtilServerReRoll.askForReRollIfAvailable(getGameState(), game.getThrower(), ReRolledAction.PASS, minimumRoll, state.passFumble)) {
             doNextStep = false;
           }
         }
@@ -247,12 +258,12 @@ public class StepPass extends AbstractStepWithReRoll {
     Game game = getGameState().getGame();
     game.getFieldModel().setRangeRuler(null);
     FieldCoordinate throwerCoordinate = game.getFieldModel().getPlayerCoordinate(game.getThrower());
-    publishParameter(new StepParameter(StepParameterKey.PASS_FUMBLE, fPassFumble));
-    if (fHoldingSafeThrow) {
+    publishParameter(new StepParameter(StepParameterKey.PASS_FUMBLE, state.passFumble));
+    if (state.holdingSafeThrow) {
       game.getFieldModel().setBallCoordinate(throwerCoordinate);
       game.getFieldModel().setBallMoving(false);
-      getResult().setNextAction(StepAction.GOTO_LABEL, fGotoLabelOnEnd);
-    } else if (fPassFumble) {
+      getResult().setNextAction(StepAction.GOTO_LABEL, state.goToLabelOnEnd);
+    } else if (state.passFumble) {
       if (PlayerAction.THROW_BOMB == game.getThrowerAction()) {
         game.getFieldModel().setBombCoordinate(game.getFieldModel().getPlayerCoordinate(game.getThrower()));
       } else {
@@ -268,7 +279,7 @@ public class StepPass extends AbstractStepWithReRoll {
         game.getFieldModel().setBallCoordinate(game.getPassCoordinate());
       }
       publishParameter(new StepParameter(StepParameterKey.CATCHER_ID, null));
-      getResult().setNextAction(StepAction.GOTO_LABEL, fGotoLabelOnMissedPass);
+      getResult().setNextAction(StepAction.GOTO_LABEL, state.goToLabelOnMissedPass);
     }
   }
 
@@ -277,13 +288,13 @@ public class StepPass extends AbstractStepWithReRoll {
   @Override
   public JsonObject toJsonValue() {
     JsonObject jsonObject = super.toJsonValue();
-    IServerJsonOption.GOTO_LABEL_ON_END.addTo(jsonObject, fGotoLabelOnEnd);
-    IServerJsonOption.GOTO_LABEL_ON_MISSED_PASS.addTo(jsonObject, fGotoLabelOnMissedPass);
-    IServerJsonOption.CATCHER_ID.addTo(jsonObject, fCatcherId);
-    IServerJsonOption.SUCCESSFUL.addTo(jsonObject, fSuccessful);
-    IServerJsonOption.HOLDING_SAFE_THROW.addTo(jsonObject, fHoldingSafeThrow);
-    IServerJsonOption.PASS_FUMBLE.addTo(jsonObject, fPassFumble);
-    IServerJsonOption.PASS_SKILL_USED.addTo(jsonObject, fPassSkillUsed);
+    IServerJsonOption.GOTO_LABEL_ON_END.addTo(jsonObject, state.goToLabelOnEnd);
+    IServerJsonOption.GOTO_LABEL_ON_MISSED_PASS.addTo(jsonObject, state.goToLabelOnMissedPass);
+    IServerJsonOption.CATCHER_ID.addTo(jsonObject, state.CatcherId);
+    IServerJsonOption.SUCCESSFUL.addTo(jsonObject, state.successful);
+    IServerJsonOption.HOLDING_SAFE_THROW.addTo(jsonObject, state.holdingSafeThrow);
+    IServerJsonOption.PASS_FUMBLE.addTo(jsonObject, state.passFumble);
+    IServerJsonOption.PASS_SKILL_USED.addTo(jsonObject, state.passSkillUsed);
     return jsonObject;
   }
 
@@ -291,13 +302,13 @@ public class StepPass extends AbstractStepWithReRoll {
   public StepPass initFrom(JsonValue pJsonValue) {
     super.initFrom(pJsonValue);
     JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-    fGotoLabelOnEnd = IServerJsonOption.GOTO_LABEL_ON_END.getFrom(jsonObject);
-    fGotoLabelOnMissedPass = IServerJsonOption.GOTO_LABEL_ON_MISSED_PASS.getFrom(jsonObject);
-    fCatcherId = IServerJsonOption.CATCHER_ID.getFrom(jsonObject);
-    fSuccessful = IServerJsonOption.SUCCESSFUL.getFrom(jsonObject);
-    fHoldingSafeThrow = IServerJsonOption.HOLDING_SAFE_THROW.getFrom(jsonObject);
-    fPassFumble = IServerJsonOption.PASS_FUMBLE.getFrom(jsonObject);
-    fPassSkillUsed = IServerJsonOption.PASS_SKILL_USED.getFrom(jsonObject);
+    state.goToLabelOnEnd = IServerJsonOption.GOTO_LABEL_ON_END.getFrom(jsonObject);
+    state.goToLabelOnMissedPass = IServerJsonOption.GOTO_LABEL_ON_MISSED_PASS.getFrom(jsonObject);
+    state.CatcherId = IServerJsonOption.CATCHER_ID.getFrom(jsonObject);
+    state.successful = IServerJsonOption.SUCCESSFUL.getFrom(jsonObject);
+    state.holdingSafeThrow = IServerJsonOption.HOLDING_SAFE_THROW.getFrom(jsonObject);
+    state.passFumble = IServerJsonOption.PASS_FUMBLE.getFrom(jsonObject);
+    state.passSkillUsed = IServerJsonOption.PASS_SKILL_USED.getFrom(jsonObject);
     return this;
   }
 
