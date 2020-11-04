@@ -14,6 +14,7 @@ public class NamedProperties {
   public static final ISkillProperty canBeKicked = new NamedProperty("Can Be Kicked");
   public static final ISkillProperty canBlockMoreThanOnce = new NamedProperty("Can Block More Than Once");
   public static final ISkillProperty canBlockSameTeamPlayer = new NamedProperty("Can Block Same Team Player");
+  public static final ISkillProperty canForceInterceptionReroll = new NamedProperty("Can Force Interception Reroll");
   public static final ISkillProperty canKickTeamMates = new NamedProperty("Can Kick Team Mates");
   public static final ISkillProperty canMakeAnExtraGfi = new NamedProperty("Use Special Block Rules");
   public static final ISkillProperty canReduceKickDistance = new NamedProperty("Can Reduce Kick Distance");

@@ -18,9 +18,9 @@ import com.balancedbytes.games.ffb.model.AnimationType;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.model.Team;
+import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandUseSkill;
 import com.balancedbytes.games.ffb.report.ReportPassRoll;
-import com.balancedbytes.games.ffb.server.ActionStatus;
 import com.balancedbytes.games.ffb.server.DiceInterpreter;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.IServerJsonOption;
@@ -34,7 +34,6 @@ import com.balancedbytes.games.ffb.server.step.StepId;
 import com.balancedbytes.games.ffb.server.step.StepParameter;
 import com.balancedbytes.games.ffb.server.step.StepParameterKey;
 import com.balancedbytes.games.ffb.server.step.StepParameterSet;
-import com.balancedbytes.games.ffb.server.step.action.block.StepWrestle.StepState;
 import com.balancedbytes.games.ffb.server.util.UtilServerDialog;
 import com.balancedbytes.games.ffb.server.util.UtilServerGame;
 import com.balancedbytes.games.ffb.server.util.UtilServerReRoll;
@@ -186,7 +185,7 @@ public class StepPass extends AbstractStepWithReRoll {
     	state.passFumble = DiceInterpreter.getInstance().isPassFumble(roll, game.getThrower(), passingDistance, passModifiers);
       if (state.passFumble) {
     	  state.successful = false;
-    	  state.holdingSafeThrow = (UtilCards.hasSkill(game, game.getThrower(), ServerSkill.SAFE_THROW) && (PlayerAction.THROW_BOMB != game.getThrowerAction()));
+    	  state.holdingSafeThrow = (UtilCards.hasSkillWithProperty(game.getThrower(), NamedProperties.canForceInterceptionReroll) && (PlayerAction.THROW_BOMB != game.getThrowerAction()));
       } else {
     	  state.successful = DiceInterpreter.getInstance().isSkillRollSuccessful(roll, minimumRoll);
     	  state.holdingSafeThrow = false;
@@ -233,13 +232,14 @@ public class StepPass extends AbstractStepWithReRoll {
       if (getReRolledAction() != ReRolledAction.PASS) {
         setReRolledAction(ReRolledAction.PASS);
         
-        if (UtilCards.hasSkill(game, game.getThrower(), ServerSkill.PASS) && !state.passSkillUsed) {
+        ReRollSource PassingReroll = UtilCards.getRerollSource(game.getThrower(), ReRolledAction.PASS);
+        if (PassingReroll != null && !state.passSkillUsed) {
           doNextStep = false;
           state.passSkillUsed = true;
           Team actingTeam = game.isHomePlaying() ? game.getTeamHome() : game.getTeamAway();
           UtilServerDialog.showDialog(
               getGameState(),
-              new DialogSkillUseParameter(game.getThrowerId(), ServerSkill.PASS, minimumRoll),
+              new DialogSkillUseParameter(game.getThrowerId(), PassingReroll.getSkill(), minimumRoll),
               actingTeam.hasPlayer(game.getThrower())
           );
         } else {
