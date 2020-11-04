@@ -231,19 +231,19 @@ public class StepMoveDodge extends AbstractStepWithReRoll {
       status = ActionStatus.FAILURE;
       if (!fReRollUsed && (getReRolledAction() != ReRolledAction.DODGE)) {
         setReRolledAction(ReRolledAction.DODGE);
-        boolean useDodgeSkill = UtilCards.hasUnusedSkill(game, game.getActingPlayer(), ServerSkill.DODGE);
-        if (useDodgeSkill) {
+        ReRollSource skillRerollSource = UtilCards.getUnusedRerollSource(game.getActingPlayer(), ReRolledAction.DODGE);
+        if (skillRerollSource != null) {
           Team otherTeam = UtilPlayer.findOtherTeam(game, actingPlayer.getPlayer());
           Player[] opponents = UtilPlayer.findAdjacentPlayersWithTacklezones(game, otherTeam, fCoordinateFrom, false);
           for (int i = 0; i < opponents.length; i++) {
-            if (UtilCards.hasSkill(game, opponents[i], ServerSkill.TACKLE)) {
-              useDodgeSkill = false;
+            if (UtilCards.cancelsSkill(opponents[i], skillRerollSource.getSkill())) {
+            	skillRerollSource = null;
               break;
             }
           }
         }
-        if (useDodgeSkill) {
-          setReRollSource(ReRollSource.DODGE);
+        if (skillRerollSource != null) {
+          setReRollSource(skillRerollSource);
           UtilServerReRoll.useReRoll(this, getReRollSource(), actingPlayer.getPlayer());
           status = dodge(true);
         } else {

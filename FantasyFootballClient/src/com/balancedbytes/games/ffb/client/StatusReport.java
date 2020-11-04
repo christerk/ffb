@@ -2251,7 +2251,7 @@ public class StatusReport {
         }
       }
     }
-    List<Player> unzappedPlayers = pReport.getUnzappedPlayers();
+    List<Player<?>> unzappedPlayers = pReport.getUnzappedPlayers();
     if (unzappedPlayers != null) {
       for (Player player: unzappedPlayers) {
           print(getIndent(), true, player);

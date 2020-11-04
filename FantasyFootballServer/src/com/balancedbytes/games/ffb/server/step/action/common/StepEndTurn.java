@@ -238,7 +238,7 @@ public class StepEndTurn extends AbstractStep {
   
         List<KnockoutRecovery> knockoutRecoveries = new ArrayList<KnockoutRecovery>();
         List<HeatExhaustion> heatExhaustions = new ArrayList<HeatExhaustion>();
-        List<Player> unzappedPlayers = new ArrayList<Player>();
+        List<Player<?>> unzappedPlayers = new ArrayList<Player<?>>();
         if (fNewHalf || fTouchdown) {
           for (Player player : game.getPlayers()) {
             if (player instanceof ZappedPlayer) {

@@ -32,6 +32,7 @@ public class NamedProperties {
   public static final ISkillProperty grabOutsideBlock = new NamedProperty("Grab Outside Block");
   public static final ISkillProperty hasNoTacklezone = new NamedProperty("Has No Tacklezone");
   public static final ISkillProperty hasToRollToUseTeamReroll = new NamedProperty("Has To Roll To Use Team Reroll");
+  public static final ISkillProperty ignoreTackleWhenBlocked = new NamedProperty("Ignore Tackle When Blocked");
   public static final ISkillProperty ignoreTacklezonesWhenMoving = new NamedProperty("Ignore Tacklezones When Moving");
   public static final ISkillProperty ignoreTacklezonesWhenPassing = new NamedProperty("Ignore Tacklezones when Passing");
   public static final ISkillProperty ignoreTacklezonesWhenPickingUp = new NamedProperty("Ignore Tacklezones When Picking Up");
@@ -45,6 +46,8 @@ public class NamedProperties {
   public static final ISkillProperty preventFallOnBothDown = new NamedProperty("Prevent Fall on Both Down");
   public static final ISkillProperty preventHoldBall = new NamedProperty("Prevent Hold Ball");
   public static final ISkillProperty preventKickTeamMateAction = new NamedProperty("Prevent Kick Team Mate Action");
+  public static final ISkillProperty preventOpponentFollowingUp = new NamedProperty("Prevent Opponent Following Up");
+  public static final ISkillProperty preventRaiseFromDead = new NamedProperty("Prevent Raise From Dead");
   public static final ISkillProperty preventRecoverFromConcusionAction = new NamedProperty("Prevent Recover from Confusion Action");
   public static final ISkillProperty preventRecoverFromGazeAction = new NamedProperty("Prevent Recover from Gaze Aztion");
   public static final ISkillProperty preventRegularBlitzAction = new NamedProperty("Prevent Regular Blitz Action");

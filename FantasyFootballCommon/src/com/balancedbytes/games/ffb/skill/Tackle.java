@@ -2,6 +2,8 @@ package com.balancedbytes.games.ffb.skill;
 
 import com.balancedbytes.games.ffb.SkillCategory;
 import com.balancedbytes.games.ffb.model.Skill;
+import com.balancedbytes.games.ffb.model.SkillConstants;
+import com.balancedbytes.games.ffb.model.modifier.CancelSkillProperty;
 
 /**
 * Opposing players who are standing in any of this player's tackle zones
@@ -13,6 +15,8 @@ public class Tackle extends Skill {
 
   public Tackle() {
     super("Tackle", SkillCategory.GENERAL);
+    
+    registerProperty(new CancelSkillProperty(SkillConstants.DODGE));
   }
 
 }

@@ -89,7 +89,7 @@ public final class StepKickoffScatterRoll extends AbstractStep {
 			switch (pReceivedCommand.getId()) {
 	      case CLIENT_USE_SKILL:
 	        ClientCommandUseSkill skillUseCommand = (ClientCommandUseSkill) pReceivedCommand.getCommand();
-	        if (skillUseCommand.getSkill() == ServerSkill.KICK) {
+	        if(skillUseCommand.getSkill().hasSkillProperty(NamedProperties.canReduceKickDistance)) {
 	        	fUseKickChoice = skillUseCommand.isSkillUsed();
 	          commandStatus = StepCommandStatus.EXECUTE_STEP;
 	        }

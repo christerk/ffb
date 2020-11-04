@@ -477,15 +477,16 @@ public class UtilServerInjury {
 		Player deadPlayer = game.getPlayerById(pInjuryResult.getDefenderId());
 		Team necroTeam = UtilPlayer.findOtherTeam(game, deadPlayer);
 		TeamResult necroTeamResult = (game.getTeamHome() == necroTeam) ? game.getGameResult().getTeamResultHome() : game.getGameResult().getTeamResultAway();
+		boolean deadPlayerPreventsRaisedFromDead = UtilCards.hasSkillWithProperty(deadPlayer, NamedProperties.preventRaiseFromDead);
 
 		if ((pInjuryResult != null) && (pInjuryResult.getPlayerState() != null) && (PlayerState.RIP == pInjuryResult.getPlayerState().getBase())) {
 			if (necroTeam.getRoster().hasNecromancer() && (necroTeamResult.getRaisedDead() == 0) && (deadPlayer.getStrength() <= 4)
-					&& !UtilCards.hasSkill(game, deadPlayer, ServerSkill.STUNTY) && !UtilCards.hasSkill(game, deadPlayer, ServerSkill.REGENERATION)) {
+					&& !deadPlayerPreventsRaisedFromDead) {
 				raisedPlayer = raisePlayer(game, necroTeam, necroTeamResult, deadPlayer.getName(), nurglesRot, deadPlayer.getId());
 			} else {
 				Player attacker = game.getPlayerById(pInjuryResult.getAttackerId());
 				if ((attacker != null) && UtilCards.hasSkill(game, attacker, ServerSkill.NURGLES_ROT) && (deadPlayer.getStrength() <= 4)
-						&& !UtilCards.hasSkill(game, deadPlayer, ServerSkill.STUNTY) && !UtilCards.hasSkill(game, deadPlayer, ServerSkill.REGENERATION)
+						&& !deadPlayerPreventsRaisedFromDead
 						&& !UtilCards.hasSkill(game, deadPlayer, ServerSkill.DECAY)) {
 					RosterPosition zombiePosition = necroTeam.getRoster().getRaisedRosterPosition();
 					if (zombiePosition != null) {
