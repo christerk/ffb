@@ -19,6 +19,7 @@ import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.model.RosterPlayer;
 import com.balancedbytes.games.ffb.model.Skill;
 import com.balancedbytes.games.ffb.model.Team;
+import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
 import com.balancedbytes.games.ffb.option.GameOptionId;
 import com.balancedbytes.games.ffb.option.UtilGameOption;
 
@@ -163,7 +164,7 @@ public class UtilPlayer {
       if (offensiveAssist != pAttacker) {
         FieldCoordinate coordinateAssist = pGame.getFieldModel().getPlayerCoordinate(offensiveAssist);
         if ((findAdjacentPlayersWithTacklezones(pGame, pDefender.getTeam(), coordinateAssist, false).length < 1)
-        	|| (UtilGameOption.isOptionEnabled(pGame, GameOptionId.SNEAKY_GIT_AS_FOUL_GUARD) && UtilCards.hasSkill(pGame, offensiveAssist, Skill.SNEAKY_GIT))) {
+        	|| (UtilGameOption.isOptionEnabled(pGame, GameOptionId.SNEAKY_GIT_AS_FOUL_GUARD) && UtilCards.hasSkillWithProperty(offensiveAssist, NamedProperties.canAlwaysAssistFouls))) {
           foulAssists++;
         }
       }
@@ -261,7 +262,7 @@ public class UtilPlayer {
     Team otherTeam = UtilPlayer.findOtherTeam(pGame, pPlayer);
     PlayerState playerState = pGame.getFieldModel().getPlayerState(pPlayer);
     
-    if (!UtilCards.hasSkill(pGame, pPlayer, Skill.HYPNOTIC_GAZE)){
+    if(!UtilCards.hasSkillWithProperty(pPlayer, NamedProperties.inflictsConfusion)) {
     	return false;
     } else if (!playerState.isActive()) {
     	return false;
@@ -294,7 +295,9 @@ public class UtilPlayer {
     FieldCoordinate throwerCoordinate = fieldModel.getPlayerCoordinate(pThrower);
     Player[] adjacentPlayers = findAdjacentPlayersWithTacklezones(pGame, pThrower.getTeam(), throwerCoordinate, false);
     for (Player adjacentPlayer : adjacentPlayers) {
-      if (UtilCards.hasSkill(pGame, adjacentPlayer, Skill.RIGHT_STUFF)) {
+    	
+    	
+      if (UtilCards.hasSkillWithProperty(adjacentPlayer, NamedProperties.canBeThrown)) {
         throwablePlayers.add(adjacentPlayer);
       }
     }
@@ -307,7 +310,7 @@ public class UtilPlayer {
     FieldCoordinate kickerCoordinate = fieldModel.getPlayerCoordinate(pKicker);
     Player[] adjacentPlayers = findAdjacentPlayersWithTacklezones(pGame, pKicker.getTeam(), kickerCoordinate, false);
     for (Player adjacentPlayer : adjacentPlayers) {
-      if (UtilCards.hasSkill(pGame, adjacentPlayer, Skill.RIGHT_STUFF)) {
+      if (UtilCards.hasSkillWithProperty(adjacentPlayer, NamedProperties.canBeKicked)) {
         kickablePlayers.add(adjacentPlayer);
       }
     }
@@ -315,11 +318,11 @@ public class UtilPlayer {
   }
   
   public static boolean canThrowTeamMate(Game pGame, Player pThrower, boolean pCheckPassUsed) {
-    return ((pThrower != null) && (!pCheckPassUsed || !pGame.getTurnData().isPassUsed()) && UtilCards.hasSkill(pGame, pThrower, Skill.THROW_TEAM_MATE) && (UtilPlayer.findThrowableTeamMates(pGame, pThrower).length > 0));
+    return ((pThrower != null) && (!pCheckPassUsed || !pGame.getTurnData().isPassUsed()) && UtilCards.hasSkillWithProperty(pThrower, NamedProperties.canThrowTeamMates) && (UtilPlayer.findThrowableTeamMates(pGame, pThrower).length > 0));
   }
   
   public static boolean canKickTeamMate(Game pGame, Player pKicker, boolean pCheckBlitzUsed) {
-    return ((pKicker != null) && (!pCheckBlitzUsed || !pGame.getTurnData().isBlitzUsed()) && UtilCards.hasSkill(pGame, pKicker, Skill.KICK_TEAM_MATE) && (UtilPlayer.findKickableTeamMates(pGame, pKicker).length > 0));
+    return ((pKicker != null) && (!pCheckBlitzUsed || !pGame.getTurnData().isBlitzUsed()) && UtilCards.hasSkillWithProperty(pKicker, NamedProperties.canKickTeamMates) && (UtilPlayer.findKickableTeamMates(pGame, pKicker).length > 0));
   }
   
   public static boolean isBlockable(Game pGame, Player pPlayer) {
@@ -370,7 +373,7 @@ public class UtilPlayer {
     if (player != null) {
       if ((pGame.getTurnMode() == TurnMode.KICKOFF_RETURN) || (pGame.getTurnMode() == TurnMode.PASS_BLOCK)) {
       	return false;
-      } else if (actingPlayer.isStandingUp() && !actingPlayer.hasActed() && !UtilCards.hasSkill(pGame, actingPlayer, Skill.JUMP_UP)) {
+      } else if (actingPlayer.isStandingUp() && !actingPlayer.hasActed() && !UtilCards.hasSkillWithProperty(actingPlayer.getPlayer(), NamedProperties.canStandUpForFree)) {
         nextMoveGoingForIt = (3 >= UtilCards.getPlayerMovement(pGame, player));
       } else {
       	if (actingPlayer.isLeaping()) {
@@ -406,7 +409,8 @@ public class UtilPlayer {
       } else {
         int extraMove = 0;
         if (actingPlayer.isGoingForIt()) {
-          extraMove = UtilCards.hasSkill(pGame, actingPlayer, Skill.SPRINT) ? 3 : 2;
+          boolean canMakeAnExtraGfi = UtilCards.hasSkillWithProperty(actingPlayer.getPlayer(), NamedProperties.canMakeAnExtraGfi);
+          extraMove = canMakeAnExtraGfi ? 3 : 2;
           if (pLeaping) {
           	extraMove--;
           }

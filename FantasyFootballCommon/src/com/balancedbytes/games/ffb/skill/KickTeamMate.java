@@ -2,6 +2,7 @@ package com.balancedbytes.games.ffb.skill;
 
 import com.balancedbytes.games.ffb.SkillCategory;
 import com.balancedbytes.games.ffb.model.Skill;
+import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
 
 /**
  * When a player with this skill makes a Blitz Action, they can kick an adjacent
@@ -39,6 +40,8 @@ public class KickTeamMate extends Skill {
 
   public KickTeamMate() {
     super("Kick Team-Mate", SkillCategory.EXTRAORDINARY);
+
+    registerProperty(NamedProperties.canKickTeamMates);
   }
 
 }

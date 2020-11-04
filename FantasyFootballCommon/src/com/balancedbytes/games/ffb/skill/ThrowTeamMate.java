@@ -2,6 +2,7 @@ package com.balancedbytes.games.ffb.skill;
 
 import com.balancedbytes.games.ffb.SkillCategory;
 import com.balancedbytes.games.ffb.model.Skill;
+import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
 
 /**
 * A player with this skill has the ability to throw a player from the same
@@ -31,6 +32,8 @@ public class ThrowTeamMate extends Skill {
 
   public ThrowTeamMate() {
     super("Throw Team-Mate", SkillCategory.EXTRAORDINARY);
+
+    registerProperty(NamedProperties.canThrowTeamMates);
   }
 
 }

@@ -2,6 +2,7 @@ package com.balancedbytes.games.ffb.skill;
 
 import com.balancedbytes.games.ffb.SkillCategory;
 import com.balancedbytes.games.ffb.model.Skill;
+import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
 
 /**
 * A player with the Right Stuff skill can be thrown by another player from
@@ -22,6 +23,9 @@ public class RightStuff extends Skill {
 
   public RightStuff() {
     super("Right Stuff", SkillCategory.EXTRAORDINARY);
+    
+    registerProperty(NamedProperties.canBeThrown);
+    registerProperty(NamedProperties.canBeKicked);
   }
 
 }
