@@ -4,7 +4,6 @@ import com.balancedbytes.games.ffb.ReRollSource;
 import com.balancedbytes.games.ffb.ReRolledAction;
 import com.balancedbytes.games.ffb.SkillCategory;
 import com.balancedbytes.games.ffb.model.Skill;
-import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
 
 /**
 * A player with the Pass skill is allowed to re-roll the D6 if he throws an

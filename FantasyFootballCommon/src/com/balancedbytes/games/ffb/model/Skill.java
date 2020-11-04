@@ -80,7 +80,7 @@ public class Skill implements INamedObject {
   }
 
   protected void registerRerollSource(ReRolledAction action, ReRollSource source) {
-    rerollSources.put(action, source);
+		rerollSources.put(action, source);
   }
   
   public List<ISkillBehaviour> getSkillBehaviours() {

@@ -6,6 +6,7 @@ import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.PassModifier;
 import com.balancedbytes.games.ffb.PassModifierFactory;
 import com.balancedbytes.games.ffb.PassingDistance;
+import com.balancedbytes.games.ffb.ReRollSource;
 import com.balancedbytes.games.ffb.ReRolledAction;
 import com.balancedbytes.games.ffb.dialog.DialogSkillUseParameter;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
@@ -15,19 +16,16 @@ import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandUseSkill;
 import com.balancedbytes.games.ffb.report.ReportThrowTeamMateRoll;
 import com.balancedbytes.games.ffb.server.DiceInterpreter;
-import com.balancedbytes.games.ffb.server.model.ServerSkill;
 import com.balancedbytes.games.ffb.server.model.SkillBehaviour;
 import com.balancedbytes.games.ffb.server.model.StepModifier;
 import com.balancedbytes.games.ffb.server.step.SequenceGenerator;
 import com.balancedbytes.games.ffb.server.step.StepAction;
 import com.balancedbytes.games.ffb.server.step.StepCommandStatus;
-import com.balancedbytes.games.ffb.server.step.action.block.StepWrestle;
 import com.balancedbytes.games.ffb.server.step.action.ttm.StepThrowTeamMate;
 import com.balancedbytes.games.ffb.server.step.action.ttm.StepThrowTeamMate.StepState;
 import com.balancedbytes.games.ffb.server.util.UtilServerDialog;
 import com.balancedbytes.games.ffb.server.util.UtilServerReRoll;
 import com.balancedbytes.games.ffb.skill.ThrowTeamMate;
-import com.balancedbytes.games.ffb.skill.Wrestle;
 import com.balancedbytes.games.ffb.util.UtilCards;
 import com.balancedbytes.games.ffb.util.UtilPassing;
 
@@ -78,9 +76,10 @@ public class ThrowTeamMateBehaviour extends SkillBehaviour<ThrowTeamMate> {
 				      } else {
 				        if (step.getReRolledAction() != ReRolledAction.THROW_TEAM_MATE) {
 				        	step.setReRolledAction(ReRolledAction.THROW_TEAM_MATE);
-				        	
-				          if (UtilCards.hasSkillWithProperty(thrower, NamedProperties.canRerollFailedPass)) {
-				            UtilServerDialog.showDialog(step.getGameState(), new DialogSkillUseParameter(thrower.getId(), ServerSkill.PASS, minimumRoll), false);
+				        
+				          ReRollSource unusedPassingReroll = UtilCards.getUnusedRerollSource(actingPlayer, ReRolledAction.PASS);
+				          if (unusedPassingReroll != null) {
+				            UtilServerDialog.showDialog(step.getGameState(), new DialogSkillUseParameter(thrower.getId(), unusedPassingReroll.getSkill(), minimumRoll), false);
 				          } else {
 				            if (!UtilServerReRoll.askForReRollIfAvailable(step.getGameState(), actingPlayer.getPlayer(), ReRolledAction.THROW_TEAM_MATE, minimumRoll, false)) {
 				            	step.getResult().setNextAction(StepAction.GOTO_LABEL, state.goToLabelOnFailure);
