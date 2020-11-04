@@ -9,6 +9,7 @@ import com.balancedbytes.games.ffb.dialog.DialogTouchbackParameter;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
+import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandTouchback;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.IServerJsonOption;
@@ -109,7 +110,7 @@ public final class StepTouchback extends AbstractStep {
         game.getFieldModel().setBallCoordinate(fTouchbackCoordinate);
         Player player = game.getFieldModel().getPlayer(fTouchbackCoordinate);
         PlayerState playerState = game.getFieldModel().getPlayerState(player);
-        if ((player != null) && !UtilCards.hasSkill(game, player, ServerSkill.NO_HANDS) && playerState.hasTacklezones()) {
+        if ((player != null) && !UtilCards.hasSkillWithProperty(player, NamedProperties.preventHoldBall) && playerState.hasTacklezones()) {
         	game.getFieldModel().setBallMoving(false);
           getResult().setSound(SoundId.CATCH);
         } else {

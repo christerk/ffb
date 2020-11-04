@@ -8,6 +8,7 @@ import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.model.Team;
+import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.model.ServerSkill;
 import com.balancedbytes.games.ffb.util.UtilCards;
@@ -19,19 +20,19 @@ import com.balancedbytes.games.ffb.util.UtilPlayer;
  */
 public class UtilServerCatchScatterThrowIn {
   
-  public static Player[] findDivingCatchers(GameState pGameState, Team pTeam, FieldCoordinate pCoordinate) {
-	  Set<Player> divingCatchPlayers = new HashSet<Player>(); 
-    Game game = pGameState.getGame();
-    Player[] adjacentPlayers = UtilPlayer.findAdjacentPlayersWithTacklezones(game, pTeam, pCoordinate, false);
-    for (Player player : adjacentPlayers) {
-      if (UtilCards.hasSkill(game, player, ServerSkill.DIVING_CATCH)) {
-      	divingCatchPlayers.add(player);
-      }
-    }
-    Player[] playerArray = divingCatchPlayers.toArray(new Player[divingCatchPlayers.size()]);
-    UtilPlayer.sortByPlayerNr(playerArray);
-    return playerArray;
-  }
+	public static Player[] findDivingCatchers(GameState pGameState, Team pTeam, FieldCoordinate pCoordinate) {
+		Set<Player> divingCatchPlayers = new HashSet<Player>(); 
+		Game game = pGameState.getGame();
+		Player[] adjacentPlayers = UtilPlayer.findAdjacentPlayersWithTacklezones(game, pTeam, pCoordinate, false);
+		for (Player player : adjacentPlayers) {
+			if(UtilCards.hasSkillWithProperty(player, NamedProperties.canAttemptCatchInAdjacentSquares)) {
+				divingCatchPlayers.add(player);
+			}
+		}
+		Player[] playerArray = divingCatchPlayers.toArray(new Player[divingCatchPlayers.size()]);
+		UtilPlayer.sortByPlayerNr(playerArray);
+		return playerArray;
+	}
 
 	public static FieldCoordinate findScatterCoordinate(FieldCoordinate pStartCoordinate, Direction pScatterDirection, int pScatterDistance) {
 	  if (pStartCoordinate == null) {

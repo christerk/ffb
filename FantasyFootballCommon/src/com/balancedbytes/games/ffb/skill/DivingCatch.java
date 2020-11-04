@@ -2,6 +2,7 @@ package com.balancedbytes.games.ffb.skill;
 
 import com.balancedbytes.games.ffb.SkillCategory;
 import com.balancedbytes.games.ffb.model.Skill;
+import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
 
 /**
 * The player is superb at diving to catch balls others cannot reach and
@@ -18,6 +19,8 @@ public class DivingCatch extends Skill {
 
   public DivingCatch() {
     super("Diving Catch", SkillCategory.AGILITY);
+    
+    registerProperty(NamedProperties.canAttemptCatchInAdjacentSquares);
   }
 
 }

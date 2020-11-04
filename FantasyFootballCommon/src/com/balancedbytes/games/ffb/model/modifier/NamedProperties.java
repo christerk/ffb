@@ -8,9 +8,12 @@ public class NamedProperties {
   public static final ISkillProperty appliesConfusion = new NamedProperty("Applies Confusion");
   public static final ISkillProperty appliesPoisonOnBadlyHurt = new NamedProperty("Applies Poison on Badly Hurt");
   public static final ISkillProperty assistInTacklezones = new NamedProperty("Assist in Tacklezones");
+  public static final ISkillProperty canAttemptCatchInAdjacentSquares = new NamedProperty("Can Attempt Catch In Adjacent Squares");
   public static final ISkillProperty canBlockMoreThanOnce = new NamedProperty("Can Block More Than Once");
   public static final ISkillProperty canBlockSameTeamPlayer = new NamedProperty("Can Block Same Team Player");
+  public static final ISkillProperty canReduceKickDistance = new NamedProperty("Can Reduce Kick Distance");
   public static final ISkillProperty canRerollOncePerTurn = new NamedProperty("Can Reroll Once Per Turn");
+  public static final ISkillProperty canStandUpForFree = new NamedProperty("Can Stand Up For Free");
   public static final ISkillProperty convertKOToStunOn8 = new NamedProperty("Convert KO to Stun on a roll of 8");
   public static final ISkillProperty convertStunToKO = new NamedProperty("Convert Stun to KO");
   public static final ISkillProperty enableStandUpAndEndBlitzAction = new NamedProperty("Enable Stand Up and End Blitz Action");
@@ -32,6 +35,7 @@ public class NamedProperties {
   public static final ISkillProperty preventCardRabbitsFoot = new NamedProperty("Prevent Rabbit's Foot Card");
   public static final ISkillProperty preventCatch = new NamedProperty("Prevent Catch");
   public static final ISkillProperty preventFallOnBothDown = new NamedProperty("Prevent Fall on Both Down");
+  public static final ISkillProperty preventHoldBall = new NamedProperty("Prevent Hold Ball");
   public static final ISkillProperty preventKickTeamMateAction = new NamedProperty("Prevent Kick Team Mate Action");
   public static final ISkillProperty preventRecoverFromConcusionAction = new NamedProperty("Prevent Recover from Confusion Action");
   public static final ISkillProperty preventRecoverFromGazeAction = new NamedProperty("Prevent Recover from Gaze Aztion");
@@ -43,5 +47,6 @@ public class NamedProperties {
   public static final ISkillProperty preventStandUpAction = new NamedProperty("Prevent Regular Stand Up Action");
   public static final ISkillProperty preventStuntyDodgeModifier = new NamedProperty("Prevent Stunty Dodge Modifier");
   public static final ISkillProperty preventThrowTeamMateAction = new NamedProperty("Prevent Throw Team Mate Action");
+  public static final ISkillProperty ttmScattersInSingleDirection = new NamedProperty("Throw Team Mate Scatters In Single Direction");
   public static final ISkillProperty useSpecialBlockRules = new NamedProperty("Use Special Block Rules");
 }

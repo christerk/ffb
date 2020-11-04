@@ -12,6 +12,7 @@ import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.model.Team;
+import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandUseSkill;
 import com.balancedbytes.games.ffb.report.ReportKickoffScatter;
 import com.balancedbytes.games.ffb.report.ReportSkillUse;
@@ -119,7 +120,7 @@ public final class StepKickoffScatterRoll extends AbstractStep {
       
       if (kickingPlayer != null) {
       	fKickingPlayerCoordinate = game.getFieldModel().getPlayerCoordinate(kickingPlayer);
-        if (UtilCards.hasSkill(game, kickingPlayer, ServerSkill.KICK) && ((game.isHomePlaying()&& FieldCoordinateBounds.CENTER_FIELD_HOME.isInBounds(game.getFieldModel().getPlayerCoordinate(kickingPlayer))) || (!game.isHomePlaying() && FieldCoordinateBounds.CENTER_FIELD_AWAY.isInBounds(game.getFieldModel().getPlayerCoordinate(kickingPlayer))))) {
+        if (UtilCards.hasSkillWithProperty(kickingPlayer, NamedProperties.canReduceKickDistance) && ((game.isHomePlaying()&& FieldCoordinateBounds.CENTER_FIELD_HOME.isInBounds(game.getFieldModel().getPlayerCoordinate(kickingPlayer))) || (!game.isHomePlaying() && FieldCoordinateBounds.CENTER_FIELD_AWAY.isInBounds(game.getFieldModel().getPlayerCoordinate(kickingPlayer))))) {
           FieldCoordinate ballCoordinateEndWithKick = UtilServerCatchScatterThrowIn.findScatterCoordinate(fKickoffStartCoordinate, fScatterDirection, fScatterDistance / 2);
           UtilServerDialog.showDialog(getGameState(), new DialogKickSkillParameter(kickingPlayer.getId(), ballCoordinateEnd, ballCoordinateEndWithKick), false);
         } else {
@@ -182,7 +183,7 @@ public final class StepKickoffScatterRoll extends AbstractStep {
       }
       if ((game.isHomePlaying() && FieldCoordinateBounds.CENTER_FIELD_HOME.isInBounds(playerCoordinate))
         || (!game.isHomePlaying() && FieldCoordinateBounds.CENTER_FIELD_AWAY.isInBounds(playerCoordinate))) {
-        if (UtilCards.hasSkill(game, players[i], ServerSkill.KICK)) {
+        if (UtilCards.hasSkillWithProperty(players[i], NamedProperties.canReduceKickDistance)) {
           kickingPlayer = players[i];
           break;
         } else {

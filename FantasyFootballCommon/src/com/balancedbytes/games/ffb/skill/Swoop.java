@@ -25,6 +25,7 @@ public class Swoop extends Skill {
     super("Swoop", SkillCategory.EXTRAORDINARY);
     
     registerProperty(NamedProperties.preventStuntyDodgeModifier);
+    registerProperty(NamedProperties.ttmScattersInSingleDirection);
   }
 
 }
