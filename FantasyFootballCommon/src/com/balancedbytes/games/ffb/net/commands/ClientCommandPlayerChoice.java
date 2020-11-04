@@ -28,11 +28,11 @@ public class ClientCommandPlayerChoice extends ClientCommand {
     fPlayerIds = new ArrayList<String>();
   }
 
-  public ClientCommandPlayerChoice(PlayerChoiceMode pPlayerChoiceMode, Player[] pPlayers) {
+  public ClientCommandPlayerChoice(PlayerChoiceMode pPlayerChoiceMode, Player<?>[] pPlayers) {
     this();
     fPlayerChoiceMode = pPlayerChoiceMode;
     if (ArrayTool.isProvided(pPlayers)) {
-      for (Player player : pPlayers) {
+      for (Player<?> player : pPlayers) {
         addPlayerId(player.getId());
       }
     }

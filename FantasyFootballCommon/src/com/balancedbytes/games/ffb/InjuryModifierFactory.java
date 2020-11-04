@@ -39,7 +39,7 @@ public class InjuryModifierFactory implements INamedObjectFactory {
     }
   }
   
-  public InjuryModifier getNigglingInjuryModifier(Player pPlayer) {
+  public InjuryModifier getNigglingInjuryModifier(Player<?> pPlayer) {
     if (pPlayer != null) {
       int nigglingInjuries = 0;
       for (SeriousInjury injury : pPlayer.getLastingInjuries()) {

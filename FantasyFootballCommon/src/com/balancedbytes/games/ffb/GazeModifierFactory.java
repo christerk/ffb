@@ -26,7 +26,7 @@ public class GazeModifierFactory implements IRollModifierFactory {
   
   public Set<GazeModifier> findGazeModifiers(Game pGame) {
     Set<GazeModifier> gazeModifiers = new HashSet<GazeModifier>();
-    Player player = pGame.getActingPlayer().getPlayer();
+    Player<?> player = pGame.getActingPlayer().getPlayer();
     if (player != null) {
       GazeModifier tacklezoneModifier = getTacklezoneModifier(pGame, player);
       if (tacklezoneModifier != null) {
@@ -53,7 +53,7 @@ public class GazeModifierFactory implements IRollModifierFactory {
     }
   }
   
-  private GazeModifier getTacklezoneModifier(Game pGame, Player pPlayer) {
+  private GazeModifier getTacklezoneModifier(Game pGame, Player<?> pPlayer) {
     int tacklezones = UtilPlayer.findTacklezones(pGame, pPlayer);
     if (tacklezones > 1) {
       for (GazeModifier modifier : GazeModifier.values()) {

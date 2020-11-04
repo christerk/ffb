@@ -353,7 +353,7 @@ public class RosterPlayer extends Player<RosterPosition> {
     if (getClass() != obj.getClass()) {
       return false;
     }
-    Player other = (Player) obj;
+    Player<?> other = (Player<?>) obj;
     return getId().equals(other.getId());
   }
   

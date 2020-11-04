@@ -22,7 +22,7 @@ public class Loner extends Skill {
   }
 
   @Override
-  public int getCost(Player player) {
+  public int getCost(Player<?> player) {
     return 0;
   }
 

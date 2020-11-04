@@ -107,7 +107,7 @@ public class TeamSetup implements IXmlSerializable, IJsonSerializable {
   public void applyTo(Game pGame) {
     boolean homeSetup = getTeamId().equals(pGame.getTeamHome().getId());
     Team team = homeSetup ? pGame.getTeamHome() : pGame.getTeamAway();
-    for (Player player : team.getPlayers()) {
+    for (Player<?> player : team.getPlayers()) {
       FieldCoordinate playerCoordinate = getCoordinate(player.getNr());
       PlayerState playerState = pGame.getFieldModel().getPlayerState(player);
       if (playerState.canBeSetUp()) {

@@ -25,7 +25,7 @@ public class RightStuffModifierFactory implements IRollModifierFactory {
     return null;
   }
 
-  public Set<RightStuffModifier> findRightStuffModifiers(Game pGame, Player pPlayer) {
+  public Set<RightStuffModifier> findRightStuffModifiers(Game pGame, Player<?> pPlayer) {
     Set<RightStuffModifier> rightStuffModifiers = new HashSet<RightStuffModifier>();
     RightStuffModifier tacklezoneModifier = getTacklezoneModifier(pGame, pPlayer);
     if (tacklezoneModifier != null) {
@@ -54,7 +54,7 @@ public class RightStuffModifierFactory implements IRollModifierFactory {
     }
   }
   
-  private RightStuffModifier getTacklezoneModifier(Game pGame, Player pPlayer) {
+  private RightStuffModifier getTacklezoneModifier(Game pGame, Player<?> pPlayer) {
     int tacklezones = UtilPlayer.findTacklezones(pGame, pPlayer);
     for (RightStuffModifier modifier : RightStuffModifier.values()) {
       if (modifier.isTacklezoneModifier() && (modifier.getModifier() == tacklezones)) {

@@ -27,7 +27,7 @@ public class InterceptionModifierFactory implements IRollModifierFactory {
     return null;
   }
 
-  public Set<InterceptionModifier> findInterceptionModifiers(Game pGame, Player pPlayer) {
+  public Set<InterceptionModifier> findInterceptionModifiers(Game pGame, Player<?> pPlayer) {
     Set<InterceptionModifier> interceptionModifiers = new HashSet<InterceptionModifier>();
     if (Weather.POURING_RAIN == pGame.getFieldModel().getWeather()) {
       interceptionModifiers.add(InterceptionModifier.POURING_RAIN);
@@ -76,7 +76,7 @@ public class InterceptionModifierFactory implements IRollModifierFactory {
     }
   }
   
-  private InterceptionModifier getTacklezoneModifier(Game pGame, Player pPlayer) {
+  private InterceptionModifier getTacklezoneModifier(Game pGame, Player<?> pPlayer) {
     int tacklezones = UtilPlayer.findTacklezones(pGame, pPlayer);
     for (InterceptionModifier modifier : InterceptionModifier.values()) {
       if (modifier.isTacklezoneModifier() && (modifier.getModifier() == tacklezones)) {
@@ -86,7 +86,7 @@ public class InterceptionModifierFactory implements IRollModifierFactory {
     return null;
   }
   
-  private InterceptionModifier getDisturbingPresenceModifier(Game pGame, Player pPlayer) {
+  private InterceptionModifier getDisturbingPresenceModifier(Game pGame, Player<?> pPlayer) {
     int disturbingPresences = UtilDisturbingPresence.findOpposingDisturbingPresences(pGame, pPlayer);
     for (InterceptionModifier modifier : InterceptionModifier.values()) {
       if (modifier.isDisturbingPresenceModifier() && (modifier.getModifier() == disturbingPresences)) {

@@ -250,8 +250,8 @@ public class Game extends ModelChangeObservable implements IJsonSerializable {
     return team;
   }
   
-  public Player getPlayerById(String pPlayerId) {
-    Player player = null;
+  public Player<?> getPlayerById(String pPlayerId) {
+    Player<?> player = null;
     if (getTeamHome() != null) {
       player = getTeamHome().getPlayerById(pPlayerId);
     }
@@ -261,13 +261,13 @@ public class Game extends ModelChangeObservable implements IJsonSerializable {
     return player;
   }
 
-  public Player[] getPlayers() {
-    List<Player> allPlayers = new ArrayList<Player>();
-    Player[] playersHome = getTeamHome().getPlayers();
+  public Player<?>[] getPlayers() {
+    List<Player<?>> allPlayers = new ArrayList<Player<?>>();
+    Player<?>[] playersHome = getTeamHome().getPlayers();
     for (int i = 0; i < playersHome.length; i++) {
       allPlayers.add(playersHome[i]);
     }
-    Player[] playersAway = getTeamAway().getPlayers();
+    Player<?>[] playersAway = getTeamAway().getPlayers();
     for (int i = 0; i < playersAway.length; i++) {
       allPlayers.add(playersAway[i]);
     }
@@ -320,7 +320,7 @@ public class Game extends ModelChangeObservable implements IJsonSerializable {
     return fDefenderId;
   }
   
-  public Player getDefender() {
+  public Player<?> getDefender() {
   	return getPlayerById(getDefenderId());
   }
   
@@ -348,7 +348,7 @@ public class Game extends ModelChangeObservable implements IJsonSerializable {
     return fThrowerId;
   }
   
-  public Player getThrower() {
+  public Player<?> getThrower() {
   	return getPlayerById(getThrowerId());
   }
 
@@ -484,7 +484,7 @@ public class Game extends ModelChangeObservable implements IJsonSerializable {
     return fOptions;
   }
   
-  public Team findTeam(Player pPlayer) {
+  public Team findTeam(Player<?> pPlayer) {
   	if (getTeamHome().hasPlayer(pPlayer)) {
   		return getTeamHome();
   	}

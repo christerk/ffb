@@ -277,7 +277,7 @@ public class PathFinderWithPassBlockSupport {
 
 			if (context.blockTacklezones) {
 				// And mark tackle zones as well for each opponent
-				Player p = fieldModel.getPlayer(pCoord);
+				Player<?> p = fieldModel.getPlayer(pCoord);
 				if (p.getTeam() != movingTeam) {
 					// Skip if the player does not have a tackle zone
 					if (!fieldModel.getPlayerState(p).hasTacklezones())
@@ -376,7 +376,7 @@ public class PathFinderWithPassBlockSupport {
 	  return result;
 	}
 
-	public static FieldCoordinate[] allowPassBlockMove(Game pGame, Player passBlocker, FieldCoordinate startPosition, int distance, boolean canLeap) {
+	public static FieldCoordinate[] allowPassBlockMove(Game pGame, Player<?> passBlocker, FieldCoordinate startPosition, int distance, boolean canLeap) {
 	  // Skip if the player doesn't have pass block
 		
 	  if (!UtilCards.hasSkill(pGame, passBlocker, Skill.PASS_BLOCK)) {

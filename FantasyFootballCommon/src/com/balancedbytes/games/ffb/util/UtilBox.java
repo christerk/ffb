@@ -48,7 +48,7 @@ public class UtilBox {
   public static void putAllPlayersIntoBox(Game pGame) {
     refreshBoxes(pGame);
     if (pGame != null) {
-      for (Player player : pGame.getPlayers()) {
+      for (Player<?> player : pGame.getPlayers()) {
         PlayerState playerState = pGame.getFieldModel().getPlayerState(player);
         if (playerState.canBeSetUp()) {
           pGame.getFieldModel().setPlayerState(player, playerState.changeBase(PlayerState.RESERVE));
@@ -58,7 +58,7 @@ public class UtilBox {
     }
   }
   
-  public static void putPlayerIntoBox(Game pGame, Player pPlayer) {
+  public static void putPlayerIntoBox(Game pGame, Player<?> pPlayer) {
     if ((pGame != null) && (pPlayer != null)) {
       int boxX = 0;
       boolean homePlayer = pGame.getTeamHome().hasPlayer(pPlayer);
@@ -132,7 +132,7 @@ public class UtilBox {
       }
     );
     for (int y = 0; y < coordinates.size(); y++) {
-      Player player = pGame.getFieldModel().getPlayer(coordinates.get(y));
+      Player<?> player = pGame.getFieldModel().getPlayer(coordinates.get(y));
       pGame.getFieldModel().setPlayerCoordinate(player, new FieldCoordinate(pBoxX, y));
     }
   }

@@ -1,29 +1,17 @@
 package com.balancedbytes.games.ffb.server.step.action.select;
 
-import com.balancedbytes.games.ffb.PlayerAction;
-import com.balancedbytes.games.ffb.PlayerState;
-import com.balancedbytes.games.ffb.ReRolledAction;
 import com.balancedbytes.games.ffb.json.UtilJson;
-import com.balancedbytes.games.ffb.model.ActingPlayer;
-import com.balancedbytes.games.ffb.model.Game;
-import com.balancedbytes.games.ffb.report.ReportId;
-import com.balancedbytes.games.ffb.report.ReportSkillRoll;
-import com.balancedbytes.games.ffb.server.DiceInterpreter;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.IServerJsonOption;
-import com.balancedbytes.games.ffb.server.model.ServerSkill;
 import com.balancedbytes.games.ffb.server.net.ReceivedCommand;
 import com.balancedbytes.games.ffb.server.step.AbstractStepWithReRoll;
-import com.balancedbytes.games.ffb.server.step.StepAction;
 import com.balancedbytes.games.ffb.server.step.StepCommandStatus;
 import com.balancedbytes.games.ffb.server.step.StepException;
 import com.balancedbytes.games.ffb.server.step.StepId;
 import com.balancedbytes.games.ffb.server.step.StepParameter;
 import com.balancedbytes.games.ffb.server.step.StepParameterKey;
 import com.balancedbytes.games.ffb.server.step.StepParameterSet;
-import com.balancedbytes.games.ffb.server.util.UtilServerReRoll;
 import com.balancedbytes.games.ffb.util.StringTool;
-import com.balancedbytes.games.ffb.util.UtilCards;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
@@ -39,10 +27,18 @@ import com.eclipsesource.json.JsonValue;
  */
 public final class StepJumpUp extends AbstractStepWithReRoll {
 	
-  private String fGotoLabelOnFailure;
+  
+	public class StepState {
+		public String goToLabelOnFailure;
+	  }
+	
+	private StepState state;
 	
 	public StepJumpUp(GameState pGameState) {
 		super(pGameState);
+		
+		state = new StepState();
+
 	}
 	
 	public StepId getId() {
@@ -56,14 +52,14 @@ public final class StepJumpUp extends AbstractStepWithReRoll {
   			switch (parameter.getKey()) {
   			  // mandatory
   				case GOTO_LABEL_ON_FAILURE:
-  					fGotoLabelOnFailure = (String) parameter.getValue();
+  					state.goToLabelOnFailure = (String) parameter.getValue();
   					break;
 					default:
 						break;
   			}
   		}
   	}
-  	if (!StringTool.isProvided(fGotoLabelOnFailure)) {
+  	if (!StringTool.isProvided(state.goToLabelOnFailure)) {
 			throw new StepException("StepParameter " + StepParameterKey.GOTO_LABEL_ON_FAILURE + " is not initialized.");
   	}
   }
@@ -84,44 +80,7 @@ public final class StepJumpUp extends AbstractStepWithReRoll {
 	}
 	
   private void executeStep() {
-    Game game = getGameState().getGame();
-    ActingPlayer actingPlayer = game.getActingPlayer();
-    PlayerState playerState = game.getFieldModel().getPlayerState(actingPlayer.getPlayer());
-    if ((actingPlayer.isStandingUp() && !actingPlayer.hasMoved() && UtilCards.hasUnusedSkill(game, actingPlayer, ServerSkill.JUMP_UP)) || (ReRolledAction.JUMP_UP == getReRolledAction())) {
-      actingPlayer.setHasMoved(true);
-      game.setConcessionPossible(false);
-      actingPlayer.markSkillUsed(ServerSkill.JUMP_UP);
-      if ((PlayerAction.BLOCK == actingPlayer.getPlayerAction()) || (PlayerAction.MULTIPLE_BLOCK == actingPlayer.getPlayerAction())) {
-        if (ReRolledAction.JUMP_UP == getReRolledAction()) {
-          if ((getReRollSource() == null) || !UtilServerReRoll.useReRoll(this, getReRollSource(), actingPlayer.getPlayer())) {
-            game.getFieldModel().setPlayerState(actingPlayer.getPlayer(), playerState.changeBase(PlayerState.PRONE).changeActive(false));
-            publishParameter(new StepParameter(StepParameterKey.END_PLAYER_ACTION, true));
-            getResult().setNextAction(StepAction.GOTO_LABEL, fGotoLabelOnFailure);
-            return;
-          }
-        }
-        int minimumRoll = DiceInterpreter.getInstance().minimumRollJumpUp(actingPlayer.getPlayer());
-        int roll = getGameState().getDiceRoller().rollSkill();
-        boolean successful = DiceInterpreter.getInstance().isSkillRollSuccessful(roll, minimumRoll);
-        boolean reRolled = ((getReRolledAction() == ReRolledAction.JUMP_UP) && (getReRollSource() != null));
-        getResult().addReport(new ReportSkillRoll(ReportId.JUMP_UP_ROLL, actingPlayer.getPlayerId(), successful, roll, minimumRoll, reRolled));
-        if (successful) {
-          actingPlayer.setStandingUp(false);
-          getResult().setNextAction(StepAction.NEXT_STEP);
-          return;
-        } else {
-          if ((getReRolledAction() == ReRolledAction.JUMP_UP) || !UtilServerReRoll.askForReRollIfAvailable(getGameState(), actingPlayer.getPlayer(), ReRolledAction.JUMP_UP, minimumRoll, false)) {
-            game.getFieldModel().setPlayerState(actingPlayer.getPlayer(), playerState.changeBase(PlayerState.PRONE).changeActive(false));
-            publishParameter(new StepParameter(StepParameterKey.END_PLAYER_ACTION, true));
-            getResult().setNextAction(StepAction.GOTO_LABEL, fGotoLabelOnFailure);
-          } else {
-            getResult().setNextAction(StepAction.CONTINUE);
-          }
-          return;
-        }
-      }
-    }
-    getResult().setNextAction(StepAction.NEXT_STEP);            
+	  getGameState().executeStepHooks(this, state);
   }
   
   // JSON serialization
@@ -129,7 +88,7 @@ public final class StepJumpUp extends AbstractStepWithReRoll {
   @Override
   public JsonObject toJsonValue() {
     JsonObject jsonObject = super.toJsonValue();
-    IServerJsonOption.GOTO_LABEL_ON_FAILURE.addTo(jsonObject, fGotoLabelOnFailure);
+    IServerJsonOption.GOTO_LABEL_ON_FAILURE.addTo(jsonObject, state.goToLabelOnFailure);
     return jsonObject;
   }
   
@@ -137,7 +96,7 @@ public final class StepJumpUp extends AbstractStepWithReRoll {
   public StepJumpUp initFrom(JsonValue pJsonValue) {
     super.initFrom(pJsonValue);
     JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-    fGotoLabelOnFailure = IServerJsonOption.GOTO_LABEL_ON_FAILURE.getFrom(jsonObject);
+    state.goToLabelOnFailure = IServerJsonOption.GOTO_LABEL_ON_FAILURE.getFrom(jsonObject);
     return this;
   }
   	

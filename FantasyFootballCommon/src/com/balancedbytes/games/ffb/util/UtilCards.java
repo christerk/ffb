@@ -30,7 +30,7 @@ import com.balancedbytes.games.ffb.model.SkillConstants;
  */
 public final class UtilCards {
 
-  public static boolean hasSkill(Game pGame, Player pPlayer, Skill pSkill) {
+  public static boolean hasSkill(Game pGame, Player<?> pPlayer, Skill pSkill) {
     if ((pGame == null) || (pPlayer == null) || (pSkill == null)) {
       return false;
     }
@@ -52,7 +52,7 @@ public final class UtilCards {
     return (hasSkill(pGame, pActingPlayer.getPlayer(), pSkill) && !pActingPlayer.isSkillUsed(pSkill));
   }
 
-  public static Collection<PassModifier> getPassModifiers(Player thrower, PassContext context) {
+  public static Collection<PassModifier> getPassModifiers(Player<?> thrower, PassContext context) {
     Set<PassModifier> result = new HashSet<PassModifier>();
     
     for (Skill skill : thrower.getSkills()) {
@@ -66,7 +66,7 @@ public final class UtilCards {
     return result;
   }
 
-  public static Collection<PickupModifier> getPickupModifiers(Player player, PickupContext context) {
+  public static Collection<PickupModifier> getPickupModifiers(Player<?> player, PickupContext context) {
     Set<PickupModifier> result = new HashSet<PickupModifier>();
     
     for (Skill skill : player.getSkills()) {
@@ -94,7 +94,7 @@ public final class UtilCards {
     return result;
   }
   
-  private static Set<Skill> findSkillsProvidedByCardsAndEffects(Game pGame, Player pPlayer) {
+  private static Set<Skill> findSkillsProvidedByCardsAndEffects(Game pGame, Player<?> pPlayer) {
     Set<Skill> cardSkills = new HashSet<Skill>();
     if ((pGame == null) || (pPlayer == null)) {
       return cardSkills;
@@ -167,7 +167,7 @@ public final class UtilCards {
     return cardSkills;
   }
 
-  public static int getPlayerStrength(Game pGame, Player pPlayer) {
+  public static int getPlayerStrength(Game pGame, Player<?> pPlayer) {
     if ((pGame == null) || (pPlayer == null)) {
       return 0;
     }
@@ -193,7 +193,7 @@ public final class UtilCards {
     return strength;
   }
 
-  public static int getPlayerMovement(Game pGame, Player pPlayer) {
+  public static int getPlayerMovement(Game pGame, Player<?> pPlayer) {
     if ((pGame == null) || (pPlayer == null)) {
       return 0;
     }
@@ -214,7 +214,7 @@ public final class UtilCards {
     return movement;
   }
 
-  public static Skill[] findAllSkills(Game pGame, Player pPlayer) {
+  public static Skill[] findAllSkills(Game pGame, Player<?> pPlayer) {
     Set<Skill> allSkills = findSkillsProvidedByCardsAndEffects(pGame, pPlayer);
     for (Skill skill : pPlayer.getSkills()) {
       allSkills.add(skill);
@@ -242,7 +242,7 @@ public final class UtilCards {
     return false;
   }
 
-  public static boolean hasCard(Game pGame, Player pPlayer, Card pCard) {
+  public static boolean hasCard(Game pGame, Player<?> pPlayer, Card pCard) {
     if ((pGame == null) || (pPlayer == null) || (pCard == null)) {
       return false;
     }
@@ -254,7 +254,7 @@ public final class UtilCards {
     return false;
   }
   
-  public static Skill getSkillWithProperty(Player player, ISkillProperty property) {
+  public static Skill getSkillWithProperty(Player<?> player, ISkillProperty property) {
     for (Skill playerSkill : player.getSkills()) {
       if (playerSkill.hasSkillProperty(property)) {
         return playerSkill;
@@ -263,11 +263,11 @@ public final class UtilCards {
     return null;
   }
   
-  public static boolean hasSkillWithProperty(Player player, ISkillProperty property) {
+  public static boolean hasSkillWithProperty(Player<?> player, ISkillProperty property) {
     return getSkillWithProperty(player, property) != null;
   }
   
-  public static Skill getSkillCancelling(Player player, Skill skill) {
+  public static Skill getSkillCancelling(Player<?> player, Skill skill) {
     for (Skill playerSkill : player.getSkills()) {
       if (playerSkill.canCancel(skill)) {
         return skill;
@@ -276,7 +276,7 @@ public final class UtilCards {
     return null;
   }
 
-  public static boolean cancelsSkill(Player player, Skill skill) {
+  public static boolean cancelsSkill(Player<?> player, Skill skill) {
     return getSkillCancelling(player, skill) != null;
   }
 
@@ -289,7 +289,7 @@ public final class UtilCards {
     return false;
   }
 
-  public static ReRollSource getRerollSource(Player player, ReRolledAction action) {
+  public static ReRollSource getRerollSource(Player<?> player, ReRolledAction action) {
     for (Skill playerSkill : player.getSkills()) {
       ReRollSource source = playerSkill.getRerollSource(action);
       if (source != null) {

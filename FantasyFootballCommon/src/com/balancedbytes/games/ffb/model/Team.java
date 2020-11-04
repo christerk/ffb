@@ -65,18 +65,18 @@ public class Team implements IXmlSerializable, IJsonSerializable {
 
   private InducementSet fInducementSet;
 
-  private transient Map<String, Player> fPlayerById;
-  private transient Map<Integer, Player> fPlayerByNr;
+  private transient Map<String, Player<?>> fPlayerById;
+  private transient Map<Integer, Player<?>> fPlayerByNr;
 
-  private class PlayerComparatorByNr implements Comparator<Player> {
-    public int compare(Player pPlayer1, Player pPlayer2) {
+  private class PlayerComparatorByNr implements Comparator<Player<?>> {
+    public int compare(Player<?> pPlayer1, Player<?> pPlayer2) {
       return (pPlayer1.getNr() - pPlayer2.getNr());
     }
   }
 
   public Team() {
-    fPlayerById = new HashMap<String, Player>();
-    fPlayerByNr = new HashMap<Integer, Player>();
+    fPlayerById = new HashMap<String, Player<?>>();
+    fPlayerByNr = new HashMap<Integer, Player<?>>();
     updateRoster(new Roster());
   }
   
@@ -112,7 +112,7 @@ public class Team implements IXmlSerializable, IJsonSerializable {
     return fId;
   }
 
-  public void addPlayer(Player pPlayer) {
+  public void addPlayer(Player<?> pPlayer) {
     fPlayerByNr.put(pPlayer.getNr(), pPlayer);
     if (pPlayer.getId() != null) {
       fPlayerById.put(pPlayer.getId(), pPlayer);
@@ -120,32 +120,32 @@ public class Team implements IXmlSerializable, IJsonSerializable {
     pPlayer.setTeam(this);
   }
   
-  public void removePlayer(Player pPlayer) {
+  public void removePlayer(Player<?> pPlayer) {
     fPlayerByNr.remove(pPlayer.getNr());
     fPlayerById.remove(pPlayer.getId());
     pPlayer.setTeam(null);
   }
 
-  public Player getPlayerById(String pId) {
+  public Player<?> getPlayerById(String pId) {
     return fPlayerById.get(pId);
   }
 
-  public Player getPlayerByNr(int pNr) {
+  public Player<?> getPlayerByNr(int pNr) {
     return fPlayerByNr.get(pNr);
   }
 
   /**
    * @return array of playes sorted by playerNr
    */
-  public Player[] getPlayers() {
-    Player[] players = fPlayerByNr.values().toArray(new Player[fPlayerByNr.size()]);
+  public Player<?>[] getPlayers() {
+	  Player<?>[] players = fPlayerByNr.values().toArray(new Player[fPlayerByNr.size()]);
     Arrays.sort(players, new PlayerComparatorByNr());
     return players;
   }
   
   public int getMaxPlayerNr() {
     int maxPlayerNr = 0;
-    for (Player player : getPlayers()) {
+    for (Player<?> player : getPlayers()) {
       if (player.getNr() > maxPlayerNr) {
         maxPlayerNr = player.getNr();
       }
@@ -155,7 +155,7 @@ public class Team implements IXmlSerializable, IJsonSerializable {
   
   public int getNrOfAvailablePlayersInPosition(RosterPosition pos) {
 	    int nrOfPlayersInPosition = 0;
-	    for (Player player : getPlayers()) {
+	    for (Player<?> player : getPlayers()) {
 	      if ((player.getPosition() == pos) && (player.getRecoveringInjury() == null)) {
 	    	  nrOfPlayersInPosition++;
 	      }
@@ -165,7 +165,7 @@ public class Team implements IXmlSerializable, IJsonSerializable {
   
   public int getNrOfAvailablePlayers() {
 	    int nrOfAvailablePlayers = 0;
-	    for (Player player : getPlayers()) {
+	    for (Player<?> player : getPlayers()) {
 	      if (player.getRecoveringInjury() == null) {
 	    	  nrOfAvailablePlayers++;
 	      }
@@ -173,7 +173,7 @@ public class Team implements IXmlSerializable, IJsonSerializable {
 	    return nrOfAvailablePlayers;
 	  }
 
-  public boolean hasPlayer(Player pPlayer) {
+  public boolean hasPlayer(Player<?> pPlayer) {
     return ((pPlayer != null) && (getPlayerById(pPlayer.getId()) != null));
   }
 
@@ -210,7 +210,7 @@ public class Team implements IXmlSerializable, IJsonSerializable {
     if (fRoster != null) {
       setRosterId(fRoster.getId());
       setRace(fRoster.getName());
-      for (Player player : getPlayers()) {
+      for (Player<?> player : getPlayers()) {
         String positionId = player.getPositionId();
         player.updatePosition(fRoster.getPositionById(positionId));
       }
@@ -321,7 +321,7 @@ public class Team implements IXmlSerializable, IJsonSerializable {
   	UtilXml.addValueElement(pHandler, _XML_TAG_BASE_ICON_PATH, getBaseIconPath());
   	UtilXml.addValueElement(pHandler, _XML_TAG_LOGO_URL, getLogoUrl());
 
-    for (Player player : getPlayers()) {
+    for (Player<?> player : getPlayers()) {
     	player.addToXml(pHandler);
     }
     
@@ -430,7 +430,7 @@ public class Team implements IXmlSerializable, IJsonSerializable {
     IJsonOption.LOGO_URL.addTo(jsonObject, fLogoUrl);
     
     JsonArray playerArray = new JsonArray();
-    for (Player player : getPlayers()) {
+    for (Player<?> player : getPlayers()) {
       playerArray.add(player.toJsonValue());
     }
     IJsonOption.PLAYER_ARRAY.addTo(jsonObject, playerArray);

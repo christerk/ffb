@@ -11,7 +11,7 @@ public class AgilityIncrease extends Skill {
   }
 
   @Override
-  public int getCost(Player player) {
+  public int getCost(Player<?> player) {
     return 40000;
   }
 }

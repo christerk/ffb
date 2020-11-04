@@ -134,13 +134,13 @@ public abstract class Player<T extends Position> implements IXmlSerializable, IJ
 
   public abstract JsonObject toJsonValue();
 
-  public static Player getFrom(JsonValue jsonValue) {
-    Player player = createPlayer(jsonValue);
+  public static Player<?> getFrom(JsonValue jsonValue) {
+    Player<?> player = createPlayer(jsonValue);
     player.initFrom(jsonValue);
     return player;
   }
 
-  private static Player createPlayer(JsonValue jsonValue) {
+  private static Player<?> createPlayer(JsonValue jsonValue) {
     if (jsonValue instanceof JsonObject &&
       ZappedPlayer.KIND.equals(IJsonOption.PLAYER_KIND.getFrom((JsonObject)jsonValue))) {
       return new ZappedPlayer();

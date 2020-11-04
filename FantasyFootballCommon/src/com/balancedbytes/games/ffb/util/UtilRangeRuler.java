@@ -16,7 +16,7 @@ import com.balancedbytes.games.ffb.model.Player;
  */
 public class UtilRangeRuler {
   
-  public static RangeRuler createRangeRuler(Game pGame, Player pThrower, FieldCoordinate pTargetCoordinate, boolean pThrowTeamMate) {
+  public static RangeRuler createRangeRuler(Game pGame, Player<?> pThrower, FieldCoordinate pTargetCoordinate, boolean pThrowTeamMate) {
     RangeRuler rangeRuler = null;
     if ((pGame != null) && (pThrower != null) && (pTargetCoordinate != null)) {
       FieldCoordinate throwerCoordinate = pGame.getFieldModel().getPlayerCoordinate(pThrower);
@@ -35,7 +35,7 @@ public class UtilRangeRuler {
     return rangeRuler;
   }
   
-  public static int minimumRollPass(Player pThrower, PassingDistance pPassingDistance, Set<PassModifier> pPassModifiers) {
+  public static int minimumRollPass(Player<?> pThrower, PassingDistance pPassingDistance, Set<PassModifier> pPassModifiers) {
     int modifierTotal = 0;
     for (PassModifier passModifier : pPassModifiers) {
       modifierTotal += passModifier.getModifier();
@@ -43,7 +43,7 @@ public class UtilRangeRuler {
     return Math.max(Math.max(2 - (pPassingDistance.getModifier() - modifierTotal), 2), 7 - Math.min(pThrower.getAgility(), 6) - pPassingDistance.getModifier() + modifierTotal);
   }
   
-  public static int minimumRollThrowTeamMate(Player pThrower, PassingDistance pPassingDistance, Set<PassModifier> pPassModifiers) {
+  public static int minimumRollThrowTeamMate(Player<?> pThrower, PassingDistance pPassingDistance, Set<PassModifier> pPassModifiers) {
     int modifierTotal = 0;
     for (PassModifier passModifier : pPassModifiers) {
       modifierTotal += passModifier.getModifier();

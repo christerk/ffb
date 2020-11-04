@@ -249,7 +249,7 @@ public class TeamResult implements IJsonSerializable {
 
   public int totalCompletions() {
     int completions = 0;
-    for (Player player : getTeam().getPlayers()) {
+    for (Player<?> player : getTeam().getPlayers()) {
       completions += getPlayerResult(player).getCompletions();
     }
     return completions;
@@ -257,7 +257,7 @@ public class TeamResult implements IJsonSerializable {
 
   public int totalInterceptions() {
     int interceptions = 0;
-    for (Player player : getTeam().getPlayers()) {
+    for (Player<?> player : getTeam().getPlayers()) {
       interceptions += getPlayerResult(player).getInterceptions();
     }
     return interceptions;
@@ -265,7 +265,7 @@ public class TeamResult implements IJsonSerializable {
 
   public int totalCasualties() {
     int casualties = 0;
-    for (Player player : getTeam().getPlayers()) {
+    for (Player<?> player : getTeam().getPlayers()) {
       casualties += getPlayerResult(player).getCasualties();
     }
     return casualties;
@@ -273,7 +273,7 @@ public class TeamResult implements IJsonSerializable {
 
   public int totalBlocks() {
     int blocks = 0;
-    for (Player player : getTeam().getPlayers()) {
+    for (Player<?> player : getTeam().getPlayers()) {
       blocks += getPlayerResult(player).getBlocks();
     }
     return blocks;
@@ -281,7 +281,7 @@ public class TeamResult implements IJsonSerializable {
   
   public int totalFouls() {
     int fouls = 0;
-    for (Player player : getTeam().getPlayers()) {
+    for (Player<?> player : getTeam().getPlayers()) {
       fouls += getPlayerResult(player).getFouls();
     }
     return fouls;
@@ -289,7 +289,7 @@ public class TeamResult implements IJsonSerializable {
     
   public int totalRushing() {
     int rushing = 0;
-    for (Player player : getTeam().getPlayers()) {
+    for (Player<?> player : getTeam().getPlayers()) {
       rushing += getPlayerResult(player).getRushing();
     }
     return rushing;
@@ -297,7 +297,7 @@ public class TeamResult implements IJsonSerializable {
 
   public int totalPassing() {
     int passing = 0;
-    for (Player player : getTeam().getPlayers()) {
+    for (Player<?> player : getTeam().getPlayers()) {
       passing += getPlayerResult(player).getPassing();
     }
     return passing;
@@ -305,13 +305,13 @@ public class TeamResult implements IJsonSerializable {
 
   public int totalEarnedSpps() {
     int earnedSpps = 0;
-    for (Player player : getTeam().getPlayers()) {
+    for (Player<?> player : getTeam().getPlayers()) {
       earnedSpps += getPlayerResult(player).totalEarnedSpps();
     }
     return earnedSpps;
   }
   
-  public PlayerResult getPlayerResult(Player pPlayer) {
+  public PlayerResult getPlayerResult(Player<?> pPlayer) {
     String playerId = (pPlayer != null) ? pPlayer.getId() : null;
     PlayerResult playerResult = fPlayerResultByPlayerId.get(playerId);
     if ((playerResult == null) && getTeam().hasPlayer(pPlayer)) {
@@ -321,7 +321,7 @@ public class TeamResult implements IJsonSerializable {
     return playerResult;
   }
    
-  public void removePlayerResult(Player pPlayer) {
+  public void removePlayerResult(Player<?> pPlayer) {
     String playerId = (pPlayer != null) ? pPlayer.getId() : null;
     fPlayerResultByPlayerId.remove(playerId);
   }
@@ -346,7 +346,7 @@ public class TeamResult implements IJsonSerializable {
       fPettyCashTransferred = pTeamResult.getPettyCashTransferred();
       fPettyCashUsed = pTeamResult.getPettyCashUsed();
       fTeamValue = pTeamResult.getTeamValue();
-      for (Player player : fTeam.getPlayers()) {
+      for (Player<?> player : fTeam.getPlayers()) {
         PlayerResult oldPlayerResult = pTeamResult.getPlayerResult(player);
         PlayerResult newPlayerResult = new PlayerResult(this);
         newPlayerResult.init(oldPlayerResult);
@@ -383,7 +383,7 @@ public class TeamResult implements IJsonSerializable {
     IJsonOption.SPIRALLING_EXPENSES.addTo(jsonObject, fSpirallingExpenses);
     if (getTeam() != null) {
       JsonArray playerResultArray = new JsonArray();
-      for (Player player : getTeam().getPlayers()) {
+      for (Player<?> player : getTeam().getPlayers()) {
         playerResultArray.add(getPlayerResult(player).toJsonValue());
       }
       IJsonOption.PLAYER_RESULTS.addTo(jsonObject, playerResultArray);

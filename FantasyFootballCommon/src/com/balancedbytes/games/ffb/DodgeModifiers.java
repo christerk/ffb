@@ -68,8 +68,8 @@ public class DodgeModifiers {
       ActingPlayer actingPlayer = pGame.getActingPlayer();
       Team otherTeam = UtilPlayer.findOtherTeam(pGame, actingPlayer.getPlayer());
       int nrOfPrehensileTails = 0;
-      Player[] opponents = UtilPlayer.findAdjacentPlayersWithTacklezones(pGame, otherTeam, pCoordinateFrom, true);
-      for (Player opponent : opponents) {
+      Player<?>[] opponents = UtilPlayer.findAdjacentPlayersWithTacklezones(pGame, otherTeam, pCoordinateFrom, true);
+      for (Player<?> opponent : opponents) {
         if (UtilCards.hasSkill(pGame, opponent, SkillConstants.PREHENSILE_TAIL)) {
           nrOfPrehensileTails++;
         }

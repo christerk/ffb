@@ -39,13 +39,13 @@ public class PlayerResult implements IJsonSerializable {
   private boolean fHasUsedSecretWeapon;
 
   private transient TeamResult fTeamResult;
-  private transient Player fPlayer;
+  private transient Player<?> fPlayer;
     
   public PlayerResult(TeamResult pTeamResult) {
     this(pTeamResult, null);
   }
   
-  public PlayerResult(TeamResult pTeamResult, Player pPlayer) {
+  public PlayerResult(TeamResult pTeamResult, Player<?> pPlayer) {
     fTeamResult = pTeamResult;
     fPlayer = pPlayer;
   }
@@ -54,7 +54,7 @@ public class PlayerResult implements IJsonSerializable {
     return fTeamResult;
   }
   
-  public Player getPlayer() {
+  public Player<?> getPlayer() {
     return fPlayer;
   }
   

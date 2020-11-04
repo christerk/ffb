@@ -97,7 +97,7 @@ public class SwoopBehaviour extends SkillBehaviour<Swoop> {
 							UtilServerPlayerSwoop.updateSwoopSquares(gameState, swoopingPlayer);
 						} else {
 							// Landing
-							List<Player> playersInSquare = game.getFieldModel().getPlayers(state.coordinateTo);
+							List<Player<?>> playersInSquare = game.getFieldModel().getPlayers(state.coordinateTo);
 							boolean crashed = false;
 							for(Player p : playersInSquare) {
 								if (p != swoopingPlayer) {

@@ -70,8 +70,8 @@ public class DodgeModifierFactory implements IRollModifierFactory {
     ActingPlayer actingPlayer = pGame.getActingPlayer();
     Team otherTeam = UtilPlayer.findOtherTeam(pGame, actingPlayer.getPlayer());
     int tacklezones = pModifier;
-    Player[] adjacentPlayers = UtilPlayer.findAdjacentPlayersWithTacklezones(pGame, otherTeam, pCoordinateTo, false);
-    for (Player player : adjacentPlayers) {
+    Player<?>[] adjacentPlayers = UtilPlayer.findAdjacentPlayersWithTacklezones(pGame, otherTeam, pCoordinateTo, false);
+    for (Player<?> player : adjacentPlayers) {
       if (!UtilCards.hasSkillWithProperty(player, NamedProperties.hasNoTacklezone)) {
         tacklezones++;
       }
@@ -88,8 +88,8 @@ public class DodgeModifierFactory implements IRollModifierFactory {
     ActingPlayer actingPlayer = pGame.getActingPlayer();
     Team otherTeam = UtilPlayer.findOtherTeam(pGame, actingPlayer.getPlayer());
     int nrOfPrehensileTails = 0;
-    Player[] opponents = UtilPlayer.findAdjacentPlayersWithTacklezones(pGame, otherTeam, pCoordinateFrom, true);
-    for (Player opponent : opponents) {
+    Player<?>[] opponents = UtilPlayer.findAdjacentPlayersWithTacklezones(pGame, otherTeam, pCoordinateFrom, true);
+    for (Player<?> opponent : opponents) {
       if (UtilCards.hasSkill(pGame, opponent, SkillConstants.PREHENSILE_TAIL)) {
         nrOfPrehensileTails++;
       }

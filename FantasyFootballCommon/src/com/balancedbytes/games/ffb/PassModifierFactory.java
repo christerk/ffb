@@ -29,7 +29,7 @@ public class PassModifierFactory implements IRollModifierFactory {
     return null;
   }
 
-  public Set<PassModifier> findPassModifiers(Game pGame, Player pThrower, PassingDistance pPassingDistance, boolean pThrowTeamMate) {
+  public Set<PassModifier> findPassModifiers(Game pGame, Player<?> pThrower, PassingDistance pPassingDistance, boolean pThrowTeamMate) {
     Set<PassModifier> passModifiers = new HashSet<PassModifier>();
     if (pThrower != null) {
       if (Weather.VERY_SUNNY == pGame.getFieldModel().getWeather()) {
@@ -78,7 +78,7 @@ public class PassModifierFactory implements IRollModifierFactory {
     }
   }
 
-  private PassModifier getTacklezoneModifier(Game pGame, Player pPlayer) {
+  private PassModifier getTacklezoneModifier(Game pGame, Player<?> pPlayer) {
     int tacklezones = UtilPlayer.findTacklezones(pGame, pPlayer);
     for (PassModifier modifier : PassingModifiers.tackleZoneModifiers) {
       if (modifier.isTacklezoneModifier() && (modifier.getModifier() == tacklezones)) {
@@ -88,7 +88,7 @@ public class PassModifierFactory implements IRollModifierFactory {
     return null;
   }
   
-  private PassModifier getDisturbingPresenceModifier(Game pGame, Player pPlayer) {
+  private PassModifier getDisturbingPresenceModifier(Game pGame, Player<?> pPlayer) {
     int disturbingPresences = UtilDisturbingPresence.findOpposingDisturbingPresences(pGame, pPlayer);
     for (PassModifier modifier : PassingModifiers.disturbingPresenceModifiers) {
       if (modifier.isDisturbingPresenceModifier() && (modifier.getModifier() == disturbingPresences)) {

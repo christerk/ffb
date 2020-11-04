@@ -30,9 +30,9 @@ import com.balancedbytes.games.ffb.option.UtilGameOption;
  */
 public class UtilPlayer {
 
-	public static Player[] findPlayersOnPitchWithSkill(Game pGame, Team pTeam, Skill pSkill) {
-		List<Player> result = new ArrayList<Player>(); 
-		for (Player player : pTeam.getPlayers()) {
+	public static Player<?>[] findPlayersOnPitchWithSkill(Game pGame, Team pTeam, Skill pSkill) {
+		List<Player<?>> result = new ArrayList<Player<?>>(); 
+		for (Player<?> player : pTeam.getPlayers()) {
 			if (UtilCards.hasSkill(pGame, player, pSkill) && FieldCoordinateBounds.FIELD.isInBounds(pGame.getFieldModel().getPlayerCoordinate(player))) {
 				result.add(player);
 			}
@@ -40,28 +40,28 @@ public class UtilPlayer {
 		return result.toArray(new Player[result.size()]);
 	}
 	
-  public static Player[] findAdjacentOpposingPlayersWithSkill(Game pGame, FieldCoordinate pCenterCoordinate, Skill pSkill, boolean pCheckAbleToMove) {
+  public static Player<?>[] findAdjacentOpposingPlayersWithSkill(Game pGame, FieldCoordinate pCenterCoordinate, Skill pSkill, boolean pCheckAbleToMove) {
     ActingPlayer actingPlayer = pGame.getActingPlayer();
     Team otherTeam = UtilPlayer.findOtherTeam(pGame, actingPlayer.getPlayer());
-    Player[] opponents = UtilPlayer.findAdjacentPlayersWithTacklezones(pGame, otherTeam, pCenterCoordinate, false);
-    Set<Player> shadowingPlayers = new HashSet<Player>(); 
-    for (Player opponent : opponents) {
+    Player<?>[] opponents = UtilPlayer.findAdjacentPlayersWithTacklezones(pGame, otherTeam, pCenterCoordinate, false);
+    Set<Player<?>> shadowingPlayers = new HashSet<Player<?>>(); 
+    for (Player<?> opponent : opponents) {
       PlayerState opponentState = pGame.getFieldModel().getPlayerState(opponent);
       if ((opponentState != null) && opponentState.hasTacklezones() && UtilCards.hasSkill(pGame, opponent, pSkill) && (!pCheckAbleToMove || opponentState.isAbleToMove())) {
         shadowingPlayers.add(opponent);
       }
     }
-    Player[] playerArray = shadowingPlayers.toArray(new Player[shadowingPlayers.size()]);
+    Player<?>[] playerArray = shadowingPlayers.toArray(new Player[shadowingPlayers.size()]);
     UtilPlayer.sortByPlayerNr(playerArray);
     return playerArray;
   }
 
-  public static Player[] findAdjacentPronePlayers(Game pGame, Team pTeam, FieldCoordinate pCoordinate) {
-    List<Player> adjacentPlayers = new ArrayList<Player>();
+  public static Player<?>[] findAdjacentPronePlayers(Game pGame, Team pTeam, FieldCoordinate pCoordinate) {
+    List<Player<?>> adjacentPlayers = new ArrayList<Player<?>>();
     FieldModel fieldModel = pGame.getFieldModel();
     FieldCoordinate[] adjacentCoordinates = fieldModel.findAdjacentCoordinates(pCoordinate, FieldCoordinateBounds.FIELD, 1, false);
     for (int i = 0; i < adjacentCoordinates.length; i++) {
-      Player player = fieldModel.getPlayer(adjacentCoordinates[i]);
+      Player<?> player = fieldModel.getPlayer(adjacentCoordinates[i]);
       if ((player != null) && (player.getTeam() == pTeam)) {
         PlayerState playerState = fieldModel.getPlayerState(player);
         if ((playerState.getBase() == PlayerState.PRONE) || (playerState.getBase() == PlayerState.STUNNED)) {
@@ -72,12 +72,12 @@ public class UtilPlayer {
     return adjacentPlayers.toArray(new Player[adjacentPlayers.size()]);
   }
 
-  public static Player[] findAdjacentBlockablePlayers(Game pGame, Team pTeam, FieldCoordinate pCoordinate) {
-    List<Player> adjacentPlayers = new ArrayList<Player>();
+  public static Player<?>[] findAdjacentBlockablePlayers(Game pGame, Team pTeam, FieldCoordinate pCoordinate) {
+    List<Player<?>> adjacentPlayers = new ArrayList<Player<?>>();
     FieldModel fieldModel = pGame.getFieldModel();
     FieldCoordinate[] adjacentCoordinates = fieldModel.findAdjacentCoordinates(pCoordinate, FieldCoordinateBounds.FIELD, 1, false);
     for (int i = 0; i < adjacentCoordinates.length; i++) {
-      Player player = fieldModel.getPlayer(adjacentCoordinates[i]);
+      Player<?> player = fieldModel.getPlayer(adjacentCoordinates[i]);
       if ((player != null) && (player.getTeam() == pTeam)) {
         PlayerState playerState = fieldModel.getPlayerState(player);
         if (playerState.canBeBlocked()) {
@@ -88,12 +88,12 @@ public class UtilPlayer {
     return adjacentPlayers.toArray(new Player[adjacentPlayers.size()]);
   }
 
-  public static Player[] findAdjacentStandingOrPronePlayers(Game pGame, Team pTeam, FieldCoordinate pCoordinate) {
-    List<Player> adjacentPlayers = new ArrayList<Player>();
+  public static Player<?>[] findAdjacentStandingOrPronePlayers(Game pGame, Team pTeam, FieldCoordinate pCoordinate) {
+    List<Player<?>> adjacentPlayers = new ArrayList<Player<?>>();
     FieldModel fieldModel = pGame.getFieldModel();
     FieldCoordinate[] adjacentCoordinates = fieldModel.findAdjacentCoordinates(pCoordinate, FieldCoordinateBounds.FIELD, 1, false);
     for (int i = 0; i < adjacentCoordinates.length; i++) {
-      Player player = fieldModel.getPlayer(adjacentCoordinates[i]);
+      Player<?> player = fieldModel.getPlayer(adjacentCoordinates[i]);
       if ((player != null) && (player.getTeam() == pTeam)) {
         PlayerState playerState = fieldModel.getPlayerState(player);
         if (!playerState.isStunned()) {
@@ -104,12 +104,12 @@ public class UtilPlayer {
     return adjacentPlayers.toArray(new Player[adjacentPlayers.size()]);
   }
 
-  public static Player[] findAdjacentPlayersWithTacklezones(Game pGame, Team pTeam, FieldCoordinate pCoordinate, boolean pWithStartCoordinate) {
-    List<Player> adjacentPlayers = new ArrayList<Player>();
+  public static Player<?>[] findAdjacentPlayersWithTacklezones(Game pGame, Team pTeam, FieldCoordinate pCoordinate, boolean pWithStartCoordinate) {
+    List<Player<?>> adjacentPlayers = new ArrayList<Player<?>>();
     FieldModel fieldModel = pGame.getFieldModel();
     FieldCoordinate[] adjacentCoordinates = fieldModel.findAdjacentCoordinates(pCoordinate, FieldCoordinateBounds.FIELD, 1, pWithStartCoordinate);
     for (int i = 0; i < adjacentCoordinates.length; i++) {
-      Player player = fieldModel.getPlayer(adjacentCoordinates[i]);
+      Player<?> player = fieldModel.getPlayer(adjacentCoordinates[i]);
       if ((player != null) && (player.getTeam() == pTeam)) {
         PlayerState playerState = fieldModel.getPlayerState(player);
         if (playerState.hasTacklezones()) {
@@ -120,12 +120,12 @@ public class UtilPlayer {
     return adjacentPlayers.toArray(new Player[adjacentPlayers.size()]);
   }
 
-  public static Player[] findAdjacentPlayersToFeedOn(Game pGame, Team pTeam, FieldCoordinate pCoordinate) {
-    List<Player> adjacentPlayers = new ArrayList<Player>();
+  public static Player<?>[] findAdjacentPlayersToFeedOn(Game pGame, Team pTeam, FieldCoordinate pCoordinate) {
+    List<Player<?>> adjacentPlayers = new ArrayList<Player<?>>();
     FieldModel fieldModel = pGame.getFieldModel();
     FieldCoordinate[] adjacentCoordinates = fieldModel.findAdjacentCoordinates(pCoordinate, FieldCoordinateBounds.FIELD, 1, false);
     for (int i = 0; i < adjacentCoordinates.length; i++) {
-      Player player = fieldModel.getPlayer(adjacentCoordinates[i]);
+      Player<?> player = fieldModel.getPlayer(adjacentCoordinates[i]);
       if ((player != null) && (player.getTeam() == pTeam) && (player instanceof RosterPlayer) && ((RosterPlayer)player).getPosition().isThrall()) {
         adjacentPlayers.add(player);
       }
@@ -133,10 +133,10 @@ public class UtilPlayer {
     return adjacentPlayers.toArray(new Player[adjacentPlayers.size()]);
   }
   
-  public static Player[] filterThrower(Game pGame, Player[] pPlayers) {
-  	List<Player> playerList = new ArrayList<Player>();
+  public static Player<?>[] filterThrower(Game pGame, Player<?>[] pPlayers) {
+  	List<Player<?>> playerList = new ArrayList<Player<?>>();
   	if (ArrayTool.isProvided(pPlayers)) {
-  		for (Player player : pPlayers) {
+  		for (Player<?> player : pPlayers) {
   			if (player != pGame.getThrower()) {
   				playerList.add(player);
   			}
@@ -145,10 +145,10 @@ public class UtilPlayer {
   	return playerList.toArray(new Player[playerList.size()]);
   }
 
-  public static Player[] filterAttackerAndDefender(Game pGame, Player[] pPlayers) {
-  	List<Player> playerList = new ArrayList<Player>();
+  public static Player<?>[] filterAttackerAndDefender(Game pGame, Player<?>[] pPlayers) {
+  	List<Player<?>> playerList = new ArrayList<Player<?>>();
   	if (ArrayTool.isProvided(pPlayers)) {
-  		for (Player player : pPlayers) {
+  		for (Player<?> player : pPlayers) {
   			if ((player != pGame.getActingPlayer().getPlayer()) && (player != pGame.getDefender())) {
   				playerList.add(player);
   			}
@@ -157,10 +157,10 @@ public class UtilPlayer {
   	return playerList.toArray(new Player[playerList.size()]);
   }
 
-  public static int findFoulAssists(Game pGame, Player pAttacker, Player pDefender) {
+  public static int findFoulAssists(Game pGame, Player<?> pAttacker, Player<?> pDefender) {
     int foulAssists = 0;
     FieldCoordinate coordinateDefender = pGame.getFieldModel().getPlayerCoordinate(pDefender);
-    for (Player offensiveAssist : findAdjacentPlayersWithTacklezones(pGame, pAttacker.getTeam(), coordinateDefender, false)) {
+    for (Player<?> offensiveAssist : findAdjacentPlayersWithTacklezones(pGame, pAttacker.getTeam(), coordinateDefender, false)) {
       if (offensiveAssist != pAttacker) {
         FieldCoordinate coordinateAssist = pGame.getFieldModel().getPlayerCoordinate(offensiveAssist);
         if ((findAdjacentPlayersWithTacklezones(pGame, pDefender.getTeam(), coordinateAssist, false).length < 1)
@@ -170,7 +170,7 @@ public class UtilPlayer {
       }
     }
     FieldCoordinate coordinateAttacker = pGame.getFieldModel().getPlayerCoordinate(pAttacker);
-    for (Player defensiveAssist : findAdjacentPlayersWithTacklezones(pGame, pDefender.getTeam(), coordinateAttacker, false)) {
+    for (Player<?> defensiveAssist : findAdjacentPlayersWithTacklezones(pGame, pDefender.getTeam(), coordinateAttacker, false)) {
       if (defensiveAssist != pDefender) {
         FieldCoordinate coordinateAssist = pGame.getFieldModel().getPlayerCoordinate(defensiveAssist);
         if (findAdjacentPlayersWithTacklezones(pGame, pAttacker.getTeam(), coordinateAssist, false).length < 2) {
@@ -181,13 +181,13 @@ public class UtilPlayer {
     return foulAssists;
   }
 
-  public static int findStandUpAssists(Game pGame, Player timmmberPlayer) {
+  public static int findStandUpAssists(Game pGame, Player<?> timmmberPlayer) {
     int assists = 0;
     Team opposingTeam = findOtherTeam(pGame, timmmberPlayer);
     FieldCoordinate coordinatePlayer = pGame.getFieldModel().getPlayerCoordinate(timmmberPlayer);
-    for (Player assist : findAdjacentPlayersWithTacklezones(pGame, timmmberPlayer.getTeam(), coordinatePlayer, false)) {
+    for (Player<?> assist : findAdjacentPlayersWithTacklezones(pGame, timmmberPlayer.getTeam(), coordinatePlayer, false)) {
       FieldCoordinate assistCoordinate = pGame.getFieldModel().getPlayerCoordinate(assist);
-      Player[] opponents = findAdjacentPlayersWithTacklezones(pGame, opposingTeam, assistCoordinate, false);
+      Player<?>[] opponents = findAdjacentPlayersWithTacklezones(pGame, opposingTeam, assistCoordinate, false);
       if (opponents.length == 0) {
         assists++;
       }
@@ -195,7 +195,7 @@ public class UtilPlayer {
     return assists;
   }
 
-  public static Team findOtherTeam(Game pGame, Player pPlayer) {
+  public static Team findOtherTeam(Game pGame, Player<?> pPlayer) {
     Team ownTeam = pPlayer.getTeam();
     if (pGame.getTeamHome() == ownTeam) {
       return pGame.getTeamAway();
@@ -204,7 +204,7 @@ public class UtilPlayer {
     }
   }
 
-  public static int findTacklezones(Game pGame, Player pPlayer) {
+  public static int findTacklezones(Game pGame, Player<?> pPlayer) {
     Team otherTeam = findOtherTeam(pGame, pPlayer);
     FieldCoordinate playerCoordinate = pGame.getFieldModel().getPlayerCoordinate(pPlayer);
     return findAdjacentPlayersWithTacklezones(pGame, otherTeam, playerCoordinate, false).length;
@@ -212,7 +212,7 @@ public class UtilPlayer {
   
   public static void refreshPlayersForTurnStart(Game pGame) {
     FieldModel fieldModel = pGame.getFieldModel();
-    Player[] players = pGame.getPlayers();
+    Player<?>[] players = pGame.getPlayers();
     for (int i = 0; i < players.length; i++) {
       PlayerState newPlayerState = null;
       PlayerState oldPlayerState = fieldModel.getPlayerState(players[i]);
@@ -245,7 +245,7 @@ public class UtilPlayer {
     }
   }
   
-  public static boolean canHandOver(Game pGame, Player pThrower) {
+  public static boolean canHandOver(Game pGame, Player<?> pThrower) {
     FieldModel fieldModel = pGame.getFieldModel();
     FieldCoordinate throwerCoordinate = fieldModel.getPlayerCoordinate(pThrower); 
     Team throwerTeam = pGame.getTeamHome().hasPlayer(pThrower) ? pGame.getTeamHome() : pGame.getTeamAway();
@@ -257,7 +257,7 @@ public class UtilPlayer {
     );
   }
 
-  public static boolean canGaze(Game pGame, Player pPlayer) {
+  public static boolean canGaze(Game pGame, Player<?> pPlayer) {
     FieldCoordinate playerCoordinate = pGame.getFieldModel().getPlayerCoordinate(pPlayer);
     Team otherTeam = UtilPlayer.findOtherTeam(pGame, pPlayer);
     PlayerState playerState = pGame.getFieldModel().getPlayerState(pPlayer);
@@ -271,7 +271,7 @@ public class UtilPlayer {
     }
   }
 
-  public static boolean canFoul(Game pGame, Player pPlayer) {
+  public static boolean canFoul(Game pGame, Player<?> pPlayer) {
     FieldModel fieldModel = pGame.getFieldModel();
     FieldCoordinate playerCoordinate = fieldModel.getPlayerCoordinate(pPlayer);
     Team otherTeam = UtilPlayer.findOtherTeam(pGame, pPlayer);
@@ -281,20 +281,20 @@ public class UtilPlayer {
     );
   }
   
-  public static boolean isBallAvailable(Game pGame, Player pPlayer) {
+  public static boolean isBallAvailable(Game pGame, Player<?> pPlayer) {
     return ((pPlayer != null) && (pGame != null) && pGame.getFieldModel().isBallInPlay() && (pGame.getFieldModel().isBallMoving() || pGame.getFieldModel().getBallCoordinate().equals(pGame.getFieldModel().getPlayerCoordinate(pPlayer))));
   }
   
-  public static boolean hasBall(Game pGame, Player pPlayer) {
+  public static boolean hasBall(Game pGame, Player<?> pPlayer) {
     return ((pPlayer != null) && (pGame != null) && pGame.getFieldModel().isBallInPlay() && !pGame.getFieldModel().isBallMoving() && pGame.getFieldModel().getBallCoordinate().equals(pGame.getFieldModel().getPlayerCoordinate(pPlayer)));
   }
   
-  public static Player[] findThrowableTeamMates(Game pGame, Player pThrower) {
-    List<Player> throwablePlayers = new ArrayList<Player>();
+  public static Player<?>[] findThrowableTeamMates(Game pGame, Player<?> pThrower) {
+    List<Player<?>> throwablePlayers = new ArrayList<Player<?>>();
     FieldModel fieldModel = pGame.getFieldModel();
     FieldCoordinate throwerCoordinate = fieldModel.getPlayerCoordinate(pThrower);
-    Player[] adjacentPlayers = findAdjacentPlayersWithTacklezones(pGame, pThrower.getTeam(), throwerCoordinate, false);
-    for (Player adjacentPlayer : adjacentPlayers) {
+    Player<?>[] adjacentPlayers = findAdjacentPlayersWithTacklezones(pGame, pThrower.getTeam(), throwerCoordinate, false);
+    for (Player<?> adjacentPlayer : adjacentPlayers) {
     	
     	
       if (UtilCards.hasSkillWithProperty(adjacentPlayer, NamedProperties.canBeThrown)) {
@@ -304,12 +304,12 @@ public class UtilPlayer {
     return throwablePlayers.toArray(new Player[throwablePlayers.size()]);
   }
   
-  public static Player[] findKickableTeamMates(Game pGame, Player pKicker) {
-    List<Player> kickablePlayers = new ArrayList<Player>();
+  public static Player<?>[] findKickableTeamMates(Game pGame, Player<?> pKicker) {
+    List<Player<?>> kickablePlayers = new ArrayList<Player<?>>();
     FieldModel fieldModel = pGame.getFieldModel();
     FieldCoordinate kickerCoordinate = fieldModel.getPlayerCoordinate(pKicker);
-    Player[] adjacentPlayers = findAdjacentPlayersWithTacklezones(pGame, pKicker.getTeam(), kickerCoordinate, false);
-    for (Player adjacentPlayer : adjacentPlayers) {
+    Player<?>[] adjacentPlayers = findAdjacentPlayersWithTacklezones(pGame, pKicker.getTeam(), kickerCoordinate, false);
+    for (Player<?> adjacentPlayer : adjacentPlayers) {
       if (UtilCards.hasSkillWithProperty(adjacentPlayer, NamedProperties.canBeKicked)) {
         kickablePlayers.add(adjacentPlayer);
       }
@@ -317,15 +317,15 @@ public class UtilPlayer {
     return kickablePlayers.toArray(new Player[kickablePlayers.size()]);
   }
   
-  public static boolean canThrowTeamMate(Game pGame, Player pThrower, boolean pCheckPassUsed) {
+  public static boolean canThrowTeamMate(Game pGame, Player<?> pThrower, boolean pCheckPassUsed) {
     return ((pThrower != null) && (!pCheckPassUsed || !pGame.getTurnData().isPassUsed()) && UtilCards.hasSkillWithProperty(pThrower, NamedProperties.canThrowTeamMates) && (UtilPlayer.findThrowableTeamMates(pGame, pThrower).length > 0));
   }
   
-  public static boolean canKickTeamMate(Game pGame, Player pKicker, boolean pCheckBlitzUsed) {
+  public static boolean canKickTeamMate(Game pGame, Player<?> pKicker, boolean pCheckBlitzUsed) {
     return ((pKicker != null) && (!pCheckBlitzUsed || !pGame.getTurnData().isBlitzUsed()) && UtilCards.hasSkillWithProperty(pKicker, NamedProperties.canKickTeamMates) && (UtilPlayer.findKickableTeamMates(pGame, pKicker).length > 0));
   }
   
-  public static boolean isBlockable(Game pGame, Player pPlayer) {
+  public static boolean isBlockable(Game pGame, Player<?> pPlayer) {
     ActingPlayer actingPlayer = pGame.getActingPlayer();
     if (pPlayer != null) {
       PlayerState defenderState = pGame.getFieldModel().getPlayerState(pPlayer);
@@ -340,7 +340,7 @@ public class UtilPlayer {
     return false;
   }
   
-  public static boolean isFoulable(Game pGame, Player pPlayer) {
+  public static boolean isFoulable(Game pGame, Player<?> pPlayer) {
     boolean foulable = false;
     ActingPlayer actingPlayer = pGame.getActingPlayer();
     if (pPlayer != null) {
@@ -358,9 +358,9 @@ public class UtilPlayer {
     return (pGame.getFieldModel().isBallInPlay() && pGame.getFieldModel().isBallMoving() && playerCoordinate.equals(pGame.getFieldModel().getBallCoordinate()));
   }
   
-  public static void sortByPlayerNr(Player[] pPlayerArray) {
-    Arrays.sort(pPlayerArray, new Comparator<Player>() {
-      public int compare(Player pPlayer1, Player pPlayer2) {
+  public static void sortByPlayerNr(Player<?>[] pPlayerArray) {
+    Arrays.sort(pPlayerArray, new Comparator<Player<?>>() {
+      public int compare(Player<?> pPlayer1, Player<?> pPlayer2) {
         return pPlayer1.getNr() - pPlayer2.getNr();
       }
     });
@@ -369,7 +369,7 @@ public class UtilPlayer {
   public static boolean isNextMoveGoingForIt(Game pGame) {
     boolean nextMoveGoingForIt = false;
     ActingPlayer actingPlayer = pGame.getActingPlayer();
-    Player player = actingPlayer.getPlayer();
+    Player<?> player = actingPlayer.getPlayer();
     if (player != null) {
       if ((pGame.getTurnMode() == TurnMode.KICKOFF_RETURN) || (pGame.getTurnMode() == TurnMode.PASS_BLOCK)) {
       	return false;
@@ -389,7 +389,7 @@ public class UtilPlayer {
   public static boolean isNextMoveDodge(Game pGame) {
     boolean nextMoveDodge = false;
     if (pGame.getActingPlayer() != null) {
-      Player player = pGame.getActingPlayer().getPlayer();
+      Player<?> player = pGame.getActingPlayer().getPlayer();
       if (player != null) {
         Team otherTeam = findOtherTeam(pGame, player);
         FieldCoordinate playerCoordinate = pGame.getFieldModel().getPlayerCoordinate(player);
@@ -422,13 +422,13 @@ public class UtilPlayer {
   }
 
   public static boolean isPickup(Game pGame) {
-    Player player = pGame.getActingPlayer().getPlayer();
+    Player<?> player = pGame.getActingPlayer().getPlayer();
     FieldCoordinate playerCoordinate = pGame.getFieldModel().getPlayerCoordinate(player);
     return (pGame.getFieldModel().isBallMoving() && playerCoordinate.equals(pGame.getFieldModel().getBallCoordinate()));
   }
   
   public static boolean testPlayersAbleToAct(Game pGame, Team pTeam) {
-    for (Player player : pTeam.getPlayers()) {
+    for (Player<?> player : pTeam.getPlayers()) {
     	FieldCoordinate playerCoordinate = pGame.getFieldModel().getPlayerCoordinate(player);
       PlayerState playerState = pGame.getFieldModel().getPlayerState(player);
       if ((playerCoordinate != null) && !playerCoordinate.isBoxCoordinate() && (playerState != null) && playerState.isActive()) {
@@ -438,9 +438,9 @@ public class UtilPlayer {
     return false;
   }
   
-  public static Player[] findPlayersInReserveOrField(Game pGame, Team pTeam) {
-  	List<Player> playersInBoxOrField = new ArrayList<Player>();
-  	for (Player player : pTeam.getPlayers()) {
+  public static Player<?>[] findPlayersInReserveOrField(Game pGame, Team pTeam) {
+  	List<Player<?>> playersInBoxOrField = new ArrayList<Player<?>>();
+  	for (Player<?> player : pTeam.getPlayers()) {
   		FieldCoordinate playerCoordinate = pGame.getFieldModel().getPlayerCoordinate(player);
   		if ((playerCoordinate != null) && !playerCoordinate.isBoxCoordinate()) {
   			playersInBoxOrField.add(player);
