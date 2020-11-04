@@ -62,10 +62,12 @@ public class UtilActingPlayer {
       fieldModel.clearDiceDecorations();
       fieldModel.clearPushbackSquares();
       fieldModel.clearMoveSquares();
-      if (pGame.getActingPlayer().getPlayer() != null) {
-        PlayerState playerState = pGame.getFieldModel().getPlayerState(pGame.getActingPlayer().getPlayer());
+      Player<?> player = pGame.getActingPlayer().getPlayer(); 
+      if (player != null) {
+        PlayerState playerState = pGame.getFieldModel().getPlayerState(player);
+      	Skill skillThatAllowsReroll =  UtilCards.getSkillWithProperty(player, NamedProperties.canRerollOncePerTurn);
         if (playerState.hasUsedPro()) {
-          pGame.getActingPlayer().markSkillUsed(Skill.PRO);
+          pGame.getActingPlayer().markSkillUsed(skillThatAllowsReroll);
         }
       }
       Player<?>[] players = pGame.getPlayers();

@@ -23,6 +23,7 @@ import com.balancedbytes.games.ffb.model.FieldModel;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.model.Skill;
+import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
 import com.balancedbytes.games.ffb.util.UtilCards;
 import com.balancedbytes.games.ffb.util.UtilPlayer;
 
@@ -96,7 +97,7 @@ public class ClientStateHandOver extends ClientStateMove {
         throwerCoordinate.isAdjacent(catcherCoordinate)
       	&& (catcherState != null)
       	&& (!actingPlayer.isSufferingAnimosity() || actingPlayer.getRace().equals(pCatcher.getRace()))
-	    	&& (catcherState.hasTacklezones() && !UtilCards.hasSkill(game, pCatcher, Skill.NO_HANDS) && (game.getTeamHome() == pCatcher.getTeam()))
+	    	&& (catcherState.hasTacklezones() && !UtilCards.hasSkillWithProperty(pCatcher, NamedProperties.preventCatch) && (game.getTeamHome() == pCatcher.getTeam()))
 	    );
     }
     return false;

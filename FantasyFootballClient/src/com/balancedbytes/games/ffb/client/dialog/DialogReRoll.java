@@ -22,7 +22,7 @@ import com.balancedbytes.games.ffb.dialog.DialogId;
 import com.balancedbytes.games.ffb.dialog.DialogReRollParameter;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
-import com.balancedbytes.games.ffb.model.Skill;
+import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
 import com.balancedbytes.games.ffb.util.UtilCards;
 
 /**
@@ -80,7 +80,7 @@ public class DialogReRoll extends Dialog implements ActionListener, KeyListener 
     
     Game game = getClient().getGame();
     Player reRollingPlayer = game.getPlayerById(pDialogParameter.getPlayerId());
-    if ((reRollingPlayer != null) && UtilCards.hasSkill(game, reRollingPlayer, Skill.LONER)) {
+    if ((reRollingPlayer != null) && UtilCards.hasSkillWithProperty(reRollingPlayer, NamedProperties.hasToRollToUseTeamReroll)) {
       messagePanel.add(Box.createVerticalStrut(5));
       StringBuilder message3 = new StringBuilder();
       message3.append("Player is a LONER - the Re-Roll is not guaranteed to help.");

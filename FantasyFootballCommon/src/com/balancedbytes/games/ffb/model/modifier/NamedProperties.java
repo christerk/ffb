@@ -25,6 +25,7 @@ public class NamedProperties {
   public static final ISkillProperty enableStandUpAndEndBlitzAction = new NamedProperty("Enable Stand Up and End Blitz Action");
   public static final ISkillProperty enableThrowBombAction = new NamedProperty("Enable Throw Bomb Action");
   public static final ISkillProperty flipSameTeamOpponentToOtherTeam = new NamedProperty("Flip Same Team Opponent to Other Team");
+  public static final ISkillProperty forceOpponentToDropBallOnPushback = new NamedProperty("Force Opponent To Drop Ball On Pushback");
   public static final ISkillProperty forceFollowup = new NamedProperty("Force Followup");
   public static final ISkillProperty forceFullMovement = new NamedProperty("Force Full Movement");
   public static final ISkillProperty getsSentOffAtEndOfDrive = new NamedProperty("Gets Sent Off At End Of Drive");

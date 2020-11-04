@@ -2,6 +2,7 @@ package com.balancedbytes.games.ffb.skill;
 
 import com.balancedbytes.games.ffb.SkillCategory;
 import com.balancedbytes.games.ffb.model.Skill;
+import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
 
 /**
 * When a player with this skill blocks an opponent with the ball, applying a
@@ -13,6 +14,9 @@ public class StripBall extends Skill {
 
   public StripBall() {
     super("Strip Ball", SkillCategory.GENERAL);
+    
+    
+    registerProperty(NamedProperties.forceOpponentToDropBallOnPushback);
   }
 
 }
