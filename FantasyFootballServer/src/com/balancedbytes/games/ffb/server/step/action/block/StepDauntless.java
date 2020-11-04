@@ -9,7 +9,6 @@ import com.balancedbytes.games.ffb.server.step.AbstractStepWithReRoll;
 import com.balancedbytes.games.ffb.server.step.StepCommandStatus;
 import com.balancedbytes.games.ffb.server.step.StepId;
 import com.balancedbytes.games.ffb.server.step.StepParameter;
-import com.balancedbytes.games.ffb.server.step.action.ttm.StepSwoop.StepState;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 

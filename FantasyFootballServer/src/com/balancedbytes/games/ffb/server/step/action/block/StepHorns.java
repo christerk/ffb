@@ -6,7 +6,6 @@ import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.IServerJsonOption;
 import com.balancedbytes.games.ffb.server.step.AbstractStep;
 import com.balancedbytes.games.ffb.server.step.StepId;
-import com.balancedbytes.games.ffb.server.step.action.ttm.StepSwoop.StepState;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
