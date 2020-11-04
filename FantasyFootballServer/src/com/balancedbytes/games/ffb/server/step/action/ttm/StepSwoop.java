@@ -21,6 +21,7 @@ import com.balancedbytes.games.ffb.server.step.StepParameter;
 import com.balancedbytes.games.ffb.server.step.StepParameterKey;
 import com.balancedbytes.games.ffb.server.step.StepParameterSet;
 import com.balancedbytes.games.ffb.server.step.UtilServerSteps;
+import com.balancedbytes.games.ffb.server.step.action.block.StepWrestle.StepState;
 import com.balancedbytes.games.ffb.server.util.UtilServerGame;
 import com.balancedbytes.games.ffb.server.util.UtilServerPlayerSwoop;
 import com.balancedbytes.games.ffb.util.UtilActingPlayer;
@@ -69,6 +70,7 @@ public class StepSwoop extends AbstractStep {
 
 	public StepSwoop(GameState pGameState) {
 		super(pGameState);
+		state = new StepState();
 	}
 
 	public StepId getId() {
@@ -170,7 +172,7 @@ public class StepSwoop extends AbstractStep {
 	}
 
 	private void executeSwoop() {
-		
+		getGameState().executeStepHooks(this, state);
 	}
 
 	private void executeStep() {

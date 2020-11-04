@@ -20,6 +20,7 @@ import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.GameResult;
 import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.model.PlayerResult;
+import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
 import com.balancedbytes.games.ffb.report.ReportInjury;
 import com.balancedbytes.games.ffb.server.model.ServerSkill;
 import com.balancedbytes.games.ffb.server.step.IStep;
@@ -315,7 +316,7 @@ public class InjuryResult implements IJsonSerializable {
     Player defender = game.getPlayerById(getDefenderId());
 
     PlayerResult playerResult = gameResult.getPlayerResult(defender);
-    if (UtilCards.hasSkill(game, defender, ServerSkill.SECRET_WEAPON)) {
+    if(UtilCards.hasSkillWithProperty(defender, NamedProperties.getsSentOffAtEndOfDrive)) {
       playerResult.setHasUsedSecretWeapon(true);
     }
 

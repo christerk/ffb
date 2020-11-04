@@ -13,6 +13,7 @@ import com.balancedbytes.games.ffb.server.step.AbstractStep;
 import com.balancedbytes.games.ffb.server.step.StepCommandStatus;
 import com.balancedbytes.games.ffb.server.step.StepId;
 import com.balancedbytes.games.ffb.server.step.StepParameter;
+import com.balancedbytes.games.ffb.server.step.action.ttm.StepSwoop.StepState;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
@@ -36,6 +37,7 @@ public class StepDumpOff extends AbstractStep {
 
   public StepDumpOff(GameState pGameState) {
     super(pGameState);
+    state = new StepState();
   }
 
   public StepId getId() {

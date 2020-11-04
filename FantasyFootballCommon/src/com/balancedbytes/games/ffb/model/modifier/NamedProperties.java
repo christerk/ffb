@@ -12,6 +12,7 @@ public class NamedProperties {
   public static final ISkillProperty canBlockMoreThanOnce = new NamedProperty("Can Block More Than Once");
   public static final ISkillProperty canBlockSameTeamPlayer = new NamedProperty("Can Block Same Team Player");
   public static final ISkillProperty canReduceKickDistance = new NamedProperty("Can Reduce Kick Distance");
+  public static final ISkillProperty canRerollFailedPass = new NamedProperty("Can Reroll Failed Pass");
   public static final ISkillProperty canRerollOncePerTurn = new NamedProperty("Can Reroll Once Per Turn");
   public static final ISkillProperty canStandUpForFree = new NamedProperty("Can Stand Up For Free");
   public static final ISkillProperty convertKOToStunOn8 = new NamedProperty("Convert KO to Stun on a roll of 8");
@@ -21,6 +22,7 @@ public class NamedProperties {
   public static final ISkillProperty flipSameTeamOpponentToOtherTeam = new NamedProperty("Flip Same Team Opponent to Other Team");
   public static final ISkillProperty forceFollowup = new NamedProperty("Force Followup");
   public static final ISkillProperty forceFullMovement = new NamedProperty("Force Full Movement");
+  public static final ISkillProperty getsSentOffAtEndOfDrive = new NamedProperty("Gets Sent Off At End Of Drive");
   public static final ISkillProperty goForItAfterBlock = new NamedProperty("Go For It After Block");
   public static final ISkillProperty grabOutsideBlock = new NamedProperty("Grab Outside Block");
   public static final ISkillProperty hasNoTacklezone = new NamedProperty("Has No Tacklezone");
