@@ -164,7 +164,7 @@ public class ZappedPlayer extends Player<ZappedPosition> {
 
   @Override
   public void setTeam(Team pTeam) {
-    // NOOP
+    originalPlayer.setTeam(pTeam);
   }
 
   @Override
