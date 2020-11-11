@@ -1,28 +1,18 @@
 package com.balancedbytes.games.ffb.server.step.action.block;
 
-import com.balancedbytes.games.ffb.FieldCoordinate;
-import com.balancedbytes.games.ffb.InjuryType;
-import com.balancedbytes.games.ffb.SoundId;
 import com.balancedbytes.games.ffb.json.UtilJson;
-import com.balancedbytes.games.ffb.model.ActingPlayer;
-import com.balancedbytes.games.ffb.model.Game;
+import com.balancedbytes.games.ffb.server.ActionStatus;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.IServerJsonOption;
-import com.balancedbytes.games.ffb.server.InjuryResult;
-import com.balancedbytes.games.ffb.server.model.ServerSkill;
 import com.balancedbytes.games.ffb.server.net.ReceivedCommand;
 import com.balancedbytes.games.ffb.server.step.AbstractStep;
-import com.balancedbytes.games.ffb.server.step.StepAction;
 import com.balancedbytes.games.ffb.server.step.StepCommandStatus;
 import com.balancedbytes.games.ffb.server.step.StepException;
 import com.balancedbytes.games.ffb.server.step.StepId;
 import com.balancedbytes.games.ffb.server.step.StepParameter;
 import com.balancedbytes.games.ffb.server.step.StepParameterKey;
 import com.balancedbytes.games.ffb.server.step.StepParameterSet;
-import com.balancedbytes.games.ffb.server.step.action.common.ApothecaryMode;
-import com.balancedbytes.games.ffb.server.util.UtilServerInjury;
 import com.balancedbytes.games.ffb.util.StringTool;
-import com.balancedbytes.games.ffb.util.UtilCards;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
@@ -40,8 +30,13 @@ import com.eclipsesource.json.JsonValue;
  */
 public class StepStab extends AbstractStep {
 	
-	private String fGotoLabelOnSuccess;
-	private Boolean fUsingStab;
+	public class StepState {
+	    public ActionStatus status;
+		public String goToLabelOnFailure;
+		public Boolean usingStab;
+	  }
+	
+	private StepState state;
 
 	public StepStab(GameState pGameState) {
 		super(pGameState);
@@ -57,14 +52,14 @@ public class StepStab extends AbstractStep {
   		for (StepParameter parameter : pParameterSet.values()) {
   			switch (parameter.getKey()) {
   				case GOTO_LABEL_ON_SUCCESS:
-  					fGotoLabelOnSuccess = (String) parameter.getValue();
+  					state.goToLabelOnFailure = (String) parameter.getValue();
   					break;
 					default:
 						break;
   			}
   		}
   	}
-  	if (!StringTool.isProvided(fGotoLabelOnSuccess)) {
+  	if (!StringTool.isProvided(state.goToLabelOnFailure)) {
 			throw new StepException("StepParameter " + StepParameterKey.GOTO_LABEL_ON_SUCCESS + " is not initialized.");
   	}
   }
@@ -90,7 +85,7 @@ public class StepStab extends AbstractStep {
 		if ((pParameter != null) && !super.setParameter(pParameter)) {
 			switch (pParameter.getKey()) {
 				case USING_STAB:
-					fUsingStab = (Boolean) pParameter.getValue();
+					state.usingStab = (Boolean) pParameter.getValue();
 					return true;
 				default:
 					break;
@@ -100,20 +95,7 @@ public class StepStab extends AbstractStep {
 	}
 	
   private void executeStep() {
-  	Game game = getGameState().getGame();
-    ActingPlayer actingPlayer = game.getActingPlayer();
-    if (UtilCards.hasSkill(game, actingPlayer, ServerSkill.STAB) && (fUsingStab != null) && fUsingStab) {
-      getResult().setSound(SoundId.STAB);
-      FieldCoordinate defenderCoordinate = game.getFieldModel().getPlayerCoordinate(game.getDefender());
-      InjuryResult injuryResultDefender = UtilServerInjury.handleInjury(this, InjuryType.STAB, actingPlayer.getPlayer(), game.getDefender(), defenderCoordinate, null, ApothecaryMode.DEFENDER);
-      if (injuryResultDefender.isArmorBroken()) {
-        publishParameters(UtilServerInjury.dropPlayer(this, game.getDefender(), ApothecaryMode.DEFENDER));
-      }
-      publishParameter(new StepParameter(StepParameterKey.INJURY_RESULT, injuryResultDefender));
-      getResult().setNextAction(StepAction.GOTO_LABEL, fGotoLabelOnSuccess);
-    } else {
-    	getResult().setNextAction(StepAction.NEXT_STEP);
-    }
+	  getGameState().executeStepHooks(this, state);
   }
 
   // JSON serialization
@@ -121,8 +103,8 @@ public class StepStab extends AbstractStep {
   @Override
   public JsonObject toJsonValue() {
     JsonObject jsonObject = super.toJsonValue();
-    IServerJsonOption.GOTO_LABEL_ON_SUCCESS.addTo(jsonObject, fGotoLabelOnSuccess);
-    IServerJsonOption.USING_STAB.addTo(jsonObject, fUsingStab);
+    IServerJsonOption.GOTO_LABEL_ON_SUCCESS.addTo(jsonObject, state.goToLabelOnFailure);
+    IServerJsonOption.USING_STAB.addTo(jsonObject, state.usingStab);
     return jsonObject;
   }
   
@@ -130,8 +112,8 @@ public class StepStab extends AbstractStep {
   public StepStab initFrom(JsonValue pJsonValue) {
     super.initFrom(pJsonValue);
     JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-    fGotoLabelOnSuccess = IServerJsonOption.GOTO_LABEL_ON_SUCCESS.getFrom(jsonObject);
-    fUsingStab = IServerJsonOption.USING_STAB.getFrom(jsonObject);
+    state.goToLabelOnFailure = IServerJsonOption.GOTO_LABEL_ON_SUCCESS.getFrom(jsonObject);
+    state.usingStab = IServerJsonOption.USING_STAB.getFrom(jsonObject);
     return this;
   }
 
