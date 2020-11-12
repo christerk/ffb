@@ -11,7 +11,7 @@ import com.balancedbytes.games.ffb.client.util.UtilClientStateBlocking;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
-import com.balancedbytes.games.ffb.model.Skill;
+import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
 import com.balancedbytes.games.ffb.util.UtilCards;
 import com.balancedbytes.games.ffb.util.UtilPlayer;
 
@@ -94,8 +94,8 @@ public class ClientStateBlitz extends ClientStateMove {
 	          communication.sendActingPlayer(null, null, false);
 	          break;
 	        case IPlayerPopupMenuKeys.KEY_LEAP: 
-	        	 if(UtilCards.hasUnusedSkill(game, actingPlayer, Skill.LEAP) && UtilPlayer.isNextMovePossible(game, false)){
-	          communication.sendActingPlayer(pPlayer, actingPlayer.getPlayerAction(), !actingPlayer.isLeaping());}
+	        	 if(UtilCards.hasUnusedSkillWithProperty(actingPlayer, NamedProperties.canLeap) && UtilPlayer.isNextMovePossible(game, false)){
+	        		 communication.sendActingPlayer(pPlayer, actingPlayer.getPlayerAction(), !actingPlayer.isLeaping());}
 	          break;
 	        case IPlayerPopupMenuKeys.KEY_MOVE:
 	            if (actingPlayer.isSufferingBloodLust()) {

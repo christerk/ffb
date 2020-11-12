@@ -99,6 +99,10 @@ public class UtilServerInjury {
 
 		if (!injuryResult.isArmorBroken()) {
 
+			boolean attackerHasChainsaw =UtilCards.hasSkillWithProperty(pAttacker, NamedProperties.blocksLikeChainsaw);
+			boolean defenderHasChainsaw =UtilCards.hasSkillWithProperty(pDefender, NamedProperties.blocksLikeChainsaw);
+			boolean chainsawIsInvolved = (attackerHasChainsaw|| defenderHasChainsaw);
+
 			switch (pInjuryType) {
 			case KTM_CROWD:
 			case KTM_INJURY:
@@ -125,7 +129,7 @@ public class UtilServerInjury {
 			case TTM_LANDING:
 			case TTM_HIT_PLAYER:
 				injuryResult.setArmorRoll(diceRoller.rollArmour());
-				if (UtilCards.hasSkill(game, pDefender, ServerSkill.CHAINSAW)) {
+				if (UtilCards.hasSkillWithProperty(pDefender, NamedProperties.blocksLikeChainsaw)) {
 					injuryResult.addArmorModifier(ArmorModifier.CHAINSAW);
 				}
 				injuryResult.setArmorBroken(diceInterpreter.isArmourBroken(gameState, injuryResult));
@@ -142,18 +146,18 @@ public class UtilServerInjury {
 				break;
 			case BLOCK:
 				injuryResult.setArmorRoll(diceRoller.rollArmour());
-				if (UtilCards.hasSkill(game, pAttacker, ServerSkill.CHAINSAW) || UtilCards.hasSkill(game, pDefender, ServerSkill.CHAINSAW)) {
+				if (chainsawIsInvolved) {
 					injuryResult.addArmorModifier(ArmorModifier.CHAINSAW);
 				}
 				injuryResult.setArmorBroken(diceInterpreter.isArmourBroken(gameState, injuryResult));
 				// do not use armorModifiers on blocking own team-mate
 				if (pAttacker.getTeam() != pDefender.getTeam()) {
-					if (UtilCards.hasSkill(game, pAttacker, ServerSkill.CLAW) && (pDefender.getArmour() > 7) && !UtilCards.hasSkill(game, pAttacker, ServerSkill.CHAINSAW)) {
+					if (UtilCards.hasSkill(game, pAttacker, ServerSkill.CLAW) && (pDefender.getArmour() > 7) && !UtilCards.hasSkillWithProperty(pAttacker, NamedProperties.blocksLikeChainsaw)) {
 						injuryResult.addArmorModifier(ArmorModifier.CLAWS);
 					}
 					injuryResult.setArmorBroken(diceInterpreter.isArmourBroken(gameState, injuryResult));
 					if (!injuryResult.isArmorBroken() && UtilCards.hasSkill(game, pAttacker, ServerSkill.MIGHTY_BLOW)
-							&& !UtilCards.hasSkill(game, pAttacker, ServerSkill.CHAINSAW)
+							&& !attackerHasChainsaw
 							&& !(UtilCards.hasSkill(game, pAttacker, ServerSkill.CLAW) && UtilGameOption.isOptionEnabled(game, GameOptionId.CLAW_DOES_NOT_STACK))) {
 						injuryResult.addArmorModifier(ArmorModifier.MIGHTY_BLOW);
 						injuryResult.setArmorBroken(diceInterpreter.isArmourBroken(gameState, injuryResult));
@@ -164,15 +168,15 @@ public class UtilServerInjury {
 				injuryResult.setArmorRoll(diceRoller.rollArmour());
 				injuryResult.setArmorBroken(diceInterpreter.isArmourBroken(gameState, injuryResult));
 				if (!UtilGameOption.isOptionEnabled(game, GameOptionId.PILING_ON_DOES_NOT_STACK)) {
-					if (UtilCards.hasSkill(game, pAttacker, ServerSkill.CHAINSAW) || UtilCards.hasSkill(game, pDefender, ServerSkill.CHAINSAW)) {
+					if (chainsawIsInvolved) {
 						injuryResult.addArmorModifier(ArmorModifier.CHAINSAW);
 					}
-					if (UtilCards.hasSkill(game, pAttacker, ServerSkill.CLAW) && (pDefender.getArmour() > 7) && !UtilCards.hasSkill(game, pAttacker, ServerSkill.CHAINSAW)) {
+					if (UtilCards.hasSkill(game, pAttacker, ServerSkill.CLAW) && (pDefender.getArmour() > 7) && !attackerHasChainsaw) {
 						injuryResult.addArmorModifier(ArmorModifier.CLAWS);
 					}
 					injuryResult.setArmorBroken(diceInterpreter.isArmourBroken(gameState, injuryResult));
 					if (!injuryResult.isArmorBroken() && UtilCards.hasSkill(game, pAttacker, ServerSkill.MIGHTY_BLOW)
-							&& !UtilCards.hasSkill(game, pAttacker, ServerSkill.CHAINSAW)
+							&& !attackerHasChainsaw
 							&& !(UtilCards.hasSkill(game, pAttacker, ServerSkill.CLAW) && UtilGameOption.isOptionEnabled(game, GameOptionId.CLAW_DOES_NOT_STACK))) {
 						injuryResult.addArmorModifier(ArmorModifier.MIGHTY_BLOW);
 						injuryResult.setArmorBroken(diceInterpreter.isArmourBroken(gameState, injuryResult));
@@ -190,14 +194,14 @@ public class UtilServerInjury {
 				break;
 			case BOMB:
 				injuryResult.setArmorRoll(diceRoller.rollArmour());
-				if (UtilCards.hasSkill(game, pDefender, ServerSkill.CHAINSAW)) {
+				if (defenderHasChainsaw) {
 					injuryResult.addArmorModifier(ArmorModifier.CHAINSAW);
 				}
 				injuryResult.setArmorBroken(diceInterpreter.isArmourBroken(gameState, injuryResult));
 				break;
 			case FOUL:
 				injuryResult.setArmorRoll(diceRoller.rollArmour());
-				if (UtilCards.hasSkill(game, pAttacker, ServerSkill.CHAINSAW)) {
+				if (attackerHasChainsaw) {
 					injuryResult.addArmorModifier(ArmorModifier.CHAINSAW);
 				}
 				if (UtilGameOption.isOptionEnabled(game, GameOptionId.FOUL_BONUS)

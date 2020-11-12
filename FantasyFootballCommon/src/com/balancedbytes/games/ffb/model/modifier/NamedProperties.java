@@ -8,6 +8,7 @@ public class NamedProperties {
   public static final ISkillProperty appliesConfusion = new NamedProperty("Applies Confusion");
   public static final ISkillProperty appliesPoisonOnBadlyHurt = new NamedProperty("Applies Poison on Badly Hurt");
   public static final ISkillProperty assistInTacklezones = new NamedProperty("Assist in Tacklezones");
+  public static final ISkillProperty blocksLikeChainsaw = new NamedProperty("Blocks Like Chainsaw");
   public static final ISkillProperty canAlwaysAssistFouls = new NamedProperty("Can Always Assist Fouls");
   public static final ISkillProperty canAttemptCatchInAdjacentSquares = new NamedProperty("Can Attempt Catch In Adjacent Squares");
   public static final ISkillProperty canBeThrown = new NamedProperty("Can Be Thrown");
@@ -16,6 +17,7 @@ public class NamedProperties {
   public static final ISkillProperty canBlockSameTeamPlayer = new NamedProperty("Can Block Same Team Player");
   public static final ISkillProperty canForceInterceptionReroll = new NamedProperty("Can Force Interception Reroll");
   public static final ISkillProperty canKickTeamMates = new NamedProperty("Can Kick Team Mates");
+  public static final ISkillProperty canLeap = new NamedProperty("Can Leap");
   public static final ISkillProperty canMakeAnExtraGfi = new NamedProperty("Use Special Block Rules");
   public static final ISkillProperty canReduceKickDistance = new NamedProperty("Can Reduce Kick Distance");
   public static final ISkillProperty canRerollOncePerTurn = new NamedProperty("Can Reroll Once Per Turn");

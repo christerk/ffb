@@ -2,6 +2,7 @@ package com.balancedbytes.games.ffb.skill;
 
 import com.balancedbytes.games.ffb.SkillCategory;
 import com.balancedbytes.games.ffb.model.Skill;
+import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
 
 /**
 * A player with the Leap skill is allowed to jump to any empty square within
@@ -22,6 +23,9 @@ public class Leap extends Skill {
 
   public Leap() {
     super("Leap", SkillCategory.AGILITY);
+    
+    registerProperty(NamedProperties.canLeap);
+
   }
 
 }

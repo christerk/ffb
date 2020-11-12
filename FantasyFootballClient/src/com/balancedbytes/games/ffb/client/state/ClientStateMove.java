@@ -132,7 +132,7 @@ public class ClientStateMove extends ClientState {
     ActingPlayer actingPlayer = game.getActingPlayer();
     if (pPlayer == actingPlayer.getPlayer()) {
       if (actingPlayer.hasActed()
-      	|| UtilCards.hasSkill(game, pPlayer, Skill.LEAP)
+      	|| UtilCards.hasSkillWithProperty(pPlayer, NamedProperties.canLeap)
       	|| UtilCards.hasSkill(game, pPlayer, Skill.HYPNOTIC_GAZE)
       	|| ((actingPlayer.getPlayerAction() == PlayerAction.PASS_MOVE) && UtilPlayer.hasBall(game, pPlayer))
       	|| ((actingPlayer.getPlayerAction() == PlayerAction.HAND_OVER_MOVE) && UtilPlayer.hasBall(game, pPlayer))
@@ -165,7 +165,7 @@ public class ClientStateMove extends ClientState {
           }
           break;
         case IPlayerPopupMenuKeys.KEY_LEAP:
-	        if (UtilCards.hasUnusedSkill(game, actingPlayer, Skill.LEAP) && UtilPlayer.isNextMovePossible(game, false)) {
+	        if (UtilCards.hasUnusedSkillWithProperty(actingPlayer, NamedProperties.canLeap) && UtilPlayer.isNextMovePossible(game, false)) {
 	          communication.sendActingPlayer(pPlayer, actingPlayer.getPlayerAction(), !actingPlayer.isLeaping());
 	        }       
           break;
@@ -232,7 +232,7 @@ public class ClientStateMove extends ClientState {
       moveAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_MOVE, 0));
       menuItemList.add(moveAction);
     }
-    if (UtilCards.hasUnusedSkill(game, actingPlayer, Skill.LEAP) && UtilPlayer.isNextMovePossible(game, true)) {
+    if (UtilCards.hasUnusedSkillWithProperty(actingPlayer, NamedProperties.canLeap) && UtilPlayer.isNextMovePossible(game, true)) {
       if (actingPlayer.isLeaping()) {
         JMenuItem leapAction = new JMenuItem("Don't Leap", new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_MOVE)));
         leapAction.setMnemonic(IPlayerPopupMenuKeys.KEY_LEAP);

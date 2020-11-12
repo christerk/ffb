@@ -5,10 +5,10 @@ import com.balancedbytes.games.ffb.InjuryType;
 import com.balancedbytes.games.ffb.SoundId;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.Game;
+import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
 import com.balancedbytes.games.ffb.report.ReportFoul;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.InjuryResult;
-import com.balancedbytes.games.ffb.server.model.ServerSkill;
 import com.balancedbytes.games.ffb.server.net.ReceivedCommand;
 import com.balancedbytes.games.ffb.server.step.AbstractStep;
 import com.balancedbytes.games.ffb.server.step.StepAction;
@@ -59,7 +59,7 @@ public class StepFoul extends AbstractStep {
     Game game = getGameState().getGame();
     ActingPlayer actingPlayer = game.getActingPlayer();
     getResult().addReport(new ReportFoul(game.getDefenderId()));
-    if (!UtilCards.hasSkill(game, actingPlayer, ServerSkill.CHAINSAW)) {
+    if (!UtilCards.hasSkillWithProperty(actingPlayer.getPlayer(), NamedProperties.blocksLikeChainsaw)) {
       getResult().setSound(SoundId.FOUL);
     }
     UtilServerGame.syncGameModel(this);

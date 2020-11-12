@@ -22,7 +22,6 @@ import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.FieldModel;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
-import com.balancedbytes.games.ffb.model.Skill;
 import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
 import com.balancedbytes.games.ffb.util.UtilCards;
 import com.balancedbytes.games.ffb.util.UtilPlayer;
@@ -130,7 +129,7 @@ public class ClientStateHandOver extends ClientStateMove {
       menuItemList.add(passAction);
     }
     
-    if (UtilCards.hasUnusedSkill(game, actingPlayer, Skill.LEAP) && UtilPlayer.isNextMovePossible(game, true)) {
+    if (UtilCards.hasUnusedSkillWithProperty(actingPlayer, NamedProperties.canLeap) && UtilPlayer.isNextMovePossible(game, true)) {
       if (actingPlayer.isLeaping()) {
         JMenuItem leapAction = new JMenuItem("Don't Leap", new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_MOVE)));
         leapAction.setMnemonic(IPlayerPopupMenuKeys.KEY_LEAP);

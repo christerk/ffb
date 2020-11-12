@@ -27,7 +27,7 @@ import com.balancedbytes.games.ffb.client.util.UtilClientActionKeys;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
-import com.balancedbytes.games.ffb.model.Skill;
+import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
 import com.balancedbytes.games.ffb.util.UtilCards;
 import com.balancedbytes.games.ffb.util.UtilPassing;
 import com.balancedbytes.games.ffb.util.UtilPlayer;
@@ -71,7 +71,7 @@ public class ClientStatePassBlock extends ClientStateMove {
       ClientCommunication communication = getClient().getCommunication();
       switch (pMenuKey) {
 	      case IPlayerPopupMenuKeys.KEY_LEAP:
-	        if ((actingPlayer.getPlayer() != null) && UtilCards.hasUnusedSkill(game, actingPlayer, Skill.LEAP) && UtilPlayer.isNextMovePossible(game, false)) {
+	        if ((actingPlayer.getPlayer() != null) && UtilCards.hasUnusedSkillWithProperty(actingPlayer, NamedProperties.canLeap) && UtilPlayer.isNextMovePossible(game, false)) {
 	          communication.sendActingPlayer(pPlayer, actingPlayer.getPlayerAction(), !actingPlayer.isLeaping());
 	        }       
 	        break;
@@ -97,7 +97,7 @@ public class ClientStatePassBlock extends ClientStateMove {
       moveAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_MOVE, 0));
       menuItemList.add(moveAction);
     }
-    if ((actingPlayer.getPlayer() != null) && UtilCards.hasUnusedSkill(game, actingPlayer, Skill.LEAP) && UtilPlayer.isNextMovePossible(game, false)) {
+    if ((actingPlayer.getPlayer() != null) && UtilCards.hasUnusedSkillWithProperty(actingPlayer, NamedProperties.canLeap) && UtilPlayer.isNextMovePossible(game, false)) {
       if (actingPlayer.isLeaping()) {
         JMenuItem leapAction = new JMenuItem("Don't Leap", new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_MOVE)));
         leapAction.setMnemonic(IPlayerPopupMenuKeys.KEY_LEAP);

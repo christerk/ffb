@@ -6,6 +6,7 @@ import com.balancedbytes.games.ffb.PlayerState;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.Game;
+import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.IServerJsonOption;
 import com.balancedbytes.games.ffb.server.model.ServerSkill;
@@ -113,7 +114,7 @@ public class StepEndBlocking extends AbstractStep {
       }
       if ((actingPlayer.getPlayerAction() == PlayerAction.MULTIPLE_BLOCK)
           && UtilCards.hasUnusedSkill(game, actingPlayer, ServerSkill.MULTIPLE_BLOCK) && attackerState.hasTacklezones()
-          && !UtilCards.hasSkill(game, actingPlayer, ServerSkill.CHAINSAW) && !attackerState.isConfused()
+          && !UtilCards.hasSkillWithProperty(actingPlayer.getPlayer(), NamedProperties.blocksLikeChainsaw) && !attackerState.isConfused()
           && actingPlayer.hasBlocked()) {
         actingPlayer.markSkillUsed(ServerSkill.MULTIPLE_BLOCK);
         actingPlayer.setHasBlocked(false);
@@ -135,7 +136,7 @@ public class StepEndBlocking extends AbstractStep {
         actingPlayer.setGoingForIt(UtilPlayer.isNextMoveGoingForIt(game)); // auto
                                                                            // go-for-it
         if ((actingPlayer.getPlayerAction() == PlayerAction.BLITZ) && !fUsingStab
-            && !UtilCards.hasSkill(game, actingPlayer, ServerSkill.CHAINSAW) && attackerState.hasTacklezones()
+            && !UtilCards.hasSkillWithProperty(actingPlayer.getPlayer(), NamedProperties.blocksLikeChainsaw) && attackerState.hasTacklezones()
             && UtilPlayer.isNextMovePossible(game, false)) {
           String actingPlayerId = actingPlayer.getPlayer().getId();
           UtilServerGame.changeActingPlayer(this, actingPlayerId, PlayerAction.BLITZ_MOVE, actingPlayer.isLeaping());

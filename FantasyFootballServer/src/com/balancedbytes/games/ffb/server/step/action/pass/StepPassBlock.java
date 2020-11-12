@@ -14,6 +14,7 @@ import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.model.Team;
+import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
 import com.balancedbytes.games.ffb.report.ReportPassBlock;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.IServerJsonOption;
@@ -284,7 +285,7 @@ public class StepPassBlock extends AbstractStep {
 				FieldCoordinate startPosition = game.getFieldModel().getPlayerCoordinate(player);
 				if (!pCheckCanReach || (playerState.hasTacklezones()
 						&& ArrayTool.isProvided(PathFinderWithPassBlockSupport.allowPassBlockMove(game, player,
-								startPosition, 3, UtilCards.hasSkill(game, player, ServerSkill.LEAP))))) {
+								startPosition, 3, UtilCards.hasSkillWithProperty(player, NamedProperties.canLeap))))) {
 					passBlockers.add(player);
 				}
 			}

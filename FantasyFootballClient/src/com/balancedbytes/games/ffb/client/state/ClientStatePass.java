@@ -203,7 +203,7 @@ public class ClientStatePass extends ClientStateMove {
       menuItemList.add(hailMaryPassAction);
     }
     
-    if (UtilCards.hasUnusedSkill(game, actingPlayer, Skill.LEAP) && UtilPlayer.isNextMovePossible(game, false)) {
+    if (UtilCards.hasUnusedSkillWithProperty(actingPlayer, NamedProperties.canLeap) && UtilPlayer.isNextMovePossible(game, false)) {
       if (actingPlayer.isLeaping()) {
         JMenuItem leapAction = new JMenuItem("Don't Leap", new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_MOVE)));
         leapAction.setMnemonic(IPlayerPopupMenuKeys.KEY_LEAP);
