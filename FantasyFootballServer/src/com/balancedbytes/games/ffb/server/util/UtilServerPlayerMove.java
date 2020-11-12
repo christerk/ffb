@@ -22,7 +22,6 @@ import com.balancedbytes.games.ffb.server.DebugLog;
 import com.balancedbytes.games.ffb.server.DiceInterpreter;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.IServerLogLevel;
-import com.balancedbytes.games.ffb.server.model.ServerSkill;
 import com.balancedbytes.games.ffb.util.ArrayTool;
 import com.balancedbytes.games.ffb.util.UtilCards;
 import com.balancedbytes.games.ffb.util.UtilPassing;
@@ -78,7 +77,7 @@ public class UtilServerPlayerMove {
 	          if (fieldModel.getPlayer(coordinate) == null) {
 		        	if (game.getTurnMode() == TurnMode.PASS_BLOCK) {
 		          	int distance = coordinate.distanceInSteps(playerCoordinate);
-		          	if (validPassBlockCoordinates.contains(coordinate) || ArrayTool.isProvided(PathFinderWithPassBlockSupport.allowPassBlockMove(game, actingPlayer.getPlayer(), coordinate, 3 - distance - actingPlayer.getCurrentMove(), UtilCards.hasUnusedSkill(game, actingPlayer, ServerSkill.LEAP)))) {
+		          	if (validPassBlockCoordinates.contains(coordinate) || ArrayTool.isProvided(PathFinderWithPassBlockSupport.allowPassBlockMove(game, actingPlayer.getPlayer(), coordinate, 3 - distance - actingPlayer.getCurrentMove(), UtilCards.hasUnusedSkillWithProperty(actingPlayer, NamedProperties.canLeap)))) {
 			          	addMoveSquare(pGameState, pLeaping, coordinate);
 		          	}
 		        	} else if (game.getTurnMode() == TurnMode.KICKOFF_RETURN) {
