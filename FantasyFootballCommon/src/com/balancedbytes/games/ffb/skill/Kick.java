@@ -2,6 +2,7 @@ package com.balancedbytes.games.ffb.skill;
 
 import com.balancedbytes.games.ffb.SkillCategory;
 import com.balancedbytes.games.ffb.model.Skill;
+import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
 
 /**
 * The player is an expert at kicking the ball and can place the kick with
@@ -17,6 +18,8 @@ public class Kick extends Skill {
 
   public Kick() {
     super("Kick", SkillCategory.GENERAL);
+    
+    registerProperty(NamedProperties.canReduceKickDistance);
   }
 
 }

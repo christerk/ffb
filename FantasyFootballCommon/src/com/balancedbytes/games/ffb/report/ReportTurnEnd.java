@@ -24,15 +24,15 @@ public class ReportTurnEnd implements IReport {
   private String fPlayerIdTouchdown;
   private List<KnockoutRecovery> fKnockoutRecoveries;
   private List<HeatExhaustion> fHeatExhaustions;
-  private List<Player> unzappedPlayers;
+  private List<Player<?>> unzappedPlayers;
   
   public ReportTurnEnd() {
     fKnockoutRecoveries = new ArrayList<KnockoutRecovery>();
     fHeatExhaustions = new ArrayList<HeatExhaustion>();
-    unzappedPlayers = new ArrayList<Player>();
+    unzappedPlayers = new ArrayList<Player<?>>();
   }
 
-  public ReportTurnEnd(String pPlayerIdTouchdown, KnockoutRecovery[] pKnockoutRecoveries, HeatExhaustion[] pHeatExhaustions, List<Player> unzappedPlayers) {
+  public ReportTurnEnd(String pPlayerIdTouchdown, KnockoutRecovery[] pKnockoutRecoveries, HeatExhaustion[] pHeatExhaustions, List<Player<?>> unzappedPlayers) {
     this();
     fPlayerIdTouchdown = pPlayerIdTouchdown;
     add(pKnockoutRecoveries);
@@ -66,8 +66,8 @@ public class ReportTurnEnd implements IReport {
     }
   }
 
-  public List<Player> getUnzappedPlayers() {
-    return new ArrayList<Player>(unzappedPlayers);
+  public List<Player<?>> getUnzappedPlayers() {
+    return new ArrayList<Player<?>>(unzappedPlayers);
   }
 
   public HeatExhaustion[] getHeatExhaustions() {
@@ -111,7 +111,7 @@ public class ReportTurnEnd implements IReport {
     }
     IJsonOption.HEAT_EXHAUSTION_ARRAY.addTo(jsonObject, heatExhaustionArray);
     JsonArray unzappedArray = new JsonArray();
-    for (Player unzappedPlayer: unzappedPlayers) {
+    for (Player<?> unzappedPlayer: unzappedPlayers) {
       unzappedArray.add(unzappedPlayer.toJsonValue());
     }
     IJsonOption.UNZAP_ARRAY.addTo(jsonObject, unzappedArray);

@@ -80,7 +80,7 @@ public class Skill implements INamedObject {
   }
 
   protected void registerRerollSource(ReRolledAction action, ReRollSource source) {
-    rerollSources.put(action, source);
+		rerollSources.put(action, source);
   }
   
   public List<ISkillBehaviour> getSkillBehaviours() {
@@ -108,7 +108,7 @@ public class Skill implements INamedObject {
     behaviours.add(behaviour);
   }
   
-  public int getCost(Player player) {
+  public int getCost(Player<?> player) {
     Position position = player.getPosition();
     if (position.hasSkill(this)) {
       return 0;
@@ -152,4 +152,5 @@ public class Skill implements INamedObject {
     }
     return null;
   }
+
 }

@@ -1,5 +1,7 @@
 package com.balancedbytes.games.ffb.skill;
 
+import com.balancedbytes.games.ffb.ReRollSource;
+import com.balancedbytes.games.ffb.ReRolledAction;
 import com.balancedbytes.games.ffb.SkillCategory;
 import com.balancedbytes.games.ffb.model.Skill;
 
@@ -11,6 +13,8 @@ public class Pass extends Skill {
 
   public Pass() {
     super("Pass", SkillCategory.PASSING);
+
+    registerRerollSource(ReRolledAction.PASS, ReRollSource.PASS);
   }
 
 }

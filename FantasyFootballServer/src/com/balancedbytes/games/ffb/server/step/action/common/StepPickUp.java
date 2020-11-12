@@ -12,13 +12,13 @@ import com.balancedbytes.games.ffb.SoundId;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.Game;
+import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
 import com.balancedbytes.games.ffb.report.ReportId;
 import com.balancedbytes.games.ffb.report.ReportSkillRoll;
 import com.balancedbytes.games.ffb.server.ActionStatus;
 import com.balancedbytes.games.ffb.server.DiceInterpreter;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.IServerJsonOption;
-import com.balancedbytes.games.ffb.server.model.ServerSkill;
 import com.balancedbytes.games.ffb.server.net.ReceivedCommand;
 import com.balancedbytes.games.ffb.server.step.AbstractStepWithReRoll;
 import com.balancedbytes.games.ffb.server.step.StepAction;
@@ -133,7 +133,7 @@ public class StepPickUp extends AbstractStepWithReRoll {
   private ActionStatus pickUp() {
     Game game = getGameState().getGame();
     ActingPlayer actingPlayer = game.getActingPlayer();
-    if (UtilCards.hasSkill(game, actingPlayer, ServerSkill.NO_HANDS)) {
+    if(UtilCards.hasSkillWithProperty(actingPlayer.getPlayer(), NamedProperties.preventHoldBall)) {
       return ActionStatus.FAILURE;
     } else {
       PickupModifierFactory modifierFactory = new PickupModifierFactory();
@@ -149,8 +149,9 @@ public class StepPickUp extends AbstractStepWithReRoll {
       } else {
         if (getReRolledAction() != ReRolledAction.PICK_UP) {
           setReRolledAction(ReRolledAction.PICK_UP);
-          if (UtilCards.hasUnusedSkill(game, actingPlayer, ServerSkill.SURE_HANDS)) {
-            setReRollSource(ReRollSource.SURE_HANDS);
+          ReRollSource unusedPickupReroll = UtilCards.getUnusedRerollSource(actingPlayer, ReRolledAction.PICK_UP);
+          if (unusedPickupReroll != null) {
+            setReRollSource(unusedPickupReroll);
             UtilServerReRoll.useReRoll(this, getReRollSource(), actingPlayer.getPlayer());
             return pickUp();
           } else {

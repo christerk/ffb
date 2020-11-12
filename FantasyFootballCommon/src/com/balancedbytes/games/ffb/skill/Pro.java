@@ -2,6 +2,7 @@ package com.balancedbytes.games.ffb.skill;
 
 import com.balancedbytes.games.ffb.SkillCategory;
 import com.balancedbytes.games.ffb.model.Skill;
+import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
 
 /**
 * A player with this skill is a hardened veteran. Such players are called
@@ -17,6 +18,9 @@ public class Pro extends Skill {
 
   public Pro() {
     super("Pro", SkillCategory.GENERAL);
+    
+    registerProperty(NamedProperties.canRerollOncePerTurn);
+
   }
 
 }

@@ -6,8 +6,9 @@ import com.balancedbytes.games.ffb.MoveSquare;
 import com.balancedbytes.games.ffb.model.FieldModel;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
+import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
 import com.balancedbytes.games.ffb.server.GameState;
-import com.balancedbytes.games.ffb.server.model.ServerSkill;
+import com.balancedbytes.games.ffb.util.UtilCards;
 
 public class UtilServerPlayerSwoop {
 	public static void updateSwoopSquares(GameState pGameState, Player swoopingPlayer) {
@@ -17,7 +18,7 @@ public class UtilServerPlayerSwoop {
 			fieldModel.clearMoveSquares();
 			FieldCoordinate playerCoordinate = fieldModel.getPlayerCoordinate(swoopingPlayer);
 			if (FieldCoordinateBounds.FIELD.isInBounds(playerCoordinate)) {
-				if (swoopingPlayer.hasSkill(ServerSkill.SWOOP)) {
+				if(UtilCards.hasSkillWithProperty(swoopingPlayer, NamedProperties.ttmScattersInSingleDirection)) {
 					for (int x = -1; x < 2; x += 2) {
 						FieldCoordinate moveCoordinate = playerCoordinate.add(x, 0);
 						if (FieldCoordinateBounds.FIELD.isInBounds(moveCoordinate)) {

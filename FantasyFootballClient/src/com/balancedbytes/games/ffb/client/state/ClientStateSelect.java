@@ -24,7 +24,6 @@ import com.balancedbytes.games.ffb.client.util.UtilClientActionKeys;
 import com.balancedbytes.games.ffb.model.FieldModel;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
-import com.balancedbytes.games.ffb.model.Skill;
 import com.balancedbytes.games.ffb.model.SkillConstants;
 import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
 import com.balancedbytes.games.ffb.util.UtilCards;
@@ -278,7 +277,7 @@ public class ClientStateSelect extends ClientState {
       && !game.getFieldModel().hasCardEffect(pPlayer, CardEffect.ILLEGALLY_SUBSTITUTED)
       && playerState.isActive()
       && !UtilCards.hasSkillWithProperty(pPlayer, NamedProperties.preventRegularBlockAction)
-      && ((playerState.getBase() != PlayerState.PRONE) || ((playerState.getBase() == PlayerState.PRONE) && UtilCards.hasSkill(game, pPlayer, Skill.JUMP_UP)))) {
+      && ((playerState.getBase() != PlayerState.PRONE) || ((playerState.getBase() == PlayerState.PRONE) && UtilCards.hasSkillWithProperty(pPlayer, NamedProperties.canStandUpForFree)))) {
      	FieldCoordinate playerCoordinate = game.getFieldModel().getPlayerCoordinate(pPlayer);
       int blockablePlayers = UtilPlayer.findAdjacentBlockablePlayers(game, game.getTeamAway(), playerCoordinate).length;
       return (blockablePlayers > 0);
@@ -294,7 +293,7 @@ public class ClientStateSelect extends ClientState {
       && playerState.isActive()
       && UtilCards.hasSkill(game, pPlayer, SkillConstants.MULTIPLE_BLOCK)
       && !UtilCards.cancelsSkill(pPlayer, SkillConstants.MULTIPLE_BLOCK)
-      && ((playerState.getBase() != PlayerState.PRONE) || ((playerState.getBase() == PlayerState.PRONE) && UtilCards.hasSkill(game, pPlayer, Skill.JUMP_UP)))) {
+      && ((playerState.getBase() != PlayerState.PRONE) || ((playerState.getBase() == PlayerState.PRONE) && UtilCards.hasSkillWithProperty(pPlayer, NamedProperties.canStandUpForFree)))) {
      	FieldCoordinate playerCoordinate = game.getFieldModel().getPlayerCoordinate(pPlayer);
       int blockablePlayers = UtilPlayer.findAdjacentBlockablePlayers(game, game.getTeamAway(), playerCoordinate).length;
       return (blockablePlayers > 1);
@@ -384,7 +383,7 @@ public class ClientStateSelect extends ClientState {
     Player[] teamPlayers = pPlayer.getTeam().getPlayers();
     for (int i = 0; i < teamPlayers.length; i++) {
       FieldCoordinate playerCoordinate = fieldModel.getPlayerCoordinate(teamPlayers[i]);
-      if (UtilCards.hasSkill(game, teamPlayers[i], Skill.RIGHT_STUFF) && !playerCoordinate.isBoxCoordinate()) {
+      if (UtilCards.hasSkillWithProperty(teamPlayers[i], NamedProperties.canBeThrown) && !playerCoordinate.isBoxCoordinate()) {
         rightStuffAvailable = true;
         break;
       }
@@ -394,7 +393,7 @@ public class ClientStateSelect extends ClientState {
     FieldCoordinate playerCoordinate = game.getFieldModel().getPlayerCoordinate(pPlayer);
     Player[] adjacentTeamPlayers = UtilPlayer.findAdjacentPlayersWithTacklezones(game, pPlayer.getTeam(), playerCoordinate, false);
     for (int i = 0; i < adjacentTeamPlayers.length; i++) {
-      if (UtilCards.hasSkill(game, adjacentTeamPlayers[i], Skill.RIGHT_STUFF)) {
+      if(UtilCards.hasSkillWithProperty(adjacentTeamPlayers[i], NamedProperties.canBeThrown)) {
         rightStuffAdjacent = true;
         break;
       }
@@ -402,7 +401,7 @@ public class ClientStateSelect extends ClientState {
   	
     return (!game.getTurnData().isPassUsed()
       && !game.getFieldModel().hasCardEffect(pPlayer, CardEffect.ILLEGALLY_SUBSTITUTED)
-      && UtilCards.hasSkill(game, pPlayer, Skill.THROW_TEAM_MATE)
+      && UtilCards.hasSkillWithProperty(pPlayer, NamedProperties.canThrowTeamMates)
       && rightStuffAvailable
       && (playerState.isAbleToMove() || rightStuffAdjacent));
   }
@@ -419,7 +418,7 @@ public class ClientStateSelect extends ClientState {
     Player[] teamPlayers = pPlayer.getTeam().getPlayers();
     for (int i = 0; i < teamPlayers.length; i++) {
       FieldCoordinate playerCoordinate = fieldModel.getPlayerCoordinate(teamPlayers[i]);
-      if (UtilCards.hasSkill(game, teamPlayers[i], Skill.RIGHT_STUFF) && !playerCoordinate.isBoxCoordinate()) {
+      if (UtilCards.hasSkillWithProperty(teamPlayers[i], NamedProperties.canBeKicked) && !playerCoordinate.isBoxCoordinate()) {
         rightStuffAvailable = true;
         break;
       }
@@ -429,7 +428,7 @@ public class ClientStateSelect extends ClientState {
     FieldCoordinate playerCoordinate = game.getFieldModel().getPlayerCoordinate(pPlayer);
     Player[] adjacentTeamPlayers = UtilPlayer.findAdjacentPlayersWithTacklezones(game, pPlayer.getTeam(), playerCoordinate, false);
     for (int i = 0; i < adjacentTeamPlayers.length; i++) {
-      if (UtilCards.hasSkill(game, adjacentTeamPlayers[i], Skill.RIGHT_STUFF)) {
+      if (UtilCards.hasSkillWithProperty(adjacentTeamPlayers[i], NamedProperties.canBeKicked)) {
         rightStuffAdjacent = true;
         break;
       }
@@ -437,7 +436,7 @@ public class ClientStateSelect extends ClientState {
     
     return (!game.getTurnData().isBlitzUsed()
       && !game.getFieldModel().hasCardEffect(pPlayer, CardEffect.ILLEGALLY_SUBSTITUTED)
-      && UtilCards.hasSkill(game, pPlayer, Skill.KICK_TEAM_MATE)
+      && UtilCards.hasSkillWithProperty(pPlayer, NamedProperties.canKickTeamMates)
       && rightStuffAvailable
       && (playerState.isAbleToMove() || rightStuffAdjacent));
   }

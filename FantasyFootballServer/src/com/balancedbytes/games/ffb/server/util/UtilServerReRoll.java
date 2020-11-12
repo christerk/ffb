@@ -11,10 +11,10 @@ import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.model.Team;
 import com.balancedbytes.games.ffb.model.TurnData;
+import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
 import com.balancedbytes.games.ffb.report.ReportReRoll;
 import com.balancedbytes.games.ffb.server.DiceInterpreter;
 import com.balancedbytes.games.ffb.server.GameState;
-import com.balancedbytes.games.ffb.server.model.ServerSkill;
 import com.balancedbytes.games.ffb.server.step.IStep;
 import com.balancedbytes.games.ffb.server.step.StepResult;
 import com.balancedbytes.games.ffb.util.UtilCards;
@@ -39,7 +39,8 @@ public class UtilServerReRoll {
         TurnData turnData = game.getTurnData();
         turnData.setReRollUsed(true);
         turnData.setReRolls(turnData.getReRolls() - 1);
-        if (UtilCards.hasSkill(game, pPlayer, ServerSkill.LONER)) {
+        
+        if (UtilCards.hasSkillWithProperty(pPlayer, NamedProperties.hasToRollToUseTeamReroll)) {
           int roll = gameState.getDiceRoller().rollSkill();
           successful = DiceInterpreter.getInstance().isLonerSuccessful(roll);
           stepResult.addReport(new ReportReRoll(pPlayer.getId(), ReRollSource.LONER, successful, roll));
@@ -57,7 +58,7 @@ public class UtilServerReRoll {
       if (pReRollSource.getSkill() != null) {
         if (ReRollSource.PRO == pReRollSource) {
           PlayerState playerState = game.getFieldModel().getPlayerState(pPlayer);
-          successful = (UtilCards.hasSkill(game, pPlayer, ServerSkill.PRO) && !playerState.hasUsedPro());
+          successful = (UtilCards.hasSkillWithProperty(pPlayer, NamedProperties.canRerollOncePerTurn) && !playerState.hasUsedPro());
           if (successful) {
             game.getFieldModel().setPlayerState(pPlayer, playerState.changeUsedPro(true));
             int roll = gameState.getDiceRoller().rollSkill();
@@ -83,7 +84,7 @@ public class UtilServerReRoll {
     if (minimumRoll >= 0) {
       boolean teamReRollOption = isTeamReRollAvailable(gameState, player);
       PlayerState playerState = game.getFieldModel().getPlayerState(player);
-      boolean proOption = (UtilCards.hasSkill(game, player, ServerSkill.PRO) && !playerState.hasUsedPro());
+      boolean proOption = (UtilCards.hasSkillWithProperty(player, NamedProperties.canRerollOncePerTurn) && !playerState.hasUsedPro());
       reRollAvailable = (teamReRollOption || proOption);
       if (reRollAvailable) {
         Team actingTeam = game.isHomePlaying() ? game.getTeamHome() : game.getTeamAway();

@@ -21,6 +21,7 @@ public class SecretWeapon extends Skill {
     super("Secret Weapon", SkillCategory.EXTRAORDINARY);
     
     registerProperty(NamedProperties.preventStuntyDodgeModifier);
+    registerProperty(NamedProperties.getsSentOffAtEndOfDrive);
   }
 
 }

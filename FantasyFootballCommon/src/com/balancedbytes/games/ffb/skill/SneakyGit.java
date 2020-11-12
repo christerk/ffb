@@ -2,6 +2,7 @@ package com.balancedbytes.games.ffb.skill;
 
 import com.balancedbytes.games.ffb.SkillCategory;
 import com.balancedbytes.games.ffb.model.Skill;
+import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
 
 /**
 * This player has the quickness and finesse to stick the boot to a downed
@@ -14,6 +15,8 @@ public class SneakyGit extends Skill {
 
   public SneakyGit() {
     super("Sneaky Git", SkillCategory.AGILITY);
+    
+    registerProperty(NamedProperties.canAlwaysAssistFouls);
   }
 
 }

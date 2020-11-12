@@ -42,7 +42,7 @@ public enum SkillUse implements INamedObject {
     return fName;
   }
   
-  public String getDescription(Player pPlayer) {
+  public String getDescription(Player<?> pPlayer) {
     if (pPlayer != null) {
       return fDescription.replaceAll(_PARAMETER_GENITIVE, pPlayer.getPlayerGender().getGenitive());
     } else {

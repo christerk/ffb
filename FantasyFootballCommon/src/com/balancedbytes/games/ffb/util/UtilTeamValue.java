@@ -22,7 +22,7 @@ public class UtilTeamValue {
         teamValue += pTeam.getAssistantCoaches() * 10000;
         teamValue += pTeam.getCheerleaders() * 10000;
         teamValue += pTeam.getApothecaries() * 50000;
-        for (Player player : pTeam.getPlayers()) {
+        for (Player<?> player : pTeam.getPlayers()) {
           if (player.getRecoveringInjury() == null) {
             teamValue += findPlayerValue(player);
           }
@@ -32,7 +32,7 @@ public class UtilTeamValue {
     return teamValue;
   }
 
-  private static int findPlayerValue(Player pPlayer) {
+  private static int findPlayerValue(Player<?> pPlayer) {
     int playerValue = 0;
     if (pPlayer != null) {
       Position position = pPlayer.getPosition();

@@ -2,6 +2,7 @@ package com.balancedbytes.games.ffb.skill;
 
 import com.balancedbytes.games.ffb.SkillCategory;
 import com.balancedbytes.games.ffb.model.Skill;
+import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
 
 /**
 * The player may attempt to move up to three extra squares rather than
@@ -12,6 +13,8 @@ public class Sprint extends Skill {
 
   public Sprint() {
     super("Sprint", SkillCategory.AGILITY);
+
+    registerProperty(NamedProperties.canMakeAnExtraGfi);
   }
 
 }

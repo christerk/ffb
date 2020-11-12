@@ -22,8 +22,8 @@ public class UtilActingPlayer {
     FieldModel fieldModel = pGame.getFieldModel();
     ActingPlayer actingPlayer = pGame.getActingPlayer();
 
-    Player oldPlayer = actingPlayer.getPlayer();
-    Player newPlayer = pGame.getPlayerById(pActingPlayerId);
+    Player<?> oldPlayer = actingPlayer.getPlayer();
+    Player<?> newPlayer = pGame.getPlayerById(pActingPlayerId);
     
     if ((oldPlayer != null) && (oldPlayer != newPlayer)) {
       changed = true;
@@ -62,13 +62,15 @@ public class UtilActingPlayer {
       fieldModel.clearDiceDecorations();
       fieldModel.clearPushbackSquares();
       fieldModel.clearMoveSquares();
-      if (pGame.getActingPlayer().getPlayer() != null) {
-        PlayerState playerState = pGame.getFieldModel().getPlayerState(pGame.getActingPlayer().getPlayer());
+      Player<?> player = pGame.getActingPlayer().getPlayer(); 
+      if (player != null) {
+        PlayerState playerState = pGame.getFieldModel().getPlayerState(player);
+      	Skill skillThatAllowsReroll =  UtilCards.getSkillWithProperty(player, NamedProperties.canRerollOncePerTurn);
         if (playerState.hasUsedPro()) {
-          pGame.getActingPlayer().markSkillUsed(Skill.PRO);
+          pGame.getActingPlayer().markSkillUsed(skillThatAllowsReroll);
         }
       }
-      Player[] players = pGame.getPlayers();
+      Player<?>[] players = pGame.getPlayers();
       for (int i = 0; i < players.length; i++) {
         PlayerState playerState = fieldModel.getPlayerState(players[i]);
         if ((playerState.getBase() == PlayerState.BLOCKED) || ((playerState.getBase() == PlayerState.MOVING) && (players[i] != actingPlayer.getPlayer()) && (players[i] != pGame.getThrower()))) {

@@ -81,7 +81,7 @@ public class FieldModel implements IJsonSerializable {
     fCardEffectsByPlayerId = new HashMap<String, Set<CardEffect>>();
   }
 
-  public Player getPlayer(FieldCoordinate pPlayerPosition) {
+  public Player<?> getPlayer(FieldCoordinate pPlayerPosition) {
 	String playerId = null;
 	if (pPlayerPosition != null) {
 		List<String> playersAtCoordinate = fPlayerIdByCoordinate.get(pPlayerPosition);
@@ -98,12 +98,12 @@ public class FieldModel implements IJsonSerializable {
   	return getGame().getPlayerById(playerId);
   }
 
-  public List<Player> getPlayers(FieldCoordinate pPlayerPosition) {
-	List<Player> players = null;
+  public List<Player<?>> getPlayers(FieldCoordinate pPlayerPosition) {
+	List<Player<?>> players = null;
 	if (pPlayerPosition != null) {
 		List<String> playersAtCoordinate = fPlayerIdByCoordinate.get(pPlayerPosition);
 		if (playersAtCoordinate != null && playersAtCoordinate.size() > 0) {
-			players = new ArrayList<Player>();
+			players = new ArrayList<Player<?>>();
 			for (String playerId : playersAtCoordinate) {
 				players.add(getGame().getPlayerById(playerId));
 			}
@@ -112,7 +112,7 @@ public class FieldModel implements IJsonSerializable {
 	return players;
   }
   
-  public void remove(Player pPlayer) {
+  public void remove(Player<?> pPlayer) {
     if (pPlayer == null) {
     	return;
     }
@@ -127,21 +127,21 @@ public class FieldModel implements IJsonSerializable {
   
   public void remove(Team pTeam) {
     if (pTeam != null) {
-      for (Player player : pTeam.getPlayers()) {
+      for (Player<?> player : pTeam.getPlayers()) {
         remove(player);
         fStateByPlayerId.remove(player.getId());
       }
     }
   }
   
-  public FieldCoordinate getPlayerCoordinate(Player pPlayer) {
+  public FieldCoordinate getPlayerCoordinate(Player<?> pPlayer) {
   	if (pPlayer == null)  {
   		return null;
   	}
     return fCoordinateByPlayerId.get(pPlayer.getId());
   }
   
-  public void setPlayerCoordinate(Player pPlayer, FieldCoordinate pCoordinate) {
+  public void setPlayerCoordinate(Player<?> pPlayer, FieldCoordinate pCoordinate) {
     if ((pCoordinate == null) || (pPlayer == null)) {
     	return;
     }
@@ -177,7 +177,7 @@ public class FieldModel implements IJsonSerializable {
       return coordinates.toArray(new FieldCoordinate[coordinates.size()]);
   }
   
-  public void sendPosition(Player pPlayer) {
+  public void sendPosition(Player<?> pPlayer) {
 	  if (pPlayer == null) {
 		  return;
 	  }
@@ -189,7 +189,7 @@ public class FieldModel implements IJsonSerializable {
       notifyObservers(ModelChangeId.FIELD_MODEL_SET_PLAYER_COORDINATE, pPlayer.getId(), oldCoordinate);
   }
   
-  public void setPlayerState(Player pPlayer, PlayerState pState) {
+  public void setPlayerState(Player<?> pPlayer, PlayerState pState) {
   	if (pPlayer == null) {
   		return;
   	}
@@ -200,7 +200,7 @@ public class FieldModel implements IJsonSerializable {
     }
   }
   
-  public PlayerState getPlayerState(Player pPlayer) {
+  public PlayerState getPlayerState(Player<?> pPlayer) {
   	if (pPlayer == null) {
   		return null;
   	}
@@ -208,7 +208,7 @@ public class FieldModel implements IJsonSerializable {
     return (playerState != null) ? playerState : new PlayerState(PlayerState.UNKNOWN);
   }
 
-  public void addCard(Player pPlayer, Card pCard) {
+  public void addCard(Player<?> pPlayer, Card pCard) {
   	if ((pPlayer == null) || (pCard == null)) {
   		return;
   	}
@@ -221,7 +221,7 @@ public class FieldModel implements IJsonSerializable {
   	notifyObservers(ModelChangeId.FIELD_MODEL_ADD_CARD, pPlayer.getId(), pCard);
   }
   
-  public boolean removeCard(Player pPlayer, Card pCard) {
+  public boolean removeCard(Player<?> pPlayer, Card pCard) {
   	if ((pPlayer == null) || (pCard == null)) {
   		return false;
   	}
@@ -236,7 +236,7 @@ public class FieldModel implements IJsonSerializable {
   	return removed;
   }
   
-  public Card[] getCards(Player pPlayer) {
+  public Card[] getCards(Player<?> pPlayer) {
   	if (pPlayer == null) {
   		return null;
   	}
@@ -247,7 +247,7 @@ public class FieldModel implements IJsonSerializable {
   	return cards.toArray(new Card[cards.size()]);
   }
   
-  public Player findPlayer(Card pCard) {
+  public Player<?> findPlayer(Card pCard) {
   	for (String playerId : fCardsByPlayerId.keySet()) {
   		for (Card card : fCardsByPlayerId.get(playerId)) {
   			if (card == pCard) {
@@ -258,7 +258,7 @@ public class FieldModel implements IJsonSerializable {
   	return null;
   }
 
-  public void addCardEffect(Player pPlayer, CardEffect pCardEffect) {
+  public void addCardEffect(Player<?> pPlayer, CardEffect pCardEffect) {
     if ((pPlayer == null) || (pCardEffect == null)) {
       return;
     }
@@ -271,7 +271,7 @@ public class FieldModel implements IJsonSerializable {
     notifyObservers(ModelChangeId.FIELD_MODEL_ADD_CARD_EFFECT, pPlayer.getId(), pCardEffect);
   }
   
-  public boolean removeCardEffect(Player pPlayer, CardEffect pCardEffect) {
+  public boolean removeCardEffect(Player<?> pPlayer, CardEffect pCardEffect) {
     if ((pPlayer == null) || (pCardEffect == null)) {
       return false;
     }
@@ -286,7 +286,7 @@ public class FieldModel implements IJsonSerializable {
     return removed;
   }
   
-  public CardEffect[] getCardEffects(Player pPlayer) {
+  public CardEffect[] getCardEffects(Player<?> pPlayer) {
     if (pPlayer == null) {
       return null;
     }
@@ -297,7 +297,7 @@ public class FieldModel implements IJsonSerializable {
     return cardEffects.toArray(new CardEffect[cardEffects.size()]);
   }
   
-  public boolean hasCardEffect(Player pPlayer, CardEffect pCardEffect) {
+  public boolean hasCardEffect(Player<?> pPlayer, CardEffect pCardEffect) {
     if ((pPlayer == null) || (pCardEffect == null)) {
       return false;
     }
@@ -308,8 +308,8 @@ public class FieldModel implements IJsonSerializable {
     return cardEffects.contains(pCardEffect);
   }
   
-  public Player[] findPlayers(CardEffect pCardEffect) {
-    Set<Player> players = new HashSet<Player>();
+  public Player<?>[] findPlayers(CardEffect pCardEffect) {
+    Set<Player<?>> players = new HashSet<Player<?>>();
     for (String playerId : fCardEffectsByPlayerId.keySet()) {
       for (CardEffect cardEffect : fCardEffectsByPlayerId.get(playerId)) {
         if (cardEffect == pCardEffect) {
@@ -653,7 +653,7 @@ public class FieldModel implements IJsonSerializable {
     notifyObservers(ModelChangeId.FIELD_MODEL_SET_RANGE_RULER, null, fRangeRuler);
   }
     
-  public boolean updatePlayerAndBallPosition(Player pPlayer, FieldCoordinate pCoordinate) {
+  public boolean updatePlayerAndBallPosition(Player<?> pPlayer, FieldCoordinate pCoordinate) {
     boolean ballPositionUpdated = false;
     FieldCoordinate oldPosition = getPlayerCoordinate(pPlayer);
     if (!isBallMoving() && (oldPosition != null) && oldPosition.equals(getBallCoordinate())) {
@@ -685,7 +685,7 @@ public class FieldModel implements IJsonSerializable {
     transformedModel.setWeather(getWeather());
     
     for (String playerId : fStateByPlayerId.keySet()) {
-      Player player = getGame().getPlayerById(playerId);
+      Player<?> player = getGame().getPlayerById(playerId);
       transformedModel.setPlayerState(player, getPlayerState(player));
       Card[] cards = getCards(player);
       if (ArrayTool.isProvided(cards)) {
@@ -800,7 +800,7 @@ public class FieldModel implements IJsonSerializable {
     IJsonOption.PLAYER_MARKER_ARRAY.addTo(jsonObject, playerMarkerArray);
     
     JsonArray playerDataArray = new JsonArray();
-    for (Player player : getGame().getPlayers()) {
+    for (Player<?> player : getGame().getPlayers()) {
       
       JsonObject playerDataObject = new JsonObject();
       IJsonOption.PLAYER_ID.addTo(playerDataObject, player.getId());
@@ -895,7 +895,7 @@ public class FieldModel implements IJsonSerializable {
       JsonObject playerDataObject = UtilJson.toJsonObject(playerDataArray.get(i));
       
       String playerId = IJsonOption.PLAYER_ID.getFrom(playerDataObject);
-      Player player = getGame().getPlayerById(playerId);
+      Player<?> player = getGame().getPlayerById(playerId);
       
       FieldCoordinate playerCoordinate = IJsonOption.PLAYER_COORDINATE.getFrom(playerDataObject);
       setPlayerCoordinate(player, playerCoordinate);

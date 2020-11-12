@@ -27,7 +27,7 @@ public class CatchModifierFactory implements IRollModifierFactory {
     return null;
   }
 
-  public Set<CatchModifier> findCatchModifiers(Game pGame, Player pPlayer, CatchScatterThrowInMode pCatchMode) {
+  public Set<CatchModifier> findCatchModifiers(Game pGame, Player<?> pPlayer, CatchScatterThrowInMode pCatchMode) {
     Set<CatchModifier> catchModifiers = new HashSet<CatchModifier>();
     if ((CatchScatterThrowInMode.CATCH_ACCURATE_PASS == pCatchMode) || (CatchScatterThrowInMode.CATCH_ACCURATE_BOMB == pCatchMode)) {
       catchModifiers.add(CatchModifier.ACCURATE);
@@ -80,7 +80,7 @@ public class CatchModifierFactory implements IRollModifierFactory {
     }
   }
   
-  private CatchModifier getTacklezoneModifier(Game pGame, Player pPlayer) {
+  private CatchModifier getTacklezoneModifier(Game pGame, Player<?> pPlayer) {
     int tacklezones = UtilPlayer.findTacklezones(pGame, pPlayer);
     if (tacklezones > 0) {
       for (CatchModifier modifier : CatchModifier.values()) {
@@ -92,7 +92,7 @@ public class CatchModifierFactory implements IRollModifierFactory {
     return null;
   }
   
-  private CatchModifier getDisturbingPresenceModifier(Game pGame, Player pPlayer) {
+  private CatchModifier getDisturbingPresenceModifier(Game pGame, Player<?> pPlayer) {
     int disturbingPresences = UtilDisturbingPresence.findOpposingDisturbingPresences(pGame, pPlayer);
     if (disturbingPresences > 0) {
       for (CatchModifier modifier : CatchModifier.values()) {

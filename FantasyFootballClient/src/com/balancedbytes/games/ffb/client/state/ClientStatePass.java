@@ -25,6 +25,7 @@ import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.model.Skill;
+import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
 import com.balancedbytes.games.ffb.net.NetCommand;
 import com.balancedbytes.games.ffb.util.UtilCards;
 import com.balancedbytes.games.ffb.util.UtilPlayer;
@@ -161,7 +162,7 @@ public class ClientStatePass extends ClientStateMove {
     ActingPlayer actingPlayer = game.getActingPlayer();
     if ((pCatcher != null) && (actingPlayer.getPlayer() != null)) {
       PlayerState catcherState = game.getFieldModel().getPlayerState(pCatcher);
-      canGetPass = (!UtilCards.hasSkill(game, pCatcher, Skill.NO_HANDS) && (catcherState != null) && catcherState.hasTacklezones() && (game.getTeamHome() == pCatcher.getTeam()) && (!actingPlayer.isSufferingAnimosity() || actingPlayer.getRace().equals(pCatcher.getRace())));
+      canGetPass = (!UtilCards.hasSkillWithProperty(pCatcher, NamedProperties.preventCatch) && (catcherState != null) && catcherState.hasTacklezones() && (game.getTeamHome() == pCatcher.getTeam()) && (!actingPlayer.isSufferingAnimosity() || actingPlayer.getRace().equals(pCatcher.getRace())));
     }
     return canGetPass;
   }

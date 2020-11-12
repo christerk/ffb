@@ -38,6 +38,7 @@ import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.model.PlayerResult;
 import com.balancedbytes.games.ffb.model.Position;
 import com.balancedbytes.games.ffb.model.Skill;
+import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
 import com.balancedbytes.games.ffb.util.ArrayTool;
 import com.balancedbytes.games.ffb.util.StringTool;
 import com.balancedbytes.games.ffb.util.UtilCards;
@@ -211,7 +212,7 @@ public class PlayerDetailComponent extends JPanel {
         moveLeft -= actingPlayer.getCurrentMove();
         if (actingPlayer.isGoingForIt() && (moveLeft <= 0)) {
           moveIsRed = true;
-          if (UtilCards.hasSkill(game, getPlayer(), Skill.SPRINT)) {
+          if(UtilCards.hasSkillWithProperty(getPlayer(), NamedProperties.canMakeAnExtraGfi)) {
             moveLeft = 3 + moveLeft; 
           } else {
             moveLeft = 2 + moveLeft;

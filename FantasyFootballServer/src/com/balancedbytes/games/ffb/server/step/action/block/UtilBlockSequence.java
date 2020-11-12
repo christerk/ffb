@@ -5,8 +5,9 @@ import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.SkillUse;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.Game;
+import com.balancedbytes.games.ffb.model.Skill;
+import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
 import com.balancedbytes.games.ffb.report.ReportSkillUse;
-import com.balancedbytes.games.ffb.server.model.ServerSkill;
 import com.balancedbytes.games.ffb.server.step.IStep;
 import com.balancedbytes.games.ffb.server.step.StepParameter;
 import com.balancedbytes.games.ffb.server.step.StepParameterKey;
@@ -34,18 +35,21 @@ public class UtilBlockSequence {
     game.getFieldModel().clearPushbackSquares();
     parameterSet.add(new StepParameter(StepParameterKey.STARTING_PUSHBACK_SQUARE,
       UtilServerPushback.findStartingSquare(attackerCoordinate, defenderCoordinate, game.isHomePlaying())));
-    if (UtilCards.hasSkill(game, actingPlayer, ServerSkill.STRIP_BALL)
+    
+    Skill skillCanForceOpponentToDropBall = UtilCards.getSkillWithProperty(actingPlayer.getPlayer(), NamedProperties.forceOpponentToDropBallOnPushback);
+    if (skillCanForceOpponentToDropBall != null
 	  && defenderCoordinate != null
       && defenderCoordinate.equals(game.getFieldModel().getBallCoordinate())
       && (game.getDefender().getTeam() != actingPlayer.getPlayer().getTeam())) {
-      if ((game.getDefender() != null) && UtilCards.hasSkill(game, game.getDefender(), ServerSkill.SURE_HANDS)) {
-        pStep.getResult().addReport(new ReportSkillUse(game.getDefenderId(), ServerSkill.SURE_HANDS, true, SkillUse.CANCEL_STRIP_BALL));
-      } else if ((game.getDefender() != null) && UtilCards.hasSkill(game, game.getDefender(), ServerSkill.MOUNSTROUS_MOUTH)) {
-        pStep.getResult().addReport(new ReportSkillUse(game.getDefenderId(), ServerSkill.MOUNSTROUS_MOUTH, true, SkillUse.CANCEL_STRIP_BALL));
+    	
+    	Skill skillCanCounterOpponentForcingDropBall = UtilCards.getSkillCancelling(game.getDefender(), skillCanForceOpponentToDropBall);
+    	   	
+      if ((game.getDefender() != null) && skillCanCounterOpponentForcingDropBall != null) {
+        pStep.getResult().addReport(new ReportSkillUse(game.getDefenderId(), skillCanCounterOpponentForcingDropBall, true, SkillUse.CANCEL_STRIP_BALL));
       } else {
-        pStep.getResult().addReport(new ReportSkillUse(actingPlayer.getPlayerId(), ServerSkill.STRIP_BALL, true, SkillUse.STEAL_BALL));
+        pStep.getResult().addReport(new ReportSkillUse(actingPlayer.getPlayerId(), skillCanCounterOpponentForcingDropBall, true, SkillUse.STEAL_BALL));
         parameterSet.add(new StepParameter(StepParameterKey.CATCH_SCATTER_THROW_IN_MODE, CatchScatterThrowInMode.SCATTER_BALL));
-        actingPlayer.markSkillUsed(ServerSkill.STRIP_BALL);
+        actingPlayer.markSkillUsed(skillCanCounterOpponentForcingDropBall);
       }
     }
     return parameterSet;

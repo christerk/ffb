@@ -1,22 +1,14 @@
 package com.balancedbytes.games.ffb.server.step.action.block;
 
-import com.balancedbytes.games.ffb.ReRolledAction;
 import com.balancedbytes.games.ffb.json.UtilJson;
-import com.balancedbytes.games.ffb.model.ActingPlayer;
-import com.balancedbytes.games.ffb.model.Game;
-import com.balancedbytes.games.ffb.report.ReportDauntlessRoll;
-import com.balancedbytes.games.ffb.server.DiceInterpreter;
+import com.balancedbytes.games.ffb.server.ActionStatus;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.IServerJsonOption;
-import com.balancedbytes.games.ffb.server.model.ServerSkill;
 import com.balancedbytes.games.ffb.server.net.ReceivedCommand;
 import com.balancedbytes.games.ffb.server.step.AbstractStepWithReRoll;
-import com.balancedbytes.games.ffb.server.step.StepAction;
 import com.balancedbytes.games.ffb.server.step.StepCommandStatus;
 import com.balancedbytes.games.ffb.server.step.StepId;
 import com.balancedbytes.games.ffb.server.step.StepParameter;
-import com.balancedbytes.games.ffb.server.util.UtilServerReRoll;
-import com.balancedbytes.games.ffb.util.UtilCards;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
@@ -29,10 +21,16 @@ import com.eclipsesource.json.JsonValue;
  */
 public class StepDauntless extends AbstractStepWithReRoll {
 	
-	private Boolean fUsingStab;
+	public class StepState {
+		public ActionStatus status;
+		public Boolean usingStab;
+	  }
+	
+	private StepState state;
 	
 	public StepDauntless(GameState pGameState) {
 		super(pGameState);
+		state = new StepState();
 	}
 	
 	public StepId getId() {
@@ -59,7 +57,7 @@ public class StepDauntless extends AbstractStepWithReRoll {
 		if ((pParameter != null) && !super.setParameter(pParameter)) {
 			switch (pParameter.getKey()) {
 				case USING_STAB:
-					fUsingStab = (Boolean) pParameter.getValue();
+					state.usingStab = (Boolean) pParameter.getValue();
 					return true;
 				default:
 					break;
@@ -69,35 +67,7 @@ public class StepDauntless extends AbstractStepWithReRoll {
 	}
 	
   private void executeStep() {
-    boolean doNextStep = true;
-    Game game = getGameState().getGame();
-    ActingPlayer actingPlayer = game.getActingPlayer();
-    if (UtilCards.hasSkill(game, actingPlayer, ServerSkill.DAUNTLESS) && (actingPlayer.getStrength() < UtilCards.getPlayerStrength(game, game.getDefender())) && ((fUsingStab == null) || !fUsingStab) && !UtilCards.hasSkill(game, actingPlayer, ServerSkill.CHAINSAW)) {
-      boolean doDauntless = true;
-      if (ReRolledAction.DAUNTLESS == getReRolledAction()) {
-        if ((getReRollSource() == null) || !UtilServerReRoll.useReRoll(this, getReRollSource(), actingPlayer.getPlayer())) {
-          doDauntless = false;
-        }
-      }
-      if (doDauntless) {
-        int dauntlessRoll = getGameState().getDiceRoller().rollDauntless();
-        int minimumRoll = DiceInterpreter.getInstance().minimumRollDauntless(actingPlayer.getStrength(), UtilCards.getPlayerStrength(game, game.getDefender()));
-        boolean successful = (dauntlessRoll >= minimumRoll);
-        boolean reRolled = ((getReRolledAction() == ReRolledAction.DAUNTLESS) && (getReRollSource() != null));
-        getResult().addReport(new ReportDauntlessRoll(actingPlayer.getPlayerId(), successful, dauntlessRoll, minimumRoll, reRolled, UtilCards.getPlayerStrength(game, game.getDefender())));
-        if (successful) {
-          actingPlayer.setStrength(UtilCards.getPlayerStrength(game, game.getDefender()));
-          actingPlayer.markSkillUsed(ServerSkill.DAUNTLESS);
-        } else {
-          if (UtilServerReRoll.askForReRollIfAvailable(getGameState(), actingPlayer.getPlayer(), ReRolledAction.DAUNTLESS, minimumRoll, false)) {
-            doNextStep = false;
-          }
-        }
-      }
-    }
-    if (doNextStep) {
-    	getResult().setNextAction(StepAction.NEXT_STEP);
-    }
+	  getGameState().executeStepHooks(this, state);
   }
   
   // JSON serialization
@@ -105,7 +75,7 @@ public class StepDauntless extends AbstractStepWithReRoll {
   @Override
   public JsonObject toJsonValue() {
     JsonObject jsonObject = super.toJsonValue();
-    IServerJsonOption.USING_STAB.addTo(jsonObject, fUsingStab);
+    IServerJsonOption.USING_STAB.addTo(jsonObject, state.usingStab);
     return jsonObject;
   }
   
@@ -113,7 +83,7 @@ public class StepDauntless extends AbstractStepWithReRoll {
   public StepDauntless initFrom(JsonValue pJsonValue) {
     super.initFrom(pJsonValue);
     JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-    fUsingStab = IServerJsonOption.USING_STAB.getFrom(jsonObject);
+    state.usingStab = IServerJsonOption.USING_STAB.getFrom(jsonObject);
     return this;
   }
 

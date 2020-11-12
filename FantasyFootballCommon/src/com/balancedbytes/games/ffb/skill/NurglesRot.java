@@ -18,6 +18,8 @@ public class NurglesRot extends Skill {
 
   public NurglesRot() {
     super("Nurgle's Rot", SkillCategory.EXTRAORDINARY);
+    
+
   }
 
 }

@@ -14,12 +14,12 @@ import com.balancedbytes.games.ffb.model.Team;
  */
 public class UtilDisturbingPresence {
 
-  public static int findOpposingDisturbingPresences(Game pGame, Player pPlayer) {
+  public static int findOpposingDisturbingPresences(Game pGame, Player<?> pPlayer) {
     int foulAppearances = 0;
     FieldModel fieldModel = pGame.getFieldModel();
     FieldCoordinate playerCoordinate = fieldModel.getPlayerCoordinate(pPlayer);
     Team otherTeam = UtilPlayer.findOtherTeam(pGame, pPlayer);
-    for (Player opposingPlayer : otherTeam.getPlayers()) {
+    for (Player<?> opposingPlayer : otherTeam.getPlayers()) {
       FieldCoordinate coordinate = fieldModel.getPlayerCoordinate(opposingPlayer);
       if (UtilCards.hasSkill(pGame, opposingPlayer, Skill.DISTURBING_PRESENCE) && FieldCoordinateBounds.FIELD.isInBounds(coordinate) && (playerCoordinate.distanceInSteps(coordinate) <= 3)) {
         // System.out.println(opposingPlayer.getName() + ": " + playerCoordinate.distanceInSteps(coordinate));

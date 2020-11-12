@@ -3,6 +3,9 @@ package com.balancedbytes.games.ffb.skill;
 import com.balancedbytes.games.ffb.PassingModifiers;
 import com.balancedbytes.games.ffb.SkillCategory;
 import com.balancedbytes.games.ffb.model.Skill;
+import com.balancedbytes.games.ffb.model.SkillConstants;
+import com.balancedbytes.games.ffb.model.modifier.CancelSkillProperty;
+import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
 
 /**
  * The player is so small that they are very difficult to tackle because they
@@ -24,6 +27,10 @@ public class Stunty extends Skill {
     super("Stunty", SkillCategory.EXTRAORDINARY);
     
     registerModifier(PassingModifiers.STUNTY);
+    
+    registerProperty(NamedProperties.preventRaiseFromDead);
+    
+    registerProperty(new CancelSkillProperty(SkillConstants.NURGLES_ROT));
   }
 
 }

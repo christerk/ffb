@@ -11,7 +11,7 @@ public class MovementIncrease extends Skill {
   }
 
   @Override
-  public int getCost(Player player) {
+  public int getCost(Player<?> player) {
     return 30000;
   }
 }

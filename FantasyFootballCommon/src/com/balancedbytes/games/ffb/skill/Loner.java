@@ -18,10 +18,11 @@ public class Loner extends Skill {
     super("Loner", SkillCategory.EXTRAORDINARY);
     
     registerProperty(NamedProperties.preventCardRabbitsFoot);
+    registerProperty(NamedProperties.hasToRollToUseTeamReroll);
   }
 
   @Override
-  public int getCost(Player player) {
+  public int getCost(Player<?> player) {
     return 0;
   }
 

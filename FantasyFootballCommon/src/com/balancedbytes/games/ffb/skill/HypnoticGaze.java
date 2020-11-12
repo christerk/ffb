@@ -2,6 +2,7 @@ package com.balancedbytes.games.ffb.skill;
 
 import com.balancedbytes.games.ffb.SkillCategory;
 import com.balancedbytes.games.ffb.model.Skill;
+import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
 
 /**
 * The player has a powerful telepathic ability that he can use to stun an
@@ -19,6 +20,8 @@ public class HypnoticGaze extends Skill {
 
   public HypnoticGaze() {
     super("Hypnotic Gaze", SkillCategory.EXTRAORDINARY);
+
+    registerProperty(NamedProperties.inflictsConfusion);
   }
 
 }

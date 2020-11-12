@@ -38,8 +38,10 @@ public class StepStab extends AbstractStep {
 	
 	private StepState state;
 
+	
 	public StepStab(GameState pGameState) {
 		super(pGameState);
+		state = new StepState();
 	}
 	
 	public StepId getId() {

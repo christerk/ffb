@@ -7,7 +7,8 @@ import java.util.Set;
 
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
-import com.balancedbytes.games.ffb.model.Skill;
+import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
+import com.balancedbytes.games.ffb.util.UtilCards;
 import com.balancedbytes.games.ffb.util.UtilPlayer;
 
 /**
@@ -25,13 +26,13 @@ public class RightStuffModifierFactory implements IRollModifierFactory {
     return null;
   }
 
-  public Set<RightStuffModifier> findRightStuffModifiers(Game pGame, Player pPlayer) {
+  public Set<RightStuffModifier> findRightStuffModifiers(Game pGame, Player<?> pPlayer) {
     Set<RightStuffModifier> rightStuffModifiers = new HashSet<RightStuffModifier>();
     RightStuffModifier tacklezoneModifier = getTacklezoneModifier(pGame, pPlayer);
     if (tacklezoneModifier != null) {
       rightStuffModifiers.add(tacklezoneModifier);
     }
-    if (pPlayer.hasSkill(Skill.SWOOP)) {
+    if (UtilCards.hasSkillWithProperty(pPlayer, NamedProperties.ttmScattersInSingleDirection)) {
     	rightStuffModifiers.add(RightStuffModifier.SWOOP);
     }
     return rightStuffModifiers;
@@ -54,7 +55,7 @@ public class RightStuffModifierFactory implements IRollModifierFactory {
     }
   }
   
-  private RightStuffModifier getTacklezoneModifier(Game pGame, Player pPlayer) {
+  private RightStuffModifier getTacklezoneModifier(Game pGame, Player<?> pPlayer) {
     int tacklezones = UtilPlayer.findTacklezones(pGame, pPlayer);
     for (RightStuffModifier modifier : RightStuffModifier.values()) {
       if (modifier.isTacklezoneModifier() && (modifier.getModifier() == tacklezones)) {

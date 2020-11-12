@@ -66,7 +66,7 @@ public class GameResult implements IJsonSerializable {
     return new GameResult(getGame(), transformedTeamResultHome, transformedTeamResultAway);
   }
   
-  public PlayerResult getPlayerResult(Player pPlayer) {
+  public PlayerResult getPlayerResult(Player<?> pPlayer) {
     if (getGame().getTeamHome().hasPlayer(pPlayer)) {
       return getTeamResultHome().getPlayerResult(pPlayer);
     } else {

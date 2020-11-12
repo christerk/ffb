@@ -14,7 +14,12 @@ import net.codejava.model.Country;
  */
 public class CountryRenderer extends JLabel implements ListCellRenderer<Country> {
 
-    public CountryRenderer() {
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 7896925225003735613L;
+
+	public CountryRenderer() {
         setOpaque(true);
     }
 

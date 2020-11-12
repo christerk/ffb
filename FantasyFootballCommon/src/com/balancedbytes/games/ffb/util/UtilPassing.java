@@ -16,8 +16,8 @@ import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.FieldModel;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
-import com.balancedbytes.games.ffb.model.Skill;
 import com.balancedbytes.games.ffb.model.Team;
+import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
 
 /**
  * 
@@ -71,17 +71,17 @@ public class UtilPassing {
     return passingDistance;
   }
 
-  public static Player[] findInterceptors(Game pGame, Player pThrower, FieldCoordinate pTargetCoordinate) {
-    List<Player> interceptors = new ArrayList<Player>();
+  public static Player<?>[] findInterceptors(Game pGame, Player<?> pThrower, FieldCoordinate pTargetCoordinate) {
+    List<Player<?>> interceptors = new ArrayList<Player<?>>();
     if ((pTargetCoordinate != null) && (pThrower != null)) {
       FieldCoordinate throwerCoordinate = pGame.getFieldModel().getPlayerCoordinate(pThrower);
       Team otherTeam = pGame.getTeamHome().hasPlayer(pThrower) ? pGame.getTeamAway() : pGame.getTeamHome();
-      Player[] otherPlayers = otherTeam.getPlayers();
+      Player<?>[] otherPlayers = otherTeam.getPlayers();
       for (int i = 0; i < otherPlayers.length; i++) {
         PlayerState interceptorState = pGame.getFieldModel().getPlayerState(otherPlayers[i]);
         FieldCoordinate interceptorCoordinate = pGame.getFieldModel().getPlayerCoordinate(otherPlayers[i]);
         if ((interceptorCoordinate != null) && (interceptorState != null) && interceptorState.hasTacklezones()
-            && !UtilCards.hasSkill(pGame, otherPlayers[i], Skill.NO_HANDS)) {
+            && !UtilCards.hasSkillWithProperty(otherPlayers[i], NamedProperties.preventCatch)) {
           if (canIntercept(throwerCoordinate, pTargetCoordinate, interceptorCoordinate)) {
             interceptors.add(otherPlayers[i]);
           }
@@ -121,13 +121,13 @@ public class UtilPassing {
     FieldCoordinate[] neighbours = pGame.getFieldModel().findAdjacentCoordinates(pGame.getFieldModel().getPlayerCoordinate(pGame.getThrower()),
         FieldCoordinateBounds.FIELD, 1, false);
     for (FieldCoordinate c : neighbours) {
-      Player playerInTz = pGame.getFieldModel().getPlayer(c);
+      Player<?> playerInTz = pGame.getFieldModel().getPlayer(c);
       if ((playerInTz == null) || (playerInTz == actingPlayer.getPlayer())) {
         validCoordinates.add(c);
       }
     }
 
-    Player targetPlayer = pGame.getFieldModel().getPlayer(pGame.getPassCoordinate());
+    Player<?> targetPlayer = pGame.getFieldModel().getPlayer(pGame.getPassCoordinate());
 
     if (PlayerAction.HAIL_MARY_PASS == pGame.getThrowerAction()) {
 
@@ -143,7 +143,7 @@ public class UtilPassing {
       if (targetPlayer != null) {
         neighbours = pGame.getFieldModel().findAdjacentCoordinates(pGame.getPassCoordinate(), FieldCoordinateBounds.FIELD, 1, false);
         for (FieldCoordinate c : neighbours) {
-          Player playerInTz = pGame.getFieldModel().getPlayer(c);
+        	Player<?> playerInTz = pGame.getFieldModel().getPlayer(c);
           if ((playerInTz == null) || (playerInTz == actingPlayer.getPlayer())) {
             validCoordinates.add(c);
           }

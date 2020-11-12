@@ -15,7 +15,7 @@ import com.balancedbytes.games.ffb.client.util.UtilClientCursor;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
-import com.balancedbytes.games.ffb.model.Skill;
+import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
 import com.balancedbytes.games.ffb.net.NetCommand;
 import com.balancedbytes.games.ffb.util.ArrayTool;
 import com.balancedbytes.games.ffb.util.UtilCards;
@@ -139,7 +139,7 @@ public class ClientStateThrowTeamMate extends ClientStateMove {
     FieldCoordinate throwerCoordinate = game.getFieldModel().getPlayerCoordinate(actingPlayer.getPlayer());
     FieldCoordinate catcherCoordinate = game.getFieldModel().getPlayerCoordinate(pPlayer);
     // added a check so you could not throw the opponents players, maybe this should be in the server-check?
-    return (UtilCards.hasSkill(game, actingPlayer, Skill.THROW_TEAM_MATE) && UtilCards.hasSkill(game, pPlayer, Skill.RIGHT_STUFF) && catcherState.hasTacklezones() && catcherCoordinate.isAdjacent(throwerCoordinate) && (actingPlayer.getPlayer().getTeam() == pPlayer.getTeam()));
+    return ( UtilCards.hasSkillWithProperty(actingPlayer.getPlayer(), NamedProperties.canThrowTeamMates) && UtilCards.hasSkillWithProperty(pPlayer, NamedProperties.canBeThrown) && catcherState.hasTacklezones() && catcherCoordinate.isAdjacent(throwerCoordinate) && (actingPlayer.getPlayer().getTeam() == pPlayer.getTeam()));
   }
     
   private void markThrowablePlayers() {

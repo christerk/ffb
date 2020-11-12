@@ -69,16 +69,16 @@ public class ActingPlayer implements IJsonSerializable {
     fStandingUp = false;
     fSufferingBloodLust = false;
     fSufferingAnimosity = false;
-    Player player = getGame().getPlayerById(getPlayerId());
+    Player<?> player = getGame().getPlayerById(getPlayerId());
     setStrength((player != null) ? UtilCards.getPlayerStrength(getGame(), player) : 0);
     notifyObservers(ModelChangeId.ACTING_PLAYER_SET_PLAYER_ID, fPlayerId);
   }
   
-  public Player getPlayer() {
+  public Player<?> getPlayer() {
     return getGame().getPlayerById(getPlayerId());
   }
   
-  public void setPlayer(Player pPlayer) {
+  public void setPlayer(Player<?> pPlayer) {
     if (pPlayer != null) {
       setPlayerId(pPlayer.getId());
     } else {

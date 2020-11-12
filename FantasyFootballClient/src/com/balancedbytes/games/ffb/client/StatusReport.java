@@ -13,7 +13,6 @@ import com.balancedbytes.games.ffb.CardEffect;
 import com.balancedbytes.games.ffb.CatchModifier;
 import com.balancedbytes.games.ffb.ClientMode;
 import com.balancedbytes.games.ffb.Direction;
-import com.balancedbytes.games.ffb.DodgeModifier;
 import com.balancedbytes.games.ffb.DodgeModifiers;
 import com.balancedbytes.games.ffb.FantasyFootballConstants;
 import com.balancedbytes.games.ffb.HeatExhaustion;
@@ -2252,7 +2251,7 @@ public class StatusReport {
         }
       }
     }
-    List<Player> unzappedPlayers = pReport.getUnzappedPlayers();
+    List<Player<?>> unzappedPlayers = pReport.getUnzappedPlayers();
     if (unzappedPlayers != null) {
       for (Player player: unzappedPlayers) {
           print(getIndent(), true, player);

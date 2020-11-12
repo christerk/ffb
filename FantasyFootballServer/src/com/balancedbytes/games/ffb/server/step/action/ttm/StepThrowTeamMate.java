@@ -1,38 +1,19 @@
 package com.balancedbytes.games.ffb.server.step.action.ttm;
 
-import java.util.Set;
-
-import com.balancedbytes.games.ffb.FieldCoordinate;
-import com.balancedbytes.games.ffb.PassModifier;
-import com.balancedbytes.games.ffb.PassModifierFactory;
-import com.balancedbytes.games.ffb.PassingDistance;
 import com.balancedbytes.games.ffb.PlayerState;
-import com.balancedbytes.games.ffb.ReRolledAction;
-import com.balancedbytes.games.ffb.dialog.DialogSkillUseParameter;
 import com.balancedbytes.games.ffb.json.UtilJson;
-import com.balancedbytes.games.ffb.model.ActingPlayer;
-import com.balancedbytes.games.ffb.model.Game;
-import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandUseSkill;
-import com.balancedbytes.games.ffb.report.ReportThrowTeamMateRoll;
-import com.balancedbytes.games.ffb.server.DiceInterpreter;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.IServerJsonOption;
 import com.balancedbytes.games.ffb.server.model.ServerSkill;
 import com.balancedbytes.games.ffb.server.net.ReceivedCommand;
 import com.balancedbytes.games.ffb.server.step.AbstractStepWithReRoll;
-import com.balancedbytes.games.ffb.server.step.SequenceGenerator;
-import com.balancedbytes.games.ffb.server.step.StepAction;
 import com.balancedbytes.games.ffb.server.step.StepCommandStatus;
 import com.balancedbytes.games.ffb.server.step.StepException;
 import com.balancedbytes.games.ffb.server.step.StepId;
 import com.balancedbytes.games.ffb.server.step.StepParameter;
 import com.balancedbytes.games.ffb.server.step.StepParameterKey;
 import com.balancedbytes.games.ffb.server.step.StepParameterSet;
-import com.balancedbytes.games.ffb.server.util.UtilServerDialog;
-import com.balancedbytes.games.ffb.server.util.UtilServerReRoll;
-import com.balancedbytes.games.ffb.util.UtilCards;
-import com.balancedbytes.games.ffb.util.UtilPassing;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
@@ -50,14 +31,14 @@ import com.eclipsesource.json.JsonValue;
  * @author Kalimar
  */
 public final class StepThrowTeamMate extends AbstractStepWithReRoll {
-	public class StepState {
-	  
-	}
 	
-  private String fGotoLabelOnFailure;
-  private String fThrownPlayerId;
-  private PlayerState fThrownPlayerState;
-  private boolean fThrownPlayerHasBall;
+	public class StepState {
+		public String goToLabelOnFailure;
+		public String thrownPlayerId;
+		public PlayerState thrownPlayerState;
+		public boolean thrownPlayerHasBall; 
+	}
+  
 	private StepState state;
   
 	public StepThrowTeamMate(GameState pGameState) {
@@ -76,14 +57,14 @@ public final class StepThrowTeamMate extends AbstractStepWithReRoll {
   			switch (parameter.getKey()) {
   			  // mandatory
   				case GOTO_LABEL_ON_FAILURE:
-  					fGotoLabelOnFailure = (String) parameter.getValue();
+  					state.goToLabelOnFailure = (String) parameter.getValue();
   					break;
 					default:
 						break;
   			}
   		}
   	}
-  	if (fGotoLabelOnFailure == null) {
+  	if (state.goToLabelOnFailure == null) {
 			throw new StepException("StepParameter " + StepParameterKey.GOTO_LABEL_ON_FAILURE + " is not initialized.");
   	}
   }
@@ -93,13 +74,13 @@ public final class StepThrowTeamMate extends AbstractStepWithReRoll {
 		if ((pParameter != null) && !super.setParameter(pParameter)) {
 			switch (pParameter.getKey()) {
 				case THROWN_PLAYER_ID:
-					fThrownPlayerId = (String) pParameter.getValue();
+					state.thrownPlayerId = (String) pParameter.getValue();
 					return true;
 				case THROWN_PLAYER_STATE:
-					fThrownPlayerState = (PlayerState) pParameter.getValue();
+					state.thrownPlayerState = (PlayerState) pParameter.getValue();
 					return true;
 				case THROWN_PLAYER_HAS_BALL:
-					fThrownPlayerHasBall = (pParameter.getValue() != null) ? (Boolean) pParameter.getValue() : false;
+					state.thrownPlayerHasBall = (pParameter.getValue() != null) ? (Boolean) pParameter.getValue() : false;
 					return true;
 				default:
 					break;
@@ -142,51 +123,7 @@ public final class StepThrowTeamMate extends AbstractStepWithReRoll {
 	}
 	
   private void executeStep() {
-    Game game = getGameState().getGame();
-    ActingPlayer actingPlayer = game.getActingPlayer();
-    actingPlayer.setHasPassed(true);
-    game.setConcessionPossible(false);
-    game.getTurnData().setPassUsed(true);
-    UtilServerDialog.hideDialog(getGameState());
-    Player thrower = game.getActingPlayer().getPlayer();
-    boolean doRoll = true;
-    if (ReRolledAction.THROW_TEAM_MATE == getReRolledAction()) {
-      if ((getReRollSource() == null) || !UtilServerReRoll.useReRoll(this, getReRollSource(), thrower)) {
-      	getResult().setNextAction(StepAction.GOTO_LABEL, fGotoLabelOnFailure);
-        doRoll = false;
-      }
-    }
-    if (doRoll) {
-      PassModifierFactory passModifierFactory = new PassModifierFactory();
-      FieldCoordinate throwerCoordinate = game.getFieldModel().getPlayerCoordinate(thrower);
-      PassingDistance passingDistance = UtilPassing.findPassingDistance(game, throwerCoordinate, game.getPassCoordinate(), true);
-      Set<PassModifier> passModifiers = passModifierFactory.findPassModifiers(game, thrower, passingDistance, true);
-      int minimumRoll = DiceInterpreter.getInstance().minimumRollThrowTeamMate(thrower, passingDistance, passModifiers);
-      int roll = getGameState().getDiceRoller().rollSkill();
-      boolean successful = !DiceInterpreter.getInstance().isPassFumble(roll, actingPlayer.getPlayer(), passingDistance, passModifiers);
-      PassModifier[] passModifierArray = passModifierFactory.toArray(passModifiers);
-      boolean reRolled = ((getReRolledAction() == ReRolledAction.THROW_TEAM_MATE) && (getReRollSource() != null));
-      getResult().addReport(new ReportThrowTeamMateRoll(thrower.getId(), successful, roll, minimumRoll, reRolled, passModifierArray, passingDistance, fThrownPlayerId));
-      if (successful) {
-        Player thrownPlayer = game.getPlayerById(fThrownPlayerId);
-        boolean hasSwoop = thrownPlayer != null && thrownPlayer.hasSkill(ServerSkill.SWOOP);
-      	SequenceGenerator.getInstance().pushScatterPlayerSequence(getGameState(), fThrownPlayerId, fThrownPlayerState, fThrownPlayerHasBall, throwerCoordinate, hasSwoop, true);
-      	getResult().setNextAction(StepAction.NEXT_STEP);
-      } else {
-        if (getReRolledAction() != ReRolledAction.THROW_TEAM_MATE) {
-          setReRolledAction(ReRolledAction.THROW_TEAM_MATE);
-          if (UtilCards.hasSkill(game, thrower, ServerSkill.PASS)) {
-            UtilServerDialog.showDialog(getGameState(), new DialogSkillUseParameter(thrower.getId(), ServerSkill.PASS, minimumRoll), false);
-          } else {
-            if (!UtilServerReRoll.askForReRollIfAvailable(getGameState(), actingPlayer.getPlayer(), ReRolledAction.THROW_TEAM_MATE, minimumRoll, false)) {
-            	getResult().setNextAction(StepAction.GOTO_LABEL, fGotoLabelOnFailure);
-            }
-          }
-        } else {
-        	getResult().setNextAction(StepAction.GOTO_LABEL, fGotoLabelOnFailure);
-        }
-      }
-    }
+	  getGameState().executeStepHooks(this, state);
   }
   
   // JSON serialization
@@ -194,10 +131,10 @@ public final class StepThrowTeamMate extends AbstractStepWithReRoll {
   @Override
   public JsonObject toJsonValue() {
     JsonObject jsonObject = super.toJsonValue();
-    IServerJsonOption.GOTO_LABEL_ON_FAILURE.addTo(jsonObject, fGotoLabelOnFailure);
-    IServerJsonOption.THROWN_PLAYER_ID.addTo(jsonObject, fThrownPlayerId);
-    IServerJsonOption.THROWN_PLAYER_STATE.addTo(jsonObject, fThrownPlayerState);
-    IServerJsonOption.THROWN_PLAYER_HAS_BALL.addTo(jsonObject, fThrownPlayerHasBall);
+    IServerJsonOption.GOTO_LABEL_ON_FAILURE.addTo(jsonObject, state.goToLabelOnFailure);
+    IServerJsonOption.THROWN_PLAYER_ID.addTo(jsonObject, state.thrownPlayerId);
+    IServerJsonOption.THROWN_PLAYER_STATE.addTo(jsonObject, state.thrownPlayerState);
+    IServerJsonOption.THROWN_PLAYER_HAS_BALL.addTo(jsonObject, state.thrownPlayerHasBall);
     return jsonObject;
   }
   
@@ -205,10 +142,10 @@ public final class StepThrowTeamMate extends AbstractStepWithReRoll {
   public StepThrowTeamMate initFrom(JsonValue pJsonValue) {
     super.initFrom(pJsonValue);
     JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-    fGotoLabelOnFailure = IServerJsonOption.GOTO_LABEL_ON_FAILURE.getFrom(jsonObject);
-    fThrownPlayerId = IServerJsonOption.THROWN_PLAYER_ID.getFrom(jsonObject);
-    fThrownPlayerState = IServerJsonOption.THROWN_PLAYER_STATE.getFrom(jsonObject);
-    fThrownPlayerHasBall = IServerJsonOption.THROWN_PLAYER_HAS_BALL.getFrom(jsonObject);
+    state.goToLabelOnFailure = IServerJsonOption.GOTO_LABEL_ON_FAILURE.getFrom(jsonObject);
+    state.thrownPlayerId = IServerJsonOption.THROWN_PLAYER_ID.getFrom(jsonObject);
+    state.thrownPlayerState = IServerJsonOption.THROWN_PLAYER_STATE.getFrom(jsonObject);
+    state.thrownPlayerHasBall = IServerJsonOption.THROWN_PLAYER_HAS_BALL.getFrom(jsonObject);
     return this;
   }
 }

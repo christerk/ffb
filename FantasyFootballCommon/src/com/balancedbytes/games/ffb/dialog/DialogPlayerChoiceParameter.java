@@ -30,7 +30,7 @@ public class DialogPlayerChoiceParameter implements IDialogParameter {
     fDescriptions = new ArrayList<String>();
   }
   
-  public DialogPlayerChoiceParameter(String pTeamId, PlayerChoiceMode pPlayerChoiceMode, Player[] pPlayers, String[] pDescriptions, int pMaxSelects) {
+  public DialogPlayerChoiceParameter(String pTeamId, PlayerChoiceMode pPlayerChoiceMode, Player<?>[] pPlayers, String[] pDescriptions, int pMaxSelects) {
     this(pTeamId, pPlayerChoiceMode, findPlayerIds(pPlayers), pDescriptions, pMaxSelects);
   }
   
@@ -95,7 +95,7 @@ public class DialogPlayerChoiceParameter implements IDialogParameter {
     }
   }
   
-  private static String[] findPlayerIds(Player[] pPlayers) {
+  private static String[] findPlayerIds(Player<?>[] pPlayers) {
     if (ArrayTool.isProvided(pPlayers)) {
       String[] playerIds = new String[pPlayers.length];
       for (int i = 0; i < playerIds.length; i++) {

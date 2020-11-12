@@ -2,6 +2,8 @@ package com.balancedbytes.games.ffb.skill;
 
 import com.balancedbytes.games.ffb.SkillCategory;
 import com.balancedbytes.games.ffb.model.Skill;
+import com.balancedbytes.games.ffb.model.SkillConstants;
+import com.balancedbytes.games.ffb.model.modifier.CancelSkillProperty;
 
 /**
 * A player with a Monstrous Mouth is allowed to re-roll the D6 if they fail
@@ -13,6 +15,7 @@ public class MonstrousMouth extends Skill {
 
   public MonstrousMouth() {
     super("Monstrous Mouth", SkillCategory.EXTRAORDINARY);
+    registerProperty(new CancelSkillProperty(SkillConstants.STRIP_BALL));
   }
 
 }

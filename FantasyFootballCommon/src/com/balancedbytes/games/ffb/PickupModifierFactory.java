@@ -28,7 +28,7 @@ public class PickupModifierFactory implements IRollModifierFactory {
   
   public Set<PickupModifier> findPickupModifiers(Game pGame) {
     Set<PickupModifier> pickupModifiers = new HashSet<PickupModifier>();
-    Player player = pGame.getActingPlayer().getPlayer();
+    Player<?> player = pGame.getActingPlayer().getPlayer();
     if (player != null) {
       
       pickupModifiers.addAll(UtilCards.getPickupModifiers(player, null));
@@ -66,7 +66,7 @@ public class PickupModifierFactory implements IRollModifierFactory {
     }
   }
   
-  private PickupModifier getTacklezoneModifier(Game pGame, Player pPlayer) {
+  private PickupModifier getTacklezoneModifier(Game pGame, Player<?> pPlayer) {
     int tacklezones = UtilPlayer.findTacklezones(pGame, pPlayer);
     if (tacklezones > 0) {
       for (PickupModifier modifier : PickupModifier.values()) {

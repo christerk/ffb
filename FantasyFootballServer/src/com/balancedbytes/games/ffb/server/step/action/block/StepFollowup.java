@@ -11,13 +11,13 @@ import com.balancedbytes.games.ffb.dialog.DialogSkillUseParameter;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.Game;
+import com.balancedbytes.games.ffb.model.Skill;
 import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandFollowupChoice;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandUseSkill;
 import com.balancedbytes.games.ffb.report.ReportSkillUse;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.IServerJsonOption;
-import com.balancedbytes.games.ffb.server.model.ServerSkill;
 import com.balancedbytes.games.ffb.server.net.ReceivedCommand;
 import com.balancedbytes.games.ffb.server.step.AbstractStep;
 import com.balancedbytes.games.ffb.server.step.StepAction;
@@ -45,11 +45,11 @@ import com.eclipsesource.json.JsonValue;
  */
 public class StepFollowup extends AbstractStep {
 
-  private FieldCoordinate fCoordinateFrom;
-  private FieldCoordinate fDefenderPosition;
-  private Boolean fUsingFend;
-  private Boolean fFollowupChoice;
-  private PlayerState fOldDefenderState;
+  private FieldCoordinate coordinateFrom;
+  private FieldCoordinate defenderPosition;
+  private Boolean usingSkillPreventingFollowUp;
+  private Boolean followupChoice;
+  private PlayerState oldDefenderState;
 
   public StepFollowup(GameState pGameState) {
     super(pGameState);
@@ -72,8 +72,8 @@ public class StepFollowup extends AbstractStep {
       switch (pReceivedCommand.getId()) {
         case CLIENT_USE_SKILL:
           ClientCommandUseSkill useSkillCommand = (ClientCommandUseSkill) pReceivedCommand.getCommand();
-          if (ServerSkill.FEND == useSkillCommand.getSkill()) {
-            fUsingFend = useSkillCommand.isSkillUsed();
+          if(useSkillCommand.getSkill().hasSkillProperty(NamedProperties.preventOpponentFollowingUp)) {
+            usingSkillPreventingFollowUp = useSkillCommand.isSkillUsed();
             commandStatus = StepCommandStatus.EXECUTE_STEP;
           }
           break;
@@ -97,16 +97,16 @@ public class StepFollowup extends AbstractStep {
     if ((pParameter != null) && !super.setParameter(pParameter)) {
       switch (pParameter.getKey()) {
         case COORDINATE_FROM:
-          fCoordinateFrom = (FieldCoordinate) pParameter.getValue();
+          coordinateFrom = (FieldCoordinate) pParameter.getValue();
           return true;
         case DEFENDER_POSITION:
-          fDefenderPosition = (FieldCoordinate) pParameter.getValue();
+          defenderPosition = (FieldCoordinate) pParameter.getValue();
           return true;
         case FOLLOWUP_CHOICE:
-          fFollowupChoice = (Boolean) pParameter.getValue();
+          followupChoice = (Boolean) pParameter.getValue();
           return true;
         case OLD_DEFENDER_STATE:
-          fOldDefenderState = (PlayerState) pParameter.getValue();
+          oldDefenderState = (PlayerState) pParameter.getValue();
           return true;
         default:
           break;
@@ -125,45 +125,48 @@ public class StepFollowup extends AbstractStep {
     if (actingPlayer.getPlayerAction() == PlayerAction.MULTIPLE_BLOCK) {
       publishParameter(new StepParameter(StepParameterKey.FOLLOWUP_CHOICE, false));
     }
-    if (fFollowupChoice == null) {
+    if (followupChoice == null) {
       PlayerState defenderState = game.getFieldModel().getPlayerState(game.getDefender());
-      if (UtilCards.hasSkill(game, game.getDefender(), ServerSkill.FEND) && !defenderState.isProne()
-          && !((fOldDefenderState != null) && fOldDefenderState.isProne())) {
-        if (fUsingFend == null) {
-          if ((PlayerAction.BLITZ == actingPlayer.getPlayerAction()) && UtilCards.hasSkill(game, actingPlayer, ServerSkill.JUGGERNAUT)) {
-            fUsingFend = false;
-            getResult().addReport(new ReportSkillUse(actingPlayer.getPlayerId(), ServerSkill.JUGGERNAUT, true, SkillUse.CANCEL_FEND));
+      
+      Skill skillPreventsFollowingUp = UtilCards.getSkillWithProperty(game.getDefender(), NamedProperties.preventOpponentFollowingUp);
+      if (skillPreventsFollowingUp != null && !defenderState.isProne()
+          && !((oldDefenderState != null) && oldDefenderState.isProne())) {
+    	  Skill skillCancelsSkillPreventingFollow = UtilCards.getSkillCancelling(actingPlayer.getPlayer(), skillPreventsFollowingUp );
+        if (usingSkillPreventingFollowUp == null) {
+          if ((PlayerAction.BLITZ == actingPlayer.getPlayerAction()) && skillCancelsSkillPreventingFollow != null) {
+            usingSkillPreventingFollowUp = false;
+            getResult().addReport(new ReportSkillUse(actingPlayer.getPlayerId(), skillCancelsSkillPreventingFollow, true, SkillUse.CANCEL_FEND));
           }
         }
-        if (fUsingFend == null) {
-          UtilServerDialog.showDialog(getGameState(), new DialogSkillUseParameter(game.getDefenderId(), ServerSkill.FEND, 0), true);
+        if (usingSkillPreventingFollowUp == null) {
+          UtilServerDialog.showDialog(getGameState(), new DialogSkillUseParameter(game.getDefenderId(), skillPreventsFollowingUp, 0), true);
         } else {
-          if (fUsingFend) {
+          if (usingSkillPreventingFollowUp) {
             publishParameter(new StepParameter(StepParameterKey.FOLLOWUP_CHOICE, false));
           }
-          getResult().addReport(new ReportSkillUse(game.getDefenderId(), ServerSkill.FEND, fUsingFend, SkillUse.STAY_AWAY_FROM_OPPONENT));
+          getResult().addReport(new ReportSkillUse(game.getDefenderId(), skillPreventsFollowingUp, usingSkillPreventingFollowUp, SkillUse.STAY_AWAY_FROM_OPPONENT));
         }
       } else {
-        fUsingFend = false;
+        usingSkillPreventingFollowUp = false;
       }
-      if ((fUsingFend != null) && !fUsingFend
+      if ((usingSkillPreventingFollowUp != null) && !usingSkillPreventingFollowUp
           && UtilCards.hasSkillWithProperty(actingPlayer.getPlayer(), NamedProperties.forceFollowup)) {
         publishParameter(new StepParameter(StepParameterKey.FOLLOWUP_CHOICE, true));
       }
-      if ((fFollowupChoice == null) && (fUsingFend != null)) {
+      if ((followupChoice == null) && (usingSkillPreventingFollowUp != null)) {
         UtilServerDialog.showDialog(getGameState(), new DialogFollowupChoiceParameter(), false);
       }
     }
-    if (fFollowupChoice != null) {
+    if (followupChoice != null) {
       TrackNumber trackNumber = null;
       FieldCoordinate followupCoordinate = null;
-      if (fFollowupChoice) {
-        followupCoordinate = fDefenderPosition;
+      if (followupChoice) {
+        followupCoordinate = defenderPosition;
         publishParameter(new StepParameter(StepParameterKey.COORDINATE_FROM, game.getFieldModel().getPlayerCoordinate(actingPlayer.getPlayer())));
         game.getFieldModel().updatePlayerAndBallPosition(actingPlayer.getPlayer(), followupCoordinate);
         UtilServerPlayerMove.updateMoveSquares(getGameState(), false);
         if (PlayerAction.BLITZ == actingPlayer.getPlayerAction()) {
-          trackNumber = new TrackNumber(fCoordinateFrom, actingPlayer.getCurrentMove() - 1);
+          trackNumber = new TrackNumber(coordinateFrom, actingPlayer.getCurrentMove() - 1);
           game.getFieldModel().add(trackNumber);
         }
         getResult().setSound(SoundId.STEP);
@@ -180,11 +183,11 @@ public class StepFollowup extends AbstractStep {
   @Override
   public JsonObject toJsonValue() {
     JsonObject jsonObject = super.toJsonValue();
-    IServerJsonOption.COORDINATE_FROM.addTo(jsonObject, fCoordinateFrom);
-    IServerJsonOption.DEFENDER_POSITION.addTo(jsonObject, fDefenderPosition);
-    IServerJsonOption.USING_FEND.addTo(jsonObject, fUsingFend);
-    IServerJsonOption.FOLLOWUP_CHOICE.addTo(jsonObject, fFollowupChoice);
-    IServerJsonOption.OLD_DEFENDER_STATE.addTo(jsonObject, fOldDefenderState);
+    IServerJsonOption.COORDINATE_FROM.addTo(jsonObject, coordinateFrom);
+    IServerJsonOption.DEFENDER_POSITION.addTo(jsonObject, defenderPosition);
+    IServerJsonOption.USING_FEND.addTo(jsonObject, usingSkillPreventingFollowUp);
+    IServerJsonOption.FOLLOWUP_CHOICE.addTo(jsonObject, followupChoice);
+    IServerJsonOption.OLD_DEFENDER_STATE.addTo(jsonObject, oldDefenderState);
     return jsonObject;
   }
 
@@ -192,11 +195,11 @@ public class StepFollowup extends AbstractStep {
   public StepFollowup initFrom(JsonValue pJsonValue) {
     super.initFrom(pJsonValue);
     JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-    fCoordinateFrom = IServerJsonOption.COORDINATE_FROM.getFrom(jsonObject);
-    fDefenderPosition = IServerJsonOption.DEFENDER_POSITION.getFrom(jsonObject);
-    fUsingFend = IServerJsonOption.USING_FEND.getFrom(jsonObject);
-    fFollowupChoice = IServerJsonOption.FOLLOWUP_CHOICE.getFrom(jsonObject);
-    fOldDefenderState = IServerJsonOption.OLD_DEFENDER_STATE.getFrom(jsonObject);
+    coordinateFrom = IServerJsonOption.COORDINATE_FROM.getFrom(jsonObject);
+    defenderPosition = IServerJsonOption.DEFENDER_POSITION.getFrom(jsonObject);
+    usingSkillPreventingFollowUp = IServerJsonOption.USING_FEND.getFrom(jsonObject);
+    followupChoice = IServerJsonOption.FOLLOWUP_CHOICE.getFrom(jsonObject);
+    oldDefenderState = IServerJsonOption.OLD_DEFENDER_STATE.getFrom(jsonObject);
     return this;
   }
 
