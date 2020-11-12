@@ -32,6 +32,7 @@ public class Chainsaw extends Skill {
     super("Chainsaw", SkillCategory.EXTRAORDINARY);
     
     registerProperty(NamedProperties.useSpecialBlockRules);
+    registerProperty(NamedProperties.blocksLikeChainsaw);
   }
 
 }

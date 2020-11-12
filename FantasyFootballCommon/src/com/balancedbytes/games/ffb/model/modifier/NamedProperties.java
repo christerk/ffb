@@ -8,6 +8,7 @@ public class NamedProperties {
   public static final ISkillProperty appliesConfusion = new NamedProperty("Applies Confusion");
   public static final ISkillProperty appliesPoisonOnBadlyHurt = new NamedProperty("Applies Poison on Badly Hurt");
   public static final ISkillProperty assistInTacklezones = new NamedProperty("Assist in Tacklezones");
+  public static final ISkillProperty blocksLikeChainsaw = new NamedProperty("Blocks Like Chainsaw");
   public static final ISkillProperty canAlwaysAssistFouls = new NamedProperty("Can Always Assist Fouls");
   public static final ISkillProperty canAttemptCatchInAdjacentSquares = new NamedProperty("Can Attempt Catch In Adjacent Squares");
   public static final ISkillProperty canBeThrown = new NamedProperty("Can Be Thrown");
