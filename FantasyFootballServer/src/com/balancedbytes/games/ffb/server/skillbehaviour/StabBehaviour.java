@@ -14,6 +14,7 @@ import com.balancedbytes.games.ffb.server.step.StepCommandStatus;
 import com.balancedbytes.games.ffb.server.step.StepParameter;
 import com.balancedbytes.games.ffb.server.step.StepParameterKey;
 import com.balancedbytes.games.ffb.server.step.action.block.StepStab;
+import com.balancedbytes.games.ffb.server.step.action.block.StepStab.StepState;
 import com.balancedbytes.games.ffb.server.step.action.common.ApothecaryMode;
 import com.balancedbytes.games.ffb.server.util.UtilServerInjury;
 import com.balancedbytes.games.ffb.skill.Stab;
@@ -26,31 +27,31 @@ public class StabBehaviour extends SkillBehaviour<Stab> {
 		registerModifier(new StepModifier<StepStab, StepStab.StepState>() {
 
 			@Override
-			public StepCommandStatus handleCommandHook(StepStab step,
-					com.balancedbytes.games.ffb.server.step.action.block.StepStab.StepState state,
+			public StepCommandStatus handleCommandHook(StepStab step, StepState state,
 					ClientCommandUseSkill useSkillCommand) {
 				return StepCommandStatus.EXECUTE_STEP;
 			}
 
 			@Override
-			public boolean handleExecuteStepHook(StepStab step,
-					com.balancedbytes.games.ffb.server.step.action.block.StepStab.StepState state) {
+			public boolean handleExecuteStepHook(StepStab step, StepState state) {
 				Game game = step.getGameState().getGame();
-				ActingPlayer actingPlayer = game.getActingPlayer();
-				if (UtilCards.hasSkill(game, actingPlayer, skill) && (state.usingStab != null) && state.usingStab) {
-					step.getResult().setSound(SoundId.STAB);
-					FieldCoordinate defenderCoordinate = game.getFieldModel().getPlayerCoordinate(game.getDefender());
-					InjuryResult injuryResultDefender = UtilServerInjury.handleInjury(step, InjuryType.STAB, actingPlayer.getPlayer(), game.getDefender(), defenderCoordinate, null, ApothecaryMode.DEFENDER);
-					if (injuryResultDefender.isArmorBroken()) {
-						step.publishParameters(UtilServerInjury.dropPlayer(step, game.getDefender(), ApothecaryMode.DEFENDER));
-					}
-					step.publishParameter(new StepParameter(StepParameterKey.INJURY_RESULT, injuryResultDefender));
-					step.getResult().setNextAction(StepAction.GOTO_LABEL, state.goToLabelOnSuccess);
-				} else {
-					step.getResult().setNextAction(StepAction.NEXT_STEP);
-				}
+			    ActingPlayer actingPlayer = game.getActingPlayer();
+			    if (UtilCards.hasSkill(game, actingPlayer, skill) && (state.usingStab != null) && state.usingStab) {
+			      step.getResult().setSound(SoundId.STAB);
+			      FieldCoordinate defenderCoordinate = game.getFieldModel().getPlayerCoordinate(game.getDefender());
+			      InjuryResult injuryResultDefender = UtilServerInjury.handleInjury(step, InjuryType.STAB, actingPlayer.getPlayer(), game.getDefender(), defenderCoordinate, null, ApothecaryMode.DEFENDER);
+			      if (injuryResultDefender.isArmorBroken()) {
+			        step.publishParameters(UtilServerInjury.dropPlayer(step, game.getDefender(), ApothecaryMode.DEFENDER));
+			      }
+			      step.publishParameter(new StepParameter(StepParameterKey.INJURY_RESULT, injuryResultDefender));
+			      step.getResult().setNextAction(StepAction.GOTO_LABEL, state.goToLabelOnFailure);
+			    } else {
+			    	step.getResult().setNextAction(StepAction.NEXT_STEP);
+			    }
+			    
 				return false;
 			}
+			
 		});
 	}
 }

@@ -30,10 +30,9 @@ import com.eclipsesource.json.JsonValue;
  */
 public class StepStab extends AbstractStep {
 	
-	
 	public class StepState {
-		public ActionStatus status;
-		public String goToLabelOnSuccess;
+	    public ActionStatus status;
+		public String goToLabelOnFailure;
 		public Boolean usingStab;
 	  }
 	
@@ -55,14 +54,14 @@ public class StepStab extends AbstractStep {
   		for (StepParameter parameter : pParameterSet.values()) {
   			switch (parameter.getKey()) {
   				case GOTO_LABEL_ON_SUCCESS:
-  					state.goToLabelOnSuccess = (String) parameter.getValue();
+  					state.goToLabelOnFailure = (String) parameter.getValue();
   					break;
 					default:
 						break;
   			}
   		}
   	}
-  	if (!StringTool.isProvided(state.goToLabelOnSuccess)) {
+  	if (!StringTool.isProvided(state.goToLabelOnFailure)) {
 			throw new StepException("StepParameter " + StepParameterKey.GOTO_LABEL_ON_SUCCESS + " is not initialized.");
   	}
   }
@@ -106,7 +105,7 @@ public class StepStab extends AbstractStep {
   @Override
   public JsonObject toJsonValue() {
     JsonObject jsonObject = super.toJsonValue();
-    IServerJsonOption.GOTO_LABEL_ON_SUCCESS.addTo(jsonObject, state.goToLabelOnSuccess);
+    IServerJsonOption.GOTO_LABEL_ON_SUCCESS.addTo(jsonObject, state.goToLabelOnFailure);
     IServerJsonOption.USING_STAB.addTo(jsonObject, state.usingStab);
     return jsonObject;
   }
@@ -115,7 +114,7 @@ public class StepStab extends AbstractStep {
   public StepStab initFrom(JsonValue pJsonValue) {
     super.initFrom(pJsonValue);
     JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-    state.goToLabelOnSuccess = IServerJsonOption.GOTO_LABEL_ON_SUCCESS.getFrom(jsonObject);
+    state.goToLabelOnFailure = IServerJsonOption.GOTO_LABEL_ON_SUCCESS.getFrom(jsonObject);
     state.usingStab = IServerJsonOption.USING_STAB.getFrom(jsonObject);
     return this;
   }
