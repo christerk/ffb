@@ -18,7 +18,6 @@ import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
 import com.balancedbytes.games.ffb.report.ReportPassBlock;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.IServerJsonOption;
-import com.balancedbytes.games.ffb.server.model.ServerSkill;
 import com.balancedbytes.games.ffb.server.step.AbstractStep;
 import com.balancedbytes.games.ffb.server.step.SequenceGenerator;
 import com.balancedbytes.games.ffb.server.step.StepAction;
@@ -280,7 +279,7 @@ public class StepPassBlock extends AbstractStep {
 		Game game = getGameState().getGame();
 		Player[] players = pTeam.getPlayers();
 		for (Player player : players) {
-			if (UtilCards.hasSkill(game, player, ServerSkill.PASS_BLOCK)) {
+			if (UtilCards.hasSkillWithProperty(player, NamedProperties.canMoveWhenOpponentPasses)) {
 				PlayerState playerState = game.getFieldModel().getPlayerState(player);
 				FieldCoordinate startPosition = game.getFieldModel().getPlayerCoordinate(player);
 				if (!pCheckCanReach || (playerState.hasTacklezones()

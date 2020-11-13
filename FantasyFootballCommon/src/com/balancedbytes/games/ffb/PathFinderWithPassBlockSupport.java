@@ -10,8 +10,8 @@ import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.FieldModel;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
-import com.balancedbytes.games.ffb.model.Skill;
 import com.balancedbytes.games.ffb.model.Team;
+import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
 import com.balancedbytes.games.ffb.util.UtilCards;
 import com.balancedbytes.games.ffb.util.UtilPassing;
 
@@ -379,7 +379,7 @@ public class PathFinderWithPassBlockSupport {
 	public static FieldCoordinate[] allowPassBlockMove(Game pGame, Player<?> passBlocker, FieldCoordinate startPosition, int distance, boolean canLeap) {
 	  // Skip if the player doesn't have pass block
 		
-	  if (!UtilCards.hasSkill(pGame, passBlocker, Skill.PASS_BLOCK)) {
+	  if (!UtilCards.hasSkillWithProperty(passBlocker, NamedProperties.canMoveWhenOpponentPasses)) {
 			return new FieldCoordinate[0];
 	  }
 

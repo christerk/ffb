@@ -28,7 +28,6 @@ import com.balancedbytes.games.ffb.client.util.UtilClientCursor;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
-import com.balancedbytes.games.ffb.model.Skill;
 import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
 import com.balancedbytes.games.ffb.util.ArrayTool;
 import com.balancedbytes.games.ffb.util.UtilCards;
@@ -133,7 +132,7 @@ public class ClientStateMove extends ClientState {
     if (pPlayer == actingPlayer.getPlayer()) {
       if (actingPlayer.hasActed()
       	|| UtilCards.hasSkillWithProperty(pPlayer, NamedProperties.canLeap)
-      	|| UtilCards.hasSkill(game, pPlayer, Skill.HYPNOTIC_GAZE)
+      	|| UtilCards.hasSkillWithProperty(pPlayer, NamedProperties.inflictsConfusion)
       	|| ((actingPlayer.getPlayerAction() == PlayerAction.PASS_MOVE) && UtilPlayer.hasBall(game, pPlayer))
       	|| ((actingPlayer.getPlayerAction() == PlayerAction.HAND_OVER_MOVE) && UtilPlayer.hasBall(game, pPlayer))
       	|| (actingPlayer.getPlayerAction() == PlayerAction.THROW_TEAM_MATE_MOVE)

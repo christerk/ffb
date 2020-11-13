@@ -8,12 +8,12 @@ import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
+import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
 import com.balancedbytes.games.ffb.option.GameOptionId;
 import com.balancedbytes.games.ffb.option.UtilGameOption;
 import com.balancedbytes.games.ffb.report.ReportKickTeamMateRoll;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.IServerJsonOption;
-import com.balancedbytes.games.ffb.server.model.ServerSkill;
 import com.balancedbytes.games.ffb.server.net.ReceivedCommand;
 import com.balancedbytes.games.ffb.server.step.AbstractStepWithReRoll;
 import com.balancedbytes.games.ffb.server.step.SequenceGenerator;
@@ -26,6 +26,7 @@ import com.balancedbytes.games.ffb.server.step.StepParameterKey;
 import com.balancedbytes.games.ffb.server.step.StepParameterSet;
 import com.balancedbytes.games.ffb.server.util.UtilServerDialog;
 import com.balancedbytes.games.ffb.server.util.UtilServerReRoll;
+import com.balancedbytes.games.ffb.util.UtilCards;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
@@ -181,7 +182,7 @@ public final class StepKickTeamMate extends AbstractStepWithReRoll {
   private void executeKick(Player kickedPlayer, FieldCoordinate kickerCoordinate, boolean successful) {
     if (successful) {
       Game game = getGameState().getGame();
-      boolean hasSwoop = kickedPlayer != null && kickedPlayer.hasSkill(ServerSkill.SWOOP);
+      boolean hasSwoop = kickedPlayer != null && UtilCards.hasSkillWithProperty(kickedPlayer, NamedProperties.ttmScattersInSingleDirection);
       game.getFieldModel().setPlayerState(game.getDefender(), fKickedPlayerState.changeBase(PlayerState.PICKED_UP));
       SequenceGenerator.getInstance().pushScatterPlayerSequence(getGameState(), fKickedPlayerId, fKickedPlayerState, fKickedPlayerHasBall, kickerCoordinate, hasSwoop, true);
       publishParameter(new StepParameter(StepParameterKey.IS_KICKED_PLAYER, true));

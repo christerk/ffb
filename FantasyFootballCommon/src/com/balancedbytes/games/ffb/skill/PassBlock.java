@@ -2,6 +2,7 @@ package com.balancedbytes.games.ffb.skill;
 
 import com.balancedbytes.games.ffb.SkillCategory;
 import com.balancedbytes.games.ffb.model.Skill;
+import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
 
 /**
 * A player with this skill is allowed to move up to three squares when the
@@ -27,6 +28,8 @@ public class PassBlock extends Skill {
 
   public PassBlock() {
     super("Pass Block", SkillCategory.GENERAL);
+    
+    registerProperty(NamedProperties.canMoveWhenOpponentPasses);
   }
 
 }

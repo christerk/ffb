@@ -24,9 +24,11 @@ import com.balancedbytes.games.ffb.model.GameResult;
 import com.balancedbytes.games.ffb.model.InducementSet;
 import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.model.PlayerResult;
+import com.balancedbytes.games.ffb.model.Skill;
 import com.balancedbytes.games.ffb.model.Team;
 import com.balancedbytes.games.ffb.model.TurnData;
 import com.balancedbytes.games.ffb.model.ZappedPlayer;
+import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandArgueTheCall;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandUseInducement;
 import com.balancedbytes.games.ffb.option.GameOptionId;
@@ -40,7 +42,6 @@ import com.balancedbytes.games.ffb.server.FantasyFootballServer;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.IServerJsonOption;
 import com.balancedbytes.games.ffb.server.ServerMode;
-import com.balancedbytes.games.ffb.server.model.ServerSkill;
 import com.balancedbytes.games.ffb.server.net.ReceivedCommand;
 import com.balancedbytes.games.ffb.server.request.fumbbl.FumbblRequestUpdateGamestate;
 import com.balancedbytes.games.ffb.server.step.AbstractStep;
@@ -400,9 +401,9 @@ public class StepEndTurn extends AbstractStep {
         PlayerState playerState = game.getFieldModel().getPlayerState(player);
         PlayerResult playerResult = game.getGameResult().getPlayerResult(player);
         if (playerState.canBeSetUp() && playerState.getBase() != PlayerState.RESERVE) {
-          boolean hasSecretWeapon = UtilCards.hasSkill(game, player, ServerSkill.SECRET_WEAPON);
+          boolean hasSecretWeapon = UtilCards.hasSkillWithProperty(player, NamedProperties.getsSentOffAtEndOfDrive);
           if (!hasSecretWeapon && player instanceof ZappedPlayer) {
-            hasSecretWeapon = UtilCards.hasSkill(game, ((ZappedPlayer) player).getOriginalPlayer(), ServerSkill.SECRET_WEAPON);
+            hasSecretWeapon = UtilCards.hasSkillWithProperty(((ZappedPlayer) player).getOriginalPlayer(), NamedProperties.getsSentOffAtEndOfDrive);
           }
           if (hasSecretWeapon) {
             playerResult.setHasUsedSecretWeapon(true);
@@ -420,9 +421,10 @@ public class StepEndTurn extends AbstractStep {
     Game game = getGameState().getGame();
     for (Player player : game.getPlayers()) {
       PlayerResult playerResult = game.getGameResult().getPlayerResult(player);
-      if (playerResult.hasUsedSecretWeapon()) {
+      Skill skillRequiringPlayerToBeSentOff = UtilCards.getSkillWithProperty(player, NamedProperties.getsSentOffAtEndOfDrive);
+      if (playerResult.hasUsedSecretWeapon() && skillRequiringPlayerToBeSentOff != null) {
         // special for stunty leeg -> roll for secret weapon ban
-        Integer penalty = player.getPosition().getSkillValue(ServerSkill.SECRET_WEAPON);
+        Integer penalty = player.getPosition().getSkillValue(skillRequiringPlayerToBeSentOff);
         if ((penalty != null) && (penalty > 0)) {
           int[] roll = getGameState().getDiceRoller().rollSecretWeapon();
           int total = roll[0] + roll[1];

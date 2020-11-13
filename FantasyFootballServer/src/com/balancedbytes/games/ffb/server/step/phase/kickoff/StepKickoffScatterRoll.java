@@ -11,6 +11,7 @@ import com.balancedbytes.games.ffb.dialog.DialogKickSkillParameter;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
+import com.balancedbytes.games.ffb.model.Skill;
 import com.balancedbytes.games.ffb.model.Team;
 import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandUseSkill;
@@ -19,7 +20,6 @@ import com.balancedbytes.games.ffb.report.ReportSkillUse;
 import com.balancedbytes.games.ffb.server.DiceInterpreter;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.IServerJsonOption;
-import com.balancedbytes.games.ffb.server.model.ServerSkill;
 import com.balancedbytes.games.ffb.server.net.ReceivedCommand;
 import com.balancedbytes.games.ffb.server.step.AbstractStep;
 import com.balancedbytes.games.ffb.server.step.StepAction;
@@ -109,6 +109,8 @@ public final class StepKickoffScatterRoll extends AbstractStep {
   	Game game = getGameState().getGame();
     Player kickingPlayer = findKickingPlayer();
 
+    Skill skillReduceKickDistance = UtilCards.getSkillWithProperty(kickingPlayer, NamedProperties.canReduceKickDistance);
+
     if (fUseKickChoice == null) {
 
       int rollScatterDirection = getGameState().getDiceRoller().rollScatterDirection();
@@ -120,7 +122,7 @@ public final class StepKickoffScatterRoll extends AbstractStep {
       
       if (kickingPlayer != null) {
       	fKickingPlayerCoordinate = game.getFieldModel().getPlayerCoordinate(kickingPlayer);
-        if (UtilCards.hasSkillWithProperty(kickingPlayer, NamedProperties.canReduceKickDistance) && ((game.isHomePlaying()&& FieldCoordinateBounds.CENTER_FIELD_HOME.isInBounds(game.getFieldModel().getPlayerCoordinate(kickingPlayer))) || (!game.isHomePlaying() && FieldCoordinateBounds.CENTER_FIELD_AWAY.isInBounds(game.getFieldModel().getPlayerCoordinate(kickingPlayer))))) {
+        if (skillReduceKickDistance != null && ((game.isHomePlaying()&& FieldCoordinateBounds.CENTER_FIELD_HOME.isInBounds(game.getFieldModel().getPlayerCoordinate(kickingPlayer))) || (!game.isHomePlaying() && FieldCoordinateBounds.CENTER_FIELD_AWAY.isInBounds(game.getFieldModel().getPlayerCoordinate(kickingPlayer))))) {
           FieldCoordinate ballCoordinateEndWithKick = UtilServerCatchScatterThrowIn.findScatterCoordinate(fKickoffStartCoordinate, fScatterDirection, fScatterDistance / 2);
           UtilServerDialog.showDialog(getGameState(), new DialogKickSkillParameter(kickingPlayer.getId(), ballCoordinateEnd, ballCoordinateEndWithKick), false);
         } else {
@@ -157,8 +159,8 @@ public final class StepKickoffScatterRoll extends AbstractStep {
       }
       fTouchback = (fKickoffBounds == null);
       
-      if (fUseKickChoice) {
-        getResult().addReport(new ReportSkillUse(kickingPlayer.getId(), ServerSkill.KICK, true, SkillUse.HALVE_KICKOFF_SCATTER));
+      if (fUseKickChoice && skillReduceKickDistance != null) {
+        getResult().addReport(new ReportSkillUse(kickingPlayer.getId(), skillReduceKickDistance, true, SkillUse.HALVE_KICKOFF_SCATTER));
       }
 
       publishParameter(new StepParameter(StepParameterKey.KICKING_PLAYER_COORDINATE, fKickingPlayerCoordinate));

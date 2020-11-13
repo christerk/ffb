@@ -5,9 +5,9 @@ import com.balancedbytes.games.ffb.PlayerAction;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.Game;
+import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.IServerJsonOption;
-import com.balancedbytes.games.ffb.server.model.ServerSkill;
 import com.balancedbytes.games.ffb.server.step.AbstractStep;
 import com.balancedbytes.games.ffb.server.step.SequenceGenerator;
 import com.balancedbytes.games.ffb.server.step.StepAction;
@@ -15,6 +15,7 @@ import com.balancedbytes.games.ffb.server.step.StepId;
 import com.balancedbytes.games.ffb.server.step.StepParameter;
 import com.balancedbytes.games.ffb.server.step.UtilServerSteps;
 import com.balancedbytes.games.ffb.server.util.UtilServerDialog;
+import com.balancedbytes.games.ffb.util.UtilCards;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
@@ -229,7 +230,7 @@ public final class StepEndSelecting extends AbstractStep {
     		SequenceGenerator.getInstance().pushEndPlayerActionSequence(getGameState(), true, true, false);
         break;
       case STAND_UP:
-      	if (actingPlayer.getPlayer().hasSkill(ServerSkill.HYPNOTIC_GAZE)) {     		
+      	if (UtilCards.hasSkillWithProperty(actingPlayer.getPlayer(), NamedProperties.inflictsConfusion)) {     		
       		SequenceGenerator.getInstance().pushMoveSequence(getGameState());
       	} else {
       		SequenceGenerator.getInstance().pushEndPlayerActionSequence(getGameState(), true, true, false);

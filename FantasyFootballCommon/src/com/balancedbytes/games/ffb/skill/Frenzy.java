@@ -22,6 +22,7 @@ public class Frenzy extends Skill {
     super("Frenzy", SkillCategory.GENERAL);
     
     registerProperty(NamedProperties.forceFollowup);
+    registerProperty(NamedProperties.forceSecondBlock);
   }
 
 }
