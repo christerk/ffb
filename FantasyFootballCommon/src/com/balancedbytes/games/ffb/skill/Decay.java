@@ -4,6 +4,7 @@ import com.balancedbytes.games.ffb.SkillCategory;
 import com.balancedbytes.games.ffb.model.Skill;
 import com.balancedbytes.games.ffb.model.SkillConstants;
 import com.balancedbytes.games.ffb.model.modifier.CancelSkillProperty;
+import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
 
 /**
 * Staying on the pitch is difficult when your rotting body is barely held
@@ -18,6 +19,8 @@ public class Decay extends Skill {
     super("Decay", SkillCategory.EXTRAORDINARY);
     
     registerProperty(new CancelSkillProperty(SkillConstants.NURGLES_ROT));
+
+    registerProperty(NamedProperties.requiresSecondCasualtyRoll);
   }
 
 }

@@ -41,6 +41,7 @@ import com.balancedbytes.games.ffb.model.Skill;
 import com.balancedbytes.games.ffb.model.SkillConstants;
 import com.balancedbytes.games.ffb.model.Team;
 import com.balancedbytes.games.ffb.model.ZappedPlayer;
+import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
 import com.balancedbytes.games.ffb.net.ServerStatus;
 import com.balancedbytes.games.ffb.net.commands.ServerCommandJoin;
 import com.balancedbytes.games.ffb.net.commands.ServerCommandLeave;
@@ -635,8 +636,8 @@ public class StatusReport {
     Game game = getClient().getGame();
     GameResult gameResult = game.getGameResult();
     KickoffResult kickoffResult = pReport.getKickoffResult();
-    int fanFavouritesHome = UtilPlayer.findPlayersOnPitchWithSkill(game, game.getTeamHome(), Skill.FAN_FAVOURITE).length;
-    int fanFavouritesAway = UtilPlayer.findPlayersOnPitchWithSkill(game, game.getTeamAway(), Skill.FAN_FAVOURITE).length;
+    int fanFavouritesHome = UtilPlayer.findPlayersOnPitchWithProperty(game, game.getTeamHome(), NamedProperties.increasesTeamsFame).length;
+    int fanFavouritesAway = UtilPlayer.findPlayersOnPitchWithProperty(game, game.getTeamAway(), NamedProperties.increasesTeamsFame).length;
     StringBuilder status = new StringBuilder();
     if (kickoffResult == KickoffResult.CHEERING_FANS) {
       status.append("Cheering Fans Roll Home Team [ ").append(pReport.getRollHome()).append(" ]");
@@ -704,8 +705,8 @@ public class StatusReport {
   public void reportKickoffThrowARock(ReportKickoffThrowARock pReport) {
     Game game = getClient().getGame();
     GameResult gameResult = game.getGameResult();
-    int fanFavouritesHome = UtilPlayer.findPlayersOnPitchWithSkill(game, game.getTeamHome(), Skill.FAN_FAVOURITE).length;
-    int fanFavouritesAway = UtilPlayer.findPlayersOnPitchWithSkill(game, game.getTeamAway(), Skill.FAN_FAVOURITE).length;
+    int fanFavouritesHome = UtilPlayer.findPlayersOnPitchWithProperty(game, game.getTeamHome(), NamedProperties.increasesTeamsFame).length;
+    int fanFavouritesAway = UtilPlayer.findPlayersOnPitchWithProperty(game, game.getTeamAway(), NamedProperties.increasesTeamsFame).length;
     StringBuilder status = new StringBuilder();
     status.append("Throw a Rock Roll Home Team [ ").append(pReport.getRollHome()).append(" ]");
     println(getIndent(), TextStyle.ROLL, status.toString());
@@ -787,8 +788,8 @@ public class StatusReport {
   public void reportKickoffPitchInvasion(ReportKickoffPitchInvasion pReport) {
     Game game = getClient().getGame();
     GameResult gameResult = game.getGameResult();
-    int fanFavouritesHome = UtilPlayer.findPlayersOnPitchWithSkill(game, game.getTeamHome(), Skill.FAN_FAVOURITE).length;
-    int fanFavouritesAway = UtilPlayer.findPlayersOnPitchWithSkill(game, game.getTeamAway(), Skill.FAN_FAVOURITE).length;
+    int fanFavouritesHome = UtilPlayer.findPlayersOnPitchWithProperty(game, game.getTeamHome(), NamedProperties.increasesTeamsFame).length;
+    int fanFavouritesAway = UtilPlayer.findPlayersOnPitchWithProperty(game, game.getTeamAway(), NamedProperties.increasesTeamsFame).length;
     int[] rollsHome = pReport.getRollsHome();
     boolean[] playersAffectedHome = pReport.getPlayersAffectedHome();
     Player[] homePlayers = game.getTeamHome().getPlayers();

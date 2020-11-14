@@ -15,6 +15,7 @@ import com.balancedbytes.games.ffb.TurnMode;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.FieldModel;
 import com.balancedbytes.games.ffb.model.Game;
+import com.balancedbytes.games.ffb.model.ISkillProperty;
 import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.model.RosterPlayer;
 import com.balancedbytes.games.ffb.model.Skill;
@@ -39,6 +40,17 @@ public class UtilPlayer {
 		}
 		return result.toArray(new Player[result.size()]);
 	}
+	
+	public static Player<?>[] findPlayersOnPitchWithProperty(Game pGame, Team pTeam, ISkillProperty property) {
+		List<Player<?>> result = new ArrayList<Player<?>>(); 
+		for (Player<?> player : pTeam.getPlayers()) {
+			if (UtilCards.hasSkillWithProperty(player, property)  && FieldCoordinateBounds.FIELD.isInBounds(pGame.getFieldModel().getPlayerCoordinate(player))) {
+				result.add(player);
+			}
+		}
+		return result.toArray(new Player[result.size()]);
+	}
+	
 	
   public static Player<?>[] findAdjacentOpposingPlayersWithSkill(Game pGame, FieldCoordinate pCenterCoordinate, Skill pSkill, boolean pCheckAbleToMove) {
     ActingPlayer actingPlayer = pGame.getActingPlayer();

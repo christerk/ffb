@@ -282,7 +282,7 @@ public class UtilServerInjury {
 					} else {
 						injuryResult.setCasualtyRoll(diceRoller.rollCasualty());
 						injuryResult.setInjury(diceInterpreter.interpretRollCasualty(injuryResult.getCasualtyRoll()));
-						if (UtilCards.hasSkill(game, pDefender, ServerSkill.DECAY)) {
+						if (UtilCards.hasSkillWithProperty(pDefender, NamedProperties.requiresSecondCasualtyRoll)) {
 							injuryResult.setCasualtyRollDecay(diceRoller.rollCasualty());
 							injuryResult.setInjuryDecay(diceInterpreter.interpretRollCasualty(injuryResult.getCasualtyRollDecay()));
 						}
@@ -306,7 +306,7 @@ public class UtilServerInjury {
 
 		if (injuryResult.isSeriousInjury()) {
 			injuryResult.setSeriousInjury(DiceInterpreter.getInstance().interpretRollSeriousInjury(injuryResult.getCasualtyRoll()));
-			if (UtilCards.hasSkill(game, pDefender, ServerSkill.DECAY)) {
+			if (UtilCards.hasSkillWithProperty(pDefender, NamedProperties.requiresSecondCasualtyRoll)) {
 				injuryResult.setSeriousInjuryDecay(DiceInterpreter.getInstance().interpretRollSeriousInjury(injuryResult.getCasualtyRollDecay()));
 			}
 		}
@@ -491,7 +491,7 @@ public class UtilServerInjury {
 				Player attacker = game.getPlayerById(pInjuryResult.getAttackerId());
 				if ((attacker != null) && UtilCards.hasSkill(game, attacker, ServerSkill.NURGLES_ROT) && (deadPlayer.getStrength() <= 4)
 						&& !deadPlayerPreventsRaisedFromDead
-						&& !UtilCards.hasSkill(game, deadPlayer, ServerSkill.DECAY)) {
+						&& !UtilCards.hasSkillWithProperty(deadPlayer, NamedProperties.requiresSecondCasualtyRoll)) {
 					RosterPosition zombiePosition = necroTeam.getRoster().getRaisedRosterPosition();
 					if (zombiePosition != null) {
 						nurglesRot = true;

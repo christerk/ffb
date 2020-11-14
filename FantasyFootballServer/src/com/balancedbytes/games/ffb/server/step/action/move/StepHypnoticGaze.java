@@ -11,13 +11,14 @@ import com.balancedbytes.games.ffb.SoundId;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.Game;
+import com.balancedbytes.games.ffb.model.Skill;
 import com.balancedbytes.games.ffb.model.SkillConstants;
+import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
 import com.balancedbytes.games.ffb.report.ReportId;
 import com.balancedbytes.games.ffb.report.ReportSkillRoll;
 import com.balancedbytes.games.ffb.server.DiceInterpreter;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.IServerJsonOption;
-import com.balancedbytes.games.ffb.server.model.ServerSkill;
 import com.balancedbytes.games.ffb.server.net.ReceivedCommand;
 import com.balancedbytes.games.ffb.server.step.AbstractStepWithReRoll;
 import com.balancedbytes.games.ffb.server.step.StepAction;
@@ -92,6 +93,7 @@ public class StepHypnoticGaze extends AbstractStepWithReRoll {
     Game game = getGameState().getGame();
     ActingPlayer actingPlayer = game.getActingPlayer();
     boolean doGaze = ((actingPlayer.getPlayerAction() == PlayerAction.GAZE) && (game.getDefender() != null));
+    Skill gazeSkill = null;
     if (!doGaze) {
     	getResult().setNextAction(StepAction.NEXT_STEP);
     	return;
@@ -102,10 +104,11 @@ public class StepHypnoticGaze extends AbstractStepWithReRoll {
         doGaze = false;
       }
     } else {
-      doGaze = UtilCards.hasUnusedSkill(game, actingPlayer, ServerSkill.HYPNOTIC_GAZE) && !UtilCards.cancelsSkill(actingPlayer.getPlayer(), SkillConstants.HYPNOTIC_GAZE);
+      gazeSkill = UtilCards.getUnusedSkillWithProperty(actingPlayer, NamedProperties.inflictsConfusion);
+      doGaze = gazeSkill != null && !UtilCards.cancelsSkill(actingPlayer.getPlayer(), SkillConstants.HYPNOTIC_GAZE);
     }
-    if (doGaze) {
-      actingPlayer.markSkillUsed(ServerSkill.HYPNOTIC_GAZE);
+    if (doGaze && gazeSkill != null) {
+      actingPlayer.markSkillUsed(gazeSkill);
       int roll = getGameState().getDiceRoller().rollSkill();
       GazeModifierFactory modifierFactory = new GazeModifierFactory();
       Set<GazeModifier> gazeModifiers = modifierFactory.findGazeModifiers(game);

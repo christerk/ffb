@@ -6,6 +6,7 @@ import com.balancedbytes.games.ffb.PlayerState;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.Game;
+import com.balancedbytes.games.ffb.model.Skill;
 import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.IServerJsonOption;
@@ -109,7 +110,10 @@ public class StepEndBlocking extends AbstractStep {
       FieldCoordinate attackerPositon = game.getFieldModel().getPlayerCoordinate(actingPlayer.getPlayer());
       PlayerState attackerState = game.getFieldModel().getPlayerState(actingPlayer.getPlayer());
       PlayerState defenderState = game.getFieldModel().getPlayerState(game.getDefender());
-      if (UtilCards.hasSkill(game, actingPlayer, ServerSkill.FRENZY)) {
+      
+      Skill unusedPlayerMustMakeSecondBlockSkill = UtilCards.getUnusedSkillWithProperty(actingPlayer, NamedProperties.forceSecondBlock);
+      
+      if (UtilCards.hasSkillWithProperty(actingPlayer.getPlayer(), NamedProperties.forceSecondBlock)) {
         actingPlayer.setGoingForIt(true);
       }
       if ((actingPlayer.getPlayerAction() == PlayerAction.MULTIPLE_BLOCK)
@@ -122,13 +126,13 @@ public class StepEndBlocking extends AbstractStep {
         SequenceGenerator.getInstance().pushBlockSequence(getGameState(), null, false, game.getDefenderId());
         game.setDefenderId(null);
         getResult().setNextAction(StepAction.NEXT_STEP);
-      } else if (UtilCards.hasUnusedSkill(game, actingPlayer, ServerSkill.FRENZY) && (defenderState != null)
+      } else if( (unusedPlayerMustMakeSecondBlockSkill != null) && (defenderState != null)
           && defenderState.canBeBlocked() && attackerPositon.isAdjacent(defenderPosition)
           && attackerState.hasTacklezones() && fDefenderPushed
           && (actingPlayer.getPlayerAction() != PlayerAction.MULTIPLE_BLOCK)
           && UtilPlayer.isNextMovePossible(game, false)) {
         actingPlayer.setGoingForIt(true);
-        actingPlayer.markSkillUsed(ServerSkill.FRENZY);
+        actingPlayer.markSkillUsed(unusedPlayerMustMakeSecondBlockSkill);
         SequenceGenerator.getInstance().pushBlockSequence(getGameState(), game.getDefenderId(), fUsingStab, null);
       } else {
         ServerUtilBlock.removePlayerBlockStates(game);

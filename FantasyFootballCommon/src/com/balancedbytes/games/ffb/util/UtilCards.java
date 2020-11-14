@@ -280,6 +280,15 @@ public final class UtilCards {
     return getSkillCancelling(player, skill) != null;
   }
 
+  public static Skill getUnusedSkillWithProperty(ActingPlayer actingPlayer, ISkillProperty property) {
+    for (Skill playerSkill : actingPlayer.getPlayer().getSkills()) {
+      if (playerSkill.hasSkillProperty(property) && !actingPlayer.isSkillUsed(playerSkill)) {
+        return playerSkill;
+      }
+    }
+    return null;
+  }
+  
   public static boolean hasUnusedSkillWithProperty(ActingPlayer actingPlayer, ISkillProperty property) {
     for (Skill playerSkill : actingPlayer.getPlayer().getSkills()) {
       if (playerSkill.hasSkillProperty(property) && !actingPlayer.isSkillUsed(playerSkill)) {

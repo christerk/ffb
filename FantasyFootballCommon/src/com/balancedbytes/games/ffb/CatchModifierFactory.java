@@ -8,6 +8,7 @@ import java.util.Set;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.model.Skill;
+import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
 import com.balancedbytes.games.ffb.util.UtilCards;
 import com.balancedbytes.games.ffb.util.UtilDisturbingPresence;
 import com.balancedbytes.games.ffb.util.UtilPlayer;
@@ -48,7 +49,7 @@ public class CatchModifierFactory implements IRollModifierFactory {
     if (UtilCards.hasSkill(pGame, pPlayer, Skill.EXTRA_ARMS)) {
       catchModifiers.add(CatchModifier.EXTRA_ARMS);
     }
-    if (UtilCards.hasSkill(pGame, pPlayer, Skill.NERVES_OF_STEEL)) {
+    if (UtilCards.hasSkillWithProperty(pPlayer, NamedProperties.ignoreTacklezonesWhenCatching)) {
       catchModifiers.add(CatchModifier.NERVES_OF_STEEL);
     } else {
       CatchModifier tacklezoneModifier = getTacklezoneModifier(pGame, pPlayer);

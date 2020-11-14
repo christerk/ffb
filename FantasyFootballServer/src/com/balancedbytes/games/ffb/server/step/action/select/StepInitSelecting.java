@@ -6,6 +6,7 @@ import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
+import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandActingPlayer;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandBlock;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandFoul;
@@ -19,7 +20,6 @@ import com.balancedbytes.games.ffb.server.GameCache;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.IServerConstant;
 import com.balancedbytes.games.ffb.server.IServerJsonOption;
-import com.balancedbytes.games.ffb.server.model.ServerSkill;
 import com.balancedbytes.games.ffb.server.net.ReceivedCommand;
 import com.balancedbytes.games.ffb.server.step.AbstractStep;
 import com.balancedbytes.games.ffb.server.step.StepAction;
@@ -274,7 +274,7 @@ public final class StepInitSelecting extends AbstractStep {
         ServerUtilBlock.updateDiceDecorations(game);
       }
       if (actingPlayer.getPlayerAction().isMoving()) {
-        if (actingPlayer.isStandingUp() && !UtilCards.hasSkill(game, actingPlayer, ServerSkill.JUMP_UP)) {
+        if (actingPlayer.isStandingUp() && !UtilCards.hasSkillWithProperty(actingPlayer.getPlayer(), NamedProperties.canStandUpForFree)) {
           actingPlayer.setCurrentMove(Math.min(IServerConstant.MINIMUM_MOVE_TO_STAND_UP, UtilCards.getPlayerMovement(game, actingPlayer.getPlayer())));
           actingPlayer.setGoingForIt(UtilPlayer.isNextMoveGoingForIt(game)); // auto
                                                                              // go-for-it
