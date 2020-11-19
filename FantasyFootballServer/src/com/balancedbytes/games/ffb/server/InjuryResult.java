@@ -1,12 +1,11 @@
 package com.balancedbytes.games.ffb.server;
 
-import java.util.HashSet;
-import java.util.Set;
-
+import com.balancedbytes.games.ffb.ApothecaryMode;
+import com.balancedbytes.games.ffb.ApothecaryStatus;
 import com.balancedbytes.games.ffb.ArmorModifier;
 import com.balancedbytes.games.ffb.ArmorModifierFactory;
 import com.balancedbytes.games.ffb.BloodSpot;
-import com.balancedbytes.games.ffb.FieldCoordinate;
+import com.balancedbytes.games.ffb.InjuryContext;
 import com.balancedbytes.games.ffb.InjuryModifier;
 import com.balancedbytes.games.ffb.InjuryModifierFactory;
 import com.balancedbytes.games.ffb.InjuryType;
@@ -23,7 +22,6 @@ import com.balancedbytes.games.ffb.model.PlayerResult;
 import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
 import com.balancedbytes.games.ffb.report.ReportInjury;
 import com.balancedbytes.games.ffb.server.step.IStep;
-import com.balancedbytes.games.ffb.server.step.action.common.ApothecaryMode;
 import com.balancedbytes.games.ffb.server.util.UtilServerGame;
 import com.balancedbytes.games.ffb.util.UtilBox;
 import com.balancedbytes.games.ffb.util.UtilCards;
@@ -37,454 +35,189 @@ import com.eclipsesource.json.JsonValue;
  */
 public class InjuryResult implements IJsonSerializable {
 
-  private InjuryType fInjuryType;
-  private String fDefenderId;
-  private FieldCoordinate fDefenderPosition;
-  private String fAttackerId;
-  private Set<ArmorModifier> fArmorModifiers;
-  private int[] fArmorRoll;
-  private boolean fArmorBroken;
-  private Set<InjuryModifier> fInjuryModifiers;
-  private int[] fInjuryRoll;
-  private int[] fCasualtyRoll;
-  private int[] fCasualtyRollDecay;
-  private PlayerState fInjury;
-  private PlayerState fInjuryDecay;
-  private SeriousInjury fSeriousInjury;
-  private SeriousInjury fSeriousInjuryDecay;
-  private ApothecaryStatus fApothecaryStatus;
-  private SendToBoxReason fSendToBoxReason;
-  private int fSendToBoxTurn;
-  private int fSendToBoxHalf;
-  private SoundId fSound;
-  private PlayerState fSufferedInjury;
-  private ApothecaryMode fApothecaryMode;
+	private InjuryContext injuryContext;
 
-  public InjuryResult() {
-    fArmorModifiers = new HashSet<ArmorModifier>();
-    fInjuryModifiers = new HashSet<InjuryModifier>();
-  }
-
-  public void setInjuryType(InjuryType pInjuryType) {
-    fInjuryType = pInjuryType;
-  }
-
-  public InjuryType getInjuryType() {
-    return fInjuryType;
-  }
-
-  public void setDefenderId(String pPlayerId) {
-    fDefenderId = pPlayerId;
-  }
-
-  public String getDefenderId() {
-    return fDefenderId;
-  }
-
-  public void setDefenderCoordinate(FieldCoordinate pDefenderCoordinate) {
-    fDefenderPosition = pDefenderCoordinate;
-  }
-
-  public FieldCoordinate getDefenderPosition() {
-    return fDefenderPosition;
-  }
-
-  public void setAttackerId(String pSendToBoxByPlayerId) {
-    fAttackerId = pSendToBoxByPlayerId;
-  }
-
-  public String getAttackerId() {
-    return fAttackerId;
-  }
-
-  public void addArmorModifier(ArmorModifier pArmorModifier) {
-    if (pArmorModifier != null) {
-      fArmorModifiers.add(pArmorModifier);
-    }
-  }
-
-  public boolean hasArmorModifier(ArmorModifier pArmorModifier) {
-    return fArmorModifiers.contains(pArmorModifier);
-  }
-
-  public int getArmorModifierTotal() {
-    int totalModifiers = 0;
-    for (ArmorModifier armorModifier : fArmorModifiers) {
-      totalModifiers += armorModifier.getModifier();
-    }
-    return totalModifiers;
-  }
-
-  public ArmorModifier[] getArmorModifiers() {
-    return new ArmorModifierFactory().toArray(fArmorModifiers);
-  }
-  
-  public void clearArmorModifiers() {
-  	fArmorModifiers.clear();
-  }
-
-  public void addInjuryModifier(InjuryModifier pInjuryModifier) {
-    if (pInjuryModifier != null) {
-      fInjuryModifiers.add(pInjuryModifier);
-    }
-  }
-
-  public boolean hasInjuryModifier(InjuryModifier pInjuryModifier) {
-    return fInjuryModifiers.contains(pInjuryModifier);
-  }
-
-  public int getInjuryModifierTotal() {
-    int totalModifiers = 0;
-    for (InjuryModifier injuryModifier : fInjuryModifiers) {
-      totalModifiers += injuryModifier.getModifier();
-    }
-    return totalModifiers;
-  }
-
-  public InjuryModifier[] getInjuryModifiers() {
-    return new InjuryModifierFactory().toArray(fInjuryModifiers);
-  }
-  
-  public void clearInjuryModifiers() {
-  	fInjuryModifiers.clear();
-  }
-
-  public int[] getArmorRoll() {
-    return fArmorRoll;
-  }
-
-  public void setArmorRoll(int[] pArmorRoll) {
-    fArmorRoll = pArmorRoll;
-  }
-
-  public void setArmorBroken(boolean pArmorBroken) {
-    fArmorBroken = pArmorBroken;
-  }
-
-  public boolean isArmorBroken() {
-    return fArmorBroken;
-  }
-
-  public int[] getInjuryRoll() {
-    return fInjuryRoll;
-  }
-
-  public void setInjuryRoll(int[] pInjuryRoll) {
-    fInjuryRoll = pInjuryRoll;
-  }
-
-  public int[] getCasualtyRoll() {
-    return fCasualtyRoll;
-  }
-
-  public void setCasualtyRoll(int[] pCasualtyRoll) {
-    fCasualtyRoll = pCasualtyRoll;
-  }
-
-  public PlayerState getInjury() {
-    return fInjury;
-  }
-
-  public void setInjury(PlayerState pInjury) {
-    fInjury = pInjury;
-  }
-
-  public PlayerState getInjuryDecay() {
-    return fInjuryDecay;
-  }
-
-  public void setInjuryDecay(PlayerState pInjuryDecay) {
-    fInjuryDecay = pInjuryDecay;
-  }
-
-  public PlayerState getPlayerState() {
-    if ((getInjuryDecay() != null) && (getInjury() != null)) {
-      if (getInjuryDecay().getId() > getInjury().getId()) {
-        return getInjuryDecay();
-      } else {
-        return getInjury();
-      }
-    } else {
-      return getInjury();
-    }
-  }
-
-  public SeriousInjury getSeriousInjury() {
-    return fSeriousInjury;
-  }
-
-  public void setSeriousInjury(SeriousInjury pSeriousInjury) {
-    fSeriousInjury = pSeriousInjury;
-  }
-
-  public boolean isBadlyHurt() {
-    return ((getPlayerState() != null) && (getPlayerState().getBase() == PlayerState.BADLY_HURT));
-  }
-  
-  public boolean isCasualty() {
-    return ((getPlayerState() != null) && getPlayerState().isCasualty());
-  }
-
-  public boolean isKnockedOut() {
-    return ((getPlayerState() != null) && (getPlayerState().getBase() == PlayerState.KNOCKED_OUT));
-  }
-
-  public boolean isReserve() {
-    return ((getPlayerState() != null) && (getPlayerState().getBase() == PlayerState.RESERVE));
-  }
-
-  public boolean isSeriousInjury() {
-    return ((getPlayerState() != null) && (getPlayerState().getBase() == PlayerState.SERIOUS_INJURY));
-  }
-
-  public void setApothecaryStatus(ApothecaryStatus pApothecaryStatus) {
-    fApothecaryStatus = pApothecaryStatus;
-  }
-
-  public ApothecaryStatus getApothecaryStatus() {
-    return fApothecaryStatus;
-  }
-
-  public void setSendToBoxReason(SendToBoxReason pSendToBoxReason) {
-    fSendToBoxReason = pSendToBoxReason;
-  }
-
-  public SendToBoxReason getSendToBoxReason() {
-    return fSendToBoxReason;
-  }
-
-  public void setSendToBoxTurn(int pSendToBoxTurn) {
-    fSendToBoxTurn = pSendToBoxTurn;
-  }
-
-  public int getSendToBoxTurn() {
-    return fSendToBoxTurn;
-  }
-
-  public void setSendToBoxHalf(int pSendToBoxHalf) {
-    fSendToBoxHalf = pSendToBoxHalf;
-  }
-
-  public int getSendToBoxHalf() {
-    return fSendToBoxHalf;
-  }
-
-  public void setSound(SoundId pSound) {
-    fSound = pSound;
-  }
-
-  public SoundId getSound() {
-    return fSound;
-  }
-
-  public int[] getCasualtyRollDecay() {
-    return fCasualtyRollDecay;
-  }
-
-  public void setCasualtyRollDecay(int[] pCasualtyRollDecay) {
-    fCasualtyRollDecay = pCasualtyRollDecay;
-  }
-
-  public SeriousInjury getSeriousInjuryDecay() {
-    return fSeriousInjuryDecay;
-  }
-
-  public void setSeriousInjuryDecay(SeriousInjury pSeriousInjuryDecay) {
-    fSeriousInjuryDecay = pSeriousInjuryDecay;
-  }
-
-  public void setSufferedInjury(PlayerState pSufferedInjury) {
-    fSufferedInjury = pSufferedInjury;
-  }
-
-  public PlayerState getSufferedInjury() {
-    return fSufferedInjury;
-  }
-  
-  public ApothecaryMode getApothecaryMode() {
-		return fApothecaryMode;
+	public InjuryResult() {
+		injuryContext = new InjuryContext();
 	}
-  
-  public void setApothecaryMode(ApothecaryMode pApothecaryMode) {
-		fApothecaryMode = pApothecaryMode;
+	
+	public InjuryContext injuryContext() { return injuryContext;}
+
+	public void setInjuryContext(InjuryContext context) {
+		injuryContext = context;
 	}
 
-  public void applyTo(IStep pStep) {
-    Game game = pStep.getGameState().getGame();
-    GameResult gameResult = game.getGameResult();
-    Player defender = game.getPlayerById(getDefenderId());
+	public void applyTo(IStep pStep) {
+		Game game = pStep.getGameState().getGame();
+		GameResult gameResult = game.getGameResult();
+		Player defender = game.getPlayerById(injuryContext.getDefenderId());
 
-    PlayerResult playerResult = gameResult.getPlayerResult(defender);
-    if(UtilCards.hasSkillWithProperty(defender, NamedProperties.getsSentOffAtEndOfDrive)) {
-      playerResult.setHasUsedSecretWeapon(true);
-    }
+		PlayerResult playerResult = gameResult.getPlayerResult(defender);
+		if(UtilCards.hasSkillWithProperty(defender, NamedProperties.getsSentOffAtEndOfDrive)) {
+			playerResult.setHasUsedSecretWeapon(true);
+		}
 
-    InjuryType injuryType = getInjuryType();
-    boolean isCausedByOpponent = false;
-    if (injuryType == InjuryType.BLOCK || injuryType == InjuryType.FOUL || injuryType == InjuryType.STAB || injuryType == InjuryType.PILING_ON_INJURY || injuryType == InjuryType.PILING_ON_ARMOR
-        || (injuryType == InjuryType.CHAINSAW && getAttackerId() != null)) {
-      isCausedByOpponent = true;
-    }
-    
-    PlayerState oldPlayerState = game.getFieldModel().getPlayerState(defender);
-    if (getPlayerState() != null) {
-      // Make sure the player isn't converted from a stun to prone (for example when fouling a stunned player)
-      if ((getPlayerState().getBase() != PlayerState.PRONE) || (oldPlayerState.getBase() != PlayerState.STUNNED)) {
-        PlayerState playerState = game.getFieldModel().getPlayerState(defender);
-        game.getFieldModel().setPlayerState(defender, playerState.changeBase(getPlayerState().getBase()));
-        if ((getPlayerState().getBase() == PlayerState.STUNNED)
-          && (((defender.getTeam() == game.getTeamHome()) && game.isHomePlaying()) || ((defender.getTeam() == game.getTeamAway()) && !game.isHomePlaying()))) {
-          game.getFieldModel().setPlayerState(defender, game.getFieldModel().getPlayerState(defender).changeActive(false));
-        }
-      }
-      if (isCasualty() || isKnockedOut() || isReserve()) {
-        UtilBox.putPlayerIntoBox(game, defender);
-        UtilServerGame.updateLeaderReRolls(pStep);
-      }
-    }
-    // death is also a serious injury
-    if ((getPlayerState() != null) && (getPlayerState().getBase() == PlayerState.RIP)) {
-      playerResult.setSeriousInjury(SeriousInjury.DEAD);
-      playerResult.setSeriousInjuryDecay(null);
-    } else {
-      playerResult.setSeriousInjury(getSeriousInjury());
-      playerResult.setSeriousInjuryDecay(getSeriousInjuryDecay());
-    }
-    if (getSendToBoxReason() != null) {
-      playerResult.setSendToBoxReason(getSendToBoxReason());
-      playerResult.setSendToBoxTurn(getSendToBoxTurn());
-      playerResult.setSendToBoxHalf(getSendToBoxHalf());
-      playerResult.setSendToBoxByPlayerId(getAttackerId());
-    }
-    if (getSufferedInjury() != null) {
-      if (isCausedByOpponent) {
-        if ((fApothecaryStatus == ApothecaryStatus.RESULT_CHOICE) && (getPlayerState().getBase() == PlayerState.RESERVE)) {
-          if (game.getTeamHome().hasPlayer(defender)) {
-            gameResult.getTeamResultHome().sufferInjury(new PlayerState(PlayerState.BADLY_HURT));
-          } else {
-            gameResult.getTeamResultAway().sufferInjury(new PlayerState(PlayerState.BADLY_HURT));
-          }
-        } else {
-          if (game.getTeamHome().hasPlayer(defender)) {
-            gameResult.getTeamResultHome().sufferInjury(getPlayerState());
-          } else {
-            gameResult.getTeamResultAway().sufferInjury(getPlayerState());
-          }
-        }
-        Player attacker = game.getPlayerById(getAttackerId());
-        if (getSufferedInjury().isCasualty() && getInjuryType().isWorthSpps() && (attacker.getTeam() != defender.getTeam())) {
-          PlayerResult attackerResult = gameResult.getPlayerResult(attacker);
-          attackerResult.setCasualties(attackerResult.getCasualties() + 1);
-        }
-      }
-      game.getFieldModel().add(new BloodSpot(getDefenderPosition(), getSufferedInjury()));
-    }
-  }
+		boolean isCausedByOpponent = injuryContext.getInjuryType().isCausedByOpponent();
 
-  public void report(IStep pStep) {
-    pStep.getResult().addReport(
-    		new ReportInjury(
-    				getDefenderId(),
-    				getInjuryType(),
-    				isArmorBroken(),
-    				getArmorModifiers(),
-    				getArmorRoll(),
-    				getInjuryModifiers(),
-            getInjuryRoll(),
-            getCasualtyRoll(),
-            getSeriousInjury(),
-            getCasualtyRollDecay(),
-            getSeriousInjuryDecay(),
-            getInjury(),
-            getInjuryDecay(),
-            getAttackerId()
-        )
-    );
-    pStep.getResult().setSound(getSound());
-  }
+		PlayerState oldPlayerState = game.getFieldModel().getPlayerState(defender);
+		if (injuryContext.getPlayerState() != null) {
+			// Make sure the player isn't converted from a stun to prone (for example when fouling a stunned player)
+			if ((injuryContext.getPlayerState().getBase() != PlayerState.PRONE) || (oldPlayerState.getBase() != PlayerState.STUNNED)) {
+				PlayerState playerState = game.getFieldModel().getPlayerState(defender);
+				game.getFieldModel().setPlayerState(defender, playerState.changeBase(injuryContext.getPlayerState().getBase()));
+				if ((injuryContext.getPlayerState().getBase() == PlayerState.STUNNED)
+						&& (((defender.getTeam() == game.getTeamHome()) && game.isHomePlaying()) || ((defender.getTeam() == game.getTeamAway()) && !game.isHomePlaying()))) {
+					game.getFieldModel().setPlayerState(defender, game.getFieldModel().getPlayerState(defender).changeActive(false));
+				}
+			}
+			if (injuryContext.isCasualty() || injuryContext.isKnockedOut() || injuryContext.isReserve()) {
+				UtilBox.putPlayerIntoBox(game, defender);
+				UtilServerGame.updateLeaderReRolls(pStep);
+			}
+		}
+		// death is also a serious injury
+		if ((injuryContext.getPlayerState() != null) && (injuryContext.getPlayerState().getBase() == PlayerState.RIP)) {
+			playerResult.setSeriousInjury(SeriousInjury.DEAD);
+			playerResult.setSeriousInjuryDecay(null);
+		} else {
+			playerResult.setSeriousInjury(injuryContext.getSeriousInjury());
+			playerResult.setSeriousInjuryDecay(injuryContext.getSeriousInjuryDecay());
+		}
+		if (injuryContext.getSendToBoxReason() != null) {
+			playerResult.setSendToBoxReason(injuryContext.getSendToBoxReason());
+			playerResult.setSendToBoxTurn(injuryContext.getSendToBoxTurn());
+			playerResult.setSendToBoxHalf(injuryContext.getSendToBoxHalf());
+			playerResult.setSendToBoxByPlayerId(injuryContext.getAttackerId());
+		}
+		if (injuryContext.getSufferedInjury() != null) {
+			if (isCausedByOpponent) {
+				if ((injuryContext.fApothecaryStatus == ApothecaryStatus.RESULT_CHOICE) && (injuryContext.getPlayerState().getBase() == PlayerState.RESERVE)) {
+					if (game.getTeamHome().hasPlayer(defender)) {
+						gameResult.getTeamResultHome().sufferInjury(new PlayerState(PlayerState.BADLY_HURT));
+					} else {
+						gameResult.getTeamResultAway().sufferInjury(new PlayerState(PlayerState.BADLY_HURT));
+					}
+				} else {
+					if (game.getTeamHome().hasPlayer(defender)) {
+						gameResult.getTeamResultHome().sufferInjury(injuryContext.getPlayerState());
+					} else {
+						gameResult.getTeamResultAway().sufferInjury(injuryContext.getPlayerState());
+					}
+				}
+				Player attacker = game.getPlayerById(injuryContext.getAttackerId());
+				if (injuryContext.getSufferedInjury().isCasualty() && injuryContext.getInjuryType().isWorthSpps() && (attacker.getTeam() != defender.getTeam())) {
+					PlayerResult attackerResult = gameResult.getPlayerResult(attacker);
+					attackerResult.setCasualties(attackerResult.getCasualties() + 1);
+				}
+			}
+			game.getFieldModel().add(new BloodSpot(injuryContext.getDefenderPosition(), injuryContext.getSufferedInjury()));
+		}
+	}
 
-  // JSON serialization
-  
-  public JsonObject toJsonValue() {
+	public void report(IStep pStep) {
+		pStep.getResult().addReport(
+				new ReportInjury(
+						injuryContext.getDefenderId(),
+						injuryContext.getInjuryType(),
+						injuryContext.isArmorBroken(),
+						injuryContext.getArmorModifiers(),
+						injuryContext.getArmorRoll(),
+						injuryContext.getInjuryModifiers(),
+						injuryContext.getInjuryRoll(),
+						injuryContext.getCasualtyRoll(),
+						injuryContext.getSeriousInjury(),
+						injuryContext.getCasualtyRollDecay(),
+						injuryContext.getSeriousInjuryDecay(),
+						injuryContext.getInjury(),
+						injuryContext.getInjuryDecay(),
+						injuryContext.getAttackerId()
+						)
+				);
+		pStep.getResult().setSound(injuryContext.getSound());
+	}
 
-    JsonObject jsonObject = new JsonObject();
-    
-    IServerJsonOption.INJURY_TYPE.addTo(jsonObject, fInjuryType);
-    IServerJsonOption.DEFENDER_ID.addTo(jsonObject, fDefenderId);
-    IServerJsonOption.DEFENDER_POSITION.addTo(jsonObject, fDefenderPosition);
-    IServerJsonOption.ATTACKER_ID.addTo(jsonObject, fAttackerId);
-    IServerJsonOption.ARMOR_ROLL.addTo(jsonObject, fArmorRoll);
-    IServerJsonOption.ARMOR_BROKEN.addTo(jsonObject, fArmorBroken);
-    IServerJsonOption.INJURY_ROLL.addTo(jsonObject, fInjuryRoll);
-    IServerJsonOption.INJURY.addTo(jsonObject, fInjury);
-    IServerJsonOption.INJURY_DECAY.addTo(jsonObject, fInjuryDecay);
-    IServerJsonOption.CASUALTY_ROLL.addTo(jsonObject, fCasualtyRoll);
-    IServerJsonOption.SERIOUS_INJURY.addTo(jsonObject, fSeriousInjury);
-    IServerJsonOption.CASUALTY_ROLL_DECAY.addTo(jsonObject, fCasualtyRollDecay);
-    IServerJsonOption.SERIOUS_INJURY_DECAY.addTo(jsonObject, fSeriousInjuryDecay);
-    IServerJsonOption.APOTHECARY_STATUS.addTo(jsonObject, fApothecaryStatus);
-    IServerJsonOption.SEND_TO_BOX_REASON.addTo(jsonObject, fSendToBoxReason);
-    IServerJsonOption.SEND_TO_BOX_TURN.addTo(jsonObject, fSendToBoxTurn);
-    IServerJsonOption.SEND_TO_BOX_HALF.addTo(jsonObject, fSendToBoxHalf);
-    IServerJsonOption.SOUND.addTo(jsonObject, fSound);
-    IServerJsonOption.APOTHECARY_MODE.addTo(jsonObject, fApothecaryMode);
+	// JSON serialization
 
-    JsonArray armorModifiers = new JsonArray();
-    for (ArmorModifier armorModifier : getArmorModifiers()) {
-      armorModifiers.add(UtilJson.toJsonValue(armorModifier));
-    }
-    IServerJsonOption.ARMOR_MODIFIERS.addTo(jsonObject, armorModifiers);
+	public JsonObject toJsonValue() {
 
-    JsonArray injuryModifiers = new JsonArray();
-    for (InjuryModifier injuryModifier : getInjuryModifiers()) {
-      injuryModifiers.add(UtilJson.toJsonValue(injuryModifier));
-    }
-    IServerJsonOption.INJURY_MODIFIERS.addTo(jsonObject, injuryModifiers);
+		JsonObject jsonObject = new JsonObject();
 
-    return jsonObject;
-    
-  }
-  
-  public InjuryResult initFrom(JsonValue pJsonValue) {
-    
-    JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
+		IServerJsonOption.INJURY_TYPE.addTo(jsonObject, injuryContext.fInjuryType);
+		IServerJsonOption.DEFENDER_ID.addTo(jsonObject, injuryContext.fDefenderId);
+		IServerJsonOption.DEFENDER_POSITION.addTo(jsonObject, injuryContext.fDefenderPosition);
+		IServerJsonOption.ATTACKER_ID.addTo(jsonObject, injuryContext.fAttackerId);
+		IServerJsonOption.ARMOR_ROLL.addTo(jsonObject, injuryContext.fArmorRoll);
+		IServerJsonOption.ARMOR_BROKEN.addTo(jsonObject, injuryContext.fArmorBroken);
+		IServerJsonOption.INJURY_ROLL.addTo(jsonObject, injuryContext.fInjuryRoll);
+		IServerJsonOption.INJURY.addTo(jsonObject, injuryContext.fInjury);
+		IServerJsonOption.INJURY_DECAY.addTo(jsonObject, injuryContext.fInjuryDecay);
+		IServerJsonOption.CASUALTY_ROLL.addTo(jsonObject, injuryContext.fCasualtyRoll);
+		IServerJsonOption.SERIOUS_INJURY.addTo(jsonObject, injuryContext.fSeriousInjury);
+		IServerJsonOption.CASUALTY_ROLL_DECAY.addTo(jsonObject, injuryContext.fCasualtyRollDecay);
+		IServerJsonOption.SERIOUS_INJURY_DECAY.addTo(jsonObject, injuryContext.fSeriousInjuryDecay);
+		IServerJsonOption.APOTHECARY_STATUS.addTo(jsonObject, injuryContext.fApothecaryStatus);
+		IServerJsonOption.SEND_TO_BOX_REASON.addTo(jsonObject, injuryContext.fSendToBoxReason);
+		IServerJsonOption.SEND_TO_BOX_TURN.addTo(jsonObject, injuryContext.fSendToBoxTurn);
+		IServerJsonOption.SEND_TO_BOX_HALF.addTo(jsonObject, injuryContext.fSendToBoxHalf);
+		IServerJsonOption.SOUND.addTo(jsonObject, injuryContext.fSound);
+		IServerJsonOption.APOTHECARY_MODE.addTo(jsonObject, injuryContext.fApothecaryMode);
 
-    fInjuryType = (InjuryType) IServerJsonOption.INJURY_TYPE.getFrom(jsonObject);
-    fDefenderId = IServerJsonOption.DEFENDER_ID.getFrom(jsonObject);
-    fDefenderPosition = IServerJsonOption.DEFENDER_POSITION.getFrom(jsonObject);
-    fAttackerId = IServerJsonOption.ATTACKER_ID.getFrom(jsonObject);
-    fArmorRoll = IServerJsonOption.ARMOR_ROLL.getFrom(jsonObject);
-    fArmorBroken = IServerJsonOption.ARMOR_BROKEN.getFrom(jsonObject);
-    fInjuryRoll = IServerJsonOption.INJURY_ROLL.getFrom(jsonObject);
-    fInjury = IServerJsonOption.INJURY.getFrom(jsonObject);
-    fInjuryDecay = IServerJsonOption.INJURY_DECAY.getFrom(jsonObject);
-    fCasualtyRoll = IServerJsonOption.CASUALTY_ROLL.getFrom(jsonObject);
-    fSeriousInjury = (SeriousInjury) IServerJsonOption.SERIOUS_INJURY.getFrom(jsonObject);
-    fCasualtyRollDecay = IServerJsonOption.CASUALTY_ROLL_DECAY.getFrom(jsonObject);
-    fSeriousInjuryDecay = (SeriousInjury) IServerJsonOption.SERIOUS_INJURY_DECAY.getFrom(jsonObject);
-    fApothecaryStatus = (ApothecaryStatus) IServerJsonOption.APOTHECARY_STATUS.getFrom(jsonObject);
-    fSendToBoxReason = (SendToBoxReason) IServerJsonOption.SEND_TO_BOX_REASON.getFrom(jsonObject);
-    fSendToBoxTurn = IServerJsonOption.SEND_TO_BOX_TURN.getFrom(jsonObject);
-    fSendToBoxHalf = IServerJsonOption.SEND_TO_BOX_HALF.getFrom(jsonObject);
-    fSound = (SoundId) IServerJsonOption.SOUND.getFrom(jsonObject);
-    fApothecaryMode = (ApothecaryMode) IServerJsonOption.APOTHECARY_MODE.getFrom(jsonObject);
+		JsonArray armorModifiers = new JsonArray();
+		for (ArmorModifier armorModifier : injuryContext.getArmorModifiers()) {
+			armorModifiers.add(UtilJson.toJsonValue(armorModifier));
+		}
+		IServerJsonOption.ARMOR_MODIFIERS.addTo(jsonObject, armorModifiers);
 
-    fArmorModifiers.clear();
-    ArmorModifierFactory armorModifierFactory = new ArmorModifierFactory();
-    JsonArray armorModifiers = IServerJsonOption.ARMOR_MODIFIERS.getFrom(jsonObject);
-    for (int i = 0; i < armorModifiers.size(); i++) {
-      fArmorModifiers.add((ArmorModifier) UtilJson.toEnumWithName(armorModifierFactory, armorModifiers.get(i)));
-    }
+		JsonArray injuryModifiers = new JsonArray();
+		for (InjuryModifier injuryModifier : injuryContext.getInjuryModifiers()) {
+			injuryModifiers.add(UtilJson.toJsonValue(injuryModifier));
+		}
+		IServerJsonOption.INJURY_MODIFIERS.addTo(jsonObject, injuryModifiers);
 
-    fInjuryModifiers.clear();
-    InjuryModifierFactory injuryModifierFactory = new InjuryModifierFactory();
-    JsonArray injuryModifiers = IServerJsonOption.INJURY_MODIFIERS.getFrom(jsonObject);
-    for (int i = 0; i < injuryModifiers.size(); i++) {
-      fInjuryModifiers.add((InjuryModifier) UtilJson.toEnumWithName(injuryModifierFactory, injuryModifiers.get(i)));
-    }
-    
-    return this;
-    
-  }
+		return jsonObject;
+
+	}
+
+	public InjuryResult initFrom(JsonValue pJsonValue) {
+
+		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
+
+		injuryContext.fInjuryType = (InjuryType) IServerJsonOption.INJURY_TYPE.getFrom(jsonObject);
+		injuryContext.fDefenderId = IServerJsonOption.DEFENDER_ID.getFrom(jsonObject);
+		injuryContext.fDefenderPosition = IServerJsonOption.DEFENDER_POSITION.getFrom(jsonObject);
+		injuryContext.fAttackerId = IServerJsonOption.ATTACKER_ID.getFrom(jsonObject);
+		injuryContext.fArmorRoll = IServerJsonOption.ARMOR_ROLL.getFrom(jsonObject);
+		injuryContext.fArmorBroken = IServerJsonOption.ARMOR_BROKEN.getFrom(jsonObject);
+		injuryContext.fInjuryRoll = IServerJsonOption.INJURY_ROLL.getFrom(jsonObject);
+		injuryContext.fInjury = IServerJsonOption.INJURY.getFrom(jsonObject);
+		injuryContext.fInjuryDecay = IServerJsonOption.INJURY_DECAY.getFrom(jsonObject);
+		injuryContext.fCasualtyRoll = IServerJsonOption.CASUALTY_ROLL.getFrom(jsonObject);
+		injuryContext.fSeriousInjury = (SeriousInjury) IServerJsonOption.SERIOUS_INJURY.getFrom(jsonObject);
+		injuryContext.fCasualtyRollDecay = IServerJsonOption.CASUALTY_ROLL_DECAY.getFrom(jsonObject);
+		injuryContext.fSeriousInjuryDecay = (SeriousInjury) IServerJsonOption.SERIOUS_INJURY_DECAY.getFrom(jsonObject);
+		injuryContext.fApothecaryStatus = (ApothecaryStatus) IServerJsonOption.APOTHECARY_STATUS.getFrom(jsonObject);
+		injuryContext.fSendToBoxReason = (SendToBoxReason) IServerJsonOption.SEND_TO_BOX_REASON.getFrom(jsonObject);
+		injuryContext.fSendToBoxTurn = IServerJsonOption.SEND_TO_BOX_TURN.getFrom(jsonObject);
+		injuryContext.fSendToBoxHalf = IServerJsonOption.SEND_TO_BOX_HALF.getFrom(jsonObject);
+		injuryContext.fSound = (SoundId) IServerJsonOption.SOUND.getFrom(jsonObject);
+		injuryContext.fApothecaryMode = (ApothecaryMode) IServerJsonOption.APOTHECARY_MODE.getFrom(jsonObject);
+
+		injuryContext.fArmorModifiers.clear();
+		ArmorModifierFactory armorModifierFactory = new ArmorModifierFactory();
+		JsonArray armorModifiers = IServerJsonOption.ARMOR_MODIFIERS.getFrom(jsonObject);
+		for (int i = 0; i < armorModifiers.size(); i++) {
+			injuryContext.fArmorModifiers.add((ArmorModifier) UtilJson.toEnumWithName(armorModifierFactory, armorModifiers.get(i)));
+		}
+
+		injuryContext.fInjuryModifiers.clear();
+		InjuryModifierFactory injuryModifierFactory = new InjuryModifierFactory();
+		JsonArray injuryModifiers = IServerJsonOption.INJURY_MODIFIERS.getFrom(jsonObject);
+		for (int i = 0; i < injuryModifiers.size(); i++) {
+			injuryContext.fInjuryModifiers.add((InjuryModifier) UtilJson.toEnumWithName(injuryModifierFactory, injuryModifiers.get(i)));
+		}
+
+		return this;
+
+	}
 
 }

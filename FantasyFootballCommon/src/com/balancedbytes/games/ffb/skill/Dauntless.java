@@ -2,6 +2,7 @@ package com.balancedbytes.games.ffb.skill;
 
 import com.balancedbytes.games.ffb.SkillCategory;
 import com.balancedbytes.games.ffb.model.Skill;
+import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
 
 /**
 * A player with this skill is capable of psyching themselves up so that they
@@ -19,6 +20,8 @@ public class Dauntless extends Skill {
 
   public Dauntless() {
     super("Dauntless", SkillCategory.GENERAL);
+
+    registerProperty(NamedProperties.canRollToMatchOpponentsStrength);
   }
 
 }

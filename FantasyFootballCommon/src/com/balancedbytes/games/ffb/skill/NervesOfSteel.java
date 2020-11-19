@@ -1,5 +1,7 @@
 package com.balancedbytes.games.ffb.skill;
 
+import com.balancedbytes.games.ffb.CatchModifiers;
+import com.balancedbytes.games.ffb.InterceptionModifiers;
 import com.balancedbytes.games.ffb.PassingModifiers;
 import com.balancedbytes.games.ffb.SkillCategory;
 import com.balancedbytes.games.ffb.model.Skill;
@@ -15,6 +17,8 @@ public class NervesOfSteel extends Skill {
     super("Nerves of Steel", SkillCategory.PASSING);
     
     registerModifier(PassingModifiers.NERVES_OF_STEEL);
+    registerModifier(InterceptionModifiers.NERVES_OF_STEEL);
+    registerModifier(CatchModifiers.NERVES_OF_STEEL);
     
     registerProperty(NamedProperties.ignoreTacklezonesWhenPassing);
     registerProperty(NamedProperties.ignoreTacklezonesWhenCatching);

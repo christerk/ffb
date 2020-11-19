@@ -2,6 +2,7 @@ package com.balancedbytes.games.ffb.skill;
 
 import com.balancedbytes.games.ffb.SkillCategory;
 import com.balancedbytes.games.ffb.model.Skill;
+import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
 
 /**
 * At the start of a Block Action a player who is adjacent to at least two
@@ -16,6 +17,9 @@ public class MultipleBlock extends Skill {
 
   public MultipleBlock() {
     super("Multiple Block", SkillCategory.STRENGTH);
+    
+	registerProperty(NamedProperties.canBlockMoreThanOnce);
+
   }
 
 }

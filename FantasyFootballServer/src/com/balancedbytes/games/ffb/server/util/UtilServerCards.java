@@ -3,6 +3,7 @@ package com.balancedbytes.games.ffb.server.util;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.balancedbytes.games.ffb.ApothecaryMode;
 import com.balancedbytes.games.ffb.Card;
 import com.balancedbytes.games.ffb.CardEffect;
 import com.balancedbytes.games.ffb.CardTarget;
@@ -20,7 +21,6 @@ import com.balancedbytes.games.ffb.report.ReportCardEffectRoll;
 import com.balancedbytes.games.ffb.report.ReportPlayCard;
 import com.balancedbytes.games.ffb.server.DiceInterpreter;
 import com.balancedbytes.games.ffb.server.step.IStep;
-import com.balancedbytes.games.ffb.server.step.action.common.ApothecaryMode;
 import com.balancedbytes.games.ffb.util.StringTool;
 import com.balancedbytes.games.ffb.util.UtilCards;
 import com.balancedbytes.games.ffb.util.UtilPlayer;

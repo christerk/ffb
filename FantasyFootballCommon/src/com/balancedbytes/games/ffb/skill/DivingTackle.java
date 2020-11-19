@@ -2,6 +2,7 @@ package com.balancedbytes.games.ffb.skill;
 
 import com.balancedbytes.games.ffb.SkillCategory;
 import com.balancedbytes.games.ffb.model.Skill;
+import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
 
 /**
 * The player may use this skill after an opposing player attempts to dodge
@@ -19,6 +20,7 @@ public class DivingTackle extends Skill {
 
   public DivingTackle() {
     super("Diving Tackle", SkillCategory.AGILITY);
+    
+    registerProperty(NamedProperties.canAttemptToTackleDodgingPlayer);
   }
-
 }

@@ -2,6 +2,7 @@ package com.balancedbytes.games.ffb.skill;
 
 import com.balancedbytes.games.ffb.SkillCategory;
 import com.balancedbytes.games.ffb.model.Skill;
+import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
 
 /**
  * During each Start of a Drive sequence after Step 2 but before Step 3, you may
@@ -13,6 +14,9 @@ public class Swarming extends Skill {
 
   public Swarming() {
     super("Swarming", SkillCategory.EXTRAORDINARY);
+    
+    registerProperty(NamedProperties.canSneakExtraPlayersOntoPitch);
+
   }
 
 }

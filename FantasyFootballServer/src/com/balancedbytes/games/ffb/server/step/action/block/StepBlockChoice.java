@@ -6,6 +6,7 @@ import com.balancedbytes.games.ffb.SkillUse;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.Game;
+import com.balancedbytes.games.ffb.model.Skill;
 import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
 import com.balancedbytes.games.ffb.option.GameOptionId;
 import com.balancedbytes.games.ffb.option.UtilGameOption;
@@ -13,7 +14,6 @@ import com.balancedbytes.games.ffb.report.ReportBlockChoice;
 import com.balancedbytes.games.ffb.report.ReportSkillUse;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.IServerJsonOption;
-import com.balancedbytes.games.ffb.server.model.ServerSkill;
 import com.balancedbytes.games.ffb.server.net.ReceivedCommand;
 import com.balancedbytes.games.ffb.server.step.AbstractStep;
 import com.balancedbytes.games.ffb.server.step.StepAction;
@@ -139,57 +139,61 @@ public class StepBlockChoice extends AbstractStep {
   }
 
   private void executeStep() {
-    Game game = getGameState().getGame();
-    ActingPlayer actingPlayer = game.getActingPlayer();
-    UtilServerDialog.hideDialog(getGameState());
-    PlayerState attackerState = game.getFieldModel().getPlayerState(actingPlayer.getPlayer());
-    PlayerState defenderState = game.getFieldModel().getPlayerState(game.getDefender());
-    switch (fBlockResult) {
-      case SKULL:
-        game.getFieldModel().setPlayerState(actingPlayer.getPlayer(), attackerState.changeBase(PlayerState.FALLING));
-        game.getFieldModel().setPlayerState(game.getDefender(), fOldDefenderState);
-        getResult().setNextAction(StepAction.NEXT_STEP);
-        break;
-      case BOTH_DOWN:
-        getResult().setNextAction(StepAction.GOTO_LABEL, fGotoLabelOnJuggernaut);
-        break;
-      case POW_PUSHBACK:
-        if (UtilCards.hasSkill(game, game.getDefender(), ServerSkill.DODGE)) {
-          if (UtilCards.hasSkill(game, actingPlayer, ServerSkill.TACKLE)
-              && (!UtilCards.hasSkillWithProperty(actingPlayer.getPlayer(), NamedProperties.canBlockSameTeamPlayer) || actingPlayer.getPlayer().getTeam() != game.getDefender().getTeam())) {
-            if (UtilGameOption.isOptionEnabled(game, GameOptionId.RIGHT_STUFF_CANCELS_TACKLE)
-                && UtilCards.hasSkill(game, game.getDefender(), ServerSkill.RIGHT_STUFF)) {
-              getResult().addReport(new ReportSkillUse(game.getDefenderId(), ServerSkill.RIGHT_STUFF, true, SkillUse.CANCEL_TACKLE));
-              getResult().setNextAction(StepAction.GOTO_LABEL, fGotoLabelOnDodge);
-            } else {
-              getResult().addReport(new ReportSkillUse(actingPlayer.getPlayerId(), ServerSkill.TACKLE, true, SkillUse.CANCEL_DODGE));
-              game.getFieldModel().setPlayerState(game.getDefender(), defenderState.changeBase(PlayerState.FALLING));
-              publishParameters(UtilBlockSequence.initPushback(this));
-              getResult().setNextAction(StepAction.GOTO_LABEL, fGotoLabelOnPushback);
-            }
-          } else {
-            getResult().setNextAction(StepAction.GOTO_LABEL, fGotoLabelOnDodge);
-          }
-        } else {
-          game.getFieldModel().setPlayerState(game.getDefender(), defenderState.changeBase(PlayerState.FALLING));
-          publishParameters(UtilBlockSequence.initPushback(this));
-          getResult().setNextAction(StepAction.GOTO_LABEL, fGotoLabelOnPushback);
-        }
-        break;
-      case POW:
-        game.getFieldModel().setPlayerState(game.getDefender(), defenderState.changeBase(PlayerState.FALLING));
-        publishParameters(UtilBlockSequence.initPushback(this));
-        getResult().setNextAction(StepAction.GOTO_LABEL, fGotoLabelOnPushback);
-        break;
-      case PUSHBACK:
-        game.getFieldModel().setPlayerState(game.getDefender(), fOldDefenderState);
-        publishParameters(UtilBlockSequence.initPushback(this));
-        getResult().setNextAction(StepAction.GOTO_LABEL, fGotoLabelOnPushback);
-        break;
-      default:
-        break;
-    }
-    getResult().addReport(new ReportBlockChoice(fNrOfDice, fBlockRoll, fDiceIndex, fBlockResult, game.getDefenderId()));
+	  Game game = getGameState().getGame();
+	  ActingPlayer actingPlayer = game.getActingPlayer();
+	  UtilServerDialog.hideDialog(getGameState());
+	  PlayerState attackerState = game.getFieldModel().getPlayerState(actingPlayer.getPlayer());
+	  PlayerState defenderState = game.getFieldModel().getPlayerState(game.getDefender());
+	  switch (fBlockResult) {
+	  case SKULL:
+		  game.getFieldModel().setPlayerState(actingPlayer.getPlayer(), attackerState.changeBase(PlayerState.FALLING));
+		  game.getFieldModel().setPlayerState(game.getDefender(), fOldDefenderState);
+		  getResult().setNextAction(StepAction.NEXT_STEP);
+		  break;
+	  case BOTH_DOWN:
+		  getResult().setNextAction(StepAction.GOTO_LABEL, fGotoLabelOnJuggernaut);
+		  break;
+	  case POW_PUSHBACK:
+		  Skill defenderDodgeSkill = UtilCards.getSkillWithProperty(game.getDefender(), NamedProperties.ignoreDefenderStumblesResult);
+		  Skill attackerCanCancelDodgeSkill = UtilCards.getSkillCancelling(actingPlayer.getPlayer(), defenderDodgeSkill);
+		  if (defenderDodgeSkill != null) {
+			  if ((attackerCanCancelDodgeSkill != null)
+					  && (!UtilCards.hasSkillWithProperty(actingPlayer.getPlayer(), NamedProperties.canBlockSameTeamPlayer) || actingPlayer.getPlayer().getTeam() != game.getDefender().getTeam())) {
+
+				  Skill playerCanBeThrownSkill = UtilCards.getSkillWithProperty(game.getDefender(), NamedProperties.canBeThrown); 
+				  if (UtilGameOption.isOptionEnabled(game, GameOptionId.RIGHT_STUFF_CANCELS_TACKLE)
+						  && playerCanBeThrownSkill != null) {
+					  getResult().addReport(new ReportSkillUse(game.getDefenderId(), playerCanBeThrownSkill, true, SkillUse.CANCEL_TACKLE));
+					  getResult().setNextAction(StepAction.GOTO_LABEL, fGotoLabelOnDodge);
+				  } else {
+					  getResult().addReport(new ReportSkillUse(actingPlayer.getPlayerId(), attackerCanCancelDodgeSkill, true, SkillUse.CANCEL_DODGE));
+					  game.getFieldModel().setPlayerState(game.getDefender(), defenderState.changeBase(PlayerState.FALLING));
+					  publishParameters(UtilBlockSequence.initPushback(this));
+					  getResult().setNextAction(StepAction.GOTO_LABEL, fGotoLabelOnPushback);
+				  }
+			  } else {
+				  getResult().setNextAction(StepAction.GOTO_LABEL, fGotoLabelOnDodge);
+			  }
+		  } else {
+			  game.getFieldModel().setPlayerState(game.getDefender(), defenderState.changeBase(PlayerState.FALLING));
+			  publishParameters(UtilBlockSequence.initPushback(this));
+			  getResult().setNextAction(StepAction.GOTO_LABEL, fGotoLabelOnPushback);
+		  }
+		  break;
+	  case POW:
+		  game.getFieldModel().setPlayerState(game.getDefender(), defenderState.changeBase(PlayerState.FALLING));
+		  publishParameters(UtilBlockSequence.initPushback(this));
+		  getResult().setNextAction(StepAction.GOTO_LABEL, fGotoLabelOnPushback);
+		  break;
+	  case PUSHBACK:
+		  game.getFieldModel().setPlayerState(game.getDefender(), fOldDefenderState);
+		  publishParameters(UtilBlockSequence.initPushback(this));
+		  getResult().setNextAction(StepAction.GOTO_LABEL, fGotoLabelOnPushback);
+		  break;
+	  default:
+		  break;
+	  }
+	  getResult().addReport(new ReportBlockChoice(fNrOfDice, fBlockRoll, fDiceIndex, fBlockResult, game.getDefenderId()));
   }
 
   // JSON serialization

@@ -1,6 +1,8 @@
 package com.balancedbytes.games.ffb;
 
+import java.lang.reflect.Field;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 public class PassingModifiers {
@@ -47,7 +49,30 @@ public class PassingModifiers {
     }
   };
   
-  public class PassContext {
+  private static Map<String, PassModifier> values;
+  public static Map<String, PassModifier> values() { return values;}
+  
+  public PassingModifiers() {
+		try {
+			Class<?> c = this.getClass();
+			Class<?> cModifierType = PassModifier.class.getClass();
+			for(Field f :c.getDeclaredFields())
+			{
+				if(f.getType() == cModifierType)
+				{
+					PassModifier modifier = (PassModifier)f.get(this);
+					values.put(modifier.getName().toLowerCase(), modifier);
+				}
+			}
+			
+		} catch (IllegalArgumentException | IllegalAccessException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+  
+  public static class PassContext {
     public PassingDistance distance;
     public boolean duringThrowTeamMate;
 

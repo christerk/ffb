@@ -1,8 +1,8 @@
 package com.balancedbytes.games.ffb.server.step.action.ktm;
 
+import com.balancedbytes.games.ffb.ApothecaryMode;
 import com.balancedbytes.games.ffb.CatchScatterThrowInMode;
 import com.balancedbytes.games.ffb.FieldCoordinate;
-import com.balancedbytes.games.ffb.InjuryType;
 import com.balancedbytes.games.ffb.PlayerState;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.Game;
@@ -10,6 +10,7 @@ import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.IServerJsonOption;
 import com.balancedbytes.games.ffb.server.InjuryResult;
+import com.balancedbytes.games.ffb.server.InjuryType.InjuryTypeKTMCrowd;
 import com.balancedbytes.games.ffb.server.net.ReceivedCommand;
 import com.balancedbytes.games.ffb.server.step.AbstractStep;
 import com.balancedbytes.games.ffb.server.step.StepAction;
@@ -17,7 +18,6 @@ import com.balancedbytes.games.ffb.server.step.StepCommandStatus;
 import com.balancedbytes.games.ffb.server.step.StepId;
 import com.balancedbytes.games.ffb.server.step.StepParameter;
 import com.balancedbytes.games.ffb.server.step.StepParameterKey;
-import com.balancedbytes.games.ffb.server.step.action.common.ApothecaryMode;
 import com.balancedbytes.games.ffb.server.util.UtilServerInjury;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
@@ -77,7 +77,7 @@ public class StepKickTeamMateDoubleRolled extends AbstractStep {
       game.getFieldModel().setPlayerCoordinate(kickedPlayer, fKickedPlayerCoordinate);
       game.getFieldModel().setPlayerState(game.getDefender(), fKickedPlayerState);
       game.setDefenderId(null);
-      InjuryResult injury = UtilServerInjury.handleInjury(this, InjuryType.KTM_INJURY, null, kickedPlayer, fKickedPlayerCoordinate, null, ApothecaryMode.THROWN_PLAYER);
+      InjuryResult injury = UtilServerInjury.handleInjury(this, new InjuryTypeKTMCrowd(this), null, kickedPlayer, fKickedPlayerCoordinate, null, ApothecaryMode.THROWN_PLAYER);
       publishParameter(new StepParameter(StepParameterKey.INJURY_RESULT, injury));
       
       if (fKickedPlayerCoordinate.equals(game.getFieldModel().getBallCoordinate())) {

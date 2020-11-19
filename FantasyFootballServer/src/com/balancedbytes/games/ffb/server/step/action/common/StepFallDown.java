@@ -1,5 +1,6 @@
 package com.balancedbytes.games.ffb.server.step.action.common;
 
+import com.balancedbytes.games.ffb.ApothecaryMode;
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.InjuryType;
 import com.balancedbytes.games.ffb.PlayerState;

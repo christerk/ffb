@@ -3,6 +3,7 @@ package com.balancedbytes.games.ffb;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 import com.balancedbytes.games.ffb.model.Game;
@@ -18,12 +19,7 @@ import com.balancedbytes.games.ffb.util.UtilPlayer;
 public class PickupModifierFactory implements IRollModifierFactory {
   
   public PickupModifier forName(String pName) {
-    for (PickupModifier modifier : PickupModifier.values()) {
-      if (modifier.getName().equalsIgnoreCase(pName)) {
-        return modifier;
-      }
-    }
-    return null;
+	  return PickupModifiers.values().get(pName.toLowerCase());
   }
   
   public Set<PickupModifier> findPickupModifiers(Game pGame) {
@@ -67,15 +63,16 @@ public class PickupModifierFactory implements IRollModifierFactory {
   }
   
   private PickupModifier getTacklezoneModifier(Game pGame, Player<?> pPlayer) {
-    int tacklezones = UtilPlayer.findTacklezones(pGame, pPlayer);
-    if (tacklezones > 0) {
-      for (PickupModifier modifier : PickupModifier.values()) {
-        if (modifier.isTacklezoneModifier() && (modifier.getModifier() == tacklezones)) {
-          return modifier;
-        }
-      }
-    }
-    return null;
+	  int tacklezones = UtilPlayer.findTacklezones(pGame, pPlayer);
+	  if (tacklezones > 0) {
+		  for (Map.Entry<String, PickupModifier> entry : PickupModifiers.values().entrySet()) {
+			  PickupModifier modifier = entry.getValue();
+			  if (modifier.isTacklezoneModifier() && (modifier.getModifier() == tacklezones)) {
+				  return modifier;
+			  }
+		  }
+	  }
+	  return null;
   }
-  
+
 }

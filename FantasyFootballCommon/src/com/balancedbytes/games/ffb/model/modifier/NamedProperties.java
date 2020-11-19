@@ -3,6 +3,7 @@ package com.balancedbytes.games.ffb.model.modifier;
 import com.balancedbytes.games.ffb.model.ISkillProperty;
 
 public class NamedProperties {
+  public static final ISkillProperty addBonusForAccuratePass = new NamedProperty("Add Bonus For Accurate Pass");
   public static final ISkillProperty addStrengthOnBlitz = new NamedProperty("Add Strength on Blitz");
   public static final ISkillProperty allowStandupAssists = new NamedProperty("Allow Stand Up Assists");
   public static final ISkillProperty appliesConfusion = new NamedProperty("Applies Confusion");
@@ -11,17 +12,26 @@ public class NamedProperties {
   public static final ISkillProperty blocksLikeChainsaw = new NamedProperty("Blocks Like Chainsaw");
   public static final ISkillProperty canAlwaysAssistFouls = new NamedProperty("Can Always Assist Fouls");
   public static final ISkillProperty canAttemptCatchInAdjacentSquares = new NamedProperty("Can Attempt Catch In Adjacent Squares");
+  public static final ISkillProperty canAttemptToTackleDodgingPlayer = new NamedProperty("Can Attempt To Tackle Dodging Player");
   public static final ISkillProperty canBeThrown = new NamedProperty("Can Be Thrown");
   public static final ISkillProperty canBeKicked = new NamedProperty("Can Be Kicked");
   public static final ISkillProperty canBlockMoreThanOnce = new NamedProperty("Can Block More Than Once");
   public static final ISkillProperty canBlockSameTeamPlayer = new NamedProperty("Can Block Same Team Player");
+  public static final ISkillProperty canChooseOwnPushedBackSquare = new NamedProperty("Can Choose Own Pushed Back Square");
   public static final ISkillProperty canForceInterceptionReroll = new NamedProperty("Can Force Interception Reroll");
   public static final ISkillProperty canKickTeamMates = new NamedProperty("Can Kick Team Mates");
   public static final ISkillProperty canLeap = new NamedProperty("Can Leap");
   public static final ISkillProperty canMakeAnExtraGfi = new NamedProperty("Use Special Block Rules");
+  public static final ISkillProperty canMoveDuringKickOffScatter = new NamedProperty("Can Move During Kick Off Scatter");
   public static final ISkillProperty canMoveWhenOpponentPasses = new NamedProperty("Can Move When Opponent Passes");
+  public static final ISkillProperty canPassToAnySquare = new NamedProperty("Can Pass To Any Square");
+  public static final ISkillProperty canPerformArmourRollInsteadOfBlock = new NamedProperty("Can Perform Armour Roll Instead Of Block");
+  public static final ISkillProperty canPushBackToAnySquare = new NamedProperty("Can Push Back To Any Square");
   public static final ISkillProperty canReduceKickDistance = new NamedProperty("Can Reduce Kick Distance");
   public static final ISkillProperty canRerollOncePerTurn = new NamedProperty("Can Reroll Once Per Turn");
+  public static final ISkillProperty canRollToMatchOpponentsStrength = new NamedProperty("Can Roll To Match Opponents Strength");
+  public static final ISkillProperty canRollToSaveFromInjury = new NamedProperty("Can Roll To Save From Injury");
+  public static final ISkillProperty canSneakExtraPlayersOntoPitch = new NamedProperty("Can Sneak Extra Players Onto Pitch");
   public static final ISkillProperty canStandUpForFree = new NamedProperty("Can Stand Up For Free");
   public static final ISkillProperty canThrowTeamMates = new NamedProperty("Can Throw Team Mates");
   public static final ISkillProperty convertKOToStunOn8 = new NamedProperty("Convert KO to Stun on a roll of 8");
@@ -36,8 +46,11 @@ public class NamedProperties {
   public static final ISkillProperty getsSentOffAtEndOfDrive = new NamedProperty("Gets Sent Off At End Of Drive");
   public static final ISkillProperty goForItAfterBlock = new NamedProperty("Go For It After Block");
   public static final ISkillProperty grabOutsideBlock = new NamedProperty("Grab Outside Block");
+  public static final ISkillProperty grantsTeamRerollWhenOnPitch = new NamedProperty("Grants Team Reroll When On Pitch");
   public static final ISkillProperty hasNoTacklezone = new NamedProperty("Has No Tacklezone");
+  public static final ISkillProperty hasNurglesRot = new NamedProperty("Has Nurgles Rot");
   public static final ISkillProperty hasToRollToUseTeamReroll = new NamedProperty("Has To Roll To Use Team Reroll");
+  public static final ISkillProperty ignoreDefenderStumblesResult = new NamedProperty("Ignore Defender Stumbles Result");
   public static final ISkillProperty ignoreTackleWhenBlocked = new NamedProperty("Ignore Tackle When Blocked");
   public static final ISkillProperty ignoreTacklezonesWhenCatching = new NamedProperty("Ignore Tacklezones when Catching");
   public static final ISkillProperty ignoreTacklezonesWhenMoving = new NamedProperty("Ignore Tacklezones When Moving");
@@ -45,7 +58,8 @@ public class NamedProperties {
   public static final ISkillProperty ignoreTacklezonesWhenPickingUp = new NamedProperty("Ignore Tacklezones When Picking Up");
   public static final ISkillProperty ignoreWeatherWhenPickingUp = new NamedProperty("Ignore Weather when Picking Up");
   public static final ISkillProperty increasesTeamsFame = new NamedProperty("Increases Teams Fame");
-  public static final ISkillProperty inflictsConfusion = new NamedProperty("Use Special Block Rules");
+  public static final ISkillProperty inflictsConfusion = new NamedProperty("Inflicts Confusion");
+  public static final ISkillProperty inflictsDisturbingPresence = new NamedProperty("Inflicts Disturbing Presence");
   public static final ISkillProperty movesRandomly = new NamedProperty("Moves Randomly");
   public static final ISkillProperty placedProneCausesInjuryRoll = new NamedProperty("Placed Prone Causes Injury Roll");
   public static final ISkillProperty preventAutoMove = new NamedProperty("Prevent AutoMove");

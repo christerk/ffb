@@ -5,8 +5,12 @@ import java.util.Comparator;
 import java.util.Hashtable;
 import java.util.List;
 
+import com.balancedbytes.games.ffb.CatchModifier;
 import com.balancedbytes.games.ffb.DodgeModifier;
 import com.balancedbytes.games.ffb.INamedObject;
+import com.balancedbytes.games.ffb.InjuryModifier;
+import com.balancedbytes.games.ffb.InterceptionModifier;
+import com.balancedbytes.games.ffb.LeapModifier;
 import com.balancedbytes.games.ffb.PassModifier;
 import com.balancedbytes.games.ffb.PickupModifier;
 import com.balancedbytes.games.ffb.ReRollSource;
@@ -22,6 +26,10 @@ public class Skill implements INamedObject {
   private List<PassModifier> passModifiers;
   private List<PickupModifier> pickupModifiers;
   private List<DodgeModifier> dodgeModifiers;
+  private List<LeapModifier> leapModifiers;
+  private List<InterceptionModifier> interceptionModifiers;
+  private List<InjuryModifier> injuryModifiers;
+  private List<CatchModifier> catchModifiers;
   private List<ISkillBehaviour> behaviours;
   private List<ISkillProperty> skillProperties;
   private Hashtable<ReRolledAction, ReRollSource> rerollSources;
@@ -31,10 +39,14 @@ public class Skill implements INamedObject {
     this.category = category;
     behaviours = new ArrayList<>();
     skillProperties = new ArrayList<>();
+    leapModifiers = new ArrayList<>();
     playerModifiers = new ArrayList<>();
     passModifiers = new ArrayList<>();
     pickupModifiers = new ArrayList<>();
     dodgeModifiers = new ArrayList<>();
+    interceptionModifiers = new ArrayList<>();
+    catchModifiers = new ArrayList<>();
+    injuryModifiers = new ArrayList<>();
     rerollSources = new Hashtable<>();
   }
   
@@ -59,6 +71,10 @@ public class Skill implements INamedObject {
     };
   }
 
+  protected void registerModifier(LeapModifier modifier) {
+    leapModifiers.add(modifier);
+  }
+  
   protected void registerModifier(PassModifier modifier) {
     passModifiers.add(modifier);
   }
@@ -74,13 +90,25 @@ public class Skill implements INamedObject {
   protected void registerModifier(PlayerModifier modifier) {
     playerModifiers.add(modifier);
   }
+
+  protected void registerModifier(InterceptionModifier modifier) {
+    interceptionModifiers.add(modifier);
+  }
+  
+  protected void registerModifier(InjuryModifier modifier) {
+    injuryModifiers.add(modifier);
+  }
+  
+  protected void registerModifier(CatchModifier modifier) {
+    catchModifiers.add(modifier);
+  }
   
   protected void registerProperty(ISkillProperty property) {
     skillProperties.add(property);
   }
 
   protected void registerRerollSource(ReRolledAction action, ReRollSource source) {
-		rerollSources.put(action, source);
+	  rerollSources.put(action, source);
   }
   
   public List<ISkillBehaviour> getSkillBehaviours() {
@@ -103,7 +131,22 @@ public class Skill implements INamedObject {
     return dodgeModifiers;
   }
   
+  public List<LeapModifier> getLeapModifiers() {
+	  return leapModifiers;
+  } 
   
+  public List<InterceptionModifier> getInterceptionModifiers() {
+	  return interceptionModifiers;
+  } 
+
+  public List<CatchModifier> getCatchModifiers() {
+	  return catchModifiers;
+  } 
+
+  public List<InjuryModifier> getInjuryModifiers() {
+	  return injuryModifiers;
+  } 
+
   public void addBehaviour(ISkillBehaviour behaviour) {
     behaviours.add(behaviour);
   }
@@ -152,5 +195,6 @@ public class Skill implements INamedObject {
     }
     return null;
   }
+
 
 }

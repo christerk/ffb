@@ -1,7 +1,10 @@
 package com.balancedbytes.games.ffb.skill;
 
+import com.balancedbytes.games.ffb.ReRollSource;
+import com.balancedbytes.games.ffb.ReRolledAction;
 import com.balancedbytes.games.ffb.SkillCategory;
 import com.balancedbytes.games.ffb.model.Skill;
+import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
 
 /**
 * A player with the Dodge skill is adept at slipping away from opponents,
@@ -15,6 +18,10 @@ public class Dodge extends Skill {
 
   public Dodge() {
     super("Dodge", SkillCategory.AGILITY);
+    
+    registerProperty(NamedProperties.ignoreDefenderStumblesResult);
+    
+    registerRerollSource(ReRolledAction.DODGE, ReRollSource.DODGE);
   }
 
 }

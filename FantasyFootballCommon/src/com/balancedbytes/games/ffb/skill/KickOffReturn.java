@@ -2,6 +2,7 @@ package com.balancedbytes.games.ffb.skill;
 
 import com.balancedbytes.games.ffb.SkillCategory;
 import com.balancedbytes.games.ffb.model.Skill;
+import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
 
 /**
 * A player on the receiving team that is not on the Line of Scrimmage or in
@@ -16,6 +17,9 @@ public class KickOffReturn extends Skill {
 
   public KickOffReturn() {
     super("Kick-Off Return", SkillCategory.GENERAL);
+    
+    registerProperty(NamedProperties.canMoveDuringKickOffScatter);
+
   }
 
 }

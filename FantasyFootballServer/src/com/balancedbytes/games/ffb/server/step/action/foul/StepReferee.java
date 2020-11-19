@@ -1,29 +1,19 @@
 package com.balancedbytes.games.ffb.server.step.action.foul;
 
-import com.balancedbytes.games.ffb.Card;
-import com.balancedbytes.games.ffb.SoundId;
+import com.balancedbytes.games.ffb.ApothecaryMode;
 import com.balancedbytes.games.ffb.json.UtilJson;
-import com.balancedbytes.games.ffb.model.ActingPlayer;
-import com.balancedbytes.games.ffb.model.Game;
-import com.balancedbytes.games.ffb.option.GameOptionId;
-import com.balancedbytes.games.ffb.option.UtilGameOption;
-import com.balancedbytes.games.ffb.report.ReportReferee;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.IServerJsonOption;
 import com.balancedbytes.games.ffb.server.InjuryResult;
-import com.balancedbytes.games.ffb.server.model.ServerSkill;
 import com.balancedbytes.games.ffb.server.net.ReceivedCommand;
 import com.balancedbytes.games.ffb.server.step.AbstractStep;
-import com.balancedbytes.games.ffb.server.step.StepAction;
 import com.balancedbytes.games.ffb.server.step.StepCommandStatus;
 import com.balancedbytes.games.ffb.server.step.StepException;
 import com.balancedbytes.games.ffb.server.step.StepId;
 import com.balancedbytes.games.ffb.server.step.StepParameter;
 import com.balancedbytes.games.ffb.server.step.StepParameterKey;
 import com.balancedbytes.games.ffb.server.step.StepParameterSet;
-import com.balancedbytes.games.ffb.server.step.action.common.ApothecaryMode;
 import com.balancedbytes.games.ffb.util.StringTool;
-import com.balancedbytes.games.ffb.util.UtilCards;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
@@ -38,11 +28,17 @@ import com.eclipsesource.json.JsonValue;
  */
 public class StepReferee extends AbstractStep {
 	
-	private String fGotoLabelOnEnd;
-	private InjuryResult fInjuryResultDefender;
+	public class StepState {
+		public String gotoLabelOnEnd;
+		public InjuryResult injuryResultDefender;
+	  }
+	
+	private StepState state;
 
 	public StepReferee(GameState pGameState) {
 		super(pGameState);
+		
+		state = new StepState();
 	}
 	
 	public StepId getId() {
@@ -55,14 +51,14 @@ public class StepReferee extends AbstractStep {
   		for (StepParameter parameter : pParameterSet.values()) {
   			switch (parameter.getKey()) {
   				case GOTO_LABEL_ON_END:
-  					fGotoLabelOnEnd = (String) parameter.getValue();
+  					state.gotoLabelOnEnd = (String) parameter.getValue();
   					break;
 					default:
 						break;
   			}
   		}
   	}
-  	if (!StringTool.isProvided(fGotoLabelOnEnd)) {
+  	if (!StringTool.isProvided(state.gotoLabelOnEnd)) {
 			throw new StepException("StepParameter " + StepParameterKey.GOTO_LABEL_ON_END + " is not initialized.");
   	}
   }
@@ -73,8 +69,8 @@ public class StepReferee extends AbstractStep {
 			switch (pParameter.getKey()) {
 				case INJURY_RESULT:
 					InjuryResult injuryResult = (InjuryResult) pParameter.getValue();
-					if ((injuryResult != null) && (injuryResult.getApothecaryMode() == ApothecaryMode.DEFENDER)) { 
-						fInjuryResultDefender = injuryResult;
+					if ((injuryResult != null) && (injuryResult.injuryContext().getApothecaryMode() == ApothecaryMode.DEFENDER)) { 
+						state.injuryResultDefender = injuryResult;
 						return true;
 					}
 					return false;
@@ -101,28 +97,9 @@ public class StepReferee extends AbstractStep {
   }
 
 	private void executeStep() {
-		if (fInjuryResultDefender != null) {
-	    Game game = getGameState().getGame();
-	    ActingPlayer actingPlayer = game.getActingPlayer();
-	    boolean refereeSpotsFoul = false;
-	    if (!UtilCards.isCardActive(game, Card.BLATANT_FOUL)
-	      && (!UtilCards.hasSkill(game, actingPlayer, ServerSkill.SNEAKY_GIT)
-	    	|| fInjuryResultDefender.isArmorBroken()
-	    	|| ((UtilCards.hasSkill(game, actingPlayer, ServerSkill.SNEAKY_GIT) && UtilGameOption.isOptionEnabled(game, GameOptionId.SNEAKY_GIT_BAN_TO_KO))))) {
-	      int[] armorRoll = fInjuryResultDefender.getArmorRoll();
-	      refereeSpotsFoul = (armorRoll[0] == armorRoll[1]);
-	    }
-	    if (!refereeSpotsFoul && fInjuryResultDefender.isArmorBroken()) {
-	      int[] injuryRoll = fInjuryResultDefender.getInjuryRoll();
-	      refereeSpotsFoul = (injuryRoll[0] == injuryRoll[1]);
-	    }
-	    getResult().addReport(new ReportReferee(refereeSpotsFoul));
-	    if (refereeSpotsFoul) {
-	    	getResult().setSound(SoundId.WHISTLE);
-	    	getResult().setNextAction(StepAction.NEXT_STEP);
-	    } else {
-	    	getResult().setNextAction(StepAction.GOTO_LABEL, fGotoLabelOnEnd);
-	    }
+
+		if (state.injuryResultDefender != null) {
+			getGameState().executeStepHooks(this, state);
 		}
   }
   
@@ -131,9 +108,9 @@ public class StepReferee extends AbstractStep {
   @Override
   public JsonObject toJsonValue() {
     JsonObject jsonObject = super.toJsonValue();
-    IServerJsonOption.GOTO_LABEL_ON_END.addTo(jsonObject, fGotoLabelOnEnd);
-    if (fInjuryResultDefender != null) {
-      IServerJsonOption.INJURY_RESULT_DEFENDER.addTo(jsonObject, fInjuryResultDefender.toJsonValue());
+    IServerJsonOption.GOTO_LABEL_ON_END.addTo(jsonObject, state.gotoLabelOnEnd);
+    if (state.injuryResultDefender != null) {
+      IServerJsonOption.INJURY_RESULT_DEFENDER.addTo(jsonObject, state.injuryResultDefender.toJsonValue());
     }
     return jsonObject;
   }
@@ -142,11 +119,11 @@ public class StepReferee extends AbstractStep {
   public StepReferee initFrom(JsonValue pJsonValue) {
     super.initFrom(pJsonValue);
     JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-    fGotoLabelOnEnd = IServerJsonOption.GOTO_LABEL_ON_END.getFrom(jsonObject);
-    fInjuryResultDefender = null;
+    state.gotoLabelOnEnd = IServerJsonOption.GOTO_LABEL_ON_END.getFrom(jsonObject);
+    state.injuryResultDefender = null;
     JsonObject injuryResultDefenderObject = IServerJsonOption.INJURY_RESULT_DEFENDER.getFrom(jsonObject);
     if (injuryResultDefenderObject != null) {
-      fInjuryResultDefender = new InjuryResult().initFrom(injuryResultDefenderObject);
+    	state.injuryResultDefender = new InjuryResult().initFrom(injuryResultDefenderObject);
     }
     return this;
   }

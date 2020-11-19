@@ -23,6 +23,7 @@ public class Regeneration extends Skill {
     super("Regeneration", SkillCategory.EXTRAORDINARY);
     
        registerProperty(NamedProperties.preventRaiseFromDead);
+       registerProperty(NamedProperties.canRollToSaveFromInjury);
        
        registerProperty(new CancelSkillProperty(SkillConstants.NURGLES_ROT));
 

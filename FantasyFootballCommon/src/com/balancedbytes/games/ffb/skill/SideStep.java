@@ -4,6 +4,7 @@ import com.balancedbytes.games.ffb.SkillCategory;
 import com.balancedbytes.games.ffb.model.Skill;
 import com.balancedbytes.games.ffb.model.SkillConstants;
 import com.balancedbytes.games.ffb.model.modifier.CancelSkillProperty;
+import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
 
 /**
 * A player with this skill is an expert at stepping neatly out of the way of an
@@ -26,6 +27,7 @@ public class SideStep extends Skill {
 
     registerProperty(new CancelSkillProperty(SkillConstants.GRAB));
     
+    registerProperty(NamedProperties.canChooseOwnPushedBackSquare);
   }
 
   @Override

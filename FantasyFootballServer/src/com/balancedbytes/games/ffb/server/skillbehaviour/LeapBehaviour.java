@@ -2,17 +2,19 @@ package com.balancedbytes.games.ffb.server.skillbehaviour;
 
 import java.util.Set;
 
-import com.balancedbytes.games.ffb.InjuryType;
+import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.LeapModifier;
 import com.balancedbytes.games.ffb.LeapModifierFactory;
 import com.balancedbytes.games.ffb.ReRolledAction;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
+import com.balancedbytes.games.ffb.model.FieldModel;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandUseSkill;
 import com.balancedbytes.games.ffb.report.ReportId;
 import com.balancedbytes.games.ffb.report.ReportSkillRoll;
 import com.balancedbytes.games.ffb.server.ActionStatus;
 import com.balancedbytes.games.ffb.server.DiceInterpreter;
+import com.balancedbytes.games.ffb.server.InjuryType.InjuryTypeDropLeap;
 import com.balancedbytes.games.ffb.server.model.SkillBehaviour;
 import com.balancedbytes.games.ffb.server.model.StepModifier;
 import com.balancedbytes.games.ffb.server.step.StepAction;
@@ -46,7 +48,7 @@ public class LeapBehaviour extends SkillBehaviour<Leap> {
 				    if (doLeap) {
 				      if (ReRolledAction.LEAP == step.getReRolledAction()) {
 				        if ((step.getReRollSource() == null) || !UtilServerReRoll.useReRoll(step, step.getReRollSource(), actingPlayer.getPlayer())) {
-				        	step.publishParameter(new StepParameter(StepParameterKey.INJURY_TYPE, InjuryType.DROP_LEAP));
+				        	step.publishParameter(new StepParameter(StepParameterKey.INJURY_TYPE, new InjuryTypeDropLeap(step)));
 				        	step.getResult().setNextAction(StepAction.GOTO_LABEL, state.goToLabelOnFailure);
 				          doLeap = false;
 				        }
@@ -61,7 +63,7 @@ public class LeapBehaviour extends SkillBehaviour<Leap> {
 				          case FAILURE:
 				            actingPlayer.setLeaping(false);
 				            actingPlayer.markSkillUsed(skill);
-				            step.publishParameter(new StepParameter(StepParameterKey.INJURY_TYPE, InjuryType.DROP_LEAP));
+				            step.publishParameter(new StepParameter(StepParameterKey.INJURY_TYPE, new InjuryTypeDropLeap(step)));
 				          	step.getResult().setNextAction(StepAction.GOTO_LABEL, state.goToLabelOnFailure);
 				            break;
 				          default:
@@ -82,8 +84,11 @@ public class LeapBehaviour extends SkillBehaviour<Leap> {
 	    ActionStatus status = null;
 	    Game game = step.getGameState().getGame();
 	    ActingPlayer actingPlayer = game.getActingPlayer();
+	    FieldModel fieldModel = game.getFieldModel();
+	    FieldCoordinate playerCoordinate = fieldModel.getPlayerCoordinate(actingPlayer.getPlayer());
+
 	    LeapModifierFactory modifierFactory = new LeapModifierFactory();
-	    Set<LeapModifier> leapModifiers = modifierFactory.findLeapModifiers(game);
+	    Set<LeapModifier> leapModifiers = modifierFactory.findLeapModifiers(game, playerCoordinate);
 	    int minimumRoll = DiceInterpreter.getInstance().minimumRollLeap(actingPlayer.getPlayer(), leapModifiers);
 	    int roll = step.getGameState().getDiceRoller().rollSkill();
 	    boolean successful = DiceInterpreter.getInstance().isSkillRollSuccessful(roll, minimumRoll);

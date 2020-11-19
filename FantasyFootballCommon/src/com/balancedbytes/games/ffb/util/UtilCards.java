@@ -8,8 +8,14 @@ import java.util.Set;
 
 import com.balancedbytes.games.ffb.Card;
 import com.balancedbytes.games.ffb.CardEffect;
+import com.balancedbytes.games.ffb.CatchModifier;
+import com.balancedbytes.games.ffb.CatchModifiers.CatchContext;
 import com.balancedbytes.games.ffb.DodgeModifier;
 import com.balancedbytes.games.ffb.DodgeModifiers.DodgeContext;
+import com.balancedbytes.games.ffb.InterceptionModifier;
+import com.balancedbytes.games.ffb.InterceptionModifiers.InterceptionContext;
+import com.balancedbytes.games.ffb.LeapModifier;
+import com.balancedbytes.games.ffb.LeapModifiers.LeapContext;
 import com.balancedbytes.games.ffb.PassModifier;
 import com.balancedbytes.games.ffb.PassingModifiers.PassContext;
 import com.balancedbytes.games.ffb.PickupModifier;
@@ -94,6 +100,44 @@ public final class UtilCards {
     return result;
   }
   
+  public static Collection<LeapModifier> getLeapModifiers(ActingPlayer player, LeapContext context) {
+    Set<LeapModifier> result = new HashSet<LeapModifier>();
+    
+    for (Skill skill : player.getPlayer().getSkills()) {
+      for (LeapModifier modifier : skill.getLeapModifiers()) {
+        if (modifier.appliesToContext(skill, context)) {
+          result.add(modifier);
+        }
+      }
+    }
+    return result;
+  }
+  
+  public static Collection<InterceptionModifier> getInterceptionModifiers(Player<?> player, InterceptionContext context) {
+	  Set<InterceptionModifier> result = new HashSet<InterceptionModifier>();
+
+	  for (Skill skill : player.getSkills()) {
+		  for (InterceptionModifier modifier : skill.getInterceptionModifiers()) {
+			  if (modifier.appliesToContext(skill, context)) {
+				  result.add(modifier);
+			  }
+		  }
+	  }
+	  return result;
+  }
+  
+  public static Collection<CatchModifier> getCatchModifiers(Player<?> player, CatchContext context) {
+	  Set<CatchModifier> result = new HashSet<CatchModifier>();
+	  for (Skill skill : player.getSkills()) {
+		  for (CatchModifier modifier : skill.getCatchModifiers()) {
+			  if (modifier.appliesToContext(context)) {
+				  result.add(modifier);
+			  }
+		  }
+	  }
+	  return result;
+  }
+
   private static Set<Skill> findSkillsProvidedByCardsAndEffects(Game pGame, Player<?> pPlayer) {
     Set<Skill> cardSkills = new HashSet<Skill>();
     if ((pGame == null) || (pPlayer == null)) {

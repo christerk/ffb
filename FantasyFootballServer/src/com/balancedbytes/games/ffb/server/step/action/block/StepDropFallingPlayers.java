@@ -1,41 +1,17 @@
 package com.balancedbytes.games.ffb.server.step.action.block;
 
-import com.balancedbytes.games.ffb.Card;
-import com.balancedbytes.games.ffb.CardEffect;
-import com.balancedbytes.games.ffb.FieldCoordinate;
-import com.balancedbytes.games.ffb.InjuryType;
 import com.balancedbytes.games.ffb.PlayerState;
-import com.balancedbytes.games.ffb.ReRollSource;
-import com.balancedbytes.games.ffb.dialog.DialogPilingOnParameter;
 import com.balancedbytes.games.ffb.json.UtilJson;
-import com.balancedbytes.games.ffb.model.ActingPlayer;
-import com.balancedbytes.games.ffb.model.Game;
-import com.balancedbytes.games.ffb.model.Player;
-import com.balancedbytes.games.ffb.model.SkillConstants;
-import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandUseSkill;
-import com.balancedbytes.games.ffb.option.GameOptionId;
-import com.balancedbytes.games.ffb.option.UtilGameOption;
-import com.balancedbytes.games.ffb.report.ReportId;
-import com.balancedbytes.games.ffb.report.ReportPilingOn;
-import com.balancedbytes.games.ffb.report.ReportSkillRoll;
-import com.balancedbytes.games.ffb.server.DiceInterpreter;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.IServerJsonOption;
 import com.balancedbytes.games.ffb.server.InjuryResult;
 import com.balancedbytes.games.ffb.server.model.ServerSkill;
 import com.balancedbytes.games.ffb.server.net.ReceivedCommand;
 import com.balancedbytes.games.ffb.server.step.AbstractStep;
-import com.balancedbytes.games.ffb.server.step.StepAction;
 import com.balancedbytes.games.ffb.server.step.StepCommandStatus;
 import com.balancedbytes.games.ffb.server.step.StepId;
 import com.balancedbytes.games.ffb.server.step.StepParameter;
-import com.balancedbytes.games.ffb.server.step.StepParameterKey;
-import com.balancedbytes.games.ffb.server.step.action.common.ApothecaryMode;
-import com.balancedbytes.games.ffb.server.util.UtilServerDialog;
-import com.balancedbytes.games.ffb.server.util.UtilServerInjury;
-import com.balancedbytes.games.ffb.server.util.UtilServerReRoll;
-import com.balancedbytes.games.ffb.util.UtilCards;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
@@ -53,12 +29,20 @@ import com.eclipsesource.json.JsonValue;
  */
 public class StepDropFallingPlayers extends AbstractStep {
 
-  private InjuryResult fInjuryResultDefender;
-  private Boolean fUsingPilingOn;
-  private PlayerState fOldDefenderState;
+ 
+  
+  public class StepState {
+	  public InjuryResult injuryResultDefender;
+	  public Boolean usingPilingOn;
+	  public PlayerState oldDefenderState;
+	  }
+	
+	private StepState state;
 
   public StepDropFallingPlayers(GameState pGameState) {
     super(pGameState);
+    
+    state = new StepState();
   }
 
   public StepId getId() {
@@ -70,7 +54,7 @@ public class StepDropFallingPlayers extends AbstractStep {
     if ((pParameter != null) && !super.setParameter(pParameter)) {
       switch (pParameter.getKey()) {
         case OLD_DEFENDER_STATE:
-          fOldDefenderState = (PlayerState) pParameter.getValue();
+        	state.oldDefenderState = (PlayerState) pParameter.getValue();
           return true;
         default:
           break;
@@ -91,11 +75,14 @@ public class StepDropFallingPlayers extends AbstractStep {
     if (commandStatus == StepCommandStatus.UNHANDLED_COMMAND) {
       switch (pReceivedCommand.getId()) {
         case CLIENT_USE_SKILL:
-          ClientCommandUseSkill useSkillCommand = (ClientCommandUseSkill) pReceivedCommand.getCommand();
-          if (ServerSkill.PILING_ON == useSkillCommand.getSkill()) {
-            fUsingPilingOn = useSkillCommand.isSkillUsed();
-            commandStatus = StepCommandStatus.EXECUTE_STEP;
-          }
+        	 ClientCommandUseSkill useSkillCommand = (ClientCommandUseSkill) pReceivedCommand.getCommand();
+             ServerSkill usedSkill = (ServerSkill) useSkillCommand.getSkill();
+             if (usedSkill != null) {
+               StepCommandStatus newStatus = usedSkill.applyUseSkillCommandHooks(this, state, useSkillCommand);
+               if (newStatus != null) {
+                 commandStatus = newStatus;
+               }
+             }
           break;
         default:
           break;
@@ -108,134 +95,21 @@ public class StepDropFallingPlayers extends AbstractStep {
   }
 
   private void executeStep() {
-    boolean doNextStep = true;
-    Game game = getGameState().getGame();
-    ActingPlayer actingPlayer = game.getActingPlayer();
-    PlayerState defenderState = game.getFieldModel().getPlayerState(game.getDefender());
-    FieldCoordinate defenderCoordinate = game.getFieldModel().getPlayerCoordinate(game.getDefender());
-    PlayerState attackerState = game.getFieldModel().getPlayerState(actingPlayer.getPlayer());
-    FieldCoordinate attackerCoordinate = game.getFieldModel().getPlayerCoordinate(actingPlayer.getPlayer());
-    if ((attackerState != null) && (attackerState.getBase() == PlayerState.FALLING) && attackerState.isRooted()) {
-      attackerState = attackerState.changeRooted(false);
-    }
-    if ((defenderState != null) && (defenderState.getBase() == PlayerState.FALLING) && defenderState.isRooted()) {
-      defenderState = defenderState.changeRooted(false);
-    }
-    if (((defenderState != null) && (defenderState.getBase() == PlayerState.FALLING) && (defenderCoordinate != null)) || (fUsingPilingOn != null)) {
-      if (fUsingPilingOn != null) {
-        boolean reRollInjury = fInjuryResultDefender.isArmorBroken();
-        getResult().addReport(new ReportPilingOn(actingPlayer.getPlayerId(), fUsingPilingOn, reRollInjury));
-        boolean usesATeamReroll = UtilGameOption.isOptionEnabled(game, GameOptionId.PILING_ON_USES_A_TEAM_REROLL);
-        if (fUsingPilingOn && (!usesATeamReroll || UtilServerReRoll.useReRoll(this, ReRollSource.TEAM_RE_ROLL, actingPlayer.getPlayer()))) {
-          actingPlayer.markSkillUsed(ServerSkill.PILING_ON);
-          publishParameters(UtilServerInjury.dropPlayer(this, actingPlayer.getPlayer(), ApothecaryMode.ATTACKER));
-          boolean rolledDouble;
-          if (reRollInjury) {
-            fInjuryResultDefender = UtilServerInjury.handleInjury(this, InjuryType.PILING_ON_INJURY, actingPlayer.getPlayer(), game.getDefender(),
-                defenderCoordinate, fInjuryResultDefender, ApothecaryMode.DEFENDER);
-            rolledDouble = DiceInterpreter.getInstance().isDouble(fInjuryResultDefender.getInjuryRoll());
-          } else {
-            fInjuryResultDefender = UtilServerInjury.handleInjury(this, InjuryType.PILING_ON_ARMOR, actingPlayer.getPlayer(), game.getDefender(),
-                defenderCoordinate, null, ApothecaryMode.DEFENDER);
-            rolledDouble = DiceInterpreter.getInstance().isDouble(fInjuryResultDefender.getArmorRoll());
-          }
-          if (rolledDouble && UtilGameOption.isOptionEnabled(game, GameOptionId.PILING_ON_TO_KO_ON_DOUBLE)) {
-            publishParameter(new StepParameter(StepParameterKey.INJURY_RESULT, UtilServerInjury.handleInjury(this, InjuryType.PILING_ON_KNOCKED_OUT, null,
-                actingPlayer.getPlayer(), attackerCoordinate, null, ApothecaryMode.ATTACKER)));
-          }
-        }
-      } else {
-        publishParameters(UtilServerInjury.dropPlayer(this, game.getDefender(), ApothecaryMode.DEFENDER));
-        InjuryType injuryType = InjuryType.BLOCK;
-
-        if (fOldDefenderState != null) {
-          if (fOldDefenderState.isStunned()){
-            injuryType = InjuryType.BLOCK_STUNNED;
-          } else if (fOldDefenderState.isProne()) {
-            injuryType = InjuryType.BLOCK_PRONE;
-          }
-        }
-
-        fInjuryResultDefender = UtilServerInjury.handleInjury(this, injuryType, actingPlayer.getPlayer(), game.getDefender(), defenderCoordinate,
-          null, ApothecaryMode.DEFENDER);
-
-        if (UtilCards.hasSkillWithProperty(actingPlayer.getPlayer(), NamedProperties.appliesPoisonOnBadlyHurt) && fInjuryResultDefender.isBadlyHurt()) {
-          boolean success = rollWeepingDagger(actingPlayer.getPlayer(), game.getDefender());
-          if (success) {
-        	  publishParameter(new StepParameter(StepParameterKey.DEFENDER_POISONED, true));
-          }
-        }
-        boolean usesATeamReroll = UtilGameOption.isOptionEnabled(game, GameOptionId.PILING_ON_USES_A_TEAM_REROLL);
-        if ((attackerState.getBase() != PlayerState.FALLING)
-            && UtilCards.hasUnusedSkill(game, actingPlayer, SkillConstants.PILING_ON)
-            && (!usesATeamReroll || UtilServerReRoll.isTeamReRollAvailable(getGameState(), actingPlayer.getPlayer()))
-            && attackerCoordinate.isAdjacent(defenderCoordinate)
-            && !fInjuryResultDefender.isCasualty()
-            && !attackerState.isRooted()
-            && (!UtilGameOption.isOptionEnabled(game, GameOptionId.PILING_ON_INJURY_ONLY) || fInjuryResultDefender.isArmorBroken())
-            && (!UtilGameOption.isOptionEnabled(game, GameOptionId.PILING_ON_ARMOR_ONLY) || !fInjuryResultDefender.isArmorBroken())
-            && (!UtilCards.hasCard(game, game.getDefender(), Card.BELT_OF_INVULNERABILITY) || fInjuryResultDefender.isArmorBroken())
-            && !UtilCards.cancelsSkill(actingPlayer.getPlayer(), SkillConstants.PILING_ON)
-            && !UtilCards.hasCard(game, game.getDefender(), Card.GOOD_OLD_MAGIC_CODPIECE)) {
-          fInjuryResultDefender.report(this);
-          UtilServerDialog.showDialog(getGameState(), new DialogPilingOnParameter(actingPlayer.getPlayerId(), fInjuryResultDefender.isArmorBroken(),
-              usesATeamReroll), false);
-          doNextStep = false;
-        }
-      }
-    }
-    if (doNextStep) {
-      if (fInjuryResultDefender != null) {
-        publishParameter(new StepParameter(StepParameterKey.INJURY_RESULT, fInjuryResultDefender));
-      }
-      if (fUsingPilingOn != null) {
-        publishParameter(new StepParameter(StepParameterKey.USING_PILING_ON, fUsingPilingOn));
-      }
-      // end turn if dropping a player of your own team
-      if ((defenderState != null) && (defenderState.getBase() == PlayerState.FALLING) && (game.getDefender().getTeam() == actingPlayer.getPlayer().getTeam())
-          && (fOldDefenderState != null) && !fOldDefenderState.isProne()) {
-        publishParameter(new StepParameter(StepParameterKey.END_TURN, true));
-      }
-      if ((attackerState != null) && (attackerState.getBase() == PlayerState.FALLING) && (attackerCoordinate != null)) {
-        publishParameter(new StepParameter(StepParameterKey.END_TURN, true));
-        publishParameters(UtilServerInjury.dropPlayer(this, actingPlayer.getPlayer(), ApothecaryMode.ATTACKER));
-        InjuryResult injuryResultAttacker = UtilServerInjury.handleInjury(this, InjuryType.BLOCK, game.getDefender(), actingPlayer.getPlayer(), attackerCoordinate, null, ApothecaryMode.ATTACKER);
-        if (UtilCards.hasSkillWithProperty(game.getDefender(), NamedProperties.appliesPoisonOnBadlyHurt) && injuryResultAttacker.isBadlyHurt()) {
-            boolean success = rollWeepingDagger(game.getDefender(), actingPlayer.getPlayer());
-            if (success) {
-          	  publishParameter(new StepParameter(StepParameterKey.ATTACKER_POISONED, true));
-            }
-        }
-        publishParameter(new StepParameter(StepParameterKey.INJURY_RESULT, injuryResultAttacker));
-      }
-      getResult().setNextAction(StepAction.NEXT_STEP);
-    }
+	getGameState().executeStepHooks(this, state);
   }
   
-  private boolean rollWeepingDagger(Player source, Player target) {
-    Game game = getGameState().getGame();
-    int minimumRoll = DiceInterpreter.getInstance().minimumRollWeepingDagger();
-    int roll = getGameState().getDiceRoller().rollWeepingDagger();
-    boolean successful = DiceInterpreter.getInstance().isSkillRollSuccessful(roll, minimumRoll);
-    if (successful) {
-      game.getFieldModel().addCardEffect(target, CardEffect.POISONED);
-    }
-    getResult().addReport(
-      new ReportSkillRoll(ReportId.WEEPING_DAGGER_ROLL, source.getId(), successful, roll, minimumRoll, false, null)
-    );
-    return successful;
-  }
+
 
   // JSON serialization
 
   @Override
   public JsonObject toJsonValue() {
     JsonObject jsonObject = super.toJsonValue();
-    if (fInjuryResultDefender != null) {
-      IServerJsonOption.INJURY_RESULT_DEFENDER.addTo(jsonObject, fInjuryResultDefender.toJsonValue());
+    if (state.injuryResultDefender != null) {
+      IServerJsonOption.INJURY_RESULT_DEFENDER.addTo(jsonObject, state.injuryResultDefender.toJsonValue());
     }
-    IServerJsonOption.USING_PILING_ON.addTo(jsonObject, fUsingPilingOn);
-    IServerJsonOption.OLD_DEFENDER_STATE.addTo(jsonObject, fOldDefenderState);
+    IServerJsonOption.USING_PILING_ON.addTo(jsonObject, state.usingPilingOn);
+    IServerJsonOption.OLD_DEFENDER_STATE.addTo(jsonObject, state.oldDefenderState);
     return jsonObject;
   }
 
@@ -243,13 +117,13 @@ public class StepDropFallingPlayers extends AbstractStep {
   public StepDropFallingPlayers initFrom(JsonValue pJsonValue) {
     super.initFrom(pJsonValue);
     JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-    fInjuryResultDefender = null;
+    state.injuryResultDefender = null;
     JsonObject injuryResultDefenderObject = IServerJsonOption.INJURY_RESULT_DEFENDER.getFrom(jsonObject);
     if (injuryResultDefenderObject != null) {
-      fInjuryResultDefender = new InjuryResult().initFrom(injuryResultDefenderObject);
+    	state.injuryResultDefender = new InjuryResult().initFrom(injuryResultDefenderObject);
     }
-    fUsingPilingOn = IServerJsonOption.USING_PILING_ON.getFrom(jsonObject);
-    fOldDefenderState = IServerJsonOption.OLD_DEFENDER_STATE.getFrom(jsonObject);
+    state.usingPilingOn = IServerJsonOption.USING_PILING_ON.getFrom(jsonObject);
+    state.oldDefenderState = IServerJsonOption.OLD_DEFENDER_STATE.getFrom(jsonObject);
     return this;
   }
 

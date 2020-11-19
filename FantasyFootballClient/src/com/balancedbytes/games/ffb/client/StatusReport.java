@@ -10,7 +10,7 @@ import com.balancedbytes.games.ffb.BlockResult;
 import com.balancedbytes.games.ffb.BlockResultFactory;
 import com.balancedbytes.games.ffb.Card;
 import com.balancedbytes.games.ffb.CardEffect;
-import com.balancedbytes.games.ffb.CatchModifier;
+import com.balancedbytes.games.ffb.CatchModifiers;
 import com.balancedbytes.games.ffb.ClientMode;
 import com.balancedbytes.games.ffb.Direction;
 import com.balancedbytes.games.ffb.DodgeModifiers;
@@ -18,12 +18,12 @@ import com.balancedbytes.games.ffb.FantasyFootballConstants;
 import com.balancedbytes.games.ffb.HeatExhaustion;
 import com.balancedbytes.games.ffb.IRollModifier;
 import com.balancedbytes.games.ffb.InjuryModifier;
-import com.balancedbytes.games.ffb.InterceptionModifier;
+import com.balancedbytes.games.ffb.InterceptionModifiers;
 import com.balancedbytes.games.ffb.KickoffResult;
 import com.balancedbytes.games.ffb.KnockoutRecovery;
 import com.balancedbytes.games.ffb.LeaderState;
-import com.balancedbytes.games.ffb.PassModifier;
 import com.balancedbytes.games.ffb.PassingDistance;
+import com.balancedbytes.games.ffb.PassingModifiers;
 import com.balancedbytes.games.ffb.PickupModifiers;
 import com.balancedbytes.games.ffb.PlayerAction;
 import com.balancedbytes.games.ffb.PlayerState;
@@ -1152,7 +1152,7 @@ public class StatusReport {
       print(getIndent(), true, thrownPlayer);
       println(getIndent(), TextStyle.BOLD, ":");
     }
-    if (pReport.hasRollModifier(PassModifier.NERVES_OF_STEEL)) {
+    if (pReport.hasRollModifier(PassingModifiers.NERVES_OF_STEEL)) {
       Player player = getClient().getGame().getActingPlayer().getPlayer();
       reportNervesOfSteel(player, "pass");
     }
@@ -1608,7 +1608,7 @@ public class StatusReport {
       } else {
         println(getIndent(), TextStyle.BOLD, " tries to catch the ball:");
       }
-      if (pReport.hasRollModifier(CatchModifier.NERVES_OF_STEEL)) {
+      if (pReport.hasRollModifier(CatchModifiers.NERVES_OF_STEEL)) {
         reportNervesOfSteel(player, "catch");
       }
     }
@@ -1652,7 +1652,7 @@ public class StatusReport {
       } else {
         println(getIndent(), TextStyle.BOLD, " tries to intercept the ball:");
       }
-      if (pReport.hasRollModifier(InterceptionModifier.NERVES_OF_STEEL)) {
+      if (pReport.hasRollModifier(InterceptionModifiers.NERVES_OF_STEEL)) {
         reportNervesOfSteel(player, "intercept");
       }
     }
@@ -1945,7 +1945,7 @@ public class StatusReport {
         }
       }
     }
-    if (pReport.hasRollModifier(PassModifier.NERVES_OF_STEEL)) {
+    if (pReport.hasRollModifier(PassingModifiers.NERVES_OF_STEEL)) {
       Player player = getClient().getGame().getActingPlayer().getPlayer();
       reportNervesOfSteel(player, "pass");
     }
@@ -2386,7 +2386,7 @@ public class StatusReport {
     StringBuilder status = new StringBuilder();
 
     // report injury type
-
+    
     switch (pReport.getInjuryType()) {
       case KTM_CROWD:
         print(getIndent() + 1, false, defender);
@@ -2667,9 +2667,6 @@ public class StatusReport {
     if (pReport.getSkill() != null) {
       Player player = game.getPlayerById(pReport.getPlayerId());
       int indent = getIndent();
-      if (pReport.getSkill() != Skill.KICK) {
-        indent += 1;
-      }
       StringBuilder status = new StringBuilder();
       if (!pReport.isUsed()) {
         if (player != null) {

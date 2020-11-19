@@ -18,6 +18,7 @@ public class Horns extends Skill {
     super("Horns", SkillCategory.MUTATION);
     
     registerProperty(NamedProperties.addStrengthOnBlitz);
+
   }
 
 }

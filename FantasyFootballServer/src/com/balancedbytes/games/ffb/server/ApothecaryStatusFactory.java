@@ -1,5 +1,6 @@
 package com.balancedbytes.games.ffb.server;
 
+import com.balancedbytes.games.ffb.ApothecaryStatus;
 import com.balancedbytes.games.ffb.INamedObjectFactory;
 
 /**

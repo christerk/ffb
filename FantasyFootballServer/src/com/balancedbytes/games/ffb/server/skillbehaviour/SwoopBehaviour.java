@@ -2,10 +2,10 @@ package com.balancedbytes.games.ffb.server.skillbehaviour;
 
 import java.util.List;
 
+import com.balancedbytes.games.ffb.ApothecaryMode;
 import com.balancedbytes.games.ffb.CatchScatterThrowInMode;
 import com.balancedbytes.games.ffb.Direction;
 import com.balancedbytes.games.ffb.FieldCoordinateBounds;
-import com.balancedbytes.games.ffb.InjuryType;
 import com.balancedbytes.games.ffb.PlayerState;
 import com.balancedbytes.games.ffb.SoundId;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
@@ -17,13 +17,14 @@ import com.balancedbytes.games.ffb.report.ReportSwoopPlayer;
 import com.balancedbytes.games.ffb.server.DiceInterpreter;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.InjuryResult;
+import com.balancedbytes.games.ffb.server.InjuryType.InjuryTypeCrowdPush;
+import com.balancedbytes.games.ffb.server.InjuryType.InjuryTypeTTMHitPlayer;
 import com.balancedbytes.games.ffb.server.model.SkillBehaviour;
 import com.balancedbytes.games.ffb.server.model.StepModifier;
 import com.balancedbytes.games.ffb.server.step.StepAction;
 import com.balancedbytes.games.ffb.server.step.StepCommandStatus;
 import com.balancedbytes.games.ffb.server.step.StepParameter;
 import com.balancedbytes.games.ffb.server.step.StepParameterKey;
-import com.balancedbytes.games.ffb.server.step.action.common.ApothecaryMode;
 import com.balancedbytes.games.ffb.server.step.action.ttm.StepSwoop;
 import com.balancedbytes.games.ffb.server.step.action.ttm.StepSwoop.StepState;
 import com.balancedbytes.games.ffb.server.util.UtilServerCatchScatterThrowIn;
@@ -73,7 +74,7 @@ public class SwoopBehaviour extends SkillBehaviour<Swoop> {
 					if (!FieldCoordinateBounds.FIELD.isInBounds(state.coordinateTo)) {
 						// Out of bounds
 						game.getFieldModel().setPlayerState(swoopingPlayer, new PlayerState(PlayerState.FALLING));
-						InjuryResult injuryResultThrownPlayer = UtilServerInjury.handleInjury(step, InjuryType.CROWDPUSH, null, swoopingPlayer, state.coordinateFrom, null, ApothecaryMode.THROWN_PLAYER);
+						InjuryResult injuryResultThrownPlayer = UtilServerInjury.handleInjury(step, new InjuryTypeCrowdPush(step), null, swoopingPlayer, state.coordinateFrom, null, ApothecaryMode.THROWN_PLAYER);
 						step.publishParameter(new StepParameter(StepParameterKey.INJURY_RESULT, injuryResultThrownPlayer));
 						if (state.thrownPlayerHasBall) {
 							step.publishParameter(new StepParameter(StepParameterKey.CATCH_SCATTER_THROW_IN_MODE, CatchScatterThrowInMode.THROW_IN));
@@ -103,7 +104,7 @@ public class SwoopBehaviour extends SkillBehaviour<Swoop> {
 								if (p != swoopingPlayer) {
 									// Landed on another player
 									step.publishParameter(new StepParameter(StepParameterKey.DROP_THROWN_PLAYER, true));
-									InjuryResult injuryResultHitPlayer = UtilServerInjury.handleInjury(step, InjuryType.TTM_HIT_PLAYER, null, p, state.coordinateTo, null, ApothecaryMode.HIT_PLAYER);
+									InjuryResult injuryResultHitPlayer = UtilServerInjury.handleInjury(step, new InjuryTypeTTMHitPlayer(step), null, p, state.coordinateTo, null, ApothecaryMode.HIT_PLAYER);
 									step.publishParameter(new StepParameter(StepParameterKey.INJURY_RESULT, injuryResultHitPlayer));
 									if ((game.isHomePlaying() && game.getTeamHome().hasPlayer(p)) || (!game.isHomePlaying() && game.getTeamAway().hasPlayer(p))) {
 										step.publishParameter(new StepParameter(StepParameterKey.END_TURN, true));

@@ -51,7 +51,6 @@ public class UtilPlayer {
 		return result.toArray(new Player[result.size()]);
 	}
 	
-	
   public static Player<?>[] findAdjacentOpposingPlayersWithSkill(Game pGame, FieldCoordinate pCenterCoordinate, Skill pSkill, boolean pCheckAbleToMove) {
     ActingPlayer actingPlayer = pGame.getActingPlayer();
     Team otherTeam = UtilPlayer.findOtherTeam(pGame, actingPlayer.getPlayer());
@@ -67,6 +66,22 @@ public class UtilPlayer {
     UtilPlayer.sortByPlayerNr(playerArray);
     return playerArray;
   }
+  
+  public static Player<?>[] findAdjacentOpposingPlayersWithProperty(Game pGame, FieldCoordinate pCenterCoordinate, ISkillProperty pProperty, boolean pCheckAbleToMove) {
+	    ActingPlayer actingPlayer = pGame.getActingPlayer();
+	    Team otherTeam = UtilPlayer.findOtherTeam(pGame, actingPlayer.getPlayer());
+	    Player<?>[] opponents = UtilPlayer.findAdjacentPlayersWithTacklezones(pGame, otherTeam, pCenterCoordinate, false);
+	    Set<Player<?>> shadowingPlayers = new HashSet<Player<?>>(); 
+	    for (Player<?> opponent : opponents) {
+	      PlayerState opponentState = pGame.getFieldModel().getPlayerState(opponent);
+	      if ((opponentState != null) && opponentState.hasTacklezones() && UtilCards.hasSkillWithProperty(opponent, pProperty) && (!pCheckAbleToMove || opponentState.isAbleToMove())) {
+	        shadowingPlayers.add(opponent);
+	      }
+	    }
+	    Player<?>[] playerArray = shadowingPlayers.toArray(new Player[shadowingPlayers.size()]);
+	    UtilPlayer.sortByPlayerNr(playerArray);
+	    return playerArray;
+	  }
 
   public static Player<?>[] findAdjacentPronePlayers(Game pGame, Team pTeam, FieldCoordinate pCoordinate) {
     List<Player<?>> adjacentPlayers = new ArrayList<Player<?>>();

@@ -2,6 +2,7 @@ package com.balancedbytes.games.ffb.server.step.action.common;
 
 import java.util.Set;
 
+import com.balancedbytes.games.ffb.ApothecaryMode;
 import com.balancedbytes.games.ffb.Card;
 import com.balancedbytes.games.ffb.CatchModifier;
 import com.balancedbytes.games.ffb.CatchModifierFactory;
@@ -10,7 +11,6 @@ import com.balancedbytes.games.ffb.Direction;
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.FieldCoordinateBounds;
 import com.balancedbytes.games.ffb.InducementDuration;
-import com.balancedbytes.games.ffb.InjuryType;
 import com.balancedbytes.games.ffb.PlayerChoiceMode;
 import com.balancedbytes.games.ffb.PlayerState;
 import com.balancedbytes.games.ffb.ReRolledAction;
@@ -38,6 +38,7 @@ import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.IServerJsonOption;
 import com.balancedbytes.games.ffb.server.IServerLogLevel;
 import com.balancedbytes.games.ffb.server.InjuryResult;
+import com.balancedbytes.games.ffb.server.InjuryType.InjuryTypeStab;
 import com.balancedbytes.games.ffb.server.net.ReceivedCommand;
 import com.balancedbytes.games.ffb.server.step.AbstractStepWithReRoll;
 import com.balancedbytes.games.ffb.server.step.SequenceGenerator;
@@ -228,13 +229,13 @@ public class StepCatchScatterThrowIn extends AbstractStepWithReRoll {
         fBombMode = false;
         if ((playerUnderBall != null) && game.getFieldModel().isBallInPlay()
           && (UtilGameOption.isOptionEnabled(game, GameOptionId.SPIKED_BALL) || UtilCards.isCardActive(game, Card.SPIKED_BALL))) {
-          InjuryResult injuryResultCatcher = UtilServerInjury.handleInjury(this, InjuryType.STAB, null, playerUnderBall,
+          InjuryResult injuryResultCatcher = UtilServerInjury.handleInjury(this, new InjuryTypeStab(this), null, playerUnderBall,
             game.getFieldModel().getBallCoordinate(), null, ApothecaryMode.CATCHER);
           getGameState().pushCurrentStepOnStack();
           SequenceGenerator.getInstance().pushSpikedBallApoSequence(getGameState());
           fCatchScatterThrowInMode = CatchScatterThrowInMode.SCATTER_BALL;
           getResult().setNextAction(StepAction.NEXT_STEP);
-          if (injuryResultCatcher.isArmorBroken()) {
+          if (injuryResultCatcher.injuryContext().isArmorBroken()) {
             publishParameters(UtilServerInjury.dropPlayer(this, playerUnderBall, ApothecaryMode.CATCHER));
           }
           publishParameter(new StepParameter(StepParameterKey.INJURY_RESULT, injuryResultCatcher));

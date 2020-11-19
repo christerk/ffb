@@ -3,7 +3,6 @@ package com.balancedbytes.games.ffb.server.step.action.move;
 import com.balancedbytes.games.ffb.Direction;
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.FieldCoordinateBounds;
-import com.balancedbytes.games.ffb.InjuryType;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.Game;
@@ -13,6 +12,7 @@ import com.balancedbytes.games.ffb.report.ReportScatterPlayer;
 import com.balancedbytes.games.ffb.server.DiceInterpreter;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.IServerJsonOption;
+import com.balancedbytes.games.ffb.server.InjuryType.InjuryTypeCrowdPush;
 import com.balancedbytes.games.ffb.server.net.ReceivedCommand;
 import com.balancedbytes.games.ffb.server.step.AbstractStep;
 import com.balancedbytes.games.ffb.server.step.StepAction;
@@ -141,7 +141,7 @@ public class StepMoveBallAndChain extends AbstractStep {
     	fCoordinateTo = UtilServerCatchScatterThrowIn.findScatterCoordinate(fCoordinateFrom, playerScatter, 1);
     	getResult().addReport(new ReportScatterPlayer(fCoordinateFrom, fCoordinateTo, new Direction[] { playerScatter }, new int[] { scatterRoll }));
     	if (!FieldCoordinateBounds.FIELD.isInBounds(fCoordinateTo)) {
-    		publishParameter(new StepParameter(StepParameterKey.INJURY_TYPE, InjuryType.CROWDPUSH));
+    		publishParameter(new StepParameter(StepParameterKey.INJURY_TYPE, new InjuryTypeCrowdPush(this)));
     		getResult().setNextAction(StepAction.GOTO_LABEL, fGotoLabelOnFallDown);
     		return;
     	}

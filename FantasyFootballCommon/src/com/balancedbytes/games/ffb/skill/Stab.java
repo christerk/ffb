@@ -2,6 +2,7 @@ package com.balancedbytes.games.ffb.skill;
 
 import com.balancedbytes.games.ffb.SkillCategory;
 import com.balancedbytes.games.ffb.model.Skill;
+import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
 
 /**
 * A player with this skill is armed with something very good at stabbing,
@@ -19,6 +20,8 @@ public class Stab extends Skill {
 
   public Stab() {
     super("Stab", SkillCategory.EXTRAORDINARY);
+
+    registerProperty(NamedProperties.canPerformArmourRollInsteadOfBlock);
   }
 
 }

@@ -21,6 +21,7 @@ public class DivingCatch extends Skill {
     super("Diving Catch", SkillCategory.AGILITY);
     
     registerProperty(NamedProperties.canAttemptCatchInAdjacentSquares);
+    registerProperty(NamedProperties.addBonusForAccuratePass);
   }
 
 }

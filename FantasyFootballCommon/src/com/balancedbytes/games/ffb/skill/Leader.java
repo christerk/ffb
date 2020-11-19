@@ -2,6 +2,7 @@ package com.balancedbytes.games.ffb.skill;
 
 import com.balancedbytes.games.ffb.SkillCategory;
 import com.balancedbytes.games.ffb.model.Skill;
+import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
 
 /**
 * The player is a natural leader and commands the rest of
@@ -20,6 +21,8 @@ public class Leader extends Skill {
 
   public Leader() {
     super("Leader", SkillCategory.PASSING);
+    
+    registerProperty(NamedProperties.grantsTeamRerollWhenOnPitch);
   }
 
 }

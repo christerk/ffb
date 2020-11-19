@@ -13,6 +13,7 @@ import com.balancedbytes.games.ffb.DodgeModifiers;
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.GazeModifier;
 import com.balancedbytes.games.ffb.GoForItModifier;
+import com.balancedbytes.games.ffb.InjuryContext;
 import com.balancedbytes.games.ffb.InjuryModifier;
 import com.balancedbytes.games.ffb.InjuryType;
 import com.balancedbytes.games.ffb.InterceptionModifier;
@@ -301,27 +302,27 @@ public class DiceInterpreter {
     return reRollsStolen;
   }
 
-  public PlayerState interpretRollInjury(GameState pGameState, InjuryResult pInjuryResult) {
+  public PlayerState interpretRollInjury(GameState pGameState, InjuryContext pInjuryContext) {
     PlayerState playerState = null;
-    if ((pGameState != null) && (pInjuryResult != null)) {
+    if ((pGameState != null) && (pInjuryContext != null)) {
       Game game = pGameState.getGame();
-      int[] injuryRoll = pInjuryResult.getInjuryRoll();
-      Player defender = game.getPlayerById(pInjuryResult.getDefenderId());
+      int[] injuryRoll = pInjuryContext.getInjuryRoll();
+      Player defender = game.getPlayerById(pInjuryContext.getDefenderId());
       if ((defender != null) && UtilCards.hasCard(game, defender, Card.GOOD_OLD_MAGIC_CODPIECE)) {
-        pInjuryResult.clearInjuryModifiers();
+    	  pInjuryContext.clearInjuryModifiers();
       }
-      int total = injuryRoll[0] + injuryRoll[1] + pInjuryResult.getInjuryModifierTotal();
+      int total = injuryRoll[0] + injuryRoll[1] + pInjuryContext.getInjuryModifierTotal();
       if ((total == 8) && (defender != null) && UtilCards.hasSkillWithProperty(defender, NamedProperties.convertKOToStunOn8)) {
         playerState = new PlayerState(PlayerState.STUNNED);
-        pInjuryResult.addInjuryModifier(InjuryModifier.THICK_SKULL);
-      } else if ((total == 7) && (defender != null) && UtilCards.hasSkill(game, defender, ServerSkill.STUNTY) && (pInjuryResult.getInjuryType() != InjuryType.STAB)
+        pInjuryContext.addInjuryModifier(InjuryModifier.THICK_SKULL);
+      } else if ((total == 7) && (defender != null) && UtilCards.hasSkill(game, defender, ServerSkill.STUNTY) && (pInjuryContext.getInjuryType() != InjuryType.STAB)
           && !UtilCards.hasCard(game, defender, Card.GOOD_OLD_MAGIC_CODPIECE)) {
         playerState = new PlayerState(PlayerState.KNOCKED_OUT);
-        pInjuryResult.addInjuryModifier(InjuryModifier.STUNTY);
-      } else if ((total == 9) && (defender != null) && UtilCards.hasSkill(game, defender, ServerSkill.STUNTY) && (pInjuryResult.getInjuryType() != InjuryType.STAB)
+        pInjuryContext.addInjuryModifier(InjuryModifier.STUNTY);
+      } else if ((total == 9) && (defender != null) && UtilCards.hasSkill(game, defender, ServerSkill.STUNTY) && (pInjuryContext.getInjuryType() != InjuryType.STAB)
           && !UtilCards.hasCard(game, defender, Card.GOOD_OLD_MAGIC_CODPIECE)) {
         playerState = new PlayerState(PlayerState.BADLY_HURT);
-        pInjuryResult.addInjuryModifier(InjuryModifier.STUNTY);
+        pInjuryContext.addInjuryModifier(InjuryModifier.STUNTY);
       } else if (total > 9) {
         playerState = null;
       } else if (total > 7) {
@@ -432,18 +433,18 @@ public class DiceInterpreter {
     return seriousInjury;
   }
 
-  public boolean isArmourBroken(GameState pGameState, InjuryResult pInjuryResult) {
+  public boolean isArmourBroken(GameState pGameState, InjuryContext pInjuryContext) {
     Game game = pGameState.getGame();
-    int[] armourRoll = pInjuryResult.getArmorRoll();
-    Player defender = game.getPlayerById(pInjuryResult.getDefenderId());
+    int[] armourRoll = pInjuryContext.getArmorRoll();
+    Player defender = game.getPlayerById(pInjuryContext.getDefenderId());
     int armour = defender.getArmour();
     if (UtilCards.hasCard(game, defender, Card.BELT_OF_INVULNERABILITY)) {
-      pInjuryResult.clearArmorModifiers();
+    	pInjuryContext.clearArmorModifiers();
     }
-    if ((armour > 7) && pInjuryResult.hasArmorModifier(ArmorModifier.CLAWS)) {
+    if ((armour > 7) && pInjuryContext.hasArmorModifier(ArmorModifier.CLAWS)) {
       armour = 7;
     }
-    return (armour < (armourRoll[0] + armourRoll[1] + pInjuryResult.getArmorModifierTotal()));
+    return (armour < (armourRoll[0] + armourRoll[1] + pInjuryContext.getArmorModifierTotal()));
   }
 
   public boolean isApothecarySuccessful(int roll) {

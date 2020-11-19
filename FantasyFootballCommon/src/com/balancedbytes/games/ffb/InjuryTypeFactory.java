@@ -1,19 +1,15 @@
 package com.balancedbytes.games.ffb;
 
+import com.balancedbytes.games.ffb.server.InjuryTypes;
 
 /**
  * 
  * @author Kalimar
  */
 public class InjuryTypeFactory implements INamedObjectFactory {
-  
+	
   public InjuryType forName(String pName) {
-    for (InjuryType type : InjuryType.values()) {
-      if (type.getName().equalsIgnoreCase(pName)) {
-        return type;
-      }
-    }
-    return null;
+	  return InjuryTypes.values().get(pName.toLowerCase());
   }
-
 }
+
