@@ -1,7 +1,5 @@
 package com.balancedbytes.games.ffb;
 
-import com.balancedbytes.games.ffb.server.InjuryTypes;
-
 /**
  * 
  * @author Kalimar
