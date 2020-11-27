@@ -6,7 +6,6 @@ import com.balancedbytes.games.ffb.Card;
 import com.balancedbytes.games.ffb.CatchScatterThrowInMode;
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.InjuryContext;
-import com.balancedbytes.games.ffb.InjuryType;
 import com.balancedbytes.games.ffb.PlayerState;
 import com.balancedbytes.games.ffb.PlayerType;
 import com.balancedbytes.games.ffb.SendToBoxReason;
@@ -46,7 +45,6 @@ import com.balancedbytes.games.ffb.util.UtilPlayer;
  */
 public class UtilServerInjury {
 
-	@SuppressWarnings("unchecked")
 	public static InjuryResult handleInjury(
 			IStep pStep,
 			InjuryTypeServer<?> pInjuryType,
@@ -70,7 +68,6 @@ public class UtilServerInjury {
 		GameState gameState = pStep.getGameState();
 		Game game = gameState.getGame();
 		DiceRoller diceRoller = gameState.getDiceRoller();
-		DiceInterpreter diceInterpreter = DiceInterpreter.getInstance();
 		injuryContext.setInjuryType(pInjuryType.injuryType());
 		injuryContext.setDefenderId(pDefender.getId());
 		injuryContext.setAttackerId((pAttacker != null) ? pAttacker.getId() : null);
@@ -90,7 +87,7 @@ public class UtilServerInjury {
 			if (UtilCards.hasCard(game, pDefender, Card.LUCKY_CHARM) && (injuryContext.getArmorRoll() != null)) {
 				injuryContext.setArmorBroken(false);
 				injuryContext.setInjury(new PlayerState(PlayerState.PRONE));
-				UtilCards.deactivateCard(pStep, Card.LUCKY_CHARM);
+				UtilServerCards.deactivateCard(pStep, Card.LUCKY_CHARM);
 			}
 		}
 		

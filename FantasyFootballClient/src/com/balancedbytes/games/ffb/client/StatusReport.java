@@ -2663,7 +2663,7 @@ public class StatusReport {
     }
   }
 
-  public void reportPilingOn(ReportPilingOn pReport) {
+  public void reportPilingOn(ReportPilingOn pReport) { 
     Game game = getClient().getGame();
     Player player = game.getPlayerById(pReport.getPlayerId());
     if (player != null) {
