@@ -35,6 +35,7 @@ public abstract class InjuryTypeServer<T extends InjuryType> implements INamedOb
 	public InjuryType injuryType() { return injuryType; }
 	public boolean canUseApo() { return injuryType.canUseApo(); }
 	public SendToBoxReason sendToBoxReason() { return injuryType.sendToBoxReason(); }
+	public boolean fallingDownCausesTurnover() { return injuryType.fallingDownCausesTurnover(); }
 	
 
 	public abstract InjuryContext handleInjury(IStep step, Game game,GameState gameState, DiceRoller diceRoller, Player<?> pAttacker, Player<?> pDefender,
@@ -61,5 +62,6 @@ public abstract class InjuryTypeServer<T extends InjuryType> implements INamedOb
 		}
 		return diceInterpreter.interpretRollInjury(gameState, injuryContext);
 	}
+
 
 }

@@ -80,8 +80,7 @@ public class UtilServerInjury {
 		
 
 		// ball and chain always breaks armor on being knocked down
-		if ((UtilCards.hasSkillWithProperty(pDefender, NamedProperties.placedProneCausesInjuryRoll)
-				&& (pInjuryType != InjuryType.STAB) && (pInjuryType != InjuryType.CHAINSAW))) {
+		if (UtilCards.hasSkillWithProperty(pDefender, NamedProperties.placedProneCausesInjuryRoll)) {
 			injuryContext.setArmorBroken(true);
 		}
 		
@@ -143,7 +142,7 @@ public class UtilServerInjury {
 				injuryContext.setSound(SoundId.KO);
 				break;
 			default:
-				if (injuryContext.getInjuryType() != InjuryType.FOUL) {
+				if (injuryContext.getInjuryType().shouldPlayFallSound()) {
 					injuryContext.setSound(SoundId.FALL);
 				}
 				break;

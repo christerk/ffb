@@ -34,6 +34,9 @@ public abstract class InjuryType implements INamedObject {
   public SendToBoxReason sendToBoxReason() { return sendToBoxReason;}
   public boolean isCausedByOpponent() { return false; }
   public boolean canUseApo() { return true; }
+  public boolean canApoKoIntoStun() { return true; }
+  public boolean shouldPlayFallSound() { return true; }
+  public boolean fallingDownCausesTurnover() { return true; }
 
   public InjuryContext injuryContext() { return this.injuryContext; }
 

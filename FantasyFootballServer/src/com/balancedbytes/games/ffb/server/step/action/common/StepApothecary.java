@@ -4,7 +4,6 @@ import com.balancedbytes.games.ffb.ApothecaryMode;
 import com.balancedbytes.games.ffb.ApothecaryStatus;
 import com.balancedbytes.games.ffb.CardEffect;
 import com.balancedbytes.games.ffb.InducementType;
-import com.balancedbytes.games.ffb.InjuryType;
 import com.balancedbytes.games.ffb.PlayerState;
 import com.balancedbytes.games.ffb.PlayerType;
 import com.balancedbytes.games.ffb.SeriousInjury;
@@ -240,7 +239,7 @@ public class StepApothecary extends AbstractStep {
 					PlayerState playerState = game.getFieldModel().getPlayerState(player);
 					if ((playerState != null) && playerState.isCasualty()
 							&& UtilCards.hasSkillWithProperty(player, NamedProperties.canRollToSaveFromInjury)
-							&& (fInjuryResult.injuryContext().getInjuryType() != InjuryType.EAT_PLAYER)) {
+							&& (fInjuryResult.injuryContext().getInjuryType().canUseApo())) {
 						if (!UtilServerInjury.handleRegeneration(this, player)) {
 							InducementSet inducementSet = game.getTeamHome().hasPlayer(player)
 									? game.getTurnDataHome().getInducementSet()
@@ -296,7 +295,7 @@ public class StepApothecary extends AbstractStep {
 		if (!apothecaryChoice) {
 			fInjuryResult.injuryContext().setSeriousInjury(null);
 			if ((fInjuryResult.injuryContext().getPlayerState().getBase() == PlayerState.KNOCKED_OUT)
-					&& (fInjuryResult.injuryContext().getInjuryType() != InjuryType.CROWDPUSH)) {
+					&& (fInjuryResult.injuryContext().getInjuryType().canApoKoIntoStun())) {
 				fInjuryResult.injuryContext().setInjury(new PlayerState(PlayerState.STUNNED));
 			} else {
 				curePoison();
