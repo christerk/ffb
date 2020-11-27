@@ -1,6 +1,5 @@
 package com.balancedbytes.games.ffb;
 
-import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
 
 /**
@@ -21,6 +20,8 @@ public abstract class InjuryType implements INamedObject {
 	  sendToBoxReason = pSendToBoxReason;
 	  injuryContext = new InjuryContext(); 
   }
+  
+  public InjuryType injuryType() { return this; }
 
   public String getName() {
     return name;
@@ -30,20 +31,13 @@ public abstract class InjuryType implements INamedObject {
 		return worthSpps;
 	}
   
-  public SendToBoxReason sendToBoxReason() {
-	  return sendToBoxReason;
-  }
-  
+  public SendToBoxReason sendToBoxReason() { return sendToBoxReason;}
   public boolean isCausedByOpponent() { return false; }
   public boolean canUseApo() { return true; }
 
-  
-  public InjuryContext getInjuryContext() { return injuryContext; }
-  
-  public abstract InjuryContext handleInjury(Game game, Player<?> pAttacker, Player<?> pDefender,
-			FieldCoordinate pDefenderCoordinate, InjuryContext pOldInjuryContext, ApothecaryMode pApothecaryMode);
+  public InjuryContext injuryContext() { return this.injuryContext; }
 
-  public void reportInjury(StringBuilder status, int indent, Player<?> attacker, Player<?> defender)
+  public void reportInjuryString(StringBuilder string, Player<?> attacker, Player<?> defender)
   {
 	  
   }

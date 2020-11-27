@@ -4,7 +4,6 @@ import com.balancedbytes.games.ffb.ApothecaryMode;
 import com.balancedbytes.games.ffb.Card;
 import com.balancedbytes.games.ffb.CardEffect;
 import com.balancedbytes.games.ffb.FieldCoordinate;
-import com.balancedbytes.games.ffb.InjuryType;
 import com.balancedbytes.games.ffb.PlayerState;
 import com.balancedbytes.games.ffb.ReRollSource;
 import com.balancedbytes.games.ffb.dialog.DialogPilingOnParameter;
@@ -27,6 +26,7 @@ import com.balancedbytes.games.ffb.server.InjuryType.InjuryTypeBlockStunned;
 import com.balancedbytes.games.ffb.server.InjuryType.InjuryTypePilingOnArmour;
 import com.balancedbytes.games.ffb.server.InjuryType.InjuryTypePilingOnInjury;
 import com.balancedbytes.games.ffb.server.InjuryType.InjuryTypePilingOnKnockedOut;
+import com.balancedbytes.games.ffb.server.InjuryType.InjuryTypeServer;
 import com.balancedbytes.games.ffb.server.model.SkillBehaviour;
 import com.balancedbytes.games.ffb.server.model.StepModifier;
 import com.balancedbytes.games.ffb.server.step.StepAction;
@@ -79,11 +79,11 @@ public class PilingOnBehaviour extends SkillBehaviour<PilingOn> {
 				          step.publishParameters(UtilServerInjury.dropPlayer(step, actingPlayer.getPlayer(), ApothecaryMode.ATTACKER));
 				          boolean rolledDouble;
 				          if (reRollInjury) {
-				        	  state.injuryResultDefender = UtilServerInjury.handleInjury(step, new InjuryTypePilingOnInjury(step), actingPlayer.getPlayer(), game.getDefender(),
+				        	  state.injuryResultDefender = UtilServerInjury.handleInjury(step, new InjuryTypePilingOnInjury(), actingPlayer.getPlayer(), game.getDefender(),
 				                defenderCoordinate, state.injuryResultDefender, ApothecaryMode.DEFENDER);
 				            rolledDouble = DiceInterpreter.getInstance().isDouble(state.injuryResultDefender.injuryContext().getInjuryRoll());
 				          } else {
-				        	  state.injuryResultDefender = UtilServerInjury.handleInjury(step, new InjuryTypePilingOnArmour(step), actingPlayer.getPlayer(), game.getDefender(),
+				        	  state.injuryResultDefender = UtilServerInjury.handleInjury(step, new InjuryTypePilingOnArmour(), actingPlayer.getPlayer(), game.getDefender(),
 				                defenderCoordinate, null, ApothecaryMode.DEFENDER);
 				            rolledDouble = DiceInterpreter.getInstance().isDouble(state.injuryResultDefender.injuryContext().getArmorRoll());
 				          }
@@ -94,13 +94,13 @@ public class PilingOnBehaviour extends SkillBehaviour<PilingOn> {
 				        }
 				      } else {
 				        step.publishParameters(UtilServerInjury.dropPlayer(step, game.getDefender(), ApothecaryMode.DEFENDER));
-				        InjuryType injuryType = new InjuryTypeBlock(step);
+				        InjuryTypeServer injuryType = new InjuryTypeBlock();
 
 				        if (state.oldDefenderState != null) {
 				          if (state.oldDefenderState.isStunned()){
-				            injuryType = new InjuryTypeBlockStunned(step);
+				            injuryType = new InjuryTypeBlockStunned();
 				          } else if (state.oldDefenderState.isProne()) {
-				            injuryType = new InjuryTypeBlockProne(step);
+				            injuryType = new InjuryTypeBlockProne();
 				          }
 				        }
 
@@ -147,7 +147,7 @@ public class PilingOnBehaviour extends SkillBehaviour<PilingOn> {
 				      if ((attackerState != null) && (attackerState.getBase() == PlayerState.FALLING) && (attackerCoordinate != null)) {
 				    	  step.publishParameter(new StepParameter(StepParameterKey.END_TURN, true));
 				    	  step.publishParameters(UtilServerInjury.dropPlayer(step, actingPlayer.getPlayer(), ApothecaryMode.ATTACKER));
-				        InjuryResult injuryResultAttacker = UtilServerInjury.handleInjury(step, new InjuryTypeBlock(step), game.getDefender(), actingPlayer.getPlayer(), attackerCoordinate, null, ApothecaryMode.ATTACKER);
+				        InjuryResult injuryResultAttacker = UtilServerInjury.handleInjury(step, new InjuryTypeBlock(), game.getDefender(), actingPlayer.getPlayer(), attackerCoordinate, null, ApothecaryMode.ATTACKER);
 				        if (UtilCards.hasSkillWithProperty(game.getDefender(), NamedProperties.appliesPoisonOnBadlyHurt) && injuryResultAttacker.injuryContext().isBadlyHurt()) {
 				            boolean success = rollWeepingDagger(game.getDefender(), actingPlayer.getPlayer(), step);
 				            if (success) {

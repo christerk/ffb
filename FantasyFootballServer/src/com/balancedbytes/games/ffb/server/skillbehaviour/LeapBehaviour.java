@@ -48,7 +48,7 @@ public class LeapBehaviour extends SkillBehaviour<Leap> {
 				    if (doLeap) {
 				      if (ReRolledAction.LEAP == step.getReRolledAction()) {
 				        if ((step.getReRollSource() == null) || !UtilServerReRoll.useReRoll(step, step.getReRollSource(), actingPlayer.getPlayer())) {
-				        	step.publishParameter(new StepParameter(StepParameterKey.INJURY_TYPE, new InjuryTypeDropLeap(step)));
+				        	step.publishParameter(new StepParameter(StepParameterKey.INJURY_TYPE, new InjuryTypeDropLeap()));
 				        	step.getResult().setNextAction(StepAction.GOTO_LABEL, state.goToLabelOnFailure);
 				          doLeap = false;
 				        }
@@ -63,7 +63,7 @@ public class LeapBehaviour extends SkillBehaviour<Leap> {
 				          case FAILURE:
 				            actingPlayer.setLeaping(false);
 				            actingPlayer.markSkillUsed(skill);
-				            step.publishParameter(new StepParameter(StepParameterKey.INJURY_TYPE, new InjuryTypeDropLeap(step)));
+				            step.publishParameter(new StepParameter(StepParameterKey.INJURY_TYPE, new InjuryTypeDropLeap()));
 				          	step.getResult().setNextAction(StepAction.GOTO_LABEL, state.goToLabelOnFailure);
 				            break;
 				          default:

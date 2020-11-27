@@ -1,5 +1,6 @@
 package com.balancedbytes.games.ffb.server.InjuryType;
 
+import com.balancedbytes.game.ffb.injury.Foul;
 import com.balancedbytes.games.ffb.ApothecaryMode;
 import com.balancedbytes.games.ffb.ArmorModifier;
 import com.balancedbytes.games.ffb.ArmorModifierFactory;
@@ -9,20 +10,22 @@ import com.balancedbytes.games.ffb.InjuryContext;
 import com.balancedbytes.games.ffb.InjuryModifier;
 import com.balancedbytes.games.ffb.InjuryModifierFactory;
 import com.balancedbytes.games.ffb.PlayerState;
-import com.balancedbytes.games.ffb.SendToBoxReason;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
 import com.balancedbytes.games.ffb.option.GameOptionId;
 import com.balancedbytes.games.ffb.option.UtilGameOption;
+import com.balancedbytes.games.ffb.server.DiceInterpreter;
+import com.balancedbytes.games.ffb.server.DiceRoller;
+import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.model.ServerSkill;
 import com.balancedbytes.games.ffb.server.step.IStep;
 import com.balancedbytes.games.ffb.util.UtilCards;
 import com.balancedbytes.games.ffb.util.UtilPlayer;
 
-public class InjuryTypeFoul extends InjuryTypeServer {
-		public InjuryTypeFoul(IStep step) {
-			super(step, "foul", false, SendToBoxReason.FOULED);
+public class InjuryTypeFoul extends InjuryTypeServer<Foul>  {
+		public InjuryTypeFoul() {
+			super(new Foul());
 		}
 
 		public boolean isCausedByOpponent() {
@@ -31,8 +34,11 @@ public class InjuryTypeFoul extends InjuryTypeServer {
 
 
 		@Override
-		public InjuryContext handleInjury(Game game, Player<?> pAttacker, Player<?> pDefender,
+		public InjuryContext handleInjury(IStep step, Game game,GameState gameState, DiceRoller diceRoller, Player<?> pAttacker, Player<?> pDefender,
 				FieldCoordinate pDefenderCoordinate, InjuryContext pOldInjuryContext, ApothecaryMode pApothecaryMode) {
+			
+			DiceInterpreter diceInterpreter = DiceInterpreter.getInstance();
+
 			// Blatant Foul breaks armor without roll
 			if (UtilCards.isCardActive(game, Card.BLATANT_FOUL)) {
 				injuryContext.setArmorBroken(true);
@@ -73,7 +79,7 @@ public class InjuryTypeFoul extends InjuryTypeServer {
 					injuryContext.addInjuryModifier(InjuryModifier.DIRTY_PLAYER);
 				}
 
-				setInjury(pDefender);
+				setInjury(pDefender, gameState, diceRoller);
 
 			} else {
 				injuryContext.setInjury(new PlayerState(PlayerState.PRONE));

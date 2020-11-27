@@ -489,7 +489,7 @@ public final class StepApplyKickoffResult extends AbstractStep {
       
       publishParameters(UtilServerInjury.dropPlayer(this, player, ApothecaryMode.HOME));
       publishParameter(new StepParameter(StepParameterKey.INJURY_RESULT,
-        	UtilServerInjury.handleInjury(this, new InjuryTypeThrowARock(this), null, player, playerCoordinate, null, ApothecaryMode.HOME)));
+        	UtilServerInjury.handleInjury(this, new InjuryTypeThrowARock(), null, player, playerCoordinate, null, ApothecaryMode.HOME)));
       
     }
 
@@ -509,7 +509,7 @@ public final class StepApplyKickoffResult extends AbstractStep {
       
       publishParameters(UtilServerInjury.dropPlayer(this, player, ApothecaryMode.AWAY));
       publishParameter(new StepParameter(StepParameterKey.INJURY_RESULT,
-      	UtilServerInjury.handleInjury(this, new InjuryTypeThrowARock(this), null, player, playerCoordinate, null, ApothecaryMode.AWAY)));
+      	UtilServerInjury.handleInjury(this, new InjuryTypeThrowARock(), null, player, playerCoordinate, null, ApothecaryMode.AWAY)));
       
     }
     

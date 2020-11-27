@@ -2387,44 +2387,11 @@ public class StatusReport {
 
     // report injury type
     
-    switch (pReport.getInjuryType()) {
-      case KTM_CROWD:
-        print(getIndent() + 1, false, defender);
-        println(getIndent() + 1, " is kicked into the crowd and is knocked out.");
-        break;
-      case CROWDPUSH:
-        print(getIndent() + 1, false, defender);
-        println(getIndent() + 1, " is pushed into the crowd.");
-        break;
-      case STAB:
-        if (attacker != null) {
-          print(getIndent(), true, attacker);
-          print(getIndent(), TextStyle.BOLD, " stabs ");
-          print(getIndent(), true, defender);
-        } else {
-          print(getIndent(), true, defender);
-          print(getIndent(), TextStyle.BOLD, " is stabbed");
-        }
-        println(getIndent(), TextStyle.BOLD, ":");
-        setIndent(getIndent() + 1);
-        break;
-      case BITTEN:
-        print(getIndent(), true, attacker);
-        print(getIndent(), TextStyle.BOLD, " bites ");
-        print(getIndent(), true, defender);
-        println(getIndent(), TextStyle.BOLD, ":");
-        setIndent(getIndent() + 1);
-        break;
-      case BALL_AND_CHAIN:
-        print(getIndent() + 1, false, defender);
-        status.append(" is knocked out by ");
-        status.append(defender.getPlayerGender().getGenitive());
-        status.append(" own Ball & Chain.");
+    pReport.getInjuryType().reportInjuryString(status, attacker, defender);
+    if(status.length() > 0)
+    {
         println(getIndent() + 1, status.toString());
         status = new StringBuilder();
-        break;
-      default:
-        break;
     }
 
     // report armour roll

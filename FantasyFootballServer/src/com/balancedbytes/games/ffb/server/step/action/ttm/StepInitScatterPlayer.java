@@ -171,7 +171,7 @@ public final class StepInitScatterPlayer extends AbstractStep {
       playerLandedUpon = game.getFieldModel().getPlayer(endCoordinate);
       if (playerLandedUpon != null) {
         publishParameter(new StepParameter(StepParameterKey.DROP_THROWN_PLAYER, true));
-      	InjuryResult injuryResultHitPlayer = UtilServerInjury.handleInjury(this, new InjuryTypeTTMHitPlayer(this), null, playerLandedUpon, endCoordinate, null, ApothecaryMode.HIT_PLAYER);
+      	InjuryResult injuryResultHitPlayer = UtilServerInjury.handleInjury(this, new InjuryTypeTTMHitPlayer(), null, playerLandedUpon, endCoordinate, null, ApothecaryMode.HIT_PLAYER);
       	publishParameter(new StepParameter(StepParameterKey.INJURY_RESULT, injuryResultHitPlayer));
         if ((game.isHomePlaying() && game.getTeamHome().hasPlayer(playerLandedUpon)) || (!game.isHomePlaying() && game.getTeamAway().hasPlayer(playerLandedUpon))) {
         	publishParameter(new StepParameter(StepParameterKey.END_TURN, true));
@@ -189,10 +189,10 @@ public final class StepInitScatterPlayer extends AbstractStep {
     	// throw player out of bounds
     	game.getFieldModel().setPlayerState(thrownPlayer, new PlayerState(PlayerState.FALLING));
     	if (fIsKickedPlayer) {
-        InjuryResult injuryResultKickedPlayer = UtilServerInjury.handleInjury(this, new InjuryTypeKTMCrowd(this), null, thrownPlayer, endCoordinate, null, ApothecaryMode.THROWN_PLAYER);
+        InjuryResult injuryResultKickedPlayer = UtilServerInjury.handleInjury(this, new InjuryTypeKTMCrowd(), null, thrownPlayer, endCoordinate, null, ApothecaryMode.THROWN_PLAYER);
         publishParameter(new StepParameter(StepParameterKey.INJURY_RESULT, injuryResultKickedPlayer));
     	} else {
-        InjuryResult injuryResultThrownPlayer = UtilServerInjury.handleInjury(this, new InjuryTypeCrowdPush(this), null, thrownPlayer, endCoordinate, null, ApothecaryMode.THROWN_PLAYER);
+        InjuryResult injuryResultThrownPlayer = UtilServerInjury.handleInjury(this, new InjuryTypeCrowdPush(), null, thrownPlayer, endCoordinate, null, ApothecaryMode.THROWN_PLAYER);
         publishParameter(new StepParameter(StepParameterKey.INJURY_RESULT, injuryResultThrownPlayer));
     	}
       if (fThrownPlayerHasBall) {

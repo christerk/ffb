@@ -74,7 +74,7 @@ public class SwoopBehaviour extends SkillBehaviour<Swoop> {
 					if (!FieldCoordinateBounds.FIELD.isInBounds(state.coordinateTo)) {
 						// Out of bounds
 						game.getFieldModel().setPlayerState(swoopingPlayer, new PlayerState(PlayerState.FALLING));
-						InjuryResult injuryResultThrownPlayer = UtilServerInjury.handleInjury(step, new InjuryTypeCrowdPush(step), null, swoopingPlayer, state.coordinateFrom, null, ApothecaryMode.THROWN_PLAYER);
+						InjuryResult injuryResultThrownPlayer = UtilServerInjury.handleInjury(step, new InjuryTypeCrowdPush(), null, swoopingPlayer, state.coordinateFrom, null, ApothecaryMode.THROWN_PLAYER);
 						step.publishParameter(new StepParameter(StepParameterKey.INJURY_RESULT, injuryResultThrownPlayer));
 						if (state.thrownPlayerHasBall) {
 							step.publishParameter(new StepParameter(StepParameterKey.CATCH_SCATTER_THROW_IN_MODE, CatchScatterThrowInMode.THROW_IN));
@@ -104,7 +104,7 @@ public class SwoopBehaviour extends SkillBehaviour<Swoop> {
 								if (p != swoopingPlayer) {
 									// Landed on another player
 									step.publishParameter(new StepParameter(StepParameterKey.DROP_THROWN_PLAYER, true));
-									InjuryResult injuryResultHitPlayer = UtilServerInjury.handleInjury(step, new InjuryTypeTTMHitPlayer(step), null, p, state.coordinateTo, null, ApothecaryMode.HIT_PLAYER);
+									InjuryResult injuryResultHitPlayer = UtilServerInjury.handleInjury(step, new InjuryTypeTTMHitPlayer(), null, p, state.coordinateTo, null, ApothecaryMode.HIT_PLAYER);
 									step.publishParameter(new StepParameter(StepParameterKey.INJURY_RESULT, injuryResultHitPlayer));
 									if ((game.isHomePlaying() && game.getTeamHome().hasPlayer(p)) || (!game.isHomePlaying() && game.getTeamAway().hasPlayer(p))) {
 										step.publishParameter(new StepParameter(StepParameterKey.END_TURN, true));

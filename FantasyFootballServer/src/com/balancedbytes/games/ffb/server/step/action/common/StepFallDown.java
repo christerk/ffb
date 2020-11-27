@@ -11,6 +11,7 @@ import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.IServerJsonOption;
 import com.balancedbytes.games.ffb.server.InjuryResult;
+import com.balancedbytes.games.ffb.server.InjuryType.InjuryTypeServer;
 import com.balancedbytes.games.ffb.server.net.ReceivedCommand;
 import com.balancedbytes.games.ffb.server.step.AbstractStep;
 import com.balancedbytes.games.ffb.server.step.StepAction;
@@ -35,7 +36,7 @@ import com.eclipsesource.json.JsonValue;
  */
 public class StepFallDown extends AbstractStep {
 
-	private InjuryType fInjuryType;
+	private InjuryTypeServer fInjuryType;
 
 	public StepFallDown(GameState pGameState) {
 		super(pGameState);
@@ -50,7 +51,7 @@ public class StepFallDown extends AbstractStep {
 		if ((pParameter != null) && !super.setParameter(pParameter)) {
 			switch (pParameter.getKey()) {
 				case INJURY_TYPE:
-					fInjuryType = (InjuryType) pParameter.getValue();
+					fInjuryType = (InjuryTypeServer) pParameter.getValue();
 					return true;
 				default:
 					break;
@@ -106,7 +107,7 @@ public class StepFallDown extends AbstractStep {
   public StepFallDown initFrom(JsonValue pJsonValue) {
     super.initFrom(pJsonValue);
     JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-    fInjuryType = (InjuryType) IServerJsonOption.INJURY_TYPE.getFrom(jsonObject);
+    fInjuryType = (InjuryTypeServer) IServerJsonOption.INJURY_TYPE.getFrom(jsonObject);
     return this;
   }
 

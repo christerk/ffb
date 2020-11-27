@@ -195,7 +195,7 @@ public class StepPushback extends AbstractStep {
         if (!ArrayTool.isProvided(pushbackSquares)) {
           // Crowdpush
           publishParameter(new StepParameter(StepParameterKey.INJURY_RESULT,
-              UtilServerInjury.handleInjury(this, new InjuryTypeCrowdPush(this), null, state.defender,
+              UtilServerInjury.handleInjury(this, new InjuryTypeCrowdPush(), null, state.defender,
                   state.startingPushbackSquare.getCoordinate(), null, ApothecaryMode.CROWD_PUSH)));
           game.getFieldModel().remove(state.defender);
           if (defenderCoordinate.equals(game.getFieldModel().getBallCoordinate())) {

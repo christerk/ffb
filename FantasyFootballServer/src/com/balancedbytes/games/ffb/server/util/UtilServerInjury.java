@@ -29,6 +29,7 @@ import com.balancedbytes.games.ffb.server.DiceRoller;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.InjuryResult;
 import com.balancedbytes.games.ffb.server.InjuryType.InjuryTypeBallAndChain;
+import com.balancedbytes.games.ffb.server.InjuryType.InjuryTypeServer;
 import com.balancedbytes.games.ffb.server.step.IStep;
 import com.balancedbytes.games.ffb.server.step.StepParameter;
 import com.balancedbytes.games.ffb.server.step.StepParameterKey;
@@ -45,9 +46,10 @@ import com.balancedbytes.games.ffb.util.UtilPlayer;
  */
 public class UtilServerInjury {
 
+	@SuppressWarnings("unchecked")
 	public static InjuryResult handleInjury(
 			IStep pStep,
-			InjuryType pInjuryType,
+			InjuryTypeServer<?> pInjuryType,
 			Player pAttacker,
 			Player pDefender,
 			FieldCoordinate pDefenderCoordinate,
@@ -59,16 +61,17 @@ public class UtilServerInjury {
 			throw new IllegalArgumentException("Parameter defender must not be null.");
 		}
 		if (pInjuryType == null) {
-			throw new IllegalArgumentException("Parameter injuryType must not be null.");
+			throw new IllegalArgumentException("Parameter injuryTypeServer must not be null.");
 		}
+	
 		
-		InjuryContext injuryContext = pInjuryType.getInjuryContext();
+		InjuryContext injuryContext = pInjuryType.injuryContext();
 		
 		GameState gameState = pStep.getGameState();
 		Game game = gameState.getGame();
 		DiceRoller diceRoller = gameState.getDiceRoller();
 		DiceInterpreter diceInterpreter = DiceInterpreter.getInstance();
-		injuryContext.setInjuryType(pInjuryType);
+		injuryContext.setInjuryType(pInjuryType.injuryType());
 		injuryContext.setDefenderId(pDefender.getId());
 		injuryContext.setAttackerId((pAttacker != null) ? pAttacker.getId() : null);
 		injuryContext.setDefenderCoordinate(pDefenderCoordinate);
@@ -82,7 +85,7 @@ public class UtilServerInjury {
 			injuryContext.setArmorBroken(true);
 		}
 		
-		pInjuryType.handleInjury(game, pAttacker, pDefender, pDefenderCoordinate, pOldInjuryResult.injuryContext(), pApothecaryMode);
+		pInjuryType.handleInjury(pStep, game, gameState, diceRoller, pAttacker, pDefender, pDefenderCoordinate, pOldInjuryResult.injuryContext(), pApothecaryMode);
 		
 		if (injuryContext.isArmorBroken()) {
 			if (UtilCards.hasCard(game, pDefender, Card.LUCKY_CHARM) && (injuryContext.getArmorRoll() != null)) {
@@ -148,7 +151,7 @@ public class UtilServerInjury {
 		}
 
 		InjuryResult injuryResult = new InjuryResult();
-		injuryResult.setInjuryContext(pInjuryType.getInjuryContext());
+		injuryResult.setInjuryContext(pInjuryType.injuryContext());
 		return injuryResult;
 
 	}
@@ -275,7 +278,7 @@ public class UtilServerInjury {
 		if ((playerCoordinate != null) && (playerState != null)) {
 			if (UtilCards.hasSkillWithProperty(pPlayer, NamedProperties.placedProneCausesInjuryRoll)) {
 				pStep.publishParameter(new StepParameter(StepParameterKey.INJURY_RESULT,
-						UtilServerInjury.handleInjury(pStep, new InjuryTypeBallAndChain(pStep), null, pPlayer, playerCoordinate, null, pApothecaryMode))
+						UtilServerInjury.handleInjury(pStep, new InjuryTypeBallAndChain(), null, pPlayer, playerCoordinate, null, pApothecaryMode))
 						);
 			} else {
 				if ((playerState.getBase() != PlayerState.PRONE) && (playerState.getBase() != PlayerState.STUNNED)) {

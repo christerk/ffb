@@ -83,7 +83,7 @@ public class WrestleBehaviour extends SkillBehaviour<Wrestle> {
 				        if (UtilCards.hasSkillWithProperty(game.getDefender(), NamedProperties.placedProneCausesInjuryRoll)) {
 				        	FieldCoordinate defenderCoordinate = game.getFieldModel().getPlayerCoordinate(game.getDefender());
 				          step.publishParameter(new StepParameter(StepParameterKey.INJURY_RESULT,
-			          	UtilServerInjury.handleInjury(step, new InjuryTypeBallAndChain(step), actingPlayer.getPlayer(), game.getDefender(), defenderCoordinate, null, ApothecaryMode.DEFENDER))
+			          	UtilServerInjury.handleInjury(step, new InjuryTypeBallAndChain(), actingPlayer.getPlayer(), game.getDefender(), defenderCoordinate, null, ApothecaryMode.DEFENDER))
 				          );
 				        }
 				      }

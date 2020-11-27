@@ -1,27 +1,23 @@
 package com.balancedbytes.games.ffb.server.InjuryType;
 
+import com.balancedbytes.game.ffb.injury.EatPlayer;
 import com.balancedbytes.games.ffb.ApothecaryMode;
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.InjuryContext;
 import com.balancedbytes.games.ffb.PlayerState;
-import com.balancedbytes.games.ffb.SendToBoxReason;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
+import com.balancedbytes.games.ffb.server.DiceRoller;
+import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.step.IStep;
 
-public class InjuryTypeEatPlayer extends InjuryTypeServer {
-		public InjuryTypeEatPlayer(IStep step) {
-			super(step, "eatPlayer", false, SendToBoxReason.EATEN);
+public class InjuryTypeEatPlayer extends InjuryTypeServer<EatPlayer>  {
+		public InjuryTypeEatPlayer() {
+			super(new EatPlayer());
 		}
 
 		@Override
-		public boolean canUseApo() {
-			return false;
-		}
-
-
-		@Override
-		public InjuryContext handleInjury(Game game, Player<?> pAttacker, Player<?> pDefender,
+		public InjuryContext handleInjury(IStep step, Game game,GameState gameState, DiceRoller diceRoller, Player<?> pAttacker, Player<?> pDefender,
 				FieldCoordinate pDefenderCoordinate, InjuryContext pOldInjuryContext, ApothecaryMode pApothecaryMode) {
 
 			if (!injuryContext.isArmorBroken()) {
@@ -30,7 +26,7 @@ public class InjuryTypeEatPlayer extends InjuryTypeServer {
 
 			if (injuryContext.isArmorBroken()) {
 				injuryContext.setInjury(new PlayerState(PlayerState.RIP));
-				setInjury(pDefender);
+				setInjury(pDefender, gameState, diceRoller);
 			} else {
 				injuryContext.setInjury(new PlayerState(PlayerState.PRONE));
 			}

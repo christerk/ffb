@@ -229,7 +229,7 @@ public class StepCatchScatterThrowIn extends AbstractStepWithReRoll {
         fBombMode = false;
         if ((playerUnderBall != null) && game.getFieldModel().isBallInPlay()
           && (UtilGameOption.isOptionEnabled(game, GameOptionId.SPIKED_BALL) || UtilCards.isCardActive(game, Card.SPIKED_BALL))) {
-          InjuryResult injuryResultCatcher = UtilServerInjury.handleInjury(this, new InjuryTypeStab(this), null, playerUnderBall,
+          InjuryResult injuryResultCatcher = UtilServerInjury.handleInjury(this, new InjuryTypeStab(), null, playerUnderBall,
             game.getFieldModel().getBallCoordinate(), null, ApothecaryMode.CATCHER);
           getGameState().pushCurrentStepOnStack();
           SequenceGenerator.getInstance().pushSpikedBallApoSequence(getGameState());

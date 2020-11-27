@@ -21,7 +21,7 @@ public class SkillBehaviour<T extends Skill> implements ISkillBehaviour {
     playerModifiers = new ArrayList<PlayerModifier>();
     stepModifiers = new ArrayList<StepModifier>();
     
-    skillClass = (Class<? extends Skill>) ((ParameterizedType)getClass().getGenericSuperclass()).getActualTypeArguments()[0].getClass();
+	skillClass = (Class<? extends Skill>) ((ParameterizedType)getClass().getGenericSuperclass()).getActualTypeArguments()[0].getClass();
   }
   
   @SuppressWarnings("unchecked")

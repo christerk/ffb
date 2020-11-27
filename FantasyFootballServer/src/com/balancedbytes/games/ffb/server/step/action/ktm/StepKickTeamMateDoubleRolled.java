@@ -77,7 +77,7 @@ public class StepKickTeamMateDoubleRolled extends AbstractStep {
       game.getFieldModel().setPlayerCoordinate(kickedPlayer, fKickedPlayerCoordinate);
       game.getFieldModel().setPlayerState(game.getDefender(), fKickedPlayerState);
       game.setDefenderId(null);
-      InjuryResult injury = UtilServerInjury.handleInjury(this, new InjuryTypeKTMCrowd(this), null, kickedPlayer, fKickedPlayerCoordinate, null, ApothecaryMode.THROWN_PLAYER);
+      InjuryResult injury = UtilServerInjury.handleInjury(this, new InjuryTypeKTMCrowd(), null, kickedPlayer, fKickedPlayerCoordinate, null, ApothecaryMode.THROWN_PLAYER);
       publishParameter(new StepParameter(StepParameterKey.INJURY_RESULT, injury));
       
       if (fKickedPlayerCoordinate.equals(game.getFieldModel().getBallCoordinate())) {

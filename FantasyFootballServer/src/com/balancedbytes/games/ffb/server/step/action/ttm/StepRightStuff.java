@@ -161,7 +161,7 @@ public final class StepRightStuff extends AbstractStepWithReRoll {
     }
     if (!doRoll) {
       FieldCoordinate playerCoordinate = game.getFieldModel().getPlayerCoordinate(thrownPlayer);
-      InjuryResult injuryResultThrownPlayer = UtilServerInjury.handleInjury(this, new InjuryTypeTTMLanding(this), null, thrownPlayer, playerCoordinate, null, ApothecaryMode.THROWN_PLAYER);
+      InjuryResult injuryResultThrownPlayer = UtilServerInjury.handleInjury(this, new InjuryTypeTTMLanding(), null, thrownPlayer, playerCoordinate, null, ApothecaryMode.THROWN_PLAYER);
       publishParameter(new StepParameter(StepParameterKey.INJURY_RESULT, injuryResultThrownPlayer));
       StepParameterSet params = UtilServerInjury.dropPlayer(this, thrownPlayer, ApothecaryMode.THROWN_PLAYER);
       if (!fThrownPlayerHasBall) {

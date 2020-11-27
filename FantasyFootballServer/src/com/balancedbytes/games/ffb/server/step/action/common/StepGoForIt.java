@@ -142,7 +142,7 @@ public class StepGoForIt extends AbstractStepWithReRoll {
 
   private void failGfi() {
     publishParameter(new StepParameter(StepParameterKey.END_TURN, true));
-    publishParameter(new StepParameter(StepParameterKey.INJURY_TYPE, new InjuryTypeDropGFI(this)));
+    publishParameter(new StepParameter(StepParameterKey.INJURY_TYPE, new InjuryTypeDropGFI()));
     getResult().setNextAction(StepAction.GOTO_LABEL, fGotoLabelOnFailure);
   }
 

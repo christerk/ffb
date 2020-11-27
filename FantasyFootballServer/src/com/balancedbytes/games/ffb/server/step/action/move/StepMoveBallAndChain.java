@@ -141,7 +141,7 @@ public class StepMoveBallAndChain extends AbstractStep {
     	fCoordinateTo = UtilServerCatchScatterThrowIn.findScatterCoordinate(fCoordinateFrom, playerScatter, 1);
     	getResult().addReport(new ReportScatterPlayer(fCoordinateFrom, fCoordinateTo, new Direction[] { playerScatter }, new int[] { scatterRoll }));
     	if (!FieldCoordinateBounds.FIELD.isInBounds(fCoordinateTo)) {
-    		publishParameter(new StepParameter(StepParameterKey.INJURY_TYPE, new InjuryTypeCrowdPush(this)));
+    		publishParameter(new StepParameter(StepParameterKey.INJURY_TYPE, new InjuryTypeCrowdPush()));
     		getResult().setNextAction(StepAction.GOTO_LABEL, fGotoLabelOnFallDown);
     		return;
     	}

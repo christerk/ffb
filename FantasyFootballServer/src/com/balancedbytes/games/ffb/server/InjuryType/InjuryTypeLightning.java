@@ -1,5 +1,6 @@
 package com.balancedbytes.games.ffb.server.InjuryType;
 
+import com.balancedbytes.game.ffb.injury.Lightning;
 import com.balancedbytes.games.ffb.ApothecaryMode;
 import com.balancedbytes.games.ffb.ArmorModifier;
 import com.balancedbytes.games.ffb.FieldCoordinate;
@@ -7,20 +8,24 @@ import com.balancedbytes.games.ffb.InjuryContext;
 import com.balancedbytes.games.ffb.InjuryModifier;
 import com.balancedbytes.games.ffb.InjuryModifierFactory;
 import com.balancedbytes.games.ffb.PlayerState;
-import com.balancedbytes.games.ffb.SendToBoxReason;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
+import com.balancedbytes.games.ffb.server.DiceInterpreter;
+import com.balancedbytes.games.ffb.server.DiceRoller;
+import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.step.IStep;
 
-public class InjuryTypeLightning extends InjuryTypeServer {
-		public InjuryTypeLightning(IStep step) {
-			super(step, "lightning", false, SendToBoxReason.LIGHTNING);
+public class InjuryTypeLightning extends InjuryTypeServer<Lightning>   {
+		public InjuryTypeLightning() {
+			super(new Lightning());
 		}
 
 
 		@Override
-		public InjuryContext handleInjury(Game game, Player<?> pAttacker, Player<?> pDefender,
+		public InjuryContext handleInjury(IStep step, Game game,GameState gameState, DiceRoller diceRoller, Player<?> pAttacker, Player<?> pDefender,
 				FieldCoordinate pDefenderCoordinate, InjuryContext pOldInjuryContext, ApothecaryMode pApothecaryMode) {
+
+			DiceInterpreter diceInterpreter = DiceInterpreter.getInstance();
 
 			if (!injuryContext.isArmorBroken()) {
 				injuryContext.setArmorRoll(diceRoller.rollArmour());
@@ -39,7 +44,7 @@ public class InjuryTypeLightning extends InjuryTypeServer {
 					injuryContext.addInjuryModifier(InjuryModifier.MIGHTY_BLOW);
 				}
 
-				setInjury(pDefender);
+				setInjury(pDefender, gameState, diceRoller);
 			} else {
 				injuryContext.setInjury(new PlayerState(PlayerState.PRONE));
 			}

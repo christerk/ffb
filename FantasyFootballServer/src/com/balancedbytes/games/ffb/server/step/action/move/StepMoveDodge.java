@@ -176,7 +176,7 @@ public class StepMoveDodge extends AbstractStepWithReRoll {
   }
 
   private void failDodge() {
-    publishParameter(new StepParameter(StepParameterKey.INJURY_TYPE, new InjuryTypeDropDodge(this)));
+    publishParameter(new StepParameter(StepParameterKey.INJURY_TYPE, new InjuryTypeDropDodge()));
     getResult().setNextAction(StepAction.GOTO_LABEL, fGotoLabelOnFailure);
   }
 
