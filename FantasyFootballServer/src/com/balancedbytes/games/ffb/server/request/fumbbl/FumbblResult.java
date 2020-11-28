@@ -20,6 +20,7 @@ import com.balancedbytes.games.ffb.model.InducementSet;
 import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.model.PlayerResult;
 import com.balancedbytes.games.ffb.model.Skill;
+import com.balancedbytes.games.ffb.model.SkillConstants;
 import com.balancedbytes.games.ffb.model.Team;
 import com.balancedbytes.games.ffb.model.TeamResult;
 import com.balancedbytes.games.ffb.util.ArrayTool;
@@ -254,7 +255,7 @@ public class FumbblResult implements IXmlWriteable {
             rosterSkills.add(skill);
           }
           for (Skill skill : mercenary.getSkills()) {
-            if (!rosterSkills.contains(skill) && (skill != Skill.LONER)) {
+            if (!rosterSkills.contains(skill) && (skill != SkillConstants.LONER)) {
               addedSkill = skill;
               break;
             }

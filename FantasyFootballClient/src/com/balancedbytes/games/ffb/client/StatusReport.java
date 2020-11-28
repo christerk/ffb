@@ -883,7 +883,7 @@ public class StatusReport {
             print(getIndent(), false, player);
             println(getIndent(), " using a Secret Weapon.");
           }
-          Integer secretWeaponValue = player.getPosition().getSkillValue(Skill.SECRET_WEAPON);
+          Integer secretWeaponValue = player.getPosition().getSkillValue(SkillConstants.SECRET_WEAPON);
           if ((rolls[i] > 0) && (secretWeaponValue != null)) {
             StringBuilder penalty = new StringBuilder();
             penalty.append("Penalty roll was ").append(rolls[i]);
@@ -1576,14 +1576,14 @@ public class StatusReport {
         }
       }
       if (neededRoll != null) {
-        if (Skill.WILD_ANIMAL == pReport.getConfusionSkill()) {
+        if (SkillConstants.WILD_ANIMAL == pReport.getConfusionSkill()) {
           if (pReport.getMinimumRoll() > 2) {
             neededRoll.append(" (Wild Animal does not attack)");
           } else {
             neededRoll.append(" (Wild Animal does attack)");
           }
         }
-        if (Skill.REALLY_STUPID == pReport.getConfusionSkill()) {
+        if (SkillConstants.REALLY_STUPID == pReport.getConfusionSkill()) {
           if (pReport.getMinimumRoll() > 2) {
             neededRoll.append(" (Really Stupid player without assistance)");
           } else {
@@ -1760,13 +1760,13 @@ public class StatusReport {
     ActingPlayer actingPlayer = game.getActingPlayer();
     Player defender = game.getPlayerById(pReport.getDefenderId());
     if (!pReport.isReRolled()) {
-      if (pReport.getSkill() == Skill.SHADOWING) {
+      if (pReport.getSkill() == SkillConstants.SHADOWING) {
         print(getIndent(), true, defender);
         print(getIndent(), TextStyle.BOLD, " tries to shadow ");
         print(getIndent(), true, actingPlayer.getPlayer());
         println(getIndent(), TextStyle.BOLD, ":");
       }
-      if (pReport.getSkill() == Skill.TENTACLES) {
+      if (pReport.getSkill() == SkillConstants.TENTACLES) {
         status = new StringBuilder();
         print(getIndent(), true, defender);
         print(getIndent(), TextStyle.BOLD, " tries to hold ");
@@ -1779,7 +1779,7 @@ public class StatusReport {
     if (ArrayTool.isProvided(pReport.getRoll())) {
       rolledTotal = pReport.getRoll()[0] + pReport.getRoll()[1];
     }
-    if (pReport.getSkill() == Skill.SHADOWING) {
+    if (pReport.getSkill() == SkillConstants.SHADOWING) {
       if (rolledTotal > 0) {
         status = new StringBuilder();
         status.append("Shadowing Escape Roll [ ").append(pReport.getRoll()[0]).append(" ][ ").append(pReport.getRoll()[1]).append(" ] = ").append(rolledTotal);
@@ -1808,7 +1808,7 @@ public class StatusReport {
         println(getIndent() + 2, TextStyle.NEEDED_ROLL, neededRoll.toString());
       }
     }
-    if (pReport.getSkill() == Skill.TENTACLES) {
+    if (pReport.getSkill() == SkillConstants.TENTACLES) {
       if (rolledTotal > 0) {
         status = new StringBuilder();
         status.append("Tentacles Escape Roll [ ").append(pReport.getRoll()[0]).append(" ][ ").append(pReport.getRoll()[1]).append(" ] = ").append(rolledTotal);
@@ -2671,9 +2671,9 @@ public class StatusReport {
       print(indent, false, player);
       StringBuilder status = new StringBuilder();
       if (!pReport.isUsed()) {
-        status.append(" does not use ").append(Skill.PILING_ON.getName()).append(".");
+        status.append(" does not use ").append(SkillConstants.PILING_ON.getName()).append(".");
       } else {
-        status.append(" uses ").append(Skill.PILING_ON.getName()).append(" to re-roll ");
+        status.append(" uses ").append(SkillConstants.PILING_ON.getName()).append(" to re-roll ");
         status.append(pReport.isReRollInjury() ? "Injury" : "Armor").append(".");
       }
       println(indent, status.toString());

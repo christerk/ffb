@@ -7,7 +7,7 @@ import com.balancedbytes.games.ffb.dialog.DialogId;
 import com.balancedbytes.games.ffb.dialog.DialogPilingOnParameter;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
-import com.balancedbytes.games.ffb.model.Skill;
+import com.balancedbytes.games.ffb.model.SkillConstants;
 
 /**
  * 
@@ -46,7 +46,7 @@ public class DialogPilingOnHandler extends DialogHandler {
     if (testDialogHasId(pDialog, DialogId.PILING_ON)) {
       DialogPilingOn pilingOnDialog = (DialogPilingOn) pDialog;
       String playerId = ((DialogPilingOnParameter)getClient().getGame().getDialogParameter()).getPlayerId();
-      getClient().getCommunication().sendUseSkill(Skill.PILING_ON, pilingOnDialog.isChoiceYes(), playerId);
+      getClient().getCommunication().sendUseSkill(SkillConstants.PILING_ON, pilingOnDialog.isChoiceYes(), playerId);
     }
   }
 

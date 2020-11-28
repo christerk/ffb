@@ -10,11 +10,11 @@ import com.balancedbytes.games.ffb.PlayerState;
 import com.balancedbytes.games.ffb.injury.PilingOnInjury;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
+import com.balancedbytes.games.ffb.model.SkillConstants;
 import com.balancedbytes.games.ffb.option.GameOptionId;
 import com.balancedbytes.games.ffb.option.UtilGameOption;
 import com.balancedbytes.games.ffb.server.DiceRoller;
 import com.balancedbytes.games.ffb.server.GameState;
-import com.balancedbytes.games.ffb.server.model.ServerSkill;
 import com.balancedbytes.games.ffb.server.step.IStep;
 import com.balancedbytes.games.ffb.util.UtilCards;
 
@@ -42,7 +42,7 @@ public class InjuryTypePilingOnInjury extends InjuryTypeServer<PilingOnInjury>  
 				injuryContext.addInjuryModifier(new InjuryModifierFactory().getNigglingInjuryModifier(pDefender));
 
 				if (!UtilGameOption.isOptionEnabled(game, GameOptionId.PILING_ON_DOES_NOT_STACK)) {
-					if (UtilCards.hasSkill(game, pAttacker, ServerSkill.MIGHTY_BLOW)
+					if (UtilCards.hasSkill(game, pAttacker, SkillConstants.MIGHTY_BLOW)
 							&& !injuryContext.hasArmorModifier(ArmorModifier.MIGHTY_BLOW)) {
 						injuryContext.addInjuryModifier(InjuryModifier.MIGHTY_BLOW);
 					}
