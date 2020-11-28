@@ -1,12 +1,12 @@
-package com.balancedbytes.game.ffb.injury;
+package com.balancedbytes.games.ffb.injury;
 
 import com.balancedbytes.games.ffb.InjuryType;
 import com.balancedbytes.games.ffb.SendToBoxReason;
 
-public class PilingOnInjury extends InjuryType {
+public class BlockProne extends InjuryType {
 
-	public PilingOnInjury() {
-		super("pilingOnInjury", true, SendToBoxReason.PILED_ON);
+	public BlockProne() {
+		super("blockProne", false, SendToBoxReason.BLOCKED);
 		// TODO Auto-generated constructor stub
 	}
 

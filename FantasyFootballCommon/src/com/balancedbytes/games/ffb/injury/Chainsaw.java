@@ -1,12 +1,12 @@
-package com.balancedbytes.game.ffb.injury;
+package com.balancedbytes.games.ffb.injury;
 
 import com.balancedbytes.games.ffb.InjuryType;
 import com.balancedbytes.games.ffb.SendToBoxReason;
 
-public class BlockProne extends InjuryType {
+public class Chainsaw extends InjuryType {
 
-	public BlockProne() {
-		super("blockProne", false, SendToBoxReason.BLOCKED);
+	public Chainsaw() {
+		super("chainsaw", false, SendToBoxReason.CHAINSAW);
 		// TODO Auto-generated constructor stub
 	}
 

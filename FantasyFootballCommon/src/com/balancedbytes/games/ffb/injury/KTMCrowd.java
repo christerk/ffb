@@ -1,4 +1,4 @@
-package com.balancedbytes.game.ffb.injury;
+package com.balancedbytes.games.ffb.injury;
 
 import com.balancedbytes.games.ffb.InjuryType;
 import com.balancedbytes.games.ffb.SendToBoxReason;
