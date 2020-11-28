@@ -13,9 +13,9 @@ import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.model.Team;
+import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.IServerJsonOption;
-import com.balancedbytes.games.ffb.server.model.ServerSkill;
 import com.balancedbytes.games.ffb.server.net.ReceivedCommand;
 import com.balancedbytes.games.ffb.server.step.AbstractStep;
 import com.balancedbytes.games.ffb.server.step.SequenceGenerator;
@@ -132,7 +132,7 @@ public final class StepKickoffReturn extends AbstractStep {
       for (Player player : kickoffReturnTeam.getPlayers()) {
         FieldCoordinate playerCoordinate = game.getFieldModel().getPlayerCoordinate(player);
         if ((playerCoordinate != null) && !playerCoordinate.isBoxCoordinate()) {
-          if (UtilCards.hasSkill(game, player, ServerSkill.KICK_OFF_RETURN)) {
+          if (UtilCards.hasSkillWithProperty(player, NamedProperties.canMoveDuringKickOffScatter)) {
             FieldCoordinateBounds losBounds = game.isHomePlaying() ? FieldCoordinateBounds.LOS_AWAY : FieldCoordinateBounds.LOS_HOME;
             if (losBounds.isInBounds(playerCoordinate)) {
               passivePlayers.add(player);

@@ -24,7 +24,6 @@ import com.balancedbytes.games.ffb.client.util.UtilClientCursor;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
-import com.balancedbytes.games.ffb.model.Skill;
 import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
 import com.balancedbytes.games.ffb.net.NetCommand;
 import com.balancedbytes.games.ffb.util.UtilCards;
@@ -195,7 +194,7 @@ public class ClientStatePass extends ClientStateMove {
       menuItemList.add(passAction);
     }
 
-    if (UtilCards.hasSkill(game, actingPlayer, Skill.HAIL_MARY_PASS) && UtilPlayer.hasBall(game, actingPlayer.getPlayer()) && (game.getFieldModel().getWeather() != Weather.BLIZZARD)) {
+    if (UtilCards.hasSkillWithProperty(actingPlayer.getPlayer(), NamedProperties.canPassToAnySquare) && UtilPlayer.hasBall(game, actingPlayer.getPlayer()) && (game.getFieldModel().getWeather() != Weather.BLIZZARD)) {
     	String text = (PlayerAction.HAIL_MARY_PASS == actingPlayer.getPlayerAction()) ? "Don't use Hail Mary Pass" : "Use Hail Mary Pass";
     	JMenuItem hailMaryPassAction = new JMenuItem(text, new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_TOGGLE_HAIL_MARY_PASS)));
       hailMaryPassAction.setMnemonic(IPlayerPopupMenuKeys.KEY_HAIL_MARY_PASS);
@@ -248,7 +247,7 @@ public class ClientStatePass extends ClientStateMove {
       fRangeGridHandler.setShowRangeGrid(!fRangeGridHandler.isShowRangeGrid());
       fRangeGridHandler.refreshRangeGrid();
     } else if (pMenuKey == IPlayerPopupMenuKeys.KEY_HAIL_MARY_PASS) {
-    	if (UtilCards.hasSkill(game, game.getActingPlayer(), Skill.HAIL_MARY_PASS)) {
+    	if (UtilCards.hasSkillWithProperty(game.getActingPlayer().getPlayer(), NamedProperties.canPassToAnySquare)) {
     		if (PlayerAction.HAIL_MARY_PASS == actingPlayer.getPlayerAction()) {
           communication.sendActingPlayer(pPlayer, PlayerAction.PASS, actingPlayer.isLeaping());
           fShowRangeRuler = true;

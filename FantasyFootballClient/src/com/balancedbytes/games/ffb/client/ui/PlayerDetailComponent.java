@@ -371,7 +371,8 @@ public class PlayerDetailComponent extends JPanel {
         } else {
           cardSkills.add(skill.getName());
         }
-        if (((getPlayer() == actingPlayer.getPlayer()) && actingPlayer.isSkillUsed(skill)) || ((skill == Skill.PRO) && playerState.hasUsedPro())) {
+        Skill unusedProSkill = UtilCards.getSkillWithProperty(getPlayer(), NamedProperties.canRerollOncePerTurn);
+        if (((getPlayer() == actingPlayer.getPlayer()) && actingPlayer.isSkillUsed(skill)) || ((skill == unusedProSkill) && playerState.hasUsedPro())) {
         	usedSkills.add(skill.getName());
         }
       }

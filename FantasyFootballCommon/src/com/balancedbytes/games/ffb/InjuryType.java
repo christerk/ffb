@@ -1,51 +1,49 @@
 package com.balancedbytes.games.ffb;
 
+import com.balancedbytes.games.ffb.model.Player;
 
 /**
  * 
  * @author Kalimar
  */
-public enum InjuryType implements INamedObject {
+public abstract class InjuryType implements INamedObject {
   
-  DROP_DODGE("dropDodge", false),
-  DROP_GFI("dropGfi", false),
-  DROP_LEAP("dropLeap", false),
-  BLOCK("block", true),
-  FOUL("foul", false),
-  CROWDPUSH("crowdpush", false),
-  THROW_A_ROCK("throwARock", false),
-  EAT_PLAYER("eatPlayer", false),
-  STAB("stab", false),
-  TTM_LANDING("ttmLanding", false),
-  TTM_HIT_PLAYER("ttmHitPlayer", false),
-  KTM_CROWD("ktmCrowd", false),
-  KTM_INJURY("ktmInjury", false),
-  PILING_ON_INJURY("pilingOnInjury", true),
-  CHAINSAW("chainsaw", false),
-  BITTEN("bitten", false),
-  FIREBALL("fireball", false),
-  LIGHTNING("lightning", false),
-  PILING_ON_ARMOR("pilingOnArmor", true),
-  PILING_ON_KNOCKED_OUT("pilingOnKnockedOut", false),
-  BALL_AND_CHAIN("ballAndChain", false),
-  BLOCK_PRONE("blockProne", false),
-  BLOCK_STUNNED("blockStunned", false),
-  BOMB("bomb", false);
+  private String name;
+  private boolean worthSpps;
+  private SendToBoxReason sendToBoxReason = null;
   
-  private String fName;
-  private boolean fWorthSpps;
+  protected InjuryContext injuryContext;
   
-  private InjuryType(String pName, boolean pWorthSpps) {
-    fName = pName;
-    fWorthSpps = pWorthSpps;
+  protected InjuryType(String pName, boolean pWorthSpps, SendToBoxReason pSendToBoxReason) {
+	  name = pName;
+	  worthSpps = pWorthSpps;
+	  sendToBoxReason = pSendToBoxReason;
+	  injuryContext = new InjuryContext(); 
   }
+  
+  public InjuryType injuryType() { return this; }
 
   public String getName() {
-    return fName;
+    return name;
   }
   
   public boolean isWorthSpps() {
-		return fWorthSpps;
+		return worthSpps;
 	}
+  
+  public SendToBoxReason sendToBoxReason() { return sendToBoxReason;}
+  public boolean isCausedByOpponent() { return false; }
+  public boolean canUseApo() { return true; }
+  public boolean canApoKoIntoStun() { return true; }
+  public boolean shouldPlayFallSound() { return true; }
+  public boolean fallingDownCausesTurnover() { return true; }
+
+  public InjuryContext injuryContext() { return this.injuryContext; }
+
+  public void reportInjuryString(StringBuilder string, Player<?> attacker, Player<?> defender)
+  {
+	  
+  }
+
   
 }

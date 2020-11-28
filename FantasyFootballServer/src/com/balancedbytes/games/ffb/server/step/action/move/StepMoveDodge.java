@@ -6,7 +6,6 @@ import com.balancedbytes.games.ffb.DodgeModifier;
 import com.balancedbytes.games.ffb.DodgeModifierFactory;
 import com.balancedbytes.games.ffb.DodgeModifiers;
 import com.balancedbytes.games.ffb.FieldCoordinate;
-import com.balancedbytes.games.ffb.InjuryType;
 import com.balancedbytes.games.ffb.ReRollSource;
 import com.balancedbytes.games.ffb.ReRolledAction;
 import com.balancedbytes.games.ffb.SkillUse;
@@ -25,7 +24,7 @@ import com.balancedbytes.games.ffb.server.ActionStatus;
 import com.balancedbytes.games.ffb.server.DiceInterpreter;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.IServerJsonOption;
-import com.balancedbytes.games.ffb.server.model.ServerSkill;
+import com.balancedbytes.games.ffb.server.InjuryType.InjuryTypeDropDodge;
 import com.balancedbytes.games.ffb.server.net.ReceivedCommand;
 import com.balancedbytes.games.ffb.server.step.AbstractStepWithReRoll;
 import com.balancedbytes.games.ffb.server.step.StepAction;
@@ -177,7 +176,7 @@ public class StepMoveDodge extends AbstractStepWithReRoll {
   }
 
   private void failDodge() {
-    publishParameter(new StepParameter(StepParameterKey.INJURY_TYPE, InjuryType.DROP_DODGE));
+    publishParameter(new StepParameter(StepParameterKey.INJURY_TYPE, new InjuryTypeDropDodge()));
     getResult().setNextAction(StepAction.GOTO_LABEL, fGotoLabelOnFailure);
   }
 
@@ -196,7 +195,7 @@ public class StepMoveDodge extends AbstractStepWithReRoll {
       dodgeModifiers.add(DodgeModifiers.BREAK_TACKLE);
     }
     if ((fUsingDivingTackle != null) && fUsingDivingTackle) {
-      dodgeModifiers.add(DodgeModifier.DIVING_TACKLE);
+      dodgeModifiers.add(DodgeModifiers.DIVING_TACKLE);
     }
 
     int minimumRoll = DiceInterpreter.getInstance().minimumRollDodge(game, actingPlayer.getPlayer(), dodgeModifiers);

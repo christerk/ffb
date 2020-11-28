@@ -8,12 +8,13 @@ import com.balancedbytes.games.ffb.model.Animation;
 import com.balancedbytes.games.ffb.model.AnimationType;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
+import com.balancedbytes.games.ffb.model.Skill;
+import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
 import com.balancedbytes.games.ffb.report.ReportId;
 import com.balancedbytes.games.ffb.report.ReportSkillRoll;
 import com.balancedbytes.games.ffb.server.DiceInterpreter;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.IServerJsonOption;
-import com.balancedbytes.games.ffb.server.model.ServerSkill;
 import com.balancedbytes.games.ffb.server.net.ReceivedCommand;
 import com.balancedbytes.games.ffb.server.step.AbstractStepWithReRoll;
 import com.balancedbytes.games.ffb.server.step.StepAction;
@@ -109,7 +110,9 @@ public class StepSafeThrow extends AbstractStepWithReRoll {
     }
     boolean doNextStep = true;
     boolean safeThrowSuccessful = false;
-    boolean doSafeThrow = (UtilCards.hasSkill(game, game.getThrower(), ServerSkill.SAFE_THROW) && !UtilCards.hasSkill(game, interceptor, ServerSkill.VERY_LONG_LEGS));
+    
+    Skill canForceInterceptionRerollSkill = UtilCards.getSkillWithProperty(game.getThrower(), NamedProperties.canForceInterceptionReroll);
+    boolean doSafeThrow = (canForceInterceptionRerollSkill != null && !UtilCards.cancelsSkill(interceptor, canForceInterceptionRerollSkill));
     if (doSafeThrow) {
       if (ReRolledAction.SAFE_THROW == getReRolledAction()) {
         if ((getReRollSource() == null) || !UtilServerReRoll.useReRoll(this, getReRollSource(), game.getThrower())) {

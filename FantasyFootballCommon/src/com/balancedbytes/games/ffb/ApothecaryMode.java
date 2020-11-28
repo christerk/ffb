@@ -1,6 +1,4 @@
-package com.balancedbytes.games.ffb.server.step.action.common;
-
-import com.balancedbytes.games.ffb.INamedObject;
+package com.balancedbytes.games.ffb;
 
 /**
  * 

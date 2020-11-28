@@ -10,10 +10,10 @@ import com.balancedbytes.games.ffb.dialog.DialogSetupErrorParameter;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.model.Team;
+import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
 import com.balancedbytes.games.ffb.option.GameOptionId;
 import com.balancedbytes.games.ffb.option.UtilGameOption;
 import com.balancedbytes.games.ffb.server.GameState;
-import com.balancedbytes.games.ffb.server.model.ServerSkill;
 import com.balancedbytes.games.ffb.server.util.UtilServerDialog;
 import com.balancedbytes.games.ffb.util.UtilCards;
 import com.balancedbytes.games.ffb.util.UtilPlayer;
@@ -48,7 +48,7 @@ public class UtilKickoffSequence {
       }
       FieldCoordinate playerCoordinate = game.getFieldModel().getPlayerCoordinate(player);
       if ((pHomeTeam && FieldCoordinateBounds.HALF_HOME.isInBounds(playerCoordinate)) || (!pHomeTeam && FieldCoordinateBounds.HALF_AWAY.isInBounds(playerCoordinate))) {
-        if (UtilCards.hasSkill(game, player, ServerSkill.SWARMING)) {
+        if (UtilCards.hasSkillWithProperty(player, NamedProperties.canSneakExtraPlayersOntoPitch)) {
           swarmersOnField++;
         } else {
           playersOnField++;

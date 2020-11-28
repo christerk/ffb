@@ -11,10 +11,10 @@ import com.balancedbytes.games.ffb.model.FieldModel;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.InducementSet;
 import com.balancedbytes.games.ffb.model.Player;
-import com.balancedbytes.games.ffb.model.Skill;
 import com.balancedbytes.games.ffb.model.Team;
 import com.balancedbytes.games.ffb.model.TurnData;
 import com.balancedbytes.games.ffb.model.change.ModelChangeList;
+import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
 import com.balancedbytes.games.ffb.report.ReportInducement;
 import com.balancedbytes.games.ffb.report.ReportLeader;
 import com.balancedbytes.games.ffb.report.ReportList;
@@ -26,6 +26,7 @@ import com.balancedbytes.games.ffb.server.FantasyFootballServer;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.step.IStep;
 import com.balancedbytes.games.ffb.util.UtilActingPlayer;
+import com.balancedbytes.games.ffb.util.UtilCards;
 
 /**
  * 
@@ -151,16 +152,14 @@ public class UtilServerGame {
   }
 
   protected static boolean teamHasLeaderOnField(Team pTeam, FieldModel pFieldModel) {
-    for (Player player : pTeam.getPlayers()) {
-      if (playerOnField(player, pFieldModel)) {
-        for (Skill skill : player.getSkills()) {
-          if (Skill.LEADER.equals(skill)) {
-            return true;
-          }
-        }
-      }
-    }
-    return false;
+	  for (Player player : pTeam.getPlayers()) {
+		  if (playerOnField(player, pFieldModel) &&
+			  UtilCards.hasSkillWithProperty(player, NamedProperties.grantsTeamRerollWhenOnPitch))
+		  {
+			  return true; 
+		  }
+	  }
+	  return false;
   }
 
   protected static boolean playerOnField(Player pPlayer, FieldModel pFieldModel) {

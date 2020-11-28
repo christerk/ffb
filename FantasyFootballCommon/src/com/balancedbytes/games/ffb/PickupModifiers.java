@@ -1,5 +1,8 @@
 package com.balancedbytes.games.ffb;
 
+import java.lang.reflect.Field;
+import java.util.Map;
+
 public class PickupModifiers {
   public static final PickupModifier BIG_HAND = new PickupModifier("Big Hand", 0, false);
   public static final PickupModifier POURING_RAIN = new PickupModifier("Pouring Rain", 1, false);
@@ -12,6 +15,29 @@ public class PickupModifiers {
   public static final PickupModifier TACKLEZONES_6 = new PickupModifier("6 Tacklezones", 6, true);
   public static final PickupModifier TACKLEZONES_7 = new PickupModifier("7 Tacklezones", 7, true);
   public static final PickupModifier TACKLEZONES_8 = new PickupModifier("8 Tacklezones", 8, true);
+  
+  private static Map<String, PickupModifier> values;
+	
+  public static Map<String, PickupModifier> values() { return values;}
+  
+  public PickupModifiers() {
+		try {
+			Class<?> c = this.getClass();
+			Class<?> cModifierType = PickupModifier.class.getClass();
+			for(Field f :c.getDeclaredFields())
+			{
+				if(f.getType() == cModifierType)
+				{
+					PickupModifier modifier = (PickupModifier)f.get(this);
+					values.put(modifier.getName().toLowerCase(), modifier);
+				}
+			}
+			
+		} catch (IllegalArgumentException | IllegalAccessException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 
   public class PickupContext {
     public PickupContext() {

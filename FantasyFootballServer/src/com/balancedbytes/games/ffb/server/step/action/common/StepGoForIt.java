@@ -4,7 +4,6 @@ import java.util.Set;
 
 import com.balancedbytes.games.ffb.GoForItModifier;
 import com.balancedbytes.games.ffb.GoForItModifierFactory;
-import com.balancedbytes.games.ffb.InjuryType;
 import com.balancedbytes.games.ffb.PlayerAction;
 import com.balancedbytes.games.ffb.ReRollSource;
 import com.balancedbytes.games.ffb.ReRolledAction;
@@ -18,6 +17,7 @@ import com.balancedbytes.games.ffb.server.ActionStatus;
 import com.balancedbytes.games.ffb.server.DiceInterpreter;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.IServerJsonOption;
+import com.balancedbytes.games.ffb.server.InjuryType.InjuryTypeDropGFI;
 import com.balancedbytes.games.ffb.server.net.ReceivedCommand;
 import com.balancedbytes.games.ffb.server.step.AbstractStepWithReRoll;
 import com.balancedbytes.games.ffb.server.step.StepAction;
@@ -142,7 +142,7 @@ public class StepGoForIt extends AbstractStepWithReRoll {
 
   private void failGfi() {
     publishParameter(new StepParameter(StepParameterKey.END_TURN, true));
-    publishParameter(new StepParameter(StepParameterKey.INJURY_TYPE, InjuryType.DROP_GFI));
+    publishParameter(new StepParameter(StepParameterKey.INJURY_TYPE, new InjuryTypeDropGFI()));
     getResult().setNextAction(StepAction.GOTO_LABEL, fGotoLabelOnFailure);
   }
 

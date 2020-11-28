@@ -21,12 +21,7 @@ import com.balancedbytes.games.ffb.util.UtilPlayer;
 public class PassModifierFactory implements IRollModifierFactory {
   
   public PassModifier forName(String pName) {
-    for (PassModifier modifier : PassModifier.values()) {
-      if (modifier.getName().equalsIgnoreCase(pName)) {
-        return modifier;
-      }
-    }
-    return null;
+	  return PassingModifiers.values().get(pName.toLowerCase());
   }
 
   public Set<PassModifier> findPassModifiers(Game pGame, Player<?> pThrower, PassingDistance pPassingDistance, boolean pThrowTeamMate) {
@@ -51,7 +46,7 @@ public class PassModifierFactory implements IRollModifierFactory {
       
       
       if (UtilCards.hasCard(pGame, pThrower, Card.GROMSKULLS_EXPLODING_RUNES)) {
-        passModifiers.add(PassModifier.GROMSKULLS_EXPLODING_RUNES);
+        passModifiers.add(PassingModifiers.GROMSKULLS_EXPLODING_RUNES);
       }
       PassModifier disturbingPresenceModifier = getDisturbingPresenceModifier(pGame, pThrower);
       if (disturbingPresenceModifier != null) {

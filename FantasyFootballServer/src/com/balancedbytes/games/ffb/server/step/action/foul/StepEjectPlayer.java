@@ -1,18 +1,11 @@
 package com.balancedbytes.games.ffb.server.step.action.foul;
 
 import com.balancedbytes.games.ffb.CatchScatterThrowInMode;
-import com.balancedbytes.games.ffb.PlayerState;
-import com.balancedbytes.games.ffb.SendToBoxReason;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.Game;
-import com.balancedbytes.games.ffb.model.GameResult;
-import com.balancedbytes.games.ffb.model.PlayerResult;
-import com.balancedbytes.games.ffb.option.GameOptionId;
-import com.balancedbytes.games.ffb.option.UtilGameOption;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.IServerJsonOption;
-import com.balancedbytes.games.ffb.server.model.ServerSkill;
 import com.balancedbytes.games.ffb.server.net.ReceivedCommand;
 import com.balancedbytes.games.ffb.server.step.AbstractStep;
 import com.balancedbytes.games.ffb.server.step.StepAction;
@@ -25,7 +18,6 @@ import com.balancedbytes.games.ffb.server.step.StepParameterSet;
 import com.balancedbytes.games.ffb.server.util.UtilServerGame;
 import com.balancedbytes.games.ffb.util.StringTool;
 import com.balancedbytes.games.ffb.util.UtilBox;
-import com.balancedbytes.games.ffb.util.UtilCards;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
@@ -44,12 +36,18 @@ import com.eclipsesource.json.JsonValue;
  */
 public class StepEjectPlayer extends AbstractStep {
 
-  private String fGotoLabelOnEnd;
-  private Boolean fFoulerHasBall;
-  private Boolean fArgueTheCallSuccessful;
+	public class StepState {
+		public String gotoLabelOnEnd;
+		public Boolean foulerHasBall;
+		public Boolean argueTheCallSuccessful;
+	}
+	
+	private StepState state;
 
   public StepEjectPlayer(GameState pGameState) {
     super(pGameState);
+    
+	state = new StepState();
   }
 
   public StepId getId() {
@@ -62,14 +60,14 @@ public class StepEjectPlayer extends AbstractStep {
       for (StepParameter parameter : pParameterSet.values()) {
         switch (parameter.getKey()) {
           case GOTO_LABEL_ON_END:
-            fGotoLabelOnEnd = (String) parameter.getValue();
+        	  state.gotoLabelOnEnd = (String) parameter.getValue();
             break;
           default:
             break;
         }
       }
     }
-    if (!StringTool.isProvided(fGotoLabelOnEnd)) {
+    if (!StringTool.isProvided(state.gotoLabelOnEnd)) {
       throw new StepException("StepParameter " + StepParameterKey.GOTO_LABEL_ON_END + " is not initialized.");
     }
   }
@@ -79,10 +77,10 @@ public class StepEjectPlayer extends AbstractStep {
     if ((pParameter != null) && !super.setParameter(pParameter)) {
       switch (pParameter.getKey()) {
         case FOULER_HAS_BALL:
-          fFoulerHasBall = (Boolean) pParameter.getValue();
+        	state.foulerHasBall = (Boolean) pParameter.getValue();
           return true;
         case ARGUE_THE_CALL_SUCCESSFUL:
-          fArgueTheCallSuccessful = (Boolean) pParameter.getValue();
+        	state.argueTheCallSuccessful = (Boolean) pParameter.getValue();
           return true;
         default:
           break;
@@ -107,35 +105,24 @@ public class StepEjectPlayer extends AbstractStep {
   }
 
   private void executeStep() {
+	getGameState().executeStepHooks(this, state);
     Game game = getGameState().getGame();
-    GameResult gameResult = game.getGameResult();
+    
     ActingPlayer actingPlayer = game.getActingPlayer();
-    PlayerState playerState = game.getFieldModel().getPlayerState(actingPlayer.getPlayer());
-    PlayerResult attackerResult = gameResult.getPlayerResult(actingPlayer.getPlayer());
-
-    if ((fArgueTheCallSuccessful != null) && fArgueTheCallSuccessful) {
-      game.getFieldModel().setPlayerState(actingPlayer.getPlayer(), playerState.changeBase(PlayerState.RESERVE));
-    } else if (UtilCards.hasSkill(game, actingPlayer, ServerSkill.SNEAKY_GIT) && UtilGameOption.isOptionEnabled(game, GameOptionId.SNEAKY_GIT_BAN_TO_KO)) {
-      game.getFieldModel().setPlayerState(actingPlayer.getPlayer(), playerState.changeBase(PlayerState.KNOCKED_OUT));
-      attackerResult.setSendToBoxReason(SendToBoxReason.FOUL_BAN);
-      attackerResult.setSendToBoxTurn(game.getTurnData().getTurnNr());
-      attackerResult.setSendToBoxHalf(game.getHalf());
-    } else {
-      game.getFieldModel().setPlayerState(actingPlayer.getPlayer(), playerState.changeBase(PlayerState.BANNED));
-      attackerResult.setSendToBoxReason(SendToBoxReason.FOUL_BAN);
-      attackerResult.setSendToBoxTurn(game.getTurnData().getTurnNr());
-      attackerResult.setSendToBoxHalf(game.getHalf());
-    }
+  
     UtilBox.putPlayerIntoBox(game, actingPlayer.getPlayer());
     UtilBox.refreshBoxes(game);
     UtilServerGame.updateLeaderReRolls(this);
     publishParameter(new StepParameter(StepParameterKey.END_TURN, true));
-    if ((fFoulerHasBall != null) && fFoulerHasBall) {
+    if ((state.foulerHasBall != null) && state.foulerHasBall) {
       publishParameter(new StepParameter(StepParameterKey.CATCH_SCATTER_THROW_IN_MODE, CatchScatterThrowInMode.SCATTER_BALL));
       getResult().setNextAction(StepAction.NEXT_STEP);
     } else {
-      getResult().setNextAction(StepAction.GOTO_LABEL, fGotoLabelOnEnd);
+      getResult().setNextAction(StepAction.GOTO_LABEL, state.gotoLabelOnEnd);
     }
+    
+	  
+
   }
 
   // JSON serialization
@@ -143,9 +130,9 @@ public class StepEjectPlayer extends AbstractStep {
   @Override
   public JsonObject toJsonValue() {
     JsonObject jsonObject = super.toJsonValue();
-    IServerJsonOption.GOTO_LABEL_ON_END.addTo(jsonObject, fGotoLabelOnEnd);
-    IServerJsonOption.FOULER_HAS_BALL.addTo(jsonObject, fFoulerHasBall);
-    IServerJsonOption.ARGUE_THE_CALL_SUCCESSFUL.addTo(jsonObject, fArgueTheCallSuccessful);
+    IServerJsonOption.GOTO_LABEL_ON_END.addTo(jsonObject, state.gotoLabelOnEnd);
+    IServerJsonOption.FOULER_HAS_BALL.addTo(jsonObject, state.foulerHasBall);
+    IServerJsonOption.ARGUE_THE_CALL_SUCCESSFUL.addTo(jsonObject, state.argueTheCallSuccessful);
     return jsonObject;
   }
 
@@ -153,9 +140,9 @@ public class StepEjectPlayer extends AbstractStep {
   public StepEjectPlayer initFrom(JsonValue pJsonValue) {
     super.initFrom(pJsonValue);
     JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-    fGotoLabelOnEnd = IServerJsonOption.GOTO_LABEL_ON_END.getFrom(jsonObject);
-    fFoulerHasBall = IServerJsonOption.FOULER_HAS_BALL.getFrom(jsonObject);
-    fArgueTheCallSuccessful = IServerJsonOption.ARGUE_THE_CALL_SUCCESSFUL.getFrom(jsonObject);
+    state.gotoLabelOnEnd = IServerJsonOption.GOTO_LABEL_ON_END.getFrom(jsonObject);
+    state.foulerHasBall = IServerJsonOption.FOULER_HAS_BALL.getFrom(jsonObject);
+    state.argueTheCallSuccessful = IServerJsonOption.ARGUE_THE_CALL_SUCCESSFUL.getFrom(jsonObject);
     return this;
   }
 

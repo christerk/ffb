@@ -1,7 +1,4 @@
-package com.balancedbytes.games.ffb.server;
-
-import com.balancedbytes.games.ffb.INamedObject;
-
+package com.balancedbytes.games.ffb;
 
 public enum ApothecaryStatus implements INamedObject {
   

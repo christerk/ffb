@@ -1,8 +1,8 @@
 package com.balancedbytes.games.ffb.server.step.action.ttm;
 
+import com.balancedbytes.games.ffb.ApothecaryMode;
 import com.balancedbytes.games.ffb.CatchScatterThrowInMode;
 import com.balancedbytes.games.ffb.FieldCoordinate;
-import com.balancedbytes.games.ffb.InjuryType;
 import com.balancedbytes.games.ffb.PlayerState;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.Animation;
@@ -11,6 +11,9 @@ import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.IServerJsonOption;
 import com.balancedbytes.games.ffb.server.InjuryResult;
+import com.balancedbytes.games.ffb.server.InjuryType.InjuryTypeCrowdPush;
+import com.balancedbytes.games.ffb.server.InjuryType.InjuryTypeKTMCrowd;
+import com.balancedbytes.games.ffb.server.InjuryType.InjuryTypeTTMHitPlayer;
 import com.balancedbytes.games.ffb.server.net.ReceivedCommand;
 import com.balancedbytes.games.ffb.server.step.AbstractStep;
 import com.balancedbytes.games.ffb.server.step.StepAction;
@@ -20,7 +23,6 @@ import com.balancedbytes.games.ffb.server.step.StepId;
 import com.balancedbytes.games.ffb.server.step.StepParameter;
 import com.balancedbytes.games.ffb.server.step.StepParameterKey;
 import com.balancedbytes.games.ffb.server.step.StepParameterSet;
-import com.balancedbytes.games.ffb.server.step.action.common.ApothecaryMode;
 import com.balancedbytes.games.ffb.server.util.UtilServerGame;
 import com.balancedbytes.games.ffb.server.util.UtilServerInjury;
 import com.eclipsesource.json.JsonObject;
@@ -169,7 +171,7 @@ public final class StepInitScatterPlayer extends AbstractStep {
       playerLandedUpon = game.getFieldModel().getPlayer(endCoordinate);
       if (playerLandedUpon != null) {
         publishParameter(new StepParameter(StepParameterKey.DROP_THROWN_PLAYER, true));
-      	InjuryResult injuryResultHitPlayer = UtilServerInjury.handleInjury(this, InjuryType.TTM_HIT_PLAYER, null, playerLandedUpon, endCoordinate, null, ApothecaryMode.HIT_PLAYER);
+      	InjuryResult injuryResultHitPlayer = UtilServerInjury.handleInjury(this, new InjuryTypeTTMHitPlayer(), null, playerLandedUpon, endCoordinate, null, ApothecaryMode.HIT_PLAYER);
       	publishParameter(new StepParameter(StepParameterKey.INJURY_RESULT, injuryResultHitPlayer));
         if ((game.isHomePlaying() && game.getTeamHome().hasPlayer(playerLandedUpon)) || (!game.isHomePlaying() && game.getTeamAway().hasPlayer(playerLandedUpon))) {
         	publishParameter(new StepParameter(StepParameterKey.END_TURN, true));
@@ -187,10 +189,10 @@ public final class StepInitScatterPlayer extends AbstractStep {
     	// throw player out of bounds
     	game.getFieldModel().setPlayerState(thrownPlayer, new PlayerState(PlayerState.FALLING));
     	if (fIsKickedPlayer) {
-        InjuryResult injuryResultKickedPlayer = UtilServerInjury.handleInjury(this, InjuryType.KTM_CROWD, null, thrownPlayer, endCoordinate, null, ApothecaryMode.THROWN_PLAYER);
+        InjuryResult injuryResultKickedPlayer = UtilServerInjury.handleInjury(this, new InjuryTypeKTMCrowd(), null, thrownPlayer, endCoordinate, null, ApothecaryMode.THROWN_PLAYER);
         publishParameter(new StepParameter(StepParameterKey.INJURY_RESULT, injuryResultKickedPlayer));
     	} else {
-        InjuryResult injuryResultThrownPlayer = UtilServerInjury.handleInjury(this, InjuryType.CROWDPUSH, null, thrownPlayer, endCoordinate, null, ApothecaryMode.THROWN_PLAYER);
+        InjuryResult injuryResultThrownPlayer = UtilServerInjury.handleInjury(this, new InjuryTypeCrowdPush(), null, thrownPlayer, endCoordinate, null, ApothecaryMode.THROWN_PLAYER);
         publishParameter(new StepParameter(StepParameterKey.INJURY_RESULT, injuryResultThrownPlayer));
     	}
       if (fThrownPlayerHasBall) {

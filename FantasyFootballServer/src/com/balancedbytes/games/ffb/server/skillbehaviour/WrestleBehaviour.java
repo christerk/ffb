@@ -1,7 +1,7 @@
 package com.balancedbytes.games.ffb.server.skillbehaviour;
 
+import com.balancedbytes.games.ffb.ApothecaryMode;
 import com.balancedbytes.games.ffb.FieldCoordinate;
-import com.balancedbytes.games.ffb.InjuryType;
 import com.balancedbytes.games.ffb.PlayerAction;
 import com.balancedbytes.games.ffb.PlayerState;
 import com.balancedbytes.games.ffb.SkillUse;
@@ -11,6 +11,7 @@ import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandUseSkill;
 import com.balancedbytes.games.ffb.report.ReportSkillUse;
+import com.balancedbytes.games.ffb.server.InjuryType.InjuryTypeBallAndChain;
 import com.balancedbytes.games.ffb.server.model.SkillBehaviour;
 import com.balancedbytes.games.ffb.server.model.StepModifier;
 import com.balancedbytes.games.ffb.server.step.StepAction;
@@ -19,7 +20,6 @@ import com.balancedbytes.games.ffb.server.step.StepParameter;
 import com.balancedbytes.games.ffb.server.step.StepParameterKey;
 import com.balancedbytes.games.ffb.server.step.action.block.StepWrestle;
 import com.balancedbytes.games.ffb.server.step.action.block.StepWrestle.StepState;
-import com.balancedbytes.games.ffb.server.step.action.common.ApothecaryMode;
 import com.balancedbytes.games.ffb.server.util.UtilServerDialog;
 import com.balancedbytes.games.ffb.server.util.UtilServerInjury;
 import com.balancedbytes.games.ffb.skill.Wrestle;
@@ -83,7 +83,7 @@ public class WrestleBehaviour extends SkillBehaviour<Wrestle> {
 				        if (UtilCards.hasSkillWithProperty(game.getDefender(), NamedProperties.placedProneCausesInjuryRoll)) {
 				        	FieldCoordinate defenderCoordinate = game.getFieldModel().getPlayerCoordinate(game.getDefender());
 				          step.publishParameter(new StepParameter(StepParameterKey.INJURY_RESULT,
-			          	UtilServerInjury.handleInjury(step, InjuryType.BALL_AND_CHAIN, actingPlayer.getPlayer(), game.getDefender(), defenderCoordinate, null, ApothecaryMode.DEFENDER))
+			          	UtilServerInjury.handleInjury(step, new InjuryTypeBallAndChain(), actingPlayer.getPlayer(), game.getDefender(), defenderCoordinate, null, ApothecaryMode.DEFENDER))
 				          );
 				        }
 				      }

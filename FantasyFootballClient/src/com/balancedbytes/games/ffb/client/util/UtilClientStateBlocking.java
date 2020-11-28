@@ -16,7 +16,7 @@ import com.balancedbytes.games.ffb.client.state.IPlayerPopupMenuKeys;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
-import com.balancedbytes.games.ffb.model.Skill;
+import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
 import com.balancedbytes.games.ffb.util.UtilCards;
 import com.balancedbytes.games.ffb.util.UtilPlayer;
 
@@ -78,7 +78,7 @@ public class UtilClientStateBlocking {
     if (UtilPlayer.isBlockable(game, pDefender) && (!pDoBlitz || UtilPlayer.isNextMovePossible(game, false))) {
       handled = true;
       FieldCoordinate defenderCoordinate = game.getFieldModel().getPlayerCoordinate(pDefender);
-      if (UtilCards.hasSkill(game, actingPlayer, Skill.STAB)) {
+      if (UtilCards.hasSkillWithProperty(actingPlayer.getPlayer(), NamedProperties.canPerformArmourRollInsteadOfBlock)) {
         createAndShowStabPopupMenu(pClientState, pDefender);
       } else if (game.getFieldModel().getDiceDecoration(defenderCoordinate) != null) {
         block(pClientState, actingPlayer.getPlayerId(), pDefender, false);

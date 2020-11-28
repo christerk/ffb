@@ -3,11 +3,12 @@ package com.balancedbytes.games.ffb;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
+import com.balancedbytes.games.ffb.CatchModifiers.CatchContext;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
-import com.balancedbytes.games.ffb.model.Skill;
 import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
 import com.balancedbytes.games.ffb.util.UtilCards;
 import com.balancedbytes.games.ffb.util.UtilDisturbingPresence;
@@ -20,38 +21,33 @@ import com.balancedbytes.games.ffb.util.UtilPlayer;
 public class CatchModifierFactory implements IRollModifierFactory {
   
   public CatchModifier forName(String pName) {
-    for (CatchModifier modifier : CatchModifier.values()) {
-      if (modifier.getName().equalsIgnoreCase(pName)) {
-        return modifier;
-      }
-    }
-    return null;
+	 return CatchModifiers.values().get(pName.toLowerCase());
   }
+  
 
   public Set<CatchModifier> findCatchModifiers(Game pGame, Player<?> pPlayer, CatchScatterThrowInMode pCatchMode) {
     Set<CatchModifier> catchModifiers = new HashSet<CatchModifier>();
+    
+    
+    CatchContext context = new CatchContext(pPlayer, pCatchMode);
+    catchModifiers.addAll(UtilCards.getCatchModifiers(pPlayer, context));
+    
     if ((CatchScatterThrowInMode.CATCH_ACCURATE_PASS == pCatchMode) || (CatchScatterThrowInMode.CATCH_ACCURATE_BOMB == pCatchMode)) {
-      catchModifiers.add(CatchModifier.ACCURATE);
-      if (UtilCards.hasSkill(pGame, pPlayer, Skill.DIVING_CATCH)) {
-        catchModifiers.add(CatchModifier.DIVING_CATCH);
-      }
+      catchModifiers.add(CatchModifiers.ACCURATE);
     }
+    
     if ((CatchScatterThrowInMode.CATCH_ACCURATE_PASS_EMPTY_SQUARE == pCatchMode || CatchScatterThrowInMode.CATCH_ACCURATE_BOMB_EMPTY_SQUARE == pCatchMode)
-      && UtilCards.hasSkill(pGame, pPlayer, Skill.DIVING_CATCH)) {
-      catchModifiers.add(CatchModifier.ACCURATE);
+      && UtilCards.hasSkillWithProperty(pPlayer, NamedProperties.addBonusForAccuratePass)) {
+      catchModifiers.add(CatchModifiers.ACCURATE);
     }
+    
     if (CatchScatterThrowInMode.CATCH_HAND_OFF == pCatchMode) {
-      catchModifiers.add(CatchModifier.HAND_OFF);
+      catchModifiers.add(CatchModifiers.HAND_OFF);
     }
     if (Weather.POURING_RAIN == pGame.getFieldModel().getWeather()) {
-      catchModifiers.add(CatchModifier.POURING_RAIN);
+      catchModifiers.add(CatchModifiers.POURING_RAIN);
     }
-    if (UtilCards.hasSkill(pGame, pPlayer, Skill.EXTRA_ARMS)) {
-      catchModifiers.add(CatchModifier.EXTRA_ARMS);
-    }
-    if (UtilCards.hasSkillWithProperty(pPlayer, NamedProperties.ignoreTacklezonesWhenCatching)) {
-      catchModifiers.add(CatchModifier.NERVES_OF_STEEL);
-    } else {
+    if (!UtilCards.hasSkillWithProperty(pPlayer, NamedProperties.ignoreTacklezonesWhenCatching)) {
       CatchModifier tacklezoneModifier = getTacklezoneModifier(pGame, pPlayer);
       if (tacklezoneModifier != null) {
         catchModifiers.add(tacklezoneModifier);
@@ -82,27 +78,29 @@ public class CatchModifierFactory implements IRollModifierFactory {
   }
   
   private CatchModifier getTacklezoneModifier(Game pGame, Player<?> pPlayer) {
-    int tacklezones = UtilPlayer.findTacklezones(pGame, pPlayer);
-    if (tacklezones > 0) {
-      for (CatchModifier modifier : CatchModifier.values()) {
-        if (modifier.isTacklezoneModifier() && (modifier.getModifier() == tacklezones)) {
-          return modifier;
-        }
-      }
-    }
-    return null;
+	  int tacklezones = UtilPlayer.findTacklezones(pGame, pPlayer);
+	  if (tacklezones > 0) {
+		  for (Map.Entry<String, CatchModifier> entry : CatchModifiers.values().entrySet()) {
+			  CatchModifier modifier = entry.getValue();
+			  if (modifier.isTacklezoneModifier() && (modifier.getModifier() == tacklezones)) {
+				  return modifier;
+			  }
+		  }
+	  }
+	  return null;
   }
-  
+
   private CatchModifier getDisturbingPresenceModifier(Game pGame, Player<?> pPlayer) {
-    int disturbingPresences = UtilDisturbingPresence.findOpposingDisturbingPresences(pGame, pPlayer);
-    if (disturbingPresences > 0) {
-      for (CatchModifier modifier : CatchModifier.values()) {
-        if (modifier.isDisturbingPresenceModifier() && (modifier.getModifier() == disturbingPresences)) {
-          return modifier;
-        }
-      }
-    }
-    return null;
+	  int disturbingPresences = UtilDisturbingPresence.findOpposingDisturbingPresences(pGame, pPlayer);
+	  if (disturbingPresences > 0) {
+		  for (Map.Entry<String, CatchModifier> entry : CatchModifiers.values().entrySet()) {
+			  CatchModifier modifier = entry.getValue();
+			  if (modifier.isDisturbingPresenceModifier() && (modifier.getModifier() == disturbingPresences)) {
+				  return modifier;
+			  }
+		  }
+	  }
+	  return null;
   }
-  
+
 }

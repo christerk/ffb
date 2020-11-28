@@ -4,10 +4,10 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Stack;
 
+import com.balancedbytes.games.ffb.ApothecaryMode;
 import com.balancedbytes.games.ffb.CatchScatterThrowInMode;
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.FieldCoordinateBounds;
-import com.balancedbytes.games.ffb.InjuryType;
 import com.balancedbytes.games.ffb.PlayerState;
 import com.balancedbytes.games.ffb.Pushback;
 import com.balancedbytes.games.ffb.PushbackMode;
@@ -21,6 +21,7 @@ import com.balancedbytes.games.ffb.net.commands.ClientCommandUseSkill;
 import com.balancedbytes.games.ffb.report.ReportPushback;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.IServerJsonOption;
+import com.balancedbytes.games.ffb.server.InjuryType.InjuryTypeCrowdPush;
 import com.balancedbytes.games.ffb.server.model.ServerSkill;
 import com.balancedbytes.games.ffb.server.net.ReceivedCommand;
 import com.balancedbytes.games.ffb.server.step.AbstractStep;
@@ -30,7 +31,6 @@ import com.balancedbytes.games.ffb.server.step.StepId;
 import com.balancedbytes.games.ffb.server.step.StepParameter;
 import com.balancedbytes.games.ffb.server.step.StepParameterKey;
 import com.balancedbytes.games.ffb.server.step.UtilServerSteps;
-import com.balancedbytes.games.ffb.server.step.action.common.ApothecaryMode;
 import com.balancedbytes.games.ffb.server.util.UtilServerDialog;
 import com.balancedbytes.games.ffb.server.util.UtilServerInjury;
 import com.balancedbytes.games.ffb.server.util.UtilServerPlayerMove;
@@ -195,7 +195,7 @@ public class StepPushback extends AbstractStep {
         if (!ArrayTool.isProvided(pushbackSquares)) {
           // Crowdpush
           publishParameter(new StepParameter(StepParameterKey.INJURY_RESULT,
-              UtilServerInjury.handleInjury(this, InjuryType.CROWDPUSH, null, state.defender,
+              UtilServerInjury.handleInjury(this, new InjuryTypeCrowdPush(), null, state.defender,
                   state.startingPushbackSquare.getCoordinate(), null, ApothecaryMode.CROWD_PUSH)));
           game.getFieldModel().remove(state.defender);
           if (defenderCoordinate.equals(game.getFieldModel().getBallCoordinate())) {

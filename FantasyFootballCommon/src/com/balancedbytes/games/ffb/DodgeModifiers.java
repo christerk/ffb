@@ -1,5 +1,8 @@
 package com.balancedbytes.games.ffb;
 
+import java.lang.reflect.Field;
+import java.util.Map;
+
 import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
@@ -78,16 +81,38 @@ public class DodgeModifiers {
     }    
   }
   
-  public static class DodgeContext {
-    public ActingPlayer actingPlayer;
-    public FieldCoordinate sourceCoordinate;
-    public boolean addTackleZoneModifier;
-    
-    public DodgeContext(ActingPlayer actingPlayer, FieldCoordinate sourceCoordinate) {
-      this.sourceCoordinate = sourceCoordinate;
-      this.actingPlayer = actingPlayer;
-      this.addTackleZoneModifier = true;
-    }
+  private static Map<String, DodgeModifier> values;
+  public static Map<String, DodgeModifier> values() { return values;}
+
+  public DodgeModifiers() {
+	  try {
+		  Class<?> c = this.getClass();
+		  Class<?> cModifierType = DodgeModifier.class.getClass();
+		  for(Field f :c.getDeclaredFields())
+		  {
+			  if(f.getType() == cModifierType)
+			  {
+				  DodgeModifier modifier = (DodgeModifier)f.get(this);
+				  values.put(modifier.getName().toLowerCase(), modifier);
+			  }
+		  }
+
+	  } catch (IllegalArgumentException | IllegalAccessException e) {
+		  // TODO Auto-generated catch block
+		  e.printStackTrace();
+	  }
   }
-  
+
+  public static class DodgeContext {
+	  public ActingPlayer actingPlayer;
+	  public FieldCoordinate sourceCoordinate;
+	  public boolean addTackleZoneModifier;
+
+	  public DodgeContext(ActingPlayer actingPlayer, FieldCoordinate sourceCoordinate) {
+		  this.sourceCoordinate = sourceCoordinate;
+		  this.actingPlayer = actingPlayer;
+		  this.addTackleZoneModifier = true;
+	  }
+  }
+
 }

@@ -2,6 +2,7 @@ package com.balancedbytes.games.ffb.skill;
 
 import com.balancedbytes.games.ffb.SkillCategory;
 import com.balancedbytes.games.ffb.model.Skill;
+import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
 
 /**
 * This player's presence is very disturbing, whether it is caused by a
@@ -16,6 +17,8 @@ public class DisturbingPresence extends Skill {
 
   public DisturbingPresence() {
     super("Disturbing Presence", SkillCategory.MUTATION);
+    
+    registerProperty(NamedProperties.inflictsDisturbingPresence);
   }
 
 }

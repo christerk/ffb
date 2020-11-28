@@ -4,6 +4,7 @@ import com.balancedbytes.games.ffb.SkillCategory;
 import com.balancedbytes.games.ffb.model.Skill;
 import com.balancedbytes.games.ffb.model.SkillConstants;
 import com.balancedbytes.games.ffb.model.modifier.CancelSkillProperty;
+import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
 
 /**
 * A player with this skill uses his great strength and prowess to grab his
@@ -22,6 +23,7 @@ public class Grab extends Skill {
   public Grab() {
     super("Grab", SkillCategory.STRENGTH);
 
+    registerProperty(NamedProperties.canPushBackToAnySquare);
     registerProperty(new CancelSkillProperty(SkillConstants.SIDE_STEP));
   }
 

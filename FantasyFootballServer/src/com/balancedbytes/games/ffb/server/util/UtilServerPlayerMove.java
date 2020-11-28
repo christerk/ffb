@@ -105,7 +105,7 @@ public class UtilServerPlayerMove {
     boolean dodging = !UtilCards.hasSkillWithProperty(actingPlayer.getPlayer(), NamedProperties.ignoreTacklezonesWhenMoving) && (UtilPlayer.findTacklezones(game, actingPlayer.getPlayer()) > 0);
     if (pLeaping) {
       LeapModifierFactory modifierFactory = new LeapModifierFactory();
-      Set<LeapModifier> leapModifiers = modifierFactory.findLeapModifiers(game);
+      Set<LeapModifier> leapModifiers = modifierFactory.findLeapModifiers(game, playerCoordinate);
       minimumRollDodge = DiceInterpreter.getInstance().minimumRollLeap(actingPlayer.getPlayer(), leapModifiers);
       if (actingPlayer.isStandingUp() && !actingPlayer.hasActed() && !UtilCards.hasSkillWithProperty(actingPlayer.getPlayer(), NamedProperties.canStandUpForFree)) {
         goForIt = ((3 + playerCoordinate.distanceInSteps(pCoordinate)) > UtilCards.getPlayerMovement(game, actingPlayer.getPlayer()));

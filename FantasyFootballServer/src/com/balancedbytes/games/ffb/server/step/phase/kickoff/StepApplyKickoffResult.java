@@ -3,12 +3,12 @@ package com.balancedbytes.games.ffb.server.step.phase.kickoff;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.balancedbytes.games.ffb.ApothecaryMode;
 import com.balancedbytes.games.ffb.Direction;
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.FieldCoordinateBounds;
 import com.balancedbytes.games.ffb.Inducement;
 import com.balancedbytes.games.ffb.InducementType;
-import com.balancedbytes.games.ffb.InjuryType;
 import com.balancedbytes.games.ffb.KickoffResult;
 import com.balancedbytes.games.ffb.PlayerState;
 import com.balancedbytes.games.ffb.TurnMode;
@@ -33,6 +33,7 @@ import com.balancedbytes.games.ffb.report.ReportWeather;
 import com.balancedbytes.games.ffb.server.DiceInterpreter;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.IServerJsonOption;
+import com.balancedbytes.games.ffb.server.InjuryType.InjuryTypeThrowARock;
 import com.balancedbytes.games.ffb.server.net.ReceivedCommand;
 import com.balancedbytes.games.ffb.server.step.AbstractStep;
 import com.balancedbytes.games.ffb.server.step.StepAction;
@@ -43,7 +44,6 @@ import com.balancedbytes.games.ffb.server.step.StepParameter;
 import com.balancedbytes.games.ffb.server.step.StepParameterKey;
 import com.balancedbytes.games.ffb.server.step.StepParameterSet;
 import com.balancedbytes.games.ffb.server.step.UtilServerSteps;
-import com.balancedbytes.games.ffb.server.step.action.common.ApothecaryMode;
 import com.balancedbytes.games.ffb.server.util.UtilServerCatchScatterThrowIn;
 import com.balancedbytes.games.ffb.server.util.UtilServerGame;
 import com.balancedbytes.games.ffb.server.util.UtilServerInjury;
@@ -489,7 +489,7 @@ public final class StepApplyKickoffResult extends AbstractStep {
       
       publishParameters(UtilServerInjury.dropPlayer(this, player, ApothecaryMode.HOME));
       publishParameter(new StepParameter(StepParameterKey.INJURY_RESULT,
-        	UtilServerInjury.handleInjury(this, InjuryType.THROW_A_ROCK, null, player, playerCoordinate, null, ApothecaryMode.HOME)));
+        	UtilServerInjury.handleInjury(this, new InjuryTypeThrowARock(), null, player, playerCoordinate, null, ApothecaryMode.HOME)));
       
     }
 
@@ -509,7 +509,7 @@ public final class StepApplyKickoffResult extends AbstractStep {
       
       publishParameters(UtilServerInjury.dropPlayer(this, player, ApothecaryMode.AWAY));
       publishParameter(new StepParameter(StepParameterKey.INJURY_RESULT,
-      	UtilServerInjury.handleInjury(this, InjuryType.THROW_A_ROCK, null, player, playerCoordinate, null, ApothecaryMode.AWAY)));
+      	UtilServerInjury.handleInjury(this, new InjuryTypeThrowARock(), null, player, playerCoordinate, null, ApothecaryMode.AWAY)));
       
     }
     

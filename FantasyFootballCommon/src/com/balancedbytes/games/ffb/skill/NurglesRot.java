@@ -2,6 +2,7 @@ package com.balancedbytes.games.ffb.skill;
 
 import com.balancedbytes.games.ffb.SkillCategory;
 import com.balancedbytes.games.ffb.model.Skill;
+import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
 
 /**
 * This player has a horrible infectious disease which spreads when he kills
@@ -19,6 +20,7 @@ public class NurglesRot extends Skill {
   public NurglesRot() {
     super("Nurgle's Rot", SkillCategory.EXTRAORDINARY);
     
+    registerProperty(NamedProperties.hasNurglesRot);
 
   }
 

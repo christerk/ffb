@@ -1,8 +1,8 @@
 package com.balancedbytes.games.ffb.server.step.phase.special;
 
+import com.balancedbytes.games.ffb.ApothecaryMode;
 import com.balancedbytes.games.ffb.CatchScatterThrowInMode;
 import com.balancedbytes.games.ffb.FieldCoordinate;
-import com.balancedbytes.games.ffb.InjuryType;
 import com.balancedbytes.games.ffb.SpecialEffect;
 import com.balancedbytes.games.ffb.TurnMode;
 import com.balancedbytes.games.ffb.json.UtilJson;
@@ -15,6 +15,9 @@ import com.balancedbytes.games.ffb.report.ReportSpecialEffectRoll;
 import com.balancedbytes.games.ffb.server.DiceInterpreter;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.IServerJsonOption;
+import com.balancedbytes.games.ffb.server.InjuryType.InjuryTypeBomb;
+import com.balancedbytes.games.ffb.server.InjuryType.InjuryTypeFireball;
+import com.balancedbytes.games.ffb.server.InjuryType.InjuryTypeLightning;
 import com.balancedbytes.games.ffb.server.step.AbstractStep;
 import com.balancedbytes.games.ffb.server.step.StepAction;
 import com.balancedbytes.games.ffb.server.step.StepException;
@@ -22,7 +25,6 @@ import com.balancedbytes.games.ffb.server.step.StepId;
 import com.balancedbytes.games.ffb.server.step.StepParameter;
 import com.balancedbytes.games.ffb.server.step.StepParameterKey;
 import com.balancedbytes.games.ffb.server.step.StepParameterSet;
-import com.balancedbytes.games.ffb.server.step.action.common.ApothecaryMode;
 import com.balancedbytes.games.ffb.server.step.action.common.StepCatchScatterThrowIn;
 import com.balancedbytes.games.ffb.server.util.UtilServerInjury;
 import com.eclipsesource.json.JsonObject;
@@ -120,7 +122,7 @@ public final class StepSpecialEffect extends AbstractStep {
 				FieldCoordinate playerCoordinate = game.getFieldModel().getPlayerCoordinate(player);
 				if (fSpecialEffect == SpecialEffect.LIGHTNING) {
 					publishParameter(new StepParameter(StepParameterKey.INJURY_RESULT,
-						UtilServerInjury.handleInjury(this, InjuryType.LIGHTNING, null, player, playerCoordinate, null, ApothecaryMode.SPECIAL_EFFECT)));
+						UtilServerInjury.handleInjury(this, new InjuryTypeLightning(), null, player, playerCoordinate, null, ApothecaryMode.SPECIAL_EFFECT)));
 					publishParameters(UtilServerInjury.dropPlayer(this, player, ApothecaryMode.SPECIAL_EFFECT));
 				}
 				if (fSpecialEffect == SpecialEffect.ZAP && player instanceof RosterPlayer) {
@@ -137,12 +139,12 @@ public final class StepSpecialEffect extends AbstractStep {
 				}
 				if (fSpecialEffect == SpecialEffect.FIREBALL) {
 					publishParameter(new StepParameter(StepParameterKey.INJURY_RESULT,
-						UtilServerInjury.handleInjury(this, InjuryType.FIREBALL, null, player, playerCoordinate, null, ApothecaryMode.SPECIAL_EFFECT)));
+						UtilServerInjury.handleInjury(this, new InjuryTypeFireball(), null, player, playerCoordinate, null, ApothecaryMode.SPECIAL_EFFECT)));
 					publishParameters(UtilServerInjury.dropPlayer(this, player, ApothecaryMode.SPECIAL_EFFECT));
 				}
 				if (fSpecialEffect == SpecialEffect.BOMB) {
 					publishParameter(new StepParameter(StepParameterKey.INJURY_RESULT,
-						UtilServerInjury.handleInjury(this, InjuryType.BOMB, null, player, playerCoordinate, null, ApothecaryMode.SPECIAL_EFFECT)));
+						UtilServerInjury.handleInjury(this, new InjuryTypeBomb(), null, player, playerCoordinate, null, ApothecaryMode.SPECIAL_EFFECT)));
 					publishParameters(UtilServerInjury.dropPlayer(this, player, ApothecaryMode.SPECIAL_EFFECT));
 				}
 

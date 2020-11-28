@@ -1,8 +1,8 @@
 package com.balancedbytes.games.ffb.server.step.action.end;
 
+import com.balancedbytes.games.ffb.ApothecaryMode;
 import com.balancedbytes.games.ffb.CatchScatterThrowInMode;
 import com.balancedbytes.games.ffb.FieldCoordinate;
-import com.balancedbytes.games.ffb.InjuryType;
 import com.balancedbytes.games.ffb.PlayerChoiceMode;
 import com.balancedbytes.games.ffb.PlayerState;
 import com.balancedbytes.games.ffb.SoundId;
@@ -17,6 +17,7 @@ import com.balancedbytes.games.ffb.report.ReportBiteSpectator;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.IServerJsonOption;
 import com.balancedbytes.games.ffb.server.InjuryResult;
+import com.balancedbytes.games.ffb.server.InjuryType.InjuryTypeBitten;
 import com.balancedbytes.games.ffb.server.net.ReceivedCommand;
 import com.balancedbytes.games.ffb.server.step.AbstractStep;
 import com.balancedbytes.games.ffb.server.step.StepAction;
@@ -26,7 +27,6 @@ import com.balancedbytes.games.ffb.server.step.StepId;
 import com.balancedbytes.games.ffb.server.step.StepParameter;
 import com.balancedbytes.games.ffb.server.step.StepParameterKey;
 import com.balancedbytes.games.ffb.server.step.StepParameterSet;
-import com.balancedbytes.games.ffb.server.step.action.common.ApothecaryMode;
 import com.balancedbytes.games.ffb.server.util.UtilServerDialog;
 import com.balancedbytes.games.ffb.server.util.UtilServerInjury;
 import com.balancedbytes.games.ffb.util.ArrayTool;
@@ -158,7 +158,7 @@ public class StepInitFeeding extends AbstractStep {
     if (!playerState.hasTacklezones() || (fFeedOnPlayerChoice != null)) {
       if ((fFeedOnPlayerChoice != null) && fFeedOnPlayerChoice && (game.getDefender() != null)) {
         FieldCoordinate feedOnPlayerCoordinate = game.getFieldModel().getPlayerCoordinate(game.getDefender());
-        InjuryResult injuryResultFeeding = UtilServerInjury.handleInjury(this, InjuryType.BITTEN, actingPlayer.getPlayer(), game.getDefender(),
+        InjuryResult injuryResultFeeding = UtilServerInjury.handleInjury(this, new InjuryTypeBitten(), actingPlayer.getPlayer(), game.getDefender(),
             feedOnPlayerCoordinate, null, ApothecaryMode.FEEDING);
         fEndTurn = UtilPlayer.hasBall(game, game.getDefender()); // turn end on biting the ball carrier
         publishParameter(new StepParameter(StepParameterKey.INJURY_RESULT, injuryResultFeeding));
