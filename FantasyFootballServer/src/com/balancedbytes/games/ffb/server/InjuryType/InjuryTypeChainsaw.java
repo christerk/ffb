@@ -1,11 +1,11 @@
 package com.balancedbytes.games.ffb.server.InjuryType;
 
-import com.balancedbytes.game.ffb.injury.Chainsaw;
 import com.balancedbytes.games.ffb.ApothecaryMode;
 import com.balancedbytes.games.ffb.ArmorModifier;
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.InjuryContext;
 import com.balancedbytes.games.ffb.InjuryModifierFactory;
+import com.balancedbytes.games.ffb.injury.Chainsaw;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.server.DiceInterpreter;
