@@ -2,10 +2,11 @@ package com.balancedbytes.games.ffb.server.InjuryType;
 
 import com.balancedbytes.games.ffb.ApothecaryMode;
 import com.balancedbytes.games.ffb.ArmorModifier;
+import com.balancedbytes.games.ffb.ArmorModifiers;
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.InjuryContext;
-import com.balancedbytes.games.ffb.InjuryModifier;
 import com.balancedbytes.games.ffb.InjuryModifierFactory;
+import com.balancedbytes.games.ffb.InjuryModifiers;
 import com.balancedbytes.games.ffb.PlayerState;
 import com.balancedbytes.games.ffb.injury.PilingOnInjury;
 import com.balancedbytes.games.ffb.model.Game;
@@ -43,8 +44,8 @@ public class InjuryTypePilingOnInjury extends InjuryTypeServer<PilingOnInjury>  
 
 				if (!UtilGameOption.isOptionEnabled(game, GameOptionId.PILING_ON_DOES_NOT_STACK)) {
 					if (UtilCards.hasSkill(game, pAttacker, SkillConstants.MIGHTY_BLOW)
-							&& !injuryContext.hasArmorModifier(ArmorModifier.MIGHTY_BLOW)) {
-						injuryContext.addInjuryModifier(InjuryModifier.MIGHTY_BLOW);
+							&& !injuryContext.hasArmorModifier(ArmorModifiers.MIGHTY_BLOW)) {
+						injuryContext.addInjuryModifier(InjuryModifiers.MIGHTY_BLOW);
 					}
 				}
 

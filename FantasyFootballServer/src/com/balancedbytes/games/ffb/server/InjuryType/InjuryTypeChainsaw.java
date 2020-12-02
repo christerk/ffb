@@ -1,7 +1,7 @@
 package com.balancedbytes.games.ffb.server.InjuryType;
 
 import com.balancedbytes.games.ffb.ApothecaryMode;
-import com.balancedbytes.games.ffb.ArmorModifier;
+import com.balancedbytes.games.ffb.ArmorModifiers;
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.InjuryContext;
 import com.balancedbytes.games.ffb.InjuryModifierFactory;
@@ -26,7 +26,7 @@ public class InjuryTypeChainsaw extends InjuryTypeServer<Chainsaw> {
 
 		if (!injuryContext.isArmorBroken()) {
 			injuryContext.setArmorRoll(diceRoller.rollArmour());
-			injuryContext.addArmorModifier(ArmorModifier.CHAINSAW);
+			injuryContext.addArmorModifier(ArmorModifiers.CHAINSAW);
 			injuryContext.setArmorBroken(diceInterpreter.isArmourBroken(gameState, injuryContext));
 		}
 

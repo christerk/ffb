@@ -5,6 +5,7 @@ import java.util.Comparator;
 import java.util.Hashtable;
 import java.util.List;
 
+import com.balancedbytes.games.ffb.ArmorModifier;
 import com.balancedbytes.games.ffb.CatchModifier;
 import com.balancedbytes.games.ffb.DodgeModifier;
 import com.balancedbytes.games.ffb.INamedObject;
@@ -29,6 +30,7 @@ public class Skill implements INamedObject {
   private List<LeapModifier> leapModifiers;
   private List<InterceptionModifier> interceptionModifiers;
   private List<InjuryModifier> injuryModifiers;
+  private List<ArmorModifier> armorModifiers;
   private List<CatchModifier> catchModifiers;
   private List<ISkillBehaviour> behaviours;
   private List<ISkillProperty> skillProperties;
@@ -47,6 +49,7 @@ public class Skill implements INamedObject {
     interceptionModifiers = new ArrayList<>();
     catchModifiers = new ArrayList<>();
     injuryModifiers = new ArrayList<>();
+    armorModifiers = new ArrayList<>();
     rerollSources = new Hashtable<>();
   }
   
@@ -95,6 +98,10 @@ public class Skill implements INamedObject {
     interceptionModifiers.add(modifier);
   }
   
+  protected void registerModifier(ArmorModifier modifier) {
+    armorModifiers.add(modifier);
+  }
+
   protected void registerModifier(InjuryModifier modifier) {
     injuryModifiers.add(modifier);
   }
@@ -141,6 +148,10 @@ public class Skill implements INamedObject {
 
   public List<CatchModifier> getCatchModifiers() {
 	  return catchModifiers;
+  } 
+
+  public List<ArmorModifier> getArmorModifiers() {
+	  return armorModifiers;
   } 
 
   public List<InjuryModifier> getInjuryModifiers() {

@@ -37,6 +37,8 @@ public abstract class InjuryType implements INamedObject {
   public boolean canApoKoIntoStun() { return true; }
   public boolean shouldPlayFallSound() { return true; }
   public boolean fallingDownCausesTurnover() { return true; }
+  public boolean isStab() { return false; }
+  public boolean isFoul() { return false; }
 
   public InjuryContext injuryContext() { return this.injuryContext; }
 

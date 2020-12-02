@@ -1,5 +1,6 @@
 package com.balancedbytes.games.ffb.skill;
 
+import com.balancedbytes.games.ffb.ArmorModifiers;
 import com.balancedbytes.games.ffb.SkillCategory;
 import com.balancedbytes.games.ffb.model.Skill;
 
@@ -13,6 +14,9 @@ public class Stakes extends Skill {
 
   public Stakes() {
     super("Stakes", SkillCategory.EXTRAORDINARY);
+    
+    registerModifier(ArmorModifiers.STAKES);
+
   }
 
 }

@@ -36,6 +36,8 @@ public abstract class InjuryTypeServer<T extends InjuryType> implements INamedOb
 	public boolean canUseApo() { return injuryType.canUseApo(); }
 	public SendToBoxReason sendToBoxReason() { return injuryType.sendToBoxReason(); }
 	public boolean fallingDownCausesTurnover() { return injuryType.fallingDownCausesTurnover(); }
+	public boolean isStab() { return injuryType.isStab(); }
+	public boolean isFoul() { return injuryType.isFoul(); }
 	
 
 	public abstract InjuryContext handleInjury(IStep step, Game game,GameState gameState, DiceRoller diceRoller, Player<?> pAttacker, Player<?> pDefender,

@@ -28,5 +28,8 @@ public class Stab extends InjuryType{
 	public boolean isCausedByOpponent() {
 		return true;
 	}
+	
+	@Override	
+	public boolean isStab() { return true; }
 
 }

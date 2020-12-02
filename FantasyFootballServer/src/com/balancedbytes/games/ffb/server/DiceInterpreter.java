@@ -2,7 +2,7 @@ package com.balancedbytes.games.ffb.server;
 
 import java.util.Set;
 
-import com.balancedbytes.games.ffb.ArmorModifier;
+import com.balancedbytes.games.ffb.ArmorModifiers;
 import com.balancedbytes.games.ffb.Card;
 import com.balancedbytes.games.ffb.CardEffect;
 import com.balancedbytes.games.ffb.CatchModifier;
@@ -14,8 +14,7 @@ import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.GazeModifier;
 import com.balancedbytes.games.ffb.GoForItModifier;
 import com.balancedbytes.games.ffb.InjuryContext;
-import com.balancedbytes.games.ffb.InjuryModifier;
-import com.balancedbytes.games.ffb.InjuryType;
+import com.balancedbytes.games.ffb.InjuryModifiers;
 import com.balancedbytes.games.ffb.InterceptionModifier;
 import com.balancedbytes.games.ffb.KickoffResult;
 import com.balancedbytes.games.ffb.KickoffResultFactory;
@@ -31,7 +30,6 @@ import com.balancedbytes.games.ffb.Weather;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
-import com.balancedbytes.games.ffb.server.model.ServerSkill;
 import com.balancedbytes.games.ffb.util.ArrayTool;
 import com.balancedbytes.games.ffb.util.UtilCards;
 import com.balancedbytes.games.ffb.util.UtilRangeRuler;
@@ -314,15 +312,11 @@ public class DiceInterpreter {
       int total = injuryRoll[0] + injuryRoll[1] + pInjuryContext.getInjuryModifierTotal();
       if ((total == 8) && (defender != null) && UtilCards.hasSkillWithProperty(defender, NamedProperties.convertKOToStunOn8)) {
         playerState = new PlayerState(PlayerState.STUNNED);
-        pInjuryContext.addInjuryModifier(InjuryModifier.THICK_SKULL);
-      } else if ((total == 7) && (defender != null) && UtilCards.hasSkill(game, defender, ServerSkill.STUNTY) && (pInjuryContext.getInjuryType() != InjuryType.STAB)
-          && !UtilCards.hasCard(game, defender, Card.GOOD_OLD_MAGIC_CODPIECE)) {
+        pInjuryContext.addInjuryModifier(InjuryModifiers.THICK_SKULL);
+      } else if ((total == 7) && pInjuryContext.hasInjuryModifier(InjuryModifiers.STUNTY)) {
         playerState = new PlayerState(PlayerState.KNOCKED_OUT);
-        pInjuryContext.addInjuryModifier(InjuryModifier.STUNTY);
-      } else if ((total == 9) && (defender != null) && UtilCards.hasSkill(game, defender, ServerSkill.STUNTY) && (pInjuryContext.getInjuryType() != InjuryType.STAB)
-          && !UtilCards.hasCard(game, defender, Card.GOOD_OLD_MAGIC_CODPIECE)) {
+      } else if ((total == 9) && (defender != null)  && pInjuryContext.hasInjuryModifier(InjuryModifiers.STUNTY)) {
         playerState = new PlayerState(PlayerState.BADLY_HURT);
-        pInjuryContext.addInjuryModifier(InjuryModifier.STUNTY);
       } else if (total > 9) {
         playerState = null;
       } else if (total > 7) {
@@ -441,7 +435,7 @@ public class DiceInterpreter {
     if (UtilCards.hasCard(game, defender, Card.BELT_OF_INVULNERABILITY)) {
     	pInjuryContext.clearArmorModifiers();
     }
-    if ((armour > 7) && pInjuryContext.hasArmorModifier(ArmorModifier.CLAWS)) {
+    if ((armour > 7) && pInjuryContext.hasArmorModifier(ArmorModifiers.CLAWS)) {
       armour = 7;
     }
     return (armour < (armourRoll[0] + armourRoll[1] + pInjuryContext.getArmorModifierTotal()));

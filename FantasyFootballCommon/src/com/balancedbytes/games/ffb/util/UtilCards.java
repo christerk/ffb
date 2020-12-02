@@ -6,12 +6,16 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import com.balancedbytes.games.ffb.ArmorModifier;
+import com.balancedbytes.games.ffb.ArmorModifiers.ArmorModifierContext;
 import com.balancedbytes.games.ffb.Card;
 import com.balancedbytes.games.ffb.CardEffect;
 import com.balancedbytes.games.ffb.CatchModifier;
 import com.balancedbytes.games.ffb.CatchModifiers.CatchContext;
 import com.balancedbytes.games.ffb.DodgeModifier;
 import com.balancedbytes.games.ffb.DodgeModifiers.DodgeContext;
+import com.balancedbytes.games.ffb.InjuryModifier;
+import com.balancedbytes.games.ffb.InjuryModifier.InjuryModifierContext;
 import com.balancedbytes.games.ffb.InterceptionModifier;
 import com.balancedbytes.games.ffb.InterceptionModifiers.InterceptionContext;
 import com.balancedbytes.games.ffb.LeapModifier;
@@ -138,6 +142,30 @@ public final class UtilCards {
 	  return result;
   }
 
+  public static Collection<ArmorModifier> getArmorModifiers(Player<?> player, ArmorModifierContext context) {
+	  Set<ArmorModifier> result = new HashSet<ArmorModifier>();
+	  for (Skill skill : player.getSkills()) {
+		  for (ArmorModifier modifier : skill.getArmorModifiers()) {
+			  if (modifier.appliesToContext(context)) {
+				  result.add(modifier);
+			  }
+		  }
+	  }
+	  return result;
+  }
+  
+  public static Collection<InjuryModifier> getInjuryModifiers(Player<?> player, InjuryModifierContext context) {
+	  Set<InjuryModifier> result = new HashSet<InjuryModifier>();
+	  for (Skill skill : player.getSkills()) {
+		  for (InjuryModifier modifier : skill.getInjuryModifiers()) {
+			  if (modifier.appliesToContext(context)) {
+				  result.add(modifier);
+			  }
+		  }
+	  }
+	  return result;
+  }
+  
   private static Set<Skill> findSkillsProvidedByCardsAndEffects(Game pGame, Player<?> pPlayer) {
     Set<Skill> cardSkills = new HashSet<Skill>();
     if ((pGame == null) || (pPlayer == null)) {

@@ -1,5 +1,7 @@
 package com.balancedbytes.games.ffb.skill;
 
+import com.balancedbytes.games.ffb.ArmorModifiers;
+import com.balancedbytes.games.ffb.InjuryModifiers;
 import com.balancedbytes.games.ffb.SkillCategory;
 import com.balancedbytes.games.ffb.model.Skill;
 
@@ -14,6 +16,9 @@ public class MightyBlow extends Skill {
 
   public MightyBlow() {
     super("Mighty Blow", SkillCategory.STRENGTH);
+    
+    registerModifier(ArmorModifiers.MIGHTY_BLOW);
+    registerModifier(InjuryModifiers.MIGHTY_BLOW);
   }
 
 }

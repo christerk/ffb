@@ -1,5 +1,6 @@
 package com.balancedbytes.games.ffb.skill;
 
+import com.balancedbytes.games.ffb.InjuryModifiers;
 import com.balancedbytes.games.ffb.PassingModifiers;
 import com.balancedbytes.games.ffb.SkillCategory;
 import com.balancedbytes.games.ffb.model.Skill;
@@ -27,9 +28,9 @@ public class Stunty extends Skill {
     super("Stunty", SkillCategory.EXTRAORDINARY);
     
     registerModifier(PassingModifiers.STUNTY);
+    registerModifier(InjuryModifiers.STUNTY);
     
     registerProperty(NamedProperties.preventRaiseFromDead);
-    
     registerProperty(new CancelSkillProperty(SkillConstants.NURGLES_ROT));
   }
 

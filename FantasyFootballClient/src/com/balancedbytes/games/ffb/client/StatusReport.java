@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.balancedbytes.games.ffb.ArmorModifier;
+import com.balancedbytes.games.ffb.ArmorModifiers;
 import com.balancedbytes.games.ffb.BlockResult;
 import com.balancedbytes.games.ffb.BlockResultFactory;
 import com.balancedbytes.games.ffb.Card;
@@ -18,6 +19,7 @@ import com.balancedbytes.games.ffb.FantasyFootballConstants;
 import com.balancedbytes.games.ffb.HeatExhaustion;
 import com.balancedbytes.games.ffb.IRollModifier;
 import com.balancedbytes.games.ffb.InjuryModifier;
+import com.balancedbytes.games.ffb.InjuryModifiers;
 import com.balancedbytes.games.ffb.InterceptionModifiers;
 import com.balancedbytes.games.ffb.KickoffResult;
 import com.balancedbytes.games.ffb.KnockoutRecovery;
@@ -2406,7 +2408,7 @@ public class StatusReport {
       int armorModifierTotal = 0;
       boolean usingClaws = false;
       for (ArmorModifier armorModifier : pReport.getArmorModifiers()) {
-        usingClaws |= (armorModifier == ArmorModifier.CLAWS);
+        usingClaws |= (armorModifier == ArmorModifiers.CLAWS);
         if (armorModifier.getModifier() != 0) {
           armorModifierTotal += armorModifier.getModifier();
           if (armorModifier.getModifier() > 0) {
@@ -2465,10 +2467,10 @@ public class StatusReport {
           for (InjuryModifier injuryModifier : pReport.getInjuryModifiers()) {
             injuryModifierTotal += injuryModifier.getModifier();
             if (injuryModifier.getModifier() == 0) {
-              if (injuryModifier == InjuryModifier.THICK_SKULL) {
+              if (injuryModifier == InjuryModifiers.THICK_SKULL) {
                 thickSkullUsed = true;
               }
-              if (injuryModifier == InjuryModifier.STUNTY) {
+              if (injuryModifier == InjuryModifiers.STUNTY) {
                 stuntyUsed = true;
               }
             } else if (injuryModifier.isNigglingInjuryModifier()) {

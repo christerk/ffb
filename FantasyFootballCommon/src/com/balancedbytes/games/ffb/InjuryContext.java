@@ -71,6 +71,10 @@ public class InjuryContext {
 		}
 	}
 
+	public void addArmorModifiers(Set<ArmorModifier> pArmorModifiers) {
+		fArmorModifiers.addAll(pArmorModifiers);
+	}
+
 	public boolean hasArmorModifier(ArmorModifier pArmorModifier) {
 		return fArmorModifiers.contains(pArmorModifier);
 	}
@@ -95,6 +99,10 @@ public class InjuryContext {
 		if (pInjuryModifier != null) {
 			fInjuryModifiers.add(pInjuryModifier);
 		}
+	}
+
+	public void addInjuryModifiers(Set<InjuryModifier> pInjuryModifiers) {
+		fInjuryModifiers.addAll(pInjuryModifiers);
 	}
 
 	public boolean hasInjuryModifier(InjuryModifier pInjuryModifier) {

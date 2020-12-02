@@ -1,5 +1,7 @@
 package com.balancedbytes.games.ffb.skill;
 
+import com.balancedbytes.games.ffb.ArmorModifiers;
+import com.balancedbytes.games.ffb.InjuryModifiers;
 import com.balancedbytes.games.ffb.SkillCategory;
 import com.balancedbytes.games.ffb.model.Skill;
 
@@ -14,6 +16,10 @@ public class DirtyPlayer extends Skill {
 
   public DirtyPlayer() {
     super("Dirty Player", SkillCategory.GENERAL);
+    
+    registerModifier(ArmorModifiers.DIRTY_PLAYER);
+    registerModifier(InjuryModifiers.DIRTY_PLAYER);
+    
   }
 
 }
