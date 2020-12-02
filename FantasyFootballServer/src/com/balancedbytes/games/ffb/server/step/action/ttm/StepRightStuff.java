@@ -6,7 +6,7 @@ import com.balancedbytes.games.ffb.ApothecaryMode;
 import com.balancedbytes.games.ffb.CatchScatterThrowInMode;
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.PlayerState;
-import com.balancedbytes.games.ffb.ReRolledAction;
+import com.balancedbytes.games.ffb.ReRolledActions;
 import com.balancedbytes.games.ffb.RightStuffModifier;
 import com.balancedbytes.games.ffb.RightStuffModifierFactory;
 import com.balancedbytes.games.ffb.json.UtilJson;
@@ -118,7 +118,7 @@ public final class StepRightStuff extends AbstractStepWithReRoll {
     if (fDropThrownPlayer) {
       doRoll = false;
     }
-    if (!fDropThrownPlayer && (ReRolledAction.RIGHT_STUFF == getReRolledAction())) {
+    if (!fDropThrownPlayer && (ReRolledActions.RIGHT_STUFF == getReRolledAction())) {
       if ((getReRollSource() == null) || !UtilServerReRoll.useReRoll(this, getReRollSource(), thrownPlayer)) {
         doRoll = false;
       }
@@ -135,7 +135,7 @@ public final class StepRightStuff extends AbstractStepWithReRoll {
       int roll = getGameState().getDiceRoller().rollSkill();
       boolean successful = DiceInterpreter.getInstance().isSkillRollSuccessful(roll, minimumRoll);
       RightStuffModifier[] rightStuffModifiersArray = modifierFactory.toArray(rightStuffModifiers);
-      boolean reRolled = ((getReRolledAction() == ReRolledAction.RIGHT_STUFF) && (getReRollSource() != null));
+      boolean reRolled = ((getReRolledAction() == ReRolledActions.RIGHT_STUFF) && (getReRollSource() != null));
       getResult().addReport(new ReportSkillRoll(ReportId.RIGHT_STUFF_ROLL, fThrownPlayerId, successful, roll, minimumRoll, reRolled, rightStuffModifiersArray));
       if (successful) {
       	if (fThrownPlayerHasBall) {
@@ -151,9 +151,9 @@ public final class StepRightStuff extends AbstractStepWithReRoll {
   	    publishParameter(new StepParameter(StepParameterKey.THROWN_PLAYER_COORDINATE, null));  // avoid reset in end step
       	getResult().setNextAction(StepAction.NEXT_STEP);
       } else {
-        if (getReRolledAction() != ReRolledAction.RIGHT_STUFF) {
-          setReRolledAction(ReRolledAction.RIGHT_STUFF);
-          doRoll = UtilServerReRoll.askForReRollIfAvailable(getGameState(), thrownPlayer, ReRolledAction.RIGHT_STUFF, minimumRoll, false);
+        if (getReRolledAction() != ReRolledActions.RIGHT_STUFF) {
+          setReRolledAction(ReRolledActions.RIGHT_STUFF);
+          doRoll = UtilServerReRoll.askForReRollIfAvailable(getGameState(), thrownPlayer, ReRolledActions.RIGHT_STUFF, minimumRoll, false);
         } else {
           doRoll = false;
         }

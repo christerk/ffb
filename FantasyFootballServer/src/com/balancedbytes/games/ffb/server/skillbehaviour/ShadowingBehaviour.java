@@ -1,7 +1,7 @@
 package com.balancedbytes.games.ffb.server.skillbehaviour;
 
 import com.balancedbytes.games.ffb.PlayerChoiceMode;
-import com.balancedbytes.games.ffb.ReRolledAction;
+import com.balancedbytes.games.ffb.ReRolledActions;
 import com.balancedbytes.games.ffb.TurnMode;
 import com.balancedbytes.games.ffb.dialog.DialogPlayerChoiceParameter;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
@@ -83,7 +83,7 @@ public class ShadowingBehaviour extends SkillBehaviour<Shadowing> {
 			      doNextStep = true;
 			      if (state.usingShadowing && (game.getDefender() != null)) {
 			        boolean rollShadowing = true;
-			        if (ReRolledAction.SHADOWING_ESCAPE == step.getReRolledAction()) {
+			        if (ReRolledActions.SHADOWING_ESCAPE == step.getReRolledAction()) {
 			          if ((step.getReRollSource() == null) || !UtilServerReRoll.useReRoll(step, step.getReRollSource(), actingPlayer.getPlayer())) {
 			            rollShadowing = false;
 			          }
@@ -92,13 +92,13 @@ public class ShadowingBehaviour extends SkillBehaviour<Shadowing> {
 			          int[] rollEscape = step.getGameState().getDiceRoller().rollShadowingEscape();
 			          boolean successful = DiceInterpreter.getInstance().isShadowingEscapeSuccessful(rollEscape, UtilCards.getPlayerMovement(game, game.getDefender()), UtilCards.getPlayerMovement(game, actingPlayer.getPlayer()));
 			          int minimumRoll = DiceInterpreter.getInstance().minimumRollShadowingEscape(UtilCards.getPlayerMovement(game, game.getDefender()), UtilCards.getPlayerMovement(game, actingPlayer.getPlayer()));
-			          boolean reRolled = ((step.getReRolledAction() == ReRolledAction.SHADOWING_ESCAPE) && (step.getReRollSource() != null));
+			          boolean reRolled = ((step.getReRolledAction() == ReRolledActions.SHADOWING_ESCAPE) && (step.getReRollSource() != null));
 			          step.getResult().addReport(new ReportTentaclesShadowingRoll(skill, game.getDefenderId(), rollEscape, successful, minimumRoll, reRolled));
 			          if (successful) {
 			          	state.usingShadowing = false;
 			          } else {
-			            if (step.getReRolledAction() != ReRolledAction.SHADOWING_ESCAPE) {
-			              if (UtilServerReRoll.askForReRollIfAvailable(step.getGameState(), actingPlayer.getPlayer(), ReRolledAction.SHADOWING_ESCAPE, minimumRoll, false)) {
+			            if (step.getReRolledAction() != ReRolledActions.SHADOWING_ESCAPE) {
+			              if (UtilServerReRoll.askForReRollIfAvailable(step.getGameState(), actingPlayer.getPlayer(), ReRolledActions.SHADOWING_ESCAPE, minimumRoll, false)) {
 			                doNextStep = false;
 			              }
 			            }

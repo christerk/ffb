@@ -1,6 +1,6 @@
 package com.balancedbytes.games.ffb.server.step.game.end;
 
-import com.balancedbytes.games.ffb.ReRolledAction;
+import com.balancedbytes.games.ffb.ReRolledActions;
 import com.balancedbytes.games.ffb.dialog.DialogWinningsReRollParameter;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.GameResult;
@@ -51,7 +51,7 @@ public final class StepWinnings extends AbstractStepWithReRoll {
   private void executeStep() {
     UtilServerDialog.hideDialog(getGameState());
     Game game = getGameState().getGame();
-    if ((getReRolledAction() == null) || ((getReRolledAction() == ReRolledAction.WINNINGS) && (getReRollSource() != null))) {
+    if ((getReRolledAction() == null) || ((getReRolledAction() == ReRolledActions.WINNINGS) && (getReRollSource() != null))) {
       ReportWinningsRoll reportWinnings = rollWinnings();
       if (game.isAdminMode()) {
         // roll winnings, reroll on a 1 or 2 -->

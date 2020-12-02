@@ -7,7 +7,7 @@ import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.PickupModifier;
 import com.balancedbytes.games.ffb.PickupModifierFactory;
 import com.balancedbytes.games.ffb.ReRollSource;
-import com.balancedbytes.games.ffb.ReRolledAction;
+import com.balancedbytes.games.ffb.ReRolledActions;
 import com.balancedbytes.games.ffb.SoundId;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
@@ -93,7 +93,7 @@ public class StepPickUp extends AbstractStepWithReRoll {
     ActingPlayer actingPlayer = game.getActingPlayer();
     boolean doPickUp = true;
     if (isPickUp()) {
-      if (ReRolledAction.PICK_UP == getReRolledAction()) {
+      if (ReRolledActions.PICK_UP == getReRolledAction()) {
         if ((getReRollSource() == null) || !UtilServerReRoll.useReRoll(this, getReRollSource(), actingPlayer.getPlayer())) {
         	doPickUp = false;
           publishParameter(new StepParameter(StepParameterKey.END_TURN, true));
@@ -142,20 +142,20 @@ public class StepPickUp extends AbstractStepWithReRoll {
       int roll = getGameState().getDiceRoller().rollSkill();
       boolean successful = DiceInterpreter.getInstance().isSkillRollSuccessful(roll, minimumRoll);
       PickupModifier[] pickupModifierArray = modifierFactory.toArray(pickupModifiers);
-      boolean reRolled = ((getReRolledAction() == ReRolledAction.PICK_UP) && (getReRollSource() != null));
+      boolean reRolled = ((getReRolledAction() == ReRolledActions.PICK_UP) && (getReRollSource() != null));
       getResult().addReport(new ReportSkillRoll(ReportId.PICK_UP_ROLL, actingPlayer.getPlayerId(), successful, roll, minimumRoll, reRolled, pickupModifierArray));
       if (successful) {
         return ActionStatus.SUCCESS;
       } else {
-        if (getReRolledAction() != ReRolledAction.PICK_UP) {
-          setReRolledAction(ReRolledAction.PICK_UP);
-          ReRollSource unusedPickupReroll = UtilCards.getUnusedRerollSource(actingPlayer, ReRolledAction.PICK_UP);
+        if (getReRolledAction() != ReRolledActions.PICK_UP) {
+          setReRolledAction(ReRolledActions.PICK_UP);
+          ReRollSource unusedPickupReroll = UtilCards.getUnusedRerollSource(actingPlayer, ReRolledActions.PICK_UP);
           if (unusedPickupReroll != null) {
             setReRollSource(unusedPickupReroll);
             UtilServerReRoll.useReRoll(this, getReRollSource(), actingPlayer.getPlayer());
             return pickUp();
           } else {
-            if (UtilServerReRoll.askForReRollIfAvailable(getGameState(), actingPlayer.getPlayer(), ReRolledAction.PICK_UP, minimumRoll, false)) {
+            if (UtilServerReRoll.askForReRollIfAvailable(getGameState(), actingPlayer.getPlayer(), ReRolledActions.PICK_UP, minimumRoll, false)) {
               return ActionStatus.WAITING_FOR_RE_ROLL;
             } else {
               return ActionStatus.FAILURE;

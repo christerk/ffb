@@ -10,7 +10,7 @@ import com.balancedbytes.games.ffb.PassingDistance;
 import com.balancedbytes.games.ffb.PlayerAction;
 import com.balancedbytes.games.ffb.PlayerState;
 import com.balancedbytes.games.ffb.ReRollSource;
-import com.balancedbytes.games.ffb.ReRolledAction;
+import com.balancedbytes.games.ffb.ReRolledActions;
 import com.balancedbytes.games.ffb.dialog.DialogSkillUseParameter;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.Animation;
@@ -162,7 +162,7 @@ public class StepPass extends AbstractStepWithReRoll {
     } else {
       game.getFieldModel().setBallMoving(true);
     }
-    if (ReRolledAction.PASS == getReRolledAction()) {
+    if (ReRolledActions.PASS == getReRolledAction()) {
       if ((getReRollSource() == null) || !UtilServerReRoll.useReRoll(this, getReRollSource(), game.getThrower())) {
         handleFailedPass();
         return;
@@ -192,7 +192,7 @@ public class StepPass extends AbstractStepWithReRoll {
       }
     }
     PassModifier[] passModifierArray = new PassModifierFactory().toArray(passModifiers);
-    boolean reRolled = ((getReRolledAction() == ReRolledAction.PASS) && (getReRollSource() != null));
+    boolean reRolled = ((getReRolledAction() == ReRolledActions.PASS) && (getReRollSource() != null));
     getResult().addReport(new ReportPassRoll(game.getThrowerId(), state.successful, roll, minimumRoll, reRolled, passModifierArray, passingDistance, state.passFumble,
     		state.holdingSafeThrow, (PlayerAction.THROW_BOMB == game.getThrowerAction())));
     if (state.successful) {
@@ -229,10 +229,10 @@ public class StepPass extends AbstractStepWithReRoll {
       }
     } else {
       boolean doNextStep = true;
-      if (getReRolledAction() != ReRolledAction.PASS) {
-        setReRolledAction(ReRolledAction.PASS);
+      if (getReRolledAction() != ReRolledActions.PASS) {
+        setReRolledAction(ReRolledActions.PASS);
         
-        ReRollSource PassingReroll = UtilCards.getRerollSource(game.getThrower(), ReRolledAction.PASS);
+        ReRollSource PassingReroll = UtilCards.getRerollSource(game.getThrower(), ReRolledActions.PASS);
         if (PassingReroll != null && !state.passSkillUsed) {
           doNextStep = false;
           state.passSkillUsed = true;
@@ -243,7 +243,7 @@ public class StepPass extends AbstractStepWithReRoll {
               actingTeam.hasPlayer(game.getThrower())
           );
         } else {
-          if (UtilServerReRoll.askForReRollIfAvailable(getGameState(), game.getThrower(), ReRolledAction.PASS, minimumRoll, state.passFumble)) {
+          if (UtilServerReRoll.askForReRollIfAvailable(getGameState(), game.getThrower(), ReRolledActions.PASS, minimumRoll, state.passFumble)) {
             doNextStep = false;
           }
         }

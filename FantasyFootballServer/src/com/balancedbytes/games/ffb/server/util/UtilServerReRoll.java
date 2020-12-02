@@ -3,6 +3,7 @@ package com.balancedbytes.games.ffb.server.util;
 import com.balancedbytes.games.ffb.LeaderState;
 import com.balancedbytes.games.ffb.PlayerState;
 import com.balancedbytes.games.ffb.ReRollSource;
+import com.balancedbytes.games.ffb.ReRollSources;
 import com.balancedbytes.games.ffb.ReRolledAction;
 import com.balancedbytes.games.ffb.TurnMode;
 import com.balancedbytes.games.ffb.dialog.DialogReRollParameter;
@@ -35,7 +36,7 @@ public class UtilServerReRoll {
     Game game = gameState.getGame();
     StepResult stepResult = pStep.getResult();
     if (pReRollSource != null) {
-      if (ReRollSource.TEAM_RE_ROLL == pReRollSource) {
+      if (ReRollSources.TEAM_RE_ROLL == pReRollSource) {
         TurnData turnData = game.getTurnData();
         turnData.setReRollUsed(true);
         turnData.setReRolls(turnData.getReRolls() - 1);
@@ -43,27 +44,27 @@ public class UtilServerReRoll {
         if (UtilCards.hasSkillWithProperty(pPlayer, NamedProperties.hasToRollToUseTeamReroll)) {
           int roll = gameState.getDiceRoller().rollSkill();
           successful = DiceInterpreter.getInstance().isLonerSuccessful(roll);
-          stepResult.addReport(new ReportReRoll(pPlayer.getId(), ReRollSource.LONER, successful, roll));
+          stepResult.addReport(new ReportReRoll(pPlayer.getId(), ReRollSources.LONER, successful, roll));
           // TODO: add a message for Leader reroll being used with Loner?
         } else {
           successful = true;
           if (LeaderState.AVAILABLE.equals(turnData.getLeaderState())) {
-            stepResult.addReport(new ReportReRoll(pPlayer.getId(), ReRollSource.LEADER, successful, 0));
+            stepResult.addReport(new ReportReRoll(pPlayer.getId(), ReRollSources.LEADER, successful, 0));
             turnData.setLeaderState(LeaderState.USED);
           } else {
-            stepResult.addReport(new ReportReRoll(pPlayer.getId(), ReRollSource.TEAM_RE_ROLL, successful, 0));
+            stepResult.addReport(new ReportReRoll(pPlayer.getId(), ReRollSources.TEAM_RE_ROLL, successful, 0));
           }
         }
       }
       if (pReRollSource.getSkill() != null) {
-        if (ReRollSource.PRO == pReRollSource) {
+        if (ReRollSources.PRO == pReRollSource) {
           PlayerState playerState = game.getFieldModel().getPlayerState(pPlayer);
           successful = (UtilCards.hasSkillWithProperty(pPlayer, NamedProperties.canRerollOncePerTurn) && !playerState.hasUsedPro());
           if (successful) {
             game.getFieldModel().setPlayerState(pPlayer, playerState.changeUsedPro(true));
             int roll = gameState.getDiceRoller().rollSkill();
             successful = DiceInterpreter.getInstance().isProSuccessful(roll);
-            stepResult.addReport(new ReportReRoll(pPlayer.getId(), ReRollSource.PRO, successful, roll));
+            stepResult.addReport(new ReportReRoll(pPlayer.getId(), ReRollSources.PRO, successful, roll));
           }
         } else {
           successful = UtilCards.hasSkill(game, pPlayer, pReRollSource.getSkill());

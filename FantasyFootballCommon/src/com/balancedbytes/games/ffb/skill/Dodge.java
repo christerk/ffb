@@ -1,7 +1,7 @@
 package com.balancedbytes.games.ffb.skill;
 
-import com.balancedbytes.games.ffb.ReRollSource;
-import com.balancedbytes.games.ffb.ReRolledAction;
+import com.balancedbytes.games.ffb.ReRollSources;
+import com.balancedbytes.games.ffb.ReRolledActions;
 import com.balancedbytes.games.ffb.SkillCategory;
 import com.balancedbytes.games.ffb.model.Skill;
 import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
@@ -21,7 +21,7 @@ public class Dodge extends Skill {
     
     registerProperty(NamedProperties.ignoreDefenderStumblesResult);
     
-    registerRerollSource(ReRolledAction.DODGE, ReRollSource.DODGE);
+    registerRerollSource(ReRolledActions.DODGE, ReRollSources.DODGE);
   }
 
 }

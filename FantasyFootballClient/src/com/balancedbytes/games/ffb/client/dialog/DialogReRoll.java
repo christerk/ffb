@@ -15,6 +15,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import com.balancedbytes.games.ffb.ReRollSource;
+import com.balancedbytes.games.ffb.ReRollSources;
 import com.balancedbytes.games.ffb.ReRolledAction;
 import com.balancedbytes.games.ffb.client.FantasyFootballClient;
 import com.balancedbytes.games.ffb.client.IIconProperty;
@@ -131,10 +132,10 @@ public class DialogReRoll extends Dialog implements ActionListener, KeyListener 
   
   public void actionPerformed(ActionEvent pActionEvent) {
     if (pActionEvent.getSource() == fButtonTeamReRoll) {
-      fReRollSource = ReRollSource.TEAM_RE_ROLL;
+      fReRollSource = ReRollSources.TEAM_RE_ROLL;
     }
     if (pActionEvent.getSource() == fButtonProReRoll) {
-      fReRollSource = ReRollSource.PRO;
+      fReRollSource = ReRollSources.PRO;
     }
     if (pActionEvent.getSource() == fButtonNoReRoll) {
       fReRollSource = null;
@@ -164,12 +165,12 @@ public class DialogReRoll extends Dialog implements ActionListener, KeyListener 
     switch (pKeyEvent.getKeyCode()) {
       case KeyEvent.VK_T:
         if (getDialogParameter().isTeamReRollOption()) {
-          fReRollSource = ReRollSource.TEAM_RE_ROLL;
+          fReRollSource = ReRollSources.TEAM_RE_ROLL;
         }
         break;
       case KeyEvent.VK_P:
         if (getDialogParameter().isProReRollOption()) {
-          fReRollSource = ReRollSource.PRO;
+          fReRollSource = ReRollSources.PRO;
         }
         break;
       case KeyEvent.VK_N:

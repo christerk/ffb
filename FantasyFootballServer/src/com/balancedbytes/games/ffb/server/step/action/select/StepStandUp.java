@@ -1,7 +1,7 @@
 package com.balancedbytes.games.ffb.server.step.action.select;
 
 import com.balancedbytes.games.ffb.PlayerState;
-import com.balancedbytes.games.ffb.ReRolledAction;
+import com.balancedbytes.games.ffb.ReRolledActions;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.Game;
@@ -85,12 +85,12 @@ public final class StepStandUp extends AbstractStepWithReRoll {
     game.getTurnData().setTurnStarted(true);
     ActingPlayer actingPlayer = game.getActingPlayer();
     PlayerState playerState = game.getFieldModel().getPlayerState(actingPlayer.getPlayer());
-    if ((actingPlayer.isStandingUp() && !actingPlayer.hasMoved()) || (ReRolledAction.STAND_UP == getReRolledAction())) {
+    if ((actingPlayer.isStandingUp() && !actingPlayer.hasMoved()) || (ReRolledActions.STAND_UP == getReRolledAction())) {
       actingPlayer.setHasMoved(true);
       game.setConcessionPossible(false);
       boolean rollStandUp = (UtilCards.getPlayerMovement(game, actingPlayer.getPlayer()) < IServerConstant.MINIMUM_MOVE_TO_STAND_UP);
       if (rollStandUp) {
-        if (ReRolledAction.STAND_UP == getReRolledAction()) {
+        if (ReRolledActions.STAND_UP == getReRolledAction()) {
           if ((getReRollSource() == null) || !UtilServerReRoll.useReRoll(this, getReRollSource(), actingPlayer.getPlayer())) {
             rollStandUp = false;
           }
@@ -104,7 +104,7 @@ public final class StepStandUp extends AbstractStepWithReRoll {
           }
 
           boolean successful = DiceInterpreter.getInstance().isStandUpSuccessful(roll, modifier);
-          boolean reRolled = ((getReRolledAction() == ReRolledAction.STAND_UP) && (getReRollSource() != null));
+          boolean reRolled = ((getReRolledAction() == ReRolledActions.STAND_UP) && (getReRollSource() != null));
           getResult().addReport(new ReportStandUpRoll(actingPlayer.getPlayerId(), successful, roll, modifier, reRolled));
           if (successful) {
             actingPlayer.setStandingUp(false);
@@ -114,7 +114,7 @@ public final class StepStandUp extends AbstractStepWithReRoll {
             	getResult().setNextAction(StepAction.NEXT_STEP);
             }
           } else {
-            if ((getReRolledAction() == ReRolledAction.STAND_UP) || !UtilServerReRoll.askForReRollIfAvailable(getGameState(), actingPlayer.getPlayer(), ReRolledAction.STAND_UP, Math.max(2, 4 - modifier), false)) {
+            if ((getReRolledAction() == ReRolledActions.STAND_UP) || !UtilServerReRoll.askForReRollIfAvailable(getGameState(), actingPlayer.getPlayer(), ReRolledActions.STAND_UP, Math.max(2, 4 - modifier), false)) {
               rollStandUp = false;
               switch (actingPlayer.getPlayerAction()) {
                 case BLITZ:

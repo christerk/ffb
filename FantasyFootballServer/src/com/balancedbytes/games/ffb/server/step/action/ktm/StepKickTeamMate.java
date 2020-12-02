@@ -3,7 +3,7 @@ package com.balancedbytes.games.ffb.server.step.action.ktm;
 import com.balancedbytes.games.ffb.Direction;
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.PlayerState;
-import com.balancedbytes.games.ffb.ReRolledAction;
+import com.balancedbytes.games.ffb.ReRolledActions;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.Game;
@@ -127,7 +127,7 @@ public final class StepKickTeamMate extends AbstractStepWithReRoll {
     UtilServerDialog.hideDialog(getGameState());
     Player kicker = game.getActingPlayer().getPlayer();
     boolean doRoll = true;
-    if (ReRolledAction.KICK_TEAM_MATE == getReRolledAction()) {
+    if (ReRolledActions.KICK_TEAM_MATE == getReRolledAction()) {
       if ((getReRollSource() == null) || !UtilServerReRoll.useReRoll(this, getReRollSource(), kicker)) {
         FieldCoordinate kickerCoordinate = game.getFieldModel().getPlayerCoordinate(kicker);
         Player kickedPlayer = game.getPlayerById(fKickedPlayerId);
@@ -157,16 +157,16 @@ public final class StepKickTeamMate extends AbstractStepWithReRoll {
       targetCoordinate = targetCoordinate.move(d, fDistance);
       game.setPassCoordinate(targetCoordinate);
       
-      boolean reRolled = ((getReRolledAction() == ReRolledAction.KICK_TEAM_MATE) && (getReRollSource() != null));
+      boolean reRolled = ((getReRolledAction() == ReRolledActions.KICK_TEAM_MATE) && (getReRollSource() != null));
       getResult().addReport(new ReportKickTeamMateRoll(kicker.getId(), kickedPlayer.getId(), successful, fRolls, reRolled, fDistance));
 
       boolean act = false;
       
       boolean allowKtmReroll = UtilGameOption.isOptionEnabled(game, GameOptionId.ALLOW_KTM_REROLL);
       
-      if (allowKtmReroll && getReRolledAction() != ReRolledAction.KICK_TEAM_MATE) {
-        setReRolledAction(ReRolledAction.KICK_TEAM_MATE);
-        if (!UtilServerReRoll.askForReRollIfAvailable(getGameState(), actingPlayer.getPlayer(), ReRolledAction.KICK_TEAM_MATE, 0, false)) {
+      if (allowKtmReroll && getReRolledAction() != ReRolledActions.KICK_TEAM_MATE) {
+        setReRolledAction(ReRolledActions.KICK_TEAM_MATE);
+        if (!UtilServerReRoll.askForReRollIfAvailable(getGameState(), actingPlayer.getPlayer(), ReRolledActions.KICK_TEAM_MATE, 0, false)) {
           act = true;
         }
       } else {

@@ -6,7 +6,7 @@ import com.balancedbytes.games.ffb.GazeModifier;
 import com.balancedbytes.games.ffb.GazeModifierFactory;
 import com.balancedbytes.games.ffb.PlayerAction;
 import com.balancedbytes.games.ffb.PlayerState;
-import com.balancedbytes.games.ffb.ReRolledAction;
+import com.balancedbytes.games.ffb.ReRolledActions;
 import com.balancedbytes.games.ffb.SoundId;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
@@ -99,7 +99,7 @@ public class StepHypnoticGaze extends AbstractStepWithReRoll {
     	return;
     }
     boolean gotoEndLabel = true;
-    if (ReRolledAction.HYPNOTIC_GAZE == getReRolledAction()) {
+    if (ReRolledActions.HYPNOTIC_GAZE == getReRolledAction()) {
       if ((getReRollSource() == null) || !UtilServerReRoll.useReRoll(this, getReRollSource(), actingPlayer.getPlayer())) {
         doGaze = false;
       }
@@ -114,7 +114,7 @@ public class StepHypnoticGaze extends AbstractStepWithReRoll {
       Set<GazeModifier> gazeModifiers = modifierFactory.findGazeModifiers(game);
       int minimumRoll = DiceInterpreter.getInstance().minimumRollHypnoticGaze(actingPlayer.getPlayer(), gazeModifiers);
       boolean successful = DiceInterpreter.getInstance().isSkillRollSuccessful(roll, minimumRoll);
-      boolean reRolled = ((getReRolledAction() == ReRolledAction.HYPNOTIC_GAZE) && (getReRollSource() != null));
+      boolean reRolled = ((getReRolledAction() == ReRolledActions.HYPNOTIC_GAZE) && (getReRollSource() != null));
       if (!reRolled) {
         getResult().setSound(SoundId.HYPNO);
       }
@@ -125,7 +125,7 @@ public class StepHypnoticGaze extends AbstractStepWithReRoll {
           game.getFieldModel().setPlayerState(game.getDefender(), oldVictimState.changeHypnotized(true));
         }
       } else {
-        if ((getReRolledAction() != ReRolledAction.HYPNOTIC_GAZE) && UtilServerReRoll.askForReRollIfAvailable(getGameState(), actingPlayer.getPlayer(), ReRolledAction.HYPNOTIC_GAZE, minimumRoll, false)) {
+        if ((getReRolledAction() != ReRolledActions.HYPNOTIC_GAZE) && UtilServerReRoll.askForReRollIfAvailable(getGameState(), actingPlayer.getPlayer(), ReRolledActions.HYPNOTIC_GAZE, minimumRoll, false)) {
           gotoEndLabel = false;
         }
       }

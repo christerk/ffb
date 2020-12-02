@@ -7,7 +7,7 @@ import com.balancedbytes.games.ffb.DodgeModifierFactory;
 import com.balancedbytes.games.ffb.DodgeModifiers;
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.ReRollSource;
-import com.balancedbytes.games.ffb.ReRolledAction;
+import com.balancedbytes.games.ffb.ReRolledActions;
 import com.balancedbytes.games.ffb.SkillUse;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
@@ -148,17 +148,17 @@ public class StepMoveDodge extends AbstractStepWithReRoll {
       getResult().setNextAction(StepAction.NEXT_STEP);
       return;
     }
-    if (ReRolledAction.DODGE == getReRolledAction()) {
+    if (ReRolledActions.DODGE == getReRolledAction()) {
       if ((getReRollSource() == null) || !UtilServerReRoll.useReRoll(this, getReRollSource(), actingPlayer.getPlayer())) {
         failDodge();
         return;
       }
     }
-    boolean reRolledAction = (getReRolledAction() == ReRolledAction.DODGE) && (getReRollSource() != null);
+    boolean reRolledAction = (getReRolledAction() == ReRolledActions.DODGE) && (getReRollSource() != null);
     boolean doRoll = reRolledAction || (fUsingDivingTackle == null);
     switch (dodge(doRoll)) {
       case SUCCESS:
-        reRolledAction = (getReRolledAction() == ReRolledAction.DODGE) && (getReRollSource() != null);
+        reRolledAction = (getReRolledAction() == ReRolledActions.DODGE) && (getReRollSource() != null);
         publishParameter(new StepParameter(StepParameterKey.RE_ROLL_USED, fReRollUsed || reRolledAction));
         getResult().setNextAction(StepAction.NEXT_STEP);
         break;
@@ -220,7 +220,7 @@ public class StepMoveDodge extends AbstractStepWithReRoll {
     }
 
     DodgeModifier[] dodgeModifierArray = modifierFactory.toArray(dodgeModifiers);
-    boolean reRolled = ((getReRolledAction() == ReRolledAction.DODGE) && (getReRollSource() != null));
+    boolean reRolled = ((getReRolledAction() == ReRolledActions.DODGE) && (getReRollSource() != null));
     getResult().addReport(new ReportSkillRoll(ReportId.DODGE_ROLL, actingPlayer.getPlayerId(), successful, (pDoRoll ? fDodgeRoll : 0), minimumRoll, reRolled,
         dodgeModifierArray));
 
@@ -228,9 +228,9 @@ public class StepMoveDodge extends AbstractStepWithReRoll {
       status = ActionStatus.SUCCESS;
     } else {
       status = ActionStatus.FAILURE;
-      if (!fReRollUsed && (getReRolledAction() != ReRolledAction.DODGE)) {
-        setReRolledAction(ReRolledAction.DODGE);
-        ReRollSource skillRerollSource = UtilCards.getUnusedRerollSource(game.getActingPlayer(), ReRolledAction.DODGE);
+      if (!fReRollUsed && (getReRolledAction() != ReRolledActions.DODGE)) {
+        setReRolledAction(ReRolledActions.DODGE);
+        ReRollSource skillRerollSource = UtilCards.getUnusedRerollSource(game.getActingPlayer(), ReRolledActions.DODGE);
         if (skillRerollSource != null) {
           Team otherTeam = UtilPlayer.findOtherTeam(game, actingPlayer.getPlayer());
           Player[] opponents = UtilPlayer.findAdjacentPlayersWithTacklezones(game, otherTeam, fCoordinateFrom, false);
@@ -246,7 +246,7 @@ public class StepMoveDodge extends AbstractStepWithReRoll {
           UtilServerReRoll.useReRoll(this, getReRollSource(), actingPlayer.getPlayer());
           status = dodge(true);
         } else {
-          if (UtilServerReRoll.askForReRollIfAvailable(getGameState(), actingPlayer.getPlayer(), ReRolledAction.DODGE, minimumRoll, false)) {
+          if (UtilServerReRoll.askForReRollIfAvailable(getGameState(), actingPlayer.getPlayer(), ReRolledActions.DODGE, minimumRoll, false)) {
             status = ActionStatus.WAITING_FOR_RE_ROLL;
           }
         }

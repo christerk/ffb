@@ -1,7 +1,7 @@
 package com.balancedbytes.games.ffb.skill;
 
-import com.balancedbytes.games.ffb.ReRollSource;
-import com.balancedbytes.games.ffb.ReRolledAction;
+import com.balancedbytes.games.ffb.ReRollSources;
+import com.balancedbytes.games.ffb.ReRolledActions;
 import com.balancedbytes.games.ffb.SkillCategory;
 import com.balancedbytes.games.ffb.model.Skill;
 
@@ -15,7 +15,7 @@ public class SureFeet extends Skill {
   public SureFeet() {
     super("Sure Feet", SkillCategory.AGILITY);
     
-    registerRerollSource(ReRolledAction.GO_FOR_IT, ReRollSource.SURE_FEET);
+    registerRerollSource(ReRolledActions.GO_FOR_IT, ReRollSources.SURE_FEET);
   }
 
 }

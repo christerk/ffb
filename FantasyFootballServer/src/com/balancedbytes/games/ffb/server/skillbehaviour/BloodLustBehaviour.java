@@ -1,6 +1,6 @@
 package com.balancedbytes.games.ffb.server.skillbehaviour;
 
-import com.balancedbytes.games.ffb.ReRolledAction;
+import com.balancedbytes.games.ffb.ReRolledActions;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandUseSkill;
@@ -43,7 +43,7 @@ public class BloodLustBehaviour extends SkillBehaviour<BloodLust> {
 				    }
 				    ActingPlayer actingPlayer = game.getActingPlayer();
 					  boolean doRoll = true;
-					  if (ReRolledAction.BLOOD_LUST == step.getReRolledAction()) {
+					  if (ReRolledActions.BLOOD_LUST == step.getReRolledAction()) {
 					    if ((step.getReRollSource() == null) || !UtilServerReRoll.useReRoll(step, step.getReRollSource(), actingPlayer.getPlayer())) {
 					      doRoll = false;
 					      status = ActionStatus.FAILURE;
@@ -59,13 +59,13 @@ public class BloodLustBehaviour extends SkillBehaviour<BloodLust> {
 				      actingPlayer.markSkillUsed(skill);
 				      if (!successful) {
 				        status = ActionStatus.FAILURE;
-				        if ((ReRolledAction.BLOOD_LUST != step.getReRolledAction()) && UtilServerReRoll.askForReRollIfAvailable(step.getGameState(), actingPlayer.getPlayer(), ReRolledAction.BLOOD_LUST, minimumRoll, false)) {
+				        if ((ReRolledActions.BLOOD_LUST != step.getReRolledAction()) && UtilServerReRoll.askForReRollIfAvailable(step.getGameState(), actingPlayer.getPlayer(), ReRolledActions.BLOOD_LUST, minimumRoll, false)) {
 				          status = ActionStatus.WAITING_FOR_RE_ROLL;
 				        } else {
 				          actingPlayer.setSufferingBloodLust(true);
 				        }
 				      }
-				      boolean reRolled = ((ReRolledAction.BLOOD_LUST == step.getReRolledAction()) && (step.getReRollSource() != null));
+				      boolean reRolled = ((ReRolledActions.BLOOD_LUST == step.getReRolledAction()) && (step.getReRollSource() != null));
 				      step.getResult().addReport(new ReportSkillRoll(ReportId.BLOOD_LUST_ROLL, actingPlayer.getPlayerId(), successful, roll, minimumRoll, reRolled));
 				    }
 				    if (status == ActionStatus.SUCCESS) {

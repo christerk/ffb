@@ -1,7 +1,7 @@
 package com.balancedbytes.games.ffb.skill;
 
-import com.balancedbytes.games.ffb.ReRollSource;
-import com.balancedbytes.games.ffb.ReRolledAction;
+import com.balancedbytes.games.ffb.ReRollSources;
+import com.balancedbytes.games.ffb.ReRolledActions;
 import com.balancedbytes.games.ffb.SkillCategory;
 import com.balancedbytes.games.ffb.model.Skill;
 import com.balancedbytes.games.ffb.model.SkillConstants;
@@ -19,7 +19,7 @@ public class SureHands extends Skill {
     
     registerProperty(new CancelSkillProperty(SkillConstants.STRIP_BALL));
 
-    registerRerollSource(ReRolledAction.PICK_UP, ReRollSource.SURE_HANDS);
+    registerRerollSource(ReRolledActions.PICK_UP, ReRollSources.SURE_HANDS);
   }
 
 }

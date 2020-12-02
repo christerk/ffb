@@ -22,6 +22,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import com.balancedbytes.games.ffb.ReRollSource;
+import com.balancedbytes.games.ffb.ReRollSources;
 import com.balancedbytes.games.ffb.client.FantasyFootballClient;
 import com.balancedbytes.games.ffb.client.IconCache;
 import com.balancedbytes.games.ffb.dialog.DialogBlockRollParameter;
@@ -193,10 +194,10 @@ public class DialogBlockRoll extends Dialog implements ActionListener, KeyListen
     Game game = getClient().getGame();
     boolean homeChoice = ((getDialogParameter().getNrOfDice() > 0) || !game.isHomePlaying());
     if (pActionEvent.getSource() == fButtonTeamReRoll) {
-      fReRollSource = ReRollSource.TEAM_RE_ROLL;
+      fReRollSource = ReRollSources.TEAM_RE_ROLL;
     }
     if (pActionEvent.getSource() == fButtonProReRoll) {
-      fReRollSource = ReRollSource.PRO;
+      fReRollSource = ReRollSources.PRO;
     }
     if (homeChoice && (fBlockDice.length >= 1) && (pActionEvent.getSource() == fBlockDice[0])) {
       fDiceIndex = 0;
@@ -258,13 +259,13 @@ public class DialogBlockRoll extends Dialog implements ActionListener, KeyListen
       case KeyEvent.VK_T:
         if (getDialogParameter().hasTeamReRollOption()) {
           keyHandled = true;
-          fReRollSource = ReRollSource.TEAM_RE_ROLL;
+          fReRollSource = ReRollSources.TEAM_RE_ROLL;
         }
         break;
       case KeyEvent.VK_P:
         if (getDialogParameter().hasProReRollOption()) {
           keyHandled = true;
-          fReRollSource = ReRollSource.PRO;
+          fReRollSource = ReRollSources.PRO;
         }
         break;
       case KeyEvent.VK_N:
