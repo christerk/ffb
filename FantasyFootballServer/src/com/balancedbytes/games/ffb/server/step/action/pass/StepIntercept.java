@@ -6,7 +6,7 @@ import com.balancedbytes.games.ffb.InterceptionModifier;
 import com.balancedbytes.games.ffb.InterceptionModifierFactory;
 import com.balancedbytes.games.ffb.PlayerAction;
 import com.balancedbytes.games.ffb.ReRollSource;
-import com.balancedbytes.games.ffb.ReRolledAction;
+import com.balancedbytes.games.ffb.ReRolledActions;
 import com.balancedbytes.games.ffb.TurnMode;
 import com.balancedbytes.games.ffb.dialog.DialogInterceptionParameter;
 import com.balancedbytes.games.ffb.json.UtilJson;
@@ -119,7 +119,7 @@ public final class StepIntercept extends AbstractStepWithReRoll {
     boolean doIntercept = (possibleInterceptors.length > 0); 
     if (doIntercept) {
       Player interceptor = game.getPlayerById(fInterceptorId);
-      if (ReRolledAction.INTERCEPTION == getReRolledAction()) {
+      if (ReRolledActions.INTERCEPTION == getReRolledAction()) {
         if ((getReRollSource() == null) || !UtilServerReRoll.useReRoll(this, getReRollSource(), interceptor)) {
           doIntercept = false;
         }
@@ -170,21 +170,21 @@ public final class StepIntercept extends AbstractStepWithReRoll {
     int roll = getGameState().getDiceRoller().rollSkill();
     boolean successful = DiceInterpreter.getInstance().isSkillRollSuccessful(roll, minimumRoll);
     InterceptionModifier[] interceptionModifierArray = modifierFactory.toArray(interceptionModifiers);
-    boolean reRolled = ((getReRolledAction() == ReRolledAction.CATCH) && (getReRollSource() != null));
+    boolean reRolled = ((getReRolledAction() == ReRolledActions.CATCH) && (getReRollSource() != null));
     getResult().addReport(new ReportInterceptionRoll(pInterceptor.getId(), successful, roll, minimumRoll, reRolled, interceptionModifierArray, (PlayerAction.THROW_BOMB == game.getThrowerAction())));
     if (successful) {
       status = ActionStatus.SUCCESS;
     } else {
       status = ActionStatus.FAILURE;
-      if (getReRolledAction() != ReRolledAction.CATCH) {
-        setReRolledAction(ReRolledAction.CATCH);
-        ReRollSource catchRerollSource = UtilCards.getRerollSource(pInterceptor, ReRolledAction.CATCH);
+      if (getReRolledAction() != ReRolledActions.CATCH) {
+        setReRolledAction(ReRolledActions.CATCH);
+        ReRollSource catchRerollSource = UtilCards.getRerollSource(pInterceptor, ReRolledActions.CATCH);
         if (catchRerollSource != null) {
           setReRollSource(catchRerollSource);
           UtilServerReRoll.useReRoll(this, getReRollSource(), pInterceptor);
           status = intercept(pInterceptor);
         } else {
-          if (UtilServerReRoll.askForReRollIfAvailable(getGameState(), pInterceptor, ReRolledAction.INTERCEPTION, minimumRoll, false)) {
+          if (UtilServerReRoll.askForReRollIfAvailable(getGameState(), pInterceptor, ReRolledActions.INTERCEPTION, minimumRoll, false)) {
             status = ActionStatus.WAITING_FOR_RE_ROLL;
           }
         }

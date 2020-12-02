@@ -7,7 +7,7 @@ import com.balancedbytes.games.ffb.PassModifier;
 import com.balancedbytes.games.ffb.PassModifierFactory;
 import com.balancedbytes.games.ffb.PassingDistance;
 import com.balancedbytes.games.ffb.ReRollSource;
-import com.balancedbytes.games.ffb.ReRolledAction;
+import com.balancedbytes.games.ffb.ReRolledActions;
 import com.balancedbytes.games.ffb.dialog.DialogSkillUseParameter;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.Game;
@@ -51,7 +51,7 @@ public class ThrowTeamMateBehaviour extends SkillBehaviour<ThrowTeamMate> {
 				    UtilServerDialog.hideDialog(step.getGameState());
 				    Player thrower = game.getActingPlayer().getPlayer();
 				    boolean doRoll = true;
-				    if (ReRolledAction.THROW_TEAM_MATE == step.getReRolledAction()) {
+				    if (ReRolledActions.THROW_TEAM_MATE == step.getReRolledAction()) {
 				      if ((step.getReRollSource() == null) || !UtilServerReRoll.useReRoll(step, step.getReRollSource(), thrower)) {
 				    	  step.getResult().setNextAction(StepAction.GOTO_LABEL, state.goToLabelOnFailure);
 				        doRoll = false;
@@ -66,7 +66,7 @@ public class ThrowTeamMateBehaviour extends SkillBehaviour<ThrowTeamMate> {
 				      int roll = step.getGameState().getDiceRoller().rollSkill();
 				      boolean successful = !DiceInterpreter.getInstance().isPassFumble(roll, actingPlayer.getPlayer(), passingDistance, passModifiers);
 				      PassModifier[] passModifierArray = passModifierFactory.toArray(passModifiers);
-				      boolean reRolled = ((step.getReRolledAction() == ReRolledAction.THROW_TEAM_MATE) && (step.getReRollSource() != null));
+				      boolean reRolled = ((step.getReRolledAction() == ReRolledActions.THROW_TEAM_MATE) && (step.getReRollSource() != null));
 				      step.getResult().addReport(new ReportThrowTeamMateRoll(thrower.getId(), successful, roll, minimumRoll, reRolled, passModifierArray, passingDistance, state.thrownPlayerId));
 				      if (successful) {
 				        Player thrownPlayer = game.getPlayerById(state.thrownPlayerId);
@@ -74,14 +74,14 @@ public class ThrowTeamMateBehaviour extends SkillBehaviour<ThrowTeamMate> {
 				      	SequenceGenerator.getInstance().pushScatterPlayerSequence(step.getGameState(), state.thrownPlayerId, state.thrownPlayerState, state.thrownPlayerHasBall, throwerCoordinate, scattersSingleDirection, true);
 				      	step.getResult().setNextAction(StepAction.NEXT_STEP);
 				      } else {
-				        if (step.getReRolledAction() != ReRolledAction.THROW_TEAM_MATE) {
-				        	step.setReRolledAction(ReRolledAction.THROW_TEAM_MATE);
+				        if (step.getReRolledAction() != ReRolledActions.THROW_TEAM_MATE) {
+				        	step.setReRolledAction(ReRolledActions.THROW_TEAM_MATE);
 				        
-				          ReRollSource unusedPassingReroll = UtilCards.getUnusedRerollSource(actingPlayer, ReRolledAction.PASS);
+				          ReRollSource unusedPassingReroll = UtilCards.getUnusedRerollSource(actingPlayer, ReRolledActions.PASS);
 				          if (unusedPassingReroll != null) {
 				            UtilServerDialog.showDialog(step.getGameState(), new DialogSkillUseParameter(thrower.getId(), unusedPassingReroll.getSkill(), minimumRoll), false);
 				          } else {
-				            if (!UtilServerReRoll.askForReRollIfAvailable(step.getGameState(), actingPlayer.getPlayer(), ReRolledAction.THROW_TEAM_MATE, minimumRoll, false)) {
+				            if (!UtilServerReRoll.askForReRollIfAvailable(step.getGameState(), actingPlayer.getPlayer(), ReRolledActions.THROW_TEAM_MATE, minimumRoll, false)) {
 				            	step.getResult().setNextAction(StepAction.GOTO_LABEL, state.goToLabelOnFailure);
 				            }
 				          }

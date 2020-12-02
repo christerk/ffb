@@ -6,7 +6,7 @@ import com.balancedbytes.games.ffb.GoForItModifier;
 import com.balancedbytes.games.ffb.GoForItModifierFactory;
 import com.balancedbytes.games.ffb.PlayerAction;
 import com.balancedbytes.games.ffb.ReRollSource;
-import com.balancedbytes.games.ffb.ReRolledAction;
+import com.balancedbytes.games.ffb.ReRolledActions;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.Game;
@@ -107,7 +107,7 @@ public class StepGoForIt extends AbstractStepWithReRoll {
 	      actingPlayer.setGoingForIt(UtilPlayer.isNextMoveGoingForIt(game));
 	    }
 	    if (actingPlayer.isGoingForIt() && (actingPlayer.getCurrentMove() > UtilCards.getPlayerMovement(game, actingPlayer.getPlayer()))) {
-	      if (ReRolledAction.GO_FOR_IT == getReRolledAction()) {
+	      if (ReRolledActions.GO_FOR_IT == getReRolledAction()) {
 	        if ((getReRollSource() == null) || !UtilServerReRoll.useReRoll(this, getReRollSource(), actingPlayer.getPlayer())) {
 	          failGfi();
 	          return;
@@ -155,22 +155,22 @@ public class StepGoForIt extends AbstractStepWithReRoll {
     int roll = getGameState().getDiceRoller().rollGoingForIt();
     boolean successful = DiceInterpreter.getInstance().isSkillRollSuccessful(roll, minimumRoll);
     GoForItModifier[] goForItModifierArray = modifierFactory.toArray(goForItModifiers);
-    boolean reRolled = ((getReRolledAction() == ReRolledAction.GO_FOR_IT) && (getReRollSource() != null));
+    boolean reRolled = ((getReRolledAction() == ReRolledActions.GO_FOR_IT) && (getReRollSource() != null));
     getResult().addReport(
         new ReportSkillRoll(ReportId.GO_FOR_IT_ROLL, actingPlayer.getPlayerId(), successful, roll, minimumRoll, reRolled, goForItModifierArray));
     if (successful) {
       return ActionStatus.SUCCESS;
     } else {
-      if (getReRolledAction() != ReRolledAction.GO_FOR_IT) {
-        setReRolledAction(ReRolledAction.GO_FOR_IT);
-        ReRollSource gfiRerollSource = UtilCards.getUnusedRerollSource(actingPlayer, ReRolledAction.GO_FOR_IT);
+      if (getReRolledAction() != ReRolledActions.GO_FOR_IT) {
+        setReRolledAction(ReRolledActions.GO_FOR_IT);
+        ReRollSource gfiRerollSource = UtilCards.getUnusedRerollSource(actingPlayer, ReRolledActions.GO_FOR_IT);
         
         if (gfiRerollSource != null) {
           setReRollSource(gfiRerollSource);
           UtilServerReRoll.useReRoll(this, getReRollSource(), actingPlayer.getPlayer());
           return goForIt();
         } else {
-          if (UtilServerReRoll.askForReRollIfAvailable(getGameState(), actingPlayer.getPlayer(), ReRolledAction.GO_FOR_IT, minimumRoll, false)) {
+          if (UtilServerReRoll.askForReRollIfAvailable(getGameState(), actingPlayer.getPlayer(), ReRolledActions.GO_FOR_IT, minimumRoll, false)) {
             return ActionStatus.WAITING_FOR_RE_ROLL;
           } else {
             return ActionStatus.FAILURE;

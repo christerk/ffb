@@ -7,12 +7,7 @@ package com.balancedbytes.games.ffb;
 public class ReRollSourceFactory implements INamedObjectFactory {
   
   public ReRollSource forName(String pName) {
-    for (ReRollSource source : ReRollSource.values()) {
-      if (source.getName().equalsIgnoreCase(pName)) {
-        return source;
-      }
-    }
-    return null;
+	 return ReRollSources.values().get(pName.toLowerCase());
   }
 
 }

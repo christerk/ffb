@@ -3,7 +3,7 @@ package com.balancedbytes.games.ffb.server.step.action.block;
 import com.balancedbytes.games.ffb.BlockResult;
 import com.balancedbytes.games.ffb.BlockResultFactory;
 import com.balancedbytes.games.ffb.PlayerAction;
-import com.balancedbytes.games.ffb.ReRolledAction;
+import com.balancedbytes.games.ffb.ReRolledActions;
 import com.balancedbytes.games.ffb.SoundId;
 import com.balancedbytes.games.ffb.dialog.DialogBlockRollParameter;
 import com.balancedbytes.games.ffb.json.UtilJson;
@@ -86,7 +86,7 @@ public class StepBlockRoll extends AbstractStepWithReRoll {
     ActingPlayer actingPlayer = game.getActingPlayer();
     if (fBlockResult == null) {
       boolean doRoll = true;
-      if (ReRolledAction.BLOCK == getReRolledAction()) {
+      if (ReRolledActions.BLOCK == getReRolledAction()) {
         if ((getReRollSource() == null) || !UtilServerReRoll.useReRoll(this, getReRollSource(), actingPlayer.getPlayer())) {
           doRoll = false;
           showBlockRollDialog(doRoll);

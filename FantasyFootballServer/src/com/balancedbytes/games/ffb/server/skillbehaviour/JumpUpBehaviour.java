@@ -2,7 +2,7 @@ package com.balancedbytes.games.ffb.server.skillbehaviour;
 
 import com.balancedbytes.games.ffb.PlayerAction;
 import com.balancedbytes.games.ffb.PlayerState;
-import com.balancedbytes.games.ffb.ReRolledAction;
+import com.balancedbytes.games.ffb.ReRolledActions;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandUseSkill;
@@ -38,12 +38,12 @@ public class JumpUpBehaviour extends SkillBehaviour<JumpUp> {
 				Game game = step.getGameState().getGame();
 				ActingPlayer actingPlayer = game.getActingPlayer();
 				PlayerState playerState = game.getFieldModel().getPlayerState(actingPlayer.getPlayer());
-				if ((actingPlayer.isStandingUp() && !actingPlayer.hasMoved() && UtilCards.hasUnusedSkill(game, actingPlayer, skill)) || (ReRolledAction.JUMP_UP == step.getReRolledAction())) {
+				if ((actingPlayer.isStandingUp() && !actingPlayer.hasMoved() && UtilCards.hasUnusedSkill(game, actingPlayer, skill)) || (ReRolledActions.JUMP_UP == step.getReRolledAction())) {
 					actingPlayer.setHasMoved(true);
 					game.setConcessionPossible(false);
 					actingPlayer.markSkillUsed(skill);
 					if ((PlayerAction.BLOCK == actingPlayer.getPlayerAction()) || (PlayerAction.MULTIPLE_BLOCK == actingPlayer.getPlayerAction())) {
-						if (ReRolledAction.JUMP_UP == step.getReRolledAction()) {
+						if (ReRolledActions.JUMP_UP == step.getReRolledAction()) {
 							if ((step.getReRollSource() == null) || !UtilServerReRoll.useReRoll(step, step.getReRollSource(), actingPlayer.getPlayer())) {
 								game.getFieldModel().setPlayerState(actingPlayer.getPlayer(), playerState.changeBase(PlayerState.PRONE).changeActive(false));
 								step.publishParameter(new StepParameter(StepParameterKey.END_PLAYER_ACTION, true));
@@ -54,14 +54,14 @@ public class JumpUpBehaviour extends SkillBehaviour<JumpUp> {
 						int minimumRoll = DiceInterpreter.getInstance().minimumRollJumpUp(actingPlayer.getPlayer());
 						int roll = step.getGameState().getDiceRoller().rollSkill();
 						boolean successful = DiceInterpreter.getInstance().isSkillRollSuccessful(roll, minimumRoll);
-						boolean reRolled = ((step.getReRolledAction() == ReRolledAction.JUMP_UP) && (step.getReRollSource() != null));
+						boolean reRolled = ((step.getReRolledAction() == ReRolledActions.JUMP_UP) && (step.getReRollSource() != null));
 						step.getResult().addReport(new ReportSkillRoll(ReportId.JUMP_UP_ROLL, actingPlayer.getPlayerId(), successful, roll, minimumRoll, reRolled));
 						if (successful) {
 							actingPlayer.setStandingUp(false);
 							step.getResult().setNextAction(StepAction.NEXT_STEP);
 							return false;
 						} else {
-							if ((step.getReRolledAction() == ReRolledAction.JUMP_UP) || !UtilServerReRoll.askForReRollIfAvailable(step.getGameState(), actingPlayer.getPlayer(), ReRolledAction.JUMP_UP, minimumRoll, false)) {
+							if ((step.getReRolledAction() == ReRolledActions.JUMP_UP) || !UtilServerReRoll.askForReRollIfAvailable(step.getGameState(), actingPlayer.getPlayer(), ReRolledActions.JUMP_UP, minimumRoll, false)) {
 								game.getFieldModel().setPlayerState(actingPlayer.getPlayer(), playerState.changeBase(PlayerState.PRONE).changeActive(false));
 								step.publishParameter(new StepParameter(StepParameterKey.END_PLAYER_ACTION, true));
 								step.getResult().setNextAction(StepAction.GOTO_LABEL, state.goToLabelOnFailure);

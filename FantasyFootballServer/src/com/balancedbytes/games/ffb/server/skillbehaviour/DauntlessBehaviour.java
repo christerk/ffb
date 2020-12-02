@@ -1,6 +1,6 @@
 package com.balancedbytes.games.ffb.server.skillbehaviour;
 
-import com.balancedbytes.games.ffb.ReRolledAction;
+import com.balancedbytes.games.ffb.ReRolledActions;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
@@ -39,7 +39,7 @@ public class DauntlessBehaviour extends SkillBehaviour<Dauntless> {
 
 				if (UtilCards.hasSkill(game, actingPlayer, skill) && lessStrengthThanDefender && ((state.usingStab == null) || !state.usingStab) && !usesSpecialBlockingRules) {
 					boolean doDauntless = true;
-					if (ReRolledAction.DAUNTLESS == step.getReRolledAction()) {
+					if (ReRolledActions.DAUNTLESS == step.getReRolledAction()) {
 						if ((step.getReRollSource() == null) || !UtilServerReRoll.useReRoll(step, step.getReRollSource(), actingPlayer.getPlayer())) {
 							doDauntless = false;
 						}
@@ -48,13 +48,13 @@ public class DauntlessBehaviour extends SkillBehaviour<Dauntless> {
 						int dauntlessRoll = step.getGameState().getDiceRoller().rollDauntless();
 						int minimumRoll = DiceInterpreter.getInstance().minimumRollDauntless(actingPlayer.getStrength(), UtilCards.getPlayerStrength(game, game.getDefender()));
 						boolean successful = (dauntlessRoll >= minimumRoll);
-						boolean reRolled = ((step.getReRolledAction() == ReRolledAction.DAUNTLESS) && (step.getReRollSource() != null));
+						boolean reRolled = ((step.getReRolledAction() == ReRolledActions.DAUNTLESS) && (step.getReRollSource() != null));
 						step.getResult().addReport(new ReportDauntlessRoll(actingPlayer.getPlayerId(), successful, dauntlessRoll, minimumRoll, reRolled, UtilCards.getPlayerStrength(game, game.getDefender())));
 						if (successful) {
 							actingPlayer.setStrength(UtilCards.getPlayerStrength(game, game.getDefender()));
 							actingPlayer.markSkillUsed(skill);
 						} else {
-							if (UtilServerReRoll.askForReRollIfAvailable(step.getGameState(), actingPlayer.getPlayer(), ReRolledAction.DAUNTLESS, minimumRoll, false)) {
+							if (UtilServerReRoll.askForReRollIfAvailable(step.getGameState(), actingPlayer.getPlayer(), ReRolledActions.DAUNTLESS, minimumRoll, false)) {
 								doNextStep = false;
 							}
 						}

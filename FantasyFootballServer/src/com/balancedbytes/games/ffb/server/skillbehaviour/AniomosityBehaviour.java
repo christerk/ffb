@@ -3,7 +3,7 @@ package com.balancedbytes.games.ffb.server.skillbehaviour;
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.PlayerAction;
 import com.balancedbytes.games.ffb.PlayerState;
-import com.balancedbytes.games.ffb.ReRolledAction;
+import com.balancedbytes.games.ffb.ReRolledActions;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
@@ -70,7 +70,7 @@ public class AniomosityBehaviour extends SkillBehaviour<Animosity> {
             step.getResult().setNextAction(StepAction.NEXT_STEP);
           }
         } else {
-          if (ReRolledAction.ANIMOSITY == step.getReRolledAction()) {
+          if (ReRolledActions.ANIMOSITY == step.getReRolledAction()) {
             if ((step.getReRollSource() == null) || !UtilServerReRoll.useReRoll(step, step.getReRollSource(), thrower)) {
               actingPlayer.setSufferingAnimosity(true);
             } else {
@@ -90,12 +90,12 @@ public class AniomosityBehaviour extends SkillBehaviour<Animosity> {
               actingPlayer.setSufferingAnimosity(false);
               step.getResult().setNextAction(StepAction.NEXT_STEP);
             } else {
-              if ((ReRolledAction.ANIMOSITY == step.getReRolledAction())
-                  || !UtilServerReRoll.askForReRollIfAvailable(step.getGameState(), actingPlayer.getPlayer(), ReRolledAction.ANIMOSITY, minimumRoll, false)) {
+              if ((ReRolledActions.ANIMOSITY == step.getReRolledAction())
+                  || !UtilServerReRoll.askForReRollIfAvailable(step.getGameState(), actingPlayer.getPlayer(), ReRolledActions.ANIMOSITY, minimumRoll, false)) {
                 actingPlayer.setSufferingAnimosity(true);
               }
             }
-            boolean reRolled = ((ReRolledAction.ANIMOSITY == step.getReRolledAction()) && (step.getReRollSource() != null));
+            boolean reRolled = ((ReRolledActions.ANIMOSITY == step.getReRolledAction()) && (step.getReRollSource() != null));
             step.getResult().addReport(new ReportSkillRoll(ReportId.ANIMOSITY_ROLL, actingPlayer.getPlayerId(), successful, roll, minimumRoll, reRolled));
           }
           if (actingPlayer.isSufferingAnimosity()) {

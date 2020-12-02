@@ -30,7 +30,7 @@ import com.balancedbytes.games.ffb.PickupModifiers;
 import com.balancedbytes.games.ffb.PlayerAction;
 import com.balancedbytes.games.ffb.PlayerState;
 import com.balancedbytes.games.ffb.PushbackMode;
-import com.balancedbytes.games.ffb.ReRollSource;
+import com.balancedbytes.games.ffb.ReRollSources;
 import com.balancedbytes.games.ffb.SeriousInjury;
 import com.balancedbytes.games.ffb.SpecialEffect;
 import com.balancedbytes.games.ffb.TurnMode;
@@ -925,7 +925,7 @@ public class StatusReport {
     Game game = getClient().getGame();
     Player player = game.getPlayerById(pReport.getPlayerId());
     StringBuilder status = new StringBuilder();
-    if (ReRollSource.LONER == pReport.getReRollSource()) {
+    if (ReRollSources.LONER == pReport.getReRollSource()) {
       status.append("Loner Roll [ ").append(pReport.getRoll()).append(" ]");
       println(getIndent() + 1, TextStyle.ROLL, status.toString());
       print(getIndent() + 2, false, player);
@@ -934,7 +934,7 @@ public class StatusReport {
       } else {
         println(getIndent() + 2, " wastes a Team Re-Roll.");
       }
-    } else if (ReRollSource.PRO == pReport.getReRollSource()) {
+    } else if (ReRollSources.PRO == pReport.getReRollSource()) {
       status.append("Pro Roll [ ").append(pReport.getRoll()).append(" ]");
       println(getIndent() + 1, TextStyle.ROLL, status.toString());
       print(getIndent() + 2, false, player);

@@ -1,7 +1,7 @@
 package com.balancedbytes.games.ffb.server.skillbehaviour;
 
-import com.balancedbytes.games.ffb.ReRollSource;
-import com.balancedbytes.games.ffb.ReRolledAction;
+import com.balancedbytes.games.ffb.ReRollSources;
+import com.balancedbytes.games.ffb.ReRolledActions;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandUseSkill;
 import com.balancedbytes.games.ffb.server.model.SkillBehaviour;
 import com.balancedbytes.games.ffb.server.model.StepModifier;
@@ -24,8 +24,8 @@ public class MonstrousMouthBehaviour extends SkillBehaviour<MonstrousMouth> {
 
       @Override
       public boolean handleExecuteStepHook(StepCatchScatterThrowIn step, StepState state) {
-        step.setReRolledAction(ReRolledAction.CATCH);
-        step.setReRollSource(ReRollSource.MONSTROUS_MOUTH);
+        step.setReRolledAction(ReRolledActions.CATCH);
+        step.setReRollSource(ReRollSources.MONSTROUS_MOUTH);
         return true;
       }
       

@@ -13,7 +13,7 @@ import com.balancedbytes.games.ffb.FieldCoordinateBounds;
 import com.balancedbytes.games.ffb.InducementDuration;
 import com.balancedbytes.games.ffb.PlayerChoiceMode;
 import com.balancedbytes.games.ffb.PlayerState;
-import com.balancedbytes.games.ffb.ReRolledAction;
+import com.balancedbytes.games.ffb.ReRolledActions;
 import com.balancedbytes.games.ffb.SkillUse;
 import com.balancedbytes.games.ffb.SoundId;
 import com.balancedbytes.games.ffb.TurnMode;
@@ -343,7 +343,7 @@ public class StepCatchScatterThrowIn extends AbstractStepWithReRoll {
     FieldCoordinate catcherCoordinate = game.getFieldModel().getPlayerCoordinate(catcher);
 
     boolean doRoll = true;
-    if (ReRolledAction.CATCH == getReRolledAction()) {
+    if (ReRolledActions.CATCH == getReRolledAction()) {
       if ((getReRollSource() == null) || !UtilServerReRoll.useReRoll(this, getReRollSource(), catcher)) {
         doRoll = false;
       }
@@ -354,7 +354,7 @@ public class StepCatchScatterThrowIn extends AbstractStepWithReRoll {
       CatchModifierFactory modifierFactory = new CatchModifierFactory();
       Set<CatchModifier> catchModifiers = modifierFactory.findCatchModifiers(game, catcher, fCatchScatterThrowInMode);
       int minimumRoll = DiceInterpreter.getInstance().minimumRollCatch(catcher, catchModifiers);
-      boolean reRolled = ((getReRolledAction() == ReRolledAction.CATCH) && (getReRollSource() != null));
+      boolean reRolled = ((getReRolledAction() == ReRolledActions.CATCH) && (getReRollSource() != null));
       int roll = getGameState().getDiceRoller().rollSkill();
       boolean successful = DiceInterpreter.getInstance().isSkillRollSuccessful(roll, minimumRoll);
       getResult().addReport(new ReportCatchRoll(catcher.getId(), successful, roll, minimumRoll, reRolled, modifierFactory.toArray(catchModifiers),
@@ -379,15 +379,15 @@ public class StepCatchScatterThrowIn extends AbstractStepWithReRoll {
         return null;
 
       } else {
-        if (getReRolledAction() != ReRolledAction.CATCH) {
+        if (getReRolledAction() != ReRolledActions.CATCH) {
           
           boolean stopProcessing = getGameState().executeStepHooks(this, state);
           if (state.actionRerolled) {
             return catchBall();
           }
           if (!stopProcessing) {
-            if (UtilServerReRoll.askForReRollIfAvailable(getGameState(), catcher, ReRolledAction.CATCH, minimumRoll, false)) {
-              setReRolledAction(ReRolledAction.CATCH);
+            if (UtilServerReRoll.askForReRollIfAvailable(getGameState(), catcher, ReRolledActions.CATCH, minimumRoll, false)) {
+              setReRolledAction(ReRolledActions.CATCH);
               return fCatchScatterThrowInMode;
             }
           }

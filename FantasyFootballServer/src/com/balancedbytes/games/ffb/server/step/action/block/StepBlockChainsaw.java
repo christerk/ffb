@@ -2,7 +2,7 @@ package com.balancedbytes.games.ffb.server.step.action.block;
 
 import com.balancedbytes.games.ffb.ApothecaryMode;
 import com.balancedbytes.games.ffb.FieldCoordinate;
-import com.balancedbytes.games.ffb.ReRolledAction;
+import com.balancedbytes.games.ffb.ReRolledActions;
 import com.balancedbytes.games.ffb.SoundId;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
@@ -100,13 +100,13 @@ public class StepBlockChainsaw extends AbstractStepWithReRoll {
     ActingPlayer actingPlayer = game.getActingPlayer();
     if (UtilCards.hasSkillWithProperty(actingPlayer.getPlayer(), NamedProperties.blocksLikeChainsaw)) {
       boolean dropChainsawPlayer = false;
-      if (ReRolledAction.CHAINSAW == getReRolledAction()) {
+      if (ReRolledActions.CHAINSAW == getReRolledAction()) {
         if ((getReRollSource() == null) || !UtilServerReRoll.useReRoll(this, getReRollSource(), actingPlayer.getPlayer())) {
           dropChainsawPlayer = true;
         }
       }
       if (!dropChainsawPlayer) {
-        boolean reRolled = ((getReRolledAction() == ReRolledAction.CHAINSAW) && (getReRollSource() != null));
+        boolean reRolled = ((getReRolledAction() == ReRolledActions.CHAINSAW) && (getReRollSource() != null));
         if (!reRolled) {
           getResult().setSound(SoundId.CHAINSAW);
         }
@@ -123,7 +123,7 @@ public class StepBlockChainsaw extends AbstractStepWithReRoll {
           publishParameter(new StepParameter(StepParameterKey.INJURY_RESULT, injuryResultDefender));
           getResult().setNextAction(StepAction.GOTO_LABEL, fGotoLabelOnSuccess);
         } else {
-          if (!UtilServerReRoll.askForReRollIfAvailable(getGameState(), actingPlayer.getPlayer(), ReRolledAction.CHAINSAW, minimumRoll, false)) {
+          if (!UtilServerReRoll.askForReRollIfAvailable(getGameState(), actingPlayer.getPlayer(), ReRolledActions.CHAINSAW, minimumRoll, false)) {
             dropChainsawPlayer = true;
           }
         }

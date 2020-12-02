@@ -2,7 +2,7 @@ package com.balancedbytes.games.ffb.server.step.action.pass;
 
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.PlayerAction;
-import com.balancedbytes.games.ffb.ReRolledAction;
+import com.balancedbytes.games.ffb.ReRolledActions;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.Animation;
 import com.balancedbytes.games.ffb.model.AnimationType;
@@ -114,7 +114,7 @@ public class StepSafeThrow extends AbstractStepWithReRoll {
     Skill canForceInterceptionRerollSkill = UtilCards.getSkillWithProperty(game.getThrower(), NamedProperties.canForceInterceptionReroll);
     boolean doSafeThrow = (canForceInterceptionRerollSkill != null && !UtilCards.cancelsSkill(interceptor, canForceInterceptionRerollSkill));
     if (doSafeThrow) {
-      if (ReRolledAction.SAFE_THROW == getReRolledAction()) {
+      if (ReRolledActions.SAFE_THROW == getReRolledAction()) {
         if ((getReRollSource() == null) || !UtilServerReRoll.useReRoll(this, getReRollSource(), game.getThrower())) {
           doSafeThrow = false;
         }
@@ -123,10 +123,10 @@ public class StepSafeThrow extends AbstractStepWithReRoll {
         int roll = getGameState().getDiceRoller().rollSkill();
         int minimumRoll = DiceInterpreter.getInstance().minimumRollSafeThrow(game.getThrower());
         safeThrowSuccessful = DiceInterpreter.getInstance().isSkillRollSuccessful(roll, minimumRoll);
-        boolean reRolled = ((getReRolledAction() == ReRolledAction.SAFE_THROW) && (getReRollSource() != null));
+        boolean reRolled = ((getReRolledAction() == ReRolledActions.SAFE_THROW) && (getReRollSource() != null));
         getResult().addReport(new ReportSkillRoll(ReportId.SAFE_THROW_ROLL, game.getThrowerId(), safeThrowSuccessful, roll, minimumRoll, reRolled));
-        if (!safeThrowSuccessful && (getReRolledAction() != ReRolledAction.SAFE_THROW)
-            && UtilServerReRoll.askForReRollIfAvailable(getGameState(), game.getThrower(), ReRolledAction.SAFE_THROW, minimumRoll, false)) {
+        if (!safeThrowSuccessful && (getReRolledAction() != ReRolledActions.SAFE_THROW)
+            && UtilServerReRoll.askForReRollIfAvailable(getGameState(), game.getThrower(), ReRolledActions.SAFE_THROW, minimumRoll, false)) {
           doNextStep = false;
         }
       }

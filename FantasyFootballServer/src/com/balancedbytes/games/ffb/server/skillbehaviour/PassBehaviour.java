@@ -2,8 +2,8 @@ package com.balancedbytes.games.ffb.server.skillbehaviour;
 
 import com.balancedbytes.games.ffb.CatchScatterThrowInMode;
 import com.balancedbytes.games.ffb.PlayerAction;
-import com.balancedbytes.games.ffb.ReRollSource;
-import com.balancedbytes.games.ffb.ReRolledAction;
+import com.balancedbytes.games.ffb.ReRollSources;
+import com.balancedbytes.games.ffb.ReRolledActions;
 import com.balancedbytes.games.ffb.dialog.DialogSkillUseParameter;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Team;
@@ -32,8 +32,8 @@ public class PassBehaviour extends SkillBehaviour<Pass> {
 			@Override
 			public StepCommandStatus handleCommandHook(StepPass step, StepState state,
 					ClientCommandUseSkill useSkillCommand) {
-				step.setReRolledAction(ReRolledAction.PASS);
-	            step.setReRollSource(useSkillCommand.isSkillUsed() ? ReRollSource.PASS : null);
+				step.setReRolledAction(ReRolledActions.PASS);
+	            step.setReRollSource(useSkillCommand.isSkillUsed() ? ReRollSources.PASS : null);
 				return StepCommandStatus.EXECUTE_STEP;
 			}
 
@@ -51,8 +51,8 @@ public class PassBehaviour extends SkillBehaviour<Pass> {
 			public StepCommandStatus handleCommandHook(StepHailMaryPass step,
 					com.balancedbytes.games.ffb.server.step.action.pass.StepHailMaryPass.StepState state,
 					ClientCommandUseSkill useSkillCommand) {
-				step.setReRolledAction(ReRolledAction.PASS);
-				step.setReRollSource(useSkillCommand.isSkillUsed() ? ReRollSource.PASS : null);
+				step.setReRolledAction(ReRolledActions.PASS);
+				step.setReRollSource(useSkillCommand.isSkillUsed() ? ReRollSources.PASS : null);
 	            return StepCommandStatus.EXECUTE_STEP;
 			}
 
@@ -71,7 +71,7 @@ public class PassBehaviour extends SkillBehaviour<Pass> {
 				}
 				boolean doRoll = true;
 				boolean doNextStep = false;
-				if (ReRolledAction.PASS == step.getReRolledAction()) {
+				if (ReRolledActions.PASS == step.getReRolledAction()) {
 					if ((step.getReRollSource() == null) || !UtilServerReRoll.useReRoll(step, step.getReRollSource(), game.getThrower())) {
 						doRoll = false;
 						doNextStep = true;
@@ -80,12 +80,12 @@ public class PassBehaviour extends SkillBehaviour<Pass> {
 				if (doRoll) {
 					int roll = step.getGameState().getDiceRoller().rollSkill();
 					state.passFumble = (roll == 1);
-					boolean reRolled = ((step.getReRolledAction() == ReRolledAction.PASS) && (step.getReRollSource() != null));
+					boolean reRolled = ((step.getReRolledAction() == ReRolledActions.PASS) && (step.getReRollSource() != null));
 					step.getResult().addReport(new ReportPassRoll(game.getThrowerId(), state.passFumble, roll, reRolled, (PlayerAction.HAIL_MARY_BOMB == game.getThrowerAction())));
 					doNextStep = true;
 					if (state.passFumble) {
-						if (step.getReRolledAction() != ReRolledAction.PASS) {
-							step.setReRolledAction(ReRolledAction.PASS);
+						if (step.getReRolledAction() != ReRolledActions.PASS) {
+							step.setReRolledAction(ReRolledActions.PASS);
 							if (UtilCards.hasSkill(game, game.getThrower(), skill) && !state.passSkillUsed) {
 								doNextStep = false;
 								state.passSkillUsed = true;
@@ -96,7 +96,7 @@ public class PassBehaviour extends SkillBehaviour<Pass> {
 										actingTeam.hasPlayer(game.getThrower())
 										);
 							} else {
-								if (UtilServerReRoll.askForReRollIfAvailable(step.getGameState(), game.getThrower(), ReRolledAction.PASS, 2, false)) {
+								if (UtilServerReRoll.askForReRollIfAvailable(step.getGameState(), game.getThrower(), ReRolledActions.PASS, 2, false)) {
 									doNextStep = false;
 								}
 							}

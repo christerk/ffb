@@ -1,7 +1,7 @@
 package com.balancedbytes.games.ffb.client.dialog;
 
 import com.balancedbytes.games.ffb.ClientMode;
-import com.balancedbytes.games.ffb.ReRolledAction;
+import com.balancedbytes.games.ffb.ReRolledActions;
 import com.balancedbytes.games.ffb.SoundId;
 import com.balancedbytes.games.ffb.StatusType;
 import com.balancedbytes.games.ffb.client.ClientData;
@@ -71,7 +71,7 @@ public class DialogBlockRollHandler extends DialogHandler {
           communication.sendBlockChoice(blockRollDialog.getDiceIndex());
         } else {
           clientData.setBlockDiceResult(fDialogParameter.getNrOfDice(), fDialogParameter.getBlockRoll(), -1);
-          communication.sendUseReRoll(ReRolledAction.BLOCK, blockRollDialog.getReRollSource());
+          communication.sendUseReRoll(ReRolledActions.BLOCK, blockRollDialog.getReRollSource());
         }
         userInterface.refreshSideBars();
       }

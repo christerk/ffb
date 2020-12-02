@@ -1,7 +1,7 @@
 package com.balancedbytes.games.ffb.server.step.action.ttm;
 
 import com.balancedbytes.games.ffb.ReRollSource;
-import com.balancedbytes.games.ffb.ReRolledAction;
+import com.balancedbytes.games.ffb.ReRolledActions;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.Game;
@@ -117,7 +117,7 @@ public final class StepAlwaysHungry extends AbstractStepWithReRoll {
     boolean doAlwaysHungry = UtilCards.hasUnusedSkill(game, actingPlayer, SkillConstants.ALWAYS_HUNGRY);
     boolean doEscape = UtilCards.hasSkill(game, actingPlayer, SkillConstants.ALWAYS_HUNGRY) && !doAlwaysHungry;
     if (doAlwaysHungry) {
-      if (ReRolledAction.ALWAYS_HUNGRY == getReRolledAction()) {
+      if (ReRolledActions.ALWAYS_HUNGRY == getReRolledAction()) {
         if ((getReRollSource() == null) || !UtilServerReRoll.useReRoll(this, getReRollSource(), actingPlayer.getPlayer())) {
           doEscape = true;
           doAlwaysHungry = false;
@@ -126,15 +126,15 @@ public final class StepAlwaysHungry extends AbstractStepWithReRoll {
       if (doAlwaysHungry) {
         int roll = getGameState().getDiceRoller().rollSkill();
         boolean successful = DiceInterpreter.getInstance().isAlwaysHungrySuccessful(roll);
-        boolean reRolled = ((getReRolledAction() == ReRolledAction.ALWAYS_HUNGRY) && (getReRollSource() != null));
+        boolean reRolled = ((getReRolledAction() == ReRolledActions.ALWAYS_HUNGRY) && (getReRollSource() != null));
         getResult().addReport(new ReportSkillRoll(ReportId.ALWAYS_HUNGRY_ROLL, actingPlayer.getPlayerId(), successful, roll, 2, reRolled));
         if (successful) {
         	getResult().setNextAction(StepAction.NEXT_STEP);
         } else {
           doEscape = true;
-          if (getReRolledAction() != ReRolledAction.ALWAYS_HUNGRY) {
-            setReRolledAction(ReRolledAction.ALWAYS_HUNGRY);
-            if (UtilServerReRoll.askForReRollIfAvailable(getGameState(), actingPlayer.getPlayer(), ReRolledAction.ALWAYS_HUNGRY, 2, false)) {
+          if (getReRolledAction() != ReRolledActions.ALWAYS_HUNGRY) {
+            setReRolledAction(ReRolledActions.ALWAYS_HUNGRY);
+            if (UtilServerReRoll.askForReRollIfAvailable(getGameState(), actingPlayer.getPlayer(), ReRolledActions.ALWAYS_HUNGRY, 2, false)) {
               doEscape = false;
             }
           }
@@ -144,7 +144,7 @@ public final class StepAlwaysHungry extends AbstractStepWithReRoll {
     if (doEscape) {
       actingPlayer.markSkillUsed(SkillConstants.ALWAYS_HUNGRY);
       ReRollSource reRollSource = null;
-      if (ReRolledAction.ESCAPE == getReRolledAction()) {
+      if (ReRolledActions.ESCAPE == getReRolledAction()) {
         if ((getReRollSource() == null) || !UtilServerReRoll.useReRoll(this, getReRollSource(), thrownPlayer)) {
         	getResult().setNextAction(StepAction.GOTO_LABEL, fGotoLabelOnFailure);
           return;
@@ -157,9 +157,9 @@ public final class StepAlwaysHungry extends AbstractStepWithReRoll {
         if (successful) {
         	getResult().setNextAction(StepAction.GOTO_LABEL, fGotoLabelOnSuccess);
         } else {
-          if (getReRolledAction() != ReRolledAction.ESCAPE) {
-            setReRolledAction(ReRolledAction.ESCAPE);
-            if (UtilServerReRoll.askForReRollIfAvailable(getGameState(), thrownPlayer, ReRolledAction.ESCAPE, 2, false)) {
+          if (getReRolledAction() != ReRolledActions.ESCAPE) {
+            setReRolledAction(ReRolledActions.ESCAPE);
+            if (UtilServerReRoll.askForReRollIfAvailable(getGameState(), thrownPlayer, ReRolledActions.ESCAPE, 2, false)) {
             	return;
             }
           }

@@ -5,7 +5,7 @@ import com.balancedbytes.games.ffb.Card;
 import com.balancedbytes.games.ffb.CardEffect;
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.PlayerState;
-import com.balancedbytes.games.ffb.ReRollSource;
+import com.balancedbytes.games.ffb.ReRollSources;
 import com.balancedbytes.games.ffb.dialog.DialogPilingOnParameter;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.Game;
@@ -74,7 +74,7 @@ public class PilingOnBehaviour extends SkillBehaviour<PilingOn> {
 				        boolean reRollInjury = state.injuryResultDefender.injuryContext().isArmorBroken();
 				        step.getResult().addReport(new ReportPilingOn(actingPlayer.getPlayerId(), state.usingPilingOn, reRollInjury));
 				        boolean usesATeamReroll = UtilGameOption.isOptionEnabled(game, GameOptionId.PILING_ON_USES_A_TEAM_REROLL);
-				        if (state.usingPilingOn && (!usesATeamReroll || UtilServerReRoll.useReRoll(step, ReRollSource.TEAM_RE_ROLL, actingPlayer.getPlayer()))) {
+				        if (state.usingPilingOn && (!usesATeamReroll || UtilServerReRoll.useReRoll(step, ReRollSources.TEAM_RE_ROLL, actingPlayer.getPlayer()))) {
 				          actingPlayer.markSkillUsed(skill);
 				          step.publishParameters(UtilServerInjury.dropPlayer(step, actingPlayer.getPlayer(), ApothecaryMode.ATTACKER));
 				          boolean rolledDouble;

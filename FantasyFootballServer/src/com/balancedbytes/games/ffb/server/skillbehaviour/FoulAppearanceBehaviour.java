@@ -1,6 +1,6 @@
 package com.balancedbytes.games.ffb.server.skillbehaviour;
 
-import com.balancedbytes.games.ffb.ReRolledAction;
+import com.balancedbytes.games.ffb.ReRolledActions;
 import com.balancedbytes.games.ffb.SoundId;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.Game;
@@ -37,7 +37,7 @@ public class FoulAppearanceBehaviour extends SkillBehaviour<FoulAppearance> {
 			    ActingPlayer actingPlayer = game.getActingPlayer();
 			    if ((game.getDefender() != null) && UtilCards.hasSkill(game, game.getDefender(), skill) && !UtilCards.cancelsSkill(actingPlayer.getPlayer(), SkillConstants.FOUL_APPEARANCE)) {
 			      boolean doRoll = true;
-			      if (ReRolledAction.FOUL_APPEARANCE == step.getReRolledAction()) {
+			      if (ReRolledActions.FOUL_APPEARANCE == step.getReRolledAction()) {
 			        if ((step.getReRollSource() == null) || !UtilServerReRoll.useReRoll(step, step.getReRollSource(), actingPlayer.getPlayer())) {
 			          doRoll = false;
 			          actingPlayer.setHasBlocked(true);
@@ -49,12 +49,12 @@ public class FoulAppearanceBehaviour extends SkillBehaviour<FoulAppearance> {
 			        int foulAppearanceRoll = step.getGameState().getDiceRoller().rollSkill();
 			        int minimumRoll = DiceInterpreter.getInstance().minimumRollResistingFoulAppearance();
 			        boolean mayBlock = DiceInterpreter.getInstance().isSkillRollSuccessful(foulAppearanceRoll, minimumRoll);
-			        boolean reRolled = ((step.getReRolledAction() == ReRolledAction.FOUL_APPEARANCE) && (step.getReRollSource() != null));
+			        boolean reRolled = ((step.getReRolledAction() == ReRolledActions.FOUL_APPEARANCE) && (step.getReRollSource() != null));
 			        step.getResult().addReport(new ReportSkillRoll(ReportId.FOUL_APPEARANCE_ROLL, actingPlayer.getPlayerId(), mayBlock, foulAppearanceRoll, minimumRoll, reRolled));
 			        if (mayBlock) {
 			        	step.getResult().setNextAction(StepAction.NEXT_STEP);
 			        } else {
-			          if (!UtilServerReRoll.askForReRollIfAvailable(step.getGameState(), actingPlayer.getPlayer(), ReRolledAction.FOUL_APPEARANCE, minimumRoll, false)) {
+			          if (!UtilServerReRoll.askForReRollIfAvailable(step.getGameState(), actingPlayer.getPlayer(), ReRolledActions.FOUL_APPEARANCE, minimumRoll, false)) {
 			            actingPlayer.setHasBlocked(true);
 			          	game.getTurnData().setTurnStarted(true);
 			          	step.getResult().setNextAction(StepAction.GOTO_LABEL, state.goToLabelOnFailure);

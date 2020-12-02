@@ -2,7 +2,8 @@ package com.balancedbytes.games.ffb.client.dialog;
 
 import com.balancedbytes.games.ffb.ClientMode;
 import com.balancedbytes.games.ffb.ReRollSource;
-import com.balancedbytes.games.ffb.ReRolledAction;
+import com.balancedbytes.games.ffb.ReRollSources;
+import com.balancedbytes.games.ffb.ReRolledActions;
 import com.balancedbytes.games.ffb.StatusType;
 import com.balancedbytes.games.ffb.client.FantasyFootballClient;
 import com.balancedbytes.games.ffb.dialog.DialogId;
@@ -46,8 +47,8 @@ public class DialogWinningsReRollHandler extends DialogHandler {
     hideDialog();
     if (testDialogHasId(pDialog, DialogId.WINNINGS_RE_ROLL)) {
       DialogWinningsReRoll winningsReRollDialog = (DialogWinningsReRoll) pDialog;
-      ReRollSource reRollSource = !winningsReRollDialog.isChoiceYes() ? ReRollSource.WINNINGS : null;
-      getClient().getCommunication().sendUseReRoll(ReRolledAction.WINNINGS, reRollSource);
+      ReRollSource reRollSource = !winningsReRollDialog.isChoiceYes() ? ReRollSources.WINNINGS : null;
+      getClient().getCommunication().sendUseReRoll(ReRolledActions.WINNINGS, reRollSource);
     }
   }
 
