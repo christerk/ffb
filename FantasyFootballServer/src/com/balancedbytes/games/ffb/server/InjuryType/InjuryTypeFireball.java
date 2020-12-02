@@ -1,11 +1,11 @@
 package com.balancedbytes.games.ffb.server.InjuryType;
 
 import com.balancedbytes.games.ffb.ApothecaryMode;
-import com.balancedbytes.games.ffb.ArmorModifier;
+import com.balancedbytes.games.ffb.ArmorModifiers;
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.InjuryContext;
-import com.balancedbytes.games.ffb.InjuryModifier;
 import com.balancedbytes.games.ffb.InjuryModifierFactory;
+import com.balancedbytes.games.ffb.InjuryModifiers;
 import com.balancedbytes.games.ffb.PlayerState;
 import com.balancedbytes.games.ffb.injury.Fireball;
 import com.balancedbytes.games.ffb.model.Game;
@@ -29,7 +29,7 @@ public class InjuryTypeFireball extends InjuryTypeServer<Fireball>  {
 				injuryContext.setArmorRoll(diceRoller.rollArmour());
 				injuryContext.setArmorBroken(diceInterpreter.isArmourBroken(gameState, injuryContext));
 				if (!injuryContext.isArmorBroken()) {
-					injuryContext.addArmorModifier(ArmorModifier.MIGHTY_BLOW);
+					injuryContext.addArmorModifier(ArmorModifiers.MIGHTY_BLOW);
 					injuryContext.setArmorBroken(diceInterpreter.isArmourBroken(gameState, injuryContext));
 				}
 			}
@@ -38,8 +38,8 @@ public class InjuryTypeFireball extends InjuryTypeServer<Fireball>  {
 				injuryContext.setInjuryRoll(diceRoller.rollInjury());
 				injuryContext.addInjuryModifier(new InjuryModifierFactory().getNigglingInjuryModifier(pDefender));
 
-				if (!injuryContext.hasArmorModifier(ArmorModifier.MIGHTY_BLOW)) {
-					injuryContext.addInjuryModifier(InjuryModifier.MIGHTY_BLOW);
+				if (!injuryContext.hasArmorModifier(ArmorModifiers.MIGHTY_BLOW)) {
+					injuryContext.addInjuryModifier(InjuryModifiers.MIGHTY_BLOW);
 				}
 
 				setInjury(pDefender, gameState, diceRoller);

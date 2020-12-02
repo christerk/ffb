@@ -1,0 +1,54 @@
+package com.balancedbytes.games.ffb.model;
+
+import com.balancedbytes.games.ffb.InjuryType;
+import com.balancedbytes.games.ffb.injury.BallAndChain;
+import com.balancedbytes.games.ffb.injury.Bitten;
+import com.balancedbytes.games.ffb.injury.Block;
+import com.balancedbytes.games.ffb.injury.BlockProne;
+import com.balancedbytes.games.ffb.injury.BlockStunned;
+import com.balancedbytes.games.ffb.injury.Bomb;
+import com.balancedbytes.games.ffb.injury.Chainsaw;
+import com.balancedbytes.games.ffb.injury.CrowdPush;
+import com.balancedbytes.games.ffb.injury.DropDodge;
+import com.balancedbytes.games.ffb.injury.DropGFI;
+import com.balancedbytes.games.ffb.injury.DropLeap;
+import com.balancedbytes.games.ffb.injury.EatPlayer;
+import com.balancedbytes.games.ffb.injury.Fireball;
+import com.balancedbytes.games.ffb.injury.Foul;
+import com.balancedbytes.games.ffb.injury.KTMCrowd;
+import com.balancedbytes.games.ffb.injury.KTMInjury;
+import com.balancedbytes.games.ffb.injury.Lightning;
+import com.balancedbytes.games.ffb.injury.PilingOnArmour;
+import com.balancedbytes.games.ffb.injury.PilingOnInjury;
+import com.balancedbytes.games.ffb.injury.PilingOnKnockedOut;
+import com.balancedbytes.games.ffb.injury.Stab;
+import com.balancedbytes.games.ffb.injury.TTMHitPlayer;
+import com.balancedbytes.games.ffb.injury.TTMLanding;
+import com.balancedbytes.games.ffb.injury.ThrowARock;
+
+public class InjuryTypeConstants {
+	 public static final InjuryType BALL_AND_CHAIN = new BallAndChain();
+	 public static final InjuryType BITTEN = new Bitten();
+	 public static final InjuryType BLOCK = new Block();
+	 public static final InjuryType BLOCK_PRONE = new BlockProne();
+	 public static final InjuryType BLOCK_STUNNED = new BlockStunned();
+	 public static final InjuryType BOMB = new Bomb();
+	 public static final InjuryType CHAINSAW = new Chainsaw();
+	 public static final InjuryType CROWD_PUSH = new CrowdPush();
+	 public static final InjuryType DROP_DODGE = new DropDodge();
+	 public static final InjuryType DROP_GFI = new DropGFI();
+	 public static final InjuryType DROP_LEAP = new DropLeap();
+	 public static final InjuryType EAT_PLAYER = new EatPlayer();
+	 public static final InjuryType FIREBALL = new Fireball();
+	 public static final InjuryType FOUL = new Foul();
+	 public static final InjuryType KTM_CROWD = new KTMCrowd();
+	 public static final InjuryType KTM_INJURY = new KTMInjury();
+	 public static final InjuryType LIGHTNING = new Lightning();
+	 public static final InjuryType PILING_ON_ARMOUR = new PilingOnArmour();
+	 public static final InjuryType PILING_ON_INJURY = new PilingOnInjury();
+	 public static final InjuryType PILING_ON_KNOCKED_OUT = new PilingOnKnockedOut();
+	 public static final InjuryType STAB = new Stab();
+	 public static final InjuryType THROW_A_ROCK = new ThrowARock();
+	 public static final InjuryType TTM_HIT_PLAYER = new TTMHitPlayer();
+	 public static final InjuryType TTM_LANDING = new TTMLanding();
+}

@@ -1,19 +1,16 @@
 package com.balancedbytes.games.ffb.server.InjuryType;
 
 import com.balancedbytes.games.ffb.ApothecaryMode;
-import com.balancedbytes.games.ffb.ArmorModifier;
+import com.balancedbytes.games.ffb.ArmorModifierFactory;
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.InjuryContext;
 import com.balancedbytes.games.ffb.injury.Stab;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
-import com.balancedbytes.games.ffb.model.Team;
 import com.balancedbytes.games.ffb.server.DiceInterpreter;
 import com.balancedbytes.games.ffb.server.DiceRoller;
 import com.balancedbytes.games.ffb.server.GameState;
-import com.balancedbytes.games.ffb.server.model.ServerSkill;
 import com.balancedbytes.games.ffb.server.step.IStep;
-import com.balancedbytes.games.ffb.util.UtilCards;
 
 public class InjuryTypeStab extends InjuryTypeServer<Stab>  {
 		public InjuryTypeStab() {
@@ -27,12 +24,10 @@ public class InjuryTypeStab extends InjuryTypeServer<Stab>  {
 			DiceInterpreter diceInterpreter = DiceInterpreter.getInstance();
 					
 			if (!injuryContext.isArmorBroken()) {
-				Team otherTeam = game.getTeamHome().hasPlayer(pDefender) ? game.getTeamHome() : game.getTeamAway();
-				if ((pAttacker != null) && UtilCards.hasSkill(game, pAttacker, ServerSkill.STAKES)
-						&& (otherTeam.getRoster().isUndead()
-								|| ((pDefender != null) && pDefender.getPosition().isUndead()))) {
-					injuryContext.addArmorModifier(ArmorModifier.STAKES);
-				}
+				
+				ArmorModifierFactory modifierFactory = new ArmorModifierFactory();
+			    modifierFactory.findArmorModifiers(game, pAttacker, pDefender, isStab(), isFoul());
+				
 				injuryContext.setArmorRoll(diceRoller.rollArmour());
 				injuryContext.setArmorBroken(diceInterpreter.isArmourBroken(gameState, injuryContext));
 			}

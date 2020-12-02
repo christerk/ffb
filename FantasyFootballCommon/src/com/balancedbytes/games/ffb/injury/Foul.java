@@ -12,5 +12,8 @@ public class Foul extends InjuryType{
 	
 	@Override
 	public boolean shouldPlayFallSound() { return false; }
+	
+	@Override
+	public boolean isFoul() { return true; }
 
 }

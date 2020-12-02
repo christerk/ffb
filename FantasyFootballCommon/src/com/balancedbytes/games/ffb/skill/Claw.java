@@ -1,5 +1,6 @@
 package com.balancedbytes.games.ffb.skill;
 
+import com.balancedbytes.games.ffb.ArmorModifiers;
 import com.balancedbytes.games.ffb.SkillCategory;
 import com.balancedbytes.games.ffb.model.Skill;
 
@@ -13,6 +14,8 @@ public class Claw extends Skill {
 
   public Claw() {
     super("Claw", SkillCategory.MUTATION);
+    
+    registerModifier(ArmorModifiers.CLAWS);
   }
 
 }
