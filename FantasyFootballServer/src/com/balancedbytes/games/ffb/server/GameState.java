@@ -319,14 +319,13 @@ public class GameState implements IModelChangeObserver, IJsonSerializable {
   }
 
   public boolean executeStepHooks(IStep step, Object state) {
-    List<StepModifier> modifiers = new ArrayList<StepModifier>();
+    List<StepModifier<? extends IStep, ?>> modifiers = new ArrayList<>();
     
     for (Skill skill : skillFactory.getSkills()) {
-
-      for (ISkillBehaviour behaviour : skill.getSkillBehaviours()) {
-        @SuppressWarnings("unchecked")
-        List<StepModifier> skillModifiers = ((SkillBehaviour) behaviour).getStepModifiers();
-        for (StepModifier modifier : skillModifiers) {
+      ISkillBehaviour behaviour = skill.getSkillBehaviour();
+      if (behaviour != null) {
+        List<StepModifier<? extends IStep, ?>> skillModifiers = ((SkillBehaviour<? extends Skill>) behaviour).getStepModifiers();
+        for (StepModifier<? extends IStep, ?> modifier : skillModifiers) {
           if (modifier.appliesTo(step)) {
             modifiers.add(modifier);
           }
@@ -336,7 +335,7 @@ public class GameState implements IModelChangeObserver, IJsonSerializable {
     
     modifiers.sort(StepModifier.Comparator);
     
-    for (StepModifier modifier : modifiers) {
+    for (StepModifier<? extends IStep, ?> modifier : modifiers) {
       boolean stopProcessing = modifier.handleExecuteStep(step, state);
       if (stopProcessing) {
         return true;

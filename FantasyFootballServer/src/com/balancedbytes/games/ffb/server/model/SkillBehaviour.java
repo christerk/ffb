@@ -7,6 +7,7 @@ import java.util.List;
 import com.balancedbytes.games.ffb.model.ISkillBehaviour;
 import com.balancedbytes.games.ffb.model.PlayerModifier;
 import com.balancedbytes.games.ffb.model.Skill;
+import com.balancedbytes.games.ffb.server.step.IStep;
 
 public class SkillBehaviour<T extends Skill> implements ISkillBehaviour {
 
@@ -14,7 +15,7 @@ public class SkillBehaviour<T extends Skill> implements ISkillBehaviour {
   public final Class<? extends Skill> skillClass;
   
   private List<PlayerModifier> playerModifiers;
-  private List<StepModifier> stepModifiers;
+  private List<StepModifier<? extends IStep, ?>> stepModifiers;
   
   @SuppressWarnings("unchecked")
   public SkillBehaviour() {
@@ -27,7 +28,7 @@ public class SkillBehaviour<T extends Skill> implements ISkillBehaviour {
   @SuppressWarnings("unchecked")
   public void setSkill(Skill skill) {
     this.skill = (T) skill;
-    this.skill.addBehaviour(this);
+    this.skill.setBehaviour(this);
   }
   
   protected void registerModifier(StepModifier<?, ?> stepModifier) {
@@ -38,7 +39,7 @@ public class SkillBehaviour<T extends Skill> implements ISkillBehaviour {
     playerModifiers.add(playerModifier);
   }
   
-  public List<StepModifier> getStepModifiers() {
+  public List<StepModifier<? extends IStep, ?>> getStepModifiers() {
     return stepModifiers;
   }
 }
