@@ -19,15 +19,14 @@ public class SkillBehaviour<T extends Skill> implements ISkillBehaviour {
   
   @SuppressWarnings("unchecked")
   public SkillBehaviour() {
-    playerModifiers = new ArrayList<PlayerModifier>();
-    stepModifiers = new ArrayList<StepModifier>();
+    playerModifiers = new ArrayList<>();
+    stepModifiers = new ArrayList<>();
     
 	skillClass = (Class<? extends Skill>) ((ParameterizedType)getClass().getGenericSuperclass()).getActualTypeArguments()[0];
   }
   
-  @SuppressWarnings("unchecked")
-  public void setSkill(Skill skill) {
-    this.skill = (T) skill;
+  public void setSkill(T skill) {
+    this.skill = skill;
     this.skill.setBehaviour(this);
   }
   

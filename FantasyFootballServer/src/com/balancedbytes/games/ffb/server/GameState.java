@@ -45,7 +45,7 @@ public class GameState implements IModelChangeObserver, IJsonSerializable {
   private GameStatus fStatus;
   private StepStack fStepStack;
   private IStep fCurrentStep;
-  private Set<String> zappedPlayerIds = new HashSet<String>();
+  private Set<String> zappedPlayerIds = new HashSet<>();
   private int kickingSwarmers;
 
   private transient FantasyFootballServer fServer;
@@ -62,7 +62,7 @@ public class GameState implements IModelChangeObserver, IJsonSerializable {
     UtilSkillBehaviours.registerBehaviours(skillFactory, fServer.getDebugLog());
     fGameLog = new GameLog(this);
     fDiceRoller = new DiceRoller(this);
-    fSpectatorCooldownTime = new HashMap<String, Long>();
+    fSpectatorCooldownTime = new HashMap<>();
     initCommandNrGenerator(0);
     fStepStack = new StepStack(this);
     fChangeList = new ModelChangeList();
@@ -112,10 +112,6 @@ public class GameState implements IModelChangeObserver, IJsonSerializable {
     return (int) fCommandNrGenerator.generateId();
   }
 
-  public int lastCommandNr() {
-    return (int) fCommandNrGenerator.lastId();
-  }
-
   public void initCommandNrGenerator(long pLastId) {
     fCommandNrGenerator = new IdGenerator(pLastId);
   }
@@ -157,10 +153,6 @@ public class GameState implements IModelChangeObserver, IJsonSerializable {
     return fCurrentStep;
   }
 
-  public void setCurrentStep(IStep pCurrentStep) {
-    fCurrentStep = pCurrentStep;
-  }
-
   public void handleCommand(ReceivedCommand pReceivedCommand) {
     if (pReceivedCommand == null) {
       return;
@@ -199,7 +191,7 @@ public class GameState implements IModelChangeObserver, IJsonSerializable {
 		  StepAction action = stepResult.getNextAction();
 
 		  if (action.triggerGoto()) {
-			  handleStepResultGotoLabel((String) stepResult.getNextActionParameter());
+			  handleStepResultGotoLabel(stepResult.getNextActionParameter());
 		  }
 		  
 		  if (action.triggerNextStep()) {
@@ -244,15 +236,15 @@ public class GameState implements IModelChangeObserver, IJsonSerializable {
     throw new StepException("Goto unknown label " + pGotoLabel);
   }
 
-  public void addZappedPlayer(Player player) {
+  public void addZappedPlayer(Player<?> player) {
     zappedPlayerIds.add(player.getId());
   }
 
-  public void removeZappedPlayer(Player player) {
+  public void removeZappedPlayer(Player<?> player) {
     zappedPlayerIds.remove(player.getId());
   }
 
-  public boolean isZapped(Player player) {
+  public boolean isZapped(Player<?> player) {
     return zappedPlayerIds.contains(player.getId());
   }
 

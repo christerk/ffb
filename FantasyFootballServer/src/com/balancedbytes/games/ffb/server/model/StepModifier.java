@@ -8,14 +8,14 @@ import com.balancedbytes.games.ffb.server.step.IStep;
 import com.balancedbytes.games.ffb.server.step.StepCommandStatus;
 
 public abstract class StepModifier<T extends IStep, V> {
-  private Class modifierType;
+  private Class<?> modifierType;
   private int priority = 0;
 
   protected StepModifier() {
     this(0);
   }
   protected StepModifier(int priority) {
-    modifierType = (Class)((ParameterizedType)getClass().getGenericSuperclass()).getActualTypeArguments()[0];
+    modifierType = (Class<?>)((ParameterizedType)getClass().getGenericSuperclass()).getActualTypeArguments()[0];
     this.priority = priority;
   }
 
@@ -30,7 +30,7 @@ public abstract class StepModifier<T extends IStep, V> {
     return step.getClass().equals(modifierType);
   }
   
-  public Class getConcreteClass() {
+  public Class<?> getConcreteClass() {
     return modifierType;
   }
   
