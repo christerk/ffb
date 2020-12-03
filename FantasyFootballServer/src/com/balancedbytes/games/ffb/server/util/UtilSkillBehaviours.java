@@ -19,7 +19,7 @@ public class UtilSkillBehaviours {
       try {
         Class<?> behaviourClass = Class.forName(behaviourPackage + "." + skillClassName + "Behaviour");
         SkillBehaviour<?> behaviour = (SkillBehaviour<?>) behaviourClass.getConstructor((Class<?>[])null).newInstance((Object[])null);
-        if (registerBehaviour(behaviour, factory, log)) {
+        if (registerBehaviour(behaviour, factory)) {
           log.log(IServerLogLevel.DEBUG, "Registered behavior class '" + behaviourClass.getSimpleName() + "' for skill '" + skillClassName + "'");
         } else {
           log.log(IServerLogLevel.WARN, "No skill found for '" + behaviour.getClass().getSimpleName());
@@ -32,7 +32,7 @@ public class UtilSkillBehaviours {
     }
   }
 
-  private static boolean registerBehaviour(SkillBehaviour<?> behaviour, SkillFactory factory, DebugLog log) {
+  private static boolean registerBehaviour(SkillBehaviour<?> behaviour, SkillFactory factory) {
     Skill skill = factory.forClass(behaviour.skillClass);
     if (skill != null) {
       behaviour.setSkill(skill);
