@@ -1,6 +1,7 @@
 package com.balancedbytes.games.ffb;
 
 import java.lang.reflect.Field;
+import java.util.HashMap;
 import java.util.Map;
 
 import com.balancedbytes.games.ffb.skill.AlwaysHungry;
@@ -54,13 +55,14 @@ public class ReRolledActions {
 	 public static final ReRolledAction  HYPNOTIC_GAZE= new ReRolledAction(HypnoticGaze.class);
 	 public static final ReRolledAction  ANIMOSITY= new ReRolledAction(Animosity.class);
 	 
-	  private static Map<String, ReRolledAction> values;
-	  public static Map<String, ReRolledAction> values() { return values;}
+	  private Map<String, ReRolledAction> values;
+	  public  Map<String, ReRolledAction> values() { return values;}
 
 	  public ReRolledActions() {
+		  values = new HashMap<String, ReRolledAction>();
 		  try {
 			  Class<?> c = this.getClass();
-			  Class<?> cModifierType = ReRollSource.class.getClass();
+			  Class<?> cModifierType = ReRolledAction.class;
 			  for(Field f :c.getDeclaredFields())
 			  {
 				  if(f.getType() == cModifierType)

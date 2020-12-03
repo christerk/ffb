@@ -1,6 +1,7 @@
 package com.balancedbytes.games.ffb;
 
 import java.lang.reflect.Field;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -49,13 +50,14 @@ public class PassingModifiers {
     }
   };
   
-  private static Map<String, PassModifier> values;
-  public static Map<String, PassModifier> values() { return values;}
+  private Map<String, PassModifier> values;
+  public Map<String, PassModifier> values() { return values;}
   
   public PassingModifiers() {
+	  values = new HashMap<String, PassModifier>();
 		try {
 			Class<?> c = this.getClass();
-			Class<?> cModifierType = PassModifier.class.getClass();
+			Class<?> cModifierType = PassModifier.class;
 			for(Field f :c.getDeclaredFields())
 			{
 				if(f.getType() == cModifierType)

@@ -31,6 +31,8 @@ public class StepSwarming extends AbstractStep {
 
   public StepSwarming(GameState pGameState) {
     super(pGameState);
+    
+    state = new StepState();
   }
 
   @Override

@@ -1,6 +1,7 @@
 package com.balancedbytes.games.ffb;
 
 import java.lang.reflect.Field;
+import java.util.HashMap;
 import java.util.Map;
 
 import com.balancedbytes.games.ffb.model.ActingPlayer;
@@ -81,13 +82,14 @@ public class DodgeModifiers {
     }    
   }
   
-  private static Map<String, DodgeModifier> values;
-  public static Map<String, DodgeModifier> values() { return values;}
+  private Map<String, DodgeModifier> values;
+  public Map<String, DodgeModifier> values() { return values;}
 
   public DodgeModifiers() {
+	  values = new HashMap<String, DodgeModifier>();
 	  try {
 		  Class<?> c = this.getClass();
-		  Class<?> cModifierType = DodgeModifier.class.getClass();
+		  Class<?> cModifierType = DodgeModifier.class;
 		  for(Field f :c.getDeclaredFields())
 		  {
 			  if(f.getType() == cModifierType)

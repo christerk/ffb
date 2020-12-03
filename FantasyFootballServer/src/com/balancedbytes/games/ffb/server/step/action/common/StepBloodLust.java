@@ -33,6 +33,8 @@ public class StepBloodLust extends AbstractStepWithReRoll {
 	
 	public StepBloodLust(GameState pGameState) {
 		super(pGameState);
+	    state = new StepState();
+
 	}
 	
 	public StepId getId() {

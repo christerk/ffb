@@ -1,6 +1,7 @@
 package com.balancedbytes.games.ffb;
 
 import java.lang.reflect.Field;
+import java.util.HashMap;
 import java.util.Map;
 
 import com.balancedbytes.games.ffb.model.Game;
@@ -75,13 +76,14 @@ public class ArmorModifiers {
 	  }
 	
 	
-	  private static Map<String, ArmorModifier> values;
-	  public static Map<String, ArmorModifier> values() { return values;}
+	  private Map<String, ArmorModifier> values;
+	  public Map<String, ArmorModifier> values() { return values;}
 
 	  public ArmorModifiers() {
+		  values = new HashMap<String, ArmorModifier>();
 		  try {
 			  Class<?> c = this.getClass();
-			  Class<?> cModifierType = ArmorModifier.class.getClass();
+			  Class<?> cModifierType = ArmorModifier.class;
 			  for(Field f :c.getDeclaredFields())
 			  {
 				  if(f.getType() == cModifierType)

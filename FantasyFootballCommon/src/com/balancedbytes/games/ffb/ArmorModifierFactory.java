@@ -19,8 +19,15 @@ import com.balancedbytes.games.ffb.util.UtilCards;
  */
 public class ArmorModifierFactory implements INamedObjectFactory {
 
+	static ArmorModifiers armorModifiers;
+	
+	public ArmorModifierFactory()
+	{
+		armorModifiers = new ArmorModifiers();
+	}
+
 	public ArmorModifier forName(String pName) {
-		return ArmorModifiers.values().get(pName.toLowerCase());
+		return armorModifiers.values().get(pName.toLowerCase());
 	}
 	
 	public Set<ArmorModifier> findArmorModifiers(Game game, Player<?> attacker, Player<?> defender, boolean isStab, boolean isFoul) {
@@ -39,7 +46,7 @@ public class ArmorModifierFactory implements INamedObjectFactory {
 	}
 
 	public ArmorModifier getFoulAssist(int pModifier) {
-		for (Map.Entry<String, ArmorModifier> entry : ArmorModifiers.values().entrySet()) {
+		for (Map.Entry<String, ArmorModifier> entry : armorModifiers.values().entrySet()) {
 			ArmorModifier modifier = entry.getValue();
 			if (modifier.isFoulAssistModifier() && (modifier.getModifier() == pModifier)) {
 				return modifier;

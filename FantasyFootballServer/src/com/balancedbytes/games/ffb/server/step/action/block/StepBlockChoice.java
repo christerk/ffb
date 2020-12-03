@@ -155,8 +155,8 @@ public class StepBlockChoice extends AbstractStep {
 		  break;
 	  case POW_PUSHBACK:
 		  Skill defenderDodgeSkill = UtilCards.getSkillWithProperty(game.getDefender(), NamedProperties.ignoreDefenderStumblesResult);
-		  Skill attackerCanCancelDodgeSkill = UtilCards.getSkillCancelling(actingPlayer.getPlayer(), defenderDodgeSkill);
 		  if (defenderDodgeSkill != null) {
+			  Skill attackerCanCancelDodgeSkill = UtilCards.getSkillCancelling(actingPlayer.getPlayer(), defenderDodgeSkill);
 			  if ((attackerCanCancelDodgeSkill != null)
 					  && (!UtilCards.hasSkillWithProperty(actingPlayer.getPlayer(), NamedProperties.canBlockSameTeamPlayer) || actingPlayer.getPlayer().getTeam() != game.getDefender().getTeam())) {
 

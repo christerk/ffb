@@ -1,6 +1,7 @@
 package com.balancedbytes.games.ffb;
 
 import java.lang.reflect.Field;
+import java.util.HashMap;
 import java.util.Map;
 
 import com.balancedbytes.games.ffb.model.ActingPlayer;
@@ -9,13 +10,14 @@ public class LeapModifiers {
 
 	public static final LeapModifier VERY_LONG_LEGS = new LeapModifier("Very Long Legs", -1);
 	
-	private static Map<String, LeapModifier> values;
-	public static Map<String, LeapModifier> values() { return values;}
+	private Map<String, LeapModifier> values;
+	public Map<String, LeapModifier> values() { return values;}
 	
 	public LeapModifiers() {
+		values = new HashMap<String, LeapModifier>();
 		try {
 			Class<?> c = this.getClass();
-			Class<?> cModifierType = LeapModifier.class.getClass();
+			Class<?> cModifierType = LeapModifier.class;
 			for(Field f :c.getDeclaredFields())
 			{
 				if(f.getType() == cModifierType)

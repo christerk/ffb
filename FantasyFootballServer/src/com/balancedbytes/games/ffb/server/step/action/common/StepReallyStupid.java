@@ -35,6 +35,7 @@ public class StepReallyStupid extends AbstractStepWithReRoll {
 	
 	public StepReallyStupid(GameState pGameState) {
 		super(pGameState);
+	    state = new StepState();
 	}
 	
 	public StepId getId() {

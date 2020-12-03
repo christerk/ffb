@@ -16,8 +16,15 @@ import com.balancedbytes.games.ffb.util.UtilCards;
  */
 public class LeapModifierFactory implements IRollModifierFactory {
 
+	static LeapModifiers leapModifiers;
+	
+	public LeapModifierFactory()
+	{
+		leapModifiers = new LeapModifiers();
+	}
+	
 	public LeapModifier forName(String pName) {
-		return LeapModifiers.values().get(pName.toLowerCase());
+		return leapModifiers.values().get(pName.toLowerCase());
 	}
 
 	public Set<LeapModifier> findLeapModifiers(Game pGame, FieldCoordinate pCoordinateFrom) {

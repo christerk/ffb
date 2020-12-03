@@ -81,7 +81,16 @@ public class UtilServerInjury {
 			injuryContext.setArmorBroken(true);
 		}
 		
-		pInjuryType.handleInjury(pStep, game, gameState, diceRoller, pAttacker, pDefender, pDefenderCoordinate, pOldInjuryResult.injuryContext(), pApothecaryMode);
+		InjuryContext oldInjuryContext = null;
+		if(pOldInjuryResult != null){
+			oldInjuryContext = pOldInjuryResult.injuryContext();
+		}
+		else
+		{
+			oldInjuryContext = new InjuryContext();
+		}
+		
+		pInjuryType.handleInjury(pStep, game, gameState, diceRoller, pAttacker, pDefender, pDefenderCoordinate, oldInjuryContext, pApothecaryMode);
 		
 		if (injuryContext.isArmorBroken()) {
 			if (UtilCards.hasCard(game, pDefender, Card.LUCKY_CHARM) && (injuryContext.getArmorRoll() != null)) {

@@ -1,6 +1,7 @@
 package com.balancedbytes.games.ffb;
 
 import java.lang.reflect.Field;
+import java.util.HashMap;
 import java.util.Map;
 
 import com.balancedbytes.games.ffb.util.UtilCards;
@@ -43,13 +44,14 @@ public class InjuryModifiers {
 		    }
 		  };
 	 
-	 private static Map<String, InjuryModifier> values;
-	 public static Map<String, InjuryModifier> values() { return values;}
+	 private Map<String, InjuryModifier> values;
+	 public Map<String, InjuryModifier> values() { return values;}
 	  
 	  public InjuryModifiers() {
+		  values = new HashMap<String, InjuryModifier>();
 		  try {
 			  Class<?> c = this.getClass();
-			  Class<?> cModifierType = InjuryModifier.class.getClass();
+			  Class<?> cModifierType = InjuryModifier.class;
 			  for(Field f :c.getDeclaredFields())
 			  {
 				  if(f.getType() == cModifierType)

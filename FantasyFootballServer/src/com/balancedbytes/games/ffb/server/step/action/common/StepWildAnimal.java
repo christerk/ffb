@@ -35,6 +35,7 @@ public class StepWildAnimal extends AbstractStepWithReRoll {
 
   public StepWildAnimal(GameState pGameState) {
     super(pGameState);
+    	state = new StepState();
   }
 
   public StepId getId() {

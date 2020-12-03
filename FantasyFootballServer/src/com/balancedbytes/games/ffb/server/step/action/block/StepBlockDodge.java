@@ -34,6 +34,8 @@ public class StepBlockDodge extends AbstractStep {
 
   public StepBlockDodge(GameState pGameState) {
     super(pGameState);
+    
+    state = new StepState();
   }
 
   public StepId getId() {

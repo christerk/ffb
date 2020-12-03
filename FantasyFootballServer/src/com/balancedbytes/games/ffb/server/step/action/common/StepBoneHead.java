@@ -36,6 +36,9 @@ public class StepBoneHead extends AbstractStepWithReRoll {
 	
 	public StepBoneHead(GameState pGameState) {
 		super(pGameState);
+		
+	    state = new StepState();
+
 	}
 	
 	public StepId getId() {

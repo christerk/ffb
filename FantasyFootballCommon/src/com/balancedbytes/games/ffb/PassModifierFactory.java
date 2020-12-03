@@ -19,9 +19,16 @@ import com.balancedbytes.games.ffb.util.UtilPlayer;
  * @author Kalimar
  */
 public class PassModifierFactory implements IRollModifierFactory {
+	
+	static PassingModifiers passingModifiers = new PassingModifiers();
+	
+	public PassModifierFactory()
+	{
+		passingModifiers = new PassingModifiers();
+	}
   
   public PassModifier forName(String pName) {
-	  return PassingModifiers.values().get(pName.toLowerCase());
+	  return passingModifiers.values().get(pName.toLowerCase());
   }
 
   public Set<PassModifier> findPassModifiers(Game pGame, Player<?> pThrower, PassingDistance pPassingDistance, boolean pThrowTeamMate) {
