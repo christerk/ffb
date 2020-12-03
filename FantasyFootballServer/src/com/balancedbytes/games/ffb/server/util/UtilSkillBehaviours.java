@@ -8,7 +8,7 @@ import com.balancedbytes.games.ffb.server.model.SkillBehaviour;
 
 public class UtilSkillBehaviours {
 
-  public static void RegisterBehaviours(SkillFactory factory, DebugLog log) {
+  public static void registerBehaviours(SkillFactory factory, DebugLog log) {
 
     String behaviourPackage = "com.balancedbytes.games.ffb.server.skillbehaviour";
     for (Skill skill : factory.getSkills()) {
