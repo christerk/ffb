@@ -21,7 +21,7 @@ import com.balancedbytes.games.ffb.util.UtilCards;
 
 public class StandFirmBehaviour extends SkillBehaviour<StandFirm> {
 	public StandFirmBehaviour() {
-		super();
+		super(StandFirm.class);
 
 		 registerModifier(new StepModifier<StepPushback, StepPushback.StepState>(1) {
 

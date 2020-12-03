@@ -14,7 +14,7 @@ import com.balancedbytes.games.ffb.skill.Bombardier;
 
 public class BombardierBehaviour extends SkillBehaviour<Bombardier> {
   public BombardierBehaviour() {
-    super();
+    super(Bombardier.class);
     
     registerModifier(new StepModifier<StepBombardier, StepBombardier.StepState>() {
 

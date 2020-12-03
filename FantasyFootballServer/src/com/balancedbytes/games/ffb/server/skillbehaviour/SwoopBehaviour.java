@@ -35,7 +35,7 @@ import com.balancedbytes.games.ffb.util.UtilCards;
 
 public class SwoopBehaviour extends SkillBehaviour<Swoop> {
 	public SwoopBehaviour() {
-		super();
+		super(Swoop.class);
 
 		registerModifier(new StepModifier<StepSwoop, StepSwoop.StepState>() {
 

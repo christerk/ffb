@@ -22,7 +22,7 @@ import com.balancedbytes.games.ffb.util.UtilCards;
 
 public class StabBehaviour extends SkillBehaviour<Stab> {
 	public StabBehaviour() {
-		super();
+		super(Stab.class);
 
 		registerModifier(new StepModifier<StepStab, StepStab.StepState>() {
 

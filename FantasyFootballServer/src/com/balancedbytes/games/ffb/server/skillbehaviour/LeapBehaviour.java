@@ -28,7 +28,7 @@ import com.balancedbytes.games.ffb.util.UtilCards;
 
 public class LeapBehaviour extends SkillBehaviour<Leap> {
 	public LeapBehaviour() {
-		super();
+		super(Leap.class);
 
 		registerModifier(new StepModifier<StepLeap, StepLeap.StepState>() {
 

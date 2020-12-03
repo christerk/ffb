@@ -19,7 +19,7 @@ import com.balancedbytes.games.ffb.util.UtilCards;
 
 public class DauntlessBehaviour extends SkillBehaviour<Dauntless> {
 	public DauntlessBehaviour() {
-		super();
+		super(Dauntless.class);
 
 		registerModifier(new StepModifier<StepDauntless, StepDauntless.StepState>() {
 

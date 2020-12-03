@@ -28,7 +28,7 @@ import com.balancedbytes.games.ffb.util.UtilPlayer;
 
 public class ReallyStupidBehaviour extends SkillBehaviour<ReallyStupid> {
 	public ReallyStupidBehaviour() {
-		super();
+		super(ReallyStupid.class);
 
 		registerModifier(new StepModifier<StepReallyStupid, StepReallyStupid.StepState>() {
 

@@ -24,7 +24,7 @@ import com.balancedbytes.games.ffb.util.UtilCards;
 
 public class SneakyGitBehaviour extends SkillBehaviour<SneakyGit> {
 	public SneakyGitBehaviour() {
-		super();
+		super(SneakyGit.class);
 
 		registerModifier(new StepModifier<StepEjectPlayer, StepEjectPlayer.StepState>() {
 

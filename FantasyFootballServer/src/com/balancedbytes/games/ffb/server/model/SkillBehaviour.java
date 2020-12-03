@@ -1,28 +1,26 @@
 package com.balancedbytes.games.ffb.server.model;
 
-import java.lang.reflect.ParameterizedType;
-import java.util.ArrayList;
-import java.util.List;
-
 import com.balancedbytes.games.ffb.model.ISkillBehaviour;
 import com.balancedbytes.games.ffb.model.PlayerModifier;
 import com.balancedbytes.games.ffb.model.Skill;
 import com.balancedbytes.games.ffb.server.step.IStep;
 
-public class SkillBehaviour<T extends Skill> implements ISkillBehaviour {
+import java.util.ArrayList;
+import java.util.List;
+
+public abstract class SkillBehaviour<T extends Skill> implements ISkillBehaviour {
 
   public T skill;
-  public final Class<? extends Skill> skillClass;
+  public final Class<T> skillClass;
   
   private List<PlayerModifier> playerModifiers;
   private List<StepModifier<? extends IStep, ?>> stepModifiers;
   
-  @SuppressWarnings("unchecked")
-  public SkillBehaviour() {
+  public SkillBehaviour(Class<T> skillClass) {
     playerModifiers = new ArrayList<>();
     stepModifiers = new ArrayList<>();
     
-	skillClass = (Class<? extends Skill>) ((ParameterizedType)getClass().getGenericSuperclass()).getActualTypeArguments()[0];
+	  this.skillClass = skillClass;
   }
   
   public void setSkill(T skill) {

@@ -17,7 +17,7 @@ import com.balancedbytes.games.ffb.util.UtilCards;
 
 public class HornsBehaviour extends SkillBehaviour<Horns> {
 	public HornsBehaviour() {
-		super();
+		super(Horns.class);
 
 		registerModifier(new StepModifier<StepHorns, StepHorns.StepState>() {
 

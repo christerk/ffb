@@ -24,7 +24,7 @@ import com.balancedbytes.games.ffb.util.UtilCards;
 
 public class SideStepBehaviour extends SkillBehaviour<SideStep> {
   public SideStepBehaviour() {
-    super();
+    super(SideStep.class);
     
     registerModifier(new StepModifier<StepPushback, StepPushback.StepState>(2) {
 

@@ -25,7 +25,7 @@ import com.balancedbytes.games.ffb.util.UtilCards;
 	
 	public class BoneHeadBehaviour extends SkillBehaviour<BoneHead> {
 		public BoneHeadBehaviour() {
-			super();
+			super(BoneHead.class);
 
 			registerModifier(new StepModifier<StepBoneHead, StepBoneHead.StepState>() {
 

@@ -29,7 +29,7 @@ import com.balancedbytes.games.ffb.util.UtilPlayer;
 
 public class AniomosityBehaviour extends SkillBehaviour<Animosity> {
   public AniomosityBehaviour() {
-    super();
+    super(Animosity.class);
     
     registerModifier(new StepModifier<StepAnimosity, StepAnimosity.StepState>() {
 

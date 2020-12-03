@@ -25,7 +25,7 @@ import com.balancedbytes.games.ffb.util.UtilCards;
 
 public class GrabBehaviour extends SkillBehaviour<Pass> {
   public GrabBehaviour() {
-    super();
+    super(Pass.class);
     
     registerModifier(new StepModifier<StepPushback, StepPushback.StepState>(3) {
 
