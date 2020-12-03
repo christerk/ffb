@@ -10,7 +10,6 @@ import com.balancedbytes.games.ffb.server.step.StepCommandStatus;
 import com.balancedbytes.games.ffb.server.step.StepId;
 import com.balancedbytes.games.ffb.server.step.StepParameter;
 import com.balancedbytes.games.ffb.server.step.StepParameterSet;
-import com.balancedbytes.games.ffb.server.step.phase.kickoff.StepSwarming.StepState;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
