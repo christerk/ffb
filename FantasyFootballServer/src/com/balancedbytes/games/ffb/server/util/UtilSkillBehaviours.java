@@ -18,7 +18,7 @@ public class UtilSkillBehaviours {
         Class<?> behaviourClass = Class.forName(behaviourPackage+"."+skillClassName + "Behaviour");
         registerBehaviour((SkillBehaviour<?>) behaviourClass.getConstructor((Class<?>[])null).newInstance((Object[])null), factory);
       } catch (Exception e) {
-        log.log(IServerLogLevel.WARN, "Failed to register behavior for '" + skill.getName() + "': " + e.getMessage());
+        log.log(IServerLogLevel.WARN, "Failed to register behaviour for '" + skill.getName() + "': " + e.getMessage());
       }
     }
   }
