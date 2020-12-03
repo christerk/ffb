@@ -59,7 +59,7 @@ public class GameState implements IModelChangeObserver, IJsonSerializable {
   public GameState(FantasyFootballServer pServer) {
     fServer = pServer;
     skillFactory = new SkillFactory();
-    UtilSkillBehaviours.RegisterBehaviours(skillFactory);
+    UtilSkillBehaviours.RegisterBehaviours(skillFactory, fServer.getDebugLog());
     fGameLog = new GameLog(this);
     fDiceRoller = new DiceRoller(this);
     fSpectatorCooldownTime = new HashMap<String, Long>();
