@@ -17,9 +17,17 @@ import com.balancedbytes.games.ffb.util.UtilCards;
  * @author Kalimar
  */
 public class InjuryModifierFactory implements INamedObjectFactory {
-  
+
+	static InjuryModifiers injuryModifiers;
+
+	public InjuryModifierFactory()
+	{
+		injuryModifiers = new InjuryModifiers();
+	}
+
+	
   public InjuryModifier forName(String pName) {
-    return InjuryModifiers.values().get(pName.toLowerCase());
+    return injuryModifiers.values().get(pName.toLowerCase());
   }
   
   public Set<InjuryModifier> findInjuryModifiers(Game game, InjuryContext injuryContext, Player<?> attacker, Player<?> defender, boolean isStab, boolean isFoul) {
@@ -57,7 +65,7 @@ public class InjuryModifierFactory implements INamedObjectFactory {
           nigglingInjuries++;
         }
       }
-      for (Map.Entry<String, InjuryModifier> entry : InjuryModifiers.values().entrySet()) {
+      for (Map.Entry<String, InjuryModifier> entry : injuryModifiers.values().entrySet()) {
     	  InjuryModifier modifier = entry.getValue();
     	  if (modifier.isNigglingInjuryModifier() && (modifier.getModifier() == nigglingInjuries)) {
     		  return modifier;

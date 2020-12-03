@@ -1,6 +1,7 @@
 package com.balancedbytes.games.ffb;
 
 import java.lang.reflect.Field;
+import java.util.HashMap;
 import java.util.Map;
 
 public class PickupModifiers {
@@ -16,14 +17,15 @@ public class PickupModifiers {
   public static final PickupModifier TACKLEZONES_7 = new PickupModifier("7 Tacklezones", 7, true);
   public static final PickupModifier TACKLEZONES_8 = new PickupModifier("8 Tacklezones", 8, true);
   
-  private static Map<String, PickupModifier> values;
+  private Map<String, PickupModifier> values;
 	
-  public static Map<String, PickupModifier> values() { return values;}
+  public Map<String, PickupModifier> values() { return values;}
   
   public PickupModifiers() {
+	  values = new HashMap<String, PickupModifier>();
 		try {
 			Class<?> c = this.getClass();
-			Class<?> cModifierType = PickupModifier.class.getClass();
+			Class<?> cModifierType = PickupModifier.class;
 			for(Field f :c.getDeclaredFields())
 			{
 				if(f.getType() == cModifierType)

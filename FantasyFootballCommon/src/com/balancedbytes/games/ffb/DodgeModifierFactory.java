@@ -20,10 +20,17 @@ import com.balancedbytes.games.ffb.util.UtilPlayer;
  * @author Kalimar
  */
 public class DodgeModifierFactory implements IRollModifierFactory {
-  
-  public DodgeModifier forName(String pName) {
-	  return DodgeModifiers.values().get(pName.toLowerCase());
-  }
+	
+	static DodgeModifiers dodgeModifiers;
+
+	public DodgeModifierFactory()
+	{
+		dodgeModifiers = new DodgeModifiers();
+	}
+
+	public DodgeModifier forName(String pName) {
+		return dodgeModifiers.values().get(pName.toLowerCase());
+	}
 
   public Set<DodgeModifier> findDodgeModifiers(Game pGame, FieldCoordinate pCoordinateFrom, FieldCoordinate pCoordinateTo, int pTacklezoneModifier) {
     Set<DodgeModifier> dodgeModifiers = new HashSet<DodgeModifier>();
@@ -35,7 +42,7 @@ public class DodgeModifierFactory implements IRollModifierFactory {
     DodgeModifier tacklezoneModifier = findTacklezoneModifier(pGame, pCoordinateTo, pTacklezoneModifier);
     
     boolean preventStunty = UtilCards.hasSkillWithProperty(actingPlayer.getPlayer(), NamedProperties.preventStuntyDodgeModifier);
-    if (context.addTackleZoneModifier || preventStunty) {
+    if (tacklezoneModifier != null && (context.addTackleZoneModifier || preventStunty)) {
       dodgeModifiers.add(tacklezoneModifier);
     }
 
@@ -69,7 +76,7 @@ public class DodgeModifierFactory implements IRollModifierFactory {
 			  tacklezones++;
 		  }
 	  }
-	  for (Map.Entry<String, DodgeModifier> entry : DodgeModifiers.values().entrySet()) {
+	  for (Map.Entry<String, DodgeModifier> entry : dodgeModifiers.values().entrySet()) {
 		  DodgeModifier modifier = entry.getValue();
 		  if (modifier.isTacklezoneModifier() && (modifier.getModifier() == tacklezones)) {
 			  return modifier;

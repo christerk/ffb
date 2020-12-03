@@ -1,6 +1,7 @@
 package com.balancedbytes.games.ffb;
 
 import java.lang.reflect.Field;
+import java.util.HashMap;
 import java.util.Map;
 
 import com.balancedbytes.games.ffb.model.Player;
@@ -33,9 +34,8 @@ public class CatchModifiers {
 	public static final CatchModifier DISTURBING_PRESENCES_11 = new CatchModifier("11 Disturbing Presences", 11, false, true);
 	public static final CatchModifier HAND_OFF = new CatchModifier("Hand Off", -1, false, false);
 	
-	private static Map<String, CatchModifier> values;
-	
-	public static Map<String, CatchModifier> values() { return values;}
+	private Map<String, CatchModifier> values;
+	public Map<String, CatchModifier> values() { return values;}
 	
 	public static final CatchModifier DIVING_CATCH = new CatchModifier("Diving Catch", -1, false, false) {
 		 @Override
@@ -50,9 +50,10 @@ public class CatchModifiers {
 	};
 	
 	public CatchModifiers() {
+		values = new HashMap<String, CatchModifier>();
 		try {
 			Class<?> c = this.getClass();
-			Class<?> cModifierType = CatchModifier.class.getClass();
+			Class<?> cModifierType = CatchModifier.class;
 			for(Field f :c.getDeclaredFields())
 			{
 				if(f.getType() == cModifierType)

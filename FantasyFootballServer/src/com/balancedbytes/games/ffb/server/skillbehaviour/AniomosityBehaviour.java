@@ -118,11 +118,7 @@ public class AniomosityBehaviour extends SkillBehaviour<Animosity> {
               game.getFieldModel().setRangeRuler(null);
             }
             step.getResult().setNextAction(StepAction.GOTO_LABEL, state.gotoLabelOnFailure);
-          } else {
-            if (!state.doRoll) {
-              step.getResult().setNextAction(StepAction.NEXT_STEP);
-            }
-          }
+          } 
         }
         return false;
       }

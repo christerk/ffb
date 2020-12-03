@@ -103,6 +103,10 @@ public final class StepAnimosity extends AbstractStepWithReRoll {
     }
     
     getGameState().executeStepHooks(this, state);
+    
+    if (!state.doRoll) {
+    	getResult().setNextAction(StepAction.NEXT_STEP);
+    }
   }
 
   // JSON serialization

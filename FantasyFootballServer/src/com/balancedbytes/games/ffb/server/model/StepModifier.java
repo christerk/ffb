@@ -15,7 +15,7 @@ public abstract class StepModifier<T extends IStep, V> {
     this(0);
   }
   protected StepModifier(int priority) {
-    modifierType = ((ParameterizedType)getClass().getGenericSuperclass()).getActualTypeArguments()[0].getClass();
+    modifierType = (Class)((ParameterizedType)getClass().getGenericSuperclass()).getActualTypeArguments()[0];
     this.priority = priority;
   }
 

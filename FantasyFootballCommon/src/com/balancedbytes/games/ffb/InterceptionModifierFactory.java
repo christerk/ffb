@@ -19,9 +19,17 @@ import com.balancedbytes.games.ffb.util.UtilPlayer;
  * @author Kalimar
  */
 public class InterceptionModifierFactory implements IRollModifierFactory {
+
+	static InterceptionModifiers interceptionModifiers;
+
+	public InterceptionModifierFactory()
+	{
+		interceptionModifiers = new InterceptionModifiers();
+	}
+
   
   public InterceptionModifier forName(String pName) {
-	  return InterceptionModifiers.values().get(pName.toLowerCase());
+	  return interceptionModifiers.values().get(pName.toLowerCase());
   }
 
   public Set<InterceptionModifier> findInterceptionModifiers(Game pGame, Player<?> pPlayer) {
@@ -72,7 +80,7 @@ public class InterceptionModifierFactory implements IRollModifierFactory {
   
   private InterceptionModifier getTacklezoneModifier(Game pGame, Player<?> pPlayer) {
 	  int tacklezones = UtilPlayer.findTacklezones(pGame, pPlayer);
-	  for (Map.Entry<String, InterceptionModifier> entry : InterceptionModifiers.values().entrySet()) {
+	  for (Map.Entry<String, InterceptionModifier> entry : interceptionModifiers.values().entrySet()) {
 		  InterceptionModifier modifier = entry.getValue();
 		  if (modifier.isTacklezoneModifier() && (modifier.getModifier() == tacklezones)) {
 			  return modifier;
@@ -83,7 +91,7 @@ public class InterceptionModifierFactory implements IRollModifierFactory {
 
   private InterceptionModifier getDisturbingPresenceModifier(Game pGame, Player<?> pPlayer) {
 	  int disturbingPresences = UtilDisturbingPresence.findOpposingDisturbingPresences(pGame, pPlayer);
-	  for (Map.Entry<String, InterceptionModifier> entry : InterceptionModifiers.values().entrySet()) {
+	  for (Map.Entry<String, InterceptionModifier> entry : interceptionModifiers.values().entrySet()) {
 		  InterceptionModifier modifier = entry.getValue();
 		  if (modifier.isDisturbingPresenceModifier() && (modifier.getModifier() == disturbingPresences)) {
 			  return modifier;

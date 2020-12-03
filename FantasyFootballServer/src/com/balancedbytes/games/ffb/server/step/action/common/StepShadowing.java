@@ -1,7 +1,10 @@
 package com.balancedbytes.games.ffb.server.step.action.common;
 
 import com.balancedbytes.games.ffb.FieldCoordinate;
+import com.balancedbytes.games.ffb.PlayerChoiceMode;
 import com.balancedbytes.games.ffb.json.UtilJson;
+import com.balancedbytes.games.ffb.model.Game;
+import com.balancedbytes.games.ffb.net.commands.ClientCommandPlayerChoice;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandUseSkill;
 import com.balancedbytes.games.ffb.server.ActionStatus;
 import com.balancedbytes.games.ffb.server.GameState;
@@ -12,6 +15,8 @@ import com.balancedbytes.games.ffb.server.step.AbstractStepWithReRoll;
 import com.balancedbytes.games.ffb.server.step.StepCommandStatus;
 import com.balancedbytes.games.ffb.server.step.StepId;
 import com.balancedbytes.games.ffb.server.step.StepParameter;
+import com.balancedbytes.games.ffb.server.step.phase.kickoff.StepSwarming.StepState;
+import com.balancedbytes.games.ffb.util.StringTool;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
@@ -40,6 +45,9 @@ public class StepShadowing extends AbstractStepWithReRoll {
 	
 	public StepShadowing(GameState pGameState) {
 		super(pGameState);
+		
+	    state = new StepState();
+
 	}
 	
 	public StepId getId() {
@@ -74,24 +82,26 @@ public class StepShadowing extends AbstractStepWithReRoll {
   
   @Override
   public StepCommandStatus handleCommand(ReceivedCommand pReceivedCommand) {
-    StepCommandStatus commandStatus = super.handleCommand(pReceivedCommand);
-    if (commandStatus == StepCommandStatus.UNHANDLED_COMMAND) {
-      switch (pReceivedCommand.getId()) {
-        case CLIENT_PLAYER_CHOICE:
-        	 ClientCommandUseSkill useSkillCommand = (ClientCommandUseSkill) pReceivedCommand.getCommand();
-             ServerSkill usedSkill = (ServerSkill) useSkillCommand.getSkill();
-             if (usedSkill != null) { 
-           	  commandStatus = usedSkill.applyUseSkillCommandHooks(this, state, useSkillCommand);
-             } 	
-          break;
-        default:
-          break;
-      }
-    }
-    if (commandStatus == StepCommandStatus.EXECUTE_STEP) {
-      executeStep();
-    }
-    return commandStatus;
+	  StepCommandStatus commandStatus = super.handleCommand(pReceivedCommand);
+	  if (commandStatus == StepCommandStatus.UNHANDLED_COMMAND) {
+		  Game game = getGameState().getGame();
+		  switch (pReceivedCommand.getId()) {
+		  case CLIENT_PLAYER_CHOICE:
+			  ClientCommandPlayerChoice playerChoiceCommand = (ClientCommandPlayerChoice) pReceivedCommand.getCommand();
+			  if (PlayerChoiceMode.SHADOWING == playerChoiceCommand.getPlayerChoiceMode()) {
+				  state.usingShadowing = StringTool.isProvided(playerChoiceCommand.getPlayerId());
+				  game.setDefenderId(playerChoiceCommand.getPlayerId());
+				  commandStatus = StepCommandStatus.EXECUTE_STEP;
+			  }
+			  break;
+		  default:
+			  break;
+		  }
+	  }
+	  if (commandStatus == StepCommandStatus.EXECUTE_STEP) {
+		  executeStep();
+	  }
+	  return commandStatus;
   }
 
   private void executeStep() {

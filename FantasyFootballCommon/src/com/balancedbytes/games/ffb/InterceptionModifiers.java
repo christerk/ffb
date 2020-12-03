@@ -1,6 +1,7 @@
 package com.balancedbytes.games.ffb;
 
 import java.lang.reflect.Field;
+import java.util.HashMap;
 import java.util.Map;
 
 import com.balancedbytes.games.ffb.model.Player;
@@ -33,13 +34,14 @@ public class InterceptionModifiers {
   public static final InterceptionModifier FAWNDOUGHS_HEADBAND = new InterceptionModifier("Fawndough's Headband", -1, false, false);
   public static final InterceptionModifier MAGIC_GLOVES_OF_JARK_LONGARM = new InterceptionModifier("Magic Gloves of Jark Longarm", -1, false, false);
   
-  private static Map<String, InterceptionModifier> values;
-  public static Map<String, InterceptionModifier> values() { return values;}
+  private Map<String, InterceptionModifier> values;
+  public Map<String, InterceptionModifier> values() { return values;}
   
 	public InterceptionModifiers() {
+		values = new HashMap<String, InterceptionModifier>();
 		try {
 			Class<?> c = this.getClass();
-			Class<?> cModifierType = InterceptionModifier.class.getClass();
+			Class<?> cModifierType = InterceptionModifier.class;
 			for(Field f :c.getDeclaredFields())
 			{
 				if(f.getType() == cModifierType)

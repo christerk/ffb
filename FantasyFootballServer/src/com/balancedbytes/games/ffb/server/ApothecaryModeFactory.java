@@ -1,4 +1,4 @@
-package com.balancedbytes.games.ffb.server.step.action.common;
+package com.balancedbytes.games.ffb.server;
 
 import com.balancedbytes.games.ffb.ApothecaryMode;
 import com.balancedbytes.games.ffb.INamedObjectFactory;

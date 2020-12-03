@@ -17,9 +17,16 @@ import com.balancedbytes.games.ffb.util.UtilPlayer;
  * @author Kalimar
  */
 public class PickupModifierFactory implements IRollModifierFactory {
+	
+	static PickupModifiers pickupModifiers;
+	
+	public PickupModifierFactory()
+	{
+		pickupModifiers = new PickupModifiers();
+	}
   
   public PickupModifier forName(String pName) {
-	  return PickupModifiers.values().get(pName.toLowerCase());
+	  return pickupModifiers.values().get(pName.toLowerCase());
   }
   
   public Set<PickupModifier> findPickupModifiers(Game pGame) {
@@ -65,7 +72,7 @@ public class PickupModifierFactory implements IRollModifierFactory {
   private PickupModifier getTacklezoneModifier(Game pGame, Player<?> pPlayer) {
 	  int tacklezones = UtilPlayer.findTacklezones(pGame, pPlayer);
 	  if (tacklezones > 0) {
-		  for (Map.Entry<String, PickupModifier> entry : PickupModifiers.values().entrySet()) {
+		  for (Map.Entry<String, PickupModifier> entry : pickupModifiers.values().entrySet()) {
 			  PickupModifier modifier = entry.getValue();
 			  if (modifier.isTacklezoneModifier() && (modifier.getModifier() == tacklezones)) {
 				  return modifier;

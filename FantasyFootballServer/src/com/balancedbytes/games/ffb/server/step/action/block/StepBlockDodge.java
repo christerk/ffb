@@ -11,6 +11,7 @@ import com.balancedbytes.games.ffb.server.step.AbstractStep;
 import com.balancedbytes.games.ffb.server.step.StepCommandStatus;
 import com.balancedbytes.games.ffb.server.step.StepId;
 import com.balancedbytes.games.ffb.server.step.StepParameter;
+import com.balancedbytes.games.ffb.server.step.phase.kickoff.StepSwarming.StepState;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
@@ -34,6 +35,8 @@ public class StepBlockDodge extends AbstractStep {
 
   public StepBlockDodge(GameState pGameState) {
     super(pGameState);
+    
+    state = new StepState();
   }
 
   public StepId getId() {

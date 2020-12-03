@@ -19,11 +19,18 @@ import com.balancedbytes.games.ffb.util.UtilPlayer;
  * @author Kalimar
  */
 public class CatchModifierFactory implements IRollModifierFactory {
+	
+  static CatchModifiers catchModifiers;
+  
+  public CatchModifierFactory()
+  {
+	  catchModifiers = new CatchModifiers();
+  }
+ 
   
   public CatchModifier forName(String pName) {
-	 return CatchModifiers.values().get(pName.toLowerCase());
+	 return catchModifiers.values().get(pName.toLowerCase());
   }
-  
 
   public Set<CatchModifier> findCatchModifiers(Game pGame, Player<?> pPlayer, CatchScatterThrowInMode pCatchMode) {
     Set<CatchModifier> catchModifiers = new HashSet<CatchModifier>();
@@ -80,7 +87,7 @@ public class CatchModifierFactory implements IRollModifierFactory {
   private CatchModifier getTacklezoneModifier(Game pGame, Player<?> pPlayer) {
 	  int tacklezones = UtilPlayer.findTacklezones(pGame, pPlayer);
 	  if (tacklezones > 0) {
-		  for (Map.Entry<String, CatchModifier> entry : CatchModifiers.values().entrySet()) {
+		  for (Map.Entry<String, CatchModifier> entry : catchModifiers.values().entrySet()) {
 			  CatchModifier modifier = entry.getValue();
 			  if (modifier.isTacklezoneModifier() && (modifier.getModifier() == tacklezones)) {
 				  return modifier;
@@ -93,7 +100,7 @@ public class CatchModifierFactory implements IRollModifierFactory {
   private CatchModifier getDisturbingPresenceModifier(Game pGame, Player<?> pPlayer) {
 	  int disturbingPresences = UtilDisturbingPresence.findOpposingDisturbingPresences(pGame, pPlayer);
 	  if (disturbingPresences > 0) {
-		  for (Map.Entry<String, CatchModifier> entry : CatchModifiers.values().entrySet()) {
+		  for (Map.Entry<String, CatchModifier> entry : catchModifiers.values().entrySet()) {
 			  CatchModifier modifier = entry.getValue();
 			  if (modifier.isDisturbingPresenceModifier() && (modifier.getModifier() == disturbingPresences)) {
 				  return modifier;

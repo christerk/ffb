@@ -5,9 +5,16 @@ package com.balancedbytes.games.ffb;
  * @author Kalimar
  */
 public class ReRollSourceFactory implements INamedObjectFactory {
-  
-  public ReRollSource forName(String pName) {
-	 return ReRollSources.values().get(pName.toLowerCase());
-  }
+
+	static ReRollSources reRollSources = new ReRollSources();
+
+	public ReRollSourceFactory()
+	{
+		reRollSources = new ReRollSources();
+	}
+
+	public ReRollSource forName(String pName) {
+		return reRollSources.values().get(pName.toLowerCase());
+	}
 
 }

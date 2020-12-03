@@ -1,6 +1,7 @@
 package com.balancedbytes.games.ffb;
 
 import java.lang.reflect.Field;
+import java.util.HashMap;
 import java.util.Map;
 
 import com.balancedbytes.games.ffb.skill.Catch;
@@ -27,13 +28,14 @@ public class ReRollSources {
 	 public static final ReRollSource  LEADER= new ReRollSource(Leader.class);
 	 public static final ReRollSource  MONSTROUS_MOUTH = new ReRollSource(MonstrousMouth.class);
 
-	  private static Map<String, ReRollSource> values;
-	  public static Map<String, ReRollSource> values() { return values;}
+	  private Map<String, ReRollSource> values;
+	  public Map<String, ReRollSource> values() { return values;}
 
 	  public ReRollSources() {
+		  values = new HashMap<String, ReRollSource>();
 		  try {
 			  Class<?> c = this.getClass();
-			  Class<?> cModifierType = ReRollSource.class.getClass();
+			  Class<?> cModifierType = ReRollSource.class;
 			  for(Field f :c.getDeclaredFields())
 			  {
 				  if(f.getType() == cModifierType)
