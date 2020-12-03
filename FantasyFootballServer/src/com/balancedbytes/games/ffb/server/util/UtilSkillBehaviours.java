@@ -13,8 +13,8 @@ public class UtilSkillBehaviours {
       String skillClassName = skill.getClass().getSimpleName();
 
       try {
-        Class behaviourClass = Class.forName(behaviourPackage+"."+skillClassName + "Behaviour");
-        registerBehaviour((SkillBehaviour<?>) behaviourClass.getConstructor((Class[])null).newInstance((Object[])null), factory);
+        Class<?> behaviourClass = Class.forName(behaviourPackage+"."+skillClassName + "Behaviour");
+        registerBehaviour((SkillBehaviour<?>) behaviourClass.getConstructor((Class<?>[])null).newInstance((Object[])null), factory);
       } catch (Exception e) { }
     }
   }
