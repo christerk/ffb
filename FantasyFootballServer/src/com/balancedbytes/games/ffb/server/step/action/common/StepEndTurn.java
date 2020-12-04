@@ -163,11 +163,11 @@ public class StepEndTurn extends AbstractStep {
   
         fNextSequencePushed = true;
   
-        Player touchdownPlayer = null;
+        Player<?> touchdownPlayer = null;
         if (fTouchdown) {
   
           touchdownPlayer = game.getFieldModel().getPlayer(game.getFieldModel().getBallCoordinate());
-          boolean offTurnTouchDown = false;
+          boolean offTurnTouchDown;
           if (touchdownPlayer != null) {
   
             GameResult gameResult = game.getGameResult();
@@ -176,11 +176,11 @@ public class StepEndTurn extends AbstractStep {
   
             if (game.getTeamHome().hasPlayer(touchdownPlayer)) {
               gameResult.getTeamResultHome().setScore(gameResult.getTeamResultHome().getScore() + 1);
-              offTurnTouchDown |= !game.isHomePlaying();
+              offTurnTouchDown = !game.isHomePlaying();
   
             } else {
               gameResult.getTeamResultAway().setScore(gameResult.getTeamResultAway().getScore() + 1);
-              offTurnTouchDown |= game.isHomePlaying();
+              offTurnTouchDown = game.isHomePlaying();
             }
   
             // in the case of a caught kick-off that results in a TD
@@ -237,11 +237,11 @@ public class StepEndTurn extends AbstractStep {
         game.getFieldModel().clearTrackNumbers();
         game.getFieldModel().clearDiceDecorations();
   
-        List<KnockoutRecovery> knockoutRecoveries = new ArrayList<KnockoutRecovery>();
-        List<HeatExhaustion> heatExhaustions = new ArrayList<HeatExhaustion>();
-        List<Player<?>> unzappedPlayers = new ArrayList<Player<?>>();
+        List<KnockoutRecovery> knockoutRecoveries = new ArrayList<>();
+        List<HeatExhaustion> heatExhaustions = new ArrayList<>();
+        List<Player<?>> unzappedPlayers = new ArrayList<>();
         if (fNewHalf || fTouchdown) {
-          for (Player player : game.getPlayers()) {
+          for (Player<?> player : game.getPlayers()) {
             if (player instanceof ZappedPlayer) {
               getGameState().getServer().getCommunication().sendUnzapPlayer(getGameState(), (ZappedPlayer) player);
               Team team = game.findTeam(player);
@@ -319,8 +319,8 @@ public class StepEndTurn extends AbstractStep {
           SequenceGenerator.getInstance().pushInducementSequence(getGameState(), InducementPhase.START_OF_OWN_TURN, game.isHomePlaying());
         }
   
-        KnockoutRecovery[] knockoutRecoveryArray = knockoutRecoveries.toArray(new KnockoutRecovery[knockoutRecoveries.size()]);
-        HeatExhaustion[] heatExhaustionArray = heatExhaustions.toArray(new HeatExhaustion[heatExhaustions.size()]);
+        KnockoutRecovery[] knockoutRecoveryArray = knockoutRecoveries.toArray(new KnockoutRecovery[0]);
+        HeatExhaustion[] heatExhaustionArray = heatExhaustions.toArray(new HeatExhaustion[0]);
         String touchdownPlayerId = (touchdownPlayer != null) ? touchdownPlayer.getId() : null;
         getResult().addReport(new ReportTurnEnd(touchdownPlayerId, knockoutRecoveryArray, heatExhaustionArray, unzappedPlayers));
   
@@ -397,7 +397,7 @@ public class StepEndTurn extends AbstractStep {
   private void markPlayedAndSecretWeapons() {
     Game game = getGameState().getGame();
     if (game.getTurnMode() == TurnMode.REGULAR) {
-      for (Player player : game.getPlayers()) {
+      for (Player<?> player : game.getPlayers()) {
         PlayerState playerState = game.getFieldModel().getPlayerState(player);
         PlayerResult playerResult = game.getGameResult().getPlayerResult(player);
         if (playerState.canBeSetUp() && playerState.getBase() != PlayerState.RESERVE) {
@@ -419,13 +419,13 @@ public class StepEndTurn extends AbstractStep {
   private void reportSecretWeaponsUsed() {
     ReportSecretWeaponBan reportBan = new ReportSecretWeaponBan();
     Game game = getGameState().getGame();
-    for (Player player : game.getPlayers()) {
+    for (Player<?> player : game.getPlayers()) {
       PlayerResult playerResult = game.getGameResult().getPlayerResult(player);
       Skill skillRequiringPlayerToBeSentOff = UtilCards.getSkillWithProperty(player, NamedProperties.getsSentOffAtEndOfDrive);
       if (playerResult.hasUsedSecretWeapon() && skillRequiringPlayerToBeSentOff != null) {
         // special for stunty leeg -> roll for secret weapon ban
-        Integer penalty = player.getPosition().getSkillValue(skillRequiringPlayerToBeSentOff);
-        if ((penalty != null) && (penalty > 0)) {
+        int penalty = player.getPosition().getSkillValue(skillRequiringPlayerToBeSentOff);
+        if (penalty > 0) {
           int[] roll = getGameState().getDiceRoller().rollSecretWeapon();
           int total = roll[0] + roll[1];
           boolean banned = (total >= penalty);
@@ -444,7 +444,7 @@ public class StepEndTurn extends AbstractStep {
 
   private void removeUsedSecretWeapons() {
     Game game = getGameState().getGame();
-    for (Player player : game.getPlayers()) {
+    for (Player<?> player : game.getPlayers()) {
       PlayerResult playerResult = game.getGameResult().getPlayerResult(player);
       if (playerResult.hasUsedSecretWeapon()) {
         PlayerState playerState = game.getFieldModel().getPlayerState(player);
@@ -460,9 +460,9 @@ public class StepEndTurn extends AbstractStep {
     UtilServerGame.updateLeaderReRolls(this);
   }
 
-  private KnockoutRecovery recoverKnockout(Player pPlayer) {
+  private KnockoutRecovery recoverKnockout(Player<?> pPlayer) {
     if (pPlayer != null) {
-      String playerId = (pPlayer != null) ? pPlayer.getId() : null;
+      String playerId = pPlayer.getId();
       int recoveryRoll = getGameState().getDiceRoller().rollKnockoutRecovery();
       Game game = getGameState().getGame();
       InducementSet inducementSet = (pPlayer.getTeam() == game.getTeamHome()) ? game.getTurnDataHome().getInducementSet() : game.getTurnDataAway()
@@ -476,15 +476,14 @@ public class StepEndTurn extends AbstractStep {
     }
   }
 
-  private HeatExhaustion heatExhaust(Player pPlayer) {
+  private HeatExhaustion heatExhaust(Player<?> pPlayer) {
     String playerId = (pPlayer != null) ? pPlayer.getId() : null;
     int exhaustionRoll = getGameState().getDiceRoller().rollKnockoutRecovery();
     boolean isExhausted = DiceInterpreter.getInstance().isExhausted(exhaustionRoll);
     return new HeatExhaustion(playerId, isExhausted, exhaustionRoll);
   }
 
-  private static boolean updateFumbblGame(GameState pGameState, boolean pNewHalf, boolean pTouchdown) {
-    boolean isOk = true;
+  private static void updateFumbblGame(GameState pGameState, boolean pNewHalf, boolean pTouchdown) {
     FantasyFootballServer server = pGameState.getServer();
     if (server.getMode() == ServerMode.FUMBBL) {
       Game game = pGameState.getGame();
@@ -492,7 +491,6 @@ public class StepEndTurn extends AbstractStep {
         server.getRequestProcessor().add(new FumbblRequestUpdateGamestate(pGameState));
       }
     }
-    return isOk;
   }
 
   private void argueTheCall(Team pTeam, String[] pPlayerIds) {
@@ -507,7 +505,7 @@ public class StepEndTurn extends AbstractStep {
     }
     if (ArrayTool.isProvided(pPlayerIds)) {
       for (String playerId : pPlayerIds) {
-        Player player = pTeam.getPlayerById(playerId);
+        Player<?> player = pTeam.getPlayerById(playerId);
         if ((player != null) && !turnData.isCoachBanned()) {
           int roll = getGameState().getDiceRoller().rollArgueTheCall();
           boolean successful = DiceInterpreter.getInstance().isArgueTheCallSuccessful(roll);
@@ -535,7 +533,7 @@ public class StepEndTurn extends AbstractStep {
     }
     if (ArrayTool.isProvided(pPlayerIds) && UtilServerInducementUse.useInducement(getGameState(), pTeam, InducementType.BRIBES, pPlayerIds.length)) {
       for (String playerId : pPlayerIds) {
-        Player player = pTeam.getPlayerById(playerId);
+        Player<?> player = pTeam.getPlayerById(playerId);
         if (player != null) {
           int roll = getGameState().getDiceRoller().rollBribes();
           boolean successful = DiceInterpreter.getInstance().isBribesSuccessful(roll);
@@ -577,20 +575,13 @@ public class StepEndTurn extends AbstractStep {
 
   private boolean askForSecretWeaponBribes(Team team) {
     Game game = getGameState().getGame();
-    List<String> playerIds = new ArrayList<String>();
-    for (Player player : team.getPlayers()) {
-      PlayerResult playerResult = game.getGameResult().getPlayerResult(player);
-      PlayerState playerState = game.getFieldModel().getPlayerState(player);
-      if (playerResult.hasUsedSecretWeapon() && (playerState.getBase() != PlayerState.BANNED)) {
-        playerIds.add(player.getId());
-      }
-    }
+    List<String> playerIds = getPlayerIds(team, game);
     if (playerIds.size() > 0) {
       InducementSet inducementSet = (game.getTeamHome() == team) ? game.getTurnDataHome().getInducementSet() : game.getTurnDataAway().getInducementSet();
       if (inducementSet.hasUsesLeft(InducementType.BRIBES)) {
         Inducement bribes = inducementSet.get(InducementType.BRIBES);
         DialogBribesParameter dialogParameter = new DialogBribesParameter(team.getId(), bribes.getUsesLeft());
-        dialogParameter.addPlayerIds(playerIds.toArray(new String[playerIds.size()]));
+        dialogParameter.addPlayerIds(playerIds.toArray(new String[0]));
         UtilServerDialog.showDialog(
             getGameState(),
             dialogParameter,
@@ -607,19 +598,12 @@ public class StepEndTurn extends AbstractStep {
     if (!UtilGameOption.isOptionEnabled(game, GameOptionId.ARGUE_THE_CALL)) {
       return false;
     }
-    List<String> playerIds = new ArrayList<String>();
-    for (Player player : team.getPlayers()) {
-      PlayerResult playerResult = game.getGameResult().getPlayerResult(player);
-      PlayerState playerState = game.getFieldModel().getPlayerState(player);
-      if (playerResult.hasUsedSecretWeapon() && (playerState.getBase() != PlayerState.BANNED)) {
-        playerIds.add(player.getId());
-      }
-    }
+    List<String> playerIds = getPlayerIds(team, game);
     if (playerIds.size() > 0) {
       TurnData turnData = (game.getTeamHome() == team) ? game.getTurnDataHome() : game.getTurnDataAway();
       if (!turnData.isCoachBanned()) {
         DialogArgueTheCallParameter dialogParameter = new DialogArgueTheCallParameter(team.getId());
-        dialogParameter.addPlayerIds(playerIds.toArray(new String[playerIds.size()]));
+        dialogParameter.addPlayerIds(playerIds.toArray(new String[0]));
         UtilServerDialog.showDialog(
             getGameState(),
             dialogParameter,
@@ -629,6 +613,18 @@ public class StepEndTurn extends AbstractStep {
       }
     }
     return false;
+  }
+
+  private List<String> getPlayerIds(Team team, Game game) {
+    List<String> playerIds = new ArrayList<>();
+    for (Player<?> player : team.getPlayers()) {
+      PlayerResult playerResult = game.getGameResult().getPlayerResult(player);
+      PlayerState playerState = game.getFieldModel().getPlayerState(player);
+      if (playerResult.hasUsedSecretWeapon() && (playerState.getBase() != PlayerState.BANNED)) {
+        playerIds.add(player.getId());
+      }
+    }
+    return playerIds;
   }
 
   // JSON serialization

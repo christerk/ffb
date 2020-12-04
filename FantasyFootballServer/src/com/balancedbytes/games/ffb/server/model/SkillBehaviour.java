@@ -1,33 +1,32 @@
 package com.balancedbytes.games.ffb.server.model;
 
+import com.balancedbytes.games.ffb.model.ISkillBehaviour;
+import com.balancedbytes.games.ffb.model.PlayerModifier;
+import com.balancedbytes.games.ffb.model.Skill;
+import com.balancedbytes.games.ffb.server.step.IStep;
+
 import java.lang.reflect.ParameterizedType;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.balancedbytes.games.ffb.model.ISkillBehaviour;
-import com.balancedbytes.games.ffb.model.PlayerModifier;
-import com.balancedbytes.games.ffb.model.Skill;
-
-public class SkillBehaviour<T extends Skill> implements ISkillBehaviour {
+public abstract class SkillBehaviour<T extends Skill> implements ISkillBehaviour {
 
   public T skill;
-  public final Class<? extends Skill> skillClass;
+
+  @SuppressWarnings("unchecked")
+  public final Class<T> skillClass = (Class<T>) ((ParameterizedType)getClass().getGenericSuperclass()).getActualTypeArguments()[0].getClass();
   
   private List<PlayerModifier> playerModifiers;
-  private List<StepModifier> stepModifiers;
+  private List<StepModifier<? extends IStep, ?>> stepModifiers;
   
-  @SuppressWarnings("unchecked")
   public SkillBehaviour() {
-    playerModifiers = new ArrayList<PlayerModifier>();
-    stepModifiers = new ArrayList<StepModifier>();
-    
-	skillClass = (Class<? extends Skill>) ((ParameterizedType)getClass().getGenericSuperclass()).getActualTypeArguments()[0];
+    playerModifiers = new ArrayList<>();
+    stepModifiers = new ArrayList<>();
   }
   
-  @SuppressWarnings("unchecked")
-  public void setSkill(Skill skill) {
-    this.skill = (T) skill;
-    this.skill.addBehaviour(this);
+  public void setSkill(T skill) {
+    this.skill = skill;
+    this.skill.setBehaviour(this);
   }
   
   protected void registerModifier(StepModifier<?, ?> stepModifier) {
@@ -38,7 +37,7 @@ public class SkillBehaviour<T extends Skill> implements ISkillBehaviour {
     playerModifiers.add(playerModifier);
   }
   
-  public List<StepModifier> getStepModifiers() {
+  public List<StepModifier<? extends IStep, ?>> getStepModifiers() {
     return stepModifiers;
   }
 }

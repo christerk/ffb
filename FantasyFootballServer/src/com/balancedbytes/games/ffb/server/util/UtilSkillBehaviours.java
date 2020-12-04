@@ -18,7 +18,7 @@ public class UtilSkillBehaviours {
 
       try {
         Class<?> behaviourClass = Class.forName(behaviourPackage + "." + skillClassName + "Behaviour");
-        SkillBehaviour<?> behaviour = (SkillBehaviour<?>) behaviourClass.getConstructor((Class<?>[])null).newInstance((Object[])null);
+        @SuppressWarnings("unchecked") SkillBehaviour<Skill> behaviour = (SkillBehaviour<Skill>) behaviourClass.getConstructor((Class<Skill>[])null).newInstance((Object[])null);
         if (registerBehaviour(behaviour, factory)) {
           log.log(IServerLogLevel.DEBUG, "Registered behavior class '" + behaviourClass.getSimpleName() + "' for skill '" + skillClassName + "'");
         } else {
@@ -32,7 +32,7 @@ public class UtilSkillBehaviours {
     }
   }
 
-  private static boolean registerBehaviour(SkillBehaviour<?> behaviour, SkillFactory factory) {
+  private static boolean registerBehaviour(SkillBehaviour<Skill> behaviour, SkillFactory factory) {
     Skill skill = factory.forClass(behaviour.skillClass);
     if (skill != null) {
       behaviour.setSkill(skill);

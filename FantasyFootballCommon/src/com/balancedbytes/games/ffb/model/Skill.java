@@ -32,14 +32,13 @@ public class Skill implements INamedObject {
   private List<InjuryModifier> injuryModifiers;
   private List<ArmorModifier> armorModifiers;
   private List<CatchModifier> catchModifiers;
-  private List<ISkillBehaviour> behaviours;
+  private ISkillBehaviour behaviour;
   private List<ISkillProperty> skillProperties;
   private Hashtable<ReRolledAction, ReRollSource> rerollSources;
   
   public Skill(String name, SkillCategory category) {
     this.name = name;
     this.category = category;
-    behaviours = new ArrayList<>();
     skillProperties = new ArrayList<>();
     leapModifiers = new ArrayList<>();
     playerModifiers = new ArrayList<>();
@@ -118,8 +117,8 @@ public class Skill implements INamedObject {
 	  rerollSources.put(action, source);
   }
   
-  public List<ISkillBehaviour> getSkillBehaviours() {
-    return behaviours;
+  public ISkillBehaviour getSkillBehaviour() {
+    return behaviour;
   }
   
   public List<PlayerModifier> getPlayerModifiers() {
@@ -158,8 +157,8 @@ public class Skill implements INamedObject {
 	  return injuryModifiers;
   } 
 
-  public void addBehaviour(ISkillBehaviour behaviour) {
-    behaviours.add(behaviour);
+  public void setBehaviour(ISkillBehaviour behaviour) {
+    this.behaviour = behaviour;
   }
   
   public int getCost(Player<?> player) {
@@ -206,6 +205,4 @@ public class Skill implements INamedObject {
     }
     return null;
   }
-
-
 }
