@@ -5,7 +5,7 @@ import com.balancedbytes.games.ffb.skill.AgilityIncrease;
 
 public class AgilityIncreaseBehaviour extends SkillBehaviour<AgilityIncrease> {
   public AgilityIncreaseBehaviour() {
-    super(AgilityIncrease.class);
+    super();
     
     registerModifier(player -> player.setAgility(player.getAgility() + 1));
   }

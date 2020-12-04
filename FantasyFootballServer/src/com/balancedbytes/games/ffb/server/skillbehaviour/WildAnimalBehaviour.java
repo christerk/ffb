@@ -24,7 +24,7 @@ import com.balancedbytes.games.ffb.util.UtilCards;
 
 public class WildAnimalBehaviour extends SkillBehaviour<WildAnimal> {
 	public WildAnimalBehaviour() {
-		super(WildAnimal.class);
+		super();
 		
 		registerModifier(new StepModifier<StepWildAnimal, StepWildAnimal.StepState>() {
 

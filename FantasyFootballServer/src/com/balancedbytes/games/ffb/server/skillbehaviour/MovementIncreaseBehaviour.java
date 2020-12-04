@@ -5,7 +5,7 @@ import com.balancedbytes.games.ffb.skill.MovementIncrease;
 
 public class MovementIncreaseBehaviour extends SkillBehaviour<MovementIncrease> {
   public MovementIncreaseBehaviour() {
-    super(MovementIncrease.class);
+    super();
     
     registerModifier(player -> player.setMovement(player.getMovement() + 1));
   }

@@ -22,10 +22,9 @@ import com.balancedbytes.games.ffb.server.util.UtilServerReRoll;
 import com.balancedbytes.games.ffb.skill.BoneHead;
 import com.balancedbytes.games.ffb.util.UtilCards;
 
-	
 	public class BoneHeadBehaviour extends SkillBehaviour<BoneHead> {
 		public BoneHeadBehaviour() {
-			super(BoneHead.class);
+			super();
 
 			registerModifier(new StepModifier<StepBoneHead, StepBoneHead.StepState>() {
 

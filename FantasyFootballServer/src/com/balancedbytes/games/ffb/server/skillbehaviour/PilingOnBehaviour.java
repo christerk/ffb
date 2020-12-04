@@ -43,7 +43,7 @@ import com.balancedbytes.games.ffb.util.UtilCards;
 
 public class PilingOnBehaviour extends SkillBehaviour<PilingOn> {
 	public PilingOnBehaviour() {
-		super(PilingOn.class);
+		super();
 
 		registerModifier(new StepModifier<StepDropFallingPlayers, StepDropFallingPlayers.StepState>() {
 

@@ -23,7 +23,7 @@ import com.balancedbytes.games.ffb.util.UtilCards;
 
 public class JuggernautBehaviour extends SkillBehaviour<Juggernaut> {
 	public JuggernautBehaviour() {
-		super(Juggernaut.class);
+		super();
 
 		registerModifier(new StepModifier<StepJuggernaut, StepJuggernaut.StepState>() {
 

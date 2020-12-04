@@ -5,7 +5,7 @@ import com.balancedbytes.games.ffb.skill.AgilityDecrease;
 
 public class AgilityDecreaseBehaviour extends SkillBehaviour<AgilityDecrease> {
   public AgilityDecreaseBehaviour() {
-    super(AgilityDecrease.class);
+    super();
     
     registerModifier(player -> player.setAgility(player.getAgility() - 1));
   }

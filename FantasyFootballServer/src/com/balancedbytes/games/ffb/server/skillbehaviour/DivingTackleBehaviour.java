@@ -32,7 +32,7 @@ import com.balancedbytes.games.ffb.util.UtilPlayer;
 
 public class DivingTackleBehaviour extends SkillBehaviour<DivingTackle> {
 	public DivingTackleBehaviour() {
-		super(DivingTackle.class);
+		super();
 
 		registerModifier(new StepModifier<StepDivingTackle, StepDivingTackle.StepState>() {
 

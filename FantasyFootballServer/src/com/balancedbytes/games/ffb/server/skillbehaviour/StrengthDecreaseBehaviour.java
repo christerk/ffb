@@ -5,7 +5,7 @@ import com.balancedbytes.games.ffb.skill.StrengthDecrease;
 
 public class StrengthDecreaseBehaviour extends SkillBehaviour<StrengthDecrease> {
   public StrengthDecreaseBehaviour() {
-    super(StrengthDecrease.class);
+    super();
     
     registerModifier(player -> player.setStrength(player.getStrength() - 1));
   }

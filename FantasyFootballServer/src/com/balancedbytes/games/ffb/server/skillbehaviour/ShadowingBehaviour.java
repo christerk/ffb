@@ -28,7 +28,7 @@ import com.balancedbytes.games.ffb.util.UtilPlayer;
 
 public class ShadowingBehaviour extends SkillBehaviour<Shadowing> {
 	public ShadowingBehaviour() {
-		super(Shadowing.class);
+		super();
 
 		registerModifier(new StepModifier<StepShadowing, StepShadowing.StepState>() {
 

@@ -31,7 +31,7 @@ import com.balancedbytes.games.ffb.util.UtilPassing;
 
 public class ThrowTeamMateBehaviour extends SkillBehaviour<ThrowTeamMate> {
 	public ThrowTeamMateBehaviour() {
-		super(ThrowTeamMate.class);
+		super();
 
 		registerModifier(new StepModifier<StepThrowTeamMate, StepThrowTeamMate.StepState>() {
 

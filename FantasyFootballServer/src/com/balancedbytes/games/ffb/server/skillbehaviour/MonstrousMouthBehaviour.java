@@ -12,7 +12,7 @@ import com.balancedbytes.games.ffb.skill.MonstrousMouth;
 
 public class MonstrousMouthBehaviour extends SkillBehaviour<MonstrousMouth> {
   public MonstrousMouthBehaviour() {
-    super(MonstrousMouth.class);
+    super();
     
     registerModifier(new StepModifier<StepCatchScatterThrowIn, StepCatchScatterThrowIn.StepState>() {
 

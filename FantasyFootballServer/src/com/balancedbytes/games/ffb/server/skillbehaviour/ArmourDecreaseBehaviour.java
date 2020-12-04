@@ -5,7 +5,7 @@ import com.balancedbytes.games.ffb.skill.ArmourDecrease;
 
 public class ArmourDecreaseBehaviour extends SkillBehaviour<ArmourDecrease> {
   public ArmourDecreaseBehaviour() {
-    super(ArmourDecrease.class);
+    super();
     
     registerModifier(player -> player.setArmour(player.getArmour() - 1));
   }

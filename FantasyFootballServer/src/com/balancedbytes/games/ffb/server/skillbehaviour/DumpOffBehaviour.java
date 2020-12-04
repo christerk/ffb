@@ -20,7 +20,7 @@ import com.balancedbytes.games.ffb.util.UtilCards;
 
 public class DumpOffBehaviour extends SkillBehaviour<DumpOff> {
 	public DumpOffBehaviour() {
-		super(DumpOff.class);
+		super();
 
 		registerModifier(new StepModifier<StepDumpOff, StepDumpOff.StepState>() {
 

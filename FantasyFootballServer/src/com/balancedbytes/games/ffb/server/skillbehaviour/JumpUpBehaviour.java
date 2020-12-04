@@ -23,7 +23,7 @@ import com.balancedbytes.games.ffb.util.UtilCards;
 
 public class JumpUpBehaviour extends SkillBehaviour<JumpUp> {
 	public JumpUpBehaviour() {
-		super(JumpUp.class);
+		super();
 
 		registerModifier(new StepModifier<StepJumpUp, StepJumpUp.StepState>() {
 

@@ -5,7 +5,7 @@ import com.balancedbytes.games.ffb.skill.StrengthIncrease;
 
 public class StrengthIncreaseBehaviour extends SkillBehaviour<StrengthIncrease> {
   public StrengthIncreaseBehaviour() {
-    super(StrengthIncrease.class);
+    super();
     
     registerModifier(player -> player.setStrength(player.getStrength() + 1));
   }

@@ -20,7 +20,7 @@ import com.balancedbytes.games.ffb.util.UtilCards;
 
 public class TakeRootBehaviour extends SkillBehaviour<TakeRoot> {
   public TakeRootBehaviour() {
-    super(TakeRoot.class);
+    super();
     
     registerModifier(new StepModifier<StepTakeRoot, StepTakeRoot.StepState>() {
 

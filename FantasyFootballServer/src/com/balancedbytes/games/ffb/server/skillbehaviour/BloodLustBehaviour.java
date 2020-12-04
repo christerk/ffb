@@ -23,7 +23,7 @@ import com.balancedbytes.games.ffb.util.UtilCards;
 
 public class BloodLustBehaviour extends SkillBehaviour<BloodLust> {
 	public BloodLustBehaviour() {
-		super(BloodLust.class);
+		super();
 		
 		registerModifier(new StepModifier<StepBloodLust, StepBloodLust.StepState>() {
 

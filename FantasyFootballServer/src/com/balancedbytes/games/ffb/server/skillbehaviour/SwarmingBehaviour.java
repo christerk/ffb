@@ -28,7 +28,7 @@ import com.balancedbytes.games.ffb.util.UtilPlayer;
 
 public class SwarmingBehaviour extends SkillBehaviour<Swarming> {
 	public SwarmingBehaviour() {
-		super(Swarming.class);
+		super();
 
 		registerModifier(new StepModifier<StepSwarming, StepSwarming.StepState>() {
 

@@ -5,22 +5,23 @@ import com.balancedbytes.games.ffb.model.PlayerModifier;
 import com.balancedbytes.games.ffb.model.Skill;
 import com.balancedbytes.games.ffb.server.step.IStep;
 
+import java.lang.reflect.ParameterizedType;
 import java.util.ArrayList;
 import java.util.List;
 
 public abstract class SkillBehaviour<T extends Skill> implements ISkillBehaviour {
 
   public T skill;
-  public final Class<T> skillClass;
+
+  @SuppressWarnings("unchecked")
+  public final Class<T> skillClass = (Class<T>) ((ParameterizedType)getClass().getGenericSuperclass()).getActualTypeArguments()[0].getClass();
   
   private List<PlayerModifier> playerModifiers;
   private List<StepModifier<? extends IStep, ?>> stepModifiers;
   
-  public SkillBehaviour(Class<T> skillClass) {
+  public SkillBehaviour() {
     playerModifiers = new ArrayList<>();
     stepModifiers = new ArrayList<>();
-    
-	  this.skillClass = skillClass;
   }
   
   public void setSkill(T skill) {

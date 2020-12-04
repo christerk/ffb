@@ -21,7 +21,7 @@ import com.balancedbytes.games.ffb.util.UtilCards;
 
 public class FoulAppearanceBehaviour extends SkillBehaviour<FoulAppearance> {
 	public FoulAppearanceBehaviour() {
-		super(FoulAppearance.class);
+		super();
 
 		registerModifier(new StepModifier<StepFoulAppearance, StepFoulAppearance.StepState>() {
 

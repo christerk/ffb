@@ -27,7 +27,7 @@ import com.balancedbytes.games.ffb.util.UtilPlayer;
 
 public class TentaclesBehaviour extends SkillBehaviour<Wrestle> {
 	public TentaclesBehaviour() {
-		super(Wrestle.class);
+		super();
 
 		registerModifier(new StepModifier<StepTentacles, StepTentacles.StepState>() {
 

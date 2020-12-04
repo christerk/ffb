@@ -29,7 +29,7 @@ import com.balancedbytes.games.ffb.util.UtilCards;
 
 public class DodgeBehaviour extends SkillBehaviour<Dodge> {
 	public DodgeBehaviour() {
-		super(Dodge.class);
+		super();
 
 		registerModifier(new StepModifier<StepBlockDodge, StepBlockDodge.StepState>() {
 

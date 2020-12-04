@@ -25,7 +25,7 @@ import com.balancedbytes.games.ffb.util.UtilCards;
 
 public class PassBehaviour extends SkillBehaviour<Pass> {
 	public PassBehaviour() {
-		super(Pass.class);
+		super();
 
 		registerModifier(new StepModifier<StepPass, StepPass.StepState>() {
 

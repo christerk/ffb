@@ -11,7 +11,7 @@ import com.balancedbytes.games.ffb.skill.Catch;
 
 public class CatchBehaviour extends SkillBehaviour<Catch> {
   public CatchBehaviour() {
-    super(Catch.class);
+    super();
     
     registerModifier(new StepModifier<StepCatchScatterThrowIn, StepCatchScatterThrowIn.StepState>() {
 

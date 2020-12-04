@@ -27,7 +27,7 @@ import com.balancedbytes.games.ffb.util.UtilCards;
 
 public class WrestleBehaviour extends SkillBehaviour<Wrestle> {
 	public WrestleBehaviour() {
-		super(Wrestle.class);
+		super();
 
 		registerModifier(new StepModifier<StepWrestle, StepWrestle.StepState>() {
 
