@@ -14,7 +14,7 @@ public abstract class SkillBehaviour<T extends Skill> implements ISkillBehaviour
   public T skill;
 
   @SuppressWarnings("unchecked")
-  public final Class<T> skillClass = (Class<T>) ((ParameterizedType)getClass().getGenericSuperclass()).getActualTypeArguments()[0].getClass();
+  public final Class<T> skillClass = (Class<T>) ((ParameterizedType)getClass().getGenericSuperclass()).getActualTypeArguments()[0];
   
   private List<PlayerModifier> playerModifiers;
   private List<StepModifier<? extends IStep, ?>> stepModifiers;
