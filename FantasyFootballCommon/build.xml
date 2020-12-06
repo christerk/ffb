@@ -20,7 +20,7 @@
 	</target>
 	
 	<target name="compile" depends="prepare">
-		<javac encoding="UTF-8" srcdir="${src.dir}" destdir="${bin.dir}" includeantruntime="false" target="1.6" source="1.6" debug="on" />
+		<javac encoding="UTF-8" srcdir="${src.dir}" destdir="${bin.dir}" includeantruntime="false" target="1.8" source="1.8" debug="on" />
 	</target>
 
     <target name="build">
