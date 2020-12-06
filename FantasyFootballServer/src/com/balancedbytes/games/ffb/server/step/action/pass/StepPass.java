@@ -1,7 +1,5 @@
 package com.balancedbytes.games.ffb.server.step.action.pass;
 
-import java.util.Set;
-
 import com.balancedbytes.games.ffb.CatchScatterThrowInMode;
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.PassModifier;
@@ -19,12 +17,12 @@ import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.model.Team;
 import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
+import com.balancedbytes.games.ffb.net.NetCommandId;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandUseSkill;
 import com.balancedbytes.games.ffb.report.ReportPassRoll;
 import com.balancedbytes.games.ffb.server.DiceInterpreter;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.IServerJsonOption;
-import com.balancedbytes.games.ffb.server.model.ServerSkill;
 import com.balancedbytes.games.ffb.server.net.ReceivedCommand;
 import com.balancedbytes.games.ffb.server.step.AbstractStepWithReRoll;
 import com.balancedbytes.games.ffb.server.step.StepAction;
@@ -43,6 +41,8 @@ import com.balancedbytes.games.ffb.util.UtilPassing;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
+import java.util.Set;
+
 /**
  * Step in the pass sequence to handle passing the ball.
  * 
@@ -59,14 +59,14 @@ import com.eclipsesource.json.JsonValue;
  */
 public class StepPass extends AbstractStepWithReRoll {
 
-	public class StepState {
+	public static class StepState {
 		public String goToLabelOnEnd;
 		public String goToLabelOnMissedPass;
 		public String CatcherId;
 		public boolean successful;
 		public boolean holdingSafeThrow;
 		public boolean passFumble;
-		public boolean passSkillUsed;;
+		public boolean passSkillUsed;
 	}
 
 	private StepState state;
@@ -110,12 +110,9 @@ public class StepPass extends AbstractStepWithReRoll {
 	@Override
 	public boolean setParameter(StepParameter pParameter) {
 		if ((pParameter != null) && !super.setParameter(pParameter)) {
-			switch (pParameter.getKey()) {
-			case CATCHER_ID:
+			if (pParameter.getKey() == StepParameterKey.CATCHER_ID) {
 				state.CatcherId = (String) pParameter.getValue();
 				return true;
-			default:
-				break;
 			}
 		}
 		return false;
@@ -130,22 +127,10 @@ public class StepPass extends AbstractStepWithReRoll {
 	@Override
 	public StepCommandStatus handleCommand(ReceivedCommand pReceivedCommand) {
 		StepCommandStatus commandStatus = super.handleCommand(pReceivedCommand);
-		if (commandStatus == StepCommandStatus.UNHANDLED_COMMAND) {
-			switch (pReceivedCommand.getId()) {
-			case CLIENT_USE_SKILL:
-				ClientCommandUseSkill useSkillCommand = (ClientCommandUseSkill) pReceivedCommand.getCommand();
-				ServerSkill usedSkill = (ServerSkill) useSkillCommand.getSkill();
-				if (usedSkill != null) {
-					StepCommandStatus newStatus = usedSkill.applyUseSkillCommandHooks(this, state, useSkillCommand);
-					if (newStatus != null) {
-						commandStatus = newStatus;
-					}
-				}
-				break;
-			default:
-				break;
-			}
+		if (commandStatus == StepCommandStatus.UNHANDLED_COMMAND && pReceivedCommand.getId() == NetCommandId.CLIENT_USE_SKILL) {
+			commandStatus = handleSkillCommand((ClientCommandUseSkill) pReceivedCommand.getCommand(), state);
 		}
+
 		if (commandStatus == StepCommandStatus.EXECUTE_STEP) {
 			executeStep();
 		}
@@ -211,7 +196,7 @@ public class StepPass extends AbstractStepWithReRoll {
 				getResult().setAnimation(new Animation(AnimationType.PASS, startCoordinate, game.getPassCoordinate(), null));
 			}
 			UtilServerGame.syncGameModel(this);
-			Player catcher = game.getPlayerById(state.CatcherId);
+			Player<?> catcher = game.getPlayerById(state.CatcherId);
 			PlayerState catcherState = game.getFieldModel().getPlayerState(catcher);
 			if ((catcher == null) || (catcherState == null) || !catcherState.hasTacklezones()) {
 				if (PlayerAction.THROW_BOMB == game.getThrowerAction()) {

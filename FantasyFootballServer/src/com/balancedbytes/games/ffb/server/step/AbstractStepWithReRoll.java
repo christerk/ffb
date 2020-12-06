@@ -3,9 +3,13 @@ package com.balancedbytes.games.ffb.server.step;
 import com.balancedbytes.games.ffb.ReRollSource;
 import com.balancedbytes.games.ffb.ReRolledAction;
 import com.balancedbytes.games.ffb.json.UtilJson;
+import com.balancedbytes.games.ffb.model.Skill;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandUseReRoll;
+import com.balancedbytes.games.ffb.net.commands.ClientCommandUseSkill;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.IServerJsonOption;
+import com.balancedbytes.games.ffb.server.model.SkillBehaviour;
+import com.balancedbytes.games.ffb.server.model.StepModifier;
 import com.balancedbytes.games.ffb.server.net.ReceivedCommand;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
@@ -35,6 +39,23 @@ public abstract class AbstractStepWithReRoll extends AbstractStep {
 				break;
 			default:
 				break;
+			}
+		}
+		return commandStatus;
+	}
+
+	protected StepCommandStatus handleSkillCommand(ClientCommandUseSkill useSkillCommand, Object state) {
+		StepCommandStatus commandStatus = StepCommandStatus.UNHANDLED_COMMAND;
+		Skill usedSkill = useSkillCommand.getSkill();
+		if (usedSkill != null) {
+			SkillBehaviour<? extends Skill> behaviour = (SkillBehaviour<? extends Skill>) usedSkill.getSkillBehaviour();
+			for (StepModifier<?, ?> modifier : behaviour.getStepModifiers()) {
+				if (modifier.appliesTo(this)) {
+					StepCommandStatus newStatus = modifier.handleCommand(this, state, useSkillCommand);
+					if (newStatus != null) {
+						commandStatus = newStatus;
+					}
+				}
 			}
 		}
 		return commandStatus;
