@@ -61,6 +61,7 @@ public class WrestleBehaviour extends SkillBehaviour<Wrestle> {
 			private StepAction performWrestle(StepWrestle step, StepWrestle.StepState state) {
 				Game game = step.getGameState().getGame();
 				ActingPlayer actingPlayer = game.getActingPlayer();
+				
 				if (state.usingWrestleAttacker) {
 					step.getResult()
 							.addReport(new ReportSkillUse(actingPlayer.getPlayerId(), skill, true, SkillUse.BRING_DOWN_OPPONENT));
@@ -72,6 +73,7 @@ public class WrestleBehaviour extends SkillBehaviour<Wrestle> {
 						step.getResult().addReport(new ReportSkillUse(null, skill, false, null));
 					}
 				}
+				
 				if (state.usingWrestleAttacker || state.usingWrestleDefender) {
 					step.publishParameters(UtilServerInjury.dropPlayer(step, game.getDefender(), ApothecaryMode.DEFENDER));
 					step.publishParameters(UtilServerInjury.dropPlayer(step, actingPlayer.getPlayer(), ApothecaryMode.ATTACKER));

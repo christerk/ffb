@@ -198,7 +198,7 @@ public class DiceRoller {
 	}
 
 	public int rollGender() {
-		return rollDice(3);
+		return rollDice(4);
 	}
 
 	public int rollSwarmingPlayers() {

@@ -6,7 +6,9 @@ package com.balancedbytes.games.ffb;
  */
 public enum PlayerGender implements INamedObject {
 
-	MALE("male", "M", "he", "his", "him", "himself"), FEMALE("female", "F", "she", "her", "her", "herself"),
+	MALE("male", "M", "he", "his", "him", "himself"),
+	FEMALE("female", "F", "she", "her", "her", "herself"),
+	UNSPECIFIED("unspecified", "U", "they", "their", "them", "themself"),
 	NEUTRAL("neutral", "N", "it", "its", "it", "itself");
 
 	private String fName;
@@ -56,6 +58,8 @@ public enum PlayerGender implements INamedObject {
 			return MALE;
 		case 2:
 			return FEMALE;
+		case 3:
+			return UNSPECIFIED;
 		default:
 			return NEUTRAL;
 		}
