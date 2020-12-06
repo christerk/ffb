@@ -44,17 +44,21 @@ public class WrestleBehaviour extends SkillBehaviour<Wrestle> {
 
 			@Override
 			public boolean handleExecuteStepHook(StepWrestle step, StepWrestle.StepState state) {
+				StepAction nextAction = StepAction.NEXT_STEP;
+				
 				if (state.usingWrestleAttacker == null) {
-					askAttackerForWrestleUse(step, state);
+					nextAction = askAttackerForWrestleUse(step, state);
 				} else if (state.usingWrestleDefender == null) {
-					askDefenderForWrestleUse(step, state);
+					nextAction = askDefenderForWrestleUse(step, state);
 				} else {
-					performWrestle(step, state);
+					nextAction = performWrestle(step, state);
 				}
+				
+				step.getResult().setNextAction(nextAction);
 				return false;
 			}
 
-			private void performWrestle(StepWrestle step, StepWrestle.StepState state) {
+			private StepAction performWrestle(StepWrestle step, StepWrestle.StepState state) {
 				Game game = step.getGameState().getGame();
 				ActingPlayer actingPlayer = game.getActingPlayer();
 				if (state.usingWrestleAttacker) {
@@ -79,10 +83,10 @@ public class WrestleBehaviour extends SkillBehaviour<Wrestle> {
 										game.getDefender(), defenderCoordinate, null, ApothecaryMode.DEFENDER)));
 					}
 				}
-				step.getResult().setNextAction(StepAction.NEXT_STEP);
+				return StepAction.NEXT_STEP;
 			}
 
-			private void askDefenderForWrestleUse(StepWrestle step, StepWrestle.StepState state) {
+			private StepAction askDefenderForWrestleUse(StepWrestle step, StepWrestle.StepState state) {
 				Game game = step.getGameState().getGame();
 				ActingPlayer actingPlayer = game.getActingPlayer();
 				PlayerState defenderState = game.getFieldModel().getPlayerState(game.getDefender());
@@ -92,14 +96,14 @@ public class WrestleBehaviour extends SkillBehaviour<Wrestle> {
 						&& !(actingPlayerIsBlitzing && UtilCards.cancelsSkill(actingPlayer.getPlayer(), skill))) {
 					UtilServerDialog.showDialog(step.getGameState(), new DialogSkillUseParameter(game.getDefenderId(), skill, 0),
 							true);
-					step.getResult().setNextAction(StepAction.CONTINUE);
+					return StepAction.CONTINUE;
 				} else {
 					state.usingWrestleDefender = false;
-					step.getResult().setNextAction(StepAction.REPEAT);
+					return StepAction.REPEAT;
 				}
 			}
 
-			private void askAttackerForWrestleUse(StepWrestle step, StepWrestle.StepState state) {
+			private StepAction askAttackerForWrestleUse(StepWrestle step, StepWrestle.StepState state) {
 				Game game = step.getGameState().getGame();
 				ActingPlayer actingPlayer = game.getActingPlayer();
 				PlayerState attackerState = game.getFieldModel().getPlayerState(actingPlayer.getPlayer());
@@ -107,10 +111,10 @@ public class WrestleBehaviour extends SkillBehaviour<Wrestle> {
 				if (attackerCanUseSkill) {
 					UtilServerDialog.showDialog(step.getGameState(),
 							new DialogSkillUseParameter(actingPlayer.getPlayer().getId(), skill, 0), false);
-					step.getResult().setNextAction(StepAction.CONTINUE);
+					return StepAction.CONTINUE;
 				} else {
 					state.usingWrestleAttacker = false;
-					step.getResult().setNextAction(StepAction.REPEAT);
+					return StepAction.REPEAT;
 				}
 			}
 
