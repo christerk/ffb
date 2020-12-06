@@ -56,6 +56,10 @@ public class GameState implements IModelChangeObserver, IJsonSerializable {
 	private transient Map<String, Long> fSpectatorCooldownTime;
 	private transient SkillFactory skillFactory;
 
+	private enum StepExecutionMode {
+		Start, HandleCommand
+	}
+
 	public GameState(FantasyFootballServer pServer) {
 		fServer = pServer;
 		skillFactory = new SkillFactory();
@@ -158,60 +162,59 @@ public class GameState implements IModelChangeObserver, IJsonSerializable {
 			return;
 		}
 		if (fCurrentStep == null) {
-			findNextStep(null);
+			startNextStep();
 		}
 		if (fCurrentStep != null) {
-			fCurrentStep.handleCommand(pReceivedCommand);
-
-			while (fCurrentStep.getResult().getNextAction().triggerRepeat()) {
-				fCurrentStep.repeat();
-			}
-
-			UtilServerGame.syncGameModel(fCurrentStep);
+			executeStep(StepExecutionMode.HandleCommand, pReceivedCommand);
 		}
-		progressStepStack(pReceivedCommand);
+	}
+
+	public void startNextStep() {
+		fCurrentStep = getStepStack().pop();
+		if (fCurrentStep != null) {
+			getServer().getDebugLog().logCurrentStep(IServerLogLevel.DEBUG, this);
+			executeStep(StepExecutionMode.Start, null);
+		}
+	}
+	
+	private void executeStep(StepExecutionMode mode, ReceivedCommand receivedCommand) {
+		if (mode == StepExecutionMode.Start) {
+			fCurrentStep.start();
+		} else {
+			fCurrentStep.handleCommand(receivedCommand);
+		}
+
+		while (fCurrentStep.getResult().getNextAction().triggerRepeat()) {
+			fCurrentStep.repeat();
+		}
+
+		UtilServerGame.syncGameModel(fCurrentStep);
+		processStepResult(receivedCommand);
+	}
+
+	private void processStepResult(ReceivedCommand pReceivedCommand) {
+		if (fCurrentStep == null) {
+			throw new StepException("Trying to process result from a null step.");
+		}
+
+		StepResult stepResult = fCurrentStep.getResult();
+		StepAction action = stepResult.getNextAction();
+
+		if (action.triggerGoto()) {
+			handleStepResultGotoLabel(stepResult.getNextActionParameter());
+		}
+
+		if (action.triggerNextStep()) {
+			startNextStep();
+			if (action.forwardCommand()) {
+				executeStep(StepExecutionMode.HandleCommand, pReceivedCommand);
+			}
+		}
 	}
 
 	public void pushCurrentStepOnStack() {
 		if (fCurrentStep != null) {
 			getStepStack().push(fCurrentStep);
-		}
-	}
-
-	public void findNextStep(ReceivedCommand receivedCommand) {
-		fCurrentStep = getStepStack().pop();
-		if (fCurrentStep != null) {
-			getServer().getDebugLog().logCurrentStep(IServerLogLevel.DEBUG, this);
-			if (receivedCommand == null) {
-				fCurrentStep.start();
-
-				while (fCurrentStep.getResult().getNextAction().triggerRepeat()) {
-					fCurrentStep.repeat();
-				}
-
-				UtilServerGame.syncGameModel(fCurrentStep);
-			}
-			progressStepStack(receivedCommand);
-		}
-	}
-
-	private void progressStepStack(ReceivedCommand pReceivedCommand) {
-		if (fCurrentStep != null) {
-			StepResult stepResult = fCurrentStep.getResult();
-			StepAction action = stepResult.getNextAction();
-
-			if (action.triggerGoto()) {
-				handleStepResultGotoLabel(stepResult.getNextActionParameter());
-			}
-
-			if (action.triggerNextStep()) {
-				ReceivedCommand forwardedCommand = action.forwardCommand() ? pReceivedCommand : null;
-
-				findNextStep(forwardedCommand);
-				if (action.forwardCommand()) {
-					handleCommand(forwardedCommand);
-				}
-			}
 		}
 	}
 

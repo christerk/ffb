@@ -44,7 +44,7 @@ public class ServerCommandHandlerUploadGame extends ServerCommandHandler {
 						.setConceded(game.getTeamAway().getId().equals(uploadGameCommand.getConcedingTeamId()));
 			}
 			SequenceGenerator.getInstance().pushEndGameSequence(gameState, true);
-			gameState.findNextStep(null);
+			gameState.startNextStep();
 		}
 		return true;
 	}

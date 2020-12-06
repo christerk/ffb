@@ -8,8 +8,10 @@ import com.balancedbytes.games.ffb.INamedObject;
  */
 public enum StepAction implements INamedObject {
 
-	CONTINUE("continue", false, false, false, false), NEXT_STEP("nextStep", true, false, false, false),
-	REPEAT("repeat", false, false, false, true), GOTO_LABEL("gotoLabel", true, false, true, false),
+	CONTINUE("continue", false, false, false, false),
+	NEXT_STEP("nextStep", true, false, false, false),
+	REPEAT("repeat", false, false, false, true),
+	GOTO_LABEL("gotoLabel", true, false, true, false),
 	NEXT_STEP_AND_REPEAT("nextStepAndRepeat", true, true, false, false),
 	GOTO_LABEL_AND_REPEAT("gotoLabelAndRepeat", true, true, true, false);
 
