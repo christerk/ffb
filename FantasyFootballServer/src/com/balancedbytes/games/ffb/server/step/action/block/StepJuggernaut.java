@@ -2,11 +2,11 @@ package com.balancedbytes.games.ffb.server.step.action.block;
 
 import com.balancedbytes.games.ffb.PlayerState;
 import com.balancedbytes.games.ffb.json.UtilJson;
+import com.balancedbytes.games.ffb.net.NetCommandId;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandUseSkill;
 import com.balancedbytes.games.ffb.server.ActionStatus;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.IServerJsonOption;
-import com.balancedbytes.games.ffb.server.model.ServerSkill;
 import com.balancedbytes.games.ffb.server.net.ReceivedCommand;
 import com.balancedbytes.games.ffb.server.step.AbstractStep;
 import com.balancedbytes.games.ffb.server.step.StepCommandStatus;
@@ -32,7 +32,7 @@ import com.eclipsesource.json.JsonValue;
  */
 public class StepJuggernaut extends AbstractStep {
 
-	public class StepState {
+	public static class StepState {
 		public ActionStatus status;
 		public Boolean usingJuggernaut;
 		public PlayerState oldDefenderState;
@@ -54,12 +54,8 @@ public class StepJuggernaut extends AbstractStep {
 	public void init(StepParameterSet pParameterSet) {
 		if (pParameterSet != null) {
 			for (StepParameter parameter : pParameterSet.values()) {
-				switch (parameter.getKey()) {
-				case GOTO_LABEL_ON_SUCCESS:
+				if (parameter.getKey() == StepParameterKey.GOTO_LABEL_ON_SUCCESS) {
 					state.goToLabelOnSuccess = (String) parameter.getValue();
-					break;
-				default:
-					break;
 				}
 			}
 		}
@@ -77,21 +73,8 @@ public class StepJuggernaut extends AbstractStep {
 	@Override
 	public StepCommandStatus handleCommand(ReceivedCommand pReceivedCommand) {
 		StepCommandStatus commandStatus = super.handleCommand(pReceivedCommand);
-		if (commandStatus == StepCommandStatus.UNHANDLED_COMMAND) {
-			switch (pReceivedCommand.getId()) {
-			case CLIENT_USE_SKILL:
-				ClientCommandUseSkill useSkillCommand = (ClientCommandUseSkill) pReceivedCommand.getCommand();
-				ServerSkill usedSkill = (ServerSkill) useSkillCommand.getSkill();
-				if (usedSkill != null) {
-					StepCommandStatus newStatus = usedSkill.applyUseSkillCommandHooks(this, state, useSkillCommand);
-					if (newStatus != null) {
-						commandStatus = newStatus;
-					}
-				}
-				break;
-			default:
-				break;
-			}
+		if (commandStatus == StepCommandStatus.UNHANDLED_COMMAND && pReceivedCommand.getId() == NetCommandId.CLIENT_USE_SKILL) {
+			commandStatus = handleSkillCommand((ClientCommandUseSkill) pReceivedCommand.getCommand(), state);
 		}
 		if (commandStatus == StepCommandStatus.EXECUTE_STEP) {
 			executeStep();
@@ -102,12 +85,9 @@ public class StepJuggernaut extends AbstractStep {
 	@Override
 	public boolean setParameter(StepParameter pParameter) {
 		if ((pParameter != null) && !super.setParameter(pParameter)) {
-			switch (pParameter.getKey()) {
-			case OLD_DEFENDER_STATE:
+			if (pParameter.getKey() == StepParameterKey.OLD_DEFENDER_STATE) {
 				state.oldDefenderState = (PlayerState) pParameter.getValue();
 				return true;
-			default:
-				break;
 			}
 		}
 		return false;

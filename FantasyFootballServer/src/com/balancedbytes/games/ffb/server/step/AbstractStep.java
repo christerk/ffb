@@ -6,7 +6,9 @@ import com.balancedbytes.games.ffb.dialog.DialogConcedeGameParameter;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.GameResult;
+import com.balancedbytes.games.ffb.model.Skill;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandConcedeGame;
+import com.balancedbytes.games.ffb.net.commands.ClientCommandUseSkill;
 import com.balancedbytes.games.ffb.report.ReportList;
 import com.balancedbytes.games.ffb.report.ReportTimeoutEnforced;
 import com.balancedbytes.games.ffb.server.DebugLog;
@@ -14,6 +16,8 @@ import com.balancedbytes.games.ffb.server.FantasyFootballServer;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.IServerJsonOption;
 import com.balancedbytes.games.ffb.server.IServerLogLevel;
+import com.balancedbytes.games.ffb.server.model.SkillBehaviour;
+import com.balancedbytes.games.ffb.server.model.StepModifier;
 import com.balancedbytes.games.ffb.server.net.ReceivedCommand;
 import com.balancedbytes.games.ffb.server.net.SessionManager;
 import com.balancedbytes.games.ffb.server.util.UtilServerDialog;
@@ -88,6 +92,23 @@ public abstract class AbstractStep implements IStep {
 			break;
 		default:
 			break;
+		}
+		return commandStatus;
+	}
+
+	protected StepCommandStatus handleSkillCommand(ClientCommandUseSkill useSkillCommand, Object state) {
+		StepCommandStatus commandStatus = StepCommandStatus.UNHANDLED_COMMAND;
+		Skill usedSkill = useSkillCommand.getSkill();
+		if (usedSkill != null) {
+			SkillBehaviour<? extends Skill> behaviour = (SkillBehaviour<? extends Skill>) usedSkill.getSkillBehaviour();
+			for (StepModifier<?, ?> modifier : behaviour.getStepModifiers()) {
+				if (modifier.appliesTo(this)) {
+					StepCommandStatus newStatus = modifier.handleCommand(this, state, useSkillCommand);
+					if (newStatus != null) {
+						commandStatus = newStatus;
+					}
+				}
+			}
 		}
 		return commandStatus;
 	}

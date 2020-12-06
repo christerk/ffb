@@ -44,23 +44,6 @@ public abstract class AbstractStepWithReRoll extends AbstractStep {
 		return commandStatus;
 	}
 
-	protected StepCommandStatus handleSkillCommand(ClientCommandUseSkill useSkillCommand, Object state) {
-		StepCommandStatus commandStatus = StepCommandStatus.UNHANDLED_COMMAND;
-		Skill usedSkill = useSkillCommand.getSkill();
-		if (usedSkill != null) {
-			SkillBehaviour<? extends Skill> behaviour = (SkillBehaviour<? extends Skill>) usedSkill.getSkillBehaviour();
-			for (StepModifier<?, ?> modifier : behaviour.getStepModifiers()) {
-				if (modifier.appliesTo(this)) {
-					StepCommandStatus newStatus = modifier.handleCommand(this, state, useSkillCommand);
-					if (newStatus != null) {
-						commandStatus = newStatus;
-					}
-				}
-			}
-		}
-		return commandStatus;
-	}
-
 	public ReRolledAction getReRolledAction() {
 		return fReRolledAction;
 	}
