@@ -49,31 +49,31 @@ import org.glassfish.tyrus.core.l10n.LocalizationMessages;
  * @author Stepan Kopriva (stepan.kopriva at oracle.com)
  */
 class TextBuffer {
-    private StringBuffer buffer;
-    private int bufferSize;
-    private static final Logger LOGGER = Logger.getLogger(BinaryBuffer.class.getName());
+	private StringBuffer buffer;
+	private int bufferSize;
+	private static final Logger LOGGER = Logger.getLogger(BinaryBuffer.class.getName());
 
-    void appendMessagePart(String message) {
-        if (message == null || message.length() == 0) {
-            return;
-        }
+	void appendMessagePart(String message) {
+		if (message == null || message.length() == 0) {
+			return;
+		}
 
-        if (buffer.length() + message.length() <= bufferSize) {
-            buffer.append(message);
-        } else {
-            final MessageTooBigException messageTooBigException =
-                    new MessageTooBigException(LocalizationMessages.PARTIAL_MESSAGE_BUFFER_OVERFLOW());
-            LOGGER.log(Level.FINE, LocalizationMessages.PARTIAL_MESSAGE_BUFFER_OVERFLOW(), messageTooBigException);
-            throw messageTooBigException;
-        }
-    }
+		if (buffer.length() + message.length() <= bufferSize) {
+			buffer.append(message);
+		} else {
+			final MessageTooBigException messageTooBigException = new MessageTooBigException(
+					LocalizationMessages.PARTIAL_MESSAGE_BUFFER_OVERFLOW());
+			LOGGER.log(Level.FINE, LocalizationMessages.PARTIAL_MESSAGE_BUFFER_OVERFLOW(), messageTooBigException);
+			throw messageTooBigException;
+		}
+	}
 
-    String getBufferedContent() {
-        return buffer.toString();
-    }
+	String getBufferedContent() {
+		return buffer.toString();
+	}
 
-    void resetBuffer(int bufferSize) {
-        this.bufferSize = bufferSize;
-        this.buffer = new StringBuffer();
-    }
+	void resetBuffer(int bufferSize) {
+		this.bufferSize = bufferSize;
+		this.buffer = new StringBuffer();
+	}
 }

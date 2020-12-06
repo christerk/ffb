@@ -10,39 +10,56 @@ import com.eclipsesource.json.JsonValue;
 
 public class FieldCoordinateBounds implements IJsonSerializable {
 
-	public static final FieldCoordinateBounds FIELD = new FieldCoordinateBounds(new FieldCoordinate(0, 0), new FieldCoordinate(25, 14));
+	public static final FieldCoordinateBounds FIELD = new FieldCoordinateBounds(new FieldCoordinate(0, 0),
+			new FieldCoordinate(25, 14));
 
-	public static final FieldCoordinateBounds HALF_HOME = new FieldCoordinateBounds(new FieldCoordinate(0, 0), new FieldCoordinate(12, 14));
+	public static final FieldCoordinateBounds HALF_HOME = new FieldCoordinateBounds(new FieldCoordinate(0, 0),
+			new FieldCoordinate(12, 14));
 
-	public static final FieldCoordinateBounds HALF_AWAY = new FieldCoordinateBounds(new FieldCoordinate(13, 0), new FieldCoordinate(25, 14));
+	public static final FieldCoordinateBounds HALF_AWAY = new FieldCoordinateBounds(new FieldCoordinate(13, 0),
+			new FieldCoordinate(25, 14));
 
-	public static final FieldCoordinateBounds UPPER_HALF = new FieldCoordinateBounds(new FieldCoordinate(0, 0), new FieldCoordinate(25, 7));
-	
-	public static final FieldCoordinateBounds LOWER_HALF = new FieldCoordinateBounds(new FieldCoordinate(0, 7), new FieldCoordinate(25, 14));
+	public static final FieldCoordinateBounds UPPER_HALF = new FieldCoordinateBounds(new FieldCoordinate(0, 0),
+			new FieldCoordinate(25, 7));
 
-	public static final FieldCoordinateBounds CENTER_FIELD_HOME = new FieldCoordinateBounds(new FieldCoordinate(0, 4), new FieldCoordinate(11, 10));
+	public static final FieldCoordinateBounds LOWER_HALF = new FieldCoordinateBounds(new FieldCoordinate(0, 7),
+			new FieldCoordinate(25, 14));
 
-	public static final FieldCoordinateBounds CENTER_FIELD_AWAY = new FieldCoordinateBounds(new FieldCoordinate(14, 4), new FieldCoordinate(25, 10));
+	public static final FieldCoordinateBounds CENTER_FIELD_HOME = new FieldCoordinateBounds(new FieldCoordinate(0, 4),
+			new FieldCoordinate(11, 10));
 
-	public static final FieldCoordinateBounds LOS_HOME = new FieldCoordinateBounds(new FieldCoordinate(12, 4), new FieldCoordinate(12, 10));
+	public static final FieldCoordinateBounds CENTER_FIELD_AWAY = new FieldCoordinateBounds(new FieldCoordinate(14, 4),
+			new FieldCoordinate(25, 10));
 
-	public static final FieldCoordinateBounds LOS_AWAY = new FieldCoordinateBounds(new FieldCoordinate(13, 4), new FieldCoordinate(13, 10));
+	public static final FieldCoordinateBounds LOS_HOME = new FieldCoordinateBounds(new FieldCoordinate(12, 4),
+			new FieldCoordinate(12, 10));
 
-	public static final FieldCoordinateBounds UPPER_WIDE_ZONE_HOME = new FieldCoordinateBounds(new FieldCoordinate(0, 0), new FieldCoordinate(12, 3));
+	public static final FieldCoordinateBounds LOS_AWAY = new FieldCoordinateBounds(new FieldCoordinate(13, 4),
+			new FieldCoordinate(13, 10));
 
-	public static final FieldCoordinateBounds UPPER_WIDE_ZONE_AWAY = new FieldCoordinateBounds(new FieldCoordinate(13, 0), new FieldCoordinate(25, 3));
+	public static final FieldCoordinateBounds UPPER_WIDE_ZONE_HOME = new FieldCoordinateBounds(new FieldCoordinate(0, 0),
+			new FieldCoordinate(12, 3));
 
-	public static final FieldCoordinateBounds LOWER_WIDE_ZONE_HOME = new FieldCoordinateBounds(new FieldCoordinate(0, 11), new FieldCoordinate(12, 14));
+	public static final FieldCoordinateBounds UPPER_WIDE_ZONE_AWAY = new FieldCoordinateBounds(new FieldCoordinate(13, 0),
+			new FieldCoordinate(25, 3));
 
-	public static final FieldCoordinateBounds LOWER_WIDE_ZONE_AWAY = new FieldCoordinateBounds(new FieldCoordinate(13, 11), new FieldCoordinate(25, 14));
+	public static final FieldCoordinateBounds LOWER_WIDE_ZONE_HOME = new FieldCoordinateBounds(new FieldCoordinate(0, 11),
+			new FieldCoordinate(12, 14));
 
-	public static final FieldCoordinateBounds ENDZONE_HOME = new FieldCoordinateBounds(new FieldCoordinate(0, 0), new FieldCoordinate(0, 14));
+	public static final FieldCoordinateBounds LOWER_WIDE_ZONE_AWAY = new FieldCoordinateBounds(
+			new FieldCoordinate(13, 11), new FieldCoordinate(25, 14));
 
-	public static final FieldCoordinateBounds ENDZONE_AWAY = new FieldCoordinateBounds(new FieldCoordinate(25, 0), new FieldCoordinate(25, 14));
+	public static final FieldCoordinateBounds ENDZONE_HOME = new FieldCoordinateBounds(new FieldCoordinate(0, 0),
+			new FieldCoordinate(0, 14));
 
-	public static final FieldCoordinateBounds SIDELINE_UPPER = new FieldCoordinateBounds(new FieldCoordinate(1, 0), new FieldCoordinate(24, 0));
+	public static final FieldCoordinateBounds ENDZONE_AWAY = new FieldCoordinateBounds(new FieldCoordinate(25, 0),
+			new FieldCoordinate(25, 14));
 
-	public static final FieldCoordinateBounds SIDELINE_LOWER = new FieldCoordinateBounds(new FieldCoordinate(1, 14), new FieldCoordinate(24, 14));
+	public static final FieldCoordinateBounds SIDELINE_UPPER = new FieldCoordinateBounds(new FieldCoordinate(1, 0),
+			new FieldCoordinate(24, 0));
+
+	public static final FieldCoordinateBounds SIDELINE_LOWER = new FieldCoordinateBounds(new FieldCoordinate(1, 14),
+			new FieldCoordinate(24, 14));
 
 	private FieldCoordinate fTopLeftCorner;
 	private FieldCoordinate fBottomRightCorner;
@@ -50,7 +67,7 @@ public class FieldCoordinateBounds implements IJsonSerializable {
 	public FieldCoordinateBounds() {
 		super();
 	}
-	
+
 	public FieldCoordinateBounds(FieldCoordinate pTopLeftCorner, FieldCoordinate pBottomRightCorner) {
 		fTopLeftCorner = pTopLeftCorner;
 		fBottomRightCorner = pBottomRightCorner;
@@ -106,7 +123,7 @@ public class FieldCoordinateBounds implements IJsonSerializable {
 	public int size() {
 		return width() * height();
 	}
-	
+
 	// ByteArraySerialization
 
 	@Override
@@ -140,20 +157,20 @@ public class FieldCoordinateBounds implements IJsonSerializable {
 		return true;
 	}
 
-  // JSON serialization
-  
-  public JsonObject toJsonValue() {
-    JsonObject jsonObject = new JsonObject();
-    IJsonOption.TOP_LEFT.addTo(jsonObject, fTopLeftCorner);
-    IJsonOption.BOTTOM_RIGHT.addTo(jsonObject, fBottomRightCorner);
-    return jsonObject;
-  }
-  
-  public FieldCoordinateBounds initFrom(JsonValue pJsonValue) {
-    JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-    fTopLeftCorner = IJsonOption.TOP_LEFT.getFrom(jsonObject);
-    fBottomRightCorner = IJsonOption.BOTTOM_RIGHT.getFrom(jsonObject);
-    return this;
-  }
+	// JSON serialization
+
+	public JsonObject toJsonValue() {
+		JsonObject jsonObject = new JsonObject();
+		IJsonOption.TOP_LEFT.addTo(jsonObject, fTopLeftCorner);
+		IJsonOption.BOTTOM_RIGHT.addTo(jsonObject, fBottomRightCorner);
+		return jsonObject;
+	}
+
+	public FieldCoordinateBounds initFrom(JsonValue pJsonValue) {
+		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
+		fTopLeftCorner = IJsonOption.TOP_LEFT.getFrom(jsonObject);
+		fBottomRightCorner = IJsonOption.BOTTOM_RIGHT.getFrom(jsonObject);
+		return this;
+	}
 
 }

@@ -12,14 +12,15 @@ import com.balancedbytes.games.ffb.server.DiceRoller;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.step.IStep;
 
-public class InjuryTypeKTMInjury extends InjuryTypeServer<KTMInjury>  {
+public class InjuryTypeKTMInjury extends InjuryTypeServer<KTMInjury> {
 	InjuryTypeKTMInjury() {
 		super(new KTMInjury());
 	}
 
 	@Override
-	public InjuryContext handleInjury(IStep step, Game game,GameState gameState, DiceRoller diceRoller, Player<?> pAttacker, Player<?> pDefender,
-			FieldCoordinate pDefenderCoordinate, InjuryContext pOldInjuryContext, ApothecaryMode pApothecaryMode) {
+	public InjuryContext handleInjury(IStep step, Game game, GameState gameState, DiceRoller diceRoller,
+			Player<?> pAttacker, Player<?> pDefender, FieldCoordinate pDefenderCoordinate, InjuryContext pOldInjuryContext,
+			ApothecaryMode pApothecaryMode) {
 
 		if (!injuryContext.isArmorBroken()) {
 			injuryContext.setArmorBroken(true);

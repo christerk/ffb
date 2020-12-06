@@ -6,12 +6,12 @@ import com.balancedbytes.games.ffb.model.Skill;
 
 public class MovementIncrease extends Skill {
 
-  public MovementIncrease() {
-    super("+MA", SkillCategory.STAT_INCREASE);
-  }
+	public MovementIncrease() {
+		super("+MA", SkillCategory.STAT_INCREASE);
+	}
 
-  @Override
-  public int getCost(Player<?> player) {
-    return 30000;
-  }
+	@Override
+	public int getCost(Player<?> player) {
+		return 30000;
+	}
 }

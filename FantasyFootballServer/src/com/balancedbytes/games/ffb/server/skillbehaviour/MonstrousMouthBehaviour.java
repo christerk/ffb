@@ -11,24 +11,24 @@ import com.balancedbytes.games.ffb.server.step.action.common.StepCatchScatterThr
 import com.balancedbytes.games.ffb.skill.MonstrousMouth;
 
 public class MonstrousMouthBehaviour extends SkillBehaviour<MonstrousMouth> {
-  public MonstrousMouthBehaviour() {
-    super();
-    
-    registerModifier(new StepModifier<StepCatchScatterThrowIn, StepCatchScatterThrowIn.StepState>() {
+	public MonstrousMouthBehaviour() {
+		super();
 
-      @Override
-      public StepCommandStatus handleCommandHook(StepCatchScatterThrowIn step, StepState state,
-          ClientCommandUseSkill useSkillCommand) {
-        return null;
-      }
+		registerModifier(new StepModifier<StepCatchScatterThrowIn, StepCatchScatterThrowIn.StepState>() {
 
-      @Override
-      public boolean handleExecuteStepHook(StepCatchScatterThrowIn step, StepState state) {
-        step.setReRolledAction(ReRolledActions.CATCH);
-        step.setReRollSource(ReRollSources.MONSTROUS_MOUTH);
-        return true;
-      }
-      
-    });    
-  }
+			@Override
+			public StepCommandStatus handleCommandHook(StepCatchScatterThrowIn step, StepState state,
+					ClientCommandUseSkill useSkillCommand) {
+				return null;
+			}
+
+			@Override
+			public boolean handleExecuteStepHook(StepCatchScatterThrowIn step, StepState state) {
+				step.setReRolledAction(ReRolledActions.CATCH);
+				step.setReRollSource(ReRollSources.MONSTROUS_MOUTH);
+				return true;
+			}
+
+		});
+	}
 }

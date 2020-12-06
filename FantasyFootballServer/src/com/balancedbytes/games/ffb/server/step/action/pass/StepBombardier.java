@@ -16,61 +16,61 @@ import com.eclipsesource.json.JsonValue;
  */
 public final class StepBombardier extends AbstractStep {
 
-  public class StepState {
-    
-  }
-  
-  private StepState state;
-  
-  public StepBombardier(GameState pGameState) {
-    super(pGameState);
-    
-    state = new StepState();
-  }
+	public class StepState {
 
-  public StepId getId() {
-    return StepId.BOMBARDIER;
-  }
+	}
 
-  @Override
-  public void start() {
-    super.start();
-    executeStep();
-  }
+	private StepState state;
 
-  @Override
-  public StepCommandStatus handleCommand(ReceivedCommand pReceivedCommand) {
-    StepCommandStatus commandStatus = super.handleCommand(pReceivedCommand);
-    if (commandStatus == StepCommandStatus.EXECUTE_STEP) {
-      executeStep();
-    }
-    return commandStatus;
-  }
+	public StepBombardier(GameState pGameState) {
+		super(pGameState);
 
-  private void executeStep() {
-    
-    getGameState().executeStepHooks(this, state);
-    
-    getResult().setNextAction(StepAction.NEXT_STEP);
-  }
+		state = new StepState();
+	}
 
-  // ByteArray serialization
+	public StepId getId() {
+		return StepId.BOMBARDIER;
+	}
 
-  public int getByteArraySerializationVersion() {
-    return 1;
-  }
+	@Override
+	public void start() {
+		super.start();
+		executeStep();
+	}
 
-  // JSON serialization
+	@Override
+	public StepCommandStatus handleCommand(ReceivedCommand pReceivedCommand) {
+		StepCommandStatus commandStatus = super.handleCommand(pReceivedCommand);
+		if (commandStatus == StepCommandStatus.EXECUTE_STEP) {
+			executeStep();
+		}
+		return commandStatus;
+	}
 
-  @Override
-  public JsonObject toJsonValue() {
-    return super.toJsonValue();
-  }
+	private void executeStep() {
 
-  @Override
-  public StepBombardier initFrom(JsonValue pJsonValue) {
-    super.initFrom(pJsonValue);
-    return this;
-  }
+		getGameState().executeStepHooks(this, state);
+
+		getResult().setNextAction(StepAction.NEXT_STEP);
+	}
+
+	// ByteArray serialization
+
+	public int getByteArraySerializationVersion() {
+		return 1;
+	}
+
+	// JSON serialization
+
+	@Override
+	public JsonObject toJsonValue() {
+		return super.toJsonValue();
+	}
+
+	@Override
+	public StepBombardier initFrom(JsonValue pJsonValue) {
+		super.initFrom(pJsonValue);
+		return this;
+	}
 
 }

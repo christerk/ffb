@@ -10,32 +10,32 @@ import com.eclipsesource.json.JsonValue;
  * @author Kalimar
  */
 public class StepNextStep extends AbstractStep {
-	
+
 	public StepNextStep(GameState pGameState) {
 		super(pGameState);
 	}
-	
+
 	public StepId getId() {
 		return StepId.NEXT_STEP;
 	}
-	
+
 	@Override
 	public void start() {
 		super.start();
 		getResult().setNextAction(StepAction.NEXT_STEP);
 	}
-	
-  // JSON serialization
-  
-  @Override
-  public JsonObject toJsonValue() {
-    return super.toJsonValue();
-  }
-  
-  @Override
-  public StepNextStep initFrom(JsonValue pJsonValue) {
-    super.initFrom(pJsonValue);
-    return this;
-  }
-  
+
+	// JSON serialization
+
+	@Override
+	public JsonObject toJsonValue() {
+		return super.toJsonValue();
+	}
+
+	@Override
+	public StepNextStep initFrom(JsonValue pJsonValue) {
+		super.initFrom(pJsonValue);
+		return this;
+	}
+
 }

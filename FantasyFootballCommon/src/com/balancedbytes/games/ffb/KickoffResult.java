@@ -1,8 +1,8 @@
 package com.balancedbytes.games.ffb;
 
 public enum KickoffResult implements INamedObject {
-  
-  GET_THE_REF("Get the Ref", "Get the Ref", "Each coach receives a free bribe."),
+
+	GET_THE_REF("Get the Ref", "Get the Ref", "Each coach receives a free bribe."),
 	RIOT("Riot", "Riot", "The referee adjusts the clock after the riot clears."),
 	PERFECT_DEFENCE("Perfect Defence", "Perfect Defence", "The kicking team may reorganize its players."),
 	HIGH_KICK("High Kick", "High Kick", "A player on the receiving team may try to catch the ball directly."),
@@ -14,26 +14,26 @@ public enum KickoffResult implements INamedObject {
 	THROW_A_ROCK("Throw a Rock", "Throw a Rock", "A random player is hit by a rock and suffers an injury."),
 	PITCH_INVASION("Pitch Invasion", "Pitch Invasion", "Random players are being stunned by the crowd.");
 
-  private String fName;
+	private String fName;
 	private String fTitle;
 	private String fDescription;
-	
+
 	private KickoffResult(String pName, String pTitle, String pDescription) {
 		fName = pName;
 		fTitle = pTitle;
 		fDescription = pDescription;
 	}
-	
+
 	public String getName() {
 		return fName;
 	}
-	
+
 	public String getTitle() {
-    return fTitle;
-  }
-	
+		return fTitle;
+	}
+
 	public String getDescription() {
 		return fDescription;
 	}
-  
+
 }

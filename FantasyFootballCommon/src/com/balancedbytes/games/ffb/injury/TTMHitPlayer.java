@@ -10,5 +10,4 @@ public class TTMHitPlayer extends InjuryType {
 		// TODO Auto-generated constructor stub
 	}
 
-
 }

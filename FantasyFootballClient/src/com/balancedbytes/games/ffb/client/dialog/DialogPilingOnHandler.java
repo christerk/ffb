@@ -14,40 +14,39 @@ import com.balancedbytes.games.ffb.model.SkillConstants;
  * @author Kalimar
  */
 public class DialogPilingOnHandler extends DialogHandler {
-  
-  public DialogPilingOnHandler(FantasyFootballClient pClient) {
-    super(pClient);
-  }
-  
-  public void showDialog() {
-    
-    Game game = getClient().getGame();
-    DialogPilingOnParameter dialogParameter = (DialogPilingOnParameter) game.getDialogParameter();
 
-    if (dialogParameter != null) {
-      
-      Player player = game.getPlayerById(dialogParameter.getPlayerId()); 
-      
-      if ((ClientMode.PLAYER == getClient().getMode()) && (game.getTeamHome().hasPlayer(player))) {
-        setDialog(new DialogPilingOn(getClient(), dialogParameter));
-        getDialog().showDialog(this);
+	public DialogPilingOnHandler(FantasyFootballClient pClient) {
+		super(pClient);
+	}
 
-      } else {
-        showStatus("Piling On", "Waiting for coach to use Piling On.", StatusType.WAITING);
-      }
-      
-    }
-    
-  }
-  
-  
-  public void dialogClosed(IDialog pDialog) {
-    hideDialog();
-    if (testDialogHasId(pDialog, DialogId.PILING_ON)) {
-      DialogPilingOn pilingOnDialog = (DialogPilingOn) pDialog;
-      String playerId = ((DialogPilingOnParameter)getClient().getGame().getDialogParameter()).getPlayerId();
-      getClient().getCommunication().sendUseSkill(SkillConstants.PILING_ON, pilingOnDialog.isChoiceYes(), playerId);
-    }
-  }
+	public void showDialog() {
+
+		Game game = getClient().getGame();
+		DialogPilingOnParameter dialogParameter = (DialogPilingOnParameter) game.getDialogParameter();
+
+		if (dialogParameter != null) {
+
+			Player player = game.getPlayerById(dialogParameter.getPlayerId());
+
+			if ((ClientMode.PLAYER == getClient().getMode()) && (game.getTeamHome().hasPlayer(player))) {
+				setDialog(new DialogPilingOn(getClient(), dialogParameter));
+				getDialog().showDialog(this);
+
+			} else {
+				showStatus("Piling On", "Waiting for coach to use Piling On.", StatusType.WAITING);
+			}
+
+		}
+
+	}
+
+	public void dialogClosed(IDialog pDialog) {
+		hideDialog();
+		if (testDialogHasId(pDialog, DialogId.PILING_ON)) {
+			DialogPilingOn pilingOnDialog = (DialogPilingOn) pDialog;
+			String playerId = ((DialogPilingOnParameter) getClient().getGame().getDialogParameter()).getPlayerId();
+			getClient().getCommunication().sendUseSkill(SkillConstants.PILING_ON, pilingOnDialog.isChoiceYes(), playerId);
+		}
+	}
 
 }

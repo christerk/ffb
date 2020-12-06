@@ -12,34 +12,35 @@ import com.balancedbytes.games.ffb.server.DiceRoller;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.step.IStep;
 
-public class InjuryTypeStab extends InjuryTypeServer<Stab>  {
-		public InjuryTypeStab() {
-			super(new Stab());
-		}
-
-		@Override
-		public InjuryContext handleInjury(IStep step, Game game,GameState gameState, DiceRoller diceRoller, Player<?> pAttacker, Player<?> pDefender,
-				FieldCoordinate pDefenderCoordinate, InjuryContext pOldInjuryContext, ApothecaryMode pApothecaryMode) {
-			
-			DiceInterpreter diceInterpreter = DiceInterpreter.getInstance();
-					
-			if (!injuryContext.isArmorBroken()) {
-				
-				ArmorModifierFactory modifierFactory = new ArmorModifierFactory();
-			    modifierFactory.findArmorModifiers(game, pAttacker, pDefender, isStab(), isFoul());
-				
-				injuryContext.setArmorRoll(diceRoller.rollArmour());
-				injuryContext.setArmorBroken(diceInterpreter.isArmourBroken(gameState, injuryContext));
-			}
-
-			if (injuryContext.isArmorBroken()) {
-				injuryContext.setInjuryRoll(diceRoller.rollInjury());
-
-				setInjury(pDefender, gameState, diceRoller);
-			} else {
-				injuryContext.setInjury(null);
-			}
-
-			return injuryContext;
-		}
+public class InjuryTypeStab extends InjuryTypeServer<Stab> {
+	public InjuryTypeStab() {
+		super(new Stab());
 	}
+
+	@Override
+	public InjuryContext handleInjury(IStep step, Game game, GameState gameState, DiceRoller diceRoller,
+			Player<?> pAttacker, Player<?> pDefender, FieldCoordinate pDefenderCoordinate, InjuryContext pOldInjuryContext,
+			ApothecaryMode pApothecaryMode) {
+
+		DiceInterpreter diceInterpreter = DiceInterpreter.getInstance();
+
+		if (!injuryContext.isArmorBroken()) {
+
+			ArmorModifierFactory modifierFactory = new ArmorModifierFactory();
+			modifierFactory.findArmorModifiers(game, pAttacker, pDefender, isStab(), isFoul());
+
+			injuryContext.setArmorRoll(diceRoller.rollArmour());
+			injuryContext.setArmorBroken(diceInterpreter.isArmourBroken(gameState, injuryContext));
+		}
+
+		if (injuryContext.isArmorBroken()) {
+			injuryContext.setInjuryRoll(diceRoller.rollInjury());
+
+			setInjury(pDefender, gameState, diceRoller);
+		} else {
+			injuryContext.setInjury(null);
+		}
+
+		return injuryContext;
+	}
+}

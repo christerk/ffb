@@ -17,33 +17,36 @@ import com.balancedbytes.games.ffb.server.request.fumbbl.FumbblRequestLoadTeam;
  */
 public class ServerCommandHandlerScheduleGame extends ServerCommandHandler {
 
-  protected ServerCommandHandlerScheduleGame(FantasyFootballServer pServer) {
-    super(pServer);
-  }
-  
-  public NetCommandId getId() {
-    return NetCommandId.INTERNAL_SERVER_SCHEDULE_GAME;
-  }
+	protected ServerCommandHandlerScheduleGame(FantasyFootballServer pServer) {
+		super(pServer);
+	}
 
-  public boolean handleCommand(ReceivedCommand pReceivedCommand) {
-    InternalServerCommandScheduleGame scheduleGameCommand = (InternalServerCommandScheduleGame) pReceivedCommand.getCommand();
-    GameCache gameCache = getServer().getGameCache();
-    GameState gameState = gameCache.createGameState(GameStartMode.SCHEDULE_GAME);
-    if (ServerMode.FUMBBL == getServer().getMode()) {
-      FumbblRequestLoadTeam requestHomeTeam = new FumbblRequestLoadTeam(gameState, null, scheduleGameCommand.getTeamHomeId(), true, null);
-      getServer().getRequestProcessor().add(requestHomeTeam);
-      FumbblRequestLoadTeam requestAwayTeam = new FumbblRequestLoadTeam(gameState, null, scheduleGameCommand.getTeamAwayId(), false, null);
-      getServer().getRequestProcessor().add(requestAwayTeam);
-    } else {
-      Team teamHome = gameCache.getTeamById(scheduleGameCommand.getTeamHomeId());
-      gameCache.addTeamToGame(gameState, teamHome, true);
-      Team teamAway = gameCache.getTeamById(scheduleGameCommand.getTeamAwayId());
-      gameCache.addTeamToGame(gameState, teamAway, false);
-    }
-    if (scheduleGameCommand.getGameIdListener() != null) {
-      scheduleGameCommand.getGameIdListener().setGameId(gameState.getId());
-    }
-    return true;
-  }
-  
+	public NetCommandId getId() {
+		return NetCommandId.INTERNAL_SERVER_SCHEDULE_GAME;
+	}
+
+	public boolean handleCommand(ReceivedCommand pReceivedCommand) {
+		InternalServerCommandScheduleGame scheduleGameCommand = (InternalServerCommandScheduleGame) pReceivedCommand
+				.getCommand();
+		GameCache gameCache = getServer().getGameCache();
+		GameState gameState = gameCache.createGameState(GameStartMode.SCHEDULE_GAME);
+		if (ServerMode.FUMBBL == getServer().getMode()) {
+			FumbblRequestLoadTeam requestHomeTeam = new FumbblRequestLoadTeam(gameState, null,
+					scheduleGameCommand.getTeamHomeId(), true, null);
+			getServer().getRequestProcessor().add(requestHomeTeam);
+			FumbblRequestLoadTeam requestAwayTeam = new FumbblRequestLoadTeam(gameState, null,
+					scheduleGameCommand.getTeamAwayId(), false, null);
+			getServer().getRequestProcessor().add(requestAwayTeam);
+		} else {
+			Team teamHome = gameCache.getTeamById(scheduleGameCommand.getTeamHomeId());
+			gameCache.addTeamToGame(gameState, teamHome, true);
+			Team teamAway = gameCache.getTeamById(scheduleGameCommand.getTeamAwayId());
+			gameCache.addTeamToGame(gameState, teamAway, false);
+		}
+		if (scheduleGameCommand.getGameIdListener() != null) {
+			scheduleGameCommand.getGameIdListener().setGameId(gameState.getId());
+		}
+		return true;
+	}
+
 }

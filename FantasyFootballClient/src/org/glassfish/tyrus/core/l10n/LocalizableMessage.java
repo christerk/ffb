@@ -44,33 +44,33 @@ package org.glassfish.tyrus.core.l10n;
  */
 public final class LocalizableMessage implements Localizable {
 
-    private final String _bundlename;
-    private final String _key;
-    private final Object[] _args;
+	private final String _bundlename;
+	private final String _key;
+	private final Object[] _args;
 
-    public LocalizableMessage(String bundlename, String key, Object... args) {
-        _bundlename = bundlename;
-        _key = key;
-        if (args == null) {
-            args = new Object[0];
-        }
-        _args = args;
-    }
+	public LocalizableMessage(String bundlename, String key, Object... args) {
+		_bundlename = bundlename;
+		_key = key;
+		if (args == null) {
+			args = new Object[0];
+		}
+		_args = args;
+	}
 
-    @Override
-    public String getKey() {
-        return _key;
-    }
+	@Override
+	public String getKey() {
+		return _key;
+	}
 
-    @Override
-    public Object[] getArguments() {
-        final Object[] copy = new Object[_args.length];
-        System.arraycopy(_args, 0, copy, 0, _args.length);
-        return copy;
-    }
+	@Override
+	public Object[] getArguments() {
+		final Object[] copy = new Object[_args.length];
+		System.arraycopy(_args, 0, copy, 0, _args.length);
+		return copy;
+	}
 
-    @Override
-    public String getResourceBundleName() {
-        return _bundlename;
-    }
+	@Override
+	public String getResourceBundleName() {
+		return _bundlename;
+	}
 }

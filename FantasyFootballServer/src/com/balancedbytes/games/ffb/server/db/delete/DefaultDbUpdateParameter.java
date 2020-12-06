@@ -11,22 +11,22 @@ import com.balancedbytes.games.ffb.server.db.IDbUpdateParameter;
  */
 public abstract class DefaultDbUpdateParameter implements IDbUpdateParameter {
 
-  private int fUpdatedRows;
-  
-  public void executeUpdate(FantasyFootballServer pServer) throws SQLException {
-    fUpdatedRows = getDbUpdateStatement(pServer).execute(this);
-  }
-  
-  public int getUpdatedRows() {
-    return fUpdatedRows;
-  }
-  
-  public void doAfterCommit(FantasyFootballServer pServer) {
-    // implemented in subclasses if necessary
-  }
-  
-  public void doAfterRollback(FantasyFootballServer pServer) {
-    // implemented in subclasses if necessary
-  }
-    
+	private int fUpdatedRows;
+
+	public void executeUpdate(FantasyFootballServer pServer) throws SQLException {
+		fUpdatedRows = getDbUpdateStatement(pServer).execute(this);
+	}
+
+	public int getUpdatedRows() {
+		return fUpdatedRows;
+	}
+
+	public void doAfterCommit(FantasyFootballServer pServer) {
+		// implemented in subclasses if necessary
+	}
+
+	public void doAfterRollback(FantasyFootballServer pServer) {
+		// implemented in subclasses if necessary
+	}
+
 }

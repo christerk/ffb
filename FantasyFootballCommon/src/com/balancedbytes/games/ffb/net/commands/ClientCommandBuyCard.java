@@ -7,46 +7,43 @@ import com.balancedbytes.games.ffb.net.NetCommandId;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
-
-
-
 /**
  * 
  * @author Kalimar
  */
 public class ClientCommandBuyCard extends ClientCommand {
-  
-  private CardType fCardType;
-  
-  public ClientCommandBuyCard() {
-    super();
-  }
-  
-  public ClientCommandBuyCard(CardType pCardType) {
-    fCardType = pCardType;
-  }
-  
-  public NetCommandId getId() {
-    return NetCommandId.CLIENT_BUY_CARD;
-  }
-  
-  public CardType getCardType() {
-	  return fCardType;
-  }
-  
-  // JSON serialization
-  
-  public JsonObject toJsonValue() {
-    JsonObject jsonObject = super.toJsonValue();
-    IJsonOption.CARD_TYPE.addTo(jsonObject, fCardType);
-    return jsonObject;
-  }
-  
-  public ClientCommandBuyCard initFrom(JsonValue jsonValue) {
-    super.initFrom(jsonValue);
-    JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
-    fCardType = (CardType) IJsonOption.CARD_TYPE.getFrom(jsonObject);
-    return this;
-  }
+
+	private CardType fCardType;
+
+	public ClientCommandBuyCard() {
+		super();
+	}
+
+	public ClientCommandBuyCard(CardType pCardType) {
+		fCardType = pCardType;
+	}
+
+	public NetCommandId getId() {
+		return NetCommandId.CLIENT_BUY_CARD;
+	}
+
+	public CardType getCardType() {
+		return fCardType;
+	}
+
+	// JSON serialization
+
+	public JsonObject toJsonValue() {
+		JsonObject jsonObject = super.toJsonValue();
+		IJsonOption.CARD_TYPE.addTo(jsonObject, fCardType);
+		return jsonObject;
+	}
+
+	public ClientCommandBuyCard initFrom(JsonValue jsonValue) {
+		super.initFrom(jsonValue);
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
+		fCardType = (CardType) IJsonOption.CARD_TYPE.getFrom(jsonObject);
+		return this;
+	}
 
 }

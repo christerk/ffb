@@ -25,8 +25,9 @@ public class DropDownPanel extends JPanel implements ActionListener {
 	private int fAmountSelected = 0;
 	private boolean fHandleEvents = true;
 	private InducementType fInducementType;
-	
-	public DropDownPanel(InducementType pInducementType, int pMax, String pText, int pCost, ActionListener pListener, int pAvailableGold) {
+
+	public DropDownPanel(InducementType pInducementType, int pMax, String pText, int pCost, ActionListener pListener,
+			int pAvailableGold) {
 		super();
 		fInducementType = pInducementType;
 		fMax = pMax;
@@ -49,7 +50,7 @@ public class DropDownPanel extends JPanel implements ActionListener {
 //		fBox.setEnabled(fAvailable);
 //		fBox.addActionListener(this);
 //		add(fBox);
-		
+
 		ArrayList<String> anzahl = new ArrayList<String>();
 		for (int i = 0; i <= fMax && i * fCost <= pAvailableGold; i++) {
 			anzahl.add(Integer.toString(i));
@@ -60,38 +61,39 @@ public class DropDownPanel extends JPanel implements ActionListener {
 		fBox.addActionListener(pListener);
 		fBox.setEnabled(fAvailable);
 		fBox.addActionListener(this);
-		
+
 		setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
 		add(fBox);
 		add(Box.createHorizontalStrut(10));
-		JLabel label = new JLabel(fText + " (Max: " + Integer.toString(fMax) + "  " + formatGold(fCost) + " Gold" + (pMax > 1 ? " each)" : ")"));
+		JLabel label = new JLabel(
+				fText + " (Max: " + Integer.toString(fMax) + "  " + formatGold(fCost) + " Gold" + (pMax > 1 ? " each)" : ")"));
 		add(label);
 		add(Box.createHorizontalGlue());
-		
+
 		setMaximumSize(new Dimension(getMaximumSize().width, getMinimumSize().height));
 
 	}
-	
+
 	public InducementType getInducementType() {
 		return fInducementType;
 	}
-	
+
 	public int getSelectedAmount() {
 		return fAmountSelected;
 	}
-	
+
 	public void reset(int pAvailableGold) {
 		fAmountSelected = 0;
 		fBox.setSelectedIndex(0);
 		availableGoldChanged(pAvailableGold);
 	}
-	
+
 	private String formatGold(int pAmount) {
 		StringBuilder buf = new StringBuilder(Integer.toString(pAmount)).reverse();
 		StringBuilder result = new StringBuilder();
 		for (int i = 0; i < buf.length(); i++) {
 			result.insert(0, buf.charAt(i));
-			if ( (i+1) %3 == 0 && i+1 < buf.length()) {
+			if ((i + 1) % 3 == 0 && i + 1 < buf.length()) {
 				result.insert(0, ",");
 			}
 		}
@@ -101,21 +103,21 @@ public class DropDownPanel extends JPanel implements ActionListener {
 	public void availableGoldChanged(int pAvailableGold) {
 		fHandleEvents = false;
 		ArrayList<String> anzahl = new ArrayList<String>();
-		if ((fMax - fAmountSelected) * fCost > pAvailableGold || fBox.getItemCount() < fMax +1) {
+		if ((fMax - fAmountSelected) * fCost > pAvailableGold || fBox.getItemCount() < fMax + 1) {
 			if (fBox.isEnabled()) {
 				for (int i = 0; i <= fAmountSelected; i++) {
 					anzahl.add(Integer.toString(i));
 				}
-				for (int i = fAmountSelected + 1; i <= fMax && (i - fAmountSelected)* fCost <= pAvailableGold; i++) {
+				for (int i = fAmountSelected + 1; i <= fMax && (i - fAmountSelected) * fCost <= pAvailableGold; i++) {
 					anzahl.add(Integer.toString(i));
-				}		
+				}
 				if (fBox.getItemCount() > anzahl.size()) {
-					for(int i = fBox.getItemCount(); i > anzahl.size() && i > 0; i--) { 
+					for (int i = fBox.getItemCount(); i > anzahl.size() && i > 0; i--) {
 						fBox.removeItemAt(i - 1);
 					}
 				} else {
-					for(int i = fBox.getItemCount() + 1; i <= anzahl.size(); i++) {
-						fBox.addItem(anzahl.get(i-1));
+					for (int i = fBox.getItemCount() + 1; i <= anzahl.size(); i++) {
+						fBox.addItem(anzahl.get(i - 1));
 					}
 				}
 			}
@@ -124,10 +126,10 @@ public class DropDownPanel extends JPanel implements ActionListener {
 	}
 
 	public int getCurrentCost() {
-		return 	fAmountSelected * fCost;
+		return fAmountSelected * fCost;
 
 	}
-	
+
 	public void actionPerformed(ActionEvent e) {
 		if (fHandleEvents) {
 			fAmountSelected = Integer.parseInt(fBox.getItemAt(fBox.getSelectedIndex()).toString());

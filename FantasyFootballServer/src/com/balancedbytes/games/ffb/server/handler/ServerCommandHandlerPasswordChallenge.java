@@ -14,27 +14,29 @@ import com.balancedbytes.games.ffb.util.StringTool;
  */
 public class ServerCommandHandlerPasswordChallenge extends ServerCommandHandler {
 
-  protected ServerCommandHandlerPasswordChallenge(FantasyFootballServer pServer) {
-    super(pServer);
-  }
-  
-  public NetCommandId getId() {
-    return NetCommandId.CLIENT_PASSWORD_CHALLENGE;
-  }
+	protected ServerCommandHandlerPasswordChallenge(FantasyFootballServer pServer) {
+		super(pServer);
+	}
 
-  public boolean handleCommand(ReceivedCommand pReceivedCommand) {
-    
-    ClientCommandPasswordChallenge passwordChallengeCommand = (ClientCommandPasswordChallenge) pReceivedCommand.getCommand();
+	public NetCommandId getId() {
+		return NetCommandId.CLIENT_PASSWORD_CHALLENGE;
+	}
 
-    String challenge = null;
-    if ((ServerMode.FUMBBL == getServer().getMode()) && StringTool.isProvided(passwordChallengeCommand.getCoach())) {
-      getServer().getRequestProcessor().add(new FumbblRequestPasswordChallenge(passwordChallengeCommand.getCoach(), pReceivedCommand.getSession()));
-    } else {
-      getServer().getCommunication().sendPasswordChallenge(pReceivedCommand.getSession(), challenge);
-    }
-    
-    return true;
-    
-  }
+	public boolean handleCommand(ReceivedCommand pReceivedCommand) {
+
+		ClientCommandPasswordChallenge passwordChallengeCommand = (ClientCommandPasswordChallenge) pReceivedCommand
+				.getCommand();
+
+		String challenge = null;
+		if ((ServerMode.FUMBBL == getServer().getMode()) && StringTool.isProvided(passwordChallengeCommand.getCoach())) {
+			getServer().getRequestProcessor()
+					.add(new FumbblRequestPasswordChallenge(passwordChallengeCommand.getCoach(), pReceivedCommand.getSession()));
+		} else {
+			getServer().getCommunication().sendPasswordChallenge(pReceivedCommand.getSession(), challenge);
+		}
+
+		return true;
+
+	}
 
 }

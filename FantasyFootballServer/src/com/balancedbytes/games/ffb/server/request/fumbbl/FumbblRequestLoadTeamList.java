@@ -25,48 +25,49 @@ import com.balancedbytes.games.ffb.xml.XmlHandler;
  */
 public class FumbblRequestLoadTeamList extends ServerRequest {
 
-  private String fCoach;
-  private GameState fGameState;
-  private Session fSession;
+	private String fCoach;
+	private GameState fGameState;
+	private Session fSession;
 
-  public FumbblRequestLoadTeamList(GameState pGameState, String pCoach, Session pSession) {
-    fGameState = pGameState;
-    fCoach = pCoach;
-    fSession = pSession;
-  }
+	public FumbblRequestLoadTeamList(GameState pGameState, String pCoach, Session pSession) {
+		fGameState = pGameState;
+		fCoach = pCoach;
+		fSession = pSession;
+	}
 
-  public GameState getGameState() {
-    return fGameState;
-  }
+	public GameState getGameState() {
+		return fGameState;
+	}
 
-  public String getCoach() {
-    return fCoach;
-  }
+	public String getCoach() {
+		return fCoach;
+	}
 
-  public Session getSession() {
-    return fSession;
-  }
+	public Session getSession() {
+		return fSession;
+	}
 
-  @Override
-  public void process(ServerRequestProcessor pRequestProcessor) {
-    FantasyFootballServer server = pRequestProcessor.getServer();
-    TeamList teamList = null;
-    try {
-      setRequestUrl(StringTool.bind(server.getProperty(IServerProperty.FUMBBL_TEAMS), URLEncoder.encode(getCoach(), UtilFumbblRequest.CHARACTER_ENCODING)));
-      String teamsXml = UtilServerHttpClient.fetchPage(getRequestUrl());
-      if (StringTool.isProvided(teamsXml)) {
-        try (BufferedReader xmlReader = new BufferedReader(new StringReader(teamsXml))) {
-          InputSource xmlSource = new InputSource(xmlReader);
-          teamList = new TeamList();
-          XmlHandler.parse(xmlSource, teamList);
-        }
-      }
-    } catch (IOException ioe) {
-      throw new FantasyFootballException(ioe);
-    }
-    if (teamList != null) {
-      server.getCommunication().sendTeamList(getSession(), teamList);
-    }
-  }
+	@Override
+	public void process(ServerRequestProcessor pRequestProcessor) {
+		FantasyFootballServer server = pRequestProcessor.getServer();
+		TeamList teamList = null;
+		try {
+			setRequestUrl(StringTool.bind(server.getProperty(IServerProperty.FUMBBL_TEAMS),
+					URLEncoder.encode(getCoach(), UtilFumbblRequest.CHARACTER_ENCODING)));
+			String teamsXml = UtilServerHttpClient.fetchPage(getRequestUrl());
+			if (StringTool.isProvided(teamsXml)) {
+				try (BufferedReader xmlReader = new BufferedReader(new StringReader(teamsXml))) {
+					InputSource xmlSource = new InputSource(xmlReader);
+					teamList = new TeamList();
+					XmlHandler.parse(xmlSource, teamList);
+				}
+			}
+		} catch (IOException ioe) {
+			throw new FantasyFootballException(ioe);
+		}
+		if (teamList != null) {
+			server.getCommunication().sendTeamList(getSession(), teamList);
+		}
+	}
 
 }

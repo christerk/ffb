@@ -12,45 +12,45 @@ import com.eclipsesource.json.JsonValue;
  */
 public class ClientCommandUseApothecary extends ClientCommand {
 
-  private String fPlayerId;
-  private boolean fApothecaryUsed;
+	private String fPlayerId;
+	private boolean fApothecaryUsed;
 
-  public ClientCommandUseApothecary() {
-    super();
-  }
+	public ClientCommandUseApothecary() {
+		super();
+	}
 
-  public ClientCommandUseApothecary(String pPlayerId, boolean pApothecaryUsed) {
-    fPlayerId = pPlayerId;
-    fApothecaryUsed = pApothecaryUsed;
-  }
+	public ClientCommandUseApothecary(String pPlayerId, boolean pApothecaryUsed) {
+		fPlayerId = pPlayerId;
+		fApothecaryUsed = pApothecaryUsed;
+	}
 
-  public NetCommandId getId() {
-    return NetCommandId.CLIENT_USE_APOTHECARY;
-  }
+	public NetCommandId getId() {
+		return NetCommandId.CLIENT_USE_APOTHECARY;
+	}
 
-  public String getPlayerId() {
-    return fPlayerId;
-  }
+	public String getPlayerId() {
+		return fPlayerId;
+	}
 
-  public boolean isApothecaryUsed() {
-    return fApothecaryUsed;
-  }
+	public boolean isApothecaryUsed() {
+		return fApothecaryUsed;
+	}
 
-  // JSON serialization
+	// JSON serialization
 
-  public JsonObject toJsonValue() {
-    JsonObject jsonObject = super.toJsonValue();
-    IJsonOption.PLAYER_ID.addTo(jsonObject, fPlayerId);
-    IJsonOption.APOTHECARY_USED.addTo(jsonObject, fApothecaryUsed);
-    return jsonObject;
-  }
+	public JsonObject toJsonValue() {
+		JsonObject jsonObject = super.toJsonValue();
+		IJsonOption.PLAYER_ID.addTo(jsonObject, fPlayerId);
+		IJsonOption.APOTHECARY_USED.addTo(jsonObject, fApothecaryUsed);
+		return jsonObject;
+	}
 
-  public ClientCommandUseApothecary initFrom(JsonValue jsonValue) {
-    super.initFrom(jsonValue);
-    JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
-    fPlayerId = IJsonOption.PLAYER_ID.getFrom(jsonObject);
-    fApothecaryUsed = IJsonOption.APOTHECARY_USED.getFrom(jsonObject);
-    return this;
-  }
+	public ClientCommandUseApothecary initFrom(JsonValue jsonValue) {
+		super.initFrom(jsonValue);
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
+		fPlayerId = IJsonOption.PLAYER_ID.getFrom(jsonObject);
+		fApothecaryUsed = IJsonOption.APOTHECARY_USED.getFrom(jsonObject);
+		return this;
+	}
 
 }

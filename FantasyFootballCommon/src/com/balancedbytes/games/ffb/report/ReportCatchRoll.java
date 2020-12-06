@@ -12,47 +12,49 @@ import com.eclipsesource.json.JsonValue;
  */
 public class ReportCatchRoll extends ReportSkillRoll {
 
-  private boolean fBomb;
+	private boolean fBomb;
 
-  public ReportCatchRoll() {
-    super(ReportId.CATCH_ROLL);
-  }
+	public ReportCatchRoll() {
+		super(ReportId.CATCH_ROLL);
+	}
 
-  public ReportCatchRoll(String pPlayerId, boolean pSuccessful, int pRoll, int pMinimumRoll, boolean pReRolled, CatchModifier[] pRollModifiers, boolean pBomb) {
-    super(ReportId.CATCH_ROLL, pPlayerId, pSuccessful, pRoll, pMinimumRoll, pReRolled, pRollModifiers);
-    fBomb = pBomb;
-  }
-  
-  public boolean isBomb() {
-    return fBomb;
-  }
-  
-  @Override
-  public CatchModifier[] getRollModifiers() {
-    return getRollModifierList().toArray(new CatchModifier[getRollModifierList().size()]);
-  }
-  
-  // transformation
+	public ReportCatchRoll(String pPlayerId, boolean pSuccessful, int pRoll, int pMinimumRoll, boolean pReRolled,
+			CatchModifier[] pRollModifiers, boolean pBomb) {
+		super(ReportId.CATCH_ROLL, pPlayerId, pSuccessful, pRoll, pMinimumRoll, pReRolled, pRollModifiers);
+		fBomb = pBomb;
+	}
 
-  public IReport transform() {
-    return new ReportCatchRoll(getPlayerId(), isSuccessful(), getRoll(), getMinimumRoll(), isReRolled(), getRollModifiers(), isBomb());
-  }
+	public boolean isBomb() {
+		return fBomb;
+	}
 
-  // JSON serialization
-  
-  @Override
-  public JsonObject toJsonValue() {
-    JsonObject jsonObject = UtilJson.toJsonObject(super.toJsonValue());
-    IJsonOption.BOMB.addTo(jsonObject, fBomb);
-    return jsonObject;
-  }
-  
-  @Override
-  public ReportCatchRoll initFrom(JsonValue pJsonValue) {
-    super.initFrom(pJsonValue);
-    JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-    fBomb = IJsonOption.BOMB.getFrom(jsonObject);
-    return this;
-  }
+	@Override
+	public CatchModifier[] getRollModifiers() {
+		return getRollModifierList().toArray(new CatchModifier[getRollModifierList().size()]);
+	}
+
+	// transformation
+
+	public IReport transform() {
+		return new ReportCatchRoll(getPlayerId(), isSuccessful(), getRoll(), getMinimumRoll(), isReRolled(),
+				getRollModifiers(), isBomb());
+	}
+
+	// JSON serialization
+
+	@Override
+	public JsonObject toJsonValue() {
+		JsonObject jsonObject = UtilJson.toJsonObject(super.toJsonValue());
+		IJsonOption.BOMB.addTo(jsonObject, fBomb);
+		return jsonObject;
+	}
+
+	@Override
+	public ReportCatchRoll initFrom(JsonValue pJsonValue) {
+		super.initFrom(pJsonValue);
+		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
+		fBomb = IJsonOption.BOMB.getFrom(jsonObject);
+		return this;
+	}
 
 }

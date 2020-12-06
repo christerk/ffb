@@ -35,23 +35,24 @@ public class StabBehaviour extends SkillBehaviour<Stab> {
 			@Override
 			public boolean handleExecuteStepHook(StepStab step, StepState state) {
 				Game game = step.getGameState().getGame();
-			    ActingPlayer actingPlayer = game.getActingPlayer();
-			    if (UtilCards.hasSkill(game, actingPlayer, skill) && (state.usingStab != null) && state.usingStab) {
-			      step.getResult().setSound(SoundId.STAB);
-			      FieldCoordinate defenderCoordinate = game.getFieldModel().getPlayerCoordinate(game.getDefender());
-			      InjuryResult injuryResultDefender = UtilServerInjury.handleInjury(step, new InjuryTypeStab(), actingPlayer.getPlayer(), game.getDefender(), defenderCoordinate, null, ApothecaryMode.DEFENDER);
-			      if (injuryResultDefender.injuryContext().isArmorBroken()) {
-			        step.publishParameters(UtilServerInjury.dropPlayer(step, game.getDefender(), ApothecaryMode.DEFENDER));
-			      }
-			      step.publishParameter(new StepParameter(StepParameterKey.INJURY_RESULT, injuryResultDefender));
-			      step.getResult().setNextAction(StepAction.GOTO_LABEL, state.goToLabelOnFailure);
-			    } else {
-			    	step.getResult().setNextAction(StepAction.NEXT_STEP);
-			    }
-			    
+				ActingPlayer actingPlayer = game.getActingPlayer();
+				if (UtilCards.hasSkill(game, actingPlayer, skill) && (state.usingStab != null) && state.usingStab) {
+					step.getResult().setSound(SoundId.STAB);
+					FieldCoordinate defenderCoordinate = game.getFieldModel().getPlayerCoordinate(game.getDefender());
+					InjuryResult injuryResultDefender = UtilServerInjury.handleInjury(step, new InjuryTypeStab(),
+							actingPlayer.getPlayer(), game.getDefender(), defenderCoordinate, null, ApothecaryMode.DEFENDER);
+					if (injuryResultDefender.injuryContext().isArmorBroken()) {
+						step.publishParameters(UtilServerInjury.dropPlayer(step, game.getDefender(), ApothecaryMode.DEFENDER));
+					}
+					step.publishParameter(new StepParameter(StepParameterKey.INJURY_RESULT, injuryResultDefender));
+					step.getResult().setNextAction(StepAction.GOTO_LABEL, state.goToLabelOnFailure);
+				} else {
+					step.getResult().setNextAction(StepAction.NEXT_STEP);
+				}
+
 				return false;
 			}
-			
+
 		});
 	}
 }

@@ -10,90 +10,89 @@ import com.balancedbytes.games.ffb.util.ArrayTool;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
-
-
 /**
  * 
  * @author Kalimar
  */
 public class ServerCommandVersion extends ServerCommand {
-  
-  private String fServerVersion;
-  private String fClientVersion;
-  private Map<String, String> fClientProperties;
-  
-  public ServerCommandVersion() {
-    fClientProperties = new HashMap<String, String>();
-  }
-  
-  public ServerCommandVersion(String pServerVersion, String pClientVersion, String[] pClientProperties, String[] pClientPropertyValues) {
-    this();
-    fServerVersion = pServerVersion;
-    fClientVersion = pClientVersion;
-    if (ArrayTool.isProvided(pClientProperties) && ArrayTool.isProvided(pClientPropertyValues)) {
-      for (int i = 0; i < pClientProperties.length; i++) {
-        fClientProperties.put(pClientProperties[i], pClientPropertyValues[i]);
-      }
-    }
-  }
-  
-  public NetCommandId getId() {
-    return NetCommandId.SERVER_VERSION;
-  }
-  
-  public String getServerVersion() {
-    return fServerVersion;
-  }
-  
-  public String getClientVersion() {
-    return fClientVersion;
-  }
-  
-  public String[] getClientProperties() {
-    return fClientProperties.keySet().toArray(new String[fClientProperties.size()]);
-  }
-  
-  public String getClientPropertyValue(String pClientProperty) {
-    return fClientProperties.get(pClientProperty);
-  }
-    
-  public boolean isReplayable() {
-    return false;
-  }
-  
-  // JSON serialization
-  
-  public JsonObject toJsonValue() {
-    JsonObject jsonObject = new JsonObject();
-    IJsonOption.NET_COMMAND_ID.addTo(jsonObject, getId());
-    IJsonOption.COMMAND_NR.addTo(jsonObject, getCommandNr());
-    IJsonOption.SERVER_VERSION.addTo(jsonObject, fServerVersion);
-    IJsonOption.CLIENT_VERSION.addTo(jsonObject, fClientVersion);
-    String[] clientPropertyNames = getClientProperties();
-    String[] clientPropertyValues = new String[clientPropertyNames.length];
-    for (int i = 0; i < clientPropertyNames.length; i++) {
-      clientPropertyValues[i] = getClientPropertyValue(clientPropertyNames[i]);
-    }
-    IJsonOption.CLIENT_PROPERTY_NAMES.addTo(jsonObject, clientPropertyNames);
-    IJsonOption.CLIENT_PROPERTY_VALUES.addTo(jsonObject, clientPropertyValues);
-    return jsonObject;
-  }
-  
-  public ServerCommandVersion initFrom(JsonValue pJsonValue) {
-    JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-    UtilNetCommand.validateCommandId(this, (NetCommandId) IJsonOption.NET_COMMAND_ID.getFrom(jsonObject));
-    setCommandNr(IJsonOption.COMMAND_NR.getFrom(jsonObject));
-    fServerVersion = IJsonOption.SERVER_VERSION.getFrom(jsonObject);
-    fClientVersion = IJsonOption.CLIENT_VERSION.getFrom(jsonObject);
-    String[] clientPropertyNames = IJsonOption.CLIENT_PROPERTY_NAMES.getFrom(jsonObject);
-    String[] clientPropertyValues = IJsonOption.CLIENT_PROPERTY_VALUES.getFrom(jsonObject);
-    fClientProperties.clear();
-    if (ArrayTool.isProvided(clientPropertyNames) && ArrayTool.isProvided(clientPropertyValues)) {
-      for (int i = 0; i < clientPropertyNames.length; i++) {
-        fClientProperties.put(clientPropertyNames[i], clientPropertyValues[i]);
-      }
-    }
-    return this;
-  }
-    
+
+	private String fServerVersion;
+	private String fClientVersion;
+	private Map<String, String> fClientProperties;
+
+	public ServerCommandVersion() {
+		fClientProperties = new HashMap<String, String>();
+	}
+
+	public ServerCommandVersion(String pServerVersion, String pClientVersion, String[] pClientProperties,
+			String[] pClientPropertyValues) {
+		this();
+		fServerVersion = pServerVersion;
+		fClientVersion = pClientVersion;
+		if (ArrayTool.isProvided(pClientProperties) && ArrayTool.isProvided(pClientPropertyValues)) {
+			for (int i = 0; i < pClientProperties.length; i++) {
+				fClientProperties.put(pClientProperties[i], pClientPropertyValues[i]);
+			}
+		}
+	}
+
+	public NetCommandId getId() {
+		return NetCommandId.SERVER_VERSION;
+	}
+
+	public String getServerVersion() {
+		return fServerVersion;
+	}
+
+	public String getClientVersion() {
+		return fClientVersion;
+	}
+
+	public String[] getClientProperties() {
+		return fClientProperties.keySet().toArray(new String[fClientProperties.size()]);
+	}
+
+	public String getClientPropertyValue(String pClientProperty) {
+		return fClientProperties.get(pClientProperty);
+	}
+
+	public boolean isReplayable() {
+		return false;
+	}
+
+	// JSON serialization
+
+	public JsonObject toJsonValue() {
+		JsonObject jsonObject = new JsonObject();
+		IJsonOption.NET_COMMAND_ID.addTo(jsonObject, getId());
+		IJsonOption.COMMAND_NR.addTo(jsonObject, getCommandNr());
+		IJsonOption.SERVER_VERSION.addTo(jsonObject, fServerVersion);
+		IJsonOption.CLIENT_VERSION.addTo(jsonObject, fClientVersion);
+		String[] clientPropertyNames = getClientProperties();
+		String[] clientPropertyValues = new String[clientPropertyNames.length];
+		for (int i = 0; i < clientPropertyNames.length; i++) {
+			clientPropertyValues[i] = getClientPropertyValue(clientPropertyNames[i]);
+		}
+		IJsonOption.CLIENT_PROPERTY_NAMES.addTo(jsonObject, clientPropertyNames);
+		IJsonOption.CLIENT_PROPERTY_VALUES.addTo(jsonObject, clientPropertyValues);
+		return jsonObject;
+	}
+
+	public ServerCommandVersion initFrom(JsonValue pJsonValue) {
+		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
+		UtilNetCommand.validateCommandId(this, (NetCommandId) IJsonOption.NET_COMMAND_ID.getFrom(jsonObject));
+		setCommandNr(IJsonOption.COMMAND_NR.getFrom(jsonObject));
+		fServerVersion = IJsonOption.SERVER_VERSION.getFrom(jsonObject);
+		fClientVersion = IJsonOption.CLIENT_VERSION.getFrom(jsonObject);
+		String[] clientPropertyNames = IJsonOption.CLIENT_PROPERTY_NAMES.getFrom(jsonObject);
+		String[] clientPropertyValues = IJsonOption.CLIENT_PROPERTY_VALUES.getFrom(jsonObject);
+		fClientProperties.clear();
+		if (ArrayTool.isProvided(clientPropertyNames) && ArrayTool.isProvided(clientPropertyValues)) {
+			for (int i = 0; i < clientPropertyNames.length; i++) {
+				fClientProperties.put(clientPropertyNames[i], clientPropertyValues[i]);
+			}
+		}
+		return this;
+	}
+
 }

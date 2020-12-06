@@ -3,7 +3,7 @@ package com.balancedbytes.games.ffb.injury;
 import com.balancedbytes.games.ffb.InjuryType;
 import com.balancedbytes.games.ffb.SendToBoxReason;
 
-public class PilingOnKnockedOut extends InjuryType{
+public class PilingOnKnockedOut extends InjuryType {
 
 	public PilingOnKnockedOut() {
 		super("pilingOnKnockedOut", false, SendToBoxReason.KO_ON_PILING_ON);

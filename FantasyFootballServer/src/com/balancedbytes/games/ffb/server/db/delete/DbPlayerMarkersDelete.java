@@ -16,35 +16,36 @@ import com.balancedbytes.games.ffb.server.db.IDbUpdateParameter;
  * @author Kalimar
  */
 public class DbPlayerMarkersDelete extends DbUpdateStatement {
-  
-  private PreparedStatement fStatement;
-  
-  public DbPlayerMarkersDelete(FantasyFootballServer pServer) {
-    super(pServer);
-  }
-  
-  public DbStatementId getId() {
-    return DbStatementId.PLAYER_MARKERS_DELETE;
-  }
 
-  public void prepare(Connection pConnection) {
-    try {
-      StringBuilder sql = new StringBuilder();
-      sql.append("DELETE FROM ").append(IDbTablePlayerMarkers.TABLE_NAME).append(" WHERE (").append(IDbTablePlayerMarkers.COLUMN_TEAM_ID).append("=?)");
-      fStatement = pConnection.prepareStatement(sql.toString());
-    } catch (SQLException sqlE) {
-      throw new FantasyFootballException(sqlE);
-    }
-  }
-  
-  private PreparedStatement fillDbStatement(IDbUpdateParameter pDbUpdateParameter) throws SQLException {
-    DbPlayerMarkersDeleteParameter parameter = (DbPlayerMarkersDeleteParameter) pDbUpdateParameter;
-    fStatement.setString(1, parameter.getTeamId());
-    return fStatement;
-  }
+	private PreparedStatement fStatement;
+
+	public DbPlayerMarkersDelete(FantasyFootballServer pServer) {
+		super(pServer);
+	}
+
+	public DbStatementId getId() {
+		return DbStatementId.PLAYER_MARKERS_DELETE;
+	}
+
+	public void prepare(Connection pConnection) {
+		try {
+			StringBuilder sql = new StringBuilder();
+			sql.append("DELETE FROM ").append(IDbTablePlayerMarkers.TABLE_NAME).append(" WHERE (")
+					.append(IDbTablePlayerMarkers.COLUMN_TEAM_ID).append("=?)");
+			fStatement = pConnection.prepareStatement(sql.toString());
+		} catch (SQLException sqlE) {
+			throw new FantasyFootballException(sqlE);
+		}
+	}
+
+	private PreparedStatement fillDbStatement(IDbUpdateParameter pDbUpdateParameter) throws SQLException {
+		DbPlayerMarkersDeleteParameter parameter = (DbPlayerMarkersDeleteParameter) pDbUpdateParameter;
+		fStatement.setString(1, parameter.getTeamId());
+		return fStatement;
+	}
 
 	public int execute(IDbUpdateParameter pUpdateParameter) throws SQLException {
-	  return fillDbStatement(pUpdateParameter).executeUpdate();
+		return fillDbStatement(pUpdateParameter).executeUpdate();
 	}
 
 	public String toString(IDbUpdateParameter pUpdateParameter) throws SQLException {

@@ -12,68 +12,68 @@ import com.eclipsesource.json.JsonValue;
  */
 public class ReportSpecialEffectRoll implements IReport {
 
-  private SpecialEffect fSpecialEffect;
-  private String fPlayerId;
-  private int fRoll;
-  private boolean fSuccessful;
+	private SpecialEffect fSpecialEffect;
+	private String fPlayerId;
+	private int fRoll;
+	private boolean fSuccessful;
 
-  public ReportSpecialEffectRoll() {
-    super();
-  }
+	public ReportSpecialEffectRoll() {
+		super();
+	}
 
-  public ReportSpecialEffectRoll(SpecialEffect pSpecialEffect, String pPlayerId, int pRoll, boolean pSuccessful) {
-    fSpecialEffect = pSpecialEffect;
-    fPlayerId = pPlayerId;
-    fRoll = pRoll;
-    fSuccessful = pSuccessful;
-  }
+	public ReportSpecialEffectRoll(SpecialEffect pSpecialEffect, String pPlayerId, int pRoll, boolean pSuccessful) {
+		fSpecialEffect = pSpecialEffect;
+		fPlayerId = pPlayerId;
+		fRoll = pRoll;
+		fSuccessful = pSuccessful;
+	}
 
-  public ReportId getId() {
-    return ReportId.SPELL_EFFECT_ROLL;
-  }
+	public ReportId getId() {
+		return ReportId.SPELL_EFFECT_ROLL;
+	}
 
-  public SpecialEffect getSpecialEffect() {
-    return fSpecialEffect;
-  }
+	public SpecialEffect getSpecialEffect() {
+		return fSpecialEffect;
+	}
 
-  public String getPlayerId() {
-    return fPlayerId;
-  }
+	public String getPlayerId() {
+		return fPlayerId;
+	}
 
-  public int getRoll() {
-    return fRoll;
-  }
+	public int getRoll() {
+		return fRoll;
+	}
 
-  public boolean isSuccessful() {
-    return fSuccessful;
-  }
+	public boolean isSuccessful() {
+		return fSuccessful;
+	}
 
-  // transformation
+	// transformation
 
-  public IReport transform() {
-    return new ReportSpecialEffectRoll(getSpecialEffect(), getPlayerId(), getRoll(), isSuccessful());
-  }
+	public IReport transform() {
+		return new ReportSpecialEffectRoll(getSpecialEffect(), getPlayerId(), getRoll(), isSuccessful());
+	}
 
-  // JSON serialization
-  
-  public JsonObject toJsonValue() {
-    JsonObject jsonObject = new JsonObject();
-    IJsonOption.REPORT_ID.addTo(jsonObject, getId());
-    IJsonOption.SPECIAL_EFFECT.addTo(jsonObject, fSpecialEffect);
-    IJsonOption.PLAYER_ID.addTo(jsonObject, fPlayerId);
-    IJsonOption.ROLL.addTo(jsonObject, fRoll);
-    IJsonOption.SUCCESSFUL.addTo(jsonObject, fSuccessful);
-    return jsonObject;
-  }
-  
-  public ReportSpecialEffectRoll initFrom(JsonValue pJsonValue) {
-    JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-    UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(jsonObject));
-    fSpecialEffect = (SpecialEffect) IJsonOption.SPECIAL_EFFECT.getFrom(jsonObject);
-    fPlayerId = IJsonOption.PLAYER_ID.getFrom(jsonObject);
-    fRoll = IJsonOption.ROLL.getFrom(jsonObject);
-    fSuccessful = IJsonOption.SUCCESSFUL.getFrom(jsonObject);
-    return this;
-  }
+	// JSON serialization
+
+	public JsonObject toJsonValue() {
+		JsonObject jsonObject = new JsonObject();
+		IJsonOption.REPORT_ID.addTo(jsonObject, getId());
+		IJsonOption.SPECIAL_EFFECT.addTo(jsonObject, fSpecialEffect);
+		IJsonOption.PLAYER_ID.addTo(jsonObject, fPlayerId);
+		IJsonOption.ROLL.addTo(jsonObject, fRoll);
+		IJsonOption.SUCCESSFUL.addTo(jsonObject, fSuccessful);
+		return jsonObject;
+	}
+
+	public ReportSpecialEffectRoll initFrom(JsonValue pJsonValue) {
+		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
+		UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(jsonObject));
+		fSpecialEffect = (SpecialEffect) IJsonOption.SPECIAL_EFFECT.getFrom(jsonObject);
+		fPlayerId = IJsonOption.PLAYER_ID.getFrom(jsonObject);
+		fRoll = IJsonOption.ROLL.getFrom(jsonObject);
+		fSuccessful = IJsonOption.SUCCESSFUL.getFrom(jsonObject);
+		return this;
+	}
 
 }

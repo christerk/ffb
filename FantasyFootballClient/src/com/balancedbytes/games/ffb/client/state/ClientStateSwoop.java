@@ -27,26 +27,27 @@ public class ClientStateSwoop extends ClientStateMove {
 	private void sendSwoop(Game game, ActingPlayer actingPlayer, FieldCoordinate destination) {
 		FieldCoordinate source = game.getFieldModel().getPlayerCoordinate(actingPlayer.getPlayer());
 		if (source.isAdjacent(destination)) {
-			// Check if the destination is in one of the 4 cardinal directions from the player
+			// Check if the destination is in one of the 4 cardinal directions from the
+			// player
 			if (source.getY() == destination.getY() || source.getX() == destination.getX()) {
 				getClient().getCommunication().sendSwoop(actingPlayer.getPlayerId(), destination);
 			}
 		}
 	}
-	
+
 	protected void clickOnField(FieldCoordinate pCoordinate) {
 		Game game = getClient().getGame();
 		ActingPlayer actingPlayer = game.getActingPlayer();
 
 		if (actingPlayer.getPlayerAction() == PlayerAction.SWOOP) {
 			sendSwoop(game, actingPlayer, pCoordinate);
-		}    
+		}
 	}
 
 	protected void clickOnPlayer(Player pPlayer) {
 		Game game = getClient().getGame();
 		ActingPlayer actingPlayer = game.getActingPlayer();
-		
+
 		if (actingPlayer.getPlayerAction() == PlayerAction.SWOOP) {
 			FieldCoordinate coordinate = game.getFieldModel().getPlayerCoordinate(pPlayer);
 			sendSwoop(game, actingPlayer, coordinate);
@@ -59,12 +60,12 @@ public class ClientStateSwoop extends ClientStateMove {
 		if ((game.getDefender() == null) && (game.getPassCoordinate() == null)) {
 			UtilClientCursor.setDefaultCursor(userInterface);
 		}
-		//    if ((PlayerAction.THROW_TEAM_MATE == actingPlayer.getPlayerAction()) && (game.getPassCoordinate() == null)) {
+		// if ((PlayerAction.THROW_TEAM_MATE == actingPlayer.getPlayerAction()) &&
+		// (game.getPassCoordinate() == null)) {
 		getClient().getClientData().setSelectedPlayer(pPlayer);
 		userInterface.refreshSideBars();
 		return true;
 	}
-
 
 	@Override
 	public void leaveState() {

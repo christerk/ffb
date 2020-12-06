@@ -28,154 +28,157 @@ import com.eclipsesource.json.JsonValue;
  */
 public class GameOptions implements IXmlSerializable, IJsonSerializable {
 
-  public static final String XML_TAG = "options";
+	public static final String XML_TAG = "options";
 
-  private Map<GameOptionId, IGameOption> fOptionById;
+	private Map<GameOptionId, IGameOption> fOptionById;
 
-  private transient Game fGame;
-  private transient GameOptionFactory fGameOptionFactory;
+	private transient Game fGame;
+	private transient GameOptionFactory fGameOptionFactory;
 
-  public GameOptions(Game pGame) {
-    fGame = pGame;
-    fOptionById = new HashMap<GameOptionId, IGameOption>();
-    fGameOptionFactory = new GameOptionFactory();
-  }
+	public GameOptions(Game pGame) {
+		fGame = pGame;
+		fOptionById = new HashMap<GameOptionId, IGameOption>();
+		fGameOptionFactory = new GameOptionFactory();
+	}
 
-  public Game getGame() {
-    return fGame;
-  }
+	public Game getGame() {
+		return fGame;
+	}
 
-  public void addOption(IGameOption pOption) {
-    if (pOption != null) {
-      addOptionInternal(pOption);
-      // handle mutually exclusive options
-      switch (pOption.getId()) {
-        case PILING_ON_ARMOR_ONLY:
-          if (((GameOptionBoolean) pOption).isEnabled()) {
-            GameOptionBoolean pilingOnInjuryOnly = (GameOptionBoolean) getOptionWithDefault(GameOptionId.PILING_ON_INJURY_ONLY);
-            if (pilingOnInjuryOnly.isEnabled()) {
-              addOptionInternal(pilingOnInjuryOnly.setValue(false));
-            }
-          }
-          break;
-        case PILING_ON_INJURY_ONLY:
-          if (((GameOptionBoolean) pOption).isEnabled()) {
-            GameOptionBoolean pilingOnArmorOnly = (GameOptionBoolean) getOptionWithDefault(GameOptionId.PILING_ON_ARMOR_ONLY);
-            if (pilingOnArmorOnly.isEnabled()) {
-              addOptionInternal(pilingOnArmorOnly.setValue(false));
-            }
-          }
-          break;
-        case FOUL_BONUS:
-          if (((GameOptionBoolean) pOption).isEnabled()) {
-            GameOptionBoolean foulBonusOutsideTacklezone = (GameOptionBoolean) getOptionWithDefault(GameOptionId.FOUL_BONUS_OUTSIDE_TACKLEZONE);
-            if (foulBonusOutsideTacklezone.isEnabled()) {
-              addOptionInternal(foulBonusOutsideTacklezone.setValue(false));
-            }
-          }
-          break;
-        case FOUL_BONUS_OUTSIDE_TACKLEZONE:
-          if (((GameOptionBoolean) pOption).isEnabled()) {
-            GameOptionBoolean foulBonus = (GameOptionBoolean) getOptionWithDefault(GameOptionId.FOUL_BONUS);
-            if (foulBonus.isEnabled()) {
-              addOptionInternal(foulBonus.setValue(false));
-            }
-          }
-          break;
-        default:
-          break;
-      }
-    }
-  }
-  
-  private void addOptionInternal(IGameOption pOption) {
-    fOptionById.put(pOption.getId(), pOption);
-    notifyObservers(ModelChangeId.GAME_OPTIONS_ADD_OPTION, pOption);
-  }
+	public void addOption(IGameOption pOption) {
+		if (pOption != null) {
+			addOptionInternal(pOption);
+			// handle mutually exclusive options
+			switch (pOption.getId()) {
+			case PILING_ON_ARMOR_ONLY:
+				if (((GameOptionBoolean) pOption).isEnabled()) {
+					GameOptionBoolean pilingOnInjuryOnly = (GameOptionBoolean) getOptionWithDefault(
+							GameOptionId.PILING_ON_INJURY_ONLY);
+					if (pilingOnInjuryOnly.isEnabled()) {
+						addOptionInternal(pilingOnInjuryOnly.setValue(false));
+					}
+				}
+				break;
+			case PILING_ON_INJURY_ONLY:
+				if (((GameOptionBoolean) pOption).isEnabled()) {
+					GameOptionBoolean pilingOnArmorOnly = (GameOptionBoolean) getOptionWithDefault(
+							GameOptionId.PILING_ON_ARMOR_ONLY);
+					if (pilingOnArmorOnly.isEnabled()) {
+						addOptionInternal(pilingOnArmorOnly.setValue(false));
+					}
+				}
+				break;
+			case FOUL_BONUS:
+				if (((GameOptionBoolean) pOption).isEnabled()) {
+					GameOptionBoolean foulBonusOutsideTacklezone = (GameOptionBoolean) getOptionWithDefault(
+							GameOptionId.FOUL_BONUS_OUTSIDE_TACKLEZONE);
+					if (foulBonusOutsideTacklezone.isEnabled()) {
+						addOptionInternal(foulBonusOutsideTacklezone.setValue(false));
+					}
+				}
+				break;
+			case FOUL_BONUS_OUTSIDE_TACKLEZONE:
+				if (((GameOptionBoolean) pOption).isEnabled()) {
+					GameOptionBoolean foulBonus = (GameOptionBoolean) getOptionWithDefault(GameOptionId.FOUL_BONUS);
+					if (foulBonus.isEnabled()) {
+						addOptionInternal(foulBonus.setValue(false));
+					}
+				}
+				break;
+			default:
+				break;
+			}
+		}
+	}
 
-  public IGameOption getOption(GameOptionId pOptionId) {
-    return fOptionById.get(pOptionId);
-  }
-  
-  public IGameOption getOptionWithDefault(GameOptionId pOptionId) {
-    IGameOption option = getOption(pOptionId);
-    if (option == null) {
-      option = fGameOptionFactory.createGameOption(pOptionId);
-    }
-    return option;
-  }
+	private void addOptionInternal(IGameOption pOption) {
+		fOptionById.put(pOption.getId(), pOption);
+		notifyObservers(ModelChangeId.GAME_OPTIONS_ADD_OPTION, pOption);
+	}
 
-  public IGameOption[] getOptions() {
-    return fOptionById.values().toArray(new IGameOption[fOptionById.size()]);
-  }
+	public IGameOption getOption(GameOptionId pOptionId) {
+		return fOptionById.get(pOptionId);
+	}
 
-  public void init(GameOptions pOtherOptions) {
-    if (pOtherOptions == null) {
-      return;
-    }
-    for (IGameOption otherOption : pOtherOptions.getOptions()) {
-      IGameOption myOption = fGameOptionFactory.createGameOption(otherOption.getId());
-      myOption.setValue(otherOption.getValueAsString());
-      addOption(myOption);
-    }
-  }
+	public IGameOption getOptionWithDefault(GameOptionId pOptionId) {
+		IGameOption option = getOption(pOptionId);
+		if (option == null) {
+			option = fGameOptionFactory.createGameOption(pOptionId);
+		}
+		return option;
+	}
 
-  // change tracking
+	public IGameOption[] getOptions() {
+		return fOptionById.values().toArray(new IGameOption[fOptionById.size()]);
+	}
 
-  private void notifyObservers(ModelChangeId pChangeId, Object pValue) {
-    if ((getGame() == null) || (pChangeId == null)) {
-      return;
-    }
-    getGame().notifyObservers(new ModelChange(pChangeId, null, pValue));
-  }
+	public void init(GameOptions pOtherOptions) {
+		if (pOtherOptions == null) {
+			return;
+		}
+		for (IGameOption otherOption : pOtherOptions.getOptions()) {
+			IGameOption myOption = fGameOptionFactory.createGameOption(otherOption.getId());
+			myOption.setValue(otherOption.getValueAsString());
+			addOption(myOption);
+		}
+	}
 
-  // XML serialization
+	// change tracking
 
-  public void addToXml(TransformerHandler pHandler) {
-    UtilXml.startElement(pHandler, XML_TAG);
-    for (IGameOption option : getOptions()) {
-      option.addToXml(pHandler);
-    }
-    UtilXml.endElement(pHandler, XML_TAG);
-  }
+	private void notifyObservers(ModelChangeId pChangeId, Object pValue) {
+		if ((getGame() == null) || (pChangeId == null)) {
+			return;
+		}
+		getGame().notifyObservers(new ModelChange(pChangeId, null, pValue));
+	}
 
-  public String toXml(boolean pIndent) {
-    return UtilXml.toXml(this, pIndent);
-  }
+	// XML serialization
 
-  public IXmlSerializable startXmlElement(String pXmlTag, Attributes pXmlAttributes) {
-    if (IGameOption.XML_TAG.equals(pXmlTag)) {
-      addOption(new GameOptionFactory().fromXmlElement(pXmlTag, pXmlAttributes));
-    }
-    return this;
-  }
+	public void addToXml(TransformerHandler pHandler) {
+		UtilXml.startElement(pHandler, XML_TAG);
+		for (IGameOption option : getOptions()) {
+			option.addToXml(pHandler);
+		}
+		UtilXml.endElement(pHandler, XML_TAG);
+	}
 
-  public boolean endXmlElement(String pXmlTag, String pValue) {
-    return XML_TAG.equals(pXmlTag);
-  }
+	public String toXml(boolean pIndent) {
+		return UtilXml.toXml(this, pIndent);
+	}
 
-  // JSON serialization
+	public IXmlSerializable startXmlElement(String pXmlTag, Attributes pXmlAttributes) {
+		if (IGameOption.XML_TAG.equals(pXmlTag)) {
+			addOption(new GameOptionFactory().fromXmlElement(pXmlTag, pXmlAttributes));
+		}
+		return this;
+	}
 
-  public JsonObject toJsonValue() {
-    JsonObject jsonObject = new JsonObject();
-    JsonArray optionArray = new JsonArray();
-    for (IGameOption option : getOptions()) {
-      optionArray.add(option.toJsonValue());
-    }
-    IJsonOption.GAME_OPTION_ARRAY.addTo(jsonObject, optionArray);
-    return jsonObject;
-  }
+	public boolean endXmlElement(String pXmlTag, String pValue) {
+		return XML_TAG.equals(pXmlTag);
+	}
 
-  public GameOptions initFrom(JsonValue pJsonValue) {
-    JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-    JsonArray optionArray = IJsonOption.GAME_OPTION_ARRAY.getFrom(jsonObject);
-    int nrOfOptions = optionArray.size();
-    GameOptionFactory optionFactory = new GameOptionFactory();
-    for (int i = 0; i < nrOfOptions; i++) {
-      IGameOption gameOption = optionFactory.fromJsonValue(optionArray.get(i));
-      addOption(gameOption);
-    }
-    return this;
-  }
-  
+	// JSON serialization
+
+	public JsonObject toJsonValue() {
+		JsonObject jsonObject = new JsonObject();
+		JsonArray optionArray = new JsonArray();
+		for (IGameOption option : getOptions()) {
+			optionArray.add(option.toJsonValue());
+		}
+		IJsonOption.GAME_OPTION_ARRAY.addTo(jsonObject, optionArray);
+		return jsonObject;
+	}
+
+	public GameOptions initFrom(JsonValue pJsonValue) {
+		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
+		JsonArray optionArray = IJsonOption.GAME_OPTION_ARRAY.getFrom(jsonObject);
+		int nrOfOptions = optionArray.size();
+		GameOptionFactory optionFactory = new GameOptionFactory();
+		for (int i = 0; i < nrOfOptions; i++) {
+			IGameOption gameOption = optionFactory.fromJsonValue(optionArray.get(i));
+			addOption(gameOption);
+		}
+		return this;
+	}
+
 }

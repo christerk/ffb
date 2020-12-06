@@ -6,16 +6,16 @@ package com.balancedbytes.games.ffb.server.request;
  */
 public abstract class ServerRequest {
 
-  private String fRequestUrl;
+	private String fRequestUrl;
 
-  public abstract void process(ServerRequestProcessor pRequestProcessor);
+	public abstract void process(ServerRequestProcessor pRequestProcessor);
 
-  public String getRequestUrl() {
-    return fRequestUrl;
-  }
+	public String getRequestUrl() {
+		return fRequestUrl;
+	}
 
-  public void setRequestUrl(String pRequestUrl) {
-    fRequestUrl = pRequestUrl;
-  }
+	public void setRequestUrl(String pRequestUrl) {
+		fRequestUrl = pRequestUrl;
+	}
 
 }

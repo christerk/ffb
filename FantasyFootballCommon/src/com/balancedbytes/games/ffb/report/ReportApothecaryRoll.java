@@ -7,77 +7,75 @@ import com.balancedbytes.games.ffb.json.UtilJson;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
-
-
-
 /**
  * 
  * @author Kalimar
  */
 public class ReportApothecaryRoll implements IReport {
-  
-  private String fPlayerId;
-  private int[] fCasualtyRoll;
-  private PlayerState fPlayerState;
-  private SeriousInjury fSeriousInjury;
 
-  public ReportApothecaryRoll() {
-    super();
-  }
+	private String fPlayerId;
+	private int[] fCasualtyRoll;
+	private PlayerState fPlayerState;
+	private SeriousInjury fSeriousInjury;
 
-  public ReportApothecaryRoll(String pPlayerId, int[] pCasualtyRoll, PlayerState pPlayerState, SeriousInjury pSeriousInjury) {
-    fPlayerId = pPlayerId;
-    fCasualtyRoll = pCasualtyRoll;
-    fPlayerState = pPlayerState;
-    fSeriousInjury = pSeriousInjury;
-  }
-  
-  public ReportId getId() {
-    return ReportId.APOTHECARY_ROLL;
-  }
-  
-  public String getPlayerId() {
-    return fPlayerId;
-  }
+	public ReportApothecaryRoll() {
+		super();
+	}
 
-  public int[] getCasualtyRoll() {
-    return fCasualtyRoll;
-  }
+	public ReportApothecaryRoll(String pPlayerId, int[] pCasualtyRoll, PlayerState pPlayerState,
+			SeriousInjury pSeriousInjury) {
+		fPlayerId = pPlayerId;
+		fCasualtyRoll = pCasualtyRoll;
+		fPlayerState = pPlayerState;
+		fSeriousInjury = pSeriousInjury;
+	}
 
-  public PlayerState getPlayerState() {
-    return fPlayerState;
-  }
+	public ReportId getId() {
+		return ReportId.APOTHECARY_ROLL;
+	}
 
-  public SeriousInjury getSeriousInjury() {
-    return fSeriousInjury;
-  }
-  
-  // transformation
-  
-  public IReport transform() {
-    return new ReportApothecaryRoll(getPlayerId(), getCasualtyRoll(), getPlayerState(), getSeriousInjury());
-  }
-  
-  // JSON serialization
-  
-  public JsonObject toJsonValue() {
-    JsonObject jsonObject = new JsonObject();
-    IJsonOption.REPORT_ID.addTo(jsonObject, getId());
-    IJsonOption.PLAYER_ID.addTo(jsonObject, fPlayerId);
-    IJsonOption.CASUALTY_ROLL.addTo(jsonObject, fCasualtyRoll);
-    IJsonOption.PLAYER_STATE.addTo(jsonObject, fPlayerState);
-    IJsonOption.SERIOUS_INJURY.addTo(jsonObject, fSeriousInjury);
-    return jsonObject;
-  }
-  
-  public ReportApothecaryRoll initFrom(JsonValue pJsonValue) {
-    JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-    UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(jsonObject));
-    fPlayerId = IJsonOption.PLAYER_ID.getFrom(jsonObject);
-    fCasualtyRoll = IJsonOption.CASUALTY_ROLL.getFrom(jsonObject);
-    fPlayerState = IJsonOption.PLAYER_STATE.getFrom(jsonObject);
-    fSeriousInjury = (SeriousInjury) IJsonOption.SERIOUS_INJURY.getFrom(jsonObject);
-    return this;
-  }
-    
+	public String getPlayerId() {
+		return fPlayerId;
+	}
+
+	public int[] getCasualtyRoll() {
+		return fCasualtyRoll;
+	}
+
+	public PlayerState getPlayerState() {
+		return fPlayerState;
+	}
+
+	public SeriousInjury getSeriousInjury() {
+		return fSeriousInjury;
+	}
+
+	// transformation
+
+	public IReport transform() {
+		return new ReportApothecaryRoll(getPlayerId(), getCasualtyRoll(), getPlayerState(), getSeriousInjury());
+	}
+
+	// JSON serialization
+
+	public JsonObject toJsonValue() {
+		JsonObject jsonObject = new JsonObject();
+		IJsonOption.REPORT_ID.addTo(jsonObject, getId());
+		IJsonOption.PLAYER_ID.addTo(jsonObject, fPlayerId);
+		IJsonOption.CASUALTY_ROLL.addTo(jsonObject, fCasualtyRoll);
+		IJsonOption.PLAYER_STATE.addTo(jsonObject, fPlayerState);
+		IJsonOption.SERIOUS_INJURY.addTo(jsonObject, fSeriousInjury);
+		return jsonObject;
+	}
+
+	public ReportApothecaryRoll initFrom(JsonValue pJsonValue) {
+		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
+		UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(jsonObject));
+		fPlayerId = IJsonOption.PLAYER_ID.getFrom(jsonObject);
+		fCasualtyRoll = IJsonOption.CASUALTY_ROLL.getFrom(jsonObject);
+		fPlayerState = IJsonOption.PLAYER_STATE.getFrom(jsonObject);
+		fSeriousInjury = (SeriousInjury) IJsonOption.SERIOUS_INJURY.getFrom(jsonObject);
+		return this;
+	}
+
 }

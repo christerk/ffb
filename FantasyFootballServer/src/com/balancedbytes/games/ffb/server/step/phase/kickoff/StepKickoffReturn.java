@@ -45,150 +45,151 @@ import com.eclipsesource.json.JsonValue;
  */
 public final class StepKickoffReturn extends AbstractStep {
 
-  private boolean fTouchback;
-  private boolean fEndPlayerAction;
-  private boolean fEndTurn;
+	private boolean fTouchback;
+	private boolean fEndPlayerAction;
+	private boolean fEndTurn;
 
-  public StepKickoffReturn(GameState pGameState) {
-    super(pGameState);
-  }
+	public StepKickoffReturn(GameState pGameState) {
+		super(pGameState);
+	}
 
-  public StepId getId() {
-    return StepId.KICKOFF_RETURN;
-  }
+	public StepId getId() {
+		return StepId.KICKOFF_RETURN;
+	}
 
-  @Override
-  public boolean setParameter(StepParameter pParameter) {
-    Game game = getGameState().getGame();
-    if ((pParameter != null) && !super.setParameter(pParameter)) {
-      switch (pParameter.getKey()) {
-        case END_PLAYER_ACTION:
-          fEndPlayerAction = (pParameter.getValue() != null) ? (Boolean) pParameter.getValue() : false;
-          if (game.getTurnMode() == TurnMode.KICKOFF_RETURN) {
-            consume(pParameter);
-          }
-          return true;
-        case END_TURN:
-          fEndTurn = (pParameter.getValue() != null) ? (Boolean) pParameter.getValue() : false;
-          if (game.getTurnMode() == TurnMode.KICKOFF_RETURN) {
-            consume(pParameter);
-          }
-          return true;
-        case TOUCHBACK:
-          fTouchback = (Boolean) pParameter.getValue();
-          return true;
-        default:
-          break;
-      }
-    }
-    return false;
-  }
+	@Override
+	public boolean setParameter(StepParameter pParameter) {
+		Game game = getGameState().getGame();
+		if ((pParameter != null) && !super.setParameter(pParameter)) {
+			switch (pParameter.getKey()) {
+			case END_PLAYER_ACTION:
+				fEndPlayerAction = (pParameter.getValue() != null) ? (Boolean) pParameter.getValue() : false;
+				if (game.getTurnMode() == TurnMode.KICKOFF_RETURN) {
+					consume(pParameter);
+				}
+				return true;
+			case END_TURN:
+				fEndTurn = (pParameter.getValue() != null) ? (Boolean) pParameter.getValue() : false;
+				if (game.getTurnMode() == TurnMode.KICKOFF_RETURN) {
+					consume(pParameter);
+				}
+				return true;
+			case TOUCHBACK:
+				fTouchback = (Boolean) pParameter.getValue();
+				return true;
+			default:
+				break;
+			}
+		}
+		return false;
+	}
 
-  @Override
-  public void start() {
-    super.start();
-    executeStep();
-  }
+	@Override
+	public void start() {
+		super.start();
+		executeStep();
+	}
 
-  @Override
-  public StepCommandStatus handleCommand(ReceivedCommand pReceivedCommand) {
-    StepCommandStatus commandStatus = super.handleCommand(pReceivedCommand);
-    if (commandStatus == StepCommandStatus.EXECUTE_STEP) {
-      executeStep();
-    }
-    return commandStatus;
-  }
+	@Override
+	public StepCommandStatus handleCommand(ReceivedCommand pReceivedCommand) {
+		StepCommandStatus commandStatus = super.handleCommand(pReceivedCommand);
+		if (commandStatus == StepCommandStatus.EXECUTE_STEP) {
+			executeStep();
+		}
+		return commandStatus;
+	}
 
-  private void executeStep() {
+	private void executeStep() {
 
-    Game game = getGameState().getGame();
-    ActingPlayer actingPlayer = game.getActingPlayer();
+		Game game = getGameState().getGame();
+		ActingPlayer actingPlayer = game.getActingPlayer();
 
-    if (game.getTurnMode() == TurnMode.KICKOFF_RETURN) {
+		if (game.getTurnMode() == TurnMode.KICKOFF_RETURN) {
 
-      if (fEndPlayerAction && !actingPlayer.hasActed()) {
-        UtilServerSteps.changePlayerAction(this, null, null, false);
-        getGameState().pushCurrentStepOnStack();
-        SequenceGenerator.getInstance().pushSelectSequence(getGameState(), false);
+			if (fEndPlayerAction && !actingPlayer.hasActed()) {
+				UtilServerSteps.changePlayerAction(this, null, null, false);
+				getGameState().pushCurrentStepOnStack();
+				SequenceGenerator.getInstance().pushSelectSequence(getGameState(), false);
 
-      } else {
+			} else {
 
-        if (fEndPlayerAction || fEndTurn) {
-          UtilServerSteps.changePlayerAction(this, null, null, false);
-          game.setHomePlaying(!game.isHomePlaying());
-          game.setTurnMode(TurnMode.KICKOFF);
-          UtilPlayer.refreshPlayersForTurnStart(game);
-          game.getFieldModel().clearTrackNumbers();
-        }
+				if (fEndPlayerAction || fEndTurn) {
+					UtilServerSteps.changePlayerAction(this, null, null, false);
+					game.setHomePlaying(!game.isHomePlaying());
+					game.setTurnMode(TurnMode.KICKOFF);
+					UtilPlayer.refreshPlayersForTurnStart(game);
+					game.getFieldModel().clearTrackNumbers();
+				}
 
-      }
+			}
 
-    } else {
+		} else {
 
-      Team kickoffReturnTeam = game.isHomePlaying() ? game.getTeamAway() : game.getTeamHome();
-      Team otherTeam = game.isHomePlaying() ? game.getTeamHome() : game.getTeamAway();
-      Player kickoffReturnPlayer = null;
-      List<Player> passivePlayers = new ArrayList<Player>();
-      for (Player player : kickoffReturnTeam.getPlayers()) {
-        FieldCoordinate playerCoordinate = game.getFieldModel().getPlayerCoordinate(player);
-        if ((playerCoordinate != null) && !playerCoordinate.isBoxCoordinate()) {
-          if (UtilCards.hasSkillWithProperty(player, NamedProperties.canMoveDuringKickOffScatter)) {
-            FieldCoordinateBounds losBounds = game.isHomePlaying() ? FieldCoordinateBounds.LOS_AWAY : FieldCoordinateBounds.LOS_HOME;
-            if (losBounds.isInBounds(playerCoordinate)) {
-              passivePlayers.add(player);
-            } else {
-              if (UtilPlayer.findAdjacentPlayersWithTacklezones(game, otherTeam, playerCoordinate, false).length > 0) {
-                passivePlayers.add(player);
-              } else {
-                kickoffReturnPlayer = player;
-              }
-            }
-          } else {
-            passivePlayers.add(player);
-          }
-        }
-      }
+			Team kickoffReturnTeam = game.isHomePlaying() ? game.getTeamAway() : game.getTeamHome();
+			Team otherTeam = game.isHomePlaying() ? game.getTeamHome() : game.getTeamAway();
+			Player kickoffReturnPlayer = null;
+			List<Player> passivePlayers = new ArrayList<Player>();
+			for (Player player : kickoffReturnTeam.getPlayers()) {
+				FieldCoordinate playerCoordinate = game.getFieldModel().getPlayerCoordinate(player);
+				if ((playerCoordinate != null) && !playerCoordinate.isBoxCoordinate()) {
+					if (UtilCards.hasSkillWithProperty(player, NamedProperties.canMoveDuringKickOffScatter)) {
+						FieldCoordinateBounds losBounds = game.isHomePlaying() ? FieldCoordinateBounds.LOS_AWAY
+								: FieldCoordinateBounds.LOS_HOME;
+						if (losBounds.isInBounds(playerCoordinate)) {
+							passivePlayers.add(player);
+						} else {
+							if (UtilPlayer.findAdjacentPlayersWithTacklezones(game, otherTeam, playerCoordinate, false).length > 0) {
+								passivePlayers.add(player);
+							} else {
+								kickoffReturnPlayer = player;
+							}
+						}
+					} else {
+						passivePlayers.add(player);
+					}
+				}
+			}
 
-      if ((kickoffReturnPlayer != null) && !fTouchback) {
+			if ((kickoffReturnPlayer != null) && !fTouchback) {
 
-        for (Player player : passivePlayers) {
-          PlayerState playerState = game.getFieldModel().getPlayerState(player);
-          game.getFieldModel().setPlayerState(player, playerState.changeActive(false));
-        }
-        game.setHomePlaying(!game.isHomePlaying());
-        game.setTurnMode(TurnMode.KICKOFF_RETURN);
-        UtilServerDialog.showDialog(getGameState(), new DialogKickoffReturnParameter(), false);
+				for (Player player : passivePlayers) {
+					PlayerState playerState = game.getFieldModel().getPlayerState(player);
+					game.getFieldModel().setPlayerState(player, playerState.changeActive(false));
+				}
+				game.setHomePlaying(!game.isHomePlaying());
+				game.setTurnMode(TurnMode.KICKOFF_RETURN);
+				UtilServerDialog.showDialog(getGameState(), new DialogKickoffReturnParameter(), false);
 
-        getGameState().pushCurrentStepOnStack();
-        SequenceGenerator.getInstance().pushSelectSequence(getGameState(), false);
+				getGameState().pushCurrentStepOnStack();
+				SequenceGenerator.getInstance().pushSelectSequence(getGameState(), false);
 
-      }
+			}
 
-    }
+		}
 
-    getResult().setNextAction(StepAction.NEXT_STEP);
+		getResult().setNextAction(StepAction.NEXT_STEP);
 
-  }
+	}
 
-  // JSON serialization
+	// JSON serialization
 
-  @Override
-  public JsonObject toJsonValue() {
-    JsonObject jsonObject = super.toJsonValue();
-    IServerJsonOption.TOUCHBACK.addTo(jsonObject, fTouchback);
-    IServerJsonOption.END_PLAYER_ACTION.addTo(jsonObject, fEndPlayerAction);
-    IServerJsonOption.END_TURN.addTo(jsonObject, fEndTurn);
-    return jsonObject;
-  }
+	@Override
+	public JsonObject toJsonValue() {
+		JsonObject jsonObject = super.toJsonValue();
+		IServerJsonOption.TOUCHBACK.addTo(jsonObject, fTouchback);
+		IServerJsonOption.END_PLAYER_ACTION.addTo(jsonObject, fEndPlayerAction);
+		IServerJsonOption.END_TURN.addTo(jsonObject, fEndTurn);
+		return jsonObject;
+	}
 
-  @Override
-  public StepKickoffReturn initFrom(JsonValue pJsonValue) {
-    super.initFrom(pJsonValue);
-    JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-    fTouchback = IServerJsonOption.TOUCHBACK.getFrom(jsonObject);
-    fEndPlayerAction = IServerJsonOption.END_PLAYER_ACTION.getFrom(jsonObject);
-    fEndTurn = IServerJsonOption.END_TURN.getFrom(jsonObject);
-    return this;
-  }
+	@Override
+	public StepKickoffReturn initFrom(JsonValue pJsonValue) {
+		super.initFrom(pJsonValue);
+		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
+		fTouchback = IServerJsonOption.TOUCHBACK.getFrom(jsonObject);
+		fEndPlayerAction = IServerJsonOption.END_PLAYER_ACTION.getFrom(jsonObject);
+		fEndTurn = IServerJsonOption.END_TURN.getFrom(jsonObject);
+		return this;
+	}
 
 }

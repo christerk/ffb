@@ -12,37 +12,37 @@ import com.eclipsesource.json.JsonValue;
  */
 public class ClientCommandTalk extends ClientCommand {
 
-  private String fTalk;
+	private String fTalk;
 
-  public ClientCommandTalk() {
-    super();
-  }
+	public ClientCommandTalk() {
+		super();
+	}
 
-  public ClientCommandTalk(String pTalk) {
-    fTalk = pTalk;
-  }
+	public ClientCommandTalk(String pTalk) {
+		fTalk = pTalk;
+	}
 
-  public NetCommandId getId() {
-    return NetCommandId.CLIENT_TALK;
-  }
+	public NetCommandId getId() {
+		return NetCommandId.CLIENT_TALK;
+	}
 
-  public String getTalk() {
-    return fTalk;
-  }
+	public String getTalk() {
+		return fTalk;
+	}
 
-  // JSON serialization
+	// JSON serialization
 
-  public JsonObject toJsonValue() {
-    JsonObject jsonObject = super.toJsonValue();
-    IJsonOption.TALK.addTo(jsonObject, fTalk);
-    return jsonObject;
-  }
+	public JsonObject toJsonValue() {
+		JsonObject jsonObject = super.toJsonValue();
+		IJsonOption.TALK.addTo(jsonObject, fTalk);
+		return jsonObject;
+	}
 
-  public ClientCommandTalk initFrom(JsonValue jsonValue) {
-    super.initFrom(jsonValue);
-    JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
-    fTalk = IJsonOption.TALK.getFrom(jsonObject);
-    return this;
-  }
+	public ClientCommandTalk initFrom(JsonValue jsonValue) {
+		super.initFrom(jsonValue);
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
+		fTalk = IJsonOption.TALK.getFrom(jsonObject);
+		return this;
+	}
 
 }

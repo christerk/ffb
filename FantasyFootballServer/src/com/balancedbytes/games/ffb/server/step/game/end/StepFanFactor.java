@@ -31,40 +31,43 @@ public final class StepFanFactor extends AbstractStep {
 		super.start();
 		executeStep();
 	}
-	
-  private void executeStep() {
-    Game game = getGameState().getGame();
-    GameResult gameResult = game.getGameResult();
-    int scoreDiffHome = gameResult.getTeamResultHome().getScore() - gameResult.getTeamResultAway().getScore();
-    int[] fanFactorRollHome = null;
-    int fanFactorModifierHome = -1;
-    if (!gameResult.getTeamResultHome().hasConceded()) {
-      fanFactorRollHome = getGameState().getDiceRoller().rollFanFactor(scoreDiffHome > 0);
-      fanFactorModifierHome = DiceInterpreter.getInstance().interpretFanFactorRoll(fanFactorRollHome, game.getTeamHome().getFanFactor(), scoreDiffHome);
-    }
-    gameResult.getTeamResultHome().setFanFactorModifier(fanFactorModifierHome);
-    int[] fanFactorRollAway = null;
-    int fanFactorModifierAway = -1;
-    if (!gameResult.getTeamResultAway().hasConceded()) {
-      fanFactorRollAway = getGameState().getDiceRoller().rollFanFactor(scoreDiffHome < 0);
-      fanFactorModifierAway = DiceInterpreter.getInstance().interpretFanFactorRoll(fanFactorRollAway, game.getTeamAway().getFanFactor(), -scoreDiffHome);
-    }
-    gameResult.getTeamResultAway().setFanFactorModifier(fanFactorModifierAway);
-    getResult().addReport(new ReportFanFactorRoll(fanFactorRollHome, fanFactorModifierHome, fanFactorRollAway, fanFactorModifierAway));
-    getResult().setNextAction(StepAction.NEXT_STEP);
-  }
-  
-  // JSON serialization
-  
-  @Override
-  public JsonObject toJsonValue() {
-    return super.toJsonValue();
-  }
-  
-  @Override
-  public StepFanFactor initFrom(JsonValue pJsonValue) {
-    super.initFrom(pJsonValue);
-    return this;
-  }
+
+	private void executeStep() {
+		Game game = getGameState().getGame();
+		GameResult gameResult = game.getGameResult();
+		int scoreDiffHome = gameResult.getTeamResultHome().getScore() - gameResult.getTeamResultAway().getScore();
+		int[] fanFactorRollHome = null;
+		int fanFactorModifierHome = -1;
+		if (!gameResult.getTeamResultHome().hasConceded()) {
+			fanFactorRollHome = getGameState().getDiceRoller().rollFanFactor(scoreDiffHome > 0);
+			fanFactorModifierHome = DiceInterpreter.getInstance().interpretFanFactorRoll(fanFactorRollHome,
+					game.getTeamHome().getFanFactor(), scoreDiffHome);
+		}
+		gameResult.getTeamResultHome().setFanFactorModifier(fanFactorModifierHome);
+		int[] fanFactorRollAway = null;
+		int fanFactorModifierAway = -1;
+		if (!gameResult.getTeamResultAway().hasConceded()) {
+			fanFactorRollAway = getGameState().getDiceRoller().rollFanFactor(scoreDiffHome < 0);
+			fanFactorModifierAway = DiceInterpreter.getInstance().interpretFanFactorRoll(fanFactorRollAway,
+					game.getTeamAway().getFanFactor(), -scoreDiffHome);
+		}
+		gameResult.getTeamResultAway().setFanFactorModifier(fanFactorModifierAway);
+		getResult().addReport(
+				new ReportFanFactorRoll(fanFactorRollHome, fanFactorModifierHome, fanFactorRollAway, fanFactorModifierAway));
+		getResult().setNextAction(StepAction.NEXT_STEP);
+	}
+
+	// JSON serialization
+
+	@Override
+	public JsonObject toJsonValue() {
+		return super.toJsonValue();
+	}
+
+	@Override
+	public StepFanFactor initFrom(JsonValue pJsonValue) {
+		super.initFrom(pJsonValue);
+		return this;
+	}
 
 }

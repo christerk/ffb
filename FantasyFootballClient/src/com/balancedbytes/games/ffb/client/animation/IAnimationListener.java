@@ -7,7 +7,7 @@ import java.util.EventListener;
  * @author Kalimar
  */
 public interface IAnimationListener extends EventListener {
-  
-  public void animationFinished();
+
+	public void animationFinished();
 
 }

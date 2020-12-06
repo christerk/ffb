@@ -14,27 +14,28 @@ import com.balancedbytes.games.ffb.net.commands.ServerCommandAdminMessage;
  */
 public class ClientCommandHandlerAdminMessage extends ClientCommandHandler implements IDialogCloseListener {
 
-  protected ClientCommandHandlerAdminMessage(FantasyFootballClient pClient) {
-    super(pClient);
-  }
-  
-  public NetCommandId getId() {
-    return NetCommandId.SERVER_ADMIN_MESSAGE;
-  }
+	protected ClientCommandHandlerAdminMessage(FantasyFootballClient pClient) {
+		super(pClient);
+	}
 
-  public boolean handleNetCommand(NetCommand pNetCommand, ClientCommandHandlerMode pMode) {
-    
-    ServerCommandAdminMessage messageCommand = (ServerCommandAdminMessage) pNetCommand;
-    
-    DialogInformation messageDialog = new DialogInformation(getClient(), "Administrator Message", messageCommand.getMessages(), DialogInformation.OK_DIALOG, false);
-    messageDialog.showDialog(this);
+	public NetCommandId getId() {
+		return NetCommandId.SERVER_ADMIN_MESSAGE;
+	}
 
-    return true;
-    
-  }
-  
-  public void dialogClosed(IDialog pDialog) {
-    pDialog.hideDialog();
-  }
-    
+	public boolean handleNetCommand(NetCommand pNetCommand, ClientCommandHandlerMode pMode) {
+
+		ServerCommandAdminMessage messageCommand = (ServerCommandAdminMessage) pNetCommand;
+
+		DialogInformation messageDialog = new DialogInformation(getClient(), "Administrator Message",
+				messageCommand.getMessages(), DialogInformation.OK_DIALOG, false);
+		messageDialog.showDialog(this);
+
+		return true;
+
+	}
+
+	public void dialogClosed(IDialog pDialog) {
+		pDialog.hideDialog();
+	}
+
 }

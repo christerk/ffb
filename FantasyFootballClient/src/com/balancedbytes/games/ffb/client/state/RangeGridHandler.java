@@ -16,54 +16,55 @@ import com.balancedbytes.games.ffb.util.UtilPlayer;
  */
 public class RangeGridHandler {
 
-  private FantasyFootballClient fClient;
-  private boolean fShowRangeGrid;
-  private boolean fThrowTeamMate;
+	private FantasyFootballClient fClient;
+	private boolean fShowRangeGrid;
+	private boolean fThrowTeamMate;
 
-  public RangeGridHandler(FantasyFootballClient pClient, boolean pThrowTeamMate) {
-    fClient = pClient;
-    fThrowTeamMate = pThrowTeamMate;
-  }
-  
-  public FantasyFootballClient getClient() {
-    return fClient;
-  }
-    
-  public void refreshRangeGrid() {
-    boolean gridDrawn = false;
-    UserInterface userInterface = getClient().getUserInterface();
-    if (fShowRangeGrid) {
-      Game game = getClient().getGame();
-      ActingPlayer actingPlayer = game.getActingPlayer();
-      if ((!fThrowTeamMate && UtilPlayer.hasBall(game, actingPlayer.getPlayer()))
-      	|| (fThrowTeamMate && (actingPlayer.getPlayerAction() == PlayerAction.THROW_TEAM_MATE))
-      	|| (actingPlayer.getPlayerAction() == PlayerAction.THROW_BOMB)) {
-        FieldCoordinate actingPlayerCoordinate = game.getFieldModel().getPlayerCoordinate(actingPlayer.getPlayer());
-        if (userInterface.getFieldComponent().getLayerRangeGrid().drawRangeGrid(actingPlayerCoordinate, fThrowTeamMate)) {
-          userInterface.getFieldComponent().refresh();
-        }
-        gridDrawn = true;
-      }
-    }
-    if (!gridDrawn && userInterface.getFieldComponent().getLayerRangeGrid().clearRangeGrid()) {
-      userInterface.getFieldComponent().refresh();
-    }
-  }
-      
-  public void refreshSettings() {
-    String rangeGridSettingProperty = getClient().getProperty(IClientProperty.SETTING_RANGEGRID);
-    if (!fShowRangeGrid && IClientPropertyValue.SETTING_RANGEGRID_ALWAYS_ON.equals(rangeGridSettingProperty)) {
-      setShowRangeGrid(true);
-      refreshRangeGrid();
-    }
-  }
+	public RangeGridHandler(FantasyFootballClient pClient, boolean pThrowTeamMate) {
+		fClient = pClient;
+		fThrowTeamMate = pThrowTeamMate;
+	}
 
-  public boolean isShowRangeGrid() {
-    return fShowRangeGrid;
-  }
+	public FantasyFootballClient getClient() {
+		return fClient;
+	}
 
-  public void setShowRangeGrid(boolean pShowRangeGrid) {
-    fShowRangeGrid = pShowRangeGrid;
-  }
-  
+	public void refreshRangeGrid() {
+		boolean gridDrawn = false;
+		UserInterface userInterface = getClient().getUserInterface();
+		if (fShowRangeGrid) {
+			Game game = getClient().getGame();
+			ActingPlayer actingPlayer = game.getActingPlayer();
+			if ((!fThrowTeamMate && UtilPlayer.hasBall(game, actingPlayer.getPlayer()))
+					|| (fThrowTeamMate && (actingPlayer.getPlayerAction() == PlayerAction.THROW_TEAM_MATE))
+					|| (actingPlayer.getPlayerAction() == PlayerAction.THROW_BOMB)) {
+				FieldCoordinate actingPlayerCoordinate = game.getFieldModel().getPlayerCoordinate(actingPlayer.getPlayer());
+				if (userInterface.getFieldComponent().getLayerRangeGrid().drawRangeGrid(actingPlayerCoordinate,
+						fThrowTeamMate)) {
+					userInterface.getFieldComponent().refresh();
+				}
+				gridDrawn = true;
+			}
+		}
+		if (!gridDrawn && userInterface.getFieldComponent().getLayerRangeGrid().clearRangeGrid()) {
+			userInterface.getFieldComponent().refresh();
+		}
+	}
+
+	public void refreshSettings() {
+		String rangeGridSettingProperty = getClient().getProperty(IClientProperty.SETTING_RANGEGRID);
+		if (!fShowRangeGrid && IClientPropertyValue.SETTING_RANGEGRID_ALWAYS_ON.equals(rangeGridSettingProperty)) {
+			setShowRangeGrid(true);
+			refreshRangeGrid();
+		}
+	}
+
+	public boolean isShowRangeGrid() {
+		return fShowRangeGrid;
+	}
+
+	public void setShowRangeGrid(boolean pShowRangeGrid) {
+		fShowRangeGrid = pShowRangeGrid;
+	}
+
 }

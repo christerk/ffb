@@ -3,7 +3,6 @@ package com.balancedbytes.games.ffb;
 import java.util.HashSet;
 import java.util.Set;
 
-
 public class InjuryContext {
 	public InjuryType fInjuryType;
 	public String fDefenderId;
@@ -284,6 +283,5 @@ public class InjuryContext {
 	public PlayerState getSufferedInjury() {
 		return fSufferedInjury;
 	}
-
 
 }

@@ -20,43 +20,40 @@ import com.balancedbytes.games.ffb.xml.XmlHandler;
  */
 public class RosterCache {
 
-  private Map<String, Roster> fRosterById;
-  
-  public RosterCache() {
-    fRosterById = new HashMap<>();
-  }
-  
-  public void add(Roster pRoster) {
-    if (pRoster != null) {
-      fRosterById.put(pRoster.getId(), pRoster);
-    }
-  }
-    
-  public Roster getRosterById(String pRosterId) {
-    return fRosterById.get(pRosterId);
-  }
+	private Map<String, Roster> fRosterById;
 
-  public void clear() {
-    fRosterById.clear();
-  }
-  
-  public void init(File pRosterDirectory) throws IOException {
-    FileIterator fileIterator = new FileIterator(
-      pRosterDirectory,
-      false,
-      pathname -> pathname.getName().endsWith(".xml")
-    );
-    while (fileIterator.hasNext()) {
-      File file = fileIterator.next();
-      try (BufferedReader xmlIn = new BufferedReader(new FileReader(file))) {
-        InputSource xmlSource = new InputSource(xmlIn);
-        Roster roster = new Roster();
-          XmlHandler.parse(xmlSource, roster);
-          add(roster);
-      } catch (FantasyFootballException pFfe) {
-      throw new FantasyFootballException("Error initializing roster " + file.getAbsolutePath(), pFfe);
-      }
-    }
-  }
-  
+	public RosterCache() {
+		fRosterById = new HashMap<>();
+	}
+
+	public void add(Roster pRoster) {
+		if (pRoster != null) {
+			fRosterById.put(pRoster.getId(), pRoster);
+		}
+	}
+
+	public Roster getRosterById(String pRosterId) {
+		return fRosterById.get(pRosterId);
+	}
+
+	public void clear() {
+		fRosterById.clear();
+	}
+
+	public void init(File pRosterDirectory) throws IOException {
+		FileIterator fileIterator = new FileIterator(pRosterDirectory, false,
+				pathname -> pathname.getName().endsWith(".xml"));
+		while (fileIterator.hasNext()) {
+			File file = fileIterator.next();
+			try (BufferedReader xmlIn = new BufferedReader(new FileReader(file))) {
+				InputSource xmlSource = new InputSource(xmlIn);
+				Roster roster = new Roster();
+				XmlHandler.parse(xmlSource, roster);
+				add(roster);
+			} catch (FantasyFootballException pFfe) {
+				throw new FantasyFootballException("Error initializing roster " + file.getAbsolutePath(), pFfe);
+			}
+		}
+	}
+
 }

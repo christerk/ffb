@@ -55,57 +55,56 @@ import org.glassfish.tyrus.core.l10n.LocalizationMessages;
  * @author Pavel Bucek (pavel.bucek at oracle.com)
  */
 class BinaryBuffer {
-    private final List<ByteBuffer> list = new ArrayList<ByteBuffer>();
-    private int bufferSize;
-    private int currentlyBuffered = 0;
-    private static final Logger LOGGER = Logger.getLogger(BinaryBuffer.class.getName());
+	private final List<ByteBuffer> list = new ArrayList<ByteBuffer>();
+	private int bufferSize;
+	private int currentlyBuffered = 0;
+	private static final Logger LOGGER = Logger.getLogger(BinaryBuffer.class.getName());
 
-    /**
-     * Append buffer.
-     * <p>
-     * Actual implementation just stores the buffer instance in list.
-     *
-     * @param message to be buffered.
-     */
-    void appendMessagePart(ByteBuffer message) {
+	/**
+	 * Append buffer.
+	 * <p>
+	 * Actual implementation just stores the buffer instance in list.
+	 *
+	 * @param message to be buffered.
+	 */
+	void appendMessagePart(ByteBuffer message) {
 
-        if ((currentlyBuffered + message.remaining()) <= bufferSize) {
-            currentlyBuffered += message.remaining();
-            list.add(message);
-        } else {
-            final MessageTooBigException messageTooBigException = new MessageTooBigException(
-                    LocalizationMessages.PARTIAL_MESSAGE_BUFFER_OVERFLOW());
-            LOGGER.log(Level.FINE, LocalizationMessages.PARTIAL_MESSAGE_BUFFER_OVERFLOW(), messageTooBigException);
-            throw messageTooBigException;
-        }
-    }
+		if ((currentlyBuffered + message.remaining()) <= bufferSize) {
+			currentlyBuffered += message.remaining();
+			list.add(message);
+		} else {
+			final MessageTooBigException messageTooBigException = new MessageTooBigException(
+					LocalizationMessages.PARTIAL_MESSAGE_BUFFER_OVERFLOW());
+			LOGGER.log(Level.FINE, LocalizationMessages.PARTIAL_MESSAGE_BUFFER_OVERFLOW(), messageTooBigException);
+			throw messageTooBigException;
+		}
+	}
 
-    /**
-     * Return concatenated list of buffers and reset internal state.
-     *
-     * @return concatenated buffer.
-     */
-    ByteBuffer getBufferedContent() {
-        ByteBuffer b = ByteBuffer.allocate(currentlyBuffered);
+	/**
+	 * Return concatenated list of buffers and reset internal state.
+	 *
+	 * @return concatenated buffer.
+	 */
+	ByteBuffer getBufferedContent() {
+		ByteBuffer b = ByteBuffer.allocate(currentlyBuffered);
 
-        for (ByteBuffer buffered : list) {
-            b.put(buffered);
-        }
+		for (ByteBuffer buffered : list) {
+			b.put(buffered);
+		}
 
-        b.flip();
-        resetBuffer(0);
-        return b;
-    }
+		b.flip();
+		resetBuffer(0);
+		return b;
+	}
 
-    /**
-     * Reset buffer with setting maximal buffer size.
-     *
-     * @param bufferSize max buffer size.
-     */
-    void resetBuffer(int bufferSize) {
-        this.bufferSize = bufferSize;
-        this.list.clear();
-        currentlyBuffered = 0;
-    }
+	/**
+	 * Reset buffer with setting maximal buffer size.
+	 *
+	 * @param bufferSize max buffer size.
+	 */
+	void resetBuffer(int bufferSize) {
+		this.bufferSize = bufferSize;
+		this.list.clear();
+		currentlyBuffered = 0;
+	}
 }
-

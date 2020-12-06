@@ -11,28 +11,28 @@ import com.balancedbytes.games.ffb.net.commands.ServerCommandZapPlayer;
 
 public class ClientCommandHandlerZapPlayer extends ClientCommandHandler {
 
-  protected ClientCommandHandlerZapPlayer(FantasyFootballClient pClient) {
-    super(pClient);
-  }
+	protected ClientCommandHandlerZapPlayer(FantasyFootballClient pClient) {
+		super(pClient);
+	}
 
-  @Override
-  public NetCommandId getId() {
-    return NetCommandId.SERVER_ZAP_PLAYER;
-  }
+	@Override
+	public NetCommandId getId() {
+		return NetCommandId.SERVER_ZAP_PLAYER;
+	}
 
-  @Override
-  public boolean handleNetCommand(NetCommand pNetCommand, ClientCommandHandlerMode pMode) {
-    ServerCommandZapPlayer command = (ServerCommandZapPlayer) pNetCommand;
-    Team team = getClient().getGame().getTeamById(command.getTeamId());
-    Player player = team.getPlayerById(command.getPlayerId());
+	@Override
+	public boolean handleNetCommand(NetCommand pNetCommand, ClientCommandHandlerMode pMode) {
+		ServerCommandZapPlayer command = (ServerCommandZapPlayer) pNetCommand;
+		Team team = getClient().getGame().getTeamById(command.getTeamId());
+		Player player = team.getPlayerById(command.getPlayerId());
 
-    if (player instanceof RosterPlayer) {
-      RosterPlayer rosterPlayer = (RosterPlayer) player;
-      ZappedPlayer zappedPlayer = new ZappedPlayer();
-      zappedPlayer.init(rosterPlayer);
-      team.addPlayer(zappedPlayer);
-      getClient().getGame().getFieldModel().sendPosition(player);
-    }
-    return true;
-  }
+		if (player instanceof RosterPlayer) {
+			RosterPlayer rosterPlayer = (RosterPlayer) player;
+			ZappedPlayer zappedPlayer = new ZappedPlayer();
+			zappedPlayer.init(rosterPlayer);
+			team.addPlayer(zappedPlayer);
+			getClient().getGame().getFieldModel().sendPosition(player);
+		}
+		return true;
+	}
 }

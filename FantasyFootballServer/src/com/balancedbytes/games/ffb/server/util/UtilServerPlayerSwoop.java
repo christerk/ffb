@@ -18,7 +18,7 @@ public class UtilServerPlayerSwoop {
 			fieldModel.clearMoveSquares();
 			FieldCoordinate playerCoordinate = fieldModel.getPlayerCoordinate(swoopingPlayer);
 			if (FieldCoordinateBounds.FIELD.isInBounds(playerCoordinate)) {
-				if(UtilCards.hasSkillWithProperty(swoopingPlayer, NamedProperties.ttmScattersInSingleDirection)) {
+				if (UtilCards.hasSkillWithProperty(swoopingPlayer, NamedProperties.ttmScattersInSingleDirection)) {
 					for (int x = -1; x < 2; x += 2) {
 						FieldCoordinate moveCoordinate = playerCoordinate.add(x, 0);
 						if (FieldCoordinateBounds.FIELD.isInBounds(moveCoordinate)) {
@@ -35,10 +35,10 @@ public class UtilServerPlayerSwoop {
 			}
 		}
 	}
-	
+
 	private static void addSwoopSquare(GameState pGameState, FieldCoordinate pCoordinate) {
-	    Game game = pGameState.getGame();
-	    FieldModel fieldModel = game.getFieldModel();
+		Game game = pGameState.getGame();
+		FieldModel fieldModel = game.getFieldModel();
 		MoveSquare moveSquare = new MoveSquare(pCoordinate, 0, 0);
 		fieldModel.add(moveSquare);
 	}

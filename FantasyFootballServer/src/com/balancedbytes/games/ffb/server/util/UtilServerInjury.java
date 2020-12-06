@@ -37,23 +37,15 @@ import com.balancedbytes.games.ffb.util.UtilBox;
 import com.balancedbytes.games.ffb.util.UtilCards;
 import com.balancedbytes.games.ffb.util.UtilPlayer;
 
-
-
 /**
  * 
  * @author Kalimar
  */
 public class UtilServerInjury {
 
-	public static InjuryResult handleInjury(
-			IStep pStep,
-			InjuryTypeServer<?> pInjuryType,
-			Player pAttacker,
-			Player pDefender,
-			FieldCoordinate pDefenderCoordinate,
-			InjuryResult pOldInjuryResult,
-			ApothecaryMode pApothecaryMode
-			) {
+	public static InjuryResult handleInjury(IStep pStep, InjuryTypeServer<?> pInjuryType, Player pAttacker,
+			Player pDefender, FieldCoordinate pDefenderCoordinate, InjuryResult pOldInjuryResult,
+			ApothecaryMode pApothecaryMode) {
 
 		if (pDefender == null) {
 			throw new IllegalArgumentException("Parameter defender must not be null.");
@@ -61,10 +53,9 @@ public class UtilServerInjury {
 		if (pInjuryType == null) {
 			throw new IllegalArgumentException("Parameter injuryTypeServer must not be null.");
 		}
-	
-		
+
 		InjuryContext injuryContext = pInjuryType.injuryContext();
-		
+
 		GameState gameState = pStep.getGameState();
 		Game game = gameState.getGame();
 		DiceRoller diceRoller = gameState.getDiceRoller();
@@ -74,24 +65,22 @@ public class UtilServerInjury {
 		injuryContext.setDefenderCoordinate(pDefenderCoordinate);
 		injuryContext.setApothecaryStatus(ApothecaryStatus.NO_APOTHECARY);
 		injuryContext.setApothecaryMode(pApothecaryMode);
-		
 
 		// ball and chain always breaks armor on being knocked down
 		if (UtilCards.hasSkillWithProperty(pDefender, NamedProperties.placedProneCausesInjuryRoll)) {
 			injuryContext.setArmorBroken(true);
 		}
-		
+
 		InjuryContext oldInjuryContext = null;
-		if(pOldInjuryResult != null){
+		if (pOldInjuryResult != null) {
 			oldInjuryContext = pOldInjuryResult.injuryContext();
-		}
-		else
-		{
+		} else {
 			oldInjuryContext = new InjuryContext();
 		}
-		
-		pInjuryType.handleInjury(pStep, game, gameState, diceRoller, pAttacker, pDefender, pDefenderCoordinate, oldInjuryContext, pApothecaryMode);
-		
+
+		pInjuryType.handleInjury(pStep, game, gameState, diceRoller, pAttacker, pDefender, pDefenderCoordinate,
+				oldInjuryContext, pApothecaryMode);
+
 		if (injuryContext.isArmorBroken()) {
 			if (UtilCards.hasCard(game, pDefender, Card.LUCKY_CHARM) && (injuryContext.getArmorRoll() != null)) {
 				injuryContext.setArmorBroken(false);
@@ -99,27 +88,31 @@ public class UtilServerInjury {
 				UtilServerCards.deactivateCard(pStep, Card.LUCKY_CHARM);
 			}
 		}
-		
+
 		if (injuryContext.isSeriousInjury()) {
-			injuryContext.setSeriousInjury(DiceInterpreter.getInstance().interpretRollSeriousInjury(injuryContext.getCasualtyRoll()));
+			injuryContext
+					.setSeriousInjury(DiceInterpreter.getInstance().interpretRollSeriousInjury(injuryContext.getCasualtyRoll()));
 			if (UtilCards.hasSkillWithProperty(pDefender, NamedProperties.requiresSecondCasualtyRoll)) {
-				injuryContext.setSeriousInjuryDecay(DiceInterpreter.getInstance().interpretRollSeriousInjury(injuryContext.getCasualtyRollDecay()));
+				injuryContext.setSeriousInjuryDecay(
+						DiceInterpreter.getInstance().interpretRollSeriousInjury(injuryContext.getCasualtyRollDecay()));
 			}
 		}
 
-		if (UtilCards.hasSkillWithProperty(pDefender, NamedProperties.convertStunToKO) && (injuryContext.getInjury() != null)
-				&& (injuryContext.getInjury().getBase() == PlayerState.STUNNED)) {
+		if (UtilCards.hasSkillWithProperty(pDefender, NamedProperties.convertStunToKO)
+				&& (injuryContext.getInjury() != null) && (injuryContext.getInjury().getBase() == PlayerState.STUNNED)) {
 			injuryContext.setInjury(new PlayerState(PlayerState.KNOCKED_OUT));
 		}
-		
+
 		if (injuryContext.getPlayerState() != null) {
 			if (injuryContext.isCasualty() || injuryContext.isKnockedOut()) {
 				injuryContext.setSufferedInjury(injuryContext.getPlayerState());
-				if (pInjuryType.canUseApo()
-						|| (injuryContext.isKnockedOut() && UtilCards.hasSkillWithProperty(pDefender, NamedProperties.placedProneCausesInjuryRoll))) {
+				if (pInjuryType.canUseApo() || (injuryContext.isKnockedOut()
+						&& UtilCards.hasSkillWithProperty(pDefender, NamedProperties.placedProneCausesInjuryRoll))) {
 					injuryContext.setApothecaryStatus(ApothecaryStatus.NO_APOTHECARY);
-				} else if ((game.getTeamHome().hasPlayer(pDefender) && (game.getTurnDataHome().getApothecaries() > 0) && pDefender.getPlayerType() != PlayerType.STAR)
-						|| (game.getTeamAway().hasPlayer(pDefender) && (game.getTurnDataAway().getApothecaries() > 0) && pDefender.getPlayerType() != PlayerType.STAR)) {
+				} else if ((game.getTeamHome().hasPlayer(pDefender) && (game.getTurnDataHome().getApothecaries() > 0)
+						&& pDefender.getPlayerType() != PlayerType.STAR)
+						|| (game.getTeamAway().hasPlayer(pDefender) && (game.getTurnDataAway().getApothecaries() > 0)
+								&& pDefender.getPlayerType() != PlayerType.STAR)) {
 					injuryContext.setApothecaryStatus(ApothecaryStatus.DO_REQUEST);
 				} else {
 					injuryContext.setApothecaryStatus(ApothecaryStatus.NO_APOTHECARY);
@@ -130,10 +123,9 @@ public class UtilServerInjury {
 		if (injuryContext.isCasualty() || injuryContext.isKnockedOut() || injuryContext.isReserve()) {
 			injuryContext.setSendToBoxTurn(game.getTurnData().getTurnNr());
 			injuryContext.setSendToBoxHalf(game.getHalf());
-			
+
 			injuryContext.setSendToBoxReason(pInjuryType.sendToBoxReason());
 		}
-
 
 		if ((injuryContext != null) && (injuryContext.getPlayerState() != null)) {
 			switch (injuryContext.getPlayerState().getBase()) {
@@ -161,14 +153,14 @@ public class UtilServerInjury {
 
 	}
 
-
 	public static boolean handleRegeneration(IStep pStep, Player pPlayer) {
 		boolean successful = false;
 		if (pPlayer != null) {
 			GameState gameState = pStep.getGameState();
 			Game game = gameState.getGame();
 			PlayerState playerState = game.getFieldModel().getPlayerState(pPlayer);
-			if ((playerState != null) && playerState.isCasualty() && UtilCards.hasSkillWithProperty(pPlayer, NamedProperties.canRollToSaveFromInjury)) {
+			if ((playerState != null) && playerState.isCasualty()
+					&& UtilCards.hasSkillWithProperty(pPlayer, NamedProperties.canRollToSaveFromInjury)) {
 				DiceRoller diceRoller = gameState.getDiceRoller();
 				DiceInterpreter diceInterpreter = DiceInterpreter.getInstance();
 				int roll = diceRoller.rollSkill();
@@ -183,7 +175,8 @@ public class UtilServerInjury {
 					UtilBox.refreshBoxes(game);
 					UtilServerGame.updateLeaderReRolls(pStep);
 				}
-				pStep.getResult().addReport(new ReportSkillRoll(ReportId.REGENERATION_ROLL, pPlayer.getId(), successful, roll, 4, false));
+				pStep.getResult()
+						.addReport(new ReportSkillRoll(ReportId.REGENERATION_ROLL, pPlayer.getId(), successful, roll, 4, false));
 			}
 		}
 		return successful;
@@ -197,22 +190,27 @@ public class UtilServerInjury {
 		Game game = gameState.getGame();
 		Player deadPlayer = game.getPlayerById(pInjuryResult.injuryContext().getDefenderId());
 		Team necroTeam = UtilPlayer.findOtherTeam(game, deadPlayer);
-		TeamResult necroTeamResult = (game.getTeamHome() == necroTeam) ? game.getGameResult().getTeamResultHome() : game.getGameResult().getTeamResultAway();
-		boolean deadPlayerPreventsRaisedFromDead = UtilCards.hasSkillWithProperty(deadPlayer, NamedProperties.preventRaiseFromDead);
+		TeamResult necroTeamResult = (game.getTeamHome() == necroTeam) ? game.getGameResult().getTeamResultHome()
+				: game.getGameResult().getTeamResultAway();
+		boolean deadPlayerPreventsRaisedFromDead = UtilCards.hasSkillWithProperty(deadPlayer,
+				NamedProperties.preventRaiseFromDead);
 
-		if ((pInjuryResult != null) && (pInjuryResult.injuryContext().getPlayerState() != null) && (PlayerState.RIP == pInjuryResult.injuryContext().getPlayerState().getBase())) {
-			if (necroTeam.getRoster().hasNecromancer() && (necroTeamResult.getRaisedDead() == 0) && (deadPlayer.getStrength() <= 4)
-					&& !deadPlayerPreventsRaisedFromDead) {
-				raisedPlayer = raisePlayer(game, necroTeam, necroTeamResult, deadPlayer.getName(), nurglesRot, deadPlayer.getId());
+		if ((pInjuryResult != null) && (pInjuryResult.injuryContext().getPlayerState() != null)
+				&& (PlayerState.RIP == pInjuryResult.injuryContext().getPlayerState().getBase())) {
+			if (necroTeam.getRoster().hasNecromancer() && (necroTeamResult.getRaisedDead() == 0)
+					&& (deadPlayer.getStrength() <= 4) && !deadPlayerPreventsRaisedFromDead) {
+				raisedPlayer = raisePlayer(game, necroTeam, necroTeamResult, deadPlayer.getName(), nurglesRot,
+						deadPlayer.getId());
 			} else {
 				Player attacker = game.getPlayerById(pInjuryResult.injuryContext().getAttackerId());
-				if ((attacker != null) && UtilCards.hasSkillWithProperty(attacker, NamedProperties.hasNurglesRot) && (deadPlayer.getStrength() <= 4)
-						&& !deadPlayerPreventsRaisedFromDead
+				if ((attacker != null) && UtilCards.hasSkillWithProperty(attacker, NamedProperties.hasNurglesRot)
+						&& (deadPlayer.getStrength() <= 4) && !deadPlayerPreventsRaisedFromDead
 						&& !UtilCards.hasSkillWithProperty(deadPlayer, NamedProperties.requiresSecondCasualtyRoll)) {
 					RosterPosition zombiePosition = necroTeam.getRoster().getRaisedRosterPosition();
 					if (zombiePosition != null) {
 						nurglesRot = true;
-						raisedPlayer = raisePlayer(game, necroTeam, necroTeamResult, deadPlayer.getName(), nurglesRot, deadPlayer.getId());
+						raisedPlayer = raisePlayer(game, necroTeam, necroTeamResult, deadPlayer.getName(), nurglesRot,
+								deadPlayer.getId());
 					}
 				}
 			}
@@ -221,9 +219,8 @@ public class UtilServerInjury {
 		if (raisedPlayer != null) {
 
 			// communicate raised player to clients
-			gameState.getServer().getCommunication().sendAddPlayer(
-					gameState, necroTeam.getId(), raisedPlayer, game.getFieldModel().getPlayerState(raisedPlayer), game.getGameResult().getPlayerResult(raisedPlayer)
-					);
+			gameState.getServer().getCommunication().sendAddPlayer(gameState, necroTeam.getId(), raisedPlayer,
+					game.getFieldModel().getPlayerState(raisedPlayer), game.getGameResult().getPlayerResult(raisedPlayer));
 			pStep.getResult().addReport(new ReportRaiseDead(raisedPlayer.getId(), nurglesRot));
 			pStep.getResult().setSound(SoundId.ORGAN);
 
@@ -235,13 +232,15 @@ public class UtilServerInjury {
 
 	}
 
-	private static RosterPlayer raisePlayer(Game pGame, Team pNecroTeam, TeamResult pNecroTeamResult, String pPlayerName, boolean pNurglesRot, String killedId) {
+	private static RosterPlayer raisePlayer(Game pGame, Team pNecroTeam, TeamResult pNecroTeamResult, String pPlayerName,
+			boolean pNurglesRot, String killedId) {
 		RosterPlayer raisedPlayer = null;
 		RosterPosition zombiePosition = pNecroTeam.getRoster().getRaisedRosterPosition();
 		if (zombiePosition != null) {
 			pNecroTeamResult.setRaisedDead(pNecroTeamResult.getRaisedDead() + 1);
 			raisedPlayer = new RosterPlayer();
-			StringBuilder raisedPlayerId = new StringBuilder().append(killedId).append("R").append(pNecroTeamResult.getRaisedDead());
+			StringBuilder raisedPlayerId = new StringBuilder().append(killedId).append("R")
+					.append(pNecroTeamResult.getRaisedDead());
 			raisedPlayer.setId(raisedPlayerId.toString());
 			raisedPlayer.updatePosition(zombiePosition);
 			raisedPlayer.setName(pPlayerName);
@@ -274,7 +273,8 @@ public class UtilServerInjury {
 	// drops the given player
 	// sets stepParameter END_TURN if player is on acting team and drops the ball
 	// sets stepParameter INJURY_RESULT if player has skill Ball&Chain
-	private static StepParameterSet dropPlayer(IStep pStep, Player pPlayer, int pPlayerBase, ApothecaryMode pApothecaryMode) {
+	private static StepParameterSet dropPlayer(IStep pStep, Player pPlayer, int pPlayerBase,
+			ApothecaryMode pApothecaryMode) {
 		StepParameterSet stepParameters = new StepParameterSet();
 		GameState gameState = pStep.getGameState();
 		Game game = gameState.getGame();
@@ -282,9 +282,8 @@ public class UtilServerInjury {
 		PlayerState playerState = game.getFieldModel().getPlayerState(pPlayer);
 		if ((playerCoordinate != null) && (playerState != null)) {
 			if (UtilCards.hasSkillWithProperty(pPlayer, NamedProperties.placedProneCausesInjuryRoll)) {
-				pStep.publishParameter(new StepParameter(StepParameterKey.INJURY_RESULT,
-						UtilServerInjury.handleInjury(pStep, new InjuryTypeBallAndChain(), null, pPlayer, playerCoordinate, null, pApothecaryMode))
-						);
+				pStep.publishParameter(new StepParameter(StepParameterKey.INJURY_RESULT, UtilServerInjury.handleInjury(pStep,
+						new InjuryTypeBallAndChain(), null, pPlayer, playerCoordinate, null, pApothecaryMode)));
 			} else {
 				if ((playerState.getBase() != PlayerState.PRONE) && (playerState.getBase() != PlayerState.STUNNED)) {
 					playerState = playerState.changeBase(pPlayerBase);
@@ -297,7 +296,8 @@ public class UtilServerInjury {
 			}
 			if (playerCoordinate.equals(game.getFieldModel().getBallCoordinate()) && game.getTurnMode() != TurnMode.BLITZ) {
 				game.getFieldModel().setBallMoving(true);
-				stepParameters.add(new StepParameter(StepParameterKey.CATCH_SCATTER_THROW_IN_MODE, CatchScatterThrowInMode.SCATTER_BALL));
+				stepParameters
+						.add(new StepParameter(StepParameterKey.CATCH_SCATTER_THROW_IN_MODE, CatchScatterThrowInMode.SCATTER_BALL));
 				// check for turnover
 				boolean endTurn;
 				switch (game.getTurnMode()) {

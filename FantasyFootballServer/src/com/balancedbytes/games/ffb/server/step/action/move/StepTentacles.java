@@ -31,109 +31,109 @@ import com.eclipsesource.json.JsonValue;
  */
 public class StepTentacles extends AbstractStepWithReRoll {
 
-  public class StepState {
-	  public String goToLabelOnSuccess;
-	  public FieldCoordinate coordinateFrom;
-	  public Boolean usingTentacles;
-	  }
-	
+	public class StepState {
+		public String goToLabelOnSuccess;
+		public FieldCoordinate coordinateFrom;
+		public Boolean usingTentacles;
+	}
+
 	private StepState state;
 
-  public StepTentacles(GameState pGameState) {
-    super(pGameState);
-    
-    state = new StepState();
-  }
+	public StepTentacles(GameState pGameState) {
+		super(pGameState);
 
-  public StepId getId() {
-    return StepId.TENTACLES;
-  }
+		state = new StepState();
+	}
 
-  @Override
-  public void init(StepParameterSet pParameterSet) {
-    if (pParameterSet != null) {
-      for (StepParameter parameter : pParameterSet.values()) {
-        switch (parameter.getKey()) {
-          // mandatory
-          case GOTO_LABEL_ON_SUCCESS:
-            state.goToLabelOnSuccess = (String) parameter.getValue();
-            break;
-          default:
-            break;
-        }
-      }
-    }
-    if (state.goToLabelOnSuccess == null) {
-      throw new StepException("StepParameter " + StepParameterKey.GOTO_LABEL_ON_SUCCESS + " is not initialized.");
-    }
-  }
+	public StepId getId() {
+		return StepId.TENTACLES;
+	}
 
-  @Override
-  public boolean setParameter(StepParameter pParameter) {
-    if ((pParameter != null) && !super.setParameter(pParameter)) {
-      switch (pParameter.getKey()) {
-        case COORDINATE_FROM:
-        	state.coordinateFrom = (FieldCoordinate) pParameter.getValue();
-          return true;
-        default:
-          break;
-      }
-    }
-    return false;
-  }
+	@Override
+	public void init(StepParameterSet pParameterSet) {
+		if (pParameterSet != null) {
+			for (StepParameter parameter : pParameterSet.values()) {
+				switch (parameter.getKey()) {
+				// mandatory
+				case GOTO_LABEL_ON_SUCCESS:
+					state.goToLabelOnSuccess = (String) parameter.getValue();
+					break;
+				default:
+					break;
+				}
+			}
+		}
+		if (state.goToLabelOnSuccess == null) {
+			throw new StepException("StepParameter " + StepParameterKey.GOTO_LABEL_ON_SUCCESS + " is not initialized.");
+		}
+	}
 
-  @Override
-  public void start() {
-    super.start();
-    executeStep();
-  }
+	@Override
+	public boolean setParameter(StepParameter pParameter) {
+		if ((pParameter != null) && !super.setParameter(pParameter)) {
+			switch (pParameter.getKey()) {
+			case COORDINATE_FROM:
+				state.coordinateFrom = (FieldCoordinate) pParameter.getValue();
+				return true;
+			default:
+				break;
+			}
+		}
+		return false;
+	}
 
-  @Override
-  public StepCommandStatus handleCommand(ReceivedCommand pReceivedCommand) {
-    StepCommandStatus commandStatus = super.handleCommand(pReceivedCommand);
-    if (commandStatus == StepCommandStatus.UNHANDLED_COMMAND) {
-      switch (pReceivedCommand.getId()) {
-        case CLIENT_PLAYER_CHOICE:
-          ClientCommandPlayerChoice playerChoiceCommand = (ClientCommandPlayerChoice) pReceivedCommand.getCommand();
-          if (playerChoiceCommand.getPlayerChoiceMode() == PlayerChoiceMode.TENTACLES) {
-        	  state.usingTentacles = StringTool.isProvided(playerChoiceCommand.getPlayerId());
-            getGameState().getGame().setDefenderId(playerChoiceCommand.getPlayerId());
-            commandStatus = StepCommandStatus.EXECUTE_STEP;
-          }
-          break;
-        default:
-          break;
-      }
-    }
-    if (commandStatus == StepCommandStatus.EXECUTE_STEP) {
-      executeStep();
-    }
-    return commandStatus;
-  }
+	@Override
+	public void start() {
+		super.start();
+		executeStep();
+	}
 
-  private void executeStep() {
-	  getGameState().executeStepHooks(this, state);
-  }
+	@Override
+	public StepCommandStatus handleCommand(ReceivedCommand pReceivedCommand) {
+		StepCommandStatus commandStatus = super.handleCommand(pReceivedCommand);
+		if (commandStatus == StepCommandStatus.UNHANDLED_COMMAND) {
+			switch (pReceivedCommand.getId()) {
+			case CLIENT_PLAYER_CHOICE:
+				ClientCommandPlayerChoice playerChoiceCommand = (ClientCommandPlayerChoice) pReceivedCommand.getCommand();
+				if (playerChoiceCommand.getPlayerChoiceMode() == PlayerChoiceMode.TENTACLES) {
+					state.usingTentacles = StringTool.isProvided(playerChoiceCommand.getPlayerId());
+					getGameState().getGame().setDefenderId(playerChoiceCommand.getPlayerId());
+					commandStatus = StepCommandStatus.EXECUTE_STEP;
+				}
+				break;
+			default:
+				break;
+			}
+		}
+		if (commandStatus == StepCommandStatus.EXECUTE_STEP) {
+			executeStep();
+		}
+		return commandStatus;
+	}
 
-  // JSON serialization
+	private void executeStep() {
+		getGameState().executeStepHooks(this, state);
+	}
 
-  @Override
-  public JsonObject toJsonValue() {
-    JsonObject jsonObject = super.toJsonValue();
-    IServerJsonOption.GOTO_LABEL_ON_SUCCESS.addTo(jsonObject, state.goToLabelOnSuccess);
-    IServerJsonOption.COORDINATE_FROM.addTo(jsonObject, state.coordinateFrom);
-    IServerJsonOption.USING_TENTACLES.addTo(jsonObject, state.usingTentacles);
-    return jsonObject;
-  }
+	// JSON serialization
 
-  @Override
-  public StepTentacles initFrom(JsonValue pJsonValue) {
-    super.initFrom(pJsonValue);
-    JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-    state.goToLabelOnSuccess = IServerJsonOption.GOTO_LABEL_ON_SUCCESS.getFrom(jsonObject);
-    state.coordinateFrom = IServerJsonOption.COORDINATE_FROM.getFrom(jsonObject);
-    state.usingTentacles = IServerJsonOption.USING_TENTACLES.getFrom(jsonObject);
-    return this;
-  }
+	@Override
+	public JsonObject toJsonValue() {
+		JsonObject jsonObject = super.toJsonValue();
+		IServerJsonOption.GOTO_LABEL_ON_SUCCESS.addTo(jsonObject, state.goToLabelOnSuccess);
+		IServerJsonOption.COORDINATE_FROM.addTo(jsonObject, state.coordinateFrom);
+		IServerJsonOption.USING_TENTACLES.addTo(jsonObject, state.usingTentacles);
+		return jsonObject;
+	}
+
+	@Override
+	public StepTentacles initFrom(JsonValue pJsonValue) {
+		super.initFrom(pJsonValue);
+		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
+		state.goToLabelOnSuccess = IServerJsonOption.GOTO_LABEL_ON_SUCCESS.getFrom(jsonObject);
+		state.coordinateFrom = IServerJsonOption.COORDINATE_FROM.getFrom(jsonObject);
+		state.usingTentacles = IServerJsonOption.USING_TENTACLES.getFrom(jsonObject);
+		return this;
+	}
 
 }

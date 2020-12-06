@@ -46,10 +46,10 @@ package javax.websocket;
  */
 public interface SendHandler {
 
-    /**
-     * Called once the message has been transmitted.
-     *
-     * @param result the result.
-     */
-    void onResult(SendResult result);
+	/**
+	 * Called once the message has been transmitted.
+	 *
+	 * @param result the result.
+	 */
+	void onResult(SendResult result);
 }

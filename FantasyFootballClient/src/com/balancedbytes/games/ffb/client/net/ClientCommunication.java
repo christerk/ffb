@@ -86,325 +86,330 @@ import com.fumbbl.rng.MouseEntropySource;
  */
 public class ClientCommunication implements Runnable, INetCommandHandler {
 
-  private boolean fStopped;
-  private List<NetCommand> fCommandQueue;
-  private FantasyFootballClient fClient;
-  
-  public ClientCommunication(FantasyFootballClient pClient) {
-    fClient = pClient;
-    fCommandQueue = new ArrayList<NetCommand>();
-  }
+	private boolean fStopped;
+	private List<NetCommand> fCommandQueue;
+	private FantasyFootballClient fClient;
 
-  public void handleCommand(NetCommand pNetCommand) {
-    synchronized (fCommandQueue) {
-      fCommandQueue.add(pNetCommand);
-      fCommandQueue.notify();
-    }
-  }
-  
-  public void stop() {
-  	if (!fStopped) {
-      fStopped = true;
-      synchronized (fCommandQueue) {
-        fCommandQueue.notifyAll();
-      }
-  	}
-  }
-  
-  public void run() {
-    
-    while (true) {
-      
-      NetCommand netCommand = null;
-      synchronized (fCommandQueue) {
-        try {
-          while (fCommandQueue.isEmpty() && !fStopped) {
-            fCommandQueue.wait();
-          }
-        } catch (InterruptedException e) {
-          break;
-        }
-        if (fStopped) {
-          break;
-        }
-        netCommand = fCommandQueue.remove(0);
-      }
+	public ClientCommunication(FantasyFootballClient pClient) {
+		fClient = pClient;
+		fCommandQueue = new ArrayList<NetCommand>();
+	}
 
-      switch (netCommand.getId()) {
-        case SERVER_PONG:
-        case SERVER_TALK:
-        case SERVER_SOUND:
-        case SERVER_REPLAY:
-        case INTERNAL_SERVER_SOCKET_CLOSED:
-          break;
-        default:
-          getClient().getReplayer().add((ServerCommand) netCommand);
-          break;
-      }
-      ClientCommandHandlerMode mode = getClient().getReplayer().isReplaying() ? ClientCommandHandlerMode.QUEUING : ClientCommandHandlerMode.PLAYING;
-      getClient().getCommandHandlerFactory().handleNetCommand(netCommand, mode);
+	public void handleCommand(NetCommand pNetCommand) {
+		synchronized (fCommandQueue) {
+			fCommandQueue.add(pNetCommand);
+			fCommandQueue.notify();
+		}
+	}
 
-    }
-    
-  }
-  
-  protected void send(ClientCommand clientCommand) {
-    if (clientCommand == null) {
-      return;
-    }
-    try {
-      // add entropy payload if available
-      MouseEntropySource entropySource = getClient().getUserInterface().getMouseEntropySource();
-      if (entropySource.hasEnoughEntropy()) {
-        clientCommand.setEntropy(entropySource.getEntropy());
-      }
-      // send command
-      getClient().getCommandEndpoint().send(clientCommand);
-    } catch (IOException pIoException) {
-      throw new FantasyFootballException(pIoException);
-    }
-  }
+	public void stop() {
+		if (!fStopped) {
+			fStopped = true;
+			synchronized (fCommandQueue) {
+				fCommandQueue.notifyAll();
+			}
+		}
+	}
 
-  public void sendDebugClientState(ClientStateId pClientStateId) {
-    send(new ClientCommandDebugClientState(pClientStateId));
-  }
-  
-  public void sendJoin(String pCoach, String pPassword, long pGameId, String pGameName, String pTeamId, String pTeamName) {
-    ClientCommandJoin joinCommand = new ClientCommandJoin(getClient().getMode());
-    joinCommand.setCoach(pCoach);
-    joinCommand.setPassword(pPassword);
-    joinCommand.setGameId(pGameId);
-    joinCommand.setGameName(pGameName);
-    joinCommand.setTeamId(pTeamId);
-    joinCommand.setTeamName(pTeamName);
-    send(joinCommand);
-  }
-  
-  public void sendJourneymen(String[] pPositionsIds, int[] pSlots) {
-    send(new ClientCommandJourneymen(pPositionsIds, pSlots));
-  }
-  
-  public void sendTalk(String pTalk) {
-    send(new ClientCommandTalk(pTalk));
-  }
-  
-  public void sendPasswordChallenge() {
-    send(new ClientCommandPasswordChallenge(getClient().getParameters().getCoach()));
-  }
-  
-  public void sendPing(long timestamp) {
-    send(new ClientCommandPing(timestamp));
-  }
-  
-  public void sendSetupPlayer(Player pPlayer, FieldCoordinate pCoordinate) {
-    send(new ClientCommandSetupPlayer(pPlayer.getId(), pCoordinate));
-  }
-  
-  public void sendTouchback(FieldCoordinate pBallCoordinate) {
-    send(new ClientCommandTouchback(pBallCoordinate));
-  }
-  
-  public void sendPlayerMove(String pActingPlayerId, FieldCoordinate pCoordinateFrom, FieldCoordinate[] pCoordinatesTo) {
-    send(new ClientCommandMove(pActingPlayerId, pCoordinateFrom, pCoordinatesTo));
-  }
+	public void run() {
 
-  public void sendStartGame() {
-    send(new ClientCommandStartGame());
-  }
-  
-  public void sendEndTurn() {
-    send(new ClientCommandEndTurn());
-  }
-  
-  public void sendConfirm() {
-    send(new ClientCommandConfirm());
-  }
-  
-  public void sendCloseSession() {
-    send(new ClientCommandCloseSession());
-  }
-  
-  public void sendConcedeGame(ConcedeGameStatus pStatus) {
-    send(new ClientCommandConcedeGame(pStatus));
-  }
-  
-  public void sendIllegalProcedure() {
-    send(new ClientCommandIllegalProcedure());
-  }
-  
-  public void sendRequestVersion() {
-    send(new ClientCommandRequestVersion());
-  }
+		while (true) {
 
-  public void sendCoinChoice(boolean pChoiceHeads) {
-    send(new ClientCommandCoinChoice(pChoiceHeads));
-  }
-  
-  public void sendReceiveChoice(boolean pChoiceReceive) {
-    send(new ClientCommandReceiveChoice(pChoiceReceive));
-  }
-  
-  public void sendPlayerChoice(PlayerChoiceMode pMode, Player[] pPlayers) {
-    send(new ClientCommandPlayerChoice(pMode, pPlayers));
-  }
-  
-  public void sendPettyCash(int pPettyCash) {
-    send(new ClientCommandPettyCash(pPettyCash));
-  }
+			NetCommand netCommand = null;
+			synchronized (fCommandQueue) {
+				try {
+					while (fCommandQueue.isEmpty() && !fStopped) {
+						fCommandQueue.wait();
+					}
+				} catch (InterruptedException e) {
+					break;
+				}
+				if (fStopped) {
+					break;
+				}
+				netCommand = fCommandQueue.remove(0);
+			}
 
-  public void sendActingPlayer(Player pPlayer, PlayerAction pPlayerAction, boolean pLeaping) {
-    String playerId = (pPlayer != null) ? pPlayer.getId() : null; 
-    send(new ClientCommandActingPlayer(playerId, pPlayerAction, pLeaping));
-  }
-  
-  public void sendUseReRoll(ReRolledAction pReRolledAction, ReRollSource pReRollSource) {
-    send(new ClientCommandUseReRoll(pReRolledAction, pReRollSource));
-  }
-  
-  public void sendUseSkill(Skill pSkill, boolean pSkillUsed, String playerId) {
-    send(new ClientCommandUseSkill(pSkill, pSkillUsed, playerId));
-  }
-  
-  public void sendKickoff(FieldCoordinate pBallCoordinate) {
-    send(new ClientCommandKickoff(pBallCoordinate));
-  }
-  
-  public void sendHandOver(String pActingPlayerId, Player pCatcher) {
-    String catcherId = (pCatcher != null) ? pCatcher.getId() : null;
-    send(new ClientCommandHandOver(pActingPlayerId, catcherId));
-  }
+			switch (netCommand.getId()) {
+			case SERVER_PONG:
+			case SERVER_TALK:
+			case SERVER_SOUND:
+			case SERVER_REPLAY:
+			case INTERNAL_SERVER_SOCKET_CLOSED:
+				break;
+			default:
+				getClient().getReplayer().add((ServerCommand) netCommand);
+				break;
+			}
+			ClientCommandHandlerMode mode = getClient().getReplayer().isReplaying() ? ClientCommandHandlerMode.QUEUING
+					: ClientCommandHandlerMode.PLAYING;
+			getClient().getCommandHandlerFactory().handleNetCommand(netCommand, mode);
 
-  public void sendGaze(String pActingPlayerId, Player pVictim) {
-    String victimId = (pVictim != null) ? pVictim.getId() : null;
-    send(new ClientCommandGaze(pActingPlayerId, victimId));
-  }
+		}
 
-  public void sendPass(String pActingPlayerId, FieldCoordinate pTargetCoordinate) {
-    send(new ClientCommandPass(pActingPlayerId, pTargetCoordinate));
-  }
+	}
 
-  public void sendBlock(String pActingPlayerId, Player pDefender, boolean pUsingStab) {
-    String defenderId = (pDefender != null) ? pDefender.getId() : null;
-    send(new ClientCommandBlock(pActingPlayerId, defenderId, pUsingStab));
-  }
-  
-  public void sendFoul(String pActingPlayerId, Player pDefender) {
-    String defenderId = (pDefender != null) ? pDefender.getId() : null;
-    send(new ClientCommandFoul(pActingPlayerId, defenderId));
-  }
+	protected void send(ClientCommand clientCommand) {
+		if (clientCommand == null) {
+			return;
+		}
+		try {
+			// add entropy payload if available
+			MouseEntropySource entropySource = getClient().getUserInterface().getMouseEntropySource();
+			if (entropySource.hasEnoughEntropy()) {
+				clientCommand.setEntropy(entropySource.getEntropy());
+			}
+			// send command
+			getClient().getCommandEndpoint().send(clientCommand);
+		} catch (IOException pIoException) {
+			throw new FantasyFootballException(pIoException);
+		}
+	}
 
-  public void sendBlockChoice(int pDiceIndex) {
-    send(new ClientCommandBlockChoice(pDiceIndex));
-  }
+	public void sendDebugClientState(ClientStateId pClientStateId) {
+		send(new ClientCommandDebugClientState(pClientStateId));
+	}
 
-  public void sendUseInducement(InducementType pInducement) {
-    send(new ClientCommandUseInducement(pInducement));
-  }
+	public void sendJoin(String pCoach, String pPassword, long pGameId, String pGameName, String pTeamId,
+			String pTeamName) {
+		ClientCommandJoin joinCommand = new ClientCommandJoin(getClient().getMode());
+		joinCommand.setCoach(pCoach);
+		joinCommand.setPassword(pPassword);
+		joinCommand.setGameId(pGameId);
+		joinCommand.setGameName(pGameName);
+		joinCommand.setTeamId(pTeamId);
+		joinCommand.setTeamName(pTeamName);
+		send(joinCommand);
+	}
 
-  public void sendUseInducement(Card pCard) {
-    send(new ClientCommandUseInducement(pCard));
-  }
+	public void sendJourneymen(String[] pPositionsIds, int[] pSlots) {
+		send(new ClientCommandJourneymen(pPositionsIds, pSlots));
+	}
 
-  public void sendUseInducement(InducementType pInducement, String pPlayerId) {
-    send(new ClientCommandUseInducement(pInducement, pPlayerId));
-  }
+	public void sendTalk(String pTalk) {
+		send(new ClientCommandTalk(pTalk));
+	}
 
-  public void sendUseInducement(Card pCard, String pPlayerId) {
-    send(new ClientCommandUseInducement(pCard, pPlayerId));
-  }
+	public void sendPasswordChallenge() {
+		send(new ClientCommandPasswordChallenge(getClient().getParameters().getCoach()));
+	}
 
-  public void sendUseInducement(InducementType pInducement, String[] pPlayerIds) {
-    send(new ClientCommandUseInducement(pInducement, pPlayerIds));
-  }
+	public void sendPing(long timestamp) {
+		send(new ClientCommandPing(timestamp));
+	}
 
-  public void sendArgueTheCall(String playerId) {
-    send(new ClientCommandArgueTheCall(playerId));
-  }
+	public void sendSetupPlayer(Player pPlayer, FieldCoordinate pCoordinate) {
+		send(new ClientCommandSetupPlayer(pPlayer.getId(), pCoordinate));
+	}
 
-  public void sendArgueTheCall(String[] playerIds) {
-    send(new ClientCommandArgueTheCall(playerIds));
-  }
+	public void sendTouchback(FieldCoordinate pBallCoordinate) {
+		send(new ClientCommandTouchback(pBallCoordinate));
+	}
 
-  public void sendPushback(Pushback pPushback) {
-    send(new ClientCommandPushback(pPushback));
-  }
-  
-  public void sendFollowupChoice(boolean pFollowupChoice) {
-    send(new ClientCommandFollowupChoice(pFollowupChoice));
-  }
-  
-  public void sendInterceptorChoice(Player pInterceptor) {
-    String interceptorId = (pInterceptor != null) ? pInterceptor.getId() : null;
-    send(new ClientCommandInterceptorChoice(interceptorId));
-  }
-  
-  public void sendTeamSetupLoad(String pSetupName) {
-    send(new ClientCommandTeamSetupLoad(pSetupName));
-  }
-  
-  public void sendTeamSetupDelete(String pSetupName) {
-    send(new ClientCommandTeamSetupDelete(pSetupName));
-  }
+	public void sendPlayerMove(String pActingPlayerId, FieldCoordinate pCoordinateFrom,
+			FieldCoordinate[] pCoordinatesTo) {
+		send(new ClientCommandMove(pActingPlayerId, pCoordinateFrom, pCoordinatesTo));
+	}
 
-  public void sendTeamSetupSave(TeamSetup pTeamSetup) {
-    send(new ClientCommandTeamSetupSave(pTeamSetup.getName(), pTeamSetup.getPlayerNumbers(), pTeamSetup.getCoordinates()));
-  }
-  
-  public void sendUseApothecary(String pPlayerId, boolean pApothecaryUsed) {
-    send(new ClientCommandUseApothecary(pPlayerId, pApothecaryUsed));
-  }
+	public void sendStartGame() {
+		send(new ClientCommandStartGame());
+	}
 
-  public void sendApothecaryChoice(String pPlayerId, PlayerState pPlayerState, SeriousInjury pSeriousInjury) {
-    send(new ClientCommandApothecaryChoice(pPlayerId, pPlayerState, pSeriousInjury));
-  }
- 
-  public void sendUserSettings(String[] pSettingNames, String[] pSettingValues) {
-    send(new ClientCommandUserSettings(pSettingNames, pSettingValues));
-  }
-  
-  public void sendReplay(long pGameId, int pReplayToCommandNr) {
-    send(new ClientCommandReplay(pGameId, pReplayToCommandNr));
-  }
-  
-  public void sendThrowTeamMate(String pActingPlayerId, FieldCoordinate pTargetCoordinate) {
-    send(new ClientCommandThrowTeamMate(pActingPlayerId, pTargetCoordinate));
-  }
+	public void sendEndTurn() {
+		send(new ClientCommandEndTurn());
+	}
 
-  public void sendKickTeamMate(String pActingPlayerId, String pPlayerId, int numDice) {
-    send(new ClientCommandKickTeamMate(pActingPlayerId, pPlayerId, numDice));
-  }
-  
-  
-  public void sendThrowTeamMate(String pActingPlayerId, String pPlayerId) {
-    send(new ClientCommandThrowTeamMate(pActingPlayerId, pPlayerId));
-  }
-  
-  public void sendSwoop(String pActingPlayerId, FieldCoordinate pTargetCoordinate) {
-	    send(new ClientCommandSwoop(pActingPlayerId, pTargetCoordinate));
-  }
-  
-  public void sendBuyInducements(String pTeamId, int pAvailableGold, InducementSet pInducementSet, String[] pStarPlayerPositionIds, String[] pMercenaryPositionIds, Skill[] pMercenarySkills) {
-    send(new ClientCommandBuyInducements(pTeamId, pAvailableGold, pInducementSet, pStarPlayerPositionIds, pMercenaryPositionIds, pMercenarySkills));  
-  }
-  
-  public void sendBuyCard(CardType pType) {
-  	send(new ClientCommandBuyCard(pType));
-  }
-  
-  public void sendSetMarker(String pPlayerId, String pText) {
-    send(new ClientCommandSetMarker(pPlayerId, pText));
-  }
-  
-  public void sendSetMarker(FieldCoordinate pCoordinate, String pText) {
-    send(new ClientCommandSetMarker(pCoordinate, pText));
-  }
+	public void sendConfirm() {
+		send(new ClientCommandConfirm());
+	}
 
-  public void sendWizardSpell(SpecialEffect pWizardSpell, FieldCoordinate pCoordinate) {
-    send(new ClientCommandWizardSpell(pWizardSpell, pCoordinate));
-  }
+	public void sendCloseSession() {
+		send(new ClientCommandCloseSession());
+	}
 
-  public FantasyFootballClient getClient() {
-    return fClient;
-  }
+	public void sendConcedeGame(ConcedeGameStatus pStatus) {
+		send(new ClientCommandConcedeGame(pStatus));
+	}
+
+	public void sendIllegalProcedure() {
+		send(new ClientCommandIllegalProcedure());
+	}
+
+	public void sendRequestVersion() {
+		send(new ClientCommandRequestVersion());
+	}
+
+	public void sendCoinChoice(boolean pChoiceHeads) {
+		send(new ClientCommandCoinChoice(pChoiceHeads));
+	}
+
+	public void sendReceiveChoice(boolean pChoiceReceive) {
+		send(new ClientCommandReceiveChoice(pChoiceReceive));
+	}
+
+	public void sendPlayerChoice(PlayerChoiceMode pMode, Player[] pPlayers) {
+		send(new ClientCommandPlayerChoice(pMode, pPlayers));
+	}
+
+	public void sendPettyCash(int pPettyCash) {
+		send(new ClientCommandPettyCash(pPettyCash));
+	}
+
+	public void sendActingPlayer(Player pPlayer, PlayerAction pPlayerAction, boolean pLeaping) {
+		String playerId = (pPlayer != null) ? pPlayer.getId() : null;
+		send(new ClientCommandActingPlayer(playerId, pPlayerAction, pLeaping));
+	}
+
+	public void sendUseReRoll(ReRolledAction pReRolledAction, ReRollSource pReRollSource) {
+		send(new ClientCommandUseReRoll(pReRolledAction, pReRollSource));
+	}
+
+	public void sendUseSkill(Skill pSkill, boolean pSkillUsed, String playerId) {
+		send(new ClientCommandUseSkill(pSkill, pSkillUsed, playerId));
+	}
+
+	public void sendKickoff(FieldCoordinate pBallCoordinate) {
+		send(new ClientCommandKickoff(pBallCoordinate));
+	}
+
+	public void sendHandOver(String pActingPlayerId, Player pCatcher) {
+		String catcherId = (pCatcher != null) ? pCatcher.getId() : null;
+		send(new ClientCommandHandOver(pActingPlayerId, catcherId));
+	}
+
+	public void sendGaze(String pActingPlayerId, Player pVictim) {
+		String victimId = (pVictim != null) ? pVictim.getId() : null;
+		send(new ClientCommandGaze(pActingPlayerId, victimId));
+	}
+
+	public void sendPass(String pActingPlayerId, FieldCoordinate pTargetCoordinate) {
+		send(new ClientCommandPass(pActingPlayerId, pTargetCoordinate));
+	}
+
+	public void sendBlock(String pActingPlayerId, Player pDefender, boolean pUsingStab) {
+		String defenderId = (pDefender != null) ? pDefender.getId() : null;
+		send(new ClientCommandBlock(pActingPlayerId, defenderId, pUsingStab));
+	}
+
+	public void sendFoul(String pActingPlayerId, Player pDefender) {
+		String defenderId = (pDefender != null) ? pDefender.getId() : null;
+		send(new ClientCommandFoul(pActingPlayerId, defenderId));
+	}
+
+	public void sendBlockChoice(int pDiceIndex) {
+		send(new ClientCommandBlockChoice(pDiceIndex));
+	}
+
+	public void sendUseInducement(InducementType pInducement) {
+		send(new ClientCommandUseInducement(pInducement));
+	}
+
+	public void sendUseInducement(Card pCard) {
+		send(new ClientCommandUseInducement(pCard));
+	}
+
+	public void sendUseInducement(InducementType pInducement, String pPlayerId) {
+		send(new ClientCommandUseInducement(pInducement, pPlayerId));
+	}
+
+	public void sendUseInducement(Card pCard, String pPlayerId) {
+		send(new ClientCommandUseInducement(pCard, pPlayerId));
+	}
+
+	public void sendUseInducement(InducementType pInducement, String[] pPlayerIds) {
+		send(new ClientCommandUseInducement(pInducement, pPlayerIds));
+	}
+
+	public void sendArgueTheCall(String playerId) {
+		send(new ClientCommandArgueTheCall(playerId));
+	}
+
+	public void sendArgueTheCall(String[] playerIds) {
+		send(new ClientCommandArgueTheCall(playerIds));
+	}
+
+	public void sendPushback(Pushback pPushback) {
+		send(new ClientCommandPushback(pPushback));
+	}
+
+	public void sendFollowupChoice(boolean pFollowupChoice) {
+		send(new ClientCommandFollowupChoice(pFollowupChoice));
+	}
+
+	public void sendInterceptorChoice(Player pInterceptor) {
+		String interceptorId = (pInterceptor != null) ? pInterceptor.getId() : null;
+		send(new ClientCommandInterceptorChoice(interceptorId));
+	}
+
+	public void sendTeamSetupLoad(String pSetupName) {
+		send(new ClientCommandTeamSetupLoad(pSetupName));
+	}
+
+	public void sendTeamSetupDelete(String pSetupName) {
+		send(new ClientCommandTeamSetupDelete(pSetupName));
+	}
+
+	public void sendTeamSetupSave(TeamSetup pTeamSetup) {
+		send(new ClientCommandTeamSetupSave(pTeamSetup.getName(), pTeamSetup.getPlayerNumbers(),
+				pTeamSetup.getCoordinates()));
+	}
+
+	public void sendUseApothecary(String pPlayerId, boolean pApothecaryUsed) {
+		send(new ClientCommandUseApothecary(pPlayerId, pApothecaryUsed));
+	}
+
+	public void sendApothecaryChoice(String pPlayerId, PlayerState pPlayerState, SeriousInjury pSeriousInjury) {
+		send(new ClientCommandApothecaryChoice(pPlayerId, pPlayerState, pSeriousInjury));
+	}
+
+	public void sendUserSettings(String[] pSettingNames, String[] pSettingValues) {
+		send(new ClientCommandUserSettings(pSettingNames, pSettingValues));
+	}
+
+	public void sendReplay(long pGameId, int pReplayToCommandNr) {
+		send(new ClientCommandReplay(pGameId, pReplayToCommandNr));
+	}
+
+	public void sendThrowTeamMate(String pActingPlayerId, FieldCoordinate pTargetCoordinate) {
+		send(new ClientCommandThrowTeamMate(pActingPlayerId, pTargetCoordinate));
+	}
+
+	public void sendKickTeamMate(String pActingPlayerId, String pPlayerId, int numDice) {
+		send(new ClientCommandKickTeamMate(pActingPlayerId, pPlayerId, numDice));
+	}
+
+	public void sendThrowTeamMate(String pActingPlayerId, String pPlayerId) {
+		send(new ClientCommandThrowTeamMate(pActingPlayerId, pPlayerId));
+	}
+
+	public void sendSwoop(String pActingPlayerId, FieldCoordinate pTargetCoordinate) {
+		send(new ClientCommandSwoop(pActingPlayerId, pTargetCoordinate));
+	}
+
+	public void sendBuyInducements(String pTeamId, int pAvailableGold, InducementSet pInducementSet,
+			String[] pStarPlayerPositionIds, String[] pMercenaryPositionIds, Skill[] pMercenarySkills) {
+		send(new ClientCommandBuyInducements(pTeamId, pAvailableGold, pInducementSet, pStarPlayerPositionIds,
+				pMercenaryPositionIds, pMercenarySkills));
+	}
+
+	public void sendBuyCard(CardType pType) {
+		send(new ClientCommandBuyCard(pType));
+	}
+
+	public void sendSetMarker(String pPlayerId, String pText) {
+		send(new ClientCommandSetMarker(pPlayerId, pText));
+	}
+
+	public void sendSetMarker(FieldCoordinate pCoordinate, String pText) {
+		send(new ClientCommandSetMarker(pCoordinate, pText));
+	}
+
+	public void sendWizardSpell(SpecialEffect pWizardSpell, FieldCoordinate pCoordinate) {
+		send(new ClientCommandWizardSpell(pWizardSpell, pCoordinate));
+	}
+
+	public FantasyFootballClient getClient() {
+		return fClient;
+	}
 
 }

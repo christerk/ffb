@@ -15,31 +15,30 @@ import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
 /**
- * Last step in the inducement sequence.
- * Consumes all expected stepParameters.
+ * Last step in the inducement sequence. Consumes all expected stepParameters.
  * 
  * Expects stepParameter END_INDUCEMENT_PHASE to be set by a preceding step.
- * Expects stepParameter END_TURN to be set by a preceding step.
- * Expects stepParameter HOME_TEAM to be set by a preceding step.
- * Expects stepParameter INDUCEMENT_PHASE to be set by a preceding step.
+ * Expects stepParameter END_TURN to be set by a preceding step. Expects
+ * stepParameter HOME_TEAM to be set by a preceding step. Expects stepParameter
+ * INDUCEMENT_PHASE to be set by a preceding step.
  * 
  * @author Kalimar
  */
 public final class StepEndInducement extends AbstractStep {
-	
-  private boolean fEndInducementPhase;
-  private boolean fEndTurn;
+
+	private boolean fEndInducementPhase;
+	private boolean fEndTurn;
 	private InducementPhase fInducementPhase;
 	private boolean fHomeTeam;
-	
+
 	public StepEndInducement(GameState pGameState) {
 		super(pGameState);
 	}
-	
+
 	public StepId getId() {
 		return StepId.END_INDUCEMENT;
 	}
-		
+
 	@Override
 	public boolean setParameter(StepParameter pParameter) {
 		if ((pParameter != null) && !super.setParameter(pParameter)) {
@@ -66,59 +65,59 @@ public final class StepEndInducement extends AbstractStep {
 		}
 		return false;
 	}
-	
+
 	@Override
 	public void start() {
 		super.start();
 		executeStep();
 	}
-	
+
 	private void executeStep() {
 		UtilServerDialog.hideDialog(getGameState());
 		if (fInducementPhase == null) {
 			return;
 		}
-    fEndTurn |= UtilServerSteps.checkTouchdown(getGameState());
-    if (fEndTurn) {
-    	SequenceGenerator.getInstance().pushEndTurnSequence(getGameState());
-    } else if (fEndInducementPhase) {
-    	switch (fInducementPhase) {
-    		case END_OF_OWN_TURN:
-      		SequenceGenerator.getInstance().pushEndTurnSequence(getGameState());
-      		break;
-    		case START_OF_OWN_TURN:
-        	SequenceGenerator.getInstance().pushSelectSequence(getGameState(), true);
-        	break;
-      	default:
-      		break;
-    	}
-    } else {
-    	SequenceGenerator.getInstance().pushInducementSequence(getGameState(), fInducementPhase, fHomeTeam);
-    }
-  	getResult().setNextAction(StepAction.NEXT_STEP);
-  }
-	
-  // JSON serialization
-  
-  @Override
-  public JsonObject toJsonValue() {
-    JsonObject jsonObject = super.toJsonValue();
-    IServerJsonOption.INDUCEMENT_PHASE.addTo(jsonObject, fInducementPhase);
-    IServerJsonOption.HOME_TEAM.addTo(jsonObject, fHomeTeam);
-    IServerJsonOption.END_TURN.addTo(jsonObject, fEndTurn);
-    IServerJsonOption.END_INDUCEMENT_PHASE.addTo(jsonObject, fEndInducementPhase);
-    return jsonObject;
-  }
-  
-  @Override
-  public StepEndInducement initFrom(JsonValue pJsonValue) {
-    super.initFrom(pJsonValue);
-    JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-    fInducementPhase = (InducementPhase) IServerJsonOption.INDUCEMENT_PHASE.getFrom(jsonObject);
-    fHomeTeam = IServerJsonOption.HOME_TEAM.getFrom(jsonObject);
-    fEndTurn = IServerJsonOption.END_TURN.getFrom(jsonObject);
-    fEndInducementPhase = IServerJsonOption.END_INDUCEMENT_PHASE.getFrom(jsonObject);
-    return this;
-  }
+		fEndTurn |= UtilServerSteps.checkTouchdown(getGameState());
+		if (fEndTurn) {
+			SequenceGenerator.getInstance().pushEndTurnSequence(getGameState());
+		} else if (fEndInducementPhase) {
+			switch (fInducementPhase) {
+			case END_OF_OWN_TURN:
+				SequenceGenerator.getInstance().pushEndTurnSequence(getGameState());
+				break;
+			case START_OF_OWN_TURN:
+				SequenceGenerator.getInstance().pushSelectSequence(getGameState(), true);
+				break;
+			default:
+				break;
+			}
+		} else {
+			SequenceGenerator.getInstance().pushInducementSequence(getGameState(), fInducementPhase, fHomeTeam);
+		}
+		getResult().setNextAction(StepAction.NEXT_STEP);
+	}
+
+	// JSON serialization
+
+	@Override
+	public JsonObject toJsonValue() {
+		JsonObject jsonObject = super.toJsonValue();
+		IServerJsonOption.INDUCEMENT_PHASE.addTo(jsonObject, fInducementPhase);
+		IServerJsonOption.HOME_TEAM.addTo(jsonObject, fHomeTeam);
+		IServerJsonOption.END_TURN.addTo(jsonObject, fEndTurn);
+		IServerJsonOption.END_INDUCEMENT_PHASE.addTo(jsonObject, fEndInducementPhase);
+		return jsonObject;
+	}
+
+	@Override
+	public StepEndInducement initFrom(JsonValue pJsonValue) {
+		super.initFrom(pJsonValue);
+		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
+		fInducementPhase = (InducementPhase) IServerJsonOption.INDUCEMENT_PHASE.getFrom(jsonObject);
+		fHomeTeam = IServerJsonOption.HOME_TEAM.getFrom(jsonObject);
+		fEndTurn = IServerJsonOption.END_TURN.getFrom(jsonObject);
+		fEndInducementPhase = IServerJsonOption.END_INDUCEMENT_PHASE.getFrom(jsonObject);
+		return this;
+	}
 
 }

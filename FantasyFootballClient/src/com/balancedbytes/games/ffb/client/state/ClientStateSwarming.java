@@ -11,33 +11,33 @@ import com.balancedbytes.games.ffb.util.UtilCards;
 
 public class ClientStateSwarming extends ClientStateSetup {
 
-  public ClientStateSwarming(FantasyFootballClient pClient) {
-    super(pClient);
-  }
+	public ClientStateSwarming(FantasyFootballClient pClient) {
+		super(pClient);
+	}
 
-  @Override
-  public ClientStateId getId() {
-    return ClientStateId.SWARMING;
-  }
+	@Override
+	public ClientStateId getId() {
+		return ClientStateId.SWARMING;
+	}
 
-  @Override
-  public boolean isInitDragAllowed(FieldCoordinate pCoordinate) {
-    if (pCoordinate != null) {
-      Player player = getClient().getGame().getFieldModel().getPlayer(pCoordinate);
-      return player != null && UtilCards.hasSkillWithProperty( player, NamedProperties.canSneakExtraPlayersOntoPitch);
-    }
+	@Override
+	public boolean isInitDragAllowed(FieldCoordinate pCoordinate) {
+		if (pCoordinate != null) {
+			Player player = getClient().getGame().getFieldModel().getPlayer(pCoordinate);
+			return player != null && UtilCards.hasSkillWithProperty(player, NamedProperties.canSneakExtraPlayersOntoPitch);
+		}
 
-    return false;
-  }
+		return false;
+	}
 
-  @Override
-  public boolean isDragAllowed(FieldCoordinate pCoordinate) {
-    Game game = getClient().getGame();
-    return ((pCoordinate != null) &&
-      ((FieldCoordinateBounds.HALF_HOME.isInBounds(pCoordinate) && !FieldCoordinateBounds.LOS_HOME.isInBounds(pCoordinate) &&
-        !FieldCoordinateBounds.LOWER_WIDE_ZONE_HOME.isInBounds(pCoordinate) && !FieldCoordinateBounds.UPPER_WIDE_ZONE_HOME.isInBounds(pCoordinate)
-        || pCoordinate.isBoxCoordinate()) &&
-        (game.getFieldModel().getPlayer(pCoordinate) == null)));
+	@Override
+	public boolean isDragAllowed(FieldCoordinate pCoordinate) {
+		Game game = getClient().getGame();
+		return ((pCoordinate != null) && ((FieldCoordinateBounds.HALF_HOME.isInBounds(pCoordinate)
+				&& !FieldCoordinateBounds.LOS_HOME.isInBounds(pCoordinate)
+				&& !FieldCoordinateBounds.LOWER_WIDE_ZONE_HOME.isInBounds(pCoordinate)
+				&& !FieldCoordinateBounds.UPPER_WIDE_ZONE_HOME.isInBounds(pCoordinate) || pCoordinate.isBoxCoordinate())
+				&& (game.getFieldModel().getPlayer(pCoordinate) == null)));
 
-  }
+	}
 }

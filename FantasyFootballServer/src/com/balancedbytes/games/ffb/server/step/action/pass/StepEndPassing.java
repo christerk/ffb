@@ -107,7 +107,8 @@ public final class StepEndPassing extends AbstractStep {
 		game.getFieldModel().setRangeRuler(null);
 		ActingPlayer actingPlayer = game.getActingPlayer();
 		// failed confusion roll on throw bomb -> end player action
-		if (fEndPlayerAction && ((actingPlayer.getPlayerAction() == PlayerAction.THROW_BOMB) || (actingPlayer.getPlayerAction() == PlayerAction.HAIL_MARY_BOMB))) {
+		if (fEndPlayerAction && ((actingPlayer.getPlayerAction() == PlayerAction.THROW_BOMB)
+				|| (actingPlayer.getPlayerAction() == PlayerAction.HAIL_MARY_BOMB))) {
 			SequenceGenerator.getInstance().pushEndPlayerActionSequence(getGameState(), true, true, fEndTurn);
 			getResult().setNextAction(StepAction.NEXT_STEP);
 			return;
@@ -133,7 +134,8 @@ public final class StepEndPassing extends AbstractStep {
 		}
 		Player catcher = game.getPlayerById(fCatcherId);
 		// completions and passing statistic
-		if ((game.getThrower() != null) && (catcher != null) && UtilPlayer.hasBall(game, catcher) && game.getThrower().getTeam().hasPlayer(catcher)) {
+		if ((game.getThrower() != null) && (catcher != null) && UtilPlayer.hasBall(game, catcher)
+				&& game.getThrower().getTeam().hasPlayer(catcher)) {
 			PlayerResult throwerResult = game.getGameResult().getPlayerResult(game.getThrower());
 			if (fPassAccurate) {
 				throwerResult.setCompletions(throwerResult.getCompletions() + 1);
@@ -148,9 +150,11 @@ public final class StepEndPassing extends AbstractStep {
 			}
 			throwerResult.setPassing(throwerResult.getPassing() + deltaX);
 		}
-		if (fEndTurn || fEndPlayerAction || ((game.getThrower() == actingPlayer.getPlayer()) && actingPlayer.isSufferingBloodLust() && !actingPlayer.hasFed())) {
-			fEndTurn |= (UtilServerSteps.checkTouchdown(getGameState()) || ((catcher == null) && !actingPlayer.isSufferingAnimosity()) || UtilPlayer.findOtherTeam(game, game.getThrower()).hasPlayer(catcher)
-					|| fPassFumble);
+		if (fEndTurn || fEndPlayerAction || ((game.getThrower() == actingPlayer.getPlayer())
+				&& actingPlayer.isSufferingBloodLust() && !actingPlayer.hasFed())) {
+			fEndTurn |= (UtilServerSteps.checkTouchdown(getGameState())
+					|| ((catcher == null) && !actingPlayer.isSufferingAnimosity())
+					|| UtilPlayer.findOtherTeam(game, game.getThrower()).hasPlayer(catcher) || fPassFumble);
 			SequenceGenerator.getInstance().pushEndPlayerActionSequence(getGameState(), true, fEndPlayerAction, fEndTurn);
 		} else {
 			if (StringTool.isProvided(fInterceptorId)) {
@@ -165,8 +169,9 @@ public final class StepEndPassing extends AbstractStep {
 				catcher = game.getFieldModel().getPlayer(game.getFieldModel().getBallCoordinate());
 			}
 			if (game.getThrower() == actingPlayer.getPlayer()) {
-				fEndTurn |= (UtilServerSteps.checkTouchdown(getGameState()) || ((catcher == null) && !actingPlayer.isSufferingAnimosity()) || UtilPlayer.findOtherTeam(game, game.getThrower()).hasPlayer(catcher)
-						|| fPassFumble);
+				fEndTurn |= (UtilServerSteps.checkTouchdown(getGameState())
+						|| ((catcher == null) && !actingPlayer.isSufferingAnimosity())
+						|| UtilPlayer.findOtherTeam(game, game.getThrower()).hasPlayer(catcher) || fPassFumble);
 				SequenceGenerator.getInstance().pushEndPlayerActionSequence(getGameState(), true, true, fEndTurn);
 			} else {
 				game.setDefenderAction(null); // reset dump-off action

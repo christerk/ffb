@@ -10,10 +10,10 @@ import com.balancedbytes.games.ffb.server.FantasyFootballServer;
  */
 public interface IDbUpdateParameter {
 
-  public int getUpdatedRows();
-  
-  public void executeUpdate(FantasyFootballServer pServer) throws SQLException;
-  
-  public DbUpdateStatement getDbUpdateStatement(FantasyFootballServer pServer);
-    
+	public int getUpdatedRows();
+
+	public void executeUpdate(FantasyFootballServer pServer) throws SQLException;
+
+	public DbUpdateStatement getDbUpdateStatement(FantasyFootballServer pServer);
+
 }

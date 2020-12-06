@@ -26,8 +26,8 @@ import com.eclipsesource.json.JsonValue;
  * 
  * Needs to be initialized with stepParameter GOTO_LABEL_ON_END.
  * 
- * Expects stepParameter FOULER_HAS_BALL to be set by a preceding step.
- * Expects stepParameter ARGUE_THE_CALL_SUCCESFUL to be set by a preceding step.
+ * Expects stepParameter FOULER_HAS_BALL to be set by a preceding step. Expects
+ * stepParameter ARGUE_THE_CALL_SUCCESFUL to be set by a preceding step.
  * 
  * Sets stepParameter CATCH_SCATTER_THROW_IN_MODE for all steps on the stack.
  * Sets stepParameter END_TURN for all steps on the stack.
@@ -41,109 +41,108 @@ public class StepEjectPlayer extends AbstractStep {
 		public Boolean foulerHasBall;
 		public Boolean argueTheCallSuccessful;
 	}
-	
+
 	private StepState state;
 
-  public StepEjectPlayer(GameState pGameState) {
-    super(pGameState);
-    
-	state = new StepState();
-  }
+	public StepEjectPlayer(GameState pGameState) {
+		super(pGameState);
 
-  public StepId getId() {
-    return StepId.EJECT_PLAYER;
-  }
+		state = new StepState();
+	}
 
-  @Override
-  public void init(StepParameterSet pParameterSet) {
-    if (pParameterSet != null) {
-      for (StepParameter parameter : pParameterSet.values()) {
-        switch (parameter.getKey()) {
-          case GOTO_LABEL_ON_END:
-        	  state.gotoLabelOnEnd = (String) parameter.getValue();
-            break;
-          default:
-            break;
-        }
-      }
-    }
-    if (!StringTool.isProvided(state.gotoLabelOnEnd)) {
-      throw new StepException("StepParameter " + StepParameterKey.GOTO_LABEL_ON_END + " is not initialized.");
-    }
-  }
+	public StepId getId() {
+		return StepId.EJECT_PLAYER;
+	}
 
-  @Override
-  public boolean setParameter(StepParameter pParameter) {
-    if ((pParameter != null) && !super.setParameter(pParameter)) {
-      switch (pParameter.getKey()) {
-        case FOULER_HAS_BALL:
-        	state.foulerHasBall = (Boolean) pParameter.getValue();
-          return true;
-        case ARGUE_THE_CALL_SUCCESSFUL:
-        	state.argueTheCallSuccessful = (Boolean) pParameter.getValue();
-          return true;
-        default:
-          break;
-      }
-    }
-    return false;
-  }
+	@Override
+	public void init(StepParameterSet pParameterSet) {
+		if (pParameterSet != null) {
+			for (StepParameter parameter : pParameterSet.values()) {
+				switch (parameter.getKey()) {
+				case GOTO_LABEL_ON_END:
+					state.gotoLabelOnEnd = (String) parameter.getValue();
+					break;
+				default:
+					break;
+				}
+			}
+		}
+		if (!StringTool.isProvided(state.gotoLabelOnEnd)) {
+			throw new StepException("StepParameter " + StepParameterKey.GOTO_LABEL_ON_END + " is not initialized.");
+		}
+	}
 
-  @Override
-  public void start() {
-    super.start();
-    executeStep();
-  }
+	@Override
+	public boolean setParameter(StepParameter pParameter) {
+		if ((pParameter != null) && !super.setParameter(pParameter)) {
+			switch (pParameter.getKey()) {
+			case FOULER_HAS_BALL:
+				state.foulerHasBall = (Boolean) pParameter.getValue();
+				return true;
+			case ARGUE_THE_CALL_SUCCESSFUL:
+				state.argueTheCallSuccessful = (Boolean) pParameter.getValue();
+				return true;
+			default:
+				break;
+			}
+		}
+		return false;
+	}
 
-  @Override
-  public StepCommandStatus handleCommand(ReceivedCommand pReceivedCommand) {
-    StepCommandStatus commandStatus = super.handleCommand(pReceivedCommand);
-    if (commandStatus == StepCommandStatus.EXECUTE_STEP) {
-      executeStep();
-    }
-    return commandStatus;
-  }
+	@Override
+	public void start() {
+		super.start();
+		executeStep();
+	}
 
-  private void executeStep() {
-	getGameState().executeStepHooks(this, state);
-    Game game = getGameState().getGame();
-    
-    ActingPlayer actingPlayer = game.getActingPlayer();
-  
-    UtilBox.putPlayerIntoBox(game, actingPlayer.getPlayer());
-    UtilBox.refreshBoxes(game);
-    UtilServerGame.updateLeaderReRolls(this);
-    publishParameter(new StepParameter(StepParameterKey.END_TURN, true));
-    if ((state.foulerHasBall != null) && state.foulerHasBall) {
-      publishParameter(new StepParameter(StepParameterKey.CATCH_SCATTER_THROW_IN_MODE, CatchScatterThrowInMode.SCATTER_BALL));
-      getResult().setNextAction(StepAction.NEXT_STEP);
-    } else {
-      getResult().setNextAction(StepAction.GOTO_LABEL, state.gotoLabelOnEnd);
-    }
-    
-	  
+	@Override
+	public StepCommandStatus handleCommand(ReceivedCommand pReceivedCommand) {
+		StepCommandStatus commandStatus = super.handleCommand(pReceivedCommand);
+		if (commandStatus == StepCommandStatus.EXECUTE_STEP) {
+			executeStep();
+		}
+		return commandStatus;
+	}
 
-  }
+	private void executeStep() {
+		getGameState().executeStepHooks(this, state);
+		Game game = getGameState().getGame();
 
-  // JSON serialization
+		ActingPlayer actingPlayer = game.getActingPlayer();
 
-  @Override
-  public JsonObject toJsonValue() {
-    JsonObject jsonObject = super.toJsonValue();
-    IServerJsonOption.GOTO_LABEL_ON_END.addTo(jsonObject, state.gotoLabelOnEnd);
-    IServerJsonOption.FOULER_HAS_BALL.addTo(jsonObject, state.foulerHasBall);
-    IServerJsonOption.ARGUE_THE_CALL_SUCCESSFUL.addTo(jsonObject, state.argueTheCallSuccessful);
-    return jsonObject;
-  }
+		UtilBox.putPlayerIntoBox(game, actingPlayer.getPlayer());
+		UtilBox.refreshBoxes(game);
+		UtilServerGame.updateLeaderReRolls(this);
+		publishParameter(new StepParameter(StepParameterKey.END_TURN, true));
+		if ((state.foulerHasBall != null) && state.foulerHasBall) {
+			publishParameter(
+					new StepParameter(StepParameterKey.CATCH_SCATTER_THROW_IN_MODE, CatchScatterThrowInMode.SCATTER_BALL));
+			getResult().setNextAction(StepAction.NEXT_STEP);
+		} else {
+			getResult().setNextAction(StepAction.GOTO_LABEL, state.gotoLabelOnEnd);
+		}
 
-  @Override
-  public StepEjectPlayer initFrom(JsonValue pJsonValue) {
-    super.initFrom(pJsonValue);
-    JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-    state.gotoLabelOnEnd = IServerJsonOption.GOTO_LABEL_ON_END.getFrom(jsonObject);
-    state.foulerHasBall = IServerJsonOption.FOULER_HAS_BALL.getFrom(jsonObject);
-    state.argueTheCallSuccessful = IServerJsonOption.ARGUE_THE_CALL_SUCCESSFUL.getFrom(jsonObject);
-    return this;
-  }
+	}
+
+	// JSON serialization
+
+	@Override
+	public JsonObject toJsonValue() {
+		JsonObject jsonObject = super.toJsonValue();
+		IServerJsonOption.GOTO_LABEL_ON_END.addTo(jsonObject, state.gotoLabelOnEnd);
+		IServerJsonOption.FOULER_HAS_BALL.addTo(jsonObject, state.foulerHasBall);
+		IServerJsonOption.ARGUE_THE_CALL_SUCCESSFUL.addTo(jsonObject, state.argueTheCallSuccessful);
+		return jsonObject;
+	}
+
+	@Override
+	public StepEjectPlayer initFrom(JsonValue pJsonValue) {
+		super.initFrom(pJsonValue);
+		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
+		state.gotoLabelOnEnd = IServerJsonOption.GOTO_LABEL_ON_END.getFrom(jsonObject);
+		state.foulerHasBall = IServerJsonOption.FOULER_HAS_BALL.getFrom(jsonObject);
+		state.argueTheCallSuccessful = IServerJsonOption.ARGUE_THE_CALL_SUCCESSFUL.getFrom(jsonObject);
+		return this;
+	}
 
 }

@@ -7,9 +7,10 @@ import java.net.Socket;
 import java.net.SocketTimeoutException;
 
 /**
- * The entropy server listens on a set network port for entropy data. The idea is that a single client can send entropy
- * information which is buffered by the server. A server-side application can then pull the entropy data from the EntropyServer
- * and use it for whatever purpose it sees fit.
+ * The entropy server listens on a set network port for entropy data. The idea
+ * is that a single client can send entropy information which is buffered by the
+ * server. A server-side application can then pull the entropy data from the
+ * EntropyServer and use it for whatever purpose it sees fit.
  * 
  * @author christer
  *
@@ -29,7 +30,7 @@ public class EntropyServer implements Runnable, EntropySource {
 	/**
 	 * Constructs the Entropy server.
 	 * 
-	 * @param port Port number to listen for client.
+	 * @param port       Port number to listen for client.
 	 * @param bufferSize Buffer size for receiving entropy.
 	 */
 	public EntropyServer(int port, int bufferSize) {
@@ -82,7 +83,7 @@ public class EntropyServer implements Runnable, EntropySource {
 	private synchronized void put(byte[] buf, int length) {
 		while (isFull()) {
 			try {
-				synchronized(lockFull) {
+				synchronized (lockFull) {
 					lockFull.wait();
 				}
 			} catch (InterruptedException ie) {
@@ -91,15 +92,15 @@ public class EntropyServer implements Runnable, EntropySource {
 		}
 
 		int availableSpace = availableSpace();
-		
+
 		if (length > availableSpace)
 			length = availableSpace;
-		
-		for (int i=0; i<length; i++) {
+
+		for (int i = 0; i < length; i++) {
 			buffer[bEnd] = buf[i];
 			bEnd = (bEnd + 1) % bLength;
 		}
-		
+
 		synchronized (lockEmpty) {
 			lockEmpty.notifyAll();
 		}
@@ -119,10 +120,10 @@ public class EntropyServer implements Runnable, EntropySource {
 		byte b = buffer[bStart];
 		bStart = (bStart + 1) % bLength;
 
-		synchronized(lockFull) {
+		synchronized (lockFull) {
 			lockFull.notify();
 		}
-		
+
 		return b;
 	}
 
@@ -137,11 +138,10 @@ public class EntropyServer implements Runnable, EntropySource {
 	private synchronized int availableSpace() {
 		if (bEnd == bStart)
 			return bLength;
-		
-		if (bEnd > bStart)
-			return bLength - (bEnd-bStart) - 1;
 
-		
+		if (bEnd > bStart)
+			return bLength - (bEnd - bStart) - 1;
+
 		return bStart - bEnd;
 	}
 

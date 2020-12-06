@@ -11,19 +11,19 @@ import com.balancedbytes.games.ffb.server.net.ReceivedCommand;
  */
 public class ServerCommandHandlerPing extends ServerCommandHandler {
 
-  protected ServerCommandHandlerPing(FantasyFootballServer pServer) {
-    super(pServer);
-  }
-  
-  public NetCommandId getId() {
-    return NetCommandId.CLIENT_PING;
-  }
+	protected ServerCommandHandlerPing(FantasyFootballServer pServer) {
+		super(pServer);
+	}
 
-  public boolean handleCommand(ReceivedCommand pReceivedCommand) {
-    ClientCommandPing pingCommand = (ClientCommandPing) pReceivedCommand.getCommand();
-    getServer().getSessionManager().setLastPing(pReceivedCommand.getSession(), System.currentTimeMillis());
-    getServer().getCommunication().sendPong(pReceivedCommand.getSession(), pingCommand.getTimestamp());
-    return true;
-  }
+	public NetCommandId getId() {
+		return NetCommandId.CLIENT_PING;
+	}
+
+	public boolean handleCommand(ReceivedCommand pReceivedCommand) {
+		ClientCommandPing pingCommand = (ClientCommandPing) pReceivedCommand.getCommand();
+		getServer().getSessionManager().setLastPing(pReceivedCommand.getSession(), System.currentTimeMillis());
+		getServer().getCommunication().sendPong(pReceivedCommand.getSession(), pingCommand.getTimestamp());
+		return true;
+	}
 
 }

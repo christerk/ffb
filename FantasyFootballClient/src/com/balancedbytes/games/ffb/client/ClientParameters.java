@@ -11,15 +11,15 @@ import com.balancedbytes.games.ffb.util.StringTool;
  * @author Kalimar
  */
 public class ClientParameters {
-	
-  public static final String USAGE = "java -jar FantasyFootballClient.jar -player -coach <coach>\n"
-      + "java -jar FantasyFootballClient.jar -player -coach <coach> -gameId <gameId>\n"
-      + "java -jar FantasyFootballClient.jar -player -coach <coach> -gameId <gameId> -teamHome <teamName> -teamAway <teamName>\n"
-      + "java -jar FantasyFootballClient.jar -player -coach <coach> -teamId <teamId> -teamName <teamName>\n"
-      + "java -jar FantasyFootballClient.jar -spectator -coach <coach>\n"
-      + "java -jar FantasyFootballClient.jar -spectator -coach <coach> -gameId <gameId>\n"
-      + "java -jar FantasyFootballClient.jar -replay -gameId <gameId>";
-	
+
+	public static final String USAGE = "java -jar FantasyFootballClient.jar -player -coach <coach>\n"
+			+ "java -jar FantasyFootballClient.jar -player -coach <coach> -gameId <gameId>\n"
+			+ "java -jar FantasyFootballClient.jar -player -coach <coach> -gameId <gameId> -teamHome <teamName> -teamAway <teamName>\n"
+			+ "java -jar FantasyFootballClient.jar -player -coach <coach> -teamId <teamId> -teamName <teamName>\n"
+			+ "java -jar FantasyFootballClient.jar -spectator -coach <coach>\n"
+			+ "java -jar FantasyFootballClient.jar -spectator -coach <coach> -gameId <gameId>\n"
+			+ "java -jar FantasyFootballClient.jar -replay -gameId <gameId>";
+
 	private static final String _ARGUMENT_COACH = "-coach";
 	private static final String _ARGUMENT_GAME_ID = "-gameId";
 	private static final String _ARGUMENT_TEAM_ID = "-teamId";
@@ -30,47 +30,47 @@ public class ClientParameters {
 	private static final String _ARGUMENT_PORT = "-port";
 	private static final String _ARGUMENT_SERVER = "-server";
 	private static final String _ARGUMENT_BUILD = "-build";
-	
-  private ClientMode fMode;
-  private String fCoach;
-  private long fGameId;
-  private String fTeamId;
-  private String fTeamName;
-  private String fTeamHome;
-  private String fTeamAway;
-  private String fAuthentication;
-  private int fPort;
-  private String fServer;
-  private String fBuild;
-  	
-  public ClientMode getMode() {
+
+	private ClientMode fMode;
+	private String fCoach;
+	private long fGameId;
+	private String fTeamId;
+	private String fTeamName;
+	private String fTeamHome;
+	private String fTeamAway;
+	private String fAuthentication;
+	private int fPort;
+	private String fServer;
+	private String fBuild;
+
+	public ClientMode getMode() {
 		return fMode;
 	}
-	
+
 	public String getCoach() {
 		return fCoach;
 	}
-	
+
 	private void setCoach(String pCoach) {
 		fCoach = pCoach;
 	}
-	
+
 	public long getGameId() {
 		return fGameId;
 	}
-	
+
 	public String getTeamName() {
 		return fTeamName;
 	}
-	
+
 	public String getTeamId() {
 		return fTeamId;
 	}
-	
+
 	public String getTeamHome() {
 		return fTeamHome;
 	}
-	
+
 	public String getTeamAway() {
 		return fTeamAway;
 	}
@@ -78,7 +78,7 @@ public class ClientParameters {
 	public String getAuthentication() {
 		return fAuthentication;
 	}
-	
+
 	public int getPort() {
 		return fPort;
 	}
@@ -90,10 +90,10 @@ public class ClientParameters {
 	public String getBuild() {
 		return fBuild;
 	}
-	
+
 	public void initFrom(String[] pArguments) {
 		if (ArrayTool.isProvided(pArguments)) {
-		  ClientModeFactory clientModeFactory = new ClientModeFactory();
+			ClientModeFactory clientModeFactory = new ClientModeFactory();
 			int pos = 0;
 			while (pos < pArguments.length) {
 				String argument = fetchArgument(pArguments, pos++);
@@ -123,7 +123,7 @@ public class ClientParameters {
 					} catch (NumberFormatException pNfe) {
 						throw new FantasyFootballException("Port must be numeric.");
 					}
-				} else if (_ARGUMENT_SERVER.equalsIgnoreCase(argument)){
+				} else if (_ARGUMENT_SERVER.equalsIgnoreCase(argument)) {
 					fServer = fetchArgument(pArguments, pos++);
 				} else if (_ARGUMENT_BUILD.equalsIgnoreCase(argument)) {
 					fBuild = fetchArgument(pArguments, pos++);
@@ -133,44 +133,44 @@ public class ClientParameters {
 			}
 		}
 	}
-	
+
 	public boolean validate() {
 		if (getMode() == null) {
 			return false;
 		}
 		switch (getMode()) {
-			case PLAYER:
-				if (!StringTool.isProvided(getCoach())) {
-					return false;
-				}
-				if (getGameId() > 0) {
-					if (StringTool.isProvided(getTeamHome())) {
-						return StringTool.isProvided(getTeamAway());
-					}
-					if (StringTool.isProvided(getTeamAway())) {
-						return StringTool.isProvided(getTeamHome());
-					}
-				} else {
-					if (StringTool.isProvided(getTeamId())) {
-						return StringTool.isProvided(getTeamName());
-					}
-					if (StringTool.isProvided(getTeamName())) {
-						return StringTool.isProvided(getTeamId());
-					}
-				}
-				return true;
-			case SPECTATOR:
-				if (!StringTool.isProvided(getCoach())) {
-					return false;
-				}
-				return true;
-			case REPLAY:
-				return (getGameId() > 0);
-			default:
+		case PLAYER:
+			if (!StringTool.isProvided(getCoach())) {
 				return false;
+			}
+			if (getGameId() > 0) {
+				if (StringTool.isProvided(getTeamHome())) {
+					return StringTool.isProvided(getTeamAway());
+				}
+				if (StringTool.isProvided(getTeamAway())) {
+					return StringTool.isProvided(getTeamHome());
+				}
+			} else {
+				if (StringTool.isProvided(getTeamId())) {
+					return StringTool.isProvided(getTeamName());
+				}
+				if (StringTool.isProvided(getTeamName())) {
+					return StringTool.isProvided(getTeamId());
+				}
+			}
+			return true;
+		case SPECTATOR:
+			if (!StringTool.isProvided(getCoach())) {
+				return false;
+			}
+			return true;
+		case REPLAY:
+			return (getGameId() > 0);
+		default:
+			return false;
 		}
 	}
-	
+
 	private String fetchArgument(String[] pArguments, int pPosition) {
 		if (pPosition < pArguments.length) {
 			return pArguments[pPosition];
@@ -178,5 +178,5 @@ public class ClientParameters {
 			throw new FantasyFootballException("Argument list too short");
 		}
 	}
-  
+
 }

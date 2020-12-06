@@ -45,32 +45,33 @@ import org.glassfish.tyrus.core.Base64Utils;
 import org.glassfish.tyrus.core.l10n.LocalizationMessages;
 
 /**
- * Generates a value of {@code Authorization} header of HTTP request for Basic Http Authentication scheme.
+ * Generates a value of {@code Authorization} header of HTTP request for Basic
+ * Http Authentication scheme.
  *
  * @author Ondrej Kosatka (ondrej.kosatka at oracle.com)
  */
 final class BasicAuthenticator extends Authenticator {
 
-    @Override
-    public String generateAuthorizationHeader(final URI uri, final String wwwAuthenticateHeader,
-                                              final Credentials credentials) throws AuthenticationException {
-        return generateAuthorizationHeader(credentials);
-    }
+	@Override
+	public String generateAuthorizationHeader(final URI uri, final String wwwAuthenticateHeader,
+			final Credentials credentials) throws AuthenticationException {
+		return generateAuthorizationHeader(credentials);
+	}
 
-    private String generateAuthorizationHeader(final Credentials credentials) throws AuthenticationException {
-        if (credentials == null) {
-            throw new AuthenticationException(LocalizationMessages.AUTHENTICATION_CREDENTIALS_MISSING());
-        }
-        String username = credentials.getUsername();
-        byte[] password = credentials.getPassword();
+	private String generateAuthorizationHeader(final Credentials credentials) throws AuthenticationException {
+		if (credentials == null) {
+			throw new AuthenticationException(LocalizationMessages.AUTHENTICATION_CREDENTIALS_MISSING());
+		}
+		String username = credentials.getUsername();
+		byte[] password = credentials.getPassword();
 
-        final byte[] prefix = (username + ":").getBytes(AuthConfig.CHARACTER_SET);
-        final byte[] usernamePassword = new byte[prefix.length + password.length];
+		final byte[] prefix = (username + ":").getBytes(AuthConfig.CHARACTER_SET);
+		final byte[] usernamePassword = new byte[prefix.length + password.length];
 
-        System.arraycopy(prefix, 0, usernamePassword, 0, prefix.length);
-        System.arraycopy(password, 0, usernamePassword, prefix.length, password.length);
+		System.arraycopy(prefix, 0, usernamePassword, 0, prefix.length);
+		System.arraycopy(password, 0, usernamePassword, prefix.length, password.length);
 
-        return "Basic " + Base64Utils.encodeToString(usernamePassword, false);
-    }
+		return "Basic " + Base64Utils.encodeToString(usernamePassword, false);
+	}
 
 }

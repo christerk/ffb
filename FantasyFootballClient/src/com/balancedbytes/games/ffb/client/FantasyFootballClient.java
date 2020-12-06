@@ -37,276 +37,277 @@ import com.balancedbytes.games.ffb.util.StringTool;
  * @author Kalimar
  */
 public class FantasyFootballClient implements IConnectionListener, IDialogCloseListener {
-  private Game fGame;
-  private UserInterface fUserInterface;
-  private ClientCommunication fCommunication;
-  private Thread fCommunicationThread;
-  private Timer fPingTimer;
-  private ClientPingTask fClientPingTask;
-  private Properties fProperties;
-  private ClientState fState;
-  private ClientStateFactory fStateFactory;
-  private ClientCommandHandlerFactory fCommandHandlerFactory;
-  private boolean fConnectionEstablished;
-  private ActionKeyBindings fActionKeyBindings;
-  private ClientReplayer fReplayer;
-  private ClientParameters fParameters;
-  private ClientMode fMode;
+	private Game fGame;
+	private UserInterface fUserInterface;
+	private ClientCommunication fCommunication;
+	private Thread fCommunicationThread;
+	private Timer fPingTimer;
+	private ClientPingTask fClientPingTask;
+	private Properties fProperties;
+	private ClientState fState;
+	private ClientStateFactory fStateFactory;
+	private ClientCommandHandlerFactory fCommandHandlerFactory;
+	private boolean fConnectionEstablished;
+	private ActionKeyBindings fActionKeyBindings;
+	private ClientReplayer fReplayer;
+	private ClientParameters fParameters;
+	private ClientMode fMode;
 
-  private Session fSession;
-  private CommandEndpoint fCommandEndpoint;
-  private SkillFactory skillFactory;
-  
-  private transient ClientData fClientData;
+	private Session fSession;
+	private CommandEndpoint fCommandEndpoint;
+	private SkillFactory skillFactory;
 
-  public FantasyFootballClient(ClientParameters pParameters) throws IOException {
+	private transient ClientData fClientData;
 
-    fParameters = pParameters;
-    setMode(fParameters.getMode());
+	public FantasyFootballClient(ClientParameters pParameters) throws IOException {
 
-    fClientData = new ClientData();
+		fParameters = pParameters;
+		setMode(fParameters.getMode());
 
-    loadProperties();
+		fClientData = new ClientData();
 
-    fActionKeyBindings = new ActionKeyBindings(this);
+		loadProperties();
 
-    try {
-      UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-      // UIManager.setLookAndFeel(NimbusLookAndFeel.class.getName());
-      UIManager.put("TabbedPane.contentBorderInsets", new Insets(0, 0, 0, 0));
-    } catch (Exception all) {
-      all.printStackTrace();
-    }
+		fActionKeyBindings = new ActionKeyBindings(this);
 
-    setGame(new Game());
-    fStateFactory = new ClientStateFactory(this);
-    skillFactory = new SkillFactory();
-    fCommandHandlerFactory = new ClientCommandHandlerFactory(this);
+		try {
+			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+			// UIManager.setLookAndFeel(NimbusLookAndFeel.class.getName());
+			UIManager.put("TabbedPane.contentBorderInsets", new Insets(0, 0, 0, 0));
+		} catch (Exception all) {
+			all.printStackTrace();
+		}
 
-    fReplayer = new ClientReplayer(this);
+		setGame(new Game());
+		fStateFactory = new ClientStateFactory(this);
+		skillFactory = new SkillFactory();
+		fCommandHandlerFactory = new ClientCommandHandlerFactory(this);
 
-    fUserInterface = new UserInterface(this);
-    fUserInterface.refreshSideBars();
-    fUserInterface.getScoreBar().refresh();
+		fReplayer = new ClientReplayer(this);
 
-    fCommandEndpoint = new CommandEndpoint(this);
+		fUserInterface = new UserInterface(this);
+		fUserInterface.refreshSideBars();
+		fUserInterface.getScoreBar().refresh();
 
-    fCommunication = new ClientCommunication(this);
-    fCommunicationThread = new Thread(fCommunication);
-    fCommunicationThread.start();
+		fCommandEndpoint = new CommandEndpoint(this);
 
-    fPingTimer = new Timer(true);
+		fCommunication = new ClientCommunication(this);
+		fCommunicationThread = new Thread(fCommunication);
+		fCommunicationThread.start();
 
-  }
+		fPingTimer = new Timer(true);
 
-  public UserInterface getUserInterface() {
-    return fUserInterface;
-  }
+	}
 
-  public Game getGame() {
-    return fGame;
-  }
+	public UserInterface getUserInterface() {
+		return fUserInterface;
+	}
 
-  public void setGame(Game pGame) {
-    fGame = pGame;
-    getClientData().clear();
-  }
+	public Game getGame() {
+		return fGame;
+	}
 
-  public ClientCommunication getCommunication() {
-    return fCommunication;
-  }
+	public void setGame(Game pGame) {
+		fGame = pGame;
+		getClientData().clear();
+	}
 
-  public void connectionEstablished(boolean pSuccessful) {
-    fConnectionEstablished = pSuccessful;
-    synchronized (this) {
-      this.notify();
-    }
-  }
+	public ClientCommunication getCommunication() {
+		return fCommunication;
+	}
 
-  public void showUserInterface() throws IOException {
-    getUserInterface().getFieldComponent().getLayerField().drawWeather(Weather.INTRO);
-    getUserInterface().getFieldComponent().refresh();
-    getUserInterface().setVisible(true);
-    DialogAboutHandler aboutDialogHandler = new DialogAboutHandler(this);
-    aboutDialogHandler.showDialog();
-  }
+	public void connectionEstablished(boolean pSuccessful) {
+		fConnectionEstablished = pSuccessful;
+		synchronized (this) {
+			this.notify();
+		}
+	}
 
-  public void dialogClosed(IDialog pDialog) {
-    pDialog.hideDialog();
-  }
+	public void showUserInterface() throws IOException {
+		getUserInterface().getFieldComponent().getLayerField().drawWeather(Weather.INTRO);
+		getUserInterface().getFieldComponent().refresh();
+		getUserInterface().setVisible(true);
+		DialogAboutHandler aboutDialogHandler = new DialogAboutHandler(this);
+		aboutDialogHandler.showDialog();
+	}
 
-  public void startClient() {
+	public void dialogClosed(IDialog pDialog) {
+		pDialog.hideDialog();
+	}
 
-    getUserInterface().getStatusReport().reportVersion();
-    try {
-      getUserInterface().getStatusReport().reportConnecting(getServerHost(), getServerPort());
-    } catch (UnknownHostException pUnknownHostException) {
-      throw new FantasyFootballException(pUnknownHostException);
-    }
+	public void startClient() {
 
-    boolean connectionEstablished = false;
+		getUserInterface().getStatusReport().reportVersion();
+		try {
+			getUserInterface().getStatusReport().reportConnecting(getServerHost(), getServerPort());
+		} catch (UnknownHostException pUnknownHostException) {
+			throw new FantasyFootballException(pUnknownHostException);
+		}
 
-    try {
+		boolean connectionEstablished = false;
 
-      URI uri = new URI("ws", null, getServerHost().getCanonicalHostName(), getServerPort(), "/command", null, null);
-      WebSocketContainer container = ContainerProvider.getWebSocketContainer();
-      container.setDefaultMaxSessionIdleTimeout(Integer.MAX_VALUE);
-      container.setDefaultMaxTextMessageBufferSize(64 * 1024);
-      fCommandEndpoint = new CommandEndpoint(this);
-      fSession = container.connectToServer(fCommandEndpoint, uri);
-      connectionEstablished = (fSession != null);
+		try {
 
-    } catch (Exception pAnyException) {
-      pAnyException.printStackTrace();
-    }
-    
-    String pingIntervalProperty = getProperty(IClientProperty.CLIENT_PING_INTERVAL);
-    if (StringTool.isProvided(pingIntervalProperty) && (ClientMode.REPLAY != getMode())) {
-      int pingInterval = Integer.parseInt(pingIntervalProperty);
-      // String pingMaxDelayProperty = getProperty(IClientProperty.CLIENT_PING_MAX_DELAY);
-      // int pingMaxDelay = StringTool.isProvided(pingMaxDelayProperty) ? Integer.parseInt(pingMaxDelayProperty) : 0;
-      fClientPingTask = new ClientPingTask(this);
-      fPingTimer.schedule(fClientPingTask, 0, pingInterval);
-    }
+			URI uri = new URI("ws", null, getServerHost().getCanonicalHostName(), getServerPort(), "/command", null, null);
+			WebSocketContainer container = ContainerProvider.getWebSocketContainer();
+			container.setDefaultMaxSessionIdleTimeout(Integer.MAX_VALUE);
+			container.setDefaultMaxTextMessageBufferSize(64 * 1024);
+			fCommandEndpoint = new CommandEndpoint(this);
+			fSession = container.connectToServer(fCommandEndpoint, uri);
+			connectionEstablished = (fSession != null);
 
-    getUserInterface().getStatusReport().reportConnectionEstablished(connectionEstablished);
+		} catch (Exception pAnyException) {
+			pAnyException.printStackTrace();
+		}
 
-    updateClientState();
+		String pingIntervalProperty = getProperty(IClientProperty.CLIENT_PING_INTERVAL);
+		if (StringTool.isProvided(pingIntervalProperty) && (ClientMode.REPLAY != getMode())) {
+			int pingInterval = Integer.parseInt(pingIntervalProperty);
+			// String pingMaxDelayProperty =
+			// getProperty(IClientProperty.CLIENT_PING_MAX_DELAY);
+			// int pingMaxDelay = StringTool.isProvided(pingMaxDelayProperty) ?
+			// Integer.parseInt(pingMaxDelayProperty) : 0;
+			fClientPingTask = new ClientPingTask(this);
+			fPingTimer.schedule(fClientPingTask, 0, pingInterval);
+		}
 
-  }
+		getUserInterface().getStatusReport().reportConnectionEstablished(connectionEstablished);
 
-  public void exitClient() {
-    fPingTimer = null;
-    try {
-      fSession.close();
-      fCommandEndpoint.awaitClose(10, TimeUnit.SECONDS);
-    } catch (Exception pAnyException) {
-      pAnyException.printStackTrace();
-    }
-    getCommunication().stop();
-    getUserInterface().setVisible(false);
-    System.exit(0);
-  }
+		updateClientState();
 
-  public String getProperty(String pProperty) {
-    return fProperties.getProperty(pProperty);
-  }
+	}
 
-  public void setProperty(String pProperty, String pValue) {
-    if ((fProperties == null) || (pProperty == null) || (pValue == null)) {
-      return;
-    }
-    fProperties.setProperty(pProperty, pValue);
-  }
+	public void exitClient() {
+		fPingTimer = null;
+		try {
+			fSession.close();
+			fCommandEndpoint.awaitClose(10, TimeUnit.SECONDS);
+		} catch (Exception pAnyException) {
+			pAnyException.printStackTrace();
+		}
+		getCommunication().stop();
+		getUserInterface().setVisible(false);
+		System.exit(0);
+	}
 
-  public ClientState updateClientState() {
-    ClientState newState = fStateFactory.getStateForGame();
-    if ((newState != null) && (newState != fState)) {
-      if (fState != null) {
-        fState.leaveState();
-      }
-      fState = newState;
-      if (Boolean.parseBoolean(getProperty(IClientProperty.CLIENT_DEBUG_STATE))) {
-        getCommunication().sendDebugClientState(fState.getId());
-      }
-      getUserInterface().getGameMenuBar().changeState(fState.getId());
-      fState.enterState();
-    }
-    return fState;
-  }
+	public String getProperty(String pProperty) {
+		return fProperties.getProperty(pProperty);
+	}
 
-  public ClientState getClientState() {
-    return fState;
-  }
+	public void setProperty(String pProperty, String pValue) {
+		if ((fProperties == null) || (pProperty == null) || (pValue == null)) {
+			return;
+		}
+		fProperties.setProperty(pProperty, pValue);
+	}
 
-  public ClientCommandHandlerFactory getCommandHandlerFactory() {
-    return fCommandHandlerFactory;
-  }
+	public ClientState updateClientState() {
+		ClientState newState = fStateFactory.getStateForGame();
+		if ((newState != null) && (newState != fState)) {
+			if (fState != null) {
+				fState.leaveState();
+			}
+			fState = newState;
+			if (Boolean.parseBoolean(getProperty(IClientProperty.CLIENT_DEBUG_STATE))) {
+				getCommunication().sendDebugClientState(fState.getId());
+			}
+			getUserInterface().getGameMenuBar().changeState(fState.getId());
+			fState.enterState();
+		}
+		return fState;
+	}
 
-  public ClientPingTask getClientPingTask() {
-    return fClientPingTask;
-  }
+	public ClientState getClientState() {
+		return fState;
+	}
 
-  public boolean isConnectionEstablished() {
-    return fConnectionEstablished;
-  }
+	public ClientCommandHandlerFactory getCommandHandlerFactory() {
+		return fCommandHandlerFactory;
+	}
 
-  public static void main(String[] args) {
+	public ClientPingTask getClientPingTask() {
+		return fClientPingTask;
+	}
 
-    try {
-      ClientParameters parameters = new ClientParameters();
-      parameters.initFrom(args);
-      if (!parameters.validate()) {
-        System.out.println(ClientParameters.USAGE);
-        return;
-      }
-      FantasyFootballClient client = new FantasyFootballClient(parameters);
-      client.showUserInterface();
-    } catch (Exception all) {
-      all.printStackTrace(System.err);
-    }
+	public boolean isConnectionEstablished() {
+		return fConnectionEstablished;
+	}
 
-  }
+	public static void main(String[] args) {
 
-  public ActionKeyBindings getActionKeyBindings() {
-    return fActionKeyBindings;
-  }
+		try {
+			ClientParameters parameters = new ClientParameters();
+			parameters.initFrom(args);
+			if (!parameters.validate()) {
+				System.out.println(ClientParameters.USAGE);
+				return;
+			}
+			FantasyFootballClient client = new FantasyFootballClient(parameters);
+			client.showUserInterface();
+		} catch (Exception all) {
+			all.printStackTrace(System.err);
+		}
 
-  public ClientReplayer getReplayer() {
-    return fReplayer;
-  }
+	}
 
-  public void loadProperties() throws IOException {
-    fProperties = new Properties();
-    InputStream propertyInputStream = null;
-    try {
-      propertyInputStream = getClass().getResourceAsStream("/client.ini");
-      fProperties.load(propertyInputStream);
-    } finally {
-      if (propertyInputStream != null) {
-        propertyInputStream.close();
-      }
-    }
-  }
+	public ActionKeyBindings getActionKeyBindings() {
+		return fActionKeyBindings;
+	}
 
-  public ClientData getClientData() {
-    return fClientData;
-  }
+	public ClientReplayer getReplayer() {
+		return fReplayer;
+	}
 
-  public ClientParameters getParameters() {
-    return fParameters;
-  }
+	public void loadProperties() throws IOException {
+		fProperties = new Properties();
+		InputStream propertyInputStream = null;
+		try {
+			propertyInputStream = getClass().getResourceAsStream("/client.ini");
+			fProperties.load(propertyInputStream);
+		} finally {
+			if (propertyInputStream != null) {
+				propertyInputStream.close();
+			}
+		}
+	}
 
-  public int getServerPort() {
-    if (getParameters().getPort() > 0) {
-      return getParameters().getPort();
-    } else {
-      return Integer.parseInt(getProperty(IClientProperty.SERVER_PORT));
-    }
-  }
+	public ClientData getClientData() {
+		return fClientData;
+	}
 
-  public InetAddress getServerHost() throws UnknownHostException {
-    String serverName = StringTool.isProvided(getParameters().getServer()) ?
-            getParameters().getServer() :
-            getProperty(IClientProperty.SERVER_HOST);
+	public ClientParameters getParameters() {
+		return fParameters;
+	}
 
-    return InetAddress.getByName(serverName);
-  }
+	public int getServerPort() {
+		if (getParameters().getPort() > 0) {
+			return getParameters().getPort();
+		} else {
+			return Integer.parseInt(getProperty(IClientProperty.SERVER_PORT));
+		}
+	}
 
-  public ClientMode getMode() {
-    return fMode;
-  }
+	public InetAddress getServerHost() throws UnknownHostException {
+		String serverName = StringTool.isProvided(getParameters().getServer()) ? getParameters().getServer()
+				: getProperty(IClientProperty.SERVER_HOST);
 
-  public void setMode(ClientMode pMode) {
-    fMode = pMode;
-  }
+		return InetAddress.getByName(serverName);
+	}
 
-  public CommandEndpoint getCommandEndpoint() {
-    return fCommandEndpoint;
-  }
+	public ClientMode getMode() {
+		return fMode;
+	}
 
-  public SkillFactory getSkillFactory() {
-    return skillFactory;
-  }
+	public void setMode(ClientMode pMode) {
+		fMode = pMode;
+	}
+
+	public CommandEndpoint getCommandEndpoint() {
+		return fCommandEndpoint;
+	}
+
+	public SkillFactory getSkillFactory() {
+		return skillFactory;
+	}
 
 }

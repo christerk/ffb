@@ -43,140 +43,146 @@ import com.eclipsesource.json.JsonValue;
  */
 public class StepSafeThrow extends AbstractStepWithReRoll {
 
-  private String fGotoLabelOnFailure;
-  private String fInterceptorId;
+	private String fGotoLabelOnFailure;
+	private String fInterceptorId;
 
-  public StepSafeThrow(GameState pGameState) {
-    super(pGameState);
-  }
+	public StepSafeThrow(GameState pGameState) {
+		super(pGameState);
+	}
 
-  public StepId getId() {
-    return StepId.SAFE_THROW;
-  }
+	public StepId getId() {
+		return StepId.SAFE_THROW;
+	}
 
-  @Override
-  public void init(StepParameterSet pParameterSet) {
-    if (pParameterSet != null) {
-      for (StepParameter parameter : pParameterSet.values()) {
-        switch (parameter.getKey()) {
-          // mandatory
-          case GOTO_LABEL_ON_FAILURE:
-            fGotoLabelOnFailure = (String) parameter.getValue();
-            break;
-          default:
-            break;
-        }
-      }
-    }
-    if (fGotoLabelOnFailure == null) {
-      throw new StepException("StepParameter " + StepParameterKey.GOTO_LABEL_ON_FAILURE + " is not initialized.");
-    }
-  }
+	@Override
+	public void init(StepParameterSet pParameterSet) {
+		if (pParameterSet != null) {
+			for (StepParameter parameter : pParameterSet.values()) {
+				switch (parameter.getKey()) {
+				// mandatory
+				case GOTO_LABEL_ON_FAILURE:
+					fGotoLabelOnFailure = (String) parameter.getValue();
+					break;
+				default:
+					break;
+				}
+			}
+		}
+		if (fGotoLabelOnFailure == null) {
+			throw new StepException("StepParameter " + StepParameterKey.GOTO_LABEL_ON_FAILURE + " is not initialized.");
+		}
+	}
 
-  @Override
-  public boolean setParameter(StepParameter pParameter) {
-    if ((pParameter != null) && !super.setParameter(pParameter)) {
-      switch (pParameter.getKey()) {
-        case INTERCEPTOR_ID:
-          fInterceptorId = (String) pParameter.getValue();
-          return true;
-        default:
-          break;
-      }
-    }
-    return false;
-  }
+	@Override
+	public boolean setParameter(StepParameter pParameter) {
+		if ((pParameter != null) && !super.setParameter(pParameter)) {
+			switch (pParameter.getKey()) {
+			case INTERCEPTOR_ID:
+				fInterceptorId = (String) pParameter.getValue();
+				return true;
+			default:
+				break;
+			}
+		}
+		return false;
+	}
 
-  @Override
-  public void start() {
-    super.start();
-    executeStep();
-  }
+	@Override
+	public void start() {
+		super.start();
+		executeStep();
+	}
 
-  @Override
-  public StepCommandStatus handleCommand(ReceivedCommand pReceivedCommand) {
-    StepCommandStatus commandStatus = super.handleCommand(pReceivedCommand);
-    if (commandStatus == StepCommandStatus.EXECUTE_STEP) {
-      executeStep();
-    }
-    return commandStatus;
-  }
+	@Override
+	public StepCommandStatus handleCommand(ReceivedCommand pReceivedCommand) {
+		StepCommandStatus commandStatus = super.handleCommand(pReceivedCommand);
+		if (commandStatus == StepCommandStatus.EXECUTE_STEP) {
+			executeStep();
+		}
+		return commandStatus;
+	}
 
-  private void executeStep() {
-    Game game = getGameState().getGame();
-    Player interceptor = game.getPlayerById(fInterceptorId);
-    if ((game.getThrower() == null) || (interceptor == null)) {
-      return;
-    }
-    boolean doNextStep = true;
-    boolean safeThrowSuccessful = false;
-    
-    Skill canForceInterceptionRerollSkill = UtilCards.getSkillWithProperty(game.getThrower(), NamedProperties.canForceInterceptionReroll);
-    boolean doSafeThrow = (canForceInterceptionRerollSkill != null && !UtilCards.cancelsSkill(interceptor, canForceInterceptionRerollSkill));
-    if (doSafeThrow) {
-      if (ReRolledActions.SAFE_THROW == getReRolledAction()) {
-        if ((getReRollSource() == null) || !UtilServerReRoll.useReRoll(this, getReRollSource(), game.getThrower())) {
-          doSafeThrow = false;
-        }
-      }
-      if (doSafeThrow) {
-        int roll = getGameState().getDiceRoller().rollSkill();
-        int minimumRoll = DiceInterpreter.getInstance().minimumRollSafeThrow(game.getThrower());
-        safeThrowSuccessful = DiceInterpreter.getInstance().isSkillRollSuccessful(roll, minimumRoll);
-        boolean reRolled = ((getReRolledAction() == ReRolledActions.SAFE_THROW) && (getReRollSource() != null));
-        getResult().addReport(new ReportSkillRoll(ReportId.SAFE_THROW_ROLL, game.getThrowerId(), safeThrowSuccessful, roll, minimumRoll, reRolled));
-        if (!safeThrowSuccessful && (getReRolledAction() != ReRolledActions.SAFE_THROW)
-            && UtilServerReRoll.askForReRollIfAvailable(getGameState(), game.getThrower(), ReRolledActions.SAFE_THROW, minimumRoll, false)) {
-          doNextStep = false;
-        }
-      }
-    }
-    if (doNextStep) {
-      if (safeThrowSuccessful) {
-        publishParameter(new StepParameter(StepParameterKey.INTERCEPTOR_ID, null));
-        getResult().setNextAction(StepAction.NEXT_STEP);
-      } else {
-        game.getFieldModel().setRangeRuler(null);
-        FieldCoordinate startCoordinate = game.getFieldModel().getPlayerCoordinate(game.getThrower());
-        FieldCoordinate interceptorCoordinate = null;
-        if (interceptor != null) {
-          interceptorCoordinate = game.getFieldModel().getPlayerCoordinate(interceptor);
-        }
-        if (PlayerAction.THROW_BOMB == game.getThrowerAction()) {
-          getResult().setAnimation(new Animation(AnimationType.THROW_BOMB, startCoordinate, game.getPassCoordinate(), interceptorCoordinate));
-        } else {
-          getResult().setAnimation(new Animation(AnimationType.PASS, startCoordinate, game.getPassCoordinate(), interceptorCoordinate));
-        }
-        UtilServerGame.syncGameModel(this);
-        if (PlayerAction.THROW_BOMB == game.getThrowerAction()) {
-          game.getFieldModel().setBombCoordinate(interceptorCoordinate);
-          game.getFieldModel().setBombMoving(false);
-        } else {
-          game.getFieldModel().setBallCoordinate(interceptorCoordinate);
-          game.getFieldModel().setBallMoving(false);
-        }
-        getResult().setNextAction(StepAction.GOTO_LABEL, fGotoLabelOnFailure);
-      }
-    }
-  }
+	private void executeStep() {
+		Game game = getGameState().getGame();
+		Player interceptor = game.getPlayerById(fInterceptorId);
+		if ((game.getThrower() == null) || (interceptor == null)) {
+			return;
+		}
+		boolean doNextStep = true;
+		boolean safeThrowSuccessful = false;
 
-  // JSON serialization
+		Skill canForceInterceptionRerollSkill = UtilCards.getSkillWithProperty(game.getThrower(),
+				NamedProperties.canForceInterceptionReroll);
+		boolean doSafeThrow = (canForceInterceptionRerollSkill != null
+				&& !UtilCards.cancelsSkill(interceptor, canForceInterceptionRerollSkill));
+		if (doSafeThrow) {
+			if (ReRolledActions.SAFE_THROW == getReRolledAction()) {
+				if ((getReRollSource() == null) || !UtilServerReRoll.useReRoll(this, getReRollSource(), game.getThrower())) {
+					doSafeThrow = false;
+				}
+			}
+			if (doSafeThrow) {
+				int roll = getGameState().getDiceRoller().rollSkill();
+				int minimumRoll = DiceInterpreter.getInstance().minimumRollSafeThrow(game.getThrower());
+				safeThrowSuccessful = DiceInterpreter.getInstance().isSkillRollSuccessful(roll, minimumRoll);
+				boolean reRolled = ((getReRolledAction() == ReRolledActions.SAFE_THROW) && (getReRollSource() != null));
+				getResult().addReport(new ReportSkillRoll(ReportId.SAFE_THROW_ROLL, game.getThrowerId(), safeThrowSuccessful,
+						roll, minimumRoll, reRolled));
+				if (!safeThrowSuccessful && (getReRolledAction() != ReRolledActions.SAFE_THROW)
+						&& UtilServerReRoll.askForReRollIfAvailable(getGameState(), game.getThrower(), ReRolledActions.SAFE_THROW,
+								minimumRoll, false)) {
+					doNextStep = false;
+				}
+			}
+		}
+		if (doNextStep) {
+			if (safeThrowSuccessful) {
+				publishParameter(new StepParameter(StepParameterKey.INTERCEPTOR_ID, null));
+				getResult().setNextAction(StepAction.NEXT_STEP);
+			} else {
+				game.getFieldModel().setRangeRuler(null);
+				FieldCoordinate startCoordinate = game.getFieldModel().getPlayerCoordinate(game.getThrower());
+				FieldCoordinate interceptorCoordinate = null;
+				if (interceptor != null) {
+					interceptorCoordinate = game.getFieldModel().getPlayerCoordinate(interceptor);
+				}
+				if (PlayerAction.THROW_BOMB == game.getThrowerAction()) {
+					getResult().setAnimation(new Animation(AnimationType.THROW_BOMB, startCoordinate, game.getPassCoordinate(),
+							interceptorCoordinate));
+				} else {
+					getResult().setAnimation(
+							new Animation(AnimationType.PASS, startCoordinate, game.getPassCoordinate(), interceptorCoordinate));
+				}
+				UtilServerGame.syncGameModel(this);
+				if (PlayerAction.THROW_BOMB == game.getThrowerAction()) {
+					game.getFieldModel().setBombCoordinate(interceptorCoordinate);
+					game.getFieldModel().setBombMoving(false);
+				} else {
+					game.getFieldModel().setBallCoordinate(interceptorCoordinate);
+					game.getFieldModel().setBallMoving(false);
+				}
+				getResult().setNextAction(StepAction.GOTO_LABEL, fGotoLabelOnFailure);
+			}
+		}
+	}
 
-  @Override
-  public JsonObject toJsonValue() {
-    JsonObject jsonObject = super.toJsonValue();
-    IServerJsonOption.GOTO_LABEL_ON_FAILURE.addTo(jsonObject, fGotoLabelOnFailure);
-    IServerJsonOption.INTERCEPTOR_ID.addTo(jsonObject, fInterceptorId);
-    return jsonObject;
-  }
+	// JSON serialization
 
-  @Override
-  public StepSafeThrow initFrom(JsonValue pJsonValue) {
-    super.initFrom(pJsonValue);
-    JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-    fGotoLabelOnFailure = IServerJsonOption.GOTO_LABEL_ON_FAILURE.getFrom(jsonObject);
-    fInterceptorId = IServerJsonOption.INTERCEPTOR_ID.getFrom(jsonObject);
-    return this;
-  }
+	@Override
+	public JsonObject toJsonValue() {
+		JsonObject jsonObject = super.toJsonValue();
+		IServerJsonOption.GOTO_LABEL_ON_FAILURE.addTo(jsonObject, fGotoLabelOnFailure);
+		IServerJsonOption.INTERCEPTOR_ID.addTo(jsonObject, fInterceptorId);
+		return jsonObject;
+	}
+
+	@Override
+	public StepSafeThrow initFrom(JsonValue pJsonValue) {
+		super.initFrom(pJsonValue);
+		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
+		fGotoLabelOnFailure = IServerJsonOption.GOTO_LABEL_ON_FAILURE.getFrom(jsonObject);
+		fInterceptorId = IServerJsonOption.INTERCEPTOR_ID.getFrom(jsonObject);
+		return this;
+	}
 
 }

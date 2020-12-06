@@ -11,18 +11,18 @@ import com.balancedbytes.games.ffb.net.commands.ServerCommandSound;
  */
 public class ClientCommandHandlerSound extends ClientCommandHandler {
 
-  protected ClientCommandHandlerSound(FantasyFootballClient pClient) {
-    super(pClient);
-  }
+	protected ClientCommandHandlerSound(FantasyFootballClient pClient) {
+		super(pClient);
+	}
 
-  public NetCommandId getId() {
-    return NetCommandId.SERVER_SOUND;
-  }
+	public NetCommandId getId() {
+		return NetCommandId.SERVER_SOUND;
+	}
 
-  public boolean handleNetCommand(NetCommand pNetCommand, ClientCommandHandlerMode pMode) {
-    ServerCommandSound soundCommand = (ServerCommandSound) pNetCommand;
-    playSound(soundCommand.getSound(), pMode, false);
-    return true;
-  }
+	public boolean handleNetCommand(NetCommand pNetCommand, ClientCommandHandlerMode pMode) {
+		ServerCommandSound soundCommand = (ServerCommandSound) pNetCommand;
+		playSound(soundCommand.getSound(), pMode, false);
+		return true;
+	}
 
 }

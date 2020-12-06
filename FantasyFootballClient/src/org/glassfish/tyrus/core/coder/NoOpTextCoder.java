@@ -48,18 +48,18 @@ import javax.websocket.Encoder;
  * @author Stepan Kopriva (stepan.kopriva at oracle.com)
  */
 public class NoOpTextCoder extends CoderAdapter implements Decoder.Text<String>, Encoder.Text<String> {
-    @Override
-    public boolean willDecode(String s) {
-        return true;
-    }
+	@Override
+	public boolean willDecode(String s) {
+		return true;
+	}
 
-    @Override
-    public String decode(String s) throws DecodeException {
-        return s;
-    }
+	@Override
+	public String decode(String s) throws DecodeException {
+		return s;
+	}
 
-    @Override
-    public String encode(String object) throws EncodeException {
-        return object;
-    }
+	@Override
+	public String encode(String object) throws EncodeException {
+		return object;
+	}
 }

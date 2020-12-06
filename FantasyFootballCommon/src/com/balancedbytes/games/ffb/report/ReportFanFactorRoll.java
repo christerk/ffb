@@ -5,76 +5,76 @@ import com.balancedbytes.games.ffb.json.UtilJson;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
-
-
 /**
  * 
  * @author Kalimar
  */
 public class ReportFanFactorRoll implements IReport {
-  
-  private int[] fFanFactorRollHome;
-  private int fFanFactorModifierHome;
-  private int[] fFanFactorRollAway;
-  private int fFanFactorModifierAway;
-  
-  public ReportFanFactorRoll() {
-    super();
-  }
 
-  public ReportFanFactorRoll(int[] pFanFactorRollHome, int pFanFactorModifierHome, int[] pFanFactorRollAway, int pFanFactorModifierAway) {
-    fFanFactorRollHome = pFanFactorRollHome;
-    fFanFactorModifierHome = pFanFactorModifierHome;
-    fFanFactorRollAway = pFanFactorRollAway;
-    fFanFactorModifierAway = pFanFactorModifierAway;
-  }
-  
-  public ReportId getId() {
-    return ReportId.FAN_FACTOR_ROLL;
-  }
+	private int[] fFanFactorRollHome;
+	private int fFanFactorModifierHome;
+	private int[] fFanFactorRollAway;
+	private int fFanFactorModifierAway;
 
-  public int[] getFanFactorRollHome() {
-    return fFanFactorRollHome;
-  }
+	public ReportFanFactorRoll() {
+		super();
+	}
 
-  public int getFanFactorModifierHome() {
-    return fFanFactorModifierHome;
-  }
+	public ReportFanFactorRoll(int[] pFanFactorRollHome, int pFanFactorModifierHome, int[] pFanFactorRollAway,
+			int pFanFactorModifierAway) {
+		fFanFactorRollHome = pFanFactorRollHome;
+		fFanFactorModifierHome = pFanFactorModifierHome;
+		fFanFactorRollAway = pFanFactorRollAway;
+		fFanFactorModifierAway = pFanFactorModifierAway;
+	}
 
-  public int[] getFanFactorRollAway() {
-    return fFanFactorRollAway;
-  }
+	public ReportId getId() {
+		return ReportId.FAN_FACTOR_ROLL;
+	}
 
-  public int getFanFactorModifierAway() {
-    return fFanFactorModifierAway;
-  }
+	public int[] getFanFactorRollHome() {
+		return fFanFactorRollHome;
+	}
 
-  // transformation
-  
-  public IReport transform() {
-    return new ReportFanFactorRoll(getFanFactorRollAway(), getFanFactorModifierAway(), getFanFactorRollHome(), getFanFactorModifierHome());
-  }
-  
-  // JSON serialization
-  
-  public JsonObject toJsonValue() {
-    JsonObject jsonObject = new JsonObject();
-    IJsonOption.REPORT_ID.addTo(jsonObject, getId());
-    IJsonOption.FAN_FACTOR_ROLL_HOME.addTo(jsonObject, fFanFactorRollHome);
-    IJsonOption.FAN_FACTOR_MODIFIER_HOME.addTo(jsonObject, fFanFactorModifierHome);
-    IJsonOption.FAN_FACTOR_ROLL_AWAY.addTo(jsonObject, fFanFactorRollAway);
-    IJsonOption.FAN_FACTOR_MODIFIER_AWAY.addTo(jsonObject, fFanFactorModifierAway);
-    return jsonObject;
-  }
-  
-  public ReportFanFactorRoll initFrom(JsonValue pJsonValue) {
-    JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-    UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(jsonObject));
-    fFanFactorRollHome = IJsonOption.FAN_FACTOR_ROLL_HOME.getFrom(jsonObject);
-    fFanFactorModifierHome = IJsonOption.FAN_FACTOR_MODIFIER_HOME.getFrom(jsonObject);
-    fFanFactorRollAway = IJsonOption.FAN_FACTOR_ROLL_AWAY.getFrom(jsonObject);
-    fFanFactorModifierAway = IJsonOption.FAN_FACTOR_MODIFIER_AWAY.getFrom(jsonObject);
-    return this;
-  }
-        
+	public int getFanFactorModifierHome() {
+		return fFanFactorModifierHome;
+	}
+
+	public int[] getFanFactorRollAway() {
+		return fFanFactorRollAway;
+	}
+
+	public int getFanFactorModifierAway() {
+		return fFanFactorModifierAway;
+	}
+
+	// transformation
+
+	public IReport transform() {
+		return new ReportFanFactorRoll(getFanFactorRollAway(), getFanFactorModifierAway(), getFanFactorRollHome(),
+				getFanFactorModifierHome());
+	}
+
+	// JSON serialization
+
+	public JsonObject toJsonValue() {
+		JsonObject jsonObject = new JsonObject();
+		IJsonOption.REPORT_ID.addTo(jsonObject, getId());
+		IJsonOption.FAN_FACTOR_ROLL_HOME.addTo(jsonObject, fFanFactorRollHome);
+		IJsonOption.FAN_FACTOR_MODIFIER_HOME.addTo(jsonObject, fFanFactorModifierHome);
+		IJsonOption.FAN_FACTOR_ROLL_AWAY.addTo(jsonObject, fFanFactorRollAway);
+		IJsonOption.FAN_FACTOR_MODIFIER_AWAY.addTo(jsonObject, fFanFactorModifierAway);
+		return jsonObject;
+	}
+
+	public ReportFanFactorRoll initFrom(JsonValue pJsonValue) {
+		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
+		UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(jsonObject));
+		fFanFactorRollHome = IJsonOption.FAN_FACTOR_ROLL_HOME.getFrom(jsonObject);
+		fFanFactorModifierHome = IJsonOption.FAN_FACTOR_MODIFIER_HOME.getFrom(jsonObject);
+		fFanFactorRollAway = IJsonOption.FAN_FACTOR_ROLL_AWAY.getFrom(jsonObject);
+		fFanFactorModifierAway = IJsonOption.FAN_FACTOR_MODIFIER_AWAY.getFrom(jsonObject);
+		return this;
+	}
+
 }

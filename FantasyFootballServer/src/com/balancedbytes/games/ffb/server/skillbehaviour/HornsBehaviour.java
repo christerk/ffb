@@ -30,17 +30,19 @@ public class HornsBehaviour extends SkillBehaviour<Horns> {
 			@Override
 			public boolean handleExecuteStepHook(StepHorns step, StepState state) {
 				Game game = step.getGameState().getGame();
-			    ActingPlayer actingPlayer = game.getActingPlayer();
-			    state.usingHorns = (UtilCards.hasSkill(game, actingPlayer, skill) && (PlayerAction.BLITZ == actingPlayer.getPlayerAction()));
-			    if (state.usingHorns) {
-			      actingPlayer.setStrength(actingPlayer.getStrength() + 1);
-			      actingPlayer.markSkillUsed(skill);
-			      step.getResult().addReport(new ReportSkillUse(actingPlayer.getPlayerId(), skill, true, SkillUse.INCREASE_STRENGTH_BY_1));
-			    }
-			    step.getResult().setNextAction(StepAction.NEXT_STEP);
+				ActingPlayer actingPlayer = game.getActingPlayer();
+				state.usingHorns = (UtilCards.hasSkill(game, actingPlayer, skill)
+						&& (PlayerAction.BLITZ == actingPlayer.getPlayerAction()));
+				if (state.usingHorns) {
+					actingPlayer.setStrength(actingPlayer.getStrength() + 1);
+					actingPlayer.markSkillUsed(skill);
+					step.getResult()
+							.addReport(new ReportSkillUse(actingPlayer.getPlayerId(), skill, true, SkillUse.INCREASE_STRENGTH_BY_1));
+				}
+				step.getResult().setNextAction(StepAction.NEXT_STEP);
 				return false;
 			}
-		
-	});
+
+		});
 	}
 }

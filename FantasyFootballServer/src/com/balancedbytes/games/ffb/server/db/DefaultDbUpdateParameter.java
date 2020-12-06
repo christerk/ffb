@@ -10,14 +10,14 @@ import com.balancedbytes.games.ffb.server.FantasyFootballServer;
  */
 public abstract class DefaultDbUpdateParameter implements IDbUpdateParameter {
 
-  private int fUpdatedRows;
-  
-  public void executeUpdate(FantasyFootballServer pServer) throws SQLException {
-    fUpdatedRows = getDbUpdateStatement(pServer).execute(this);
-  }
-  
-  public int getUpdatedRows() {
-    return fUpdatedRows;
-  }
-      
+	private int fUpdatedRows;
+
+	public void executeUpdate(FantasyFootballServer pServer) throws SQLException {
+		fUpdatedRows = getDbUpdateStatement(pServer).execute(this);
+	}
+
+	public int getUpdatedRows() {
+		return fUpdatedRows;
+	}
+
 }

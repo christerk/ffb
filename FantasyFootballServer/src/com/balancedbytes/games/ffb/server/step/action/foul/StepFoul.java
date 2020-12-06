@@ -35,57 +35,58 @@ public class StepFoul extends AbstractStep {
 	public StepFoul(GameState pGameState) {
 		super(pGameState);
 	}
-	
+
 	public StepId getId() {
 		return StepId.FOUL;
 	}
-	
+
 	@Override
 	public void start() {
 		super.start();
 		executeStep();
 	}
-	
-  @Override
-  public StepCommandStatus handleCommand(ReceivedCommand pReceivedCommand) {
-    StepCommandStatus commandStatus = super.handleCommand(pReceivedCommand);
-    if (commandStatus == StepCommandStatus.EXECUTE_STEP) {
-      executeStep();
-    }
-    return commandStatus;
-  }
+
+	@Override
+	public StepCommandStatus handleCommand(ReceivedCommand pReceivedCommand) {
+		StepCommandStatus commandStatus = super.handleCommand(pReceivedCommand);
+		if (commandStatus == StepCommandStatus.EXECUTE_STEP) {
+			executeStep();
+		}
+		return commandStatus;
+	}
 
 	private void executeStep() {
-    Game game = getGameState().getGame();
-    ActingPlayer actingPlayer = game.getActingPlayer();
-    getResult().addReport(new ReportFoul(game.getDefenderId()));
-    if (!UtilCards.hasSkillWithProperty(actingPlayer.getPlayer(), NamedProperties.blocksLikeChainsaw)) {
-      getResult().setSound(SoundId.FOUL);
-    }
-    UtilServerGame.syncGameModel(this);
-    FieldCoordinate defenderCoordinate = game.getFieldModel().getPlayerCoordinate(game.getDefender());
-    InjuryResult injuryResultDefender = UtilServerInjury.handleInjury(this, new InjuryTypeFoul(), actingPlayer.getPlayer(), game.getDefender(), defenderCoordinate, null, ApothecaryMode.DEFENDER);
-    publishParameter(new StepParameter(StepParameterKey.INJURY_RESULT, injuryResultDefender));
-    getResult().setNextAction(StepAction.NEXT_STEP);
-  }
-	
+		Game game = getGameState().getGame();
+		ActingPlayer actingPlayer = game.getActingPlayer();
+		getResult().addReport(new ReportFoul(game.getDefenderId()));
+		if (!UtilCards.hasSkillWithProperty(actingPlayer.getPlayer(), NamedProperties.blocksLikeChainsaw)) {
+			getResult().setSound(SoundId.FOUL);
+		}
+		UtilServerGame.syncGameModel(this);
+		FieldCoordinate defenderCoordinate = game.getFieldModel().getPlayerCoordinate(game.getDefender());
+		InjuryResult injuryResultDefender = UtilServerInjury.handleInjury(this, new InjuryTypeFoul(),
+				actingPlayer.getPlayer(), game.getDefender(), defenderCoordinate, null, ApothecaryMode.DEFENDER);
+		publishParameter(new StepParameter(StepParameterKey.INJURY_RESULT, injuryResultDefender));
+		getResult().setNextAction(StepAction.NEXT_STEP);
+	}
+
 	// ByteArray serialization
-  
-  public int getByteArraySerializationVersion() {
-  	return 1;
-  }
-  
-  // JSON serialization
-  
-  @Override
-  public JsonObject toJsonValue() {
-    return super.toJsonValue();
-  }
-  
-  @Override
-  public StepFoul initFrom(JsonValue pJsonValue) {
-    super.initFrom(pJsonValue);
-    return this;
-  }
+
+	public int getByteArraySerializationVersion() {
+		return 1;
+	}
+
+	// JSON serialization
+
+	@Override
+	public JsonObject toJsonValue() {
+		return super.toJsonValue();
+	}
+
+	@Override
+	public StepFoul initFrom(JsonValue pJsonValue) {
+		super.initFrom(pJsonValue);
+		return this;
+	}
 
 }

@@ -24,311 +24,311 @@ import com.eclipsesource.json.JsonValue;
  */
 public class Roster implements IXmlSerializable, IJsonSerializable {
 
-  public static final String XML_TAG = "roster";
+	public static final String XML_TAG = "roster";
 
-  private static final String _XML_ATTRIBUTE_ID = "id";
-  private static final String _XML_ATTRIBUTE_TEAM = "team";
+	private static final String _XML_ATTRIBUTE_ID = "id";
+	private static final String _XML_ATTRIBUTE_TEAM = "team";
 
-  private static final String _XML_TAG_NAME = "name";
-  private static final String _XML_TAG_RE_ROLL_COST = "reRollCost";
-  private static final String _XML_TAG_MAX_RE_ROLLS = "maxReRolls";
-  private static final String _XML_TAG_BASE_ICON_PATH = "baseIconPath";
-  private static final String _XML_TAG_LOGO_URL = "logo";
-  private static final String _XML_TAG_RAISED_POSITION_ID = "raisedPositionId";
-  private static final String _XML_TAG_APOTHECARY = "apothecary";
-  private static final String _XML_TAG_NECROMANCER = "necromancer";
-  private static final String _XML_TAG_UNDEAD = "undead";
-  private static final String _XML_TAG_RIOTOUS_POSITION_ID = "riotousPositionId";
-  private static final String _XML_TAG_NAME_GENERATOR = "nameGenerator";
+	private static final String _XML_TAG_NAME = "name";
+	private static final String _XML_TAG_RE_ROLL_COST = "reRollCost";
+	private static final String _XML_TAG_MAX_RE_ROLLS = "maxReRolls";
+	private static final String _XML_TAG_BASE_ICON_PATH = "baseIconPath";
+	private static final String _XML_TAG_LOGO_URL = "logo";
+	private static final String _XML_TAG_RAISED_POSITION_ID = "raisedPositionId";
+	private static final String _XML_TAG_APOTHECARY = "apothecary";
+	private static final String _XML_TAG_NECROMANCER = "necromancer";
+	private static final String _XML_TAG_UNDEAD = "undead";
+	private static final String _XML_TAG_RIOTOUS_POSITION_ID = "riotousPositionId";
+	private static final String _XML_TAG_NAME_GENERATOR = "nameGenerator";
 
-  private String fId;
-  private String fName;
-  private int fReRollCost;
-  private int fMaxReRolls;
-  private String fBaseIconPath;
-  private String fLogoUrl;
-  private String fRaisedPositionId;
-  private boolean fApothecary;
-  private boolean fNecromancer;
-  private boolean fUndead;
-  private String riotousPositionId;
-  private String nameGenerator;
+	private String fId;
+	private String fName;
+	private int fReRollCost;
+	private int fMaxReRolls;
+	private String fBaseIconPath;
+	private String fLogoUrl;
+	private String fRaisedPositionId;
+	private boolean fApothecary;
+	private boolean fNecromancer;
+	private boolean fUndead;
+	private String riotousPositionId;
+	private String nameGenerator;
 
-  private RosterPosition fCurrentlyParsedRosterPosition;
-  
-  private Map<String, RosterPosition> fRosterPositionById;
-  private Map<String, RosterPosition> fRosterPositionByName;
+	private RosterPosition fCurrentlyParsedRosterPosition;
 
-  public Roster() {
-    fRosterPositionById = new HashMap<String, RosterPosition>();
-    fRosterPositionByName = new HashMap<String, RosterPosition>();
-    fApothecary = true;
-  }
+	private Map<String, RosterPosition> fRosterPositionById;
+	private Map<String, RosterPosition> fRosterPositionByName;
 
-  public String getName() {
-    return fName;
-  }
+	public Roster() {
+		fRosterPositionById = new HashMap<String, RosterPosition>();
+		fRosterPositionByName = new HashMap<String, RosterPosition>();
+		fApothecary = true;
+	}
 
-  public void setName(String name) {
-    fName = name;
-  }
+	public String getName() {
+		return fName;
+	}
 
-  public int getReRollCost() {
-    return fReRollCost;
-  }
+	public void setName(String name) {
+		fName = name;
+	}
 
-  public void setReRollCost(int reRollCost) {
-    fReRollCost = reRollCost;
-  }
+	public int getReRollCost() {
+		return fReRollCost;
+	}
 
-  public RosterPosition[] getPositions() {
-    return fRosterPositionById.values().toArray(new RosterPosition[fRosterPositionById.size()]);
-  }
+	public void setReRollCost(int reRollCost) {
+		fReRollCost = reRollCost;
+	}
 
-  public RosterPosition getPositionById(String pPositionId) {
-    return fRosterPositionById.get(pPositionId);
-  }
-  
-  public RosterPosition getPositionByName(String pPositionName) {
-    return fRosterPositionByName.get(pPositionName);
-  }
+	public RosterPosition[] getPositions() {
+		return fRosterPositionById.values().toArray(new RosterPosition[fRosterPositionById.size()]);
+	}
 
-  public int getMaxReRolls() {
-    return fMaxReRolls;
-  }
+	public RosterPosition getPositionById(String pPositionId) {
+		return fRosterPositionById.get(pPositionId);
+	}
 
-  public void setMaxReRolls(int maxReRolls) {
-    fMaxReRolls = maxReRolls;
-  }
+	public RosterPosition getPositionByName(String pPositionName) {
+		return fRosterPositionByName.get(pPositionName);
+	}
 
-  public String getId() {
-    return fId;
-  }
-  
-  public void setId(String pId) {
-	  fId = pId;
-  }
-  
-  public RosterPosition getRaisedRosterPosition() {
-    return fRosterPositionById.get(fRaisedPositionId);
-  }
-  
-  private void addPosition(RosterPosition pPosition) {
-    if (pPosition != null) {
-      fRosterPositionById.put(pPosition.getId(), pPosition);
-      fRosterPositionByName.put(pPosition.getName(), pPosition);
-      pPosition.setRoster(this);
-    }
-  }
+	public int getMaxReRolls() {
+		return fMaxReRolls;
+	}
 
-  public String getBaseIconPath() {
-    return fBaseIconPath;
-  }
+	public void setMaxReRolls(int maxReRolls) {
+		fMaxReRolls = maxReRolls;
+	}
 
-  public void setBaseIconPath(String pBaseIconPath) {
-    fBaseIconPath = pBaseIconPath;
-  }
+	public String getId() {
+		return fId;
+	}
 
-  public void setLogoUrl(String pLogoUrl) {
-    fLogoUrl = pLogoUrl;
-  }
+	public void setId(String pId) {
+		fId = pId;
+	}
 
-  public String getLogoUrl() {
-    return fLogoUrl;
-  }
+	public RosterPosition getRaisedRosterPosition() {
+		return fRosterPositionById.get(fRaisedPositionId);
+	}
 
-  public boolean hasApothecary() {
+	private void addPosition(RosterPosition pPosition) {
+		if (pPosition != null) {
+			fRosterPositionById.put(pPosition.getId(), pPosition);
+			fRosterPositionByName.put(pPosition.getName(), pPosition);
+			pPosition.setRoster(this);
+		}
+	}
+
+	public String getBaseIconPath() {
+		return fBaseIconPath;
+	}
+
+	public void setBaseIconPath(String pBaseIconPath) {
+		fBaseIconPath = pBaseIconPath;
+	}
+
+	public void setLogoUrl(String pLogoUrl) {
+		fLogoUrl = pLogoUrl;
+	}
+
+	public String getLogoUrl() {
+		return fLogoUrl;
+	}
+
+	public boolean hasApothecary() {
 		return fApothecary;
 	}
-  
-  public void setApothecary(boolean pApothecary) {
+
+	public void setApothecary(boolean pApothecary) {
 		fApothecary = pApothecary;
 	}
-  
-  public boolean hasNecromancer() {
+
+	public boolean hasNecromancer() {
 		return fNecromancer;
 	}
-  
-  public void setNecromancer(boolean pNecromancer) {
+
+	public void setNecromancer(boolean pNecromancer) {
 		fNecromancer = pNecromancer;
 	}
-  
-  public boolean isUndead() {
+
+	public boolean isUndead() {
 		return fUndead;
 	}
-  
-  public void setUndead(boolean pUndead) {
+
+	public void setUndead(boolean pUndead) {
 		fUndead = pUndead;
 	}
 
-  public String getRiotousPositionId() {
-    return riotousPositionId;
-  }
+	public String getRiotousPositionId() {
+		return riotousPositionId;
+	}
 
-  public void setRiotousPositionId(String riotousPositionId) {
-    this.riotousPositionId = riotousPositionId;
-  }
+	public void setRiotousPositionId(String riotousPositionId) {
+		this.riotousPositionId = riotousPositionId;
+	}
 
-  public RosterPosition getRiotousPosition() {
-    return fRosterPositionById.get(riotousPositionId);
-  }
+	public RosterPosition getRiotousPosition() {
+		return fRosterPositionById.get(riotousPositionId);
+	}
 
-  public String getNameGenerator() {
-    if (StringTool.isProvided(nameGenerator)) {
-      return nameGenerator;
-    }
-    return "default";
-  }
+	public String getNameGenerator() {
+		if (StringTool.isProvided(nameGenerator)) {
+			return nameGenerator;
+		}
+		return "default";
+	}
 // XML serialization
 
-  public void addToXml(TransformerHandler pHandler) {
+	public void addToXml(TransformerHandler pHandler) {
 
-  	AttributesImpl attributes = new AttributesImpl();
-  	UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_ID, getId());
-  	UtilXml.startElement(pHandler, XML_TAG);
+		AttributesImpl attributes = new AttributesImpl();
+		UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_ID, getId());
+		UtilXml.startElement(pHandler, XML_TAG);
 
-    UtilXml.addValueElement(pHandler, _XML_TAG_NAME, getName());
-    UtilXml.addValueElement(pHandler, _XML_TAG_RE_ROLL_COST, getReRollCost());
-    UtilXml.addValueElement(pHandler, _XML_TAG_MAX_RE_ROLLS, getMaxReRolls());
-    UtilXml.addValueElement(pHandler, _XML_TAG_BASE_ICON_PATH, getBaseIconPath());
-    UtilXml.addValueElement(pHandler, _XML_TAG_LOGO_URL, getLogoUrl());
-    UtilXml.addValueElement(pHandler, _XML_TAG_RAISED_POSITION_ID, fRaisedPositionId);
-    UtilXml.addValueElement(pHandler, _XML_TAG_APOTHECARY, hasApothecary());
-    UtilXml.addValueElement(pHandler, _XML_TAG_NECROMANCER, hasNecromancer());
-    UtilXml.addValueElement(pHandler, _XML_TAG_UNDEAD, isUndead());
-    UtilXml.addValueElement(pHandler, _XML_TAG_RIOTOUS_POSITION_ID, getRiotousPositionId());
-    UtilXml.addValueElement(pHandler, _XML_TAG_NAME_GENERATOR, nameGenerator);
- 
-    for (RosterPosition position : getPositions()) {
-    	position.addToXml(pHandler);
-    }
+		UtilXml.addValueElement(pHandler, _XML_TAG_NAME, getName());
+		UtilXml.addValueElement(pHandler, _XML_TAG_RE_ROLL_COST, getReRollCost());
+		UtilXml.addValueElement(pHandler, _XML_TAG_MAX_RE_ROLLS, getMaxReRolls());
+		UtilXml.addValueElement(pHandler, _XML_TAG_BASE_ICON_PATH, getBaseIconPath());
+		UtilXml.addValueElement(pHandler, _XML_TAG_LOGO_URL, getLogoUrl());
+		UtilXml.addValueElement(pHandler, _XML_TAG_RAISED_POSITION_ID, fRaisedPositionId);
+		UtilXml.addValueElement(pHandler, _XML_TAG_APOTHECARY, hasApothecary());
+		UtilXml.addValueElement(pHandler, _XML_TAG_NECROMANCER, hasNecromancer());
+		UtilXml.addValueElement(pHandler, _XML_TAG_UNDEAD, isUndead());
+		UtilXml.addValueElement(pHandler, _XML_TAG_RIOTOUS_POSITION_ID, getRiotousPositionId());
+		UtilXml.addValueElement(pHandler, _XML_TAG_NAME_GENERATOR, nameGenerator);
 
-    UtilXml.endElement(pHandler, XML_TAG);
+		for (RosterPosition position : getPositions()) {
+			position.addToXml(pHandler);
+		}
 
-  }
-  
-  public String toXml(boolean pIndent) {
-    return UtilXml.toXml(this, pIndent);
-  }  
+		UtilXml.endElement(pHandler, XML_TAG);
 
-  public IXmlSerializable startXmlElement(String pXmlTag, Attributes pXmlAttributes) {
-    IXmlSerializable xmlElement = this;
-    if (XML_TAG.equals(pXmlTag)) {
-    	if (StringTool.isProvided(pXmlAttributes.getValue(_XML_ATTRIBUTE_ID))) {
-    		fId = pXmlAttributes.getValue(_XML_ATTRIBUTE_ID).trim();
-    	}
-    	if (StringTool.isProvided(pXmlAttributes.getValue(_XML_ATTRIBUTE_TEAM))) {
-    		fId = pXmlAttributes.getValue(_XML_ATTRIBUTE_TEAM).trim();
-    	}
-    }
-    if (RosterPosition.XML_TAG.equals(pXmlTag)) {
-      fCurrentlyParsedRosterPosition = new RosterPosition(null);
-      fCurrentlyParsedRosterPosition.startXmlElement(pXmlTag, pXmlAttributes);
-      xmlElement = fCurrentlyParsedRosterPosition;
-    }
-    return xmlElement;
-  }
+	}
 
-  public boolean endXmlElement(String pXmlTag, String pValue) {
-    boolean complete = XML_TAG.equals(pXmlTag);
-    if (!complete) {
-      if (_XML_TAG_NAME.equals(pXmlTag)) {
-        setName(pValue);
-      }
-      if (_XML_TAG_RE_ROLL_COST.equals(pXmlTag)) {
-        setReRollCost(Integer.parseInt(pValue));
-      }
-      if (_XML_TAG_MAX_RE_ROLLS.equals(pXmlTag)) {
-        setMaxReRolls(Integer.parseInt(pValue));
-      }
-      if (_XML_TAG_BASE_ICON_PATH.equals(pXmlTag)) {
-        setBaseIconPath(pValue);
-      }
-      if (_XML_TAG_LOGO_URL.equals(pXmlTag)) {
-        setLogoUrl(pValue);
-      }
-      if (_XML_TAG_RAISED_POSITION_ID.equals(pXmlTag)) {
-        fRaisedPositionId = pValue;
-      }
-      if (RosterPosition.XML_TAG.equals(pXmlTag)) {
-        addPosition(fCurrentlyParsedRosterPosition);
-      }
-      if (_XML_TAG_APOTHECARY.equals(pXmlTag)) {
-      	setApothecary(Boolean.parseBoolean(pValue));
-      }
-      if (_XML_TAG_NECROMANCER.equals(pXmlTag)) {
-      	setNecromancer(Boolean.parseBoolean(pValue));
-      }
-      if (_XML_TAG_UNDEAD.equals(pXmlTag)) {
-      	setUndead(Boolean.parseBoolean(pValue));
-      }
-      if (_XML_TAG_RIOTOUS_POSITION_ID.equals(pXmlTag)) {
-        riotousPositionId = pValue;
-      }
-      if (_XML_TAG_NAME_GENERATOR.equals(pXmlTag)) {
-        nameGenerator = pValue;
-      }
-    }
-    return complete;
-  }
+	public String toXml(boolean pIndent) {
+		return UtilXml.toXml(this, pIndent);
+	}
 
-  // JSON serialization
-  
-  public JsonObject toJsonValue() {
-    
-	JsonObject jsonObject = new JsonObject();
-	
-    IJsonOption.ROSTER_ID.addTo(jsonObject, fId);
-    IJsonOption.ROSTER_NAME.addTo(jsonObject, fName);
-    IJsonOption.RE_ROLL_COST.addTo(jsonObject, fReRollCost);
-    IJsonOption.MAX_RE_ROLLS.addTo(jsonObject, fMaxReRolls);
-    IJsonOption.BASE_ICON_PATH.addTo(jsonObject, fBaseIconPath);
-    IJsonOption.LOGO_URL.addTo(jsonObject, fLogoUrl);
-    IJsonOption.RAISED_POSITION_ID.addTo(jsonObject, fRaisedPositionId);
-    IJsonOption.APOTHECARY.addTo(jsonObject, fApothecary);
-    IJsonOption.NECROMANCER.addTo(jsonObject, fNecromancer);
-    IJsonOption.UNDEAD.addTo(jsonObject, fUndead);
-    IJsonOption.RIOTOUS_POSITION_ID.addTo(jsonObject, riotousPositionId);
-    IJsonOption.NAME_GENERATOR.addTo(jsonObject, nameGenerator);
+	public IXmlSerializable startXmlElement(String pXmlTag, Attributes pXmlAttributes) {
+		IXmlSerializable xmlElement = this;
+		if (XML_TAG.equals(pXmlTag)) {
+			if (StringTool.isProvided(pXmlAttributes.getValue(_XML_ATTRIBUTE_ID))) {
+				fId = pXmlAttributes.getValue(_XML_ATTRIBUTE_ID).trim();
+			}
+			if (StringTool.isProvided(pXmlAttributes.getValue(_XML_ATTRIBUTE_TEAM))) {
+				fId = pXmlAttributes.getValue(_XML_ATTRIBUTE_TEAM).trim();
+			}
+		}
+		if (RosterPosition.XML_TAG.equals(pXmlTag)) {
+			fCurrentlyParsedRosterPosition = new RosterPosition(null);
+			fCurrentlyParsedRosterPosition.startXmlElement(pXmlTag, pXmlAttributes);
+			xmlElement = fCurrentlyParsedRosterPosition;
+		}
+		return xmlElement;
+	}
 
-    JsonArray positionArray = new JsonArray();
-    for (RosterPosition position : getPositions()) {
-      positionArray.add(position.toJsonValue());
-    }
-    IJsonOption.POSITION_ARRAY.addTo(jsonObject, positionArray);
+	public boolean endXmlElement(String pXmlTag, String pValue) {
+		boolean complete = XML_TAG.equals(pXmlTag);
+		if (!complete) {
+			if (_XML_TAG_NAME.equals(pXmlTag)) {
+				setName(pValue);
+			}
+			if (_XML_TAG_RE_ROLL_COST.equals(pXmlTag)) {
+				setReRollCost(Integer.parseInt(pValue));
+			}
+			if (_XML_TAG_MAX_RE_ROLLS.equals(pXmlTag)) {
+				setMaxReRolls(Integer.parseInt(pValue));
+			}
+			if (_XML_TAG_BASE_ICON_PATH.equals(pXmlTag)) {
+				setBaseIconPath(pValue);
+			}
+			if (_XML_TAG_LOGO_URL.equals(pXmlTag)) {
+				setLogoUrl(pValue);
+			}
+			if (_XML_TAG_RAISED_POSITION_ID.equals(pXmlTag)) {
+				fRaisedPositionId = pValue;
+			}
+			if (RosterPosition.XML_TAG.equals(pXmlTag)) {
+				addPosition(fCurrentlyParsedRosterPosition);
+			}
+			if (_XML_TAG_APOTHECARY.equals(pXmlTag)) {
+				setApothecary(Boolean.parseBoolean(pValue));
+			}
+			if (_XML_TAG_NECROMANCER.equals(pXmlTag)) {
+				setNecromancer(Boolean.parseBoolean(pValue));
+			}
+			if (_XML_TAG_UNDEAD.equals(pXmlTag)) {
+				setUndead(Boolean.parseBoolean(pValue));
+			}
+			if (_XML_TAG_RIOTOUS_POSITION_ID.equals(pXmlTag)) {
+				riotousPositionId = pValue;
+			}
+			if (_XML_TAG_NAME_GENERATOR.equals(pXmlTag)) {
+				nameGenerator = pValue;
+			}
+		}
+		return complete;
+	}
 
-    return jsonObject;
-    
-  }
-  
-  public Roster initFrom(JsonValue pJsonValue) {
-    
-    JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
+	// JSON serialization
 
-    fId = IJsonOption.ROSTER_ID.getFrom(jsonObject);
-    fName = IJsonOption.ROSTER_NAME.getFrom(jsonObject);
-    fReRollCost = IJsonOption.RE_ROLL_COST.getFrom(jsonObject);
-    fMaxReRolls = IJsonOption.MAX_RE_ROLLS.getFrom(jsonObject);
-    fBaseIconPath = IJsonOption.BASE_ICON_PATH.getFrom(jsonObject);
-    fLogoUrl = IJsonOption.LOGO_URL.getFrom(jsonObject);
-    fRaisedPositionId = IJsonOption.RAISED_POSITION_ID.getFrom(jsonObject);
-    fApothecary = IJsonOption.APOTHECARY.getFrom(jsonObject);
-    fNecromancer = IJsonOption.NECROMANCER.getFrom(jsonObject);
-    fUndead = IJsonOption.UNDEAD.getFrom(jsonObject);
-    riotousPositionId = IJsonOption.RIOTOUS_POSITION_ID.getFrom(jsonObject);
-    nameGenerator = IJsonOption.NAME_GENERATOR.getFrom(jsonObject);
+	public JsonObject toJsonValue() {
 
-    fRosterPositionById.clear();
-    fRosterPositionByName.clear();
-    JsonArray positionArray = IJsonOption.POSITION_ARRAY.getFrom(jsonObject);
-    if (positionArray != null) {
-      for (int i = 0; i < positionArray.size(); i++) {
-        addPosition(new RosterPosition().initFrom(positionArray.get(i)));
-      }
-    }
+		JsonObject jsonObject = new JsonObject();
 
-    return this;
-    
-  }
+		IJsonOption.ROSTER_ID.addTo(jsonObject, fId);
+		IJsonOption.ROSTER_NAME.addTo(jsonObject, fName);
+		IJsonOption.RE_ROLL_COST.addTo(jsonObject, fReRollCost);
+		IJsonOption.MAX_RE_ROLLS.addTo(jsonObject, fMaxReRolls);
+		IJsonOption.BASE_ICON_PATH.addTo(jsonObject, fBaseIconPath);
+		IJsonOption.LOGO_URL.addTo(jsonObject, fLogoUrl);
+		IJsonOption.RAISED_POSITION_ID.addTo(jsonObject, fRaisedPositionId);
+		IJsonOption.APOTHECARY.addTo(jsonObject, fApothecary);
+		IJsonOption.NECROMANCER.addTo(jsonObject, fNecromancer);
+		IJsonOption.UNDEAD.addTo(jsonObject, fUndead);
+		IJsonOption.RIOTOUS_POSITION_ID.addTo(jsonObject, riotousPositionId);
+		IJsonOption.NAME_GENERATOR.addTo(jsonObject, nameGenerator);
+
+		JsonArray positionArray = new JsonArray();
+		for (RosterPosition position : getPositions()) {
+			positionArray.add(position.toJsonValue());
+		}
+		IJsonOption.POSITION_ARRAY.addTo(jsonObject, positionArray);
+
+		return jsonObject;
+
+	}
+
+	public Roster initFrom(JsonValue pJsonValue) {
+
+		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
+
+		fId = IJsonOption.ROSTER_ID.getFrom(jsonObject);
+		fName = IJsonOption.ROSTER_NAME.getFrom(jsonObject);
+		fReRollCost = IJsonOption.RE_ROLL_COST.getFrom(jsonObject);
+		fMaxReRolls = IJsonOption.MAX_RE_ROLLS.getFrom(jsonObject);
+		fBaseIconPath = IJsonOption.BASE_ICON_PATH.getFrom(jsonObject);
+		fLogoUrl = IJsonOption.LOGO_URL.getFrom(jsonObject);
+		fRaisedPositionId = IJsonOption.RAISED_POSITION_ID.getFrom(jsonObject);
+		fApothecary = IJsonOption.APOTHECARY.getFrom(jsonObject);
+		fNecromancer = IJsonOption.NECROMANCER.getFrom(jsonObject);
+		fUndead = IJsonOption.UNDEAD.getFrom(jsonObject);
+		riotousPositionId = IJsonOption.RIOTOUS_POSITION_ID.getFrom(jsonObject);
+		nameGenerator = IJsonOption.NAME_GENERATOR.getFrom(jsonObject);
+
+		fRosterPositionById.clear();
+		fRosterPositionByName.clear();
+		JsonArray positionArray = IJsonOption.POSITION_ARRAY.getFrom(jsonObject);
+		if (positionArray != null) {
+			for (int i = 0; i < positionArray.size(); i++) {
+				addPosition(new RosterPosition().initFrom(positionArray.get(i)));
+			}
+		}
+
+		return this;
+
+	}
 
 }

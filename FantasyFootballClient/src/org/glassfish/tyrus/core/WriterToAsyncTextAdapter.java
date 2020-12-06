@@ -48,36 +48,36 @@ import java.io.Writer;
  * @author Danny Coward (danny.coward at oracle.com)
  */
 class WriterToAsyncTextAdapter extends Writer {
-    private final TyrusWebSocket socket;
-    private String buffer = null;
+	private final TyrusWebSocket socket;
+	private String buffer = null;
 
-    public WriterToAsyncTextAdapter(TyrusWebSocket socket) {
-        this.socket = socket;
-    }
+	public WriterToAsyncTextAdapter(TyrusWebSocket socket) {
+		this.socket = socket;
+	}
 
-    private void sendBuffer(boolean last) {
-        socket.sendText(buffer, last);
-    }
+	private void sendBuffer(boolean last) {
+		socket.sendText(buffer, last);
+	}
 
-    @Override
-    public void write(char[] chars, int index, int len) throws IOException {
-        if (buffer != null) {
-            this.sendBuffer(false);
-        }
-        buffer = (new String(chars)).substring(index, index + len);
+	@Override
+	public void write(char[] chars, int index, int len) throws IOException {
+		if (buffer != null) {
+			this.sendBuffer(false);
+		}
+		buffer = (new String(chars)).substring(index, index + len);
 
-    }
+	}
 
-    @Override
-    public void flush() throws IOException {
-        if (buffer != null) {
-            this.sendBuffer(false);
-        }
-        buffer = null;
-    }
+	@Override
+	public void flush() throws IOException {
+		if (buffer != null) {
+			this.sendBuffer(false);
+		}
+		buffer = null;
+	}
 
-    @Override
-    public void close() throws IOException {
-        this.sendBuffer(true);
-    }
+	@Override
+	public void close() throws IOException {
+		this.sendBuffer(true);
+	}
 }

@@ -12,37 +12,37 @@ import com.eclipsesource.json.JsonValue;
  */
 public class ClientCommandReceiveChoice extends ClientCommand {
 
-  private boolean fChoiceReceive;
+	private boolean fChoiceReceive;
 
-  public ClientCommandReceiveChoice() {
-    super();
-  }
+	public ClientCommandReceiveChoice() {
+		super();
+	}
 
-  public ClientCommandReceiveChoice(boolean pChoiceReceive) {
-    fChoiceReceive = pChoiceReceive;
-  }
+	public ClientCommandReceiveChoice(boolean pChoiceReceive) {
+		fChoiceReceive = pChoiceReceive;
+	}
 
-  public NetCommandId getId() {
-    return NetCommandId.CLIENT_RECEIVE_CHOICE;
-  }
+	public NetCommandId getId() {
+		return NetCommandId.CLIENT_RECEIVE_CHOICE;
+	}
 
-  public boolean isChoiceReceive() {
-    return fChoiceReceive;
-  }
+	public boolean isChoiceReceive() {
+		return fChoiceReceive;
+	}
 
-  // JSON serialization
+	// JSON serialization
 
-  public JsonObject toJsonValue() {
-    JsonObject jsonObject = super.toJsonValue();
-    IJsonOption.CHOICE_RECEIVE.addTo(jsonObject, fChoiceReceive);
-    return jsonObject;
-  }
+	public JsonObject toJsonValue() {
+		JsonObject jsonObject = super.toJsonValue();
+		IJsonOption.CHOICE_RECEIVE.addTo(jsonObject, fChoiceReceive);
+		return jsonObject;
+	}
 
-  public ClientCommandReceiveChoice initFrom(JsonValue jsonValue) {
-    super.initFrom(jsonValue);
-    JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
-    fChoiceReceive = IJsonOption.CHOICE_RECEIVE.getFrom(jsonObject);
-    return this;
-  }
+	public ClientCommandReceiveChoice initFrom(JsonValue jsonValue) {
+		super.initFrom(jsonValue);
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
+		fChoiceReceive = IJsonOption.CHOICE_RECEIVE.getFrom(jsonObject);
+		return this;
+	}
 
 }

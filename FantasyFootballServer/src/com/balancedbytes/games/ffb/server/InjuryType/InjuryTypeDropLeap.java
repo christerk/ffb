@@ -16,35 +16,36 @@ import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.step.IStep;
 import com.balancedbytes.games.ffb.util.UtilCards;
 
-public class InjuryTypeDropLeap extends InjuryTypeServer<DropLeap>  {
-		public InjuryTypeDropLeap() {
-			super(new DropLeap());
-		}
-
-		@Override
-		public InjuryContext handleInjury(IStep step, Game game,GameState gameState, DiceRoller diceRoller, Player<?> pAttacker, Player<?> pDefender,
-				FieldCoordinate pDefenderCoordinate, InjuryContext pOldInjuryContext, ApothecaryMode pApothecaryMode) {
-			
-			DiceInterpreter diceInterpreter = DiceInterpreter.getInstance();
-
-			if (!injuryContext.isArmorBroken()) {
-				injuryContext.setArmorRoll(diceRoller.rollArmour());
-				if (UtilCards.hasSkillWithProperty(pDefender, NamedProperties.blocksLikeChainsaw)) {
-					injuryContext.addArmorModifier(ArmorModifiers.CHAINSAW);
-				}
-				injuryContext.setArmorBroken(diceInterpreter.isArmourBroken(gameState, injuryContext));
-			}
-
-			if (injuryContext.isArmorBroken()) {
-				injuryContext.setInjuryRoll(diceRoller.rollInjury());
-				injuryContext.addInjuryModifier(new InjuryModifierFactory().getNigglingInjuryModifier(pDefender));
-
-				setInjury(pDefender, gameState, diceRoller);
-
-			} else {
-				injuryContext.setInjury(new PlayerState(PlayerState.PRONE));
-			}
-
-			return injuryContext;
-		}
+public class InjuryTypeDropLeap extends InjuryTypeServer<DropLeap> {
+	public InjuryTypeDropLeap() {
+		super(new DropLeap());
 	}
+
+	@Override
+	public InjuryContext handleInjury(IStep step, Game game, GameState gameState, DiceRoller diceRoller,
+			Player<?> pAttacker, Player<?> pDefender, FieldCoordinate pDefenderCoordinate, InjuryContext pOldInjuryContext,
+			ApothecaryMode pApothecaryMode) {
+
+		DiceInterpreter diceInterpreter = DiceInterpreter.getInstance();
+
+		if (!injuryContext.isArmorBroken()) {
+			injuryContext.setArmorRoll(diceRoller.rollArmour());
+			if (UtilCards.hasSkillWithProperty(pDefender, NamedProperties.blocksLikeChainsaw)) {
+				injuryContext.addArmorModifier(ArmorModifiers.CHAINSAW);
+			}
+			injuryContext.setArmorBroken(diceInterpreter.isArmourBroken(gameState, injuryContext));
+		}
+
+		if (injuryContext.isArmorBroken()) {
+			injuryContext.setInjuryRoll(diceRoller.rollInjury());
+			injuryContext.addInjuryModifier(new InjuryModifierFactory().getNigglingInjuryModifier(pDefender));
+
+			setInjury(pDefender, gameState, diceRoller);
+
+		} else {
+			injuryContext.setInjury(new PlayerState(PlayerState.PRONE));
+		}
+
+		return injuryContext;
+	}
+}

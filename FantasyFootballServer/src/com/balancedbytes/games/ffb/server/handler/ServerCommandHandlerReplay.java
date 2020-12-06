@@ -17,59 +17,56 @@ import com.balancedbytes.games.ffb.server.util.UtilServerReplay;
  */
 public class ServerCommandHandlerReplay extends ServerCommandHandler {
 
-  protected ServerCommandHandlerReplay(FantasyFootballServer pServer) {
-    super(pServer);
-  }
-  
-  public NetCommandId getId() {
-    return NetCommandId.CLIENT_REPLAY;
-  }
+	protected ServerCommandHandlerReplay(FantasyFootballServer pServer) {
+		super(pServer);
+	}
 
-  public boolean handleCommand(ReceivedCommand pReceivedCommand) {
+	public NetCommandId getId() {
+		return NetCommandId.CLIENT_REPLAY;
+	}
 
-    ClientCommandReplay replayCommand = (ClientCommandReplay) pReceivedCommand.getCommand();
-    Session session = pReceivedCommand.getSession();
-    int replayToCommandNr = replayCommand.getReplayToCommandNr();
+	public boolean handleCommand(ReceivedCommand pReceivedCommand) {
 
-    long gameId = replayCommand.getGameId();
+		ClientCommandReplay replayCommand = (ClientCommandReplay) pReceivedCommand.getCommand();
+		Session session = pReceivedCommand.getSession();
+		int replayToCommandNr = replayCommand.getReplayToCommandNr();
 
-    if (gameId == 0) {
-      SessionManager sessionManager = getServer().getSessionManager();
-      gameId = sessionManager.getGameIdForSession(pReceivedCommand.getSession());
-    }
-    
-    if (gameId == 0) {
-      return false;
-    }
-    
-    // client signals that it has received the complete replay - socket can be closed
-    /*
-    if (replayToCommandNr < 0) {
-      try {
-        pReceivedCommand.getSession().close();
-      } catch (IOException pIoException) {
-        getServer().getDebugLog().log(gameId, pIoException);
-      }
-      return;
-    }
-    */
-    
-    GameState gameState = getServer().getGameCache().getGameStateById(gameId);
-    if (gameState == null) {
-      gameState = getServer().getGameCache().queryFromDb(gameId);
-      getServer().getGameCache().addGame(gameState);
-    }
-    
-    if (gameState != null) {
-      UtilServerReplay.startServerReplay(gameState, replayToCommandNr, pReceivedCommand.getSession());
+		long gameId = replayCommand.getGameId();
 
-    } else {
-      // game has been moved out of the db - request it from the backup service
-      getServer().getRequestProcessor().add(new ServerRequestLoadReplay(replayCommand.getGameId(), replayToCommandNr, session, ServerRequestLoadReplay.LOAD_GAME));
-    }
-    
-    return true;
-    
-  }
-    
+		if (gameId == 0) {
+			SessionManager sessionManager = getServer().getSessionManager();
+			gameId = sessionManager.getGameIdForSession(pReceivedCommand.getSession());
+		}
+
+		if (gameId == 0) {
+			return false;
+		}
+
+		// client signals that it has received the complete replay - socket can be
+		// closed
+		/*
+		 * if (replayToCommandNr < 0) { try { pReceivedCommand.getSession().close(); }
+		 * catch (IOException pIoException) { getServer().getDebugLog().log(gameId,
+		 * pIoException); } return; }
+		 */
+
+		GameState gameState = getServer().getGameCache().getGameStateById(gameId);
+		if (gameState == null) {
+			gameState = getServer().getGameCache().queryFromDb(gameId);
+			getServer().getGameCache().addGame(gameState);
+		}
+
+		if (gameState != null) {
+			UtilServerReplay.startServerReplay(gameState, replayToCommandNr, pReceivedCommand.getSession());
+
+		} else {
+			// game has been moved out of the db - request it from the backup service
+			getServer().getRequestProcessor().add(new ServerRequestLoadReplay(replayCommand.getGameId(), replayToCommandNr,
+					session, ServerRequestLoadReplay.LOAD_GAME));
+		}
+
+		return true;
+
+	}
+
 }

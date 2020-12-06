@@ -20,48 +20,49 @@ import com.eclipsesource.json.JsonValue;
  * @author Kalimar
  */
 public final class StepInitKickoff extends AbstractStep {
-	
+
 	public StepInitKickoff(GameState pGameState) {
 		super(pGameState);
 	}
-	
+
 	public StepId getId() {
 		return StepId.INIT_KICKOFF;
 	}
-	
+
 	@Override
 	public void start() {
 		executeStep();
 	}
-	
-  @Override
-  public StepCommandStatus handleCommand(ReceivedCommand pReceivedCommand) {
-    StepCommandStatus commandStatus = super.handleCommand(pReceivedCommand);
+
+	@Override
+	public StepCommandStatus handleCommand(ReceivedCommand pReceivedCommand) {
+		StepCommandStatus commandStatus = super.handleCommand(pReceivedCommand);
 		if (commandStatus == StepCommandStatus.EXECUTE_STEP) {
 			executeStep();
 		}
 		return commandStatus;
 	}
 
-  private void executeStep() {
-    Game game = getGameState().getGame();
-    if (game.getTurnMode() == TurnMode.START_GAME) {
-      UtilServerDialog.hideDialog(getGameState());
-      UtilServerGame.startHalf(this, 1);
-      game.setTurnMode(TurnMode.SETUP);
-      game.startTurn();
-      UtilServerGame.updateLeaderReRolls(this);
-    }
-    SequenceGenerator.getInstance().pushInducementSequence(getGameState(), InducementPhase.BEFORE_SETUP, game.isHomePlaying());
-    getResult().setNextAction(StepAction.NEXT_STEP);
-  }
-  
-  // JSON serialization
-    
-  @Override
-  public StepInitKickoff initFrom(JsonValue pJsonValue) {
-    super.initFrom(pJsonValue);
-    return this;
-  }
-  
+	private void executeStep() {
+		Game game = getGameState().getGame();
+		if (game.getTurnMode() == TurnMode.START_GAME) {
+			UtilServerDialog.hideDialog(getGameState());
+			UtilServerGame.startHalf(this, 1);
+			game.setTurnMode(TurnMode.SETUP);
+			game.startTurn();
+			UtilServerGame.updateLeaderReRolls(this);
+		}
+		SequenceGenerator.getInstance().pushInducementSequence(getGameState(), InducementPhase.BEFORE_SETUP,
+				game.isHomePlaying());
+		getResult().setNextAction(StepAction.NEXT_STEP);
+	}
+
+	// JSON serialization
+
+	@Override
+	public StepInitKickoff initFrom(JsonValue pJsonValue) {
+		super.initFrom(pJsonValue);
+		return this;
+	}
+
 }

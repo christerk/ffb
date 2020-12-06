@@ -6,12 +6,12 @@ import com.balancedbytes.games.ffb.model.Skill;
 
 public class AgilityIncrease extends Skill {
 
-  public AgilityIncrease() {
-    super("+AG", SkillCategory.STAT_INCREASE);
-  }
+	public AgilityIncrease() {
+		super("+AG", SkillCategory.STAT_INCREASE);
+	}
 
-  @Override
-  public int getCost(Player<?> player) {
-    return 40000;
-  }
+	@Override
+	public int getCost(Player<?> player) {
+		return 40000;
+	}
 }

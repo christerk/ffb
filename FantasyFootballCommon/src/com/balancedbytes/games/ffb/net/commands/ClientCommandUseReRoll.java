@@ -14,45 +14,45 @@ import com.eclipsesource.json.JsonValue;
  */
 public class ClientCommandUseReRoll extends ClientCommand {
 
-  private ReRolledAction fReRolledAction;
-  private ReRollSource fReRollSource;
+	private ReRolledAction fReRolledAction;
+	private ReRollSource fReRollSource;
 
-  public ClientCommandUseReRoll() {
-    super();
-  }
+	public ClientCommandUseReRoll() {
+		super();
+	}
 
-  public ClientCommandUseReRoll(ReRolledAction pReRolledAction, ReRollSource pReRollSource) {
-    fReRolledAction = pReRolledAction;
-    fReRollSource = pReRollSource;
-  }
+	public ClientCommandUseReRoll(ReRolledAction pReRolledAction, ReRollSource pReRollSource) {
+		fReRolledAction = pReRolledAction;
+		fReRollSource = pReRollSource;
+	}
 
-  public NetCommandId getId() {
-    return NetCommandId.CLIENT_USE_RE_ROLL;
-  }
+	public NetCommandId getId() {
+		return NetCommandId.CLIENT_USE_RE_ROLL;
+	}
 
-  public ReRolledAction getReRolledAction() {
-    return fReRolledAction;
-  }
+	public ReRolledAction getReRolledAction() {
+		return fReRolledAction;
+	}
 
-  public ReRollSource getReRollSource() {
-    return fReRollSource;
-  }
+	public ReRollSource getReRollSource() {
+		return fReRollSource;
+	}
 
-  // JSON serialization
+	// JSON serialization
 
-  public JsonObject toJsonValue() {
-    JsonObject jsonObject = super.toJsonValue();
-    IJsonOption.RE_ROLLED_ACTION.addTo(jsonObject, fReRolledAction);
-    IJsonOption.RE_ROLL_SOURCE.addTo(jsonObject, fReRollSource);
-    return jsonObject;
-  }
+	public JsonObject toJsonValue() {
+		JsonObject jsonObject = super.toJsonValue();
+		IJsonOption.RE_ROLLED_ACTION.addTo(jsonObject, fReRolledAction);
+		IJsonOption.RE_ROLL_SOURCE.addTo(jsonObject, fReRollSource);
+		return jsonObject;
+	}
 
-  public ClientCommandUseReRoll initFrom(JsonValue jsonValue) {
-    super.initFrom(jsonValue);
-    JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
-    fReRolledAction = (ReRolledAction) IJsonOption.RE_ROLLED_ACTION.getFrom(jsonObject);
-    fReRollSource = (ReRollSource) IJsonOption.RE_ROLL_SOURCE.getFrom(jsonObject);
-    return this;
-  }
+	public ClientCommandUseReRoll initFrom(JsonValue jsonValue) {
+		super.initFrom(jsonValue);
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
+		fReRolledAction = (ReRolledAction) IJsonOption.RE_ROLLED_ACTION.getFrom(jsonObject);
+		fReRollSource = (ReRollSource) IJsonOption.RE_ROLL_SOURCE.getFrom(jsonObject);
+		return this;
+	}
 
 }

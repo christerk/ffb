@@ -5,8 +5,8 @@ import com.balancedbytes.games.ffb.model.Skill;
 
 public class StrengthDecrease extends Skill {
 
-  public StrengthDecrease() {
-    super("-ST", SkillCategory.STAT_DECREASE);
-  }
+	public StrengthDecrease() {
+		super("-ST", SkillCategory.STAT_DECREASE);
+	}
 
 }

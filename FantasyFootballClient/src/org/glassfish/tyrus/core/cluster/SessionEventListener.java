@@ -53,95 +53,98 @@ import javax.websocket.Session;
  */
 public class SessionEventListener {
 
-    private final Session session;
+	private final Session session;
 
-    /**
-     * Constructor.
-     *
-     * @param session session to be used for sending messages passed from other nodes.
-     */
-    public SessionEventListener(Session session) {
-        this.session = session;
-    }
+	/**
+	 * Constructor.
+	 *
+	 * @param session session to be used for sending messages passed from other
+	 *                nodes.
+	 */
+	public SessionEventListener(Session session) {
+		this.session = session;
+	}
 
-    /**
-     * Invoked on send text message event.
-     *
-     * @param message message to be sent.
-     * @throws IOException if there is a problem delivering the message.
-     */
-    public void onSendText(String message) throws IOException {
-        session.getBasicRemote().sendText(message);
-    }
+	/**
+	 * Invoked on send text message event.
+	 *
+	 * @param message message to be sent.
+	 * @throws IOException if there is a problem delivering the message.
+	 */
+	public void onSendText(String message) throws IOException {
+		session.getBasicRemote().sendText(message);
+	}
 
-    /**
-     * Invoked on send partial text message event.
-     *
-     * @param message partial message to be sent.
-     * @param isLast  {@code true} when the partial message being sent is the last part of the message.
-     * @throws IOException if there is a problem delivering the message.
-     */
-    public void onSendText(String message, boolean isLast) throws IOException {
-        session.getBasicRemote().sendText(message, isLast);
-    }
+	/**
+	 * Invoked on send partial text message event.
+	 *
+	 * @param message partial message to be sent.
+	 * @param isLast  {@code true} when the partial message being sent is the last
+	 *                part of the message.
+	 * @throws IOException if there is a problem delivering the message.
+	 */
+	public void onSendText(String message, boolean isLast) throws IOException {
+		session.getBasicRemote().sendText(message, isLast);
+	}
 
-    /**
-     * Invoked on send binary message event.
-     *
-     * @param message data to be sent.
-     * @throws IOException if there is a problem delivering the message.
-     */
-    public void onSendBinary(byte[] message) throws IOException {
-        session.getBasicRemote().sendBinary(ByteBuffer.wrap(message));
-    }
+	/**
+	 * Invoked on send binary message event.
+	 *
+	 * @param message data to be sent.
+	 * @throws IOException if there is a problem delivering the message.
+	 */
+	public void onSendBinary(byte[] message) throws IOException {
+		session.getBasicRemote().sendBinary(ByteBuffer.wrap(message));
+	}
 
-    /**
-     * Invoked on send partial binary message event.
-     *
-     * @param message data to be sent.
-     * @param isLast  {@code true} when the partial message being sent is the last part of the message.
-     * @throws IOException if there is a problem delivering the message.
-     */
-    public void onSendBinary(byte[] message, boolean isLast) throws IOException {
-        session.getBasicRemote().sendBinary(ByteBuffer.wrap(message), isLast);
-    }
+	/**
+	 * Invoked on send partial binary message event.
+	 *
+	 * @param message data to be sent.
+	 * @param isLast  {@code true} when the partial message being sent is the last
+	 *                part of the message.
+	 * @throws IOException if there is a problem delivering the message.
+	 */
+	public void onSendBinary(byte[] message, boolean isLast) throws IOException {
+		session.getBasicRemote().sendBinary(ByteBuffer.wrap(message), isLast);
+	}
 
-    /**
-     * Invoked on send ping frame event.
-     *
-     * @param payload ping frame payload.
-     * @throws IOException if there is a problem delivering the message.
-     */
-    public void onSendPing(byte[] payload) throws IOException {
-        session.getBasicRemote().sendPing(ByteBuffer.wrap(payload));
-    }
+	/**
+	 * Invoked on send ping frame event.
+	 *
+	 * @param payload ping frame payload.
+	 * @throws IOException if there is a problem delivering the message.
+	 */
+	public void onSendPing(byte[] payload) throws IOException {
+		session.getBasicRemote().sendPing(ByteBuffer.wrap(payload));
+	}
 
-    /**
-     * Invoked on send pong frame event.
-     *
-     * @param payload pong frame payload.
-     * @throws IOException if there is a problem delivering the message.
-     */
-    public void onSendPong(byte[] payload) throws IOException {
-        session.getBasicRemote().sendPong(ByteBuffer.wrap(payload));
-    }
+	/**
+	 * Invoked on send pong frame event.
+	 *
+	 * @param payload pong frame payload.
+	 * @throws IOException if there is a problem delivering the message.
+	 */
+	public void onSendPong(byte[] payload) throws IOException {
+		session.getBasicRemote().sendPong(ByteBuffer.wrap(payload));
+	}
 
-    /**
-     * Invoked on session close event.
-     *
-     * @throws IOException if there is a problem closing the session.
-     */
-    public void onClose() throws IOException {
-        session.close();
-    }
+	/**
+	 * Invoked on session close event.
+	 *
+	 * @throws IOException if there is a problem closing the session.
+	 */
+	public void onClose() throws IOException {
+		session.close();
+	}
 
-    /**
-     * Invoked on session close event.
-     *
-     * @param closeReason close reason of the session close event.
-     * @throws IOException if there is a problem closing the session.
-     */
-    public void onClose(CloseReason closeReason) throws IOException {
-        session.close(closeReason);
-    }
+	/**
+	 * Invoked on session close event.
+	 *
+	 * @param closeReason close reason of the session close event.
+	 * @throws IOException if there is a problem closing the session.
+	 */
+	public void onClose(CloseReason closeReason) throws IOException {
+		session.close(closeReason);
+	}
 }

@@ -36,257 +36,257 @@ import com.fumbbl.rng.MouseEntropySource;
 @SuppressWarnings("serial")
 public class UserInterface extends JFrame implements WindowListener, IDialogCloseListener {
 
-  public static String LINE_SEPARATOR = System.getProperty("line.separator", "\n");
+	public static String LINE_SEPARATOR = System.getProperty("line.separator", "\n");
 
-  private FantasyFootballClient fClient;
-  private FieldComponent fFieldComponent;
-  private StatusReport fStatusReport;
-  private SideBarComponent fSideBarHome;
-  private SideBarComponent fSideBarAway;
-  private IconCache fIconCache;
-  private SoundEngine fSoundEngine;
-  private ScoreBarComponent fScoreBar;
-  private LogComponent fLog;
-  private ChatComponent fChat;
-  private DialogManager fDialogManager;
-  private JDesktopPane fDesktop;
-  private GameTitle fGameTitle;
-  private PlayerIconFactory fPlayerIconFactory;
-  private MouseEntropySource fMouseEntropySource;
+	private FantasyFootballClient fClient;
+	private FieldComponent fFieldComponent;
+	private StatusReport fStatusReport;
+	private SideBarComponent fSideBarHome;
+	private SideBarComponent fSideBarAway;
+	private IconCache fIconCache;
+	private SoundEngine fSoundEngine;
+	private ScoreBarComponent fScoreBar;
+	private LogComponent fLog;
+	private ChatComponent fChat;
+	private DialogManager fDialogManager;
+	private JDesktopPane fDesktop;
+	private GameTitle fGameTitle;
+	private PlayerIconFactory fPlayerIconFactory;
+	private MouseEntropySource fMouseEntropySource;
 
-  public UserInterface(FantasyFootballClient pClient) {
+	public UserInterface(FantasyFootballClient pClient) {
 
-    fClient = pClient;
-    fIconCache = new IconCache(getClient());
-    fIconCache.init();
-    fSoundEngine = new SoundEngine(getClient());
-    fSoundEngine.init();
-    fDialogManager = new DialogManager(getClient());
-    setGameMenuBar(new GameMenuBar(getClient()));
-    setGameTitle(new GameTitle());
-    
-    fFieldComponent = new FieldComponent(getClient());
-    fPlayerIconFactory = new PlayerIconFactory();
-    fStatusReport = new StatusReport(getClient());
+		fClient = pClient;
+		fIconCache = new IconCache(getClient());
+		fIconCache.init();
+		fSoundEngine = new SoundEngine(getClient());
+		fSoundEngine.init();
+		fDialogManager = new DialogManager(getClient());
+		setGameMenuBar(new GameMenuBar(getClient()));
+		setGameTitle(new GameTitle());
 
-    JPanel fieldPanel = new JPanel();
-    fieldPanel.setLayout(new BoxLayout(fieldPanel, BoxLayout.X_AXIS));
-    fieldPanel.add(fFieldComponent);
-    // fieldPanel.setBorder(BorderFactory.createEmptyBorder(2, 1, 1, 1));
+		fFieldComponent = new FieldComponent(getClient());
+		fPlayerIconFactory = new PlayerIconFactory();
+		fStatusReport = new StatusReport(getClient());
 
-    fLog = new LogComponent(getClient());
-    fChat = new ChatComponent(getClient());
-    
-    JPanel logChatPanel = new JPanel();
-    logChatPanel.setLayout(new BoxLayout(logChatPanel, BoxLayout.X_AXIS));
-    logChatPanel.add(getLog());
-    logChatPanel.add(Box.createHorizontalStrut(2));
-    logChatPanel.add(getChat());
-    logChatPanel.setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
-    
-    fScoreBar = new ScoreBarComponent(getClient());
+		JPanel fieldPanel = new JPanel();
+		fieldPanel.setLayout(new BoxLayout(fieldPanel, BoxLayout.X_AXIS));
+		fieldPanel.add(fFieldComponent);
+		// fieldPanel.setBorder(BorderFactory.createEmptyBorder(2, 1, 1, 1));
 
-    JPanel panelCenter = new JPanel();
-    panelCenter.setLayout(new BoxLayout(panelCenter, BoxLayout.Y_AXIS));
-    panelCenter.add(fieldPanel);
-    panelCenter.add(getScoreBar());
-    panelCenter.add(logChatPanel);
+		fLog = new LogComponent(getClient());
+		fChat = new ChatComponent(getClient());
 
-    fSideBarHome = new SideBarComponent(getClient(), true);
-    JPanel panelHome = new JPanel();
-    panelHome.setLayout(new BoxLayout(panelHome, BoxLayout.Y_AXIS));
-    panelHome.add(fSideBarHome);
-    // panelHome.setBorder(BorderFactory.createEmptyBorder(0, 1, 0, 1));
+		JPanel logChatPanel = new JPanel();
+		logChatPanel.setLayout(new BoxLayout(logChatPanel, BoxLayout.X_AXIS));
+		logChatPanel.add(getLog());
+		logChatPanel.add(Box.createHorizontalStrut(2));
+		logChatPanel.add(getChat());
+		logChatPanel.setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
 
-    fSideBarAway = new SideBarComponent(getClient(), false);
-    JPanel panelAway = new JPanel();
-    panelAway.setLayout(new BoxLayout(panelAway, BoxLayout.Y_AXIS));
-    panelAway.add(fSideBarAway);
-    // panelAway.setBorder(BorderFactory.createEmptyBorder(0, 1, 0, 1));
+		fScoreBar = new ScoreBarComponent(getClient());
 
-    JPanel panelContent = new JPanel();
-    panelContent.setLayout(new BoxLayout(panelContent, BoxLayout.X_AXIS));
-    panelContent.add(panelHome);
-    // panelContent.add(Box.createHorizontalStrut(1));
-    panelContent.add(panelCenter);
-    // panelContent.add(Box.createHorizontalStrut(1));
-    panelContent.add(panelAway);
+		JPanel panelCenter = new JPanel();
+		panelCenter.setLayout(new BoxLayout(panelCenter, BoxLayout.Y_AXIS));
+		panelCenter.add(fieldPanel);
+		panelCenter.add(getScoreBar());
+		panelCenter.add(logChatPanel);
 
-    fDesktop = new JDesktopPane();
-    panelContent.setSize(panelContent.getPreferredSize());
-    fDesktop.add(panelContent, -1);
-    fDesktop.setPreferredSize(panelContent.getPreferredSize());
-    
-    fMouseEntropySource = new MouseEntropySource(this);
+		fSideBarHome = new SideBarComponent(getClient(), true);
+		JPanel panelHome = new JPanel();
+		panelHome.setLayout(new BoxLayout(panelHome, BoxLayout.Y_AXIS));
+		panelHome.add(fSideBarHome);
+		// panelHome.setBorder(BorderFactory.createEmptyBorder(0, 1, 0, 1));
 
-    getContentPane().add(fDesktop, BorderLayout.CENTER);
-    
-    setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-    addWindowListener(this);
-    setResizable(false);
+		fSideBarAway = new SideBarComponent(getClient(), false);
+		JPanel panelAway = new JPanel();
+		panelAway.setLayout(new BoxLayout(panelAway, BoxLayout.Y_AXIS));
+		panelAway.add(fSideBarAway);
+		// panelAway.setBorder(BorderFactory.createEmptyBorder(0, 1, 0, 1));
 
-    pack();
-    
-    getChat().requestChatInputFocus();
-    
-  }
+		JPanel panelContent = new JPanel();
+		panelContent.setLayout(new BoxLayout(panelContent, BoxLayout.X_AXIS));
+		panelContent.add(panelHome);
+		// panelContent.add(Box.createHorizontalStrut(1));
+		panelContent.add(panelCenter);
+		// panelContent.add(Box.createHorizontalStrut(1));
+		panelContent.add(panelAway);
 
-  public FieldComponent getFieldComponent() {
-    return fFieldComponent;
-  }
+		fDesktop = new JDesktopPane();
+		panelContent.setSize(panelContent.getPreferredSize());
+		fDesktop.add(panelContent, -1);
+		fDesktop.setPreferredSize(panelContent.getPreferredSize());
 
-  public FantasyFootballClient getClient() {
-    return fClient;
-  }
+		fMouseEntropySource = new MouseEntropySource(this);
 
-  public SideBarComponent getSideBarHome() {
-    return fSideBarHome;
-  }
+		getContentPane().add(fDesktop, BorderLayout.CENTER);
 
-  public SideBarComponent getSideBarAway() {
-    return fSideBarAway;
-  }
+		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+		addWindowListener(this);
+		setResizable(false);
 
-  public IconCache getIconCache() {
-    return fIconCache;
-  }
+		pack();
 
-  public SoundEngine getSoundEngine() {
-    return fSoundEngine;
-  }
+		getChat().requestChatInputFocus();
 
-  public LogComponent getLog() {
-    return fLog;
-  }
-  
-  public ChatComponent getChat() {
-    return fChat;
-  }
+	}
 
-  public DialogManager getDialogManager() {
-    return fDialogManager;
-  }
-  
-  public GameTitle getGameTitle() {
-    return fGameTitle;
-  }
-  
-  public void setGameTitle(GameTitle pGameTitle) {
-    fGameTitle = pGameTitle;
-    refreshTitle();
-  }
-  
-  public void refreshTitle() {
-    setTitle((fGameTitle != null) ? fGameTitle.toString() : "FantasyFootball");
-  }
+	public FieldComponent getFieldComponent() {
+		return fFieldComponent;
+	}
 
-  public void refreshSideBars() {
-    getSideBarHome().refresh();
-    getSideBarAway().refresh();
-    getScoreBar().refresh();
-  }
+	public FantasyFootballClient getClient() {
+		return fClient;
+	}
 
-  public void refresh() {
-    refreshSideBars();
-    getFieldComponent().refresh();
-    getGameMenuBar().refresh();
-  }
-  
-  public void init() {
-    
-    getSideBarHome().init();
-    getSideBarAway().init();
-    getScoreBar().init();
-    getFieldComponent().init();
-    getGameMenuBar().init();
-    
-    Game game = getClient().getGame();
-    GameTitle gameTitle = new GameTitle();
-    gameTitle.setClientMode(getClient().getMode());
-    gameTitle.setHomeCoach(game.getTeamHome().getCoach());
-    gameTitle.setAwayCoach(game.getTeamAway().getCoach());
-    gameTitle.setGameTime(game.getGameTime());
-    gameTitle.setTurnTime(game.getTurnTime());
-    setGameTitle(gameTitle);
-    
-    String volumeSetting = getClient().getProperty(IClientProperty.SETTING_SOUND_VOLUME);
-    int volume = StringTool.isProvided(volumeSetting) ? Integer.parseInt(volumeSetting) : 50;
-    getClient().getUserInterface().getSoundEngine().setVolume(volume);
-    
-  }
+	public SideBarComponent getSideBarHome() {
+		return fSideBarHome;
+	}
 
-  public JDesktopPane getDesktop() {
-    return fDesktop;
-  }
+	public SideBarComponent getSideBarAway() {
+		return fSideBarAway;
+	}
 
-  public GameMenuBar getGameMenuBar() {
-    return (GameMenuBar) getJMenuBar();
-  }
+	public IconCache getIconCache() {
+		return fIconCache;
+	}
 
-  public void setGameMenuBar(GameMenuBar pGameMenuBar) {
-    setJMenuBar(pGameMenuBar);
-  }
-    
-  public ScoreBarComponent getScoreBar() {
-    return fScoreBar;
-  }
-  
-  public PlayerIconFactory getPlayerIconFactory() {
-    return fPlayerIconFactory;
-  }
-  
-  public StatusReport getStatusReport() {
-    return fStatusReport;
-  }
-  
-  public void invokeAndWait(Runnable pRunnable) {
-    try {
-      SwingUtilities.invokeAndWait(pRunnable);
-    } catch (InterruptedException e) {
-      throw new FantasyFootballException(e);
-    } catch (InvocationTargetException e) {
-      throw new FantasyFootballException(e);
-    }
-  }
+	public SoundEngine getSoundEngine() {
+		return fSoundEngine;
+	}
 
-  public void invokeLater(Runnable pRunnable) {
-    SwingUtilities.invokeLater(pRunnable);
-  }
+	public LogComponent getLog() {
+		return fLog;
+	}
 
-  public MouseEntropySource getMouseEntropySource() {
-    return fMouseEntropySource;
-  }
-  
-  public void windowClosing(WindowEvent pE) {
-    DialogLeaveGame leaveGameQuestion = new DialogLeaveGame(getClient());
-    leaveGameQuestion.showDialog(this);
-  }
-  
-  public void windowActivated(WindowEvent pE) {
-  }
-  
-  public void windowClosed(WindowEvent pE) {
-  }
-  
-  public void windowDeactivated(WindowEvent pE) {
-  }
-  
-  public void windowDeiconified(WindowEvent pE) {
-  }
-  
-  public void windowIconified(WindowEvent pE) {
-  }
-  
-  public void windowOpened(WindowEvent pE) {
-  }
-  
-  public void dialogClosed(IDialog pDialog) {
-    pDialog.hideDialog();
-    if (DialogId.LEAVE_GAME == pDialog.getId()) {
-      if (((DialogLeaveGame) pDialog).isChoiceYes()) {
-        System.exit(0);
-      }
-    }
-  }
-  
+	public ChatComponent getChat() {
+		return fChat;
+	}
+
+	public DialogManager getDialogManager() {
+		return fDialogManager;
+	}
+
+	public GameTitle getGameTitle() {
+		return fGameTitle;
+	}
+
+	public void setGameTitle(GameTitle pGameTitle) {
+		fGameTitle = pGameTitle;
+		refreshTitle();
+	}
+
+	public void refreshTitle() {
+		setTitle((fGameTitle != null) ? fGameTitle.toString() : "FantasyFootball");
+	}
+
+	public void refreshSideBars() {
+		getSideBarHome().refresh();
+		getSideBarAway().refresh();
+		getScoreBar().refresh();
+	}
+
+	public void refresh() {
+		refreshSideBars();
+		getFieldComponent().refresh();
+		getGameMenuBar().refresh();
+	}
+
+	public void init() {
+
+		getSideBarHome().init();
+		getSideBarAway().init();
+		getScoreBar().init();
+		getFieldComponent().init();
+		getGameMenuBar().init();
+
+		Game game = getClient().getGame();
+		GameTitle gameTitle = new GameTitle();
+		gameTitle.setClientMode(getClient().getMode());
+		gameTitle.setHomeCoach(game.getTeamHome().getCoach());
+		gameTitle.setAwayCoach(game.getTeamAway().getCoach());
+		gameTitle.setGameTime(game.getGameTime());
+		gameTitle.setTurnTime(game.getTurnTime());
+		setGameTitle(gameTitle);
+
+		String volumeSetting = getClient().getProperty(IClientProperty.SETTING_SOUND_VOLUME);
+		int volume = StringTool.isProvided(volumeSetting) ? Integer.parseInt(volumeSetting) : 50;
+		getClient().getUserInterface().getSoundEngine().setVolume(volume);
+
+	}
+
+	public JDesktopPane getDesktop() {
+		return fDesktop;
+	}
+
+	public GameMenuBar getGameMenuBar() {
+		return (GameMenuBar) getJMenuBar();
+	}
+
+	public void setGameMenuBar(GameMenuBar pGameMenuBar) {
+		setJMenuBar(pGameMenuBar);
+	}
+
+	public ScoreBarComponent getScoreBar() {
+		return fScoreBar;
+	}
+
+	public PlayerIconFactory getPlayerIconFactory() {
+		return fPlayerIconFactory;
+	}
+
+	public StatusReport getStatusReport() {
+		return fStatusReport;
+	}
+
+	public void invokeAndWait(Runnable pRunnable) {
+		try {
+			SwingUtilities.invokeAndWait(pRunnable);
+		} catch (InterruptedException e) {
+			throw new FantasyFootballException(e);
+		} catch (InvocationTargetException e) {
+			throw new FantasyFootballException(e);
+		}
+	}
+
+	public void invokeLater(Runnable pRunnable) {
+		SwingUtilities.invokeLater(pRunnable);
+	}
+
+	public MouseEntropySource getMouseEntropySource() {
+		return fMouseEntropySource;
+	}
+
+	public void windowClosing(WindowEvent pE) {
+		DialogLeaveGame leaveGameQuestion = new DialogLeaveGame(getClient());
+		leaveGameQuestion.showDialog(this);
+	}
+
+	public void windowActivated(WindowEvent pE) {
+	}
+
+	public void windowClosed(WindowEvent pE) {
+	}
+
+	public void windowDeactivated(WindowEvent pE) {
+	}
+
+	public void windowDeiconified(WindowEvent pE) {
+	}
+
+	public void windowIconified(WindowEvent pE) {
+	}
+
+	public void windowOpened(WindowEvent pE) {
+	}
+
+	public void dialogClosed(IDialog pDialog) {
+		pDialog.hideDialog();
+		if (DialogId.LEAVE_GAME == pDialog.getId()) {
+			if (((DialogLeaveGame) pDialog).isChoiceYes()) {
+				System.exit(0);
+			}
+		}
+	}
+
 }

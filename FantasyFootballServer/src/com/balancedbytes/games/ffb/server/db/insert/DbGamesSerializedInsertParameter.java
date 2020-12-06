@@ -11,15 +11,16 @@ import com.balancedbytes.games.ffb.server.db.update.DbGamesSerializedUpdateParam
  * 
  * @author Kalimar
  */
-public class DbGamesSerializedInsertParameter extends DbGamesSerializedUpdateParameter implements IDbUpdateWithGameState {
+public class DbGamesSerializedInsertParameter extends DbGamesSerializedUpdateParameter
+		implements IDbUpdateWithGameState {
 
-  public DbGamesSerializedInsertParameter(GameState pGameState) {
-    super(pGameState);
-  }
-   
-  @Override
-  public DbUpdateStatement getDbUpdateStatement(FantasyFootballServer pServer) {
-    return (DbUpdateStatement) pServer.getDbUpdateFactory().getStatement(DbStatementId.GAMES_SERIALIZED_INSERT);
-  }
+	public DbGamesSerializedInsertParameter(GameState pGameState) {
+		super(pGameState);
+	}
+
+	@Override
+	public DbUpdateStatement getDbUpdateStatement(FantasyFootballServer pServer) {
+		return (DbUpdateStatement) pServer.getDbUpdateFactory().getStatement(DbStatementId.GAMES_SERIALIZED_INSERT);
+	}
 
 }

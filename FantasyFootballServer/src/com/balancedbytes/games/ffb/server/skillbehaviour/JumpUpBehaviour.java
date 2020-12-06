@@ -38,14 +38,19 @@ public class JumpUpBehaviour extends SkillBehaviour<JumpUp> {
 				Game game = step.getGameState().getGame();
 				ActingPlayer actingPlayer = game.getActingPlayer();
 				PlayerState playerState = game.getFieldModel().getPlayerState(actingPlayer.getPlayer());
-				if ((actingPlayer.isStandingUp() && !actingPlayer.hasMoved() && UtilCards.hasUnusedSkill(game, actingPlayer, skill)) || (ReRolledActions.JUMP_UP == step.getReRolledAction())) {
+				if ((actingPlayer.isStandingUp() && !actingPlayer.hasMoved()
+						&& UtilCards.hasUnusedSkill(game, actingPlayer, skill))
+						|| (ReRolledActions.JUMP_UP == step.getReRolledAction())) {
 					actingPlayer.setHasMoved(true);
 					game.setConcessionPossible(false);
 					actingPlayer.markSkillUsed(skill);
-					if ((PlayerAction.BLOCK == actingPlayer.getPlayerAction()) || (PlayerAction.MULTIPLE_BLOCK == actingPlayer.getPlayerAction())) {
+					if ((PlayerAction.BLOCK == actingPlayer.getPlayerAction())
+							|| (PlayerAction.MULTIPLE_BLOCK == actingPlayer.getPlayerAction())) {
 						if (ReRolledActions.JUMP_UP == step.getReRolledAction()) {
-							if ((step.getReRollSource() == null) || !UtilServerReRoll.useReRoll(step, step.getReRollSource(), actingPlayer.getPlayer())) {
-								game.getFieldModel().setPlayerState(actingPlayer.getPlayer(), playerState.changeBase(PlayerState.PRONE).changeActive(false));
+							if ((step.getReRollSource() == null)
+									|| !UtilServerReRoll.useReRoll(step, step.getReRollSource(), actingPlayer.getPlayer())) {
+								game.getFieldModel().setPlayerState(actingPlayer.getPlayer(),
+										playerState.changeBase(PlayerState.PRONE).changeActive(false));
 								step.publishParameter(new StepParameter(StepParameterKey.END_PLAYER_ACTION, true));
 								step.getResult().setNextAction(StepAction.GOTO_LABEL, state.goToLabelOnFailure);
 								return false;
@@ -54,15 +59,20 @@ public class JumpUpBehaviour extends SkillBehaviour<JumpUp> {
 						int minimumRoll = DiceInterpreter.getInstance().minimumRollJumpUp(actingPlayer.getPlayer());
 						int roll = step.getGameState().getDiceRoller().rollSkill();
 						boolean successful = DiceInterpreter.getInstance().isSkillRollSuccessful(roll, minimumRoll);
-						boolean reRolled = ((step.getReRolledAction() == ReRolledActions.JUMP_UP) && (step.getReRollSource() != null));
-						step.getResult().addReport(new ReportSkillRoll(ReportId.JUMP_UP_ROLL, actingPlayer.getPlayerId(), successful, roll, minimumRoll, reRolled));
+						boolean reRolled = ((step.getReRolledAction() == ReRolledActions.JUMP_UP)
+								&& (step.getReRollSource() != null));
+						step.getResult().addReport(new ReportSkillRoll(ReportId.JUMP_UP_ROLL, actingPlayer.getPlayerId(),
+								successful, roll, minimumRoll, reRolled));
 						if (successful) {
 							actingPlayer.setStandingUp(false);
 							step.getResult().setNextAction(StepAction.NEXT_STEP);
 							return false;
 						} else {
-							if ((step.getReRolledAction() == ReRolledActions.JUMP_UP) || !UtilServerReRoll.askForReRollIfAvailable(step.getGameState(), actingPlayer.getPlayer(), ReRolledActions.JUMP_UP, minimumRoll, false)) {
-								game.getFieldModel().setPlayerState(actingPlayer.getPlayer(), playerState.changeBase(PlayerState.PRONE).changeActive(false));
+							if ((step.getReRolledAction() == ReRolledActions.JUMP_UP)
+									|| !UtilServerReRoll.askForReRollIfAvailable(step.getGameState(), actingPlayer.getPlayer(),
+											ReRolledActions.JUMP_UP, minimumRoll, false)) {
+								game.getFieldModel().setPlayerState(actingPlayer.getPlayer(),
+										playerState.changeBase(PlayerState.PRONE).changeActive(false));
 								step.publishParameter(new StepParameter(StepParameterKey.END_PLAYER_ACTION, true));
 								step.getResult().setNextAction(StepAction.GOTO_LABEL, state.goToLabelOnFailure);
 							} else {
@@ -72,7 +82,7 @@ public class JumpUpBehaviour extends SkillBehaviour<JumpUp> {
 						}
 					}
 				}
-				step.getResult().setNextAction(StepAction.NEXT_STEP);      
+				step.getResult().setNextAction(StepAction.NEXT_STEP);
 				return false;
 			}
 

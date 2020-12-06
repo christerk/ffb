@@ -21,18 +21,9 @@ public class DbInitializer {
 
 	private static final String _DIR_TEAM_SETUPS = "setups";
 
-	private static final String[] _COACHES = new String[] {
-        "Kalimar",
-        "BattleLore",
-        "LordCrunchy",
-        "LordMisery"
-	};
-	private static final String[] _PASSWORDS = new String[] {
-        "f14bcf4b9ce4dd76dcc324a034dcabb6",
-        "77acbde639f9676910987a94227d1192",
-        "fb8f371eb70e3ac3117aa77b6929ee0a",
-        "74baf495a667a34978097fbe81968c0a"
-	};
+	private static final String[] _COACHES = new String[] { "Kalimar", "BattleLore", "LordCrunchy", "LordMisery" };
+	private static final String[] _PASSWORDS = new String[] { "f14bcf4b9ce4dd76dcc324a034dcabb6",
+			"77acbde639f9676910987a94227d1192", "fb8f371eb70e3ac3117aa77b6929ee0a", "74baf495a667a34978097fbe81968c0a" };
 
 	private DbConnectionManager fDbConnectionManager;
 
@@ -43,7 +34,7 @@ public class DbInitializer {
 	public void initDb() throws SQLException {
 
 		try (Connection connection = fDbConnectionManager.openDbConnection();
-			Statement statement = connection.createStatement();) {
+				Statement statement = connection.createStatement();) {
 
 			dropTable(statement, IDbTablePlayerMarkers.TABLE_NAME);
 			dropTable(statement, IDbTableTeamSetups.TABLE_NAME);
@@ -148,7 +139,7 @@ public class DbInitializer {
 		sql.append(IDbTableGamesInfo.COLUMN_HOME_PLAYING).append(" BOOLEAN NOT NULL,"); // 13
 		sql.append(IDbTableGamesInfo.COLUMN_STATUS).append(" CHAR(1) NOT NULL,"); // 14
 		sql.append(IDbTableGamesInfo.COLUMN_TESTING).append(" BOOLEAN NOT NULL,"); // 15
-        sql.append(IDbTableGamesInfo.COLUMN_ADMIN_MODE).append(" BOOLEAN NOT NULL,"); // 16
+		sql.append(IDbTableGamesInfo.COLUMN_ADMIN_MODE).append(" BOOLEAN NOT NULL,"); // 16
 		sql.append(IDbTableGamesInfo.COLUMN_LAST_UPDATED).append(" TIMESTAMP,"); // 17
 		sql.append("PRIMARY KEY(").append(IDbTableGamesInfo.COLUMN_ID).append(")");
 		if (fDbConnectionManager.useMysqlDialect()) {
@@ -180,7 +171,7 @@ public class DbInitializer {
 		sql.append(IDbTablePlayerMarkers.COLUMN_PLAYER_ID).append(" VARCHAR(40) NOT NULL,"); // 2
 		sql.append(IDbTablePlayerMarkers.COLUMN_TEXT).append(" VARCHAR(40),"); // 3
 		sql.append("PRIMARY KEY(").append(IDbTablePlayerMarkers.COLUMN_TEAM_ID).append(",")
-			.append(IDbTablePlayerMarkers.COLUMN_PLAYER_ID).append(")");
+				.append(IDbTablePlayerMarkers.COLUMN_PLAYER_ID).append(")");
 		if (fDbConnectionManager.useMysqlDialect()) {
 			sql.append(");");
 		} else {
@@ -194,7 +185,7 @@ public class DbInitializer {
 		for (int i = 0; i < _COACHES.length; i++) {
 			StringBuilder sql = new StringBuilder();
 			sql.append("INSERT INTO ").append(IDbTableCoaches.TABLE_NAME).append(" VALUES('").append(_COACHES[i])
-			        .append("', '").append(_PASSWORDS[i]).append("');");
+					.append("', '").append(_PASSWORDS[i]).append("');");
 			updatedRows += pStatement.executeUpdate(sql.toString());
 		}
 		return updatedRows;

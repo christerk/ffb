@@ -7,68 +7,66 @@ import com.balancedbytes.games.ffb.json.UtilJson;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
-
-
 /**
  * 
  * @author Kalimar
  */
 public class ReportApothecaryChoice implements IReport {
-   
-  private String fPlayerId;
-  private PlayerState fPlayerState;
-  private SeriousInjury fSeriousInjury;
-  
-  public ReportApothecaryChoice() {
-    super();
-  }
-  
-  public ReportApothecaryChoice(String pPlayerId, PlayerState pPlayerState, SeriousInjury pSeriousInjury) {
-    fPlayerId = pPlayerId;
-    fPlayerState = pPlayerState;
-    fSeriousInjury = pSeriousInjury;
-  }
-  
-  public ReportId getId() {
-    return ReportId.APOTHECARY_CHOICE;
-  }
-  
-  public String getPlayerId() {
-    return fPlayerId;
-  }
-  
-  public PlayerState getPlayerState() {
-    return fPlayerState;
-  }
-  
-  public SeriousInjury getSeriousInjury() {
-    return fSeriousInjury;
-  }
-  
-  // transformation
-  
-  public IReport transform() {
-    return new ReportApothecaryChoice(getPlayerId(), getPlayerState(), getSeriousInjury());
-  }
-  
-  // JSON serialization
-  
-  public JsonObject toJsonValue() {
-    JsonObject jsonObject = new JsonObject();
-    IJsonOption.REPORT_ID.addTo(jsonObject, getId());
-    IJsonOption.PLAYER_ID.addTo(jsonObject, fPlayerId);
-    IJsonOption.PLAYER_STATE.addTo(jsonObject, fPlayerState);
-    IJsonOption.SERIOUS_INJURY.addTo(jsonObject, fSeriousInjury);
-    return jsonObject;
-  }
-  
-  public ReportApothecaryChoice initFrom(JsonValue pJsonValue) {
-    JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-    UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(jsonObject));
-    fPlayerId = IJsonOption.PLAYER_ID.getFrom(jsonObject);
-    fPlayerState = IJsonOption.PLAYER_STATE.getFrom(jsonObject);
-    fSeriousInjury = (SeriousInjury) IJsonOption.SERIOUS_INJURY.getFrom(jsonObject);
-    return this;
-  }
+
+	private String fPlayerId;
+	private PlayerState fPlayerState;
+	private SeriousInjury fSeriousInjury;
+
+	public ReportApothecaryChoice() {
+		super();
+	}
+
+	public ReportApothecaryChoice(String pPlayerId, PlayerState pPlayerState, SeriousInjury pSeriousInjury) {
+		fPlayerId = pPlayerId;
+		fPlayerState = pPlayerState;
+		fSeriousInjury = pSeriousInjury;
+	}
+
+	public ReportId getId() {
+		return ReportId.APOTHECARY_CHOICE;
+	}
+
+	public String getPlayerId() {
+		return fPlayerId;
+	}
+
+	public PlayerState getPlayerState() {
+		return fPlayerState;
+	}
+
+	public SeriousInjury getSeriousInjury() {
+		return fSeriousInjury;
+	}
+
+	// transformation
+
+	public IReport transform() {
+		return new ReportApothecaryChoice(getPlayerId(), getPlayerState(), getSeriousInjury());
+	}
+
+	// JSON serialization
+
+	public JsonObject toJsonValue() {
+		JsonObject jsonObject = new JsonObject();
+		IJsonOption.REPORT_ID.addTo(jsonObject, getId());
+		IJsonOption.PLAYER_ID.addTo(jsonObject, fPlayerId);
+		IJsonOption.PLAYER_STATE.addTo(jsonObject, fPlayerState);
+		IJsonOption.SERIOUS_INJURY.addTo(jsonObject, fSeriousInjury);
+		return jsonObject;
+	}
+
+	public ReportApothecaryChoice initFrom(JsonValue pJsonValue) {
+		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
+		UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(jsonObject));
+		fPlayerId = IJsonOption.PLAYER_ID.getFrom(jsonObject);
+		fPlayerState = IJsonOption.PLAYER_STATE.getFrom(jsonObject);
+		fSeriousInjury = (SeriousInjury) IJsonOption.SERIOUS_INJURY.getFrom(jsonObject);
+		return this;
+	}
 
 }

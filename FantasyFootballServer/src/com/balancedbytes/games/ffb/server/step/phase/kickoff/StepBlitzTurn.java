@@ -28,97 +28,97 @@ import com.eclipsesource.json.JsonValue;
  */
 public final class StepBlitzTurn extends AbstractStep {
 
-  private boolean fEndTurn;
+	private boolean fEndTurn;
 
-  public StepBlitzTurn(GameState pGameState) {
-    super(pGameState);
-  }
+	public StepBlitzTurn(GameState pGameState) {
+		super(pGameState);
+	}
 
-  public StepId getId() {
-    return StepId.BLITZ_TURN;
-  }
+	public StepId getId() {
+		return StepId.BLITZ_TURN;
+	}
 
-  @Override
-  public boolean setParameter(StepParameter pParameter) {
-    Game game = getGameState().getGame();
-    if ((pParameter != null) && !super.setParameter(pParameter)) {
-      switch (pParameter.getKey()) {
-        case END_TURN:
-          fEndTurn = (pParameter.getValue() != null) ? (Boolean) pParameter.getValue() : false;
-          if (game.getTurnMode() == TurnMode.BLITZ) {
-            consume(pParameter);
-          }
-          return true;
-        default:
-          break;
-      }
-    }
-    return false;
-  }
+	@Override
+	public boolean setParameter(StepParameter pParameter) {
+		Game game = getGameState().getGame();
+		if ((pParameter != null) && !super.setParameter(pParameter)) {
+			switch (pParameter.getKey()) {
+			case END_TURN:
+				fEndTurn = (pParameter.getValue() != null) ? (Boolean) pParameter.getValue() : false;
+				if (game.getTurnMode() == TurnMode.BLITZ) {
+					consume(pParameter);
+				}
+				return true;
+			default:
+				break;
+			}
+		}
+		return false;
+	}
 
-  @Override
-  public void start() {
-    super.start();
-    executeStep();
-  }
+	@Override
+	public void start() {
+		super.start();
+		executeStep();
+	}
 
-  @Override
-  public StepCommandStatus handleCommand(ReceivedCommand pReceivedCommand) {
-    StepCommandStatus commandStatus = super.handleCommand(pReceivedCommand);
-    if (commandStatus == StepCommandStatus.EXECUTE_STEP) {
-      executeStep();
-    }
-    return commandStatus;
-  }
+	@Override
+	public StepCommandStatus handleCommand(ReceivedCommand pReceivedCommand) {
+		StepCommandStatus commandStatus = super.handleCommand(pReceivedCommand);
+		if (commandStatus == StepCommandStatus.EXECUTE_STEP) {
+			executeStep();
+		}
+		return commandStatus;
+	}
 
-  private void executeStep() {
+	private void executeStep() {
 
-    Game game = getGameState().getGame();
+		Game game = getGameState().getGame();
 
-    if (game.getTurnMode() == TurnMode.BLITZ) {
+		if (game.getTurnMode() == TurnMode.BLITZ) {
 
-      if (fEndTurn) {
-        game.setTurnMode(TurnMode.KICKOFF);
-      }
+			if (fEndTurn) {
+				game.setTurnMode(TurnMode.KICKOFF);
+			}
 
-    } else {
+		} else {
 
-      game.setTurnMode(TurnMode.BLITZ);
-      Team blitzingTeam = game.isHomePlaying() ? game.getTeamHome() : game.getTeamAway();
-      UtilKickoffSequence.pinPlayersInTacklezones(getGameState(), blitzingTeam);
-      long currentTimeMillis = System.currentTimeMillis();
-      if (game.isTurnTimeEnabled()) {
-        UtilServerTimer.stopTurnTimer(getGameState(), currentTimeMillis);
-        game.setTurnTime(0);
-        UtilServerTimer.startTurnTimer(getGameState(), currentTimeMillis);
-      }
-      game.startTurn();
-      UtilServerGame.updateLeaderReRolls(this);
-      // insert select sequence into kickoff sequence after this step
-      getGameState().pushCurrentStepOnStack();
-      SequenceGenerator.getInstance().pushSelectSequence(getGameState(), true);
+			game.setTurnMode(TurnMode.BLITZ);
+			Team blitzingTeam = game.isHomePlaying() ? game.getTeamHome() : game.getTeamAway();
+			UtilKickoffSequence.pinPlayersInTacklezones(getGameState(), blitzingTeam);
+			long currentTimeMillis = System.currentTimeMillis();
+			if (game.isTurnTimeEnabled()) {
+				UtilServerTimer.stopTurnTimer(getGameState(), currentTimeMillis);
+				game.setTurnTime(0);
+				UtilServerTimer.startTurnTimer(getGameState(), currentTimeMillis);
+			}
+			game.startTurn();
+			UtilServerGame.updateLeaderReRolls(this);
+			// insert select sequence into kickoff sequence after this step
+			getGameState().pushCurrentStepOnStack();
+			SequenceGenerator.getInstance().pushSelectSequence(getGameState(), true);
 
-    }
+		}
 
-    getResult().setNextAction(StepAction.NEXT_STEP);
+		getResult().setNextAction(StepAction.NEXT_STEP);
 
-  }
+	}
 
-  // JSON serialization
+	// JSON serialization
 
-  @Override
-  public JsonObject toJsonValue() {
-    JsonObject jsonObject = super.toJsonValue();
-    IServerJsonOption.END_TURN.addTo(jsonObject, fEndTurn);
-    return jsonObject;
-  }
+	@Override
+	public JsonObject toJsonValue() {
+		JsonObject jsonObject = super.toJsonValue();
+		IServerJsonOption.END_TURN.addTo(jsonObject, fEndTurn);
+		return jsonObject;
+	}
 
-  @Override
-  public StepBlitzTurn initFrom(JsonValue pJsonValue) {
-    super.initFrom(pJsonValue);
-    JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-    fEndTurn = IServerJsonOption.END_TURN.getFrom(jsonObject);
-    return this;
-  }
+	@Override
+	public StepBlitzTurn initFrom(JsonValue pJsonValue) {
+		super.initFrom(pJsonValue);
+		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
+		fEndTurn = IServerJsonOption.END_TURN.getFrom(jsonObject);
+		return this;
+	}
 
 }

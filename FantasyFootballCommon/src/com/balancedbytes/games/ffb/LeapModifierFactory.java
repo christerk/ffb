@@ -17,12 +17,11 @@ import com.balancedbytes.games.ffb.util.UtilCards;
 public class LeapModifierFactory implements IRollModifierFactory {
 
 	static LeapModifiers leapModifiers;
-	
-	public LeapModifierFactory()
-	{
+
+	public LeapModifierFactory() {
 		leapModifiers = new LeapModifiers();
 	}
-	
+
 	public LeapModifier forName(String pName) {
 		return leapModifiers.values().get(pName.toLowerCase());
 	}
@@ -34,21 +33,17 @@ public class LeapModifierFactory implements IRollModifierFactory {
 		LeapContext context = new LeapContext(actingPlayer, pCoordinateFrom);
 		leapModifiers.addAll(UtilCards.getLeapModifiers(actingPlayer, context));
 
-
 		return leapModifiers;
 	}
 
 	public LeapModifier[] toArray(Set<LeapModifier> pLeapModifierSet) {
 		if (pLeapModifierSet != null) {
 			LeapModifier[] leapModifierArray = pLeapModifierSet.toArray(new LeapModifier[pLeapModifierSet.size()]);
-			Arrays.sort(
-					leapModifierArray,
-					new Comparator<LeapModifier>() {
-						public int compare(LeapModifier pO1, LeapModifier pO2) {
-							return pO1.getName().compareTo(pO2.getName());
-						}
-					}
-					);
+			Arrays.sort(leapModifierArray, new Comparator<LeapModifier>() {
+				public int compare(LeapModifier pO1, LeapModifier pO2) {
+					return pO1.getName().compareTo(pO2.getName());
+				}
+			});
 			return leapModifierArray;
 		} else {
 			return new LeapModifier[0];

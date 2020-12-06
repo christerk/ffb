@@ -44,145 +44,151 @@ import com.eclipsesource.json.JsonValue;
  * @author Kalimar
  */
 public class StepPickUp extends AbstractStepWithReRoll {
-	
+
 	private String fGotoLabelOnFailure;
-	
+
 	public StepPickUp(GameState pGameState) {
 		super(pGameState);
 	}
-	
+
 	public StepId getId() {
 		return StepId.PICK_UP;
 	}
-	
-  @Override
-  public void init(StepParameterSet pParameterSet) {
-  	if (pParameterSet != null) {
-  		for (StepParameter parameter : pParameterSet.values()) {
-  			switch (parameter.getKey()) {
-  				case GOTO_LABEL_ON_FAILURE:
-  					fGotoLabelOnFailure = (String) parameter.getValue();
-  					break;
-					default:
-						break;
-  			}
-  		}
-  	}
-  	if (fGotoLabelOnFailure == null) {
+
+	@Override
+	public void init(StepParameterSet pParameterSet) {
+		if (pParameterSet != null) {
+			for (StepParameter parameter : pParameterSet.values()) {
+				switch (parameter.getKey()) {
+				case GOTO_LABEL_ON_FAILURE:
+					fGotoLabelOnFailure = (String) parameter.getValue();
+					break;
+				default:
+					break;
+				}
+			}
+		}
+		if (fGotoLabelOnFailure == null) {
 			throw new StepException("StepParameter " + StepParameterKey.GOTO_LABEL_ON_FAILURE + " is not initialized.");
-  	}
-  }
-	
+		}
+	}
+
 	@Override
 	public void start() {
 		super.start();
 		executeStep();
 	}
-	
-  @Override
-  public StepCommandStatus handleCommand(ReceivedCommand pReceivedCommand) {
-    StepCommandStatus commandStatus = super.handleCommand(pReceivedCommand);
-    if (commandStatus == StepCommandStatus.EXECUTE_STEP) {
-      executeStep();
-    }
-    return commandStatus;
-  }
-	
-  private void executeStep() {
-    Game game = getGameState().getGame();
-    ActingPlayer actingPlayer = game.getActingPlayer();
-    boolean doPickUp = true;
-    if (isPickUp()) {
-      if (ReRolledActions.PICK_UP == getReRolledAction()) {
-        if ((getReRollSource() == null) || !UtilServerReRoll.useReRoll(this, getReRollSource(), actingPlayer.getPlayer())) {
-        	doPickUp = false;
-          publishParameter(new StepParameter(StepParameterKey.END_TURN, true));
-        	publishParameter(new StepParameter(StepParameterKey.CATCH_SCATTER_THROW_IN_MODE, CatchScatterThrowInMode.FAILED_PICK_UP));
-        	getResult().setNextAction(StepAction.GOTO_LABEL, fGotoLabelOnFailure);
-        }
-      }
-      if (doPickUp) {
-        switch (pickUp()) {
-	        case SUCCESS:
-	          game.getFieldModel().setBallMoving(false);
-	          getResult().setSound(SoundId.PICKUP);
-	        	getResult().setNextAction(StepAction.NEXT_STEP);
-	          break;
-	        case FAILURE:
-	          publishParameter(new StepParameter(StepParameterKey.FEEDING_ALLOWED, false));
-	          publishParameter(new StepParameter(StepParameterKey.END_TURN, true));
-	          publishParameter(new StepParameter(StepParameterKey.CATCH_SCATTER_THROW_IN_MODE, CatchScatterThrowInMode.FAILED_PICK_UP));
-	        	getResult().setNextAction(StepAction.GOTO_LABEL, fGotoLabelOnFailure);
-	          break;
-          default:
-          	break;
-        }
-      }
-    } else {
-    	getResult().setNextAction(StepAction.NEXT_STEP);
-    }
-  }
-  
-  private boolean isPickUp() {
-  	Game game = getGameState().getGame();
-    ActingPlayer actingPlayer = game.getActingPlayer();
-    FieldCoordinate playerCoordinate = game.getFieldModel().getPlayerCoordinate(actingPlayer.getPlayer());
-    return (game.getFieldModel().isBallInPlay() && game.getFieldModel().isBallMoving() && playerCoordinate.equals(game.getFieldModel().getBallCoordinate()));
-  }
-  
-  private ActionStatus pickUp() {
-    Game game = getGameState().getGame();
-    ActingPlayer actingPlayer = game.getActingPlayer();
-    if(UtilCards.hasSkillWithProperty(actingPlayer.getPlayer(), NamedProperties.preventHoldBall)) {
-      return ActionStatus.FAILURE;
-    } else {
-      PickupModifierFactory modifierFactory = new PickupModifierFactory();
-      Set<PickupModifier> pickupModifiers = modifierFactory.findPickupModifiers(game);
-      int minimumRoll = DiceInterpreter.getInstance().minimumRollPickup(actingPlayer.getPlayer(), pickupModifiers);
-      int roll = getGameState().getDiceRoller().rollSkill();
-      boolean successful = DiceInterpreter.getInstance().isSkillRollSuccessful(roll, minimumRoll);
-      PickupModifier[] pickupModifierArray = modifierFactory.toArray(pickupModifiers);
-      boolean reRolled = ((getReRolledAction() == ReRolledActions.PICK_UP) && (getReRollSource() != null));
-      getResult().addReport(new ReportSkillRoll(ReportId.PICK_UP_ROLL, actingPlayer.getPlayerId(), successful, roll, minimumRoll, reRolled, pickupModifierArray));
-      if (successful) {
-        return ActionStatus.SUCCESS;
-      } else {
-        if (getReRolledAction() != ReRolledActions.PICK_UP) {
-          setReRolledAction(ReRolledActions.PICK_UP);
-          ReRollSource unusedPickupReroll = UtilCards.getUnusedRerollSource(actingPlayer, ReRolledActions.PICK_UP);
-          if (unusedPickupReroll != null) {
-            setReRollSource(unusedPickupReroll);
-            UtilServerReRoll.useReRoll(this, getReRollSource(), actingPlayer.getPlayer());
-            return pickUp();
-          } else {
-            if (UtilServerReRoll.askForReRollIfAvailable(getGameState(), actingPlayer.getPlayer(), ReRolledActions.PICK_UP, minimumRoll, false)) {
-              return ActionStatus.WAITING_FOR_RE_ROLL;
-            } else {
-              return ActionStatus.FAILURE;
-            }
-          }
-        } else {
-          return ActionStatus.FAILURE;
-        }
-      }
-    }
-  }
-  
-  // JSON serialization
-  
-  @Override
-  public JsonObject toJsonValue() {
-    JsonObject jsonObject = super.toJsonValue();
-    IServerJsonOption.GOTO_LABEL_ON_FAILURE.addTo(jsonObject, fGotoLabelOnFailure);
-    return jsonObject;
-  }
-  
-  @Override
-  public StepPickUp initFrom(JsonValue pJsonValue) {
-    super.initFrom(pJsonValue);
-    JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-    fGotoLabelOnFailure = IServerJsonOption.GOTO_LABEL_ON_FAILURE.getFrom(jsonObject);
-    return this;
-  }
+
+	@Override
+	public StepCommandStatus handleCommand(ReceivedCommand pReceivedCommand) {
+		StepCommandStatus commandStatus = super.handleCommand(pReceivedCommand);
+		if (commandStatus == StepCommandStatus.EXECUTE_STEP) {
+			executeStep();
+		}
+		return commandStatus;
+	}
+
+	private void executeStep() {
+		Game game = getGameState().getGame();
+		ActingPlayer actingPlayer = game.getActingPlayer();
+		boolean doPickUp = true;
+		if (isPickUp()) {
+			if (ReRolledActions.PICK_UP == getReRolledAction()) {
+				if ((getReRollSource() == null)
+						|| !UtilServerReRoll.useReRoll(this, getReRollSource(), actingPlayer.getPlayer())) {
+					doPickUp = false;
+					publishParameter(new StepParameter(StepParameterKey.END_TURN, true));
+					publishParameter(
+							new StepParameter(StepParameterKey.CATCH_SCATTER_THROW_IN_MODE, CatchScatterThrowInMode.FAILED_PICK_UP));
+					getResult().setNextAction(StepAction.GOTO_LABEL, fGotoLabelOnFailure);
+				}
+			}
+			if (doPickUp) {
+				switch (pickUp()) {
+				case SUCCESS:
+					game.getFieldModel().setBallMoving(false);
+					getResult().setSound(SoundId.PICKUP);
+					getResult().setNextAction(StepAction.NEXT_STEP);
+					break;
+				case FAILURE:
+					publishParameter(new StepParameter(StepParameterKey.FEEDING_ALLOWED, false));
+					publishParameter(new StepParameter(StepParameterKey.END_TURN, true));
+					publishParameter(
+							new StepParameter(StepParameterKey.CATCH_SCATTER_THROW_IN_MODE, CatchScatterThrowInMode.FAILED_PICK_UP));
+					getResult().setNextAction(StepAction.GOTO_LABEL, fGotoLabelOnFailure);
+					break;
+				default:
+					break;
+				}
+			}
+		} else {
+			getResult().setNextAction(StepAction.NEXT_STEP);
+		}
+	}
+
+	private boolean isPickUp() {
+		Game game = getGameState().getGame();
+		ActingPlayer actingPlayer = game.getActingPlayer();
+		FieldCoordinate playerCoordinate = game.getFieldModel().getPlayerCoordinate(actingPlayer.getPlayer());
+		return (game.getFieldModel().isBallInPlay() && game.getFieldModel().isBallMoving()
+				&& playerCoordinate.equals(game.getFieldModel().getBallCoordinate()));
+	}
+
+	private ActionStatus pickUp() {
+		Game game = getGameState().getGame();
+		ActingPlayer actingPlayer = game.getActingPlayer();
+		if (UtilCards.hasSkillWithProperty(actingPlayer.getPlayer(), NamedProperties.preventHoldBall)) {
+			return ActionStatus.FAILURE;
+		} else {
+			PickupModifierFactory modifierFactory = new PickupModifierFactory();
+			Set<PickupModifier> pickupModifiers = modifierFactory.findPickupModifiers(game);
+			int minimumRoll = DiceInterpreter.getInstance().minimumRollPickup(actingPlayer.getPlayer(), pickupModifiers);
+			int roll = getGameState().getDiceRoller().rollSkill();
+			boolean successful = DiceInterpreter.getInstance().isSkillRollSuccessful(roll, minimumRoll);
+			PickupModifier[] pickupModifierArray = modifierFactory.toArray(pickupModifiers);
+			boolean reRolled = ((getReRolledAction() == ReRolledActions.PICK_UP) && (getReRollSource() != null));
+			getResult().addReport(new ReportSkillRoll(ReportId.PICK_UP_ROLL, actingPlayer.getPlayerId(), successful, roll,
+					minimumRoll, reRolled, pickupModifierArray));
+			if (successful) {
+				return ActionStatus.SUCCESS;
+			} else {
+				if (getReRolledAction() != ReRolledActions.PICK_UP) {
+					setReRolledAction(ReRolledActions.PICK_UP);
+					ReRollSource unusedPickupReroll = UtilCards.getUnusedRerollSource(actingPlayer, ReRolledActions.PICK_UP);
+					if (unusedPickupReroll != null) {
+						setReRollSource(unusedPickupReroll);
+						UtilServerReRoll.useReRoll(this, getReRollSource(), actingPlayer.getPlayer());
+						return pickUp();
+					} else {
+						if (UtilServerReRoll.askForReRollIfAvailable(getGameState(), actingPlayer.getPlayer(),
+								ReRolledActions.PICK_UP, minimumRoll, false)) {
+							return ActionStatus.WAITING_FOR_RE_ROLL;
+						} else {
+							return ActionStatus.FAILURE;
+						}
+					}
+				} else {
+					return ActionStatus.FAILURE;
+				}
+			}
+		}
+	}
+
+	// JSON serialization
+
+	@Override
+	public JsonObject toJsonValue() {
+		JsonObject jsonObject = super.toJsonValue();
+		IServerJsonOption.GOTO_LABEL_ON_FAILURE.addTo(jsonObject, fGotoLabelOnFailure);
+		return jsonObject;
+	}
+
+	@Override
+	public StepPickUp initFrom(JsonValue pJsonValue) {
+		super.initFrom(pJsonValue);
+		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
+		fGotoLabelOnFailure = IServerJsonOption.GOTO_LABEL_ON_FAILURE.getFrom(jsonObject);
+		return this;
+	}
 
 }

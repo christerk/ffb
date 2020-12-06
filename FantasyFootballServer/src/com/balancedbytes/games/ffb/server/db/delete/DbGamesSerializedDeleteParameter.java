@@ -10,19 +10,19 @@ import com.balancedbytes.games.ffb.server.db.DefaultDbUpdateParameter;
  * @author Kalimar
  */
 public class DbGamesSerializedDeleteParameter extends DefaultDbUpdateParameter {
-  
-  private long fGameStateId;
-  
-  public DbGamesSerializedDeleteParameter(long pGameStateId) {
-    fGameStateId = pGameStateId;
-  }
- 
-  public long getGameStateId() {
-    return fGameStateId;
-  }  
-  
-  public DbUpdateStatement getDbUpdateStatement(FantasyFootballServer pServer) {
-    return (DbUpdateStatement) pServer.getDbUpdateFactory().getStatement(DbStatementId.GAMES_SERIALIZED_DELETE);
-  }
-  
+
+	private long fGameStateId;
+
+	public DbGamesSerializedDeleteParameter(long pGameStateId) {
+		fGameStateId = pGameStateId;
+	}
+
+	public long getGameStateId() {
+		return fGameStateId;
+	}
+
+	public DbUpdateStatement getDbUpdateStatement(FantasyFootballServer pServer) {
+		return (DbUpdateStatement) pServer.getDbUpdateFactory().getStatement(DbStatementId.GAMES_SERIALIZED_DELETE);
+	}
+
 }

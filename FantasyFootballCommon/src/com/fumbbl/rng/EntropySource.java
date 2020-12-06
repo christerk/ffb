@@ -6,5 +6,6 @@ package com.fumbbl.rng;
  */
 public interface EntropySource {
 	public boolean hasEnoughEntropy();
+
 	public byte getEntropy();
 }

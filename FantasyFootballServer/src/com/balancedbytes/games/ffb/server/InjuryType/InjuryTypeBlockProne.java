@@ -13,30 +13,30 @@ import com.balancedbytes.games.ffb.server.DiceRoller;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.step.IStep;
 
-public class InjuryTypeBlockProne extends InjuryTypeServer<BlockProne>  {
-		public InjuryTypeBlockProne() {
-			super(new BlockProne());
-		}
-
-
-		@Override
-		public InjuryContext handleInjury(IStep step, Game game,GameState gameState, DiceRoller diceRoller, Player<?> pAttacker, Player<?> pDefender,
-				FieldCoordinate pDefenderCoordinate, InjuryContext pOldInjuryContext, ApothecaryMode pApothecaryMode) {
-
-			DiceInterpreter diceInterpreter = DiceInterpreter.getInstance();
-
-			if (!injuryContext.isArmorBroken()) {
-				injuryContext.setArmorRoll(diceRoller.rollArmour());
-				injuryContext.setArmorBroken(diceInterpreter.isArmourBroken(gameState, injuryContext));
-			}
-			if (injuryContext.isArmorBroken()) {
-				injuryContext.setInjuryRoll(diceRoller.rollInjury());
-				injuryContext.addInjuryModifier(new InjuryModifierFactory().getNigglingInjuryModifier(pDefender));
-				setInjury(pDefender, gameState, diceRoller);
-
-			} else {
-				injuryContext.setInjury(new PlayerState(PlayerState.PRONE));
-			}
-			return injuryContext;
-		}
+public class InjuryTypeBlockProne extends InjuryTypeServer<BlockProne> {
+	public InjuryTypeBlockProne() {
+		super(new BlockProne());
 	}
+
+	@Override
+	public InjuryContext handleInjury(IStep step, Game game, GameState gameState, DiceRoller diceRoller,
+			Player<?> pAttacker, Player<?> pDefender, FieldCoordinate pDefenderCoordinate, InjuryContext pOldInjuryContext,
+			ApothecaryMode pApothecaryMode) {
+
+		DiceInterpreter diceInterpreter = DiceInterpreter.getInstance();
+
+		if (!injuryContext.isArmorBroken()) {
+			injuryContext.setArmorRoll(diceRoller.rollArmour());
+			injuryContext.setArmorBroken(diceInterpreter.isArmourBroken(gameState, injuryContext));
+		}
+		if (injuryContext.isArmorBroken()) {
+			injuryContext.setInjuryRoll(diceRoller.rollInjury());
+			injuryContext.addInjuryModifier(new InjuryModifierFactory().getNigglingInjuryModifier(pDefender));
+			setInjury(pDefender, gameState, diceRoller);
+
+		} else {
+			injuryContext.setInjury(new PlayerState(PlayerState.PRONE));
+		}
+		return injuryContext;
+	}
+}

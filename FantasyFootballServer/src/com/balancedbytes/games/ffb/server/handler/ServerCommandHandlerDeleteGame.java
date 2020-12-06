@@ -12,19 +12,19 @@ import com.balancedbytes.games.ffb.server.net.commands.InternalServerCommandDele
  */
 public class ServerCommandHandlerDeleteGame extends ServerCommandHandler {
 
-  protected ServerCommandHandlerDeleteGame(FantasyFootballServer pServer) {
-    super(pServer);
-  }
-  
-  public NetCommandId getId() {
-    return NetCommandId.INTERNAL_SERVER_DELETE_GAME;
-  }
+	protected ServerCommandHandlerDeleteGame(FantasyFootballServer pServer) {
+		super(pServer);
+	}
 
-  public boolean handleCommand(ReceivedCommand pReceivedCommand) {
-    InternalServerCommandDeleteGame deleteGameCommand = (InternalServerCommandDeleteGame) pReceivedCommand.getCommand();
-    getServer().getGameCache().queueDbDelete(deleteGameCommand.getGameId(), deleteGameCommand.isWithGamesInfo());
-    getServer().getDebugLog().log(IServerLogLevel.WARN, deleteGameCommand.getGameId(), "GameState deleted from db");
-    return true;
-  }
-  
+	public NetCommandId getId() {
+		return NetCommandId.INTERNAL_SERVER_DELETE_GAME;
+	}
+
+	public boolean handleCommand(ReceivedCommand pReceivedCommand) {
+		InternalServerCommandDeleteGame deleteGameCommand = (InternalServerCommandDeleteGame) pReceivedCommand.getCommand();
+		getServer().getGameCache().queueDbDelete(deleteGameCommand.getGameId(), deleteGameCommand.isWithGamesInfo());
+		getServer().getDebugLog().log(IServerLogLevel.WARN, deleteGameCommand.getGameId(), "GameState deleted from db");
+		return true;
+	}
+
 }

@@ -16,79 +16,79 @@ import com.eclipsesource.json.JsonValue;
  */
 public class ReportMostValuablePlayers implements IReport {
 
-  private List<String> fPlayerIdsHome;
-  private List<String> fPlayerIdsAway;
+	private List<String> fPlayerIdsHome;
+	private List<String> fPlayerIdsAway;
 
-  public ReportMostValuablePlayers() {
-    fPlayerIdsHome = new ArrayList<String>();
-    fPlayerIdsAway = new ArrayList<String>();
-  }
+	public ReportMostValuablePlayers() {
+		fPlayerIdsHome = new ArrayList<String>();
+		fPlayerIdsAway = new ArrayList<String>();
+	}
 
-  public ReportId getId() {
-    return ReportId.MOST_VALUABLE_PLAYERS;
-  }
+	public ReportId getId() {
+		return ReportId.MOST_VALUABLE_PLAYERS;
+	}
 
-  public void addPlayerIdHome(String pPlayerId) {
-    if (StringTool.isProvided(pPlayerId)) {
-      fPlayerIdsHome.add(pPlayerId);
-    }
-  }
+	public void addPlayerIdHome(String pPlayerId) {
+		if (StringTool.isProvided(pPlayerId)) {
+			fPlayerIdsHome.add(pPlayerId);
+		}
+	}
 
-  private void addPlayerIdsHome(String[] pPlayerIds) {
-    if (ArrayTool.isProvided(pPlayerIds)) {
-      for (String playerId : pPlayerIds) {
-        addPlayerIdHome(playerId);
-      }
-    }
-  }
+	private void addPlayerIdsHome(String[] pPlayerIds) {
+		if (ArrayTool.isProvided(pPlayerIds)) {
+			for (String playerId : pPlayerIds) {
+				addPlayerIdHome(playerId);
+			}
+		}
+	}
 
-  public String[] getPlayerIdsHome() {
-    return fPlayerIdsHome.toArray(new String[fPlayerIdsHome.size()]);
-  }
+	public String[] getPlayerIdsHome() {
+		return fPlayerIdsHome.toArray(new String[fPlayerIdsHome.size()]);
+	}
 
-  public void addPlayerIdAway(String pPlayerId) {
-    if (StringTool.isProvided(pPlayerId)) {
-      fPlayerIdsAway.add(pPlayerId);
-    }
-  }
+	public void addPlayerIdAway(String pPlayerId) {
+		if (StringTool.isProvided(pPlayerId)) {
+			fPlayerIdsAway.add(pPlayerId);
+		}
+	}
 
-  private void addPlayerIdsAway(String[] pPlayerIds) {
-    if (ArrayTool.isProvided(pPlayerIds)) {
-      for (String playerId : pPlayerIds) {
-        addPlayerIdAway(playerId);
-      }
-    }
-  }
+	private void addPlayerIdsAway(String[] pPlayerIds) {
+		if (ArrayTool.isProvided(pPlayerIds)) {
+			for (String playerId : pPlayerIds) {
+				addPlayerIdAway(playerId);
+			}
+		}
+	}
 
-  public String[] getPlayerIdsAway() {
-    return fPlayerIdsAway.toArray(new String[fPlayerIdsAway.size()]);
-  }
+	public String[] getPlayerIdsAway() {
+		return fPlayerIdsAway.toArray(new String[fPlayerIdsAway.size()]);
+	}
 
-  // transformation
+	// transformation
 
-  public IReport transform() {
-    ReportMostValuablePlayers transformedReport = new ReportMostValuablePlayers();
-    transformedReport.addPlayerIdsAway(getPlayerIdsHome());
-    transformedReport.addPlayerIdsHome(getPlayerIdsAway());
-    return transformedReport;
-  }
+	public IReport transform() {
+		ReportMostValuablePlayers transformedReport = new ReportMostValuablePlayers();
+		transformedReport.addPlayerIdsAway(getPlayerIdsHome());
+		transformedReport.addPlayerIdsHome(getPlayerIdsAway());
+		return transformedReport;
+	}
 
-  // JSON serialization
+	// JSON serialization
 
-  public JsonObject toJsonValue() {
-    JsonObject jsonObject = new JsonObject();
-    IJsonOption.REPORT_ID.addTo(jsonObject, getId());
-    IJsonOption.PLAYER_IDS_HOME.addTo(jsonObject, getPlayerIdsHome());
-    IJsonOption.PLAYER_IDS_AWAY.addTo(jsonObject, getPlayerIdsAway());
-    return jsonObject;
-  }
+	public JsonObject toJsonValue() {
+		JsonObject jsonObject = new JsonObject();
+		IJsonOption.REPORT_ID.addTo(jsonObject, getId());
+		IJsonOption.PLAYER_IDS_HOME.addTo(jsonObject, getPlayerIdsHome());
+		IJsonOption.PLAYER_IDS_AWAY.addTo(jsonObject, getPlayerIdsAway());
+		return jsonObject;
+	}
 
-  public ReportMostValuablePlayers initFrom(JsonValue pJsonValue) {
-    JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-    UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(jsonObject));
-    addPlayerIdsHome(IJsonOption.PLAYER_IDS_HOME.getFrom(jsonObject));
-    addPlayerIdsAway(IJsonOption.PLAYER_IDS_AWAY.getFrom(jsonObject));
-    return this;
-  }
+	public ReportMostValuablePlayers initFrom(JsonValue pJsonValue) {
+		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
+		UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(jsonObject));
+		addPlayerIdsHome(IJsonOption.PLAYER_IDS_HOME.getFrom(jsonObject));
+		addPlayerIdsAway(IJsonOption.PLAYER_IDS_AWAY.getFrom(jsonObject));
+		return this;
+	}
 
 }

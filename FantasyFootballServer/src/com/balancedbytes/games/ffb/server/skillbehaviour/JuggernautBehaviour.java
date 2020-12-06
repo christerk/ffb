@@ -36,31 +36,33 @@ public class JuggernautBehaviour extends SkillBehaviour<Juggernaut> {
 
 			@Override
 			public boolean handleExecuteStepHook(StepJuggernaut step, StepState state) {
-				 Game game = step.getGameState().getGame();
-				    ActingPlayer actingPlayer = game.getActingPlayer();
-				    UtilServerDialog.hideDialog(step.getGameState());
-				    if ((PlayerAction.BLITZ == actingPlayer.getPlayerAction()) && UtilCards.hasSkill(game, actingPlayer, skill) && !state.oldDefenderState.isRooted()) {
-				      if (state.usingJuggernaut == null) {
-				        UtilServerDialog.showDialog(step.getGameState(), new DialogSkillUseParameter(actingPlayer.getPlayer().getId(), skill, 0), false);
-				      } else {
-				        if (state.usingJuggernaut) {
-				        	step.getResult().addReport(new ReportSkillUse(actingPlayer.getPlayerId(), skill, true, SkillUse.PUSH_BACK_OPPONENT));
-				        	step.publishParameter(new StepParameter(StepParameterKey.BLOCK_RESULT, BlockResult.PUSHBACK));
-				        	game.getFieldModel().setPlayerState(game.getDefender(), state.oldDefenderState);
-				        	step.publishParameters(UtilBlockSequence.initPushback(step));
-				        	step.getResult().setNextAction(StepAction.GOTO_LABEL, state.goToLabelOnSuccess);
-				        } else {
-				        	step.getResult().addReport(new ReportSkillUse(actingPlayer.getPlayerId(), skill, false, null));
-				        	step.getResult().setNextAction(StepAction.NEXT_STEP);
-				        }
-				      }
-				    } else {
-				    	step.getResult().setNextAction(StepAction.NEXT_STEP);
-				    }
+				Game game = step.getGameState().getGame();
+				ActingPlayer actingPlayer = game.getActingPlayer();
+				UtilServerDialog.hideDialog(step.getGameState());
+				if ((PlayerAction.BLITZ == actingPlayer.getPlayerAction()) && UtilCards.hasSkill(game, actingPlayer, skill)
+						&& !state.oldDefenderState.isRooted()) {
+					if (state.usingJuggernaut == null) {
+						UtilServerDialog.showDialog(step.getGameState(),
+								new DialogSkillUseParameter(actingPlayer.getPlayer().getId(), skill, 0), false);
+					} else {
+						if (state.usingJuggernaut) {
+							step.getResult()
+									.addReport(new ReportSkillUse(actingPlayer.getPlayerId(), skill, true, SkillUse.PUSH_BACK_OPPONENT));
+							step.publishParameter(new StepParameter(StepParameterKey.BLOCK_RESULT, BlockResult.PUSHBACK));
+							game.getFieldModel().setPlayerState(game.getDefender(), state.oldDefenderState);
+							step.publishParameters(UtilBlockSequence.initPushback(step));
+							step.getResult().setNextAction(StepAction.GOTO_LABEL, state.goToLabelOnSuccess);
+						} else {
+							step.getResult().addReport(new ReportSkillUse(actingPlayer.getPlayerId(), skill, false, null));
+							step.getResult().setNextAction(StepAction.NEXT_STEP);
+						}
+					}
+				} else {
+					step.getResult().setNextAction(StepAction.NEXT_STEP);
+				}
 				return false;
 			}
-			
-			
+
 		});
 	}
 }

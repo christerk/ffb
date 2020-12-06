@@ -12,29 +12,30 @@ import com.balancedbytes.games.ffb.server.DiceRoller;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.step.IStep;
 
-public class InjuryTypeThrowARock extends InjuryTypeServer<ThrowARock>   {
-		public InjuryTypeThrowARock() {
-			super(new ThrowARock());
-		}
-
-		@Override
-		public InjuryContext handleInjury(IStep step, Game game,GameState gameState, DiceRoller diceRoller, Player<?> pAttacker, Player<?> pDefender,
-				FieldCoordinate pDefenderCoordinate, InjuryContext pOldInjuryContext, ApothecaryMode pApothecaryMode) {
-
-			if (!injuryContext.isArmorBroken()) {
-				injuryContext.setArmorBroken(true);
-			}
-
-			if (injuryContext.isArmorBroken()) {
-				injuryContext.setInjuryRoll(diceRoller.rollInjury());
-				injuryContext.addInjuryModifier(new InjuryModifierFactory().getNigglingInjuryModifier(pDefender));
-
-				setInjury(pDefender, gameState, diceRoller);
-
-			} else {
-				injuryContext.setInjury(new PlayerState(PlayerState.PRONE));
-			}
-
-			return injuryContext;
-		}
+public class InjuryTypeThrowARock extends InjuryTypeServer<ThrowARock> {
+	public InjuryTypeThrowARock() {
+		super(new ThrowARock());
 	}
+
+	@Override
+	public InjuryContext handleInjury(IStep step, Game game, GameState gameState, DiceRoller diceRoller,
+			Player<?> pAttacker, Player<?> pDefender, FieldCoordinate pDefenderCoordinate, InjuryContext pOldInjuryContext,
+			ApothecaryMode pApothecaryMode) {
+
+		if (!injuryContext.isArmorBroken()) {
+			injuryContext.setArmorBroken(true);
+		}
+
+		if (injuryContext.isArmorBroken()) {
+			injuryContext.setInjuryRoll(diceRoller.rollInjury());
+			injuryContext.addInjuryModifier(new InjuryModifierFactory().getNigglingInjuryModifier(pDefender));
+
+			setInjury(pDefender, gameState, diceRoller);
+
+		} else {
+			injuryContext.setInjury(new PlayerState(PlayerState.PRONE));
+		}
+
+		return injuryContext;
+	}
+}

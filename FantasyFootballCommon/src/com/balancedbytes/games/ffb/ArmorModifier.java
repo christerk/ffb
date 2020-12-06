@@ -8,31 +8,30 @@ import com.balancedbytes.games.ffb.ArmorModifiers.ArmorModifierContext;
  */
 public class ArmorModifier implements INamedObject {
 
-  
-  private String fName;
-  private int fModifier;
-  private boolean fFoulAssistModifier; 
-  
-  ArmorModifier(String pName, int pModifier, boolean pFoulAssistModifier) {
-    fName = pName;
-    fModifier = pModifier;
-    fFoulAssistModifier = pFoulAssistModifier;
-  }
-  
-  public int getModifier() {
-    return fModifier;
-  }
-  
-  public String getName() {
-    return fName;
-  }
-  
-  public boolean isFoulAssistModifier() {
-    return fFoulAssistModifier;
-  }
+	private String fName;
+	private int fModifier;
+	private boolean fFoulAssistModifier;
 
-  public boolean appliesToContext(ArmorModifierContext context) {
-	  return true;
-  }
-  
+	ArmorModifier(String pName, int pModifier, boolean pFoulAssistModifier) {
+		fName = pName;
+		fModifier = pModifier;
+		fFoulAssistModifier = pFoulAssistModifier;
+	}
+
+	public int getModifier() {
+		return fModifier;
+	}
+
+	public String getName() {
+		return fName;
+	}
+
+	public boolean isFoulAssistModifier() {
+		return fFoulAssistModifier;
+	}
+
+	public boolean appliesToContext(ArmorModifierContext context) {
+		return true;
+	}
+
 }

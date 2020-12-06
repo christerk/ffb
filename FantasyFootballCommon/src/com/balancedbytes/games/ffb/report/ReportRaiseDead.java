@@ -11,52 +11,52 @@ import com.eclipsesource.json.JsonValue;
  */
 public class ReportRaiseDead implements IReport {
 
-  private String fPlayerId;
-  private boolean fNurglesRot;
+	private String fPlayerId;
+	private boolean fNurglesRot;
 
-  public ReportRaiseDead() {
-    super();
-  }
+	public ReportRaiseDead() {
+		super();
+	}
 
-  public ReportRaiseDead(String pPlayerId, boolean pNurglesRot) {
-    fPlayerId = pPlayerId;
-    fNurglesRot = pNurglesRot;
-  }
+	public ReportRaiseDead(String pPlayerId, boolean pNurglesRot) {
+		fPlayerId = pPlayerId;
+		fNurglesRot = pNurglesRot;
+	}
 
-  public ReportId getId() {
-    return ReportId.RAISE_DEAD;
-  }
+	public ReportId getId() {
+		return ReportId.RAISE_DEAD;
+	}
 
-  public String getPlayerId() {
-    return fPlayerId;
-  }
+	public String getPlayerId() {
+		return fPlayerId;
+	}
 
-  public boolean isNurglesRot() {
-    return fNurglesRot;
-  }
+	public boolean isNurglesRot() {
+		return fNurglesRot;
+	}
 
-  // transformation
+	// transformation
 
-  public IReport transform() {
-    return new ReportRaiseDead(getPlayerId(), isNurglesRot());
-  }
+	public IReport transform() {
+		return new ReportRaiseDead(getPlayerId(), isNurglesRot());
+	}
 
-  // JSON serialization
+	// JSON serialization
 
-  public JsonObject toJsonValue() {
-    JsonObject jsonObject = new JsonObject();
-    IJsonOption.REPORT_ID.addTo(jsonObject, getId());
-    IJsonOption.PLAYER_ID.addTo(jsonObject, fPlayerId);
-    IJsonOption.NURGLES_ROT.addTo(jsonObject, fNurglesRot);
-    return jsonObject;
-  }
+	public JsonObject toJsonValue() {
+		JsonObject jsonObject = new JsonObject();
+		IJsonOption.REPORT_ID.addTo(jsonObject, getId());
+		IJsonOption.PLAYER_ID.addTo(jsonObject, fPlayerId);
+		IJsonOption.NURGLES_ROT.addTo(jsonObject, fNurglesRot);
+		return jsonObject;
+	}
 
-  public ReportRaiseDead initFrom(JsonValue pJsonValue) {
-    JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-    UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(jsonObject));
-    fPlayerId = IJsonOption.PLAYER_ID.getFrom(jsonObject);
-    fNurglesRot = IJsonOption.NURGLES_ROT.getFrom(jsonObject);
-    return this;
-  }
+	public ReportRaiseDead initFrom(JsonValue pJsonValue) {
+		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
+		UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(jsonObject));
+		fPlayerId = IJsonOption.PLAYER_ID.getFrom(jsonObject);
+		fNurglesRot = IJsonOption.NURGLES_ROT.getFrom(jsonObject);
+		return this;
+	}
 
 }

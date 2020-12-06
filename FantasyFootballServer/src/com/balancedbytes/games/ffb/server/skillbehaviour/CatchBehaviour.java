@@ -10,25 +10,25 @@ import com.balancedbytes.games.ffb.server.step.action.common.StepCatchScatterThr
 import com.balancedbytes.games.ffb.skill.Catch;
 
 public class CatchBehaviour extends SkillBehaviour<Catch> {
-  public CatchBehaviour() {
-    super();
-    
-    registerModifier(new StepModifier<StepCatchScatterThrowIn, StepCatchScatterThrowIn.StepState>() {
+	public CatchBehaviour() {
+		super();
 
-      @Override
-      public StepCommandStatus handleCommandHook(StepCatchScatterThrowIn step, StepState state,
-          ClientCommandUseSkill useSkillCommand) {
-        return null;
-      }
+		registerModifier(new StepModifier<StepCatchScatterThrowIn, StepCatchScatterThrowIn.StepState>() {
 
-      @Override
-      public boolean handleExecuteStepHook(StepCatchScatterThrowIn step, StepState state) {
-        step.setReRolledAction(ReRolledActions.CATCH);
-        step.setReRollSource(skill.getRerollSource(ReRolledActions.CATCH));
+			@Override
+			public StepCommandStatus handleCommandHook(StepCatchScatterThrowIn step, StepState state,
+					ClientCommandUseSkill useSkillCommand) {
+				return null;
+			}
 
-        return true;
-      }
-      
-    });
-  }
+			@Override
+			public boolean handleExecuteStepHook(StepCatchScatterThrowIn step, StepState state) {
+				step.setReRolledAction(ReRolledActions.CATCH);
+				step.setReRollSource(skill.getRerollSource(ReRolledActions.CATCH));
+
+				return true;
+			}
+
+		});
+	}
 }

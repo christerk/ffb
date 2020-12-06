@@ -44,30 +44,31 @@ import java.io.IOException;
 import java.io.InputStream;
 
 /**
- * Passed to the (@link MessageHandler.Whole} in case that partial messages are being received.
+ * Passed to the (@link MessageHandler.Whole} in case that partial messages are
+ * being received.
  *
  * @author Danny Coward (danny.coward at oracle.com)
  * @author Stepan Kopriva (stepan.kopriva at oracle.com)
  */
 class BufferedInputStream extends InputStream {
-    private final InputStreamBuffer buffer;
+	private final InputStreamBuffer buffer;
 
-    /**
-     * Constructor.
-     *
-     * @param buffer underlying buffer.
-     */
-    public BufferedInputStream(InputStreamBuffer buffer) {
-        this.buffer = buffer;
-    }
+	/**
+	 * Constructor.
+	 *
+	 * @param buffer underlying buffer.
+	 */
+	public BufferedInputStream(InputStreamBuffer buffer) {
+		this.buffer = buffer;
+	}
 
-    @Override
-    public int read() throws IOException {
-        return buffer.getNextByte();
-    }
+	@Override
+	public int read() throws IOException {
+		return buffer.getNextByte();
+	}
 
-    @Override
-    public void close() {
-        this.buffer.finishReading();
-    }
+	@Override
+	public void close() {
+		this.buffer.finishReading();
+	}
 }

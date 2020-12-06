@@ -41,39 +41,39 @@ public final class StepEndGame extends AbstractStep {
 		executeStep();
 	}
 
-  private void executeStep() {
-    Game game = getGameState().getGame();
-    GameCache gameCache = getGameState().getServer().getGameCache();
-    if (game.getFinished() == null) {
-      game.setFinished(new Date());
-      getGameState().setStatus(GameStatus.FINISHED);
-      getGameState().getStepStack().clear();  // clean up after ourselves
-      gameCache.queueDbUpdate(getGameState(), true);
-      IDialogParameter gameStatistics = new DialogParameterFactory().createDialogParameter(DialogId.GAME_STATISTICS);
-      UtilServerDialog.showDialog(getGameState(), gameStatistics, false);
-    }
-    FantasyFootballServer server = getGameState().getServer();
-    if (!game.isTesting()) {
-      if (server.getMode() == ServerMode.FUMBBL) {
-        server.getRequestProcessor().add(new FumbblRequestUploadResults(getGameState()));
-      } else {
-        server.getRequestProcessor().add(new ServerRequestSaveReplay(getGameState().getId()));
-      }
-    }
-    getResult().setNextAction(StepAction.NEXT_STEP);
-  }
+	private void executeStep() {
+		Game game = getGameState().getGame();
+		GameCache gameCache = getGameState().getServer().getGameCache();
+		if (game.getFinished() == null) {
+			game.setFinished(new Date());
+			getGameState().setStatus(GameStatus.FINISHED);
+			getGameState().getStepStack().clear(); // clean up after ourselves
+			gameCache.queueDbUpdate(getGameState(), true);
+			IDialogParameter gameStatistics = new DialogParameterFactory().createDialogParameter(DialogId.GAME_STATISTICS);
+			UtilServerDialog.showDialog(getGameState(), gameStatistics, false);
+		}
+		FantasyFootballServer server = getGameState().getServer();
+		if (!game.isTesting()) {
+			if (server.getMode() == ServerMode.FUMBBL) {
+				server.getRequestProcessor().add(new FumbblRequestUploadResults(getGameState()));
+			} else {
+				server.getRequestProcessor().add(new ServerRequestSaveReplay(getGameState().getId()));
+			}
+		}
+		getResult().setNextAction(StepAction.NEXT_STEP);
+	}
 
-  // JSON serialization
-  
-  @Override
-  public JsonObject toJsonValue() {
-    return super.toJsonValue();
-  }
-  
-  @Override
-  public StepEndGame initFrom(JsonValue pJsonValue) {
-    super.initFrom(pJsonValue);
-    return this;
-  }
+	// JSON serialization
+
+	@Override
+	public JsonObject toJsonValue() {
+		return super.toJsonValue();
+	}
+
+	@Override
+	public StepEndGame initFrom(JsonValue pJsonValue) {
+		super.initFrom(pJsonValue);
+		return this;
+	}
 
 }

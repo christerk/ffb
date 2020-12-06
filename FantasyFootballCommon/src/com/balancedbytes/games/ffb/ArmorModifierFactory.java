@@ -20,29 +20,28 @@ import com.balancedbytes.games.ffb.util.UtilCards;
 public class ArmorModifierFactory implements INamedObjectFactory {
 
 	static ArmorModifiers armorModifiers;
-	
-	public ArmorModifierFactory()
-	{
+
+	public ArmorModifierFactory() {
 		armorModifiers = new ArmorModifiers();
 	}
 
 	public ArmorModifier forName(String pName) {
 		return armorModifiers.values().get(pName.toLowerCase());
 	}
-	
-	public Set<ArmorModifier> findArmorModifiers(Game game, Player<?> attacker, Player<?> defender, boolean isStab, boolean isFoul) {
-		 Set<ArmorModifier> armorModifiers = new HashSet<ArmorModifier>();
-		 
-		 ArmorModifierContext context = new ArmorModifierContext(game, attacker, defender, isStab, isFoul);
-		 armorModifiers.addAll(UtilCards.getArmorModifiers(attacker, context));
-		 
-		 if(armorModifiers.contains(ArmorModifiers.CLAWS) 
-				 && armorModifiers.contains(ArmorModifiers.MIGHTY_BLOW) 
-				 && UtilGameOption.isOptionEnabled(game, GameOptionId.CLAW_DOES_NOT_STACK)) {
+
+	public Set<ArmorModifier> findArmorModifiers(Game game, Player<?> attacker, Player<?> defender, boolean isStab,
+			boolean isFoul) {
+		Set<ArmorModifier> armorModifiers = new HashSet<ArmorModifier>();
+
+		ArmorModifierContext context = new ArmorModifierContext(game, attacker, defender, isStab, isFoul);
+		armorModifiers.addAll(UtilCards.getArmorModifiers(attacker, context));
+
+		if (armorModifiers.contains(ArmorModifiers.CLAWS) && armorModifiers.contains(ArmorModifiers.MIGHTY_BLOW)
+				&& UtilGameOption.isOptionEnabled(game, GameOptionId.CLAW_DOES_NOT_STACK)) {
 			armorModifiers.remove(ArmorModifiers.MIGHTY_BLOW);
-		 }
-	
-		 return armorModifiers;
+		}
+
+		return armorModifiers;
 	}
 
 	public ArmorModifier getFoulAssist(int pModifier) {
@@ -58,14 +57,11 @@ public class ArmorModifierFactory implements INamedObjectFactory {
 	public ArmorModifier[] toArray(Set<ArmorModifier> pArmorModifiers) {
 		if (pArmorModifiers != null) {
 			ArmorModifier[] modifierArray = pArmorModifiers.toArray(new ArmorModifier[pArmorModifiers.size()]);
-			Arrays.sort(
-					modifierArray,
-					new Comparator<ArmorModifier>() {
-						public int compare(ArmorModifier pO1, ArmorModifier pO2) {
-							return pO1.getName().compareTo(pO2.getName());
-						}
-					}
-					);
+			Arrays.sort(modifierArray, new Comparator<ArmorModifier>() {
+				public int compare(ArmorModifier pO1, ArmorModifier pO2) {
+					return pO1.getName().compareTo(pO2.getName());
+				}
+			});
 			return modifierArray;
 		} else {
 			return new ArmorModifier[0];

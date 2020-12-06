@@ -28,8 +28,8 @@ import com.eclipsesource.json.JsonValue;
  * 
  * Expects stepParameter INJURY_TYPE to be set by a preceding step.
  * 
- * Sets stepParameter END_TURN for all steps on the stack.
- * Sets stepParameter INJURY_RESULT for all steps on the stack.
+ * Sets stepParameter END_TURN for all steps on the stack. Sets stepParameter
+ * INJURY_RESULT for all steps on the stack.
  * 
  * @author Kalimar
  */
@@ -49,11 +49,11 @@ public class StepFallDown extends AbstractStep {
 	public boolean setParameter(StepParameter pParameter) {
 		if ((pParameter != null) && !super.setParameter(pParameter)) {
 			switch (pParameter.getKey()) {
-				case INJURY_TYPE:
-					fInjuryType = (InjuryTypeServer) pParameter.getValue();
-					return true;
-				default:
-					break;
+			case INJURY_TYPE:
+				fInjuryType = (InjuryTypeServer) pParameter.getValue();
+				return true;
+			default:
+				break;
 			}
 		}
 		return false;
@@ -64,50 +64,51 @@ public class StepFallDown extends AbstractStep {
 		super.start();
 		executeStep();
 	}
-	
-  @Override
-  public StepCommandStatus handleCommand(ReceivedCommand pReceivedCommand) {
-    StepCommandStatus commandStatus = super.handleCommand(pReceivedCommand);
-    if (commandStatus == StepCommandStatus.EXECUTE_STEP) {
-      executeStep();
-    }
-    return commandStatus;
-  }
 
-  private void executeStep() {
-	  Game game = getGameState().getGame();
-	  ActingPlayer actingPlayer = game.getActingPlayer();
-	  FieldCoordinate playerCoordinate = game.getFieldModel().getPlayerCoordinate(actingPlayer.getPlayer());
-	  InjuryResult injuryResultAttacker = UtilServerInjury.handleInjury(this, fInjuryType, null, actingPlayer.getPlayer(), playerCoordinate, null, ApothecaryMode.ATTACKER);
-	  publishParameters(UtilServerInjury.dropPlayer(this, actingPlayer.getPlayer(), ApothecaryMode.ATTACKER));
-	  if (actingPlayer.isSufferingBloodLust()) {
-		  game.getFieldModel().clearMoveSquares();
-		  PlayerState playerState = game.getFieldModel().getPlayerState(actingPlayer.getPlayer());
-		  game.getFieldModel().setPlayerState(actingPlayer.getPlayer(), playerState.changeBase(PlayerState.RESERVE));
-		  UtilBox.putPlayerIntoBox(game, actingPlayer.getPlayer());
-	  }
-	  publishParameter(new StepParameter(StepParameterKey.INJURY_RESULT, injuryResultAttacker));
-	  if ((!fInjuryType.fallingDownCausesTurnover()) && (game.getTurnMode() != TurnMode.PASS_BLOCK)) {
-		  publishParameter(new StepParameter(StepParameterKey.END_TURN, true));
-	  }
-	  getResult().setNextAction(StepAction.NEXT_STEP);
-  }
+	@Override
+	public StepCommandStatus handleCommand(ReceivedCommand pReceivedCommand) {
+		StepCommandStatus commandStatus = super.handleCommand(pReceivedCommand);
+		if (commandStatus == StepCommandStatus.EXECUTE_STEP) {
+			executeStep();
+		}
+		return commandStatus;
+	}
 
-  // JSON serialization
+	private void executeStep() {
+		Game game = getGameState().getGame();
+		ActingPlayer actingPlayer = game.getActingPlayer();
+		FieldCoordinate playerCoordinate = game.getFieldModel().getPlayerCoordinate(actingPlayer.getPlayer());
+		InjuryResult injuryResultAttacker = UtilServerInjury.handleInjury(this, fInjuryType, null, actingPlayer.getPlayer(),
+				playerCoordinate, null, ApothecaryMode.ATTACKER);
+		publishParameters(UtilServerInjury.dropPlayer(this, actingPlayer.getPlayer(), ApothecaryMode.ATTACKER));
+		if (actingPlayer.isSufferingBloodLust()) {
+			game.getFieldModel().clearMoveSquares();
+			PlayerState playerState = game.getFieldModel().getPlayerState(actingPlayer.getPlayer());
+			game.getFieldModel().setPlayerState(actingPlayer.getPlayer(), playerState.changeBase(PlayerState.RESERVE));
+			UtilBox.putPlayerIntoBox(game, actingPlayer.getPlayer());
+		}
+		publishParameter(new StepParameter(StepParameterKey.INJURY_RESULT, injuryResultAttacker));
+		if ((!fInjuryType.fallingDownCausesTurnover()) && (game.getTurnMode() != TurnMode.PASS_BLOCK)) {
+			publishParameter(new StepParameter(StepParameterKey.END_TURN, true));
+		}
+		getResult().setNextAction(StepAction.NEXT_STEP);
+	}
 
-  @Override
-  public JsonObject toJsonValue() {
-	  JsonObject jsonObject = super.toJsonValue();
-	  IServerJsonOption.INJURY_TYPE.addTo(jsonObject, fInjuryType);
-	  return jsonObject;
-  }
+	// JSON serialization
 
-  @Override
-  public StepFallDown initFrom(JsonValue pJsonValue) {
-	  super.initFrom(pJsonValue);
-	  JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-	  fInjuryType = (InjuryTypeServer) IServerJsonOption.INJURY_TYPE.getFrom(jsonObject);
-	  return this;
-  }
+	@Override
+	public JsonObject toJsonValue() {
+		JsonObject jsonObject = super.toJsonValue();
+		IServerJsonOption.INJURY_TYPE.addTo(jsonObject, fInjuryType);
+		return jsonObject;
+	}
+
+	@Override
+	public StepFallDown initFrom(JsonValue pJsonValue) {
+		super.initFrom(pJsonValue);
+		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
+		fInjuryType = (InjuryTypeServer) IServerJsonOption.INJURY_TYPE.getFrom(jsonObject);
+		return this;
+	}
 
 }

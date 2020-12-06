@@ -54,61 +54,60 @@ import javax.websocket.server.ServerEndpointConfig;
  */
 final class DefaultTyrusServerEndpointConfig implements TyrusServerEndpointConfig {
 
-    /* wrapped origin config */
-    private ServerEndpointConfig config;
-    /* maximal number of open sessions */
-    private int maxSessions;
+	/* wrapped origin config */
+	private ServerEndpointConfig config;
+	/* maximal number of open sessions */
+	private int maxSessions;
 
+	// The builder ensures nothing except configurator can be {@code null}.
+	DefaultTyrusServerEndpointConfig(ServerEndpointConfig config, int maxSessions) {
+		this.config = config;
+		this.maxSessions = maxSessions;
+	}
 
-    // The builder ensures nothing except configurator can be {@code null}.
-    DefaultTyrusServerEndpointConfig(ServerEndpointConfig config, int maxSessions) {
-        this.config = config;
-        this.maxSessions = maxSessions;
-    }
+	@Override
+	public int getMaxSessions() {
+		return maxSessions;
+	}
 
-    @Override
-    public int getMaxSessions() {
-        return maxSessions;
-    }
+	@Override
+	public Class<?> getEndpointClass() {
+		return config.getEndpointClass();
+	}
 
-    @Override
-    public Class<?> getEndpointClass() {
-        return config.getEndpointClass();
-    }
+	@Override
+	public List<Class<? extends Encoder>> getEncoders() {
+		return config.getEncoders();
+	}
 
-    @Override
-    public List<Class<? extends Encoder>> getEncoders() {
-        return config.getEncoders();
-    }
+	@Override
+	public List<Class<? extends Decoder>> getDecoders() {
+		return config.getDecoders();
+	}
 
-    @Override
-    public List<Class<? extends Decoder>> getDecoders() {
-        return config.getDecoders();
-    }
+	@Override
+	public String getPath() {
+		return config.getPath();
+	}
 
-    @Override
-    public String getPath() {
-        return config.getPath();
-    }
+	@Override
+	public ServerEndpointConfig.Configurator getConfigurator() {
+		return config.getConfigurator();
+	}
 
-    @Override
-    public ServerEndpointConfig.Configurator getConfigurator() {
-        return config.getConfigurator();
-    }
+	@Override
+	public final Map<String, Object> getUserProperties() {
+		return config.getUserProperties();
+	}
 
-    @Override
-    public final Map<String, Object> getUserProperties() {
-        return config.getUserProperties();
-    }
+	@Override
+	public final List<String> getSubprotocols() {
+		return config.getSubprotocols();
+	}
 
-    @Override
-    public final List<String> getSubprotocols() {
-        return config.getSubprotocols();
-    }
-
-    @Override
-    public final List<Extension> getExtensions() {
-        return config.getExtensions();
-    }
+	@Override
+	public final List<Extension> getExtensions() {
+		return config.getExtensions();
+	}
 
 }

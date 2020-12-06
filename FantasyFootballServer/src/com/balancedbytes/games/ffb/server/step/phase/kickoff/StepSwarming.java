@@ -19,88 +19,86 @@ import com.eclipsesource.json.JsonValue;
 public class StepSwarming extends AbstractStep {
 
 	public class StepState {
-	    public ActionStatus status;
-	    public boolean endTurn;
-	    public boolean handleReceivingTeam;
-	    public int allowedAmount;
-	    public String teamId;
-	  }
-	
+		public ActionStatus status;
+		public boolean endTurn;
+		public boolean handleReceivingTeam;
+		public int allowedAmount;
+		public String teamId;
+	}
+
 	private StepState state;
-	
 
-  public StepSwarming(GameState pGameState) {
-    super(pGameState);
-    
-    state = new StepState();
-  }
+	public StepSwarming(GameState pGameState) {
+		super(pGameState);
 
-  @Override
-  public void start() {
-    executeStep();
-  }
+		state = new StepState();
+	}
 
-  @Override
-  public StepId getId() {
-    return StepId.SWARMING;
-  }
+	@Override
+	public void start() {
+		executeStep();
+	}
 
-  @Override
-  public void init(StepParameterSet pParameterSet) {
-    super.init(pParameterSet);
-    if (pParameterSet != null) {
-      for (StepParameter parameter : pParameterSet.values()) {
-        if (parameter.getKey() == StepParameterKey.HANDLE_RECEIVING_TEAM) {
-          state.handleReceivingTeam = (boolean) parameter.getValue();
-        }
-      }
-    }
-  }
+	@Override
+	public StepId getId() {
+		return StepId.SWARMING;
+	}
 
-  @Override
-  public StepCommandStatus handleCommand(ReceivedCommand pReceivedCommand) {
-    StepCommandStatus commandStatus = super.handleCommand(pReceivedCommand);
+	@Override
+	public void init(StepParameterSet pParameterSet) {
+		super.init(pParameterSet);
+		if (pParameterSet != null) {
+			for (StepParameter parameter : pParameterSet.values()) {
+				if (parameter.getKey() == StepParameterKey.HANDLE_RECEIVING_TEAM) {
+					state.handleReceivingTeam = (boolean) parameter.getValue();
+				}
+			}
+		}
+	}
 
-    switch (pReceivedCommand.getId()) {
-    case CLIENT_END_TURN:
-      state.endTurn = true;
-      executeStep();
-      break;
+	@Override
+	public StepCommandStatus handleCommand(ReceivedCommand pReceivedCommand) {
+		StepCommandStatus commandStatus = super.handleCommand(pReceivedCommand);
 
-    case CLIENT_SETUP_PLAYER:
-      ClientCommandSetupPlayer setupPlayerCommand = (ClientCommandSetupPlayer) pReceivedCommand.getCommand();
-      UtilServerSetup.setupPlayer(getGameState(), setupPlayerCommand.getPlayerId(), setupPlayerCommand.getCoordinate());
-      break;
-    default:
-      break;
-    }
-    return commandStatus;
-  }
+		switch (pReceivedCommand.getId()) {
+		case CLIENT_END_TURN:
+			state.endTurn = true;
+			executeStep();
+			break;
 
-  private void executeStep() {
-	  getGameState().executeStepHooks(this, state);
-  }
+		case CLIENT_SETUP_PLAYER:
+			ClientCommandSetupPlayer setupPlayerCommand = (ClientCommandSetupPlayer) pReceivedCommand.getCommand();
+			UtilServerSetup.setupPlayer(getGameState(), setupPlayerCommand.getPlayerId(), setupPlayerCommand.getCoordinate());
+			break;
+		default:
+			break;
+		}
+		return commandStatus;
+	}
 
-  @Override
-  public JsonObject toJsonValue() {
-    JsonObject jsonObject = super.toJsonValue();
-    IServerJsonOption.END_TURN.addTo(jsonObject, state.endTurn);
-    IServerJsonOption.HANDLE_RECEIVING_TEAM.addTo(jsonObject, state.handleReceivingTeam);
-    IServerJsonOption.SWARMING_PLAYER_AMOUT.addTo(jsonObject, state.allowedAmount);
-    IServerJsonOption.TEAM_ID.addTo(jsonObject, state.teamId);
-    return jsonObject;
-  }
+	private void executeStep() {
+		getGameState().executeStepHooks(this, state);
+	}
 
-  @Override
-  public StepSwarming initFrom(JsonValue pJsonValue) {
-    super.initFrom(pJsonValue);
-    JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-    state.endTurn = IServerJsonOption.END_TURN.getFrom(jsonObject);
-    state.handleReceivingTeam = IServerJsonOption.HANDLE_RECEIVING_TEAM.getFrom(jsonObject);
-    state.allowedAmount = IServerJsonOption.SWARMING_PLAYER_AMOUT.getFrom(jsonObject);
-    state.teamId = IServerJsonOption.TEAM_ID.getFrom(jsonObject);
-    return this;
-  }
+	@Override
+	public JsonObject toJsonValue() {
+		JsonObject jsonObject = super.toJsonValue();
+		IServerJsonOption.END_TURN.addTo(jsonObject, state.endTurn);
+		IServerJsonOption.HANDLE_RECEIVING_TEAM.addTo(jsonObject, state.handleReceivingTeam);
+		IServerJsonOption.SWARMING_PLAYER_AMOUT.addTo(jsonObject, state.allowedAmount);
+		IServerJsonOption.TEAM_ID.addTo(jsonObject, state.teamId);
+		return jsonObject;
+	}
 
-  
+	@Override
+	public StepSwarming initFrom(JsonValue pJsonValue) {
+		super.initFrom(pJsonValue);
+		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
+		state.endTurn = IServerJsonOption.END_TURN.getFrom(jsonObject);
+		state.handleReceivingTeam = IServerJsonOption.HANDLE_RECEIVING_TEAM.getFrom(jsonObject);
+		state.allowedAmount = IServerJsonOption.SWARMING_PLAYER_AMOUT.getFrom(jsonObject);
+		state.teamId = IServerJsonOption.TEAM_ID.getFrom(jsonObject);
+		return this;
+	}
+
 }

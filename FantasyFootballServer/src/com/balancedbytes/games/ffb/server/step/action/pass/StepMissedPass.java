@@ -88,9 +88,11 @@ public class StepMissedPass extends AbstractStep {
 		game.getFieldModel().setRangeRuler(null);
 		FieldCoordinate throwerCoordinate = game.getFieldModel().getPlayerCoordinate(game.getThrower());
 		if (PlayerAction.HAIL_MARY_PASS == game.getThrowerAction()) {
-			getResult().setAnimation(new Animation(AnimationType.HAIL_MARY_PASS, throwerCoordinate, lastValidCoordinate, null));
+			getResult()
+					.setAnimation(new Animation(AnimationType.HAIL_MARY_PASS, throwerCoordinate, lastValidCoordinate, null));
 		} else if (PlayerAction.HAIL_MARY_BOMB == game.getThrowerAction()) {
-			getResult().setAnimation(new Animation(AnimationType.HAIL_MARY_BOMB, throwerCoordinate, lastValidCoordinate, null));
+			getResult()
+					.setAnimation(new Animation(AnimationType.HAIL_MARY_BOMB, throwerCoordinate, lastValidCoordinate, null));
 		} else if (PlayerAction.THROW_BOMB == game.getThrowerAction()) {
 			getResult().setAnimation(new Animation(AnimationType.THROW_BOMB, throwerCoordinate, lastValidCoordinate, null));
 		} else {
@@ -98,21 +100,26 @@ public class StepMissedPass extends AbstractStep {
 		}
 		UtilServerGame.syncGameModel(this);
 		if (!FieldCoordinateBounds.FIELD.isInBounds(coordinateEnd)) {
-			if ((PlayerAction.HAIL_MARY_BOMB == game.getThrowerAction()) || (PlayerAction.THROW_BOMB == game.getThrowerAction())) {
+			if ((PlayerAction.HAIL_MARY_BOMB == game.getThrowerAction())
+					|| (PlayerAction.THROW_BOMB == game.getThrowerAction())) {
 				game.getFieldModel().setBombCoordinate(null);
 				publishParameter(new StepParameter(StepParameterKey.BOMB_OUT_OF_BOUNDS, true));
 			} else {
-				publishParameter(new StepParameter(StepParameterKey.CATCH_SCATTER_THROW_IN_MODE, CatchScatterThrowInMode.THROW_IN));
+				publishParameter(
+						new StepParameter(StepParameterKey.CATCH_SCATTER_THROW_IN_MODE, CatchScatterThrowInMode.THROW_IN));
 				publishParameter(new StepParameter(StepParameterKey.THROW_IN_COORDINATE, lastValidCoordinate));
 				game.getFieldModel().setBallMoving(true);
 			}
 		} else {
-			if ((PlayerAction.HAIL_MARY_BOMB == game.getThrowerAction()) || (PlayerAction.THROW_BOMB == game.getThrowerAction())) {
-				publishParameter(new StepParameter(StepParameterKey.CATCH_SCATTER_THROW_IN_MODE, CatchScatterThrowInMode.CATCH_BOMB));
+			if ((PlayerAction.HAIL_MARY_BOMB == game.getThrowerAction())
+					|| (PlayerAction.THROW_BOMB == game.getThrowerAction())) {
+				publishParameter(
+						new StepParameter(StepParameterKey.CATCH_SCATTER_THROW_IN_MODE, CatchScatterThrowInMode.CATCH_BOMB));
 				game.getFieldModel().setBombCoordinate(coordinateEnd);
 				game.getFieldModel().setBombMoving(true);
 			} else {
-				publishParameter(new StepParameter(StepParameterKey.CATCH_SCATTER_THROW_IN_MODE, CatchScatterThrowInMode.CATCH_MISSED_PASS));
+				publishParameter(
+						new StepParameter(StepParameterKey.CATCH_SCATTER_THROW_IN_MODE, CatchScatterThrowInMode.CATCH_MISSED_PASS));
 				game.getFieldModel().setBallCoordinate(coordinateEnd);
 				game.getFieldModel().setBallMoving(true);
 			}

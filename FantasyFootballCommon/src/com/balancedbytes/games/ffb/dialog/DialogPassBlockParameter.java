@@ -12,26 +12,26 @@ import com.eclipsesource.json.JsonValue;
  */
 public class DialogPassBlockParameter extends DialogWithoutParameter {
 
-  public DialogPassBlockParameter() {
-    super();
-  }
+	public DialogPassBlockParameter() {
+		super();
+	}
 
-  public DialogId getId() {
-    return DialogId.PASS_BLOCK;
-  }
-  
-  // transformation
-  
-  public IDialogParameter transform() {
-    return new DialogPassBlockParameter();
-  }
-  
-  // JSON serialization
-  
-  public DialogPassBlockParameter initFrom(JsonValue pJsonValue) {
-    JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-    UtilDialogParameter.validateDialogId(this, (DialogId) IJsonOption.DIALOG_ID.getFrom(jsonObject));
-    return this;
-  }
+	public DialogId getId() {
+		return DialogId.PASS_BLOCK;
+	}
+
+	// transformation
+
+	public IDialogParameter transform() {
+		return new DialogPassBlockParameter();
+	}
+
+	// JSON serialization
+
+	public DialogPassBlockParameter initFrom(JsonValue pJsonValue) {
+		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
+		UtilDialogParameter.validateDialogId(this, (DialogId) IJsonOption.DIALOG_ID.getFrom(jsonObject));
+		return this;
+	}
 
 }

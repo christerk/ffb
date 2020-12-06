@@ -7,9 +7,9 @@ import org.xml.sax.Attributes;
  * @author Kalimar
  */
 public interface IXmlReadable {
-	
-  public IXmlReadable startXmlElement(String pXmlTag, Attributes pXmlAttributes);
-  
-  public boolean endXmlElement(String pXmlTag, String pValue);
+
+	public IXmlReadable startXmlElement(String pXmlTag, Attributes pXmlAttributes);
+
+	public boolean endXmlElement(String pXmlTag, String pValue);
 
 }

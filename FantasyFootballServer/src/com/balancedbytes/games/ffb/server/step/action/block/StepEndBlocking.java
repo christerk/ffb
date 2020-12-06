@@ -40,161 +40,166 @@ import com.eclipsesource.json.JsonValue;
  */
 public class StepEndBlocking extends AbstractStep {
 
-  private boolean fEndTurn;
-  private boolean fEndPlayerAction;
-  private boolean fDefenderPushed;
-  private boolean fUsingStab;
-  private PlayerState fOldDefenderState;
+	private boolean fEndTurn;
+	private boolean fEndPlayerAction;
+	private boolean fDefenderPushed;
+	private boolean fUsingStab;
+	private PlayerState fOldDefenderState;
 
-  public StepEndBlocking(GameState pGameState) {
-    super(pGameState);
-  }
+	public StepEndBlocking(GameState pGameState) {
+		super(pGameState);
+	}
 
-  public StepId getId() {
-    return StepId.END_BLOCKING;
-  }
+	public StepId getId() {
+		return StepId.END_BLOCKING;
+	}
 
-  @Override
-  public boolean setParameter(StepParameter pParameter) {
-    if ((pParameter != null) && !super.setParameter(pParameter)) {
-      switch (pParameter.getKey()) {
-      case DEFENDER_PUSHED:
-        fDefenderPushed = (pParameter.getValue() != null) ? (Boolean) pParameter.getValue() : false;
-        consume(pParameter);
-        return true;
-      case END_PLAYER_ACTION:
-        fEndPlayerAction = (pParameter.getValue() != null) ? (Boolean) pParameter.getValue() : false;
-        consume(pParameter);
-        return true;
-      case END_TURN:
-        fEndTurn = (pParameter.getValue() != null) ? (Boolean) pParameter.getValue() : false;
-        consume(pParameter);
-        return true;
-      case OLD_DEFENDER_STATE:
-        fOldDefenderState = (PlayerState) pParameter.getValue();
-        consume(pParameter);
-        return true;
-      case USING_STAB:
-        fUsingStab = (pParameter.getValue() != null) ? (Boolean) pParameter.getValue() : false;
-        consume(pParameter);
-        return true;
-      default:
-        break;
-      }
-    }
-    return false;
-  }
+	@Override
+	public boolean setParameter(StepParameter pParameter) {
+		if ((pParameter != null) && !super.setParameter(pParameter)) {
+			switch (pParameter.getKey()) {
+			case DEFENDER_PUSHED:
+				fDefenderPushed = (pParameter.getValue() != null) ? (Boolean) pParameter.getValue() : false;
+				consume(pParameter);
+				return true;
+			case END_PLAYER_ACTION:
+				fEndPlayerAction = (pParameter.getValue() != null) ? (Boolean) pParameter.getValue() : false;
+				consume(pParameter);
+				return true;
+			case END_TURN:
+				fEndTurn = (pParameter.getValue() != null) ? (Boolean) pParameter.getValue() : false;
+				consume(pParameter);
+				return true;
+			case OLD_DEFENDER_STATE:
+				fOldDefenderState = (PlayerState) pParameter.getValue();
+				consume(pParameter);
+				return true;
+			case USING_STAB:
+				fUsingStab = (pParameter.getValue() != null) ? (Boolean) pParameter.getValue() : false;
+				consume(pParameter);
+				return true;
+			default:
+				break;
+			}
+		}
+		return false;
+	}
 
-  @Override
-  public void start() {
-    super.start();
-    executeStep();
-  }
+	@Override
+	public void start() {
+		super.start();
+		executeStep();
+	}
 
-  private void executeStep() {
-	  Game game = getGameState().getGame();
-	  ActingPlayer actingPlayer = game.getActingPlayer();
-	  UtilServerDialog.hideDialog(getGameState());
-	  fEndTurn |= UtilServerSteps.checkTouchdown(getGameState());
-	  if (fEndTurn || fEndPlayerAction) {
-		  game.setDefenderId(null); // clear defender for next multi block
-		  SequenceGenerator.getInstance().pushEndPlayerActionSequence(getGameState(), true, true, fEndTurn);
-	  } else {
-		  // Revert back strength gained from HORNS and DAUNTLESS to avoid interaction with tentacles.
-		  Skill skillHorns = UtilCards.getSkillWithProperty(actingPlayer.getPlayer(), NamedProperties.addStrengthOnBlitz);
-		  Skill skillDauntless = UtilCards.getSkillWithProperty(actingPlayer.getPlayer(), NamedProperties.canRollToMatchOpponentsStrength);
-		  boolean usedHorns = (skillHorns != null) && actingPlayer.isSkillUsed(skillHorns);
-		  boolean usedDauntless = (skillDauntless != null) && actingPlayer.isSkillUsed(skillDauntless);
+	private void executeStep() {
+		Game game = getGameState().getGame();
+		ActingPlayer actingPlayer = game.getActingPlayer();
+		UtilServerDialog.hideDialog(getGameState());
+		fEndTurn |= UtilServerSteps.checkTouchdown(getGameState());
+		if (fEndTurn || fEndPlayerAction) {
+			game.setDefenderId(null); // clear defender for next multi block
+			SequenceGenerator.getInstance().pushEndPlayerActionSequence(getGameState(), true, true, fEndTurn);
+		} else {
+			// Revert back strength gained from HORNS and DAUNTLESS to avoid interaction
+			// with tentacles.
+			Skill skillHorns = UtilCards.getSkillWithProperty(actingPlayer.getPlayer(), NamedProperties.addStrengthOnBlitz);
+			Skill skillDauntless = UtilCards.getSkillWithProperty(actingPlayer.getPlayer(),
+					NamedProperties.canRollToMatchOpponentsStrength);
+			boolean usedHorns = (skillHorns != null) && actingPlayer.isSkillUsed(skillHorns);
+			boolean usedDauntless = (skillDauntless != null) && actingPlayer.isSkillUsed(skillDauntless);
 
-		  if (usedHorns || usedDauntless) {
-			  actingPlayer.setStrength(UtilCards.getPlayerStrength(game, actingPlayer.getPlayer()));
-		  }
+			if (usedHorns || usedDauntless) {
+				actingPlayer.setStrength(UtilCards.getPlayerStrength(game, actingPlayer.getPlayer()));
+			}
 
-		  FieldCoordinate defenderPosition = game.getFieldModel().getPlayerCoordinate(game.getDefender());
-		  FieldCoordinate attackerPositon = game.getFieldModel().getPlayerCoordinate(actingPlayer.getPlayer());
-		  PlayerState attackerState = game.getFieldModel().getPlayerState(actingPlayer.getPlayer());
-		  PlayerState defenderState = game.getFieldModel().getPlayerState(game.getDefender());
+			FieldCoordinate defenderPosition = game.getFieldModel().getPlayerCoordinate(game.getDefender());
+			FieldCoordinate attackerPositon = game.getFieldModel().getPlayerCoordinate(actingPlayer.getPlayer());
+			PlayerState attackerState = game.getFieldModel().getPlayerState(actingPlayer.getPlayer());
+			PlayerState defenderState = game.getFieldModel().getPlayerState(game.getDefender());
 
-		  Skill unusedPlayerMustMakeSecondBlockSkill = UtilCards.getUnusedSkillWithProperty(actingPlayer, NamedProperties.forceSecondBlock);
+			Skill unusedPlayerMustMakeSecondBlockSkill = UtilCards.getUnusedSkillWithProperty(actingPlayer,
+					NamedProperties.forceSecondBlock);
 
-		  if (UtilCards.hasSkillWithProperty(actingPlayer.getPlayer(), NamedProperties.forceSecondBlock)) {
-			  actingPlayer.setGoingForIt(true);
-		  }
-		  Skill canBlockMultipleTimesSkill = UtilCards.getUnusedSkillWithProperty(actingPlayer, NamedProperties.canBlockMoreThanOnce);
-		  if ((actingPlayer.getPlayerAction() == PlayerAction.MULTIPLE_BLOCK)
-				  && canBlockMultipleTimesSkill != null && attackerState.hasTacklezones()
-				  && !UtilCards.hasSkillWithProperty(actingPlayer.getPlayer(), NamedProperties.blocksLikeChainsaw) && !attackerState.isConfused()
-				  && actingPlayer.hasBlocked()) {
-			  actingPlayer.markSkillUsed(canBlockMultipleTimesSkill);
-			  actingPlayer.setHasBlocked(false);
-			  ServerUtilBlock.updateDiceDecorations(game);
-			  SequenceGenerator.getInstance().pushBlockSequence(getGameState(), null, false, game.getDefenderId());
-			  game.setDefenderId(null);
-			  getResult().setNextAction(StepAction.NEXT_STEP);
-		  } else if( (unusedPlayerMustMakeSecondBlockSkill != null) && (defenderState != null)
-				  && defenderState.canBeBlocked() && attackerPositon.isAdjacent(defenderPosition)
-				  && attackerState.hasTacklezones() && fDefenderPushed
-				  && (actingPlayer.getPlayerAction() != PlayerAction.MULTIPLE_BLOCK)
-				  && UtilPlayer.isNextMovePossible(game, false)) {
-			  actingPlayer.setGoingForIt(true);
-			  actingPlayer.markSkillUsed(unusedPlayerMustMakeSecondBlockSkill);
-			  SequenceGenerator.getInstance().pushBlockSequence(getGameState(), game.getDefenderId(), fUsingStab, null);
-		  } else {
-			  ServerUtilBlock.removePlayerBlockStates(game);
-			  game.getFieldModel().clearDiceDecorations();
-			  actingPlayer.setGoingForIt(UtilPlayer.isNextMoveGoingForIt(game)); // auto
-			  // go-for-it
-			  if ((actingPlayer.getPlayerAction() == PlayerAction.BLITZ) && !fUsingStab
-					  && !UtilCards.hasSkillWithProperty(actingPlayer.getPlayer(), NamedProperties.blocksLikeChainsaw) && attackerState.hasTacklezones()
-					  && UtilPlayer.isNextMovePossible(game, false)) {
-				  String actingPlayerId = actingPlayer.getPlayer().getId();
-				  UtilServerGame.changeActingPlayer(this, actingPlayerId, PlayerAction.BLITZ_MOVE, actingPlayer.isLeaping());
-				  UtilServerPlayerMove.updateMoveSquares(getGameState(), actingPlayer.isLeaping());
-				  ServerUtilBlock.updateDiceDecorations(game);
-				  SequenceGenerator.getInstance().pushMoveSequence(getGameState());
-				  // this may happen for ball and chain
-			  } else if ((actingPlayer.getPlayerAction() == PlayerAction.MOVE) && UtilPlayer.isNextMovePossible(game, false)) {
-				  UtilServerPlayerMove.updateMoveSquares(getGameState(), actingPlayer.isLeaping());
-				  ServerUtilBlock.updateDiceDecorations(game);
-				  SequenceGenerator.getInstance().pushMoveSequence(getGameState());
-				  // this may happen on a failed bloodlust roll
-			  } else if (actingPlayer.isSufferingBloodLust() && !actingPlayer.hasBlocked()) {
-				  game.getFieldModel().setPlayerState(game.getDefender(), fOldDefenderState);
-				  game.setDefenderId(null);
-				  ServerUtilBlock.updateDiceDecorations(game);
-				  SequenceGenerator.getInstance().pushBlockSequence(getGameState());
-			  } else {
-				  game.setDefenderId(null); // clear defender for next multi block
-				  SequenceGenerator.getInstance().pushEndPlayerActionSequence(getGameState(), true, true, false);
-			  }
-		  }
-	  }
-	  getResult().setNextAction(StepAction.NEXT_STEP);
-  }
+			if (UtilCards.hasSkillWithProperty(actingPlayer.getPlayer(), NamedProperties.forceSecondBlock)) {
+				actingPlayer.setGoingForIt(true);
+			}
+			Skill canBlockMultipleTimesSkill = UtilCards.getUnusedSkillWithProperty(actingPlayer,
+					NamedProperties.canBlockMoreThanOnce);
+			if ((actingPlayer.getPlayerAction() == PlayerAction.MULTIPLE_BLOCK) && canBlockMultipleTimesSkill != null
+					&& attackerState.hasTacklezones()
+					&& !UtilCards.hasSkillWithProperty(actingPlayer.getPlayer(), NamedProperties.blocksLikeChainsaw)
+					&& !attackerState.isConfused() && actingPlayer.hasBlocked()) {
+				actingPlayer.markSkillUsed(canBlockMultipleTimesSkill);
+				actingPlayer.setHasBlocked(false);
+				ServerUtilBlock.updateDiceDecorations(game);
+				SequenceGenerator.getInstance().pushBlockSequence(getGameState(), null, false, game.getDefenderId());
+				game.setDefenderId(null);
+				getResult().setNextAction(StepAction.NEXT_STEP);
+			} else if ((unusedPlayerMustMakeSecondBlockSkill != null) && (defenderState != null)
+					&& defenderState.canBeBlocked() && attackerPositon.isAdjacent(defenderPosition)
+					&& attackerState.hasTacklezones() && fDefenderPushed
+					&& (actingPlayer.getPlayerAction() != PlayerAction.MULTIPLE_BLOCK)
+					&& UtilPlayer.isNextMovePossible(game, false)) {
+				actingPlayer.setGoingForIt(true);
+				actingPlayer.markSkillUsed(unusedPlayerMustMakeSecondBlockSkill);
+				SequenceGenerator.getInstance().pushBlockSequence(getGameState(), game.getDefenderId(), fUsingStab, null);
+			} else {
+				ServerUtilBlock.removePlayerBlockStates(game);
+				game.getFieldModel().clearDiceDecorations();
+				actingPlayer.setGoingForIt(UtilPlayer.isNextMoveGoingForIt(game)); // auto
+				// go-for-it
+				if ((actingPlayer.getPlayerAction() == PlayerAction.BLITZ) && !fUsingStab
+						&& !UtilCards.hasSkillWithProperty(actingPlayer.getPlayer(), NamedProperties.blocksLikeChainsaw)
+						&& attackerState.hasTacklezones() && UtilPlayer.isNextMovePossible(game, false)) {
+					String actingPlayerId = actingPlayer.getPlayer().getId();
+					UtilServerGame.changeActingPlayer(this, actingPlayerId, PlayerAction.BLITZ_MOVE, actingPlayer.isLeaping());
+					UtilServerPlayerMove.updateMoveSquares(getGameState(), actingPlayer.isLeaping());
+					ServerUtilBlock.updateDiceDecorations(game);
+					SequenceGenerator.getInstance().pushMoveSequence(getGameState());
+					// this may happen for ball and chain
+				} else if ((actingPlayer.getPlayerAction() == PlayerAction.MOVE)
+						&& UtilPlayer.isNextMovePossible(game, false)) {
+					UtilServerPlayerMove.updateMoveSquares(getGameState(), actingPlayer.isLeaping());
+					ServerUtilBlock.updateDiceDecorations(game);
+					SequenceGenerator.getInstance().pushMoveSequence(getGameState());
+					// this may happen on a failed bloodlust roll
+				} else if (actingPlayer.isSufferingBloodLust() && !actingPlayer.hasBlocked()) {
+					game.getFieldModel().setPlayerState(game.getDefender(), fOldDefenderState);
+					game.setDefenderId(null);
+					ServerUtilBlock.updateDiceDecorations(game);
+					SequenceGenerator.getInstance().pushBlockSequence(getGameState());
+				} else {
+					game.setDefenderId(null); // clear defender for next multi block
+					SequenceGenerator.getInstance().pushEndPlayerActionSequence(getGameState(), true, true, false);
+				}
+			}
+		}
+		getResult().setNextAction(StepAction.NEXT_STEP);
+	}
 
-  // JSON serialization
+	// JSON serialization
 
-  @Override
-  public JsonObject toJsonValue() {
-	  JsonObject jsonObject = super.toJsonValue();
-	  IServerJsonOption.END_TURN.addTo(jsonObject, fEndTurn);
-	  IServerJsonOption.END_PLAYER_ACTION.addTo(jsonObject, fEndPlayerAction);
-	  IServerJsonOption.DEFENDER_PUSHED.addTo(jsonObject, fDefenderPushed);
-	  IServerJsonOption.USING_STAB.addTo(jsonObject, fUsingStab);
-	  IServerJsonOption.OLD_DEFENDER_STATE.addTo(jsonObject, fOldDefenderState);
-	  return jsonObject;
-  }
+	@Override
+	public JsonObject toJsonValue() {
+		JsonObject jsonObject = super.toJsonValue();
+		IServerJsonOption.END_TURN.addTo(jsonObject, fEndTurn);
+		IServerJsonOption.END_PLAYER_ACTION.addTo(jsonObject, fEndPlayerAction);
+		IServerJsonOption.DEFENDER_PUSHED.addTo(jsonObject, fDefenderPushed);
+		IServerJsonOption.USING_STAB.addTo(jsonObject, fUsingStab);
+		IServerJsonOption.OLD_DEFENDER_STATE.addTo(jsonObject, fOldDefenderState);
+		return jsonObject;
+	}
 
-  @Override
-  public StepEndBlocking initFrom(JsonValue pJsonValue) {
-	  super.initFrom(pJsonValue);
-	  JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-	  fEndTurn = IServerJsonOption.END_TURN.getFrom(jsonObject);
-	  fEndPlayerAction = IServerJsonOption.END_PLAYER_ACTION.getFrom(jsonObject);
-	  fDefenderPushed = IServerJsonOption.DEFENDER_PUSHED.getFrom(jsonObject);
-	  fUsingStab = IServerJsonOption.USING_STAB.getFrom(jsonObject);
-	  fOldDefenderState = IServerJsonOption.OLD_DEFENDER_STATE.getFrom(jsonObject);
-	  return this;
-  }
+	@Override
+	public StepEndBlocking initFrom(JsonValue pJsonValue) {
+		super.initFrom(pJsonValue);
+		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
+		fEndTurn = IServerJsonOption.END_TURN.getFrom(jsonObject);
+		fEndPlayerAction = IServerJsonOption.END_PLAYER_ACTION.getFrom(jsonObject);
+		fDefenderPushed = IServerJsonOption.DEFENDER_PUSHED.getFrom(jsonObject);
+		fUsingStab = IServerJsonOption.USING_STAB.getFrom(jsonObject);
+		fOldDefenderState = IServerJsonOption.OLD_DEFENDER_STATE.getFrom(jsonObject);
+		return this;
+	}
 
 }

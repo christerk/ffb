@@ -29,51 +29,51 @@ import com.eclipsesource.json.JsonValue;
  * Expects stepParameter THROWN_PLAYER_ID to be set by a preceding step.
  * 
  * Sets stepParameter CATCH_SCATTER_THROW_IN_MODE for all steps on the stack.
- * Sets stepParameter END_TURN for all steps on the stack.
- * Sets stepParameter INJURY_RESULT for all steps on the stack.
- * Sets stepParameter THROWN_PLAYER_COORDINATE for all steps on the stack.
+ * Sets stepParameter END_TURN for all steps on the stack. Sets stepParameter
+ * INJURY_RESULT for all steps on the stack. Sets stepParameter
+ * THROWN_PLAYER_COORDINATE for all steps on the stack.
  * 
  * @author Kalimar
  */
 public final class StepEatTeamMate extends AbstractStep {
 
-  private FieldCoordinate fThrownPlayerCoordinate;
-  private String fThrownPlayerId;
+	private FieldCoordinate fThrownPlayerCoordinate;
+	private String fThrownPlayerId;
 
 	public StepEatTeamMate(GameState pGameState) {
 		super(pGameState);
 	}
-	
+
 	public StepId getId() {
 		return StepId.EAT_TEAM_MATE;
 	}
-	
-  @Override
-  public boolean setParameter(StepParameter pParameter) {
+
+	@Override
+	public boolean setParameter(StepParameter pParameter) {
 		if ((pParameter != null) && !super.setParameter(pParameter)) {
-	  	switch (pParameter.getKey()) {
-				case THROWN_PLAYER_COORDINATE:
-					fThrownPlayerCoordinate = (FieldCoordinate) pParameter.getValue();
-					return true;
-				case THROWN_PLAYER_ID:
-					fThrownPlayerId = (String) pParameter.getValue();
-					return true;
-				default:
-					break;
-	  	}
+			switch (pParameter.getKey()) {
+			case THROWN_PLAYER_COORDINATE:
+				fThrownPlayerCoordinate = (FieldCoordinate) pParameter.getValue();
+				return true;
+			case THROWN_PLAYER_ID:
+				fThrownPlayerId = (String) pParameter.getValue();
+				return true;
+			default:
+				break;
+			}
 		}
 		return false;
-  }
-	
+	}
+
 	@Override
 	public void start() {
 		super.start();
 		executeStep();
 	}
-	
+
 	@Override
-  public StepCommandStatus handleCommand(ReceivedCommand pReceivedCommand) {
-    StepCommandStatus commandStatus = super.handleCommand(pReceivedCommand);
+	public StepCommandStatus handleCommand(ReceivedCommand pReceivedCommand) {
+		StepCommandStatus commandStatus = super.handleCommand(pReceivedCommand);
 		if (commandStatus == StepCommandStatus.EXECUTE_STEP) {
 			executeStep();
 		}
@@ -81,39 +81,41 @@ public final class StepEatTeamMate extends AbstractStep {
 	}
 
 	private void executeStep() {
-    Game game = getGameState().getGame();
-    Player thrownPlayer = game.getPlayerById(fThrownPlayerId);
-    if ((thrownPlayer != null) && (fThrownPlayerCoordinate != null)) {
-	    if (fThrownPlayerCoordinate.equals(game.getFieldModel().getBallCoordinate())) {
-	      game.getFieldModel().setBallMoving(true);
-	      publishParameter(new StepParameter(StepParameterKey.END_TURN, true));
-	      publishParameter(new StepParameter(StepParameterKey.CATCH_SCATTER_THROW_IN_MODE, CatchScatterThrowInMode.SCATTER_BALL));
-	    }
-	    InjuryResult injuryResultThrownPlayer = UtilServerInjury.handleInjury(this, new InjuryTypeEatPlayer(), null, thrownPlayer, fThrownPlayerCoordinate, null, ApothecaryMode.THROWN_PLAYER);
-	    publishParameter(new StepParameter(StepParameterKey.INJURY_RESULT, injuryResultThrownPlayer));
-	    publishParameter(new StepParameter(StepParameterKey.THROWN_PLAYER_COORDINATE, null));  // avoid reset in end step
-	    getResult().setSound(SoundId.NOMNOM);
-    }
-    getResult().setNextAction(StepAction.NEXT_STEP);
-  }
-  
-  // JSON serialization
-  
-  @Override
-  public JsonObject toJsonValue() {
-    JsonObject jsonObject = super.toJsonValue();
-    IServerJsonOption.THROWN_PLAYER_COORDINATE.addTo(jsonObject, fThrownPlayerCoordinate);
-    IServerJsonOption.THROWN_PLAYER_ID.addTo(jsonObject, fThrownPlayerId);
-    return jsonObject;
-  }
-  
-  @Override
-  public StepEatTeamMate initFrom(JsonValue pJsonValue) {
-    super.initFrom(pJsonValue);
-    JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-    fThrownPlayerCoordinate = IServerJsonOption.THROWN_PLAYER_COORDINATE.getFrom(jsonObject);
-    fThrownPlayerId = IServerJsonOption.THROWN_PLAYER_ID.getFrom(jsonObject);
-    return this;
-  }
+		Game game = getGameState().getGame();
+		Player thrownPlayer = game.getPlayerById(fThrownPlayerId);
+		if ((thrownPlayer != null) && (fThrownPlayerCoordinate != null)) {
+			if (fThrownPlayerCoordinate.equals(game.getFieldModel().getBallCoordinate())) {
+				game.getFieldModel().setBallMoving(true);
+				publishParameter(new StepParameter(StepParameterKey.END_TURN, true));
+				publishParameter(
+						new StepParameter(StepParameterKey.CATCH_SCATTER_THROW_IN_MODE, CatchScatterThrowInMode.SCATTER_BALL));
+			}
+			InjuryResult injuryResultThrownPlayer = UtilServerInjury.handleInjury(this, new InjuryTypeEatPlayer(), null,
+					thrownPlayer, fThrownPlayerCoordinate, null, ApothecaryMode.THROWN_PLAYER);
+			publishParameter(new StepParameter(StepParameterKey.INJURY_RESULT, injuryResultThrownPlayer));
+			publishParameter(new StepParameter(StepParameterKey.THROWN_PLAYER_COORDINATE, null)); // avoid reset in end step
+			getResult().setSound(SoundId.NOMNOM);
+		}
+		getResult().setNextAction(StepAction.NEXT_STEP);
+	}
+
+	// JSON serialization
+
+	@Override
+	public JsonObject toJsonValue() {
+		JsonObject jsonObject = super.toJsonValue();
+		IServerJsonOption.THROWN_PLAYER_COORDINATE.addTo(jsonObject, fThrownPlayerCoordinate);
+		IServerJsonOption.THROWN_PLAYER_ID.addTo(jsonObject, fThrownPlayerId);
+		return jsonObject;
+	}
+
+	@Override
+	public StepEatTeamMate initFrom(JsonValue pJsonValue) {
+		super.initFrom(pJsonValue);
+		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
+		fThrownPlayerCoordinate = IServerJsonOption.THROWN_PLAYER_COORDINATE.getFrom(jsonObject);
+		fThrownPlayerId = IServerJsonOption.THROWN_PLAYER_ID.getFrom(jsonObject);
+		return this;
+	}
 
 }

@@ -1,6 +1,5 @@
 package com.balancedbytes.games.ffb.xml;
 
-
 /**
  * 
  * @author Kalimar

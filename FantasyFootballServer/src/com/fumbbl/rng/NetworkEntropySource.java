@@ -13,12 +13,13 @@ import java.util.Set;
 public class NetworkEntropySource implements EntropySource {
 
 	private Set<InetAddress> endpoints;
-	
+
 	public NetworkEntropySource() {
 		endpoints = new HashSet<InetAddress>();
 		try {
 			endpoints.add(InetAddress.getLocalHost());
-		} catch (UnknownHostException uhe) {}
+		} catch (UnknownHostException uhe) {
+		}
 	}
 
 	public void addEndpoint(InetAddress addr) {
@@ -35,17 +36,18 @@ public class NetworkEntropySource implements EntropySource {
 
 	public byte getEntropy() {
 		byte b = 0;
-		
+
 		b |= System.currentTimeMillis() & 0xff;
-		
+
 		for (InetAddress addr : endpoints) {
 			try {
 				addr.isReachable(100);
-			} catch (IOException ioe) {}
+			} catch (IOException ioe) {
+			}
 		}
-		
+
 		b |= System.currentTimeMillis() & 0xff;
-		
+
 		return b;
 	}
 

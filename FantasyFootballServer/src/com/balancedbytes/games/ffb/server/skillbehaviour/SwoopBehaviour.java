@@ -68,16 +68,19 @@ public class SwoopBehaviour extends SkillBehaviour<Swoop> {
 					} else { // coordinateFrom.getY() > coordinateTo.getY()
 						playerScatter = DiceInterpreter.getInstance().interpretThrowInDirectionRoll(Direction.NORTH, scatterRoll);
 					}
-					state.coordinateTo = UtilServerCatchScatterThrowIn.findScatterCoordinate(state.coordinateFrom, playerScatter, 1);
+					state.coordinateTo = UtilServerCatchScatterThrowIn.findScatterCoordinate(state.coordinateFrom, playerScatter,
+							1);
 					step.getResult().addReport(new ReportSwoopPlayer(state.coordinateFrom, state.coordinateTo,
 							new Direction[] { playerScatter }, new int[] { scatterRoll }));
 					if (!FieldCoordinateBounds.FIELD.isInBounds(state.coordinateTo)) {
 						// Out of bounds
 						game.getFieldModel().setPlayerState(swoopingPlayer, new PlayerState(PlayerState.FALLING));
-						InjuryResult injuryResultThrownPlayer = UtilServerInjury.handleInjury(step, new InjuryTypeCrowdPush(), null, swoopingPlayer, state.coordinateFrom, null, ApothecaryMode.THROWN_PLAYER);
+						InjuryResult injuryResultThrownPlayer = UtilServerInjury.handleInjury(step, new InjuryTypeCrowdPush(), null,
+								swoopingPlayer, state.coordinateFrom, null, ApothecaryMode.THROWN_PLAYER);
 						step.publishParameter(new StepParameter(StepParameterKey.INJURY_RESULT, injuryResultThrownPlayer));
 						if (state.thrownPlayerHasBall) {
-							step.publishParameter(new StepParameter(StepParameterKey.CATCH_SCATTER_THROW_IN_MODE, CatchScatterThrowInMode.THROW_IN));
+							step.publishParameter(
+									new StepParameter(StepParameterKey.CATCH_SCATTER_THROW_IN_MODE, CatchScatterThrowInMode.THROW_IN));
 							step.publishParameter(new StepParameter(StepParameterKey.THROW_IN_COORDINATE, state.coordinateFrom));
 							step.publishParameter(new StepParameter(StepParameterKey.END_TURN, true));
 						}
@@ -100,13 +103,15 @@ public class SwoopBehaviour extends SkillBehaviour<Swoop> {
 							// Landing
 							List<Player<?>> playersInSquare = game.getFieldModel().getPlayers(state.coordinateTo);
 							boolean crashed = false;
-							for(Player p : playersInSquare) {
+							for (Player p : playersInSquare) {
 								if (p != swoopingPlayer) {
 									// Landed on another player
 									step.publishParameter(new StepParameter(StepParameterKey.DROP_THROWN_PLAYER, true));
-									InjuryResult injuryResultHitPlayer = UtilServerInjury.handleInjury(step, new InjuryTypeTTMHitPlayer(), null, p, state.coordinateTo, null, ApothecaryMode.HIT_PLAYER);
+									InjuryResult injuryResultHitPlayer = UtilServerInjury.handleInjury(step, new InjuryTypeTTMHitPlayer(),
+											null, p, state.coordinateTo, null, ApothecaryMode.HIT_PLAYER);
 									step.publishParameter(new StepParameter(StepParameterKey.INJURY_RESULT, injuryResultHitPlayer));
-									if ((game.isHomePlaying() && game.getTeamHome().hasPlayer(p)) || (!game.isHomePlaying() && game.getTeamAway().hasPlayer(p))) {
+									if ((game.isHomePlaying() && game.getTeamHome().hasPlayer(p))
+											|| (!game.isHomePlaying() && game.getTeamAway().hasPlayer(p))) {
 										step.publishParameter(new StepParameter(StepParameterKey.END_TURN, true));
 									}
 
@@ -114,32 +119,36 @@ public class SwoopBehaviour extends SkillBehaviour<Swoop> {
 										// Hide the ball from the play while scatters are dealt with.
 										game.getFieldModel().setBallCoordinate(null);
 									}
-									
+
 									step.publishParameters(UtilServerInjury.dropPlayer(step, p, ApothecaryMode.HIT_PLAYER));
 
 									step.publishParameter(new StepParameter(StepParameterKey.THROWN_PLAYER_ID, state.thrownPlayerId));
-									step.publishParameter(new StepParameter(StepParameterKey.THROWN_PLAYER_STATE, state.thrownPlayerState));
-									step.publishParameter(new StepParameter(StepParameterKey.THROWN_PLAYER_HAS_BALL, state.thrownPlayerHasBall));
-									
-									step.publishParameter(new StepParameter(StepParameterKey.THROWN_PLAYER_COORDINATE, state.coordinateTo));
+									step.publishParameter(
+											new StepParameter(StepParameterKey.THROWN_PLAYER_STATE, state.thrownPlayerState));
+									step.publishParameter(
+											new StepParameter(StepParameterKey.THROWN_PLAYER_HAS_BALL, state.thrownPlayerHasBall));
+
+									step.publishParameter(
+											new StepParameter(StepParameterKey.THROWN_PLAYER_COORDINATE, state.coordinateTo));
 									crashed = true;
 									break; // Stop looking for more players to crash on
 								}
 							}
 							if (crashed) {
 								step.getResult().setNextAction(StepAction.NEXT_STEP);
-								//getResult().setNextAction(StepAction.GOTO_LABEL, fGotoLabelOnFallDown);
+								// getResult().setNextAction(StepAction.GOTO_LABEL, fGotoLabelOnFallDown);
 							} else {
 								step.getResult().setNextAction(StepAction.NEXT_STEP);
 							}
 						}
 					}
-					//publishParameter(new StepParameter(StepParameterKey.COORDINATE_TO, fCoordinateTo));
-				}		
+					// publishParameter(new StepParameter(StepParameterKey.COORDINATE_TO,
+					// fCoordinateTo));
+				}
 
 				return false;
 			}
-			
+
 		});
 	}
 }

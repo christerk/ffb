@@ -12,26 +12,26 @@ import com.eclipsesource.json.JsonValue;
  */
 public class DialogGameStatisticsParameter extends DialogWithoutParameter {
 
-  public DialogGameStatisticsParameter() {
-    super();
-  }
+	public DialogGameStatisticsParameter() {
+		super();
+	}
 
-  public DialogId getId() {
-    return DialogId.GAME_STATISTICS;
-  }
-  
-  // transformation
-  
-  public IDialogParameter transform() {
-    return new DialogGameStatisticsParameter();
-  }
+	public DialogId getId() {
+		return DialogId.GAME_STATISTICS;
+	}
 
-  // JSON serialization
-  
-  public DialogGameStatisticsParameter initFrom(JsonValue pJsonValue) {
-    JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-    UtilDialogParameter.validateDialogId(this, (DialogId) IJsonOption.DIALOG_ID.getFrom(jsonObject));
-    return this;
-  }
+	// transformation
+
+	public IDialogParameter transform() {
+		return new DialogGameStatisticsParameter();
+	}
+
+	// JSON serialization
+
+	public DialogGameStatisticsParameter initFrom(JsonValue pJsonValue) {
+		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
+		UtilDialogParameter.validateDialogId(this, (DialogId) IJsonOption.DIALOG_ID.getFrom(jsonObject));
+		return this;
+	}
 
 }

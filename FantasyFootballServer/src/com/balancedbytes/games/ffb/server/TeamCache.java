@@ -24,55 +24,52 @@ import com.balancedbytes.games.ffb.xml.XmlHandler;
  */
 public class TeamCache {
 
-  private Map<String, Team> fTeamById;
-  
-  public TeamCache() {
-    fTeamById = new HashMap<String, Team>();
-  }
-  
-  public void add(Team pTeam) {
-    fTeamById.put(pTeam.getId(), pTeam);
-  }
-    
-  public Team getTeamById(String pTeamId) {
-    return fTeamById.get(pTeamId);
-  }
+	private Map<String, Team> fTeamById;
 
-  public Team[] getTeams() {
-    return fTeamById.values().toArray(new Team[fTeamById.size()]);
-  }
-  
-  public Team[] getTeamsForCoach(String pCoach) {
-    List<Team> teamList = new ArrayList<Team>();
-    for (Team team : fTeamById.values()) {
-      if (team.getCoach().equals(pCoach)) {
-        teamList.add(team);
-      }
-    }
-    Collections.sort(teamList, Team.comparatorByName());
-    return teamList.toArray(new Team[teamList.size()]);
-  }
+	public TeamCache() {
+		fTeamById = new HashMap<String, Team>();
+	}
 
-  public void init(File pTeamDirectory) throws IOException {
-    FileIterator fileIterator = new FileIterator(
-      pTeamDirectory,
-      false,
-      pathname -> pathname.getName().endsWith(".xml")
-    );
-    while (fileIterator.hasNext()) {
-      File file = fileIterator.next();
-      try (BufferedReader xmlIn = new BufferedReader(new FileReader(file))) {
-        InputSource xmlSource = new InputSource(xmlIn);
-        Team team = new Team();
-        XmlHandler.parse(xmlSource, team);
-        for (Player player : team.getPlayers()) {
-          player.setTeam(team);
-        }
-        add(team);
-      } catch (FantasyFootballException pFfe) {
-        throw new FantasyFootballException("Error initializing team " + file.getAbsolutePath(), pFfe);
-      }
-    }
-  }
-  
+	public void add(Team pTeam) {
+		fTeamById.put(pTeam.getId(), pTeam);
+	}
+
+	public Team getTeamById(String pTeamId) {
+		return fTeamById.get(pTeamId);
+	}
+
+	public Team[] getTeams() {
+		return fTeamById.values().toArray(new Team[fTeamById.size()]);
+	}
+
+	public Team[] getTeamsForCoach(String pCoach) {
+		List<Team> teamList = new ArrayList<Team>();
+		for (Team team : fTeamById.values()) {
+			if (team.getCoach().equals(pCoach)) {
+				teamList.add(team);
+			}
+		}
+		Collections.sort(teamList, Team.comparatorByName());
+		return teamList.toArray(new Team[teamList.size()]);
+	}
+
+	public void init(File pTeamDirectory) throws IOException {
+		FileIterator fileIterator = new FileIterator(pTeamDirectory, false,
+				pathname -> pathname.getName().endsWith(".xml"));
+		while (fileIterator.hasNext()) {
+			File file = fileIterator.next();
+			try (BufferedReader xmlIn = new BufferedReader(new FileReader(file))) {
+				InputSource xmlSource = new InputSource(xmlIn);
+				Team team = new Team();
+				XmlHandler.parse(xmlSource, team);
+				for (Player player : team.getPlayers()) {
+					player.setTeam(team);
+				}
+				add(team);
+			} catch (FantasyFootballException pFfe) {
+				throw new FantasyFootballException("Error initializing team " + file.getAbsolutePath(), pFfe);
+			}
+		}
+	}
+
 }

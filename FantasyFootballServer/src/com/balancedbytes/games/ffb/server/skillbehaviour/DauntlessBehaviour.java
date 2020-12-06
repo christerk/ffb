@@ -34,27 +34,35 @@ public class DauntlessBehaviour extends SkillBehaviour<Dauntless> {
 				boolean doNextStep = true;
 				Game game = step.getGameState().getGame();
 				ActingPlayer actingPlayer = game.getActingPlayer();
-				boolean lessStrengthThanDefender = (actingPlayer.getStrength() < UtilCards.getPlayerStrength(game, game.getDefender()));
-				boolean usesSpecialBlockingRules = UtilCards.hasSkillWithProperty(actingPlayer.getPlayer(), NamedProperties.useSpecialBlockRules);
+				boolean lessStrengthThanDefender = (actingPlayer.getStrength() < UtilCards.getPlayerStrength(game,
+						game.getDefender()));
+				boolean usesSpecialBlockingRules = UtilCards.hasSkillWithProperty(actingPlayer.getPlayer(),
+						NamedProperties.useSpecialBlockRules);
 
-				if (UtilCards.hasSkill(game, actingPlayer, skill) && lessStrengthThanDefender && ((state.usingStab == null) || !state.usingStab) && !usesSpecialBlockingRules) {
+				if (UtilCards.hasSkill(game, actingPlayer, skill) && lessStrengthThanDefender
+						&& ((state.usingStab == null) || !state.usingStab) && !usesSpecialBlockingRules) {
 					boolean doDauntless = true;
 					if (ReRolledActions.DAUNTLESS == step.getReRolledAction()) {
-						if ((step.getReRollSource() == null) || !UtilServerReRoll.useReRoll(step, step.getReRollSource(), actingPlayer.getPlayer())) {
+						if ((step.getReRollSource() == null)
+								|| !UtilServerReRoll.useReRoll(step, step.getReRollSource(), actingPlayer.getPlayer())) {
 							doDauntless = false;
 						}
 					}
 					if (doDauntless) {
 						int dauntlessRoll = step.getGameState().getDiceRoller().rollDauntless();
-						int minimumRoll = DiceInterpreter.getInstance().minimumRollDauntless(actingPlayer.getStrength(), UtilCards.getPlayerStrength(game, game.getDefender()));
+						int minimumRoll = DiceInterpreter.getInstance().minimumRollDauntless(actingPlayer.getStrength(),
+								UtilCards.getPlayerStrength(game, game.getDefender()));
 						boolean successful = (dauntlessRoll >= minimumRoll);
-						boolean reRolled = ((step.getReRolledAction() == ReRolledActions.DAUNTLESS) && (step.getReRollSource() != null));
-						step.getResult().addReport(new ReportDauntlessRoll(actingPlayer.getPlayerId(), successful, dauntlessRoll, minimumRoll, reRolled, UtilCards.getPlayerStrength(game, game.getDefender())));
+						boolean reRolled = ((step.getReRolledAction() == ReRolledActions.DAUNTLESS)
+								&& (step.getReRollSource() != null));
+						step.getResult().addReport(new ReportDauntlessRoll(actingPlayer.getPlayerId(), successful, dauntlessRoll,
+								minimumRoll, reRolled, UtilCards.getPlayerStrength(game, game.getDefender())));
 						if (successful) {
 							actingPlayer.setStrength(UtilCards.getPlayerStrength(game, game.getDefender()));
 							actingPlayer.markSkillUsed(skill);
 						} else {
-							if (UtilServerReRoll.askForReRollIfAvailable(step.getGameState(), actingPlayer.getPlayer(), ReRolledActions.DAUNTLESS, minimumRoll, false)) {
+							if (UtilServerReRoll.askForReRollIfAvailable(step.getGameState(), actingPlayer.getPlayer(),
+									ReRolledActions.DAUNTLESS, minimumRoll, false)) {
 								doNextStep = false;
 							}
 						}

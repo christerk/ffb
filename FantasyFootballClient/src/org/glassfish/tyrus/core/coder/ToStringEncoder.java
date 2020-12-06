@@ -44,13 +44,14 @@ import javax.websocket.EncodeException;
 import javax.websocket.Encoder;
 
 /**
- * Fall-back encoder - encoders any object to string using {@link Object#toString()} method.
+ * Fall-back encoder - encoders any object to string using
+ * {@link Object#toString()} method.
  *
  * @author Martin Matula (martin.matula at oracle.com)
  */
 public class ToStringEncoder extends CoderAdapter implements Encoder.Text<Object> {
-    @Override
-    public String encode(Object object) throws EncodeException {
-        return object.toString();
-    }
+	@Override
+	public String encode(Object object) throws EncodeException {
+		return object.toString();
+	}
 }

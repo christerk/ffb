@@ -27,39 +27,39 @@ import com.eclipsesource.json.JsonValue;
  * @author Kalimar
  */
 public final class StepKickoff extends AbstractStep {
-	
-  private FieldCoordinate fKickoffStartCoordinate;
+
+	private FieldCoordinate fKickoffStartCoordinate;
 
 	public StepKickoff(GameState pGameState) {
 		super(pGameState);
 	}
-	
+
 	public StepId getId() {
 		return StepId.KICKOFF;
 	}
-	
+
 	@Override
 	public void start() {
 		executeStep();
 	}
-	
-  @Override
-  public StepCommandStatus handleCommand(ReceivedCommand pReceivedCommand) {
-    StepCommandStatus commandStatus = super.handleCommand(pReceivedCommand);
+
+	@Override
+	public StepCommandStatus handleCommand(ReceivedCommand pReceivedCommand) {
+		StepCommandStatus commandStatus = super.handleCommand(pReceivedCommand);
 		if (commandStatus == StepCommandStatus.UNHANDLED_COMMAND) {
 			Game game = getGameState().getGame();
 			switch (pReceivedCommand.getId()) {
-        case CLIENT_KICKOFF:
-          ClientCommandKickoff kickoffCommand = (ClientCommandKickoff) pReceivedCommand.getCommand();
-          if (game.isHomePlaying()) {
-          	fKickoffStartCoordinate = kickoffCommand.getBallCoordinate();
-          } else {
-          	fKickoffStartCoordinate = kickoffCommand.getBallCoordinate().transform();
-          }
-          commandStatus = StepCommandStatus.EXECUTE_STEP;
-          break;
-				default:
-					break;
+			case CLIENT_KICKOFF:
+				ClientCommandKickoff kickoffCommand = (ClientCommandKickoff) pReceivedCommand.getCommand();
+				if (game.isHomePlaying()) {
+					fKickoffStartCoordinate = kickoffCommand.getBallCoordinate();
+				} else {
+					fKickoffStartCoordinate = kickoffCommand.getBallCoordinate().transform();
+				}
+				commandStatus = StepCommandStatus.EXECUTE_STEP;
+				break;
+			default:
+				break;
 			}
 		}
 		if (commandStatus == StepCommandStatus.EXECUTE_STEP) {
@@ -68,32 +68,34 @@ public final class StepKickoff extends AbstractStep {
 		return commandStatus;
 	}
 
-  private void executeStep() {
-    if (fKickoffStartCoordinate != null) {
-      Game game = getGameState().getGame();
-      UtilServerDialog.hideDialog(getGameState());
-      publishParameter(new StepParameter(StepParameterKey.KICKOFF_START_COORDINATE, fKickoffStartCoordinate));
-    	SequenceGenerator.getInstance().pushInducementSequence(getGameState(), InducementPhase.BEFORE_KICKOFF_SCATTER, game.isHomePlaying());
-    	SequenceGenerator.getInstance().pushInducementSequence(getGameState(), InducementPhase.BEFORE_KICKOFF_SCATTER, !game.isHomePlaying());
-      getResult().setNextAction(StepAction.NEXT_STEP);
-    }
-  }
-  
-  // JSON serialization
-  
-  @Override
-  public JsonObject toJsonValue() {
-    JsonObject jsonObject = super.toJsonValue();
-    IServerJsonOption.KICKOFF_START_COORDINATE.addTo(jsonObject, fKickoffStartCoordinate);
-    return jsonObject;
-  }
-  
-  @Override
-  public StepKickoff initFrom(JsonValue pJsonValue) {
-    super.initFrom(pJsonValue);
-    JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-    fKickoffStartCoordinate = IServerJsonOption.KICKOFF_START_COORDINATE.getFrom(jsonObject);
-    return this;
-  }
-  
+	private void executeStep() {
+		if (fKickoffStartCoordinate != null) {
+			Game game = getGameState().getGame();
+			UtilServerDialog.hideDialog(getGameState());
+			publishParameter(new StepParameter(StepParameterKey.KICKOFF_START_COORDINATE, fKickoffStartCoordinate));
+			SequenceGenerator.getInstance().pushInducementSequence(getGameState(), InducementPhase.BEFORE_KICKOFF_SCATTER,
+					game.isHomePlaying());
+			SequenceGenerator.getInstance().pushInducementSequence(getGameState(), InducementPhase.BEFORE_KICKOFF_SCATTER,
+					!game.isHomePlaying());
+			getResult().setNextAction(StepAction.NEXT_STEP);
+		}
+	}
+
+	// JSON serialization
+
+	@Override
+	public JsonObject toJsonValue() {
+		JsonObject jsonObject = super.toJsonValue();
+		IServerJsonOption.KICKOFF_START_COORDINATE.addTo(jsonObject, fKickoffStartCoordinate);
+		return jsonObject;
+	}
+
+	@Override
+	public StepKickoff initFrom(JsonValue pJsonValue) {
+		super.initFrom(pJsonValue);
+		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
+		fKickoffStartCoordinate = IServerJsonOption.KICKOFF_START_COORDINATE.getFrom(jsonObject);
+		return this;
+	}
+
 }

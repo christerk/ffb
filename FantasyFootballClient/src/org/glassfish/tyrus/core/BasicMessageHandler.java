@@ -48,18 +48,18 @@ import javax.websocket.MessageHandler;
  */
 interface BasicMessageHandler extends MessageHandler.Whole {
 
-    /**
-     * Get type of handled message.
-     *
-     * @return type of handled message.
-     */
-    Class<?> getType();
+	/**
+	 * Get type of handled message.
+	 *
+	 * @return type of handled message.
+	 */
+	Class<?> getType();
 
-    /**
-     * Get max message size allowed for this message handler.
-     *
-     * @return max message size.
-     * @see javax.websocket.OnMessage#maxMessageSize()
-     */
-    long getMaxMessageSize();
+	/**
+	 * Get max message size allowed for this message handler.
+	 *
+	 * @return max message size.
+	 * @see javax.websocket.OnMessage#maxMessageSize()
+	 */
+	long getMaxMessageSize();
 }

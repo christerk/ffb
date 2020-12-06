@@ -21,188 +21,189 @@ import com.balancedbytes.games.ffb.model.modifier.CancelSkillProperty;
 
 public class Skill implements INamedObject {
 
-  private String name;
-  private SkillCategory category;
-  private List<PlayerModifier> playerModifiers;
-  private List<PassModifier> passModifiers;
-  private List<PickupModifier> pickupModifiers;
-  private List<DodgeModifier> dodgeModifiers;
-  private List<LeapModifier> leapModifiers;
-  private List<InterceptionModifier> interceptionModifiers;
-  private List<InjuryModifier> injuryModifiers;
-  private List<ArmorModifier> armorModifiers;
-  private List<CatchModifier> catchModifiers;
-  private ISkillBehaviour<? extends Skill> behaviour;
-  private List<ISkillProperty> skillProperties;
-  private Hashtable<ReRolledAction, ReRollSource> rerollSources;
-  
-  public Skill(String name, SkillCategory category) {
-    this.name = name;
-    this.category = category;
-    skillProperties = new ArrayList<>();
-    leapModifiers = new ArrayList<>();
-    playerModifiers = new ArrayList<>();
-    passModifiers = new ArrayList<>();
-    pickupModifiers = new ArrayList<>();
-    dodgeModifiers = new ArrayList<>();
-    interceptionModifiers = new ArrayList<>();
-    catchModifiers = new ArrayList<>();
-    injuryModifiers = new ArrayList<>();
-    armorModifiers = new ArrayList<>();
-    rerollSources = new Hashtable<>();
-  }
-  
-  @Override
-  public String getName() {
-    return name;
-  }
-  
-  public SkillCategory getCategory() {
-    return category;
-  }
+	private String name;
+	private SkillCategory category;
+	private List<PlayerModifier> playerModifiers;
+	private List<PassModifier> passModifiers;
+	private List<PickupModifier> pickupModifiers;
+	private List<DodgeModifier> dodgeModifiers;
+	private List<LeapModifier> leapModifiers;
+	private List<InterceptionModifier> interceptionModifiers;
+	private List<InjuryModifier> injuryModifiers;
+	private List<ArmorModifier> armorModifiers;
+	private List<CatchModifier> catchModifiers;
+	private ISkillBehaviour<? extends Skill> behaviour;
+	private List<ISkillProperty> skillProperties;
+	private Hashtable<ReRolledAction, ReRollSource> rerollSources;
 
-  public boolean equals(Object other) {
-    return name != null && other instanceof Skill && name.equals(((Skill)other).name);
-  }
-  
-  public static Comparator<Skill> getComparator() {
-    return new Comparator<Skill>() {
-      public int compare(Skill a, Skill b) {
-        return a.getName().compareTo(b.getName());
-      }
-    };
-  }
+	public Skill(String name, SkillCategory category) {
+		this.name = name;
+		this.category = category;
+		skillProperties = new ArrayList<>();
+		leapModifiers = new ArrayList<>();
+		playerModifiers = new ArrayList<>();
+		passModifiers = new ArrayList<>();
+		pickupModifiers = new ArrayList<>();
+		dodgeModifiers = new ArrayList<>();
+		interceptionModifiers = new ArrayList<>();
+		catchModifiers = new ArrayList<>();
+		injuryModifiers = new ArrayList<>();
+		armorModifiers = new ArrayList<>();
+		rerollSources = new Hashtable<>();
+	}
 
-  protected void registerModifier(LeapModifier modifier) {
-    leapModifiers.add(modifier);
-  }
-  
-  protected void registerModifier(PassModifier modifier) {
-    passModifiers.add(modifier);
-  }
+	@Override
+	public String getName() {
+		return name;
+	}
 
-  protected void registerModifier(PickupModifier modifier) {
-    pickupModifiers.add(modifier);
-  }
-  
-  protected void registerModifier(DodgeModifier modifier) {
-    dodgeModifiers.add(modifier);
-  }
-  
-  protected void registerModifier(PlayerModifier modifier) {
-    playerModifiers.add(modifier);
-  }
+	public SkillCategory getCategory() {
+		return category;
+	}
 
-  protected void registerModifier(InterceptionModifier modifier) {
-    interceptionModifiers.add(modifier);
-  }
-  
-  protected void registerModifier(ArmorModifier modifier) {
-    armorModifiers.add(modifier);
-  }
+	public boolean equals(Object other) {
+		return name != null && other instanceof Skill && name.equals(((Skill) other).name);
+	}
 
-  protected void registerModifier(InjuryModifier modifier) {
-    injuryModifiers.add(modifier);
-  }
-  
-  protected void registerModifier(CatchModifier modifier) {
-    catchModifiers.add(modifier);
-  }
-  
-  protected void registerProperty(ISkillProperty property) {
-    skillProperties.add(property);
-  }
+	public static Comparator<Skill> getComparator() {
+		return new Comparator<Skill>() {
+			public int compare(Skill a, Skill b) {
+				return a.getName().compareTo(b.getName());
+			}
+		};
+	}
 
-  protected void registerRerollSource(ReRolledAction action, ReRollSource source) {
-	  rerollSources.put(action, source);
-  }
-  
-  public ISkillBehaviour<? extends Skill> getSkillBehaviour() {
-    return behaviour;
-  }
-  
-  public List<PlayerModifier> getPlayerModifiers() {
-    return playerModifiers;
-  }
-  
-  public List<PassModifier> getPassModifiers() {
-    return passModifiers;
-  }
+	protected void registerModifier(LeapModifier modifier) {
+		leapModifiers.add(modifier);
+	}
 
-  public List<PickupModifier> getPickupModifiers() {
-    return pickupModifiers;
-  }
+	protected void registerModifier(PassModifier modifier) {
+		passModifiers.add(modifier);
+	}
 
-  public List<DodgeModifier> getDodgeModifiers() {
-    return dodgeModifiers;
-  }
-  
-  public List<LeapModifier> getLeapModifiers() {
-	  return leapModifiers;
-  } 
-  
-  public List<InterceptionModifier> getInterceptionModifiers() {
-	  return interceptionModifiers;
-  } 
+	protected void registerModifier(PickupModifier modifier) {
+		pickupModifiers.add(modifier);
+	}
 
-  public List<CatchModifier> getCatchModifiers() {
-	  return catchModifiers;
-  } 
+	protected void registerModifier(DodgeModifier modifier) {
+		dodgeModifiers.add(modifier);
+	}
 
-  public List<ArmorModifier> getArmorModifiers() {
-	  return armorModifiers;
-  } 
+	protected void registerModifier(PlayerModifier modifier) {
+		playerModifiers.add(modifier);
+	}
 
-  public List<InjuryModifier> getInjuryModifiers() {
-	  return injuryModifiers;
-  } 
+	protected void registerModifier(InterceptionModifier modifier) {
+		interceptionModifiers.add(modifier);
+	}
 
-  public void setBehaviour(ISkillBehaviour<? extends Skill> behaviour) {
-    this.behaviour = behaviour;
-  }
-  
-  public int getCost(Player<?> player) {
-    Position position = player.getPosition();
-    if (position.hasSkill(this)) {
-      return 0;
-    }
-    if (position.isDoubleCategory(category)) {
-      return 30000;
-    } else {
-      return 20000;
-    }
-  }
+	protected void registerModifier(ArmorModifier modifier) {
+		armorModifiers.add(modifier);
+	}
 
-  public String[] getSkillUseDescription() {
-    return null;
-  }
+	protected void registerModifier(InjuryModifier modifier) {
+		injuryModifiers.add(modifier);
+	}
 
-  public boolean canCancel(Skill otherSkill) {
-    for (ISkillProperty skillProperty : skillProperties) {
-      if (skillProperty instanceof CancelSkillProperty && ((CancelSkillProperty) skillProperty).cancelsSkill(otherSkill)) {
-        return true;
-      }
-    }
-    return false;
-  }
-  
-  public boolean hasSkillProperty(ISkillProperty property) {
-    for (ISkillProperty skillProperty : skillProperties) {
-      if (property.matches(skillProperty)) {
-        return true;
-      }
-    }
-    return false;
-  }
+	protected void registerModifier(CatchModifier modifier) {
+		catchModifiers.add(modifier);
+	}
 
-  public String getConfusionMessage() {
-    return "is confused";
-  }
+	protected void registerProperty(ISkillProperty property) {
+		skillProperties.add(property);
+	}
 
-  public ReRollSource getRerollSource(ReRolledAction action) {
-    if (rerollSources.containsKey(action)) {
-      return rerollSources.get(action);
-    }
-    return null;
-  }
+	protected void registerRerollSource(ReRolledAction action, ReRollSource source) {
+		rerollSources.put(action, source);
+	}
+
+	public ISkillBehaviour<? extends Skill> getSkillBehaviour() {
+		return behaviour;
+	}
+
+	public List<PlayerModifier> getPlayerModifiers() {
+		return playerModifiers;
+	}
+
+	public List<PassModifier> getPassModifiers() {
+		return passModifiers;
+	}
+
+	public List<PickupModifier> getPickupModifiers() {
+		return pickupModifiers;
+	}
+
+	public List<DodgeModifier> getDodgeModifiers() {
+		return dodgeModifiers;
+	}
+
+	public List<LeapModifier> getLeapModifiers() {
+		return leapModifiers;
+	}
+
+	public List<InterceptionModifier> getInterceptionModifiers() {
+		return interceptionModifiers;
+	}
+
+	public List<CatchModifier> getCatchModifiers() {
+		return catchModifiers;
+	}
+
+	public List<ArmorModifier> getArmorModifiers() {
+		return armorModifiers;
+	}
+
+	public List<InjuryModifier> getInjuryModifiers() {
+		return injuryModifiers;
+	}
+
+	public void setBehaviour(ISkillBehaviour<? extends Skill> behaviour) {
+		this.behaviour = behaviour;
+	}
+
+	public int getCost(Player<?> player) {
+		Position position = player.getPosition();
+		if (position.hasSkill(this)) {
+			return 0;
+		}
+		if (position.isDoubleCategory(category)) {
+			return 30000;
+		} else {
+			return 20000;
+		}
+	}
+
+	public String[] getSkillUseDescription() {
+		return null;
+	}
+
+	public boolean canCancel(Skill otherSkill) {
+		for (ISkillProperty skillProperty : skillProperties) {
+			if (skillProperty instanceof CancelSkillProperty
+					&& ((CancelSkillProperty) skillProperty).cancelsSkill(otherSkill)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	public boolean hasSkillProperty(ISkillProperty property) {
+		for (ISkillProperty skillProperty : skillProperties) {
+			if (property.matches(skillProperty)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	public String getConfusionMessage() {
+		return "is confused";
+	}
+
+	public ReRollSource getRerollSource(ReRolledAction action) {
+		if (rerollSources.containsKey(action)) {
+			return rerollSources.get(action);
+		}
+		return null;
+	}
 }

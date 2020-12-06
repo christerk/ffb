@@ -21,59 +21,61 @@ import com.balancedbytes.games.ffb.util.StringTool;
  */
 public class DbGamesSerializedUpdate extends DbUpdateStatement {
 
-  private PreparedStatement fStatement;
+	private PreparedStatement fStatement;
 
-  public DbGamesSerializedUpdate(FantasyFootballServer pServer) {
-    super(pServer);
-  }
+	public DbGamesSerializedUpdate(FantasyFootballServer pServer) {
+		super(pServer);
+	}
 
-  public DbStatementId getId() {
-    return DbStatementId.GAMES_SERIALIZED_UPDATE;
-  }
+	public DbStatementId getId() {
+		return DbStatementId.GAMES_SERIALIZED_UPDATE;
+	}
 
-  public void prepare(Connection pConnection) {
-    try {
-      StringBuilder sql = new StringBuilder();
-      sql.append("UPDATE ").append(IDbTableGamesSerialized.TABLE_NAME).append(" SET ");
-      sql.append(IDbTableGamesSerialized.COLUMN_SERIALIZED).append("=?"); // 2
-      sql.append(" WHERE ").append(IDbTableGamesSerialized.COLUMN_ID).append("=?"); // 1
-      fStatement = pConnection.prepareStatement(sql.toString());
-    } catch (SQLException sqlE) {
-      throw new FantasyFootballException(sqlE);
-    }
-  }
+	public void prepare(Connection pConnection) {
+		try {
+			StringBuilder sql = new StringBuilder();
+			sql.append("UPDATE ").append(IDbTableGamesSerialized.TABLE_NAME).append(" SET ");
+			sql.append(IDbTableGamesSerialized.COLUMN_SERIALIZED).append("=?"); // 2
+			sql.append(" WHERE ").append(IDbTableGamesSerialized.COLUMN_ID).append("=?"); // 1
+			fStatement = pConnection.prepareStatement(sql.toString());
+		} catch (SQLException sqlE) {
+			throw new FantasyFootballException(sqlE);
+		}
+	}
 
-  public int execute(IDbUpdateParameter pUpdateParameter) throws SQLException {
-    return fillDbStatement(pUpdateParameter, true).executeUpdate();
-  }
+	public int execute(IDbUpdateParameter pUpdateParameter) throws SQLException {
+		return fillDbStatement(pUpdateParameter, true).executeUpdate();
+	}
 
-  public String toString(IDbUpdateParameter pUpdateParameter) throws SQLException {
-    return fillDbStatement(pUpdateParameter, false).toString();
-  }
+	public String toString(IDbUpdateParameter pUpdateParameter) throws SQLException {
+		return fillDbStatement(pUpdateParameter, false).toString();
+	}
 
-  private PreparedStatement fillDbStatement(IDbUpdateParameter pUpdateParameter, boolean pFillBlob) throws SQLException {
-    DbGamesSerializedUpdateParameter parameter = (DbGamesSerializedUpdateParameter) pUpdateParameter;
-    fStatement.clearParameters();
-    int col = 1;
-    try {
-      byte[] blobData = pFillBlob ? parameter.gzip() : new byte[0];
-      if (pFillBlob && getServer().getDebugLog().isLogging(IServerLogLevel.TRACE)) {
-        int newLength = blobData.length;
-        int oldLength = parameter.length();
-        StringBuilder logMsg = new StringBuilder();
-        logMsg.append("updating compressed serialized game of ").append(StringTool.formatThousands(newLength)).append(" bytes");
-        logMsg.append(" (").append(Math.round((double) newLength * 100 / oldLength)).append("%");
-        logMsg.append(" of original ").append(StringTool.formatThousands(oldLength)).append(" bytes)");
-        getServer().getDebugLog().log(IServerLogLevel.TRACE, parameter.getId(), logMsg.toString());
+	private PreparedStatement fillDbStatement(IDbUpdateParameter pUpdateParameter, boolean pFillBlob)
+			throws SQLException {
+		DbGamesSerializedUpdateParameter parameter = (DbGamesSerializedUpdateParameter) pUpdateParameter;
+		fStatement.clearParameters();
+		int col = 1;
+		try {
+			byte[] blobData = pFillBlob ? parameter.gzip() : new byte[0];
+			if (pFillBlob && getServer().getDebugLog().isLogging(IServerLogLevel.TRACE)) {
+				int newLength = blobData.length;
+				int oldLength = parameter.length();
+				StringBuilder logMsg = new StringBuilder();
+				logMsg.append("updating compressed serialized game of ").append(StringTool.formatThousands(newLength))
+						.append(" bytes");
+				logMsg.append(" (").append(Math.round((double) newLength * 100 / oldLength)).append("%");
+				logMsg.append(" of original ").append(StringTool.formatThousands(oldLength)).append(" bytes)");
+				getServer().getDebugLog().log(IServerLogLevel.TRACE, parameter.getId(), logMsg.toString());
 //        String currentStepName = (parameter.getGameState().getCurrentStep() != null) ? parameter.getGameState().getCurrentStep().getId().getName() : "null";
 //        getServer().getDebugLog().log(IServerLogLevel.TRACE, StringTool.bind("saved CurrentStep $1", currentStepName));
-      }
-      fStatement.setBinaryStream(col++, new ByteArrayInputStream(blobData), blobData.length);
-    } catch (IOException pIoException) {
-      throw new SQLException("Error on compressing game", pIoException);
-    }
-    fStatement.setLong(col++, parameter.getId());
-    return fStatement;
-  }
+			}
+			fStatement.setBinaryStream(col++, new ByteArrayInputStream(blobData), blobData.length);
+		} catch (IOException pIoException) {
+			throw new SQLException("Error on compressing game", pIoException);
+		}
+		fStatement.setLong(col++, parameter.getId());
+		return fStatement;
+	}
 
 }

@@ -11,26 +11,27 @@ import com.balancedbytes.games.ffb.server.DiceRoller;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.step.IStep;
 
-public class InjuryTypeEatPlayer extends InjuryTypeServer<EatPlayer>  {
-		public InjuryTypeEatPlayer() {
-			super(new EatPlayer());
-		}
-
-		@Override
-		public InjuryContext handleInjury(IStep step, Game game,GameState gameState, DiceRoller diceRoller, Player<?> pAttacker, Player<?> pDefender,
-				FieldCoordinate pDefenderCoordinate, InjuryContext pOldInjuryContext, ApothecaryMode pApothecaryMode) {
-
-			if (!injuryContext.isArmorBroken()) {
-				injuryContext.setArmorBroken(true);
-			}
-
-			if (injuryContext.isArmorBroken()) {
-				injuryContext.setInjury(new PlayerState(PlayerState.RIP));
-				setInjury(pDefender, gameState, diceRoller);
-			} else {
-				injuryContext.setInjury(new PlayerState(PlayerState.PRONE));
-			}
-
-			return injuryContext;
-		}
+public class InjuryTypeEatPlayer extends InjuryTypeServer<EatPlayer> {
+	public InjuryTypeEatPlayer() {
+		super(new EatPlayer());
 	}
+
+	@Override
+	public InjuryContext handleInjury(IStep step, Game game, GameState gameState, DiceRoller diceRoller,
+			Player<?> pAttacker, Player<?> pDefender, FieldCoordinate pDefenderCoordinate, InjuryContext pOldInjuryContext,
+			ApothecaryMode pApothecaryMode) {
+
+		if (!injuryContext.isArmorBroken()) {
+			injuryContext.setArmorBroken(true);
+		}
+
+		if (injuryContext.isArmorBroken()) {
+			injuryContext.setInjury(new PlayerState(PlayerState.RIP));
+			setInjury(pDefender, gameState, diceRoller);
+		} else {
+			injuryContext.setInjury(new PlayerState(PlayerState.PRONE));
+		}
+
+		return injuryContext;
+	}
+}

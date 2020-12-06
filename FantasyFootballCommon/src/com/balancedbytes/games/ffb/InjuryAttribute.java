@@ -6,44 +6,40 @@ package com.balancedbytes.games.ffb;
  */
 public enum InjuryAttribute {
 
-  MA(1, "MA"),
-  ST(2, "ST"),
-  AG(3, "AG"),
-  AV(4, "AV"),
-  NI(5, "NI");
+	MA(1, "MA"), ST(2, "ST"), AG(3, "AG"), AV(4, "AV"), NI(5, "NI");
 
-  private int fId;
-  private String fName;
+	private int fId;
+	private String fName;
 
-  private InjuryAttribute(int pValue, String pName) {
-    fId = pValue;
-    fName = pName;
-  }
+	private InjuryAttribute(int pValue, String pName) {
+		fId = pValue;
+		fName = pName;
+	}
 
-  public int getId() {
-    return fId;
-  }
+	public int getId() {
+		return fId;
+	}
 
-  public String getName() {
-    return fName;
-  }
+	public String getName() {
+		return fName;
+	}
 
-  public static InjuryAttribute fromId(int pId) {
-    for (InjuryAttribute attribute : values()) {
-      if (attribute.getId() == pId) {
-        return attribute;
-      }
-    }
-    return null;
-  }
-  
-  public static InjuryAttribute fromName(String pName) {
-    for (InjuryAttribute attribute : values()) {
-      if (attribute.getName().equals(pName)) {
-        return attribute;
-      }
-    }
-    return null;
-  }
-  
+	public static InjuryAttribute fromId(int pId) {
+		for (InjuryAttribute attribute : values()) {
+			if (attribute.getId() == pId) {
+				return attribute;
+			}
+		}
+		return null;
+	}
+
+	public static InjuryAttribute fromName(String pName) {
+		for (InjuryAttribute attribute : values()) {
+			if (attribute.getName().equals(pName)) {
+				return attribute;
+			}
+		}
+		return null;
+	}
+
 }

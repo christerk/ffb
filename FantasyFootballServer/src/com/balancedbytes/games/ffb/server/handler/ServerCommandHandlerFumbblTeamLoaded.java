@@ -14,24 +14,26 @@ import com.balancedbytes.games.ffb.server.util.UtilServerStartGame;
  */
 public class ServerCommandHandlerFumbblTeamLoaded extends ServerCommandHandler {
 
-  protected ServerCommandHandlerFumbblTeamLoaded(FantasyFootballServer pServer) {
-    super(pServer);
-  }
-  
-  public NetCommandId getId() {
-    return NetCommandId.INTERNAL_SERVER_FUMBBL_TEAM_LOADED;
-  }
+	protected ServerCommandHandlerFumbblTeamLoaded(FantasyFootballServer pServer) {
+		super(pServer);
+	}
 
-  public boolean handleCommand(ReceivedCommand pReceivedCommand) {
-    InternalServerCommandFumbblTeamLoaded teamLoadedCommand = (InternalServerCommandFumbblTeamLoaded) pReceivedCommand.getCommand();
-    GameState gameState = getServer().getGameCache().getGameStateById(teamLoadedCommand.getGameId());
-    if (gameState == null) {
-    	return false;
-    }
-    if (UtilServerStartGame.joinGameAsPlayerAndCheckIfReadyToStart(gameState, pReceivedCommand.getSession(), teamLoadedCommand.getCoach(), teamLoadedCommand.isHomeTeam())) {
-      getServer().getRequestProcessor().add(new FumbblRequestCheckGamestate(gameState));
-    }
-    return true;
-  }
+	public NetCommandId getId() {
+		return NetCommandId.INTERNAL_SERVER_FUMBBL_TEAM_LOADED;
+	}
+
+	public boolean handleCommand(ReceivedCommand pReceivedCommand) {
+		InternalServerCommandFumbblTeamLoaded teamLoadedCommand = (InternalServerCommandFumbblTeamLoaded) pReceivedCommand
+				.getCommand();
+		GameState gameState = getServer().getGameCache().getGameStateById(teamLoadedCommand.getGameId());
+		if (gameState == null) {
+			return false;
+		}
+		if (UtilServerStartGame.joinGameAsPlayerAndCheckIfReadyToStart(gameState, pReceivedCommand.getSession(),
+				teamLoadedCommand.getCoach(), teamLoadedCommand.isHomeTeam())) {
+			getServer().getRequestProcessor().add(new FumbblRequestCheckGamestate(gameState));
+		}
+		return true;
+	}
 
 }

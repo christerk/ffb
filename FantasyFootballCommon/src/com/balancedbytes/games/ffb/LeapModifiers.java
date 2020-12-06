@@ -9,24 +9,25 @@ import com.balancedbytes.games.ffb.model.ActingPlayer;
 public class LeapModifiers {
 
 	public static final LeapModifier VERY_LONG_LEGS = new LeapModifier("Very Long Legs", -1);
-	
+
 	private Map<String, LeapModifier> values;
-	public Map<String, LeapModifier> values() { return values;}
-	
+
+	public Map<String, LeapModifier> values() {
+		return values;
+	}
+
 	public LeapModifiers() {
 		values = new HashMap<String, LeapModifier>();
 		try {
 			Class<?> c = this.getClass();
 			Class<?> cModifierType = LeapModifier.class;
-			for(Field f :c.getDeclaredFields())
-			{
-				if(f.getType() == cModifierType)
-				{
-					LeapModifier modifier = (LeapModifier)f.get(this);
+			for (Field f : c.getDeclaredFields()) {
+				if (f.getType() == cModifierType) {
+					LeapModifier modifier = (LeapModifier) f.get(this);
 					values.put(modifier.getName().toLowerCase(), modifier);
 				}
 			}
-			
+
 		} catch (IllegalArgumentException | IllegalAccessException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -41,5 +42,5 @@ public class LeapModifiers {
 			this.sourceCoordinate = sourceCoordinate;
 			this.actingPlayer = actingPlayer;
 		}
-	} 
+	}
 }

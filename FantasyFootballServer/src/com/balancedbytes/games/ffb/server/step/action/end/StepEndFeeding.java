@@ -27,82 +27,83 @@ import com.eclipsesource.json.JsonValue;
  */
 public class StepEndFeeding extends AbstractStep {
 
-  private boolean fEndPlayerAction;
-  private boolean fEndTurn;
+	private boolean fEndPlayerAction;
+	private boolean fEndTurn;
 
-  public StepEndFeeding(GameState pGameState) {
-    super(pGameState);
-  }
+	public StepEndFeeding(GameState pGameState) {
+		super(pGameState);
+	}
 
-  public StepId getId() {
-    return StepId.END_FEEDING;
-  }
+	public StepId getId() {
+		return StepId.END_FEEDING;
+	}
 
-  @Override
-  public boolean setParameter(StepParameter pParameter) {
-    if ((pParameter != null) && !super.setParameter(pParameter)) {
-      switch (pParameter.getKey()) {
-        case END_PLAYER_ACTION:
-          fEndPlayerAction = (pParameter.getValue() != null) ? (Boolean) pParameter.getValue() : false;
-          consume(pParameter);
-          return true;
-        case END_TURN:
-          fEndTurn = (pParameter.getValue() != null) ? (Boolean) pParameter.getValue() : false;
-          consume(pParameter);
-          return true;
-        default:
-          break;
-      }
-    }
-    return false;
-  }
+	@Override
+	public boolean setParameter(StepParameter pParameter) {
+		if ((pParameter != null) && !super.setParameter(pParameter)) {
+			switch (pParameter.getKey()) {
+			case END_PLAYER_ACTION:
+				fEndPlayerAction = (pParameter.getValue() != null) ? (Boolean) pParameter.getValue() : false;
+				consume(pParameter);
+				return true;
+			case END_TURN:
+				fEndTurn = (pParameter.getValue() != null) ? (Boolean) pParameter.getValue() : false;
+				consume(pParameter);
+				return true;
+			default:
+				break;
+			}
+		}
+		return false;
+	}
 
-  @Override
-  public void start() {
-    super.start();
-    executeStep();
-  }
+	@Override
+	public void start() {
+		super.start();
+		executeStep();
+	}
 
-  private void executeStep() {
-    UtilServerDialog.hideDialog(getGameState());
-    Game game = getGameState().getGame();
-    fEndTurn |= UtilServerSteps.checkTouchdown(getGameState());
-    if (fEndTurn) {
-      if (game.getTurnMode() == TurnMode.PASS_BLOCK) {
-        SequenceGenerator.getInstance().pushEndTurnSequence(getGameState());
-      } else {
-        UtilServerSteps.changePlayerAction(this, null, null, false);
-        SequenceGenerator.getInstance().pushInducementSequence(getGameState(), InducementPhase.END_OF_OWN_TURN, game.isHomePlaying());
-      }
-    } else if (!fEndPlayerAction && (game.getThrowerAction() != null) && game.getThrowerAction().isPassing()) {
-      SequenceGenerator.getInstance().pushPassSequence(getGameState(), game.getPassCoordinate());
-    } else if ((game.getTurnMode() == TurnMode.KICKOFF_RETURN) || (game.getTurnMode() == TurnMode.PASS_BLOCK)) {
-      publishParameter(new StepParameter(StepParameterKey.END_PLAYER_ACTION, true));
-    } else {
-      game.setPassCoordinate(null);
-      UtilServerSteps.changePlayerAction(this, null, null, false);
-      SequenceGenerator.getInstance().pushSelectSequence(getGameState(), false);
-    }
-    getResult().setNextAction(StepAction.NEXT_STEP);
-  }
+	private void executeStep() {
+		UtilServerDialog.hideDialog(getGameState());
+		Game game = getGameState().getGame();
+		fEndTurn |= UtilServerSteps.checkTouchdown(getGameState());
+		if (fEndTurn) {
+			if (game.getTurnMode() == TurnMode.PASS_BLOCK) {
+				SequenceGenerator.getInstance().pushEndTurnSequence(getGameState());
+			} else {
+				UtilServerSteps.changePlayerAction(this, null, null, false);
+				SequenceGenerator.getInstance().pushInducementSequence(getGameState(), InducementPhase.END_OF_OWN_TURN,
+						game.isHomePlaying());
+			}
+		} else if (!fEndPlayerAction && (game.getThrowerAction() != null) && game.getThrowerAction().isPassing()) {
+			SequenceGenerator.getInstance().pushPassSequence(getGameState(), game.getPassCoordinate());
+		} else if ((game.getTurnMode() == TurnMode.KICKOFF_RETURN) || (game.getTurnMode() == TurnMode.PASS_BLOCK)) {
+			publishParameter(new StepParameter(StepParameterKey.END_PLAYER_ACTION, true));
+		} else {
+			game.setPassCoordinate(null);
+			UtilServerSteps.changePlayerAction(this, null, null, false);
+			SequenceGenerator.getInstance().pushSelectSequence(getGameState(), false);
+		}
+		getResult().setNextAction(StepAction.NEXT_STEP);
+	}
 
-  // JSON serialization
+	// JSON serialization
 
-  @Override
-  public JsonObject toJsonValue() {
-    JsonObject jsonObject = super.toJsonValue();
-    IServerJsonOption.END_PLAYER_ACTION.addTo(jsonObject, fEndPlayerAction);
-    IServerJsonOption.END_TURN.addTo(jsonObject, fEndTurn);
-    return jsonObject;
-  }
+	@Override
+	public JsonObject toJsonValue() {
+		JsonObject jsonObject = super.toJsonValue();
+		IServerJsonOption.END_PLAYER_ACTION.addTo(jsonObject, fEndPlayerAction);
+		IServerJsonOption.END_TURN.addTo(jsonObject, fEndTurn);
+		return jsonObject;
+	}
 
-  @Override
-  public StepEndFeeding initFrom(JsonValue pJsonValue) {
-    super.initFrom(pJsonValue);
-    JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-    fEndPlayerAction = IServerJsonOption.END_PLAYER_ACTION.getFrom(jsonObject);
-    fEndTurn = IServerJsonOption.END_TURN.getFrom(jsonObject);
-    return this;
-  }
+	@Override
+	public StepEndFeeding initFrom(JsonValue pJsonValue) {
+		super.initFrom(pJsonValue);
+		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
+		fEndPlayerAction = IServerJsonOption.END_PLAYER_ACTION.getFrom(jsonObject);
+		fEndTurn = IServerJsonOption.END_TURN.getFrom(jsonObject);
+		return this;
+	}
 
 }

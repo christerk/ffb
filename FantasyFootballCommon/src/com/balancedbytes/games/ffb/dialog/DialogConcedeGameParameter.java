@@ -12,27 +12,26 @@ import com.eclipsesource.json.JsonValue;
  */
 public class DialogConcedeGameParameter extends DialogWithoutParameter {
 
-  public DialogConcedeGameParameter() {
-    super();
-  }
+	public DialogConcedeGameParameter() {
+		super();
+	}
 
-  public DialogId getId() {
-    return DialogId.CONCEDE_GAME;
-  }
+	public DialogId getId() {
+		return DialogId.CONCEDE_GAME;
+	}
 
-  // transformation
-  
-  public IDialogParameter transform() {
-    return new DialogConcedeGameParameter();
-  }
-  
-  // JSON serialization
-  
-  public DialogConcedeGameParameter initFrom(JsonValue pJsonValue) {
-    JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-    UtilDialogParameter.validateDialogId(this, (DialogId) IJsonOption.DIALOG_ID.getFrom(jsonObject));
-    return this;
-  }
-  
+	// transformation
+
+	public IDialogParameter transform() {
+		return new DialogConcedeGameParameter();
+	}
+
+	// JSON serialization
+
+	public DialogConcedeGameParameter initFrom(JsonValue pJsonValue) {
+		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
+		UtilDialogParameter.validateDialogId(this, (DialogId) IJsonOption.DIALOG_ID.getFrom(jsonObject));
+		return this;
+	}
+
 }
-

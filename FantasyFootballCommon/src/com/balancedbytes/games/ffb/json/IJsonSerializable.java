@@ -1,6 +1,5 @@
 package com.balancedbytes.games.ffb.json;
 
-
 /**
  * 
  * @author Kalimar

@@ -41,11 +41,13 @@ public class SneakyGitBehaviour extends SkillBehaviour<SneakyGit> {
 				ActingPlayer actingPlayer = game.getActingPlayer();
 				PlayerState playerState = game.getFieldModel().getPlayerState(actingPlayer.getPlayer());
 				PlayerResult attackerResult = gameResult.getPlayerResult(actingPlayer.getPlayer());
-				    
+
 				if ((state.argueTheCallSuccessful != null) && state.argueTheCallSuccessful) {
 					game.getFieldModel().setPlayerState(actingPlayer.getPlayer(), playerState.changeBase(PlayerState.RESERVE));
-				} else if (UtilCards.hasSkill(game, actingPlayer, skill) && UtilGameOption.isOptionEnabled(game, GameOptionId.SNEAKY_GIT_BAN_TO_KO)) {
-					game.getFieldModel().setPlayerState(actingPlayer.getPlayer(), playerState.changeBase(PlayerState.KNOCKED_OUT));
+				} else if (UtilCards.hasSkill(game, actingPlayer, skill)
+						&& UtilGameOption.isOptionEnabled(game, GameOptionId.SNEAKY_GIT_BAN_TO_KO)) {
+					game.getFieldModel().setPlayerState(actingPlayer.getPlayer(),
+							playerState.changeBase(PlayerState.KNOCKED_OUT));
 					attackerResult.setSendToBoxReason(SendToBoxReason.FOUL_BAN);
 					attackerResult.setSendToBoxTurn(game.getTurnData().getTurnNr());
 					attackerResult.setSendToBoxHalf(game.getHalf());
@@ -72,30 +74,30 @@ public class SneakyGitBehaviour extends SkillBehaviour<SneakyGit> {
 			@Override
 			public boolean handleExecuteStepHook(StepReferee step,
 					com.balancedbytes.games.ffb.server.step.action.foul.StepReferee.StepState state) {
-				 Game game = step.getGameState().getGame();
-				    ActingPlayer actingPlayer = game.getActingPlayer();
-				    boolean refereeSpotsFoul = false;
-				    if (!UtilCards.isCardActive(game, Card.BLATANT_FOUL)
-				      && (!UtilCards.hasSkill(game, actingPlayer, skill)
-				    	|| state.injuryResultDefender.injuryContext().isArmorBroken()
-				    	|| ((UtilCards.hasSkill(game, actingPlayer, skill) && UtilGameOption.isOptionEnabled(game, GameOptionId.SNEAKY_GIT_BAN_TO_KO))))) {
-				      int[] armorRoll = state.injuryResultDefender.injuryContext().getArmorRoll();
-				      refereeSpotsFoul = (armorRoll[0] == armorRoll[1]);
-				    }
-				    if (!refereeSpotsFoul && state.injuryResultDefender.injuryContext().isArmorBroken()) {
-				      int[] injuryRoll = state.injuryResultDefender.injuryContext().getInjuryRoll();
-				      refereeSpotsFoul = (injuryRoll[0] == injuryRoll[1]);
-				    }
-				    step.getResult().addReport(new ReportReferee(refereeSpotsFoul));
-				    if (refereeSpotsFoul) {
-				    	step.getResult().setSound(SoundId.WHISTLE);
-				    	step.getResult().setNextAction(StepAction.NEXT_STEP);
-				    } else {
-				    	step.getResult().setNextAction(StepAction.GOTO_LABEL, state.gotoLabelOnEnd);
-				    }
+				Game game = step.getGameState().getGame();
+				ActingPlayer actingPlayer = game.getActingPlayer();
+				boolean refereeSpotsFoul = false;
+				if (!UtilCards.isCardActive(game, Card.BLATANT_FOUL) && (!UtilCards.hasSkill(game, actingPlayer, skill)
+						|| state.injuryResultDefender.injuryContext().isArmorBroken()
+						|| ((UtilCards.hasSkill(game, actingPlayer, skill)
+								&& UtilGameOption.isOptionEnabled(game, GameOptionId.SNEAKY_GIT_BAN_TO_KO))))) {
+					int[] armorRoll = state.injuryResultDefender.injuryContext().getArmorRoll();
+					refereeSpotsFoul = (armorRoll[0] == armorRoll[1]);
+				}
+				if (!refereeSpotsFoul && state.injuryResultDefender.injuryContext().isArmorBroken()) {
+					int[] injuryRoll = state.injuryResultDefender.injuryContext().getInjuryRoll();
+					refereeSpotsFoul = (injuryRoll[0] == injuryRoll[1]);
+				}
+				step.getResult().addReport(new ReportReferee(refereeSpotsFoul));
+				if (refereeSpotsFoul) {
+					step.getResult().setSound(SoundId.WHISTLE);
+					step.getResult().setNextAction(StepAction.NEXT_STEP);
+				} else {
+					step.getResult().setNextAction(StepAction.GOTO_LABEL, state.gotoLabelOnEnd);
+				}
 				return false;
 			}
-			
+
 		});
 	}
 }

@@ -5,7 +5,7 @@ package com.balancedbytes.games.ffb.server.step;
  * @author Kalimar
  */
 public interface IStepLabel {
-	
+
 	String APOTHECARY_ATTACKER = "apothecaryAttacker";
 	String APOTHECARY_DEFENDER = "apothecaryDefender";
 	String APOTHECARY_HIT_PLAYER = "apothecaryHitPlayer";
@@ -19,8 +19,8 @@ public interface IStepLabel {
 	String END_BOMB = "endBomb";
 	String END_FEEDING = "endFeeding";
 	String END_FOULING = "endFouling";
-  String END_GAME = "endGame";
-  String END_KICK_TEAM_MATE = "endKickTeamMate";
+	String END_GAME = "endGame";
+	String END_KICK_TEAM_MATE = "endKickTeamMate";
 	String END_KICKOFF = "endKickoff";
 	String END_MOVING = "endMoving";
 	String END_PASSING = "endPassing";

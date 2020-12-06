@@ -12,26 +12,26 @@ import com.eclipsesource.json.JsonValue;
  */
 public class DialogJoinParameter extends DialogWithoutParameter {
 
-  public DialogJoinParameter() {
-    super();
-  }
+	public DialogJoinParameter() {
+		super();
+	}
 
-  public DialogId getId() {
-    return DialogId.JOIN;
-  }
-  
-  // transformation
-  
-  public IDialogParameter transform() {
-    return new DialogJoinParameter();
-  }
-  
-  // JSON serialization
-  
-  public DialogJoinParameter initFrom(JsonValue pJsonValue) {
-    JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-    UtilDialogParameter.validateDialogId(this, (DialogId) IJsonOption.DIALOG_ID.getFrom(jsonObject));
-    return this;
-  }
+	public DialogId getId() {
+		return DialogId.JOIN;
+	}
+
+	// transformation
+
+	public IDialogParameter transform() {
+		return new DialogJoinParameter();
+	}
+
+	// JSON serialization
+
+	public DialogJoinParameter initFrom(JsonValue pJsonValue) {
+		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
+		UtilDialogParameter.validateDialogId(this, (DialogId) IJsonOption.DIALOG_ID.getFrom(jsonObject));
+		return this;
+	}
 
 }

@@ -46,11 +46,8 @@ public class DumpOffBehaviour extends SkillBehaviour<DumpOff> {
 							&& !game.getFieldModel().isBallMoving()
 							&& !(game.getFieldModel().getPlayerState(game.getDefender()).isConfused()
 									|| game.getFieldModel().getPlayerState(game.getDefender()).isHypnotized())) {
-						UtilServerDialog.showDialog(
-								step.getGameState(),
-								new DialogSkillUseParameter(game.getDefenderId(), skill, 0),
-								true
-								);
+						UtilServerDialog.showDialog(step.getGameState(),
+								new DialogSkillUseParameter(game.getDefenderId(), skill, 0), true);
 						step.getResult().setNextAction(StepAction.CONTINUE);
 					} else {
 						state.usingDumpOff = false;

@@ -47,73 +47,74 @@ import java.util.Map;
 import org.glassfish.tyrus.spi.UpgradeRequest;
 
 /**
- * Adds getHttpMethod method to @UpgradeRequest. Wraps an upgrade request and delegates all method calls except
- * {@link #getHttpMethod()} to it.
+ * Adds getHttpMethod method to @UpgradeRequest. Wraps an upgrade request and
+ * delegates all method calls except {@link #getHttpMethod()} to it.
  *
  * @author Petr Janouch (petr.janouch at oracle.com)
  */
 abstract class JdkUpgradeRequest extends UpgradeRequest {
 
-    private final UpgradeRequest upgradeRequest;
+	private final UpgradeRequest upgradeRequest;
 
-    /**
-     * Create new {@link org.glassfish.tyrus.container.jdk.client.JdkUpgradeRequest} wrapping
-     *
-     * @param upgradeRequest wrapped upgrade request.
-     */
-    JdkUpgradeRequest(UpgradeRequest upgradeRequest) {
-        this.upgradeRequest = upgradeRequest;
-    }
+	/**
+	 * Create new {@link org.glassfish.tyrus.container.jdk.client.JdkUpgradeRequest}
+	 * wrapping
+	 *
+	 * @param upgradeRequest wrapped upgrade request.
+	 */
+	JdkUpgradeRequest(UpgradeRequest upgradeRequest) {
+		this.upgradeRequest = upgradeRequest;
+	}
 
-    /**
-     * Returns a HTTP method that should be used when composing HTTP request.
-     *
-     * @return a HTTP method.
-     */
-    public abstract String getHttpMethod();
+	/**
+	 * Returns a HTTP method that should be used when composing HTTP request.
+	 *
+	 * @return a HTTP method.
+	 */
+	public abstract String getHttpMethod();
 
-    @Override
-    public String getHeader(String name) {
-        return upgradeRequest.getHeader(name);
-    }
+	@Override
+	public String getHeader(String name) {
+		return upgradeRequest.getHeader(name);
+	}
 
-    @Override
-    public boolean isSecure() {
-        return upgradeRequest.isSecure();
-    }
+	@Override
+	public boolean isSecure() {
+		return upgradeRequest.isSecure();
+	}
 
-    @Override
-    public Map<String, List<String>> getHeaders() {
-        return upgradeRequest.getHeaders();
-    }
+	@Override
+	public Map<String, List<String>> getHeaders() {
+		return upgradeRequest.getHeaders();
+	}
 
-    @Override
-    public Principal getUserPrincipal() {
-        return upgradeRequest.getUserPrincipal();
-    }
+	@Override
+	public Principal getUserPrincipal() {
+		return upgradeRequest.getUserPrincipal();
+	}
 
-    @Override
-    public URI getRequestURI() {
-        return upgradeRequest.getRequestURI();
-    }
+	@Override
+	public URI getRequestURI() {
+		return upgradeRequest.getRequestURI();
+	}
 
-    @Override
-    public boolean isUserInRole(String role) {
-        return upgradeRequest.isUserInRole(role);
-    }
+	@Override
+	public boolean isUserInRole(String role) {
+		return upgradeRequest.isUserInRole(role);
+	}
 
-    @Override
-    public Object getHttpSession() {
-        return upgradeRequest.getHttpSession();
-    }
+	@Override
+	public Object getHttpSession() {
+		return upgradeRequest.getHttpSession();
+	}
 
-    @Override
-    public Map<String, List<String>> getParameterMap() {
-        return upgradeRequest.getParameterMap();
-    }
+	@Override
+	public Map<String, List<String>> getParameterMap() {
+		return upgradeRequest.getParameterMap();
+	}
 
-    @Override
-    public String getQueryString() {
-        return upgradeRequest.getQueryString();
-    }
+	@Override
+	public String getQueryString() {
+		return upgradeRequest.getQueryString();
+	}
 }

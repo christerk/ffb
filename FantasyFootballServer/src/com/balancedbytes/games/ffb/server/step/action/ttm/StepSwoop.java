@@ -50,21 +50,19 @@ import com.eclipsesource.json.JsonValue;
  */
 public class StepSwoop extends AbstractStep {
 
-	
-	
 	public class StepState {
-	    public ActionStatus status;
+		public ActionStatus status;
 
-	    public String thrownPlayerId;
-	    public PlayerState thrownPlayerState;
-	    public boolean thrownPlayerHasBall;
-	    public FieldCoordinate thrownPlayerCoordinate;
+		public String thrownPlayerId;
+		public PlayerState thrownPlayerState;
+		public boolean thrownPlayerHasBall;
+		public FieldCoordinate thrownPlayerCoordinate;
 		public boolean throwScatter;
 		public FieldCoordinate coordinateFrom;
 		public FieldCoordinate coordinateTo;
 		public String goToLabelOnFallDown;
-	  }
-	
+	}
+
 	private StepState state;
 
 	public StepSwoop(GameState pGameState) {
@@ -85,19 +83,19 @@ public class StepSwoop extends AbstractStep {
 				case THROWN_PLAYER_ID:
 					state.thrownPlayerId = (String) parameter.getValue();
 					break;
-					// mandatory
+				// mandatory
 				case THROWN_PLAYER_HAS_BALL:
 					state.thrownPlayerHasBall = (parameter.getValue() != null) ? (Boolean) parameter.getValue() : false;
 					break;
-					// mandatory
+				// mandatory
 				case THROWN_PLAYER_COORDINATE:
 					state.thrownPlayerCoordinate = (FieldCoordinate) parameter.getValue();
 					break;
-					// mandatory
+				// mandatory
 				case THROWN_PLAYER_STATE:
 					state.thrownPlayerState = (PlayerState) parameter.getValue();
 					break;
-					// mandatory
+				// mandatory
 				case THROW_SCATTER:
 					state.throwScatter = (parameter.getValue() != null) ? (Boolean) parameter.getValue() : false;
 					break;
@@ -116,12 +114,10 @@ public class StepSwoop extends AbstractStep {
 			throw new StepException("StepParameter " + StepParameterKey.THROWN_PLAYER_ID + " is not initialized.");
 		}
 		if (state.thrownPlayerCoordinate == null) {
-			throw new StepException(
-					"StepParameter " + StepParameterKey.THROWN_PLAYER_COORDINATE + " is not initialized.");
+			throw new StepException("StepParameter " + StepParameterKey.THROWN_PLAYER_COORDINATE + " is not initialized.");
 		}
 		if (state.goToLabelOnFallDown == null) {
-			throw new StepException(
-					"StepParameter " + StepParameterKey.GOTO_LABEL_ON_FALL_DOWN + " is not initialized.");
+			throw new StepException("StepParameter " + StepParameterKey.GOTO_LABEL_ON_FALL_DOWN + " is not initialized.");
 		}
 	}
 
@@ -179,7 +175,7 @@ public class StepSwoop extends AbstractStep {
 		Game game = gameState.getGame();
 
 		Player thrownPlayer = game.getPlayerById(state.thrownPlayerId);
-		if ((thrownPlayer == null) || (state.thrownPlayerCoordinate == null))  {
+		if ((thrownPlayer == null) || (state.thrownPlayerCoordinate == null)) {
 			getResult().setNextAction(StepAction.NEXT_STEP);
 			return;
 		}
@@ -190,7 +186,8 @@ public class StepSwoop extends AbstractStep {
 			passCoordinate = game.getPassCoordinate();
 
 			// Render flying animation
-			getResult().setAnimation(new Animation(state.thrownPlayerCoordinate, passCoordinate, state.thrownPlayerId, state.thrownPlayerHasBall));
+			getResult().setAnimation(
+					new Animation(state.thrownPlayerCoordinate, passCoordinate, state.thrownPlayerId, state.thrownPlayerHasBall));
 			UtilServerGame.syncGameModel(this);
 
 			// Move player
@@ -199,7 +196,7 @@ public class StepSwoop extends AbstractStep {
 			if (state.thrownPlayerHasBall) {
 				game.getFieldModel().setBallCoordinate(passCoordinate);
 			}
-			game.getActingPlayer().setCurrentMove(thrownPlayer.getMovement()-3);
+			game.getActingPlayer().setCurrentMove(thrownPlayer.getMovement() - 3);
 
 			publishParameter(new StepParameter(StepParameterKey.THROWN_PLAYER_ID, state.thrownPlayerId));
 			publishParameter(new StepParameter(StepParameterKey.THROWN_PLAYER_STATE, state.thrownPlayerState));
@@ -211,7 +208,7 @@ public class StepSwoop extends AbstractStep {
 		if (state.coordinateTo == null) {
 			UtilServerPlayerSwoop.updateSwoopSquares(gameState, thrownPlayer);
 		}
-		//getResult().setNextAction(StepAction.NEXT_STEP);
+		// getResult().setNextAction(StepAction.NEXT_STEP);
 	}
 
 	// JSON serialization

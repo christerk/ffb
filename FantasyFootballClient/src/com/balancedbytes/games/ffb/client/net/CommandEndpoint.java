@@ -33,107 +33,104 @@ import com.eclipsesource.json.JsonValue;
 @ClientEndpoint
 public class CommandEndpoint {
 
-  private FantasyFootballClient fClient;
-  private NetCommandFactory fNetCommandFactory;
-  private boolean fCommandCompression;
-  private Session fSession;
+	private FantasyFootballClient fClient;
+	private NetCommandFactory fNetCommandFactory;
+	private boolean fCommandCompression;
+	private Session fSession;
 
-  private final CountDownLatch fCloseLatch;
+	private final CountDownLatch fCloseLatch;
 
-  public CommandEndpoint(FantasyFootballClient pClient) {
-    fClient = pClient;
-    fNetCommandFactory = new NetCommandFactory();
-    fCloseLatch = new CountDownLatch(1);
-    String commandCompressionProperty = null;
-    if (fClient != null) {
-      commandCompressionProperty = fClient.getProperty(IClientProperty.CLIENT_COMMAND_COMPRESSION);
-    }
-    fCommandCompression = false;
-    if (StringTool.isProvided(commandCompressionProperty)) {
-      fCommandCompression = Boolean.parseBoolean(commandCompressionProperty);
-    }
-  }
+	public CommandEndpoint(FantasyFootballClient pClient) {
+		fClient = pClient;
+		fNetCommandFactory = new NetCommandFactory();
+		fCloseLatch = new CountDownLatch(1);
+		String commandCompressionProperty = null;
+		if (fClient != null) {
+			commandCompressionProperty = fClient.getProperty(IClientProperty.CLIENT_COMMAND_COMPRESSION);
+		}
+		fCommandCompression = false;
+		if (StringTool.isProvided(commandCompressionProperty)) {
+			fCommandCompression = Boolean.parseBoolean(commandCompressionProperty);
+		}
+	}
 
-  @OnOpen
-  public void onOpen(Session session, EndpointConfig endpointConfig) {
-    fSession = session;
-  }
+	@OnOpen
+	public void onOpen(Session session, EndpointConfig endpointConfig) {
+		fSession = session;
+	}
 
-  @OnMessage
-  public void onBinary(byte[] buf, boolean last, Session session) {
-	  this.onMessage(new String(buf, 0, buf.length, Charset.forName("UTF8")));
-  }
-  
-  @OnMessage
-  public void onMessage(String pTextMessage) {
+	@OnMessage
+	public void onBinary(byte[] buf, boolean last, Session session) {
+		this.onMessage(new String(buf, 0, buf.length, Charset.forName("UTF8")));
+	}
 
-    if (!StringTool.isProvided(pTextMessage) || !isOpen()) {
-      return;
-    }
+	@OnMessage
+	public void onMessage(String pTextMessage) {
 
-    JsonValue jsonValue = JsonValue.readFrom(
-      fCommandCompression ? LZString.decompressFromUTF16(pTextMessage) : pTextMessage
-    );
+		if (!StringTool.isProvided(pTextMessage) || !isOpen()) {
+			return;
+		}
 
-    handleNetCommand(fNetCommandFactory.forJsonValue(jsonValue));
-  }
-  
-  @OnClose
-  public void onClose(Session session, CloseReason closeReason) {
-    fClient.getUserInterface().getStatusReport().reportSocketClosed();
-    fCloseLatch.countDown();
-  }
+		JsonValue jsonValue = JsonValue
+				.readFrom(fCommandCompression ? LZString.decompressFromUTF16(pTextMessage) : pTextMessage);
 
-  public boolean awaitClose(int duration, TimeUnit unit) throws InterruptedException {
-    return fCloseLatch.await(duration, unit);
-  }
+		handleNetCommand(fNetCommandFactory.forJsonValue(jsonValue));
+	}
 
-  public boolean send(NetCommand pCommand) throws IOException {
+	@OnClose
+	public void onClose(Session session, CloseReason closeReason) {
+		fClient.getUserInterface().getStatusReport().reportSocketClosed();
+		fCloseLatch.countDown();
+	}
 
-    if ((pCommand == null) || !isOpen()) {
-      return false;
-    }
+	public boolean awaitClose(int duration, TimeUnit unit) throws InterruptedException {
+		return fCloseLatch.await(duration, unit);
+	}
 
-    JsonValue jsonValue = pCommand.toJsonValue();
-    if (jsonValue == null) {
-      return false;
-    }
+	public boolean send(NetCommand pCommand) throws IOException {
 
-    String textMessage = jsonValue.toString();
-    if (fCommandCompression) {
-      textMessage = LZString.compressToUTF16(textMessage);
-    }
+		if ((pCommand == null) || !isOpen()) {
+			return false;
+		}
 
-    if (!StringTool.isProvided(textMessage)) {
-      return false;
-    }
+		JsonValue jsonValue = pCommand.toJsonValue();
+		if (jsonValue == null) {
+			return false;
+		}
 
-    //fSession.getAsyncRemote().sendText(textMessage);
-    fSession.getAsyncRemote().sendBinary(ByteBuffer.wrap(textMessage.getBytes(Charset.forName("UTF8"))));
-    return true;
+		String textMessage = jsonValue.toString();
+		if (fCommandCompression) {
+			textMessage = LZString.compressToUTF16(textMessage);
+		}
 
-  }
+		if (!StringTool.isProvided(textMessage)) {
+			return false;
+		}
 
-  public boolean isOpen() {
-    return ((fSession != null) && fSession.isOpen());
-  }
-  
-  private void handleNetCommand(NetCommand netCommand) {
-   if (netCommand == null) {
-      return;
-    } else if (NetCommandId.SERVER_PONG == netCommand.getId()) {
-      ServerCommandPong pongCommand = (ServerCommandPong) netCommand;
-      if (pongCommand.getTimestamp() > 0) {
-        long received = System.currentTimeMillis();
-        GameTitle gameTitle = new GameTitle();
-        gameTitle.setPingTime(received - pongCommand.getTimestamp());
-        fClient.getUserInterface().invokeLater(
-          new GameTitleUpdateTask(fClient, gameTitle)
-        );
-      }
-    } else {
-      fClient.getCommunication().handleCommand(netCommand);
-    }
-  }
+		// fSession.getAsyncRemote().sendText(textMessage);
+		fSession.getAsyncRemote().sendBinary(ByteBuffer.wrap(textMessage.getBytes(Charset.forName("UTF8"))));
+		return true;
+
+	}
+
+	public boolean isOpen() {
+		return ((fSession != null) && fSession.isOpen());
+	}
+
+	private void handleNetCommand(NetCommand netCommand) {
+		if (netCommand == null) {
+			return;
+		} else if (NetCommandId.SERVER_PONG == netCommand.getId()) {
+			ServerCommandPong pongCommand = (ServerCommandPong) netCommand;
+			if (pongCommand.getTimestamp() > 0) {
+				long received = System.currentTimeMillis();
+				GameTitle gameTitle = new GameTitle();
+				gameTitle.setPingTime(received - pongCommand.getTimestamp());
+				fClient.getUserInterface().invokeLater(new GameTitleUpdateTask(fClient, gameTitle));
+			}
+		} else {
+			fClient.getCommunication().handleCommand(netCommand);
+		}
+	}
 
 }

@@ -27,14 +27,14 @@ import com.eclipsesource.json.JsonValue;
 /**
  * Step to init the throw team mate sequence.
  * 
- * Needs to be initialized with stepParameter GOTO_LABEL_ON_END.
- * May be initialized with stepParameter TARGET_COORDINATE.
- * May be initialized with stepParameter THROWN_PLAYER_ID.
+ * Needs to be initialized with stepParameter GOTO_LABEL_ON_END. May be
+ * initialized with stepParameter TARGET_COORDINATE. May be initialized with
+ * stepParameter THROWN_PLAYER_ID.
  * 
- * Sets stepParameter END_PLAYER_ACTION for all steps on the stack.
- * Sets stepParameter END_TURN for all steps on the stack.
- * Sets stepParameter THROWN_PLAYER_ID for all steps on the stack.
- * Sets stepParameter THROWN_PLAYER_STATE for all steps on the stack.
+ * Sets stepParameter END_PLAYER_ACTION for all steps on the stack. Sets
+ * stepParameter END_TURN for all steps on the stack. Sets stepParameter
+ * THROWN_PLAYER_ID for all steps on the stack. Sets stepParameter
+ * THROWN_PLAYER_STATE for all steps on the stack.
  *
  * @author Kalimar
  */
@@ -63,11 +63,11 @@ public final class StepInitKickTeamMate extends AbstractStep {
 				case GOTO_LABEL_ON_END:
 					fGotoLabelOnEnd = (String) parameter.getValue();
 					break;
-					// optional
+				// optional
 				case NR_OF_DICE:
 					fNumDice = (parameter.getValue() != null) ? (Integer) parameter.getValue() : 0;
 					break;
-					// optional
+				// optional
 				case KICKED_PLAYER_ID:
 					fKickedPlayerId = (String) parameter.getValue();
 					break;
@@ -90,7 +90,8 @@ public final class StepInitKickTeamMate extends AbstractStep {
 	@Override
 	public StepCommandStatus handleCommand(ReceivedCommand pReceivedCommand) {
 		StepCommandStatus commandStatus = super.handleCommand(pReceivedCommand);
-		if ((pReceivedCommand != null) && (commandStatus == StepCommandStatus.UNHANDLED_COMMAND) && UtilServerSteps.checkCommandIsFromCurrentPlayer(getGameState(), pReceivedCommand)) {
+		if ((pReceivedCommand != null) && (commandStatus == StepCommandStatus.UNHANDLED_COMMAND)
+				&& UtilServerSteps.checkCommandIsFromCurrentPlayer(getGameState(), pReceivedCommand)) {
 			switch (pReceivedCommand.getId()) {
 			case CLIENT_KICK_TEAM_MATE:
 				ClientCommandKickTeamMate kickTeamMateCommand = (ClientCommandKickTeamMate) pReceivedCommand.getCommand();
@@ -107,7 +108,8 @@ public final class StepInitKickTeamMate extends AbstractStep {
 			case CLIENT_ACTING_PLAYER:
 				ClientCommandActingPlayer actingPlayerCommand = (ClientCommandActingPlayer) pReceivedCommand.getCommand();
 				if (StringTool.isProvided(actingPlayerCommand.getPlayerId())) {
-					UtilServerSteps.changePlayerAction(this, actingPlayerCommand.getPlayerId(), actingPlayerCommand.getPlayerAction(), actingPlayerCommand.isLeaping());
+					UtilServerSteps.changePlayerAction(this, actingPlayerCommand.getPlayerId(),
+							actingPlayerCommand.getPlayerAction(), actingPlayerCommand.isLeaping());
 				} else {
 					fEndPlayerAction = true;
 				}
@@ -147,11 +149,12 @@ public final class StepInitKickTeamMate extends AbstractStep {
 					publishParameter(new StepParameter(StepParameterKey.KICKED_PLAYER_STATE, kickedPlayerState));
 					FieldCoordinate kickedPlayerCoordinate = game.getFieldModel().getPlayerCoordinate(game.getDefender());
 					publishParameter(new StepParameter(StepParameterKey.KICKED_PLAYER_COORDINATE, kickedPlayerCoordinate));
-					boolean thrownPlayerHasBall = kickedPlayerCoordinate.equals(game.getFieldModel().getBallCoordinate()) && !game.getFieldModel().isBallMoving();
+					boolean thrownPlayerHasBall = kickedPlayerCoordinate.equals(game.getFieldModel().getBallCoordinate())
+							&& !game.getFieldModel().isBallMoving();
 					publishParameter(new StepParameter(StepParameterKey.KICKED_PLAYER_HAS_BALL, thrownPlayerHasBall));
 					publishParameter(new StepParameter(StepParameterKey.NR_OF_DICE, fNumDice));
 					UtilServerSteps.changePlayerAction(this, actingPlayer.getPlayerId(), PlayerAction.KICK_TEAM_MATE, false);
-          getResult().setNextAction(StepAction.NEXT_STEP);
+					getResult().setNextAction(StepAction.NEXT_STEP);
 				}
 			}
 		}

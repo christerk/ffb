@@ -6,8 +6,8 @@ package com.balancedbytes.games.ffb.client;
  */
 public interface IProgressListener {
 
-  public void initProgress(int pMinimum, int pMaximum);
-  
-  public void updateProgress(int pProgress);
+	public void initProgress(int pMinimum, int pMaximum);
+
+	public void updateProgress(int pProgress);
 
 }

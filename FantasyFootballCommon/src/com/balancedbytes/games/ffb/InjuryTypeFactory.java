@@ -37,7 +37,6 @@ public class InjuryTypeFactory implements INamedObjectFactory {
 		}
 	}
 
-
 	public Collection<InjuryType> getInjuryTypes() {
 		return injuryTypes.values();
 	}
@@ -59,4 +58,3 @@ public class InjuryTypeFactory implements INamedObjectFactory {
 		return injuryTypeMap.get(c);
 	}
 }
-

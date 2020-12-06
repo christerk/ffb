@@ -12,37 +12,37 @@ import com.eclipsesource.json.JsonValue;
  */
 public class ClientCommandTeamSetupDelete extends ClientCommand {
 
-  private String fSetupName;
+	private String fSetupName;
 
-  public ClientCommandTeamSetupDelete() {
-    super();
-  }
+	public ClientCommandTeamSetupDelete() {
+		super();
+	}
 
-  public ClientCommandTeamSetupDelete(String pSetupName) {
-    fSetupName = pSetupName;
-  }
+	public ClientCommandTeamSetupDelete(String pSetupName) {
+		fSetupName = pSetupName;
+	}
 
-  public NetCommandId getId() {
-    return NetCommandId.CLIENT_TEAM_SETUP_DELETE;
-  }
+	public NetCommandId getId() {
+		return NetCommandId.CLIENT_TEAM_SETUP_DELETE;
+	}
 
-  public String getSetupName() {
-    return fSetupName;
-  }
+	public String getSetupName() {
+		return fSetupName;
+	}
 
-  // JSON serialization
+	// JSON serialization
 
-  public JsonObject toJsonValue() {
-    JsonObject jsonObject = super.toJsonValue();
-    IJsonOption.SETUP_NAME.addTo(jsonObject, fSetupName);
-    return jsonObject;
-  }
+	public JsonObject toJsonValue() {
+		JsonObject jsonObject = super.toJsonValue();
+		IJsonOption.SETUP_NAME.addTo(jsonObject, fSetupName);
+		return jsonObject;
+	}
 
-  public ClientCommandTeamSetupDelete initFrom(JsonValue jsonValue) {
-    super.initFrom(jsonValue);
-    JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
-    fSetupName = IJsonOption.SETUP_NAME.getFrom(jsonObject);
-    return this;
-  }
+	public ClientCommandTeamSetupDelete initFrom(JsonValue jsonValue) {
+		super.initFrom(jsonValue);
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
+		fSetupName = IJsonOption.SETUP_NAME.getFrom(jsonObject);
+		return this;
+	}
 
 }

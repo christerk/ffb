@@ -19,41 +19,42 @@ import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.step.IStep;
 import com.balancedbytes.games.ffb.util.UtilCards;
 
-public class InjuryTypePilingOnInjury extends InjuryTypeServer<PilingOnInjury>  {
-		public InjuryTypePilingOnInjury() {
-			super(new PilingOnInjury());
-		}
-
-		@Override
-		public InjuryContext handleInjury(IStep step, Game game,GameState gameState, DiceRoller diceRoller, Player<?> pAttacker, Player<?> pDefender,
-				FieldCoordinate pDefenderCoordinate, InjuryContext pOldInjuryContext, ApothecaryMode pApothecaryMode) {
-			
-			if (pOldInjuryContext != null) {
-				for (ArmorModifier armorModifier : pOldInjuryContext.getArmorModifiers()) {
-					injuryContext.addArmorModifier(armorModifier);
-				}
-			}
-
-			if (!injuryContext.isArmorBroken()) {
-				injuryContext.setArmorBroken(true);
-			}
-
-			if (injuryContext.isArmorBroken()) {
-				injuryContext.setInjuryRoll(diceRoller.rollInjury());
-				injuryContext.addInjuryModifier(new InjuryModifierFactory().getNigglingInjuryModifier(pDefender));
-
-				if (!UtilGameOption.isOptionEnabled(game, GameOptionId.PILING_ON_DOES_NOT_STACK)) {
-					if (UtilCards.hasSkill(game, pAttacker, SkillConstants.MIGHTY_BLOW)
-							&& !injuryContext.hasArmorModifier(ArmorModifiers.MIGHTY_BLOW)) {
-						injuryContext.addInjuryModifier(InjuryModifiers.MIGHTY_BLOW);
-					}
-				}
-
-				setInjury(pDefender, gameState, diceRoller);
-			} else {
-				injuryContext.setInjury(new PlayerState(PlayerState.PRONE));
-			}
-
-			return injuryContext;
-		}
+public class InjuryTypePilingOnInjury extends InjuryTypeServer<PilingOnInjury> {
+	public InjuryTypePilingOnInjury() {
+		super(new PilingOnInjury());
 	}
+
+	@Override
+	public InjuryContext handleInjury(IStep step, Game game, GameState gameState, DiceRoller diceRoller,
+			Player<?> pAttacker, Player<?> pDefender, FieldCoordinate pDefenderCoordinate, InjuryContext pOldInjuryContext,
+			ApothecaryMode pApothecaryMode) {
+
+		if (pOldInjuryContext != null) {
+			for (ArmorModifier armorModifier : pOldInjuryContext.getArmorModifiers()) {
+				injuryContext.addArmorModifier(armorModifier);
+			}
+		}
+
+		if (!injuryContext.isArmorBroken()) {
+			injuryContext.setArmorBroken(true);
+		}
+
+		if (injuryContext.isArmorBroken()) {
+			injuryContext.setInjuryRoll(diceRoller.rollInjury());
+			injuryContext.addInjuryModifier(new InjuryModifierFactory().getNigglingInjuryModifier(pDefender));
+
+			if (!UtilGameOption.isOptionEnabled(game, GameOptionId.PILING_ON_DOES_NOT_STACK)) {
+				if (UtilCards.hasSkill(game, pAttacker, SkillConstants.MIGHTY_BLOW)
+						&& !injuryContext.hasArmorModifier(ArmorModifiers.MIGHTY_BLOW)) {
+					injuryContext.addInjuryModifier(InjuryModifiers.MIGHTY_BLOW);
+				}
+			}
+
+			setInjury(pDefender, gameState, diceRoller);
+		} else {
+			injuryContext.setInjury(new PlayerState(PlayerState.PRONE));
+		}
+
+		return injuryContext;
+	}
+}

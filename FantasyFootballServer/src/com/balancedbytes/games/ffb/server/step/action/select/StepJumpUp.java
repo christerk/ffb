@@ -20,84 +20,83 @@ import com.eclipsesource.json.JsonValue;
  * 
  * Needs to be initialized with stepParameter GOTO_LABEL_ON_FAILURE.
  * 
- * Sets stepParameter DISPATCH_PLAYER_ACTION for all steps on the stack.
- * Sets stepParameter END_PLAYER_ACTION for all steps on the stack.
- *  
+ * Sets stepParameter DISPATCH_PLAYER_ACTION for all steps on the stack. Sets
+ * stepParameter END_PLAYER_ACTION for all steps on the stack.
+ * 
  * @author Kalimar
  */
 public final class StepJumpUp extends AbstractStepWithReRoll {
-	
-  
+
 	public class StepState {
 		public String goToLabelOnFailure;
-	  }
-	
+	}
+
 	private StepState state;
-	
+
 	public StepJumpUp(GameState pGameState) {
 		super(pGameState);
-		
+
 		state = new StepState();
 
 	}
-	
+
 	public StepId getId() {
 		return StepId.JUMP_UP;
 	}
-	
-  @Override
-  public void init(StepParameterSet pParameterSet) {
-  	if (pParameterSet != null) {
-  		for (StepParameter parameter : pParameterSet.values()) {
-  			switch (parameter.getKey()) {
-  			  // mandatory
-  				case GOTO_LABEL_ON_FAILURE:
-  					state.goToLabelOnFailure = (String) parameter.getValue();
-  					break;
-					default:
-						break;
-  			}
-  		}
-  	}
-  	if (!StringTool.isProvided(state.goToLabelOnFailure)) {
+
+	@Override
+	public void init(StepParameterSet pParameterSet) {
+		if (pParameterSet != null) {
+			for (StepParameter parameter : pParameterSet.values()) {
+				switch (parameter.getKey()) {
+				// mandatory
+				case GOTO_LABEL_ON_FAILURE:
+					state.goToLabelOnFailure = (String) parameter.getValue();
+					break;
+				default:
+					break;
+				}
+			}
+		}
+		if (!StringTool.isProvided(state.goToLabelOnFailure)) {
 			throw new StepException("StepParameter " + StepParameterKey.GOTO_LABEL_ON_FAILURE + " is not initialized.");
-  	}
-  }
-	
+		}
+	}
+
 	@Override
 	public void start() {
 		super.start();
 		executeStep();
 	}
-	
+
 	@Override
-  public StepCommandStatus handleCommand(ReceivedCommand pReceivedCommand) {
+	public StepCommandStatus handleCommand(ReceivedCommand pReceivedCommand) {
 		StepCommandStatus commandStatus = super.handleCommand(pReceivedCommand);
 		if (commandStatus == StepCommandStatus.EXECUTE_STEP) {
 			executeStep();
 		}
 		return commandStatus;
 	}
-	
-  private void executeStep() {
-	  getGameState().executeStepHooks(this, state);
-  }
-  
-  // JSON serialization
-  
-  @Override
-  public JsonObject toJsonValue() {
-    JsonObject jsonObject = super.toJsonValue();
-    IServerJsonOption.GOTO_LABEL_ON_FAILURE.addTo(jsonObject, state.goToLabelOnFailure);
-    return jsonObject;
-  }
-  
-  @Override
-  public StepJumpUp initFrom(JsonValue pJsonValue) {
-    super.initFrom(pJsonValue);
-    JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-    state.goToLabelOnFailure = IServerJsonOption.GOTO_LABEL_ON_FAILURE.getFrom(jsonObject);
-    return this;
-  }
-  	
+
+	private void executeStep() {
+		getGameState().executeStepHooks(this, state);
+	}
+
+	// JSON serialization
+
+	@Override
+	public JsonObject toJsonValue() {
+		JsonObject jsonObject = super.toJsonValue();
+		IServerJsonOption.GOTO_LABEL_ON_FAILURE.addTo(jsonObject, state.goToLabelOnFailure);
+		return jsonObject;
+	}
+
+	@Override
+	public StepJumpUp initFrom(JsonValue pJsonValue) {
+		super.initFrom(pJsonValue);
+		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
+		state.goToLabelOnFailure = IServerJsonOption.GOTO_LABEL_ON_FAILURE.getFrom(jsonObject);
+		return this;
+	}
+
 }

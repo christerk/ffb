@@ -42,26 +42,29 @@ package org.glassfish.tyrus.core;
 import javax.websocket.CloseReason;
 
 /**
- * Thrown when {@link javax.websocket.OnMessage#maxMessageSize()} is smaller than received message size.
+ * Thrown when {@link javax.websocket.OnMessage#maxMessageSize()} is smaller
+ * than received message size.
  * <p>
- * Underlying web socket connection will be closed with {@link javax.websocket.CloseReason.CloseCode}
- * {@link javax.websocket.CloseReason.CloseCodes#TOO_BIG} and {@link javax.websocket.OnError} annotated method (or
- * {@link javax.websocket.Endpoint#onError(javax.websocket.Session, Throwable)} will be called with instance of this
- * class as {@link Throwable} parameter.
+ * Underlying web socket connection will be closed with
+ * {@link javax.websocket.CloseReason.CloseCode}
+ * {@link javax.websocket.CloseReason.CloseCodes#TOO_BIG} and
+ * {@link javax.websocket.OnError} annotated method (or
+ * {@link javax.websocket.Endpoint#onError(javax.websocket.Session, Throwable)}
+ * will be called with instance of this class as {@link Throwable} parameter.
  *
  * @author Pavel Bucek (pavel.bucek at oracle.com)
  */
 class MessageTooBigException extends WebSocketException {
 
-    private static final CloseReason CLOSE_REASON = CloseReasons.TOO_BIG.getCloseReason();
-    private static final long serialVersionUID = -1636733948291376261L;
+	private static final CloseReason CLOSE_REASON = CloseReasons.TOO_BIG.getCloseReason();
+	private static final long serialVersionUID = -1636733948291376261L;
 
-    MessageTooBigException(String message) {
-        super(message);
-    }
+	MessageTooBigException(String message) {
+		super(message);
+	}
 
-    @Override
-    public CloseReason getCloseReason() {
-        return CLOSE_REASON;
-    }
+	@Override
+	public CloseReason getCloseReason() {
+		return CLOSE_REASON;
+	}
 }

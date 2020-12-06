@@ -27,181 +27,182 @@ import com.eclipsesource.json.JsonValue;
  */
 public abstract class AbstractStep implements IStep {
 
-  private GameState fGameState;
-  private StepResult fStepResult;
-  private String fLabel;
-  protected SkillFactory skillFactory;
+	private GameState fGameState;
+	private StepResult fStepResult;
+	private String fLabel;
+	protected SkillFactory skillFactory;
 
-  protected AbstractStep(GameState pGameState) {
-    fGameState = pGameState;
-    setStepResult(new StepResult());
-    skillFactory = pGameState.getSkillFactory();
-  }
-  
-  protected AbstractStep(GameState pGameState, StepAction defaultStepResult) {
-  	this(pGameState);
-  	fStepResult.setNextAction(defaultStepResult);
-  }
+	protected AbstractStep(GameState pGameState) {
+		fGameState = pGameState;
+		setStepResult(new StepResult());
+		skillFactory = pGameState.getSkillFactory();
+	}
 
-  public void setLabel(String pLabel) {
-    fLabel = pLabel;
-    // System.out.println("setLabel(" + pLabel + ")");
-  }
+	protected AbstractStep(GameState pGameState, StepAction defaultStepResult) {
+		this(pGameState);
+		fStepResult.setNextAction(defaultStepResult);
+	}
 
-  public String getLabel() {
-    return fLabel;
-  }
+	public void setLabel(String pLabel) {
+		fLabel = pLabel;
+		// System.out.println("setLabel(" + pLabel + ")");
+	}
 
-  public GameState getGameState() {
-    return fGameState;
-  }
+	public String getLabel() {
+		return fLabel;
+	}
 
-  private void setStepResult(StepResult pStepResult) {
-    fStepResult = pStepResult;
-  }
+	public GameState getGameState() {
+		return fGameState;
+	}
 
-  public StepResult getResult() {
-    return fStepResult;
-  }
+	private void setStepResult(StepResult pStepResult) {
+		fStepResult = pStepResult;
+	}
 
-  public void init(StepParameterSet pParameterSet) {
-    // do nothing, override in subclass if needed
-  }
+	public StepResult getResult() {
+		return fStepResult;
+	}
 
-  public void start() {
-    // do nothing, override in subclass if needed
-  }
+	public void init(StepParameterSet pParameterSet) {
+		// do nothing, override in subclass if needed
+	}
+
+	public void start() {
+		// do nothing, override in subclass if needed
+	}
 
 	public void repeat() {
-	// This prevents endless loops being caused by incomplete implementations
-		getResult().setNextAction(StepAction.CONTINUE); 
+		// This prevents endless loops being caused by incomplete implementations
+		getResult().setNextAction(StepAction.CONTINUE);
 	}
-  
-  public StepCommandStatus handleCommand(ReceivedCommand pReceivedCommand) {
-    StepCommandStatus commandStatus = StepCommandStatus.UNHANDLED_COMMAND;
-    switch (pReceivedCommand.getId()) {
-      case CLIENT_CONCEDE_GAME:
-        commandStatus = handleConcedeGame(pReceivedCommand);
-        break;
-      case CLIENT_ILLEGAL_PROCEDURE:
-        commandStatus = handleIllegalProcedure(pReceivedCommand);
-        break;
-      default:
-        break;
-    }
-    return commandStatus;
-  }
 
-  public boolean setParameter(StepParameter pParameter) {
-    // do nothing, override in subclass if needed
-    return false;
-  }
+	public StepCommandStatus handleCommand(ReceivedCommand pReceivedCommand) {
+		StepCommandStatus commandStatus = StepCommandStatus.UNHANDLED_COMMAND;
+		switch (pReceivedCommand.getId()) {
+		case CLIENT_CONCEDE_GAME:
+			commandStatus = handleConcedeGame(pReceivedCommand);
+			break;
+		case CLIENT_ILLEGAL_PROCEDURE:
+			commandStatus = handleIllegalProcedure(pReceivedCommand);
+			break;
+		default:
+			break;
+		}
+		return commandStatus;
+	}
 
-  public void publishParameter(StepParameter pParameter) {
-    if (pParameter != null) {
-      DebugLog debugLog = getGameState().getServer().getDebugLog();
-      if (debugLog.isLogging(IServerLogLevel.TRACE)) {
-        StringBuilder trace = new StringBuilder();
-        trace.append(getId()).append(" publishes ").append(pParameter.getKey()).append("=").append(pParameter.getValue());
-        debugLog.log(IServerLogLevel.TRACE, trace.toString());
-      }
-      setParameter(pParameter);
-      getGameState().getStepStack().publishStepParameter(pParameter);
-    }
-  }
+	public boolean setParameter(StepParameter pParameter) {
+		// do nothing, override in subclass if needed
+		return false;
+	}
 
-  public void publishParameters(StepParameterSet pParameterSet) {
-    if (pParameterSet != null) {
-      for (StepParameter parameter : pParameterSet.values()) {
-        publishParameter(parameter);
-      }
-    }
-  }
+	public void publishParameter(StepParameter pParameter) {
+		if (pParameter != null) {
+			DebugLog debugLog = getGameState().getServer().getDebugLog();
+			if (debugLog.isLogging(IServerLogLevel.TRACE)) {
+				StringBuilder trace = new StringBuilder();
+				trace.append(getId()).append(" publishes ").append(pParameter.getKey()).append("=")
+						.append(pParameter.getValue());
+				debugLog.log(IServerLogLevel.TRACE, trace.toString());
+			}
+			setParameter(pParameter);
+			getGameState().getStepStack().publishStepParameter(pParameter);
+		}
+	}
 
-  public void consume(StepParameter pParameter) {
-	  DebugLog debugLog = fGameState.getServer().getDebugLog();
-	  if (debugLog.isLogging(IServerLogLevel.TRACE)) {
-		  StringBuilder trace = new StringBuilder();
-		  trace.append(getId()).append(" consumes ").append(pParameter.getKey()).append("=").append(pParameter.getValue());
-		  debugLog.log(IServerLogLevel.TRACE, trace.toString());
-	  }
-	  pParameter.consume();
-  }
-  
-  // JSON serialization
+	public void publishParameters(StepParameterSet pParameterSet) {
+		if (pParameterSet != null) {
+			for (StepParameter parameter : pParameterSet.values()) {
+				publishParameter(parameter);
+			}
+		}
+	}
 
-  public JsonObject toJsonValue() {
-    JsonObject jsonObject = new JsonObject();
-    IServerJsonOption.STEP_ID.addTo(jsonObject, getId());
-    IServerJsonOption.LABEL.addTo(jsonObject, fLabel);
-    IServerJsonOption.STEP_RESULT.addTo(jsonObject, fStepResult.toJsonValue());
-    return jsonObject;
-  }
+	public void consume(StepParameter pParameter) {
+		DebugLog debugLog = fGameState.getServer().getDebugLog();
+		if (debugLog.isLogging(IServerLogLevel.TRACE)) {
+			StringBuilder trace = new StringBuilder();
+			trace.append(getId()).append(" consumes ").append(pParameter.getKey()).append("=").append(pParameter.getValue());
+			debugLog.log(IServerLogLevel.TRACE, trace.toString());
+		}
+		pParameter.consume();
+	}
 
-  public AbstractStep initFrom(JsonValue pJsonValue) {
-    JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-    UtilServerSteps.validateStepId(this, (StepId) IServerJsonOption.STEP_ID.getFrom(jsonObject));
-    fLabel = IServerJsonOption.LABEL.getFrom(jsonObject);
-    fStepResult = null;
-    JsonObject stepResultObject = IServerJsonOption.STEP_RESULT.getFrom(jsonObject);
-    if (stepResultObject != null) {
-      fStepResult = new StepResult().initFrom(stepResultObject);
-    }
-    return this;
-  }
+	// JSON serialization
 
-  // Helper methods
+	public JsonObject toJsonValue() {
+		JsonObject jsonObject = new JsonObject();
+		IServerJsonOption.STEP_ID.addTo(jsonObject, getId());
+		IServerJsonOption.LABEL.addTo(jsonObject, fLabel);
+		IServerJsonOption.STEP_RESULT.addTo(jsonObject, fStepResult.toJsonValue());
+		return jsonObject;
+	}
 
-  private StepCommandStatus handleConcedeGame(ReceivedCommand pReceivedCommand) {
-    ClientCommandConcedeGame concedeGameCommand = (ClientCommandConcedeGame) pReceivedCommand.getCommand();
-    StepCommandStatus commandStatus = StepCommandStatus.UNHANDLED_COMMAND;
-    Game game = getGameState().getGame();
-    GameResult gameResult = game.getGameResult();
-    if (concedeGameCommand.getConcedeGameStatus() != null) {
-      SessionManager sessionManager = getGameState().getServer().getSessionManager();
-      boolean homeCommand = (sessionManager.getSessionOfHomeCoach(getGameState().getId()) == pReceivedCommand.getSession());
-      boolean awayCommand = (sessionManager.getSessionOfAwayCoach(getGameState().getId()) == pReceivedCommand.getSession());
-      switch (concedeGameCommand.getConcedeGameStatus()) {
-        case REQUESTED:
-          if (game.isConcessionPossible() && ((game.isHomePlaying() && homeCommand) || (!game.isHomePlaying() && awayCommand))) {
-            UtilServerDialog.showDialog(
-                getGameState(),
-                new DialogConcedeGameParameter(),
-                false);
-          }
-          break;
-        case CONFIRMED:
-          game.setConcessionPossible(false);
-          gameResult.getTeamResultHome().setConceded(game.isHomePlaying() && homeCommand);
-          gameResult.getTeamResultAway().setConceded(!game.isHomePlaying() && awayCommand);
-          break;
-        case DENIED:
-          UtilServerDialog.hideDialog(getGameState());
-          break;
-      }
-      if (gameResult.getTeamResultHome().hasConceded() || gameResult.getTeamResultAway().hasConceded()) {
-        getGameState().getStepStack().clear();
-        SequenceGenerator.getInstance().pushEndGameSequence(getGameState(), false);
-        getResult().setNextAction(StepAction.NEXT_STEP);
-      }
-      commandStatus = StepCommandStatus.SKIP_STEP;
-    }
-    return commandStatus;
-  }
+	public AbstractStep initFrom(JsonValue pJsonValue) {
+		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
+		UtilServerSteps.validateStepId(this, (StepId) IServerJsonOption.STEP_ID.getFrom(jsonObject));
+		fLabel = IServerJsonOption.LABEL.getFrom(jsonObject);
+		fStepResult = null;
+		JsonObject stepResultObject = IServerJsonOption.STEP_RESULT.getFrom(jsonObject);
+		if (stepResultObject != null) {
+			fStepResult = new StepResult().initFrom(stepResultObject);
+		}
+		return this;
+	}
 
-  private StepCommandStatus handleIllegalProcedure(ReceivedCommand pReceivedCommand) {
-    StepCommandStatus commandStatus = StepCommandStatus.UNHANDLED_COMMAND;
-    Game game = getGameState().getGame();
-    if (game.isTimeoutPossible()) {
-      ReportList reports = new ReportList();
-      FantasyFootballServer server = getGameState().getServer();
-      String coach = server.getSessionManager().getCoachForSession(pReceivedCommand.getSession());
-      reports.add(new ReportTimeoutEnforced(coach));
-      game.setTimeoutEnforced(true);
-      game.setTimeoutPossible(false);
-      UtilServerGame.syncGameModel(getGameState(), reports, null, SoundId.WHISTLE);
-    }
-    return commandStatus;
-  }
+	// Helper methods
+
+	private StepCommandStatus handleConcedeGame(ReceivedCommand pReceivedCommand) {
+		ClientCommandConcedeGame concedeGameCommand = (ClientCommandConcedeGame) pReceivedCommand.getCommand();
+		StepCommandStatus commandStatus = StepCommandStatus.UNHANDLED_COMMAND;
+		Game game = getGameState().getGame();
+		GameResult gameResult = game.getGameResult();
+		if (concedeGameCommand.getConcedeGameStatus() != null) {
+			SessionManager sessionManager = getGameState().getServer().getSessionManager();
+			boolean homeCommand = (sessionManager.getSessionOfHomeCoach(getGameState().getId()) == pReceivedCommand
+					.getSession());
+			boolean awayCommand = (sessionManager.getSessionOfAwayCoach(getGameState().getId()) == pReceivedCommand
+					.getSession());
+			switch (concedeGameCommand.getConcedeGameStatus()) {
+			case REQUESTED:
+				if (game.isConcessionPossible()
+						&& ((game.isHomePlaying() && homeCommand) || (!game.isHomePlaying() && awayCommand))) {
+					UtilServerDialog.showDialog(getGameState(), new DialogConcedeGameParameter(), false);
+				}
+				break;
+			case CONFIRMED:
+				game.setConcessionPossible(false);
+				gameResult.getTeamResultHome().setConceded(game.isHomePlaying() && homeCommand);
+				gameResult.getTeamResultAway().setConceded(!game.isHomePlaying() && awayCommand);
+				break;
+			case DENIED:
+				UtilServerDialog.hideDialog(getGameState());
+				break;
+			}
+			if (gameResult.getTeamResultHome().hasConceded() || gameResult.getTeamResultAway().hasConceded()) {
+				getGameState().getStepStack().clear();
+				SequenceGenerator.getInstance().pushEndGameSequence(getGameState(), false);
+				getResult().setNextAction(StepAction.NEXT_STEP);
+			}
+			commandStatus = StepCommandStatus.SKIP_STEP;
+		}
+		return commandStatus;
+	}
+
+	private StepCommandStatus handleIllegalProcedure(ReceivedCommand pReceivedCommand) {
+		StepCommandStatus commandStatus = StepCommandStatus.UNHANDLED_COMMAND;
+		Game game = getGameState().getGame();
+		if (game.isTimeoutPossible()) {
+			ReportList reports = new ReportList();
+			FantasyFootballServer server = getGameState().getServer();
+			String coach = server.getSessionManager().getCoachForSession(pReceivedCommand.getSession());
+			reports.add(new ReportTimeoutEnforced(coach));
+			game.setTimeoutEnforced(true);
+			game.setTimeoutPossible(false);
+			UtilServerGame.syncGameModel(getGameState(), reports, null, SoundId.WHISTLE);
+		}
+		return commandStatus;
+	}
 
 }

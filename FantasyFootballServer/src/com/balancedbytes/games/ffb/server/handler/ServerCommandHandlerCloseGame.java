@@ -11,18 +11,18 @@ import com.balancedbytes.games.ffb.server.net.commands.InternalServerCommandClos
  */
 public class ServerCommandHandlerCloseGame extends ServerCommandHandler {
 
-  protected ServerCommandHandlerCloseGame(FantasyFootballServer pServer) {
-    super(pServer);
-  }
-  
-  public NetCommandId getId() {
-    return NetCommandId.INTERNAL_SERVER_CLOSE_GAME;
-  }
+	protected ServerCommandHandlerCloseGame(FantasyFootballServer pServer) {
+		super(pServer);
+	}
 
-  public boolean handleCommand(ReceivedCommand pReceivedCommand) {
-    InternalServerCommandCloseGame closeGameCommand = (InternalServerCommandCloseGame) pReceivedCommand.getCommand();
-    getServer().getGameCache().closeGame(closeGameCommand.getGameId());
-    return true;
-  }
-  
+	public NetCommandId getId() {
+		return NetCommandId.INTERNAL_SERVER_CLOSE_GAME;
+	}
+
+	public boolean handleCommand(ReceivedCommand pReceivedCommand) {
+		InternalServerCommandCloseGame closeGameCommand = (InternalServerCommandCloseGame) pReceivedCommand.getCommand();
+		getServer().getGameCache().closeGame(closeGameCommand.getGameId());
+		return true;
+	}
+
 }

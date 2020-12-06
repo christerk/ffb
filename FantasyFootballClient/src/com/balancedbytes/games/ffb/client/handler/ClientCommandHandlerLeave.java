@@ -13,38 +13,38 @@ import com.balancedbytes.games.ffb.net.commands.ServerCommandLeave;
  */
 public class ClientCommandHandlerLeave extends ClientCommandHandler {
 
-  protected ClientCommandHandlerLeave(FantasyFootballClient pClient) {
-    super(pClient);
-  }
+	protected ClientCommandHandlerLeave(FantasyFootballClient pClient) {
+		super(pClient);
+	}
 
-  public NetCommandId getId() {
-    return NetCommandId.SERVER_LEAVE;
-  }
+	public NetCommandId getId() {
+		return NetCommandId.SERVER_LEAVE;
+	}
 
-  public boolean handleNetCommand(NetCommand pNetCommand, ClientCommandHandlerMode pMode) {
-    
-    if (pMode == ClientCommandHandlerMode.QUEUING) {
-      return true;
-    }
+	public boolean handleNetCommand(NetCommand pNetCommand, ClientCommandHandlerMode pMode) {
 
-    ServerCommandLeave leaveCommand = (ServerCommandLeave) pNetCommand;
+		if (pMode == ClientCommandHandlerMode.QUEUING) {
+			return true;
+		}
 
-    if (ClientMode.PLAYER == leaveCommand.getClientMode()) {
-      getClient().getClientData().setTurnTimerStopped(true);
-    }
-    
-    getClient().getClientData().setSpectators(leaveCommand.getSpectators());
+		ServerCommandLeave leaveCommand = (ServerCommandLeave) pNetCommand;
 
-    if (pMode != ClientCommandHandlerMode.REPLAYING) {
-      UserInterface userInterface = getClient().getUserInterface();
-      userInterface.getLog().markCommandBegin(leaveCommand.getCommandNr());
-      userInterface.getStatusReport().reportLeave(leaveCommand);
-      userInterface.getLog().markCommandEnd(leaveCommand.getCommandNr());
-      refreshSideBars();
-    }
-    
-    return true;
-    
-  }
-    
+		if (ClientMode.PLAYER == leaveCommand.getClientMode()) {
+			getClient().getClientData().setTurnTimerStopped(true);
+		}
+
+		getClient().getClientData().setSpectators(leaveCommand.getSpectators());
+
+		if (pMode != ClientCommandHandlerMode.REPLAYING) {
+			UserInterface userInterface = getClient().getUserInterface();
+			userInterface.getLog().markCommandBegin(leaveCommand.getCommandNr());
+			userInterface.getStatusReport().reportLeave(leaveCommand);
+			userInterface.getLog().markCommandEnd(leaveCommand.getCommandNr());
+			refreshSideBars();
+		}
+
+		return true;
+
+	}
+
 }

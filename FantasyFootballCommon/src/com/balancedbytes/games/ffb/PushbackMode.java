@@ -5,19 +5,17 @@ package com.balancedbytes.games.ffb;
  * @author Kalimar
  */
 public enum PushbackMode implements INamedObject {
-  
-  REGULAR("regular"),
-  SIDE_STEP("sideStep"),
-  GRAB("grab");
-  
-  private String fName;
-  
-  private PushbackMode(String pName) {
-    fName = pName;
-  }
-  
-  public String getName() {
-    return fName;
-  }
+
+	REGULAR("regular"), SIDE_STEP("sideStep"), GRAB("grab");
+
+	private String fName;
+
+	private PushbackMode(String pName) {
+		fName = pName;
+	}
+
+	public String getName() {
+		return fName;
+	}
 
 }

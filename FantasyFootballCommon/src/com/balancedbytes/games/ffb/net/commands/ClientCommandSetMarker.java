@@ -7,64 +7,63 @@ import com.balancedbytes.games.ffb.net.NetCommandId;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
-
 /**
  * 
  * @author Kalimar
  */
 public class ClientCommandSetMarker extends ClientCommand {
-  
-  private String fPlayerId;
-  private FieldCoordinate fCoordinate;
-  private String fText;
-  
-  public ClientCommandSetMarker() {
-    super();
-  }
 
-  public ClientCommandSetMarker(FieldCoordinate pCoordinate, String pText) {
-    fCoordinate = pCoordinate;
-    fText = pText;
-  }
-  
-  public ClientCommandSetMarker(String pPlayerId, String pText) {
-    fPlayerId = pPlayerId;
-    fText = pText;
-  }
+	private String fPlayerId;
+	private FieldCoordinate fCoordinate;
+	private String fText;
 
-  public NetCommandId getId() {
-    return NetCommandId.CLIENT_SET_MARKER;
-  }
-  
-  public FieldCoordinate getCoordinate() {
-    return fCoordinate;
-  }
-  
-  public String getPlayerId() {
-    return fPlayerId;
-  }
-  
-  public String getText() {
-    return fText;
-  }
+	public ClientCommandSetMarker() {
+		super();
+	}
 
-  // JSON serialization
-  
-  public JsonObject toJsonValue() {
-    JsonObject jsonObject = super.toJsonValue();
-    IJsonOption.COORDINATE.addTo(jsonObject, fCoordinate);
-    IJsonOption.PLAYER_ID.addTo(jsonObject, fPlayerId);
-    IJsonOption.TEXT.addTo(jsonObject, fText);
-    return jsonObject;
-  }
-  
-  public ClientCommandSetMarker initFrom(JsonValue jsonValue) {
-    super.initFrom(jsonValue);
-    JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
-    fCoordinate = IJsonOption.COORDINATE.getFrom(jsonObject);
-    fPlayerId = IJsonOption.PLAYER_ID.getFrom(jsonObject);
-    fText = IJsonOption.TEXT.getFrom(jsonObject);
-    return this;
-  }
-    
+	public ClientCommandSetMarker(FieldCoordinate pCoordinate, String pText) {
+		fCoordinate = pCoordinate;
+		fText = pText;
+	}
+
+	public ClientCommandSetMarker(String pPlayerId, String pText) {
+		fPlayerId = pPlayerId;
+		fText = pText;
+	}
+
+	public NetCommandId getId() {
+		return NetCommandId.CLIENT_SET_MARKER;
+	}
+
+	public FieldCoordinate getCoordinate() {
+		return fCoordinate;
+	}
+
+	public String getPlayerId() {
+		return fPlayerId;
+	}
+
+	public String getText() {
+		return fText;
+	}
+
+	// JSON serialization
+
+	public JsonObject toJsonValue() {
+		JsonObject jsonObject = super.toJsonValue();
+		IJsonOption.COORDINATE.addTo(jsonObject, fCoordinate);
+		IJsonOption.PLAYER_ID.addTo(jsonObject, fPlayerId);
+		IJsonOption.TEXT.addTo(jsonObject, fText);
+		return jsonObject;
+	}
+
+	public ClientCommandSetMarker initFrom(JsonValue jsonValue) {
+		super.initFrom(jsonValue);
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
+		fCoordinate = IJsonOption.COORDINATE.getFrom(jsonObject);
+		fPlayerId = IJsonOption.PLAYER_ID.getFrom(jsonObject);
+		fText = IJsonOption.TEXT.getFrom(jsonObject);
+		return this;
+	}
+
 }

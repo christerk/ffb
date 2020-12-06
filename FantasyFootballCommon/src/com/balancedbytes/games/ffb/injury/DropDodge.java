@@ -10,5 +10,4 @@ public class DropDodge extends InjuryType {
 		// TODO Auto-generated constructor stub
 	}
 
-
 }

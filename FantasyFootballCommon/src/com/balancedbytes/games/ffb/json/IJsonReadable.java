@@ -8,7 +8,7 @@ import com.eclipsesource.json.JsonValue;
  */
 public interface IJsonReadable {
 
-  // will return "this"
-  public Object initFrom(JsonValue pJsonValue);
+	// will return "this"
+	public Object initFrom(JsonValue pJsonValue);
 
 }

@@ -12,26 +12,26 @@ import com.eclipsesource.json.JsonValue;
  */
 public class DialogDefenderActionParameter extends DialogWithoutParameter {
 
-  public DialogDefenderActionParameter() {
-    super();
-  }
+	public DialogDefenderActionParameter() {
+		super();
+	}
 
-  public DialogId getId() {
-    return DialogId.DEFENDER_ACTION;
-  }
-  
-  // transformation
-  
-  public IDialogParameter transform() {
-    return new DialogDefenderActionParameter();
-  }
-  
-  // JSON serialization
-  
-  public DialogDefenderActionParameter initFrom(JsonValue pJsonValue) {
-    JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-    UtilDialogParameter.validateDialogId(this, (DialogId) IJsonOption.DIALOG_ID.getFrom(jsonObject));
-    return this;
-  }
-  
+	public DialogId getId() {
+		return DialogId.DEFENDER_ACTION;
+	}
+
+	// transformation
+
+	public IDialogParameter transform() {
+		return new DialogDefenderActionParameter();
+	}
+
+	// JSON serialization
+
+	public DialogDefenderActionParameter initFrom(JsonValue pJsonValue) {
+		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
+		UtilDialogParameter.validateDialogId(this, (DialogId) IJsonOption.DIALOG_ID.getFrom(jsonObject));
+		return this;
+	}
+
 }

@@ -33,85 +33,86 @@ import com.eclipsesource.json.JsonValue;
  */
 public class StepBlockBallAndChain extends AbstractStep {
 
-  private String fGotoLabelOnPushback;
-  private PlayerState fOldDefenderState;
+	private String fGotoLabelOnPushback;
+	private PlayerState fOldDefenderState;
 
-  public StepBlockBallAndChain(GameState pGameState) {
-    super(pGameState);
-  }
+	public StepBlockBallAndChain(GameState pGameState) {
+		super(pGameState);
+	}
 
-  public StepId getId() {
-    return StepId.BLOCK_BALL_AND_CHAIN;
-  }
+	public StepId getId() {
+		return StepId.BLOCK_BALL_AND_CHAIN;
+	}
 
-  @Override
-  public void init(StepParameterSet pParameterSet) {
-    if (pParameterSet != null) {
-      for (StepParameter parameter : pParameterSet.values()) {
-        switch (parameter.getKey()) {
-        // mandatory
-        case GOTO_LABEL_ON_PUSHBACK:
-          fGotoLabelOnPushback = (String) parameter.getValue();
-          break;
-        default:
-          break;
-        }
-      }
-    }
-    if (!StringTool.isProvided(fGotoLabelOnPushback)) {
-      throw new StepException("StepParameter " + StepParameterKey.GOTO_LABEL_ON_PUSHBACK + " is not initialized.");
-    }
-  }
+	@Override
+	public void init(StepParameterSet pParameterSet) {
+		if (pParameterSet != null) {
+			for (StepParameter parameter : pParameterSet.values()) {
+				switch (parameter.getKey()) {
+				// mandatory
+				case GOTO_LABEL_ON_PUSHBACK:
+					fGotoLabelOnPushback = (String) parameter.getValue();
+					break;
+				default:
+					break;
+				}
+			}
+		}
+		if (!StringTool.isProvided(fGotoLabelOnPushback)) {
+			throw new StepException("StepParameter " + StepParameterKey.GOTO_LABEL_ON_PUSHBACK + " is not initialized.");
+		}
+	}
 
-  @Override
-  public boolean setParameter(StepParameter pParameter) {
-    if ((pParameter != null) && !super.setParameter(pParameter)) {
-      switch (pParameter.getKey()) {
-      case OLD_DEFENDER_STATE:
-        fOldDefenderState = (PlayerState) pParameter.getValue();
-        return true;
-      default:
-        break;
-      }
-    }
-    return false;
-  }
+	@Override
+	public boolean setParameter(StepParameter pParameter) {
+		if ((pParameter != null) && !super.setParameter(pParameter)) {
+			switch (pParameter.getKey()) {
+			case OLD_DEFENDER_STATE:
+				fOldDefenderState = (PlayerState) pParameter.getValue();
+				return true;
+			default:
+				break;
+			}
+		}
+		return false;
+	}
 
-  @Override
-  public void start() {
-    super.start();
-    executeStep();
-  }
+	@Override
+	public void start() {
+		super.start();
+		executeStep();
+	}
 
-  private void executeStep() {
-    Game game = getGameState().getGame();
-    ActingPlayer actingPlayer = game.getActingPlayer();
-    if (UtilCards.hasSkill(game, actingPlayer, SkillConstants.BALL_AND_CHAIN) && (fOldDefenderState != null) && fOldDefenderState.isProne()) {
-      publishParameters(UtilBlockSequence.initPushback(this));
-      game.getFieldModel().setPlayerState(game.getDefender(), fOldDefenderState.changeBase(PlayerState.FALLING));
-      getResult().setNextAction(StepAction.GOTO_LABEL, fGotoLabelOnPushback);
-    } else {
-      getResult().setNextAction(StepAction.NEXT_STEP);
-    }
-  }
+	private void executeStep() {
+		Game game = getGameState().getGame();
+		ActingPlayer actingPlayer = game.getActingPlayer();
+		if (UtilCards.hasSkill(game, actingPlayer, SkillConstants.BALL_AND_CHAIN) && (fOldDefenderState != null)
+				&& fOldDefenderState.isProne()) {
+			publishParameters(UtilBlockSequence.initPushback(this));
+			game.getFieldModel().setPlayerState(game.getDefender(), fOldDefenderState.changeBase(PlayerState.FALLING));
+			getResult().setNextAction(StepAction.GOTO_LABEL, fGotoLabelOnPushback);
+		} else {
+			getResult().setNextAction(StepAction.NEXT_STEP);
+		}
+	}
 
-  // JSON serialization
+	// JSON serialization
 
-  @Override
-  public JsonObject toJsonValue() {
-    JsonObject jsonObject = super.toJsonValue();
-    IServerJsonOption.GOTO_LABEL_ON_PUSHBACK.addTo(jsonObject, fGotoLabelOnPushback);
-    IServerJsonOption.OLD_DEFENDER_STATE.addTo(jsonObject, fOldDefenderState);
-    return jsonObject;
-  }
+	@Override
+	public JsonObject toJsonValue() {
+		JsonObject jsonObject = super.toJsonValue();
+		IServerJsonOption.GOTO_LABEL_ON_PUSHBACK.addTo(jsonObject, fGotoLabelOnPushback);
+		IServerJsonOption.OLD_DEFENDER_STATE.addTo(jsonObject, fOldDefenderState);
+		return jsonObject;
+	}
 
-  @Override
-  public StepBlockBallAndChain initFrom(JsonValue pJsonValue) {
-    super.initFrom(pJsonValue);
-    JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-    fGotoLabelOnPushback = IServerJsonOption.GOTO_LABEL_ON_PUSHBACK.getFrom(jsonObject);
-    fOldDefenderState = IServerJsonOption.OLD_DEFENDER_STATE.getFrom(jsonObject);
-    return this;
-  }
+	@Override
+	public StepBlockBallAndChain initFrom(JsonValue pJsonValue) {
+		super.initFrom(pJsonValue);
+		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
+		fGotoLabelOnPushback = IServerJsonOption.GOTO_LABEL_ON_PUSHBACK.getFrom(jsonObject);
+		fOldDefenderState = IServerJsonOption.OLD_DEFENDER_STATE.getFrom(jsonObject);
+		return this;
+	}
 
 }

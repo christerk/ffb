@@ -15,27 +15,27 @@ import com.eclipsesource.json.JsonValue;
  * @author Kalimar
  */
 public class StepGotoLabel extends AbstractStep {
-	
+
 	private String fGotoLabel;
-	
+
 	public StepGotoLabel(GameState pGameState) {
 		super(pGameState);
 	}
-	
+
 	public StepId getId() {
 		return StepId.GOTO_LABEL;
 	}
-	
+
 	@Override
 	public void init(StepParameterSet pParameterSet) {
 		if (pParameterSet != null) {
 			for (StepParameter parameter : pParameterSet.values()) {
 				switch (parameter.getKey()) {
-					case GOTO_LABEL:
-						fGotoLabel = (String) parameter.getValue();
-						break;
-					default:
-						break;
+				case GOTO_LABEL:
+					fGotoLabel = (String) parameter.getValue();
+					break;
+				default:
+					break;
 				}
 			}
 		}
@@ -50,21 +50,21 @@ public class StepGotoLabel extends AbstractStep {
 		getResult().setNextAction(StepAction.GOTO_LABEL, fGotoLabel);
 	}
 
-  // JSON serialization
-  
-  @Override
-  public JsonObject toJsonValue() {
-    JsonObject jsonObject = super.toJsonValue();
-    IServerJsonOption.GOTO_LABEL.addTo(jsonObject, fGotoLabel);
-    return jsonObject;
-  }
-  
-  @Override
-  public StepGotoLabel initFrom(JsonValue pJsonValue) {
-    super.initFrom(pJsonValue);
-    JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-    fGotoLabel = IServerJsonOption.GOTO_LABEL.getFrom(jsonObject);
-    return this;
-  }
+	// JSON serialization
+
+	@Override
+	public JsonObject toJsonValue() {
+		JsonObject jsonObject = super.toJsonValue();
+		IServerJsonOption.GOTO_LABEL.addTo(jsonObject, fGotoLabel);
+		return jsonObject;
+	}
+
+	@Override
+	public StepGotoLabel initFrom(JsonValue pJsonValue) {
+		super.initFrom(pJsonValue);
+		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
+		fGotoLabel = IServerJsonOption.GOTO_LABEL.getFrom(jsonObject);
+		return this;
+	}
 
 }

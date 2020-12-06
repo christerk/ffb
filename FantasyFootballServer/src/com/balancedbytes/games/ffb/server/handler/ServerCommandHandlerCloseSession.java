@@ -10,17 +10,17 @@ import com.balancedbytes.games.ffb.server.net.ReceivedCommand;
  */
 public class ServerCommandHandlerCloseSession extends ServerCommandHandler {
 
-  protected ServerCommandHandlerCloseSession(FantasyFootballServer pServer) {
-    super(pServer);
-  }
-  
-  public NetCommandId getId() {
-    return NetCommandId.CLIENT_CLOSE_SESSION;
-  }
+	protected ServerCommandHandlerCloseSession(FantasyFootballServer pServer) {
+		super(pServer);
+	}
 
-  public boolean handleCommand(ReceivedCommand pReceivedCommand) {
-    getServer().getCommunication().close(pReceivedCommand.getSession());
-    return true;
-  }
-  
+	public NetCommandId getId() {
+		return NetCommandId.CLIENT_CLOSE_SESSION;
+	}
+
+	public boolean handleCommand(ReceivedCommand pReceivedCommand) {
+		getServer().getCommunication().close(pReceivedCommand.getSession());
+		return true;
+	}
+
 }

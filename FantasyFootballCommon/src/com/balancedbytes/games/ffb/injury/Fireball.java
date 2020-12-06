@@ -10,5 +10,4 @@ public class Fireball extends InjuryType {
 		// TODO Auto-generated constructor stub
 	}
 
-
 }

@@ -25,70 +25,71 @@ import com.balancedbytes.games.ffb.server.step.IStep;
 import com.balancedbytes.games.ffb.util.UtilCards;
 import com.balancedbytes.games.ffb.util.UtilPlayer;
 
-public class InjuryTypeFoul extends InjuryTypeServer<Foul>  {
-		public InjuryTypeFoul() {
-			super(new Foul());
+public class InjuryTypeFoul extends InjuryTypeServer<Foul> {
+	public InjuryTypeFoul() {
+		super(new Foul());
+	}
+
+	public boolean isCausedByOpponent() {
+		return true;
+	}
+
+	@Override
+	public InjuryContext handleInjury(IStep step, Game game, GameState gameState, DiceRoller diceRoller,
+			Player<?> pAttacker, Player<?> pDefender, FieldCoordinate pDefenderCoordinate, InjuryContext pOldInjuryContext,
+			ApothecaryMode pApothecaryMode) {
+
+		DiceInterpreter diceInterpreter = DiceInterpreter.getInstance();
+
+		// Blatant Foul breaks armor without roll
+		if (UtilCards.isCardActive(game, Card.BLATANT_FOUL)) {
+			injuryContext.setArmorBroken(true);
 		}
 
-		public boolean isCausedByOpponent() {
-			return true;
-		}
+		if (!injuryContext.isArmorBroken()) {
 
+			boolean attackerHasChainsaw = UtilCards.hasSkillWithProperty(pAttacker, NamedProperties.blocksLikeChainsaw);
 
-		@Override
-		public InjuryContext handleInjury(IStep step, Game game,GameState gameState, DiceRoller diceRoller, Player<?> pAttacker, Player<?> pDefender,
-				FieldCoordinate pDefenderCoordinate, InjuryContext pOldInjuryContext, ApothecaryMode pApothecaryMode) {
-			
-			DiceInterpreter diceInterpreter = DiceInterpreter.getInstance();
-
-			// Blatant Foul breaks armor without roll
-			if (UtilCards.isCardActive(game, Card.BLATANT_FOUL)) {
-				injuryContext.setArmorBroken(true);
+			injuryContext.setArmorRoll(diceRoller.rollArmour());
+			if (attackerHasChainsaw) {
+				injuryContext.addArmorModifier(ArmorModifiers.CHAINSAW);
 			}
+			if (UtilGameOption.isOptionEnabled(game, GameOptionId.FOUL_BONUS)
+					|| (UtilGameOption.isOptionEnabled(game, GameOptionId.FOUL_BONUS_OUTSIDE_TACKLEZONE)
+							&& (UtilPlayer.findTacklezones(game, pAttacker) < 1))) {
+				injuryContext.addArmorModifier(ArmorModifiers.FOUL);
+			}
+			int foulAssists = UtilPlayer.findFoulAssists(game, pAttacker, pDefender);
+			if (foulAssists != 0) {
+				ArmorModifier assistModifier = new ArmorModifierFactory().getFoulAssist(foulAssists);
+				injuryContext.addArmorModifier(assistModifier);
+			}
+			injuryContext.setArmorBroken(diceInterpreter.isArmourBroken(gameState, injuryContext));
 
 			if (!injuryContext.isArmorBroken()) {
-
-				boolean attackerHasChainsaw = UtilCards.hasSkillWithProperty(pAttacker,
-						NamedProperties.blocksLikeChainsaw);
-
-				injuryContext.setArmorRoll(diceRoller.rollArmour());
-				if (attackerHasChainsaw) {
-					injuryContext.addArmorModifier(ArmorModifiers.CHAINSAW);
-				}
-				if (UtilGameOption.isOptionEnabled(game, GameOptionId.FOUL_BONUS)
-						|| (UtilGameOption.isOptionEnabled(game, GameOptionId.FOUL_BONUS_OUTSIDE_TACKLEZONE)
-								&& (UtilPlayer.findTacklezones(game, pAttacker) < 1))) {
-					injuryContext.addArmorModifier(ArmorModifiers.FOUL);
-				}
-				int foulAssists = UtilPlayer.findFoulAssists(game, pAttacker, pDefender);
-				if (foulAssists != 0) {
-					ArmorModifier assistModifier = new ArmorModifierFactory().getFoulAssist(foulAssists);
-					injuryContext.addArmorModifier(assistModifier);
-				}
-				injuryContext.setArmorBroken(diceInterpreter.isArmourBroken(gameState, injuryContext));
-				
-				if (!injuryContext.isArmorBroken()) {
-					ArmorModifierFactory modifierFactory = new ArmorModifierFactory();
-					Set<ArmorModifier> armorModifiers = modifierFactory.findArmorModifiers(game, pAttacker, pDefender, isStab(), isFoul());
-					injuryContext.addArmorModifiers(armorModifiers);
-				}
-					
+				ArmorModifierFactory modifierFactory = new ArmorModifierFactory();
+				Set<ArmorModifier> armorModifiers = modifierFactory.findArmorModifiers(game, pAttacker, pDefender, isStab(),
+						isFoul());
+				injuryContext.addArmorModifiers(armorModifiers);
 			}
 
-			if (injuryContext.isArmorBroken()) {
-				injuryContext.setInjuryRoll(diceRoller.rollInjury());
-				injuryContext.addInjuryModifier(new InjuryModifierFactory().getNigglingInjuryModifier(pDefender));
-
-				InjuryModifierFactory modifierFactory = new InjuryModifierFactory();
-				Set<InjuryModifier> armorModifiers = modifierFactory.findInjuryModifiers(game, injuryContext, pAttacker, pDefender, isStab(), isFoul());
-				injuryContext.addInjuryModifiers(armorModifiers);
-
-				setInjury(pDefender, gameState, diceRoller);
-
-			} else {
-				injuryContext.setInjury(new PlayerState(PlayerState.PRONE));
-			}
-
-			return injuryContext;
 		}
+
+		if (injuryContext.isArmorBroken()) {
+			injuryContext.setInjuryRoll(diceRoller.rollInjury());
+			injuryContext.addInjuryModifier(new InjuryModifierFactory().getNigglingInjuryModifier(pDefender));
+
+			InjuryModifierFactory modifierFactory = new InjuryModifierFactory();
+			Set<InjuryModifier> armorModifiers = modifierFactory.findInjuryModifiers(game, injuryContext, pAttacker,
+					pDefender, isStab(), isFoul());
+			injuryContext.addInjuryModifiers(armorModifiers);
+
+			setInjury(pDefender, gameState, diceRoller);
+
+		} else {
+			injuryContext.setInjury(new PlayerState(PlayerState.PRONE));
+		}
+
+		return injuryContext;
 	}
+}

@@ -12,60 +12,60 @@ import com.eclipsesource.json.JsonValue;
  */
 public class ReportInducement implements IReport {
 
-  private String fTeamId;
-  private InducementType fInducementType;
-  private int fValue;
+	private String fTeamId;
+	private InducementType fInducementType;
+	private int fValue;
 
-  public ReportInducement() {
-    super();
-  }
+	public ReportInducement() {
+		super();
+	}
 
-  public ReportInducement(String pTeamId, InducementType pType, int pValue) {
-    fTeamId = pTeamId;
-    fInducementType = pType;
-    fValue = pValue;
-  }
+	public ReportInducement(String pTeamId, InducementType pType, int pValue) {
+		fTeamId = pTeamId;
+		fInducementType = pType;
+		fValue = pValue;
+	}
 
-  public ReportId getId() {
-    return ReportId.INDUCEMENT;
-  }
-  
-  public String getTeamId() {
-    return fTeamId;
-  }
-  
-  public InducementType getInducementType() {
-    return fInducementType;
-  }
-  
-  public int getValue() {
-    return fValue;
-  }
+	public ReportId getId() {
+		return ReportId.INDUCEMENT;
+	}
 
-  // transformation
+	public String getTeamId() {
+		return fTeamId;
+	}
 
-  public IReport transform() {
-    return new ReportInducement(getTeamId(), getInducementType(), getValue());
-  }
+	public InducementType getInducementType() {
+		return fInducementType;
+	}
 
-  // JSON serialization
-  
-  public JsonObject toJsonValue() {
-    JsonObject jsonObject = new JsonObject();
-    IJsonOption.REPORT_ID.addTo(jsonObject, getId());
-    IJsonOption.TEAM_ID.addTo(jsonObject, fTeamId);
-    IJsonOption.INDUCEMENT_TYPE.addTo(jsonObject, fInducementType);
-    IJsonOption.VALUE.addTo(jsonObject, fValue);
-    return jsonObject;
-  }
-  
-  public ReportInducement initFrom(JsonValue pJsonValue) {
-    JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-    UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(jsonObject));
-    fTeamId = IJsonOption.TEAM_ID.getFrom(jsonObject);
-    fInducementType = (InducementType) IJsonOption.INDUCEMENT_TYPE.getFrom(jsonObject);
-    fValue = IJsonOption.VALUE.getFrom(jsonObject);
-    return this;
-  }
+	public int getValue() {
+		return fValue;
+	}
+
+	// transformation
+
+	public IReport transform() {
+		return new ReportInducement(getTeamId(), getInducementType(), getValue());
+	}
+
+	// JSON serialization
+
+	public JsonObject toJsonValue() {
+		JsonObject jsonObject = new JsonObject();
+		IJsonOption.REPORT_ID.addTo(jsonObject, getId());
+		IJsonOption.TEAM_ID.addTo(jsonObject, fTeamId);
+		IJsonOption.INDUCEMENT_TYPE.addTo(jsonObject, fInducementType);
+		IJsonOption.VALUE.addTo(jsonObject, fValue);
+		return jsonObject;
+	}
+
+	public ReportInducement initFrom(JsonValue pJsonValue) {
+		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
+		UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(jsonObject));
+		fTeamId = IJsonOption.TEAM_ID.getFrom(jsonObject);
+		fInducementType = (InducementType) IJsonOption.INDUCEMENT_TYPE.getFrom(jsonObject);
+		fValue = IJsonOption.VALUE.getFrom(jsonObject);
+		return this;
+	}
 
 }

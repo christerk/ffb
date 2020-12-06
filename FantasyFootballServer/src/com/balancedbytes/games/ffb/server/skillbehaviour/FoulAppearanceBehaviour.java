@@ -34,42 +34,47 @@ public class FoulAppearanceBehaviour extends SkillBehaviour<FoulAppearance> {
 			@Override
 			public boolean handleExecuteStepHook(StepFoulAppearance step, StepState state) {
 				Game game = step.getGameState().getGame();
-			    ActingPlayer actingPlayer = game.getActingPlayer();
-			    if ((game.getDefender() != null) && UtilCards.hasSkill(game, game.getDefender(), skill) && !UtilCards.cancelsSkill(actingPlayer.getPlayer(), SkillConstants.FOUL_APPEARANCE)) {
-			      boolean doRoll = true;
-			      if (ReRolledActions.FOUL_APPEARANCE == step.getReRolledAction()) {
-			        if ((step.getReRollSource() == null) || !UtilServerReRoll.useReRoll(step, step.getReRollSource(), actingPlayer.getPlayer())) {
-			          doRoll = false;
-			          actingPlayer.setHasBlocked(true);
-			        	game.getTurnData().setTurnStarted(true);
-			        	step.getResult().setNextAction(StepAction.GOTO_LABEL, state.goToLabelOnFailure);
-			        }
-			      }
-			      if (doRoll) {
-			        int foulAppearanceRoll = step.getGameState().getDiceRoller().rollSkill();
-			        int minimumRoll = DiceInterpreter.getInstance().minimumRollResistingFoulAppearance();
-			        boolean mayBlock = DiceInterpreter.getInstance().isSkillRollSuccessful(foulAppearanceRoll, minimumRoll);
-			        boolean reRolled = ((step.getReRolledAction() == ReRolledActions.FOUL_APPEARANCE) && (step.getReRollSource() != null));
-			        step.getResult().addReport(new ReportSkillRoll(ReportId.FOUL_APPEARANCE_ROLL, actingPlayer.getPlayerId(), mayBlock, foulAppearanceRoll, minimumRoll, reRolled));
-			        if (mayBlock) {
-			        	step.getResult().setNextAction(StepAction.NEXT_STEP);
-			        } else {
-			          if (!UtilServerReRoll.askForReRollIfAvailable(step.getGameState(), actingPlayer.getPlayer(), ReRolledActions.FOUL_APPEARANCE, minimumRoll, false)) {
-			            actingPlayer.setHasBlocked(true);
-			          	game.getTurnData().setTurnStarted(true);
-			          	step.getResult().setNextAction(StepAction.GOTO_LABEL, state.goToLabelOnFailure);
-			          }
-			        }
-			        if (!mayBlock && !reRolled) {
-			        	step.getResult().setSound(SoundId.EW);
-			        }
-			      }
-			    } else {
-			    	step.getResult().setNextAction(StepAction.NEXT_STEP);
-			    }
+				ActingPlayer actingPlayer = game.getActingPlayer();
+				if ((game.getDefender() != null) && UtilCards.hasSkill(game, game.getDefender(), skill)
+						&& !UtilCards.cancelsSkill(actingPlayer.getPlayer(), SkillConstants.FOUL_APPEARANCE)) {
+					boolean doRoll = true;
+					if (ReRolledActions.FOUL_APPEARANCE == step.getReRolledAction()) {
+						if ((step.getReRollSource() == null)
+								|| !UtilServerReRoll.useReRoll(step, step.getReRollSource(), actingPlayer.getPlayer())) {
+							doRoll = false;
+							actingPlayer.setHasBlocked(true);
+							game.getTurnData().setTurnStarted(true);
+							step.getResult().setNextAction(StepAction.GOTO_LABEL, state.goToLabelOnFailure);
+						}
+					}
+					if (doRoll) {
+						int foulAppearanceRoll = step.getGameState().getDiceRoller().rollSkill();
+						int minimumRoll = DiceInterpreter.getInstance().minimumRollResistingFoulAppearance();
+						boolean mayBlock = DiceInterpreter.getInstance().isSkillRollSuccessful(foulAppearanceRoll, minimumRoll);
+						boolean reRolled = ((step.getReRolledAction() == ReRolledActions.FOUL_APPEARANCE)
+								&& (step.getReRollSource() != null));
+						step.getResult().addReport(new ReportSkillRoll(ReportId.FOUL_APPEARANCE_ROLL, actingPlayer.getPlayerId(),
+								mayBlock, foulAppearanceRoll, minimumRoll, reRolled));
+						if (mayBlock) {
+							step.getResult().setNextAction(StepAction.NEXT_STEP);
+						} else {
+							if (!UtilServerReRoll.askForReRollIfAvailable(step.getGameState(), actingPlayer.getPlayer(),
+									ReRolledActions.FOUL_APPEARANCE, minimumRoll, false)) {
+								actingPlayer.setHasBlocked(true);
+								game.getTurnData().setTurnStarted(true);
+								step.getResult().setNextAction(StepAction.GOTO_LABEL, state.goToLabelOnFailure);
+							}
+						}
+						if (!mayBlock && !reRolled) {
+							step.getResult().setSound(SoundId.EW);
+						}
+					}
+				} else {
+					step.getResult().setNextAction(StepAction.NEXT_STEP);
+				}
 				return false;
 			}
-			
+
 		});
 	}
 }

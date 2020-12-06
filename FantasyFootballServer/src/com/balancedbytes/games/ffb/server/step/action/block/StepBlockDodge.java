@@ -23,94 +23,90 @@ import com.eclipsesource.json.JsonValue;
  */
 public class StepBlockDodge extends AbstractStep {
 
- 
-  
-  public class StepState {
-	  public Boolean usingDodge;
-	  public PlayerState oldDefenderState;
-	  }
-	
+	public class StepState {
+		public Boolean usingDodge;
+		public PlayerState oldDefenderState;
+	}
+
 	private StepState state;
 
-  public StepBlockDodge(GameState pGameState) {
-    super(pGameState);
-    
-    state = new StepState();
-  }
+	public StepBlockDodge(GameState pGameState) {
+		super(pGameState);
 
-  public StepId getId() {
-    return StepId.BLOCK_DODGE;
-  }
+		state = new StepState();
+	}
 
-  @Override
-  public void start() {
-    super.start();
-    state = new StepState();
-    executeStep();
-  }
+	public StepId getId() {
+		return StepId.BLOCK_DODGE;
+	}
 
-  @Override
-  public StepCommandStatus handleCommand(ReceivedCommand pReceivedCommand) {
-    StepCommandStatus commandStatus = super.handleCommand(pReceivedCommand);
-    if (commandStatus == StepCommandStatus.UNHANDLED_COMMAND) {
-      switch (pReceivedCommand.getId()) {
-      case CLIENT_USE_SKILL:          
-          ClientCommandUseSkill useSkillCommand = (ClientCommandUseSkill) pReceivedCommand.getCommand();
-          ServerSkill usedSkill = (ServerSkill) useSkillCommand.getSkill();
-          if (usedSkill != null) {
-            StepCommandStatus newStatus = usedSkill.applyUseSkillCommandHooks(this, state, useSkillCommand);
-            if (newStatus != null) {
-              commandStatus = newStatus;
-            }
-          }
-          break;
-        default:
-          break;
-      }
-    }
-    if (commandStatus == StepCommandStatus.EXECUTE_STEP) {
-      executeStep();
-    }
-    return commandStatus;
-  }
+	@Override
+	public void start() {
+		super.start();
+		state = new StepState();
+		executeStep();
+	}
 
-  @Override
-  public boolean setParameter(StepParameter pParameter) {
-    if ((pParameter != null) && !super.setParameter(pParameter)) {
-      switch (pParameter.getKey()) {
-        case OLD_DEFENDER_STATE:
-        	state.oldDefenderState = (PlayerState) pParameter.getValue();
-          return true;
-        default:
-          break;
-      }
-    }
-    return false;
-  }
+	@Override
+	public StepCommandStatus handleCommand(ReceivedCommand pReceivedCommand) {
+		StepCommandStatus commandStatus = super.handleCommand(pReceivedCommand);
+		if (commandStatus == StepCommandStatus.UNHANDLED_COMMAND) {
+			switch (pReceivedCommand.getId()) {
+			case CLIENT_USE_SKILL:
+				ClientCommandUseSkill useSkillCommand = (ClientCommandUseSkill) pReceivedCommand.getCommand();
+				ServerSkill usedSkill = (ServerSkill) useSkillCommand.getSkill();
+				if (usedSkill != null) {
+					StepCommandStatus newStatus = usedSkill.applyUseSkillCommandHooks(this, state, useSkillCommand);
+					if (newStatus != null) {
+						commandStatus = newStatus;
+					}
+				}
+				break;
+			default:
+				break;
+			}
+		}
+		if (commandStatus == StepCommandStatus.EXECUTE_STEP) {
+			executeStep();
+		}
+		return commandStatus;
+	}
 
-  private void executeStep() {
-	  getGameState().executeStepHooks(this, state);
-  }
+	@Override
+	public boolean setParameter(StepParameter pParameter) {
+		if ((pParameter != null) && !super.setParameter(pParameter)) {
+			switch (pParameter.getKey()) {
+			case OLD_DEFENDER_STATE:
+				state.oldDefenderState = (PlayerState) pParameter.getValue();
+				return true;
+			default:
+				break;
+			}
+		}
+		return false;
+	}
 
+	private void executeStep() {
+		getGameState().executeStepHooks(this, state);
+	}
 
+	// JSON serialization
 
-  // JSON serialization
+	@Override
+	public JsonObject toJsonValue() {
+		JsonObject jsonObject = super.toJsonValue();
+		IServerJsonOption.USING_DODGE.addTo(jsonObject, state.usingDodge);
+		IServerJsonOption.OLD_DEFENDER_STATE.addTo(jsonObject, state.oldDefenderState);
+		return jsonObject;
+	}
 
-  @Override
-  public JsonObject toJsonValue() {
-    JsonObject jsonObject = super.toJsonValue();
-    IServerJsonOption.USING_DODGE.addTo(jsonObject, state.usingDodge);
-    IServerJsonOption.OLD_DEFENDER_STATE.addTo(jsonObject, state.oldDefenderState);
-    return jsonObject;
-  }
-
-  @Override
-  public StepBlockDodge initFrom(JsonValue pJsonValue) {
-    super.initFrom(pJsonValue);
-    JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-    state.usingDodge = IServerJsonOption.USING_DODGE.getFrom(jsonObject);
-    state.oldDefenderState = IServerJsonOption.OLD_DEFENDER_STATE.getFrom(jsonObject);
-    return this;
-  }
+	@Override
+	public StepBlockDodge initFrom(JsonValue pJsonValue) {
+		super.initFrom(pJsonValue);
+		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
+		state.usingDodge = IServerJsonOption.USING_DODGE.getFrom(jsonObject);
+		state.oldDefenderState = IServerJsonOption.OLD_DEFENDER_STATE.getFrom(jsonObject);
+		return this;
+	}
 
 }

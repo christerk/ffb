@@ -6,18 +6,18 @@ import com.balancedbytes.games.ffb.client.UserInterface;
 
 public class GameTitleUpdateTask implements Runnable {
 
-  private FantasyFootballClient fClient; 
-  private GameTitle fGameTitle;
+	private FantasyFootballClient fClient;
+	private GameTitle fGameTitle;
 
-  public GameTitleUpdateTask(FantasyFootballClient pClient, GameTitle pGameTitle) {
-    fClient = pClient;
-    fGameTitle = pGameTitle;
-  }
+	public GameTitleUpdateTask(FantasyFootballClient pClient, GameTitle pGameTitle) {
+		fClient = pClient;
+		fGameTitle = pGameTitle;
+	}
 
-  public void run() {
-    UserInterface userInterface = fClient.getUserInterface();
-    userInterface.getGameTitle().update(fGameTitle);
-    userInterface.refreshTitle();
-  }
+	public void run() {
+		UserInterface userInterface = fClient.getUserInterface();
+		userInterface.getGameTitle().update(fGameTitle);
+		userInterface.refreshTitle();
+	}
 
 }

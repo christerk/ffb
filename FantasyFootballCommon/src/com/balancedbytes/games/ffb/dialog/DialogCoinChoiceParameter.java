@@ -12,26 +12,26 @@ import com.eclipsesource.json.JsonValue;
  */
 public class DialogCoinChoiceParameter extends DialogWithoutParameter {
 
-  public DialogCoinChoiceParameter() {
-    super();
-  }
+	public DialogCoinChoiceParameter() {
+		super();
+	}
 
-  public DialogId getId() {
-    return DialogId.COIN_CHOICE;
-  }
-  
-  // transformation
-  
-  public IDialogParameter transform() {
-    return new DialogCoinChoiceParameter();
-  }
-  
-  // JSON serialization
-  
-  public DialogCoinChoiceParameter initFrom(JsonValue pJsonValue) {
-    JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-    UtilDialogParameter.validateDialogId(this, (DialogId) IJsonOption.DIALOG_ID.getFrom(jsonObject));
-    return this;
-  }
+	public DialogId getId() {
+		return DialogId.COIN_CHOICE;
+	}
+
+	// transformation
+
+	public IDialogParameter transform() {
+		return new DialogCoinChoiceParameter();
+	}
+
+	// JSON serialization
+
+	public DialogCoinChoiceParameter initFrom(JsonValue pJsonValue) {
+		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
+		UtilDialogParameter.validateDialogId(this, (DialogId) IJsonOption.DIALOG_ID.getFrom(jsonObject));
+		return this;
+	}
 
 }

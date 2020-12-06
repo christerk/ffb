@@ -12,37 +12,37 @@ import com.eclipsesource.json.JsonValue;
  */
 public class ClientCommandPettyCash extends ClientCommand {
 
-  private int fPettyCash;
+	private int fPettyCash;
 
-  public ClientCommandPettyCash() {
-    super();
-  }
+	public ClientCommandPettyCash() {
+		super();
+	}
 
-  public ClientCommandPettyCash(int pPettyCash) {
-    fPettyCash = pPettyCash;
-  }
+	public ClientCommandPettyCash(int pPettyCash) {
+		fPettyCash = pPettyCash;
+	}
 
-  public NetCommandId getId() {
-    return NetCommandId.CLIENT_PETTY_CASH;
-  }
+	public NetCommandId getId() {
+		return NetCommandId.CLIENT_PETTY_CASH;
+	}
 
-  public int getPettyCash() {
-    return fPettyCash;
-  }
+	public int getPettyCash() {
+		return fPettyCash;
+	}
 
-  // JSON serialization
+	// JSON serialization
 
-  public JsonObject toJsonValue() {
-    JsonObject jsonObject = super.toJsonValue();
-    IJsonOption.PETTY_CASH.addTo(jsonObject, fPettyCash);
-    return jsonObject;
-  }
+	public JsonObject toJsonValue() {
+		JsonObject jsonObject = super.toJsonValue();
+		IJsonOption.PETTY_CASH.addTo(jsonObject, fPettyCash);
+		return jsonObject;
+	}
 
-  public ClientCommandPettyCash initFrom(JsonValue jsonValue) {
-    super.initFrom(jsonValue);
-    JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
-    fPettyCash = IJsonOption.PETTY_CASH.getFrom(jsonObject);
-    return this;
-  }
+	public ClientCommandPettyCash initFrom(JsonValue jsonValue) {
+		super.initFrom(jsonValue);
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
+		fPettyCash = IJsonOption.PETTY_CASH.getFrom(jsonObject);
+		return this;
+	}
 
 }

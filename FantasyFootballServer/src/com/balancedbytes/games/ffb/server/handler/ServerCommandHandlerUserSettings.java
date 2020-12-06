@@ -14,38 +14,38 @@ import com.balancedbytes.games.ffb.server.net.ReceivedCommand;
  */
 public class ServerCommandHandlerUserSettings extends ServerCommandHandler {
 
-  protected ServerCommandHandlerUserSettings(FantasyFootballServer pServer) {
-    super(pServer);
-  }
-  
-  public NetCommandId getId() {
-    return NetCommandId.CLIENT_USER_SETTINGS;
-  }
+	protected ServerCommandHandlerUserSettings(FantasyFootballServer pServer) {
+		super(pServer);
+	}
 
-  public boolean handleCommand(ReceivedCommand pReceivedCommand) {
-    
-    ClientCommandUserSettings userSettingsCommand = (ClientCommandUserSettings) pReceivedCommand.getCommand();        
-    String coach = getServer().getSessionManager().getCoachForSession(pReceivedCommand.getSession());
+	public NetCommandId getId() {
+		return NetCommandId.CLIENT_USER_SETTINGS;
+	}
 
-    if (coach != null) {
-    
-      DbTransaction dbTransaction = new DbTransaction();
+	public boolean handleCommand(ReceivedCommand pReceivedCommand) {
 
-      dbTransaction.add(new DbUserSettingsDeleteParameter(coach));
-    
-      DbUserSettingsInsertParameterList insertParameters = new DbUserSettingsInsertParameterList();
-      String[] settingNames = userSettingsCommand.getSettingNames();
-      for (String settingName : settingNames) {
-        insertParameters.addParameter(coach, settingName, userSettingsCommand.getSettingValue(settingName));
-      }
-      dbTransaction.add(insertParameters);
-      
-      getServer().getDbUpdater().add(dbTransaction);
-    
-    }
-    
-    return true;
-    
-  }
+		ClientCommandUserSettings userSettingsCommand = (ClientCommandUserSettings) pReceivedCommand.getCommand();
+		String coach = getServer().getSessionManager().getCoachForSession(pReceivedCommand.getSession());
+
+		if (coach != null) {
+
+			DbTransaction dbTransaction = new DbTransaction();
+
+			dbTransaction.add(new DbUserSettingsDeleteParameter(coach));
+
+			DbUserSettingsInsertParameterList insertParameters = new DbUserSettingsInsertParameterList();
+			String[] settingNames = userSettingsCommand.getSettingNames();
+			for (String settingName : settingNames) {
+				insertParameters.addParameter(coach, settingName, userSettingsCommand.getSettingValue(settingName));
+			}
+			dbTransaction.add(insertParameters);
+
+			getServer().getDbUpdater().add(dbTransaction);
+
+		}
+
+		return true;
+
+	}
 
 }

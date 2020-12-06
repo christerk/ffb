@@ -9,9 +9,9 @@ import java.security.NoSuchAlgorithmException;
  */
 public class EntropyPool {
 
-  private MessageDigest digest;
+	private MessageDigest digest;
 	private int byteCount;
-	
+
 	public EntropyPool() {
 		try {
 			digest = MessageDigest.getInstance("SHA-256");
@@ -19,17 +19,17 @@ public class EntropyPool {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public void addEntropy(byte data) {
 		digest.update(data);
 		byteCount++;
 	}
-	
+
 	public byte[] getEntropy() {
 		byteCount = 0;
 		return digest.digest();
 	}
-	
+
 	public boolean hasEnoughEntropy() {
 		return byteCount >= 32;
 	}

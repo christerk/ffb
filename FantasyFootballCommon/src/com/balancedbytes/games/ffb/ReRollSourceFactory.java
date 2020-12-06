@@ -8,8 +8,7 @@ public class ReRollSourceFactory implements INamedObjectFactory {
 
 	static ReRollSources reRollSources = new ReRollSources();
 
-	public ReRollSourceFactory()
-	{
+	public ReRollSourceFactory() {
 		reRollSources = new ReRollSources();
 	}
 

@@ -42,70 +42,73 @@ public class LeapBehaviour extends SkillBehaviour<Leap> {
 			@Override
 			public boolean handleExecuteStepHook(StepLeap step,
 					com.balancedbytes.games.ffb.server.step.action.move.StepLeap.StepState state) {
-				 Game game = step.getGameState().getGame();
-				    ActingPlayer actingPlayer = game.getActingPlayer();
-				    boolean doLeap = (actingPlayer.isLeaping() && UtilCards.hasUnusedSkill(game, actingPlayer, skill));
-				    if (doLeap) {
-				      if (ReRolledActions.LEAP == step.getReRolledAction()) {
-				        if ((step.getReRollSource() == null) || !UtilServerReRoll.useReRoll(step, step.getReRollSource(), actingPlayer.getPlayer())) {
-				        	step.publishParameter(new StepParameter(StepParameterKey.INJURY_TYPE, new InjuryTypeDropLeap()));
-				        	step.getResult().setNextAction(StepAction.GOTO_LABEL, state.goToLabelOnFailure);
-				          doLeap = false;
-				        }
-				      }
-				      if (doLeap) {
-				        switch (leap(step)) {
-				          case SUCCESS:
-				            actingPlayer.setLeaping(false);
-				            actingPlayer.markSkillUsed(skill);
-				            step.getResult().setNextAction(StepAction.NEXT_STEP);
-				            break;
-				          case FAILURE:
-				            actingPlayer.setLeaping(false);
-				            actingPlayer.markSkillUsed(skill);
-				            step.publishParameter(new StepParameter(StepParameterKey.INJURY_TYPE, new InjuryTypeDropLeap()));
-				          	step.getResult().setNextAction(StepAction.GOTO_LABEL, state.goToLabelOnFailure);
-				            break;
-				          default:
-				          	break;
-				        }
-				      }
-				    } else {
-				    	step.getResult().setNextAction(StepAction.NEXT_STEP);
-				    }
+				Game game = step.getGameState().getGame();
+				ActingPlayer actingPlayer = game.getActingPlayer();
+				boolean doLeap = (actingPlayer.isLeaping() && UtilCards.hasUnusedSkill(game, actingPlayer, skill));
+				if (doLeap) {
+					if (ReRolledActions.LEAP == step.getReRolledAction()) {
+						if ((step.getReRollSource() == null)
+								|| !UtilServerReRoll.useReRoll(step, step.getReRollSource(), actingPlayer.getPlayer())) {
+							step.publishParameter(new StepParameter(StepParameterKey.INJURY_TYPE, new InjuryTypeDropLeap()));
+							step.getResult().setNextAction(StepAction.GOTO_LABEL, state.goToLabelOnFailure);
+							doLeap = false;
+						}
+					}
+					if (doLeap) {
+						switch (leap(step)) {
+						case SUCCESS:
+							actingPlayer.setLeaping(false);
+							actingPlayer.markSkillUsed(skill);
+							step.getResult().setNextAction(StepAction.NEXT_STEP);
+							break;
+						case FAILURE:
+							actingPlayer.setLeaping(false);
+							actingPlayer.markSkillUsed(skill);
+							step.publishParameter(new StepParameter(StepParameterKey.INJURY_TYPE, new InjuryTypeDropLeap()));
+							step.getResult().setNextAction(StepAction.GOTO_LABEL, state.goToLabelOnFailure);
+							break;
+						default:
+							break;
+						}
+					}
+				} else {
+					step.getResult().setNextAction(StepAction.NEXT_STEP);
+				}
 				return false;
 			}
-			
-		});
-		
-	}
-	
-	private ActionStatus leap(StepLeap step) {
-	    ActionStatus status = null;
-	    Game game = step.getGameState().getGame();
-	    ActingPlayer actingPlayer = game.getActingPlayer();
-	    FieldModel fieldModel = game.getFieldModel();
-	    FieldCoordinate playerCoordinate = fieldModel.getPlayerCoordinate(actingPlayer.getPlayer());
 
-	    LeapModifierFactory modifierFactory = new LeapModifierFactory();
-	    Set<LeapModifier> leapModifiers = modifierFactory.findLeapModifiers(game, playerCoordinate);
-	    int minimumRoll = DiceInterpreter.getInstance().minimumRollLeap(actingPlayer.getPlayer(), leapModifiers);
-	    int roll = step.getGameState().getDiceRoller().rollSkill();
-	    boolean successful = DiceInterpreter.getInstance().isSkillRollSuccessful(roll, minimumRoll);
-	    LeapModifier[] leapModifierArray = modifierFactory.toArray(leapModifiers);
-	    boolean reRolled = ((step.getReRolledAction() == ReRolledActions.LEAP) && (step.getReRollSource() != null));
-	    step.getResult().addReport(new ReportSkillRoll(ReportId.LEAP_ROLL, actingPlayer.getPlayerId(), successful, roll, minimumRoll, reRolled, leapModifierArray));
-	    if (successful) {
-	      status = ActionStatus.SUCCESS;
-	    } else {
-	      status = ActionStatus.FAILURE;
-	      if (step.getReRolledAction() != ReRolledActions.LEAP) {
-	    	  step.setReRolledAction(ReRolledActions.LEAP);
-	        if (UtilServerReRoll.askForReRollIfAvailable(step.getGameState(), actingPlayer.getPlayer(), ReRolledActions.LEAP, minimumRoll, false)) {
-	          status = ActionStatus.WAITING_FOR_RE_ROLL;
-	        }
-	      }
-	    }
-	    return status;
-	  }
+		});
+
+	}
+
+	private ActionStatus leap(StepLeap step) {
+		ActionStatus status = null;
+		Game game = step.getGameState().getGame();
+		ActingPlayer actingPlayer = game.getActingPlayer();
+		FieldModel fieldModel = game.getFieldModel();
+		FieldCoordinate playerCoordinate = fieldModel.getPlayerCoordinate(actingPlayer.getPlayer());
+
+		LeapModifierFactory modifierFactory = new LeapModifierFactory();
+		Set<LeapModifier> leapModifiers = modifierFactory.findLeapModifiers(game, playerCoordinate);
+		int minimumRoll = DiceInterpreter.getInstance().minimumRollLeap(actingPlayer.getPlayer(), leapModifiers);
+		int roll = step.getGameState().getDiceRoller().rollSkill();
+		boolean successful = DiceInterpreter.getInstance().isSkillRollSuccessful(roll, minimumRoll);
+		LeapModifier[] leapModifierArray = modifierFactory.toArray(leapModifiers);
+		boolean reRolled = ((step.getReRolledAction() == ReRolledActions.LEAP) && (step.getReRollSource() != null));
+		step.getResult().addReport(new ReportSkillRoll(ReportId.LEAP_ROLL, actingPlayer.getPlayerId(), successful, roll,
+				minimumRoll, reRolled, leapModifierArray));
+		if (successful) {
+			status = ActionStatus.SUCCESS;
+		} else {
+			status = ActionStatus.FAILURE;
+			if (step.getReRolledAction() != ReRolledActions.LEAP) {
+				step.setReRolledAction(ReRolledActions.LEAP);
+				if (UtilServerReRoll.askForReRollIfAvailable(step.getGameState(), actingPlayer.getPlayer(),
+						ReRolledActions.LEAP, minimumRoll, false)) {
+					status = ActionStatus.WAITING_FOR_RE_ROLL;
+				}
+			}
+		}
+		return status;
+	}
 }

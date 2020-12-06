@@ -14,50 +14,50 @@ import com.balancedbytes.games.ffb.model.Player;
  * @author Kalimar
  */
 public class DialogSkillUseHandler extends DialogHandler {
-  
-  public DialogSkillUseHandler(FantasyFootballClient pClient) {
-    super(pClient);
-  }
-  
-  public void showDialog() {
-    
-    Game game = getClient().getGame();
-    DialogSkillUseParameter dialogSkillUseParameter = (DialogSkillUseParameter) game.getDialogParameter();
 
-    if (dialogSkillUseParameter != null) {
-   
-      Player player = game.getPlayerById(dialogSkillUseParameter.getPlayerId());
-      
-      if ((ClientMode.PLAYER == getClient().getMode()) && game.getTeamHome().hasPlayer(player)) {
-        setDialog(new DialogSkillUse(getClient(), dialogSkillUseParameter)); 
-        getDialog().showDialog(this);
-        if (!game.isHomePlaying()) {
-          playSound(SoundId.QUESTION);
-        }
-        
-      } else {
-        StringBuilder message = new StringBuilder();     
-        String skillName = (dialogSkillUseParameter.getSkill() != null) ? dialogSkillUseParameter.getSkill().getName() : null;
-        message.append("Waiting for coach to use ").append(skillName);
-        if (dialogSkillUseParameter.getMinimumRoll() > 0) {
-          message.append(" (").append(dialogSkillUseParameter.getMinimumRoll()).append("+ to succeed)");
-        }
-        message.append(".");
-        showStatus("Skill Use", message.toString(), StatusType.WAITING);
-      }
-      
-    }    
-    
-  }
-  
-  
-  public void dialogClosed(IDialog pDialog) {
-    hideDialog();
-    if (testDialogHasId(pDialog, DialogId.SKILL_USE)) {
-      DialogSkillUse skillUseDialog = (DialogSkillUse) pDialog;
-      String playerId = ((DialogSkillUseParameter)getClient().getGame().getDialogParameter()).getPlayerId();
-      getClient().getCommunication().sendUseSkill(skillUseDialog.getSkill(), skillUseDialog.isChoiceYes(), playerId);
-    }
-  }
+	public DialogSkillUseHandler(FantasyFootballClient pClient) {
+		super(pClient);
+	}
+
+	public void showDialog() {
+
+		Game game = getClient().getGame();
+		DialogSkillUseParameter dialogSkillUseParameter = (DialogSkillUseParameter) game.getDialogParameter();
+
+		if (dialogSkillUseParameter != null) {
+
+			Player player = game.getPlayerById(dialogSkillUseParameter.getPlayerId());
+
+			if ((ClientMode.PLAYER == getClient().getMode()) && game.getTeamHome().hasPlayer(player)) {
+				setDialog(new DialogSkillUse(getClient(), dialogSkillUseParameter));
+				getDialog().showDialog(this);
+				if (!game.isHomePlaying()) {
+					playSound(SoundId.QUESTION);
+				}
+
+			} else {
+				StringBuilder message = new StringBuilder();
+				String skillName = (dialogSkillUseParameter.getSkill() != null) ? dialogSkillUseParameter.getSkill().getName()
+						: null;
+				message.append("Waiting for coach to use ").append(skillName);
+				if (dialogSkillUseParameter.getMinimumRoll() > 0) {
+					message.append(" (").append(dialogSkillUseParameter.getMinimumRoll()).append("+ to succeed)");
+				}
+				message.append(".");
+				showStatus("Skill Use", message.toString(), StatusType.WAITING);
+			}
+
+		}
+
+	}
+
+	public void dialogClosed(IDialog pDialog) {
+		hideDialog();
+		if (testDialogHasId(pDialog, DialogId.SKILL_USE)) {
+			DialogSkillUse skillUseDialog = (DialogSkillUse) pDialog;
+			String playerId = ((DialogSkillUseParameter) getClient().getGame().getDialogParameter()).getPlayerId();
+			getClient().getCommunication().sendUseSkill(skillUseDialog.getSkill(), skillUseDialog.isChoiceYes(), playerId);
+		}
+	}
 
 }

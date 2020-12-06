@@ -12,8 +12,7 @@ import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
 /**
- * Final step of the foul sequence.
- * Consumes all expected stepParameters.
+ * Final step of the foul sequence. Consumes all expected stepParameters.
  * 
  * Expects stepParameter END_PLAYER_ACTION to be set by a preceding step.
  * Expects stepParameter END_TURN to be set by a preceding step.
@@ -28,58 +27,58 @@ public class StepEndFouling extends AbstractStep {
 	public StepEndFouling(GameState pGameState) {
 		super(pGameState);
 	}
-	
+
 	public StepId getId() {
 		return StepId.END_FOULING;
 	}
-	
-  @Override
-  public boolean setParameter(StepParameter pParameter) {
+
+	@Override
+	public boolean setParameter(StepParameter pParameter) {
 		if ((pParameter != null) && !super.setParameter(pParameter)) {
-	  	switch (pParameter.getKey()) {
-				case END_PLAYER_ACTION:
-					fEndPlayerAction = (pParameter.getValue() != null) ? (Boolean) pParameter.getValue() : false;
-					consume(pParameter);
-					return true;
-				case END_TURN:
-					fEndTurn = (pParameter.getValue() != null) ? (Boolean) pParameter.getValue() : false;
-					consume(pParameter);
-					return true;
-				default:
-					break;
-	  	}
+			switch (pParameter.getKey()) {
+			case END_PLAYER_ACTION:
+				fEndPlayerAction = (pParameter.getValue() != null) ? (Boolean) pParameter.getValue() : false;
+				consume(pParameter);
+				return true;
+			case END_TURN:
+				fEndTurn = (pParameter.getValue() != null) ? (Boolean) pParameter.getValue() : false;
+				consume(pParameter);
+				return true;
+			default:
+				break;
+			}
 		}
 		return false;
-  }
-	
+	}
+
 	@Override
 	public void start() {
 		super.start();
 		executeStep();
 	}
-	
+
 	private void executeStep() {
 		SequenceGenerator.getInstance().pushEndPlayerActionSequence(getGameState(), true, true, fEndTurn);
-    getResult().setNextAction(StepAction.NEXT_STEP);
-  }
-  
-  // JSON serialization
-  
-  @Override
-  public JsonObject toJsonValue() {
-    JsonObject jsonObject = super.toJsonValue();
-    IServerJsonOption.END_TURN.addTo(jsonObject, fEndTurn);
-    IServerJsonOption.END_PLAYER_ACTION.addTo(jsonObject, fEndPlayerAction);
-    return jsonObject;
-  }
-  
-  @Override
-  public StepEndFouling initFrom(JsonValue pJsonValue) {
-    super.initFrom(pJsonValue);
-    JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-    fEndTurn = IServerJsonOption.END_TURN.getFrom(jsonObject);
-    fEndPlayerAction = IServerJsonOption.END_PLAYER_ACTION.getFrom(jsonObject);
-    return this;
-  }
+		getResult().setNextAction(StepAction.NEXT_STEP);
+	}
+
+	// JSON serialization
+
+	@Override
+	public JsonObject toJsonValue() {
+		JsonObject jsonObject = super.toJsonValue();
+		IServerJsonOption.END_TURN.addTo(jsonObject, fEndTurn);
+		IServerJsonOption.END_PLAYER_ACTION.addTo(jsonObject, fEndPlayerAction);
+		return jsonObject;
+	}
+
+	@Override
+	public StepEndFouling initFrom(JsonValue pJsonValue) {
+		super.initFrom(pJsonValue);
+		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
+		fEndTurn = IServerJsonOption.END_TURN.getFrom(jsonObject);
+		fEndPlayerAction = IServerJsonOption.END_PLAYER_ACTION.getFrom(jsonObject);
+		return this;
+	}
 
 }

@@ -25,79 +25,78 @@ import com.eclipsesource.json.JsonValue;
  * @author Kalimar
  */
 public class StepBoneHead extends AbstractStepWithReRoll {
-	
-	
+
 	public class StepState {
-	    public ActionStatus status;
+		public ActionStatus status;
 		public String goToLabelOnFailure;
-	  }
-	
+	}
+
 	private StepState state;
-	
+
 	public StepBoneHead(GameState pGameState) {
 		super(pGameState);
-		
-	    state = new StepState();
+
+		state = new StepState();
 
 	}
-	
+
 	public StepId getId() {
 		return StepId.BONE_HEAD;
 	}
-	
-  @Override
-  public void init(StepParameterSet pParameterSet) {
-  	if (pParameterSet != null) {
-  		for (StepParameter parameter : pParameterSet.values()) {
-  			switch (parameter.getKey()) {
-  				// mandatory
-  				case GOTO_LABEL_ON_FAILURE:
-  					state.goToLabelOnFailure = (String) parameter.getValue();
-  					break;
-					default:
-						break;
-  			}
-  		}
-  	}
-  	if (state.goToLabelOnFailure == null) {
+
+	@Override
+	public void init(StepParameterSet pParameterSet) {
+		if (pParameterSet != null) {
+			for (StepParameter parameter : pParameterSet.values()) {
+				switch (parameter.getKey()) {
+				// mandatory
+				case GOTO_LABEL_ON_FAILURE:
+					state.goToLabelOnFailure = (String) parameter.getValue();
+					break;
+				default:
+					break;
+				}
+			}
+		}
+		if (state.goToLabelOnFailure == null) {
 			throw new StepException("StepParameter " + StepParameterKey.GOTO_LABEL_ON_FAILURE + " is not initialized.");
-  	}
-  }
+		}
+	}
 
 	@Override
 	public void start() {
 		super.start();
 		executeStep();
 	}
-	
-  @Override
-  public StepCommandStatus handleCommand(ReceivedCommand pReceivedCommand) {
-    StepCommandStatus commandStatus = super.handleCommand(pReceivedCommand);
-    if (commandStatus == StepCommandStatus.EXECUTE_STEP) {
-      executeStep();
-    }
-    return commandStatus;
-  }
-	
-  private void executeStep() {
-	  getGameState().executeStepHooks(this, state);
-  }
- 
-  // JSON serialization
-  
-  @Override
-  public JsonObject toJsonValue() {
-    JsonObject jsonObject = super.toJsonValue();
-    IServerJsonOption.GOTO_LABEL_ON_FAILURE.addTo(jsonObject, state.goToLabelOnFailure);
-    return jsonObject;
-  }
-  
-  @Override
-  public StepBoneHead initFrom(JsonValue pJsonValue) {
-    super.initFrom(pJsonValue);
-    JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-    state.goToLabelOnFailure = IServerJsonOption.GOTO_LABEL_ON_FAILURE.getFrom(jsonObject);
-    return this;
-  }
-	
+
+	@Override
+	public StepCommandStatus handleCommand(ReceivedCommand pReceivedCommand) {
+		StepCommandStatus commandStatus = super.handleCommand(pReceivedCommand);
+		if (commandStatus == StepCommandStatus.EXECUTE_STEP) {
+			executeStep();
+		}
+		return commandStatus;
+	}
+
+	private void executeStep() {
+		getGameState().executeStepHooks(this, state);
+	}
+
+	// JSON serialization
+
+	@Override
+	public JsonObject toJsonValue() {
+		JsonObject jsonObject = super.toJsonValue();
+		IServerJsonOption.GOTO_LABEL_ON_FAILURE.addTo(jsonObject, state.goToLabelOnFailure);
+		return jsonObject;
+	}
+
+	@Override
+	public StepBoneHead initFrom(JsonValue pJsonValue) {
+		super.initFrom(pJsonValue);
+		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
+		state.goToLabelOnFailure = IServerJsonOption.GOTO_LABEL_ON_FAILURE.getFrom(jsonObject);
+		return this;
+	}
+
 }

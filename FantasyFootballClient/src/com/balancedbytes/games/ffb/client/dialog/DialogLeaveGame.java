@@ -10,12 +10,12 @@ import com.balancedbytes.games.ffb.dialog.DialogId;
 @SuppressWarnings("serial")
 public class DialogLeaveGame extends DialogYesOrNoQuestion {
 
-  public DialogLeaveGame(FantasyFootballClient pClient) {
-    super(pClient, "Leave Game", new String[] { "Do you really want to leave the game?" }, null);
-  }
+	public DialogLeaveGame(FantasyFootballClient pClient) {
+		super(pClient, "Leave Game", new String[] { "Do you really want to leave the game?" }, null);
+	}
 
-  public DialogId getId() {
-    return DialogId.LEAVE_GAME;
-  }
+	public DialogId getId() {
+		return DialogId.LEAVE_GAME;
+	}
 
 }

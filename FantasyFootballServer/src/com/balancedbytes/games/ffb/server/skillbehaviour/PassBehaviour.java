@@ -33,7 +33,7 @@ public class PassBehaviour extends SkillBehaviour<Pass> {
 			public StepCommandStatus handleCommandHook(StepPass step, StepState state,
 					ClientCommandUseSkill useSkillCommand) {
 				step.setReRolledAction(ReRolledActions.PASS);
-	            step.setReRollSource(useSkillCommand.isSkillUsed() ? ReRollSources.PASS : null);
+				step.setReRollSource(useSkillCommand.isSkillUsed() ? ReRollSources.PASS : null);
 				return StepCommandStatus.EXECUTE_STEP;
 			}
 
@@ -42,9 +42,9 @@ public class PassBehaviour extends SkillBehaviour<Pass> {
 				// TODO Auto-generated method stub
 				return false;
 			}
-			
+
 		});
-		
+
 		registerModifier(new StepModifier<StepHailMaryPass, StepHailMaryPass.StepState>() {
 
 			@Override
@@ -53,7 +53,7 @@ public class PassBehaviour extends SkillBehaviour<Pass> {
 					ClientCommandUseSkill useSkillCommand) {
 				step.setReRolledAction(ReRolledActions.PASS);
 				step.setReRollSource(useSkillCommand.isSkillUsed() ? ReRollSources.PASS : null);
-	            return StepCommandStatus.EXECUTE_STEP;
+				return StepCommandStatus.EXECUTE_STEP;
 			}
 
 			@Override
@@ -72,7 +72,8 @@ public class PassBehaviour extends SkillBehaviour<Pass> {
 				boolean doRoll = true;
 				boolean doNextStep = false;
 				if (ReRolledActions.PASS == step.getReRolledAction()) {
-					if ((step.getReRollSource() == null) || !UtilServerReRoll.useReRoll(step, step.getReRollSource(), game.getThrower())) {
+					if ((step.getReRollSource() == null)
+							|| !UtilServerReRoll.useReRoll(step, step.getReRollSource(), game.getThrower())) {
 						doRoll = false;
 						doNextStep = true;
 					}
@@ -81,7 +82,8 @@ public class PassBehaviour extends SkillBehaviour<Pass> {
 					int roll = step.getGameState().getDiceRoller().rollSkill();
 					state.passFumble = (roll == 1);
 					boolean reRolled = ((step.getReRolledAction() == ReRolledActions.PASS) && (step.getReRollSource() != null));
-					step.getResult().addReport(new ReportPassRoll(game.getThrowerId(), state.passFumble, roll, reRolled, (PlayerAction.HAIL_MARY_BOMB == game.getThrowerAction())));
+					step.getResult().addReport(new ReportPassRoll(game.getThrowerId(), state.passFumble, roll, reRolled,
+							(PlayerAction.HAIL_MARY_BOMB == game.getThrowerAction())));
 					doNextStep = true;
 					if (state.passFumble) {
 						if (step.getReRolledAction() != ReRolledActions.PASS) {
@@ -90,13 +92,12 @@ public class PassBehaviour extends SkillBehaviour<Pass> {
 								doNextStep = false;
 								state.passSkillUsed = true;
 								Team actingTeam = game.isHomePlaying() ? game.getTeamHome() : game.getTeamAway();
-								UtilServerDialog.showDialog(
-										step.getGameState(),
+								UtilServerDialog.showDialog(step.getGameState(),
 										new DialogSkillUseParameter(game.getThrowerId(), skill, 2),
-										actingTeam.hasPlayer(game.getThrower())
-										);
+										actingTeam.hasPlayer(game.getThrower()));
 							} else {
-								if (UtilServerReRoll.askForReRollIfAvailable(step.getGameState(), game.getThrower(), ReRolledActions.PASS, 2, false)) {
+								if (UtilServerReRoll.askForReRollIfAvailable(step.getGameState(), game.getThrower(),
+										ReRolledActions.PASS, 2, false)) {
 									doNextStep = false;
 								}
 							}
@@ -110,7 +111,8 @@ public class PassBehaviour extends SkillBehaviour<Pass> {
 							game.getFieldModel().setBombCoordinate(game.getFieldModel().getPlayerCoordinate(game.getThrower()));
 						} else {
 							game.getFieldModel().setBallCoordinate(game.getFieldModel().getPlayerCoordinate(game.getThrower()));
-							step.publishParameter(new StepParameter(StepParameterKey.CATCH_SCATTER_THROW_IN_MODE, CatchScatterThrowInMode.SCATTER_BALL));
+							step.publishParameter(new StepParameter(StepParameterKey.CATCH_SCATTER_THROW_IN_MODE,
+									CatchScatterThrowInMode.SCATTER_BALL));
 						}
 						step.getResult().setNextAction(StepAction.GOTO_LABEL, state.goToLabelOnFailure);
 					} else {
@@ -126,7 +128,6 @@ public class PassBehaviour extends SkillBehaviour<Pass> {
 				return false;
 			}
 
-		
 		});
 	}
 }

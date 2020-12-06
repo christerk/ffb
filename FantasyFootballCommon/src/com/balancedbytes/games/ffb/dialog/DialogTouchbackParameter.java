@@ -12,26 +12,26 @@ import com.eclipsesource.json.JsonValue;
  */
 public class DialogTouchbackParameter extends DialogWithoutParameter {
 
-  public DialogTouchbackParameter() {
-    super();
-  }
+	public DialogTouchbackParameter() {
+		super();
+	}
 
-  public DialogId getId() {
-    return DialogId.TOUCHBACK;
-  }
-  
-  // transformation
-  
-  public IDialogParameter transform() {
-    return new DialogTouchbackParameter();
-  }
-  
-  // JSON serialization
-  
-  public DialogTouchbackParameter initFrom(JsonValue pJsonValue) {
-    JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-    UtilDialogParameter.validateDialogId(this, (DialogId) IJsonOption.DIALOG_ID.getFrom(jsonObject));
-    return this;
-  }
+	public DialogId getId() {
+		return DialogId.TOUCHBACK;
+	}
+
+	// transformation
+
+	public IDialogParameter transform() {
+		return new DialogTouchbackParameter();
+	}
+
+	// JSON serialization
+
+	public DialogTouchbackParameter initFrom(JsonValue pJsonValue) {
+		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
+		UtilDialogParameter.validateDialogId(this, (DialogId) IJsonOption.DIALOG_ID.getFrom(jsonObject));
+		return this;
+	}
 
 }

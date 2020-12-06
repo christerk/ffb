@@ -42,24 +42,25 @@ package org.glassfish.tyrus.core.coder;
 import javax.websocket.EndpointConfig;
 
 /**
- * Adapter for {@link javax.websocket.Encoder} and {@link javax.websocket.Decoder} which implements lifecycle
- * methods.
+ * Adapter for {@link javax.websocket.Encoder} and
+ * {@link javax.websocket.Decoder} which implements lifecycle methods.
  *
  * @author Pavel Bucek (pavel.bucek at oracle.com)
  */
 public abstract class CoderAdapter {
 
-    /**
-     * This method does nothing.
-     *
-     * @param config the endpoint configuration object when being brought into service.
-     */
-    public void init(EndpointConfig config) {
-    }
+	/**
+	 * This method does nothing.
+	 *
+	 * @param config the endpoint configuration object when being brought into
+	 *               service.
+	 */
+	public void init(EndpointConfig config) {
+	}
 
-    /**
-     * This method does nothing.
-     */
-    public void destroy() {
-    }
+	/**
+	 * This method does nothing.
+	 */
+	public void destroy() {
+	}
 }

@@ -11,12 +11,13 @@ import com.balancedbytes.games.ffb.dialog.DialogId;
 @SuppressWarnings("serial")
 public class DialogInterception extends DialogYesOrNoQuestion {
 
-  public DialogInterception(FantasyFootballClient pClient) {
-    super(pClient, "Interception", new String[] { "Do you want to try to intercept the pass?" }, IIconProperty.GAME_REF);
-  }
+	public DialogInterception(FantasyFootballClient pClient) {
+		super(pClient, "Interception", new String[] { "Do you want to try to intercept the pass?" },
+				IIconProperty.GAME_REF);
+	}
 
-  public DialogId getId() {
-    return DialogId.INTERCEPTION;
-  }
+	public DialogId getId() {
+		return DialogId.INTERCEPTION;
+	}
 
 }

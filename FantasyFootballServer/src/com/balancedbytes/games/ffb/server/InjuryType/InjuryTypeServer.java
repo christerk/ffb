@@ -17,36 +17,57 @@ import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.step.IStep;
 import com.balancedbytes.games.ffb.util.UtilCards;
 
-public abstract class InjuryTypeServer<T extends InjuryType> implements INamedObject  {
-	
+public abstract class InjuryTypeServer<T extends InjuryType> implements INamedObject {
+
 	T injuryType;
 	InjuryContext injuryContext;
-	
-	InjuryTypeServer(T injuryType)
-	{
+
+	InjuryTypeServer(T injuryType) {
 		this.injuryType = injuryType;
 		this.injuryContext = injuryType.injuryContext();
 	}
 
 	@Override
-	public String getName() { return injuryType.getName(); }
-	
-	public InjuryContext injuryContext() { return injuryContext; }
-	public InjuryType injuryType() { return injuryType; }
-	public boolean canUseApo() { return injuryType.canUseApo(); }
-	public SendToBoxReason sendToBoxReason() { return injuryType.sendToBoxReason(); }
-	public boolean fallingDownCausesTurnover() { return injuryType.fallingDownCausesTurnover(); }
-	public boolean isStab() { return injuryType.isStab(); }
-	public boolean isFoul() { return injuryType.isFoul(); }
-	
+	public String getName() {
+		return injuryType.getName();
+	}
 
-	public abstract InjuryContext handleInjury(IStep step, Game game,GameState gameState, DiceRoller diceRoller, Player<?> pAttacker, Player<?> pDefender,
-			FieldCoordinate pDefenderCoordinate, InjuryContext pOldInjuryContext, ApothecaryMode pApothecaryMode);
-	
-	void setInjury(Player<?> pDefender, GameState gameState,DiceRoller diceRoller)
-	{
+	public InjuryContext injuryContext() {
+		return injuryContext;
+	}
+
+	public InjuryType injuryType() {
+		return injuryType;
+	}
+
+	public boolean canUseApo() {
+		return injuryType.canUseApo();
+	}
+
+	public SendToBoxReason sendToBoxReason() {
+		return injuryType.sendToBoxReason();
+	}
+
+	public boolean fallingDownCausesTurnover() {
+		return injuryType.fallingDownCausesTurnover();
+	}
+
+	public boolean isStab() {
+		return injuryType.isStab();
+	}
+
+	public boolean isFoul() {
+		return injuryType.isFoul();
+	}
+
+	public abstract InjuryContext handleInjury(IStep step, Game game, GameState gameState, DiceRoller diceRoller,
+			Player<?> pAttacker, Player<?> pDefender, FieldCoordinate pDefenderCoordinate, InjuryContext pOldInjuryContext,
+			ApothecaryMode pApothecaryMode);
+
+	void setInjury(Player<?> pDefender, GameState gameState, DiceRoller diceRoller) {
 		DiceInterpreter diceInterpreter = DiceInterpreter.getInstance();
-		injuryContext.setInjury(interpretInjury(diceInterpreter, gameState, injuryContext, pDefender instanceof ZappedPlayer));
+		injuryContext
+				.setInjury(interpretInjury(diceInterpreter, gameState, injuryContext, pDefender instanceof ZappedPlayer));
 
 		if (injuryContext.getPlayerState() == null) {
 			injuryContext.setCasualtyRoll(diceRoller.rollCasualty());
@@ -57,13 +78,13 @@ public abstract class InjuryTypeServer<T extends InjuryType> implements INamedOb
 			}
 		}
 	}
-	
-	PlayerState interpretInjury(DiceInterpreter diceInterpreter, GameState gameState, InjuryContext injuryResult, boolean isZapped) {
+
+	PlayerState interpretInjury(DiceInterpreter diceInterpreter, GameState gameState, InjuryContext injuryResult,
+			boolean isZapped) {
 		if (isZapped) {
 			return new PlayerState(PlayerState.BADLY_HURT);
 		}
 		return diceInterpreter.interpretRollInjury(gameState, injuryContext);
 	}
-
 
 }

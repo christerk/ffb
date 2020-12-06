@@ -12,26 +12,26 @@ import com.eclipsesource.json.JsonValue;
  */
 public class DialogTransferPettyCashParameter extends DialogWithoutParameter {
 
-  public DialogTransferPettyCashParameter() {
-    super();
-  }
+	public DialogTransferPettyCashParameter() {
+		super();
+	}
 
-  public DialogId getId() {
-    return DialogId.TRANSFER_PETTY_CASH;
-  }
-  
-  // transformation
-  
-  public IDialogParameter transform() {
-    return new DialogTransferPettyCashParameter();
-  }
-  
-  // JSON serialization
-  
-  public DialogTransferPettyCashParameter initFrom(JsonValue pJsonValue) {
-    JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-    UtilDialogParameter.validateDialogId(this, (DialogId) IJsonOption.DIALOG_ID.getFrom(jsonObject));
-    return this;
-  }
+	public DialogId getId() {
+		return DialogId.TRANSFER_PETTY_CASH;
+	}
+
+	// transformation
+
+	public IDialogParameter transform() {
+		return new DialogTransferPettyCashParameter();
+	}
+
+	// JSON serialization
+
+	public DialogTransferPettyCashParameter initFrom(JsonValue pJsonValue) {
+		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
+		UtilDialogParameter.validateDialogId(this, (DialogId) IJsonOption.DIALOG_ID.getFrom(jsonObject));
+		return this;
+	}
 
 }

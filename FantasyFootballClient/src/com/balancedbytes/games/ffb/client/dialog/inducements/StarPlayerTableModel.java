@@ -32,7 +32,7 @@ public class StarPlayerTableModel extends AbstractTableModel {
 		fDialog = pDialog;
 		fColumnNames = new String[] { "", "Icon", "Name", "Gold" };
 		fRowData = buildRowData();
-		fMaxNrOfStars = ((GameOptionInt)gameOptions.getOptionWithDefault(GameOptionId.INDUCEMENT_STARS_MAX)).getValue();
+		fMaxNrOfStars = ((GameOptionInt) gameOptions.getOptionWithDefault(GameOptionId.INDUCEMENT_STARS_MAX)).getValue();
 	}
 
 	public int getColumnCount() {
@@ -68,7 +68,7 @@ public class StarPlayerTableModel extends AbstractTableModel {
 		}
 		return noBoughtStarPlayers;
 	}
-	
+
 	public void setMaxNrOfStars(int amount) {
 		fMaxNrOfStars = amount;
 	}
@@ -77,7 +77,7 @@ public class StarPlayerTableModel extends AbstractTableModel {
 		if (pColumnIndex == 0) {
 			Player player = (Player) fRowData[pRowIndex][4];
 			int cost = player.getPosition().getCost();
-			String teamWithPositionId = player.getPosition().getTeamWithPositionId(); 
+			String teamWithPositionId = player.getPosition().getTeamWithPositionId();
 			if (StringTool.isProvided(teamWithPositionId)) {
 				int partnerRowId = -1;
 				for (int i = 0; i < getRowCount(); i++) {
@@ -90,7 +90,8 @@ public class StarPlayerTableModel extends AbstractTableModel {
 				if (partnerRowId >= 0) {
 					if ((Boolean) pValue) {
 						cost += ((Player) fRowData[partnerRowId][4]).getPosition().getCost();
-						if ((cost <= fDialog.getAvailableGold()) && (fNrOfCheckedRows < fMaxNrOfStars) && (fDialog.getFreeSlotsInRoster() > 1)) {
+						if ((cost <= fDialog.getAvailableGold()) && (fNrOfCheckedRows < fMaxNrOfStars)
+								&& (fDialog.getFreeSlotsInRoster() > 1)) {
 							fRowData[pRowIndex][pColumnIndex] = true;
 							fireTableCellUpdated(pRowIndex, pColumnIndex);
 							fRowData[partnerRowId][pColumnIndex] = true;
@@ -111,7 +112,8 @@ public class StarPlayerTableModel extends AbstractTableModel {
 				}
 			} else {
 				if ((Boolean) pValue) {
-					if ((cost <= fDialog.getAvailableGold()) && (fNrOfCheckedRows < fMaxNrOfStars) && (fDialog.getFreeSlotsInRoster() > 0)) {
+					if ((cost <= fDialog.getAvailableGold()) && (fNrOfCheckedRows < fMaxNrOfStars)
+							&& (fDialog.getFreeSlotsInRoster() > 0)) {
 						fRowData[pRowIndex][pColumnIndex] = pValue;
 						fireTableCellUpdated(pRowIndex, pColumnIndex);
 						fDialog.recalculateGold();

@@ -12,33 +12,34 @@ import com.eclipsesource.json.JsonValue;
  */
 public interface IStep extends IJsonSerializable {
 
-  public StepId getId();
+	public StepId getId();
 
-  public void setLabel(String pLabel);
+	public void setLabel(String pLabel);
 
-  public String getLabel();
+	public String getLabel();
 
-  public void start();
-  public void repeat();
+	public void start();
 
-  public void init(StepParameterSet pParameterSet);
+	public void repeat();
 
-  public StepCommandStatus handleCommand(ReceivedCommand pReceivedCommand);
+	public void init(StepParameterSet pParameterSet);
 
-  public GameState getGameState();
+	public StepCommandStatus handleCommand(ReceivedCommand pReceivedCommand);
 
-  public StepResult getResult();
+	public GameState getGameState();
 
-  public boolean setParameter(StepParameter pParameter);
+	public StepResult getResult();
 
-  public void publishParameter(StepParameter pParameter);
+	public boolean setParameter(StepParameter pParameter);
 
-  public void publishParameters(StepParameterSet pParameterSet);
+	public void publishParameter(StepParameter pParameter);
 
-  // overrides IJsonSerializable
-  public IStep initFrom(JsonValue pJsonValue);
+	public void publishParameters(StepParameterSet pParameterSet);
 
-  // overrides IJsonSerializable
-  public JsonObject toJsonValue();
+	// overrides IJsonSerializable
+	public IStep initFrom(JsonValue pJsonValue);
+
+	// overrides IJsonSerializable
+	public JsonObject toJsonValue();
 
 }

@@ -7,57 +7,57 @@ import com.balancedbytes.games.ffb.json.IJsonSerializable;
 import com.balancedbytes.games.ffb.xml.IXmlSerializable;
 
 public interface Position extends IXmlSerializable, IJsonSerializable {
-  PlayerType getType();
+	PlayerType getType();
 
-  PlayerGender getGender();
+	PlayerGender getGender();
 
-  int getAgility();
+	int getAgility();
 
-  int getArmour();
+	int getArmour();
 
-  int getMovement();
+	int getMovement();
 
-  int getCost();
+	int getCost();
 
-  String getName();
+	String getName();
 
-  String getShorthand();
+	String getShorthand();
 
-  int getStrength();
+	int getStrength();
 
-  boolean hasSkill(Skill pSkill);
+	boolean hasSkill(Skill pSkill);
 
-  Skill[] getSkills();
+	Skill[] getSkills();
 
-  int getSkillValue(Skill pSkill);
+	int getSkillValue(Skill pSkill);
 
-  String getUrlPortrait();
+	String getUrlPortrait();
 
-  void setUrlPortrait(String pUrlPortrait);
+	void setUrlPortrait(String pUrlPortrait);
 
-  String getUrlIconSet();
+	String getUrlIconSet();
 
-  int getQuantity();
+	int getQuantity();
 
-  Roster getRoster();
+	Roster getRoster();
 
-  String getId();
+	String getId();
 
-  int getNrOfIcons();
+	int getNrOfIcons();
 
-  int findNextIconSetIndex();
+	int findNextIconSetIndex();
 
-  String getDisplayName();
+	String getDisplayName();
 
-  String getRace();
+	String getRace();
 
-  boolean isUndead();
+	boolean isUndead();
 
-  boolean isThrall();
+	boolean isThrall();
 
-  String getTeamWithPositionId();
+	String getTeamWithPositionId();
 
-  boolean isDoubleCategory(SkillCategory category);
+	boolean isDoubleCategory(SkillCategory category);
 
-  SkillCategory[] getSkillCategories(boolean b);
+	SkillCategory[] getSkillCategories(boolean b);
 }

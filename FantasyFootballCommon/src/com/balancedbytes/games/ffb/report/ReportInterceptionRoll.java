@@ -12,51 +12,53 @@ import com.eclipsesource.json.JsonValue;
  */
 public class ReportInterceptionRoll extends ReportSkillRoll {
 
-  private boolean fBomb;
+	private boolean fBomb;
 
-  public ReportInterceptionRoll() {
-    super(ReportId.INTERCEPTION_ROLL);
-  }
+	public ReportInterceptionRoll() {
+		super(ReportId.INTERCEPTION_ROLL);
+	}
 
-  public ReportInterceptionRoll(String pPlayerId, boolean pSuccessful, int pRoll, int pMinimumRoll, boolean pReRolled, InterceptionModifier[] pModifiers, boolean pBomb) {
-    super(ReportId.INTERCEPTION_ROLL, pPlayerId, pSuccessful,pRoll, pMinimumRoll, pReRolled, pModifiers);
-    fBomb = pBomb;
-  }
+	public ReportInterceptionRoll(String pPlayerId, boolean pSuccessful, int pRoll, int pMinimumRoll, boolean pReRolled,
+			InterceptionModifier[] pModifiers, boolean pBomb) {
+		super(ReportId.INTERCEPTION_ROLL, pPlayerId, pSuccessful, pRoll, pMinimumRoll, pReRolled, pModifiers);
+		fBomb = pBomb;
+	}
 
-  public ReportId getId() {
-    return ReportId.INTERCEPTION_ROLL;
-  }
+	public ReportId getId() {
+		return ReportId.INTERCEPTION_ROLL;
+	}
 
-  @Override
-  public InterceptionModifier[] getRollModifiers() {
-    return getRollModifierList().toArray(new InterceptionModifier[getRollModifierList().size()]);
-  }
+	@Override
+	public InterceptionModifier[] getRollModifiers() {
+		return getRollModifierList().toArray(new InterceptionModifier[getRollModifierList().size()]);
+	}
 
-  public boolean isBomb() {
-    return fBomb;
-  }
+	public boolean isBomb() {
+		return fBomb;
+	}
 
-  // transformation
+	// transformation
 
-  public IReport transform() {
-    return new ReportInterceptionRoll(getPlayerId(), isSuccessful(), getRoll(), getMinimumRoll(), isReRolled(), getRollModifiers(), isBomb());
-  }
+	public IReport transform() {
+		return new ReportInterceptionRoll(getPlayerId(), isSuccessful(), getRoll(), getMinimumRoll(), isReRolled(),
+				getRollModifiers(), isBomb());
+	}
 
-  // JSON serialization
-  
-  @Override
-  public JsonObject toJsonValue() {
-    JsonObject jsonObject = UtilJson.toJsonObject(super.toJsonValue());
-    IJsonOption.BOMB.addTo(jsonObject, fBomb);
-    return jsonObject;
-  }
-  
-  @Override
-  public ReportInterceptionRoll initFrom(JsonValue pJsonValue) {
-    super.initFrom(pJsonValue);
-    JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-    fBomb = IJsonOption.BOMB.getFrom(jsonObject);
-    return this;
-  }
+	// JSON serialization
+
+	@Override
+	public JsonObject toJsonValue() {
+		JsonObject jsonObject = UtilJson.toJsonObject(super.toJsonValue());
+		IJsonOption.BOMB.addTo(jsonObject, fBomb);
+		return jsonObject;
+	}
+
+	@Override
+	public ReportInterceptionRoll initFrom(JsonValue pJsonValue) {
+		super.initFrom(pJsonValue);
+		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
+		fBomb = IJsonOption.BOMB.getFrom(jsonObject);
+		return this;
+	}
 
 }

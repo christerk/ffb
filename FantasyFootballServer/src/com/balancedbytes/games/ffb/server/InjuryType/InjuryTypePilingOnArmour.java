@@ -20,16 +20,16 @@ import com.balancedbytes.games.ffb.server.DiceRoller;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.step.IStep;
 
-public class InjuryTypePilingOnArmour extends InjuryTypeServer<PilingOnArmour>  {
+public class InjuryTypePilingOnArmour extends InjuryTypeServer<PilingOnArmour> {
 	public InjuryTypePilingOnArmour() {
 		super(new PilingOnArmour());
 	}
 
-	
 	@Override
-	public InjuryContext handleInjury(IStep step, Game game,GameState gameState, DiceRoller diceRoller, Player<?> pAttacker, Player<?> pDefender,
-			FieldCoordinate pDefenderCoordinate, InjuryContext pOldInjuryContext, ApothecaryMode pApothecaryMode) {
-		
+	public InjuryContext handleInjury(IStep step, Game game, GameState gameState, DiceRoller diceRoller,
+			Player<?> pAttacker, Player<?> pDefender, FieldCoordinate pDefenderCoordinate, InjuryContext pOldInjuryContext,
+			ApothecaryMode pApothecaryMode) {
+
 		DiceInterpreter diceInterpreter = DiceInterpreter.getInstance();
 
 		if (!injuryContext.isArmorBroken()) {
@@ -37,7 +37,8 @@ public class InjuryTypePilingOnArmour extends InjuryTypeServer<PilingOnArmour>  
 			injuryContext.setArmorBroken(diceInterpreter.isArmourBroken(gameState, injuryContext));
 			if (!UtilGameOption.isOptionEnabled(game, GameOptionId.PILING_ON_DOES_NOT_STACK)) {
 				ArmorModifierFactory modifierFactory = new ArmorModifierFactory();
-				Set<ArmorModifier> armorModifiers = modifierFactory.findArmorModifiers(game, pAttacker, pDefender, isStab(), isFoul());
+				Set<ArmorModifier> armorModifiers = modifierFactory.findArmorModifiers(game, pAttacker, pDefender, isStab(),
+						isFoul());
 				injuryContext.addArmorModifiers(armorModifiers);
 			}
 		}
@@ -48,7 +49,8 @@ public class InjuryTypePilingOnArmour extends InjuryTypeServer<PilingOnArmour>  
 
 			if (!UtilGameOption.isOptionEnabled(game, GameOptionId.PILING_ON_DOES_NOT_STACK)) {
 				InjuryModifierFactory modifierFactory = new InjuryModifierFactory();
-				Set<InjuryModifier> armorModifiers = modifierFactory.findInjuryModifiers(game, injuryContext, pAttacker, pDefender, isStab(), isFoul());
+				Set<InjuryModifier> armorModifiers = modifierFactory.findInjuryModifiers(game, injuryContext, pAttacker,
+						pDefender, isStab(), isFoul());
 				injuryContext.addInjuryModifiers(armorModifiers);
 			}
 			setInjury(pDefender, gameState, diceRoller);

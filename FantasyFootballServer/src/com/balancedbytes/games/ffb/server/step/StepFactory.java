@@ -247,9 +247,9 @@ public class StepFactory {
 			case END_INDUCEMENT:
 				step = new StepEndInducement(fGameState);
 				break;
-      case END_KICK_TEAM_MATE:
-        step = new StepEndKickTeamMate(fGameState);
-        break;
+			case END_KICK_TEAM_MATE:
+				step = new StepEndKickTeamMate(fGameState);
+				break;
 			case END_KICKOFF:
 				step = new StepEndKickoff(fGameState);
 				break;
@@ -331,9 +331,9 @@ public class StepFactory {
 			case INIT_INDUCEMENT:
 				step = new StepInitInducement(fGameState);
 				break;
-      case INIT_KICK_TEAM_MATE:
-        step = new StepInitKickTeamMate(fGameState);
-        break;
+			case INIT_KICK_TEAM_MATE:
+				step = new StepInitKickTeamMate(fGameState);
+				break;
 			case INIT_KICKOFF:
 				step = new StepInitKickoff(fGameState);
 				break;
@@ -364,12 +364,12 @@ public class StepFactory {
 			case JUMP_UP:
 				step = new StepJumpUp(fGameState);
 				break;
-      case KICK_TEAM_MATE:
-        step = new StepKickTeamMate(fGameState);
-        break;
-      case KICK_TM_DOUBLE_ROLLED:
-        step = new StepKickTeamMateDoubleRolled(fGameState);
-        break;
+			case KICK_TEAM_MATE:
+				step = new StepKickTeamMate(fGameState);
+				break;
+			case KICK_TM_DOUBLE_ROLLED:
+				step = new StepKickTeamMateDoubleRolled(fGameState);
+				break;
 			case KICKOFF:
 				step = new StepKickoff(fGameState);
 				break;
@@ -439,7 +439,7 @@ public class StepFactory {
 			case RIGHT_STUFF:
 				step = new StepRightStuff(fGameState);
 				break;
-		  case RIOTOUS_ROOKIES:
+			case RIOTOUS_ROOKIES:
 				step = new StepRiotousRookies(fGameState);
 				break;
 			case SAFE_THROW:

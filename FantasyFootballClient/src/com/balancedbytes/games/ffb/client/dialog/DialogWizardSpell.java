@@ -23,132 +23,132 @@ import com.balancedbytes.games.ffb.dialog.DialogId;
  */
 @SuppressWarnings("serial")
 public class DialogWizardSpell extends Dialog implements ActionListener, KeyListener {
-  
-  private JButton fButtonLightning;
-  private JButton buttonZap;
-  private JButton fButtonFireball;
-  private JButton fButtonCancel;
-  private SpecialEffect fWizardSpell;
-  
-  public DialogWizardSpell(FantasyFootballClient pClient) {
-    
-    super(pClient, "Wizard Spell", false);
-    
-    JPanel panelText = new JPanel();
-    panelText.setLayout(new BoxLayout(panelText, BoxLayout.X_AXIS));
-    panelText.add(new JLabel("Which spell should your wizard cast?"));
-    
-    JPanel panelButtons = new JPanel();
-    panelButtons.setLayout(new BoxLayout(panelButtons, BoxLayout.X_AXIS));
 
-    panelButtons.add(Box.createHorizontalGlue());
+	private JButton fButtonLightning;
+	private JButton buttonZap;
+	private JButton fButtonFireball;
+	private JButton fButtonCancel;
+	private SpecialEffect fWizardSpell;
 
-    if (spellEnabled(SpecialEffect.LIGHTNING)) {
-      fButtonLightning = new JButton("Lightning");
-      fButtonLightning.addActionListener(this);
-      fButtonLightning.addKeyListener(this);
-      panelButtons.add(fButtonLightning);
-    }
+	public DialogWizardSpell(FantasyFootballClient pClient) {
 
-    if (spellEnabled(SpecialEffect.FIREBALL)) {
-    fButtonFireball = new JButton("Fireball");
-    fButtonFireball.addActionListener(this);
-    fButtonFireball.addKeyListener(this);
-    panelButtons.add(fButtonFireball);
-    }
+		super(pClient, "Wizard Spell", false);
 
-    if (spellEnabled(SpecialEffect.ZAP)) {
-      buttonZap = new JButton("Zap");
-      buttonZap.addActionListener(this);
-      buttonZap.addKeyListener(this);
-      panelButtons.add(buttonZap);
-    }
+		JPanel panelText = new JPanel();
+		panelText.setLayout(new BoxLayout(panelText, BoxLayout.X_AXIS));
+		panelText.add(new JLabel("Which spell should your wizard cast?"));
 
-    fButtonCancel = new JButton("Cancel");
-    fButtonCancel.addActionListener(this);
-    fButtonCancel.addKeyListener(this);
-    panelButtons.add(fButtonCancel);
+		JPanel panelButtons = new JPanel();
+		panelButtons.setLayout(new BoxLayout(panelButtons, BoxLayout.X_AXIS));
 
-    panelButtons.add(Box.createHorizontalGlue());
+		panelButtons.add(Box.createHorizontalGlue());
 
-    getContentPane().setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
-    getContentPane().add(Box.createVerticalStrut(5));
-    getContentPane().add(panelText);
-    getContentPane().add(Box.createVerticalStrut(5));
-    getContentPane().add(panelButtons);
-    
-    pack();
-    setLocationToCenter();
-    
-  }
+		if (spellEnabled(SpecialEffect.LIGHTNING)) {
+			fButtonLightning = new JButton("Lightning");
+			fButtonLightning.addActionListener(this);
+			fButtonLightning.addKeyListener(this);
+			panelButtons.add(fButtonLightning);
+		}
 
-  public DialogId getId() {
-    return DialogId.WIZARD_SPELL;
-  }
-  
-  public void actionPerformed(ActionEvent pActionEvent) {
-    if (pActionEvent.getSource() != null) {
-      if (pActionEvent.getSource() == fButtonLightning) {
-        fWizardSpell = SpecialEffect.LIGHTNING;
-      }
-      if (pActionEvent.getSource() == buttonZap) {
-        fWizardSpell = SpecialEffect.ZAP;
-      }
-      if (pActionEvent.getSource() == fButtonFireball) {
-        fWizardSpell = SpecialEffect.FIREBALL;
-      }
-      if (pActionEvent.getSource() == fButtonCancel) {
-        fWizardSpell = null;
-      }
-    }
-    if (getCloseListener() != null) {
-      getCloseListener().dialogClosed(this);
-    }
-  }
-  
-  public void keyPressed(KeyEvent pKeyEvent) {
-  }
-  
-  public void keyReleased(KeyEvent pKeyEvent) {
-    boolean keyHandled = true;
-    switch (pKeyEvent.getKeyCode()) {
-      case KeyEvent.VK_L:
-        fWizardSpell = SpecialEffect.LIGHTNING;
-        break;
-      case KeyEvent.VK_Z:
-        fWizardSpell = SpecialEffect.ZAP;
-        break;
-      case KeyEvent.VK_F:
-        fWizardSpell = SpecialEffect.FIREBALL;
-        break;
-      case KeyEvent.VK_C:
-      	fWizardSpell = null;
-      	break;
-      default:
-        keyHandled = false;
-        break;
-    }
+		if (spellEnabled(SpecialEffect.FIREBALL)) {
+			fButtonFireball = new JButton("Fireball");
+			fButtonFireball.addActionListener(this);
+			fButtonFireball.addKeyListener(this);
+			panelButtons.add(fButtonFireball);
+		}
 
-    if (fWizardSpell != null && !spellEnabled(fWizardSpell)) {
-      fWizardSpell = null;
-      keyHandled = false;
-    }
+		if (spellEnabled(SpecialEffect.ZAP)) {
+			buttonZap = new JButton("Zap");
+			buttonZap.addActionListener(this);
+			buttonZap.addKeyListener(this);
+			panelButtons.add(buttonZap);
+		}
 
-    if (keyHandled) {
-      if (getCloseListener() != null) {
-        getCloseListener().dialogClosed(this);
-      }
-    }
-  }
-  
-  public void keyTyped(KeyEvent pKeyEvent) {
-  }
-  
-  public SpecialEffect getWizardSpell() {
+		fButtonCancel = new JButton("Cancel");
+		fButtonCancel.addActionListener(this);
+		fButtonCancel.addKeyListener(this);
+		panelButtons.add(fButtonCancel);
+
+		panelButtons.add(Box.createHorizontalGlue());
+
+		getContentPane().setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
+		getContentPane().add(Box.createVerticalStrut(5));
+		getContentPane().add(panelText);
+		getContentPane().add(Box.createVerticalStrut(5));
+		getContentPane().add(panelButtons);
+
+		pack();
+		setLocationToCenter();
+
+	}
+
+	public DialogId getId() {
+		return DialogId.WIZARD_SPELL;
+	}
+
+	public void actionPerformed(ActionEvent pActionEvent) {
+		if (pActionEvent.getSource() != null) {
+			if (pActionEvent.getSource() == fButtonLightning) {
+				fWizardSpell = SpecialEffect.LIGHTNING;
+			}
+			if (pActionEvent.getSource() == buttonZap) {
+				fWizardSpell = SpecialEffect.ZAP;
+			}
+			if (pActionEvent.getSource() == fButtonFireball) {
+				fWizardSpell = SpecialEffect.FIREBALL;
+			}
+			if (pActionEvent.getSource() == fButtonCancel) {
+				fWizardSpell = null;
+			}
+		}
+		if (getCloseListener() != null) {
+			getCloseListener().dialogClosed(this);
+		}
+	}
+
+	public void keyPressed(KeyEvent pKeyEvent) {
+	}
+
+	public void keyReleased(KeyEvent pKeyEvent) {
+		boolean keyHandled = true;
+		switch (pKeyEvent.getKeyCode()) {
+		case KeyEvent.VK_L:
+			fWizardSpell = SpecialEffect.LIGHTNING;
+			break;
+		case KeyEvent.VK_Z:
+			fWizardSpell = SpecialEffect.ZAP;
+			break;
+		case KeyEvent.VK_F:
+			fWizardSpell = SpecialEffect.FIREBALL;
+			break;
+		case KeyEvent.VK_C:
+			fWizardSpell = null;
+			break;
+		default:
+			keyHandled = false;
+			break;
+		}
+
+		if (fWizardSpell != null && !spellEnabled(fWizardSpell)) {
+			fWizardSpell = null;
+			keyHandled = false;
+		}
+
+		if (keyHandled) {
+			if (getCloseListener() != null) {
+				getCloseListener().dialogClosed(this);
+			}
+		}
+	}
+
+	public void keyTyped(KeyEvent pKeyEvent) {
+	}
+
+	public SpecialEffect getWizardSpell() {
 		return fWizardSpell;
 	}
 
-  private boolean spellEnabled(SpecialEffect effect) {
-    return SpellCollection.spells(InducementType.WIZARD).contains(effect);
-  }
+	private boolean spellEnabled(SpecialEffect effect) {
+		return SpellCollection.spells(InducementType.WIZARD).contains(effect);
+	}
 }

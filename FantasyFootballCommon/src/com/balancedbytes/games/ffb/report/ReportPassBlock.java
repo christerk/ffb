@@ -11,52 +11,52 @@ import com.eclipsesource.json.JsonValue;
  */
 public class ReportPassBlock implements IReport {
 
-  private String fTeamId;
-  private boolean fPassBlockAvailable;
+	private String fTeamId;
+	private boolean fPassBlockAvailable;
 
-  public ReportPassBlock() {
-    super();
-  }
+	public ReportPassBlock() {
+		super();
+	}
 
-  public ReportPassBlock(String pTeamId, boolean pPassBlockAvailable) {
-    fTeamId = pTeamId;
-    fPassBlockAvailable = pPassBlockAvailable;
-  }
+	public ReportPassBlock(String pTeamId, boolean pPassBlockAvailable) {
+		fTeamId = pTeamId;
+		fPassBlockAvailable = pPassBlockAvailable;
+	}
 
-  public ReportId getId() {
-    return ReportId.PASS_BLOCK;
-  }
+	public ReportId getId() {
+		return ReportId.PASS_BLOCK;
+	}
 
-  public String getTeamId() {
-    return fTeamId;
-  }
+	public String getTeamId() {
+		return fTeamId;
+	}
 
-  public boolean isPassBlockAvailable() {
-    return fPassBlockAvailable;
-  }
+	public boolean isPassBlockAvailable() {
+		return fPassBlockAvailable;
+	}
 
-  // transformation
+	// transformation
 
-  public IReport transform() {
-    return new ReportPassBlock(getTeamId(), isPassBlockAvailable());
-  }
+	public IReport transform() {
+		return new ReportPassBlock(getTeamId(), isPassBlockAvailable());
+	}
 
-  // JSON serialization
-  
-  public JsonObject toJsonValue() {
-    JsonObject jsonObject = new JsonObject();
-    IJsonOption.REPORT_ID.addTo(jsonObject, getId());
-    IJsonOption.TEAM_ID.addTo(jsonObject, fTeamId);
-    IJsonOption.PASS_BLOCK_AVAILABLE.addTo(jsonObject, fPassBlockAvailable);
-    return jsonObject;
-  }
-  
-  public ReportPassBlock initFrom(JsonValue pJsonValue) {
-    JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-    UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(jsonObject));
-    fTeamId = IJsonOption.TEAM_ID.getFrom(jsonObject);
-    fPassBlockAvailable = IJsonOption.PASS_BLOCK_AVAILABLE.getFrom(jsonObject);
-    return this;
-  }
+	// JSON serialization
+
+	public JsonObject toJsonValue() {
+		JsonObject jsonObject = new JsonObject();
+		IJsonOption.REPORT_ID.addTo(jsonObject, getId());
+		IJsonOption.TEAM_ID.addTo(jsonObject, fTeamId);
+		IJsonOption.PASS_BLOCK_AVAILABLE.addTo(jsonObject, fPassBlockAvailable);
+		return jsonObject;
+	}
+
+	public ReportPassBlock initFrom(JsonValue pJsonValue) {
+		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
+		UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(jsonObject));
+		fTeamId = IJsonOption.TEAM_ID.getFrom(jsonObject);
+		fPassBlockAvailable = IJsonOption.PASS_BLOCK_AVAILABLE.getFrom(jsonObject);
+		return this;
+	}
 
 }

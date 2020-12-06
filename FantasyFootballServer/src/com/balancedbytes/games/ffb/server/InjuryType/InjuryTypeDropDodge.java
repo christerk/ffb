@@ -16,15 +16,16 @@ import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.step.IStep;
 import com.balancedbytes.games.ffb.util.UtilCards;
 
-public class InjuryTypeDropDodge extends InjuryTypeServer<DropDodge>  {
+public class InjuryTypeDropDodge extends InjuryTypeServer<DropDodge> {
 	public InjuryTypeDropDodge() {
 		super(new DropDodge());
 	}
 
 	@Override
-	public InjuryContext handleInjury(IStep step, Game game,GameState gameState, DiceRoller diceRoller, Player<?> pAttacker, Player<?> pDefender,
-			FieldCoordinate pDefenderCoordinate, InjuryContext pOldInjuryContext, ApothecaryMode pApothecaryMode) {
-		
+	public InjuryContext handleInjury(IStep step, Game game, GameState gameState, DiceRoller diceRoller,
+			Player<?> pAttacker, Player<?> pDefender, FieldCoordinate pDefenderCoordinate, InjuryContext pOldInjuryContext,
+			ApothecaryMode pApothecaryMode) {
+
 		DiceInterpreter diceInterpreter = DiceInterpreter.getInstance();
 
 		if (!injuryContext.isArmorBroken()) {

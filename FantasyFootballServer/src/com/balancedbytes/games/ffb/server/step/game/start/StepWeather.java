@@ -18,53 +18,53 @@ import com.eclipsesource.json.JsonValue;
  * @author Kalimar
  */
 public final class StepWeather extends AbstractStep {
-	
+
 	public StepWeather(GameState pGameState) {
 		super(pGameState);
 	}
-	
+
 	public StepId getId() {
 		return StepId.WEATHER;
 	}
-		
+
 	@Override
 	public void start() {
 		super.start();
 		executeStep();
 	}
-	
+
 	@Override
-  public StepCommandStatus handleCommand(ReceivedCommand pReceivedCommand) {
-    StepCommandStatus commandStatus = super.handleCommand(pReceivedCommand);
+	public StepCommandStatus handleCommand(ReceivedCommand pReceivedCommand) {
+		StepCommandStatus commandStatus = super.handleCommand(pReceivedCommand);
 		if (commandStatus == StepCommandStatus.EXECUTE_STEP) {
 			executeStep();
 		}
 		return commandStatus;
 	}
 
-  private void executeStep() {
-    getResult().addReport(rollWeather());
-    getResult().setNextAction(StepAction.NEXT_STEP);
-  }
-  
-  private ReportWeather rollWeather() {
-    int[] roll = getGameState().getDiceRoller().rollWeather();
-    Weather weather = DiceInterpreter.getInstance().interpretRollWeather(roll);
-    getGameState().getGame().getFieldModel().setWeather(weather);
-    return new ReportWeather(weather, roll);
-  }
-  
-  // JSON serialization
-  
-  @Override
-  public JsonObject toJsonValue() {
-    return super.toJsonValue();
-  }
-  
-  @Override
-  public StepWeather initFrom(JsonValue pJsonValue) {
-    super.initFrom(pJsonValue);
-    return this;
-  }
-  
+	private void executeStep() {
+		getResult().addReport(rollWeather());
+		getResult().setNextAction(StepAction.NEXT_STEP);
+	}
+
+	private ReportWeather rollWeather() {
+		int[] roll = getGameState().getDiceRoller().rollWeather();
+		Weather weather = DiceInterpreter.getInstance().interpretRollWeather(roll);
+		getGameState().getGame().getFieldModel().setWeather(weather);
+		return new ReportWeather(weather, roll);
+	}
+
+	// JSON serialization
+
+	@Override
+	public JsonObject toJsonValue() {
+		return super.toJsonValue();
+	}
+
+	@Override
+	public StepWeather initFrom(JsonValue pJsonValue) {
+		super.initFrom(pJsonValue);
+		return this;
+	}
+
 }

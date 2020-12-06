@@ -20,54 +20,55 @@ import com.eclipsesource.json.JsonValue;
  * @author Kalimar
  */
 public final class StepEndKickoff extends AbstractStep {
-	
+
 	public StepEndKickoff(GameState pGameState) {
 		super(pGameState);
 	}
-	
+
 	public StepId getId() {
 		return StepId.END_KICKOFF;
 	}
-	
+
 	@Override
 	public void start() {
 		super.start();
 		executeStep();
 	}
-	
-  @Override
-  public StepCommandStatus handleCommand(ReceivedCommand pReceivedCommand) {
-    StepCommandStatus commandStatus = super.handleCommand(pReceivedCommand);
-    if (commandStatus == StepCommandStatus.EXECUTE_STEP) {
-      executeStep();
-    }
-    return commandStatus;
-  }
-	
-  private void executeStep() {
-  	Game game = getGameState().getGame();
-  	SequenceGenerator.getInstance().pushEndTurnSequence(getGameState());
-  	SequenceGenerator.getInstance().pushInducementSequence(getGameState(), InducementPhase.AFTER_KICKOFF_TO_OPPONENT, game.isHomePlaying());
-  	getResult().setNextAction(StepAction.NEXT_STEP);
-  }
-  
-  // ByteArray serialization
-  
-  public int getByteArraySerializationVersion() {
-  	return 1;
-  }
-  
-  // JSON serialization
-  
-  @Override
-  public JsonObject toJsonValue() {
-    return super.toJsonValue();
-  }
-  
-  @Override
-  public StepEndKickoff initFrom(JsonValue pJsonValue) {
-    super.initFrom(pJsonValue);
-    return this;
-  }
-  
+
+	@Override
+	public StepCommandStatus handleCommand(ReceivedCommand pReceivedCommand) {
+		StepCommandStatus commandStatus = super.handleCommand(pReceivedCommand);
+		if (commandStatus == StepCommandStatus.EXECUTE_STEP) {
+			executeStep();
+		}
+		return commandStatus;
+	}
+
+	private void executeStep() {
+		Game game = getGameState().getGame();
+		SequenceGenerator.getInstance().pushEndTurnSequence(getGameState());
+		SequenceGenerator.getInstance().pushInducementSequence(getGameState(), InducementPhase.AFTER_KICKOFF_TO_OPPONENT,
+				game.isHomePlaying());
+		getResult().setNextAction(StepAction.NEXT_STEP);
+	}
+
+	// ByteArray serialization
+
+	public int getByteArraySerializationVersion() {
+		return 1;
+	}
+
+	// JSON serialization
+
+	@Override
+	public JsonObject toJsonValue() {
+		return super.toJsonValue();
+	}
+
+	@Override
+	public StepEndKickoff initFrom(JsonValue pJsonValue) {
+		super.initFrom(pJsonValue);
+		return this;
+	}
+
 }

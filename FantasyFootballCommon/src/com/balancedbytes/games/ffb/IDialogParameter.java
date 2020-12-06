@@ -10,15 +10,15 @@ import com.eclipsesource.json.JsonValue;
  * @author Kalimar
  */
 public interface IDialogParameter extends IJsonSerializable {
-  
-  public DialogId getId();
-  
-  public IDialogParameter transform();
-  
-  // overrides IJsonSerializable
-  public IDialogParameter initFrom(JsonValue pJsonValue);
 
-  // overrides IJsonSerializable
-  public JsonObject toJsonValue();
-  
+	public DialogId getId();
+
+	public IDialogParameter transform();
+
+	// overrides IJsonSerializable
+	public IDialogParameter initFrom(JsonValue pJsonValue);
+
+	// overrides IJsonSerializable
+	public JsonObject toJsonValue();
+
 }

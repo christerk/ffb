@@ -33,82 +33,82 @@ import com.eclipsesource.json.JsonValue;
 /**
  * Step in inducement sequence to handle spell effect.
  * 
- * Needs to be initialized with stepParameter PLAYER_ID.
- * Needs to be initialized with stepParameter ROLL_FOR_EFFECT.
- * Needs to be initialized with stepParameter SPECIAL_EFFECT.
+ * Needs to be initialized with stepParameter PLAYER_ID. Needs to be initialized
+ * with stepParameter ROLL_FOR_EFFECT. Needs to be initialized with
+ * stepParameter SPECIAL_EFFECT.
  * 
- * Sets stepParameter END_TURN for all steps on the stack.
- * Sets stepParameter INJURY_RESULT for all steps on the stack.
+ * Sets stepParameter END_TURN for all steps on the stack. Sets stepParameter
+ * INJURY_RESULT for all steps on the stack.
  *
  * @author Kalimar
  */
 public final class StepSpecialEffect extends AbstractStep {
 
-  private String fGotoLabelOnFailure;
-  private String fPlayerId;
-  private boolean fRollForEffect;
-  private SpecialEffect fSpecialEffect;
-	
+	private String fGotoLabelOnFailure;
+	private String fPlayerId;
+	private boolean fRollForEffect;
+	private SpecialEffect fSpecialEffect;
+
 	public StepSpecialEffect(GameState pGameState) {
 		super(pGameState);
 	}
-	
+
 	public StepId getId() {
 		return StepId.SPECIAL_EFFECT;
 	}
-	
-  @Override
-  public void init(StepParameterSet pParameterSet) {
-  	if (pParameterSet != null) {
-  		for (StepParameter parameter : pParameterSet.values()) {
-  			switch (parameter.getKey()) {
-  				// mandatory
-					case GOTO_LABEL_ON_FAILURE:
-						fGotoLabelOnFailure = (String) parameter.getValue();
-						break;
-  			  // mandatory
-  				case PLAYER_ID:
-  					fPlayerId = (String) parameter.getValue();
-  					break;
-  			  // mandatory
-  				case ROLL_FOR_EFFECT:
-  					fRollForEffect = (parameter.getValue() != null) ? (Boolean) parameter.getValue() : false;
-  					break;
-  				// mandatory
-  				case SPECIAL_EFFECT:
-  					fSpecialEffect = (SpecialEffect) parameter.getValue();
-  					break;
-					default:
-						break;
-  			}
-  		}
-  	}
-  	if (fGotoLabelOnFailure == null) {
-			throw new StepException("StepParameter " + StepParameterKey.GOTO_LABEL_ON_FAILURE + " is not initialized.");
-  	}
-  	if (fPlayerId == null) {
-			throw new StepException("StepParameter " + StepParameterKey.PLAYER_ID + " is not initialized.");
-  	}
-  	if (fSpecialEffect == null) {
-			throw new StepException("StepParameter " + StepParameterKey.SPECIAL_EFFECT + " is not initialized.");
-  	}
-  }
 
-  @Override
+	@Override
+	public void init(StepParameterSet pParameterSet) {
+		if (pParameterSet != null) {
+			for (StepParameter parameter : pParameterSet.values()) {
+				switch (parameter.getKey()) {
+				// mandatory
+				case GOTO_LABEL_ON_FAILURE:
+					fGotoLabelOnFailure = (String) parameter.getValue();
+					break;
+				// mandatory
+				case PLAYER_ID:
+					fPlayerId = (String) parameter.getValue();
+					break;
+				// mandatory
+				case ROLL_FOR_EFFECT:
+					fRollForEffect = (parameter.getValue() != null) ? (Boolean) parameter.getValue() : false;
+					break;
+				// mandatory
+				case SPECIAL_EFFECT:
+					fSpecialEffect = (SpecialEffect) parameter.getValue();
+					break;
+				default:
+					break;
+				}
+			}
+		}
+		if (fGotoLabelOnFailure == null) {
+			throw new StepException("StepParameter " + StepParameterKey.GOTO_LABEL_ON_FAILURE + " is not initialized.");
+		}
+		if (fPlayerId == null) {
+			throw new StepException("StepParameter " + StepParameterKey.PLAYER_ID + " is not initialized.");
+		}
+		if (fSpecialEffect == null) {
+			throw new StepException("StepParameter " + StepParameterKey.SPECIAL_EFFECT + " is not initialized.");
+		}
+	}
+
+	@Override
 	public void start() {
 		super.start();
 		executeStep();
 	}
-	
-  private void executeStep() {
-		
-  	Game game = getGameState().getGame();
-		
+
+	private void executeStep() {
+
+		Game game = getGameState().getGame();
+
 		Player player = game.getPlayerById(fPlayerId);
 		if (player != null) {
-			
+
 			boolean successful = true;
-			
+
 			if (fRollForEffect) {
 				int roll = getGameState().getDiceRoller().rollWizardSpell();
 				successful = DiceInterpreter.getInstance().isSpecialEffectSuccesful(fSpecialEffect, player, roll);
@@ -116,13 +116,13 @@ public final class StepSpecialEffect extends AbstractStep {
 			} else {
 				getResult().addReport(new ReportSpecialEffectRoll(fSpecialEffect, player.getId(), 0, true));
 			}
-			
+
 			if (successful) {
-				
+
 				FieldCoordinate playerCoordinate = game.getFieldModel().getPlayerCoordinate(player);
 				if (fSpecialEffect == SpecialEffect.LIGHTNING) {
-					publishParameter(new StepParameter(StepParameterKey.INJURY_RESULT,
-						UtilServerInjury.handleInjury(this, new InjuryTypeLightning(), null, player, playerCoordinate, null, ApothecaryMode.SPECIAL_EFFECT)));
+					publishParameter(new StepParameter(StepParameterKey.INJURY_RESULT, UtilServerInjury.handleInjury(this,
+							new InjuryTypeLightning(), null, player, playerCoordinate, null, ApothecaryMode.SPECIAL_EFFECT)));
 					publishParameters(UtilServerInjury.dropPlayer(this, player, ApothecaryMode.SPECIAL_EFFECT));
 				}
 				if (fSpecialEffect == SpecialEffect.ZAP && player instanceof RosterPlayer) {
@@ -134,17 +134,18 @@ public final class StepSpecialEffect extends AbstractStep {
 					getGameState().getServer().getCommunication().sendZapPlayer(getGameState(), (RosterPlayer) player);
 					if (FieldCoordinate.equals(game.getFieldModel().getBallCoordinate(), playerCoordinate)) {
 						getGameState().getStepStack().push(new StepCatchScatterThrowIn(getGameState()));
-						publishParameter(new StepParameter(StepParameterKey.CATCH_SCATTER_THROW_IN_MODE, CatchScatterThrowInMode.SCATTER_BALL));
+						publishParameter(
+								new StepParameter(StepParameterKey.CATCH_SCATTER_THROW_IN_MODE, CatchScatterThrowInMode.SCATTER_BALL));
 					}
 				}
 				if (fSpecialEffect == SpecialEffect.FIREBALL) {
-					publishParameter(new StepParameter(StepParameterKey.INJURY_RESULT,
-						UtilServerInjury.handleInjury(this, new InjuryTypeFireball(), null, player, playerCoordinate, null, ApothecaryMode.SPECIAL_EFFECT)));
+					publishParameter(new StepParameter(StepParameterKey.INJURY_RESULT, UtilServerInjury.handleInjury(this,
+							new InjuryTypeFireball(), null, player, playerCoordinate, null, ApothecaryMode.SPECIAL_EFFECT)));
 					publishParameters(UtilServerInjury.dropPlayer(this, player, ApothecaryMode.SPECIAL_EFFECT));
 				}
 				if (fSpecialEffect == SpecialEffect.BOMB) {
-					publishParameter(new StepParameter(StepParameterKey.INJURY_RESULT,
-						UtilServerInjury.handleInjury(this, new InjuryTypeBomb(), null, player, playerCoordinate, null, ApothecaryMode.SPECIAL_EFFECT)));
+					publishParameter(new StepParameter(StepParameterKey.INJURY_RESULT, UtilServerInjury.handleInjury(this,
+							new InjuryTypeBomb(), null, player, playerCoordinate, null, ApothecaryMode.SPECIAL_EFFECT)));
 					publishParameters(UtilServerInjury.dropPlayer(this, player, ApothecaryMode.SPECIAL_EFFECT));
 				}
 
@@ -161,36 +162,36 @@ public final class StepSpecialEffect extends AbstractStep {
 				}
 
 				getResult().setNextAction(StepAction.NEXT_STEP);
-			
+
 			} else {
 				getResult().setNextAction(StepAction.GOTO_LABEL, fGotoLabelOnFailure);
 			}
-			
+
 		}
-		
-  }
-  
-  // JSON serialization
-  
-  @Override
-  public JsonObject toJsonValue() {
-    JsonObject jsonObject = super.toJsonValue();
-    IServerJsonOption.GOTO_LABEL_ON_FAILURE.addTo(jsonObject, fGotoLabelOnFailure);
-    IServerJsonOption.PLAYER_ID.addTo(jsonObject, fPlayerId);
-    IServerJsonOption.ROLL_FOR_EFFECT.addTo(jsonObject, fRollForEffect);
-    IServerJsonOption.SPECIAL_EFFECT.addTo(jsonObject, fSpecialEffect);
-    return jsonObject;
-  }
-  
-  @Override
-  public StepSpecialEffect initFrom(JsonValue pJsonValue) {
-    super.initFrom(pJsonValue);
-    JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-    fGotoLabelOnFailure = IServerJsonOption.GOTO_LABEL_ON_FAILURE.getFrom(jsonObject);
-    fPlayerId = IServerJsonOption.PLAYER_ID.getFrom(jsonObject);
-    fRollForEffect = IServerJsonOption.ROLL_FOR_EFFECT.getFrom(jsonObject);
-    fSpecialEffect = (SpecialEffect) IServerJsonOption.SPECIAL_EFFECT.getFrom(jsonObject);
-    return this;
-  }
+
+	}
+
+	// JSON serialization
+
+	@Override
+	public JsonObject toJsonValue() {
+		JsonObject jsonObject = super.toJsonValue();
+		IServerJsonOption.GOTO_LABEL_ON_FAILURE.addTo(jsonObject, fGotoLabelOnFailure);
+		IServerJsonOption.PLAYER_ID.addTo(jsonObject, fPlayerId);
+		IServerJsonOption.ROLL_FOR_EFFECT.addTo(jsonObject, fRollForEffect);
+		IServerJsonOption.SPECIAL_EFFECT.addTo(jsonObject, fSpecialEffect);
+		return jsonObject;
+	}
+
+	@Override
+	public StepSpecialEffect initFrom(JsonValue pJsonValue) {
+		super.initFrom(pJsonValue);
+		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
+		fGotoLabelOnFailure = IServerJsonOption.GOTO_LABEL_ON_FAILURE.getFrom(jsonObject);
+		fPlayerId = IServerJsonOption.PLAYER_ID.getFrom(jsonObject);
+		fRollForEffect = IServerJsonOption.ROLL_FOR_EFFECT.getFrom(jsonObject);
+		fSpecialEffect = (SpecialEffect) IServerJsonOption.SPECIAL_EFFECT.getFrom(jsonObject);
+		return this;
+	}
 
 }

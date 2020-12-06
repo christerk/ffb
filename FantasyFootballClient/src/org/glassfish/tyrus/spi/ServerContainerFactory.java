@@ -49,57 +49,58 @@ import java.util.ServiceLoader;
  */
 public abstract class ServerContainerFactory {
 
-    private static final String CONTAINTER_CLASS =
-            "org.glassfish.tyrus.container.grizzly.server.GrizzlyServerContainer";
+	private static final String CONTAINTER_CLASS = "org.glassfish.tyrus.container.grizzly.server.GrizzlyServerContainer";
 
-    /**
-     * Create new {@link org.glassfish.tyrus.spi.ServerContainer} with default configuration.
-     *
-     * @return new {@link org.glassfish.tyrus.spi.ServerContainer}.
-     */
-    public static ServerContainer createServerContainer() {
-        return createServerContainer(Collections.<String, Object>emptyMap());
-    }
+	/**
+	 * Create new {@link org.glassfish.tyrus.spi.ServerContainer} with default
+	 * configuration.
+	 *
+	 * @return new {@link org.glassfish.tyrus.spi.ServerContainer}.
+	 */
+	public static ServerContainer createServerContainer() {
+		return createServerContainer(Collections.<String, Object>emptyMap());
+	}
 
-    /**
-     * Create new {@link org.glassfish.tyrus.spi.ServerContainer} with configuration.
-     *
-     * @param properties configuration passed to created server container.
-     * @return new {@link org.glassfish.tyrus.spi.ServerContainer}.
-     */
-    public static ServerContainer createServerContainer(final Map<String, Object> properties) {
-        ServerContainerFactory factory = null;
+	/**
+	 * Create new {@link org.glassfish.tyrus.spi.ServerContainer} with
+	 * configuration.
+	 *
+	 * @param properties configuration passed to created server container.
+	 * @return new {@link org.glassfish.tyrus.spi.ServerContainer}.
+	 */
+	public static ServerContainer createServerContainer(final Map<String, Object> properties) {
+		ServerContainerFactory factory = null;
 
-        Iterator<ServerContainerFactory> it = ServiceLoader.load(ServerContainerFactory.class).iterator();
-        if (it.hasNext()) {
-            factory = it.next();
-        }
-        if (factory == null) {
-            try {
-                ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-                Class factoryClass = (classLoader == null)
-                        ? Class.forName(CONTAINTER_CLASS)
-                        : classLoader.loadClass(CONTAINTER_CLASS);
-                factory = (ServerContainerFactory) factoryClass.newInstance();
-            } catch (ClassNotFoundException ce) {
-                throw new RuntimeException(ce);
-            } catch (InstantiationException ie) {
-                throw new RuntimeException(ie);
-            } catch (IllegalAccessException ie) {
-                throw new RuntimeException(ie);
-            }
-        }
-        return factory.createContainer(properties);
-    }
+		Iterator<ServerContainerFactory> it = ServiceLoader.load(ServerContainerFactory.class).iterator();
+		if (it.hasNext()) {
+			factory = it.next();
+		}
+		if (factory == null) {
+			try {
+				ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+				Class factoryClass = (classLoader == null) ? Class.forName(CONTAINTER_CLASS)
+						: classLoader.loadClass(CONTAINTER_CLASS);
+				factory = (ServerContainerFactory) factoryClass.newInstance();
+			} catch (ClassNotFoundException ce) {
+				throw new RuntimeException(ce);
+			} catch (InstantiationException ie) {
+				throw new RuntimeException(ie);
+			} catch (IllegalAccessException ie) {
+				throw new RuntimeException(ie);
+			}
+		}
+		return factory.createContainer(properties);
+	}
 
-    /**
-     * Create container delegate method.
-     * <p>
-     * Has to be implemented by {@link org.glassfish.tyrus.spi.ServerContainerFactory} implementations.
-     *
-     * @param properties configuration passed to created server container.
-     * @return new {@link org.glassfish.tyrus.spi.ServerContainer}.
-     */
-    public abstract ServerContainer createContainer(Map<String, Object> properties);
+	/**
+	 * Create container delegate method.
+	 * <p>
+	 * Has to be implemented by
+	 * {@link org.glassfish.tyrus.spi.ServerContainerFactory} implementations.
+	 *
+	 * @param properties configuration passed to created server container.
+	 * @return new {@link org.glassfish.tyrus.spi.ServerContainer}.
+	 */
+	public abstract ServerContainer createContainer(Map<String, Object> properties);
 
 }

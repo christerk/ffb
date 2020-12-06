@@ -11,44 +11,44 @@ import com.eclipsesource.json.JsonValue;
  */
 public class ReportStartHalf implements IReport {
 
-  private int fHalf;
+	private int fHalf;
 
-  public ReportStartHalf() {
-    super();
-  }
+	public ReportStartHalf() {
+		super();
+	}
 
-  public ReportStartHalf(int pHalf) {
-    fHalf = pHalf;
-  }
+	public ReportStartHalf(int pHalf) {
+		fHalf = pHalf;
+	}
 
-  public ReportId getId() {
-    return ReportId.START_HALF;
-  }
-  
-  public int getHalf() {
-    return fHalf;
-  }
+	public ReportId getId() {
+		return ReportId.START_HALF;
+	}
 
-  // transformation
+	public int getHalf() {
+		return fHalf;
+	}
 
-  public IReport transform() {
-    return new ReportStartHalf(getHalf());
-  }
+	// transformation
 
-  // JSON serialization
-  
-  public JsonObject toJsonValue() {
-    JsonObject jsonObject = new JsonObject();
-    IJsonOption.REPORT_ID.addTo(jsonObject, getId());
-    IJsonOption.HALF.addTo(jsonObject, fHalf);
-    return jsonObject;
-  }
-  
-  public ReportStartHalf initFrom(JsonValue pJsonValue) {
-    JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-    UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(jsonObject));
-    fHalf = IJsonOption.HALF.getFrom(jsonObject);
-    return this;
-  }
+	public IReport transform() {
+		return new ReportStartHalf(getHalf());
+	}
+
+	// JSON serialization
+
+	public JsonObject toJsonValue() {
+		JsonObject jsonObject = new JsonObject();
+		IJsonOption.REPORT_ID.addTo(jsonObject, getId());
+		IJsonOption.HALF.addTo(jsonObject, fHalf);
+		return jsonObject;
+	}
+
+	public ReportStartHalf initFrom(JsonValue pJsonValue) {
+		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
+		UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(jsonObject));
+		fHalf = IJsonOption.HALF.getFrom(jsonObject);
+		return this;
+	}
 
 }

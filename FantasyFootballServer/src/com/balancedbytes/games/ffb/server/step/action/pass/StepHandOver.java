@@ -30,77 +30,78 @@ import com.eclipsesource.json.JsonValue;
  */
 public final class StepHandOver extends AbstractStepWithReRoll {
 
-  private String fCatcherId;
+	private String fCatcherId;
 
-  public StepHandOver(GameState pGameState) {
-    super(pGameState);
-  }
+	public StepHandOver(GameState pGameState) {
+		super(pGameState);
+	}
 
-  public StepId getId() {
-    return StepId.HAND_OVER;
-  }
+	public StepId getId() {
+		return StepId.HAND_OVER;
+	}
 
-  @Override
-  public boolean setParameter(StepParameter pParameter) {
-    if ((pParameter != null) && !super.setParameter(pParameter)) {
-      switch (pParameter.getKey()) {
-        case CATCHER_ID:
-          fCatcherId = (String) pParameter.getValue();
-          return true;
-        default:
-          break;
-      }
-    }
-    return false;
-  }
+	@Override
+	public boolean setParameter(StepParameter pParameter) {
+		if ((pParameter != null) && !super.setParameter(pParameter)) {
+			switch (pParameter.getKey()) {
+			case CATCHER_ID:
+				fCatcherId = (String) pParameter.getValue();
+				return true;
+			default:
+				break;
+			}
+		}
+		return false;
+	}
 
-  @Override
-  public void start() {
-    super.start();
-    executeStep();
-  }
+	@Override
+	public void start() {
+		super.start();
+		executeStep();
+	}
 
-  @Override
-  public StepCommandStatus handleCommand(ReceivedCommand pReceivedCommand) {
-    StepCommandStatus commandStatus = super.handleCommand(pReceivedCommand);
-    if (commandStatus == StepCommandStatus.EXECUTE_STEP) {
-      executeStep();
-    }
-    return commandStatus;
-  }
+	@Override
+	public StepCommandStatus handleCommand(ReceivedCommand pReceivedCommand) {
+		StepCommandStatus commandStatus = super.handleCommand(pReceivedCommand);
+		if (commandStatus == StepCommandStatus.EXECUTE_STEP) {
+			executeStep();
+		}
+		return commandStatus;
+	}
 
-  private void executeStep() {
-    Game game = getGameState().getGame();
-    game.getFieldModel().setBallMoving(true);
-    game.setPassCoordinate(null);
-    Player thrower = game.getActingPlayer().getPlayer();
-    FieldCoordinate throwerCoordinate = game.getFieldModel().getPlayerCoordinate(thrower);
-    Player catcher = game.getPlayerById(fCatcherId);
-    FieldCoordinate catcherCoordinate = game.getFieldModel().getPlayerCoordinate(catcher);
-    if ((throwerCoordinate != null) && throwerCoordinate.isAdjacent(catcherCoordinate)) {
-      game.getFieldModel().setBallCoordinate(catcherCoordinate);
-      getResult().addReport(new ReportHandOver(fCatcherId));
-      publishParameter(new StepParameter(StepParameterKey.CATCH_SCATTER_THROW_IN_MODE, CatchScatterThrowInMode.CATCH_HAND_OFF));
-    }
-    publishParameter(new StepParameter(StepParameterKey.END_PLAYER_ACTION, true));
-    getResult().setNextAction(StepAction.NEXT_STEP);
-  }
+	private void executeStep() {
+		Game game = getGameState().getGame();
+		game.getFieldModel().setBallMoving(true);
+		game.setPassCoordinate(null);
+		Player thrower = game.getActingPlayer().getPlayer();
+		FieldCoordinate throwerCoordinate = game.getFieldModel().getPlayerCoordinate(thrower);
+		Player catcher = game.getPlayerById(fCatcherId);
+		FieldCoordinate catcherCoordinate = game.getFieldModel().getPlayerCoordinate(catcher);
+		if ((throwerCoordinate != null) && throwerCoordinate.isAdjacent(catcherCoordinate)) {
+			game.getFieldModel().setBallCoordinate(catcherCoordinate);
+			getResult().addReport(new ReportHandOver(fCatcherId));
+			publishParameter(
+					new StepParameter(StepParameterKey.CATCH_SCATTER_THROW_IN_MODE, CatchScatterThrowInMode.CATCH_HAND_OFF));
+		}
+		publishParameter(new StepParameter(StepParameterKey.END_PLAYER_ACTION, true));
+		getResult().setNextAction(StepAction.NEXT_STEP);
+	}
 
-  // JSON serialization
+	// JSON serialization
 
-  @Override
-  public JsonObject toJsonValue() {
-    JsonObject jsonObject = super.toJsonValue();
-    IServerJsonOption.CATCHER_ID.addTo(jsonObject, fCatcherId);
-    return jsonObject;
-  }
+	@Override
+	public JsonObject toJsonValue() {
+		JsonObject jsonObject = super.toJsonValue();
+		IServerJsonOption.CATCHER_ID.addTo(jsonObject, fCatcherId);
+		return jsonObject;
+	}
 
-  @Override
-  public StepHandOver initFrom(JsonValue pJsonValue) {
-    super.initFrom(pJsonValue);
-    JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-    fCatcherId = IServerJsonOption.CATCHER_ID.getFrom(jsonObject);
-    return this;
-  }
+	@Override
+	public StepHandOver initFrom(JsonValue pJsonValue) {
+		super.initFrom(pJsonValue);
+		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
+		fCatcherId = IServerJsonOption.CATCHER_ID.getFrom(jsonObject);
+		return this;
+	}
 
 }

@@ -12,28 +12,29 @@ import com.balancedbytes.games.ffb.server.DiceRoller;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.step.IStep;
 
-public class InjuryTypeCrowdPush extends InjuryTypeServer<CrowdPush>  {
-		public InjuryTypeCrowdPush() {
-			super(new CrowdPush());
-		}
-
-		@Override
-		public InjuryContext handleInjury(IStep step, Game game, GameState gameState, DiceRoller diceRoller, Player<?> pAttacker, Player<?> pDefender,
-				FieldCoordinate pDefenderCoordinate, InjuryContext pOldInjuryContext, ApothecaryMode pApothecaryMode) {
-			
-			if (!injuryContext.isArmorBroken()) {
-				injuryContext.setArmorBroken(true);
-			}
-
-			injuryContext.setInjuryRoll(diceRoller.rollInjury());
-			injuryContext.addInjuryModifier(new InjuryModifierFactory().getNigglingInjuryModifier(pDefender));
-			setInjury(pDefender, gameState, diceRoller);
-
-			// crowdpush to reserve
-			if (!injuryContext.isCasualty() && !injuryContext.isKnockedOut()) {
-				injuryContext.setInjury(new PlayerState(PlayerState.RESERVE));
-			}
-
-			return injuryContext;
-		}
+public class InjuryTypeCrowdPush extends InjuryTypeServer<CrowdPush> {
+	public InjuryTypeCrowdPush() {
+		super(new CrowdPush());
 	}
+
+	@Override
+	public InjuryContext handleInjury(IStep step, Game game, GameState gameState, DiceRoller diceRoller,
+			Player<?> pAttacker, Player<?> pDefender, FieldCoordinate pDefenderCoordinate, InjuryContext pOldInjuryContext,
+			ApothecaryMode pApothecaryMode) {
+
+		if (!injuryContext.isArmorBroken()) {
+			injuryContext.setArmorBroken(true);
+		}
+
+		injuryContext.setInjuryRoll(diceRoller.rollInjury());
+		injuryContext.addInjuryModifier(new InjuryModifierFactory().getNigglingInjuryModifier(pDefender));
+		setInjury(pDefender, gameState, diceRoller);
+
+		// crowdpush to reserve
+		if (!injuryContext.isCasualty() && !injuryContext.isKnockedOut()) {
+			injuryContext.setInjury(new PlayerState(PlayerState.RESERVE));
+		}
+
+		return injuryContext;
+	}
+}

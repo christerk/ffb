@@ -10,16 +10,16 @@ import com.eclipsesource.json.JsonObject;
  */
 public abstract class DialogWithoutParameter implements IDialogParameter {
 
-  public DialogWithoutParameter() {
-    super();
-  }
+	public DialogWithoutParameter() {
+		super();
+	}
 
-  // JSON serialization
-  
-  public JsonObject toJsonValue() {
-    JsonObject jsonObject = new JsonObject();
-    IJsonOption.DIALOG_ID.addTo(jsonObject, getId());
-    return jsonObject;
-  }
+	// JSON serialization
+
+	public JsonObject toJsonValue() {
+		JsonObject jsonObject = new JsonObject();
+		IJsonOption.DIALOG_ID.addTo(jsonObject, getId());
+		return jsonObject;
+	}
 
 }

@@ -10,10 +10,9 @@ public class KTMCrowd extends InjuryType {
 		super("ktmCrowd", false, SendToBoxReason.CROWD_KICKED);
 		// TODO Auto-generated constructor stub
 	}
-	
+
 	@Override
-	public void reportInjuryString(StringBuilder string, Player<?> attacker, Player<?> defender)
-	{
+	public void reportInjuryString(StringBuilder string, Player<?> attacker, Player<?> defender) {
 		string.append(defender.getName());
 		string.append(" is kicked into the crowd and is knocked out.");
 	}

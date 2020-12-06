@@ -22,109 +22,105 @@ import com.eclipsesource.json.JsonValue;
  * Expects stepParameter OLD_DEFENDER_STATE to be set by a preceding step.
  * 
  * Sets stepParameter CATCH_SCATTER_THROWIN_MODE for all steps on the stack.
- * Sets stepParameter INJURY_RESULT for all steps on the stack.
- * Sets stepParameter USING_PILING_ON for all steps on the stack.
+ * Sets stepParameter INJURY_RESULT for all steps on the stack. Sets
+ * stepParameter USING_PILING_ON for all steps on the stack.
  * 
  * @author Kalimar
  */
 public class StepDropFallingPlayers extends AbstractStep {
 
- 
-  
-  public class StepState {
-	  public InjuryResult injuryResultDefender;
-	  public Boolean usingPilingOn;
-	  public PlayerState oldDefenderState;
-	  }
-	
+	public class StepState {
+		public InjuryResult injuryResultDefender;
+		public Boolean usingPilingOn;
+		public PlayerState oldDefenderState;
+	}
+
 	private StepState state;
 
-  public StepDropFallingPlayers(GameState pGameState) {
-    super(pGameState);
-    
-    state = new StepState();
-  }
+	public StepDropFallingPlayers(GameState pGameState) {
+		super(pGameState);
 
-  public StepId getId() {
-    return StepId.DROP_FALLING_PLAYERS;
-  }
+		state = new StepState();
+	}
 
-  @Override
-  public boolean setParameter(StepParameter pParameter) {
-    if ((pParameter != null) && !super.setParameter(pParameter)) {
-      switch (pParameter.getKey()) {
-        case OLD_DEFENDER_STATE:
-        	state.oldDefenderState = (PlayerState) pParameter.getValue();
-          return true;
-        default:
-          break;
-      }
-    }
-    return false;
-  }
+	public StepId getId() {
+		return StepId.DROP_FALLING_PLAYERS;
+	}
 
-  @Override
-  public void start() {
-    super.start();
-    executeStep();
-  }
+	@Override
+	public boolean setParameter(StepParameter pParameter) {
+		if ((pParameter != null) && !super.setParameter(pParameter)) {
+			switch (pParameter.getKey()) {
+			case OLD_DEFENDER_STATE:
+				state.oldDefenderState = (PlayerState) pParameter.getValue();
+				return true;
+			default:
+				break;
+			}
+		}
+		return false;
+	}
 
-  @Override
-  public StepCommandStatus handleCommand(ReceivedCommand pReceivedCommand) {
-    StepCommandStatus commandStatus = super.handleCommand(pReceivedCommand);
-    if (commandStatus == StepCommandStatus.UNHANDLED_COMMAND) {
-      switch (pReceivedCommand.getId()) {
-        case CLIENT_USE_SKILL:
-        	 ClientCommandUseSkill useSkillCommand = (ClientCommandUseSkill) pReceivedCommand.getCommand();
-             ServerSkill usedSkill = (ServerSkill) useSkillCommand.getSkill();
-             if (usedSkill != null) {
-               StepCommandStatus newStatus = usedSkill.applyUseSkillCommandHooks(this, state, useSkillCommand);
-               if (newStatus != null) {
-                 commandStatus = newStatus;
-               }
-             }
-          break;
-        default:
-          break;
-      }
-    }
-    if (commandStatus == StepCommandStatus.EXECUTE_STEP) {
-      executeStep();
-    }
-    return commandStatus;
-  }
+	@Override
+	public void start() {
+		super.start();
+		executeStep();
+	}
 
-  private void executeStep() {
-	getGameState().executeStepHooks(this, state);
-  }
-  
+	@Override
+	public StepCommandStatus handleCommand(ReceivedCommand pReceivedCommand) {
+		StepCommandStatus commandStatus = super.handleCommand(pReceivedCommand);
+		if (commandStatus == StepCommandStatus.UNHANDLED_COMMAND) {
+			switch (pReceivedCommand.getId()) {
+			case CLIENT_USE_SKILL:
+				ClientCommandUseSkill useSkillCommand = (ClientCommandUseSkill) pReceivedCommand.getCommand();
+				ServerSkill usedSkill = (ServerSkill) useSkillCommand.getSkill();
+				if (usedSkill != null) {
+					StepCommandStatus newStatus = usedSkill.applyUseSkillCommandHooks(this, state, useSkillCommand);
+					if (newStatus != null) {
+						commandStatus = newStatus;
+					}
+				}
+				break;
+			default:
+				break;
+			}
+		}
+		if (commandStatus == StepCommandStatus.EXECUTE_STEP) {
+			executeStep();
+		}
+		return commandStatus;
+	}
 
+	private void executeStep() {
+		getGameState().executeStepHooks(this, state);
+	}
 
-  // JSON serialization
+	// JSON serialization
 
-  @Override
-  public JsonObject toJsonValue() {
-    JsonObject jsonObject = super.toJsonValue();
-    if (state.injuryResultDefender != null) {
-      IServerJsonOption.INJURY_RESULT_DEFENDER.addTo(jsonObject, state.injuryResultDefender.toJsonValue());
-    }
-    IServerJsonOption.USING_PILING_ON.addTo(jsonObject, state.usingPilingOn);
-    IServerJsonOption.OLD_DEFENDER_STATE.addTo(jsonObject, state.oldDefenderState);
-    return jsonObject;
-  }
+	@Override
+	public JsonObject toJsonValue() {
+		JsonObject jsonObject = super.toJsonValue();
+		if (state.injuryResultDefender != null) {
+			IServerJsonOption.INJURY_RESULT_DEFENDER.addTo(jsonObject, state.injuryResultDefender.toJsonValue());
+		}
+		IServerJsonOption.USING_PILING_ON.addTo(jsonObject, state.usingPilingOn);
+		IServerJsonOption.OLD_DEFENDER_STATE.addTo(jsonObject, state.oldDefenderState);
+		return jsonObject;
+	}
 
-  @Override
-  public StepDropFallingPlayers initFrom(JsonValue pJsonValue) {
-    super.initFrom(pJsonValue);
-    JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-    state.injuryResultDefender = null;
-    JsonObject injuryResultDefenderObject = IServerJsonOption.INJURY_RESULT_DEFENDER.getFrom(jsonObject);
-    if (injuryResultDefenderObject != null) {
-    	state.injuryResultDefender = new InjuryResult().initFrom(injuryResultDefenderObject);
-    }
-    state.usingPilingOn = IServerJsonOption.USING_PILING_ON.getFrom(jsonObject);
-    state.oldDefenderState = IServerJsonOption.OLD_DEFENDER_STATE.getFrom(jsonObject);
-    return this;
-  }
+	@Override
+	public StepDropFallingPlayers initFrom(JsonValue pJsonValue) {
+		super.initFrom(pJsonValue);
+		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
+		state.injuryResultDefender = null;
+		JsonObject injuryResultDefenderObject = IServerJsonOption.INJURY_RESULT_DEFENDER.getFrom(jsonObject);
+		if (injuryResultDefenderObject != null) {
+			state.injuryResultDefender = new InjuryResult().initFrom(injuryResultDefenderObject);
+		}
+		state.usingPilingOn = IServerJsonOption.USING_PILING_ON.getFrom(jsonObject);
+		state.oldDefenderState = IServerJsonOption.OLD_DEFENDER_STATE.getFrom(jsonObject);
+		return this;
+	}
 
 }

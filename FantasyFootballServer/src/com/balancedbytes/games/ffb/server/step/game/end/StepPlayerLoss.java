@@ -26,65 +26,67 @@ import com.eclipsesource.json.JsonValue;
  */
 public final class StepPlayerLoss extends AbstractStep {
 
-  public StepPlayerLoss(GameState pGameState) {
-    super(pGameState);
-  }
+	public StepPlayerLoss(GameState pGameState) {
+		super(pGameState);
+	}
 
-  public StepId getId() {
-    return StepId.PLAYER_LOSS;
-  }
+	public StepId getId() {
+		return StepId.PLAYER_LOSS;
+	}
 
-  @Override
-  public void start() {
-    super.start();
-    executeStep();
-  }
+	@Override
+	public void start() {
+		super.start();
+		executeStep();
+	}
 
-  private void executeStep() {
-    Game game = getGameState().getGame();
-    GameResult gameResult = game.getGameResult();
-    Team team = null;
-    if (gameResult.getTeamResultHome().hasConceded() && (UtilPlayer.findPlayersInReserveOrField(game, game.getTeamHome()).length > 2)) {
-      team = game.getTeamHome();
-    }
-    if (gameResult.getTeamResultAway().hasConceded() && (UtilPlayer.findPlayersInReserveOrField(game, game.getTeamAway()).length > 2)) {
-      team = game.getTeamAway();
-    }
-    if (team != null) {
-      List<String> defectingPlayerIds = new ArrayList<String>();
-      List<Integer> defectingRolls = new ArrayList<Integer>();
-      List<Boolean> defectingFlags = new ArrayList<Boolean>();
-      for (Player player : team.getPlayers()) {
-        PlayerResult playerResult = gameResult.getPlayerResult(player);
-        if (playerResult.getCurrentSpps() >= 51) {
-          defectingPlayerIds.add(player.getId());
-          int defectingRoll = getGameState().getDiceRoller().rollPlayerLoss();
-          defectingRolls.add(defectingRoll);
-          boolean playerDefecting = DiceInterpreter.getInstance().isPlayerDefecting(defectingRoll);
-          defectingFlags.add(playerDefecting);
-          playerResult.setDefecting(playerDefecting);
-        }
-      }
-      if (defectingPlayerIds.size() > 0) {
-        getResult().addReport(
-            new ReportDefectingPlayers(defectingPlayerIds.toArray(new String[defectingPlayerIds.size()]), ArrayTool.toIntArray(defectingRolls), ArrayTool
-                .toBooleanArray(defectingFlags)));
-      }
-    }
-    getResult().setNextAction(StepAction.NEXT_STEP);
-  }
+	private void executeStep() {
+		Game game = getGameState().getGame();
+		GameResult gameResult = game.getGameResult();
+		Team team = null;
+		if (gameResult.getTeamResultHome().hasConceded()
+				&& (UtilPlayer.findPlayersInReserveOrField(game, game.getTeamHome()).length > 2)) {
+			team = game.getTeamHome();
+		}
+		if (gameResult.getTeamResultAway().hasConceded()
+				&& (UtilPlayer.findPlayersInReserveOrField(game, game.getTeamAway()).length > 2)) {
+			team = game.getTeamAway();
+		}
+		if (team != null) {
+			List<String> defectingPlayerIds = new ArrayList<String>();
+			List<Integer> defectingRolls = new ArrayList<Integer>();
+			List<Boolean> defectingFlags = new ArrayList<Boolean>();
+			for (Player player : team.getPlayers()) {
+				PlayerResult playerResult = gameResult.getPlayerResult(player);
+				if (playerResult.getCurrentSpps() >= 51) {
+					defectingPlayerIds.add(player.getId());
+					int defectingRoll = getGameState().getDiceRoller().rollPlayerLoss();
+					defectingRolls.add(defectingRoll);
+					boolean playerDefecting = DiceInterpreter.getInstance().isPlayerDefecting(defectingRoll);
+					defectingFlags.add(playerDefecting);
+					playerResult.setDefecting(playerDefecting);
+				}
+			}
+			if (defectingPlayerIds.size() > 0) {
+				getResult()
+						.addReport(new ReportDefectingPlayers(defectingPlayerIds.toArray(new String[defectingPlayerIds.size()]),
+								ArrayTool.toIntArray(defectingRolls), ArrayTool.toBooleanArray(defectingFlags)));
+			}
+		}
+		getResult().setNextAction(StepAction.NEXT_STEP);
+	}
 
-  // JSON serialization
+	// JSON serialization
 
-  @Override
-  public JsonObject toJsonValue() {
-    return super.toJsonValue();
-  }
+	@Override
+	public JsonObject toJsonValue() {
+		return super.toJsonValue();
+	}
 
-  @Override
-  public StepPlayerLoss initFrom(JsonValue pJsonValue) {
-    super.initFrom(pJsonValue);
-    return this;
-  }
+	@Override
+	public StepPlayerLoss initFrom(JsonValue pJsonValue) {
+		super.initFrom(pJsonValue);
+		return this;
+	}
 
 }

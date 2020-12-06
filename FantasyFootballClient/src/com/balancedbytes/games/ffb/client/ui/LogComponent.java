@@ -23,144 +23,146 @@ import com.balancedbytes.games.ffb.client.TextStyle;
 @SuppressWarnings("serial")
 public class LogComponent extends JPanel implements MouseMotionListener, IReplayMouseListener {
 
-  public static final int WIDTH = 389;  
-  public static final int HEIGHT = 226;
-  
-  private ChatLogScrollPane fLogScrollPane;
-  private ChatLogTextPane fLogTextPane;
-  
-  private Map<Integer, CommandHighlightArea> fCommandHighlightAreaByCommandNr;
-  private CommandHighlightArea fCurrentCommandHighlight;
-  private int fMinimumCommandNr;
+	public static final int WIDTH = 389;
+	public static final int HEIGHT = 226;
 
-  private FantasyFootballClient fClient;  
+	private ChatLogScrollPane fLogScrollPane;
+	private ChatLogTextPane fLogTextPane;
 
-  public LogComponent(FantasyFootballClient pClient) {
-    fClient = pClient;
-    fLogTextPane = new ChatLogTextPane();
-    fLogScrollPane = new ChatLogScrollPane(fLogTextPane);
-    getClient().getActionKeyBindings().addKeyBindings(fLogScrollPane, ActionKeyGroup.ALL);
-    setLayout(new BorderLayout());
-    add(fLogScrollPane, BorderLayout.CENTER);
-    Dimension size = new Dimension(WIDTH, HEIGHT);
-    setMinimumSize(size);
-    setPreferredSize(size);
-    setMaximumSize(size);
-    fLogTextPane.setHighlighter(new CommandHighlighter());
-    fLogTextPane.addMouseMotionListener(this);
-    fLogScrollPane.addMouseMotionListener(this);
-    fCommandHighlightAreaByCommandNr = new HashMap<Integer, CommandHighlightArea>();
-  }
+	private Map<Integer, CommandHighlightArea> fCommandHighlightAreaByCommandNr;
+	private CommandHighlightArea fCurrentCommandHighlight;
+	private int fMinimumCommandNr;
 
-  public void append(ParagraphStyle pTextIndent, TextStyle pStyle, String pText) {
-    fLogTextPane.append(pTextIndent, pStyle, pText);
-  }
+	private FantasyFootballClient fClient;
 
-  public FantasyFootballClient getClient() {
-    return fClient;
-  }
-  
-  public void markCommandBegin(int pCommandNr) {
-    fCurrentCommandHighlight = fCommandHighlightAreaByCommandNr.get(pCommandNr);
-    if (fCurrentCommandHighlight == null) {
-      fCurrentCommandHighlight = new CommandHighlightArea(pCommandNr);
-    }
-    int logOffset = fLogTextPane.getChatLogDocument().getEndPosition().getOffset() - 1;
-    fCurrentCommandHighlight.setStartPosition(logOffset);
-  }
+	public LogComponent(FantasyFootballClient pClient) {
+		fClient = pClient;
+		fLogTextPane = new ChatLogTextPane();
+		fLogScrollPane = new ChatLogScrollPane(fLogTextPane);
+		getClient().getActionKeyBindings().addKeyBindings(fLogScrollPane, ActionKeyGroup.ALL);
+		setLayout(new BorderLayout());
+		add(fLogScrollPane, BorderLayout.CENTER);
+		Dimension size = new Dimension(WIDTH, HEIGHT);
+		setMinimumSize(size);
+		setPreferredSize(size);
+		setMaximumSize(size);
+		fLogTextPane.setHighlighter(new CommandHighlighter());
+		fLogTextPane.addMouseMotionListener(this);
+		fLogScrollPane.addMouseMotionListener(this);
+		fCommandHighlightAreaByCommandNr = new HashMap<Integer, CommandHighlightArea>();
+	}
 
-  public void markCommandEnd(int pCommandNr) {
-    if (fCurrentCommandHighlight.getCommandNr() == pCommandNr) {
-      if (fMinimumCommandNr > pCommandNr) {
-        fMinimumCommandNr = pCommandNr;
-      }
-      int logOffset = fLogTextPane.getChatLogDocument().getEndPosition().getOffset() - 1;
-      fCurrentCommandHighlight.setEndPosition(logOffset);
-      fCommandHighlightAreaByCommandNr.put(fCurrentCommandHighlight.getCommandNr(), fCurrentCommandHighlight);
-    }
-  }
+	public void append(ParagraphStyle pTextIndent, TextStyle pStyle, String pText) {
+		fLogTextPane.append(pTextIndent, pStyle, pText);
+	}
 
-  public void mouseMoved(MouseEvent pMouseEvent) {
-    getClient().getUserInterface().getMouseEntropySource().reportMousePosition(pMouseEvent);
-  }
-  
-  public void mouseDragged(MouseEvent pMouseEvent) {
-    getClient().getUserInterface().getMouseEntropySource().reportMousePosition(pMouseEvent);
-  }
-  
+	public FantasyFootballClient getClient() {
+		return fClient;
+	}
 
-  public void detachLogDocument() {
-    fLogTextPane.detachDocument();
-    fCommandHighlightAreaByCommandNr.clear();
-  }
+	public void markCommandBegin(int pCommandNr) {
+		fCurrentCommandHighlight = fCommandHighlightAreaByCommandNr.get(pCommandNr);
+		if (fCurrentCommandHighlight == null) {
+			fCurrentCommandHighlight = new CommandHighlightArea(pCommandNr);
+		}
+		int logOffset = fLogTextPane.getChatLogDocument().getEndPosition().getOffset() - 1;
+		fCurrentCommandHighlight.setStartPosition(logOffset);
+	}
 
-  public void attachLogDocument() {
-    fLogTextPane.attachDocument();
-  }
+	public void markCommandEnd(int pCommandNr) {
+		if (fCurrentCommandHighlight.getCommandNr() == pCommandNr) {
+			if (fMinimumCommandNr > pCommandNr) {
+				fMinimumCommandNr = pCommandNr;
+			}
+			int logOffset = fLogTextPane.getChatLogDocument().getEndPosition().getOffset() - 1;
+			fCurrentCommandHighlight.setEndPosition(logOffset);
+			fCommandHighlightAreaByCommandNr.put(fCurrentCommandHighlight.getCommandNr(), fCurrentCommandHighlight);
+		}
+	}
 
-  public boolean hasCommandHighlight(int pCommandNr) {
-    CommandHighlightArea highlightArea = fCommandHighlightAreaByCommandNr.get(pCommandNr);
-    return ((highlightArea != null) && ((highlightArea.getEndPosition() - highlightArea.getStartPosition()) > 0));
-  }
+	public void mouseMoved(MouseEvent pMouseEvent) {
+		getClient().getUserInterface().getMouseEntropySource().reportMousePosition(pMouseEvent);
+	}
 
-  public boolean highlightCommand(int pCommandNr, boolean pShowEnd) {
-    CommandHighlightArea highlightArea = fCommandHighlightAreaByCommandNr.get(pCommandNr);
-    boolean highlightShown = ((highlightArea != null) && ((highlightArea.getEndPosition() - highlightArea.getStartPosition()) > 0));
-    if (highlightShown) {
-      try {
-        ((CommandHighlighter) fLogTextPane.getHighlighter()).changeHighlight(highlightArea.getStartPosition(), highlightArea.getEndPosition());
-        if (pShowEnd) {
-          fLogTextPane.setCaretPosition(highlightArea.getEndPosition());
-        } else {
-          fLogTextPane.setCaretPosition(Math.max(highlightArea.getStartPosition() - 1, 0));
-        }
-      } catch (BadLocationException e) {
-      }
-    }
-    return highlightShown;
-  }
+	public void mouseDragged(MouseEvent pMouseEvent) {
+		getClient().getUserInterface().getMouseEntropySource().reportMousePosition(pMouseEvent);
+	}
 
-  public int findCommandNr(int pPosition) {
-    int commandNr = -1;
-    CommandHighlightArea[] highlights = fCommandHighlightAreaByCommandNr.values().toArray(new CommandHighlightArea[fCommandHighlightAreaByCommandNr.size()]);
-    for (int i = 0; i < highlights.length; i++) {
-      if ((pPosition >= highlights[i].getStartPosition()) && (pPosition <= highlights[i].getEndPosition())) {
-        commandNr = highlights[i].getCommandNr();
-        break;
-      }
-    }
-    return commandNr;
-  }
+	public void detachLogDocument() {
+		fLogTextPane.detachDocument();
+		fCommandHighlightAreaByCommandNr.clear();
+	}
 
-  public void hideHighlight() {
-    try {
-      ((CommandHighlighter) fLogTextPane.getHighlighter()).changeHighlight(0, 0);
-    } catch (BadLocationException e) {
-    }
-  }
+	public void attachLogDocument() {
+		fLogTextPane.attachDocument();
+	}
 
-  public int getMinimumCommandNr() {
-    return fMinimumCommandNr;
-  }
-  
-  public void mousePressedForReplay(int pPosition) {
-    ClientReplayer replayer = getClient().getReplayer();
-    int commandNr = findCommandNr(pPosition);
-    if (commandNr > 0) {
-      replayer.replayToCommand(commandNr);
-    }
-  }
-  
-  public void enableReplay(boolean pEnabled) {
-    if (pEnabled) {
-      fLogTextPane.addReplayMouseListener(this);
-    } else {
-      fLogTextPane.removeReplayMouseListener();
-    }
-  }
-  
-  public ChatLogScrollPane getLogScrollPane() {
-    return fLogScrollPane;
-  }
-  
+	public boolean hasCommandHighlight(int pCommandNr) {
+		CommandHighlightArea highlightArea = fCommandHighlightAreaByCommandNr.get(pCommandNr);
+		return ((highlightArea != null) && ((highlightArea.getEndPosition() - highlightArea.getStartPosition()) > 0));
+	}
+
+	public boolean highlightCommand(int pCommandNr, boolean pShowEnd) {
+		CommandHighlightArea highlightArea = fCommandHighlightAreaByCommandNr.get(pCommandNr);
+		boolean highlightShown = ((highlightArea != null)
+				&& ((highlightArea.getEndPosition() - highlightArea.getStartPosition()) > 0));
+		if (highlightShown) {
+			try {
+				((CommandHighlighter) fLogTextPane.getHighlighter()).changeHighlight(highlightArea.getStartPosition(),
+						highlightArea.getEndPosition());
+				if (pShowEnd) {
+					fLogTextPane.setCaretPosition(highlightArea.getEndPosition());
+				} else {
+					fLogTextPane.setCaretPosition(Math.max(highlightArea.getStartPosition() - 1, 0));
+				}
+			} catch (BadLocationException e) {
+			}
+		}
+		return highlightShown;
+	}
+
+	public int findCommandNr(int pPosition) {
+		int commandNr = -1;
+		CommandHighlightArea[] highlights = fCommandHighlightAreaByCommandNr.values()
+				.toArray(new CommandHighlightArea[fCommandHighlightAreaByCommandNr.size()]);
+		for (int i = 0; i < highlights.length; i++) {
+			if ((pPosition >= highlights[i].getStartPosition()) && (pPosition <= highlights[i].getEndPosition())) {
+				commandNr = highlights[i].getCommandNr();
+				break;
+			}
+		}
+		return commandNr;
+	}
+
+	public void hideHighlight() {
+		try {
+			((CommandHighlighter) fLogTextPane.getHighlighter()).changeHighlight(0, 0);
+		} catch (BadLocationException e) {
+		}
+	}
+
+	public int getMinimumCommandNr() {
+		return fMinimumCommandNr;
+	}
+
+	public void mousePressedForReplay(int pPosition) {
+		ClientReplayer replayer = getClient().getReplayer();
+		int commandNr = findCommandNr(pPosition);
+		if (commandNr > 0) {
+			replayer.replayToCommand(commandNr);
+		}
+	}
+
+	public void enableReplay(boolean pEnabled) {
+		if (pEnabled) {
+			fLogTextPane.addReplayMouseListener(this);
+		} else {
+			fLogTextPane.removeReplayMouseListener();
+		}
+	}
+
+	public ChatLogScrollPane getLogScrollPane() {
+		return fLogScrollPane;
+	}
+
 }

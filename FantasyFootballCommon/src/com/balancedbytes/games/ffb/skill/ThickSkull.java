@@ -5,16 +5,16 @@ import com.balancedbytes.games.ffb.model.Skill;
 import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
 
 /**
-* This player treats a roll of 8 on the Injury table, after any modifiers have
-* been applied, as a Stunned result rather than a KO'd result. This skill
-* may be used even if the player is Prone or Stunned.
-*/
+ * This player treats a roll of 8 on the Injury table, after any modifiers have
+ * been applied, as a Stunned result rather than a KO'd result. This skill may
+ * be used even if the player is Prone or Stunned.
+ */
 public class ThickSkull extends Skill {
 
-  public ThickSkull() {
-    super("Thick Skull", SkillCategory.STRENGTH);
-    
-    registerProperty(NamedProperties.convertKOToStunOn8);
-  }
+	public ThickSkull() {
+		super("Thick Skull", SkillCategory.STRENGTH);
+
+		registerProperty(NamedProperties.convertKOToStunOn8);
+	}
 
 }

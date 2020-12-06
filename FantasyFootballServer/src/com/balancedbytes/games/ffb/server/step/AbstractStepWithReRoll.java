@@ -16,63 +16,63 @@ import com.eclipsesource.json.JsonValue;
  */
 public abstract class AbstractStepWithReRoll extends AbstractStep {
 
-  private ReRolledAction fReRolledAction;
-  private ReRollSource fReRollSource;
+	private ReRolledAction fReRolledAction;
+	private ReRollSource fReRollSource;
 
-  protected AbstractStepWithReRoll(GameState pGameState) {
-    super(pGameState);
-  }
+	protected AbstractStepWithReRoll(GameState pGameState) {
+		super(pGameState);
+	}
 
-  public StepCommandStatus handleCommand(ReceivedCommand pReceivedCommand) {
-    StepCommandStatus commandStatus = super.handleCommand(pReceivedCommand);
-    if (commandStatus == StepCommandStatus.UNHANDLED_COMMAND) {
-      switch (pReceivedCommand.getId()) {
-        case CLIENT_USE_RE_ROLL:
-          ClientCommandUseReRoll useReRollCommand = (ClientCommandUseReRoll) pReceivedCommand.getCommand();
-          setReRolledAction(useReRollCommand.getReRolledAction());
-          setReRollSource(useReRollCommand.getReRollSource());
-          commandStatus = StepCommandStatus.EXECUTE_STEP;
-          break;
-        default:
-          break;
-      }
-    }
-    return commandStatus;
-  }
+	public StepCommandStatus handleCommand(ReceivedCommand pReceivedCommand) {
+		StepCommandStatus commandStatus = super.handleCommand(pReceivedCommand);
+		if (commandStatus == StepCommandStatus.UNHANDLED_COMMAND) {
+			switch (pReceivedCommand.getId()) {
+			case CLIENT_USE_RE_ROLL:
+				ClientCommandUseReRoll useReRollCommand = (ClientCommandUseReRoll) pReceivedCommand.getCommand();
+				setReRolledAction(useReRollCommand.getReRolledAction());
+				setReRollSource(useReRollCommand.getReRollSource());
+				commandStatus = StepCommandStatus.EXECUTE_STEP;
+				break;
+			default:
+				break;
+			}
+		}
+		return commandStatus;
+	}
 
-  public ReRolledAction getReRolledAction() {
-    return fReRolledAction;
-  }
+	public ReRolledAction getReRolledAction() {
+		return fReRolledAction;
+	}
 
-  public void setReRolledAction(ReRolledAction pReRolledAction) {
-    fReRolledAction = pReRolledAction;
-  }
+	public void setReRolledAction(ReRolledAction pReRolledAction) {
+		fReRolledAction = pReRolledAction;
+	}
 
-  public ReRollSource getReRollSource() {
-    return fReRollSource;
-  }
+	public ReRollSource getReRollSource() {
+		return fReRollSource;
+	}
 
-  public void setReRollSource(ReRollSource pReRollSource) {
-    fReRollSource = pReRollSource;
-  }
+	public void setReRollSource(ReRollSource pReRollSource) {
+		fReRollSource = pReRollSource;
+	}
 
-  // JSON serialization
+	// JSON serialization
 
-  @Override
-  public JsonObject toJsonValue() {
-    JsonObject jsonObject = super.toJsonValue();
-    IServerJsonOption.RE_ROLLED_ACTION.addTo(jsonObject, fReRolledAction);
-    IServerJsonOption.RE_ROLL_SOURCE.addTo(jsonObject, fReRollSource);
-    return jsonObject;
-  }
+	@Override
+	public JsonObject toJsonValue() {
+		JsonObject jsonObject = super.toJsonValue();
+		IServerJsonOption.RE_ROLLED_ACTION.addTo(jsonObject, fReRolledAction);
+		IServerJsonOption.RE_ROLL_SOURCE.addTo(jsonObject, fReRollSource);
+		return jsonObject;
+	}
 
-  @Override
-  public AbstractStepWithReRoll initFrom(JsonValue pJsonValue) {
-    super.initFrom(pJsonValue);
-    JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-    fReRolledAction = (ReRolledAction) IServerJsonOption.RE_ROLLED_ACTION.getFrom(jsonObject);
-    fReRollSource = (ReRollSource) IServerJsonOption.RE_ROLL_SOURCE.getFrom(jsonObject);
-    return this;
-  }
+	@Override
+	public AbstractStepWithReRoll initFrom(JsonValue pJsonValue) {
+		super.initFrom(pJsonValue);
+		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
+		fReRolledAction = (ReRolledAction) IServerJsonOption.RE_ROLLED_ACTION.getFrom(jsonObject);
+		fReRollSource = (ReRollSource) IServerJsonOption.RE_ROLL_SOURCE.getFrom(jsonObject);
+		return this;
+	}
 
 }

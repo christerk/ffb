@@ -11,32 +11,32 @@ import com.eclipsesource.json.JsonValue;
  */
 public class ReportBombOutOfBounds implements IReport {
 
-  public ReportBombOutOfBounds() {
-    super();
-  }
+	public ReportBombOutOfBounds() {
+		super();
+	}
 
-  public ReportId getId() {
-    return ReportId.BOMB_OUT_OF_BOUNDS;
-  }
-  
-  // transformation
+	public ReportId getId() {
+		return ReportId.BOMB_OUT_OF_BOUNDS;
+	}
 
-  public IReport transform() {
-    return new ReportBombOutOfBounds();
-  }
+	// transformation
 
-  // JSON serialization
-  
-  public JsonObject toJsonValue() {
-    JsonObject jsonObject = new JsonObject();
-    IJsonOption.REPORT_ID.addTo(jsonObject, getId());
-    return jsonObject;
-  }
-  
-  public ReportBombOutOfBounds initFrom(JsonValue pJsonValue) {
-    JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-    UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(jsonObject));
-    return this;
-  }   
+	public IReport transform() {
+		return new ReportBombOutOfBounds();
+	}
+
+	// JSON serialization
+
+	public JsonObject toJsonValue() {
+		JsonObject jsonObject = new JsonObject();
+		IJsonOption.REPORT_ID.addTo(jsonObject, getId());
+		return jsonObject;
+	}
+
+	public ReportBombOutOfBounds initFrom(JsonValue pJsonValue) {
+		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
+		UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(jsonObject));
+		return this;
+	}
 
 }

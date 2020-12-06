@@ -14,19 +14,22 @@ import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
  */
 public class UtilDisturbingPresence {
 
-  public static int findOpposingDisturbingPresences(Game pGame, Player<?> pPlayer) {
-    int disturbingPresences = 0;
-    FieldModel fieldModel = pGame.getFieldModel();
-    FieldCoordinate playerCoordinate = fieldModel.getPlayerCoordinate(pPlayer);
-    Team otherTeam = UtilPlayer.findOtherTeam(pGame, pPlayer);
-    for (Player<?> opposingPlayer : otherTeam.getPlayers()) {
-      FieldCoordinate coordinate = fieldModel.getPlayerCoordinate(opposingPlayer);
-      if (UtilCards.hasSkillWithProperty(opposingPlayer, NamedProperties.inflictsDisturbingPresence) && FieldCoordinateBounds.FIELD.isInBounds(coordinate) && (playerCoordinate.distanceInSteps(coordinate) <= 3)) {
-        // System.out.println(opposingPlayer.getName() + ": " + playerCoordinate.distanceInSteps(coordinate));
-    	  disturbingPresences++;
-      }
-    }
-    return disturbingPresences;
-  }
-  
+	public static int findOpposingDisturbingPresences(Game pGame, Player<?> pPlayer) {
+		int disturbingPresences = 0;
+		FieldModel fieldModel = pGame.getFieldModel();
+		FieldCoordinate playerCoordinate = fieldModel.getPlayerCoordinate(pPlayer);
+		Team otherTeam = UtilPlayer.findOtherTeam(pGame, pPlayer);
+		for (Player<?> opposingPlayer : otherTeam.getPlayers()) {
+			FieldCoordinate coordinate = fieldModel.getPlayerCoordinate(opposingPlayer);
+			if (UtilCards.hasSkillWithProperty(opposingPlayer, NamedProperties.inflictsDisturbingPresence)
+					&& FieldCoordinateBounds.FIELD.isInBounds(coordinate)
+					&& (playerCoordinate.distanceInSteps(coordinate) <= 3)) {
+				// System.out.println(opposingPlayer.getName() + ": " +
+				// playerCoordinate.distanceInSteps(coordinate));
+				disturbingPresences++;
+			}
+		}
+		return disturbingPresences;
+	}
+
 }

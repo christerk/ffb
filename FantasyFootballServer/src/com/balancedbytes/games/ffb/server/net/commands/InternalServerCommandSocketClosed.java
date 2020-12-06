@@ -8,12 +8,12 @@ import com.balancedbytes.games.ffb.net.NetCommandId;
  */
 public class InternalServerCommandSocketClosed extends InternalServerCommand {
 
-  public InternalServerCommandSocketClosed() {
-    super();
-  }
+	public InternalServerCommandSocketClosed() {
+		super();
+	}
 
-  public NetCommandId getId() {
-    return NetCommandId.INTERNAL_SERVER_SOCKET_CLOSED;
-  }
+	public NetCommandId getId() {
+		return NetCommandId.INTERNAL_SERVER_SOCKET_CLOSED;
+	}
 
 }

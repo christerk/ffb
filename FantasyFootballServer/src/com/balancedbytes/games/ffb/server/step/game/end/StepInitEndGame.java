@@ -24,110 +24,112 @@ import com.eclipsesource.json.JsonValue;
 /**
  * Initialization step in end game sequence.
  * 
- * Needs to be initialized with stepParameter GOTO_LABEL_ON_END.
- * May be initialized with stepParameter ADMIN_MODE.
+ * Needs to be initialized with stepParameter GOTO_LABEL_ON_END. May be
+ * initialized with stepParameter ADMIN_MODE.
  * 
  * @author Kalimar
  */
 public final class StepInitEndGame extends AbstractStep {
 
-  private String fGotoLabelOnEnd;
-  private boolean fAdminMode;
+	private String fGotoLabelOnEnd;
+	private boolean fAdminMode;
 
-  public StepInitEndGame(GameState pGameState) {
-    super(pGameState);
-  }
+	public StepInitEndGame(GameState pGameState) {
+		super(pGameState);
+	}
 
-  public StepId getId() {
-    return StepId.INIT_END_GAME;
-  }
+	public StepId getId() {
+		return StepId.INIT_END_GAME;
+	}
 
-  @Override
-  public void init(StepParameterSet pParameterSet) {
-    if (pParameterSet != null) {
-      for (StepParameter parameter : pParameterSet.values()) {
-        switch (parameter.getKey()) {
-          // mandatory
-          case GOTO_LABEL_ON_END:
-            fGotoLabelOnEnd = (String) parameter.getValue();
-            break;
-          // optional
-          case ADMIN_MODE:
-            fAdminMode = (parameter.getValue() != null) ? (Boolean) parameter.getValue() : false;
-            break;
-          default:
-            break;
-        }
-      }
-    }
-    if (!StringTool.isProvided(fGotoLabelOnEnd)) {
-      throw new StepException("StepParameter " + StepParameterKey.GOTO_LABEL_ON_END + " is not initialized.");
-    }
-  }
+	@Override
+	public void init(StepParameterSet pParameterSet) {
+		if (pParameterSet != null) {
+			for (StepParameter parameter : pParameterSet.values()) {
+				switch (parameter.getKey()) {
+				// mandatory
+				case GOTO_LABEL_ON_END:
+					fGotoLabelOnEnd = (String) parameter.getValue();
+					break;
+				// optional
+				case ADMIN_MODE:
+					fAdminMode = (parameter.getValue() != null) ? (Boolean) parameter.getValue() : false;
+					break;
+				default:
+					break;
+				}
+			}
+		}
+		if (!StringTool.isProvided(fGotoLabelOnEnd)) {
+			throw new StepException("StepParameter " + StepParameterKey.GOTO_LABEL_ON_END + " is not initialized.");
+		}
+	}
 
-  @Override
-  public void start() {
-    super.start();
-    executeStep();
-  }
+	@Override
+	public void start() {
+		super.start();
+		executeStep();
+	}
 
-  private void executeStep() {
-    Game game = getGameState().getGame();
-    if (game.getFinished() != null) {
-      getResult().setNextAction(StepAction.GOTO_LABEL, fGotoLabelOnEnd);
-      return;
-    }
-    GameResult gameResult = game.getGameResult();
-    if (gameResult.getTeamResultHome().hasConceded()) {
-      int scoreDiffAway = gameResult.getTeamResultAway().getScore() - gameResult.getTeamResultHome().getScore();
-      if (scoreDiffAway <= 0) {
-        gameResult.getTeamResultAway().setScore(gameResult.getTeamResultAway().getScore() + Math.abs(scoreDiffAway) + 1);
-      }
-    }
-    if (gameResult.getTeamResultAway().hasConceded()) {
-      int scoreDiffHome = gameResult.getTeamResultHome().getScore() - gameResult.getTeamResultAway().getScore();
-      if (scoreDiffHome <= 0) {
-        gameResult.getTeamResultHome().setScore(gameResult.getTeamResultHome().getScore() + Math.abs(scoreDiffHome) + 1);
-      }
-    }
-    game.setTurnMode(TurnMode.END_GAME);
-    game.setConcessionPossible(false);
-    game.setAdminMode(fAdminMode);
-    handlePoisonedPlayers();
-    getResult().setNextAction(StepAction.NEXT_STEP);
-  }
-  
-  private void handlePoisonedPlayers() {
-    Game game = getGameState().getGame();
-    for (Player player : game.getPlayers()) {
-      if (game.getFieldModel().hasCardEffect(player, CardEffect.POISONED)) {
-        PlayerResult playerResult = game.getGameResult().getPlayerResult(player);
-        if (playerResult.getSeriousInjury() == null) {
-          playerResult.setSeriousInjury(SeriousInjury.POISONED);
-        }
-        game.getFieldModel().removeCardEffect(player, CardEffect.POISONED);
-      }
-    }
-  }
+	private void executeStep() {
+		Game game = getGameState().getGame();
+		if (game.getFinished() != null) {
+			getResult().setNextAction(StepAction.GOTO_LABEL, fGotoLabelOnEnd);
+			return;
+		}
+		GameResult gameResult = game.getGameResult();
+		if (gameResult.getTeamResultHome().hasConceded()) {
+			int scoreDiffAway = gameResult.getTeamResultAway().getScore() - gameResult.getTeamResultHome().getScore();
+			if (scoreDiffAway <= 0) {
+				gameResult.getTeamResultAway()
+						.setScore(gameResult.getTeamResultAway().getScore() + Math.abs(scoreDiffAway) + 1);
+			}
+		}
+		if (gameResult.getTeamResultAway().hasConceded()) {
+			int scoreDiffHome = gameResult.getTeamResultHome().getScore() - gameResult.getTeamResultAway().getScore();
+			if (scoreDiffHome <= 0) {
+				gameResult.getTeamResultHome()
+						.setScore(gameResult.getTeamResultHome().getScore() + Math.abs(scoreDiffHome) + 1);
+			}
+		}
+		game.setTurnMode(TurnMode.END_GAME);
+		game.setConcessionPossible(false);
+		game.setAdminMode(fAdminMode);
+		handlePoisonedPlayers();
+		getResult().setNextAction(StepAction.NEXT_STEP);
+	}
 
-  // JSON serialization
+	private void handlePoisonedPlayers() {
+		Game game = getGameState().getGame();
+		for (Player player : game.getPlayers()) {
+			if (game.getFieldModel().hasCardEffect(player, CardEffect.POISONED)) {
+				PlayerResult playerResult = game.getGameResult().getPlayerResult(player);
+				if (playerResult.getSeriousInjury() == null) {
+					playerResult.setSeriousInjury(SeriousInjury.POISONED);
+				}
+				game.getFieldModel().removeCardEffect(player, CardEffect.POISONED);
+			}
+		}
+	}
 
-  @Override
-  public JsonObject toJsonValue() {
-    JsonObject jsonObject = super.toJsonValue();
-    IServerJsonOption.ADMIN_MODE.addTo(jsonObject, fAdminMode);
-    IServerJsonOption.GOTO_LABEL_ON_END.addTo(jsonObject, fGotoLabelOnEnd);
-    return jsonObject;
-  }
+	// JSON serialization
 
-  @Override
-  public StepInitEndGame initFrom(JsonValue pJsonValue) {
-    super.initFrom(pJsonValue);
-    JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-    Boolean adminMode = IServerJsonOption.ADMIN_MODE.getFrom(jsonObject);
-    fAdminMode = (adminMode != null) ? adminMode : false;
-    fGotoLabelOnEnd = IServerJsonOption.GOTO_LABEL_ON_END.getFrom(jsonObject);
-    return this;
-  }
+	@Override
+	public JsonObject toJsonValue() {
+		JsonObject jsonObject = super.toJsonValue();
+		IServerJsonOption.ADMIN_MODE.addTo(jsonObject, fAdminMode);
+		IServerJsonOption.GOTO_LABEL_ON_END.addTo(jsonObject, fGotoLabelOnEnd);
+		return jsonObject;
+	}
+
+	@Override
+	public StepInitEndGame initFrom(JsonValue pJsonValue) {
+		super.initFrom(pJsonValue);
+		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
+		Boolean adminMode = IServerJsonOption.ADMIN_MODE.getFrom(jsonObject);
+		fAdminMode = (adminMode != null) ? adminMode : false;
+		fGotoLabelOnEnd = IServerJsonOption.GOTO_LABEL_ON_END.getFrom(jsonObject);
+		return this;
+	}
 
 }

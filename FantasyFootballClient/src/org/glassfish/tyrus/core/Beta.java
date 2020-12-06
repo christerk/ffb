@@ -55,23 +55,26 @@ import java.lang.annotation.Target;
 /**
  * Marker of a public Tyrus API that is still in "beta" non-final version.
  * <p>
- * This annotation signals that the annotated public Tyrus API (package, class, method or field)
- * has not been fully stabilized yet. As such, the API is subject to backward-incompatible changes
- * (or even removal) in a future Tyrus release. Tyrus development team does not make any guarantees
- * to retain backward compatibility of a {@code @Beta}-annotated Tyrus API.
+ * This annotation signals that the annotated public Tyrus API (package, class,
+ * method or field) has not been fully stabilized yet. As such, the API is
+ * subject to backward-incompatible changes (or even removal) in a future Tyrus
+ * release. Tyrus development team does not make any guarantees to retain
+ * backward compatibility of a {@code @Beta}-annotated Tyrus API.
  * <p>
- * This annotation does not indicate inferior quality or performance of the API, just informs that the
- * API may still evolve in the future in a backward-incompatible ways. Tyrus users may use beta APIs
- * in their applications keeping in mind potential cost of extra work associated with an upgrade
- * to a newer Tyrus version.
+ * This annotation does not indicate inferior quality or performance of the API,
+ * just informs that the API may still evolve in the future in a
+ * backward-incompatible ways. Tyrus users may use beta APIs in their
+ * applications keeping in mind potential cost of extra work associated with an
+ * upgrade to a newer Tyrus version.
  * <p>
- * Once a {@code @Beta}-annotated Tyrus API reaches the desired maturity, the {@code @Beta} annotation
- * will be removed from such API and the API will become part of a stable public Tyrus API.
+ * Once a {@code @Beta}-annotated Tyrus API reaches the desired maturity, the
+ * {@code @Beta} annotation will be removed from such API and the API will
+ * become part of a stable public Tyrus API.
  *
  * @author Marek Potociar (marek.potociar at oracle.com)
  */
 @Retention(RetentionPolicy.CLASS)
 @Documented
-@Target({ANNOTATION_TYPE, TYPE, CONSTRUCTOR, METHOD, FIELD, PACKAGE})
+@Target({ ANNOTATION_TYPE, TYPE, CONSTRUCTOR, METHOD, FIELD, PACKAGE })
 public @interface Beta {
 }

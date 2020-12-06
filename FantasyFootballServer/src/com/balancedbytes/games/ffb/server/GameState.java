@@ -40,311 +40,313 @@ import com.eclipsesource.json.JsonValue;
  */
 public class GameState implements IModelChangeObserver, IJsonSerializable {
 
-  private Game fGame;
-  private GameLog fGameLog;
-  private GameStatus fStatus;
-  private StepStack fStepStack;
-  private IStep fCurrentStep;
-  private Set<String> zappedPlayerIds = new HashSet<>();
-  private int kickingSwarmers;
+	private Game fGame;
+	private GameLog fGameLog;
+	private GameStatus fStatus;
+	private StepStack fStepStack;
+	private IStep fCurrentStep;
+	private Set<String> zappedPlayerIds = new HashSet<>();
+	private int kickingSwarmers;
 
-  private transient FantasyFootballServer fServer;
-  private transient DiceRoller fDiceRoller;
-  private transient IdGenerator fCommandNrGenerator;
-  private transient long fTurnTimeStarted;
-  private transient ModelChangeList fChangeList;
-  private transient Map<String, Long> fSpectatorCooldownTime;
-  private transient SkillFactory skillFactory;
+	private transient FantasyFootballServer fServer;
+	private transient DiceRoller fDiceRoller;
+	private transient IdGenerator fCommandNrGenerator;
+	private transient long fTurnTimeStarted;
+	private transient ModelChangeList fChangeList;
+	private transient Map<String, Long> fSpectatorCooldownTime;
+	private transient SkillFactory skillFactory;
 
-  public GameState(FantasyFootballServer pServer) {
-    fServer = pServer;
-    skillFactory = new SkillFactory();
-    UtilSkillBehaviours.registerBehaviours(skillFactory, fServer.getDebugLog());
-    fGameLog = new GameLog(this);
-    fDiceRoller = new DiceRoller(this);
-    fSpectatorCooldownTime = new HashMap<>();
-    initCommandNrGenerator(0);
-    fStepStack = new StepStack(this);
-    fChangeList = new ModelChangeList();
-    setGame(new Game());
-  }
+	public GameState(FantasyFootballServer pServer) {
+		fServer = pServer;
+		skillFactory = new SkillFactory();
+		UtilSkillBehaviours.registerBehaviours(skillFactory, fServer.getDebugLog());
+		fGameLog = new GameLog(this);
+		fDiceRoller = new DiceRoller(this);
+		fSpectatorCooldownTime = new HashMap<>();
+		initCommandNrGenerator(0);
+		fStepStack = new StepStack(this);
+		fChangeList = new ModelChangeList();
+		setGame(new Game());
+	}
 
-  public void setServer(FantasyFootballServer pServer) {
-    fServer = pServer;
-  }
+	public void setServer(FantasyFootballServer pServer) {
+		fServer = pServer;
+	}
 
-  public FantasyFootballServer getServer() {
-    return fServer;
-  }
+	public FantasyFootballServer getServer() {
+		return fServer;
+	}
 
-  public void setGame(Game pGame) {
-    fGame = pGame;
-    if (fGame != null) {
-      fGame.addObserver(this);
-    }
-  }
+	public void setGame(Game pGame) {
+		fGame = pGame;
+		if (fGame != null) {
+			fGame.addObserver(this);
+		}
+	}
 
-  public Game getGame() {
-    return fGame;
-  }
+	public Game getGame() {
+		return fGame;
+	}
 
-  public long getId() {
-    return getGame().getId();
-  }
+	public long getId() {
+		return getGame().getId();
+	}
 
-  public ModelChangeList fetchChanges() {
-    ModelChangeList changeList = fChangeList;
-    fChangeList = new ModelChangeList();
-    return changeList;
-  }
+	public ModelChangeList fetchChanges() {
+		ModelChangeList changeList = fChangeList;
+		fChangeList = new ModelChangeList();
+		return changeList;
+	}
 
-  public void update(ModelChange change) {
-    if (change != null) {
-      fChangeList.add(change);
-    }
-  }
-  
-  public DiceRoller getDiceRoller() {
-    return fDiceRoller;
-  }
+	public void update(ModelChange change) {
+		if (change != null) {
+			fChangeList.add(change);
+		}
+	}
 
-  public int generateCommandNr() {
-    return (int) fCommandNrGenerator.generateId();
-  }
+	public DiceRoller getDiceRoller() {
+		return fDiceRoller;
+	}
 
-  public void initCommandNrGenerator(long pLastId) {
-    fCommandNrGenerator = new IdGenerator(pLastId);
-  }
+	public int generateCommandNr() {
+		return (int) fCommandNrGenerator.generateId();
+	}
 
-  public GameLog getGameLog() {
-    return fGameLog;
-  }
+	public void initCommandNrGenerator(long pLastId) {
+		fCommandNrGenerator = new IdGenerator(pLastId);
+	}
 
-  public long getTurnTimeStarted() {
-    return fTurnTimeStarted;
-  }
+	public GameLog getGameLog() {
+		return fGameLog;
+	}
 
-  public void setTurnTimeStarted(long pTurnTimeStarted) {
-    fTurnTimeStarted = pTurnTimeStarted;
-  }
+	public long getTurnTimeStarted() {
+		return fTurnTimeStarted;
+	}
 
-  public GameStatus getStatus() {
-    return fStatus;
-  }
+	public void setTurnTimeStarted(long pTurnTimeStarted) {
+		fTurnTimeStarted = pTurnTimeStarted;
+	}
 
-  public void setStatus(GameStatus pStatus) {
-    fStatus = pStatus;
-    update(null);
-  }
+	public GameStatus getStatus() {
+		return fStatus;
+	}
 
-  public long getSpectatorCooldownTime(String pCoach) {
-    return (fSpectatorCooldownTime.get(pCoach) != null) ? fSpectatorCooldownTime.get(pCoach) : 0;
-  }
+	public void setStatus(GameStatus pStatus) {
+		fStatus = pStatus;
+		update(null);
+	}
 
-  public void putSpectatorCooldownTime(String pCoach, long pTimestamp) {
-    fSpectatorCooldownTime.put(pCoach, pTimestamp);
-  }
+	public long getSpectatorCooldownTime(String pCoach) {
+		return (fSpectatorCooldownTime.get(pCoach) != null) ? fSpectatorCooldownTime.get(pCoach) : 0;
+	}
 
-  public StepStack getStepStack() {
-    return fStepStack;
-  }
+	public void putSpectatorCooldownTime(String pCoach, long pTimestamp) {
+		fSpectatorCooldownTime.put(pCoach, pTimestamp);
+	}
 
-  public IStep getCurrentStep() {
-    return fCurrentStep;
-  }
+	public StepStack getStepStack() {
+		return fStepStack;
+	}
 
-  public void handleCommand(ReceivedCommand pReceivedCommand) {
-    if (pReceivedCommand == null) {
-      return;
-    }
-    if (fCurrentStep == null) {
-      findNextStep(null);
-    }
-    if (fCurrentStep != null) {
-  		fCurrentStep.handleCommand(pReceivedCommand);
-  		
-    	while (fCurrentStep.getResult().getNextAction().triggerRepeat()) {
-    		fCurrentStep.repeat();
-    	}
-    	
-      UtilServerGame.syncGameModel(fCurrentStep);
-    }
-    progressStepStack(pReceivedCommand);
-  }
+	public IStep getCurrentStep() {
+		return fCurrentStep;
+	}
 
-  public void pushCurrentStepOnStack() {
-    if (fCurrentStep != null) {
-      getStepStack().push(fCurrentStep);
-    }
-  }
+	public void handleCommand(ReceivedCommand pReceivedCommand) {
+		if (pReceivedCommand == null) {
+			return;
+		}
+		if (fCurrentStep == null) {
+			findNextStep(null);
+		}
+		if (fCurrentStep != null) {
+			fCurrentStep.handleCommand(pReceivedCommand);
 
-  public void findNextStep(ReceivedCommand receivedCommand) {
-    fCurrentStep = getStepStack().pop();
-    if (fCurrentStep != null) {
-      getServer().getDebugLog().logCurrentStep(IServerLogLevel.DEBUG, this);
-      if (receivedCommand == null) {
-        fCurrentStep.start();
-      	
-        while (fCurrentStep.getResult().getNextAction().triggerRepeat()) {
-      		fCurrentStep.repeat();
-      	}
-      	
-        UtilServerGame.syncGameModel(fCurrentStep);
-      }
-      progressStepStack(receivedCommand);
-    }
-  }
+			while (fCurrentStep.getResult().getNextAction().triggerRepeat()) {
+				fCurrentStep.repeat();
+			}
 
-  private void progressStepStack(ReceivedCommand pReceivedCommand) {
-	  if (fCurrentStep != null) {
-		  StepResult stepResult = fCurrentStep.getResult();
-		  StepAction action = stepResult.getNextAction();
+			UtilServerGame.syncGameModel(fCurrentStep);
+		}
+		progressStepStack(pReceivedCommand);
+	}
 
-		  if (action.triggerGoto()) {
-			  handleStepResultGotoLabel(stepResult.getNextActionParameter());
-		  }
-		  
-		  if (action.triggerNextStep()) {
-			  ReceivedCommand forwardedCommand = action.forwardCommand() ? pReceivedCommand : null;
+	public void pushCurrentStepOnStack() {
+		if (fCurrentStep != null) {
+			getStepStack().push(fCurrentStep);
+		}
+	}
 
-			  findNextStep(forwardedCommand);
-			  if (action.forwardCommand()) {
-				  handleCommand(forwardedCommand);
-			  }
-		  }
-	  }
-  }
+	public void findNextStep(ReceivedCommand receivedCommand) {
+		fCurrentStep = getStepStack().pop();
+		if (fCurrentStep != null) {
+			getServer().getDebugLog().logCurrentStep(IServerLogLevel.DEBUG, this);
+			if (receivedCommand == null) {
+				fCurrentStep.start();
 
-  public void cleanupStepStack(String pGotoLabel) {
-    if (StringTool.isProvided(pGotoLabel)) {
-      List<IStep> poppedSteps = new ArrayList<>();
-      while (getStepStack().peek() != null) {
-        if (pGotoLabel.equals(getStepStack().peek().getLabel())) {
-          return;
-        } else {
-          poppedSteps.add(getStepStack().pop());
-        }
-      }
+				while (fCurrentStep.getResult().getNextAction().triggerRepeat()) {
+					fCurrentStep.repeat();
+				}
 
-      getStepStack().push(poppedSteps);
-    }
-  }
+				UtilServerGame.syncGameModel(fCurrentStep);
+			}
+			progressStepStack(receivedCommand);
+		}
+	}
 
-  private void handleStepResultGotoLabel(String pGotoLabel) {
-    if (pGotoLabel == null) {
-      String stepName = (fCurrentStep != null) ? fCurrentStep.getId().getName() : "unknown";
-      throw new StepException("Step " + stepName + ": No goto label set.");
-    }
-    fCurrentStep = null;
-    while (getStepStack().peek() != null) {
-      if (pGotoLabel.equals(getStepStack().peek().getLabel())) {
-        return;
-      } else {
-        getStepStack().pop();
-      }
-    }
-    throw new StepException("Goto unknown label " + pGotoLabel);
-  }
+	private void progressStepStack(ReceivedCommand pReceivedCommand) {
+		if (fCurrentStep != null) {
+			StepResult stepResult = fCurrentStep.getResult();
+			StepAction action = stepResult.getNextAction();
 
-  public void addZappedPlayer(Player<?> player) {
-    zappedPlayerIds.add(player.getId());
-  }
+			if (action.triggerGoto()) {
+				handleStepResultGotoLabel(stepResult.getNextActionParameter());
+			}
 
-  public void removeZappedPlayer(Player<?> player) {
-    zappedPlayerIds.remove(player.getId());
-  }
+			if (action.triggerNextStep()) {
+				ReceivedCommand forwardedCommand = action.forwardCommand() ? pReceivedCommand : null;
 
-  public boolean isZapped(Player<?> player) {
-    return zappedPlayerIds.contains(player.getId());
-  }
+				findNextStep(forwardedCommand);
+				if (action.forwardCommand()) {
+					handleCommand(forwardedCommand);
+				}
+			}
+		}
+	}
 
-  public int getKickingSwarmers() {
-    return kickingSwarmers;
-  }
+	public void cleanupStepStack(String pGotoLabel) {
+		if (StringTool.isProvided(pGotoLabel)) {
+			List<IStep> poppedSteps = new ArrayList<>();
+			while (getStepStack().peek() != null) {
+				if (pGotoLabel.equals(getStepStack().peek().getLabel())) {
+					return;
+				} else {
+					poppedSteps.add(getStepStack().pop());
+				}
+			}
 
-  public void setKickingSwarmers(int kickingSwarmers) {
-    this.kickingSwarmers = kickingSwarmers;
-  }
-  // JSON serialization
+			getStepStack().push(poppedSteps);
+		}
+	}
 
-  public JsonObject toJsonValue() {
-    JsonObject jsonObject = new JsonObject();
-    IServerJsonOption.GAME_STATUS.addTo(jsonObject, fStatus);
-    IServerJsonOption.STEP_STACK.addTo(jsonObject, fStepStack.toJsonValue());
-    IServerJsonOption.GAME_LOG.addTo(jsonObject, fGameLog.toJsonValue());
-    if (fCurrentStep != null) {
-      IServerJsonOption.CURRENT_STEP.addTo(jsonObject, fCurrentStep.toJsonValue());
-    }
-    if (fGame != null) {
-      IServerJsonOption.GAME.addTo(jsonObject, fGame.toJsonValue());
-    }
-    IServerJsonOption.PLAYER_IDS.addTo(jsonObject, zappedPlayerIds);
-    IServerJsonOption.SWARMING_PLAYER_ACTUAL.addTo(jsonObject, kickingSwarmers);
-    return jsonObject;
-  }
+	private void handleStepResultGotoLabel(String pGotoLabel) {
+		if (pGotoLabel == null) {
+			String stepName = (fCurrentStep != null) ? fCurrentStep.getId().getName() : "unknown";
+			throw new StepException("Step " + stepName + ": No goto label set.");
+		}
+		fCurrentStep = null;
+		while (getStepStack().peek() != null) {
+			if (pGotoLabel.equals(getStepStack().peek().getLabel())) {
+				return;
+			} else {
+				getStepStack().pop();
+			}
+		}
+		throw new StepException("Goto unknown label " + pGotoLabel);
+	}
 
-  public GameState initFrom(JsonValue pJsonValue) {
-    JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-    fStatus = (GameStatus) IServerJsonOption.GAME_STATUS.getFrom(jsonObject);
-    fStepStack.clear();
-    JsonObject stepStackObject = IServerJsonOption.STEP_STACK.getFrom(jsonObject);
-    if (stepStackObject != null) {
-      fStepStack.initFrom(stepStackObject);
-    }
-    fGameLog.clear();
-    JsonObject gameLogObject = IServerJsonOption.GAME_LOG.getFrom(jsonObject);
-    if (gameLogObject != null) {
-      fGameLog.initFrom(gameLogObject);
-    }
-    fCurrentStep = null;
-    JsonObject currentStepObject = IServerJsonOption.CURRENT_STEP.getFrom(jsonObject);
-    if (currentStepObject != null) {
-      fCurrentStep = new StepFactory(this).forJsonValue(currentStepObject);
-    }
-    setGame(null);
-    JsonObject gameObject = IServerJsonOption.GAME.getFrom(jsonObject);
-    if (gameObject != null) {
-      setGame(new Game().initFrom(gameObject));
-    }
-    String[] ids = IServerJsonOption.PLAYER_IDS.getFrom(jsonObject);
-    if (ids != null) {
-      zappedPlayerIds.addAll(Arrays.asList(ids));
-    }
+	public void addZappedPlayer(Player<?> player) {
+		zappedPlayerIds.add(player.getId());
+	}
 
-    kickingSwarmers = IServerJsonOption.SWARMING_PLAYER_ACTUAL.getFrom(jsonObject);
+	public void removeZappedPlayer(Player<?> player) {
+		zappedPlayerIds.remove(player.getId());
+	}
 
-    return this;
-  }
+	public boolean isZapped(Player<?> player) {
+		return zappedPlayerIds.contains(player.getId());
+	}
 
-  public SkillFactory getSkillFactory() {
-    return skillFactory;
-  }
+	public int getKickingSwarmers() {
+		return kickingSwarmers;
+	}
 
-  public boolean executeStepHooks(IStep step, Object state) {
-    List<StepModifier<? extends IStep, ?>> modifiers = new ArrayList<>();
-    
-    for (Skill skill : skillFactory.getSkills()) {
-      ISkillBehaviour<? extends Skill> behaviour = skill.getSkillBehaviour();
-      if (behaviour != null) {
-        List<StepModifier<? extends IStep, ?>> skillModifiers = ((SkillBehaviour<? extends Skill>) behaviour).getStepModifiers();
-        for (StepModifier<? extends IStep, ?> modifier : skillModifiers) {
-          if (modifier.appliesTo(step)) {
-            getServer().getDebugLog().log(IServerLogLevel.DEBUG, getGame().getId(), "Detected StepModifier: " + modifier.getClass().getName());
-            modifiers.add(modifier);
-          }
-        }
-      }
-    }
-    
-    modifiers.sort(StepModifier.Comparator);
-    
-    for (StepModifier<? extends IStep, ?> modifier : modifiers) {
-      boolean stopProcessing = modifier.handleExecuteStep(step, state);
-      if (stopProcessing) {
-        return true;
-      }
-    }
-    return false;
-  }
+	public void setKickingSwarmers(int kickingSwarmers) {
+		this.kickingSwarmers = kickingSwarmers;
+	}
+	// JSON serialization
+
+	public JsonObject toJsonValue() {
+		JsonObject jsonObject = new JsonObject();
+		IServerJsonOption.GAME_STATUS.addTo(jsonObject, fStatus);
+		IServerJsonOption.STEP_STACK.addTo(jsonObject, fStepStack.toJsonValue());
+		IServerJsonOption.GAME_LOG.addTo(jsonObject, fGameLog.toJsonValue());
+		if (fCurrentStep != null) {
+			IServerJsonOption.CURRENT_STEP.addTo(jsonObject, fCurrentStep.toJsonValue());
+		}
+		if (fGame != null) {
+			IServerJsonOption.GAME.addTo(jsonObject, fGame.toJsonValue());
+		}
+		IServerJsonOption.PLAYER_IDS.addTo(jsonObject, zappedPlayerIds);
+		IServerJsonOption.SWARMING_PLAYER_ACTUAL.addTo(jsonObject, kickingSwarmers);
+		return jsonObject;
+	}
+
+	public GameState initFrom(JsonValue pJsonValue) {
+		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
+		fStatus = (GameStatus) IServerJsonOption.GAME_STATUS.getFrom(jsonObject);
+		fStepStack.clear();
+		JsonObject stepStackObject = IServerJsonOption.STEP_STACK.getFrom(jsonObject);
+		if (stepStackObject != null) {
+			fStepStack.initFrom(stepStackObject);
+		}
+		fGameLog.clear();
+		JsonObject gameLogObject = IServerJsonOption.GAME_LOG.getFrom(jsonObject);
+		if (gameLogObject != null) {
+			fGameLog.initFrom(gameLogObject);
+		}
+		fCurrentStep = null;
+		JsonObject currentStepObject = IServerJsonOption.CURRENT_STEP.getFrom(jsonObject);
+		if (currentStepObject != null) {
+			fCurrentStep = new StepFactory(this).forJsonValue(currentStepObject);
+		}
+		setGame(null);
+		JsonObject gameObject = IServerJsonOption.GAME.getFrom(jsonObject);
+		if (gameObject != null) {
+			setGame(new Game().initFrom(gameObject));
+		}
+		String[] ids = IServerJsonOption.PLAYER_IDS.getFrom(jsonObject);
+		if (ids != null) {
+			zappedPlayerIds.addAll(Arrays.asList(ids));
+		}
+
+		kickingSwarmers = IServerJsonOption.SWARMING_PLAYER_ACTUAL.getFrom(jsonObject);
+
+		return this;
+	}
+
+	public SkillFactory getSkillFactory() {
+		return skillFactory;
+	}
+
+	public boolean executeStepHooks(IStep step, Object state) {
+		List<StepModifier<? extends IStep, ?>> modifiers = new ArrayList<>();
+
+		for (Skill skill : skillFactory.getSkills()) {
+			ISkillBehaviour<? extends Skill> behaviour = skill.getSkillBehaviour();
+			if (behaviour != null) {
+				List<StepModifier<? extends IStep, ?>> skillModifiers = ((SkillBehaviour<? extends Skill>) behaviour)
+						.getStepModifiers();
+				for (StepModifier<? extends IStep, ?> modifier : skillModifiers) {
+					if (modifier.appliesTo(step)) {
+						getServer().getDebugLog().log(IServerLogLevel.DEBUG, getGame().getId(),
+								"Detected StepModifier: " + modifier.getClass().getName());
+						modifiers.add(modifier);
+					}
+				}
+			}
+		}
+
+		modifiers.sort(StepModifier.Comparator);
+
+		for (StepModifier<? extends IStep, ?> modifier : modifiers) {
+			boolean stopProcessing = modifier.handleExecuteStep(step, state);
+			if (stopProcessing) {
+				return true;
+			}
+		}
+		return false;
+	}
 
 }

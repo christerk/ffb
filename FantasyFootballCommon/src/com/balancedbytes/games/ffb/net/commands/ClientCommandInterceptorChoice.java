@@ -12,37 +12,37 @@ import com.eclipsesource.json.JsonValue;
  */
 public class ClientCommandInterceptorChoice extends ClientCommand {
 
-  private String fInterceptorId;
+	private String fInterceptorId;
 
-  public ClientCommandInterceptorChoice() {
-    super();
-  }
+	public ClientCommandInterceptorChoice() {
+		super();
+	}
 
-  public ClientCommandInterceptorChoice(String pInterceptorId) {
-    fInterceptorId = pInterceptorId;
-  }
+	public ClientCommandInterceptorChoice(String pInterceptorId) {
+		fInterceptorId = pInterceptorId;
+	}
 
-  public NetCommandId getId() {
-    return NetCommandId.CLIENT_INTERCEPTOR_CHOICE;
-  }
+	public NetCommandId getId() {
+		return NetCommandId.CLIENT_INTERCEPTOR_CHOICE;
+	}
 
-  public String getInterceptorId() {
-    return fInterceptorId;
-  }
+	public String getInterceptorId() {
+		return fInterceptorId;
+	}
 
-  // JSON serialization
+	// JSON serialization
 
-  public JsonObject toJsonValue() {
-    JsonObject jsonObject = super.toJsonValue();
-    IJsonOption.INTERCEPTOR_ID.addTo(jsonObject, fInterceptorId);
-    return jsonObject;
-  }
+	public JsonObject toJsonValue() {
+		JsonObject jsonObject = super.toJsonValue();
+		IJsonOption.INTERCEPTOR_ID.addTo(jsonObject, fInterceptorId);
+		return jsonObject;
+	}
 
-  public ClientCommandInterceptorChoice initFrom(JsonValue jsonValue) {
-    super.initFrom(jsonValue);
-    JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
-    fInterceptorId = IJsonOption.INTERCEPTOR_ID.getFrom(jsonObject);
-    return this;
-  }
+	public ClientCommandInterceptorChoice initFrom(JsonValue jsonValue) {
+		super.initFrom(jsonValue);
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
+		fInterceptorId = IJsonOption.INTERCEPTOR_ID.getFrom(jsonObject);
+		return this;
+	}
 
 }

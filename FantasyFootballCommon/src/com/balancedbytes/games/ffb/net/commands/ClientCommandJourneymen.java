@@ -17,81 +17,81 @@ import com.eclipsesource.json.JsonValue;
  */
 public class ClientCommandJourneymen extends ClientCommand {
 
-  private List<Integer> fSlots;
-  private List<String> fPositionIds;
+	private List<Integer> fSlots;
+	private List<String> fPositionIds;
 
-  public ClientCommandJourneymen() {
-    fSlots = new ArrayList<Integer>();
-    fPositionIds = new ArrayList<String>();
-  }
+	public ClientCommandJourneymen() {
+		fSlots = new ArrayList<Integer>();
+		fPositionIds = new ArrayList<String>();
+	}
 
-  public ClientCommandJourneymen(String[] pPositionsIds, int[] pSlots) {
-    this();
-    addPositionIds(pPositionsIds);
-    addSlots(pSlots);
-  }
+	public ClientCommandJourneymen(String[] pPositionsIds, int[] pSlots) {
+		this();
+		addPositionIds(pPositionsIds);
+		addSlots(pSlots);
+	}
 
-  public NetCommandId getId() {
-    return NetCommandId.CLIENT_JOURNEYMEN;
-  }
+	public NetCommandId getId() {
+		return NetCommandId.CLIENT_JOURNEYMEN;
+	}
 
-  public String[] getPositionIds() {
-    return fPositionIds.toArray(new String[fPositionIds.size()]);
-  }
+	public String[] getPositionIds() {
+		return fPositionIds.toArray(new String[fPositionIds.size()]);
+	}
 
-  public int[] getSlots() {
-    int[] slots = new int[fSlots.size()];
-    for (int i = 0; i < slots.length; i++) {
-      slots[i] = fSlots.get(i);
-    }
-    return slots;
-  }
+	public int[] getSlots() {
+		int[] slots = new int[fSlots.size()];
+		for (int i = 0; i < slots.length; i++) {
+			slots[i] = fSlots.get(i);
+		}
+		return slots;
+	}
 
-  public int getSlotsTotal() {
-    int total = 0;
-    int[] slots = getSlots();
-    for (int i = 0; i < slots.length; i++) {
-      total += slots[i];
-    }
-    return total;
-  }
+	public int getSlotsTotal() {
+		int total = 0;
+		int[] slots = getSlots();
+		for (int i = 0; i < slots.length; i++) {
+			total += slots[i];
+		}
+		return total;
+	}
 
-  private void addPositionId(String pPositionId) {
-    if (StringTool.isProvided(pPositionId)) {
-      fPositionIds.add(pPositionId);
-    }
-  }
+	private void addPositionId(String pPositionId) {
+		if (StringTool.isProvided(pPositionId)) {
+			fPositionIds.add(pPositionId);
+		}
+	}
 
-  private void addPositionIds(String[] pPositionIds) {
-    if (ArrayTool.isProvided(pPositionIds)) {
-      for (String positionId : pPositionIds) {
-        addPositionId(positionId);
-      }
-    }
-  }
+	private void addPositionIds(String[] pPositionIds) {
+		if (ArrayTool.isProvided(pPositionIds)) {
+			for (String positionId : pPositionIds) {
+				addPositionId(positionId);
+			}
+		}
+	}
 
-  private void addSlots(int[] pSlots) {
-    if (ArrayTool.isProvided(pSlots)) {
-      for (int slots : pSlots) {
-        fSlots.add(slots);
-      }
-    }
-  }
+	private void addSlots(int[] pSlots) {
+		if (ArrayTool.isProvided(pSlots)) {
+			for (int slots : pSlots) {
+				fSlots.add(slots);
+			}
+		}
+	}
 
-  // JSON serialization
+	// JSON serialization
 
-  public JsonObject toJsonValue() {
-    JsonObject jsonObject = super.toJsonValue();
-    IJsonOption.POSITION_IDS.addTo(jsonObject, fPositionIds);
-    IJsonOption.SLOTS.addTo(jsonObject, fSlots);
-    return jsonObject;
-  }
+	public JsonObject toJsonValue() {
+		JsonObject jsonObject = super.toJsonValue();
+		IJsonOption.POSITION_IDS.addTo(jsonObject, fPositionIds);
+		IJsonOption.SLOTS.addTo(jsonObject, fSlots);
+		return jsonObject;
+	}
 
-  public ClientCommandJourneymen initFrom(JsonValue jsonValue) {
-    super.initFrom(jsonValue);
-    JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
-    addPositionIds(IJsonOption.POSITION_IDS.getFrom(jsonObject));
-    addSlots(IJsonOption.SLOTS.getFrom(jsonObject));
-    return this;
-  }
+	public ClientCommandJourneymen initFrom(JsonValue jsonValue) {
+		super.initFrom(jsonValue);
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
+		addPositionIds(IJsonOption.POSITION_IDS.getFrom(jsonObject));
+		addSlots(IJsonOption.SLOTS.getFrom(jsonObject));
+		return this;
+	}
 }

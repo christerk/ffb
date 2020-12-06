@@ -32,119 +32,136 @@ import com.balancedbytes.games.ffb.util.UtilPlayer;
  * @author Kalimar
  */
 public class UtilServerPlayerMove {
-	
+
 	public static boolean isValidMove(GameState pGameState, ClientCommandMove pMoveCommand, boolean pHomeCommand) {
-		if ((pMoveCommand == null) || (pMoveCommand.getCoordinateFrom() == null) || !ArrayTool.isProvided(pMoveCommand.getCoordinatesTo())) {
+		if ((pMoveCommand == null) || (pMoveCommand.getCoordinateFrom() == null)
+				|| !ArrayTool.isProvided(pMoveCommand.getCoordinatesTo())) {
 			return false;
 		}
-		FieldCoordinate coordinateFrom = pHomeCommand ? pMoveCommand.getCoordinateFrom() : pMoveCommand.getCoordinateFrom().transform();
-    Game game = pGameState.getGame();
-    ActingPlayer actingPlayer = game.getActingPlayer();
-    FieldCoordinate playerCoordinate = game.getFieldModel().getPlayerCoordinate(actingPlayer.getPlayer());
-    if ((playerCoordinate != null) && playerCoordinate.equals(coordinateFrom)) {
-    	return true;
-    }
-    pGameState.getServer().getDebugLog().log(IServerLogLevel.DEBUG, pHomeCommand ? DebugLog.COMMAND_CLIENT_HOME : DebugLog.COMMAND_CLIENT_AWAY, "!Client move out of sync, Command dropped");
-    return false;
+		FieldCoordinate coordinateFrom = pHomeCommand ? pMoveCommand.getCoordinateFrom()
+				: pMoveCommand.getCoordinateFrom().transform();
+		Game game = pGameState.getGame();
+		ActingPlayer actingPlayer = game.getActingPlayer();
+		FieldCoordinate playerCoordinate = game.getFieldModel().getPlayerCoordinate(actingPlayer.getPlayer());
+		if ((playerCoordinate != null) && playerCoordinate.equals(coordinateFrom)) {
+			return true;
+		}
+		pGameState.getServer().getDebugLog().log(IServerLogLevel.DEBUG,
+				pHomeCommand ? DebugLog.COMMAND_CLIENT_HOME : DebugLog.COMMAND_CLIENT_AWAY,
+				"!Client move out of sync, Command dropped");
+		return false;
 	}
-	
-  public static void updateMoveSquares(GameState pGameState, boolean pLeaping) {
-    Game game = pGameState.getGame();
-    FieldModel fieldModel = game.getFieldModel();
-    ActingPlayer actingPlayer = game.getActingPlayer();
-    if (actingPlayer.getPlayer() != null) {
-      fieldModel.clearMoveSquares();
-      FieldCoordinate playerCoordinate = fieldModel.getPlayerCoordinate(actingPlayer.getPlayer());
-      if (actingPlayer.getPlayerAction().isMoving() && UtilPlayer.isNextMovePossible(game, pLeaping) && FieldCoordinateBounds.FIELD.isInBounds(playerCoordinate)) {
-      	if (UtilCards.hasSkillWithProperty(actingPlayer.getPlayer(), NamedProperties.movesRandomly)) {
-      		for (int x = -1; x < 2; x += 2) {
-    				FieldCoordinate moveCoordinate = playerCoordinate.add(x, 0);
-    				if (FieldCoordinateBounds.FIELD.isInBounds(moveCoordinate)) {
-    					addMoveSquare(pGameState, pLeaping, moveCoordinate);
-    				}
-      		}
-      		for (int y = -1; y < 2; y += 2) {
-    				FieldCoordinate moveCoordinate = playerCoordinate.add(0, y);
-    				if (FieldCoordinateBounds.FIELD.isInBounds(moveCoordinate)) {
-    					addMoveSquare(pGameState, pLeaping, moveCoordinate);
-    				}
-      		}
-      	} else {
-	        int steps = pLeaping ? 2 : 1;
-	      	Set<FieldCoordinate> validPassBlockCoordinates = UtilPassing.findValidPassBlockEndCoordinates(game);
-	        FieldCoordinate[] adjacentCoordinates = fieldModel.findAdjacentCoordinates(playerCoordinate, FieldCoordinateBounds.FIELD, steps, false);
-	        for (FieldCoordinate coordinate : adjacentCoordinates) {
-	          if (fieldModel.getPlayer(coordinate) == null) {
-		        	if (game.getTurnMode() == TurnMode.PASS_BLOCK) {
-		          	int distance = coordinate.distanceInSteps(playerCoordinate);
-		          	if (validPassBlockCoordinates.contains(coordinate) || ArrayTool.isProvided(PathFinderWithPassBlockSupport.allowPassBlockMove(game, actingPlayer.getPlayer(), coordinate, 3 - distance - actingPlayer.getCurrentMove(), UtilCards.hasUnusedSkillWithProperty(actingPlayer, NamedProperties.canLeap)))) {
-			          	addMoveSquare(pGameState, pLeaping, coordinate);
-		          	}
-		        	} else if (game.getTurnMode() == TurnMode.KICKOFF_RETURN) {
-		        		FieldCoordinateBounds bounds = game.isHomePlaying() ? FieldCoordinateBounds.HALF_HOME : FieldCoordinateBounds.HALF_AWAY;
-		        		if (bounds.isInBounds(coordinate)) {
-		        			addMoveSquare(pGameState, pLeaping, coordinate);
-		        		}
-		        	} else {
-		          	addMoveSquare(pGameState, pLeaping, coordinate);
-		        	}
-	          }
-	        }
-      	}
-      }
-    }
-  }
-  
-  private static void addMoveSquare(GameState pGameState, boolean pLeaping, FieldCoordinate pCoordinate) {
-    Game game = pGameState.getGame();
-    FieldModel fieldModel = game.getFieldModel();
-    ActingPlayer actingPlayer = game.getActingPlayer();
-    FieldCoordinate playerCoordinate = fieldModel.getPlayerCoordinate(actingPlayer.getPlayer());
-  	boolean goForIt = false;
-    int minimumRollDodge = 0;
-    boolean dodging = !UtilCards.hasSkillWithProperty(actingPlayer.getPlayer(), NamedProperties.ignoreTacklezonesWhenMoving) && (UtilPlayer.findTacklezones(game, actingPlayer.getPlayer()) > 0);
-    if (pLeaping) {
-      LeapModifierFactory modifierFactory = new LeapModifierFactory();
-      Set<LeapModifier> leapModifiers = modifierFactory.findLeapModifiers(game, playerCoordinate);
-      minimumRollDodge = DiceInterpreter.getInstance().minimumRollLeap(actingPlayer.getPlayer(), leapModifiers);
-      if (actingPlayer.isStandingUp() && !actingPlayer.hasActed() && !UtilCards.hasSkillWithProperty(actingPlayer.getPlayer(), NamedProperties.canStandUpForFree)) {
-        goForIt = ((3 + playerCoordinate.distanceInSteps(pCoordinate)) > UtilCards.getPlayerMovement(game, actingPlayer.getPlayer()));
-      } else {
-        goForIt = ((actingPlayer.getCurrentMove() + playerCoordinate.distanceInSteps(pCoordinate)) > UtilCards.getPlayerMovement(game, actingPlayer.getPlayer()));
-      }
-    } else {
-      goForIt = UtilPlayer.isNextMoveGoingForIt(game);
-      if (dodging) {
-        DodgeModifierFactory modifierFactory = new DodgeModifierFactory();
-        Set<DodgeModifier> dodgeModifiers = modifierFactory.findDodgeModifiers(game, playerCoordinate, pCoordinate, 0);
-        minimumRollDodge = DiceInterpreter.getInstance().minimumRollDodge(game, actingPlayer.getPlayer(), dodgeModifiers);
-      }
-    }
-    int minimumRollGoForIt = 0;
-    if (goForIt) {
-      Set<GoForItModifier> goForItModifiers = new GoForItModifierFactory().findGoForItModifiers(game);
-      minimumRollGoForIt = DiceInterpreter.getInstance().minimumRollGoingForIt(goForItModifiers);
-    }
-    MoveSquare moveSquare = new MoveSquare(pCoordinate, minimumRollDodge, minimumRollGoForIt);
-    fieldModel.add(moveSquare);
-  }
 
-	public static FieldCoordinate[] fetchMoveStack(GameState pGameState, ClientCommandMove pMoveCommand, boolean pHomeCommand) {
+	public static void updateMoveSquares(GameState pGameState, boolean pLeaping) {
+		Game game = pGameState.getGame();
+		FieldModel fieldModel = game.getFieldModel();
+		ActingPlayer actingPlayer = game.getActingPlayer();
+		if (actingPlayer.getPlayer() != null) {
+			fieldModel.clearMoveSquares();
+			FieldCoordinate playerCoordinate = fieldModel.getPlayerCoordinate(actingPlayer.getPlayer());
+			if (actingPlayer.getPlayerAction().isMoving() && UtilPlayer.isNextMovePossible(game, pLeaping)
+					&& FieldCoordinateBounds.FIELD.isInBounds(playerCoordinate)) {
+				if (UtilCards.hasSkillWithProperty(actingPlayer.getPlayer(), NamedProperties.movesRandomly)) {
+					for (int x = -1; x < 2; x += 2) {
+						FieldCoordinate moveCoordinate = playerCoordinate.add(x, 0);
+						if (FieldCoordinateBounds.FIELD.isInBounds(moveCoordinate)) {
+							addMoveSquare(pGameState, pLeaping, moveCoordinate);
+						}
+					}
+					for (int y = -1; y < 2; y += 2) {
+						FieldCoordinate moveCoordinate = playerCoordinate.add(0, y);
+						if (FieldCoordinateBounds.FIELD.isInBounds(moveCoordinate)) {
+							addMoveSquare(pGameState, pLeaping, moveCoordinate);
+						}
+					}
+				} else {
+					int steps = pLeaping ? 2 : 1;
+					Set<FieldCoordinate> validPassBlockCoordinates = UtilPassing.findValidPassBlockEndCoordinates(game);
+					FieldCoordinate[] adjacentCoordinates = fieldModel.findAdjacentCoordinates(playerCoordinate,
+							FieldCoordinateBounds.FIELD, steps, false);
+					for (FieldCoordinate coordinate : adjacentCoordinates) {
+						if (fieldModel.getPlayer(coordinate) == null) {
+							if (game.getTurnMode() == TurnMode.PASS_BLOCK) {
+								int distance = coordinate.distanceInSteps(playerCoordinate);
+								if (validPassBlockCoordinates.contains(coordinate)
+										|| ArrayTool.isProvided(PathFinderWithPassBlockSupport.allowPassBlockMove(game,
+												actingPlayer.getPlayer(), coordinate, 3 - distance - actingPlayer.getCurrentMove(),
+												UtilCards.hasUnusedSkillWithProperty(actingPlayer, NamedProperties.canLeap)))) {
+									addMoveSquare(pGameState, pLeaping, coordinate);
+								}
+							} else if (game.getTurnMode() == TurnMode.KICKOFF_RETURN) {
+								FieldCoordinateBounds bounds = game.isHomePlaying() ? FieldCoordinateBounds.HALF_HOME
+										: FieldCoordinateBounds.HALF_AWAY;
+								if (bounds.isInBounds(coordinate)) {
+									addMoveSquare(pGameState, pLeaping, coordinate);
+								}
+							} else {
+								addMoveSquare(pGameState, pLeaping, coordinate);
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
+	private static void addMoveSquare(GameState pGameState, boolean pLeaping, FieldCoordinate pCoordinate) {
+		Game game = pGameState.getGame();
+		FieldModel fieldModel = game.getFieldModel();
+		ActingPlayer actingPlayer = game.getActingPlayer();
+		FieldCoordinate playerCoordinate = fieldModel.getPlayerCoordinate(actingPlayer.getPlayer());
+		boolean goForIt = false;
+		int minimumRollDodge = 0;
+		boolean dodging = !UtilCards.hasSkillWithProperty(actingPlayer.getPlayer(),
+				NamedProperties.ignoreTacklezonesWhenMoving)
+				&& (UtilPlayer.findTacklezones(game, actingPlayer.getPlayer()) > 0);
+		if (pLeaping) {
+			LeapModifierFactory modifierFactory = new LeapModifierFactory();
+			Set<LeapModifier> leapModifiers = modifierFactory.findLeapModifiers(game, playerCoordinate);
+			minimumRollDodge = DiceInterpreter.getInstance().minimumRollLeap(actingPlayer.getPlayer(), leapModifiers);
+			if (actingPlayer.isStandingUp() && !actingPlayer.hasActed()
+					&& !UtilCards.hasSkillWithProperty(actingPlayer.getPlayer(), NamedProperties.canStandUpForFree)) {
+				goForIt = ((3 + playerCoordinate.distanceInSteps(pCoordinate)) > UtilCards.getPlayerMovement(game,
+						actingPlayer.getPlayer()));
+			} else {
+				goForIt = ((actingPlayer.getCurrentMove() + playerCoordinate.distanceInSteps(pCoordinate)) > UtilCards
+						.getPlayerMovement(game, actingPlayer.getPlayer()));
+			}
+		} else {
+			goForIt = UtilPlayer.isNextMoveGoingForIt(game);
+			if (dodging) {
+				DodgeModifierFactory modifierFactory = new DodgeModifierFactory();
+				Set<DodgeModifier> dodgeModifiers = modifierFactory.findDodgeModifiers(game, playerCoordinate, pCoordinate, 0);
+				minimumRollDodge = DiceInterpreter.getInstance().minimumRollDodge(game, actingPlayer.getPlayer(),
+						dodgeModifiers);
+			}
+		}
+		int minimumRollGoForIt = 0;
+		if (goForIt) {
+			Set<GoForItModifier> goForItModifiers = new GoForItModifierFactory().findGoForItModifiers(game);
+			minimumRollGoForIt = DiceInterpreter.getInstance().minimumRollGoingForIt(goForItModifiers);
+		}
+		MoveSquare moveSquare = new MoveSquare(pCoordinate, minimumRollDodge, minimumRollGoForIt);
+		fieldModel.add(moveSquare);
+	}
+
+	public static FieldCoordinate[] fetchMoveStack(GameState pGameState, ClientCommandMove pMoveCommand,
+			boolean pHomeCommand) {
 		if ((pGameState == null) || (pMoveCommand == null) || !ArrayTool.isProvided(pMoveCommand.getCoordinatesTo())) {
 			return new FieldCoordinate[0];
 		}
-	  FieldCoordinate[] coordinatesTo = pMoveCommand.getCoordinatesTo();
-	  FieldCoordinate[] moveStack = new FieldCoordinate[coordinatesTo.length];
-	  if (pHomeCommand) {
-	  	for (int i = 0; i < moveStack.length; i++) {
-	  		moveStack[i] = coordinatesTo[i];
-	  	}
-	  } else {
-	  	for (int i = 0; i < moveStack.length; i++) {
-	  		moveStack[i] = coordinatesTo[i].transform();
-	  	}
-	  }
-	  return moveStack;
+		FieldCoordinate[] coordinatesTo = pMoveCommand.getCoordinatesTo();
+		FieldCoordinate[] moveStack = new FieldCoordinate[coordinatesTo.length];
+		if (pHomeCommand) {
+			for (int i = 0; i < moveStack.length; i++) {
+				moveStack[i] = coordinatesTo[i];
+			}
+		} else {
+			for (int i = 0; i < moveStack.length; i++) {
+				moveStack[i] = coordinatesTo[i].transform();
+			}
+		}
+		return moveStack;
 	}
-  
+
 }

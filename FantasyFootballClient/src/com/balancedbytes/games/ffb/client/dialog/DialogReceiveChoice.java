@@ -11,12 +11,12 @@ import com.balancedbytes.games.ffb.dialog.DialogId;
 @SuppressWarnings("serial")
 public class DialogReceiveChoice extends DialogYesOrNoQuestion {
 
-  public DialogReceiveChoice(FantasyFootballClient pClient) {
-    super(pClient, "Kick or receive", new String[] { "Do you want to receive the kickoff ?" }, IIconProperty.GAME_REF);
-  }
+	public DialogReceiveChoice(FantasyFootballClient pClient) {
+		super(pClient, "Kick or receive", new String[] { "Do you want to receive the kickoff ?" }, IIconProperty.GAME_REF);
+	}
 
-  public DialogId getId() {
-    return DialogId.RECEIVE_CHOICE;
-  }
+	public DialogId getId() {
+		return DialogId.RECEIVE_CHOICE;
+	}
 
 }

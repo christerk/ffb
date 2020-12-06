@@ -11,23 +11,24 @@ import com.balancedbytes.games.ffb.server.DiceRoller;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.step.IStep;
 
-public class InjuryTypeBallAndChain extends InjuryTypeServer<BallAndChain>  {
-	
-		public InjuryTypeBallAndChain() {
-			super(new BallAndChain());
-		}
+public class InjuryTypeBallAndChain extends InjuryTypeServer<BallAndChain> {
 
-		@Override
-		public InjuryContext handleInjury(IStep step, Game game,GameState gameState, DiceRoller diceRoller,  Player<?> pAttacker, Player<?> pDefender,
-				FieldCoordinate pDefenderCoordinate, InjuryContext pOldInjuryContext, ApothecaryMode pApothecaryMode) {
-			// ball and chain always breaks armour on being knocked down
-			injuryContext.setArmorBroken(true);
-
-			injuryContext.setInjuryRoll(diceRoller.rollInjury());
-			injuryContext.addInjuryModifier(new InjuryModifierFactory().getNigglingInjuryModifier(pDefender));
-			setInjury(pDefender, gameState, diceRoller);
-
-			return injuryContext;
-		}
-
+	public InjuryTypeBallAndChain() {
+		super(new BallAndChain());
 	}
+
+	@Override
+	public InjuryContext handleInjury(IStep step, Game game, GameState gameState, DiceRoller diceRoller,
+			Player<?> pAttacker, Player<?> pDefender, FieldCoordinate pDefenderCoordinate, InjuryContext pOldInjuryContext,
+			ApothecaryMode pApothecaryMode) {
+		// ball and chain always breaks armour on being knocked down
+		injuryContext.setArmorBroken(true);
+
+		injuryContext.setInjuryRoll(diceRoller.rollInjury());
+		injuryContext.addInjuryModifier(new InjuryModifierFactory().getNigglingInjuryModifier(pDefender));
+		setInjury(pDefender, gameState, diceRoller);
+
+		return injuryContext;
+	}
+
+}

@@ -28,35 +28,35 @@ import com.eclipsesource.json.JsonValue;
  * @author Kalimar
  */
 public final class StepCoinChoice extends AbstractStep {
-	
+
 	protected Boolean fCoinChoiceHeads;
-	
+
 	public StepCoinChoice(GameState pGameState) {
 		super(pGameState);
 	}
-	
+
 	public StepId getId() {
 		return StepId.COIN_CHOICE;
 	}
-		
+
 	@Override
 	public void start() {
 		super.start();
 		executeStep();
 	}
-	
-  @Override
-  public StepCommandStatus handleCommand(ReceivedCommand pReceivedCommand) {
-    StepCommandStatus commandStatus = super.handleCommand(pReceivedCommand);
+
+	@Override
+	public StepCommandStatus handleCommand(ReceivedCommand pReceivedCommand) {
+		StepCommandStatus commandStatus = super.handleCommand(pReceivedCommand);
 		if (commandStatus == StepCommandStatus.UNHANDLED_COMMAND) {
 			switch (pReceivedCommand.getId()) {
-			  case CLIENT_COIN_CHOICE:
-			    ClientCommandCoinChoice coinChoiceCommand = (ClientCommandCoinChoice) pReceivedCommand.getCommand();
-			    fCoinChoiceHeads = coinChoiceCommand.isChoiceHeads();
-			    commandStatus = StepCommandStatus.EXECUTE_STEP;
-			    break;
-		    default:
-		    	break;
+			case CLIENT_COIN_CHOICE:
+				ClientCommandCoinChoice coinChoiceCommand = (ClientCommandCoinChoice) pReceivedCommand.getCommand();
+				fCoinChoiceHeads = coinChoiceCommand.isChoiceHeads();
+				commandStatus = StepCommandStatus.EXECUTE_STEP;
+				break;
+			default:
+				break;
 			}
 		}
 		if (commandStatus == StepCommandStatus.EXECUTE_STEP) {
@@ -65,40 +65,41 @@ public final class StepCoinChoice extends AbstractStep {
 		return commandStatus;
 	}
 
-  private void executeStep() {
-    Game game = getGameState().getGame();
-    if (fCoinChoiceHeads == null) {
-      UtilServerDialog.showDialog(getGameState(), new DialogCoinChoiceParameter(), false);
-    } else {
-      boolean coinThrowHeads = getGameState().getDiceRoller().throwCoin();
-      Team choosingTeam = game.isHomePlaying() ? game.getTeamHome() : game.getTeamAway();
-      getResult().addReport(new ReportCoinThrow(coinThrowHeads, choosingTeam.getCoach(), fCoinChoiceHeads));
-      if ((game.isHomePlaying() && (coinThrowHeads != fCoinChoiceHeads) || (!game.isHomePlaying() && (coinThrowHeads == fCoinChoiceHeads)))) {
-        choosingTeam = game.getTeamAway();
-      } else {
-        choosingTeam = game.getTeamHome();
-      }
-      publishParameter(new StepParameter(StepParameterKey.CHOOSING_TEAM_ID, choosingTeam.getId()));
-      UtilServerDialog.showDialog(getGameState(), new DialogReceiveChoiceParameter(choosingTeam.getId()), false);
-      getResult().setNextAction(StepAction.NEXT_STEP);
-    }
-  }
-  
-  // JSON serialization
-  
-  @Override
-  public JsonObject toJsonValue() {
-    JsonObject jsonObject = super.toJsonValue();
-    IServerJsonOption.COIN_CHOICE_HEADS.addTo(jsonObject, fCoinChoiceHeads);
-    return jsonObject;
-  }
-  
-  @Override
-  public StepCoinChoice initFrom(JsonValue pJsonValue) {
-    super.initFrom(pJsonValue);
-    JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-    fCoinChoiceHeads = IServerJsonOption.COIN_CHOICE_HEADS.getFrom(jsonObject);
-    return this;
-  }
-  
+	private void executeStep() {
+		Game game = getGameState().getGame();
+		if (fCoinChoiceHeads == null) {
+			UtilServerDialog.showDialog(getGameState(), new DialogCoinChoiceParameter(), false);
+		} else {
+			boolean coinThrowHeads = getGameState().getDiceRoller().throwCoin();
+			Team choosingTeam = game.isHomePlaying() ? game.getTeamHome() : game.getTeamAway();
+			getResult().addReport(new ReportCoinThrow(coinThrowHeads, choosingTeam.getCoach(), fCoinChoiceHeads));
+			if ((game.isHomePlaying() && (coinThrowHeads != fCoinChoiceHeads)
+					|| (!game.isHomePlaying() && (coinThrowHeads == fCoinChoiceHeads)))) {
+				choosingTeam = game.getTeamAway();
+			} else {
+				choosingTeam = game.getTeamHome();
+			}
+			publishParameter(new StepParameter(StepParameterKey.CHOOSING_TEAM_ID, choosingTeam.getId()));
+			UtilServerDialog.showDialog(getGameState(), new DialogReceiveChoiceParameter(choosingTeam.getId()), false);
+			getResult().setNextAction(StepAction.NEXT_STEP);
+		}
+	}
+
+	// JSON serialization
+
+	@Override
+	public JsonObject toJsonValue() {
+		JsonObject jsonObject = super.toJsonValue();
+		IServerJsonOption.COIN_CHOICE_HEADS.addTo(jsonObject, fCoinChoiceHeads);
+		return jsonObject;
+	}
+
+	@Override
+	public StepCoinChoice initFrom(JsonValue pJsonValue) {
+		super.initFrom(pJsonValue);
+		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
+		fCoinChoiceHeads = IServerJsonOption.COIN_CHOICE_HEADS.getFrom(jsonObject);
+		return this;
+	}
+
 }

@@ -17,28 +17,28 @@ import com.balancedbytes.games.ffb.util.StringTool;
 @SuppressWarnings("serial")
 public class CommandServlet extends WebSocketServlet implements WebSocketCreator {
 
-  private FantasyFootballServer fServer;
+	private FantasyFootballServer fServer;
 
-  public CommandServlet(FantasyFootballServer pServer) {
-    fServer = pServer;
-  }
+	public CommandServlet(FantasyFootballServer pServer) {
+		fServer = pServer;
+	}
 
-  @Override
-  public void configure(WebSocketServletFactory factory) {
-    factory.getPolicy().setIdleTimeout(10000);
-    factory.setCreator(this);
-  }
+	@Override
+	public void configure(WebSocketServletFactory factory) {
+		factory.getPolicy().setIdleTimeout(10000);
+		factory.setCreator(this);
+	}
 
-  public Object createWebSocket(ServletUpgradeRequest pRequest, ServletUpgradeResponse pResponse) {
-    String commandCompressionProperty = null;
-    if (fServer != null) {
-      commandCompressionProperty = fServer.getProperty(IServerProperty.SERVER_COMMAND_COMPRESSION);
-    }
-    boolean commandCompression = false;
-    if (StringTool.isProvided(commandCompressionProperty)) {
-      commandCompression = Boolean.parseBoolean(commandCompressionProperty);
-    }
-    return new CommandSocket(fServer.getCommunication(), commandCompression);
-  }
+	public Object createWebSocket(ServletUpgradeRequest pRequest, ServletUpgradeResponse pResponse) {
+		String commandCompressionProperty = null;
+		if (fServer != null) {
+			commandCompressionProperty = fServer.getProperty(IServerProperty.SERVER_COMMAND_COMPRESSION);
+		}
+		boolean commandCompression = false;
+		if (StringTool.isProvided(commandCompressionProperty)) {
+			commandCompression = Boolean.parseBoolean(commandCompressionProperty);
+		}
+		return new CommandSocket(fServer.getCommunication(), commandCompression);
+	}
 
 }

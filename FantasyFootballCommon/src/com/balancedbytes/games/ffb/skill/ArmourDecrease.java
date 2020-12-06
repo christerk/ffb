@@ -5,7 +5,7 @@ import com.balancedbytes.games.ffb.model.Skill;
 
 public class ArmourDecrease extends Skill {
 
-  public ArmourDecrease() {
-    super("-AV", SkillCategory.STAT_DECREASE);
-  }
+	public ArmourDecrease() {
+		super("-AV", SkillCategory.STAT_DECREASE);
+	}
 }

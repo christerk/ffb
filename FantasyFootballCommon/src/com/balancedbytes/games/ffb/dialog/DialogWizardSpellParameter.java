@@ -12,26 +12,26 @@ import com.eclipsesource.json.JsonValue;
  */
 public class DialogWizardSpellParameter extends DialogWithoutParameter {
 
-  public DialogWizardSpellParameter() {
-    super();
-  }
+	public DialogWizardSpellParameter() {
+		super();
+	}
 
-  public DialogId getId() {
-    return DialogId.WIZARD_SPELL;
-  }
-  
-  // transformation
-  
-  public IDialogParameter transform() {
-    return new DialogWizardSpellParameter();
-  }
-  
-  // JSON serialization
-  
-  public DialogWizardSpellParameter initFrom(JsonValue pJsonValue) {
-    JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-    UtilDialogParameter.validateDialogId(this, (DialogId) IJsonOption.DIALOG_ID.getFrom(jsonObject));
-    return this;
-  }
+	public DialogId getId() {
+		return DialogId.WIZARD_SPELL;
+	}
+
+	// transformation
+
+	public IDialogParameter transform() {
+		return new DialogWizardSpellParameter();
+	}
+
+	// JSON serialization
+
+	public DialogWizardSpellParameter initFrom(JsonValue pJsonValue) {
+		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
+		UtilDialogParameter.validateDialogId(this, (DialogId) IJsonOption.DIALOG_ID.getFrom(jsonObject));
+		return this;
+	}
 
 }

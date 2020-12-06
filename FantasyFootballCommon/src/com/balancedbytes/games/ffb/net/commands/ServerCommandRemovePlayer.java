@@ -11,41 +11,41 @@ import com.eclipsesource.json.JsonValue;
  * @author Kalimar
  */
 public class ServerCommandRemovePlayer extends ServerCommand {
-  
-  private String fPlayerId;
-  
-  public ServerCommandRemovePlayer() {
-    super();
-  }
 
-  public ServerCommandRemovePlayer(String pPlayerId) {
-    fPlayerId = pPlayerId;
-  }
-  
-  public NetCommandId getId() {
-    return NetCommandId.SERVER_REMOVE_PLAYER;
-  }
+	private String fPlayerId;
 
-  public String getPlayerId() {
-    return fPlayerId;
-  }  
-  
-  // JSON serialization
+	public ServerCommandRemovePlayer() {
+		super();
+	}
 
-  public JsonObject toJsonValue() {
-    JsonObject jsonObject = new JsonObject();
-    IJsonOption.NET_COMMAND_ID.addTo(jsonObject, getId());
-    IJsonOption.COMMAND_NR.addTo(jsonObject, getCommandNr());
-    IJsonOption.PLAYER_ID.addTo(jsonObject, fPlayerId);
-    return jsonObject;
-  }
+	public ServerCommandRemovePlayer(String pPlayerId) {
+		fPlayerId = pPlayerId;
+	}
 
-  public ServerCommandRemovePlayer initFrom(JsonValue pJsonValue) {
-    JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-    UtilNetCommand.validateCommandId(this, (NetCommandId) IJsonOption.NET_COMMAND_ID.getFrom(jsonObject));
-    setCommandNr(IJsonOption.COMMAND_NR.getFrom(jsonObject));
-    fPlayerId = IJsonOption.PLAYER_ID.getFrom(jsonObject);
-    return this;
-  }
-    
+	public NetCommandId getId() {
+		return NetCommandId.SERVER_REMOVE_PLAYER;
+	}
+
+	public String getPlayerId() {
+		return fPlayerId;
+	}
+
+	// JSON serialization
+
+	public JsonObject toJsonValue() {
+		JsonObject jsonObject = new JsonObject();
+		IJsonOption.NET_COMMAND_ID.addTo(jsonObject, getId());
+		IJsonOption.COMMAND_NR.addTo(jsonObject, getCommandNr());
+		IJsonOption.PLAYER_ID.addTo(jsonObject, fPlayerId);
+		return jsonObject;
+	}
+
+	public ServerCommandRemovePlayer initFrom(JsonValue pJsonValue) {
+		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
+		UtilNetCommand.validateCommandId(this, (NetCommandId) IJsonOption.NET_COMMAND_ID.getFrom(jsonObject));
+		setCommandNr(IJsonOption.COMMAND_NR.getFrom(jsonObject));
+		fPlayerId = IJsonOption.PLAYER_ID.getFrom(jsonObject);
+		return this;
+	}
+
 }

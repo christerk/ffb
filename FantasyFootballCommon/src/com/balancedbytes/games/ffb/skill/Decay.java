@@ -7,20 +7,20 @@ import com.balancedbytes.games.ffb.model.modifier.CancelSkillProperty;
 import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
 
 /**
-* Staying on the pitch is difficult when your rotting body is barely held
-* together. When this player suffers a Casualty result on the Injury table,
-* roll twice on the Casualty table (see page 25) and apply both results. The
-* player will only ever miss one future match as a result of his injuries,
-* even if he suffers two results with this effect.
-*/
+ * Staying on the pitch is difficult when your rotting body is barely held
+ * together. When this player suffers a Casualty result on the Injury table,
+ * roll twice on the Casualty table (see page 25) and apply both results. The
+ * player will only ever miss one future match as a result of his injuries, even
+ * if he suffers two results with this effect.
+ */
 public class Decay extends Skill {
 
-  public Decay() {
-    super("Decay", SkillCategory.EXTRAORDINARY);
-    
-    registerProperty(new CancelSkillProperty(SkillConstants.NURGLES_ROT));
+	public Decay() {
+		super("Decay", SkillCategory.EXTRAORDINARY);
 
-    registerProperty(NamedProperties.requiresSecondCasualtyRoll);
-  }
+		registerProperty(new CancelSkillProperty(SkillConstants.NURGLES_ROT));
+
+		registerProperty(NamedProperties.requiresSecondCasualtyRoll);
+	}
 
 }

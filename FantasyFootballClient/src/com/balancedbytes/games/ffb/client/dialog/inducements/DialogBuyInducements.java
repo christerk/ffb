@@ -77,10 +77,10 @@ public class DialogBuyInducements extends Dialog implements ActionListener, KeyL
 			fTeam = client.getGame().getTeamAway();
 		}
 		fStartGold = fAvailableGold = availableGold;
-		
+
 		fGoldPanel = new JPanel();
 		fGoldPanel.setLayout(new BoxLayout(fGoldPanel, BoxLayout.X_AXIS));
-		
+
 		JLabel goldLabel = new JLabel("Available Gold:");
 		goldLabel.setFont(new Font("Sans Serif", Font.BOLD, 12));
 
@@ -89,7 +89,7 @@ public class DialogBuyInducements extends Dialog implements ActionListener, KeyL
 
 		fGoldLabelAmount = new JLabel(formatGold(fAvailableGold));
 		fGoldLabelAmount.setFont(new Font("Sans Serif", Font.BOLD, 12));
-		
+
 		fGoldPanel.add(fGoldLabelAmount);
 		fGoldPanel.add(Box.createHorizontalGlue());
 
@@ -97,8 +97,10 @@ public class DialogBuyInducements extends Dialog implements ActionListener, KeyL
 
 		GameOptions gameOptions = client.getGame().getOptions();
 
-		mercExtraCost = ((GameOptionInt)gameOptions.getOptionWithDefault(GameOptionId.INDUCEMENT_MERCENARIES_EXTRA_COST)).getValue();
-		mercSkillCost = ((GameOptionInt)gameOptions.getOptionWithDefault(GameOptionId.INDUCEMENT_MERCENARIES_SKILL_COST)).getValue();
+		mercExtraCost = ((GameOptionInt) gameOptions.getOptionWithDefault(GameOptionId.INDUCEMENT_MERCENARIES_EXTRA_COST))
+				.getValue();
+		mercSkillCost = ((GameOptionInt) gameOptions.getOptionWithDefault(GameOptionId.INDUCEMENT_MERCENARIES_SKILL_COST))
+				.getValue();
 
 		JPanel leftPanel = buildLeftPanel(gameOptions);
 		JPanel rightPanel = buildRightPanel(gameOptions);
@@ -137,10 +139,9 @@ public class DialogBuyInducements extends Dialog implements ActionListener, KeyL
 		setLocationToCenter();
 		Point p = getLocation();
 		setLocation(p.x, 10);
-		
+
 	}
 
-	
 	public int getFreeSlotsInRoster() {
 		int freeSlots = 16 - fTeam.getNrOfAvailablePlayers();
 		freeSlots -= fTableModelStarPlayers.getCheckedRows();
@@ -157,7 +158,7 @@ public class DialogBuyInducements extends Dialog implements ActionListener, KeyL
 
 		JPanel leftPanel = new JPanel();
 		leftPanel.setLayout(new BoxLayout(leftPanel, BoxLayout.Y_AXIS));
-		
+
 		JPanel labelPanel = new JPanel();
 		labelPanel.setLayout(new BoxLayout(labelPanel, BoxLayout.X_AXIS));
 		labelPanel.add(new JLabel("Inducements:"));
@@ -174,7 +175,6 @@ public class DialogBuyInducements extends Dialog implements ActionListener, KeyL
 		createPanel(InducementType.WANDERING_APOTHECARIES, leftPanel, verticalStrut, gameOptions);
 		createPanel(InducementType.WIZARD, leftPanel, verticalStrut, gameOptions);
 		createPanel(InducementType.RIOTOUS_ROOKIES, leftPanel, verticalStrut, gameOptions);
-
 
 		leftPanel.add(Box.createVerticalGlue());
 
@@ -244,11 +244,11 @@ public class DialogBuyInducements extends Dialog implements ActionListener, KeyL
 	public Team getTeam() {
 		return fTeam;
 	}
-	
+
 	public Roster getRoster() {
 		return fRoster;
 	}
-	
+
 	private JPanel buildRightPanel(GameOptions gameOptions) {
 
 		// Right Panel
@@ -262,19 +262,18 @@ public class DialogBuyInducements extends Dialog implements ActionListener, KeyL
 
 			fTableStarPlayers = new StarPlayerTable(fTableModelStarPlayers);
 			fTableStarPlayers.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-			fTableStarPlayers.getSelectionModel().addListSelectionListener(
-				new ListSelectionListener() {
-					public void valueChanged(ListSelectionEvent pE) {
-						if (!pE.getValueIsAdjusting()) {
-							int selectedRowIndex = fTableStarPlayers.getSelectionModel().getLeadSelectionIndex();
-							if (selectedRowIndex >= 0) {
-								getClient().getClientData().setSelectedPlayer((Player) fTableModelStarPlayers.getValueAt(selectedRowIndex, 4));
-								getClient().getUserInterface().refreshSideBars();
-							}
+			fTableStarPlayers.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+				public void valueChanged(ListSelectionEvent pE) {
+					if (!pE.getValueIsAdjusting()) {
+						int selectedRowIndex = fTableStarPlayers.getSelectionModel().getLeadSelectionIndex();
+						if (selectedRowIndex >= 0) {
+							getClient().getClientData()
+									.setSelectedPlayer((Player) fTableModelStarPlayers.getValueAt(selectedRowIndex, 4));
+							getClient().getUserInterface().refreshSideBars();
 						}
 					}
 				}
-			);
+			});
 			DefaultTableCellRenderer rightAlignedRenderer = new DefaultTableCellRenderer();
 			rightAlignedRenderer.setHorizontalAlignment(JLabel.RIGHT);
 			fTableStarPlayers.getColumnModel().getColumn(3).setCellRenderer(rightAlignedRenderer);
@@ -299,23 +298,23 @@ public class DialogBuyInducements extends Dialog implements ActionListener, KeyL
 
 		fTableModelMercenaries = new MercenaryTableModel(this, gameOptions);
 
-		int maxMercs = ((GameOptionInt) gameOptions.getOptionWithDefault(GameOptionId.INDUCEMENT_MERCENARIES_MAX)).getValue();
+		int maxMercs = ((GameOptionInt) gameOptions.getOptionWithDefault(GameOptionId.INDUCEMENT_MERCENARIES_MAX))
+				.getValue();
 		if (maxMercs > 0) {
 			fTableMercenaries = new MercenaryTable(fTableModelMercenaries);
 			fTableMercenaries.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-			fTableMercenaries.getSelectionModel().addListSelectionListener(
-				new ListSelectionListener() {
-					public void valueChanged(ListSelectionEvent pE) {
-						if (!pE.getValueIsAdjusting()) {
-							int selectedRowIndex = fTableMercenaries.getSelectionModel().getLeadSelectionIndex();
-							if (selectedRowIndex >= 0) {
-								getClient().getClientData().setSelectedPlayer((Player) fTableModelMercenaries.getValueAt(selectedRowIndex, 5));
-								getClient().getUserInterface().refreshSideBars();
-							}
+			fTableMercenaries.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+				public void valueChanged(ListSelectionEvent pE) {
+					if (!pE.getValueIsAdjusting()) {
+						int selectedRowIndex = fTableMercenaries.getSelectionModel().getLeadSelectionIndex();
+						if (selectedRowIndex >= 0) {
+							getClient().getClientData()
+									.setSelectedPlayer((Player) fTableModelMercenaries.getValueAt(selectedRowIndex, 5));
+							getClient().getUserInterface().refreshSideBars();
 						}
 					}
 				}
-			);
+			});
 			DefaultTableCellRenderer mercAlignedRenderer = new DefaultTableCellRenderer();
 			mercAlignedRenderer.setHorizontalAlignment(JLabel.RIGHT);
 			fTableMercenaries.getColumnModel().getColumn(3).setCellRenderer(mercAlignedRenderer);
@@ -363,13 +362,15 @@ public class DialogBuyInducements extends Dialog implements ActionListener, KeyL
 		return result.toString();
 	}
 
-	private void createPanel(InducementType pInducementType, JPanel pAddToPanel, int pVertStrut, GameOptions gameOptions) {
+	private void createPanel(InducementType pInducementType, JPanel pAddToPanel, int pVertStrut,
+			GameOptions gameOptions) {
 		int maxCount = UtilInducements.findInducementsAvailable(fRoster, pInducementType, gameOptions);
 		if (maxCount <= 0) {
 			return;
 		}
 		int cost = UtilInducements.findInducementCost(fRoster, pInducementType, gameOptions);
-		DropDownPanel panel = new DropDownPanel(pInducementType, maxCount, pInducementType.getDescription(), cost, this, fAvailableGold);
+		DropDownPanel panel = new DropDownPanel(pInducementType, maxCount, pInducementType.getDescription(), cost, this,
+				fAvailableGold);
 		pAddToPanel.add(panel);
 		if (pVertStrut > 0) {
 			pAddToPanel.add(Box.createVerticalStrut(pVertStrut));

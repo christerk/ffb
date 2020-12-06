@@ -16,116 +16,111 @@ import com.eclipsesource.json.JsonValue;
  */
 public class ServerCommandModelSync extends ServerCommand {
 
-  private ModelChangeList fModelChanges;
-  private ReportList fReportList;
-  private Animation fAnimation;
-  private SoundId fSound;
-  private long fGameTime;
-  private long fTurnTime;
+	private ModelChangeList fModelChanges;
+	private ReportList fReportList;
+	private Animation fAnimation;
+	private SoundId fSound;
+	private long fGameTime;
+	private long fTurnTime;
 
-  public ServerCommandModelSync() {
-    fModelChanges = new ModelChangeList();
-    fReportList = new ReportList();
-  }
+	public ServerCommandModelSync() {
+		fModelChanges = new ModelChangeList();
+		fReportList = new ReportList();
+	}
 
-  public ServerCommandModelSync(ModelChangeList pModelChanges, ReportList pReportList, Animation pAnimation, SoundId pSound, long pGameTime, long pTurnTime) {
-    this();
-    fModelChanges.add(pModelChanges);
-    fReportList.add(pReportList);
-    fAnimation = pAnimation;
-    fSound = pSound;
-    fGameTime = pGameTime;
-    fTurnTime = pTurnTime;
-  }
+	public ServerCommandModelSync(ModelChangeList pModelChanges, ReportList pReportList, Animation pAnimation,
+			SoundId pSound, long pGameTime, long pTurnTime) {
+		this();
+		fModelChanges.add(pModelChanges);
+		fReportList.add(pReportList);
+		fAnimation = pAnimation;
+		fSound = pSound;
+		fGameTime = pGameTime;
+		fTurnTime = pTurnTime;
+	}
 
-  public NetCommandId getId() {
-    return NetCommandId.SERVER_MODEL_SYNC;
-  }
+	public NetCommandId getId() {
+		return NetCommandId.SERVER_MODEL_SYNC;
+	}
 
-  public ModelChangeList getModelChanges() {
-    return fModelChanges;
-  }
+	public ModelChangeList getModelChanges() {
+		return fModelChanges;
+	}
 
-  public ReportList getReportList() {
-    return fReportList;
-  }
+	public ReportList getReportList() {
+		return fReportList;
+	}
 
-  public Animation getAnimation() {
-    return fAnimation;
-  }
+	public Animation getAnimation() {
+		return fAnimation;
+	}
 
-  public SoundId getSound() {
-    return fSound;
-  }
+	public SoundId getSound() {
+		return fSound;
+	}
 
-  public long getGameTime() {
-    return fGameTime;
-  }
+	public long getGameTime() {
+		return fGameTime;
+	}
 
-  public long getTurnTime() {
-    return fTurnTime;
-  }
+	public long getTurnTime() {
+		return fTurnTime;
+	}
 
-  // transformation
+	// transformation
 
-  public ServerCommandModelSync transform() {
-    Animation transformedAnimation = (getAnimation() != null) ? getAnimation().transform() : null;
-    ServerCommandModelSync transformedCommand = new ServerCommandModelSync(
-      getModelChanges().transform(),
-      getReportList().transform(),
-      transformedAnimation,
-      getSound(),
-      getGameTime(),
-      getTurnTime()
-    );
-    transformedCommand.setCommandNr(getCommandNr());
-    return transformedCommand;
-  }
+	public ServerCommandModelSync transform() {
+		Animation transformedAnimation = (getAnimation() != null) ? getAnimation().transform() : null;
+		ServerCommandModelSync transformedCommand = new ServerCommandModelSync(getModelChanges().transform(),
+				getReportList().transform(), transformedAnimation, getSound(), getGameTime(), getTurnTime());
+		transformedCommand.setCommandNr(getCommandNr());
+		return transformedCommand;
+	}
 
-  // JSON serialization
-  
-  public JsonObject toJsonValue() {
-    JsonObject jsonObject = new JsonObject();
-    IJsonOption.NET_COMMAND_ID.addTo(jsonObject, getId());
-    IJsonOption.COMMAND_NR.addTo(jsonObject, getCommandNr());
-    if (fModelChanges != null) {
-      IJsonOption.MODEL_CHANGE_LIST.addTo(jsonObject, fModelChanges.toJsonValue());
-    }
-    if (fReportList != null) {
-      IJsonOption.REPORT_LIST.addTo(jsonObject, fReportList.toJsonValue());
-    }
-    if (fAnimation != null) {
-      IJsonOption.ANIMATION.addTo(jsonObject, fAnimation.toJsonValue());
-    }
-    IJsonOption.SOUND.addTo(jsonObject, fSound);
-    IJsonOption.GAME_TIME.addTo(jsonObject, fGameTime);
-    IJsonOption.TURN_TIME.addTo(jsonObject, fTurnTime);
-    return jsonObject;
-  }
-  
-  public ServerCommandModelSync initFrom(JsonValue pJsonValue) {
-    JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-    UtilNetCommand.validateCommandId(this, (NetCommandId) IJsonOption.NET_COMMAND_ID.getFrom(jsonObject));
-    setCommandNr(IJsonOption.COMMAND_NR.getFrom(jsonObject));
-    JsonObject modelChangeListObject = IJsonOption.MODEL_CHANGE_LIST.getFrom(jsonObject);
-    fModelChanges = new ModelChangeList();
-    if (modelChangeListObject != null) {
-      fModelChanges.initFrom(modelChangeListObject);
-    }
-    fReportList = new ReportList();
-    JsonObject reportListObject = IJsonOption.REPORT_LIST.getFrom(jsonObject);
-    if (reportListObject != null) {
-      fReportList.initFrom(reportListObject);
-    }
-    fAnimation = null;
-    JsonObject animationObject = IJsonOption.ANIMATION.getFrom(jsonObject);
-    if (animationObject != null) {
-      fAnimation = new Animation().initFrom(animationObject);
-    }
-    fSound = (SoundId) IJsonOption.SOUND.getFrom(jsonObject);
-    fGameTime = IJsonOption.GAME_TIME.getFrom(jsonObject);
-    fTurnTime = IJsonOption.TURN_TIME.getFrom(jsonObject);
-    return this;
-  }
+	// JSON serialization
+
+	public JsonObject toJsonValue() {
+		JsonObject jsonObject = new JsonObject();
+		IJsonOption.NET_COMMAND_ID.addTo(jsonObject, getId());
+		IJsonOption.COMMAND_NR.addTo(jsonObject, getCommandNr());
+		if (fModelChanges != null) {
+			IJsonOption.MODEL_CHANGE_LIST.addTo(jsonObject, fModelChanges.toJsonValue());
+		}
+		if (fReportList != null) {
+			IJsonOption.REPORT_LIST.addTo(jsonObject, fReportList.toJsonValue());
+		}
+		if (fAnimation != null) {
+			IJsonOption.ANIMATION.addTo(jsonObject, fAnimation.toJsonValue());
+		}
+		IJsonOption.SOUND.addTo(jsonObject, fSound);
+		IJsonOption.GAME_TIME.addTo(jsonObject, fGameTime);
+		IJsonOption.TURN_TIME.addTo(jsonObject, fTurnTime);
+		return jsonObject;
+	}
+
+	public ServerCommandModelSync initFrom(JsonValue pJsonValue) {
+		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
+		UtilNetCommand.validateCommandId(this, (NetCommandId) IJsonOption.NET_COMMAND_ID.getFrom(jsonObject));
+		setCommandNr(IJsonOption.COMMAND_NR.getFrom(jsonObject));
+		JsonObject modelChangeListObject = IJsonOption.MODEL_CHANGE_LIST.getFrom(jsonObject);
+		fModelChanges = new ModelChangeList();
+		if (modelChangeListObject != null) {
+			fModelChanges.initFrom(modelChangeListObject);
+		}
+		fReportList = new ReportList();
+		JsonObject reportListObject = IJsonOption.REPORT_LIST.getFrom(jsonObject);
+		if (reportListObject != null) {
+			fReportList.initFrom(reportListObject);
+		}
+		fAnimation = null;
+		JsonObject animationObject = IJsonOption.ANIMATION.getFrom(jsonObject);
+		if (animationObject != null) {
+			fAnimation = new Animation().initFrom(animationObject);
+		}
+		fSound = (SoundId) IJsonOption.SOUND.getFrom(jsonObject);
+		fGameTime = IJsonOption.GAME_TIME.getFrom(jsonObject);
+		fTurnTime = IJsonOption.TURN_TIME.getFrom(jsonObject);
+		return this;
+	}
 
 }
