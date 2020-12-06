@@ -1,9 +1,5 @@
 package com.balancedbytes.games.ffb.server.step.action.block;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Stack;
-
 import com.balancedbytes.games.ffb.ApothecaryMode;
 import com.balancedbytes.games.ffb.CatchScatterThrowInMode;
 import com.balancedbytes.games.ffb.FieldCoordinate;
@@ -22,7 +18,6 @@ import com.balancedbytes.games.ffb.report.ReportPushback;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.IServerJsonOption;
 import com.balancedbytes.games.ffb.server.InjuryType.InjuryTypeCrowdPush;
-import com.balancedbytes.games.ffb.server.model.ServerSkill;
 import com.balancedbytes.games.ffb.server.net.ReceivedCommand;
 import com.balancedbytes.games.ffb.server.step.AbstractStep;
 import com.balancedbytes.games.ffb.server.step.StepAction;
@@ -38,6 +33,10 @@ import com.balancedbytes.games.ffb.server.util.UtilServerPushback;
 import com.balancedbytes.games.ffb.util.ArrayTool;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Stack;
 
 /**
  * Step in block sequence to handle pushbacks.
@@ -55,7 +54,7 @@ import com.eclipsesource.json.JsonValue;
  */
 public class StepPushback extends AbstractStep {
 
-	public class StepState {
+	public static class StepState {
 		public PlayerState oldDefenderState;
 		public PushbackSquare startingPushbackSquare;
 		public Boolean grabbing;
@@ -64,9 +63,8 @@ public class StepPushback extends AbstractStep {
 		public Stack<Pushback> pushbackStack;
 
 		// Transients
-		public Player defender;
+		public Player<?> defender;
 		public boolean doPush;
-		public boolean continueStep;
 		public boolean freeSquareAroundDefender;
 		public PushbackMode pushbackMode;
 		public PushbackSquare[] pushbackSquares;
@@ -99,15 +97,7 @@ public class StepPushback extends AbstractStep {
 		if (commandStatus == StepCommandStatus.UNHANDLED_COMMAND) {
 			switch (pReceivedCommand.getId()) {
 			case CLIENT_USE_SKILL:
-				ClientCommandUseSkill useSkillCommand = (ClientCommandUseSkill) pReceivedCommand.getCommand();
-				ServerSkill usedSkill = (ServerSkill) useSkillCommand.getSkill();
-
-				if (usedSkill != null) {
-					StepCommandStatus newStatus = usedSkill.applyUseSkillCommandHooks(this, state, useSkillCommand);
-					if (newStatus != null) {
-						commandStatus = newStatus;
-					}
-				}
+				commandStatus = handleSkillCommand((ClientCommandUseSkill) pReceivedCommand.getCommand(), state);
 				break;
 			case CLIENT_PUSHBACK:
 				ClientCommandPushback pushbackCommand = (ClientCommandPushback) pReceivedCommand.getCommand();
@@ -217,7 +207,7 @@ public class StepPushback extends AbstractStep {
 			if (state.pushbackStack.size() > 0) {
 				while (state.pushbackStack.size() > 0) {
 					Pushback pushback = state.pushbackStack.pop();
-					Player player = game.getPlayerById(pushback.getPlayerId());
+					Player<?> player = game.getPlayerById(pushback.getPlayerId());
 					pushPlayer(player, pushback.getCoordinate());
 				}
 			}
@@ -228,7 +218,7 @@ public class StepPushback extends AbstractStep {
 		}
 	}
 
-	private void pushPlayer(Player pPlayer, FieldCoordinate pCoordinate) {
+	private void pushPlayer(Player<?> pPlayer, FieldCoordinate pCoordinate) {
 		Game game = getGameState().getGame();
 		FieldModel fieldModel = game.getFieldModel();
 		fieldModel.updatePlayerAndBallPosition(pPlayer, pCoordinate);
