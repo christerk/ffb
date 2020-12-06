@@ -37,6 +37,11 @@ public abstract class AbstractStep implements IStep {
     setStepResult(new StepResult());
     skillFactory = pGameState.getSkillFactory();
   }
+  
+  protected AbstractStep(GameState pGameState, StepAction defaultStepResult) {
+  	this(pGameState);
+  	fStepResult.setNextAction(defaultStepResult);
+  }
 
   public void setLabel(String pLabel) {
     fLabel = pLabel;
@@ -67,6 +72,11 @@ public abstract class AbstractStep implements IStep {
     // do nothing, override in subclass if needed
   }
 
+	public void repeat() {
+	// This prevents endless loops being caused by incomplete implementations
+		getResult().setNextAction(StepAction.CONTINUE); 
+	}
+  
   public StepCommandStatus handleCommand(ReceivedCommand pReceivedCommand) {
     StepCommandStatus commandStatus = StepCommandStatus.UNHANDLED_COMMAND;
     switch (pReceivedCommand.getId()) {

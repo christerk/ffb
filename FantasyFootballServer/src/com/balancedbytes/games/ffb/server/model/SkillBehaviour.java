@@ -9,7 +9,7 @@ import java.lang.reflect.ParameterizedType;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class SkillBehaviour<T extends Skill> implements ISkillBehaviour {
+public abstract class SkillBehaviour<T extends Skill> implements ISkillBehaviour<T> {
 
   public T skill;
 

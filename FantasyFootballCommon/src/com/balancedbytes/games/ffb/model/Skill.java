@@ -32,7 +32,7 @@ public class Skill implements INamedObject {
   private List<InjuryModifier> injuryModifiers;
   private List<ArmorModifier> armorModifiers;
   private List<CatchModifier> catchModifiers;
-  private ISkillBehaviour behaviour;
+  private ISkillBehaviour<? extends Skill> behaviour;
   private List<ISkillProperty> skillProperties;
   private Hashtable<ReRolledAction, ReRollSource> rerollSources;
   
@@ -117,7 +117,7 @@ public class Skill implements INamedObject {
 	  rerollSources.put(action, source);
   }
   
-  public ISkillBehaviour getSkillBehaviour() {
+  public ISkillBehaviour<? extends Skill> getSkillBehaviour() {
     return behaviour;
   }
   
@@ -157,7 +157,7 @@ public class Skill implements INamedObject {
 	  return injuryModifiers;
   } 
 
-  public void setBehaviour(ISkillBehaviour behaviour) {
+  public void setBehaviour(ISkillBehaviour<? extends Skill> behaviour) {
     this.behaviour = behaviour;
   }
   

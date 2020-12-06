@@ -161,7 +161,12 @@ public class GameState implements IModelChangeObserver, IJsonSerializable {
       findNextStep(null);
     }
     if (fCurrentStep != null) {
-      fCurrentStep.handleCommand(pReceivedCommand);
+  		fCurrentStep.handleCommand(pReceivedCommand);
+  		
+    	while (fCurrentStep.getResult().getNextAction().triggerRepeat()) {
+    		fCurrentStep.repeat();
+    	}
+    	
       UtilServerGame.syncGameModel(fCurrentStep);
     }
     progressStepStack(pReceivedCommand);
@@ -179,6 +184,11 @@ public class GameState implements IModelChangeObserver, IJsonSerializable {
       getServer().getDebugLog().logCurrentStep(IServerLogLevel.DEBUG, this);
       if (receivedCommand == null) {
         fCurrentStep.start();
+      	
+        while (fCurrentStep.getResult().getNextAction().triggerRepeat()) {
+      		fCurrentStep.repeat();
+      	}
+      	
         UtilServerGame.syncGameModel(fCurrentStep);
       }
       progressStepStack(receivedCommand);
@@ -314,11 +324,12 @@ public class GameState implements IModelChangeObserver, IJsonSerializable {
     List<StepModifier<? extends IStep, ?>> modifiers = new ArrayList<>();
     
     for (Skill skill : skillFactory.getSkills()) {
-      ISkillBehaviour behaviour = skill.getSkillBehaviour();
+      ISkillBehaviour<? extends Skill> behaviour = skill.getSkillBehaviour();
       if (behaviour != null) {
         List<StepModifier<? extends IStep, ?>> skillModifiers = ((SkillBehaviour<? extends Skill>) behaviour).getStepModifiers();
         for (StepModifier<? extends IStep, ?> modifier : skillModifiers) {
           if (modifier.appliesTo(step)) {
+            getServer().getDebugLog().log(IServerLogLevel.DEBUG, getGame().getId(), "Detected StepModifier: " + modifier.getClass().getName());
             modifiers.add(modifier);
           }
         }

@@ -19,6 +19,7 @@ public interface IStep extends IJsonSerializable {
   public String getLabel();
 
   public void start();
+  public void repeat();
 
   public void init(StepParameterSet pParameterSet);
 

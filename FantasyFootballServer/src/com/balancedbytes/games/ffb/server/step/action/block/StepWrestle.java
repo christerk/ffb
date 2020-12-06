@@ -8,6 +8,7 @@ import com.balancedbytes.games.ffb.server.IServerJsonOption;
 import com.balancedbytes.games.ffb.server.model.ServerSkill;
 import com.balancedbytes.games.ffb.server.net.ReceivedCommand;
 import com.balancedbytes.games.ffb.server.step.AbstractStep;
+import com.balancedbytes.games.ffb.server.step.StepAction;
 import com.balancedbytes.games.ffb.server.step.StepCommandStatus;
 import com.balancedbytes.games.ffb.server.step.StepId;
 import com.eclipsesource.json.JsonObject;
@@ -33,7 +34,7 @@ public class StepWrestle extends AbstractStep {
 	private StepState state;
 	
 	public StepWrestle(GameState pGameState) {
-		super(pGameState);
+		super(pGameState, StepAction.NEXT_STEP);
 		state = new StepState();
 	}
 	
@@ -44,6 +45,12 @@ public class StepWrestle extends AbstractStep {
 	@Override
 	public void start() {
 		super.start();
+		executeStep();
+	}
+	
+	@Override
+	public void repeat() {
+		super.repeat();
 		executeStep();
 	}
 	

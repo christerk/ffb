@@ -20,12 +20,12 @@ import com.balancedbytes.games.ffb.server.step.action.move.StepTentacles;
 import com.balancedbytes.games.ffb.server.step.action.move.StepTentacles.StepState;
 import com.balancedbytes.games.ffb.server.util.UtilServerDialog;
 import com.balancedbytes.games.ffb.server.util.UtilServerReRoll;
-import com.balancedbytes.games.ffb.skill.Wrestle;
+import com.balancedbytes.games.ffb.skill.Tentacles;
 import com.balancedbytes.games.ffb.util.ArrayTool;
 import com.balancedbytes.games.ffb.util.UtilCards;
 import com.balancedbytes.games.ffb.util.UtilPlayer;
 
-public class TentaclesBehaviour extends SkillBehaviour<Wrestle> {
+public class TentaclesBehaviour extends SkillBehaviour<Tentacles> {
 	public TentaclesBehaviour() {
 		super();
 
