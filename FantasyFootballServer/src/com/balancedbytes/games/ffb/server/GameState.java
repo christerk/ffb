@@ -170,29 +170,39 @@ public class GameState implements IModelChangeObserver, IJsonSerializable {
 	}
 
 	public void startNextStep() {
-		fCurrentStep = getStepStack().pop();
+		progressToNextStep();
 		if (fCurrentStep != null) {
 			getServer().getDebugLog().logCurrentStep(IServerLogLevel.DEBUG, this);
 			executeStep(StepExecutionMode.Start, null);
 		}
 	}
 	
+	private void progressToNextStep() {
+		fCurrentStep = getStepStack().pop();
+	}
+	
 	private void executeStep(StepExecutionMode mode, ReceivedCommand receivedCommand) {
-		if (mode == StepExecutionMode.Start) {
-			fCurrentStep.start();
-		} else {
-			fCurrentStep.handleCommand(receivedCommand);
-		}
-
-		while (fCurrentStep.getResult().getNextAction().triggerRepeat()) {
-			fCurrentStep.repeat();
-		}
-
-		UtilServerGame.syncGameModel(fCurrentStep);
-		processStepResult(receivedCommand);
+		boolean forward = false;
+		do {
+			if (mode == StepExecutionMode.Start) {
+				fCurrentStep.start();
+			} else {
+				fCurrentStep.handleCommand(receivedCommand);
+			}
+	
+			while (fCurrentStep.getResult().getNextAction().triggerRepeat()) {
+				fCurrentStep.repeat();
+			}
+	
+			UtilServerGame.syncGameModel(fCurrentStep);
+			forward = processStepResult(receivedCommand);
+			if (forward) {
+				mode = StepExecutionMode.HandleCommand;
+			}
+		} while (forward);
 	}
 
-	private void processStepResult(ReceivedCommand pReceivedCommand) {
+	private boolean processStepResult(ReceivedCommand pReceivedCommand) {
 		if (fCurrentStep == null) {
 			throw new StepException("Trying to process result from a null step.");
 		}
@@ -201,15 +211,23 @@ public class GameState implements IModelChangeObserver, IJsonSerializable {
 		StepAction action = stepResult.getNextAction();
 
 		if (action.triggerGoto()) {
+			// Skip forward until we're at the appropriate label
 			handleStepResultGotoLabel(stepResult.getNextActionParameter());
 		}
 
 		if (action.triggerNextStep()) {
-			startNextStep();
 			if (action.forwardCommand()) {
-				executeStep(StepExecutionMode.HandleCommand, pReceivedCommand);
+				// With forwarded commands, we're expected to not run start()
+				// So just get the next step off of the stack
+				progressToNextStep();
+				return true;
+			} else {
+				// We're triggering the next step normally, so get it off of the stack
+				// and execute
+				startNextStep();
 			}
 		}
+		return false;
 	}
 
 	public void pushCurrentStepOnStack() {
