@@ -1,5 +1,7 @@
 package com.balancedbytes.games.ffb.skill;
 
+import com.balancedbytes.games.ffb.ReRollSources;
+import com.balancedbytes.games.ffb.ReRolledActions;
 import com.balancedbytes.games.ffb.SkillCategory;
 import com.balancedbytes.games.ffb.model.Skill;
 import com.balancedbytes.games.ffb.model.SkillConstants;
@@ -16,6 +18,8 @@ public class MonstrousMouth extends Skill {
 	public MonstrousMouth() {
 		super("Monstrous Mouth", SkillCategory.EXTRAORDINARY);
 		registerProperty(new CancelSkillProperty(SkillConstants.STRIP_BALL));
+		
+		registerRerollSource(ReRolledActions.CATCH, ReRollSources.MONSTROUS_MOUTH);
 	}
 
 }
