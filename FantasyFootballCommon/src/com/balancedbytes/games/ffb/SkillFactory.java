@@ -42,17 +42,18 @@ public class SkillFactory implements INamedObjectFactory {
 	}
 
 	private void addSkill(Skill skill) {
-		skills.put(skill.getName(), skill);
+		skills.put(skill.getName().toLowerCase(), skill);
 		skillMap.put(skill.getClass(), skill);
 	}
 
 	public Skill forName(String name) {
+		name = name.toLowerCase();
 		if (skills.containsKey(name)) {
 			return skills.get(name);
 		}
 
 		if ("Ball & Chain".equalsIgnoreCase(name) || "Ball &amp; Chain".equalsIgnoreCase(name)) {
-			return skills.get("Ball and Chain");
+			return skills.get("ball and chain");
 		}
 		return null;
 	}
