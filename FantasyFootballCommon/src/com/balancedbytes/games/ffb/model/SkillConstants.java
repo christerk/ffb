@@ -99,6 +99,7 @@ public class SkillConstants {
 	public static final Skill ARMOUR_DECREASE = new ArmourDecrease();
 	public static final Skill ARMOUR_INCREASE = new ArmourIncrease();
 	public static final Skill BALL_AND_CHAIN = new BallAndChain();
+	public static final Skill BIG_HAND = new BallAndChain();
 	public static final Skill BLOCK = new Block();
 	public static final Skill BLOOD_LUST = new BloodLust();
 	public static final Skill BOMBARDIER = new Bombardier();
