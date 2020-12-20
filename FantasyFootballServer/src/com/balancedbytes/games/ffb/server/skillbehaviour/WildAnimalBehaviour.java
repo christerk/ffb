@@ -55,7 +55,7 @@ public class WildAnimalBehaviour extends SkillBehaviour<WildAnimal> {
 				}
 				if (UtilCards.hasSkill(game, actingPlayer, skill)) {
 					boolean doRoll = true;
-					ReRolledAction reRolledAction = new ReRolledActionFactory().forSkill(skill);
+					ReRolledAction reRolledAction = new ReRolledActionFactory().forSkill(step.getGameState().getSkillFactory(), skill);
 					if ((reRolledAction != null) && (reRolledAction == step.getReRolledAction())) {
 						if ((step.getReRollSource() == null)
 								|| !UtilServerReRoll.useReRoll(step, step.getReRollSource(), actingPlayer.getPlayer())) {

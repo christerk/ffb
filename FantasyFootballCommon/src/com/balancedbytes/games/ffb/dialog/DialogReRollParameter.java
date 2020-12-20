@@ -4,6 +4,7 @@ import com.balancedbytes.games.ffb.IDialogParameter;
 import com.balancedbytes.games.ffb.ReRolledAction;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
+import com.balancedbytes.games.ffb.model.Game;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 

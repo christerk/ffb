@@ -20,10 +20,10 @@ public class ReRolledActionFactory implements INamedObjectFactory {
 		return rerolledActions.values().get(pName.toLowerCase());
 	}
 
-	public ReRolledAction forSkill(Skill pSkill) {
+	public ReRolledAction forSkill(SkillFactory skillFactory, Skill pSkill) {
 		for (Map.Entry<String, ReRolledAction> entry : rerolledActions.values().entrySet()) {
 			ReRolledAction action = entry.getValue();
-			if (pSkill == action.getSkill()) {
+			if (pSkill == action.getSkill(skillFactory)) {
 				return action;
 			}
 		}

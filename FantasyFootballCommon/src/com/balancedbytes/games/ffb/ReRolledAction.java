@@ -25,8 +25,7 @@ public class ReRolledAction implements INamedObject {
 		return name;
 	}
 
-	public Skill getSkill() {
-		SkillFactory skillFactory = new SkillFactory();
+	public Skill getSkill(SkillFactory skillFactory) {
 		if (skill != null) {
 			return skillFactory.forClass(skill);
 		} else {

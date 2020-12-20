@@ -38,7 +38,7 @@ public class TakeRootBehaviour extends SkillBehaviour<TakeRoot> {
 
 				if (!playerState.isRooted()) {
 					boolean doRoll = true;
-					ReRolledAction reRolledAction = new ReRolledActionFactory().forSkill(skill);
+					ReRolledAction reRolledAction = new ReRolledActionFactory().forSkill(step.getGameState().getSkillFactory(), skill);
 					if ((reRolledAction != null) && (reRolledAction == step.getReRolledAction())) {
 						if ((step.getReRollSource() == null)
 								|| !UtilServerReRoll.useReRoll(step, step.getReRollSource(), actingPlayer.getPlayer())) {
