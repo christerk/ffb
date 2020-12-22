@@ -50,6 +50,11 @@ public class IconCache {
 	}
 
 	public void init() {
+		// Prevent on disk caching for image files. Improves performance for many small files.
+		ImageIO.setUseCache(false);
+		// Don't bother checking for certificate revocation. It's slow and not really functional anyway.
+		System.setProperty("com.sun.net.ssl.checkRevocation", "false");
+		
 		fIconUrlProperties = new Properties();
 		InputStream propertyInputStream = null;
 		try {
