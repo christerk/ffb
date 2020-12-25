@@ -71,6 +71,7 @@ public class InjuryTypeFoul extends InjuryTypeServer<Foul> {
 				Set<ArmorModifier> armorModifiers = modifierFactory.findArmorModifiers(game, pAttacker, pDefender, isStab(),
 						isFoul());
 				injuryContext.addArmorModifiers(armorModifiers);
+				injuryContext.setArmorBroken(diceInterpreter.isArmourBroken(gameState, injuryContext));
 			}
 
 		}
