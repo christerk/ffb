@@ -8,6 +8,7 @@ import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.GameResult;
 import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.model.PlayerResult;
+import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.IServerJsonOption;
 import com.balancedbytes.games.ffb.server.step.AbstractStep;
@@ -19,6 +20,7 @@ import com.balancedbytes.games.ffb.server.step.StepParameterKey;
 import com.balancedbytes.games.ffb.server.step.UtilServerSteps;
 import com.balancedbytes.games.ffb.server.util.UtilServerDialog;
 import com.balancedbytes.games.ffb.util.StringTool;
+import com.balancedbytes.games.ffb.util.UtilCards;
 import com.balancedbytes.games.ffb.util.UtilPlayer;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
@@ -45,6 +47,7 @@ public final class StepEndPassing extends AbstractStep {
 	private boolean fEndTurn;
 	private boolean fEndPlayerAction;
 	private boolean fBombOutOfBounds;
+	private boolean dontDropFumble;
 
 	public StepEndPassing(GameState pGameState) {
 		super(pGameState);
@@ -80,6 +83,10 @@ public final class StepEndPassing extends AbstractStep {
 				return true;
 			case PASS_FUMBLE:
 				fPassFumble = (pParameter.getValue() != null) ? (Boolean) pParameter.getValue() : false;
+				consume(pParameter);
+				return true;
+			case DONT_DROP_FUMBLE:
+				dontDropFumble = (pParameter.getValue() != null) ? (Boolean) pParameter.getValue() : false;
 				consume(pParameter);
 				return true;
 			case BOMB_OUT_OF_BOUNDS:
@@ -171,7 +178,8 @@ public final class StepEndPassing extends AbstractStep {
 			if (game.getThrower() == actingPlayer.getPlayer()) {
 				fEndTurn |= (UtilServerSteps.checkTouchdown(getGameState())
 						|| ((catcher == null) && !actingPlayer.isSufferingAnimosity())
-						|| UtilPlayer.findOtherTeam(game, game.getThrower()).hasPlayer(catcher) || fPassFumble);
+						|| UtilPlayer.findOtherTeam(game, game.getThrower()).hasPlayer(catcher)
+						|| (fPassFumble && !dontDropFumble));
 				SequenceGenerator.getInstance().pushEndPlayerActionSequence(getGameState(), true, true, fEndTurn);
 			} else {
 				game.setDefenderAction(null); // reset dump-off action
@@ -191,6 +199,7 @@ public final class StepEndPassing extends AbstractStep {
 		IServerJsonOption.PASS_FUMBLE.addTo(jsonObject, fPassFumble);
 		IServerJsonOption.END_TURN.addTo(jsonObject, fEndTurn);
 		IServerJsonOption.END_PLAYER_ACTION.addTo(jsonObject, fEndPlayerAction);
+		IServerJsonOption.DONT_DROP_FUMBLE.addTo(jsonObject, dontDropFumble);
 		return jsonObject;
 	}
 
@@ -204,6 +213,7 @@ public final class StepEndPassing extends AbstractStep {
 		fPassFumble = IServerJsonOption.PASS_FUMBLE.getFrom(jsonObject);
 		fEndTurn = IServerJsonOption.END_TURN.getFrom(jsonObject);
 		fEndPlayerAction = IServerJsonOption.END_PLAYER_ACTION.getFrom(jsonObject);
+		dontDropFumble = IServerJsonOption.DONT_DROP_FUMBLE.getFrom(jsonObject);
 		return this;
 	}
 
