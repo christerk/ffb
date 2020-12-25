@@ -25,7 +25,7 @@ public class InjuryModifiers {
 	public static final InjuryModifier MIGHTY_BLOW = new InjuryModifier("Mighty Blow", 1, false) {
 		@Override
 		public boolean appliesToContext(InjuryModifierContext context) {
-			return (!context.isFoul && context.injuryContext.hasArmorModifier(ArmorModifiers.MIGHTY_BLOW));
+			return (!context.isFoul && !context.injuryContext.hasArmorModifier(ArmorModifiers.MIGHTY_BLOW));
 		}
 	};
 
