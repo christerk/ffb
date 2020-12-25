@@ -1,24 +1,25 @@
 package com.balancedbytes.games.ffb;
 
+import com.balancedbytes.games.ffb.model.InjuryTypeConstants;
+
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.Collection;
-import java.util.Hashtable;
-
-import com.balancedbytes.games.ffb.model.InjuryTypeConstants;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
- * 
+ *
  * @author Kalimar
  */
 public class InjuryTypeFactory implements INamedObjectFactory {
 
-	private Hashtable<String, InjuryType> injuryTypes;
-	private Hashtable<Class<? extends InjuryType>, InjuryType> injuryTypeMap;
+	private final Map<String, InjuryType> injuryTypes;
+	private Map<Class<? extends InjuryType>, InjuryType> injuryTypeMap;
 
 	public InjuryTypeFactory() {
-		injuryTypes = new Hashtable<String, InjuryType>();
-		injuryTypeMap = new Hashtable<Class<? extends InjuryType>, InjuryType>();
+		injuryTypes = new HashMap<>();
+		injuryTypeMap = new HashMap<>();
 
 		try {
 			Field[] fields = InjuryTypeConstants.class.getFields();
@@ -47,11 +48,11 @@ public class InjuryTypeFactory implements INamedObjectFactory {
 	}
 
 	public InjuryType forName(String name) {
-		if (injuryTypes.containsKey(name)) {
+		if (name != null && injuryTypes.containsKey(name.toLowerCase())) {
 			return injuryTypes.get(name.toLowerCase());
 		}
 
-		return null;
+		throw new IllegalArgumentException("InjuryType '" + name + "' is unknown");
 	}
 
 	public InjuryType forClass(Class<? extends InjuryType> c) {

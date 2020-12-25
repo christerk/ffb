@@ -12,7 +12,7 @@ import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.util.UtilCards;
 
 /**
- * 
+ *
  * @author Kalimar
  */
 public class InjuryModifierFactory implements INamedObjectFactory {
@@ -29,22 +29,16 @@ public class InjuryModifierFactory implements INamedObjectFactory {
 
 	public Set<InjuryModifier> findInjuryModifiers(Game game, InjuryContext injuryContext, Player<?> attacker,
 			Player<?> defender, boolean isStab, boolean isFoul) {
-		Set<InjuryModifier> injuryModifiers = new HashSet<InjuryModifier>();
 
 		InjuryModifierContext context = new InjuryModifierContext(game, injuryContext, attacker, defender, isStab, isFoul);
-		injuryModifiers.addAll(UtilCards.getInjuryModifiers(attacker, context));
 
-		return injuryModifiers;
+		return new HashSet<>(UtilCards.getInjuryModifiers(attacker, context));
 	}
 
 	public InjuryModifier[] toArray(Set<InjuryModifier> pInjuryModifiers) {
 		if (pInjuryModifiers != null) {
-			InjuryModifier[] modifierArray = pInjuryModifiers.toArray(new InjuryModifier[pInjuryModifiers.size()]);
-			Arrays.sort(modifierArray, new Comparator<InjuryModifier>() {
-				public int compare(InjuryModifier pO1, InjuryModifier pO2) {
-					return pO1.getName().compareTo(pO2.getName());
-				}
-			});
+			InjuryModifier[] modifierArray = pInjuryModifiers.toArray(new InjuryModifier[0]);
+			Arrays.sort(modifierArray, Comparator.comparing(InjuryModifier::getName));
 			return modifierArray;
 		} else {
 			return new InjuryModifier[0];

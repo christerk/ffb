@@ -1,7 +1,9 @@
 package com.balancedbytes.games.ffb.util;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -35,7 +37,7 @@ import com.balancedbytes.games.ffb.model.Skill;
 import com.balancedbytes.games.ffb.model.SkillConstants;
 
 /**
- * 
+ *
  * @author Kalimar
  */
 public final class UtilCards {
@@ -63,7 +65,7 @@ public final class UtilCards {
 	}
 
 	public static Collection<PassModifier> getPassModifiers(Player<?> thrower, PassContext context) {
-		Set<PassModifier> result = new HashSet<PassModifier>();
+		Set<PassModifier> result = new HashSet<>();
 
 		for (Skill skill : thrower.getSkills()) {
 			for (PassModifier modifier : skill.getPassModifiers()) {
@@ -77,7 +79,7 @@ public final class UtilCards {
 	}
 
 	public static Collection<PickupModifier> getPickupModifiers(Player<?> player, PickupContext context) {
-		Set<PickupModifier> result = new HashSet<PickupModifier>();
+		Set<PickupModifier> result = new HashSet<>();
 
 		for (Skill skill : player.getSkills()) {
 			for (PickupModifier modifier : skill.getPickupModifiers()) {
@@ -91,7 +93,7 @@ public final class UtilCards {
 	}
 
 	public static Collection<DodgeModifier> getDodgeModifiers(ActingPlayer player, DodgeContext context) {
-		Set<DodgeModifier> result = new HashSet<DodgeModifier>();
+		Set<DodgeModifier> result = new HashSet<>();
 
 		for (Skill skill : player.getPlayer().getSkills()) {
 			for (DodgeModifier modifier : skill.getDodgeModifiers()) {
@@ -105,7 +107,7 @@ public final class UtilCards {
 	}
 
 	public static Collection<LeapModifier> getLeapModifiers(ActingPlayer player, LeapContext context) {
-		Set<LeapModifier> result = new HashSet<LeapModifier>();
+		Set<LeapModifier> result = new HashSet<>();
 
 		for (Skill skill : player.getPlayer().getSkills()) {
 			for (LeapModifier modifier : skill.getLeapModifiers()) {
@@ -119,7 +121,7 @@ public final class UtilCards {
 
 	public static Collection<InterceptionModifier> getInterceptionModifiers(Player<?> player,
 			InterceptionContext context) {
-		Set<InterceptionModifier> result = new HashSet<InterceptionModifier>();
+		Set<InterceptionModifier> result = new HashSet<>();
 
 		for (Skill skill : player.getSkills()) {
 			for (InterceptionModifier modifier : skill.getInterceptionModifiers()) {
@@ -132,7 +134,7 @@ public final class UtilCards {
 	}
 
 	public static Collection<CatchModifier> getCatchModifiers(Player<?> player, CatchContext context) {
-		Set<CatchModifier> result = new HashSet<CatchModifier>();
+		Set<CatchModifier> result = new HashSet<>();
 		for (Skill skill : player.getSkills()) {
 			for (CatchModifier modifier : skill.getCatchModifiers()) {
 				if (modifier.appliesToContext(context)) {
@@ -144,7 +146,7 @@ public final class UtilCards {
 	}
 
 	public static Collection<ArmorModifier> getArmorModifiers(Player<?> player, ArmorModifierContext context) {
-		Set<ArmorModifier> result = new HashSet<ArmorModifier>();
+		Set<ArmorModifier> result = new HashSet<>();
 		for (Skill skill : player.getSkills()) {
 			for (ArmorModifier modifier : skill.getArmorModifiers()) {
 				if (modifier.appliesToContext(context)) {
@@ -156,7 +158,7 @@ public final class UtilCards {
 	}
 
 	public static Collection<InjuryModifier> getInjuryModifiers(Player<?> player, InjuryModifierContext context) {
-		Set<InjuryModifier> result = new HashSet<InjuryModifier>();
+		Set<InjuryModifier> result = new HashSet<>();
 		for (Skill skill : player.getSkills()) {
 			for (InjuryModifier modifier : skill.getInjuryModifiers()) {
 				if (modifier.appliesToContext(context)) {
@@ -168,7 +170,7 @@ public final class UtilCards {
 	}
 
 	private static Set<Skill> findSkillsProvidedByCardsAndEffects(Game pGame, Player<?> pPlayer) {
-		Set<Skill> cardSkills = new HashSet<Skill>();
+		Set<Skill> cardSkills = new HashSet<>();
 		if ((pGame == null) || (pPlayer == null)) {
 			return cardSkills;
 		}
@@ -276,14 +278,10 @@ public final class UtilCards {
 				? pGame.getTurnDataHome().getInducementSet()
 				: pGame.getTurnDataAway().getInducementSet();
 		for (Card card : pGame.getFieldModel().getCards(pPlayer)) {
-			switch (card) {
-			case KICKING_BOOTS:
+			if (card == Card.KICKING_BOOTS) {
 				if (inducementSet.isActive(card)) {
 					movement -= 1;
 				}
-				break;
-			default:
-				break;
 			}
 		}
 		return movement;
@@ -291,21 +289,15 @@ public final class UtilCards {
 
 	public static Skill[] findAllSkills(Game pGame, Player<?> pPlayer) {
 		Set<Skill> allSkills = findSkillsProvidedByCardsAndEffects(pGame, pPlayer);
-		for (Skill skill : pPlayer.getSkills()) {
-			allSkills.add(skill);
-		}
-		return allSkills.toArray(new Skill[allSkills.size()]);
+		allSkills.addAll(Arrays.asList(pPlayer.getSkills()));
+		return allSkills.toArray(new Skill[0]);
 	}
 
 	public static Card[] findAllActiveCards(Game pGame) {
-		List<Card> allActiveCards = new ArrayList<Card>();
-		for (Card card : pGame.getTurnDataHome().getInducementSet().getActiveCards()) {
-			allActiveCards.add(card);
-		}
-		for (Card card : pGame.getTurnDataAway().getInducementSet().getActiveCards()) {
-			allActiveCards.add(card);
-		}
-		return allActiveCards.toArray(new Card[allActiveCards.size()]);
+		List<Card> allActiveCards = new ArrayList<>();
+		Collections.addAll(allActiveCards, pGame.getTurnDataHome().getInducementSet().getActiveCards());
+		Collections.addAll(allActiveCards, pGame.getTurnDataAway().getInducementSet().getActiveCards());
+		return allActiveCards.toArray(new Card[0]);
 	}
 
 	public static boolean isCardActive(Game pGame, Card pCard) {

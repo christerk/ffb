@@ -14,7 +14,7 @@ import com.balancedbytes.games.ffb.option.UtilGameOption;
 import com.balancedbytes.games.ffb.util.UtilCards;
 
 /**
- * 
+ *
  * @author Kalimar
  */
 public class ArmorModifierFactory implements INamedObjectFactory {
@@ -31,10 +31,9 @@ public class ArmorModifierFactory implements INamedObjectFactory {
 
 	public Set<ArmorModifier> findArmorModifiers(Game game, Player<?> attacker, Player<?> defender, boolean isStab,
 			boolean isFoul) {
-		Set<ArmorModifier> armorModifiers = new HashSet<ArmorModifier>();
 
 		ArmorModifierContext context = new ArmorModifierContext(game, attacker, defender, isStab, isFoul);
-		armorModifiers.addAll(UtilCards.getArmorModifiers(attacker, context));
+		Set<ArmorModifier> armorModifiers = new HashSet<>(UtilCards.getArmorModifiers(attacker, context));
 
 		if (armorModifiers.contains(ArmorModifiers.CLAWS) && armorModifiers.contains(ArmorModifiers.MIGHTY_BLOW)
 				&& UtilGameOption.isOptionEnabled(game, GameOptionId.CLAW_DOES_NOT_STACK)) {

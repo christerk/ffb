@@ -1,14 +1,14 @@
 package com.balancedbytes.games.ffb;
 
-import java.lang.reflect.Field;
-import java.util.HashMap;
-import java.util.Map;
-
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.model.Team;
 import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
 import com.balancedbytes.games.ffb.util.UtilCards;
+
+import java.lang.reflect.Field;
+import java.util.HashMap;
+import java.util.Map;
 
 public class ArmorModifiers {
 
@@ -59,11 +59,7 @@ public class ArmorModifiers {
 	public static final ArmorModifier DIRTY_PLAYER = new ArmorModifier("Dirty Player", 1, false) {
 		@Override
 		public boolean appliesToContext(ArmorModifierContext context) {
-			boolean applies = false;
-			if (context.isFoul) {
-				applies = true;
-			}
-			return applies;
+			return context.isFoul;
 		}
 	};
 
@@ -75,14 +71,14 @@ public class ArmorModifiers {
 		return (playerHasChainsaw(attacker) || playerHasChainsaw(defender));
 	}
 
-	private Map<String, ArmorModifier> values;
+	private final Map<String, ArmorModifier> values;
 
 	public Map<String, ArmorModifier> values() {
 		return values;
 	}
 
 	public ArmorModifiers() {
-		values = new HashMap<String, ArmorModifier>();
+		values = new HashMap<>();
 		try {
 			Class<?> c = this.getClass();
 			Class<?> cModifierType = ArmorModifier.class;
