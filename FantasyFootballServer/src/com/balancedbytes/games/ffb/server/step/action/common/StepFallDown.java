@@ -25,12 +25,12 @@ import com.eclipsesource.json.JsonValue;
 
 /**
  * Step in move sequence to drop the acting player.
- * 
+ *
  * Expects stepParameter INJURY_TYPE to be set by a preceding step.
- * 
+ *
  * Sets stepParameter END_TURN for all steps on the stack. Sets stepParameter
  * INJURY_RESULT for all steps on the stack.
- * 
+ *
  * @author Kalimar
  */
 public class StepFallDown extends AbstractStep {
@@ -88,7 +88,7 @@ public class StepFallDown extends AbstractStep {
 			UtilBox.putPlayerIntoBox(game, actingPlayer.getPlayer());
 		}
 		publishParameter(new StepParameter(StepParameterKey.INJURY_RESULT, injuryResultAttacker));
-		if ((!fInjuryType.fallingDownCausesTurnover()) && (game.getTurnMode() != TurnMode.PASS_BLOCK)) {
+		if (fInjuryType.fallingDownCausesTurnover() && (game.getTurnMode() != TurnMode.PASS_BLOCK)) {
 			publishParameter(new StepParameter(StepParameterKey.END_TURN, true));
 		}
 		getResult().setNextAction(StepAction.NEXT_STEP);
