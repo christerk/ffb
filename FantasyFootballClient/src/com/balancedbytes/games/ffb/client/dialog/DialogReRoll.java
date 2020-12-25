@@ -27,7 +27,7 @@ import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
 import com.balancedbytes.games.ffb.util.UtilCards;
 
 /**
- * 
+ *
  * @author Kalimar
  */
 @SuppressWarnings("serial")
@@ -62,9 +62,9 @@ public class DialogReRoll extends Dialog implements ActionListener, KeyListener 
 		fButtonNoReRoll.setMnemonic((int) 'N');
 
 		StringBuilder message1 = new StringBuilder();
-		
-		String action = fDialogParameter.getReRolledAction().getSkill(pClient.getSkillFactory()).getName();
-		
+
+		String action = fDialogParameter.getReRolledAction().getName();
+
 		if (fDialogParameter.getMinimumRoll() > 0) {
 			message1.append("Do you want to re-roll the failed ").append(action)
 					.append("?");
