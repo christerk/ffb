@@ -3,7 +3,7 @@ package com.balancedbytes.games.ffb;
 import com.balancedbytes.games.ffb.model.Skill;
 
 /**
- * 
+ *
  * @author Kalimar
  */
 public class ReRolledAction implements INamedObject {
@@ -33,4 +33,11 @@ public class ReRolledAction implements INamedObject {
 		}
 	}
 
+	public String getName(SkillFactory skillFactory) {
+		Skill skill = getSkill(skillFactory);
+		if (skill != null) {
+			return skill.getName();
+		}
+		return name;
+	}
 }

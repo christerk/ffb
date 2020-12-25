@@ -63,7 +63,7 @@ public class DialogReRoll extends Dialog implements ActionListener, KeyListener 
 
 		StringBuilder message1 = new StringBuilder();
 
-		String action = fDialogParameter.getReRolledAction().getName();
+		String action = fDialogParameter.getReRolledAction().getName(pClient.getSkillFactory());
 
 		if (fDialogParameter.getMinimumRoll() > 0) {
 			message1.append("Do you want to re-roll the failed ").append(action)
