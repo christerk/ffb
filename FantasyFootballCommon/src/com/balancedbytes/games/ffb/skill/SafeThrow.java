@@ -17,6 +17,7 @@ public class SafeThrow extends Skill {
 		super("Safe Throw", SkillCategory.PASSING);
 
 		registerProperty(NamedProperties.canForceInterceptionReroll);
+		registerProperty(NamedProperties.dontDropFumbles);
 	}
 
 }

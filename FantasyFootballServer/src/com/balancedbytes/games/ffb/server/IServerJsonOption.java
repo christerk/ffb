@@ -50,6 +50,7 @@ public interface IServerJsonOption extends IJsonOption {
 			new PlayerActionFactory());
 	JsonBooleanOption DIVING_CATCH_CHOICE = new JsonBooleanOption("divingCatchChoice");
 	JsonIntOption DODGE_ROLL = new JsonIntOption("dodgeRoll");
+	JsonBooleanOption DONT_DROP_FUMBLE = new JsonBooleanOption("dontDropFumble");
 	JsonBooleanOption END_PLAYER_ACTION = new JsonBooleanOption("endPlayerAction");
 	JsonBooleanOption END_GAME = new JsonBooleanOption("endGame");
 	JsonBooleanOption END_INDUCEMENT = new JsonBooleanOption("endInducement");

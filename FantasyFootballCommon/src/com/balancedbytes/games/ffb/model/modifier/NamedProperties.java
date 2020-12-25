@@ -43,6 +43,7 @@ public class NamedProperties {
 	public static final ISkillProperty canThrowTeamMates = new NamedProperty("Can Throw Team Mates");
 	public static final ISkillProperty convertKOToStunOn8 = new NamedProperty("Convert KO to Stun on a roll of 8");
 	public static final ISkillProperty convertStunToKO = new NamedProperty("Convert Stun to KO");
+	public static final ISkillProperty dontDropFumbles = new NamedProperty("Don't Drop 2+ Fumbles");
 	public static final ISkillProperty enableStandUpAndEndBlitzAction = new NamedProperty(
 			"Enable Stand Up and End Blitz Action");
 	public static final ISkillProperty enableThrowBombAction = new NamedProperty("Enable Throw Bomb Action");
