@@ -18,7 +18,7 @@ public class InjuryModifiers {
 	public static final InjuryModifier DIRTY_PLAYER = new InjuryModifier("Dirty Player", 1, false) {
 		@Override
 		public boolean appliesToContext(InjuryModifierContext context) {
-			return (context.isFoul && context.injuryContext.hasArmorModifier(ArmorModifiers.DIRTY_PLAYER));
+			return (context.isFoul && !context.injuryContext.hasArmorModifier(ArmorModifiers.DIRTY_PLAYER));
 		}
 	};
 
