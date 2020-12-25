@@ -4,15 +4,15 @@ import com.balancedbytes.games.ffb.DodgeModifiers.DodgeContext;
 import com.balancedbytes.games.ffb.model.Skill;
 
 /**
- * 
+ *
  * @author Kalimar
  */
 public class DodgeModifier implements IRollModifier {
 
-	private String fName;
-	private int fModifier;
-	private boolean fTacklezoneModifier;
-	private boolean fPrehensileTailModifier;
+	private final String fName;
+	private final int fModifier;
+	private final boolean fTacklezoneModifier;
+	private final boolean fPrehensileTailModifier;
 
 	public DodgeModifier(String pName, int pModifier, boolean pTacklezoneModifier, boolean pPrehensileTailModifier) {
 		fName = pName;

@@ -1,18 +1,13 @@
 package com.balancedbytes.games.ffb;
 
+import com.balancedbytes.games.ffb.model.ActingPlayer;
+import com.balancedbytes.games.ffb.model.Skill;
+import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
+import com.balancedbytes.games.ffb.util.UtilCards;
+
 import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Map;
-
-import com.balancedbytes.games.ffb.model.ActingPlayer;
-import com.balancedbytes.games.ffb.model.Game;
-import com.balancedbytes.games.ffb.model.Player;
-import com.balancedbytes.games.ffb.model.Skill;
-import com.balancedbytes.games.ffb.model.SkillConstants;
-import com.balancedbytes.games.ffb.model.Team;
-import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
-import com.balancedbytes.games.ffb.util.UtilCards;
-import com.balancedbytes.games.ffb.util.UtilPlayer;
 
 public class DodgeModifiers {
 	public static final DodgeModifier TWO_HEADS = new DodgeModifier("Two Heads", -1, false, false);
@@ -26,21 +21,21 @@ public class DodgeModifiers {
 	public static final DodgeModifier TACKLEZONES_6 = new DodgeModifier("6 Tacklezones", 6, true, false);
 	public static final DodgeModifier TACKLEZONES_7 = new DodgeModifier("7 Tacklezones", 7, true, false);
 	public static final DodgeModifier TACKLEZONES_8 = new DodgeModifier("8 Tacklezones", 8, true, false);
-	public static final DodgeModifier PREHENSILE_TAIL_1 = new PrehensileDodgeModifier("1 Prehensile Tail", 1, false,
+	public static final DodgeModifier PREHENSILE_TAIL_1 = new DodgeModifier("1 Prehensile Tail", 1, false,
 			true);
-	public static final DodgeModifier PREHENSILE_TAIL_2 = new PrehensileDodgeModifier("2 Prehensile Tails", 2, false,
+	public static final DodgeModifier PREHENSILE_TAIL_2 = new DodgeModifier("2 Prehensile Tails", 2, false,
 			true);
-	public static final DodgeModifier PREHENSILE_TAIL_3 = new PrehensileDodgeModifier("3 Prehensile Tails", 3, false,
+	public static final DodgeModifier PREHENSILE_TAIL_3 = new DodgeModifier("3 Prehensile Tails", 3, false,
 			true);
-	public static final DodgeModifier PREHENSILE_TAIL_4 = new PrehensileDodgeModifier("4 Prehensile Tails", 4, false,
+	public static final DodgeModifier PREHENSILE_TAIL_4 = new DodgeModifier("4 Prehensile Tails", 4, false,
 			true);
-	public static final DodgeModifier PREHENSILE_TAIL_5 = new PrehensileDodgeModifier("5 Prehensile Tails", 5, false,
+	public static final DodgeModifier PREHENSILE_TAIL_5 = new DodgeModifier("5 Prehensile Tails", 5, false,
 			true);
-	public static final DodgeModifier PREHENSILE_TAIL_6 = new PrehensileDodgeModifier("6 Prehensile Tails", 6, false,
+	public static final DodgeModifier PREHENSILE_TAIL_6 = new DodgeModifier("6 Prehensile Tails", 6, false,
 			true);
-	public static final DodgeModifier PREHENSILE_TAIL_7 = new PrehensileDodgeModifier("7 Prehensile Tails", 7, false,
+	public static final DodgeModifier PREHENSILE_TAIL_7 = new DodgeModifier("7 Prehensile Tails", 7, false,
 			true);
-	public static final DodgeModifier PREHENSILE_TAIL_8 = new PrehensileDodgeModifier("8 Prehensile Tails", 8, false,
+	public static final DodgeModifier PREHENSILE_TAIL_8 = new DodgeModifier("8 Prehensile Tails", 8, false,
 			true);
 
 	public static final DodgeModifier STUNTY = new DodgeModifier("Stunty", 0, false, false) {
@@ -62,42 +57,24 @@ public class DodgeModifiers {
 		}
 	};
 
-	public static final class PrehensileDodgeModifier extends DodgeModifier {
-
-		public PrehensileDodgeModifier(String pName, int pModifier, boolean pTacklezoneModifier,
-				boolean pPrehensileTailModifier) {
-			super(pName, pModifier, pTacklezoneModifier, pPrehensileTailModifier);
-
-		}
-
-		@Override
-		public boolean appliesToContext(Skill skill, DodgeContext context) {
-			int number = findNumberOfPrehensileTails(context.actingPlayer.getGame(), context.sourceCoordinate);
-			return number == this.getModifier();
-		}
-
-		private int findNumberOfPrehensileTails(Game pGame, FieldCoordinate pCoordinateFrom) {
-			ActingPlayer actingPlayer = pGame.getActingPlayer();
-			Team otherTeam = UtilPlayer.findOtherTeam(pGame, actingPlayer.getPlayer());
-			int nrOfPrehensileTails = 0;
-			Player<?>[] opponents = UtilPlayer.findAdjacentPlayersWithTacklezones(pGame, otherTeam, pCoordinateFrom, true);
-			for (Player<?> opponent : opponents) {
-				if (UtilCards.hasSkill(pGame, opponent, SkillConstants.PREHENSILE_TAIL)) {
-					nrOfPrehensileTails++;
-				}
+	public DodgeModifier prehensileTailModifier(int number) {
+		for (DodgeModifier modifier: values.values()) {
+			if (modifier.isPrehensileTailModifier() && modifier.getModifier() == number) {
+				return modifier;
 			}
-			return nrOfPrehensileTails;
 		}
-	}
 
-	private Map<String, DodgeModifier> values;
+		return null;
+  }
+
+	private final Map<String, DodgeModifier> values;
 
 	public Map<String, DodgeModifier> values() {
 		return values;
 	}
 
 	public DodgeModifiers() {
-		values = new HashMap<String, DodgeModifier>();
+		values = new HashMap<>();
 		try {
 			Class<?> c = this.getClass();
 			Class<?> cModifierType = DodgeModifier.class;
