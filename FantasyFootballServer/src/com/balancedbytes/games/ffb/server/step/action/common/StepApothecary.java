@@ -46,14 +46,14 @@ import com.eclipsesource.json.JsonValue;
 /**
  * Step in any sequence to handle the apothecary. Offers different modes
  * (ATTACKER, CROWDPUSH, DEFENDER) to modify the behavior.
- * 
+ *
  * Needs to be initialized with stepParameter APOTHECARY_MODE.
- * 
+ *
  * Expects stepParameter INJURY_RESULT to be set by a preceding step.
  * (InjuryResult.getApothecaryMode() must match ApothecaryMode of this step)
  * Expects stepParameter USING_PILING_ON to be set by a preceding step (mode
  * DEFENDER).
- * 
+ *
  * @author Kalimar
  */
 public class StepApothecary extends AbstractStep {
@@ -77,13 +77,9 @@ public class StepApothecary extends AbstractStep {
 	public void init(StepParameterSet pParameterSet) {
 		if (pParameterSet != null) {
 			for (StepParameter parameter : pParameterSet.values()) {
-				switch (parameter.getKey()) {
 				// mandatory
-				case APOTHECARY_MODE:
+				if (parameter.getKey() == StepParameterKey.APOTHECARY_MODE) {
 					fApothecaryMode = (ApothecaryMode) parameter.getValue();
-					break;
-				default:
-					break;
 				}
 			}
 		}
@@ -165,10 +161,10 @@ public class StepApothecary extends AbstractStep {
 				}
 				return false;
 			case DEFENDER_POISONED:
-				fDefenderPoisoned = pParameter != null ? (Boolean) pParameter.getValue() : false;
+				fDefenderPoisoned = (Boolean) pParameter.getValue();
 				return fApothecaryMode == ApothecaryMode.DEFENDER;
 			case ATTACKER_POISONED:
-				fAttackerPoisoned = pParameter != null ? (Boolean) pParameter.getValue() : false;
+				fAttackerPoisoned = (Boolean) pParameter.getValue();
 				return fApothecaryMode == ApothecaryMode.ATTACKER;
 			default:
 				break;
@@ -219,7 +215,7 @@ public class StepApothecary extends AbstractStep {
 				}
 			}
 			if (doNextStep) {
-				Player player = game.getPlayerById(fInjuryResult.injuryContext().getDefenderId());
+				Player<?> player = game.getPlayerById(fInjuryResult.injuryContext().getDefenderId());
 				switch (fInjuryResult.injuryContext().getApothecaryStatus()) {
 				case DO_NOT_USE_IGOR:
 					break;
@@ -263,7 +259,7 @@ public class StepApothecary extends AbstractStep {
 
 	private boolean rollApothecary() {
 		Game game = getGameState().getGame();
-		Player defender = game.getPlayerById(fInjuryResult.injuryContext().getDefenderId());
+		Player<?> defender = game.getPlayerById(fInjuryResult.injuryContext().getDefenderId());
 		if (game.getTeamHome().hasPlayer(defender)) {
 			game.getTurnDataHome().useApothecary();
 		} else {
@@ -308,7 +304,7 @@ public class StepApothecary extends AbstractStep {
 
 	private void curePoison() {
 		Game game = getGameState().getGame();
-		Player player = game.getPlayerById(fInjuryResult.injuryContext().getDefenderId());
+		Player<?> player = game.getPlayerById(fInjuryResult.injuryContext().getDefenderId());
 		if (fDefenderPoisoned && fApothecaryMode == ApothecaryMode.DEFENDER) {
 			game.getFieldModel().removeCardEffect(player, CardEffect.POISONED);
 		} else if (fAttackerPoisoned && fApothecaryMode == ApothecaryMode.ATTACKER) {
