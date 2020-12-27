@@ -19,11 +19,11 @@ import com.balancedbytes.games.ffb.server.step.action.block.StepPushback;
 import com.balancedbytes.games.ffb.server.step.action.block.StepPushback.StepState;
 import com.balancedbytes.games.ffb.server.util.UtilServerDialog;
 import com.balancedbytes.games.ffb.server.util.UtilServerPushback;
-import com.balancedbytes.games.ffb.skill.Pass;
+import com.balancedbytes.games.ffb.skill.Grab;
 import com.balancedbytes.games.ffb.util.ArrayTool;
 import com.balancedbytes.games.ffb.util.UtilCards;
 
-public class GrabBehaviour extends SkillBehaviour<Pass> {
+public class GrabBehaviour extends SkillBehaviour<Grab> {
 	public GrabBehaviour() {
 		super();
 

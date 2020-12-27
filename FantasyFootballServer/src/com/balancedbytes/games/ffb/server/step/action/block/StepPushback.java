@@ -167,9 +167,9 @@ public class StepPushback extends AbstractStep {
 				throw new IllegalStateException("Defender unknown at this point - cannot continue.");
 			}
 			state.pushbackMode = PushbackMode.REGULAR;
-			PushbackSquare[] pushbackSquares = UtilServerPushback.findPushbackSquares(game, state.startingPushbackSquare,
+			state.pushbackSquares = UtilServerPushback.findPushbackSquares(game, state.startingPushbackSquare,
 					state.pushbackMode);
-			fieldModel.add(pushbackSquares);
+			fieldModel.add(state.pushbackSquares);
 			state.freeSquareAroundDefender = false;
 			FieldCoordinate[] adjacentSquares = fieldModel
 					.findAdjacentCoordinates(state.startingPushbackSquare.getCoordinate(), FieldCoordinateBounds.FIELD, 1, false);
@@ -182,7 +182,7 @@ public class StepPushback extends AbstractStep {
 			boolean stopProcessing = getGameState().executeStepHooks(this, state);
 
 			if (!stopProcessing) {
-				if (!ArrayTool.isProvided(pushbackSquares)) {
+				if (!ArrayTool.isProvided(state.pushbackSquares)) {
 					// Crowdpush
 					publishParameter(new StepParameter(StepParameterKey.INJURY_RESULT,
 							UtilServerInjury.handleInjury(this, new InjuryTypeCrowdPush(), null, state.defender,
