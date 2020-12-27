@@ -241,8 +241,9 @@ public class SequenceGenerator {
 		sequence.add(StepId.TAKE_ROOT, param(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.END_THROW_TEAM_MATE));
 		sequence.add(StepId.WILD_ANIMAL, param(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.END_THROW_TEAM_MATE));
 		sequence.add(StepId.BLOOD_LUST);
-		sequence.add(StepId.ALWAYS_HUNGRY, param(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.EAT_TEAM_MATE),
-				param(StepParameterKey.GOTO_LABEL_ON_SUCCESS, IStepLabel.END_THROW_TEAM_MATE));
+		sequence.add(StepId.ALWAYS_HUNGRY,
+				param(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.EAT_TEAM_MATE),
+				param(StepParameterKey.GOTO_LABEL_ON_SUCCESS, IStepLabel.FUMBLE_TTM_PASS));
 		sequence.add(StepId.THROW_TEAM_MATE, param(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.FUMBLE_TTM_PASS));
 		// insert scatterPlayerSequence at this point
 		sequence.jump(IStepLabel.RIGHT_STUFF);
