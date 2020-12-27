@@ -23,6 +23,8 @@ public class ServerUtilBlock {
 		boolean isMultiBlock = (PlayerAction.MULTIPLE_BLOCK == actingPlayer.getPlayerAction());
 		boolean canBlockMoreThanOnce = UtilCards.hasSkillWithProperty(actingPlayer.getPlayer(),
 				NamedProperties.canBlockMoreThanOnce);
+		boolean canBlockSameTeamPlayer = UtilCards.hasSkillWithProperty(actingPlayer.getPlayer(),
+				NamedProperties.canBlockSameTeamPlayer);
 
 		if ((actingPlayer.getPlayer() != null)
 				&& (canBlockMoreThanOnce || (!actingPlayer.hasBlocked() && (isBlitz || isBlock || isMultiBlock)))) {
@@ -30,7 +32,7 @@ public class ServerUtilBlock {
 			FieldCoordinate coordinateAttacker = pGame.getFieldModel().getPlayerCoordinate(actingPlayer.getPlayer());
 			Team otherTeam = UtilPlayer.findOtherTeam(pGame, actingPlayer.getPlayer());
 			addDiceDecorations(pGame, UtilPlayer.findAdjacentBlockablePlayers(pGame, otherTeam, coordinateAttacker));
-			if (canBlockMoreThanOnce) {
+			if (canBlockSameTeamPlayer) {
 				addDiceDecorations(pGame,
 						UtilPlayer.findAdjacentBlockablePlayers(pGame, actingPlayer.getPlayer().getTeam(), coordinateAttacker));
 			}
