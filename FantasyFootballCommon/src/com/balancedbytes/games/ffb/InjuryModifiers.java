@@ -4,6 +4,7 @@ import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.balancedbytes.games.ffb.model.SkillConstants;
 import com.balancedbytes.games.ffb.util.UtilCards;
 
 public class InjuryModifiers {
@@ -34,7 +35,9 @@ public class InjuryModifiers {
 		public boolean appliesToContext(InjuryModifierContext context) {
 			boolean applies = false;
 
-			if (!context.isStab && !UtilCards.hasCard(context.game, context.defender, Card.GOOD_OLD_MAGIC_CODPIECE)) {
+			if (!context.isStab && 
+					!UtilCards.hasCard(context.game, context.defender, Card.GOOD_OLD_MAGIC_CODPIECE) &&
+					context.defender.hasSkill(SkillConstants.STUNTY)) {
 				applies = true;
 			}
 
