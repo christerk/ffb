@@ -312,21 +312,27 @@ public class DiceInterpreter {
 			if ((defender != null) && UtilCards.hasCard(game, defender, Card.GOOD_OLD_MAGIC_CODPIECE)) {
 				pInjuryContext.clearInjuryModifiers();
 			}
-			int total = injuryRoll[0] + injuryRoll[1] + pInjuryContext.getInjuryModifierTotal();
-			if ((total == 8) && (defender != null)
-					&& UtilCards.hasSkillWithProperty(defender, NamedProperties.convertKOToStunOn8)) {
-				playerState = new PlayerState(PlayerState.STUNNED);
-				pInjuryContext.addInjuryModifier(InjuryModifiers.THICK_SKULL);
-			} else if ((total == 7) && pInjuryContext.hasInjuryModifier(InjuryModifiers.STUNTY)) {
-				playerState = new PlayerState(PlayerState.KNOCKED_OUT);
-			} else if ((total == 9) && (defender != null) && pInjuryContext.hasInjuryModifier(InjuryModifiers.STUNTY)) {
-				playerState = new PlayerState(PlayerState.BADLY_HURT);
-			} else if (total > 9) {
-				playerState = null;
-			} else if (total > 7) {
-				playerState = new PlayerState(PlayerState.KNOCKED_OUT);
+			if (injuryRoll == null) {
+				// This is a forced injury, for example triggered by the player being eaten
+				// We expect an injury being available in the injury context
+				playerState = pInjuryContext.getInjury();
 			} else {
-				playerState = new PlayerState(PlayerState.STUNNED);
+				int total = injuryRoll[0] + injuryRoll[1] + pInjuryContext.getInjuryModifierTotal();
+				if ((total == 8) && (defender != null)
+						&& UtilCards.hasSkillWithProperty(defender, NamedProperties.convertKOToStunOn8)) {
+					playerState = new PlayerState(PlayerState.STUNNED);
+					pInjuryContext.addInjuryModifier(InjuryModifiers.THICK_SKULL);
+				} else if ((total == 7) && pInjuryContext.hasInjuryModifier(InjuryModifiers.STUNTY)) {
+					playerState = new PlayerState(PlayerState.KNOCKED_OUT);
+				} else if ((total == 9) && (defender != null) && pInjuryContext.hasInjuryModifier(InjuryModifiers.STUNTY)) {
+					playerState = new PlayerState(PlayerState.BADLY_HURT);
+				} else if (total > 9) {
+					playerState = null;
+				} else if (total > 7) {
+					playerState = new PlayerState(PlayerState.KNOCKED_OUT);
+				} else {
+					playerState = new PlayerState(PlayerState.STUNNED);
+				}
 			}
 		}
 		return playerState;
