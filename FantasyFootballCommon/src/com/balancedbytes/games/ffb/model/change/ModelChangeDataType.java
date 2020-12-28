@@ -194,7 +194,7 @@ public enum ModelChangeDataType implements INamedObject {
 		case SERIOUS_INJURY:
 			return UtilJson.toEnumWithName(new SeriousInjuryFactory(), pJsonValue);
 		case SKILL:
-			return UtilJson.toEnumWithName(new SkillFactory(), pJsonValue);
+			return UtilJson.toEnumWithName(SkillFactory.getInstance(), pJsonValue);
 		case STRING:
 			return pJsonValue.asString();
 		case TRACK_NUMBER:

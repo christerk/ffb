@@ -61,7 +61,7 @@ public class ServerCommandHandlerTalk extends ServerCommandHandler {
 	protected ServerCommandHandlerTalk(FantasyFootballServer server) {
 		super(server);
 
-		skillFactory = new SkillFactory();
+		skillFactory = SkillFactory.getInstance();
 	}
 
 	public NetCommandId getId() {

@@ -133,7 +133,7 @@ public class ClientCommandBuyInducements extends ClientCommand {
 		String[] mercenaryPositionIds = IJsonOption.MERCENARY_POSTION_IDS.getFrom(jsonObject);
 		String[] mercenarySkillNames = IJsonOption.MERCENARY_SKILLS.getFrom(jsonObject);
 		if (StringTool.isProvided(mercenaryPositionIds) && StringTool.isProvided(mercenarySkillNames)) {
-			SkillFactory skillFactory = new SkillFactory();
+			SkillFactory skillFactory = SkillFactory.getInstance();
 			for (int i = 0; i < mercenaryPositionIds.length; i++) {
 				addMercenaryPosition(mercenaryPositionIds[i], skillFactory.forName(mercenarySkillNames[i]));
 			}

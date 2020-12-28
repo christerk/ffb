@@ -445,7 +445,7 @@ public class RosterPosition implements Position {
 				fInsideSkillListTag = false;
 			}
 			if (_XML_TAG_SKILL.equals(pTag)) {
-				Skill skill = new SkillFactory().forName(pValue);
+				Skill skill = SkillFactory.getInstance().forName(pValue);
 				if (skill != null) {
 					fSkillValues.put(skill, fCurrentSkillValue);
 				}
@@ -630,7 +630,7 @@ public class RosterPosition implements Position {
 		JsonArray skillArray = IJsonOption.SKILL_ARRAY.getFrom(jsonObject);
 		int[] skillValues = IJsonOption.SKILL_VALUES.getFrom(jsonObject);
 		if ((skillArray != null) && (skillArray.size() > 0) && ArrayTool.isProvided(skillValues)) {
-			SkillFactory skillFactory = new SkillFactory();
+			SkillFactory skillFactory = SkillFactory.getInstance();
 			for (int i = 0; i < skillArray.size(); i++) {
 				Skill skill = (Skill) UtilJson.toEnumWithName(skillFactory, skillArray.get(i));
 				fSkillValues.put(skill, skillValues[i]);

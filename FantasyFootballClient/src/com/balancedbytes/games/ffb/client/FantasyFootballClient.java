@@ -80,7 +80,7 @@ public class FantasyFootballClient implements IConnectionListener, IDialogCloseL
 
 		setGame(new Game());
 		fStateFactory = new ClientStateFactory(this);
-		skillFactory = new SkillFactory();
+		skillFactory = SkillFactory.getInstance();
 		fCommandHandlerFactory = new ClientCommandHandlerFactory(this);
 
 		fReplayer = new ClientReplayer(this);

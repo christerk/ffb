@@ -30,7 +30,7 @@ public class ReRollSource implements INamedObject {
 	}
 
 	public Skill getSkill() {
-		SkillFactory skillFactory = new SkillFactory();
+		SkillFactory skillFactory = SkillFactory.getInstance();
 		if (skill != null) {
 			return skillFactory.forClass(skill);
 		} else {

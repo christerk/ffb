@@ -70,7 +70,7 @@ public class RosterPlayer extends Player<RosterPosition> {
 		setGender(PlayerGender.MALE);
 		fIconSetIndex = 0;
 		fPosition = new RosterPosition(null);
-		skillFactory = new SkillFactory();
+		skillFactory = SkillFactory.getInstance();
 	}
 
 	@Override
@@ -604,7 +604,7 @@ public class RosterPlayer extends Player<RosterPosition> {
 		fNrOfIcons = IJsonOption.NR_OF_ICONS.getFrom(jsonObject);
 		fIconSetIndex = IJsonOption.POSITION_ICON_INDEX.getFrom(jsonObject);
 
-		SkillFactory skillFactory = new SkillFactory();
+		SkillFactory skillFactory = SkillFactory.getInstance();
 
 		fSkills.clear();
 		JsonArray skillArray = IJsonOption.SKILL_ARRAY.getFrom(jsonObject);

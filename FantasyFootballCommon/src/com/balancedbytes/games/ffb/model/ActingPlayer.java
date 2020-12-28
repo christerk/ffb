@@ -337,7 +337,7 @@ public class ActingPlayer implements IJsonSerializable {
 		fUsedSkills.clear();
 		if (usedSkillsArray != null) {
 			for (int i = 0; i < usedSkillsArray.size(); i++) {
-				fUsedSkills.add((Skill) UtilJson.toEnumWithName(new SkillFactory(), usedSkillsArray.get(i)));
+				fUsedSkills.add((Skill) UtilJson.toEnumWithName(SkillFactory.getInstance(), usedSkillsArray.get(i)));
 			}
 		}
 		return this;

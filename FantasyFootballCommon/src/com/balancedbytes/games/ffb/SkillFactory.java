@@ -3,7 +3,9 @@ package com.balancedbytes.games.ffb;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Hashtable;
+import java.util.Map;
 
 import com.balancedbytes.games.ffb.model.Skill;
 import com.balancedbytes.games.ffb.model.SkillConstants;
@@ -13,12 +15,26 @@ import com.balancedbytes.games.ffb.model.SkillConstants;
  * @author Kalimar
  */
 public class SkillFactory implements INamedObjectFactory {
-	private Hashtable<String, Skill> skills;
-	private Hashtable<Class<? extends Skill>, Skill> skillMap;
+	private Map<String, Skill> skills;
+	private Map<Class<? extends Skill>, Skill> skillMap;
 
-	public SkillFactory() {
-		skills = new Hashtable<>();
-		skillMap = new Hashtable<>();
+	private static SkillFactory instance;
+
+	public static SkillFactory getInstance() {
+		if (instance == null) {
+			synchronized (SkillFactory.class) {
+				if (instance == null) {
+					instance = new SkillFactory();
+				}
+			}
+		}
+
+		return instance;
+	}
+
+	private SkillFactory() {
+		skills = new HashMap<>();
+		skillMap = new HashMap<>();
 
 		try {
 			Field[] fields = SkillConstants.class.getFields();

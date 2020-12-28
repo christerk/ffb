@@ -118,7 +118,7 @@ public interface IJsonOption {
 	JsonBooleanOption CONCEDED = new JsonBooleanOption("conceded");
 	JsonStringOption CONCEDING_TEAM_ID = new JsonStringOption("concedingTeamId");
 	JsonBooleanOption CONCESSION_POSSIBLE = new JsonBooleanOption("concessionPossible");
-	JsonEnumWithNameOption CONFUSION_SKILL = new JsonEnumWithNameOption("confusionSkill", new SkillFactory());
+	JsonEnumWithNameOption CONFUSION_SKILL = new JsonEnumWithNameOption("confusionSkill", SkillFactory.getInstance());
 	JsonFieldCoordinateOption COORDINATE = new JsonFieldCoordinateOption("coordinate");
 	JsonFieldCoordinateOption COORDINATE_FROM = new JsonFieldCoordinateOption("coordinateFrom");
 	JsonFieldCoordinateArrayOption COORDINATES_TO = new JsonFieldCoordinateArrayOption("coordinatesTo");
@@ -377,7 +377,7 @@ public interface IJsonOption {
 	JsonStringArrayOption SETUP_NAMES = new JsonStringArrayOption("setupNames");
 	JsonBooleanOption SETUP_OFFENSE = new JsonBooleanOption("setupOffense");
 	JsonStringOption SHORTHAND = new JsonStringOption("shorthand");
-	JsonEnumWithNameOption SKILL = new JsonEnumWithNameOption("skill", new SkillFactory());
+	JsonEnumWithNameOption SKILL = new JsonEnumWithNameOption("skill", SkillFactory.getInstance());
 	JsonArrayOption SKILL_ARRAY = new JsonArrayOption("skillArray");
 	JsonArrayOption SKILL_CATEGORIES_DOUBLE = new JsonArrayOption("skillCategoriesDouble");
 	JsonArrayOption SKILL_CATEGORIES_NORMAL = new JsonArrayOption("skillCategoriesNormal");

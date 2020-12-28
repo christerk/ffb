@@ -62,7 +62,7 @@ public class GameState implements IModelChangeObserver, IJsonSerializable {
 
 	public GameState(FantasyFootballServer pServer) {
 		fServer = pServer;
-		skillFactory = new SkillFactory();
+		skillFactory = SkillFactory.getInstance();
 		UtilSkillBehaviours.registerBehaviours(skillFactory, fServer.getDebugLog());
 		fGameLog = new GameLog(this);
 		fDiceRoller = new DiceRoller(this);
