@@ -337,7 +337,7 @@ public final class UtilCards {
 	public static Skill getSkillCancelling(Player<?> player, Skill skill) {
 		for (Skill playerSkill : player.getSkills()) {
 			if (playerSkill.canCancel(skill)) {
-				return skill;
+				return playerSkill;
 			}
 		}
 		return null;
