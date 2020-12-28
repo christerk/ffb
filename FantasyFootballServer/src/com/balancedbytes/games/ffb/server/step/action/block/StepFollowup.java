@@ -132,11 +132,13 @@ public class StepFollowup extends AbstractStep {
 					NamedProperties.preventOpponentFollowingUp);
 			if (skillPreventsFollowingUp != null && !defenderState.isProne()
 					&& !((oldDefenderState != null) && oldDefenderState.isProne())) {
+				boolean cancelSkillUsed = false;
 				Skill skillCancelsSkillPreventingFollow = UtilCards.getSkillCancelling(actingPlayer.getPlayer(),
 						skillPreventsFollowingUp);
 				if (usingSkillPreventingFollowUp == null) {
 					if ((PlayerAction.BLITZ == actingPlayer.getPlayerAction()) && skillCancelsSkillPreventingFollow != null) {
 						usingSkillPreventingFollowUp = false;
+						cancelSkillUsed = true;
 						getResult().addReport(new ReportSkillUse(actingPlayer.getPlayerId(), skillCancelsSkillPreventingFollow,
 								true, SkillUse.CANCEL_FEND));
 					}
@@ -148,8 +150,10 @@ public class StepFollowup extends AbstractStep {
 					if (usingSkillPreventingFollowUp) {
 						publishParameter(new StepParameter(StepParameterKey.FOLLOWUP_CHOICE, false));
 					}
-					getResult().addReport(new ReportSkillUse(game.getDefenderId(), skillPreventsFollowingUp,
+					if (!cancelSkillUsed) {
+						getResult().addReport(new ReportSkillUse(game.getDefenderId(), skillPreventsFollowingUp,
 							usingSkillPreventingFollowUp, SkillUse.STAY_AWAY_FROM_OPPONENT));
+					}
 				}
 			} else {
 				usingSkillPreventingFollowUp = false;
@@ -163,8 +167,8 @@ public class StepFollowup extends AbstractStep {
 			}
 		}
 		if (followupChoice != null) {
-			TrackNumber trackNumber = null;
-			FieldCoordinate followupCoordinate = null;
+			TrackNumber trackNumber;
+			FieldCoordinate followupCoordinate;
 			if (followupChoice) {
 				followupCoordinate = defenderPosition;
 				publishParameter(new StepParameter(StepParameterKey.COORDINATE_FROM,
