@@ -19,7 +19,10 @@ public class DivingCatch extends Skill {
 
 	public DivingCatch() {
 		super("Diving Catch", SkillCategory.AGILITY);
+	}
 
+	@Override
+	public void postConstruct() {
 		registerProperty(NamedProperties.canAttemptCatchInAdjacentSquares);
 		registerProperty(NamedProperties.addBonusForAccuratePass);
 	}

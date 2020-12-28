@@ -14,7 +14,10 @@ public class Catch extends Skill {
 
 	public Catch() {
 		super("Catch", SkillCategory.AGILITY);
+	}
 
+	@Override
+	public void postConstruct() {
 		registerRerollSource(ReRolledActions.CATCH, ReRollSources.CATCH);
 	}
 

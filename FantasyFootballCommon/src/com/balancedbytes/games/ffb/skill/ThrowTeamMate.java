@@ -32,7 +32,10 @@ public class ThrowTeamMate extends Skill {
 
 	public ThrowTeamMate() {
 		super("Throw Team-Mate", SkillCategory.EXTRAORDINARY);
+	}
 
+	@Override
+	public void postConstruct() {
 		registerProperty(NamedProperties.canThrowTeamMates);
 		registerModifier(PassingModifiers.THROW_TEAM_MATE);
 	}

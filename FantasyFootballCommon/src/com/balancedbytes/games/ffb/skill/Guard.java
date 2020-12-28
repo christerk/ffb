@@ -13,7 +13,10 @@ public class Guard extends Skill {
 
 	public Guard() {
 		super("Guard", SkillCategory.STRENGTH);
+	}
 
+	@Override
+	public void postConstruct() {
 		registerProperty(NamedProperties.assistInTacklezones);
 	}
 

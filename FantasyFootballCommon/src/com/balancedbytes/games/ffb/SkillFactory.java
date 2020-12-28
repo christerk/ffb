@@ -17,8 +17,8 @@ public class SkillFactory implements INamedObjectFactory {
 	private Hashtable<Class<? extends Skill>, Skill> skillMap;
 
 	public SkillFactory() {
-		skills = new Hashtable<String, Skill>();
-		skillMap = new Hashtable<Class<? extends Skill>, Skill>();
+		skills = new Hashtable<>();
+		skillMap = new Hashtable<>();
 
 		try {
 			Field[] fields = SkillConstants.class.getFields();
@@ -28,12 +28,12 @@ public class SkillFactory implements INamedObjectFactory {
 					addSkill((Skill) field.get(null));
 				}
 			}
-		} catch (IllegalArgumentException e) {
-			// TODO Auto-generated catch block
+		} catch (IllegalArgumentException | IllegalAccessException e) {
 			e.printStackTrace();
-		} catch (IllegalAccessException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		}
+
+		for (Skill skill: skills.values()) {
+			skill.postConstruct();
 		}
 	}
 

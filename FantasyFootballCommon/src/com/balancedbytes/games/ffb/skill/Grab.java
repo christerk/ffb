@@ -21,7 +21,10 @@ public class Grab extends Skill {
 
 	public Grab() {
 		super("Grab", SkillCategory.STRENGTH);
+	}
 
+	@Override
+	public void postConstruct() {
 		registerProperty(NamedProperties.canPushBackToAnySquare);
 		registerProperty(new CancelSkillProperty(SkillConstants.SIDE_STEP));
 	}

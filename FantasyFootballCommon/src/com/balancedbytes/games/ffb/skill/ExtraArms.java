@@ -14,7 +14,10 @@ public class ExtraArms extends Skill {
 
 	public ExtraArms() {
 		super("Extra Arms", SkillCategory.MUTATION);
+	}
 
+	@Override
+	public void postConstruct() {
 		registerModifier(PickupModifiers.EXTRA_ARMS);
 		registerModifier(InterceptionModifiers.EXTRA_ARMS);
 		registerModifier(CatchModifiers.EXTRA_ARMS);

@@ -17,7 +17,10 @@ public class Decay extends Skill {
 
 	public Decay() {
 		super("Decay", SkillCategory.EXTRAORDINARY);
+	}
 
+	@Override
+	public void postConstruct() {
 		registerProperty(new CancelSkillProperty(SkillConstants.NURGLES_ROT));
 
 		registerProperty(NamedProperties.requiresSecondCasualtyRoll);

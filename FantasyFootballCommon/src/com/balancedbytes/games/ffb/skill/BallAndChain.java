@@ -32,7 +32,10 @@ public class BallAndChain extends Skill {
 
 	public BallAndChain() {
 		super("Ball and Chain", SkillCategory.EXTRAORDINARY);
+	}
 
+	@Override
+	public void postConstruct() {
 		registerProperty(NamedProperties.grabOutsideBlock);
 		registerProperty(NamedProperties.placedProneCausesInjuryRoll);
 		registerProperty(NamedProperties.flipSameTeamOpponentToOtherTeam);

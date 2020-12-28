@@ -17,7 +17,10 @@ public class DisturbingPresence extends Skill {
 
 	public DisturbingPresence() {
 		super("Disturbing Presence", SkillCategory.MUTATION);
+	}
 
+	@Override
+	public void postConstruct() {
 		registerProperty(NamedProperties.inflictsDisturbingPresence);
 	}
 

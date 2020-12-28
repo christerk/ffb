@@ -22,7 +22,10 @@ public class Leap extends Skill {
 
 	public Leap() {
 		super("Leap", SkillCategory.AGILITY);
+	}
 
+	@Override
+	public void postConstruct() {
 		registerProperty(NamedProperties.canLeap);
 
 	}

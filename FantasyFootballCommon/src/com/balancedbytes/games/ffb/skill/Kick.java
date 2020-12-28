@@ -17,7 +17,10 @@ public class Kick extends Skill {
 
 	public Kick() {
 		super("Kick", SkillCategory.GENERAL);
+	}
 
+	@Override
+	public void postConstruct() {
 		registerProperty(NamedProperties.canReduceKickDistance);
 	}
 

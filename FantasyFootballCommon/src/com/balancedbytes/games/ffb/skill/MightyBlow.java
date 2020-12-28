@@ -16,7 +16,10 @@ public class MightyBlow extends Skill {
 
 	public MightyBlow() {
 		super("Mighty Blow", SkillCategory.STRENGTH);
+	}
 
+	@Override
+	public void postConstruct() {
 		registerModifier(ArmorModifiers.MIGHTY_BLOW);
 		registerModifier(InjuryModifiers.MIGHTY_BLOW);
 	}

@@ -16,7 +16,10 @@ public class KickOffReturn extends Skill {
 
 	public KickOffReturn() {
 		super("Kick-Off Return", SkillCategory.GENERAL);
+	}
 
+	@Override
+	public void postConstruct() {
 		registerProperty(NamedProperties.canMoveDuringKickOffScatter);
 
 	}

@@ -14,7 +14,10 @@ public class NoHands extends Skill {
 
 	public NoHands() {
 		super("No Hands", SkillCategory.EXTRAORDINARY);
+	}
 
+	@Override
+	public void postConstruct() {
 		registerProperty(NamedProperties.preventCatch);
 		registerProperty(NamedProperties.preventHoldBall);
 	}

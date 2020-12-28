@@ -14,7 +14,10 @@ public class Stakes extends Skill {
 
 	public Stakes() {
 		super("Stakes", SkillCategory.EXTRAORDINARY);
+	}
 
+	@Override
+	public void postConstruct() {
 		registerModifier(ArmorModifiers.STAKES);
 
 	}

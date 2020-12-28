@@ -13,7 +13,10 @@ public class Pass extends Skill {
 
 	public Pass() {
 		super("Pass", SkillCategory.PASSING);
+	}
 
+	@Override
+	public void postConstruct() {
 		registerRerollSource(ReRolledActions.PASS, ReRollSources.PASS);
 	}
 

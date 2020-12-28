@@ -13,7 +13,10 @@ public class SureFeet extends Skill {
 
 	public SureFeet() {
 		super("Sure Feet", SkillCategory.AGILITY);
+	}
 
+	@Override
+	public void postConstruct() {
 		registerRerollSource(ReRolledActions.GO_FOR_IT, ReRollSources.SURE_FEET);
 	}
 

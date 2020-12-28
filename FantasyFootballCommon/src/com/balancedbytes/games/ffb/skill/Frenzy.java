@@ -20,7 +20,10 @@ public class Frenzy extends Skill {
 
 	public Frenzy() {
 		super("Frenzy", SkillCategory.GENERAL);
+	}
 
+	@Override
+	public void postConstruct() {
 		registerProperty(NamedProperties.forceFollowup);
 		registerProperty(NamedProperties.forceSecondBlock);
 	}

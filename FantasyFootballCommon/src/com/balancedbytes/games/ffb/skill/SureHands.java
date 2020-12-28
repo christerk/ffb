@@ -16,7 +16,10 @@ public class SureHands extends Skill {
 
 	public SureHands() {
 		super("Sure Hands", SkillCategory.GENERAL);
+	}
 
+	@Override
+	public void postConstruct() {
 		registerProperty(new CancelSkillProperty(SkillConstants.STRIP_BALL));
 
 		registerRerollSource(ReRolledActions.PICK_UP, ReRollSources.SURE_HANDS);

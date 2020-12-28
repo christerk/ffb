@@ -13,7 +13,10 @@ public class Sprint extends Skill {
 
 	public Sprint() {
 		super("Sprint", SkillCategory.AGILITY);
+	}
 
+	@Override
+	public void postConstruct() {
 		registerProperty(NamedProperties.canMakeAnExtraGfi);
 	}
 

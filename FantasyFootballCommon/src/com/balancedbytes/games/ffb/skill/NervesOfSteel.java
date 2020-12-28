@@ -15,7 +15,10 @@ public class NervesOfSteel extends Skill {
 
 	public NervesOfSteel() {
 		super("Nerves of Steel", SkillCategory.PASSING);
+	}
 
+	@Override
+	public void postConstruct() {
 		registerModifier(PassingModifiers.NERVES_OF_STEEL);
 		registerModifier(InterceptionModifiers.NERVES_OF_STEEL);
 		registerModifier(CatchModifiers.NERVES_OF_STEEL);

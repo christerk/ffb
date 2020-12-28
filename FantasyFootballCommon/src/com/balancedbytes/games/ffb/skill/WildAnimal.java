@@ -16,7 +16,10 @@ public class WildAnimal extends Skill {
 
 	public WildAnimal() {
 		super("Wild Animal", SkillCategory.EXTRAORDINARY);
+	}
 
+	@Override
+	public void postConstruct() {
 		registerProperty(NamedProperties.enableStandUpAndEndBlitzAction);
 	}
 

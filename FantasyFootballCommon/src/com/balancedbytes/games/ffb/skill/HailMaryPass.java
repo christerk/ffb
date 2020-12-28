@@ -18,7 +18,10 @@ public class HailMaryPass extends Skill {
 
 	public HailMaryPass() {
 		super("Hail Mary Pass", SkillCategory.PASSING);
+	}
 
+	@Override
+	public void postConstruct() {
 		registerProperty(NamedProperties.canPassToAnySquare);
 
 	}

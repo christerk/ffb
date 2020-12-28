@@ -19,7 +19,10 @@ public class Timmmber extends Skill {
 
 	public Timmmber() {
 		super("Timmm-ber!", SkillCategory.EXTRAORDINARY);
+	}
 
+	@Override
+	public void postConstruct() {
 		registerProperty(NamedProperties.allowStandupAssists);
 	}
 

@@ -19,38 +19,29 @@ import com.balancedbytes.games.ffb.ReRolledAction;
 import com.balancedbytes.games.ffb.SkillCategory;
 import com.balancedbytes.games.ffb.model.modifier.CancelSkillProperty;
 
-public class Skill implements INamedObject {
+public abstract class Skill implements INamedObject {
 
 	private String name;
 	private SkillCategory category;
-	private List<PlayerModifier> playerModifiers;
-	private List<PassModifier> passModifiers;
-	private List<PickupModifier> pickupModifiers;
-	private List<DodgeModifier> dodgeModifiers;
-	private List<LeapModifier> leapModifiers;
-	private List<InterceptionModifier> interceptionModifiers;
-	private List<InjuryModifier> injuryModifiers;
-	private List<ArmorModifier> armorModifiers;
-	private List<CatchModifier> catchModifiers;
+	private List<PlayerModifier> playerModifiers = new ArrayList<>();
+	private List<PassModifier> passModifiers = new ArrayList<>();
+	private List<PickupModifier> pickupModifiers = new ArrayList<>();
+	private List<DodgeModifier> dodgeModifiers = new ArrayList<>();
+	private List<LeapModifier> leapModifiers = new ArrayList<>();
+	private List<InterceptionModifier> interceptionModifiers = new ArrayList<>();
+	private List<InjuryModifier> injuryModifiers = new ArrayList<>();
+	private List<ArmorModifier> armorModifiers = new ArrayList<>();
+	private List<CatchModifier> catchModifiers = new ArrayList<>();
 	private ISkillBehaviour<? extends Skill> behaviour;
-	private List<ISkillProperty> skillProperties;
-	private Hashtable<ReRolledAction, ReRollSource> rerollSources;
+	private List<ISkillProperty> skillProperties = new ArrayList<>();
+	private Hashtable<ReRolledAction, ReRollSource> rerollSources = new Hashtable<>();
 
 	public Skill(String name, SkillCategory category) {
 		this.name = name;
 		this.category = category;
-		skillProperties = new ArrayList<>();
-		leapModifiers = new ArrayList<>();
-		playerModifiers = new ArrayList<>();
-		passModifiers = new ArrayList<>();
-		pickupModifiers = new ArrayList<>();
-		dodgeModifiers = new ArrayList<>();
-		interceptionModifiers = new ArrayList<>();
-		catchModifiers = new ArrayList<>();
-		injuryModifiers = new ArrayList<>();
-		armorModifiers = new ArrayList<>();
-		rerollSources = new Hashtable<>();
 	}
+
+	public void postConstruct() {}
 
 	@Override
 	public String getName() {
@@ -66,11 +57,7 @@ public class Skill implements INamedObject {
 	}
 
 	public static Comparator<Skill> getComparator() {
-		return new Comparator<Skill>() {
-			public int compare(Skill a, Skill b) {
-				return a.getName().compareTo(b.getName());
-			}
-		};
+		return Comparator.comparing(Skill::getName);
 	}
 
 	protected void registerModifier(LeapModifier modifier) {

@@ -20,7 +20,10 @@ public class DivingTackle extends Skill {
 
 	public DivingTackle() {
 		super("Diving Tackle", SkillCategory.AGILITY);
+	}
 
+	@Override
+	public void postConstruct() {
 		registerProperty(NamedProperties.canAttemptToTackleDodgingPlayer);
 	}
 }

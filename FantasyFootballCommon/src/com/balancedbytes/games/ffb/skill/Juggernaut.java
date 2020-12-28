@@ -16,7 +16,10 @@ public class Juggernaut extends Skill {
 
 	public Juggernaut() {
 		super("Juggernaut", SkillCategory.STRENGTH);
+	}
 
+	@Override
+	public void postConstruct() {
 		registerProperty(new CancelSkillProperty(SkillConstants.JUGGERNAUT));
 		registerProperty(new CancelSkillProperty(SkillConstants.WRESTLE));
 		registerProperty(new CancelSkillProperty(SkillConstants.STAND_FIRM));

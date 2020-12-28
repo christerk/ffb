@@ -26,7 +26,10 @@ public class Stunty extends Skill {
 
 	public Stunty() {
 		super("Stunty", SkillCategory.EXTRAORDINARY);
+	}
 
+	@Override
+	public void postConstruct() {
 		registerModifier(PassingModifiers.STUNTY);
 		registerModifier(InjuryModifiers.STUNTY);
 

@@ -14,7 +14,10 @@ public class Fend extends Skill {
 
 	public Fend() {
 		super("Fend", SkillCategory.GENERAL);
+	}
 
+	@Override
+	public void postConstruct() {
 		registerProperty(NamedProperties.preventOpponentFollowingUp);
 	}
 

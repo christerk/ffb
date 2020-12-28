@@ -19,7 +19,10 @@ public class Stab extends Skill {
 
 	public Stab() {
 		super("Stab", SkillCategory.EXTRAORDINARY);
+	}
 
+	@Override
+	public void postConstruct() {
 		registerProperty(NamedProperties.canPerformArmourRollInsteadOfBlock);
 	}
 

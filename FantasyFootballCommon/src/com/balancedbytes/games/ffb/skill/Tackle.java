@@ -15,7 +15,10 @@ public class Tackle extends Skill {
 
 	public Tackle() {
 		super("Tackle", SkillCategory.GENERAL);
+	}
 
+	@Override
+	public void postConstruct() {
 		registerProperty(new CancelSkillProperty(SkillConstants.DODGE));
 	}
 

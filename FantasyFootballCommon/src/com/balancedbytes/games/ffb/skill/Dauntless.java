@@ -20,7 +20,10 @@ public class Dauntless extends Skill {
 
 	public Dauntless() {
 		super("Dauntless", SkillCategory.GENERAL);
+	}
 
+	@Override
+	public void postConstruct() {
 		registerProperty(NamedProperties.canRollToMatchOpponentsStrength);
 	}
 

@@ -27,7 +27,10 @@ public class PassBlock extends Skill {
 
 	public PassBlock() {
 		super("Pass Block", SkillCategory.GENERAL);
+	}
 
+	@Override
+	public void postConstruct() {
 		registerProperty(NamedProperties.canMoveWhenOpponentPasses);
 	}
 

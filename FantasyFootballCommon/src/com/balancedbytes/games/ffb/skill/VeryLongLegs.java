@@ -16,7 +16,10 @@ public class VeryLongLegs extends Skill {
 
 	public VeryLongLegs() {
 		super("Very Long Legs", SkillCategory.MUTATION);
+	}
 
+	@Override
+	public void postConstruct() {
 		registerProperty(new CancelSkillProperty(SkillConstants.SAFE_THROW));
 
 		registerModifier(LeapModifiers.VERY_LONG_LEGS);

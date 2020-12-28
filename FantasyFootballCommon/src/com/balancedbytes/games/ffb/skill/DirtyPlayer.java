@@ -16,7 +16,10 @@ public class DirtyPlayer extends Skill {
 
 	public DirtyPlayer() {
 		super("Dirty Player", SkillCategory.GENERAL);
+	}
 
+	@Override
+	public void postConstruct() {
 		registerModifier(ArmorModifiers.DIRTY_PLAYER);
 		registerModifier(InjuryModifiers.DIRTY_PLAYER);
 

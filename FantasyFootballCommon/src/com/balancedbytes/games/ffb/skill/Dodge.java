@@ -18,7 +18,10 @@ public class Dodge extends Skill {
 
 	public Dodge() {
 		super("Dodge", SkillCategory.AGILITY);
+	}
 
+	@Override
+	public void postConstruct() {
 		registerProperty(NamedProperties.ignoreDefenderStumblesResult);
 
 		registerRerollSource(ReRolledActions.DODGE, ReRollSources.DODGE);

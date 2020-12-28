@@ -13,7 +13,10 @@ public class Block extends Skill {
 
 	public Block() {
 		super("Block", SkillCategory.GENERAL);
+	}
 
+	@Override
+	public void postConstruct() {
 		registerProperty(NamedProperties.preventFallOnBothDown);
 	}
 

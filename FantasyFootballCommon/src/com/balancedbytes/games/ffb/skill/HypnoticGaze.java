@@ -20,7 +20,10 @@ public class HypnoticGaze extends Skill {
 
 	public HypnoticGaze() {
 		super("Hypnotic Gaze", SkillCategory.EXTRAORDINARY);
+	}
 
+	@Override
+	public void postConstruct() {
 		registerProperty(NamedProperties.inflictsConfusion);
 	}
 

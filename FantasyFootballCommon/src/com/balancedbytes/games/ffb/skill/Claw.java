@@ -14,7 +14,10 @@ public class Claw extends Skill {
 
 	public Claw() {
 		super("Claw", SkillCategory.MUTATION);
+	}
 
+	@Override
+	public void postConstruct() {
 		registerModifier(ArmorModifiers.CLAWS);
 	}
 

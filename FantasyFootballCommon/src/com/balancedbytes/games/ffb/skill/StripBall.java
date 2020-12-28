@@ -14,7 +14,10 @@ public class StripBall extends Skill {
 
 	public StripBall() {
 		super("Strip Ball", SkillCategory.GENERAL);
+	}
 
+	@Override
+	public void postConstruct() {
 		registerProperty(NamedProperties.forceOpponentToDropBallOnPushback);
 	}
 

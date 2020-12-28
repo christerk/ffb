@@ -30,7 +30,10 @@ public class Chainsaw extends Skill {
 
 	public Chainsaw() {
 		super("Chainsaw", SkillCategory.EXTRAORDINARY);
+	}
 
+	@Override
+	public void postConstruct() {
 		registerProperty(NamedProperties.useSpecialBlockRules);
 		registerProperty(NamedProperties.blocksLikeChainsaw);
 

@@ -40,7 +40,10 @@ public class KickTeamMate extends Skill {
 
 	public KickTeamMate() {
 		super("Kick Team-Mate", SkillCategory.EXTRAORDINARY);
+	}
 
+	@Override
+	public void postConstruct() {
 		registerProperty(NamedProperties.canKickTeamMates);
 	}
 

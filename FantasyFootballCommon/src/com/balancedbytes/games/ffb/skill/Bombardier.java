@@ -30,7 +30,10 @@ public class Bombardier extends Skill {
 
 	public Bombardier() {
 		super("Bombardier", SkillCategory.EXTRAORDINARY);
+	}
 
+	@Override
+	public void postConstruct() {
 		registerProperty(NamedProperties.enableThrowBombAction);
 	}
 

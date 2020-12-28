@@ -6,6 +6,6 @@ package com.balancedbytes.games.ffb;
  */
 public interface INamedObject {
 
-	public String getName();
+	String getName();
 
 }

@@ -20,7 +20,10 @@ public class BoneHead extends Skill {
 
 	public BoneHead() {
 		super("Bone-Head", SkillCategory.EXTRAORDINARY);
+	}
 
+	@Override
+	public void postConstruct() {
 		registerProperty(NamedProperties.appliesConfusion);
 	}
 

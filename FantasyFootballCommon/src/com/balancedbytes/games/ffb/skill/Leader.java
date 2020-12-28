@@ -20,7 +20,10 @@ public class Leader extends Skill {
 
 	public Leader() {
 		super("Leader", SkillCategory.PASSING);
+	}
 
+	@Override
+	public void postConstruct() {
 		registerProperty(NamedProperties.grantsTeamRerollWhenOnPitch);
 	}
 

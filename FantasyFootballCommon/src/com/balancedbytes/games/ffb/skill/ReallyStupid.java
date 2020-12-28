@@ -25,7 +25,10 @@ public class ReallyStupid extends Skill {
 
 	public ReallyStupid() {
 		super("Really Stupid", SkillCategory.EXTRAORDINARY);
+	}
 
+	@Override
+	public void postConstruct() {
 		registerProperty(NamedProperties.appliesConfusion);
 	}
 

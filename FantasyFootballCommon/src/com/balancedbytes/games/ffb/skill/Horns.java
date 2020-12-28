@@ -16,7 +16,10 @@ public class Horns extends Skill {
 
 	public Horns() {
 		super("Horns", SkillCategory.MUTATION);
+	}
 
+	@Override
+	public void postConstruct() {
 		registerProperty(NamedProperties.addStrengthOnBlitz);
 
 	}

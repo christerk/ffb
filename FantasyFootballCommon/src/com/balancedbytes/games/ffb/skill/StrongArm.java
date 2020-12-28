@@ -12,7 +12,10 @@ public class StrongArm extends Skill {
 
 	public StrongArm() {
 		super("Strong Arm", SkillCategory.STRENGTH);
+	}
 
+	@Override
+	public void postConstruct() {
 		registerModifier(PassingModifiers.STRONG_ARM);
 	}
 

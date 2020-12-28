@@ -13,7 +13,10 @@ public class TwoHeads extends Skill {
 
 	public TwoHeads() {
 		super("Two Heads", SkillCategory.MUTATION);
+	}
 
+	@Override
+	public void postConstruct() {
 		registerModifier(DodgeModifiers.TWO_HEADS);
 	}
 }

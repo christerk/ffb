@@ -17,6 +17,10 @@ public class MonstrousMouth extends Skill {
 
 	public MonstrousMouth() {
 		super("Monstrous Mouth", SkillCategory.EXTRAORDINARY);
+	}
+
+	@Override
+	public void postConstruct() {
 		registerProperty(new CancelSkillProperty(SkillConstants.STRIP_BALL));
 		
 		registerRerollSource(ReRolledActions.CATCH, ReRollSources.MONSTROUS_MOUTH);

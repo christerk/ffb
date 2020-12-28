@@ -14,7 +14,10 @@ public class BreakTackle extends Skill {
 
 	public BreakTackle() {
 		super("Break Tackle", SkillCategory.STRENGTH);
+	}
 
+	@Override
+	public void postConstruct() {
 		registerModifier(DodgeModifiers.BREAK_TACKLE);
 	}
 

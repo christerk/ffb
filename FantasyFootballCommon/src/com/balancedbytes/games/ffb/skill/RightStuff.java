@@ -22,7 +22,10 @@ public class RightStuff extends Skill {
 
 	public RightStuff() {
 		super("Right Stuff", SkillCategory.EXTRAORDINARY);
+	}
 
+	@Override
+	public void postConstruct() {
 		registerProperty(NamedProperties.canBeThrown);
 		registerProperty(NamedProperties.canBeKicked);
 		registerProperty(NamedProperties.ignoreTackleWhenBlocked);

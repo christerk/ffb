@@ -18,7 +18,9 @@ public class Pro extends Skill {
 
 	public Pro() {
 		super("Pro", SkillCategory.GENERAL);
+	}
 
+	public void postConstruct() {
 		registerProperty(NamedProperties.canRerollOncePerTurn);
 
 	}

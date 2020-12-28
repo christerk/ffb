@@ -16,7 +16,10 @@ public class WeepingDagger extends Skill {
 
 	public WeepingDagger() {
 		super("Weeping Dagger", SkillCategory.EXTRAORDINARY);
+	}
 
+	@Override
+	public void postConstruct() {
 		registerProperty(NamedProperties.appliesPoisonOnBadlyHurt);
 	}
 

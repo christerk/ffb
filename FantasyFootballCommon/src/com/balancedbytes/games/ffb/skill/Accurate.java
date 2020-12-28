@@ -11,7 +11,10 @@ public class Accurate extends Skill {
 
 	public Accurate() {
 		super("Accurate", SkillCategory.PASSING);
+	}
 
+	@Override
+	public void postConstruct(){
 		registerModifier(PassingModifiers.ACCURATE);
 	}
 

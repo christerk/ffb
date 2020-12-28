@@ -20,7 +20,10 @@ public class SideStep extends Skill {
 
 	public SideStep() {
 		super("Side Step", SkillCategory.AGILITY);
+	}
 
+	@Override
+	public void postConstruct() {
 		registerProperty(new CancelSkillProperty(SkillConstants.GRAB));
 
 		registerProperty(NamedProperties.canChooseOwnPushedBackSquare);

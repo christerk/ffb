@@ -17,7 +17,10 @@ public class MultipleBlock extends Skill {
 
 	public MultipleBlock() {
 		super("Multiple Block", SkillCategory.STRENGTH);
+	}
 
+	@Override
+	public void postConstruct() {
 		registerProperty(NamedProperties.canBlockMoreThanOnce);
 
 	}

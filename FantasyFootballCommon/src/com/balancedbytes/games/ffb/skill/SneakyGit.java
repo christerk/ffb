@@ -14,7 +14,10 @@ public class SneakyGit extends Skill {
 
 	public SneakyGit() {
 		super("Sneaky Git", SkillCategory.AGILITY);
+	}
 
+	@Override
+	public void postConstruct() {
 		registerProperty(NamedProperties.canAlwaysAssistFouls);
 	}
 

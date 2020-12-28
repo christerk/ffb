@@ -15,7 +15,10 @@ public class Swarming extends Skill {
 
 	public Swarming() {
 		super("Swarming", SkillCategory.EXTRAORDINARY);
+	}
 
+	@Override
+	public void postConstruct() {
 		registerProperty(NamedProperties.canSneakExtraPlayersOntoPitch);
 
 	}

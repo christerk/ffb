@@ -17,7 +17,10 @@ public class JumpUp extends Skill {
 
 	public JumpUp() {
 		super("Jump Up", SkillCategory.AGILITY);
+	}
 
+	@Override
+	public void postConstruct() {
 		registerProperty(NamedProperties.canStandUpForFree);
 	}
 

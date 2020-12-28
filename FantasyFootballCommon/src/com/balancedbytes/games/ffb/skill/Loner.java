@@ -16,7 +16,10 @@ public class Loner extends Skill {
 
 	public Loner() {
 		super("Loner", SkillCategory.EXTRAORDINARY);
+	}
 
+	@Override
+	public void postConstruct() {
 		registerProperty(NamedProperties.preventCardRabbitsFoot);
 		registerProperty(NamedProperties.hasToRollToUseTeamReroll);
 	}

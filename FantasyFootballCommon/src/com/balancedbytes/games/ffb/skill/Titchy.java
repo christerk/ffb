@@ -16,7 +16,10 @@ public class Titchy extends Skill {
 
 	public Titchy() {
 		super("Titchy", SkillCategory.EXTRAORDINARY);
+	}
 
+	@Override
+	public void postConstruct() {
 		registerProperty(NamedProperties.hasNoTacklezone);
 		registerModifier(DodgeModifiers.TITCHY);
 	}

@@ -21,7 +21,10 @@ public class Regeneration extends Skill {
 
 	public Regeneration() {
 		super("Regeneration", SkillCategory.EXTRAORDINARY);
+	}
 
+	@Override
+	public void postConstruct() {
 		registerProperty(NamedProperties.preventRaiseFromDead);
 		registerProperty(NamedProperties.canRollToSaveFromInjury);
 

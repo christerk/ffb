@@ -13,7 +13,10 @@ public class ThickSkull extends Skill {
 
 	public ThickSkull() {
 		super("Thick Skull", SkillCategory.STRENGTH);
+	}
 
+	@Override
+	public void postConstruct() {
 		registerProperty(NamedProperties.convertKOToStunOn8);
 	}
 

@@ -14,7 +14,10 @@ public class BigHand extends Skill {
 
 	public BigHand() {
 		super("Big Hand", SkillCategory.MUTATION);
+	}
 
+	@Override
+	public void postConstruct() {
 		registerProperty(NamedProperties.ignoreTacklezonesWhenPickingUp);
 		registerProperty(NamedProperties.ignoreWeatherWhenPickingUp);
 		registerModifier(PickupModifiers.BIG_HAND);
