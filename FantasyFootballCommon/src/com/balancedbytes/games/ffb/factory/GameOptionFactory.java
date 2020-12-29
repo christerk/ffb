@@ -246,7 +246,7 @@ public class GameOptionFactory {
 
 	// XML serialization
 
-	public IGameOption fromXmlElement(String pXmlTag, Attributes pXmlAttributes) {
+	public IGameOption fromXmlElement(Game game, String pXmlTag, Attributes pXmlAttributes) {
 		IGameOption option = null;
 		if (IGameOption.XML_TAG.equals(pXmlTag)) {
 			String name = UtilXml.getStringAttribute(pXmlAttributes, IGameOption.XML_ATTRIBUTE_NAME);

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.balancedbytes.games.ffb.IRollModifier;
+import com.balancedbytes.games.ffb.FactoryType.Factory;
 import com.balancedbytes.games.ffb.factory.CatchModifierFactory;
 import com.balancedbytes.games.ffb.factory.DodgeModifierFactory;
 import com.balancedbytes.games.ffb.factory.GazeModifierFactory;
@@ -110,7 +111,7 @@ public class ReportSkillRoll implements IReport {
 
 	// transformation
 
-	public IReport transform() {
+	public IReport transform(Game game) {
 		return new ReportSkillRoll(getId(), getPlayerId(), isSuccessful(), getRoll(), getMinimumRoll(), isReRolled(),
 				getRollModifiers());
 	}
@@ -145,7 +146,7 @@ public class ReportSkillRoll implements IReport {
 		fReRolled = IJsonOption.RE_ROLLED.getFrom(game, jsonObject);
 		JsonArray modifierArray = IJsonOption.ROLL_MODIFIERS.getFrom(game, jsonObject);
 		if (modifierArray != null) {
-			IRollModifierFactory modifierFactory = createRollModifierFactory();
+			IRollModifierFactory modifierFactory = createRollModifierFactory(game);
 			if (modifierFactory != null) {
 				for (int i = 0; i < modifierArray.size(); i++) {
 					fRollModifierList.add((IRollModifier) UtilJson.toEnumWithName(modifierFactory, modifierArray.get(i)));
@@ -155,27 +156,27 @@ public class ReportSkillRoll implements IReport {
 		return this;
 	}
 
-	private IRollModifierFactory createRollModifierFactory() {
+	private IRollModifierFactory createRollModifierFactory(Game game) {
 		switch (getId()) {
 		case CATCH_ROLL:
-			return new CatchModifierFactory();
+			return game.<CatchModifierFactory>getFactory(Factory.catchModifier);
 		case DODGE_ROLL:
-			return new DodgeModifierFactory();
+			return game.<DodgeModifierFactory>getFactory(Factory.dodgeModifier);
 		case GO_FOR_IT_ROLL:
-			return new GoForItModifierFactory();
+			return game.<GoForItModifierFactory>getFactory(Factory.goForItModifier);
 		case INTERCEPTION_ROLL:
-			return new InterceptionModifierFactory();
+			return game.<InterceptionModifierFactory>getFactory(Factory.interceptionModifier);
 		case LEAP_ROLL:
-			return new LeapModifierFactory();
+			return game.<LeapModifierFactory>getFactory(Factory.leapModifier);
 		case PASS_ROLL:
 		case THROW_TEAM_MATE_ROLL:
-			return new PassModifierFactory();
+			return game.<PassModifierFactory>getFactory(Factory.passModifier);
 		case PICK_UP_ROLL:
-			return new PickupModifierFactory();
+			return game.<PickupModifierFactory>getFactory(Factory.pickupModifier);
 		case RIGHT_STUFF_ROLL:
-			return new RightStuffModifierFactory();
+			return game.<RightStuffModifierFactory>getFactory(Factory.rightStuffModifier);
 		case HYPNOTIC_GAZE_ROLL:
-			return new GazeModifierFactory();
+			return game.<GazeModifierFactory>getFactory(Factory.gazeModifier);
 		default:
 			return null;
 		}

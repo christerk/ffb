@@ -51,7 +51,7 @@ public class ReportReRoll implements IReport {
 
 	// transformation
 
-	public IReport transform() {
+	public IReport transform(Game game) {
 		return new ReportReRoll(getPlayerId(), getReRollSource(), isSuccessful(), getRoll());
 	}
 

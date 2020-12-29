@@ -213,7 +213,7 @@ public class AdminListEntry implements IXmlSerializable {
 		return UtilXml.toXml(this, pIndent);
 	}
 
-	public IXmlSerializable startXmlElement(String pXmlTag, Attributes pXmlAttributes) {
+	public IXmlSerializable startXmlElement(Game game, String pXmlTag, Attributes pXmlAttributes) {
 		if (XML_TAG.equals(pXmlTag)) {
 			fGameId = UtilXml.getLongAttribute(pXmlAttributes, _XML_ATTRIBUTE_ID);
 			fStatus = new GameStatusFactory().forName(UtilXml.getStringAttribute(pXmlAttributes, _XML_ATTRIBUTE_STATUS));

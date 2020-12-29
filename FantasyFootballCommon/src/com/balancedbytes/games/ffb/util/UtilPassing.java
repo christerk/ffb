@@ -27,11 +27,20 @@ public class UtilPassing {
 
 	public static double RULER_WIDTH = 1.74;
 
-	private static final String[] _THROWING_RANGE_TABLE = new String[] { "T Q Q Q S S S L L L L B B B",
-			"Q Q Q Q S S S L L L L B B B", "Q Q Q S S S S L L L L B B  ", "Q Q S S S S S L L L B B B  ",
-			"S S S S S S L L L L B B B  ", "S S S S S L L L L B B B    ", "S S S S L L L L L B B B    ",
-			"L L L L L L L L B B B      ", "L L L L L L L B B B B      ", "L L L L L B B B B B        ",
-			"L L L B B B B B B          ", "B B B B B B B              ", "B B B B B                  ",
+	private static final String[] _THROWING_RANGE_TABLE = new String[] {
+			"T Q Q Q S S S L L L L B B B",
+			"Q Q Q Q S S S L L L L B B B",
+			"Q Q Q S S S S L L L L B B  ",
+			"Q Q S S S S S L L L B B B  ",
+			"S S S S S S L L L L B B B  ",
+			"S S S S S L L L L B B B    ",
+			"S S S S L L L L L B B B    ",
+			"L L L L L L L L B B B      ",
+			"L L L L L L L B B B B      ",
+			"L L L L L B B B B B        ",
+			"L L L B B B B B B          ",
+			"B B B B B B B              ",
+			"B B B B B                  ",
 			"B B                        " };
 
 	private static final PassingDistance[][] _PASSING_DISTANCES_TABLE = new PassingDistance[14][14];

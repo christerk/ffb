@@ -38,7 +38,7 @@ public class ReportFumbblResultUpload implements IReport {
 
 	// transformation
 
-	public IReport transform() {
+	public IReport transform(Game game) {
 		return new ReportFumbblResultUpload(isSuccessful(), getUploadStatus());
 	}
 

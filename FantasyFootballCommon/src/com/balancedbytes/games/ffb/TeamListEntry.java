@@ -147,7 +147,7 @@ public class TeamListEntry implements IXmlSerializable, IJsonSerializable {
 		return UtilXml.toXml(this, pIndent);
 	}
 
-	public IXmlReadable startXmlElement(String pXmlTag, Attributes pXmlAttributes) {
+	public IXmlReadable startXmlElement(Game game, String pXmlTag, Attributes pXmlAttributes) {
 		return this;
 	}
 

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.balancedbytes.games.ffb.Direction;
+import com.balancedbytes.games.ffb.FactoryType.Factory;
 import com.balancedbytes.games.ffb.factory.DirectionFactory;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
@@ -83,8 +84,8 @@ public class ReportScatterBall implements IReport {
 
 	// transformation
 
-	public IReport transform() {
-		return new ReportScatterBall(new DirectionFactory().transform(getDirections()), getRolls(), isGustOfWind());
+	public IReport transform(Game game) {
+		return new ReportScatterBall(game.<DirectionFactory>getFactory(Factory.direction).transform(getDirections()), getRolls(), isGustOfWind());
 	}
 
 	// JSON serialization
@@ -108,7 +109,7 @@ public class ReportScatterBall implements IReport {
 		JsonArray directionArray = IJsonOption.DIRECTION_ARRAY.getFrom(game, jsonObject);
 		if (directionArray != null) {
 			for (int i = 0; i < directionArray.size(); i++) {
-				addDirection((Direction) UtilJson.toEnumWithName(new DirectionFactory(), directionArray.get(i)));
+				addDirection((Direction) UtilJson.toEnumWithName(game.<DirectionFactory>getFactory(Factory.direction), directionArray.get(i)));
 			}
 		}
 		addRolls(IJsonOption.ROLLS.getFrom(game, jsonObject));

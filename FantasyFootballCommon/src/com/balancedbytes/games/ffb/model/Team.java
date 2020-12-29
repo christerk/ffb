@@ -332,28 +332,28 @@ public class Team implements IXmlSerializable, IJsonSerializable {
 		return UtilXml.toXml(this, pIndent);
 	}
 
-	public IXmlReadable startXmlElement(String pXmlTag, Attributes pXmlAttributes) {
+	public IXmlReadable startXmlElement(Game game, String pXmlTag, Attributes pXmlAttributes) {
 		IXmlReadable xmlElement = this;
 		if (XML_TAG.equals(pXmlTag)) {
 			setId(UtilXml.getStringAttribute(pXmlAttributes, _XML_ATTRIBUTE_ID));
 		}
 		if (RosterPlayer.XML_TAG.equals(pXmlTag)) {
 			RosterPlayer player = new RosterPlayer();
-			player.startXmlElement(pXmlTag, pXmlAttributes);
+			player.startXmlElement(game, pXmlTag, pXmlAttributes);
 			addPlayer(player);
 			xmlElement = player;
 		}
 
 		if (ZappedPlayer.XML_TAG.equals(pXmlTag)) {
 			ZappedPlayer player = new ZappedPlayer();
-			player.startXmlElement(pXmlTag, pXmlAttributes);
+			player.startXmlElement(game, pXmlTag, pXmlAttributes);
 			addPlayer(player);
 			xmlElement = player;
 		}
 		// when reading XML only
 		if (InducementSet.XML_TAG.equals(pXmlTag)) {
 			setInducementSet(new InducementSet());
-			getInducementSet().startXmlElement(pXmlTag, pXmlAttributes);
+			getInducementSet().startXmlElement(game, pXmlTag, pXmlAttributes);
 			xmlElement = getInducementSet();
 		}
 		return xmlElement;

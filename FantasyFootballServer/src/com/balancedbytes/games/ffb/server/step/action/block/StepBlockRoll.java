@@ -4,6 +4,7 @@ import com.balancedbytes.games.ffb.BlockResult;
 import com.balancedbytes.games.ffb.PlayerAction;
 import com.balancedbytes.games.ffb.ReRolledActions;
 import com.balancedbytes.games.ffb.SoundId;
+import com.balancedbytes.games.ffb.FactoryType.Factory;
 import com.balancedbytes.games.ffb.dialog.DialogBlockRollParameter;
 import com.balancedbytes.games.ffb.factory.BlockResultFactory;
 import com.balancedbytes.games.ffb.json.UtilJson;
@@ -68,7 +69,7 @@ public class StepBlockRoll extends AbstractStepWithReRoll {
 			case CLIENT_BLOCK_CHOICE:
 				ClientCommandBlockChoice blockChoiceCommand = (ClientCommandBlockChoice) pReceivedCommand.getCommand();
 				fDiceIndex = blockChoiceCommand.getDiceIndex();
-				fBlockResult = new BlockResultFactory().forRoll(fBlockRoll[fDiceIndex]);
+				fBlockResult = getGameState().getGame().getRules().<BlockResultFactory>getFactory(Factory.blockResult).forRoll(fBlockRoll[fDiceIndex]);
 				commandStatus = StepCommandStatus.EXECUTE_STEP;
 				break;
 			default:

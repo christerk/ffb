@@ -45,34 +45,12 @@ public class DirectionFactory implements INamedObjectFactory {
 		}
 	}
 
-	public Direction transform(Direction pDirection) {
-		if (pDirection == null) {
-			return null;
-		}
-		switch (pDirection) {
-		case NORTHEAST:
-			return Direction.NORTHWEST;
-		case EAST:
-			return Direction.WEST;
-		case SOUTHEAST:
-			return Direction.SOUTHWEST;
-		case SOUTHWEST:
-			return Direction.SOUTHEAST;
-		case WEST:
-			return Direction.EAST;
-		case NORTHWEST:
-			return Direction.NORTHEAST;
-		default:
-			return pDirection;
-		}
-	}
-
 	public Direction[] transform(Direction[] pDirections) {
 		Direction[] transformedDirections = new Direction[0];
 		if (ArrayTool.isProvided(pDirections)) {
 			transformedDirections = new Direction[pDirections.length];
 			for (int i = 0; i < transformedDirections.length; i++) {
-				transformedDirections[i] = transform(pDirections[i]);
+				transformedDirections[i] = pDirections[i].transform();
 			}
 		}
 		return transformedDirections;

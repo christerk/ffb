@@ -68,7 +68,7 @@ public class XmlHandler extends DefaultHandler {
 	public void startElement(String uri, String localName, String qName, Attributes atts) {
 		if (!fXmlElementStack.empty()) {
 			IXmlReadable currentElement = fXmlElementStack.peek();
-			IXmlReadable newElement = currentElement.startXmlElement(qName, atts);
+			IXmlReadable newElement = currentElement.startXmlElement(game, qName, atts);
 			if (currentElement != newElement) {
 				fXmlElementStack.push(newElement);
 			}

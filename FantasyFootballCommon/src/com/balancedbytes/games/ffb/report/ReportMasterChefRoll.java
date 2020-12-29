@@ -44,7 +44,7 @@ public class ReportMasterChefRoll implements IReport {
 
 	// transformation
 
-	public IReport transform() {
+	public IReport transform(Game game) {
 		return new ReportMasterChefRoll(getTeamId(), getMasterChefRoll(), getReRollsStolen());
 	}
 

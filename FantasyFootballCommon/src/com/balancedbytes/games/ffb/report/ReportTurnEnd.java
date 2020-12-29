@@ -90,7 +90,7 @@ public class ReportTurnEnd implements IReport {
 
 	// transformation
 
-	public IReport transform() {
+	public IReport transform(Game game) {
 		return new ReportTurnEnd(getPlayerIdTouchdown(), getKnockoutRecoveries(), getHeatExhaustions(),
 				getUnzappedPlayers());
 	}

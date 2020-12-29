@@ -1,6 +1,5 @@
 package com.balancedbytes.games.ffb;
 
-import com.balancedbytes.games.ffb.factory.DirectionFactory;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.IJsonSerializable;
 import com.balancedbytes.games.ffb.json.UtilJson;
@@ -68,7 +67,7 @@ public final class PushbackSquare implements IJsonSerializable {
 
 	public PushbackSquare transform() {
 		FieldCoordinate transformedCoordinate = getCoordinate().transform();
-		Direction transformedDirection = new DirectionFactory().transform(getDirection());
+		Direction transformedDirection = getDirection().transform();
 		PushbackSquare transformedPushback = new PushbackSquare(transformedCoordinate, transformedDirection,
 				!isHomeChoice());
 		transformedPushback.setSelected(isSelected());

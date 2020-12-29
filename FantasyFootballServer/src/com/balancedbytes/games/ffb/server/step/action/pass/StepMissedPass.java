@@ -71,7 +71,7 @@ public class StepMissedPass extends AbstractStep {
 		while (FieldCoordinateBounds.FIELD.isInBounds(coordinateStart) && (rollList.size() < 3)) {
 			int roll = getGameState().getDiceRoller().rollScatterDirection();
 			rollList.add(roll);
-			Direction direction = DiceInterpreter.getInstance().interpretScatterDirectionRoll(roll);
+			Direction direction = DiceInterpreter.getInstance().interpretScatterDirectionRoll(game, roll);
 			directionList.add(direction);
 			coordinateEnd = UtilServerCatchScatterThrowIn.findScatterCoordinate(coordinateStart, direction, 1);
 			lastValidCoordinate = FieldCoordinateBounds.FIELD.isInBounds(coordinateEnd) ? coordinateEnd : coordinateStart;

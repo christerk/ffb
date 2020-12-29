@@ -67,7 +67,7 @@ public class ReportMostValuablePlayers implements IReport {
 
 	// transformation
 
-	public IReport transform() {
+	public IReport transform(Game game) {
 		ReportMostValuablePlayers transformedReport = new ReportMostValuablePlayers();
 		transformedReport.addPlayerIdsAway(getPlayerIdsHome());
 		transformedReport.addPlayerIdsHome(getPlayerIdsAway());

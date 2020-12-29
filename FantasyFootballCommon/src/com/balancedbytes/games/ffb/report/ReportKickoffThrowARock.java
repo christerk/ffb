@@ -64,7 +64,7 @@ public class ReportKickoffThrowARock implements IReport {
 
 	// transformation
 
-	public IReport transform() {
+	public IReport transform(Game game) {
 		return new ReportKickoffThrowARock(getRollAway(), getRollHome(), getPlayersHit());
 	}
 

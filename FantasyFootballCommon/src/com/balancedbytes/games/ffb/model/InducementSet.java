@@ -13,6 +13,7 @@ import org.xml.sax.Attributes;
 import org.xml.sax.helpers.AttributesImpl;
 
 import com.balancedbytes.games.ffb.Card;
+import com.balancedbytes.games.ffb.FactoryType.Factory;
 import com.balancedbytes.games.ffb.Inducement;
 import com.balancedbytes.games.ffb.InducementType;
 import com.balancedbytes.games.ffb.factory.CardFactory;
@@ -278,11 +279,11 @@ public class InducementSet implements IXmlSerializable, IJsonSerializable {
 		return UtilXml.toXml(this, pIndent);
 	}
 
-	public IXmlReadable startXmlElement(String pXmlTag, Attributes pXmlAttributes) {
+	public IXmlReadable startXmlElement(Game game, String pXmlTag, Attributes pXmlAttributes) {
 		IXmlReadable xmlElement = this;
 		if (Inducement.XML_TAG.equals(pXmlTag)) {
 			Inducement inducement = new Inducement();
-			inducement.startXmlElement(pXmlTag, pXmlAttributes);
+			inducement.startXmlElement(game, pXmlTag, pXmlAttributes);
 			addInducement(inducement);
 			xmlElement = inducement;
 		}
@@ -300,7 +301,7 @@ public class InducementSet implements IXmlSerializable, IJsonSerializable {
 		}
 		if (_XML_TAG_CARD.equals(pXmlTag)) {
 			String cardName = pXmlAttributes.getValue(_XML_ATTRIBUTE_NAME).trim();
-			Card card = new CardFactory().forName(cardName);
+			Card card = game.<CardFactory>getFactory(Factory.card).forName(cardName);
 			if (card != null) {
 				fCardsAvailable.add(card);
 			}
@@ -353,7 +354,7 @@ public class InducementSet implements IXmlSerializable, IJsonSerializable {
 				addInducement(inducement);
 			}
 		}
-		CardFactory cardFactory = new CardFactory();
+		CardFactory cardFactory = game.<CardFactory>getFactory(Factory.card);
 		String[] cardsAvailable = IJsonOption.CARDS_AVAILABLE.getFrom(game, jsonObject);
 		if (ArrayTool.isProvided(cardsAvailable)) {
 			for (String cardName : cardsAvailable) {

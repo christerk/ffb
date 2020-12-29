@@ -1,7 +1,6 @@
 package com.balancedbytes.games.ffb.report;
 
 import com.balancedbytes.games.ffb.Direction;
-import com.balancedbytes.games.ffb.factory.DirectionFactory;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.Game;
@@ -46,8 +45,8 @@ public class ReportThrowIn implements IReport {
 
 	// transformation
 
-	public IReport transform() {
-		return new ReportThrowIn(new DirectionFactory().transform(getDirection()), getDirectionRoll(), getDistanceRoll());
+	public IReport transform(Game game) {
+		return new ReportThrowIn(getDirection().transform(), getDirectionRoll(), getDistanceRoll());
 	}
 
 	// JSON serialization

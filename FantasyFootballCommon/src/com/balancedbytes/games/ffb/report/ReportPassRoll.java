@@ -72,7 +72,7 @@ public class ReportPassRoll extends ReportSkillRoll {
 
 	// transformation
 
-	public IReport transform() {
+	public IReport transform(Game game) {
 		if (isHailMaryPass()) {
 			return new ReportPassRoll(getPlayerId(), isFumble(), getRoll(), isReRolled(), isBomb());
 		} else {

@@ -160,7 +160,7 @@ public class TeamSetup implements IXmlSerializable, IJsonSerializable {
 		return UtilXml.toXml(this, pIndent);
 	}
 
-	public IXmlReadable startXmlElement(String pXmlTag, Attributes pXmlAttributes) {
+	public IXmlReadable startXmlElement(Game game, String pXmlTag, Attributes pXmlAttributes) {
 		if (XML_TAG.equals(pXmlTag)) {
 			setName(UtilXml.getStringAttribute(pXmlAttributes, _XML_ATTRIBUTE_NAME));
 			setTeamId(UtilXml.getStringAttribute(pXmlAttributes, _XML_ATTRIBUTE_TEAM_ID));

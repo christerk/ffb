@@ -71,7 +71,7 @@ public class ReportGameOptions implements IReport {
 
 	// transformation
 
-	public IReport transform() {
+	public IReport transform(Game game) {
 		ReportGameOptions transformedReport = new ReportGameOptions();
 		transformedReport.init(this);
 		return transformedReport;

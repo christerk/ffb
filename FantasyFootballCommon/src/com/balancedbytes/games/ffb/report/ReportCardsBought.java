@@ -44,7 +44,7 @@ public class ReportCardsBought implements IReport {
 
 	// transformation
 
-	public IReport transform() {
+	public IReport transform(Game game) {
 		return new ReportCardsBought(getTeamId(), getNrOfCards(), getGold());
 	}
 

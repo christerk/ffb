@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.balancedbytes.games.ffb.Card;
+import com.balancedbytes.games.ffb.FactoryType.Factory;
 import com.balancedbytes.games.ffb.IDialogParameter;
 import com.balancedbytes.games.ffb.InducementType;
 import com.balancedbytes.games.ffb.factory.CardFactory;
@@ -87,7 +88,7 @@ public class DialogUseInducementParameter implements IDialogParameter {
 		}
 		String[] cardNames = IJsonOption.CARDS.getFrom(game, jsonObject);
 		fCards = new Card[cardNames.length];
-		CardFactory cardFactory = new CardFactory();
+		CardFactory cardFactory = game.<CardFactory>getFactory(Factory.card);
 		for (int i = 0; i < fCards.length; i++) {
 			fCards[i] = cardFactory.forName(cardNames[i]);
 		}

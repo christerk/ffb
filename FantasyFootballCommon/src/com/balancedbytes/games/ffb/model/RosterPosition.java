@@ -407,7 +407,7 @@ public class RosterPosition implements Position {
 		return UtilXml.toXml(this, pIndent);
 	}
 
-	public IXmlReadable startXmlElement(String pXmlTag, Attributes pXmlAttributes) {
+	public IXmlReadable startXmlElement(Game game, String pXmlTag, Attributes pXmlAttributes) {
 		if (fInsideSkillListTag) {
 			if (_XML_TAG_SKILL.equals(pXmlTag)) {
 				String skillValue = UtilXml.getStringAttribute(pXmlAttributes, _XML_ATTRIBUTE_VALUE);

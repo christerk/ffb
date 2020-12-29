@@ -128,14 +128,14 @@ public class TeamList implements IXmlSerializable, IJsonSerializable {
 		return UtilXml.toXml(this, pIndent);
 	}
 
-	public IXmlReadable startXmlElement(String pXmlTag, Attributes pXmlAttributes) {
+	public IXmlReadable startXmlElement(Game game, String pXmlTag, Attributes pXmlAttributes) {
 		IXmlReadable xmlElement = this;
 		if (XML_TAG.equals(pXmlTag)) {
 			fCoach = UtilXml.getStringAttribute(pXmlAttributes, _XML_ATTRIBUTE_COACH);
 		}
 		if (TeamListEntry.XML_TAG.equals(pXmlTag)) {
 			TeamListEntry teamListEntry = new TeamListEntry();
-			teamListEntry.startXmlElement(pXmlTag, pXmlAttributes);
+			teamListEntry.startXmlElement(game, pXmlTag, pXmlAttributes);
 			add(teamListEntry);
 			xmlElement = teamListEntry;
 		}

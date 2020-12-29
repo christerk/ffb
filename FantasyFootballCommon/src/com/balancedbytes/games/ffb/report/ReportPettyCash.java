@@ -38,7 +38,7 @@ public class ReportPettyCash implements IReport {
 
 	// transformation
 
-	public IReport transform() {
+	public IReport transform(Game game) {
 		return new ReportPettyCash(getTeamId(), getGold());
 	}
 

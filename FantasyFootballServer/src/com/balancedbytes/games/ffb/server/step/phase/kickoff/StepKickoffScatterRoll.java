@@ -115,7 +115,7 @@ public final class StepKickoffScatterRoll extends AbstractStep {
 		if (fUseKickChoice == null) {
 
 			int rollScatterDirection = getGameState().getDiceRoller().rollScatterDirection();
-			fScatterDirection = DiceInterpreter.getInstance().interpretScatterDirectionRoll(rollScatterDirection);
+			fScatterDirection = DiceInterpreter.getInstance().interpretScatterDirectionRoll(game, rollScatterDirection);
 			fScatterDistance = getGameState().getDiceRoller().rollScatterDistance();
 
 			FieldCoordinate ballCoordinateEnd = UtilServerCatchScatterThrowIn.findScatterCoordinate(fKickoffStartCoordinate,

@@ -64,7 +64,7 @@ public class ReportKickTeamMateRoll implements IReport {
 
 	// transformation
 
-	public IReport transform() {
+	public IReport transform(Game game) {
 		return new ReportKickTeamMateRoll(getKickingPlayerId(), getKickedPlayerId(), isSuccessful(), getRoll(),
 				isReRolled(), getKickDistance());
 	}

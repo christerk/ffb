@@ -98,7 +98,7 @@ public class ReportDefectingPlayers implements IReport {
 
 	// transformation
 
-	public ReportDefectingPlayers transform() {
+	public ReportDefectingPlayers transform(Game game) {
 		return new ReportDefectingPlayers(getPlayerIds(), getRolls(), getDefectings());
 	}
 

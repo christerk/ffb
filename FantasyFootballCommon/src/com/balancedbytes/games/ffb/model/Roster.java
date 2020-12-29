@@ -211,7 +211,7 @@ public class Roster implements IXmlSerializable, IJsonSerializable {
 		return UtilXml.toXml(this, pIndent);
 	}
 
-	public IXmlSerializable startXmlElement(String pXmlTag, Attributes pXmlAttributes) {
+	public IXmlSerializable startXmlElement(Game game, String pXmlTag, Attributes pXmlAttributes) {
 		IXmlSerializable xmlElement = this;
 		if (XML_TAG.equals(pXmlTag)) {
 			if (StringTool.isProvided(pXmlAttributes.getValue(_XML_ATTRIBUTE_ID))) {
@@ -223,7 +223,7 @@ public class Roster implements IXmlSerializable, IJsonSerializable {
 		}
 		if (RosterPosition.XML_TAG.equals(pXmlTag)) {
 			fCurrentlyParsedRosterPosition = new RosterPosition(null);
-			fCurrentlyParsedRosterPosition.startXmlElement(pXmlTag, pXmlAttributes);
+			fCurrentlyParsedRosterPosition.startXmlElement(game, pXmlTag, pXmlAttributes);
 			xmlElement = fCurrentlyParsedRosterPosition;
 		}
 		return xmlElement;

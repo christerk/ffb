@@ -56,7 +56,7 @@ public class ReportSkillUse implements IReport {
 
 	// transformation
 
-	public IReport transform() {
+	public IReport transform(Game game) {
 		return new ReportSkillUse(getPlayerId(), getSkill(), isUsed(), getSkillUse());
 	}
 

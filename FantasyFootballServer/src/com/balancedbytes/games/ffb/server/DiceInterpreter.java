@@ -9,6 +9,7 @@ import com.balancedbytes.games.ffb.CatchModifier;
 import com.balancedbytes.games.ffb.Direction;
 import com.balancedbytes.games.ffb.DodgeModifier;
 import com.balancedbytes.games.ffb.DodgeModifiers;
+import com.balancedbytes.games.ffb.FactoryType.Factory;
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.GazeModifier;
 import com.balancedbytes.games.ffb.GoForItModifier;
@@ -475,8 +476,8 @@ public class DiceInterpreter {
 		return ((roll > 0) && (roll < 4));
 	}
 
-	public Direction interpretScatterDirectionRoll(int roll) {
-		return new DirectionFactory().forRoll(roll);
+	public Direction interpretScatterDirectionRoll(Game game, int roll) {
+		return game.<DirectionFactory>getFactory(Factory.direction).forRoll(roll);
 	}
 
 	public Direction interpretThrowInDirectionRoll(FieldCoordinate pStartCoordinate, int roll) {

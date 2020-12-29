@@ -16,6 +16,7 @@ import com.balancedbytes.games.ffb.PlayerState;
 import com.balancedbytes.games.ffb.SeriousInjury;
 import com.balancedbytes.games.ffb.SoundId;
 import com.balancedbytes.games.ffb.Weather;
+import com.balancedbytes.games.ffb.FactoryType.Factory;
 import com.balancedbytes.games.ffb.factory.AnimationTypeFactory;
 import com.balancedbytes.games.ffb.factory.CardFactory;
 import com.balancedbytes.games.ffb.factory.GameOptionFactory;
@@ -199,7 +200,7 @@ public class ServerCommandHandlerTalk extends ServerCommandHandler {
 		if ((commands == null) || (commands.length <= 1)) {
 			return;
 		}
-		AnimationType animationType = new AnimationTypeFactory().forName(commands[1]);
+		AnimationType animationType = pGameState.getGame().getRules().<AnimationTypeFactory>getFactory(Factory.animationType).forName(commands[1]);
 		if ((animationType == null) || (animationType == AnimationType.PASS) || (animationType == AnimationType.KICK)
 				|| (animationType == AnimationType.THROW_TEAM_MATE)) {
 			return;
@@ -208,7 +209,7 @@ public class ServerCommandHandlerTalk extends ServerCommandHandler {
 		Animation animation = null;
 		FieldCoordinate animationCoordinate = null;
 		if ((commands.length > 2) && (animationType == AnimationType.CARD) && StringTool.isProvided(commands[2])) {
-			card = new CardFactory().forShortName(commands[2].replaceAll("_", " "));
+			card = pGameState.getGame().<CardFactory>getFactory(Factory.card).forShortName(commands[2].replaceAll("_", " "));
 		}
 		if (commands.length > 3) {
 			try {
@@ -436,7 +437,7 @@ public class ServerCommandHandlerTalk extends ServerCommandHandler {
 		if ((commands == null) || (commands.length <= 2)) {
 			return;
 		}
-		Card card = new CardFactory().forShortName(commands[2].replace('_', ' '));
+		Card card = gameState.getGame().<CardFactory>getFactory(Factory.card).forShortName(commands[2].replace('_', ' '));
 		if (card == null) {
 			return;
 		}

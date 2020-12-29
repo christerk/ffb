@@ -64,7 +64,7 @@ public class ReportTentaclesShadowingRoll implements IReport {
 
 	// transformation
 
-	public IReport transform() {
+	public IReport transform(Game game) {
 		return new ReportTentaclesShadowingRoll(getSkill(), getDefenderId(), getRoll(), isSuccessful(), getMinimumRoll(),
 				isReRolled());
 	}

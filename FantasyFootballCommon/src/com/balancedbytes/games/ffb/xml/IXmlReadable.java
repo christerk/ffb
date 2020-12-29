@@ -10,7 +10,7 @@ import com.balancedbytes.games.ffb.model.Game;
  */
 public interface IXmlReadable {
 
-	public IXmlReadable startXmlElement(String pXmlTag, Attributes pXmlAttributes);
+	public IXmlReadable startXmlElement(Game game, String pXmlTag, Attributes pXmlAttributes);
 
 	public boolean endXmlElement(Game game, String pXmlTag, String pValue);
 

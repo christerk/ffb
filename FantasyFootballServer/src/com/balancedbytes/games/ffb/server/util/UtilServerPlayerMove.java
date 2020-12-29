@@ -10,6 +10,7 @@ import com.balancedbytes.games.ffb.LeapModifier;
 import com.balancedbytes.games.ffb.MoveSquare;
 import com.balancedbytes.games.ffb.PathFinderWithPassBlockSupport;
 import com.balancedbytes.games.ffb.TurnMode;
+import com.balancedbytes.games.ffb.FactoryType.Factory;
 import com.balancedbytes.games.ffb.factory.DodgeModifierFactory;
 import com.balancedbytes.games.ffb.factory.GoForItModifierFactory;
 import com.balancedbytes.games.ffb.factory.LeapModifierFactory;
@@ -130,7 +131,7 @@ public class UtilServerPlayerMove {
 		} else {
 			goForIt = UtilPlayer.isNextMoveGoingForIt(game);
 			if (dodging) {
-				DodgeModifierFactory modifierFactory = new DodgeModifierFactory();
+				DodgeModifierFactory modifierFactory = game.<DodgeModifierFactory>getFactory(Factory.dodgeModifier);
 				Set<DodgeModifier> dodgeModifiers = modifierFactory.findDodgeModifiers(game, playerCoordinate, pCoordinate, 0);
 				minimumRollDodge = DiceInterpreter.getInstance().minimumRollDodge(game, actingPlayer.getPlayer(),
 						dodgeModifiers);

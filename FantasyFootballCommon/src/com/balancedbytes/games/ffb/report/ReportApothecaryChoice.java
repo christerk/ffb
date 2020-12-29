@@ -46,7 +46,7 @@ public class ReportApothecaryChoice implements IReport {
 
 	// transformation
 
-	public IReport transform() {
+	public IReport transform(Game game) {
 		return new ReportApothecaryChoice(getPlayerId(), getPlayerState(), getSeriousInjury());
 	}
 

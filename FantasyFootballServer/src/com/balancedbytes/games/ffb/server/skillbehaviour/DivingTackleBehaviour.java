@@ -7,6 +7,7 @@ import com.balancedbytes.games.ffb.DodgeModifiers;
 import com.balancedbytes.games.ffb.PlayerChoiceMode;
 import com.balancedbytes.games.ffb.SkillUse;
 import com.balancedbytes.games.ffb.TurnMode;
+import com.balancedbytes.games.ffb.FactoryType.Factory;
 import com.balancedbytes.games.ffb.dialog.DialogPlayerChoiceParameter;
 import com.balancedbytes.games.ffb.factory.DodgeModifierFactory;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
@@ -57,7 +58,7 @@ public class DivingTackleBehaviour extends SkillBehaviour<DivingTackle> {
 							divingTacklers = UtilPlayer.filterAttackerAndDefender(game, divingTacklers);
 						}
 						if (ArrayTool.isProvided(divingTacklers) && (state.dodgeRoll > 0)) {
-							DodgeModifierFactory modifierFactory = new DodgeModifierFactory();
+							DodgeModifierFactory modifierFactory = game.<DodgeModifierFactory>getFactory(Factory.dodgeModifier);
 							Set<DodgeModifier> dodgeModifiers = modifierFactory.findDodgeModifiers(game, state.coordinateFrom,
 									state.coordinateTo, 0);
 							dodgeModifiers.add(DodgeModifiers.DIVING_TACKLE);

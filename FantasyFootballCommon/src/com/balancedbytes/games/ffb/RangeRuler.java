@@ -131,7 +131,7 @@ public class RangeRuler implements IXmlSerializable, IJsonSerializable {
 		return UtilXml.toXml(this, pIndent);
 	}
 
-	public IXmlReadable startXmlElement(String pXmlTag, Attributes pXmlAttributes) {
+	public IXmlReadable startXmlElement(Game game, String pXmlTag, Attributes pXmlAttributes) {
 		IXmlReadable xmlElement = this;
 		if (XML_TAG.equals(pXmlTag)) {
 			fThrowerId = UtilXml.getStringAttribute(pXmlAttributes, _XML_ATTRIBUTE_THROWER_ID);

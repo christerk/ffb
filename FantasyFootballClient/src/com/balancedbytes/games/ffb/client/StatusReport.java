@@ -34,6 +34,7 @@ import com.balancedbytes.games.ffb.SeriousInjury;
 import com.balancedbytes.games.ffb.SpecialEffect;
 import com.balancedbytes.games.ffb.TurnMode;
 import com.balancedbytes.games.ffb.Weather;
+import com.balancedbytes.games.ffb.FactoryType.Factory;
 import com.balancedbytes.games.ffb.factory.BlockResultFactory;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.Game;
@@ -2345,7 +2346,7 @@ public class StatusReport {
 		{
 			StringBuilder status = new StringBuilder();
 			status.append("Block Roll");
-			BlockResultFactory blockResultFactory = new BlockResultFactory();
+			BlockResultFactory blockResultFactory = fClient.getGame().getRules().<BlockResultFactory>getFactory(Factory.blockResult);
 			for (int i = 0; i < pReport.getBlockRoll().length; i++) {
 				BlockResult blockResult = blockResultFactory.forRoll(pReport.getBlockRoll()[i]);
 				status.append(" [ ").append(blockResult.getName()).append(" ]");

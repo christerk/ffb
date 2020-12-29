@@ -1,7 +1,5 @@
 package com.balancedbytes.games.ffb.server.request;
 
-import com.balancedbytes.games.ffb.model.Game;
-
 /**
  * 
  * @author Kalimar

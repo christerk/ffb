@@ -2,7 +2,6 @@ package com.balancedbytes.games.ffb.report;
 
 import com.balancedbytes.games.ffb.Direction;
 import com.balancedbytes.games.ffb.FieldCoordinate;
-import com.balancedbytes.games.ffb.factory.DirectionFactory;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.Game;
@@ -54,9 +53,9 @@ public class ReportKickoffScatter implements IReport {
 
 	// transformation
 
-	public IReport transform() {
+	public IReport transform(Game game) {
 		return new ReportKickoffScatter(FieldCoordinate.transform(getBallCoordinateEnd()),
-				new DirectionFactory().transform(getScatterDirection()), getRollScatterDirection(), getRollScatterDistance());
+				getScatterDirection().transform(), getRollScatterDirection(), getRollScatterDistance());
 	}
 
 	// JSON serialization

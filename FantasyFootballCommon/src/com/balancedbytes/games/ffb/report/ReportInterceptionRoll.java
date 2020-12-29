@@ -40,7 +40,7 @@ public class ReportInterceptionRoll extends ReportSkillRoll {
 
 	// transformation
 
-	public IReport transform() {
+	public IReport transform(Game game) {
 		return new ReportInterceptionRoll(getPlayerId(), isSuccessful(), getRoll(), getMinimumRoll(), isReRolled(),
 				getRollModifiers(), isBomb());
 	}

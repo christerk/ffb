@@ -45,7 +45,7 @@ public class ReportInducement implements IReport {
 
 	// transformation
 
-	public IReport transform() {
+	public IReport transform(Game game) {
 		return new ReportInducement(getTeamId(), getInducementType(), getValue());
 	}
 

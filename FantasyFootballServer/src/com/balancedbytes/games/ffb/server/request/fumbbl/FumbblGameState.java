@@ -85,10 +85,10 @@ public class FumbblGameState implements IXmlSerializable {
 		return UtilXml.toXml(this, pIndent);
 	}
 
-	public IXmlSerializable startXmlElement(String pXmlTag, Attributes pXmlAttributes) {
+	public IXmlSerializable startXmlElement(Game game, String pXmlTag, Attributes pXmlAttributes) {
 		IXmlSerializable xmlElement = this;
 		if (GameOptions.XML_TAG.equals(pXmlTag)) {
-			getOptions().startXmlElement(pXmlTag, pXmlAttributes);
+			getOptions().startXmlElement(game, pXmlTag, pXmlAttributes);
 			xmlElement = getOptions();
 		}
 		return xmlElement;

@@ -43,7 +43,7 @@ public class ReportThrowTeamMateRoll extends ReportSkillRoll {
 
 	// transformation
 
-	public IReport transform() {
+	public IReport transform(Game game) {
 		return new ReportThrowTeamMateRoll(getPlayerId(), isSuccessful(), getRoll(), getMinimumRoll(), isReRolled(),
 				getRollModifiers(), getPassingDistance(), getThrownPlayerId());
 	}

@@ -401,7 +401,7 @@ public class RosterPlayer extends Player<RosterPosition> {
 		return UtilXml.toXml(this, pIndent);
 	}
 
-	public IXmlSerializable startXmlElement(String pXmlTag, Attributes pXmlAttributes) {
+	public IXmlSerializable startXmlElement(Game game, String pXmlTag, Attributes pXmlAttributes) {
 		IXmlSerializable xmlElement = this;
 		if (fInsideInjuryList) {
 			if (_XML_TAG_INJURY.equals(pXmlTag)) {

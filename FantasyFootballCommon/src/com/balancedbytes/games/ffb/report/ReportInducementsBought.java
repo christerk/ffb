@@ -56,7 +56,7 @@ public class ReportInducementsBought implements IReport {
 
 	// transformation
 
-	public IReport transform() {
+	public IReport transform(Game game) {
 		return new ReportInducementsBought(getTeamId(), getNrOfInducements(), getNrOfStars(), getNrOfMercenaries(),
 				getGold());
 	}

@@ -45,6 +45,10 @@ public class GameOptions implements IXmlSerializable, IJsonSerializable {
 		return fGame;
 	}
 
+	public GameOptionFactory getFactory() {
+		return fGameOptionFactory;
+	}
+	
 	public void addOption(IGameOption pOption) {
 		if (pOption != null) {
 			addOptionInternal(pOption);
@@ -146,9 +150,9 @@ public class GameOptions implements IXmlSerializable, IJsonSerializable {
 		return UtilXml.toXml(this, pIndent);
 	}
 
-	public IXmlSerializable startXmlElement(String pXmlTag, Attributes pXmlAttributes) {
+	public IXmlSerializable startXmlElement(Game game, String pXmlTag, Attributes pXmlAttributes) {
 		if (IGameOption.XML_TAG.equals(pXmlTag)) {
-			addOption(new GameOptionFactory().fromXmlElement(pXmlTag, pXmlAttributes));
+			addOption(new GameOptionFactory().fromXmlElement(game, pXmlTag, pXmlAttributes));
 		}
 		return this;
 	}

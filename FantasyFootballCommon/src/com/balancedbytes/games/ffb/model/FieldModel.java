@@ -11,6 +11,7 @@ import com.balancedbytes.games.ffb.BloodSpot;
 import com.balancedbytes.games.ffb.Card;
 import com.balancedbytes.games.ffb.CardEffect;
 import com.balancedbytes.games.ffb.DiceDecoration;
+import com.balancedbytes.games.ffb.FactoryType.Factory;
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.FieldCoordinateBounds;
 import com.balancedbytes.games.ffb.FieldMarker;
@@ -887,8 +888,8 @@ public class FieldModel implements IJsonSerializable {
 		fStateByPlayerId.clear();
 		fCardsByPlayerId.clear();
 
-		CardFactory cardFactory = new CardFactory();
-		CardEffectFactory cardEffectFactory = new CardEffectFactory();
+		CardFactory cardFactory = game.<CardFactory>getFactory(Factory.card);
+		CardEffectFactory cardEffectFactory = game.<CardEffectFactory>getFactory(Factory.cardEffect);
 
 		JsonArray playerDataArray = IJsonOption.PLAYER_DATA_ARRAY.getFrom(game, jsonObject);
 		for (int i = 0; i < playerDataArray.size(); i++) {

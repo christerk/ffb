@@ -258,11 +258,11 @@ public class ZappedPlayer extends Player<ZappedPosition> {
 	}
 
 	@Override
-	public IXmlSerializable startXmlElement(String pXmlTag, Attributes pXmlAttributes) {
+	public IXmlSerializable startXmlElement(Game game, String pXmlTag, Attributes pXmlAttributes) {
 		IXmlSerializable xmlElement = this;
 		if (RosterPlayer.XML_TAG.equals(pXmlTag)) {
 			RosterPlayer player = new RosterPlayer();
-			player.startXmlElement(pXmlTag, pXmlAttributes);
+			player.startXmlElement(game, pXmlTag, pXmlAttributes);
 			init(player);
 		}
 		return xmlElement;
