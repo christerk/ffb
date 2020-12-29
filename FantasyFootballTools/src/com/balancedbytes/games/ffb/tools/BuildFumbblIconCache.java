@@ -80,7 +80,7 @@ public class BuildFumbblIconCache {
          BufferedReader xmlIn = new BufferedReader(stringReader)) {
       InputSource inputSource = new InputSource(xmlIn);
       try {
-        XmlHandler.parse(inputSource, roster);
+        XmlHandler.parse(null, inputSource, roster);
       } catch (FantasyFootballException pFfe) {
         throw new FantasyFootballException("Error initializing roster id " + pRosterId, pFfe);
       }

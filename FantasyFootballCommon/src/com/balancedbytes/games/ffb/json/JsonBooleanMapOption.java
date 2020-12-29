@@ -3,6 +3,7 @@ package com.balancedbytes.games.ffb.json;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.balancedbytes.games.ffb.model.Game;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
@@ -11,7 +12,7 @@ public class JsonBooleanMapOption extends JsonAbstractOption {
 		super(pKey);
 	}
 
-	public Map<String, Boolean> getFrom(JsonObject jsonObject) {
+	public Map<String, Boolean> getFrom(Game game, JsonObject jsonObject) {
 		Map<String, Boolean> map = new HashMap<String, Boolean>();
 
 		if (isDefinedIn(jsonObject)) {

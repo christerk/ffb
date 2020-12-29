@@ -2,6 +2,7 @@ package com.balancedbytes.games.ffb.report;
 
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
+import com.balancedbytes.games.ffb.model.Game;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
@@ -44,10 +45,10 @@ public class ReportReferee implements IReport {
 		return jsonObject;
 	}
 
-	public ReportReferee initFrom(JsonValue pJsonValue) {
+	public ReportReferee initFrom(Game game, JsonValue pJsonValue) {
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(jsonObject));
-		fFoulingPlayerBanned = IJsonOption.FOULING_PLAYER_BANNED.getFrom(jsonObject);
+		UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(game, jsonObject));
+		fFoulingPlayerBanned = IJsonOption.FOULING_PLAYER_BANNED.getFrom(game, jsonObject);
 		return this;
 	}
 

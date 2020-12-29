@@ -3,10 +3,10 @@ package com.balancedbytes.games.ffb.server.step.action.common;
 import java.util.Set;
 
 import com.balancedbytes.games.ffb.GoForItModifier;
-import com.balancedbytes.games.ffb.GoForItModifierFactory;
 import com.balancedbytes.games.ffb.PlayerAction;
 import com.balancedbytes.games.ffb.ReRollSource;
 import com.balancedbytes.games.ffb.ReRolledActions;
+import com.balancedbytes.games.ffb.factory.GoForItModifierFactory;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.Game;
@@ -199,11 +199,11 @@ public class StepGoForIt extends AbstractStepWithReRoll {
 	}
 
 	@Override
-	public StepGoForIt initFrom(JsonValue pJsonValue) {
-		super.initFrom(pJsonValue);
+	public StepGoForIt initFrom(Game game, JsonValue pJsonValue) {
+		super.initFrom(game, pJsonValue);
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		fSecondGoForIt = IServerJsonOption.SECOND_GO_FOR_IT.getFrom(jsonObject);
-		fGotoLabelOnFailure = IServerJsonOption.GOTO_LABEL_ON_FAILURE.getFrom(jsonObject);
+		fSecondGoForIt = IServerJsonOption.SECOND_GO_FOR_IT.getFrom(game, jsonObject);
+		fGotoLabelOnFailure = IServerJsonOption.GOTO_LABEL_ON_FAILURE.getFrom(game, jsonObject);
 		return this;
 	}
 

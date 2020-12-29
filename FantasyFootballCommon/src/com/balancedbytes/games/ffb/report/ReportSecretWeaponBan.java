@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
+import com.balancedbytes.games.ffb.model.Game;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
@@ -102,15 +103,15 @@ public class ReportSecretWeaponBan implements IReport {
 		return jsonObject;
 	}
 
-	public ReportSecretWeaponBan initFrom(JsonValue pJsonValue) {
+	public ReportSecretWeaponBan initFrom(Game game, JsonValue pJsonValue) {
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(jsonObject));
+		UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(game, jsonObject));
 		fPlayerIds.clear();
-		addPlayerIds(IJsonOption.PLAYER_IDS.getFrom(jsonObject));
+		addPlayerIds(IJsonOption.PLAYER_IDS.getFrom(game, jsonObject));
 		fRolls.clear();
-		addRolls(IJsonOption.ROLLS.getFrom(jsonObject));
+		addRolls(IJsonOption.ROLLS.getFrom(game, jsonObject));
 		fBans.clear();
-		addBans(IJsonOption.BAN_ARRAY.getFrom(jsonObject));
+		addBans(IJsonOption.BAN_ARRAY.getFrom(game, jsonObject));
 		return this;
 	}
 

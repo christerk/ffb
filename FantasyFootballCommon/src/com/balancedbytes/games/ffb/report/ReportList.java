@@ -6,6 +6,7 @@ import java.util.List;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.IJsonSerializable;
 import com.balancedbytes.games.ffb.json.UtilJson;
+import com.balancedbytes.games.ffb.model.Game;
 import com.eclipsesource.json.JsonArray;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
@@ -90,13 +91,13 @@ public class ReportList implements IJsonSerializable {
 		return jsonObject;
 	}
 
-	public ReportList initFrom(JsonValue pJsonValue) {
+	public ReportList initFrom(Game game, JsonValue pJsonValue) {
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		JsonArray reportArray = IJsonOption.REPORTS.getFrom(jsonObject);
+		JsonArray reportArray = IJsonOption.REPORTS.getFrom(game, jsonObject);
 		if (reportArray != null) {
 			ReportFactory reportFactory = new ReportFactory();
 			for (int i = 0; i < reportArray.size(); i++) {
-				add(reportFactory.forJsonValue(reportArray.get(i)));
+				add(reportFactory.forJsonValue(game, reportArray.get(i)));
 			}
 		}
 		return this;

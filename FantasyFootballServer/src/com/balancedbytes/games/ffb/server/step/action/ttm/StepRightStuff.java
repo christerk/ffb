@@ -8,7 +8,7 @@ import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.PlayerState;
 import com.balancedbytes.games.ffb.ReRolledActions;
 import com.balancedbytes.games.ffb.RightStuffModifier;
-import com.balancedbytes.games.ffb.RightStuffModifierFactory;
+import com.balancedbytes.games.ffb.factory.RightStuffModifierFactory;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
@@ -191,11 +191,11 @@ public final class StepRightStuff extends AbstractStepWithReRoll {
 	}
 
 	@Override
-	public StepRightStuff initFrom(JsonValue pJsonValue) {
-		super.initFrom(pJsonValue);
+	public StepRightStuff initFrom(Game game, JsonValue pJsonValue) {
+		super.initFrom(game, pJsonValue);
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		fThrownPlayerHasBall = IServerJsonOption.THROWN_PLAYER_HAS_BALL.getFrom(jsonObject);
-		fThrownPlayerId = IServerJsonOption.THROWN_PLAYER_ID.getFrom(jsonObject);
+		fThrownPlayerHasBall = IServerJsonOption.THROWN_PLAYER_HAS_BALL.getFrom(game, jsonObject);
+		fThrownPlayerId = IServerJsonOption.THROWN_PLAYER_ID.getFrom(game, jsonObject);
 		return this;
 	}
 

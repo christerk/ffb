@@ -1,6 +1,8 @@
 package com.balancedbytes.games.ffb.skill;
 
+import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.SkillCategory;
+import com.balancedbytes.games.ffb.RulesCollection.Rules;
 import com.balancedbytes.games.ffb.model.Skill;
 import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
 
@@ -26,6 +28,7 @@ import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
  * any players Knocked Down by the bomb. Casualties caused by a bomb do not
  * count for Star Player points.
  */
+@RulesCollection(Rules.All)
 public class Bombardier extends Skill {
 
 	public Bombardier() {

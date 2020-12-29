@@ -359,28 +359,28 @@ public class PlayerResult implements IJsonSerializable {
 		return jsonObject;
 	}
 
-	public PlayerResult initFrom(JsonValue pJsonValue) {
+	public PlayerResult initFrom(Game game, JsonValue pJsonValue) {
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		String playerId = IJsonOption.PLAYER_ID.getFrom(jsonObject);
+		String playerId = IJsonOption.PLAYER_ID.getFrom(game, jsonObject);
 		fPlayer = getTeamResult().getTeam().getPlayerById(playerId);
-		fCompletions = IJsonOption.COMPLETIONS.getFrom(jsonObject);
-		fTouchdowns = IJsonOption.TOUCHDOWNS.getFrom(jsonObject);
-		fInterceptions = IJsonOption.INTERCEPTIONS.getFrom(jsonObject);
-		fCasualties = IJsonOption.CASUALTIES.getFrom(jsonObject);
-		fPlayerAwards = IJsonOption.PLAYER_AWARDS.getFrom(jsonObject);
-		fBlocks = IJsonOption.BLOCKS.getFrom(jsonObject);
-		fFouls = IJsonOption.FOULS.getFrom(jsonObject);
-		fRushing = IJsonOption.RUSHING.getFrom(jsonObject);
-		fPassing = IJsonOption.PASSING.getFrom(jsonObject);
-		fCurrentSpps = IJsonOption.CURRENT_SPPS.getFrom(jsonObject);
-		fSeriousInjury = (SeriousInjury) IJsonOption.SERIOUS_INJURY.getFrom(jsonObject);
-		fSendToBoxReason = (SendToBoxReason) IJsonOption.SEND_TO_BOX_REASON.getFrom(jsonObject);
-		fSendToBoxTurn = IJsonOption.SEND_TO_BOX_TURN.getFrom(jsonObject);
-		fSendToBoxHalf = IJsonOption.SEND_TO_BOX_HALF.getFrom(jsonObject);
-		fSendToBoxByPlayerId = IJsonOption.SEND_TO_BOX_BY_PLAYER_ID.getFrom(jsonObject);
-		fTurnsPlayed = IJsonOption.TURNS_PLAYED.getFrom(jsonObject);
-		fHasUsedSecretWeapon = IJsonOption.HAS_USED_SECRET_WEAPON.getFrom(jsonObject);
-		fDefecting = IJsonOption.DEFECTING.getFrom(jsonObject);
+		fCompletions = IJsonOption.COMPLETIONS.getFrom(game, jsonObject);
+		fTouchdowns = IJsonOption.TOUCHDOWNS.getFrom(game, jsonObject);
+		fInterceptions = IJsonOption.INTERCEPTIONS.getFrom(game, jsonObject);
+		fCasualties = IJsonOption.CASUALTIES.getFrom(game, jsonObject);
+		fPlayerAwards = IJsonOption.PLAYER_AWARDS.getFrom(game, jsonObject);
+		fBlocks = IJsonOption.BLOCKS.getFrom(game, jsonObject);
+		fFouls = IJsonOption.FOULS.getFrom(game, jsonObject);
+		fRushing = IJsonOption.RUSHING.getFrom(game, jsonObject);
+		fPassing = IJsonOption.PASSING.getFrom(game, jsonObject);
+		fCurrentSpps = IJsonOption.CURRENT_SPPS.getFrom(game, jsonObject);
+		fSeriousInjury = (SeriousInjury) IJsonOption.SERIOUS_INJURY.getFrom(game, jsonObject);
+		fSendToBoxReason = (SendToBoxReason) IJsonOption.SEND_TO_BOX_REASON.getFrom(game, jsonObject);
+		fSendToBoxTurn = IJsonOption.SEND_TO_BOX_TURN.getFrom(game, jsonObject);
+		fSendToBoxHalf = IJsonOption.SEND_TO_BOX_HALF.getFrom(game, jsonObject);
+		fSendToBoxByPlayerId = IJsonOption.SEND_TO_BOX_BY_PLAYER_ID.getFrom(game, jsonObject);
+		fTurnsPlayed = IJsonOption.TURNS_PLAYED.getFrom(game, jsonObject);
+		fHasUsedSecretWeapon = IJsonOption.HAS_USED_SECRET_WEAPON.getFrom(game, jsonObject);
+		fDefecting = IJsonOption.DEFECTING.getFrom(game, jsonObject);
 		return this;
 	}
 

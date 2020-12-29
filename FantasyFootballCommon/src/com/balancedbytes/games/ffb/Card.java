@@ -2,6 +2,8 @@ package com.balancedbytes.games.ffb;
 
 import java.util.Comparator;
 
+import com.balancedbytes.games.ffb.factory.InducementPhaseFactory;
+
 /**
  * 
  * @author Kalimar

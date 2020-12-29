@@ -177,11 +177,11 @@ public class StepSafeThrow extends AbstractStepWithReRoll {
 	}
 
 	@Override
-	public StepSafeThrow initFrom(JsonValue pJsonValue) {
-		super.initFrom(pJsonValue);
+	public StepSafeThrow initFrom(Game game, JsonValue pJsonValue) {
+		super.initFrom(game, pJsonValue);
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		fGotoLabelOnFailure = IServerJsonOption.GOTO_LABEL_ON_FAILURE.getFrom(jsonObject);
-		fInterceptorId = IServerJsonOption.INTERCEPTOR_ID.getFrom(jsonObject);
+		fGotoLabelOnFailure = IServerJsonOption.GOTO_LABEL_ON_FAILURE.getFrom(game, jsonObject);
+		fInterceptorId = IServerJsonOption.INTERCEPTOR_ID.getFrom(game, jsonObject);
 		return this;
 	}
 

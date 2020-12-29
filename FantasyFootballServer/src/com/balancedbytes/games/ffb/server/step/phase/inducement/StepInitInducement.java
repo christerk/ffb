@@ -191,13 +191,13 @@ public final class StepInitInducement extends AbstractStep {
 	}
 
 	@Override
-	public StepInitInducement initFrom(JsonValue pJsonValue) {
-		super.initFrom(pJsonValue);
+	public StepInitInducement initFrom(Game game, JsonValue pJsonValue) {
+		super.initFrom(game, pJsonValue);
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		fInducementPhase = (InducementPhase) IServerJsonOption.INDUCEMENT_PHASE.getFrom(jsonObject);
-		fHomeTeam = IServerJsonOption.HOME_TEAM.getFrom(jsonObject);
-		fInducementType = (InducementType) IServerJsonOption.INDUCEMENT_TYPE.getFrom(jsonObject);
-		fCard = (Card) IServerJsonOption.CARD.getFrom(jsonObject);
+		fInducementPhase = (InducementPhase) IServerJsonOption.INDUCEMENT_PHASE.getFrom(game, jsonObject);
+		fHomeTeam = IServerJsonOption.HOME_TEAM.getFrom(game, jsonObject);
+		fInducementType = (InducementType) IServerJsonOption.INDUCEMENT_TYPE.getFrom(game, jsonObject);
+		fCard = (Card) IServerJsonOption.CARD.getFrom(game, jsonObject);
 		return this;
 	}
 

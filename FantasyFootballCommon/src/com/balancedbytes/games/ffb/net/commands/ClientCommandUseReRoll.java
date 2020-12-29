@@ -4,6 +4,7 @@ import com.balancedbytes.games.ffb.ReRollSource;
 import com.balancedbytes.games.ffb.ReRolledAction;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
+import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.net.NetCommandId;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
@@ -47,11 +48,11 @@ public class ClientCommandUseReRoll extends ClientCommand {
 		return jsonObject;
 	}
 
-	public ClientCommandUseReRoll initFrom(JsonValue jsonValue) {
-		super.initFrom(jsonValue);
+	public ClientCommandUseReRoll initFrom(Game game, JsonValue jsonValue) {
+		super.initFrom(game, jsonValue);
 		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
-		fReRolledAction = (ReRolledAction) IJsonOption.RE_ROLLED_ACTION.getFrom(jsonObject);
-		fReRollSource = (ReRollSource) IJsonOption.RE_ROLL_SOURCE.getFrom(jsonObject);
+		fReRolledAction = (ReRolledAction) IJsonOption.RE_ROLLED_ACTION.getFrom(game, jsonObject);
+		fReRollSource = (ReRollSource) IJsonOption.RE_ROLL_SOURCE.getFrom(game, jsonObject);
 		return this;
 	}
 

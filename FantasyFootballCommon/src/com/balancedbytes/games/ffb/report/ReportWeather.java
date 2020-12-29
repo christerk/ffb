@@ -3,6 +3,7 @@ package com.balancedbytes.games.ffb.report;
 import com.balancedbytes.games.ffb.Weather;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
+import com.balancedbytes.games.ffb.model.Game;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
@@ -52,11 +53,11 @@ public class ReportWeather implements IReport {
 		return jsonObject;
 	}
 
-	public ReportWeather initFrom(JsonValue pJsonValue) {
+	public ReportWeather initFrom(Game game, JsonValue pJsonValue) {
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(jsonObject));
-		fWeather = (Weather) IJsonOption.WEATHER.getFrom(jsonObject);
-		fWeatherRoll = IJsonOption.WEATHER_ROLL.getFrom(jsonObject);
+		UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(game, jsonObject));
+		fWeather = (Weather) IJsonOption.WEATHER.getFrom(game, jsonObject);
+		fWeatherRoll = IJsonOption.WEATHER_ROLL.getFrom(game, jsonObject);
 		return this;
 	}
 

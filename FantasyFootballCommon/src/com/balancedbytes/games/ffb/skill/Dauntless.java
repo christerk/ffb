@@ -1,6 +1,8 @@
 package com.balancedbytes.games.ffb.skill;
 
+import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.SkillCategory;
+import com.balancedbytes.games.ffb.RulesCollection.Rules;
 import com.balancedbytes.games.ffb.model.Skill;
 import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
 
@@ -16,6 +18,7 @@ import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
  * both players is calculated before any defensive or offensive assists are
  * added but after all other modifiers.
  */
+@RulesCollection(Rules.All)
 public class Dauntless extends Skill {
 
 	public Dauntless() {

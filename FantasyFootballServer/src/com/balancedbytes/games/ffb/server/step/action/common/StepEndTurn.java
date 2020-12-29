@@ -654,19 +654,19 @@ public class StepEndTurn extends AbstractStep {
 	}
 
 	@Override
-	public StepEndTurn initFrom(JsonValue pJsonValue) {
-		super.initFrom(pJsonValue);
+	public StepEndTurn initFrom(Game game, JsonValue pJsonValue) {
+		super.initFrom(game, pJsonValue);
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		fTouchdown = IServerJsonOption.TOUCHDOWN.getFrom(jsonObject);
-		fArgueTheCallChoiceHome = IServerJsonOption.ARGUE_THE_CALL_CHOICE_HOME.getFrom(jsonObject);
-		fArgueTheCallChoiceAway = IServerJsonOption.ARGUE_THE_CALL_CHOICE_AWAY.getFrom(jsonObject);
-		fBribesChoiceHome = IServerJsonOption.BRIBES_CHOICE_HOME.getFrom(jsonObject);
-		fBribesChoiceAway = IServerJsonOption.BRIBES_CHOICE_AWAY.getFrom(jsonObject);
-		fNextSequencePushed = IServerJsonOption.NEXT_SEQUENCE_PUSHED.getFrom(jsonObject);
-		fRemoveUsedSecretWeapons = IServerJsonOption.REMOVE_USED_SECRET_WEAPONS.getFrom(jsonObject);
-		fNewHalf = IServerJsonOption.NEW_HALF.getFrom(jsonObject);
-		fEndGame = IServerJsonOption.END_GAME.getFrom(jsonObject);
-		Boolean withinSecretWeaponHandling = IServerJsonOption.WITHIN_SECRET_WEAPON_HANDLING.getFrom(jsonObject);
+		fTouchdown = IServerJsonOption.TOUCHDOWN.getFrom(game, jsonObject);
+		fArgueTheCallChoiceHome = IServerJsonOption.ARGUE_THE_CALL_CHOICE_HOME.getFrom(game, jsonObject);
+		fArgueTheCallChoiceAway = IServerJsonOption.ARGUE_THE_CALL_CHOICE_AWAY.getFrom(game, jsonObject);
+		fBribesChoiceHome = IServerJsonOption.BRIBES_CHOICE_HOME.getFrom(game, jsonObject);
+		fBribesChoiceAway = IServerJsonOption.BRIBES_CHOICE_AWAY.getFrom(game, jsonObject);
+		fNextSequencePushed = IServerJsonOption.NEXT_SEQUENCE_PUSHED.getFrom(game, jsonObject);
+		fRemoveUsedSecretWeapons = IServerJsonOption.REMOVE_USED_SECRET_WEAPONS.getFrom(game, jsonObject);
+		fNewHalf = IServerJsonOption.NEW_HALF.getFrom(game, jsonObject);
+		fEndGame = IServerJsonOption.END_GAME.getFrom(game, jsonObject);
+		Boolean withinSecretWeaponHandling = IServerJsonOption.WITHIN_SECRET_WEAPON_HANDLING.getFrom(game, jsonObject);
 		fWithinSecretWeaponHandling = (withinSecretWeaponHandling != null) ? withinSecretWeaponHandling : false;
 		return this;
 	}

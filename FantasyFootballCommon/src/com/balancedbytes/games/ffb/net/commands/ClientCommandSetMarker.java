@@ -3,6 +3,7 @@ package com.balancedbytes.games.ffb.net.commands;
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
+import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.net.NetCommandId;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
@@ -57,12 +58,12 @@ public class ClientCommandSetMarker extends ClientCommand {
 		return jsonObject;
 	}
 
-	public ClientCommandSetMarker initFrom(JsonValue jsonValue) {
-		super.initFrom(jsonValue);
+	public ClientCommandSetMarker initFrom(Game game, JsonValue jsonValue) {
+		super.initFrom(game, jsonValue);
 		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
-		fCoordinate = IJsonOption.COORDINATE.getFrom(jsonObject);
-		fPlayerId = IJsonOption.PLAYER_ID.getFrom(jsonObject);
-		fText = IJsonOption.TEXT.getFrom(jsonObject);
+		fCoordinate = IJsonOption.COORDINATE.getFrom(game, jsonObject);
+		fPlayerId = IJsonOption.PLAYER_ID.getFrom(game, jsonObject);
+		fText = IJsonOption.TEXT.getFrom(game, jsonObject);
 		return this;
 	}
 

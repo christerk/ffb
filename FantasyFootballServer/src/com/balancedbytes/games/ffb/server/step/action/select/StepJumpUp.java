@@ -1,6 +1,7 @@
 package com.balancedbytes.games.ffb.server.step.action.select;
 
 import com.balancedbytes.games.ffb.json.UtilJson;
+import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.IServerJsonOption;
 import com.balancedbytes.games.ffb.server.net.ReceivedCommand;
@@ -92,10 +93,10 @@ public final class StepJumpUp extends AbstractStepWithReRoll {
 	}
 
 	@Override
-	public StepJumpUp initFrom(JsonValue pJsonValue) {
-		super.initFrom(pJsonValue);
+	public StepJumpUp initFrom(Game game, JsonValue pJsonValue) {
+		super.initFrom(game, pJsonValue);
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		state.goToLabelOnFailure = IServerJsonOption.GOTO_LABEL_ON_FAILURE.getFrom(jsonObject);
+		state.goToLabelOnFailure = IServerJsonOption.GOTO_LABEL_ON_FAILURE.getFrom(game, jsonObject);
 		return this;
 	}
 

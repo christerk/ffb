@@ -3,6 +3,7 @@ package com.balancedbytes.games.ffb;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.IJsonSerializable;
 import com.balancedbytes.games.ffb.json.UtilJson;
+import com.balancedbytes.games.ffb.model.Game;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
@@ -55,12 +56,12 @@ public class KnockoutRecovery implements IJsonSerializable {
 		return jsonObject;
 	}
 
-	public KnockoutRecovery initFrom(JsonValue pJsonValue) {
+	public KnockoutRecovery initFrom(Game game, JsonValue pJsonValue) {
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		fPlayerId = IJsonOption.PLAYER_ID.getFrom(jsonObject);
-		fRecovering = IJsonOption.RECOVERING.getFrom(jsonObject);
-		fRoll = IJsonOption.ROLL.getFrom(jsonObject);
-		fBloodweiserBabes = IJsonOption.BLOODWEISER_KEGS.getFrom(jsonObject);
+		fPlayerId = IJsonOption.PLAYER_ID.getFrom(game, jsonObject);
+		fRecovering = IJsonOption.RECOVERING.getFrom(game, jsonObject);
+		fRoll = IJsonOption.ROLL.getFrom(game, jsonObject);
+		fBloodweiserBabes = IJsonOption.BLOODWEISER_KEGS.getFrom(game, jsonObject);
 		return this;
 	}
 

@@ -84,8 +84,8 @@ public final class StepPlayerLoss extends AbstractStep {
 	}
 
 	@Override
-	public StepPlayerLoss initFrom(JsonValue pJsonValue) {
-		super.initFrom(pJsonValue);
+	public StepPlayerLoss initFrom(Game game, JsonValue pJsonValue) {
+		super.initFrom(game, pJsonValue);
 		return this;
 	}
 

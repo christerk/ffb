@@ -82,10 +82,10 @@ public class GameResult implements IJsonSerializable {
 		return jsonObject;
 	}
 
-	public GameResult initFrom(JsonValue pJsonValue) {
+	public GameResult initFrom(Game game, JsonValue pJsonValue) {
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		fTeamResultHome.initFrom(IJsonOption.TEAM_RESULT_HOME.getFrom(jsonObject));
-		fTeamResultAway.initFrom(IJsonOption.TEAM_RESULT_AWAY.getFrom(jsonObject));
+		fTeamResultHome.initFrom(game, IJsonOption.TEAM_RESULT_HOME.getFrom(game, jsonObject));
+		fTeamResultAway.initFrom(game, IJsonOption.TEAM_RESULT_AWAY.getFrom(game, jsonObject));
 		return this;
 	}
 

@@ -3,19 +3,20 @@ package com.balancedbytes.games.ffb.report;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.balancedbytes.games.ffb.CatchModifierFactory;
-import com.balancedbytes.games.ffb.DodgeModifierFactory;
-import com.balancedbytes.games.ffb.GazeModifierFactory;
-import com.balancedbytes.games.ffb.GoForItModifierFactory;
 import com.balancedbytes.games.ffb.IRollModifier;
-import com.balancedbytes.games.ffb.IRollModifierFactory;
-import com.balancedbytes.games.ffb.InterceptionModifierFactory;
-import com.balancedbytes.games.ffb.LeapModifierFactory;
-import com.balancedbytes.games.ffb.PassModifierFactory;
-import com.balancedbytes.games.ffb.PickupModifierFactory;
-import com.balancedbytes.games.ffb.RightStuffModifierFactory;
+import com.balancedbytes.games.ffb.factory.CatchModifierFactory;
+import com.balancedbytes.games.ffb.factory.DodgeModifierFactory;
+import com.balancedbytes.games.ffb.factory.GazeModifierFactory;
+import com.balancedbytes.games.ffb.factory.GoForItModifierFactory;
+import com.balancedbytes.games.ffb.factory.IRollModifierFactory;
+import com.balancedbytes.games.ffb.factory.InterceptionModifierFactory;
+import com.balancedbytes.games.ffb.factory.LeapModifierFactory;
+import com.balancedbytes.games.ffb.factory.PassModifierFactory;
+import com.balancedbytes.games.ffb.factory.PickupModifierFactory;
+import com.balancedbytes.games.ffb.factory.RightStuffModifierFactory;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
+import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.util.ArrayTool;
 import com.eclipsesource.json.JsonArray;
 import com.eclipsesource.json.JsonObject;
@@ -134,15 +135,15 @@ public class ReportSkillRoll implements IReport {
 		return jsonObject;
 	}
 
-	public ReportSkillRoll initFrom(JsonValue pJsonValue) {
+	public ReportSkillRoll initFrom(Game game, JsonValue pJsonValue) {
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(jsonObject));
-		fPlayerId = IJsonOption.PLAYER_ID.getFrom(jsonObject);
-		fSuccessful = IJsonOption.SUCCESSFUL.getFrom(jsonObject);
-		fRoll = IJsonOption.ROLL.getFrom(jsonObject);
-		fMinimumRoll = IJsonOption.MINIMUM_ROLL.getFrom(jsonObject);
-		fReRolled = IJsonOption.RE_ROLLED.getFrom(jsonObject);
-		JsonArray modifierArray = IJsonOption.ROLL_MODIFIERS.getFrom(jsonObject);
+		UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(game, jsonObject));
+		fPlayerId = IJsonOption.PLAYER_ID.getFrom(game, jsonObject);
+		fSuccessful = IJsonOption.SUCCESSFUL.getFrom(game, jsonObject);
+		fRoll = IJsonOption.ROLL.getFrom(game, jsonObject);
+		fMinimumRoll = IJsonOption.MINIMUM_ROLL.getFrom(game, jsonObject);
+		fReRolled = IJsonOption.RE_ROLLED.getFrom(game, jsonObject);
+		JsonArray modifierArray = IJsonOption.ROLL_MODIFIERS.getFrom(game, jsonObject);
 		if (modifierArray != null) {
 			IRollModifierFactory modifierFactory = createRollModifierFactory();
 			if (modifierFactory != null) {

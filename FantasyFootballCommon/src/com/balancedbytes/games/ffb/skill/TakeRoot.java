@@ -1,6 +1,8 @@
 package com.balancedbytes.games.ffb.skill;
 
+import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.SkillCategory;
+import com.balancedbytes.games.ffb.RulesCollection.Rules;
 import com.balancedbytes.games.ffb.model.Skill;
 
 /**
@@ -15,6 +17,7 @@ import com.balancedbytes.games.ffb.model.Skill;
  * player fails his Take Root roll as part of a Blitz Action he may not block
  * that turn (he can still roll to stand up if he is Prone).
  */
+@RulesCollection(Rules.All)
 public class TakeRoot extends Skill {
 
 	public TakeRoot() {

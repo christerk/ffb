@@ -1,8 +1,8 @@
 package com.balancedbytes.games.ffb.client;
 
 import com.balancedbytes.games.ffb.ClientMode;
-import com.balancedbytes.games.ffb.ClientModeFactory;
 import com.balancedbytes.games.ffb.FantasyFootballException;
+import com.balancedbytes.games.ffb.factory.ClientModeFactory;
 import com.balancedbytes.games.ffb.util.ArrayTool;
 import com.balancedbytes.games.ffb.util.StringTool;
 

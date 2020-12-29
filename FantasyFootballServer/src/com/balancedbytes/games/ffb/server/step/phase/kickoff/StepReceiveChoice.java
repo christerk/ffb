@@ -104,11 +104,11 @@ public final class StepReceiveChoice extends AbstractStep {
 	}
 
 	@Override
-	public StepReceiveChoice initFrom(JsonValue pJsonValue) {
-		super.initFrom(pJsonValue);
+	public StepReceiveChoice initFrom(Game game, JsonValue pJsonValue) {
+		super.initFrom(game, pJsonValue);
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		fChoosingTeamId = IServerJsonOption.CHOOSING_TEAM_ID.getFrom(jsonObject);
-		fReceiveChoice = IServerJsonOption.RECEIVE_CHOICE.getFrom(jsonObject);
+		fChoosingTeamId = IServerJsonOption.CHOOSING_TEAM_ID.getFrom(game, jsonObject);
+		fReceiveChoice = IServerJsonOption.RECEIVE_CHOICE.getFrom(game, jsonObject);
 		return this;
 	}
 

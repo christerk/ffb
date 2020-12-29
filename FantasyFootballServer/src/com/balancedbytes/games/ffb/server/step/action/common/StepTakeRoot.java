@@ -180,10 +180,10 @@ public class StepTakeRoot extends AbstractStepWithReRoll {
 	}
 
 	@Override
-	public StepTakeRoot initFrom(JsonValue pJsonValue) {
-		super.initFrom(pJsonValue);
+	public StepTakeRoot initFrom(Game game, JsonValue pJsonValue) {
+		super.initFrom(game, pJsonValue);
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		fGotoLabelOnFailure = IServerJsonOption.GOTO_LABEL_ON_FAILURE.getFrom(jsonObject);
+		fGotoLabelOnFailure = IServerJsonOption.GOTO_LABEL_ON_FAILURE.getFrom(game, jsonObject);
 		return this;
 	}
 

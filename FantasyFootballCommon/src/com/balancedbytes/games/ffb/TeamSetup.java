@@ -177,7 +177,7 @@ public class TeamSetup implements IXmlSerializable, IJsonSerializable {
 		return this;
 	}
 
-	public boolean endXmlElement(String pXmlTag, String pValue) {
+	public boolean endXmlElement(Game game, String pXmlTag, String pValue) {
 		return XML_TAG.equals(pXmlTag);
 	}
 
@@ -201,15 +201,15 @@ public class TeamSetup implements IXmlSerializable, IJsonSerializable {
 		return jsonObject;
 	}
 
-	public TeamSetup initFrom(JsonValue pJsonValue) {
+	public TeamSetup initFrom(Game game, JsonValue pJsonValue) {
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		fName = IJsonOption.NAME.getFrom(jsonObject);
-		fTeamId = IJsonOption.TEAM_ID.getFrom(jsonObject);
+		fName = IJsonOption.NAME.getFrom(game, jsonObject);
+		fTeamId = IJsonOption.TEAM_ID.getFrom(game, jsonObject);
 		// get coordinates and playerNrs from array of inner jsonObjects
-		JsonArray playerPositions = IJsonOption.PLAYER_POSITIONS.getFrom(jsonObject);
+		JsonArray playerPositions = IJsonOption.PLAYER_POSITIONS.getFrom(game, jsonObject);
 		for (int i = 0; i < playerPositions.size(); i++) {
 			JsonObject playerPosition = playerPositions.get(i).asObject();
-			addCoordinate(IJsonOption.COORDINATE.getFrom(playerPosition), IJsonOption.PLAYER_NR.getFrom(playerPosition));
+			addCoordinate(IJsonOption.COORDINATE.getFrom(game, playerPosition), IJsonOption.PLAYER_NR.getFrom(game, playerPosition));
 		}
 		return this;
 	}

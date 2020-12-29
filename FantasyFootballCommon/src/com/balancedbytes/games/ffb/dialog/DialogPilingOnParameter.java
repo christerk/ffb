@@ -3,6 +3,7 @@ package com.balancedbytes.games.ffb.dialog;
 import com.balancedbytes.games.ffb.IDialogParameter;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
+import com.balancedbytes.games.ffb.model.Game;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
@@ -59,12 +60,12 @@ public class DialogPilingOnParameter implements IDialogParameter {
 		return jsonObject;
 	}
 
-	public DialogPilingOnParameter initFrom(JsonValue pJsonValue) {
+	public DialogPilingOnParameter initFrom(Game game, JsonValue pJsonValue) {
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		UtilDialogParameter.validateDialogId(this, (DialogId) IJsonOption.DIALOG_ID.getFrom(jsonObject));
-		fPlayerId = IJsonOption.PLAYER_ID.getFrom(jsonObject);
-		fReRollInjury = IJsonOption.RE_ROLL_INJURY.getFrom(jsonObject);
-		Boolean usesATeamReroll = IJsonOption.USES_A_TEAM_REROLL.getFrom(jsonObject);
+		UtilDialogParameter.validateDialogId(this, (DialogId) IJsonOption.DIALOG_ID.getFrom(game, jsonObject));
+		fPlayerId = IJsonOption.PLAYER_ID.getFrom(game, jsonObject);
+		fReRollInjury = IJsonOption.RE_ROLL_INJURY.getFrom(game, jsonObject);
+		Boolean usesATeamReroll = IJsonOption.USES_A_TEAM_REROLL.getFrom(game, jsonObject);
 		fUsesATeamReroll = (usesATeamReroll != null) ? usesATeamReroll : false;
 		return this;
 	}

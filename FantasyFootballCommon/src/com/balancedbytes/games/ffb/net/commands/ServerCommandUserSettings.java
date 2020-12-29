@@ -6,6 +6,7 @@ import java.util.Map;
 
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
+import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.net.NetCommandId;
 import com.balancedbytes.games.ffb.util.ArrayTool;
 import com.eclipsesource.json.JsonObject;
@@ -75,12 +76,12 @@ public class ServerCommandUserSettings extends ServerCommand {
 		return jsonObject;
 	}
 
-	public ServerCommandUserSettings initFrom(JsonValue pJsonValue) {
+	public ServerCommandUserSettings initFrom(Game game, JsonValue pJsonValue) {
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		UtilNetCommand.validateCommandId(this, (NetCommandId) IJsonOption.NET_COMMAND_ID.getFrom(jsonObject));
-		setCommandNr(IJsonOption.COMMAND_NR.getFrom(jsonObject));
-		String[] userSettingNames = IJsonOption.USER_SETTING_NAMES.getFrom(jsonObject);
-		String[] userSettingValues = IJsonOption.USER_SETTING_VALUES.getFrom(jsonObject);
+		UtilNetCommand.validateCommandId(this, (NetCommandId) IJsonOption.NET_COMMAND_ID.getFrom(game, jsonObject));
+		setCommandNr(IJsonOption.COMMAND_NR.getFrom(game, jsonObject));
+		String[] userSettingNames = IJsonOption.USER_SETTING_NAMES.getFrom(game, jsonObject);
+		String[] userSettingValues = IJsonOption.USER_SETTING_VALUES.getFrom(game, jsonObject);
 		init(userSettingNames, userSettingValues);
 		return this;
 	}

@@ -61,7 +61,8 @@ public class Game extends ModelChangeObservable implements IJsonSerializable {
 	private ActingPlayer fActingPlayer;
 	private GameResult fGameResult;
 	private GameOptions fOptions;
-
+	private GameRules rules;
+	
 	public Game() {
 
 		setFieldModel(new FieldModel(this));
@@ -79,7 +80,7 @@ public class Game extends ModelChangeObservable implements IJsonSerializable {
 		setTeamAway(new Team());
 
 		fOptions = new GameOptions(this);
-
+		initializeRules();
 	}
 
 	public void setId(long pId) {
@@ -94,6 +95,17 @@ public class Game extends ModelChangeObservable implements IJsonSerializable {
 		return fId;
 	}
 
+	/**
+	 * Initialize rules, runs after game options have been set.
+	 */
+	public void initializeRules() {
+		rules = new GameRules(fOptions);
+	}
+	
+	public GameRules getRules() {
+		return rules;
+	}
+	
 	public GameResult getGameResult() {
 		return fGameResult;
 	}
@@ -205,7 +217,7 @@ public class Game extends ModelChangeObservable implements IJsonSerializable {
 		fHomeFirstOffense = pHomeFirstOffense;
 		notifyObservers(ModelChangeId.GAME_SET_HOME_FIRST_OFFENSE, null, fHomeFirstOffense);
 	}
-
+	
 	public void startTurn() {
 		setPassCoordinate(null);
 		UtilActingPlayer.changeActingPlayer(this, null, null, false);
@@ -602,46 +614,46 @@ public class Game extends ModelChangeObservable implements IJsonSerializable {
 
 	}
 
-	public Game initFrom(JsonValue pJsonValue) {
+	public Game initFrom(Game game, JsonValue pJsonValue) {
 
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
 
-		fId = IJsonOption.GAME_ID.getFrom(jsonObject);
-		fScheduled = IJsonOption.SCHEDULED.getFrom(jsonObject);
-		fStarted = IJsonOption.STARTED.getFrom(jsonObject);
-		fFinished = IJsonOption.FINISHED.getFrom(jsonObject);
-		fHomePlaying = IJsonOption.HOME_PLAYING.getFrom(jsonObject);
-		fHalf = IJsonOption.HALF.getFrom(jsonObject);
-		fHomeFirstOffense = IJsonOption.HOME_FIRST_OFFENSE.getFrom(jsonObject);
-		fSetupOffense = IJsonOption.SETUP_OFFENSE.getFrom(jsonObject);
-		fWaitingForOpponent = IJsonOption.WAITING_FOR_OPPONENT.getFrom(jsonObject);
-		fTurnTime = IJsonOption.TURN_TIME.getFrom(jsonObject);
-		fGameTime = IJsonOption.GAME_TIME.getFrom(jsonObject);
-		fTimeoutPossible = IJsonOption.TIMEOUT_POSSIBLE.getFrom(jsonObject);
-		fTimeoutEnforced = IJsonOption.TIMEOUT_ENFORCED.getFrom(jsonObject);
-		fConcessionPossible = IJsonOption.CONCESSION_POSSIBLE.getFrom(jsonObject);
-		fTesting = IJsonOption.TESTING.getFrom(jsonObject);
-		fTurnMode = (TurnMode) IJsonOption.TURN_MODE.getFrom(jsonObject);
-		fLastTurnMode = (TurnMode) IJsonOption.LAST_TURN_MODE.getFrom(jsonObject);
-		fDefenderId = IJsonOption.DEFENDER_ID.getFrom(jsonObject);
-		fDefenderAction = (PlayerAction) IJsonOption.DEFENDER_ACTION.getFrom(jsonObject);
-		fPassCoordinate = IJsonOption.PASS_COORDINATE.getFrom(jsonObject);
-		fThrowerId = IJsonOption.THROWER_ID.getFrom(jsonObject);
-		fThrowerAction = (PlayerAction) IJsonOption.THROWER_ACTION.getFrom(jsonObject);
+		fId = IJsonOption.GAME_ID.getFrom(game, jsonObject);
+		fScheduled = IJsonOption.SCHEDULED.getFrom(game, jsonObject);
+		fStarted = IJsonOption.STARTED.getFrom(game, jsonObject);
+		fFinished = IJsonOption.FINISHED.getFrom(game, jsonObject);
+		fHomePlaying = IJsonOption.HOME_PLAYING.getFrom(game, jsonObject);
+		fHalf = IJsonOption.HALF.getFrom(game, jsonObject);
+		fHomeFirstOffense = IJsonOption.HOME_FIRST_OFFENSE.getFrom(game, jsonObject);
+		fSetupOffense = IJsonOption.SETUP_OFFENSE.getFrom(game, jsonObject);
+		fWaitingForOpponent = IJsonOption.WAITING_FOR_OPPONENT.getFrom(game, jsonObject);
+		fTurnTime = IJsonOption.TURN_TIME.getFrom(game, jsonObject);
+		fGameTime = IJsonOption.GAME_TIME.getFrom(game, jsonObject);
+		fTimeoutPossible = IJsonOption.TIMEOUT_POSSIBLE.getFrom(game, jsonObject);
+		fTimeoutEnforced = IJsonOption.TIMEOUT_ENFORCED.getFrom(game, jsonObject);
+		fConcessionPossible = IJsonOption.CONCESSION_POSSIBLE.getFrom(game, jsonObject);
+		fTesting = IJsonOption.TESTING.getFrom(game, jsonObject);
+		fTurnMode = (TurnMode) IJsonOption.TURN_MODE.getFrom(game, jsonObject);
+		fLastTurnMode = (TurnMode) IJsonOption.LAST_TURN_MODE.getFrom(game, jsonObject);
+		fDefenderId = IJsonOption.DEFENDER_ID.getFrom(game, jsonObject);
+		fDefenderAction = (PlayerAction) IJsonOption.DEFENDER_ACTION.getFrom(game, jsonObject);
+		fPassCoordinate = IJsonOption.PASS_COORDINATE.getFrom(game, jsonObject);
+		fThrowerId = IJsonOption.THROWER_ID.getFrom(game, jsonObject);
+		fThrowerAction = (PlayerAction) IJsonOption.THROWER_ACTION.getFrom(game, jsonObject);
 
-		fTeamAway.initFrom(IJsonOption.TEAM_AWAY.getFrom(jsonObject));
-		fTurnDataAway.initFrom(IJsonOption.TURN_DATA_AWAY.getFrom(jsonObject));
-		fTeamHome.initFrom(IJsonOption.TEAM_HOME.getFrom(jsonObject));
-		fTurnDataHome.initFrom(IJsonOption.TURN_DATA_HOME.getFrom(jsonObject));
-		fFieldModel.initFrom(IJsonOption.FIELD_MODEL.getFrom(jsonObject));
-		fActingPlayer.initFrom(IJsonOption.ACTING_PLAYER.getFrom(jsonObject));
-		fGameResult.initFrom(IJsonOption.GAME_RESULT.getFrom(jsonObject));
-		fOptions.initFrom(IJsonOption.GAME_OPTIONS.getFrom(jsonObject));
+		fTeamAway.initFrom(game, IJsonOption.TEAM_AWAY.getFrom(game, jsonObject));
+		fTurnDataAway.initFrom(game, IJsonOption.TURN_DATA_AWAY.getFrom(game, jsonObject));
+		fTeamHome.initFrom(game, IJsonOption.TEAM_HOME.getFrom(game, jsonObject));
+		fTurnDataHome.initFrom(game, IJsonOption.TURN_DATA_HOME.getFrom(game, jsonObject));
+		fFieldModel.initFrom(game, IJsonOption.FIELD_MODEL.getFrom(game, jsonObject));
+		fActingPlayer.initFrom(game, IJsonOption.ACTING_PLAYER.getFrom(game, jsonObject));
+		fGameResult.initFrom(game, IJsonOption.GAME_RESULT.getFrom(game, jsonObject));
+		fOptions.initFrom(game, IJsonOption.GAME_OPTIONS.getFrom(game, jsonObject));
 
 		fDialogParameter = null;
-		JsonObject dialogParameterObject = IJsonOption.DIALOG_PARAMETER.getFrom(jsonObject);
+		JsonObject dialogParameterObject = IJsonOption.DIALOG_PARAMETER.getFrom(game, jsonObject);
 		if (dialogParameterObject != null) {
-			fDialogParameter = new DialogParameterFactory().forJsonValue(dialogParameterObject);
+			fDialogParameter = new DialogParameterFactory().forJsonValue(game, dialogParameterObject);
 		}
 
 		return this;

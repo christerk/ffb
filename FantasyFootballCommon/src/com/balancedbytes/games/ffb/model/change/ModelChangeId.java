@@ -1,6 +1,7 @@
 package com.balancedbytes.games.ffb.model.change;
 
 import com.balancedbytes.games.ffb.INamedObject;
+import com.balancedbytes.games.ffb.model.Game;
 import com.eclipsesource.json.JsonValue;
 
 /**
@@ -156,8 +157,8 @@ public enum ModelChangeId implements INamedObject {
 		return getDataType().toJsonValue(pValue);
 	}
 
-	public Object fromJsonValue(JsonValue pJsonValue) {
-		return getDataType().fromJsonValue(pJsonValue);
+	public Object fromJsonValue(Game game, JsonValue pJsonValue) {
+		return getDataType().fromJsonValue(game, pJsonValue);
 	}
 
 }

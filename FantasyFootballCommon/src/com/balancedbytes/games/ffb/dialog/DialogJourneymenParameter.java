@@ -6,6 +6,7 @@ import java.util.List;
 import com.balancedbytes.games.ffb.IDialogParameter;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
+import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.util.ArrayTool;
 import com.balancedbytes.games.ffb.util.StringTool;
 import com.eclipsesource.json.JsonObject;
@@ -79,12 +80,12 @@ public class DialogJourneymenParameter implements IDialogParameter {
 		return jsonObject;
 	}
 
-	public DialogJourneymenParameter initFrom(JsonValue pJsonValue) {
+	public DialogJourneymenParameter initFrom(Game game, JsonValue pJsonValue) {
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		UtilDialogParameter.validateDialogId(this, (DialogId) IJsonOption.DIALOG_ID.getFrom(jsonObject));
-		fTeamId = IJsonOption.TEAM_ID.getFrom(jsonObject);
-		fNrOfSlots = IJsonOption.NR_OF_SLOTS.getFrom(jsonObject);
-		addPositionIds(IJsonOption.POSITION_IDS.getFrom(jsonObject));
+		UtilDialogParameter.validateDialogId(this, (DialogId) IJsonOption.DIALOG_ID.getFrom(game, jsonObject));
+		fTeamId = IJsonOption.TEAM_ID.getFrom(game, jsonObject);
+		fNrOfSlots = IJsonOption.NR_OF_SLOTS.getFrom(game, jsonObject);
+		addPositionIds(IJsonOption.POSITION_IDS.getFrom(game, jsonObject));
 		return this;
 	}
 

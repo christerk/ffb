@@ -104,11 +104,11 @@ public final class StepEndBomb extends AbstractStep {
 	}
 
 	@Override
-	public StepEndBomb initFrom(JsonValue pJsonValue) {
-		super.initFrom(pJsonValue);
+	public StepEndBomb initFrom(Game game, JsonValue pJsonValue) {
+		super.initFrom(game, pJsonValue);
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		fCatcherId = IServerJsonOption.CATCHER_ID.getFrom(jsonObject);
-		fEndTurn = IServerJsonOption.END_TURN.getFrom(jsonObject);
+		fCatcherId = IServerJsonOption.CATCHER_ID.getFrom(game, jsonObject);
+		fEndTurn = IServerJsonOption.END_TURN.getFrom(game, jsonObject);
 		return this;
 	}
 

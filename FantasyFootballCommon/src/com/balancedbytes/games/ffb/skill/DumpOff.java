@@ -1,6 +1,8 @@
 package com.balancedbytes.games.ffb.skill;
 
+import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.SkillCategory;
+import com.balancedbytes.games.ffb.RulesCollection.Rules;
 import com.balancedbytes.games.ffb.model.Skill;
 
 /**
@@ -13,6 +15,7 @@ import com.balancedbytes.games.ffb.model.Skill;
  * Dump-Off may not be used on the second block from an opponent with the Frenzy
  * skill or in conjunction with the Bombardier or Throw Team-Mate skills.
  */
+@RulesCollection(Rules.All)
 public class DumpOff extends Skill {
 
 	public DumpOff() {

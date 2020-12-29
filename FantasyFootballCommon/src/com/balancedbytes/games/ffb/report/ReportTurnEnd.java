@@ -7,6 +7,7 @@ import com.balancedbytes.games.ffb.HeatExhaustion;
 import com.balancedbytes.games.ffb.KnockoutRecovery;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
+import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.util.ArrayTool;
 import com.eclipsesource.json.JsonArray;
@@ -118,27 +119,27 @@ public class ReportTurnEnd implements IReport {
 		return jsonObject;
 	}
 
-	public ReportTurnEnd initFrom(JsonValue pJsonValue) {
+	public ReportTurnEnd initFrom(Game game, JsonValue pJsonValue) {
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(jsonObject));
-		fPlayerIdTouchdown = IJsonOption.PLAYER_ID_TOUCHDOWN.getFrom(jsonObject);
-		JsonArray knockoutRecoveryArray = IJsonOption.KNOCKOUT_RECOVERY_ARRAY.getFrom(jsonObject);
+		UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(game, jsonObject));
+		fPlayerIdTouchdown = IJsonOption.PLAYER_ID_TOUCHDOWN.getFrom(game, jsonObject);
+		JsonArray knockoutRecoveryArray = IJsonOption.KNOCKOUT_RECOVERY_ARRAY.getFrom(game, jsonObject);
 		if (knockoutRecoveryArray != null) {
 			for (int i = 0; i < knockoutRecoveryArray.size(); i++) {
-				add(new KnockoutRecovery().initFrom(knockoutRecoveryArray.get(i)));
+				add(new KnockoutRecovery().initFrom(game, knockoutRecoveryArray.get(i)));
 			}
 		}
-		JsonArray heatExhaustionArray = IJsonOption.HEAT_EXHAUSTION_ARRAY.getFrom(jsonObject);
+		JsonArray heatExhaustionArray = IJsonOption.HEAT_EXHAUSTION_ARRAY.getFrom(game, jsonObject);
 		if (heatExhaustionArray != null) {
 			for (int i = 0; i < heatExhaustionArray.size(); i++) {
-				add(new HeatExhaustion().initFrom(heatExhaustionArray.get(i)));
+				add(new HeatExhaustion().initFrom(game, heatExhaustionArray.get(i)));
 			}
 		}
 
-		JsonArray unzappedArray = IJsonOption.UNZAP_ARRAY.getFrom(jsonObject);
+		JsonArray unzappedArray = IJsonOption.UNZAP_ARRAY.getFrom(game, jsonObject);
 		if (unzappedArray != null) {
 			for (int i = 0; i < unzappedArray.size(); i++) {
-				unzappedPlayers.add(Player.getFrom(unzappedArray.get(i)));
+				unzappedPlayers.add(Player.getFrom(game, unzappedArray.get(i)));
 			}
 		}
 

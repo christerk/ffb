@@ -3,13 +3,13 @@ package com.balancedbytes.games.ffb.server.step.action.pass;
 import com.balancedbytes.games.ffb.CatchScatterThrowInMode;
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.PassModifier;
-import com.balancedbytes.games.ffb.PassModifierFactory;
 import com.balancedbytes.games.ffb.PassingDistance;
 import com.balancedbytes.games.ffb.PlayerAction;
 import com.balancedbytes.games.ffb.PlayerState;
 import com.balancedbytes.games.ffb.ReRollSource;
 import com.balancedbytes.games.ffb.ReRolledActions;
 import com.balancedbytes.games.ffb.dialog.DialogSkillUseParameter;
+import com.balancedbytes.games.ffb.factory.PassModifierFactory;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.Animation;
 import com.balancedbytes.games.ffb.model.AnimationType;
@@ -236,7 +236,7 @@ public class StepPass extends AbstractStepWithReRoll {
 					state.passSkillUsed = true;
 					Team actingTeam = game.isHomePlaying() ? game.getTeamHome() : game.getTeamAway();
 					UtilServerDialog.showDialog(getGameState(),
-							new DialogSkillUseParameter(game.getThrowerId(), PassingReroll.getSkill(), minimumRoll),
+							new DialogSkillUseParameter(game.getThrowerId(), PassingReroll.getSkill(game), minimumRoll),
 							actingTeam.hasPlayer(game.getThrower()));
 				} else {
 					if (UtilServerReRoll.askForReRollIfAvailable(getGameState(), game.getThrower(), ReRolledActions.PASS,
@@ -297,16 +297,16 @@ public class StepPass extends AbstractStepWithReRoll {
 	}
 
 	@Override
-	public StepPass initFrom(JsonValue pJsonValue) {
-		super.initFrom(pJsonValue);
+	public StepPass initFrom(Game game, JsonValue pJsonValue) {
+		super.initFrom(game, pJsonValue);
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		state.goToLabelOnEnd = IServerJsonOption.GOTO_LABEL_ON_END.getFrom(jsonObject);
-		state.goToLabelOnMissedPass = IServerJsonOption.GOTO_LABEL_ON_MISSED_PASS.getFrom(jsonObject);
-		state.CatcherId = IServerJsonOption.CATCHER_ID.getFrom(jsonObject);
-		state.successful = IServerJsonOption.SUCCESSFUL.getFrom(jsonObject);
-		state.holdingSafeThrow = IServerJsonOption.HOLDING_SAFE_THROW.getFrom(jsonObject);
-		state.passFumble = IServerJsonOption.PASS_FUMBLE.getFrom(jsonObject);
-		state.passSkillUsed = IServerJsonOption.PASS_SKILL_USED.getFrom(jsonObject);
+		state.goToLabelOnEnd = IServerJsonOption.GOTO_LABEL_ON_END.getFrom(game, jsonObject);
+		state.goToLabelOnMissedPass = IServerJsonOption.GOTO_LABEL_ON_MISSED_PASS.getFrom(game, jsonObject);
+		state.CatcherId = IServerJsonOption.CATCHER_ID.getFrom(game, jsonObject);
+		state.successful = IServerJsonOption.SUCCESSFUL.getFrom(game, jsonObject);
+		state.holdingSafeThrow = IServerJsonOption.HOLDING_SAFE_THROW.getFrom(game, jsonObject);
+		state.passFumble = IServerJsonOption.PASS_FUMBLE.getFrom(game, jsonObject);
+		state.passSkillUsed = IServerJsonOption.PASS_SKILL_USED.getFrom(game, jsonObject);
 		return this;
 	}
 

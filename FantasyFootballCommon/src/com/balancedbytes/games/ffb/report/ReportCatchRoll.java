@@ -3,6 +3,7 @@ package com.balancedbytes.games.ffb.report;
 import com.balancedbytes.games.ffb.CatchModifier;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
+import com.balancedbytes.games.ffb.model.Game;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
@@ -50,10 +51,10 @@ public class ReportCatchRoll extends ReportSkillRoll {
 	}
 
 	@Override
-	public ReportCatchRoll initFrom(JsonValue pJsonValue) {
-		super.initFrom(pJsonValue);
+	public ReportCatchRoll initFrom(Game game, JsonValue pJsonValue) {
+		super.initFrom(game, pJsonValue);
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		fBomb = IJsonOption.BOMB.getFrom(jsonObject);
+		fBomb = IJsonOption.BOMB.getFrom(game, jsonObject);
 		return this;
 	}
 

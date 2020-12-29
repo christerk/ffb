@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
+import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.util.ArrayTool;
 import com.balancedbytes.games.ffb.util.StringTool;
 import com.eclipsesource.json.JsonObject;
@@ -78,13 +79,13 @@ public class ReportKickoffThrowARock implements IReport {
 		return jsonObject;
 	}
 
-	public ReportKickoffThrowARock initFrom(JsonValue pJsonValue) {
+	public ReportKickoffThrowARock initFrom(Game game, JsonValue pJsonValue) {
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(jsonObject));
-		fRollHome = IJsonOption.ROLL_HOME.getFrom(jsonObject);
-		fRollAway = IJsonOption.ROLL_AWAY.getFrom(jsonObject);
+		UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(game, jsonObject));
+		fRollHome = IJsonOption.ROLL_HOME.getFrom(game, jsonObject);
+		fRollAway = IJsonOption.ROLL_AWAY.getFrom(game, jsonObject);
 		fPlayersHit.clear();
-		addPlayerIds(IJsonOption.PLAYER_IDS_HIT.getFrom(jsonObject));
+		addPlayerIds(IJsonOption.PLAYER_IDS_HIT.getFrom(game, jsonObject));
 		return this;
 	}
 

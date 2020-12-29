@@ -1,7 +1,9 @@
 package com.balancedbytes.games.ffb.skill;
 
 import com.balancedbytes.games.ffb.ArmorModifiers;
+import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.SkillCategory;
+import com.balancedbytes.games.ffb.RulesCollection.Rules;
 import com.balancedbytes.games.ffb.model.Skill;
 
 /**
@@ -10,6 +12,7 @@ import com.balancedbytes.games.ffb.model.Skill;
  * player during a block, any Armour roll of 8 or more after modifications
  * automatically breaks armour.
  */
+@RulesCollection(Rules.All)
 public class Claw extends Skill {
 
 	public Claw() {

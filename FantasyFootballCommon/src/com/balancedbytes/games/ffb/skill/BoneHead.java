@@ -1,6 +1,8 @@
 package com.balancedbytes.games.ffb.skill;
 
+import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.SkillCategory;
+import com.balancedbytes.games.ffb.RulesCollection.Rules;
 import com.balancedbytes.games.ffb.model.Skill;
 import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
 
@@ -16,6 +18,7 @@ import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
  * voluntarily move until he manages to roll a 2 or better at the start of a
  * future Action or the drive ends.
  */
+@RulesCollection(Rules.All)
 public class BoneHead extends Skill {
 
 	public BoneHead() {

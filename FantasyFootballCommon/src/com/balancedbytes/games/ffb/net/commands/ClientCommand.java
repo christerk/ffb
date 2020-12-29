@@ -2,6 +2,7 @@ package com.balancedbytes.games.ffb.net.commands;
 
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
+import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.net.NetCommand;
 import com.balancedbytes.games.ffb.net.NetCommandId;
 import com.eclipsesource.json.JsonObject;
@@ -38,11 +39,11 @@ public abstract class ClientCommand extends NetCommand {
 		return jsonObject;
 	}
 
-	public ClientCommand initFrom(JsonValue jsonValue) {
+	public ClientCommand initFrom(Game game, JsonValue jsonValue) {
 		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
-		UtilNetCommand.validateCommandId(this, (NetCommandId) IJsonOption.NET_COMMAND_ID.getFrom(jsonObject));
+		UtilNetCommand.validateCommandId(this, (NetCommandId) IJsonOption.NET_COMMAND_ID.getFrom(game, jsonObject));
 		if (IJsonOption.ENTROPY.isDefinedIn(jsonObject)) {
-			setEntropy((byte) IJsonOption.ENTROPY.getFrom(jsonObject));
+			setEntropy((byte) IJsonOption.ENTROPY.getFrom(game, jsonObject));
 		}
 		return this;
 	}

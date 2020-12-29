@@ -1,6 +1,8 @@
 package com.balancedbytes.games.ffb.skill;
 
+import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.SkillCategory;
+import com.balancedbytes.games.ffb.RulesCollection.Rules;
 import com.balancedbytes.games.ffb.model.Skill;
 import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
 
@@ -15,6 +17,7 @@ import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
  * count as an Action, and a player can assist regardless of whether they have
  * taken an Action.
  */
+@RulesCollection(Rules.All)
 public class Timmmber extends Skill {
 
 	public Timmmber() {

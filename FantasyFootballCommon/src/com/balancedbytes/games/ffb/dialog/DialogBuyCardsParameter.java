@@ -7,6 +7,7 @@ import com.balancedbytes.games.ffb.CardType;
 import com.balancedbytes.games.ffb.IDialogParameter;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
+import com.balancedbytes.games.ffb.model.Game;
 import com.eclipsesource.json.JsonArray;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
@@ -89,18 +90,18 @@ public class DialogBuyCardsParameter implements IDialogParameter {
 		return jsonObject;
 	}
 
-	public DialogBuyCardsParameter initFrom(JsonValue pJsonValue) {
+	public DialogBuyCardsParameter initFrom(Game game, JsonValue pJsonValue) {
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		UtilDialogParameter.validateDialogId(this, (DialogId) IJsonOption.DIALOG_ID.getFrom(jsonObject));
-		fTeamId = IJsonOption.TEAM_ID.getFrom(jsonObject);
-		fAvailableCards = IJsonOption.AVAILABLE_CARDS.getFrom(jsonObject);
-		fAvailableGold = IJsonOption.AVAILABLE_GOLD.getFrom(jsonObject);
+		UtilDialogParameter.validateDialogId(this, (DialogId) IJsonOption.DIALOG_ID.getFrom(game, jsonObject));
+		fTeamId = IJsonOption.TEAM_ID.getFrom(game, jsonObject);
+		fAvailableCards = IJsonOption.AVAILABLE_CARDS.getFrom(game, jsonObject);
+		fAvailableGold = IJsonOption.AVAILABLE_GOLD.getFrom(game, jsonObject);
 		// get nrOfCards and cardType from array of inner jsonObjects
-		JsonArray nrOfCardsPerType = IJsonOption.NR_OF_CARDS_PER_TYPE.getFrom(jsonObject);
+		JsonArray nrOfCardsPerType = IJsonOption.NR_OF_CARDS_PER_TYPE.getFrom(game, jsonObject);
 		for (int i = 0; i < nrOfCardsPerType.size(); i++) {
 			JsonObject nrOfCardsForThisType = nrOfCardsPerType.get(i).asObject();
-			CardType cardType = (CardType) IJsonOption.CARD_TYPE.getFrom(nrOfCardsForThisType);
-			int nrOfCards = IJsonOption.NR_OF_CARDS.getFrom(nrOfCardsForThisType);
+			CardType cardType = (CardType) IJsonOption.CARD_TYPE.getFrom(game, nrOfCardsForThisType);
+			int nrOfCards = IJsonOption.NR_OF_CARDS.getFrom(game, nrOfCardsForThisType);
 			put(cardType, nrOfCards);
 		}
 		return this;

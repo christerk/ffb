@@ -1,6 +1,8 @@
 package com.balancedbytes.games.ffb.skill;
 
+import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.SkillCategory;
+import com.balancedbytes.games.ffb.RulesCollection.Rules;
 import com.balancedbytes.games.ffb.model.Skill;
 
 /**
@@ -21,6 +23,7 @@ import com.balancedbytes.games.ffb.model.Skill;
  * when he was removed and he will not score a touchdown if he was in the
  * opposing end zone.
  */
+@RulesCollection(Rules.All)
 public class BloodLust extends Skill {
 
 	public BloodLust() {

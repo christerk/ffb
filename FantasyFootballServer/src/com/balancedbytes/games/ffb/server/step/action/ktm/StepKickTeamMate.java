@@ -214,13 +214,13 @@ public final class StepKickTeamMate extends AbstractStepWithReRoll {
 	}
 
 	@Override
-	public StepKickTeamMate initFrom(JsonValue pJsonValue) {
-		super.initFrom(pJsonValue);
+	public StepKickTeamMate initFrom(Game game, JsonValue pJsonValue) {
+		super.initFrom(game, pJsonValue);
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		fGotoLabelOnFailure = IServerJsonOption.GOTO_LABEL_ON_FAILURE.getFrom(jsonObject);
-		fKickedPlayerId = IServerJsonOption.KICKED_PLAYER_ID.getFrom(jsonObject);
-		fKickedPlayerState = IServerJsonOption.KICKED_PLAYER_STATE.getFrom(jsonObject);
-		fKickedPlayerHasBall = IServerJsonOption.KICKED_PLAYER_HAS_BALL.getFrom(jsonObject);
+		fGotoLabelOnFailure = IServerJsonOption.GOTO_LABEL_ON_FAILURE.getFrom(game, jsonObject);
+		fKickedPlayerId = IServerJsonOption.KICKED_PLAYER_ID.getFrom(game, jsonObject);
+		fKickedPlayerState = IServerJsonOption.KICKED_PLAYER_STATE.getFrom(game, jsonObject);
+		fKickedPlayerHasBall = IServerJsonOption.KICKED_PLAYER_HAS_BALL.getFrom(game, jsonObject);
 		return this;
 	}
 }

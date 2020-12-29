@@ -13,6 +13,7 @@ import org.xml.sax.Attributes;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.IJsonSerializable;
 import com.balancedbytes.games.ffb.json.UtilJson;
+import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.util.ArrayTool;
 import com.balancedbytes.games.ffb.xml.IXmlReadable;
 import com.balancedbytes.games.ffb.xml.IXmlSerializable;
@@ -111,7 +112,7 @@ public class GameList implements IXmlSerializable, IJsonSerializable {
 		return xmlElement;
 	}
 
-	public boolean endXmlElement(String pXmlTag, String pValue) {
+	public boolean endXmlElement(Game game, String pXmlTag, String pValue) {
 		return XML_TAG.equals(pXmlTag);
 	}
 
@@ -128,12 +129,12 @@ public class GameList implements IXmlSerializable, IJsonSerializable {
 		return jsonObject;
 	}
 
-	public GameList initFrom(JsonValue pJsonValue) {
+	public GameList initFrom(Game game, JsonValue pJsonValue) {
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		JsonArray gameListArray = IJsonOption.GAME_LIST_ENTRIES.getFrom(jsonObject);
+		JsonArray gameListArray = IJsonOption.GAME_LIST_ENTRIES.getFrom(game, jsonObject);
 		for (int i = 0; i < gameListArray.size(); i++) {
 			GameListEntry gameListEntry = new GameListEntry();
-			gameListEntry.initFrom(gameListArray.get(i));
+			gameListEntry.initFrom(game, gameListArray.get(i));
 			add(gameListEntry);
 		}
 		return this;

@@ -8,14 +8,15 @@ import javax.xml.transform.sax.TransformerHandler;
 import org.xml.sax.Attributes;
 import org.xml.sax.helpers.AttributesImpl;
 
+import com.balancedbytes.games.ffb.FactoryType.Factory;
 import com.balancedbytes.games.ffb.PlayerGender;
-import com.balancedbytes.games.ffb.PlayerGenderFactory;
 import com.balancedbytes.games.ffb.PlayerType;
-import com.balancedbytes.games.ffb.PlayerTypeFactory;
 import com.balancedbytes.games.ffb.SeriousInjury;
-import com.balancedbytes.games.ffb.SeriousInjuryFactory;
 import com.balancedbytes.games.ffb.SkillCategory;
-import com.balancedbytes.games.ffb.SkillFactory;
+import com.balancedbytes.games.ffb.factory.PlayerGenderFactory;
+import com.balancedbytes.games.ffb.factory.PlayerTypeFactory;
+import com.balancedbytes.games.ffb.factory.SeriousInjuryFactory;
+import com.balancedbytes.games.ffb.factory.SkillFactory;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.xml.IXmlSerializable;
@@ -62,7 +63,6 @@ public class RosterPlayer extends Player<RosterPosition> {
 	private transient boolean fInsideSkillList;
 	private transient boolean fInsideInjuryList;
 	private transient boolean fInjuryCurrent;
-	private SkillFactory skillFactory;
 
 	public RosterPlayer() {
 		fLastingInjuries = new ArrayList<SeriousInjury>();
@@ -70,7 +70,6 @@ public class RosterPlayer extends Player<RosterPosition> {
 		setGender(PlayerGender.MALE);
 		fIconSetIndex = 0;
 		fPosition = new RosterPosition(null);
-		skillFactory = SkillFactory.getInstance();
 	}
 
 	@Override
@@ -429,7 +428,7 @@ public class RosterPlayer extends Player<RosterPosition> {
 		return xmlElement;
 	}
 
-	public boolean endXmlElement(String pXmlTag, String pValue) {
+	public boolean endXmlElement(Game game, String pXmlTag, String pValue) {
 		boolean complete = XML_TAG.equals(pXmlTag);
 		if (!complete) {
 			if (fInsideSkillList) {
@@ -437,7 +436,7 @@ public class RosterPlayer extends Player<RosterPosition> {
 					fInsideSkillList = false;
 				}
 				if (_XML_TAG_SKILL.equals(pXmlTag)) {
-					Skill skill = skillFactory.forName(pValue);
+					Skill skill = game.getRules().<SkillFactory>getFactory(Factory.skill).forName(pValue);
 					if (skill != null) {
 						fSkills.add(skill);
 					}
@@ -574,40 +573,40 @@ public class RosterPlayer extends Player<RosterPosition> {
 
 	}
 
-	public RosterPlayer initFrom(JsonValue pJsonValue) {
+	public RosterPlayer initFrom(Game game, JsonValue pJsonValue) {
 
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
 
-		fId = IJsonOption.PLAYER_ID.getFrom(jsonObject);
-		fNr = IJsonOption.PLAYER_NR.getFrom(jsonObject);
-		fPositionId = IJsonOption.POSITION_ID.getFrom(jsonObject);
-		fName = IJsonOption.PLAYER_NAME.getFrom(jsonObject);
-		fPlayerGender = (PlayerGender) IJsonOption.PLAYER_GENDER.getFrom(jsonObject);
-		fPlayerType = (PlayerType) IJsonOption.PLAYER_TYPE.getFrom(jsonObject);
+		fId = IJsonOption.PLAYER_ID.getFrom(game, jsonObject);
+		fNr = IJsonOption.PLAYER_NR.getFrom(game, jsonObject);
+		fPositionId = IJsonOption.POSITION_ID.getFrom(game, jsonObject);
+		fName = IJsonOption.PLAYER_NAME.getFrom(game, jsonObject);
+		fPlayerGender = (PlayerGender) IJsonOption.PLAYER_GENDER.getFrom(game, jsonObject);
+		fPlayerType = (PlayerType) IJsonOption.PLAYER_TYPE.getFrom(game, jsonObject);
 
-		fMovement = IJsonOption.MOVEMENT.getFrom(jsonObject);
-		fStrength = IJsonOption.STRENGTH.getFrom(jsonObject);
-		fAgility = IJsonOption.AGILITY.getFrom(jsonObject);
-		fArmour = IJsonOption.ARMOUR.getFrom(jsonObject);
+		fMovement = IJsonOption.MOVEMENT.getFrom(game, jsonObject);
+		fStrength = IJsonOption.STRENGTH.getFrom(game, jsonObject);
+		fAgility = IJsonOption.AGILITY.getFrom(game, jsonObject);
+		fArmour = IJsonOption.ARMOUR.getFrom(game, jsonObject);
 
 		SeriousInjuryFactory seriousInjuryFactory = new SeriousInjuryFactory();
 
 		fLastingInjuries.clear();
-		JsonArray lastingInjuries = IJsonOption.LASTING_INJURIES.getFrom(jsonObject);
+		JsonArray lastingInjuries = IJsonOption.LASTING_INJURIES.getFrom(game, jsonObject);
 		for (int i = 0; i < lastingInjuries.size(); i++) {
 			fLastingInjuries.add((SeriousInjury) UtilJson.toEnumWithName(seriousInjuryFactory, lastingInjuries.get(i)));
 		}
-		fRecoveringInjury = (SeriousInjury) IJsonOption.RECOVERING_INJURY.getFrom(jsonObject);
+		fRecoveringInjury = (SeriousInjury) IJsonOption.RECOVERING_INJURY.getFrom(game, jsonObject);
 
-		fUrlPortrait = IJsonOption.URL_PORTRAIT.getFrom(jsonObject);
-		fUrlIconSet = IJsonOption.URL_ICON_SET.getFrom(jsonObject);
-		fNrOfIcons = IJsonOption.NR_OF_ICONS.getFrom(jsonObject);
-		fIconSetIndex = IJsonOption.POSITION_ICON_INDEX.getFrom(jsonObject);
+		fUrlPortrait = IJsonOption.URL_PORTRAIT.getFrom(game, jsonObject);
+		fUrlIconSet = IJsonOption.URL_ICON_SET.getFrom(game, jsonObject);
+		fNrOfIcons = IJsonOption.NR_OF_ICONS.getFrom(game, jsonObject);
+		fIconSetIndex = IJsonOption.POSITION_ICON_INDEX.getFrom(game, jsonObject);
 
-		SkillFactory skillFactory = SkillFactory.getInstance();
+		SkillFactory skillFactory = game.getRules().getSkillFactory();
 
 		fSkills.clear();
-		JsonArray skillArray = IJsonOption.SKILL_ARRAY.getFrom(jsonObject);
+		JsonArray skillArray = IJsonOption.SKILL_ARRAY.getFrom(game, jsonObject);
 		for (int i = 0; i < skillArray.size(); i++) {
 			fSkills.add((Skill) UtilJson.toEnumWithName(skillFactory, skillArray.get(i)));
 		}

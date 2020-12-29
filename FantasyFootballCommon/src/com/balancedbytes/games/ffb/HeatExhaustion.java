@@ -3,6 +3,7 @@ package com.balancedbytes.games.ffb;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.IJsonSerializable;
 import com.balancedbytes.games.ffb.json.UtilJson;
+import com.balancedbytes.games.ffb.model.Game;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
@@ -48,11 +49,11 @@ public class HeatExhaustion implements IJsonSerializable {
 		return jsonObject;
 	}
 
-	public HeatExhaustion initFrom(JsonValue pJsonValue) {
+	public HeatExhaustion initFrom(Game game, JsonValue pJsonValue) {
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		fPlayerId = IJsonOption.PLAYER_ID.getFrom(jsonObject);
-		fExhausted = IJsonOption.EXHAUSTED.getFrom(jsonObject);
-		fRoll = IJsonOption.ROLL.getFrom(jsonObject);
+		fPlayerId = IJsonOption.PLAYER_ID.getFrom(game, jsonObject);
+		fExhausted = IJsonOption.EXHAUSTED.getFrom(game, jsonObject);
+		fRoll = IJsonOption.ROLL.getFrom(game, jsonObject);
 		return this;
 	}
 

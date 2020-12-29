@@ -6,6 +6,7 @@ import java.util.List;
 import com.balancedbytes.games.ffb.IDialogParameter;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
+import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.util.ArrayTool;
 import com.balancedbytes.games.ffb.util.StringTool;
 import com.eclipsesource.json.JsonObject;
@@ -80,12 +81,12 @@ public class DialogBribesParameter implements IDialogParameter {
 		return jsonObject;
 	}
 
-	public DialogBribesParameter initFrom(JsonValue pJsonValue) {
+	public DialogBribesParameter initFrom(Game game, JsonValue pJsonValue) {
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		UtilDialogParameter.validateDialogId(this, (DialogId) IJsonOption.DIALOG_ID.getFrom(jsonObject));
-		fTeamId = IJsonOption.TEAM_ID.getFrom(jsonObject);
-		fMaxNrOfBribes = IJsonOption.MAX_NR_OF_BRIBES.getFrom(jsonObject);
-		addPlayerIds(IJsonOption.PLAYER_IDS.getFrom(jsonObject));
+		UtilDialogParameter.validateDialogId(this, (DialogId) IJsonOption.DIALOG_ID.getFrom(game, jsonObject));
+		fTeamId = IJsonOption.TEAM_ID.getFrom(game, jsonObject);
+		fMaxNrOfBribes = IJsonOption.MAX_NR_OF_BRIBES.getFrom(game, jsonObject);
+		addPlayerIds(IJsonOption.PLAYER_IDS.getFrom(game, jsonObject));
 		return this;
 	}
 

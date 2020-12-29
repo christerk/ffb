@@ -9,7 +9,6 @@ import java.util.Map;
 import java.util.Set;
 
 import com.balancedbytes.games.ffb.GameStatus;
-import com.balancedbytes.games.ffb.SkillFactory;
 import com.balancedbytes.games.ffb.json.IJsonSerializable;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.Game;
@@ -29,7 +28,6 @@ import com.balancedbytes.games.ffb.server.step.StepFactory;
 import com.balancedbytes.games.ffb.server.step.StepResult;
 import com.balancedbytes.games.ffb.server.step.StepStack;
 import com.balancedbytes.games.ffb.server.util.UtilServerGame;
-import com.balancedbytes.games.ffb.server.util.UtilSkillBehaviours;
 import com.balancedbytes.games.ffb.util.StringTool;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
@@ -54,7 +52,6 @@ public class GameState implements IModelChangeObserver, IJsonSerializable {
 	private transient long fTurnTimeStarted;
 	private transient ModelChangeList fChangeList;
 	private transient Map<String, Long> fSpectatorCooldownTime;
-	private transient SkillFactory skillFactory;
 
 	private enum StepExecutionMode {
 		Start, HandleCommand
@@ -62,8 +59,6 @@ public class GameState implements IModelChangeObserver, IJsonSerializable {
 
 	public GameState(FantasyFootballServer pServer) {
 		fServer = pServer;
-		skillFactory = SkillFactory.getInstance();
-		UtilSkillBehaviours.registerBehaviours(skillFactory, fServer.getDebugLog());
 		fGameLog = new GameLog(this);
 		fDiceRoller = new DiceRoller(this);
 		fSpectatorCooldownTime = new HashMap<>();
@@ -304,47 +299,45 @@ public class GameState implements IModelChangeObserver, IJsonSerializable {
 		return jsonObject;
 	}
 
-	public GameState initFrom(JsonValue pJsonValue) {
+	public GameState initFrom(Game game, JsonValue pJsonValue) {
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		fStatus = (GameStatus) IServerJsonOption.GAME_STATUS.getFrom(jsonObject);
+		fStatus = (GameStatus) IServerJsonOption.GAME_STATUS.getFrom(game, jsonObject);
 		fStepStack.clear();
-		JsonObject stepStackObject = IServerJsonOption.STEP_STACK.getFrom(jsonObject);
+		JsonObject stepStackObject = IServerJsonOption.STEP_STACK.getFrom(game, jsonObject);
 		if (stepStackObject != null) {
-			fStepStack.initFrom(stepStackObject);
+			fStepStack.initFrom(game, stepStackObject);
 		}
 		fGameLog.clear();
-		JsonObject gameLogObject = IServerJsonOption.GAME_LOG.getFrom(jsonObject);
+		JsonObject gameLogObject = IServerJsonOption.GAME_LOG.getFrom(game, jsonObject);
 		if (gameLogObject != null) {
-			fGameLog.initFrom(gameLogObject);
+			fGameLog.initFrom(game, gameLogObject);
 		}
 		fCurrentStep = null;
-		JsonObject currentStepObject = IServerJsonOption.CURRENT_STEP.getFrom(jsonObject);
+		JsonObject currentStepObject = IServerJsonOption.CURRENT_STEP.getFrom(game, jsonObject);
 		if (currentStepObject != null) {
-			fCurrentStep = new StepFactory(this).forJsonValue(currentStepObject);
+			fCurrentStep = new StepFactory(this).forJsonValue(game, currentStepObject);
 		}
 		setGame(null);
-		JsonObject gameObject = IServerJsonOption.GAME.getFrom(jsonObject);
+		JsonObject gameObject = IServerJsonOption.GAME.getFrom(game, jsonObject);
 		if (gameObject != null) {
-			setGame(new Game().initFrom(gameObject));
+			game = new Game();
+			game.initFrom(game,  gameObject);
+			setGame(game);
 		}
-		String[] ids = IServerJsonOption.PLAYER_IDS.getFrom(jsonObject);
+		String[] ids = IServerJsonOption.PLAYER_IDS.getFrom(game, jsonObject);
 		if (ids != null) {
 			zappedPlayerIds.addAll(Arrays.asList(ids));
 		}
 
-		kickingSwarmers = IServerJsonOption.SWARMING_PLAYER_ACTUAL.getFrom(jsonObject);
+		kickingSwarmers = IServerJsonOption.SWARMING_PLAYER_ACTUAL.getFrom(game, jsonObject);
 
 		return this;
-	}
-
-	public SkillFactory getSkillFactory() {
-		return skillFactory;
 	}
 
 	public boolean executeStepHooks(IStep step, Object state) {
 		List<StepModifier<? extends IStep, ?>> modifiers = new ArrayList<>();
 
-		for (Skill skill : skillFactory.getSkills()) {
+		for (Skill skill : getGame().getRules().getSkillFactory().getSkills()) {
 			ISkillBehaviour<? extends Skill> behaviour = skill.getSkillBehaviour();
 			if (behaviour != null) {
 				List<StepModifier<? extends IStep, ?>> skillModifiers = ((SkillBehaviour<? extends Skill>) behaviour)

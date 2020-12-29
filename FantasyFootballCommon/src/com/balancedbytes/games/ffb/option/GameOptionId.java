@@ -7,7 +7,7 @@ import com.balancedbytes.games.ffb.INamedObject;
  * @author Kalimar
  */
 public enum GameOptionId implements INamedObject {
-
+	RULESVERSION("rulesVersion"),
 	OVERTIME("overtime"), TURNTIME("turntime"), PETTY_CASH("pettyCash"), INDUCEMENTS("inducements"),
 	CHECK_OWNERSHIP("checkOwnership"), TEST_MODE("testMode"), MAX_NR_OF_CARDS("maxNrOfCards"),
 

@@ -2,7 +2,9 @@ package com.balancedbytes.games.ffb.skill;
 
 import com.balancedbytes.games.ffb.ArmorModifiers;
 import com.balancedbytes.games.ffb.InjuryModifiers;
+import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.SkillCategory;
+import com.balancedbytes.games.ffb.RulesCollection.Rules;
 import com.balancedbytes.games.ffb.model.Skill;
 
 /**
@@ -12,6 +14,7 @@ import com.balancedbytes.games.ffb.model.Skill;
  * the Armour roll, you may not modify the Injury roll as well. Mighty Blow
  * cannot be used with the Stab or Chainsaw skills.
  */
+@RulesCollection(Rules.All)
 public class MightyBlow extends Skill {
 
 	public MightyBlow() {

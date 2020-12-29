@@ -4,6 +4,7 @@ import javax.xml.transform.sax.TransformerHandler;
 
 import org.xml.sax.Attributes;
 
+import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.GameOptions;
 import com.balancedbytes.games.ffb.xml.IXmlSerializable;
 import com.balancedbytes.games.ffb.xml.UtilXml;
@@ -93,7 +94,7 @@ public class FumbblGameState implements IXmlSerializable {
 		return xmlElement;
 	}
 
-	public boolean endXmlElement(String pXmlTag, String pValue) {
+	public boolean endXmlElement(Game game, String pXmlTag, String pValue) {
 		if (_XML_TAG_URL.equals(pXmlTag)) {
 			fUrl = pValue;
 		}

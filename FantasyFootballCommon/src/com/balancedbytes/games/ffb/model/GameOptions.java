@@ -7,13 +7,13 @@ import javax.xml.transform.sax.TransformerHandler;
 
 import org.xml.sax.Attributes;
 
+import com.balancedbytes.games.ffb.factory.GameOptionFactory;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.IJsonSerializable;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.change.ModelChange;
 import com.balancedbytes.games.ffb.model.change.ModelChangeId;
 import com.balancedbytes.games.ffb.option.GameOptionBoolean;
-import com.balancedbytes.games.ffb.option.GameOptionFactory;
 import com.balancedbytes.games.ffb.option.GameOptionId;
 import com.balancedbytes.games.ffb.option.IGameOption;
 import com.balancedbytes.games.ffb.xml.IXmlSerializable;
@@ -153,7 +153,7 @@ public class GameOptions implements IXmlSerializable, IJsonSerializable {
 		return this;
 	}
 
-	public boolean endXmlElement(String pXmlTag, String pValue) {
+	public boolean endXmlElement(Game game, String pXmlTag, String pValue) {
 		return XML_TAG.equals(pXmlTag);
 	}
 
@@ -169,13 +169,13 @@ public class GameOptions implements IXmlSerializable, IJsonSerializable {
 		return jsonObject;
 	}
 
-	public GameOptions initFrom(JsonValue pJsonValue) {
+	public GameOptions initFrom(Game game, JsonValue pJsonValue) {
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		JsonArray optionArray = IJsonOption.GAME_OPTION_ARRAY.getFrom(jsonObject);
+		JsonArray optionArray = IJsonOption.GAME_OPTION_ARRAY.getFrom(game, jsonObject);
 		int nrOfOptions = optionArray.size();
 		GameOptionFactory optionFactory = new GameOptionFactory();
 		for (int i = 0; i < nrOfOptions; i++) {
-			IGameOption gameOption = optionFactory.fromJsonValue(optionArray.get(i));
+			IGameOption gameOption = optionFactory.fromJsonValue(game, optionArray.get(i));
 			addOption(gameOption);
 		}
 		return this;

@@ -2,6 +2,7 @@ package com.balancedbytes.games.ffb.report;
 
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
+import com.balancedbytes.games.ffb.model.Game;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
@@ -65,13 +66,13 @@ public class ReportArgueTheCallRoll implements IReport {
 		return jsonObject;
 	}
 
-	public ReportArgueTheCallRoll initFrom(JsonValue pJsonValue) {
+	public ReportArgueTheCallRoll initFrom(Game game, JsonValue pJsonValue) {
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(jsonObject));
-		fPlayerId = IJsonOption.PLAYER_ID.getFrom(jsonObject);
-		fSuccessful = IJsonOption.SUCCESSFUL.getFrom(jsonObject);
-		fCoachBanned = IJsonOption.COACH_BANNED.getFrom(jsonObject);
-		fRoll = IJsonOption.ROLL.getFrom(jsonObject);
+		UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(game, jsonObject));
+		fPlayerId = IJsonOption.PLAYER_ID.getFrom(game, jsonObject);
+		fSuccessful = IJsonOption.SUCCESSFUL.getFrom(game, jsonObject);
+		fCoachBanned = IJsonOption.COACH_BANNED.getFrom(game, jsonObject);
+		fRoll = IJsonOption.ROLL.getFrom(game, jsonObject);
 		return this;
 	}
 

@@ -4,6 +4,7 @@ import com.balancedbytes.games.ffb.PassModifier;
 import com.balancedbytes.games.ffb.PassingDistance;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
+import com.balancedbytes.games.ffb.model.Game;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
@@ -94,14 +95,14 @@ public class ReportPassRoll extends ReportSkillRoll {
 	}
 
 	@Override
-	public ReportPassRoll initFrom(JsonValue pJsonValue) {
-		super.initFrom(pJsonValue);
+	public ReportPassRoll initFrom(Game game, JsonValue pJsonValue) {
+		super.initFrom(game, pJsonValue);
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		fPassingDistance = (PassingDistance) IJsonOption.PASSING_DISTANCE.getFrom(jsonObject);
-		fFumble = IJsonOption.FUMBLE.getFrom(jsonObject);
-		fSafeThrowHold = IJsonOption.SAFE_THROW_HOLD.getFrom(jsonObject);
-		fHailMaryPass = IJsonOption.HAIL_MARY_PASS.getFrom(jsonObject);
-		fBomb = IJsonOption.BOMB.getFrom(jsonObject);
+		fPassingDistance = (PassingDistance) IJsonOption.PASSING_DISTANCE.getFrom(game, jsonObject);
+		fFumble = IJsonOption.FUMBLE.getFrom(game, jsonObject);
+		fSafeThrowHold = IJsonOption.SAFE_THROW_HOLD.getFrom(game, jsonObject);
+		fHailMaryPass = IJsonOption.HAIL_MARY_PASS.getFrom(game, jsonObject);
+		fBomb = IJsonOption.BOMB.getFrom(game, jsonObject);
 		return this;
 	}
 

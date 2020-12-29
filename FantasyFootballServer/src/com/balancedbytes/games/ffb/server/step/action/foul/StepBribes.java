@@ -195,12 +195,12 @@ public class StepBribes extends AbstractStep {
 	}
 
 	@Override
-	public StepBribes initFrom(JsonValue pJsonValue) {
-		super.initFrom(pJsonValue);
+	public StepBribes initFrom(Game game, JsonValue pJsonValue) {
+		super.initFrom(game, pJsonValue);
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		fGotoLabelOnEnd = IServerJsonOption.GOTO_LABEL_ON_END.getFrom(jsonObject);
-		fBribesChoice = IServerJsonOption.BRIBES_CHOICE.getFrom(jsonObject);
-		fBribeSuccessful = IServerJsonOption.BRIBE_SUCCESSFUL.getFrom(jsonObject);
+		fGotoLabelOnEnd = IServerJsonOption.GOTO_LABEL_ON_END.getFrom(game, jsonObject);
+		fBribesChoice = IServerJsonOption.BRIBES_CHOICE.getFrom(game, jsonObject);
+		fBribeSuccessful = IServerJsonOption.BRIBE_SUCCESSFUL.getFrom(game, jsonObject);
 		return this;
 	}
 

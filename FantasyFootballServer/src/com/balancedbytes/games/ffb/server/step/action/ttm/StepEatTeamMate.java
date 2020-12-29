@@ -110,11 +110,11 @@ public final class StepEatTeamMate extends AbstractStep {
 	}
 
 	@Override
-	public StepEatTeamMate initFrom(JsonValue pJsonValue) {
-		super.initFrom(pJsonValue);
+	public StepEatTeamMate initFrom(Game game, JsonValue pJsonValue) {
+		super.initFrom(game, pJsonValue);
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		fThrownPlayerCoordinate = IServerJsonOption.THROWN_PLAYER_COORDINATE.getFrom(jsonObject);
-		fThrownPlayerId = IServerJsonOption.THROWN_PLAYER_ID.getFrom(jsonObject);
+		fThrownPlayerCoordinate = IServerJsonOption.THROWN_PLAYER_COORDINATE.getFrom(game, jsonObject);
+		fThrownPlayerId = IServerJsonOption.THROWN_PLAYER_ID.getFrom(game, jsonObject);
 		return this;
 	}
 

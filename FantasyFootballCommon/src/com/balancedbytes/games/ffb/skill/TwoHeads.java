@@ -1,7 +1,9 @@
 package com.balancedbytes.games.ffb.skill;
 
 import com.balancedbytes.games.ffb.DodgeModifiers;
+import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.SkillCategory;
+import com.balancedbytes.games.ffb.RulesCollection.Rules;
 import com.balancedbytes.games.ffb.model.Skill;
 
 /**
@@ -9,6 +11,7 @@ import com.balancedbytes.games.ffb.model.Skill;
  * opponent trying to make sure he does not get there at the same time. Add 1 to
  * all Dodge rolls the player makes.
  */
+@RulesCollection(Rules.All)
 public class TwoHeads extends Skill {
 
 	public TwoHeads() {

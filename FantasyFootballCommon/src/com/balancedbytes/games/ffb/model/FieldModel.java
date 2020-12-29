@@ -10,8 +10,6 @@ import java.util.Set;
 import com.balancedbytes.games.ffb.BloodSpot;
 import com.balancedbytes.games.ffb.Card;
 import com.balancedbytes.games.ffb.CardEffect;
-import com.balancedbytes.games.ffb.CardEffectFactory;
-import com.balancedbytes.games.ffb.CardFactory;
 import com.balancedbytes.games.ffb.DiceDecoration;
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.FieldCoordinateBounds;
@@ -23,6 +21,8 @@ import com.balancedbytes.games.ffb.PushbackSquare;
 import com.balancedbytes.games.ffb.RangeRuler;
 import com.balancedbytes.games.ffb.TrackNumber;
 import com.balancedbytes.games.ffb.Weather;
+import com.balancedbytes.games.ffb.factory.CardEffectFactory;
+import com.balancedbytes.games.ffb.factory.CardFactory;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.IJsonSerializable;
 import com.balancedbytes.games.ffb.json.UtilJson;
@@ -829,57 +829,57 @@ public class FieldModel implements IJsonSerializable {
 
 	}
 
-	public FieldModel initFrom(JsonValue pJsonValue) {
+	public FieldModel initFrom(Game game, JsonValue pJsonValue) {
 
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
 
-		fWeather = (Weather) IJsonOption.WEATHER.getFrom(jsonObject);
-		fBallCoordinate = IJsonOption.BALL_COORDINATE.getFrom(jsonObject);
-		fBallInPlay = IJsonOption.BALL_IN_PLAY.getFrom(jsonObject);
-		fBallMoving = IJsonOption.BALL_MOVING.getFrom(jsonObject);
-		fBombCoordinate = IJsonOption.BOMB_COORDINATE.getFrom(jsonObject);
-		fBombMoving = IJsonOption.BOMB_MOVING.getFrom(jsonObject);
+		fWeather = (Weather) IJsonOption.WEATHER.getFrom(game, jsonObject);
+		fBallCoordinate = IJsonOption.BALL_COORDINATE.getFrom(game, jsonObject);
+		fBallInPlay = IJsonOption.BALL_IN_PLAY.getFrom(game, jsonObject);
+		fBallMoving = IJsonOption.BALL_MOVING.getFrom(game, jsonObject);
+		fBombCoordinate = IJsonOption.BOMB_COORDINATE.getFrom(game, jsonObject);
+		fBombMoving = IJsonOption.BOMB_MOVING.getFrom(game, jsonObject);
 
 		fBloodspots.clear();
-		JsonArray bloodspotArray = IJsonOption.BLOODSPOT_ARRAY.getFrom(jsonObject);
+		JsonArray bloodspotArray = IJsonOption.BLOODSPOT_ARRAY.getFrom(game, jsonObject);
 		for (int i = 0; i < bloodspotArray.size(); i++) {
-			fBloodspots.add(new BloodSpot().initFrom(bloodspotArray.get(i)));
+			fBloodspots.add(new BloodSpot().initFrom(game, bloodspotArray.get(i)));
 		}
 
 		fPushbackSquares.clear();
-		JsonArray pushbackSquareArray = IJsonOption.PUSHBACK_SQUARE_ARRAY.getFrom(jsonObject);
+		JsonArray pushbackSquareArray = IJsonOption.PUSHBACK_SQUARE_ARRAY.getFrom(game, jsonObject);
 		for (int i = 0; i < pushbackSquareArray.size(); i++) {
-			fPushbackSquares.add(new PushbackSquare().initFrom(pushbackSquareArray.get(i)));
+			fPushbackSquares.add(new PushbackSquare().initFrom(game, pushbackSquareArray.get(i)));
 		}
 
 		fMoveSquares.clear();
-		JsonArray moveSquareArray = IJsonOption.MOVE_SQUARE_ARRAY.getFrom(jsonObject);
+		JsonArray moveSquareArray = IJsonOption.MOVE_SQUARE_ARRAY.getFrom(game, jsonObject);
 		for (int i = 0; i < moveSquareArray.size(); i++) {
-			fMoveSquares.add(new MoveSquare().initFrom(moveSquareArray.get(i)));
+			fMoveSquares.add(new MoveSquare().initFrom(game, moveSquareArray.get(i)));
 		}
 
 		fTrackNumbers.clear();
-		JsonArray trackNumberArray = IJsonOption.TRACK_NUMBER_ARRAY.getFrom(jsonObject);
+		JsonArray trackNumberArray = IJsonOption.TRACK_NUMBER_ARRAY.getFrom(game, jsonObject);
 		for (int i = 0; i < trackNumberArray.size(); i++) {
-			fTrackNumbers.add(new TrackNumber().initFrom(trackNumberArray.get(i)));
+			fTrackNumbers.add(new TrackNumber().initFrom(game, trackNumberArray.get(i)));
 		}
 
 		fDiceDecorations.clear();
-		JsonArray diceDecorationArray = IJsonOption.DICE_DECORATION_ARRAY.getFrom(jsonObject);
+		JsonArray diceDecorationArray = IJsonOption.DICE_DECORATION_ARRAY.getFrom(game, jsonObject);
 		for (int i = 0; i < diceDecorationArray.size(); i++) {
-			fDiceDecorations.add(new DiceDecoration().initFrom(diceDecorationArray.get(i)));
+			fDiceDecorations.add(new DiceDecoration().initFrom(game, diceDecorationArray.get(i)));
 		}
 
 		fFieldMarkers.clear();
-		JsonArray fieldMarkerArray = IJsonOption.FIELD_MARKER_ARRAY.getFrom(jsonObject);
+		JsonArray fieldMarkerArray = IJsonOption.FIELD_MARKER_ARRAY.getFrom(game, jsonObject);
 		for (int i = 0; i < fieldMarkerArray.size(); i++) {
-			fFieldMarkers.add(new FieldMarker().initFrom(fieldMarkerArray.get(i)));
+			fFieldMarkers.add(new FieldMarker().initFrom(game, fieldMarkerArray.get(i)));
 		}
 
 		fPlayerMarkers.clear();
-		JsonArray playerMarkerArray = IJsonOption.PLAYER_MARKER_ARRAY.getFrom(jsonObject);
+		JsonArray playerMarkerArray = IJsonOption.PLAYER_MARKER_ARRAY.getFrom(game, jsonObject);
 		for (int i = 0; i < playerMarkerArray.size(); i++) {
-			fPlayerMarkers.add(new PlayerMarker().initFrom(playerMarkerArray.get(i)));
+			fPlayerMarkers.add(new PlayerMarker().initFrom(game, playerMarkerArray.get(i)));
 		}
 
 		fPlayerIdByCoordinate.clear();
@@ -890,28 +890,28 @@ public class FieldModel implements IJsonSerializable {
 		CardFactory cardFactory = new CardFactory();
 		CardEffectFactory cardEffectFactory = new CardEffectFactory();
 
-		JsonArray playerDataArray = IJsonOption.PLAYER_DATA_ARRAY.getFrom(jsonObject);
+		JsonArray playerDataArray = IJsonOption.PLAYER_DATA_ARRAY.getFrom(game, jsonObject);
 		for (int i = 0; i < playerDataArray.size(); i++) {
 
 			JsonObject playerDataObject = UtilJson.toJsonObject(playerDataArray.get(i));
 
-			String playerId = IJsonOption.PLAYER_ID.getFrom(playerDataObject);
+			String playerId = IJsonOption.PLAYER_ID.getFrom(game, playerDataObject);
 			Player<?> player = getGame().getPlayerById(playerId);
 
-			FieldCoordinate playerCoordinate = IJsonOption.PLAYER_COORDINATE.getFrom(playerDataObject);
+			FieldCoordinate playerCoordinate = IJsonOption.PLAYER_COORDINATE.getFrom(game, playerDataObject);
 			setPlayerCoordinate(player, playerCoordinate);
 
-			PlayerState playerState = IJsonOption.PLAYER_STATE.getFrom(playerDataObject);
+			PlayerState playerState = IJsonOption.PLAYER_STATE.getFrom(game, playerDataObject);
 			setPlayerState(player, playerState);
 
-			String[] cards = IJsonOption.CARDS.getFrom(playerDataObject);
+			String[] cards = IJsonOption.CARDS.getFrom(game, playerDataObject);
 			if (ArrayTool.isProvided(cards)) {
 				for (int j = 0; j < cards.length; j++) {
 					addCard(player, cardFactory.forName(cards[j]));
 				}
 			}
 
-			String[] cardEffects = IJsonOption.CARD_EFFECTS.getFrom(playerDataObject);
+			String[] cardEffects = IJsonOption.CARD_EFFECTS.getFrom(game, playerDataObject);
 			if (ArrayTool.isProvided(cardEffects)) {
 				for (int j = 0; j < cardEffects.length; j++) {
 					addCardEffect(player, cardEffectFactory.forName(cardEffects[j]));

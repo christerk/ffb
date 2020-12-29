@@ -3,6 +3,7 @@ package com.balancedbytes.games.ffb.net.commands;
 import com.balancedbytes.games.ffb.CardType;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
+import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.net.NetCommandId;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
@@ -39,10 +40,10 @@ public class ClientCommandBuyCard extends ClientCommand {
 		return jsonObject;
 	}
 
-	public ClientCommandBuyCard initFrom(JsonValue jsonValue) {
-		super.initFrom(jsonValue);
+	public ClientCommandBuyCard initFrom(Game game, JsonValue jsonValue) {
+		super.initFrom(game, jsonValue);
 		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
-		fCardType = (CardType) IJsonOption.CARD_TYPE.getFrom(jsonObject);
+		fCardType = (CardType) IJsonOption.CARD_TYPE.getFrom(game, jsonObject);
 		return this;
 	}
 

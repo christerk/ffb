@@ -2,6 +2,7 @@ package com.balancedbytes.games.ffb.report;
 
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
+import com.balancedbytes.games.ffb.model.Game;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
@@ -44,10 +45,10 @@ public class ReportBiteSpectator implements IReport {
 		return jsonObject;
 	}
 
-	public ReportBiteSpectator initFrom(JsonValue pJsonValue) {
+	public ReportBiteSpectator initFrom(Game game, JsonValue pJsonValue) {
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(jsonObject));
-		fPlayerId = IJsonOption.PLAYER_ID.getFrom(jsonObject);
+		UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(game, jsonObject));
+		fPlayerId = IJsonOption.PLAYER_ID.getFrom(game, jsonObject);
 		return this;
 	}
 

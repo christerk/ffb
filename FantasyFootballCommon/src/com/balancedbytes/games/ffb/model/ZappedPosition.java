@@ -200,7 +200,7 @@ public class ZappedPosition implements Position {
 		return this;
 	}
 
-	public boolean endXmlElement(String pTag, String pValue) {
+	public boolean endXmlElement(Game game, String pTag, String pValue) {
 		return XML_TAG.equals(pTag);
 	}
 
@@ -210,9 +210,9 @@ public class ZappedPosition implements Position {
 		return jsonObject;
 	}
 
-	public ZappedPosition initFrom(JsonValue pJsonValue) {
+	public ZappedPosition initFrom(Game game, JsonValue pJsonValue) {
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		originalPosition = new RosterPosition().initFrom(IJsonOption.ROSTER_POSITION.getFrom(jsonObject));
+		originalPosition = new RosterPosition().initFrom(game, IJsonOption.ROSTER_POSITION.getFrom(game, jsonObject));
 		return this;
 	}
 }

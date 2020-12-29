@@ -2,7 +2,9 @@ package com.balancedbytes.games.ffb.skill;
 
 import com.balancedbytes.games.ffb.ReRollSources;
 import com.balancedbytes.games.ffb.ReRolledActions;
+import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.SkillCategory;
+import com.balancedbytes.games.ffb.RulesCollection.Rules;
 import com.balancedbytes.games.ffb.model.Skill;
 import com.balancedbytes.games.ffb.model.SkillConstants;
 import com.balancedbytes.games.ffb.model.modifier.CancelSkillProperty;
@@ -13,6 +15,7 @@ import com.balancedbytes.games.ffb.model.modifier.CancelSkillProperty;
  * hand-off or fail to make an interception. In addition, the Strip Ball skill
  * will not work against a player with a Monstrous Mouth.
  */
+@RulesCollection(Rules.All)
 public class MonstrousMouth extends Skill {
 
 	public MonstrousMouth() {

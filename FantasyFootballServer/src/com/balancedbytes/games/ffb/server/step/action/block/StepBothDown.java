@@ -91,10 +91,10 @@ public class StepBothDown extends AbstractStep {
 	}
 
 	@Override
-	public StepBothDown initFrom(JsonValue pJsonValue) {
-		super.initFrom(pJsonValue);
+	public StepBothDown initFrom(Game game, JsonValue pJsonValue) {
+		super.initFrom(game, pJsonValue);
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		fOldDefenderState = IServerJsonOption.OLD_DEFENDER_STATE.getFrom(jsonObject);
+		fOldDefenderState = IServerJsonOption.OLD_DEFENDER_STATE.getFrom(game, jsonObject);
 		return this;
 	}
 

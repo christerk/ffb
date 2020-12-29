@@ -2,6 +2,7 @@ package com.balancedbytes.games.ffb.report;
 
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
+import com.balancedbytes.games.ffb.model.Game;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
@@ -48,10 +49,10 @@ public class ReportDauntlessRoll extends ReportSkillRoll {
 	}
 
 	@Override
-	public ReportDauntlessRoll initFrom(JsonValue pJsonValue) {
-		super.initFrom(pJsonValue);
+	public ReportDauntlessRoll initFrom(Game game, JsonValue pJsonValue) {
+		super.initFrom(game, pJsonValue);
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		fStrength = IJsonOption.STRENGTH.getFrom(jsonObject);
+		fStrength = IJsonOption.STRENGTH.getFrom(game, jsonObject);
 		return this;
 	}
 

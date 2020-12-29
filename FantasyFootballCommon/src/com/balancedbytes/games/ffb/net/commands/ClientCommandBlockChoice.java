@@ -2,6 +2,7 @@ package com.balancedbytes.games.ffb.net.commands;
 
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
+import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.net.NetCommandId;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
@@ -38,10 +39,10 @@ public class ClientCommandBlockChoice extends ClientCommand {
 		return jsonObject;
 	}
 
-	public ClientCommandBlockChoice initFrom(JsonValue jsonValue) {
-		super.initFrom(jsonValue);
+	public ClientCommandBlockChoice initFrom(Game game, JsonValue jsonValue) {
+		super.initFrom(game, jsonValue);
 		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
-		fDiceIndex = IJsonOption.DICE_INDEX.getFrom(jsonObject);
+		fDiceIndex = IJsonOption.DICE_INDEX.getFrom(game, jsonObject);
 		return this;
 	}
 

@@ -2,6 +2,7 @@ package com.balancedbytes.games.ffb.net.commands;
 
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
+import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.net.NetCommandId;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
@@ -45,11 +46,11 @@ public class ClientCommandReplay extends ClientCommand {
 		return jsonObject;
 	}
 
-	public ClientCommandReplay initFrom(JsonValue jsonValue) {
-		super.initFrom(jsonValue);
+	public ClientCommandReplay initFrom(Game game, JsonValue jsonValue) {
+		super.initFrom(game, jsonValue);
 		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
-		fGameId = IJsonOption.GAME_ID.getFrom(jsonObject);
-		fReplayToCommandNr = IJsonOption.REPLAY_TO_COMMAND_NR.getFrom(jsonObject);
+		fGameId = IJsonOption.GAME_ID.getFrom(game, jsonObject);
+		fReplayToCommandNr = IJsonOption.REPLAY_TO_COMMAND_NR.getFrom(game, jsonObject);
 		return this;
 	}
 

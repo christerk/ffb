@@ -136,12 +136,12 @@ public class StepEjectPlayer extends AbstractStep {
 	}
 
 	@Override
-	public StepEjectPlayer initFrom(JsonValue pJsonValue) {
-		super.initFrom(pJsonValue);
+	public StepEjectPlayer initFrom(Game game, JsonValue pJsonValue) {
+		super.initFrom(game, pJsonValue);
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		state.gotoLabelOnEnd = IServerJsonOption.GOTO_LABEL_ON_END.getFrom(jsonObject);
-		state.foulerHasBall = IServerJsonOption.FOULER_HAS_BALL.getFrom(jsonObject);
-		state.argueTheCallSuccessful = IServerJsonOption.ARGUE_THE_CALL_SUCCESSFUL.getFrom(jsonObject);
+		state.gotoLabelOnEnd = IServerJsonOption.GOTO_LABEL_ON_END.getFrom(game, jsonObject);
+		state.foulerHasBall = IServerJsonOption.FOULER_HAS_BALL.getFrom(game, jsonObject);
+		state.argueTheCallSuccessful = IServerJsonOption.ARGUE_THE_CALL_SUCCESSFUL.getFrom(game, jsonObject);
 		return this;
 	}
 

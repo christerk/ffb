@@ -1,6 +1,8 @@
 package com.balancedbytes.games.ffb.skill;
 
+import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.SkillCategory;
+import com.balancedbytes.games.ffb.RulesCollection.Rules;
 import com.balancedbytes.games.ffb.model.Skill;
 import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
 
@@ -16,6 +18,7 @@ import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
  * be carried over into Overtime if not used, but the team does not receive a
  * new Leader re-roll at the start of Overtime.
  */
+@RulesCollection(Rules.All)
 public class Leader extends Skill {
 
 	public Leader() {

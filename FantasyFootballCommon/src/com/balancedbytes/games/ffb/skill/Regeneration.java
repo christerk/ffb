@@ -1,6 +1,8 @@
 package com.balancedbytes.games.ffb.skill;
 
+import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.SkillCategory;
+import com.balancedbytes.games.ffb.RulesCollection.Rules;
 import com.balancedbytes.games.ffb.model.Skill;
 import com.balancedbytes.games.ffb.model.SkillConstants;
 import com.balancedbytes.games.ffb.model.modifier.CancelSkillProperty;
@@ -17,6 +19,7 @@ import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
  * player with this skill, even if the result doesn't affect the player in the
  * normal way.
  */
+@RulesCollection(Rules.All)
 public class Regeneration extends Skill {
 
 	public Regeneration() {

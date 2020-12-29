@@ -1,6 +1,8 @@
 package com.balancedbytes.games.ffb.skill;
 
+import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.SkillCategory;
+import com.balancedbytes.games.ffb.RulesCollection.Rules;
 import com.balancedbytes.games.ffb.model.Skill;
 import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
 
@@ -18,6 +20,7 @@ import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
  * turn if he has not already done so. A failed landing roll or landing in the
  * crowd does not cause a turnover, unless he was holding the ball.
  */
+@RulesCollection(Rules.All)
 public class RightStuff extends Skill {
 
 	public RightStuff() {

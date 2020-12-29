@@ -123,12 +123,12 @@ public final class StepInitEndGame extends AbstractStep {
 	}
 
 	@Override
-	public StepInitEndGame initFrom(JsonValue pJsonValue) {
-		super.initFrom(pJsonValue);
+	public StepInitEndGame initFrom(Game game, JsonValue pJsonValue) {
+		super.initFrom(game, pJsonValue);
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		Boolean adminMode = IServerJsonOption.ADMIN_MODE.getFrom(jsonObject);
+		Boolean adminMode = IServerJsonOption.ADMIN_MODE.getFrom(game, jsonObject);
 		fAdminMode = (adminMode != null) ? adminMode : false;
-		fGotoLabelOnEnd = IServerJsonOption.GOTO_LABEL_ON_END.getFrom(jsonObject);
+		fGotoLabelOnEnd = IServerJsonOption.GOTO_LABEL_ON_END.getFrom(game, jsonObject);
 		return this;
 	}
 

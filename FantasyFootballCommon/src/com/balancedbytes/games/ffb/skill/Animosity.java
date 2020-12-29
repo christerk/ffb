@@ -1,6 +1,8 @@
 package com.balancedbytes.games.ffb.skill;
 
+import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.SkillCategory;
+import com.balancedbytes.games.ffb.RulesCollection.Rules;
 import com.balancedbytes.games.ffb.model.Skill;
 
 /**
@@ -15,6 +17,7 @@ import com.balancedbytes.games.ffb.model.Skill;
  * Animosity player, however no more movement is allowed for the Animosity
  * player, so the current Action may be lost for the turn.
  */
+@RulesCollection(Rules.All)
 public class Animosity extends Skill {
 
 	public Animosity() {

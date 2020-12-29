@@ -6,6 +6,7 @@ import java.util.Map;
 
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
+import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.net.NetCommandId;
 import com.balancedbytes.games.ffb.util.ArrayTool;
 import com.eclipsesource.json.JsonObject;
@@ -68,10 +69,10 @@ public class ClientCommandUserSettings extends ClientCommand {
 		return jsonObject;
 	}
 
-	public ClientCommandUserSettings initFrom(JsonValue jsonValue) {
-		super.initFrom(jsonValue);
+	public ClientCommandUserSettings initFrom(Game game, JsonValue jsonValue) {
+		super.initFrom(game, jsonValue);
 		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
-		init(IJsonOption.SETTING_NAMES.getFrom(jsonObject), IJsonOption.SETTING_VALUES.getFrom(jsonObject));
+		init(IJsonOption.SETTING_NAMES.getFrom(game, jsonObject), IJsonOption.SETTING_VALUES.getFrom(game, jsonObject));
 		return this;
 	}
 

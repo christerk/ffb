@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.balancedbytes.games.ffb.json.IJsonSerializable;
 import com.balancedbytes.games.ffb.json.UtilJson;
+import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.server.DebugLog;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.IServerJsonOption;
@@ -102,14 +103,14 @@ public class StepStack implements IJsonSerializable {
 		return jsonObject;
 	}
 
-	public StepStack initFrom(JsonValue pJsonValue) {
+	public StepStack initFrom(Game game, JsonValue pJsonValue) {
 		StepFactory stepFactory = new StepFactory(getGameState());
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		JsonArray stepArray = IServerJsonOption.STEPS.getFrom(jsonObject);
+		JsonArray stepArray = IServerJsonOption.STEPS.getFrom(game, jsonObject);
 		fStack.clear();
 		if (stepArray != null) {
 			for (int i = 0; i < stepArray.size(); i++) {
-				IStep step = stepFactory.forJsonValue(stepArray.get(i));
+				IStep step = stepFactory.forJsonValue(game, stepArray.get(i));
 				fStack.add(step);
 			}
 		}

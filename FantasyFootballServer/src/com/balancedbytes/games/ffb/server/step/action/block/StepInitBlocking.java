@@ -182,15 +182,15 @@ public class StepInitBlocking extends AbstractStep {
 	}
 
 	@Override
-	public StepInitBlocking initFrom(JsonValue pJsonValue) {
-		super.initFrom(pJsonValue);
+	public StepInitBlocking initFrom(Game game, JsonValue pJsonValue) {
+		super.initFrom(game, pJsonValue);
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		fGotoLabelOnEnd = IServerJsonOption.GOTO_LABEL_ON_END.getFrom(jsonObject);
-		fBlockDefenderId = IServerJsonOption.BLOCK_DEFENDER_ID.getFrom(jsonObject);
-		fUsingStab = IServerJsonOption.USING_STAB.getFrom(jsonObject);
-		fMultiBlockDefenderId = IServerJsonOption.MULTI_BLOCK_DEFENDER_ID.getFrom(jsonObject);
-		fEndTurn = IServerJsonOption.END_TURN.getFrom(jsonObject);
-		fEndPlayerAction = IServerJsonOption.END_PLAYER_ACTION.getFrom(jsonObject);
+		fGotoLabelOnEnd = IServerJsonOption.GOTO_LABEL_ON_END.getFrom(game, jsonObject);
+		fBlockDefenderId = IServerJsonOption.BLOCK_DEFENDER_ID.getFrom(game, jsonObject);
+		fUsingStab = IServerJsonOption.USING_STAB.getFrom(game, jsonObject);
+		fMultiBlockDefenderId = IServerJsonOption.MULTI_BLOCK_DEFENDER_ID.getFrom(game, jsonObject);
+		fEndTurn = IServerJsonOption.END_TURN.getFrom(game, jsonObject);
+		fEndPlayerAction = IServerJsonOption.END_PLAYER_ACTION.getFrom(game, jsonObject);
 		return this;
 	}
 

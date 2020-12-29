@@ -145,15 +145,15 @@ public final class StepEndKickTeamMate extends AbstractStep {
 	}
 
 	@Override
-	public StepEndKickTeamMate initFrom(JsonValue pJsonValue) {
-		super.initFrom(pJsonValue);
+	public StepEndKickTeamMate initFrom(Game game, JsonValue pJsonValue) {
+		super.initFrom(game, pJsonValue);
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		fEndTurn = IServerJsonOption.END_TURN.getFrom(jsonObject);
-		fEndPlayerAction = IServerJsonOption.END_PLAYER_ACTION.getFrom(jsonObject);
-		fKickedPlayerId = IServerJsonOption.KICKED_PLAYER_ID.getFrom(jsonObject);
-		fKickedPlayerState = IServerJsonOption.KICKED_PLAYER_STATE.getFrom(jsonObject);
-		fKickedPlayerHasBall = IServerJsonOption.KICKED_PLAYER_HAS_BALL.getFrom(jsonObject);
-		fKickedPlayerCoordinate = IServerJsonOption.KICKED_PLAYER_COORDINATE.getFrom(jsonObject);
+		fEndTurn = IServerJsonOption.END_TURN.getFrom(game, jsonObject);
+		fEndPlayerAction = IServerJsonOption.END_PLAYER_ACTION.getFrom(game, jsonObject);
+		fKickedPlayerId = IServerJsonOption.KICKED_PLAYER_ID.getFrom(game, jsonObject);
+		fKickedPlayerState = IServerJsonOption.KICKED_PLAYER_STATE.getFrom(game, jsonObject);
+		fKickedPlayerHasBall = IServerJsonOption.KICKED_PLAYER_HAS_BALL.getFrom(game, jsonObject);
+		fKickedPlayerCoordinate = IServerJsonOption.KICKED_PLAYER_COORDINATE.getFrom(game, jsonObject);
 		return this;
 	}
 

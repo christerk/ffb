@@ -1,6 +1,8 @@
 package com.balancedbytes.games.ffb.skill;
 
+import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.SkillCategory;
+import com.balancedbytes.games.ffb.RulesCollection.Rules;
 import com.balancedbytes.games.ffb.model.Skill;
 import com.balancedbytes.games.ffb.model.SkillConstants;
 import com.balancedbytes.games.ffb.model.modifier.CancelSkillProperty;
@@ -16,6 +18,7 @@ import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
  * adjacent to this player. Note that the coach may choose which square the
  * player is moved to even if the player is Knocked Down after the push back.
  */
+@RulesCollection(Rules.All)
 public class SideStep extends Skill {
 
 	public SideStep() {

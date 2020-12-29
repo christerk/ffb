@@ -4,6 +4,7 @@ import com.balancedbytes.games.ffb.SoundId;
 import com.balancedbytes.games.ffb.json.IJsonSerializable;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.Animation;
+import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.report.IReport;
 import com.balancedbytes.games.ffb.report.ReportList;
 import com.balancedbytes.games.ffb.server.IServerJsonOption;
@@ -109,22 +110,22 @@ public class StepResult implements IJsonSerializable {
 		return jsonObject;
 	}
 
-	public StepResult initFrom(JsonValue pJsonValue) {
+	public StepResult initFrom(Game game, JsonValue pJsonValue) {
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		fNextAction = (StepAction) IServerJsonOption.NEXT_ACTION.getFrom(jsonObject);
-		fNextActionParameter = IServerJsonOption.NEXT_ACTION_PARAMETER.getFrom(jsonObject);
+		fNextAction = (StepAction) IServerJsonOption.NEXT_ACTION.getFrom(game, jsonObject);
+		fNextActionParameter = IServerJsonOption.NEXT_ACTION_PARAMETER.getFrom(game, jsonObject);
 		fReportList.clear();
-		JsonObject reportListObject = IServerJsonOption.REPORT_LIST.getFrom(jsonObject);
+		JsonObject reportListObject = IServerJsonOption.REPORT_LIST.getFrom(game, jsonObject);
 		if (reportListObject != null) {
-			fReportList.initFrom(reportListObject);
+			fReportList.initFrom(game, reportListObject);
 		}
 		fAnimation = null;
-		JsonObject animationObject = IServerJsonOption.ANIMATION.getFrom(jsonObject);
+		JsonObject animationObject = IServerJsonOption.ANIMATION.getFrom(game, jsonObject);
 		if (animationObject != null) {
-			fAnimation = new Animation().initFrom(animationObject);
+			fAnimation = new Animation().initFrom(game, animationObject);
 		}
-		fSound = (SoundId) IServerJsonOption.SOUND.getFrom(jsonObject);
-		fSynchronize = IServerJsonOption.SYNCHRONIZE.getFrom(jsonObject);
+		fSound = (SoundId) IServerJsonOption.SOUND.getFrom(game, jsonObject);
+		fSynchronize = IServerJsonOption.SYNCHRONIZE.getFrom(game, jsonObject);
 		return this;
 	}
 

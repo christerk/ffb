@@ -1,6 +1,8 @@
 package com.balancedbytes.games.ffb.skill;
 
+import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.SkillCategory;
+import com.balancedbytes.games.ffb.RulesCollection.Rules;
 import com.balancedbytes.games.ffb.model.Skill;
 import com.balancedbytes.games.ffb.model.SkillConstants;
 import com.balancedbytes.games.ffb.model.modifier.CancelSkillProperty;
@@ -28,6 +30,7 @@ import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
  * learned it!). A Ball & Chain player may never use the Diving Tackle, Frenzy,
  * Kick-Off Return, Pass Block or Shadowing skills.
  */
+@RulesCollection(Rules.All)
 public class BallAndChain extends Skill {
 
 	public BallAndChain() {

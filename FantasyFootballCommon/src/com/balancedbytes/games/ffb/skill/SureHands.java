@@ -2,7 +2,9 @@ package com.balancedbytes.games.ffb.skill;
 
 import com.balancedbytes.games.ffb.ReRollSources;
 import com.balancedbytes.games.ffb.ReRolledActions;
+import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.SkillCategory;
+import com.balancedbytes.games.ffb.RulesCollection.Rules;
 import com.balancedbytes.games.ffb.model.Skill;
 import com.balancedbytes.games.ffb.model.SkillConstants;
 import com.balancedbytes.games.ffb.model.modifier.CancelSkillProperty;
@@ -12,6 +14,7 @@ import com.balancedbytes.games.ffb.model.modifier.CancelSkillProperty;
  * to pick up the ball. In addition, the Strip Ball skill will not work against
  * a player with this skill.
  */
+@RulesCollection(Rules.All)
 public class SureHands extends Skill {
 
 	public SureHands() {

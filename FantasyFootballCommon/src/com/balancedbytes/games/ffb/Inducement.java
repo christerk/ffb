@@ -5,9 +5,11 @@ import javax.xml.transform.sax.TransformerHandler;
 import org.xml.sax.Attributes;
 import org.xml.sax.helpers.AttributesImpl;
 
+import com.balancedbytes.games.ffb.factory.InducementTypeFactory;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.IJsonSerializable;
 import com.balancedbytes.games.ffb.json.UtilJson;
+import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.xml.IXmlReadable;
 import com.balancedbytes.games.ffb.xml.IXmlSerializable;
 import com.balancedbytes.games.ffb.xml.UtilXml;
@@ -89,7 +91,7 @@ public class Inducement implements IXmlSerializable, IJsonSerializable {
 		return this;
 	}
 
-	public boolean endXmlElement(String pXmlTag, String pValue) {
+	public boolean endXmlElement(Game game, String pXmlTag, String pValue) {
 		return XML_TAG.equals(pXmlTag);
 	}
 
@@ -103,11 +105,11 @@ public class Inducement implements IXmlSerializable, IJsonSerializable {
 		return jsonObject;
 	}
 
-	public Inducement initFrom(JsonValue pJsonValue) {
+	public Inducement initFrom(Game game, JsonValue pJsonValue) {
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		fType = (InducementType) IJsonOption.INDUCEMENT_TYPE.getFrom(jsonObject);
-		fValue = IJsonOption.VALUE.getFrom(jsonObject);
-		fUses = IJsonOption.USES.getFrom(jsonObject);
+		fType = (InducementType) IJsonOption.INDUCEMENT_TYPE.getFrom(game, jsonObject);
+		fValue = IJsonOption.VALUE.getFrom(game, jsonObject);
+		fUses = IJsonOption.USES.getFrom(game, jsonObject);
 		return this;
 	}
 

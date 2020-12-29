@@ -3,6 +3,7 @@ package com.balancedbytes.games.ffb.report;
 import com.balancedbytes.games.ffb.InterceptionModifier;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
+import com.balancedbytes.games.ffb.model.Game;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
@@ -54,10 +55,10 @@ public class ReportInterceptionRoll extends ReportSkillRoll {
 	}
 
 	@Override
-	public ReportInterceptionRoll initFrom(JsonValue pJsonValue) {
-		super.initFrom(pJsonValue);
+	public ReportInterceptionRoll initFrom(Game game, JsonValue pJsonValue) {
+		super.initFrom(game, pJsonValue);
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		fBomb = IJsonOption.BOMB.getFrom(jsonObject);
+		fBomb = IJsonOption.BOMB.getFrom(game, jsonObject);
 		return this;
 	}
 

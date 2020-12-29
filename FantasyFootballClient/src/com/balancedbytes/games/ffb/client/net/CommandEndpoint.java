@@ -74,7 +74,7 @@ public class CommandEndpoint {
 		JsonValue jsonValue = JsonValue
 				.readFrom(fCommandCompression ? LZString.decompressFromUTF16(pTextMessage) : pTextMessage);
 
-		handleNetCommand(fNetCommandFactory.forJsonValue(jsonValue));
+		handleNetCommand(fNetCommandFactory.forJsonValue(fClient.getGame(), jsonValue));
 	}
 
 	@OnClose

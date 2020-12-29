@@ -2,6 +2,7 @@ package com.balancedbytes.games.ffb.json;
 
 import java.util.Collection;
 
+import com.balancedbytes.games.ffb.model.Game;
 import com.eclipsesource.json.JsonArray;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
@@ -16,7 +17,7 @@ public class JsonStringArrayOption extends JsonAbstractOption {
 		super(pKey);
 	}
 
-	public String[] getFrom(JsonObject pJsonObject) {
+	public String[] getFrom(Game game, JsonObject pJsonObject) {
 		JsonValue value = getValueFrom(pJsonObject);
 		if ((value != null) && !value.isNull()) {
 			return toStringArray(value.asArray());

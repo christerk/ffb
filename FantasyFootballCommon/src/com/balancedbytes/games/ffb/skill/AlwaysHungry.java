@@ -1,6 +1,8 @@
 package com.balancedbytes.games.ffb.skill;
 
+import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.SkillCategory;
+import com.balancedbytes.games.ffb.RulesCollection.Rules;
 import com.balancedbytes.games.ffb.model.Skill;
 
 /**
@@ -16,6 +18,7 @@ import com.balancedbytes.games.ffb.model.Skill;
  * the Pass Action is automatically treated as a fumbled pass. Fumble the player
  * with the Right Stuff skill as normal.
  */
+@RulesCollection(Rules.All)
 public class AlwaysHungry extends Skill {
 
 	public AlwaysHungry() {

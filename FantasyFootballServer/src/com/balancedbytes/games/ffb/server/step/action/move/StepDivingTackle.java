@@ -3,6 +3,7 @@ package com.balancedbytes.games.ffb.server.step.action.move;
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.PlayerChoiceMode;
 import com.balancedbytes.games.ffb.json.UtilJson;
+import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandPlayerChoice;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.IServerJsonOption;
@@ -143,15 +144,15 @@ public class StepDivingTackle extends AbstractStep {
 	}
 
 	@Override
-	public StepDivingTackle initFrom(JsonValue pJsonValue) {
-		super.initFrom(pJsonValue);
+	public StepDivingTackle initFrom(Game game, JsonValue pJsonValue) {
+		super.initFrom(game, pJsonValue);
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		state.goToLabelOnSuccess = IServerJsonOption.GOTO_LABEL_ON_SUCCESS.getFrom(jsonObject);
-		state.coordinateFrom = IServerJsonOption.COORDINATE_FROM.getFrom(jsonObject);
-		state.coordinateTo = IServerJsonOption.COORDINATE_TO.getFrom(jsonObject);
-		state.dodgeRoll = IServerJsonOption.DODGE_ROLL.getFrom(jsonObject);
-		state.usingDivingTackle = IServerJsonOption.USING_DIVING_TACKLE.getFrom(jsonObject);
-		state.usingBreakTackle = IServerJsonOption.USING_BREAK_TACKLE.getFrom(jsonObject);
+		state.goToLabelOnSuccess = IServerJsonOption.GOTO_LABEL_ON_SUCCESS.getFrom(game, jsonObject);
+		state.coordinateFrom = IServerJsonOption.COORDINATE_FROM.getFrom(game, jsonObject);
+		state.coordinateTo = IServerJsonOption.COORDINATE_TO.getFrom(game, jsonObject);
+		state.dodgeRoll = IServerJsonOption.DODGE_ROLL.getFrom(game, jsonObject);
+		state.usingDivingTackle = IServerJsonOption.USING_DIVING_TACKLE.getFrom(game, jsonObject);
+		state.usingBreakTackle = IServerJsonOption.USING_BREAK_TACKLE.getFrom(game, jsonObject);
 		return this;
 	}
 

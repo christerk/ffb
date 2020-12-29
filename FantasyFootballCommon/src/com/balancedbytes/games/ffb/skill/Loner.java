@@ -1,6 +1,8 @@
 package com.balancedbytes.games.ffb.skill;
 
+import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.SkillCategory;
+import com.balancedbytes.games.ffb.RulesCollection.Rules;
 import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.model.Skill;
 import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
@@ -12,6 +14,7 @@ import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
  * the team re-roll as normal. On a roll of 1-3 the original result stands
  * without being re-rolled but the team re-roll is lost (i.e. used).
  */
+@RulesCollection(Rules.All)
 public class Loner extends Skill {
 
 	public Loner() {

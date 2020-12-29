@@ -98,11 +98,11 @@ public class StepEndFeeding extends AbstractStep {
 	}
 
 	@Override
-	public StepEndFeeding initFrom(JsonValue pJsonValue) {
-		super.initFrom(pJsonValue);
+	public StepEndFeeding initFrom(Game game, JsonValue pJsonValue) {
+		super.initFrom(game, pJsonValue);
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		fEndPlayerAction = IServerJsonOption.END_PLAYER_ACTION.getFrom(jsonObject);
-		fEndTurn = IServerJsonOption.END_TURN.getFrom(jsonObject);
+		fEndPlayerAction = IServerJsonOption.END_PLAYER_ACTION.getFrom(game, jsonObject);
+		fEndTurn = IServerJsonOption.END_TURN.getFrom(game, jsonObject);
 		return this;
 	}
 

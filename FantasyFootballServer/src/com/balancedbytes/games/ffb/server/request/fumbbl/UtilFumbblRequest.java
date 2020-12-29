@@ -64,7 +64,7 @@ public class UtilFumbblRequest {
 		try (BufferedReader xmlReader = new BufferedReader(new StringReader(pResponseXml));) {
 			InputSource xmlSource = new InputSource(xmlReader);
 			gameState = new FumbblGameState(pRequestUrl);
-			XmlHandler.parse(xmlSource, gameState);
+			XmlHandler.parse(null, xmlSource, gameState);
 		} catch (IOException ioe) {
 			throw new FantasyFootballException(ioe);
 		}
@@ -139,7 +139,7 @@ public class UtilFumbblRequest {
 		}
 	}
 
-	public static Team loadFumbblTeam(FantasyFootballServer pServer, String pTeamId) {
+	public static Team loadFumbblTeam(Game game, FantasyFootballServer pServer, String pTeamId) {
 		if ((pServer == null) || !StringTool.isProvided(pTeamId)) {
 			return null;
 		}
@@ -151,7 +151,7 @@ public class UtilFumbblRequest {
 				team = new Team();
 				try (BufferedReader xmlReader = new BufferedReader(new StringReader(teamXml))) {
 					InputSource xmlSource = new InputSource(xmlReader);
-					XmlHandler.parse(xmlSource, team);
+					XmlHandler.parse(game, xmlSource, team);
 				}
 			}
 		} catch (IOException ioe) {
@@ -160,7 +160,7 @@ public class UtilFumbblRequest {
 		return team;
 	}
 
-	public static Roster loadFumbblRosterForTeam(FantasyFootballServer pServer, String pTeamId) {
+	public static Roster loadFumbblRosterForTeam(Game game, FantasyFootballServer pServer, String pTeamId) {
 		if ((pServer == null) || !StringTool.isProvided(pTeamId)) {
 			return null;
 		}
@@ -172,7 +172,7 @@ public class UtilFumbblRequest {
 				roster = new Roster();
 				try (BufferedReader xmlReader = new BufferedReader(new StringReader(rosterXml))) {
 					InputSource xmlSource = new InputSource(xmlReader);
-					XmlHandler.parse(xmlSource, roster);
+					XmlHandler.parse(game, xmlSource, roster);
 				}
 			}
 		} catch (IOException ioe) {

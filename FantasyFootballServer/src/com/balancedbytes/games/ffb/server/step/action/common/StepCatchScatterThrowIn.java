@@ -5,7 +5,6 @@ import java.util.Set;
 import com.balancedbytes.games.ffb.ApothecaryMode;
 import com.balancedbytes.games.ffb.Card;
 import com.balancedbytes.games.ffb.CatchModifier;
-import com.balancedbytes.games.ffb.CatchModifierFactory;
 import com.balancedbytes.games.ffb.CatchScatterThrowInMode;
 import com.balancedbytes.games.ffb.Direction;
 import com.balancedbytes.games.ffb.FieldCoordinate;
@@ -18,6 +17,7 @@ import com.balancedbytes.games.ffb.SkillUse;
 import com.balancedbytes.games.ffb.SoundId;
 import com.balancedbytes.games.ffb.TurnMode;
 import com.balancedbytes.games.ffb.dialog.DialogPlayerChoiceParameter;
+import com.balancedbytes.games.ffb.factory.CatchModifierFactory;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.Animation;
 import com.balancedbytes.games.ffb.model.AnimationType;
@@ -522,20 +522,20 @@ public class StepCatchScatterThrowIn extends AbstractStepWithReRoll {
 	}
 
 	@Override
-	public StepCatchScatterThrowIn initFrom(JsonValue pJsonValue) {
-		super.initFrom(pJsonValue);
+	public StepCatchScatterThrowIn initFrom(Game game, JsonValue pJsonValue) {
+		super.initFrom(game, pJsonValue);
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		fCatcherId = IServerJsonOption.CATCHER_ID.getFrom(jsonObject);
+		fCatcherId = IServerJsonOption.CATCHER_ID.getFrom(game, jsonObject);
 		fScatterBounds = null;
-		JsonObject scatterBoundsObject = IServerJsonOption.SCATTER_BOUNDS.getFrom(jsonObject);
+		JsonObject scatterBoundsObject = IServerJsonOption.SCATTER_BOUNDS.getFrom(game, jsonObject);
 		if (scatterBoundsObject != null) {
-			fScatterBounds = new FieldCoordinateBounds().initFrom(scatterBoundsObject);
+			fScatterBounds = new FieldCoordinateBounds().initFrom(game, scatterBoundsObject);
 		}
 		fCatchScatterThrowInMode = (CatchScatterThrowInMode) IServerJsonOption.CATCH_SCATTER_THROW_IN_MODE
-				.getFrom(jsonObject);
-		fThrowInCoordinate = IServerJsonOption.THROW_IN_COORDINATE.getFrom(jsonObject);
-		fDivingCatchChoice = IServerJsonOption.DIVING_CATCH_CHOICE.getFrom(jsonObject);
-		fBombMode = IServerJsonOption.BOMB_MODE.getFrom(jsonObject);
+				.getFrom(game, jsonObject);
+		fThrowInCoordinate = IServerJsonOption.THROW_IN_COORDINATE.getFrom(game, jsonObject);
+		fDivingCatchChoice = IServerJsonOption.DIVING_CATCH_CHOICE.getFrom(game, jsonObject);
+		fBombMode = IServerJsonOption.BOMB_MODE.getFrom(game, jsonObject);
 		return this;
 	}
 

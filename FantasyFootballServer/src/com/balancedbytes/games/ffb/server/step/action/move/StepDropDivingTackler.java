@@ -96,11 +96,11 @@ public class StepDropDivingTackler extends AbstractStep {
 	}
 
 	@Override
-	public StepDropDivingTackler initFrom(JsonValue pJsonValue) {
-		super.initFrom(pJsonValue);
+	public StepDropDivingTackler initFrom(Game game, JsonValue pJsonValue) {
+		super.initFrom(game, pJsonValue);
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		fUsingDivingTackle = IServerJsonOption.USING_DIVING_TACKLE.getFrom(jsonObject);
-		fCoordinateFrom = IServerJsonOption.COORDINATE_FROM.getFrom(jsonObject);
+		fUsingDivingTackle = IServerJsonOption.USING_DIVING_TACKLE.getFrom(game, jsonObject);
+		fCoordinateFrom = IServerJsonOption.COORDINATE_FROM.getFrom(game, jsonObject);
 		return this;
 	}
 

@@ -16,8 +16,8 @@ import java.util.zip.GZIPOutputStream;
 
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.INamedObject;
-import com.balancedbytes.games.ffb.INamedObjectFactory;
 import com.balancedbytes.games.ffb.PlayerState;
+import com.balancedbytes.games.ffb.factory.INamedObjectFactory;
 import com.balancedbytes.games.ffb.util.ArrayTool;
 import com.eclipsesource.json.JsonArray;
 import com.eclipsesource.json.JsonObject;

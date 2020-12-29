@@ -71,8 +71,8 @@ public final class StepEndGame extends AbstractStep {
 	}
 
 	@Override
-	public StepEndGame initFrom(JsonValue pJsonValue) {
-		super.initFrom(pJsonValue);
+	public StepEndGame initFrom(Game game, JsonValue pJsonValue) {
+		super.initFrom(game, pJsonValue);
 		return this;
 	}
 

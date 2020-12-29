@@ -1,6 +1,8 @@
 package com.balancedbytes.games.ffb.skill;
 
+import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.SkillCategory;
+import com.balancedbytes.games.ffb.RulesCollection.Rules;
 import com.balancedbytes.games.ffb.model.Skill;
 import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
 
@@ -15,6 +17,7 @@ import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
  * more players attempting to use this skill then they get in each other's way
  * and neither can use it.
  */
+@RulesCollection(Rules.All)
 public class DivingCatch extends Skill {
 
 	public DivingCatch() {

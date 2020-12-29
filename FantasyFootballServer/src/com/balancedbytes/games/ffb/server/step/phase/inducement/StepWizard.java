@@ -188,14 +188,14 @@ public final class StepWizard extends AbstractStep {
 	}
 
 	@Override
-	public StepWizard initFrom(JsonValue pJsonValue) {
-		super.initFrom(pJsonValue);
+	public StepWizard initFrom(Game game, JsonValue pJsonValue) {
+		super.initFrom(game, pJsonValue);
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		fWizardSpell = (SpecialEffect) IServerJsonOption.WIZARD_SPELL.getFrom(jsonObject);
-		fTargetCoordinate = IServerJsonOption.TARGET_COORDINATE.getFrom(jsonObject);
-		fEndInducement = IServerJsonOption.END_INDUCEMENT.getFrom(jsonObject);
-		fOldTurnMode = (TurnMode) IServerJsonOption.OLD_TURN_MODE.getFrom(jsonObject);
-		Boolean homeTeam = IServerJsonOption.HOME_TEAM.getFrom(jsonObject);
+		fWizardSpell = (SpecialEffect) IServerJsonOption.WIZARD_SPELL.getFrom(game, jsonObject);
+		fTargetCoordinate = IServerJsonOption.TARGET_COORDINATE.getFrom(game, jsonObject);
+		fEndInducement = IServerJsonOption.END_INDUCEMENT.getFrom(game, jsonObject);
+		fOldTurnMode = (TurnMode) IServerJsonOption.OLD_TURN_MODE.getFrom(game, jsonObject);
+		Boolean homeTeam = IServerJsonOption.HOME_TEAM.getFrom(game, jsonObject);
 		fHomeTeam = (homeTeam != null) ? homeTeam : false;
 		return this;
 	}

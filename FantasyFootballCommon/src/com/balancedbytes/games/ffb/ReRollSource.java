@@ -1,5 +1,7 @@
 package com.balancedbytes.games.ffb;
 
+import com.balancedbytes.games.ffb.factory.SkillFactory;
+import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Skill;
 
 /**
@@ -29,8 +31,8 @@ public class ReRollSource implements INamedObject {
 		return name;
 	}
 
-	public Skill getSkill() {
-		SkillFactory skillFactory = SkillFactory.getInstance();
+	public Skill getSkill(Game game) {
+		SkillFactory skillFactory = game.getRules().getSkillFactory();
 		if (skill != null) {
 			return skillFactory.forClass(skill);
 		} else {

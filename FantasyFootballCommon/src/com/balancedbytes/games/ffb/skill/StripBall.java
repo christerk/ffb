@@ -1,6 +1,8 @@
 package com.balancedbytes.games.ffb.skill;
 
+import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.SkillCategory;
+import com.balancedbytes.games.ffb.RulesCollection.Rules;
 import com.balancedbytes.games.ffb.model.Skill;
 import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
 
@@ -10,6 +12,7 @@ import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
  * the ball in the square that they are pushed to, even if the opposing player
  * is not Knocked Down.
  */
+@RulesCollection(Rules.All)
 public class StripBall extends Skill {
 
 	public StripBall() {

@@ -1,9 +1,10 @@
 package com.balancedbytes.games.ffb.report;
 
 import com.balancedbytes.games.ffb.Direction;
-import com.balancedbytes.games.ffb.DirectionFactory;
+import com.balancedbytes.games.ffb.factory.DirectionFactory;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
+import com.balancedbytes.games.ffb.model.Game;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
@@ -60,12 +61,12 @@ public class ReportThrowIn implements IReport {
 		return jsonObject;
 	}
 
-	public ReportThrowIn initFrom(JsonValue pJsonValue) {
+	public ReportThrowIn initFrom(Game game, JsonValue pJsonValue) {
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(jsonObject));
-		fDirection = (Direction) IJsonOption.DIRECTION.getFrom(jsonObject);
-		fDirectionRoll = IJsonOption.DIRECTION_ROLL.getFrom(jsonObject);
-		fDistanceRoll = IJsonOption.DISTANCE_ROLL.getFrom(jsonObject);
+		UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(game, jsonObject));
+		fDirection = (Direction) IJsonOption.DIRECTION.getFrom(game, jsonObject);
+		fDirectionRoll = IJsonOption.DIRECTION_ROLL.getFrom(game, jsonObject);
+		fDistanceRoll = IJsonOption.DISTANCE_ROLL.getFrom(game, jsonObject);
 		return this;
 	}
 

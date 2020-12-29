@@ -1,7 +1,9 @@
 package com.balancedbytes.games.ffb.skill;
 
 import com.balancedbytes.games.ffb.PassingModifiers;
+import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.SkillCategory;
+import com.balancedbytes.games.ffb.RulesCollection.Rules;
 import com.balancedbytes.games.ffb.model.Skill;
 import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
 
@@ -28,6 +30,7 @@ import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
  * See the Right Stuff entry to see if the player lands on his feet or head-down
  * in a crumpled heap!
  */
+@RulesCollection(Rules.All)
 public class ThrowTeamMate extends Skill {
 
 	public ThrowTeamMate() {

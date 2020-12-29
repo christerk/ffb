@@ -63,9 +63,10 @@ public class FumbblRequestLoadTeam extends ServerRequest {
 	@Override
 	public void process(ServerRequestProcessor pRequestProcessor) {
 		FantasyFootballServer server = pRequestProcessor.getServer();
+		Game game = getGameState().getGame();
 		Team team = null;
 		try {
-			team = UtilFumbblRequest.loadFumbblTeam(server, getTeamId());
+			team = UtilFumbblRequest.loadFumbblTeam(game, server, getTeamId());
 		} catch (FantasyFootballException pFantasyFootballException) {
 			handleInvalidTeam(pRequestProcessor, getTeamId(), pFantasyFootballException);
 			return;
@@ -76,7 +77,7 @@ public class FumbblRequestLoadTeam extends ServerRequest {
 		}
 		Roster roster = null;
 		try {
-			roster = UtilFumbblRequest.loadFumbblRosterForTeam(server, getTeamId());
+			roster = UtilFumbblRequest.loadFumbblRosterForTeam(game, server, getTeamId());
 		} catch (FantasyFootballException pFantasyFootballException) {
 			handleInvalidRoster(pRequestProcessor, getTeamId(), pFantasyFootballException);
 			return;
@@ -88,7 +89,6 @@ public class FumbblRequestLoadTeam extends ServerRequest {
 		team.updateRoster(roster);
 		server.getGameCache().addTeamToGame(getGameState(), team, isHomeTeam());
 		if (GameStatus.SCHEDULED == getGameState().getStatus()) {
-			Game game = getGameState().getGame();
 			if (StringTool.isProvided(game.getTeamHome().getId()) && StringTool.isProvided(game.getTeamAway().getId())) {
 				// log game scheduled -->
 				if (server.getDebugLog().isLogging(IServerLogLevel.WARN)) {

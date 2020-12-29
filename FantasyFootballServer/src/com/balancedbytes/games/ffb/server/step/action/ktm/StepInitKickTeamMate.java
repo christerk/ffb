@@ -174,14 +174,14 @@ public final class StepInitKickTeamMate extends AbstractStep {
 	}
 
 	@Override
-	public StepInitKickTeamMate initFrom(JsonValue pJsonValue) {
-		super.initFrom(pJsonValue);
+	public StepInitKickTeamMate initFrom(Game game, JsonValue pJsonValue) {
+		super.initFrom(game, pJsonValue);
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		fEndTurn = IServerJsonOption.END_TURN.getFrom(jsonObject);
-		fEndPlayerAction = IServerJsonOption.END_PLAYER_ACTION.getFrom(jsonObject);
-		fKickedPlayerId = IServerJsonOption.THROWN_PLAYER_ID.getFrom(jsonObject);
-		fNumDice = IServerJsonOption.NR_OF_DICE.getFrom(jsonObject);
-		fGotoLabelOnEnd = IServerJsonOption.GOTO_LABEL_ON_END.getFrom(jsonObject);
+		fEndTurn = IServerJsonOption.END_TURN.getFrom(game, jsonObject);
+		fEndPlayerAction = IServerJsonOption.END_PLAYER_ACTION.getFrom(game, jsonObject);
+		fKickedPlayerId = IServerJsonOption.THROWN_PLAYER_ID.getFrom(game, jsonObject);
+		fNumDice = IServerJsonOption.NR_OF_DICE.getFrom(game, jsonObject);
+		fGotoLabelOnEnd = IServerJsonOption.GOTO_LABEL_ON_END.getFrom(game, jsonObject);
 		return this;
 	}
 

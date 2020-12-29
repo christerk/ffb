@@ -3,6 +3,7 @@ package com.balancedbytes.games.ffb.dialog;
 import com.balancedbytes.games.ffb.IDialogParameter;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
+import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Skill;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
@@ -60,12 +61,12 @@ public class DialogSkillUseParameter implements IDialogParameter {
 		return jsonObject;
 	}
 
-	public DialogSkillUseParameter initFrom(JsonValue pJsonValue) {
+	public DialogSkillUseParameter initFrom(Game game, JsonValue pJsonValue) {
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		UtilDialogParameter.validateDialogId(this, (DialogId) IJsonOption.DIALOG_ID.getFrom(jsonObject));
-		fPlayerId = IJsonOption.PLAYER_ID.getFrom(jsonObject);
-		fSkill = (Skill) IJsonOption.SKILL.getFrom(jsonObject);
-		fMinimumRoll = IJsonOption.MINIMUM_ROLL.getFrom(jsonObject);
+		UtilDialogParameter.validateDialogId(this, (DialogId) IJsonOption.DIALOG_ID.getFrom(game, jsonObject));
+		fPlayerId = IJsonOption.PLAYER_ID.getFrom(game, jsonObject);
+		fSkill = (Skill) IJsonOption.SKILL.getFrom(game, jsonObject);
+		fMinimumRoll = IJsonOption.MINIMUM_ROLL.getFrom(game, jsonObject);
 		return this;
 	}
 

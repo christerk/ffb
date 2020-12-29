@@ -1,6 +1,8 @@
 package com.balancedbytes.games.ffb.skill;
 
+import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.SkillCategory;
+import com.balancedbytes.games.ffb.RulesCollection.Rules;
 import com.balancedbytes.games.ffb.model.Skill;
 import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
 
@@ -10,6 +12,7 @@ import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
  * crack. During a Foul Action a player with this skill is not ejected for
  * rolling doubles on the Armour roll unless the Armour roll was successful.
  */
+@RulesCollection(Rules.All)
 public class SneakyGit extends Skill {
 
 	public SneakyGit() {

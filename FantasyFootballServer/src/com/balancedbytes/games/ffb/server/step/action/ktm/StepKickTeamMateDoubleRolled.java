@@ -106,12 +106,12 @@ public class StepKickTeamMateDoubleRolled extends AbstractStep {
 	}
 
 	@Override
-	public StepKickTeamMateDoubleRolled initFrom(JsonValue pJsonValue) {
-		super.initFrom(pJsonValue);
+	public StepKickTeamMateDoubleRolled initFrom(Game game, JsonValue pJsonValue) {
+		super.initFrom(game, pJsonValue);
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		fKickedPlayerId = IServerJsonOption.KICKED_PLAYER_ID.getFrom(jsonObject);
-		fKickedPlayerState = IServerJsonOption.KICKED_PLAYER_STATE.getFrom(jsonObject);
-		fKickedPlayerCoordinate = IServerJsonOption.KICKED_PLAYER_COORDINATE.getFrom(jsonObject);
+		fKickedPlayerId = IServerJsonOption.KICKED_PLAYER_ID.getFrom(game, jsonObject);
+		fKickedPlayerState = IServerJsonOption.KICKED_PLAYER_STATE.getFrom(game, jsonObject);
+		fKickedPlayerCoordinate = IServerJsonOption.KICKED_PLAYER_COORDINATE.getFrom(game, jsonObject);
 		return this;
 	}
 

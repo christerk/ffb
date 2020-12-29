@@ -3,12 +3,12 @@ package com.balancedbytes.games.ffb.server.step.action.move;
 import java.util.Set;
 
 import com.balancedbytes.games.ffb.DodgeModifier;
-import com.balancedbytes.games.ffb.DodgeModifierFactory;
 import com.balancedbytes.games.ffb.DodgeModifiers;
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.ReRollSource;
 import com.balancedbytes.games.ffb.ReRolledActions;
 import com.balancedbytes.games.ffb.SkillUse;
+import com.balancedbytes.games.ffb.factory.DodgeModifierFactory;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.Game;
@@ -237,7 +237,7 @@ public class StepMoveDodge extends AbstractStepWithReRoll {
 					Team otherTeam = UtilPlayer.findOtherTeam(game, actingPlayer.getPlayer());
 					Player[] opponents = UtilPlayer.findAdjacentPlayersWithTacklezones(game, otherTeam, fCoordinateFrom, false);
 					for (int i = 0; i < opponents.length; i++) {
-						if (UtilCards.cancelsSkill(opponents[i], skillRerollSource.getSkill())) {
+						if (UtilCards.cancelsSkill(opponents[i], skillRerollSource.getSkill(game))) {
 							skillRerollSource = null;
 							break;
 						}
@@ -282,16 +282,16 @@ public class StepMoveDodge extends AbstractStepWithReRoll {
 	}
 
 	@Override
-	public StepMoveDodge initFrom(JsonValue pJsonValue) {
-		super.initFrom(pJsonValue);
+	public StepMoveDodge initFrom(Game game, JsonValue pJsonValue) {
+		super.initFrom(game, pJsonValue);
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		fGotoLabelOnFailure = IServerJsonOption.GOTO_LABEL_ON_FAILURE.getFrom(jsonObject);
-		fCoordinateFrom = IServerJsonOption.COORDINATE_FROM.getFrom(jsonObject);
-		fCoordinateTo = IServerJsonOption.COORDINATE_TO.getFrom(jsonObject);
-		fDodgeRoll = IServerJsonOption.DODGE_ROLL.getFrom(jsonObject);
-		fUsingDivingTackle = IServerJsonOption.USING_DIVING_TACKLE.getFrom(jsonObject);
-		fUsingBreakTackle = IServerJsonOption.USING_BREAK_TACKLE.getFrom(jsonObject);
-		Boolean reRollUsed = IServerJsonOption.RE_ROLL_USED.getFrom(jsonObject);
+		fGotoLabelOnFailure = IServerJsonOption.GOTO_LABEL_ON_FAILURE.getFrom(game, jsonObject);
+		fCoordinateFrom = IServerJsonOption.COORDINATE_FROM.getFrom(game, jsonObject);
+		fCoordinateTo = IServerJsonOption.COORDINATE_TO.getFrom(game, jsonObject);
+		fDodgeRoll = IServerJsonOption.DODGE_ROLL.getFrom(game, jsonObject);
+		fUsingDivingTackle = IServerJsonOption.USING_DIVING_TACKLE.getFrom(game, jsonObject);
+		fUsingBreakTackle = IServerJsonOption.USING_BREAK_TACKLE.getFrom(game, jsonObject);
+		Boolean reRollUsed = IServerJsonOption.RE_ROLL_USED.getFrom(game, jsonObject);
 		fReRollUsed = (reRollUsed != null) ? reRollUsed : false;
 		return this;
 	}

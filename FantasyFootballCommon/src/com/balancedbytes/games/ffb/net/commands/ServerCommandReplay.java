@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
+import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.net.NetCommandFactory;
 import com.balancedbytes.games.ffb.net.NetCommandId;
 import com.balancedbytes.games.ffb.util.ArrayTool;
@@ -100,15 +101,15 @@ public class ServerCommandReplay extends ServerCommand {
 		return jsonObject;
 	}
 
-	public ServerCommandReplay initFrom(JsonValue pJsonValue) {
+	public ServerCommandReplay initFrom(Game game, JsonValue pJsonValue) {
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		UtilNetCommand.validateCommandId(this, (NetCommandId) IJsonOption.NET_COMMAND_ID.getFrom(jsonObject));
-		fTotalNrOfCommands = IJsonOption.TOTAL_NR_OF_COMMANDS.getFrom(jsonObject);
-		JsonArray commandArray = IJsonOption.COMMAND_ARRAY.getFrom(jsonObject);
+		UtilNetCommand.validateCommandId(this, (NetCommandId) IJsonOption.NET_COMMAND_ID.getFrom(game, jsonObject));
+		fTotalNrOfCommands = IJsonOption.TOTAL_NR_OF_COMMANDS.getFrom(game, jsonObject);
+		JsonArray commandArray = IJsonOption.COMMAND_ARRAY.getFrom(game, jsonObject);
 		fReplayCommands.clear();
 		NetCommandFactory netCommandFactory = new NetCommandFactory();
 		for (int i = 0; i < commandArray.size(); i++) {
-			ServerCommand replayCommand = (ServerCommand) netCommandFactory.forJsonValue(commandArray.get(i));
+			ServerCommand replayCommand = (ServerCommand) netCommandFactory.forJsonValue(game, commandArray.get(i));
 			add(replayCommand);
 		}
 		return this;

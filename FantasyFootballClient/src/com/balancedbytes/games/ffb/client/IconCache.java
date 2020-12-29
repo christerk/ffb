@@ -20,7 +20,7 @@ import com.balancedbytes.games.ffb.DiceDecoration;
 import com.balancedbytes.games.ffb.PlayerState;
 import com.balancedbytes.games.ffb.PushbackSquare;
 import com.balancedbytes.games.ffb.Weather;
-import com.balancedbytes.games.ffb.WeatherFactory;
+import com.balancedbytes.games.ffb.factory.WeatherFactory;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Team;
 import com.balancedbytes.games.ffb.option.GameOptionId;

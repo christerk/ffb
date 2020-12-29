@@ -19,6 +19,7 @@ import com.balancedbytes.games.ffb.server.step.AbstractStep;
 import com.balancedbytes.games.ffb.server.step.StepAction;
 import com.balancedbytes.games.ffb.server.step.StepCommandStatus;
 import com.balancedbytes.games.ffb.server.step.StepId;
+import com.balancedbytes.games.ffb.server.util.UtilSkillBehaviours;
 import com.balancedbytes.games.ffb.util.StringTool;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
@@ -128,6 +129,9 @@ public final class StepInitStartGame extends AbstractStep {
 					server.getDebugLog().log(IServerLogLevel.WARN, getGameState().getId(), "Default Options");
 				}
 			}
+			game.initializeRules();
+			UtilSkillBehaviours.registerBehaviours(game.getRules().getSkillFactory(), server.getDebugLog());
+
 			// <-- log start game
 		}
 		getResult().setNextAction(StepAction.NEXT_STEP);
@@ -143,10 +147,10 @@ public final class StepInitStartGame extends AbstractStep {
 	}
 
 	@Override
-	public StepInitStartGame initFrom(JsonValue pJsonValue) {
-		super.initFrom(pJsonValue);
+	public StepInitStartGame initFrom(Game game, JsonValue pJsonValue) {
+		super.initFrom(game, pJsonValue);
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		fFumbblGameCreated = IServerJsonOption.FUMBBL_GAME_CREATED.getFrom(jsonObject);
+		fFumbblGameCreated = IServerJsonOption.FUMBBL_GAME_CREATED.getFrom(game, jsonObject);
 		return this;
 	}
 

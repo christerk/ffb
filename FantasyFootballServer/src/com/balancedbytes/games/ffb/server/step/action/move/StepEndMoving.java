@@ -233,15 +233,15 @@ public class StepEndMoving extends AbstractStep {
 	}
 
 	@Override
-	public StepEndMoving initFrom(JsonValue pJsonValue) {
-		super.initFrom(pJsonValue);
+	public StepEndMoving initFrom(Game game, JsonValue pJsonValue) {
+		super.initFrom(game, pJsonValue);
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		fEndTurn = IServerJsonOption.END_TURN.getFrom(jsonObject);
-		fEndPlayerAction = IServerJsonOption.END_PLAYER_ACTION.getFrom(jsonObject);
-		fFeedingAllowed = IServerJsonOption.FEEDING_ALLOWED.getFrom(jsonObject);
-		fMoveStack = IServerJsonOption.MOVE_STACK.getFrom(jsonObject);
-		fDispatchPlayerAction = (PlayerAction) IServerJsonOption.DISPATCH_PLAYER_ACTION.getFrom(jsonObject);
-		fBlockDefenderId = IServerJsonOption.BLOCK_DEFENDER_ID.getFrom(jsonObject);
+		fEndTurn = IServerJsonOption.END_TURN.getFrom(game, jsonObject);
+		fEndPlayerAction = IServerJsonOption.END_PLAYER_ACTION.getFrom(game, jsonObject);
+		fFeedingAllowed = IServerJsonOption.FEEDING_ALLOWED.getFrom(game, jsonObject);
+		fMoveStack = IServerJsonOption.MOVE_STACK.getFrom(game, jsonObject);
+		fDispatchPlayerAction = (PlayerAction) IServerJsonOption.DISPATCH_PLAYER_ACTION.getFrom(game, jsonObject);
+		fBlockDefenderId = IServerJsonOption.BLOCK_DEFENDER_ID.getFrom(game, jsonObject);
 		return this;
 	}
 

@@ -2,6 +2,7 @@ package com.balancedbytes.games.ffb.server.step.phase.inducement;
 
 import com.balancedbytes.games.ffb.InducementPhase;
 import com.balancedbytes.games.ffb.json.UtilJson;
+import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.IServerJsonOption;
 import com.balancedbytes.games.ffb.server.step.AbstractStep;
@@ -110,13 +111,13 @@ public final class StepEndInducement extends AbstractStep {
 	}
 
 	@Override
-	public StepEndInducement initFrom(JsonValue pJsonValue) {
-		super.initFrom(pJsonValue);
+	public StepEndInducement initFrom(Game game, JsonValue pJsonValue) {
+		super.initFrom(game, pJsonValue);
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		fInducementPhase = (InducementPhase) IServerJsonOption.INDUCEMENT_PHASE.getFrom(jsonObject);
-		fHomeTeam = IServerJsonOption.HOME_TEAM.getFrom(jsonObject);
-		fEndTurn = IServerJsonOption.END_TURN.getFrom(jsonObject);
-		fEndInducementPhase = IServerJsonOption.END_INDUCEMENT_PHASE.getFrom(jsonObject);
+		fInducementPhase = (InducementPhase) IServerJsonOption.INDUCEMENT_PHASE.getFrom(game, jsonObject);
+		fHomeTeam = IServerJsonOption.HOME_TEAM.getFrom(game, jsonObject);
+		fEndTurn = IServerJsonOption.END_TURN.getFrom(game, jsonObject);
+		fEndInducementPhase = IServerJsonOption.END_INDUCEMENT_PHASE.getFrom(game, jsonObject);
 		return this;
 	}
 

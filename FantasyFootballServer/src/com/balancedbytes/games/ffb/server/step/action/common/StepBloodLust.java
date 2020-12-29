@@ -1,6 +1,7 @@
 package com.balancedbytes.games.ffb.server.step.action.common;
 
 import com.balancedbytes.games.ffb.json.UtilJson;
+import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.server.ActionStatus;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.IServerJsonOption;
@@ -87,10 +88,10 @@ public class StepBloodLust extends AbstractStepWithReRoll {
 	}
 
 	@Override
-	public StepBloodLust initFrom(JsonValue pJsonValue) {
-		super.initFrom(pJsonValue);
+	public StepBloodLust initFrom(Game game, JsonValue pJsonValue) {
+		super.initFrom(game, pJsonValue);
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		state.goToLabelOnFailure = IServerJsonOption.GOTO_LABEL_ON_FAILURE.getFrom(jsonObject);
+		state.goToLabelOnFailure = IServerJsonOption.GOTO_LABEL_ON_FAILURE.getFrom(game, jsonObject);
 		return this;
 	}
 

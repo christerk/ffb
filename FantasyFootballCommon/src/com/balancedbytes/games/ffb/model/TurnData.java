@@ -266,24 +266,24 @@ public class TurnData implements IJsonSerializable {
 		return jsonObject;
 	}
 
-	public TurnData initFrom(JsonValue pJsonValue) {
+	public TurnData initFrom(Game game, JsonValue pJsonValue) {
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		fHomeData = IJsonOption.HOME_DATA.getFrom(jsonObject);
-		fTurnStarted = IJsonOption.TURN_STARTED.getFrom(jsonObject);
-		fTurnNr = IJsonOption.TURN_NR.getFrom(jsonObject);
-		fFirstTurnAfterKickoff = IJsonOption.FIRST_TURN_AFTER_KICKOFF.getFrom(jsonObject);
-		fReRolls = IJsonOption.RE_ROLLS.getFrom(jsonObject);
-		fApothecaries = IJsonOption.APOTHECARIES.getFrom(jsonObject);
-		fBlitzUsed = IJsonOption.BLITZ_USED.getFrom(jsonObject);
-		fFoulUsed = IJsonOption.FOUL_USED.getFrom(jsonObject);
-		fReRollUsed = IJsonOption.RE_ROLL_USED.getFrom(jsonObject);
-		fHandOverUsed = IJsonOption.HAND_OVER_USED.getFrom(jsonObject);
-		fPassUsed = IJsonOption.PASS_USED.getFrom(jsonObject);
-		Boolean coachBanned = IJsonOption.COACH_BANNED.getFrom(jsonObject);
+		fHomeData = IJsonOption.HOME_DATA.getFrom(game, jsonObject);
+		fTurnStarted = IJsonOption.TURN_STARTED.getFrom(game, jsonObject);
+		fTurnNr = IJsonOption.TURN_NR.getFrom(game, jsonObject);
+		fFirstTurnAfterKickoff = IJsonOption.FIRST_TURN_AFTER_KICKOFF.getFrom(game, jsonObject);
+		fReRolls = IJsonOption.RE_ROLLS.getFrom(game, jsonObject);
+		fApothecaries = IJsonOption.APOTHECARIES.getFrom(game, jsonObject);
+		fBlitzUsed = IJsonOption.BLITZ_USED.getFrom(game, jsonObject);
+		fFoulUsed = IJsonOption.FOUL_USED.getFrom(game, jsonObject);
+		fReRollUsed = IJsonOption.RE_ROLL_USED.getFrom(game, jsonObject);
+		fHandOverUsed = IJsonOption.HAND_OVER_USED.getFrom(game, jsonObject);
+		fPassUsed = IJsonOption.PASS_USED.getFrom(game, jsonObject);
+		Boolean coachBanned = IJsonOption.COACH_BANNED.getFrom(game, jsonObject);
 		fCoachBanned = (coachBanned != null) ? coachBanned : false;
-		fLeaderState = (LeaderState) IJsonOption.LEADER_STATE.getFrom(jsonObject);
+		fLeaderState = (LeaderState) IJsonOption.LEADER_STATE.getFrom(game, jsonObject);
 		fInducementSet = new InducementSet(this);
-		fInducementSet.initFrom(IJsonOption.INDUCEMENT_SET.getFrom(jsonObject));
+		fInducementSet.initFrom(game, IJsonOption.INDUCEMENT_SET.getFrom(game, jsonObject));
 		return this;
 	}
 

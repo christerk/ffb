@@ -84,15 +84,15 @@ public class DialogReRollParameter implements IDialogParameter {
 		return jsonObject;
 	}
 
-	public DialogReRollParameter initFrom(JsonValue pJsonValue) {
+	public DialogReRollParameter initFrom(Game game, JsonValue pJsonValue) {
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		UtilDialogParameter.validateDialogId(this, (DialogId) IJsonOption.DIALOG_ID.getFrom(jsonObject));
-		fPlayerId = IJsonOption.PLAYER_ID.getFrom(jsonObject);
-		fReRolledAction = (ReRolledAction) IJsonOption.RE_ROLLED_ACTION.getFrom(jsonObject);
-		fMinimumRoll = IJsonOption.MINIMUM_ROLL.getFrom(jsonObject);
-		fTeamReRollOption = IJsonOption.TEAM_RE_ROLL_OPTION.getFrom(jsonObject);
-		fProReRollOption = IJsonOption.PRO_RE_ROLL_OPTION.getFrom(jsonObject);
-		fFumble = IJsonOption.FUMBLE.getFrom(jsonObject);
+		UtilDialogParameter.validateDialogId(this, (DialogId) IJsonOption.DIALOG_ID.getFrom(game, jsonObject));
+		fPlayerId = IJsonOption.PLAYER_ID.getFrom(game, jsonObject);
+		fReRolledAction = (ReRolledAction) IJsonOption.RE_ROLLED_ACTION.getFrom(game, jsonObject);
+		fMinimumRoll = IJsonOption.MINIMUM_ROLL.getFrom(game, jsonObject);
+		fTeamReRollOption = IJsonOption.TEAM_RE_ROLL_OPTION.getFrom(game, jsonObject);
+		fProReRollOption = IJsonOption.PRO_RE_ROLL_OPTION.getFrom(game, jsonObject);
+		fFumble = IJsonOption.FUMBLE.getFrom(game, jsonObject);
 		return this;
 	}
 

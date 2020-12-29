@@ -165,13 +165,13 @@ public final class StepPettyCash extends AbstractStep {
 	}
 
 	@Override
-	public StepPettyCash initFrom(JsonValue pJsonValue) {
-		super.initFrom(pJsonValue);
+	public StepPettyCash initFrom(Game game, JsonValue pJsonValue) {
+		super.initFrom(game, pJsonValue);
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		fPettyCashSelectedHome = IServerJsonOption.PETTY_CASH_SELECTED_HOME.getFrom(jsonObject);
-		fPettyCashSelectedAway = IServerJsonOption.PETTY_CASH_SELECTED_AWAY.getFrom(jsonObject);
-		fReportedHome = IServerJsonOption.REPORTED_HOME.getFrom(jsonObject);
-		fReportedAway = IServerJsonOption.REPORTED_AWAY.getFrom(jsonObject);
+		fPettyCashSelectedHome = IServerJsonOption.PETTY_CASH_SELECTED_HOME.getFrom(game, jsonObject);
+		fPettyCashSelectedAway = IServerJsonOption.PETTY_CASH_SELECTED_AWAY.getFrom(game, jsonObject);
+		fReportedHome = IServerJsonOption.REPORTED_HOME.getFrom(game, jsonObject);
+		fReportedAway = IServerJsonOption.REPORTED_AWAY.getFrom(game, jsonObject);
 		return this;
 	}
 

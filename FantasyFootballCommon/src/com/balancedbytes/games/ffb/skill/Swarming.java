@@ -1,6 +1,8 @@
 package com.balancedbytes.games.ffb.skill;
 
+import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.SkillCategory;
+import com.balancedbytes.games.ffb.RulesCollection.Rules;
 import com.balancedbytes.games.ffb.model.Skill;
 import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
 
@@ -11,6 +13,7 @@ import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
  * These extra players may not be placed on the Line of Scrimmage or in a Wide
  * Zone.
  */
+@RulesCollection(Rules.All)
 public class Swarming extends Skill {
 
 	public Swarming() {

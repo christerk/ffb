@@ -2,6 +2,7 @@ package com.balancedbytes.games.ffb.report;
 
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
+import com.balancedbytes.games.ffb.model.Game;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
@@ -44,10 +45,10 @@ public class ReportTimeoutEnforced implements IReport {
 		return jsonObject;
 	}
 
-	public ReportTimeoutEnforced initFrom(JsonValue pJsonValue) {
+	public ReportTimeoutEnforced initFrom(Game game, JsonValue pJsonValue) {
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(jsonObject));
-		fCoach = IJsonOption.COACH.getFrom(jsonObject);
+		UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(game, jsonObject));
+		fCoach = IJsonOption.COACH.getFrom(game, jsonObject);
 		return this;
 	}
 

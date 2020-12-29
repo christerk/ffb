@@ -1,6 +1,8 @@
 package com.balancedbytes.games.ffb.skill;
 
+import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.SkillCategory;
+import com.balancedbytes.games.ffb.RulesCollection.Rules;
 import com.balancedbytes.games.ffb.model.Skill;
 import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
 
@@ -12,6 +14,7 @@ import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
  * to the roll if taking a Block or Blitz Action. On a roll of 1-3, the Wild
  * Animal does not move and roars in rage instead, and the Action is wasted.
  */
+@RulesCollection(Rules.All)
 public class WildAnimal extends Skill {
 
 	public WildAnimal() {

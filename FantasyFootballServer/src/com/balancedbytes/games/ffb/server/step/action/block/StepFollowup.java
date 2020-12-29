@@ -203,14 +203,14 @@ public class StepFollowup extends AbstractStep {
 	}
 
 	@Override
-	public StepFollowup initFrom(JsonValue pJsonValue) {
-		super.initFrom(pJsonValue);
+	public StepFollowup initFrom(Game game, JsonValue pJsonValue) {
+		super.initFrom(game, pJsonValue);
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		coordinateFrom = IServerJsonOption.COORDINATE_FROM.getFrom(jsonObject);
-		defenderPosition = IServerJsonOption.DEFENDER_POSITION.getFrom(jsonObject);
-		usingSkillPreventingFollowUp = IServerJsonOption.USING_FEND.getFrom(jsonObject);
-		followupChoice = IServerJsonOption.FOLLOWUP_CHOICE.getFrom(jsonObject);
-		oldDefenderState = IServerJsonOption.OLD_DEFENDER_STATE.getFrom(jsonObject);
+		coordinateFrom = IServerJsonOption.COORDINATE_FROM.getFrom(game, jsonObject);
+		defenderPosition = IServerJsonOption.DEFENDER_POSITION.getFrom(game, jsonObject);
+		usingSkillPreventingFollowUp = IServerJsonOption.USING_FEND.getFrom(game, jsonObject);
+		followupChoice = IServerJsonOption.FOLLOWUP_CHOICE.getFrom(game, jsonObject);
+		oldDefenderState = IServerJsonOption.OLD_DEFENDER_STATE.getFrom(game, jsonObject);
 		return this;
 	}
 

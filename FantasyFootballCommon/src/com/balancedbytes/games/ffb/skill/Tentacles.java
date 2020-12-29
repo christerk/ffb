@@ -1,6 +1,8 @@
 package com.balancedbytes.games.ffb.skill;
 
+import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.SkillCategory;
+import com.balancedbytes.games.ffb.RulesCollection.Rules;
 import com.balancedbytes.games.ffb.model.Skill;
 
 /**
@@ -12,6 +14,7 @@ import com.balancedbytes.games.ffb.model.Skill;
  * tackle zone of several players that have the Tentacles ability, then only one
  * of the opposing players may at tempt to grab him with the tentacles.
  */
+@RulesCollection(Rules.All)
 public class Tentacles extends Skill {
 
 	public Tentacles() {

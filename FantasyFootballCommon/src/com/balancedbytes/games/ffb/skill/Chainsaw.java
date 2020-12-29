@@ -1,7 +1,9 @@
 package com.balancedbytes.games.ffb.skill;
 
 import com.balancedbytes.games.ffb.ArmorModifiers;
+import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.SkillCategory;
+import com.balancedbytes.games.ffb.RulesCollection.Rules;
 import com.balancedbytes.games.ffb.model.Skill;
 import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
 
@@ -26,6 +28,7 @@ import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
  * moving after using it. Casualties caused by a chainsaw player do not count
  * for Star Player points.
  */
+@RulesCollection(Rules.All)
 public class Chainsaw extends Skill {
 
 	public Chainsaw() {

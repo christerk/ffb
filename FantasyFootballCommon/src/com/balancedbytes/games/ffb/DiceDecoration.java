@@ -3,6 +3,7 @@ package com.balancedbytes.games.ffb;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.IJsonSerializable;
 import com.balancedbytes.games.ffb.json.UtilJson;
+import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.util.ArrayTool;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
@@ -71,10 +72,10 @@ public class DiceDecoration implements IJsonSerializable {
 		return jsonObject;
 	}
 
-	public DiceDecoration initFrom(JsonValue pJsonValue) {
+	public DiceDecoration initFrom(Game game, JsonValue pJsonValue) {
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		fCoordinate = IJsonOption.COORDINATE.getFrom(jsonObject);
-		fNrOfDice = IJsonOption.NR_OF_DICE.getFrom(jsonObject);
+		fCoordinate = IJsonOption.COORDINATE.getFrom(game, jsonObject);
+		fNrOfDice = IJsonOption.NR_OF_DICE.getFrom(game, jsonObject);
 		return this;
 	}
 

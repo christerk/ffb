@@ -14,6 +14,7 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+import com.balancedbytes.games.ffb.FactoryType.Factory;
 import com.balancedbytes.games.ffb.ReRollSource;
 import com.balancedbytes.games.ffb.ReRollSources;
 import com.balancedbytes.games.ffb.ReRolledAction;
@@ -21,6 +22,7 @@ import com.balancedbytes.games.ffb.client.FantasyFootballClient;
 import com.balancedbytes.games.ffb.client.IIconProperty;
 import com.balancedbytes.games.ffb.dialog.DialogId;
 import com.balancedbytes.games.ffb.dialog.DialogReRollParameter;
+import com.balancedbytes.games.ffb.factory.SkillFactory;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
@@ -63,7 +65,7 @@ public class DialogReRoll extends Dialog implements ActionListener, KeyListener 
 
 		StringBuilder message1 = new StringBuilder();
 
-		String action = fDialogParameter.getReRolledAction().getName(pClient.getSkillFactory());
+		String action = fDialogParameter.getReRolledAction().getName(pClient.getGame().getRules().<SkillFactory>getFactory(Factory.skill));
 
 		if (fDialogParameter.getMinimumRoll() > 0) {
 			message1.append("Do you want to re-roll the failed ").append(action)

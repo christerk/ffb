@@ -10,6 +10,7 @@ import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.DefaultHandler;
 
 import com.balancedbytes.games.ffb.FantasyFootballException;
+import com.balancedbytes.games.ffb.model.Game;
 
 /**
  * 
@@ -20,15 +21,17 @@ public class XmlHandler extends DefaultHandler {
 	private StringBuilder fValue;
 	private IXmlReadable fParsedElement;
 	private Stack<IXmlReadable> fXmlElementStack;
+	private Game game;
 
 	/**
 	 * Default constructor.
 	 */
-	public XmlHandler(IXmlReadable pParsedElement) {
+	public XmlHandler(Game game, IXmlReadable pParsedElement) {
 		fValue = new StringBuilder();
 		fParsedElement = pParsedElement;
 		fXmlElementStack = new Stack<IXmlReadable>();
 		fXmlElementStack.push(fParsedElement);
+		this.game = game;
 	}
 
 	public IXmlReadable getParsedElement() {
@@ -50,7 +53,7 @@ public class XmlHandler extends DefaultHandler {
 		String value = fValue.toString().trim();
 		while (!fXmlElementStack.empty()) {
 			IXmlReadable currentElement = fXmlElementStack.pop();
-			if (!currentElement.endXmlElement(qName, value)) {
+			if (!currentElement.endXmlElement(game, qName, value)) {
 				fXmlElementStack.push(currentElement);
 				break;
 			}
@@ -72,10 +75,10 @@ public class XmlHandler extends DefaultHandler {
 		}
 	}
 
-	public static void parse(InputSource pXmlSource, IXmlReadable pParsedElement) {
+	public static void parse(Game game, InputSource pXmlSource, IXmlReadable pParsedElement) {
 		SAXParserFactory xmlParserFactory = SAXParserFactory.newInstance();
 		xmlParserFactory.setNamespaceAware(false);
-		XmlHandler xmlHandler = new XmlHandler(pParsedElement);
+		XmlHandler xmlHandler = new XmlHandler(game, pParsedElement);
 		XMLReader xmlReader = null;
 		try {
 			xmlReader = xmlParserFactory.newSAXParser().getXMLReader();

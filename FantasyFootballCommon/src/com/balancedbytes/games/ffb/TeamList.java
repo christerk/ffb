@@ -11,6 +11,7 @@ import org.xml.sax.helpers.AttributesImpl;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.IJsonSerializable;
 import com.balancedbytes.games.ffb.json.UtilJson;
+import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.util.ArrayTool;
 import com.balancedbytes.games.ffb.util.StringTool;
 import com.balancedbytes.games.ffb.xml.IXmlReadable;
@@ -141,7 +142,7 @@ public class TeamList implements IXmlSerializable, IJsonSerializable {
 		return xmlElement;
 	}
 
-	public boolean endXmlElement(String pXmlTag, String pValue) {
+	public boolean endXmlElement(Game game, String pXmlTag, String pValue) {
 		return XML_TAG.equals(pXmlTag);
 	}
 
@@ -159,13 +160,13 @@ public class TeamList implements IXmlSerializable, IJsonSerializable {
 		return jsonObject;
 	}
 
-	public TeamList initFrom(JsonValue pJsonValue) {
+	public TeamList initFrom(Game game, JsonValue pJsonValue) {
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		fCoach = IJsonOption.COACH.getFrom(jsonObject);
-		JsonArray teamListEntries = IJsonOption.TEAM_LIST_ENTRIES.getFrom(jsonObject);
+		fCoach = IJsonOption.COACH.getFrom(game, jsonObject);
+		JsonArray teamListEntries = IJsonOption.TEAM_LIST_ENTRIES.getFrom(game, jsonObject);
 		for (int i = 0; i < teamListEntries.size(); i++) {
 			TeamListEntry teamListEntry = new TeamListEntry();
-			teamListEntry.initFrom(teamListEntries.get(i));
+			teamListEntry.initFrom(game, teamListEntries.get(i));
 			add(teamListEntry);
 		}
 		return this;

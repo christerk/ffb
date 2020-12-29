@@ -52,6 +52,22 @@ public class PassingModifiers {
 			return context.duringThrowTeamMate;
 		}
 	};
+	
+	public static final PassModifier ACCURATE_2020 = new PassModifier("Accurate", -1, false, false) {
+		@Override
+		public boolean appliesToContext(PassContext context) {
+			return context.distance == PassingDistance.QUICK_PASS ||
+					context.distance == PassingDistance.SHORT_PASS;
+		}
+	};
+	
+	public static final PassModifier CANNONEER = new PassModifier("Cannoneer", -1, false, false) {
+		@Override
+		public boolean appliesToContext(PassContext context) {
+			return context.distance == PassingDistance.LONG_PASS ||
+					context.distance == PassingDistance.LONG_BOMB;
+		}
+	};
 
 	private Map<String, PassModifier> values;
 

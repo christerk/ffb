@@ -144,13 +144,13 @@ public final class StepDispatchPassing extends AbstractStep {
 	}
 
 	@Override
-	public StepDispatchPassing initFrom(JsonValue pJsonValue) {
-		super.initFrom(pJsonValue);
+	public StepDispatchPassing initFrom(Game game, JsonValue pJsonValue) {
+		super.initFrom(game, pJsonValue);
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		fGotoLabelOnEnd = IServerJsonOption.GOTO_LABEL_ON_END.getFrom(jsonObject);
-		fGotoLabelOnHailMaryPass = IServerJsonOption.GOTO_LABEL_ON_HAIL_MARY_PASS.getFrom(jsonObject);
-		fGotoLabelOnHandOver = IServerJsonOption.GOTO_LABEL_ON_HAND_OVER.getFrom(jsonObject);
-		fCatcherId = IServerJsonOption.CATCHER_ID.getFrom(jsonObject);
+		fGotoLabelOnEnd = IServerJsonOption.GOTO_LABEL_ON_END.getFrom(game, jsonObject);
+		fGotoLabelOnHailMaryPass = IServerJsonOption.GOTO_LABEL_ON_HAIL_MARY_PASS.getFrom(game, jsonObject);
+		fGotoLabelOnHandOver = IServerJsonOption.GOTO_LABEL_ON_HAND_OVER.getFrom(game, jsonObject);
+		fCatcherId = IServerJsonOption.CATCHER_ID.getFrom(game, jsonObject);
 		return this;
 	}
 

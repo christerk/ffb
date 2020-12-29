@@ -5,8 +5,6 @@ import java.util.Date;
 import com.balancedbytes.games.ffb.BloodSpot;
 import com.balancedbytes.games.ffb.Card;
 import com.balancedbytes.games.ffb.CardEffect;
-import com.balancedbytes.games.ffb.CardEffectFactory;
-import com.balancedbytes.games.ffb.CardFactory;
 import com.balancedbytes.games.ffb.DiceDecoration;
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.FieldMarker;
@@ -14,30 +12,32 @@ import com.balancedbytes.games.ffb.IDialogParameter;
 import com.balancedbytes.games.ffb.INamedObject;
 import com.balancedbytes.games.ffb.Inducement;
 import com.balancedbytes.games.ffb.LeaderState;
-import com.balancedbytes.games.ffb.LeaderStateFactory;
 import com.balancedbytes.games.ffb.MoveSquare;
 import com.balancedbytes.games.ffb.PlayerAction;
-import com.balancedbytes.games.ffb.PlayerActionFactory;
 import com.balancedbytes.games.ffb.PlayerMarker;
 import com.balancedbytes.games.ffb.PlayerState;
 import com.balancedbytes.games.ffb.PushbackSquare;
 import com.balancedbytes.games.ffb.RangeRuler;
 import com.balancedbytes.games.ffb.SendToBoxReason;
-import com.balancedbytes.games.ffb.SendToBoxReasonFactory;
 import com.balancedbytes.games.ffb.SeriousInjury;
-import com.balancedbytes.games.ffb.SeriousInjuryFactory;
-import com.balancedbytes.games.ffb.SkillFactory;
 import com.balancedbytes.games.ffb.TrackNumber;
 import com.balancedbytes.games.ffb.TurnMode;
-import com.balancedbytes.games.ffb.TurnModeFactory;
 import com.balancedbytes.games.ffb.Weather;
-import com.balancedbytes.games.ffb.WeatherFactory;
 import com.balancedbytes.games.ffb.dialog.DialogId;
-import com.balancedbytes.games.ffb.dialog.DialogIdFactory;
 import com.balancedbytes.games.ffb.dialog.DialogParameterFactory;
+import com.balancedbytes.games.ffb.factory.CardEffectFactory;
+import com.balancedbytes.games.ffb.factory.CardFactory;
+import com.balancedbytes.games.ffb.factory.DialogIdFactory;
+import com.balancedbytes.games.ffb.factory.GameOptionFactory;
+import com.balancedbytes.games.ffb.factory.LeaderStateFactory;
+import com.balancedbytes.games.ffb.factory.PlayerActionFactory;
+import com.balancedbytes.games.ffb.factory.SendToBoxReasonFactory;
+import com.balancedbytes.games.ffb.factory.SeriousInjuryFactory;
+import com.balancedbytes.games.ffb.factory.TurnModeFactory;
+import com.balancedbytes.games.ffb.factory.WeatherFactory;
 import com.balancedbytes.games.ffb.json.UtilJson;
+import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Skill;
-import com.balancedbytes.games.ffb.option.GameOptionFactory;
 import com.balancedbytes.games.ffb.option.IGameOption;
 import com.eclipsesource.json.JsonValue;
 
@@ -140,13 +140,13 @@ public enum ModelChangeDataType implements INamedObject {
 		}
 	}
 
-	public Object fromJsonValue(JsonValue pJsonValue) {
+	public Object fromJsonValue(Game game, JsonValue pJsonValue) {
 		if ((pJsonValue == null) || pJsonValue.isNull()) {
 			return null;
 		}
 		switch (this) {
 		case BLOOD_SPOT:
-			return new BloodSpot().initFrom(pJsonValue);
+			return new BloodSpot().initFrom(game, pJsonValue);
 		case BOOLEAN:
 			return pJsonValue.asBoolean();
 		case CARD:
@@ -158,17 +158,17 @@ public enum ModelChangeDataType implements INamedObject {
 		case DIALOG_ID:
 			return UtilJson.toEnumWithName(new DialogIdFactory(), pJsonValue);
 		case DIALOG_PARAMETER:
-			return new DialogParameterFactory().forJsonValue(pJsonValue);
+			return new DialogParameterFactory().forJsonValue(game, pJsonValue);
 		case DICE_DECORATION:
-			return new DiceDecoration().initFrom(pJsonValue);
+			return new DiceDecoration().initFrom(game, pJsonValue);
 		case FIELD_COORDINATE:
 			return UtilJson.toFieldCoordinate(pJsonValue);
 		case FIELD_MARKER:
-			return new FieldMarker().initFrom(pJsonValue);
+			return new FieldMarker().initFrom(game, pJsonValue);
 		case GAME_OPTION:
-			return new GameOptionFactory().fromJsonValue(pJsonValue);
+			return new GameOptionFactory().fromJsonValue(game, pJsonValue);
 		case INDUCEMENT:
-			return new Inducement().initFrom(pJsonValue);
+			return new Inducement().initFrom(game, pJsonValue);
 		case INTEGER:
 			return pJsonValue.asInt();
 		case LEADER_STATE:
@@ -176,29 +176,29 @@ public enum ModelChangeDataType implements INamedObject {
 		case LONG:
 			return pJsonValue.asLong();
 		case MOVE_SQUARE:
-			return new MoveSquare().initFrom(pJsonValue);
+			return new MoveSquare().initFrom(game, pJsonValue);
 		case NULL:
 			return null;
 		case PLAYER_ACTION:
 			return UtilJson.toEnumWithName(new PlayerActionFactory(), pJsonValue);
 		case PLAYER_MARKER:
-			return new PlayerMarker().initFrom(pJsonValue);
+			return new PlayerMarker().initFrom(game, pJsonValue);
 		case PLAYER_STATE:
 			return UtilJson.toPlayerState(pJsonValue);
 		case PUSHBACK_SQUARE:
-			return new PushbackSquare().initFrom(pJsonValue);
+			return new PushbackSquare().initFrom(game, pJsonValue);
 		case RANGE_RULER:
-			return new RangeRuler().initFrom(pJsonValue);
+			return new RangeRuler().initFrom(game, pJsonValue);
 		case SEND_TO_BOX_REASON:
 			return UtilJson.toEnumWithName(new SendToBoxReasonFactory(), pJsonValue);
 		case SERIOUS_INJURY:
 			return UtilJson.toEnumWithName(new SeriousInjuryFactory(), pJsonValue);
 		case SKILL:
-			return UtilJson.toEnumWithName(SkillFactory.getInstance(), pJsonValue);
+			return UtilJson.toEnumWithName(game.getRules().getSkillFactory(), pJsonValue);
 		case STRING:
 			return pJsonValue.asString();
 		case TRACK_NUMBER:
-			return new TrackNumber().initFrom(pJsonValue);
+			return new TrackNumber().initFrom(game, pJsonValue);
 		case TURN_MODE:
 			return UtilJson.toEnumWithName(new TurnModeFactory(), pJsonValue);
 		case WEATHER:

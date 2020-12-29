@@ -307,14 +307,14 @@ public class StepInitMoving extends AbstractStep {
 	}
 
 	@Override
-	public StepInitMoving initFrom(JsonValue pJsonValue) {
-		super.initFrom(pJsonValue);
+	public StepInitMoving initFrom(Game game, JsonValue pJsonValue) {
+		super.initFrom(game, pJsonValue);
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		fGotoLabelOnEnd = IServerJsonOption.GOTO_LABEL_ON_END.getFrom(jsonObject);
-		fMoveStack = IServerJsonOption.MOVE_STACK.getFrom(jsonObject);
-		fGazeVictimId = IServerJsonOption.GAZE_VICTIM_ID.getFrom(jsonObject);
-		fEndTurn = IServerJsonOption.END_TURN.getFrom(jsonObject);
-		fEndPlayerAction = IServerJsonOption.END_PLAYER_ACTION.getFrom(jsonObject);
+		fGotoLabelOnEnd = IServerJsonOption.GOTO_LABEL_ON_END.getFrom(game, jsonObject);
+		fMoveStack = IServerJsonOption.MOVE_STACK.getFrom(game, jsonObject);
+		fGazeVictimId = IServerJsonOption.GAZE_VICTIM_ID.getFrom(game, jsonObject);
+		fEndTurn = IServerJsonOption.END_TURN.getFrom(game, jsonObject);
+		fEndPlayerAction = IServerJsonOption.END_PLAYER_ACTION.getFrom(game, jsonObject);
 		return this;
 	}
 

@@ -2,6 +2,7 @@ package com.balancedbytes.games.ffb.report;
 
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
+import com.balancedbytes.games.ffb.model.Game;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
@@ -67,13 +68,13 @@ public class ReportFanFactorRoll implements IReport {
 		return jsonObject;
 	}
 
-	public ReportFanFactorRoll initFrom(JsonValue pJsonValue) {
+	public ReportFanFactorRoll initFrom(Game game, JsonValue pJsonValue) {
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(jsonObject));
-		fFanFactorRollHome = IJsonOption.FAN_FACTOR_ROLL_HOME.getFrom(jsonObject);
-		fFanFactorModifierHome = IJsonOption.FAN_FACTOR_MODIFIER_HOME.getFrom(jsonObject);
-		fFanFactorRollAway = IJsonOption.FAN_FACTOR_ROLL_AWAY.getFrom(jsonObject);
-		fFanFactorModifierAway = IJsonOption.FAN_FACTOR_MODIFIER_AWAY.getFrom(jsonObject);
+		UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(game, jsonObject));
+		fFanFactorRollHome = IJsonOption.FAN_FACTOR_ROLL_HOME.getFrom(game, jsonObject);
+		fFanFactorModifierHome = IJsonOption.FAN_FACTOR_MODIFIER_HOME.getFrom(game, jsonObject);
+		fFanFactorRollAway = IJsonOption.FAN_FACTOR_ROLL_AWAY.getFrom(game, jsonObject);
+		fFanFactorModifierAway = IJsonOption.FAN_FACTOR_MODIFIER_AWAY.getFrom(game, jsonObject);
 		return this;
 	}
 

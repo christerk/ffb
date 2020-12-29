@@ -1,6 +1,8 @@
 package com.balancedbytes.games.ffb.skill;
 
+import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.SkillCategory;
+import com.balancedbytes.games.ffb.RulesCollection.Rules;
 import com.balancedbytes.games.ffb.model.Skill;
 import com.balancedbytes.games.ffb.model.SkillConstants;
 import com.balancedbytes.games.ffb.model.modifier.CancelSkillProperty;
@@ -12,6 +14,7 @@ import com.balancedbytes.games.ffb.model.modifier.CancelSkillProperty;
  * choose to treat a "Both Down" result as if a "Pushed" result has been rolled
  * instead.
  */
+@RulesCollection(Rules.All)
 public class Juggernaut extends Skill {
 
 	public Juggernaut() {

@@ -1,5 +1,6 @@
 package com.balancedbytes.games.ffb.json;
 
+import com.balancedbytes.games.ffb.model.Game;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
@@ -13,7 +14,7 @@ public class JsonIntOption extends JsonAbstractOption {
 		super(pKey);
 	}
 
-	public int getFrom(JsonObject pJsonObject) {
+	public int getFrom(Game game, JsonObject pJsonObject) {
 		JsonValue value = getValueFrom(pJsonObject);
 		if ((value == null) || value.isNull()) {
 			return 0;

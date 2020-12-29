@@ -38,7 +38,7 @@ public class CommandServlet extends WebSocketServlet implements WebSocketCreator
 		if (StringTool.isProvided(commandCompressionProperty)) {
 			commandCompression = Boolean.parseBoolean(commandCompressionProperty);
 		}
-		return new CommandSocket(fServer.getCommunication(), commandCompression);
+		return new CommandSocket(fServer, commandCompression);
 	}
 
 }

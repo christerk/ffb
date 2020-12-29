@@ -61,7 +61,7 @@ public class TeamCache {
 			try (BufferedReader xmlIn = new BufferedReader(new FileReader(file))) {
 				InputSource xmlSource = new InputSource(xmlIn);
 				Team team = new Team();
-				XmlHandler.parse(xmlSource, team);
+				XmlHandler.parse(null, xmlSource, team);
 				for (Player player : team.getPlayers()) {
 					player.setTeam(team);
 				}

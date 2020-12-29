@@ -120,11 +120,11 @@ public final class StepAnimosity extends AbstractStepWithReRoll {
 	}
 
 	@Override
-	public StepAnimosity initFrom(JsonValue pJsonValue) {
-		super.initFrom(pJsonValue);
+	public StepAnimosity initFrom(Game game, JsonValue pJsonValue) {
+		super.initFrom(game, pJsonValue);
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		state.gotoLabelOnFailure = IServerJsonOption.GOTO_LABEL_ON_FAILURE.getFrom(jsonObject);
-		state.catcherId = IServerJsonOption.CATCHER_ID.getFrom(jsonObject);
+		state.gotoLabelOnFailure = IServerJsonOption.GOTO_LABEL_ON_FAILURE.getFrom(game, jsonObject);
+		state.catcherId = IServerJsonOption.CATCHER_ID.getFrom(game, jsonObject);
 		return this;
 	}
 

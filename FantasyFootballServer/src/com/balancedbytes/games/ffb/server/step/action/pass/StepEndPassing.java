@@ -8,7 +8,6 @@ import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.GameResult;
 import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.model.PlayerResult;
-import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.IServerJsonOption;
 import com.balancedbytes.games.ffb.server.step.AbstractStep;
@@ -20,7 +19,6 @@ import com.balancedbytes.games.ffb.server.step.StepParameterKey;
 import com.balancedbytes.games.ffb.server.step.UtilServerSteps;
 import com.balancedbytes.games.ffb.server.util.UtilServerDialog;
 import com.balancedbytes.games.ffb.util.StringTool;
-import com.balancedbytes.games.ffb.util.UtilCards;
 import com.balancedbytes.games.ffb.util.UtilPlayer;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
@@ -204,16 +202,16 @@ public final class StepEndPassing extends AbstractStep {
 	}
 
 	@Override
-	public StepEndPassing initFrom(JsonValue pJsonValue) {
-		super.initFrom(pJsonValue);
+	public StepEndPassing initFrom(Game game, JsonValue pJsonValue) {
+		super.initFrom(game, pJsonValue);
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		fInterceptorId = IServerJsonOption.INTERCEPTOR_ID.getFrom(jsonObject);
-		fCatcherId = IServerJsonOption.CATCHER_ID.getFrom(jsonObject);
-		fPassAccurate = IServerJsonOption.PASS_ACCURATE.getFrom(jsonObject);
-		fPassFumble = IServerJsonOption.PASS_FUMBLE.getFrom(jsonObject);
-		fEndTurn = IServerJsonOption.END_TURN.getFrom(jsonObject);
-		fEndPlayerAction = IServerJsonOption.END_PLAYER_ACTION.getFrom(jsonObject);
-		dontDropFumble = IServerJsonOption.DONT_DROP_FUMBLE.getFrom(jsonObject);
+		fInterceptorId = IServerJsonOption.INTERCEPTOR_ID.getFrom(game, jsonObject);
+		fCatcherId = IServerJsonOption.CATCHER_ID.getFrom(game, jsonObject);
+		fPassAccurate = IServerJsonOption.PASS_ACCURATE.getFrom(game, jsonObject);
+		fPassFumble = IServerJsonOption.PASS_FUMBLE.getFrom(game, jsonObject);
+		fEndTurn = IServerJsonOption.END_TURN.getFrom(game, jsonObject);
+		fEndPlayerAction = IServerJsonOption.END_PLAYER_ACTION.getFrom(game, jsonObject);
+		dontDropFumble = IServerJsonOption.DONT_DROP_FUMBLE.getFrom(game, jsonObject);
 		return this;
 	}
 

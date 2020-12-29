@@ -3,6 +3,7 @@ package com.balancedbytes.games.ffb;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.IJsonSerializable;
 import com.balancedbytes.games.ffb.json.UtilJson;
+import com.balancedbytes.games.ffb.model.Game;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
@@ -75,11 +76,11 @@ public class PlayerMarker implements IJsonSerializable {
 		return jsonObject;
 	}
 
-	public PlayerMarker initFrom(JsonValue pJsonValue) {
+	public PlayerMarker initFrom(Game game, JsonValue pJsonValue) {
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		fPlayerId = IJsonOption.PLAYER_ID.getFrom(jsonObject);
-		fHomeText = IJsonOption.HOME_TEXT.getFrom(jsonObject);
-		fAwayText = IJsonOption.AWAY_TEXT.getFrom(jsonObject);
+		fPlayerId = IJsonOption.PLAYER_ID.getFrom(game, jsonObject);
+		fHomeText = IJsonOption.HOME_TEXT.getFrom(game, jsonObject);
+		fAwayText = IJsonOption.AWAY_TEXT.getFrom(game, jsonObject);
 		return this;
 	}
 

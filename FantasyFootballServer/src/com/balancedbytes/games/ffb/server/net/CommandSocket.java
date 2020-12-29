@@ -9,8 +9,11 @@ import org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
 
 import com.balancedbytes.games.ffb.json.LZString;
+import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.net.NetCommand;
 import com.balancedbytes.games.ffb.net.NetCommandFactory;
+import com.balancedbytes.games.ffb.server.FantasyFootballServer;
+import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.handler.IReceivedCommandHandler;
 import com.balancedbytes.games.ffb.server.net.commands.InternalServerCommandSocketClosed;
 import com.eclipsesource.json.JsonValue;
@@ -25,9 +28,11 @@ public class CommandSocket {
 	private IReceivedCommandHandler fCommandHandler;
 	private NetCommandFactory fNetCommandFactory;
 	private boolean fCommandCompression;
+	private FantasyFootballServer server;
 
-	public CommandSocket(IReceivedCommandHandler pCommandHandler, boolean commandCompression) {
-		fCommandHandler = pCommandHandler;
+	public CommandSocket(FantasyFootballServer server, boolean commandCompression) {
+		this.server = server;
+		fCommandHandler = server.getCommunication();
 		fNetCommandFactory = new NetCommandFactory();
 		fCommandCompression = commandCompression;
 	}
@@ -48,7 +53,10 @@ public class CommandSocket {
 			String decompressed = fCommandCompression ? LZString.decompressFromUTF16(pTextMessage) : pTextMessage;
 			JsonValue jsonValue = JsonValue.readFrom(decompressed);
 
-			NetCommand netCommand = fNetCommandFactory.forJsonValue(jsonValue);
+			long gameId = server.getSessionManager().getGameIdForSession(pSession);
+			GameState gameState = server.getGameCache().getGameStateById(gameId);
+			Game game = gameState != null ? gameState.getGame() : null;
+			NetCommand netCommand = fNetCommandFactory.forJsonValue(game, jsonValue);
 			if (netCommand == null) {
 				return;
 			}

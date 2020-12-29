@@ -2,6 +2,7 @@ package com.balancedbytes.games.ffb.net.commands;
 
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
+import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.net.NetCommandId;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
@@ -45,11 +46,11 @@ public class ClientCommandHandOver extends ClientCommand implements ICommandWith
 		return jsonObject;
 	}
 
-	public ClientCommandHandOver initFrom(JsonValue jsonValue) {
-		super.initFrom(jsonValue);
+	public ClientCommandHandOver initFrom(Game game, JsonValue jsonValue) {
+		super.initFrom(game, jsonValue);
 		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
-		fActingPlayerId = IJsonOption.ACTING_PLAYER_ID.getFrom(jsonObject);
-		fCatcherId = IJsonOption.CATCHER_ID.getFrom(jsonObject);
+		fActingPlayerId = IJsonOption.ACTING_PLAYER_ID.getFrom(game, jsonObject);
+		fCatcherId = IJsonOption.CATCHER_ID.getFrom(game, jsonObject);
 		return this;
 	}
 

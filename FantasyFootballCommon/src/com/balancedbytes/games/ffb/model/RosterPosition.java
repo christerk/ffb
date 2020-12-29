@@ -12,13 +12,14 @@ import javax.xml.transform.sax.TransformerHandler;
 import org.xml.sax.Attributes;
 import org.xml.sax.helpers.AttributesImpl;
 
+import com.balancedbytes.games.ffb.FactoryType.Factory;
 import com.balancedbytes.games.ffb.PlayerGender;
-import com.balancedbytes.games.ffb.PlayerGenderFactory;
 import com.balancedbytes.games.ffb.PlayerType;
-import com.balancedbytes.games.ffb.PlayerTypeFactory;
 import com.balancedbytes.games.ffb.SkillCategory;
-import com.balancedbytes.games.ffb.SkillCategoryFactory;
-import com.balancedbytes.games.ffb.SkillFactory;
+import com.balancedbytes.games.ffb.factory.PlayerGenderFactory;
+import com.balancedbytes.games.ffb.factory.PlayerTypeFactory;
+import com.balancedbytes.games.ffb.factory.SkillCategoryFactory;
+import com.balancedbytes.games.ffb.factory.SkillFactory;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.util.ArrayTool;
@@ -433,7 +434,7 @@ public class RosterPosition implements Position {
 		return this;
 	}
 
-	public boolean endXmlElement(String pTag, String pValue) {
+	public boolean endXmlElement(Game game, String pTag, String pValue) {
 		boolean complete = XML_TAG.equals(pTag);
 		if (complete) {
 			// set a default shortcut if it is missing
@@ -445,7 +446,7 @@ public class RosterPosition implements Position {
 				fInsideSkillListTag = false;
 			}
 			if (_XML_TAG_SKILL.equals(pTag)) {
-				Skill skill = SkillFactory.getInstance().forName(pValue);
+				Skill skill = game.getRules().<SkillFactory>getFactory(Factory.skill).forName(pValue);
 				if (skill != null) {
 					fSkillValues.put(skill, fCurrentSkillValue);
 				}
@@ -585,52 +586,52 @@ public class RosterPosition implements Position {
 
 	}
 
-	public RosterPosition initFrom(JsonValue pJsonValue) {
+	public RosterPosition initFrom(Game game, JsonValue pJsonValue) {
 
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
 
-		fId = IJsonOption.POSITION_ID.getFrom(jsonObject);
-		fName = IJsonOption.POSITION_NAME.getFrom(jsonObject);
-		fShorthand = IJsonOption.SHORTHAND.getFrom(jsonObject);
-		fDisplayName = IJsonOption.DISPLAY_NAME.getFrom(jsonObject);
-		fType = (PlayerType) IJsonOption.PLAYER_TYPE.getFrom(jsonObject);
-		fGender = (PlayerGender) IJsonOption.PLAYER_GENDER.getFrom(jsonObject);
-		fQuantity = IJsonOption.QUANTITY.getFrom(jsonObject);
-		fMovement = IJsonOption.MOVEMENT.getFrom(jsonObject);
-		fStrength = IJsonOption.STRENGTH.getFrom(jsonObject);
-		fAgility = IJsonOption.AGILITY.getFrom(jsonObject);
-		fArmour = IJsonOption.ARMOUR.getFrom(jsonObject);
-		fCost = IJsonOption.COST.getFrom(jsonObject);
-		fRace = IJsonOption.RACE.getFrom(jsonObject);
-		fUndead = IJsonOption.UNDEAD.getFrom(jsonObject);
-		fThrall = IJsonOption.THRALL.getFrom(jsonObject);
-		fTeamWithPositionId = IJsonOption.TEAM_WITH_POSITION_ID.getFrom(jsonObject);
-		nameGenerator = IJsonOption.NAME_GENERATOR.getFrom(jsonObject);
+		fId = IJsonOption.POSITION_ID.getFrom(game, jsonObject);
+		fName = IJsonOption.POSITION_NAME.getFrom(game, jsonObject);
+		fShorthand = IJsonOption.SHORTHAND.getFrom(game, jsonObject);
+		fDisplayName = IJsonOption.DISPLAY_NAME.getFrom(game, jsonObject);
+		fType = (PlayerType) IJsonOption.PLAYER_TYPE.getFrom(game, jsonObject);
+		fGender = (PlayerGender) IJsonOption.PLAYER_GENDER.getFrom(game, jsonObject);
+		fQuantity = IJsonOption.QUANTITY.getFrom(game, jsonObject);
+		fMovement = IJsonOption.MOVEMENT.getFrom(game, jsonObject);
+		fStrength = IJsonOption.STRENGTH.getFrom(game, jsonObject);
+		fAgility = IJsonOption.AGILITY.getFrom(game, jsonObject);
+		fArmour = IJsonOption.ARMOUR.getFrom(game, jsonObject);
+		fCost = IJsonOption.COST.getFrom(game, jsonObject);
+		fRace = IJsonOption.RACE.getFrom(game, jsonObject);
+		fUndead = IJsonOption.UNDEAD.getFrom(game, jsonObject);
+		fThrall = IJsonOption.THRALL.getFrom(game, jsonObject);
+		fTeamWithPositionId = IJsonOption.TEAM_WITH_POSITION_ID.getFrom(game, jsonObject);
+		nameGenerator = IJsonOption.NAME_GENERATOR.getFrom(game, jsonObject);
 
-		fUrlPortrait = IJsonOption.URL_PORTRAIT.getFrom(jsonObject);
-		fUrlIconSet = IJsonOption.URL_ICON_SET.getFrom(jsonObject);
-		fNrOfIcons = IJsonOption.NR_OF_ICONS.getFrom(jsonObject);
+		fUrlPortrait = IJsonOption.URL_PORTRAIT.getFrom(game, jsonObject);
+		fUrlIconSet = IJsonOption.URL_ICON_SET.getFrom(game, jsonObject);
+		fNrOfIcons = IJsonOption.NR_OF_ICONS.getFrom(game, jsonObject);
 
 		SkillCategoryFactory skillCategoryFactory = new SkillCategoryFactory();
 
 		fSkillCategoriesOnNormalRoll.clear();
-		JsonArray skillCategoriesNormal = IJsonOption.SKILL_CATEGORIES_NORMAL.getFrom(jsonObject);
+		JsonArray skillCategoriesNormal = IJsonOption.SKILL_CATEGORIES_NORMAL.getFrom(game, jsonObject);
 		for (int i = 0; i < skillCategoriesNormal.size(); i++) {
 			fSkillCategoriesOnNormalRoll
 					.add((SkillCategory) UtilJson.toEnumWithName(skillCategoryFactory, skillCategoriesNormal.get(i)));
 		}
 		fSkillCategoriesOnDoubleRoll.clear();
-		JsonArray skillCategoriesDouble = IJsonOption.SKILL_CATEGORIES_DOUBLE.getFrom(jsonObject);
+		JsonArray skillCategoriesDouble = IJsonOption.SKILL_CATEGORIES_DOUBLE.getFrom(game, jsonObject);
 		for (int i = 0; i < skillCategoriesDouble.size(); i++) {
 			fSkillCategoriesOnDoubleRoll
 					.add((SkillCategory) UtilJson.toEnumWithName(skillCategoryFactory, skillCategoriesDouble.get(i)));
 		}
 
 		fSkillValues.clear();
-		JsonArray skillArray = IJsonOption.SKILL_ARRAY.getFrom(jsonObject);
-		int[] skillValues = IJsonOption.SKILL_VALUES.getFrom(jsonObject);
+		JsonArray skillArray = IJsonOption.SKILL_ARRAY.getFrom(game, jsonObject);
+		int[] skillValues = IJsonOption.SKILL_VALUES.getFrom(game, jsonObject);
 		if ((skillArray != null) && (skillArray.size() > 0) && ArrayTool.isProvided(skillValues)) {
-			SkillFactory skillFactory = SkillFactory.getInstance();
+			SkillFactory skillFactory = game.getRules().getSkillFactory();
 			for (int i = 0; i < skillArray.size(); i++) {
 				Skill skill = (Skill) UtilJson.toEnumWithName(skillFactory, skillArray.get(i));
 				fSkillValues.put(skill, skillValues[i]);

@@ -23,8 +23,8 @@ import org.xml.sax.helpers.AttributesImpl;
 
 import com.balancedbytes.games.ffb.FantasyFootballException;
 import com.balancedbytes.games.ffb.GameStatus;
-import com.balancedbytes.games.ffb.GameStatusFactory;
 import com.balancedbytes.games.ffb.PasswordChallenge;
+import com.balancedbytes.games.ffb.factory.GameStatusFactory;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.server.FantasyFootballServer;
 import com.balancedbytes.games.ffb.server.GameState;

@@ -60,8 +60,8 @@ public final class StepInitKickoff extends AbstractStep {
 	// JSON serialization
 
 	@Override
-	public StepInitKickoff initFrom(JsonValue pJsonValue) {
-		super.initFrom(pJsonValue);
+	public StepInitKickoff initFrom(Game game, JsonValue pJsonValue) {
+		super.initFrom(game, pJsonValue);
 		return this;
 	}
 

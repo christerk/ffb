@@ -4,7 +4,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 import com.balancedbytes.games.ffb.PlayerAction;
-import com.balancedbytes.games.ffb.SkillFactory;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.IJsonSerializable;
 import com.balancedbytes.games.ffb.json.UtilJson;
@@ -319,25 +318,25 @@ public class ActingPlayer implements IJsonSerializable {
 		return jsonObject;
 	}
 
-	public ActingPlayer initFrom(JsonValue pJsonValue) {
+	public ActingPlayer initFrom(Game game, JsonValue pJsonValue) {
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		fPlayerId = IJsonOption.PLAYER_ID.getFrom(jsonObject);
-		fCurrentMove = IJsonOption.CURRENT_MOVE.getFrom(jsonObject);
-		fGoingForIt = IJsonOption.GOING_FOR_IT.getFrom(jsonObject);
-		fHasBlocked = IJsonOption.HAS_BLOCKED.getFrom(jsonObject);
-		fHasFed = IJsonOption.HAS_FED.getFrom(jsonObject);
-		fHasFouled = IJsonOption.HAS_FOULED.getFrom(jsonObject);
-		fHasMoved = IJsonOption.HAS_MOVED.getFrom(jsonObject);
-		fHasPassed = IJsonOption.HAS_PASSED.getFrom(jsonObject);
-		fPlayerAction = (PlayerAction) IJsonOption.PLAYER_ACTION.getFrom(jsonObject);
-		fStandingUp = IJsonOption.STANDING_UP.getFrom(jsonObject);
-		fSufferingAnimosity = IJsonOption.SUFFERING_ANIMOSITY.getFrom(jsonObject);
-		fSufferingBloodLust = IJsonOption.SUFFERING_BLOODLUST.getFrom(jsonObject);
-		JsonArray usedSkillsArray = IJsonOption.USED_SKILLS.getFrom(jsonObject);
+		fPlayerId = IJsonOption.PLAYER_ID.getFrom(game, jsonObject);
+		fCurrentMove = IJsonOption.CURRENT_MOVE.getFrom(game, jsonObject);
+		fGoingForIt = IJsonOption.GOING_FOR_IT.getFrom(game, jsonObject);
+		fHasBlocked = IJsonOption.HAS_BLOCKED.getFrom(game, jsonObject);
+		fHasFed = IJsonOption.HAS_FED.getFrom(game, jsonObject);
+		fHasFouled = IJsonOption.HAS_FOULED.getFrom(game, jsonObject);
+		fHasMoved = IJsonOption.HAS_MOVED.getFrom(game, jsonObject);
+		fHasPassed = IJsonOption.HAS_PASSED.getFrom(game, jsonObject);
+		fPlayerAction = (PlayerAction) IJsonOption.PLAYER_ACTION.getFrom(game, jsonObject);
+		fStandingUp = IJsonOption.STANDING_UP.getFrom(game, jsonObject);
+		fSufferingAnimosity = IJsonOption.SUFFERING_ANIMOSITY.getFrom(game, jsonObject);
+		fSufferingBloodLust = IJsonOption.SUFFERING_BLOODLUST.getFrom(game, jsonObject);
+		JsonArray usedSkillsArray = IJsonOption.USED_SKILLS.getFrom(game, jsonObject);
 		fUsedSkills.clear();
 		if (usedSkillsArray != null) {
 			for (int i = 0; i < usedSkillsArray.size(); i++) {
-				fUsedSkills.add((Skill) UtilJson.toEnumWithName(SkillFactory.getInstance(), usedSkillsArray.get(i)));
+				fUsedSkills.add((Skill) UtilJson.toEnumWithName(fGame.getRules().getSkillFactory(), usedSkillsArray.get(i)));
 			}
 		}
 		return this;

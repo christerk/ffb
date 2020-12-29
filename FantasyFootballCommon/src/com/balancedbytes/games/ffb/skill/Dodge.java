@@ -2,7 +2,9 @@ package com.balancedbytes.games.ffb.skill;
 
 import com.balancedbytes.games.ffb.ReRollSources;
 import com.balancedbytes.games.ffb.ReRolledActions;
+import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.SkillCategory;
+import com.balancedbytes.games.ffb.RulesCollection.Rules;
 import com.balancedbytes.games.ffb.model.Skill;
 import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
 
@@ -14,6 +16,7 @@ import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
  * rolled on the Block dice, as explained in the Blocking rules in the Blood
  * Bowl book.
  */
+@RulesCollection(Rules.All)
 public class Dodge extends Skill {
 
 	public Dodge() {

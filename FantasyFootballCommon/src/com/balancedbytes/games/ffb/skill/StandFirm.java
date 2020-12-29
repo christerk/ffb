@@ -1,6 +1,8 @@
 package com.balancedbytes.games.ffb.skill;
 
+import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.SkillCategory;
+import com.balancedbytes.games.ffb.RulesCollection.Rules;
 import com.balancedbytes.games.ffb.model.Skill;
 
 /**
@@ -10,6 +12,7 @@ import com.balancedbytes.games.ffb.model.Skill;
  * a player is pushed back into a player with using Stand Firm then neither
  * player moves.
  */
+@RulesCollection(Rules.All)
 public class StandFirm extends Skill {
 
 	public StandFirm() {

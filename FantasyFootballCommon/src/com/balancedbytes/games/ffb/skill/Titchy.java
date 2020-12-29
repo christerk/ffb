@@ -1,7 +1,9 @@
 package com.balancedbytes.games.ffb.skill;
 
 import com.balancedbytes.games.ffb.DodgeModifiers;
+import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.SkillCategory;
+import com.balancedbytes.games.ffb.RulesCollection.Rules;
 import com.balancedbytes.games.ffb.model.Skill;
 import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
 
@@ -12,6 +14,7 @@ import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
  * a Titchy player's tackle zones, Titchy players are so small that they do not
  * exert a -1 modifier when opponents dodge into any of their tackle zones.
  */
+@RulesCollection(Rules.All)
 public class Titchy extends Skill {
 
 	public Titchy() {

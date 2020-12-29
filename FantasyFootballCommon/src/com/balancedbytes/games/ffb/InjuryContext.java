@@ -3,6 +3,8 @@ package com.balancedbytes.games.ffb;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.balancedbytes.games.ffb.factory.InjuryModifierFactory;
+
 public class InjuryContext {
 	public InjuryType fInjuryType;
 	public String fDefenderId;

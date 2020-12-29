@@ -1,7 +1,11 @@
 package com.balancedbytes.games.ffb.json;
 
+import com.balancedbytes.games.ffb.FactoryType.Factory;
+import com.balancedbytes.games.ffb.factory.INamedObjectFactory;
 import com.balancedbytes.games.ffb.INamedObject;
-import com.balancedbytes.games.ffb.INamedObjectFactory;
+import com.balancedbytes.games.ffb.model.Game;
+import com.balancedbytes.games.ffb.model.GameOptions;
+import com.balancedbytes.games.ffb.model.GameRules;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
@@ -11,29 +15,28 @@ import com.eclipsesource.json.JsonValue;
  */
 public class JsonEnumWithNameOption extends JsonAbstractOption {
 
-	private INamedObjectFactory fFactory;
-
-	public JsonEnumWithNameOption(String pKey, INamedObjectFactory pFactory) {
+	private static GameRules defaultRules;
+	private Factory factory;
+	
+	public JsonEnumWithNameOption(String pKey, Factory factory) {
 		super(pKey);
-		fFactory = pFactory;
-		if (fFactory == null) {
-			throw new IllegalArgumentException("Parameter factory must not be null.");
-		}
+		
+		this.factory = factory;
 	}
 
-	public INamedObject getFrom(JsonObject pJsonObject) {
-		return asEnumWithName(getValueFrom(pJsonObject));
+	public INamedObject getFrom(Game game, JsonObject pJsonObject) {
+		return asEnumWithName(game, getValueFrom(pJsonObject));
 	}
 
 	public void addTo(JsonObject pJsonObject, INamedObject pValue) {
 		addValueTo(pJsonObject, asJsonValue(pValue));
 	}
 
-	private INamedObject asEnumWithName(JsonValue pJsonValue) {
+	private INamedObject asEnumWithName(Game game, JsonValue pJsonValue) {
 		if ((pJsonValue == null) || pJsonValue.isNull()) {
 			return null;
 		}
-		return fFactory.forName(pJsonValue.asString());
+		return getFactory(game).forName(pJsonValue.asString());
 	}
 
 	private JsonValue asJsonValue(INamedObject pEnumWithName) {
@@ -43,4 +46,24 @@ public class JsonEnumWithNameOption extends JsonAbstractOption {
 		return JsonValue.valueOf(pEnumWithName.getName());
 	}
 
+	@SuppressWarnings("unchecked")
+	private <T extends INamedObjectFactory> T getFactory(Game game) {
+		GameRules rules = null;
+		if (game != null) {
+			rules = game.getRules(); 
+		}
+		if (rules == null) {
+			rules = getDefaultRules();
+		}
+		return (T) rules.getFactory(factory);
+	}
+
+	private GameRules getDefaultRules() {
+		if (defaultRules == null) {
+			defaultRules = new GameRules(new GameOptions(null)); 
+		}
+		
+		return defaultRules;
+	}
+	
 }

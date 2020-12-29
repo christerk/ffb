@@ -346,7 +346,7 @@ public class BackupServlet extends HttpServlet {
 			if ("DATA".equals(msgType)) {
 				try {
 					GameState gameState = new GameState(fServer);
-					gameState.initFrom(UtilJson.gunzip(data));
+					gameState.initFrom(gameState.getGame(), UtilJson.gunzip(data));
 					return gameState;
 				} catch (IOException ioE) {
 					fServer.getDebugLog().log(gameId, ioE);

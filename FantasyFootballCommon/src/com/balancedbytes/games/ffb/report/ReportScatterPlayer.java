@@ -4,10 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.balancedbytes.games.ffb.Direction;
-import com.balancedbytes.games.ffb.DirectionFactory;
 import com.balancedbytes.games.ffb.FieldCoordinate;
+import com.balancedbytes.games.ffb.factory.DirectionFactory;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
+import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.util.ArrayTool;
 import com.eclipsesource.json.JsonArray;
 import com.eclipsesource.json.JsonObject;
@@ -111,18 +112,18 @@ public class ReportScatterPlayer implements IReport {
 		return jsonObject;
 	}
 
-	public ReportScatterPlayer initFrom(JsonValue pJsonValue) {
+	public ReportScatterPlayer initFrom(Game game, JsonValue pJsonValue) {
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(jsonObject));
-		fStartCoordinate = IJsonOption.START_COORDINATE.getFrom(jsonObject);
-		fEndCoordinate = IJsonOption.END_COORDINATE.getFrom(jsonObject);
-		JsonArray directionArray = IJsonOption.DIRECTION_ARRAY.getFrom(jsonObject);
+		UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(game, jsonObject));
+		fStartCoordinate = IJsonOption.START_COORDINATE.getFrom(game, jsonObject);
+		fEndCoordinate = IJsonOption.END_COORDINATE.getFrom(game, jsonObject);
+		JsonArray directionArray = IJsonOption.DIRECTION_ARRAY.getFrom(game, jsonObject);
 		if (directionArray != null) {
 			for (int i = 0; i < directionArray.size(); i++) {
 				addDirection((Direction) UtilJson.toEnumWithName(new DirectionFactory(), directionArray.get(i)));
 			}
 		}
-		addRolls(IJsonOption.ROLLS.getFrom(jsonObject));
+		addRolls(IJsonOption.ROLLS.getFrom(game, jsonObject));
 		return this;
 	}
 

@@ -90,8 +90,8 @@ public final class StepSpectators extends AbstractStep {
 	}
 
 	@Override
-	public StepSpectators initFrom(JsonValue pJsonValue) {
-		super.initFrom(pJsonValue);
+	public StepSpectators initFrom(Game game, JsonValue pJsonValue) {
+		super.initFrom(game, pJsonValue);
 		return this;
 	}
 

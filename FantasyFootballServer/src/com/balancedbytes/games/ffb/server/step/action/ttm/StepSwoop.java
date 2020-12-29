@@ -227,16 +227,16 @@ public class StepSwoop extends AbstractStep {
 	}
 
 	@Override
-	public StepSwoop initFrom(JsonValue pJsonValue) {
-		super.initFrom(pJsonValue);
+	public StepSwoop initFrom(Game game, JsonValue pJsonValue) {
+		super.initFrom(game, pJsonValue);
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		state.thrownPlayerId = IServerJsonOption.THROWN_PLAYER_ID.getFrom(jsonObject);
-		state.thrownPlayerState = IServerJsonOption.THROWN_PLAYER_STATE.getFrom(jsonObject);
-		state.thrownPlayerHasBall = IServerJsonOption.THROWN_PLAYER_HAS_BALL.getFrom(jsonObject);
-		state.thrownPlayerCoordinate = IServerJsonOption.THROWN_PLAYER_COORDINATE.getFrom(jsonObject);
-		state.throwScatter = IServerJsonOption.THROW_SCATTER.getFrom(jsonObject);
-		state.coordinateFrom = IServerJsonOption.COORDINATE_FROM.getFrom(jsonObject);
-		state.coordinateTo = IServerJsonOption.COORDINATE_TO.getFrom(jsonObject);
+		state.thrownPlayerId = IServerJsonOption.THROWN_PLAYER_ID.getFrom(game, jsonObject);
+		state.thrownPlayerState = IServerJsonOption.THROWN_PLAYER_STATE.getFrom(game, jsonObject);
+		state.thrownPlayerHasBall = IServerJsonOption.THROWN_PLAYER_HAS_BALL.getFrom(game, jsonObject);
+		state.thrownPlayerCoordinate = IServerJsonOption.THROWN_PLAYER_COORDINATE.getFrom(game, jsonObject);
+		state.throwScatter = IServerJsonOption.THROW_SCATTER.getFrom(game, jsonObject);
+		state.coordinateFrom = IServerJsonOption.COORDINATE_FROM.getFrom(game, jsonObject);
+		state.coordinateTo = IServerJsonOption.COORDINATE_TO.getFrom(game, jsonObject);
 		return this;
 	}
 

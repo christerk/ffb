@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
+import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.net.NetCommandId;
 import com.balancedbytes.games.ffb.util.ArrayTool;
 import com.balancedbytes.games.ffb.util.StringTool;
@@ -64,11 +65,11 @@ public class ServerCommandAdminMessage extends ServerCommand {
 		return jsonObject;
 	}
 
-	public ServerCommandAdminMessage initFrom(JsonValue pJsonValue) {
+	public ServerCommandAdminMessage initFrom(Game game, JsonValue pJsonValue) {
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		UtilNetCommand.validateCommandId(this, (NetCommandId) IJsonOption.NET_COMMAND_ID.getFrom(jsonObject));
-		setCommandNr(IJsonOption.COMMAND_NR.getFrom(jsonObject));
-		addMessages(IJsonOption.MESSAGE_ARRAY.getFrom(jsonObject));
+		UtilNetCommand.validateCommandId(this, (NetCommandId) IJsonOption.NET_COMMAND_ID.getFrom(game, jsonObject));
+		setCommandNr(IJsonOption.COMMAND_NR.getFrom(game, jsonObject));
+		addMessages(IJsonOption.MESSAGE_ARRAY.getFrom(game, jsonObject));
 		return this;
 	}
 

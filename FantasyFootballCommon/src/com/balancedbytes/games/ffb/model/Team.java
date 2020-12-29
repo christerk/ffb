@@ -359,7 +359,7 @@ public class Team implements IXmlSerializable, IJsonSerializable {
 		return xmlElement;
 	}
 
-	public boolean endXmlElement(String pXmlTag, String pValue) {
+	public boolean endXmlElement(Game game, String pXmlTag, String pValue) {
 		boolean complete = XML_TAG.equals(pXmlTag);
 		if (!complete) {
 			if (_XML_TAG_NAME.equals(pXmlTag)) {
@@ -442,36 +442,36 @@ public class Team implements IXmlSerializable, IJsonSerializable {
 
 	}
 
-	public Team initFrom(JsonValue pJsonValue) {
+	public Team initFrom(Game game, JsonValue pJsonValue) {
 
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
 
-		fId = IJsonOption.TEAM_ID.getFrom(jsonObject);
-		fName = IJsonOption.TEAM_NAME.getFrom(jsonObject);
-		fCoach = IJsonOption.COACH.getFrom(jsonObject);
-		fRace = IJsonOption.RACE.getFrom(jsonObject);
-		fReRolls = IJsonOption.RE_ROLLS.getFrom(jsonObject);
-		fApothecaries = IJsonOption.APOTHECARIES.getFrom(jsonObject);
-		fCheerleaders = IJsonOption.CHEERLEADERS.getFrom(jsonObject);
-		fAssistantCoaches = IJsonOption.ASSISTANT_COACHES.getFrom(jsonObject);
-		fFanFactor = IJsonOption.FAN_FACTOR.getFrom(jsonObject);
-		fTeamValue = IJsonOption.TEAM_VALUE.getFrom(jsonObject);
-		fTreasury = IJsonOption.TREASURY.getFrom(jsonObject);
-		fBaseIconPath = IJsonOption.BASE_ICON_PATH.getFrom(jsonObject);
-		fLogoUrl = IJsonOption.LOGO_URL.getFrom(jsonObject);
+		fId = IJsonOption.TEAM_ID.getFrom(game, jsonObject);
+		fName = IJsonOption.TEAM_NAME.getFrom(game, jsonObject);
+		fCoach = IJsonOption.COACH.getFrom(game, jsonObject);
+		fRace = IJsonOption.RACE.getFrom(game, jsonObject);
+		fReRolls = IJsonOption.RE_ROLLS.getFrom(game, jsonObject);
+		fApothecaries = IJsonOption.APOTHECARIES.getFrom(game, jsonObject);
+		fCheerleaders = IJsonOption.CHEERLEADERS.getFrom(game, jsonObject);
+		fAssistantCoaches = IJsonOption.ASSISTANT_COACHES.getFrom(game, jsonObject);
+		fFanFactor = IJsonOption.FAN_FACTOR.getFrom(game, jsonObject);
+		fTeamValue = IJsonOption.TEAM_VALUE.getFrom(game, jsonObject);
+		fTreasury = IJsonOption.TREASURY.getFrom(game, jsonObject);
+		fBaseIconPath = IJsonOption.BASE_ICON_PATH.getFrom(game, jsonObject);
+		fLogoUrl = IJsonOption.LOGO_URL.getFrom(game, jsonObject);
 
 		fPlayerById.clear();
 		fPlayerByNr.clear();
 
-		JsonArray playerArray = IJsonOption.PLAYER_ARRAY.getFrom(jsonObject);
+		JsonArray playerArray = IJsonOption.PLAYER_ARRAY.getFrom(game, jsonObject);
 		for (int i = 0; i < playerArray.size(); i++) {
-			addPlayer(Player.getFrom(playerArray.get(i)));
+			addPlayer(Player.getFrom(game, playerArray.get(i)));
 		}
 
 		Roster roster = null;
-		JsonObject rosterObject = IJsonOption.ROSTER.getFrom(jsonObject);
+		JsonObject rosterObject = IJsonOption.ROSTER.getFrom(game, jsonObject);
 		if (rosterObject != null) {
-			roster = new Roster().initFrom(rosterObject);
+			roster = new Roster().initFrom(game, rosterObject);
 		}
 		updateRoster(roster);
 

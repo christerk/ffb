@@ -2,6 +2,8 @@ package com.balancedbytes.games.ffb.xml;
 
 import org.xml.sax.Attributes;
 
+import com.balancedbytes.games.ffb.model.Game;
+
 /**
  * 
  * @author Kalimar
@@ -10,6 +12,6 @@ public interface IXmlReadable {
 
 	public IXmlReadable startXmlElement(String pXmlTag, Attributes pXmlAttributes);
 
-	public boolean endXmlElement(String pXmlTag, String pValue);
+	public boolean endXmlElement(Game game, String pXmlTag, String pValue);
 
 }

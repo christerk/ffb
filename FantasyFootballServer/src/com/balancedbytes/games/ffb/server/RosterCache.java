@@ -48,7 +48,7 @@ public class RosterCache {
 			try (BufferedReader xmlIn = new BufferedReader(new FileReader(file))) {
 				InputSource xmlSource = new InputSource(xmlIn);
 				Roster roster = new Roster();
-				XmlHandler.parse(xmlSource, roster);
+				XmlHandler.parse(null, xmlSource, roster);
 				add(roster);
 			} catch (FantasyFootballException pFfe) {
 				throw new FantasyFootballException("Error initializing roster " + file.getAbsolutePath(), pFfe);

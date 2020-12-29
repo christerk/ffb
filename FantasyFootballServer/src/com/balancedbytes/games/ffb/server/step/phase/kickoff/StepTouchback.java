@@ -139,11 +139,11 @@ public final class StepTouchback extends AbstractStep {
 	}
 
 	@Override
-	public StepTouchback initFrom(JsonValue pJsonValue) {
-		super.initFrom(pJsonValue);
+	public StepTouchback initFrom(Game game, JsonValue pJsonValue) {
+		super.initFrom(game, pJsonValue);
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		fTouchback = IServerJsonOption.TOUCHBACK.getFrom(jsonObject);
-		fTouchbackCoordinate = IServerJsonOption.TOUCHBACK_COORDINATE.getFrom(jsonObject);
+		fTouchback = IServerJsonOption.TOUCHBACK.getFrom(game, jsonObject);
+		fTouchbackCoordinate = IServerJsonOption.TOUCHBACK_COORDINATE.getFrom(game, jsonObject);
 		return this;
 	}
 

@@ -95,7 +95,7 @@ public class TeamSetupCache {
 				InputSource xmlSource = new InputSource(xmlIn);
 				TeamSetup setup = new TeamSetup();
 				try {
-					XmlHandler.parse(xmlSource, setup);
+					XmlHandler.parse(null, xmlSource, setup);
 					add(setup);
 				} catch (FantasyFootballException pFfe) {
 					throw new FantasyFootballException("Error on initializing team setup " + file.getAbsolutePath(), pFfe);

@@ -1,6 +1,8 @@
 package com.balancedbytes.games.ffb.skill;
 
+import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.SkillCategory;
+import com.balancedbytes.games.ffb.RulesCollection.Rules;
 import com.balancedbytes.games.ffb.model.Skill;
 import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
 
@@ -10,6 +12,7 @@ import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
  * player is Knocked Down. The opposing player may still continue moving after
  * blocking if he had declared a Blitz Action.
  */
+@RulesCollection(Rules.All)
 public class Fend extends Skill {
 
 	public Fend() {

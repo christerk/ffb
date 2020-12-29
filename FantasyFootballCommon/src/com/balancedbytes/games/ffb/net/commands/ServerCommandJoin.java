@@ -6,6 +6,7 @@ import java.util.List;
 import com.balancedbytes.games.ffb.ClientMode;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
+import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.net.NetCommandId;
 import com.balancedbytes.games.ffb.util.ArrayTool;
 import com.balancedbytes.games.ffb.util.StringTool;
@@ -86,14 +87,14 @@ public class ServerCommandJoin extends ServerCommand {
 		return jsonObject;
 	}
 
-	public ServerCommandJoin initFrom(JsonValue pJsonValue) {
+	public ServerCommandJoin initFrom(Game game, JsonValue pJsonValue) {
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		UtilNetCommand.validateCommandId(this, (NetCommandId) IJsonOption.NET_COMMAND_ID.getFrom(jsonObject));
-		setCommandNr(IJsonOption.COMMAND_NR.getFrom(jsonObject));
-		fCoach = IJsonOption.COACH.getFrom(jsonObject);
-		fClientMode = (ClientMode) IJsonOption.CLIENT_MODE.getFrom(jsonObject);
-		fSpectators = IJsonOption.SPECTATORS.getFrom(jsonObject);
-		addPlayerNames(IJsonOption.PLAYER_NAMES.getFrom(jsonObject));
+		UtilNetCommand.validateCommandId(this, (NetCommandId) IJsonOption.NET_COMMAND_ID.getFrom(game, jsonObject));
+		setCommandNr(IJsonOption.COMMAND_NR.getFrom(game, jsonObject));
+		fCoach = IJsonOption.COACH.getFrom(game, jsonObject);
+		fClientMode = (ClientMode) IJsonOption.CLIENT_MODE.getFrom(game, jsonObject);
+		fSpectators = IJsonOption.SPECTATORS.getFrom(game, jsonObject);
+		addPlayerNames(IJsonOption.PLAYER_NAMES.getFrom(game, jsonObject));
 		return this;
 	}
 

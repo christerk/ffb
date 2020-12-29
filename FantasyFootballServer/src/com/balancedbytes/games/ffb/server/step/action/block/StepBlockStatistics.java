@@ -70,8 +70,8 @@ public class StepBlockStatistics extends AbstractStep {
 	}
 
 	@Override
-	public StepBlockStatistics initFrom(JsonValue pJsonValue) {
-		super.initFrom(pJsonValue);
+	public StepBlockStatistics initFrom(Game game, JsonValue pJsonValue) {
+		super.initFrom(game, pJsonValue);
 		return this;
 	}
 

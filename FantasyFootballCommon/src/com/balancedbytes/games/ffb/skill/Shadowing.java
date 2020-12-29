@@ -1,6 +1,8 @@
 package com.balancedbytes.games.ffb.skill;
 
+import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.SkillCategory;
+import com.balancedbytes.games.ffb.RulesCollection.Rules;
 import com.balancedbytes.games.ffb.model.Skill;
 
 /**
@@ -17,6 +19,7 @@ import com.balancedbytes.games.ffb.model.Skill;
  * the tackle zone of several players that have the Shadowing s kill, then only
  * one of the opposing players may attempt to shadow him.
  */
+@RulesCollection(Rules.All)
 public class Shadowing extends Skill {
 
 	public Shadowing() {

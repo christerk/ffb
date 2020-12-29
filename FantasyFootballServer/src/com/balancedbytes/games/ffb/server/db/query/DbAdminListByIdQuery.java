@@ -8,7 +8,7 @@ import java.sql.Timestamp;
 import java.util.Date;
 
 import com.balancedbytes.games.ffb.FantasyFootballException;
-import com.balancedbytes.games.ffb.GameStatusFactory;
+import com.balancedbytes.games.ffb.factory.GameStatusFactory;
 import com.balancedbytes.games.ffb.server.FantasyFootballServer;
 import com.balancedbytes.games.ffb.server.ServerMode;
 import com.balancedbytes.games.ffb.server.admin.AdminList;

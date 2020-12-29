@@ -25,12 +25,14 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableCellRenderer;
 
+import com.balancedbytes.games.ffb.FactoryType.Factory;
 import com.balancedbytes.games.ffb.Inducement;
 import com.balancedbytes.games.ffb.InducementType;
 import com.balancedbytes.games.ffb.client.FantasyFootballClient;
 import com.balancedbytes.games.ffb.client.PlayerIconFactory;
 import com.balancedbytes.games.ffb.client.dialog.Dialog;
 import com.balancedbytes.games.ffb.dialog.DialogId;
+import com.balancedbytes.games.ffb.factory.SkillFactory;
 import com.balancedbytes.games.ffb.model.GameOptions;
 import com.balancedbytes.games.ffb.model.InducementSet;
 import com.balancedbytes.games.ffb.model.Player;
@@ -230,7 +232,7 @@ public class DialogBuyInducements extends Dialog implements ActionListener, KeyL
 		List<Skill> mercenarySkills = new ArrayList<Skill>();
 		for (int i = 0; i < fTableModelMercenaries.getRowCount(); i++) {
 			if ((Boolean) fTableModelMercenaries.getValueAt(i, 0)) {
-				Skill mercenarySkill = getClient().getSkillFactory().forName((String) fTableModelMercenaries.getValueAt(i, 4));
+				Skill mercenarySkill = getClient().getGame().getRules().<SkillFactory>getFactory(Factory.skill).forName((String) fTableModelMercenaries.getValueAt(i, 4));
 				mercenarySkills.add(mercenarySkill);
 			}
 		}

@@ -3,6 +3,7 @@ package com.balancedbytes.games.ffb.net.commands;
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
+import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.net.NetCommandId;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
@@ -39,10 +40,10 @@ public class ClientCommandTouchback extends ClientCommand {
 		return jsonObject;
 	}
 
-	public ClientCommandTouchback initFrom(JsonValue jsonValue) {
-		super.initFrom(jsonValue);
+	public ClientCommandTouchback initFrom(Game game, JsonValue jsonValue) {
+		super.initFrom(game, jsonValue);
 		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
-		fBallCoordinate = IJsonOption.BALL_COORDINATE.getFrom(jsonObject);
+		fBallCoordinate = IJsonOption.BALL_COORDINATE.getFrom(game, jsonObject);
 		return this;
 	}
 

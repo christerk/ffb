@@ -1,6 +1,8 @@
 package com.balancedbytes.games.ffb.skill;
 
+import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.SkillCategory;
+import com.balancedbytes.games.ffb.RulesCollection.Rules;
 import com.balancedbytes.games.ffb.model.Skill;
 import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
 
@@ -9,6 +11,7 @@ import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
  * is in another player's tackle zone. This skill may not be used to assist a
  * foul.
  */
+@RulesCollection(Rules.All)
 public class Guard extends Skill {
 
 	public Guard() {

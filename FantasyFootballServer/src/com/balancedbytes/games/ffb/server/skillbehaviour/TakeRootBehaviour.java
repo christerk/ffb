@@ -2,7 +2,7 @@ package com.balancedbytes.games.ffb.server.skillbehaviour;
 
 import com.balancedbytes.games.ffb.PlayerState;
 import com.balancedbytes.games.ffb.ReRolledAction;
-import com.balancedbytes.games.ffb.ReRolledActionFactory;
+import com.balancedbytes.games.ffb.factory.ReRolledActionFactory;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandUseSkill;
@@ -38,7 +38,7 @@ public class TakeRootBehaviour extends SkillBehaviour<TakeRoot> {
 
 				if (!playerState.isRooted()) {
 					boolean doRoll = true;
-					ReRolledAction reRolledAction = new ReRolledActionFactory().forSkill(step.getGameState().getSkillFactory(), skill);
+					ReRolledAction reRolledAction = new ReRolledActionFactory().forSkill(game, skill);
 					if ((reRolledAction != null) && (reRolledAction == step.getReRolledAction())) {
 						if ((step.getReRollSource() == null)
 								|| !UtilServerReRoll.useReRoll(step, step.getReRollSource(), actingPlayer.getPlayer())) {

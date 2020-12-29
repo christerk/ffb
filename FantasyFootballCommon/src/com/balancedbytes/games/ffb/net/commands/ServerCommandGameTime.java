@@ -2,6 +2,7 @@ package com.balancedbytes.games.ffb.net.commands;
 
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
+import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.net.NetCommandId;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
@@ -59,12 +60,12 @@ public class ServerCommandGameTime extends ServerCommand {
 		return jsonObject;
 	}
 
-	public ServerCommandGameTime initFrom(JsonValue pJsonValue) {
+	public ServerCommandGameTime initFrom(Game game, JsonValue pJsonValue) {
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		UtilNetCommand.validateCommandId(this, (NetCommandId) IJsonOption.NET_COMMAND_ID.getFrom(jsonObject));
-		setCommandNr(IJsonOption.COMMAND_NR.getFrom(jsonObject));
-		fGameTime = IJsonOption.GAME_TIME.getFrom(jsonObject);
-		fTurnTime = IJsonOption.TURN_TIME.getFrom(jsonObject);
+		UtilNetCommand.validateCommandId(this, (NetCommandId) IJsonOption.NET_COMMAND_ID.getFrom(game, jsonObject));
+		setCommandNr(IJsonOption.COMMAND_NR.getFrom(game, jsonObject));
+		fGameTime = IJsonOption.GAME_TIME.getFrom(game, jsonObject);
+		fTurnTime = IJsonOption.TURN_TIME.getFrom(game, jsonObject);
 		return this;
 	}
 

@@ -2,6 +2,7 @@ package com.balancedbytes.games.ffb.report;
 
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
+import com.balancedbytes.games.ffb.model.Game;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
@@ -73,14 +74,14 @@ public class ReportInducementsBought implements IReport {
 		return jsonObject;
 	}
 
-	public ReportInducementsBought initFrom(JsonValue pJsonValue) {
+	public ReportInducementsBought initFrom(Game game, JsonValue pJsonValue) {
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(jsonObject));
-		fTeamId = IJsonOption.TEAM_ID.getFrom(jsonObject);
-		fNrOfInducements = IJsonOption.NR_OF_INDUCEMENTS.getFrom(jsonObject);
-		fNrOfStars = IJsonOption.NR_OF_STARS.getFrom(jsonObject);
-		fNrOfMercenaries = IJsonOption.NR_OF_MERCENARIES.getFrom(jsonObject);
-		fGold = IJsonOption.GOLD.getFrom(jsonObject);
+		UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(game, jsonObject));
+		fTeamId = IJsonOption.TEAM_ID.getFrom(game, jsonObject);
+		fNrOfInducements = IJsonOption.NR_OF_INDUCEMENTS.getFrom(game, jsonObject);
+		fNrOfStars = IJsonOption.NR_OF_STARS.getFrom(game, jsonObject);
+		fNrOfMercenaries = IJsonOption.NR_OF_MERCENARIES.getFrom(game, jsonObject);
+		fGold = IJsonOption.GOLD.getFrom(game, jsonObject);
 		return this;
 	}
 

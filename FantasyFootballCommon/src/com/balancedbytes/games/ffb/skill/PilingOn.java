@@ -1,6 +1,8 @@
 package com.balancedbytes.games.ffb.skill;
 
+import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.SkillCategory;
+import com.balancedbytes.games.ffb.RulesCollection.Rules;
 import com.balancedbytes.games.ffb.model.Skill;
 
 /**
@@ -14,6 +16,7 @@ import com.balancedbytes.games.ffb.model.Skill;
  * unless the Piling On player is carrying the ball. Piling On cannot be used
  * with the Stab or Chainsaw skills.
  */
+@RulesCollection(Rules.All)
 public class PilingOn extends Skill {
 
 	public PilingOn() {

@@ -3,6 +3,7 @@ package com.balancedbytes.games.ffb.model.change;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.IJsonSerializable;
 import com.balancedbytes.games.ffb.json.UtilJson;
+import com.balancedbytes.games.ffb.model.Game;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
@@ -63,11 +64,11 @@ public class ModelChange implements IJsonSerializable {
 		return jsonObject;
 	}
 
-	public ModelChange initFrom(JsonValue pJsonValue) {
+	public ModelChange initFrom(Game game, JsonValue pJsonValue) {
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		fChangeId = (ModelChangeId) IJsonOption.MODEL_CHANGE_ID.getFrom(jsonObject);
-		fKey = IJsonOption.MODEL_CHANGE_KEY.getFrom(jsonObject);
-		fValue = fChangeId.fromJsonValue(IJsonOption.MODEL_CHANGE_VALUE.getFrom(jsonObject));
+		fChangeId = (ModelChangeId) IJsonOption.MODEL_CHANGE_ID.getFrom(game, jsonObject);
+		fKey = IJsonOption.MODEL_CHANGE_KEY.getFrom(game, jsonObject);
+		fValue = fChangeId.fromJsonValue(game, IJsonOption.MODEL_CHANGE_VALUE.getFrom(game, jsonObject));
 		return this;
 	}
 

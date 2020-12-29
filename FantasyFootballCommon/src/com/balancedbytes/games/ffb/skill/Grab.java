@@ -1,6 +1,8 @@
 package com.balancedbytes.games.ffb.skill;
 
+import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.SkillCategory;
+import com.balancedbytes.games.ffb.RulesCollection.Rules;
 import com.balancedbytes.games.ffb.model.Skill;
 import com.balancedbytes.games.ffb.model.SkillConstants;
 import com.balancedbytes.games.ffb.model.modifier.CancelSkillProperty;
@@ -17,6 +19,7 @@ import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
  * skill through any means. Likewise, a player with the Frenzy skill can never
  * learn or gain the Grab skill through any means.
  */
+@RulesCollection(Rules.All)
 public class Grab extends Skill {
 
 	public Grab() {

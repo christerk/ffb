@@ -339,15 +339,15 @@ public class StepApothecary extends AbstractStep {
 	}
 
 	@Override
-	public StepApothecary initFrom(JsonValue pJsonValue) {
-		super.initFrom(pJsonValue);
+	public StepApothecary initFrom(Game game, JsonValue pJsonValue) {
+		super.initFrom(game, pJsonValue);
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		fApothecaryMode = (ApothecaryMode) IServerJsonOption.APOTHECARY_MODE.getFrom(jsonObject);
-		JsonObject injuryResultObject = IServerJsonOption.INJURY_RESULT.getFrom(jsonObject);
+		fApothecaryMode = (ApothecaryMode) IServerJsonOption.APOTHECARY_MODE.getFrom(game, jsonObject);
+		JsonObject injuryResultObject = IServerJsonOption.INJURY_RESULT.getFrom(game, jsonObject);
 		if (injuryResultObject != null) {
-			fInjuryResult = new InjuryResult().initFrom(injuryResultObject);
+			fInjuryResult = new InjuryResult().initFrom(game, injuryResultObject);
 		}
-		fShowReport = IServerJsonOption.SHOW_REPORT.getFrom(jsonObject);
+		fShowReport = IServerJsonOption.SHOW_REPORT.getFrom(game, jsonObject);
 		return this;
 	}
 

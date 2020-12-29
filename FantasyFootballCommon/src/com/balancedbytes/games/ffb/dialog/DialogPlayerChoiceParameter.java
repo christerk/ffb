@@ -7,6 +7,7 @@ import com.balancedbytes.games.ffb.IDialogParameter;
 import com.balancedbytes.games.ffb.PlayerChoiceMode;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
+import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.util.ArrayTool;
 import com.balancedbytes.games.ffb.util.StringTool;
@@ -129,14 +130,14 @@ public class DialogPlayerChoiceParameter implements IDialogParameter {
 		return jsonObject;
 	}
 
-	public DialogPlayerChoiceParameter initFrom(JsonValue pJsonValue) {
+	public DialogPlayerChoiceParameter initFrom(Game game, JsonValue pJsonValue) {
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		UtilDialogParameter.validateDialogId(this, (DialogId) IJsonOption.DIALOG_ID.getFrom(jsonObject));
-		fTeamId = IJsonOption.TEAM_ID.getFrom(jsonObject);
-		fPlayerChoiceMode = (PlayerChoiceMode) IJsonOption.PLAYER_CHOICE_MODE.getFrom(jsonObject);
-		fMaxSelects = IJsonOption.MAX_SELECTS.getFrom(jsonObject);
-		addPlayerIds(IJsonOption.PLAYER_IDS.getFrom(jsonObject));
-		addDescriptions(IJsonOption.DESCRIPTIONS.getFrom(jsonObject));
+		UtilDialogParameter.validateDialogId(this, (DialogId) IJsonOption.DIALOG_ID.getFrom(game, jsonObject));
+		fTeamId = IJsonOption.TEAM_ID.getFrom(game, jsonObject);
+		fPlayerChoiceMode = (PlayerChoiceMode) IJsonOption.PLAYER_CHOICE_MODE.getFrom(game, jsonObject);
+		fMaxSelects = IJsonOption.MAX_SELECTS.getFrom(game, jsonObject);
+		addPlayerIds(IJsonOption.PLAYER_IDS.getFrom(game, jsonObject));
+		addDescriptions(IJsonOption.DESCRIPTIONS.getFrom(game, jsonObject));
 		return this;
 	}
 

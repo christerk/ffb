@@ -1,6 +1,8 @@
 package com.balancedbytes.games.ffb.skill;
 
+import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.SkillCategory;
+import com.balancedbytes.games.ffb.RulesCollection.Rules;
 import com.balancedbytes.games.ffb.model.Skill;
 import com.balancedbytes.games.ffb.model.SkillConstants;
 import com.balancedbytes.games.ffb.model.modifier.CancelSkillProperty;
@@ -11,6 +13,7 @@ import com.balancedbytes.games.ffb.model.modifier.CancelSkillProperty;
  * the player's tackle zones, nor may they use their Dodge skill if the player
  * throws a block at them and uses the Tackle skill.
  */
+@RulesCollection(Rules.All)
 public class Tackle extends Skill {
 
 	public Tackle() {

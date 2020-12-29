@@ -3,6 +3,7 @@ package com.balancedbytes.games.ffb.net.commands;
 import com.balancedbytes.games.ffb.TeamList;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
+import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.net.NetCommandId;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
@@ -48,13 +49,13 @@ public class ServerCommandTeamList extends ServerCommand {
 		return jsonObject;
 	}
 
-	public ServerCommandTeamList initFrom(JsonValue pJsonValue) {
+	public ServerCommandTeamList initFrom(Game game, JsonValue pJsonValue) {
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		UtilNetCommand.validateCommandId(this, (NetCommandId) IJsonOption.NET_COMMAND_ID.getFrom(jsonObject));
-		setCommandNr(IJsonOption.COMMAND_NR.getFrom(jsonObject));
-		JsonObject teamListObject = IJsonOption.TEAM_LIST.getFrom(jsonObject);
+		UtilNetCommand.validateCommandId(this, (NetCommandId) IJsonOption.NET_COMMAND_ID.getFrom(game, jsonObject));
+		setCommandNr(IJsonOption.COMMAND_NR.getFrom(game, jsonObject));
+		JsonObject teamListObject = IJsonOption.TEAM_LIST.getFrom(game, jsonObject);
 		if (teamListObject != null) {
-			fTeamList = new TeamList().initFrom(teamListObject);
+			fTeamList = new TeamList().initFrom(game, teamListObject);
 		} else {
 			fTeamList = null;
 		}

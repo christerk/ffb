@@ -3,6 +3,7 @@ package com.balancedbytes.games.ffb.dialog;
 import com.balancedbytes.games.ffb.IDialogParameter;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
+import com.balancedbytes.games.ffb.model.Game;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
@@ -52,11 +53,11 @@ public class DialogWinningsReRollParameter implements IDialogParameter {
 		return jsonObject;
 	}
 
-	public DialogWinningsReRollParameter initFrom(JsonValue pJsonValue) {
+	public DialogWinningsReRollParameter initFrom(Game game, JsonValue pJsonValue) {
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		UtilDialogParameter.validateDialogId(this, (DialogId) IJsonOption.DIALOG_ID.getFrom(jsonObject));
-		fTeamId = IJsonOption.TEAM_ID.getFrom(jsonObject);
-		fOldRoll = IJsonOption.OLD_ROLL.getFrom(jsonObject);
+		UtilDialogParameter.validateDialogId(this, (DialogId) IJsonOption.DIALOG_ID.getFrom(game, jsonObject));
+		fTeamId = IJsonOption.TEAM_ID.getFrom(game, jsonObject);
+		fOldRoll = IJsonOption.OLD_ROLL.getFrom(game, jsonObject);
 		return this;
 	}
 

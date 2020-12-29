@@ -2,6 +2,7 @@ package com.balancedbytes.games.ffb.report;
 
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
+import com.balancedbytes.games.ffb.model.Game;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
@@ -81,15 +82,15 @@ public class ReportSpectators implements IReport {
 		return jsonObject;
 	}
 
-	public ReportSpectators initFrom(JsonValue pJsonValue) {
+	public ReportSpectators initFrom(Game game, JsonValue pJsonValue) {
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(jsonObject));
-		fSpectatorRollHome = IJsonOption.SPECTATOR_ROLL_HOME.getFrom(jsonObject);
-		fSpectatorsHome = IJsonOption.SPECTATORS_HOME.getFrom(jsonObject);
-		fFameHome = IJsonOption.FAME_HOME.getFrom(jsonObject);
-		fSpectatorRollAway = IJsonOption.SPECTATOR_ROLL_AWAY.getFrom(jsonObject);
-		fSpectatorsAway = IJsonOption.SPECTATORS_AWAY.getFrom(jsonObject);
-		fFameAway = IJsonOption.FAME_AWAY.getFrom(jsonObject);
+		UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(game, jsonObject));
+		fSpectatorRollHome = IJsonOption.SPECTATOR_ROLL_HOME.getFrom(game, jsonObject);
+		fSpectatorsHome = IJsonOption.SPECTATORS_HOME.getFrom(game, jsonObject);
+		fFameHome = IJsonOption.FAME_HOME.getFrom(game, jsonObject);
+		fSpectatorRollAway = IJsonOption.SPECTATOR_ROLL_AWAY.getFrom(game, jsonObject);
+		fSpectatorsAway = IJsonOption.SPECTATORS_AWAY.getFrom(game, jsonObject);
+		fFameAway = IJsonOption.FAME_AWAY.getFrom(game, jsonObject);
 		return this;
 	}
 

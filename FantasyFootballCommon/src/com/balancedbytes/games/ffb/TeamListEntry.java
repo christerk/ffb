@@ -4,9 +4,11 @@ import javax.xml.transform.sax.TransformerHandler;
 
 import org.xml.sax.Attributes;
 
+import com.balancedbytes.games.ffb.factory.TeamStatusFactory;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.IJsonSerializable;
 import com.balancedbytes.games.ffb.json.UtilJson;
+import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Team;
 import com.balancedbytes.games.ffb.xml.IXmlReadable;
 import com.balancedbytes.games.ffb.xml.IXmlSerializable;
@@ -149,7 +151,7 @@ public class TeamListEntry implements IXmlSerializable, IJsonSerializable {
 		return this;
 	}
 
-	public boolean endXmlElement(String pXmlTag, String pValue) {
+	public boolean endXmlElement(Game game, String pXmlTag, String pValue) {
 		if (_XML_TAG_ID.equals(pXmlTag)) {
 			fTeamId = pValue;
 		}
@@ -189,15 +191,15 @@ public class TeamListEntry implements IXmlSerializable, IJsonSerializable {
 		return jsonObject;
 	}
 
-	public TeamListEntry initFrom(JsonValue pJsonValue) {
+	public TeamListEntry initFrom(Game game, JsonValue pJsonValue) {
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		fTeamId = IJsonOption.TEAM_ID.getFrom(jsonObject);
-		fTeamStatus = (TeamStatus) IJsonOption.TEAM_STATUS.getFrom(jsonObject);
-		fDivision = IJsonOption.DIVISION.getFrom(jsonObject);
-		fTeamName = IJsonOption.TEAM_NAME.getFrom(jsonObject);
-		fTeamValue = IJsonOption.TEAM_VALUE.getFrom(jsonObject);
-		fRace = IJsonOption.RACE.getFrom(jsonObject);
-		fTreasury = IJsonOption.TREASURY.getFrom(jsonObject);
+		fTeamId = IJsonOption.TEAM_ID.getFrom(game, jsonObject);
+		fTeamStatus = (TeamStatus) IJsonOption.TEAM_STATUS.getFrom(game, jsonObject);
+		fDivision = IJsonOption.DIVISION.getFrom(game, jsonObject);
+		fTeamName = IJsonOption.TEAM_NAME.getFrom(game, jsonObject);
+		fTeamValue = IJsonOption.TEAM_VALUE.getFrom(game, jsonObject);
+		fRace = IJsonOption.RACE.getFrom(game, jsonObject);
+		fTreasury = IJsonOption.TREASURY.getFrom(game, jsonObject);
 		return this;
 	}
 

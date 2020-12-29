@@ -17,7 +17,6 @@ import javax.websocket.WebSocketContainer;
 
 import com.balancedbytes.games.ffb.ClientMode;
 import com.balancedbytes.games.ffb.FantasyFootballException;
-import com.balancedbytes.games.ffb.SkillFactory;
 import com.balancedbytes.games.ffb.Weather;
 import com.balancedbytes.games.ffb.client.dialog.DialogAboutHandler;
 import com.balancedbytes.games.ffb.client.dialog.IDialog;
@@ -55,7 +54,6 @@ public class FantasyFootballClient implements IConnectionListener, IDialogCloseL
 
 	private Session fSession;
 	private CommandEndpoint fCommandEndpoint;
-	private SkillFactory skillFactory;
 
 	private transient ClientData fClientData;
 
@@ -80,7 +78,6 @@ public class FantasyFootballClient implements IConnectionListener, IDialogCloseL
 
 		setGame(new Game());
 		fStateFactory = new ClientStateFactory(this);
-		skillFactory = SkillFactory.getInstance();
 		fCommandHandlerFactory = new ClientCommandHandlerFactory(this);
 
 		fReplayer = new ClientReplayer(this);
@@ -305,9 +302,4 @@ public class FantasyFootballClient implements IConnectionListener, IDialogCloseL
 	public CommandEndpoint getCommandEndpoint() {
 		return fCommandEndpoint;
 	}
-
-	public SkillFactory getSkillFactory() {
-		return skillFactory;
-	}
-
 }

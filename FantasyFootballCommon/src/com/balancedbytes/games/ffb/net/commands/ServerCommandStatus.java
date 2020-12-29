@@ -2,6 +2,7 @@ package com.balancedbytes.games.ffb.net.commands;
 
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
+import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.net.NetCommandId;
 import com.balancedbytes.games.ffb.net.ServerStatus;
 import com.eclipsesource.json.JsonObject;
@@ -52,12 +53,12 @@ public class ServerCommandStatus extends ServerCommand {
 		return jsonObject;
 	}
 
-	public ServerCommandStatus initFrom(JsonValue pJsonValue) {
+	public ServerCommandStatus initFrom(Game game, JsonValue pJsonValue) {
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		UtilNetCommand.validateCommandId(this, (NetCommandId) IJsonOption.NET_COMMAND_ID.getFrom(jsonObject));
-		setCommandNr(IJsonOption.COMMAND_NR.getFrom(jsonObject));
-		fServerStatus = (ServerStatus) IJsonOption.SERVER_STATUS.getFrom(jsonObject);
-		fMessage = IJsonOption.MESSAGE.getFrom(jsonObject);
+		UtilNetCommand.validateCommandId(this, (NetCommandId) IJsonOption.NET_COMMAND_ID.getFrom(game, jsonObject));
+		setCommandNr(IJsonOption.COMMAND_NR.getFrom(game, jsonObject));
+		fServerStatus = (ServerStatus) IJsonOption.SERVER_STATUS.getFrom(game, jsonObject);
+		fMessage = IJsonOption.MESSAGE.getFrom(game, jsonObject);
 		return this;
 	}
 

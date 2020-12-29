@@ -2,6 +2,7 @@ package com.balancedbytes.games.ffb.server.step.action.block;
 
 import com.balancedbytes.games.ffb.PlayerState;
 import com.balancedbytes.games.ffb.json.UtilJson;
+import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.net.NetCommandId;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandUseSkill;
 import com.balancedbytes.games.ffb.server.GameState;
@@ -95,16 +96,16 @@ public class StepDropFallingPlayers extends AbstractStep {
 	}
 
 	@Override
-	public StepDropFallingPlayers initFrom(JsonValue pJsonValue) {
-		super.initFrom(pJsonValue);
+	public StepDropFallingPlayers initFrom(Game game, JsonValue pJsonValue) {
+		super.initFrom(game, pJsonValue);
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
 		state.injuryResultDefender = null;
-		JsonObject injuryResultDefenderObject = IServerJsonOption.INJURY_RESULT_DEFENDER.getFrom(jsonObject);
+		JsonObject injuryResultDefenderObject = IServerJsonOption.INJURY_RESULT_DEFENDER.getFrom(game, jsonObject);
 		if (injuryResultDefenderObject != null) {
-			state.injuryResultDefender = new InjuryResult().initFrom(injuryResultDefenderObject);
+			state.injuryResultDefender = new InjuryResult().initFrom(game, injuryResultDefenderObject);
 		}
-		state.usingPilingOn = IServerJsonOption.USING_PILING_ON.getFrom(jsonObject);
-		state.oldDefenderState = IServerJsonOption.OLD_DEFENDER_STATE.getFrom(jsonObject);
+		state.usingPilingOn = IServerJsonOption.USING_PILING_ON.getFrom(game, jsonObject);
+		state.oldDefenderState = IServerJsonOption.OLD_DEFENDER_STATE.getFrom(game, jsonObject);
 		return this;
 	}
 

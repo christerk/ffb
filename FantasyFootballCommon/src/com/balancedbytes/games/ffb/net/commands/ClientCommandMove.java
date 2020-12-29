@@ -6,6 +6,7 @@ import java.util.List;
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
+import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.net.NetCommandId;
 import com.balancedbytes.games.ffb.util.ArrayTool;
 import com.eclipsesource.json.JsonObject;
@@ -72,12 +73,12 @@ public class ClientCommandMove extends ClientCommand implements ICommandWithActi
 		return jsonObject;
 	}
 
-	public ClientCommandMove initFrom(JsonValue jsonValue) {
-		super.initFrom(jsonValue);
+	public ClientCommandMove initFrom(Game game, JsonValue jsonValue) {
+		super.initFrom(game, jsonValue);
 		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
-		fActingPlayerId = IJsonOption.ACTING_PLAYER_ID.getFrom(jsonObject);
-		fCoordinateFrom = IJsonOption.COORDINATE_FROM.getFrom(jsonObject);
-		addCoordinatesTo(IJsonOption.COORDINATES_TO.getFrom(jsonObject));
+		fActingPlayerId = IJsonOption.ACTING_PLAYER_ID.getFrom(game, jsonObject);
+		fCoordinateFrom = IJsonOption.COORDINATE_FROM.getFrom(game, jsonObject);
+		addCoordinatesTo(IJsonOption.COORDINATES_TO.getFrom(game, jsonObject));
 		return this;
 	}
 

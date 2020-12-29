@@ -3,6 +3,7 @@ package com.balancedbytes.games.ffb.report;
 import com.balancedbytes.games.ffb.SpecialEffect;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
+import com.balancedbytes.games.ffb.model.Game;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
@@ -66,13 +67,13 @@ public class ReportSpecialEffectRoll implements IReport {
 		return jsonObject;
 	}
 
-	public ReportSpecialEffectRoll initFrom(JsonValue pJsonValue) {
+	public ReportSpecialEffectRoll initFrom(Game game, JsonValue pJsonValue) {
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(jsonObject));
-		fSpecialEffect = (SpecialEffect) IJsonOption.SPECIAL_EFFECT.getFrom(jsonObject);
-		fPlayerId = IJsonOption.PLAYER_ID.getFrom(jsonObject);
-		fRoll = IJsonOption.ROLL.getFrom(jsonObject);
-		fSuccessful = IJsonOption.SUCCESSFUL.getFrom(jsonObject);
+		UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(game, jsonObject));
+		fSpecialEffect = (SpecialEffect) IJsonOption.SPECIAL_EFFECT.getFrom(game, jsonObject);
+		fPlayerId = IJsonOption.PLAYER_ID.getFrom(game, jsonObject);
+		fRoll = IJsonOption.ROLL.getFrom(game, jsonObject);
+		fSuccessful = IJsonOption.SUCCESSFUL.getFrom(game, jsonObject);
 		return this;
 	}
 

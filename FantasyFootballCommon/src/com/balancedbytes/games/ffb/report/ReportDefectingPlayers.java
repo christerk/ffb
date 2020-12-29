@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
+import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.util.ArrayTool;
 import com.balancedbytes.games.ffb.util.StringTool;
 import com.eclipsesource.json.JsonObject;
@@ -112,15 +113,15 @@ public class ReportDefectingPlayers implements IReport {
 		return jsonObject;
 	}
 
-	public ReportDefectingPlayers initFrom(JsonValue pJsonValue) {
+	public ReportDefectingPlayers initFrom(Game game, JsonValue pJsonValue) {
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(jsonObject));
+		UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(game, jsonObject));
 		fPlayerIds.clear();
-		addPlayerIds(IJsonOption.PLAYER_IDS.getFrom(jsonObject));
+		addPlayerIds(IJsonOption.PLAYER_IDS.getFrom(game, jsonObject));
 		fRolls.clear();
-		addRolls(IJsonOption.ROLLS.getFrom(jsonObject));
+		addRolls(IJsonOption.ROLLS.getFrom(game, jsonObject));
 		fDefectings.clear();
-		addDefectings(IJsonOption.DEFECTING_ARRAY.getFrom(jsonObject));
+		addDefectings(IJsonOption.DEFECTING_ARRAY.getFrom(game, jsonObject));
 		return this;
 	}
 

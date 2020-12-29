@@ -4,6 +4,7 @@ import com.balancedbytes.games.ffb.PassModifier;
 import com.balancedbytes.games.ffb.PassingDistance;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
+import com.balancedbytes.games.ffb.model.Game;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
@@ -58,11 +59,11 @@ public class ReportThrowTeamMateRoll extends ReportSkillRoll {
 	}
 
 	@Override
-	public ReportThrowTeamMateRoll initFrom(JsonValue pJsonValue) {
-		super.initFrom(pJsonValue);
+	public ReportThrowTeamMateRoll initFrom(Game game, JsonValue pJsonValue) {
+		super.initFrom(game, pJsonValue);
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		fThrownPlayerId = IJsonOption.THROWN_PLAYER_ID.getFrom(jsonObject);
-		fPassingDistance = (PassingDistance) IJsonOption.PASSING_DISTANCE.getFrom(jsonObject);
+		fThrownPlayerId = IJsonOption.THROWN_PLAYER_ID.getFrom(game, jsonObject);
+		fPassingDistance = (PassingDistance) IJsonOption.PASSING_DISTANCE.getFrom(game, jsonObject);
 		return this;
 	}
 

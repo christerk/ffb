@@ -179,7 +179,7 @@ public class GameListEntry implements IXmlSerializable, IJsonSerializable {
 		return this;
 	}
 
-	public boolean endXmlElement(String pXmlTag, String pValue) {
+	public boolean endXmlElement(Game game, String pXmlTag, String pValue) {
 		return XML_TAG.equals(pXmlTag);
 	}
 
@@ -198,16 +198,16 @@ public class GameListEntry implements IXmlSerializable, IJsonSerializable {
 		return jsonObject;
 	}
 
-	public GameListEntry initFrom(JsonValue pJsonValue) {
+	public GameListEntry initFrom(Game game, JsonValue pJsonValue) {
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		fGameId = IJsonOption.GAME_ID.getFrom(jsonObject);
-		fStarted = IJsonOption.STARTED.getFrom(jsonObject);
-		fTeamHomeId = IJsonOption.TEAM_HOME_ID.getFrom(jsonObject);
-		fTeamHomeName = IJsonOption.TEAM_HOME_NAME.getFrom(jsonObject);
-		fTeamHomeCoach = IJsonOption.TEAM_HOME_COACH.getFrom(jsonObject);
-		fTeamAwayId = IJsonOption.TEAM_AWAY_ID.getFrom(jsonObject);
-		fTeamAwayName = IJsonOption.TEAM_AWAY_NAME.getFrom(jsonObject);
-		fTeamAwayCoach = IJsonOption.TEAM_AWAY_COACH.getFrom(jsonObject);
+		fGameId = IJsonOption.GAME_ID.getFrom(game, jsonObject);
+		fStarted = IJsonOption.STARTED.getFrom(game, jsonObject);
+		fTeamHomeId = IJsonOption.TEAM_HOME_ID.getFrom(game, jsonObject);
+		fTeamHomeName = IJsonOption.TEAM_HOME_NAME.getFrom(game, jsonObject);
+		fTeamHomeCoach = IJsonOption.TEAM_HOME_COACH.getFrom(game, jsonObject);
+		fTeamAwayId = IJsonOption.TEAM_AWAY_ID.getFrom(game, jsonObject);
+		fTeamAwayName = IJsonOption.TEAM_AWAY_NAME.getFrom(game, jsonObject);
+		fTeamAwayCoach = IJsonOption.TEAM_AWAY_COACH.getFrom(game, jsonObject);
 		return this;
 	}
 

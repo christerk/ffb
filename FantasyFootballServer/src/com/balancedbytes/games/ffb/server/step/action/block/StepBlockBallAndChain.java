@@ -107,11 +107,11 @@ public class StepBlockBallAndChain extends AbstractStep {
 	}
 
 	@Override
-	public StepBlockBallAndChain initFrom(JsonValue pJsonValue) {
-		super.initFrom(pJsonValue);
+	public StepBlockBallAndChain initFrom(Game game, JsonValue pJsonValue) {
+		super.initFrom(game, pJsonValue);
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		fGotoLabelOnPushback = IServerJsonOption.GOTO_LABEL_ON_PUSHBACK.getFrom(jsonObject);
-		fOldDefenderState = IServerJsonOption.OLD_DEFENDER_STATE.getFrom(jsonObject);
+		fGotoLabelOnPushback = IServerJsonOption.GOTO_LABEL_ON_PUSHBACK.getFrom(game, jsonObject);
+		fOldDefenderState = IServerJsonOption.OLD_DEFENDER_STATE.getFrom(game, jsonObject);
 		return this;
 	}
 

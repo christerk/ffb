@@ -316,15 +316,15 @@ public class StepPassBlock extends AbstractStep {
 	}
 
 	@Override
-	public StepPassBlock initFrom(JsonValue pJsonValue) {
-		super.initFrom(pJsonValue);
+	public StepPassBlock initFrom(Game game, JsonValue pJsonValue) {
+		super.initFrom(game, pJsonValue);
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		fGotoLabelOnEnd = IServerJsonOption.GOTO_LABEL_ON_END.getFrom(jsonObject);
-		fOldTurnMode = (TurnMode) IServerJsonOption.OLD_TURN_MODE.getFrom(jsonObject);
-		fEndTurn = IServerJsonOption.END_TURN.getFrom(jsonObject);
-		fEndPlayerAction = IServerJsonOption.END_PLAYER_ACTION.getFrom(jsonObject);
+		fGotoLabelOnEnd = IServerJsonOption.GOTO_LABEL_ON_END.getFrom(game, jsonObject);
+		fOldTurnMode = (TurnMode) IServerJsonOption.OLD_TURN_MODE.getFrom(game, jsonObject);
+		fEndTurn = IServerJsonOption.END_TURN.getFrom(game, jsonObject);
+		fEndPlayerAction = IServerJsonOption.END_PLAYER_ACTION.getFrom(game, jsonObject);
 		fOldPlayerStates = null;
-		int[] playerStateIds = IServerJsonOption.OLD_PLAYER_STATES.getFrom(jsonObject);
+		int[] playerStateIds = IServerJsonOption.OLD_PLAYER_STATES.getFrom(game, jsonObject);
 		if (ArrayTool.isProvided(playerStateIds)) {
 			fOldPlayerStates = new PlayerState[playerStateIds.length];
 			for (int i = 0; i < playerStateIds.length; i++) {

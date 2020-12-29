@@ -143,8 +143,8 @@ public class StepMissedPass extends AbstractStep {
 	}
 
 	@Override
-	public StepMissedPass initFrom(JsonValue pJsonValue) {
-		super.initFrom(pJsonValue);
+	public StepMissedPass initFrom(Game game, JsonValue pJsonValue) {
+		super.initFrom(game, pJsonValue);
 		return this;
 	}
 

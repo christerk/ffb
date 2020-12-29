@@ -53,7 +53,8 @@ public class DbGamesSerializedQuery extends DbStatement {
 				while (resultSet.next()) {
 					Blob blob = resultSet.getBlob(1);
 					JsonValue jsonValue = UtilJson.gunzip(blob.getBytes(1, (int) blob.length()));
-					gameState = new GameState(pServer).initFrom(jsonValue);
+					gameState = new GameState(pServer);
+					gameState.initFrom(gameState.getGame(), jsonValue);
 					if (getServer().getDebugLog().isLogging(IServerLogLevel.TRACE) && (gameState.getCurrentStep() != null)) {
 						String currentStepName = (gameState.getCurrentStep() != null) ? gameState.getCurrentStep().getId().getName()
 								: "null";

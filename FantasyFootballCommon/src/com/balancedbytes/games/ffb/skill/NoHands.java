@@ -1,6 +1,8 @@
 package com.balancedbytes.games.ffb.skill;
 
+import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.SkillCategory;
+import com.balancedbytes.games.ffb.RulesCollection.Rules;
 import com.balancedbytes.games.ffb.model.Skill;
 import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
 
@@ -10,6 +12,7 @@ import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
  * because his hands are full. If he attempts to pick up the ball then it will
  * bounce, and will causes a turnover if it is his team's turn.
  */
+@RulesCollection(Rules.All)
 public class NoHands extends Skill {
 
 	public NoHands() {

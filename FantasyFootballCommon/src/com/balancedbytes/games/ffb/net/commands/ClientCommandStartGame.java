@@ -1,5 +1,6 @@
 package com.balancedbytes.games.ffb.net.commands;
 
+import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.net.NetCommandId;
 import com.eclipsesource.json.JsonValue;
 
@@ -19,8 +20,8 @@ public class ClientCommandStartGame extends ClientCommand {
 
 	// JSON serialization
 
-	public ClientCommandStartGame initFrom(JsonValue jsonValue) {
-		super.initFrom(jsonValue);
+	public ClientCommandStartGame initFrom(Game game, JsonValue jsonValue) {
+		super.initFrom(game, jsonValue);
 		return this;
 	}
 

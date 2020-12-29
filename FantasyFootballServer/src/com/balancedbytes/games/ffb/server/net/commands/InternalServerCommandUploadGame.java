@@ -2,6 +2,7 @@ package com.balancedbytes.games.ffb.server.net.commands;
 
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
+import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.net.NetCommandId;
 import com.balancedbytes.games.ffb.net.commands.UtilNetCommand;
 import com.eclipsesource.json.JsonObject;
@@ -40,10 +41,10 @@ public class InternalServerCommandUploadGame extends InternalServerCommand {
 		return jsonObject;
 	}
 
-	public InternalServerCommandUploadGame initFrom(JsonValue pJsonValue) {
+	public InternalServerCommandUploadGame initFrom(Game game, JsonValue pJsonValue) {
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		UtilNetCommand.validateCommandId(this, (NetCommandId) IJsonOption.NET_COMMAND_ID.getFrom(jsonObject));
-		fConcedingTeamId = IJsonOption.CONCEDING_TEAM_ID.getFrom(jsonObject);
+		UtilNetCommand.validateCommandId(this, (NetCommandId) IJsonOption.NET_COMMAND_ID.getFrom(game, jsonObject));
+		fConcedingTeamId = IJsonOption.CONCEDING_TEAM_ID.getFrom(game, jsonObject);
 		return this;
 	}
 

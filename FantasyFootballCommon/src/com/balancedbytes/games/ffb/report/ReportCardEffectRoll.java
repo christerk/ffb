@@ -4,6 +4,7 @@ import com.balancedbytes.games.ffb.Card;
 import com.balancedbytes.games.ffb.CardEffect;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
+import com.balancedbytes.games.ffb.model.Game;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
@@ -67,12 +68,12 @@ public class ReportCardEffectRoll implements IReport {
 		return jsonObject;
 	}
 
-	public ReportCardEffectRoll initFrom(JsonValue pJsonValue) {
+	public ReportCardEffectRoll initFrom(Game game, JsonValue pJsonValue) {
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(jsonObject));
-		fCard = (Card) IJsonOption.CARD.getFrom(jsonObject);
-		fRoll = IJsonOption.ROLL.getFrom(jsonObject);
-		fCardEffect = (CardEffect) IJsonOption.CARD_EFFECT.getFrom(jsonObject);
+		UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(game, jsonObject));
+		fCard = (Card) IJsonOption.CARD.getFrom(game, jsonObject);
+		fRoll = IJsonOption.ROLL.getFrom(game, jsonObject);
+		fCardEffect = (CardEffect) IJsonOption.CARD_EFFECT.getFrom(game, jsonObject);
 		return this;
 	}
 

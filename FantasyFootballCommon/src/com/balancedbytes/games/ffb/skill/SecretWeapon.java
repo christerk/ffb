@@ -1,6 +1,8 @@
 package com.balancedbytes.games.ffb.skill;
 
+import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.SkillCategory;
+import com.balancedbytes.games.ffb.RulesCollection.Rules;
 import com.balancedbytes.games.ffb.model.Skill;
 import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
 
@@ -15,6 +17,7 @@ import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
  * have been caught committing fouls during the match regardless of whether the
  * player is still on the pitch or not.
  */
+@RulesCollection(Rules.All)
 public class SecretWeapon extends Skill {
 
 	public SecretWeapon() {

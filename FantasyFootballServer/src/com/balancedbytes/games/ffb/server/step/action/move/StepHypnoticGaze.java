@@ -3,11 +3,11 @@ package com.balancedbytes.games.ffb.server.step.action.move;
 import java.util.Set;
 
 import com.balancedbytes.games.ffb.GazeModifier;
-import com.balancedbytes.games.ffb.GazeModifierFactory;
 import com.balancedbytes.games.ffb.PlayerAction;
 import com.balancedbytes.games.ffb.PlayerState;
 import com.balancedbytes.games.ffb.ReRolledActions;
 import com.balancedbytes.games.ffb.SoundId;
+import com.balancedbytes.games.ffb.factory.GazeModifierFactory;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.Game;
@@ -149,10 +149,10 @@ public class StepHypnoticGaze extends AbstractStepWithReRoll {
 	}
 
 	@Override
-	public StepHypnoticGaze initFrom(JsonValue pJsonValue) {
-		super.initFrom(pJsonValue);
+	public StepHypnoticGaze initFrom(Game game, JsonValue pJsonValue) {
+		super.initFrom(game, pJsonValue);
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		fGotoLabelOnEnd = IServerJsonOption.GOTO_LABEL_ON_END.getFrom(jsonObject);
+		fGotoLabelOnEnd = IServerJsonOption.GOTO_LABEL_ON_END.getFrom(game, jsonObject);
 		return this;
 	}
 

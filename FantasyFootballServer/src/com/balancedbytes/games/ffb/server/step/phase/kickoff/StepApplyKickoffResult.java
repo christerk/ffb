@@ -602,19 +602,19 @@ public final class StepApplyKickoffResult extends AbstractStep {
 	}
 
 	@Override
-	public StepApplyKickoffResult initFrom(JsonValue pJsonValue) {
-		super.initFrom(pJsonValue);
+	public StepApplyKickoffResult initFrom(Game game, JsonValue pJsonValue) {
+		super.initFrom(game, pJsonValue);
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		fGotoLabelOnEnd = IServerJsonOption.GOTO_LABEL_ON_END.getFrom(jsonObject);
-		fGotoLabelOnBlitz = IServerJsonOption.GOTO_LABEL_ON_BLITZ.getFrom(jsonObject);
-		fKickoffResult = (KickoffResult) IServerJsonOption.KICKOFF_RESULT.getFrom(jsonObject);
-		fTouchback = IServerJsonOption.TOUCHBACK.getFrom(jsonObject);
+		fGotoLabelOnEnd = IServerJsonOption.GOTO_LABEL_ON_END.getFrom(game, jsonObject);
+		fGotoLabelOnBlitz = IServerJsonOption.GOTO_LABEL_ON_BLITZ.getFrom(game, jsonObject);
+		fKickoffResult = (KickoffResult) IServerJsonOption.KICKOFF_RESULT.getFrom(game, jsonObject);
+		fTouchback = IServerJsonOption.TOUCHBACK.getFrom(game, jsonObject);
 		fKickoffBounds = null;
-		JsonObject kickoffBoundsObject = IServerJsonOption.KICKOFF_BOUNDS.getFrom(jsonObject);
+		JsonObject kickoffBoundsObject = IServerJsonOption.KICKOFF_BOUNDS.getFrom(game, jsonObject);
 		if (kickoffBoundsObject != null) {
-			fKickoffBounds = new FieldCoordinateBounds().initFrom(kickoffBoundsObject);
+			fKickoffBounds = new FieldCoordinateBounds().initFrom(game, kickoffBoundsObject);
 		}
-		fEndKickoff = IServerJsonOption.END_KICKOFF.getFrom(jsonObject);
+		fEndKickoff = IServerJsonOption.END_KICKOFF.getFrom(game, jsonObject);
 		return this;
 	}
 

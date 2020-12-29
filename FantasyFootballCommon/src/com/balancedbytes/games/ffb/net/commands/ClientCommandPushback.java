@@ -3,6 +3,7 @@ package com.balancedbytes.games.ffb.net.commands;
 import com.balancedbytes.games.ffb.Pushback;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
+import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.net.NetCommandId;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
@@ -42,11 +43,11 @@ public class ClientCommandPushback extends ClientCommand {
 		return jsonObject;
 	}
 
-	public ClientCommandPushback initFrom(JsonValue jsonValue) {
-		super.initFrom(jsonValue);
+	public ClientCommandPushback initFrom(Game game, JsonValue jsonValue) {
+		super.initFrom(game, jsonValue);
 		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
 		fPushback = new Pushback();
-		fPushback.initFrom(IJsonOption.PUSHBACK.getFrom(jsonObject));
+		fPushback.initFrom(game, IJsonOption.PUSHBACK.getFrom(game, jsonObject));
 		return this;
 	}
 

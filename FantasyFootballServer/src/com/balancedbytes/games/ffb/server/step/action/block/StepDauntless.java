@@ -1,6 +1,7 @@
 package com.balancedbytes.games.ffb.server.step.action.block;
 
 import com.balancedbytes.games.ffb.json.UtilJson;
+import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.server.ActionStatus;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.IServerJsonOption;
@@ -80,10 +81,10 @@ public class StepDauntless extends AbstractStepWithReRoll {
 	}
 
 	@Override
-	public StepDauntless initFrom(JsonValue pJsonValue) {
-		super.initFrom(pJsonValue);
+	public StepDauntless initFrom(Game game, JsonValue pJsonValue) {
+		super.initFrom(game, pJsonValue);
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		state.usingStab = IServerJsonOption.USING_STAB.getFrom(jsonObject);
+		state.usingStab = IServerJsonOption.USING_STAB.getFrom(game, jsonObject);
 		return this;
 	}
 

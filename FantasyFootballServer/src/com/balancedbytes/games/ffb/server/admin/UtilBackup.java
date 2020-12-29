@@ -105,7 +105,7 @@ public class UtilBackup {
 			GameState gameState = null;
 			if (jsonValue != null) {
 				gameState = new GameState(pServer);
-				gameState.initFrom(jsonValue);
+				gameState.initFrom(gameState.getGame(), jsonValue);
 				return gameState;
 			}
 

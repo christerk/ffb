@@ -52,13 +52,15 @@ public class ServerCommandGameState extends ServerCommand {
 		return jsonObject;
 	}
 
-	public ServerCommandGameState initFrom(JsonValue pJsonValue) {
+	public ServerCommandGameState initFrom(Game game, JsonValue pJsonValue) {
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		UtilNetCommand.validateCommandId(this, (NetCommandId) IJsonOption.NET_COMMAND_ID.getFrom(jsonObject));
-		setCommandNr(IJsonOption.COMMAND_NR.getFrom(jsonObject));
-		JsonObject gameObject = IJsonOption.GAME.getFrom(jsonObject);
+		UtilNetCommand.validateCommandId(this, (NetCommandId) IJsonOption.NET_COMMAND_ID.getFrom(game, jsonObject));
+		setCommandNr(IJsonOption.COMMAND_NR.getFrom(game, jsonObject));
+		JsonObject gameObject = IJsonOption.GAME.getFrom(game, jsonObject);
 		if (gameObject != null) {
-			fGame = new Game().initFrom(gameObject);
+			game = new Game();
+			game.initFrom(game, gameObject);
+			fGame = game;
 		}
 		return this;
 	}

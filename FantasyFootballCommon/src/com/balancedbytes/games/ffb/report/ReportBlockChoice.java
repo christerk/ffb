@@ -3,6 +3,7 @@ package com.balancedbytes.games.ffb.report;
 import com.balancedbytes.games.ffb.BlockResult;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
+import com.balancedbytes.games.ffb.model.Game;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
@@ -74,14 +75,14 @@ public class ReportBlockChoice implements IReport {
 		return jsonObject;
 	}
 
-	public ReportBlockChoice initFrom(JsonValue pJsonValue) {
+	public ReportBlockChoice initFrom(Game game, JsonValue pJsonValue) {
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(jsonObject));
-		fNrOfDice = IJsonOption.NR_OF_DICE.getFrom(jsonObject);
-		fBlockRoll = IJsonOption.BLOCK_ROLL.getFrom(jsonObject);
-		fDiceIndex = IJsonOption.DICE_INDEX.getFrom(jsonObject);
-		fBlockResult = (BlockResult) IJsonOption.BLOCK_RESULT.getFrom(jsonObject);
-		fDefenderId = IJsonOption.DEFENDER_ID.getFrom(jsonObject);
+		UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(game, jsonObject));
+		fNrOfDice = IJsonOption.NR_OF_DICE.getFrom(game, jsonObject);
+		fBlockRoll = IJsonOption.BLOCK_ROLL.getFrom(game, jsonObject);
+		fDiceIndex = IJsonOption.DICE_INDEX.getFrom(game, jsonObject);
+		fBlockResult = (BlockResult) IJsonOption.BLOCK_RESULT.getFrom(game, jsonObject);
+		fDefenderId = IJsonOption.DEFENDER_ID.getFrom(game, jsonObject);
 		return this;
 	}
 

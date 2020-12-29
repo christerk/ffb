@@ -1,6 +1,8 @@
 package com.balancedbytes.games.ffb.skill;
 
+import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.SkillCategory;
+import com.balancedbytes.games.ffb.RulesCollection.Rules;
 import com.balancedbytes.games.ffb.model.Skill;
 import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
 
@@ -13,6 +15,7 @@ import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
  * choose to halve the number of squares that the ball scatters on kick-off,
  * rounding any fractions down (i.e., 1 = 0, 2-3 = 1, 4-5 = 2, 6 = 3).
  */
+@RulesCollection(Rules.All)
 public class Kick extends Skill {
 
 	public Kick() {

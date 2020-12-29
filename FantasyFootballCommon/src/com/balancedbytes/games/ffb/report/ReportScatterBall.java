@@ -4,9 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.balancedbytes.games.ffb.Direction;
-import com.balancedbytes.games.ffb.DirectionFactory;
+import com.balancedbytes.games.ffb.factory.DirectionFactory;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
+import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.util.ArrayTool;
 import com.eclipsesource.json.JsonArray;
 import com.eclipsesource.json.JsonObject;
@@ -101,17 +102,17 @@ public class ReportScatterBall implements IReport {
 		return jsonObject;
 	}
 
-	public ReportScatterBall initFrom(JsonValue pJsonValue) {
+	public ReportScatterBall initFrom(Game game, JsonValue pJsonValue) {
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(jsonObject));
-		JsonArray directionArray = IJsonOption.DIRECTION_ARRAY.getFrom(jsonObject);
+		UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(game, jsonObject));
+		JsonArray directionArray = IJsonOption.DIRECTION_ARRAY.getFrom(game, jsonObject);
 		if (directionArray != null) {
 			for (int i = 0; i < directionArray.size(); i++) {
 				addDirection((Direction) UtilJson.toEnumWithName(new DirectionFactory(), directionArray.get(i)));
 			}
 		}
-		addRolls(IJsonOption.ROLLS.getFrom(jsonObject));
-		fGustOfWind = IJsonOption.GUST_OF_WIND.getFrom(jsonObject);
+		addRolls(IJsonOption.ROLLS.getFrom(game, jsonObject));
+		fGustOfWind = IJsonOption.GUST_OF_WIND.getFrom(game, jsonObject);
 		return this;
 	}
 

@@ -229,7 +229,7 @@ public class Roster implements IXmlSerializable, IJsonSerializable {
 		return xmlElement;
 	}
 
-	public boolean endXmlElement(String pXmlTag, String pValue) {
+	public boolean endXmlElement(Game game, String pXmlTag, String pValue) {
 		boolean complete = XML_TAG.equals(pXmlTag);
 		if (!complete) {
 			if (_XML_TAG_NAME.equals(pXmlTag)) {
@@ -301,29 +301,29 @@ public class Roster implements IXmlSerializable, IJsonSerializable {
 
 	}
 
-	public Roster initFrom(JsonValue pJsonValue) {
+	public Roster initFrom(Game game, JsonValue pJsonValue) {
 
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
 
-		fId = IJsonOption.ROSTER_ID.getFrom(jsonObject);
-		fName = IJsonOption.ROSTER_NAME.getFrom(jsonObject);
-		fReRollCost = IJsonOption.RE_ROLL_COST.getFrom(jsonObject);
-		fMaxReRolls = IJsonOption.MAX_RE_ROLLS.getFrom(jsonObject);
-		fBaseIconPath = IJsonOption.BASE_ICON_PATH.getFrom(jsonObject);
-		fLogoUrl = IJsonOption.LOGO_URL.getFrom(jsonObject);
-		fRaisedPositionId = IJsonOption.RAISED_POSITION_ID.getFrom(jsonObject);
-		fApothecary = IJsonOption.APOTHECARY.getFrom(jsonObject);
-		fNecromancer = IJsonOption.NECROMANCER.getFrom(jsonObject);
-		fUndead = IJsonOption.UNDEAD.getFrom(jsonObject);
-		riotousPositionId = IJsonOption.RIOTOUS_POSITION_ID.getFrom(jsonObject);
-		nameGenerator = IJsonOption.NAME_GENERATOR.getFrom(jsonObject);
+		fId = IJsonOption.ROSTER_ID.getFrom(game, jsonObject);
+		fName = IJsonOption.ROSTER_NAME.getFrom(game, jsonObject);
+		fReRollCost = IJsonOption.RE_ROLL_COST.getFrom(game, jsonObject);
+		fMaxReRolls = IJsonOption.MAX_RE_ROLLS.getFrom(game, jsonObject);
+		fBaseIconPath = IJsonOption.BASE_ICON_PATH.getFrom(game, jsonObject);
+		fLogoUrl = IJsonOption.LOGO_URL.getFrom(game, jsonObject);
+		fRaisedPositionId = IJsonOption.RAISED_POSITION_ID.getFrom(game, jsonObject);
+		fApothecary = IJsonOption.APOTHECARY.getFrom(game, jsonObject);
+		fNecromancer = IJsonOption.NECROMANCER.getFrom(game, jsonObject);
+		fUndead = IJsonOption.UNDEAD.getFrom(game, jsonObject);
+		riotousPositionId = IJsonOption.RIOTOUS_POSITION_ID.getFrom(game, jsonObject);
+		nameGenerator = IJsonOption.NAME_GENERATOR.getFrom(game, jsonObject);
 
 		fRosterPositionById.clear();
 		fRosterPositionByName.clear();
-		JsonArray positionArray = IJsonOption.POSITION_ARRAY.getFrom(jsonObject);
+		JsonArray positionArray = IJsonOption.POSITION_ARRAY.getFrom(game, jsonObject);
 		if (positionArray != null) {
 			for (int i = 0; i < positionArray.size(); i++) {
-				addPosition(new RosterPosition().initFrom(positionArray.get(i)));
+				addPosition(new RosterPosition().initFrom(game, positionArray.get(i)));
 			}
 		}
 

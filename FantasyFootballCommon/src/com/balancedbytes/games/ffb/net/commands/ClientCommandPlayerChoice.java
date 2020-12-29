@@ -6,6 +6,7 @@ import java.util.List;
 import com.balancedbytes.games.ffb.PlayerChoiceMode;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
+import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.net.NetCommandId;
 import com.balancedbytes.games.ffb.util.ArrayTool;
@@ -75,11 +76,11 @@ public class ClientCommandPlayerChoice extends ClientCommand {
 		return jsonObject;
 	}
 
-	public ClientCommandPlayerChoice initFrom(JsonValue pJsonValue) {
-		super.initFrom(pJsonValue);
+	public ClientCommandPlayerChoice initFrom(Game game, JsonValue pJsonValue) {
+		super.initFrom(game, pJsonValue);
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		fPlayerChoiceMode = (PlayerChoiceMode) IJsonOption.PLAYER_CHOICE_MODE.getFrom(jsonObject);
-		addPlayerIds(IJsonOption.PLAYER_IDS.getFrom(jsonObject));
+		fPlayerChoiceMode = (PlayerChoiceMode) IJsonOption.PLAYER_CHOICE_MODE.getFrom(game, jsonObject);
+		addPlayerIds(IJsonOption.PLAYER_IDS.getFrom(game, jsonObject));
 		return this;
 	}
 

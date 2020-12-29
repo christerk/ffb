@@ -1,6 +1,7 @@
 package com.balancedbytes.games.ffb.server.step.phase.kickoff;
 
 import com.balancedbytes.games.ffb.json.UtilJson;
+import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandSetupPlayer;
 import com.balancedbytes.games.ffb.server.ActionStatus;
 import com.balancedbytes.games.ffb.server.GameState;
@@ -91,13 +92,13 @@ public class StepSwarming extends AbstractStep {
 	}
 
 	@Override
-	public StepSwarming initFrom(JsonValue pJsonValue) {
-		super.initFrom(pJsonValue);
+	public StepSwarming initFrom(Game game, JsonValue pJsonValue) {
+		super.initFrom(game, pJsonValue);
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		state.endTurn = IServerJsonOption.END_TURN.getFrom(jsonObject);
-		state.handleReceivingTeam = IServerJsonOption.HANDLE_RECEIVING_TEAM.getFrom(jsonObject);
-		state.allowedAmount = IServerJsonOption.SWARMING_PLAYER_AMOUT.getFrom(jsonObject);
-		state.teamId = IServerJsonOption.TEAM_ID.getFrom(jsonObject);
+		state.endTurn = IServerJsonOption.END_TURN.getFrom(game, jsonObject);
+		state.handleReceivingTeam = IServerJsonOption.HANDLE_RECEIVING_TEAM.getFrom(game, jsonObject);
+		state.allowedAmount = IServerJsonOption.SWARMING_PLAYER_AMOUT.getFrom(game, jsonObject);
+		state.teamId = IServerJsonOption.TEAM_ID.getFrom(game, jsonObject);
 		return this;
 	}
 

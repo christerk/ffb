@@ -2,6 +2,7 @@ package com.balancedbytes.games.ffb.net.commands;
 
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
+import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Skill;
 import com.balancedbytes.games.ffb.net.NetCommandId;
 import com.eclipsesource.json.JsonObject;
@@ -53,12 +54,12 @@ public class ClientCommandUseSkill extends ClientCommand {
 		return jsonObject;
 	}
 
-	public ClientCommandUseSkill initFrom(JsonValue jsonValue) {
-		super.initFrom(jsonValue);
+	public ClientCommandUseSkill initFrom(Game game, JsonValue jsonValue) {
+		super.initFrom(game, jsonValue);
 		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
-		fSkill = (Skill) IJsonOption.SKILL.getFrom(jsonObject);
-		fSkillUsed = IJsonOption.SKILL_USED.getFrom(jsonObject);
-		playerId = IJsonOption.PLAYER_ID.getFrom(jsonObject);
+		fSkill = (Skill) IJsonOption.SKILL.getFrom(game, jsonObject);
+		fSkillUsed = IJsonOption.SKILL_USED.getFrom(game, jsonObject);
+		playerId = IJsonOption.PLAYER_ID.getFrom(game, jsonObject);
 		return this;
 	}
 }

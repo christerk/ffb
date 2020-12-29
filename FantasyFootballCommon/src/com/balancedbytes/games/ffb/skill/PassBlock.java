@@ -1,6 +1,8 @@
 package com.balancedbytes.games.ffb.skill;
 
+import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.SkillCategory;
+import com.balancedbytes.games.ffb.RulesCollection.Rules;
 import com.balancedbytes.games.ffb.model.Skill;
 import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
 
@@ -23,6 +25,7 @@ import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
  * skills and the player does have to dodge in order to leave opposing players'
  * tackle zones.
  */
+@RulesCollection(Rules.All)
 public class PassBlock extends Skill {
 
 	public PassBlock() {

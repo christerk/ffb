@@ -4,6 +4,7 @@ import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.IDialogParameter;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
+import com.balancedbytes.games.ffb.model.Game;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
@@ -62,12 +63,12 @@ public class DialogKickSkillParameter implements IDialogParameter {
 		return jsonObject;
 	}
 
-	public DialogKickSkillParameter initFrom(JsonValue pJsonValue) {
+	public DialogKickSkillParameter initFrom(Game game, JsonValue pJsonValue) {
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		UtilDialogParameter.validateDialogId(this, (DialogId) IJsonOption.DIALOG_ID.getFrom(jsonObject));
-		fPlayerId = IJsonOption.PLAYER_ID.getFrom(jsonObject);
-		fBallCoordinate = IJsonOption.BALL_COORDINATE.getFrom(jsonObject);
-		fBallCoordinateWithKick = IJsonOption.BALL_COORDINATE_WITH_KICK.getFrom(jsonObject);
+		UtilDialogParameter.validateDialogId(this, (DialogId) IJsonOption.DIALOG_ID.getFrom(game, jsonObject));
+		fPlayerId = IJsonOption.PLAYER_ID.getFrom(game, jsonObject);
+		fBallCoordinate = IJsonOption.BALL_COORDINATE.getFrom(game, jsonObject);
+		fBallCoordinateWithKick = IJsonOption.BALL_COORDINATE_WITH_KICK.getFrom(game, jsonObject);
 		return this;
 	}
 

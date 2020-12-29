@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
+import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.net.NetCommandId;
 import com.balancedbytes.games.ffb.util.ArrayTool;
 import com.balancedbytes.games.ffb.util.StringTool;
@@ -87,11 +88,11 @@ public class ClientCommandJourneymen extends ClientCommand {
 		return jsonObject;
 	}
 
-	public ClientCommandJourneymen initFrom(JsonValue jsonValue) {
-		super.initFrom(jsonValue);
+	public ClientCommandJourneymen initFrom(Game game, JsonValue jsonValue) {
+		super.initFrom(game, jsonValue);
 		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
-		addPositionIds(IJsonOption.POSITION_IDS.getFrom(jsonObject));
-		addSlots(IJsonOption.SLOTS.getFrom(jsonObject));
+		addPositionIds(IJsonOption.POSITION_IDS.getFrom(game, jsonObject));
+		addSlots(IJsonOption.SLOTS.getFrom(game, jsonObject));
 		return this;
 	}
 }

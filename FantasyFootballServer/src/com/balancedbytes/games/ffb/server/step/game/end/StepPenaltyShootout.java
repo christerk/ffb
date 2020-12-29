@@ -64,8 +64,8 @@ public final class StepPenaltyShootout extends AbstractStep {
 	}
 
 	@Override
-	public StepPenaltyShootout initFrom(JsonValue pJsonValue) {
-		super.initFrom(pJsonValue);
+	public StepPenaltyShootout initFrom(Game game, JsonValue pJsonValue) {
+		super.initFrom(game, pJsonValue);
 		return this;
 	}
 

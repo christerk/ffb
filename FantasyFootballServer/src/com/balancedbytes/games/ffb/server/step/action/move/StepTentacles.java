@@ -3,6 +3,7 @@ package com.balancedbytes.games.ffb.server.step.action.move;
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.PlayerChoiceMode;
 import com.balancedbytes.games.ffb.json.UtilJson;
+import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandPlayerChoice;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.IServerJsonOption;
@@ -127,12 +128,12 @@ public class StepTentacles extends AbstractStepWithReRoll {
 	}
 
 	@Override
-	public StepTentacles initFrom(JsonValue pJsonValue) {
-		super.initFrom(pJsonValue);
+	public StepTentacles initFrom(Game game, JsonValue pJsonValue) {
+		super.initFrom(game, pJsonValue);
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		state.goToLabelOnSuccess = IServerJsonOption.GOTO_LABEL_ON_SUCCESS.getFrom(jsonObject);
-		state.coordinateFrom = IServerJsonOption.COORDINATE_FROM.getFrom(jsonObject);
-		state.usingTentacles = IServerJsonOption.USING_TENTACLES.getFrom(jsonObject);
+		state.goToLabelOnSuccess = IServerJsonOption.GOTO_LABEL_ON_SUCCESS.getFrom(game, jsonObject);
+		state.coordinateFrom = IServerJsonOption.COORDINATE_FROM.getFrom(game, jsonObject);
+		state.usingTentacles = IServerJsonOption.USING_TENTACLES.getFrom(game, jsonObject);
 		return this;
 	}
 

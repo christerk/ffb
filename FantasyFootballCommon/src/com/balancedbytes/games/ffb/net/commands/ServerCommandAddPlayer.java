@@ -4,6 +4,7 @@ import com.balancedbytes.games.ffb.PlayerState;
 import com.balancedbytes.games.ffb.SendToBoxReason;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
+import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.PlayerResult;
 import com.balancedbytes.games.ffb.model.RosterPlayer;
 import com.balancedbytes.games.ffb.net.NetCommandId;
@@ -88,19 +89,19 @@ public class ServerCommandAddPlayer extends ServerCommand {
 		return jsonObject;
 	}
 
-	public ServerCommandAddPlayer initFrom(JsonValue pJsonValue) {
+	public ServerCommandAddPlayer initFrom(Game game, JsonValue pJsonValue) {
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		UtilNetCommand.validateCommandId(this, (NetCommandId) IJsonOption.NET_COMMAND_ID.getFrom(jsonObject));
-		setCommandNr(IJsonOption.COMMAND_NR.getFrom(jsonObject));
-		fTeamId = IJsonOption.TEAM_ID.getFrom(jsonObject);
-		JsonObject playerObject = IJsonOption.PLAYER.getFrom(jsonObject);
+		UtilNetCommand.validateCommandId(this, (NetCommandId) IJsonOption.NET_COMMAND_ID.getFrom(game, jsonObject));
+		setCommandNr(IJsonOption.COMMAND_NR.getFrom(game, jsonObject));
+		fTeamId = IJsonOption.TEAM_ID.getFrom(game, jsonObject);
+		JsonObject playerObject = IJsonOption.PLAYER.getFrom(game, jsonObject);
 		if (playerObject != null) {
-			fPlayer = new RosterPlayer().initFrom(playerObject);
+			fPlayer = new RosterPlayer().initFrom(game, playerObject);
 		}
-		fPlayerState = IJsonOption.PLAYER_STATE.getFrom(jsonObject);
-		fSendToBoxReason = (SendToBoxReason) IJsonOption.SEND_TO_BOX_REASON.getFrom(jsonObject);
-		fSendToBoxTurn = IJsonOption.SEND_TO_BOX_TURN.getFrom(jsonObject);
-		fSendToBoxHalf = IJsonOption.SEND_TO_BOX_HALF.getFrom(jsonObject);
+		fPlayerState = IJsonOption.PLAYER_STATE.getFrom(game, jsonObject);
+		fSendToBoxReason = (SendToBoxReason) IJsonOption.SEND_TO_BOX_REASON.getFrom(game, jsonObject);
+		fSendToBoxTurn = IJsonOption.SEND_TO_BOX_TURN.getFrom(game, jsonObject);
+		fSendToBoxHalf = IJsonOption.SEND_TO_BOX_HALF.getFrom(game, jsonObject);
 		return this;
 	}
 

@@ -2,6 +2,7 @@ package com.balancedbytes.games.ffb.server.step.action.foul;
 
 import com.balancedbytes.games.ffb.ApothecaryMode;
 import com.balancedbytes.games.ffb.json.UtilJson;
+import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.IServerJsonOption;
 import com.balancedbytes.games.ffb.server.InjuryResult;
@@ -116,14 +117,14 @@ public class StepReferee extends AbstractStep {
 	}
 
 	@Override
-	public StepReferee initFrom(JsonValue pJsonValue) {
-		super.initFrom(pJsonValue);
+	public StepReferee initFrom(Game game, JsonValue pJsonValue) {
+		super.initFrom(game, pJsonValue);
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		state.gotoLabelOnEnd = IServerJsonOption.GOTO_LABEL_ON_END.getFrom(jsonObject);
+		state.gotoLabelOnEnd = IServerJsonOption.GOTO_LABEL_ON_END.getFrom(game, jsonObject);
 		state.injuryResultDefender = null;
-		JsonObject injuryResultDefenderObject = IServerJsonOption.INJURY_RESULT_DEFENDER.getFrom(jsonObject);
+		JsonObject injuryResultDefenderObject = IServerJsonOption.INJURY_RESULT_DEFENDER.getFrom(game, jsonObject);
 		if (injuryResultDefenderObject != null) {
-			state.injuryResultDefender = new InjuryResult().initFrom(injuryResultDefenderObject);
+			state.injuryResultDefender = new InjuryResult().initFrom(game, injuryResultDefenderObject);
 		}
 		return this;
 	}

@@ -4,12 +4,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.balancedbytes.games.ffb.Card;
-import com.balancedbytes.games.ffb.CardFactory;
 import com.balancedbytes.games.ffb.IDialogParameter;
 import com.balancedbytes.games.ffb.InducementType;
-import com.balancedbytes.games.ffb.InducementTypeFactory;
+import com.balancedbytes.games.ffb.factory.CardFactory;
+import com.balancedbytes.games.ffb.factory.InducementTypeFactory;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
+import com.balancedbytes.games.ffb.model.Game;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
@@ -74,17 +75,17 @@ public class DialogUseInducementParameter implements IDialogParameter {
 		return jsonObject;
 	}
 
-	public DialogUseInducementParameter initFrom(JsonValue pJsonValue) {
+	public DialogUseInducementParameter initFrom(Game game, JsonValue pJsonValue) {
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		UtilDialogParameter.validateDialogId(this, (DialogId) IJsonOption.DIALOG_ID.getFrom(jsonObject));
-		fTeamId = IJsonOption.TEAM_ID.getFrom(jsonObject);
-		String[] inducementTypeNames = IJsonOption.INDUCEMENT_TYPE_ARRAY.getFrom(jsonObject);
+		UtilDialogParameter.validateDialogId(this, (DialogId) IJsonOption.DIALOG_ID.getFrom(game, jsonObject));
+		fTeamId = IJsonOption.TEAM_ID.getFrom(game, jsonObject);
+		String[] inducementTypeNames = IJsonOption.INDUCEMENT_TYPE_ARRAY.getFrom(game, jsonObject);
 		fInducementTypes = new InducementType[inducementTypeNames.length];
 		InducementTypeFactory inducementTypeFactory = new InducementTypeFactory();
 		for (int i = 0; i < fInducementTypes.length; i++) {
 			fInducementTypes[i] = inducementTypeFactory.forName(inducementTypeNames[i]);
 		}
-		String[] cardNames = IJsonOption.CARDS.getFrom(jsonObject);
+		String[] cardNames = IJsonOption.CARDS.getFrom(game, jsonObject);
 		fCards = new Card[cardNames.length];
 		CardFactory cardFactory = new CardFactory();
 		for (int i = 0; i < fCards.length; i++) {

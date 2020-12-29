@@ -2,6 +2,7 @@ package com.balancedbytes.games.ffb.report;
 
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
+import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Skill;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
@@ -49,10 +50,10 @@ public class ReportConfusionRoll extends ReportSkillRoll {
 	}
 
 	@Override
-	public ReportConfusionRoll initFrom(JsonValue pJsonValue) {
-		super.initFrom(pJsonValue);
+	public ReportConfusionRoll initFrom(Game game, JsonValue pJsonValue) {
+		super.initFrom(game, pJsonValue);
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		fConfusionSkill = (Skill) IJsonOption.CONFUSION_SKILL.getFrom(jsonObject);
+		fConfusionSkill = (Skill) IJsonOption.CONFUSION_SKILL.getFrom(game, jsonObject);
 		return this;
 	}
 

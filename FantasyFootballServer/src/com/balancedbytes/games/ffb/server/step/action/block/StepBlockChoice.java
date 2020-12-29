@@ -218,17 +218,17 @@ public class StepBlockChoice extends AbstractStep {
 	}
 
 	@Override
-	public StepBlockChoice initFrom(JsonValue pJsonValue) {
-		super.initFrom(pJsonValue);
+	public StepBlockChoice initFrom(Game game, JsonValue pJsonValue) {
+		super.initFrom(game, pJsonValue);
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		fGotoLabelOnDodge = IServerJsonOption.GOTO_LABEL_ON_DODGE.getFrom(jsonObject);
-		fGotoLabelOnJuggernaut = IServerJsonOption.GOTO_LABEL_ON_JUGGERNAUT.getFrom(jsonObject);
-		fGotoLabelOnPushback = IServerJsonOption.GOTO_LABEL_ON_PUSHBACK.getFrom(jsonObject);
-		fNrOfDice = IServerJsonOption.NR_OF_DICE.getFrom(jsonObject);
-		fBlockRoll = IServerJsonOption.BLOCK_ROLL.getFrom(jsonObject);
-		fDiceIndex = IServerJsonOption.DICE_INDEX.getFrom(jsonObject);
-		fBlockResult = (BlockResult) IServerJsonOption.BLOCK_RESULT.getFrom(jsonObject);
-		fOldDefenderState = IServerJsonOption.OLD_DEFENDER_STATE.getFrom(jsonObject);
+		fGotoLabelOnDodge = IServerJsonOption.GOTO_LABEL_ON_DODGE.getFrom(game, jsonObject);
+		fGotoLabelOnJuggernaut = IServerJsonOption.GOTO_LABEL_ON_JUGGERNAUT.getFrom(game, jsonObject);
+		fGotoLabelOnPushback = IServerJsonOption.GOTO_LABEL_ON_PUSHBACK.getFrom(game, jsonObject);
+		fNrOfDice = IServerJsonOption.NR_OF_DICE.getFrom(game, jsonObject);
+		fBlockRoll = IServerJsonOption.BLOCK_ROLL.getFrom(game, jsonObject);
+		fDiceIndex = IServerJsonOption.DICE_INDEX.getFrom(game, jsonObject);
+		fBlockResult = (BlockResult) IServerJsonOption.BLOCK_RESULT.getFrom(game, jsonObject);
+		fOldDefenderState = IServerJsonOption.OLD_DEFENDER_STATE.getFrom(game, jsonObject);
 		return this;
 	}
 

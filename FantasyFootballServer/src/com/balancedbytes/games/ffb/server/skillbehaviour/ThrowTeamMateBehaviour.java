@@ -4,11 +4,11 @@ import java.util.Set;
 
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.PassModifier;
-import com.balancedbytes.games.ffb.PassModifierFactory;
 import com.balancedbytes.games.ffb.PassingDistance;
 import com.balancedbytes.games.ffb.ReRollSource;
 import com.balancedbytes.games.ffb.ReRolledActions;
 import com.balancedbytes.games.ffb.dialog.DialogSkillUseParameter;
+import com.balancedbytes.games.ffb.factory.PassModifierFactory;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
@@ -87,7 +87,7 @@ public class ThrowTeamMateBehaviour extends SkillBehaviour<ThrowTeamMate> {
 							ReRollSource unusedPassingReroll = UtilCards.getUnusedRerollSource(actingPlayer, ReRolledActions.PASS);
 							if (unusedPassingReroll != null) {
 								UtilServerDialog.showDialog(step.getGameState(),
-										new DialogSkillUseParameter(thrower.getId(), unusedPassingReroll.getSkill(), minimumRoll), false);
+										new DialogSkillUseParameter(thrower.getId(), unusedPassingReroll.getSkill(game), minimumRoll), false);
 							} else {
 								if (!UtilServerReRoll.askForReRollIfAvailable(step.getGameState(), actingPlayer.getPlayer(),
 										ReRolledActions.THROW_TEAM_MATE, minimumRoll, false)) {

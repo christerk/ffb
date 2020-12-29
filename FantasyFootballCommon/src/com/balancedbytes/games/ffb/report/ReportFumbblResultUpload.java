@@ -2,6 +2,7 @@ package com.balancedbytes.games.ffb.report;
 
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
+import com.balancedbytes.games.ffb.model.Game;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
@@ -51,11 +52,11 @@ public class ReportFumbblResultUpload implements IReport {
 		return jsonObject;
 	}
 
-	public ReportFumbblResultUpload initFrom(JsonValue pJsonValue) {
+	public ReportFumbblResultUpload initFrom(Game game, JsonValue pJsonValue) {
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(jsonObject));
-		fSuccessful = IJsonOption.SUCCESSFUL.getFrom(jsonObject);
-		fUploadStatus = IJsonOption.UPLOAD_STATUS.getFrom(jsonObject);
+		UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(game, jsonObject));
+		fSuccessful = IJsonOption.SUCCESSFUL.getFrom(game, jsonObject);
+		fUploadStatus = IJsonOption.UPLOAD_STATUS.getFrom(game, jsonObject);
 		return this;
 	}
 

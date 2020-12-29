@@ -3,6 +3,7 @@ package com.balancedbytes.games.ffb.dialog;
 import com.balancedbytes.games.ffb.IDialogParameter;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
+import com.balancedbytes.games.ffb.model.Game;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
@@ -96,15 +97,15 @@ public class DialogParameterFactory {
 
 	// JSON serialization
 
-	public IDialogParameter forJsonValue(JsonValue pJsonValue) {
+	public IDialogParameter forJsonValue(Game game, JsonValue pJsonValue) {
 		if ((pJsonValue == null) || pJsonValue.isNull()) {
 			return null;
 		}
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		DialogId dialogId = (DialogId) IJsonOption.DIALOG_ID.getFrom(jsonObject);
+		DialogId dialogId = (DialogId) IJsonOption.DIALOG_ID.getFrom(game, jsonObject);
 		IDialogParameter dialogParameter = createDialogParameter(dialogId);
 		if (dialogParameter != null) {
-			dialogParameter.initFrom(pJsonValue);
+			dialogParameter.initFrom(game, pJsonValue);
 		}
 		return dialogParameter;
 	}

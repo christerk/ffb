@@ -143,8 +143,8 @@ public final class StepWinnings extends AbstractStepWithReRoll {
 	}
 
 	@Override
-	public StepWinnings initFrom(JsonValue pJsonValue) {
-		super.initFrom(pJsonValue);
+	public StepWinnings initFrom(Game game, JsonValue pJsonValue) {
+		super.initFrom(game, pJsonValue);
 		return this;
 	}
 

@@ -133,15 +133,15 @@ public abstract class Player<T extends Position> implements IXmlSerializable, IJ
 
 	public abstract JsonObject toJsonValue();
 
-	public static Player<?> getFrom(JsonValue jsonValue) {
-		Player<?> player = createPlayer(jsonValue);
-		player.initFrom(jsonValue);
+	public static Player<?> getFrom(Game game, JsonValue jsonValue) {
+		Player<?> player = createPlayer(game, jsonValue);
+		player.initFrom(game, jsonValue);
 		return player;
 	}
 
-	private static Player<?> createPlayer(JsonValue jsonValue) {
+	private static Player<?> createPlayer(Game game, JsonValue jsonValue) {
 		if (jsonValue instanceof JsonObject
-				&& ZappedPlayer.KIND.equals(IJsonOption.PLAYER_KIND.getFrom((JsonObject) jsonValue))) {
+				&& ZappedPlayer.KIND.equals(IJsonOption.PLAYER_KIND.getFrom(game, (JsonObject) jsonValue))) {
 			return new ZappedPlayer();
 		}
 		return new RosterPlayer();

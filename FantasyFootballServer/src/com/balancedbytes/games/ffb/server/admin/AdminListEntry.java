@@ -11,7 +11,8 @@ import org.xml.sax.Attributes;
 import org.xml.sax.helpers.AttributesImpl;
 
 import com.balancedbytes.games.ffb.GameStatus;
-import com.balancedbytes.games.ffb.GameStatusFactory;
+import com.balancedbytes.games.ffb.factory.GameStatusFactory;
+import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.util.StringTool;
 import com.balancedbytes.games.ffb.xml.IXmlSerializable;
 import com.balancedbytes.games.ffb.xml.UtilXml;
@@ -265,7 +266,7 @@ public class AdminListEntry implements IXmlSerializable {
 		return this;
 	}
 
-	public boolean endXmlElement(String pXmlTag, String pValue) {
+	public boolean endXmlElement(Game game, String pXmlTag, String pValue) {
 		return XML_TAG.equals(pXmlTag);
 	}
 

@@ -8,6 +8,7 @@ import org.xml.sax.helpers.AttributesImpl;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.IJsonSerializable;
 import com.balancedbytes.games.ffb.json.UtilJson;
+import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.xml.IXmlReadable;
 import com.balancedbytes.games.ffb.xml.IXmlSerializable;
 import com.balancedbytes.games.ffb.xml.UtilXml;
@@ -145,7 +146,7 @@ public class RangeRuler implements IXmlSerializable, IJsonSerializable {
 		return xmlElement;
 	}
 
-	public boolean endXmlElement(String pXmlTag, String pValue) {
+	public boolean endXmlElement(Game game, String pXmlTag, String pValue) {
 		return XML_TAG.equals(pXmlTag);
 	}
 
@@ -160,12 +161,12 @@ public class RangeRuler implements IXmlSerializable, IJsonSerializable {
 		return jsonObject;
 	}
 
-	public RangeRuler initFrom(JsonValue pJsonValue) {
+	public RangeRuler initFrom(Game game, JsonValue pJsonValue) {
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		fThrowerId = IJsonOption.THROWER_ID.getFrom(jsonObject);
-		fTargetCoordinate = IJsonOption.TARGET_COORDINATE.getFrom(jsonObject);
-		fMinimumRoll = IJsonOption.MINIMUM_ROLL.getFrom(jsonObject);
-		fThrowTeamMate = IJsonOption.THROW_TEAM_MATE.getFrom(jsonObject);
+		fThrowerId = IJsonOption.THROWER_ID.getFrom(game, jsonObject);
+		fTargetCoordinate = IJsonOption.TARGET_COORDINATE.getFrom(game, jsonObject);
+		fMinimumRoll = IJsonOption.MINIMUM_ROLL.getFrom(game, jsonObject);
+		fThrowTeamMate = IJsonOption.THROW_TEAM_MATE.getFrom(game, jsonObject);
 		return this;
 	}
 

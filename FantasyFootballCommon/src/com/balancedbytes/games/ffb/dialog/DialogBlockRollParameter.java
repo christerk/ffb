@@ -3,6 +3,7 @@ package com.balancedbytes.games.ffb.dialog;
 import com.balancedbytes.games.ffb.IDialogParameter;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
+import com.balancedbytes.games.ffb.model.Game;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
@@ -75,14 +76,14 @@ public class DialogBlockRollParameter implements IDialogParameter {
 		return jsonObject;
 	}
 
-	public DialogBlockRollParameter initFrom(JsonValue pJsonValue) {
+	public DialogBlockRollParameter initFrom(Game game, JsonValue pJsonValue) {
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		UtilDialogParameter.validateDialogId(this, (DialogId) IJsonOption.DIALOG_ID.getFrom(jsonObject));
-		fChoosingTeamId = IJsonOption.CHOOSING_TEAM_ID.getFrom(jsonObject);
-		fNrOfDice = IJsonOption.NR_OF_DICE.getFrom(jsonObject);
-		fBlockRoll = IJsonOption.BLOCK_ROLL.getFrom(jsonObject);
-		fTeamReRollOption = IJsonOption.TEAM_RE_ROLL_OPTION.getFrom(jsonObject);
-		fProReRollOption = IJsonOption.PRO_RE_ROLL_OPTION.getFrom(jsonObject);
+		UtilDialogParameter.validateDialogId(this, (DialogId) IJsonOption.DIALOG_ID.getFrom(game, jsonObject));
+		fChoosingTeamId = IJsonOption.CHOOSING_TEAM_ID.getFrom(game, jsonObject);
+		fNrOfDice = IJsonOption.NR_OF_DICE.getFrom(game, jsonObject);
+		fBlockRoll = IJsonOption.BLOCK_ROLL.getFrom(game, jsonObject);
+		fTeamReRollOption = IJsonOption.TEAM_RE_ROLL_OPTION.getFrom(game, jsonObject);
+		fProReRollOption = IJsonOption.PRO_RE_ROLL_OPTION.getFrom(game, jsonObject);
 		return this;
 	}
 

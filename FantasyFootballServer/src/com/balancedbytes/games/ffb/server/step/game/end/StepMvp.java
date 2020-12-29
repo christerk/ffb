@@ -238,17 +238,17 @@ public final class StepMvp extends AbstractStep {
 	}
 
 	@Override
-	public StepMvp initFrom(JsonValue pJsonValue) {
-		super.initFrom(pJsonValue);
+	public StepMvp initFrom(Game game, JsonValue pJsonValue) {
+		super.initFrom(game, pJsonValue);
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		fNrOfAwayChoices = IServerJsonOption.NR_OF_AWAY_CHOICES.getFrom(jsonObject);
-		fNrOfAwayMvps = IServerJsonOption.NR_OF_AWAY_MVPS.getFrom(jsonObject);
-		fNrOfHomeChoices = IServerJsonOption.NR_OF_HOME_CHOICES.getFrom(jsonObject);
-		fNrOfHomeMvps = IServerJsonOption.NR_OF_HOME_MVPS.getFrom(jsonObject);
-		fAwayPlayersNominated = IServerJsonOption.AWAY_PLAYERS_NOMINATED.getFrom(jsonObject);
-		fHomePlayersNominated = IServerJsonOption.HOME_PLAYERS_NOMINATED.getFrom(jsonObject);
-		ListTool.replaceAll(fAwayPlayersMvp, IServerJsonOption.AWAY_PLAYERS_MVP.getFrom(jsonObject));
-		ListTool.replaceAll(fHomePlayersMvp, IServerJsonOption.HOME_PLAYERS_MVP.getFrom(jsonObject));
+		fNrOfAwayChoices = IServerJsonOption.NR_OF_AWAY_CHOICES.getFrom(game, jsonObject);
+		fNrOfAwayMvps = IServerJsonOption.NR_OF_AWAY_MVPS.getFrom(game, jsonObject);
+		fNrOfHomeChoices = IServerJsonOption.NR_OF_HOME_CHOICES.getFrom(game, jsonObject);
+		fNrOfHomeMvps = IServerJsonOption.NR_OF_HOME_MVPS.getFrom(game, jsonObject);
+		fAwayPlayersNominated = IServerJsonOption.AWAY_PLAYERS_NOMINATED.getFrom(game, jsonObject);
+		fHomePlayersNominated = IServerJsonOption.HOME_PLAYERS_NOMINATED.getFrom(game, jsonObject);
+		ListTool.replaceAll(fAwayPlayersMvp, IServerJsonOption.AWAY_PLAYERS_MVP.getFrom(game, jsonObject));
+		ListTool.replaceAll(fHomePlayersMvp, IServerJsonOption.HOME_PLAYERS_MVP.getFrom(game, jsonObject));
 		return this;
 	}
 

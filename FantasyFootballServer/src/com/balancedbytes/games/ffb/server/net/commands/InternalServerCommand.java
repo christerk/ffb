@@ -2,6 +2,7 @@ package com.balancedbytes.games.ffb.server.net.commands;
 
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
+import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.net.NetCommand;
 import com.balancedbytes.games.ffb.net.NetCommandId;
 import com.balancedbytes.games.ffb.net.commands.UtilNetCommand;
@@ -49,12 +50,12 @@ public abstract class InternalServerCommand extends NetCommand {
 		return jsonObject;
 	}
 
-	public InternalServerCommand initFrom(JsonValue pJsonValue) {
+	public InternalServerCommand initFrom(Game game, JsonValue pJsonValue) {
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		UtilNetCommand.validateCommandId(this, (NetCommandId) IJsonOption.NET_COMMAND_ID.getFrom(jsonObject));
+		UtilNetCommand.validateCommandId(this, (NetCommandId) IJsonOption.NET_COMMAND_ID.getFrom(game, jsonObject));
 		fGameId = 0L;
 		if (IJsonOption.GAME_ID.isDefinedIn(jsonObject)) {
-			fGameId = IJsonOption.GAME_ID.getFrom(jsonObject);
+			fGameId = IJsonOption.GAME_ID.getFrom(game, jsonObject);
 		}
 		return this;
 	}

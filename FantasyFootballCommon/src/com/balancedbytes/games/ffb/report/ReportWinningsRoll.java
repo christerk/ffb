@@ -2,6 +2,7 @@ package com.balancedbytes.games.ffb.report;
 
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
+import com.balancedbytes.games.ffb.model.Game;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
@@ -65,13 +66,13 @@ public class ReportWinningsRoll implements IReport {
 		return jsonObject;
 	}
 
-	public ReportWinningsRoll initFrom(JsonValue pJsonValue) {
+	public ReportWinningsRoll initFrom(Game game, JsonValue pJsonValue) {
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(jsonObject));
-		fWinningsRollHome = IJsonOption.WINNINGS_ROLL_HOME.getFrom(jsonObject);
-		fWinningsHome = IJsonOption.WINNINGS_HOME.getFrom(jsonObject);
-		fWinningsRollAway = IJsonOption.WINNINGS_ROLL_AWAY.getFrom(jsonObject);
-		fWinningsAway = IJsonOption.WINNINGS_AWAY.getFrom(jsonObject);
+		UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(game, jsonObject));
+		fWinningsRollHome = IJsonOption.WINNINGS_ROLL_HOME.getFrom(game, jsonObject);
+		fWinningsHome = IJsonOption.WINNINGS_HOME.getFrom(game, jsonObject);
+		fWinningsRollAway = IJsonOption.WINNINGS_ROLL_AWAY.getFrom(game, jsonObject);
+		fWinningsAway = IJsonOption.WINNINGS_AWAY.getFrom(game, jsonObject);
 		return this;
 	}
 

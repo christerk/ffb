@@ -2,6 +2,7 @@ package com.balancedbytes.games.ffb.server.step.action.block;
 
 import com.balancedbytes.games.ffb.PlayerState;
 import com.balancedbytes.games.ffb.json.UtilJson;
+import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.net.NetCommandId;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandUseSkill;
 import com.balancedbytes.games.ffb.server.ActionStatus;
@@ -109,12 +110,12 @@ public class StepJuggernaut extends AbstractStep {
 	}
 
 	@Override
-	public StepJuggernaut initFrom(JsonValue pJsonValue) {
-		super.initFrom(pJsonValue);
+	public StepJuggernaut initFrom(Game game, JsonValue pJsonValue) {
+		super.initFrom(game, pJsonValue);
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		state.usingJuggernaut = IServerJsonOption.USING_JUGGERNAUT.getFrom(jsonObject);
-		state.oldDefenderState = IServerJsonOption.OLD_DEFENDER_STATE.getFrom(jsonObject);
-		state.goToLabelOnSuccess = IServerJsonOption.GOTO_LABEL_ON_SUCCESS.getFrom(jsonObject);
+		state.usingJuggernaut = IServerJsonOption.USING_JUGGERNAUT.getFrom(game, jsonObject);
+		state.oldDefenderState = IServerJsonOption.OLD_DEFENDER_STATE.getFrom(game, jsonObject);
+		state.goToLabelOnSuccess = IServerJsonOption.GOTO_LABEL_ON_SUCCESS.getFrom(game, jsonObject);
 		return this;
 	}
 

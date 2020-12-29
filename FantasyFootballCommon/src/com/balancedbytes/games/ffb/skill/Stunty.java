@@ -2,7 +2,9 @@ package com.balancedbytes.games.ffb.skill;
 
 import com.balancedbytes.games.ffb.InjuryModifiers;
 import com.balancedbytes.games.ffb.PassingModifiers;
+import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.SkillCategory;
+import com.balancedbytes.games.ffb.RulesCollection.Rules;
 import com.balancedbytes.games.ffb.model.Skill;
 import com.balancedbytes.games.ffb.model.SkillConstants;
 import com.balancedbytes.games.ffb.model.modifier.CancelSkillProperty;
@@ -22,6 +24,7 @@ import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
  * are not allowed to ignore enemy tackle zones, but still suffer the other
  * penalties.
  */
+@RulesCollection(Rules.All)
 public class Stunty extends Skill {
 
 	public Stunty() {

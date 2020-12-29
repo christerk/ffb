@@ -104,10 +104,10 @@ public class StepFallDown extends AbstractStep {
 	}
 
 	@Override
-	public StepFallDown initFrom(JsonValue pJsonValue) {
-		super.initFrom(pJsonValue);
+	public StepFallDown initFrom(Game game, JsonValue pJsonValue) {
+		super.initFrom(game, pJsonValue);
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		fInjuryType = (InjuryTypeServer) IServerJsonOption.INJURY_TYPE.getFrom(jsonObject);
+		fInjuryType = (InjuryTypeServer) IServerJsonOption.INJURY_TYPE.getFrom(game, jsonObject);
 		return this;
 	}
 

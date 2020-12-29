@@ -2,6 +2,7 @@ package com.balancedbytes.games.ffb.net.commands;
 
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
+import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.net.NetCommandId;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
@@ -52,12 +53,12 @@ public class ClientCommandKickTeamMate extends ClientCommand implements ICommand
 		return jsonObject;
 	}
 
-	public ClientCommandKickTeamMate initFrom(JsonValue jsonValue) {
-		super.initFrom(jsonValue);
+	public ClientCommandKickTeamMate initFrom(Game game, JsonValue jsonValue) {
+		super.initFrom(game, jsonValue);
 		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
-		fActingPlayerId = IJsonOption.ACTING_PLAYER_ID.getFrom(jsonObject);
-		fKickedPlayerId = IJsonOption.KICKED_PLAYER_ID.getFrom(jsonObject);
-		fNumDice = IJsonOption.NR_OF_DICE.getFrom(jsonObject);
+		fActingPlayerId = IJsonOption.ACTING_PLAYER_ID.getFrom(game, jsonObject);
+		fKickedPlayerId = IJsonOption.KICKED_PLAYER_ID.getFrom(game, jsonObject);
+		fNumDice = IJsonOption.NR_OF_DICE.getFrom(game, jsonObject);
 		return this;
 	}
 

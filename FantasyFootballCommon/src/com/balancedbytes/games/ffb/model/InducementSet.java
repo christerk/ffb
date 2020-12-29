@@ -13,9 +13,9 @@ import org.xml.sax.Attributes;
 import org.xml.sax.helpers.AttributesImpl;
 
 import com.balancedbytes.games.ffb.Card;
-import com.balancedbytes.games.ffb.CardFactory;
 import com.balancedbytes.games.ffb.Inducement;
 import com.balancedbytes.games.ffb.InducementType;
+import com.balancedbytes.games.ffb.factory.CardFactory;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.IJsonSerializable;
 import com.balancedbytes.games.ffb.json.UtilJson;
@@ -308,7 +308,7 @@ public class InducementSet implements IXmlSerializable, IJsonSerializable {
 		return xmlElement;
 	}
 
-	public boolean endXmlElement(String pXmlTag, String pValue) {
+	public boolean endXmlElement(Game game, String pXmlTag, String pValue) {
 		return XML_TAG.equals(pXmlTag);
 	}
 
@@ -343,36 +343,36 @@ public class InducementSet implements IXmlSerializable, IJsonSerializable {
 		return jsonObject;
 	}
 
-	public InducementSet initFrom(JsonValue pJsonValue) {
+	public InducementSet initFrom(Game game, JsonValue pJsonValue) {
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		JsonArray inducements = IJsonOption.INDUCEMENT_ARRAY.getFrom(jsonObject);
+		JsonArray inducements = IJsonOption.INDUCEMENT_ARRAY.getFrom(game, jsonObject);
 		if (inducements != null) {
 			for (int i = 0; i < inducements.size(); i++) {
 				Inducement inducement = new Inducement();
-				inducement.initFrom(inducements.get(i));
+				inducement.initFrom(game, inducements.get(i));
 				addInducement(inducement);
 			}
 		}
 		CardFactory cardFactory = new CardFactory();
-		String[] cardsAvailable = IJsonOption.CARDS_AVAILABLE.getFrom(jsonObject);
+		String[] cardsAvailable = IJsonOption.CARDS_AVAILABLE.getFrom(game, jsonObject);
 		if (ArrayTool.isProvided(cardsAvailable)) {
 			for (String cardName : cardsAvailable) {
 				fCardsAvailable.add(cardFactory.forName(cardName));
 			}
 		}
-		String[] cardsActive = IJsonOption.CARDS_ACTIVE.getFrom(jsonObject);
+		String[] cardsActive = IJsonOption.CARDS_ACTIVE.getFrom(game, jsonObject);
 		if (ArrayTool.isProvided(cardsActive)) {
 			for (String cardName : cardsActive) {
 				fCardsActive.add(cardFactory.forName(cardName));
 			}
 		}
-		String[] cardsDeactivated = IJsonOption.CARDS_DEACTIVATED.getFrom(jsonObject);
+		String[] cardsDeactivated = IJsonOption.CARDS_DEACTIVATED.getFrom(game, jsonObject);
 		if (ArrayTool.isProvided(cardsDeactivated)) {
 			for (String cardName : cardsDeactivated) {
 				fCardsDeactivated.add(cardFactory.forName(cardName));
 			}
 		}
-		String[] starPlayerPositionIds = IJsonOption.STAR_PLAYER_POSTION_IDS.getFrom(jsonObject);
+		String[] starPlayerPositionIds = IJsonOption.STAR_PLAYER_POSTION_IDS.getFrom(game, jsonObject);
 		if (ArrayTool.isProvided(starPlayerPositionIds)) {
 			for (String starPlayerPositionId : starPlayerPositionIds) {
 				fStarPlayerPositionIds.add(starPlayerPositionId);

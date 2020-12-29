@@ -183,12 +183,12 @@ public final class StepKickoffReturn extends AbstractStep {
 	}
 
 	@Override
-	public StepKickoffReturn initFrom(JsonValue pJsonValue) {
-		super.initFrom(pJsonValue);
+	public StepKickoffReturn initFrom(Game game, JsonValue pJsonValue) {
+		super.initFrom(game, pJsonValue);
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		fTouchback = IServerJsonOption.TOUCHBACK.getFrom(jsonObject);
-		fEndPlayerAction = IServerJsonOption.END_PLAYER_ACTION.getFrom(jsonObject);
-		fEndTurn = IServerJsonOption.END_TURN.getFrom(jsonObject);
+		fTouchback = IServerJsonOption.TOUCHBACK.getFrom(game, jsonObject);
+		fEndPlayerAction = IServerJsonOption.END_PLAYER_ACTION.getFrom(game, jsonObject);
+		fEndTurn = IServerJsonOption.END_TURN.getFrom(game, jsonObject);
 		return this;
 	}
 

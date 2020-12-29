@@ -2,6 +2,7 @@ package com.balancedbytes.games.ffb.server.step.phase.kickoff;
 
 import com.balancedbytes.games.ffb.KickoffResult;
 import com.balancedbytes.games.ffb.json.UtilJson;
+import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.report.ReportKickoffResult;
 import com.balancedbytes.games.ffb.server.DiceInterpreter;
 import com.balancedbytes.games.ffb.server.GameState;
@@ -74,10 +75,10 @@ public final class StepKickoffResultRoll extends AbstractStep {
 	}
 
 	@Override
-	public StepKickoffResultRoll initFrom(JsonValue pJsonValue) {
-		super.initFrom(pJsonValue);
+	public StepKickoffResultRoll initFrom(Game game, JsonValue pJsonValue) {
+		super.initFrom(game, pJsonValue);
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		fKickoffResult = (KickoffResult) IServerJsonOption.KICKOFF_RESULT.getFrom(jsonObject);
+		fKickoffResult = (KickoffResult) IServerJsonOption.KICKOFF_RESULT.getFrom(game, jsonObject);
 		return this;
 	}
 

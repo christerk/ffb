@@ -66,8 +66,8 @@ public final class StepEndKickoff extends AbstractStep {
 	}
 
 	@Override
-	public StepEndKickoff initFrom(JsonValue pJsonValue) {
-		super.initFrom(pJsonValue);
+	public StepEndKickoff initFrom(Game game, JsonValue pJsonValue) {
+		super.initFrom(game, pJsonValue);
 		return this;
 	}
 

@@ -84,8 +84,8 @@ public class StepFoul extends AbstractStep {
 	}
 
 	@Override
-	public StepFoul initFrom(JsonValue pJsonValue) {
-		super.initFrom(pJsonValue);
+	public StepFoul initFrom(Game game, JsonValue pJsonValue) {
+		super.initFrom(game, pJsonValue);
 		return this;
 	}
 

@@ -1,6 +1,8 @@
 package com.balancedbytes.games.ffb.skill;
 
+import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.SkillCategory;
+import com.balancedbytes.games.ffb.RulesCollection.Rules;
 import com.balancedbytes.games.ffb.model.Skill;
 
 /**
@@ -12,6 +14,7 @@ import com.balancedbytes.games.ffb.model.Skill;
  * make Armour rolls for either player. Use of this skill does not cause a
  * turnover unless the active player was holding the ball.
  */
+@RulesCollection(Rules.All)
 public class Wrestle extends Skill {
 
 	public Wrestle() {

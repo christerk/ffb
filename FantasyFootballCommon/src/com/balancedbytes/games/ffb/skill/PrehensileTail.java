@@ -1,6 +1,8 @@
 package com.balancedbytes.games.ffb.skill;
 
+import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.SkillCategory;
+import com.balancedbytes.games.ffb.RulesCollection.Rules;
 import com.balancedbytes.games.ffb.model.Skill;
 
 /**
@@ -8,6 +10,7 @@ import com.balancedbytes.games.ffb.model.Skill;
  * players. To represent this, opposing players must subtract 1 from the D6 roll
  * if they attempt to dodge out of any of the player's tackle zones.
  */
+@RulesCollection(Rules.All)
 public class PrehensileTail extends Skill {
 
 	public PrehensileTail() {

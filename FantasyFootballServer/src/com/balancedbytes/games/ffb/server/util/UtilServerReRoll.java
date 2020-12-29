@@ -55,7 +55,7 @@ public class UtilServerReRoll {
 					}
 				}
 			}
-			if (pReRollSource.getSkill() != null) {
+			if (pReRollSource.getSkill(game) != null) {
 				if (ReRollSources.PRO == pReRollSource) {
 					PlayerState playerState = game.getFieldModel().getPlayerState(pPlayer);
 					successful = (UtilCards.hasSkillWithProperty(pPlayer, NamedProperties.canRerollOncePerTurn)
@@ -67,12 +67,12 @@ public class UtilServerReRoll {
 						stepResult.addReport(new ReportReRoll(pPlayer.getId(), ReRollSources.PRO, successful, roll));
 					}
 				} else {
-					successful = UtilCards.hasSkill(game, pPlayer, pReRollSource.getSkill());
+					successful = UtilCards.hasSkill(game, pPlayer, pReRollSource.getSkill(game));
 					stepResult.addReport(new ReportReRoll(pPlayer.getId(), pReRollSource, successful, 0));
 				}
 				ActingPlayer actingPlayer = game.getActingPlayer();
 				if (actingPlayer.getPlayer() == pPlayer) {
-					actingPlayer.markSkillUsed(pReRollSource.getSkill());
+					actingPlayer.markSkillUsed(pReRollSource.getSkill(game));
 				}
 			}
 		}

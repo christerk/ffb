@@ -252,8 +252,8 @@ public class ZappedPlayer extends Player<ZappedPosition> {
 	}
 
 	@Override
-	public ZappedPlayer initFrom(JsonValue pJsonValue) {
-		originalPlayer = new RosterPlayer().initFrom(IJsonOption.PLAYER.getFrom((JsonObject) pJsonValue));
+	public ZappedPlayer initFrom(Game game, JsonValue pJsonValue) {
+		originalPlayer = new RosterPlayer().initFrom(game, IJsonOption.PLAYER.getFrom(game, (JsonObject) pJsonValue));
 		return this;
 	}
 
@@ -269,7 +269,7 @@ public class ZappedPlayer extends Player<ZappedPosition> {
 	}
 
 	@Override
-	public boolean endXmlElement(String pXmlTag, String pValue) {
+	public boolean endXmlElement(Game game, String pXmlTag, String pValue) {
 		return XML_TAG.equals(pXmlTag);
 	}
 

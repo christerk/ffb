@@ -1,6 +1,8 @@
 package com.balancedbytes.games.ffb.skill;
 
+import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.SkillCategory;
+import com.balancedbytes.games.ffb.RulesCollection.Rules;
 import com.balancedbytes.games.ffb.model.Skill;
 import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
 
@@ -14,6 +16,7 @@ import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
  * result stands and may not be re-rolled with a skill or team re-roll; however
  * you can re-roll the Pro roll with a Team re-roll.
  */
+@RulesCollection(Rules.All)
 public class Pro extends Skill {
 
 	public Pro() {

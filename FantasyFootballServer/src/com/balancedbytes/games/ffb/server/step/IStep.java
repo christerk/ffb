@@ -1,6 +1,7 @@
 package com.balancedbytes.games.ffb.server.step;
 
 import com.balancedbytes.games.ffb.json.IJsonSerializable;
+import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.net.ReceivedCommand;
 import com.eclipsesource.json.JsonObject;
@@ -37,7 +38,7 @@ public interface IStep extends IJsonSerializable {
 	public void publishParameters(StepParameterSet pParameterSet);
 
 	// overrides IJsonSerializable
-	public IStep initFrom(JsonValue pJsonValue);
+	public IStep initFrom(Game game, JsonValue pJsonValue);
 
 	// overrides IJsonSerializable
 	public JsonObject toJsonValue();

@@ -1,6 +1,8 @@
 package com.balancedbytes.games.ffb.skill;
 
+import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.SkillCategory;
+import com.balancedbytes.games.ffb.RulesCollection.Rules;
 import com.balancedbytes.games.ffb.model.Skill;
 import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
 
@@ -19,6 +21,7 @@ import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
  * square they are moving to - the presence of a large pair of wings negates any
  * benefit they would gain from being small and slippery.
  */
+@RulesCollection(Rules.All)
 public class Swoop extends Skill {
 
 	public Swoop() {

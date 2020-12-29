@@ -184,13 +184,13 @@ public final class StepSpecialEffect extends AbstractStep {
 	}
 
 	@Override
-	public StepSpecialEffect initFrom(JsonValue pJsonValue) {
-		super.initFrom(pJsonValue);
+	public StepSpecialEffect initFrom(Game game, JsonValue pJsonValue) {
+		super.initFrom(game, pJsonValue);
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		fGotoLabelOnFailure = IServerJsonOption.GOTO_LABEL_ON_FAILURE.getFrom(jsonObject);
-		fPlayerId = IServerJsonOption.PLAYER_ID.getFrom(jsonObject);
-		fRollForEffect = IServerJsonOption.ROLL_FOR_EFFECT.getFrom(jsonObject);
-		fSpecialEffect = (SpecialEffect) IServerJsonOption.SPECIAL_EFFECT.getFrom(jsonObject);
+		fGotoLabelOnFailure = IServerJsonOption.GOTO_LABEL_ON_FAILURE.getFrom(game, jsonObject);
+		fPlayerId = IServerJsonOption.PLAYER_ID.getFrom(game, jsonObject);
+		fRollForEffect = IServerJsonOption.ROLL_FOR_EFFECT.getFrom(game, jsonObject);
+		fSpecialEffect = (SpecialEffect) IServerJsonOption.SPECIAL_EFFECT.getFrom(game, jsonObject);
 		return this;
 	}
 

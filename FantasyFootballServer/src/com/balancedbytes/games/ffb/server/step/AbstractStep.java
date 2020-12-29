@@ -1,6 +1,5 @@
 package com.balancedbytes.games.ffb.server.step;
 
-import com.balancedbytes.games.ffb.SkillFactory;
 import com.balancedbytes.games.ffb.SoundId;
 import com.balancedbytes.games.ffb.dialog.DialogConcedeGameParameter;
 import com.balancedbytes.games.ffb.json.UtilJson;
@@ -34,12 +33,10 @@ public abstract class AbstractStep implements IStep {
 	private GameState fGameState;
 	private StepResult fStepResult;
 	private String fLabel;
-	protected SkillFactory skillFactory;
 
 	protected AbstractStep(GameState pGameState) {
 		fGameState = pGameState;
 		setStepResult(new StepResult());
-		skillFactory = pGameState.getSkillFactory();
 	}
 
 	protected AbstractStep(GameState pGameState, StepAction defaultStepResult) {
@@ -160,14 +157,14 @@ public abstract class AbstractStep implements IStep {
 		return jsonObject;
 	}
 
-	public AbstractStep initFrom(JsonValue pJsonValue) {
+	public AbstractStep initFrom(Game game, JsonValue pJsonValue) {
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		UtilServerSteps.validateStepId(this, (StepId) IServerJsonOption.STEP_ID.getFrom(jsonObject));
-		fLabel = IServerJsonOption.LABEL.getFrom(jsonObject);
+		UtilServerSteps.validateStepId(this, (StepId) IServerJsonOption.STEP_ID.getFrom(game, jsonObject));
+		fLabel = IServerJsonOption.LABEL.getFrom(game, jsonObject);
 		fStepResult = null;
-		JsonObject stepResultObject = IServerJsonOption.STEP_RESULT.getFrom(jsonObject);
+		JsonObject stepResultObject = IServerJsonOption.STEP_RESULT.getFrom(game, jsonObject);
 		if (stepResultObject != null) {
-			fStepResult = new StepResult().initFrom(stepResultObject);
+			fStepResult = new StepResult().initFrom(game, stepResultObject);
 		}
 		return this;
 	}

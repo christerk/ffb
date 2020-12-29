@@ -96,12 +96,12 @@ public class ModelChangeList implements IJsonSerializable {
 		return jsonObject;
 	}
 
-	public ModelChangeList initFrom(JsonValue pJsonValue) {
+	public ModelChangeList initFrom(Game game, JsonValue pJsonValue) {
 		clear();
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		JsonArray modelChanges = IJsonOption.MODEL_CHANGE_ARRAY.getFrom(jsonObject);
+		JsonArray modelChanges = IJsonOption.MODEL_CHANGE_ARRAY.getFrom(game, jsonObject);
 		for (int i = 0; i < modelChanges.size(); i++) {
-			add(new ModelChange().initFrom(modelChanges.get(i)));
+			add(new ModelChange().initFrom(game, modelChanges.get(i)));
 		}
 		return this;
 	}
