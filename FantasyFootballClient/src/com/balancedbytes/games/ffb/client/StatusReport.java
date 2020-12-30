@@ -25,7 +25,6 @@ import com.balancedbytes.games.ffb.KickoffResult;
 import com.balancedbytes.games.ffb.KnockoutRecovery;
 import com.balancedbytes.games.ffb.LeaderState;
 import com.balancedbytes.games.ffb.PassingDistance;
-import com.balancedbytes.games.ffb.PassingModifiers;
 import com.balancedbytes.games.ffb.PickupModifiers;
 import com.balancedbytes.games.ffb.PlayerAction;
 import com.balancedbytes.games.ffb.PlayerState;
@@ -36,6 +35,7 @@ import com.balancedbytes.games.ffb.SpecialEffect;
 import com.balancedbytes.games.ffb.TurnMode;
 import com.balancedbytes.games.ffb.Weather;
 import com.balancedbytes.games.ffb.factory.BlockResultFactory;
+import com.balancedbytes.games.ffb.factory.PassModifierFactory;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.GameResult;
@@ -1176,7 +1176,8 @@ public class StatusReport {
 			print(getIndent(), true, thrownPlayer);
 			println(getIndent(), TextStyle.BOLD, ":");
 		}
-		if (pReport.hasRollModifier(PassingModifiers.NERVES_OF_STEEL)) {
+		PassModifierFactory pmf = getClient().getGame().<PassModifierFactory>getFactory(Factory.PASS_MODIFIER);
+		if (pReport.hasRollModifier(pmf.forName("Nerves of Steel"))) {
 			Player player = getClient().getGame().getActingPlayer().getPlayer();
 			reportNervesOfSteel(player, "pass");
 		}
@@ -1987,7 +1988,8 @@ public class StatusReport {
 				}
 			}
 		}
-		if (pReport.hasRollModifier(PassingModifiers.NERVES_OF_STEEL)) {
+		PassModifierFactory pmf = getClient().getGame().<PassModifierFactory>getFactory(Factory.PASS_MODIFIER);
+		if (pReport.hasRollModifier(pmf.forName("Nerves of Steel"))) {
 			Player player = getClient().getGame().getActingPlayer().getPlayer();
 			reportNervesOfSteel(player, "pass");
 		}

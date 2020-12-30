@@ -1,9 +1,10 @@
 package com.balancedbytes.games.ffb.skill;
 
-import com.balancedbytes.games.ffb.PassingModifiers;
+import com.balancedbytes.games.ffb.PassModifier;
 import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.RulesCollection.Rules;
 import com.balancedbytes.games.ffb.SkillCategory;
+import com.balancedbytes.games.ffb.PassingModifiers.PassContext;
 import com.balancedbytes.games.ffb.model.Skill;
 import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
 
@@ -40,7 +41,12 @@ public class ThrowTeamMate extends Skill {
 	@Override
 	public void postConstruct() {
 		registerProperty(NamedProperties.canThrowTeamMates);
-		registerModifier(PassingModifiers.THROW_TEAM_MATE);
+		registerModifier(new PassModifier("Throw Team-Mate", 1, false, false) {
+			@Override
+			public boolean appliesToContext(PassContext context) {
+				return context.duringThrowTeamMate;
+			}
+		});
 	}
 
 }

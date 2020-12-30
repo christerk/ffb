@@ -10,7 +10,6 @@ public class PassingModifiers {
 	public static Set<PassModifier> tackleZoneModifiers = new HashSet<PassModifier>();
 	public static Set<PassModifier> disturbingPresenceModifiers = new HashSet<PassModifier>();
 
-	public static final PassModifier NERVES_OF_STEEL = new PassModifier("Nerves of Steel", 0, false, false);
 	public static final PassModifier VERY_SUNNY = new PassModifier("Very Sunny", 1, false, false);
 	public static final PassModifier BLIZZARD = new PassModifier("Blizzard", 0, false, false);
 	public static final PassModifier TACKLEZONES_1 = new PassModifier("1 Tacklezone", 1, true, false);
@@ -37,20 +36,6 @@ public class PassingModifiers {
 	public static final PassModifier GROMSKULLS_EXPLODING_RUNES = new PassModifier("Gromskull's Exploding Runes", 1,
 			false, false);
 
-	public static final PassModifier STRONG_ARM = new PassModifier("Strong Arm", -1, false, false) {
-		@Override
-		public boolean appliesToContext(PassContext context) {
-			return context.distance != PassingDistance.QUICK_PASS;
-		}
-	};
-
-	public static final PassModifier THROW_TEAM_MATE = new PassModifier("Throw Team-Mate", 1, false, false) {
-		@Override
-		public boolean appliesToContext(PassContext context) {
-			return context.duringThrowTeamMate;
-		}
-	};
-	
 	public static final PassModifier CANNONEER = new PassModifier("Cannoneer", -1, false, false) {
 		@Override
 		public boolean appliesToContext(PassContext context) {
