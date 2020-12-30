@@ -30,7 +30,7 @@ import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
  * See the Right Stuff entry to see if the player lands on his feet or head-down
  * in a crumpled heap!
  */
-@RulesCollection(Rules.All)
+@RulesCollection(Rules.COMMON)
 public class ThrowTeamMate extends Skill {
 
 	public ThrowTeamMate() {

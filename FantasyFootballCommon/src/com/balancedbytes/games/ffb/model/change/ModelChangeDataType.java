@@ -6,6 +6,7 @@ import com.balancedbytes.games.ffb.BloodSpot;
 import com.balancedbytes.games.ffb.Card;
 import com.balancedbytes.games.ffb.CardEffect;
 import com.balancedbytes.games.ffb.DiceDecoration;
+import com.balancedbytes.games.ffb.FactoryType.Factory;
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.FieldMarker;
 import com.balancedbytes.games.ffb.IDialogParameter;
@@ -150,13 +151,13 @@ public enum ModelChangeDataType implements INamedObject {
 		case BOOLEAN:
 			return pJsonValue.asBoolean();
 		case CARD:
-			return UtilJson.toEnumWithName(new CardFactory(), pJsonValue);
+			return UtilJson.toEnumWithName(game.<CardFactory>getFactory(Factory.CARD), pJsonValue);
 		case CARD_EFFECT:
-			return UtilJson.toEnumWithName(new CardEffectFactory(), pJsonValue);
+			return UtilJson.toEnumWithName(game.<CardEffectFactory>getFactory(Factory.CARD_EFFECT), pJsonValue);
 		case DATE:
 			return UtilJson.toDate(pJsonValue);
 		case DIALOG_ID:
-			return UtilJson.toEnumWithName(new DialogIdFactory(), pJsonValue);
+			return UtilJson.toEnumWithName(game.<DialogIdFactory>getFactory(Factory.DIALOG_ID), pJsonValue);
 		case DIALOG_PARAMETER:
 			return new DialogParameterFactory().forJsonValue(game, pJsonValue);
 		case DICE_DECORATION:

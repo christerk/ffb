@@ -25,7 +25,7 @@ import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
  * skills and the player does have to dodge in order to leave opposing players'
  * tackle zones.
  */
-@RulesCollection(Rules.All)
+@RulesCollection(Rules.COMMON)
 public class PassBlock extends Skill {
 
 	public PassBlock() {

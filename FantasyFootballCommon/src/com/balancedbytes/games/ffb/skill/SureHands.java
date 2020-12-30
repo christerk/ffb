@@ -14,7 +14,7 @@ import com.balancedbytes.games.ffb.model.modifier.CancelSkillProperty;
  * to pick up the ball. In addition, the Strip Ball skill will not work against
  * a player with this skill.
  */
-@RulesCollection(Rules.All)
+@RulesCollection(Rules.COMMON)
 public class SureHands extends Skill {
 
 	public SureHands() {

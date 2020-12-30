@@ -173,8 +173,7 @@ public class StepPass extends AbstractStepWithReRoll {
 					passModifiers);
 			if (state.passFumble) {
 				state.successful = false;
-				state.holdingSafeThrow = (UtilCards.hasSkillWithProperty(game.getThrower(),
-						NamedProperties.dontDropFumbles) && (PlayerAction.THROW_BOMB != game.getThrowerAction()));
+				state.holdingSafeThrow = (game.getThrower().hasSkillWithProperty(NamedProperties.dontDropFumbles) && (PlayerAction.THROW_BOMB != game.getThrowerAction()));
 				publishParameter(new StepParameter(StepParameterKey.DONT_DROP_FUMBLE, state.holdingSafeThrow));
 			} else {
 				state.successful = DiceInterpreter.getInstance().isSkillRollSuccessful(roll, minimumRoll);

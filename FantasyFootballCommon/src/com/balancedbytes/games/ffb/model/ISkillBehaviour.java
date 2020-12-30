@@ -1,5 +1,7 @@
 package com.balancedbytes.games.ffb.model;
 
-public interface ISkillBehaviour<T extends Skill> {
+import com.balancedbytes.games.ffb.IKeyedItem;
 
+public interface ISkillBehaviour<T extends Skill> extends IKeyedItem {
+	
 }

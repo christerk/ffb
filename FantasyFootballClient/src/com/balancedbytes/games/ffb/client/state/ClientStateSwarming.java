@@ -7,7 +7,6 @@ import com.balancedbytes.games.ffb.client.FantasyFootballClient;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
-import com.balancedbytes.games.ffb.util.UtilCards;
 
 public class ClientStateSwarming extends ClientStateSetup {
 
@@ -24,7 +23,7 @@ public class ClientStateSwarming extends ClientStateSetup {
 	public boolean isInitDragAllowed(FieldCoordinate pCoordinate) {
 		if (pCoordinate != null) {
 			Player player = getClient().getGame().getFieldModel().getPlayer(pCoordinate);
-			return player != null && UtilCards.hasSkillWithProperty(player, NamedProperties.canSneakExtraPlayersOntoPitch);
+			return player != null && player.hasSkillWithProperty(NamedProperties.canSneakExtraPlayersOntoPitch);
 		}
 
 		return false;

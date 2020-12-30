@@ -27,7 +27,7 @@ public class ReportRiotousRookies implements IReport {
 	}
 
 	@Override
-	public IReport transform() {
+	public IReport transform(Game game) {
 		return new ReportRiotousRookies(roll, amount, teamId);
 	}
 

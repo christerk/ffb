@@ -1,6 +1,8 @@
 package com.balancedbytes.games.ffb.server.skillbehaviour;
 
 import com.balancedbytes.games.ffb.ReRolledActions;
+import com.balancedbytes.games.ffb.RulesCollection;
+import com.balancedbytes.games.ffb.RulesCollection.Rules;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
@@ -17,6 +19,7 @@ import com.balancedbytes.games.ffb.server.util.UtilServerReRoll;
 import com.balancedbytes.games.ffb.skill.Dauntless;
 import com.balancedbytes.games.ffb.util.UtilCards;
 
+@RulesCollection(Rules.COMMON)
 public class DauntlessBehaviour extends SkillBehaviour<Dauntless> {
 	public DauntlessBehaviour() {
 		super();
@@ -36,8 +39,7 @@ public class DauntlessBehaviour extends SkillBehaviour<Dauntless> {
 				ActingPlayer actingPlayer = game.getActingPlayer();
 				boolean lessStrengthThanDefender = (actingPlayer.getStrength() < UtilCards.getPlayerStrength(game,
 						game.getDefender()));
-				boolean usesSpecialBlockingRules = UtilCards.hasSkillWithProperty(actingPlayer.getPlayer(),
-						NamedProperties.useSpecialBlockRules);
+				boolean usesSpecialBlockingRules = actingPlayer.getPlayer().hasSkillWithProperty(NamedProperties.useSpecialBlockRules);
 
 				if (UtilCards.hasSkill(game, actingPlayer, skill) && lessStrengthThanDefender
 						&& ((state.usingStab == null) || !state.usingStab) && !usesSpecialBlockingRules) {

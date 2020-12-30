@@ -7,6 +7,8 @@ import javax.xml.transform.sax.TransformerHandler;
 
 import org.xml.sax.Attributes;
 
+import com.balancedbytes.games.ffb.RulesCollection;
+import com.balancedbytes.games.ffb.RulesCollection.Rules;
 import com.balancedbytes.games.ffb.factory.GameOptionFactory;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.IJsonSerializable;
@@ -45,6 +47,19 @@ public class GameOptions implements IXmlSerializable, IJsonSerializable {
 		return fGame;
 	}
 
+	public RulesCollection.Rules getRulesVersion() {
+		String rulesVersion = getOptionWithDefault(GameOptionId.RULESVERSION).getValueAsString();
+		RulesCollection.Rules rules = Rules.BB2020;
+		try {
+			rules = RulesCollection.Rules.valueOf(rulesVersion);
+		} catch (IllegalArgumentException e) { }
+		return rules;
+	}
+	
+	public GameOptionFactory getFactory() {
+		return fGameOptionFactory;
+	}
+	
 	public void addOption(IGameOption pOption) {
 		if (pOption != null) {
 			addOptionInternal(pOption);
@@ -146,9 +161,9 @@ public class GameOptions implements IXmlSerializable, IJsonSerializable {
 		return UtilXml.toXml(this, pIndent);
 	}
 
-	public IXmlSerializable startXmlElement(String pXmlTag, Attributes pXmlAttributes) {
+	public IXmlSerializable startXmlElement(Game game, String pXmlTag, Attributes pXmlAttributes) {
 		if (IGameOption.XML_TAG.equals(pXmlTag)) {
-			addOption(new GameOptionFactory().fromXmlElement(pXmlTag, pXmlAttributes));
+			addOption(new GameOptionFactory().fromXmlElement(game, pXmlTag, pXmlAttributes));
 		}
 		return this;
 	}

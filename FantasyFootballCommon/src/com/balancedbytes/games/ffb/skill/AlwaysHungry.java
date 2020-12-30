@@ -18,7 +18,7 @@ import com.balancedbytes.games.ffb.model.Skill;
  * the Pass Action is automatically treated as a fumbled pass. Fumble the player
  * with the Right Stuff skill as normal.
  */
-@RulesCollection(Rules.All)
+@RulesCollection(Rules.COMMON)
 public class AlwaysHungry extends Skill {
 
 	public AlwaysHungry() {

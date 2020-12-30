@@ -10,7 +10,7 @@ import com.balancedbytes.games.ffb.model.Skill;
  * The player may add 1 to the D6 when he passes to Short, Long or Long Bomb
  * range.
  */
-@RulesCollection(Rules.All)
+@RulesCollection(Rules.COMMON)
 public class StrongArm extends Skill {
 
 	public StrongArm() {

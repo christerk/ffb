@@ -38,8 +38,7 @@ public class UtilBlockSequence {
 		parameterSet.add(new StepParameter(StepParameterKey.STARTING_PUSHBACK_SQUARE,
 				UtilServerPushback.findStartingSquare(attackerCoordinate, defenderCoordinate, game.isHomePlaying())));
 
-		Skill skillCanForceOpponentToDropBall = UtilCards.getSkillWithProperty(actingPlayer.getPlayer(),
-				NamedProperties.forceOpponentToDropBallOnPushback);
+		Skill skillCanForceOpponentToDropBall = actingPlayer.getPlayer().getSkillWithProperty(NamedProperties.forceOpponentToDropBallOnPushback);
 		if (skillCanForceOpponentToDropBall != null && defenderCoordinate != null
 				&& defenderCoordinate.equals(game.getFieldModel().getBallCoordinate())
 				&& (game.getDefender().getTeam() != actingPlayer.getPlayer().getTeam())) {

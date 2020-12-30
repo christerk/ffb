@@ -44,7 +44,7 @@ public class ReportPilingOn implements IReport {
 
 	// transformation
 
-	public IReport transform() {
+	public IReport transform(Game game) {
 		return new ReportPilingOn(getPlayerId(), isUsed(), isReRollInjury());
 	}
 

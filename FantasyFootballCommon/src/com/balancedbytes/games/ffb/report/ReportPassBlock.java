@@ -38,7 +38,7 @@ public class ReportPassBlock implements IReport {
 
 	// transformation
 
-	public IReport transform() {
+	public IReport transform(Game game) {
 		return new ReportPassBlock(getTeamId(), isPassBlockAvailable());
 	}
 

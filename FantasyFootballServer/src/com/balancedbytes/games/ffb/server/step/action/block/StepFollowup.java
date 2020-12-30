@@ -128,8 +128,7 @@ public class StepFollowup extends AbstractStep {
 		if (followupChoice == null) {
 			PlayerState defenderState = game.getFieldModel().getPlayerState(game.getDefender());
 
-			Skill skillPreventsFollowingUp = UtilCards.getSkillWithProperty(game.getDefender(),
-					NamedProperties.preventOpponentFollowingUp);
+			Skill skillPreventsFollowingUp = game.getDefender().getSkillWithProperty(NamedProperties.preventOpponentFollowingUp);
 			if (skillPreventsFollowingUp != null && !defenderState.isProne()
 					&& !((oldDefenderState != null) && oldDefenderState.isProne())) {
 				boolean cancelSkillUsed = false;
@@ -159,7 +158,7 @@ public class StepFollowup extends AbstractStep {
 				usingSkillPreventingFollowUp = false;
 			}
 			if ((usingSkillPreventingFollowUp != null) && !usingSkillPreventingFollowUp
-					&& UtilCards.hasSkillWithProperty(actingPlayer.getPlayer(), NamedProperties.forceFollowup)) {
+					&& actingPlayer.getPlayer().hasSkillWithProperty(NamedProperties.forceFollowup)) {
 				publishParameter(new StepParameter(StepParameterKey.FOLLOWUP_CHOICE, true));
 			}
 			if ((followupChoice == null) && (usingSkillPreventingFollowUp != null)) {

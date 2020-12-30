@@ -2,6 +2,7 @@ package com.balancedbytes.games.ffb.factory;
 
 import com.balancedbytes.games.ffb.FactoryType;
 import com.balancedbytes.games.ffb.PassingDistance;
+import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.RulesCollection.Rules;
 import com.balancedbytes.games.ffb.model.GameOptions;
 
@@ -9,7 +10,8 @@ import com.balancedbytes.games.ffb.model.GameOptions;
  * 
  * @author Kalimar
  */
-@FactoryType(FactoryType.Factory.passingDistance)
+@FactoryType(FactoryType.Factory.PASSING_DISTANCE)
+@RulesCollection(Rules.COMMON)
 public class PassingDistanceFactory implements INamedObjectFactory {
 
 	public PassingDistance forName(String pName) {
@@ -31,7 +33,7 @@ public class PassingDistanceFactory implements INamedObjectFactory {
 	}
 
 	@Override
-	public void initialize(Rules rules, GameOptions options) {
+	public void initialize(GameOptions options) {
 		// TODO Auto-generated method stub
 		
 	}

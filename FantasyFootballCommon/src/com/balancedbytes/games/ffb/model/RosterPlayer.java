@@ -401,7 +401,7 @@ public class RosterPlayer extends Player<RosterPosition> {
 		return UtilXml.toXml(this, pIndent);
 	}
 
-	public IXmlSerializable startXmlElement(String pXmlTag, Attributes pXmlAttributes) {
+	public IXmlSerializable startXmlElement(Game game, String pXmlTag, Attributes pXmlAttributes) {
 		IXmlSerializable xmlElement = this;
 		if (fInsideInjuryList) {
 			if (_XML_TAG_INJURY.equals(pXmlTag)) {
@@ -436,7 +436,7 @@ public class RosterPlayer extends Player<RosterPosition> {
 					fInsideSkillList = false;
 				}
 				if (_XML_TAG_SKILL.equals(pXmlTag)) {
-					Skill skill = game.getRules().<SkillFactory>getFactory(Factory.skill).forName(pValue);
+					Skill skill = game.getRules().<SkillFactory>getFactory(Factory.SKILL).forName(pValue);
 					if (skill != null) {
 						fSkills.add(skill);
 					}

@@ -11,6 +11,7 @@ import com.balancedbytes.games.ffb.InjuryAttribute;
 import com.balancedbytes.games.ffb.InjuryContext;
 import com.balancedbytes.games.ffb.InjuryModifier;
 import com.balancedbytes.games.ffb.InjuryModifiers;
+import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.RulesCollection.Rules;
 import com.balancedbytes.games.ffb.SeriousInjury;
 import com.balancedbytes.games.ffb.InjuryModifier.InjuryModifierContext;
@@ -23,7 +24,8 @@ import com.balancedbytes.games.ffb.util.UtilCards;
  *
  * @author Kalimar
  */
-@FactoryType(FactoryType.Factory.injuryModifier)
+@FactoryType(FactoryType.Factory.INJURY_MODIFIER)
+@RulesCollection(Rules.COMMON)
 public class InjuryModifierFactory implements INamedObjectFactory {
 
 	static InjuryModifiers injuryModifiers;
@@ -73,7 +75,7 @@ public class InjuryModifierFactory implements INamedObjectFactory {
 	}
 
 	@Override
-	public void initialize(Rules rules, GameOptions options) {
+	public void initialize(GameOptions options) {
 		// TODO Auto-generated method stub
 		
 	}

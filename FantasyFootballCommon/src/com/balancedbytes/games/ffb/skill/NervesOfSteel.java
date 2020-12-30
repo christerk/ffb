@@ -13,7 +13,7 @@ import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
  * The player ignores modifiers for enemy tackle zones when he attempts to pass,
  * catch or intercept.
  */
-@RulesCollection(Rules.All)
+@RulesCollection(Rules.COMMON)
 public class NervesOfSteel extends Skill {
 
 	public NervesOfSteel() {

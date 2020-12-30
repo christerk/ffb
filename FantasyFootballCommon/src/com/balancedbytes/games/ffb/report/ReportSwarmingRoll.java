@@ -33,7 +33,7 @@ public class ReportSwarmingRoll implements IReport {
 	}
 
 	@Override
-	public IReport transform() {
+	public IReport transform(Game game) {
 		return new ReportSwarmingRoll(teamId, amount);
 	}
 

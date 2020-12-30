@@ -11,7 +11,7 @@ import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
  * been applied, as a Stunned result rather than a KO'd result. This skill may
  * be used even if the player is Prone or Stunned.
  */
-@RulesCollection(Rules.All)
+@RulesCollection(Rules.COMMON)
 public class ThickSkull extends Skill {
 
 	public ThickSkull() {

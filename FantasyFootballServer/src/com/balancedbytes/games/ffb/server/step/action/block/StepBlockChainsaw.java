@@ -27,7 +27,6 @@ import com.balancedbytes.games.ffb.server.step.StepParameterSet;
 import com.balancedbytes.games.ffb.server.util.UtilServerInjury;
 import com.balancedbytes.games.ffb.server.util.UtilServerReRoll;
 import com.balancedbytes.games.ffb.util.StringTool;
-import com.balancedbytes.games.ffb.util.UtilCards;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
@@ -98,7 +97,7 @@ public class StepBlockChainsaw extends AbstractStepWithReRoll {
 	private void executeStep() {
 		Game game = getGameState().getGame();
 		ActingPlayer actingPlayer = game.getActingPlayer();
-		if (UtilCards.hasSkillWithProperty(actingPlayer.getPlayer(), NamedProperties.blocksLikeChainsaw)) {
+		if (actingPlayer.getPlayer().hasSkillWithProperty(NamedProperties.blocksLikeChainsaw)) {
 			boolean dropChainsawPlayer = false;
 			if (ReRolledActions.CHAINSAW == getReRolledAction()) {
 				if ((getReRollSource() == null)

@@ -58,7 +58,7 @@ public class ReportKickoffExtraReRoll implements IReport {
 
 	// transformation
 
-	public IReport transform() {
+	public IReport transform(Game game) {
 		return new ReportKickoffExtraReRoll(getKickoffResult(), getRollAway(), isAwayGainsReRoll(), getRollHome(),
 				isHomeGainsReRoll());
 	}

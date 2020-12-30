@@ -3,6 +3,8 @@ package com.balancedbytes.games.ffb.server.skillbehaviour;
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.PlayerAction;
 import com.balancedbytes.games.ffb.PushbackMode;
+import com.balancedbytes.games.ffb.RulesCollection;
+import com.balancedbytes.games.ffb.RulesCollection.Rules;
 import com.balancedbytes.games.ffb.dialog.DialogSkillUseParameter;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.FieldModel;
@@ -23,6 +25,7 @@ import com.balancedbytes.games.ffb.skill.Grab;
 import com.balancedbytes.games.ffb.util.ArrayTool;
 import com.balancedbytes.games.ffb.util.UtilCards;
 
+@RulesCollection(Rules.COMMON)
 public class GrabBehaviour extends SkillBehaviour<Grab> {
 	public GrabBehaviour() {
 		super();
@@ -44,8 +47,7 @@ public class GrabBehaviour extends SkillBehaviour<Grab> {
 				FieldCoordinate attackerCoordinate = fieldModel.getPlayerCoordinate(actingPlayer.getPlayer());
 				FieldCoordinate defenderCoordinate = state.startingPushbackSquare.getCoordinate();
 				Skill cancellingSkill = UtilCards.getSkillCancelling(state.defender, skill);
-				boolean allowGrabOutsideBlock = UtilCards.hasSkillWithProperty(actingPlayer.getPlayer(),
-						NamedProperties.grabOutsideBlock);
+				boolean allowGrabOutsideBlock = actingPlayer.getPlayer().hasSkillWithProperty(NamedProperties.grabOutsideBlock);
 
 				if (((state.grabbing == null) || state.grabbing) && state.freeSquareAroundDefender
 						&& UtilCards.hasSkill(game, actingPlayer, skill) && attackerCoordinate.isAdjacent(defenderCoordinate)

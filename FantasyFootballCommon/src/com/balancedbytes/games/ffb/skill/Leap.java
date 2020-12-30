@@ -20,7 +20,7 @@ import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
  * failed leap causes a turnover, and the moving team's turn ends immediately. A
  * player may only use the Leap skill once per Action.
  */
-@RulesCollection(Rules.All)
+@RulesCollection(Rules.COMMON)
 public class Leap extends Skill {
 
 	public Leap() {

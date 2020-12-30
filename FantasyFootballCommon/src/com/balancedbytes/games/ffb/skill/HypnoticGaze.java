@@ -18,7 +18,7 @@ import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
  * next action or the drive ends. If the roll fails, then the hypnotic gaze has
  * no effect.
  */
-@RulesCollection(Rules.All)
+@RulesCollection(Rules.COMMON)
 public class HypnoticGaze extends Skill {
 
 	public HypnoticGaze() {

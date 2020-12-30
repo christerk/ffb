@@ -71,10 +71,10 @@ public class ReportList implements IJsonSerializable {
 
 	// transformation
 
-	public ReportList transform() {
+	public ReportList transform(Game game) {
 		ReportList transformedList = new ReportList(size());
 		for (IReport report : fReports) {
-			transformedList.add(report.transform());
+			transformedList.add(report.transform(game));
 		}
 		return transformedList;
 	}

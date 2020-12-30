@@ -49,7 +49,7 @@ public class ReportCardEffectRoll implements IReport {
 
 	// transformation
 
-	public IReport transform() {
+	public IReport transform(Game game) {
 		ReportCardEffectRoll transformedReport = new ReportCardEffectRoll(getCard(), getRoll());
 		transformedReport.setCardEffect(getCardEffect());
 		return transformedReport;

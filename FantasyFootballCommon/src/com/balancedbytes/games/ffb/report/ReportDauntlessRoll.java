@@ -34,7 +34,7 @@ public class ReportDauntlessRoll extends ReportSkillRoll {
 
 	// transformation
 
-	public IReport transform() {
+	public IReport transform(Game game) {
 		return new ReportDauntlessRoll(getPlayerId(), isSuccessful(), getRoll(), getMinimumRoll(), isReRolled(),
 				getStrength());
 	}

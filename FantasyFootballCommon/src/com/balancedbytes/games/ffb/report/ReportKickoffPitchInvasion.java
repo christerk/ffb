@@ -123,7 +123,7 @@ public class ReportKickoffPitchInvasion implements IReport {
 
 	// transformation
 
-	public ReportKickoffPitchInvasion transform() {
+	public ReportKickoffPitchInvasion transform(Game game) {
 		return new ReportKickoffPitchInvasion(getRollsAway(), getPlayersAffectedAway(), getRollsHome(),
 				getPlayersAffectedHome());
 	}

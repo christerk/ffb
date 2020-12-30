@@ -38,7 +38,7 @@ public class ReportReceiveChoice implements IReport {
 
 	// transformation
 
-	public IReport transform() {
+	public IReport transform(Game game) {
 		return new ReportReceiveChoice(getTeamId(), isReceiveChoice());
 	}
 

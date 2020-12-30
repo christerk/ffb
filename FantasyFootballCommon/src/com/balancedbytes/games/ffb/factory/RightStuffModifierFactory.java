@@ -7,19 +7,20 @@ import java.util.Set;
 
 import com.balancedbytes.games.ffb.FactoryType;
 import com.balancedbytes.games.ffb.RightStuffModifier;
+import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.RulesCollection.Rules;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.GameOptions;
 import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
-import com.balancedbytes.games.ffb.util.UtilCards;
 import com.balancedbytes.games.ffb.util.UtilPlayer;
 
 /**
  * 
  * @author Kalimar
  */
-@FactoryType(FactoryType.Factory.rightStuffModifier)
+@FactoryType(FactoryType.Factory.RIGHT_STUFF_MODIFIER)
+@RulesCollection(Rules.COMMON)
 public class RightStuffModifierFactory implements IRollModifierFactory {
 
 	public RightStuffModifier forName(String pName) {
@@ -37,7 +38,7 @@ public class RightStuffModifierFactory implements IRollModifierFactory {
 		if (tacklezoneModifier != null) {
 			rightStuffModifiers.add(tacklezoneModifier);
 		}
-		if (UtilCards.hasSkillWithProperty(pPlayer, NamedProperties.ttmScattersInSingleDirection)) {
+		if (pPlayer.hasSkillWithProperty(NamedProperties.ttmScattersInSingleDirection)) {
 			rightStuffModifiers.add(RightStuffModifier.SWOOP);
 		}
 		return rightStuffModifiers;
@@ -69,7 +70,7 @@ public class RightStuffModifierFactory implements IRollModifierFactory {
 	}
 
 	@Override
-	public void initialize(Rules rules, GameOptions options) {
+	public void initialize(GameOptions options) {
 		// TODO Auto-generated method stub
 		
 	}

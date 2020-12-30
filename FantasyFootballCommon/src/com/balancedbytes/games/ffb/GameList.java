@@ -101,11 +101,11 @@ public class GameList implements IXmlSerializable, IJsonSerializable {
 		return UtilXml.toXml(this, pIndent);
 	}
 
-	public IXmlReadable startXmlElement(String pXmlTag, Attributes pXmlAttributes) {
+	public IXmlReadable startXmlElement(Game game, String pXmlTag, Attributes pXmlAttributes) {
 		IXmlReadable xmlElement = this;
 		if (GameListEntry.XML_TAG.equals(pXmlTag)) {
 			GameListEntry gameListEntry = new GameListEntry();
-			gameListEntry.startXmlElement(pXmlTag, pXmlAttributes);
+			gameListEntry.startXmlElement(game, pXmlTag, pXmlAttributes);
 			add(gameListEntry);
 			xmlElement = gameListEntry;
 		}

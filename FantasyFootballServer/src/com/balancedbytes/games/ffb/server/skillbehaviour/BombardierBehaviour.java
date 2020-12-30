@@ -1,7 +1,9 @@
 package com.balancedbytes.games.ffb.server.skillbehaviour;
 
 import com.balancedbytes.games.ffb.PlayerAction;
+import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.TurnMode;
+import com.balancedbytes.games.ffb.RulesCollection.Rules;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandUseSkill;
@@ -12,6 +14,7 @@ import com.balancedbytes.games.ffb.server.step.action.pass.StepBombardier;
 import com.balancedbytes.games.ffb.server.step.action.pass.StepBombardier.StepState;
 import com.balancedbytes.games.ffb.skill.Bombardier;
 
+@RulesCollection(Rules.COMMON)
 public class BombardierBehaviour extends SkillBehaviour<Bombardier> {
 	public BombardierBehaviour() {
 		super();

@@ -38,7 +38,7 @@ public class ReportRaiseDead implements IReport {
 
 	// transformation
 
-	public IReport transform() {
+	public IReport transform(Game game) {
 		return new ReportRaiseDead(getPlayerId(), isNurglesRot());
 	}
 

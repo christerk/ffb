@@ -40,7 +40,7 @@ public class ReportPushback implements IReport {
 
 	// transformation
 
-	public IReport transform() {
+	public IReport transform(Game game) {
 		return new ReportPushback(getDefenderId(), getPushbackMode());
 	}
 

@@ -12,7 +12,7 @@ import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
  * completely functional. The player ignores modifier(s) for enemy tackle zones
  * or Pouring Rain weather when he attempts to pick up the ball.
  */
-@RulesCollection(Rules.All)
+@RulesCollection(Rules.COMMON)
 public class BigHand extends Skill {
 
 	public BigHand() {

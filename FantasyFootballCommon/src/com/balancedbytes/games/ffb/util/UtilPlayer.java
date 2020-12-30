@@ -45,7 +45,7 @@ public class UtilPlayer {
 	public static Player<?>[] findPlayersOnPitchWithProperty(Game pGame, Team pTeam, ISkillProperty property) {
 		List<Player<?>> result = new ArrayList<Player<?>>();
 		for (Player<?> player : pTeam.getPlayers()) {
-			if (UtilCards.hasSkillWithProperty(player, property)
+			if (player.hasSkillWithProperty(property)
 					&& FieldCoordinateBounds.FIELD.isInBounds(pGame.getFieldModel().getPlayerCoordinate(player))) {
 				result.add(player);
 			}
@@ -80,7 +80,7 @@ public class UtilPlayer {
 		for (Player<?> opponent : opponents) {
 			PlayerState opponentState = pGame.getFieldModel().getPlayerState(opponent);
 			if ((opponentState != null) && opponentState.hasTacklezones()
-					&& UtilCards.hasSkillWithProperty(opponent, pProperty)
+					&& opponent.hasSkillWithProperty(pProperty)
 					&& (!pCheckAbleToMove || opponentState.isAbleToMove())) {
 				shadowingPlayers.add(opponent);
 			}
@@ -207,7 +207,7 @@ public class UtilPlayer {
 				FieldCoordinate coordinateAssist = pGame.getFieldModel().getPlayerCoordinate(offensiveAssist);
 				if ((findAdjacentPlayersWithTacklezones(pGame, pDefender.getTeam(), coordinateAssist, false).length < 1)
 						|| (UtilGameOption.isOptionEnabled(pGame, GameOptionId.SNEAKY_GIT_AS_FOUL_GUARD)
-								&& UtilCards.hasSkillWithProperty(offensiveAssist, NamedProperties.canAlwaysAssistFouls))) {
+								&& offensiveAssist.hasSkillWithProperty(NamedProperties.canAlwaysAssistFouls))) {
 					foulAssists++;
 				}
 			}
@@ -305,7 +305,7 @@ public class UtilPlayer {
 		Team otherTeam = UtilPlayer.findOtherTeam(pGame, pPlayer);
 		PlayerState playerState = pGame.getFieldModel().getPlayerState(pPlayer);
 
-		if (!UtilCards.hasSkillWithProperty(pPlayer, NamedProperties.inflictsConfusion)) {
+		if (!pPlayer.hasSkillWithProperty(NamedProperties.inflictsConfusion)) {
 			return false;
 		} else if (!playerState.isActive()) {
 			return false;
@@ -343,7 +343,7 @@ public class UtilPlayer {
 				false);
 		for (Player<?> adjacentPlayer : adjacentPlayers) {
 
-			if (UtilCards.hasSkillWithProperty(adjacentPlayer, NamedProperties.canBeThrown)) {
+			if (adjacentPlayer.hasSkillWithProperty(NamedProperties.canBeThrown)) {
 				throwablePlayers.add(adjacentPlayer);
 			}
 		}
@@ -356,7 +356,7 @@ public class UtilPlayer {
 		FieldCoordinate kickerCoordinate = fieldModel.getPlayerCoordinate(pKicker);
 		Player<?>[] adjacentPlayers = findAdjacentPlayersWithTacklezones(pGame, pKicker.getTeam(), kickerCoordinate, false);
 		for (Player<?> adjacentPlayer : adjacentPlayers) {
-			if (UtilCards.hasSkillWithProperty(adjacentPlayer, NamedProperties.canBeKicked)) {
+			if (adjacentPlayer.hasSkillWithProperty(NamedProperties.canBeKicked)) {
 				kickablePlayers.add(adjacentPlayer);
 			}
 		}
@@ -365,13 +365,13 @@ public class UtilPlayer {
 
 	public static boolean canThrowTeamMate(Game pGame, Player<?> pThrower, boolean pCheckPassUsed) {
 		return ((pThrower != null) && (!pCheckPassUsed || !pGame.getTurnData().isPassUsed())
-				&& UtilCards.hasSkillWithProperty(pThrower, NamedProperties.canThrowTeamMates)
+				&& pThrower.hasSkillWithProperty(NamedProperties.canThrowTeamMates)
 				&& (UtilPlayer.findThrowableTeamMates(pGame, pThrower).length > 0));
 	}
 
 	public static boolean canKickTeamMate(Game pGame, Player<?> pKicker, boolean pCheckBlitzUsed) {
 		return ((pKicker != null) && (!pCheckBlitzUsed || !pGame.getTurnData().isBlitzUsed())
-				&& UtilCards.hasSkillWithProperty(pKicker, NamedProperties.canKickTeamMates)
+				&& pKicker.hasSkillWithProperty(NamedProperties.canKickTeamMates)
 				&& (UtilPlayer.findKickableTeamMates(pGame, pKicker).length > 0));
 	}
 
@@ -426,7 +426,7 @@ public class UtilPlayer {
 			if ((pGame.getTurnMode() == TurnMode.KICKOFF_RETURN) || (pGame.getTurnMode() == TurnMode.PASS_BLOCK)) {
 				return false;
 			} else if (actingPlayer.isStandingUp() && !actingPlayer.hasActed()
-					&& !UtilCards.hasSkillWithProperty(actingPlayer.getPlayer(), NamedProperties.canStandUpForFree)) {
+					&& !actingPlayer.getPlayer().hasSkillWithProperty(NamedProperties.canStandUpForFree)) {
 				nextMoveGoingForIt = (3 >= UtilCards.getPlayerMovement(pGame, player));
 			} else {
 				if (actingPlayer.isLeaping()) {
@@ -462,8 +462,7 @@ public class UtilPlayer {
 			} else {
 				int extraMove = 0;
 				if (actingPlayer.isGoingForIt()) {
-					boolean canMakeAnExtraGfi = UtilCards.hasSkillWithProperty(actingPlayer.getPlayer(),
-							NamedProperties.canMakeAnExtraGfi);
+					boolean canMakeAnExtraGfi = actingPlayer.getPlayer().hasSkillWithProperty(NamedProperties.canMakeAnExtraGfi);
 					extraMove = canMakeAnExtraGfi ? 3 : 2;
 					if (pLeaping) {
 						extraMove--;

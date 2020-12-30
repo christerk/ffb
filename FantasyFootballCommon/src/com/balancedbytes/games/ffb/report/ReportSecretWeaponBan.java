@@ -81,7 +81,7 @@ public class ReportSecretWeaponBan implements IReport {
 
 	// transformation
 
-	public ReportSecretWeaponBan transform() {
+	public ReportSecretWeaponBan transform(Game game) {
 		ReportSecretWeaponBan transformed = new ReportSecretWeaponBan();
 		String[] playerIds = getPlayerIds();
 		int[] rolls = getRolls();

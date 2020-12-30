@@ -21,7 +21,7 @@ import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
  * square they are moving to - the presence of a large pair of wings negates any
  * benefit they would gain from being small and slippery.
  */
-@RulesCollection(Rules.All)
+@RulesCollection(Rules.COMMON)
 public class Swoop extends Skill {
 
 	public Swoop() {

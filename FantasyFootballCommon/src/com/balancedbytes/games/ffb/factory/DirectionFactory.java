@@ -2,6 +2,7 @@ package com.balancedbytes.games.ffb.factory;
 
 import com.balancedbytes.games.ffb.Direction;
 import com.balancedbytes.games.ffb.FactoryType;
+import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.RulesCollection.Rules;
 import com.balancedbytes.games.ffb.model.GameOptions;
 import com.balancedbytes.games.ffb.util.ArrayTool;
@@ -10,7 +11,8 @@ import com.balancedbytes.games.ffb.util.ArrayTool;
  * 
  * @author Kalimar
  */
-@FactoryType(FactoryType.Factory.direction)
+@FactoryType(FactoryType.Factory.DIRECTION)
+@RulesCollection(Rules.COMMON)
 public class DirectionFactory implements INamedObjectFactory {
 
 	public Direction forName(String pName) {
@@ -45,41 +47,19 @@ public class DirectionFactory implements INamedObjectFactory {
 		}
 	}
 
-	public Direction transform(Direction pDirection) {
-		if (pDirection == null) {
-			return null;
-		}
-		switch (pDirection) {
-		case NORTHEAST:
-			return Direction.NORTHWEST;
-		case EAST:
-			return Direction.WEST;
-		case SOUTHEAST:
-			return Direction.SOUTHWEST;
-		case SOUTHWEST:
-			return Direction.SOUTHEAST;
-		case WEST:
-			return Direction.EAST;
-		case NORTHWEST:
-			return Direction.NORTHEAST;
-		default:
-			return pDirection;
-		}
-	}
-
 	public Direction[] transform(Direction[] pDirections) {
 		Direction[] transformedDirections = new Direction[0];
 		if (ArrayTool.isProvided(pDirections)) {
 			transformedDirections = new Direction[pDirections.length];
 			for (int i = 0; i < transformedDirections.length; i++) {
-				transformedDirections[i] = transform(pDirections[i]);
+				transformedDirections[i] = pDirections[i].transform();
 			}
 		}
 		return transformedDirections;
 	}
 
 	@Override
-	public void initialize(Rules rules, GameOptions options) {
+	public void initialize(GameOptions options) {
 		// TODO Auto-generated method stub
 		
 	}

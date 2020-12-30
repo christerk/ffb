@@ -17,7 +17,7 @@ import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
  * of a Blitz Action, the player cannot continue moving after using it.
  * Casualties caused by a stabbing attack do not count for Star Player points.
  */
-@RulesCollection(Rules.All)
+@RulesCollection(Rules.COMMON)
 public class Stab extends Skill {
 
 	public Stab() {

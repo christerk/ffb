@@ -8,6 +8,7 @@ import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.ReRollSource;
 import com.balancedbytes.games.ffb.ReRolledActions;
 import com.balancedbytes.games.ffb.SkillUse;
+import com.balancedbytes.games.ffb.FactoryType.Factory;
 import com.balancedbytes.games.ffb.factory.DodgeModifierFactory;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
@@ -190,7 +191,7 @@ public class StepMoveDodge extends AbstractStepWithReRoll {
 		if (pDoRoll) {
 			publishParameter(new StepParameter(StepParameterKey.DODGE_ROLL, getGameState().getDiceRoller().rollSkill()));
 		}
-		DodgeModifierFactory modifierFactory = new DodgeModifierFactory();
+		DodgeModifierFactory modifierFactory = game.<DodgeModifierFactory>getFactory(Factory.DODGE_MODIFIER);
 		Set<DodgeModifier> dodgeModifiers = modifierFactory.findDodgeModifiers(game, fCoordinateFrom, fCoordinateTo, 0);
 		if (fUsingBreakTackle) {
 			dodgeModifiers.add(DodgeModifiers.BREAK_TACKLE);

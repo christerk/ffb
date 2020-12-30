@@ -11,7 +11,7 @@ import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
  * Block skill, if used, affects the results rolled with the Block dice, as
  * explained in the Blocking rules.
  */
-@RulesCollection(Rules.All)
+@RulesCollection(Rules.COMMON)
 public class Block extends Skill {
 
 	public Block() {

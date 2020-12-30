@@ -40,7 +40,7 @@ public class ReportPlayerAction implements IReport {
 
 	// transformation
 
-	public IReport transform() {
+	public IReport transform(Game game) {
 		return new ReportPlayerAction(getActingPlayerId(), getPlayerAction());
 	}
 

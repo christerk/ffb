@@ -397,7 +397,7 @@ public final class StepApplyKickoffResult extends AbstractStep {
 		if (!fTouchback && (Weather.NICE == game.getFieldModel().getWeather())) {
 			FieldCoordinate lastValidCoordinate = game.getFieldModel().getBallCoordinate();
 			int roll = getGameState().getDiceRoller().rollScatterDirection();
-			Direction direction = DiceInterpreter.getInstance().interpretScatterDirectionRoll(roll);
+			Direction direction = DiceInterpreter.getInstance().interpretScatterDirectionRoll(game, roll);
 			FieldCoordinate ballCoordinateEnd = UtilServerCatchScatterThrowIn.findScatterCoordinate(lastValidCoordinate,
 					direction, 1);
 			fTouchback = !fKickoffBounds.isInBounds(ballCoordinateEnd);

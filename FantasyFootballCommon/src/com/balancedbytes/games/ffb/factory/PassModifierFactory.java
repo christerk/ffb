@@ -10,6 +10,7 @@ import com.balancedbytes.games.ffb.FactoryType;
 import com.balancedbytes.games.ffb.PassModifier;
 import com.balancedbytes.games.ffb.PassingDistance;
 import com.balancedbytes.games.ffb.PassingModifiers;
+import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.Weather;
 import com.balancedbytes.games.ffb.PassingModifiers.PassContext;
 import com.balancedbytes.games.ffb.RulesCollection.Rules;
@@ -25,7 +26,8 @@ import com.balancedbytes.games.ffb.util.UtilPlayer;
  * 
  * @author Kalimar
  */
-@FactoryType(FactoryType.Factory.passModifier)
+@FactoryType(FactoryType.Factory.PASS_MODIFIER)
+@RulesCollection(Rules.COMMON)
 public class PassModifierFactory implements IRollModifierFactory {
 
 	static PassingModifiers passingModifiers = new PassingModifiers();
@@ -49,7 +51,7 @@ public class PassModifierFactory implements IRollModifierFactory {
 				passModifiers.add(PassingModifiers.BLIZZARD);
 			}
 
-			if (!UtilCards.hasSkillWithProperty(pThrower, NamedProperties.ignoreTacklezonesWhenPassing)) {
+			if (!pThrower.hasSkillWithProperty(NamedProperties.ignoreTacklezonesWhenPassing)) {
 				PassModifier tacklezoneModifier = getTacklezoneModifier(pGame, pThrower);
 				if (tacklezoneModifier != null) {
 					passModifiers.add(tacklezoneModifier);
@@ -105,7 +107,7 @@ public class PassModifierFactory implements IRollModifierFactory {
 	}
 
 	@Override
-	public void initialize(Rules rules, GameOptions options) {
+	public void initialize(GameOptions options) {
 		// TODO Auto-generated method stub
 		
 	}

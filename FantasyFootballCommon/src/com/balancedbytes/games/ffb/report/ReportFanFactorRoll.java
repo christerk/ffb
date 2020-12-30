@@ -51,7 +51,7 @@ public class ReportFanFactorRoll implements IReport {
 
 	// transformation
 
-	public IReport transform() {
+	public IReport transform(Game game) {
 		return new ReportFanFactorRoll(getFanFactorRollAway(), getFanFactorModifierAway(), getFanFactorRollHome(),
 				getFanFactorModifierHome());
 	}

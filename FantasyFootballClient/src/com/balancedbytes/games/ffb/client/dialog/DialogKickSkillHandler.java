@@ -14,7 +14,6 @@ import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.model.Skill;
 import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
-import com.balancedbytes.games.ffb.util.UtilCards;
 
 /**
  * 
@@ -38,7 +37,7 @@ public class DialogKickSkillHandler extends DialogHandler {
 
 			Player player = game.getPlayerById(dialogKickSkillParameter.getPlayerId());
 
-			Skill skillReduceKickDistance = UtilCards.getSkillWithProperty(player, NamedProperties.canReduceKickDistance);
+			Skill skillReduceKickDistance = player.getSkillWithProperty(NamedProperties.canReduceKickDistance);
 
 			if ((ClientMode.PLAYER == getClient().getMode()) && game.getTeamHome().hasPlayer(player)
 					&& skillReduceKickDistance != null) {

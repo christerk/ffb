@@ -18,7 +18,7 @@ import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
  * the second block unless he has no further normal movement and cannot go for
  * it again.
  */
-@RulesCollection(Rules.All)
+@RulesCollection(Rules.COMMON)
 public class Frenzy extends Skill {
 
 	public Frenzy() {

@@ -12,7 +12,7 @@ import com.balancedbytes.games.ffb.model.Skill;
  * catch roll. It also allows the player to re-roll the D6 if he drops a
  * hand-off or fails to make an interception.
  */
-@RulesCollection(Rules.All)
+@RulesCollection(Rules.COMMON)
 public class Catch extends Skill {
 
 	public Catch() {

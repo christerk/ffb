@@ -7,7 +7,6 @@ import java.util.Map;
 import java.util.Set;
 
 import com.balancedbytes.games.ffb.ArmorModifiers.ArmorModifierContext;
-import com.balancedbytes.games.ffb.RulesCollection.Rules;
 import com.balancedbytes.games.ffb.factory.INamedObjectFactory;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.GameOptions;
@@ -71,7 +70,7 @@ public class ArmorModifierFactory implements INamedObjectFactory {
 	}
 
 	@Override
-	public void initialize(Rules rules, GameOptions options) {
+	public void initialize(GameOptions options) {
 		// TODO Auto-generated method stub
 		
 	}

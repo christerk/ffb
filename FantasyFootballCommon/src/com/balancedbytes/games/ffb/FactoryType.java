@@ -7,16 +7,16 @@ import java.lang.annotation.RetentionPolicy;
 public @interface FactoryType {
 
 	public enum Factory {
-		animationType, apothecaryMode, apothecaryStatus, blockResult, card, cardEffect,
-		cardType, catchModifier, catchScatterThrowInMode, clientMode, clientStateId,
-		concedeGameStatus, dialogId, direction, dodgeModifier, gameOptionId, gameStatus,
-		gazeModifier, goForItModifier, inducementPhase, inducementType, injuryModifier,
-		injuryType, interceptionModifier, kickoffResult, leaderState, leapModifier,
-		modelChangeDataType, modelChangeId, netCommandId, passingDistance, passModifier, pickupModifier,
-		playerAction, playerChoiceMode, playerGender, playerType, pushbackMode,
-		reportId, reRolledAction, reRollSource, rightStuffModifier, sendToBoxReason, seriousInjury, serverStatus,
-		skill, skillCategory, skillUse, soundId, specialEffect, stepAction, stepId,
-		teamStatus, turnMode, weather
+		ANIMATION_TYPE, APOTHECARY_MODE, APOTHECARY_STATUS, BLOCK_RESULT, CARD, CARD_EFFECT,
+		CARD_TYPE, CATCH_MODIFIER, CATCH_SCATTER_THROWIN_MODE, CLIENT_MODE, CLIENT_STATE_ID,
+		CONCEDE_GAME_STATUS, DIALOG_ID, DIRECTION, DODGE_MODIFIER, GAME_OPTION_ID, GAME_STATUS,
+		GAZE_MODIFIER, GO_FOR_IT_MODIFIER, INDUCEMENT_PHASE, INDUCEMENT_TYPE, INJURY_MODIFIER,
+		INJURY_TYPE, INTERCEPTION_MODIFIER, KICKOFF_RESULT, LEADER_STATE, LEAP_MODIFIER,
+		MODEL_CHANGE_DATA_TYPE, MODEL_CHANGE_ID, NET_COMMAND_ID, PASSING_DISTANCE, PASS_MODIFIER, PICKUP_MODIFIER,
+		PLAYER_ACTION, PLAYER_CHOICE_MODE, PLAYER_GENDER, PLAYER_TYPE, PUSHBACK_MODE,
+		REPORT_ID, RE_ROLLED_ACTION, RE_ROLL_SOURCE, RIGHT_STUFF_MODIFIER, SEND_TO_BOX_REASON, SERIOUS_INJURY, SERVER_STATUS,
+		SKILL, SKILL_CATEGORY, SKILL_USE, SOUND_ID, SPECIAL_EFFECT, STEP_ACTION, STEP_ID,
+		TEAM_STATUS, TURN_MODE, WEATHER
 	}
 	
 	Factory value();

@@ -10,6 +10,7 @@ import com.balancedbytes.games.ffb.Card;
 import com.balancedbytes.games.ffb.FactoryType;
 import com.balancedbytes.games.ffb.InterceptionModifier;
 import com.balancedbytes.games.ffb.InterceptionModifiers;
+import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.Weather;
 import com.balancedbytes.games.ffb.InterceptionModifiers.InterceptionContext;
 import com.balancedbytes.games.ffb.RulesCollection.Rules;
@@ -25,7 +26,8 @@ import com.balancedbytes.games.ffb.util.UtilPlayer;
  * 
  * @author Kalimar
  */
-@FactoryType(FactoryType.Factory.interceptionModifier)
+@FactoryType(FactoryType.Factory.INTERCEPTION_MODIFIER)
+@RulesCollection(Rules.COMMON)
 public class InterceptionModifierFactory implements IRollModifierFactory {
 
 	static InterceptionModifiers interceptionModifiers;
@@ -47,7 +49,7 @@ public class InterceptionModifierFactory implements IRollModifierFactory {
 		InterceptionContext context = new InterceptionContext(pPlayer);
 		interceptionModifiers.addAll(UtilCards.getInterceptionModifiers(pPlayer, context));
 
-		if (!UtilCards.hasSkillWithProperty(pPlayer, NamedProperties.ignoreTacklezonesWhenCatching)) {
+		if (!pPlayer.hasSkillWithProperty(NamedProperties.ignoreTacklezonesWhenCatching)) {
 			InterceptionModifier tacklezoneModifier = getTacklezoneModifier(pGame, pPlayer);
 			if (tacklezoneModifier != null) {
 				interceptionModifiers.add(tacklezoneModifier);
@@ -105,7 +107,7 @@ public class InterceptionModifierFactory implements IRollModifierFactory {
 	}
 
 	@Override
-	public void initialize(Rules rules, GameOptions options) {
+	public void initialize(GameOptions options) {
 		// TODO Auto-generated method stub
 		
 	}

@@ -25,7 +25,6 @@ import com.balancedbytes.games.ffb.server.step.StepId;
 import com.balancedbytes.games.ffb.server.step.StepParameter;
 import com.balancedbytes.games.ffb.server.step.UtilServerSteps;
 import com.balancedbytes.games.ffb.server.util.UtilServerDialog;
-import com.balancedbytes.games.ffb.util.UtilCards;
 import com.balancedbytes.games.ffb.util.UtilPlayer;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
@@ -132,7 +131,7 @@ public final class StepKickoffReturn extends AbstractStep {
 			for (Player player : kickoffReturnTeam.getPlayers()) {
 				FieldCoordinate playerCoordinate = game.getFieldModel().getPlayerCoordinate(player);
 				if ((playerCoordinate != null) && !playerCoordinate.isBoxCoordinate()) {
-					if (UtilCards.hasSkillWithProperty(player, NamedProperties.canMoveDuringKickOffScatter)) {
+					if (player.hasSkillWithProperty(NamedProperties.canMoveDuringKickOffScatter)) {
 						FieldCoordinateBounds losBounds = game.isHomePlaying() ? FieldCoordinateBounds.LOS_AWAY
 								: FieldCoordinateBounds.LOS_HOME;
 						if (losBounds.isInBounds(playerCoordinate)) {

@@ -366,7 +366,6 @@ public class AnnotatedEndpoint extends Endpoint {
 		return as == null ? Object.class : (as[0] == null ? Object.class : as[0]);
 	}
 
-	@SuppressWarnings("unchecked")
 	private ParameterExtractor[] getOnCloseParameterExtractors(final Method method, Map<Integer, Class<?>> unknownParams,
 			ErrorCollector collector) {
 		return getParameterExtractors(method, unknownParams,

@@ -11,7 +11,7 @@ import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
  * is in another player's tackle zone. This skill may not be used to assist a
  * foul.
  */
-@RulesCollection(Rules.All)
+@RulesCollection(Rules.COMMON)
 public class Guard extends Skill {
 
 	public Guard() {

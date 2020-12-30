@@ -21,10 +21,8 @@ public class ServerUtilBlock {
 		boolean isBlitz = PlayerAction.BLITZ_MOVE == actingPlayer.getPlayerAction();
 		boolean isBlock = PlayerAction.BLOCK == actingPlayer.getPlayerAction();
 		boolean isMultiBlock = (PlayerAction.MULTIPLE_BLOCK == actingPlayer.getPlayerAction());
-		boolean canBlockMoreThanOnce = UtilCards.hasSkillWithProperty(actingPlayer.getPlayer(),
-				NamedProperties.canBlockMoreThanOnce);
-		boolean canBlockSameTeamPlayer = UtilCards.hasSkillWithProperty(actingPlayer.getPlayer(),
-				NamedProperties.canBlockSameTeamPlayer);
+		boolean canBlockMoreThanOnce = actingPlayer.getPlayer().hasSkillWithProperty(NamedProperties.canBlockMoreThanOnce);
+		boolean canBlockSameTeamPlayer = actingPlayer.getPlayer().hasSkillWithProperty(NamedProperties.canBlockSameTeamPlayer);
 
 		if ((actingPlayer.getPlayer() != null)
 				&& (canBlockMoreThanOnce || (!actingPlayer.hasBlocked() && (isBlitz || isBlock || isMultiBlock)))) {
@@ -53,7 +51,7 @@ public class ServerUtilBlock {
 		ActingPlayer actingPlayer = pGame.getActingPlayer();
 		if (pPlayers.length > 0) {
 			int attackerStrength = actingPlayer.getStrength();
-			if (UtilCards.hasSkillWithProperty(actingPlayer.getPlayer(), NamedProperties.addStrengthOnBlitz)
+			if (actingPlayer.getPlayer().hasSkillWithProperty(NamedProperties.addStrengthOnBlitz)
 					&& ((actingPlayer.getPlayerAction() == PlayerAction.BLITZ)
 							|| (actingPlayer.getPlayerAction() == PlayerAction.BLITZ_MOVE))) {
 				attackerStrength++;
@@ -62,7 +60,7 @@ public class ServerUtilBlock {
 			for (int i = 0; i < pPlayers.length; i++) {
 				if (!usingMultiBlock || (pPlayers[i] != pGame.getDefender())) {
 					int nrOfDice = 0;
-					if (!UtilCards.hasSkillWithProperty(actingPlayer.getPlayer(), NamedProperties.useSpecialBlockRules)) {
+					if (!actingPlayer.getPlayer().hasSkillWithProperty(NamedProperties.useSpecialBlockRules)) {
 						nrOfDice = findNrOfBlockDice(pGame, actingPlayer.getPlayer(), attackerStrength, pPlayers[i],
 								usingMultiBlock);
 					}

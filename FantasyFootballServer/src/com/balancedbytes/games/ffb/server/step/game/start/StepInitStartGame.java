@@ -130,7 +130,7 @@ public final class StepInitStartGame extends AbstractStep {
 				}
 			}
 			game.initializeRules();
-			UtilSkillBehaviours.registerBehaviours(game.getRules().getSkillFactory(), server.getDebugLog());
+			UtilSkillBehaviours.registerBehaviours(game, server.getDebugLog());
 
 			// <-- log start game
 		}

@@ -9,7 +9,7 @@ import com.balancedbytes.games.ffb.model.Skill;
 /**
  * The player may add 1 to the D6 roll when he passes.
  */
-@RulesCollection(Rules.All)
+@RulesCollection(Rules.COMMON)
 public class Accurate extends Skill {
 
 	public Accurate() {

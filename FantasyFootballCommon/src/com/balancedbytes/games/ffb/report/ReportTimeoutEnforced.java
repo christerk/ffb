@@ -32,7 +32,7 @@ public class ReportTimeoutEnforced implements IReport {
 
 	// transformation
 
-	public IReport transform() {
+	public IReport transform(Game game) {
 		return new ReportTimeoutEnforced(getCoach());
 	}
 

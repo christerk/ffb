@@ -12,7 +12,7 @@ import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
  * because his hands are full. If he attempts to pick up the ball then it will
  * bounce, and will causes a turnover if it is his team's turn.
  */
-@RulesCollection(Rules.All)
+@RulesCollection(Rules.COMMON)
 public class NoHands extends Skill {
 
 	public NoHands() {

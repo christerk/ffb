@@ -63,7 +63,7 @@ public class ReportSpectators implements IReport {
 
 	// transformation
 
-	public IReport transform() {
+	public IReport transform(Game game) {
 		return new ReportSpectators(getSpectatorRollAway(), getSpectatorsAway(), getFameAway(), getSpectatorRollHome(),
 				getSpectatorsHome(), getFameHome());
 	}

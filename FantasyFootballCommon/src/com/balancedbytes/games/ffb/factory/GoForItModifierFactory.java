@@ -8,6 +8,7 @@ import java.util.Set;
 import com.balancedbytes.games.ffb.Card;
 import com.balancedbytes.games.ffb.FactoryType;
 import com.balancedbytes.games.ffb.GoForItModifier;
+import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.RulesCollection.Rules;
 import com.balancedbytes.games.ffb.Weather;
 import com.balancedbytes.games.ffb.model.Game;
@@ -18,7 +19,8 @@ import com.balancedbytes.games.ffb.util.UtilCards;
  * 
  * @author Kalimar
  */
-@FactoryType(FactoryType.Factory.goForItModifier)
+@FactoryType(FactoryType.Factory.GO_FOR_IT_MODIFIER)
+@RulesCollection(Rules.COMMON)
 public class GoForItModifierFactory implements IRollModifierFactory {
 
 	public GoForItModifier forName(String pName) {
@@ -57,7 +59,7 @@ public class GoForItModifierFactory implements IRollModifierFactory {
 	}
 
 	@Override
-	public void initialize(Rules rules, GameOptions options) {
+	public void initialize(GameOptions options) {
 		// TODO Auto-generated method stub
 		
 	}

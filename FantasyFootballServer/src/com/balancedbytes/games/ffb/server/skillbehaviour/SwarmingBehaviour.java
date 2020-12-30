@@ -6,8 +6,10 @@ import java.util.Set;
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.FieldCoordinateBounds;
 import com.balancedbytes.games.ffb.PlayerState;
+import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.SoundId;
 import com.balancedbytes.games.ffb.TurnMode;
+import com.balancedbytes.games.ffb.RulesCollection.Rules;
 import com.balancedbytes.games.ffb.dialog.DialogSwarmingErrorParameter;
 import com.balancedbytes.games.ffb.dialog.DialogSwarmingPlayersParameter;
 import com.balancedbytes.games.ffb.model.Game;
@@ -26,6 +28,7 @@ import com.balancedbytes.games.ffb.skill.Swarming;
 import com.balancedbytes.games.ffb.util.UtilCards;
 import com.balancedbytes.games.ffb.util.UtilPlayer;
 
+@RulesCollection(Rules.COMMON)
 public class SwarmingBehaviour extends SkillBehaviour<Swarming> {
 	public SwarmingBehaviour() {
 		super();

@@ -23,7 +23,7 @@ import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
  * manages to roll a successful result for a Really Stupid roll at the start of
  * a future Action or the drive ends.
  */
-@RulesCollection(Rules.All)
+@RulesCollection(Rules.COMMON)
 public class ReallyStupid extends Skill {
 
 	public ReallyStupid() {

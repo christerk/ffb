@@ -16,7 +16,7 @@ import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
  * rolled on the Block dice, as explained in the Blocking rules in the Blood
  * Bowl book.
  */
-@RulesCollection(Rules.All)
+@RulesCollection(Rules.COMMON)
 public class Dodge extends Skill {
 
 	public Dodge() {

@@ -6,6 +6,8 @@ import com.balancedbytes.games.ffb.CardEffect;
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.PlayerState;
 import com.balancedbytes.games.ffb.ReRollSources;
+import com.balancedbytes.games.ffb.RulesCollection;
+import com.balancedbytes.games.ffb.RulesCollection.Rules;
 import com.balancedbytes.games.ffb.dialog.DialogPilingOnParameter;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.Game;
@@ -41,6 +43,7 @@ import com.balancedbytes.games.ffb.server.util.UtilServerReRoll;
 import com.balancedbytes.games.ffb.skill.PilingOn;
 import com.balancedbytes.games.ffb.util.UtilCards;
 
+@RulesCollection(Rules.COMMON)
 public class PilingOnBehaviour extends SkillBehaviour<PilingOn> {
 	public PilingOnBehaviour() {
 		super();
@@ -115,7 +118,7 @@ public class PilingOnBehaviour extends SkillBehaviour<PilingOn> {
 						state.injuryResultDefender = UtilServerInjury.handleInjury(step, injuryType, actingPlayer.getPlayer(),
 								game.getDefender(), defenderCoordinate, null, ApothecaryMode.DEFENDER);
 
-						if (UtilCards.hasSkillWithProperty(actingPlayer.getPlayer(), NamedProperties.appliesPoisonOnBadlyHurt)
+						if (actingPlayer.getPlayer().hasSkillWithProperty(NamedProperties.appliesPoisonOnBadlyHurt)
 								&& state.injuryResultDefender.injuryContext().isBadlyHurt()) {
 							boolean success = rollWeepingDagger(actingPlayer.getPlayer(), game.getDefender(), step);
 							if (success) {
@@ -164,7 +167,7 @@ public class PilingOnBehaviour extends SkillBehaviour<PilingOn> {
 								UtilServerInjury.dropPlayer(step, actingPlayer.getPlayer(), ApothecaryMode.ATTACKER));
 						InjuryResult injuryResultAttacker = UtilServerInjury.handleInjury(step, new InjuryTypeBlock(),
 								game.getDefender(), actingPlayer.getPlayer(), attackerCoordinate, null, ApothecaryMode.ATTACKER);
-						if (UtilCards.hasSkillWithProperty(game.getDefender(), NamedProperties.appliesPoisonOnBadlyHurt)
+						if (game.getDefender().hasSkillWithProperty(NamedProperties.appliesPoisonOnBadlyHurt)
 								&& injuryResultAttacker.injuryContext().isBadlyHurt()) {
 							boolean success = rollWeepingDagger(game.getDefender(), actingPlayer.getPlayer(), step);
 							if (success) {

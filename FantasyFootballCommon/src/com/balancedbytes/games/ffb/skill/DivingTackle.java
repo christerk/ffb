@@ -18,7 +18,7 @@ import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
  * addition, if Diving Tackle is used on the 1st Dodge roll, both the -2
  * modifier and tackle zone still apply to the Dodge re-roll.
  */
-@RulesCollection(Rules.All)
+@RulesCollection(Rules.COMMON)
 public class DivingTackle extends Skill {
 
 	public DivingTackle() {

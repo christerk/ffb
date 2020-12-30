@@ -14,7 +14,7 @@ import com.balancedbytes.games.ffb.model.Skill;
  * only modify one of the dice rolls, so if you decide to use Dirty Player to
  * modify the Armour roll, you may not modify the Injury roll as well.
  */
-@RulesCollection(Rules.All)
+@RulesCollection(Rules.COMMON)
 public class DirtyPlayer extends Skill {
 
 	public DirtyPlayer() {

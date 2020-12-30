@@ -1,34 +1,25 @@
 package com.balancedbytes.games.ffb.server.util;
 
 import com.balancedbytes.games.ffb.factory.SkillFactory;
+import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Skill;
 import com.balancedbytes.games.ffb.server.DebugLog;
 import com.balancedbytes.games.ffb.server.IServerLogLevel;
 import com.balancedbytes.games.ffb.server.model.SkillBehaviour;
 import com.balancedbytes.games.ffb.util.Scanner;
 
-import java.lang.reflect.InvocationTargetException;
-
 public class UtilSkillBehaviours {
 
-	public static void registerBehaviours(SkillFactory factory, DebugLog log) {
+	@SuppressWarnings("unchecked")
+	public static void registerBehaviours(Game game, DebugLog log) {
 
-		Scanner<SkillBehaviour> scanner = new Scanner<>(SkillBehaviour.class);
-		for (Class<SkillBehaviour> behaviourClass : scanner.getSubclasses()) {
-			
-			try {
-				@SuppressWarnings("unchecked")
-				SkillBehaviour<Skill> behaviour = (SkillBehaviour<Skill>) behaviourClass.getConstructor((Class<Skill>[]) null)
-						.newInstance((Object[]) null);
-				if (registerBehaviour(behaviour, factory)) {
-					log.log(IServerLogLevel.DEBUG,
-							"Registered behavior class '" + behaviourClass.getSimpleName() + "' for skill '" + behaviour.skillClass.getSimpleName() + "'");
-				} else {
-					log.log(IServerLogLevel.WARN, "No skill found for '" + behaviour.getClass().getSimpleName());
-				}
-			} catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException
-					| NoSuchMethodException | SecurityException e) {
-				log.log(IServerLogLevel.WARN, "Failed to register behaviour for '" + behaviourClass.getSimpleName() + "': " + e.getMessage());
+		Scanner<SkillBehaviour> scanner = new Scanner<SkillBehaviour>(SkillBehaviour.class);
+		for (SkillBehaviour<Skill> behaviour : scanner.getSubclasses(game.getOptions())) {
+			if (registerBehaviour(behaviour, game.getRules().getSkillFactory())) {
+				log.log(IServerLogLevel.DEBUG,
+						"Registered behavior class '" + behaviour.getClass().getSimpleName() + "' for skill '" + behaviour.skillClass.getSimpleName() + "'");
+			} else {
+				log.log(IServerLogLevel.WARN, "No skill found for '" + behaviour.getClass().getSimpleName());
 			}
 		}
 	}

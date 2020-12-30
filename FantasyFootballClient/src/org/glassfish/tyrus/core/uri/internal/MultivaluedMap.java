@@ -92,7 +92,7 @@ public interface MultivaluedMap<K, V> extends Map<K, List<V>> {
 	 *                              {@code null}.
 	 * @since 2.0
 	 */
-	void addAll(K key, V... newValues);
+	void addAll(K key, @SuppressWarnings("unchecked") V... newValues);
 
 	/**
 	 * Add all the values from the supplied value list to the current list of values

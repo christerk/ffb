@@ -191,11 +191,11 @@ public class ZappedPosition implements Position {
 		return UtilXml.toXml(this, pIndent);
 	}
 
-	public IXmlReadable startXmlElement(String pXmlTag, Attributes pXmlAttributes) {
+	public IXmlReadable startXmlElement(Game game, String pXmlTag, Attributes pXmlAttributes) {
 
 		if (RosterPosition.XML_TAG.equals(pXmlTag)) {
 			originalPosition = new RosterPosition();
-			originalPosition.startXmlElement(pXmlTag, pXmlAttributes);
+			originalPosition.startXmlElement(game, pXmlTag, pXmlAttributes);
 		}
 		return this;
 	}

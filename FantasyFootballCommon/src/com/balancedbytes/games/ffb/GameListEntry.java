@@ -161,7 +161,7 @@ public class GameListEntry implements IXmlSerializable, IJsonSerializable {
 		return UtilXml.toXml(this, pIndent);
 	}
 
-	public IXmlReadable startXmlElement(String pXmlTag, Attributes pXmlAttributes) {
+	public IXmlReadable startXmlElement(Game game, String pXmlTag, Attributes pXmlAttributes) {
 		if (XML_TAG.equals(pXmlTag)) {
 			fGameId = UtilXml.getLongAttribute(pXmlAttributes, _XML_ATTRIBUTE_ID);
 			fStarted = UtilXml.getTimestampAttribute(pXmlAttributes, _XML_ATTRIBUTE_STARTED);

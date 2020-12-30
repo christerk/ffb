@@ -26,7 +26,6 @@ import com.balancedbytes.games.ffb.factory.SkillFactory;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
-import com.balancedbytes.games.ffb.util.UtilCards;
 
 /**
  *
@@ -65,7 +64,7 @@ public class DialogReRoll extends Dialog implements ActionListener, KeyListener 
 
 		StringBuilder message1 = new StringBuilder();
 
-		String action = fDialogParameter.getReRolledAction().getName(pClient.getGame().getRules().<SkillFactory>getFactory(Factory.skill));
+		String action = fDialogParameter.getReRolledAction().getName(pClient.getGame().getRules().<SkillFactory>getFactory(Factory.SKILL));
 
 		if (fDialogParameter.getMinimumRoll() > 0) {
 			message1.append("Do you want to re-roll the failed ").append(action)
@@ -88,7 +87,7 @@ public class DialogReRoll extends Dialog implements ActionListener, KeyListener 
 		Game game = getClient().getGame();
 		Player reRollingPlayer = game.getPlayerById(pDialogParameter.getPlayerId());
 		if ((reRollingPlayer != null)
-				&& UtilCards.hasSkillWithProperty(reRollingPlayer, NamedProperties.hasToRollToUseTeamReroll)) {
+				&& reRollingPlayer.hasSkillWithProperty(NamedProperties.hasToRollToUseTeamReroll)) {
 			messagePanel.add(Box.createVerticalStrut(5));
 			StringBuilder message3 = new StringBuilder();
 			message3.append("Player is a LONER - the Re-Roll is not guaranteed to help.");

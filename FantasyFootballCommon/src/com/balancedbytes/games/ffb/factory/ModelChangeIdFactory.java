@@ -1,6 +1,7 @@
 package com.balancedbytes.games.ffb.factory;
 
 import com.balancedbytes.games.ffb.FactoryType;
+import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.RulesCollection.Rules;
 import com.balancedbytes.games.ffb.model.GameOptions;
 import com.balancedbytes.games.ffb.model.change.ModelChangeId;
@@ -9,7 +10,8 @@ import com.balancedbytes.games.ffb.model.change.ModelChangeId;
  * 
  * @author Kalimar
  */
-@FactoryType(FactoryType.Factory.modelChangeId)
+@FactoryType(FactoryType.Factory.MODEL_CHANGE_ID)
+@RulesCollection(Rules.COMMON)
 public class ModelChangeIdFactory implements INamedObjectFactory {
 
 	public ModelChangeId forName(String pName) {
@@ -22,7 +24,7 @@ public class ModelChangeIdFactory implements INamedObjectFactory {
 	}
 
 	@Override
-	public void initialize(Rules rules, GameOptions options) {
+	public void initialize(GameOptions options) {
 		// TODO Auto-generated method stub
 		
 	}

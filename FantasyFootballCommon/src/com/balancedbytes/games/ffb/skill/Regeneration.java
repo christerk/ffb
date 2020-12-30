@@ -19,7 +19,7 @@ import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
  * player with this skill, even if the result doesn't affect the player in the
  * normal way.
  */
-@RulesCollection(Rules.All)
+@RulesCollection(Rules.COMMON)
 public class Regeneration extends Skill {
 
 	public Regeneration() {

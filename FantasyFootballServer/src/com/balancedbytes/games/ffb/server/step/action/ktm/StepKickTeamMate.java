@@ -26,7 +26,6 @@ import com.balancedbytes.games.ffb.server.step.StepParameterKey;
 import com.balancedbytes.games.ffb.server.step.StepParameterSet;
 import com.balancedbytes.games.ffb.server.util.UtilServerDialog;
 import com.balancedbytes.games.ffb.server.util.UtilServerReRoll;
-import com.balancedbytes.games.ffb.util.UtilCards;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
@@ -185,7 +184,7 @@ public final class StepKickTeamMate extends AbstractStepWithReRoll {
 		if (successful) {
 			Game game = getGameState().getGame();
 			boolean hasSwoop = kickedPlayer != null
-					&& UtilCards.hasSkillWithProperty(kickedPlayer, NamedProperties.ttmScattersInSingleDirection);
+					&& kickedPlayer.hasSkillWithProperty(NamedProperties.ttmScattersInSingleDirection);
 			game.getFieldModel().setPlayerState(game.getDefender(), fKickedPlayerState.changeBase(PlayerState.PICKED_UP));
 			SequenceGenerator.getInstance().pushScatterPlayerSequence(getGameState(), fKickedPlayerId, fKickedPlayerState,
 					fKickedPlayerHasBall, kickerCoordinate, hasSwoop, true);

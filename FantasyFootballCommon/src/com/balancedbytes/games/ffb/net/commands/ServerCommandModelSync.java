@@ -70,10 +70,10 @@ public class ServerCommandModelSync extends ServerCommand {
 
 	// transformation
 
-	public ServerCommandModelSync transform() {
+	public ServerCommandModelSync transform(Game game) {
 		Animation transformedAnimation = (getAnimation() != null) ? getAnimation().transform() : null;
 		ServerCommandModelSync transformedCommand = new ServerCommandModelSync(getModelChanges().transform(),
-				getReportList().transform(), transformedAnimation, getSound(), getGameTime(), getTurnTime());
+				getReportList().transform(game), transformedAnimation, getSound(), getGameTime(), getTurnTime());
 		transformedCommand.setCommandNr(getCommandNr());
 		return transformedCommand;
 	}

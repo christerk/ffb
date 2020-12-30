@@ -19,7 +19,6 @@ import com.balancedbytes.games.ffb.server.DiceInterpreter;
 import com.balancedbytes.games.ffb.server.DiceRoller;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.step.IStep;
-import com.balancedbytes.games.ffb.util.UtilCards;
 
 public class InjuryTypeBlock extends InjuryTypeServer<Block> {
 	public InjuryTypeBlock() {
@@ -37,8 +36,8 @@ public class InjuryTypeBlock extends InjuryTypeServer<Block> {
 
 			ArmorModifierFactory modifierFactory = new ArmorModifierFactory();
 
-			boolean attackerHasChainsaw = UtilCards.hasSkillWithProperty(pAttacker, NamedProperties.blocksLikeChainsaw);
-			boolean defenderHasChainsaw = UtilCards.hasSkillWithProperty(pDefender, NamedProperties.blocksLikeChainsaw);
+			boolean attackerHasChainsaw = pAttacker.hasSkillWithProperty(NamedProperties.blocksLikeChainsaw);
+			boolean defenderHasChainsaw = pDefender.hasSkillWithProperty(NamedProperties.blocksLikeChainsaw);
 			boolean chainsawIsInvolved = (attackerHasChainsaw || defenderHasChainsaw);
 
 			injuryContext.setArmorRoll(diceRoller.rollArmour());

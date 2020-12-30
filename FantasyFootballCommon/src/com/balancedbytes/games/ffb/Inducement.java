@@ -80,7 +80,7 @@ public class Inducement implements IXmlSerializable, IJsonSerializable {
 		return UtilXml.toXml(this, pIndent);
 	}
 
-	public IXmlReadable startXmlElement(String pXmlTag, Attributes pXmlAttributes) {
+	public IXmlReadable startXmlElement(Game game, String pXmlTag, Attributes pXmlAttributes) {
 		InducementTypeFactory typeFactory = new InducementTypeFactory();
 		if (XML_TAG.equals(pXmlTag)) {
 			String typeName = UtilXml.getStringAttribute(pXmlAttributes, _XML_ATTRIBUTE_TYPE);

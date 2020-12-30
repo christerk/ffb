@@ -11,7 +11,7 @@ import com.balancedbytes.games.ffb.model.Skill;
  * A player with the Pass skill is allowed to re-roll the D6 if he throws an
  * inaccurate pass or fumbles.
  */
-@RulesCollection(Rules.All)
+@RulesCollection(Rules.COMMON)
 public class Pass extends Skill {
 
 	public Pass() {

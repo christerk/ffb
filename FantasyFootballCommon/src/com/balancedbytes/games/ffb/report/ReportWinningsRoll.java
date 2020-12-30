@@ -50,7 +50,7 @@ public class ReportWinningsRoll implements IReport {
 
 	// transformation
 
-	public IReport transform() {
+	public IReport transform(Game game) {
 		return new ReportWinningsRoll(getWinningsRollAway(), getWinningsAway(), getWinningsRollHome(), getWinningsHome());
 	}
 

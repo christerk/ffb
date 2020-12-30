@@ -20,7 +20,7 @@ import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
  * turn if he has not already done so. A failed landing roll or landing in the
  * crowd does not cause a turnover, unless he was holding the ball.
  */
-@RulesCollection(Rules.All)
+@RulesCollection(Rules.COMMON)
 public class RightStuff extends Skill {
 
 	public RightStuff() {

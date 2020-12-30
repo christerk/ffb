@@ -102,9 +102,8 @@ public class StepEndBlocking extends AbstractStep {
 		} else {
 			// Revert back strength gained from HORNS and DAUNTLESS to avoid interaction
 			// with tentacles.
-			Skill skillHorns = UtilCards.getSkillWithProperty(actingPlayer.getPlayer(), NamedProperties.addStrengthOnBlitz);
-			Skill skillDauntless = UtilCards.getSkillWithProperty(actingPlayer.getPlayer(),
-					NamedProperties.canRollToMatchOpponentsStrength);
+			Skill skillHorns = actingPlayer.getPlayer().getSkillWithProperty(NamedProperties.addStrengthOnBlitz);
+			Skill skillDauntless = actingPlayer.getPlayer().getSkillWithProperty(NamedProperties.canRollToMatchOpponentsStrength);
 			boolean usedHorns = (skillHorns != null) && actingPlayer.isSkillUsed(skillHorns);
 			boolean usedDauntless = (skillDauntless != null) && actingPlayer.isSkillUsed(skillDauntless);
 
@@ -120,14 +119,14 @@ public class StepEndBlocking extends AbstractStep {
 			Skill unusedPlayerMustMakeSecondBlockSkill = UtilCards.getUnusedSkillWithProperty(actingPlayer,
 					NamedProperties.forceSecondBlock);
 
-			if (UtilCards.hasSkillWithProperty(actingPlayer.getPlayer(), NamedProperties.forceSecondBlock)) {
+			if (actingPlayer.getPlayer().hasSkillWithProperty(NamedProperties.forceSecondBlock)) {
 				actingPlayer.setGoingForIt(true);
 			}
 			Skill canBlockMultipleTimesSkill = UtilCards.getUnusedSkillWithProperty(actingPlayer,
 					NamedProperties.canBlockMoreThanOnce);
 			if ((actingPlayer.getPlayerAction() == PlayerAction.MULTIPLE_BLOCK) && canBlockMultipleTimesSkill != null
 					&& attackerState.hasTacklezones()
-					&& !UtilCards.hasSkillWithProperty(actingPlayer.getPlayer(), NamedProperties.blocksLikeChainsaw)
+					&& !actingPlayer.getPlayer().hasSkillWithProperty(NamedProperties.blocksLikeChainsaw)
 					&& !attackerState.isConfused() && actingPlayer.hasBlocked()) {
 				actingPlayer.markSkillUsed(canBlockMultipleTimesSkill);
 				actingPlayer.setHasBlocked(false);
@@ -149,7 +148,7 @@ public class StepEndBlocking extends AbstractStep {
 				actingPlayer.setGoingForIt(UtilPlayer.isNextMoveGoingForIt(game)); // auto
 				// go-for-it
 				if ((actingPlayer.getPlayerAction() == PlayerAction.BLITZ) && !fUsingStab
-						&& !UtilCards.hasSkillWithProperty(actingPlayer.getPlayer(), NamedProperties.blocksLikeChainsaw)
+						&& !actingPlayer.getPlayer().hasSkillWithProperty(NamedProperties.blocksLikeChainsaw)
 						&& attackerState.hasTacklezones() && UtilPlayer.isNextMovePossible(game, false)) {
 					String actingPlayerId = actingPlayer.getPlayer().getId();
 					UtilServerGame.changeActingPlayer(this, actingPlayerId, PlayerAction.BLITZ_MOVE, actingPlayer.isLeaping());

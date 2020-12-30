@@ -9,6 +9,7 @@ import com.balancedbytes.games.ffb.CatchModifier;
 import com.balancedbytes.games.ffb.Direction;
 import com.balancedbytes.games.ffb.DodgeModifier;
 import com.balancedbytes.games.ffb.DodgeModifiers;
+import com.balancedbytes.games.ffb.FactoryType.Factory;
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.GazeModifier;
 import com.balancedbytes.games.ffb.GoForItModifier;
@@ -319,7 +320,7 @@ public class DiceInterpreter {
 			} else {
 				int total = injuryRoll[0] + injuryRoll[1] + pInjuryContext.getInjuryModifierTotal();
 				if ((total == 8) && (defender != null)
-						&& UtilCards.hasSkillWithProperty(defender, NamedProperties.convertKOToStunOn8)) {
+						&& defender.hasSkillWithProperty(NamedProperties.convertKOToStunOn8)) {
 					playerState = new PlayerState(PlayerState.STUNNED);
 					pInjuryContext.addInjuryModifier(InjuryModifiers.THICK_SKULL);
 				} else if ((total == 7) && pInjuryContext.hasInjuryModifier(InjuryModifiers.STUNTY)) {
@@ -475,8 +476,8 @@ public class DiceInterpreter {
 		return ((roll > 0) && (roll < 4));
 	}
 
-	public Direction interpretScatterDirectionRoll(int roll) {
-		return new DirectionFactory().forRoll(roll);
+	public Direction interpretScatterDirectionRoll(Game game, int roll) {
+		return game.<DirectionFactory>getFactory(Factory.DIRECTION).forRoll(roll);
 	}
 
 	public Direction interpretThrowInDirectionRoll(FieldCoordinate pStartCoordinate, int roll) {

@@ -1,7 +1,6 @@
 package com.balancedbytes.games.ffb.server.factory;
 
 import com.balancedbytes.games.ffb.FactoryType;
-import com.balancedbytes.games.ffb.RulesCollection.Rules;
 import com.balancedbytes.games.ffb.factory.INamedObjectFactory;
 import com.balancedbytes.games.ffb.model.GameOptions;
 import com.balancedbytes.games.ffb.server.step.StepAction;
@@ -10,7 +9,7 @@ import com.balancedbytes.games.ffb.server.step.StepAction;
  * 
  * @author Kalimar
  */
-@FactoryType(FactoryType.Factory.stepAction)
+@FactoryType(FactoryType.Factory.STEP_ACTION)
 public class StepActionFactory implements INamedObjectFactory {
 
 	public StepAction forName(String pName) {
@@ -23,7 +22,7 @@ public class StepActionFactory implements INamedObjectFactory {
 	}
 
 	@Override
-	public void initialize(Rules rules, GameOptions options) {
+	public void initialize(GameOptions options) {
 		// TODO Auto-generated method stub
 		
 	}

@@ -16,6 +16,7 @@ import com.balancedbytes.games.ffb.ReRolledActions;
 import com.balancedbytes.games.ffb.SkillUse;
 import com.balancedbytes.games.ffb.SoundId;
 import com.balancedbytes.games.ffb.TurnMode;
+import com.balancedbytes.games.ffb.FactoryType.Factory;
 import com.balancedbytes.games.ffb.dialog.DialogPlayerChoiceParameter;
 import com.balancedbytes.games.ffb.factory.CatchModifierFactory;
 import com.balancedbytes.games.ffb.json.UtilJson;
@@ -344,7 +345,7 @@ public class StepCatchScatterThrowIn extends AbstractStepWithReRoll {
 
 		Game game = getGameState().getGame();
 		state.catcher = game.getPlayerById(fCatcherId);
-		if ((state.catcher == null) || UtilCards.hasSkillWithProperty(state.catcher, NamedProperties.preventCatch)) {
+		if ((state.catcher == null) || state.catcher.hasSkillWithProperty(NamedProperties.preventCatch)) {
 			return CatchScatterThrowInMode.SCATTER_BALL;
 		}
 		FieldCoordinate catcherCoordinate = game.getFieldModel().getPlayerCoordinate(state.catcher);
@@ -358,7 +359,7 @@ public class StepCatchScatterThrowIn extends AbstractStepWithReRoll {
 
 		if (doRoll) {
 
-			CatchModifierFactory modifierFactory = new CatchModifierFactory();
+			CatchModifierFactory modifierFactory = game.<CatchModifierFactory>getFactory(Factory.CATCH_MODIFIER);
 			Set<CatchModifier> catchModifiers = modifierFactory.findCatchModifiers(game, state.catcher, fCatchScatterThrowInMode);
 			int minimumRoll = DiceInterpreter.getInstance().minimumRollCatch(state.catcher, catchModifiers);
 			boolean reRolled = ((getReRolledAction() == ReRolledActions.CATCH) && (getReRollSource() != null));
@@ -429,7 +430,7 @@ public class StepCatchScatterThrowIn extends AbstractStepWithReRoll {
 		setReRollSource(null);
 
 		int roll = getGameState().getDiceRoller().rollScatterDirection();
-		Direction direction = DiceInterpreter.getInstance().interpretScatterDirectionRoll(roll);
+		Direction direction = DiceInterpreter.getInstance().interpretScatterDirectionRoll(game, roll);
 		FieldCoordinate ballCoordinateStart = game.getFieldModel().getBallCoordinate();
 		FieldCoordinate ballCoordinateEnd = UtilServerCatchScatterThrowIn.findScatterCoordinate(ballCoordinateStart,
 				direction, 1);

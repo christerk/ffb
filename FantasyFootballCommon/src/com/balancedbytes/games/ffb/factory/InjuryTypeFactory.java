@@ -2,6 +2,7 @@ package com.balancedbytes.games.ffb.factory;
 
 import com.balancedbytes.games.ffb.FactoryType;
 import com.balancedbytes.games.ffb.InjuryType;
+import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.RulesCollection.Rules;
 import com.balancedbytes.games.ffb.model.GameOptions;
 import com.balancedbytes.games.ffb.model.InjuryTypeConstants;
@@ -16,7 +17,8 @@ import java.util.Map;
  *
  * @author Kalimar
  */
-@FactoryType(FactoryType.Factory.injuryType)
+@FactoryType(FactoryType.Factory.INJURY_TYPE)
+@RulesCollection(Rules.COMMON)
 public class InjuryTypeFactory implements INamedObjectFactory {
 
 	private final Map<String, InjuryType> injuryTypes;
@@ -65,7 +67,7 @@ public class InjuryTypeFactory implements INamedObjectFactory {
 	}
 
 	@Override
-	public void initialize(Rules rules, GameOptions options) {
+	public void initialize(GameOptions options) {
 		// TODO Auto-generated method stub
 		
 	}

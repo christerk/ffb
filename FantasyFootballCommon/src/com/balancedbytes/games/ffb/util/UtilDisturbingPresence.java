@@ -21,7 +21,7 @@ public class UtilDisturbingPresence {
 		Team otherTeam = UtilPlayer.findOtherTeam(pGame, pPlayer);
 		for (Player<?> opposingPlayer : otherTeam.getPlayers()) {
 			FieldCoordinate coordinate = fieldModel.getPlayerCoordinate(opposingPlayer);
-			if (UtilCards.hasSkillWithProperty(opposingPlayer, NamedProperties.inflictsDisturbingPresence)
+			if (opposingPlayer.hasSkillWithProperty(NamedProperties.inflictsDisturbingPresence)
 					&& FieldCoordinateBounds.FIELD.isInBounds(coordinate)
 					&& (playerCoordinate.distanceInSteps(coordinate) <= 3)) {
 				// System.out.println(opposingPlayer.getName() + ": " +

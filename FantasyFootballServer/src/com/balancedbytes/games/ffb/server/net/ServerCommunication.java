@@ -487,7 +487,7 @@ public class ServerCommunication implements Runnable, IReceivedCommandHandler {
 				pGameTime, pTurnTime);
 		syncCommand.setCommandNr(gameState.generateCommandNr());
 		sendHomeAndSpectatorSessions(gameState, syncCommand);
-		sendAwaySession(gameState, syncCommand.transform());
+		sendAwaySession(gameState, syncCommand.transform(gameState.getGame()));
 	}
 
 	public void sendZapPlayer(GameState gameState, RosterPlayer player) {

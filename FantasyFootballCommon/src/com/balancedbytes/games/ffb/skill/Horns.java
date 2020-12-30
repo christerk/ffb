@@ -14,7 +14,7 @@ import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
  * count!). If the player has the Frenzy skill, then the Horns bonus applies on
  * the second block if it applied on the first.
  */
-@RulesCollection(Rules.All)
+@RulesCollection(Rules.COMMON)
 public class Horns extends Skill {
 
 	public Horns() {

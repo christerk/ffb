@@ -2,6 +2,7 @@ package com.balancedbytes.games.ffb.factory;
 
 import com.balancedbytes.games.ffb.FactoryType;
 import com.balancedbytes.games.ffb.PlayerType;
+import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.RulesCollection.Rules;
 import com.balancedbytes.games.ffb.model.GameOptions;
 import com.balancedbytes.games.ffb.util.StringTool;
@@ -10,7 +11,8 @@ import com.balancedbytes.games.ffb.util.StringTool;
  * 
  * @author Kalimar
  */
-@FactoryType(FactoryType.Factory.playerType)
+@FactoryType(FactoryType.Factory.PLAYER_TYPE)
+@RulesCollection(Rules.COMMON)
 public class PlayerTypeFactory implements INamedObjectFactory {
 
 	public PlayerType forName(String pName) {
@@ -29,7 +31,7 @@ public class PlayerTypeFactory implements INamedObjectFactory {
 	}
 
 	@Override
-	public void initialize(Rules rules, GameOptions options) {
+	public void initialize(GameOptions options) {
 		// TODO Auto-generated method stub
 		
 	}

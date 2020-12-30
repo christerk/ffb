@@ -9,6 +9,7 @@ import java.util.Set;
 import com.balancedbytes.games.ffb.FactoryType;
 import com.balancedbytes.games.ffb.PickupModifier;
 import com.balancedbytes.games.ffb.PickupModifiers;
+import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.RulesCollection.Rules;
 import com.balancedbytes.games.ffb.Weather;
 import com.balancedbytes.games.ffb.model.Game;
@@ -22,7 +23,8 @@ import com.balancedbytes.games.ffb.util.UtilPlayer;
  * 
  * @author Kalimar
  */
-@FactoryType(FactoryType.Factory.pickupModifier)
+@FactoryType(FactoryType.Factory.PICKUP_MODIFIER)
+@RulesCollection(Rules.COMMON)
 public class PickupModifierFactory implements IRollModifierFactory {
 
 	static PickupModifiers pickupModifiers;
@@ -42,14 +44,14 @@ public class PickupModifierFactory implements IRollModifierFactory {
 
 			pickupModifiers.addAll(UtilCards.getPickupModifiers(player, null));
 
-			if (!UtilCards.hasSkillWithProperty(player, NamedProperties.ignoreTacklezonesWhenPickingUp)) {
+			if (!player.hasSkillWithProperty(NamedProperties.ignoreTacklezonesWhenPickingUp)) {
 				PickupModifier tacklezoneModifier = getTacklezoneModifier(pGame, player);
 				if (tacklezoneModifier != null) {
 					pickupModifiers.add(tacklezoneModifier);
 				}
 			}
 
-			if (!UtilCards.hasSkillWithProperty(player, NamedProperties.ignoreWeatherWhenPickingUp)) {
+			if (!player.hasSkillWithProperty(NamedProperties.ignoreWeatherWhenPickingUp)) {
 				if (Weather.POURING_RAIN == pGame.getFieldModel().getWeather()) {
 					pickupModifiers.add(PickupModifiers.POURING_RAIN);
 				}
@@ -86,7 +88,7 @@ public class PickupModifierFactory implements IRollModifierFactory {
 	}
 
 	@Override
-	public void initialize(Rules rules, GameOptions options) {
+	public void initialize(GameOptions options) {
 		// TODO Auto-generated method stub
 		
 	}

@@ -26,7 +26,6 @@ import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
 import com.balancedbytes.games.ffb.net.NetCommand;
-import com.balancedbytes.games.ffb.util.UtilCards;
 import com.balancedbytes.games.ffb.util.UtilPassing;
 import com.balancedbytes.games.ffb.util.UtilRangeRuler;
 
@@ -232,7 +231,7 @@ public class ClientStateBomb extends ClientState {
 	private boolean isHailMaryPassActionAvailable() {
 		Game game = getClient().getGame();
 		ActingPlayer actingPlayer = game.getActingPlayer();
-		return (UtilCards.hasSkillWithProperty(actingPlayer.getPlayer(), NamedProperties.canPassToAnySquare)
+		return (actingPlayer.getPlayer().hasSkillWithProperty(NamedProperties.canPassToAnySquare)
 				&& (game.getFieldModel().getWeather() != Weather.BLIZZARD));
 	}
 

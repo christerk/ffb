@@ -24,7 +24,7 @@ import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
  * are not allowed to ignore enemy tackle zones, but still suffer the other
  * penalties.
  */
-@RulesCollection(Rules.All)
+@RulesCollection(Rules.COMMON)
 public class Stunty extends Skill {
 
 	public Stunty() {
@@ -36,6 +36,7 @@ public class Stunty extends Skill {
 		registerModifier(PassingModifiers.STUNTY);
 		registerModifier(InjuryModifiers.STUNTY);
 
+		registerProperty(NamedProperties.smallIcon);
 		registerProperty(NamedProperties.preventRaiseFromDead);
 		registerProperty(new CancelSkillProperty(SkillConstants.NURGLES_ROT));
 	}

@@ -39,7 +39,7 @@ public class ReportWeather implements IReport {
 
 	// transformation
 
-	public IReport transform() {
+	public IReport transform(Game game) {
 		return new ReportWeather(getWeather(), getWeatherRoll());
 	}
 

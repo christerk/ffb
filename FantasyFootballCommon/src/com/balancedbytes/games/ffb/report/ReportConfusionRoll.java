@@ -35,7 +35,7 @@ public class ReportConfusionRoll extends ReportSkillRoll {
 
 	// transformation
 
-	public IReport transform() {
+	public IReport transform(Game game) {
 		return new ReportConfusionRoll(getPlayerId(), isSuccessful(), getRoll(), getMinimumRoll(), isReRolled(),
 				getConfusionSkill());
 	}

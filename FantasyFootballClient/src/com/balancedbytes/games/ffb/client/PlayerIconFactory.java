@@ -19,11 +19,10 @@ import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.model.Position;
 import com.balancedbytes.games.ffb.model.Roster;
-import com.balancedbytes.games.ffb.model.SkillConstants;
 import com.balancedbytes.games.ffb.model.Team;
 import com.balancedbytes.games.ffb.model.ZappedPlayer;
+import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
 import com.balancedbytes.games.ffb.util.StringTool;
-import com.balancedbytes.games.ffb.util.UtilCards;
 import com.balancedbytes.games.ffb.util.UtilUrl;
 
 /**
@@ -43,7 +42,6 @@ public class PlayerIconFactory {
 			return null;
 		}
 
-		Game game = pClient.getGame();
 		IconCache iconCache = pClient.getUserInterface().getIconCache();
 		String settingIcons = pClient.getProperty(IClientProperty.SETTING_ICONS);
 		BufferedImage icon = null;
@@ -97,7 +95,7 @@ public class PlayerIconFactory {
 				} else {
 					playerIcon = iconCache.getIconByProperty(IIconProperty.PLAYER_LARGE_AWAY);
 				}
-			} else if (UtilCards.hasSkill(game, pPlayer, SkillConstants.STUNTY)) {
+			} else if (pPlayer.hasSkillWithProperty(NamedProperties.smallIcon)) {
 				fontSize = 13;
 				if (pHomePlayer) {
 					playerIcon = iconCache.getIconByProperty(IIconProperty.PLAYER_SMALL_HOME);

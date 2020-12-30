@@ -58,7 +58,7 @@ public class UtilThrowTeamMateSequence {
 			}
 			int roll = gameState.getDiceRoller().rollScatterDirection();
 			rollList.add(roll);
-			Direction direction = DiceInterpreter.getInstance().interpretScatterDirectionRoll(roll);
+			Direction direction = DiceInterpreter.getInstance().interpretScatterDirectionRoll(game, roll);
 			directionList.add(direction);
 			endCoordinate = UtilServerCatchScatterThrowIn.findScatterCoordinate(startCoordinate, direction, 1);
 			if (FieldCoordinateBounds.FIELD.isInBounds(endCoordinate)) {

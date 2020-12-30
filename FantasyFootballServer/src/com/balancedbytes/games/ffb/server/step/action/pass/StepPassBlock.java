@@ -28,7 +28,6 @@ import com.balancedbytes.games.ffb.server.step.StepParameterKey;
 import com.balancedbytes.games.ffb.server.step.StepParameterSet;
 import com.balancedbytes.games.ffb.server.step.UtilServerSteps;
 import com.balancedbytes.games.ffb.util.ArrayTool;
-import com.balancedbytes.games.ffb.util.UtilCards;
 import com.balancedbytes.games.ffb.util.UtilPassing;
 import com.balancedbytes.games.ffb.util.UtilPlayer;
 import com.eclipsesource.json.JsonObject;
@@ -279,12 +278,12 @@ public class StepPassBlock extends AbstractStep {
 		Game game = getGameState().getGame();
 		Player[] players = pTeam.getPlayers();
 		for (Player player : players) {
-			if (UtilCards.hasSkillWithProperty(player, NamedProperties.canMoveWhenOpponentPasses)) {
+			if (player.hasSkillWithProperty(NamedProperties.canMoveWhenOpponentPasses)) {
 				PlayerState playerState = game.getFieldModel().getPlayerState(player);
 				FieldCoordinate startPosition = game.getFieldModel().getPlayerCoordinate(player);
 				if (!pCheckCanReach || (playerState.hasTacklezones()
 						&& ArrayTool.isProvided(PathFinderWithPassBlockSupport.allowPassBlockMove(game, player, startPosition, 3,
-								UtilCards.hasSkillWithProperty(player, NamedProperties.canLeap))))) {
+								player.hasSkillWithProperty(NamedProperties.canLeap))))) {
 					passBlockers.add(player);
 				}
 			}

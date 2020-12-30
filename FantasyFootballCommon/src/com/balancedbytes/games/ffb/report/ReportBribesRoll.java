@@ -44,7 +44,7 @@ public class ReportBribesRoll implements IReport {
 
 	// transformation
 
-	public IReport transform() {
+	public IReport transform(Game game) {
 		return new ReportBribesRoll(getPlayerId(), isSuccessful(), getRoll());
 	}
 

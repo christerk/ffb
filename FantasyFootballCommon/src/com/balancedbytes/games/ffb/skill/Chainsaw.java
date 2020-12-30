@@ -28,7 +28,7 @@ import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
  * moving after using it. Casualties caused by a chainsaw player do not count
  * for Star Player points.
  */
-@RulesCollection(Rules.All)
+@RulesCollection(Rules.COMMON)
 public class Chainsaw extends Skill {
 
 	public Chainsaw() {

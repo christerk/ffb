@@ -10,7 +10,6 @@ import org.xml.sax.InputSource;
 
 import com.balancedbytes.games.ffb.FantasyFootballException;
 import com.balancedbytes.games.ffb.TeamList;
-import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.server.FantasyFootballServer;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.IServerProperty;

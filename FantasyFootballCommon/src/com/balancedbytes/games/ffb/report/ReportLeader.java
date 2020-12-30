@@ -35,7 +35,7 @@ public class ReportLeader implements IReport {
 
 	// transformation
 
-	public IReport transform() {
+	public IReport transform(Game game) {
 		return new ReportLeader(getTeamId(), getLeaderState());
 	}
 

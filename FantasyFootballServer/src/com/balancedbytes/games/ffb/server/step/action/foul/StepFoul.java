@@ -19,7 +19,6 @@ import com.balancedbytes.games.ffb.server.step.StepParameter;
 import com.balancedbytes.games.ffb.server.step.StepParameterKey;
 import com.balancedbytes.games.ffb.server.util.UtilServerGame;
 import com.balancedbytes.games.ffb.server.util.UtilServerInjury;
-import com.balancedbytes.games.ffb.util.UtilCards;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
@@ -59,7 +58,7 @@ public class StepFoul extends AbstractStep {
 		Game game = getGameState().getGame();
 		ActingPlayer actingPlayer = game.getActingPlayer();
 		getResult().addReport(new ReportFoul(game.getDefenderId()));
-		if (!UtilCards.hasSkillWithProperty(actingPlayer.getPlayer(), NamedProperties.blocksLikeChainsaw)) {
+		if (!actingPlayer.getPlayer().hasSkillWithProperty(NamedProperties.blocksLikeChainsaw)) {
 			getResult().setSound(SoundId.FOUL);
 		}
 		UtilServerGame.syncGameModel(this);

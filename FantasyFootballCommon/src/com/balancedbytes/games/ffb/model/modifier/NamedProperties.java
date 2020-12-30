@@ -100,6 +100,7 @@ public class NamedProperties {
 	public static final ISkillProperty preventStuntyDodgeModifier = new NamedProperty("Prevent Stunty Dodge Modifier");
 	public static final ISkillProperty preventThrowTeamMateAction = new NamedProperty("Prevent Throw Team Mate Action");
 	public static final ISkillProperty requiresSecondCasualtyRoll = new NamedProperty("Requires Second Casualty Roll");
+	public static final ISkillProperty smallIcon = new NamedProperty("Display with a small icon");
 	public static final ISkillProperty ttmScattersInSingleDirection = new NamedProperty(
 			"Throw Team Mate Scatters In Single Direction");
 	public static final ISkillProperty useSpecialBlockRules = new NamedProperty("Use Special Block Rules");

@@ -5,15 +5,13 @@ import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.model.Team;
 import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
-import com.balancedbytes.games.ffb.util.UtilCards;
 import com.balancedbytes.games.ffb.util.UtilPlayer;
 
 public class ServerUtilPlayer {
 
 	public static int findBlockStrength(Game game, Player attacker, int attackerStrength, Player defender) {
 		Team defenderTeam = defender.getTeam();
-		boolean flipOpponentIfSameTeam = UtilCards.hasSkillWithProperty(attacker,
-				NamedProperties.flipSameTeamOpponentToOtherTeam);
+		boolean flipOpponentIfSameTeam = attacker.hasSkillWithProperty(NamedProperties.flipSameTeamOpponentToOtherTeam);
 
 		// team-mates assist b&c if attacker is on the same team as defender to gain
 		// maximum block dice (more choice)
@@ -38,7 +36,7 @@ public class ServerUtilPlayer {
 						defendingPlayersOtherThanBlocker++;
 				}
 
-				if (UtilCards.hasSkillWithProperty(offensiveAssists[i], NamedProperties.assistInTacklezones)
+				if (offensiveAssists[i].hasSkillWithProperty(NamedProperties.assistInTacklezones)
 						|| (defendingPlayersOtherThanBlocker == 0)) {
 					// System.out.println(offensiveAssists[i].getName() + " assists " +
 					// pAttacker.getName());

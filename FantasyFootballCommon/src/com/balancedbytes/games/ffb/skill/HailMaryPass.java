@@ -16,7 +16,7 @@ import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
  * back into the target square! This skill may not be used in a blizzard or with
  * the Throw Team-Mate skill.
  */
-@RulesCollection(Rules.All)
+@RulesCollection(Rules.COMMON)
 public class HailMaryPass extends Skill {
 
 	public HailMaryPass() {

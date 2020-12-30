@@ -7,6 +7,8 @@ import com.balancedbytes.games.ffb.PassModifier;
 import com.balancedbytes.games.ffb.PassingDistance;
 import com.balancedbytes.games.ffb.ReRollSource;
 import com.balancedbytes.games.ffb.ReRolledActions;
+import com.balancedbytes.games.ffb.RulesCollection;
+import com.balancedbytes.games.ffb.RulesCollection.Rules;
 import com.balancedbytes.games.ffb.dialog.DialogSkillUseParameter;
 import com.balancedbytes.games.ffb.factory.PassModifierFactory;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
@@ -29,6 +31,7 @@ import com.balancedbytes.games.ffb.skill.ThrowTeamMate;
 import com.balancedbytes.games.ffb.util.UtilCards;
 import com.balancedbytes.games.ffb.util.UtilPassing;
 
+@RulesCollection(Rules.COMMON)
 public class ThrowTeamMateBehaviour extends SkillBehaviour<ThrowTeamMate> {
 	public ThrowTeamMateBehaviour() {
 		super();
@@ -76,7 +79,7 @@ public class ThrowTeamMateBehaviour extends SkillBehaviour<ThrowTeamMate> {
 					if (successful) {
 						Player thrownPlayer = game.getPlayerById(state.thrownPlayerId);
 						boolean scattersSingleDirection = thrownPlayer != null
-								&& UtilCards.hasSkillWithProperty(thrownPlayer, NamedProperties.ttmScattersInSingleDirection);
+								&& thrownPlayer.hasSkillWithProperty(NamedProperties.ttmScattersInSingleDirection);
 						SequenceGenerator.getInstance().pushScatterPlayerSequence(step.getGameState(), state.thrownPlayerId,
 								state.thrownPlayerState, state.thrownPlayerHasBall, throwerCoordinate, scattersSingleDirection, true);
 						step.getResult().setNextAction(StepAction.NEXT_STEP);
