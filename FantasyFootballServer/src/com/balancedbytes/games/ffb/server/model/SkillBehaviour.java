@@ -15,7 +15,7 @@ public abstract class SkillBehaviour<T extends Skill> implements ISkillBehaviour
 
 	public T skill;
 
-	public Object getKey() {
+	public String getKey() {
 		return skillClass.getSimpleName();
 	}
 	

@@ -8,5 +8,5 @@ public interface INamedObject extends IKeyedItem {
 
 	String getName();
 
-	default Object getKey() { return getName(); }
+	default String getKey() { return getName(); }
 }

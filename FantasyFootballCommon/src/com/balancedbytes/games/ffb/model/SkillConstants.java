@@ -85,9 +85,9 @@ import com.balancedbytes.games.ffb.skill.Timmmber;
 import com.balancedbytes.games.ffb.skill.Titchy;
 import com.balancedbytes.games.ffb.skill.TwoHeads;
 import com.balancedbytes.games.ffb.skill.VeryLongLegs;
-import com.balancedbytes.games.ffb.skill.WeepingDagger;
 import com.balancedbytes.games.ffb.skill.WildAnimal;
 import com.balancedbytes.games.ffb.skill.Wrestle;
+import com.balancedbytes.games.ffb.skill.bb2016.WeepingDagger;
 
 public class SkillConstants {
 	//public static final Skill ACCURATE = new Accurate();

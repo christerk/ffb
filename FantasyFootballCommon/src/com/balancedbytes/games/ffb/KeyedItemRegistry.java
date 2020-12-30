@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class KeyedItemRegistry<T extends IKeyedItem> {
-	private Map<Object, T> itemsByKey = new HashMap<>();
+	private Map<String, T> itemsByKey = new HashMap<>();
 	private Map<Class, T> itemsByClass = new HashMap<>();
 	
 	public KeyedItemRegistry() {
@@ -15,7 +15,7 @@ public class KeyedItemRegistry<T extends IKeyedItem> {
 			return false;
 		}
 		
-		itemsByKey.put(item.getKey(), item);
+		itemsByKey.put(item.getKey().toLowerCase(), item);
 		itemsByClass.put(item.getClass(), item);
 		
 		return true;
@@ -25,7 +25,7 @@ public class KeyedItemRegistry<T extends IKeyedItem> {
 		return itemsByClass.get(cls);
 	}
 	
-	public T forKey(Object key) {
-		return itemsByKey.get(key);
+	public T forKey(String key) {
+		return itemsByKey.get(key.toLowerCase());
 	}
 }

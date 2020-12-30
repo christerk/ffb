@@ -17,9 +17,9 @@ public interface INamedObjectFactory<T> extends IKeyedItem {
 
 	public void initialize(Game game);
 	
-	default Object getKey() {
+	default String getKey() {
 		FactoryType a = this.getClass().getAnnotation(FactoryType.class);
-		return a;
+		return a.value().name();
 	}
 
 	default void register(Collection<T> items) {}
