@@ -6,6 +6,8 @@ import com.balancedbytes.games.ffb.CardEffect;
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.PlayerState;
 import com.balancedbytes.games.ffb.ReRollSources;
+import com.balancedbytes.games.ffb.RulesCollection;
+import com.balancedbytes.games.ffb.RulesCollection.Rules;
 import com.balancedbytes.games.ffb.dialog.DialogPilingOnParameter;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.Game;
@@ -41,6 +43,7 @@ import com.balancedbytes.games.ffb.server.util.UtilServerReRoll;
 import com.balancedbytes.games.ffb.skill.PilingOn;
 import com.balancedbytes.games.ffb.util.UtilCards;
 
+@RulesCollection(Rules.COMMON)
 public class PilingOnBehaviour extends SkillBehaviour<PilingOn> {
 	public PilingOnBehaviour() {
 		super();

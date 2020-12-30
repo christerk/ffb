@@ -59,7 +59,7 @@ public class GoForItModifierFactory implements IRollModifierFactory {
 	}
 
 	@Override
-	public void initialize(Rules rules, GameOptions options) {
+	public void initialize(GameOptions options) {
 		// TODO Auto-generated method stub
 		
 	}

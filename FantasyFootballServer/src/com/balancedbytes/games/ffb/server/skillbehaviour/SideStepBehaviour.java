@@ -3,6 +3,8 @@ package com.balancedbytes.games.ffb.server.skillbehaviour;
 import com.balancedbytes.games.ffb.PlayerState;
 import com.balancedbytes.games.ffb.PushbackMode;
 import com.balancedbytes.games.ffb.PushbackSquare;
+import com.balancedbytes.games.ffb.RulesCollection;
+import com.balancedbytes.games.ffb.RulesCollection.Rules;
 import com.balancedbytes.games.ffb.dialog.DialogSkillUseParameter;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.FieldModel;
@@ -22,6 +24,7 @@ import com.balancedbytes.games.ffb.server.util.UtilServerTimer;
 import com.balancedbytes.games.ffb.skill.SideStep;
 import com.balancedbytes.games.ffb.util.UtilCards;
 
+@RulesCollection(Rules.COMMON)
 public class SideStepBehaviour extends SkillBehaviour<SideStep> {
 	public SideStepBehaviour() {
 		super();

@@ -7,6 +7,8 @@ import javax.xml.transform.sax.TransformerHandler;
 
 import org.xml.sax.Attributes;
 
+import com.balancedbytes.games.ffb.RulesCollection;
+import com.balancedbytes.games.ffb.RulesCollection.Rules;
 import com.balancedbytes.games.ffb.factory.GameOptionFactory;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.IJsonSerializable;
@@ -45,6 +47,15 @@ public class GameOptions implements IXmlSerializable, IJsonSerializable {
 		return fGame;
 	}
 
+	public RulesCollection.Rules getRulesVersion() {
+		String rulesVersion = getOptionWithDefault(GameOptionId.RULESVERSION).getValueAsString();
+		RulesCollection.Rules rules = Rules.BB2020;
+		try {
+			rules = RulesCollection.Rules.valueOf(rulesVersion);
+		} catch (IllegalArgumentException e) { }
+		return rules;
+	}
+	
 	public GameOptionFactory getFactory() {
 		return fGameOptionFactory;
 	}

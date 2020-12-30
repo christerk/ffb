@@ -1,7 +1,9 @@
 package com.balancedbytes.games.ffb.server.skillbehaviour;
 
 import com.balancedbytes.games.ffb.PlayerAction;
+import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.SkillUse;
+import com.balancedbytes.games.ffb.RulesCollection.Rules;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandUseSkill;
@@ -15,6 +17,7 @@ import com.balancedbytes.games.ffb.server.step.action.block.StepHorns.StepState;
 import com.balancedbytes.games.ffb.skill.Horns;
 import com.balancedbytes.games.ffb.util.UtilCards;
 
+@RulesCollection(Rules.COMMON)
 public class HornsBehaviour extends SkillBehaviour<Horns> {
 	public HornsBehaviour() {
 		super();

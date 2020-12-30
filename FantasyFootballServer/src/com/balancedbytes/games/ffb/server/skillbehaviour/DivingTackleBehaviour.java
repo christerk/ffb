@@ -5,9 +5,11 @@ import java.util.Set;
 import com.balancedbytes.games.ffb.DodgeModifier;
 import com.balancedbytes.games.ffb.DodgeModifiers;
 import com.balancedbytes.games.ffb.PlayerChoiceMode;
+import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.SkillUse;
 import com.balancedbytes.games.ffb.TurnMode;
 import com.balancedbytes.games.ffb.FactoryType.Factory;
+import com.balancedbytes.games.ffb.RulesCollection.Rules;
 import com.balancedbytes.games.ffb.dialog.DialogPlayerChoiceParameter;
 import com.balancedbytes.games.ffb.factory.DodgeModifierFactory;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
@@ -31,6 +33,7 @@ import com.balancedbytes.games.ffb.skill.DivingTackle;
 import com.balancedbytes.games.ffb.util.ArrayTool;
 import com.balancedbytes.games.ffb.util.UtilPlayer;
 
+@RulesCollection(Rules.COMMON)
 public class DivingTackleBehaviour extends SkillBehaviour<DivingTackle> {
 	public DivingTackleBehaviour() {
 		super();

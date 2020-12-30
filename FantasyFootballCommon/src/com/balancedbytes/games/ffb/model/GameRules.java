@@ -7,11 +7,8 @@ import java.util.HashMap;
 
 import com.balancedbytes.games.ffb.FactoryType;
 import com.balancedbytes.games.ffb.FactoryType.Factory;
-import com.balancedbytes.games.ffb.RulesCollection;
-import com.balancedbytes.games.ffb.RulesCollection.Rules;
 import com.balancedbytes.games.ffb.factory.INamedObjectFactory;
 import com.balancedbytes.games.ffb.factory.SkillFactory;
-import com.balancedbytes.games.ffb.option.GameOptionId;
 import com.balancedbytes.games.ffb.util.Scanner;
 
 public class GameRules {
@@ -21,9 +18,8 @@ public class GameRules {
 	public GameRules(GameOptions options) {
 		factories = new HashMap<>();
 		
-		String rulesVersion = options.getOptionWithDefault(GameOptionId.RULESVERSION).getValueAsString();
-		
 		Scanner<INamedObjectFactory> scanner = new Scanner<>(INamedObjectFactory.class);
+
 		for (Class<INamedObjectFactory> factoryClass : scanner.getClassesImplementing()) {
 			for (Annotation a : factoryClass.getAnnotations()) {
 				if (a instanceof FactoryType) {
@@ -41,14 +37,8 @@ public class GameRules {
 			}
 		}
 
-		RulesCollection.Rules rules = Rules.BB2020;
-		try {
-			RulesCollection.Rules.valueOf(rulesVersion);
-		} catch (IllegalArgumentException e) {
-		}
-		
 		for (INamedObjectFactory factory : factories.values()) {
-			factory.initialize(rules, options);
+			factory.initialize(options);
 		}
 	}
 

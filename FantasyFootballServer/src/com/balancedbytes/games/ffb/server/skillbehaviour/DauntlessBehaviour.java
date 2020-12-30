@@ -1,6 +1,8 @@
 package com.balancedbytes.games.ffb.server.skillbehaviour;
 
 import com.balancedbytes.games.ffb.ReRolledActions;
+import com.balancedbytes.games.ffb.RulesCollection;
+import com.balancedbytes.games.ffb.RulesCollection.Rules;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
@@ -17,6 +19,7 @@ import com.balancedbytes.games.ffb.server.util.UtilServerReRoll;
 import com.balancedbytes.games.ffb.skill.Dauntless;
 import com.balancedbytes.games.ffb.util.UtilCards;
 
+@RulesCollection(Rules.COMMON)
 public class DauntlessBehaviour extends SkillBehaviour<Dauntless> {
 	public DauntlessBehaviour() {
 		super();

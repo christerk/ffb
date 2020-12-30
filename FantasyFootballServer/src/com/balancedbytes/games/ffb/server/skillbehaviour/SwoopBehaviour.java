@@ -7,7 +7,9 @@ import com.balancedbytes.games.ffb.CatchScatterThrowInMode;
 import com.balancedbytes.games.ffb.Direction;
 import com.balancedbytes.games.ffb.FieldCoordinateBounds;
 import com.balancedbytes.games.ffb.PlayerState;
+import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.SoundId;
+import com.balancedbytes.games.ffb.RulesCollection.Rules;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
@@ -32,6 +34,7 @@ import com.balancedbytes.games.ffb.server.util.UtilServerInjury;
 import com.balancedbytes.games.ffb.server.util.UtilServerPlayerSwoop;
 import com.balancedbytes.games.ffb.skill.Swoop;
 
+@RulesCollection(Rules.COMMON)
 public class SwoopBehaviour extends SkillBehaviour<Swoop> {
 	public SwoopBehaviour() {
 		super();

@@ -1,6 +1,8 @@
 package com.balancedbytes.games.ffb.server.skillbehaviour;
 
 import com.balancedbytes.games.ffb.ReRolledActions;
+import com.balancedbytes.games.ffb.RulesCollection;
+import com.balancedbytes.games.ffb.RulesCollection.Rules;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandUseSkill;
 import com.balancedbytes.games.ffb.server.model.SkillBehaviour;
@@ -11,6 +13,7 @@ import com.balancedbytes.games.ffb.server.step.action.common.StepCatchScatterThr
 import com.balancedbytes.games.ffb.skill.Catch;
 import com.balancedbytes.games.ffb.util.UtilCards;
 
+@RulesCollection(Rules.COMMON)
 public class CatchBehaviour extends SkillBehaviour<Catch> {
 	public CatchBehaviour() {
 		super();

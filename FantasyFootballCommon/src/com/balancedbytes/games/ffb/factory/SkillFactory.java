@@ -1,8 +1,5 @@
 package com.balancedbytes.games.ffb.factory;
 
-import java.lang.annotation.Annotation;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -55,34 +52,10 @@ public class SkillFactory implements INamedObjectFactory {
 	}
 
 	@Override
-	public void initialize(Rules rules, GameOptions options) {
+	public void initialize(GameOptions options) {
 		Scanner<Skill> scanner = new Scanner<Skill>(Skill.class);
 		
-		for (Class<Skill> skillClass : scanner.getSubclasses()) {
-			for (Annotation a : skillClass.getAnnotations()) {
-				if (a instanceof RulesCollection) {
-					Rules skillRule = ((RulesCollection)a).value();
-					if (skillRule.matches(rules)) {
-						addSkill(skillClass);
-					}
-				}
-			}
-		}
-		
-		for (Skill skill: skills.values()) {
-			skill.postConstruct();
-		}
-		
-	}
-
-	private void addSkill(Class<Skill> skillClass) {
-		try {
-			Constructor<Skill> constructor = skillClass.getConstructor();
-			Skill skill = constructor.newInstance();
-			addSkill(skill);
-		} catch (NoSuchMethodException | SecurityException | InstantiationException | IllegalAccessException | IllegalArgumentException
-				| InvocationTargetException e) {
-			e.printStackTrace();
-		}
+		scanner.getSubclasses(options).forEach(s -> addSkill(s));
+		skills.values().forEach(s -> s.postConstruct());
 	}
 }

@@ -2,8 +2,10 @@ package com.balancedbytes.games.ffb.server.skillbehaviour;
 
 import com.balancedbytes.games.ffb.Card;
 import com.balancedbytes.games.ffb.PlayerState;
+import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.SendToBoxReason;
 import com.balancedbytes.games.ffb.SoundId;
+import com.balancedbytes.games.ffb.RulesCollection.Rules;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.GameResult;
@@ -22,6 +24,7 @@ import com.balancedbytes.games.ffb.server.step.action.foul.StepReferee;
 import com.balancedbytes.games.ffb.skill.SneakyGit;
 import com.balancedbytes.games.ffb.util.UtilCards;
 
+@RulesCollection(Rules.COMMON)
 public class SneakyGitBehaviour extends SkillBehaviour<SneakyGit> {
 	public SneakyGitBehaviour() {
 		super();

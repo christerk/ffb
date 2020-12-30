@@ -1,5 +1,6 @@
 package com.balancedbytes.games.ffb.server.model;
 
+import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.model.ISkillBehaviour;
 import com.balancedbytes.games.ffb.model.PlayerModifier;
 import com.balancedbytes.games.ffb.model.Skill;
@@ -13,6 +14,10 @@ public abstract class SkillBehaviour<T extends Skill> implements ISkillBehaviour
 
 	public T skill;
 
+	public Object getKey() {
+		return skillClass.getSimpleName();
+	}
+	
 	@SuppressWarnings("unchecked")
 	public final Class<T> skillClass = (Class<T>) ((ParameterizedType) getClass().getGenericSuperclass())
 			.getActualTypeArguments()[0];
@@ -23,6 +28,13 @@ public abstract class SkillBehaviour<T extends Skill> implements ISkillBehaviour
 	public SkillBehaviour() {
 		playerModifiers = new ArrayList<>();
 		stepModifiers = new ArrayList<>();
+		
+		RulesCollection skillRules = skillClass.getAnnotation(RulesCollection.class);
+		RulesCollection behaviourRules = getClass().getAnnotation(RulesCollection.class);
+		
+		if (!skillRules.value().matches(behaviourRules.value())) {
+			throw new RuntimeException("Skill behaviour rule does not match skill rule");
+		}
 	}
 
 	public void setSkill(T skill) {

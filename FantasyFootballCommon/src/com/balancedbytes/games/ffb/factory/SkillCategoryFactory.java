@@ -54,7 +54,7 @@ public class SkillCategoryFactory implements INamedObjectFactory {
 	}
 
 	@Override
-	public void initialize(Rules rules, GameOptions options) {
+	public void initialize(GameOptions options) {
 		// TODO Auto-generated method stub
 		
 	}
