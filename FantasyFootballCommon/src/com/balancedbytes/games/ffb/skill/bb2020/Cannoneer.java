@@ -9,25 +9,24 @@ import com.balancedbytes.games.ffb.SkillCategory;
 import com.balancedbytes.games.ffb.model.Skill;
 
 /**
- * When this player performs a Quick Pass action or a Short Pass action,
+ * When this player performs a Long Pass action or a Long Bomb Pass action,
  * you may apply an additional +1 modifier to the Passing Ability test.
  */
 @RulesCollection(Rules.BB2020)
-public class Accurate extends Skill {
+public class Cannoneer extends Skill {
 
-	public Accurate() {
-		super("Accurate", SkillCategory.PASSING);
+	public Cannoneer() {
+		super("Cannoneer", SkillCategory.PASSING);
 	}
 
 	@Override
 	public void postConstruct(){
-		registerModifier(new PassModifier("Accurate", -1, false, false) {
+		registerModifier(new PassModifier("Cannoneer", -1, false, false) {
 			@Override
 			public boolean appliesToContext(PassContext context) {
-				return context.distance == PassingDistance.QUICK_PASS ||
-						context.distance == PassingDistance.SHORT_PASS;
+				return context.distance == PassingDistance.LONG_PASS ||
+						context.distance == PassingDistance.LONG_BOMB;
 			}
 		});
 	}
-
 }

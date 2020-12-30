@@ -36,14 +36,6 @@ public class PassingModifiers {
 	public static final PassModifier GROMSKULLS_EXPLODING_RUNES = new PassModifier("Gromskull's Exploding Runes", 1,
 			false, false);
 
-	public static final PassModifier CANNONEER = new PassModifier("Cannoneer", -1, false, false) {
-		@Override
-		public boolean appliesToContext(PassContext context) {
-			return context.distance == PassingDistance.LONG_PASS ||
-					context.distance == PassingDistance.LONG_BOMB;
-		}
-	};
-
 	private Map<String, PassModifier> values;
 
 	public Map<String, PassModifier> values() {
