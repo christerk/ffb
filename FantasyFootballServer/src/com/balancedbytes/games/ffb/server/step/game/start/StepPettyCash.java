@@ -1,6 +1,7 @@
 package com.balancedbytes.games.ffb.server.step.game.start;
 
 import com.balancedbytes.games.ffb.dialog.DialogPettyCashParameter;
+import com.balancedbytes.games.ffb.factory.IFactorySource;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.GameResult;
@@ -165,7 +166,7 @@ public final class StepPettyCash extends AbstractStep {
 	}
 
 	@Override
-	public StepPettyCash initFrom(Game game, JsonValue pJsonValue) {
+	public StepPettyCash initFrom(IFactorySource game, JsonValue pJsonValue) {
 		super.initFrom(game, pJsonValue);
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
 		fPettyCashSelectedHome = IServerJsonOption.PETTY_CASH_SELECTED_HOME.getFrom(game, jsonObject);

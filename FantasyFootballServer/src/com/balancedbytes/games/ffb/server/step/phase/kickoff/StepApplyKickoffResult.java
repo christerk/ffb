@@ -13,6 +13,7 @@ import com.balancedbytes.games.ffb.KickoffResult;
 import com.balancedbytes.games.ffb.PlayerState;
 import com.balancedbytes.games.ffb.TurnMode;
 import com.balancedbytes.games.ffb.Weather;
+import com.balancedbytes.games.ffb.factory.IFactorySource;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.Animation;
 import com.balancedbytes.games.ffb.model.AnimationType;
@@ -602,19 +603,19 @@ public final class StepApplyKickoffResult extends AbstractStep {
 	}
 
 	@Override
-	public StepApplyKickoffResult initFrom(Game game, JsonValue pJsonValue) {
-		super.initFrom(game, pJsonValue);
+	public StepApplyKickoffResult initFrom(IFactorySource source, JsonValue pJsonValue) {
+		super.initFrom(source, pJsonValue);
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		fGotoLabelOnEnd = IServerJsonOption.GOTO_LABEL_ON_END.getFrom(game, jsonObject);
-		fGotoLabelOnBlitz = IServerJsonOption.GOTO_LABEL_ON_BLITZ.getFrom(game, jsonObject);
-		fKickoffResult = (KickoffResult) IServerJsonOption.KICKOFF_RESULT.getFrom(game, jsonObject);
-		fTouchback = IServerJsonOption.TOUCHBACK.getFrom(game, jsonObject);
+		fGotoLabelOnEnd = IServerJsonOption.GOTO_LABEL_ON_END.getFrom(source, jsonObject);
+		fGotoLabelOnBlitz = IServerJsonOption.GOTO_LABEL_ON_BLITZ.getFrom(source, jsonObject);
+		fKickoffResult = (KickoffResult) IServerJsonOption.KICKOFF_RESULT.getFrom(source, jsonObject);
+		fTouchback = IServerJsonOption.TOUCHBACK.getFrom(source, jsonObject);
 		fKickoffBounds = null;
-		JsonObject kickoffBoundsObject = IServerJsonOption.KICKOFF_BOUNDS.getFrom(game, jsonObject);
+		JsonObject kickoffBoundsObject = IServerJsonOption.KICKOFF_BOUNDS.getFrom(source, jsonObject);
 		if (kickoffBoundsObject != null) {
-			fKickoffBounds = new FieldCoordinateBounds().initFrom(game, kickoffBoundsObject);
+			fKickoffBounds = new FieldCoordinateBounds().initFrom(source, kickoffBoundsObject);
 		}
-		fEndKickoff = IServerJsonOption.END_KICKOFF.getFrom(game, jsonObject);
+		fEndKickoff = IServerJsonOption.END_KICKOFF.getFrom(source, jsonObject);
 		return this;
 	}
 

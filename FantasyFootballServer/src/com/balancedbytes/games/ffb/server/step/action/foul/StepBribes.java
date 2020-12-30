@@ -3,6 +3,7 @@ package com.balancedbytes.games.ffb.server.step.action.foul;
 import com.balancedbytes.games.ffb.InducementType;
 import com.balancedbytes.games.ffb.dialog.DialogArgueTheCallParameter;
 import com.balancedbytes.games.ffb.dialog.DialogBribesParameter;
+import com.balancedbytes.games.ffb.factory.IFactorySource;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.Game;
@@ -195,7 +196,7 @@ public class StepBribes extends AbstractStep {
 	}
 
 	@Override
-	public StepBribes initFrom(Game game, JsonValue pJsonValue) {
+	public StepBribes initFrom(IFactorySource game, JsonValue pJsonValue) {
 		super.initFrom(game, pJsonValue);
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
 		fGotoLabelOnEnd = IServerJsonOption.GOTO_LABEL_ON_END.getFrom(game, jsonObject);

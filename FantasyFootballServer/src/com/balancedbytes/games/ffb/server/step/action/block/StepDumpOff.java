@@ -2,8 +2,8 @@ package com.balancedbytes.games.ffb.server.step.action.block;
 
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.TurnMode;
+import com.balancedbytes.games.ffb.factory.IFactorySource;
 import com.balancedbytes.games.ffb.json.UtilJson;
-import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.net.NetCommandId;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandUseSkill;
 import com.balancedbytes.games.ffb.server.ActionStatus;
@@ -90,7 +90,7 @@ public class StepDumpOff extends AbstractStep {
 	}
 
 	@Override
-	public StepDumpOff initFrom(Game game, JsonValue pJsonValue) {
+	public StepDumpOff initFrom(IFactorySource game, JsonValue pJsonValue) {
 		super.initFrom(game, pJsonValue);
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
 		state.usingDumpOff = IServerJsonOption.USING_DUMP_OFF.getFrom(game, jsonObject);

@@ -6,6 +6,7 @@ import java.util.Map;
 import com.balancedbytes.games.ffb.Card;
 import com.balancedbytes.games.ffb.CardType;
 import com.balancedbytes.games.ffb.dialog.DialogBuyCardsParameter;
+import com.balancedbytes.games.ffb.factory.IFactorySource;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.GameResult;
@@ -238,7 +239,7 @@ public final class StepBuyCards extends AbstractStep {
 	}
 
 	@Override
-	public StepBuyCards initFrom(Game game, JsonValue pJsonValue) {
+	public StepBuyCards initFrom(IFactorySource game, JsonValue pJsonValue) {
 		super.initFrom(game, pJsonValue);
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
 		fInducementGoldAway = IServerJsonOption.INDUCEMENT_GOLD_AWAY.getFrom(game, jsonObject);

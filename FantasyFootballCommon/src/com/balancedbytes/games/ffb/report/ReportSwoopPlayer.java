@@ -4,12 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.balancedbytes.games.ffb.Direction;
-import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.FactoryType.Factory;
+import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.factory.DirectionFactory;
+import com.balancedbytes.games.ffb.factory.IFactorySource;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
-import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.util.ArrayTool;
 import com.eclipsesource.json.JsonArray;
 import com.eclipsesource.json.JsonObject;
@@ -92,9 +92,9 @@ public class ReportSwoopPlayer implements IReport {
 
 	// transformation
 
-	public IReport transform(Game game) {
+	public IReport transform(IFactorySource source) {
 		return new ReportSwoopPlayer(FieldCoordinate.transform(getStartCoordinate()),
-				FieldCoordinate.transform(getEndCoordinate()), game.<DirectionFactory>getFactory(Factory.DIRECTION).transform(getDirections()), getRolls());
+				FieldCoordinate.transform(getEndCoordinate()), source.<DirectionFactory>getFactory(Factory.DIRECTION).transform(getDirections()), getRolls());
 	}
 
 	// JSON serialization
@@ -113,7 +113,7 @@ public class ReportSwoopPlayer implements IReport {
 		return jsonObject;
 	}
 
-	public ReportSwoopPlayer initFrom(Game game, JsonValue pJsonValue) {
+	public ReportSwoopPlayer initFrom(IFactorySource game, JsonValue pJsonValue) {
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
 		UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(game, jsonObject));
 		fStartCoordinate = IJsonOption.START_COORDINATE.getFrom(game, jsonObject);

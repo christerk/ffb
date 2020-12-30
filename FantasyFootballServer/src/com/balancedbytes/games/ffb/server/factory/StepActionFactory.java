@@ -2,7 +2,7 @@ package com.balancedbytes.games.ffb.server.factory;
 
 import com.balancedbytes.games.ffb.FactoryType;
 import com.balancedbytes.games.ffb.factory.INamedObjectFactory;
-import com.balancedbytes.games.ffb.model.GameOptions;
+import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.server.step.StepAction;
 
 /**
@@ -22,7 +22,7 @@ public class StepActionFactory implements INamedObjectFactory {
 	}
 
 	@Override
-	public void initialize(GameOptions options) {
+	public void initialize(Game game) {
 		// TODO Auto-generated method stub
 		
 	}

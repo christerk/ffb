@@ -1,6 +1,7 @@
 package com.balancedbytes.games.ffb.server.step.action.block;
 
 import com.balancedbytes.games.ffb.PlayerState;
+import com.balancedbytes.games.ffb.factory.IFactorySource;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.Game;
@@ -107,11 +108,11 @@ public class StepBlockBallAndChain extends AbstractStep {
 	}
 
 	@Override
-	public StepBlockBallAndChain initFrom(Game game, JsonValue pJsonValue) {
-		super.initFrom(game, pJsonValue);
+	public StepBlockBallAndChain initFrom(IFactorySource source, JsonValue pJsonValue) {
+		super.initFrom(source, pJsonValue);
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		fGotoLabelOnPushback = IServerJsonOption.GOTO_LABEL_ON_PUSHBACK.getFrom(game, jsonObject);
-		fOldDefenderState = IServerJsonOption.OLD_DEFENDER_STATE.getFrom(game, jsonObject);
+		fGotoLabelOnPushback = IServerJsonOption.GOTO_LABEL_ON_PUSHBACK.getFrom(source, jsonObject);
+		fOldDefenderState = IServerJsonOption.OLD_DEFENDER_STATE.getFrom(source, jsonObject);
 		return this;
 	}
 

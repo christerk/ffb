@@ -1,9 +1,9 @@
 package com.balancedbytes.games.ffb.report;
 
 import com.balancedbytes.games.ffb.SkillUse;
+import com.balancedbytes.games.ffb.factory.IFactorySource;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
-import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Skill;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
@@ -56,7 +56,7 @@ public class ReportSkillUse implements IReport {
 
 	// transformation
 
-	public IReport transform(Game game) {
+	public IReport transform(IFactorySource source) {
 		return new ReportSkillUse(getPlayerId(), getSkill(), isUsed(), getSkillUse());
 	}
 
@@ -72,7 +72,7 @@ public class ReportSkillUse implements IReport {
 		return jsonObject;
 	}
 
-	public ReportSkillUse initFrom(Game game, JsonValue pJsonValue) {
+	public ReportSkillUse initFrom(IFactorySource game, JsonValue pJsonValue) {
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
 		UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(game, jsonObject));
 		fPlayerId = IJsonOption.PLAYER_ID.getFrom(game, jsonObject);

@@ -10,6 +10,7 @@ import com.balancedbytes.games.ffb.SeriousInjury;
 import com.balancedbytes.games.ffb.dialog.DialogApothecaryChoiceParameter;
 import com.balancedbytes.games.ffb.dialog.DialogUseApothecaryParameter;
 import com.balancedbytes.games.ffb.dialog.DialogUseIgorParameter;
+import com.balancedbytes.games.ffb.factory.IFactorySource;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.InducementSet;
@@ -338,15 +339,15 @@ public class StepApothecary extends AbstractStep {
 	}
 
 	@Override
-	public StepApothecary initFrom(Game game, JsonValue pJsonValue) {
-		super.initFrom(game, pJsonValue);
+	public StepApothecary initFrom(IFactorySource source, JsonValue pJsonValue) {
+		super.initFrom(source, pJsonValue);
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		fApothecaryMode = (ApothecaryMode) IServerJsonOption.APOTHECARY_MODE.getFrom(game, jsonObject);
-		JsonObject injuryResultObject = IServerJsonOption.INJURY_RESULT.getFrom(game, jsonObject);
+		fApothecaryMode = (ApothecaryMode) IServerJsonOption.APOTHECARY_MODE.getFrom(source, jsonObject);
+		JsonObject injuryResultObject = IServerJsonOption.INJURY_RESULT.getFrom(source, jsonObject);
 		if (injuryResultObject != null) {
-			fInjuryResult = new InjuryResult().initFrom(game, injuryResultObject);
+			fInjuryResult = new InjuryResult().initFrom(source, injuryResultObject);
 		}
-		fShowReport = IServerJsonOption.SHOW_REPORT.getFrom(game, jsonObject);
+		fShowReport = IServerJsonOption.SHOW_REPORT.getFrom(source, jsonObject);
 		return this;
 	}
 

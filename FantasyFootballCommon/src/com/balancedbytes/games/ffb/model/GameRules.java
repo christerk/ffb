@@ -1,53 +1,57 @@
 package com.balancedbytes.games.ffb.model;
 
-import java.lang.annotation.Annotation;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
-import java.util.HashMap;
+import java.util.Map;
 
-import com.balancedbytes.games.ffb.FactoryType;
+import com.balancedbytes.games.ffb.FactoryManager;
 import com.balancedbytes.games.ffb.FactoryType.Factory;
+import com.balancedbytes.games.ffb.FactoryType.FactoryContext;
+import com.balancedbytes.games.ffb.factory.IFactorySource;
 import com.balancedbytes.games.ffb.factory.INamedObjectFactory;
 import com.balancedbytes.games.ffb.factory.SkillFactory;
-import com.balancedbytes.games.ffb.util.Scanner;
 
-public class GameRules {
+public class GameRules implements IFactorySource {
 
-	private HashMap<Factory, INamedObjectFactory> factories;
+	private Map<Factory, INamedObjectFactory> factories;
+	private FactoryManager manager;
+	private IFactorySource applicationSource;
 	
-	public GameRules(GameOptions options) {
-		factories = new HashMap<>();
-		
-		Scanner<INamedObjectFactory> scanner = new Scanner<>(INamedObjectFactory.class);
-
-		for (Class<INamedObjectFactory> factoryClass : scanner.getClassesImplementing()) {
-			for (Annotation a : factoryClass.getAnnotations()) {
-				if (a instanceof FactoryType) {
-					
-					try {
-						Constructor<INamedObjectFactory> constructor = factoryClass.getConstructor();
-						INamedObjectFactory factory = constructor.newInstance();
-						factories.put(((FactoryType)a).value(), factory);
-					} catch (NoSuchMethodException | SecurityException | InstantiationException | IllegalAccessException | IllegalArgumentException
-							| InvocationTargetException e) {
-						e.printStackTrace();
-					}
-					
-				}
-			}
-		}
-
+	public GameRules(IFactorySource applicationSource, FactoryManager manager) {
+		this.manager = manager;
+		this.applicationSource = applicationSource;
+		factories = manager.getFactoriesForContext(getContext());
+	}
+	
+	public void initialize(Game game) {
 		for (INamedObjectFactory factory : factories.values()) {
-			factory.initialize(options);
+			factory.initialize(game);
 		}
 	}
 
+	public SkillFactory getSkillFactory() {
+		return this.<SkillFactory>getFactory(Factory.SKILL);
+	}
+
 	@SuppressWarnings("unchecked")
+	@Override
 	public <T extends INamedObjectFactory> T getFactory(Factory factory) {
 		return (T) factories.get(factory);
 	}
 	
-	public SkillFactory getSkillFactory() {
-		return this.<SkillFactory>getFactory(Factory.SKILL);
+	@Override
+	public FactoryContext getContext() {
+		return FactoryContext.GAME;
+	}
+
+	@Override
+	public FactoryManager getFactoryManager() {
+		return manager;
+	}
+
+	@Override
+	public IFactorySource forContext(FactoryContext context) {
+		if (context == getContext()) {
+			return this;
+		}
+		return applicationSource;
 	}
 }

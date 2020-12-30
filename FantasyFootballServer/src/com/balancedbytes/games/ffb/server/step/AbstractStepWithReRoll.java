@@ -2,8 +2,8 @@ package com.balancedbytes.games.ffb.server.step;
 
 import com.balancedbytes.games.ffb.ReRollSource;
 import com.balancedbytes.games.ffb.ReRolledAction;
+import com.balancedbytes.games.ffb.factory.IFactorySource;
 import com.balancedbytes.games.ffb.json.UtilJson;
-import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandUseReRoll;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.IServerJsonOption;
@@ -68,11 +68,11 @@ public abstract class AbstractStepWithReRoll extends AbstractStep {
 	}
 
 	@Override
-	public AbstractStepWithReRoll initFrom(Game game, JsonValue pJsonValue) {
-		super.initFrom(game, pJsonValue);
+	public AbstractStepWithReRoll initFrom(IFactorySource source, JsonValue pJsonValue) {
+		super.initFrom(source, pJsonValue);
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		fReRolledAction = (ReRolledAction) IServerJsonOption.RE_ROLLED_ACTION.getFrom(game, jsonObject);
-		fReRollSource = (ReRollSource) IServerJsonOption.RE_ROLL_SOURCE.getFrom(game, jsonObject);
+		fReRolledAction = (ReRolledAction) IServerJsonOption.RE_ROLLED_ACTION.getFrom(source, jsonObject);
+		fReRollSource = (ReRollSource) IServerJsonOption.RE_ROLL_SOURCE.getFrom(source, jsonObject);
 		return this;
 	}
 

@@ -1,5 +1,6 @@
 package com.balancedbytes.games.ffb.server.step.game.end;
 
+import com.balancedbytes.games.ffb.factory.IFactorySource;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.GameResult;
 import com.balancedbytes.games.ffb.report.ReportFanFactorRoll;
@@ -65,7 +66,7 @@ public final class StepFanFactor extends AbstractStep {
 	}
 
 	@Override
-	public StepFanFactor initFrom(Game game, JsonValue pJsonValue) {
+	public StepFanFactor initFrom(IFactorySource game, JsonValue pJsonValue) {
 		super.initFrom(game, pJsonValue);
 		return this;
 	}

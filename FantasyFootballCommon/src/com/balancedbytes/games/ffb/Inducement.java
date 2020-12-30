@@ -5,6 +5,7 @@ import javax.xml.transform.sax.TransformerHandler;
 import org.xml.sax.Attributes;
 import org.xml.sax.helpers.AttributesImpl;
 
+import com.balancedbytes.games.ffb.factory.IFactorySource;
 import com.balancedbytes.games.ffb.factory.InducementTypeFactory;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.IJsonSerializable;
@@ -105,7 +106,7 @@ public class Inducement implements IXmlSerializable, IJsonSerializable {
 		return jsonObject;
 	}
 
-	public Inducement initFrom(Game game, JsonValue pJsonValue) {
+	public Inducement initFrom(IFactorySource game, JsonValue pJsonValue) {
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
 		fType = (InducementType) IJsonOption.INDUCEMENT_TYPE.getFrom(game, jsonObject);
 		fValue = IJsonOption.VALUE.getFrom(game, jsonObject);

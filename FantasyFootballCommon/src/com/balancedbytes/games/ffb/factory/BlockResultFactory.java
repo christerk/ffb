@@ -4,7 +4,7 @@ import com.balancedbytes.games.ffb.BlockResult;
 import com.balancedbytes.games.ffb.FactoryType;
 import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.RulesCollection.Rules;
-import com.balancedbytes.games.ffb.model.GameOptions;
+import com.balancedbytes.games.ffb.model.Game;
 
 /**
  * 
@@ -39,7 +39,7 @@ public class BlockResultFactory implements INamedObjectFactory {
 	}
 
 	@Override
-	public void initialize(GameOptions options) {
+	public void initialize(Game game) {
 		// TODO Auto-generated method stub
 		
 	}

@@ -9,7 +9,6 @@ import java.util.Set;
 import com.balancedbytes.games.ffb.ArmorModifiers.ArmorModifierContext;
 import com.balancedbytes.games.ffb.factory.INamedObjectFactory;
 import com.balancedbytes.games.ffb.model.Game;
-import com.balancedbytes.games.ffb.model.GameOptions;
 import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.option.GameOptionId;
 import com.balancedbytes.games.ffb.option.UtilGameOption;
@@ -70,7 +69,7 @@ public class ArmorModifierFactory implements INamedObjectFactory {
 	}
 
 	@Override
-	public void initialize(GameOptions options) {
+	public void initialize(Game game) {
 		// TODO Auto-generated method stub
 		
 	}

@@ -18,6 +18,7 @@ import com.balancedbytes.games.ffb.TurnMode;
 import com.balancedbytes.games.ffb.Weather;
 import com.balancedbytes.games.ffb.dialog.DialogArgueTheCallParameter;
 import com.balancedbytes.games.ffb.dialog.DialogBribesParameter;
+import com.balancedbytes.games.ffb.factory.IFactorySource;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.GameResult;
@@ -651,19 +652,19 @@ public class StepEndTurn extends AbstractStep {
 	}
 
 	@Override
-	public StepEndTurn initFrom(Game game, JsonValue pJsonValue) {
-		super.initFrom(game, pJsonValue);
+	public StepEndTurn initFrom(IFactorySource source, JsonValue pJsonValue) {
+		super.initFrom(source, pJsonValue);
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		fTouchdown = IServerJsonOption.TOUCHDOWN.getFrom(game, jsonObject);
-		fArgueTheCallChoiceHome = IServerJsonOption.ARGUE_THE_CALL_CHOICE_HOME.getFrom(game, jsonObject);
-		fArgueTheCallChoiceAway = IServerJsonOption.ARGUE_THE_CALL_CHOICE_AWAY.getFrom(game, jsonObject);
-		fBribesChoiceHome = IServerJsonOption.BRIBES_CHOICE_HOME.getFrom(game, jsonObject);
-		fBribesChoiceAway = IServerJsonOption.BRIBES_CHOICE_AWAY.getFrom(game, jsonObject);
-		fNextSequencePushed = IServerJsonOption.NEXT_SEQUENCE_PUSHED.getFrom(game, jsonObject);
-		fRemoveUsedSecretWeapons = IServerJsonOption.REMOVE_USED_SECRET_WEAPONS.getFrom(game, jsonObject);
-		fNewHalf = IServerJsonOption.NEW_HALF.getFrom(game, jsonObject);
-		fEndGame = IServerJsonOption.END_GAME.getFrom(game, jsonObject);
-		Boolean withinSecretWeaponHandling = IServerJsonOption.WITHIN_SECRET_WEAPON_HANDLING.getFrom(game, jsonObject);
+		fTouchdown = IServerJsonOption.TOUCHDOWN.getFrom(source, jsonObject);
+		fArgueTheCallChoiceHome = IServerJsonOption.ARGUE_THE_CALL_CHOICE_HOME.getFrom(source, jsonObject);
+		fArgueTheCallChoiceAway = IServerJsonOption.ARGUE_THE_CALL_CHOICE_AWAY.getFrom(source, jsonObject);
+		fBribesChoiceHome = IServerJsonOption.BRIBES_CHOICE_HOME.getFrom(source, jsonObject);
+		fBribesChoiceAway = IServerJsonOption.BRIBES_CHOICE_AWAY.getFrom(source, jsonObject);
+		fNextSequencePushed = IServerJsonOption.NEXT_SEQUENCE_PUSHED.getFrom(source, jsonObject);
+		fRemoveUsedSecretWeapons = IServerJsonOption.REMOVE_USED_SECRET_WEAPONS.getFrom(source, jsonObject);
+		fNewHalf = IServerJsonOption.NEW_HALF.getFrom(source, jsonObject);
+		fEndGame = IServerJsonOption.END_GAME.getFrom(source, jsonObject);
+		Boolean withinSecretWeaponHandling = IServerJsonOption.WITHIN_SECRET_WEAPON_HANDLING.getFrom(source, jsonObject);
 		fWithinSecretWeaponHandling = (withinSecretWeaponHandling != null) ? withinSecretWeaponHandling : false;
 		return this;
 	}

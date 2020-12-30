@@ -1,13 +1,10 @@
 package com.balancedbytes.games.ffb.server.request.fumbbl;
 
-import java.io.BufferedInputStream;
 import java.io.BufferedReader;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.StringReader;
 import java.net.URLEncoder;
 import java.security.NoSuchAlgorithmException;
-import java.util.Properties;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -17,7 +14,6 @@ import org.xml.sax.InputSource;
 import com.balancedbytes.games.ffb.FantasyFootballException;
 import com.balancedbytes.games.ffb.PasswordChallenge;
 import com.balancedbytes.games.ffb.model.Game;
-import com.balancedbytes.games.ffb.model.GameOptions;
 import com.balancedbytes.games.ffb.model.Roster;
 import com.balancedbytes.games.ffb.model.Team;
 import com.balancedbytes.games.ffb.net.ServerStatus;
@@ -26,7 +22,6 @@ import com.balancedbytes.games.ffb.server.FantasyFootballServer;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.IServerLogLevel;
 import com.balancedbytes.games.ffb.server.IServerProperty;
-import com.balancedbytes.games.ffb.server.ServerMode;
 import com.balancedbytes.games.ffb.server.util.UtilServerHttpClient;
 import com.balancedbytes.games.ffb.util.StringTool;
 import com.balancedbytes.games.ffb.xml.XmlHandler;
@@ -179,39 +174,6 @@ public class UtilFumbblRequest {
 			throw new FantasyFootballException(ioe);
 		}
 		return roster;
-	}
-
-	public static void main(String[] args) {
-
-		try (FileInputStream fileStream = new FileInputStream(args[0]);
-				BufferedInputStream propertyInputStream = new BufferedInputStream(fileStream)) {
-
-			Properties properties = new Properties();
-			properties.load(propertyInputStream);
-
-			FantasyFootballServer server = new FantasyFootballServer(ServerMode.STANDALONE, properties);
-
-			String responseXml = "<gamestate>" + "<result>OK</result>" + "<options>"
-					+ "<option name=\"overtime\" value=\"false\"/>" + "<option name=\"turntime\" value=\"240\"/>"
-					+ "<option name=\"maxCards\" value=\"5\"/>" + "<option name=\"cardGold\" value=\"0\"/>"
-					+ "<option name=\"inducementGold\" value=\"0\"/>" + "<option name=\"wideZonePlayers\" value=\"2\"/>"
-					+ "<option name=\"playersOnField\" value=\"11\"/>" + "<option name=\"playersOnLos\" value=\"3\"/>"
-					+ "<option name=\"spikedBall\" value=\"false\"/>" + "<option name=\"clawNoStack\" value=\"false\"/>"
-					+ "<option name=\"pilingOnNoStack\" value=\"false\"/>" + "<option name=\"pilingOnKoDouble\" value=\"false\"/>"
-					+ "<option name=\"sneakyAsFoul\" value=\"false\"/>" + "<option name=\"sneakyBanToKo\" value=\"false\"/>"
-					+ "<option name=\"standFirmNoFall\" value=\"false\"/>"
-					+ "<option name=\"rightStuffCancelTackle\" value=\"false\"/>" + "<option name=\"extraMvp\" value=\"true\"/>"
-					+ "<option name=\"freeInducementMoney\" value=\"100000\"/>" + "</options>" + "</gamestate>";
-
-			FumbblGameState fumbblGameState = processFumbblGameStateResponse(server, "http://fumbbl.com/", responseXml);
-			GameOptions gameOptions = new GameOptions(new Game());
-			gameOptions.init(fumbblGameState.getOptions());
-			System.out.println(gameOptions.toJsonValue());
-
-		} catch (Exception pAny) {
-			pAny.printStackTrace();
-		}
-
 	}
 
 }

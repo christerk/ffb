@@ -2,6 +2,7 @@ package com.balancedbytes.games.ffb.server.step.action.end;
 
 import com.balancedbytes.games.ffb.InducementPhase;
 import com.balancedbytes.games.ffb.TurnMode;
+import com.balancedbytes.games.ffb.factory.IFactorySource;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.server.GameState;
@@ -98,7 +99,7 @@ public class StepEndFeeding extends AbstractStep {
 	}
 
 	@Override
-	public StepEndFeeding initFrom(Game game, JsonValue pJsonValue) {
+	public StepEndFeeding initFrom(IFactorySource game, JsonValue pJsonValue) {
 		super.initFrom(game, pJsonValue);
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
 		fEndPlayerAction = IServerJsonOption.END_PLAYER_ACTION.getFrom(game, jsonObject);

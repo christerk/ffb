@@ -4,9 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.balancedbytes.games.ffb.FieldCoordinate;
+import com.balancedbytes.games.ffb.factory.IFactorySource;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
-import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.net.NetCommandId;
 import com.balancedbytes.games.ffb.util.ArrayTool;
 import com.eclipsesource.json.JsonObject;
@@ -90,7 +90,7 @@ public class ClientCommandTeamSetupSave extends ClientCommand {
 		return jsonObject;
 	}
 
-	public ClientCommandTeamSetupSave initFrom(Game game, JsonValue jsonValue) {
+	public ClientCommandTeamSetupSave initFrom(IFactorySource game, JsonValue jsonValue) {
 		super.initFrom(game, jsonValue);
 		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
 		fSetupName = IJsonOption.SETUP_NAME.getFrom(game, jsonObject);

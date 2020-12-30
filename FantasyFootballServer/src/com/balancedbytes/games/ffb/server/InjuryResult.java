@@ -12,6 +12,7 @@ import com.balancedbytes.games.ffb.PlayerState;
 import com.balancedbytes.games.ffb.SendToBoxReason;
 import com.balancedbytes.games.ffb.SeriousInjury;
 import com.balancedbytes.games.ffb.SoundId;
+import com.balancedbytes.games.ffb.factory.IFactorySource;
 import com.balancedbytes.games.ffb.factory.InjuryModifierFactory;
 import com.balancedbytes.games.ffb.json.IJsonSerializable;
 import com.balancedbytes.games.ffb.json.UtilJson;
@@ -172,33 +173,33 @@ public class InjuryResult implements IJsonSerializable {
 
 	}
 
-	public InjuryResult initFrom(Game game, JsonValue pJsonValue) {
+	public InjuryResult initFrom(IFactorySource source, JsonValue pJsonValue) {
 
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
 
-		injuryContext.fInjuryType = (InjuryType) IServerJsonOption.INJURY_TYPE.getFrom(game, jsonObject);
-		injuryContext.fDefenderId = IServerJsonOption.DEFENDER_ID.getFrom(game, jsonObject);
-		injuryContext.fDefenderPosition = IServerJsonOption.DEFENDER_POSITION.getFrom(game, jsonObject);
-		injuryContext.fAttackerId = IServerJsonOption.ATTACKER_ID.getFrom(game, jsonObject);
-		injuryContext.fArmorRoll = IServerJsonOption.ARMOR_ROLL.getFrom(game, jsonObject);
-		injuryContext.fArmorBroken = IServerJsonOption.ARMOR_BROKEN.getFrom(game, jsonObject);
-		injuryContext.fInjuryRoll = IServerJsonOption.INJURY_ROLL.getFrom(game, jsonObject);
-		injuryContext.fInjury = IServerJsonOption.INJURY.getFrom(game, jsonObject);
-		injuryContext.fInjuryDecay = IServerJsonOption.INJURY_DECAY.getFrom(game, jsonObject);
-		injuryContext.fCasualtyRoll = IServerJsonOption.CASUALTY_ROLL.getFrom(game, jsonObject);
-		injuryContext.fSeriousInjury = (SeriousInjury) IServerJsonOption.SERIOUS_INJURY.getFrom(game, jsonObject);
-		injuryContext.fCasualtyRollDecay = IServerJsonOption.CASUALTY_ROLL_DECAY.getFrom(game, jsonObject);
-		injuryContext.fSeriousInjuryDecay = (SeriousInjury) IServerJsonOption.SERIOUS_INJURY_DECAY.getFrom(game, jsonObject);
-		injuryContext.fApothecaryStatus = (ApothecaryStatus) IServerJsonOption.APOTHECARY_STATUS.getFrom(game, jsonObject);
-		injuryContext.fSendToBoxReason = (SendToBoxReason) IServerJsonOption.SEND_TO_BOX_REASON.getFrom(game, jsonObject);
-		injuryContext.fSendToBoxTurn = IServerJsonOption.SEND_TO_BOX_TURN.getFrom(game, jsonObject);
-		injuryContext.fSendToBoxHalf = IServerJsonOption.SEND_TO_BOX_HALF.getFrom(game, jsonObject);
-		injuryContext.fSound = (SoundId) IServerJsonOption.SOUND.getFrom(game, jsonObject);
-		injuryContext.fApothecaryMode = (ApothecaryMode) IServerJsonOption.APOTHECARY_MODE.getFrom(game, jsonObject);
+		injuryContext.fInjuryType = (InjuryType) IServerJsonOption.INJURY_TYPE.getFrom(source, jsonObject);
+		injuryContext.fDefenderId = IServerJsonOption.DEFENDER_ID.getFrom(source, jsonObject);
+		injuryContext.fDefenderPosition = IServerJsonOption.DEFENDER_POSITION.getFrom(source, jsonObject);
+		injuryContext.fAttackerId = IServerJsonOption.ATTACKER_ID.getFrom(source, jsonObject);
+		injuryContext.fArmorRoll = IServerJsonOption.ARMOR_ROLL.getFrom(source, jsonObject);
+		injuryContext.fArmorBroken = IServerJsonOption.ARMOR_BROKEN.getFrom(source, jsonObject);
+		injuryContext.fInjuryRoll = IServerJsonOption.INJURY_ROLL.getFrom(source, jsonObject);
+		injuryContext.fInjury = IServerJsonOption.INJURY.getFrom(source, jsonObject);
+		injuryContext.fInjuryDecay = IServerJsonOption.INJURY_DECAY.getFrom(source, jsonObject);
+		injuryContext.fCasualtyRoll = IServerJsonOption.CASUALTY_ROLL.getFrom(source, jsonObject);
+		injuryContext.fSeriousInjury = (SeriousInjury) IServerJsonOption.SERIOUS_INJURY.getFrom(source, jsonObject);
+		injuryContext.fCasualtyRollDecay = IServerJsonOption.CASUALTY_ROLL_DECAY.getFrom(source, jsonObject);
+		injuryContext.fSeriousInjuryDecay = (SeriousInjury) IServerJsonOption.SERIOUS_INJURY_DECAY.getFrom(source, jsonObject);
+		injuryContext.fApothecaryStatus = (ApothecaryStatus) IServerJsonOption.APOTHECARY_STATUS.getFrom(source, jsonObject);
+		injuryContext.fSendToBoxReason = (SendToBoxReason) IServerJsonOption.SEND_TO_BOX_REASON.getFrom(source, jsonObject);
+		injuryContext.fSendToBoxTurn = IServerJsonOption.SEND_TO_BOX_TURN.getFrom(source, jsonObject);
+		injuryContext.fSendToBoxHalf = IServerJsonOption.SEND_TO_BOX_HALF.getFrom(source, jsonObject);
+		injuryContext.fSound = (SoundId) IServerJsonOption.SOUND.getFrom(source, jsonObject);
+		injuryContext.fApothecaryMode = (ApothecaryMode) IServerJsonOption.APOTHECARY_MODE.getFrom(source, jsonObject);
 
 		injuryContext.fArmorModifiers.clear();
 		ArmorModifierFactory armorModifierFactory = new ArmorModifierFactory();
-		JsonArray armorModifiers = IServerJsonOption.ARMOR_MODIFIERS.getFrom(game, jsonObject);
+		JsonArray armorModifiers = IServerJsonOption.ARMOR_MODIFIERS.getFrom(source, jsonObject);
 		for (int i = 0; i < armorModifiers.size(); i++) {
 			injuryContext.fArmorModifiers
 					.add((ArmorModifier) UtilJson.toEnumWithName(armorModifierFactory, armorModifiers.get(i)));
@@ -206,7 +207,7 @@ public class InjuryResult implements IJsonSerializable {
 
 		injuryContext.fInjuryModifiers.clear();
 		InjuryModifierFactory injuryModifierFactory = new InjuryModifierFactory();
-		JsonArray injuryModifiers = IServerJsonOption.INJURY_MODIFIERS.getFrom(game, jsonObject);
+		JsonArray injuryModifiers = IServerJsonOption.INJURY_MODIFIERS.getFrom(source, jsonObject);
 		for (int i = 0; i < injuryModifiers.size(); i++) {
 			injuryContext.fInjuryModifiers
 					.add((InjuryModifier) UtilJson.toEnumWithName(injuryModifierFactory, injuryModifiers.get(i)));

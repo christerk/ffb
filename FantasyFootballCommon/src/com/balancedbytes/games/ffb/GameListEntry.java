@@ -7,6 +7,7 @@ import javax.xml.transform.sax.TransformerHandler;
 import org.xml.sax.Attributes;
 import org.xml.sax.helpers.AttributesImpl;
 
+import com.balancedbytes.games.ffb.factory.IFactorySource;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.IJsonSerializable;
 import com.balancedbytes.games.ffb.json.UtilJson;
@@ -198,7 +199,7 @@ public class GameListEntry implements IXmlSerializable, IJsonSerializable {
 		return jsonObject;
 	}
 
-	public GameListEntry initFrom(Game game, JsonValue pJsonValue) {
+	public GameListEntry initFrom(IFactorySource game, JsonValue pJsonValue) {
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
 		fGameId = IJsonOption.GAME_ID.getFrom(game, jsonObject);
 		fStarted = IJsonOption.STARTED.getFrom(game, jsonObject);

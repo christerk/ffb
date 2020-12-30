@@ -1,7 +1,7 @@
 package com.balancedbytes.games.ffb.server.step.game.start;
 
 import com.balancedbytes.games.ffb.Weather;
-import com.balancedbytes.games.ffb.model.Game;
+import com.balancedbytes.games.ffb.factory.IFactorySource;
 import com.balancedbytes.games.ffb.report.ReportWeather;
 import com.balancedbytes.games.ffb.server.DiceInterpreter;
 import com.balancedbytes.games.ffb.server.GameState;
@@ -63,7 +63,7 @@ public final class StepWeather extends AbstractStep {
 	}
 
 	@Override
-	public StepWeather initFrom(Game game, JsonValue pJsonValue) {
+	public StepWeather initFrom(IFactorySource game, JsonValue pJsonValue) {
 		super.initFrom(game, pJsonValue);
 		return this;
 	}

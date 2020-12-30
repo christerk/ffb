@@ -2,6 +2,7 @@ package com.balancedbytes.games.ffb.server.step.phase.kickoff;
 
 import com.balancedbytes.games.ffb.InducementPhase;
 import com.balancedbytes.games.ffb.TurnMode;
+import com.balancedbytes.games.ffb.factory.IFactorySource;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.net.ReceivedCommand;
@@ -60,8 +61,8 @@ public final class StepInitKickoff extends AbstractStep {
 	// JSON serialization
 
 	@Override
-	public StepInitKickoff initFrom(Game game, JsonValue pJsonValue) {
-		super.initFrom(game, pJsonValue);
+	public StepInitKickoff initFrom(IFactorySource source, JsonValue pJsonValue) {
+		super.initFrom(source, pJsonValue);
 		return this;
 	}
 

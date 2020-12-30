@@ -3,9 +3,9 @@ package com.balancedbytes.games.ffb.report;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.balancedbytes.games.ffb.factory.IFactorySource;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
-import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.util.ArrayTool;
 import com.balancedbytes.games.ffb.util.StringTool;
 import com.eclipsesource.json.JsonObject;
@@ -98,7 +98,7 @@ public class ReportDefectingPlayers implements IReport {
 
 	// transformation
 
-	public ReportDefectingPlayers transform(Game game) {
+	public ReportDefectingPlayers transform(IFactorySource source) {
 		return new ReportDefectingPlayers(getPlayerIds(), getRolls(), getDefectings());
 	}
 
@@ -113,7 +113,7 @@ public class ReportDefectingPlayers implements IReport {
 		return jsonObject;
 	}
 
-	public ReportDefectingPlayers initFrom(Game game, JsonValue pJsonValue) {
+	public ReportDefectingPlayers initFrom(IFactorySource game, JsonValue pJsonValue) {
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
 		UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(game, jsonObject));
 		fPlayerIds.clear();

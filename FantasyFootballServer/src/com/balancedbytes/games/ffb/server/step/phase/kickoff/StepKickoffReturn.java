@@ -8,6 +8,7 @@ import com.balancedbytes.games.ffb.FieldCoordinateBounds;
 import com.balancedbytes.games.ffb.PlayerState;
 import com.balancedbytes.games.ffb.TurnMode;
 import com.balancedbytes.games.ffb.dialog.DialogKickoffReturnParameter;
+import com.balancedbytes.games.ffb.factory.IFactorySource;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.Game;
@@ -182,7 +183,7 @@ public final class StepKickoffReturn extends AbstractStep {
 	}
 
 	@Override
-	public StepKickoffReturn initFrom(Game game, JsonValue pJsonValue) {
+	public StepKickoffReturn initFrom(IFactorySource game, JsonValue pJsonValue) {
 		super.initFrom(game, pJsonValue);
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
 		fTouchback = IServerJsonOption.TOUCHBACK.getFrom(game, jsonObject);

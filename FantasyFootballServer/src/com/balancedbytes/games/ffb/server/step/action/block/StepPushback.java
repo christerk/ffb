@@ -1,5 +1,9 @@
 package com.balancedbytes.games.ffb.server.step.action.block;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Stack;
+
 import com.balancedbytes.games.ffb.ApothecaryMode;
 import com.balancedbytes.games.ffb.CatchScatterThrowInMode;
 import com.balancedbytes.games.ffb.FieldCoordinate;
@@ -8,6 +12,7 @@ import com.balancedbytes.games.ffb.PlayerState;
 import com.balancedbytes.games.ffb.Pushback;
 import com.balancedbytes.games.ffb.PushbackMode;
 import com.balancedbytes.games.ffb.PushbackSquare;
+import com.balancedbytes.games.ffb.factory.IFactorySource;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.FieldModel;
 import com.balancedbytes.games.ffb.model.Game;
@@ -33,10 +38,6 @@ import com.balancedbytes.games.ffb.server.util.UtilServerPushback;
 import com.balancedbytes.games.ffb.util.ArrayTool;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
-
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Stack;
 
 /**
  * Step in block sequence to handle pushbacks.
@@ -245,7 +246,7 @@ public class StepPushback extends AbstractStep {
 	}
 
 	@Override
-	public StepPushback initFrom(Game game, JsonValue pJsonValue) {
+	public StepPushback initFrom(IFactorySource game, JsonValue pJsonValue) {
 		super.initFrom(game, pJsonValue);
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
 		state.oldDefenderState = IServerJsonOption.OLD_DEFENDER_STATE.getFrom(game, jsonObject);

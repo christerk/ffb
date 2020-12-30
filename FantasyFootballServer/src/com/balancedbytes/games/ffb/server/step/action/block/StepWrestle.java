@@ -1,7 +1,7 @@
 package com.balancedbytes.games.ffb.server.step.action.block;
 
+import com.balancedbytes.games.ffb.factory.IFactorySource;
 import com.balancedbytes.games.ffb.json.UtilJson;
-import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.net.NetCommandId;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandUseSkill;
 import com.balancedbytes.games.ffb.server.ActionStatus;
@@ -81,7 +81,7 @@ public class StepWrestle extends AbstractStep {
 	}
 
 	@Override
-	public StepWrestle initFrom(Game game, JsonValue pJsonValue) {
+	public StepWrestle initFrom(IFactorySource game, JsonValue pJsonValue) {
 		super.initFrom(game, pJsonValue);
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
 		state.usingWrestleAttacker = IServerJsonOption.USING_WRESTLE_ATTACKER.getFrom(game, jsonObject);

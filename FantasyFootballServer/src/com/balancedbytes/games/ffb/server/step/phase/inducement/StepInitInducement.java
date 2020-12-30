@@ -7,6 +7,7 @@ import com.balancedbytes.games.ffb.Card;
 import com.balancedbytes.games.ffb.InducementPhase;
 import com.balancedbytes.games.ffb.InducementType;
 import com.balancedbytes.games.ffb.dialog.DialogUseInducementParameter;
+import com.balancedbytes.games.ffb.factory.IFactorySource;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.InducementSet;
@@ -191,7 +192,7 @@ public final class StepInitInducement extends AbstractStep {
 	}
 
 	@Override
-	public StepInitInducement initFrom(Game game, JsonValue pJsonValue) {
+	public StepInitInducement initFrom(IFactorySource game, JsonValue pJsonValue) {
 		super.initFrom(game, pJsonValue);
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
 		fInducementPhase = (InducementPhase) IServerJsonOption.INDUCEMENT_PHASE.getFrom(game, jsonObject);

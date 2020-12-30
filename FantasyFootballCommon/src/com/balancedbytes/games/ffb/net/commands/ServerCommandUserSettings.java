@@ -4,9 +4,10 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.balancedbytes.games.ffb.FactoryType.FactoryContext;
+import com.balancedbytes.games.ffb.factory.IFactorySource;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
-import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.net.NetCommandId;
 import com.balancedbytes.games.ffb.util.ArrayTool;
 import com.eclipsesource.json.JsonObject;
@@ -60,6 +61,11 @@ public class ServerCommandUserSettings extends ServerCommand {
 		return false;
 	}
 
+	@Override
+	public FactoryContext getContext() {
+		return FactoryContext.APPLICATION;
+	}
+	
 	// JSON serialization
 
 	public JsonObject toJsonValue() {
@@ -76,7 +82,7 @@ public class ServerCommandUserSettings extends ServerCommand {
 		return jsonObject;
 	}
 
-	public ServerCommandUserSettings initFrom(Game game, JsonValue pJsonValue) {
+	public ServerCommandUserSettings initFrom(IFactorySource game, JsonValue pJsonValue) {
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
 		UtilNetCommand.validateCommandId(this, (NetCommandId) IJsonOption.NET_COMMAND_ID.getFrom(game, jsonObject));
 		setCommandNr(IJsonOption.COMMAND_NR.getFrom(game, jsonObject));

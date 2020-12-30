@@ -4,9 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.balancedbytes.games.ffb.IDialogParameter;
+import com.balancedbytes.games.ffb.factory.IFactorySource;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
-import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.util.ArrayTool;
 import com.balancedbytes.games.ffb.util.StringTool;
 import com.eclipsesource.json.JsonObject;
@@ -73,7 +73,7 @@ public class DialogSetupErrorParameter implements IDialogParameter {
 		return jsonObject;
 	}
 
-	public DialogSetupErrorParameter initFrom(Game game, JsonValue pJsonValue) {
+	public DialogSetupErrorParameter initFrom(IFactorySource game, JsonValue pJsonValue) {
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
 		UtilDialogParameter.validateDialogId(this, (DialogId) IJsonOption.DIALOG_ID.getFrom(game, jsonObject));
 		fTeamId = IJsonOption.TEAM_ID.getFrom(game, jsonObject);

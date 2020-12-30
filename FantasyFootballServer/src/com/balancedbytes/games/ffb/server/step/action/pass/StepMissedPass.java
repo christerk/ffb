@@ -8,6 +8,7 @@ import com.balancedbytes.games.ffb.Direction;
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.FieldCoordinateBounds;
 import com.balancedbytes.games.ffb.PlayerAction;
+import com.balancedbytes.games.ffb.factory.IFactorySource;
 import com.balancedbytes.games.ffb.model.Animation;
 import com.balancedbytes.games.ffb.model.AnimationType;
 import com.balancedbytes.games.ffb.model.Game;
@@ -143,7 +144,7 @@ public class StepMissedPass extends AbstractStep {
 	}
 
 	@Override
-	public StepMissedPass initFrom(Game game, JsonValue pJsonValue) {
+	public StepMissedPass initFrom(IFactorySource game, JsonValue pJsonValue) {
 		super.initFrom(game, pJsonValue);
 		return this;
 	}

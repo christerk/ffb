@@ -1,9 +1,9 @@
 package com.balancedbytes.games.ffb.report;
 
 import com.balancedbytes.games.ffb.KickoffResult;
+import com.balancedbytes.games.ffb.factory.IFactorySource;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
-import com.balancedbytes.games.ffb.model.Game;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
@@ -39,7 +39,7 @@ public class ReportKickoffResult implements IReport {
 
 	// transformation
 
-	public IReport transform(Game game) {
+	public IReport transform(IFactorySource source) {
 		return new ReportKickoffResult(getKickoffResult(), getKickoffRoll());
 	}
 
@@ -53,11 +53,11 @@ public class ReportKickoffResult implements IReport {
 		return jsonObject;
 	}
 
-	public ReportKickoffResult initFrom(Game game, JsonValue pJsonValue) {
+	public ReportKickoffResult initFrom(IFactorySource source, JsonValue pJsonValue) {
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(game, jsonObject));
-		fKickoffResult = (KickoffResult) IJsonOption.KICKOFF_RESULT.getFrom(game, jsonObject);
-		fKickoffRoll = IJsonOption.KICKOFF_ROLL.getFrom(game, jsonObject);
+		UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(source, jsonObject));
+		fKickoffResult = (KickoffResult) IJsonOption.KICKOFF_RESULT.getFrom(source, jsonObject);
+		fKickoffRoll = IJsonOption.KICKOFF_ROLL.getFrom(source, jsonObject);
 		return this;
 	}
 

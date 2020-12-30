@@ -1,8 +1,8 @@
 package com.balancedbytes.games.ffb.net.commands;
 
+import com.balancedbytes.games.ffb.factory.IFactorySource;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
-import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.net.NetCommandId;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
@@ -39,7 +39,7 @@ public class ClientCommandCoinChoice extends ClientCommand {
 		return jsonObject;
 	}
 
-	public ClientCommandCoinChoice initFrom(Game game, JsonValue pJsonValue) {
+	public ClientCommandCoinChoice initFrom(IFactorySource game, JsonValue pJsonValue) {
 		super.initFrom(game, pJsonValue);
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
 		fChoiceHeads = IJsonOption.CHOICE_HEADS.getFrom(game, jsonObject);

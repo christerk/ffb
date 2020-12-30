@@ -3,6 +3,7 @@ package com.balancedbytes.games.ffb.model.change;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.balancedbytes.games.ffb.factory.IFactorySource;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.IJsonSerializable;
 import com.balancedbytes.games.ffb.json.UtilJson;
@@ -96,7 +97,7 @@ public class ModelChangeList implements IJsonSerializable {
 		return jsonObject;
 	}
 
-	public ModelChangeList initFrom(Game game, JsonValue pJsonValue) {
+	public ModelChangeList initFrom(IFactorySource game, JsonValue pJsonValue) {
 		clear();
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
 		JsonArray modelChanges = IJsonOption.MODEL_CHANGE_ARRAY.getFrom(game, jsonObject);

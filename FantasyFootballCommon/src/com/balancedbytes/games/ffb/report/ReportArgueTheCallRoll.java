@@ -1,8 +1,8 @@
 package com.balancedbytes.games.ffb.report;
 
+import com.balancedbytes.games.ffb.factory.IFactorySource;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
-import com.balancedbytes.games.ffb.model.Game;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
@@ -50,7 +50,7 @@ public class ReportArgueTheCallRoll implements IReport {
 
 	// transformation
 
-	public IReport transform(Game game) {
+	public IReport transform(IFactorySource source) {
 		return new ReportArgueTheCallRoll(getPlayerId(), isSuccessful(), isCoachBanned(), getRoll());
 	}
 
@@ -66,7 +66,7 @@ public class ReportArgueTheCallRoll implements IReport {
 		return jsonObject;
 	}
 
-	public ReportArgueTheCallRoll initFrom(Game game, JsonValue pJsonValue) {
+	public ReportArgueTheCallRoll initFrom(IFactorySource game, JsonValue pJsonValue) {
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
 		UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(game, jsonObject));
 		fPlayerId = IJsonOption.PLAYER_ID.getFrom(game, jsonObject);

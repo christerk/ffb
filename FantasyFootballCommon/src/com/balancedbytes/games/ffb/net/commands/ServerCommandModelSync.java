@@ -1,10 +1,10 @@
 package com.balancedbytes.games.ffb.net.commands;
 
 import com.balancedbytes.games.ffb.SoundId;
+import com.balancedbytes.games.ffb.factory.IFactorySource;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.Animation;
-import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.change.ModelChangeList;
 import com.balancedbytes.games.ffb.net.NetCommandId;
 import com.balancedbytes.games.ffb.report.ReportList;
@@ -70,10 +70,10 @@ public class ServerCommandModelSync extends ServerCommand {
 
 	// transformation
 
-	public ServerCommandModelSync transform(Game game) {
+	public ServerCommandModelSync transform(IFactorySource source) {
 		Animation transformedAnimation = (getAnimation() != null) ? getAnimation().transform() : null;
 		ServerCommandModelSync transformedCommand = new ServerCommandModelSync(getModelChanges().transform(),
-				getReportList().transform(game), transformedAnimation, getSound(), getGameTime(), getTurnTime());
+				getReportList().transform(source), transformedAnimation, getSound(), getGameTime(), getTurnTime());
 		transformedCommand.setCommandNr(getCommandNr());
 		return transformedCommand;
 	}
@@ -99,28 +99,28 @@ public class ServerCommandModelSync extends ServerCommand {
 		return jsonObject;
 	}
 
-	public ServerCommandModelSync initFrom(Game game, JsonValue pJsonValue) {
+	public ServerCommandModelSync initFrom(IFactorySource source, JsonValue pJsonValue) {
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		UtilNetCommand.validateCommandId(this, (NetCommandId) IJsonOption.NET_COMMAND_ID.getFrom(game, jsonObject));
-		setCommandNr(IJsonOption.COMMAND_NR.getFrom(game, jsonObject));
-		JsonObject modelChangeListObject = IJsonOption.MODEL_CHANGE_LIST.getFrom(game, jsonObject);
+		UtilNetCommand.validateCommandId(this, (NetCommandId) IJsonOption.NET_COMMAND_ID.getFrom(source, jsonObject));
+		setCommandNr(IJsonOption.COMMAND_NR.getFrom(source, jsonObject));
+		JsonObject modelChangeListObject = IJsonOption.MODEL_CHANGE_LIST.getFrom(source, jsonObject);
 		fModelChanges = new ModelChangeList();
 		if (modelChangeListObject != null) {
-			fModelChanges.initFrom(game, modelChangeListObject);
+			fModelChanges.initFrom(source, modelChangeListObject);
 		}
 		fReportList = new ReportList();
-		JsonObject reportListObject = IJsonOption.REPORT_LIST.getFrom(game, jsonObject);
+		JsonObject reportListObject = IJsonOption.REPORT_LIST.getFrom(source, jsonObject);
 		if (reportListObject != null) {
-			fReportList.initFrom(game, reportListObject);
+			fReportList.initFrom(source, reportListObject);
 		}
 		fAnimation = null;
-		JsonObject animationObject = IJsonOption.ANIMATION.getFrom(game, jsonObject);
+		JsonObject animationObject = IJsonOption.ANIMATION.getFrom(source, jsonObject);
 		if (animationObject != null) {
-			fAnimation = new Animation().initFrom(game, animationObject);
+			fAnimation = new Animation().initFrom(source, animationObject);
 		}
-		fSound = (SoundId) IJsonOption.SOUND.getFrom(game, jsonObject);
-		fGameTime = IJsonOption.GAME_TIME.getFrom(game, jsonObject);
-		fTurnTime = IJsonOption.TURN_TIME.getFrom(game, jsonObject);
+		fSound = (SoundId) IJsonOption.SOUND.getFrom(source, jsonObject);
+		fGameTime = IJsonOption.GAME_TIME.getFrom(source, jsonObject);
+		fTurnTime = IJsonOption.TURN_TIME.getFrom(source, jsonObject);
 		return this;
 	}
 

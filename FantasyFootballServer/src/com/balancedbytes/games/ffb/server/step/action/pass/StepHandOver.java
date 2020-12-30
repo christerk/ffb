@@ -2,6 +2,7 @@ package com.balancedbytes.games.ffb.server.step.action.pass;
 
 import com.balancedbytes.games.ffb.CatchScatterThrowInMode;
 import com.balancedbytes.games.ffb.FieldCoordinate;
+import com.balancedbytes.games.ffb.factory.IFactorySource;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
@@ -97,7 +98,7 @@ public final class StepHandOver extends AbstractStepWithReRoll {
 	}
 
 	@Override
-	public StepHandOver initFrom(Game game, JsonValue pJsonValue) {
+	public StepHandOver initFrom(IFactorySource game, JsonValue pJsonValue) {
 		super.initFrom(game, pJsonValue);
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
 		fCatcherId = IServerJsonOption.CATCHER_ID.getFrom(game, jsonObject);

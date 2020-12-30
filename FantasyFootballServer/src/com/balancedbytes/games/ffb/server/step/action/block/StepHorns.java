@@ -1,7 +1,7 @@
 package com.balancedbytes.games.ffb.server.step.action.block;
 
+import com.balancedbytes.games.ffb.factory.IFactorySource;
 import com.balancedbytes.games.ffb.json.UtilJson;
-import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.server.ActionStatus;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.IServerJsonOption;
@@ -53,7 +53,7 @@ public class StepHorns extends AbstractStep {
 	}
 
 	@Override
-	public StepHorns initFrom(Game game, JsonValue pJsonValue) {
+	public StepHorns initFrom(IFactorySource game, JsonValue pJsonValue) {
 		super.initFrom(game, pJsonValue);
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
 		state.usingHorns = IServerJsonOption.USING_HORNS.getFrom(game, jsonObject);

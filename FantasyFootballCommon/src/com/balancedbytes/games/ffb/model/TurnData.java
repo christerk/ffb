@@ -1,6 +1,7 @@
 package com.balancedbytes.games.ffb.model;
 
 import com.balancedbytes.games.ffb.LeaderState;
+import com.balancedbytes.games.ffb.factory.IFactorySource;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.IJsonSerializable;
 import com.balancedbytes.games.ffb.json.UtilJson;
@@ -266,24 +267,24 @@ public class TurnData implements IJsonSerializable {
 		return jsonObject;
 	}
 
-	public TurnData initFrom(Game game, JsonValue pJsonValue) {
+	public TurnData initFrom(IFactorySource source, JsonValue pJsonValue) {
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		fHomeData = IJsonOption.HOME_DATA.getFrom(game, jsonObject);
-		fTurnStarted = IJsonOption.TURN_STARTED.getFrom(game, jsonObject);
-		fTurnNr = IJsonOption.TURN_NR.getFrom(game, jsonObject);
-		fFirstTurnAfterKickoff = IJsonOption.FIRST_TURN_AFTER_KICKOFF.getFrom(game, jsonObject);
-		fReRolls = IJsonOption.RE_ROLLS.getFrom(game, jsonObject);
-		fApothecaries = IJsonOption.APOTHECARIES.getFrom(game, jsonObject);
-		fBlitzUsed = IJsonOption.BLITZ_USED.getFrom(game, jsonObject);
-		fFoulUsed = IJsonOption.FOUL_USED.getFrom(game, jsonObject);
-		fReRollUsed = IJsonOption.RE_ROLL_USED.getFrom(game, jsonObject);
-		fHandOverUsed = IJsonOption.HAND_OVER_USED.getFrom(game, jsonObject);
-		fPassUsed = IJsonOption.PASS_USED.getFrom(game, jsonObject);
-		Boolean coachBanned = IJsonOption.COACH_BANNED.getFrom(game, jsonObject);
+		fHomeData = IJsonOption.HOME_DATA.getFrom(source, jsonObject);
+		fTurnStarted = IJsonOption.TURN_STARTED.getFrom(source, jsonObject);
+		fTurnNr = IJsonOption.TURN_NR.getFrom(source, jsonObject);
+		fFirstTurnAfterKickoff = IJsonOption.FIRST_TURN_AFTER_KICKOFF.getFrom(source, jsonObject);
+		fReRolls = IJsonOption.RE_ROLLS.getFrom(source, jsonObject);
+		fApothecaries = IJsonOption.APOTHECARIES.getFrom(source, jsonObject);
+		fBlitzUsed = IJsonOption.BLITZ_USED.getFrom(source, jsonObject);
+		fFoulUsed = IJsonOption.FOUL_USED.getFrom(source, jsonObject);
+		fReRollUsed = IJsonOption.RE_ROLL_USED.getFrom(source, jsonObject);
+		fHandOverUsed = IJsonOption.HAND_OVER_USED.getFrom(source, jsonObject);
+		fPassUsed = IJsonOption.PASS_USED.getFrom(source, jsonObject);
+		Boolean coachBanned = IJsonOption.COACH_BANNED.getFrom(source, jsonObject);
 		fCoachBanned = (coachBanned != null) ? coachBanned : false;
-		fLeaderState = (LeaderState) IJsonOption.LEADER_STATE.getFrom(game, jsonObject);
+		fLeaderState = (LeaderState) IJsonOption.LEADER_STATE.getFrom(source, jsonObject);
 		fInducementSet = new InducementSet(this);
-		fInducementSet.initFrom(game, IJsonOption.INDUCEMENT_SET.getFrom(game, jsonObject));
+		fInducementSet.initFrom(source, IJsonOption.INDUCEMENT_SET.getFrom(source, jsonObject));
 		return this;
 	}
 

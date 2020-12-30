@@ -1,9 +1,9 @@
 package com.balancedbytes.games.ffb.report;
 
 import com.balancedbytes.games.ffb.PlayerAction;
+import com.balancedbytes.games.ffb.factory.IFactorySource;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
-import com.balancedbytes.games.ffb.model.Game;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
@@ -40,7 +40,7 @@ public class ReportPlayerAction implements IReport {
 
 	// transformation
 
-	public IReport transform(Game game) {
+	public IReport transform(IFactorySource source) {
 		return new ReportPlayerAction(getActingPlayerId(), getPlayerAction());
 	}
 
@@ -54,7 +54,7 @@ public class ReportPlayerAction implements IReport {
 		return jsonObject;
 	}
 
-	public ReportPlayerAction initFrom(Game game, JsonValue pJsonValue) {
+	public ReportPlayerAction initFrom(IFactorySource game, JsonValue pJsonValue) {
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
 		UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(game, jsonObject));
 		fActingPlayerId = IJsonOption.ACTING_PLAYER_ID.getFrom(game, jsonObject);

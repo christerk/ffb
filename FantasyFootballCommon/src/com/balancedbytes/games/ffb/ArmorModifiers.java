@@ -1,12 +1,13 @@
 package com.balancedbytes.games.ffb;
 
+import java.lang.reflect.Field;
+import java.util.HashMap;
+import java.util.Map;
+
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.model.Team;
 import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
-import java.lang.reflect.Field;
-import java.util.HashMap;
-import java.util.Map;
 
 public class ArmorModifiers {
 

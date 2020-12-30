@@ -183,7 +183,7 @@ public final class UtilCards {
 				cardSkills.add(SkillConstants.SIDE_STEP);
 				break;
 			case FAWNDOUGHS_HEADBAND:
-				cardSkills.add(SkillConstants.ACCURATE);
+				//cardSkills.add(SkillConstants.ACCURATE);
 				cardSkills.add(SkillConstants.PASS);
 				break;
 			case FORCE_SHIELD:

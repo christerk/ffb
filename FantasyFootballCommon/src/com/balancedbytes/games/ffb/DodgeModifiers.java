@@ -1,13 +1,13 @@
 package com.balancedbytes.games.ffb;
 
+import java.lang.reflect.Field;
+import java.util.HashMap;
+import java.util.Map;
+
 import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.Skill;
 import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
 import com.balancedbytes.games.ffb.util.UtilCards;
-
-import java.lang.reflect.Field;
-import java.util.HashMap;
-import java.util.Map;
 
 public class DodgeModifiers {
 	public static final DodgeModifier TWO_HEADS = new DodgeModifier("Two Heads", -1, false, false);

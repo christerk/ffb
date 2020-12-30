@@ -1,6 +1,7 @@
 package com.balancedbytes.games.ffb.server.step.phase.kickoff;
 
 import com.balancedbytes.games.ffb.InducementPhase;
+import com.balancedbytes.games.ffb.factory.IFactorySource;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.net.ReceivedCommand;
@@ -66,7 +67,7 @@ public final class StepEndKickoff extends AbstractStep {
 	}
 
 	@Override
-	public StepEndKickoff initFrom(Game game, JsonValue pJsonValue) {
+	public StepEndKickoff initFrom(IFactorySource game, JsonValue pJsonValue) {
 		super.initFrom(game, pJsonValue);
 		return this;
 	}

@@ -2,9 +2,9 @@ package com.balancedbytes.games.ffb.net.commands;
 
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.SpecialEffect;
+import com.balancedbytes.games.ffb.factory.IFactorySource;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
-import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.net.NetCommandId;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
@@ -52,7 +52,7 @@ public class ClientCommandWizardSpell extends ClientCommand {
 		return jsonObject;
 	}
 
-	public ClientCommandWizardSpell initFrom(Game game, JsonValue jsonValue) {
+	public ClientCommandWizardSpell initFrom(IFactorySource game, JsonValue jsonValue) {
 		super.initFrom(game, jsonValue);
 		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
 		fWizardSpell = (SpecialEffect) IJsonOption.WIZARD_SPELL.getFrom(game, jsonObject);

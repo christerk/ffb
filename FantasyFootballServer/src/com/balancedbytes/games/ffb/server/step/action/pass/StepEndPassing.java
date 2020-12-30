@@ -2,6 +2,7 @@ package com.balancedbytes.games.ffb.server.step.action.pass;
 
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.PlayerAction;
+import com.balancedbytes.games.ffb.factory.IFactorySource;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.Game;
@@ -202,7 +203,7 @@ public final class StepEndPassing extends AbstractStep {
 	}
 
 	@Override
-	public StepEndPassing initFrom(Game game, JsonValue pJsonValue) {
+	public StepEndPassing initFrom(IFactorySource game, JsonValue pJsonValue) {
 		super.initFrom(game, pJsonValue);
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
 		fInterceptorId = IServerJsonOption.INTERCEPTOR_ID.getFrom(game, jsonObject);

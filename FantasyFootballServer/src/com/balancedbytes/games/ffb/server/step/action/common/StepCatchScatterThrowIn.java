@@ -7,6 +7,7 @@ import com.balancedbytes.games.ffb.Card;
 import com.balancedbytes.games.ffb.CatchModifier;
 import com.balancedbytes.games.ffb.CatchScatterThrowInMode;
 import com.balancedbytes.games.ffb.Direction;
+import com.balancedbytes.games.ffb.FactoryType.Factory;
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.FieldCoordinateBounds;
 import com.balancedbytes.games.ffb.InducementDuration;
@@ -16,9 +17,9 @@ import com.balancedbytes.games.ffb.ReRolledActions;
 import com.balancedbytes.games.ffb.SkillUse;
 import com.balancedbytes.games.ffb.SoundId;
 import com.balancedbytes.games.ffb.TurnMode;
-import com.balancedbytes.games.ffb.FactoryType.Factory;
 import com.balancedbytes.games.ffb.dialog.DialogPlayerChoiceParameter;
 import com.balancedbytes.games.ffb.factory.CatchModifierFactory;
+import com.balancedbytes.games.ffb.factory.IFactorySource;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.Animation;
 import com.balancedbytes.games.ffb.model.AnimationType;
@@ -523,7 +524,7 @@ public class StepCatchScatterThrowIn extends AbstractStepWithReRoll {
 	}
 
 	@Override
-	public StepCatchScatterThrowIn initFrom(Game game, JsonValue pJsonValue) {
+	public StepCatchScatterThrowIn initFrom(IFactorySource game, JsonValue pJsonValue) {
 		super.initFrom(game, pJsonValue);
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
 		fCatcherId = IServerJsonOption.CATCHER_ID.getFrom(game, jsonObject);

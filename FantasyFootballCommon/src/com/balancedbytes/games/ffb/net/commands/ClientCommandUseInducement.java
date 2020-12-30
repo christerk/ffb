@@ -5,9 +5,9 @@ import java.util.List;
 
 import com.balancedbytes.games.ffb.Card;
 import com.balancedbytes.games.ffb.InducementType;
+import com.balancedbytes.games.ffb.factory.IFactorySource;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
-import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.net.NetCommandId;
 import com.balancedbytes.games.ffb.util.ArrayTool;
 import com.balancedbytes.games.ffb.util.StringTool;
@@ -97,7 +97,7 @@ public class ClientCommandUseInducement extends ClientCommand {
 		return jsonObject;
 	}
 
-	public ClientCommandUseInducement initFrom(Game game, JsonValue jsonValue) {
+	public ClientCommandUseInducement initFrom(IFactorySource game, JsonValue jsonValue) {
 		super.initFrom(game, jsonValue);
 		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
 		fInducementType = (InducementType) IJsonOption.INDUCEMENT_TYPE.getFrom(game, jsonObject);

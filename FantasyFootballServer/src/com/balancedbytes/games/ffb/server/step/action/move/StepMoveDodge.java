@@ -4,12 +4,13 @@ import java.util.Set;
 
 import com.balancedbytes.games.ffb.DodgeModifier;
 import com.balancedbytes.games.ffb.DodgeModifiers;
+import com.balancedbytes.games.ffb.FactoryType.Factory;
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.ReRollSource;
 import com.balancedbytes.games.ffb.ReRolledActions;
 import com.balancedbytes.games.ffb.SkillUse;
-import com.balancedbytes.games.ffb.FactoryType.Factory;
 import com.balancedbytes.games.ffb.factory.DodgeModifierFactory;
+import com.balancedbytes.games.ffb.factory.IFactorySource;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.Game;
@@ -283,7 +284,7 @@ public class StepMoveDodge extends AbstractStepWithReRoll {
 	}
 
 	@Override
-	public StepMoveDodge initFrom(Game game, JsonValue pJsonValue) {
+	public StepMoveDodge initFrom(IFactorySource game, JsonValue pJsonValue) {
 		super.initFrom(game, pJsonValue);
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
 		fGotoLabelOnFailure = IServerJsonOption.GOTO_LABEL_ON_FAILURE.getFrom(game, jsonObject);

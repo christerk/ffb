@@ -1,8 +1,8 @@
 package com.balancedbytes.games.ffb.report;
 
+import com.balancedbytes.games.ffb.factory.IFactorySource;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
-import com.balancedbytes.games.ffb.model.Game;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
@@ -64,7 +64,7 @@ public class ReportKickTeamMateRoll implements IReport {
 
 	// transformation
 
-	public IReport transform(Game game) {
+	public IReport transform(IFactorySource source) {
 		return new ReportKickTeamMateRoll(getKickingPlayerId(), getKickedPlayerId(), isSuccessful(), getRoll(),
 				isReRolled(), getKickDistance());
 	}
@@ -85,7 +85,7 @@ public class ReportKickTeamMateRoll implements IReport {
 	}
 
 	@Override
-	public ReportKickTeamMateRoll initFrom(Game game, JsonValue pJsonValue) {
+	public ReportKickTeamMateRoll initFrom(IFactorySource game, JsonValue pJsonValue) {
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
 		UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(game, jsonObject));
 		fKickingPlayerId = IJsonOption.PLAYER_ID.getFrom(game, jsonObject);

@@ -1,5 +1,6 @@
 package com.balancedbytes.games.ffb.server.step.action.pass;
 
+import com.balancedbytes.games.ffb.factory.IFactorySource;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.server.GameState;
@@ -144,7 +145,7 @@ public final class StepDispatchPassing extends AbstractStep {
 	}
 
 	@Override
-	public StepDispatchPassing initFrom(Game game, JsonValue pJsonValue) {
+	public StepDispatchPassing initFrom(IFactorySource game, JsonValue pJsonValue) {
 		super.initFrom(game, pJsonValue);
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
 		fGotoLabelOnEnd = IServerJsonOption.GOTO_LABEL_ON_END.getFrom(game, jsonObject);

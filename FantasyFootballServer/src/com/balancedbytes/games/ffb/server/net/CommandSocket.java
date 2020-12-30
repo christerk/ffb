@@ -8,6 +8,7 @@ import org.eclipse.jetty.websocket.api.annotations.OnWebSocketConnect;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
 
+import com.balancedbytes.games.ffb.factory.IFactorySource;
 import com.balancedbytes.games.ffb.json.LZString;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.net.NetCommand;
@@ -33,7 +34,7 @@ public class CommandSocket {
 	public CommandSocket(FantasyFootballServer server, boolean commandCompression) {
 		this.server = server;
 		fCommandHandler = server.getCommunication();
-		fNetCommandFactory = new NetCommandFactory();
+		fNetCommandFactory = new NetCommandFactory(server.getFactorySource());
 		fCommandCompression = commandCompression;
 	}
 
@@ -56,7 +57,8 @@ public class CommandSocket {
 			long gameId = server.getSessionManager().getGameIdForSession(pSession);
 			GameState gameState = server.getGameCache().getGameStateById(gameId);
 			Game game = gameState != null ? gameState.getGame() : null;
-			NetCommand netCommand = fNetCommandFactory.forJsonValue(game, jsonValue);
+			IFactorySource source = game != null ? game.getRules() : server.getFactorySource();
+			NetCommand netCommand = fNetCommandFactory.forJsonValue(source, jsonValue);
 			if (netCommand == null) {
 				return;
 			}

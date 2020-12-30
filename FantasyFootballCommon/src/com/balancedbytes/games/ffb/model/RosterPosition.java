@@ -16,6 +16,7 @@ import com.balancedbytes.games.ffb.FactoryType.Factory;
 import com.balancedbytes.games.ffb.PlayerGender;
 import com.balancedbytes.games.ffb.PlayerType;
 import com.balancedbytes.games.ffb.SkillCategory;
+import com.balancedbytes.games.ffb.factory.IFactorySource;
 import com.balancedbytes.games.ffb.factory.PlayerGenderFactory;
 import com.balancedbytes.games.ffb.factory.PlayerTypeFactory;
 import com.balancedbytes.games.ffb.factory.SkillCategoryFactory;
@@ -586,52 +587,52 @@ public class RosterPosition implements Position {
 
 	}
 
-	public RosterPosition initFrom(Game game, JsonValue pJsonValue) {
+	public RosterPosition initFrom(IFactorySource source, JsonValue pJsonValue) {
 
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
 
-		fId = IJsonOption.POSITION_ID.getFrom(game, jsonObject);
-		fName = IJsonOption.POSITION_NAME.getFrom(game, jsonObject);
-		fShorthand = IJsonOption.SHORTHAND.getFrom(game, jsonObject);
-		fDisplayName = IJsonOption.DISPLAY_NAME.getFrom(game, jsonObject);
-		fType = (PlayerType) IJsonOption.PLAYER_TYPE.getFrom(game, jsonObject);
-		fGender = (PlayerGender) IJsonOption.PLAYER_GENDER.getFrom(game, jsonObject);
-		fQuantity = IJsonOption.QUANTITY.getFrom(game, jsonObject);
-		fMovement = IJsonOption.MOVEMENT.getFrom(game, jsonObject);
-		fStrength = IJsonOption.STRENGTH.getFrom(game, jsonObject);
-		fAgility = IJsonOption.AGILITY.getFrom(game, jsonObject);
-		fArmour = IJsonOption.ARMOUR.getFrom(game, jsonObject);
-		fCost = IJsonOption.COST.getFrom(game, jsonObject);
-		fRace = IJsonOption.RACE.getFrom(game, jsonObject);
-		fUndead = IJsonOption.UNDEAD.getFrom(game, jsonObject);
-		fThrall = IJsonOption.THRALL.getFrom(game, jsonObject);
-		fTeamWithPositionId = IJsonOption.TEAM_WITH_POSITION_ID.getFrom(game, jsonObject);
-		nameGenerator = IJsonOption.NAME_GENERATOR.getFrom(game, jsonObject);
+		fId = IJsonOption.POSITION_ID.getFrom(source, jsonObject);
+		fName = IJsonOption.POSITION_NAME.getFrom(source, jsonObject);
+		fShorthand = IJsonOption.SHORTHAND.getFrom(source, jsonObject);
+		fDisplayName = IJsonOption.DISPLAY_NAME.getFrom(source, jsonObject);
+		fType = (PlayerType) IJsonOption.PLAYER_TYPE.getFrom(source, jsonObject);
+		fGender = (PlayerGender) IJsonOption.PLAYER_GENDER.getFrom(source, jsonObject);
+		fQuantity = IJsonOption.QUANTITY.getFrom(source, jsonObject);
+		fMovement = IJsonOption.MOVEMENT.getFrom(source, jsonObject);
+		fStrength = IJsonOption.STRENGTH.getFrom(source, jsonObject);
+		fAgility = IJsonOption.AGILITY.getFrom(source, jsonObject);
+		fArmour = IJsonOption.ARMOUR.getFrom(source, jsonObject);
+		fCost = IJsonOption.COST.getFrom(source, jsonObject);
+		fRace = IJsonOption.RACE.getFrom(source, jsonObject);
+		fUndead = IJsonOption.UNDEAD.getFrom(source, jsonObject);
+		fThrall = IJsonOption.THRALL.getFrom(source, jsonObject);
+		fTeamWithPositionId = IJsonOption.TEAM_WITH_POSITION_ID.getFrom(source, jsonObject);
+		nameGenerator = IJsonOption.NAME_GENERATOR.getFrom(source, jsonObject);
 
-		fUrlPortrait = IJsonOption.URL_PORTRAIT.getFrom(game, jsonObject);
-		fUrlIconSet = IJsonOption.URL_ICON_SET.getFrom(game, jsonObject);
-		fNrOfIcons = IJsonOption.NR_OF_ICONS.getFrom(game, jsonObject);
+		fUrlPortrait = IJsonOption.URL_PORTRAIT.getFrom(source, jsonObject);
+		fUrlIconSet = IJsonOption.URL_ICON_SET.getFrom(source, jsonObject);
+		fNrOfIcons = IJsonOption.NR_OF_ICONS.getFrom(source, jsonObject);
 
 		SkillCategoryFactory skillCategoryFactory = new SkillCategoryFactory();
 
 		fSkillCategoriesOnNormalRoll.clear();
-		JsonArray skillCategoriesNormal = IJsonOption.SKILL_CATEGORIES_NORMAL.getFrom(game, jsonObject);
+		JsonArray skillCategoriesNormal = IJsonOption.SKILL_CATEGORIES_NORMAL.getFrom(source, jsonObject);
 		for (int i = 0; i < skillCategoriesNormal.size(); i++) {
 			fSkillCategoriesOnNormalRoll
 					.add((SkillCategory) UtilJson.toEnumWithName(skillCategoryFactory, skillCategoriesNormal.get(i)));
 		}
 		fSkillCategoriesOnDoubleRoll.clear();
-		JsonArray skillCategoriesDouble = IJsonOption.SKILL_CATEGORIES_DOUBLE.getFrom(game, jsonObject);
+		JsonArray skillCategoriesDouble = IJsonOption.SKILL_CATEGORIES_DOUBLE.getFrom(source, jsonObject);
 		for (int i = 0; i < skillCategoriesDouble.size(); i++) {
 			fSkillCategoriesOnDoubleRoll
 					.add((SkillCategory) UtilJson.toEnumWithName(skillCategoryFactory, skillCategoriesDouble.get(i)));
 		}
 
 		fSkillValues.clear();
-		JsonArray skillArray = IJsonOption.SKILL_ARRAY.getFrom(game, jsonObject);
-		int[] skillValues = IJsonOption.SKILL_VALUES.getFrom(game, jsonObject);
+		JsonArray skillArray = IJsonOption.SKILL_ARRAY.getFrom(source, jsonObject);
+		int[] skillValues = IJsonOption.SKILL_VALUES.getFrom(source, jsonObject);
 		if ((skillArray != null) && (skillArray.size() > 0) && ArrayTool.isProvided(skillValues)) {
-			SkillFactory skillFactory = game.getRules().getSkillFactory();
+			SkillFactory skillFactory = source.<SkillFactory>getFactory(Factory.SKILL);
 			for (int i = 0; i < skillArray.size(); i++) {
 				Skill skill = (Skill) UtilJson.toEnumWithName(skillFactory, skillArray.get(i));
 				fSkillValues.put(skill, skillValues[i]);

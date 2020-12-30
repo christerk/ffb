@@ -3,6 +3,7 @@ package com.balancedbytes.games.ffb.server.step.action.block;
 import com.balancedbytes.games.ffb.BlockResult;
 import com.balancedbytes.games.ffb.PlayerState;
 import com.balancedbytes.games.ffb.SkillUse;
+import com.balancedbytes.games.ffb.factory.IFactorySource;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.Game;
@@ -216,17 +217,17 @@ public class StepBlockChoice extends AbstractStep {
 	}
 
 	@Override
-	public StepBlockChoice initFrom(Game game, JsonValue pJsonValue) {
-		super.initFrom(game, pJsonValue);
+	public StepBlockChoice initFrom(IFactorySource source, JsonValue pJsonValue) {
+		super.initFrom(source, pJsonValue);
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		fGotoLabelOnDodge = IServerJsonOption.GOTO_LABEL_ON_DODGE.getFrom(game, jsonObject);
-		fGotoLabelOnJuggernaut = IServerJsonOption.GOTO_LABEL_ON_JUGGERNAUT.getFrom(game, jsonObject);
-		fGotoLabelOnPushback = IServerJsonOption.GOTO_LABEL_ON_PUSHBACK.getFrom(game, jsonObject);
-		fNrOfDice = IServerJsonOption.NR_OF_DICE.getFrom(game, jsonObject);
-		fBlockRoll = IServerJsonOption.BLOCK_ROLL.getFrom(game, jsonObject);
-		fDiceIndex = IServerJsonOption.DICE_INDEX.getFrom(game, jsonObject);
-		fBlockResult = (BlockResult) IServerJsonOption.BLOCK_RESULT.getFrom(game, jsonObject);
-		fOldDefenderState = IServerJsonOption.OLD_DEFENDER_STATE.getFrom(game, jsonObject);
+		fGotoLabelOnDodge = IServerJsonOption.GOTO_LABEL_ON_DODGE.getFrom(source, jsonObject);
+		fGotoLabelOnJuggernaut = IServerJsonOption.GOTO_LABEL_ON_JUGGERNAUT.getFrom(source, jsonObject);
+		fGotoLabelOnPushback = IServerJsonOption.GOTO_LABEL_ON_PUSHBACK.getFrom(source, jsonObject);
+		fNrOfDice = IServerJsonOption.NR_OF_DICE.getFrom(source, jsonObject);
+		fBlockRoll = IServerJsonOption.BLOCK_ROLL.getFrom(source, jsonObject);
+		fDiceIndex = IServerJsonOption.DICE_INDEX.getFrom(source, jsonObject);
+		fBlockResult = (BlockResult) IServerJsonOption.BLOCK_RESULT.getFrom(source, jsonObject);
+		fOldDefenderState = IServerJsonOption.OLD_DEFENDER_STATE.getFrom(source, jsonObject);
 		return this;
 	}
 

@@ -11,12 +11,12 @@ import java.util.Set;
 import org.eclipse.jetty.websocket.api.Session;
 
 import com.balancedbytes.games.ffb.Card;
+import com.balancedbytes.games.ffb.FactoryType.Factory;
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.PlayerState;
 import com.balancedbytes.games.ffb.SeriousInjury;
 import com.balancedbytes.games.ffb.SoundId;
 import com.balancedbytes.games.ffb.Weather;
-import com.balancedbytes.games.ffb.FactoryType.Factory;
 import com.balancedbytes.games.ffb.factory.AnimationTypeFactory;
 import com.balancedbytes.games.ffb.factory.CardFactory;
 import com.balancedbytes.games.ffb.factory.GameOptionFactory;

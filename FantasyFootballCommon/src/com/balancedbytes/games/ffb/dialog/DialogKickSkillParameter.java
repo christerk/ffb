@@ -2,9 +2,9 @@ package com.balancedbytes.games.ffb.dialog;
 
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.IDialogParameter;
+import com.balancedbytes.games.ffb.factory.IFactorySource;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
-import com.balancedbytes.games.ffb.model.Game;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
@@ -63,7 +63,7 @@ public class DialogKickSkillParameter implements IDialogParameter {
 		return jsonObject;
 	}
 
-	public DialogKickSkillParameter initFrom(Game game, JsonValue pJsonValue) {
+	public DialogKickSkillParameter initFrom(IFactorySource game, JsonValue pJsonValue) {
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
 		UtilDialogParameter.validateDialogId(this, (DialogId) IJsonOption.DIALOG_ID.getFrom(game, jsonObject));
 		fPlayerId = IJsonOption.PLAYER_ID.getFrom(game, jsonObject);

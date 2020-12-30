@@ -1,8 +1,8 @@
 package com.balancedbytes.games.ffb.report;
 
+import com.balancedbytes.games.ffb.factory.IFactorySource;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
-import com.balancedbytes.games.ffb.model.Game;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
@@ -63,7 +63,7 @@ public class ReportSpectators implements IReport {
 
 	// transformation
 
-	public IReport transform(Game game) {
+	public IReport transform(IFactorySource source) {
 		return new ReportSpectators(getSpectatorRollAway(), getSpectatorsAway(), getFameAway(), getSpectatorRollHome(),
 				getSpectatorsHome(), getFameHome());
 	}
@@ -82,7 +82,7 @@ public class ReportSpectators implements IReport {
 		return jsonObject;
 	}
 
-	public ReportSpectators initFrom(Game game, JsonValue pJsonValue) {
+	public ReportSpectators initFrom(IFactorySource game, JsonValue pJsonValue) {
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
 		UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(game, jsonObject));
 		fSpectatorRollHome = IJsonOption.SPECTATOR_ROLL_HOME.getFrom(game, jsonObject);

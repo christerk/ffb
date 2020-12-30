@@ -1,8 +1,9 @@
 package com.balancedbytes.games.ffb.server.net.commands;
 
+import com.balancedbytes.games.ffb.FactoryType.FactoryContext;
+import com.balancedbytes.games.ffb.factory.IFactorySource;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
-import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.net.NetCommand;
 import com.balancedbytes.games.ffb.net.NetCommandId;
 import com.balancedbytes.games.ffb.net.commands.UtilNetCommand;
@@ -39,6 +40,10 @@ public abstract class InternalServerCommand extends NetCommand {
 		fGameId = pGameId;
 	}
 
+	public FactoryContext getContext() {
+		return FactoryContext.APPLICATION;
+	}
+	
 	// JSON serialization
 
 	public JsonObject toJsonValue() {
@@ -50,7 +55,7 @@ public abstract class InternalServerCommand extends NetCommand {
 		return jsonObject;
 	}
 
-	public InternalServerCommand initFrom(Game game, JsonValue pJsonValue) {
+	public InternalServerCommand initFrom(IFactorySource game, JsonValue pJsonValue) {
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
 		UtilNetCommand.validateCommandId(this, (NetCommandId) IJsonOption.NET_COMMAND_ID.getFrom(game, jsonObject));
 		fGameId = 0L;

@@ -8,6 +8,7 @@ import javax.xml.transform.sax.TransformerHandler;
 import org.xml.sax.Attributes;
 import org.xml.sax.helpers.AttributesImpl;
 
+import com.balancedbytes.games.ffb.factory.IFactorySource;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.IJsonSerializable;
 import com.balancedbytes.games.ffb.json.UtilJson;
@@ -301,7 +302,7 @@ public class Roster implements IXmlSerializable, IJsonSerializable {
 
 	}
 
-	public Roster initFrom(Game game, JsonValue pJsonValue) {
+	public Roster initFrom(IFactorySource game, JsonValue pJsonValue) {
 
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
 

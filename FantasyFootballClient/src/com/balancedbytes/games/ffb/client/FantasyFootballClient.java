@@ -6,6 +6,7 @@ import java.io.InputStream;
 import java.net.InetAddress;
 import java.net.URI;
 import java.net.UnknownHostException;
+import java.util.Map;
 import java.util.Properties;
 import java.util.Timer;
 import java.util.concurrent.TimeUnit;
@@ -16,6 +17,9 @@ import javax.websocket.Session;
 import javax.websocket.WebSocketContainer;
 
 import com.balancedbytes.games.ffb.ClientMode;
+import com.balancedbytes.games.ffb.FactoryManager;
+import com.balancedbytes.games.ffb.FactoryType.Factory;
+import com.balancedbytes.games.ffb.FactoryType.FactoryContext;
 import com.balancedbytes.games.ffb.FantasyFootballException;
 import com.balancedbytes.games.ffb.Weather;
 import com.balancedbytes.games.ffb.client.dialog.DialogAboutHandler;
@@ -27,6 +31,8 @@ import com.balancedbytes.games.ffb.client.net.ClientPingTask;
 import com.balancedbytes.games.ffb.client.net.CommandEndpoint;
 import com.balancedbytes.games.ffb.client.state.ClientState;
 import com.balancedbytes.games.ffb.client.state.ClientStateFactory;
+import com.balancedbytes.games.ffb.factory.IFactorySource;
+import com.balancedbytes.games.ffb.factory.INamedObjectFactory;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.net.IConnectionListener;
 import com.balancedbytes.games.ffb.util.StringTool;
@@ -35,7 +41,7 @@ import com.balancedbytes.games.ffb.util.StringTool;
  * 
  * @author Kalimar
  */
-public class FantasyFootballClient implements IConnectionListener, IDialogCloseListener {
+public class FantasyFootballClient implements IConnectionListener, IDialogCloseListener, IFactorySource {
 	private Game fGame;
 	private UserInterface fUserInterface;
 	private ClientCommunication fCommunication;
@@ -57,8 +63,13 @@ public class FantasyFootballClient implements IConnectionListener, IDialogCloseL
 
 	private transient ClientData fClientData;
 
+	private FactoryManager factoryManager;
+	private Map<Factory, INamedObjectFactory> factories;
+	
 	public FantasyFootballClient(ClientParameters pParameters) throws IOException {
-
+		factoryManager = new FactoryManager();
+		factories = factoryManager.getFactoriesForContext(getContext());
+		
 		fParameters = pParameters;
 		setMode(fParameters.getMode());
 
@@ -76,7 +87,7 @@ public class FantasyFootballClient implements IConnectionListener, IDialogCloseL
 			all.printStackTrace();
 		}
 
-		setGame(new Game());
+		setGame(new Game(getFactorySource(), factoryManager));
 		fStateFactory = new ClientStateFactory(this);
 		fCommandHandlerFactory = new ClientCommandHandlerFactory(this);
 
@@ -301,5 +312,32 @@ public class FantasyFootballClient implements IConnectionListener, IDialogCloseL
 
 	public CommandEndpoint getCommandEndpoint() {
 		return fCommandEndpoint;
+	}
+
+	public FactoryManager getFactoryManager() {
+		return factoryManager;
+	}
+
+	@Override
+	public FactoryContext getContext() {
+		return FactoryContext.APPLICATION;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public <T extends INamedObjectFactory> T getFactory(Factory factory) {
+		return (T) factories.get(factory);
+	}
+	
+	public IFactorySource getFactorySource() {
+		return this;
+	}
+
+	@Override
+	public IFactorySource forContext(FactoryContext context) {
+		if (context == getContext()) {
+			return this;
+		}
+		throw new FantasyFootballException("Trying to get game context from application.");
 	}
 }

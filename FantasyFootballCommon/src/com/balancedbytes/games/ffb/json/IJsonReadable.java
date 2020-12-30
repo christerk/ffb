@@ -1,6 +1,6 @@
 package com.balancedbytes.games.ffb.json;
 
-import com.balancedbytes.games.ffb.model.Game;
+import com.balancedbytes.games.ffb.factory.IFactorySource;
 import com.eclipsesource.json.JsonValue;
 
 /**
@@ -10,6 +10,6 @@ import com.eclipsesource.json.JsonValue;
 public interface IJsonReadable {
 
 	// will return "this"
-	public Object initFrom(Game game, JsonValue pJsonValue);
+	public Object initFrom(IFactorySource game, JsonValue pJsonValue);
 
 }

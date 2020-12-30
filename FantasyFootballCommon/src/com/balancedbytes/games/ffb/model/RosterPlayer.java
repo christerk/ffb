@@ -13,6 +13,7 @@ import com.balancedbytes.games.ffb.PlayerGender;
 import com.balancedbytes.games.ffb.PlayerType;
 import com.balancedbytes.games.ffb.SeriousInjury;
 import com.balancedbytes.games.ffb.SkillCategory;
+import com.balancedbytes.games.ffb.factory.IFactorySource;
 import com.balancedbytes.games.ffb.factory.PlayerGenderFactory;
 import com.balancedbytes.games.ffb.factory.PlayerTypeFactory;
 import com.balancedbytes.games.ffb.factory.SeriousInjuryFactory;
@@ -573,40 +574,40 @@ public class RosterPlayer extends Player<RosterPosition> {
 
 	}
 
-	public RosterPlayer initFrom(Game game, JsonValue pJsonValue) {
+	public RosterPlayer initFrom(IFactorySource source, JsonValue pJsonValue) {
 
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
 
-		fId = IJsonOption.PLAYER_ID.getFrom(game, jsonObject);
-		fNr = IJsonOption.PLAYER_NR.getFrom(game, jsonObject);
-		fPositionId = IJsonOption.POSITION_ID.getFrom(game, jsonObject);
-		fName = IJsonOption.PLAYER_NAME.getFrom(game, jsonObject);
-		fPlayerGender = (PlayerGender) IJsonOption.PLAYER_GENDER.getFrom(game, jsonObject);
-		fPlayerType = (PlayerType) IJsonOption.PLAYER_TYPE.getFrom(game, jsonObject);
+		fId = IJsonOption.PLAYER_ID.getFrom(source, jsonObject);
+		fNr = IJsonOption.PLAYER_NR.getFrom(source, jsonObject);
+		fPositionId = IJsonOption.POSITION_ID.getFrom(source, jsonObject);
+		fName = IJsonOption.PLAYER_NAME.getFrom(source, jsonObject);
+		fPlayerGender = (PlayerGender) IJsonOption.PLAYER_GENDER.getFrom(source, jsonObject);
+		fPlayerType = (PlayerType) IJsonOption.PLAYER_TYPE.getFrom(source, jsonObject);
 
-		fMovement = IJsonOption.MOVEMENT.getFrom(game, jsonObject);
-		fStrength = IJsonOption.STRENGTH.getFrom(game, jsonObject);
-		fAgility = IJsonOption.AGILITY.getFrom(game, jsonObject);
-		fArmour = IJsonOption.ARMOUR.getFrom(game, jsonObject);
+		fMovement = IJsonOption.MOVEMENT.getFrom(source, jsonObject);
+		fStrength = IJsonOption.STRENGTH.getFrom(source, jsonObject);
+		fAgility = IJsonOption.AGILITY.getFrom(source, jsonObject);
+		fArmour = IJsonOption.ARMOUR.getFrom(source, jsonObject);
 
 		SeriousInjuryFactory seriousInjuryFactory = new SeriousInjuryFactory();
 
 		fLastingInjuries.clear();
-		JsonArray lastingInjuries = IJsonOption.LASTING_INJURIES.getFrom(game, jsonObject);
+		JsonArray lastingInjuries = IJsonOption.LASTING_INJURIES.getFrom(source, jsonObject);
 		for (int i = 0; i < lastingInjuries.size(); i++) {
 			fLastingInjuries.add((SeriousInjury) UtilJson.toEnumWithName(seriousInjuryFactory, lastingInjuries.get(i)));
 		}
-		fRecoveringInjury = (SeriousInjury) IJsonOption.RECOVERING_INJURY.getFrom(game, jsonObject);
+		fRecoveringInjury = (SeriousInjury) IJsonOption.RECOVERING_INJURY.getFrom(source, jsonObject);
 
-		fUrlPortrait = IJsonOption.URL_PORTRAIT.getFrom(game, jsonObject);
-		fUrlIconSet = IJsonOption.URL_ICON_SET.getFrom(game, jsonObject);
-		fNrOfIcons = IJsonOption.NR_OF_ICONS.getFrom(game, jsonObject);
-		fIconSetIndex = IJsonOption.POSITION_ICON_INDEX.getFrom(game, jsonObject);
+		fUrlPortrait = IJsonOption.URL_PORTRAIT.getFrom(source, jsonObject);
+		fUrlIconSet = IJsonOption.URL_ICON_SET.getFrom(source, jsonObject);
+		fNrOfIcons = IJsonOption.NR_OF_ICONS.getFrom(source, jsonObject);
+		fIconSetIndex = IJsonOption.POSITION_ICON_INDEX.getFrom(source, jsonObject);
 
-		SkillFactory skillFactory = game.getRules().getSkillFactory();
+		SkillFactory skillFactory = source.<SkillFactory>getFactory(Factory.SKILL);
 
 		fSkills.clear();
-		JsonArray skillArray = IJsonOption.SKILL_ARRAY.getFrom(game, jsonObject);
+		JsonArray skillArray = IJsonOption.SKILL_ARRAY.getFrom(source, jsonObject);
 		for (int i = 0; i < skillArray.size(); i++) {
 			fSkills.add((Skill) UtilJson.toEnumWithName(skillFactory, skillArray.get(i)));
 		}

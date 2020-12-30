@@ -1,6 +1,7 @@
 package com.balancedbytes.games.ffb.server.step.phase.kickoff;
 
 import com.balancedbytes.games.ffb.TurnMode;
+import com.balancedbytes.games.ffb.factory.IFactorySource;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Team;
@@ -114,10 +115,10 @@ public final class StepBlitzTurn extends AbstractStep {
 	}
 
 	@Override
-	public StepBlitzTurn initFrom(Game game, JsonValue pJsonValue) {
-		super.initFrom(game, pJsonValue);
+	public StepBlitzTurn initFrom(IFactorySource source, JsonValue pJsonValue) {
+		super.initFrom(source, pJsonValue);
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		fEndTurn = IServerJsonOption.END_TURN.getFrom(game, jsonObject);
+		fEndTurn = IServerJsonOption.END_TURN.getFrom(source, jsonObject);
 		return this;
 	}
 

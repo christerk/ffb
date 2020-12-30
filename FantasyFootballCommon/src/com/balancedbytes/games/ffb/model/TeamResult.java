@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.balancedbytes.games.ffb.PlayerState;
+import com.balancedbytes.games.ffb.factory.IFactorySource;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.IJsonSerializable;
 import com.balancedbytes.games.ffb.json.UtilJson;
@@ -394,31 +395,31 @@ public class TeamResult implements IJsonSerializable {
 		return jsonObject;
 	}
 
-	public TeamResult initFrom(Game game, JsonValue pJsonValue) {
+	public TeamResult initFrom(IFactorySource source, JsonValue pJsonValue) {
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		fScore = IJsonOption.SCORE.getFrom(game, jsonObject);
-		fConceded = IJsonOption.CONCEDED.getFrom(game, jsonObject);
-		fRaisedDead = IJsonOption.RAISED_DEAD.getFrom(game, jsonObject);
-		fSpectators = IJsonOption.SPECTATORS.getFrom(game, jsonObject);
-		fFame = IJsonOption.FAME.getFrom(game, jsonObject);
-		fWinnings = IJsonOption.WINNINGS.getFrom(game, jsonObject);
-		fFanFactorModifier = IJsonOption.FAN_FACTOR_MODIFIER.getFrom(game, jsonObject);
-		fBadlyHurtSuffered = IJsonOption.BADLY_HURT_SUFFERED.getFrom(game, jsonObject);
-		fSeriousInjurySuffered = IJsonOption.SERIOUS_INJURY_SUFFERED.getFrom(game, jsonObject);
-		fRipSuffered = IJsonOption.RIP_SUFFERED.getFrom(game, jsonObject);
-		fSpirallingExpenses = IJsonOption.SPIRALLING_EXPENSES.getFrom(game, jsonObject);
+		fScore = IJsonOption.SCORE.getFrom(source, jsonObject);
+		fConceded = IJsonOption.CONCEDED.getFrom(source, jsonObject);
+		fRaisedDead = IJsonOption.RAISED_DEAD.getFrom(source, jsonObject);
+		fSpectators = IJsonOption.SPECTATORS.getFrom(source, jsonObject);
+		fFame = IJsonOption.FAME.getFrom(source, jsonObject);
+		fWinnings = IJsonOption.WINNINGS.getFrom(source, jsonObject);
+		fFanFactorModifier = IJsonOption.FAN_FACTOR_MODIFIER.getFrom(source, jsonObject);
+		fBadlyHurtSuffered = IJsonOption.BADLY_HURT_SUFFERED.getFrom(source, jsonObject);
+		fSeriousInjurySuffered = IJsonOption.SERIOUS_INJURY_SUFFERED.getFrom(source, jsonObject);
+		fRipSuffered = IJsonOption.RIP_SUFFERED.getFrom(source, jsonObject);
+		fSpirallingExpenses = IJsonOption.SPIRALLING_EXPENSES.getFrom(source, jsonObject);
 		fPlayerResultByPlayerId.clear();
-		JsonArray playerResultArray = IJsonOption.PLAYER_RESULTS.getFrom(game, jsonObject);
+		JsonArray playerResultArray = IJsonOption.PLAYER_RESULTS.getFrom(source, jsonObject);
 		if (playerResultArray != null) {
 			for (int i = 0; i < playerResultArray.size(); i++) {
 				PlayerResult playerResult = new PlayerResult(this);
-				playerResult.initFrom(game, playerResultArray.get(i));
+				playerResult.initFrom(source, playerResultArray.get(i));
 				fPlayerResultByPlayerId.put(playerResult.getPlayer().getId(), playerResult);
 			}
 		}
-		fPettyCashTransferred = IJsonOption.PETTY_CASH_TRANSFERRED.getFrom(game, jsonObject);
-		fPettyCashUsed = IJsonOption.PETTY_CASH_USED.getFrom(game, jsonObject);
-		fTeamValue = IJsonOption.TEAM_VALUE.getFrom(game, jsonObject);
+		fPettyCashTransferred = IJsonOption.PETTY_CASH_TRANSFERRED.getFrom(source, jsonObject);
+		fPettyCashUsed = IJsonOption.PETTY_CASH_USED.getFrom(source, jsonObject);
+		fTeamValue = IJsonOption.TEAM_VALUE.getFrom(source, jsonObject);
 		return this;
 	}
 

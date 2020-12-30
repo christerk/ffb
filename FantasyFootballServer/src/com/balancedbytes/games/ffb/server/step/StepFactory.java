@@ -1,7 +1,7 @@
 package com.balancedbytes.games.ffb.server.step;
 
+import com.balancedbytes.games.ffb.factory.IFactorySource;
 import com.balancedbytes.games.ffb.json.UtilJson;
-import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.IServerJsonOption;
 import com.balancedbytes.games.ffb.server.step.action.block.StepBlockBallAndChain;
@@ -517,17 +517,17 @@ public class StepFactory {
 
 	// JSON serialization
 
-	public IStep forJsonValue(Game game, JsonValue pJsonValue) {
+	public IStep forJsonValue(IFactorySource source, JsonValue pJsonValue) {
 		if ((pJsonValue == null) || pJsonValue.isNull()) {
 			return null;
 		}
 		IStep step = null;
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		StepId stepId = (StepId) IServerJsonOption.STEP_ID.getFrom(game, jsonObject);
+		StepId stepId = (StepId) IServerJsonOption.STEP_ID.getFrom(source, jsonObject);
 		if (stepId != null) {
 			step = forStepId(stepId);
 			if (step != null) {
-				step.initFrom(game, pJsonValue);
+				step.initFrom(source, pJsonValue);
 			}
 		}
 		return step;

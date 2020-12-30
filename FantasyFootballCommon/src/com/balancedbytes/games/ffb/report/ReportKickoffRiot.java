@@ -1,8 +1,8 @@
 package com.balancedbytes.games.ffb.report;
 
+import com.balancedbytes.games.ffb.factory.IFactorySource;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
-import com.balancedbytes.games.ffb.model.Game;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
@@ -38,7 +38,7 @@ public class ReportKickoffRiot implements IReport {
 
 	// transformation
 
-	public IReport transform(Game game) {
+	public IReport transform(IFactorySource source) {
 		return new ReportKickoffRiot(getRoll(), getTurnModifier());
 	}
 
@@ -52,11 +52,11 @@ public class ReportKickoffRiot implements IReport {
 		return jsonObject;
 	}
 
-	public ReportKickoffRiot initFrom(Game game, JsonValue pJsonValue) {
+	public ReportKickoffRiot initFrom(IFactorySource source, JsonValue pJsonValue) {
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(game, jsonObject));
-		fRoll = IJsonOption.ROLL.getFrom(game, jsonObject);
-		fTurnModifier = IJsonOption.TURN_MODIFIER.getFrom(game, jsonObject);
+		UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(source, jsonObject));
+		fRoll = IJsonOption.ROLL.getFrom(source, jsonObject);
+		fTurnModifier = IJsonOption.TURN_MODIFIER.getFrom(source, jsonObject);
 		return this;
 	}
 

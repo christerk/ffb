@@ -3,9 +3,9 @@ package com.balancedbytes.games.ffb.report;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.balancedbytes.games.ffb.factory.IFactorySource;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
-import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.util.ArrayTool;
 import com.balancedbytes.games.ffb.util.StringTool;
 import com.eclipsesource.json.JsonObject;
@@ -64,7 +64,7 @@ public class ReportKickoffThrowARock implements IReport {
 
 	// transformation
 
-	public IReport transform(Game game) {
+	public IReport transform(IFactorySource source) {
 		return new ReportKickoffThrowARock(getRollAway(), getRollHome(), getPlayersHit());
 	}
 
@@ -79,7 +79,7 @@ public class ReportKickoffThrowARock implements IReport {
 		return jsonObject;
 	}
 
-	public ReportKickoffThrowARock initFrom(Game game, JsonValue pJsonValue) {
+	public ReportKickoffThrowARock initFrom(IFactorySource game, JsonValue pJsonValue) {
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
 		UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(game, jsonObject));
 		fRollHome = IJsonOption.ROLL_HOME.getFrom(game, jsonObject);

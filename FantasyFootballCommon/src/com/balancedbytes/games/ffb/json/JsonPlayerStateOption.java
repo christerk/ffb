@@ -1,7 +1,7 @@
 package com.balancedbytes.games.ffb.json;
 
 import com.balancedbytes.games.ffb.PlayerState;
-import com.balancedbytes.games.ffb.model.Game;
+import com.balancedbytes.games.ffb.factory.IFactorySource;
 import com.eclipsesource.json.JsonObject;
 
 /**
@@ -14,7 +14,7 @@ public class JsonPlayerStateOption extends JsonAbstractOption {
 		super(pKey);
 	}
 
-	public PlayerState getFrom(Game game, JsonObject pJsonObject) {
+	public PlayerState getFrom(IFactorySource game, JsonObject pJsonObject) {
 		return UtilJson.toPlayerState(getValueFrom(pJsonObject));
 	}
 

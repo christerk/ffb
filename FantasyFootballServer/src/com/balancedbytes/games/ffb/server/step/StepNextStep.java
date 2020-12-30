@@ -1,6 +1,6 @@
 package com.balancedbytes.games.ffb.server.step;
 
-import com.balancedbytes.games.ffb.model.Game;
+import com.balancedbytes.games.ffb.factory.IFactorySource;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
@@ -34,7 +34,7 @@ public class StepNextStep extends AbstractStep {
 	}
 
 	@Override
-	public StepNextStep initFrom(Game game, JsonValue pJsonValue) {
+	public StepNextStep initFrom(IFactorySource game, JsonValue pJsonValue) {
 		super.initFrom(game, pJsonValue);
 		return this;
 	}

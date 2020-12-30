@@ -1,21 +1,22 @@
 package com.balancedbytes.games.ffb.factory;
 
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Set;
 
 import com.balancedbytes.games.ffb.Card;
 import com.balancedbytes.games.ffb.FactoryType;
+import com.balancedbytes.games.ffb.KeyedItemRegistry;
 import com.balancedbytes.games.ffb.PassModifier;
 import com.balancedbytes.games.ffb.PassingDistance;
 import com.balancedbytes.games.ffb.PassingModifiers;
-import com.balancedbytes.games.ffb.RulesCollection;
-import com.balancedbytes.games.ffb.Weather;
 import com.balancedbytes.games.ffb.PassingModifiers.PassContext;
+import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.RulesCollection.Rules;
+import com.balancedbytes.games.ffb.Weather;
 import com.balancedbytes.games.ffb.model.Game;
-import com.balancedbytes.games.ffb.model.GameOptions;
 import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
 import com.balancedbytes.games.ffb.util.UtilCards;
@@ -28,18 +29,30 @@ import com.balancedbytes.games.ffb.util.UtilPlayer;
  */
 @FactoryType(FactoryType.Factory.PASS_MODIFIER)
 @RulesCollection(Rules.COMMON)
-public class PassModifierFactory implements IRollModifierFactory {
-
+public class PassModifierFactory implements IRollModifierFactory<PassModifier> {
+	private KeyedItemRegistry<PassModifier> registry = new KeyedItemRegistry<>();
 	static PassingModifiers passingModifiers = new PassingModifiers();
 
 	public PassModifierFactory() {
 		passingModifiers = new PassingModifiers();
+		register(passingModifiers.values().values());
 	}
 
 	public PassModifier forName(String pName) {
-		return passingModifiers.values().get(pName.toLowerCase());
+		return registry.forKey(pName);
+		//return passingModifiers.values().get(pName.toLowerCase());
 	}
 
+	@Override
+	public void register(Collection<PassModifier> items) {
+		items.forEach(m -> {
+			if (!registry.add(m)) {
+				System.err.println("WARNING - Trying to register duplicate passing modifier " + m.getKey());
+				//throw new RuntimeException("Duplicate passing modifier registered");
+			}
+		});
+	}
+	
 	public Set<PassModifier> findPassModifiers(Game pGame, Player<?> pThrower, PassingDistance pPassingDistance,
 			boolean pThrowTeamMate) {
 		Set<PassModifier> passModifiers = new HashSet<PassModifier>();
@@ -107,7 +120,7 @@ public class PassModifierFactory implements IRollModifierFactory {
 	}
 
 	@Override
-	public void initialize(GameOptions options) {
+	public void initialize(Game game) {
 		// TODO Auto-generated method stub
 		
 	}

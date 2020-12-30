@@ -11,6 +11,7 @@ import com.balancedbytes.games.ffb.PlayerState;
 import com.balancedbytes.games.ffb.SpecialEffect;
 import com.balancedbytes.games.ffb.TurnMode;
 import com.balancedbytes.games.ffb.dialog.DialogWizardSpellParameter;
+import com.balancedbytes.games.ffb.factory.IFactorySource;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.Animation;
 import com.balancedbytes.games.ffb.model.AnimationType;
@@ -188,7 +189,7 @@ public final class StepWizard extends AbstractStep {
 	}
 
 	@Override
-	public StepWizard initFrom(Game game, JsonValue pJsonValue) {
+	public StepWizard initFrom(IFactorySource game, JsonValue pJsonValue) {
 		super.initFrom(game, pJsonValue);
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
 		fWizardSpell = (SpecialEffect) IServerJsonOption.WIZARD_SPELL.getFrom(game, jsonObject);

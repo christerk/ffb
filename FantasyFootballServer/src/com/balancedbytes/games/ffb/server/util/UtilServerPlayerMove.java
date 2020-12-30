@@ -3,6 +3,7 @@ package com.balancedbytes.games.ffb.server.util;
 import java.util.Set;
 
 import com.balancedbytes.games.ffb.DodgeModifier;
+import com.balancedbytes.games.ffb.FactoryType.Factory;
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.FieldCoordinateBounds;
 import com.balancedbytes.games.ffb.GoForItModifier;
@@ -10,7 +11,6 @@ import com.balancedbytes.games.ffb.LeapModifier;
 import com.balancedbytes.games.ffb.MoveSquare;
 import com.balancedbytes.games.ffb.PathFinderWithPassBlockSupport;
 import com.balancedbytes.games.ffb.TurnMode;
-import com.balancedbytes.games.ffb.FactoryType.Factory;
 import com.balancedbytes.games.ffb.factory.DodgeModifierFactory;
 import com.balancedbytes.games.ffb.factory.GoForItModifierFactory;
 import com.balancedbytes.games.ffb.factory.LeapModifierFactory;

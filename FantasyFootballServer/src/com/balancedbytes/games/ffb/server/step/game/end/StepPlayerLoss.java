@@ -3,6 +3,7 @@ package com.balancedbytes.games.ffb.server.step.game.end;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.balancedbytes.games.ffb.factory.IFactorySource;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.GameResult;
 import com.balancedbytes.games.ffb.model.Player;
@@ -84,7 +85,7 @@ public final class StepPlayerLoss extends AbstractStep {
 	}
 
 	@Override
-	public StepPlayerLoss initFrom(Game game, JsonValue pJsonValue) {
+	public StepPlayerLoss initFrom(IFactorySource game, JsonValue pJsonValue) {
 		super.initFrom(game, pJsonValue);
 		return this;
 	}

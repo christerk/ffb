@@ -2,9 +2,9 @@ package com.balancedbytes.games.ffb.report;
 
 import com.balancedbytes.games.ffb.PassModifier;
 import com.balancedbytes.games.ffb.PassingDistance;
+import com.balancedbytes.games.ffb.factory.IFactorySource;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
-import com.balancedbytes.games.ffb.model.Game;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
@@ -72,7 +72,7 @@ public class ReportPassRoll extends ReportSkillRoll {
 
 	// transformation
 
-	public IReport transform(Game game) {
+	public IReport transform(IFactorySource source) {
 		if (isHailMaryPass()) {
 			return new ReportPassRoll(getPlayerId(), isFumble(), getRoll(), isReRolled(), isBomb());
 		} else {
@@ -95,7 +95,7 @@ public class ReportPassRoll extends ReportSkillRoll {
 	}
 
 	@Override
-	public ReportPassRoll initFrom(Game game, JsonValue pJsonValue) {
+	public ReportPassRoll initFrom(IFactorySource game, JsonValue pJsonValue) {
 		super.initFrom(game, pJsonValue);
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
 		fPassingDistance = (PassingDistance) IJsonOption.PASSING_DISTANCE.getFrom(game, jsonObject);

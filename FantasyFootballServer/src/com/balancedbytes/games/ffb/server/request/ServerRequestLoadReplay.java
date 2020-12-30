@@ -70,7 +70,7 @@ public class ServerRequestLoadReplay extends ServerRequest {
 				JsonValue jsonValue = JsonValue.readFrom(jsonString);
 				if ((jsonValue != null) && !jsonValue.isNull()) {
 					gameState = new GameState(server);
-					gameState.initFrom(gameState.getGame(), jsonValue);
+					gameState.initFrom(gameState.getGame().getRules(), jsonValue);
 				}
 			}
 		} catch (ParseException parseException) {

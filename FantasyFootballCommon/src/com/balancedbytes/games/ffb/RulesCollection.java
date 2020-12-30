@@ -9,6 +9,7 @@ public @interface RulesCollection {
 	
 	public enum Rules {
 		COMMON,
+		BB2016,
 		BB2020;
 		
 		public boolean matches(Rules other) {

@@ -7,6 +7,7 @@ import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.PlayerChoiceMode;
 import com.balancedbytes.games.ffb.TurnMode;
 import com.balancedbytes.games.ffb.dialog.DialogPlayerChoiceParameter;
+import com.balancedbytes.games.ffb.factory.IFactorySource;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
@@ -243,7 +244,7 @@ public final class StepPlayCard extends AbstractStep {
 	}
 
 	@Override
-	public StepPlayCard initFrom(Game game, JsonValue pJsonValue) {
+	public StepPlayCard initFrom(IFactorySource game, JsonValue pJsonValue) {
 		super.initFrom(game, pJsonValue);
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
 		fHomeTeam = IServerJsonOption.HOME_TEAM.getFrom(game, jsonObject);

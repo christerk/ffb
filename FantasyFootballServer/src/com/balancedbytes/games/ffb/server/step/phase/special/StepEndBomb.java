@@ -2,6 +2,7 @@ package com.balancedbytes.games.ffb.server.step.phase.special;
 
 import com.balancedbytes.games.ffb.PlayerAction;
 import com.balancedbytes.games.ffb.TurnMode;
+import com.balancedbytes.games.ffb.factory.IFactorySource;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
@@ -104,7 +105,7 @@ public final class StepEndBomb extends AbstractStep {
 	}
 
 	@Override
-	public StepEndBomb initFrom(Game game, JsonValue pJsonValue) {
+	public StepEndBomb initFrom(IFactorySource game, JsonValue pJsonValue) {
 		super.initFrom(game, pJsonValue);
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
 		fCatcherId = IServerJsonOption.CATCHER_ID.getFrom(game, jsonObject);

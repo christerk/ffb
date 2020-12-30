@@ -1,8 +1,8 @@
 package com.balancedbytes.games.ffb.report;
 
+import com.balancedbytes.games.ffb.factory.IFactorySource;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
-import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Skill;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
@@ -35,7 +35,7 @@ public class ReportConfusionRoll extends ReportSkillRoll {
 
 	// transformation
 
-	public IReport transform(Game game) {
+	public IReport transform(IFactorySource source) {
 		return new ReportConfusionRoll(getPlayerId(), isSuccessful(), getRoll(), getMinimumRoll(), isReRolled(),
 				getConfusionSkill());
 	}
@@ -50,7 +50,7 @@ public class ReportConfusionRoll extends ReportSkillRoll {
 	}
 
 	@Override
-	public ReportConfusionRoll initFrom(Game game, JsonValue pJsonValue) {
+	public ReportConfusionRoll initFrom(IFactorySource game, JsonValue pJsonValue) {
 		super.initFrom(game, pJsonValue);
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
 		fConfusionSkill = (Skill) IJsonOption.CONFUSION_SKILL.getFrom(game, jsonObject);

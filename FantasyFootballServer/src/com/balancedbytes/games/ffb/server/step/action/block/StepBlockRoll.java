@@ -1,12 +1,13 @@
 package com.balancedbytes.games.ffb.server.step.action.block;
 
 import com.balancedbytes.games.ffb.BlockResult;
+import com.balancedbytes.games.ffb.FactoryType.Factory;
 import com.balancedbytes.games.ffb.PlayerAction;
 import com.balancedbytes.games.ffb.ReRolledActions;
 import com.balancedbytes.games.ffb.SoundId;
-import com.balancedbytes.games.ffb.FactoryType.Factory;
 import com.balancedbytes.games.ffb.dialog.DialogBlockRollParameter;
 import com.balancedbytes.games.ffb.factory.BlockResultFactory;
+import com.balancedbytes.games.ffb.factory.IFactorySource;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.Game;
@@ -144,13 +145,13 @@ public class StepBlockRoll extends AbstractStepWithReRoll {
 	}
 
 	@Override
-	public StepBlockRoll initFrom(Game game, JsonValue pJsonValue) {
-		super.initFrom(game, pJsonValue);
+	public StepBlockRoll initFrom(IFactorySource source, JsonValue pJsonValue) {
+		super.initFrom(source, pJsonValue);
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		fNrOfDice = IServerJsonOption.NR_OF_DICE.getFrom(game, jsonObject);
-		fBlockRoll = IServerJsonOption.BLOCK_ROLL.getFrom(game, jsonObject);
-		fDiceIndex = IServerJsonOption.DICE_INDEX.getFrom(game, jsonObject);
-		fBlockResult = (BlockResult) IServerJsonOption.BLOCK_RESULT.getFrom(game, jsonObject);
+		fNrOfDice = IServerJsonOption.NR_OF_DICE.getFrom(source, jsonObject);
+		fBlockRoll = IServerJsonOption.BLOCK_ROLL.getFrom(source, jsonObject);
+		fDiceIndex = IServerJsonOption.DICE_INDEX.getFrom(source, jsonObject);
+		fBlockResult = (BlockResult) IServerJsonOption.BLOCK_RESULT.getFrom(source, jsonObject);
 		return this;
 	}
 

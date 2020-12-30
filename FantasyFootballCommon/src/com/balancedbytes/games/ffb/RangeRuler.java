@@ -5,6 +5,7 @@ import javax.xml.transform.sax.TransformerHandler;
 import org.xml.sax.Attributes;
 import org.xml.sax.helpers.AttributesImpl;
 
+import com.balancedbytes.games.ffb.factory.IFactorySource;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.IJsonSerializable;
 import com.balancedbytes.games.ffb.json.UtilJson;
@@ -161,7 +162,7 @@ public class RangeRuler implements IXmlSerializable, IJsonSerializable {
 		return jsonObject;
 	}
 
-	public RangeRuler initFrom(Game game, JsonValue pJsonValue) {
+	public RangeRuler initFrom(IFactorySource game, JsonValue pJsonValue) {
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
 		fThrowerId = IJsonOption.THROWER_ID.getFrom(game, jsonObject);
 		fTargetCoordinate = IJsonOption.TARGET_COORDINATE.getFrom(game, jsonObject);

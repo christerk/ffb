@@ -3,10 +3,10 @@ package com.balancedbytes.games.ffb.server;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.balancedbytes.games.ffb.factory.IFactorySource;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.IJsonSerializable;
 import com.balancedbytes.games.ffb.json.UtilJson;
-import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.net.NetCommandFactory;
 import com.balancedbytes.games.ffb.net.commands.ServerCommand;
 import com.eclipsesource.json.JsonArray;
@@ -109,8 +109,8 @@ public class GameLog implements IJsonSerializable {
 		return jsonObject;
 	}
 
-	public GameLog initFrom(Game game, JsonValue pJsonValue) {
-		NetCommandFactory netCommandFactory = new NetCommandFactory();
+	public GameLog initFrom(IFactorySource game, JsonValue pJsonValue) {
+		NetCommandFactory netCommandFactory = new NetCommandFactory(fGameState.getServer().getFactorySource());
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
 		JsonArray commandArray = IJsonOption.COMMAND_ARRAY.getFrom(game, jsonObject);
 		fServerCommands.clear();

@@ -1,7 +1,7 @@
 package com.balancedbytes.games.ffb.server.step.phase.kickoff;
 
+import com.balancedbytes.games.ffb.factory.IFactorySource;
 import com.balancedbytes.games.ffb.json.UtilJson;
-import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandSetupPlayer;
 import com.balancedbytes.games.ffb.server.ActionStatus;
 import com.balancedbytes.games.ffb.server.GameState;
@@ -92,7 +92,7 @@ public class StepSwarming extends AbstractStep {
 	}
 
 	@Override
-	public StepSwarming initFrom(Game game, JsonValue pJsonValue) {
+	public StepSwarming initFrom(IFactorySource game, JsonValue pJsonValue) {
 		super.initFrom(game, pJsonValue);
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
 		state.endTurn = IServerJsonOption.END_TURN.getFrom(game, jsonObject);

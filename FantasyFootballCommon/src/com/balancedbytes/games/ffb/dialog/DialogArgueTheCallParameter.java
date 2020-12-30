@@ -4,9 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.balancedbytes.games.ffb.IDialogParameter;
+import com.balancedbytes.games.ffb.factory.IFactorySource;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
-import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.util.ArrayTool;
 import com.balancedbytes.games.ffb.util.StringTool;
 import com.eclipsesource.json.JsonObject;
@@ -78,7 +78,7 @@ public class DialogArgueTheCallParameter implements IDialogParameter {
 		return jsonObject;
 	}
 
-	public DialogArgueTheCallParameter initFrom(Game game, JsonValue pJsonValue) {
+	public DialogArgueTheCallParameter initFrom(IFactorySource game, JsonValue pJsonValue) {
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
 		UtilDialogParameter.validateDialogId(this, (DialogId) IJsonOption.DIALOG_ID.getFrom(game, jsonObject));
 		setTeamId(IJsonOption.TEAM_ID.getFrom(game, jsonObject));

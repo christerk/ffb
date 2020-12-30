@@ -42,7 +42,7 @@ public class CommandEndpoint {
 
 	public CommandEndpoint(FantasyFootballClient pClient) {
 		fClient = pClient;
-		fNetCommandFactory = new NetCommandFactory();
+		fNetCommandFactory = new NetCommandFactory(pClient.getFactorySource());
 		fCloseLatch = new CountDownLatch(1);
 		String commandCompressionProperty = null;
 		if (fClient != null) {
@@ -74,7 +74,7 @@ public class CommandEndpoint {
 		JsonValue jsonValue = JsonValue
 				.readFrom(fCommandCompression ? LZString.decompressFromUTF16(pTextMessage) : pTextMessage);
 
-		handleNetCommand(fNetCommandFactory.forJsonValue(fClient.getGame(), jsonValue));
+		handleNetCommand(fNetCommandFactory.forJsonValue(fClient.getGame().getRules(), jsonValue));
 	}
 
 	@OnClose

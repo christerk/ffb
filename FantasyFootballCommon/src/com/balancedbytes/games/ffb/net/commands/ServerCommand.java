@@ -1,5 +1,6 @@
 package com.balancedbytes.games.ffb.net.commands;
 
+import com.balancedbytes.games.ffb.FactoryType.FactoryContext;
 import com.balancedbytes.games.ffb.net.NetCommand;
 
 /**
@@ -22,4 +23,7 @@ public abstract class ServerCommand extends NetCommand {
 		return true;
 	}
 
+	public FactoryContext getContext() {
+		return FactoryContext.GAME;
+	}
 }

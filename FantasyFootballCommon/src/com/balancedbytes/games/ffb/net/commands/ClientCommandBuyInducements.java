@@ -3,10 +3,11 @@ package com.balancedbytes.games.ffb.net.commands;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.balancedbytes.games.ffb.FactoryType.Factory;
+import com.balancedbytes.games.ffb.factory.IFactorySource;
 import com.balancedbytes.games.ffb.factory.SkillFactory;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
-import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.InducementSet;
 import com.balancedbytes.games.ffb.model.Skill;
 import com.balancedbytes.games.ffb.net.NetCommandId;
@@ -117,24 +118,24 @@ public class ClientCommandBuyInducements extends ClientCommand {
 		return jsonObject;
 	}
 
-	public ClientCommandBuyInducements initFrom(Game game, JsonValue jsonValue) {
-		super.initFrom(game, jsonValue);
+	public ClientCommandBuyInducements initFrom(IFactorySource source, JsonValue jsonValue) {
+		super.initFrom(source, jsonValue);
 		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
-		fTeamId = IJsonOption.TEAM_ID.getFrom(game, jsonObject);
+		fTeamId = IJsonOption.TEAM_ID.getFrom(source, jsonObject);
 		fInducementSet = new InducementSet();
-		JsonObject inducementSetObject = IJsonOption.INDUCEMENT_SET.getFrom(game, jsonObject);
+		JsonObject inducementSetObject = IJsonOption.INDUCEMENT_SET.getFrom(source, jsonObject);
 		if (inducementSetObject != null) {
-			fInducementSet.initFrom(game, inducementSetObject);
+			fInducementSet.initFrom(source, inducementSetObject);
 		}
-		String[] starPlayerPositionIds = IJsonOption.STAR_PLAYER_POSTION_IDS.getFrom(game, jsonObject);
+		String[] starPlayerPositionIds = IJsonOption.STAR_PLAYER_POSTION_IDS.getFrom(source, jsonObject);
 		for (String positionId : starPlayerPositionIds) {
 			addStarPlayerPositionId(positionId);
 		}
-		fAvailableGold = IJsonOption.AVAILABLE_GOLD.getFrom(game, jsonObject);
-		String[] mercenaryPositionIds = IJsonOption.MERCENARY_POSTION_IDS.getFrom(game, jsonObject);
-		String[] mercenarySkillNames = IJsonOption.MERCENARY_SKILLS.getFrom(game, jsonObject);
+		fAvailableGold = IJsonOption.AVAILABLE_GOLD.getFrom(source, jsonObject);
+		String[] mercenaryPositionIds = IJsonOption.MERCENARY_POSTION_IDS.getFrom(source, jsonObject);
+		String[] mercenarySkillNames = IJsonOption.MERCENARY_SKILLS.getFrom(source, jsonObject);
 		if (StringTool.isProvided(mercenaryPositionIds) && StringTool.isProvided(mercenarySkillNames)) {
-			SkillFactory skillFactory = game.getRules().getSkillFactory();
+			SkillFactory skillFactory = source.<SkillFactory>getFactory(Factory.SKILL);
 			for (int i = 0; i < mercenaryPositionIds.length; i++) {
 				addMercenaryPosition(mercenaryPositionIds[i], skillFactory.forName(mercenarySkillNames[i]));
 			}

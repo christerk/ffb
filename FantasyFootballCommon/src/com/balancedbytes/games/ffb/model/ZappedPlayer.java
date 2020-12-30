@@ -8,6 +8,7 @@ import org.xml.sax.helpers.AttributesImpl;
 import com.balancedbytes.games.ffb.PlayerGender;
 import com.balancedbytes.games.ffb.PlayerType;
 import com.balancedbytes.games.ffb.SeriousInjury;
+import com.balancedbytes.games.ffb.factory.IFactorySource;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.xml.IXmlSerializable;
 import com.balancedbytes.games.ffb.xml.UtilXml;
@@ -252,7 +253,7 @@ public class ZappedPlayer extends Player<ZappedPosition> {
 	}
 
 	@Override
-	public ZappedPlayer initFrom(Game game, JsonValue pJsonValue) {
+	public ZappedPlayer initFrom(IFactorySource game, JsonValue pJsonValue) {
 		originalPlayer = new RosterPlayer().initFrom(game, IJsonOption.PLAYER.getFrom(game, (JsonObject) pJsonValue));
 		return this;
 	}

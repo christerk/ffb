@@ -3,9 +3,9 @@ package com.balancedbytes.games.ffb.net.commands;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.balancedbytes.games.ffb.factory.IFactorySource;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
-import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.net.NetCommandId;
 import com.balancedbytes.games.ffb.util.ArrayTool;
 import com.balancedbytes.games.ffb.util.StringTool;
@@ -65,11 +65,11 @@ public class ServerCommandTeamSetupList extends ServerCommand {
 		return jsonObject;
 	}
 
-	public ServerCommandTeamSetupList initFrom(Game game, JsonValue pJsonValue) {
+	public ServerCommandTeamSetupList initFrom(IFactorySource source, JsonValue pJsonValue) {
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		UtilNetCommand.validateCommandId(this, (NetCommandId) IJsonOption.NET_COMMAND_ID.getFrom(game, jsonObject));
-		setCommandNr(IJsonOption.COMMAND_NR.getFrom(game, jsonObject));
-		addSetupNames(IJsonOption.SETUP_NAMES.getFrom(game, jsonObject));
+		UtilNetCommand.validateCommandId(this, (NetCommandId) IJsonOption.NET_COMMAND_ID.getFrom(source, jsonObject));
+		setCommandNr(IJsonOption.COMMAND_NR.getFrom(source, jsonObject));
+		addSetupNames(IJsonOption.SETUP_NAMES.getFrom(source, jsonObject));
 		return this;
 	}
 

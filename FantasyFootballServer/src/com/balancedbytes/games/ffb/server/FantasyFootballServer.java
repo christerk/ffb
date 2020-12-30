@@ -6,6 +6,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Date;
+import java.util.Map;
 import java.util.Properties;
 import java.util.Timer;
 
@@ -13,7 +14,13 @@ import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
 
+import com.balancedbytes.games.ffb.FactoryManager;
+import com.balancedbytes.games.ffb.FactoryType.Factory;
+import com.balancedbytes.games.ffb.FactoryType.FactoryContext;
 import com.balancedbytes.games.ffb.FantasyFootballConstants;
+import com.balancedbytes.games.ffb.FantasyFootballException;
+import com.balancedbytes.games.ffb.factory.IFactorySource;
+import com.balancedbytes.games.ffb.factory.INamedObjectFactory;
 import com.balancedbytes.games.ffb.server.admin.AdminServlet;
 import com.balancedbytes.games.ffb.server.admin.BackupServlet;
 import com.balancedbytes.games.ffb.server.commandline.InifileParamFilter;
@@ -41,7 +48,7 @@ import com.fumbbl.rng.Fortuna;
  * 
  * @author Kalimar
  */
-public class FantasyFootballServer {
+public class FantasyFootballServer implements IFactorySource {
 
 	private static final String _USAGE = "java -jar FantasyFootballServer.jar standalone\n"
 			+ "java -jar FantasyFootballServer.jar standalone initDb\n" + "java -jar FantasyFootballServer.jar fumbbl\n"
@@ -68,12 +75,28 @@ public class FantasyFootballServer {
 	private Timer fDbKeepAliveTimer;
 	private Timer fNetworkEntropyTimer;
 	private Timer sessionTimeoutTimer;
+	
+	private FactoryManager factoryManager;
+
+	private Map<Factory, INamedObjectFactory> factories;
 
 	public FantasyFootballServer(ServerMode pMode, Properties pProperties) {
 		fMode = pMode;
 		fProperties = pProperties;
+		factoryManager = new FactoryManager();
+		
+		factories = factoryManager.getFactoriesForContext(getContext());
+		
+		for (INamedObjectFactory factory : factories.values()) {
+			factory.initialize(null);
+		}
+		
 	}
 
+	public FactoryManager getFactoryManager() {
+		return factoryManager;
+	}
+	
 	public ServerMode getMode() {
 		return fMode;
 	}
@@ -347,5 +370,28 @@ public class FantasyFootballServer {
 				server.stop(99);
 			}
 		}
+	}
+
+	@Override
+	public FactoryContext getContext() {
+		return FactoryContext.APPLICATION;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public <T extends INamedObjectFactory> T getFactory(Factory factory) {
+		return (T) factories.get(factory);
+	}
+	
+	public IFactorySource getFactorySource() {
+		return this;
+	}
+	
+	@Override
+	public IFactorySource forContext(FactoryContext context) {
+		if (context == getContext()) {
+			return this;
+		}
+		throw new FantasyFootballException("Trying to get game context from application.");
 	}
 }

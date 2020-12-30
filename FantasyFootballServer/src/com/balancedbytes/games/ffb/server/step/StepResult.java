@@ -1,10 +1,10 @@
 package com.balancedbytes.games.ffb.server.step;
 
 import com.balancedbytes.games.ffb.SoundId;
+import com.balancedbytes.games.ffb.factory.IFactorySource;
 import com.balancedbytes.games.ffb.json.IJsonSerializable;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.Animation;
-import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.report.IReport;
 import com.balancedbytes.games.ffb.report.ReportList;
 import com.balancedbytes.games.ffb.server.IServerJsonOption;
@@ -110,22 +110,22 @@ public class StepResult implements IJsonSerializable {
 		return jsonObject;
 	}
 
-	public StepResult initFrom(Game game, JsonValue pJsonValue) {
+	public StepResult initFrom(IFactorySource source, JsonValue pJsonValue) {
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		fNextAction = (StepAction) IServerJsonOption.NEXT_ACTION.getFrom(game, jsonObject);
-		fNextActionParameter = IServerJsonOption.NEXT_ACTION_PARAMETER.getFrom(game, jsonObject);
+		fNextAction = (StepAction) IServerJsonOption.NEXT_ACTION.getFrom(source, jsonObject);
+		fNextActionParameter = IServerJsonOption.NEXT_ACTION_PARAMETER.getFrom(source, jsonObject);
 		fReportList.clear();
-		JsonObject reportListObject = IServerJsonOption.REPORT_LIST.getFrom(game, jsonObject);
+		JsonObject reportListObject = IServerJsonOption.REPORT_LIST.getFrom(source, jsonObject);
 		if (reportListObject != null) {
-			fReportList.initFrom(game, reportListObject);
+			fReportList.initFrom(source, reportListObject);
 		}
 		fAnimation = null;
-		JsonObject animationObject = IServerJsonOption.ANIMATION.getFrom(game, jsonObject);
+		JsonObject animationObject = IServerJsonOption.ANIMATION.getFrom(source, jsonObject);
 		if (animationObject != null) {
-			fAnimation = new Animation().initFrom(game, animationObject);
+			fAnimation = new Animation().initFrom(source, animationObject);
 		}
-		fSound = (SoundId) IServerJsonOption.SOUND.getFrom(game, jsonObject);
-		fSynchronize = IServerJsonOption.SYNCHRONIZE.getFrom(game, jsonObject);
+		fSound = (SoundId) IServerJsonOption.SOUND.getFrom(source, jsonObject);
+		fSynchronize = IServerJsonOption.SYNCHRONIZE.getFrom(source, jsonObject);
 		return this;
 	}
 

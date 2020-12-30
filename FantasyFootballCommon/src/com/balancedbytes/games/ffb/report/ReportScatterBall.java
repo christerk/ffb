@@ -6,9 +6,9 @@ import java.util.List;
 import com.balancedbytes.games.ffb.Direction;
 import com.balancedbytes.games.ffb.FactoryType.Factory;
 import com.balancedbytes.games.ffb.factory.DirectionFactory;
+import com.balancedbytes.games.ffb.factory.IFactorySource;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
-import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.util.ArrayTool;
 import com.eclipsesource.json.JsonArray;
 import com.eclipsesource.json.JsonObject;
@@ -84,8 +84,8 @@ public class ReportScatterBall implements IReport {
 
 	// transformation
 
-	public IReport transform(Game game) {
-		return new ReportScatterBall(game.<DirectionFactory>getFactory(Factory.DIRECTION).transform(getDirections()), getRolls(), isGustOfWind());
+	public IReport transform(IFactorySource source) {
+		return new ReportScatterBall(source.<DirectionFactory>getFactory(Factory.DIRECTION).transform(getDirections()), getRolls(), isGustOfWind());
 	}
 
 	// JSON serialization
@@ -103,7 +103,7 @@ public class ReportScatterBall implements IReport {
 		return jsonObject;
 	}
 
-	public ReportScatterBall initFrom(Game game, JsonValue pJsonValue) {
+	public ReportScatterBall initFrom(IFactorySource game, JsonValue pJsonValue) {
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
 		UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(game, jsonObject));
 		JsonArray directionArray = IJsonOption.DIRECTION_ARRAY.getFrom(game, jsonObject);

@@ -339,7 +339,7 @@ public class ClientReplayer implements ActionListener {
 
 	private Game createGame() {
 		Game oldGame = getClient().getGame();
-		Game game = new Game();
+		Game game = new Game(getClient().getFactorySource(), getClient().getFactoryManager());
 		game.setId(oldGame.getId());
 		game.setTurnTime(oldGame.getTurnTime());
 		game.setGameTime(oldGame.getGameTime());

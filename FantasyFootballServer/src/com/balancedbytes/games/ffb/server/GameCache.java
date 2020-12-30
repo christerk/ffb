@@ -213,7 +213,7 @@ public class GameCache {
 	}
 
 	public GameState createGameState(GameStartMode pMode) {
-		Game game = new Game();
+		Game game = new Game(fServer.getFactorySource(), fServer.getFactoryManager());
 		game.setId(0L); // id is unknown - will be determined by the db
 		game.setTesting(GameStartMode.START_TEST_GAME == pMode);
 		game.setHomePlaying(true);

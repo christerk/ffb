@@ -1,6 +1,6 @@
 package com.balancedbytes.games.ffb.json;
 
-import com.balancedbytes.games.ffb.model.Game;
+import com.balancedbytes.games.ffb.factory.IFactorySource;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
@@ -14,7 +14,7 @@ public class JsonStringOption extends JsonAbstractOption {
 		super(pKey);
 	}
 
-	public String getFrom(Game game, JsonObject pJsonObject) {
+	public String getFrom(IFactorySource source, JsonObject pJsonObject) {
 		return asString(getValueFrom(pJsonObject));
 	}
 

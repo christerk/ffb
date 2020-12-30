@@ -1,7 +1,7 @@
 package com.balancedbytes.games.ffb.server.step.action.pass;
 
+import com.balancedbytes.games.ffb.factory.IFactorySource;
 import com.balancedbytes.games.ffb.json.UtilJson;
-import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.net.NetCommandId;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandUseSkill;
 import com.balancedbytes.games.ffb.server.GameState;
@@ -95,7 +95,7 @@ public final class StepHailMaryPass extends AbstractStepWithReRoll {
 	}
 
 	@Override
-	public StepHailMaryPass initFrom(Game game, JsonValue pJsonValue) {
+	public StepHailMaryPass initFrom(IFactorySource game, JsonValue pJsonValue) {
 		super.initFrom(game, pJsonValue);
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
 		state.goToLabelOnFailure = IServerJsonOption.GOTO_LABEL_ON_FAILURE.getFrom(game, jsonObject);

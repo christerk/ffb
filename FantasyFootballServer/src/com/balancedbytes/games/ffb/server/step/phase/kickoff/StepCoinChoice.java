@@ -2,6 +2,7 @@ package com.balancedbytes.games.ffb.server.step.phase.kickoff;
 
 import com.balancedbytes.games.ffb.dialog.DialogCoinChoiceParameter;
 import com.balancedbytes.games.ffb.dialog.DialogReceiveChoiceParameter;
+import com.balancedbytes.games.ffb.factory.IFactorySource;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Team;
@@ -95,7 +96,7 @@ public final class StepCoinChoice extends AbstractStep {
 	}
 
 	@Override
-	public StepCoinChoice initFrom(Game game, JsonValue pJsonValue) {
+	public StepCoinChoice initFrom(IFactorySource game, JsonValue pJsonValue) {
 		super.initFrom(game, pJsonValue);
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
 		fCoinChoiceHeads = IServerJsonOption.COIN_CHOICE_HEADS.getFrom(game, jsonObject);

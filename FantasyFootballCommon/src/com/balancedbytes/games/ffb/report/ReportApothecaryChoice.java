@@ -2,9 +2,9 @@ package com.balancedbytes.games.ffb.report;
 
 import com.balancedbytes.games.ffb.PlayerState;
 import com.balancedbytes.games.ffb.SeriousInjury;
+import com.balancedbytes.games.ffb.factory.IFactorySource;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
-import com.balancedbytes.games.ffb.model.Game;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
@@ -46,7 +46,7 @@ public class ReportApothecaryChoice implements IReport {
 
 	// transformation
 
-	public IReport transform(Game game) {
+	public IReport transform(IFactorySource source) {
 		return new ReportApothecaryChoice(getPlayerId(), getPlayerState(), getSeriousInjury());
 	}
 
@@ -61,7 +61,7 @@ public class ReportApothecaryChoice implements IReport {
 		return jsonObject;
 	}
 
-	public ReportApothecaryChoice initFrom(Game game, JsonValue pJsonValue) {
+	public ReportApothecaryChoice initFrom(IFactorySource game, JsonValue pJsonValue) {
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
 		UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(game, jsonObject));
 		fPlayerId = IJsonOption.PLAYER_ID.getFrom(game, jsonObject);

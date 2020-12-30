@@ -1,5 +1,6 @@
 package com.balancedbytes.games.ffb.server.step.phase.kickoff;
 
+import com.balancedbytes.games.ffb.factory.IFactorySource;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandReceiveChoice;
@@ -104,7 +105,7 @@ public final class StepReceiveChoice extends AbstractStep {
 	}
 
 	@Override
-	public StepReceiveChoice initFrom(Game game, JsonValue pJsonValue) {
+	public StepReceiveChoice initFrom(IFactorySource game, JsonValue pJsonValue) {
 		super.initFrom(game, pJsonValue);
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
 		fChoosingTeamId = IServerJsonOption.CHOOSING_TEAM_ID.getFrom(game, jsonObject);

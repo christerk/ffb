@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.Set;
 
 import com.balancedbytes.games.ffb.GameStatus;
+import com.balancedbytes.games.ffb.factory.IFactorySource;
 import com.balancedbytes.games.ffb.json.IJsonSerializable;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.Game;
@@ -65,7 +66,7 @@ public class GameState implements IModelChangeObserver, IJsonSerializable {
 		initCommandNrGenerator(0);
 		fStepStack = new StepStack(this);
 		fChangeList = new ModelChangeList();
-		setGame(new Game());
+		setGame(new Game(fServer.getFactorySource(), fServer.getFactoryManager()));
 	}
 
 	public void setServer(FantasyFootballServer pServer) {
@@ -299,37 +300,37 @@ public class GameState implements IModelChangeObserver, IJsonSerializable {
 		return jsonObject;
 	}
 
-	public GameState initFrom(Game game, JsonValue pJsonValue) {
+	public GameState initFrom(IFactorySource source, JsonValue pJsonValue) {
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		fStatus = (GameStatus) IServerJsonOption.GAME_STATUS.getFrom(game, jsonObject);
+		fStatus = (GameStatus) IServerJsonOption.GAME_STATUS.getFrom(source, jsonObject);
 		fStepStack.clear();
-		JsonObject stepStackObject = IServerJsonOption.STEP_STACK.getFrom(game, jsonObject);
+		JsonObject stepStackObject = IServerJsonOption.STEP_STACK.getFrom(source, jsonObject);
 		if (stepStackObject != null) {
-			fStepStack.initFrom(game, stepStackObject);
+			fStepStack.initFrom(source, stepStackObject);
 		}
 		fGameLog.clear();
-		JsonObject gameLogObject = IServerJsonOption.GAME_LOG.getFrom(game, jsonObject);
+		JsonObject gameLogObject = IServerJsonOption.GAME_LOG.getFrom(source, jsonObject);
 		if (gameLogObject != null) {
-			fGameLog.initFrom(game, gameLogObject);
+			fGameLog.initFrom(source, gameLogObject);
 		}
 		fCurrentStep = null;
-		JsonObject currentStepObject = IServerJsonOption.CURRENT_STEP.getFrom(game, jsonObject);
+		JsonObject currentStepObject = IServerJsonOption.CURRENT_STEP.getFrom(source, jsonObject);
 		if (currentStepObject != null) {
-			fCurrentStep = new StepFactory(this).forJsonValue(game, currentStepObject);
+			fCurrentStep = new StepFactory(this).forJsonValue(source, currentStepObject);
 		}
 		setGame(null);
-		JsonObject gameObject = IServerJsonOption.GAME.getFrom(game, jsonObject);
+		JsonObject gameObject = IServerJsonOption.GAME.getFrom(source, jsonObject);
 		if (gameObject != null) {
-			game = new Game();
-			game.initFrom(game,  gameObject);
-			setGame(game);
+			Game newGame = new Game(getServer().getFactorySource(), getServer().getFactoryManager());
+			newGame.initFrom(source, gameObject);
+			setGame(newGame);
 		}
-		String[] ids = IServerJsonOption.PLAYER_IDS.getFrom(game, jsonObject);
+		String[] ids = IServerJsonOption.PLAYER_IDS.getFrom(source, jsonObject);
 		if (ids != null) {
 			zappedPlayerIds.addAll(Arrays.asList(ids));
 		}
 
-		kickingSwarmers = IServerJsonOption.SWARMING_PLAYER_ACTUAL.getFrom(game, jsonObject);
+		kickingSwarmers = IServerJsonOption.SWARMING_PLAYER_ACTUAL.getFrom(source, jsonObject);
 
 		return this;
 	}

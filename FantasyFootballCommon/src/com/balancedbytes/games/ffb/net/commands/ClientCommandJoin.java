@@ -1,9 +1,9 @@
 package com.balancedbytes.games.ffb.net.commands;
 
 import com.balancedbytes.games.ffb.ClientMode;
+import com.balancedbytes.games.ffb.factory.IFactorySource;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
-import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.net.NetCommandId;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
@@ -104,16 +104,16 @@ public class ClientCommandJoin extends ClientCommand {
 		return jsonObject;
 	}
 
-	public ClientCommandJoin initFrom(Game game, JsonValue jsonValue) {
-		super.initFrom(game, jsonValue);
+	public ClientCommandJoin initFrom(IFactorySource source, JsonValue jsonValue) {
+		super.initFrom(source, jsonValue);
 		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
-		fClientMode = (ClientMode) IJsonOption.CLIENT_MODE.getFrom(game, jsonObject);
-		fCoach = IJsonOption.COACH.getFrom(game, jsonObject);
-		fPassword = IJsonOption.PASSWORD.getFrom(game, jsonObject);
-		fGameId = IJsonOption.GAME_ID.getFrom(game, jsonObject);
-		fGameName = IJsonOption.GAME_NAME.getFrom(game, jsonObject);
-		fTeamId = IJsonOption.TEAM_ID.getFrom(game, jsonObject);
-		fTeamName = IJsonOption.TEAM_NAME.getFrom(game, jsonObject);
+		fClientMode = (ClientMode) IJsonOption.CLIENT_MODE.getFrom(source, jsonObject);
+		fCoach = IJsonOption.COACH.getFrom(source, jsonObject);
+		fPassword = IJsonOption.PASSWORD.getFrom(source, jsonObject);
+		fGameId = IJsonOption.GAME_ID.getFrom(source, jsonObject);
+		fGameName = IJsonOption.GAME_NAME.getFrom(source, jsonObject);
+		fTeamId = IJsonOption.TEAM_ID.getFrom(source, jsonObject);
+		fTeamName = IJsonOption.TEAM_NAME.getFrom(source, jsonObject);
 		return this;
 	}
 

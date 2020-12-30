@@ -1,5 +1,6 @@
 package com.balancedbytes.games.ffb.server.step.action.pass;
 
+import com.balancedbytes.games.ffb.factory.IFactorySource;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.server.GameState;
@@ -120,11 +121,11 @@ public final class StepAnimosity extends AbstractStepWithReRoll {
 	}
 
 	@Override
-	public StepAnimosity initFrom(Game game, JsonValue pJsonValue) {
-		super.initFrom(game, pJsonValue);
+	public StepAnimosity initFrom(IFactorySource source, JsonValue pJsonValue) {
+		super.initFrom(source, pJsonValue);
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		state.gotoLabelOnFailure = IServerJsonOption.GOTO_LABEL_ON_FAILURE.getFrom(game, jsonObject);
-		state.catcherId = IServerJsonOption.CATCHER_ID.getFrom(game, jsonObject);
+		state.gotoLabelOnFailure = IServerJsonOption.GOTO_LABEL_ON_FAILURE.getFrom(source, jsonObject);
+		state.catcherId = IServerJsonOption.CATCHER_ID.getFrom(source, jsonObject);
 		return this;
 	}
 

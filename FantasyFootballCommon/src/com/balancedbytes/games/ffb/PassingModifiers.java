@@ -10,11 +10,9 @@ public class PassingModifiers {
 	public static Set<PassModifier> tackleZoneModifiers = new HashSet<PassModifier>();
 	public static Set<PassModifier> disturbingPresenceModifiers = new HashSet<PassModifier>();
 
-	public static final PassModifier ACCURATE = new PassModifier("Accurate", -1, false, false);
 	public static final PassModifier NERVES_OF_STEEL = new PassModifier("Nerves of Steel", 0, false, false);
 	public static final PassModifier VERY_SUNNY = new PassModifier("Very Sunny", 1, false, false);
 	public static final PassModifier BLIZZARD = new PassModifier("Blizzard", 0, false, false);
-	public static final PassModifier STUNTY = new PassModifier("Stunty", 1, false, false);
 	public static final PassModifier TACKLEZONES_1 = new PassModifier("1 Tacklezone", 1, true, false);
 	public static final PassModifier TACKLEZONES_2 = new PassModifier("2 Tacklezones", 2, true, false);
 	public static final PassModifier TACKLEZONES_3 = new PassModifier("3 Tacklezones", 3, true, false);
@@ -50,14 +48,6 @@ public class PassingModifiers {
 		@Override
 		public boolean appliesToContext(PassContext context) {
 			return context.duringThrowTeamMate;
-		}
-	};
-	
-	public static final PassModifier ACCURATE_2020 = new PassModifier("Accurate", -1, false, false) {
-		@Override
-		public boolean appliesToContext(PassContext context) {
-			return context.distance == PassingDistance.QUICK_PASS ||
-					context.distance == PassingDistance.SHORT_PASS;
 		}
 	};
 	

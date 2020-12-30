@@ -4,8 +4,8 @@ import com.balancedbytes.games.ffb.CatchModifiers;
 import com.balancedbytes.games.ffb.InterceptionModifiers;
 import com.balancedbytes.games.ffb.PickupModifiers;
 import com.balancedbytes.games.ffb.RulesCollection;
-import com.balancedbytes.games.ffb.SkillCategory;
 import com.balancedbytes.games.ffb.RulesCollection.Rules;
+import com.balancedbytes.games.ffb.SkillCategory;
 import com.balancedbytes.games.ffb.model.Skill;
 
 /**

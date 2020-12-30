@@ -5,9 +5,9 @@ import java.util.List;
 
 import com.balancedbytes.games.ffb.HeatExhaustion;
 import com.balancedbytes.games.ffb.KnockoutRecovery;
+import com.balancedbytes.games.ffb.factory.IFactorySource;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
-import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.util.ArrayTool;
 import com.eclipsesource.json.JsonArray;
@@ -90,7 +90,7 @@ public class ReportTurnEnd implements IReport {
 
 	// transformation
 
-	public IReport transform(Game game) {
+	public IReport transform(IFactorySource source) {
 		return new ReportTurnEnd(getPlayerIdTouchdown(), getKnockoutRecoveries(), getHeatExhaustions(),
 				getUnzappedPlayers());
 	}
@@ -119,7 +119,7 @@ public class ReportTurnEnd implements IReport {
 		return jsonObject;
 	}
 
-	public ReportTurnEnd initFrom(Game game, JsonValue pJsonValue) {
+	public ReportTurnEnd initFrom(IFactorySource game, JsonValue pJsonValue) {
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
 		UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(game, jsonObject));
 		fPlayerIdTouchdown = IJsonOption.PLAYER_ID_TOUCHDOWN.getFrom(game, jsonObject);

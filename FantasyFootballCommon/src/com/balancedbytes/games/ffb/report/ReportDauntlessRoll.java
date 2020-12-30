@@ -1,8 +1,8 @@
 package com.balancedbytes.games.ffb.report;
 
+import com.balancedbytes.games.ffb.factory.IFactorySource;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
-import com.balancedbytes.games.ffb.model.Game;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
@@ -34,7 +34,7 @@ public class ReportDauntlessRoll extends ReportSkillRoll {
 
 	// transformation
 
-	public IReport transform(Game game) {
+	public IReport transform(IFactorySource source) {
 		return new ReportDauntlessRoll(getPlayerId(), isSuccessful(), getRoll(), getMinimumRoll(), isReRolled(),
 				getStrength());
 	}
@@ -49,7 +49,7 @@ public class ReportDauntlessRoll extends ReportSkillRoll {
 	}
 
 	@Override
-	public ReportDauntlessRoll initFrom(Game game, JsonValue pJsonValue) {
+	public ReportDauntlessRoll initFrom(IFactorySource game, JsonValue pJsonValue) {
 		super.initFrom(game, pJsonValue);
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
 		fStrength = IJsonOption.STRENGTH.getFrom(game, jsonObject);

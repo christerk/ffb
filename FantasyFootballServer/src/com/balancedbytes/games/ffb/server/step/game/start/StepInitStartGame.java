@@ -3,6 +3,7 @@ package com.balancedbytes.games.ffb.server.step.game.start;
 import java.util.Date;
 
 import com.balancedbytes.games.ffb.GameStatus;
+import com.balancedbytes.games.ffb.factory.IFactorySource;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.option.IGameOption;
@@ -129,7 +130,7 @@ public final class StepInitStartGame extends AbstractStep {
 					server.getDebugLog().log(IServerLogLevel.WARN, getGameState().getId(), "Default Options");
 				}
 			}
-			game.initializeRules();
+			game.initializeRules(server.getFactorySource(), server.getFactoryManager());
 			UtilSkillBehaviours.registerBehaviours(game, server.getDebugLog());
 
 			// <-- log start game
@@ -147,7 +148,7 @@ public final class StepInitStartGame extends AbstractStep {
 	}
 
 	@Override
-	public StepInitStartGame initFrom(Game game, JsonValue pJsonValue) {
+	public StepInitStartGame initFrom(IFactorySource game, JsonValue pJsonValue) {
 		super.initFrom(game, pJsonValue);
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
 		fFumbblGameCreated = IServerJsonOption.FUMBBL_GAME_CREATED.getFrom(game, jsonObject);

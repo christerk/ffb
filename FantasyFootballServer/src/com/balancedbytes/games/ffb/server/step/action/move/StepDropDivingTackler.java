@@ -2,6 +2,7 @@ package com.balancedbytes.games.ffb.server.step.action.move;
 
 import com.balancedbytes.games.ffb.ApothecaryMode;
 import com.balancedbytes.games.ffb.FieldCoordinate;
+import com.balancedbytes.games.ffb.factory.IFactorySource;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.server.GameState;
@@ -96,7 +97,7 @@ public class StepDropDivingTackler extends AbstractStep {
 	}
 
 	@Override
-	public StepDropDivingTackler initFrom(Game game, JsonValue pJsonValue) {
+	public StepDropDivingTackler initFrom(IFactorySource game, JsonValue pJsonValue) {
 		super.initFrom(game, pJsonValue);
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
 		fUsingDivingTackle = IServerJsonOption.USING_DIVING_TACKLE.getFrom(game, jsonObject);

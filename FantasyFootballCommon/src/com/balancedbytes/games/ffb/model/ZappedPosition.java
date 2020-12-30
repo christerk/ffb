@@ -11,6 +11,7 @@ import org.xml.sax.helpers.AttributesImpl;
 import com.balancedbytes.games.ffb.PlayerGender;
 import com.balancedbytes.games.ffb.PlayerType;
 import com.balancedbytes.games.ffb.SkillCategory;
+import com.balancedbytes.games.ffb.factory.IFactorySource;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.xml.IXmlReadable;
@@ -210,7 +211,7 @@ public class ZappedPosition implements Position {
 		return jsonObject;
 	}
 
-	public ZappedPosition initFrom(Game game, JsonValue pJsonValue) {
+	public ZappedPosition initFrom(IFactorySource game, JsonValue pJsonValue) {
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
 		originalPosition = new RosterPosition().initFrom(game, IJsonOption.ROSTER_POSITION.getFrom(game, jsonObject));
 		return this;

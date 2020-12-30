@@ -2,6 +2,7 @@ package com.balancedbytes.games.ffb.model;
 
 import com.balancedbytes.games.ffb.Card;
 import com.balancedbytes.games.ffb.FieldCoordinate;
+import com.balancedbytes.games.ffb.factory.IFactorySource;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.IJsonSerializable;
 import com.balancedbytes.games.ffb.json.UtilJson;
@@ -110,7 +111,7 @@ public class Animation implements IJsonSerializable {
 		return jsonObject;
 	}
 
-	public Animation initFrom(Game game, JsonValue pJsonValue) {
+	public Animation initFrom(IFactorySource game, JsonValue pJsonValue) {
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
 		fThrownPlayerId = IJsonOption.THROWN_PLAYER_ID.getFrom(game, jsonObject);
 		fWithBall = IJsonOption.WITH_BALL.getFrom(game, jsonObject);

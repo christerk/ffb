@@ -1,5 +1,6 @@
 package com.balancedbytes.games.ffb.model;
 
+import com.balancedbytes.games.ffb.factory.IFactorySource;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.IJsonSerializable;
 import com.balancedbytes.games.ffb.json.UtilJson;
@@ -82,7 +83,7 @@ public class GameResult implements IJsonSerializable {
 		return jsonObject;
 	}
 
-	public GameResult initFrom(Game game, JsonValue pJsonValue) {
+	public GameResult initFrom(IFactorySource game, JsonValue pJsonValue) {
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
 		fTeamResultHome.initFrom(game, IJsonOption.TEAM_RESULT_HOME.getFrom(game, jsonObject));
 		fTeamResultAway.initFrom(game, IJsonOption.TEAM_RESULT_AWAY.getFrom(game, jsonObject));

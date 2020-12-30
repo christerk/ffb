@@ -1,9 +1,9 @@
 package com.balancedbytes.games.ffb;
 
+import com.balancedbytes.games.ffb.factory.IFactorySource;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.IJsonSerializable;
 import com.balancedbytes.games.ffb.json.UtilJson;
-import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.util.ArrayTool;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
@@ -90,7 +90,7 @@ public final class MoveSquare implements IJsonSerializable {
 		return jsonObject;
 	}
 
-	public MoveSquare initFrom(Game game, JsonValue pJsonValue) {
+	public MoveSquare initFrom(IFactorySource game, JsonValue pJsonValue) {
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
 		fCoordinate = IJsonOption.COORDINATE.getFrom(game, jsonObject);
 		fMinimumRollDodge = IJsonOption.MINIMUM_ROLL_DODGE.getFrom(game, jsonObject);

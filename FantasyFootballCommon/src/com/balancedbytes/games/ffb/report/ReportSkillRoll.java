@@ -3,12 +3,13 @@ package com.balancedbytes.games.ffb.report;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.balancedbytes.games.ffb.IRollModifier;
 import com.balancedbytes.games.ffb.FactoryType.Factory;
+import com.balancedbytes.games.ffb.IRollModifier;
 import com.balancedbytes.games.ffb.factory.CatchModifierFactory;
 import com.balancedbytes.games.ffb.factory.DodgeModifierFactory;
 import com.balancedbytes.games.ffb.factory.GazeModifierFactory;
 import com.balancedbytes.games.ffb.factory.GoForItModifierFactory;
+import com.balancedbytes.games.ffb.factory.IFactorySource;
 import com.balancedbytes.games.ffb.factory.IRollModifierFactory;
 import com.balancedbytes.games.ffb.factory.InterceptionModifierFactory;
 import com.balancedbytes.games.ffb.factory.LeapModifierFactory;
@@ -17,7 +18,6 @@ import com.balancedbytes.games.ffb.factory.PickupModifierFactory;
 import com.balancedbytes.games.ffb.factory.RightStuffModifierFactory;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
-import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.util.ArrayTool;
 import com.eclipsesource.json.JsonArray;
 import com.eclipsesource.json.JsonObject;
@@ -111,7 +111,7 @@ public class ReportSkillRoll implements IReport {
 
 	// transformation
 
-	public IReport transform(Game game) {
+	public IReport transform(IFactorySource source) {
 		return new ReportSkillRoll(getId(), getPlayerId(), isSuccessful(), getRoll(), getMinimumRoll(), isReRolled(),
 				getRollModifiers());
 	}
@@ -136,17 +136,17 @@ public class ReportSkillRoll implements IReport {
 		return jsonObject;
 	}
 
-	public ReportSkillRoll initFrom(Game game, JsonValue pJsonValue) {
+	public ReportSkillRoll initFrom(IFactorySource source, JsonValue pJsonValue) {
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(game, jsonObject));
-		fPlayerId = IJsonOption.PLAYER_ID.getFrom(game, jsonObject);
-		fSuccessful = IJsonOption.SUCCESSFUL.getFrom(game, jsonObject);
-		fRoll = IJsonOption.ROLL.getFrom(game, jsonObject);
-		fMinimumRoll = IJsonOption.MINIMUM_ROLL.getFrom(game, jsonObject);
-		fReRolled = IJsonOption.RE_ROLLED.getFrom(game, jsonObject);
-		JsonArray modifierArray = IJsonOption.ROLL_MODIFIERS.getFrom(game, jsonObject);
+		UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(source, jsonObject));
+		fPlayerId = IJsonOption.PLAYER_ID.getFrom(source, jsonObject);
+		fSuccessful = IJsonOption.SUCCESSFUL.getFrom(source, jsonObject);
+		fRoll = IJsonOption.ROLL.getFrom(source, jsonObject);
+		fMinimumRoll = IJsonOption.MINIMUM_ROLL.getFrom(source, jsonObject);
+		fReRolled = IJsonOption.RE_ROLLED.getFrom(source, jsonObject);
+		JsonArray modifierArray = IJsonOption.ROLL_MODIFIERS.getFrom(source, jsonObject);
 		if (modifierArray != null) {
-			IRollModifierFactory modifierFactory = createRollModifierFactory(game);
+			IRollModifierFactory modifierFactory = createRollModifierFactory(source);
 			if (modifierFactory != null) {
 				for (int i = 0; i < modifierArray.size(); i++) {
 					fRollModifierList.add((IRollModifier) UtilJson.toEnumWithName(modifierFactory, modifierArray.get(i)));
@@ -156,27 +156,27 @@ public class ReportSkillRoll implements IReport {
 		return this;
 	}
 
-	private IRollModifierFactory createRollModifierFactory(Game game) {
+	private IRollModifierFactory createRollModifierFactory(IFactorySource source) {
 		switch (getId()) {
 		case CATCH_ROLL:
-			return game.<CatchModifierFactory>getFactory(Factory.CATCH_MODIFIER);
+			return source.<CatchModifierFactory>getFactory(Factory.CATCH_MODIFIER);
 		case DODGE_ROLL:
-			return game.<DodgeModifierFactory>getFactory(Factory.DODGE_MODIFIER);
+			return source.<DodgeModifierFactory>getFactory(Factory.DODGE_MODIFIER);
 		case GO_FOR_IT_ROLL:
-			return game.<GoForItModifierFactory>getFactory(Factory.GO_FOR_IT_MODIFIER);
+			return source.<GoForItModifierFactory>getFactory(Factory.GO_FOR_IT_MODIFIER);
 		case INTERCEPTION_ROLL:
-			return game.<InterceptionModifierFactory>getFactory(Factory.INTERCEPTION_MODIFIER);
+			return source.<InterceptionModifierFactory>getFactory(Factory.INTERCEPTION_MODIFIER);
 		case LEAP_ROLL:
-			return game.<LeapModifierFactory>getFactory(Factory.LEAP_MODIFIER);
+			return source.<LeapModifierFactory>getFactory(Factory.LEAP_MODIFIER);
 		case PASS_ROLL:
 		case THROW_TEAM_MATE_ROLL:
-			return game.<PassModifierFactory>getFactory(Factory.PASS_MODIFIER);
+			return source.<PassModifierFactory>getFactory(Factory.PASS_MODIFIER);
 		case PICK_UP_ROLL:
-			return game.<PickupModifierFactory>getFactory(Factory.PICKUP_MODIFIER);
+			return source.<PickupModifierFactory>getFactory(Factory.PICKUP_MODIFIER);
 		case RIGHT_STUFF_ROLL:
-			return game.<RightStuffModifierFactory>getFactory(Factory.RIGHT_STUFF_MODIFIER);
+			return source.<RightStuffModifierFactory>getFactory(Factory.RIGHT_STUFF_MODIFIER);
 		case HYPNOTIC_GAZE_ROLL:
-			return game.<GazeModifierFactory>getFactory(Factory.GAZE_MODIFIER);
+			return source.<GazeModifierFactory>getFactory(Factory.GAZE_MODIFIER);
 		default:
 			return null;
 		}

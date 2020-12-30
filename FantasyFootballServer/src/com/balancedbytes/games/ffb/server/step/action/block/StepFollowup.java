@@ -8,6 +8,7 @@ import com.balancedbytes.games.ffb.SoundId;
 import com.balancedbytes.games.ffb.TrackNumber;
 import com.balancedbytes.games.ffb.dialog.DialogFollowupChoiceParameter;
 import com.balancedbytes.games.ffb.dialog.DialogSkillUseParameter;
+import com.balancedbytes.games.ffb.factory.IFactorySource;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.Game;
@@ -202,7 +203,7 @@ public class StepFollowup extends AbstractStep {
 	}
 
 	@Override
-	public StepFollowup initFrom(Game game, JsonValue pJsonValue) {
+	public StepFollowup initFrom(IFactorySource game, JsonValue pJsonValue) {
 		super.initFrom(game, pJsonValue);
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
 		coordinateFrom = IServerJsonOption.COORDINATE_FROM.getFrom(game, jsonObject);

@@ -1,9 +1,9 @@
 package com.balancedbytes.games.ffb.net.commands;
 
 import com.balancedbytes.games.ffb.FieldCoordinate;
+import com.balancedbytes.games.ffb.factory.IFactorySource;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
-import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.net.NetCommandId;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
@@ -60,7 +60,7 @@ public class ClientCommandThrowTeamMate extends ClientCommand implements IComman
 		return jsonObject;
 	}
 
-	public ClientCommandThrowTeamMate initFrom(Game game, JsonValue jsonValue) {
+	public ClientCommandThrowTeamMate initFrom(IFactorySource game, JsonValue jsonValue) {
 		super.initFrom(game, jsonValue);
 		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
 		fActingPlayerId = IJsonOption.ACTING_PLAYER_ID.getFrom(game, jsonObject);

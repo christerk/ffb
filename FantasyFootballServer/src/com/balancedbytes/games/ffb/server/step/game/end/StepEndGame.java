@@ -6,6 +6,7 @@ import com.balancedbytes.games.ffb.GameStatus;
 import com.balancedbytes.games.ffb.IDialogParameter;
 import com.balancedbytes.games.ffb.dialog.DialogId;
 import com.balancedbytes.games.ffb.dialog.DialogParameterFactory;
+import com.balancedbytes.games.ffb.factory.IFactorySource;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.server.FantasyFootballServer;
 import com.balancedbytes.games.ffb.server.GameCache;
@@ -71,7 +72,7 @@ public final class StepEndGame extends AbstractStep {
 	}
 
 	@Override
-	public StepEndGame initFrom(Game game, JsonValue pJsonValue) {
+	public StepEndGame initFrom(IFactorySource game, JsonValue pJsonValue) {
 		super.initFrom(game, pJsonValue);
 		return this;
 	}

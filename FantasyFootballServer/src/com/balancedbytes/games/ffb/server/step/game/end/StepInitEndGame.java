@@ -3,6 +3,7 @@ package com.balancedbytes.games.ffb.server.step.game.end;
 import com.balancedbytes.games.ffb.CardEffect;
 import com.balancedbytes.games.ffb.SeriousInjury;
 import com.balancedbytes.games.ffb.TurnMode;
+import com.balancedbytes.games.ffb.factory.IFactorySource;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.GameResult;
@@ -123,7 +124,7 @@ public final class StepInitEndGame extends AbstractStep {
 	}
 
 	@Override
-	public StepInitEndGame initFrom(Game game, JsonValue pJsonValue) {
+	public StepInitEndGame initFrom(IFactorySource game, JsonValue pJsonValue) {
 		super.initFrom(game, pJsonValue);
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
 		Boolean adminMode = IServerJsonOption.ADMIN_MODE.getFrom(game, jsonObject);

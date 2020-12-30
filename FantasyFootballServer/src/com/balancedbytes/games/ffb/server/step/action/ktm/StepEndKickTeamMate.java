@@ -2,6 +2,7 @@ package com.balancedbytes.games.ffb.server.step.action.ktm;
 
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.PlayerState;
+import com.balancedbytes.games.ffb.factory.IFactorySource;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
@@ -145,7 +146,7 @@ public final class StepEndKickTeamMate extends AbstractStep {
 	}
 
 	@Override
-	public StepEndKickTeamMate initFrom(Game game, JsonValue pJsonValue) {
+	public StepEndKickTeamMate initFrom(IFactorySource game, JsonValue pJsonValue) {
 		super.initFrom(game, pJsonValue);
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
 		fEndTurn = IServerJsonOption.END_TURN.getFrom(game, jsonObject);

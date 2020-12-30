@@ -1,7 +1,7 @@
 package com.balancedbytes.games.ffb.report;
 
+import com.balancedbytes.games.ffb.factory.IFactorySource;
 import com.balancedbytes.games.ffb.json.IJsonSerializable;
-import com.balancedbytes.games.ffb.model.Game;
 
 /**
  * 
@@ -15,6 +15,6 @@ public interface IReport extends IJsonSerializable {
 
 	public ReportId getId();
 
-	public IReport transform(Game game);
+	public IReport transform(IFactorySource source);
 
 }

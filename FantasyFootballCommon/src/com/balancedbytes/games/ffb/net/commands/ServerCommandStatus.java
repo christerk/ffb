@@ -1,8 +1,8 @@
 package com.balancedbytes.games.ffb.net.commands;
 
+import com.balancedbytes.games.ffb.factory.IFactorySource;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
-import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.net.NetCommandId;
 import com.balancedbytes.games.ffb.net.ServerStatus;
 import com.eclipsesource.json.JsonObject;
@@ -53,7 +53,7 @@ public class ServerCommandStatus extends ServerCommand {
 		return jsonObject;
 	}
 
-	public ServerCommandStatus initFrom(Game game, JsonValue pJsonValue) {
+	public ServerCommandStatus initFrom(IFactorySource game, JsonValue pJsonValue) {
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
 		UtilNetCommand.validateCommandId(this, (NetCommandId) IJsonOption.NET_COMMAND_ID.getFrom(game, jsonObject));
 		setCommandNr(IJsonOption.COMMAND_NR.getFrom(game, jsonObject));

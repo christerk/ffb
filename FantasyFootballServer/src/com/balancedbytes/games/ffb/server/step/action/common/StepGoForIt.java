@@ -7,6 +7,7 @@ import com.balancedbytes.games.ffb.PlayerAction;
 import com.balancedbytes.games.ffb.ReRollSource;
 import com.balancedbytes.games.ffb.ReRolledActions;
 import com.balancedbytes.games.ffb.factory.GoForItModifierFactory;
+import com.balancedbytes.games.ffb.factory.IFactorySource;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.Game;
@@ -198,7 +199,7 @@ public class StepGoForIt extends AbstractStepWithReRoll {
 	}
 
 	@Override
-	public StepGoForIt initFrom(Game game, JsonValue pJsonValue) {
+	public StepGoForIt initFrom(IFactorySource game, JsonValue pJsonValue) {
 		super.initFrom(game, pJsonValue);
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
 		fSecondGoForIt = IServerJsonOption.SECOND_GO_FOR_IT.getFrom(game, jsonObject);

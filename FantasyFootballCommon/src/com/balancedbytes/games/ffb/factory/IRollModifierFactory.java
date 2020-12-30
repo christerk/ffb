@@ -6,7 +6,7 @@ import com.balancedbytes.games.ffb.IRollModifier;
  * 
  * @author Kalimar
  */
-public interface IRollModifierFactory extends INamedObjectFactory {
+public interface IRollModifierFactory<T> extends INamedObjectFactory<T> {
 
 	public IRollModifier forName(String pName);
 

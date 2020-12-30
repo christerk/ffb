@@ -1,9 +1,9 @@
 package com.balancedbytes.games.ffb;
 
+import com.balancedbytes.games.ffb.factory.IFactorySource;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.IJsonSerializable;
 import com.balancedbytes.games.ffb.json.UtilJson;
-import com.balancedbytes.games.ffb.model.Game;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
@@ -61,7 +61,7 @@ public class BloodSpot implements IJsonSerializable {
 		return jsonObject;
 	}
 
-	public BloodSpot initFrom(Game game, JsonValue pJsonValue) {
+	public BloodSpot initFrom(IFactorySource game, JsonValue pJsonValue) {
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
 		fInjury = IJsonOption.INJURY.getFrom(game, jsonObject);
 		fCoordinate = IJsonOption.COORDINATE.getFrom(game, jsonObject);

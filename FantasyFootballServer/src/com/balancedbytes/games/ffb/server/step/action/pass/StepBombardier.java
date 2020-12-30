@@ -1,6 +1,6 @@
 package com.balancedbytes.games.ffb.server.step.action.pass;
 
-import com.balancedbytes.games.ffb.model.Game;
+import com.balancedbytes.games.ffb.factory.IFactorySource;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.net.ReceivedCommand;
 import com.balancedbytes.games.ffb.server.step.AbstractStep;
@@ -69,8 +69,8 @@ public final class StepBombardier extends AbstractStep {
 	}
 
 	@Override
-	public StepBombardier initFrom(Game game, JsonValue pJsonValue) {
-		super.initFrom(game, pJsonValue);
+	public StepBombardier initFrom(IFactorySource source, JsonValue pJsonValue) {
+		super.initFrom(source, pJsonValue);
 		return this;
 	}
 

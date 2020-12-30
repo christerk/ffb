@@ -3,9 +3,9 @@ package com.balancedbytes.games.ffb.report;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.balancedbytes.games.ffb.factory.IFactorySource;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
-import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.util.ArrayTool;
 import com.balancedbytes.games.ffb.util.StringTool;
 import com.eclipsesource.json.JsonObject;
@@ -67,7 +67,7 @@ public class ReportMostValuablePlayers implements IReport {
 
 	// transformation
 
-	public IReport transform(Game game) {
+	public IReport transform(IFactorySource source) {
 		ReportMostValuablePlayers transformedReport = new ReportMostValuablePlayers();
 		transformedReport.addPlayerIdsAway(getPlayerIdsHome());
 		transformedReport.addPlayerIdsHome(getPlayerIdsAway());
@@ -84,7 +84,7 @@ public class ReportMostValuablePlayers implements IReport {
 		return jsonObject;
 	}
 
-	public ReportMostValuablePlayers initFrom(Game game, JsonValue pJsonValue) {
+	public ReportMostValuablePlayers initFrom(IFactorySource game, JsonValue pJsonValue) {
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
 		UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(game, jsonObject));
 		addPlayerIdsHome(IJsonOption.PLAYER_IDS_HOME.getFrom(game, jsonObject));

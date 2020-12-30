@@ -5,9 +5,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.balancedbytes.games.ffb.FactoryType;
+import com.balancedbytes.games.ffb.FactoryType.Factory;
 import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.RulesCollection.Rules;
-import com.balancedbytes.games.ffb.model.GameOptions;
+import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Skill;
 import com.balancedbytes.games.ffb.util.Scanner;
 
@@ -52,10 +53,15 @@ public class SkillFactory implements INamedObjectFactory {
 	}
 
 	@Override
-	public void initialize(GameOptions options) {
+	public void initialize(Game game) {
 		Scanner<Skill> scanner = new Scanner<Skill>(Skill.class);
 		
-		scanner.getSubclasses(options).forEach(s -> addSkill(s));
-		skills.values().forEach(s -> s.postConstruct());
+		scanner.getSubclasses(game.getOptions()).forEach(s -> addSkill(s));
+		skills.values().forEach(s -> {
+			s.postConstruct();
+			if (game.getRules() != null) {
+				game.getRules().<PassModifierFactory>getFactory(Factory.PASS_MODIFIER).register(s.getPassModifiers());
+			}
+		});
 	}
 }

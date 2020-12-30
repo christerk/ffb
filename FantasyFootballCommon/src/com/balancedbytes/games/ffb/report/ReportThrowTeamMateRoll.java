@@ -2,9 +2,9 @@ package com.balancedbytes.games.ffb.report;
 
 import com.balancedbytes.games.ffb.PassModifier;
 import com.balancedbytes.games.ffb.PassingDistance;
+import com.balancedbytes.games.ffb.factory.IFactorySource;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
-import com.balancedbytes.games.ffb.model.Game;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
@@ -43,7 +43,7 @@ public class ReportThrowTeamMateRoll extends ReportSkillRoll {
 
 	// transformation
 
-	public IReport transform(Game game) {
+	public IReport transform(IFactorySource source) {
 		return new ReportThrowTeamMateRoll(getPlayerId(), isSuccessful(), getRoll(), getMinimumRoll(), isReRolled(),
 				getRollModifiers(), getPassingDistance(), getThrownPlayerId());
 	}
@@ -59,7 +59,7 @@ public class ReportThrowTeamMateRoll extends ReportSkillRoll {
 	}
 
 	@Override
-	public ReportThrowTeamMateRoll initFrom(Game game, JsonValue pJsonValue) {
+	public ReportThrowTeamMateRoll initFrom(IFactorySource game, JsonValue pJsonValue) {
 		super.initFrom(game, pJsonValue);
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
 		fThrownPlayerId = IJsonOption.THROWN_PLAYER_ID.getFrom(game, jsonObject);

@@ -1,6 +1,5 @@
 package com.balancedbytes.games.ffb.model;
 
-import com.balancedbytes.games.ffb.skill.Accurate;
 import com.balancedbytes.games.ffb.skill.AgilityDecrease;
 import com.balancedbytes.games.ffb.skill.AgilityIncrease;
 import com.balancedbytes.games.ffb.skill.AlwaysHungry;
@@ -91,7 +90,7 @@ import com.balancedbytes.games.ffb.skill.WildAnimal;
 import com.balancedbytes.games.ffb.skill.Wrestle;
 
 public class SkillConstants {
-	public static final Skill ACCURATE = new Accurate();
+	//public static final Skill ACCURATE = new Accurate();
 	public static final Skill AGILITY_DECREASE = new AgilityDecrease();
 	public static final Skill AGILITY_INCREASE = new AgilityIncrease();
 	public static final Skill ALWAYS_HUNGRY = new AlwaysHungry();

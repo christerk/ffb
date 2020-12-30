@@ -1,8 +1,8 @@
 package com.balancedbytes.games.ffb.report;
 
+import com.balancedbytes.games.ffb.factory.IFactorySource;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
-import com.balancedbytes.games.ffb.model.Game;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
@@ -44,7 +44,7 @@ public class ReportPilingOn implements IReport {
 
 	// transformation
 
-	public IReport transform(Game game) {
+	public IReport transform(IFactorySource source) {
 		return new ReportPilingOn(getPlayerId(), isUsed(), isReRollInjury());
 	}
 
@@ -59,12 +59,12 @@ public class ReportPilingOn implements IReport {
 		return jsonObject;
 	}
 
-	public ReportPilingOn initFrom(Game game, JsonValue pJsonValue) {
+	public ReportPilingOn initFrom(IFactorySource source, JsonValue pJsonValue) {
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(game, jsonObject));
-		fPlayerId = IJsonOption.PLAYER_ID.getFrom(game, jsonObject);
-		fUsed = IJsonOption.USED.getFrom(game, jsonObject);
-		fReRollInjury = IJsonOption.RE_ROLL_INJURY.getFrom(game, jsonObject);
+		UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(source, jsonObject));
+		fPlayerId = IJsonOption.PLAYER_ID.getFrom(source, jsonObject);
+		fUsed = IJsonOption.USED.getFrom(source, jsonObject);
+		fReRollInjury = IJsonOption.RE_ROLL_INJURY.getFrom(source, jsonObject);
 		return this;
 	}
 

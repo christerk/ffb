@@ -234,12 +234,12 @@ public class GameOptionFactory {
 
 	// JSON serialization
 
-	public IGameOption fromJsonValue(Game game, JsonValue pJsonValue) {
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		GameOptionId optionId = (GameOptionId) IJsonOption.GAME_OPTION_ID.getFrom(game, jsonObject);
+	public IGameOption fromJsonValue(IFactorySource source, JsonValue jsonValue) {
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
+		GameOptionId optionId = (GameOptionId) IJsonOption.GAME_OPTION_ID.getFrom(source, jsonObject);
 		IGameOption gameOption = createGameOption(optionId);
 		if (gameOption != null) {
-			gameOption.setValue(IJsonOption.GAME_OPTION_VALUE.getFrom(game, jsonObject));
+			gameOption.setValue(IJsonOption.GAME_OPTION_VALUE.getFrom(source, jsonObject));
 		}
 		return gameOption;
 	}

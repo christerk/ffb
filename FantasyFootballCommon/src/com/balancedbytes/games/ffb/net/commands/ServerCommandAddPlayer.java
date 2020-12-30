@@ -2,9 +2,9 @@ package com.balancedbytes.games.ffb.net.commands;
 
 import com.balancedbytes.games.ffb.PlayerState;
 import com.balancedbytes.games.ffb.SendToBoxReason;
+import com.balancedbytes.games.ffb.factory.IFactorySource;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
-import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.PlayerResult;
 import com.balancedbytes.games.ffb.model.RosterPlayer;
 import com.balancedbytes.games.ffb.net.NetCommandId;
@@ -89,7 +89,7 @@ public class ServerCommandAddPlayer extends ServerCommand {
 		return jsonObject;
 	}
 
-	public ServerCommandAddPlayer initFrom(Game game, JsonValue pJsonValue) {
+	public ServerCommandAddPlayer initFrom(IFactorySource game, JsonValue pJsonValue) {
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
 		UtilNetCommand.validateCommandId(this, (NetCommandId) IJsonOption.NET_COMMAND_ID.getFrom(game, jsonObject));
 		setCommandNr(IJsonOption.COMMAND_NR.getFrom(game, jsonObject));

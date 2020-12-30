@@ -1,7 +1,7 @@
 package com.balancedbytes.games.ffb.json;
 
 import com.balancedbytes.games.ffb.FieldCoordinate;
-import com.balancedbytes.games.ffb.model.Game;
+import com.balancedbytes.games.ffb.factory.IFactorySource;
 import com.eclipsesource.json.JsonObject;
 
 /**
@@ -14,7 +14,7 @@ public class JsonFieldCoordinateOption extends JsonAbstractOption {
 		super(pKey);
 	}
 
-	public FieldCoordinate getFrom(Game game, JsonObject pJsonObject) {
+	public FieldCoordinate getFrom(IFactorySource source, JsonObject pJsonObject) {
 		return UtilJson.toFieldCoordinate(getValueFrom(pJsonObject));
 	}
 

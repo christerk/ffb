@@ -2,9 +2,9 @@ package com.balancedbytes.games.ffb.report;
 
 import com.balancedbytes.games.ffb.Direction;
 import com.balancedbytes.games.ffb.FieldCoordinate;
+import com.balancedbytes.games.ffb.factory.IFactorySource;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
-import com.balancedbytes.games.ffb.model.Game;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
@@ -53,7 +53,7 @@ public class ReportKickoffScatter implements IReport {
 
 	// transformation
 
-	public IReport transform(Game game) {
+	public IReport transform(IFactorySource source) {
 		return new ReportKickoffScatter(FieldCoordinate.transform(getBallCoordinateEnd()),
 				getScatterDirection().transform(), getRollScatterDirection(), getRollScatterDistance());
 	}
@@ -70,13 +70,13 @@ public class ReportKickoffScatter implements IReport {
 		return jsonObject;
 	}
 
-	public ReportKickoffScatter initFrom(Game game, JsonValue pJsonValue) {
+	public ReportKickoffScatter initFrom(IFactorySource source, JsonValue pJsonValue) {
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(game, jsonObject));
-		fBallCoordinateEnd = IJsonOption.BALL_COORDINATE_END.getFrom(game, jsonObject);
-		fScatterDirection = (Direction) IJsonOption.SCATTER_DIRECTION.getFrom(game, jsonObject);
-		fRollScatterDirection = IJsonOption.ROLL_SCATTER_DIRECTION.getFrom(game, jsonObject);
-		fRollScatterDistance = IJsonOption.ROLL_SCATTER_DISTANCE.getFrom(game, jsonObject);
+		UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(source, jsonObject));
+		fBallCoordinateEnd = IJsonOption.BALL_COORDINATE_END.getFrom(source, jsonObject);
+		fScatterDirection = (Direction) IJsonOption.SCATTER_DIRECTION.getFrom(source, jsonObject);
+		fRollScatterDirection = IJsonOption.ROLL_SCATTER_DIRECTION.getFrom(source, jsonObject);
+		fRollScatterDistance = IJsonOption.ROLL_SCATTER_DISTANCE.getFrom(source, jsonObject);
 		return this;
 	}
 

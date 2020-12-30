@@ -10,6 +10,7 @@ import org.xml.sax.Attributes;
 import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.RulesCollection.Rules;
 import com.balancedbytes.games.ffb.factory.GameOptionFactory;
+import com.balancedbytes.games.ffb.factory.IFactorySource;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.IJsonSerializable;
 import com.balancedbytes.games.ffb.json.UtilJson;
@@ -184,7 +185,7 @@ public class GameOptions implements IXmlSerializable, IJsonSerializable {
 		return jsonObject;
 	}
 
-	public GameOptions initFrom(Game game, JsonValue pJsonValue) {
+	public GameOptions initFrom(IFactorySource game, JsonValue pJsonValue) {
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
 		JsonArray optionArray = IJsonOption.GAME_OPTION_ARRAY.getFrom(game, jsonObject);
 		int nrOfOptions = optionArray.size();

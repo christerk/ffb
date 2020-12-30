@@ -9,12 +9,11 @@ import com.balancedbytes.games.ffb.FactoryType;
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.LeapModifier;
 import com.balancedbytes.games.ffb.LeapModifiers;
-import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.LeapModifiers.LeapContext;
+import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.RulesCollection.Rules;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.Game;
-import com.balancedbytes.games.ffb.model.GameOptions;
 import com.balancedbytes.games.ffb.util.UtilCards;
 
 /**
@@ -60,7 +59,7 @@ public class LeapModifierFactory implements IRollModifierFactory {
 	}
 
 	@Override
-	public void initialize(GameOptions options) {
+	public void initialize(Game game) {
 		// TODO Auto-generated method stub
 		
 	}

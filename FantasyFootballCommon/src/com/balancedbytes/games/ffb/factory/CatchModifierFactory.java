@@ -8,14 +8,13 @@ import java.util.Set;
 
 import com.balancedbytes.games.ffb.CatchModifier;
 import com.balancedbytes.games.ffb.CatchModifiers;
+import com.balancedbytes.games.ffb.CatchModifiers.CatchContext;
 import com.balancedbytes.games.ffb.CatchScatterThrowInMode;
 import com.balancedbytes.games.ffb.FactoryType;
 import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.RulesCollection.Rules;
 import com.balancedbytes.games.ffb.Weather;
-import com.balancedbytes.games.ffb.CatchModifiers.CatchContext;
 import com.balancedbytes.games.ffb.model.Game;
-import com.balancedbytes.games.ffb.model.GameOptions;
 import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
 import com.balancedbytes.games.ffb.util.UtilCards;
@@ -117,7 +116,7 @@ public class CatchModifierFactory implements IRollModifierFactory {
 	}
 
 	@Override
-	public void initialize(GameOptions options) {
+	public void initialize(Game game) {
 		// TODO Auto-generated method stub
 		
 	}

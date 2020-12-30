@@ -1,5 +1,6 @@
 package com.balancedbytes.games.ffb.server.step.action.block;
 
+import com.balancedbytes.games.ffb.factory.IFactorySource;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.PlayerResult;
@@ -70,8 +71,8 @@ public class StepBlockStatistics extends AbstractStep {
 	}
 
 	@Override
-	public StepBlockStatistics initFrom(Game game, JsonValue pJsonValue) {
-		super.initFrom(game, pJsonValue);
+	public StepBlockStatistics initFrom(IFactorySource source, JsonValue pJsonValue) {
+		super.initFrom(source, pJsonValue);
 		return this;
 	}
 

@@ -1,5 +1,6 @@
 package com.balancedbytes.games.ffb.server.step.game.start;
 
+import com.balancedbytes.games.ffb.factory.IFactorySource;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.GameResult;
 import com.balancedbytes.games.ffb.model.TeamResult;
@@ -90,7 +91,7 @@ public final class StepSpectators extends AbstractStep {
 	}
 
 	@Override
-	public StepSpectators initFrom(Game game, JsonValue pJsonValue) {
+	public StepSpectators initFrom(IFactorySource game, JsonValue pJsonValue) {
 		super.initFrom(game, pJsonValue);
 		return this;
 	}

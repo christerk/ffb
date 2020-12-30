@@ -2,7 +2,7 @@ package com.balancedbytes.games.ffb.json;
 
 import java.util.Date;
 
-import com.balancedbytes.games.ffb.model.Game;
+import com.balancedbytes.games.ffb.factory.IFactorySource;
 import com.eclipsesource.json.JsonObject;
 
 /**
@@ -15,7 +15,7 @@ public class JsonDateOption extends JsonAbstractOption {
 		super(pKey);
 	}
 
-	public Date getFrom(Game game, JsonObject pJsonObject) {
+	public Date getFrom(IFactorySource source, JsonObject pJsonObject) {
 		return UtilJson.toDate(getValueFrom(pJsonObject));
 	}
 

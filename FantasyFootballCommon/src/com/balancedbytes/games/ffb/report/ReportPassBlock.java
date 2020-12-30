@@ -1,8 +1,8 @@
 package com.balancedbytes.games.ffb.report;
 
+import com.balancedbytes.games.ffb.factory.IFactorySource;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
-import com.balancedbytes.games.ffb.model.Game;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
@@ -38,7 +38,7 @@ public class ReportPassBlock implements IReport {
 
 	// transformation
 
-	public IReport transform(Game game) {
+	public IReport transform(IFactorySource source) {
 		return new ReportPassBlock(getTeamId(), isPassBlockAvailable());
 	}
 
@@ -52,11 +52,11 @@ public class ReportPassBlock implements IReport {
 		return jsonObject;
 	}
 
-	public ReportPassBlock initFrom(Game game, JsonValue pJsonValue) {
+	public ReportPassBlock initFrom(IFactorySource source, JsonValue pJsonValue) {
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(game, jsonObject));
-		fTeamId = IJsonOption.TEAM_ID.getFrom(game, jsonObject);
-		fPassBlockAvailable = IJsonOption.PASS_BLOCK_AVAILABLE.getFrom(game, jsonObject);
+		UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(source, jsonObject));
+		fTeamId = IJsonOption.TEAM_ID.getFrom(source, jsonObject);
+		fPassBlockAvailable = IJsonOption.PASS_BLOCK_AVAILABLE.getFrom(source, jsonObject);
 		return this;
 	}
 

@@ -3,9 +3,9 @@ package com.balancedbytes.games.ffb.net.commands;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.balancedbytes.games.ffb.factory.IFactorySource;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
-import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.net.NetCommandId;
 import com.balancedbytes.games.ffb.util.ArrayTool;
 import com.balancedbytes.games.ffb.util.StringTool;
@@ -68,7 +68,7 @@ public class ClientCommandArgueTheCall extends ClientCommand {
 		return jsonObject;
 	}
 
-	public ClientCommandArgueTheCall initFrom(Game game, JsonValue jsonValue) {
+	public ClientCommandArgueTheCall initFrom(IFactorySource game, JsonValue jsonValue) {
 		super.initFrom(game, jsonValue);
 		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
 		addPlayerIds(IJsonOption.PLAYER_IDS.getFrom(game, jsonObject));

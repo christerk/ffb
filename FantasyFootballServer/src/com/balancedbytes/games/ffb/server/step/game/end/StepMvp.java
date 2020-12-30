@@ -7,6 +7,7 @@ import com.balancedbytes.games.ffb.PlayerChoiceMode;
 import com.balancedbytes.games.ffb.PlayerState;
 import com.balancedbytes.games.ffb.SendToBoxReason;
 import com.balancedbytes.games.ffb.dialog.DialogPlayerChoiceParameter;
+import com.balancedbytes.games.ffb.factory.IFactorySource;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.GameResult;
@@ -238,7 +239,7 @@ public final class StepMvp extends AbstractStep {
 	}
 
 	@Override
-	public StepMvp initFrom(Game game, JsonValue pJsonValue) {
+	public StepMvp initFrom(IFactorySource game, JsonValue pJsonValue) {
 		super.initFrom(game, pJsonValue);
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
 		fNrOfAwayChoices = IServerJsonOption.NR_OF_AWAY_CHOICES.getFrom(game, jsonObject);

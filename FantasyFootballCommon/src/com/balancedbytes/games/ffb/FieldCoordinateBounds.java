@@ -2,10 +2,10 @@ package com.balancedbytes.games.ffb;
 
 import java.util.LinkedList;
 
+import com.balancedbytes.games.ffb.factory.IFactorySource;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.IJsonSerializable;
 import com.balancedbytes.games.ffb.json.UtilJson;
-import com.balancedbytes.games.ffb.model.Game;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
@@ -167,10 +167,10 @@ public class FieldCoordinateBounds implements IJsonSerializable {
 		return jsonObject;
 	}
 
-	public FieldCoordinateBounds initFrom(Game game, JsonValue pJsonValue) {
+	public FieldCoordinateBounds initFrom(IFactorySource source, JsonValue pJsonValue) {
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		fTopLeftCorner = IJsonOption.TOP_LEFT.getFrom(game, jsonObject);
-		fBottomRightCorner = IJsonOption.BOTTOM_RIGHT.getFrom(game, jsonObject);
+		fTopLeftCorner = IJsonOption.TOP_LEFT.getFrom(source, jsonObject);
+		fBottomRightCorner = IJsonOption.BOTTOM_RIGHT.getFrom(source, jsonObject);
 		return this;
 	}
 

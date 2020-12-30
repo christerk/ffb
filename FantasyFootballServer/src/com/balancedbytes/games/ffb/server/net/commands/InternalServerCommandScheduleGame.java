@@ -1,8 +1,8 @@
 package com.balancedbytes.games.ffb.server.net.commands;
 
+import com.balancedbytes.games.ffb.factory.IFactorySource;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
-import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.net.NetCommandId;
 import com.balancedbytes.games.ffb.net.commands.UtilNetCommand;
 import com.balancedbytes.games.ffb.server.IGameIdListener;
@@ -54,7 +54,7 @@ public class InternalServerCommandScheduleGame extends InternalServerCommand {
 		return jsonObject;
 	}
 
-	public InternalServerCommandScheduleGame initFrom(Game game, JsonValue pJsonValue) {
+	public InternalServerCommandScheduleGame initFrom(IFactorySource game, JsonValue pJsonValue) {
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
 		UtilNetCommand.validateCommandId(this, (NetCommandId) IJsonOption.NET_COMMAND_ID.getFrom(game, jsonObject));
 		fTeamHomeId = IJsonOption.TEAM_HOME_ID.getFrom(game, jsonObject);

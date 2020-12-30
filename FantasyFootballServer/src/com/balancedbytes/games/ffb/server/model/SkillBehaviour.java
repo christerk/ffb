@@ -1,14 +1,15 @@
 package com.balancedbytes.games.ffb.server.model;
 
+import java.lang.reflect.ParameterizedType;
+import java.util.ArrayList;
+import java.util.List;
+
+import com.balancedbytes.games.ffb.FantasyFootballException;
 import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.model.ISkillBehaviour;
 import com.balancedbytes.games.ffb.model.PlayerModifier;
 import com.balancedbytes.games.ffb.model.Skill;
 import com.balancedbytes.games.ffb.server.step.IStep;
-
-import java.lang.reflect.ParameterizedType;
-import java.util.ArrayList;
-import java.util.List;
 
 public abstract class SkillBehaviour<T extends Skill> implements ISkillBehaviour<T> {
 
@@ -33,7 +34,7 @@ public abstract class SkillBehaviour<T extends Skill> implements ISkillBehaviour
 		RulesCollection behaviourRules = getClass().getAnnotation(RulesCollection.class);
 		
 		if (!skillRules.value().matches(behaviourRules.value())) {
-			throw new RuntimeException("Skill behaviour rule does not match skill rule");
+			throw new FantasyFootballException("Skill behaviour rule does not match skill rule");
 		}
 	}
 

@@ -30,14 +30,15 @@ import com.balancedbytes.games.ffb.factory.CardEffectFactory;
 import com.balancedbytes.games.ffb.factory.CardFactory;
 import com.balancedbytes.games.ffb.factory.DialogIdFactory;
 import com.balancedbytes.games.ffb.factory.GameOptionFactory;
+import com.balancedbytes.games.ffb.factory.IFactorySource;
 import com.balancedbytes.games.ffb.factory.LeaderStateFactory;
 import com.balancedbytes.games.ffb.factory.PlayerActionFactory;
 import com.balancedbytes.games.ffb.factory.SendToBoxReasonFactory;
 import com.balancedbytes.games.ffb.factory.SeriousInjuryFactory;
+import com.balancedbytes.games.ffb.factory.SkillFactory;
 import com.balancedbytes.games.ffb.factory.TurnModeFactory;
 import com.balancedbytes.games.ffb.factory.WeatherFactory;
 import com.balancedbytes.games.ffb.json.UtilJson;
-import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Skill;
 import com.balancedbytes.games.ffb.option.IGameOption;
 import com.eclipsesource.json.JsonValue;
@@ -141,35 +142,35 @@ public enum ModelChangeDataType implements INamedObject {
 		}
 	}
 
-	public Object fromJsonValue(Game game, JsonValue pJsonValue) {
+	public Object fromJsonValue(IFactorySource source, JsonValue pJsonValue) {
 		if ((pJsonValue == null) || pJsonValue.isNull()) {
 			return null;
 		}
 		switch (this) {
 		case BLOOD_SPOT:
-			return new BloodSpot().initFrom(game, pJsonValue);
+			return new BloodSpot().initFrom(source, pJsonValue);
 		case BOOLEAN:
 			return pJsonValue.asBoolean();
 		case CARD:
-			return UtilJson.toEnumWithName(game.<CardFactory>getFactory(Factory.CARD), pJsonValue);
+			return UtilJson.toEnumWithName(source.<CardFactory>getFactory(Factory.CARD), pJsonValue);
 		case CARD_EFFECT:
-			return UtilJson.toEnumWithName(game.<CardEffectFactory>getFactory(Factory.CARD_EFFECT), pJsonValue);
+			return UtilJson.toEnumWithName(source.<CardEffectFactory>getFactory(Factory.CARD_EFFECT), pJsonValue);
 		case DATE:
 			return UtilJson.toDate(pJsonValue);
 		case DIALOG_ID:
-			return UtilJson.toEnumWithName(game.<DialogIdFactory>getFactory(Factory.DIALOG_ID), pJsonValue);
+			return UtilJson.toEnumWithName(source.<DialogIdFactory>getFactory(Factory.DIALOG_ID), pJsonValue);
 		case DIALOG_PARAMETER:
-			return new DialogParameterFactory().forJsonValue(game, pJsonValue);
+			return new DialogParameterFactory().forJsonValue(source, pJsonValue);
 		case DICE_DECORATION:
-			return new DiceDecoration().initFrom(game, pJsonValue);
+			return new DiceDecoration().initFrom(source, pJsonValue);
 		case FIELD_COORDINATE:
 			return UtilJson.toFieldCoordinate(pJsonValue);
 		case FIELD_MARKER:
-			return new FieldMarker().initFrom(game, pJsonValue);
+			return new FieldMarker().initFrom(source, pJsonValue);
 		case GAME_OPTION:
-			return new GameOptionFactory().fromJsonValue(game, pJsonValue);
+			return new GameOptionFactory().fromJsonValue(source, pJsonValue);
 		case INDUCEMENT:
-			return new Inducement().initFrom(game, pJsonValue);
+			return new Inducement().initFrom(source, pJsonValue);
 		case INTEGER:
 			return pJsonValue.asInt();
 		case LEADER_STATE:
@@ -177,29 +178,29 @@ public enum ModelChangeDataType implements INamedObject {
 		case LONG:
 			return pJsonValue.asLong();
 		case MOVE_SQUARE:
-			return new MoveSquare().initFrom(game, pJsonValue);
+			return new MoveSquare().initFrom(source, pJsonValue);
 		case NULL:
 			return null;
 		case PLAYER_ACTION:
 			return UtilJson.toEnumWithName(new PlayerActionFactory(), pJsonValue);
 		case PLAYER_MARKER:
-			return new PlayerMarker().initFrom(game, pJsonValue);
+			return new PlayerMarker().initFrom(source, pJsonValue);
 		case PLAYER_STATE:
 			return UtilJson.toPlayerState(pJsonValue);
 		case PUSHBACK_SQUARE:
-			return new PushbackSquare().initFrom(game, pJsonValue);
+			return new PushbackSquare().initFrom(source, pJsonValue);
 		case RANGE_RULER:
-			return new RangeRuler().initFrom(game, pJsonValue);
+			return new RangeRuler().initFrom(source, pJsonValue);
 		case SEND_TO_BOX_REASON:
 			return UtilJson.toEnumWithName(new SendToBoxReasonFactory(), pJsonValue);
 		case SERIOUS_INJURY:
 			return UtilJson.toEnumWithName(new SeriousInjuryFactory(), pJsonValue);
 		case SKILL:
-			return UtilJson.toEnumWithName(game.getRules().getSkillFactory(), pJsonValue);
+			return UtilJson.toEnumWithName(source.<SkillFactory>getFactory(Factory.SKILL), pJsonValue);
 		case STRING:
 			return pJsonValue.asString();
 		case TRACK_NUMBER:
-			return new TrackNumber().initFrom(game, pJsonValue);
+			return new TrackNumber().initFrom(source, pJsonValue);
 		case TURN_MODE:
 			return UtilJson.toEnumWithName(new TurnModeFactory(), pJsonValue);
 		case WEATHER:

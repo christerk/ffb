@@ -1,5 +1,7 @@
 package com.balancedbytes.games.ffb.net.commands;
 
+import com.balancedbytes.games.ffb.FactoryType.FactoryContext;
+import com.balancedbytes.games.ffb.factory.IFactorySource;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.Game;
@@ -40,7 +42,12 @@ public class ServerCommandGameState extends ServerCommand {
 		return false;
 	}
 
-	// JSON serialization
+	@Override
+	public FactoryContext getContext() {
+		return FactoryContext.APPLICATION;
+	}
+	
+		// JSON serialization
 
 	public JsonObject toJsonValue() {
 		JsonObject jsonObject = new JsonObject();
@@ -52,14 +59,14 @@ public class ServerCommandGameState extends ServerCommand {
 		return jsonObject;
 	}
 
-	public ServerCommandGameState initFrom(Game game, JsonValue pJsonValue) {
+	public ServerCommandGameState initFrom(IFactorySource source, JsonValue pJsonValue) {
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		UtilNetCommand.validateCommandId(this, (NetCommandId) IJsonOption.NET_COMMAND_ID.getFrom(game, jsonObject));
-		setCommandNr(IJsonOption.COMMAND_NR.getFrom(game, jsonObject));
-		JsonObject gameObject = IJsonOption.GAME.getFrom(game, jsonObject);
+		UtilNetCommand.validateCommandId(this, (NetCommandId) IJsonOption.NET_COMMAND_ID.getFrom(source, jsonObject));
+		setCommandNr(IJsonOption.COMMAND_NR.getFrom(source, jsonObject));
+		JsonObject gameObject = IJsonOption.GAME.getFrom(source, jsonObject);
 		if (gameObject != null) {
-			game = new Game();
-			game.initFrom(game, gameObject);
+			Game game = new Game(source.forContext(FactoryContext.APPLICATION), source.getFactoryManager(), false); // We don't want to initialize rules yet.
+			game.initFrom(source, gameObject);
 			fGame = game;
 		}
 		return this;

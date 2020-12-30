@@ -1,7 +1,7 @@
 package com.balancedbytes.games.ffb.server.step.action.block;
 
+import com.balancedbytes.games.ffb.factory.IFactorySource;
 import com.balancedbytes.games.ffb.json.UtilJson;
-import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.server.ActionStatus;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.IServerJsonOption;
@@ -110,7 +110,7 @@ public class StepStab extends AbstractStep {
 	}
 
 	@Override
-	public StepStab initFrom(Game game, JsonValue pJsonValue) {
+	public StepStab initFrom(IFactorySource game, JsonValue pJsonValue) {
 		super.initFrom(game, pJsonValue);
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
 		state.goToLabelOnFailure = IServerJsonOption.GOTO_LABEL_ON_SUCCESS.getFrom(game, jsonObject);

@@ -1,8 +1,9 @@
 package com.balancedbytes.games.ffb.net.commands;
 
+import com.balancedbytes.games.ffb.FactoryType.FactoryContext;
+import com.balancedbytes.games.ffb.factory.IFactorySource;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
-import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.net.NetCommandId;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
@@ -35,6 +36,11 @@ public class ServerCommandPasswordChallenge extends ServerCommand {
 		return false;
 	}
 
+	@Override
+	public FactoryContext getContext() {
+		return FactoryContext.APPLICATION;
+	}
+	
 	// JSON serialization
 
 	public JsonObject toJsonValue() {
@@ -45,7 +51,7 @@ public class ServerCommandPasswordChallenge extends ServerCommand {
 		return jsonObject;
 	}
 
-	public ServerCommandPasswordChallenge initFrom(Game game, JsonValue pJsonValue) {
+	public ServerCommandPasswordChallenge initFrom(IFactorySource game, JsonValue pJsonValue) {
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
 		UtilNetCommand.validateCommandId(this, (NetCommandId) IJsonOption.NET_COMMAND_ID.getFrom(game, jsonObject));
 		setCommandNr(IJsonOption.COMMAND_NR.getFrom(game, jsonObject));

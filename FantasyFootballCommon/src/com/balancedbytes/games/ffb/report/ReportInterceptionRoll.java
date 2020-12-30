@@ -1,9 +1,9 @@
 package com.balancedbytes.games.ffb.report;
 
 import com.balancedbytes.games.ffb.InterceptionModifier;
+import com.balancedbytes.games.ffb.factory.IFactorySource;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
-import com.balancedbytes.games.ffb.model.Game;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
@@ -40,7 +40,7 @@ public class ReportInterceptionRoll extends ReportSkillRoll {
 
 	// transformation
 
-	public IReport transform(Game game) {
+	public IReport transform(IFactorySource source) {
 		return new ReportInterceptionRoll(getPlayerId(), isSuccessful(), getRoll(), getMinimumRoll(), isReRolled(),
 				getRollModifiers(), isBomb());
 	}
@@ -55,7 +55,7 @@ public class ReportInterceptionRoll extends ReportSkillRoll {
 	}
 
 	@Override
-	public ReportInterceptionRoll initFrom(Game game, JsonValue pJsonValue) {
+	public ReportInterceptionRoll initFrom(IFactorySource game, JsonValue pJsonValue) {
 		super.initFrom(game, pJsonValue);
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
 		fBomb = IJsonOption.BOMB.getFrom(game, jsonObject);
