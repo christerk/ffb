@@ -38,9 +38,9 @@ public class ServerCommandHandlerScheduleGame extends ServerCommandHandler {
 					scheduleGameCommand.getTeamAwayId(), false, null);
 			getServer().getRequestProcessor().add(requestAwayTeam);
 		} else {
-			Team teamHome = gameCache.getTeamById(scheduleGameCommand.getTeamHomeId());
+			Team teamHome = gameCache.getTeamById(scheduleGameCommand.getTeamHomeId(), gameState.getGame());
 			gameCache.addTeamToGame(gameState, teamHome, true);
-			Team teamAway = gameCache.getTeamById(scheduleGameCommand.getTeamAwayId());
+			Team teamAway = gameCache.getTeamById(scheduleGameCommand.getTeamAwayId(), gameState.getGame());
 			gameCache.addTeamToGame(gameState, teamAway, false);
 		}
 		if (scheduleGameCommand.getGameIdListener() != null) {

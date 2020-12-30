@@ -4,6 +4,7 @@ import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
@@ -26,7 +27,6 @@ import com.balancedbytes.games.ffb.model.FieldModel;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.model.PlayerResult;
-import com.balancedbytes.games.ffb.model.Roster;
 import com.balancedbytes.games.ffb.model.RosterPlayer;
 import com.balancedbytes.games.ffb.model.Team;
 import com.balancedbytes.games.ffb.model.ZappedPlayer;
@@ -58,8 +58,8 @@ public class GameCache {
 	private FantasyFootballServer fServer;
 	private Map<Long, GameState> fGameStateById;
 	private Map<String, Long> fGameIdByName;
-	private RosterCache fRosterCache;
-	private TeamCache fTeamCache; // used in standalone mode only
+	private RosterLoader fRosterLoader;
+	private TeamLoader fTeamLoader; // used in standalone mode only
 
 	private static final String _PITCHES_INI = "pitches.ini";
 	private static final String _PITCH_PROPERTY_PREFIX = "pitch.";
@@ -68,28 +68,12 @@ public class GameCache {
 		fServer = pServer;
 		fGameStateById = Collections.synchronizedMap(new HashMap<Long, GameState>());
 		fGameIdByName = Collections.synchronizedMap(new HashMap<String, Long>());
-		fRosterCache = new RosterCache();
-		fTeamCache = new TeamCache();
+		fRosterLoader = new RosterLoader(new File("rosters"));
+		fTeamLoader = new TeamLoader(new File("teams"));
 	}
 
 	public void init() {
 		loadPitchProperties();
-		if (ServerMode.STANDALONE == getServer().getMode()) {
-			try {
-				fRosterCache.init(new File("rosters"));
-			} catch (IOException ioe) {
-				throw new FantasyFootballException(ioe);
-			}
-			try {
-				fTeamCache.init(new File("teams"));
-			} catch (IOException ioe) {
-				throw new FantasyFootballException(ioe);
-			}
-			for (Team team : fTeamCache.getTeams()) {
-				team.updateRoster(getRosterById(team.getRosterId()));
-				team.setTeamValue(UtilTeamValue.findTeamValue(team));
-			}
-		}
 	}
 
 	public FantasyFootballServer getServer() {
@@ -242,20 +226,23 @@ public class GameCache {
 		return gameState;
 	}
 
-	public void add(Roster pRoster) {
-		fRosterCache.add(pRoster);
+	private Team updateRoster(Team team, Game game) {
+		if (ServerMode.STANDALONE == getServer().getMode()) {
+			try {
+				team.updateRoster(fRosterLoader.getRosterById(team.getRosterId(), game));
+				team.setTeamValue(UtilTeamValue.findTeamValue(team));
+			} catch (IOException ioe) {
+				throw new FantasyFootballException(ioe);
+			}
+		}
+		return team;
 	}
 
-	public Roster getRosterById(String pRosterId) {
-		return fRosterCache.getRosterById(pRosterId);
-	}
-
-	public Team getTeamById(String pTeamId) {
-		return fTeamCache.getTeamById(pTeamId);
+	public Team getTeamById(String pTeamId, Game game) {
+		return updateRoster(fTeamLoader.getTeamById(pTeamId, game), game);
 	}
 
 	public void refresh() {
-		fRosterCache.clear();
 		loadPitchProperties();
 	}
 
@@ -326,8 +313,13 @@ public class GameCache {
 		queueDbUpdate(pGameState, true);
 	}
 
-	public Team[] getTeamsForCoach(String pCoach) {
-		return fTeamCache.getTeamsForCoach(pCoach);
+	public Team[] getTeamsForCoach(String pCoach, Game game) {
+		Team[] teams = fTeamLoader.getTeamsForCoach(pCoach, game);
+		if (ServerMode.STANDALONE == getServer().getMode()) {
+			return Arrays.stream(teams).map(team -> updateRoster(team, game)).toArray(Team[]::new);
+		}
+
+		return teams;
 	}
 
 	public void queueDbUpdate(GameState pGameState, boolean pWithSerialization) {

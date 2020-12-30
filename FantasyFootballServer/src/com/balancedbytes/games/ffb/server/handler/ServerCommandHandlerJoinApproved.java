@@ -147,7 +147,7 @@ public class ServerCommandHandlerJoinApproved extends ServerCommandHandler {
 				getServer().getRequestProcessor().add(new FumbblRequestLoadTeam(pGameState, pJoinApprovedCommand.getCoach(),
 						pJoinApprovedCommand.getTeamId(), homeTeam, pSession));
 			} else {
-				Team team = getServer().getGameCache().getTeamById(pJoinApprovedCommand.getTeamId());
+				Team team = getServer().getGameCache().getTeamById(pJoinApprovedCommand.getTeamId(), game);
 				getServer().getGameCache().addTeamToGame(pGameState, team, homeTeam);
 				if (UtilServerStartGame.joinGameAsPlayerAndCheckIfReadyToStart(pGameState, pSession,
 						pJoinApprovedCommand.getCoach(), homeTeam)) {
@@ -190,7 +190,7 @@ public class ServerCommandHandlerJoinApproved extends ServerCommandHandler {
 					.add(new FumbblRequestLoadTeamList(pGameState, pJoinApprovedCommand.getCoach(), pSession));
 		} else {
 			TeamList teamList = new TeamList();
-			Team[] teams = getServer().getGameCache().getTeamsForCoach(pJoinApprovedCommand.getCoach());
+			Team[] teams = getServer().getGameCache().getTeamsForCoach(pJoinApprovedCommand.getCoach(), pGameState.getGame());
 			for (Team team : teams) {
 				TeamListEntry teamEntry = new TeamListEntry();
 				teamEntry.init(team);
