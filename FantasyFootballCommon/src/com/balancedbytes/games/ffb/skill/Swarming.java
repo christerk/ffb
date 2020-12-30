@@ -13,7 +13,7 @@ import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
  * These extra players may not be placed on the Line of Scrimmage or in a Wide
  * Zone.
  */
-@RulesCollection(Rules.All)
+@RulesCollection(Rules.COMMON)
 public class Swarming extends Skill {
 
 	public Swarming() {

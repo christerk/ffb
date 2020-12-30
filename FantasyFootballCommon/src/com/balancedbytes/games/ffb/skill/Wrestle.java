@@ -14,7 +14,7 @@ import com.balancedbytes.games.ffb.model.Skill;
  * make Armour rolls for either player. Use of this skill does not cause a
  * turnover unless the active player was holding the ball.
  */
-@RulesCollection(Rules.All)
+@RulesCollection(Rules.COMMON)
 public class Wrestle extends Skill {
 
 	public Wrestle() {

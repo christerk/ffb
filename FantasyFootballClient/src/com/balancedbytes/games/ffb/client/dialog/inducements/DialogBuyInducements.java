@@ -232,7 +232,7 @@ public class DialogBuyInducements extends Dialog implements ActionListener, KeyL
 		List<Skill> mercenarySkills = new ArrayList<Skill>();
 		for (int i = 0; i < fTableModelMercenaries.getRowCount(); i++) {
 			if ((Boolean) fTableModelMercenaries.getValueAt(i, 0)) {
-				Skill mercenarySkill = getClient().getGame().getRules().<SkillFactory>getFactory(Factory.skill).forName((String) fTableModelMercenaries.getValueAt(i, 4));
+				Skill mercenarySkill = getClient().getGame().getRules().<SkillFactory>getFactory(Factory.SKILL).forName((String) fTableModelMercenaries.getValueAt(i, 4));
 				mercenarySkills.add(mercenarySkill);
 			}
 		}

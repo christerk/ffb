@@ -69,7 +69,7 @@ public class StepBlockRoll extends AbstractStepWithReRoll {
 			case CLIENT_BLOCK_CHOICE:
 				ClientCommandBlockChoice blockChoiceCommand = (ClientCommandBlockChoice) pReceivedCommand.getCommand();
 				fDiceIndex = blockChoiceCommand.getDiceIndex();
-				fBlockResult = getGameState().getGame().getRules().<BlockResultFactory>getFactory(Factory.blockResult).forRoll(fBlockRoll[fDiceIndex]);
+				fBlockResult = getGameState().getGame().getRules().<BlockResultFactory>getFactory(Factory.BLOCK_RESULT).forRoll(fBlockRoll[fDiceIndex]);
 				commandStatus = StepCommandStatus.EXECUTE_STEP;
 				break;
 			default:

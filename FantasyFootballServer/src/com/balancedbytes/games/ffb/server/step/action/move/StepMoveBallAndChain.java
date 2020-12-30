@@ -24,7 +24,6 @@ import com.balancedbytes.games.ffb.server.step.StepParameterKey;
 import com.balancedbytes.games.ffb.server.step.StepParameterSet;
 import com.balancedbytes.games.ffb.server.util.UtilServerCatchScatterThrowIn;
 import com.balancedbytes.games.ffb.util.StringTool;
-import com.balancedbytes.games.ffb.util.UtilCards;
 import com.balancedbytes.games.ffb.util.UtilPlayer;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
@@ -126,7 +125,7 @@ public class StepMoveBallAndChain extends AbstractStep {
 	private void executeStep() {
 		Game game = getGameState().getGame();
 		ActingPlayer actingPlayer = game.getActingPlayer();
-		if (UtilCards.hasSkillWithProperty(actingPlayer.getPlayer(), NamedProperties.movesRandomly)) {
+		if (actingPlayer.getPlayer().hasSkillWithProperty(NamedProperties.movesRandomly)) {
 			Direction playerScatter = null;
 			int scatterRoll = getGameState().getDiceRoller().rollThrowInDirection();
 			if (fCoordinateFrom.getX() < fCoordinateTo.getX()) {

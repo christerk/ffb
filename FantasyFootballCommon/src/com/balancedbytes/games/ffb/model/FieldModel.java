@@ -888,8 +888,8 @@ public class FieldModel implements IJsonSerializable {
 		fStateByPlayerId.clear();
 		fCardsByPlayerId.clear();
 
-		CardFactory cardFactory = game.<CardFactory>getFactory(Factory.card);
-		CardEffectFactory cardEffectFactory = game.<CardEffectFactory>getFactory(Factory.cardEffect);
+		CardFactory cardFactory = game.<CardFactory>getFactory(Factory.CARD);
+		CardEffectFactory cardEffectFactory = game.<CardEffectFactory>getFactory(Factory.CARD_EFFECT);
 
 		JsonArray playerDataArray = IJsonOption.PLAYER_DATA_ARRAY.getFrom(game, jsonObject);
 		for (int i = 0; i < playerDataArray.size(); i++) {

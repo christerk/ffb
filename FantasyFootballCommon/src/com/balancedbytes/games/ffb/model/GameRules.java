@@ -58,6 +58,6 @@ public class GameRules {
 	}
 	
 	public SkillFactory getSkillFactory() {
-		return this.<SkillFactory>getFactory(Factory.skill);
+		return this.<SkillFactory>getFactory(Factory.SKILL);
 	}
 }

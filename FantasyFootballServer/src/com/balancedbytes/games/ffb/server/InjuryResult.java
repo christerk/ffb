@@ -24,7 +24,6 @@ import com.balancedbytes.games.ffb.report.ReportInjury;
 import com.balancedbytes.games.ffb.server.step.IStep;
 import com.balancedbytes.games.ffb.server.util.UtilServerGame;
 import com.balancedbytes.games.ffb.util.UtilBox;
-import com.balancedbytes.games.ffb.util.UtilCards;
 import com.eclipsesource.json.JsonArray;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
@@ -55,7 +54,7 @@ public class InjuryResult implements IJsonSerializable {
 		Player defender = game.getPlayerById(injuryContext.getDefenderId());
 
 		PlayerResult playerResult = gameResult.getPlayerResult(defender);
-		if (UtilCards.hasSkillWithProperty(defender, NamedProperties.getsSentOffAtEndOfDrive)) {
+		if (defender.hasSkillWithProperty(NamedProperties.getsSentOffAtEndOfDrive)) {
 			playerResult.setHasUsedSecretWeapon(true);
 		}
 

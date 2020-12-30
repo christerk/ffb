@@ -17,7 +17,7 @@ import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
  * more players attempting to use this skill then they get in each other's way
  * and neither can use it.
  */
-@RulesCollection(Rules.All)
+@RulesCollection(Rules.COMMON)
 public class DivingCatch extends Skill {
 
 	public DivingCatch() {

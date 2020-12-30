@@ -88,7 +88,7 @@ public class DialogUseInducementParameter implements IDialogParameter {
 		}
 		String[] cardNames = IJsonOption.CARDS.getFrom(game, jsonObject);
 		fCards = new Card[cardNames.length];
-		CardFactory cardFactory = game.<CardFactory>getFactory(Factory.card);
+		CardFactory cardFactory = game.<CardFactory>getFactory(Factory.CARD);
 		for (int i = 0; i < fCards.length; i++) {
 			fCards[i] = cardFactory.forName(cardNames[i]);
 		}

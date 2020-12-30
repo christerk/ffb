@@ -215,7 +215,7 @@ public class PlayerDetailComponent extends JPanel {
 				moveLeft -= actingPlayer.getCurrentMove();
 				if (actingPlayer.isGoingForIt() && (moveLeft <= 0)) {
 					moveIsRed = true;
-					if (UtilCards.hasSkillWithProperty(getPlayer(), NamedProperties.canMakeAnExtraGfi)) {
+					if (getPlayer().hasSkillWithProperty(NamedProperties.canMakeAnExtraGfi)) {
 						moveLeft = 3 + moveLeft;
 					} else {
 						moveLeft = 2 + moveLeft;
@@ -380,7 +380,7 @@ public class PlayerDetailComponent extends JPanel {
 				} else {
 					cardSkills.add(skill.getName());
 				}
-				Skill unusedProSkill = UtilCards.getSkillWithProperty(getPlayer(), NamedProperties.canRerollOncePerTurn);
+				Skill unusedProSkill = getPlayer().getSkillWithProperty(NamedProperties.canRerollOncePerTurn);
 				if (((getPlayer() == actingPlayer.getPlayer()) && actingPlayer.isSkillUsed(skill))
 						|| ((skill == unusedProSkill) && playerState.hasUsedPro())) {
 					usedSkills.add(skill.getName());

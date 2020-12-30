@@ -12,7 +12,7 @@ import com.balancedbytes.games.ffb.model.Skill;
  * a player is pushed back into a player with using Stand Firm then neither
  * player moves.
  */
-@RulesCollection(Rules.All)
+@RulesCollection(Rules.COMMON)
 public class StandFirm extends Skill {
 
 	public StandFirm() {

@@ -12,7 +12,7 @@ import com.balancedbytes.games.ffb.model.Skill;
  * the Armour roll when they make a Stab attack against any player playing for a
  * Khemri, Necromantic, Undead or Vampire team.
  */
-@RulesCollection(Rules.All)
+@RulesCollection(Rules.COMMON)
 public class Stakes extends Skill {
 
 	public Stakes() {

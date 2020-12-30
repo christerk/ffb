@@ -12,7 +12,7 @@ import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
  * player is Knocked Down. The opposing player may still continue moving after
  * blocking if he had declared a Blitz Action.
  */
-@RulesCollection(Rules.All)
+@RulesCollection(Rules.COMMON)
 public class Fend extends Skill {
 
 	public Fend() {

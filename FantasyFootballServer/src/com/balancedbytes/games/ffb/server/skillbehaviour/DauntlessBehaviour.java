@@ -36,8 +36,7 @@ public class DauntlessBehaviour extends SkillBehaviour<Dauntless> {
 				ActingPlayer actingPlayer = game.getActingPlayer();
 				boolean lessStrengthThanDefender = (actingPlayer.getStrength() < UtilCards.getPlayerStrength(game,
 						game.getDefender()));
-				boolean usesSpecialBlockingRules = UtilCards.hasSkillWithProperty(actingPlayer.getPlayer(),
-						NamedProperties.useSpecialBlockRules);
+				boolean usesSpecialBlockingRules = actingPlayer.getPlayer().hasSkillWithProperty(NamedProperties.useSpecialBlockRules);
 
 				if (UtilCards.hasSkill(game, actingPlayer, skill) && lessStrengthThanDefender
 						&& ((state.usingStab == null) || !state.usingStab) && !usesSpecialBlockingRules) {

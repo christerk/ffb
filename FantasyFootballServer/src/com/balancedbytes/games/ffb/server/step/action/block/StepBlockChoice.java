@@ -154,16 +154,14 @@ public class StepBlockChoice extends AbstractStep {
 			getResult().setNextAction(StepAction.GOTO_LABEL, fGotoLabelOnJuggernaut);
 			break;
 		case POW_PUSHBACK:
-			Skill defenderDodgeSkill = UtilCards.getSkillWithProperty(game.getDefender(),
-					NamedProperties.ignoreDefenderStumblesResult);
+			Skill defenderDodgeSkill = game.getDefender().getSkillWithProperty(NamedProperties.ignoreDefenderStumblesResult);
 			if (defenderDodgeSkill != null) {
 				Skill attackerCanCancelDodgeSkill = UtilCards.getSkillCancelling(actingPlayer.getPlayer(), defenderDodgeSkill);
 				if ((attackerCanCancelDodgeSkill != null)
-						&& (!UtilCards.hasSkillWithProperty(actingPlayer.getPlayer(), NamedProperties.canBlockSameTeamPlayer)
+						&& (!actingPlayer.getPlayer().hasSkillWithProperty(NamedProperties.canBlockSameTeamPlayer)
 								|| actingPlayer.getPlayer().getTeam() != game.getDefender().getTeam())) {
 
-					Skill playerCanBeThrownSkill = UtilCards.getSkillWithProperty(game.getDefender(),
-							NamedProperties.canBeThrown);
+					Skill playerCanBeThrownSkill = game.getDefender().getSkillWithProperty(NamedProperties.canBeThrown);
 					if (UtilGameOption.isOptionEnabled(game, GameOptionId.RIGHT_STUFF_CANCELS_TACKLE)
 							&& playerCanBeThrownSkill != null) {
 						getResult().addReport(

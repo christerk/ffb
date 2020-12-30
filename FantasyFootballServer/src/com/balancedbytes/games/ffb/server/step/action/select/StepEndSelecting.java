@@ -15,7 +15,6 @@ import com.balancedbytes.games.ffb.server.step.StepId;
 import com.balancedbytes.games.ffb.server.step.StepParameter;
 import com.balancedbytes.games.ffb.server.step.UtilServerSteps;
 import com.balancedbytes.games.ffb.server.util.UtilServerDialog;
-import com.balancedbytes.games.ffb.util.UtilCards;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
@@ -230,7 +229,7 @@ public final class StepEndSelecting extends AbstractStep {
 			SequenceGenerator.getInstance().pushEndPlayerActionSequence(getGameState(), true, true, false);
 			break;
 		case STAND_UP:
-			if (UtilCards.hasSkillWithProperty(actingPlayer.getPlayer(), NamedProperties.inflictsConfusion)) {
+			if (actingPlayer.getPlayer().hasSkillWithProperty(NamedProperties.inflictsConfusion)) {
 				SequenceGenerator.getInstance().pushMoveSequence(getGameState());
 			} else {
 				SequenceGenerator.getInstance().pushEndPlayerActionSequence(getGameState(), true, true, false);

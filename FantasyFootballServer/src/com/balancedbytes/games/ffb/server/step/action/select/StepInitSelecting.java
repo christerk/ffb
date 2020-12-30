@@ -293,7 +293,7 @@ public final class StepInitSelecting extends AbstractStep {
 			}
 			if (actingPlayer.getPlayerAction().isMoving()) {
 				if (actingPlayer.isStandingUp()
-						&& !UtilCards.hasSkillWithProperty(actingPlayer.getPlayer(), NamedProperties.canStandUpForFree)) {
+						&& !actingPlayer.getPlayer().hasSkillWithProperty(NamedProperties.canStandUpForFree)) {
 					actingPlayer.setCurrentMove(Math.min(IServerConstant.MINIMUM_MOVE_TO_STAND_UP,
 							UtilCards.getPlayerMovement(game, actingPlayer.getPlayer())));
 					actingPlayer.setGoingForIt(UtilPlayer.isNextMoveGoingForIt(game)); // auto

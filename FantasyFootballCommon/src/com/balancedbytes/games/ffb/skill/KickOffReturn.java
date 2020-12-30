@@ -14,7 +14,7 @@ import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
  * each kick-off. This skill may not be used for a touchback kick-off and does
  * not allow the player to cross into the opponent's half of the pitch.
  */
-@RulesCollection(Rules.All)
+@RulesCollection(Rules.COMMON)
 public class KickOffReturn extends Skill {
 
 	public KickOffReturn() {

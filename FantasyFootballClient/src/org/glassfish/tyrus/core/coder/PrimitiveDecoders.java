@@ -60,7 +60,6 @@ import org.glassfish.tyrus.core.ReflectionHelper;
  * @author Danny Coward (danny.coward at oracle.com)
  * @author Stepan Kopriva (stepan.kopriva at oracle.com)
  */
-@SuppressWarnings("unchecked")
 public abstract class PrimitiveDecoders<T> extends CoderAdapter implements Decoder.Text<T> {
 	public static final List<Class<? extends Decoder>> ALL;
 	public static final Map<Class<?>, Decoder.Text<?>> ALL_INSTANCES;

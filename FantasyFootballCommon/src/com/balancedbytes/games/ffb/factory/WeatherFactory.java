@@ -1,6 +1,7 @@
 package com.balancedbytes.games.ffb.factory;
 
 import com.balancedbytes.games.ffb.FactoryType;
+import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.RulesCollection.Rules;
 import com.balancedbytes.games.ffb.Weather;
 import com.balancedbytes.games.ffb.model.GameOptions;
@@ -9,7 +10,8 @@ import com.balancedbytes.games.ffb.model.GameOptions;
  * 
  * @author Kalimar
  */
-@FactoryType(FactoryType.Factory.weather)
+@FactoryType(FactoryType.Factory.WEATHER)
+@RulesCollection(Rules.COMMON)
 public class WeatherFactory implements INamedObjectFactory {
 
 	public Weather forName(String pName) {

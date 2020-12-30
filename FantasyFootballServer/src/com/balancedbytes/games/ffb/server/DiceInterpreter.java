@@ -320,7 +320,7 @@ public class DiceInterpreter {
 			} else {
 				int total = injuryRoll[0] + injuryRoll[1] + pInjuryContext.getInjuryModifierTotal();
 				if ((total == 8) && (defender != null)
-						&& UtilCards.hasSkillWithProperty(defender, NamedProperties.convertKOToStunOn8)) {
+						&& defender.hasSkillWithProperty(NamedProperties.convertKOToStunOn8)) {
 					playerState = new PlayerState(PlayerState.STUNNED);
 					pInjuryContext.addInjuryModifier(InjuryModifiers.THICK_SKULL);
 				} else if ((total == 7) && pInjuryContext.hasInjuryModifier(InjuryModifiers.STUNTY)) {
@@ -477,7 +477,7 @@ public class DiceInterpreter {
 	}
 
 	public Direction interpretScatterDirectionRoll(Game game, int roll) {
-		return game.<DirectionFactory>getFactory(Factory.direction).forRoll(roll);
+		return game.<DirectionFactory>getFactory(Factory.DIRECTION).forRoll(roll);
 	}
 
 	public Direction interpretThrowInDirectionRoll(FieldCoordinate pStartCoordinate, int roll) {

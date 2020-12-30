@@ -29,7 +29,6 @@ import com.balancedbytes.games.ffb.server.step.StepParameter;
 import com.balancedbytes.games.ffb.server.step.StepParameterKey;
 import com.balancedbytes.games.ffb.server.util.UtilServerCatchScatterThrowIn;
 import com.balancedbytes.games.ffb.server.util.UtilServerDialog;
-import com.balancedbytes.games.ffb.util.UtilCards;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
@@ -109,11 +108,12 @@ public final class StepKickoffScatterRoll extends AbstractStep {
 		Game game = getGameState().getGame();
 		Player kickingPlayer = findKickingPlayer();
 
-		Skill skillReduceKickDistance = UtilCards.getSkillWithProperty(kickingPlayer,
-				NamedProperties.canReduceKickDistance);
+		Skill skillReduceKickDistance = null; 
+		if (kickingPlayer != null) {
+			skillReduceKickDistance = kickingPlayer.getSkillWithProperty(NamedProperties.canReduceKickDistance);
+		}
 
 		if (fUseKickChoice == null) {
-
 			int rollScatterDirection = getGameState().getDiceRoller().rollScatterDirection();
 			fScatterDirection = DiceInterpreter.getInstance().interpretScatterDirectionRoll(game, rollScatterDirection);
 			fScatterDistance = getGameState().getDiceRoller().rollScatterDistance();
@@ -148,7 +148,6 @@ public final class StepKickoffScatterRoll extends AbstractStep {
 		}
 
 		if (fUseKickChoice != null) {
-
 			int distance = fUseKickChoice ? fScatterDistance / 2 : fScatterDistance;
 			FieldCoordinate ballCoordinateEnd = UtilServerCatchScatterThrowIn.findScatterCoordinate(fKickoffStartCoordinate,
 					fScatterDirection, distance);
@@ -196,7 +195,7 @@ public final class StepKickoffScatterRoll extends AbstractStep {
 			}
 			if ((game.isHomePlaying() && FieldCoordinateBounds.CENTER_FIELD_HOME.isInBounds(playerCoordinate))
 					|| (!game.isHomePlaying() && FieldCoordinateBounds.CENTER_FIELD_AWAY.isInBounds(playerCoordinate))) {
-				if (UtilCards.hasSkillWithProperty(players[i], NamedProperties.canReduceKickDistance)) {
+				if (players[i].hasSkillWithProperty(NamedProperties.canReduceKickDistance)) {
 					kickingPlayer = players[i];
 					break;
 				} else {

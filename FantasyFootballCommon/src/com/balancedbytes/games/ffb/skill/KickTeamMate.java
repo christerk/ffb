@@ -38,7 +38,7 @@ import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
  * scattering), the Landing roll has a -1 modifier; if they moved 9 or more
  * (before scattering), the Landing roll has a -2 modifier.
  */
-@RulesCollection(Rules.All)
+@RulesCollection(Rules.COMMON)
 public class KickTeamMate extends Skill {
 
 	public KickTeamMate() {

@@ -25,7 +25,6 @@ import com.balancedbytes.games.ffb.server.util.UtilServerDialog;
 import com.balancedbytes.games.ffb.server.util.UtilServerPushback;
 import com.balancedbytes.games.ffb.skill.Dodge;
 import com.balancedbytes.games.ffb.util.ArrayTool;
-import com.balancedbytes.games.ffb.util.UtilCards;
 
 public class DodgeBehaviour extends SkillBehaviour<Dodge> {
 	public DodgeBehaviour() {
@@ -104,8 +103,8 @@ public class DodgeBehaviour extends SkillBehaviour<Dodge> {
 
 			PushbackSquare[] grabPushbackSquares = regularPushbackSquares;
 			if ((actingPlayer.getPlayerAction() == PlayerAction.BLOCK)
-					&& UtilCards.hasSkillWithProperty(attacker, NamedProperties.canPushBackToAnySquare)
-					&& !UtilCards.hasSkillWithProperty(game.getDefender(), NamedProperties.canChooseOwnPushedBackSquare)) {
+					&& attacker.hasSkillWithProperty(NamedProperties.canPushBackToAnySquare)
+					&& !game.getDefender().hasSkillWithProperty(NamedProperties.canChooseOwnPushedBackSquare)) {
 				grabPushbackSquares = UtilServerPushback.findPushbackSquares(game, startingSquare, PushbackMode.GRAB);
 			}
 			if (ArrayTool.isProvided(regularPushbackSquares)) {

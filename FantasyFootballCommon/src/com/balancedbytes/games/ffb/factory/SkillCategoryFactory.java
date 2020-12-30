@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.balancedbytes.games.ffb.FactoryType;
+import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.RulesCollection.Rules;
 import com.balancedbytes.games.ffb.SkillCategory;
 import com.balancedbytes.games.ffb.model.GameOptions;
@@ -13,7 +14,8 @@ import com.balancedbytes.games.ffb.util.StringTool;
  * 
  * @author Kalimar
  */
-@FactoryType(FactoryType.Factory.skillCategory)
+@FactoryType(FactoryType.Factory.SKILL_CATEGORY)
+@RulesCollection(Rules.COMMON)
 public class SkillCategoryFactory implements INamedObjectFactory {
 
 	public SkillCategory forName(String pName) {

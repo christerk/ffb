@@ -8,13 +8,13 @@ import java.lang.annotation.RetentionPolicy;
 public @interface RulesCollection {
 	
 	public enum Rules {
-		All,
+		COMMON,
 		BB2020;
 		
 		public boolean matches(Rules other) {
-			return this == All || other == All || this == other;
+			return this == COMMON || other == COMMON || this == other;
 		}
 	};
 	
-	Rules value() default Rules.All;
+	Rules value() default Rules.COMMON;
 }

@@ -85,7 +85,7 @@ public class ReportScatterBall implements IReport {
 	// transformation
 
 	public IReport transform(Game game) {
-		return new ReportScatterBall(game.<DirectionFactory>getFactory(Factory.direction).transform(getDirections()), getRolls(), isGustOfWind());
+		return new ReportScatterBall(game.<DirectionFactory>getFactory(Factory.DIRECTION).transform(getDirections()), getRolls(), isGustOfWind());
 	}
 
 	// JSON serialization
@@ -109,7 +109,7 @@ public class ReportScatterBall implements IReport {
 		JsonArray directionArray = IJsonOption.DIRECTION_ARRAY.getFrom(game, jsonObject);
 		if (directionArray != null) {
 			for (int i = 0; i < directionArray.size(); i++) {
-				addDirection((Direction) UtilJson.toEnumWithName(game.<DirectionFactory>getFactory(Factory.direction), directionArray.get(i)));
+				addDirection((Direction) UtilJson.toEnumWithName(game.<DirectionFactory>getFactory(Factory.DIRECTION), directionArray.get(i)));
 			}
 		}
 		addRolls(IJsonOption.ROLLS.getFrom(game, jsonObject));

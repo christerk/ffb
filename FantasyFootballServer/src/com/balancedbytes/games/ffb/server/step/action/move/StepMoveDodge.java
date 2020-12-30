@@ -191,7 +191,7 @@ public class StepMoveDodge extends AbstractStepWithReRoll {
 		if (pDoRoll) {
 			publishParameter(new StepParameter(StepParameterKey.DODGE_ROLL, getGameState().getDiceRoller().rollSkill()));
 		}
-		DodgeModifierFactory modifierFactory = game.<DodgeModifierFactory>getFactory(Factory.dodgeModifier);
+		DodgeModifierFactory modifierFactory = game.<DodgeModifierFactory>getFactory(Factory.DODGE_MODIFIER);
 		Set<DodgeModifier> dodgeModifiers = modifierFactory.findDodgeModifiers(game, fCoordinateFrom, fCoordinateTo, 0);
 		if (fUsingBreakTackle) {
 			dodgeModifiers.add(DodgeModifiers.BREAK_TACKLE);

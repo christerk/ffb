@@ -1,6 +1,7 @@
 package com.balancedbytes.games.ffb.factory;
 
 import com.balancedbytes.games.ffb.FactoryType;
+import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.RulesCollection.Rules;
 import com.balancedbytes.games.ffb.model.GameOptions;
 import com.balancedbytes.games.ffb.report.ReportId;
@@ -9,7 +10,8 @@ import com.balancedbytes.games.ffb.report.ReportId;
  * 
  * @author Kalimar
  */
-@FactoryType(FactoryType.Factory.reportId)
+@FactoryType(FactoryType.Factory.REPORT_ID)
+@RulesCollection(Rules.COMMON)
 public class ReportIdFactory implements INamedObjectFactory {
 
 	public ReportId forName(String pName) {

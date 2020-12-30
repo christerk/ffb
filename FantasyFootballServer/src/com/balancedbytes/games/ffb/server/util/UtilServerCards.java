@@ -22,7 +22,6 @@ import com.balancedbytes.games.ffb.report.ReportPlayCard;
 import com.balancedbytes.games.ffb.server.DiceInterpreter;
 import com.balancedbytes.games.ffb.server.step.IStep;
 import com.balancedbytes.games.ffb.util.StringTool;
-import com.balancedbytes.games.ffb.util.UtilCards;
 import com.balancedbytes.games.ffb.util.UtilPlayer;
 
 /**
@@ -55,7 +54,7 @@ public class UtilServerCards {
 				playerAllowed &= UtilPlayer.hasBall(pGame, player);
 				break;
 			case RABBITS_FOOT:
-				playerAllowed &= !UtilCards.hasSkillWithProperty(player, NamedProperties.preventCardRabbitsFoot);
+				playerAllowed &= !player.hasSkillWithProperty(NamedProperties.preventCardRabbitsFoot);
 				break;
 			case CHOP_BLOCK:
 				playerAllowed &= playerState.isActive() && !playerState.isProne()
@@ -180,7 +179,7 @@ public class UtilServerCards {
 		for (Player player : players) {
 			game.getFieldModel().removeCardEffect(player, CardEffect.DISTRACTED);
 			PlayerState playerState = game.getFieldModel().getPlayerState(player);
-			if (!UtilCards.hasSkillWithProperty(player, NamedProperties.appliesConfusion) && playerState.isConfused()) {
+			if (!player.hasSkillWithProperty(NamedProperties.appliesConfusion) && playerState.isConfused()) {
 				game.getFieldModel().setPlayerState(player, playerState.changeConfused(false));
 			}
 		}

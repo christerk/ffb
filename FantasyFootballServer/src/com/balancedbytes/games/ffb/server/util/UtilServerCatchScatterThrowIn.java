@@ -10,7 +10,6 @@ import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.model.Team;
 import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
 import com.balancedbytes.games.ffb.server.GameState;
-import com.balancedbytes.games.ffb.util.UtilCards;
 import com.balancedbytes.games.ffb.util.UtilPlayer;
 
 /**
@@ -24,7 +23,7 @@ public class UtilServerCatchScatterThrowIn {
 		Game game = pGameState.getGame();
 		Player[] adjacentPlayers = UtilPlayer.findAdjacentPlayersWithTacklezones(game, pTeam, pCoordinate, false);
 		for (Player player : adjacentPlayers) {
-			if (UtilCards.hasSkillWithProperty(player, NamedProperties.canAttemptCatchInAdjacentSquares)) {
+			if (player.hasSkillWithProperty(NamedProperties.canAttemptCatchInAdjacentSquares)) {
 				divingCatchPlayers.add(player);
 			}
 		}

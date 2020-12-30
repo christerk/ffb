@@ -2,6 +2,7 @@ package com.balancedbytes.games.ffb.factory;
 
 import com.balancedbytes.games.ffb.Direction;
 import com.balancedbytes.games.ffb.FactoryType;
+import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.RulesCollection.Rules;
 import com.balancedbytes.games.ffb.model.GameOptions;
 import com.balancedbytes.games.ffb.util.ArrayTool;
@@ -10,7 +11,8 @@ import com.balancedbytes.games.ffb.util.ArrayTool;
  * 
  * @author Kalimar
  */
-@FactoryType(FactoryType.Factory.direction)
+@FactoryType(FactoryType.Factory.DIRECTION)
+@RulesCollection(Rules.COMMON)
 public class DirectionFactory implements INamedObjectFactory {
 
 	public Direction forName(String pName) {

@@ -436,7 +436,7 @@ public class RosterPlayer extends Player<RosterPosition> {
 					fInsideSkillList = false;
 				}
 				if (_XML_TAG_SKILL.equals(pXmlTag)) {
-					Skill skill = game.getRules().<SkillFactory>getFactory(Factory.skill).forName(pValue);
+					Skill skill = game.getRules().<SkillFactory>getFactory(Factory.SKILL).forName(pValue);
 					if (skill != null) {
 						fSkills.add(skill);
 					}

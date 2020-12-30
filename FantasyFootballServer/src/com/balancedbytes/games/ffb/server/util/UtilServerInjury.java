@@ -67,7 +67,7 @@ public class UtilServerInjury {
 		injuryContext.setApothecaryMode(pApothecaryMode);
 
 		// ball and chain always breaks armor on being knocked down
-		if (UtilCards.hasSkillWithProperty(pDefender, NamedProperties.placedProneCausesInjuryRoll)) {
+		if (pDefender.hasSkillWithProperty(NamedProperties.placedProneCausesInjuryRoll)) {
 			injuryContext.setArmorBroken(true);
 		}
 
@@ -92,13 +92,13 @@ public class UtilServerInjury {
 		if (injuryContext.isSeriousInjury()) {
 			injuryContext
 					.setSeriousInjury(DiceInterpreter.getInstance().interpretRollSeriousInjury(injuryContext.getCasualtyRoll()));
-			if (UtilCards.hasSkillWithProperty(pDefender, NamedProperties.requiresSecondCasualtyRoll)) {
+			if (pDefender.hasSkillWithProperty(NamedProperties.requiresSecondCasualtyRoll)) {
 				injuryContext.setSeriousInjuryDecay(
 						DiceInterpreter.getInstance().interpretRollSeriousInjury(injuryContext.getCasualtyRollDecay()));
 			}
 		}
 
-		if (UtilCards.hasSkillWithProperty(pDefender, NamedProperties.convertStunToKO)
+		if (pDefender.hasSkillWithProperty(NamedProperties.convertStunToKO)
 				&& (injuryContext.getInjury() != null) && (injuryContext.getInjury().getBase() == PlayerState.STUNNED)) {
 			injuryContext.setInjury(new PlayerState(PlayerState.KNOCKED_OUT));
 		}
@@ -107,7 +107,7 @@ public class UtilServerInjury {
 			if (injuryContext.isCasualty() || injuryContext.isKnockedOut()) {
 				injuryContext.setSufferedInjury(injuryContext.getPlayerState());
 				if (pInjuryType.canUseApo() || (injuryContext.isKnockedOut()
-						&& UtilCards.hasSkillWithProperty(pDefender, NamedProperties.placedProneCausesInjuryRoll))) {
+						&& pDefender.hasSkillWithProperty(NamedProperties.placedProneCausesInjuryRoll))) {
 					injuryContext.setApothecaryStatus(ApothecaryStatus.NO_APOTHECARY);
 				} else if ((game.getTeamHome().hasPlayer(pDefender) && (game.getTurnDataHome().getApothecaries() > 0)
 						&& pDefender.getPlayerType() != PlayerType.STAR)
@@ -160,7 +160,7 @@ public class UtilServerInjury {
 			Game game = gameState.getGame();
 			PlayerState playerState = game.getFieldModel().getPlayerState(pPlayer);
 			if ((playerState != null) && playerState.isCasualty()
-					&& UtilCards.hasSkillWithProperty(pPlayer, NamedProperties.canRollToSaveFromInjury)) {
+					&& pPlayer.hasSkillWithProperty(NamedProperties.canRollToSaveFromInjury)) {
 				DiceRoller diceRoller = gameState.getDiceRoller();
 				DiceInterpreter diceInterpreter = DiceInterpreter.getInstance();
 				int roll = diceRoller.rollSkill();
@@ -192,8 +192,7 @@ public class UtilServerInjury {
 		Team necroTeam = UtilPlayer.findOtherTeam(game, deadPlayer);
 		TeamResult necroTeamResult = (game.getTeamHome() == necroTeam) ? game.getGameResult().getTeamResultHome()
 				: game.getGameResult().getTeamResultAway();
-		boolean deadPlayerPreventsRaisedFromDead = UtilCards.hasSkillWithProperty(deadPlayer,
-				NamedProperties.preventRaiseFromDead);
+		boolean deadPlayerPreventsRaisedFromDead = deadPlayer.hasSkillWithProperty(NamedProperties.preventRaiseFromDead);
 
 		if ((pInjuryResult != null) && (pInjuryResult.injuryContext().getPlayerState() != null)
 				&& (PlayerState.RIP == pInjuryResult.injuryContext().getPlayerState().getBase())) {
@@ -203,9 +202,9 @@ public class UtilServerInjury {
 						deadPlayer.getId());
 			} else {
 				Player attacker = game.getPlayerById(pInjuryResult.injuryContext().getAttackerId());
-				if ((attacker != null) && UtilCards.hasSkillWithProperty(attacker, NamedProperties.hasNurglesRot)
+				if ((attacker != null) && attacker.hasSkillWithProperty(NamedProperties.hasNurglesRot)
 						&& (deadPlayer.getStrength() <= 4) && !deadPlayerPreventsRaisedFromDead
-						&& !UtilCards.hasSkillWithProperty(deadPlayer, NamedProperties.requiresSecondCasualtyRoll)) {
+						&& !deadPlayer.hasSkillWithProperty(NamedProperties.requiresSecondCasualtyRoll)) {
 					RosterPosition zombiePosition = necroTeam.getRoster().getRaisedRosterPosition();
 					if (zombiePosition != null) {
 						nurglesRot = true;
@@ -281,7 +280,7 @@ public class UtilServerInjury {
 		FieldCoordinate playerCoordinate = game.getFieldModel().getPlayerCoordinate(pPlayer);
 		PlayerState playerState = game.getFieldModel().getPlayerState(pPlayer);
 		if ((playerCoordinate != null) && (playerState != null)) {
-			if (UtilCards.hasSkillWithProperty(pPlayer, NamedProperties.placedProneCausesInjuryRoll)) {
+			if (pPlayer.hasSkillWithProperty(NamedProperties.placedProneCausesInjuryRoll)) {
 				pStep.publishParameter(new StepParameter(StepParameterKey.INJURY_RESULT, UtilServerInjury.handleInjury(pStep,
 						new InjuryTypeBallAndChain(), null, pPlayer, playerCoordinate, null, pApothecaryMode)));
 			} else {

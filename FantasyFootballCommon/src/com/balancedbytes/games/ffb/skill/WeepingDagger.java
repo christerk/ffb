@@ -14,7 +14,7 @@ import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
  * player must miss their next game. If you are not playing a league, a Weeping
  * Dagger has no effect on the game.
  */
-@RulesCollection(Rules.All)
+@RulesCollection(Rules.COMMON)
 public class WeepingDagger extends Skill {
 
 	public WeepingDagger() {

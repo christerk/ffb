@@ -2,6 +2,7 @@ package com.balancedbytes.games.ffb.factory;
 
 import com.balancedbytes.games.ffb.FactoryType;
 import com.balancedbytes.games.ffb.InducementPhase;
+import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.RulesCollection.Rules;
 import com.balancedbytes.games.ffb.model.GameOptions;
 import com.balancedbytes.games.ffb.util.StringTool;
@@ -10,7 +11,8 @@ import com.balancedbytes.games.ffb.util.StringTool;
  * 
  * @author Kalimar
  */
-@FactoryType(FactoryType.Factory.inducementPhase)
+@FactoryType(FactoryType.Factory.INDUCEMENT_PHASE)
+@RulesCollection(Rules.COMMON)
 public class InducementPhaseFactory implements INamedObjectFactory {
 
 	public InducementPhase forName(String pName) {

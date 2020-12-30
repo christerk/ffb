@@ -31,7 +31,6 @@ import com.balancedbytes.games.ffb.server.util.UtilServerCatchScatterThrowIn;
 import com.balancedbytes.games.ffb.server.util.UtilServerInjury;
 import com.balancedbytes.games.ffb.server.util.UtilServerPlayerSwoop;
 import com.balancedbytes.games.ffb.skill.Swoop;
-import com.balancedbytes.games.ffb.util.UtilCards;
 
 public class SwoopBehaviour extends SkillBehaviour<Swoop> {
 	public SwoopBehaviour() {
@@ -52,7 +51,7 @@ public class SwoopBehaviour extends SkillBehaviour<Swoop> {
 				ActingPlayer actingPlayer = game.getActingPlayer();
 				Player swoopingPlayer = actingPlayer.getPlayer();
 
-				if (UtilCards.hasSkillWithProperty(swoopingPlayer, NamedProperties.ttmScattersInSingleDirection)) {
+				if (swoopingPlayer.hasSkillWithProperty(NamedProperties.ttmScattersInSingleDirection)) {
 					// Send animation moving the player to the initial target square
 
 					state.coordinateFrom = game.getFieldModel().getPlayerCoordinate(swoopingPlayer);

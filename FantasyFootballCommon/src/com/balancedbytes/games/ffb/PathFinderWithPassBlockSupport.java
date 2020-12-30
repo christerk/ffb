@@ -382,7 +382,7 @@ public class PathFinderWithPassBlockSupport {
 			int distance, boolean canLeap) {
 		// Skip if the player doesn't have pass block
 
-		if (!UtilCards.hasSkillWithProperty(passBlocker, NamedProperties.canMoveWhenOpponentPasses)) {
+		if (!passBlocker.hasSkillWithProperty(NamedProperties.canMoveWhenOpponentPasses)) {
 			return new FieldCoordinate[0];
 		}
 

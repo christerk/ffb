@@ -66,7 +66,7 @@ public class UtilActingPlayer {
 			Player<?> player = pGame.getActingPlayer().getPlayer();
 			if (player != null) {
 				PlayerState playerState = pGame.getFieldModel().getPlayerState(player);
-				Skill skillThatAllowsReroll = UtilCards.getSkillWithProperty(player, NamedProperties.canRerollOncePerTurn);
+				Skill skillThatAllowsReroll = player.getSkillWithProperty(NamedProperties.canRerollOncePerTurn);
 				if (playerState.hasUsedPro()) {
 					pGame.getActingPlayer().markSkillUsed(skillThatAllowsReroll);
 				}

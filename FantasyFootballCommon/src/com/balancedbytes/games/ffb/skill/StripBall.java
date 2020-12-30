@@ -12,7 +12,7 @@ import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
  * the ball in the square that they are pushed to, even if the opposing player
  * is not Knocked Down.
  */
-@RulesCollection(Rules.All)
+@RulesCollection(Rules.COMMON)
 public class StripBall extends Skill {
 
 	public StripBall() {

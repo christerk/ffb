@@ -59,7 +59,6 @@ import com.balancedbytes.games.ffb.server.util.UtilServerInducementUse;
 import com.balancedbytes.games.ffb.server.util.UtilServerTimer;
 import com.balancedbytes.games.ffb.util.ArrayTool;
 import com.balancedbytes.games.ffb.util.UtilBox;
-import com.balancedbytes.games.ffb.util.UtilCards;
 import com.balancedbytes.games.ffb.util.UtilPlayer;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
@@ -407,10 +406,9 @@ public class StepEndTurn extends AbstractStep {
 				PlayerState playerState = game.getFieldModel().getPlayerState(player);
 				PlayerResult playerResult = game.getGameResult().getPlayerResult(player);
 				if (playerState.canBeSetUp() && playerState.getBase() != PlayerState.RESERVE) {
-					boolean hasSecretWeapon = UtilCards.hasSkillWithProperty(player, NamedProperties.getsSentOffAtEndOfDrive);
+					boolean hasSecretWeapon = player.hasSkillWithProperty(NamedProperties.getsSentOffAtEndOfDrive);
 					if (!hasSecretWeapon && player instanceof ZappedPlayer) {
-						hasSecretWeapon = UtilCards.hasSkillWithProperty(((ZappedPlayer) player).getOriginalPlayer(),
-								NamedProperties.getsSentOffAtEndOfDrive);
+						hasSecretWeapon = (((ZappedPlayer) player).getOriginalPlayer()).hasSkillWithProperty(NamedProperties.getsSentOffAtEndOfDrive);
 					}
 					if (hasSecretWeapon) {
 						playerResult.setHasUsedSecretWeapon(true);
@@ -429,8 +427,7 @@ public class StepEndTurn extends AbstractStep {
 		Game game = getGameState().getGame();
 		for (Player<?> player : game.getPlayers()) {
 			PlayerResult playerResult = game.getGameResult().getPlayerResult(player);
-			Skill skillRequiringPlayerToBeSentOff = UtilCards.getSkillWithProperty(player,
-					NamedProperties.getsSentOffAtEndOfDrive);
+			Skill skillRequiringPlayerToBeSentOff = player.getSkillWithProperty(NamedProperties.getsSentOffAtEndOfDrive);
 			if (playerResult.hasUsedSecretWeapon() && skillRequiringPlayerToBeSentOff != null) {
 				// special for stunty leeg -> roll for secret weapon ban
 				int penalty = player.getPosition().getSkillValue(skillRequiringPlayerToBeSentOff);

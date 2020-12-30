@@ -10,7 +10,7 @@ import com.balancedbytes.games.ffb.server.step.StepId;
  * 
  * @author Kalimar
  */
-@FactoryType(FactoryType.Factory.stepId)
+@FactoryType(FactoryType.Factory.STEP_ID)
 public class StepIdFactory implements INamedObjectFactory {
 
 	public StepId forName(String pName) {

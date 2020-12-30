@@ -18,7 +18,7 @@ import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
  * both players is calculated before any defensive or offensive assists are
  * added but after all other modifiers.
  */
-@RulesCollection(Rules.All)
+@RulesCollection(Rules.COMMON)
 public class Dauntless extends Skill {
 
 	public Dauntless() {

@@ -15,7 +15,7 @@ import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
  * stand up for free and block an adjacent opponent. A failed roll means the
  * Block Action is wasted and the player may not stand up.
  */
-@RulesCollection(Rules.All)
+@RulesCollection(Rules.COMMON)
 public class JumpUp extends Skill {
 
 	public JumpUp() {

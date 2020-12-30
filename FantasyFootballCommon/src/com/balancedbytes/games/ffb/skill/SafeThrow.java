@@ -13,7 +13,7 @@ import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
  * Agility roll. If this is successful then the interception is cancelled out
  * and the passing sequence continues as normal.
  */
-@RulesCollection(Rules.All)
+@RulesCollection(Rules.COMMON)
 public class SafeThrow extends Skill {
 
 	public SafeThrow() {

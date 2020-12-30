@@ -301,7 +301,7 @@ public class InducementSet implements IXmlSerializable, IJsonSerializable {
 		}
 		if (_XML_TAG_CARD.equals(pXmlTag)) {
 			String cardName = pXmlAttributes.getValue(_XML_ATTRIBUTE_NAME).trim();
-			Card card = game.<CardFactory>getFactory(Factory.card).forName(cardName);
+			Card card = game.<CardFactory>getFactory(Factory.CARD).forName(cardName);
 			if (card != null) {
 				fCardsAvailable.add(card);
 			}
@@ -354,7 +354,7 @@ public class InducementSet implements IXmlSerializable, IJsonSerializable {
 				addInducement(inducement);
 			}
 		}
-		CardFactory cardFactory = game.<CardFactory>getFactory(Factory.card);
+		CardFactory cardFactory = game.<CardFactory>getFactory(Factory.CARD);
 		String[] cardsAvailable = IJsonOption.CARDS_AVAILABLE.getFrom(game, jsonObject);
 		if (ArrayTool.isProvided(cardsAvailable)) {
 			for (String cardName : cardsAvailable) {

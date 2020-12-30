@@ -94,7 +94,7 @@ public class ReportSwoopPlayer implements IReport {
 
 	public IReport transform(Game game) {
 		return new ReportSwoopPlayer(FieldCoordinate.transform(getStartCoordinate()),
-				FieldCoordinate.transform(getEndCoordinate()), game.<DirectionFactory>getFactory(Factory.direction).transform(getDirections()), getRolls());
+				FieldCoordinate.transform(getEndCoordinate()), game.<DirectionFactory>getFactory(Factory.DIRECTION).transform(getDirections()), getRolls());
 	}
 
 	// JSON serialization
@@ -121,7 +121,7 @@ public class ReportSwoopPlayer implements IReport {
 		JsonArray directionArray = IJsonOption.DIRECTION_ARRAY.getFrom(game, jsonObject);
 		if (directionArray != null) {
 			for (int i = 0; i < directionArray.size(); i++) {
-				addDirection((Direction) UtilJson.toEnumWithName(game.<DirectionFactory>getFactory(Factory.direction), directionArray.get(i)));
+				addDirection((Direction) UtilJson.toEnumWithName(game.<DirectionFactory>getFactory(Factory.DIRECTION), directionArray.get(i)));
 			}
 		}
 		addRolls(IJsonOption.ROLLS.getFrom(game, jsonObject));

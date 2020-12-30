@@ -6,7 +6,7 @@ import com.balancedbytes.games.ffb.RulesCollection.Rules;
 import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.model.Skill;
 
-@RulesCollection(Rules.All)
+@RulesCollection(Rules.COMMON)
 public class MovementIncrease extends Skill {
 
 	public MovementIncrease() {

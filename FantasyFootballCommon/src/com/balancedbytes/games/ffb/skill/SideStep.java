@@ -18,7 +18,7 @@ import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
  * adjacent to this player. Note that the coach may choose which square the
  * player is moved to even if the player is Knocked Down after the push back.
  */
-@RulesCollection(Rules.All)
+@RulesCollection(Rules.COMMON)
 public class SideStep extends Skill {
 
 	public SideStep() {

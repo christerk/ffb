@@ -15,7 +15,7 @@ import com.balancedbytes.games.ffb.model.modifier.CancelSkillProperty;
  * hand-off or fail to make an interception. In addition, the Strip Ball skill
  * will not work against a player with a Monstrous Mouth.
  */
-@RulesCollection(Rules.All)
+@RulesCollection(Rules.COMMON)
 public class MonstrousMouth extends Skill {
 
 	public MonstrousMouth() {

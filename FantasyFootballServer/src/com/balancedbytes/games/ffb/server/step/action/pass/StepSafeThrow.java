@@ -111,8 +111,7 @@ public class StepSafeThrow extends AbstractStepWithReRoll {
 		boolean doNextStep = true;
 		boolean safeThrowSuccessful = false;
 
-		Skill canForceInterceptionRerollSkill = UtilCards.getSkillWithProperty(game.getThrower(),
-				NamedProperties.canForceInterceptionReroll);
+		Skill canForceInterceptionRerollSkill = game.getThrower().getSkillWithProperty(NamedProperties.canForceInterceptionReroll);
 		boolean doSafeThrow = (canForceInterceptionRerollSkill != null
 				&& !UtilCards.cancelsSkill(interceptor, canForceInterceptionRerollSkill));
 		if (doSafeThrow) {

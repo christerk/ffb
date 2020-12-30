@@ -19,7 +19,7 @@ import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
  * skill through any means. Likewise, a player with the Frenzy skill can never
  * learn or gain the Grab skill through any means.
  */
-@RulesCollection(Rules.All)
+@RulesCollection(Rules.COMMON)
 public class Grab extends Skill {
 
 	public Grab() {

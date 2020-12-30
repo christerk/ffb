@@ -14,7 +14,7 @@ import com.balancedbytes.games.ffb.model.Skill;
  * When calculating Team Value, the amount of gold pieces spent to purchase a
  * player with this skill is not included in the total.
  */
-@RulesCollection(Rules.All)
+@RulesCollection(Rules.COMMON)
 public class Disposable extends Skill {
 
 	public Disposable() {

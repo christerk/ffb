@@ -15,7 +15,7 @@ import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
  * have the option to throw the second block the player must still be on his
  * feet after the first block.
  */
-@RulesCollection(Rules.All)
+@RulesCollection(Rules.COMMON)
 public class MultipleBlock extends Skill {
 
 	public MultipleBlock() {

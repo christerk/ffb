@@ -15,7 +15,7 @@ import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
  * within three squares of them, even if the Disturbing Presence player is Prone
  * or Stunned.
  */
-@RulesCollection(Rules.All)
+@RulesCollection(Rules.COMMON)
 public class DisturbingPresence extends Skill {
 
 	public DisturbingPresence() {

@@ -18,7 +18,8 @@ import com.balancedbytes.games.ffb.util.Scanner;
  * 
  * @author Kalimar
  */
-@FactoryType(FactoryType.Factory.skill)
+@FactoryType(FactoryType.Factory.SKILL)
+@RulesCollection(Rules.COMMON)
 public class SkillFactory implements INamedObjectFactory {
 	private Map<String, Skill> skills;
 	private Map<Class<? extends Skill>, Skill> skillMap;

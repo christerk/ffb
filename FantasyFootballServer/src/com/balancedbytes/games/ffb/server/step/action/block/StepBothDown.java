@@ -13,7 +13,6 @@ import com.balancedbytes.games.ffb.server.step.StepAction;
 import com.balancedbytes.games.ffb.server.step.StepCommandStatus;
 import com.balancedbytes.games.ffb.server.step.StepId;
 import com.balancedbytes.games.ffb.server.step.StepParameter;
-import com.balancedbytes.games.ffb.util.UtilCards;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
@@ -70,12 +69,12 @@ public class StepBothDown extends AbstractStep {
 		ActingPlayer actingPlayer = game.getActingPlayer();
 		PlayerState attackerState = game.getFieldModel().getPlayerState(actingPlayer.getPlayer());
 		PlayerState defenderState = game.getFieldModel().getPlayerState(game.getDefender());
-		if (!UtilCards.hasSkillWithProperty(game.getDefender(), NamedProperties.preventFallOnBothDown)) {
+		if (!game.getDefender().hasSkillWithProperty(NamedProperties.preventFallOnBothDown)) {
 			game.getFieldModel().setPlayerState(game.getDefender(), defenderState.changeBase(PlayerState.FALLING));
 		} else {
 			game.getFieldModel().setPlayerState(game.getDefender(), fOldDefenderState);
 		}
-		if (!UtilCards.hasSkillWithProperty(actingPlayer.getPlayer(), NamedProperties.preventFallOnBothDown)) {
+		if (!actingPlayer.getPlayer().hasSkillWithProperty(NamedProperties.preventFallOnBothDown)) {
 			game.getFieldModel().setPlayerState(actingPlayer.getPlayer(), attackerState.changeBase(PlayerState.FALLING));
 		}
 		getResult().setNextAction(StepAction.NEXT_STEP);

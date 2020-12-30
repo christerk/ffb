@@ -17,7 +17,7 @@ import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
  * Roster slot. This new Rotter still counts at full value towards the total
  * value of the Nurgle team.
  */
-@RulesCollection(Rules.All)
+@RulesCollection(Rules.COMMON)
 public class NurglesRot extends Skill {
 
 	public NurglesRot() {

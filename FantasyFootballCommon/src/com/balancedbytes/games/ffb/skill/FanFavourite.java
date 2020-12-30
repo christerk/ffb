@@ -11,7 +11,7 @@ import com.balancedbytes.games.ffb.model.Skill;
  * your team receives an additional +1 FAME modifier (see page 18) for any
  * Kick-Off table results, but not for the Winnings roll.
  */
-@RulesCollection(Rules.All)
+@RulesCollection(Rules.COMMON)
 public class FanFavourite extends Skill {
 
 	public FanFavourite() {

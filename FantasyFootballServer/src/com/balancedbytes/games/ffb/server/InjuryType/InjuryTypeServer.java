@@ -15,7 +15,6 @@ import com.balancedbytes.games.ffb.server.DiceInterpreter;
 import com.balancedbytes.games.ffb.server.DiceRoller;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.step.IStep;
-import com.balancedbytes.games.ffb.util.UtilCards;
 
 public abstract class InjuryTypeServer<T extends InjuryType> implements INamedObject {
 
@@ -72,7 +71,7 @@ public abstract class InjuryTypeServer<T extends InjuryType> implements INamedOb
 		if (injuryContext.getPlayerState() == null) {
 			injuryContext.setCasualtyRoll(diceRoller.rollCasualty());
 			injuryContext.setInjury(diceInterpreter.interpretRollCasualty(injuryContext.getCasualtyRoll()));
-			if (UtilCards.hasSkillWithProperty(pDefender, NamedProperties.requiresSecondCasualtyRoll)) {
+			if (pDefender.hasSkillWithProperty(NamedProperties.requiresSecondCasualtyRoll)) {
 				injuryContext.setCasualtyRollDecay(diceRoller.rollCasualty());
 				injuryContext.setInjuryDecay(diceInterpreter.interpretRollCasualty(injuryContext.getCasualtyRollDecay()));
 			}

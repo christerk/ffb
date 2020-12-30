@@ -18,7 +18,7 @@ import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
  * voluntarily move until he manages to roll a 2 or better at the start of a
  * future Action or the drive ends.
  */
-@RulesCollection(Rules.All)
+@RulesCollection(Rules.COMMON)
 public class BoneHead extends Skill {
 
 	public BoneHead() {

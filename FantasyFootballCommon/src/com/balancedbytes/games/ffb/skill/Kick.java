@@ -15,7 +15,7 @@ import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
  * choose to halve the number of squares that the ball scatters on kick-off,
  * rounding any fractions down (i.e., 1 = 0, 2-3 = 1, 4-5 = 2, 6 = 3).
  */
-@RulesCollection(Rules.All)
+@RulesCollection(Rules.COMMON)
 public class Kick extends Skill {
 
 	public Kick() {

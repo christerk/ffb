@@ -10,6 +10,7 @@ import com.balancedbytes.games.ffb.CatchModifier;
 import com.balancedbytes.games.ffb.CatchModifiers;
 import com.balancedbytes.games.ffb.CatchScatterThrowInMode;
 import com.balancedbytes.games.ffb.FactoryType;
+import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.RulesCollection.Rules;
 import com.balancedbytes.games.ffb.Weather;
 import com.balancedbytes.games.ffb.CatchModifiers.CatchContext;
@@ -25,7 +26,8 @@ import com.balancedbytes.games.ffb.util.UtilPlayer;
  * 
  * @author Kalimar
  */
-@FactoryType(FactoryType.Factory.catchModifier)
+@FactoryType(FactoryType.Factory.CATCH_MODIFIER)
+@RulesCollection(Rules.COMMON)
 public class CatchModifierFactory implements IRollModifierFactory {
 
 	static CatchModifiers catchModifiers;
@@ -51,7 +53,7 @@ public class CatchModifierFactory implements IRollModifierFactory {
 
 		if ((CatchScatterThrowInMode.CATCH_ACCURATE_PASS_EMPTY_SQUARE == pCatchMode
 				|| CatchScatterThrowInMode.CATCH_ACCURATE_BOMB_EMPTY_SQUARE == pCatchMode)
-				&& UtilCards.hasSkillWithProperty(pPlayer, NamedProperties.addBonusForAccuratePass)) {
+				&& pPlayer.hasSkillWithProperty(NamedProperties.addBonusForAccuratePass)) {
 			catchModifiers.add(CatchModifiers.ACCURATE);
 		}
 
@@ -61,7 +63,7 @@ public class CatchModifierFactory implements IRollModifierFactory {
 		if (Weather.POURING_RAIN == pGame.getFieldModel().getWeather()) {
 			catchModifiers.add(CatchModifiers.POURING_RAIN);
 		}
-		if (!UtilCards.hasSkillWithProperty(pPlayer, NamedProperties.ignoreTacklezonesWhenCatching)) {
+		if (!pPlayer.hasSkillWithProperty(NamedProperties.ignoreTacklezonesWhenCatching)) {
 			CatchModifier tacklezoneModifier = getTacklezoneModifier(pGame, pPlayer);
 			if (tacklezoneModifier != null) {
 				catchModifiers.add(tacklezoneModifier);

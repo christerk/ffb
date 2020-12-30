@@ -39,7 +39,6 @@ import com.balancedbytes.games.ffb.server.util.UtilServerDialog;
 import com.balancedbytes.games.ffb.server.util.UtilServerInducementUse;
 import com.balancedbytes.games.ffb.server.util.UtilServerInjury;
 import com.balancedbytes.games.ffb.util.StringTool;
-import com.balancedbytes.games.ffb.util.UtilCards;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
@@ -232,7 +231,7 @@ public class StepApothecary extends AbstractStep {
 					fInjuryResult.applyTo(this);
 					PlayerState playerState = game.getFieldModel().getPlayerState(player);
 					if ((playerState != null) && playerState.isCasualty()
-							&& UtilCards.hasSkillWithProperty(player, NamedProperties.canRollToSaveFromInjury)
+							&& player.hasSkillWithProperty(NamedProperties.canRollToSaveFromInjury)
 							&& (fInjuryResult.injuryContext().getInjuryType().canUseApo())) {
 						if (!UtilServerInjury.handleRegeneration(this, player)) {
 							InducementSet inducementSet = game.getTeamHome().hasPlayer(player)

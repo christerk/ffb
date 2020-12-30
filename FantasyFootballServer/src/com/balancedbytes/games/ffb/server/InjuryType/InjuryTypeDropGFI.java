@@ -14,7 +14,6 @@ import com.balancedbytes.games.ffb.server.DiceInterpreter;
 import com.balancedbytes.games.ffb.server.DiceRoller;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.step.IStep;
-import com.balancedbytes.games.ffb.util.UtilCards;
 
 public class InjuryTypeDropGFI extends InjuryTypeServer<DropGFI> {
 
@@ -31,7 +30,7 @@ public class InjuryTypeDropGFI extends InjuryTypeServer<DropGFI> {
 
 		if (!injuryContext.isArmorBroken()) {
 			injuryContext.setArmorRoll(diceRoller.rollArmour());
-			if (UtilCards.hasSkillWithProperty(pDefender, NamedProperties.blocksLikeChainsaw)) {
+			if (pDefender.hasSkillWithProperty(NamedProperties.blocksLikeChainsaw)) {
 				injuryContext.addArmorModifier(ArmorModifiers.CHAINSAW);
 			}
 			injuryContext.setArmorBroken(diceInterpreter.isArmourBroken(gameState, injuryContext));

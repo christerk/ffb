@@ -13,7 +13,6 @@ import com.balancedbytes.games.ffb.server.DiceInterpreter;
 import com.balancedbytes.games.ffb.server.DiceRoller;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.step.IStep;
-import com.balancedbytes.games.ffb.util.UtilCards;
 
 public class InjuryTypeBomb extends InjuryTypeServer<Bomb> {
 	public InjuryTypeBomb() {
@@ -28,7 +27,7 @@ public class InjuryTypeBomb extends InjuryTypeServer<Bomb> {
 		DiceInterpreter diceInterpreter = DiceInterpreter.getInstance();
 
 		if (!injuryContext.isArmorBroken()) {
-			boolean defenderHasChainsaw = UtilCards.hasSkillWithProperty(pDefender, NamedProperties.blocksLikeChainsaw);
+			boolean defenderHasChainsaw = pDefender.hasSkillWithProperty(NamedProperties.blocksLikeChainsaw);
 
 			injuryContext.setArmorRoll(diceRoller.rollArmour());
 			if (defenderHasChainsaw) {

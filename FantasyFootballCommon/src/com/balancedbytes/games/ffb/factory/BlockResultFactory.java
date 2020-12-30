@@ -2,6 +2,7 @@ package com.balancedbytes.games.ffb.factory;
 
 import com.balancedbytes.games.ffb.BlockResult;
 import com.balancedbytes.games.ffb.FactoryType;
+import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.RulesCollection.Rules;
 import com.balancedbytes.games.ffb.model.GameOptions;
 
@@ -9,7 +10,8 @@ import com.balancedbytes.games.ffb.model.GameOptions;
  * 
  * @author Kalimar
  */
-@FactoryType(FactoryType.Factory.blockResult)
+@FactoryType(FactoryType.Factory.BLOCK_RESULT)
+@RulesCollection(Rules.COMMON)
 public class BlockResultFactory implements INamedObjectFactory {
 
 	public BlockResult forName(String pName) {

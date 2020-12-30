@@ -76,7 +76,7 @@ public class ThrowTeamMateBehaviour extends SkillBehaviour<ThrowTeamMate> {
 					if (successful) {
 						Player thrownPlayer = game.getPlayerById(state.thrownPlayerId);
 						boolean scattersSingleDirection = thrownPlayer != null
-								&& UtilCards.hasSkillWithProperty(thrownPlayer, NamedProperties.ttmScattersInSingleDirection);
+								&& thrownPlayer.hasSkillWithProperty(NamedProperties.ttmScattersInSingleDirection);
 						SequenceGenerator.getInstance().pushScatterPlayerSequence(step.getGameState(), state.thrownPlayerId,
 								state.thrownPlayerState, state.thrownPlayerHasBall, throwerCoordinate, scattersSingleDirection, true);
 						step.getResult().setNextAction(StepAction.NEXT_STEP);

@@ -4,6 +4,7 @@ import com.balancedbytes.games.ffb.DodgeModifier;
 import com.balancedbytes.games.ffb.DodgeModifiers;
 import com.balancedbytes.games.ffb.FactoryType;
 import com.balancedbytes.games.ffb.FieldCoordinate;
+import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.RulesCollection.Rules;
 import com.balancedbytes.games.ffb.DodgeModifiers.DodgeContext;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
@@ -26,7 +27,8 @@ import java.util.Set;
  *
  * @author Kalimar
  */
-@FactoryType(FactoryType.Factory.dodgeModifier)
+@FactoryType(FactoryType.Factory.DODGE_MODIFIER)
+@RulesCollection(Rules.COMMON)
 public class DodgeModifierFactory implements IRollModifierFactory {
 
 	static DodgeModifiers dodgeModifiers;
@@ -56,8 +58,7 @@ public class DodgeModifierFactory implements IRollModifierFactory {
 			accumulatedModifiers.add(prehensileTailModifier);
 		}
 
-		boolean preventStunty = UtilCards.hasSkillWithProperty(actingPlayer.getPlayer(),
-				NamedProperties.preventStuntyDodgeModifier);
+		boolean preventStunty = actingPlayer.getPlayer().hasSkillWithProperty(NamedProperties.preventStuntyDodgeModifier);
 		if (tacklezoneModifier != null && (context.addTackleZoneModifier || preventStunty)) {
 			accumulatedModifiers.add(tacklezoneModifier);
 		}
@@ -81,7 +82,7 @@ public class DodgeModifierFactory implements IRollModifierFactory {
 		int tacklezones = pModifier;
 		Player<?>[] adjacentPlayers = UtilPlayer.findAdjacentPlayersWithTacklezones(pGame, otherTeam, pCoordinateTo, false);
 		for (Player<?> player : adjacentPlayers) {
-			if (!UtilCards.hasSkillWithProperty(player, NamedProperties.hasNoTacklezone)) {
+			if (!player.hasSkillWithProperty(NamedProperties.hasNoTacklezone)) {
 				tacklezones++;
 			}
 		}

@@ -12,7 +12,7 @@ import com.balancedbytes.games.ffb.model.Skill;
  * is too revolted to make the block and it is wasted (though the opposing team
  * does not suffer a turnover).
  */
-@RulesCollection(Rules.All)
+@RulesCollection(Rules.COMMON)
 public class FoulAppearance extends Skill {
 
 	public FoulAppearance() {

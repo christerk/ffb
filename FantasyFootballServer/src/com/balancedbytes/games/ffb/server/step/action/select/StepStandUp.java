@@ -102,7 +102,7 @@ public final class StepStandUp extends AbstractStepWithReRoll {
 					int roll = getGameState().getDiceRoller().rollSkill();
 
 					int modifier = 0;
-					if (UtilCards.hasSkillWithProperty(actingPlayer.getPlayer(), NamedProperties.allowStandupAssists)) {
+					if (actingPlayer.getPlayer().hasSkillWithProperty(NamedProperties.allowStandupAssists)) {
 						modifier = UtilPlayer.findStandUpAssists(game, actingPlayer.getPlayer());
 					}
 

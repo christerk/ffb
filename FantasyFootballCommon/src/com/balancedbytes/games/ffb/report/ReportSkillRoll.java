@@ -159,24 +159,24 @@ public class ReportSkillRoll implements IReport {
 	private IRollModifierFactory createRollModifierFactory(Game game) {
 		switch (getId()) {
 		case CATCH_ROLL:
-			return game.<CatchModifierFactory>getFactory(Factory.catchModifier);
+			return game.<CatchModifierFactory>getFactory(Factory.CATCH_MODIFIER);
 		case DODGE_ROLL:
-			return game.<DodgeModifierFactory>getFactory(Factory.dodgeModifier);
+			return game.<DodgeModifierFactory>getFactory(Factory.DODGE_MODIFIER);
 		case GO_FOR_IT_ROLL:
-			return game.<GoForItModifierFactory>getFactory(Factory.goForItModifier);
+			return game.<GoForItModifierFactory>getFactory(Factory.GO_FOR_IT_MODIFIER);
 		case INTERCEPTION_ROLL:
-			return game.<InterceptionModifierFactory>getFactory(Factory.interceptionModifier);
+			return game.<InterceptionModifierFactory>getFactory(Factory.INTERCEPTION_MODIFIER);
 		case LEAP_ROLL:
-			return game.<LeapModifierFactory>getFactory(Factory.leapModifier);
+			return game.<LeapModifierFactory>getFactory(Factory.LEAP_MODIFIER);
 		case PASS_ROLL:
 		case THROW_TEAM_MATE_ROLL:
-			return game.<PassModifierFactory>getFactory(Factory.passModifier);
+			return game.<PassModifierFactory>getFactory(Factory.PASS_MODIFIER);
 		case PICK_UP_ROLL:
-			return game.<PickupModifierFactory>getFactory(Factory.pickupModifier);
+			return game.<PickupModifierFactory>getFactory(Factory.PICKUP_MODIFIER);
 		case RIGHT_STUFF_ROLL:
-			return game.<RightStuffModifierFactory>getFactory(Factory.rightStuffModifier);
+			return game.<RightStuffModifierFactory>getFactory(Factory.RIGHT_STUFF_MODIFIER);
 		case HYPNOTIC_GAZE_ROLL:
-			return game.<GazeModifierFactory>getFactory(Factory.gazeModifier);
+			return game.<GazeModifierFactory>getFactory(Factory.GAZE_MODIFIER);
 		default:
 			return null;
 		}

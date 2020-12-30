@@ -446,7 +446,7 @@ public class RosterPosition implements Position {
 				fInsideSkillListTag = false;
 			}
 			if (_XML_TAG_SKILL.equals(pTag)) {
-				Skill skill = game.getRules().<SkillFactory>getFactory(Factory.skill).forName(pValue);
+				Skill skill = game.getRules().<SkillFactory>getFactory(Factory.SKILL).forName(pValue);
 				if (skill != null) {
 					fSkillValues.put(skill, fCurrentSkillValue);
 				}

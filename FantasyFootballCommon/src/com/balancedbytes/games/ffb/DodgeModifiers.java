@@ -41,8 +41,7 @@ public class DodgeModifiers {
 	public static final DodgeModifier STUNTY = new DodgeModifier("Stunty", 0, false, false) {
 		@Override
 		public boolean appliesToContext(Skill skill, DodgeContext context) {
-			boolean applies = !UtilCards.hasSkillWithProperty(context.actingPlayer.getPlayer(),
-					NamedProperties.preventStuntyDodgeModifier);
+			boolean applies = !context.actingPlayer.getPlayer().hasSkillWithProperty(NamedProperties.preventStuntyDodgeModifier);
 			if (applies) {
 				context.addTackleZoneModifier = false;
 			}

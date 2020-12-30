@@ -58,7 +58,7 @@ public class DivingTackleBehaviour extends SkillBehaviour<DivingTackle> {
 							divingTacklers = UtilPlayer.filterAttackerAndDefender(game, divingTacklers);
 						}
 						if (ArrayTool.isProvided(divingTacklers) && (state.dodgeRoll > 0)) {
-							DodgeModifierFactory modifierFactory = game.<DodgeModifierFactory>getFactory(Factory.dodgeModifier);
+							DodgeModifierFactory modifierFactory = game.<DodgeModifierFactory>getFactory(Factory.DODGE_MODIFIER);
 							Set<DodgeModifier> dodgeModifiers = modifierFactory.findDodgeModifiers(game, state.coordinateFrom,
 									state.coordinateTo, 0);
 							dodgeModifiers.add(DodgeModifiers.DIVING_TACKLE);

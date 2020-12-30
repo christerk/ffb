@@ -17,7 +17,7 @@ import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
  * have been caught committing fouls during the match regardless of whether the
  * player is still on the pitch or not.
  */
-@RulesCollection(Rules.All)
+@RulesCollection(Rules.COMMON)
 public class SecretWeapon extends Skill {
 
 	public SecretWeapon() {

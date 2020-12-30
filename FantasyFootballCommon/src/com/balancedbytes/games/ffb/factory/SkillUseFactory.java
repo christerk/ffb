@@ -1,6 +1,7 @@
 package com.balancedbytes.games.ffb.factory;
 
 import com.balancedbytes.games.ffb.FactoryType;
+import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.RulesCollection.Rules;
 import com.balancedbytes.games.ffb.SkillUse;
 import com.balancedbytes.games.ffb.model.GameOptions;
@@ -10,7 +11,8 @@ import com.balancedbytes.games.ffb.util.StringTool;
  * 
  * @author Kalimar
  */
-@FactoryType(FactoryType.Factory.skillUse)
+@FactoryType(FactoryType.Factory.SKILL_USE)
+@RulesCollection(Rules.COMMON)
 public class SkillUseFactory implements INamedObjectFactory {
 
 	public SkillUse forName(String pName) {

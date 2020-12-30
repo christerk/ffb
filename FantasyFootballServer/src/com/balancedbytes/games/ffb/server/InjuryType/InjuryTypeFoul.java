@@ -48,7 +48,7 @@ public class InjuryTypeFoul extends InjuryTypeServer<Foul> {
 
 		if (!injuryContext.isArmorBroken()) {
 
-			boolean attackerHasChainsaw = UtilCards.hasSkillWithProperty(pAttacker, NamedProperties.blocksLikeChainsaw);
+			boolean attackerHasChainsaw = pAttacker.hasSkillWithProperty(NamedProperties.blocksLikeChainsaw);
 
 			injuryContext.setArmorRoll(diceRoller.rollArmour());
 			if (attackerHasChainsaw) {

@@ -28,7 +28,7 @@ import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
  * any players Knocked Down by the bomb. Casualties caused by a bomb do not
  * count for Star Player points.
  */
-@RulesCollection(Rules.All)
+@RulesCollection(Rules.COMMON)
 public class Bombardier extends Skill {
 
 	public Bombardier() {

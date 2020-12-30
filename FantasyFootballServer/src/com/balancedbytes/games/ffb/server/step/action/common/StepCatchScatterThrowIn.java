@@ -345,7 +345,7 @@ public class StepCatchScatterThrowIn extends AbstractStepWithReRoll {
 
 		Game game = getGameState().getGame();
 		state.catcher = game.getPlayerById(fCatcherId);
-		if ((state.catcher == null) || UtilCards.hasSkillWithProperty(state.catcher, NamedProperties.preventCatch)) {
+		if ((state.catcher == null) || state.catcher.hasSkillWithProperty(NamedProperties.preventCatch)) {
 			return CatchScatterThrowInMode.SCATTER_BALL;
 		}
 		FieldCoordinate catcherCoordinate = game.getFieldModel().getPlayerCoordinate(state.catcher);
@@ -359,7 +359,7 @@ public class StepCatchScatterThrowIn extends AbstractStepWithReRoll {
 
 		if (doRoll) {
 
-			CatchModifierFactory modifierFactory = game.<CatchModifierFactory>getFactory(Factory.catchModifier);
+			CatchModifierFactory modifierFactory = game.<CatchModifierFactory>getFactory(Factory.CATCH_MODIFIER);
 			Set<CatchModifier> catchModifiers = modifierFactory.findCatchModifiers(game, state.catcher, fCatchScatterThrowInMode);
 			int minimumRoll = DiceInterpreter.getInstance().minimumRollCatch(state.catcher, catchModifiers);
 			boolean reRolled = ((getReRolledAction() == ReRolledActions.CATCH) && (getReRollSource() != null));

@@ -25,7 +25,6 @@ import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
 import com.balancedbytes.games.ffb.net.NetCommand;
 import com.balancedbytes.games.ffb.util.ArrayTool;
-import com.balancedbytes.games.ffb.util.UtilCards;
 import com.balancedbytes.games.ffb.util.UtilPlayer;
 
 /**
@@ -119,8 +118,8 @@ public class ClientStateKickTeamMate extends ClientStateMove {
 		FieldCoordinate catcherCoordinate = game.getFieldModel().getPlayerCoordinate(pPlayer);
 		// added a check so you could not throw the opponents players, maybe this should
 		// be in the server-check?
-		return (UtilCards.hasSkillWithProperty(actingPlayer.getPlayer(), NamedProperties.canKickTeamMates)
-				&& UtilCards.hasSkillWithProperty(pPlayer, NamedProperties.canBeKicked) && catcherState.hasTacklezones()
+		return (actingPlayer.getPlayer().hasSkillWithProperty(NamedProperties.canKickTeamMates)
+				&& pPlayer.hasSkillWithProperty(NamedProperties.canBeKicked) && catcherState.hasTacklezones()
 				&& catcherCoordinate.isAdjacent(throwerCoordinate)
 				&& (actingPlayer.getPlayer().getTeam() == pPlayer.getTeam()));
 	}

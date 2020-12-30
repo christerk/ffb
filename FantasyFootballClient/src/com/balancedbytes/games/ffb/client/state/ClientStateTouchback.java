@@ -9,7 +9,6 @@ import com.balancedbytes.games.ffb.client.util.UtilClientCursor;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
-import com.balancedbytes.games.ffb.util.UtilCards;
 
 /**
  * 
@@ -85,7 +84,7 @@ public class ClientStateTouchback extends ClientState {
 			Game game = getClient().getGame();
 			PlayerState playerState = game.getFieldModel().getPlayerState(pPlayer);
 			selectable = ((playerState != null) && playerState.hasTacklezones() && game.getTeamHome().hasPlayer(pPlayer)
-					&& !UtilCards.hasSkillWithProperty(pPlayer, NamedProperties.preventHoldBall));
+					&& !pPlayer.hasSkillWithProperty(NamedProperties.preventHoldBall));
 		}
 		return selectable;
 	}

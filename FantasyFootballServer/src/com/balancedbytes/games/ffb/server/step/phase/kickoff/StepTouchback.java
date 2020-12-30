@@ -22,7 +22,6 @@ import com.balancedbytes.games.ffb.server.step.StepParameter;
 import com.balancedbytes.games.ffb.server.step.StepParameterKey;
 import com.balancedbytes.games.ffb.server.step.UtilServerSteps;
 import com.balancedbytes.games.ffb.server.util.UtilServerDialog;
-import com.balancedbytes.games.ffb.util.UtilCards;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
@@ -109,7 +108,7 @@ public final class StepTouchback extends AbstractStep {
 				game.getFieldModel().setBallCoordinate(fTouchbackCoordinate);
 				Player player = game.getFieldModel().getPlayer(fTouchbackCoordinate);
 				PlayerState playerState = game.getFieldModel().getPlayerState(player);
-				if ((player != null) && !UtilCards.hasSkillWithProperty(player, NamedProperties.preventHoldBall)
+				if ((player != null) && !player.hasSkillWithProperty(NamedProperties.preventHoldBall)
 						&& playerState.hasTacklezones()) {
 					game.getFieldModel().setBallMoving(false);
 					getResult().setSound(SoundId.CATCH);

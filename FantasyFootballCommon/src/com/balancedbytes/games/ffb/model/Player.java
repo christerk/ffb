@@ -146,4 +146,17 @@ public abstract class Player<T extends Position> implements IXmlSerializable, IJ
 		}
 		return new RosterPlayer();
 	}
+	
+	public Skill getSkillWithProperty(ISkillProperty property) {
+		for (Skill playerSkill : getSkills()) {
+			if (playerSkill.hasSkillProperty(property)) {
+				return playerSkill;
+			}
+		}
+		return null;
+	}
+
+	public boolean hasSkillWithProperty(ISkillProperty property) {
+		return getSkillWithProperty(property) != null;
+	}
 }

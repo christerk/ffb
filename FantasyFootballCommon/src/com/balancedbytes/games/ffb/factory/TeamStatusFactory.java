@@ -1,6 +1,7 @@
 package com.balancedbytes.games.ffb.factory;
 
 import com.balancedbytes.games.ffb.FactoryType;
+import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.RulesCollection.Rules;
 import com.balancedbytes.games.ffb.TeamStatus;
 import com.balancedbytes.games.ffb.model.GameOptions;
@@ -9,7 +10,8 @@ import com.balancedbytes.games.ffb.model.GameOptions;
  * 
  * @author Kalimar
  */
-@FactoryType(FactoryType.Factory.teamStatus)
+@FactoryType(FactoryType.Factory.TEAM_STATUS)
+@RulesCollection(Rules.COMMON)
 public class TeamStatusFactory implements INamedObjectFactory {
 
 	// TODO: this method should no longer be necessary

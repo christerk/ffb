@@ -23,7 +23,7 @@ import com.balancedbytes.games.ffb.model.Skill;
  * when he was removed and he will not score a touchdown if he was in the
  * opposing end zone.
  */
-@RulesCollection(Rules.All)
+@RulesCollection(Rules.COMMON)
 public class BloodLust extends Skill {
 
 	public BloodLust() {

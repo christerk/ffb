@@ -2346,7 +2346,7 @@ public class StatusReport {
 		{
 			StringBuilder status = new StringBuilder();
 			status.append("Block Roll");
-			BlockResultFactory blockResultFactory = fClient.getGame().getRules().<BlockResultFactory>getFactory(Factory.blockResult);
+			BlockResultFactory blockResultFactory = fClient.getGame().getRules().<BlockResultFactory>getFactory(Factory.BLOCK_RESULT);
 			for (int i = 0; i < pReport.getBlockRoll().length; i++) {
 				BlockResult blockResult = blockResultFactory.forRoll(pReport.getBlockRoll()[i]);
 				status.append(" [ ").append(blockResult.getName()).append(" ]");
@@ -2364,16 +2364,26 @@ public class StatusReport {
 		Player defender = game.getPlayerById(pReport.getDefenderId());
 		switch (pReport.getBlockResult()) {
 		case BOTH_DOWN:
-			if (UtilCards.hasSkill(game, attacker, SkillConstants.BLOCK)) {
+			if (attacker.hasSkillWithProperty(NamedProperties.preventFallOnBothDown)) {
 				print(getIndent() + 1, false, attacker);
 				status = new StringBuilder();
-				status.append(" has been saved by ").append(attacker.getPlayerGender().getGenitive()).append(" Block skill.");
+				status
+					.append(" has been saved by ")
+					.append(attacker.getPlayerGender().getGenitive())
+					.append(" ")
+					.append(attacker.getSkillWithProperty(NamedProperties.preventFallOnBothDown))
+					.append(" skill.");
 				println(getIndent() + 1, status.toString());
 			}
-			if (UtilCards.hasSkill(game, defender, SkillConstants.BLOCK)) {
+			if (defender.hasSkillWithProperty(NamedProperties.preventFallOnBothDown)) {
 				print(getIndent() + 1, false, defender);
 				status = new StringBuilder();
-				status.append(" has been saved by ").append(defender.getPlayerGender().getGenitive()).append(" Block skill.");
+				status
+				.append(" has been saved by ")
+				.append(defender.getPlayerGender().getGenitive())
+				.append(" ")
+				.append(defender.getSkillWithProperty(NamedProperties.preventFallOnBothDown))
+				.append(" skill.");
 				println(getIndent() + 1, status.toString());
 			}
 			break;

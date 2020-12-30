@@ -2,6 +2,7 @@ package com.balancedbytes.games.ffb.factory;
 
 import com.balancedbytes.games.ffb.FactoryType;
 import com.balancedbytes.games.ffb.PushbackMode;
+import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.RulesCollection.Rules;
 import com.balancedbytes.games.ffb.model.GameOptions;
 
@@ -9,7 +10,8 @@ import com.balancedbytes.games.ffb.model.GameOptions;
  * 
  * @author Kalimar
  */
-@FactoryType(FactoryType.Factory.pushbackMode)
+@FactoryType(FactoryType.Factory.PUSHBACK_MODE)
+@RulesCollection(Rules.COMMON)
 public class PushbackModeFactory implements INamedObjectFactory {
 
 	public PushbackMode forName(String pName) {

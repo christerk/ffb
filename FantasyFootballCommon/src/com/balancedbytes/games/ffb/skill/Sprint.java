@@ -11,7 +11,7 @@ import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
  * normal two when Going For It (see page 20). His coach must still roll to see
  * if the player is Knocked Down in each extra square he enters.
  */
-@RulesCollection(Rules.All)
+@RulesCollection(Rules.COMMON)
 public class Sprint extends Skill {
 
 	public Sprint() {

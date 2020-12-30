@@ -7,6 +7,7 @@ import java.util.Set;
 
 import com.balancedbytes.games.ffb.FactoryType;
 import com.balancedbytes.games.ffb.GazeModifier;
+import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.RulesCollection.Rules;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.GameOptions;
@@ -17,7 +18,8 @@ import com.balancedbytes.games.ffb.util.UtilPlayer;
  * 
  * @author Kalimar
  */
-@FactoryType(FactoryType.Factory.gazeModifier)
+@FactoryType(FactoryType.Factory.GAZE_MODIFIER)
+@RulesCollection(Rules.COMMON)
 public class GazeModifierFactory implements IRollModifierFactory {
 
 	public GazeModifier forName(String pName) {
