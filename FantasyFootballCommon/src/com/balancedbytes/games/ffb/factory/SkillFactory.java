@@ -2,6 +2,7 @@ package com.balancedbytes.games.ffb.factory;
 
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 
 import com.balancedbytes.games.ffb.FactoryType;
@@ -9,6 +10,7 @@ import com.balancedbytes.games.ffb.FactoryType.Factory;
 import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.RulesCollection.Rules;
 import com.balancedbytes.games.ffb.model.Game;
+import com.balancedbytes.games.ffb.model.ISkillBehaviour;
 import com.balancedbytes.games.ffb.model.Skill;
 import com.balancedbytes.games.ffb.util.Scanner;
 
@@ -52,6 +54,17 @@ public class SkillFactory implements INamedObjectFactory {
 		return skillMap.get(c);
 	}
 
+	public Collection<ISkillBehaviour<? extends Skill>> getBehaviours() {
+		Collection<ISkillBehaviour<? extends Skill>> result = new HashSet<>();
+		skills.values().forEach(s -> {
+			ISkillBehaviour<? extends Skill> behaviour = s.getSkillBehaviour();
+			if (behaviour != null) {
+				result.add(behaviour);
+			}
+		});
+		return result;
+	}
+	
 	@Override
 	public void initialize(Game game) {
 		Scanner<Skill> scanner = new Scanner<Skill>(Skill.class);

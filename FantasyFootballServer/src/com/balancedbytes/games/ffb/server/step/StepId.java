@@ -28,6 +28,7 @@ public enum StepId implements INamedObject {
 	BUY_INDUCEMENTS("buyInducements"), // game.start
 	CATCH_SCATTER_THROW_IN("catchScatterThrowIn"), // action.common
 	COIN_CHOICE("coinChoice"), // game.start
+	CLOUD_BURSTER("cloudBurster"), // action.pass
 	DAUNTLESS("dauntless"), // action.block
 	DISPATCH_PASSING("dispatchPassing"), // action.pass
 	DIVING_TACKLE("divingTackle"), // action.move

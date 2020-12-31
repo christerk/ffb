@@ -11,6 +11,7 @@ import com.balancedbytes.games.ffb.PlayerState;
 import com.balancedbytes.games.ffb.SpecialEffect;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.IServerLogLevel;
+import com.balancedbytes.games.ffb.server.skillbehaviour.StepHook.HookPoint;
 import com.balancedbytes.games.ffb.server.step.phase.inducement.StepRiotousRookies;
 
 /**
@@ -135,7 +136,10 @@ public class SequenceGenerator {
 				param(StepParameterKey.GOTO_LABEL_ON_HAND_OVER, IStepLabel.HAND_OVER),
 				param(StepParameterKey.GOTO_LABEL_ON_HAIL_MARY_PASS, IStepLabel.HAIL_MARY_PASS));
 		sequence.add(StepId.INTERCEPT, param(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.PASS));
-		sequence.add(StepId.SAFE_THROW, param(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.END_PASSING));
+
+		sequence.insertHooks(HookPoint.PASS_INTERCEPT,
+				param(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.END_PASSING));
+		
 		sequence.add(StepId.PASS, IStepLabel.PASS, param(StepParameterKey.GOTO_LABEL_ON_END, IStepLabel.END_PASSING),
 				param(StepParameterKey.GOTO_LABEL_ON_MISSED_PASS, IStepLabel.MISSED_PASS));
 		sequence.jump(IStepLabel.SCATTER_BALL);
@@ -586,6 +590,12 @@ public class SequenceGenerator {
 			this.gameState = gameState;
 		}
 
+		public void insertHooks(HookPoint passIntercept, StepParameter... params) {
+			gameState.getStepFactory().getSteps(HookPoint.PASS_INTERCEPT).forEach(step -> {
+				add(step, params);
+			});
+		}
+
 		public void add(StepId step, StepParameter... params) {
 			add(step, null, params);
 		}
@@ -599,7 +609,7 @@ public class SequenceGenerator {
 				}
 			}
 
-			sequence.add(new StepFactory(gameState).create(step, label, parameterSet));
+			sequence.add(gameState.getStepFactory().create(step, label, parameterSet));
 		}
 
 		public void jump(String targetLabel) {

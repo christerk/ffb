@@ -17,6 +17,8 @@ import com.balancedbytes.games.ffb.server.DiceInterpreter;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.IServerJsonOption;
 import com.balancedbytes.games.ffb.server.net.ReceivedCommand;
+import com.balancedbytes.games.ffb.server.skillbehaviour.StepHook;
+import com.balancedbytes.games.ffb.server.skillbehaviour.StepHook.HookPoint;
 import com.balancedbytes.games.ffb.server.step.AbstractStepWithReRoll;
 import com.balancedbytes.games.ffb.server.step.StepAction;
 import com.balancedbytes.games.ffb.server.step.StepCommandStatus;
@@ -42,6 +44,7 @@ import com.eclipsesource.json.JsonValue;
  * 
  * @author Kalimar
  */
+@StepHook(HookPoint.PASS_INTERCEPT)
 public class StepSafeThrow extends AbstractStepWithReRoll {
 
 	private String fGotoLabelOnFailure;

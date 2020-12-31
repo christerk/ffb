@@ -1,5 +1,7 @@
 package com.balancedbytes.games.ffb.model.modifier;
 
+import com.balancedbytes.games.ffb.PassingDistance;
+import com.balancedbytes.games.ffb.PassingModifiers.PassContext;
 import com.balancedbytes.games.ffb.model.ISkillProperty;
 
 public class NamedProperties {
@@ -22,6 +24,13 @@ public class NamedProperties {
 	public static final ISkillProperty canChooseOwnPushedBackSquare = new NamedProperty(
 			"Can Choose Own Pushed Back Square");
 	public static final ISkillProperty canForceInterceptionReroll = new NamedProperty("Can Force Interception Reroll");
+	public static final PassingProperty canForceInterceptionRerollOfLongPasses = new PassingProperty("Can Force Interception Reroll of Long Passes") {
+		@Override
+		public boolean appliesToContext(PassContext context) {
+			return context.distance == PassingDistance.LONG_PASS ||
+					context.distance == PassingDistance.LONG_BOMB;
+		};
+	};
 	public static final ISkillProperty canKickTeamMates = new NamedProperty("Can Kick Team Mates");
 	public static final ISkillProperty canLeap = new NamedProperty("Can Leap");
 	public static final ISkillProperty canMakeAnExtraGfi = new NamedProperty("Use Special Block Rules");

@@ -42,5 +42,4 @@ public interface IStep extends IJsonSerializable {
 
 	// overrides IJsonSerializable
 	public JsonObject toJsonValue();
-
 }

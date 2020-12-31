@@ -103,14 +103,14 @@ public class StepStack implements IJsonSerializable {
 		return jsonObject;
 	}
 
-	public StepStack initFrom(IFactorySource game, JsonValue pJsonValue) {
-		StepFactory stepFactory = new StepFactory(getGameState());
+	public StepStack initFrom(IFactorySource source, JsonValue pJsonValue) {
+		StepFactory stepFactory = getGameState().getStepFactory();
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		JsonArray stepArray = IServerJsonOption.STEPS.getFrom(game, jsonObject);
+		JsonArray stepArray = IServerJsonOption.STEPS.getFrom(source, jsonObject);
 		fStack.clear();
 		if (stepArray != null) {
 			for (int i = 0; i < stepArray.size(); i++) {
-				IStep step = stepFactory.forJsonValue(game, stepArray.get(i));
+				IStep step = stepFactory.forJsonValue(source, stepArray.get(i));
 				fStack.add(step);
 			}
 		}

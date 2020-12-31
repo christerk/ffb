@@ -1,9 +1,24 @@
 package com.balancedbytes.games.ffb.server.step;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import com.balancedbytes.games.ffb.FactoryType.Factory;
 import com.balancedbytes.games.ffb.factory.IFactorySource;
+import com.balancedbytes.games.ffb.factory.SkillFactory;
 import com.balancedbytes.games.ffb.json.UtilJson;
+import com.balancedbytes.games.ffb.model.ISkillBehaviour;
+import com.balancedbytes.games.ffb.model.Skill;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.IServerJsonOption;
+import com.balancedbytes.games.ffb.server.model.SkillBehaviour;
+import com.balancedbytes.games.ffb.server.skillbehaviour.StepHook;
+import com.balancedbytes.games.ffb.server.skillbehaviour.StepHook.HookPoint;
 import com.balancedbytes.games.ffb.server.step.action.block.StepBlockBallAndChain;
 import com.balancedbytes.games.ffb.server.step.action.block.StepBlockChainsaw;
 import com.balancedbytes.games.ffb.server.step.action.block.StepBlockChoice;
@@ -130,9 +145,15 @@ import com.eclipsesource.json.JsonValue;
 public class StepFactory {
 
 	private GameState fGameState;
+	private HashMap<StepId, Class<? extends IStep>> stepRegistry = new HashMap<>();
+	private HashMap<HookPoint, List<StepId>> hooks = new HashMap<>();
 
 	public StepFactory(GameState pGameState) {
 		fGameState = pGameState;
+		
+		for (HookPoint p : HookPoint.values()) {
+			hooks.put(p, new ArrayList<>());
+		}
 	}
 
 	public IStep forStepId(StepId pStepId) {
@@ -498,7 +519,18 @@ public class StepFactory {
 				step = new StepWrestle(fGameState);
 				break;
 			default:
-				throw new StepException("Unhandled StepId " + pStepId);
+				if (stepRegistry.containsKey(pStepId)) {
+					Class<? extends IStep> stepClass = stepRegistry.get(pStepId);
+					Constructor ctr;
+					try {
+						ctr = stepClass.getConstructor(GameState.class);
+						step = (IStep) ctr.newInstance(fGameState);
+					} catch (NoSuchMethodException | SecurityException | InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+						throw new StepException("Error constructing Step " + pStepId, e);
+					}
+				} else {
+					throw new StepException("Unhandled StepId " + pStepId);
+				}
 			}
 		}
 
@@ -531,6 +563,29 @@ public class StepFactory {
 			}
 		}
 		return step;
+	}
+
+	public void initialize() {
+		SkillFactory skillFactory = fGameState.getGame().<SkillFactory>getFactory(Factory.SKILL);
+		
+		Collection<ISkillBehaviour<? extends Skill>> behaviours = skillFactory.getBehaviours();
+		
+		for (ISkillBehaviour<? extends Skill> behaviour : behaviours) {
+			Map<StepId, Class<? extends IStep>> steps = ((SkillBehaviour<? extends Skill>)behaviour).getSteps();
+			steps.forEach((stepId, step) -> {
+				StepHook hook = step.getAnnotation(StepHook.class);
+				if (hook != null) {
+					HookPoint hookPoint = hook.value();
+					hooks.get(hookPoint).add(stepId);
+				}
+			});
+			
+			stepRegistry.putAll(((SkillBehaviour<? extends Skill>)behaviour).getSteps());
+		}
+	}
+
+	public List<StepId> getSteps(HookPoint hookPoint) {
+		return hooks.get(hookPoint);
 	}
 
 }

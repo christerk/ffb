@@ -7,8 +7,9 @@ import com.balancedbytes.games.ffb.model.Skill;
 import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
 
 /**
- * When this player performs a Long Pass action or a Long Bomb Pass action,
- * you may apply an additional +1 modifier to the Passing Ability test.
+ * When this player performs a Long Pass action or a Long Bomb Pass
+ * action, you may choose to make the opposing coach re-roll a
+ * successful attempt to interfere with the pass.
  */
 @RulesCollection(Rules.BB2020)
 public class CloudBurster extends Skill {

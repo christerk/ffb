@@ -53,7 +53,9 @@ public class GameState implements IModelChangeObserver, IJsonSerializable {
 	private transient long fTurnTimeStarted;
 	private transient ModelChangeList fChangeList;
 	private transient Map<String, Long> fSpectatorCooldownTime;
+	private StepFactory stepFactory;
 
+	
 	private enum StepExecutionMode {
 		Start, HandleCommand
 	}
@@ -67,6 +69,7 @@ public class GameState implements IModelChangeObserver, IJsonSerializable {
 		fStepStack = new StepStack(this);
 		fChangeList = new ModelChangeList();
 		setGame(new Game(fServer.getFactorySource(), fServer.getFactoryManager()));
+		stepFactory = new StepFactory(this);
 	}
 
 	public void setServer(FantasyFootballServer pServer) {
@@ -282,6 +285,11 @@ public class GameState implements IModelChangeObserver, IJsonSerializable {
 	public void setKickingSwarmers(int kickingSwarmers) {
 		this.kickingSwarmers = kickingSwarmers;
 	}
+	
+	public StepFactory getStepFactory() {
+		return stepFactory;
+	}
+	
 	// JSON serialization
 
 	public JsonObject toJsonValue() {
@@ -316,7 +324,7 @@ public class GameState implements IModelChangeObserver, IJsonSerializable {
 		fCurrentStep = null;
 		JsonObject currentStepObject = IServerJsonOption.CURRENT_STEP.getFrom(source, jsonObject);
 		if (currentStepObject != null) {
-			fCurrentStep = new StepFactory(this).forJsonValue(source, currentStepObject);
+			fCurrentStep = stepFactory.forJsonValue(source, currentStepObject);
 		}
 		setGame(null);
 		JsonObject gameObject = IServerJsonOption.GAME.getFrom(source, jsonObject);
