@@ -123,7 +123,6 @@ public class UtilServerStartGame {
 			}
 		}
 		if (ownershipOk) {
-			addDefaultGameOptions(gameState);
 			if ((game.getFinished() == null) && (gameState.getStepStack().size() == 0)) {
 				SequenceGenerator.getInstance().pushStartGameSequence(gameState);
 			} else {
@@ -149,7 +148,7 @@ public class UtilServerStartGame {
 		}
 	}
 
-	private static void addDefaultGameOptions(GameState pGameState) {
+	public static void addDefaultGameOptions(GameState pGameState) {
 		Game game = pGameState.getGame();
 		FantasyFootballServer server = pGameState.getServer();
 		if (ServerMode.STANDALONE == server.getMode()) {
