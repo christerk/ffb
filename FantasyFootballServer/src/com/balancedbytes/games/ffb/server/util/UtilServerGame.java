@@ -15,6 +15,7 @@ import com.balancedbytes.games.ffb.model.Team;
 import com.balancedbytes.games.ffb.model.TurnData;
 import com.balancedbytes.games.ffb.model.change.ModelChangeList;
 import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
+import com.balancedbytes.games.ffb.net.ServerStatus;
 import com.balancedbytes.games.ffb.report.ReportInducement;
 import com.balancedbytes.games.ffb.report.ReportLeader;
 import com.balancedbytes.games.ffb.report.ReportList;
@@ -24,8 +25,13 @@ import com.balancedbytes.games.ffb.report.ReportStartHalf;
 import com.balancedbytes.games.ffb.server.DiceInterpreter;
 import com.balancedbytes.games.ffb.server.FantasyFootballServer;
 import com.balancedbytes.games.ffb.server.GameState;
+import com.balancedbytes.games.ffb.server.IServerLogLevel;
+import com.balancedbytes.games.ffb.server.net.SessionManager;
+import com.balancedbytes.games.ffb.server.request.ServerRequestProcessor;
 import com.balancedbytes.games.ffb.server.step.IStep;
+import com.balancedbytes.games.ffb.util.StringTool;
 import com.balancedbytes.games.ffb.util.UtilActingPlayer;
+import org.eclipse.jetty.websocket.api.Session;
 
 /**
  * 
@@ -215,4 +221,23 @@ public class UtilServerGame {
 		return reRollsStolenTotal;
 	}
 
+	public static void closeGame(GameState pGameState) {
+		if (pGameState != null) {
+			FantasyFootballServer server = pGameState.getServer();
+			SessionManager sessionManager = server.getSessionManager();
+			Session[] sessions = sessionManager.getSessionsForGameId(pGameState.getId());
+			for (int i = 0; i < sessions.length; i++) {
+				server.getCommunication().close(sessions[i]);
+			}
+		}
+	}
+
+	// this might be overkill, we'll see how it does in practice
+	public static void handleInvalidTeam(String pTeamId, GameState gameState, FantasyFootballServer server, Throwable pThrowable) {
+		server.getDebugLog().log(IServerLogLevel.ERROR, StringTool.bind("Error loading Team $1.", pTeamId));
+		server.getDebugLog().log(pThrowable);
+		server.getCommunication().sendStatus(gameState, ServerStatus.FUMBBL_ERROR,
+			StringTool.bind("Unable to load Team with id $1.", pTeamId));
+		UtilServerGame.closeGame(gameState);
+	}
 }

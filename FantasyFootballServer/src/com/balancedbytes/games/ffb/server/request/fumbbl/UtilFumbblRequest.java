@@ -8,6 +8,7 @@ import java.security.NoSuchAlgorithmException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.balancedbytes.games.ffb.model.TeamSkeleton;
 import org.eclipse.jetty.websocket.api.Session;
 import org.xml.sax.InputSource;
 
@@ -134,20 +135,21 @@ public class UtilFumbblRequest {
 		}
 	}
 
-	public static Team loadFumbblTeam(Game game, FantasyFootballServer pServer, String pTeamId) {
+	public static Team loadFumbblTeam(FantasyFootballServer pServer, String pTeamId) {
 		if ((pServer == null) || !StringTool.isProvided(pTeamId)) {
 			return null;
 		}
-		Team team = null;
+		TeamSkeleton team = null;
 		try {
 			String teamUrl = StringTool.bind(pServer.getProperty(IServerProperty.FUMBBL_TEAM), pTeamId);
 			String teamXml = UtilServerHttpClient.fetchPage(teamUrl);
 			if (StringTool.isProvided(teamXml)) {
-				team = new Team();
+				team = new TeamSkeleton();
 				try (BufferedReader xmlReader = new BufferedReader(new StringReader(teamXml))) {
 					InputSource xmlSource = new InputSource(xmlReader);
-					XmlHandler.parse(game, xmlSource, team);
+					XmlHandler.parse(null, xmlSource, team);
 				}
+				team.setXmlContent(teamXml);
 			}
 		} catch (IOException ioe) {
 			throw new FantasyFootballException(ioe);

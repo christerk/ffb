@@ -128,6 +128,7 @@ public class ServerCommandHandlerJoinApproved extends ServerCommandHandler {
 				if (getServer().getMode() == ServerMode.FUMBBL) {
 					getServer().getRequestProcessor().add(new FumbblRequestCheckGamestate(pGameState));
 				} else {
+					UtilServerStartGame.addDefaultGameOptions(pGameState);
 					UtilServerStartGame.startGame(pGameState);
 				}
 			}
@@ -147,10 +148,15 @@ public class ServerCommandHandlerJoinApproved extends ServerCommandHandler {
 				getServer().getRequestProcessor().add(new FumbblRequestLoadTeam(pGameState, pJoinApprovedCommand.getCoach(),
 						pJoinApprovedCommand.getTeamId(), homeTeam, pSession));
 			} else {
-				Team team = getServer().getGameCache().getTeamById(pJoinApprovedCommand.getTeamId(), game);
-				getServer().getGameCache().addTeamToGame(pGameState, team, homeTeam);
+				Team teamSkeleton = getServer().getGameCache().getTeamSkeleton(pJoinApprovedCommand.getTeamId());
+				getServer().getGameCache().addTeamToGame(pGameState, teamSkeleton, homeTeam);
 				if (UtilServerStartGame.joinGameAsPlayerAndCheckIfReadyToStart(pGameState, pSession,
 						pJoinApprovedCommand.getCoach(), homeTeam)) {
+					UtilServerStartGame.addDefaultGameOptions(pGameState);
+					Team teamHome = getServer().getGameCache().getTeamById(game.getTeamHome().getId(), game);
+					getServer().getGameCache().addTeamToGame(pGameState, teamHome, true);
+					Team teamAway = getServer().getGameCache().getTeamById(game.getTeamAway().getId(), game);
+					getServer().getGameCache().addTeamToGame(pGameState, teamAway, false);
 					UtilServerStartGame.startGame(pGameState);
 				}
 			}
