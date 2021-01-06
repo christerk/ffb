@@ -44,6 +44,7 @@ public class RosterPlayer extends Player<RosterPosition> {
 	private int fMovement;
 	private int fStrength;
 	private int fAgility;
+	private int fPassing;
 	private int fArmour;
 
 	private String fUrlPortrait;
@@ -101,6 +102,16 @@ public class RosterPlayer extends Player<RosterPosition> {
 	@Override
 	public void setAgility(int pAgility) {
 		fAgility = pAgility;
+	}
+
+	@Override
+	public int getPassing() {
+		return fPassing;
+	}
+
+	@Override
+	public void setPassing(int pPassing) {
+		fPassing = pPassing;
 	}
 
 	@Override
@@ -214,6 +225,7 @@ public class RosterPlayer extends Player<RosterPosition> {
 			setMovement(fPosition.getMovement());
 			setStrength(fPosition.getStrength());
 			setAgility(fPosition.getAgility());
+			setPassing(fPosition.getPassing());
 			setArmour(fPosition.getArmour());
 			fIconSetIndex = pPosition.findNextIconSetIndex();
 			for (Skill skill : fPosition.getSkills()) {
@@ -490,6 +502,9 @@ public class RosterPlayer extends Player<RosterPosition> {
 				if (_XML_TAG_AGILITY.equals(pXmlTag)) {
 					setAgility(Integer.parseInt(pValue));
 				}
+				if (_XML_TAG_PASSING.equals(pXmlTag)) {
+					setPassing(Integer.parseInt(pValue));
+				}
 				if (_XML_TAG_ARMOUR.equals(pXmlTag)) {
 					setArmour(Integer.parseInt(pValue));
 				}
@@ -514,6 +529,7 @@ public class RosterPlayer extends Player<RosterPosition> {
 		setMovement(pPlayer.getMovement());
 		setStrength(pPlayer.getStrength());
 		setAgility(pPlayer.getAgility());
+		setPassing(pPlayer.getPassing());
 		setArmour(pPlayer.getArmour());
 
 		fLastingInjuries.clear();
@@ -550,6 +566,7 @@ public class RosterPlayer extends Player<RosterPosition> {
 		IJsonOption.MOVEMENT.addTo(jsonObject, fMovement);
 		IJsonOption.STRENGTH.addTo(jsonObject, fStrength);
 		IJsonOption.AGILITY.addTo(jsonObject, fAgility);
+		IJsonOption.PASSING.addTo(jsonObject, fPassing);
 		IJsonOption.ARMOUR.addTo(jsonObject, fArmour);
 
 		JsonArray lastingInjuries = new JsonArray();
@@ -588,6 +605,7 @@ public class RosterPlayer extends Player<RosterPosition> {
 		fMovement = IJsonOption.MOVEMENT.getFrom(source, jsonObject);
 		fStrength = IJsonOption.STRENGTH.getFrom(source, jsonObject);
 		fAgility = IJsonOption.AGILITY.getFrom(source, jsonObject);
+		fPassing= IJsonOption.PASSING.getFrom(source, jsonObject);
 		fArmour = IJsonOption.ARMOUR.getFrom(source, jsonObject);
 
 		SeriousInjuryFactory seriousInjuryFactory = new SeriousInjuryFactory();

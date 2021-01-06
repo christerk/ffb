@@ -19,7 +19,7 @@ import com.balancedbytes.games.ffb.model.Player;
 @SuppressWarnings("serial")
 public class SideBarComponent extends JPanel implements MouseMotionListener {
 
-	public static final int WIDTH = 116;
+	public static final int WIDTH = 145;
 	public static final int HEIGHT = BoxComponent.HEIGHT + BoxButtonComponent.HEIGHT + ResourceComponent.HEIGHT
 			+ TurnDiceStatusComponent.HEIGHT; // 708
 

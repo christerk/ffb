@@ -30,7 +30,7 @@ import com.balancedbytes.games.ffb.model.TurnData;
 @SuppressWarnings("serial")
 public class ResourceComponent extends JPanel {
 
-	public static final int WIDTH = 116;
+	public static final int WIDTH = 145;
 	public static final int HEIGHT = 168; // 256
 
 	private SideBarComponent fSideBar;

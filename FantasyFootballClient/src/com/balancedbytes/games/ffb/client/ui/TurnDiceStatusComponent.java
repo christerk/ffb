@@ -51,7 +51,7 @@ import com.balancedbytes.games.ffb.util.UtilPlayer;
 public class TurnDiceStatusComponent extends JPanel
 		implements MouseListener, MouseMotionListener, IDialogCloseListener {
 
-	public static final int WIDTH = 116;
+	public static final int WIDTH = 145;
 	public static final int HEIGHT = 92;
 
 	private static final String _LABEL_END_TURN = "End Turn";
@@ -61,7 +61,7 @@ public class TurnDiceStatusComponent extends JPanel
 	private static final String _LABEL_TIMEOUT = "Timeout";
 
 	private static final Font _BUTTON_FONT = new Font("Sans Serif", Font.BOLD, 14);
-	private static final Rectangle _BUTTON_AREA = new Rectangle(1, 1, 114, 31);
+	private static final Rectangle _BUTTON_AREA = new Rectangle(1, 1, 140, 31);
 
 	private static final Font _DICE_FONT = new Font("Sans Serif", Font.BOLD, 11);
 	private static final Font _STATUS_TITLE_FONT = new Font("Sans Serif", Font.BOLD, 12);

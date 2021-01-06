@@ -33,7 +33,7 @@ import com.balancedbytes.games.ffb.model.FieldModel;
 @SuppressWarnings("serial")
 public class BoxButtonComponent extends JPanel implements MouseListener, MouseMotionListener {
 
-	public static final int WIDTH = 116;
+	public static final int WIDTH = 145;
 	public static final int HEIGHT = 22;
 
 	private static final Font _BUTTON_FONT = new Font("Sans Serif", Font.BOLD, 11);

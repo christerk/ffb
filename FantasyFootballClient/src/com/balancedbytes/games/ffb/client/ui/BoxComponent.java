@@ -42,7 +42,7 @@ import com.balancedbytes.games.ffb.model.Player;
 @SuppressWarnings("serial")
 public class BoxComponent extends JPanel implements MouseListener, MouseMotionListener {
 
-	public static final int WIDTH = 116;
+	public static final int WIDTH = 145;
 	public static final int HEIGHT = 430;
 
 	public static final int MAX_BOX_ELEMENTS = 30;

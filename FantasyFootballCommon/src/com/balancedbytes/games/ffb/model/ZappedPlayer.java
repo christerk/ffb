@@ -53,7 +53,17 @@ public class ZappedPlayer extends Player<ZappedPosition> {
 	}
 
 	@Override
+	public int getPassing() {
+		return getPosition().getPassing();
+	}
+
+	@Override
 	public void setAgility(int pAgility) {
+		// NOOP
+	}
+
+	@Override
+	public void setPassing(int pPassing) {
 		// NOOP
 	}
 

@@ -26,6 +26,7 @@ public class ZappedPosition implements Position {
 	private int move = 5;
 	private int strength = 1;
 	private int agility = 4;
+	private int passing = 0;
 	private int armour = 4;
 	private List<Skill> skills = new ArrayList<Skill>();
 
@@ -56,18 +57,28 @@ public class ZappedPosition implements Position {
 	}
 
 	@Override
+	public int getMovement() {
+		return move;
+	}
+
+	@Override
+	public int getStrength() {
+		return strength;
+	}
+	
+	@Override
 	public int getAgility() {
 		return agility;
+	}
+	
+	@Override
+	public int getPassing() {
+		return passing;
 	}
 
 	@Override
 	public int getArmour() {
 		return armour;
-	}
-
-	@Override
-	public int getMovement() {
-		return move;
 	}
 
 	@Override
@@ -83,11 +94,6 @@ public class ZappedPosition implements Position {
 	@Override
 	public String getShorthand() {
 		return shortHand;
-	}
-
-	@Override
-	public int getStrength() {
-		return strength;
 	}
 
 	@Override

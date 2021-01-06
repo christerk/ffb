@@ -52,6 +52,7 @@ public class RosterPosition implements Position {
 	private static final String _XML_TAG_MOVEMENT = "movement";
 	private static final String _XML_TAG_STRENGTH = "strength";
 	private static final String _XML_TAG_AGILITY = "agility";
+	private static final String _XML_TAG_PASSING = "passing";
 	private static final String _XML_TAG_ARMOUR = "armour";
 	private static final String _XML_TAG_SHORTHAND = "shorthand";
 	private static final String _XML_TAG_RACE = "race";
@@ -79,10 +80,13 @@ public class RosterPosition implements Position {
 	private PlayerGender fGender;
 	private int fQuantity;
 	private int fCost;
+	
 	private int fMovement;
 	private int fStrength;
 	private int fAgility;
+	private int fPassing;
 	private int fArmour;
+
 	private String fRace;
 	private boolean fUndead;
 	private boolean fThrall;
@@ -130,18 +134,28 @@ public class RosterPosition implements Position {
 	}
 
 	@Override
+	public int getMovement() {
+		return fMovement;
+	}
+
+	@Override
+	public int getStrength() {
+		return fStrength;
+	}
+
+	@Override
 	public int getAgility() {
 		return fAgility;
 	}
 
 	@Override
-	public int getArmour() {
-		return fArmour;
+	public int getPassing() {
+		return fPassing;
 	}
 
 	@Override
-	public int getMovement() {
-		return fMovement;
+	public int getArmour() {
+		return fArmour;
 	}
 
 	@Override
@@ -165,11 +179,6 @@ public class RosterPosition implements Position {
 	@Override
 	public String getShorthand() {
 		return fShorthand;
-	}
-
-	@Override
-	public int getStrength() {
-		return fStrength;
 	}
 
 	@Override
@@ -280,6 +289,10 @@ public class RosterPosition implements Position {
 		fAgility = agility;
 	}
 
+	public void setPassing(int passing) {
+		fPassing = passing;
+	}
+
 	public void setArmour(int armour) {
 		fArmour = armour;
 	}
@@ -357,6 +370,7 @@ public class RosterPosition implements Position {
 		UtilXml.addValueElement(pHandler, _XML_TAG_MOVEMENT, getMovement());
 		UtilXml.addValueElement(pHandler, _XML_TAG_STRENGTH, getStrength());
 		UtilXml.addValueElement(pHandler, _XML_TAG_AGILITY, getAgility());
+		UtilXml.addValueElement(pHandler, _XML_TAG_PASSING, getPassing());
 		UtilXml.addValueElement(pHandler, _XML_TAG_ARMOUR, getArmour());
 		UtilXml.addValueElement(pHandler, _XML_TAG_RACE, getRace());
 		UtilXml.addValueElement(pHandler, _XML_TAG_UNDEAD, isUndead());
@@ -508,6 +522,9 @@ public class RosterPosition implements Position {
 			if (_XML_TAG_AGILITY.equals(pTag)) {
 				setAgility(Integer.parseInt(pValue));
 			}
+			if (_XML_TAG_PASSING.equals(pTag)) {
+				setPassing(Integer.parseInt(pValue));
+			}
 			if (_XML_TAG_ARMOUR.equals(pTag)) {
 				setArmour(Integer.parseInt(pValue));
 			}
@@ -546,6 +563,7 @@ public class RosterPosition implements Position {
 		IJsonOption.MOVEMENT.addTo(jsonObject, fMovement);
 		IJsonOption.STRENGTH.addTo(jsonObject, fStrength);
 		IJsonOption.AGILITY.addTo(jsonObject, fAgility);
+		IJsonOption.PASSING.addTo(jsonObject, fPassing);
 		IJsonOption.ARMOUR.addTo(jsonObject, fArmour);
 		IJsonOption.COST.addTo(jsonObject, fCost);
 		IJsonOption.RACE.addTo(jsonObject, fRace);
@@ -601,6 +619,7 @@ public class RosterPosition implements Position {
 		fMovement = IJsonOption.MOVEMENT.getFrom(source, jsonObject);
 		fStrength = IJsonOption.STRENGTH.getFrom(source, jsonObject);
 		fAgility = IJsonOption.AGILITY.getFrom(source, jsonObject);
+		fPassing = IJsonOption.PASSING.getFrom(source, jsonObject);
 		fArmour = IJsonOption.ARMOUR.getFrom(source, jsonObject);
 		fCost = IJsonOption.COST.getFrom(source, jsonObject);
 		fRace = IJsonOption.RACE.getFrom(source, jsonObject);

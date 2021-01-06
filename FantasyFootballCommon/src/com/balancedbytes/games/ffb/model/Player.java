@@ -42,6 +42,7 @@ public abstract class Player<T extends Position> implements IXmlSerializable, IJ
 	static final String _XML_TAG_MOVEMENT = "movement";
 	static final String _XML_TAG_STRENGTH = "strength";
 	static final String _XML_TAG_AGILITY = "agility";
+	static final String _XML_TAG_PASSING = "passing";
 	static final String _XML_TAG_ARMOUR = "armour";
 	static final String _XML_TAG_SHORTHAND = "shorthand";
 	static final String _XML_TAG_RACE = "race";
@@ -57,6 +58,10 @@ public abstract class Player<T extends Position> implements IXmlSerializable, IJ
 	public abstract int getAgility();
 
 	public abstract void setAgility(int pAgility);
+
+	public abstract int getPassing();
+
+	public abstract void setPassing(int pPassing);
 
 	public abstract int getArmour();
 

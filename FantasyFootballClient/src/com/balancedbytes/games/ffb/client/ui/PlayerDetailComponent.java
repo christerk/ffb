@@ -50,10 +50,10 @@ import com.balancedbytes.games.ffb.util.UtilCards;
 @SuppressWarnings("serial")
 public class PlayerDetailComponent extends JPanel {
 
-	public static final int WIDTH = 116;
+	public static final int WIDTH = 145;
 	public static final int HEIGHT = 430;
 
-	private static final int _PORTRAIT_WIDTH = 95;
+	private static final int _PORTRAIT_WIDTH = 121;
 	private static final int _PORTRAIT_HEIGHT = 147;
 
 	private static final int _STAT_BOX_WIDTH = 28;
@@ -170,7 +170,27 @@ public class PlayerDetailComponent extends JPanel {
 			BufferedImage portraitBackground = iconCache.getIconByProperty(IIconProperty.SIDEBAR_BACKGROUND_PLAYER_PORTRAIT);
 //      if (getSideBar().isHomeSide()) {
 			if (playerPortrait != null) {
-				g2d.drawImage(playerPortrait, x, y, _PORTRAIT_WIDTH, _PORTRAIT_HEIGHT, null);
+				int canvasWidth = _PORTRAIT_WIDTH;
+				int canvasHeight = _PORTRAIT_HEIGHT;
+				int portraitWidth = playerPortrait.getWidth();
+				int portraitHeight = playerPortrait.getHeight();
+				
+				if (portraitWidth > canvasWidth || portraitHeight > canvasHeight) {
+					// Scale portrait to fit both width and height
+					
+					float scale = Math.max(
+							(float)portraitWidth / (float)canvasWidth,
+							(float)portraitHeight / (float)canvasHeight
+							);
+					
+					portraitWidth = (int) Math.floor(portraitWidth / scale);
+					portraitHeight = (int) Math.floor(portraitHeight / scale);
+				}
+				
+				int originX = (canvasWidth - portraitWidth) / 2;
+				int originY = (canvasHeight - portraitHeight) / 2;
+				
+				g2d.drawImage(playerPortrait, x + originX, y + originY, portraitWidth, portraitHeight, null);
 			} else {
 				g2d.drawImage(portraitBackground, x - 2, y, null);
 			}
@@ -209,6 +229,7 @@ public class PlayerDetailComponent extends JPanel {
 			int strength = UtilCards.getPlayerStrength(game, getPlayer())
 					- findNewStatDecreases(playerResult, InjuryAttribute.ST);
 			int agility = getPlayer().getAgility() - findNewStatDecreases(playerResult, InjuryAttribute.AG);
+			int passing = getPlayer().getPassing() - findNewStatDecreases(playerResult, InjuryAttribute.PA);
 			int armour = getPlayer().getArmour() - findNewStatDecreases(playerResult, InjuryAttribute.AV);
 			ActingPlayer actingPlayer = getSideBar().getClient().getGame().getActingPlayer();
 			if (fPlayer == actingPlayer.getPlayer()) {
@@ -226,17 +247,20 @@ public class PlayerDetailComponent extends JPanel {
 			Player player = getPlayer();
 			Position position = player.getPosition();
 			int movementModifier = player.getMovement() - position.getMovement();
-			drawStatBox(g2d, x, y, moveLeft, moveIsRed, movementModifier);
+			drawStatBox(g2d, x, y, moveLeft, moveIsRed, movementModifier, false);
 
 			int strengthModifier = player.getStrength() - position.getStrength();
 			boolean strengthIsRed = (getPlayer().getStrength() != UtilCards.getPlayerStrength(game, getPlayer()));
-			drawStatBox(g2d, x + _STAT_BOX_WIDTH, y, strength, strengthIsRed, strengthModifier);
+			drawStatBox(g2d, x + _STAT_BOX_WIDTH, y, strength, strengthIsRed, strengthModifier, false);
 
 			int agilityModifier = player.getAgility() - position.getAgility();
-			drawStatBox(g2d, x + (_STAT_BOX_WIDTH * 2), y, agility, false, agilityModifier);
+			drawStatBox(g2d, x + (_STAT_BOX_WIDTH * 2), y, agility, false, agilityModifier, true);
 
+			int passingModifier = player.getPassing() - position.getPassing();
+			drawStatBox(g2d, x + (_STAT_BOX_WIDTH * 3), y, passing, false, passingModifier, true);
+			
 			int armourModifier = player.getArmour() - position.getArmour();
-			drawStatBox(g2d, x + (_STAT_BOX_WIDTH * 3), y, armour, false, armourModifier);
+			drawStatBox(g2d, x + (_STAT_BOX_WIDTH * 4), y, armour, false, armourModifier, true);
 
 			g2d.dispose();
 
@@ -434,7 +458,7 @@ public class PlayerDetailComponent extends JPanel {
 		return height;
 	}
 
-	private void drawStatBox(Graphics2D pG2d, int pX, int pY, int pValue, boolean pStatIsRed, int statModifier) {
+	private void drawStatBox(Graphics2D pG2d, int pX, int pY, int pValue, boolean pStatIsRed, int statModifier, boolean addPlusSuffix) {
 		if (fPlayer != null) {
 			pG2d.setColor(Color.BLACK);
 			pG2d.setFont(_STAT_FONT);
@@ -469,9 +493,15 @@ public class PlayerDetailComponent extends JPanel {
 					// _STAT_BOX_INNER_HEIGHT - 1, 4, 4);
 				}
 			}
+			
 			Color statColor = pStatIsRed ? Color.RED : Color.BLACK;
+			String statText = pValue == 0 ? "–" : Integer.toString(pValue) + (addPlusSuffix ? "+" : "");
+			if (pValue == 0) {
+				// Move the dash more central
+				pY -= 1;
+			}
 			drawCenteredText(pG2d, pX + (_STAT_BOX_WIDTH / 2), pY + _STAT_BOX_HEIGHT - 4, statColor,
-					Integer.toString(pValue));
+					statText);
 		}
 	}
 

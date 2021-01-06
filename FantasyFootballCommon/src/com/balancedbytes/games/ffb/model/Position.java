@@ -11,19 +11,17 @@ public interface Position extends IXmlSerializable, IJsonSerializable {
 
 	PlayerGender getGender();
 
-	int getAgility();
-
-	int getArmour();
-
 	int getMovement();
+	int getStrength();
+	int getAgility();
+	int getPassing();
+	int getArmour();
 
 	int getCost();
 
 	String getName();
 
 	String getShorthand();
-
-	int getStrength();
 
 	boolean hasSkill(Skill pSkill);
 
