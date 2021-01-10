@@ -13,9 +13,9 @@ import com.balancedbytes.games.ffb.model.Game;
  */
 public interface INamedObjectFactory<T> extends IKeyedItem {
 
-	public INamedObject forName(String pName);
+	INamedObject forName(String pName);
 
-	public void initialize(Game game);
+	void initialize(Game game);
 	
 	default String getKey() {
 		FactoryType a = this.getClass().getAnnotation(FactoryType.class);

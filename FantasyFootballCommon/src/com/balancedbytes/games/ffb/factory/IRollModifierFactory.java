@@ -8,6 +8,6 @@ import com.balancedbytes.games.ffb.IRollModifier;
  */
 public interface IRollModifierFactory<T> extends INamedObjectFactory<T> {
 
-	public IRollModifier forName(String pName);
+	IRollModifier forName(String pName);
 
 }

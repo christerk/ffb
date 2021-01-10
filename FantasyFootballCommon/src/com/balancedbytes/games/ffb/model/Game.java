@@ -1,6 +1,7 @@
 package com.balancedbytes.games.ffb.model;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -290,16 +291,11 @@ public class Game extends ModelChangeObservable implements IJsonSerializable {
 	}
 
 	public Player<?>[] getPlayers() {
-		List<Player<?>> allPlayers = new ArrayList<Player<?>>();
 		Player<?>[] playersHome = getTeamHome().getPlayers();
-		for (int i = 0; i < playersHome.length; i++) {
-			allPlayers.add(playersHome[i]);
-		}
+		List<Player<?>> allPlayers = new ArrayList<>(Arrays.asList(playersHome));
 		Player<?>[] playersAway = getTeamAway().getPlayers();
-		for (int i = 0; i < playersAway.length; i++) {
-			allPlayers.add(playersAway[i]);
-		}
-		return allPlayers.toArray(new Player[allPlayers.size()]);
+		allPlayers.addAll(Arrays.asList(playersAway));
+		return allPlayers.toArray(new Player[0]);
 	}
 
 	public void setTeamHome(Team pTeam) {
@@ -682,7 +678,7 @@ public class Game extends ModelChangeObservable implements IJsonSerializable {
 
 	}
 	
-	public <T extends INamedObjectFactory> T getFactory(Factory factory) {
-		return getRules().<T>getFactory(factory);
+	public <T extends INamedObjectFactory<?>> T getFactory(Factory factory) {
+		return getRules().getFactory(factory);
 	}
 }

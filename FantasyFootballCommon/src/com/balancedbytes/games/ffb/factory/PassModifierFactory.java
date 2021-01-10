@@ -40,7 +40,6 @@ public class PassModifierFactory implements IRollModifierFactory<PassModifier> {
 
 	public PassModifier forName(String pName) {
 		return registry.forKey(pName);
-		//return passingModifiers.values().get(pName.toLowerCase());
 	}
 
 	@Override
@@ -48,14 +47,13 @@ public class PassModifierFactory implements IRollModifierFactory<PassModifier> {
 		items.forEach(m -> {
 			if (!registry.add(m)) {
 				System.err.println("WARNING - Trying to register duplicate passing modifier " + m.getKey());
-				//throw new RuntimeException("Duplicate passing modifier registered");
 			}
 		});
 	}
 	
 	public Set<PassModifier> findPassModifiers(Game pGame, Player<?> pThrower, PassingDistance pPassingDistance,
 			boolean pThrowTeamMate) {
-		Set<PassModifier> passModifiers = new HashSet<PassModifier>();
+		Set<PassModifier> passModifiers = new HashSet<>();
 		if (pThrower != null) {
 			if (Weather.VERY_SUNNY == pGame.getFieldModel().getWeather()) {
 				passModifiers.add(PassingModifiers.VERY_SUNNY);
@@ -87,12 +85,8 @@ public class PassModifierFactory implements IRollModifierFactory<PassModifier> {
 
 	public PassModifier[] toArray(Set<PassModifier> pPassModifierSet) {
 		if (pPassModifierSet != null) {
-			PassModifier[] passModifierArray = pPassModifierSet.toArray(new PassModifier[pPassModifierSet.size()]);
-			Arrays.sort(passModifierArray, new Comparator<PassModifier>() {
-				public int compare(PassModifier pO1, PassModifier pO2) {
-					return pO1.getName().compareTo(pO2.getName());
-				}
-			});
+			PassModifier[] passModifierArray = pPassModifierSet.toArray(new PassModifier[0]);
+			Arrays.sort(passModifierArray, Comparator.comparing(PassModifier::getName));
 			return passModifierArray;
 		} else {
 			return new PassModifier[0];
@@ -121,8 +115,6 @@ public class PassModifierFactory implements IRollModifierFactory<PassModifier> {
 
 	@Override
 	public void initialize(Game game) {
-		// TODO Auto-generated method stub
-		
 	}
 
 }
