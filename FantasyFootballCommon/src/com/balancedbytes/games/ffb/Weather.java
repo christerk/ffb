@@ -1,7 +1,6 @@
 package com.balancedbytes.games.ffb;
 
 import com.balancedbytes.games.ffb.modifiers.ModifierSource;
-import com.balancedbytes.games.ffb.skill.Pass;
 
 import java.util.Collection;
 import java.util.Collections;

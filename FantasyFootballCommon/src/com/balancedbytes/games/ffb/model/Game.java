@@ -1,15 +1,11 @@
 package com.balancedbytes.games.ffb.model;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
-
 import com.balancedbytes.games.ffb.FactoryManager;
 import com.balancedbytes.games.ffb.FactoryType.Factory;
 import com.balancedbytes.games.ffb.FactoryType.FactoryContext;
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.IDialogParameter;
+import com.balancedbytes.games.ffb.IRollModifier;
 import com.balancedbytes.games.ffb.PlayerAction;
 import com.balancedbytes.games.ffb.TurnMode;
 import com.balancedbytes.games.ffb.dialog.DialogParameterFactory;
@@ -26,6 +22,13 @@ import com.balancedbytes.games.ffb.util.StringTool;
 import com.balancedbytes.games.ffb.util.UtilActingPlayer;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * 
@@ -517,6 +520,14 @@ public class Game extends ModelChangeObservable implements IJsonSerializable {
 			return getTeamAway();
 		}
 		return null;
+	}
+
+	@SuppressWarnings("unchecked")
+	public <T extends IRollModifier>Set<T> activeModifiers(Class<T> clazz) {
+		return fFieldModel.getWeather().modifier().stream()
+			.filter(modifier -> clazz.isAssignableFrom(modifier.getClass()))
+			.map(iRollModifier -> (T) iRollModifier)
+			.collect(Collectors.toSet());
 	}
 
 	// change tracking
