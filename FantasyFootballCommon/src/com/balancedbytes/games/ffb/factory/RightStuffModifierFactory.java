@@ -1,10 +1,5 @@
 package com.balancedbytes.games.ffb.factory;
 
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.HashSet;
-import java.util.Set;
-
 import com.balancedbytes.games.ffb.FactoryType;
 import com.balancedbytes.games.ffb.RightStuffModifier;
 import com.balancedbytes.games.ffb.RulesCollection;
@@ -13,6 +8,10 @@ import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
 import com.balancedbytes.games.ffb.util.UtilPlayer;
+
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.Set;
 
 /**
  * 
@@ -32,7 +31,7 @@ public class RightStuffModifierFactory implements IRollModifierFactory<RightStuf
 	}
 
 	public Set<RightStuffModifier> findRightStuffModifiers(Game pGame, Player<?> pPlayer) {
-		Set<RightStuffModifier> rightStuffModifiers = new HashSet<>();
+		Set<RightStuffModifier> rightStuffModifiers = activeModifiers(pGame, RightStuffModifier.class);
 		RightStuffModifier tacklezoneModifier = getTacklezoneModifier(pGame, pPlayer);
 		if (tacklezoneModifier != null) {
 			rightStuffModifiers.add(tacklezoneModifier);

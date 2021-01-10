@@ -1,10 +1,5 @@
 package com.balancedbytes.games.ffb.factory;
 
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.HashSet;
-import java.util.Set;
-
 import com.balancedbytes.games.ffb.FactoryType;
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.LeapModifier;
@@ -15,6 +10,10 @@ import com.balancedbytes.games.ffb.RulesCollection.Rules;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.util.UtilCards;
+
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.Set;
 
 /**
  * 
@@ -39,7 +38,9 @@ public class LeapModifierFactory implements IRollModifierFactory<LeapModifier> {
 
 		LeapContext context = new LeapContext(actingPlayer, pCoordinateFrom);
 
-		return new HashSet<>(UtilCards.getLeapModifiers(actingPlayer, context));
+		Set<LeapModifier> modifiers = activeModifiers(pGame, LeapModifier.class);
+		modifiers.addAll(UtilCards.getLeapModifiers(actingPlayer, context));
+		return modifiers;
 	}
 
 	public LeapModifier[] toArray(Set<LeapModifier> pLeapModifierSet) {
@@ -54,8 +55,6 @@ public class LeapModifierFactory implements IRollModifierFactory<LeapModifier> {
 
 	@Override
 	public void initialize(Game game) {
-		// TODO Auto-generated method stub
-		
 	}
 
 }

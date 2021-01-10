@@ -1,10 +1,5 @@
 package com.balancedbytes.games.ffb.factory;
 
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.HashSet;
-import java.util.Set;
-
 import com.balancedbytes.games.ffb.FactoryType;
 import com.balancedbytes.games.ffb.GazeModifier;
 import com.balancedbytes.games.ffb.RulesCollection;
@@ -12,6 +7,10 @@ import com.balancedbytes.games.ffb.RulesCollection.Rules;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.util.UtilPlayer;
+
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.Set;
 
 /**
  * 
@@ -31,7 +30,7 @@ public class GazeModifierFactory implements IRollModifierFactory<GazeModifier> {
 	}
 
 	public Set<GazeModifier> findGazeModifiers(Game pGame) {
-		Set<GazeModifier> gazeModifiers = new HashSet<GazeModifier>();
+		Set<GazeModifier> gazeModifiers = activeModifiers(pGame, GazeModifier.class);
 		Player<?> player = pGame.getActingPlayer().getPlayer();
 		if (player != null) {
 			GazeModifier tacklezoneModifier = getTacklezoneModifier(pGame, player);
@@ -44,12 +43,8 @@ public class GazeModifierFactory implements IRollModifierFactory<GazeModifier> {
 
 	public GazeModifier[] toArray(Set<GazeModifier> pGazeModifierSet) {
 		if (pGazeModifierSet != null) {
-			GazeModifier[] gazeModifierArray = pGazeModifierSet.toArray(new GazeModifier[pGazeModifierSet.size()]);
-			Arrays.sort(gazeModifierArray, new Comparator<GazeModifier>() {
-				public int compare(GazeModifier pO1, GazeModifier pO2) {
-					return pO1.getName().compareTo(pO2.getName());
-				}
-			});
+			GazeModifier[] gazeModifierArray = pGazeModifierSet.toArray(new GazeModifier[0]);
+			Arrays.sort(gazeModifierArray, Comparator.comparing(GazeModifier::getName));
 			return gazeModifierArray;
 		} else {
 			return new GazeModifier[0];
@@ -70,8 +65,6 @@ public class GazeModifierFactory implements IRollModifierFactory<GazeModifier> {
 
 	@Override
 	public void initialize(Game game) {
-		// TODO Auto-generated method stub
-		
 	}
 
 }
