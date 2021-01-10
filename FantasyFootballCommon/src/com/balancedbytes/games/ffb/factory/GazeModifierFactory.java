@@ -19,7 +19,7 @@ import com.balancedbytes.games.ffb.util.UtilPlayer;
  */
 @FactoryType(FactoryType.Factory.GAZE_MODIFIER)
 @RulesCollection(Rules.COMMON)
-public class GazeModifierFactory implements IRollModifierFactory {
+public class GazeModifierFactory implements IRollModifierFactory<GazeModifier> {
 
 	public GazeModifier forName(String pName) {
 		for (GazeModifier modifier : GazeModifier.values()) {

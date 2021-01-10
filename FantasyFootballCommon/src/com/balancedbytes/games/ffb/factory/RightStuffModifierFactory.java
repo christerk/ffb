@@ -20,7 +20,7 @@ import com.balancedbytes.games.ffb.util.UtilPlayer;
  */
 @FactoryType(FactoryType.Factory.RIGHT_STUFF_MODIFIER)
 @RulesCollection(Rules.COMMON)
-public class RightStuffModifierFactory implements IRollModifierFactory {
+public class RightStuffModifierFactory implements IRollModifierFactory<RightStuffModifier> {
 
 	public RightStuffModifier forName(String pName) {
 		for (RightStuffModifier modifier : RightStuffModifier.values()) {
@@ -32,7 +32,7 @@ public class RightStuffModifierFactory implements IRollModifierFactory {
 	}
 
 	public Set<RightStuffModifier> findRightStuffModifiers(Game pGame, Player<?> pPlayer) {
-		Set<RightStuffModifier> rightStuffModifiers = new HashSet<RightStuffModifier>();
+		Set<RightStuffModifier> rightStuffModifiers = new HashSet<>();
 		RightStuffModifier tacklezoneModifier = getTacklezoneModifier(pGame, pPlayer);
 		if (tacklezoneModifier != null) {
 			rightStuffModifiers.add(tacklezoneModifier);
@@ -46,12 +46,8 @@ public class RightStuffModifierFactory implements IRollModifierFactory {
 	public RightStuffModifier[] toArray(Set<RightStuffModifier> pRightStuffModifierSet) {
 		if (pRightStuffModifierSet != null) {
 			RightStuffModifier[] rightStuffModifierArray = pRightStuffModifierSet
-					.toArray(new RightStuffModifier[pRightStuffModifierSet.size()]);
-			Arrays.sort(rightStuffModifierArray, new Comparator<RightStuffModifier>() {
-				public int compare(RightStuffModifier pO1, RightStuffModifier pO2) {
-					return pO1.getName().compareTo(pO2.getName());
-				}
-			});
+					.toArray(new RightStuffModifier[0]);
+			Arrays.sort(rightStuffModifierArray, Comparator.comparing(RightStuffModifier::getName));
 			return rightStuffModifierArray;
 		} else {
 			return new RightStuffModifier[0];
@@ -70,8 +66,6 @@ public class RightStuffModifierFactory implements IRollModifierFactory {
 
 	@Override
 	public void initialize(Game game) {
-		// TODO Auto-generated method stub
-		
 	}
 
 }

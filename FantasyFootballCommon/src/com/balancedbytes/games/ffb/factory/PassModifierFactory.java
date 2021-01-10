@@ -1,11 +1,5 @@
 package com.balancedbytes.games.ffb.factory;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Comparator;
-import java.util.HashSet;
-import java.util.Set;
-
 import com.balancedbytes.games.ffb.Card;
 import com.balancedbytes.games.ffb.FactoryType;
 import com.balancedbytes.games.ffb.KeyedItemRegistry;
@@ -15,13 +9,18 @@ import com.balancedbytes.games.ffb.PassingModifiers;
 import com.balancedbytes.games.ffb.PassingModifiers.PassContext;
 import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.RulesCollection.Rules;
-import com.balancedbytes.games.ffb.Weather;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
 import com.balancedbytes.games.ffb.util.UtilCards;
 import com.balancedbytes.games.ffb.util.UtilDisturbingPresence;
 import com.balancedbytes.games.ffb.util.UtilPlayer;
+
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Comparator;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * 
@@ -55,12 +54,7 @@ public class PassModifierFactory implements IRollModifierFactory<PassModifier> {
 			boolean pThrowTeamMate) {
 		Set<PassModifier> passModifiers = new HashSet<>();
 		if (pThrower != null) {
-			if (Weather.VERY_SUNNY == pGame.getFieldModel().getWeather()) {
-				passModifiers.add(PassingModifiers.VERY_SUNNY);
-			}
-			if (Weather.BLIZZARD == pGame.getFieldModel().getWeather()) {
-				passModifiers.add(PassingModifiers.BLIZZARD);
-			}
+			passModifiers.addAll(activeModifiers(pGame, PassModifier.class));
 
 			if (!pThrower.hasSkillWithProperty(NamedProperties.ignoreTacklezonesWhenPassing)) {
 				PassModifier tacklezoneModifier = getTacklezoneModifier(pGame, pThrower);

@@ -22,7 +22,7 @@ import com.balancedbytes.games.ffb.util.UtilCards;
  */
 @FactoryType(FactoryType.Factory.LEAP_MODIFIER)
 @RulesCollection(Rules.COMMON)
-public class LeapModifierFactory implements IRollModifierFactory {
+public class LeapModifierFactory implements IRollModifierFactory<LeapModifier> {
 
 	static LeapModifiers leapModifiers;
 
@@ -35,23 +35,17 @@ public class LeapModifierFactory implements IRollModifierFactory {
 	}
 
 	public Set<LeapModifier> findLeapModifiers(Game pGame, FieldCoordinate pCoordinateFrom) {
-		Set<LeapModifier> leapModifiers = new HashSet<LeapModifier>();
 		ActingPlayer actingPlayer = pGame.getActingPlayer();
 
 		LeapContext context = new LeapContext(actingPlayer, pCoordinateFrom);
-		leapModifiers.addAll(UtilCards.getLeapModifiers(actingPlayer, context));
 
-		return leapModifiers;
+		return new HashSet<>(UtilCards.getLeapModifiers(actingPlayer, context));
 	}
 
 	public LeapModifier[] toArray(Set<LeapModifier> pLeapModifierSet) {
 		if (pLeapModifierSet != null) {
-			LeapModifier[] leapModifierArray = pLeapModifierSet.toArray(new LeapModifier[pLeapModifierSet.size()]);
-			Arrays.sort(leapModifierArray, new Comparator<LeapModifier>() {
-				public int compare(LeapModifier pO1, LeapModifier pO2) {
-					return pO1.getName().compareTo(pO2.getName());
-				}
-			});
+			LeapModifier[] leapModifierArray = pLeapModifierSet.toArray(new LeapModifier[0]);
+			Arrays.sort(leapModifierArray, Comparator.comparing(LeapModifier::getName));
 			return leapModifierArray;
 		} else {
 			return new LeapModifier[0];

@@ -1,22 +1,21 @@
 package com.balancedbytes.games.ffb.factory;
 
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-
 import com.balancedbytes.games.ffb.FactoryType;
 import com.balancedbytes.games.ffb.PickupModifier;
 import com.balancedbytes.games.ffb.PickupModifiers;
 import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.RulesCollection.Rules;
-import com.balancedbytes.games.ffb.Weather;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
 import com.balancedbytes.games.ffb.util.UtilCards;
 import com.balancedbytes.games.ffb.util.UtilPlayer;
+
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * 
@@ -24,7 +23,7 @@ import com.balancedbytes.games.ffb.util.UtilPlayer;
  */
 @FactoryType(FactoryType.Factory.PICKUP_MODIFIER)
 @RulesCollection(Rules.COMMON)
-public class PickupModifierFactory implements IRollModifierFactory {
+public class PickupModifierFactory implements IRollModifierFactory<PickupModifier> {
 
 	static PickupModifiers pickupModifiers;
 
@@ -37,7 +36,7 @@ public class PickupModifierFactory implements IRollModifierFactory {
 	}
 
 	public Set<PickupModifier> findPickupModifiers(Game pGame) {
-		Set<PickupModifier> pickupModifiers = new HashSet<PickupModifier>();
+		Set<PickupModifier> pickupModifiers = new HashSet<>();
 		Player<?> player = pGame.getActingPlayer().getPlayer();
 		if (player != null) {
 
@@ -51,9 +50,7 @@ public class PickupModifierFactory implements IRollModifierFactory {
 			}
 
 			if (!player.hasSkillWithProperty(NamedProperties.ignoreWeatherWhenPickingUp)) {
-				if (Weather.POURING_RAIN == pGame.getFieldModel().getWeather()) {
-					pickupModifiers.add(PickupModifiers.POURING_RAIN);
-				}
+				pickupModifiers.addAll(activeModifiers(pGame, PickupModifier.class));
 			}
 		}
 		return pickupModifiers;
@@ -61,12 +58,8 @@ public class PickupModifierFactory implements IRollModifierFactory {
 
 	public PickupModifier[] toArray(Set<PickupModifier> pPickupModifierSet) {
 		if (pPickupModifierSet != null) {
-			PickupModifier[] pickupModifierArray = pPickupModifierSet.toArray(new PickupModifier[pPickupModifierSet.size()]);
-			Arrays.sort(pickupModifierArray, new Comparator<PickupModifier>() {
-				public int compare(PickupModifier pO1, PickupModifier pO2) {
-					return pO1.getName().compareTo(pO2.getName());
-				}
-			});
+			PickupModifier[] pickupModifierArray = pPickupModifierSet.toArray(new PickupModifier[0]);
+			Arrays.sort(pickupModifierArray, Comparator.comparing(PickupModifier::getName));
 			return pickupModifierArray;
 		} else {
 			return new PickupModifier[0];

@@ -1,11 +1,5 @@
 package com.balancedbytes.games.ffb.factory;
 
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-
 import com.balancedbytes.games.ffb.CatchModifier;
 import com.balancedbytes.games.ffb.CatchModifiers;
 import com.balancedbytes.games.ffb.CatchModifiers.CatchContext;
@@ -13,7 +7,6 @@ import com.balancedbytes.games.ffb.CatchScatterThrowInMode;
 import com.balancedbytes.games.ffb.FactoryType;
 import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.RulesCollection.Rules;
-import com.balancedbytes.games.ffb.Weather;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
@@ -21,13 +14,19 @@ import com.balancedbytes.games.ffb.util.UtilCards;
 import com.balancedbytes.games.ffb.util.UtilDisturbingPresence;
 import com.balancedbytes.games.ffb.util.UtilPlayer;
 
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+
 /**
  * 
  * @author Kalimar
  */
 @FactoryType(FactoryType.Factory.CATCH_MODIFIER)
 @RulesCollection(Rules.COMMON)
-public class CatchModifierFactory implements IRollModifierFactory {
+public class CatchModifierFactory implements IRollModifierFactory<CatchModifier> {
 
 	static CatchModifiers catchModifiers;
 
@@ -40,10 +39,9 @@ public class CatchModifierFactory implements IRollModifierFactory {
 	}
 
 	public Set<CatchModifier> findCatchModifiers(Game pGame, Player<?> pPlayer, CatchScatterThrowInMode pCatchMode) {
-		Set<CatchModifier> catchModifiers = new HashSet<CatchModifier>();
 
 		CatchContext context = new CatchContext(pPlayer, pCatchMode);
-		catchModifiers.addAll(UtilCards.getCatchModifiers(pPlayer, context));
+		Set<CatchModifier> catchModifiers = new HashSet<>(UtilCards.getCatchModifiers(pPlayer, context));
 
 		if ((CatchScatterThrowInMode.CATCH_ACCURATE_PASS == pCatchMode)
 				|| (CatchScatterThrowInMode.CATCH_ACCURATE_BOMB == pCatchMode)) {
@@ -59,9 +57,7 @@ public class CatchModifierFactory implements IRollModifierFactory {
 		if (CatchScatterThrowInMode.CATCH_HAND_OFF == pCatchMode) {
 			catchModifiers.add(CatchModifiers.HAND_OFF);
 		}
-		if (Weather.POURING_RAIN == pGame.getFieldModel().getWeather()) {
-			catchModifiers.add(CatchModifiers.POURING_RAIN);
-		}
+		catchModifiers.addAll(activeModifiers(pGame, CatchModifier.class));
 		if (!pPlayer.hasSkillWithProperty(NamedProperties.ignoreTacklezonesWhenCatching)) {
 			CatchModifier tacklezoneModifier = getTacklezoneModifier(pGame, pPlayer);
 			if (tacklezoneModifier != null) {
@@ -77,12 +73,8 @@ public class CatchModifierFactory implements IRollModifierFactory {
 
 	public CatchModifier[] toArray(Set<CatchModifier> pCatchModifierSet) {
 		if (pCatchModifierSet != null) {
-			CatchModifier[] catchModifierArray = pCatchModifierSet.toArray(new CatchModifier[pCatchModifierSet.size()]);
-			Arrays.sort(catchModifierArray, new Comparator<CatchModifier>() {
-				public int compare(CatchModifier pO1, CatchModifier pO2) {
-					return pO1.getName().compareTo(pO2.getName());
-				}
-			});
+			CatchModifier[] catchModifierArray = pCatchModifierSet.toArray(new CatchModifier[0]);
+			Arrays.sort(catchModifierArray, Comparator.comparing(CatchModifier::getName));
 			return catchModifierArray;
 		} else {
 			return new CatchModifier[0];

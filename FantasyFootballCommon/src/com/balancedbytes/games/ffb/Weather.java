@@ -21,7 +21,11 @@ public enum Weather implements INamedObject, ModifierSource {
 	POURING_RAIN("Pouring Rain", "rain", "A -1 modifier applies to all catch, intercept, or pick-up rolls.") {
 		@Override
 		public Collection<IRollModifier> modifier() {
-			return Collections.singleton(CatchModifiers.POURING_RAIN);
+			return new HashSet<IRollModifier>() {{
+					add(CatchModifiers.POURING_RAIN);
+					add(InterceptionModifiers.POURING_RAIN);
+					add(PickupModifiers.POURING_RAIN);
+				}};
 		}
 	},
 	BLIZZARD("Blizzard", "blizzard",

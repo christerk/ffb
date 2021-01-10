@@ -1,11 +1,5 @@
 package com.balancedbytes.games.ffb.factory;
 
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-
 import com.balancedbytes.games.ffb.Card;
 import com.balancedbytes.games.ffb.FactoryType;
 import com.balancedbytes.games.ffb.InterceptionModifier;
@@ -13,7 +7,6 @@ import com.balancedbytes.games.ffb.InterceptionModifiers;
 import com.balancedbytes.games.ffb.InterceptionModifiers.InterceptionContext;
 import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.RulesCollection.Rules;
-import com.balancedbytes.games.ffb.Weather;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
@@ -21,13 +14,18 @@ import com.balancedbytes.games.ffb.util.UtilCards;
 import com.balancedbytes.games.ffb.util.UtilDisturbingPresence;
 import com.balancedbytes.games.ffb.util.UtilPlayer;
 
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.Map;
+import java.util.Set;
+
 /**
  * 
  * @author Kalimar
  */
 @FactoryType(FactoryType.Factory.INTERCEPTION_MODIFIER)
 @RulesCollection(Rules.COMMON)
-public class InterceptionModifierFactory implements IRollModifierFactory {
+public class InterceptionModifierFactory implements IRollModifierFactory<InterceptionModifier> {
 
 	static InterceptionModifiers interceptionModifiers;
 
@@ -40,10 +38,7 @@ public class InterceptionModifierFactory implements IRollModifierFactory {
 	}
 
 	public Set<InterceptionModifier> findInterceptionModifiers(Game pGame, Player<?> pPlayer) {
-		Set<InterceptionModifier> interceptionModifiers = new HashSet<InterceptionModifier>();
-		if (Weather.POURING_RAIN == pGame.getFieldModel().getWeather()) {
-			interceptionModifiers.add(InterceptionModifiers.POURING_RAIN);
-		}
+		Set<InterceptionModifier> interceptionModifiers = activeModifiers(pGame, InterceptionModifier.class);
 
 		InterceptionContext context = new InterceptionContext(pPlayer);
 		interceptionModifiers.addAll(UtilCards.getInterceptionModifiers(pPlayer, context));
@@ -70,12 +65,8 @@ public class InterceptionModifierFactory implements IRollModifierFactory {
 	public InterceptionModifier[] toArray(Set<InterceptionModifier> pInterceptionModifierSet) {
 		if (pInterceptionModifierSet != null) {
 			InterceptionModifier[] interceptionModifierArray = pInterceptionModifierSet
-					.toArray(new InterceptionModifier[pInterceptionModifierSet.size()]);
-			Arrays.sort(interceptionModifierArray, new Comparator<InterceptionModifier>() {
-				public int compare(InterceptionModifier pO1, InterceptionModifier pO2) {
-					return pO1.getName().compareTo(pO2.getName());
-				}
-			});
+					.toArray(new InterceptionModifier[0]);
+			Arrays.sort(interceptionModifierArray, Comparator.comparing(InterceptionModifier::getName));
 			return interceptionModifierArray;
 		} else {
 			return new InterceptionModifier[0];

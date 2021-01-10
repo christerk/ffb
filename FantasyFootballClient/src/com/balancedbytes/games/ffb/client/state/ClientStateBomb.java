@@ -9,7 +9,9 @@ import javax.swing.KeyStroke;
 
 import com.balancedbytes.games.ffb.ClientStateId;
 import com.balancedbytes.games.ffb.FieldCoordinate;
+import com.balancedbytes.games.ffb.PassModifier;
 import com.balancedbytes.games.ffb.PassingDistance;
+import com.balancedbytes.games.ffb.PassingModifiers;
 import com.balancedbytes.games.ffb.PlayerAction;
 import com.balancedbytes.games.ffb.RangeRuler;
 import com.balancedbytes.games.ffb.Weather;
@@ -21,11 +23,13 @@ import com.balancedbytes.games.ffb.client.IconCache;
 import com.balancedbytes.games.ffb.client.UserInterface;
 import com.balancedbytes.games.ffb.client.net.ClientCommunication;
 import com.balancedbytes.games.ffb.client.util.UtilClientCursor;
+import com.balancedbytes.games.ffb.factory.PassModifierFactory;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
 import com.balancedbytes.games.ffb.net.NetCommand;
+import com.balancedbytes.games.ffb.skill.Pass;
 import com.balancedbytes.games.ffb.util.UtilPassing;
 import com.balancedbytes.games.ffb.util.UtilRangeRuler;
 
@@ -232,7 +236,7 @@ public class ClientStateBomb extends ClientState {
 		Game game = getClient().getGame();
 		ActingPlayer actingPlayer = game.getActingPlayer();
 		return (actingPlayer.getPlayer().hasSkillWithProperty(NamedProperties.canPassToAnySquare)
-				&& (game.getFieldModel().getWeather() != Weather.BLIZZARD));
+				&& !(new PassModifierFactory().activeModifiers(game, PassModifier.class).contains(PassingModifiers.BLIZZARD)));
 	}
 
 	private boolean isRangeGridAvailable() {

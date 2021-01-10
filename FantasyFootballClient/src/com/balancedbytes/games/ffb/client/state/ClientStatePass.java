@@ -9,6 +9,8 @@ import javax.swing.KeyStroke;
 
 import com.balancedbytes.games.ffb.ClientStateId;
 import com.balancedbytes.games.ffb.FieldCoordinate;
+import com.balancedbytes.games.ffb.PassModifier;
+import com.balancedbytes.games.ffb.PassingModifiers;
 import com.balancedbytes.games.ffb.PlayerAction;
 import com.balancedbytes.games.ffb.PlayerState;
 import com.balancedbytes.games.ffb.RangeRuler;
@@ -21,6 +23,7 @@ import com.balancedbytes.games.ffb.client.IconCache;
 import com.balancedbytes.games.ffb.client.UserInterface;
 import com.balancedbytes.games.ffb.client.net.ClientCommunication;
 import com.balancedbytes.games.ffb.client.util.UtilClientCursor;
+import com.balancedbytes.games.ffb.factory.PassModifierFactory;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
@@ -204,7 +207,7 @@ public class ClientStatePass extends ClientStateMove {
 
 		if (actingPlayer.getPlayer().hasSkillWithProperty(NamedProperties.canPassToAnySquare)
 				&& UtilPlayer.hasBall(game, actingPlayer.getPlayer())
-				&& (game.getFieldModel().getWeather() != Weather.BLIZZARD)) {
+				&& (new PassModifierFactory().activeModifiers(game, PassModifier.class).contains(PassingModifiers.BLIZZARD))) {
 			String text = (PlayerAction.HAIL_MARY_PASS == actingPlayer.getPlayerAction()) ? "Don't use Hail Mary Pass"
 					: "Use Hail Mary Pass";
 			JMenuItem hailMaryPassAction = new JMenuItem(text,

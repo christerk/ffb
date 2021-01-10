@@ -1,16 +1,13 @@
 package com.balancedbytes.games.ffb.util;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.FieldCoordinateBounds;
+import com.balancedbytes.games.ffb.PassModifier;
 import com.balancedbytes.games.ffb.PassingDistance;
+import com.balancedbytes.games.ffb.PassingModifiers;
 import com.balancedbytes.games.ffb.PlayerAction;
 import com.balancedbytes.games.ffb.PlayerState;
-import com.balancedbytes.games.ffb.Weather;
+import com.balancedbytes.games.ffb.factory.PassModifierFactory;
 import com.balancedbytes.games.ffb.factory.PassingDistanceFactory;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.FieldModel;
@@ -19,10 +16,11 @@ import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.model.Team;
 import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
 
-/**
- * 
- * @author Kalimar
- */
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 public class UtilPassing {
 
 	public static double RULER_WIDTH = 1.74;
@@ -63,7 +61,7 @@ public class UtilPassing {
 			if ((deltaY < 14) && (deltaX < 14)) {
 				passingDistance = _PASSING_DISTANCES_TABLE[deltaY][deltaX];
 			}
-			if ((pThrowTeamMate || (Weather.BLIZZARD == pGame.getFieldModel().getWeather()))
+			if ((pThrowTeamMate || new PassModifierFactory().activeModifiers(pGame, PassModifier.class).contains(PassingModifiers.BLIZZARD))
 					&& ((passingDistance == PassingDistance.LONG_BOMB) || (passingDistance == PassingDistance.LONG_PASS))) {
 				passingDistance = null;
 			}
@@ -72,23 +70,23 @@ public class UtilPassing {
 	}
 
 	public static Player<?>[] findInterceptors(Game pGame, Player<?> pThrower, FieldCoordinate pTargetCoordinate) {
-		List<Player<?>> interceptors = new ArrayList<Player<?>>();
+		List<Player<?>> interceptors = new ArrayList<>();
 		if ((pTargetCoordinate != null) && (pThrower != null)) {
 			FieldCoordinate throwerCoordinate = pGame.getFieldModel().getPlayerCoordinate(pThrower);
 			Team otherTeam = pGame.getTeamHome().hasPlayer(pThrower) ? pGame.getTeamAway() : pGame.getTeamHome();
 			Player<?>[] otherPlayers = otherTeam.getPlayers();
-			for (int i = 0; i < otherPlayers.length; i++) {
-				PlayerState interceptorState = pGame.getFieldModel().getPlayerState(otherPlayers[i]);
-				FieldCoordinate interceptorCoordinate = pGame.getFieldModel().getPlayerCoordinate(otherPlayers[i]);
+			for (Player<?> otherPlayer : otherPlayers) {
+				PlayerState interceptorState = pGame.getFieldModel().getPlayerState(otherPlayer);
+				FieldCoordinate interceptorCoordinate = pGame.getFieldModel().getPlayerCoordinate(otherPlayer);
 				if ((interceptorCoordinate != null) && (interceptorState != null) && interceptorState.hasTacklezones()
-						&& !otherPlayers[i].hasSkillWithProperty(NamedProperties.preventCatch)) {
+					&& !otherPlayer.hasSkillWithProperty(NamedProperties.preventCatch)) {
 					if (canIntercept(throwerCoordinate, pTargetCoordinate, interceptorCoordinate)) {
-						interceptors.add(otherPlayers[i]);
+						interceptors.add(otherPlayer);
 					}
 				}
 			}
 		}
-		return interceptors.toArray(new Player[interceptors.size()]);
+		return interceptors.toArray(new Player[0]);
 	}
 
 	private static boolean canIntercept(FieldCoordinate pThrowerCoordinate, FieldCoordinate pTargetCoordinate,
@@ -110,7 +108,7 @@ public class UtilPassing {
 
 	public static Set<FieldCoordinate> findValidPassBlockEndCoordinates(Game pGame) {
 
-		Set<FieldCoordinate> validCoordinates = new HashSet<FieldCoordinate>();
+		Set<FieldCoordinate> validCoordinates = new HashSet<>();
 
 		// Sanity checks
 		if ((pGame == null) || (pGame.getThrower() == null) || (pGame.getPassCoordinate() == null)) {
@@ -164,9 +162,9 @@ public class UtilPassing {
 	private static Set<FieldCoordinate> findInterceptCoordinates(Game pGame) {
 
 		FieldModel fieldModel = pGame.getFieldModel();
-		Set<FieldCoordinate> eligibleCoordinates = new HashSet<FieldCoordinate>();
-		Set<FieldCoordinate> closedSet = new HashSet<FieldCoordinate>();
-		List<FieldCoordinate> openSet = new ArrayList<FieldCoordinate>();
+		Set<FieldCoordinate> eligibleCoordinates = new HashSet<>();
+		Set<FieldCoordinate> closedSet = new HashSet<>();
+		List<FieldCoordinate> openSet = new ArrayList<>();
 		FieldCoordinate throwerCoord = fieldModel.getPlayerCoordinate(pGame.getThrower());
 
 		// Start with the thrower's location.

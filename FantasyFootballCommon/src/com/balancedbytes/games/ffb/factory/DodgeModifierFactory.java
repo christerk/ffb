@@ -28,7 +28,7 @@ import com.balancedbytes.games.ffb.util.UtilPlayer;
  */
 @FactoryType(FactoryType.Factory.DODGE_MODIFIER)
 @RulesCollection(Rules.COMMON)
-public class DodgeModifierFactory implements IRollModifierFactory {
+public class DodgeModifierFactory implements IRollModifierFactory<DodgeModifier> {
 
 	static DodgeModifiers dodgeModifiers;
 
