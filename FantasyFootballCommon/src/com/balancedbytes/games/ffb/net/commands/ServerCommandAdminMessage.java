@@ -13,7 +13,7 @@ import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
 /**
- * 
+ *
  * @author Kalimar
  */
 public class ServerCommandAdminMessage extends ServerCommand {
@@ -21,7 +21,7 @@ public class ServerCommandAdminMessage extends ServerCommand {
 	private List<String> fMessages;
 
 	public ServerCommandAdminMessage() {
-		fMessages = new ArrayList<String>();
+		fMessages = new ArrayList<>();
 	}
 
 	public ServerCommandAdminMessage(String[] pMessages) {

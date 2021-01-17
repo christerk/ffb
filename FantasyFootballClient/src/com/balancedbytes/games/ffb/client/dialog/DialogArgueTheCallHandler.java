@@ -10,7 +10,7 @@ import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.util.ArrayTool;
 
 /**
- * 
+ *
  * @author Kalimar
  */
 public class DialogArgueTheCallHandler extends DialogHandler {
@@ -30,7 +30,7 @@ public class DialogArgueTheCallHandler extends DialogHandler {
 					&& game.getTeamHome().getId().equals(dialogParameter.getTeamId())) {
 
 				if (ArrayTool.isProvided(dialogParameter.getPlayerIds()) && dialogParameter.getPlayerIds().length == 1) {
-					Player player = game.getPlayerById(dialogParameter.getPlayerIds()[0]);
+					Player<?> player = game.getPlayerById(dialogParameter.getPlayerIds()[0]);
 					setDialog(new DialogArgueTheCall(getClient(), player));
 
 				} else {
@@ -59,7 +59,7 @@ public class DialogArgueTheCallHandler extends DialogHandler {
 		}
 		if (testDialogHasId(pDialog, DialogId.PLAYER_CHOICE)) {
 			DialogPlayerChoice playerChoiceDialog = (DialogPlayerChoice) pDialog;
-			Player[] selectedPlayers = playerChoiceDialog.getSelectedPlayers();
+			Player<?>[] selectedPlayers = playerChoiceDialog.getSelectedPlayers();
 			String[] selectedPlayerIds = new String[selectedPlayers.length];
 			for (int i = 0; i < selectedPlayerIds.length; i++) {
 				selectedPlayerIds[i] = selectedPlayers[i].getId();

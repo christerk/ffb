@@ -27,12 +27,12 @@ import com.balancedbytes.games.ffb.util.StringTool;
 import com.balancedbytes.games.ffb.util.UtilPassing;
 
 /**
- * 
+ *
  * @author Kalimar
  */
 public class FieldLayerRangeRuler extends FieldLayer {
 
-	private static final Map<PassingDistance, Color> _COLOR_BY_PASSING_DISTANCE = new HashMap<PassingDistance, Color>();
+	private static final Map<PassingDistance, Color> _COLOR_BY_PASSING_DISTANCE = new HashMap<>();
 
 	static {
 		_COLOR_BY_PASSING_DISTANCE.put(PassingDistance.QUICK_PASS, new Color(0.0f, 1.0f, 0.0f, 0.3f));
@@ -62,7 +62,7 @@ public class FieldLayerRangeRuler extends FieldLayer {
 				&& StringTool.isProvided(pRangeRuler.getThrowerId())) {
 
 			Game game = getClient().getGame();
-			Player thrower = game.getPlayerById(pRangeRuler.getThrowerId());
+			Player<?> thrower = game.getPlayerById(pRangeRuler.getThrowerId());
 			FieldCoordinate throwerCoordinate = game.getFieldModel().getPlayerCoordinate(thrower);
 
 			PassingDistance passingDistance = UtilPassing.findPassingDistance(game, throwerCoordinate,
@@ -117,7 +117,7 @@ public class FieldLayerRangeRuler extends FieldLayer {
 
 				Color selectSquareColor = null;
 				Team otherTeam = game.isHomePlaying() ? game.getTeamAway() : game.getTeamHome();
-				Player catcher = game.getFieldModel().getPlayer(pRangeRuler.getTargetCoordinate());
+				Player<?> catcher = game.getFieldModel().getPlayer(pRangeRuler.getTargetCoordinate());
 				if ((catcher == null) || otherTeam.hasPlayer(catcher)) {
 					selectSquareColor = COLOR_SELECT_SQUARE;
 				} else {
@@ -227,7 +227,7 @@ public class FieldLayerRangeRuler extends FieldLayer {
 		}
 	}
 
-	public void markPlayers(Player[] pMarkedPlayers, Color pColor) {
+	public void markPlayers(Player<?>[] pMarkedPlayers, Color pColor) {
 		Game game = getClient().getGame();
 		if (ArrayTool.isProvided(pMarkedPlayers) && (pColor != null)) {
 			fMarkedCoordinates = new FieldCoordinate[pMarkedPlayers.length];

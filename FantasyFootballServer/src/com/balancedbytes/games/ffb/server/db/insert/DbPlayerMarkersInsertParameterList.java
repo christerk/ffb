@@ -11,7 +11,7 @@ import com.balancedbytes.games.ffb.server.db.IDbUpdateParameterList;
 import com.balancedbytes.games.ffb.util.StringTool;
 
 /**
- * 
+ *
  * @author Kalimar
  */
 public class DbPlayerMarkersInsertParameterList implements IDbUpdateParameterList {
@@ -19,7 +19,7 @@ public class DbPlayerMarkersInsertParameterList implements IDbUpdateParameterLis
 	private List<DbPlayerMarkersInsertParameter> fParameters;
 
 	public DbPlayerMarkersInsertParameterList() {
-		fParameters = new ArrayList<DbPlayerMarkersInsertParameter>();
+		fParameters = new ArrayList<>();
 	}
 
 	public DbPlayerMarkersInsertParameter[] getParameters() {
@@ -41,7 +41,7 @@ public class DbPlayerMarkersInsertParameterList implements IDbUpdateParameterLis
 			return;
 		}
 		for (PlayerMarker playerMarker : pGameState.getGame().getFieldModel().getPlayerMarkers()) {
-			Player player = pGameState.getGame().getPlayerById(playerMarker.getPlayerId());
+			Player<?> player = pGameState.getGame().getPlayerById(playerMarker.getPlayerId());
 			if (teamHome.hasPlayer(player) && StringTool.isProvided(playerMarker.getHomeText())) {
 				addParameter(new DbPlayerMarkersInsertParameter(teamHome.getId(), player.getId(), playerMarker.getHomeText()));
 			}

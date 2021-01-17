@@ -205,7 +205,7 @@ public interface ClientEndpointConfig extends EndpointConfig {
 		 * @return the builder instance
 		 */
 		public ClientEndpointConfig.Builder preferredSubprotocols(List<String> preferredSubprotocols) {
-			this.preferredSubprotocols = (preferredSubprotocols == null) ? new ArrayList<String>() : preferredSubprotocols;
+			this.preferredSubprotocols = (preferredSubprotocols == null) ? new ArrayList<>() : preferredSubprotocols;
 			return this;
 		}
 
@@ -218,7 +218,7 @@ public interface ClientEndpointConfig extends EndpointConfig {
 		 * @return the builder instance
 		 */
 		public ClientEndpointConfig.Builder extensions(List<Extension> extensions) {
-			this.extensions = (extensions == null) ? new ArrayList<Extension>() : extensions;
+			this.extensions = (extensions == null) ? new ArrayList<>() : extensions;
 			return this;
 		}
 
@@ -229,7 +229,7 @@ public interface ClientEndpointConfig extends EndpointConfig {
 		 * @return the builder instance
 		 */
 		public ClientEndpointConfig.Builder encoders(List<Class<? extends Encoder>> encoders) {
-			this.encoders = (encoders == null) ? new ArrayList<Class<? extends Encoder>>() : encoders;
+			this.encoders = (encoders == null) ? new ArrayList<>() : encoders;
 			return this;
 		}
 
@@ -240,7 +240,7 @@ public interface ClientEndpointConfig extends EndpointConfig {
 		 * @return this builder instance
 		 */
 		public ClientEndpointConfig.Builder decoders(List<Class<? extends Decoder>> decoders) {
-			this.decoders = (decoders == null) ? new ArrayList<Class<? extends Decoder>>() : decoders;
+			this.decoders = (decoders == null) ? new ArrayList<>() : decoders;
 			return this;
 		}
 

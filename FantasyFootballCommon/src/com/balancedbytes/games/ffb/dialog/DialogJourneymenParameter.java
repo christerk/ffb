@@ -13,7 +13,7 @@ import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
 /**
- * 
+ *
  * @author Kalimar
  */
 public class DialogJourneymenParameter implements IDialogParameter {
@@ -23,7 +23,7 @@ public class DialogJourneymenParameter implements IDialogParameter {
 	private List<String> fPositionIds;
 
 	public DialogJourneymenParameter() {
-		fPositionIds = new ArrayList<String>();
+		fPositionIds = new ArrayList<>();
 	}
 
 	public DialogJourneymenParameter(String pTeamId, int pNrOfSlots, String[] pPositionIds) {

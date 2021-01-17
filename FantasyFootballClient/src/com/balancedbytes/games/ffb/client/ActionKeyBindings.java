@@ -14,7 +14,7 @@ import javax.swing.KeyStroke;
 import com.balancedbytes.games.ffb.util.StringTool;
 
 /**
- * 
+ *
  * @author Kalimar
  */
 public class ActionKeyBindings {
@@ -24,7 +24,7 @@ public class ActionKeyBindings {
 
 	public ActionKeyBindings(FantasyFootballClient pClient) {
 		fClient = pClient;
-		fActionsByGroup = new HashMap<ActionKeyGroup, List<ActionKeyAction>>();
+		fActionsByGroup = new HashMap<>();
 		init();
 	}
 
@@ -32,7 +32,7 @@ public class ActionKeyBindings {
 
 		fActionsByGroup.clear();
 
-		List<ActionKeyAction> playerMoves = new ArrayList<ActionKeyAction>();
+		List<ActionKeyAction> playerMoves = new ArrayList<>();
 
 		playerMoves.add(
 				new ActionKeyAction(getClient(), KeyStroke.getKeyStroke(KeyEvent.VK_NUMPAD8, 0), ActionKey.PLAYER_MOVE_NORTH));
@@ -90,7 +90,7 @@ public class ActionKeyBindings {
 
 		fActionsByGroup.put(ActionKeyGroup.PLAYER_MOVES, playerMoves);
 
-		List<ActionKeyAction> playerSelection = new ArrayList<ActionKeyAction>();
+		List<ActionKeyAction> playerSelection = new ArrayList<>();
 		String selectPlayer = getClient().getProperty(IClientProperty.KEY_PLAYER_SELECT);
 		if (StringTool.isProvided(selectPlayer)) {
 			playerSelection
@@ -108,7 +108,7 @@ public class ActionKeyBindings {
 		}
 		fActionsByGroup.put(ActionKeyGroup.PLAYER_SELECTION, playerSelection);
 
-		List<ActionKeyAction> playerActions = new ArrayList<ActionKeyAction>();
+		List<ActionKeyAction> playerActions = new ArrayList<>();
 		String actionBlock = getClient().getProperty(IClientProperty.KEY_PLAYER_ACTION_BLOCK);
 		if (StringTool.isProvided(actionBlock)) {
 			playerActions
@@ -181,7 +181,7 @@ public class ActionKeyBindings {
 		}
 		fActionsByGroup.put(ActionKeyGroup.PLAYER_ACTIONS, playerActions);
 
-		List<ActionKeyAction> turnActions = new ArrayList<ActionKeyAction>();
+		List<ActionKeyAction> turnActions = new ArrayList<>();
 		String turnEnd = getClient().getProperty(IClientProperty.KEY_TOOLBAR_TURN_END);
 		if (StringTool.isProvided(turnEnd)) {
 			turnActions.add(new ActionKeyAction(getClient(), KeyStroke.getKeyStroke(turnEnd), ActionKey.TOOLBAR_TURN_END));

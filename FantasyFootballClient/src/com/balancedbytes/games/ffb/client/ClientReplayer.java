@@ -32,7 +32,7 @@ import com.balancedbytes.games.ffb.report.ReportId;
 import com.balancedbytes.games.ffb.util.UtilBox;
 
 /**
- * 
+ *
  * @author Kalimar
  */
 public class ClientReplayer implements ActionListener {
@@ -56,8 +56,8 @@ public class ClientReplayer implements ActionListener {
 
 	public ClientReplayer(FantasyFootballClient pClient) {
 		fClient = pClient;
-		fReplayList = new ArrayList<ServerCommand>();
-		fUnseenList = new ArrayList<ServerCommand>();
+		fReplayList = new ArrayList<>();
+		fUnseenList = new ArrayList<>();
 		fLastReplayPosition = -1;
 		fReplaySpeed = 1;
 		fTimer = new Timer(1000, this);
@@ -104,7 +104,7 @@ public class ClientReplayer implements ActionListener {
 
 	public void init(ServerCommand[] pServerCommands, IProgressListener pProgressListener) {
 		List<ServerCommand> oldReplayList = fReplayList;
-		fReplayList = new ArrayList<ServerCommand>();
+		fReplayList = new ArrayList<>();
 		for (ServerCommand command : pServerCommands) {
 			fReplayList.add(command);
 		}
@@ -355,7 +355,7 @@ public class ClientReplayer implements ActionListener {
 	}
 
 	private void addTeam(Game pGame, Team pTeam, TeamResult pOldTeamResult, boolean pHomeTeam) {
-		Player[] players = pTeam.getPlayers();
+		Player<?>[] players = pTeam.getPlayers();
 		if (pHomeTeam) {
 			pGame.getFieldModel().remove(pGame.getTeamHome());
 			pGame.setTeamHome(pTeam);

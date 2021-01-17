@@ -22,14 +22,14 @@ import com.eclipsesource.json.JsonValue;
 /**
  * Final step of the throw team mate sequence. Consumes all expected
  * stepParameters.
- * 
+ *
  * Expects stepParameter END_PLAYER_ACTION to be set by a preceding step.
  * Expects stepParameter END_TURN to be set by a preceding step. Expects
  * stepParameter THROWN_PLAYER_COORDINATE to be set by a preceding step. Expects
  * stepParameter THROWN_PLAYER_HAS_BALL to be set by a preceding step. Expects
  * stepParameter THROWN_PLAYER_ID to be set by a preceding step. Expects
  * stepParameter THROWN_PLAYER_STATE to be set by a preceding step.
- * 
+ *
  * @author Kalimar
  */
 public final class StepEndThrowTeamMate extends AbstractStep {
@@ -112,7 +112,7 @@ public final class StepEndThrowTeamMate extends AbstractStep {
 		game.setPassCoordinate(null);
 		game.getFieldModel().setRangeRuler(null);
 		// reset thrown player (e.g. failed confusion roll, successful escape roll)
-		Player thrownPlayer = game.getPlayerById(fThrownPlayerId);
+		Player<?> thrownPlayer = game.getPlayerById(fThrownPlayerId);
 		if ((thrownPlayer != null) && (fThrownPlayerCoordinate != null) && (fThrownPlayerState != null)
 				&& (fThrownPlayerState.getId() > 0)) {
 			game.getFieldModel().setPlayerCoordinate(thrownPlayer, fThrownPlayerCoordinate);

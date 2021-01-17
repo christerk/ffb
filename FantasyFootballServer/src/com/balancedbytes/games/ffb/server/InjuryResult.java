@@ -30,7 +30,7 @@ import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
 /**
- * 
+ *
  * @author Kalimar
  */
 public class InjuryResult implements IJsonSerializable {
@@ -52,7 +52,7 @@ public class InjuryResult implements IJsonSerializable {
 	public void applyTo(IStep pStep) {
 		Game game = pStep.getGameState().getGame();
 		GameResult gameResult = game.getGameResult();
-		Player defender = game.getPlayerById(injuryContext.getDefenderId());
+		Player<?> defender = game.getPlayerById(injuryContext.getDefenderId());
 
 		PlayerResult playerResult = gameResult.getPlayerResult(defender);
 		if (defender.hasSkillWithProperty(NamedProperties.getsSentOffAtEndOfDrive)) {
@@ -111,7 +111,7 @@ public class InjuryResult implements IJsonSerializable {
 						gameResult.getTeamResultAway().sufferInjury(injuryContext.getPlayerState());
 					}
 				}
-				Player attacker = game.getPlayerById(injuryContext.getAttackerId());
+				Player<?> attacker = game.getPlayerById(injuryContext.getAttackerId());
 				if (injuryContext.getSufferedInjury().isCasualty() && injuryContext.getInjuryType().isWorthSpps()
 						&& (attacker.getTeam() != defender.getTeam())) {
 					PlayerResult attackerResult = gameResult.getPlayerResult(attacker);

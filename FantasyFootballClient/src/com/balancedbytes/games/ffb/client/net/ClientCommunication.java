@@ -81,7 +81,7 @@ import com.balancedbytes.games.ffb.net.commands.ServerCommand;
 import com.fumbbl.rng.MouseEntropySource;
 
 /**
- * 
+ *
  * @author Kalimar
  */
 public class ClientCommunication implements Runnable, INetCommandHandler {
@@ -92,7 +92,7 @@ public class ClientCommunication implements Runnable, INetCommandHandler {
 
 	public ClientCommunication(FantasyFootballClient pClient) {
 		fClient = pClient;
-		fCommandQueue = new ArrayList<NetCommand>();
+		fCommandQueue = new ArrayList<>();
 	}
 
 	public void handleCommand(NetCommand pNetCommand) {
@@ -198,7 +198,7 @@ public class ClientCommunication implements Runnable, INetCommandHandler {
 		send(new ClientCommandPing(timestamp));
 	}
 
-	public void sendSetupPlayer(Player pPlayer, FieldCoordinate pCoordinate) {
+	public void sendSetupPlayer(Player<?> pPlayer, FieldCoordinate pCoordinate) {
 		send(new ClientCommandSetupPlayer(pPlayer.getId(), pCoordinate));
 	}
 
@@ -247,7 +247,7 @@ public class ClientCommunication implements Runnable, INetCommandHandler {
 		send(new ClientCommandReceiveChoice(pChoiceReceive));
 	}
 
-	public void sendPlayerChoice(PlayerChoiceMode pMode, Player[] pPlayers) {
+	public void sendPlayerChoice(PlayerChoiceMode pMode, Player<?>[] pPlayers) {
 		send(new ClientCommandPlayerChoice(pMode, pPlayers));
 	}
 
@@ -255,7 +255,7 @@ public class ClientCommunication implements Runnable, INetCommandHandler {
 		send(new ClientCommandPettyCash(pPettyCash));
 	}
 
-	public void sendActingPlayer(Player pPlayer, PlayerAction pPlayerAction, boolean pLeaping) {
+	public void sendActingPlayer(Player<?> pPlayer, PlayerAction pPlayerAction, boolean pLeaping) {
 		String playerId = (pPlayer != null) ? pPlayer.getId() : null;
 		send(new ClientCommandActingPlayer(playerId, pPlayerAction, pLeaping));
 	}
@@ -272,12 +272,12 @@ public class ClientCommunication implements Runnable, INetCommandHandler {
 		send(new ClientCommandKickoff(pBallCoordinate));
 	}
 
-	public void sendHandOver(String pActingPlayerId, Player pCatcher) {
+	public void sendHandOver(String pActingPlayerId, Player<?> pCatcher) {
 		String catcherId = (pCatcher != null) ? pCatcher.getId() : null;
 		send(new ClientCommandHandOver(pActingPlayerId, catcherId));
 	}
 
-	public void sendGaze(String pActingPlayerId, Player pVictim) {
+	public void sendGaze(String pActingPlayerId, Player<?> pVictim) {
 		String victimId = (pVictim != null) ? pVictim.getId() : null;
 		send(new ClientCommandGaze(pActingPlayerId, victimId));
 	}
@@ -286,12 +286,12 @@ public class ClientCommunication implements Runnable, INetCommandHandler {
 		send(new ClientCommandPass(pActingPlayerId, pTargetCoordinate));
 	}
 
-	public void sendBlock(String pActingPlayerId, Player pDefender, boolean pUsingStab) {
+	public void sendBlock(String pActingPlayerId, Player<?> pDefender, boolean pUsingStab) {
 		String defenderId = (pDefender != null) ? pDefender.getId() : null;
 		send(new ClientCommandBlock(pActingPlayerId, defenderId, pUsingStab));
 	}
 
-	public void sendFoul(String pActingPlayerId, Player pDefender) {
+	public void sendFoul(String pActingPlayerId, Player<?> pDefender) {
 		String defenderId = (pDefender != null) ? pDefender.getId() : null;
 		send(new ClientCommandFoul(pActingPlayerId, defenderId));
 	}
@@ -336,7 +336,7 @@ public class ClientCommunication implements Runnable, INetCommandHandler {
 		send(new ClientCommandFollowupChoice(pFollowupChoice));
 	}
 
-	public void sendInterceptorChoice(Player pInterceptor) {
+	public void sendInterceptorChoice(Player<?> pInterceptor) {
 		String interceptorId = (pInterceptor != null) ? pInterceptor.getId() : null;
 		send(new ClientCommandInterceptorChoice(interceptorId));
 	}

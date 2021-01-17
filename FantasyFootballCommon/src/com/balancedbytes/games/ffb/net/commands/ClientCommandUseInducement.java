@@ -15,7 +15,7 @@ import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
 /**
- * 
+ *
  * @author Kalimar
  */
 public class ClientCommandUseInducement extends ClientCommand {
@@ -25,7 +25,7 @@ public class ClientCommandUseInducement extends ClientCommand {
 	private List<String> fPlayerIds;
 
 	public ClientCommandUseInducement() {
-		fPlayerIds = new ArrayList<String>();
+		fPlayerIds = new ArrayList<>();
 	}
 
 	public ClientCommandUseInducement(InducementType pInducementType) {

@@ -26,7 +26,7 @@ import com.eclipsesource.json.JsonValue;
 
 /**
  * Final step of the pass sequence. Consumes all expected stepParameters.
- * 
+ *
  * Expects stepParameter CATCHER_ID to be set by a preceding step. Expects
  * stepParameter END_PLAYER_ACTION to be set by a preceding step. Expects
  * stepParameter END_TURN to be set by a preceding step. Expects stepParameter
@@ -34,7 +34,7 @@ import com.eclipsesource.json.JsonValue;
  * INTERCEPTOR_ID to be set by a preceding step. Expects stepParameter
  * PASS_ACCURATE to be set by a preceding step. Expects stepParameter
  * PASS_FUMBLE to be set by a preceding step.
- * 
+ *
  * @author Kalimar
  */
 public final class StepEndPassing extends AbstractStep {
@@ -138,7 +138,7 @@ public final class StepEndPassing extends AbstractStep {
 			getResult().setNextAction(StepAction.NEXT_STEP);
 			return;
 		}
-		Player catcher = game.getPlayerById(fCatcherId);
+		Player<?> catcher = game.getPlayerById(fCatcherId);
 		// completions and passing statistic
 		if ((game.getThrower() != null) && (catcher != null) && UtilPlayer.hasBall(game, catcher)
 				&& game.getThrower().getTeam().hasPlayer(catcher)) {

@@ -33,10 +33,10 @@ import com.eclipsesource.json.JsonValue;
 
 /**
  * Step to init the inducement sequence.
- * 
+ *
  * Needs to be initialized with stepParameter HOME_TEAM. Needs to be initialized
  * with stepParameter INDUCEMENT_PHASE.
- * 
+ *
  * Sets stepParameter HOME_TEAM for all steps on the stack. Sets stepParameter
  * INDUCEMENT_PHASE for all steps on the stack. Sets stepParameter
  * END_INDUCEMENT_PHASE for all steps on the stack.
@@ -145,7 +145,7 @@ public final class StepInitInducement extends AbstractStep {
 	}
 
 	private InducementType[] findUseableInducements() {
-		Set<InducementType> useableInducements = new HashSet<InducementType>();
+		Set<InducementType> useableInducements = new HashSet<>();
 		Game game = getGameState().getGame();
 		TurnData turnData = fHomeTeam ? game.getTurnDataHome() : game.getTurnDataAway();
 		if (InducementPhase.END_OF_OWN_TURN == fInducementPhase) {
@@ -163,7 +163,7 @@ public final class StepInitInducement extends AbstractStep {
 
 	private Card[] findPlayableCards() {
 		Game game = getGameState().getGame();
-		Set<Card> playableCards = new HashSet<Card>();
+		Set<Card> playableCards = new HashSet<>();
 		InducementSet inducementSet = fHomeTeam ? game.getTurnDataHome().getInducementSet()
 				: game.getTurnDataAway().getInducementSet();
 		for (Card card : inducementSet.getAvailableCards()) {

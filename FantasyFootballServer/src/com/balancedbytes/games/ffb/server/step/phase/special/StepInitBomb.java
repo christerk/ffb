@@ -35,12 +35,12 @@ import com.eclipsesource.json.JsonValue;
 /**
  * Initialization step of the pass sequence. May push SpecialEffect sequences
  * onto the stack.
- * 
+ *
  * Needs to be initialized with stepParameter CATCHER_ID. Needs to be
  * initialized with stepParameter GOTO_LABEL_ON_END. May be initialized with
  * stepParameter OLD_TURN_MODE. Needs to be initialized with stepParameter
  * PASS_FUMBLE.
- * 
+ *
  * Sets stepParameter CATCHER_ID for all steps on the stack. Sets stepParameter
  * END_PLAYER_ACTION for all steps on the stack. Sets stepParameter
  * OLD_TURN_MODE for all steps on the stack.
@@ -141,17 +141,17 @@ public final class StepInitBomb extends AbstractStep {
 				getResult().setAnimation(new Animation(AnimationType.BOMB_EXLOSION, fBombCoordinate));
 				UtilServerGame.syncGameModel(this);
 				game.getFieldModel().add(new BloodSpot(fBombCoordinate, new PlayerState(PlayerState.HIT_BY_BOMB)));
-				List<Player> affectedPlayers = new ArrayList<Player>();
+				List<Player<?>> affectedPlayers = new ArrayList<>();
 				FieldCoordinate[] targetCoordinates = game.getFieldModel().findAdjacentCoordinates(fBombCoordinate,
 						FieldCoordinateBounds.FIELD, 1, true);
 				for (int i = targetCoordinates.length - 1; i >= 0; i--) {
-					Player player = game.getFieldModel().getPlayer(targetCoordinates[i]);
+					Player<?> player = game.getFieldModel().getPlayer(targetCoordinates[i]);
 					if (player != null) {
 						affectedPlayers.add(player);
 					}
 				}
 				if (affectedPlayers.size() > 0) {
-					for (Player player : affectedPlayers) {
+					for (Player<?> player : affectedPlayers) {
 						boolean rollForEffect = !fBombCoordinate.equals(game.getFieldModel().getPlayerCoordinate(player));
 						SequenceGenerator.getInstance().pushSpecialEffectSequence(getGameState(), SpecialEffect.BOMB,
 								player.getId(), rollForEffect);

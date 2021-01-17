@@ -117,7 +117,7 @@ public class UtilBox {
 	}
 
 	private static void refreshBox(Game pGame, int pBoxX) {
-		List<FieldCoordinate> coordinates = new ArrayList<FieldCoordinate>();
+		List<FieldCoordinate> coordinates = new ArrayList<>();
 		for (FieldCoordinate coordinate : pGame.getFieldModel().getPlayerCoordinates()) {
 			if (coordinate.getX() == pBoxX) {
 				coordinates.add(coordinate);

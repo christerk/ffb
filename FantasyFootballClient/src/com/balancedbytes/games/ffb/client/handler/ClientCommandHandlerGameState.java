@@ -26,7 +26,7 @@ import com.balancedbytes.games.ffb.option.GameOptionId;
 import com.balancedbytes.games.ffb.util.StringTool;
 
 /**
- * 
+ *
  * @author Kalimar
  */
 public class ClientCommandHandlerGameState extends ClientCommandHandler implements IDialogCloseListener {
@@ -47,7 +47,7 @@ public class ClientCommandHandlerGameState extends ClientCommandHandler implemen
 		IconCache iconCache = getClient().getUserInterface().getIconCache();
 
 		// update player icons and collect all icon urls needed for the game
-		Set<String> iconUrls = new HashSet<String>();
+		Set<String> iconUrls = new HashSet<>();
 
 		addIconUrl(iconUrls, IconCache.findTeamLogoUrl(game.getTeamHome()));
 		addIconUrl(iconUrls, IconCache.findTeamLogoUrl(game.getTeamAway()));
@@ -55,7 +55,7 @@ public class ClientCommandHandlerGameState extends ClientCommandHandler implemen
 		addRosterIconUrls(iconUrls, game.getTeamHome().getRoster());
 		addRosterIconUrls(iconUrls, game.getTeamAway().getRoster());
 
-		for (Player player : game.getPlayers()) {
+		for (Player<?> player : game.getPlayers()) {
 			addIconUrl(iconUrls, PlayerIconFactory.getPortraitUrl(player));
 			addIconUrl(iconUrls, PlayerIconFactory.getIconSetUrl(player));
 		}
@@ -71,7 +71,7 @@ public class ClientCommandHandlerGameState extends ClientCommandHandler implemen
 			addIconUrl(iconUrls, iconCache.buildPitchUrl(pitchUrl, Weather.NICE));
 		}
 
-		Set<String> iconUrlsToDownload = new HashSet<String>();
+		Set<String> iconUrlsToDownload = new HashSet<>();
 		for (String iconUrl : iconUrls) {
 			// TODO: FUMBBL wrong empty player portraits
 			if (!iconCache.loadIconFromArchive(iconUrl) && !iconUrl.endsWith("/i/")) {

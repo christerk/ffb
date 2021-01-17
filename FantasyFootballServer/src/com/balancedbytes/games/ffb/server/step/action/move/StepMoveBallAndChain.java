@@ -31,23 +31,23 @@ import com.eclipsesource.json.JsonValue;
 
 /**
  * Step in the move sequence to handle skill BALL_AND_CHAIN.
- * 
+ *
  * Needs to be initialized with stepParameter DISPATCH_TO_LABEL. Needs to be
  * initialized with stepParameter GOTO_LABEL_ON_END. May be initialized with
  * stepParameter GAZE_VICTIM_ID. May be initialized with stepParameter
  * MOVE_STACK.
- * 
+ *
  * Expects stepParameter MOVE_STACK to be set by a preceding step.
- * 
+ *
  * Sets stepParameter COORDINATE_FROM for all steps on the stack. Sets
  * stepParameter COORDINATE_TO for all steps on the stack. Sets stepParameter
  * DISPATCH_PLAYER_ACTION for all steps on the stack. Sets stepParameter
  * END_TURN for all steps on the stack. Sets stepParameter END_PLAYER_ACTION for
  * all steps on the stack. Sets stepParameter MOVE_STACK for all steps on the
  * stack.
- * 
+ *
  * May replace rest of move sequence with inducement sequence.
- * 
+ *
  * @author Kalimar
  */
 public class StepMoveBallAndChain extends AbstractStep {
@@ -147,7 +147,7 @@ public class StepMoveBallAndChain extends AbstractStep {
 				return;
 			}
 			publishParameter(new StepParameter(StepParameterKey.COORDINATE_TO, fCoordinateTo));
-			Player blockDefender = game.getFieldModel().getPlayer(fCoordinateTo);
+			Player<?> blockDefender = game.getFieldModel().getPlayer(fCoordinateTo);
 			if (blockDefender != null) {
 				actingPlayer.setCurrentMove(actingPlayer.getCurrentMove() + 1);
 				actingPlayer.setGoingForIt(UtilPlayer.isNextMoveGoingForIt(game));

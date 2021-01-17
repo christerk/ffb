@@ -5,13 +5,13 @@ import com.balancedbytes.games.ffb.dialog.DialogId;
 import com.balancedbytes.games.ffb.model.Player;
 
 /**
- * 
+ *
  * @author Kalimar
  */
 @SuppressWarnings("serial")
 public class DialogBribes extends DialogYesOrNoQuestion {
 
-	public DialogBribes(FantasyFootballClient pClient, Player pPlayer) {
+	public DialogBribes(FantasyFootballClient pClient, Player<?> pPlayer) {
 		super(pClient, "Use a bribe", createMessages(pPlayer), null);
 	}
 
@@ -19,7 +19,7 @@ public class DialogBribes extends DialogYesOrNoQuestion {
 		return DialogId.BRIBES;
 	}
 
-	private static String[] createMessages(Player pPlayer) {
+	private static String[] createMessages(Player<?> pPlayer) {
 		String[] messages;
 		if (pPlayer != null) {
 			messages = new String[2];

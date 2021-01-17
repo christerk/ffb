@@ -36,15 +36,15 @@ import com.eclipsesource.json.JsonValue;
 
 /**
  * Step in ttm sequence to handle skill RIGHT_STUFF (landing roll).
- * 
+ *
  * Expects stepParameter DROP_THROWN_PLAYER to be set by a preceding step.
  * Expects stepParameter THROWN_PLAYER_HAS_BALL to be set by a preceding step.
  * Expects stepParameter THROWN_PLAYER_ID to be set by a preceding step.
- * 
+ *
  * Sets stepParameter CATCH_SCATTER_THROW_IN_MODE for all steps on the stack.
  * Sets stepParameter END_TURN for all steps on the stack. Sets stepParameter
  * INJURY_RESULT for all steps on the stack.
- * 
+ *
  * @author Kalimar
  */
 public final class StepRightStuff extends AbstractStepWithReRoll {
@@ -104,7 +104,7 @@ public final class StepRightStuff extends AbstractStepWithReRoll {
 
 	private void executeStep() {
 		Game game = getGameState().getGame();
-		Player thrownPlayer = game.getPlayerById(fThrownPlayerId);
+		Player<?> thrownPlayer = game.getPlayerById(fThrownPlayerId);
 		// skip right stuff step when player has been thrown out of bounds
 		if ((thrownPlayer != null) && game.getFieldModel().getPlayerState(thrownPlayer).getBase() == PlayerState.FALLING) {
 			publishParameter(new StepParameter(StepParameterKey.END_TURN, fThrownPlayerHasBall));

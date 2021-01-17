@@ -8,7 +8,7 @@ import org.eclipse.jetty.websocket.api.Session;
 import com.balancedbytes.games.ffb.net.commands.ServerCommand;
 
 /**
- * 
+ *
  * @author Kalimar
  */
 public class ServerReplay {
@@ -77,7 +77,7 @@ public class ServerReplay {
 	}
 
 	public ServerCommand[] findRelevantCommandsInLog() {
-		List<ServerCommand> replayCommands = new ArrayList<ServerCommand>();
+		List<ServerCommand> replayCommands = new ArrayList<>();
 		if (fServerCommands != null) {
 			for (ServerCommand serverCommand : fServerCommands) {
 				if ((serverCommand.getCommandNr() >= getFromCommandNr())

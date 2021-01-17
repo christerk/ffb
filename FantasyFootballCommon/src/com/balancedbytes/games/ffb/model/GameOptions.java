@@ -26,7 +26,7 @@ import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
 /**
- * 
+ *
  * @author Kalimar
  */
 public class GameOptions implements IXmlSerializable, IJsonSerializable {
@@ -40,7 +40,7 @@ public class GameOptions implements IXmlSerializable, IJsonSerializable {
 
 	public GameOptions(Game pGame) {
 		fGame = pGame;
-		fOptionById = new HashMap<GameOptionId, IGameOption>();
+		fOptionById = new HashMap<>();
 		fGameOptionFactory = new GameOptionFactory();
 	}
 
@@ -56,11 +56,11 @@ public class GameOptions implements IXmlSerializable, IJsonSerializable {
 		} catch (IllegalArgumentException e) { }
 		return rules;
 	}
-	
+
 	public GameOptionFactory getFactory() {
 		return fGameOptionFactory;
 	}
-	
+
 	public void addOption(IGameOption pOption) {
 		if (pOption != null) {
 			addOptionInternal(pOption);

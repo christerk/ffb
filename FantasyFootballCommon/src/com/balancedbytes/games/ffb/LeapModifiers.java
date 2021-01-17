@@ -17,7 +17,7 @@ public class LeapModifiers {
 	}
 
 	public LeapModifiers() {
-		values = new HashMap<String, LeapModifier>();
+		values = new HashMap<>();
 		try {
 			Class<?> c = this.getClass();
 			Class<?> cModifierType = LeapModifier.class;

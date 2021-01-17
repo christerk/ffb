@@ -39,7 +39,7 @@ public class ServerUtilBlock {
 	}
 
 	public static void removePlayerBlockStates(Game pGame) {
-		for (Player player : pGame.getPlayers()) {
+		for (Player<?> player : pGame.getPlayers()) {
 			PlayerState playerState = pGame.getFieldModel().getPlayerState(player);
 			if (playerState.getBase() == PlayerState.BLOCKED) {
 				pGame.getFieldModel().setPlayerState(player, playerState.changeBase(PlayerState.STANDING));
@@ -47,7 +47,7 @@ public class ServerUtilBlock {
 		}
 	}
 
-	private static boolean addDiceDecorations(Game pGame, Player[] pPlayers) {
+	private static boolean addDiceDecorations(Game pGame, Player<?>[] pPlayers) {
 		ActingPlayer actingPlayer = pGame.getActingPlayer();
 		if (pPlayers.length > 0) {
 			int attackerStrength = actingPlayer.getStrength();
@@ -73,7 +73,7 @@ public class ServerUtilBlock {
 		return false;
 	}
 
-	public static int findNrOfBlockDice(Game pGame, Player pAttacker, int pAttackerStrength, Player pDefender,
+	public static int findNrOfBlockDice(Game pGame, Player<?> pAttacker, int pAttackerStrength, Player<?> pDefender,
 			boolean pUsingMultiBlock) {
 		int nrOfDice = 0;
 		if ((pAttacker != null) && (pDefender != null)) {

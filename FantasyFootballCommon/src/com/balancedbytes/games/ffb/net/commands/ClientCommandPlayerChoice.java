@@ -24,7 +24,7 @@ public class ClientCommandPlayerChoice extends ClientCommand {
 	private List<String> fPlayerIds;
 
 	public ClientCommandPlayerChoice() {
-		fPlayerIds = new ArrayList<String>();
+		fPlayerIds = new ArrayList<>();
 	}
 
 	public ClientCommandPlayerChoice(PlayerChoiceMode pPlayerChoiceMode, Player<?>[] pPlayers) {

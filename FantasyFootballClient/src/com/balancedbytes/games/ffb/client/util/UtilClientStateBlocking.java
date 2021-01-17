@@ -20,7 +20,7 @@ import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
 import com.balancedbytes.games.ffb.util.UtilPlayer;
 
 /**
- * 
+ *
  * @author Kalimar
  */
 public class UtilClientStateBlocking {
@@ -42,14 +42,14 @@ public class UtilClientStateBlocking {
 			FieldCoordinate playerPosition = game.getFieldModel().getPlayerCoordinate(actingPlayer.getPlayer());
 			FieldCoordinate moveCoordinate = UtilClientActionKeys.findMoveCoordinate(pClientState.getClient(), playerPosition,
 					pActionKey);
-			Player defender = game.getFieldModel().getPlayer(moveCoordinate);
+			Player<?> defender = game.getFieldModel().getPlayer(moveCoordinate);
 			actionHandled = showPopupOrBlockPlayer(pClientState, defender, pDoBlitz);
 			break;
 		}
 		return actionHandled;
 	}
 
-	public static boolean menuItemSelected(ClientState pClientState, Player pPlayer, int pMenuKey) {
+	public static boolean menuItemSelected(ClientState pClientState, Player<?> pPlayer, int pMenuKey) {
 		boolean handled = false;
 		if (pPlayer != null) {
 			Game game = pClientState.getClient().getGame();
@@ -68,7 +68,7 @@ public class UtilClientStateBlocking {
 		return handled;
 	}
 
-	public static boolean showPopupOrBlockPlayer(ClientState pClientState, Player pDefender, boolean pDoBlitz) {
+	public static boolean showPopupOrBlockPlayer(ClientState pClientState, Player<?> pDefender, boolean pDoBlitz) {
 		if (pDefender == null) {
 			return false;
 		}
@@ -89,9 +89,9 @@ public class UtilClientStateBlocking {
 		return handled;
 	}
 
-	private static void createAndShowStabPopupMenu(ClientState pClientState, Player pPlayer) {
+	private static void createAndShowStabPopupMenu(ClientState pClientState, Player<?> pPlayer) {
 		IconCache iconCache = pClientState.getClient().getUserInterface().getIconCache();
-		List<JMenuItem> menuItemList = new ArrayList<JMenuItem>();
+		List<JMenuItem> menuItemList = new ArrayList<>();
 		JMenuItem stabAction = new JMenuItem("Stab Opponent",
 				new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_STAB)));
 		stabAction.setMnemonic(IPlayerPopupMenuKeys.KEY_STAB);
@@ -106,7 +106,7 @@ public class UtilClientStateBlocking {
 		pClientState.showPopupMenuForPlayer(pPlayer);
 	}
 
-	private static void block(ClientState pClientState, String pActingPlayerId, Player pDefender, boolean pUsingStab) {
+	private static void block(ClientState pClientState, String pActingPlayerId, Player<?> pDefender, boolean pUsingStab) {
 		Game game = pClientState.getClient().getGame();
 		game.getFieldModel().clearDiceDecorations();
 		pClientState.getClient().getUserInterface().getFieldComponent().refresh();

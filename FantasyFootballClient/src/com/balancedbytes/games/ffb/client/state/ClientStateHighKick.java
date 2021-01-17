@@ -12,7 +12,7 @@ import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
 
 /**
- * 
+ *
  * @author Kalimar
  */
 public class ClientStateHighKick extends ClientState {
@@ -34,10 +34,10 @@ public class ClientStateHighKick extends ClientState {
 		fOldCoordinate = null;
 	}
 
-	protected void clickOnPlayer(Player pPlayer) {
+	protected void clickOnPlayer(Player<?> pPlayer) {
 		if (isPlayerSelectable(pPlayer)) {
 			Game game = getClient().getGame();
-			Player oldPlayer = game.getFieldModel().getPlayer(game.getFieldModel().getBallCoordinate());
+			Player<?> oldPlayer = game.getFieldModel().getPlayer(game.getFieldModel().getBallCoordinate());
 			if (pPlayer != oldPlayer) {
 				if ((oldPlayer != null) && (fOldCoordinate != null)) {
 					getClient().getCommunication().sendSetupPlayer(oldPlayer, fOldCoordinate);
@@ -48,7 +48,7 @@ public class ClientStateHighKick extends ClientState {
 		}
 	}
 
-	protected boolean mouseOverPlayer(Player pPlayer) {
+	protected boolean mouseOverPlayer(Player<?> pPlayer) {
 		super.mouseOverPlayer(pPlayer);
 		if (isPlayerSelectable(pPlayer)) {
 			UtilClientCursor.setCustomCursor(getClient().getUserInterface(), IIconProperty.CURSOR_PASS);
@@ -64,7 +64,7 @@ public class ClientStateHighKick extends ClientState {
 		return true;
 	}
 
-	private boolean isPlayerSelectable(Player pPlayer) {
+	private boolean isPlayerSelectable(Player<?> pPlayer) {
 		boolean selectable = false;
 		if (pPlayer != null) {
 			Game game = getClient().getGame();

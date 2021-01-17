@@ -9,7 +9,7 @@ import com.balancedbytes.games.ffb.util.ArrayTool;
 import com.fumbbl.rng.Fortuna;
 
 /**
- * 
+ *
  * @author Kalimar
  */
 public class DiceRoller {
@@ -19,7 +19,7 @@ public class DiceRoller {
 
 	public DiceRoller(GameState pGameState) {
 		fGameState = pGameState;
-		fTestRolls = new ArrayList<Integer>();
+		fTestRolls = new ArrayList<>();
 	}
 
 	public GameState getGameState() {
@@ -205,8 +205,8 @@ public class DiceRoller {
 		return rollDice(3);
 	}
 
-	public Player randomPlayer(Player[] pPlayers) {
-		Player randomPlayer = null;
+	public Player<?> randomPlayer(Player<?>[] pPlayers) {
+		Player<?> randomPlayer = null;
 		if (ArrayTool.isProvided(pPlayers)) {
 			randomPlayer = pPlayers[rollDice(pPlayers.length) - 1];
 		}

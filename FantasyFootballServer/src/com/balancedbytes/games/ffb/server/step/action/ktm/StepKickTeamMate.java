@@ -32,15 +32,15 @@ import com.eclipsesource.json.JsonValue;
 
 /**
  * Step in ttm sequence to actual throw the team mate.
- * 
+ *
  * Needs to be initialized with stepParameter GOTO_LABEL_ON_FAILURE.
- * 
+ *
  * Expects stepParameter THROWN_PLAYER_ID to be set by a preceding step. Expects
  * stepParameter THROWN_PLAYER_STATE to be set by a preceding step. Expects
  * stepParameter THROWN_PLAYER_HAS_BALL to be set by a preceding step.
- * 
+ *
  * Pushes new scatterPlayerSequence on the stack.
- * 
+ *
  * @author Kalimar
  */
 public final class StepKickTeamMate extends AbstractStepWithReRoll {
@@ -125,12 +125,12 @@ public final class StepKickTeamMate extends AbstractStepWithReRoll {
 		game.setConcessionPossible(false);
 		game.getTurnData().setBlitzUsed(true);
 		UtilServerDialog.hideDialog(getGameState());
-		Player kicker = game.getActingPlayer().getPlayer();
+		Player<?> kicker = game.getActingPlayer().getPlayer();
 		boolean doRoll = true;
 		if (ReRolledActions.KICK_TEAM_MATE == getReRolledAction()) {
 			if ((getReRollSource() == null) || !UtilServerReRoll.useReRoll(this, getReRollSource(), kicker)) {
 				FieldCoordinate kickerCoordinate = game.getFieldModel().getPlayerCoordinate(kicker);
-				Player kickedPlayer = game.getPlayerById(fKickedPlayerId);
+				Player<?> kickedPlayer = game.getPlayerById(fKickedPlayerId);
 				boolean successful = fNumDice == 1 || fRolls[0] != fRolls[1];
 
 				executeKick(kickedPlayer, kickerCoordinate, successful);
@@ -139,7 +139,7 @@ public final class StepKickTeamMate extends AbstractStepWithReRoll {
 			}
 		}
 		if (doRoll) {
-			Player kickedPlayer = game.getPlayerById(fKickedPlayerId);
+			Player<?> kickedPlayer = game.getPlayerById(fKickedPlayerId);
 			FieldCoordinate kickerCoordinate = game.getFieldModel().getPlayerCoordinate(kicker);
 			FieldCoordinate kickedPlayerCoordinate = game.getFieldModel().getPlayerCoordinate(kickedPlayer);
 
@@ -181,7 +181,7 @@ public final class StepKickTeamMate extends AbstractStepWithReRoll {
 		}
 	}
 
-	private void executeKick(Player kickedPlayer, FieldCoordinate kickerCoordinate, boolean successful) {
+	private void executeKick(Player<?> kickedPlayer, FieldCoordinate kickerCoordinate, boolean successful) {
 		if (successful) {
 			Game game = getGameState().getGame();
 			boolean hasSwoop = kickedPlayer != null

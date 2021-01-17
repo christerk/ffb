@@ -36,7 +36,7 @@ import com.balancedbytes.games.ffb.util.UtilCards;
 import com.balancedbytes.games.ffb.util.UtilRangeRuler;
 
 /**
- * 
+ *
  * @author Kalimar
  */
 public class DiceInterpreter {
@@ -79,7 +79,7 @@ public class DiceInterpreter {
 		return 7 - Math.min(agility, 6);
 	}
 
-	public int minimumRollJumpUp(Player pPlayer) {
+	public int minimumRollJumpUp(Player<?> pPlayer) {
 		return Math.max(2, getAgilityRollBase(pPlayer.getAgility()) - 2);
 	}
 
@@ -91,7 +91,7 @@ public class DiceInterpreter {
 		return Math.max(2, 2 + modifierTotal);
 	}
 
-	public int minimumRollDodge(Game pGame, Player pPlayer, Set<DodgeModifier> pDodgeModifiers) {
+	public int minimumRollDodge(Game pGame, Player<?> pPlayer, Set<DodgeModifier> pDodgeModifiers) {
 		int modifierTotal = 0;
 		for (DodgeModifier dodgeModifier : pDodgeModifiers) {
 			modifierTotal += dodgeModifier.getModifier();
@@ -101,7 +101,7 @@ public class DiceInterpreter {
 		return Math.max(2, getAgilityRollBase(statistic) - 1 + modifierTotal);
 	}
 
-	public int minimumRollPickup(Player pPlayer, Set<PickupModifier> pPickupModifiers) {
+	public int minimumRollPickup(Player<?> pPlayer, Set<PickupModifier> pPickupModifiers) {
 		int modifierTotal = 0;
 		for (PickupModifier pickupModifier : pPickupModifiers) {
 			modifierTotal += pickupModifier.getModifier();
@@ -109,7 +109,7 @@ public class DiceInterpreter {
 		return Math.max(2, getAgilityRollBase(pPlayer.getAgility()) - 1 + modifierTotal);
 	}
 
-	public int minimumRollInterception(Player pPlayer, Set<InterceptionModifier> pInterceptionModifiers) {
+	public int minimumRollInterception(Player<?> pPlayer, Set<InterceptionModifier> pInterceptionModifiers) {
 		int modifierTotal = 0;
 		for (InterceptionModifier interceptionModifier : pInterceptionModifiers) {
 			modifierTotal += interceptionModifier.getModifier();
@@ -117,7 +117,7 @@ public class DiceInterpreter {
 		return Math.max(2, getAgilityRollBase(pPlayer.getAgility()) + 2 + modifierTotal);
 	}
 
-	public int minimumRollLeap(Player pPlayer, Set<LeapModifier> pLeapModifiers) {
+	public int minimumRollLeap(Player<?> pPlayer, Set<LeapModifier> pLeapModifiers) {
 		int modifierTotal = 0;
 		for (LeapModifier leapModifier : pLeapModifiers) {
 			modifierTotal += leapModifier.getModifier();
@@ -125,7 +125,7 @@ public class DiceInterpreter {
 		return Math.max(2, getAgilityRollBase(pPlayer.getAgility()) + modifierTotal);
 	}
 
-	public int minimumRollHypnoticGaze(Player pPlayer, Set<GazeModifier> pGazeModifiers) {
+	public int minimumRollHypnoticGaze(Player<?> pPlayer, Set<GazeModifier> pGazeModifiers) {
 		int modifierTotal = 0;
 		for (GazeModifier gazeModifier : pGazeModifiers) {
 			modifierTotal += gazeModifier.getModifier();
@@ -133,7 +133,7 @@ public class DiceInterpreter {
 		return Math.max(2, getAgilityRollBase(pPlayer.getAgility()) + modifierTotal);
 	}
 
-	public int minimumRollCatch(Player pPlayer, Set<CatchModifier> pCatchModifiers) {
+	public int minimumRollCatch(Player<?> pPlayer, Set<CatchModifier> pCatchModifiers) {
 		int modifierTotal = 0;
 		for (CatchModifier catchModifier : pCatchModifiers) {
 			modifierTotal += catchModifier.getModifier();
@@ -145,16 +145,16 @@ public class DiceInterpreter {
 		return 2;
 	}
 
-	public int minimumRollPass(Player pThrower, PassingDistance pPassingDistance, Set<PassModifier> pPassModifiers) {
+	public int minimumRollPass(Player<?> pThrower, PassingDistance pPassingDistance, Set<PassModifier> pPassModifiers) {
 		return UtilRangeRuler.minimumRollPass(pThrower, pPassingDistance, pPassModifiers);
 	}
 
-	public int minimumRollThrowTeamMate(Player pThrower, PassingDistance pPassingDistance,
+	public int minimumRollThrowTeamMate(Player<?> pThrower, PassingDistance pPassingDistance,
 			Set<PassModifier> pPassModifiers) {
 		return UtilRangeRuler.minimumRollThrowTeamMate(pThrower, pPassingDistance, pPassModifiers);
 	}
 
-	public int minimumRollRightStuff(Player pPlayer, Set<RightStuffModifier> pRightStuffModifiers) {
+	public int minimumRollRightStuff(Player<?> pPlayer, Set<RightStuffModifier> pRightStuffModifiers) {
 		int modifierTotal = 0;
 		for (RightStuffModifier rightStuffModifier : pRightStuffModifiers) {
 			modifierTotal += rightStuffModifier.getModifier();
@@ -162,7 +162,7 @@ public class DiceInterpreter {
 		return Math.max(2, getAgilityRollBase(pPlayer.getAgility()) + modifierTotal);
 	}
 
-	public boolean isPassFumble(int roll, Player pThrower, PassingDistance pPassingDistance,
+	public boolean isPassFumble(int roll, Player<?> pThrower, PassingDistance pPassingDistance,
 			Set<PassModifier> pPassModifiers) {
 		if (roll == 1) {
 			return true;
@@ -185,7 +185,7 @@ public class DiceInterpreter {
 		return (ArrayTool.isProvided(pInjuryRoll) && (pInjuryRoll[0] + pInjuryRoll[1] == 8));
 	}
 
-	public boolean isSpecialEffectSuccesful(SpecialEffect pSpecialEffect, Player targetPlayer, int roll) {
+	public boolean isSpecialEffectSuccesful(SpecialEffect pSpecialEffect, Player<?> targetPlayer, int roll) {
 		if (pSpecialEffect == SpecialEffect.LIGHTNING) {
 			return (roll >= 2);
 		} else if (pSpecialEffect == SpecialEffect.ZAP) {
@@ -271,7 +271,7 @@ public class DiceInterpreter {
 		return 4;
 	}
 
-	public int minimumRollSafeThrow(Player pPlayer) {
+	public int minimumRollSafeThrow(Player<?> pPlayer) {
 		return Math.max(2, getAgilityRollBase(pPlayer.getAgility()));
 	}
 
@@ -309,7 +309,7 @@ public class DiceInterpreter {
 		if ((pGameState != null) && (pInjuryContext != null)) {
 			Game game = pGameState.getGame();
 			int[] injuryRoll = pInjuryContext.getInjuryRoll();
-			Player defender = game.getPlayerById(pInjuryContext.getDefenderId());
+			Player<?> defender = game.getPlayerById(pInjuryContext.getDefenderId());
 			if ((defender != null) && UtilCards.hasCard(game, defender, Card.GOOD_OLD_MAGIC_CODPIECE)) {
 				pInjuryContext.clearInjuryModifiers();
 			}
@@ -441,7 +441,7 @@ public class DiceInterpreter {
 	public boolean isArmourBroken(GameState pGameState, InjuryContext pInjuryContext) {
 		Game game = pGameState.getGame();
 		int[] armourRoll = pInjuryContext.getArmorRoll();
-		Player defender = game.getPlayerById(pInjuryContext.getDefenderId());
+		Player<?> defender = game.getPlayerById(pInjuryContext.getDefenderId());
 		int armour = defender.getArmour();
 		if (UtilCards.hasCard(game, defender, Card.BELT_OF_INVULNERABILITY)) {
 			pInjuryContext.clearArmorModifiers();

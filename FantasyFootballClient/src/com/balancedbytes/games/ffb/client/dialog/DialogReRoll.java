@@ -85,7 +85,7 @@ public class DialogReRoll extends Dialog implements ActionListener, KeyListener 
 		}
 
 		Game game = getClient().getGame();
-		Player reRollingPlayer = game.getPlayerById(pDialogParameter.getPlayerId());
+		Player<?> reRollingPlayer = game.getPlayerById(pDialogParameter.getPlayerId());
 		if ((reRollingPlayer != null)
 				&& reRollingPlayer.hasSkillWithProperty(NamedProperties.hasToRollToUseTeamReroll)) {
 			messagePanel.add(Box.createVerticalStrut(5));

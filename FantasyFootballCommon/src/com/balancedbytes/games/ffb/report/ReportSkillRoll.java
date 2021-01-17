@@ -59,7 +59,7 @@ public class ReportSkillRoll implements IReport {
 	}
 
 	private void initRollModifiers(IRollModifier[] pRollModifiers) {
-		fRollModifierList = new ArrayList<IRollModifier>();
+		fRollModifierList = new ArrayList<>();
 		if (ArrayTool.isProvided(pRollModifiers)) {
 			for (IRollModifier rollModifier : pRollModifiers) {
 				addRollModifier(rollModifier);

@@ -22,7 +22,7 @@ public class DialogArgueTheCallParameter implements IDialogParameter {
 	private List<String> fPlayerIds;
 
 	public DialogArgueTheCallParameter() {
-		fPlayerIds = new ArrayList<String>();
+		fPlayerIds = new ArrayList<>();
 	}
 
 	public DialogArgueTheCallParameter(String teamId) {

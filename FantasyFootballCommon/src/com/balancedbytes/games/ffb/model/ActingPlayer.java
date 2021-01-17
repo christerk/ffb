@@ -17,7 +17,7 @@ import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
 /**
- * 
+ *
  * @author Kalimar
  */
 public class ActingPlayer implements IJsonSerializable {
@@ -43,7 +43,7 @@ public class ActingPlayer implements IJsonSerializable {
 
 	public ActingPlayer(Game pGame) {
 		fGame = pGame;
-		fUsedSkills = new HashSet<Skill>();
+		fUsedSkills = new HashSet<>();
 	}
 
 	public String getPlayerId() {

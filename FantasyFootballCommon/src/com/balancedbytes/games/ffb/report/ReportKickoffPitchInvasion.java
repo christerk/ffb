@@ -11,7 +11,7 @@ import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
 /**
- * 
+ *
  * @author Kalimar
  */
 public class ReportKickoffPitchInvasion implements IReport {
@@ -22,10 +22,10 @@ public class ReportKickoffPitchInvasion implements IReport {
 	private List<Boolean> fPlayersAffectedAway;
 
 	public ReportKickoffPitchInvasion() {
-		fRollsHome = new ArrayList<Integer>();
-		fPlayersAffectedHome = new ArrayList<Boolean>();
-		fRollsAway = new ArrayList<Integer>();
-		fPlayersAffectedAway = new ArrayList<Boolean>();
+		fRollsHome = new ArrayList<>();
+		fPlayersAffectedHome = new ArrayList<>();
+		fRollsAway = new ArrayList<>();
+		fPlayersAffectedAway = new ArrayList<>();
 	}
 
 	public ReportKickoffPitchInvasion(int[] pRollsHome, boolean[] pPlayersAffectedHome, int[] pRollsAway,

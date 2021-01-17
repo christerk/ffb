@@ -13,7 +13,7 @@ import com.balancedbytes.games.ffb.util.ArrayTool;
 import com.balancedbytes.games.ffb.util.StringTool;
 
 /**
- * 
+ *
  * @author Kalimar
  */
 public class ClientStateFactory {
@@ -24,7 +24,7 @@ public class ClientStateFactory {
 
 	public ClientStateFactory(FantasyFootballClient pClient) {
 		fClient = pClient;
-		fClientStateById = new HashMap<ClientStateId, ClientState>();
+		fClientStateById = new HashMap<>();
 		register(new ClientStateLogin(pClient));
 		register(new ClientStateStartGame(pClient));
 		register(new ClientStateSpectate(pClient));

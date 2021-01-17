@@ -23,7 +23,7 @@ import com.balancedbytes.games.ffb.util.StringTool;
 import com.balancedbytes.games.ffb.util.UtilBox;
 
 /**
- * 
+ *
  * @author Kalimar
  */
 public class UtilServerSetup {
@@ -119,7 +119,7 @@ public class UtilServerSetup {
 		if ((gameState != null) && StringTool.isProvided(pPlayerId) && (pCoordinate != null)) {
 
 			Game game = gameState.getGame();
-			Player player = game.getPlayerById(pPlayerId);
+			Player<?> player = game.getPlayerById(pPlayerId);
 			if (player == null) {
 				return;
 			}
@@ -148,7 +148,7 @@ public class UtilServerSetup {
 				// player.
 				// Force an update of the position and state.
 				fieldModel.sendPosition(player);
-				Player otherPlayer = fieldModel.getPlayer(coordinate);
+				Player<?> otherPlayer = fieldModel.getPlayer(coordinate);
 				fieldModel.sendPosition(otherPlayer);
 			} else {
 				fieldModel.setPlayerCoordinate(player, coordinate);

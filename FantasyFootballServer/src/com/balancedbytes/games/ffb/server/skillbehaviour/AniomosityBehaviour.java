@@ -48,15 +48,15 @@ public class AniomosityBehaviour extends SkillBehaviour<Animosity> {
 				Game game = step.getGameState().getGame();
 				ActingPlayer actingPlayer = game.getActingPlayer();
 
-				Player thrower = game.getThrower();
+				Player<?> thrower = game.getThrower();
 				FieldCoordinate throwerCoordinate = game.getFieldModel().getPlayerCoordinate(thrower);
-				Player catcher = game.getPlayerById(state.catcherId);
+				Player<?> catcher = game.getPlayerById(state.catcherId);
 				if (actingPlayer.isSufferingAnimosity()) {
 					if ((actingPlayer.getPlayerAction() == PlayerAction.HAND_OVER)) {
 						boolean targetAvailable = false;
-						Player[] targets = UtilPlayer.findAdjacentBlockablePlayers(game, UtilPlayer.findOtherTeam(game, thrower),
+						Player<?>[] targets = UtilPlayer.findAdjacentBlockablePlayers(game, UtilPlayer.findOtherTeam(game, thrower),
 								throwerCoordinate);
-						for (Player target : targets) {
+						for (Player<?> target : targets) {
 							targetAvailable |= thrower.getRace().equalsIgnoreCase(target.getRace());
 						}
 						if (targetAvailable) {
@@ -111,7 +111,7 @@ public class AniomosityBehaviour extends SkillBehaviour<Animosity> {
 						boolean animosityPassPossible = false;
 						Team team = game.getTeamHome().hasPlayer(actingPlayer.getPlayer()) ? game.getTeamHome()
 								: game.getTeamAway();
-						for (Player player : team.getPlayers()) {
+						for (Player<?> player : team.getPlayers()) {
 							PlayerState playerState = game.getFieldModel().getPlayerState(player);
 							FieldCoordinate playerCoordinate = game.getFieldModel().getPlayerCoordinate(player);
 							if ((playerState != null) && playerState.hasTacklezones()

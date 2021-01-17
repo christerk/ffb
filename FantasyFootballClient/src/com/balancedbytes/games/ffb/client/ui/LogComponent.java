@@ -17,7 +17,7 @@ import com.balancedbytes.games.ffb.client.ParagraphStyle;
 import com.balancedbytes.games.ffb.client.TextStyle;
 
 /**
- * 
+ *
  * @author Kalimar
  */
 @SuppressWarnings("serial")
@@ -49,7 +49,7 @@ public class LogComponent extends JPanel implements MouseMotionListener, IReplay
 		fLogTextPane.setHighlighter(new CommandHighlighter());
 		fLogTextPane.addMouseMotionListener(this);
 		fLogScrollPane.addMouseMotionListener(this);
-		fCommandHighlightAreaByCommandNr = new HashMap<Integer, CommandHighlightArea>();
+		fCommandHighlightAreaByCommandNr = new HashMap<>();
 	}
 
 	public void append(ParagraphStyle pTextIndent, TextStyle pStyle, String pText) {

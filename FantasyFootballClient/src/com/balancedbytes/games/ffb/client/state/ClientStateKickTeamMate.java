@@ -28,7 +28,7 @@ import com.balancedbytes.games.ffb.util.ArrayTool;
 import com.balancedbytes.games.ffb.util.UtilPlayer;
 
 /**
- * 
+ *
  * @author Christer
  */
 public class ClientStateKickTeamMate extends ClientStateMove {
@@ -47,7 +47,7 @@ public class ClientStateKickTeamMate extends ClientStateMove {
 		markKickablePlayers();
 	}
 
-	protected void clickOnPlayer(Player pPlayer) {
+	protected void clickOnPlayer(Player<?> pPlayer) {
 		Game game = getClient().getGame();
 		ActingPlayer actingPlayer = game.getActingPlayer();
 		if (pPlayer == actingPlayer.getPlayer()) {
@@ -56,7 +56,7 @@ public class ClientStateKickTeamMate extends ClientStateMove {
 			if ((game.getDefender() == null) && canBeKicked(pPlayer)) {
 
 				IconCache iconCache = getClient().getUserInterface().getIconCache();
-				List<JMenuItem> menuItemList = new ArrayList<JMenuItem>();
+				List<JMenuItem> menuItemList = new ArrayList<>();
 
 				JMenuItem shortKick = new JMenuItem("Short Kick",
 						new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_BLITZ)));
@@ -94,7 +94,7 @@ public class ClientStateKickTeamMate extends ClientStateMove {
 		return super.mouseOverField(pCoordinate);
 	}
 
-	protected boolean mouseOverPlayer(Player pPlayer) {
+	protected boolean mouseOverPlayer(Player<?> pPlayer) {
 		Game game = getClient().getGame();
 		UserInterface userInterface = getClient().getUserInterface();
 		if ((game.getDefender() == null) && (game.getPassCoordinate() == null)) {
@@ -110,7 +110,7 @@ public class ClientStateKickTeamMate extends ClientStateMove {
 		return true;
 	}
 
-	private boolean canBeKicked(Player pPlayer) {
+	private boolean canBeKicked(Player<?> pPlayer) {
 		Game game = getClient().getGame();
 		ActingPlayer actingPlayer = game.getActingPlayer();
 		PlayerState catcherState = game.getFieldModel().getPlayerState(pPlayer);
@@ -128,7 +128,7 @@ public class ClientStateKickTeamMate extends ClientStateMove {
 		Game game = getClient().getGame();
 		ActingPlayer actingPlayer = game.getActingPlayer();
 		UserInterface userInterface = getClient().getUserInterface();
-		Player[] kickablePlayers = UtilPlayer.findKickableTeamMates(game, actingPlayer.getPlayer());
+		Player<?>[] kickablePlayers = UtilPlayer.findKickableTeamMates(game, actingPlayer.getPlayer());
 		if ((game.getDefender() == null) && ArrayTool.isProvided(kickablePlayers)) {
 			userInterface.getFieldComponent().getLayerRangeRuler().markPlayers(kickablePlayers,
 					FieldLayerRangeRuler.COLOR_THROWABLE_PLAYER);
@@ -151,7 +151,7 @@ public class ClientStateKickTeamMate extends ClientStateMove {
 		userInterface.getFieldComponent().refresh();
 	}
 
-	protected void menuItemSelected(Player pPlayer, int pMenuKey) {
+	protected void menuItemSelected(Player<?> pPlayer, int pMenuKey) {
 		super.menuItemSelected(pPlayer, pMenuKey);
 
 		if (pPlayer != null) {

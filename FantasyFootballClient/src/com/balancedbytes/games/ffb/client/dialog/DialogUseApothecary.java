@@ -8,7 +8,7 @@ import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
 
 /**
- * 
+ *
  * @author Kalimar
  */
 @SuppressWarnings("serial")
@@ -33,7 +33,7 @@ public class DialogUseApothecary extends DialogYesOrNoQuestion {
 		String[] messages = new String[0];
 		if ((pClient != null) && (pDialogParameter != null)) {
 			Game game = pClient.getGame();
-			Player player = game.getPlayerById(pDialogParameter.getPlayerId());
+			Player<?> player = game.getPlayerById(pDialogParameter.getPlayerId());
 			messages = new String[2];
 			StringBuilder injuryMessage = new StringBuilder();
 			injuryMessage.append(player.getName()).append(" ");

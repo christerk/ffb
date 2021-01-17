@@ -21,12 +21,12 @@ import com.balancedbytes.games.ffb.server.step.StepResult;
 import com.balancedbytes.games.ffb.util.UtilCards;
 
 /**
- * 
+ *
  * @author Kalimar
  */
 public class UtilServerReRoll {
 
-	public static boolean useReRoll(IStep pStep, ReRollSource pReRollSource, Player pPlayer) {
+	public static boolean useReRoll(IStep pStep, ReRollSource pReRollSource, Player<?> pPlayer) {
 		if (pPlayer == null) {
 			throw new IllegalArgumentException("Parameter player must not be null.");
 		}
@@ -79,7 +79,7 @@ public class UtilServerReRoll {
 		return successful;
 	}
 
-	public static boolean askForReRollIfAvailable(GameState gameState, Player player, ReRolledAction reRolledAction,
+	public static boolean askForReRollIfAvailable(GameState gameState, Player<?> player, ReRolledAction reRolledAction,
 			int minimumRoll, boolean fumble) {
 		boolean reRollAvailable = false;
 		Game game = gameState.getGame();
@@ -100,7 +100,7 @@ public class UtilServerReRoll {
 		return reRollAvailable;
 	}
 
-	public static boolean isTeamReRollAvailable(GameState pGameState, Player pPlayer) {
+	public static boolean isTeamReRollAvailable(GameState pGameState, Player<?> pPlayer) {
 		Game game = pGameState.getGame();
 		Team actingTeam = game.isHomePlaying() ? game.getTeamHome() : game.getTeamAway();
 		// TODO: no team re-rolls on dump-off

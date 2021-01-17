@@ -5,13 +5,13 @@ import com.balancedbytes.games.ffb.dialog.DialogId;
 import com.balancedbytes.games.ffb.model.Player;
 
 /**
- * 
+ *
  * @author Kalimar
  */
 @SuppressWarnings("serial")
 public class DialogArgueTheCall extends DialogYesOrNoQuestion {
 
-	public DialogArgueTheCall(FantasyFootballClient pClient, Player pPlayer) {
+	public DialogArgueTheCall(FantasyFootballClient pClient, Player<?> pPlayer) {
 		super(pClient, "Argue the call", createMessages(pPlayer), null);
 	}
 
@@ -19,7 +19,7 @@ public class DialogArgueTheCall extends DialogYesOrNoQuestion {
 		return DialogId.ARGUE_THE_CALL;
 	}
 
-	private static String[] createMessages(Player pPlayer) {
+	private static String[] createMessages(Player<?> pPlayer) {
 		String[] messages;
 		if (pPlayer != null) {
 			messages = new String[3];

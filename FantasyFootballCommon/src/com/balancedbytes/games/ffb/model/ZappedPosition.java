@@ -28,7 +28,7 @@ public class ZappedPosition implements Position {
 	private int agility = 4;
 	private int passing = 0;
 	private int armour = 4;
-	private List<Skill> skills = new ArrayList<Skill>();
+	private List<Skill> skills = new ArrayList<>();
 
 	private String race = "Transmogrified Frog";
 	private String shortHand = "zf";

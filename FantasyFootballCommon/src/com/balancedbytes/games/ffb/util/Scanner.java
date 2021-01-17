@@ -18,23 +18,23 @@ import com.balancedbytes.games.ffb.model.GameOptions;
 public class Scanner<T extends IKeyedItem> {
 	private RawScanner<T> rawScanner;
 
-	
+
 	public Scanner(Class<T> cls) {
 		rawScanner = new RawScanner<T>(cls);
 	}
 
 	public Collection<T> getSubclasses(GameOptions options) {
 		Set<Class<T>> classes = rawScanner.getSubclasses();
-		
+
 		return filterClasses(options, classes);
 	}
 
 	public Collection<T> getClassesImplementing(GameOptions options) {
 		Set<Class<T>> classes = rawScanner.getClassesImplementing();
-		
+
 		return filterClasses(options, classes);
 	}
-	
+
 	private Collection<T> filterClasses(GameOptions options, Set<Class<T>> classes) {
 		Map<Object,T> result = new HashMap<>();
 		for (Class<T> cls : classes) {
@@ -50,11 +50,11 @@ public class Scanner<T extends IKeyedItem> {
 						@SuppressWarnings("unchecked")
 						T instance = (T)ctr.newInstance();
 						Object key = instance.getKey();
-						
+
 						if (result.containsKey(key)) {
 							throw new FantasyFootballException("Duplicate implementation found when scanning.");
 						}
-						
+
 						result.put(instance.getKey(), instance);
 						} catch (NoSuchMethodException|InstantiationException|IllegalAccessException|InvocationTargetException e) {
 							throw new FantasyFootballException("Error initializing scanned class.", e);
@@ -70,7 +70,7 @@ public class Scanner<T extends IKeyedItem> {
 	}
 
 	public Set<Class<T>> getClassesImplementing() {
-		Set<Class<T>> result = new HashSet<Class<T>>();
+		Set<Class<T>> result = new HashSet<>();
 		for (Class<T> cls : rawScanner.getClassesImplementing()) {
 			for (Annotation a : cls.getAnnotations()) {
 				if (a instanceof RulesCollection) {
@@ -82,7 +82,7 @@ public class Scanner<T extends IKeyedItem> {
 			}
 		}
 		return result;
-		
+
 	}
-	
+
 }

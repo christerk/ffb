@@ -29,7 +29,7 @@ public class ServerCommandReplay extends ServerCommand {
 	}
 
 	public ServerCommandReplay() {
-		fReplayCommands = new ArrayList<ServerCommand>();
+		fReplayCommands = new ArrayList<>();
 	}
 
 	public void add(ServerCommand pServerCommand) {

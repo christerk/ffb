@@ -11,7 +11,7 @@ import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
 
 /**
- * 
+ *
  * @author Kalimar
  */
 public class DialogPlayerChoiceHandler extends DialogHandler {
@@ -41,7 +41,7 @@ public class DialogPlayerChoiceHandler extends DialogHandler {
 					if (fDialogParameter.getPlayerChoiceMode() != PlayerChoiceMode.CARD) {
 						int maxX = 0, maxY = 0;
 						for (int i = 0; i < playerIds.length; i++) {
-							Player player = game.getPlayerById(playerIds[i]);
+							Player<?> player = game.getPlayerById(playerIds[i]);
 							FieldCoordinate playerCoordinate = game.getFieldModel().getPlayerCoordinate(player);
 							if (playerCoordinate.getX() > maxX) {
 								maxX = playerCoordinate.getX();

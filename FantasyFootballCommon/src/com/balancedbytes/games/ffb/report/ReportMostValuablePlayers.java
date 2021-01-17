@@ -21,8 +21,8 @@ public class ReportMostValuablePlayers implements IReport {
 	private List<String> fPlayerIdsAway;
 
 	public ReportMostValuablePlayers() {
-		fPlayerIdsHome = new ArrayList<String>();
-		fPlayerIdsAway = new ArrayList<String>();
+		fPlayerIdsHome = new ArrayList<>();
+		fPlayerIdsAway = new ArrayList<>();
 	}
 
 	public ReportId getId() {

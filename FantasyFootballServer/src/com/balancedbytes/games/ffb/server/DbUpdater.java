@@ -56,7 +56,7 @@ public class DbUpdater implements Runnable {
 
 	public void shutdown() {
 		fStopped = true;
-		List<DbTransaction> updates = new ArrayList<DbTransaction>();
+		List<DbTransaction> updates = new ArrayList<>();
 		fUpdateQueue.drainTo(updates);
 		for (DbTransaction update : updates) {
 			handleUpdateInternal(update);

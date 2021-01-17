@@ -7,7 +7,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * 
+ *
  * @author Christer Kaivo-oja
  */
 public class NetworkEntropySource implements EntropySource {
@@ -15,7 +15,7 @@ public class NetworkEntropySource implements EntropySource {
 	private Set<InetAddress> endpoints;
 
 	public NetworkEntropySource() {
-		endpoints = new HashSet<InetAddress>();
+		endpoints = new HashSet<>();
 		try {
 			endpoints.add(InetAddress.getLocalHost());
 		} catch (UnknownHostException uhe) {

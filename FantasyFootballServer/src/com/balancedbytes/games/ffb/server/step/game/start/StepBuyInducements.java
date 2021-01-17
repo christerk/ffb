@@ -49,12 +49,12 @@ import com.eclipsesource.json.JsonValue;
 
 /**
  * Step in start game sequence to buy inducements.
- * 
+ *
  * Expects stepParameter INDUCEMENT_GOLD_AWAY to be set by a preceding step.
  * Expects stepParameter INDUCEMENT_GOLD_HOME to be set by a preceding step.
  *
  * Pushes inducement sequence on the stack.
- * 
+ *
  * @author Kalimar
  */
 public final class StepBuyInducements extends AbstractStep {
@@ -261,8 +261,8 @@ public final class StepBuyInducements extends AbstractStep {
 
 		Roster roster = pTeam.getRoster();
 		Game game = getGameState().getGame();
-		List<RosterPlayer> addedPlayerList = new ArrayList<RosterPlayer>();
-		Map<RosterPosition, Integer> nrByPosition = new HashMap<RosterPosition, Integer>();
+		List<RosterPlayer> addedPlayerList = new ArrayList<>();
+		Map<RosterPosition, Integer> nrByPosition = new HashMap<>();
 
 		for (int i = 0; i < pPositionIds.length; i++) {
 			RosterPosition position = roster.getPositionById(pPositionIds[i]);
@@ -318,19 +318,19 @@ public final class StepBuyInducements extends AbstractStep {
 			Game game = getGameState().getGame();
 			FantasyFootballServer server = getGameState().getServer();
 
-			Map<String, Player> otherTeamStarPlayerByName = new HashMap<String, Player>();
+			Map<String, Player<?>> otherTeamStarPlayerByName = new HashMap<>();
 			Team otherTeam = (game.getTeamHome() == pTeam) ? game.getTeamAway() : game.getTeamHome();
-			for (Player otherPlayer : otherTeam.getPlayers()) {
+			for (Player<?> otherPlayer : otherTeam.getPlayers()) {
 				if (otherPlayer.getPlayerType() == PlayerType.STAR) {
 					otherTeamStarPlayerByName.put(otherPlayer.getName(), otherPlayer);
 				}
 			}
 
-			List<RosterPlayer> addedPlayerList = new ArrayList<RosterPlayer>();
-			List<RosterPlayer> removedPlayerList = new ArrayList<RosterPlayer>();
+			List<RosterPlayer> addedPlayerList = new ArrayList<>();
+			List<RosterPlayer> removedPlayerList = new ArrayList<>();
 			for (int i = 0; i < pPositionIds.length; i++) {
 				RosterPosition position = roster.getPositionById(pPositionIds[i]);
-				Player otherTeamStarPlayer = otherTeamStarPlayerByName.get(position.getName());
+				Player<?> otherTeamStarPlayer = otherTeamStarPlayerByName.get(position.getName());
 				if (!UtilGameOption.isOptionEnabled(game, GameOptionId.ALLOW_STAR_ON_BOTH_TEAMS)
 						&& (otherTeamStarPlayer != null)) {
 					if (otherTeamStarPlayer instanceof RosterPlayer) {
@@ -355,7 +355,7 @@ public final class StepBuyInducements extends AbstractStep {
 				removeStarPlayerInducements(game.getTurnDataHome(), removedPlayerList.size());
 				removeStarPlayerInducements(game.getTurnDataAway(), removedPlayerList.size());
 				DbTransaction transaction = new DbTransaction();
-				for (Player player : removedPlayerList) {
+				for (Player<?> player : removedPlayerList) {
 					server.getCommunication().sendRemovePlayer(getGameState(), player.getId());
 					getResult().addReport(new ReportDoubleHiredStarPlayer(player.getName()));
 				}

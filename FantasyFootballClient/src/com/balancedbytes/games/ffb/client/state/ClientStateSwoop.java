@@ -11,7 +11,7 @@ import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
 
 /**
- * 
+ *
  * @author Kalimar
  */
 public class ClientStateSwoop extends ClientStateMove {
@@ -44,7 +44,7 @@ public class ClientStateSwoop extends ClientStateMove {
 		}
 	}
 
-	protected void clickOnPlayer(Player pPlayer) {
+	protected void clickOnPlayer(Player<?> pPlayer) {
 		Game game = getClient().getGame();
 		ActingPlayer actingPlayer = game.getActingPlayer();
 
@@ -54,7 +54,7 @@ public class ClientStateSwoop extends ClientStateMove {
 		}
 	}
 
-	protected boolean mouseOverPlayer(Player pPlayer) {
+	protected boolean mouseOverPlayer(Player<?> pPlayer) {
 		Game game = getClient().getGame();
 		UserInterface userInterface = getClient().getUserInterface();
 		if ((game.getDefender() == null) && (game.getPassCoordinate() == null)) {

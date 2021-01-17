@@ -38,13 +38,13 @@ import com.balancedbytes.games.ffb.util.UtilCards;
 import com.balancedbytes.games.ffb.util.UtilPlayer;
 
 /**
- * 
+ *
  * @author Kalimar
  */
 public class UtilServerInjury {
 
-	public static InjuryResult handleInjury(IStep pStep, InjuryTypeServer<?> pInjuryType, Player pAttacker,
-			Player pDefender, FieldCoordinate pDefenderCoordinate, InjuryResult pOldInjuryResult,
+	public static InjuryResult handleInjury(IStep pStep, InjuryTypeServer<?> pInjuryType, Player<?> pAttacker,
+			Player<?> pDefender, FieldCoordinate pDefenderCoordinate, InjuryResult pOldInjuryResult,
 			ApothecaryMode pApothecaryMode) {
 
 		if (pDefender == null) {
@@ -153,7 +153,7 @@ public class UtilServerInjury {
 
 	}
 
-	public static boolean handleRegeneration(IStep pStep, Player pPlayer) {
+	public static boolean handleRegeneration(IStep pStep, Player<?> pPlayer) {
 		boolean successful = false;
 		if (pPlayer != null) {
 			GameState gameState = pStep.getGameState();
@@ -188,7 +188,7 @@ public class UtilServerInjury {
 		boolean nurglesRot = false;
 		GameState gameState = pStep.getGameState();
 		Game game = gameState.getGame();
-		Player deadPlayer = game.getPlayerById(pInjuryResult.injuryContext().getDefenderId());
+		Player<?> deadPlayer = game.getPlayerById(pInjuryResult.injuryContext().getDefenderId());
 		Team necroTeam = UtilPlayer.findOtherTeam(game, deadPlayer);
 		TeamResult necroTeamResult = (game.getTeamHome() == necroTeam) ? game.getGameResult().getTeamResultHome()
 				: game.getGameResult().getTeamResultAway();
@@ -201,7 +201,7 @@ public class UtilServerInjury {
 				raisedPlayer = raisePlayer(game, necroTeam, necroTeamResult, deadPlayer.getName(), nurglesRot,
 						deadPlayer.getId());
 			} else {
-				Player attacker = game.getPlayerById(pInjuryResult.injuryContext().getAttackerId());
+				Player<?> attacker = game.getPlayerById(pInjuryResult.injuryContext().getAttackerId());
 				if ((attacker != null) && attacker.hasSkillWithProperty(NamedProperties.hasNurglesRot)
 						&& (deadPlayer.getStrength() <= 4) && !deadPlayerPreventsRaisedFromDead
 						&& !deadPlayer.hasSkillWithProperty(NamedProperties.requiresSecondCasualtyRoll)) {
@@ -261,18 +261,18 @@ public class UtilServerInjury {
 		return raisedPlayer;
 	}
 
-	public static StepParameterSet dropPlayer(IStep pStep, Player pPlayer, ApothecaryMode pApothecaryMode) {
+	public static StepParameterSet dropPlayer(IStep pStep, Player<?> pPlayer, ApothecaryMode pApothecaryMode) {
 		return dropPlayer(pStep, pPlayer, PlayerState.PRONE, pApothecaryMode);
 	}
 
-	public static StepParameterSet stunPlayer(IStep pStep, Player pPlayer, ApothecaryMode pApothecaryMode) {
+	public static StepParameterSet stunPlayer(IStep pStep, Player<?> pPlayer, ApothecaryMode pApothecaryMode) {
 		return dropPlayer(pStep, pPlayer, PlayerState.STUNNED, pApothecaryMode);
 	}
 
 	// drops the given player
 	// sets stepParameter END_TURN if player is on acting team and drops the ball
 	// sets stepParameter INJURY_RESULT if player has skill Ball&Chain
-	private static StepParameterSet dropPlayer(IStep pStep, Player pPlayer, int pPlayerBase,
+	private static StepParameterSet dropPlayer(IStep pStep, Player<?> pPlayer, int pPlayerBase,
 			ApothecaryMode pApothecaryMode) {
 		StepParameterSet stepParameters = new StepParameterSet();
 		GameState gameState = pStep.getGameState();

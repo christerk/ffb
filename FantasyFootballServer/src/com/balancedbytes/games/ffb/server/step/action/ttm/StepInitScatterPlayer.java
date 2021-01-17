@@ -31,13 +31,13 @@ import com.eclipsesource.json.JsonValue;
 
 /**
  * Step in ttm sequence to scatter the thrown player.
- * 
+ *
  * Needs to be initialized with stepParameter THROWN_PLAYER_ID. Needs to be
  * initialized with stepParameter THROWN_PLAYER_STATE. Needs to be initialized
  * with stepParameter THROWN_PLAYER_HAS_BALL. Needs to be initialized with
  * stepParameter THROWN_PLAYER_COORDINATE. Needs to be initialized with
  * stepParameter THROW_SCATTER.
- * 
+ *
  * Sets stepParameter CATCH_SCATTER_THROW_IN_MODE for all steps on the stack.
  * Sets stepParameter DROP_TTM_PLAYER for all steps on the stack. Sets
  * stepParameter END_TURN for all steps on the stack. Sets stepParameter
@@ -47,7 +47,7 @@ import com.eclipsesource.json.JsonValue;
  * THROWN_PLAYER_STATE for all steps on the stack. Sets stepParameter
  * THROWN_PLAYER_HAS_BALL for all steps on the stack. Sets stepParameter
  * THROWN_PLAYER_COORDINATE for all steps on the stack.
- * 
+ *
  * @author Kalimar
  */
 public final class StepInitScatterPlayer extends AbstractStep {
@@ -146,7 +146,7 @@ public final class StepInitScatterPlayer extends AbstractStep {
 
 	private void executeStep() {
 		Game game = getGameState().getGame();
-		Player thrownPlayer = game.getPlayerById(fThrownPlayerId);
+		Player<?> thrownPlayer = game.getPlayerById(fThrownPlayerId);
 		if ((thrownPlayer == null) || (fThrownPlayerCoordinate == null)) {
 			getResult().setNextAction(StepAction.NEXT_STEP);
 			return;
@@ -169,7 +169,7 @@ public final class StepInitScatterPlayer extends AbstractStep {
 		getResult()
 				.setAnimation(new Animation(fThrownPlayerCoordinate, endCoordinate, fThrownPlayerId, fThrownPlayerHasBall));
 		UtilServerGame.syncGameModel(this);
-		Player playerLandedUpon = null;
+		Player<?> playerLandedUpon = null;
 		if (scatterResult.isInBounds()) {
 			playerLandedUpon = game.getFieldModel().getPlayer(endCoordinate);
 			if (playerLandedUpon != null) {

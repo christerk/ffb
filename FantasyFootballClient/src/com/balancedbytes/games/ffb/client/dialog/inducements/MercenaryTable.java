@@ -4,6 +4,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import javax.swing.DefaultCellEditor;
 import javax.swing.JComboBox;
@@ -25,10 +26,10 @@ public class MercenaryTable extends JTable {
 	@Override
 	public TableCellEditor getCellEditor(int row, int column) {
 		if (column == 4) {
-			Player player = (Player) getModel().getValueAt(row, 5);
-			ArrayList<SkillCategory> cat = new ArrayList<SkillCategory>(
+			Player<?> player = (Player) getModel().getValueAt(row, 5);
+			List<SkillCategory> cat = new ArrayList<>(
 					Arrays.asList(player.getPosition().getSkillCategories(false)));
-			ArrayList<String> skills = new ArrayList<String>();
+			List<String> skills = new ArrayList<>();
 			skills.add("");
 
 			try {

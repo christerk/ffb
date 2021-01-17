@@ -10,7 +10,7 @@ import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.model.SkillConstants;
 
 /**
- * 
+ *
  * @author Kalimar
  */
 public class DialogPilingOnHandler extends DialogHandler {
@@ -26,7 +26,7 @@ public class DialogPilingOnHandler extends DialogHandler {
 
 		if (dialogParameter != null) {
 
-			Player player = game.getPlayerById(dialogParameter.getPlayerId());
+			Player<?> player = game.getPlayerById(dialogParameter.getPlayerId());
 
 			if ((ClientMode.PLAYER == getClient().getMode()) && (game.getTeamHome().hasPlayer(player))) {
 				setDialog(new DialogPilingOn(getClient(), dialogParameter));

@@ -18,7 +18,7 @@ import com.balancedbytes.games.ffb.server.util.UtilServerDialog;
 import com.balancedbytes.games.ffb.util.UtilPlayer;
 
 /**
- * 
+ *
  * @author Kalimar
  */
 public class UtilKickoffSequence {
@@ -38,9 +38,9 @@ public class UtilKickoffSequence {
 		int playersOnLos = 0;
 		int availablePlayers = 0;
 		Game game = pGameState.getGame();
-		List<String> messageList = new ArrayList<String>();
+		List<String> messageList = new ArrayList<>();
 		Team team = pHomeTeam ? game.getTeamHome() : game.getTeamAway();
-		for (Player player : team.getPlayers()) {
+		for (Player<?> player : team.getPlayers()) {
 			PlayerState playerState = game.getFieldModel().getPlayerState(player);
 			if (playerState.canBeSetUp()) {
 				availablePlayers++;
@@ -117,7 +117,7 @@ public class UtilKickoffSequence {
 	public static void pinPlayersInTacklezones(GameState pGameState, Team pTeam) {
 		Game game = pGameState.getGame();
 		Team otherTeam = (pTeam == game.getTeamHome()) ? game.getTeamAway() : game.getTeamHome();
-		for (Player player : pTeam.getPlayers()) {
+		for (Player<?> player : pTeam.getPlayers()) {
 			PlayerState playerState = game.getFieldModel().getPlayerState(player);
 			if (playerState.isActive()) {
 				FieldCoordinate playerCoordinate = game.getFieldModel().getPlayerCoordinate(player);

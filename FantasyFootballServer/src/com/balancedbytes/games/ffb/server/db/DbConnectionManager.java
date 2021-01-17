@@ -10,7 +10,7 @@ import java.util.Set;
 import com.balancedbytes.games.ffb.server.FantasyFootballServer;
 
 /**
- * 
+ *
  * @author Kalimar
  */
 public class DbConnectionManager {
@@ -24,7 +24,7 @@ public class DbConnectionManager {
 
 	public DbConnectionManager(FantasyFootballServer pServer) {
 		fServer = pServer;
-		fConnections = new HashSet<Connection>();
+		fConnections = new HashSet<>();
 	}
 
 	public Connection openDbConnection() throws SQLException {

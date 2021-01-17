@@ -309,7 +309,7 @@ public class DialogGameStatistics extends Dialog {
 		statistics.append("  <td align=\"right\">").append(_FONT_BOLD_OPEN).append("Fouls").append(_FONT_BOLD_CLOSE)
 				.append("</td>\n");
 		statistics.append("</tr>\n");
-		for (Player player : pTeam.getPlayers()) {
+		for (Player<?> player : pTeam.getPlayers()) {
 			PlayerResult playerResult = gameResult.getPlayerResult(player);
 			statistics.append("<tr>\n");
 			statistics.append("  <td align=\"right\">").append(_FONT_BOLD_OPEN).append(player.getNr())

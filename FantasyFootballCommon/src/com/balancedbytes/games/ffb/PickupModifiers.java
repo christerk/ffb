@@ -24,7 +24,7 @@ public class PickupModifiers {
 	}
 
 	public PickupModifiers() {
-		values = new HashMap<String, PickupModifier>();
+		values = new HashMap<>();
 		try {
 			Class<?> c = this.getClass();
 			Class<?> cModifierType = PickupModifier.class;

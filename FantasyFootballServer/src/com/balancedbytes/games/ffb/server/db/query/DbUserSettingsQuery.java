@@ -15,7 +15,7 @@ import com.balancedbytes.games.ffb.server.db.DbStatementId;
 import com.balancedbytes.games.ffb.server.db.IDbTableUserSettings;
 
 /**
- * 
+ *
  * @author Kalimar
  */
 public class DbUserSettingsQuery extends DbStatement {
@@ -52,7 +52,7 @@ public class DbUserSettingsQuery extends DbStatement {
 
 	public DbUserSettingsQuery(FantasyFootballServer pServer) {
 		super(pServer);
-		fSettings = new HashMap<String, String>();
+		fSettings = new HashMap<>();
 	}
 
 	public DbStatementId getId() {

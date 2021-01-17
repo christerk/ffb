@@ -21,12 +21,12 @@ import com.eclipsesource.json.JsonValue;
 
 /**
  * Step in the pass sequence to handle a hand over of the ball.
- * 
+ *
  * Expects stepParameter CATCHER_ID to be set by a preceding step.
- * 
+ *
  * Sets stepParameter CATCH_SCATTER_THROW_IN_MODE for all steps on the stack.
  * Sets stepParameter END_PLAYER_ACTION for all steps on the stack.
- * 
+ *
  * @author Kalimar
  */
 public final class StepHandOver extends AbstractStepWithReRoll {
@@ -74,9 +74,9 @@ public final class StepHandOver extends AbstractStepWithReRoll {
 		Game game = getGameState().getGame();
 		game.getFieldModel().setBallMoving(true);
 		game.setPassCoordinate(null);
-		Player thrower = game.getActingPlayer().getPlayer();
+		Player<?> thrower = game.getActingPlayer().getPlayer();
 		FieldCoordinate throwerCoordinate = game.getFieldModel().getPlayerCoordinate(thrower);
-		Player catcher = game.getPlayerById(fCatcherId);
+		Player<?> catcher = game.getPlayerById(fCatcherId);
 		FieldCoordinate catcherCoordinate = game.getFieldModel().getPlayerCoordinate(catcher);
 		if ((throwerCoordinate != null) && throwerCoordinate.isAdjacent(catcherCoordinate)) {
 			game.getFieldModel().setBallCoordinate(catcherCoordinate);

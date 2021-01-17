@@ -21,7 +21,7 @@ import com.eclipsesource.json.JsonValue;
 
 /**
  * Step to end ttm scatter sequence.
- * 
+ *
  * Expects stepParameter THROWN_PLAYER_ID to be set by a preceding step. Expects
  * stepParameter THROWN_PLAYER_STATE to be set by a preceding step. Expects
  * stepParameter THROWN_PLAYER_HAS_BALL to be set by a preceding step. Expects
@@ -29,7 +29,7 @@ import com.eclipsesource.json.JsonValue;
  *
  * Consumes all known parameters. May push new scatterPlayerSequence on the
  * stack.
- * 
+ *
  * @author Kalimar
  */
 public final class StepEndScatterPlayer extends AbstractStep {
@@ -99,7 +99,7 @@ public final class StepEndScatterPlayer extends AbstractStep {
 
 	private void executeStep() {
 		Game game = getGameState().getGame();
-		Player thrownPlayer = game.getPlayerById(fThrownPlayerId);
+		Player<?> thrownPlayer = game.getPlayerById(fThrownPlayerId);
 		if ((thrownPlayer != null) && (fThrownPlayerState != null) && (fThrownPlayerCoordinate != null)) {
 			SequenceGenerator.getInstance().pushScatterPlayerSequence(getGameState(), fThrownPlayerId, fThrownPlayerState,
 					fThrownPlayerHasBall, fThrownPlayerCoordinate, false, false);

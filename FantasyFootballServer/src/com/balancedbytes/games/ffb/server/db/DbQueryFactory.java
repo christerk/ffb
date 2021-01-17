@@ -20,7 +20,7 @@ import com.balancedbytes.games.ffb.server.db.query.DbTeamSetupsQuery;
 import com.balancedbytes.games.ffb.server.db.query.DbUserSettingsQuery;
 
 /**
- * 
+ *
  * @author Kalimar
  */
 public class DbQueryFactory implements IDbStatementFactory {
@@ -34,7 +34,7 @@ public class DbQueryFactory implements IDbStatementFactory {
 	public DbQueryFactory(DbConnectionManager pDbConnectionManager) {
 
 		fDbConnectionManager = pDbConnectionManager;
-		fStatementById = new HashMap<DbStatementId, DbStatement>();
+		fStatementById = new HashMap<>();
 
 		register(new DbAdminListByIdQuery(getServer()));
 		register(new DbAdminListByStatusQuery(getServer()));

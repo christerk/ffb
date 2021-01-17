@@ -54,7 +54,7 @@ public class DialogJourneymen extends Dialog implements ActionListener, KeyListe
 
 		fSlotsSelected = new int[fPositionIds.length];
 
-		fBoxes = new ArrayList<JComboBox<String>>();
+		fBoxes = new ArrayList<>();
 		for (int i = 0; i < fPositionIds.length; i++) {
 			fBoxes.add(new JComboBox<String>());
 		}

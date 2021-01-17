@@ -9,7 +9,7 @@ import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
 
 /**
- * 
+ *
  * @author Kalimar
  */
 public class DialogReRollHandler extends DialogHandler {
@@ -25,7 +25,7 @@ public class DialogReRollHandler extends DialogHandler {
 
 		if (dialogReRollParameter != null) {
 
-			Player player = game.getPlayerById(dialogReRollParameter.getPlayerId());
+			Player<?> player = game.getPlayerById(dialogReRollParameter.getPlayerId());
 
 			if ((ClientMode.PLAYER == getClient().getMode()) && game.getTeamHome().hasPlayer(player)) {
 				setDialog(new DialogReRoll(getClient(), dialogReRollParameter));

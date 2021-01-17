@@ -23,7 +23,7 @@ import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
 /**
- * 
+ *
  * @author Kalimar
  */
 public class TeamList implements IXmlSerializable, IJsonSerializable {
@@ -49,7 +49,7 @@ public class TeamList implements IXmlSerializable, IJsonSerializable {
 	private List<TeamListEntry> fTeamListEntries;
 
 	public TeamList() {
-		fTeamListEntries = new ArrayList<TeamListEntry>();
+		fTeamListEntries = new ArrayList<>();
 	}
 
 	public TeamList(String pCoach, TeamListEntry[] pTeamListEntries) {

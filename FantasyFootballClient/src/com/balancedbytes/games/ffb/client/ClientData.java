@@ -7,7 +7,7 @@ import com.balancedbytes.games.ffb.model.Player;
 
 public class ClientData {
 
-	private Player fSelectedPlayer;
+	private Player<?> fSelectedPlayer;
 	private FieldCoordinate fDragEndPosition;
 	private FieldCoordinate fDragStartPosition;
 
@@ -30,11 +30,11 @@ public class ClientData {
 		super();
 	}
 
-	public Player getSelectedPlayer() {
+	public Player<?> getSelectedPlayer() {
 		return fSelectedPlayer;
 	}
 
-	public void setSelectedPlayer(Player pPlayer) {
+	public void setSelectedPlayer(Player<?> pPlayer) {
 		fSelectedPlayer = pPlayer;
 	}
 

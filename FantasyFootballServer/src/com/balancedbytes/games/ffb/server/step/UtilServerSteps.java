@@ -20,7 +20,7 @@ import com.balancedbytes.games.ffb.util.ArrayTool;
 import com.balancedbytes.games.ffb.util.StringTool;
 
 /**
- * 
+ *
  * @author Kalimar
  */
 public class UtilServerSteps {
@@ -87,7 +87,7 @@ public class UtilServerSteps {
 		Game game = gameState.getGame();
 		if (game.getFieldModel().isBallInPlay() && !game.getFieldModel().isBallMoving()) {
 			FieldCoordinate ballPosition = game.getFieldModel().getBallCoordinate();
-			Player ballCarrier = game.getFieldModel().getPlayer(ballPosition);
+			Player<?> ballCarrier = game.getFieldModel().getPlayer(ballPosition);
 			PlayerState ballCarrierState = game.getFieldModel().getPlayerState(ballCarrier);
 			ActingPlayer actingPlayer = game.getActingPlayer();
 			if ((ballCarrier != null) && (ballCarrierState != null) && !ballCarrierState.isProne()

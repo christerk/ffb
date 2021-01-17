@@ -45,7 +45,7 @@ public class DbTeamSetupsForTeamQuery extends DbStatement {
 		if (pTeam != null) {
 			try {
 				fStatement.setString(1, pTeam.getId());
-				List<String> nameList = new ArrayList<String>();
+				List<String> nameList = new ArrayList<>();
 				try (ResultSet resultSet = fStatement.executeQuery()) {
 					while (resultSet.next()) {
 						nameList.add(resultSet.getString(1));

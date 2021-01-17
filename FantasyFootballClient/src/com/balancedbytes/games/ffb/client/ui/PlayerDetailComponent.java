@@ -44,7 +44,7 @@ import com.balancedbytes.games.ffb.util.StringTool;
 import com.balancedbytes.games.ffb.util.UtilCards;
 
 /**
- * 
+ *
  * @author Kalimar
  */
 @SuppressWarnings("serial")
@@ -73,7 +73,7 @@ public class PlayerDetailComponent extends JPanel {
 	private static final int _DISPLAY_SELECTED_PLAYER = 3;
 
 	private SideBarComponent fSideBar;
-	private Player fPlayer;
+	private Player<?> fPlayer;
 	private BufferedImage fImage;
 	private boolean fRefreshNecessary;
 
@@ -117,8 +117,6 @@ public class PlayerDetailComponent extends JPanel {
 			Graphics2D g2d = fImage.createGraphics();
 			g2d.setFont(_NAME_FONT);
 			FontMetrics fontMetrics = g2d.getFontMetrics();
-//      StringBuilder nameAndNumber = new StringBuilder();
-//      nameAndNumber.append("#").append(getPlayer().getNr()).append(" - ").append(getPlayer().getName());
 			final AttributedString attStr = new AttributedString(getPlayer().getName());
 			attStr.addAttribute(TextAttribute.FONT, g2d.getFont());
 			final LineBreakMeasurer measurer = new LineBreakMeasurer(attStr.getIterator(),
@@ -146,14 +144,6 @@ public class PlayerDetailComponent extends JPanel {
 			IconCache iconCache = getSideBar().getClient().getUserInterface().getIconCache();
 			StringBuilder positionName = new StringBuilder();
 			if (getPlayer() != null) {
-//        Game game = getSideBar().getClient().getGame();
-//        if (getPlayer() == game.getActingPlayer().getPlayer()) {
-//          positionName.append("[A] ");
-//        }
-//        if (getPlayer() == game.getDefender()) {
-//          positionName.append("[D] ");
-//        }
-				// positionName.append(getPlayer().getNr()).append(" - ");
 				if (getPlayer().getPlayerType() == PlayerType.STAR) {
 					positionName.append("Star Player");
 				} else if (StringTool.isProvided(getPlayer().getPosition().getDisplayName())) {
@@ -168,28 +158,27 @@ public class PlayerDetailComponent extends JPanel {
 			FontMetrics metrics = g2d.getFontMetrics();
 			BufferedImage playerPortrait = iconCache.getIconByUrl(portraitUrl);
 			BufferedImage portraitBackground = iconCache.getIconByProperty(IIconProperty.SIDEBAR_BACKGROUND_PLAYER_PORTRAIT);
-//      if (getSideBar().isHomeSide()) {
 			if (playerPortrait != null) {
 				int canvasWidth = _PORTRAIT_WIDTH;
 				int canvasHeight = _PORTRAIT_HEIGHT;
 				int portraitWidth = playerPortrait.getWidth();
 				int portraitHeight = playerPortrait.getHeight();
-				
+
 				if (portraitWidth > canvasWidth || portraitHeight > canvasHeight) {
 					// Scale portrait to fit both width and height
-					
+
 					float scale = Math.max(
 							(float)portraitWidth / (float)canvasWidth,
 							(float)portraitHeight / (float)canvasHeight
 							);
-					
+
 					portraitWidth = (int) Math.floor(portraitWidth / scale);
 					portraitHeight = (int) Math.floor(portraitHeight / scale);
 				}
-				
+
 				int originX = (canvasWidth - portraitWidth) / 2;
 				int originY = (canvasHeight - portraitHeight) / 2;
-				
+
 				g2d.drawImage(playerPortrait, x + originX, y + originY, portraitWidth, portraitHeight, null);
 			} else {
 				g2d.drawImage(portraitBackground, x - 2, y, null);
@@ -199,18 +188,6 @@ public class PlayerDetailComponent extends JPanel {
 			g2d.drawString(positionNameString, -(y + _PORTRAIT_HEIGHT - 4), _PORTRAIT_WIDTH + metrics.getAscent() + 3);
 			g2d.setColor(Color.WHITE);
 			g2d.drawString(positionNameString, -(y + _PORTRAIT_HEIGHT - 5), _PORTRAIT_WIDTH + metrics.getAscent() + 2);
-//      } else {
-//        if (playerPortrait != null) {
-//          g2d.drawImage(playerPortrait, WIDTH - _PORTRAIT_WIDTH - 3, y, _PORTRAIT_WIDTH, _PORTRAIT_HEIGHT, null);
-//        } else {
-//          g2d.drawImage(portraitBackground, WIDTH - _PORTRAIT_WIDTH - 3, y, null);
-//        }
-//        g2d.rotate(Math.PI/2.0);
-//        g2d.setColor(Color.BLACK);      
-//        g2d.drawString(positionNameString, y + 4, -(metrics.getDescent() + 4));
-//        g2d.setColor(Color.WHITE);      
-//        g2d.drawString(positionNameString, y + 3, -(metrics.getDescent() + 3));
-//      }
 			g2d.dispose();
 		}
 	}
@@ -244,7 +221,7 @@ public class PlayerDetailComponent extends JPanel {
 				}
 			}
 
-			Player player = getPlayer();
+			Player<?> player = getPlayer();
 			Position position = player.getPosition();
 			int movementModifier = player.getMovement() - position.getMovement();
 			drawStatBox(g2d, x, y, moveLeft, moveIsRed, movementModifier, false);
@@ -258,7 +235,7 @@ public class PlayerDetailComponent extends JPanel {
 
 			int passingModifier = player.getPassing() - position.getPassing();
 			drawStatBox(g2d, x + (_STAT_BOX_WIDTH * 3), y, passing, false, passingModifier, true);
-			
+
 			int armourModifier = player.getArmour() - position.getArmour();
 			drawStatBox(g2d, x + (_STAT_BOX_WIDTH * 4), y, armour, false, armourModifier, true);
 
@@ -385,11 +362,11 @@ public class PlayerDetailComponent extends JPanel {
 			ActingPlayer actingPlayer = game.getActingPlayer();
 			PlayerState playerState = game.getFieldModel().getPlayerState(getPlayer());
 			Skill[] skills = UtilCards.findAllSkills(game, getPlayer());
-			List<String> cardSkills = new ArrayList<String>();
-			List<String> acquiredSkills = new ArrayList<String>();
-			List<String> rosterSkills = new ArrayList<String>();
-			List<String> cardEffects = new ArrayList<String>();
-			Set<String> usedSkills = new HashSet<String>();
+			List<String> cardSkills = new ArrayList<>();
+			List<String> acquiredSkills = new ArrayList<>();
+			List<String> rosterSkills = new ArrayList<>();
+			List<String> cardEffects = new ArrayList<>();
+			Set<String> usedSkills = new HashSet<>();
 			for (Skill skill : skills) {
 				if (getPlayer().getPosition().hasSkill(skill)) {
 					if ((SkillCategory.STAT_INCREASE != skill.getCategory())
@@ -467,15 +444,11 @@ public class PlayerDetailComponent extends JPanel {
 				if (statModifier > 1) {
 					pG2d.fillRect(pX + 2, pY + _STAT_BOX_HEIGHT - _STAT_BOX_INNER_HEIGHT - 2, _STAT_BOX_WIDTH - 6,
 							_STAT_BOX_INNER_HEIGHT);
-					// pG2d.fillRect(pX + 2, pY + _STAT_BOX_HEIGHT - (_STAT_BOX_INNER_HEIGHT / 2) -
-					// 2, _STAT_BOX_WIDTH - 6, _STAT_BOX_INNER_HEIGHT / 2);
 				} else {
 					pG2d.fillPolygon(new int[] { pX + 2, pX + 2, pX + _STAT_BOX_WIDTH - 3 },
 							new int[] { pY + _STAT_BOX_HEIGHT - _STAT_BOX_INNER_HEIGHT - 2, pY + _STAT_BOX_HEIGHT - 2,
 									pY + _STAT_BOX_HEIGHT - 2 },
 							3);
-					// pG2d.fillRect(pX + 2, pY + _STAT_BOX_HEIGHT - (_STAT_BOX_INNER_HEIGHT / 4) -
-					// 2, _STAT_BOX_WIDTH - 6, _STAT_BOX_INNER_HEIGHT / 4);
 				}
 			}
 			if (statModifier < 0) {
@@ -483,19 +456,16 @@ public class PlayerDetailComponent extends JPanel {
 				if (statModifier < -1) {
 					pG2d.fillRect(pX + 2, pY + _STAT_BOX_HEIGHT - _STAT_BOX_INNER_HEIGHT - 2, _STAT_BOX_WIDTH - 6,
 							_STAT_BOX_INNER_HEIGHT);
-					// pG2d.fillRect(pX + _STAT_BOX_WIDTH - 7, pY + _STAT_BOX_HEIGHT - 7, 4, 4);
 				} else {
 					pG2d.fillPolygon(new int[] { pX + 2, pX + _STAT_BOX_WIDTH - 3, pX + _STAT_BOX_WIDTH - 3 },
 							new int[] { pY + _STAT_BOX_HEIGHT - _STAT_BOX_INNER_HEIGHT - 2,
 									pY + _STAT_BOX_HEIGHT - _STAT_BOX_INNER_HEIGHT - 2, pY + _STAT_BOX_HEIGHT - 2 },
 							3);
-					// pG2d.fillRect(pX + _STAT_BOX_WIDTH - 7, pY + _STAT_BOX_HEIGHT -
-					// _STAT_BOX_INNER_HEIGHT - 1, 4, 4);
 				}
 			}
-			
+
 			Color statColor = pStatIsRed ? Color.RED : Color.BLACK;
-			String statText = pValue == 0 ? "–" : Integer.toString(pValue) + (addPlusSuffix ? "+" : "");
+			String statText = pValue == 0 ? "ï¿½" : Integer.toString(pValue) + (addPlusSuffix ? "+" : "");
 			if (pValue == 0) {
 				// Move the dash more central
 				pY -= 1;
@@ -550,11 +520,11 @@ public class PlayerDetailComponent extends JPanel {
 		pGraphics.drawImage(fImage, 0, 0, null);
 	}
 
-	public Player getPlayer() {
+	public Player<?> getPlayer() {
 		return fPlayer;
 	}
 
-	public void setPlayer(Player pPlayer) {
+	public void setPlayer(Player<?> pPlayer) {
 		fPlayer = pPlayer;
 	}
 
@@ -589,8 +559,8 @@ public class PlayerDetailComponent extends JPanel {
 		return displayMode;
 	}
 
-	private Player getDisplayedPlayer(int pDisplayMode) {
-		Player displayedPlayer = null;
+	private Player<?> getDisplayedPlayer(int pDisplayMode) {
+		Player<?> displayedPlayer = null;
 		Game game = getSideBar().getClient().getGame();
 		ClientData clientData = getSideBar().getClient().getClientData();
 		switch (pDisplayMode) {

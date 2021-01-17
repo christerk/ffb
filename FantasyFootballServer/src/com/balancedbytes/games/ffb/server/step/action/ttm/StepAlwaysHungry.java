@@ -31,12 +31,12 @@ import com.eclipsesource.json.JsonValue;
  * Step in ttm sequence to handle skill ALWAYS_HUNGRY. Failure or success refer
  * to the escape roll of a picked up player. Continues with next step if
  * ALWAYS_HUNGRY roll fails (no attempt to eat player).
- * 
+ *
  * Needs to be initialized with stepParameter GOTO_LABEL_ON_FAILURE. Needs to be
  * initialized with stepParameter GOTO_LABEL_ON_SUCCESS.
- * 
+ *
  * Expects stepParameter THROWN_PLAYER_ID to be set by a preceding step.
- * 
+ *
  * @author Kalimar
  */
 public final class StepAlwaysHungry extends AbstractStepWithReRoll {
@@ -111,7 +111,7 @@ public final class StepAlwaysHungry extends AbstractStepWithReRoll {
 	private void executeStep() {
 		Game game = getGameState().getGame();
 		ActingPlayer actingPlayer = game.getActingPlayer();
-		Player thrownPlayer = game.getPlayerById(fThrownPlayerId);
+		Player<?> thrownPlayer = game.getPlayerById(fThrownPlayerId);
 		if (thrownPlayer == null) {
 			return;
 		}

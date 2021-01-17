@@ -24,7 +24,7 @@ import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
 /**
- * 
+ *
  * @author Kalimar
  */
 public class GameList implements IXmlSerializable, IJsonSerializable {
@@ -41,7 +41,7 @@ public class GameList implements IXmlSerializable, IJsonSerializable {
 	private List<GameListEntry> fEntries;
 
 	public GameList() {
-		fEntries = new ArrayList<GameListEntry>();
+		fEntries = new ArrayList<>();
 	}
 
 	public GameList(GameListEntry[] pGameListEntries) {

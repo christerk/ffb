@@ -10,7 +10,7 @@ import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
 import com.balancedbytes.games.ffb.server.GameState;
 
 public class UtilServerPlayerSwoop {
-	public static void updateSwoopSquares(GameState pGameState, Player swoopingPlayer) {
+	public static void updateSwoopSquares(GameState pGameState, Player<?> swoopingPlayer) {
 		Game game = pGameState.getGame();
 		FieldModel fieldModel = game.getFieldModel();
 		if (swoopingPlayer != null) {

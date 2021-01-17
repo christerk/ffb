@@ -8,7 +8,7 @@ import com.balancedbytes.games.ffb.server.FantasyFootballServer;
 import com.balancedbytes.games.ffb.server.net.ReceivedCommand;
 
 /**
- * 
+ *
  * @author Kalimar
  */
 public class ServerCommandHandlerFactory {
@@ -16,7 +16,7 @@ public class ServerCommandHandlerFactory {
 	private Map<NetCommandId, ServerCommandHandler> fCommandHandlerById;
 
 	public ServerCommandHandlerFactory(FantasyFootballServer server) {
-		fCommandHandlerById = new HashMap<NetCommandId, ServerCommandHandler>();
+		fCommandHandlerById = new HashMap<>();
 		register(new ServerCommandHandlerCloseGame(server));
 		register(new ServerCommandHandlerDeleteGame(server));
 		register(new ServerCommandHandlerFumbblGameChecked(server));

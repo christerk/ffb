@@ -24,10 +24,10 @@ import com.eclipsesource.json.JsonValue;
 
 /**
  * Initialization step in end game sequence.
- * 
+ *
  * Needs to be initialized with stepParameter GOTO_LABEL_ON_END. May be
  * initialized with stepParameter ADMIN_MODE.
- * 
+ *
  * @author Kalimar
  */
 public final class StepInitEndGame extends AbstractStep {
@@ -102,7 +102,7 @@ public final class StepInitEndGame extends AbstractStep {
 
 	private void handlePoisonedPlayers() {
 		Game game = getGameState().getGame();
-		for (Player player : game.getPlayers()) {
+		for (Player<?> player : game.getPlayers()) {
 			if (game.getFieldModel().hasCardEffect(player, CardEffect.POISONED)) {
 				PlayerResult playerResult = game.getGameResult().getPlayerResult(player);
 				if (playerResult.getSeriousInjury() == null) {

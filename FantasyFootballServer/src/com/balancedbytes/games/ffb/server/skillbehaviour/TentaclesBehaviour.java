@@ -47,7 +47,7 @@ public class TentaclesBehaviour extends SkillBehaviour<Tentacles> {
 				UtilServerDialog.hideDialog(step.getGameState());
 				if (state.usingTentacles == null) {
 					if (actingPlayer.isDodging() || actingPlayer.isLeaping()) {
-						Player[] playerArray = UtilPlayer.findAdjacentOpposingPlayersWithSkill(game, state.coordinateFrom, skill,
+						Player<?>[] playerArray = UtilPlayer.findAdjacentOpposingPlayersWithSkill(game, state.coordinateFrom, skill,
 								false);
 						if (ArrayTool.isProvided(playerArray)) {
 							String teamId = game.isHomePlaying() ? game.getTeamAway().getId() : game.getTeamHome().getId();

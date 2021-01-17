@@ -77,7 +77,7 @@ public class MercenaryTableModel extends AbstractTableModel {
 	}
 
 	public void setValueAt(Object pValue, int pRowIndex, int pColumnIndex) {
-		Player player = (Player) fRowData[pRowIndex][5];
+		Player<?> player = (Player) fRowData[pRowIndex][5];
 		int playerCost = player.getPosition().getCost() + mercExtraCost;
 		if (pColumnIndex == 0) {
 			int skillCost = StringTool.isProvided(fRowData[pRowIndex][4]) ? mercSkillCost : 0;
@@ -115,7 +115,7 @@ public class MercenaryTableModel extends AbstractTableModel {
 
 	private Object[][] buildRowData() {
 		PlayerIconFactory playerIconFactory = fDialog.getClient().getUserInterface().getPlayerIconFactory();
-		List<Object[]> mercenaryList = new ArrayList<Object[]>();
+		List<Object[]> mercenaryList = new ArrayList<>();
 		for (RosterPosition pos : fDialog.getRoster().getPositions()) {
 			if (PlayerType.STAR != pos.getType()) {
 				int playerInPosition = fDialog.getTeam().getNrOfAvailablePlayersInPosition(pos);

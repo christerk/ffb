@@ -51,7 +51,7 @@ import com.balancedbytes.games.ffb.util.UtilBox;
 import com.balancedbytes.games.ffb.util.UtilTeamValue;
 
 /**
- * 
+ *
  * @author Kalimar
  */
 public class GameCache {
@@ -67,8 +67,8 @@ public class GameCache {
 
 	public GameCache(FantasyFootballServer pServer) {
 		fServer = pServer;
-		fGameStateById = Collections.synchronizedMap(new HashMap<Long, GameState>());
-		fGameIdByName = Collections.synchronizedMap(new HashMap<String, Long>());
+		fGameStateById = Collections.synchronizedMap(new HashMap<>());
+		fGameIdByName = Collections.synchronizedMap(new HashMap<>());
 	}
 
 	public void init() {
@@ -287,7 +287,7 @@ public class GameCache {
 
 	public void addTeamToGame(GameState pGameState, Team pTeam, boolean pHomeTeam) {
 		Game game = pGameState.getGame();
-		Player[] players = pTeam.getPlayers();
+		Player<?>[] players = pTeam.getPlayers();
 		if (pHomeTeam) {
 			game.getFieldModel().remove(game.getTeamHome());
 			game.setTeamHome(pTeam);
@@ -296,7 +296,7 @@ public class GameCache {
 			game.setTeamAway(pTeam);
 		}
 		FieldModel fieldModel = pGameState.getGame().getFieldModel();
-		for (Player player : players) {
+		for (Player<?> player : players) {
 			if (player instanceof ZappedPlayer) {
 				if (!pGameState.isZapped(player)) {
 					player = ((ZappedPlayer) player).getOriginalPlayer();

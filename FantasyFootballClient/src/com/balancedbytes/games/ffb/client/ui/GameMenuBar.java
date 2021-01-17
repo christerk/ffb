@@ -63,7 +63,7 @@ import com.balancedbytes.games.ffb.util.ArrayTool;
 import com.balancedbytes.games.ffb.util.StringTool;
 
 /**
- * 
+ *
  * @author Kalimar
  */
 @SuppressWarnings("serial")
@@ -161,9 +161,9 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 
 	private class MenuPlayerMouseListener extends MouseAdapter {
 
-		private Player fPlayer;
+		private Player<?> fPlayer;
 
-		public MenuPlayerMouseListener(Player pPlayer) {
+		public MenuPlayerMouseListener(Player<?> pPlayer) {
 			fPlayer = pPlayer;
 		}
 
@@ -871,7 +871,7 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 		Icon cardIcon = new ImageIcon(
 				getClient().getUserInterface().getIconCache().getIconByProperty(IIconProperty.SIDEBAR_OVERLAY_PLAYER_CARD));
 		for (Card card : pCards) {
-			Player player = null;
+			Player<?> player = null;
 			if (card.getTarget().isPlayedOnPlayer()) {
 				player = game.getFieldModel().findPlayer(card);
 			}
@@ -918,8 +918,8 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 
 		Game game = getClient().getGame();
 		Team team = pInducementSet.getTurnData().isHomeData() ? game.getTeamHome() : game.getTeamAway();
-		List<Player> starPlayers = new ArrayList<Player>();
-		for (Player player : team.getPlayers()) {
+		List<Player<?>> starPlayers = new ArrayList<>();
+		for (Player<?> player : team.getPlayers()) {
 			if (player.getPlayerType() == PlayerType.STAR) {
 				starPlayers.add(player);
 			}
@@ -934,13 +934,13 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 			}
 			JMenu starPlayerMenu = new JMenu(starPlayerMenuText.toString());
 			pInducementMenu.add(starPlayerMenu);
-			for (Player player : starPlayers) {
+			for (Player<?> player : starPlayers) {
 				addPlayerMenuItem(starPlayerMenu, player, player.getName());
 			}
 		}
 
-		List<Player> mercenaries = new ArrayList<Player>();
-		for (Player player : team.getPlayers()) {
+		List<Player<?>> mercenaries = new ArrayList<>();
+		for (Player<?> player : team.getPlayers()) {
 			if (player.getPlayerType() == PlayerType.MERCENARY) {
 				mercenaries.add(player);
 			}
@@ -955,7 +955,7 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 			}
 			JMenu mercenaryMenu = new JMenu(mercenaryMenuText.toString());
 			pInducementMenu.add(mercenaryMenu);
-			for (Player player : mercenaries) {
+			for (Player<?> player : mercenaries) {
 				addPlayerMenuItem(mercenaryMenu, player, player.getName());
 			}
 		}
@@ -1009,7 +1009,7 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 		fMissingPlayersMenu.removeAll();
 		int nrOfEntries = 0;
 		for (int i = 0; i < BoxComponent.MAX_BOX_ELEMENTS; i++) {
-			Player player = game.getFieldModel().getPlayer(new FieldCoordinate(FieldCoordinate.MNG_HOME_X, i));
+			Player<?> player = game.getFieldModel().getPlayer(new FieldCoordinate(FieldCoordinate.MNG_HOME_X, i));
 			if (player != null) {
 				addMissingPlayerMenuItem(player);
 				nrOfEntries++;
@@ -1018,7 +1018,7 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 			}
 		}
 		for (int i = 0; i < BoxComponent.MAX_BOX_ELEMENTS; i++) {
-			Player player = game.getFieldModel().getPlayer(new FieldCoordinate(FieldCoordinate.MNG_AWAY_X, i));
+			Player<?> player = game.getFieldModel().getPlayer(new FieldCoordinate(FieldCoordinate.MNG_AWAY_X, i));
 			if (player != null) {
 				addMissingPlayerMenuItem(player);
 				nrOfEntries++;
@@ -1042,7 +1042,7 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 		fMissingPlayersMenu.setText(menuText.toString());
 	}
 
-	private void addMissingPlayerMenuItem(Player pPlayer) {
+	private void addMissingPlayerMenuItem(Player<?> pPlayer) {
 		if (pPlayer == null) {
 			return;
 		}
@@ -1061,7 +1061,7 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 		addPlayerMenuItem(fMissingPlayersMenu, pPlayer, playerText.toString());
 	}
 
-	private void addPlayerMenuItem(JMenu pPlayersMenu, Player pPlayer, String pText) {
+	private void addPlayerMenuItem(JMenu pPlayersMenu, Player<?> pPlayer, String pText) {
 		if ((pPlayer == null) || !StringTool.isProvided(pText)) {
 			return;
 		}
@@ -1075,9 +1075,9 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 
 	private Map<CardType, List<Card>> buildCardMap(InducementSet pInducementSet) {
 		Card[] allCards = pInducementSet.getAllCards();
-		Map<CardType, List<Card>> cardMap = new HashMap<CardType, List<Card>>();
+		Map<CardType, List<Card>> cardMap = new HashMap<>();
 		for (CardType type : CardType.values()) {
-			List<Card> cardList = new ArrayList<Card>();
+			List<Card> cardList = new ArrayList<>();
 			for (Card card : allCards) {
 				if (type == card.getType()) {
 					cardList.add(card);

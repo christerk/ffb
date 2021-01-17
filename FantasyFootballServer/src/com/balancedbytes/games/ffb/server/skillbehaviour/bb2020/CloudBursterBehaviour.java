@@ -57,7 +57,7 @@ public class CloudBursterBehaviour extends SkillBehaviour<CloudBurster> {
 		public StepId getId() {
 			return StepId.CLOUD_BURSTER;
 		}
-		
+
 		@Override
 		public void init(StepParameterSet pParameterSet) {
 			if (pParameterSet != null) {
@@ -108,16 +108,16 @@ public class CloudBursterBehaviour extends SkillBehaviour<CloudBurster> {
 
 		private void executeStep() {
 			Game game = getGameState().getGame();
-			Player interceptor = game.getPlayerById(fInterceptorId);
+			Player<?> interceptor = game.getPlayerById(fInterceptorId);
 			if ((game.getThrower() == null) || (interceptor == null)) {
 				return;
 			}
 
 			Skill canForceInterceptionRerollSkill = game.getThrower().getSkillWithProperty(NamedProperties.canForceInterceptionReroll);
-			
+
 			FieldCoordinate throwerCoordinate = game.getFieldModel().getPlayerCoordinate(game.getThrower());
 			PassingDistance passingDistance = UtilPassing.findPassingDistance(game, throwerCoordinate, game.getPassCoordinate(), false);
-			
+
 			boolean doSafeThrow = canForceInterceptionRerollSkill != null
 					&& !UtilCards.cancelsSkill(interceptor, canForceInterceptionRerollSkill)
 					&& (passingDistance == PassingDistance.LONG_PASS || passingDistance == PassingDistance.LONG_BOMB);

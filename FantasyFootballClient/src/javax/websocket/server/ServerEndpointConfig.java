@@ -333,7 +333,7 @@ public interface ServerEndpointConfig extends EndpointConfig {
 		 * @return this builder instance
 		 */
 		public ServerEndpointConfig.Builder encoders(List<Class<? extends Encoder>> encoders) {
-			this.encoders = (encoders == null) ? new ArrayList<Class<? extends Encoder>>() : encoders;
+			this.encoders = (encoders == null) ? new ArrayList<>() : encoders;
 			return this;
 		}
 
@@ -344,7 +344,7 @@ public interface ServerEndpointConfig extends EndpointConfig {
 		 * @return this builder instance.
 		 */
 		public ServerEndpointConfig.Builder decoders(List<Class<? extends Decoder>> decoders) {
-			this.decoders = (decoders == null) ? new ArrayList<Class<? extends Decoder>>() : decoders;
+			this.decoders = (decoders == null) ? new ArrayList<>() : decoders;
 			return this;
 		}
 
@@ -355,7 +355,7 @@ public interface ServerEndpointConfig extends EndpointConfig {
 		 * @return this builder instance
 		 */
 		public ServerEndpointConfig.Builder subprotocols(List<String> subprotocols) {
-			this.subprotocols = (subprotocols == null) ? new ArrayList<String>() : subprotocols;
+			this.subprotocols = (subprotocols == null) ? new ArrayList<>() : subprotocols;
 			return this;
 		}
 
@@ -366,7 +366,7 @@ public interface ServerEndpointConfig extends EndpointConfig {
 		 * @return this builder instance.
 		 */
 		public ServerEndpointConfig.Builder extensions(List<Extension> extensions) {
-			this.extensions = (extensions == null) ? new ArrayList<Extension>() : extensions;
+			this.extensions = (extensions == null) ? new ArrayList<>() : extensions;
 			return this;
 		}
 

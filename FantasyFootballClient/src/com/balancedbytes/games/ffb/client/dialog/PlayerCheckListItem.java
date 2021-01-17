@@ -5,17 +5,17 @@ import javax.swing.Icon;
 import com.balancedbytes.games.ffb.model.Player;
 
 /**
- * 
+ *
  * @author Kalimar
  */
 public final class PlayerCheckListItem {
 
-	private Player fPlayer;
+	private Player<?> fPlayer;
 	private Icon fIcon;
 	private String fText;
 	private boolean fSelected = false;
 
-	public PlayerCheckListItem(Player pPlayer, Icon pIcon, String pText) {
+	public PlayerCheckListItem(Player<?> pPlayer, Icon pIcon, String pText) {
 		fPlayer = pPlayer;
 		fIcon = pIcon;
 		fText = pText;
@@ -30,7 +30,7 @@ public final class PlayerCheckListItem {
 		fSelected = pSelected;
 	}
 
-	public Player getPlayer() {
+	public Player<?> getPlayer() {
 		return fPlayer;
 	}
 

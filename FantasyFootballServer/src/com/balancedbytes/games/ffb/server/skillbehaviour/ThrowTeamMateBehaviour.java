@@ -52,7 +52,7 @@ public class ThrowTeamMateBehaviour extends SkillBehaviour<ThrowTeamMate> {
 				game.setConcessionPossible(false);
 				game.getTurnData().setPassUsed(true);
 				UtilServerDialog.hideDialog(step.getGameState());
-				Player thrower = game.getActingPlayer().getPlayer();
+				Player<?> thrower = game.getActingPlayer().getPlayer();
 				boolean doRoll = true;
 				if (ReRolledActions.THROW_TEAM_MATE == step.getReRolledAction()) {
 					if ((step.getReRollSource() == null) || !UtilServerReRoll.useReRoll(step, step.getReRollSource(), thrower)) {
@@ -77,7 +77,7 @@ public class ThrowTeamMateBehaviour extends SkillBehaviour<ThrowTeamMate> {
 					step.getResult().addReport(new ReportThrowTeamMateRoll(thrower.getId(), successful, roll, minimumRoll,
 							reRolled, passModifierArray, passingDistance, state.thrownPlayerId));
 					if (successful) {
-						Player thrownPlayer = game.getPlayerById(state.thrownPlayerId);
+						Player<?> thrownPlayer = game.getPlayerById(state.thrownPlayerId);
 						boolean scattersSingleDirection = thrownPlayer != null
 								&& thrownPlayer.hasSkillWithProperty(NamedProperties.ttmScattersInSingleDirection);
 						SequenceGenerator.getInstance().pushScatterPlayerSequence(step.getGameState(), state.thrownPlayerId,

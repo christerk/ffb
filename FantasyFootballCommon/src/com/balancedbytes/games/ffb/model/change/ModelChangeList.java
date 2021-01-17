@@ -25,7 +25,7 @@ public class ModelChangeList implements IJsonSerializable {
 	}
 
 	public ModelChangeList(int pInitialCapacity) {
-		fChanges = new ArrayList<ModelChange>(pInitialCapacity);
+		fChanges = new ArrayList<>(pInitialCapacity);
 	}
 
 	public void add(ModelChange newChange) {

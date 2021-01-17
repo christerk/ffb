@@ -125,7 +125,7 @@ import com.balancedbytes.games.ffb.util.UtilCards;
 import com.balancedbytes.games.ffb.util.UtilPlayer;
 
 /**
- * 
+ *
  * @author Kalimar
  */
 public class StatusReport {
@@ -434,7 +434,7 @@ public class StatusReport {
 		StringBuilder status = new StringBuilder();
 		StringBuilder neededRoll = null;
 		Game game = getClient().getGame();
-		Player player = game.getActingPlayer().getPlayer();
+		Player<?> player = game.getActingPlayer().getPlayer();
 		status.append("Go For It Roll [ ").append(pReport.getRoll()).append(" ]");
 		println(getIndent(), TextStyle.ROLL, status.toString());
 		print(getIndent() + 1, false, player);
@@ -587,7 +587,7 @@ public class StatusReport {
 		if ((pReport.getNrOfInducements() == 0) && (pReport.getNrOfStars() == 0) && (pReport.getNrOfMercenaries() == 0)) {
 			status.append("no Inducements.");
 		} else {
-			List<String> itemList = new ArrayList<String>();
+			List<String> itemList = new ArrayList<>();
 			if (pReport.getNrOfInducements() > 0) {
 				if (pReport.getNrOfInducements() == 1) {
 					itemList.add("1 Inducement");
@@ -746,7 +746,7 @@ public class StatusReport {
 		status.append(" = ").append(totalAway).append(".");
 		println(getIndent() + 1, status.toString());
 		for (String playerId : pReport.getPlayersHit()) {
-			Player player = game.getPlayerById(playerId);
+			Player<?> player = game.getPlayerById(playerId);
 			print(getIndent(), false, player);
 			println(getIndent(), " is hit by a rock.");
 		}
@@ -812,7 +812,7 @@ public class StatusReport {
 				NamedProperties.increasesTeamsFame).length;
 		int[] rollsHome = pReport.getRollsHome();
 		boolean[] playersAffectedHome = pReport.getPlayersAffectedHome();
-		Player[] homePlayers = game.getTeamHome().getPlayers();
+		Player<?>[] homePlayers = game.getTeamHome().getPlayers();
 		for (int i = 0; i < homePlayers.length; i++) {
 			if (rollsHome[i] > 0) {
 				StringBuilder status = new StringBuilder();
@@ -835,7 +835,7 @@ public class StatusReport {
 		}
 		int[] rollsAway = pReport.getRollsAway();
 		boolean[] playersAffectedAway = pReport.getPlayersAffectedAway();
-		Player[] awayPlayers = game.getTeamAway().getPlayers();
+		Player<?>[] awayPlayers = game.getTeamAway().getPlayers();
 		for (int i = 0; i < awayPlayers.length; i++) {
 			if (rollsAway[i] > 0) {
 				StringBuilder status = new StringBuilder();
@@ -868,7 +868,7 @@ public class StatusReport {
 				StringBuilder status = new StringBuilder();
 				status.append("Defecting Players Roll [ ").append(rolls[i]).append(" ]");
 				println(getIndent(), TextStyle.ROLL, status.toString());
-				Player player = game.getPlayerById(playerIds[i]);
+				Player<?> player = game.getPlayerById(playerIds[i]);
 				print(getIndent() + 1, false, player);
 				if (defecting[i]) {
 					println(getIndent() + 1, TextStyle.NONE, " leaves the team in disgust.");
@@ -892,7 +892,7 @@ public class StatusReport {
 			int[] rolls = pReport.getRolls();
 			boolean[] banned = pReport.getBans();
 			for (int i = 0; i < playerIds.length; i++) {
-				Player player = game.getPlayerById(playerIds[i]);
+				Player<?> player = game.getPlayerById(playerIds[i]);
 				if (pTeam.hasPlayer(player)) {
 					if (banned[i]) {
 						print(getIndent(), "The ref bans ");
@@ -942,7 +942,7 @@ public class StatusReport {
 
 	public void reportReRoll(ReportReRoll pReport) {
 		Game game = getClient().getGame();
-		Player player = game.getPlayerById(pReport.getPlayerId());
+		Player<?> player = game.getPlayerById(pReport.getPlayerId());
 		StringBuilder status = new StringBuilder();
 		if (ReRollSources.LONER == pReport.getReRollSource()) {
 			status.append("Loner Roll [ ").append(pReport.getRoll()).append(" ]");
@@ -974,7 +974,7 @@ public class StatusReport {
 
 	public void reportDauntless(ReportDauntlessRoll pReport) {
 		Game game = getClient().getGame();
-		Player player = game.getActingPlayer().getPlayer();
+		Player<?> player = game.getActingPlayer().getPlayer();
 		StringBuilder status = new StringBuilder();
 		status.append("Dauntless Roll [ ").append(pReport.getRoll()).append(" ]");
 		println(getIndent(), TextStyle.ROLL, status.toString());
@@ -991,7 +991,7 @@ public class StatusReport {
 
 	public void reportChainsaw(ReportSkillRoll pReport) {
 		Game game = getClient().getGame();
-		Player player = game.getActingPlayer().getPlayer();
+		Player<?> player = game.getActingPlayer().getPlayer();
 		StringBuilder status = new StringBuilder();
 		status.append("Chainsaw Roll [ ").append(pReport.getRoll()).append(" ]");
 		println(getIndent(), TextStyle.ROLL, status.toString());
@@ -1007,7 +1007,7 @@ public class StatusReport {
 
 	public void reportFoulAppearance(ReportSkillRoll pReport) {
 		Game game = getClient().getGame();
-		Player player = game.getActingPlayer().getPlayer();
+		Player<?> player = game.getActingPlayer().getPlayer();
 		StringBuilder status = new StringBuilder();
 		status.append("Foul Appearance Roll [ ").append(pReport.getRoll()).append(" ]");
 		println(getIndent(), TextStyle.ROLL, status.toString());
@@ -1025,7 +1025,7 @@ public class StatusReport {
 
 		String playerId = pReport.getPlayerId();
 
-		Player player = game.getPlayerById(playerId);
+		Player<?> player = game.getPlayerById(playerId);
 
 		StringBuilder status = new StringBuilder();
 		status.append("Weeping Dagger Roll [ ").append(pReport.getRoll()).append(" ]");
@@ -1040,7 +1040,7 @@ public class StatusReport {
 
 	public void reportRaiseDead(ReportRaiseDead pReport) {
 		Game game = getClient().getGame();
-		Player raisedPlayer = game.getPlayerById(pReport.getPlayerId());
+		Player<?> raisedPlayer = game.getPlayerById(pReport.getPlayerId());
 		print(getIndent(), false, raisedPlayer);
 		if (pReport.isNurglesRot()) {
 			print(getIndent(), " has been infected with Nurgle's Rot and will join team ");
@@ -1136,8 +1136,8 @@ public class StatusReport {
 	public void reportKickTeamMateRoll(ReportKickTeamMateRoll pReport) {
 		StringBuilder status = new StringBuilder();
 		Game game = getClient().getGame();
-		Player kicker = game.getActingPlayer().getPlayer();
-		Player kickedPlayer = game.getPlayerById(pReport.getKickedPlayerId());
+		Player<?> kicker = game.getActingPlayer().getPlayer();
+		Player<?> kickedPlayer = game.getPlayerById(pReport.getKickedPlayerId());
 		if (!pReport.isReRolled()) {
 			print(getIndent(), true, kicker);
 			print(getIndent(), TextStyle.BOLD, " tries to kick ");
@@ -1168,8 +1168,8 @@ public class StatusReport {
 		StringBuilder status = new StringBuilder();
 		StringBuilder neededRoll = null;
 		Game game = getClient().getGame();
-		Player thrower = game.getActingPlayer().getPlayer();
-		Player thrownPlayer = game.getPlayerById(pReport.getThrownPlayerId());
+		Player<?> thrower = game.getActingPlayer().getPlayer();
+		Player<?> thrownPlayer = game.getPlayerById(pReport.getThrownPlayerId());
 		if (!pReport.isReRolled()) {
 			print(getIndent(), true, thrower);
 			print(getIndent(), TextStyle.BOLD, " tries to throw ");
@@ -1178,7 +1178,7 @@ public class StatusReport {
 		}
 		PassModifierFactory pmf = getClient().getGame().<PassModifierFactory>getFactory(Factory.PASS_MODIFIER);
 		if (pReport.hasRollModifier(pmf.forName("Nerves of Steel"))) {
-			Player player = getClient().getGame().getActingPlayer().getPlayer();
+			Player<?> player = getClient().getGame().getActingPlayer().getPlayer();
 			reportNervesOfSteel(player, "pass");
 		}
 		status.append("Throw Team-Mate Roll [ ").append(pReport.getRoll()).append(" ]");
@@ -1283,7 +1283,7 @@ public class StatusReport {
 
 	public void reportAlwaysHungry(ReportSkillRoll pReport) {
 		Game game = getClient().getGame();
-		Player thrower = game.getActingPlayer().getPlayer();
+		Player<?> thrower = game.getActingPlayer().getPlayer();
 		StringBuilder status = new StringBuilder();
 		status.append("Always Hungry Roll [ ").append(pReport.getRoll()).append(" ]");
 		println(getIndent(), TextStyle.ROLL, status.toString());
@@ -1299,7 +1299,7 @@ public class StatusReport {
 
 	public void reportArgueTheCall(ReportArgueTheCallRoll report) {
 		Game game = getClient().getGame();
-		Player player = game.getPlayerById(report.getPlayerId());
+		Player<?> player = game.getPlayerById(report.getPlayerId());
 		StringBuilder status = new StringBuilder();
 		status.append("Argue the Call Roll [ ").append(report.getRoll()).append(" ]");
 		println(getIndent(), TextStyle.ROLL, status.toString());
@@ -1328,7 +1328,7 @@ public class StatusReport {
 
 	public void reportBribes(ReportBribesRoll report) {
 		Game game = getClient().getGame();
-		Player player = game.getPlayerById(report.getPlayerId());
+		Player<?> player = game.getPlayerById(report.getPlayerId());
 		StringBuilder status = new StringBuilder();
 		status.append("Bribes Roll [ ").append(report.getRoll()).append(" ]");
 		println(getIndent(), TextStyle.ROLL, status.toString());
@@ -1347,7 +1347,7 @@ public class StatusReport {
 
 	public void reportEscape(ReportSkillRoll pReport) {
 		Game game = getClient().getGame();
-		Player thrownPlayer = game.getPlayerById(pReport.getPlayerId());
+		Player<?> thrownPlayer = game.getPlayerById(pReport.getPlayerId());
 		StringBuilder status = new StringBuilder();
 		status.append("Escape Roll [ ").append(pReport.getRoll()).append(" ]");
 		println(getIndent(), TextStyle.ROLL, status.toString());
@@ -1366,7 +1366,7 @@ public class StatusReport {
 		StringBuilder status = new StringBuilder();
 		StringBuilder neededRoll = null;
 		Game game = getClient().getGame();
-		Player player = game.getActingPlayer().getPlayer();
+		Player<?> player = game.getActingPlayer().getPlayer();
 		status.append("Leap Roll [ ").append(pReport.getRoll()).append(" ]");
 		println(getIndent(), TextStyle.ROLL, status.toString());
 		print(getIndent() + 1, false, player);
@@ -1392,7 +1392,7 @@ public class StatusReport {
 
 	public void reportBiteSpectator(ReportBiteSpectator pReport) {
 		Game game = getClient().getGame();
-		Player player = game.getPlayerById(pReport.getPlayerId());
+		Player<?> player = game.getPlayerById(pReport.getPlayerId());
 		if (player != null) {
 			print(getIndent(), true, player);
 			println(getIndent(), TextStyle.BOLD, " heads off to the spectator ranks to bite some beautiful maiden.");
@@ -1403,7 +1403,7 @@ public class StatusReport {
 		StringBuilder status = new StringBuilder();
 		StringBuilder neededRoll = null;
 		Game game = getClient().getGame();
-		Player player = game.getActingPlayer().getPlayer();
+		Player<?> player = game.getActingPlayer().getPlayer();
 		status.append("Jump Up Roll [ ").append(pReport.getRoll()).append(" ]");
 		println(getIndent(), TextStyle.ROLL, status.toString());
 		print(getIndent() + 1, false, player);
@@ -1434,7 +1434,7 @@ public class StatusReport {
 		StringBuilder status = new StringBuilder();
 		StringBuilder neededRoll = null;
 		Game game = getClient().getGame();
-		Player player = game.getActingPlayer().getPlayer();
+		Player<?> player = game.getActingPlayer().getPlayer();
 		status.append("Stand Up Roll [ ").append(pReport.getRoll()).append(" ]");
 		println(getIndent(), TextStyle.ROLL, status.toString());
 		print(getIndent() + 1, false, player);
@@ -1464,7 +1464,7 @@ public class StatusReport {
 		StringBuilder status = new StringBuilder();
 		StringBuilder neededRoll = null;
 		Game game = getClient().getGame();
-		Player player = game.getActingPlayer().getPlayer();
+		Player<?> player = game.getActingPlayer().getPlayer();
 		status.append("Safe Throw Roll [ ").append(pReport.getRoll()).append(" ]");
 		println(getIndent() + 1, TextStyle.ROLL, status.toString());
 		print(getIndent() + 2, false, player);
@@ -1489,7 +1489,7 @@ public class StatusReport {
 		StringBuilder status = new StringBuilder();
 		StringBuilder neededRoll = null;
 		Game game = getClient().getGame();
-		Player player = game.getActingPlayer().getPlayer();
+		Player<?> player = game.getActingPlayer().getPlayer();
 		status.append("Blood Lust Roll [ ").append(pReport.getRoll()).append(" ]");
 		println(getIndent(), TextStyle.ROLL, status.toString());
 		print(getIndent() + 1, false, player);
@@ -1531,7 +1531,7 @@ public class StatusReport {
 		StringBuilder status = new StringBuilder();
 		StringBuilder neededRoll = null;
 		Game game = getClient().getGame();
-		Player player = game.getActingPlayer().getPlayer();
+		Player<?> player = game.getActingPlayer().getPlayer();
 		status.append("Animosity Roll [ ").append(pReport.getRoll()).append(" ]");
 		println(getIndent(), TextStyle.ROLL, status.toString());
 		print(getIndent() + 1, false, player);
@@ -1562,7 +1562,7 @@ public class StatusReport {
 		Game game = getClient().getGame();
 		status.append("Right Stuff Roll [ ").append(pReport.getRoll()).append(" ]");
 		println(getIndent(), TextStyle.ROLL, status.toString());
-		Player thrownPlayer = game.getPlayerById(pReport.getPlayerId());
+		Player<?> thrownPlayer = game.getPlayerById(pReport.getPlayerId());
 		print(getIndent() + 1, false, thrownPlayer);
 		if (pReport.isSuccessful()) {
 			status = new StringBuilder();
@@ -1590,7 +1590,7 @@ public class StatusReport {
 			StringBuilder status = new StringBuilder();
 			StringBuilder neededRoll = null;
 			Game game = getClient().getGame();
-			Player player = game.getActingPlayer().getPlayer();
+			Player<?> player = game.getActingPlayer().getPlayer();
 			status.append(pReport.getConfusionSkill().getName()).append(" Roll [ ").append(pReport.getRoll()).append(" ]");
 			println(getIndent(), TextStyle.ROLL, status.toString());
 			print(getIndent() + 1, false, player);
@@ -1635,7 +1635,7 @@ public class StatusReport {
 		StringBuilder status = new StringBuilder();
 		StringBuilder neededRoll = null;
 		Game game = getClient().getGame();
-		Player player = game.getPlayerById(pReport.getPlayerId());
+		Player<?> player = game.getPlayerById(pReport.getPlayerId());
 		if (!pReport.isReRolled()) {
 			print(getIndent(), true, player);
 			if (pReport.isBomb()) {
@@ -1680,7 +1680,7 @@ public class StatusReport {
 		StringBuilder status = new StringBuilder();
 		StringBuilder neededRoll = null;
 		Game game = getClient().getGame();
-		Player player = game.getPlayerById(pReport.getPlayerId());
+		Player<?> player = game.getPlayerById(pReport.getPlayerId());
 		if (!pReport.isReRolled()) {
 			print(getIndent(), true, player);
 			if (pReport.isBomb()) {
@@ -1725,7 +1725,7 @@ public class StatusReport {
 		StringBuilder status = new StringBuilder();
 		StringBuilder neededRoll = null;
 		Game game = getClient().getGame();
-		Player player = game.getActingPlayer().getPlayer();
+		Player<?> player = game.getActingPlayer().getPlayer();
 		if (!pReport.isReRolled()) {
 			print(getIndent(), true, player);
 			print(getIndent(), TextStyle.BOLD, " gazes upon ");
@@ -1760,7 +1760,7 @@ public class StatusReport {
 		StringBuilder status = new StringBuilder();
 		StringBuilder neededRoll = null;
 		Game game = getClient().getGame();
-		Player player = game.getActingPlayer().getPlayer();
+		Player<?> player = game.getActingPlayer().getPlayer();
 		if (!pReport.isReRolled()) {
 			print(getIndent(), true, player);
 			println(getIndent(), TextStyle.BOLD, " tries to pick up the ball:");
@@ -1795,7 +1795,7 @@ public class StatusReport {
 		StringBuilder neededRoll = null;
 		Game game = getClient().getGame();
 		ActingPlayer actingPlayer = game.getActingPlayer();
-		Player defender = game.getPlayerById(pReport.getDefenderId());
+		Player<?> defender = game.getPlayerById(pReport.getDefenderId());
 		if (!pReport.isReRolled()) {
 			if (pReport.getSkill() == SkillConstants.SHADOWING) {
 				print(getIndent(), true, defender);
@@ -1933,7 +1933,7 @@ public class StatusReport {
 		}
 		print(getIndent(), TextStyle.BOLD, status.toString());
 		if (StringTool.isProvided(pReport.getPlayerId())) {
-			Player player = game.getPlayerById(pReport.getPlayerId());
+			Player<?> player = game.getPlayerById(pReport.getPlayerId());
 			print(getIndent(), true, player);
 			println(getIndent(), TextStyle.BOLD, ".");
 		} else {
@@ -1950,8 +1950,8 @@ public class StatusReport {
 
 	public void reportHandOver(ReportHandOver pReport) {
 		Game game = getClient().getGame();
-		Player thrower = game.getActingPlayer().getPlayer();
-		Player catcher = game.getPlayerById(pReport.getCatcherId());
+		Player<?> thrower = game.getActingPlayer().getPlayer();
+		Player<?> catcher = game.getPlayerById(pReport.getCatcherId());
 		print(getIndent(), true, thrower);
 		print(getIndent(), TextStyle.BOLD, " hands over the ball to ");
 		print(getIndent(), true, catcher);
@@ -1962,10 +1962,10 @@ public class StatusReport {
 		StringBuilder status = new StringBuilder();
 		StringBuilder neededRoll = null;
 		Game game = getClient().getGame();
-		Player thrower = game.getPlayerById(pReport.getPlayerId());
+		Player<?> thrower = game.getPlayerById(pReport.getPlayerId());
 		if (!pReport.isReRolled()) {
 			print(getIndent(), true, thrower);
-			Player catcher = game.getFieldModel().getPlayer(game.getPassCoordinate());
+			Player<?> catcher = game.getFieldModel().getPlayer(game.getPassCoordinate());
 			if (pReport.isHailMaryPass()) {
 				if (pReport.isBomb()) {
 					println(getIndent(), TextStyle.BOLD, " throws a Hail Mary bomb:");
@@ -1990,7 +1990,7 @@ public class StatusReport {
 		}
 		PassModifierFactory pmf = getClient().getGame().<PassModifierFactory>getFactory(Factory.PASS_MODIFIER);
 		if (pReport.hasRollModifier(pmf.forName("Nerves of Steel"))) {
-			Player player = getClient().getGame().getActingPlayer().getPlayer();
+			Player<?> player = getClient().getGame().getActingPlayer().getPlayer();
 			reportNervesOfSteel(player, "pass");
 		}
 		status.append("Pass Roll [ ").append(pReport.getRoll()).append(" ]");
@@ -2074,7 +2074,7 @@ public class StatusReport {
 		println(getIndent(), TextStyle.BOLD, "Most Valuable Players");
 
 		for (String playerId : pReport.getPlayerIdsHome()) {
-			Player player = game.getPlayerById(playerId);
+			Player<?> player = game.getPlayerById(playerId);
 			print(getIndent() + 1, TextStyle.NONE, "The jury voted ");
 			print(getIndent() + 1, TextStyle.HOME, player.getName());
 			print(getIndent() + 1, TextStyle.NONE, " the most valuable player of ");
@@ -2083,7 +2083,7 @@ public class StatusReport {
 		}
 
 		for (String playerId : pReport.getPlayerIdsAway()) {
-			Player player = game.getPlayerById(playerId);
+			Player<?> player = game.getPlayerById(playerId);
 			print(getIndent() + 1, TextStyle.NONE, "The jury voted ");
 			print(getIndent() + 1, TextStyle.AWAY, player.getName());
 			print(getIndent() + 1, TextStyle.NONE, " the most valuable player of ");
@@ -2257,7 +2257,7 @@ public class StatusReport {
 	public void reportTurnEnd(ReportTurnEnd pReport) {
 		setIndent(0);
 		Game game = getClient().getGame();
-		Player touchdownPlayer = game.getPlayerById(pReport.getPlayerIdTouchdown());
+		Player<?> touchdownPlayer = game.getPlayerById(pReport.getPlayerIdTouchdown());
 		if (touchdownPlayer != null) {
 			print(getIndent(), true, touchdownPlayer);
 			println(getIndent() + 1, TextStyle.BOLD, " scores a touchdown.");
@@ -2271,7 +2271,7 @@ public class StatusReport {
 					status.append(" + ").append(knockoutRecovery.getBloodweiserBabes()).append(" Bloodweiser Kegs");
 				}
 				println(getIndent(), TextStyle.ROLL, status.toString());
-				Player player = game.getPlayerById(knockoutRecovery.getPlayerId());
+				Player<?> player = game.getPlayerById(knockoutRecovery.getPlayerId());
 				print(getIndent() + 1, false, player);
 				if (knockoutRecovery.isRecovering()) {
 					println(getIndent() + 1, " is regaining consciousness.");
@@ -2286,7 +2286,7 @@ public class StatusReport {
 				StringBuilder status = new StringBuilder();
 				status.append("Heat Exhaustion Roll [ ").append(heatExhaustion.getRoll()).append(" ] ");
 				println(getIndent(), TextStyle.ROLL, status.toString());
-				Player player = game.getPlayerById(heatExhaustion.getPlayerId());
+				Player<?> player = game.getPlayerById(heatExhaustion.getPlayerId());
 				print(getIndent() + 1, false, player);
 				if (heatExhaustion.isExhausted()) {
 					println(getIndent() + 1, " is suffering from heat exhaustion.");
@@ -2297,7 +2297,7 @@ public class StatusReport {
 		}
 		List<Player<?>> unzappedPlayers = pReport.getUnzappedPlayers();
 		if (unzappedPlayers != null) {
-			for (Player player : unzappedPlayers) {
+			for (Player<?> player : unzappedPlayers) {
 				print(getIndent(), true, player);
 				println(getIndent(), " recovers from Zap! spell effect.");
 			}
@@ -2320,8 +2320,8 @@ public class StatusReport {
 
 		Game game = getClient().getGame();
 		ActingPlayer actingPlayer = game.getActingPlayer();
-		Player attacker = actingPlayer.getPlayer();
-		Player defender = game.getPlayerById(pReport.getDefenderId());
+		Player<?> attacker = actingPlayer.getPlayer();
+		Player<?> defender = game.getPlayerById(pReport.getDefenderId());
 
 		print(getIndent(), true, attacker);
 		if (actingPlayer.getPlayerAction() == PlayerAction.BLITZ) {
@@ -2362,8 +2362,8 @@ public class StatusReport {
 		status.append("Block Result [ ").append(pReport.getBlockResult().getName()).append(" ]");
 		println(getIndent(), TextStyle.ROLL, status.toString());
 		Game game = getClient().getGame();
-		Player attacker = game.getActingPlayer().getPlayer();
-		Player defender = game.getPlayerById(pReport.getDefenderId());
+		Player<?> attacker = game.getActingPlayer().getPlayer();
+		Player<?> defender = game.getPlayerById(pReport.getDefenderId());
 		switch (pReport.getBlockResult()) {
 		case BOTH_DOWN:
 			if (attacker.hasSkillWithProperty(NamedProperties.preventFallOnBothDown)) {
@@ -2405,7 +2405,7 @@ public class StatusReport {
 		Game game = getClient().getGame();
 		int indent = getIndent() + 1;
 		StringBuilder status = new StringBuilder();
-		Player defender = game.getPlayerById(pReport.getDefenderId());
+		Player<?> defender = game.getPlayerById(pReport.getDefenderId());
 		if (pReport.getPushbackMode() == PushbackMode.SIDE_STEP) {
 			print(indent, false, defender);
 			status.append(" uses Side Step to avoid being pushed.");
@@ -2425,7 +2425,7 @@ public class StatusReport {
 			StringBuilder status = new StringBuilder();
 			status.append("Regeneration Roll [ ").append(pReport.getRoll()).append(" ]");
 			println(getIndent(), TextStyle.ROLL, status.toString());
-			Player player = getClient().getGame().getPlayerById(pReport.getPlayerId());
+			Player<?> player = getClient().getGame().getPlayerById(pReport.getPlayerId());
 			print(getIndent() + 1, false, player);
 			if (pReport.isSuccessful()) {
 				println(getIndent() + 1, " regenerates.");
@@ -2438,8 +2438,8 @@ public class StatusReport {
 	public void reportInjury(ReportInjury pReport) {
 
 		Game game = getClient().getGame();
-		Player defender = game.getPlayerById(pReport.getDefenderId());
-		Player attacker = game.getPlayerById(pReport.getAttackerId());
+		Player<?> defender = game.getPlayerById(pReport.getDefenderId());
+		Player<?> attacker = game.getPlayerById(pReport.getAttackerId());
 		StringBuilder status = new StringBuilder();
 
 		// report injury type
@@ -2580,7 +2580,7 @@ public class StatusReport {
 		}
 	}
 
-	private void reportInjury(Player pDefender, PlayerState pInjury, SeriousInjury pSeriousInjury) {
+	private void reportInjury(Player<?> pDefender, PlayerState pInjury, SeriousInjury pSeriousInjury) {
 		StringBuilder status = new StringBuilder();
 		print(getIndent() + 1, false, pDefender);
 		status.append(" ").append(pInjury.getDescription()).append(".");
@@ -2595,8 +2595,8 @@ public class StatusReport {
 
 	public void reportFoul(ReportFoul pReport) {
 		Game game = getClient().getGame();
-		Player attacker = game.getActingPlayer().getPlayer();
-		Player defender = game.getPlayerById(pReport.getDefenderId());
+		Player<?> attacker = game.getActingPlayer().getPlayer();
+		Player<?> defender = game.getPlayerById(pReport.getDefenderId());
 		print(getIndent(), true, attacker);
 		print(getIndent(), TextStyle.BOLD, " fouls ");
 		print(getIndent(), true, defender);
@@ -2604,7 +2604,7 @@ public class StatusReport {
 		setIndent(getIndent() + 1);
 	}
 
-	private void reportNervesOfSteel(Player pPlayer, String pDoWithTheBall) {
+	private void reportNervesOfSteel(Player<?> pPlayer, String pDoWithTheBall) {
 		if (pPlayer != null) {
 			print(getIndent(), false, pPlayer);
 			StringBuilder status = new StringBuilder();
@@ -2625,7 +2625,7 @@ public class StatusReport {
 	public void reportPlayerAction(ReportPlayerAction pReport) {
 		setIndent(0);
 		Game game = getClient().getGame();
-		Player player = game.getPlayerById(pReport.getActingPlayerId());
+		Player<?> player = game.getPlayerById(pReport.getActingPlayerId());
 		PlayerAction playerAction = pReport.getPlayerAction();
 		String actionDescription = (playerAction != null) ? playerAction.getDescription() : null;
 		if ((player != null) && StringTool.isProvided(actionDescription)) {
@@ -2641,7 +2641,7 @@ public class StatusReport {
 		int[] casualtyRoll = pReport.getCasualtyRoll();
 		if (ArrayTool.isProvided(casualtyRoll)) {
 			println(getIndent(), TextStyle.BOLD, "Apothecary used.");
-			Player player = getClient().getGame().getPlayerById(pReport.getPlayerId());
+			Player<?> player = getClient().getGame().getPlayerById(pReport.getPlayerId());
 			StringBuilder status = new StringBuilder();
 			status.append("Casualty Roll [ ").append(casualtyRoll[0]).append(" ][ ").append(casualtyRoll[1]).append(" ]");
 			println(getIndent(), TextStyle.ROLL, status.toString());
@@ -2663,7 +2663,7 @@ public class StatusReport {
 	public void reportApothecaryChoice(ReportApothecaryChoice pReport) {
 		Game game = getClient().getGame();
 		GameResult gameResult = game.getGameResult();
-		Player player = game.getPlayerById(pReport.getPlayerId());
+		Player<?> player = game.getPlayerById(pReport.getPlayerId());
 		if ((pReport.getPlayerState() != null) && (pReport.getPlayerState().getBase() == PlayerState.RESERVE)) {
 			print(getIndent(), TextStyle.BOLD, "The apothecary patches ");
 			print(getIndent(), true, player);
@@ -2690,7 +2690,7 @@ public class StatusReport {
 	public void reportSkillUse(ReportSkillUse pReport) {
 		Game game = getClient().getGame();
 		if (pReport.getSkill() != null) {
-			Player player = game.getPlayerById(pReport.getPlayerId());
+			Player<?> player = game.getPlayerById(pReport.getPlayerId());
 			int indent = getIndent();
 			StringBuilder status = new StringBuilder();
 			if (!pReport.isUsed()) {
@@ -2723,7 +2723,7 @@ public class StatusReport {
 
 	public void reportPilingOn(ReportPilingOn pReport) {
 		Game game = getClient().getGame();
-		Player player = game.getPlayerById(pReport.getPlayerId());
+		Player<?> player = game.getPlayerById(pReport.getPlayerId());
 		if (player != null) {
 			int indent = getIndent() + 1;
 			print(indent, false, player);
@@ -3128,7 +3128,7 @@ public class StatusReport {
 		getClient().getUserInterface().getLog().append(null, null, null);
 	}
 
-	private void print(int pIndent, boolean pBold, Player pPlayer) {
+	private void print(int pIndent, boolean pBold, Player<?> pPlayer) {
 		if (pPlayer != null) {
 			ParagraphStyle paragraphStyle = findParagraphStyle(pIndent);
 			if (getClient().getGame().getTeamHome().hasPlayer(pPlayer)) {

@@ -28,7 +28,7 @@ import com.eclipsesource.json.JsonValue;
 
 /**
  * Step to init the foul sequence.
- * 
+ *
  * Needs to be initialized with stepParameter GOTO_LABEL_ON_END. May be
  * initialized with stepParameter FOUL_DEFENDER_ID.
  *
@@ -130,7 +130,7 @@ public class StepInitFouling extends AbstractStep {
 			publishParameter(new StepParameter(StepParameterKey.END_PLAYER_ACTION, true));
 			getResult().setNextAction(StepAction.GOTO_LABEL, fGotoLabelOnEnd);
 		} else {
-			Player foulDefender = game.getPlayerById(fFoulDefenderId);
+			Player<?> foulDefender = game.getPlayerById(fFoulDefenderId);
 			if ((actingPlayer.getPlayer() != null) && !actingPlayer.hasFouled() && (foulDefender != null)
 					&& !UtilCards.hasCard(game, foulDefender, Card.GOOD_OLD_MAGIC_CODPIECE)) {
 				game.setDefenderId(fFoulDefenderId);

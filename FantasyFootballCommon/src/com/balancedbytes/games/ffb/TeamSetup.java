@@ -24,7 +24,7 @@ import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
 /**
- * 
+ *
  * @author Kalimar
  */
 public class TeamSetup implements IXmlSerializable, IJsonSerializable {
@@ -47,7 +47,7 @@ public class TeamSetup implements IXmlSerializable, IJsonSerializable {
 	private transient int fCurrentPlayerNr;
 
 	public TeamSetup() {
-		fCoordinateByPlayerNr = new HashMap<Integer, FieldCoordinate>();
+		fCoordinateByPlayerNr = new HashMap<>();
 	}
 
 	public int[] getPlayerNumbers() {

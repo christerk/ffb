@@ -30,13 +30,13 @@ import com.eclipsesource.json.JsonValue;
 
 /**
  * Step in the move sequence to handle skill SWOOP.
- * 
+ *
  * Needs to be initialized with stepParameter THROWN_PLAYER_ID. Needs to be
  * initialized with stepParameter THROWN_PLAYER_STATE. Needs to be initialized
  * with stepParameter THROWN_PLAYER_HAS_BALL. Needs to be initialized with
  * stepParameter THROWN_PLAYER_COORDINATE. Needs to be initialized with
  * stepParameter THROW_SCATTER.
- * 
+ *
  * Sets stepParameter CATCH_SCATTER_THROW_IN_MODE for all steps on the stack.
  * Sets stepParameter DROP_TTM_PLAYER for all steps on the stack. Sets
  * stepParameter END_TURN for all steps on the stack. Sets stepParameter
@@ -46,7 +46,7 @@ import com.eclipsesource.json.JsonValue;
  * THROWN_PLAYER_STATE for all steps on the stack. Sets stepParameter
  * THROWN_PLAYER_HAS_BALL for all steps on the stack. Sets stepParameter
  * THROWN_PLAYER_COORDINATE for all steps on the stack.
- * 
+ *
  * @author Kalimar
  */
 public class StepSwoop extends AbstractStep {
@@ -175,7 +175,7 @@ public class StepSwoop extends AbstractStep {
 		GameState gameState = getGameState();
 		Game game = gameState.getGame();
 
-		Player thrownPlayer = game.getPlayerById(state.thrownPlayerId);
+		Player<?> thrownPlayer = game.getPlayerById(state.thrownPlayerId);
 		if ((thrownPlayer == null) || (state.thrownPlayerCoordinate == null)) {
 			getResult().setNextAction(StepAction.NEXT_STEP);
 			return;

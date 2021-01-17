@@ -139,18 +139,18 @@ import com.eclipsesource.json.JsonValue;
 
 /**
  * Generator class for steps.
- * 
+ *
  * @author Kalimar
  */
 public class StepFactory {
 
-	private GameState fGameState;
-	private HashMap<StepId, Class<? extends IStep>> stepRegistry = new HashMap<>();
-	private HashMap<HookPoint, List<StepId>> hooks = new HashMap<>();
+	private final GameState fGameState;
+	private final Map<StepId, Class<? extends IStep>> stepRegistry = new HashMap<>();
+	private final Map<HookPoint, List<StepId>> hooks = new HashMap<>();
 
 	public StepFactory(GameState pGameState) {
 		fGameState = pGameState;
-		
+
 		for (HookPoint p : HookPoint.values()) {
 			hooks.put(p, new ArrayList<>());
 		}
@@ -521,7 +521,7 @@ public class StepFactory {
 			default:
 				if (stepRegistry.containsKey(pStepId)) {
 					Class<? extends IStep> stepClass = stepRegistry.get(pStepId);
-					Constructor ctr;
+					Constructor<?> ctr;
 					try {
 						ctr = stepClass.getConstructor(GameState.class);
 						step = (IStep) ctr.newInstance(fGameState);
@@ -567,9 +567,9 @@ public class StepFactory {
 
 	public void initialize() {
 		SkillFactory skillFactory = fGameState.getGame().<SkillFactory>getFactory(Factory.SKILL);
-		
+
 		Collection<ISkillBehaviour<? extends Skill>> behaviours = skillFactory.getBehaviours();
-		
+
 		for (ISkillBehaviour<? extends Skill> behaviour : behaviours) {
 			Map<StepId, Class<? extends IStep>> steps = ((SkillBehaviour<? extends Skill>)behaviour).getSteps();
 			steps.forEach((stepId, step) -> {
@@ -579,7 +579,7 @@ public class StepFactory {
 					hooks.get(hookPoint).add(stepId);
 				}
 			});
-			
+
 			stepRegistry.putAll(((SkillBehaviour<? extends Skill>)behaviour).getSteps());
 		}
 	}

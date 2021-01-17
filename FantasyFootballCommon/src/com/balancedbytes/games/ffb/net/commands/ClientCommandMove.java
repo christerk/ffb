@@ -23,7 +23,7 @@ public class ClientCommandMove extends ClientCommand implements ICommandWithActi
 	private List<FieldCoordinate> fCoordinatesTo;
 
 	public ClientCommandMove() {
-		fCoordinatesTo = new ArrayList<FieldCoordinate>();
+		fCoordinatesTo = new ArrayList<>();
 	}
 
 	public ClientCommandMove(String pActingPlayerId, FieldCoordinate pCoordinateFrom, FieldCoordinate[] pCoordinatesTo) {

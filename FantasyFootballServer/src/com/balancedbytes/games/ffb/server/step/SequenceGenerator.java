@@ -586,7 +586,7 @@ public class SequenceGenerator {
 		private List<IStep> sequence;
 
 		public Sequence(GameState gameState) {
-			this.sequence = new ArrayList<IStep>();
+			this.sequence = new ArrayList<>();
 			this.gameState = gameState;
 		}
 

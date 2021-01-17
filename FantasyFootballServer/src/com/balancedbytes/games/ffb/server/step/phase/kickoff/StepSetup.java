@@ -35,7 +35,7 @@ import com.eclipsesource.json.JsonValue;
 
 /**
  * Step in kickoff sequence to setup the playing team.
- * 
+ *
  * @author Kalimar
  */
 public final class StepSetup extends AbstractStep {
@@ -157,8 +157,8 @@ public final class StepSetup extends AbstractStep {
 	// KO'd players).
 	private boolean checkNoPlayersInBoxOrField() {
 		Game game = getGameState().getGame();
-		Player[] playersInBoxHome = UtilPlayer.findPlayersInReserveOrField(game, game.getTeamHome());
-		Player[] playersInBoxAway = UtilPlayer.findPlayersInReserveOrField(game, game.getTeamAway());
+		Player<?>[] playersInBoxHome = UtilPlayer.findPlayersInReserveOrField(game, game.getTeamHome());
+		Player<?>[] playersInBoxAway = UtilPlayer.findPlayersInReserveOrField(game, game.getTeamAway());
 		if (!ArrayTool.isProvided(playersInBoxHome) || !ArrayTool.isProvided(playersInBoxAway)) {
 			if (ArrayTool.isProvided(playersInBoxHome) && !ArrayTool.isProvided(playersInBoxAway)) {
 				game.setHomePlaying(true);

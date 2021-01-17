@@ -20,7 +20,7 @@ import com.balancedbytes.games.ffb.server.db.update.DbGamesInfoUpdate;
 import com.balancedbytes.games.ffb.server.db.update.DbGamesSerializedUpdate;
 
 /**
- * 
+ *
  * @author Kalimar
  */
 public class DbUpdateFactory implements IDbStatementFactory {
@@ -32,7 +32,7 @@ public class DbUpdateFactory implements IDbStatementFactory {
 	public DbUpdateFactory(DbConnectionManager pDbConnectionManager) {
 
 		fDbConnectionManager = pDbConnectionManager;
-		fStatementById = new HashMap<DbStatementId, DbUpdateStatement>();
+		fStatementById = new HashMap<>();
 
 		register(new DbGamesSerializedInsert(getServer()));
 		register(new DbTeamSetupsInsert(getServer()));

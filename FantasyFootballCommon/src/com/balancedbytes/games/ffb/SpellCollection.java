@@ -10,17 +10,17 @@ public class SpellCollection {
 
 	public static List<SpecialEffect> spells(InducementType inducementType) {
 		List<SpecialEffect> spells = spellCollections.get(inducementType);
-		return spells != null ? spells : new ArrayList<SpecialEffect>();
+		return spells != null ? spells : new ArrayList<>();
 	}
 
 	private static Map<InducementType, List<SpecialEffect>> create() {
-		Map<InducementType, List<SpecialEffect>> spellCollections = new HashMap<InducementType, List<SpecialEffect>>();
+		Map<InducementType, List<SpecialEffect>> spellCollections = new HashMap<>();
 		spellCollections.put(InducementType.WIZARD, wizardSpells());
 		return spellCollections;
 	}
 
 	private static List<SpecialEffect> wizardSpells() {
-		List<SpecialEffect> spells = new ArrayList<SpecialEffect>();
+		List<SpecialEffect> spells = new ArrayList<>();
 		spells.add(SpecialEffect.FIREBALL);
 		spells.add(SpecialEffect.ZAP);
 		return spells;

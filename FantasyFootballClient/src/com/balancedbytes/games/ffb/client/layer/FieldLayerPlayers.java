@@ -16,7 +16,7 @@ import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
 
 /**
- * 
+ *
  * @author Kalimar
  */
 public class FieldLayerPlayers extends FieldLayer {
@@ -61,7 +61,7 @@ public class FieldLayerPlayers extends FieldLayer {
 
 	private void drawPlayer(Graphics2D pG2d, FieldCoordinate pCoordinate) {
 		if (pCoordinate != null) {
-			Player player = getClient().getGame().getFieldModel().getPlayer(pCoordinate);
+			Player<?> player = getClient().getGame().getFieldModel().getPlayer(pCoordinate);
 			if (player != null) {
 				PlayerIconFactory playerIconFactory = getClient().getUserInterface().getPlayerIconFactory();
 				BufferedImage icon = playerIconFactory.getIcon(getClient(), player);
@@ -103,7 +103,7 @@ public class FieldLayerPlayers extends FieldLayer {
 			return;
 		}
 		Game game = getClient().getGame();
-		Player player = game.getPlayerById(pPlayerMarker.getPlayerId());
+		Player<?> player = game.getPlayerById(pPlayerMarker.getPlayerId());
 		if (player == null) {
 			return;
 		}

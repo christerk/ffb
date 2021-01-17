@@ -25,7 +25,7 @@ import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
 
 /**
- * 
+ *
  * @author Kalimar
  */
 public class ClientStateKickoffReturn extends ClientStateMove {
@@ -38,7 +38,7 @@ public class ClientStateKickoffReturn extends ClientStateMove {
 		return ClientStateId.KICKOFF_RETURN;
 	}
 
-	protected void clickOnPlayer(Player pPlayer) {
+	protected void clickOnPlayer(Player<?> pPlayer) {
 		Game game = getClient().getGame();
 		PlayerState playerState = game.getFieldModel().getPlayerState(pPlayer);
 		if (game.getTeamHome().hasPlayer(pPlayer) && playerState.isActive()) {
@@ -54,7 +54,7 @@ public class ClientStateKickoffReturn extends ClientStateMove {
 		}
 	}
 
-	public void menuItemSelected(Player pPlayer, int pMenuKey) {
+	public void menuItemSelected(Player<?> pPlayer, int pMenuKey) {
 		if (pPlayer != null) {
 			ClientCommunication communication = getClient().getCommunication();
 			switch (pMenuKey) {
@@ -68,11 +68,11 @@ public class ClientStateKickoffReturn extends ClientStateMove {
 		}
 	}
 
-	private void createAndShowPopupMenuForPlayer(Player pPlayer) {
+	private void createAndShowPopupMenuForPlayer(Player<?> pPlayer) {
 		Game game = getClient().getGame();
 		ActingPlayer actingPlayer = game.getActingPlayer();
 		IconCache iconCache = getClient().getUserInterface().getIconCache();
-		List<JMenuItem> menuItemList = new ArrayList<JMenuItem>();
+		List<JMenuItem> menuItemList = new ArrayList<>();
 		PlayerState playerState = game.getFieldModel().getPlayerState(pPlayer);
 		if ((actingPlayer.getPlayer() == null) && (playerState != null) && playerState.isAbleToMove()) {
 			JMenuItem moveAction = new JMenuItem("Move Action",
@@ -99,7 +99,7 @@ public class ClientStateKickoffReturn extends ClientStateMove {
 		boolean actionHandled = true;
 		Game game = getClient().getGame();
 		UserInterface userInterface = getClient().getUserInterface();
-		Player selectedPlayer = getClient().getClientData().getSelectedPlayer();
+		Player<?> selectedPlayer = getClient().getClientData().getSelectedPlayer();
 		switch (pActionKey) {
 		case PLAYER_SELECT:
 			if (selectedPlayer != null) {

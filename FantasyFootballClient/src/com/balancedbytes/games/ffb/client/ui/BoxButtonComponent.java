@@ -27,7 +27,7 @@ import com.balancedbytes.games.ffb.client.IconCache;
 import com.balancedbytes.games.ffb.model.FieldModel;
 
 /**
- * 
+ *
  * @author Kalimar
  */
 @SuppressWarnings("serial")
@@ -49,7 +49,7 @@ public class BoxButtonComponent extends JPanel implements MouseListener, MouseMo
 	public BoxButtonComponent(SideBarComponent pSideBar) {
 		fSideBar = pSideBar;
 		fImage = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_ARGB);
-		fButtonLocations = new HashMap<BoxType, Rectangle>();
+		fButtonLocations = new HashMap<>();
 		if (getSideBar().isHomeSide()) {
 			fButtonLocations.put(BoxType.RESERVES, new Rectangle(1, 0, _BUTTON_DIMENSION.width, _BUTTON_DIMENSION.height));
 			fButtonLocations.put(BoxType.OUT,

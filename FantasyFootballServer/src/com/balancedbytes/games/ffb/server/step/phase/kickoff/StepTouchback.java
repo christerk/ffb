@@ -28,11 +28,11 @@ import com.eclipsesource.json.JsonValue;
 
 /**
  * Step in kickoff sequence to handle touchback.
- * 
+ *
  * Expects stepParameter TOUCHBACK to be set by a preceding step.
- * 
+ *
  * Sets stepParameter CATCH_SCATTER_THROW_IN_MODE for all steps on the stack.
- * 
+ *
  * @author Kalimar
  */
 public final class StepTouchback extends AbstractStep {
@@ -107,7 +107,7 @@ public final class StepTouchback extends AbstractStep {
 			} else {
 				UtilServerDialog.hideDialog(getGameState());
 				game.getFieldModel().setBallCoordinate(fTouchbackCoordinate);
-				Player player = game.getFieldModel().getPlayer(fTouchbackCoordinate);
+				Player<?> player = game.getFieldModel().getPlayer(fTouchbackCoordinate);
 				PlayerState playerState = game.getFieldModel().getPlayerState(player);
 				if ((player != null) && !player.hasSkillWithProperty(NamedProperties.preventHoldBall)
 						&& playerState.hasTacklezones()) {

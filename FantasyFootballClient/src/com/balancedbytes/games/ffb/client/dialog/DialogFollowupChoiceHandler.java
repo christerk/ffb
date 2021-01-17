@@ -7,7 +7,7 @@ import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
 
 /**
- * 
+ *
  * @author Kalimar
  */
 public class DialogFollowupChoiceHandler extends DialogHandler {
@@ -19,7 +19,7 @@ public class DialogFollowupChoiceHandler extends DialogHandler {
 	public void showDialog() {
 
 		Game game = getClient().getGame();
-		Player player = game.getActingPlayer().getPlayer();
+		Player<?> player = game.getActingPlayer().getPlayer();
 
 		if ((getClient().getMode() == ClientMode.PLAYER) && game.getTeamHome().hasPlayer(player)) {
 			setDialog(new DialogFollowupChoice(getClient()));

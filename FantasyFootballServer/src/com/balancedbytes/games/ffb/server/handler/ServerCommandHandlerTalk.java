@@ -49,7 +49,7 @@ import com.balancedbytes.games.ffb.util.StringTool;
 import com.balancedbytes.games.ffb.util.UtilBox;
 
 /**
- * 
+ *
  * @author Kalimar
  */
 public class ServerCommandHandlerTalk extends ServerCommandHandler {
@@ -165,7 +165,7 @@ public class ServerCommandHandlerTalk extends ServerCommandHandler {
 	}
 
 	private String[] findSpectators(GameState gameState) {
-		List<String> spectatorList = new ArrayList<String>();
+		List<String> spectatorList = new ArrayList<>();
 		SessionManager sessionManager = getServer().getSessionManager();
 		Session[] sessions = sessionManager.getSessionsOfSpectators(gameState.getId());
 		for (Session session : sessions) {
@@ -238,7 +238,7 @@ public class ServerCommandHandlerTalk extends ServerCommandHandler {
 		String talk = pTalkCommand.getTalk();
 		String[] commands = talk.split(" +");
 		if ((commands != null) && (commands.length > 0)) {
-			List<String> animationNames = new ArrayList<String>();
+			List<String> animationNames = new ArrayList<>();
 			for (AnimationType animationType : AnimationType.values()) {
 				animationNames.add(animationType.getName());
 			}
@@ -306,7 +306,7 @@ public class ServerCommandHandlerTalk extends ServerCommandHandler {
 		String talk = pTalkCommand.getTalk();
 		String[] commands = talk.split(" +");
 		if ((commands != null) && (commands.length > 0)) {
-			List<String> pitchNames = new ArrayList<String>();
+			List<String> pitchNames = new ArrayList<>();
 			for (String property : getServer().getProperties()) {
 				if (property.startsWith("pitch.")) {
 					pitchNames.add(property.substring(6));
@@ -344,7 +344,7 @@ public class ServerCommandHandlerTalk extends ServerCommandHandler {
 		String talk = pTalkCommand.getTalk();
 		String[] commands = talk.split(" +");
 		if ((commands != null) && (commands.length > 0)) {
-			List<String> soundNames = new ArrayList<String>();
+			List<String> soundNames = new ArrayList<>();
 			for (SoundId soundId : SoundId.values()) {
 				soundNames.add(soundId.getName());
 			}
@@ -379,7 +379,7 @@ public class ServerCommandHandlerTalk extends ServerCommandHandler {
 
 	private void handleOptionsCommand(GameState pGameState, ClientCommandTalk pTalkCommand) {
 		Game game = pGameState.getGame();
-		List<IGameOption> optionList = new ArrayList<IGameOption>();
+		List<IGameOption> optionList = new ArrayList<>();
 		for (GameOptionId optionId : GameOptionId.values()) {
 			optionList.add(game.getOptions().getOptionWithDefault(optionId));
 		}
@@ -405,7 +405,7 @@ public class ServerCommandHandlerTalk extends ServerCommandHandler {
 		}
 		Team team = (sessionManager.getSessionOfHomeCoach(game.getId()) == session) ? game.getTeamHome()
 				: game.getTeamAway();
-		for (Player player : findPlayersInCommand(team, commands, 2)) {
+		for (Player<?> player : findPlayersInCommand(team, commands, 2)) {
 			if ("rsv".equalsIgnoreCase(commands[1])) {
 				putPlayerIntoBox(gameState, player, new PlayerState(PlayerState.RESERVE), "Reserve", null);
 			} else if ("ko".equalsIgnoreCase(commands[1])) {
@@ -471,7 +471,7 @@ public class ServerCommandHandlerTalk extends ServerCommandHandler {
 		}
 		Team team = (sessionManager.getSessionOfHomeCoach(game.getId()) == session) ? game.getTeamHome()
 				: game.getTeamAway();
-		for (Player player : findPlayersInCommand(team, commands, 1)) {
+		for (Player<?> player : findPlayersInCommand(team, commands, 1)) {
 			FieldCoordinate playerCoordinate = game.getFieldModel().getPlayerCoordinate(player);
 			if (!playerCoordinate.isBoxCoordinate()) {
 				StringBuilder info = new StringBuilder();
@@ -489,17 +489,17 @@ public class ServerCommandHandlerTalk extends ServerCommandHandler {
 		UtilServerGame.syncGameModel(gameState, null, null, null);
 	}
 
-	private Player[] findPlayersInCommand(Team pTeam, String[] pCommands, int pIndex) {
-		Set<Player> players = new HashSet<Player>();
+	private Player<?>[] findPlayersInCommand(Team pTeam, String[] pCommands, int pIndex) {
+		Set<Player<?>> players = new HashSet<>();
 		if (ArrayTool.isProvided(pCommands) && (pIndex < pCommands.length)) {
 			if ("all".equalsIgnoreCase(pCommands[pIndex])) {
-				for (Player player : pTeam.getPlayers()) {
+				for (Player<?> player : pTeam.getPlayers()) {
 					players.add(player);
 				}
 			} else {
 				for (int i = pIndex; i < pCommands.length; i++) {
 					try {
-						Player player = pTeam.getPlayerByNr(Integer.parseInt(pCommands[i]));
+						Player<?> player = pTeam.getPlayerByNr(Integer.parseInt(pCommands[i]));
 						if (player != null) {
 							players.add(player);
 						}
@@ -511,7 +511,7 @@ public class ServerCommandHandlerTalk extends ServerCommandHandler {
 		return players.toArray(new Player[players.size()]);
 	}
 
-	private void putPlayerIntoBox(GameState pGameState, Player pPlayer, PlayerState pPlayerState, String pBoxName,
+	private void putPlayerIntoBox(GameState pGameState, Player<?> pPlayer, PlayerState pPlayerState, String pBoxName,
 			SeriousInjury pSeriousInjury) {
 		Game game = pGameState.getGame();
 		PlayerResult playerResult = game.getGameResult().getPlayerResult(pPlayer);
@@ -570,7 +570,7 @@ public class ServerCommandHandlerTalk extends ServerCommandHandler {
 		}
 		Team team = (sessionManager.getSessionOfHomeCoach(game.getId()) == session) ? game.getTeamHome()
 				: game.getTeamAway();
-		for (Player player : findPlayersInCommand(team, commands, 3)) {
+		for (Player<?> player : findPlayersInCommand(team, commands, 3)) {
 			if (!(player instanceof RosterPlayer)) {
 				continue;
 			}
@@ -604,7 +604,7 @@ public class ServerCommandHandlerTalk extends ServerCommandHandler {
 		}
 		Team team = (sessionManager.getSessionOfHomeCoach(game.getId()) == session) ? game.getTeamHome()
 				: game.getTeamAway();
-		for (Player player : findPlayersInCommand(team, commands, 2)) {
+		for (Player<?> player : findPlayersInCommand(team, commands, 2)) {
 			SeriousInjury lastingInjury;
 			if ("ni".equalsIgnoreCase(commands[1])) {
 				lastingInjury = (gameState.getServer().getFortuna().getDieRoll(6) > 3) ? SeriousInjury.DAMAGED_BACK
@@ -626,10 +626,9 @@ public class ServerCommandHandlerTalk extends ServerCommandHandler {
 				((RosterPlayer) player).addLastingInjury(lastingInjury);
 				getServer().getCommunication().sendAddPlayer(gameState, team.getId(), (RosterPlayer) player,
 						game.getFieldModel().getPlayerState(player), game.getGameResult().getPlayerResult(player));
-				StringBuilder info = new StringBuilder();
-				info.append("Player ").append(player.getName()).append(" suffers injury ").append(lastingInjury.getName())
-						.append(".");
-				getServer().getCommunication().sendPlayerTalk(gameState, null, info.toString());
+				String info = "Player " + player.getName() + " suffers injury " + lastingInjury.getName() +
+						".";
+				getServer().getCommunication().sendPlayerTalk(gameState, null, info);
 			}
 		}
 	}
@@ -650,7 +649,7 @@ public class ServerCommandHandlerTalk extends ServerCommandHandler {
 		}
 		Team team = (sessionManager.getSessionOfHomeCoach(game.getId()) == session) ? game.getTeamHome()
 				: game.getTeamAway();
-		for (Player genericPlayer : findPlayersInCommand(team, commands, 3)) {
+		for (Player<?> genericPlayer : findPlayersInCommand(team, commands, 3)) {
 			if ((genericPlayer instanceof RosterPlayer) && (stat >= 0)) {
 				RosterPlayer player = (RosterPlayer) genericPlayer;
 				if ("ma".equalsIgnoreCase(commands[1])) {

@@ -29,10 +29,10 @@ import com.eclipsesource.json.JsonValue;
 
 /**
  * Step of the pass sequence to handle a missed pass.
- * 
+ *
  * Sets stepParameter CATCH_SCATTER_THROWIN_MODE for all steps on the stack.
  * Sets stepParameter THROWIN_COORDINATE for all steps on the stack.
- * 
+ *
  * @author Kalimar
  */
 public class StepMissedPass extends AbstractStep {
@@ -65,8 +65,8 @@ public class StepMissedPass extends AbstractStep {
 		Game game = getGameState().getGame();
 		FieldCoordinate coordinateEnd = null;
 		FieldCoordinate lastValidCoordinate = null;
-		List<Integer> rollList = new ArrayList<Integer>();
-		List<Direction> directionList = new ArrayList<Direction>();
+		List<Integer> rollList = new ArrayList<>();
+		List<Direction> directionList = new ArrayList<>();
 
 		FieldCoordinate coordinateStart = game.getPassCoordinate();
 		while (FieldCoordinateBounds.FIELD.isInBounds(coordinateStart) && (rollList.size() < 3)) {

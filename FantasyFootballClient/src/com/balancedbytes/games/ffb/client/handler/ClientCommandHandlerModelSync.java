@@ -28,7 +28,7 @@ import com.balancedbytes.games.ffb.report.ReportList;
 import com.balancedbytes.games.ffb.util.StringTool;
 
 /**
- * 
+ *
  * @author Kalimar
  */
 public class ClientCommandHandlerModelSync extends ClientCommandHandler implements IAnimationListener {
@@ -111,12 +111,12 @@ public class ClientCommandHandlerModelSync extends ClientCommandHandler implemen
 				break;
 			case THROW_TEAM_MATE:
 				game.getFieldModel().setRangeRuler(null);
-				Player thrownPlayer = game.getPlayerById(animation.getThrownPlayerId());
+				Player<?> thrownPlayer = game.getPlayerById(animation.getThrownPlayerId());
 				fThrownPlayerCoordinate = game.getFieldModel().getPlayerCoordinate(thrownPlayer);
 				game.getFieldModel().remove(thrownPlayer);
 				break;
 			case KICK_TEAM_MATE:
-				Player kickedPlayer = game.getPlayerById(animation.getThrownPlayerId());
+				Player<?> kickedPlayer = game.getPlayerById(animation.getThrownPlayerId());
 				fKickedPlayerCoordinate = game.getFieldModel().getPlayerCoordinate(kickedPlayer);
 				game.getFieldModel().remove(kickedPlayer);
 				break;
@@ -154,11 +154,11 @@ public class ClientCommandHandlerModelSync extends ClientCommandHandler implemen
 			game.getFieldModel().setBallCoordinate(fBallCoordinate);
 			break;
 		case THROW_TEAM_MATE:
-			Player thrownPlayer = game.getPlayerById(animation.getThrownPlayerId());
+			Player<?> thrownPlayer = game.getPlayerById(animation.getThrownPlayerId());
 			game.getFieldModel().setPlayerCoordinate(thrownPlayer, fThrownPlayerCoordinate);
 			break;
 		case KICK_TEAM_MATE:
-			Player kickedPlayer = game.getPlayerById(animation.getThrownPlayerId());
+			Player<?> kickedPlayer = game.getPlayerById(animation.getThrownPlayerId());
 			game.getFieldModel().setPlayerCoordinate(kickedPlayer, fKickedPlayerCoordinate);
 			break;
 		default:

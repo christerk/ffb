@@ -13,7 +13,7 @@ import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.model.RosterPlayer;
 
 /**
- * 
+ *
  * @author Kalimar
  */
 public class ClientStateWizard extends ClientState {
@@ -46,7 +46,7 @@ public class ClientStateWizard extends ClientState {
 	}
 
 	@Override
-	protected boolean mouseOverPlayer(Player pPlayer) {
+	protected boolean mouseOverPlayer(Player<?> pPlayer) {
 		SpecialEffect wizardSpell = getClient().getClientData().getWizardSpell();
 		FieldCoordinate playerCoordinate = getClient().getGame().getFieldModel().getPlayerCoordinate(pPlayer);
 		if ((playerCoordinate != null) && (wizardSpell != null)) {
@@ -87,7 +87,7 @@ public class ClientStateWizard extends ClientState {
 	}
 
 	@Override
-	protected void clickOnPlayer(Player pPlayer) {
+	protected void clickOnPlayer(Player<?> pPlayer) {
 		FieldCoordinate playerCoordinate = getClient().getGame().getFieldModel().getPlayerCoordinate(pPlayer);
 		handleClick(playerCoordinate);
 	}
@@ -138,7 +138,7 @@ public class ClientStateWizard extends ClientState {
 	private boolean isValidLightningTarget(FieldCoordinate pCoordinate) {
 		boolean valid = false;
 		Game game = getClient().getGame();
-		Player player = game.getFieldModel().getPlayer(pCoordinate);
+		Player<?> player = game.getFieldModel().getPlayer(pCoordinate);
 		if ((player != null) && game.getTeamAway().hasPlayer(player)) {
 			PlayerState playerState = game.getFieldModel().getPlayerState(player);
 			valid = ((playerState.getBase() != PlayerState.STUNNED) && (playerState.getBase() != PlayerState.PRONE));
@@ -148,7 +148,7 @@ public class ClientStateWizard extends ClientState {
 
 	private boolean isValidZapTarget(FieldCoordinate pCoordinate) {
 		Game game = getClient().getGame();
-		Player player = game.getFieldModel().getPlayer(pCoordinate);
+		Player<?> player = game.getFieldModel().getPlayer(pCoordinate);
 		return ((player instanceof RosterPlayer) && game.getTeamAway().hasPlayer(player));
 	}
 
@@ -158,7 +158,7 @@ public class ClientStateWizard extends ClientState {
 		FieldCoordinate[] fireballSquares = game.getFieldModel().findAdjacentCoordinates(pCoordinate,
 				FieldCoordinateBounds.FIELD, 1, true);
 		for (FieldCoordinate square : fireballSquares) {
-			Player player = game.getFieldModel().getPlayer(square);
+			Player<?> player = game.getFieldModel().getPlayer(square);
 			if ((player != null) && game.getTeamAway().hasPlayer(player)) {
 				PlayerState playerState = game.getFieldModel().getPlayerState(player);
 				if ((playerState.getBase() != PlayerState.STUNNED) && (playerState.getBase() != PlayerState.PRONE)) {

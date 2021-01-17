@@ -32,15 +32,15 @@ import com.eclipsesource.json.JsonValue;
 
 /**
  * Step in kickoff sequence to handle KICKOFF_RETURN skill.
- * 
+ *
  * Expects stepParameter END_PLAYER_ACTION to be set by a preceding step.
  * (parameter is consumed on TurnMode.KICKOFF_RETURN) Expects stepParameter
  * END_TURN to be set by a preceding step. (parameter is consumed on
  * TurnMode.KICKOFF_RETURN) Expects stepParameter TOUCHBACK to be set by a
  * preceding step.
- * 
+ *
  * May push new select sequence on the stack.
- * 
+ *
  * @author Kalimar
  */
 public final class StepKickoffReturn extends AbstractStep {
@@ -127,9 +127,9 @@ public final class StepKickoffReturn extends AbstractStep {
 
 			Team kickoffReturnTeam = game.isHomePlaying() ? game.getTeamAway() : game.getTeamHome();
 			Team otherTeam = game.isHomePlaying() ? game.getTeamHome() : game.getTeamAway();
-			Player kickoffReturnPlayer = null;
-			List<Player> passivePlayers = new ArrayList<Player>();
-			for (Player player : kickoffReturnTeam.getPlayers()) {
+			Player<?> kickoffReturnPlayer = null;
+			List<Player<?>> passivePlayers = new ArrayList<>();
+			for (Player<?> player : kickoffReturnTeam.getPlayers()) {
 				FieldCoordinate playerCoordinate = game.getFieldModel().getPlayerCoordinate(player);
 				if ((playerCoordinate != null) && !playerCoordinate.isBoxCoordinate()) {
 					if (player.hasSkillWithProperty(NamedProperties.canMoveDuringKickOffScatter)) {
@@ -152,7 +152,7 @@ public final class StepKickoffReturn extends AbstractStep {
 
 			if ((kickoffReturnPlayer != null) && !fTouchback) {
 
-				for (Player player : passivePlayers) {
+				for (Player<?> player : passivePlayers) {
 					PlayerState playerState = game.getFieldModel().getPlayerState(player);
 					game.getFieldModel().setPlayerState(player, playerState.changeActive(false));
 				}

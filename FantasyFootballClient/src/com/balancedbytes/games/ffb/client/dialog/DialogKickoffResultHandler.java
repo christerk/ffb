@@ -27,7 +27,7 @@ public class DialogKickoffResultHandler extends DialogHandler {
 				.getDialogParameter();
 
 		if (dialogKickoffResultParameter.getKickoffResult() != null) {
-			List<String> lines = new ArrayList<String>();
+			List<String> lines = new ArrayList<>();
 			switch (dialogKickoffResultParameter.getKickoffResult()) {
 			case PERFECT_DEFENCE:
 				if (ClientMode.PLAYER == getClient().getMode()) {

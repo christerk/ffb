@@ -26,7 +26,7 @@ public class ServerCommandJoin extends ServerCommand {
 	private int fSpectators;
 
 	public ServerCommandJoin() {
-		fPlayerNames = new ArrayList<String>();
+		fPlayerNames = new ArrayList<>();
 	}
 
 	public ServerCommandJoin(String pCoach, ClientMode pClientMode, String[] pPlayerNames, int pSpectators) {

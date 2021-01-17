@@ -24,7 +24,7 @@ public class ClientCommandHandlerUnzapPlayer extends ClientCommandHandler {
 	public boolean handleNetCommand(NetCommand pNetCommand, ClientCommandHandlerMode pMode) {
 		ServerCommandUnzapPlayer command = (ServerCommandUnzapPlayer) pNetCommand;
 		Team team = getClient().getGame().getTeamById(command.getTeamId());
-		Player player = team.getPlayerById(command.getPlayerId());
+		Player<?> player = team.getPlayerById(command.getPlayerId());
 
 		if (player instanceof ZappedPlayer) {
 			ZappedPlayer zappedPlayer = (ZappedPlayer) player;

@@ -19,7 +19,7 @@ import com.eclipsesource.json.JsonValue;
 
 /**
  * Final step of the bomb sequence. Consumes all expected stepParameters.
- * 
+ *
  * Expects stepParameter CATCHER_ID to be set by a preceding step. Expects
  * stepParameter END_TURN to be set by a preceding step.
  *
@@ -82,7 +82,7 @@ public final class StepEndBomb extends AbstractStep {
 			}
 			SequenceGenerator.getInstance().pushEndPlayerActionSequence(getGameState(), false, true, fEndTurn);
 		} else {
-			Player catcher = game.getPlayerById(fCatcherId);
+			Player<?> catcher = game.getPlayerById(fCatcherId);
 			game.setHomePlaying(game.getTeamHome().hasPlayer(catcher));
 			UtilServerSteps.changePlayerAction(this, fCatcherId, PlayerAction.THROW_BOMB, false);
 			SequenceGenerator.getInstance().pushPassSequence(getGameState());

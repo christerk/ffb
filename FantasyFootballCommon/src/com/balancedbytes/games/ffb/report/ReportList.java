@@ -20,7 +20,7 @@ public class ReportList implements IJsonSerializable {
 	private List<IReport> fReports;
 
 	private ReportList(int pInitialCapacity) {
-		fReports = new ArrayList<IReport>(pInitialCapacity);
+		fReports = new ArrayList<>(pInitialCapacity);
 	}
 
 	public ReportList() {

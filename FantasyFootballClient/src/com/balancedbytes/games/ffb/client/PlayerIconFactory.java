@@ -35,7 +35,7 @@ public class PlayerIconFactory {
 	public static final int MAX_ICON_WIDTH = 40;
 	public static final int MAX_ICON_HEIGHT = 40;
 
-	public BufferedImage getBasicIcon(FantasyFootballClient pClient, Player pPlayer, boolean pHomePlayer, boolean pMoving,
+	public BufferedImage getBasicIcon(FantasyFootballClient pClient, Player<?> pPlayer, boolean pHomePlayer, boolean pMoving,
 			boolean pWithBall, boolean pWithBomb) {
 
 		if ((pClient == null) || (pPlayer == null)) {
@@ -158,7 +158,7 @@ public class PlayerIconFactory {
 
 	}
 
-	public BufferedImage getIcon(FantasyFootballClient pClient, Player pPlayer) {
+	public BufferedImage getIcon(FantasyFootballClient pClient, Player<?> pPlayer) {
 
 		BufferedImage icon = null;
 		IconCache iconCache = pClient.getUserInterface().getIconCache();
@@ -283,7 +283,7 @@ public class PlayerIconFactory {
 		}
 	}
 
-	public static String getPortraitUrl(Player pPlayer) {
+	public static String getPortraitUrl(Player<?> pPlayer) {
 		if (pPlayer != null) {
 			if (StringTool.isProvided(pPlayer.getUrlPortrait())) {
 				return getIconUrl(pPlayer, pPlayer.getUrlPortrait());
@@ -301,7 +301,7 @@ public class PlayerIconFactory {
 		return null;
 	}
 
-	public static String getIconSetUrl(Player pPlayer) {
+	public static String getIconSetUrl(Player<?> pPlayer) {
 		if (pPlayer != null) {
 			if (StringTool.isProvided(pPlayer.getUrlIconSet())) {
 				return getIconUrl(pPlayer, pPlayer.getUrlIconSet());
@@ -319,7 +319,7 @@ public class PlayerIconFactory {
 		return null;
 	}
 
-	private static String getIconUrl(Player pPlayer, String pRelativeUrl) {
+	private static String getIconUrl(Player<?> pPlayer, String pRelativeUrl) {
 		if ((pPlayer != null) && StringTool.isProvided(pRelativeUrl)) {
 			Team team = pPlayer.getTeam();
 			if (team != null) {

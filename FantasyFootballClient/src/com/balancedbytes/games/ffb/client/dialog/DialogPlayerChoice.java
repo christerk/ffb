@@ -28,7 +28,7 @@ public class DialogPlayerChoice extends Dialog implements ActionListener {
 	private PlayerCheckList fList;
 	private JButton fButtonSelect;
 	private JButton fButtonCancel;
-	private Player[] fSelectedPlayers;
+	private Player<?>[] fSelectedPlayers;
 	private int fMinSelects;
 
 	public DialogPlayerChoice(FantasyFootballClient client, String header, String[] playerIds, String[] descriptions,
@@ -53,7 +53,7 @@ public class DialogPlayerChoice extends Dialog implements ActionListener {
 		fList.addMouseMotionListener(new MouseMotionAdapter() {
 			public void mouseMoved(MouseEvent pMouseEvent) {
 				int index = fList.locationToIndex(pMouseEvent.getPoint());
-				Player player = fList.getPlayerAtIndex(index);
+				Player<?> player = fList.getPlayerAtIndex(index);
 				if (player != null) {
 					FieldCoordinate playerCoordinate = getClient().getGame().getFieldModel().getPlayerCoordinate(player);
 					getClient().getClientState().hideSelectSquare();
@@ -139,7 +139,7 @@ public class DialogPlayerChoice extends Dialog implements ActionListener {
 		}
 	}
 
-	public Player[] getSelectedPlayers() {
+	public Player<?>[] getSelectedPlayers() {
 		return fSelectedPlayers;
 	}
 

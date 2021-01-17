@@ -40,8 +40,8 @@ public class ReportInjury implements IReport {
 	private PlayerState fInjuryDecay;
 
 	public ReportInjury() {
-		fArmorModifiers = new ArrayList<ArmorModifier>();
-		fInjuryModifiers = new ArrayList<InjuryModifier>();
+		fArmorModifiers = new ArrayList<>();
+		fInjuryModifiers = new ArrayList<>();
 	}
 
 	public ReportInjury(String pDefenderId, InjuryType pInjuryType, boolean pArmorBroken, ArmorModifier[] pArmorModifiers,

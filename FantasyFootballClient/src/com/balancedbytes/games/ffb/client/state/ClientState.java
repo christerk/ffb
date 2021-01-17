@@ -28,17 +28,14 @@ import com.balancedbytes.games.ffb.net.INetCommandHandler;
 import com.balancedbytes.games.ffb.net.NetCommand;
 
 /**
- * 
+ *
  * @author Kalimar
  */
 public abstract class ClientState implements INetCommandHandler, MouseListener, MouseMotionListener, ActionListener {
 
 	public static final int FIELD_SQUARE_SIZE = 30;
 
-	public static final int DICE_INDEX_PRO_REROLL = 3;
-	public static final int DICE_INDEX_TEAM_REROLL = 4;
-
-	private FantasyFootballClient fClient;
+	private final FantasyFootballClient fClient;
 
 	private FieldCoordinate fSelectSquareCoordinate;
 
@@ -50,7 +47,7 @@ public abstract class ClientState implements INetCommandHandler, MouseListener, 
 
 	private JPopupMenu fPopupMenu;
 
-	private Player fPopupMenuPlayer;
+	private Player<?> fPopupMenuPlayer;
 
 	protected ClientState(FantasyFootballClient pClient) {
 		fClient = pClient;
@@ -148,9 +145,9 @@ public abstract class ClientState implements INetCommandHandler, MouseListener, 
 			} else {
 				if (!coordinate.equals(fSelectSquareCoordinate)) {
 					hideSelectSquare();
-					boolean selectable = true;
+					boolean selectable;
 					Game game = getClient().getGame();
-					Player player = game.getFieldModel().getPlayer(coordinate);
+					Player<?> player = game.getFieldModel().getPlayer(coordinate);
 					if (player != null) {
 						selectable = mouseOverPlayer(player);
 					} else {
@@ -172,7 +169,7 @@ public abstract class ClientState implements INetCommandHandler, MouseListener, 
 		setSelectable(true);
 		FieldCoordinate coordinate = getFieldCoordinate(pMouseEvent);
 		if ((getClient().getGame() != null) && (coordinate != null)) {
-			Player player = getClient().getGame().getFieldModel().getPlayer(coordinate);
+			Player<?> player = getClient().getGame().getFieldModel().getPlayer(coordinate);
 			if (pMouseEvent.isShiftDown() && (ClientMode.PLAYER == getClient().getMode())) {
 				hideSelectSquare();
 				if (player != null) {
@@ -199,17 +196,13 @@ public abstract class ClientState implements INetCommandHandler, MouseListener, 
 
 	public void createPopupMenu(JMenuItem[] pMenuItems) {
 		fPopupMenu = new JPopupMenu();
-		for (int i = 0; i < pMenuItems.length; i++) {
-			pMenuItems[i].addActionListener(this);
-			fPopupMenu.add(pMenuItems[i]);
+		for (JMenuItem pMenuItem : pMenuItems) {
+			pMenuItem.addActionListener(this);
+			fPopupMenu.add(pMenuItem);
 		}
 	}
 
-	public void removePopupMenu() {
-		fPopupMenu = null;
-	}
-
-	public void showPopupMenuForPlayer(Player pPlayer) {
+	public void showPopupMenuForPlayer(Player<?> pPlayer) {
 		if ((pPlayer != null) && (fPopupMenu != null)) {
 			fPopupMenuPlayer = pPlayer;
 			FieldCoordinate coordinate = getClient().getGame().getFieldModel().getPlayerCoordinate(fPopupMenuPlayer);
@@ -233,10 +226,10 @@ public abstract class ClientState implements INetCommandHandler, MouseListener, 
 	protected void clickOnField(FieldCoordinate pCoordinate) {
 	}
 
-	protected void clickOnPlayer(Player pPlayer) {
+	protected void clickOnPlayer(Player<?> pPlayer) {
 	}
 
-	protected boolean mouseOverPlayer(Player pPlayer) {
+	protected boolean mouseOverPlayer(Player<?> pPlayer) {
 		if (getClient().getClientData().getSelectedPlayer() != pPlayer) {
 			getClient().getClientData().setSelectedPlayer(pPlayer);
 			getClient().getUserInterface().refreshSideBars();
@@ -252,7 +245,7 @@ public abstract class ClientState implements INetCommandHandler, MouseListener, 
 		return true;
 	}
 
-	protected void menuItemSelected(Player pPlayer, int pMenuKey) {
+	protected void menuItemSelected(Player<?> pPlayer, int pMenuKey) {
 	}
 
 	public void setClickable(boolean pClickable) {
@@ -276,10 +269,6 @@ public abstract class ClientState implements INetCommandHandler, MouseListener, 
 
 	public boolean actionKeyPressed(ActionKey pActionKey) {
 		return false;
-	}
-
-	protected Player getPopupMenuPlayer() {
-		return fPopupMenuPlayer;
 	}
 
 	public boolean isInitDragAllowed(FieldCoordinate pCoordinate) {

@@ -16,7 +16,7 @@ import com.balancedbytes.games.ffb.model.Skill;
 import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
 
 /**
- * 
+ *
  * @author Kalimar
  */
 public class DialogKickSkillHandler extends DialogHandler {
@@ -35,7 +35,7 @@ public class DialogKickSkillHandler extends DialogHandler {
 
 		if (dialogKickSkillParameter != null) {
 
-			Player player = game.getPlayerById(dialogKickSkillParameter.getPlayerId());
+			Player<?> player = game.getPlayerById(dialogKickSkillParameter.getPlayerId());
 
 			Skill skillReduceKickDistance = player.getSkillWithProperty(NamedProperties.canReduceKickDistance);
 

@@ -184,7 +184,7 @@ public class PilingOnBehaviour extends SkillBehaviour<PilingOn> {
 		});
 	}
 
-	private boolean rollWeepingDagger(Player source, Player target, StepDropFallingPlayers step) {
+	private boolean rollWeepingDagger(Player<?> source, Player<?> target, StepDropFallingPlayers step) {
 		Game game = step.getGameState().getGame();
 		int minimumRoll = DiceInterpreter.getInstance().minimumRollWeepingDagger();
 		int roll = step.getGameState().getDiceRoller().rollWeepingDagger();

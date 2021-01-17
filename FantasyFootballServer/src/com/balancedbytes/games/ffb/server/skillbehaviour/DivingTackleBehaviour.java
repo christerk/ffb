@@ -54,7 +54,7 @@ public class DivingTackleBehaviour extends SkillBehaviour<DivingTackle> {
 					game.setDefenderId(null);
 					state.usingDivingTackle = false;
 					if (game.getFieldModel().getPlayer(state.coordinateFrom) == null) {
-						Player[] divingTacklers = UtilPlayer.findAdjacentOpposingPlayersWithProperty(game, state.coordinateFrom,
+						Player<?>[] divingTacklers = UtilPlayer.findAdjacentOpposingPlayersWithProperty(game, state.coordinateFrom,
 								NamedProperties.canAttemptToTackleDodgingPlayer, true);
 						divingTacklers = UtilPlayer.filterThrower(game, divingTacklers);
 						if (game.getTurnMode() == TurnMode.DUMP_OFF) {

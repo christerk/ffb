@@ -11,13 +11,13 @@ import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Team;
 
 /**
- * 
+ *
  * @author Kalimar
  */
 public class DialogDefenderActionHandler extends DialogHandler {
 
-	private static final Map<PlayerAction, String> sTitleByAction = new HashMap<PlayerAction, String>();
-	private static final Map<PlayerAction, String> sDescriptionByAction = new HashMap<PlayerAction, String>();
+	private static final Map<PlayerAction, String> sTitleByAction = new HashMap<>();
+	private static final Map<PlayerAction, String> sDescriptionByAction = new HashMap<>();
 
 	static {
 

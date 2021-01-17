@@ -28,7 +28,7 @@ import com.balancedbytes.games.ffb.util.StringTool;
 import com.balancedbytes.games.ffb.util.UtilUrl;
 
 /**
- * 
+ *
  * @author Kalimar
  */
 public class IconCache {
@@ -45,8 +45,8 @@ public class IconCache {
 
 	public IconCache(FantasyFootballClient pClient) {
 		fClient = pClient;
-		fIconByKey = new HashMap<String, BufferedImage>();
-		fCurrentIndexPerKey = new HashMap<String, Integer>();
+		fIconByKey = new HashMap<>();
+		fCurrentIndexPerKey = new HashMap<>();
 	}
 
 	public void init() {
@@ -54,7 +54,7 @@ public class IconCache {
 		ImageIO.setUseCache(false);
 		// Don't bother checking for certificate revocation. It's slow and not really functional anyway.
 		System.setProperty("com.sun.net.ssl.checkRevocation", "false");
-		
+
 		fIconUrlProperties = new Properties();
 		InputStream propertyInputStream = null;
 		try {
@@ -370,7 +370,7 @@ public class IconCache {
 		try {
 			pitchUrl = new URL(pUrl);
 			Properties pitchProperties = new Properties();
-			Map<String, BufferedImage> iconByName = new HashMap<String, BufferedImage>();
+			Map<String, BufferedImage> iconByName = new HashMap<>();
 			ZipEntry entry = null;
 			while ((entry = pZipIn.getNextEntry()) != null) {
 				if ("pitch.ini".equals(entry.getName())) {

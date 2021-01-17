@@ -15,7 +15,7 @@ import com.balancedbytes.games.ffb.util.FileIterator;
 import com.balancedbytes.games.ffb.xml.XmlHandler;
 
 /**
- * 
+ *
  * @author Kalimar
  */
 public class TeamSetupCache {
@@ -75,7 +75,7 @@ public class TeamSetupCache {
 	private Map<TeamSetupKey, TeamSetup> fSetupBySetupKey;
 
 	public TeamSetupCache() {
-		fSetupBySetupKey = new HashMap<TeamSetupKey, TeamSetup>();
+		fSetupBySetupKey = new HashMap<>();
 	}
 
 	public void add(TeamSetup pSetup) {

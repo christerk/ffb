@@ -64,7 +64,7 @@ public class CatchModifiers {
 	};
 
 	public CatchModifiers() {
-		values = new HashMap<String, CatchModifier>();
+		values = new HashMap<>();
 		try {
 			Class<?> c = this.getClass();
 			Class<?> cModifierType = CatchModifier.class;

@@ -27,7 +27,7 @@ public class ClientStateGaze extends ClientStateMove {
 		return ClientStateId.GAZE;
 	}
 
-	protected void clickOnPlayer(Player pPlayer) {
+	protected void clickOnPlayer(Player<?> pPlayer) {
 		Game game = getClient().getGame();
 		ActingPlayer actingPlayer = game.getActingPlayer();
 		if (pPlayer == actingPlayer.getPlayer()) {
@@ -45,7 +45,7 @@ public class ClientStateGaze extends ClientStateMove {
 		ActingPlayer actingPlayer = game.getActingPlayer();
 		FieldCoordinate playerPosition = game.getFieldModel().getPlayerCoordinate(actingPlayer.getPlayer());
 		FieldCoordinate victimPosition = UtilClientActionKeys.findMoveCoordinate(getClient(), playerPosition, pActionKey);
-		Player victim = game.getFieldModel().getPlayer(victimPosition);
+		Player<?> victim = game.getFieldModel().getPlayer(victimPosition);
 		if (victim != null) {
 			actionHandled = canBeGazed(victim);
 			if (actionHandled) {
@@ -57,7 +57,7 @@ public class ClientStateGaze extends ClientStateMove {
 		return actionHandled;
 	}
 
-	protected boolean mouseOverPlayer(Player pPlayer) {
+	protected boolean mouseOverPlayer(Player<?> pPlayer) {
 		super.mouseOverPlayer(pPlayer);
 		if (canBeGazed(pPlayer)) {
 			UtilClientCursor.setCustomCursor(getClient().getUserInterface(), IIconProperty.CURSOR_GAZE);
@@ -75,7 +75,7 @@ public class ClientStateGaze extends ClientStateMove {
 
 	// Added a check to see if the player had tacklezones so no prone players could
 	// be gazed or already gazed players.
-	private boolean canBeGazed(Player pVictim) {
+	private boolean canBeGazed(Player<?> pVictim) {
 		boolean result = false;
 		if (pVictim != null) {
 			Game game = getClient().getGame();

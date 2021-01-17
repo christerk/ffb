@@ -54,7 +54,7 @@ public class ServerRequestProcessor extends Thread {
 
 	public void shutdown() {
 		fStopped = true;
-		List<ServerRequest> requests = new ArrayList<ServerRequest>();
+		List<ServerRequest> requests = new ArrayList<>();
 		fRequestQueue.drainTo(requests);
 		for (ServerRequest request : requests) {
 			handleRequestInternal(request, false);

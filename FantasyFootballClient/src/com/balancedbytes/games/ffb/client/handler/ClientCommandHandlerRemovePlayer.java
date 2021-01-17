@@ -25,7 +25,7 @@ public class ClientCommandHandlerRemovePlayer extends ClientCommandHandler {
 		Game game = getClient().getGame();
 		GameResult gameResult = game.getGameResult();
 
-		Player player = game.getPlayerById(removePlayerCommand.getPlayerId());
+		Player<?> player = game.getPlayerById(removePlayerCommand.getPlayerId());
 		game.getFieldModel().remove(player);
 		game.getFieldModel().setPlayerState(player, null);
 		if (game.getTeamHome().hasPlayer(player)) {
