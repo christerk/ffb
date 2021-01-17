@@ -36,34 +36,34 @@ public class Scanner<T extends IKeyedItem> {
 	}
 
 	private Collection<T> filterClasses(GameOptions options, Set<Class<T>> classes) {
-		Map<Object,T> result = new HashMap<>();
+		Map<Object, T> result = new HashMap<>();
 		for (Class<T> cls : classes) {
 			boolean hasRulesAnnotation = false;
 			for (Annotation a : cls.getAnnotations()) {
 				if (a instanceof RulesCollection) {
 					hasRulesAnnotation = true;
-					Rules rule = ((RulesCollection)a).value();
+					Rules rule = ((RulesCollection) a).value();
 					if (rule.matches(options.getRulesVersion())) {
 
 						try {
-						Constructor ctr = cls.getConstructor();
-						@SuppressWarnings("unchecked")
-						T instance = (T)ctr.newInstance();
-						Object key = instance.getKey();
+							Constructor<?> ctr = cls.getConstructor();
+							@SuppressWarnings("unchecked")
+							T instance = (T) ctr.newInstance();
+							Object key = instance.getKey();
 
-						if (result.containsKey(key)) {
-							throw new FantasyFootballException("Duplicate implementation found when scanning.");
-						}
+							if (result.containsKey(key)) {
+								throw new FantasyFootballException("Duplicate implementation found when scanning.");
+							}
 
-						result.put(instance.getKey(), instance);
-						} catch (NoSuchMethodException|InstantiationException|IllegalAccessException|InvocationTargetException e) {
+							result.put(instance.getKey(), instance);
+						} catch (NoSuchMethodException | InstantiationException | IllegalAccessException | InvocationTargetException e) {
 							throw new FantasyFootballException("Error initializing scanned class.", e);
 						}
 					}
 				}
 			}
 			if (!hasRulesAnnotation) {
-				throw new FantasyFootballException("Missing annotations on scanned class "+cls.getName()+".");
+				throw new FantasyFootballException("Missing annotations on scanned class " + cls.getName() + ".");
 			}
 		}
 		return result.values();
@@ -74,7 +74,7 @@ public class Scanner<T extends IKeyedItem> {
 		for (Class<T> cls : rawScanner.getClassesImplementing()) {
 			for (Annotation a : cls.getAnnotations()) {
 				if (a instanceof RulesCollection) {
-					Rules rule = ((RulesCollection)a).value();
+					Rules rule = ((RulesCollection) a).value();
 					if (rule.matches(rule)) {
 						result.add(cls);
 					}
