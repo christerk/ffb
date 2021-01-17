@@ -23,6 +23,7 @@ public class NoHands extends Skill {
 	public void postConstruct() {
 		registerProperty(NamedProperties.preventCatch);
 		registerProperty(NamedProperties.preventHoldBall);
+		registerProperty(NamedProperties.preventRegularPassAction);
 	}
 
 }
