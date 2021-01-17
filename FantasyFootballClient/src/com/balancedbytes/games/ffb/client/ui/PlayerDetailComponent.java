@@ -206,7 +206,10 @@ public class PlayerDetailComponent extends JPanel {
 			int strength = UtilCards.getPlayerStrength(game, getPlayer())
 					- findNewStatDecreases(playerResult, InjuryAttribute.ST);
 			int agility = getPlayer().getAgility() - findNewStatDecreases(playerResult, InjuryAttribute.AG);
-			int passing = getPlayer().getPassing() - findNewStatDecreases(playerResult, InjuryAttribute.PA);
+			int passing = getPlayer().getPassing();
+			if (passing > 0) {
+				passing += findNewStatDecreases(playerResult, InjuryAttribute.PA);
+			}
 			int armour = getPlayer().getArmour() - findNewStatDecreases(playerResult, InjuryAttribute.AV);
 			ActingPlayer actingPlayer = getSideBar().getClient().getGame().getActingPlayer();
 			if (fPlayer == actingPlayer.getPlayer()) {
