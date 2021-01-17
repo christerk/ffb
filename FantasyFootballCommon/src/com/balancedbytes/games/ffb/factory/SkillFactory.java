@@ -15,7 +15,7 @@ import com.balancedbytes.games.ffb.model.Skill;
 import com.balancedbytes.games.ffb.util.Scanner;
 
 /**
- * 
+ *
  * @author Kalimar
  */
 @FactoryType(FactoryType.Factory.SKILL)
@@ -68,8 +68,8 @@ public class SkillFactory implements INamedObjectFactory {
 	@Override
 	public void initialize(Game game) {
 		Scanner<Skill> scanner = new Scanner<Skill>(Skill.class);
-		
-		scanner.getSubclasses(game.getOptions()).forEach(s -> addSkill(s));
+
+		scanner.getSubclasses(game.getOptions()).forEach(this::addSkill);
 		skills.values().forEach(s -> {
 			s.postConstruct();
 			if (game.getRules() != null) {
