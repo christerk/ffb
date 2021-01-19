@@ -523,7 +523,7 @@ public class RosterPosition implements Position {
 				setAgility(Integer.parseInt(pValue));
 			}
 			if (_XML_TAG_PASSING.equals(pTag)) {
-				setPassing(Integer.parseInt(pValue));
+				setPassing(pValue != null && pValue.length() > 0 ? Integer.parseInt(pValue) : 0);
 			}
 			if (_XML_TAG_ARMOUR.equals(pTag)) {
 				setArmour(Integer.parseInt(pValue));

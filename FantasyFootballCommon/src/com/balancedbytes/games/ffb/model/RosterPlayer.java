@@ -65,6 +65,7 @@ public class RosterPlayer extends Player<RosterPosition> {
 	private transient boolean fInsideSkillList;
 	private transient boolean fInsideInjuryList;
 	private transient boolean fInjuryCurrent;
+	private transient boolean fInsidePlayerStatistics;
 
 	public RosterPlayer() {
 		fLastingInjuries = new ArrayList<SeriousInjury>();
@@ -436,6 +437,7 @@ public class RosterPlayer extends Player<RosterPosition> {
 			}
 			if (_XML_TAG_PLAYER_STATISTICS.equals(pXmlTag)) {
 				setCurrentSpps(UtilXml.getIntAttribute(pXmlAttributes, _XML_ATTRIBUTE_CURRENT_SPPS));
+				fInsidePlayerStatistics = true;
 			}
 		}
 		return xmlElement;
@@ -466,6 +468,10 @@ public class RosterPlayer extends Player<RosterPosition> {
 							fRecoveringInjury = injury;
 						}
 					}
+				}
+			} else if (fInsidePlayerStatistics) {
+				if (_XML_TAG_PLAYER_STATISTICS.equals(pXmlTag)) {
+					fInsidePlayerStatistics = false;
 				}
 			} else {
 				if (_XML_TAG_PORTRAIT.equals(pXmlTag)) {
@@ -503,7 +509,7 @@ public class RosterPlayer extends Player<RosterPosition> {
 					setAgility(Integer.parseInt(pValue));
 				}
 				if (_XML_TAG_PASSING.equals(pXmlTag)) {
-					setPassing(Integer.parseInt(pValue));
+					setPassing(pValue != null && pValue.length() > 0 ? Integer.parseInt(pValue) : 0);
 				}
 				if (_XML_TAG_ARMOUR.equals(pXmlTag)) {
 					setArmour(Integer.parseInt(pValue));

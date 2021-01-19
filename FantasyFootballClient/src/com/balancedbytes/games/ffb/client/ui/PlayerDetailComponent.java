@@ -168,51 +168,42 @@ public class PlayerDetailComponent extends JPanel {
 			FontMetrics metrics = g2d.getFontMetrics();
 			BufferedImage playerPortrait = iconCache.getIconByUrl(portraitUrl);
 			BufferedImage portraitBackground = iconCache.getIconByProperty(IIconProperty.SIDEBAR_BACKGROUND_PLAYER_PORTRAIT);
-//      if (getSideBar().isHomeSide()) {
 			if (playerPortrait != null) {
-				int canvasWidth = _PORTRAIT_WIDTH;
-				int canvasHeight = _PORTRAIT_HEIGHT;
-				int portraitWidth = playerPortrait.getWidth();
-				int portraitHeight = playerPortrait.getHeight();
-				
-				if (portraitWidth > canvasWidth || portraitHeight > canvasHeight) {
-					// Scale portrait to fit both width and height
-					
-					float scale = Math.max(
-							(float)portraitWidth / (float)canvasWidth,
-							(float)portraitHeight / (float)canvasHeight
-							);
-					
-					portraitWidth = (int) Math.floor(portraitWidth / scale);
-					portraitHeight = (int) Math.floor(portraitHeight / scale);
-				}
-				
-				int originX = (canvasWidth - portraitWidth) / 2;
-				int originY = (canvasHeight - portraitHeight) / 2;
-				
-				g2d.drawImage(playerPortrait, x + originX, y + originY, portraitWidth, portraitHeight, null);
+				drawPortrait(x, y, g2d, playerPortrait);
 			} else {
-				g2d.drawImage(portraitBackground, x - 2, y, null);
+				drawPortrait(x-1, y+1, g2d, portraitBackground);
 			}
 			g2d.rotate(-Math.PI / 2.0);
 			g2d.setColor(Color.BLACK);
 			g2d.drawString(positionNameString, -(y + _PORTRAIT_HEIGHT - 4), _PORTRAIT_WIDTH + metrics.getAscent() + 3);
 			g2d.setColor(Color.WHITE);
 			g2d.drawString(positionNameString, -(y + _PORTRAIT_HEIGHT - 5), _PORTRAIT_WIDTH + metrics.getAscent() + 2);
-//      } else {
-//        if (playerPortrait != null) {
-//          g2d.drawImage(playerPortrait, WIDTH - _PORTRAIT_WIDTH - 3, y, _PORTRAIT_WIDTH, _PORTRAIT_HEIGHT, null);
-//        } else {
-//          g2d.drawImage(portraitBackground, WIDTH - _PORTRAIT_WIDTH - 3, y, null);
-//        }
-//        g2d.rotate(Math.PI/2.0);
-//        g2d.setColor(Color.BLACK);      
-//        g2d.drawString(positionNameString, y + 4, -(metrics.getDescent() + 4));
-//        g2d.setColor(Color.WHITE);      
-//        g2d.drawString(positionNameString, y + 3, -(metrics.getDescent() + 3));
-//      }
 			g2d.dispose();
 		}
+	}
+
+	private void drawPortrait(int x, int y, Graphics2D g2d, BufferedImage playerPortrait) {
+		int canvasWidth = _PORTRAIT_WIDTH;
+		int canvasHeight = _PORTRAIT_HEIGHT;
+		int portraitWidth = playerPortrait.getWidth();
+		int portraitHeight = playerPortrait.getHeight();
+		
+		if (portraitWidth > canvasWidth || portraitHeight > canvasHeight) {
+			// Scale portrait to fit both width and height
+			
+			float scale = Math.max(
+					(float)portraitWidth / (float)canvasWidth,
+					(float)portraitHeight / (float)canvasHeight
+					);
+			
+			portraitWidth = (int) Math.floor(portraitWidth / scale);
+			portraitHeight = (int) Math.floor(portraitHeight / scale);
+		}
+		
+		int originX = (canvasWidth - portraitWidth) / 2;
+		int originY = (canvasHeight - portraitHeight) / 2;
+		
+		g2d.drawImage(playerPortrait, x + originX, y + originY, portraitWidth, portraitHeight, null);
 	}
 
 	private void drawPlayerStats() {
