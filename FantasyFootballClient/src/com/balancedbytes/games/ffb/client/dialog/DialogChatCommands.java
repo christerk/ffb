@@ -100,6 +100,11 @@ public class DialogChatCommands extends Dialog {
 				.append("</td>\n");
 		html.append("</tr>\n");
 		html.append("<tr>\n");
+		html.append("<td>").append(_FONT_BOLD_OPEN).append("/hurt").append(_FONT_BOLD_CLOSE).append("</td>\n");
+		html.append("<td>").append(_FONT_OPEN).append("ouch").append(_FONT_CLOSE)
+				.append("</td>\n");
+		html.append("</tr>\n");
+		html.append("<tr>\n");
 		html.append("<td>").append(_FONT_BOLD_OPEN).append("/laugh").append(_FONT_BOLD_CLOSE).append("</td>\n");
 		html.append("<td>").append(_FONT_OPEN).append("laughing spectators").append(_FONT_CLOSE).append("</td>\n");
 		html.append("</tr>\n");
