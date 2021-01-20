@@ -115,6 +115,7 @@ public class ClientCommandHandlerGameState extends ClientCommandHandler implemen
 			});
 		}
 
+		game.initializeRules();
 		return true;
 
 	}

@@ -181,7 +181,7 @@ public class GameState implements IModelChangeObserver, IJsonSerializable {
 	}
 	
 	private void executeStep(StepExecutionMode mode, ReceivedCommand receivedCommand) {
-		boolean forward = false;
+		boolean forward;
 		do {
 			if (mode == StepExecutionMode.Start) {
 				fCurrentStep.start();
@@ -194,14 +194,14 @@ public class GameState implements IModelChangeObserver, IJsonSerializable {
 			}
 	
 			UtilServerGame.syncGameModel(fCurrentStep);
-			forward = processStepResult(receivedCommand);
+			forward = processStepResult();
 			if (forward) {
 				mode = StepExecutionMode.HandleCommand;
 			}
 		} while (forward);
 	}
 
-	private boolean processStepResult(ReceivedCommand pReceivedCommand) {
+	private boolean processStepResult() {
 		if (fCurrentStep == null) {
 			throw new StepException("Trying to process result from a null step.");
 		}
