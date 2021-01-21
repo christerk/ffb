@@ -66,7 +66,7 @@ public class ThrowTeamMateBehaviour extends SkillBehaviour<ThrowTeamMate> {
 					PassingDistance passingDistance = UtilPassing.findPassingDistance(game, throwerCoordinate,
 							game.getPassCoordinate(), true);
 					Set<PassModifier> passModifiers = passModifierFactory.findPassModifiers(game, thrower, passingDistance, true);
-					int minimumRoll = DiceInterpreter.getInstance().minimumRollThrowTeamMate(thrower, passingDistance,
+					int minimumRoll = DiceInterpreter.getInstance().minimumRollThrowTeamMate(passingDistance,
 							passModifiers);
 					int roll = step.getGameState().getDiceRoller().rollSkill();
 					boolean successful = !DiceInterpreter.getInstance().isPassFumble(roll, actingPlayer.getPlayer(),

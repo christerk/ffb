@@ -145,13 +145,9 @@ public class DiceInterpreter {
 		return 2;
 	}
 
-	public int minimumRollPass(Player<?> pThrower, PassingDistance pPassingDistance, Set<PassModifier> pPassModifiers) {
-		return UtilRangeRuler.minimumRollPass(pThrower, pPassingDistance, pPassModifiers);
-	}
-
-	public int minimumRollThrowTeamMate(Player<?> pThrower, PassingDistance pPassingDistance,
-			Set<PassModifier> pPassModifiers) {
-		return UtilRangeRuler.minimumRollThrowTeamMate(pThrower, pPassingDistance, pPassModifiers);
+	public int minimumRollThrowTeamMate(PassingDistance pPassingDistance,
+	                                    Set<PassModifier> pPassModifiers) {
+		return UtilRangeRuler.minimumRollThrowTeamMate(pPassingDistance, pPassModifiers);
 	}
 
 	public int minimumRollRightStuff(Player<?> pPlayer, Set<RightStuffModifier> pRightStuffModifiers) {
@@ -173,7 +169,7 @@ public class DiceInterpreter {
 			for (PassModifier passModifier : pPassModifiers) {
 				modifierTotal += passModifier.getModifier();
 			}
-			return ((roll + pPassingDistance.getModifier() - modifierTotal) <= 1);
+			return ((roll + pPassingDistance.getModifier2016() - modifierTotal) <= 1);
 		}
 	}
 

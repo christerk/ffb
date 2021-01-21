@@ -1201,12 +1201,12 @@ public class StatusReport {
 		if (neededRoll != null) {
 			neededRoll.append(" (Roll ");
 			PassingDistance passingDistance = pReport.getPassingDistance();
-			if (passingDistance.getModifier() >= 0) {
+			if (passingDistance.getModifier2016() >= 0) {
 				neededRoll.append(" + ");
 			} else {
 				neededRoll.append(" - ");
 			}
-			neededRoll.append(Math.abs(passingDistance.getModifier())).append(" ").append(passingDistance.getName());
+			neededRoll.append(Math.abs(passingDistance.getModifier2016())).append(" ").append(passingDistance.getName());
 			neededRoll.append(formatRollModifiers(pReport.getRollModifiers())).append(" > 1).");
 			println(getIndent() + 2, TextStyle.NEEDED_ROLL, neededRoll.toString());
 		}
@@ -2025,12 +2025,12 @@ public class StatusReport {
 			if (!pReport.isHailMaryPass()) {
 				neededRoll.append(" (AG").append(Math.min(6, thrower.getAgility()));
 				PassingDistance passingDistance = pReport.getPassingDistance();
-				if (passingDistance.getModifier() >= 0) {
+				if (passingDistance.getModifier2016() >= 0) {
 					neededRoll.append(" + ");
 				} else {
 					neededRoll.append(" - ");
 				}
-				neededRoll.append(Math.abs(passingDistance.getModifier())).append(" ").append(passingDistance.getName());
+				neededRoll.append(Math.abs(passingDistance.getModifier2016())).append(" ").append(passingDistance.getName());
 				neededRoll.append(formatRollModifiers(pReport.getRollModifiers())).append(" + Roll > 6).");
 			}
 			println(getIndent() + 2, TextStyle.NEEDED_ROLL, neededRoll.toString());

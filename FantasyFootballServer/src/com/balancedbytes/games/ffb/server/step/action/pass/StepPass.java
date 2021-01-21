@@ -3,6 +3,7 @@ package com.balancedbytes.games.ffb.server.step.action.pass;
 import java.util.Set;
 
 import com.balancedbytes.games.ffb.CatchScatterThrowInMode;
+import com.balancedbytes.games.ffb.FactoryType;
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.PassModifier;
 import com.balancedbytes.games.ffb.PassingDistance;
@@ -14,6 +15,8 @@ import com.balancedbytes.games.ffb.dialog.DialogSkillUseParameter;
 import com.balancedbytes.games.ffb.factory.IFactorySource;
 import com.balancedbytes.games.ffb.factory.PassModifierFactory;
 import com.balancedbytes.games.ffb.json.UtilJson;
+import com.balancedbytes.games.ffb.mechanics.Mechanic;
+import com.balancedbytes.games.ffb.mechanics.PassMechanic;
 import com.balancedbytes.games.ffb.model.Animation;
 import com.balancedbytes.games.ffb.model.AnimationType;
 import com.balancedbytes.games.ffb.model.Game;
@@ -159,7 +162,8 @@ public class StepPass extends AbstractStepWithReRoll {
 				false);
 		Set<PassModifier> passModifiers = new PassModifierFactory().findPassModifiers(game, game.getThrower(),
 				passingDistance, false);
-		int minimumRoll = DiceInterpreter.getInstance().minimumRollPass(game.getThrower(), passingDistance, passModifiers);
+		PassMechanic mechanic = (PassMechanic) game.getRules().getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.PASS.name());
+		int minimumRoll = mechanic.minimumRoll(game.getThrower(), passingDistance, passModifiers);
 		int roll = getGameState().getDiceRoller().rollSkill();
 		if (roll == 6) {
 			state.successful = true;
