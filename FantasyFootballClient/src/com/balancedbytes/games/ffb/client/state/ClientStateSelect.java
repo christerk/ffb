@@ -10,6 +10,7 @@ import javax.swing.KeyStroke;
 import com.balancedbytes.games.ffb.Card;
 import com.balancedbytes.games.ffb.CardEffect;
 import com.balancedbytes.games.ffb.ClientStateId;
+import com.balancedbytes.games.ffb.FactoryType;
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.PlayerAction;
 import com.balancedbytes.games.ffb.PlayerState;
@@ -21,6 +22,8 @@ import com.balancedbytes.games.ffb.client.UserInterface;
 import com.balancedbytes.games.ffb.client.net.ClientCommunication;
 import com.balancedbytes.games.ffb.client.ui.SideBarComponent;
 import com.balancedbytes.games.ffb.client.util.UtilClientActionKeys;
+import com.balancedbytes.games.ffb.mechanics.Mechanic;
+import com.balancedbytes.games.ffb.mechanics.PassMechanic;
 import com.balancedbytes.games.ffb.model.FieldModel;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
@@ -317,8 +320,13 @@ public class ClientStateSelect extends ClientState {
 	private boolean isThrowBombActionAvailable(Player<?> pPlayer) {
 		Game game = getClient().getGame();
 		PlayerState playerState = game.getFieldModel().getPlayerState(pPlayer);
-		return ((playerState != null) && !game.getFieldModel().hasCardEffect(pPlayer, CardEffect.ILLEGALLY_SUBSTITUTED)
-				&& !playerState.isProne() && pPlayer.hasSkillWithProperty(NamedProperties.enableThrowBombAction));
+		PassMechanic passMechanic = (PassMechanic) game.getRules().getFactory(FactoryType.Factory.MECHANIC)
+			.forName(Mechanic.Type.PASS.name());
+		return ((playerState != null)
+			&& !game.getFieldModel().hasCardEffect(pPlayer, CardEffect.ILLEGALLY_SUBSTITUTED)
+			&& !playerState.isProne()
+			&& pPlayer.hasSkillWithProperty(NamedProperties.enableThrowBombAction)
+			&& passMechanic.eligibleToPass(pPlayer));
 	}
 
 	private boolean isMoveActionAvailable(Player<?> pPlayer) {
@@ -355,10 +363,12 @@ public class ClientStateSelect extends ClientState {
 	private boolean isPassActionAvailable(Player<?> pPlayer) {
 		Game game = getClient().getGame();
 		PlayerState playerState = game.getFieldModel().getPlayerState(pPlayer);
+		PassMechanic passMechanic = (PassMechanic) game.getRules().getFactory(FactoryType.Factory.MECHANIC)
+			.forName(Mechanic.Type.PASS.name());
 		return (!game.getTurnData().isPassUsed()
 				&& !game.getFieldModel().hasCardEffect(pPlayer, CardEffect.ILLEGALLY_SUBSTITUTED)
 				&& UtilPlayer.isBallAvailable(game, pPlayer) && (playerState != null)
-				&& !pPlayer.hasSkillWithProperty(NamedProperties.preventRegularPassAction)
+				&& passMechanic.eligibleToPass(pPlayer)
 				&& (playerState.isAbleToMove() || UtilPlayer.hasBall(game, pPlayer))
 				&& !UtilCards.hasCard(game, pPlayer, Card.GLOVES_OF_HOLDING));
 	}
