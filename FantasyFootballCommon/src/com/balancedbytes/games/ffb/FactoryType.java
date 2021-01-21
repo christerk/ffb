@@ -9,7 +9,7 @@ public @interface FactoryType {
 	public enum FactoryContext {
 		APPLICATION, GAME
 	}
-	
+
 	public enum Factory {
 		NET_COMMAND_ID(FactoryContext.APPLICATION),
 		CLIENT_MODE(FactoryContext.APPLICATION),
@@ -35,6 +35,6 @@ public @interface FactoryType {
 			this.context = context;
 		}
 	}
-	
+
 	Factory value();
 }

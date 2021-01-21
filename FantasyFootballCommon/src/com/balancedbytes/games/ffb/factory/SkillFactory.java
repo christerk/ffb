@@ -64,10 +64,10 @@ public class SkillFactory implements INamedObjectFactory {
 		});
 		return result;
 	}
-	
+
 	@Override
 	public void initialize(Game game) {
-		Scanner<Skill> scanner = new Scanner<Skill>(Skill.class);
+		Scanner<Skill> scanner = new Scanner<>(Skill.class);
 
 		scanner.getSubclasses(game.getOptions()).forEach(this::addSkill);
 		skills.values().forEach(s -> {
