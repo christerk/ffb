@@ -31,17 +31,17 @@ public class PassMechanic extends com.balancedbytes.games.ffb.mechanics.PassMech
 		} else if (isModifiedFumble(roll, distance, modifiers)) {
 			if (thrower.hasSkillWithProperty(NamedProperties.dontDropFumbles) && !bombAction) {
 				return PassResult.SAVED_FUMBLE;
-			} else
+			} else {
 				return PassResult.FUMBLE;
-		} else if (isBelow(roll, distance, calculateModifiers(modifiers), minimumRoll - 1)) {
+			}
+		} else if (roll < minimumRoll) {
 			return PassResult.INACCURATE;
 		} else {
 			return PassResult.ACCURATE;
 		}
 	}
 
-	@Override
-	protected boolean isBelow(int roll, PassingDistance distance, int modifiers, int threshold) {
-		return ((roll + distance.getModifier2016() - modifiers) <= threshold);
+	public boolean isModifiedFumble(int roll, PassingDistance distance, Collection<PassModifier> modifiers) {
+		return ((roll + distance.getModifier2016() - calculateModifiers(modifiers)) <= 1);
 	}
 }

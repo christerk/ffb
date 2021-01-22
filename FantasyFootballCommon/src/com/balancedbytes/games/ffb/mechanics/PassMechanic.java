@@ -22,10 +22,6 @@ public abstract class PassMechanic implements Mechanic {
 
 	public abstract PassResult evaluatePass(Player<?> thrower, int roll, PassingDistance distance, Collection<PassModifier> modifiers, boolean bombAction);
 
-	public boolean isModifiedFumble(int roll, PassingDistance pPassingDistance, Collection<PassModifier> pPassModifiers) {
-		return isBelow(roll, pPassingDistance, calculateModifiers(pPassModifiers), 1);
-	}
-	
 	protected int calculateModifiers(Collection<PassModifier> pPassModifiers) {
 		int modifierTotal = 0;
 		for (PassModifier passModifier : pPassModifiers) {
@@ -33,6 +29,4 @@ public abstract class PassMechanic implements Mechanic {
 		}
 		return modifierTotal;
 	}
-
-	protected abstract boolean isBelow(int roll, PassingDistance distance, int modifiers, int threshold);
 }
