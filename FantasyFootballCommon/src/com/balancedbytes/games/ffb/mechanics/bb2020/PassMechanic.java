@@ -2,12 +2,14 @@ package com.balancedbytes.games.ffb.mechanics.bb2020;
 
 import com.balancedbytes.games.ffb.PassModifier;
 import com.balancedbytes.games.ffb.PassingDistance;
+import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.mechanics.PassResult;
 import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
 
 import java.util.Collection;
 
+@RulesCollection(RulesCollection.Rules.BB2020)
 public class PassMechanic extends com.balancedbytes.games.ffb.mechanics.PassMechanic {
 
 	@Override
