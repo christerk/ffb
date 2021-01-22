@@ -69,7 +69,8 @@ public class StepPass extends AbstractStepWithReRoll {
 		public String CatcherId;
 		public boolean successful;
 		public boolean holdingSafeThrow;
-		public boolean passFumble;
+		public boolean fumble;
+		public boolean wildlyInaccurate;
 		public boolean passSkillUsed;
 	}
 
@@ -167,16 +168,18 @@ public class StepPass extends AbstractStepWithReRoll {
 		int roll = getGameState().getDiceRoller().rollSkill();
 		if (roll == 6) {
 			state.successful = true;
-			state.passFumble = false;
+			state.fumble = false;
 			state.holdingSafeThrow = false;
+			state.wildlyInaccurate = false;
 		} else if (roll == 1) {
 			state.successful = false;
-			state.passFumble = true;
+			state.fumble = true;
 			state.holdingSafeThrow = false;
+			state.wildlyInaccurate = false;
 		} else {
-			state.passFumble = DiceInterpreter.getInstance().isPassFumble(roll, game.getThrower(), passingDistance,
+			state.fumble = DiceInterpreter.getInstance().isPassFumble(roll, game.getThrower(), passingDistance,
 					passModifiers);
-			if (state.passFumble) {
+			if (state.fumble) {
 				state.successful = false;
 				state.holdingSafeThrow = (game.getThrower().hasSkillWithProperty(NamedProperties.dontDropFumbles) && (PlayerAction.THROW_BOMB != game.getThrowerAction()));
 				publishParameter(new StepParameter(StepParameterKey.DONT_DROP_FUMBLE, state.holdingSafeThrow));
@@ -188,11 +191,11 @@ public class StepPass extends AbstractStepWithReRoll {
 		PassModifier[] passModifierArray = new PassModifierFactory().toArray(passModifiers);
 		boolean reRolled = ((getReRolledAction() == ReRolledActions.PASS) && (getReRollSource() != null));
 		getResult().addReport(new ReportPassRoll(game.getThrowerId(), state.successful, roll, minimumRoll, reRolled,
-				passModifierArray, passingDistance, state.passFumble, state.holdingSafeThrow,
+				passModifierArray, passingDistance, state.fumble, state.holdingSafeThrow,
 				(PlayerAction.THROW_BOMB == game.getThrowerAction())));
 		if (state.successful) {
 			game.getFieldModel().setRangeRuler(null);
-			publishParameter(new StepParameter(StepParameterKey.PASS_FUMBLE, state.passFumble));
+			publishParameter(new StepParameter(StepParameterKey.PASS_FUMBLE, state.fumble));
 			FieldCoordinate startCoordinate = game.getFieldModel().getPlayerCoordinate(game.getThrower());
 			if (PlayerAction.THROW_BOMB == game.getThrowerAction()) {
 				getResult()
@@ -244,7 +247,7 @@ public class StepPass extends AbstractStepWithReRoll {
 							actingTeam.hasPlayer(game.getThrower()));
 				} else {
 					if (UtilServerReRoll.askForReRollIfAvailable(getGameState(), game.getThrower(), ReRolledActions.PASS,
-							minimumRoll, state.passFumble)) {
+							minimumRoll, state.fumble)) {
 						doNextStep = false;
 					}
 				}
@@ -259,12 +262,12 @@ public class StepPass extends AbstractStepWithReRoll {
 		Game game = getGameState().getGame();
 		game.getFieldModel().setRangeRuler(null);
 		FieldCoordinate throwerCoordinate = game.getFieldModel().getPlayerCoordinate(game.getThrower());
-		publishParameter(new StepParameter(StepParameterKey.PASS_FUMBLE, state.passFumble));
+		publishParameter(new StepParameter(StepParameterKey.PASS_FUMBLE, state.fumble));
 		if (state.holdingSafeThrow) {
 			game.getFieldModel().setBallCoordinate(throwerCoordinate);
 			game.getFieldModel().setBallMoving(false);
 			getResult().setNextAction(StepAction.GOTO_LABEL, state.goToLabelOnEnd);
-		} else if (state.passFumble) {
+		} else if (state.fumble) {
 			if (PlayerAction.THROW_BOMB == game.getThrowerAction()) {
 				game.getFieldModel().setBombCoordinate(game.getFieldModel().getPlayerCoordinate(game.getThrower()));
 			} else {
@@ -295,7 +298,7 @@ public class StepPass extends AbstractStepWithReRoll {
 		IServerJsonOption.CATCHER_ID.addTo(jsonObject, state.CatcherId);
 		IServerJsonOption.SUCCESSFUL.addTo(jsonObject, state.successful);
 		IServerJsonOption.HOLDING_SAFE_THROW.addTo(jsonObject, state.holdingSafeThrow);
-		IServerJsonOption.PASS_FUMBLE.addTo(jsonObject, state.passFumble);
+		IServerJsonOption.PASS_FUMBLE.addTo(jsonObject, state.fumble);
 		IServerJsonOption.PASS_SKILL_USED.addTo(jsonObject, state.passSkillUsed);
 		return jsonObject;
 	}
@@ -309,7 +312,7 @@ public class StepPass extends AbstractStepWithReRoll {
 		state.CatcherId = IServerJsonOption.CATCHER_ID.getFrom(game, jsonObject);
 		state.successful = IServerJsonOption.SUCCESSFUL.getFrom(game, jsonObject);
 		state.holdingSafeThrow = IServerJsonOption.HOLDING_SAFE_THROW.getFrom(game, jsonObject);
-		state.passFumble = IServerJsonOption.PASS_FUMBLE.getFrom(game, jsonObject);
+		state.fumble = IServerJsonOption.PASS_FUMBLE.getFrom(game, jsonObject);
 		state.passSkillUsed = IServerJsonOption.PASS_SKILL_USED.getFrom(game, jsonObject);
 		return this;
 	}
