@@ -1,10 +1,5 @@
 package com.balancedbytes.games.ffb;
 
-import javax.xml.transform.sax.TransformerHandler;
-
-import org.xml.sax.Attributes;
-import org.xml.sax.helpers.AttributesImpl;
-
 import com.balancedbytes.games.ffb.factory.IFactorySource;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.IJsonSerializable;
@@ -15,6 +10,10 @@ import com.balancedbytes.games.ffb.xml.IXmlSerializable;
 import com.balancedbytes.games.ffb.xml.UtilXml;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
+import org.xml.sax.Attributes;
+import org.xml.sax.helpers.AttributesImpl;
+
+import javax.xml.transform.sax.TransformerHandler;
 
 /**
  * 
@@ -56,8 +55,14 @@ public class RangeRuler implements IXmlSerializable, IJsonSerializable {
 		return fTargetCoordinate;
 	}
 
-	public int getMinimumRoll() {
-		return fMinimumRoll;
+	public String getMinimumRoll() {
+		if (fMinimumRoll == 0) {
+			return "--";
+		} else if (fMinimumRoll < 6) {
+			return fMinimumRoll + "+";
+		} else {
+			return "6";
+		}
 	}
 
 	public boolean isThrowTeamMate() {
@@ -66,7 +71,7 @@ public class RangeRuler implements IXmlSerializable, IJsonSerializable {
 
 	/**
 	 * Generated equals() Method.
-	 * 
+	 *
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
 	@Override
@@ -88,18 +93,15 @@ public class RangeRuler implements IXmlSerializable, IJsonSerializable {
 		if (fThrowTeamMate != other.fThrowTeamMate)
 			return false;
 		if (fThrowerId == null) {
-			if (other.fThrowerId != null)
-				return false;
-		} else if (!fThrowerId.equals(other.fThrowerId))
-			return false;
-		return true;
+			return other.fThrowerId == null;
+		} else return fThrowerId.equals(other.fThrowerId);
 	}
 
 	// transformation
 
 	public RangeRuler transform() {
-		return new RangeRuler(getThrowerId(), FieldCoordinate.transform(getTargetCoordinate()), getMinimumRoll(),
-				isThrowTeamMate());
+		return new RangeRuler(getThrowerId(), FieldCoordinate.transform(getTargetCoordinate()), fMinimumRoll,
+			isThrowTeamMate());
 	}
 
 	public static RangeRuler transform(RangeRuler pTrackNumber) {
@@ -112,7 +114,7 @@ public class RangeRuler implements IXmlSerializable, IJsonSerializable {
 
 		AttributesImpl attributes = new AttributesImpl();
 		UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_THROWER_ID, getThrowerId());
-		UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_MINIMUM_ROLL, getMinimumRoll());
+		UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_MINIMUM_ROLL, fMinimumRoll);
 		UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_THROW_TEAM_MATE, isThrowTeamMate());
 		UtilXml.startElement(pHandler, XML_TAG, attributes);
 

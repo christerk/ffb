@@ -2,6 +2,7 @@ package com.balancedbytes.games.ffb.server.step.action.pass;
 
 import com.balancedbytes.games.ffb.factory.IFactorySource;
 import com.balancedbytes.games.ffb.json.UtilJson;
+import com.balancedbytes.games.ffb.mechanics.PassResult;
 import com.balancedbytes.games.ffb.net.NetCommandId;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandUseSkill;
 import com.balancedbytes.games.ffb.server.GameState;
@@ -31,7 +32,7 @@ public final class StepHailMaryPass extends AbstractStepWithReRoll {
 
 	public static class StepState {
 		public String goToLabelOnFailure;
-		public boolean passFumble;
+		public PassResult result;
 		public boolean passSkillUsed;
 	}
 
@@ -89,7 +90,7 @@ public final class StepHailMaryPass extends AbstractStepWithReRoll {
 	public JsonObject toJsonValue() {
 		JsonObject jsonObject = super.toJsonValue();
 		IServerJsonOption.GOTO_LABEL_ON_FAILURE.addTo(jsonObject, state.goToLabelOnFailure);
-		IServerJsonOption.PASS_FUMBLE.addTo(jsonObject, state.passFumble);
+		IServerJsonOption.PASS_RESULT.addTo(jsonObject, state.result);
 		IServerJsonOption.PASS_SKILL_USED.addTo(jsonObject, state.passSkillUsed);
 		return jsonObject;
 	}
@@ -99,7 +100,11 @@ public final class StepHailMaryPass extends AbstractStepWithReRoll {
 		super.initFrom(game, pJsonValue);
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
 		state.goToLabelOnFailure = IServerJsonOption.GOTO_LABEL_ON_FAILURE.getFrom(game, jsonObject);
-		state.passFumble = IServerJsonOption.PASS_FUMBLE.getFrom(game, jsonObject);
+		state.result = (PassResult) IServerJsonOption.PASS_RESULT.getFrom(game, jsonObject);
+		if (state.result == null) {
+			boolean passFumble = IServerJsonOption.PASS_FUMBLE.getFrom(game, jsonObject);
+			state.result = passFumble ? PassResult.FUMBLE : PassResult.INACCURATE;
+		}
 		state.passSkillUsed = IServerJsonOption.PASS_SKILL_USED.getFrom(game, jsonObject);
 		return this;
 	}

@@ -229,6 +229,8 @@ public interface IJsonOption {
 	JsonIntOption OPPONENT_TEAM_VALUE = new JsonIntOption("opponentTeamValue");
 	JsonBooleanOption PASS_BLOCK_AVAILABLE = new JsonBooleanOption("passBlockAvailable");
 	JsonFieldCoordinateOption PASS_COORDINATE = new JsonFieldCoordinateOption("passCoordinate");
+	JsonBooleanOption PASS_DEVIATES = new JsonBooleanOption("passDeviates");
+	JsonEnumWithNameOption PASS_RESULT = new JsonEnumWithNameOption("passResult", Factory.PASS_RESULT);
 	JsonBooleanOption PASS_USED = new JsonBooleanOption("passUsed");
 	JsonEnumWithNameOption PASSING_DISTANCE = new JsonEnumWithNameOption("passingDistance", Factory.PASSING_DISTANCE);
 	JsonStringOption PASSWORD = new JsonStringOption("password");

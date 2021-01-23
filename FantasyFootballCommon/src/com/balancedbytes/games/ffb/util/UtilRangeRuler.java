@@ -1,7 +1,5 @@
 package com.balancedbytes.games.ffb.util;
 
-import java.util.Set;
-
 import com.balancedbytes.games.ffb.FactoryType;
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.PassModifier;
@@ -12,6 +10,9 @@ import com.balancedbytes.games.ffb.mechanics.Mechanic;
 import com.balancedbytes.games.ffb.mechanics.PassMechanic;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
+
+import java.util.Optional;
+import java.util.Set;
 
 /**
  * 
@@ -28,15 +29,15 @@ public class UtilRangeRuler {
 			PassingDistance passingDistance = UtilPassing.findPassingDistance(pGame, throwerCoordinate, pTargetCoordinate,
 					pThrowTeamMate);
 			if (passingDistance != null) {
-				int minimumRoll;
+				Optional<Integer> minimumRoll;
 				Set<PassModifier> passModifiers = new PassModifierFactory().findPassModifiers(pGame, pThrower, passingDistance,
-						pThrowTeamMate);
+					pThrowTeamMate);
 				if (pThrowTeamMate) {
-					minimumRoll = minimumRollThrowTeamMate(passingDistance, passModifiers);
+					minimumRoll = Optional.of(minimumRollThrowTeamMate(passingDistance, passModifiers));
 				} else {
 					minimumRoll = mechanic.minimumRoll(pThrower, passingDistance, passModifiers);
 				}
-				rangeRuler = new RangeRuler(pThrower.getId(), pTargetCoordinate, minimumRoll, pThrowTeamMate);
+				rangeRuler = new RangeRuler(pThrower.getId(), pTargetCoordinate, minimumRoll.orElse(0), pThrowTeamMate);
 			}
 		}
 		return rangeRuler;
