@@ -1087,6 +1087,21 @@ public class StatusReport {
 		setIndent(1);
 	}
 
+	public void reportPassDeviate(ReportPassDeviate report) {
+		setIndent(0);
+		StringBuilder status = new StringBuilder();
+		status.append("Pass Deviates [ ").append(report.getRollScatterDirection()).append(" ]");
+		status.append("[ ").append(report.getRollScatterDistance()).append(" ]");
+		println(getIndent(), TextStyle.ROLL, status.toString());
+		status = new StringBuilder();
+		status.append("The ball will land ");
+		status.append(report.getRollScatterDistance())
+			.append((report.getRollScatterDistance() == 1) ? " square " : " squares ");
+		status.append(report.getScatterDirection().getName().toLowerCase()).append(" from the passer.");
+		println(getIndent() + 1, status.toString());
+		setIndent(1);
+	}
+
 	public void reportDodge(ReportSkillRoll pReport) {
 		StringBuilder status = new StringBuilder();
 		StringBuilder neededRoll = null;
