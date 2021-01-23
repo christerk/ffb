@@ -32,7 +32,7 @@ import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
 /**
- * 
+ *
  * @author Kalimar
  */
 public class InducementSet implements IXmlSerializable, IJsonSerializable {
@@ -57,11 +57,11 @@ public class InducementSet implements IXmlSerializable, IJsonSerializable {
 	private transient TurnData fTurnData;
 
 	public InducementSet() {
-		fInducements = new HashMap<InducementType, Inducement>();
-		fCardsAvailable = new HashSet<Card>();
-		fCardsActive = new HashSet<Card>();
-		fCardsDeactivated = new HashSet<Card>();
-		fStarPlayerPositionIds = new HashSet<String>();
+		fInducements = new HashMap<>();
+		fCardsAvailable = new HashSet<>();
+		fCardsActive = new HashSet<>();
+		fCardsDeactivated = new HashSet<>();
+		fStarPlayerPositionIds = new HashSet<>();
 	}
 
 	public InducementSet(TurnData pTurnData) {
@@ -168,7 +168,7 @@ public class InducementSet implements IXmlSerializable, IJsonSerializable {
 	}
 
 	public Card[] getAllCards() {
-		List<Card> allCards = new ArrayList<Card>();
+		List<Card> allCards = new ArrayList<>();
 		for (Card card : getAvailableCards()) {
 			allCards.add(card);
 		}
@@ -323,17 +323,17 @@ public class InducementSet implements IXmlSerializable, IJsonSerializable {
 			inducementsArray.add(inducement.toJsonValue());
 		}
 		IJsonOption.INDUCEMENT_ARRAY.addTo(jsonObject, inducementsArray);
-		List<String> cardsAvailable = new ArrayList<String>();
+		List<String> cardsAvailable = new ArrayList<>();
 		for (Card card : getAvailableCards()) {
 			cardsAvailable.add(card.getName());
 		}
 		IJsonOption.CARDS_AVAILABLE.addTo(jsonObject, cardsAvailable);
-		List<String> cardsActive = new ArrayList<String>();
+		List<String> cardsActive = new ArrayList<>();
 		for (Card card : getActiveCards()) {
 			cardsActive.add(card.getName());
 		}
 		IJsonOption.CARDS_ACTIVE.addTo(jsonObject, cardsActive);
-		List<String> cardsDeactivated = new ArrayList<String>();
+		List<String> cardsDeactivated = new ArrayList<>();
 		for (Card card : getDeactivatedCards()) {
 			cardsDeactivated.add(card.getName());
 		}

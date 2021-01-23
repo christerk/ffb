@@ -17,6 +17,7 @@
 		<movement>6</movement>
 		<strength>3</strength>
 		<agility>3</agility>
+		<passing>4</passing>
 		<armour>7</armour>
 		<portrait>portraits/norse_lineman.png</portrait>
 		<iconSet size="4">iconsets/norse_lineman.png</iconSet>
@@ -40,6 +41,7 @@
 		<movement>6</movement>
 		<strength>3</strength>
 		<agility>3</agility>
+		<passing>3</passing>
 		<armour>7</armour>
 		<portrait>portraits/norse_thrower.png</portrait>
 		<iconSet size="2">iconsets/norse_thrower.png</iconSet>
@@ -64,6 +66,7 @@
 		<movement>7</movement>
 		<strength>3</strength>
 		<agility>3</agility>
+		<passing>5</passing>
 		<armour>7</armour>
 		<portrait>portraits/norse_runner.png</portrait>
 		<iconSet size="2">iconsets/norse_runner.png</iconSet>
@@ -88,6 +91,7 @@
 		<movement>6</movement>
 		<strength>3</strength>
 		<agility>3</agility>
+		<passing>5</passing>
 		<armour>7</armour>
 		<portrait>portraits/norse_berserker.png</portrait>
 		<iconSet size="2">iconsets/norse_berserker.png</iconSet>
@@ -113,6 +117,7 @@
 		<movement>6</movement>
 		<strength>4</strength>
 		<agility>2</agility>
+		<passing>0</passing>
 		<armour>8</armour>
 		<portrait>portraits/norse_ulfwerener.png</portrait>
 		<iconSet size="2">iconsets/norse_ulfwerener.png</iconSet>
@@ -136,6 +141,7 @@
 		<movement>5</movement>
 		<strength>5</strength>
 		<agility>1</agility>
+		<passing>0</passing>
 		<armour>8</armour>
 		<portrait>portraits/norse_snowtroll.png</portrait>
 		<iconSet size="1">iconsets/norse_snowtroll.png</iconSet>

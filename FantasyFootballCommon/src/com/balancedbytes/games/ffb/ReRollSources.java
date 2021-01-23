@@ -35,7 +35,7 @@ public class ReRollSources {
 	}
 
 	public ReRollSources() {
-		values = new HashMap<String, ReRollSource>();
+		values = new HashMap<>();
 		try {
 			Class<?> c = this.getClass();
 			Class<?> cModifierType = ReRollSource.class;

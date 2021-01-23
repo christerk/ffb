@@ -22,7 +22,7 @@ public class DialogTeamSetupParameter implements IDialogParameter {
 	private List<String> fSetupNames;
 
 	public DialogTeamSetupParameter() {
-		fSetupNames = new ArrayList<String>();
+		fSetupNames = new ArrayList<>();
 	}
 
 	public DialogTeamSetupParameter(boolean pLoadDialog, String[] pSetupNames) {

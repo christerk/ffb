@@ -12,7 +12,7 @@ public class AdminList {
 	private List<AdminListEntry> fEntries;
 
 	public AdminList() {
-		fEntries = new ArrayList<AdminListEntry>();
+		fEntries = new ArrayList<>();
 	}
 
 	public AdminListEntry[] getEntries() {

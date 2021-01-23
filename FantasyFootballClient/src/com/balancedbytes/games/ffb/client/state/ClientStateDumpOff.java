@@ -15,7 +15,7 @@ import com.balancedbytes.games.ffb.util.UtilPassing;
 import com.balancedbytes.games.ffb.util.UtilRangeRuler;
 
 /**
- * 
+ *
  * @author Kalimar
  */
 public class ClientStateDumpOff extends ClientStateMove {
@@ -35,7 +35,7 @@ public class ClientStateDumpOff extends ClientStateMove {
 		game.setPassCoordinate(null);
 	}
 
-	protected void clickOnPlayer(Player pPlayer) {
+	protected void clickOnPlayer(Player<?> pPlayer) {
 		Game game = getClient().getGame();
 		FieldCoordinate playerCoordinate = game.getFieldModel().getPlayerCoordinate(pPlayer);
 		clickOnField(playerCoordinate);
@@ -69,7 +69,7 @@ public class ClientStateDumpOff extends ClientStateMove {
 		return selectable;
 	}
 
-	protected boolean mouseOverPlayer(Player pPlayer) {
+	protected boolean mouseOverPlayer(Player<?> pPlayer) {
 		Game game = getClient().getGame();
 		UserInterface userInterface = getClient().getUserInterface();
 		FieldCoordinate playerCoordinate = game.getFieldModel().getPlayerCoordinate(pPlayer);

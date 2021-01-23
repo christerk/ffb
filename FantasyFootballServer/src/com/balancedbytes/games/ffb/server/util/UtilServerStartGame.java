@@ -27,7 +27,7 @@ import com.balancedbytes.games.ffb.server.step.SequenceGenerator;
 import com.balancedbytes.games.ffb.util.StringTool;
 
 /**
- * 
+ *
  * @author Kalimar
  */
 public class UtilServerStartGame {
@@ -55,7 +55,7 @@ public class UtilServerStartGame {
 		SessionManager sessionManager = server.getSessionManager();
 		sessionManager.addSession(pSession, pGameState.getId(), pCoach, pMode, pHomeTeam);
 
-		List<String> playerList = new ArrayList<String>();
+		List<String> playerList = new ArrayList<>();
 
 		Session[] sessions = sessionManager.getSessionsForGameId(pGameState.getId());
 		for (int i = 0; i < sessions.length; i++) {
@@ -81,8 +81,8 @@ public class UtilServerStartGame {
 
 	public static void sendUserSettings(GameState pGameState, String pCoach, Session pSession) {
 		FantasyFootballServer server = pGameState.getServer();
-		List<String> settingNames = new ArrayList<String>();
-		List<String> settingValues = new ArrayList<String>();
+		List<String> settingNames = new ArrayList<>();
+		List<String> settingValues = new ArrayList<>();
 		// always send any client settings defined in server.ini
 		for (String serverProperty : server.getProperties()) {
 			if (serverProperty.startsWith("client.")) {

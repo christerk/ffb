@@ -35,7 +35,7 @@ import com.eclipsesource.json.JsonValue;
 
 /**
  * Step in end game sequence to determine the MVP.
- * 
+ *
  * @author Kalimar
  */
 public final class StepMvp extends AbstractStep {
@@ -51,8 +51,8 @@ public final class StepMvp extends AbstractStep {
 
 	public StepMvp(GameState pGameState) {
 		super(pGameState);
-		fHomePlayersMvp = new ArrayList<String>();
-		fAwayPlayersMvp = new ArrayList<String>();
+		fHomePlayersMvp = new ArrayList<>();
+		fAwayPlayersMvp = new ArrayList<>();
 	}
 
 	public StepId getId() {
@@ -186,13 +186,13 @@ public final class StepMvp extends AbstractStep {
 		if ((fHomePlayersMvp.size() >= fNrOfHomeMvps) || (fAwayPlayersMvp.size() >= fNrOfAwayMvps)) {
 			ReportMostValuablePlayers mvpReport = new ReportMostValuablePlayers();
 			for (String playerIdHome : fHomePlayersMvp) {
-				Player playerHome = game.getPlayerById(playerIdHome);
+				Player<?> playerHome = game.getPlayerById(playerIdHome);
 				PlayerResult playerResultHome = gameResult.getPlayerResult(playerHome);
 				playerResultHome.setPlayerAwards(playerResultHome.getPlayerAwards() + 1);
 				mvpReport.addPlayerIdHome(playerIdHome);
 			}
 			for (String playerIdAway : fAwayPlayersMvp) {
-				Player playerAway = game.getPlayerById(playerIdAway);
+				Player<?> playerAway = game.getPlayerById(playerIdAway);
 				PlayerResult playerResultAway = gameResult.getPlayerResult(playerAway);
 				playerResultAway.setPlayerAwards(playerResultAway.getPlayerAwards() + 1);
 				mvpReport.addPlayerIdAway(playerIdAway);
@@ -204,10 +204,10 @@ public final class StepMvp extends AbstractStep {
 	}
 
 	private String[] findPlayerIdsForMvp(Team pTeam) {
-		List<String> playerIds = new ArrayList<String>();
+		List<String> playerIds = new ArrayList<>();
 		Game game = getGameState().getGame();
 		GameResult gameResult = game.getGameResult();
-		for (Player player : pTeam.getPlayers()) {
+		for (Player<?> player : pTeam.getPlayers()) {
 			PlayerState playerState = game.getFieldModel().getPlayerState(player);
 			if (playerState.isKilled()) {
 				continue;

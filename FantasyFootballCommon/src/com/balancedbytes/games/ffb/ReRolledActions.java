@@ -62,7 +62,7 @@ public class ReRolledActions {
 	}
 
 	public ReRolledActions() {
-		values = new HashMap<String, ReRolledAction>();
+		values = new HashMap<>();
 		try {
 			Class<?> c = this.getClass();
 			Class<?> cModifierType = ReRolledAction.class;

@@ -73,7 +73,7 @@ public class StepKickTeamMateDoubleRolled extends AbstractStep {
 
 	private void executeStep() {
 		Game game = getGameState().getGame();
-		Player kickedPlayer = game.getPlayerById(fKickedPlayerId);
+		Player<?> kickedPlayer = game.getPlayerById(fKickedPlayerId);
 		if ((kickedPlayer != null) && (fKickedPlayerCoordinate != null) && (fKickedPlayerState != null)
 				&& (fKickedPlayerState.getId() > 0)) {
 			game.getFieldModel().setPlayerCoordinate(kickedPlayer, fKickedPlayerCoordinate);

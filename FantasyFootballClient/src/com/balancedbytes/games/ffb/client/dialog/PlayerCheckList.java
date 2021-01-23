@@ -111,10 +111,10 @@ public class PlayerCheckList extends JList<PlayerCheckListItem> {
 		}
 
 		Game game = client.getGame();
-		List<PlayerCheckListItem> checkListItems = new ArrayList<PlayerCheckListItem>();
+		List<PlayerCheckListItem> checkListItems = new ArrayList<>();
 		PlayerIconFactory playerIconFactory = client.getUserInterface().getPlayerIconFactory();
 		for (int i = 0; i < playerIds.length; i++) {
-			Player player = game.getPlayerById(playerIds[i]);
+			Player<?> player = game.getPlayerById(playerIds[i]);
 			if (player != null) {
 				boolean homePlayer = game.getTeamHome().hasPlayer(player);
 				BufferedImage playerIcon = playerIconFactory.getBasicIcon(client, player, homePlayer, false, false, false);
@@ -143,7 +143,7 @@ public class PlayerCheckList extends JList<PlayerCheckListItem> {
 
 	}
 
-	public Player getPlayerAtIndex(int pIndex) {
+	public Player<?> getPlayerAtIndex(int pIndex) {
 		PlayerCheckListItem checkListItem = (PlayerCheckListItem) getModel().getElementAt(pIndex);
 		if (checkListItem != null) {
 			return checkListItem.getPlayer();
@@ -152,8 +152,8 @@ public class PlayerCheckList extends JList<PlayerCheckListItem> {
 		}
 	}
 
-	public Player[] getSelectedPlayers() {
-		List<Player> selectedPlayers = new ArrayList<Player>();
+	public Player<?>[] getSelectedPlayers() {
+		List<Player<?>> selectedPlayers = new ArrayList<>();
 		for (int i = 0; i < getModel().getSize(); i++) {
 			PlayerCheckListItem item = (PlayerCheckListItem) getModel().getElementAt(i);
 			if (item.isSelected()) {

@@ -15,7 +15,7 @@ import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
 /**
- * 
+ *
  * @author Kalimar
  */
 public class ReportTurnEnd implements IReport {
@@ -26,9 +26,9 @@ public class ReportTurnEnd implements IReport {
 	private List<Player<?>> unzappedPlayers;
 
 	public ReportTurnEnd() {
-		fKnockoutRecoveries = new ArrayList<KnockoutRecovery>();
-		fHeatExhaustions = new ArrayList<HeatExhaustion>();
-		unzappedPlayers = new ArrayList<Player<?>>();
+		fKnockoutRecoveries = new ArrayList<>();
+		fHeatExhaustions = new ArrayList<>();
+		unzappedPlayers = new ArrayList<>();
 	}
 
 	public ReportTurnEnd(String pPlayerIdTouchdown, KnockoutRecovery[] pKnockoutRecoveries,
@@ -67,7 +67,7 @@ public class ReportTurnEnd implements IReport {
 	}
 
 	public List<Player<?>> getUnzappedPlayers() {
-		return new ArrayList<Player<?>>(unzappedPlayers);
+		return new ArrayList<>(unzappedPlayers);
 	}
 
 	public HeatExhaustion[] getHeatExhaustions() {

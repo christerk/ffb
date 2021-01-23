@@ -18,6 +18,7 @@
 		<movement>6</movement>
 		<strength>3</strength>
 		<agility>4</agility>
+		<passing>4</passing>
 		<armour>8</armour>
 		<portrait>portraits/darkelf_lineman.png</portrait>
 		<iconSet size="3">iconsets/darkelf_lineman.png</iconSet>
@@ -39,6 +40,7 @@
 		<movement>7</movement>
 		<strength>3</strength>
 		<agility>4</agility>
+		<passing>4</passing>
 		<armour>8</armour>
 		<portrait>portraits/darkelf_blitzer.png</portrait>
 		<iconSet size="4">iconsets/darkelf_blitzer.png</iconSet>
@@ -62,6 +64,7 @@
 		<movement>7</movement>
 		<strength>3</strength>
 		<agility>4</agility>
+		<passing>3</passing>
 		<armour>7</armour>
 		<portrait>portraits/darkelf_runner.png</portrait>
 		<iconSet size="2">iconsets/darkelf_runner.png</iconSet>
@@ -85,6 +88,7 @@
 		<movement>6</movement>
 		<strength>3</strength>
 		<agility>4</agility>
+		<passing>5</passing>
 		<armour>7</armour>
 		<portrait>portraits/darkelf_assassin.png</portrait>
 		<iconSet size="1">iconsets/darkelf_assassin.png</iconSet>
@@ -109,6 +113,7 @@
 		<movement>7</movement>
 		<strength>3</strength>
 		<agility>4</agility>
+		<passing>5</passing>
 		<armour>7</armour>
 		<portrait>portraits/darkelf_witchelf.png</portrait>
 		<iconSet size="2">iconsets/darkelf_witchelf.png</iconSet>

@@ -26,7 +26,7 @@ import com.balancedbytes.games.ffb.dialog.DialogUseInducementParameter;
 import com.balancedbytes.games.ffb.util.ArrayTool;
 
 /**
- * 
+ *
  * @author Kalimar
  */
 @SuppressWarnings("serial")
@@ -43,7 +43,7 @@ public class DialogUseInducement extends Dialog implements ActionListener {
 
 		super(pClient, "Use Inducement", false);
 
-		Set<InducementType> inducementSet = new HashSet<InducementType>();
+		Set<InducementType> inducementSet = new HashSet<>();
 		if (ArrayTool.isProvided(pDialogParameter.getInducementTypes())) {
 			for (InducementType inducement : pDialogParameter.getInducementTypes()) {
 				inducementSet.add(inducement);
@@ -62,7 +62,7 @@ public class DialogUseInducement extends Dialog implements ActionListener {
 		panelMain.add(panelText);
 		panelMain.add(Box.createVerticalStrut(10));
 
-		fButtonPerCard = new HashMap<Card, JButton>();
+		fButtonPerCard = new HashMap<>();
 		if (ArrayTool.isProvided(pDialogParameter.getCards())) {
 			for (Card card : pDialogParameter.getCards()) {
 

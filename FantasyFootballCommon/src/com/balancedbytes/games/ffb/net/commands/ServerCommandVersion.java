@@ -13,7 +13,7 @@ import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
 /**
- * 
+ *
  * @author Kalimar
  */
 public class ServerCommandVersion extends ServerCommand {
@@ -23,7 +23,7 @@ public class ServerCommandVersion extends ServerCommand {
 	private Map<String, String> fClientProperties;
 
 	public ServerCommandVersion() {
-		fClientProperties = new HashMap<String, String>();
+		fClientProperties = new HashMap<>();
 	}
 
 	public ServerCommandVersion(String pServerVersion, String pClientVersion, String[] pClientProperties,
@@ -66,7 +66,7 @@ public class ServerCommandVersion extends ServerCommand {
 	public FactoryContext getContext() {
 		return FactoryContext.APPLICATION;
 	}
-	
+
 	// JSON serialization
 
 	public JsonObject toJsonValue() {

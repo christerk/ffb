@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * 
+ *
  * @author Kalimar
  */
 public class StepParameterSet {
@@ -12,7 +12,7 @@ public class StepParameterSet {
 	private Map<StepParameterKey, StepParameter> fParameterById;
 
 	public StepParameterSet() {
-		fParameterById = new HashMap<StepParameterKey, StepParameter>();
+		fParameterById = new HashMap<>();
 	}
 
 	public void add(StepParameter pStepParameter) {

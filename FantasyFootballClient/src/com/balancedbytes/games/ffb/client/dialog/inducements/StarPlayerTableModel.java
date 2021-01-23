@@ -75,13 +75,13 @@ public class StarPlayerTableModel extends AbstractTableModel {
 
 	public void setValueAt(Object pValue, int pRowIndex, int pColumnIndex) {
 		if (pColumnIndex == 0) {
-			Player player = (Player) fRowData[pRowIndex][4];
+			Player<?> player = (Player) fRowData[pRowIndex][4];
 			int cost = player.getPosition().getCost();
 			String teamWithPositionId = player.getPosition().getTeamWithPositionId();
 			if (StringTool.isProvided(teamWithPositionId)) {
 				int partnerRowId = -1;
 				for (int i = 0; i < getRowCount(); i++) {
-					Player rowPlayer = (Player) fRowData[i][4];
+					Player<?> rowPlayer = (Player) fRowData[i][4];
 					if (teamWithPositionId.equals(rowPlayer.getPositionId())) {
 						partnerRowId = i;
 						break;
@@ -131,7 +131,7 @@ public class StarPlayerTableModel extends AbstractTableModel {
 
 	private Object[][] buildRowData() {
 		PlayerIconFactory playerIconFactory = fDialog.getClient().getUserInterface().getPlayerIconFactory();
-		List<Object[]> starPlayerList = new ArrayList<Object[]>();
+		List<Object[]> starPlayerList = new ArrayList<>();
 		for (RosterPosition pos : fDialog.getRoster().getPositions()) {
 			if (PlayerType.STAR == pos.getType()) {
 				RosterPlayer player = new RosterPlayer();

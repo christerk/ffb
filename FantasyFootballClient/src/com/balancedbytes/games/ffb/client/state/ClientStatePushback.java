@@ -13,7 +13,7 @@ import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
 
 /**
- * 
+ *
  * @author Kalimar
  */
 public class ClientStatePushback extends ClientState {
@@ -26,7 +26,7 @@ public class ClientStatePushback extends ClientState {
 		return ClientStateId.PUSHBACK;
 	}
 
-	protected boolean mouseOverPlayer(Player pPlayer) {
+	protected boolean mouseOverPlayer(Player<?> pPlayer) {
 		super.mouseOverPlayer(pPlayer);
 		FieldCoordinate playerCoordinate = getClient().getGame().getFieldModel().getPlayerCoordinate(pPlayer);
 		return !mouseOverPushback(playerCoordinate);
@@ -44,7 +44,7 @@ public class ClientStatePushback extends ClientState {
 		}
 	}
 
-	protected void clickOnPlayer(Player pPlayer) {
+	protected void clickOnPlayer(Player<?> pPlayer) {
 		FieldCoordinate playerCoordinate = getClient().getGame().getFieldModel().getPlayerCoordinate(pPlayer);
 		Pushback pushback = findPushback(findUnlockedPushbackSquare(playerCoordinate));
 		if (pushback != null) {
@@ -142,7 +142,7 @@ public class ClientStatePushback extends ClientState {
 					break;
 				}
 			}
-			Player pushedPlayer = getClient().getGame().getFieldModel().getPlayer(fromSquare);
+			Player<?> pushedPlayer = getClient().getGame().getFieldModel().getPlayer(fromSquare);
 			if ((fromSquare != null) && (pushedPlayer != null)) {
 				pushback = new Pushback(pushedPlayer.getId(), toSquare);
 			}

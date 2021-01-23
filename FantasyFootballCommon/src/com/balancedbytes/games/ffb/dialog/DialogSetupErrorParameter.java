@@ -22,7 +22,7 @@ public class DialogSetupErrorParameter implements IDialogParameter {
 	private List<String> fSetupErrors;
 
 	public DialogSetupErrorParameter() {
-		fSetupErrors = new ArrayList<String>();
+		fSetupErrors = new ArrayList<>();
 	}
 
 	public DialogSetupErrorParameter(String pTeamId, String[] pSetupErrors) {

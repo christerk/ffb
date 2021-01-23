@@ -75,6 +75,7 @@ public enum StepParameterKey {
 	NR_OF_DICE, // Integer
 	OLD_DEFENDER_STATE, // PlayerState
 	PASS_ACCURATE, // Boolean
+	PASS_DEVIATES, // Boolean
 	PASS_FUMBLE, // Boolean
 	PLAYER_ID, // String
 	ATTACKER_POISONED, // Boolean
@@ -95,6 +96,6 @@ public enum StepParameterKey {
 	USING_BREAK_TACKLE, // Boolean
 	USING_DIVING_TACKLE, // Boolean
 	USING_PILING_ON, // Boolean
-	USING_STAB; // Boolean
+	USING_STAB // Boolean
 
 }

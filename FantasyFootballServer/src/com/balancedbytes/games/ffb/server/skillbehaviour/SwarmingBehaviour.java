@@ -51,7 +51,7 @@ public class SwarmingBehaviour extends SkillBehaviour<Swarming> {
 						state.endTurn = false;
 						step.getResult().setSound(SoundId.DING);
 						int placedSwarmingPlayers = 0;
-						for (Player player : game.getTeamById(state.teamId).getPlayers()) {
+						for (Player<?> player : game.getTeamById(state.teamId).getPlayers()) {
 							PlayerState playerState = game.getFieldModel().getPlayerState(player);
 							FieldCoordinate playerCoordinate = game.getFieldModel().getPlayerCoordinate(player);
 							if (playerState.isActive() && !playerCoordinate.isBoxCoordinate()) {
@@ -64,7 +64,7 @@ public class SwarmingBehaviour extends SkillBehaviour<Swarming> {
 									new DialogSwarmingErrorParameter(state.allowedAmount, placedSwarmingPlayers), false);
 						} else {
 
-							for (Player player : game.getTeamById(state.teamId).getPlayers()) {
+							for (Player<?> player : game.getTeamById(state.teamId).getPlayers()) {
 								PlayerState playerState = game.getFieldModel().getPlayerState(player);
 								if (playerState.getBase() == PlayerState.PRONE) {
 									game.getFieldModel().setPlayerState(player, playerState.changeBase(PlayerState.RESERVE));
@@ -88,9 +88,9 @@ public class SwarmingBehaviour extends SkillBehaviour<Swarming> {
 						step.getGameState().setKickingSwarmers(0);
 					}
 					state.teamId = swarmingTeam(state, game).getId();
-					Set<Player> playersOnPitch = new HashSet<>();
-					Set<Player> playersReserveNoSwarming = new HashSet<>();
-					for (Player player : game.getTeamById(state.teamId).getPlayers()) {
+					Set<Player<?>> playersOnPitch = new HashSet<>();
+					Set<Player<?>> playersReserveNoSwarming = new HashSet<>();
+					for (Player<?> player : game.getTeamById(state.teamId).getPlayers()) {
 						FieldCoordinate playerCoordinate = game.getFieldModel().getPlayerCoordinate(player);
 						if (FieldCoordinateBounds.FIELD.isInBounds(playerCoordinate)) {
 							playersOnPitch.add(player);
@@ -104,12 +104,12 @@ public class SwarmingBehaviour extends SkillBehaviour<Swarming> {
 					}
 
 					if (hasSwarmingReserves) {
-						for (Player player : playersOnPitch) {
+						for (Player<?> player : playersOnPitch) {
 							PlayerState playerState = game.getFieldModel().getPlayerState(player);
 							game.getFieldModel().setPlayerState(player, playerState.changeActive(false));
 						}
 
-						for (Player player : playersReserveNoSwarming) {
+						for (Player<?> player : playersReserveNoSwarming) {
 							PlayerState playerState = game.getFieldModel().getPlayerState(player);
 							game.getFieldModel().setPlayerState(player, playerState.changeBase(PlayerState.PRONE));
 						}

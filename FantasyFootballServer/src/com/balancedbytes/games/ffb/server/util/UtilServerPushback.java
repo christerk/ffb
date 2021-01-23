@@ -13,7 +13,7 @@ import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
 
 /**
- * 
+ *
  * @author Kalimar
  */
 public class UtilServerPushback {
@@ -57,7 +57,7 @@ public class UtilServerPushback {
 	public static PushbackSquare[] findPushbackSquares(Game pGame, PushbackSquare pStartingSquare,
 			PushbackMode pPushbackMode) {
 
-		List<PushbackSquare> pushbackSquares = new ArrayList<PushbackSquare>();
+		List<PushbackSquare> pushbackSquares = new ArrayList<>();
 		FieldCoordinate startCoordinate = pStartingSquare.getCoordinate();
 
 		FieldCoordinate northCoordinate = new FieldCoordinate(startCoordinate.getX(), startCoordinate.getY() - 1);
@@ -131,7 +131,7 @@ public class UtilServerPushback {
 				break;
 			}
 
-			List<PushbackSquare> validPushbackSquares = new ArrayList<PushbackSquare>();
+			List<PushbackSquare> validPushbackSquares = new ArrayList<>();
 			for (int i = 0; i < pushbackSquares.size(); i++) {
 				PushbackSquare pushbackSquare = pushbackSquares.get(i);
 				if (FieldCoordinateBounds.FIELD.isInBounds(pushbackSquare.getCoordinate())) {
@@ -145,16 +145,16 @@ public class UtilServerPushback {
 				boolean freeSquare = false;
 				FieldModel fieldModel = pGame.getFieldModel();
 				for (int i = 0; !freeSquare && (i < pushbackSquares.size()); i++) {
-					Player player = fieldModel.getPlayer(pushbackSquares.get(i).getCoordinate());
+					Player<?> player = fieldModel.getPlayer(pushbackSquares.get(i).getCoordinate());
 					if (player == null) {
 						freeSquare = true;
 					}
 				}
 
 				if (freeSquare) {
-					List<PushbackSquare> freePushBackSquares = new ArrayList<PushbackSquare>();
+					List<PushbackSquare> freePushBackSquares = new ArrayList<>();
 					for (int i = 0; i < pushbackSquares.size(); i++) {
-						Player player = fieldModel.getPlayer(pushbackSquares.get(i).getCoordinate());
+						Player<?> player = fieldModel.getPlayer(pushbackSquares.get(i).getCoordinate());
 						if (player == null) {
 							freePushBackSquares.add(pushbackSquares.get(i));
 						}

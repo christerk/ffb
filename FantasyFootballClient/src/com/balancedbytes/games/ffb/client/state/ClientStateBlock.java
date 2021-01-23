@@ -23,7 +23,7 @@ import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.util.UtilPlayer;
 
 /**
- * 
+ *
  * @author Kalimar
  */
 public class ClientStateBlock extends ClientState {
@@ -40,7 +40,7 @@ public class ClientStateBlock extends ClientState {
 		super.enterState();
 	}
 
-	protected void clickOnPlayer(Player pPlayer) {
+	protected void clickOnPlayer(Player<?> pPlayer) {
 		Game game = getClient().getGame();
 		ActingPlayer actingPlayer = game.getActingPlayer();
 		if (actingPlayer.getPlayer() == pPlayer) {
@@ -58,7 +58,7 @@ public class ClientStateBlock extends ClientState {
 		}
 	}
 
-	protected boolean mouseOverPlayer(Player pPlayer) {
+	protected boolean mouseOverPlayer(Player<?> pPlayer) {
 		super.mouseOverPlayer(pPlayer);
 		if (UtilPlayer.isBlockable(getClient().getGame(), pPlayer)) {
 			UtilClientCursor.setCustomCursor(getClient().getUserInterface(), IIconProperty.CURSOR_BLOCK);
@@ -107,7 +107,7 @@ public class ClientStateBlock extends ClientState {
 		getClient().getCommunication().sendEndTurn();
 	}
 
-	protected void menuItemSelected(Player pPlayer, int pMenuKey) {
+	protected void menuItemSelected(Player<?> pPlayer, int pMenuKey) {
 		if (pPlayer != null) {
 			Game game = getClient().getGame();
 			ActingPlayer actingPlayer = game.getActingPlayer();
@@ -128,7 +128,7 @@ public class ClientStateBlock extends ClientState {
 	private void createAndShowPopupMenuForBlockingPlayer() {
 		Game game = getClient().getGame();
 		ActingPlayer actingPlayer = game.getActingPlayer();
-		List<JMenuItem> menuItemList = new ArrayList<JMenuItem>();
+		List<JMenuItem> menuItemList = new ArrayList<>();
 		UserInterface userInterface = getClient().getUserInterface();
 		IconCache iconCache = userInterface.getIconCache();
 		userInterface.getFieldComponent().getLayerUnderPlayers().clearMovePath();

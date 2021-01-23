@@ -35,13 +35,13 @@ import com.eclipsesource.json.JsonValue;
 
 /**
  * Step in kickoff sequence to scatter the kick.
- * 
+ *
  * Expects stepParameter KICKOFF_START_COORDINATE to be set by a preceding step.
  *
  * Sets stepParameter KICKING_PLAYER_COORDINATE for all steps on the stack. Sets
  * stepParameter KICKOFF_BOUNDS for all steps on the stack. Sets stepParameter
  * TOUCHBACK for all steps on the stack.
- * 
+ *
  * @author Kalimar
  */
 public final class StepKickoffScatterRoll extends AbstractStep {
@@ -107,9 +107,9 @@ public final class StepKickoffScatterRoll extends AbstractStep {
 	private void executeStep() {
 
 		Game game = getGameState().getGame();
-		Player kickingPlayer = findKickingPlayer();
+		Player<?> kickingPlayer = findKickingPlayer();
 
-		Skill skillReduceKickDistance = null; 
+		Skill skillReduceKickDistance = null;
 		if (kickingPlayer != null) {
 			skillReduceKickDistance = kickingPlayer.getSkillWithProperty(NamedProperties.canReduceKickDistance);
 		}
@@ -183,12 +183,12 @@ public final class StepKickoffScatterRoll extends AbstractStep {
 
 	}
 
-	private Player findKickingPlayer() {
+	private Player<?> findKickingPlayer() {
 		Game game = getGameState().getGame();
-		Player kickingPlayer = null;
+		Player<?> kickingPlayer = null;
 		Team kickingTeam = game.isHomePlaying() ? game.getTeamHome() : game.getTeamAway();
-		Player[] players = kickingTeam.getPlayers();
-		List<Player> playersOnField = new ArrayList<Player>();
+		Player<?>[] players = kickingTeam.getPlayers();
+		List<Player<?>> playersOnField = new ArrayList<>();
 		for (int i = 0; i < players.length; i++) {
 			FieldCoordinate playerCoordinate = game.getFieldModel().getPlayerCoordinate(players[i]);
 			if ((playerCoordinate != null) && !playerCoordinate.isBoxCoordinate()) {

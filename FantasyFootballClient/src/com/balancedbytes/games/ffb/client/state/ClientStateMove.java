@@ -34,7 +34,7 @@ import com.balancedbytes.games.ffb.util.UtilCards;
 import com.balancedbytes.games.ffb.util.UtilPlayer;
 
 /**
- * 
+ *
  * @author Kalimar
  */
 public class ClientStateMove extends ClientState {
@@ -89,7 +89,7 @@ public class ClientStateMove extends ClientState {
 		}
 	}
 
-	protected boolean mouseOverPlayer(Player pPlayer) {
+	protected boolean mouseOverPlayer(Player<?> pPlayer) {
 		Game game = getClient().getGame();
 		FieldCoordinate playerCoordinate = game.getFieldModel().getPlayerCoordinate(pPlayer);
 		MoveSquare moveSquare = game.getFieldModel().getMoveSquare(playerCoordinate);
@@ -122,7 +122,7 @@ public class ClientStateMove extends ClientState {
 		}
 	}
 
-	protected void clickOnPlayer(Player pPlayer) {
+	protected void clickOnPlayer(Player<?> pPlayer) {
 		Game game = getClient().getGame();
 		ActingPlayer actingPlayer = game.getActingPlayer();
 		if (pPlayer == actingPlayer.getPlayer()) {
@@ -147,7 +147,7 @@ public class ClientStateMove extends ClientState {
 		}
 	}
 
-	protected void menuItemSelected(Player pPlayer, int pMenuKey) {
+	protected void menuItemSelected(Player<?> pPlayer, int pMenuKey) {
 		if (pPlayer != null) {
 			Game game = getClient().getGame();
 			ActingPlayer actingPlayer = game.getActingPlayer();
@@ -208,7 +208,7 @@ public class ClientStateMove extends ClientState {
 		UserInterface userInterface = getClient().getUserInterface();
 		IconCache iconCache = userInterface.getIconCache();
 		userInterface.getFieldComponent().getLayerUnderPlayers().clearMovePath();
-		List<JMenuItem> menuItemList = new ArrayList<JMenuItem>();
+		List<JMenuItem> menuItemList = new ArrayList<>();
 		ActingPlayer actingPlayer = game.getActingPlayer();
 		if ((PlayerAction.PASS_MOVE == actingPlayer.getPlayerAction())
 				&& UtilPlayer.hasBall(game, actingPlayer.getPlayer())) {

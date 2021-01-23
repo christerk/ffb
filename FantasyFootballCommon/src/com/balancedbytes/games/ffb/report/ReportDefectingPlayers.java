@@ -22,9 +22,9 @@ public class ReportDefectingPlayers implements IReport {
 	private List<Boolean> fDefectings;
 
 	public ReportDefectingPlayers() {
-		fPlayerIds = new ArrayList<String>();
-		fRolls = new ArrayList<Integer>();
-		fDefectings = new ArrayList<Boolean>();
+		fPlayerIds = new ArrayList<>();
+		fRolls = new ArrayList<>();
+		fDefectings = new ArrayList<>();
 	}
 
 	public ReportDefectingPlayers(String[] pPlayerIds, int[] pRolls, boolean[] pDefecting) {

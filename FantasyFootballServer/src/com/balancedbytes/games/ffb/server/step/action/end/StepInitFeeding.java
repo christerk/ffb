@@ -39,15 +39,15 @@ import com.eclipsesource.json.JsonValue;
 
 /**
  * Step in any sequence to handle the feeding on another player.
- * 
+ *
  * Needs to be initialized with stepParameter GOTO_LABEL_ON_END. Needs to be
  * initialized with stepParameter FEEDING_ALLOWED. May be initialized with
  * stepParameter END_PLAYER_ACTION. May be initialized with stepParameter
  * END_TURN.
- * 
+ *
  * Sets stepParameter END_PLAYER_ACTION for all steps on the stack. Sets
  * stepParameter END_TURN for all steps on the stack.
- * 
+ *
  * @author Kalimar
  */
 public class StepInitFeeding extends AbstractStep {
@@ -149,7 +149,7 @@ public class StepInitFeeding extends AbstractStep {
 		if (playerState.hasTacklezones() && (fFeedOnPlayerChoice == null)) {
 			game.setDefenderId(null);
 			Team team = game.isHomePlaying() ? game.getTeamHome() : game.getTeamAway();
-			Player[] victims = UtilPlayer.findAdjacentPlayersToFeedOn(game, team, playerCoordinate);
+			Player<?>[] victims = UtilPlayer.findAdjacentPlayersToFeedOn(game, team, playerCoordinate);
 			if (ArrayTool.isProvided(victims)) {
 				UtilServerDialog.showDialog(getGameState(),
 						new DialogPlayerChoiceParameter(team.getId(), PlayerChoiceMode.FEED, victims, null, 1), false);

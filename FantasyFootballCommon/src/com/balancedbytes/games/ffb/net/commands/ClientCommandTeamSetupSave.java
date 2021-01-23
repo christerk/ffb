@@ -23,8 +23,8 @@ public class ClientCommandTeamSetupSave extends ClientCommand {
 	private List<FieldCoordinate> fPlayerCoordinates;
 
 	public ClientCommandTeamSetupSave() {
-		fPlayerNumbers = new ArrayList<Integer>();
-		fPlayerCoordinates = new ArrayList<FieldCoordinate>();
+		fPlayerNumbers = new ArrayList<>();
+		fPlayerCoordinates = new ArrayList<>();
 	}
 
 	public ClientCommandTeamSetupSave(String pSetupName, int[] pPlayerNumbers, FieldCoordinate[] pPlayerCoordinates) {

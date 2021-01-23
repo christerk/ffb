@@ -13,7 +13,7 @@ import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
 /**
- * 
+ *
  * @author Kalimar
  */
 public class ClientCommandArgueTheCall extends ClientCommand {
@@ -21,7 +21,7 @@ public class ClientCommandArgueTheCall extends ClientCommand {
 	private List<String> fPlayerIds;
 
 	public ClientCommandArgueTheCall() {
-		fPlayerIds = new ArrayList<String>();
+		fPlayerIds = new ArrayList<>();
 	}
 
 	public ClientCommandArgueTheCall(String playerId) {

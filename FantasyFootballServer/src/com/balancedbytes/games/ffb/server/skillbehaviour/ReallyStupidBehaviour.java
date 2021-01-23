@@ -76,10 +76,10 @@ public class ReallyStupidBehaviour extends SkillBehaviour<ReallyStupid> {
 						if (actingPlayer.getPlayerAction() != PlayerAction.THROW_TEAM_MATE
 								&& actingPlayer.getPlayerAction() != PlayerAction.KICK_TEAM_MATE) {
 							FieldCoordinate playerCoordinate = game.getFieldModel().getPlayerCoordinate(actingPlayer.getPlayer());
-							Player[] teamMates = UtilPlayer.findAdjacentBlockablePlayers(game, actingPlayer.getPlayer().getTeam(),
+							Player<?>[] teamMates = UtilPlayer.findAdjacentBlockablePlayers(game, actingPlayer.getPlayer().getTeam(),
 									playerCoordinate);
 							goodConditions = false;
-							for (Player teamMate : teamMates) {
+							for (Player<?> teamMate : teamMates) {
 								if (!UtilCards.hasSkill(game, teamMate, skill)) {
 									goodConditions = true;
 									break;

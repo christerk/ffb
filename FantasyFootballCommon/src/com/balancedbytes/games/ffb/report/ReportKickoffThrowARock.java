@@ -22,7 +22,7 @@ public class ReportKickoffThrowARock implements IReport {
 	private List<String> fPlayersHit;
 
 	public ReportKickoffThrowARock() {
-		fPlayersHit = new ArrayList<String>();
+		fPlayersHit = new ArrayList<>();
 	}
 
 	public ReportKickoffThrowARock(int pRollHome, int pRollAway, String[] pPlayersHit) {

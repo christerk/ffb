@@ -33,7 +33,7 @@ import com.balancedbytes.games.ffb.util.UtilActingPlayer;
 import org.eclipse.jetty.websocket.api.Session;
 
 /**
- * 
+ *
  * @author Kalimar
  */
 public class UtilServerGame {
@@ -161,7 +161,7 @@ public class UtilServerGame {
 	}
 
 	protected static boolean teamHasLeaderOnField(Team pTeam, FieldModel pFieldModel) {
-		for (Player player : pTeam.getPlayers()) {
+		for (Player<?> player : pTeam.getPlayers()) {
 			if (playerOnField(player, pFieldModel)
 					&& player.hasSkillWithProperty(NamedProperties.grantsTeamRerollWhenOnPitch)) {
 				return true;
@@ -170,7 +170,7 @@ public class UtilServerGame {
 		return false;
 	}
 
-	protected static boolean playerOnField(Player pPlayer, FieldModel pFieldModel) {
+	protected static boolean playerOnField(Player<?> pPlayer, FieldModel pFieldModel) {
 		FieldCoordinate fieldCoordinate = pFieldModel.getPlayerCoordinate(pPlayer);
 		return ((fieldCoordinate != null) && !fieldCoordinate.isBoxCoordinate());
 	}

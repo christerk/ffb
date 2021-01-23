@@ -10,7 +10,7 @@ import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
 
 /**
- * 
+ *
  * @author Kalimar
  */
 public class DialogUseIgorHandler extends DialogHandler {
@@ -26,7 +26,7 @@ public class DialogUseIgorHandler extends DialogHandler {
 
 		if (dialogUseIgorParameter != null) {
 
-			Player player = game.getPlayerById(dialogUseIgorParameter.getPlayerId());
+			Player<?> player = game.getPlayerById(dialogUseIgorParameter.getPlayerId());
 
 			if ((ClientMode.PLAYER == getClient().getMode()) && getClient().getGame().getTeamHome().hasPlayer(player)) {
 				setDialog(new DialogUseIgor(getClient(), dialogUseIgorParameter));

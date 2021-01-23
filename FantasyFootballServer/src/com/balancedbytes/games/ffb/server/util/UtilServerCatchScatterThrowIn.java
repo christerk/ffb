@@ -13,21 +13,21 @@ import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.util.UtilPlayer;
 
 /**
- * 
+ *
  * @author Kalimar
  */
 public class UtilServerCatchScatterThrowIn {
 
-	public static Player[] findDivingCatchers(GameState pGameState, Team pTeam, FieldCoordinate pCoordinate) {
-		Set<Player> divingCatchPlayers = new HashSet<Player>();
+	public static Player<?>[] findDivingCatchers(GameState pGameState, Team pTeam, FieldCoordinate pCoordinate) {
+		Set<Player<?>> divingCatchPlayers = new HashSet<>();
 		Game game = pGameState.getGame();
-		Player[] adjacentPlayers = UtilPlayer.findAdjacentPlayersWithTacklezones(game, pTeam, pCoordinate, false);
-		for (Player player : adjacentPlayers) {
+		Player<?>[] adjacentPlayers = UtilPlayer.findAdjacentPlayersWithTacklezones(game, pTeam, pCoordinate, false);
+		for (Player<?> player : adjacentPlayers) {
 			if (player.hasSkillWithProperty(NamedProperties.canAttemptCatchInAdjacentSquares)) {
 				divingCatchPlayers.add(player);
 			}
 		}
-		Player[] playerArray = divingCatchPlayers.toArray(new Player[divingCatchPlayers.size()]);
+		Player<?>[] playerArray = divingCatchPlayers.toArray(new Player[divingCatchPlayers.size()]);
 		UtilPlayer.sortByPlayerNr(playerArray);
 		return playerArray;
 	}

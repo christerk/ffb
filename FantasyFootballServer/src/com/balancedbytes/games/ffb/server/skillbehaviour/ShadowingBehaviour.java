@@ -50,7 +50,7 @@ public class ShadowingBehaviour extends SkillBehaviour<Shadowing> {
 				boolean doShadowing = (!state.usingDivingTackle && (game.getTurnMode() != TurnMode.KICKOFF_RETURN)
 						&& (game.getTurnMode() != TurnMode.PASS_BLOCK));
 				if (doShadowing && (state.coordinateFrom != null) && (state.usingShadowing == null)) {
-					Player[] shadowers = UtilPlayer.findAdjacentOpposingPlayersWithSkill(game, state.coordinateFrom, skill, true);
+					Player<?>[] shadowers = UtilPlayer.findAdjacentOpposingPlayersWithSkill(game, state.coordinateFrom, skill, true);
 					shadowers = UtilPlayer.filterThrower(game, shadowers);
 					if (game.getTurnMode() == TurnMode.DUMP_OFF) {
 						shadowers = UtilPlayer.filterAttackerAndDefender(game, shadowers);
@@ -123,7 +123,7 @@ public class ShadowingBehaviour extends SkillBehaviour<Shadowing> {
 				}
 				if (doNextStep) {
 					if (state.defenderPosition != null) {
-						Player defender = game.getFieldModel().getPlayer(state.defenderPosition);
+						Player<?> defender = game.getFieldModel().getPlayer(state.defenderPosition);
 						game.setDefenderId((defender != null) ? defender.getId() : null);
 					}
 					step.getResult().setNextAction(StepAction.NEXT_STEP);

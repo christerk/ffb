@@ -42,7 +42,7 @@ import com.balancedbytes.games.ffb.model.change.ModelChange;
 
 /**
  * @author j129340
- * 
+ *
  */
 @SuppressWarnings("serial")
 public class FieldComponent extends JPanel implements IModelChangeObserver, MouseInputListener {
@@ -78,7 +78,7 @@ public class FieldComponent extends JPanel implements IModelChangeObserver, Mous
 		fLayerOverPlayers = new FieldLayerOverPlayers(pClient);
 		fLayerRangeRuler = new FieldLayerRangeRuler(pClient);
 
-		fCoordinateByPlayerId = new HashMap<String, FieldCoordinate>();
+		fCoordinateByPlayerId = new HashMap<>();
 
 		fImage = new BufferedImage(FieldLayer.FIELD_IMAGE_WIDTH, FieldLayer.FIELD_IMAGE_HEIGHT,
 				BufferedImage.TYPE_INT_ARGB);
@@ -263,7 +263,7 @@ public class FieldComponent extends JPanel implements IModelChangeObserver, Mous
 			fCoordinateByPlayerId.put(pModelChange.getKey(), playerCoordinate);
 			break;
 		case FIELD_MODEL_SET_PLAYER_STATE:
-			Player player = game.getPlayerById(pModelChange.getKey());
+			Player<?> player = game.getPlayerById(pModelChange.getKey());
 			getLayerPlayers().updateBallAndPlayers(fieldModel.getPlayerCoordinate(player), true);
 			break;
 		case FIELD_MODEL_SET_RANGE_RULER:
@@ -295,7 +295,7 @@ public class FieldComponent extends JPanel implements IModelChangeObserver, Mous
 
 	private void initPlayerCoordinates() {
 		Game game = getClient().getGame();
-		for (Player player : game.getPlayers()) {
+		for (Player<?> player : game.getPlayers()) {
 			fCoordinateByPlayerId.put(player.getId(), game.getFieldModel().getPlayerCoordinate(player));
 		}
 	}

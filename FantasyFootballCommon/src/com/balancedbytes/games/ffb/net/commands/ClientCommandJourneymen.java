@@ -13,7 +13,7 @@ import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
 /**
- * 
+ *
  * @author Kalimar
  */
 public class ClientCommandJourneymen extends ClientCommand {
@@ -22,8 +22,8 @@ public class ClientCommandJourneymen extends ClientCommand {
 	private List<String> fPositionIds;
 
 	public ClientCommandJourneymen() {
-		fSlots = new ArrayList<Integer>();
-		fPositionIds = new ArrayList<String>();
+		fSlots = new ArrayList<>();
+		fPositionIds = new ArrayList<>();
 	}
 
 	public ClientCommandJourneymen(String[] pPositionsIds, int[] pSlots) {

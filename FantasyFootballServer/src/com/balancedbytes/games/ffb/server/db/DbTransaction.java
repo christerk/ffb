@@ -8,7 +8,7 @@ import com.balancedbytes.games.ffb.server.FantasyFootballServer;
 import com.balancedbytes.games.ffb.server.IServerLogLevel;
 
 /**
- * 
+ *
  * @author Kalimar
  */
 public class DbTransaction implements IDbUpdateParameter {
@@ -17,7 +17,7 @@ public class DbTransaction implements IDbUpdateParameter {
 	private List<IDbUpdateParameter> fDbUpdateParameters;
 
 	public DbTransaction() {
-		fDbUpdateParameters = new ArrayList<IDbUpdateParameter>();
+		fDbUpdateParameters = new ArrayList<>();
 	}
 
 	public void add(IDbUpdateParameter pDbUpdateParameter) {

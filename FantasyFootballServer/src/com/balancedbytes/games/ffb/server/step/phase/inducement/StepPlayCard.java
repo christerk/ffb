@@ -37,10 +37,10 @@ import com.eclipsesource.json.JsonValue;
 
 /**
  * Step to play a card.
- * 
+ *
  * Needs to be initialized with stepParameter CARD. Needs to be initialized with
  * stepParameter HOME_TEAM.
- * 
+ *
  * @author Kalimar
  */
 public final class StepPlayCard extends AbstractStep {
@@ -121,7 +121,7 @@ public final class StepPlayCard extends AbstractStep {
 			case CLIENT_END_TURN:
 				if (fIllegalSubstitution && UtilServerSteps.checkCommandIsFromCurrentPlayer(getGameState(), pReceivedCommand)) {
 					fEndCardPlaying = true;
-					Player setupPlayer = game.getPlayerById(fSetupPlayerId);
+					Player<?> setupPlayer = game.getPlayerById(fSetupPlayerId);
 					if ((setupPlayer != null) && (fSetupPlayerCoordinate != null)) {
 						game.getFieldModel().addCardEffect(setupPlayer, CardEffect.ILLEGALLY_SUBSTITUTED);
 						UtilServerSetup.setupPlayer(getGameState(), fSetupPlayerId, fSetupPlayerCoordinate);
@@ -153,7 +153,7 @@ public final class StepPlayCard extends AbstractStep {
 			playCardOnPlayer();
 		} else if (fCard.getTarget().isPlayedOnPlayer()) {
 			// step initInducement has already checked if this card can be played
-			Player[] allowedPlayers = UtilServerCards.findAllowedPlayersForCard(game, fCard);
+			Player<?>[] allowedPlayers = UtilServerCards.findAllowedPlayersForCard(game, fCard);
 			game.setDialogParameter(
 					new DialogPlayerChoiceParameter(ownTeam.getId(), PlayerChoiceMode.CARD, allowedPlayers, null, 1));
 		} else {
@@ -178,7 +178,7 @@ public final class StepPlayCard extends AbstractStep {
 
 	private void playCardOnPlayer() {
 		Game game = getGameState().getGame();
-		Player player = game.getPlayerById(fPlayerId);
+		Player<?> player = game.getPlayerById(fPlayerId);
 		if (player == null) {
 			return;
 		}
@@ -207,12 +207,12 @@ public final class StepPlayCard extends AbstractStep {
 	private boolean playCardChopBlock() {
 		boolean doNextStep = false;
 		Game game = getGameState().getGame();
-		Player player = game.getPlayerById(fPlayerId);
+		Player<?> player = game.getPlayerById(fPlayerId);
 		FieldCoordinate playerCoordinate = game.getFieldModel().getPlayerCoordinate(player);
 		Team ownTeam = fHomeTeam ? game.getTeamHome() : game.getTeamAway();
 		Team otherTeam = fHomeTeam ? game.getTeamAway() : game.getTeamHome();
 		if (!StringTool.isProvided(fOpponentId)) {
-			Player[] blockablePlayers = UtilPlayer.findAdjacentBlockablePlayers(game, otherTeam, playerCoordinate);
+			Player<?>[] blockablePlayers = UtilPlayer.findAdjacentBlockablePlayers(game, otherTeam, playerCoordinate);
 			if (blockablePlayers.length == 1) {
 				fOpponentId = blockablePlayers[0].getId();
 			} else {
@@ -223,7 +223,7 @@ public final class StepPlayCard extends AbstractStep {
 		}
 		if (StringTool.isProvided(fOpponentId)) {
 			doNextStep = true;
-			Player opponent = game.getPlayerById(fOpponentId);
+			Player<?> opponent = game.getPlayerById(fOpponentId);
 			publishParameters(UtilServerInjury.stunPlayer(this, opponent, ApothecaryMode.DEFENDER));
 			publishParameters(UtilServerInjury.dropPlayer(this, player, ApothecaryMode.ATTACKER));
 		}

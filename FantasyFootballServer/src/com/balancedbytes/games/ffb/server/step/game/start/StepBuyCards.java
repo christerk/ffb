@@ -33,10 +33,10 @@ import com.eclipsesource.json.JsonValue;
 
 /**
  * Step in start game sequence to buy cards.
- * 
+ *
  * Sets stepParameter INDUCEMENT_GOLD_AWAY for all steps on the stack. Sets
  * stepParameter INDUCEMENT_GOLD_HOME for all steps on the stack.
- * 
+ *
  * @author Kalimar
  */
 public final class StepBuyCards extends AbstractStep {
@@ -58,7 +58,7 @@ public final class StepBuyCards extends AbstractStep {
 
 	public StepBuyCards(GameState pGameState) {
 		super(pGameState);
-		fDeckByType = new HashMap<CardType, CardDeck>();
+		fDeckByType = new HashMap<>();
 		fBuyCardHome = null;
 		fBuyCardAway = null;
 	}

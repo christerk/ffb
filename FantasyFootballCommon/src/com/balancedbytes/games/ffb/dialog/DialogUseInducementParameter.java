@@ -16,7 +16,7 @@ import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
 /**
- * 
+ *
  * @author Kalimar
  */
 public class DialogUseInducementParameter implements IDialogParameter {
@@ -63,12 +63,12 @@ public class DialogUseInducementParameter implements IDialogParameter {
 		JsonObject jsonObject = new JsonObject();
 		IJsonOption.DIALOG_ID.addTo(jsonObject, getId());
 		IJsonOption.TEAM_ID.addTo(jsonObject, fTeamId);
-		List<String> inducementTypeNames = new ArrayList<String>();
+		List<String> inducementTypeNames = new ArrayList<>();
 		for (InducementType inducementType : getInducementTypes()) {
 			inducementTypeNames.add(inducementType.getName());
 		}
 		IJsonOption.INDUCEMENT_TYPE_ARRAY.addTo(jsonObject, inducementTypeNames);
-		List<String> cardNames = new ArrayList<String>();
+		List<String> cardNames = new ArrayList<>();
 		for (Card card : getCards()) {
 			cardNames.add(card.getName());
 		}

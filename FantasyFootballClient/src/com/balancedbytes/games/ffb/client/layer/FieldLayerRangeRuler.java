@@ -1,18 +1,5 @@
 package com.balancedbytes.games.ffb.client.layer;
 
-import java.awt.AlphaComposite;
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.FontMetrics;
-import java.awt.Graphics2D;
-import java.awt.Point;
-import java.awt.Polygon;
-import java.awt.Rectangle;
-import java.awt.geom.AffineTransform;
-import java.awt.geom.Rectangle2D;
-import java.util.HashMap;
-import java.util.Map;
-
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.FieldCoordinateBounds;
 import com.balancedbytes.games.ffb.PassingDistance;
@@ -26,13 +13,26 @@ import com.balancedbytes.games.ffb.util.ArrayTool;
 import com.balancedbytes.games.ffb.util.StringTool;
 import com.balancedbytes.games.ffb.util.UtilPassing;
 
+import java.awt.AlphaComposite;
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.FontMetrics;
+import java.awt.Graphics2D;
+import java.awt.Point;
+import java.awt.Polygon;
+import java.awt.Rectangle;
+import java.awt.geom.AffineTransform;
+import java.awt.geom.Rectangle2D;
+import java.util.HashMap;
+import java.util.Map;
+
 /**
- * 
+ *
  * @author Kalimar
  */
 public class FieldLayerRangeRuler extends FieldLayer {
 
-	private static final Map<PassingDistance, Color> _COLOR_BY_PASSING_DISTANCE = new HashMap<PassingDistance, Color>();
+	private static final Map<PassingDistance, Color> _COLOR_BY_PASSING_DISTANCE = new HashMap<>();
 
 	static {
 		_COLOR_BY_PASSING_DISTANCE.put(PassingDistance.QUICK_PASS, new Color(0.0f, 1.0f, 0.0f, 0.3f));
@@ -62,7 +62,7 @@ public class FieldLayerRangeRuler extends FieldLayer {
 				&& StringTool.isProvided(pRangeRuler.getThrowerId())) {
 
 			Game game = getClient().getGame();
-			Player thrower = game.getPlayerById(pRangeRuler.getThrowerId());
+			Player<?> thrower = game.getPlayerById(pRangeRuler.getThrowerId());
 			FieldCoordinate throwerCoordinate = game.getFieldModel().getPlayerCoordinate(thrower);
 
 			PassingDistance passingDistance = UtilPassing.findPassingDistance(game, throwerCoordinate,
@@ -90,23 +90,19 @@ public class FieldLayerRangeRuler extends FieldLayer {
 					g2d.setPaint(_COLOR_BY_PASSING_DISTANCE.get(passingDistance));
 					g2d.fillPolygon(fPolygonComplete);
 
-					if (pRangeRuler.getMinimumRoll() > 0) {
+					// [ cos(theta) -sin(theta) tx ]
+					// [ sin(theta) cos(theta) ty ]
+					// [ 0 0 1 ]
 
-						// [ cos(theta) -sin(theta) tx ]
-						// [ sin(theta) cos(theta) ty ]
-						// [ 0 0 1 ]
+					// [ m00 m01 m02 ]
+					// [ m10 m11 m12 ]
+					// [ 0 0 1 ]
 
-						// [ m00 m01 m02 ]
-						// [ m10 m11 m12 ]
-						// [ 0 0 1 ]
+					g2d.transform(new AffineTransform(cosPhi, -sinPhi, sinPhi, cosPhi, startCenter.x, startCenter.y));
+					g2d.setFont(new Font("Sans Serif", Font.BOLD, 32));
+					g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.CLEAR, 0.0f));
 
-						g2d.transform(new AffineTransform(cosPhi, -sinPhi, sinPhi, cosPhi, startCenter.x, startCenter.y));
-						g2d.setFont(new Font("Sans Serif", Font.BOLD, 32));
-						g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.CLEAR, 0.0f));
-
-						drawRulerModifier(g2d, (int) length, 0, pRangeRuler.getMinimumRoll());
-
-					}
+					drawRulerModifier(g2d, (int) length, 0, pRangeRuler.getMinimumRoll());
 
 					g2d.dispose();
 
@@ -117,7 +113,7 @@ public class FieldLayerRangeRuler extends FieldLayer {
 
 				Color selectSquareColor = null;
 				Team otherTeam = game.isHomePlaying() ? game.getTeamAway() : game.getTeamHome();
-				Player catcher = game.getFieldModel().getPlayer(pRangeRuler.getTargetCoordinate());
+				Player<?> catcher = game.getFieldModel().getPlayer(pRangeRuler.getTargetCoordinate());
 				if ((catcher == null) || otherTeam.hasPlayer(catcher)) {
 					selectSquareColor = COLOR_SELECT_SQUARE;
 				} else {
@@ -167,9 +163,7 @@ public class FieldLayerRangeRuler extends FieldLayer {
 			int x = pCoordinate.getX() * FIELD_SQUARE_SIZE;
 			int y = pCoordinate.getY() * FIELD_SQUARE_SIZE;
 			Rectangle playerSquare = new Rectangle(x, y, FIELD_SQUARE_SIZE, FIELD_SQUARE_SIZE);
-			if ((fPolygonComplete != null) && fPolygonComplete.intersects(playerSquare)) {
-				return true;
-			}
+			return (fPolygonComplete != null) && fPolygonComplete.intersects(playerSquare);
 		}
 		return false;
 	}
@@ -227,7 +221,7 @@ public class FieldLayerRangeRuler extends FieldLayer {
 		}
 	}
 
-	public void markPlayers(Player[] pMarkedPlayers, Color pColor) {
+	public void markPlayers(Player<?>[] pMarkedPlayers, Color pColor) {
 		Game game = getClient().getGame();
 		if (ArrayTool.isProvided(pMarkedPlayers) && (pColor != null)) {
 			fMarkedCoordinates = new FieldCoordinate[pMarkedPlayers.length];
@@ -247,20 +241,14 @@ public class FieldLayerRangeRuler extends FieldLayer {
 		}
 	}
 
-	private void drawRulerModifier(Graphics2D pG2d, int pTotalLength, int pPreviousSegmentLength, int pMinimumRoll) {
-		String numberString;
-		if (pMinimumRoll < 6) {
-			numberString = new StringBuilder().append(pMinimumRoll).append("+").toString();
-		} else {
-			numberString = "6";
-		}
+	private void drawRulerModifier(Graphics2D pG2d, int pTotalLength, int pPreviousSegmentLength, String pMinimumRoll) {
 		FontMetrics metrics = pG2d.getFontMetrics();
-		Rectangle2D numberBounds = metrics.getStringBounds(numberString, pG2d);
+		Rectangle2D numberBounds = metrics.getStringBounds(pMinimumRoll, pG2d);
 		int segmentLength = pTotalLength - pPreviousSegmentLength;
 		if (numberBounds.getWidth() < segmentLength) {
 			int baselineX = pPreviousSegmentLength + (segmentLength - (int) numberBounds.getWidth()) / 2;
 			int baselineY = ((int) (numberBounds.getHeight() / 4)) + 2;
-			pG2d.drawString(numberString, baselineX, baselineY);
+			pG2d.drawString(pMinimumRoll, baselineX, baselineY);
 		}
 	}
 

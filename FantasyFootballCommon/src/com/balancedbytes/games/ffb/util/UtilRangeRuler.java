@@ -1,14 +1,18 @@
 package com.balancedbytes.games.ffb.util;
 
-import java.util.Set;
-
+import com.balancedbytes.games.ffb.FactoryType;
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.PassModifier;
 import com.balancedbytes.games.ffb.PassingDistance;
 import com.balancedbytes.games.ffb.RangeRuler;
 import com.balancedbytes.games.ffb.factory.PassModifierFactory;
+import com.balancedbytes.games.ffb.mechanics.Mechanic;
+import com.balancedbytes.games.ffb.mechanics.PassMechanic;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
+
+import java.util.Optional;
+import java.util.Set;
 
 /**
  * 
@@ -20,41 +24,32 @@ public class UtilRangeRuler {
 			boolean pThrowTeamMate) {
 		RangeRuler rangeRuler = null;
 		if ((pGame != null) && (pThrower != null) && (pTargetCoordinate != null)) {
+			PassMechanic mechanic = (PassMechanic) pGame.getRules().getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.PASS.name());
 			FieldCoordinate throwerCoordinate = pGame.getFieldModel().getPlayerCoordinate(pThrower);
 			PassingDistance passingDistance = UtilPassing.findPassingDistance(pGame, throwerCoordinate, pTargetCoordinate,
 					pThrowTeamMate);
 			if (passingDistance != null) {
-				int minimumRoll = 0;
+				Optional<Integer> minimumRoll;
 				Set<PassModifier> passModifiers = new PassModifierFactory().findPassModifiers(pGame, pThrower, passingDistance,
-						pThrowTeamMate);
+					pThrowTeamMate);
 				if (pThrowTeamMate) {
-					minimumRoll = minimumRollThrowTeamMate(pThrower, passingDistance, passModifiers);
+					minimumRoll = Optional.of(minimumRollThrowTeamMate(passingDistance, passModifiers));
 				} else {
-					minimumRoll = minimumRollPass(pThrower, passingDistance, passModifiers);
+					minimumRoll = mechanic.minimumRoll(pThrower, passingDistance, passModifiers);
 				}
-				rangeRuler = new RangeRuler(pThrower.getId(), pTargetCoordinate, minimumRoll, pThrowTeamMate);
+				rangeRuler = new RangeRuler(pThrower.getId(), pTargetCoordinate, minimumRoll.orElse(0), pThrowTeamMate);
 			}
 		}
 		return rangeRuler;
 	}
 
-	public static int minimumRollPass(Player<?> pThrower, PassingDistance pPassingDistance,
-			Set<PassModifier> pPassModifiers) {
+	public static int minimumRollThrowTeamMate(PassingDistance pPassingDistance,
+	                                           Set<PassModifier> pPassModifiers) {
 		int modifierTotal = 0;
 		for (PassModifier passModifier : pPassModifiers) {
 			modifierTotal += passModifier.getModifier();
 		}
-		return Math.max(Math.max(2 - (pPassingDistance.getModifier() - modifierTotal), 2),
-				7 - Math.min(pThrower.getAgility(), 6) - pPassingDistance.getModifier() + modifierTotal);
-	}
-
-	public static int minimumRollThrowTeamMate(Player<?> pThrower, PassingDistance pPassingDistance,
-			Set<PassModifier> pPassModifiers) {
-		int modifierTotal = 0;
-		for (PassModifier passModifier : pPassModifiers) {
-			modifierTotal += passModifier.getModifier();
-		}
-		return Math.max(2, 2 - pPassingDistance.getModifier() + modifierTotal);
+		return Math.max(2, 2 - pPassingDistance.getModifier2016() + modifierTotal);
 	}
 
 }

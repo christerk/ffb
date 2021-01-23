@@ -10,7 +10,7 @@ import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.util.UtilPassing;
 
 /**
- * 
+ *
  * @author Kalimar
  */
 public class ClientStateInterception extends ClientState {
@@ -29,13 +29,13 @@ public class ClientStateInterception extends ClientState {
 		setClickable(true);
 	}
 
-	protected void clickOnPlayer(Player pPlayer) {
+	protected void clickOnPlayer(Player<?> pPlayer) {
 		if (isInterceptor(pPlayer)) {
 			getClient().getCommunication().sendInterceptorChoice(pPlayer);
 		}
 	}
 
-	protected boolean mouseOverPlayer(Player pPlayer) {
+	protected boolean mouseOverPlayer(Player<?> pPlayer) {
 		super.mouseOverPlayer(pPlayer);
 		if (isInterceptor(pPlayer)) {
 			UtilClientCursor.setCustomCursor(getClient().getUserInterface(), IIconProperty.CURSOR_PASS);
@@ -51,10 +51,10 @@ public class ClientStateInterception extends ClientState {
 		return true;
 	}
 
-	private boolean isInterceptor(Player pPlayer) {
+	private boolean isInterceptor(Player<?> pPlayer) {
 		boolean isInterceptor = false;
 		Game game = getClient().getGame();
-		Player[] interceptors = UtilPassing.findInterceptors(game, game.getThrower(), game.getPassCoordinate());
+		Player<?>[] interceptors = UtilPassing.findInterceptors(game, game.getThrower(), game.getPassCoordinate());
 		for (int i = 0; i < interceptors.length; i++) {
 			if (interceptors[i] == pPlayer) {
 				isInterceptor = true;

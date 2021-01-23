@@ -9,7 +9,7 @@ import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
 
 /**
- * 
+ *
  * @author Kalimar
  */
 public class DialogUseApothecaryHandler extends DialogHandler {
@@ -26,7 +26,7 @@ public class DialogUseApothecaryHandler extends DialogHandler {
 
 		if (dialogUseApothecaryParameter != null) {
 
-			Player player = game.getPlayerById(dialogUseApothecaryParameter.getPlayerId());
+			Player<?> player = game.getPlayerById(dialogUseApothecaryParameter.getPlayerId());
 
 			if ((ClientMode.PLAYER == getClient().getMode()) && getClient().getGame().getTeamHome().hasPlayer(player)) {
 				setDialog(new DialogUseApothecary(getClient(), dialogUseApothecaryParameter));

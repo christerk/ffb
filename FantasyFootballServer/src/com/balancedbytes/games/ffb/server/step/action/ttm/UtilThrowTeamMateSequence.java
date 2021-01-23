@@ -47,8 +47,8 @@ public class UtilThrowTeamMateSequence {
 		FieldCoordinate endCoordinate = null;
 		FieldCoordinate lastValidCoordinate = null;
 		FieldCoordinate startCoordinate = pStartCoordinate;
-		List<Integer> rollList = new ArrayList<Integer>();
-		List<Direction> directionList = new ArrayList<Direction>();
+		List<Integer> rollList = new ArrayList<>();
+		List<Direction> directionList = new ArrayList<>();
 
 		boolean inBounds = true;
 		while (inBounds) {

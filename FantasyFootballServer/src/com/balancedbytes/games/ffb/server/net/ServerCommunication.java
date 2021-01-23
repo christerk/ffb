@@ -196,7 +196,7 @@ public class ServerCommunication implements Runnable, IReceivedCommandHandler {
 
 	public void shutdown() {
 		fStopped = true;
-		List<ReceivedCommand> commands = new ArrayList<ReceivedCommand>();
+		List<ReceivedCommand> commands = new ArrayList<>();
 		fCommandQueue.drainTo(commands);
 		for (ReceivedCommand command : commands) {
 			handleCommandInternal(command);

@@ -35,7 +35,7 @@ import com.balancedbytes.games.ffb.option.GameOptionInt;
 import com.balancedbytes.games.ffb.util.StringTool;
 
 /**
- * 
+ *
  * @author Kalimar
  */
 @SuppressWarnings("serial")
@@ -95,10 +95,10 @@ public class DialogBuyCards extends Dialog implements ActionListener, KeyListene
 		panelMain.add(panelCards);
 		panelMain.add(Box.createVerticalStrut(10));
 
-		fNrOfCardsPerType = new HashMap<CardType, Integer>();
-		fButtonPerType = new HashMap<CardType, JButton>();
-		cardPrices = new HashMap<CardType, Integer>();
-		cardLimits = new HashMap<CardType, Integer>();
+		fNrOfCardsPerType = new HashMap<>();
+		fButtonPerType = new HashMap<>();
+		cardPrices = new HashMap<>();
+		cardLimits = new HashMap<>();
 
 		for (CardType cardType : CardType.values()) {
 			int price = ((GameOptionInt) pClient.getGame().getOptions().getOptionWithDefault(cardType.getCostId()))

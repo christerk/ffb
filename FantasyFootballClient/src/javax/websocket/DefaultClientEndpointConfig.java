@@ -55,7 +55,7 @@ final class DefaultClientEndpointConfig implements ClientEndpointConfig {
 	private List<Extension> extensions;
 	private List<Class<? extends Encoder>> encoders;
 	private List<Class<? extends Decoder>> decoders;
-	private Map<String, Object> userProperties = new HashMap<String, Object>();
+	private Map<String, Object> userProperties = new HashMap<>();
 	private ClientEndpointConfig.Configurator clientEndpointConfigurator;
 
 	DefaultClientEndpointConfig(List<String> preferredSubprotocols, List<Extension> extensions,

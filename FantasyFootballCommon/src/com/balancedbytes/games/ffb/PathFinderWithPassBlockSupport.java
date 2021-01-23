@@ -16,7 +16,7 @@ import com.balancedbytes.games.ffb.util.UtilCards;
 import com.balancedbytes.games.ffb.util.UtilPassing;
 
 /**
- * 
+ *
  * @author Christer
  */
 public class PathFinderWithPassBlockSupport {
@@ -183,10 +183,9 @@ public class PathFinderWithPassBlockSupport {
 	 * The start square must contain a player. The path will not leave or pass
 	 * through a tackle zone, but it may end in one. The path will also avoid going
 	 * through or landing on a player.
-	 * 
-	 * @param fieldModel The field model to use.
+	 *
 	 * @param pEndCoord  Target square.
-	 * @return
+	 * @return Shortest path to target square
 	 */
 	public static FieldCoordinate[] getShortestPath(Game pGame, FieldCoordinate pEndCoord) {
 		if (pGame == null)
@@ -200,7 +199,7 @@ public class PathFinderWithPassBlockSupport {
 		Team movingTeam = actingPlayer.getPlayer().getTeam();
 		int maxDistance = UtilCards.getPlayerMovement(pGame, actingPlayer.getPlayer()) - actingPlayer.getCurrentMove();
 
-		Set<FieldCoordinate> pEndCoords = new HashSet<FieldCoordinate>(1);
+		Set<FieldCoordinate> pEndCoords = new HashSet<>(1);
 		pEndCoords.add(pEndCoord);
 		FieldCoordinate start = pGame.getFieldModel().getPlayerCoordinate(actingPlayer.getPlayer());
 
@@ -212,11 +211,10 @@ public class PathFinderWithPassBlockSupport {
 	 * The start square must contain a player. The path will not leave or pass
 	 * through a tackle zone, but it may end in one. The path will also avoid going
 	 * through or landing on a player.
-	 * 
-	 * @param fieldModel The field model to use.
+	 *
 	 * @param start      Starting square of the player.
 	 * @param pEndCoords List of target squares.
-	 * @return
+	 * @return Shortest path to target squares.
 	 */
 	private static FieldCoordinate[] getShortestPath(Game pGame, FieldCoordinate start, Set<FieldCoordinate> pEndCoords,
 			int maxDistance, Team movingTeam, PathFindContext context, boolean canLeap) {
@@ -241,12 +239,12 @@ public class PathFinderWithPassBlockSupport {
 		}
 
 		// Keeps a list of potential candidates
-		PriorityQueue<PathFindNode> openSet = new PriorityQueue<PathFindNode>();
+		PriorityQueue<PathFindNode> openSet = new PriorityQueue<>();
 
 		PathFindData data = new PathFindData();
 
 		// Nodes which have already been processed
-		HashSet<PathFindNode> closedSet = new HashSet<PathFindNode>();
+		Set<PathFindNode> closedSet = new HashSet<>();
 		PathFindNode neighbour;
 
 		// Initialise the open set with the start squares

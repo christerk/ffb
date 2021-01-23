@@ -17,6 +17,7 @@
 		<movement>6</movement>
 		<strength>2</strength>
 		<agility>3</agility>
+		<passing>4</passing>
 		<armour>7</armour>
 		<race>Goblin</race>
 		<portrait>portraits/underworld_underworldgoblin.png</portrait>
@@ -44,6 +45,7 @@
 		<movement>7</movement>
 		<strength>3</strength>
 		<agility>3</agility>
+		<passing>4</passing>
 		<armour>7</armour>
 		<race>Skaven</race>
 		<portrait>portraits/underworld_skavenlineman.png</portrait>
@@ -69,6 +71,7 @@
 		<movement>7</movement>
 		<strength>3</strength>
 		<agility>3</agility>
+		<passing>2</passing>
 		<armour>7</armour>
 		<race>Skaven</race>
 		<portrait>portraits/underworld_skaventhrower.png</portrait>
@@ -96,6 +99,7 @@
 		<movement>7</movement>
 		<strength>3</strength>
 		<agility>3</agility>
+		<passing>5</passing>
 		<armour>8</armour>
 		<race>Skaven</race>
 		<portrait>portraits/underworld_skavenblitzer.png</portrait>
@@ -122,6 +126,7 @@
 		<movement>4</movement>
 		<strength>5</strength>
 		<agility>1</agility>
+		<passing>5</passing>
 		<armour>9</armour>
 		<portrait>portraits/underworld_warpstonetroll.png</portrait>
 		<iconSet size="1">iconsets/underworld_warpstonetroll.png</iconSet>

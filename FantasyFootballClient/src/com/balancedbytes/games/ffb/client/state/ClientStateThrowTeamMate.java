@@ -22,7 +22,7 @@ import com.balancedbytes.games.ffb.util.UtilPlayer;
 import com.balancedbytes.games.ffb.util.UtilRangeRuler;
 
 /**
- * 
+ *
  * @author Kalimar
  */
 public class ClientStateThrowTeamMate extends ClientStateMove {
@@ -47,7 +47,7 @@ public class ClientStateThrowTeamMate extends ClientStateMove {
 		fRangeGridHandler.refreshSettings();
 	}
 
-	protected void clickOnPlayer(Player pPlayer) {
+	protected void clickOnPlayer(Player<?> pPlayer) {
 		Game game = getClient().getGame();
 		ActingPlayer actingPlayer = game.getActingPlayer();
 		UserInterface userInterface = getClient().getUserInterface();
@@ -91,7 +91,7 @@ public class ClientStateThrowTeamMate extends ClientStateMove {
 		return super.mouseOverField(pCoordinate);
 	}
 
-	protected boolean mouseOverPlayer(Player pPlayer) {
+	protected boolean mouseOverPlayer(Player<?> pPlayer) {
 		Game game = getClient().getGame();
 		UserInterface userInterface = getClient().getUserInterface();
 		if ((game.getDefender() == null) && (game.getPassCoordinate() == null)) {
@@ -132,7 +132,7 @@ public class ClientStateThrowTeamMate extends ClientStateMove {
 		return (rangeRuler != null);
 	}
 
-	private boolean canBeThrown(Player pPlayer) {
+	private boolean canBeThrown(Player<?> pPlayer) {
 		Game game = getClient().getGame();
 		ActingPlayer actingPlayer = game.getActingPlayer();
 		PlayerState catcherState = game.getFieldModel().getPlayerState(pPlayer);
@@ -150,7 +150,7 @@ public class ClientStateThrowTeamMate extends ClientStateMove {
 		Game game = getClient().getGame();
 		ActingPlayer actingPlayer = game.getActingPlayer();
 		UserInterface userInterface = getClient().getUserInterface();
-		Player[] throwablePlayers = UtilPlayer.findThrowableTeamMates(game, actingPlayer.getPlayer());
+		Player<?>[] throwablePlayers = UtilPlayer.findThrowableTeamMates(game, actingPlayer.getPlayer());
 		if ((game.getDefender() == null) && ArrayTool.isProvided(throwablePlayers)) {
 			userInterface.getFieldComponent().getLayerRangeRuler().markPlayers(throwablePlayers,
 					FieldLayerRangeRuler.COLOR_THROWABLE_PLAYER);
@@ -176,7 +176,7 @@ public class ClientStateThrowTeamMate extends ClientStateMove {
 		userInterface.getFieldComponent().refresh();
 	}
 
-	protected void menuItemSelected(Player pPlayer, int pMenuKey) {
+	protected void menuItemSelected(Player<?> pPlayer, int pMenuKey) {
 		if (pMenuKey == IPlayerPopupMenuKeys.KEY_RANGE_GRID) {
 			fRangeGridHandler.setShowRangeGrid(!fRangeGridHandler.isShowRangeGrid());
 			fRangeGridHandler.refreshRangeGrid();

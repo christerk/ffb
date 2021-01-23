@@ -14,7 +14,7 @@ import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
 /**
- * 
+ *
  * @author Kalimar
  */
 public class ServerCommandUserSettings extends ServerCommand {
@@ -22,7 +22,7 @@ public class ServerCommandUserSettings extends ServerCommand {
 	private Map<String, String> fUserSettings;
 
 	public ServerCommandUserSettings() {
-		fUserSettings = new HashMap<String, String>();
+		fUserSettings = new HashMap<>();
 	}
 
 	public ServerCommandUserSettings(String[] pUserSettingNames, String[] pUserSettingValues) {
@@ -65,7 +65,7 @@ public class ServerCommandUserSettings extends ServerCommand {
 	public FactoryContext getContext() {
 		return FactoryContext.APPLICATION;
 	}
-	
+
 	// JSON serialization
 
 	public JsonObject toJsonValue() {

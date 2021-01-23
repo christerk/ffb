@@ -9,7 +9,7 @@ import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
 
 /**
- * 
+ *
  * @author Kalimar
  */
 public class UtilClientActionKeys {
@@ -82,8 +82,8 @@ public class UtilClientActionKeys {
 		return moveDirection;
 	}
 
-	public static Player cyclePlayer(Game pGame, Player pStartPlayer, boolean pRight) {
-		Player nextPlayer = null;
+	public static Player<?> cyclePlayer(Game pGame, Player<?> pStartPlayer, boolean pRight) {
+		Player<?> nextPlayer = null;
 		if (pStartPlayer != null) {
 			FieldCoordinate startPlayerPosition = pGame.getFieldModel().getPlayerCoordinate(pStartPlayer);
 			if (pRight) {
@@ -116,7 +116,7 @@ public class UtilClientActionKeys {
 				}
 			}
 		} else {
-			Player[] players = pGame.getTeamHome().getPlayers();
+			Player<?>[] players = pGame.getTeamHome().getPlayers();
 			for (int i = 0; i < players.length; i++) {
 				PlayerState playerState = pGame.getFieldModel().getPlayerState(players[i]);
 				if (playerState.isActive()) {
@@ -144,8 +144,8 @@ public class UtilClientActionKeys {
 		return nextPlayer;
 	}
 
-	private static Player findSelectableHomePlayer(Game pGame, FieldCoordinate pCoordinate) {
-		Player player = pGame.getFieldModel().getPlayer(pCoordinate);
+	private static Player<?> findSelectableHomePlayer(Game pGame, FieldCoordinate pCoordinate) {
+		Player<?> player = pGame.getFieldModel().getPlayer(pCoordinate);
 		if (player != null) {
 			if (pGame.getTeamHome().hasPlayer(player)) {
 				PlayerState playerState = pGame.getFieldModel().getPlayerState(player);

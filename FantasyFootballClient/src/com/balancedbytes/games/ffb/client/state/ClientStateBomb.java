@@ -34,7 +34,7 @@ import com.balancedbytes.games.ffb.util.UtilPassing;
 import com.balancedbytes.games.ffb.util.UtilRangeRuler;
 
 /**
- * 
+ *
  * @author Kalimar
  */
 public class ClientStateBomb extends ClientState {
@@ -58,7 +58,7 @@ public class ClientStateBomb extends ClientState {
 		fRangeGridHandler.refreshSettings();
 	}
 
-	protected void clickOnPlayer(Player pPlayer) {
+	protected void clickOnPlayer(Player<?> pPlayer) {
 		Game game = getClient().getGame();
 		ActingPlayer actingPlayer = game.getActingPlayer();
 		if (pPlayer == actingPlayer.getPlayer()) {
@@ -82,7 +82,7 @@ public class ClientStateBomb extends ClientState {
 		}
 	}
 
-	protected boolean mouseOverPlayer(Player pPlayer) {
+	protected boolean mouseOverPlayer(Player<?> pPlayer) {
 		Game game = getClient().getGame();
 		UserInterface userInterface = getClient().getUserInterface();
 		getClient().getClientData().setSelectedPlayer(pPlayer);
@@ -145,7 +145,7 @@ public class ClientStateBomb extends ClientState {
 		UserInterface userInterface = getClient().getUserInterface();
 		IconCache iconCache = userInterface.getIconCache();
 		userInterface.getFieldComponent().getLayerUnderPlayers().clearMovePath();
-		List<JMenuItem> menuItemList = new ArrayList<JMenuItem>();
+		List<JMenuItem> menuItemList = new ArrayList<>();
 		ActingPlayer actingPlayer = game.getActingPlayer();
 
 		if (isHailMaryPassActionAvailable()) {
@@ -180,7 +180,7 @@ public class ClientStateBomb extends ClientState {
 
 	}
 
-	protected void menuItemSelected(Player pPlayer, int pMenuKey) {
+	protected void menuItemSelected(Player<?> pPlayer, int pMenuKey) {
 		Game game = getClient().getGame();
 		ActingPlayer actingPlayer = game.getActingPlayer();
 		ClientCommunication communication = getClient().getCommunication();

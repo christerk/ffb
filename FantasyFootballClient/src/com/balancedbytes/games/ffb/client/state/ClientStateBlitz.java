@@ -16,7 +16,7 @@ import com.balancedbytes.games.ffb.util.UtilCards;
 import com.balancedbytes.games.ffb.util.UtilPlayer;
 
 /**
- * 
+ *
  * @author Kalimar
  */
 public class ClientStateBlitz extends ClientStateMove {
@@ -33,7 +33,7 @@ public class ClientStateBlitz extends ClientStateMove {
 		super.enterState();
 	}
 
-	public void clickOnPlayer(Player pPlayer) {
+	public void clickOnPlayer(Player<?> pPlayer) {
 		Game game = getClient().getGame();
 		ActingPlayer actingPlayer = game.getActingPlayer();
 		if (pPlayer == actingPlayer.getPlayer()) {
@@ -49,7 +49,7 @@ public class ClientStateBlitz extends ClientStateMove {
 		}
 	}
 
-	protected boolean mouseOverPlayer(Player pPlayer) {
+	protected boolean mouseOverPlayer(Player<?> pPlayer) {
 		super.mouseOverPlayer(pPlayer);
 		Game game = getClient().getGame();
 		ActingPlayer actingPlayer = game.getActingPlayer();
@@ -83,7 +83,7 @@ public class ClientStateBlitz extends ClientStateMove {
 		return actionHandled;
 	}
 
-	protected void menuItemSelected(Player pPlayer, int pMenuKey) {
+	protected void menuItemSelected(Player<?> pPlayer, int pMenuKey) {
 		if (pPlayer != null) {
 			Game game = getClient().getGame();
 			ActingPlayer actingPlayer = game.getActingPlayer();

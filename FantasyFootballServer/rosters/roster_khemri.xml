@@ -19,6 +19,7 @@
 		<movement>4</movement>
 		<strength>5</strength>
 		<agility>1</agility>
+		<passing>0</passing>
 		<armour>9</armour>
 		<portrait>portraits/khemri_tombguardian.png</portrait>
 		<iconSet size="4">iconsets/khemri_tombguardian.png</iconSet>
@@ -42,6 +43,7 @@
 		<movement>6</movement>
 		<strength>3</strength>
 		<agility>2</agility>
+		<passing>6</passing>
 		<armour>8</armour>
 		<portrait>portraits/khemri_blitz-ra.png</portrait>
 		<iconSet size="2">iconsets/khemri_blitz-ra.png</iconSet>
@@ -65,6 +67,7 @@
 		<movement>6</movement>
 		<strength>3</strength>
 		<agility>2</agility>
+		<passing>3</passing>
 		<armour>7</armour>
 		<portrait>portraits/khemri_throw-ra.png</portrait>
 		<iconSet size="2">iconsets/khemri_throw-ra.png</iconSet>
@@ -89,6 +92,7 @@
 		<movement>5</movement>
 		<strength>3</strength>
 		<agility>2</agility>
+		<passing>6</passing>
 		<armour>7</armour>
 		<portrait>portraits/khemri_skeleton.png</portrait>
 		<iconSet size="4">iconsets/khemri_skeleton.png</iconSet>

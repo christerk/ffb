@@ -21,7 +21,7 @@ public class ServerCommandTeamSetupList extends ServerCommand {
 	private List<String> fSetupNames;
 
 	public ServerCommandTeamSetupList() {
-		fSetupNames = new ArrayList<String>();
+		fSetupNames = new ArrayList<>();
 	}
 
 	public ServerCommandTeamSetupList(String[] pSetupNames) {

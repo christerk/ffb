@@ -5,7 +5,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * 
+ *
  * @author Kalimar
  */
 public abstract class ModelChangeObservable {
@@ -13,7 +13,7 @@ public abstract class ModelChangeObservable {
 	private transient Set<IModelChangeObserver> fObservers;
 
 	public ModelChangeObservable() {
-		fObservers = Collections.synchronizedSet(new HashSet<IModelChangeObserver>());
+		fObservers = Collections.synchronizedSet(new HashSet<>());
 	}
 
 	public boolean addObserver(IModelChangeObserver pObserver) {

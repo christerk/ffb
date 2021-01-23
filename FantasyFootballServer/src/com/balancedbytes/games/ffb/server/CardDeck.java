@@ -18,7 +18,7 @@ public class CardDeck {
 
 	public CardDeck(CardType pType) {
 		fType = pType;
-		fCards = new ArrayList<Card>();
+		fCards = new ArrayList<>();
 	}
 
 	public CardType getType() {

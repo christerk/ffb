@@ -19,7 +19,7 @@ import com.balancedbytes.games.ffb.net.commands.ServerCommandReplay;
 import com.balancedbytes.games.ffb.net.commands.ServerCommandStatus;
 
 /**
- * 
+ *
  * @author Kalimar
  */
 public class ClientStateReplay extends ClientState implements IDialogCloseListener, IProgressListener {
@@ -45,7 +45,7 @@ public class ClientStateReplay extends ClientState implements IDialogCloseListen
 			getClient().getCommunication().sendReplay(getClient().getParameters().getGameId(), 0);
 		} else {
 			if (fReplayList == null) {
-				fReplayList = new ArrayList<ServerCommand>();
+				fReplayList = new ArrayList<>();
 				showProgressDialog();
 				getClient().getCommunication().sendReplay(0, replayer.getFirstCommandNr());
 			} else {
@@ -87,7 +87,7 @@ public class ClientStateReplay extends ClientState implements IDialogCloseListen
 			break;
 		case SERVER_GAME_STATE:
 			if (ClientMode.REPLAY == getClient().getMode()) {
-				fReplayList = new ArrayList<ServerCommand>();
+				fReplayList = new ArrayList<>();
 				showProgressDialog();
 			}
 			break;

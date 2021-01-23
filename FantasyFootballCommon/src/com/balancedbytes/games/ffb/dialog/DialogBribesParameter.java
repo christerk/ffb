@@ -13,7 +13,7 @@ import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
 /**
- * 
+ *
  * @author Kalimar
  */
 public class DialogBribesParameter implements IDialogParameter {
@@ -23,7 +23,7 @@ public class DialogBribesParameter implements IDialogParameter {
 	private List<String> fPlayerIds;
 
 	public DialogBribesParameter() {
-		fPlayerIds = new ArrayList<String>();
+		fPlayerIds = new ArrayList<>();
 	}
 
 	public DialogBribesParameter(String pTeamId, int pMaxNrOfBribes) {

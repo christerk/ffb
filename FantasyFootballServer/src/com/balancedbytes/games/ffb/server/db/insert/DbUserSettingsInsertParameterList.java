@@ -6,7 +6,7 @@ import java.util.List;
 import com.balancedbytes.games.ffb.server.db.IDbUpdateParameterList;
 
 /**
- * 
+ *
  * @author Kalimar
  */
 public class DbUserSettingsInsertParameterList implements IDbUpdateParameterList {
@@ -14,7 +14,7 @@ public class DbUserSettingsInsertParameterList implements IDbUpdateParameterList
 	private List<DbUserSettingsInsertParameter> fParameters;
 
 	public DbUserSettingsInsertParameterList() {
-		fParameters = new ArrayList<DbUserSettingsInsertParameter>();
+		fParameters = new ArrayList<>();
 	}
 
 	public DbUserSettingsInsertParameter[] getParameters() {

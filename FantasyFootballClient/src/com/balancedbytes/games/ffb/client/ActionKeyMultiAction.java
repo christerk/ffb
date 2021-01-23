@@ -18,7 +18,7 @@ public class ActionKeyMultiAction extends AbstractAction {
 	private List<ActionKeyAction> fActionKeyActions;
 
 	public ActionKeyMultiAction(ActionKey pActionKey) {
-		fActionKeyActions = new ArrayList<ActionKeyAction>();
+		fActionKeyActions = new ArrayList<>();
 		fActionKey = pActionKey;
 	}
 

@@ -22,7 +22,7 @@ import com.balancedbytes.games.ffb.model.AnimationType;
 import com.balancedbytes.games.ffb.model.Player;
 
 /**
- * 
+ *
  * @author Kalimar
  */
 public class AnimationSequenceThrowing implements IAnimationSequence, ActionListener {
@@ -77,7 +77,7 @@ public class AnimationSequenceThrowing implements IAnimationSequence, ActionList
 
 	public static AnimationSequenceThrowing createAnimationSequenceThrowTeamMate(FantasyFootballClient pClient,
 			Animation pAnimation) {
-		Player thrownPlayer = pClient.getGame().getPlayerById(pAnimation.getThrownPlayerId());
+		Player<?> thrownPlayer = pClient.getGame().getPlayerById(pAnimation.getThrownPlayerId());
 		boolean homePlayer = pClient.getGame().getTeamHome().hasPlayer(thrownPlayer);
 		PlayerIconFactory playerIconFactory = pClient.getUserInterface().getPlayerIconFactory();
 		BufferedImage playerIcon = playerIconFactory.getBasicIcon(pClient, thrownPlayer, homePlayer, false,

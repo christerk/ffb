@@ -25,20 +25,20 @@ import com.balancedbytes.games.ffb.util.StringTool;
 import com.balancedbytes.games.ffb.util.UtilPlayer;
 
 /**
- * 
+ *
  * @author Kalimar
  */
 public class UtilServerCards {
 
-	public static Player[] findAllowedPlayersForCard(Game pGame, Card pCard) {
+	public static Player<?>[] findAllowedPlayersForCard(Game pGame, Card pCard) {
 		if ((pGame == null) || (pCard == null) || !pCard.getTarget().isPlayedOnPlayer()) {
 			return new Player[0];
 		}
-		List<Player> allowedPlayers = new ArrayList<Player>();
+		List<Player<?>> allowedPlayers = new ArrayList<>();
 		Team ownTeam = pGame.getTurnDataHome().getInducementSet().isAvailable(pCard) ? pGame.getTeamHome()
 				: pGame.getTeamAway();
 		Team otherTeam = (pGame.getTeamHome() == ownTeam) ? pGame.getTeamAway() : pGame.getTeamHome();
-		for (Player player : pGame.getPlayers()) {
+		for (Player<?> player : pGame.getPlayers()) {
 			PlayerState playerState = pGame.getFieldModel().getPlayerState(player);
 			FieldCoordinate playerCoordinate = pGame.getFieldModel().getPlayerCoordinate(player);
 			boolean playerAllowed = ((playerState != null) && !playerState.isCasualty()
@@ -94,7 +94,7 @@ public class UtilServerCards {
 		InducementSet inducementSet = pHomeTeam ? game.getTurnDataHome().getInducementSet()
 				: game.getTurnDataAway().getInducementSet();
 		inducementSet.activateCard(pCard);
-		Player player = game.getPlayerById(pPlayerId);
+		Player<?> player = game.getPlayerById(pPlayerId);
 		if (player != null) {
 			game.getFieldModel().addCard(player, pCard);
 			switch (pCard) {
@@ -135,7 +135,7 @@ public class UtilServerCards {
 		pStep.getResult().addReport(new ReportCardDeactivated(pCard));
 
 		if (pCard.getTarget().isPlayedOnPlayer()) {
-			Player player = game.getFieldModel().findPlayer(pCard);
+			Player<?> player = game.getFieldModel().findPlayer(pCard);
 			if (player != null) {
 				if (!pCard.isRemainsInPlay()) {
 					game.getFieldModel().removeCard(player, pCard);
@@ -165,7 +165,7 @@ public class UtilServerCards {
 		}
 	}
 
-	private static void deactivateCardCustardPie(IStep pStep, Player pPlayer) {
+	private static void deactivateCardCustardPie(IStep pStep, Player<?> pPlayer) {
 		Game game = pStep.getGameState().getGame();
 		PlayerState playerState = game.getFieldModel().getPlayerState(pPlayer);
 		if ((playerState != null) && playerState.isHypnotized()) {
@@ -173,10 +173,10 @@ public class UtilServerCards {
 		}
 	}
 
-	private static void deactivateCardDistract(IStep pStep, Player pPlayer) {
+	private static void deactivateCardDistract(IStep pStep, Player<?> pPlayer) {
 		Game game = pStep.getGameState().getGame();
-		Player[] players = game.getFieldModel().findPlayers(CardEffect.DISTRACTED);
-		for (Player player : players) {
+		Player<?>[] players = game.getFieldModel().findPlayers(CardEffect.DISTRACTED);
+		for (Player<?> player : players) {
 			game.getFieldModel().removeCardEffect(player, CardEffect.DISTRACTED);
 			PlayerState playerState = game.getFieldModel().getPlayerState(player);
 			if (!player.hasSkillWithProperty(NamedProperties.appliesConfusion) && playerState.isConfused()) {
@@ -185,7 +185,7 @@ public class UtilServerCards {
 		}
 	}
 
-	private static void deactivateCardWitchBrew(IStep pStep, Player pPlayer) {
+	private static void deactivateCardWitchBrew(IStep pStep, Player<?> pPlayer) {
 		Game game = pStep.getGameState().getGame();
 		if (game.getFieldModel().hasCardEffect(pPlayer, CardEffect.SEDATIVE)) {
 			game.getFieldModel().removeCardEffect(pPlayer, CardEffect.SEDATIVE);
@@ -197,37 +197,37 @@ public class UtilServerCards {
 
 	private static void deactivateCardIllegalSubstitution(IStep pStep) {
 		Game game = pStep.getGameState().getGame();
-		Player[] players = game.getFieldModel().findPlayers(CardEffect.ILLEGALLY_SUBSTITUTED);
-		for (Player player : players) {
+		Player<?>[] players = game.getFieldModel().findPlayers(CardEffect.ILLEGALLY_SUBSTITUTED);
+		for (Player<?> player : players) {
 			game.getFieldModel().removeCardEffect(player, CardEffect.ILLEGALLY_SUBSTITUTED);
 		}
 	}
 
-	private static void activateCardDistract(IStep pStep, Player pPlayer) {
+	private static void activateCardDistract(IStep pStep, Player<?> pPlayer) {
 		Game game = pStep.getGameState().getGame();
 		Team otherTeam = UtilPlayer.findOtherTeam(game, pPlayer);
 		FieldCoordinate playerCoordinate = game.getFieldModel().getPlayerCoordinate(pPlayer);
 		FieldCoordinate[] adjacentCoordinates = game.getFieldModel().findAdjacentCoordinates(playerCoordinate,
 				FieldCoordinateBounds.FIELD, 3, false);
 		for (FieldCoordinate coordinate : adjacentCoordinates) {
-			Player otherPlayer = game.getFieldModel().getPlayer(coordinate);
+			Player<?> otherPlayer = game.getFieldModel().getPlayer(coordinate);
 			if ((otherPlayer != null) && otherTeam.hasPlayer(otherPlayer)) {
 				game.getFieldModel().addCardEffect(otherPlayer, CardEffect.DISTRACTED);
 			}
 		}
 	}
 
-	private static void activateCardCustardPie(IStep pStep, Player pPlayer) {
+	private static void activateCardCustardPie(IStep pStep, Player<?> pPlayer) {
 		Game game = pStep.getGameState().getGame();
 		PlayerState playerState = game.getFieldModel().getPlayerState(pPlayer);
 		game.getFieldModel().setPlayerState(pPlayer, playerState.changeHypnotized(true));
 	}
 
-	private static void activateCardPitTrap(IStep pStep, Player pPlayer) {
+	private static void activateCardPitTrap(IStep pStep, Player<?> pPlayer) {
 		pStep.publishParameters(UtilServerInjury.dropPlayer(pStep, pPlayer, ApothecaryMode.DEFENDER));
 	}
 
-	private static void activateCardWitchBrew(IStep pStep, Player pPlayer) {
+	private static void activateCardWitchBrew(IStep pStep, Player<?> pPlayer) {
 		Game game = pStep.getGameState().getGame();
 		int roll = pStep.getGameState().getDiceRoller().rollCardEffect();
 		CardEffect cardEffect = DiceInterpreter.getInstance().interpretWitchBrewRoll(roll);

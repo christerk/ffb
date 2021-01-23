@@ -8,14 +8,14 @@ import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.model.PlayerResult;
 
 /**
- * 
+ *
  * @author Kalimar
  */
 public class BoxSlot {
 
 	private PlayerState fType;
 	private Rectangle fLocation;
-	private Player fPlayer;
+	private Player<?> fPlayer;
 
 	public BoxSlot(Rectangle pLocation, PlayerState pType) {
 		fLocation = pLocation;
@@ -33,11 +33,11 @@ public class BoxSlot {
 		return fLocation;
 	}
 
-	public Player getPlayer() {
+	public Player<?> getPlayer() {
 		return fPlayer;
 	}
 
-	public void setPlayer(Player pPlayer) {
+	public void setPlayer(Player<?> pPlayer) {
 		fPlayer = pPlayer;
 	}
 
@@ -71,7 +71,7 @@ public class BoxSlot {
 						toolTip.append(" of 1st half");
 					}
 				}
-				Player attacker = pGame.getPlayerById(playerResult.getSendToBoxByPlayerId());
+				Player<?> attacker = pGame.getPlayerById(playerResult.getSendToBoxByPlayerId());
 				if (attacker != null) {
 					toolTip.append(" by ").append(attacker.getName());
 				}

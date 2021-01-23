@@ -11,7 +11,7 @@ import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.util.ArrayTool;
 
 /**
- * 
+ *
  * @author Kalimar
  */
 public class DialogTeamSetupHandler extends DialogHandler {
@@ -57,7 +57,7 @@ public class DialogTeamSetupHandler extends DialogHandler {
 				TeamSetup teamSetup = new TeamSetup();
 				teamSetup.setName(teamSetupDialog.getSetupName());
 				teamSetup.setTeamId(game.getTeamHome().getId());
-				Player[] homePlayers = game.getTeamHome().getPlayers();
+				Player<?>[] homePlayers = game.getTeamHome().getPlayers();
 				for (int i = 0; i < homePlayers.length; i++) {
 					FieldCoordinate playerCoordinate = game.getFieldModel().getPlayerCoordinate(homePlayers[i]);
 					if (FieldCoordinateBounds.HALF_HOME.isInBounds(playerCoordinate)) {

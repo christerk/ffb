@@ -17,6 +17,7 @@
 		<movement>5</movement>
 		<strength>1</strength>
 		<agility>3</agility>
+		<passing>5</passing>
 		<armour>5</armour>
 		<portrait>portraits/ogre_snotling.png</portrait>
 		<iconSet size="12">iconsets/ogre_snotling.png</iconSet>
@@ -44,6 +45,7 @@
 		<movement>5</movement>
 		<strength>5</strength>
 		<agility>2</agility>
+		<passing>5</passing>
 		<armour>9</armour>
 		<portrait>portraits/ogre_ogre.png</portrait>
 		<iconSet size="6">iconsets/ogre_ogre.png</iconSet>

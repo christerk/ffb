@@ -50,7 +50,7 @@ public class DialogBuyInducements extends Dialog implements ActionListener, KeyL
 	private final int mercExtraCost;
 	private final int mercSkillCost;
 
-	private Set<DropDownPanel> fPanels = new HashSet<DropDownPanel>();
+	private Set<DropDownPanel> fPanels = new HashSet<>();
 	private int fAvailableGold = 0;
 	private Roster fRoster = null;
 	private int fStartGold = 0;
@@ -207,10 +207,10 @@ public class DialogBuyInducements extends Dialog implements ActionListener, KeyL
 	}
 
 	public String[] getSelectedStarPlayerIds() {
-		List<String> starPlayerPositionIds = new ArrayList<String>();
+		List<String> starPlayerPositionIds = new ArrayList<>();
 		for (int i = 0; i < fTableModelStarPlayers.getRowCount(); i++) {
 			if ((Boolean) fTableModelStarPlayers.getValueAt(i, 0)) {
-				Player starPlayer = (Player) fTableModelStarPlayers.getValueAt(i, 4);
+				Player<?> starPlayer = (Player) fTableModelStarPlayers.getValueAt(i, 4);
 				starPlayerPositionIds.add(starPlayer.getPositionId());
 			}
 		}
@@ -218,10 +218,10 @@ public class DialogBuyInducements extends Dialog implements ActionListener, KeyL
 	}
 
 	public String[] getSelectedMercenaryIds() {
-		List<String> mercenaryPositionIds = new ArrayList<String>();
+		List<String> mercenaryPositionIds = new ArrayList<>();
 		for (int i = 0; i < fTableModelMercenaries.getRowCount(); i++) {
 			if ((Boolean) fTableModelMercenaries.getValueAt(i, 0)) {
-				Player mercenary = (Player) fTableModelMercenaries.getValueAt(i, 5);
+				Player<?> mercenary = (Player) fTableModelMercenaries.getValueAt(i, 5);
 				mercenaryPositionIds.add(mercenary.getPositionId());
 			}
 		}
@@ -229,7 +229,7 @@ public class DialogBuyInducements extends Dialog implements ActionListener, KeyL
 	}
 
 	public Skill[] getSelectedMercenarySkills() {
-		List<Skill> mercenarySkills = new ArrayList<Skill>();
+		List<Skill> mercenarySkills = new ArrayList<>();
 		for (int i = 0; i < fTableModelMercenaries.getRowCount(); i++) {
 			if ((Boolean) fTableModelMercenaries.getValueAt(i, 0)) {
 				Skill mercenarySkill = getClient().getGame().getRules().<SkillFactory>getFactory(Factory.SKILL).forName((String) fTableModelMercenaries.getValueAt(i, 4));

@@ -44,22 +44,22 @@ import com.eclipsesource.json.JsonValue;
 
 /**
  * Step in move sequence to handle skill DODGE.
- * 
+ *
  * Needs to be initialized with stepParameter GOTO_LABEL_ON_FAILURE.
- * 
+ *
  * Expects stepParameter COORDINATE_FROM to be set by a preceding step. Expects
  * stepParameter COORDINATE_TO to be set by a preceding step. Expects
  * stepParameter USING_BREAK_TACKLE to be set by a preceding step. Expects
  * stepParameter USING_DIVING_TACKLE to be set by a preceding step.
- * 
+ *
  * StepParameter RE_ROLL_USED may be set by a preceding step. StepParameter
  * DODGE_ROLL may be set by a preceding step.
- * 
+ *
  * Sets stepParameter RE_ROLL_USED for all steps on the stack. Sets
  * stepParameter DODGE_ROLL for all steps on the stack. Sets stepParameter
  * INJURY_TYPE for all steps on the stack. Sets stepParameter USING_BREAK_TACKLE
  * for all steps on the stack.
- * 
+ *
  * @author Kalimar
  */
 public class StepMoveDodge extends AbstractStepWithReRoll {
@@ -237,7 +237,7 @@ public class StepMoveDodge extends AbstractStepWithReRoll {
 				ReRollSource skillRerollSource = UtilCards.getUnusedRerollSource(game.getActingPlayer(), ReRolledActions.DODGE);
 				if (skillRerollSource != null) {
 					Team otherTeam = UtilPlayer.findOtherTeam(game, actingPlayer.getPlayer());
-					Player[] opponents = UtilPlayer.findAdjacentPlayersWithTacklezones(game, otherTeam, fCoordinateFrom, false);
+					Player<?>[] opponents = UtilPlayer.findAdjacentPlayersWithTacklezones(game, otherTeam, fCoordinateFrom, false);
 					for (int i = 0; i < opponents.length; i++) {
 						if (UtilCards.cancelsSkill(opponents[i], skillRerollSource.getSkill(game))) {
 							skillRerollSource = null;

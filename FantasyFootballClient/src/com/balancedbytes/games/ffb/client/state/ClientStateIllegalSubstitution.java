@@ -13,7 +13,7 @@ import com.balancedbytes.games.ffb.model.Player;
 
 public class ClientStateIllegalSubstitution extends ClientStateSetup {
 
-	private Set<Player> fFieldPlayers;
+	private Set<Player<?>> fFieldPlayers;
 
 	protected ClientStateIllegalSubstitution(FantasyFootballClient pClient) {
 		super(pClient);
@@ -27,8 +27,8 @@ public class ClientStateIllegalSubstitution extends ClientStateSetup {
 	public void enterState() {
 		super.enterState();
 		Game game = getClient().getGame();
-		fFieldPlayers = new HashSet<Player>();
-		for (Player player : game.getTeamHome().getPlayers()) {
+		fFieldPlayers = new HashSet<>();
+		for (Player<?> player : game.getTeamHome().getPlayers()) {
 			if (!game.getFieldModel().getPlayerCoordinate(player).isBoxCoordinate()) {
 				fFieldPlayers.add(player);
 			}
@@ -39,11 +39,11 @@ public class ClientStateIllegalSubstitution extends ClientStateSetup {
 	public boolean isInitDragAllowed(FieldCoordinate pCoordinate) {
 		if (pCoordinate != null) {
 			Game game = getClient().getGame();
-			Player draggedPlayer = game.getFieldModel().getPlayer(pCoordinate);
+			Player<?> draggedPlayer = game.getFieldModel().getPlayer(pCoordinate);
 			if (draggedPlayer != null) {
 				if (pCoordinate.isBoxCoordinate()) {
 					for (FieldCoordinate coordinate : FieldCoordinateBounds.ENDZONE_HOME.fieldCoordinates()) {
-						Player player = game.getFieldModel().getPlayer(coordinate);
+						Player<?> player = game.getFieldModel().getPlayer(coordinate);
 						if ((player != null) && game.getTeamHome().hasPlayer(player) && !fFieldPlayers.contains(player)) {
 							return false;
 						}

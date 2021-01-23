@@ -25,8 +25,8 @@ public class ReportScatterBall implements IReport {
 	private boolean fGustOfWind;
 
 	public ReportScatterBall() {
-		fDirections = new ArrayList<Direction>();
-		fRolls = new ArrayList<Integer>();
+		fDirections = new ArrayList<>();
+		fRolls = new ArrayList<>();
 	}
 
 	public ReportScatterBall(Direction[] pDirections, int[] pRolls, boolean pGustOfWind) {

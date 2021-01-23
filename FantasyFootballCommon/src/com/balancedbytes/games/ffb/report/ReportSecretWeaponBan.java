@@ -20,9 +20,9 @@ public class ReportSecretWeaponBan implements IReport {
 	private List<Boolean> fBans;
 
 	public ReportSecretWeaponBan() {
-		fPlayerIds = new ArrayList<String>();
-		fRolls = new ArrayList<Integer>();
-		fBans = new ArrayList<Boolean>();
+		fPlayerIds = new ArrayList<>();
+		fRolls = new ArrayList<>();
+		fBans = new ArrayList<>();
 	}
 
 	public ReportId getId() {

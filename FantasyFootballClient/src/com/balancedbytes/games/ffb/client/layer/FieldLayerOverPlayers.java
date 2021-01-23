@@ -24,7 +24,7 @@ import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
 
 /**
- * 
+ *
  * @author Kalimar
  */
 public class FieldLayerOverPlayers extends FieldLayer {
@@ -48,7 +48,7 @@ public class FieldLayerOverPlayers extends FieldLayer {
 		}
 	}
 
-	public void drawThrownPlayer(Game pGame, Player pThrownPlayer, FieldCoordinate pCoordinate, boolean pWithBall) {
+	public void drawThrownPlayer(Game pGame, Player<?> pThrownPlayer, FieldCoordinate pCoordinate, boolean pWithBall) {
 		if ((pCoordinate != null) && (pThrownPlayer != null)) {
 			clear(pCoordinate, true);
 			fThrownPlayerCoordinate = pCoordinate;

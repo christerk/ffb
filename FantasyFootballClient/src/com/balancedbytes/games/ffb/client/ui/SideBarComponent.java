@@ -13,7 +13,7 @@ import com.balancedbytes.games.ffb.client.UserInterface;
 import com.balancedbytes.games.ffb.model.Player;
 
 /**
- * 
+ *
  * @author Kalimar
  */
 @SuppressWarnings("serial")
@@ -139,12 +139,12 @@ public class SideBarComponent extends JPanel implements MouseMotionListener {
 		fTurnDiceStatusComponent.refresh();
 	}
 
-	public void updatePlayer(Player pPlayer) {
+	public void updatePlayer(Player<?> pPlayer) {
 		fPlayerDetail.setPlayer(pPlayer);
 		fPlayerDetail.refresh();
 	}
 
-	public Player getPlayer() {
+	public Player<?> getPlayer() {
 		return fPlayerDetail.getPlayer();
 	}
 

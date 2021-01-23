@@ -14,7 +14,7 @@ import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
 
 /**
- * 
+ *
  * @author Kalimar
  */
 public class UtilClientPlayerDrag {
@@ -66,7 +66,7 @@ public class UtilClientPlayerDrag {
 		Game game = pClient.getGame();
 		ClientData clientData = pClient.getClientData();
 		UserInterface userInterface = pClient.getUserInterface();
-		Player player = game.getFieldModel().getPlayer(pCoordinate);
+		Player<?> player = game.getFieldModel().getPlayer(pCoordinate);
 		PlayerState playerState = game.getFieldModel().getPlayerState(player);
 		boolean initDragAllowed = ((ClientMode.PLAYER == pClient.getMode()) && (player != null)
 				&& game.getTeamHome().hasPlayer(player) && pClient.getClientState().isInitDragAllowed(pCoordinate));
@@ -133,7 +133,7 @@ public class UtilClientPlayerDrag {
 
 	public static void resetDragging(FantasyFootballClient pClient) {
 		Game game = pClient.getGame();
-		for (Player player : game.getPlayers()) {
+		for (Player<?> player : game.getPlayers()) {
 			PlayerState playerState = game.getFieldModel().getPlayerState(player);
 			if (playerState.getBase() == PlayerState.BEING_DRAGGED) {
 				FieldCoordinate playerCoordinate = game.getFieldModel().getPlayerCoordinate(player);

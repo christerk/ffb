@@ -12,13 +12,13 @@ import kuusisto.tinysound.Sound;
 import kuusisto.tinysound.TinySound;
 
 /**
- * 
+ *
  * @author Kalimar
  */
 public class SoundEngine {
 
 	private static Map<SoundId, String> _SOUND_PROPERTY_KEYS = Collections
-			.synchronizedMap(new HashMap<SoundId, String>());
+			.synchronizedMap(new HashMap<>());
 
 	static {
 		_SOUND_PROPERTY_KEYS.put(SoundId.BLOCK, ISoundProperty.BLOCK);
@@ -75,7 +75,7 @@ public class SoundEngine {
 
 	public SoundEngine(FantasyFootballClient pClient) {
 		fClient = pClient;
-		fSoundById = new HashMap<SoundId, Sound>();
+		fSoundById = new HashMap<>();
 	}
 
 	public void init() {

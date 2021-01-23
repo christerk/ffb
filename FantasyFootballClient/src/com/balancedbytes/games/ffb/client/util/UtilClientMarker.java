@@ -20,14 +20,14 @@ import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.util.StringTool;
 
 /**
- * 
+ *
  * @author Kalimar
  */
 public class UtilClientMarker {
 
 	private static final int _FIELD_SQUARE_SIZE = 30;
 
-	public static void showMarkerPopup(final FantasyFootballClient pClient, final Player pPlayer, int pX, int pY) {
+	public static void showMarkerPopup(final FantasyFootballClient pClient, final Player<?> pPlayer, int pX, int pY) {
 		if (pPlayer != null) {
 			final JPopupMenu markerPopupMenu = new JPopupMenu();
 			PlayerMarker playerMarker = pClient.getGame().getFieldModel().getPlayerMarker(pPlayer.getId());

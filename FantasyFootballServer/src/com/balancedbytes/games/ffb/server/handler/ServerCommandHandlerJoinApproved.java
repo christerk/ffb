@@ -153,6 +153,7 @@ public class ServerCommandHandlerJoinApproved extends ServerCommandHandler {
 				if (UtilServerStartGame.joinGameAsPlayerAndCheckIfReadyToStart(pGameState, pSession,
 						pJoinApprovedCommand.getCoach(), homeTeam)) {
 					UtilServerStartGame.addDefaultGameOptions(pGameState);
+					pGameState.getGame().initializeRules();
 					Team teamHome = getServer().getGameCache().getTeamById(game.getTeamHome().getId(), game);
 					getServer().getGameCache().addTeamToGame(pGameState, teamHome, true);
 					Team teamAway = getServer().getGameCache().getTeamById(game.getTeamAway().getId(), game);

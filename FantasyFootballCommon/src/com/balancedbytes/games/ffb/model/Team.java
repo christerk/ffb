@@ -22,7 +22,7 @@ import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
 /**
- * 
+ *
  * @author Kalimar
  */
 public class Team implements IXmlSerializable, IJsonSerializable {
@@ -76,8 +76,8 @@ public class Team implements IXmlSerializable, IJsonSerializable {
 	}
 
 	public Team() {
-		fPlayerById = new HashMap<String, Player<?>>();
-		fPlayerByNr = new HashMap<Integer, Player<?>>();
+		fPlayerById = new HashMap<>();
+		fPlayerByNr = new HashMap<>();
 		updateRoster(new Roster());
 	}
 

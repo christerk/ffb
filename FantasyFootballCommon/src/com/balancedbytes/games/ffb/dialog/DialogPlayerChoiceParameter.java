@@ -15,7 +15,7 @@ import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
 /**
- * 
+ *
  * @author Kalimar
  */
 public class DialogPlayerChoiceParameter implements IDialogParameter {
@@ -27,8 +27,8 @@ public class DialogPlayerChoiceParameter implements IDialogParameter {
 	private int fMaxSelects;
 
 	public DialogPlayerChoiceParameter() {
-		fPlayerIds = new ArrayList<String>();
-		fDescriptions = new ArrayList<String>();
+		fPlayerIds = new ArrayList<>();
+		fDescriptions = new ArrayList<>();
 	}
 
 	public DialogPlayerChoiceParameter(String pTeamId, PlayerChoiceMode pPlayerChoiceMode, Player<?>[] pPlayers,

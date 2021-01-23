@@ -11,7 +11,7 @@ import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
 
 /**
- * 
+ *
  * @author Kalimar
  */
 public class ClientStateTouchback extends ClientState {
@@ -32,7 +32,7 @@ public class ClientStateTouchback extends ClientState {
 		// check if there are players on the field to give the ball to
 		Game game = getClient().getGame();
 		fTouchbackToAnyField = true;
-		for (Player player : game.getTeamHome().getPlayers()) {
+		for (Player<?> player : game.getTeamHome().getPlayers()) {
 			if (isPlayerSelectable(player)) {
 				fTouchbackToAnyField = false;
 				break;
@@ -41,7 +41,7 @@ public class ClientStateTouchback extends ClientState {
 	}
 
 	@Override
-	protected boolean mouseOverPlayer(Player pPlayer) {
+	protected boolean mouseOverPlayer(Player<?> pPlayer) {
 		super.mouseOverPlayer(pPlayer);
 		if (isClickable() && (fTouchbackToAnyField || isPlayerSelectable(pPlayer))) {
 			UtilClientCursor.setCustomCursor(getClient().getUserInterface(), IIconProperty.CURSOR_PASS);
@@ -63,7 +63,7 @@ public class ClientStateTouchback extends ClientState {
 	}
 
 	@Override
-	protected void clickOnPlayer(Player pPlayer) {
+	protected void clickOnPlayer(Player<?> pPlayer) {
 		Game game = getClient().getGame();
 		if (isClickable() && (fTouchbackToAnyField || isPlayerSelectable(pPlayer))) {
 			FieldCoordinate touchBackCoordinate = game.getFieldModel().getPlayerCoordinate(pPlayer);
@@ -78,7 +78,7 @@ public class ClientStateTouchback extends ClientState {
 		}
 	}
 
-	private boolean isPlayerSelectable(Player pPlayer) {
+	private boolean isPlayerSelectable(Player<?> pPlayer) {
 		boolean selectable = false;
 		if (pPlayer != null) {
 			Game game = getClient().getGame();

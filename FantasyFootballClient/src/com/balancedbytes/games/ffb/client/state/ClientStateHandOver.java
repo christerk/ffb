@@ -27,7 +27,7 @@ import com.balancedbytes.games.ffb.util.UtilCards;
 import com.balancedbytes.games.ffb.util.UtilPlayer;
 
 /**
- * 
+ *
  * @author Kalimar
  */
 public class ClientStateHandOver extends ClientStateMove {
@@ -40,7 +40,7 @@ public class ClientStateHandOver extends ClientStateMove {
 		return ClientStateId.HAND_OVER;
 	}
 
-	protected void clickOnPlayer(Player pPlayer) {
+	protected void clickOnPlayer(Player<?> pPlayer) {
 		Game game = getClient().getGame();
 		ActingPlayer actingPlayer = game.getActingPlayer();
 		if (pPlayer == actingPlayer.getPlayer()) {
@@ -56,7 +56,7 @@ public class ClientStateHandOver extends ClientStateMove {
 		ActingPlayer actingPlayer = game.getActingPlayer();
 		FieldCoordinate playerPosition = game.getFieldModel().getPlayerCoordinate(actingPlayer.getPlayer());
 		FieldCoordinate catcherPosition = UtilClientActionKeys.findMoveCoordinate(getClient(), playerPosition, pActionKey);
-		Player catcher = game.getFieldModel().getPlayer(catcherPosition);
+		Player<?> catcher = game.getFieldModel().getPlayer(catcherPosition);
 		if (catcher != null) {
 			actionHandled = handOver(catcher);
 		} else {
@@ -65,7 +65,7 @@ public class ClientStateHandOver extends ClientStateMove {
 		return actionHandled;
 	}
 
-	protected boolean mouseOverPlayer(Player pPlayer) {
+	protected boolean mouseOverPlayer(Player<?> pPlayer) {
 		super.mouseOverPlayer(pPlayer);
 		// Game game = getClient().getGame();
 		// ActingPlayer actingPlayer = game.getActingPlayer();
@@ -85,7 +85,7 @@ public class ClientStateHandOver extends ClientStateMove {
 		return true;
 	}
 
-	public boolean canPlayerGetHandOver(Player pCatcher) {
+	public boolean canPlayerGetHandOver(Player<?> pCatcher) {
 		Game game = getClient().getGame();
 		ActingPlayer actingPlayer = game.getActingPlayer();
 		if ((pCatcher != null) && (actingPlayer.getPlayer() != null)) {
@@ -101,7 +101,7 @@ public class ClientStateHandOver extends ClientStateMove {
 		return false;
 	}
 
-	private boolean handOver(Player pCatcher) {
+	private boolean handOver(Player<?> pCatcher) {
 		Game game = getClient().getGame();
 		ActingPlayer actingPlayer = game.getActingPlayer();
 		if (UtilPlayer.hasBall(game, actingPlayer.getPlayer())
@@ -118,7 +118,7 @@ public class ClientStateHandOver extends ClientStateMove {
 		UserInterface userInterface = getClient().getUserInterface();
 		IconCache iconCache = userInterface.getIconCache();
 		userInterface.getFieldComponent().getLayerUnderPlayers().clearMovePath();
-		List<JMenuItem> menuItemList = new ArrayList<JMenuItem>();
+		List<JMenuItem> menuItemList = new ArrayList<>();
 		ActingPlayer actingPlayer = game.getActingPlayer();
 
 		if ((PlayerAction.HAND_OVER_MOVE == actingPlayer.getPlayerAction())

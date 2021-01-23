@@ -73,12 +73,8 @@ public class Game extends ModelChangeObservable implements IJsonSerializable {
 	private GameRules rules;
 	private FactoryManager factoryManager;
 	private IFactorySource applicationSource;
-	
+
 	public Game(IFactorySource applicationSource, FactoryManager manager) {
-		this(applicationSource, manager, true);
-	}
-	
-	public Game(IFactorySource applicationSource, FactoryManager manager, boolean initializeRules) {
 		this.applicationSource = applicationSource;
 		factoryManager = manager;
 		setFieldModel(new FieldModel(this));
@@ -96,10 +92,7 @@ public class Game extends ModelChangeObservable implements IJsonSerializable {
 		setTeamAway(new Team());
 
 		fOptions = new GameOptions(this);
-		
-		if (initializeRules) {
-			initializeRules(applicationSource, manager);
-		}
+		rules = new GameRules(applicationSource, manager);
 	}
 
 	public void setId(long pId) {
@@ -114,18 +107,18 @@ public class Game extends ModelChangeObservable implements IJsonSerializable {
 		return fId;
 	}
 
-	/**
-	 * Initialize rules, runs after game options have been set.
-	 */
-	public void initializeRules(IFactorySource applicationSource, FactoryManager manager) {
-		rules = new GameRules(applicationSource, manager);
+	public void initializeRules() {
 		rules.initialize(this);
 	}
-	
+
 	public GameRules getRules() {
 		return rules;
 	}
-	
+
+	public void setRules(GameRules rules) {
+		this.rules = rules;
+	}
+
 	public GameResult getGameResult() {
 		return fGameResult;
 	}
@@ -569,6 +562,7 @@ public class Game extends ModelChangeObservable implements IJsonSerializable {
 		transformedGame.setThrowerId(getThrowerId());
 		transformedGame.setThrowerAction(getThrowerAction());
 		transformedGame.getOptions().init(getOptions());
+		transformedGame.setRules(getRules());
 
 		// transformed values
 
@@ -643,7 +637,7 @@ public class Game extends ModelChangeObservable implements IJsonSerializable {
 
 		// We parse options first in order to get the correct context to deserialize the rest of the data
 		fOptions.initFrom(source, IJsonOption.GAME_OPTIONS.getFrom(source, jsonObject));
-		initializeRules(source.forContext(FactoryContext.APPLICATION), factoryManager);
+		initializeRules();
 		
 		// Switch to the new source of factories.
 		source = getRules();

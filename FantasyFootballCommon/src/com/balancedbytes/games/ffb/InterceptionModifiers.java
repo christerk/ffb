@@ -56,7 +56,7 @@ public class InterceptionModifiers {
 	}
 
 	public InterceptionModifiers() {
-		values = new HashMap<String, InterceptionModifier>();
+		values = new HashMap<>();
 		try {
 			Class<?> c = this.getClass();
 			Class<?> cModifierType = InterceptionModifier.class;

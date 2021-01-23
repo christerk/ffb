@@ -22,7 +22,7 @@ public class ServerCommandTalk extends ServerCommand {
 	private List<String> fTalks;
 
 	public ServerCommandTalk() {
-		fTalks = new ArrayList<String>();
+		fTalks = new ArrayList<>();
 	}
 
 	public ServerCommandTalk(String pCoach, String pTalk) {

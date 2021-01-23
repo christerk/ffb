@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 
+ *
  * @author Kalimar
  */
 public class NetCommandLog {
@@ -12,7 +12,7 @@ public class NetCommandLog {
 	private List<NetCommand> fCommands;
 
 	public NetCommandLog() {
-		fCommands = new ArrayList<NetCommand>();
+		fCommands = new ArrayList<>();
 	}
 
 	public void add(NetCommand pNetCommand) {

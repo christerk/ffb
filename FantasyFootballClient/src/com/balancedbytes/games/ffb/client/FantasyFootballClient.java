@@ -171,10 +171,6 @@ public class FantasyFootballClient implements IConnectionListener, IDialogCloseL
 		String pingIntervalProperty = getProperty(IClientProperty.CLIENT_PING_INTERVAL);
 		if (StringTool.isProvided(pingIntervalProperty) && (ClientMode.REPLAY != getMode())) {
 			int pingInterval = Integer.parseInt(pingIntervalProperty);
-			// String pingMaxDelayProperty =
-			// getProperty(IClientProperty.CLIENT_PING_MAX_DELAY);
-			// int pingMaxDelay = StringTool.isProvided(pingMaxDelayProperty) ?
-			// Integer.parseInt(pingMaxDelayProperty) : 0;
 			fClientPingTask = new ClientPingTask(this);
 			fPingTimer.schedule(fClientPingTask, 0, pingInterval);
 		}

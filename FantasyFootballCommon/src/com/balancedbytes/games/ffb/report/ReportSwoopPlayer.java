@@ -27,8 +27,8 @@ public class ReportSwoopPlayer implements IReport {
 	private List<Integer> fRolls;
 
 	public ReportSwoopPlayer() {
-		fDirections = new ArrayList<Direction>();
-		fRolls = new ArrayList<Integer>();
+		fDirections = new ArrayList<>();
+		fRolls = new ArrayList<>();
 	}
 
 	public ReportSwoopPlayer(FieldCoordinate pStartCoordinate, FieldCoordinate pEndCoordinate, Direction[] pDirections,

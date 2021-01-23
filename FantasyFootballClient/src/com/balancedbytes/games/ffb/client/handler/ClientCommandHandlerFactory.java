@@ -9,7 +9,7 @@ import com.balancedbytes.games.ffb.net.NetCommand;
 import com.balancedbytes.games.ffb.net.NetCommandId;
 
 /**
- * 
+ *
  * @author Kalimar
  */
 public class ClientCommandHandlerFactory {
@@ -20,7 +20,7 @@ public class ClientCommandHandlerFactory {
 
 	public ClientCommandHandlerFactory(FantasyFootballClient pClient) {
 		fClient = pClient;
-		fCommandHandlerById = new HashMap<NetCommandId, ClientCommandHandler>();
+		fCommandHandlerById = new HashMap<>();
 		register(new ClientCommandHandlerJoin(getClient()));
 		register(new ClientCommandHandlerLeave(getClient()));
 		register(new ClientCommandHandlerTalk(getClient()));

@@ -23,7 +23,7 @@ public class DialogBuyCardsHandler extends DialogHandler {
 
 	@Override
 	public void showDialog() {
-		fCardsDrawn = new HashSet<Card>();
+		fCardsDrawn = new HashSet<>();
 		Game game = getClient().getGame();
 		DialogBuyCardsParameter dialogParameter = (DialogBuyCardsParameter) game.getDialogParameter();
 		if (dialogParameter != null) {

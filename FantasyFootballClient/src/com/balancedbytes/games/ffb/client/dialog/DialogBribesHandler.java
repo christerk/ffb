@@ -11,7 +11,7 @@ import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.util.ArrayTool;
 
 /**
- * 
+ *
  * @author Kalimar
  */
 public class DialogBribesHandler extends DialogHandler {
@@ -32,7 +32,7 @@ public class DialogBribesHandler extends DialogHandler {
 
 				if (ArrayTool.isProvided(dialogBribesParameter.getPlayerIds())
 						&& dialogBribesParameter.getPlayerIds().length == 1) {
-					Player player = game.getPlayerById(dialogBribesParameter.getPlayerIds()[0]);
+					Player<?> player = game.getPlayerById(dialogBribesParameter.getPlayerIds()[0]);
 					setDialog(new DialogBribes(getClient(), player));
 
 				} else {
@@ -68,7 +68,7 @@ public class DialogBribesHandler extends DialogHandler {
 		}
 		if (testDialogHasId(pDialog, DialogId.PLAYER_CHOICE)) {
 			DialogPlayerChoice playerChoiceDialog = (DialogPlayerChoice) pDialog;
-			Player[] selectedPlayers = playerChoiceDialog.getSelectedPlayers();
+			Player<?>[] selectedPlayers = playerChoiceDialog.getSelectedPlayers();
 			String[] selectedPlayerIds = new String[selectedPlayers.length];
 			for (int i = 0; i < selectedPlayerIds.length; i++) {
 				selectedPlayerIds[i] = selectedPlayers[i].getId();

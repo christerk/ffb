@@ -40,9 +40,9 @@ import com.eclipsesource.json.JsonValue;
  * Step in the pass sequence to handle interceptions.
  *
  * Needs to be initialized with stepParameter GOTO_LABEL_ON_FAILURE.
- * 
+ *
  * Sets stepParameter INTERCEPTOR_ID for all steps on the stack.
- * 
+ *
  * @author Kalimar
  */
 public final class StepIntercept extends AbstractStepWithReRoll {
@@ -117,11 +117,11 @@ public final class StepIntercept extends AbstractStepWithReRoll {
 			game.getFieldModel()
 					.setRangeRuler(UtilRangeRuler.createRangeRuler(game, game.getThrower(), game.getPassCoordinate(), false));
 		}
-		Player[] possibleInterceptors = UtilPassing.findInterceptors(game, game.getThrower(), game.getPassCoordinate());
+		Player<?>[] possibleInterceptors = UtilPassing.findInterceptors(game, game.getThrower(), game.getPassCoordinate());
 		boolean doNextStep = true;
 		boolean doIntercept = (possibleInterceptors.length > 0);
 		if (doIntercept) {
-			Player interceptor = game.getPlayerById(fInterceptorId);
+			Player<?> interceptor = game.getPlayerById(fInterceptorId);
 			if (ReRolledActions.INTERCEPTION == getReRolledAction()) {
 				if ((getReRollSource() == null) || !UtilServerReRoll.useReRoll(this, getReRollSource(), interceptor)) {
 					doIntercept = false;
@@ -164,7 +164,7 @@ public final class StepIntercept extends AbstractStepWithReRoll {
 		}
 	}
 
-	private ActionStatus intercept(Player pInterceptor) {
+	private ActionStatus intercept(Player<?> pInterceptor) {
 		ActionStatus status = null;
 		Game game = getGameState().getGame();
 		InterceptionModifierFactory modifierFactory = new InterceptionModifierFactory();

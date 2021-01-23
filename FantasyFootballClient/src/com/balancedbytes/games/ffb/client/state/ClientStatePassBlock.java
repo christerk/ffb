@@ -33,7 +33,7 @@ import com.balancedbytes.games.ffb.util.UtilPassing;
 import com.balancedbytes.games.ffb.util.UtilPlayer;
 
 /**
- * 
+ *
  * @author Kalimar
  */
 public class ClientStatePassBlock extends ClientStateMove {
@@ -48,7 +48,7 @@ public class ClientStatePassBlock extends ClientStateMove {
 		return ClientStateId.PASS_BLOCK;
 	}
 
-	protected void clickOnPlayer(Player pPlayer) {
+	protected void clickOnPlayer(Player<?> pPlayer) {
 		Game game = getClient().getGame();
 		PlayerState playerState = game.getFieldModel().getPlayerState(pPlayer);
 		if (game.getTeamHome().hasPlayer(pPlayer) && playerState.isActive()) {
@@ -64,7 +64,7 @@ public class ClientStatePassBlock extends ClientStateMove {
 		}
 	}
 
-	public void menuItemSelected(Player pPlayer, int pMenuKey) {
+	public void menuItemSelected(Player<?> pPlayer, int pMenuKey) {
 		if (pPlayer != null) {
 			Game game = getClient().getGame();
 			ActingPlayer actingPlayer = game.getActingPlayer();
@@ -87,10 +87,10 @@ public class ClientStatePassBlock extends ClientStateMove {
 		}
 	}
 
-	private void createAndShowPopupMenuForPlayer(Player pPlayer) {
+	private void createAndShowPopupMenuForPlayer(Player<?> pPlayer) {
 		Game game = getClient().getGame();
 		IconCache iconCache = getClient().getUserInterface().getIconCache();
-		List<JMenuItem> menuItemList = new ArrayList<JMenuItem>();
+		List<JMenuItem> menuItemList = new ArrayList<>();
 		PlayerState playerState = game.getFieldModel().getPlayerState(pPlayer);
 		ActingPlayer actingPlayer = game.getActingPlayer();
 		if ((actingPlayer.getPlayer() == null) && (playerState != null) && playerState.isAbleToMove()) {
@@ -146,7 +146,7 @@ public class ClientStatePassBlock extends ClientStateMove {
 		Game game = getClient().getGame();
 		ActingPlayer actingPlayer = game.getActingPlayer();
 		UserInterface userInterface = getClient().getUserInterface();
-		Player selectedPlayer = getClient().getClientData().getSelectedPlayer();
+		Player<?> selectedPlayer = getClient().getClientData().getSelectedPlayer();
 		switch (pActionKey) {
 		case PLAYER_SELECT:
 			if (selectedPlayer != null) {

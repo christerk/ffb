@@ -13,7 +13,7 @@ import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
 /**
- * 
+ *
  * @author Kalimar
  */
 public class DialogBuyCardsParameter implements IDialogParameter {
@@ -24,7 +24,7 @@ public class DialogBuyCardsParameter implements IDialogParameter {
 	private Map<CardType, Integer> fNrOfCardsPerType;
 
 	public DialogBuyCardsParameter() {
-		fNrOfCardsPerType = new HashMap<CardType, Integer>();
+		fNrOfCardsPerType = new HashMap<>();
 	}
 
 	public DialogBuyCardsParameter(String pTeamId, int pAvailableCards, int pAvailableGold) {

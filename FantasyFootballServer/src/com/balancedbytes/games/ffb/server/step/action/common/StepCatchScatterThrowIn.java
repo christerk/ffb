@@ -64,21 +64,21 @@ import com.eclipsesource.json.JsonValue;
 /**
  * Step in any sequence to handle scattering the ball and throw-ins. Consumes
  * all expected stepParameters.
- * 
+ *
  * Expects stepParameter CATCH_SCATTER_THROWIN_MODE to be set by a preceding
  * step. Expects stepParameter THROW_IN_COORDINATE to be set by a preceding
  * step.
- * 
+ *
  * Sets stepParameter CATCHER_ID for all steps on the stack. Sets stepParameter
  * INJURY_RESULT for all steps on the stack.
- * 
+ *
  * @author Kalimar
  */
 public class StepCatchScatterThrowIn extends AbstractStepWithReRoll {
 
 	public class StepState {
 		public boolean rerollCatch;
-		public Player catcher;
+		public Player<?> catcher;
 	}
 
 	private StepState state;
@@ -165,14 +165,14 @@ public class StepCatchScatterThrowIn extends AbstractStepWithReRoll {
 		} else {
 			fScatterBounds = FieldCoordinateBounds.FIELD;
 		}
-		Player playerUnderBall = game.getFieldModel().getPlayer(game.getFieldModel().getBallCoordinate());
+		Player<?> playerUnderBall = game.getFieldModel().getPlayer(game.getFieldModel().getBallCoordinate());
 		switch (fCatchScatterThrowInMode) {
 		case CATCH_BOMB:
 		case CATCH_ACCURATE_BOMB_EMPTY_SQUARE:
 		case CATCH_ACCURATE_BOMB:
 			fBombMode = true;
 			if (!StringTool.isProvided(fCatcherId)) {
-				Player playerUnderBomb = game.getFieldModel().getPlayer(game.getFieldModel().getBombCoordinate());
+				Player<?> playerUnderBomb = game.getFieldModel().getPlayer(game.getFieldModel().getBombCoordinate());
 				fCatcherId = (playerUnderBomb != null) ? playerUnderBomb.getId() : null;
 			}
 			if (StringTool.isProvided(fCatcherId)) {
@@ -271,7 +271,7 @@ public class StepCatchScatterThrowIn extends AbstractStepWithReRoll {
 				fDivingCatchChoice = null;
 				getGameState().pushCurrentStepOnStack();
 			} else {
-				Player catcher = null;
+				Player<?> catcher = null;
 				if (fBombMode) {
 					catcher = !game.getFieldModel().isBombMoving()
 							? game.getFieldModel().getPlayer(game.getFieldModel().getBombCoordinate())
@@ -295,7 +295,7 @@ public class StepCatchScatterThrowIn extends AbstractStepWithReRoll {
 
 	private void deactivateCards() {
 		Game game = getGameState().getGame();
-		for (Player player : game.getPlayers()) {
+		for (Player<?> player : game.getPlayers()) {
 			for (Card card : game.getFieldModel().getCards(player)) {
 				if ((InducementDuration.WHILE_HOLDING_THE_BALL == card.getDuration()) && !UtilPlayer.hasBall(game, player)) {
 					UtilServerCards.deactivateCard(this, card);
@@ -308,9 +308,9 @@ public class StepCatchScatterThrowIn extends AbstractStepWithReRoll {
 		Game game = getGameState().getGame();
 		if (fDivingCatchChoice == null) {
 			fCatcherId = null;
-			Player[] divingCatchersHome = UtilServerCatchScatterThrowIn.findDivingCatchers(getGameState(), game.getTeamHome(),
+			Player<?>[] divingCatchersHome = UtilServerCatchScatterThrowIn.findDivingCatchers(getGameState(), game.getTeamHome(),
 					pCoordinate);
-			Player[] divingCatchersAway = UtilServerCatchScatterThrowIn.findDivingCatchers(getGameState(), game.getTeamAway(),
+			Player<?>[] divingCatchersAway = UtilServerCatchScatterThrowIn.findDivingCatchers(getGameState(), game.getTeamAway(),
 					pCoordinate);
 			if (ArrayTool.isProvided(divingCatchersHome) && ArrayTool.isProvided(divingCatchersAway)) {
 				fDivingCatchChoice = false;
@@ -327,7 +327,7 @@ public class StepCatchScatterThrowIn extends AbstractStepWithReRoll {
 		}
 		if (fDivingCatchChoice != null) {
 			if (fDivingCatchChoice) {
-				Player divingCatcher = game.getPlayerById(fCatcherId);
+				Player<?> divingCatcher = game.getPlayerById(fCatcherId);
 				if (getReRollSource() == null) {
 					getResult().addReport(
 							new ReportSkillUse(divingCatcher.getId(), SkillConstants.DIVING_CATCH, true, SkillUse.CATCH_BALL));
@@ -444,7 +444,7 @@ public class StepCatchScatterThrowIn extends AbstractStepWithReRoll {
 		game.getFieldModel().setBallMoving(true);
 
 		if (fScatterBounds.isInBounds(ballCoordinateEnd)) {
-			Player player = game.getFieldModel().getPlayer(ballCoordinateEnd);
+			Player<?> player = game.getFieldModel().getPlayer(ballCoordinateEnd);
 			if (player != null) {
 				PlayerState playerState = game.getFieldModel().getPlayerState(player);
 				if (playerState.hasTacklezones()) {

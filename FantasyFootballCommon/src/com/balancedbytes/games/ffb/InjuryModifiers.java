@@ -35,7 +35,7 @@ public class InjuryModifiers {
 		public boolean appliesToContext(InjuryModifierContext context) {
 			boolean applies = false;
 
-			if (!context.isStab && 
+			if (!context.isStab &&
 					!UtilCards.hasCard(context.game, context.defender, Card.GOOD_OLD_MAGIC_CODPIECE) &&
 					context.defender.hasSkill(SkillConstants.STUNTY)) {
 				applies = true;
@@ -52,7 +52,7 @@ public class InjuryModifiers {
 	}
 
 	public InjuryModifiers() {
-		values = new HashMap<String, InjuryModifier>();
+		values = new HashMap<>();
 		try {
 			Class<?> c = this.getClass();
 			Class<?> cModifierType = InjuryModifier.class;

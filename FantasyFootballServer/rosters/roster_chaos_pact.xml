@@ -18,6 +18,7 @@
 		<movement>6</movement>
 		<strength>3</strength>
 		<agility>3</agility>
+		<passing>4</passing>
 		<armour>8</armour>
 		<portrait>portraits/chaospact_marauder.png</portrait>
 		<iconSet size="8">iconsets/chaospact_marauder.png</iconSet>
@@ -40,6 +41,7 @@
 		<movement>6</movement>
 		<strength>2</strength>
 		<agility>3</agility>
+		<passing>4</passing>
 		<armour>7</armour>
 		<race>Goblin</race>
 		<portrait>portraits/chaospact_goblinrenegade.png</portrait>
@@ -68,6 +70,7 @@
 		<movement>7</movement>
 		<strength>3</strength>
 		<agility>3</agility>
+		<passing>4</passing>
 		<armour>7</armour>
 		<race>Skaven</race>
 		<portrait>portraits/chaospact_skavenrenegade.png</portrait>
@@ -93,6 +96,7 @@
 		<movement>6</movement>
 		<strength>3</strength>
 		<agility>4</agility>
+		<passing>3</passing>
 		<armour>8</armour>
 		<race>Dark Elf</race>
 		<portrait>portraits/chaospact_darkelfrenegade.png</portrait>
@@ -118,6 +122,7 @@
 		<movement>4</movement>
 		<strength>5</strength>
 		<agility>1</agility>
+		<passing>5</passing>
 		<armour>9</armour>
 		<portrait>portraits/chaospact_chaostroll.png</portrait>
 		<iconSet size="1">iconsets/chaospact_chaostroll.png</iconSet>
@@ -147,6 +152,7 @@
 		<movement>5</movement>
 		<strength>5</strength>
 		<agility>2</agility>
+		<passing>5</passing>
 		<armour>9</armour>
 		<portrait>portraits/chaospact_chaosogre.png</portrait>
 		<iconSet size="1">iconsets/chaospact_chaosogre.png</iconSet>
@@ -175,6 +181,7 @@
 		<movement>5</movement>
 		<strength>5</strength>
 		<agility>2</agility>
+		<passing>0</passing>
 		<armour>8</armour>
 		<portrait>portraits/chaospact_minotaur.png</portrait>
 		<iconSet size="1">iconsets/chaospact_minotaur.png</iconSet>

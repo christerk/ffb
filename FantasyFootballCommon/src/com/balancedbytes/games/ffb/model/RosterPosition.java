@@ -32,7 +32,7 @@ import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
 /**
- * 
+ *
  * @author Kalimar
  */
 public class RosterPosition implements Position {
@@ -80,7 +80,7 @@ public class RosterPosition implements Position {
 	private PlayerGender fGender;
 	private int fQuantity;
 	private int fCost;
-	
+
 	private int fMovement;
 	private int fStrength;
 	private int fAgility;
@@ -113,9 +113,9 @@ public class RosterPosition implements Position {
 
 	public RosterPosition(String pId) {
 		fId = pId;
-		fSkillValues = new LinkedHashMap<Skill, Integer>();
-		fSkillCategoriesOnNormalRoll = new HashSet<SkillCategory>();
-		fSkillCategoriesOnDoubleRoll = new HashSet<SkillCategory>();
+		fSkillValues = new LinkedHashMap<>();
+		fSkillCategoriesOnNormalRoll = new HashSet<>();
+		fSkillCategoriesOnDoubleRoll = new HashSet<>();
 		fCurrentIconSetIndex = -1;
 	}
 
@@ -589,7 +589,7 @@ public class RosterPosition implements Position {
 		IJsonOption.SKILL_CATEGORIES_DOUBLE.addTo(jsonObject, skillCategoriesDouble);
 
 		JsonArray skillArray = new JsonArray();
-		List<Integer> skillValues = new ArrayList<Integer>();
+		List<Integer> skillValues = new ArrayList<>();
 		for (Skill skill : getSkills()) {
 			skillArray.add(UtilJson.toJsonValue(skill));
 			skillValues.add(getSkillValue(skill));

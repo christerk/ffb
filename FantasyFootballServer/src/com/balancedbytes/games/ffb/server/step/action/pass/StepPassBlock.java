@@ -36,13 +36,13 @@ import com.eclipsesource.json.JsonValue;
 
 /**
  * Step in pass sequence to handle skill PASS_BLOCK.
- * 
+ *
  * Needs to be initialized with stepParameter GOTO_LABEL_ON_END.
- * 
+ *
  * Expects stepParameter END_PLAYER_ACTION to be set by a preceding step.
  * (parameter is consumed on TurnMode.PASS_BLOCK) Expects stepParameter END_TURN
  * to be set by a preceding step. (parameter is consumed on TurnMode.PASS_BLOCK)
- * 
+ *
  * @author Kalimar
  */
 public class StepPassBlock extends AbstractStep {
@@ -128,7 +128,7 @@ public class StepPassBlock extends AbstractStep {
 		}
 
 		Team opposingTeam = UtilPlayer.findOtherTeam(game, game.getThrower());
-		Set<Player> passBlockers = findPassBlockers(opposingTeam, false);
+		Set<Player<?>> passBlockers = findPassBlockers(opposingTeam, false);
 		if (passBlockers.size() == 0) {
 			getResult().setNextAction(StepAction.NEXT_STEP);
 			return;
@@ -179,7 +179,7 @@ public class StepPassBlock extends AbstractStep {
 
 			if (fEndTurn) {
 
-				Player[] players = opposingTeam.getPlayers();
+				Player<?>[] players = opposingTeam.getPlayers();
 				for (int i = 0; i < players.length; i++) {
 					PlayerState playerState = game.getFieldModel().getPlayerState(players[i]);
 					FieldCoordinate playerPosition = game.getFieldModel().getPlayerCoordinate(players[i]);
@@ -214,7 +214,7 @@ public class StepPassBlock extends AbstractStep {
 
 		} else {
 
-			Set<Player> availablePassBlockers = findPassBlockers(opposingTeam, true);
+			Set<Player<?>> availablePassBlockers = findPassBlockers(opposingTeam, true);
 			if (availablePassBlockers.size() == 0) {
 
 				getResult().addReport(new ReportPassBlock(opposingTeam.getId(), false));
@@ -227,7 +227,7 @@ public class StepPassBlock extends AbstractStep {
 				game.setHomePlaying(!game.isHomePlaying());
 				game.getActingPlayer().setPlayerId(null);
 
-				Player[] players = opposingTeam.getPlayers();
+				Player<?>[] players = opposingTeam.getPlayers();
 				fOldPlayerStates = new PlayerState[players.length];
 				for (int i = 0; i < players.length; i++) {
 					PlayerState playerState = game.getFieldModel().getPlayerState(players[i]);
@@ -263,9 +263,9 @@ public class StepPassBlock extends AbstractStep {
 
 	}
 
-	private boolean checkNoPlayerActive(Set<Player> pPlayers) {
+	private boolean checkNoPlayerActive(Set<Player<?>> pPlayers) {
 		Game game = getGameState().getGame();
-		for (Player player : pPlayers) {
+		for (Player<?> player : pPlayers) {
 			PlayerState playerState = game.getFieldModel().getPlayerState(player);
 			if (playerState.isActive()) {
 				return false;
@@ -274,11 +274,11 @@ public class StepPassBlock extends AbstractStep {
 		return true;
 	}
 
-	private Set<Player> findPassBlockers(Team pTeam, boolean pCheckCanReach) {
-		Set<Player> passBlockers = new HashSet<Player>();
+	private Set<Player<?>> findPassBlockers(Team pTeam, boolean pCheckCanReach) {
+		Set<Player<?>> passBlockers = new HashSet<>();
 		Game game = getGameState().getGame();
-		Player[] players = pTeam.getPlayers();
-		for (Player player : players) {
+		Player<?>[] players = pTeam.getPlayers();
+		for (Player<?> player : players) {
 			if (player.hasSkillWithProperty(NamedProperties.canMoveWhenOpponentPasses)) {
 				PlayerState playerState = game.getFieldModel().getPlayerState(player);
 				FieldCoordinate startPosition = game.getFieldModel().getPlayerCoordinate(player);

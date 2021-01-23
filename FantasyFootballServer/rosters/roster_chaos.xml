@@ -18,6 +18,7 @@
 		<movement>6</movement>
 		<strength>3</strength>
 		<agility>3</agility>
+		<passing>4</passing>
 		<armour>8</armour>
 		<portrait>portraits/chaos_beastman.png</portrait>
 		<iconSet size="4">iconsets/chaos_beastman.png</iconSet>
@@ -42,6 +43,7 @@
 		<movement>5</movement>
 		<strength>4</strength>
 		<agility>3</agility>
+		<passing>5</passing>
 		<armour>9</armour>
 		<portrait>portraits/chaos_chaoswarrior.png</portrait>
 		<iconSet size="6">iconsets/chaos_chaoswarrior.png</iconSet>
@@ -63,6 +65,7 @@
 		<movement>5</movement>
 		<strength>5</strength>
 		<agility>2</agility>
+		<passing>0</passing>
 		<armour>8</armour>
 		<portrait>portraits/chaos_minotaur.png</portrait>
 		<iconSet size="1">iconsets/chaos_minotaur.png</iconSet>

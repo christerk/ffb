@@ -1,17 +1,17 @@
 package com.balancedbytes.games.ffb.server.step.action.pass;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.balancedbytes.games.ffb.CatchScatterThrowInMode;
 import com.balancedbytes.games.ffb.Direction;
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.FieldCoordinateBounds;
 import com.balancedbytes.games.ffb.PlayerAction;
 import com.balancedbytes.games.ffb.factory.IFactorySource;
+import com.balancedbytes.games.ffb.json.IJsonOption;
+import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.Animation;
 import com.balancedbytes.games.ffb.model.AnimationType;
 import com.balancedbytes.games.ffb.model.Game;
+import com.balancedbytes.games.ffb.report.ReportPassDeviate;
 import com.balancedbytes.games.ffb.report.ReportScatterBall;
 import com.balancedbytes.games.ffb.server.DiceInterpreter;
 import com.balancedbytes.games.ffb.server.GameState;
@@ -27,15 +27,20 @@ import com.balancedbytes.games.ffb.server.util.UtilServerGame;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Step of the pass sequence to handle a missed pass.
- * 
+ * <p>
  * Sets stepParameter CATCH_SCATTER_THROWIN_MODE for all steps on the stack.
  * Sets stepParameter THROWIN_COORDINATE for all steps on the stack.
- * 
+ *
  * @author Kalimar
  */
 public class StepMissedPass extends AbstractStep {
+
+	private boolean passDeviates;
 
 	public StepMissedPass(GameState pGameState) {
 		super(pGameState);
@@ -52,6 +57,17 @@ public class StepMissedPass extends AbstractStep {
 	}
 
 	@Override
+	public boolean setParameter(StepParameter pParameter) {
+		if ((pParameter != null) && !super.setParameter(pParameter)) {
+			if (pParameter.getKey() == StepParameterKey.PASS_DEVIATES) {
+				passDeviates = (boolean) pParameter.getValue();
+				return true;
+			}
+		}
+		return false;
+	}
+
+	@Override
 	public StepCommandStatus handleCommand(ReceivedCommand pReceivedCommand) {
 		StepCommandStatus commandStatus = super.handleCommand(pReceivedCommand);
 		if (commandStatus == StepCommandStatus.EXECUTE_STEP) {
@@ -65,32 +81,47 @@ public class StepMissedPass extends AbstractStep {
 		Game game = getGameState().getGame();
 		FieldCoordinate coordinateEnd = null;
 		FieldCoordinate lastValidCoordinate = null;
-		List<Integer> rollList = new ArrayList<Integer>();
-		List<Direction> directionList = new ArrayList<Direction>();
+		List<Integer> rollList = new ArrayList<>();
+		List<Direction> directionList = new ArrayList<>();
+		FieldCoordinate coordinateStart;
+		FieldCoordinate throwerCoordinate = game.getFieldModel().getPlayerCoordinate(game.getThrower());
+		if (passDeviates) {
+			coordinateStart = throwerCoordinate;
+			int directionRoll = getGameState().getDiceRoller().rollScatterDirection();
+			int distanceRoll = getGameState().getDiceRoller().rollScatterDistance();
+			Direction direction = DiceInterpreter.getInstance().interpretScatterDirectionRoll(game, directionRoll);
+			coordinateEnd = UtilServerCatchScatterThrowIn.findScatterCoordinate(coordinateStart, direction, distanceRoll);
+			lastValidCoordinate = coordinateEnd;
+			int validDistance = distanceRoll;
+			while (!FieldCoordinateBounds.FIELD.isInBounds(lastValidCoordinate) && validDistance > 0) {
+				validDistance--;
+				lastValidCoordinate = UtilServerCatchScatterThrowIn.findScatterCoordinate(coordinateStart, direction, validDistance);
+			}
+			getResult().addReport(new ReportPassDeviate(coordinateEnd, direction, directionRoll, distanceRoll));
+		} else {
+			coordinateStart = game.getPassCoordinate();
+			while (FieldCoordinateBounds.FIELD.isInBounds(coordinateStart) && (rollList.size() < 3)) {
+				int roll = getGameState().getDiceRoller().rollScatterDirection();
+				rollList.add(roll);
+				Direction direction = DiceInterpreter.getInstance().interpretScatterDirectionRoll(game, roll);
+				directionList.add(direction);
+				coordinateEnd = UtilServerCatchScatterThrowIn.findScatterCoordinate(coordinateStart, direction, 1);
+				lastValidCoordinate = FieldCoordinateBounds.FIELD.isInBounds(coordinateEnd) ? coordinateEnd : coordinateStart;
+				coordinateStart = coordinateEnd;
+			}
+			int[] rolls = new int[rollList.size()];
+			for (int i = 0; i < rolls.length; i++) {
+				rolls[i] = rollList.get(i);
+			}
 
-		FieldCoordinate coordinateStart = game.getPassCoordinate();
-		while (FieldCoordinateBounds.FIELD.isInBounds(coordinateStart) && (rollList.size() < 3)) {
-			int roll = getGameState().getDiceRoller().rollScatterDirection();
-			rollList.add(roll);
-			Direction direction = DiceInterpreter.getInstance().interpretScatterDirectionRoll(game, roll);
-			directionList.add(direction);
-			coordinateEnd = UtilServerCatchScatterThrowIn.findScatterCoordinate(coordinateStart, direction, 1);
-			lastValidCoordinate = FieldCoordinateBounds.FIELD.isInBounds(coordinateEnd) ? coordinateEnd : coordinateStart;
-			coordinateStart = coordinateEnd;
+			Direction[] directions = directionList.toArray(new Direction[0]);
+			getResult().addReport(new ReportScatterBall(directions, rolls, false));
 		}
-		int[] rolls = new int[rollList.size()];
-		for (int i = 0; i < rolls.length; i++) {
-			rolls[i] = rollList.get(i);
-		}
-
-		Direction[] directions = directionList.toArray(new Direction[directionList.size()]);
-		getResult().addReport(new ReportScatterBall(directions, rolls, false));
 
 		game.getFieldModel().setRangeRuler(null);
-		FieldCoordinate throwerCoordinate = game.getFieldModel().getPlayerCoordinate(game.getThrower());
 		if (PlayerAction.HAIL_MARY_PASS == game.getThrowerAction()) {
 			getResult()
-					.setAnimation(new Animation(AnimationType.HAIL_MARY_PASS, throwerCoordinate, lastValidCoordinate, null));
+				.setAnimation(new Animation(AnimationType.HAIL_MARY_PASS, throwerCoordinate, lastValidCoordinate, null));
 		} else if (PlayerAction.HAIL_MARY_BOMB == game.getThrowerAction()) {
 			getResult()
 					.setAnimation(new Animation(AnimationType.HAIL_MARY_BOMB, throwerCoordinate, lastValidCoordinate, null));
@@ -140,12 +171,16 @@ public class StepMissedPass extends AbstractStep {
 
 	@Override
 	public JsonObject toJsonValue() {
-		return super.toJsonValue();
+		JsonObject jsonObject = super.toJsonValue();
+		IJsonOption.PASS_DEVIATES.addTo(jsonObject, passDeviates);
+		return jsonObject;
 	}
 
 	@Override
 	public StepMissedPass initFrom(IFactorySource game, JsonValue pJsonValue) {
 		super.initFrom(game, pJsonValue);
+		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
+		passDeviates = IJsonOption.PASS_DEVIATES.getFrom(game, jsonObject);
 		return this;
 	}
 

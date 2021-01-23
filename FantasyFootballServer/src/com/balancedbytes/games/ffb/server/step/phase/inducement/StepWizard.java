@@ -38,9 +38,9 @@ import com.eclipsesource.json.JsonValue;
 
 /**
  * Step in inducement sequence to handle wizard.
- * 
+ *
  * Needs to be initialized with stepParameter HOME_TEAM.
- * 
+ *
  * May push SpellEffect sequences onto the stack.
  *
  * @author Kalimar
@@ -127,7 +127,7 @@ public final class StepWizard extends AbstractStep {
 			Team team = game.isHomePlaying() ? game.getTeamHome() : game.getTeamAway();
 			getResult().addReport(new ReportWizardUse(team.getId(), fWizardSpell));
 			UtilServerInducementUse.useInducement(getGameState(), team, InducementType.WIZARD, 1);
-			List<Player> affectedPlayers = new ArrayList<Player>();
+			List<Player<?>> affectedPlayers = new ArrayList<>();
 			if (fWizardSpell == SpecialEffect.ZAP) {
 				getResult().setAnimation(new Animation(AnimationType.SPELL_ZAP, fTargetCoordinate));
 				affectedPlayers.add(game.getFieldModel().getPlayer(fTargetCoordinate));
@@ -151,7 +151,7 @@ public final class StepWizard extends AbstractStep {
 			PlayerState bloodSpotInjury = new PlayerState(
 					(fWizardSpell == SpecialEffect.FIREBALL) ? PlayerState.HIT_BY_FIREBALL : PlayerState.HIT_BY_LIGHTNING);
 			game.getFieldModel().add(new BloodSpot(fTargetCoordinate, bloodSpotInjury));
-			for (Player affectedPlayer : affectedPlayers) {
+			for (Player<?> affectedPlayer : affectedPlayers) {
 				SequenceGenerator.getInstance().pushSpecialEffectSequence(getGameState(), fWizardSpell, affectedPlayer.getId(),
 						true);
 			}
@@ -166,7 +166,7 @@ public final class StepWizard extends AbstractStep {
 		}
 	}
 
-	private void addToAffectedPlayers(List<Player> pAffectedPlayers, Player pPlayer) {
+	private void addToAffectedPlayers(List<Player<?>> pAffectedPlayers, Player<?> pPlayer) {
 		Game game = getGameState().getGame();
 		PlayerState playerState = game.getFieldModel().getPlayerState(pPlayer);
 		if ((pPlayer != null) && (playerState != null) && (playerState.getBase() != PlayerState.PRONE)

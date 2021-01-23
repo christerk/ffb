@@ -58,16 +58,16 @@ import com.eclipsesource.json.JsonValue;
  * Step in kickoff sequence to apply the kickoff result.
  *
  * Needs to be initialized with stepParameter GOTO_LABEL_END.
- * 
+ *
  * Needs to be initialized with stepParameter SKIP_PAST_LABEL_ON_BLITZ.
- * 
+ *
  * Expects stepParameter KICKOFF_BOUNDS to be set by a preceding step. Expects
  * stepParameter KICKOFF_RESULT to be set by a preceding step. Expects
  * stepParameter TOUCHBACK to be set by a preceding step.
- * 
+ *
  * Sets stepParameter TOUCHBACK for all steps on the stack. Sets stepParameter
  * INJURY_RESULT for all steps on the stack.
- * 
+ *
  * @author Kalimar
  */
 public final class StepApplyKickoffResult extends AbstractStep {
@@ -298,7 +298,7 @@ public final class StepApplyKickoffResult extends AbstractStep {
 				getResult().setNextAction(StepAction.NEXT_STEP);
 			}
 		} else {
-			Player catcher = game.getFieldModel().getPlayer(game.getFieldModel().getBallCoordinate());
+			Player<?> catcher = game.getFieldModel().getPlayer(game.getFieldModel().getBallCoordinate());
 			if (fTouchback || (catcher != null)) {
 				getResult().setNextAction(StepAction.NEXT_STEP);
 			} else {
@@ -378,7 +378,7 @@ public final class StepApplyKickoffResult extends AbstractStep {
 			break;
 		case SWELTERING_HEAT:
 			getResult().setAnimation(new Animation(AnimationType.KICKOFF_SWELTERING_HEAT));
-			for (Player player : game.getPlayers()) {
+			for (Player<?> player : game.getPlayers()) {
 				PlayerState playerState = game.getFieldModel().getPlayerState(player);
 				if (playerState.getBase() == PlayerState.EXHAUSTED) {
 					game.getFieldModel().setPlayerState(player, playerState.changeBase(PlayerState.RESERVE));
@@ -457,13 +457,13 @@ public final class StepApplyKickoffResult extends AbstractStep {
 		String hitPlayerIdAway = null;
 
 		if (totalAway >= totalHome) {
-			Player homePlayer = getGameState().getDiceRoller().randomPlayer(playersOnField(game, game.getTeamHome()));
+			Player<?> homePlayer = getGameState().getDiceRoller().randomPlayer(playersOnField(game, game.getTeamHome()));
 			if (homePlayer != null) {
 				hitPlayerIdHome = homePlayer.getId();
 			}
 		}
 		if (totalHome >= totalAway) {
-			Player awayPlayer = getGameState().getDiceRoller().randomPlayer(playersOnField(game, game.getTeamAway()));
+			Player<?> awayPlayer = getGameState().getDiceRoller().randomPlayer(playersOnField(game, game.getTeamAway()));
 			if (awayPlayer != null) {
 				hitPlayerIdAway = awayPlayer.getId();
 			}
@@ -484,7 +484,7 @@ public final class StepApplyKickoffResult extends AbstractStep {
 
 		if (hitPlayerIdHome != null) {
 
-			Player player = game.getPlayerById(hitPlayerIdHome);
+			Player<?> player = game.getPlayerById(hitPlayerIdHome);
 			FieldCoordinate playerCoordinate = game.getFieldModel().getPlayerCoordinate(player);
 
 			FieldCoordinate startCoordinate = null;
@@ -504,7 +504,7 @@ public final class StepApplyKickoffResult extends AbstractStep {
 
 		if (hitPlayerIdAway != null) {
 
-			Player player = game.getPlayerById(hitPlayerIdAway);
+			Player<?> player = game.getPlayerById(hitPlayerIdAway);
 			FieldCoordinate playerCoordinate = game.getFieldModel().getPlayerCoordinate(player);
 
 			FieldCoordinate startCoordinate = null;
@@ -536,7 +536,7 @@ public final class StepApplyKickoffResult extends AbstractStep {
 		int fanFavouritesAway = UtilPlayer.findPlayersOnPitchWithProperty(game, game.getTeamAway(),
 				NamedProperties.increasesTeamsFame).length;
 
-		Player[] playersHome = game.getTeamHome().getPlayers();
+		Player<?>[] playersHome = game.getTeamHome().getPlayers();
 		int[] rollsHome = new int[playersHome.length];
 		boolean[] playerAffectedHome = new boolean[playersHome.length];
 		for (int i = 0; i < playersHome.length; i++) {
@@ -550,7 +550,7 @@ public final class StepApplyKickoffResult extends AbstractStep {
 			}
 		}
 
-		Player[] playersAway = game.getTeamAway().getPlayers();
+		Player<?>[] playersAway = game.getTeamAway().getPlayers();
 		int[] rollsAway = new int[playersAway.length];
 		boolean[] playerAffectedAway = new boolean[playersAway.length];
 		for (int i = 0; i < playersAway.length; i++) {
@@ -571,9 +571,9 @@ public final class StepApplyKickoffResult extends AbstractStep {
 
 	}
 
-	private Player[] playersOnField(Game pGame, Team pTeam) {
-		List<Player> playersOnField = new ArrayList<Player>();
-		for (Player player : pTeam.getPlayers()) {
+	private Player<?>[] playersOnField(Game pGame, Team pTeam) {
+		List<Player<?>> playersOnField = new ArrayList<>();
+		for (Player<?> player : pTeam.getPlayers()) {
 			if (isPlayerOnField(pGame, player)) {
 				playersOnField.add(player);
 			}
@@ -581,7 +581,7 @@ public final class StepApplyKickoffResult extends AbstractStep {
 		return playersOnField.toArray(new Player[playersOnField.size()]);
 	}
 
-	private boolean isPlayerOnField(Game pGame, Player pPlayer) {
+	private boolean isPlayerOnField(Game pGame, Player<?> pPlayer) {
 		FieldCoordinate playerCoordinate = pGame.getFieldModel().getPlayerCoordinate(pPlayer);
 		return (FieldCoordinateBounds.FIELD.isInBounds(playerCoordinate));
 	}

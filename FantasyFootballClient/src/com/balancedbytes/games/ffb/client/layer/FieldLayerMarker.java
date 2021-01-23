@@ -18,7 +18,7 @@ import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.util.StringTool;
 
 /**
- * 
+ *
  * @author Kalimar
  */
 public class FieldLayerMarker extends FieldLayer {
@@ -29,7 +29,7 @@ public class FieldLayerMarker extends FieldLayer {
 
 	public FieldLayerMarker(FantasyFootballClient pClient) {
 		super(pClient);
-		fFieldMarkerBounds = new HashMap<FieldCoordinate, Rectangle>();
+		fFieldMarkerBounds = new HashMap<>();
 	}
 
 	public void drawFieldMarker(FieldMarker pFieldMarker) {

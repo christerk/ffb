@@ -36,7 +36,7 @@ import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
 
 /**
- * 
+ *
  * @author Kalimar
  */
 @SuppressWarnings("serial")
@@ -61,7 +61,7 @@ public class BoxComponent extends JPanel implements MouseListener, MouseMotionLi
 	public BoxComponent(SideBarComponent pSideBar) {
 		fSideBar = pSideBar;
 		fImage = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_ARGB);
-		fBoxSlots = new ArrayList<BoxSlot>();
+		fBoxSlots = new ArrayList<>();
 		setLayout(null);
 		Dimension size = new Dimension(WIDTH, HEIGHT);
 		setMinimumSize(size);
@@ -143,7 +143,7 @@ public class BoxComponent extends JPanel implements MouseListener, MouseMotionLi
 		int yPos = drawTitle(boxState, pYPosition);
 		int row = -1;
 		for (int y = 0; y < MAX_BOX_ELEMENTS; y++) {
-			Player player = fieldModel.getPlayer(new FieldCoordinate(pXCoordinate, y));
+			Player<?> player = fieldModel.getPlayer(new FieldCoordinate(pXCoordinate, y));
 			if ((player != null) || (pXCoordinate == FieldCoordinate.RSV_HOME_X)) {
 				row = y / 3;
 				int locationX = (y % 3) * FIELD_SQUARE_SIZE;

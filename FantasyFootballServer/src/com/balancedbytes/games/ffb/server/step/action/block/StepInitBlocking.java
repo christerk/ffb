@@ -28,17 +28,17 @@ import com.eclipsesource.json.JsonValue;
 
 /**
  * Step to init the block sequence.
- * 
+ *
  * Needs to be initialized with stepParameter GOTO_LABEL_ON_END. May be
  * initialized with stepParameter BLOCK_DEFENDER_ID. May be initialized with
  * stepParameter USING_STAB.
- * 
+ *
  * Sets stepParameter DEFENDER_POSITION for all steps on the stack. Sets
  * stepParameter END_PLAYER_ACTION for all steps on the stack. Sets
  * stepParameter END_TURN for all steps on the stack. Sets stepParameter
  * OLD_DEFENDER_STATE for all steps on the stack. Sets stepParameter USING_STAB
  * for all steps on the stack.
- * 
+ *
  * @author Kalimar
  */
 public class StepInitBlocking extends AbstractStep {
@@ -149,7 +149,7 @@ public class StepInitBlocking extends AbstractStep {
 		} else if (actingPlayer.isSufferingBloodLust() && (actingPlayer.getPlayerAction() == PlayerAction.MOVE)) {
 			getResult().setNextAction(StepAction.GOTO_LABEL, fGotoLabelOnEnd);
 		} else {
-			Player defender = game.getPlayerById(fBlockDefenderId);
+			Player<?> defender = game.getPlayerById(fBlockDefenderId);
 			if (defender != null) {
 				game.setDefenderId(defender.getId());
 				actingPlayer.setStrength(UtilCards.getPlayerStrength(game, actingPlayer.getPlayer()));

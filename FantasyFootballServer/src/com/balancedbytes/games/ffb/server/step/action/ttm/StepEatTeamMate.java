@@ -25,15 +25,15 @@ import com.eclipsesource.json.JsonValue;
 
 /**
  * Step in ttm sequence to eat a team mate.
- * 
+ *
  * Expects stepParameter THROWN_PLAYER_COORDINATE to be set by a preceding step.
  * Expects stepParameter THROWN_PLAYER_ID to be set by a preceding step.
- * 
+ *
  * Sets stepParameter CATCH_SCATTER_THROW_IN_MODE for all steps on the stack.
  * Sets stepParameter END_TURN for all steps on the stack. Sets stepParameter
  * INJURY_RESULT for all steps on the stack. Sets stepParameter
  * THROWN_PLAYER_COORDINATE for all steps on the stack.
- * 
+ *
  * @author Kalimar
  */
 public final class StepEatTeamMate extends AbstractStep {
@@ -83,7 +83,7 @@ public final class StepEatTeamMate extends AbstractStep {
 
 	private void executeStep() {
 		Game game = getGameState().getGame();
-		Player thrownPlayer = game.getPlayerById(fThrownPlayerId);
+		Player<?> thrownPlayer = game.getPlayerById(fThrownPlayerId);
 		if ((thrownPlayer != null) && (fThrownPlayerCoordinate != null)) {
 			if (fThrownPlayerCoordinate.equals(game.getFieldModel().getBallCoordinate())) {
 				game.getFieldModel().setBallMoving(true);

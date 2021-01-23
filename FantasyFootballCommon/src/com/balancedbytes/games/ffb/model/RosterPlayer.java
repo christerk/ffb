@@ -68,8 +68,8 @@ public class RosterPlayer extends Player<RosterPosition> {
 	private transient boolean fInsidePlayerStatistics;
 
 	public RosterPlayer() {
-		fLastingInjuries = new ArrayList<SeriousInjury>();
-		fSkills = new ArrayList<Skill>();
+		fLastingInjuries = new ArrayList<>();
+		fSkills = new ArrayList<>();
 		setGender(PlayerGender.MALE);
 		fIconSetIndex = 0;
 		fPosition = new RosterPosition(null);

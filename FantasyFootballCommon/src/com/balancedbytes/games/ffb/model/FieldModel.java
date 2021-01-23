@@ -36,7 +36,7 @@ import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
 /**
- * 
+ *
  * @author Kalimar
  */
 public class FieldModel implements IJsonSerializable {
@@ -69,18 +69,18 @@ public class FieldModel implements IJsonSerializable {
 
 	public FieldModel(Game pGame) {
 		fGame = pGame;
-		fPlayerIdByCoordinate = new HashMap<FieldCoordinate, List<String>>();
-		fCoordinateByPlayerId = new HashMap<String, FieldCoordinate>();
-		fBloodspots = new ArrayList<BloodSpot>();
-		fPushbackSquares = new HashSet<PushbackSquare>();
-		fMoveSquares = new HashSet<MoveSquare>();
-		fTrackNumbers = new HashSet<TrackNumber>();
-		fDiceDecorations = new HashSet<DiceDecoration>();
-		fStateByPlayerId = new HashMap<String, PlayerState>();
-		fFieldMarkers = new HashSet<FieldMarker>();
-		fPlayerMarkers = new HashSet<PlayerMarker>();
-		fCardsByPlayerId = new HashMap<String, Set<Card>>();
-		fCardEffectsByPlayerId = new HashMap<String, Set<CardEffect>>();
+		fPlayerIdByCoordinate = new HashMap<>();
+		fCoordinateByPlayerId = new HashMap<>();
+		fBloodspots = new ArrayList<>();
+		fPushbackSquares = new HashSet<>();
+		fMoveSquares = new HashSet<>();
+		fTrackNumbers = new HashSet<>();
+		fDiceDecorations = new HashSet<>();
+		fStateByPlayerId = new HashMap<>();
+		fFieldMarkers = new HashSet<>();
+		fPlayerMarkers = new HashSet<>();
+		fCardsByPlayerId = new HashMap<>();
+		fCardEffectsByPlayerId = new HashMap<>();
 	}
 
 	public Player<?> getPlayer(FieldCoordinate pPlayerPosition) {
@@ -105,7 +105,7 @@ public class FieldModel implements IJsonSerializable {
 		if (pPlayerPosition != null) {
 			List<String> playersAtCoordinate = fPlayerIdByCoordinate.get(pPlayerPosition);
 			if (playersAtCoordinate != null && playersAtCoordinate.size() > 0) {
-				players = new ArrayList<Player<?>>();
+				players = new ArrayList<>();
 				for (String playerId : playersAtCoordinate) {
 					players.add(getGame().getPlayerById(playerId));
 				}
@@ -159,24 +159,20 @@ public class FieldModel implements IJsonSerializable {
 				}
 			}
 			// Add player to new coordinate
-			List<String> playerList = fPlayerIdByCoordinate.get(pCoordinate);
-			if (playerList == null) {
-				playerList = new ArrayList<String>();
-				fPlayerIdByCoordinate.put(pCoordinate, playerList);
-			}
+			List<String> playerList = fPlayerIdByCoordinate.computeIfAbsent(pCoordinate, k -> new ArrayList<>());
 			playerList.add(pPlayer.getId());
 			notifyObservers(ModelChangeId.FIELD_MODEL_SET_PLAYER_COORDINATE, pPlayer.getId(), pCoordinate);
 		}
 	}
 
 	public FieldCoordinate[] getPlayerCoordinates() {
-		ArrayList<FieldCoordinate> coordinates = new ArrayList<FieldCoordinate>();
+		List<FieldCoordinate> coordinates = new ArrayList<>();
 		for (FieldCoordinate c : fPlayerIdByCoordinate.keySet()) {
 			if (fPlayerIdByCoordinate.get(c).size() > 0) {
 				coordinates.add(c);
 			}
 		}
-		return coordinates.toArray(new FieldCoordinate[coordinates.size()]);
+		return coordinates.toArray(new FieldCoordinate[0]);
 	}
 
 	public void sendPosition(Player<?> pPlayer) {
@@ -216,7 +212,7 @@ public class FieldModel implements IJsonSerializable {
 		}
 		Set<Card> cards = fCardsByPlayerId.get(pPlayer.getId());
 		if (cards == null) {
-			cards = new HashSet<Card>();
+			cards = new HashSet<>();
 			fCardsByPlayerId.put(pPlayer.getId(), cards);
 		}
 		cards.add(pCard);
@@ -266,7 +262,7 @@ public class FieldModel implements IJsonSerializable {
 		}
 		Set<CardEffect> cardEffects = fCardEffectsByPlayerId.get(pPlayer.getId());
 		if (cardEffects == null) {
-			cardEffects = new HashSet<CardEffect>();
+			cardEffects = new HashSet<>();
 			fCardEffectsByPlayerId.put(pPlayer.getId(), cardEffects);
 		}
 		cardEffects.add(pCardEffect);
@@ -311,7 +307,7 @@ public class FieldModel implements IJsonSerializable {
 	}
 
 	public Player<?>[] findPlayers(CardEffect pCardEffect) {
-		Set<Player<?>> players = new HashSet<Player<?>>();
+		Set<Player<?>> players = new HashSet<>();
 		for (String playerId : fCardEffectsByPlayerId.keySet()) {
 			for (CardEffect cardEffect : fCardEffectsByPlayerId.get(playerId)) {
 				if (cardEffect == pCardEffect) {
@@ -349,7 +345,7 @@ public class FieldModel implements IJsonSerializable {
 
 	public FieldCoordinate[] findAdjacentCoordinates(FieldCoordinate pCoordinate, FieldCoordinateBounds pBounds,
 			int pSteps, boolean pWithStartCoordinate) {
-		List<FieldCoordinate> adjacentCoordinates = new ArrayList<FieldCoordinate>();
+		List<FieldCoordinate> adjacentCoordinates = new ArrayList<>();
 		if ((pCoordinate != null) && (pBounds != null)) {
 			for (int y = -pSteps; y <= pSteps; y++) {
 				for (int x = -pSteps; x <= pSteps; x++) {
@@ -810,13 +806,13 @@ public class FieldModel implements IJsonSerializable {
 			IJsonOption.PLAYER_COORDINATE.addTo(playerDataObject, getPlayerCoordinate(player));
 			IJsonOption.PLAYER_STATE.addTo(playerDataObject, getPlayerState(player));
 
-			List<String> cards = new ArrayList<String>();
+			List<String> cards = new ArrayList<>();
 			for (Card card : getCards(player)) {
 				cards.add(card.getName());
 			}
 			IJsonOption.CARDS.addTo(playerDataObject, cards);
 
-			List<String> cardEffects = new ArrayList<String>();
+			List<String> cardEffects = new ArrayList<>();
 			for (CardEffect cardEffect : getCardEffects(player)) {
 				cardEffects.add(cardEffect.getName());
 			}

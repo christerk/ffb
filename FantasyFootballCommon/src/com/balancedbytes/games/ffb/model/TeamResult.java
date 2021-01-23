@@ -15,7 +15,7 @@ import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
 /**
- * 
+ *
  * @author Kalimar
  */
 public class TeamResult implements IJsonSerializable {
@@ -46,7 +46,7 @@ public class TeamResult implements IJsonSerializable {
 	public TeamResult(GameResult pGameResult, boolean pHomeData) {
 		fGameResult = pGameResult;
 		fHomeData = pHomeData;
-		fPlayerResultByPlayerId = new HashMap<String, PlayerResult>();
+		fPlayerResultByPlayerId = new HashMap<>();
 	}
 
 	public GameResult getGameResult() {

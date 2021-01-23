@@ -14,7 +14,7 @@ import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
 /**
- * 
+ *
  * @author Kalimar
  */
 public class GameLog implements IJsonSerializable {
@@ -26,7 +26,7 @@ public class GameLog implements IJsonSerializable {
 
 	public GameLog(GameState pGameState) {
 		fGameState = pGameState;
-		fServerCommands = new ArrayList<ServerCommand>();
+		fServerCommands = new ArrayList<>();
 	}
 
 	public void add(ServerCommand pServerCommand) {
@@ -46,7 +46,7 @@ public class GameLog implements IJsonSerializable {
 	}
 
 	public ServerCommand[] getUncommitedServerCommands() {
-		List<ServerCommand> uncommitedCommands = new ArrayList<ServerCommand>();
+		List<ServerCommand> uncommitedCommands = new ArrayList<>();
 		synchronized (fServerCommands) {
 			for (ServerCommand serverCommand : fServerCommands) {
 				if (serverCommand.getCommandNr() > fLastCommitedCommandNr) {

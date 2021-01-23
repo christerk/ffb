@@ -10,7 +10,7 @@ import com.balancedbytes.games.ffb.client.util.UtilClientCursor;
 import com.balancedbytes.games.ffb.model.Player;
 
 /**
- * 
+ *
  * @author Kalimar
  */
 public class ClientStateKickoff extends ClientState {
@@ -36,7 +36,7 @@ public class ClientStateKickoff extends ClientState {
 		}
 	}
 
-	protected void clickOnPlayer(Player pPlayer) {
+	protected void clickOnPlayer(Player<?> pPlayer) {
 		if (!fKicked) {
 			FieldCoordinate playerCoordinate = getClient().getGame().getFieldModel().getPlayerCoordinate(pPlayer);
 			placeBall(playerCoordinate);

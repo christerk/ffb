@@ -13,7 +13,7 @@ import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
 /**
- * 
+ *
  * @author Kalimar
  */
 public class ClientCommandUserSettings extends ClientCommand {
@@ -21,7 +21,7 @@ public class ClientCommandUserSettings extends ClientCommand {
 	private Map<String, String> fSettings;
 
 	public ClientCommandUserSettings() {
-		fSettings = new HashMap<String, String>();
+		fSettings = new HashMap<>();
 	}
 
 	public ClientCommandUserSettings(String[] pSettingNames, String[] pSettingValues) {

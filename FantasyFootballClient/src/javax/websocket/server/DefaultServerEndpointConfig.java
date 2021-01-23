@@ -64,7 +64,7 @@ final class DefaultServerEndpointConfig implements ServerEndpointConfig {
 	private List<Extension> extensions;
 	private List<Class<? extends Encoder>> encoders;
 	private List<Class<? extends Decoder>> decoders;
-	private Map<String, Object> userProperties = new HashMap<String, Object>();
+	private Map<String, Object> userProperties = new HashMap<>();
 	private ServerEndpointConfig.Configurator serverEndpointConfigurator;
 
 	// The builder ensures nothing except configurator can be {@code null}.
@@ -141,7 +141,7 @@ final class DefaultServerEndpointConfig implements ServerEndpointConfig {
 
 	/**
 	 * Return the ServerEndpointConfigurator
-	 * 
+	 *
 	 * @return the ServerEndpointConfigurator
 	 */
 	@Override

@@ -10,7 +10,7 @@ import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
 
 /**
- * 
+ *
  * @author Kalimar
  */
 public class DialogSkillUseHandler extends DialogHandler {
@@ -26,7 +26,7 @@ public class DialogSkillUseHandler extends DialogHandler {
 
 		if (dialogSkillUseParameter != null) {
 
-			Player player = game.getPlayerById(dialogSkillUseParameter.getPlayerId());
+			Player<?> player = game.getPlayerById(dialogSkillUseParameter.getPlayerId());
 
 			if ((ClientMode.PLAYER == getClient().getMode()) && game.getTeamHome().hasPlayer(player)) {
 				setDialog(new DialogSkillUse(getClient(), dialogSkillUseParameter));

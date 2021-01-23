@@ -40,6 +40,7 @@ public class ServerCommandHandlerFumbblGameChecked extends ServerCommandHandler 
 		InternalServerCommandFumbblGameChecked gameCheckedCommand = (InternalServerCommandFumbblGameChecked) pReceivedCommand
 				.getCommand();
 		GameState gameState = getServer().getGameCache().getGameStateById(gameCheckedCommand.getGameId());
+		gameState.getGame().initializeRules();
 
 		TeamSkeleton homeSkeleton = (TeamSkeleton) gameState.getGame().getTeamHome();
 		TeamSkeleton awaySkeleton = (TeamSkeleton) gameState.getGame().getTeamAway();

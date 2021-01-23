@@ -24,7 +24,7 @@ public class ClientCommandHandlerZapPlayer extends ClientCommandHandler {
 	public boolean handleNetCommand(NetCommand pNetCommand, ClientCommandHandlerMode pMode) {
 		ServerCommandZapPlayer command = (ServerCommandZapPlayer) pNetCommand;
 		Team team = getClient().getGame().getTeamById(command.getTeamId());
-		Player player = team.getPlayerById(command.getPlayerId());
+		Player<?> player = team.getPlayerById(command.getPlayerId());
 
 		if (player instanceof RosterPlayer) {
 			RosterPlayer rosterPlayer = (RosterPlayer) player;

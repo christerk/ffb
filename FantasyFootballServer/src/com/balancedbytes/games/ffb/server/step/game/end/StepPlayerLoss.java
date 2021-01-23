@@ -22,7 +22,7 @@ import com.eclipsesource.json.JsonValue;
 
 /**
  * Step in end game sequence to handle player loss.
- * 
+ *
  * @author Kalimar
  */
 public final class StepPlayerLoss extends AbstractStep {
@@ -54,10 +54,10 @@ public final class StepPlayerLoss extends AbstractStep {
 			team = game.getTeamAway();
 		}
 		if (team != null) {
-			List<String> defectingPlayerIds = new ArrayList<String>();
-			List<Integer> defectingRolls = new ArrayList<Integer>();
-			List<Boolean> defectingFlags = new ArrayList<Boolean>();
-			for (Player player : team.getPlayers()) {
+			List<String> defectingPlayerIds = new ArrayList<>();
+			List<Integer> defectingRolls = new ArrayList<>();
+			List<Boolean> defectingFlags = new ArrayList<>();
+			for (Player<?> player : team.getPlayers()) {
 				PlayerResult playerResult = gameResult.getPlayerResult(player);
 				if (playerResult.getCurrentSpps() >= 51) {
 					defectingPlayerIds.add(player.getId());

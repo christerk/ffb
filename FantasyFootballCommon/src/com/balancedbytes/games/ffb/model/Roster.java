@@ -20,7 +20,7 @@ import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
 /**
- * 
+ *
  * @author Kalimar
  */
 public class Roster implements IXmlSerializable, IJsonSerializable {
@@ -61,8 +61,8 @@ public class Roster implements IXmlSerializable, IJsonSerializable {
 	private Map<String, RosterPosition> fRosterPositionByName;
 
 	public Roster() {
-		fRosterPositionById = new HashMap<String, RosterPosition>();
-		fRosterPositionByName = new HashMap<String, RosterPosition>();
+		fRosterPositionById = new HashMap<>();
+		fRosterPositionByName = new HashMap<>();
 		fApothecary = true;
 	}
 

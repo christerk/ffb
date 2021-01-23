@@ -65,7 +65,7 @@ public class ServerCommandGameState extends ServerCommand {
 		setCommandNr(IJsonOption.COMMAND_NR.getFrom(source, jsonObject));
 		JsonObject gameObject = IJsonOption.GAME.getFrom(source, jsonObject);
 		if (gameObject != null) {
-			Game game = new Game(source.forContext(FactoryContext.APPLICATION), source.getFactoryManager(), false); // We don't want to initialize rules yet.
+			Game game = new Game(source.forContext(FactoryContext.APPLICATION), source.getFactoryManager());
 			game.initFrom(source, gameObject);
 			fGame = game;
 		}

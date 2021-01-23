@@ -18,7 +18,7 @@ import com.balancedbytes.games.ffb.server.db.IDbTablePlayerMarkers;
 import com.balancedbytes.games.ffb.util.StringTool;
 
 /**
- * 
+ *
  * @author Kalimar
  */
 public class DbPlayerMarkersQuery extends DbStatement {
@@ -65,7 +65,7 @@ public class DbPlayerMarkersQuery extends DbStatement {
 				while (resultSet.next()) {
 					String playerId = resultSet.getString(1);
 					String text = resultSet.getString(2);
-					Player player = game.getPlayerById(playerId);
+					Player<?> player = game.getPlayerById(playerId);
 					if ((player != null) && StringTool.isProvided(text)) {
 						PlayerMarker playerMarker = game.getFieldModel().getPlayerMarker(player.getId());
 						if (playerMarker == null) {

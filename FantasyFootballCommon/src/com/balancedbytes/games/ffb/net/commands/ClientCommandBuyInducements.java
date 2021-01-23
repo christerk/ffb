@@ -30,9 +30,9 @@ public class ClientCommandBuyInducements extends ClientCommand {
 	private List<Skill> fMercenarySkills;
 
 	public ClientCommandBuyInducements() {
-		fStarPlayerPositionIds = new ArrayList<String>();
-		fMercenaryPositionIds = new ArrayList<String>();
-		fMercenarySkills = new ArrayList<Skill>();
+		fStarPlayerPositionIds = new ArrayList<>();
+		fMercenaryPositionIds = new ArrayList<>();
+		fMercenarySkills = new ArrayList<>();
 	}
 
 	public ClientCommandBuyInducements(String pTeamId, int pAvailableGold, InducementSet pInducementSet,

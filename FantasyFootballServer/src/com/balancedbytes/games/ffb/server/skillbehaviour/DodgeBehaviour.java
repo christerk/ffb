@@ -87,7 +87,7 @@ public class DodgeBehaviour extends SkillBehaviour<Dodge> {
 			Game game = step.getGameState().getGame();
 			ActingPlayer actingPlayer = game.getActingPlayer();
 
-			Player attacker = actingPlayer.getPlayer();
+			Player<?> attacker = actingPlayer.getPlayer();
 			FieldCoordinate attackerCoordinate = game.getFieldModel().getPlayerCoordinate(attacker);
 			FieldCoordinate defenderCoordinate = game.getFieldModel().getPlayerCoordinate(game.getDefender());
 			PushbackSquare startingSquare = UtilServerPushback.findStartingSquare(attackerCoordinate, defenderCoordinate,

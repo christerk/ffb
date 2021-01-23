@@ -7,8 +7,8 @@ import java.util.Map;
 import java.util.Set;
 
 public class PassingModifiers {
-	public static Set<PassModifier> tackleZoneModifiers = new HashSet<PassModifier>();
-	public static Set<PassModifier> disturbingPresenceModifiers = new HashSet<PassModifier>();
+	public static Set<PassModifier> tackleZoneModifiers = new HashSet<>();
+	public static Set<PassModifier> disturbingPresenceModifiers = new HashSet<>();
 
 	public static final PassModifier VERY_SUNNY = new PassModifier("Very Sunny", 1, false, false);
 	public static final PassModifier BLIZZARD = new PassModifier("Blizzard", 0, false, false);
@@ -43,7 +43,7 @@ public class PassingModifiers {
 	}
 
 	public PassingModifiers() {
-		values = new HashMap<String, PassModifier>();
+		values = new HashMap<>();
 		try {
 			Class<?> c = this.getClass();
 			Class<?> cModifierType = PassModifier.class;

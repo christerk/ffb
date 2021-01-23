@@ -30,8 +30,8 @@ public class InjuryContext {
 	public ApothecaryStatus fApothecaryStatus;
 
 	public InjuryContext() {
-		fArmorModifiers = new HashSet<ArmorModifier>();
-		fInjuryModifiers = new HashSet<InjuryModifier>();
+		fArmorModifiers = new HashSet<>();
+		fInjuryModifiers = new HashSet<>();
 	}
 
 	public void setInjuryType(InjuryType pInjuryType) {

@@ -33,11 +33,11 @@ import com.eclipsesource.json.JsonValue;
 
 /**
  * Step in inducement sequence to handle spell effect.
- * 
+ *
  * Needs to be initialized with stepParameter PLAYER_ID. Needs to be initialized
  * with stepParameter ROLL_FOR_EFFECT. Needs to be initialized with
  * stepParameter SPECIAL_EFFECT.
- * 
+ *
  * Sets stepParameter END_TURN for all steps on the stack. Sets stepParameter
  * INJURY_RESULT for all steps on the stack.
  *
@@ -105,7 +105,7 @@ public final class StepSpecialEffect extends AbstractStep {
 
 		Game game = getGameState().getGame();
 
-		Player player = game.getPlayerById(fPlayerId);
+		Player<?> player = game.getPlayerById(fPlayerId);
 		if (player != null) {
 
 			boolean successful = true;

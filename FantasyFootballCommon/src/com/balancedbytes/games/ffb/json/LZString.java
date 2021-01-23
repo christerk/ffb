@@ -4,11 +4,13 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * LZString Java Implementation by diogoduailibe. source
  * https://github.com/diogoduailibe/lzstring4j
- * 
+ *
  * Based on JavaScript lz-string by pieroxy source
  * http://pieroxy.net/blog/pages/lz-string/index.html
  */
@@ -21,8 +23,8 @@ public class LZString {
 		if (uncompressed == null)
 			return "";
 		int value;
-		HashMap<String, Integer> context_dictionary = new HashMap<String, Integer>();
-		HashSet<String> context_dictionaryToCreate = new HashSet<String>();
+		Map<String, Integer> context_dictionary = new HashMap<>();
+		Set<String> context_dictionaryToCreate = new HashSet<>();
 		String context_c = "";
 		String context_wc = "";
 		String context_w = "";
@@ -265,7 +267,7 @@ public class LZString {
 			return "";
 		if (compressed == "")
 			return null;
-		List<String> dictionary = new ArrayList<String>(200);
+		List<String> dictionary = new ArrayList<>(200);
 		double enlargeIn = 4;
 		int dictSize = 4;
 		int numBits = 3;

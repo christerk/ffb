@@ -11,7 +11,7 @@ import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.util.UtilPassing;
 
 /**
- * 
+ *
  * @author Kalimar
  */
 public class DialogInterceptionHandler extends DialogHandler {
@@ -24,7 +24,7 @@ public class DialogInterceptionHandler extends DialogHandler {
 
 		Game game = getClient().getGame();
 		DialogInterceptionParameter dialogParameter = (DialogInterceptionParameter) game.getDialogParameter();
-		Player thrower = game.getPlayerById(dialogParameter.getThrowerId());
+		Player<?> thrower = game.getPlayerById(dialogParameter.getThrowerId());
 
 		if ((ClientMode.PLAYER != getClient().getMode()) || game.getTeamHome().hasPlayer(thrower)) {
 			showStatus("Interception", "Waiting for coach to choose an interceptor.", StatusType.WAITING);
@@ -48,7 +48,7 @@ public class DialogInterceptionHandler extends DialogHandler {
 				getClient().getCommunication().sendInterceptorChoice(null);
 			} else {
 				// auto-choose lone interceptor
-				Player[] interceptors = UtilPassing.findInterceptors(game, game.getThrower(), game.getPassCoordinate());
+				Player<?>[] interceptors = UtilPassing.findInterceptors(game, game.getThrower(), game.getPassCoordinate());
 				if ((interceptors != null) && (interceptors.length == 1)) {
 					getClient().getCommunication().sendInterceptorChoice(interceptors[0]);
 				}

@@ -35,13 +35,13 @@ import com.eclipsesource.json.JsonValue;
 
 /**
  * Step in the pass sequence to handle skill SAFE_THROW.
- * 
+ *
  * Needs to be initialized with stepParameter GOTO_LABEL_ON_FAILURE.
- * 
+ *
  * Expects stepParameter INTERCEPTOR_ID to be set by a preceding step.
- * 
+ *
  * Sets stepParameter INTERCEPTOR_ID for all steps on the stack.
- * 
+ *
  * @author Kalimar
  */
 @StepHook(HookPoint.PASS_INTERCEPT)
@@ -108,7 +108,7 @@ public class StepSafeThrow extends AbstractStepWithReRoll {
 
 	private void executeStep() {
 		Game game = getGameState().getGame();
-		Player interceptor = game.getPlayerById(fInterceptorId);
+		Player<?> interceptor = game.getPlayerById(fInterceptorId);
 		if ((game.getThrower() == null) || (interceptor == null)) {
 			return;
 		}

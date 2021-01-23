@@ -31,17 +31,17 @@ import com.eclipsesource.json.JsonValue;
 
 /**
  * Initialization step of the pass sequence.
- * 
+ *
  * Needs to be initialized with stepParameter GOTO_LABEL_ON_END. May be
  * initialized with stepParameter CATCHER_ID. May be initialized with
  * stepParameter HAIL_MARY_PASS. May be initialized with stepParameter
  * TARGET_COORDINATE.
- * 
+ *
  * Sets stepParameter CATCHER_ID for all steps on the stack. Sets stepParameter
  * END_PLAYER_ACTION for all steps on the stack. Sets stepParameter END_TURN for
  * all steps on the stack. Sets stepParameter TARGET_COORDINATE for all steps on
  * the stack.
- * 
+ *
  * @author Kalimar
  */
 public final class StepInitPassing extends AbstractStep {
@@ -75,7 +75,7 @@ public final class StepInitPassing extends AbstractStep {
 					if (parameter.getValue() != null) {
 						FieldCoordinate targetCoordinate = (FieldCoordinate) parameter.getValue();
 						game.setPassCoordinate(targetCoordinate);
-						Player catcher = game.getFieldModel().getPlayer(game.getPassCoordinate());
+						Player<?> catcher = game.getFieldModel().getPlayer(game.getPassCoordinate());
 						fCatcherId = ((catcher != null) ? catcher.getId() : null);
 						if (game.getThrower() == null) {
 							if ((game.getDefender() != null) && (game.getDefenderAction() == PlayerAction.DUMP_OFF)) {
@@ -122,7 +122,7 @@ public final class StepInitPassing extends AbstractStep {
 					} else {
 						game.setPassCoordinate(passCommand.getTargetCoordinate().transform());
 					}
-					Player catcher = game.getFieldModel().getPlayer(game.getPassCoordinate());
+					Player<?> catcher = game.getFieldModel().getPlayer(game.getPassCoordinate());
 					fCatcherId = ((catcher != null) ? catcher.getId() : null);
 					if ((game.getDefender() != null) && (game.getDefenderAction() == PlayerAction.DUMP_OFF)) {
 						game.setThrowerId(game.getDefenderId());
@@ -138,7 +138,7 @@ public final class StepInitPassing extends AbstractStep {
 				ClientCommandHandOver handOverCommand = (ClientCommandHandOver) pReceivedCommand.getCommand();
 				if (UtilServerSteps.checkCommandWithActingPlayer(getGameState(), handOverCommand)) {
 					fCatcherId = handOverCommand.getCatcherId();
-					Player catcher = game.getPlayerById(fCatcherId);
+					Player<?> catcher = game.getPlayerById(fCatcherId);
 					game.setPassCoordinate(game.getFieldModel().getPlayerCoordinate(catcher));
 					game.setThrowerId(actingPlayer.getPlayerId());
 					game.setThrowerAction(PlayerAction.HAND_OVER);
@@ -176,7 +176,7 @@ public final class StepInitPassing extends AbstractStep {
 		if ((game.getThrower() == null) || (game.getThrowerAction() == null)) {
 			return;
 		}
-		Player catcher = game.getPlayerById(fCatcherId);
+		Player<?> catcher = game.getPlayerById(fCatcherId);
 		if (catcher != null) {
 			publishParameter(new StepParameter(StepParameterKey.CATCHER_ID, catcher.getId()));
 		}

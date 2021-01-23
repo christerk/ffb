@@ -25,7 +25,7 @@ import com.balancedbytes.games.ffb.util.UtilCards;
 import com.balancedbytes.games.ffb.util.UtilPlayer;
 
 /**
- * 
+ *
  * @author Kalimar
  */
 public class ClientStateFoul extends ClientStateMove {
@@ -38,7 +38,7 @@ public class ClientStateFoul extends ClientStateMove {
 		return ClientStateId.FOUL;
 	}
 
-	public void clickOnPlayer(Player pPlayer) {
+	public void clickOnPlayer(Player<?> pPlayer) {
 		Game game = getClient().getGame();
 		ActingPlayer actingPlayer = game.getActingPlayer();
 		if (pPlayer == actingPlayer.getPlayer()) {
@@ -79,7 +79,7 @@ public class ClientStateFoul extends ClientStateMove {
 			FieldCoordinate playerPosition = game.getFieldModel().getPlayerCoordinate(actingPlayer.getPlayer());
 			FieldCoordinate defenderPosition = UtilClientActionKeys.findMoveCoordinate(getClient(), playerPosition,
 					pActionKey);
-			Player defender = game.getFieldModel().getPlayer(defenderPosition);
+			Player<?> defender = game.getFieldModel().getPlayer(defenderPosition);
 			if (defender != null) {
 				actionHandled = foul(defender);
 			} else {
@@ -89,7 +89,7 @@ public class ClientStateFoul extends ClientStateMove {
 		return actionHandled;
 	}
 
-	protected boolean mouseOverPlayer(Player pPlayer) {
+	protected boolean mouseOverPlayer(Player<?> pPlayer) {
 		super.mouseOverPlayer(pPlayer);
 		Game game = getClient().getGame();
 		if (UtilPlayer.isFoulable(game, pPlayer)) {
@@ -98,7 +98,7 @@ public class ClientStateFoul extends ClientStateMove {
 		return true;
 	}
 
-	private boolean foul(Player pDefender) {
+	private boolean foul(Player<?> pDefender) {
 		Game game = getClient().getGame();
 		ActingPlayer actingPlayer = game.getActingPlayer();
 		boolean doFoul = UtilPlayer.isFoulable(game, pDefender);
@@ -108,7 +108,7 @@ public class ClientStateFoul extends ClientStateMove {
 		return doFoul;
 	}
 
-	protected void menuItemSelected(Player pPlayer, int pMenuKey) {
+	protected void menuItemSelected(Player<?> pPlayer, int pMenuKey) {
 		if (pPlayer != null) {
 			Game game = getClient().getGame();
 			ActingPlayer actingPlayer = game.getActingPlayer();
@@ -139,7 +139,7 @@ public class ClientStateFoul extends ClientStateMove {
 			UserInterface userInterface = getClient().getUserInterface();
 			IconCache iconCache = userInterface.getIconCache();
 			userInterface.getFieldComponent().getLayerUnderPlayers().clearMovePath();
-			List<JMenuItem> menuItemList = new ArrayList<JMenuItem>();
+			List<JMenuItem> menuItemList = new ArrayList<>();
 			JMenuItem moveAction = new JMenuItem("Move",
 					new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_MOVE)));
 			moveAction.setMnemonic(IPlayerPopupMenuKeys.KEY_MOVE);

@@ -52,7 +52,7 @@ public class SwoopBehaviour extends SkillBehaviour<Swoop> {
 				GameState gameState = step.getGameState();
 				Game game = gameState.getGame();
 				ActingPlayer actingPlayer = game.getActingPlayer();
-				Player swoopingPlayer = actingPlayer.getPlayer();
+				Player<?> swoopingPlayer = actingPlayer.getPlayer();
 
 				if (swoopingPlayer.hasSkillWithProperty(NamedProperties.ttmScattersInSingleDirection)) {
 					// Send animation moving the player to the initial target square
@@ -105,7 +105,7 @@ public class SwoopBehaviour extends SkillBehaviour<Swoop> {
 							// Landing
 							List<Player<?>> playersInSquare = game.getFieldModel().getPlayers(state.coordinateTo);
 							boolean crashed = false;
-							for (Player p : playersInSquare) {
+							for (Player<?> p : playersInSquare) {
 								if (p != swoopingPlayer) {
 									// Landed on another player
 									step.publishParameter(new StepParameter(StepParameterKey.DROP_THROWN_PLAYER, true));

@@ -41,7 +41,7 @@ import com.eclipsesource.json.JsonValue;
 
 /**
  * Step to init the select sequence.
- * 
+ *
  * Needs to be initialized with stepParameter GOTO_LABEL_ON_END. Needs to be
  * initialized with stepParameter UPDATE_PERSISTENCE.
  *
@@ -100,15 +100,14 @@ public final class StepInitSelecting extends AbstractStep {
 	@Override
 	public StepCommandStatus handleCommand(ReceivedCommand pReceivedCommand) {
 		StepCommandStatus commandStatus = super.handleCommand(pReceivedCommand);
-		if ((pReceivedCommand != null) && (commandStatus == StepCommandStatus.UNHANDLED_COMMAND)
-				&& UtilServerSteps.checkCommandIsFromCurrentPlayer(getGameState(), pReceivedCommand)) {
+		if (commandStatus == StepCommandStatus.UNHANDLED_COMMAND && UtilServerSteps.checkCommandIsFromCurrentPlayer(getGameState(), pReceivedCommand)) {
 			Game game = getGameState().getGame();
 			ActingPlayer actingPlayer = game.getActingPlayer();
 			boolean homeCommand = UtilServerSteps.checkCommandIsFromHomePlayer(getGameState(), pReceivedCommand);
 			switch (pReceivedCommand.getId()) {
 			case CLIENT_ACTING_PLAYER:
 				ClientCommandActingPlayer actingPlayerCommand = (ClientCommandActingPlayer) pReceivedCommand.getCommand();
-				Player selectedPlayer = game.getPlayerById(actingPlayerCommand.getPlayerId());
+				Player<?> selectedPlayer = game.getPlayerById(actingPlayerCommand.getPlayerId());
 				if (StringTool.isProvided(actingPlayerCommand.getPlayerId())
 						&& game.getActingTeam() == selectedPlayer.getTeam()) {
 					UtilServerSteps.changePlayerAction(this, actingPlayerCommand.getPlayerId(),
@@ -186,7 +185,7 @@ public final class StepInitSelecting extends AbstractStep {
 				ClientCommandHandOver handOverCommand = (ClientCommandHandOver) pReceivedCommand.getCommand();
 				if (UtilServerSteps.checkCommandWithActingPlayer(getGameState(), handOverCommand)
 						&& !game.getTurnData().isHandOverUsed()) {
-					Player catcher = game.getPlayerById(handOverCommand.getCatcherId());
+					Player<?> catcher = game.getPlayerById(handOverCommand.getCatcherId());
 					FieldCoordinate catcherCoordinate = game.getFieldModel().getPlayerCoordinate(catcher);
 					publishParameter(new StepParameter(StepParameterKey.TARGET_COORDINATE, catcherCoordinate));
 					UtilServerSteps.changePlayerAction(this, actingPlayer.getPlayerId(), PlayerAction.HAND_OVER, false);

@@ -27,8 +27,8 @@ public class ReportScatterPlayer implements IReport {
 	private List<Integer> fRolls;
 
 	public ReportScatterPlayer() {
-		fDirections = new ArrayList<Direction>();
-		fRolls = new ArrayList<Integer>();
+		fDirections = new ArrayList<>();
+		fRolls = new ArrayList<>();
 	}
 
 	public ReportScatterPlayer(FieldCoordinate pStartCoordinate, FieldCoordinate pEndCoordinate, Direction[] pDirections,

@@ -28,7 +28,7 @@ import com.balancedbytes.games.ffb.xml.IXmlWriteable;
 import com.balancedbytes.games.ffb.xml.UtilXml;
 
 /**
- * 
+ *
  * @author Kalimar
  */
 public class FumbblResult implements IXmlWriteable {
@@ -187,8 +187,8 @@ public class FumbblResult implements IXmlWriteable {
 			}
 
 			UtilXml.startElement(pHandler, _XML_TAG_PLAYER_RESULT_LIST);
-			Player[] players = pTeamResult.getTeam().getPlayers();
-			for (Player player : players) {
+			Player<?>[] players = pTeamResult.getTeam().getPlayers();
+			for (Player<?> player : players) {
 				addToXml(pHandler, pTeamResult.getPlayerResult(player), player);
 			}
 			UtilXml.endElement(pHandler, _XML_TAG_PLAYER_RESULT_LIST);
@@ -203,7 +203,7 @@ public class FumbblResult implements IXmlWriteable {
 
 		if ((getGame() != null) && (pTeam != null) && (pInducementSet != null)) {
 
-			List<Inducement> inducements = new ArrayList<Inducement>();
+			List<Inducement> inducements = new ArrayList<>();
 			for (Inducement inducement : pInducementSet.getInducements()) {
 				if ((inducement.getType() != InducementType.STAR_PLAYERS)
 						&& (inducement.getType() != InducementType.MERCENARIES)) {
@@ -211,9 +211,9 @@ public class FumbblResult implements IXmlWriteable {
 				}
 			}
 
-			List<Player> starPlayers = new ArrayList<Player>();
-			List<Player> mercenaries = new ArrayList<Player>();
-			for (Player player : pTeam.getPlayers()) {
+			List<Player<?>> starPlayers = new ArrayList<>();
+			List<Player<?>> mercenaries = new ArrayList<>();
+			for (Player<?> player : pTeam.getPlayers()) {
 				if (player.getPlayerType() == PlayerType.STAR) {
 					starPlayers.add(player);
 				}
@@ -241,7 +241,7 @@ public class FumbblResult implements IXmlWriteable {
 				}
 
 				// Star Players
-				for (Player starPlayer : starPlayers) {
+				for (Player<?> starPlayer : starPlayers) {
 					AttributesImpl attributes = new AttributesImpl();
 					UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_NAME, starPlayer.getName());
 					UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_POSITION_ID, starPlayer.getPositionId());
@@ -250,9 +250,9 @@ public class FumbblResult implements IXmlWriteable {
 				}
 
 				// Mercenaries
-				for (Player mercenary : mercenaries) {
+				for (Player<?> mercenary : mercenaries) {
 					Skill addedSkill = null;
-					Set<Skill> rosterSkills = new HashSet<Skill>();
+					Set<Skill> rosterSkills = new HashSet<>();
 					for (Skill skill : mercenary.getPosition().getSkills()) {
 						rosterSkills.add(skill);
 					}
@@ -287,7 +287,7 @@ public class FumbblResult implements IXmlWriteable {
 
 	}
 
-	private void addToXml(TransformerHandler pHandler, PlayerResult pPlayerResult, Player player) {
+	private void addToXml(TransformerHandler pHandler, PlayerResult pPlayerResult, Player<?> player) {
 
 		if ((getGame() != null) && (pPlayerResult != null)) {
 
