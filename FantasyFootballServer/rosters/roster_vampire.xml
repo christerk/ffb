@@ -21,6 +21,7 @@
 		<movement>6</movement>
 		<strength>4</strength>
 		<agility>4</agility>
+		<passing>3</passing>
 		<armour>8</armour>
 		<portrait>portraits/vampire_vampire.png</portrait>
 		<iconSet size="5">iconsets/vampire_vampire.png</iconSet>
@@ -46,6 +47,7 @@
 		<movement>6</movement>
 		<strength>3</strength>
 		<agility>3</agility>
+		<passing>5</passing>
 		<armour>7</armour>
 		<thrall>true</thrall>
 		<portrait>portraits/vampire_thrall.png</portrait>

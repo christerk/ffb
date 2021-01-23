@@ -17,6 +17,7 @@
 		<movement>6</movement>
 		<strength>2</strength>
 		<agility>3</agility>
+		<passing>4</passing>
 		<armour>7</armour>
 		<portrait>portraits/goblin_goblin.png</portrait>
 		<iconSet size="7">iconsets/goblin_goblin.png</iconSet>
@@ -42,6 +43,7 @@
 		<movement>4</movement>
 		<strength>5</strength>
 		<agility>1</agility>
+		<passing>5</passing>
 		<armour>9</armour>
 		<portrait>portraits/goblin_troll.png</portrait>
 		<iconSet size="3">iconsets/goblin_troll.png</iconSet>
@@ -70,6 +72,7 @@
 		<movement>6</movement>
 		<strength>2</strength>
 		<agility>3</agility>
+		<passing>4</passing>
 		<armour>7</armour>
 		<portrait>portraits/goblin_bombardier.png</portrait>
 		<iconSet size="2">iconsets/goblin_bombardier.png</iconSet>
@@ -96,6 +99,7 @@
 		<movement>7</movement>
 		<strength>2</strength>
 		<agility>3</agility>
+		<passing>5</passing>
 		<armour>7</armour>
 		<portrait>portraits/goblin_pogoer.png</portrait>
 		<iconSet size="2">iconsets/goblin_pogoer.png</iconSet>
@@ -122,6 +126,7 @@
 		<movement>6</movement>
 		<strength>2</strength>
 		<agility>3</agility>
+		<passing>0</passing>
 		<armour>7</armour>
 		<portrait>portraits/goblin_looney.png</portrait>
 		<iconSet size="1">iconsets/goblin_looney.png</iconSet>
@@ -147,6 +152,7 @@
 		<movement>3</movement>
 		<strength>7</strength>
 		<agility>3</agility>
+		<passing>0</passing>
 		<armour>7</armour>
 		<portrait>portraits/goblin_fanatic.png</portrait>
 		<iconSet size="1">iconsets/goblin_fanatic.png</iconSet>

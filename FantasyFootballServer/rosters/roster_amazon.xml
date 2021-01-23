@@ -17,6 +17,7 @@
 		<movement>6</movement>
 		<strength>3</strength>
 		<agility>3</agility>
+		<passing>5</passing>
 		<armour>7</armour>
 		<portrait>portraits/amazon_blitzer.png</portrait>
 		<iconSet size="4">iconsets/amazon_blitzer.png</iconSet>
@@ -40,6 +41,7 @@
 		<movement>6</movement>
 		<strength>3</strength>
 		<agility>3</agility>
+		<passing>5</passing>
 		<armour>7</armour>
 		<portrait>portraits/amazon_catcher.png</portrait>
 		<iconSet size="2">iconsets/amazon_catcher.png</iconSet>
@@ -63,6 +65,7 @@
 		<movement>6</movement>
 		<strength>3</strength>
 		<agility>3</agility>
+		<passing>5</passing>
 		<armour>7</armour>
 		<portrait>portraits/amazon_thrower.png</portrait>
 		<iconSet size="2">iconsets/amazon_thrower.png</iconSet>
@@ -86,6 +89,7 @@
 		<movement>6</movement>
 		<strength>3</strength>
 		<agility>3</agility>
+		<passing>4</passing>
 		<armour>7</armour>
 		<portrait>portraits/amazon_linewoman.png</portrait>
 		<iconSet size="2">iconsets/amazon_linewoman.png</iconSet>

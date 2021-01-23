@@ -20,6 +20,7 @@
 		<movement>3</movement>
 		<strength>5</strength>
 		<agility>1</agility>
+		<passing>0</passing>
 		<armour>9</armour>
 		<portrait>portraits/undead_mummy.png</portrait>
 		<iconSet size="2">iconsets/undead_mummy.png</iconSet>
@@ -43,6 +44,7 @@
 		<movement>6</movement>
 		<strength>3</strength>
 		<agility>3</agility>
+		<passing>5</passing>
 		<armour>8</armour>
 		<portrait>portraits/undead_wight.png</portrait>
 		<iconSte size="2">iconsets/undead_wight.png</iconSte>
@@ -66,6 +68,7 @@
 		<movement>7</movement>
 		<strength>3</strength>
 		<agility>3</agility>
+		<passing>4</passing>
 		<armour>7</armour>
 		<portrait>portraits/undead_ghoul.png</portrait>
 		<iconSet size="4">iconsets/undead_ghoul.png</iconSet>
@@ -88,6 +91,7 @@
 		<movement>4</movement>
 		<strength>3</strength>
 		<agility>2</agility>
+		<passing>0</passing>
 		<armour>8</armour>
 		<portrait>portraits/undead_zombie.png</portrait>
 		<iconSet size="12">iconsets/undead_zombie.png</iconSet>
@@ -110,6 +114,7 @@
 		<movement>5</movement>
 		<strength>3</strength>
 		<agility>2</agility>
+		<passing>6</passing>
 		<armour>7</armour>
 		<portrait>portraits/undead_skeleton.png</portrait>
 		<iconSet size="3">iconsets/undead_skeleton.png</iconSet>

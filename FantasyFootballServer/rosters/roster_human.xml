@@ -18,6 +18,7 @@
 		<movement>6</movement>
 		<strength>3</strength>
 		<agility>3</agility>
+		<passing>4</passing>
 		<armour>8</armour>
 		<portrait>portraits/human_lineman.png</portrait>
 		<iconSet size="2">iconsets/human_lineman.png</iconSet>
@@ -39,6 +40,7 @@
 		<movement>7</movement>
 		<strength>3</strength>
 		<agility>3</agility>
+		<passing>4</passing>
 		<armour>8</armour>
 		<portrait>portraits/human_blitzer.png</portrait>
 		<iconSet size="1">iconsets/human_blitzer.png</iconSet>
@@ -62,6 +64,7 @@
 		<movement>6</movement>
 		<strength>3</strength>
 		<agility>3</agility>
+		<passing>2</passing>
 		<armour>8</armour>
 		<portrait>portraits/human_thrower.png</portrait>
 		<iconSet size="1">iconsets/human_thrower.png</iconSet>
@@ -86,6 +89,7 @@
 		<movement>8</movement>
 		<strength>2</strength>
 		<agility>3</agility>
+		<passing>5</passing>
 		<armour>7</armour>
 		<portrait>portraits/human_catcher.png</portrait>
 		<iconSet size="4">iconsets/human_catcher.png</iconSet>
@@ -109,6 +113,7 @@
 		<movement>5</movement>
 		<strength>5</strength>
 		<agility>2</agility>
+		<passing>5</passing>
 		<armour>9</armour>
 		<portrait>portraits/human_ogre.png</portrait>
 		<iconSet size="6">iconsets/human_ogre.png</iconSet>

@@ -17,6 +17,7 @@
 		<movement>6</movement>
 		<strength>3</strength>
 		<agility>3</agility>
+		<passing>4</passing>
 		<armour>7</armour>
 		<portrait>portraits/chaosdwarf_hobgoblin.png</portrait>
 		<iconSet size="4">iconsets/chaosdwarf_hobgoblin.png</iconSet>
@@ -37,6 +38,7 @@
 		<movement>4</movement>
 		<strength>3</strength>
 		<agility>2</agility>
+		<passing>6</passing>
 		<armour>9</armour>
 		<portrait>portraits/chaosdwarf_chaosdwarfblocker.png</portrait>
 		<iconSet size="6">iconsets/chaosdwarf_chaosdwarfblocker.png</iconSet>
@@ -62,6 +64,7 @@
 		<movement>6</movement>
 		<strength>4</strength>
 		<agility>2</agility>
+		<passing>6</passing>
 		<armour>9</armour>
 		<portrait>portraits/chaosdwarf_bullcentaur.png</portrait>
 		<iconSet size="2">iconsets/chaosdwarf_bullcentaur.png</iconSet>
@@ -86,6 +89,7 @@
 		<movement>5</movement>
 		<strength>5</strength>
 		<agility>2</agility>
+		<passing>0</passing>
 		<armour>8</armour>
 		<portrait>portraits/chaosdwarf_minotaur.png</portrait>
 		<iconSet size="1">iconsets/chaosdwarf_minotaur.png</iconSet>

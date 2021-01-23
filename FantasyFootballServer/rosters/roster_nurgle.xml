@@ -21,6 +21,7 @@
 		<movement>5</movement>
 		<strength>3</strength>
 		<agility>3</agility>
+		<passing>6</passing>
 		<armour>8</armour>
 		<portrait>portraits/nurgle_rotter.png</portrait>
 		<iconSet size="6">iconsets/nurgle_rotter.png</iconSet>
@@ -46,6 +47,7 @@
 		<movement>6</movement>
 		<strength>3</strength>
 		<agility>3</agility>
+		<passing>4</passing>
 		<armour>8</armour>
 		<portrait>portraits/nurgle_pestigor.png</portrait>
 		<iconSet size="4">iconsets/nurgle_pestigor.png</iconSet>
@@ -72,6 +74,7 @@
 		<movement>4</movement>
 		<strength>4</strength>
 		<agility>2</agility>
+		<passing>6</passing>
 		<armour>9</armour>
 		<portrait>portraits/nurgle_nurglewarrior.png</portrait>
 		<iconSet size="4">iconsets/nurgle_nurglewarrior.png</iconSet>
@@ -99,6 +102,7 @@
 		<movement>4</movement>
 		<strength>5</strength>
 		<agility>1</agility>
+		<passing>0</passing>
 		<armour>9</armour>
 		<portrait>portraits/nurgle_beastofnurgle.png</portrait>
 		<iconSet size="1">iconsets/nurgle_beastofnurgle.png</iconSet>
