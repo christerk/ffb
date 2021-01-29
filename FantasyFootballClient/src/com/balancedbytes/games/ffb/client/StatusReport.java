@@ -2492,11 +2492,9 @@ public class StatusReport {
 			}
 			println(getIndent() + 1, status.toString());
 			if ((attacker != null) && usingClaws) {
-				status = new StringBuilder();
 				print(getIndent() + 1, false, attacker);
 				println(getIndent() + 1, " uses Claws to reduce opponents armour to 7.");
 			}
-			status = new StringBuilder();
 			if (pReport.isArmorBroken()) {
 				print(getIndent() + 1, "The armour of ");
 				print(getIndent() + 1, false, defender);

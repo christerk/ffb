@@ -82,7 +82,7 @@ public class ReportInjury implements IReport {
 	}
 
 	public ArmorModifier[] getArmorModifiers() {
-		return fArmorModifiers.toArray(new ArmorModifier[fArmorModifiers.size()]);
+		return fArmorModifiers.toArray(new ArmorModifier[0]);
 	}
 
 	private void add(ArmorModifier pArmorModifier) {
@@ -104,7 +104,7 @@ public class ReportInjury implements IReport {
 	}
 
 	public InjuryModifier[] getInjuryModifiers() {
-		return fInjuryModifiers.toArray(new InjuryModifier[fInjuryModifiers.size()]);
+		return fInjuryModifiers.toArray(new InjuryModifier[0]);
 	}
 
 	private void add(InjuryModifier pInjuryModifier) {

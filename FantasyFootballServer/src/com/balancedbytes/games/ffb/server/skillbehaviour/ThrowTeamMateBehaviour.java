@@ -69,8 +69,7 @@ public class ThrowTeamMateBehaviour extends SkillBehaviour<ThrowTeamMate> {
 					int minimumRoll = DiceInterpreter.getInstance().minimumRollThrowTeamMate(passingDistance,
 							passModifiers);
 					int roll = step.getGameState().getDiceRoller().rollSkill();
-					boolean successful = !DiceInterpreter.getInstance().isPassFumble(roll, actingPlayer.getPlayer(),
-							passingDistance, passModifiers);
+					boolean successful = !DiceInterpreter.getInstance().isPassFumble(roll, passingDistance, passModifiers);
 					PassModifier[] passModifierArray = passModifierFactory.toArray(passModifiers);
 					boolean reRolled = ((step.getReRolledAction() == ReRolledActions.THROW_TEAM_MATE)
 							&& (step.getReRollSource() != null));

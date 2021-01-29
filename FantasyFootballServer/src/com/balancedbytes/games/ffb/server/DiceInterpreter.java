@@ -28,6 +28,8 @@ import com.balancedbytes.games.ffb.SpecialEffect;
 import com.balancedbytes.games.ffb.Weather;
 import com.balancedbytes.games.ffb.factory.DirectionFactory;
 import com.balancedbytes.games.ffb.factory.KickoffResultFactory;
+import com.balancedbytes.games.ffb.mechanics.Mechanic;
+import com.balancedbytes.games.ffb.mechanics.StatsMechanic;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
@@ -158,7 +160,7 @@ public class DiceInterpreter {
 		return Math.max(2, getAgilityRollBase(pPlayer.getAgility()) + modifierTotal);
 	}
 
-	public boolean isPassFumble(int roll, Player<?> pThrower, PassingDistance pPassingDistance,
+	public boolean isPassFumble(int roll, PassingDistance pPassingDistance,
 			Set<PassModifier> pPassModifiers) {
 		if (roll == 1) {
 			return true;
@@ -175,10 +177,6 @@ public class DiceInterpreter {
 
 	public boolean isSkillRollSuccessful(int roll, int pMinimumRoll) {
 		return ((roll == 6) || ((roll != 1) && (roll >= pMinimumRoll)));
-	}
-
-	public boolean isThickSkullUsed(int[] pInjuryRoll) {
-		return (ArrayTool.isProvided(pInjuryRoll) && (pInjuryRoll[0] + pInjuryRoll[1] == 8));
 	}
 
 	public boolean isSpecialEffectSuccesful(SpecialEffect pSpecialEffect, Player<?> targetPlayer, int roll) {
@@ -436,6 +434,7 @@ public class DiceInterpreter {
 
 	public boolean isArmourBroken(GameState pGameState, InjuryContext pInjuryContext) {
 		Game game = pGameState.getGame();
+		StatsMechanic mechanic = (StatsMechanic) game.getRules().getFactory(Factory.MECHANIC).forName(Mechanic.Type.STAT.name());
 		int[] armourRoll = pInjuryContext.getArmorRoll();
 		Player<?> defender = game.getPlayerById(pInjuryContext.getDefenderId());
 		int armour = defender.getArmour();
@@ -445,11 +444,7 @@ public class DiceInterpreter {
 		if ((armour > 7) && pInjuryContext.hasArmorModifier(ArmorModifiers.CLAWS)) {
 			armour = 7;
 		}
-		return (armour < (armourRoll[0] + armourRoll[1] + pInjuryContext.getArmorModifierTotal()));
-	}
-
-	public boolean isApothecarySuccessful(int roll) {
-		return (roll > 1);
+		return mechanic.armourIsBroken(armour, armourRoll, pInjuryContext);
 	}
 
 	public boolean isBribesSuccessful(int roll) {
