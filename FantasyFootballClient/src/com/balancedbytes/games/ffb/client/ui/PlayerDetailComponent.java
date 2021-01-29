@@ -22,6 +22,7 @@ import javax.swing.JPanel;
 
 import com.balancedbytes.games.ffb.Card;
 import com.balancedbytes.games.ffb.CardEffect;
+import com.balancedbytes.games.ffb.FactoryType;
 import com.balancedbytes.games.ffb.InjuryAttribute;
 import com.balancedbytes.games.ffb.PlayerState;
 import com.balancedbytes.games.ffb.PlayerType;
@@ -32,6 +33,8 @@ import com.balancedbytes.games.ffb.client.IIconProperty;
 import com.balancedbytes.games.ffb.client.IconCache;
 import com.balancedbytes.games.ffb.client.PlayerIconFactory;
 import com.balancedbytes.games.ffb.client.UserInterface;
+import com.balancedbytes.games.ffb.mechanics.Mechanic;
+import com.balancedbytes.games.ffb.mechanics.StatsMechanic;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
@@ -210,10 +213,6 @@ public class PlayerDetailComponent extends JPanel {
 			int strength = UtilCards.getPlayerStrength(game, getPlayer())
 					- findNewStatDecreases(playerResult, InjuryAttribute.ST);
 			int agility = getPlayer().getAgility() - findNewStatDecreases(playerResult, InjuryAttribute.AG);
-			int passing = getPlayer().getPassing();
-			if (passing > 0) {
-				passing += findNewStatDecreases(playerResult, InjuryAttribute.PA);
-			}
 			int armour = getPlayer().getArmour() - findNewStatDecreases(playerResult, InjuryAttribute.AV);
 			ActingPlayer actingPlayer = getSideBar().getClient().getGame().getActingPlayer();
 			if (fPlayer == actingPlayer.getPlayer()) {
@@ -228,23 +227,31 @@ public class PlayerDetailComponent extends JPanel {
 				}
 			}
 
+			StatsMechanic mechanic = (StatsMechanic) game.getRules().getFactory(FactoryType.Factory.MECHANIC)
+				.forName(Mechanic.Type.STAT.name());
 			Player<?> player = getPlayer();
 			Position position = player.getPosition();
 			int movementModifier = player.getMovement() - position.getMovement();
-			drawStatBox(g2d, x, y, moveLeft, moveIsRed, movementModifier, false);
+			drawStatBox(g2d, x, y, moveLeft, moveIsRed, movementModifier);
 
 			int strengthModifier = player.getStrength() - position.getStrength();
 			boolean strengthIsRed = (getPlayer().getStrength() != UtilCards.getPlayerStrength(game, getPlayer()));
-			drawStatBox(g2d, x + _STAT_BOX_WIDTH, y, strength, strengthIsRed, strengthModifier, false);
+			drawStatBox(g2d, x + _STAT_BOX_WIDTH, y, strength, strengthIsRed, strengthModifier);
 
 			int agilityModifier = player.getAgility() - position.getAgility();
-			drawStatBox(g2d, x + (_STAT_BOX_WIDTH * 2), y, agility, false, agilityModifier, true);
+			drawStatBox(g2d, x + (_STAT_BOX_WIDTH * 2), y, agility, false, agilityModifier, mechanic.statSuffix());
 
-			int passingModifier = player.getPassing() - position.getPassing();
-			drawStatBox(g2d, x + (_STAT_BOX_WIDTH * 3), y, passing, false, passingModifier, true);
+			if (mechanic.drawPassing()) {
+				int passing = getPlayer().getPassing();
+				if (passing > 0) {
+					passing += findNewStatDecreases(playerResult, InjuryAttribute.PA);
+				}
+				int passingModifier = player.getPassing() - position.getPassing();
+				drawStatBox(g2d, x + (_STAT_BOX_WIDTH * 3), y, passing, false, passingModifier, mechanic.statSuffix());
+			}
 
 			int armourModifier = player.getArmour() - position.getArmour();
-			drawStatBox(g2d, x + (_STAT_BOX_WIDTH * 4), y, armour, false, armourModifier, true);
+			drawStatBox(g2d, x + (_STAT_BOX_WIDTH * 4), y, armour, false, armourModifier, mechanic.statSuffix());
 
 			g2d.dispose();
 
@@ -442,7 +449,11 @@ public class PlayerDetailComponent extends JPanel {
 		return height;
 	}
 
-	private void drawStatBox(Graphics2D pG2d, int pX, int pY, int pValue, boolean pStatIsRed, int statModifier, boolean addPlusSuffix) {
+	private void drawStatBox(Graphics2D pG2d, int pX, int pY, int pValue, boolean pStatIsRed, int statModifier) {
+		drawStatBox(pG2d, pX, pY, pValue, pStatIsRed, statModifier, "");
+	}
+
+	private void drawStatBox(Graphics2D pG2d, int pX, int pY, int pValue, boolean pStatIsRed, int statModifier, String suffix) {
 		if (fPlayer != null) {
 			pG2d.setColor(Color.BLACK);
 			pG2d.setFont(_STAT_FONT);
@@ -472,7 +483,7 @@ public class PlayerDetailComponent extends JPanel {
 			}
 
 			Color statColor = pStatIsRed ? Color.RED : Color.BLACK;
-			String statText = pValue == 0 ? "�" : pValue + (addPlusSuffix ? "+" : "");
+			String statText = pValue == 0 ? "-" : pValue + suffix;
 			if (pValue == 0) {
 				// Move the dash more central
 				pY -= 1;
