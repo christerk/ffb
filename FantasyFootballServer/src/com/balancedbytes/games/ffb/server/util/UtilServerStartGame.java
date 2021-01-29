@@ -1,6 +1,7 @@
 package com.balancedbytes.games.ffb.server.util;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.jetty.websocket.api.Session;
@@ -41,9 +42,7 @@ public class UtilServerStartGame {
 				&& game.getTeamAway().getId().equals(game.getTeamHome().getId())) {
 			server.getCommunication().sendStatus(pSession, ServerStatus.ERROR_SAME_TEAM, null);
 		} else {
-			if (sendServerJoin(pGameState, pSession, pCoach, pHomeTeam, ClientMode.PLAYER) > 1) {
-				return true;
-			}
+			return sendServerJoin(pGameState, pSession, pCoach, pHomeTeam, ClientMode.PLAYER) > 1;
 		}
 		return false;
 	}
@@ -58,18 +57,18 @@ public class UtilServerStartGame {
 		List<String> playerList = new ArrayList<>();
 
 		Session[] sessions = sessionManager.getSessionsForGameId(pGameState.getId());
-		for (int i = 0; i < sessions.length; i++) {
-			String coach = sessionManager.getCoachForSession(sessions[i]);
-			ClientMode mode = sessionManager.getModeForSession(sessions[i]);
+		for (Session session : sessions) {
+			String coach = sessionManager.getCoachForSession(session);
+			ClientMode mode = sessionManager.getModeForSession(session);
 			if (mode == ClientMode.PLAYER) {
-				if (sessions[i] == sessionManager.getSessionOfHomeCoach(pGameState.getId())) {
+				if (session == sessionManager.getSessionOfHomeCoach(pGameState.getId())) {
 					playerList.add(0, coach);
 				} else {
 					playerList.add(coach);
 				}
 			}
 		}
-		String[] players = playerList.toArray(new String[playerList.size()]);
+		String[] players = playerList.toArray(new String[0]);
 
 		server.getCommunication().sendJoin(sessions, pCoach, pMode, players, sessions.length - playerList.size());
 
@@ -94,19 +93,15 @@ public class UtilServerStartGame {
 		DbUserSettingsQuery userSettingsQuery = (DbUserSettingsQuery) statementFactory
 				.getStatement(DbStatementId.USER_SETTINGS_QUERY);
 		userSettingsQuery.execute(pCoach);
-		for (String userSettingName : userSettingsQuery.getSettingNames()) {
-			settingNames.add(userSettingName);
-		}
-		for (String userSettingValue : userSettingsQuery.getSettingValues()) {
-			settingValues.add(userSettingValue);
-		}
+		Collections.addAll(settingNames, userSettingsQuery.getSettingNames());
+		Collections.addAll(settingValues, userSettingsQuery.getSettingValues());
 		if ((settingNames.size() > 0) && (settingValues.size() > 0)) {
-			server.getCommunication().sendUserSettings(pSession, settingNames.toArray(new String[settingNames.size()]),
-					settingValues.toArray(new String[settingValues.size()]));
+			server.getCommunication().sendUserSettings(pSession, settingNames.toArray(new String[0]),
+					settingValues.toArray(new String[0]));
 		}
 	}
 
-	public static boolean startGame(GameState gameState) {
+	public static void startGame(GameState gameState) {
 		Game game = gameState.getGame();
 		FantasyFootballServer server = gameState.getServer();
 		boolean ownershipOk = true;
@@ -142,9 +137,6 @@ public class UtilServerStartGame {
 			dbPlayerMarkersQuery.execute(gameState);
 			server.getCommunication().sendGameState(gameState);
 			gameState.fetchChanges(); // clear changes after sending the whole model
-			return true;
-		} else {
-			return false;
 		}
 	}
 
