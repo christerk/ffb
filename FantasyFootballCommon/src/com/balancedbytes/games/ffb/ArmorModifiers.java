@@ -33,10 +33,7 @@ public class ArmorModifiers {
 			if (context.isStab || context.isFoul || playerHasChainsaw(context.attacker)) {
 				return false;
 			}
-			if (context.defender.getArmour() > 7) {
-				return true;
-			}
-			return false;
+			return context.defender.getArmour() > 7;
 		}
 	};
 
@@ -64,10 +61,6 @@ public class ArmorModifiers {
 
 	public static boolean playerHasChainsaw(Player<?> player) {
 		return player.hasSkillWithProperty(NamedProperties.blocksLikeChainsaw);
-	}
-
-	public static boolean chainsawIsInvolved(Player<?> attacker, Player<?> defender) {
-		return (playerHasChainsaw(attacker) || playerHasChainsaw(defender));
 	}
 
 	private final Map<String, ArmorModifier> values;
