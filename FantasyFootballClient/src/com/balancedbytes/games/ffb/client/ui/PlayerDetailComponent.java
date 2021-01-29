@@ -472,7 +472,7 @@ public class PlayerDetailComponent extends JPanel {
 			}
 
 			Color statColor = pStatIsRed ? Color.RED : Color.BLACK;
-			String statText = pValue == 0 ? "�" : Integer.toString(pValue) + (addPlusSuffix ? "+" : "");
+			String statText = pValue == 0 ? "�" : pValue + (addPlusSuffix ? "+" : "");
 			if (pValue == 0) {
 				// Move the dash more central
 				pY -= 1;
