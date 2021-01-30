@@ -98,6 +98,7 @@
         </jar>
 		<copy todir="${build.dir}/lib">
 			<fileset dir="${lib.dir}" includes="*.jar" />
+			<fileset dir="../FantasyFootballCommon/lib" includes="*.jar" />
 		</copy>
 		<!--
 		<signjar keystore="../FantasyFootballCommon/keystore.jks" storepass="dragon" alias="Kalimar" keypass="dragon">
