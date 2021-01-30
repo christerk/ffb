@@ -125,6 +125,7 @@
     	<copy file="pitches-fumbbl-test.ini" tofile="${build.dir}/pitches.ini" />
     	<copy todir="${build.dir}/lib">
     		<fileset dir="lib" />
+			<fileset dir="../FantasyFootballCommon/lib" includes="*.jar" />
     	</copy>
 		<mkdir dir="${build.dir}/log" />
     	
