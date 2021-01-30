@@ -207,13 +207,17 @@ public class Team implements IXmlSerializable, IJsonSerializable {
 	}
 
 	public void updateRoster(Roster pRoster) {
+		updateRoster(pRoster, true);
+	}
+
+	public void updateRoster(Roster pRoster, boolean updateStats) {
 		fRoster = pRoster;
 		if (fRoster != null) {
 			setRosterId(fRoster.getId());
 			setRace(fRoster.getName());
 			for (Player<?> player : getPlayers()) {
 				String positionId = player.getPositionId();
-				player.updatePosition(fRoster.getPositionById(positionId));
+				player.updatePosition(fRoster.getPositionById(positionId), updateStats);
 			}
 		}
 	}
@@ -470,7 +474,7 @@ public class Team implements IXmlSerializable, IJsonSerializable {
 		if (rosterObject != null) {
 			roster = new Roster().initFrom(game, rosterObject);
 		}
-		updateRoster(roster);
+		updateRoster(roster, false);
 
 		return this;
 

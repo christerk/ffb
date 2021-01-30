@@ -70,4 +70,9 @@ public abstract class SkillBehaviour<T extends Skill> implements ISkillBehaviour
 	public Map<StepId, Class<? extends IStep>> getSteps() {
 		return steps;
 	}
+
+	@Override
+	public List<PlayerModifier> getPlayerModifiers() {
+		return playerModifiers;
+	}
 }

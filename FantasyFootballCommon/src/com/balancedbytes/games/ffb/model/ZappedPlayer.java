@@ -163,9 +163,14 @@ public class ZappedPlayer extends Player<ZappedPosition> {
 	}
 
 	@Override
-	public void updatePosition(RosterPosition pPosition) {
+	public void updatePosition(RosterPosition pPosition, boolean updateStats) {
 		position = new ZappedPosition(pPosition);
-		originalPlayer.updatePosition(pPosition);
+		originalPlayer.updatePosition(pPosition, updateStats);
+	}
+
+	@Override
+	public void updatePosition(RosterPosition pPosition) {
+		updatePosition(pPosition, true);
 	}
 
 	@Override
@@ -260,6 +265,11 @@ public class ZappedPlayer extends Player<ZappedPosition> {
 		IJsonOption.PLAYER_KIND.addTo(jsonObject, KIND);
 		IJsonOption.PLAYER.addTo(jsonObject, originalPlayer.toJsonValue());
 		return jsonObject;
+	}
+
+	@Override
+	public void applyModifiers() {
+		originalPlayer.applyModifiers();
 	}
 
 	@Override

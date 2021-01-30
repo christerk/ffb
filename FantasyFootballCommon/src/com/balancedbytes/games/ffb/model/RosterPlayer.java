@@ -2,6 +2,8 @@ package com.balancedbytes.games.ffb.model;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 import javax.xml.transform.sax.TransformerHandler;
 
@@ -217,18 +219,26 @@ public class RosterPlayer extends Player<RosterPosition> {
 
 	@Override
 	public void updatePosition(RosterPosition pPosition) {
+		updatePosition(pPosition, true);
+	}
+
+	@Override
+	public void updatePosition(RosterPosition pPosition, boolean updateStats) {
 		fPosition = pPosition;
 		if (fPosition != null) {
 			setPositionId(fPosition.getId());
 			if (getPlayerType() == null) {
 				setType(fPosition.getType());
 			}
+			fIconSetIndex = pPosition.findNextIconSetIndex();
+			if (!updateStats) {
+				return;
+			}
 			setMovement(fPosition.getMovement());
 			setStrength(fPosition.getStrength());
 			setAgility(fPosition.getAgility());
 			setPassing(fPosition.getPassing());
 			setArmour(fPosition.getArmour());
-			fIconSetIndex = pPosition.findNextIconSetIndex();
 			for (Skill skill : fPosition.getSkills()) {
 				addSkill(skill);
 			}
@@ -595,6 +605,12 @@ public class RosterPlayer extends Player<RosterPosition> {
 
 		return jsonObject;
 
+	}
+
+	@Override
+	public void applyModifiers() {
+		fSkills.stream().map(Skill::getSkillBehaviour).filter(Objects::nonNull)
+			.flatMap(behaviour -> behaviour.getPlayerModifiers().stream()).forEach(playerModifier -> playerModifier.apply(this));
 	}
 
 	public RosterPlayer initFrom(IFactorySource source, JsonValue pJsonValue) {

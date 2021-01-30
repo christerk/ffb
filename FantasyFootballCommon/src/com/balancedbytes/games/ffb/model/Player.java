@@ -101,7 +101,9 @@ public abstract class Player<T extends Position> implements IXmlSerializable, IJ
 
 	public abstract T getPosition();
 
-	abstract void updatePosition(RosterPosition pPosition);
+	public abstract void updatePosition(RosterPosition pPosition);
+
+	public abstract void updatePosition(RosterPosition pPosition, boolean updateStats);
 
 	public abstract Team getTeam();
 
@@ -138,6 +140,8 @@ public abstract class Player<T extends Position> implements IXmlSerializable, IJ
 	public abstract void init(RosterPlayer pPlayer);
 
 	public abstract JsonObject toJsonValue();
+
+	public abstract void applyModifiers();
 
 	public static Player<?> getFrom(IFactorySource source, JsonValue jsonValue) {
 		Player<?> player = createPlayer(source, jsonValue);

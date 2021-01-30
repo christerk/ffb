@@ -14,6 +14,7 @@ import com.balancedbytes.games.ffb.server.net.commands.InternalServerCommandFumb
 import com.balancedbytes.games.ffb.server.request.fumbbl.UtilFumbblRequest;
 import com.balancedbytes.games.ffb.server.util.UtilServerGame;
 import com.balancedbytes.games.ffb.server.util.UtilServerStartGame;
+import com.balancedbytes.games.ffb.server.util.UtilSkillBehaviours;
 import com.balancedbytes.games.ffb.util.StringTool;
 import com.balancedbytes.games.ffb.xml.XmlHandler;
 import org.xml.sax.InputSource;
@@ -41,6 +42,7 @@ public class ServerCommandHandlerFumbblGameChecked extends ServerCommandHandler 
 				.getCommand();
 		GameState gameState = getServer().getGameCache().getGameStateById(gameCheckedCommand.getGameId());
 		gameState.getGame().initializeRules();
+		UtilSkillBehaviours.registerBehaviours(gameState.getGame(), getServer().getDebugLog());
 
 		TeamSkeleton homeSkeleton = (TeamSkeleton) gameState.getGame().getTeamHome();
 		TeamSkeleton awaySkeleton = (TeamSkeleton) gameState.getGame().getTeamAway();
@@ -51,9 +53,6 @@ public class ServerCommandHandlerFumbblGameChecked extends ServerCommandHandler 
 			return false;
 		}
 
-		getServer().getGameCache().addTeamToGame(gameState, home, true);
-		getServer().getGameCache().addTeamToGame(gameState, away, false);
-
 		Roster rosterHome = getRoster(gameState, home.getId());
 		Roster rosterAway = getRoster(gameState, away.getId());
 		if (rosterHome == null || rosterAway == null) {
@@ -62,6 +61,9 @@ public class ServerCommandHandlerFumbblGameChecked extends ServerCommandHandler 
 
 		home.updateRoster(rosterHome);
 		away.updateRoster(rosterAway);
+
+		getServer().getGameCache().addTeamToGame(gameState, home, true);
+		getServer().getGameCache().addTeamToGame(gameState, away, false);
 
 		UtilServerStartGame.startGame(gameState);
 		return true;

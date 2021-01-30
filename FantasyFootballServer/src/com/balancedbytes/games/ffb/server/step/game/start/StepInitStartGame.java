@@ -110,10 +110,9 @@ public final class StepInitStartGame extends AbstractStep {
 			getGameState().setStatus(GameStatus.ACTIVE);
 			gameCache.queueDbUpdate(getGameState(), true);
 			// log start game -->
-			StringBuilder logEntry = new StringBuilder();
-			logEntry.append("START GAME ").append(StringTool.print(game.getTeamHome().getName())).append(" vs. ")
-					.append(StringTool.print(game.getTeamAway().getName()));
-			server.getDebugLog().log(IServerLogLevel.WARN, getGameState().getId(), logEntry.toString());
+			String logEntry = "START GAME " + StringTool.print(game.getTeamHome().getName()) + " vs. " +
+				StringTool.print(game.getTeamAway().getName());
+			server.getDebugLog().log(IServerLogLevel.WARN, getGameState().getId(), logEntry);
 			if (game.getOptions() != null) {
 				StringBuilder optionValues = new StringBuilder();
 				for (IGameOption option : game.getOptions().getOptions()) {
@@ -130,7 +129,6 @@ public final class StepInitStartGame extends AbstractStep {
 					server.getDebugLog().log(IServerLogLevel.WARN, getGameState().getId(), "Default Options");
 				}
 			}
-			UtilSkillBehaviours.registerBehaviours(game, server.getDebugLog());
 			getGameState().getStepFactory().initialize();
 
 			// <-- log start game
