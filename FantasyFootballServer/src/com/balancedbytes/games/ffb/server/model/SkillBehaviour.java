@@ -19,7 +19,7 @@ public abstract class SkillBehaviour<T extends Skill> implements ISkillBehaviour
 	public T skill;
 
 	public String getKey() {
-		return skillClass.getCanonicalName();
+		return skillClass.getSimpleName();
 	}
 	
 	@SuppressWarnings("unchecked")

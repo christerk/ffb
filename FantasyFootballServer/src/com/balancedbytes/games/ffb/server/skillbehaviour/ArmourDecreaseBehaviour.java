@@ -1,15 +1,15 @@
-package com.balancedbytes.games.ffb.server.skillbehaviour.bb2020;
+package com.balancedbytes.games.ffb.server.skillbehaviour;
 
 import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.RulesCollection.Rules;
 import com.balancedbytes.games.ffb.server.model.SkillBehaviour;
-import com.balancedbytes.games.ffb.skill.bb2020.ArmourDecrease;
+import com.balancedbytes.games.ffb.skill.ArmourDecrease;
 
-@RulesCollection(Rules.BB2020)
+@RulesCollection(Rules.COMMON)
 public class ArmourDecreaseBehaviour extends SkillBehaviour<ArmourDecrease> {
 	public ArmourDecreaseBehaviour() {
 		super();
 
-		registerModifier(player -> player.setArmour(player.getArmour() + 1));
+		registerModifier(player -> player.setArmour(player.getArmour() - 1));
 	}
 }

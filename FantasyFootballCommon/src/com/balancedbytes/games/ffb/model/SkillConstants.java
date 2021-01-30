@@ -1,10 +1,10 @@
 package com.balancedbytes.games.ffb.model;
 
-import com.balancedbytes.games.ffb.skill.bb2016.AgilityDecrease;
-import com.balancedbytes.games.ffb.skill.bb2016.AgilityIncrease;
+import com.balancedbytes.games.ffb.skill.AgilityDecrease;
+import com.balancedbytes.games.ffb.skill.AgilityIncrease;
 import com.balancedbytes.games.ffb.skill.AlwaysHungry;
 import com.balancedbytes.games.ffb.skill.Animosity;
-import com.balancedbytes.games.ffb.skill.bb2016.ArmourDecrease;
+import com.balancedbytes.games.ffb.skill.ArmourDecrease;
 import com.balancedbytes.games.ffb.skill.BallAndChain;
 import com.balancedbytes.games.ffb.skill.Block;
 import com.balancedbytes.games.ffb.skill.BloodLust;
