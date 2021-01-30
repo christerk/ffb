@@ -14,6 +14,7 @@ import com.balancedbytes.games.ffb.client.IconCache;
 import com.balancedbytes.games.ffb.client.PlayerIconFactory;
 import com.balancedbytes.games.ffb.client.UserInterface;
 import com.balancedbytes.games.ffb.mechanics.Mechanic;
+import com.balancedbytes.games.ffb.mechanics.StatsDrawingModifier;
 import com.balancedbytes.games.ffb.mechanics.StatsMechanic;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.Game;
@@ -230,14 +231,14 @@ public class PlayerDetailComponent extends JPanel {
 			Player<?> player = getPlayer();
 			Position position = player.getPosition();
 			int movementModifier = player.getMovement() - position.getMovement();
-			drawStatBox(g2d, x, y, moveLeft, moveIsRed, movementModifier);
+			drawStatBox(g2d, x, y, moveLeft, moveIsRed, StatsDrawingModifier.positiveImproves(movementModifier));
 
 			int strengthModifier = player.getStrength() - position.getStrength();
 			boolean strengthIsRed = (getPlayer().getStrength() != UtilCards.getPlayerStrength(game, getPlayer()));
-			drawStatBox(g2d, x + _STAT_BOX_WIDTH, y, strength, strengthIsRed, strengthModifier);
+			drawStatBox(g2d, x + _STAT_BOX_WIDTH, y, strength, strengthIsRed, StatsDrawingModifier.positiveImproves(strengthModifier));
 
 			int agilityModifier = player.getAgility() - position.getAgility();
-			drawStatBox(g2d, x + (_STAT_BOX_WIDTH * 2), y, agility, false, agilityModifier, mechanic.statSuffix());
+			drawStatBox(g2d, x + (_STAT_BOX_WIDTH * 2), y, agility, false, mechanic.agilityModifier(agilityModifier), mechanic.statSuffix());
 
 			if (mechanic.drawPassing()) {
 				int passing = getPlayer().getPassing();
@@ -245,11 +246,11 @@ public class PlayerDetailComponent extends JPanel {
 					passing += findNewStatDecreases(playerResult, InjuryAttribute.PA);
 				}
 				int passingModifier = player.getPassing() - position.getPassing();
-				drawStatBox(g2d, x + (_STAT_BOX_WIDTH * 3), y, passing, false, passingModifier, mechanic.statSuffix());
+				drawStatBox(g2d, x + (_STAT_BOX_WIDTH * 3), y, passing, false, StatsDrawingModifier.positiveImpairs(passingModifier), mechanic.statSuffix());
 			}
 
 			int armourModifier = player.getArmour() - position.getArmour();
-			drawStatBox(g2d, x + (_STAT_BOX_WIDTH * 4), y, armour, false, armourModifier, mechanic.statSuffix());
+			drawStatBox(g2d, x + (_STAT_BOX_WIDTH * 4), y, armour, false, StatsDrawingModifier.positiveImproves(armourModifier), mechanic.statSuffix());
 
 			g2d.dispose();
 
@@ -447,17 +448,17 @@ public class PlayerDetailComponent extends JPanel {
 		return height;
 	}
 
-	private void drawStatBox(Graphics2D pG2d, int pX, int pY, int pValue, boolean pStatIsRed, int statModifier) {
-		drawStatBox(pG2d, pX, pY, pValue, pStatIsRed, statModifier, "");
+	private void drawStatBox(Graphics2D pG2d, int pX, int pY, int pValue, boolean pStatIsRed, StatsDrawingModifier modifier) {
+		drawStatBox(pG2d, pX, pY, pValue, pStatIsRed, modifier, "");
 	}
 
-	private void drawStatBox(Graphics2D pG2d, int pX, int pY, int pValue, boolean pStatIsRed, int statModifier, String suffix) {
+	private void drawStatBox(Graphics2D pG2d, int pX, int pY, int pValue, boolean pStatIsRed, StatsDrawingModifier modifier, String suffix) {
 		if (fPlayer != null) {
 			pG2d.setColor(Color.BLACK);
 			pG2d.setFont(_STAT_FONT);
-			if (statModifier > 0) {
+			if (modifier.isImprovement()) {
 				pG2d.setColor(Color.GREEN);
-				if (statModifier > 1) {
+				if (modifier.getAbsoluteModifier() > 1) {
 					pG2d.fillRect(pX + 2, pY + _STAT_BOX_HEIGHT - _STAT_BOX_INNER_HEIGHT - 2, _STAT_BOX_WIDTH - 6,
 						_STAT_BOX_INNER_HEIGHT);
 				} else {
@@ -467,9 +468,9 @@ public class PlayerDetailComponent extends JPanel {
 						3);
 				}
 			}
-			if (statModifier < 0) {
+			if (modifier.isImpairment()) {
 				pG2d.setColor(Color.RED);
-				if (statModifier < -1) {
+				if (modifier.getAbsoluteModifier() > 1) {
 					pG2d.fillRect(pX + 2, pY + _STAT_BOX_HEIGHT - _STAT_BOX_INNER_HEIGHT - 2, _STAT_BOX_WIDTH - 6,
 						_STAT_BOX_INNER_HEIGHT);
 				} else {

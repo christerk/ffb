@@ -14,4 +14,6 @@ public abstract class StatsMechanic implements Mechanic {
 	public abstract String statSuffix();
 
 	public abstract boolean armourIsBroken(int armour, int[] roll, InjuryContext context);
+
+	public abstract StatsDrawingModifier agilityModifier(int modifier);
 }
