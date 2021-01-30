@@ -79,7 +79,7 @@ public class XmlHandler extends DefaultHandler {
 		SAXParserFactory xmlParserFactory = SAXParserFactory.newInstance();
 		xmlParserFactory.setNamespaceAware(false);
 		XmlHandler xmlHandler = new XmlHandler(game, pParsedElement);
-		XMLReader xmlReader = null;
+		XMLReader xmlReader;
 		try {
 			xmlReader = xmlParserFactory.newSAXParser().getXMLReader();
 			xmlReader.setContentHandler(xmlHandler);

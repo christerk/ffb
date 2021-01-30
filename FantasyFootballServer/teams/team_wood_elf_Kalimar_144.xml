@@ -28,6 +28,11 @@
   	<positionId>woodelf.wardancer</positionId>
     <skillList>
       <skill>Strip Ball</skill>
+        <skill>+MA</skill>
+        <skill>+ST</skill>
+        <skill>+AG</skill>
+        <skill>+PA</skill>
+        <skill>+AV</skill>
     </skillList>
   </player>
 
@@ -35,7 +40,13 @@
   	<name>Catcher1</name>
   	<gender>male</gender>
   	<positionId>woodelf.catcher</positionId>
-  	<skillList></skillList>
+  	<skillList>
+        <skill>-MA</skill>
+        <skill>-ST</skill>
+        <skill>-AG</skill>
+        <skill>-PA</skill>
+        <skill>-AV</skill>
+    </skillList>
   </player>
 
   <player nr="4" id="teamWoodElfKalimar4">

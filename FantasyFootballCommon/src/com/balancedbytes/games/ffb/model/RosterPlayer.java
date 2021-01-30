@@ -154,7 +154,7 @@ public class RosterPlayer extends Player<RosterPosition> {
 
 	@Override
 	public SeriousInjury[] getLastingInjuries() {
-		return fLastingInjuries.toArray(new SeriousInjury[fLastingInjuries.size()]);
+		return fLastingInjuries.toArray(new SeriousInjury[0]);
 	}
 
 	@Override
@@ -177,7 +177,7 @@ public class RosterPlayer extends Player<RosterPosition> {
 
 	@Override
 	public Skill[] getSkills() {
-		return fSkills.toArray(new Skill[fSkills.size()]);
+		return fSkills.toArray(new Skill[0]);
 	}
 
 	@Override
@@ -628,7 +628,7 @@ public class RosterPlayer extends Player<RosterPosition> {
 		fNrOfIcons = IJsonOption.NR_OF_ICONS.getFrom(source, jsonObject);
 		fIconSetIndex = IJsonOption.POSITION_ICON_INDEX.getFrom(source, jsonObject);
 
-		SkillFactory skillFactory = source.<SkillFactory>getFactory(Factory.SKILL);
+		SkillFactory skillFactory = source.getFactory(Factory.SKILL);
 
 		fSkills.clear();
 		JsonArray skillArray = IJsonOption.SKILL_ARRAY.getFrom(source, jsonObject);

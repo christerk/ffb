@@ -52,7 +52,7 @@ public class Scanner<T extends IKeyedItem> {
 							Object key = instance.getKey();
 
 							if (result.containsKey(key)) {
-								throw new FantasyFootballException("Duplicate implementation found when scanning.");
+								throw new FantasyFootballException("Duplicate implementation found when scanning: "  + key);
 							}
 
 							result.put(instance.getKey(), instance);
