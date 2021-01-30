@@ -11,6 +11,7 @@ public class ScannerSingleton {
 		scanResult = new ClassGraph()
 				.enableClassInfo()
 				.acceptPackages("com.balancedbytes.games.ffb")
+				.enableRemoteJarScanning()
 				.verbose()
 				.scan();
 	}
