@@ -23,6 +23,9 @@
 			<fileset dir="htdocs" />
 		</copy>
 		<copy file="server.ini" todir="${bin.dir}" />
+		<copy todir="${lib.dir}">
+			<fileset dir="../FantasyFootballCommon/lib" includes="*.jar"/>
+		</copy>
 	</target>
 
 	<target name="prepare">
@@ -125,6 +128,9 @@
     	<copy file="pitches-fumbbl-test.ini" tofile="${build.dir}/pitches.ini" />
     	<copy todir="${build.dir}/lib">
     		<fileset dir="lib" />
+			<fileset dir="../FantasyFootballCommon/lib" includes="*.jar" />
+    	</copy>
+    	<copy todir="${lib.dir}">
 			<fileset dir="../FantasyFootballCommon/lib" includes="*.jar" />
     	</copy>
 		<mkdir dir="${build.dir}/log" />
