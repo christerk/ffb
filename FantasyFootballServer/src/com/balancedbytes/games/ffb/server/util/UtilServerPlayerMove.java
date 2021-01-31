@@ -14,6 +14,8 @@ import com.balancedbytes.games.ffb.TurnMode;
 import com.balancedbytes.games.ffb.factory.DodgeModifierFactory;
 import com.balancedbytes.games.ffb.factory.GoForItModifierFactory;
 import com.balancedbytes.games.ffb.factory.LeapModifierFactory;
+import com.balancedbytes.games.ffb.mechanics.AgilityMechanic;
+import com.balancedbytes.games.ffb.mechanics.Mechanic;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.FieldModel;
 import com.balancedbytes.games.ffb.model.Game;
@@ -111,14 +113,15 @@ public class UtilServerPlayerMove {
 		FieldModel fieldModel = game.getFieldModel();
 		ActingPlayer actingPlayer = game.getActingPlayer();
 		FieldCoordinate playerCoordinate = fieldModel.getPlayerCoordinate(actingPlayer.getPlayer());
-		boolean goForIt = false;
+		boolean goForIt;
 		int minimumRollDodge = 0;
 		boolean dodging = !actingPlayer.getPlayer().hasSkillWithProperty(NamedProperties.ignoreTacklezonesWhenMoving)
 				&& (UtilPlayer.findTacklezones(game, actingPlayer.getPlayer()) > 0);
+		AgilityMechanic mechanic = (AgilityMechanic) game.getRules().getFactory(Factory.MECHANIC).forName(Mechanic.Type.AGILITY.name());
 		if (pLeaping) {
 			LeapModifierFactory modifierFactory = new LeapModifierFactory();
 			Set<LeapModifier> leapModifiers = modifierFactory.findLeapModifiers(game, playerCoordinate);
-			minimumRollDodge = DiceInterpreter.getInstance().minimumRollLeap(actingPlayer.getPlayer(), leapModifiers);
+			minimumRollDodge = mechanic.minimumRollLeap(actingPlayer.getPlayer(), leapModifiers);
 			if (actingPlayer.isStandingUp() && !actingPlayer.hasActed()
 					&& !actingPlayer.getPlayer().hasSkillWithProperty(NamedProperties.canStandUpForFree)) {
 				goForIt = ((3 + playerCoordinate.distanceInSteps(pCoordinate)) > UtilCards.getPlayerMovement(game,
@@ -130,9 +133,9 @@ public class UtilServerPlayerMove {
 		} else {
 			goForIt = UtilPlayer.isNextMoveGoingForIt(game);
 			if (dodging) {
-				DodgeModifierFactory modifierFactory = game.<DodgeModifierFactory>getFactory(Factory.DODGE_MODIFIER);
+				DodgeModifierFactory modifierFactory = game.getFactory(Factory.DODGE_MODIFIER);
 				Set<DodgeModifier> dodgeModifiers = modifierFactory.findDodgeModifiers(game, playerCoordinate, pCoordinate, 0);
-				minimumRollDodge = DiceInterpreter.getInstance().minimumRollDodge(game, actingPlayer.getPlayer(),
+				minimumRollDodge = mechanic.minimumRollDodge(game, actingPlayer.getPlayer(),
 						dodgeModifiers);
 			}
 		}
@@ -153,9 +156,7 @@ public class UtilServerPlayerMove {
 		FieldCoordinate[] coordinatesTo = pMoveCommand.getCoordinatesTo();
 		FieldCoordinate[] moveStack = new FieldCoordinate[coordinatesTo.length];
 		if (pHomeCommand) {
-			for (int i = 0; i < moveStack.length; i++) {
-				moveStack[i] = coordinatesTo[i];
-			}
+			System.arraycopy(coordinatesTo, 0, moveStack, 0, moveStack.length);
 		} else {
 			for (int i = 0; i < moveStack.length; i++) {
 				moveStack[i] = coordinatesTo[i].transform();

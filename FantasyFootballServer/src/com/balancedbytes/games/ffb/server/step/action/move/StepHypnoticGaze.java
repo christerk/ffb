@@ -2,6 +2,7 @@ package com.balancedbytes.games.ffb.server.step.action.move;
 
 import java.util.Set;
 
+import com.balancedbytes.games.ffb.FactoryType;
 import com.balancedbytes.games.ffb.GazeModifier;
 import com.balancedbytes.games.ffb.PlayerAction;
 import com.balancedbytes.games.ffb.PlayerState;
@@ -10,6 +11,8 @@ import com.balancedbytes.games.ffb.SoundId;
 import com.balancedbytes.games.ffb.factory.GazeModifierFactory;
 import com.balancedbytes.games.ffb.factory.IFactorySource;
 import com.balancedbytes.games.ffb.json.UtilJson;
+import com.balancedbytes.games.ffb.mechanics.AgilityMechanic;
+import com.balancedbytes.games.ffb.mechanics.Mechanic;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Skill;
@@ -60,13 +63,9 @@ public class StepHypnoticGaze extends AbstractStepWithReRoll {
 	public void init(StepParameterSet pParameterSet) {
 		if (pParameterSet != null) {
 			for (StepParameter parameter : pParameterSet.values()) {
-				switch (parameter.getKey()) {
 				// mandatory
-				case GOTO_LABEL_ON_END:
+				if (parameter.getKey() == StepParameterKey.GOTO_LABEL_ON_END) {
 					fGotoLabelOnEnd = (String) parameter.getValue();
-					break;
-				default:
-					break;
 				}
 			}
 		}
@@ -114,7 +113,8 @@ public class StepHypnoticGaze extends AbstractStepWithReRoll {
 			int roll = getGameState().getDiceRoller().rollSkill();
 			GazeModifierFactory modifierFactory = new GazeModifierFactory();
 			Set<GazeModifier> gazeModifiers = modifierFactory.findGazeModifiers(game);
-			int minimumRoll = DiceInterpreter.getInstance().minimumRollHypnoticGaze(actingPlayer.getPlayer(), gazeModifiers);
+			AgilityMechanic mechanic = (AgilityMechanic) game.getRules().getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.AGILITY.name());
+			int minimumRoll = mechanic.minimumRollHypnoticGaze(actingPlayer.getPlayer(), gazeModifiers);
 			boolean successful = DiceInterpreter.getInstance().isSkillRollSuccessful(roll, minimumRoll);
 			boolean reRolled = ((getReRolledAction() == ReRolledActions.HYPNOTIC_GAZE) && (getReRollSource() != null));
 			if (!reRolled) {

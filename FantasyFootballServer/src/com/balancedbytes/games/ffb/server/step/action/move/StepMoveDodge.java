@@ -12,6 +12,8 @@ import com.balancedbytes.games.ffb.SkillUse;
 import com.balancedbytes.games.ffb.factory.DodgeModifierFactory;
 import com.balancedbytes.games.ffb.factory.IFactorySource;
 import com.balancedbytes.games.ffb.json.UtilJson;
+import com.balancedbytes.games.ffb.mechanics.AgilityMechanic;
+import com.balancedbytes.games.ffb.mechanics.Mechanic;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
@@ -84,13 +86,9 @@ public class StepMoveDodge extends AbstractStepWithReRoll {
 	public void init(StepParameterSet pParameterSet) {
 		if (pParameterSet != null) {
 			for (StepParameter parameter : pParameterSet.values()) {
-				switch (parameter.getKey()) {
 				// mandatory
-				case GOTO_LABEL_ON_FAILURE:
+				if (parameter.getKey() == StepParameterKey.GOTO_LABEL_ON_FAILURE) {
 					fGotoLabelOnFailure = (String) parameter.getValue();
-					break;
-				default:
-					break;
 				}
 			}
 		}
@@ -185,14 +183,14 @@ public class StepMoveDodge extends AbstractStepWithReRoll {
 
 	private ActionStatus dodge(boolean pDoRoll) {
 
-		ActionStatus status = null;
+		ActionStatus status;
 		Game game = getGameState().getGame();
 		ActingPlayer actingPlayer = game.getActingPlayer();
 
 		if (pDoRoll) {
 			publishParameter(new StepParameter(StepParameterKey.DODGE_ROLL, getGameState().getDiceRoller().rollSkill()));
 		}
-		DodgeModifierFactory modifierFactory = game.<DodgeModifierFactory>getFactory(Factory.DODGE_MODIFIER);
+		DodgeModifierFactory modifierFactory = game.getFactory(Factory.DODGE_MODIFIER);
 		Set<DodgeModifier> dodgeModifiers = modifierFactory.findDodgeModifiers(game, fCoordinateFrom, fCoordinateTo, 0);
 		if (fUsingBreakTackle) {
 			dodgeModifiers.add(DodgeModifiers.BREAK_TACKLE);
@@ -201,12 +199,14 @@ public class StepMoveDodge extends AbstractStepWithReRoll {
 			dodgeModifiers.add(DodgeModifiers.DIVING_TACKLE);
 		}
 
-		int minimumRoll = DiceInterpreter.getInstance().minimumRollDodge(game, actingPlayer.getPlayer(), dodgeModifiers);
+		AgilityMechanic mechanic = (AgilityMechanic) game.getRules().getFactory(Factory.MECHANIC).forName(Mechanic.Type.AGILITY.name());
+
+		int minimumRoll = mechanic.minimumRollDodge(game, actingPlayer.getPlayer(), dodgeModifiers);
 		boolean successful = DiceInterpreter.getInstance().isSkillRollSuccessful(fDodgeRoll, minimumRoll);
 
 		if (successful) {
 			if (dodgeModifiers.remove(DodgeModifiers.BREAK_TACKLE)) {
-				int minimumRollWithoutBreakTackle = DiceInterpreter.getInstance().minimumRollDodge(game,
+				int minimumRollWithoutBreakTackle = mechanic.minimumRollDodge(game,
 						actingPlayer.getPlayer(), dodgeModifiers);
 				if (!DiceInterpreter.getInstance().isSkillRollSuccessful(fDodgeRoll, minimumRollWithoutBreakTackle)) {
 					dodgeModifiers.add(DodgeModifiers.BREAK_TACKLE);
@@ -216,7 +216,7 @@ public class StepMoveDodge extends AbstractStepWithReRoll {
 			}
 		} else {
 			if (pDoRoll && dodgeModifiers.remove(DodgeModifiers.BREAK_TACKLE)) {
-				minimumRoll = DiceInterpreter.getInstance().minimumRollDodge(game, actingPlayer.getPlayer(), dodgeModifiers);
+				minimumRoll = mechanic.minimumRollDodge(game, actingPlayer.getPlayer(), dodgeModifiers);
 				if (!fUsingBreakTackle) {
 					getResult().addReport(new ReportSkillUse(null, SkillConstants.BREAK_TACKLE, false, SkillUse.WOULD_NOT_HELP));
 				}
@@ -238,8 +238,8 @@ public class StepMoveDodge extends AbstractStepWithReRoll {
 				if (skillRerollSource != null) {
 					Team otherTeam = UtilPlayer.findOtherTeam(game, actingPlayer.getPlayer());
 					Player<?>[] opponents = UtilPlayer.findAdjacentPlayersWithTacklezones(game, otherTeam, fCoordinateFrom, false);
-					for (int i = 0; i < opponents.length; i++) {
-						if (UtilCards.cancelsSkill(opponents[i], skillRerollSource.getSkill(game))) {
+					for (Player<?> opponent : opponents) {
+						if (UtilCards.cancelsSkill(opponent, skillRerollSource.getSkill(game))) {
 							skillRerollSource = null;
 							break;
 						}

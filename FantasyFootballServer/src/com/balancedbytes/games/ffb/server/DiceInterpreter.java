@@ -77,13 +77,8 @@ public class DiceInterpreter {
 		}
 	}
 
-	private int getAgilityRollBase(int agility) {
-		return 7 - Math.min(agility, 6);
-	}
 
-	public int minimumRollJumpUp(Player<?> pPlayer) {
-		return Math.max(2, getAgilityRollBase(pPlayer.getAgility()) - 2);
-	}
+
 
 	public int minimumRollGoingForIt(Set<GoForItModifier> pGoForItModifiers) {
 		int modifierTotal = 0;
@@ -93,55 +88,7 @@ public class DiceInterpreter {
 		return Math.max(2, 2 + modifierTotal);
 	}
 
-	public int minimumRollDodge(Game pGame, Player<?> pPlayer, Set<DodgeModifier> pDodgeModifiers) {
-		int modifierTotal = 0;
-		for (DodgeModifier dodgeModifier : pDodgeModifiers) {
-			modifierTotal += dodgeModifier.getModifier();
-		}
-		int statistic = pDodgeModifiers.contains(DodgeModifiers.BREAK_TACKLE) ? UtilCards.getPlayerStrength(pGame, pPlayer)
-				: pPlayer.getAgility();
-		return Math.max(2, getAgilityRollBase(statistic) - 1 + modifierTotal);
-	}
 
-	public int minimumRollPickup(Player<?> pPlayer, Set<PickupModifier> pPickupModifiers) {
-		int modifierTotal = 0;
-		for (PickupModifier pickupModifier : pPickupModifiers) {
-			modifierTotal += pickupModifier.getModifier();
-		}
-		return Math.max(2, getAgilityRollBase(pPlayer.getAgility()) - 1 + modifierTotal);
-	}
-
-	public int minimumRollInterception(Player<?> pPlayer, Set<InterceptionModifier> pInterceptionModifiers) {
-		int modifierTotal = 0;
-		for (InterceptionModifier interceptionModifier : pInterceptionModifiers) {
-			modifierTotal += interceptionModifier.getModifier();
-		}
-		return Math.max(2, getAgilityRollBase(pPlayer.getAgility()) + 2 + modifierTotal);
-	}
-
-	public int minimumRollLeap(Player<?> pPlayer, Set<LeapModifier> pLeapModifiers) {
-		int modifierTotal = 0;
-		for (LeapModifier leapModifier : pLeapModifiers) {
-			modifierTotal += leapModifier.getModifier();
-		}
-		return Math.max(2, getAgilityRollBase(pPlayer.getAgility()) + modifierTotal);
-	}
-
-	public int minimumRollHypnoticGaze(Player<?> pPlayer, Set<GazeModifier> pGazeModifiers) {
-		int modifierTotal = 0;
-		for (GazeModifier gazeModifier : pGazeModifiers) {
-			modifierTotal += gazeModifier.getModifier();
-		}
-		return Math.max(2, getAgilityRollBase(pPlayer.getAgility()) + modifierTotal);
-	}
-
-	public int minimumRollCatch(Player<?> pPlayer, Set<CatchModifier> pCatchModifiers) {
-		int modifierTotal = 0;
-		for (CatchModifier catchModifier : pCatchModifiers) {
-			modifierTotal += catchModifier.getModifier();
-		}
-		return Math.max(2, getAgilityRollBase(pPlayer.getAgility()) + modifierTotal);
-	}
 
 	public int minimumRollResistingFoulAppearance() {
 		return 2;
@@ -152,13 +99,6 @@ public class DiceInterpreter {
 		return UtilRangeRuler.minimumRollThrowTeamMate(pPassingDistance, pPassModifiers);
 	}
 
-	public int minimumRollRightStuff(Player<?> pPlayer, Set<RightStuffModifier> pRightStuffModifiers) {
-		int modifierTotal = 0;
-		for (RightStuffModifier rightStuffModifier : pRightStuffModifiers) {
-			modifierTotal += rightStuffModifier.getModifier();
-		}
-		return Math.max(2, getAgilityRollBase(pPlayer.getAgility()) + modifierTotal);
-	}
 
 	public boolean isPassFumble(int roll, PassingDistance pPassingDistance,
 			Set<PassModifier> pPassModifiers) {
@@ -263,10 +203,6 @@ public class DiceInterpreter {
 
 	public int minimumRollWeepingDagger() {
 		return 4;
-	}
-
-	public int minimumRollSafeThrow(Player<?> pPlayer) {
-		return Math.max(2, getAgilityRollBase(pPlayer.getAgility()));
 	}
 
 	public int interpretFanFactorRoll(int[] pFanFactorRoll, int pFanFactor, int pScoreDiff) {

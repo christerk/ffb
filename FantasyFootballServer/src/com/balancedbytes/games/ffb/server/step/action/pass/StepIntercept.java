@@ -2,6 +2,7 @@ package com.balancedbytes.games.ffb.server.step.action.pass;
 
 import java.util.Set;
 
+import com.balancedbytes.games.ffb.FactoryType;
 import com.balancedbytes.games.ffb.InterceptionModifier;
 import com.balancedbytes.games.ffb.PlayerAction;
 import com.balancedbytes.games.ffb.ReRollSource;
@@ -11,8 +12,11 @@ import com.balancedbytes.games.ffb.dialog.DialogInterceptionParameter;
 import com.balancedbytes.games.ffb.factory.IFactorySource;
 import com.balancedbytes.games.ffb.factory.InterceptionModifierFactory;
 import com.balancedbytes.games.ffb.json.UtilJson;
+import com.balancedbytes.games.ffb.mechanics.AgilityMechanic;
+import com.balancedbytes.games.ffb.mechanics.Mechanic;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
+import com.balancedbytes.games.ffb.net.NetCommandId;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandInterceptorChoice;
 import com.balancedbytes.games.ffb.report.ReportInterceptionRoll;
 import com.balancedbytes.games.ffb.server.ActionStatus;
@@ -64,13 +68,9 @@ public final class StepIntercept extends AbstractStepWithReRoll {
 	public void init(StepParameterSet pParameterSet) {
 		if (pParameterSet != null) {
 			for (StepParameter parameter : pParameterSet.values()) {
-				switch (parameter.getKey()) {
 				// mandatory
-				case GOTO_LABEL_ON_FAILURE:
+				if (parameter.getKey() == StepParameterKey.GOTO_LABEL_ON_FAILURE) {
 					fGotoLabelOnFailure = (String) parameter.getValue();
-					break;
-				default:
-					break;
 				}
 			}
 		}
@@ -89,16 +89,12 @@ public final class StepIntercept extends AbstractStepWithReRoll {
 	public StepCommandStatus handleCommand(ReceivedCommand pReceivedCommand) {
 		StepCommandStatus commandStatus = super.handleCommand(pReceivedCommand);
 		if (commandStatus == StepCommandStatus.UNHANDLED_COMMAND) {
-			switch (pReceivedCommand.getId()) {
-			case CLIENT_INTERCEPTOR_CHOICE:
+			if (pReceivedCommand.getId() == NetCommandId.CLIENT_INTERCEPTOR_CHOICE) {
 				ClientCommandInterceptorChoice interceptorCommand = (ClientCommandInterceptorChoice) pReceivedCommand
-						.getCommand();
+					.getCommand();
 				fInterceptorId = interceptorCommand.getInterceptorId();
 				fInterceptorChosen = true;
 				commandStatus = StepCommandStatus.EXECUTE_STEP;
-				break;
-			default:
-				break;
 			}
 		}
 		if (commandStatus == StepCommandStatus.EXECUTE_STEP) {
@@ -165,11 +161,12 @@ public final class StepIntercept extends AbstractStepWithReRoll {
 	}
 
 	private ActionStatus intercept(Player<?> pInterceptor) {
-		ActionStatus status = null;
+		ActionStatus status;
 		Game game = getGameState().getGame();
 		InterceptionModifierFactory modifierFactory = new InterceptionModifierFactory();
 		Set<InterceptionModifier> interceptionModifiers = modifierFactory.findInterceptionModifiers(game, pInterceptor);
-		int minimumRoll = DiceInterpreter.getInstance().minimumRollInterception(pInterceptor, interceptionModifiers);
+		AgilityMechanic mechanic = (AgilityMechanic) game.getRules().getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.AGILITY.name());
+		int minimumRoll = mechanic.minimumRollInterception(pInterceptor, interceptionModifiers);
 		int roll = getGameState().getDiceRoller().rollSkill();
 		boolean successful = DiceInterpreter.getInstance().isSkillRollSuccessful(roll, minimumRoll);
 		InterceptionModifier[] interceptionModifierArray = modifierFactory.toArray(interceptionModifiers);

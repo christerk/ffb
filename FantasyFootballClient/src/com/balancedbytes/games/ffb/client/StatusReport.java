@@ -31,6 +31,7 @@ import com.balancedbytes.games.ffb.TurnMode;
 import com.balancedbytes.games.ffb.Weather;
 import com.balancedbytes.games.ffb.factory.BlockResultFactory;
 import com.balancedbytes.games.ffb.factory.PassModifierFactory;
+import com.balancedbytes.games.ffb.mechanics.AgilityMechanic;
 import com.balancedbytes.games.ffb.mechanics.Mechanic;
 import com.balancedbytes.games.ffb.mechanics.PassMechanic;
 import com.balancedbytes.games.ffb.mechanics.PassResult;
@@ -1140,12 +1141,8 @@ public class StatusReport {
 			}
 		}
 		if (neededRoll != null) {
-			if (pReport.hasRollModifier(DodgeModifiers.BREAK_TACKLE)) {
-				neededRoll.append(" using Break Tackle (ST ").append(Math.min(6, actingPlayer.getStrength()));
-			} else {
-				neededRoll.append(" (AG ").append(Math.min(6, actingPlayer.getPlayer().getAgility()));
-			}
-			neededRoll.append(" + 1 Dodge").append(formatRollModifiers(pReport.getRollModifiers())).append(" + Roll > 6).");
+			AgilityMechanic mechanic = (AgilityMechanic) game.getRules().getFactory(Factory.MECHANIC).forName(Mechanic.Type.AGILITY.name());
+			neededRoll.append(mechanic.formatDodgeResult(pReport, actingPlayer));
 			println(getIndent() + 1, TextStyle.NEEDED_ROLL, neededRoll.toString());
 		}
 	}
@@ -1401,8 +1398,8 @@ public class StatusReport {
 			}
 		}
 		if (neededRoll != null) {
-			neededRoll.append(" (AG ").append(Math.min(6, player.getAgility()))
-				.append(formatRollModifiers(pReport.getRollModifiers())).append(" + Roll > 6).");
+			AgilityMechanic mechanic = (AgilityMechanic) game.getRules().getFactory(Factory.MECHANIC).forName(Mechanic.Type.AGILITY.name());
+			neededRoll.append(mechanic.formatLeapResult(pReport, player));
 			println(getIndent() + 1, TextStyle.NEEDED_ROLL, neededRoll.toString());
 		}
 	}
@@ -1441,8 +1438,8 @@ public class StatusReport {
 			}
 		}
 		if (neededRoll != null) {
-			neededRoll.append(" (AG ").append(Math.min(6, player.getAgility()))
-				.append(formatRollModifiers(pReport.getRollModifiers())).append(" + Roll > 6).");
+			AgilityMechanic mechanic = (AgilityMechanic) game.getRules().getFactory(Factory.MECHANIC).forName(Mechanic.Type.AGILITY.name());
+			neededRoll.append(mechanic.formatJumpUpResult(pReport, player));
 			println(getIndent() + 1, TextStyle.NEEDED_ROLL, neededRoll.toString());
 		}
 	}
@@ -1497,7 +1494,8 @@ public class StatusReport {
 			}
 		}
 		if (neededRoll != null) {
-			neededRoll.append(" (AG ").append(Math.min(6, player.getAgility())).append(" + Roll > 6).");
+			AgilityMechanic mechanic = (AgilityMechanic) game.getRules().getFactory(Factory.MECHANIC).forName(Mechanic.Type.AGILITY.name());
+			neededRoll.append(mechanic.formatSafeThrowResult(player));
 			println(getIndent() + 2, TextStyle.NEEDED_ROLL, neededRoll.toString());
 		}
 	}
@@ -1596,8 +1594,8 @@ public class StatusReport {
 			}
 		}
 		if (neededRoll != null) {
-			neededRoll.append(" (AG ").append(Math.min(6, thrownPlayer.getAgility()))
-				.append(formatRollModifiers(pReport.getRollModifiers())).append(" + Roll > 6).");
+			AgilityMechanic mechanic = (AgilityMechanic) game.getRules().getFactory(Factory.MECHANIC).forName(Mechanic.Type.AGILITY.name());
+			neededRoll.append(mechanic.formatRightStuffResult(pReport, thrownPlayer));
 			println(getIndent() + 1, TextStyle.NEEDED_ROLL, neededRoll.toString());
 		}
 	}
@@ -1687,8 +1685,8 @@ public class StatusReport {
 			}
 		}
 		if (neededRoll != null) {
-			neededRoll.append(" (AG ").append(Math.min(6, player.getAgility()))
-				.append(formatRollModifiers(pReport.getRollModifiers())).append(" + Roll > 6).");
+			AgilityMechanic mechanic = (AgilityMechanic) game.getRules().getFactory(Factory.MECHANIC).forName(Mechanic.Type.AGILITY.name());
+			neededRoll.append(mechanic.formatCatchResult(pReport, player));
 			println(getIndent() + 2, TextStyle.NEEDED_ROLL, neededRoll.toString());
 		}
 	}
@@ -1732,8 +1730,8 @@ public class StatusReport {
 			}
 		}
 		if (neededRoll != null) {
-			neededRoll.append(" (AG ").append(Math.min(6, player.getAgility())).append(" - 2 Interception")
-				.append(formatRollModifiers(pReport.getRollModifiers())).append(" + Roll > 6).");
+			AgilityMechanic mechanic = (AgilityMechanic) game.getRules().getFactory(Factory.MECHANIC).forName(Mechanic.Type.AGILITY.name());
+			neededRoll.append(mechanic.formatInterceptionResult(pReport, player));
 			println(getIndent() + 2, TextStyle.NEEDED_ROLL, neededRoll.toString());
 		}
 	}
@@ -1767,8 +1765,8 @@ public class StatusReport {
 			}
 		}
 		if (neededRoll != null) {
-			neededRoll.append(" (AG ").append(Math.min(6, player.getAgility()))
-				.append(formatRollModifiers(pReport.getRollModifiers())).append(" + Roll > 6).");
+			AgilityMechanic mechanic = (AgilityMechanic) game.getRules().getFactory(Factory.MECHANIC).forName(Mechanic.Type.AGILITY.name());
+			neededRoll.append(mechanic.formatHypnoticGazeResult(pReport, player));
 			println(getIndent() + 2, TextStyle.NEEDED_ROLL, neededRoll.toString());
 		}
 	}
@@ -1801,8 +1799,8 @@ public class StatusReport {
 			}
 		}
 		if (neededRoll != null) {
-			neededRoll.append(" (AG ").append(Math.min(6, player.getAgility())).append(" + 1 Pickup")
-				.append(formatRollModifiers(pReport.getRollModifiers())).append(" + Roll > 6).");
+			AgilityMechanic mechanic = (AgilityMechanic) game.getRules().getFactory(Factory.MECHANIC).forName(Mechanic.Type.AGILITY.name());
+			neededRoll.append(mechanic.formatPickupResult(pReport, player));
 			println(getIndent() + 2, TextStyle.NEEDED_ROLL, neededRoll.toString());
 		}
 	}
