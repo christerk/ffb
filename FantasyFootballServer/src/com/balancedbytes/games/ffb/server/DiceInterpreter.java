@@ -28,6 +28,8 @@ import com.balancedbytes.games.ffb.SpecialEffect;
 import com.balancedbytes.games.ffb.Weather;
 import com.balancedbytes.games.ffb.factory.DirectionFactory;
 import com.balancedbytes.games.ffb.factory.KickoffResultFactory;
+import com.balancedbytes.games.ffb.mechanics.Mechanic;
+import com.balancedbytes.games.ffb.mechanics.StatsMechanic;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
@@ -75,13 +77,8 @@ public class DiceInterpreter {
 		}
 	}
 
-	private int getAgilityRollBase(int agility) {
-		return 7 - Math.min(agility, 6);
-	}
 
-	public int minimumRollJumpUp(Player<?> pPlayer) {
-		return Math.max(2, getAgilityRollBase(pPlayer.getAgility()) - 2);
-	}
+
 
 	public int minimumRollGoingForIt(Set<GoForItModifier> pGoForItModifiers) {
 		int modifierTotal = 0;
@@ -91,55 +88,7 @@ public class DiceInterpreter {
 		return Math.max(2, 2 + modifierTotal);
 	}
 
-	public int minimumRollDodge(Game pGame, Player<?> pPlayer, Set<DodgeModifier> pDodgeModifiers) {
-		int modifierTotal = 0;
-		for (DodgeModifier dodgeModifier : pDodgeModifiers) {
-			modifierTotal += dodgeModifier.getModifier();
-		}
-		int statistic = pDodgeModifiers.contains(DodgeModifiers.BREAK_TACKLE) ? UtilCards.getPlayerStrength(pGame, pPlayer)
-				: pPlayer.getAgility();
-		return Math.max(2, getAgilityRollBase(statistic) - 1 + modifierTotal);
-	}
 
-	public int minimumRollPickup(Player<?> pPlayer, Set<PickupModifier> pPickupModifiers) {
-		int modifierTotal = 0;
-		for (PickupModifier pickupModifier : pPickupModifiers) {
-			modifierTotal += pickupModifier.getModifier();
-		}
-		return Math.max(2, getAgilityRollBase(pPlayer.getAgility()) - 1 + modifierTotal);
-	}
-
-	public int minimumRollInterception(Player<?> pPlayer, Set<InterceptionModifier> pInterceptionModifiers) {
-		int modifierTotal = 0;
-		for (InterceptionModifier interceptionModifier : pInterceptionModifiers) {
-			modifierTotal += interceptionModifier.getModifier();
-		}
-		return Math.max(2, getAgilityRollBase(pPlayer.getAgility()) + 2 + modifierTotal);
-	}
-
-	public int minimumRollLeap(Player<?> pPlayer, Set<LeapModifier> pLeapModifiers) {
-		int modifierTotal = 0;
-		for (LeapModifier leapModifier : pLeapModifiers) {
-			modifierTotal += leapModifier.getModifier();
-		}
-		return Math.max(2, getAgilityRollBase(pPlayer.getAgility()) + modifierTotal);
-	}
-
-	public int minimumRollHypnoticGaze(Player<?> pPlayer, Set<GazeModifier> pGazeModifiers) {
-		int modifierTotal = 0;
-		for (GazeModifier gazeModifier : pGazeModifiers) {
-			modifierTotal += gazeModifier.getModifier();
-		}
-		return Math.max(2, getAgilityRollBase(pPlayer.getAgility()) + modifierTotal);
-	}
-
-	public int minimumRollCatch(Player<?> pPlayer, Set<CatchModifier> pCatchModifiers) {
-		int modifierTotal = 0;
-		for (CatchModifier catchModifier : pCatchModifiers) {
-			modifierTotal += catchModifier.getModifier();
-		}
-		return Math.max(2, getAgilityRollBase(pPlayer.getAgility()) + modifierTotal);
-	}
 
 	public int minimumRollResistingFoulAppearance() {
 		return 2;
@@ -150,15 +99,8 @@ public class DiceInterpreter {
 		return UtilRangeRuler.minimumRollThrowTeamMate(pPassingDistance, pPassModifiers);
 	}
 
-	public int minimumRollRightStuff(Player<?> pPlayer, Set<RightStuffModifier> pRightStuffModifiers) {
-		int modifierTotal = 0;
-		for (RightStuffModifier rightStuffModifier : pRightStuffModifiers) {
-			modifierTotal += rightStuffModifier.getModifier();
-		}
-		return Math.max(2, getAgilityRollBase(pPlayer.getAgility()) + modifierTotal);
-	}
 
-	public boolean isPassFumble(int roll, Player<?> pThrower, PassingDistance pPassingDistance,
+	public boolean isPassFumble(int roll, PassingDistance pPassingDistance,
 			Set<PassModifier> pPassModifiers) {
 		if (roll == 1) {
 			return true;
@@ -175,10 +117,6 @@ public class DiceInterpreter {
 
 	public boolean isSkillRollSuccessful(int roll, int pMinimumRoll) {
 		return ((roll == 6) || ((roll != 1) && (roll >= pMinimumRoll)));
-	}
-
-	public boolean isThickSkullUsed(int[] pInjuryRoll) {
-		return (ArrayTool.isProvided(pInjuryRoll) && (pInjuryRoll[0] + pInjuryRoll[1] == 8));
 	}
 
 	public boolean isSpecialEffectSuccesful(SpecialEffect pSpecialEffect, Player<?> targetPlayer, int roll) {
@@ -265,10 +203,6 @@ public class DiceInterpreter {
 
 	public int minimumRollWeepingDagger() {
 		return 4;
-	}
-
-	public int minimumRollSafeThrow(Player<?> pPlayer) {
-		return Math.max(2, getAgilityRollBase(pPlayer.getAgility()));
 	}
 
 	public int interpretFanFactorRoll(int[] pFanFactorRoll, int pFanFactor, int pScoreDiff) {
@@ -436,6 +370,7 @@ public class DiceInterpreter {
 
 	public boolean isArmourBroken(GameState pGameState, InjuryContext pInjuryContext) {
 		Game game = pGameState.getGame();
+		StatsMechanic mechanic = (StatsMechanic) game.getRules().getFactory(Factory.MECHANIC).forName(Mechanic.Type.STAT.name());
 		int[] armourRoll = pInjuryContext.getArmorRoll();
 		Player<?> defender = game.getPlayerById(pInjuryContext.getDefenderId());
 		int armour = defender.getArmour();
@@ -445,11 +380,7 @@ public class DiceInterpreter {
 		if ((armour > 7) && pInjuryContext.hasArmorModifier(ArmorModifiers.CLAWS)) {
 			armour = 7;
 		}
-		return (armour < (armourRoll[0] + armourRoll[1] + pInjuryContext.getArmorModifierTotal()));
-	}
-
-	public boolean isApothecarySuccessful(int roll) {
-		return (roll > 1);
+		return mechanic.armourIsBroken(armour, armourRoll, pInjuryContext);
 	}
 
 	public boolean isBribesSuccessful(int roll) {

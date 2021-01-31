@@ -1,10 +1,13 @@
 package com.balancedbytes.games.ffb.server.skillbehaviour;
 
+import com.balancedbytes.games.ffb.FactoryType;
 import com.balancedbytes.games.ffb.PlayerAction;
 import com.balancedbytes.games.ffb.PlayerState;
 import com.balancedbytes.games.ffb.ReRolledActions;
 import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.RulesCollection.Rules;
+import com.balancedbytes.games.ffb.mechanics.AgilityMechanic;
+import com.balancedbytes.games.ffb.mechanics.Mechanic;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandUseSkill;
@@ -59,7 +62,8 @@ public class JumpUpBehaviour extends SkillBehaviour<JumpUp> {
 								return false;
 							}
 						}
-						int minimumRoll = DiceInterpreter.getInstance().minimumRollJumpUp(actingPlayer.getPlayer());
+						AgilityMechanic mechanic = (AgilityMechanic) game.getRules().getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.AGILITY.name());
+						int minimumRoll = mechanic.minimumRollJumpUp(actingPlayer.getPlayer());
 						int roll = step.getGameState().getDiceRoller().rollSkill();
 						boolean successful = DiceInterpreter.getInstance().isSkillRollSuccessful(roll, minimumRoll);
 						boolean reRolled = ((step.getReRolledAction() == ReRolledActions.JUMP_UP)

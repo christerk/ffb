@@ -1,5 +1,6 @@
 package com.balancedbytes.games.ffb.server.handler;
 
+import com.balancedbytes.games.ffb.server.util.UtilSkillBehaviours;
 import org.eclipse.jetty.websocket.api.Session;
 
 import com.balancedbytes.games.ffb.ClientMode;
@@ -154,6 +155,7 @@ public class ServerCommandHandlerJoinApproved extends ServerCommandHandler {
 						pJoinApprovedCommand.getCoach(), homeTeam)) {
 					UtilServerStartGame.addDefaultGameOptions(pGameState);
 					pGameState.getGame().initializeRules();
+					UtilSkillBehaviours.registerBehaviours(pGameState.getGame(), getServer().getDebugLog());
 					Team teamHome = getServer().getGameCache().getTeamById(game.getTeamHome().getId(), game);
 					getServer().getGameCache().addTeamToGame(pGameState, teamHome, true);
 					Team teamAway = getServer().getGameCache().getTeamById(game.getTeamAway().getId(), game);

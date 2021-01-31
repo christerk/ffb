@@ -3,6 +3,7 @@ package com.balancedbytes.games.ffb.server.step.action.common;
 import java.util.Set;
 
 import com.balancedbytes.games.ffb.CatchScatterThrowInMode;
+import com.balancedbytes.games.ffb.FactoryType;
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.PickupModifier;
 import com.balancedbytes.games.ffb.ReRollSource;
@@ -11,6 +12,8 @@ import com.balancedbytes.games.ffb.SoundId;
 import com.balancedbytes.games.ffb.factory.IFactorySource;
 import com.balancedbytes.games.ffb.factory.PickupModifierFactory;
 import com.balancedbytes.games.ffb.json.UtilJson;
+import com.balancedbytes.games.ffb.mechanics.AgilityMechanic;
+import com.balancedbytes.games.ffb.mechanics.Mechanic;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
@@ -60,12 +63,8 @@ public class StepPickUp extends AbstractStepWithReRoll {
 	public void init(StepParameterSet pParameterSet) {
 		if (pParameterSet != null) {
 			for (StepParameter parameter : pParameterSet.values()) {
-				switch (parameter.getKey()) {
-				case GOTO_LABEL_ON_FAILURE:
+				if (parameter.getKey() == StepParameterKey.GOTO_LABEL_ON_FAILURE) {
 					fGotoLabelOnFailure = (String) parameter.getValue();
-					break;
-				default:
-					break;
 				}
 			}
 		}
@@ -143,7 +142,8 @@ public class StepPickUp extends AbstractStepWithReRoll {
 		} else {
 			PickupModifierFactory modifierFactory = new PickupModifierFactory();
 			Set<PickupModifier> pickupModifiers = modifierFactory.findPickupModifiers(game);
-			int minimumRoll = DiceInterpreter.getInstance().minimumRollPickup(actingPlayer.getPlayer(), pickupModifiers);
+			AgilityMechanic mechanic = (AgilityMechanic) game.getRules().getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.AGILITY.name());
+			int minimumRoll = mechanic.minimumRollPickup(actingPlayer.getPlayer(), pickupModifiers);
 			int roll = getGameState().getDiceRoller().rollSkill();
 			boolean successful = DiceInterpreter.getInstance().isSkillRollSuccessful(roll, minimumRoll);
 			PickupModifier[] pickupModifierArray = modifierFactory.toArray(pickupModifiers);

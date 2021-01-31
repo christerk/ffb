@@ -1,10 +1,13 @@
 package com.balancedbytes.games.ffb.server.step.action.pass;
 
+import com.balancedbytes.games.ffb.FactoryType;
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.PlayerAction;
 import com.balancedbytes.games.ffb.ReRolledActions;
 import com.balancedbytes.games.ffb.factory.IFactorySource;
 import com.balancedbytes.games.ffb.json.UtilJson;
+import com.balancedbytes.games.ffb.mechanics.AgilityMechanic;
+import com.balancedbytes.games.ffb.mechanics.Mechanic;
 import com.balancedbytes.games.ffb.model.Animation;
 import com.balancedbytes.games.ffb.model.AnimationType;
 import com.balancedbytes.games.ffb.model.Game;
@@ -62,13 +65,9 @@ public class StepSafeThrow extends AbstractStepWithReRoll {
 	public void init(StepParameterSet pParameterSet) {
 		if (pParameterSet != null) {
 			for (StepParameter parameter : pParameterSet.values()) {
-				switch (parameter.getKey()) {
 				// mandatory
-				case GOTO_LABEL_ON_FAILURE:
+				if (parameter.getKey() == StepParameterKey.GOTO_LABEL_ON_FAILURE) {
 					fGotoLabelOnFailure = (String) parameter.getValue();
-					break;
-				default:
-					break;
 				}
 			}
 		}
@@ -80,12 +79,9 @@ public class StepSafeThrow extends AbstractStepWithReRoll {
 	@Override
 	public boolean setParameter(StepParameter pParameter) {
 		if ((pParameter != null) && !super.setParameter(pParameter)) {
-			switch (pParameter.getKey()) {
-			case INTERCEPTOR_ID:
+			if (pParameter.getKey() == StepParameterKey.INTERCEPTOR_ID) {
 				fInterceptorId = (String) pParameter.getValue();
 				return true;
-			default:
-				break;
 			}
 		}
 		return false;
@@ -126,7 +122,8 @@ public class StepSafeThrow extends AbstractStepWithReRoll {
 			}
 			if (doSafeThrow) {
 				int roll = getGameState().getDiceRoller().rollSkill();
-				int minimumRoll = DiceInterpreter.getInstance().minimumRollSafeThrow(game.getThrower());
+				AgilityMechanic mechanic = (AgilityMechanic) game.getRules().getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.AGILITY.name());
+				int minimumRoll = mechanic.minimumRollSafeThrow(game.getThrower());
 				safeThrowSuccessful = DiceInterpreter.getInstance().isSkillRollSuccessful(roll, minimumRoll);
 				boolean reRolled = ((getReRolledAction() == ReRolledActions.SAFE_THROW) && (getReRollSource() != null));
 				getResult().addReport(new ReportSkillRoll(ReportId.SAFE_THROW_ROLL, game.getThrowerId(), safeThrowSuccessful,
@@ -145,10 +142,8 @@ public class StepSafeThrow extends AbstractStepWithReRoll {
 			} else {
 				game.getFieldModel().setRangeRuler(null);
 				FieldCoordinate startCoordinate = game.getFieldModel().getPlayerCoordinate(game.getThrower());
-				FieldCoordinate interceptorCoordinate = null;
-				if (interceptor != null) {
-					interceptorCoordinate = game.getFieldModel().getPlayerCoordinate(interceptor);
-				}
+				FieldCoordinate interceptorCoordinate;
+				interceptorCoordinate = game.getFieldModel().getPlayerCoordinate(interceptor);
 				if (PlayerAction.THROW_BOMB == game.getThrowerAction()) {
 					getResult().setAnimation(new Animation(AnimationType.THROW_BOMB, startCoordinate, game.getPassCoordinate(),
 							interceptorCoordinate));

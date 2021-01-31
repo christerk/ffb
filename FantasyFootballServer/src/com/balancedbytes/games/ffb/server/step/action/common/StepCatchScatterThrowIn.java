@@ -21,12 +21,15 @@ import com.balancedbytes.games.ffb.dialog.DialogPlayerChoiceParameter;
 import com.balancedbytes.games.ffb.factory.CatchModifierFactory;
 import com.balancedbytes.games.ffb.factory.IFactorySource;
 import com.balancedbytes.games.ffb.json.UtilJson;
+import com.balancedbytes.games.ffb.mechanics.AgilityMechanic;
+import com.balancedbytes.games.ffb.mechanics.Mechanic;
 import com.balancedbytes.games.ffb.model.Animation;
 import com.balancedbytes.games.ffb.model.AnimationType;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.model.SkillConstants;
 import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
+import com.balancedbytes.games.ffb.net.NetCommandId;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandPlayerChoice;
 import com.balancedbytes.games.ffb.option.GameOptionId;
 import com.balancedbytes.games.ffb.option.UtilGameOption;
@@ -76,7 +79,7 @@ import com.eclipsesource.json.JsonValue;
  */
 public class StepCatchScatterThrowIn extends AbstractStepWithReRoll {
 
-	public class StepState {
+	public static class StepState {
 		public boolean rerollCatch;
 		public Player<?> catcher;
 	}
@@ -109,17 +112,13 @@ public class StepCatchScatterThrowIn extends AbstractStepWithReRoll {
 	public StepCommandStatus handleCommand(ReceivedCommand pReceivedCommand) {
 		StepCommandStatus commandStatus = super.handleCommand(pReceivedCommand);
 		if (commandStatus == StepCommandStatus.UNHANDLED_COMMAND) {
-			switch (pReceivedCommand.getId()) {
-			case CLIENT_PLAYER_CHOICE:
+			if (pReceivedCommand.getId() == NetCommandId.CLIENT_PLAYER_CHOICE) {
 				ClientCommandPlayerChoice playerChoiceCommand = (ClientCommandPlayerChoice) pReceivedCommand.getCommand();
 				if (PlayerChoiceMode.DIVING_CATCH == playerChoiceCommand.getPlayerChoiceMode()) {
 					fDivingCatchChoice = StringTool.isProvided(playerChoiceCommand.getPlayerId());
 					fCatcherId = playerChoiceCommand.getPlayerId();
 				}
 				commandStatus = StepCommandStatus.EXECUTE_STEP;
-				break;
-			default:
-				break;
 			}
 		}
 		if (commandStatus == StepCommandStatus.EXECUTE_STEP) {
@@ -271,7 +270,7 @@ public class StepCatchScatterThrowIn extends AbstractStepWithReRoll {
 				fDivingCatchChoice = null;
 				getGameState().pushCurrentStepOnStack();
 			} else {
-				Player<?> catcher = null;
+				Player<?> catcher;
 				if (fBombMode) {
 					catcher = !game.getFieldModel().isBombMoving()
 							? game.getFieldModel().getPlayer(game.getFieldModel().getBombCoordinate())
@@ -359,10 +358,10 @@ public class StepCatchScatterThrowIn extends AbstractStepWithReRoll {
 		}
 
 		if (doRoll) {
-
-			CatchModifierFactory modifierFactory = game.<CatchModifierFactory>getFactory(Factory.CATCH_MODIFIER);
+			AgilityMechanic mechanic = (AgilityMechanic) game.getRules().getFactory(Factory.MECHANIC).forName(Mechanic.Type.AGILITY.name());
+			CatchModifierFactory modifierFactory = game.getFactory(Factory.CATCH_MODIFIER);
 			Set<CatchModifier> catchModifiers = modifierFactory.findCatchModifiers(game, state.catcher, fCatchScatterThrowInMode);
-			int minimumRoll = DiceInterpreter.getInstance().minimumRollCatch(state.catcher, catchModifiers);
+			int minimumRoll = mechanic.minimumRollCatch(state.catcher, catchModifiers);
 			boolean reRolled = ((getReRolledAction() == ReRolledActions.CATCH) && (getReRollSource() != null));
 			int roll = getGameState().getDiceRoller().rollSkill();
 			boolean successful = DiceInterpreter.getInstance().isSkillRollSuccessful(roll, minimumRoll);

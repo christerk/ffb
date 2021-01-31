@@ -12,6 +12,8 @@ import com.balancedbytes.games.ffb.SkillUse;
 import com.balancedbytes.games.ffb.TurnMode;
 import com.balancedbytes.games.ffb.dialog.DialogPlayerChoiceParameter;
 import com.balancedbytes.games.ffb.factory.DodgeModifierFactory;
+import com.balancedbytes.games.ffb.mechanics.AgilityMechanic;
+import com.balancedbytes.games.ffb.mechanics.Mechanic;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
@@ -50,6 +52,7 @@ public class DivingTackleBehaviour extends SkillBehaviour<DivingTackle> {
 			public boolean handleExecuteStepHook(StepDivingTackle step, StepState state) {
 				Game game = step.getGameState().getGame();
 				ActingPlayer actingPlayer = game.getActingPlayer();
+				AgilityMechanic mechanic = (AgilityMechanic) game.getRules().getFactory(Factory.MECHANIC).forName(Mechanic.Type.AGILITY.name());
 				if (state.usingDivingTackle == null) {
 					game.setDefenderId(null);
 					state.usingDivingTackle = false;
@@ -61,19 +64,19 @@ public class DivingTackleBehaviour extends SkillBehaviour<DivingTackle> {
 							divingTacklers = UtilPlayer.filterAttackerAndDefender(game, divingTacklers);
 						}
 						if (ArrayTool.isProvided(divingTacklers) && (state.dodgeRoll > 0)) {
-							DodgeModifierFactory modifierFactory = game.<DodgeModifierFactory>getFactory(Factory.DODGE_MODIFIER);
+							DodgeModifierFactory modifierFactory = game.getFactory(Factory.DODGE_MODIFIER);
 							Set<DodgeModifier> dodgeModifiers = modifierFactory.findDodgeModifiers(game, state.coordinateFrom,
 									state.coordinateTo, 0);
 							dodgeModifiers.add(DodgeModifiers.DIVING_TACKLE);
 							if (state.usingBreakTackle) {
 								dodgeModifiers.add(DodgeModifiers.BREAK_TACKLE);
 							}
-							int minimumRoll = DiceInterpreter.getInstance().minimumRollDodge(game, actingPlayer.getPlayer(),
+							int minimumRoll = mechanic.minimumRollDodge(game, actingPlayer.getPlayer(),
 									dodgeModifiers);
 							int minimumRollWithoutBreakTackle = minimumRoll;
 							if (dodgeModifiers.contains(DodgeModifiers.BREAK_TACKLE)) {
 								dodgeModifiers.remove(DodgeModifiers.BREAK_TACKLE);
-								minimumRollWithoutBreakTackle = DiceInterpreter.getInstance().minimumRollDodge(game,
+								minimumRollWithoutBreakTackle = mechanic.minimumRollDodge(game,
 										actingPlayer.getPlayer(), dodgeModifiers);
 								dodgeModifiers.add(DodgeModifiers.BREAK_TACKLE);
 							}
@@ -108,7 +111,7 @@ public class DivingTackleBehaviour extends SkillBehaviour<DivingTackle> {
 						DodgeModifierFactory modifierFactory = new DodgeModifierFactory();
 						Set<DodgeModifier> dodgeModifiers = modifierFactory.findDodgeModifiers(game, state.coordinateFrom,
 								state.coordinateTo, 0);
-						int minimumRoll = DiceInterpreter.getInstance().minimumRollDodge(game, actingPlayer.getPlayer(),
+						int minimumRoll = mechanic.minimumRollDodge(game, actingPlayer.getPlayer(),
 								dodgeModifiers);
 						if (dodgeModifiers.contains(DodgeModifiers.BREAK_TACKLE)
 								&& DiceInterpreter.getInstance().isSkillRollSuccessful(state.dodgeRoll, minimumRoll)) {

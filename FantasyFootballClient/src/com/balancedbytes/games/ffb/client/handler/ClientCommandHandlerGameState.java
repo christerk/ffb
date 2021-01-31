@@ -102,16 +102,14 @@ public class ClientCommandHandlerGameState extends ClientCommandHandler implemen
 		UtilClientThrowTeamMate.updateThrownPlayer(getClient());
 
 		if (pMode == ClientCommandHandlerMode.PLAYING) {
-			SwingUtilities.invokeLater(new Runnable() {
-				public void run() {
-					UserInterface userInterface = getClient().getUserInterface();
-					userInterface.init();
-					getClient().updateClientState();
-					userInterface.getDialogManager().updateDialog();
-					userInterface.getGameMenuBar().updateMissingPlayers();
-					userInterface.getGameMenuBar().updateInducements();
-					userInterface.getChat().requestChatInputFocus();
-				}
+			SwingUtilities.invokeLater(() -> {
+				UserInterface userInterface = getClient().getUserInterface();
+				userInterface.init();
+				getClient().updateClientState();
+				userInterface.getDialogManager().updateDialog();
+				userInterface.getGameMenuBar().updateMissingPlayers();
+				userInterface.getGameMenuBar().updateInducements();
+				userInterface.getChat().requestChatInputFocus();
 			});
 		}
 

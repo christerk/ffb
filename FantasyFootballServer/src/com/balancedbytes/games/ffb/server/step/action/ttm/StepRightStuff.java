@@ -4,6 +4,7 @@ import java.util.Set;
 
 import com.balancedbytes.games.ffb.ApothecaryMode;
 import com.balancedbytes.games.ffb.CatchScatterThrowInMode;
+import com.balancedbytes.games.ffb.FactoryType;
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.PlayerState;
 import com.balancedbytes.games.ffb.ReRolledActions;
@@ -11,6 +12,8 @@ import com.balancedbytes.games.ffb.RightStuffModifier;
 import com.balancedbytes.games.ffb.factory.IFactorySource;
 import com.balancedbytes.games.ffb.factory.RightStuffModifierFactory;
 import com.balancedbytes.games.ffb.json.UtilJson;
+import com.balancedbytes.games.ffb.mechanics.AgilityMechanic;
+import com.balancedbytes.games.ffb.mechanics.Mechanic;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.report.ReportId;
@@ -132,7 +135,8 @@ public final class StepRightStuff extends AbstractStepWithReRoll {
 			} else if (fKtmModifier == -2) {
 				rightStuffModifiers.add(RightStuffModifier.KTM_LONG);
 			}
-			int minimumRoll = DiceInterpreter.getInstance().minimumRollRightStuff(thrownPlayer, rightStuffModifiers);
+			AgilityMechanic mechanic = (AgilityMechanic) game.getRules().getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.AGILITY.name());
+			int minimumRoll = mechanic.minimumRollRightStuff(thrownPlayer, rightStuffModifiers);
 			int roll = getGameState().getDiceRoller().rollSkill();
 			boolean successful = DiceInterpreter.getInstance().isSkillRollSuccessful(roll, minimumRoll);
 			RightStuffModifier[] rightStuffModifiersArray = modifierFactory.toArray(rightStuffModifiers);

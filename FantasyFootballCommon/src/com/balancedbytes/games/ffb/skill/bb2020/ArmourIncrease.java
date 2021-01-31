@@ -1,19 +1,17 @@
-package com.balancedbytes.games.ffb.skill;
+package com.balancedbytes.games.ffb.skill.bb2020;
 
 import com.balancedbytes.games.ffb.RulesCollection;
+import com.balancedbytes.games.ffb.RulesCollection.Rules;
 import com.balancedbytes.games.ffb.SkillCategory;
 import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.model.Skill;
 
-@RulesCollection(RulesCollection.Rules.COMMON)
-public class AgilityIncrease extends Skill {
-
-	public AgilityIncrease() {
-		super("+AG", SkillCategory.STAT_INCREASE);
-	}
+@RulesCollection(Rules.BB2020)
+public class ArmourIncrease extends com.balancedbytes.games.ffb.skill.ArmourIncrease {
 
 	@Override
 	public int getCost(Player<?> player) {
-		return 40000;
+		return 10000;
 	}
+
 }

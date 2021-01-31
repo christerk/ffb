@@ -1,5 +1,33 @@
 package com.balancedbytes.games.ffb.client.ui;
 
+import com.balancedbytes.games.ffb.Card;
+import com.balancedbytes.games.ffb.CardEffect;
+import com.balancedbytes.games.ffb.FactoryType;
+import com.balancedbytes.games.ffb.InjuryAttribute;
+import com.balancedbytes.games.ffb.PlayerState;
+import com.balancedbytes.games.ffb.PlayerType;
+import com.balancedbytes.games.ffb.SeriousInjury;
+import com.balancedbytes.games.ffb.SkillCategory;
+import com.balancedbytes.games.ffb.client.ClientData;
+import com.balancedbytes.games.ffb.client.IIconProperty;
+import com.balancedbytes.games.ffb.client.IconCache;
+import com.balancedbytes.games.ffb.client.PlayerIconFactory;
+import com.balancedbytes.games.ffb.client.UserInterface;
+import com.balancedbytes.games.ffb.mechanics.Mechanic;
+import com.balancedbytes.games.ffb.mechanics.StatsDrawingModifier;
+import com.balancedbytes.games.ffb.mechanics.StatsMechanic;
+import com.balancedbytes.games.ffb.model.ActingPlayer;
+import com.balancedbytes.games.ffb.model.Game;
+import com.balancedbytes.games.ffb.model.Player;
+import com.balancedbytes.games.ffb.model.PlayerResult;
+import com.balancedbytes.games.ffb.model.Position;
+import com.balancedbytes.games.ffb.model.Skill;
+import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
+import com.balancedbytes.games.ffb.util.ArrayTool;
+import com.balancedbytes.games.ffb.util.StringTool;
+import com.balancedbytes.games.ffb.util.UtilCards;
+
+import javax.swing.JPanel;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
@@ -18,33 +46,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import javax.swing.JPanel;
-
-import com.balancedbytes.games.ffb.Card;
-import com.balancedbytes.games.ffb.CardEffect;
-import com.balancedbytes.games.ffb.InjuryAttribute;
-import com.balancedbytes.games.ffb.PlayerState;
-import com.balancedbytes.games.ffb.PlayerType;
-import com.balancedbytes.games.ffb.SeriousInjury;
-import com.balancedbytes.games.ffb.SkillCategory;
-import com.balancedbytes.games.ffb.client.ClientData;
-import com.balancedbytes.games.ffb.client.IIconProperty;
-import com.balancedbytes.games.ffb.client.IconCache;
-import com.balancedbytes.games.ffb.client.PlayerIconFactory;
-import com.balancedbytes.games.ffb.client.UserInterface;
-import com.balancedbytes.games.ffb.model.ActingPlayer;
-import com.balancedbytes.games.ffb.model.Game;
-import com.balancedbytes.games.ffb.model.Player;
-import com.balancedbytes.games.ffb.model.PlayerResult;
-import com.balancedbytes.games.ffb.model.Position;
-import com.balancedbytes.games.ffb.model.Skill;
-import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
-import com.balancedbytes.games.ffb.util.ArrayTool;
-import com.balancedbytes.games.ffb.util.StringTool;
-import com.balancedbytes.games.ffb.util.UtilCards;
-
 /**
- *
  * @author Kalimar
  */
 @SuppressWarnings("serial")
@@ -120,7 +122,7 @@ public class PlayerDetailComponent extends JPanel {
 			final AttributedString attStr = new AttributedString(getPlayer().getName());
 			attStr.addAttribute(TextAttribute.FONT, g2d.getFont());
 			final LineBreakMeasurer measurer = new LineBreakMeasurer(attStr.getIterator(),
-					new FontRenderContext(null, false, true));
+				new FontRenderContext(null, false, true));
 			TextLayout layoutLine1 = measurer.nextLayout(WIDTH - (2 * x));
 			if (layoutLine1 != null) {
 				int yLine1 = y + fontMetrics.getHeight() - fontMetrics.getDescent();
@@ -161,7 +163,7 @@ public class PlayerDetailComponent extends JPanel {
 			if (playerPortrait != null) {
 				drawPortrait(x, y, g2d, playerPortrait);
 			} else {
-				drawPortrait(x-1, y+1, g2d, portraitBackground);
+				drawPortrait(x - 1, y + 1, g2d, portraitBackground);
 			}
 			g2d.rotate(-Math.PI / 2.0);
 			g2d.setColor(Color.BLACK);
@@ -182,9 +184,9 @@ public class PlayerDetailComponent extends JPanel {
 			// Scale portrait to fit both width and height
 
 			float scale = Math.max(
-					(float)portraitWidth / (float)canvasWidth,
-					(float)portraitHeight / (float)canvasHeight
-					);
+				(float) portraitWidth / (float) canvasWidth,
+				(float) portraitHeight / (float) canvasHeight
+			);
 
 			portraitWidth = (int) Math.floor(portraitWidth / scale);
 			portraitHeight = (int) Math.floor(portraitHeight / scale);
@@ -206,14 +208,10 @@ public class PlayerDetailComponent extends JPanel {
 			PlayerResult playerResult = game.getGameResult().getPlayerResult(getPlayer());
 			boolean moveIsRed = false;
 			int moveLeft = UtilCards.getPlayerMovement(game, getPlayer())
-					- findNewStatDecreases(playerResult, InjuryAttribute.MA);
+				- findNewStatDecreases(playerResult, InjuryAttribute.MA);
 			int strength = UtilCards.getPlayerStrength(game, getPlayer())
-					- findNewStatDecreases(playerResult, InjuryAttribute.ST);
+				- findNewStatDecreases(playerResult, InjuryAttribute.ST);
 			int agility = getPlayer().getAgility() - findNewStatDecreases(playerResult, InjuryAttribute.AG);
-			int passing = getPlayer().getPassing();
-			if (passing > 0) {
-				passing += findNewStatDecreases(playerResult, InjuryAttribute.PA);
-			}
 			int armour = getPlayer().getArmour() - findNewStatDecreases(playerResult, InjuryAttribute.AV);
 			ActingPlayer actingPlayer = getSideBar().getClient().getGame().getActingPlayer();
 			if (fPlayer == actingPlayer.getPlayer()) {
@@ -228,23 +226,31 @@ public class PlayerDetailComponent extends JPanel {
 				}
 			}
 
+			StatsMechanic mechanic = (StatsMechanic) game.getRules().getFactory(FactoryType.Factory.MECHANIC)
+				.forName(Mechanic.Type.STAT.name());
 			Player<?> player = getPlayer();
 			Position position = player.getPosition();
 			int movementModifier = player.getMovement() - position.getMovement();
-			drawStatBox(g2d, x, y, moveLeft, moveIsRed, movementModifier, false);
+			drawStatBox(g2d, x, y, moveLeft, moveIsRed, StatsDrawingModifier.positiveImproves(movementModifier));
 
 			int strengthModifier = player.getStrength() - position.getStrength();
 			boolean strengthIsRed = (getPlayer().getStrength() != UtilCards.getPlayerStrength(game, getPlayer()));
-			drawStatBox(g2d, x + _STAT_BOX_WIDTH, y, strength, strengthIsRed, strengthModifier, false);
+			drawStatBox(g2d, x + _STAT_BOX_WIDTH, y, strength, strengthIsRed, StatsDrawingModifier.positiveImproves(strengthModifier));
 
 			int agilityModifier = player.getAgility() - position.getAgility();
-			drawStatBox(g2d, x + (_STAT_BOX_WIDTH * 2), y, agility, false, agilityModifier, true);
+			drawStatBox(g2d, x + (_STAT_BOX_WIDTH * 2), y, agility, false, mechanic.agilityModifier(agilityModifier), mechanic.statSuffix());
 
-			int passingModifier = player.getPassing() - position.getPassing();
-			drawStatBox(g2d, x + (_STAT_BOX_WIDTH * 3), y, passing, false, passingModifier, true);
+			if (mechanic.drawPassing()) {
+				int passing = getPlayer().getPassing();
+				if (passing > 0) {
+					passing += findNewStatDecreases(playerResult, InjuryAttribute.PA);
+				}
+				int passingModifier = player.getPassing() - position.getPassing();
+				drawStatBox(g2d, x + (_STAT_BOX_WIDTH * 3), y, passing, false, StatsDrawingModifier.positiveImpairs(passingModifier), mechanic.statSuffix());
+			}
 
 			int armourModifier = player.getArmour() - position.getArmour();
-			drawStatBox(g2d, x + (_STAT_BOX_WIDTH * 4), y, armour, false, armourModifier, true);
+			drawStatBox(g2d, x + (_STAT_BOX_WIDTH * 4), y, armour, false, StatsDrawingModifier.positiveImproves(armourModifier), mechanic.statSuffix());
 
 			g2d.dispose();
 
@@ -256,11 +262,11 @@ public class PlayerDetailComponent extends JPanel {
 		int decreases = 0;
 		if (pPlayerResult != null) {
 			if ((pPlayerResult.getSeriousInjury() != null)
-					&& (pPlayerResult.getSeriousInjury().getInjuryAttribute() == pInjuryAttribute)) {
+				&& (pPlayerResult.getSeriousInjury().getInjuryAttribute() == pInjuryAttribute)) {
 				decreases++;
 			}
 			if ((pPlayerResult.getSeriousInjuryDecay() != null)
-					&& (pPlayerResult.getSeriousInjuryDecay().getInjuryAttribute() == pInjuryAttribute)) {
+				&& (pPlayerResult.getSeriousInjuryDecay().getInjuryAttribute() == pInjuryAttribute)) {
 				decreases++;
 			}
 		}
@@ -278,9 +284,9 @@ public class PlayerDetailComponent extends JPanel {
 			Game game = getSideBar().getClient().getGame();
 			PlayerResult playerResult = game.getGameResult().getPlayerResult(getPlayer());
 			if ((playerResult != null) && ((playerResult.getSeriousInjury() != null)
-					&& (pInjuryAttribute == playerResult.getSeriousInjury().getInjuryAttribute())
-					|| ((playerResult.getSeriousInjuryDecay() != null)
-							&& (pInjuryAttribute == playerResult.getSeriousInjuryDecay().getInjuryAttribute())))) {
+				&& (pInjuryAttribute == playerResult.getSeriousInjury().getInjuryAttribute())
+				|| ((playerResult.getSeriousInjuryDecay() != null)
+				&& (pInjuryAttribute == playerResult.getSeriousInjuryDecay().getInjuryAttribute())))) {
 				decreases++;
 			}
 		}
@@ -377,12 +383,12 @@ public class PlayerDetailComponent extends JPanel {
 			for (Skill skill : skills) {
 				if (getPlayer().getPosition().hasSkill(skill)) {
 					if ((SkillCategory.STAT_INCREASE != skill.getCategory())
-							&& (SkillCategory.STAT_DECREASE != skill.getCategory())) {
+						&& (SkillCategory.STAT_DECREASE != skill.getCategory())) {
 						rosterSkills.add(skill.getName());
 					}
 				} else if (getPlayer().hasSkill(skill)) {
 					if ((SkillCategory.STAT_INCREASE != skill.getCategory())
-							&& (SkillCategory.STAT_DECREASE != skill.getCategory())) {
+						&& (SkillCategory.STAT_DECREASE != skill.getCategory())) {
 						acquiredSkills.add(skill.getName());
 					}
 				} else {
@@ -390,7 +396,7 @@ public class PlayerDetailComponent extends JPanel {
 				}
 				Skill unusedProSkill = getPlayer().getSkillWithProperty(NamedProperties.canRerollOncePerTurn);
 				if (((getPlayer() == actingPlayer.getPlayer()) && actingPlayer.isSkillUsed(skill))
-						|| ((skill == unusedProSkill) && playerState.hasUsedPro())) {
+					|| ((skill == unusedProSkill) && playerState.hasUsedPro())) {
 					usedSkills.add(skill.getName());
 				}
 			}
@@ -442,43 +448,47 @@ public class PlayerDetailComponent extends JPanel {
 		return height;
 	}
 
-	private void drawStatBox(Graphics2D pG2d, int pX, int pY, int pValue, boolean pStatIsRed, int statModifier, boolean addPlusSuffix) {
+	private void drawStatBox(Graphics2D pG2d, int pX, int pY, int pValue, boolean pStatIsRed, StatsDrawingModifier modifier) {
+		drawStatBox(pG2d, pX, pY, pValue, pStatIsRed, modifier, "");
+	}
+
+	private void drawStatBox(Graphics2D pG2d, int pX, int pY, int pValue, boolean pStatIsRed, StatsDrawingModifier modifier, String suffix) {
 		if (fPlayer != null) {
 			pG2d.setColor(Color.BLACK);
 			pG2d.setFont(_STAT_FONT);
-			if (statModifier > 0) {
+			if (modifier.isImprovement()) {
 				pG2d.setColor(Color.GREEN);
-				if (statModifier > 1) {
+				if (modifier.getAbsoluteModifier() > 1) {
 					pG2d.fillRect(pX + 2, pY + _STAT_BOX_HEIGHT - _STAT_BOX_INNER_HEIGHT - 2, _STAT_BOX_WIDTH - 6,
-							_STAT_BOX_INNER_HEIGHT);
+						_STAT_BOX_INNER_HEIGHT);
 				} else {
-					pG2d.fillPolygon(new int[] { pX + 2, pX + 2, pX + _STAT_BOX_WIDTH - 3 },
-							new int[] { pY + _STAT_BOX_HEIGHT - _STAT_BOX_INNER_HEIGHT - 2, pY + _STAT_BOX_HEIGHT - 2,
-									pY + _STAT_BOX_HEIGHT - 2 },
-							3);
+					pG2d.fillPolygon(new int[]{pX + 2, pX + 2, pX + _STAT_BOX_WIDTH - 3},
+						new int[]{pY + _STAT_BOX_HEIGHT - _STAT_BOX_INNER_HEIGHT - 2, pY + _STAT_BOX_HEIGHT - 2,
+							pY + _STAT_BOX_HEIGHT - 2},
+						3);
 				}
 			}
-			if (statModifier < 0) {
+			if (modifier.isImpairment()) {
 				pG2d.setColor(Color.RED);
-				if (statModifier < -1) {
+				if (modifier.getAbsoluteModifier() > 1) {
 					pG2d.fillRect(pX + 2, pY + _STAT_BOX_HEIGHT - _STAT_BOX_INNER_HEIGHT - 2, _STAT_BOX_WIDTH - 6,
-							_STAT_BOX_INNER_HEIGHT);
+						_STAT_BOX_INNER_HEIGHT);
 				} else {
-					pG2d.fillPolygon(new int[] { pX + 2, pX + _STAT_BOX_WIDTH - 3, pX + _STAT_BOX_WIDTH - 3 },
-							new int[] { pY + _STAT_BOX_HEIGHT - _STAT_BOX_INNER_HEIGHT - 2,
-									pY + _STAT_BOX_HEIGHT - _STAT_BOX_INNER_HEIGHT - 2, pY + _STAT_BOX_HEIGHT - 2 },
-							3);
+					pG2d.fillPolygon(new int[]{pX + 2, pX + _STAT_BOX_WIDTH - 3, pX + _STAT_BOX_WIDTH - 3},
+						new int[]{pY + _STAT_BOX_HEIGHT - _STAT_BOX_INNER_HEIGHT - 2,
+							pY + _STAT_BOX_HEIGHT - _STAT_BOX_INNER_HEIGHT - 2, pY + _STAT_BOX_HEIGHT - 2},
+						3);
 				}
 			}
 
 			Color statColor = pStatIsRed ? Color.RED : Color.BLACK;
-			String statText = pValue == 0 ? "�" : Integer.toString(pValue) + (addPlusSuffix ? "+" : "");
+			String statText = pValue == 0 ? "-" : pValue + suffix;
 			if (pValue == 0) {
 				// Move the dash more central
 				pY -= 1;
 			}
 			drawCenteredText(pG2d, pX + (_STAT_BOX_WIDTH / 2), pY + _STAT_BOX_HEIGHT - 4, statColor,
-					statText);
+				statText);
 		}
 	}
 
@@ -546,7 +556,7 @@ public class PlayerDetailComponent extends JPanel {
 			ClientData clientData = getSideBar().getClient().getClientData();
 			UserInterface userInterface = getSideBar().getClient().getUserInterface();
 			SideBarComponent otherSideBar = getSideBar().isHomeSide() ? userInterface.getSideBarAway()
-					: userInterface.getSideBarHome();
+				: userInterface.getSideBarHome();
 			if (otherSideBar.isBoxOpen()) {
 				displayMode = _DISPLAY_SELECTED_PLAYER;
 				if ((clientData.getSelectedPlayer() == null) && (game.getActingPlayer().getPlayer() != null)) {
@@ -571,15 +581,15 @@ public class PlayerDetailComponent extends JPanel {
 		Game game = getSideBar().getClient().getGame();
 		ClientData clientData = getSideBar().getClient().getClientData();
 		switch (pDisplayMode) {
-		case _DISPLAY_ACTING_PLAYER:
-			displayedPlayer = game.getActingPlayer().getPlayer();
-			break;
-		case _DISPLAY_DEFENDING_PLAYER:
-			displayedPlayer = game.getDefender();
-			break;
-		case _DISPLAY_SELECTED_PLAYER:
-			displayedPlayer = clientData.getSelectedPlayer();
-			break;
+			case _DISPLAY_ACTING_PLAYER:
+				displayedPlayer = game.getActingPlayer().getPlayer();
+				break;
+			case _DISPLAY_DEFENDING_PLAYER:
+				displayedPlayer = game.getDefender();
+				break;
+			case _DISPLAY_SELECTED_PLAYER:
+				displayedPlayer = clientData.getSelectedPlayer();
+				break;
 		}
 		return displayedPlayer;
 	}

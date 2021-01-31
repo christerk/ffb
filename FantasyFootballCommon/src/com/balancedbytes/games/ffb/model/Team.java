@@ -69,7 +69,7 @@ public class Team implements IXmlSerializable, IJsonSerializable {
 	private transient Map<String, Player<?>> fPlayerById;
 	private transient Map<Integer, Player<?>> fPlayerByNr;
 
-	private class PlayerComparatorByNr implements Comparator<Player<?>> {
+	private static class PlayerComparatorByNr implements Comparator<Player<?>> {
 		public int compare(Player<?> pPlayer1, Player<?> pPlayer2) {
 			return (pPlayer1.getNr() - pPlayer2.getNr());
 		}
@@ -139,7 +139,7 @@ public class Team implements IXmlSerializable, IJsonSerializable {
 	 * @return array of playes sorted by playerNr
 	 */
 	public Player<?>[] getPlayers() {
-		Player<?>[] players = fPlayerByNr.values().toArray(new Player[fPlayerByNr.size()]);
+		Player<?>[] players = fPlayerByNr.values().toArray(new Player[0]);
 		Arrays.sort(players, new PlayerComparatorByNr());
 		return players;
 	}
@@ -207,13 +207,17 @@ public class Team implements IXmlSerializable, IJsonSerializable {
 	}
 
 	public void updateRoster(Roster pRoster) {
+		updateRoster(pRoster, true);
+	}
+
+	public void updateRoster(Roster pRoster, boolean updateStats) {
 		fRoster = pRoster;
 		if (fRoster != null) {
 			setRosterId(fRoster.getId());
 			setRace(fRoster.getName());
 			for (Player<?> player : getPlayers()) {
 				String positionId = player.getPositionId();
-				player.updatePosition(fRoster.getPositionById(positionId));
+				player.updatePosition(fRoster.getPositionById(positionId), updateStats);
 			}
 		}
 	}
@@ -291,11 +295,7 @@ public class Team implements IXmlSerializable, IJsonSerializable {
 	}
 
 	public static Comparator<Team> comparatorByName() {
-		return new Comparator<Team>() {
-			public int compare(Team pTeam1, Team pTeam2) {
-				return pTeam1.getName().compareTo(pTeam2.getName());
-			}
-		};
+		return Comparator.comparing(Team::getName);
 	}
 
 	// XML serialization
@@ -474,7 +474,7 @@ public class Team implements IXmlSerializable, IJsonSerializable {
 		if (rosterObject != null) {
 			roster = new Roster().initFrom(game, rosterObject);
 		}
-		updateRoster(roster);
+		updateRoster(roster, false);
 
 		return this;
 
