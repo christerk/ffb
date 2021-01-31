@@ -10,6 +10,17 @@ public class PassingIncreaseBehaviour extends SkillBehaviour<PassingIncrease> {
 	public PassingIncreaseBehaviour() {
 		super();
 
-		registerModifier(player -> player.setPassing(player.getPassing() - 1));
+		registerModifier(player -> {
+			if (player.getPassing() <= 0) {
+				player.setPassing(6);
+			} else {
+				player.setPassing(
+					Math.max(
+						Math.max(1, player.getPosition().getPassing() - 2),
+						player.getPassing() - 1
+					)
+				);
+			}
+		});
 	}
 }

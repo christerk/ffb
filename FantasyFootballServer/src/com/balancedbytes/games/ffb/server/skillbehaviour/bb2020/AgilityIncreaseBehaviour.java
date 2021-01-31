@@ -10,6 +10,11 @@ public class AgilityIncreaseBehaviour extends SkillBehaviour<AgilityIncrease> {
 	public AgilityIncreaseBehaviour() {
 		super();
 
-		registerModifier(player -> player.setAgility(player.getAgility() - 1));
+		registerModifier(player -> player.setAgility(
+			Math.max(
+				Math.max(1, player.getPosition().getAgility() - 2),
+				player.getAgility() - 1)
+			)
+		);
 	}
 }

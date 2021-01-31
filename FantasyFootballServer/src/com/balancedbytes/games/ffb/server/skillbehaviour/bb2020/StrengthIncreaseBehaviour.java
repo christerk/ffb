@@ -10,6 +10,11 @@ public class StrengthIncreaseBehaviour extends SkillBehaviour<StrengthIncrease> 
 	public StrengthIncreaseBehaviour() {
 		super();
 
-		registerModifier(player -> player.setStrength(player.getStrength() + 1));
+		registerModifier(player -> player.setStrength(
+			Math.min(
+				Math.min(8, player.getPosition().getStrength() + 2),
+				player.getStrength() + 1)
+			)
+		);
 	}
 }
