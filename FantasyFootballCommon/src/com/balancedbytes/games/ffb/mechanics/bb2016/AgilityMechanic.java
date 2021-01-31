@@ -159,24 +159,4 @@ public class AgilityMechanic extends com.balancedbytes.games.ffb.mechanics.Agili
 		return " (AG " + Math.min(6, player.getAgility()) + " + 1 Pickup" +
 			formatRollModifiers(report.getRollModifiers()) + " + Roll > 6).";
 	}
-
-	private String formatRollModifiers(IRollModifier[] pRollModifiers) {
-		StringBuilder modifiers = new StringBuilder();
-		if (ArrayTool.isProvided(pRollModifiers)) {
-			for (IRollModifier rollModifier : pRollModifiers) {
-				if (rollModifier.getModifier() != 0) {
-					if (rollModifier.getModifier() > 0) {
-						modifiers.append(" - ");
-					} else {
-						modifiers.append(" + ");
-					}
-					if (!rollModifier.isModifierIncluded()) {
-						modifiers.append(Math.abs(rollModifier.getModifier())).append(" ");
-					}
-					modifiers.append(rollModifier.getName());
-				}
-			}
-		}
-		return modifiers.toString();
-	}
 }

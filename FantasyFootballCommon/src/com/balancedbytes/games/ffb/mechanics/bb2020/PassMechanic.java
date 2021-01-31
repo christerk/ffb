@@ -57,7 +57,7 @@ public class PassMechanic extends com.balancedbytes.games.ffb.mechanics.PassMech
 		if (thrower.getPassing() <= 0) {
 			return "";
 		}
-		return " (Roll - " + Math.abs(distance.getModifier2020()) + " " + distance.getName() + formattedModifiers +
+		return " (Roll - " + distance.getModifier2020() + " " + distance.getName() + formattedModifiers +
 			" >= PA " + thrower.getPassing() + "+).";
 	}
 
