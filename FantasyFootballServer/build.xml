@@ -40,6 +40,7 @@
 		<delete includeemptydirs="true">
 			<fileset dir="${build.dir}" includes="**/*"/>
 		</delete>
+		<ant antfile="build.xml" dir="../FantasyFootballCommon" target="clean" />
 	</target>
 		
 	<target name="FantasyFootballCommon">
