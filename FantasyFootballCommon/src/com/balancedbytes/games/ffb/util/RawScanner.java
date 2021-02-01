@@ -18,7 +18,12 @@ public class RawScanner<T2> {
 		Set<Class<T2>> result = new HashSet<>();
 		for (ClassInfo classInfo : ScannerSingleton.getInstance().scanResult.getSubclasses(persistentClass.getName())) {
 			if (!classInfo.isAbstract()) {
-				result.add((Class<T2>) classInfo.loadClass());
+				try {
+					result.add((Class<T2>) Class.forName(classInfo.getName()));
+				} catch (ClassNotFoundException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 		}
 		return result;
@@ -29,7 +34,12 @@ public class RawScanner<T2> {
 		Set<Class<T2>> result = new HashSet<>();
 		for (ClassInfo classInfo : ScannerSingleton.getInstance().scanResult.getClassesImplementing(persistentClass.getName())) {
 			if (!classInfo.isAbstract()) {
-				result.add((Class<T2>) classInfo.loadClass());
+				try {
+					result.add((Class<T2>) Class.forName(classInfo.getName()));
+				} catch (ClassNotFoundException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 		}
 		return result;
