@@ -1,7 +1,6 @@
 package com.balancedbytes.games.ffb.server.skillbehaviour;
 
-import java.util.Set;
-
+import com.balancedbytes.games.ffb.FactoryType;
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.PassModifier;
 import com.balancedbytes.games.ffb.PassingDistance;
@@ -11,6 +10,8 @@ import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.RulesCollection.Rules;
 import com.balancedbytes.games.ffb.dialog.DialogSkillUseParameter;
 import com.balancedbytes.games.ffb.factory.PassModifierFactory;
+import com.balancedbytes.games.ffb.mechanics.Mechanic;
+import com.balancedbytes.games.ffb.mechanics.PassMechanic;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
@@ -29,7 +30,8 @@ import com.balancedbytes.games.ffb.server.util.UtilServerDialog;
 import com.balancedbytes.games.ffb.server.util.UtilServerReRoll;
 import com.balancedbytes.games.ffb.skill.ThrowTeamMate;
 import com.balancedbytes.games.ffb.util.UtilCards;
-import com.balancedbytes.games.ffb.util.UtilPassing;
+
+import java.util.Set;
 
 @RulesCollection(Rules.COMMON)
 public class ThrowTeamMateBehaviour extends SkillBehaviour<ThrowTeamMate> {
@@ -63,7 +65,8 @@ public class ThrowTeamMateBehaviour extends SkillBehaviour<ThrowTeamMate> {
 				if (doRoll) {
 					PassModifierFactory passModifierFactory = new PassModifierFactory();
 					FieldCoordinate throwerCoordinate = game.getFieldModel().getPlayerCoordinate(thrower);
-					PassingDistance passingDistance = UtilPassing.findPassingDistance(game, throwerCoordinate,
+					PassMechanic mechanic = (PassMechanic) game.getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.PASS.name());
+					PassingDistance passingDistance = mechanic.findPassingDistance(game, throwerCoordinate,
 							game.getPassCoordinate(), true);
 					Set<PassModifier> passModifiers = passModifierFactory.findPassModifiers(game, thrower, passingDistance, true);
 					int minimumRoll = DiceInterpreter.getInstance().minimumRollThrowTeamMate(passingDistance,

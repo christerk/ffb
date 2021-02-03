@@ -2,13 +2,8 @@ package com.balancedbytes.games.ffb.util;
 
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.FieldCoordinateBounds;
-import com.balancedbytes.games.ffb.PassModifier;
-import com.balancedbytes.games.ffb.PassingDistance;
-import com.balancedbytes.games.ffb.PassingModifiers;
 import com.balancedbytes.games.ffb.PlayerAction;
 import com.balancedbytes.games.ffb.PlayerState;
-import com.balancedbytes.games.ffb.factory.PassModifierFactory;
-import com.balancedbytes.games.ffb.factory.PassingDistanceFactory;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.FieldModel;
 import com.balancedbytes.games.ffb.model.Game;
@@ -24,50 +19,6 @@ import java.util.Set;
 public class UtilPassing {
 
 	public static double RULER_WIDTH = 1.74;
-
-	private static final String[] _THROWING_RANGE_TABLE = new String[] {
-			"T Q Q Q S S S L L L L B B B",
-			"Q Q Q Q S S S L L L L B B B",
-			"Q Q Q S S S S L L L L B B  ",
-			"Q Q S S S S S L L L B B B  ",
-			"S S S S S S L L L L B B B  ",
-			"S S S S S L L L L B B B    ",
-			"S S S S L L L L L B B B    ",
-			"L L L L L L L L B B B      ",
-			"L L L L L L L B B B B      ",
-			"L L L L L B B B B B        ",
-			"L L L B B B B B B          ",
-			"B B B B B B B              ",
-			"B B B B B                  ",
-			"B B                        " };
-
-	private static final PassingDistance[][] _PASSING_DISTANCES_TABLE = new PassingDistance[14][14];
-
-	static {
-		PassingDistanceFactory passingDistanceFactory = new PassingDistanceFactory();
-		for (int y = 0; y < 14; y++) {
-			for (int x = 0; x < 14; x++) {
-				_PASSING_DISTANCES_TABLE[y][x] = passingDistanceFactory.forShortcut(_THROWING_RANGE_TABLE[y].charAt(x * 2));
-			}
-		}
-	}
-
-	public static PassingDistance findPassingDistance(Game pGame, FieldCoordinate pFromCoordinate,
-			FieldCoordinate pToCoordinate, boolean pThrowTeamMate) {
-		PassingDistance passingDistance = null;
-		if ((pFromCoordinate != null) && (pToCoordinate != null)) {
-			int deltaY = Math.abs(pToCoordinate.getY() - pFromCoordinate.getY());
-			int deltaX = Math.abs(pToCoordinate.getX() - pFromCoordinate.getX());
-			if ((deltaY < 14) && (deltaX < 14)) {
-				passingDistance = _PASSING_DISTANCES_TABLE[deltaY][deltaX];
-			}
-			if ((pThrowTeamMate || new PassModifierFactory().activeModifiers(pGame, PassModifier.class).contains(PassingModifiers.BLIZZARD))
-					&& ((passingDistance == PassingDistance.LONG_BOMB) || (passingDistance == PassingDistance.LONG_PASS))) {
-				passingDistance = null;
-			}
-		}
-		return passingDistance;
-	}
 
 	public static Player<?>[] findInterceptors(Game pGame, Player<?> pThrower, FieldCoordinate pTargetCoordinate) {
 		List<Player<?>> interceptors = new ArrayList<>();

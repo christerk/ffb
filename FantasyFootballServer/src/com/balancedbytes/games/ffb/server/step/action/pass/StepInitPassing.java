@@ -1,10 +1,13 @@
 package com.balancedbytes.games.ffb.server.step.action.pass;
 
+import com.balancedbytes.games.ffb.FactoryType;
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.PlayerAction;
 import com.balancedbytes.games.ffb.TurnMode;
 import com.balancedbytes.games.ffb.factory.IFactorySource;
 import com.balancedbytes.games.ffb.json.UtilJson;
+import com.balancedbytes.games.ffb.mechanics.Mechanic;
+import com.balancedbytes.games.ffb.mechanics.PassMechanic;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
@@ -24,7 +27,6 @@ import com.balancedbytes.games.ffb.server.step.StepParameterKey;
 import com.balancedbytes.games.ffb.server.step.StepParameterSet;
 import com.balancedbytes.games.ffb.server.step.UtilServerSteps;
 import com.balancedbytes.games.ffb.util.StringTool;
-import com.balancedbytes.games.ffb.util.UtilPassing;
 import com.balancedbytes.games.ffb.util.UtilRangeRuler;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
@@ -201,9 +203,10 @@ public final class StepInitPassing extends AbstractStep {
 				getResult().setNextAction(StepAction.NEXT_STEP);
 				return;
 			}
+			PassMechanic mechanic = (PassMechanic) game.getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.PASS.name());
 			if ((game.getPassCoordinate() != null) && (game.getThrower() == actingPlayer.getPlayer())
 					&& ((PlayerAction.THROW_BOMB == game.getThrowerAction())
-							&& (UtilPassing.findPassingDistance(game, throwerCoordinate, game.getPassCoordinate(), false) != null))
+							&& (mechanic.findPassingDistance(game, throwerCoordinate, game.getPassCoordinate(), false) != null))
 					|| (PlayerAction.HAIL_MARY_BOMB == game.getThrowerAction())) {
 				actingPlayer.setHasPassed(true);
 				game.getTurnData().setTurnStarted(true);
@@ -217,7 +220,7 @@ public final class StepInitPassing extends AbstractStep {
 			}
 			if ((game.getPassCoordinate() != null) && (game.getThrower() == actingPlayer.getPlayer())
 					&& ((PlayerAction.PASS == game.getThrowerAction())
-							&& (UtilPassing.findPassingDistance(game, throwerCoordinate, game.getPassCoordinate(), false) != null))
+							&& (mechanic.findPassingDistance(game, throwerCoordinate, game.getPassCoordinate(), false) != null))
 					|| (PlayerAction.HAIL_MARY_PASS == game.getThrowerAction())) {
 				actingPlayer.setHasPassed(true);
 				game.getTurnData().setTurnStarted(true);
@@ -233,7 +236,7 @@ public final class StepInitPassing extends AbstractStep {
 			if ((game.getPassCoordinate() != null)
 					&& (((PlayerAction.THROW_BOMB == game.getThrowerAction())
 							|| (PlayerAction.DUMP_OFF == game.getThrowerAction()))
-							&& (UtilPassing.findPassingDistance(game, throwerCoordinate, game.getPassCoordinate(), false) != null))
+							&& (mechanic.findPassingDistance(game, throwerCoordinate, game.getPassCoordinate(), false) != null))
 					|| (PlayerAction.HAIL_MARY_BOMB == game.getThrowerAction())) {
 				if (game.getThrower() == actingPlayer.getPlayer()) {
 					actingPlayer.setHasPassed(true);

@@ -1,6 +1,7 @@
 package com.balancedbytes.games.ffb.client.state;
 
 import com.balancedbytes.games.ffb.ClientStateId;
+import com.balancedbytes.games.ffb.FactoryType;
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.PassingDistance;
 import com.balancedbytes.games.ffb.RangeRuler;
@@ -8,10 +9,11 @@ import com.balancedbytes.games.ffb.client.FantasyFootballClient;
 import com.balancedbytes.games.ffb.client.IIconProperty;
 import com.balancedbytes.games.ffb.client.UserInterface;
 import com.balancedbytes.games.ffb.client.util.UtilClientCursor;
+import com.balancedbytes.games.ffb.mechanics.Mechanic;
+import com.balancedbytes.games.ffb.mechanics.PassMechanic;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
-import com.balancedbytes.games.ffb.util.UtilPassing;
 import com.balancedbytes.games.ffb.util.UtilRangeRuler;
 
 /**
@@ -83,7 +85,8 @@ public class ClientStateDumpOff extends ClientStateMove {
 		boolean validInRange = false;
 		Game game = getClient().getGame();
 		FieldCoordinate throwerCoordinate = game.getFieldModel().getPlayerCoordinate(game.getThrower());
-		PassingDistance passingDistance = UtilPassing.findPassingDistance(game, throwerCoordinate, pCoordinate, false);
+		PassMechanic mechanic = (PassMechanic) game.getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.PASS.name());
+		PassingDistance passingDistance = mechanic.findPassingDistance(game, throwerCoordinate, pCoordinate, false);
 		validInRange = (PassingDistance.QUICK_PASS == passingDistance);
 		return validInRange;
 	}

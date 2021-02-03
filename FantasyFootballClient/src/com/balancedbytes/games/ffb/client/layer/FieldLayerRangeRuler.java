@@ -1,10 +1,13 @@
 package com.balancedbytes.games.ffb.client.layer;
 
+import com.balancedbytes.games.ffb.FactoryType;
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.FieldCoordinateBounds;
 import com.balancedbytes.games.ffb.PassingDistance;
 import com.balancedbytes.games.ffb.RangeRuler;
 import com.balancedbytes.games.ffb.client.FantasyFootballClient;
+import com.balancedbytes.games.ffb.mechanics.Mechanic;
+import com.balancedbytes.games.ffb.mechanics.PassMechanic;
 import com.balancedbytes.games.ffb.model.FieldModel;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
@@ -62,10 +65,12 @@ public class FieldLayerRangeRuler extends FieldLayer {
 				&& StringTool.isProvided(pRangeRuler.getThrowerId())) {
 
 			Game game = getClient().getGame();
+			PassMechanic mechanic = (PassMechanic) game.getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.PASS.name());
+
 			Player<?> thrower = game.getPlayerById(pRangeRuler.getThrowerId());
 			FieldCoordinate throwerCoordinate = game.getFieldModel().getPlayerCoordinate(thrower);
 
-			PassingDistance passingDistance = UtilPassing.findPassingDistance(game, throwerCoordinate,
+			PassingDistance passingDistance = mechanic.findPassingDistance(game, throwerCoordinate,
 					pRangeRuler.getTargetCoordinate(), false);
 			if (passingDistance != null) {
 

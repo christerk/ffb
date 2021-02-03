@@ -26,7 +26,7 @@ public class UtilRangeRuler {
 		if ((pGame != null) && (pThrower != null) && (pTargetCoordinate != null)) {
 			PassMechanic mechanic = (PassMechanic) pGame.getRules().getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.PASS.name());
 			FieldCoordinate throwerCoordinate = pGame.getFieldModel().getPlayerCoordinate(pThrower);
-			PassingDistance passingDistance = UtilPassing.findPassingDistance(pGame, throwerCoordinate, pTargetCoordinate,
+			PassingDistance passingDistance = mechanic.findPassingDistance(pGame, throwerCoordinate, pTargetCoordinate,
 					pThrowTeamMate);
 			if (passingDistance != null) {
 				Optional<Integer> minimumRoll;

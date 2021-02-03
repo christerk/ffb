@@ -1,20 +1,13 @@
 package com.balancedbytes.games.ffb.client.state;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.swing.ImageIcon;
-import javax.swing.JMenuItem;
-import javax.swing.KeyStroke;
-
 import com.balancedbytes.games.ffb.ClientStateId;
+import com.balancedbytes.games.ffb.FactoryType;
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.PassModifier;
 import com.balancedbytes.games.ffb.PassingDistance;
 import com.balancedbytes.games.ffb.PassingModifiers;
 import com.balancedbytes.games.ffb.PlayerAction;
 import com.balancedbytes.games.ffb.RangeRuler;
-import com.balancedbytes.games.ffb.Weather;
 import com.balancedbytes.games.ffb.client.ActionKey;
 import com.balancedbytes.games.ffb.client.FantasyFootballClient;
 import com.balancedbytes.games.ffb.client.FieldComponent;
@@ -24,14 +17,20 @@ import com.balancedbytes.games.ffb.client.UserInterface;
 import com.balancedbytes.games.ffb.client.net.ClientCommunication;
 import com.balancedbytes.games.ffb.client.util.UtilClientCursor;
 import com.balancedbytes.games.ffb.factory.PassModifierFactory;
+import com.balancedbytes.games.ffb.mechanics.Mechanic;
+import com.balancedbytes.games.ffb.mechanics.PassMechanic;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
 import com.balancedbytes.games.ffb.net.NetCommand;
-import com.balancedbytes.games.ffb.skill.Pass;
-import com.balancedbytes.games.ffb.util.UtilPassing;
 import com.balancedbytes.games.ffb.util.UtilRangeRuler;
+
+import javax.swing.ImageIcon;
+import javax.swing.JMenuItem;
+import javax.swing.KeyStroke;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -73,7 +72,8 @@ public class ClientStateBomb extends ClientState {
 		Game game = getClient().getGame();
 		ActingPlayer actingPlayer = game.getActingPlayer();
 		FieldCoordinate throwerCoordinate = game.getFieldModel().getPlayerCoordinate(actingPlayer.getPlayer());
-		PassingDistance passingDistance = UtilPassing.findPassingDistance(game, throwerCoordinate, pCoordinate, false);
+		PassMechanic mechanic = (PassMechanic) game.getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.PASS.name());
+		PassingDistance passingDistance = mechanic.findPassingDistance(game, throwerCoordinate, pCoordinate, false);
 		if ((PlayerAction.HAIL_MARY_BOMB == actingPlayer.getPlayerAction()) || (passingDistance != null)) {
 			game.setPassCoordinate(pCoordinate);
 			getClient().getCommunication().sendPass(actingPlayer.getPlayerId(), game.getPassCoordinate());

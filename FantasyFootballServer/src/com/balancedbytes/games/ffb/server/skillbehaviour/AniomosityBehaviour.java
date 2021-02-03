@@ -1,11 +1,14 @@
 package com.balancedbytes.games.ffb.server.skillbehaviour;
 
+import com.balancedbytes.games.ffb.FactoryType;
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.PlayerAction;
 import com.balancedbytes.games.ffb.PlayerState;
 import com.balancedbytes.games.ffb.ReRolledActions;
 import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.RulesCollection.Rules;
+import com.balancedbytes.games.ffb.mechanics.Mechanic;
+import com.balancedbytes.games.ffb.mechanics.PassMechanic;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
@@ -26,7 +29,6 @@ import com.balancedbytes.games.ffb.server.util.UtilServerReRoll;
 import com.balancedbytes.games.ffb.skill.Animosity;
 import com.balancedbytes.games.ffb.util.StringTool;
 import com.balancedbytes.games.ffb.util.UtilCards;
-import com.balancedbytes.games.ffb.util.UtilPassing;
 import com.balancedbytes.games.ffb.util.UtilPlayer;
 
 @RulesCollection(Rules.COMMON)
@@ -116,10 +118,11 @@ public class AniomosityBehaviour extends SkillBehaviour<Animosity> {
 							FieldCoordinate playerCoordinate = game.getFieldModel().getPlayerCoordinate(player);
 							if ((playerState != null) && playerState.hasTacklezones()
 									&& StringTool.isEqual(actingPlayer.getRace(), player.getRace())) {
+								PassMechanic mechanic = (PassMechanic) game.getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.PASS.name());
 								if (((actingPlayer.getPlayerAction() == PlayerAction.HAND_OVER)
 										&& playerCoordinate.isAdjacent(throwerCoordinate))
 										|| ((actingPlayer.getPlayerAction() == PlayerAction.PASS)
-												&& UtilPassing.findPassingDistance(game, throwerCoordinate, playerCoordinate, false) != null)) {
+												&& mechanic.findPassingDistance(game, throwerCoordinate, playerCoordinate, false) != null)) {
 									animosityPassPossible = true;
 									break;
 								}

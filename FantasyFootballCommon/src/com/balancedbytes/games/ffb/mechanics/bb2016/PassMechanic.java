@@ -1,11 +1,15 @@
 package com.balancedbytes.games.ffb.mechanics.bb2016;
 
+import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.PassModifier;
 import com.balancedbytes.games.ffb.PassingDistance;
+import com.balancedbytes.games.ffb.PassingModifiers;
 import com.balancedbytes.games.ffb.ReRolledAction;
 import com.balancedbytes.games.ffb.ReRolledActions;
 import com.balancedbytes.games.ffb.RulesCollection;
+import com.balancedbytes.games.ffb.factory.PassModifierFactory;
 import com.balancedbytes.games.ffb.mechanics.PassResult;
+import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
 
@@ -14,6 +18,26 @@ import java.util.Optional;
 
 @RulesCollection(RulesCollection.Rules.BB2016)
 public class PassMechanic extends com.balancedbytes.games.ffb.mechanics.PassMechanic {
+
+	@Override
+	protected String[] throwingRangeTable() {
+		return new String[] {
+			"T Q Q Q S S S L L L L B B B",
+			"Q Q Q Q S S S L L L L B B B",
+			"Q Q Q S S S S L L L L B B  ",
+			"Q Q S S S S S L L L B B B  ",
+			"S S S S S S L L L L B B B  ",
+			"S S S S S L L L L B B B    ",
+			"S S S S L L L L L B B B    ",
+			"L L L L L L L L B B B      ",
+			"L L L L L L L B B B B      ",
+			"L L L L L B B B B B        ",
+			"L L L B B B B B B          ",
+			"B B B B B B B              ",
+			"B B B B B                  ",
+			"B B                        " };
+
+	}
 
 	@Override
 	public Optional<Integer> minimumRoll(Player<?> pThrower, PassingDistance pPassingDistance,
@@ -75,5 +99,23 @@ public class PassMechanic extends com.balancedbytes.games.ffb.mechanics.PassMech
 	@Override
 	public String formatReportRoll(int roll, Player<?> thrower) {
 		return "Pass Roll [ " + roll + " ]";
+	}
+
+	@Override
+	public PassingDistance findPassingDistance(Game pGame, FieldCoordinate pFromCoordinate,
+	                                           FieldCoordinate pToCoordinate, boolean pThrowTeamMate) {
+		PassingDistance passingDistance = null;
+		if ((pFromCoordinate != null) && (pToCoordinate != null)) {
+			int deltaY = Math.abs(pToCoordinate.getY() - pFromCoordinate.getY());
+			int deltaX = Math.abs(pToCoordinate.getX() - pFromCoordinate.getX());
+			if ((deltaY < 14) && (deltaX < 14)) {
+				passingDistance = PASSING_DISTANCES_TABLE[deltaY][deltaX];
+			}
+			if ((pThrowTeamMate || new PassModifierFactory().activeModifiers(pGame, PassModifier.class).contains(PassingModifiers.BLIZZARD))
+				&& ((passingDistance == PassingDistance.LONG_BOMB) || (passingDistance == PassingDistance.LONG_PASS))) {
+				passingDistance = null;
+			}
+		}
+		return passingDistance;
 	}
 }

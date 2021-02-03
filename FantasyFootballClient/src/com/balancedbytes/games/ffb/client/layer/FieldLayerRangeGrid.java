@@ -1,14 +1,16 @@
 package com.balancedbytes.games.ffb.client.layer;
 
-import java.awt.Color;
-import java.awt.Graphics2D;
-import java.awt.Rectangle;
-
+import com.balancedbytes.games.ffb.FactoryType;
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.FieldCoordinateBounds;
 import com.balancedbytes.games.ffb.PassingDistance;
 import com.balancedbytes.games.ffb.client.FantasyFootballClient;
-import com.balancedbytes.games.ffb.util.UtilPassing;
+import com.balancedbytes.games.ffb.mechanics.Mechanic;
+import com.balancedbytes.games.ffb.mechanics.PassMechanic;
+
+import java.awt.Color;
+import java.awt.Graphics2D;
+import java.awt.Rectangle;
 
 /**
  * 
@@ -24,12 +26,13 @@ public class FieldLayerRangeGrid extends FieldLayer {
 
 	public boolean drawRangeGrid(FieldCoordinate pCenterCoordinate, boolean pThrowTeamMate) {
 		if ((pCenterCoordinate != null) && !pCenterCoordinate.equals(fCenterCoordinate)) {
+			PassMechanic mechanic = (PassMechanic) getClient().getGame().getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.PASS.name());
 			fCenterCoordinate = pCenterCoordinate;
 			for (int y = 0; y < FieldCoordinate.FIELD_HEIGHT; y++) {
 				for (int x = 0; x < FieldCoordinate.FIELD_WIDTH; x++) {
 					FieldCoordinate coordinate = new FieldCoordinate(x, y);
 					clear(coordinate, false);
-					PassingDistance passingDistance = UtilPassing.findPassingDistance(getClient().getGame(), fCenterCoordinate,
+					PassingDistance passingDistance = mechanic.findPassingDistance(getClient().getGame(), fCenterCoordinate,
 							coordinate, pThrowTeamMate);
 					if (passingDistance != null) {
 						markSquare(coordinate, FieldLayerRangeRuler.getColorForPassingDistance(passingDistance));

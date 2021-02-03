@@ -40,7 +40,6 @@ import com.balancedbytes.games.ffb.server.util.UtilServerGame;
 import com.balancedbytes.games.ffb.server.util.UtilServerReRoll;
 import com.balancedbytes.games.ffb.util.StringTool;
 import com.balancedbytes.games.ffb.util.UtilCards;
-import com.balancedbytes.games.ffb.util.UtilPassing;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
@@ -156,11 +155,11 @@ public class StepPass extends AbstractStepWithReRoll {
 			}
 		}
 		FieldCoordinate throwerCoordinate = game.getFieldModel().getPlayerCoordinate(game.getThrower());
-		PassingDistance passingDistance = UtilPassing.findPassingDistance(game, throwerCoordinate, game.getPassCoordinate(),
+		PassMechanic mechanic = (PassMechanic) game.getRules().getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.PASS.name());
+		PassingDistance passingDistance = mechanic.findPassingDistance(game, throwerCoordinate, game.getPassCoordinate(),
 			false);
 		Set<PassModifier> passModifiers = new PassModifierFactory().findPassModifiers(game, game.getThrower(),
 			passingDistance, false);
-		PassMechanic mechanic = (PassMechanic) game.getRules().getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.PASS.name());
 		Optional<Integer> minimumRollO = mechanic.minimumRoll(game.getThrower(), passingDistance, passModifiers);
 		int minimumRoll = minimumRollO.orElse(0);
 		int roll = minimumRollO.isPresent() ? getGameState().getDiceRoller().rollSkill() : 0;
