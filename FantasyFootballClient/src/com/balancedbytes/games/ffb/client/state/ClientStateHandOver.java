@@ -96,7 +96,7 @@ public class ClientStateHandOver extends ClientStateMove {
 			return (throwerCoordinate.isAdjacent(catcherCoordinate) && (catcherState != null)
 					&& (!actingPlayer.isSufferingAnimosity() || actingPlayer.getRace().equals(pCatcher.getRace()))
 					&& (catcherState.hasTacklezones() && !pCatcher.hasSkillWithProperty(NamedProperties.preventCatch)
-							&& (game.getTeamHome() == pCatcher.getTeam())));
+							&& (game.getTeamHome() == pCatcher.getTeam() || actingPlayer.getPlayerAction() == PlayerAction.HAND_OVER)));
 		}
 		return false;
 	}
@@ -104,8 +104,7 @@ public class ClientStateHandOver extends ClientStateMove {
 	private boolean handOver(Player<?> pCatcher) {
 		Game game = getClient().getGame();
 		ActingPlayer actingPlayer = game.getActingPlayer();
-		if (UtilPlayer.hasBall(game, actingPlayer.getPlayer())
-				&& ((actingPlayer.getPlayerAction() == PlayerAction.HAND_OVER) || canPlayerGetHandOver(pCatcher))) {
+		if (UtilPlayer.hasBall(game, actingPlayer.getPlayer()) && canPlayerGetHandOver(pCatcher)) {
 			getClient().getCommunication().sendHandOver(actingPlayer.getPlayerId(), pCatcher);
 			return true;
 		}
@@ -154,7 +153,7 @@ public class ClientStateHandOver extends ClientStateMove {
 		endMoveAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_END_MOVE, 0));
 		menuItemList.add(endMoveAction);
 
-		createPopupMenu(menuItemList.toArray(new JMenuItem[menuItemList.size()]));
+		createPopupMenu(menuItemList.toArray(new JMenuItem[0]));
 		showPopupMenuForPlayer(actingPlayer.getPlayer());
 
 	}
