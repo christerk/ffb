@@ -1,10 +1,12 @@
 package com.balancedbytes.games.ffb.client.dialog;
 
 import com.balancedbytes.games.ffb.ClientMode;
+import com.balancedbytes.games.ffb.FactoryType;
 import com.balancedbytes.games.ffb.StatusType;
 import com.balancedbytes.games.ffb.client.FantasyFootballClient;
 import com.balancedbytes.games.ffb.dialog.DialogId;
 import com.balancedbytes.games.ffb.dialog.DialogReRollParameter;
+import com.balancedbytes.games.ffb.factory.SkillFactory;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
 
@@ -34,7 +36,7 @@ public class DialogReRollHandler extends DialogHandler {
 			} else {
 				StringBuilder message = new StringBuilder();
 				String reRolledActionName = (dialogReRollParameter.getReRolledAction() != null)
-						? dialogReRollParameter.getReRolledAction().getName()
+						? dialogReRollParameter.getReRolledAction().getName(game.getRules().<SkillFactory>getFactory(FactoryType.Factory.SKILL))
 						: null;
 				message.append("Waiting to re-roll ").append(reRolledActionName);
 				if (dialogReRollParameter.getMinimumRoll() > 0) {
