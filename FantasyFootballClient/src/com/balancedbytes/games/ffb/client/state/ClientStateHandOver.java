@@ -87,7 +87,7 @@ public class ClientStateHandOver extends ClientStateMove {
 			PlayerState catcherState = fieldModel.getPlayerState(pCatcher);
 			return (throwerCoordinate.isAdjacent(catcherCoordinate) && (catcherState != null)
 				&& (!actingPlayer.isSufferingAnimosity() || actingPlayer.getRace().equals(pCatcher.getRace()))
-				&& (catcherState.hasTacklezones() && !pCatcher.hasSkillWithProperty(NamedProperties.preventCatch)
+				&& (catcherState.hasTacklezones()
 				&& (game.getTeamHome() == pCatcher.getTeam() || actingPlayer.getPlayerAction() == PlayerAction.HAND_OVER)));
 		}
 		return false;

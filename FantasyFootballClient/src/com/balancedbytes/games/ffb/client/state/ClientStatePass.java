@@ -14,7 +14,6 @@ import com.balancedbytes.games.ffb.PassingModifiers;
 import com.balancedbytes.games.ffb.PlayerAction;
 import com.balancedbytes.games.ffb.PlayerState;
 import com.balancedbytes.games.ffb.RangeRuler;
-import com.balancedbytes.games.ffb.Weather;
 import com.balancedbytes.games.ffb.client.ActionKey;
 import com.balancedbytes.games.ffb.client.FantasyFootballClient;
 import com.balancedbytes.games.ffb.client.FieldComponent;
@@ -40,7 +39,7 @@ import com.balancedbytes.games.ffb.util.UtilRangeRuler;
 public class ClientStatePass extends ClientStateMove {
 
 	private boolean fShowRangeRuler;
-	private RangeGridHandler fRangeGridHandler;
+	private final RangeGridHandler fRangeGridHandler;
 
 	protected ClientStatePass(FantasyFootballClient pClient) {
 		super(pClient);
@@ -142,7 +141,7 @@ public class ClientStatePass extends ClientStateMove {
 		return selectable;
 	}
 
-	private boolean drawRangeRuler(FieldCoordinate pCoordinate) {
+	private void drawRangeRuler(FieldCoordinate pCoordinate) {
 		RangeRuler rangeRuler = null;
 		Game game = getClient().getGame();
 		if (fShowRangeRuler && (game.getPassCoordinate() == null)) {
@@ -159,7 +158,6 @@ public class ClientStatePass extends ClientStateMove {
 			fieldComponent.getLayerUnderPlayers().clearMovePath();
 			fieldComponent.refresh();
 		}
-		return (rangeRuler != null);
 	}
 
 	public boolean canPlayerGetPass(Player<?> pCatcher) {
@@ -168,7 +166,7 @@ public class ClientStatePass extends ClientStateMove {
 		ActingPlayer actingPlayer = game.getActingPlayer();
 		if ((pCatcher != null) && (actingPlayer.getPlayer() != null)) {
 			PlayerState catcherState = game.getFieldModel().getPlayerState(pCatcher);
-			canGetPass = (!pCatcher.hasSkillWithProperty(NamedProperties.preventCatch) && (catcherState != null)
+			canGetPass = ((catcherState != null)
 					&& catcherState.hasTacklezones() && (game.getTeamHome() == pCatcher.getTeam())
 					&& (!actingPlayer.isSufferingAnimosity() || actingPlayer.getRace().equals(pCatcher.getRace())));
 		}
