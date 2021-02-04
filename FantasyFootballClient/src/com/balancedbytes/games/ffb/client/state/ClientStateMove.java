@@ -165,9 +165,12 @@ public class ClientStateMove extends ClientState {
 				}
 				break;
 			case IPlayerPopupMenuKeys.KEY_HAND_OVER:
-				if (PlayerAction.HAND_OVER_MOVE == actingPlayer.getPlayerAction()
-						&& UtilPlayer.hasBall(game, actingPlayer.getPlayer())) {
-					communication.sendActingPlayer(pPlayer, PlayerAction.HAND_OVER, actingPlayer.isLeaping());
+				if (UtilPlayer.hasBall(game, actingPlayer.getPlayer())) {
+					if (PlayerAction.HAND_OVER_MOVE == actingPlayer.getPlayerAction()) {
+						communication.sendActingPlayer(pPlayer, PlayerAction.HAND_OVER, actingPlayer.isLeaping());
+					} else if (PlayerAction.HAND_OVER == actingPlayer.getPlayerAction()) {
+						communication.sendActingPlayer(pPlayer, PlayerAction.HAND_OVER_MOVE, actingPlayer.isLeaping());
+					}
 				}
 				break;
 			case IPlayerPopupMenuKeys.KEY_PASS:

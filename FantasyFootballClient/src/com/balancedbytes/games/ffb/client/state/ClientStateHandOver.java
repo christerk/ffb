@@ -1,12 +1,5 @@
 package com.balancedbytes.games.ffb.client.state;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.swing.ImageIcon;
-import javax.swing.JMenuItem;
-import javax.swing.KeyStroke;
-
 import com.balancedbytes.games.ffb.ClientStateId;
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.PlayerAction;
@@ -26,8 +19,13 @@ import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
 import com.balancedbytes.games.ffb.util.UtilCards;
 import com.balancedbytes.games.ffb.util.UtilPlayer;
 
+import javax.swing.ImageIcon;
+import javax.swing.JMenuItem;
+import javax.swing.KeyStroke;
+import java.util.ArrayList;
+import java.util.List;
+
 /**
- *
  * @author Kalimar
  */
 public class ClientStateHandOver extends ClientStateMove {
@@ -51,26 +49,20 @@ public class ClientStateHandOver extends ClientStateMove {
 	}
 
 	public boolean actionKeyPressed(ActionKey pActionKey) {
-		boolean actionHandled = false;
 		Game game = getClient().getGame();
 		ActingPlayer actingPlayer = game.getActingPlayer();
 		FieldCoordinate playerPosition = game.getFieldModel().getPlayerCoordinate(actingPlayer.getPlayer());
 		FieldCoordinate catcherPosition = UtilClientActionKeys.findMoveCoordinate(getClient(), playerPosition, pActionKey);
 		Player<?> catcher = game.getFieldModel().getPlayer(catcherPosition);
 		if (catcher != null) {
-			actionHandled = handOver(catcher);
+			return handOver(catcher);
 		} else {
-			actionHandled = super.actionKeyPressed(pActionKey);
+			return super.actionKeyPressed(pActionKey);
 		}
-		return actionHandled;
 	}
 
 	protected boolean mouseOverPlayer(Player<?> pPlayer) {
 		super.mouseOverPlayer(pPlayer);
-		// Game game = getClient().getGame();
-		// ActingPlayer actingPlayer = game.getActingPlayer();
-		// if (canPlayerGetHandOver(pPlayer) || (actingPlayer.getPlayerAction() ==
-		// PlayerAction.HAND_OVER)) {
 		if (canPlayerGetHandOver(pPlayer)) {
 			UtilClientCursor.setCustomCursor(getClient().getUserInterface(), IIconProperty.CURSOR_PASS);
 		} else {
@@ -94,9 +86,9 @@ public class ClientStateHandOver extends ClientStateMove {
 			FieldCoordinate catcherCoordinate = fieldModel.getPlayerCoordinate(pCatcher);
 			PlayerState catcherState = fieldModel.getPlayerState(pCatcher);
 			return (throwerCoordinate.isAdjacent(catcherCoordinate) && (catcherState != null)
-					&& (!actingPlayer.isSufferingAnimosity() || actingPlayer.getRace().equals(pCatcher.getRace()))
-					&& (catcherState.hasTacklezones() && !pCatcher.hasSkillWithProperty(NamedProperties.preventCatch)
-							&& (game.getTeamHome() == pCatcher.getTeam() || actingPlayer.getPlayerAction() == PlayerAction.HAND_OVER)));
+				&& (!actingPlayer.isSufferingAnimosity() || actingPlayer.getRace().equals(pCatcher.getRace()))
+				&& (catcherState.hasTacklezones() && !pCatcher.hasSkillWithProperty(NamedProperties.preventCatch)
+				&& (game.getTeamHome() == pCatcher.getTeam() || actingPlayer.getPlayerAction() == PlayerAction.HAND_OVER)));
 		}
 		return false;
 	}
@@ -120,26 +112,33 @@ public class ClientStateHandOver extends ClientStateMove {
 		List<JMenuItem> menuItemList = new ArrayList<>();
 		ActingPlayer actingPlayer = game.getActingPlayer();
 
-		if ((PlayerAction.HAND_OVER_MOVE == actingPlayer.getPlayerAction())
-				&& UtilPlayer.hasBall(game, actingPlayer.getPlayer())) {
-			JMenuItem passAction = new JMenuItem("Hand Over Ball (any player)",
+		if (UtilPlayer.hasBall(game, actingPlayer.getPlayer())) {
+			if ((PlayerAction.HAND_OVER_MOVE == actingPlayer.getPlayerAction())) {
+				JMenuItem handOverAction = new JMenuItem("Hand Over Ball (any player)",
 					new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_HAND_OVER)));
-			passAction.setMnemonic(IPlayerPopupMenuKeys.KEY_HAND_OVER);
-			passAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_HAND_OVER, 0));
-			menuItemList.add(passAction);
+				handOverAction.setMnemonic(IPlayerPopupMenuKeys.KEY_HAND_OVER);
+				handOverAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_HAND_OVER, 0));
+				menuItemList.add(handOverAction);
+			} else if (PlayerAction.HAND_OVER == actingPlayer.getPlayerAction()) {
+				JMenuItem handOverAction = new JMenuItem("Regular Hand Over / Move",
+					new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_HAND_OVER)));
+				handOverAction.setMnemonic(IPlayerPopupMenuKeys.KEY_HAND_OVER);
+				handOverAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_HAND_OVER, 0));
+				menuItemList.add(handOverAction);
+			}
 		}
 
 		if (UtilCards.hasUnusedSkillWithProperty(actingPlayer, NamedProperties.canLeap)
-				&& UtilPlayer.isNextMovePossible(game, true)) {
+			&& UtilPlayer.isNextMovePossible(game, true)) {
 			if (actingPlayer.isLeaping()) {
 				JMenuItem leapAction = new JMenuItem("Don't Leap",
-						new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_MOVE)));
+					new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_MOVE)));
 				leapAction.setMnemonic(IPlayerPopupMenuKeys.KEY_LEAP);
 				leapAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_LEAP, 0));
 				menuItemList.add(leapAction);
 			} else {
 				JMenuItem leapAction = new JMenuItem("Leap",
-						new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_LEAP)));
+					new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_LEAP)));
 				leapAction.setMnemonic(IPlayerPopupMenuKeys.KEY_LEAP);
 				leapAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_LEAP, 0));
 				menuItemList.add(leapAction);
@@ -148,7 +147,7 @@ public class ClientStateHandOver extends ClientStateMove {
 
 		String endMoveActionLabel = actingPlayer.hasActed() ? "End Move" : "Deselect Player";
 		JMenuItem endMoveAction = new JMenuItem(endMoveActionLabel,
-				new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_END_MOVE)));
+			new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_END_MOVE)));
 		endMoveAction.setMnemonic(IPlayerPopupMenuKeys.KEY_END_MOVE);
 		endMoveAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_END_MOVE, 0));
 		menuItemList.add(endMoveAction);
