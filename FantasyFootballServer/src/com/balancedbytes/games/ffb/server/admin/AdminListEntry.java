@@ -33,6 +33,7 @@ public class AdminListEntry implements IXmlSerializable {
 	private static final String _XML_ATTRIBUTE_TURN = "turn";
 	private static final String _XML_ATTRIBUTE_STATUS = "status";
 	private static final String _XML_ATTRIBUTE_SWAPPED_OUT = "swappedOut";
+	private static final String _XML_ATTRIBUTE_TESTMODE = "testMode";
 
 	private static final String _XML_TAG_TEAM = "team";
 	private static final String _XML_ATTRIBUTE_HOME = "home";
@@ -56,6 +57,7 @@ public class AdminListEntry implements IXmlSerializable {
 	private String fTeamAwayName;
 	private String fTeamAwayCoach;
 	private boolean fSwappedOut;
+	private boolean testMode;
 
 	public AdminListEntry() {
 		super();
@@ -173,6 +175,14 @@ public class AdminListEntry implements IXmlSerializable {
 		return fSwappedOut;
 	}
 
+	public void setTestMode(boolean testMode) {
+		this.testMode = testMode;
+	}
+	
+	public boolean isTestMode() {
+		return this.testMode;
+	}
+	
 	// XML serialization
 
 	public void addToXml(TransformerHandler pHandler) {
@@ -189,6 +199,7 @@ public class AdminListEntry implements IXmlSerializable {
 		UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_TURN, getTurn());
 		UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_STATUS, (getStatus() != null) ? getStatus().getName() : null);
 		UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_SWAPPED_OUT, isSwappedOut());
+		UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_TESTMODE, isTestMode());
 		UtilXml.startElement(pHandler, XML_TAG, attributes);
 
 		attributes = new AttributesImpl();
