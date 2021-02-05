@@ -21,7 +21,7 @@ import com.balancedbytes.games.ffb.server.step.phase.inducement.StepRiotousRooki
  */
 public class SequenceGenerator {
 
-	private static SequenceGenerator _INSTANCE = new SequenceGenerator();
+	private static final SequenceGenerator _INSTANCE = new SequenceGenerator();
 
 	/**
 	 * @return the only instance of this class.
@@ -582,18 +582,16 @@ public class SequenceGenerator {
 	}
 
 	private class Sequence {
-		private GameState gameState;
-		private List<IStep> sequence;
+		private final GameState gameState;
+		private final List<IStep> sequence;
 
 		public Sequence(GameState gameState) {
 			this.sequence = new ArrayList<>();
 			this.gameState = gameState;
 		}
 
-		public void insertHooks(HookPoint passIntercept, StepParameter... params) {
-			gameState.getStepFactory().getSteps(HookPoint.PASS_INTERCEPT).forEach(step -> {
-				add(step, params);
-			});
+		public void insertHooks(HookPoint hookPoint, StepParameter... params) {
+			gameState.getStepFactory().getSteps(hookPoint).forEach(step -> add(step, params));
 		}
 
 		public void add(StepId step, StepParameter... params) {

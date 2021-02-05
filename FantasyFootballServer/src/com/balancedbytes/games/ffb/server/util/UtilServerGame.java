@@ -72,7 +72,7 @@ public class UtilServerGame {
 		PlayerAction oldPlayerAction = game.getActingPlayer().getPlayerAction();
 		if (UtilActingPlayer.changeActingPlayer(game, pActingPlayerId, pPlayerAction, pLeaping) && (pPlayerAction != null)
 				&& ((oldPlayerAction == null) || (pPlayerAction.getType() != oldPlayerAction.getType()))) {
-			if ((oldPlayerAction == null) && (pPlayerAction != null)) {
+			if (oldPlayerAction == null) {
 				pStep.getResult().setSound(SoundId.CLICK);
 			}
 			pStep.getResult().addReport(new ReportPlayerAction(pActingPlayerId, pPlayerAction));
