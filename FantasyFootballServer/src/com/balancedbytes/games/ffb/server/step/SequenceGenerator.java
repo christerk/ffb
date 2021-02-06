@@ -540,24 +540,6 @@ public class SequenceGenerator {
 		pGameState.getStepStack().push(sequence.getSequence());
 	}
 
-	public void pushSpecialEffectSequence(GameState pGameState, SpecialEffect pSpecialEffect, String pPlayerId,
-	                                      boolean pRollForEffect) {
-
-		pGameState.getServer().getDebugLog().log(IServerLogLevel.DEBUG, pGameState.getId(),
-			"push specialEffectSequence onto stack (player " + pPlayerId + ")");
-
-		Sequence sequence = new Sequence(pGameState);
-
-		sequence.add(StepId.SPECIAL_EFFECT, from(StepParameterKey.SPECIAL_EFFECT, pSpecialEffect),
-			from(StepParameterKey.PLAYER_ID, pPlayerId), from(StepParameterKey.ROLL_FOR_EFFECT, pRollForEffect),
-			from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.END_SPECIAL_EFFECT));
-		sequence.add(StepId.APOTHECARY, from(StepParameterKey.APOTHECARY_MODE, ApothecaryMode.SPECIAL_EFFECT));
-		sequence.add(StepId.NEXT_STEP, IStepLabel.END_SPECIAL_EFFECT);
-
-		pGameState.getStepStack().push(sequence.getSequence());
-
-	}
-
 	public void pushEndTurnSequence(GameState pGameState) {
 
 		pGameState.getServer().getDebugLog().log(IServerLogLevel.DEBUG, pGameState.getId(),
@@ -571,15 +553,4 @@ public class SequenceGenerator {
 		pGameState.getStepStack().push(sequence.getSequence());
 
 	}
-
-	public void pushSpikedBallApoSequence(GameState gameState) {
-		gameState.getServer().getDebugLog().log(IServerLogLevel.DEBUG, gameState.getId(),
-			"push spikedBallApoSequence onto stack");
-
-		Sequence sequence = new Sequence(gameState);
-		sequence.add(StepId.APOTHECARY, from(StepParameterKey.APOTHECARY_MODE, ApothecaryMode.CATCHER));
-		gameState.getStepStack().push(sequence.getSequence());
-	}
-
-
 }
