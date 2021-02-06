@@ -31,6 +31,10 @@ public final class StepParameter {
 		fConsumed = true;
 	}
 
+	public static StepParameter from(StepParameterKey pKey, Object pValue) {
+		return new StepParameter(pKey, pValue);
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;

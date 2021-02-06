@@ -6,11 +6,11 @@ import java.lang.annotation.RetentionPolicy;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface FactoryType {
 
-	public enum FactoryContext {
+	enum FactoryContext {
 		APPLICATION, GAME
 	}
 
-	public enum Factory {
+	enum Factory {
 		NET_COMMAND_ID(FactoryContext.APPLICATION),
 		CLIENT_MODE(FactoryContext.APPLICATION),
 		GAME_OPTION_ID(FactoryContext.APPLICATION),
@@ -22,16 +22,16 @@ public @interface FactoryType {
 		INJURY_TYPE, INTERCEPTION_MODIFIER, KICKOFF_RESULT, LEADER_STATE, LEAP_MODIFIER, MECHANIC,
 		MODEL_CHANGE_DATA_TYPE, MODEL_CHANGE_ID, PASSING_DISTANCE, PASS_MODIFIER, PASS_RESULT, PICKUP_MODIFIER,
 		PLAYER_ACTION, PLAYER_CHOICE_MODE, PLAYER_GENDER, PLAYER_TYPE, PUSHBACK_MODE,
-		REPORT_ID, RE_ROLLED_ACTION, RE_ROLL_SOURCE, RIGHT_STUFF_MODIFIER, SEND_TO_BOX_REASON, SERIOUS_INJURY, SERVER_STATUS,
-		SKILL, SKILL_CATEGORY, SKILL_USE, SOUND_ID, SPECIAL_EFFECT, STEP_ACTION, STEP_ID,
+		REPORT_ID, RE_ROLLED_ACTION, RE_ROLL_SOURCE, RIGHT_STUFF_MODIFIER, SEND_TO_BOX_REASON, SEQUENCE_GENERATOR,
+		SERIOUS_INJURY, SERVER_STATUS, SKILL, SKILL_CATEGORY, SKILL_USE, SOUND_ID, SPECIAL_EFFECT, STEP_ACTION, STEP_ID,
 		TEAM_STATUS, TURN_MODE, WEATHER;
 
 		public FactoryContext context;
 
-		private Factory() {
+		Factory() {
 			this(FactoryContext.GAME);
 		}
-		private Factory(FactoryContext context) {
+		Factory(FactoryContext context) {
 			this.context = context;
 		}
 	}
