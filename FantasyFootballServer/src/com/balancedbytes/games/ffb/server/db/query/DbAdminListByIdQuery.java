@@ -36,14 +36,22 @@ public class DbAdminListByIdQuery extends DbStatement {
 	public void prepare(Connection pConnection) {
 		try {
 			StringBuilder sql = new StringBuilder();
-			sql.append("SELECT ").append(IDbTableGamesInfo.COLUMN_ID).append(",").append(IDbTableGamesInfo.COLUMN_STARTED)
-					.append(",").append(IDbTableGamesInfo.COLUMN_FINISHED).append(",")
-					.append(IDbTableGamesInfo.COLUMN_LAST_UPDATED).append(",").append(IDbTableGamesInfo.COLUMN_COACH_HOME)
-					.append(",").append(IDbTableGamesInfo.COLUMN_TEAM_HOME_ID).append(",")
-					.append(IDbTableGamesInfo.COLUMN_TEAM_HOME_NAME).append(",").append(IDbTableGamesInfo.COLUMN_COACH_AWAY)
-					.append(",").append(IDbTableGamesInfo.COLUMN_TEAM_AWAY_ID).append(",")
-					.append(IDbTableGamesInfo.COLUMN_TEAM_AWAY_NAME).append(",").append(IDbTableGamesInfo.COLUMN_HALF).append(",")
-					.append(IDbTableGamesInfo.COLUMN_TURN).append(",").append(IDbTableGamesInfo.COLUMN_STATUS).append(" FROM ")
+			sql.append("SELECT ")
+					.append(IDbTableGamesInfo.COLUMN_ID)
+					.append(",").append(IDbTableGamesInfo.COLUMN_STARTED)
+					.append(",").append(IDbTableGamesInfo.COLUMN_FINISHED)
+					.append(",").append(IDbTableGamesInfo.COLUMN_LAST_UPDATED)
+					.append(",").append(IDbTableGamesInfo.COLUMN_COACH_HOME)
+					.append(",").append(IDbTableGamesInfo.COLUMN_TEAM_HOME_ID)
+					.append(",").append(IDbTableGamesInfo.COLUMN_TEAM_HOME_NAME)
+					.append(",").append(IDbTableGamesInfo.COLUMN_COACH_AWAY)
+					.append(",").append(IDbTableGamesInfo.COLUMN_TEAM_AWAY_ID)
+					.append(",").append(IDbTableGamesInfo.COLUMN_TEAM_AWAY_NAME)
+					.append(",").append(IDbTableGamesInfo.COLUMN_HALF)
+					.append(",").append(IDbTableGamesInfo.COLUMN_TURN)
+					.append(",").append(IDbTableGamesInfo.COLUMN_STATUS)
+					.append(",").append(IDbTableGamesInfo.COLUMN_TESTING)
+					.append(" FROM ")
 					.append(IDbTableGamesInfo.TABLE_NAME).append(" WHERE ").append(IDbTableGamesInfo.COLUMN_ID).append("=?");
 			if (getServer().getMode() == ServerMode.FUMBBL) {
 				sql.append(" AND ").append(IDbTableGamesInfo.COLUMN_TESTING).append("=false");
@@ -86,6 +94,7 @@ public class DbAdminListByIdQuery extends DbStatement {
 					entry.setHalf(resultSet.getInt(col++));
 					entry.setTurn(resultSet.getInt(col++));
 					entry.setStatus(new GameStatusFactory().forTypeString(resultSet.getString(col++)));
+					entry.setTestMode(resultSet.getBoolean(col++));
 					pAdminList.add(entry);
 				}
 			}
