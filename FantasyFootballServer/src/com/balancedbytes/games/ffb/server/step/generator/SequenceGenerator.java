@@ -19,7 +19,7 @@ public abstract class SequenceGenerator<T extends SequenceGenerator.SequencePara
 	public abstract void pushSequence(T params);
 
 	public enum Type {
-		SpecialEffect, SpikedBallApo;
+		Bomb, Card, EndPlayerAction, EndTurn, Inducement, Move, RiotousRookies, SpecialEffect, SpikedBallApo, Wizard
 	}
 
 	public static class SequenceParams {

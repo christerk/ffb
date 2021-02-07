@@ -36,9 +36,9 @@ public class SpecialEffect extends SequenceGenerator<SpecialEffect.SequenceParam
 		}
 
 	public static class SequenceParams extends SequenceGenerator.SequenceParams {
-		private com.balancedbytes.games.ffb.SpecialEffect specialEffect;
-		private String playerId;
-		private boolean rollForEffect;
+		private final com.balancedbytes.games.ffb.SpecialEffect specialEffect;
+		private final String playerId;
+		private final boolean rollForEffect;
 
 		public SequenceParams(GameState gameState, com.balancedbytes.games.ffb.SpecialEffect specialEffect, String playerId, boolean rollForEffect) {
 			super(gameState);
