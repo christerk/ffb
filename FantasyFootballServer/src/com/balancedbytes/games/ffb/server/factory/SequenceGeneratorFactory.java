@@ -4,33 +4,33 @@ import com.balancedbytes.games.ffb.FactoryType;
 import com.balancedbytes.games.ffb.FantasyFootballException;
 import com.balancedbytes.games.ffb.factory.INamedObjectFactory;
 import com.balancedbytes.games.ffb.model.Game;
-import com.balancedbytes.games.ffb.server.step.SequenceGenerator;
+import com.balancedbytes.games.ffb.server.step.generator.SequenceGenerator;
 import com.balancedbytes.games.ffb.util.Scanner;
 
-import java.util.Optional;
+import java.util.HashMap;
+import java.util.Map;
 
 @FactoryType(FactoryType.Factory.SEQUENCE_GENERATOR)
-public class SequenceGeneratorFactory implements INamedObjectFactory<SequenceGenerator> {
+public class SequenceGeneratorFactory implements INamedObjectFactory<SequenceGenerator<? extends SequenceGenerator.SequenceParams>> {
 
-	private SequenceGenerator generator;
+	private final Map<String, SequenceGenerator<? extends SequenceGenerator.SequenceParams>> generators = new HashMap<>();
 
 	@Override
-	public SequenceGenerator forName(String pName) {
-		return generator;
-	}
-
-	public SequenceGenerator getInstance(){
-		return generator;
+	public SequenceGenerator<? extends SequenceGenerator.SequenceParams> forName(String name) {
+		return generators.get(name);
 	}
 
 	@Override
+	@SuppressWarnings("unchecked")
 	public void initialize(Game game) {
-		Scanner<SequenceGenerator> scanner = new Scanner<>(SequenceGenerator.class);
-		Optional<SequenceGenerator> generator = scanner.getSubclasses(game.getOptions()).stream().findFirst();
-		if (generator.isPresent()) {
-			this.generator = generator.get();
-		} else {
-			throw new FantasyFootballException("Could not find sequence generator for " + game.getOptions().getRulesVersion().name());
-		}
+
+		new Scanner<>(SequenceGenerator.class).getSubclasses(game.getOptions()).forEach(
+			generator -> {
+				if (generators.containsKey(generator.getName())) {
+					throw new FantasyFootballException("Duplicate sequence generator " + generator.getName() + " for " + game.getOptions().getRulesVersion().name());
+				}
+				generators.put(generator.getName(), generator);
+			}
+		);
 	}
 }
