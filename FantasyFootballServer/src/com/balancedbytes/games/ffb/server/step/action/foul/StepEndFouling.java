@@ -1,14 +1,17 @@
 package com.balancedbytes.games.ffb.server.step.action.foul;
 
+import com.balancedbytes.games.ffb.FactoryType;
 import com.balancedbytes.games.ffb.factory.IFactorySource;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.IServerJsonOption;
+import com.balancedbytes.games.ffb.server.factory.SequenceGeneratorFactory;
 import com.balancedbytes.games.ffb.server.step.AbstractStep;
-import com.balancedbytes.games.ffb.server.step.SequenceGenerator;
 import com.balancedbytes.games.ffb.server.step.StepAction;
 import com.balancedbytes.games.ffb.server.step.StepId;
 import com.balancedbytes.games.ffb.server.step.StepParameter;
+import com.balancedbytes.games.ffb.server.step.generator.EndPlayerAction;
+import com.balancedbytes.games.ffb.server.step.generator.SequenceGenerator;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
@@ -59,7 +62,9 @@ public class StepEndFouling extends AbstractStep {
 	}
 
 	private void executeStep() {
-		SequenceGenerator.getInstance().pushEndPlayerActionSequence(getGameState(), true, true, fEndTurn);
+		SequenceGeneratorFactory factory = getGameState().getGame().getFactory(FactoryType.Factory.SEQUENCE_GENERATOR);
+		((EndPlayerAction) factory.forName(SequenceGenerator.Type.EndPlayerAction.name()))
+			.pushSequence(new EndPlayerAction.SequenceParams(getGameState(), true, true, fEndTurn));
 		getResult().setNextAction(StepAction.NEXT_STEP);
 	}
 

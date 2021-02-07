@@ -8,7 +8,7 @@ import com.balancedbytes.games.ffb.server.step.StepId;
 @RulesCollection(RulesCollection.Rules.COMMON)
 public class Wizard extends SequenceGenerator<SequenceGenerator.SequenceParams> {
 
-	protected Wizard() {
+	public Wizard() {
 		super(Type.Wizard);
 	}
 

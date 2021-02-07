@@ -1,9 +1,7 @@
 package com.balancedbytes.games.ffb.server.step.phase.inducement;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import com.balancedbytes.games.ffb.Card;
+import com.balancedbytes.games.ffb.FactoryType;
 import com.balancedbytes.games.ffb.InducementPhase;
 import com.balancedbytes.games.ffb.InducementType;
 import com.balancedbytes.games.ffb.dialog.DialogUseInducementParameter;
@@ -15,9 +13,9 @@ import com.balancedbytes.games.ffb.model.TurnData;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandUseInducement;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.IServerJsonOption;
+import com.balancedbytes.games.ffb.server.factory.SequenceGeneratorFactory;
 import com.balancedbytes.games.ffb.server.net.ReceivedCommand;
 import com.balancedbytes.games.ffb.server.step.AbstractStep;
-import com.balancedbytes.games.ffb.server.step.SequenceGenerator;
 import com.balancedbytes.games.ffb.server.step.StepAction;
 import com.balancedbytes.games.ffb.server.step.StepCommandStatus;
 import com.balancedbytes.games.ffb.server.step.StepException;
@@ -26,10 +24,16 @@ import com.balancedbytes.games.ffb.server.step.StepParameter;
 import com.balancedbytes.games.ffb.server.step.StepParameterKey;
 import com.balancedbytes.games.ffb.server.step.StepParameterSet;
 import com.balancedbytes.games.ffb.server.step.UtilServerSteps;
+import com.balancedbytes.games.ffb.server.step.generator.Card.SequenceParams;
+import com.balancedbytes.games.ffb.server.step.generator.SequenceGenerator;
+import com.balancedbytes.games.ffb.server.step.generator.Wizard;
 import com.balancedbytes.games.ffb.server.util.UtilServerCards;
 import com.balancedbytes.games.ffb.util.ArrayTool;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
+
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Step to init the inducement sequence.
@@ -114,6 +118,7 @@ public final class StepInitInducement extends AbstractStep {
 
 	private void executeStep() {
 		Game game = getGameState().getGame();
+		SequenceGeneratorFactory factory = game.getFactory(FactoryType.Factory.SEQUENCE_GENERATOR);
 		if (fEndInducementPhase) {
 			leaveStep(true);
 		} else if ((fCard == null) && (fInducementType == null)) {
@@ -127,10 +132,12 @@ public final class StepInitInducement extends AbstractStep {
 				leaveStep(true);
 			}
 		} else if (InducementType.WIZARD == fInducementType) {
-			SequenceGenerator.getInstance().pushWizardSequence(getGameState());
+			((Wizard)factory.forName(SequenceGenerator.Type.Wizard.name()))
+				.pushSequence(new SequenceGenerator.SequenceParams(getGameState()));
 			leaveStep(false);
 		} else if (fCard != null) {
-			SequenceGenerator.getInstance().pushCardSequence(getGameState(), fCard, fHomeTeam);
+			((com.balancedbytes.games.ffb.server.step.generator.Card)factory.forName(SequenceGenerator.Type.Card.name()))
+				.pushSequence(new SequenceParams(getGameState(), fCard, fHomeTeam));
 			leaveStep(false);
 		} else {
 			leaveStep(true);

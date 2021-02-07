@@ -1,16 +1,21 @@
 package com.balancedbytes.games.ffb.server.step.phase.inducement;
 
+import com.balancedbytes.games.ffb.FactoryType;
 import com.balancedbytes.games.ffb.InducementPhase;
 import com.balancedbytes.games.ffb.factory.IFactorySource;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.IServerJsonOption;
+import com.balancedbytes.games.ffb.server.factory.SequenceGeneratorFactory;
 import com.balancedbytes.games.ffb.server.step.AbstractStep;
-import com.balancedbytes.games.ffb.server.step.SequenceGenerator;
 import com.balancedbytes.games.ffb.server.step.StepAction;
 import com.balancedbytes.games.ffb.server.step.StepId;
 import com.balancedbytes.games.ffb.server.step.StepParameter;
 import com.balancedbytes.games.ffb.server.step.UtilServerSteps;
+import com.balancedbytes.games.ffb.server.step.generator.EndTurn;
+import com.balancedbytes.games.ffb.server.step.generator.Inducement;
+import com.balancedbytes.games.ffb.server.step.generator.Select;
+import com.balancedbytes.games.ffb.server.step.generator.SequenceGenerator;
 import com.balancedbytes.games.ffb.server.util.UtilServerDialog;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
@@ -79,21 +84,24 @@ public final class StepEndInducement extends AbstractStep {
 			return;
 		}
 		fEndTurn |= UtilServerSteps.checkTouchdown(getGameState());
+		SequenceGeneratorFactory factory = getGameState().getGame().getFactory(FactoryType.Factory.SEQUENCE_GENERATOR);
+		EndTurn endTurnGenerator = ((EndTurn)factory.forName(SequenceGenerator.Type.EndTurn.name()));
+		SequenceGenerator.SequenceParams endTurnParams = new SequenceGenerator.SequenceParams(getGameState());
 		if (fEndTurn) {
-			SequenceGenerator.getInstance().pushEndTurnSequence(getGameState());
+			endTurnGenerator.pushSequence(endTurnParams);
 		} else if (fEndInducementPhase) {
 			switch (fInducementPhase) {
 			case END_OF_OWN_TURN:
-				SequenceGenerator.getInstance().pushEndTurnSequence(getGameState());
+				endTurnGenerator.pushSequence(endTurnParams);
 				break;
 			case START_OF_OWN_TURN:
-				SequenceGenerator.getInstance().pushSelectSequence(getGameState(), true);
+				((Select)factory.forName(SequenceGenerator.Type.Select.name())).pushSequence(new Select.SequenceParams(getGameState(), true));
 				break;
 			default:
 				break;
 			}
 		} else {
-			SequenceGenerator.getInstance().pushInducementSequence(getGameState(), fInducementPhase, fHomeTeam);
+			((Inducement)factory.forName(SequenceGenerator.Type.Inducement.name())).pushSequence(new Inducement.SequenceParams(getGameState(), fInducementPhase, fHomeTeam));
 		}
 		getResult().setNextAction(StepAction.NEXT_STEP);
 	}

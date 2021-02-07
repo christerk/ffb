@@ -12,7 +12,7 @@ import static com.balancedbytes.games.ffb.server.step.StepParameter.from;
 @RulesCollection(RulesCollection.Rules.COMMON)
 public class Select extends SequenceGenerator<Select.SequenceParams> {
 
-	protected Select() {
+	public Select() {
 		super(Type.Select);
 	}
 

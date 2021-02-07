@@ -1,8 +1,6 @@
 package com.balancedbytes.games.ffb.server.step.action.pass;
 
-import java.util.HashSet;
-import java.util.Set;
-
+import com.balancedbytes.games.ffb.FactoryType;
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.PathFinderWithPassBlockSupport;
 import com.balancedbytes.games.ffb.PlayerAction;
@@ -19,8 +17,8 @@ import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
 import com.balancedbytes.games.ffb.report.ReportPassBlock;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.IServerJsonOption;
+import com.balancedbytes.games.ffb.server.factory.SequenceGeneratorFactory;
 import com.balancedbytes.games.ffb.server.step.AbstractStep;
-import com.balancedbytes.games.ffb.server.step.SequenceGenerator;
 import com.balancedbytes.games.ffb.server.step.StepAction;
 import com.balancedbytes.games.ffb.server.step.StepException;
 import com.balancedbytes.games.ffb.server.step.StepId;
@@ -28,11 +26,17 @@ import com.balancedbytes.games.ffb.server.step.StepParameter;
 import com.balancedbytes.games.ffb.server.step.StepParameterKey;
 import com.balancedbytes.games.ffb.server.step.StepParameterSet;
 import com.balancedbytes.games.ffb.server.step.UtilServerSteps;
+import com.balancedbytes.games.ffb.server.step.generator.Move;
+import com.balancedbytes.games.ffb.server.step.generator.Select;
+import com.balancedbytes.games.ffb.server.step.generator.SequenceGenerator;
 import com.balancedbytes.games.ffb.util.ArrayTool;
 import com.balancedbytes.games.ffb.util.UtilPassing;
 import com.balancedbytes.games.ffb.util.UtilPlayer;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
+
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Step in pass sequence to handle skill PASS_BLOCK.
@@ -135,11 +139,14 @@ public class StepPassBlock extends AbstractStep {
 		}
 
 		ActingPlayer actingPlayer = game.getActingPlayer();
+		SequenceGeneratorFactory factory = game.getFactory(FactoryType.Factory.SEQUENCE_GENERATOR);
+		Move moveGenerator = (Move) factory.forName(SequenceGenerator.Type.Move.name());
+		Select selectGenerator = (Select) factory.forName(SequenceGenerator.Type.Select.name());
+		Select.SequenceParams selectParams = new Select.SequenceParams(getGameState(), false);
 
 		if (game.getTurnMode() == TurnMode.PASS_BLOCK) {
 
 			Set<FieldCoordinate> validEndCoordinates = UtilPassing.findValidPassBlockEndCoordinates(game);
-
 			// check if actingPlayer has dropped (failed dodge)
 			if (actingPlayer.getPlayer() != null) {
 				PlayerState playerState = game.getFieldModel().getPlayerState(actingPlayer.getPlayer());
@@ -159,12 +166,13 @@ public class StepPassBlock extends AbstractStep {
 					} else {
 						fEndPlayerAction = false;
 						getGameState().pushCurrentStepOnStack();
-						SequenceGenerator.getInstance().pushSelectSequence(getGameState(), false);
+
+						selectGenerator.pushSequence(selectParams);
 					}
 				} else {
 					fEndPlayerAction = false;
 					getGameState().pushCurrentStepOnStack();
-					SequenceGenerator.getInstance().pushMoveSequence(getGameState());
+					moveGenerator.pushSequence(new Move.SequenceParams(getGameState()));
 				}
 			}
 
@@ -173,7 +181,7 @@ public class StepPassBlock extends AbstractStep {
 				if (!validEndCoordinates.contains(playerCoordinate)) {
 					fEndTurn = false;
 					getGameState().pushCurrentStepOnStack();
-					SequenceGenerator.getInstance().pushMoveSequence(getGameState());
+					moveGenerator.pushSequence(new Move.SequenceParams(getGameState()));
 				}
 			}
 
@@ -253,7 +261,7 @@ public class StepPassBlock extends AbstractStep {
 				game.setDialogParameter(new DialogPassBlockParameter());
 
 				getGameState().pushCurrentStepOnStack();
-				SequenceGenerator.getInstance().pushSelectSequence(getGameState(), false);
+				selectGenerator.pushSequence(selectParams);
 
 			}
 

@@ -1,9 +1,7 @@
 package com.balancedbytes.games.ffb.server.step.phase.inducement;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.balancedbytes.games.ffb.BloodSpot;
+import com.balancedbytes.games.ffb.FactoryType;
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.FieldCoordinateBounds;
 import com.balancedbytes.games.ffb.InducementType;
@@ -22,19 +20,24 @@ import com.balancedbytes.games.ffb.net.commands.ClientCommandWizardSpell;
 import com.balancedbytes.games.ffb.report.ReportWizardUse;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.IServerJsonOption;
+import com.balancedbytes.games.ffb.server.factory.SequenceGeneratorFactory;
 import com.balancedbytes.games.ffb.server.net.ReceivedCommand;
 import com.balancedbytes.games.ffb.server.step.AbstractStep;
-import com.balancedbytes.games.ffb.server.step.SequenceGenerator;
 import com.balancedbytes.games.ffb.server.step.StepAction;
 import com.balancedbytes.games.ffb.server.step.StepCommandStatus;
 import com.balancedbytes.games.ffb.server.step.StepId;
 import com.balancedbytes.games.ffb.server.step.StepParameter;
 import com.balancedbytes.games.ffb.server.step.StepParameterSet;
+import com.balancedbytes.games.ffb.server.step.generator.SequenceGenerator;
+import com.balancedbytes.games.ffb.server.step.generator.SpecialEffect.SequenceParams;
 import com.balancedbytes.games.ffb.server.util.UtilServerDialog;
 import com.balancedbytes.games.ffb.server.util.UtilServerGame;
 import com.balancedbytes.games.ffb.server.util.UtilServerInducementUse;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Step in inducement sequence to handle wizard.
@@ -151,10 +154,11 @@ public final class StepWizard extends AbstractStep {
 			PlayerState bloodSpotInjury = new PlayerState(
 					(fWizardSpell == SpecialEffect.FIREBALL) ? PlayerState.HIT_BY_FIREBALL : PlayerState.HIT_BY_LIGHTNING);
 			game.getFieldModel().add(new BloodSpot(fTargetCoordinate, bloodSpotInjury));
-			for (Player<?> affectedPlayer : affectedPlayers) {
-				SequenceGenerator.getInstance().pushSpecialEffectSequence(getGameState(), fWizardSpell, affectedPlayer.getId(),
-						true);
-			}
+			SequenceGeneratorFactory factory = game.getFactory(FactoryType.Factory.SEQUENCE_GENERATOR);
+			com.balancedbytes.games.ffb.server.step.generator.SpecialEffect generator =
+				(com.balancedbytes.games.ffb.server.step.generator.SpecialEffect) factory.forName(SequenceGenerator.Type.SpecialEffect.name());
+			affectedPlayers.stream().map(affectedPlayer -> new SequenceParams(getGameState(), fWizardSpell, affectedPlayer.getId(),
+				true)).forEach(generator::pushSequence);
 			getResult().setNextAction(StepAction.NEXT_STEP);
 		} else {
 			if (game.getTurnMode() != (TurnMode.WIZARD)) {

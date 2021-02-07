@@ -1,12 +1,7 @@
 package com.balancedbytes.games.ffb.server.util;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
-import org.eclipse.jetty.websocket.api.Session;
-
 import com.balancedbytes.games.ffb.ClientMode;
+import com.balancedbytes.games.ffb.FactoryType;
 import com.balancedbytes.games.ffb.GameStatus;
 import com.balancedbytes.games.ffb.factory.GameOptionFactory;
 import com.balancedbytes.games.ffb.model.Game;
@@ -22,10 +17,17 @@ import com.balancedbytes.games.ffb.server.db.DbStatementId;
 import com.balancedbytes.games.ffb.server.db.IDbStatementFactory;
 import com.balancedbytes.games.ffb.server.db.query.DbPlayerMarkersQuery;
 import com.balancedbytes.games.ffb.server.db.query.DbUserSettingsQuery;
+import com.balancedbytes.games.ffb.server.factory.SequenceGeneratorFactory;
 import com.balancedbytes.games.ffb.server.net.SessionManager;
 import com.balancedbytes.games.ffb.server.request.fumbbl.FumbblRequestResumeGamestate;
-import com.balancedbytes.games.ffb.server.step.SequenceGenerator;
+import com.balancedbytes.games.ffb.server.step.generator.SequenceGenerator;
+import com.balancedbytes.games.ffb.server.step.generator.StartGame;
 import com.balancedbytes.games.ffb.util.StringTool;
+import org.eclipse.jetty.websocket.api.Session;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  *
@@ -119,7 +121,9 @@ public class UtilServerStartGame {
 		}
 		if (ownershipOk) {
 			if ((game.getFinished() == null) && (gameState.getStepStack().size() == 0)) {
-				SequenceGenerator.getInstance().pushStartGameSequence(gameState);
+				SequenceGeneratorFactory factory = game.getFactory(FactoryType.Factory.SEQUENCE_GENERATOR);
+				((StartGame)factory.forName(SequenceGenerator.Type.StartGame.name()))
+					.pushSequence(new SequenceGenerator.SequenceParams(gameState));
 			} else {
 				if (server.getMode() == ServerMode.FUMBBL) {
 					server.getRequestProcessor().add(new FumbblRequestResumeGamestate(gameState));

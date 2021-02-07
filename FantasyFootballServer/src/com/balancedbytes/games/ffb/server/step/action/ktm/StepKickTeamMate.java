@@ -1,6 +1,7 @@
 package com.balancedbytes.games.ffb.server.step.action.ktm;
 
 import com.balancedbytes.games.ffb.Direction;
+import com.balancedbytes.games.ffb.FactoryType;
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.PlayerState;
 import com.balancedbytes.games.ffb.ReRolledActions;
@@ -15,9 +16,9 @@ import com.balancedbytes.games.ffb.option.UtilGameOption;
 import com.balancedbytes.games.ffb.report.ReportKickTeamMateRoll;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.IServerJsonOption;
+import com.balancedbytes.games.ffb.server.factory.SequenceGeneratorFactory;
 import com.balancedbytes.games.ffb.server.net.ReceivedCommand;
 import com.balancedbytes.games.ffb.server.step.AbstractStepWithReRoll;
-import com.balancedbytes.games.ffb.server.step.SequenceGenerator;
 import com.balancedbytes.games.ffb.server.step.StepAction;
 import com.balancedbytes.games.ffb.server.step.StepCommandStatus;
 import com.balancedbytes.games.ffb.server.step.StepException;
@@ -25,6 +26,8 @@ import com.balancedbytes.games.ffb.server.step.StepId;
 import com.balancedbytes.games.ffb.server.step.StepParameter;
 import com.balancedbytes.games.ffb.server.step.StepParameterKey;
 import com.balancedbytes.games.ffb.server.step.StepParameterSet;
+import com.balancedbytes.games.ffb.server.step.generator.ScatterPlayer;
+import com.balancedbytes.games.ffb.server.step.generator.SequenceGenerator;
 import com.balancedbytes.games.ffb.server.util.UtilServerDialog;
 import com.balancedbytes.games.ffb.server.util.UtilServerReRoll;
 import com.eclipsesource.json.JsonObject;
@@ -187,8 +190,10 @@ public final class StepKickTeamMate extends AbstractStepWithReRoll {
 			boolean hasSwoop = kickedPlayer != null
 					&& kickedPlayer.hasSkillWithProperty(NamedProperties.ttmScattersInSingleDirection);
 			game.getFieldModel().setPlayerState(game.getDefender(), fKickedPlayerState.changeBase(PlayerState.PICKED_UP));
-			SequenceGenerator.getInstance().pushScatterPlayerSequence(getGameState(), fKickedPlayerId, fKickedPlayerState,
-					fKickedPlayerHasBall, kickerCoordinate, hasSwoop, true);
+			SequenceGeneratorFactory factory = game.getFactory(FactoryType.Factory.SEQUENCE_GENERATOR);
+			((ScatterPlayer) factory.forName(SequenceGenerator.Type.ScatterPlayer.name()))
+				.pushSequence(new ScatterPlayer.SequenceParams(getGameState(), fKickedPlayerId, fKickedPlayerState,
+					fKickedPlayerHasBall, kickerCoordinate, hasSwoop, true));
 			publishParameter(new StepParameter(StepParameterKey.IS_KICKED_PLAYER, true));
 			if (fDistance >= 9) {
 				publishParameter(new StepParameter(StepParameterKey.KTM_MODIFIER, -2));

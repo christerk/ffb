@@ -13,7 +13,7 @@ public abstract class SequenceGenerator<T extends SequenceGenerator.SequencePara
 
 	@Override
 	public String getName() {
-		return "Generator." + type.name();
+		return type.name();
 	};
 
 	public abstract void pushSequence(T params);

@@ -12,7 +12,7 @@ import static com.balancedbytes.games.ffb.server.step.StepParameter.from;
 @RulesCollection(RulesCollection.Rules.COMMON)
 public class EndGame extends SequenceGenerator<EndGame.SequenceParams> {
 
-	protected EndGame() {
+	public EndGame() {
 		super(Type.EndGame);
 	}
 

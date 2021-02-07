@@ -12,7 +12,7 @@ import static com.balancedbytes.games.ffb.server.step.StepParameter.from;
 @RulesCollection(RulesCollection.Rules.COMMON)
 public class Bomb extends SequenceGenerator<Bomb.SequenceParams> {
 
-	protected Bomb() {
+	public Bomb() {
 		super(Type.Bomb);
 	}
 

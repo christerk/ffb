@@ -15,7 +15,7 @@ import static com.balancedbytes.games.ffb.server.step.StepParameter.from;
 @RulesCollection(RulesCollection.Rules.COMMON)
 public class ScatterPlayer extends SequenceGenerator<ScatterPlayer.SequenceParams> {
 
-	protected ScatterPlayer() {
+	public ScatterPlayer() {
 		super(Type.ScatterPlayer);
 	}
 
@@ -54,9 +54,8 @@ public class ScatterPlayer extends SequenceGenerator<ScatterPlayer.SequenceParam
 	public static class SequenceParams extends SequenceGenerator.SequenceParams {
 		private final String thrownPlayerId;
 		private final PlayerState thrownPlayerState;
-		private final boolean thrownPlayerHasBall;
 		private final FieldCoordinate thrownPlayerCoordinate;
-		private final boolean hasSwoop, throwScatter;
+		private final boolean hasSwoop, thrownPlayerHasBall, throwScatter;
 
 		public SequenceParams(GameState gameState, String thrownPlayerId, PlayerState thrownPlayerState, boolean thrownPlayerHasBall, FieldCoordinate thrownPlayerCoordinate, boolean hasSwoop, boolean throwScatter) {
 			super(gameState);

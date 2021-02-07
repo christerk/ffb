@@ -1,5 +1,6 @@
 package com.balancedbytes.games.ffb.server.skillbehaviour;
 
+import com.balancedbytes.games.ffb.FactoryType;
 import com.balancedbytes.games.ffb.PlayerAction;
 import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.RulesCollection.Rules;
@@ -9,13 +10,15 @@ import com.balancedbytes.games.ffb.dialog.DialogSkillUseParameter;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandUseSkill;
 import com.balancedbytes.games.ffb.report.ReportSkillUse;
+import com.balancedbytes.games.ffb.server.factory.SequenceGeneratorFactory;
 import com.balancedbytes.games.ffb.server.model.SkillBehaviour;
 import com.balancedbytes.games.ffb.server.model.StepModifier;
-import com.balancedbytes.games.ffb.server.step.SequenceGenerator;
 import com.balancedbytes.games.ffb.server.step.StepAction;
 import com.balancedbytes.games.ffb.server.step.StepCommandStatus;
 import com.balancedbytes.games.ffb.server.step.action.block.StepDumpOff;
 import com.balancedbytes.games.ffb.server.step.action.block.StepDumpOff.StepState;
+import com.balancedbytes.games.ffb.server.step.generator.Pass;
+import com.balancedbytes.games.ffb.server.step.generator.SequenceGenerator;
 import com.balancedbytes.games.ffb.server.util.UtilServerDialog;
 import com.balancedbytes.games.ffb.skill.DumpOff;
 import com.balancedbytes.games.ffb.util.UtilCards;
@@ -65,7 +68,9 @@ public class DumpOffBehaviour extends SkillBehaviour<DumpOff> {
 					game.setDefenderAction(PlayerAction.DUMP_OFF);
 					UtilServerDialog.showDialog(step.getGameState(), new DialogDefenderActionParameter(), true);
 					step.getGameState().pushCurrentStepOnStack();
-					SequenceGenerator.getInstance().pushPassSequence(step.getGameState());
+					SequenceGeneratorFactory factory = game.getFactory(FactoryType.Factory.SEQUENCE_GENERATOR);
+					((Pass) factory.forName(SequenceGenerator.Type.Pass.name()))
+						.pushSequence(new Pass.SequenceParams(step.getGameState()));
 					step.getResult().setNextAction(StepAction.NEXT_STEP);
 
 				} else {

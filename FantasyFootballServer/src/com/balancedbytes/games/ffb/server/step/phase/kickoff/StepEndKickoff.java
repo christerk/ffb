@@ -1,15 +1,19 @@
 package com.balancedbytes.games.ffb.server.step.phase.kickoff;
 
+import com.balancedbytes.games.ffb.FactoryType;
 import com.balancedbytes.games.ffb.InducementPhase;
 import com.balancedbytes.games.ffb.factory.IFactorySource;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.server.GameState;
+import com.balancedbytes.games.ffb.server.factory.SequenceGeneratorFactory;
 import com.balancedbytes.games.ffb.server.net.ReceivedCommand;
 import com.balancedbytes.games.ffb.server.step.AbstractStep;
-import com.balancedbytes.games.ffb.server.step.SequenceGenerator;
 import com.balancedbytes.games.ffb.server.step.StepAction;
 import com.balancedbytes.games.ffb.server.step.StepCommandStatus;
 import com.balancedbytes.games.ffb.server.step.StepId;
+import com.balancedbytes.games.ffb.server.step.generator.EndTurn;
+import com.balancedbytes.games.ffb.server.step.generator.Inducement;
+import com.balancedbytes.games.ffb.server.step.generator.SequenceGenerator;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
@@ -47,9 +51,12 @@ public final class StepEndKickoff extends AbstractStep {
 
 	private void executeStep() {
 		Game game = getGameState().getGame();
-		SequenceGenerator.getInstance().pushEndTurnSequence(getGameState());
-		SequenceGenerator.getInstance().pushInducementSequence(getGameState(), InducementPhase.AFTER_KICKOFF_TO_OPPONENT,
-				game.isHomePlaying());
+		SequenceGeneratorFactory factory = game.getFactory(FactoryType.Factory.SEQUENCE_GENERATOR);
+		((EndTurn)factory.forName(SequenceGenerator.Type.EndTurn.name()))
+			.pushSequence(new SequenceGenerator.SequenceParams(getGameState()));
+		((Inducement)factory.forName(SequenceGenerator.Type.Inducement.name()))
+			.pushSequence(new Inducement.SequenceParams(getGameState(), InducementPhase.AFTER_KICKOFF_TO_OPPONENT,
+			game.isHomePlaying()));
 		getResult().setNextAction(StepAction.NEXT_STEP);
 	}
 

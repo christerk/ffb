@@ -1,5 +1,6 @@
 package com.balancedbytes.games.ffb.server.step.game.start;
 
+import com.balancedbytes.games.ffb.FactoryType;
 import com.balancedbytes.games.ffb.factory.IFactorySource;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.GameResult;
@@ -7,12 +8,14 @@ import com.balancedbytes.games.ffb.model.TeamResult;
 import com.balancedbytes.games.ffb.report.ReportSpectators;
 import com.balancedbytes.games.ffb.server.GameCache;
 import com.balancedbytes.games.ffb.server.GameState;
+import com.balancedbytes.games.ffb.server.factory.SequenceGeneratorFactory;
 import com.balancedbytes.games.ffb.server.net.ReceivedCommand;
 import com.balancedbytes.games.ffb.server.step.AbstractStep;
-import com.balancedbytes.games.ffb.server.step.SequenceGenerator;
 import com.balancedbytes.games.ffb.server.step.StepAction;
 import com.balancedbytes.games.ffb.server.step.StepCommandStatus;
 import com.balancedbytes.games.ffb.server.step.StepId;
+import com.balancedbytes.games.ffb.server.step.generator.Kickoff;
+import com.balancedbytes.games.ffb.server.step.generator.SequenceGenerator;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
@@ -50,7 +53,9 @@ public final class StepSpectators extends AbstractStep {
 
 	private void executeStep() {
 		getResult().addReport(rollSpectators());
-		SequenceGenerator.getInstance().pushKickoffSequence(getGameState(), true);
+		SequenceGeneratorFactory factory = getGameState().getGame().getFactory(FactoryType.Factory.SEQUENCE_GENERATOR);
+		((Kickoff)factory.forName(SequenceGenerator.Type.Kickoff.name()))
+			.pushSequence(new Kickoff.SequenceParams(getGameState(), true));
 		GameCache gameCache = getGameState().getServer().getGameCache();
 		gameCache.queueDbUpdate(getGameState(), true);
 		getResult().setNextAction(StepAction.NEXT_STEP);

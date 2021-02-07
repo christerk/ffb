@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.balancedbytes.games.ffb.BloodSpot;
+import com.balancedbytes.games.ffb.FactoryType;
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.FieldCoordinateBounds;
 import com.balancedbytes.games.ffb.PlayerState;
@@ -17,9 +18,10 @@ import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.report.ReportBombOutOfBounds;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.IServerJsonOption;
+import com.balancedbytes.games.ffb.server.factory.SequenceGeneratorFactory;
 import com.balancedbytes.games.ffb.server.net.ReceivedCommand;
 import com.balancedbytes.games.ffb.server.step.AbstractStep;
-import com.balancedbytes.games.ffb.server.step.SequenceGenerator;
+import com.balancedbytes.games.ffb.server.step.generator.SpecialEffect.SequenceParams;
 import com.balancedbytes.games.ffb.server.step.StepAction;
 import com.balancedbytes.games.ffb.server.step.StepCommandStatus;
 import com.balancedbytes.games.ffb.server.step.StepException;
@@ -27,6 +29,7 @@ import com.balancedbytes.games.ffb.server.step.StepId;
 import com.balancedbytes.games.ffb.server.step.StepParameter;
 import com.balancedbytes.games.ffb.server.step.StepParameterKey;
 import com.balancedbytes.games.ffb.server.step.StepParameterSet;
+import com.balancedbytes.games.ffb.server.step.generator.SequenceGenerator;
 import com.balancedbytes.games.ffb.server.util.UtilServerGame;
 import com.balancedbytes.games.ffb.util.StringTool;
 import com.eclipsesource.json.JsonObject;
@@ -151,11 +154,15 @@ public final class StepInitBomb extends AbstractStep {
 					}
 				}
 				if (affectedPlayers.size() > 0) {
-					for (Player<?> player : affectedPlayers) {
+					SequenceGeneratorFactory factory = game.getFactory(FactoryType.Factory.SEQUENCE_GENERATOR);
+					com.balancedbytes.games.ffb.server.step.generator.SpecialEffect generator =
+						(com.balancedbytes.games.ffb.server.step.generator.SpecialEffect) factory.forName(SequenceGenerator.Type.SpecialEffect.name());
+
+					affectedPlayers.stream().map(player -> {
 						boolean rollForEffect = !fBombCoordinate.equals(game.getFieldModel().getPlayerCoordinate(player));
-						SequenceGenerator.getInstance().pushSpecialEffectSequence(getGameState(), SpecialEffect.BOMB,
-								player.getId(), rollForEffect);
-					}
+						return new SequenceParams(getGameState(),SpecialEffect.BOMB,
+							player.getId(), rollForEffect);
+					}).forEach(generator::pushSequence);
 				}
 				publishParameter(new StepParameter(StepParameterKey.BOMB_EXPLODED, true));
 			}

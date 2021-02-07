@@ -13,7 +13,7 @@ import static com.balancedbytes.games.ffb.server.step.StepParameter.from;
 @RulesCollection(RulesCollection.Rules.COMMON)
 public class Kickoff extends SequenceGenerator<Kickoff.SequenceParams> {
 
-	protected Kickoff() {
+	public Kickoff() {
 		super(Type.Kickoff);
 	}
 

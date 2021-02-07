@@ -13,7 +13,7 @@ import static com.balancedbytes.games.ffb.server.step.StepParameter.from;
 @RulesCollection(RulesCollection.Rules.COMMON)
 public class Block extends SequenceGenerator<Block.SequenceParams> {
 
-	protected Block() {
+	public Block() {
 		super(Type.Block);
 	}
 
@@ -96,11 +96,15 @@ public class Block extends SequenceGenerator<Block.SequenceParams> {
 		private final String multiBlockDefenderId;
 		private final boolean usingStab;
 
-		public SequenceParams(GameState gameState, String blockDefenderId, String multiBlockDefenderId, boolean usingStab) {
+		public SequenceParams(GameState gameState, String blockDefenderId, boolean usingStab, String multiBlockDefenderId) {
 			super(gameState);
 			this.blockDefenderId = blockDefenderId;
 			this.multiBlockDefenderId = multiBlockDefenderId;
 			this.usingStab = usingStab;
+		}
+
+		public SequenceParams(GameState gameState) {
+			this(gameState, null, false, null);
 		}
 	}
 }

@@ -19,13 +19,15 @@ import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandUseSkill;
 import com.balancedbytes.games.ffb.report.ReportThrowTeamMateRoll;
 import com.balancedbytes.games.ffb.server.DiceInterpreter;
+import com.balancedbytes.games.ffb.server.factory.SequenceGeneratorFactory;
 import com.balancedbytes.games.ffb.server.model.SkillBehaviour;
 import com.balancedbytes.games.ffb.server.model.StepModifier;
-import com.balancedbytes.games.ffb.server.step.SequenceGenerator;
 import com.balancedbytes.games.ffb.server.step.StepAction;
 import com.balancedbytes.games.ffb.server.step.StepCommandStatus;
 import com.balancedbytes.games.ffb.server.step.action.ttm.StepThrowTeamMate;
 import com.balancedbytes.games.ffb.server.step.action.ttm.StepThrowTeamMate.StepState;
+import com.balancedbytes.games.ffb.server.step.generator.ScatterPlayer;
+import com.balancedbytes.games.ffb.server.step.generator.SequenceGenerator;
 import com.balancedbytes.games.ffb.server.util.UtilServerDialog;
 import com.balancedbytes.games.ffb.server.util.UtilServerReRoll;
 import com.balancedbytes.games.ffb.skill.ThrowTeamMate;
@@ -82,8 +84,10 @@ public class ThrowTeamMateBehaviour extends SkillBehaviour<ThrowTeamMate> {
 						Player<?> thrownPlayer = game.getPlayerById(state.thrownPlayerId);
 						boolean scattersSingleDirection = thrownPlayer != null
 								&& thrownPlayer.hasSkillWithProperty(NamedProperties.ttmScattersInSingleDirection);
-						SequenceGenerator.getInstance().pushScatterPlayerSequence(step.getGameState(), state.thrownPlayerId,
-								state.thrownPlayerState, state.thrownPlayerHasBall, throwerCoordinate, scattersSingleDirection, true);
+						SequenceGeneratorFactory factory = game.getFactory(FactoryType.Factory.SEQUENCE_GENERATOR);
+						((ScatterPlayer) factory.forName(SequenceGenerator.Type.ScatterPlayer.name()))
+							.pushSequence(new ScatterPlayer.SequenceParams(step.getGameState(), state.thrownPlayerId,
+								state.thrownPlayerState, state.thrownPlayerHasBall, throwerCoordinate, scattersSingleDirection, true));
 						step.getResult().setNextAction(StepAction.NEXT_STEP);
 					} else {
 						if (step.getReRolledAction() != ReRolledActions.THROW_TEAM_MATE) {

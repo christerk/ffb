@@ -12,7 +12,7 @@ import static com.balancedbytes.games.ffb.server.step.StepParameter.from;
 @RulesCollection(RulesCollection.Rules.COMMON)
 public class SpikedBallApo extends SequenceGenerator<SequenceGenerator.SequenceParams> {
 
-	protected SpikedBallApo() {
+	public SpikedBallApo() {
 		super(Type.SpikedBallApo);
 	}
 

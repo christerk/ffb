@@ -13,7 +13,7 @@ import static com.balancedbytes.games.ffb.server.step.StepParameter.from;
 @RulesCollection(RulesCollection.Rules.COMMON)
 public class Foul extends SequenceGenerator<Foul.SequenceParams> {
 
-	protected Foul() {
+	public Foul() {
 		super(Type.Foul);
 	}
 
@@ -52,6 +52,10 @@ public class Foul extends SequenceGenerator<Foul.SequenceParams> {
 		public SequenceParams(GameState gameState, String fouldDefenderId) {
 			super(gameState);
 			this.fouldDefenderId = fouldDefenderId;
+		}
+
+		public SequenceParams(GameState gameState) {
+			this(gameState, null);
 		}
 	}
 }

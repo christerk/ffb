@@ -1,9 +1,7 @@
 package com.balancedbytes.games.ffb.server.step.action.common;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.balancedbytes.games.ffb.Card;
+import com.balancedbytes.games.ffb.FactoryType;
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.HeatExhaustion;
 import com.balancedbytes.games.ffb.Inducement;
@@ -43,16 +41,20 @@ import com.balancedbytes.games.ffb.server.FantasyFootballServer;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.IServerJsonOption;
 import com.balancedbytes.games.ffb.server.ServerMode;
+import com.balancedbytes.games.ffb.server.factory.SequenceGeneratorFactory;
 import com.balancedbytes.games.ffb.server.net.ReceivedCommand;
 import com.balancedbytes.games.ffb.server.request.fumbbl.FumbblRequestUpdateGamestate;
 import com.balancedbytes.games.ffb.server.step.AbstractStep;
-import com.balancedbytes.games.ffb.server.step.SequenceGenerator;
 import com.balancedbytes.games.ffb.server.step.StepAction;
 import com.balancedbytes.games.ffb.server.step.StepCommandStatus;
 import com.balancedbytes.games.ffb.server.step.StepId;
 import com.balancedbytes.games.ffb.server.step.StepParameter;
 import com.balancedbytes.games.ffb.server.step.StepParameterKey;
 import com.balancedbytes.games.ffb.server.step.UtilServerSteps;
+import com.balancedbytes.games.ffb.server.step.generator.EndGame;
+import com.balancedbytes.games.ffb.server.step.generator.Inducement.SequenceParams;
+import com.balancedbytes.games.ffb.server.step.generator.Kickoff;
+import com.balancedbytes.games.ffb.server.step.generator.SequenceGenerator;
 import com.balancedbytes.games.ffb.server.util.UtilServerCards;
 import com.balancedbytes.games.ffb.server.util.UtilServerDialog;
 import com.balancedbytes.games.ffb.server.util.UtilServerGame;
@@ -63,6 +65,9 @@ import com.balancedbytes.games.ffb.util.UtilBox;
 import com.balancedbytes.games.ffb.util.UtilPlayer;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Step in any sequence to end a turn.
@@ -142,6 +147,10 @@ public class StepEndTurn extends AbstractStep {
 		UtilServerDialog.hideDialog(getGameState());
 		boolean isHomeTurnEnding = game.isHomePlaying();
 
+		SequenceGeneratorFactory factory = game.getFactory(FactoryType.Factory.SEQUENCE_GENERATOR);
+		Kickoff kickoffGenerator = (Kickoff) factory.forName(SequenceGenerator.Type.Kickoff.name());
+		EndGame endGenerator = (EndGame) factory.forName(SequenceGenerator.Type.EndGame.name());
+
 		if (!fWithinSecretWeaponHandling) {
 
 			if ((game.getTurnMode() == TurnMode.BLITZ) || (game.getTurnMode() == TurnMode.KICKOFF_RETURN)
@@ -202,7 +211,7 @@ public class StepEndTurn extends AbstractStep {
 				} else {
 
 					switch (game.getTurnMode()) {
-					case NO_PLAYERS_TO_FIELD:
+						case NO_PLAYERS_TO_FIELD:
 						game.getTurnDataHome().setTurnNr(game.getTurnDataHome().getTurnNr() + 2);
 						game.getTurnDataAway().setTurnNr(game.getTurnDataAway().getTurnNr() + 2);
 						fNewHalf = UtilServerSteps.checkEndOfHalf(getGameState());
@@ -210,14 +219,14 @@ public class StepEndTurn extends AbstractStep {
 						game.setSetupOffense(false);
 						fTouchdown = true;
 						break;
-					case KICKOFF:
+						case KICKOFF:
 						game.setHomePlaying(!game.isHomePlaying());
 						game.getTurnData().setTurnNr(game.getTurnData().getTurnNr() + 1);
 						game.getTurnData().setTurnStarted(false);
 						game.getTurnData().setFirstTurnAfterKickoff(true);
 						game.setTurnMode(TurnMode.REGULAR);
 						break;
-					case REGULAR:
+						case REGULAR:
 						if (fNewHalf) {
 							game.setTurnMode(TurnMode.SETUP);
 							game.setSetupOffense(false);
@@ -228,8 +237,8 @@ public class StepEndTurn extends AbstractStep {
 						game.getTurnData().setTurnStarted(false);
 						game.getTurnData().setFirstTurnAfterKickoff(false);
 						break;
-					default:
-						break;
+						default:
+							break;
 					}
 
 				}
@@ -280,7 +289,6 @@ public class StepEndTurn extends AbstractStep {
 					}
 					UtilBox.putAllPlayersIntoBox(game);
 				}
-
 				if (fNewHalf) {
 					if (game.getHalf() > 2) {
 						fEndGame = true;
@@ -289,14 +297,14 @@ public class StepEndTurn extends AbstractStep {
 						if (UtilGameOption.isOptionEnabled(game, GameOptionId.OVERTIME)
 								&& (gameResult.getTeamResultHome().getScore() == gameResult.getTeamResultAway().getScore())) {
 							UtilServerGame.startHalf(this, game.getHalf() + 1);
-							SequenceGenerator.getInstance().pushKickoffSequence(getGameState(), true);
+							kickoffGenerator.pushSequence(new Kickoff.SequenceParams(getGameState(), true));
 							fRemoveUsedSecretWeapons = true;
 						} else {
 							fEndGame = true;
 						}
 					} else {
 						UtilServerGame.startHalf(this, game.getHalf() + 1);
-						SequenceGenerator.getInstance().pushKickoffSequence(getGameState(), false);
+						kickoffGenerator.pushSequence(new Kickoff.SequenceParams(getGameState(), false));
 						fRemoveUsedSecretWeapons = true;
 					}
 					getResult().setSound(SoundId.WHISTLE);
@@ -306,20 +314,21 @@ public class StepEndTurn extends AbstractStep {
 					getGameState().getServer().getCommunication().sendSound(getGameState(), SoundId.TOUCHDOWN);
 					getResult().setSound(SoundId.WHISTLE);
 					if (game.getHalf() == 3) {
-						SequenceGenerator.getInstance().pushEndGameSequence(getGameState(), false);
+						endGenerator.pushSequence(new EndGame.SequenceParams(getGameState(), false));
 					} else {
-						SequenceGenerator.getInstance().pushKickoffSequence(getGameState(), false);
+						kickoffGenerator.pushSequence(new Kickoff.SequenceParams(getGameState(), false));
 						fRemoveUsedSecretWeapons = true;
 					}
 				} else if (game.getTurnMode() != TurnMode.REGULAR) {
 					UtilBox.refreshBoxes(game);
 					getResult().setSound(SoundId.DING);
-					SequenceGenerator.getInstance().pushKickoffSequence(getGameState(), false);
+					kickoffGenerator.pushSequence(new Kickoff.SequenceParams(getGameState(), false));
 					fRemoveUsedSecretWeapons = true;
 				} else {
 					getResult().setSound(SoundId.DING);
-					SequenceGenerator.getInstance().pushInducementSequence(getGameState(), InducementPhase.START_OF_OWN_TURN,
-							game.isHomePlaying());
+					((com.balancedbytes.games.ffb.server.step.generator.Inducement) factory.forName(SequenceGenerator.Type.Inducement.name()))
+						.pushSequence(new SequenceParams(getGameState(), InducementPhase.START_OF_OWN_TURN,
+							game.isHomePlaying()));
 				}
 
 				KnockoutRecovery[] knockoutRecoveryArray = knockoutRecoveries.toArray(new KnockoutRecovery[0]);
@@ -385,7 +394,7 @@ public class StepEndTurn extends AbstractStep {
 			UtilServerGame.updateLeaderReRolls(this);
 
 			if (fEndGame) {
-				SequenceGenerator.getInstance().pushEndGameSequence(getGameState(), false);
+				endGenerator.pushSequence(new EndGame.SequenceParams(getGameState(), false));
 			}
 
 			if (!fEndGame && game.isTurnTimeEnabled()) {

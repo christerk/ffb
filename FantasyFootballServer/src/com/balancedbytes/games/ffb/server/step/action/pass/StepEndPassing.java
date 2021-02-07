@@ -1,5 +1,6 @@
 package com.balancedbytes.games.ffb.server.step.action.pass;
 
+import com.balancedbytes.games.ffb.FactoryType;
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.PlayerAction;
 import com.balancedbytes.games.ffb.factory.IFactorySource;
@@ -11,13 +12,17 @@ import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.model.PlayerResult;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.IServerJsonOption;
+import com.balancedbytes.games.ffb.server.factory.SequenceGeneratorFactory;
 import com.balancedbytes.games.ffb.server.step.AbstractStep;
-import com.balancedbytes.games.ffb.server.step.SequenceGenerator;
 import com.balancedbytes.games.ffb.server.step.StepAction;
 import com.balancedbytes.games.ffb.server.step.StepId;
 import com.balancedbytes.games.ffb.server.step.StepParameter;
 import com.balancedbytes.games.ffb.server.step.StepParameterKey;
 import com.balancedbytes.games.ffb.server.step.UtilServerSteps;
+import com.balancedbytes.games.ffb.server.step.generator.Bomb;
+import com.balancedbytes.games.ffb.server.step.generator.EndPlayerAction;
+import com.balancedbytes.games.ffb.server.step.generator.Pass;
+import com.balancedbytes.games.ffb.server.step.generator.SequenceGenerator;
 import com.balancedbytes.games.ffb.server.util.UtilServerDialog;
 import com.balancedbytes.games.ffb.util.StringTool;
 import com.balancedbytes.games.ffb.util.UtilPlayer;
@@ -112,19 +117,22 @@ public final class StepEndPassing extends AbstractStep {
 		Game game = getGameState().getGame();
 		game.getFieldModel().setRangeRuler(null);
 		ActingPlayer actingPlayer = game.getActingPlayer();
+		SequenceGeneratorFactory factory = game.getFactory(FactoryType.Factory.SEQUENCE_GENERATOR);
+		EndPlayerAction endGenerator = ((EndPlayerAction) factory.forName(SequenceGenerator.Type.EndPlayerAction.name()));
+		Bomb bombGenerator = ((Bomb) factory.forName(SequenceGenerator.Type.Bomb.name()));
 		// failed confusion roll on throw bomb -> end player action
 		if (fEndPlayerAction && ((actingPlayer.getPlayerAction() == PlayerAction.THROW_BOMB)
 				|| (actingPlayer.getPlayerAction() == PlayerAction.HAIL_MARY_BOMB))) {
-			SequenceGenerator.getInstance().pushEndPlayerActionSequence(getGameState(), true, true, fEndTurn);
+			endGenerator.pushSequence(new EndPlayerAction.SequenceParams(getGameState(), true, true, fEndTurn));
 			getResult().setNextAction(StepAction.NEXT_STEP);
 			return;
 		}
 		// throw bomb mode -> start bomb sequence
 		if (game.getTurnMode().isBombTurn()) {
 			if (StringTool.isProvided(fInterceptorId)) {
-				SequenceGenerator.getInstance().pushBombSequence(getGameState(), fInterceptorId, fPassFumble);
+				bombGenerator.pushSequence(new Bomb.SequenceParams(getGameState(), fInterceptorId, fPassFumble));
 			} else {
-				SequenceGenerator.getInstance().pushBombSequence(getGameState(), fCatcherId, fPassFumble);
+				bombGenerator.pushSequence(new Bomb.SequenceParams(getGameState(), fCatcherId, fPassFumble));
 			}
 			if (fBombOutOfBounds) {
 				publishParameter(new StepParameter(StepParameterKey.BOMB_OUT_OF_BOUNDS, true));
@@ -134,14 +142,14 @@ public final class StepEndPassing extends AbstractStep {
 		}
 		// failed animosity may try to choose a new target
 		if (actingPlayer.isSufferingAnimosity() && !fEndPlayerAction && (game.getPassCoordinate() == null)) {
-			SequenceGenerator.getInstance().pushPassSequence(getGameState());
+			((Pass)factory.forName(SequenceGenerator.Type.Pass.name())).pushSequence(new Pass.SequenceParams(getGameState()));
 			getResult().setNextAction(StepAction.NEXT_STEP);
 			return;
 		}
 		Player<?> catcher = game.getPlayerById(fCatcherId);
 		// completions and passing statistic
-		if ((game.getThrower() != null) && (catcher != null) && UtilPlayer.hasBall(game, catcher)
-				&& game.getThrower().getTeam().hasPlayer(catcher)) {
+		if ((game.getThrower() != null) && UtilPlayer.hasBall(game, catcher)
+			&& game.getThrower().getTeam().hasPlayer(catcher)) {
 			PlayerResult throwerResult = game.getGameResult().getPlayerResult(game.getThrower());
 			if (fPassAccurate) {
 				throwerResult.setCompletions(throwerResult.getCompletions() + 1);
@@ -161,7 +169,7 @@ public final class StepEndPassing extends AbstractStep {
 			fEndTurn |= (UtilServerSteps.checkTouchdown(getGameState())
 					|| ((catcher == null) && !actingPlayer.isSufferingAnimosity())
 					|| UtilPlayer.findOtherTeam(game, game.getThrower()).hasPlayer(catcher) || fPassFumble);
-			SequenceGenerator.getInstance().pushEndPlayerActionSequence(getGameState(), true, fEndPlayerAction, fEndTurn);
+			endGenerator.pushSequence(new EndPlayerAction.SequenceParams(getGameState(), true, fEndPlayerAction, fEndTurn));
 		} else {
 			if (StringTool.isProvided(fInterceptorId)) {
 				catcher = game.getPlayerById(fInterceptorId);
@@ -179,7 +187,7 @@ public final class StepEndPassing extends AbstractStep {
 						|| ((catcher == null) && !actingPlayer.isSufferingAnimosity())
 						|| UtilPlayer.findOtherTeam(game, game.getThrower()).hasPlayer(catcher)
 						|| (fPassFumble && !dontDropFumble));
-				SequenceGenerator.getInstance().pushEndPlayerActionSequence(getGameState(), true, true, fEndTurn);
+				endGenerator.pushSequence(new EndPlayerAction.SequenceParams(getGameState(), true, true, fEndTurn));
 			} else {
 				game.setDefenderAction(null); // reset dump-off action
 			}

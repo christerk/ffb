@@ -1,14 +1,17 @@
 package com.balancedbytes.games.ffb.server.handler;
 
+import com.balancedbytes.games.ffb.FactoryType;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.net.NetCommandId;
 import com.balancedbytes.games.ffb.server.FantasyFootballServer;
 import com.balancedbytes.games.ffb.server.GameCache;
 import com.balancedbytes.games.ffb.server.GameState;
+import com.balancedbytes.games.ffb.server.factory.SequenceGeneratorFactory;
 import com.balancedbytes.games.ffb.server.net.ReceivedCommand;
 import com.balancedbytes.games.ffb.server.net.commands.InternalServerCommandUploadGame;
 import com.balancedbytes.games.ffb.server.request.ServerRequestLoadReplay;
-import com.balancedbytes.games.ffb.server.step.SequenceGenerator;
+import com.balancedbytes.games.ffb.server.step.generator.EndGame;
+import com.balancedbytes.games.ffb.server.step.generator.SequenceGenerator;
 import com.balancedbytes.games.ffb.util.StringTool;
 
 /**
@@ -36,14 +39,16 @@ public class ServerCommandHandlerUploadGame extends ServerCommandHandler {
 					receivedCommand.getSession(), ServerRequestLoadReplay.UPLOAD_GAME, uploadGameCommand.getConcedingTeamId()));
 		} else {
 			gameState.getStepStack().clear();
+			Game game = gameState.getGame();
 			if (StringTool.isProvided(uploadGameCommand.getConcedingTeamId())) {
-				Game game = gameState.getGame();
 				game.getGameResult().getTeamResultHome()
 						.setConceded(game.getTeamHome().getId().equals(uploadGameCommand.getConcedingTeamId()));
 				game.getGameResult().getTeamResultAway()
 						.setConceded(game.getTeamAway().getId().equals(uploadGameCommand.getConcedingTeamId()));
 			}
-			SequenceGenerator.getInstance().pushEndGameSequence(gameState, true);
+			SequenceGeneratorFactory factory = game.getFactory(FactoryType.Factory.SEQUENCE_GENERATOR);
+			((EndGame) factory.forName(SequenceGenerator.Type.EndGame.name()))
+				.pushSequence(new EndGame.SequenceParams(gameState, true));
 			gameState.startNextStep();
 		}
 		return true;

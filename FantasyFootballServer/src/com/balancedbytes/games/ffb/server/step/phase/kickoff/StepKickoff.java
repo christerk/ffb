@@ -1,5 +1,6 @@
 package com.balancedbytes.games.ffb.server.step.phase.kickoff;
 
+import com.balancedbytes.games.ffb.FactoryType;
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.InducementPhase;
 import com.balancedbytes.games.ffb.factory.IFactorySource;
@@ -8,14 +9,16 @@ import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandKickoff;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.IServerJsonOption;
+import com.balancedbytes.games.ffb.server.factory.SequenceGeneratorFactory;
 import com.balancedbytes.games.ffb.server.net.ReceivedCommand;
 import com.balancedbytes.games.ffb.server.step.AbstractStep;
-import com.balancedbytes.games.ffb.server.step.SequenceGenerator;
 import com.balancedbytes.games.ffb.server.step.StepAction;
 import com.balancedbytes.games.ffb.server.step.StepCommandStatus;
 import com.balancedbytes.games.ffb.server.step.StepId;
 import com.balancedbytes.games.ffb.server.step.StepParameter;
 import com.balancedbytes.games.ffb.server.step.StepParameterKey;
+import com.balancedbytes.games.ffb.server.step.generator.Inducement;
+import com.balancedbytes.games.ffb.server.step.generator.SequenceGenerator;
 import com.balancedbytes.games.ffb.server.util.UtilServerDialog;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
@@ -74,10 +77,12 @@ public final class StepKickoff extends AbstractStep {
 			Game game = getGameState().getGame();
 			UtilServerDialog.hideDialog(getGameState());
 			publishParameter(new StepParameter(StepParameterKey.KICKOFF_START_COORDINATE, fKickoffStartCoordinate));
-			SequenceGenerator.getInstance().pushInducementSequence(getGameState(), InducementPhase.BEFORE_KICKOFF_SCATTER,
-					game.isHomePlaying());
-			SequenceGenerator.getInstance().pushInducementSequence(getGameState(), InducementPhase.BEFORE_KICKOFF_SCATTER,
-					!game.isHomePlaying());
+			SequenceGeneratorFactory factory = game.getFactory(FactoryType.Factory.SEQUENCE_GENERATOR);
+			Inducement generator = (Inducement) factory.forName(SequenceGenerator.Type.Inducement.name());
+			generator.pushSequence(new Inducement.SequenceParams(getGameState(), InducementPhase.BEFORE_KICKOFF_SCATTER,
+					game.isHomePlaying()));
+			generator.pushSequence(new Inducement.SequenceParams(getGameState(), InducementPhase.BEFORE_KICKOFF_SCATTER,
+					!game.isHomePlaying()));
 			getResult().setNextAction(StepAction.NEXT_STEP);
 		}
 	}

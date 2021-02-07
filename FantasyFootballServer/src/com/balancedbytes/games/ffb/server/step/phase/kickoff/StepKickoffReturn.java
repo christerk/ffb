@@ -1,8 +1,6 @@
 package com.balancedbytes.games.ffb.server.step.phase.kickoff;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import com.balancedbytes.games.ffb.FactoryType;
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.FieldCoordinateBounds;
 import com.balancedbytes.games.ffb.PlayerState;
@@ -17,18 +15,23 @@ import com.balancedbytes.games.ffb.model.Team;
 import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.IServerJsonOption;
+import com.balancedbytes.games.ffb.server.factory.SequenceGeneratorFactory;
 import com.balancedbytes.games.ffb.server.net.ReceivedCommand;
 import com.balancedbytes.games.ffb.server.step.AbstractStep;
-import com.balancedbytes.games.ffb.server.step.SequenceGenerator;
 import com.balancedbytes.games.ffb.server.step.StepAction;
 import com.balancedbytes.games.ffb.server.step.StepCommandStatus;
 import com.balancedbytes.games.ffb.server.step.StepId;
 import com.balancedbytes.games.ffb.server.step.StepParameter;
 import com.balancedbytes.games.ffb.server.step.UtilServerSteps;
+import com.balancedbytes.games.ffb.server.step.generator.Select;
+import com.balancedbytes.games.ffb.server.step.generator.SequenceGenerator;
 import com.balancedbytes.games.ffb.server.util.UtilServerDialog;
 import com.balancedbytes.games.ffb.util.UtilPlayer;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Step in kickoff sequence to handle KICKOFF_RETURN skill.
@@ -103,13 +106,14 @@ public final class StepKickoffReturn extends AbstractStep {
 
 		Game game = getGameState().getGame();
 		ActingPlayer actingPlayer = game.getActingPlayer();
-
+		SequenceGeneratorFactory factory = game.getFactory(FactoryType.Factory.SEQUENCE_GENERATOR);
+		Select generator = ((Select)factory.forName(SequenceGenerator.Type.Select.name()));
 		if (game.getTurnMode() == TurnMode.KICKOFF_RETURN) {
 
 			if (fEndPlayerAction && !actingPlayer.hasActed()) {
 				UtilServerSteps.changePlayerAction(this, null, null, false);
 				getGameState().pushCurrentStepOnStack();
-				SequenceGenerator.getInstance().pushSelectSequence(getGameState(), false);
+				generator.pushSequence(new Select.SequenceParams(getGameState(), false));
 
 			} else {
 
@@ -161,7 +165,7 @@ public final class StepKickoffReturn extends AbstractStep {
 				UtilServerDialog.showDialog(getGameState(), new DialogKickoffReturnParameter(), false);
 
 				getGameState().pushCurrentStepOnStack();
-				SequenceGenerator.getInstance().pushSelectSequence(getGameState(), false);
+				generator.pushSequence(new Select.SequenceParams(getGameState(), false));
 
 			}
 

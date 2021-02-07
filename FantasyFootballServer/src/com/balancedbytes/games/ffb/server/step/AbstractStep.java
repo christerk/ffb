@@ -1,5 +1,6 @@
 package com.balancedbytes.games.ffb.server.step;
 
+import com.balancedbytes.games.ffb.FactoryType;
 import com.balancedbytes.games.ffb.SoundId;
 import com.balancedbytes.games.ffb.dialog.DialogConcedeGameParameter;
 import com.balancedbytes.games.ffb.factory.IFactorySource;
@@ -16,10 +17,13 @@ import com.balancedbytes.games.ffb.server.FantasyFootballServer;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.IServerJsonOption;
 import com.balancedbytes.games.ffb.server.IServerLogLevel;
+import com.balancedbytes.games.ffb.server.factory.SequenceGeneratorFactory;
 import com.balancedbytes.games.ffb.server.model.SkillBehaviour;
 import com.balancedbytes.games.ffb.server.model.StepModifier;
 import com.balancedbytes.games.ffb.server.net.ReceivedCommand;
 import com.balancedbytes.games.ffb.server.net.SessionManager;
+import com.balancedbytes.games.ffb.server.step.generator.EndGame;
+import com.balancedbytes.games.ffb.server.step.generator.SequenceGenerator;
 import com.balancedbytes.games.ffb.server.util.UtilServerDialog;
 import com.balancedbytes.games.ffb.server.util.UtilServerGame;
 import com.eclipsesource.json.JsonObject;
@@ -201,7 +205,9 @@ public abstract class AbstractStep implements IStep {
 			}
 			if (gameResult.getTeamResultHome().hasConceded() || gameResult.getTeamResultAway().hasConceded()) {
 				getGameState().getStepStack().clear();
-				SequenceGenerator.getInstance().pushEndGameSequence(getGameState(), false);
+				SequenceGeneratorFactory factory = game.getFactory(FactoryType.Factory.SEQUENCE_GENERATOR);
+				((EndGame)factory.forName(SequenceGenerator.Type.EndGame.name()))
+					.pushSequence(new EndGame.SequenceParams(getGameState(), false));
 				getResult().setNextAction(StepAction.NEXT_STEP);
 			}
 			commandStatus = StepCommandStatus.SKIP_STEP;

@@ -14,7 +14,7 @@ import static com.balancedbytes.games.ffb.server.step.StepParameter.from;
 @RulesCollection(RulesCollection.Rules.COMMON)
 public class Move extends SequenceGenerator<Move.SequenceParams> {
 
-	protected Move() {
+	public Move() {
 		super(Type.Move);
 	}
 
@@ -73,6 +73,10 @@ public class Move extends SequenceGenerator<Move.SequenceParams> {
 			super(gameState);
 			this.pMoveStack = pMoveStack;
 			this.pGazeVictimId = pGazeVictimId;
+		}
+
+		public SequenceParams(GameState gameState) {
+			this(gameState, null, null);
 		}
 	}
 }

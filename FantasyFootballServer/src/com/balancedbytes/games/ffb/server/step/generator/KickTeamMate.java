@@ -13,7 +13,7 @@ import static com.balancedbytes.games.ffb.server.step.StepParameter.from;
 @RulesCollection(RulesCollection.Rules.COMMON)
 public class KickTeamMate extends SequenceGenerator<KickTeamMate.SequenceParams>{
 
-	protected KickTeamMate() {
+	public KickTeamMate() {
 		super(Type.KickTeamMate);
 	}
 
@@ -56,6 +56,10 @@ public class KickTeamMate extends SequenceGenerator<KickTeamMate.SequenceParams>
 			super(gameState);
 			this.numDice = numDice;
 			this.kickedPlayerId = kickedPlayerId;
+		}
+
+		public SequenceParams(GameState gameState) {
+			this(gameState, 0, null);
 		}
 	}
 }

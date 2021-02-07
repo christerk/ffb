@@ -1,5 +1,6 @@
 package com.balancedbytes.games.ffb.server.step.action.move;
 
+import com.balancedbytes.games.ffb.FactoryType;
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.PlayerAction;
 import com.balancedbytes.games.ffb.factory.IFactorySource;
@@ -8,14 +9,22 @@ import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.IServerJsonOption;
+import com.balancedbytes.games.ffb.server.factory.SequenceGeneratorFactory;
 import com.balancedbytes.games.ffb.server.net.ReceivedCommand;
 import com.balancedbytes.games.ffb.server.step.AbstractStep;
-import com.balancedbytes.games.ffb.server.step.SequenceGenerator;
 import com.balancedbytes.games.ffb.server.step.StepAction;
 import com.balancedbytes.games.ffb.server.step.StepCommandStatus;
 import com.balancedbytes.games.ffb.server.step.StepId;
 import com.balancedbytes.games.ffb.server.step.StepParameter;
 import com.balancedbytes.games.ffb.server.step.UtilServerSteps;
+import com.balancedbytes.games.ffb.server.step.generator.Block;
+import com.balancedbytes.games.ffb.server.step.generator.EndPlayerAction;
+import com.balancedbytes.games.ffb.server.step.generator.Foul;
+import com.balancedbytes.games.ffb.server.step.generator.KickTeamMate;
+import com.balancedbytes.games.ffb.server.step.generator.Move;
+import com.balancedbytes.games.ffb.server.step.generator.Pass;
+import com.balancedbytes.games.ffb.server.step.generator.SequenceGenerator;
+import com.balancedbytes.games.ffb.server.step.generator.ThrowTeamMate;
 import com.balancedbytes.games.ffb.server.util.UtilServerDialog;
 import com.balancedbytes.games.ffb.server.util.UtilServerPlayerMove;
 import com.balancedbytes.games.ffb.util.ArrayTool;
@@ -26,16 +35,16 @@ import com.eclipsesource.json.JsonValue;
 
 /**
  * Last step in move sequence. Consumes all expected stepParameters.
- * 
+ * <p>
  * Expects stepParameter BLOCK_DEFENDER_ID to be set by a preceding step.
  * Expects stepParameter DISPATCH_PLAYER_ACTION to be set by a preceding step.
  * Expects stepParameter END_PLAYER_ACTION to be set by a preceding step.
  * Expects stepParameter END_TURN to be set by a preceding step. Expects
  * stepParameter FEEDING_ALLOWED to be set by a preceding step. Expects
  * stepParameter MOVE_STACK to be set by a preceding step.
- * 
+ * <p>
  * May push a new sequence on the stack.
- * 
+ *
  * @author Kalimar
  */
 public class StepEndMoving extends AbstractStep {
@@ -59,32 +68,32 @@ public class StepEndMoving extends AbstractStep {
 	public boolean setParameter(StepParameter pParameter) {
 		if ((pParameter != null) && !super.setParameter(pParameter)) {
 			switch (pParameter.getKey()) {
-			case BLOCK_DEFENDER_ID:
-				fBlockDefenderId = (String) pParameter.getValue();
-				consume(pParameter);
-				return true;
-			case DISPATCH_PLAYER_ACTION:
-				fDispatchPlayerAction = (PlayerAction) pParameter.getValue();
-				consume(pParameter);
-				return true;
-			case END_PLAYER_ACTION:
-				fEndPlayerAction = (pParameter.getValue() != null) ? (Boolean) pParameter.getValue() : false;
-				consume(pParameter);
-				return true;
-			case END_TURN:
-				fEndTurn = (pParameter.getValue() != null) ? (Boolean) pParameter.getValue() : false;
-				consume(pParameter);
-				return true;
-			case FEEDING_ALLOWED:
-				fFeedingAllowed = (pParameter.getValue() != null) ? (Boolean) pParameter.getValue() : false;
-				consume(pParameter);
-				return true;
-			case MOVE_STACK:
-				fMoveStack = (FieldCoordinate[]) pParameter.getValue();
-				consume(pParameter);
-				return true;
-			default:
-				break;
+				case BLOCK_DEFENDER_ID:
+					fBlockDefenderId = (String) pParameter.getValue();
+					consume(pParameter);
+					return true;
+				case DISPATCH_PLAYER_ACTION:
+					fDispatchPlayerAction = (PlayerAction) pParameter.getValue();
+					consume(pParameter);
+					return true;
+				case END_PLAYER_ACTION:
+					fEndPlayerAction = (pParameter.getValue() != null) ? (Boolean) pParameter.getValue() : false;
+					consume(pParameter);
+					return true;
+				case END_TURN:
+					fEndTurn = (pParameter.getValue() != null) ? (Boolean) pParameter.getValue() : false;
+					consume(pParameter);
+					return true;
+				case FEEDING_ALLOWED:
+					fFeedingAllowed = (pParameter.getValue() != null) ? (Boolean) pParameter.getValue() : false;
+					consume(pParameter);
+					return true;
+				case MOVE_STACK:
+					fMoveStack = (FieldCoordinate[]) pParameter.getValue();
+					consume(pParameter);
+					return true;
+				default:
+					break;
 			}
 		}
 		return false;
@@ -101,29 +110,29 @@ public class StepEndMoving extends AbstractStep {
 		StepCommandStatus commandStatus = super.handleCommand(pReceivedCommand);
 		if (commandStatus == StepCommandStatus.UNHANDLED_COMMAND) {
 			switch (pReceivedCommand.getId()) {
-			// commands redirected from initMoving
-			// add proper sequence to stack, repeat command once more -->
-			case CLIENT_BLOCK:
-				commandStatus = dispatchPlayerAction(fDispatchPlayerAction);
-				break;
-			case CLIENT_FOUL:
-				commandStatus = dispatchPlayerAction(fDispatchPlayerAction);
-				break;
-			case CLIENT_HAND_OVER:
-				commandStatus = dispatchPlayerAction(fDispatchPlayerAction);
-				break;
-			case CLIENT_PASS:
-				commandStatus = dispatchPlayerAction(fDispatchPlayerAction);
-				break;
-			case CLIENT_THROW_TEAM_MATE:
-				commandStatus = dispatchPlayerAction(fDispatchPlayerAction);
-				break;
-			case CLIENT_KICK_TEAM_MATE:
-				commandStatus = dispatchPlayerAction(fDispatchPlayerAction);
-				break;
-			default:
-				break;
-			// <--
+				// commands redirected from initMoving
+				// add proper sequence to stack, repeat command once more -->
+				case CLIENT_BLOCK:
+					commandStatus = dispatchPlayerAction(fDispatchPlayerAction);
+					break;
+				case CLIENT_FOUL:
+					commandStatus = dispatchPlayerAction(fDispatchPlayerAction);
+					break;
+				case CLIENT_HAND_OVER:
+					commandStatus = dispatchPlayerAction(fDispatchPlayerAction);
+					break;
+				case CLIENT_PASS:
+					commandStatus = dispatchPlayerAction(fDispatchPlayerAction);
+					break;
+				case CLIENT_THROW_TEAM_MATE:
+					commandStatus = dispatchPlayerAction(fDispatchPlayerAction);
+					break;
+				case CLIENT_KICK_TEAM_MATE:
+					commandStatus = dispatchPlayerAction(fDispatchPlayerAction);
+					break;
+				default:
+					break;
+				// <--
 			}
 		}
 		if (commandStatus == StepCommandStatus.EXECUTE_STEP) {
@@ -140,34 +149,38 @@ public class StepEndMoving extends AbstractStep {
 		}
 		Game game = getGameState().getGame();
 		ActingPlayer actingPlayer = game.getActingPlayer();
+		SequenceGeneratorFactory factory = game.getFactory(FactoryType.Factory.SEQUENCE_GENERATOR);
+		EndPlayerAction endGenerator = (EndPlayerAction) factory.forName(SequenceGenerator.Type.EndPlayerAction.name());
+		Move moveGenerator = (Move) factory.forName(SequenceGenerator.Type.Move.name());
 		if (fEndTurn || fEndPlayerAction) {
-			SequenceGenerator.getInstance().pushEndPlayerActionSequence(getGameState(), fFeedingAllowed, true, fEndTurn);
+			endGenerator.pushSequence(new EndPlayerAction.SequenceParams(getGameState(), fFeedingAllowed, true, fEndTurn));
 			// block defender set by ball and chain
 		} else if (StringTool.isProvided(fBlockDefenderId)) {
-			SequenceGenerator.getInstance().pushBlockSequence(getGameState(), fBlockDefenderId, false, null);
+			((Block) factory.forName(SequenceGenerator.Type.Block.name()))
+				.pushSequence(new Block.SequenceParams(getGameState(), fBlockDefenderId, false, null));
 			// this may happen on a failed TAKE_ROOT roll
 		} else if (StringTool.isProvided(actingPlayer.getPlayerId()) && (actingPlayer.getPlayerAction() != null)
-				&& !actingPlayer.getPlayerAction().isMoving() && !(actingPlayer.getPlayerAction() == PlayerAction.PASS
-						&& !UtilPlayer.hasBall(game, actingPlayer.getPlayer()))) {
+			&& !actingPlayer.getPlayerAction().isMoving() && !(actingPlayer.getPlayerAction() == PlayerAction.PASS
+			&& !UtilPlayer.hasBall(game, actingPlayer.getPlayer()))) {
 			pushSequenceForPlayerAction(actingPlayer.getPlayerAction());
 		} else if (ArrayTool.isProvided(fMoveStack)) {
-			SequenceGenerator.getInstance().pushMoveSequence(getGameState(), fMoveStack, null);
+			moveGenerator.pushSequence(new Move.SequenceParams(getGameState(), fMoveStack, null));
 		} else if (UtilPlayer.isNextMovePossible(game, false)
-				|| ((PlayerAction.HAND_OVER_MOVE == actingPlayer.getPlayerAction())
-						&& UtilPlayer.canHandOver(game, actingPlayer.getPlayer()))
-				|| ((PlayerAction.PASS_MOVE == actingPlayer.getPlayerAction())
-						&& UtilPlayer.hasBall(game, actingPlayer.getPlayer()))
-				|| ((PlayerAction.FOUL_MOVE == actingPlayer.getPlayerAction())
-						&& UtilPlayer.canFoul(game, actingPlayer.getPlayer()))
-				|| ((PlayerAction.MOVE == actingPlayer.getPlayerAction()) && UtilPlayer.canGaze(game, actingPlayer.getPlayer()))
-				|| ((PlayerAction.KICK_TEAM_MATE_MOVE == actingPlayer.getPlayerAction())
-						&& UtilPlayer.canKickTeamMate(game, actingPlayer.getPlayer(), false))
-				|| ((PlayerAction.THROW_TEAM_MATE_MOVE == actingPlayer.getPlayerAction())
-						&& UtilPlayer.canThrowTeamMate(game, actingPlayer.getPlayer(), false))) {
+			|| ((PlayerAction.HAND_OVER_MOVE == actingPlayer.getPlayerAction())
+			&& UtilPlayer.canHandOver(game, actingPlayer.getPlayer()))
+			|| ((PlayerAction.PASS_MOVE == actingPlayer.getPlayerAction())
+			&& UtilPlayer.hasBall(game, actingPlayer.getPlayer()))
+			|| ((PlayerAction.FOUL_MOVE == actingPlayer.getPlayerAction())
+			&& UtilPlayer.canFoul(game, actingPlayer.getPlayer()))
+			|| ((PlayerAction.MOVE == actingPlayer.getPlayerAction()) && UtilPlayer.canGaze(game, actingPlayer.getPlayer()))
+			|| ((PlayerAction.KICK_TEAM_MATE_MOVE == actingPlayer.getPlayerAction())
+			&& UtilPlayer.canKickTeamMate(game, actingPlayer.getPlayer(), false))
+			|| ((PlayerAction.THROW_TEAM_MATE_MOVE == actingPlayer.getPlayerAction())
+			&& UtilPlayer.canThrowTeamMate(game, actingPlayer.getPlayer(), false))) {
 			UtilServerPlayerMove.updateMoveSquares(getGameState(), actingPlayer.isLeaping());
-			SequenceGenerator.getInstance().pushMoveSequence(getGameState());
+			moveGenerator.pushSequence(new Move.SequenceParams(getGameState()));
 		} else {
-			SequenceGenerator.getInstance().pushEndPlayerActionSequence(getGameState(), fFeedingAllowed, true, fEndTurn);
+			endGenerator.pushSequence(new EndPlayerAction.SequenceParams(getGameState(), fFeedingAllowed, true, fEndTurn));
 		}
 		getResult().setNextAction(StepAction.NEXT_STEP);
 	}
@@ -183,37 +196,44 @@ public class StepEndMoving extends AbstractStep {
 	}
 
 	private boolean pushSequenceForPlayerAction(PlayerAction pPlayerAction) {
+		SequenceGeneratorFactory factory = getGameState().getGame().getFactory(FactoryType.Factory.SEQUENCE_GENERATOR);
 		if (pPlayerAction != null) {
 			switch (pPlayerAction) {
-			case BLOCK:
-			case BLITZ:
-			case BLITZ_MOVE:
-				SequenceGenerator.getInstance().pushBlockSequence(getGameState());
-				return true;
-			case FOUL:
-			case FOUL_MOVE:
-				SequenceGenerator.getInstance().pushFoulSequence(getGameState());
-				return true;
-			case HAND_OVER:
-			case HAND_OVER_MOVE:
-			case PASS:
-			case PASS_MOVE:
-			case HAIL_MARY_PASS:
-				SequenceGenerator.getInstance().pushPassSequence(getGameState());
-				return true;
-			case THROW_TEAM_MATE:
-			case THROW_TEAM_MATE_MOVE:
-				SequenceGenerator.getInstance().pushThrowTeamMateSequence(getGameState());
-				return true;
-			case KICK_TEAM_MATE:
-			case KICK_TEAM_MATE_MOVE:
-				SequenceGenerator.getInstance().pushKickTeamMateSequence(getGameState());
-				return true;
-			case GAZE:
-				SequenceGenerator.getInstance().pushMoveSequence(getGameState());
-				return true;
-			default:
-				break;
+				case BLOCK:
+				case BLITZ:
+				case BLITZ_MOVE:
+					((Block) factory.forName(SequenceGenerator.Type.Block.name()))
+						.pushSequence(new Block.SequenceParams(getGameState()));
+					return true;
+				case FOUL:
+				case FOUL_MOVE:
+					((Foul) factory.forName(SequenceGenerator.Type.Foul.name()))
+						.pushSequence(new Foul.SequenceParams(getGameState()));
+					return true;
+				case HAND_OVER:
+				case HAND_OVER_MOVE:
+				case PASS:
+				case PASS_MOVE:
+				case HAIL_MARY_PASS:
+					((Pass) factory.forName(SequenceGenerator.Type.Pass.name()))
+						.pushSequence(new Pass.SequenceParams(getGameState()));
+					return true;
+				case THROW_TEAM_MATE:
+				case THROW_TEAM_MATE_MOVE:
+					((ThrowTeamMate) factory.forName(SequenceGenerator.Type.ThrowTeamMate.name()))
+						.pushSequence(new ThrowTeamMate.SequenceParams(getGameState()));
+					return true;
+				case KICK_TEAM_MATE:
+				case KICK_TEAM_MATE_MOVE:
+					((KickTeamMate) factory.forName(SequenceGenerator.Type.KickTeamMate.name()))
+						.pushSequence(new KickTeamMate.SequenceParams(getGameState()));
+					return true;
+				case GAZE:
+					((Move) factory.forName(SequenceGenerator.Type.Move.name()))
+						.pushSequence(new Move.SequenceParams(getGameState()));
+					return true;
+				default:
+					break;
 			}
 		}
 		return false;

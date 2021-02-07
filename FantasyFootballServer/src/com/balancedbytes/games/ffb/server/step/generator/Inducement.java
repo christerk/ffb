@@ -13,7 +13,7 @@ import static com.balancedbytes.games.ffb.server.step.StepParameter.from;
 @RulesCollection(RulesCollection.Rules.COMMON)
 public class Inducement extends SequenceGenerator<Inducement.SequenceParams> {
 
-	protected Inducement() {
+	public Inducement() {
 		super(Type.Inducement);
 	}
 

@@ -8,7 +8,7 @@ import com.balancedbytes.games.ffb.server.step.phase.inducement.StepRiotousRooki
 @RulesCollection(RulesCollection.Rules.COMMON)
 public class RiotousRookies extends SequenceGenerator<SequenceGenerator.SequenceParams> {
 
-	protected RiotousRookies() {
+	public RiotousRookies() {
 		super(Type.RiotousRookies);
 	}
 

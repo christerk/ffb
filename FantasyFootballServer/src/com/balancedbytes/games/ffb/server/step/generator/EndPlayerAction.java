@@ -13,7 +13,7 @@ import static com.balancedbytes.games.ffb.server.step.StepParameter.from;
 @RulesCollection(RulesCollection.Rules.COMMON)
 public class EndPlayerAction extends SequenceGenerator<EndPlayerAction.SequenceParams> {
 
-	protected EndPlayerAction() {
+	public EndPlayerAction() {
 		super(Type.EndPlayerAction);
 	}
 

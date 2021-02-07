@@ -13,7 +13,7 @@ import static com.balancedbytes.games.ffb.server.step.StepParameter.from;
 @RulesCollection(RulesCollection.Rules.COMMON)
 public class SpecialEffect extends SequenceGenerator<SpecialEffect.SequenceParams> {
 
-	protected SpecialEffect() {
+	public SpecialEffect() {
 		super(Type.SpecialEffect);
 	}
 

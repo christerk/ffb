@@ -1,5 +1,6 @@
 package com.balancedbytes.games.ffb.server.step.action.ttm;
 
+import com.balancedbytes.games.ffb.FactoryType;
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.PlayerState;
 import com.balancedbytes.games.ffb.factory.IFactorySource;
@@ -8,14 +9,16 @@ import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.IServerJsonOption;
+import com.balancedbytes.games.ffb.server.factory.SequenceGeneratorFactory;
 import com.balancedbytes.games.ffb.server.net.ReceivedCommand;
 import com.balancedbytes.games.ffb.server.step.AbstractStep;
-import com.balancedbytes.games.ffb.server.step.SequenceGenerator;
 import com.balancedbytes.games.ffb.server.step.StepAction;
 import com.balancedbytes.games.ffb.server.step.StepCommandStatus;
 import com.balancedbytes.games.ffb.server.step.StepId;
 import com.balancedbytes.games.ffb.server.step.StepParameter;
 import com.balancedbytes.games.ffb.server.step.StepParameterKey;
+import com.balancedbytes.games.ffb.server.step.generator.ScatterPlayer;
+import com.balancedbytes.games.ffb.server.step.generator.SequenceGenerator;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
@@ -101,8 +104,10 @@ public final class StepEndScatterPlayer extends AbstractStep {
 		Game game = getGameState().getGame();
 		Player<?> thrownPlayer = game.getPlayerById(fThrownPlayerId);
 		if ((thrownPlayer != null) && (fThrownPlayerState != null) && (fThrownPlayerCoordinate != null)) {
-			SequenceGenerator.getInstance().pushScatterPlayerSequence(getGameState(), fThrownPlayerId, fThrownPlayerState,
-					fThrownPlayerHasBall, fThrownPlayerCoordinate, false, false);
+			SequenceGeneratorFactory factory = game.getFactory(FactoryType.Factory.SEQUENCE_GENERATOR);
+			((ScatterPlayer)factory.forName(SequenceGenerator.Type.ScatterPlayer.name()))
+				.pushSequence(new ScatterPlayer.SequenceParams(getGameState(), fThrownPlayerId, fThrownPlayerState,
+					fThrownPlayerHasBall, fThrownPlayerCoordinate, false, false));
 			if (fIsKickedPlayer) {
 				publishParameter(new StepParameter(StepParameterKey.IS_KICKED_PLAYER, true));
 			}

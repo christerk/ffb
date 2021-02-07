@@ -14,7 +14,7 @@ import static com.balancedbytes.games.ffb.server.step.StepParameter.from;
 @RulesCollection(RulesCollection.Rules.COMMON)
 public class Pass extends SequenceGenerator<Pass.SequenceParams> {
 
-	protected Pass() {
+	public Pass() {
 		super(Type.Pass);
 	}
 
@@ -66,6 +66,10 @@ public class Pass extends SequenceGenerator<Pass.SequenceParams> {
 		public SequenceParams(GameState gameState, FieldCoordinate targetCoordinate) {
 			super(gameState);
 			this.targetCoordinate = targetCoordinate;
+		}
+
+		public SequenceParams(GameState gameState) {
+			this(gameState, null);
 		}
 	}
 

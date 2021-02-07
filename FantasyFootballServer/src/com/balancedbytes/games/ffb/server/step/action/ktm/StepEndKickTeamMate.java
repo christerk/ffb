@@ -1,21 +1,26 @@
 package com.balancedbytes.games.ffb.server.step.action.ktm;
 
+import com.balancedbytes.games.ffb.FactoryType;
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.PlayerState;
 import com.balancedbytes.games.ffb.factory.IFactorySource;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
+import com.balancedbytes.games.ffb.net.NetCommandId;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.IServerJsonOption;
+import com.balancedbytes.games.ffb.server.factory.SequenceGeneratorFactory;
 import com.balancedbytes.games.ffb.server.net.ReceivedCommand;
 import com.balancedbytes.games.ffb.server.step.AbstractStep;
 import com.balancedbytes.games.ffb.server.step.IStepLabel;
-import com.balancedbytes.games.ffb.server.step.SequenceGenerator;
 import com.balancedbytes.games.ffb.server.step.StepAction;
 import com.balancedbytes.games.ffb.server.step.StepCommandStatus;
 import com.balancedbytes.games.ffb.server.step.StepId;
 import com.balancedbytes.games.ffb.server.step.StepParameter;
+import com.balancedbytes.games.ffb.server.step.generator.EndPlayerAction;
+import com.balancedbytes.games.ffb.server.step.generator.Select;
+import com.balancedbytes.games.ffb.server.step.generator.SequenceGenerator;
 import com.balancedbytes.games.ffb.server.util.UtilServerDialog;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
@@ -95,14 +100,12 @@ public final class StepEndKickTeamMate extends AbstractStep {
 	public StepCommandStatus handleCommand(ReceivedCommand pReceivedCommand) {
 		StepCommandStatus commandStatus = super.handleCommand(pReceivedCommand);
 		if (commandStatus == StepCommandStatus.UNHANDLED_COMMAND) {
-			switch (pReceivedCommand.getId()) {
-			case CLIENT_ACTING_PLAYER:
-				SequenceGenerator.getInstance().pushSelectSequence(getGameState(), false);
+			if (pReceivedCommand.getId() == NetCommandId.CLIENT_ACTING_PLAYER) {
+				SequenceGeneratorFactory factory = getGameState().getGame().getFactory(FactoryType.Factory.SEQUENCE_GENERATOR);
+				((Select) factory.forName(SequenceGenerator.Type.Select.name()))
+					.pushSequence(new Select.SequenceParams(getGameState(), false));
 				getResult().setNextAction(StepAction.NEXT_STEP_AND_REPEAT);
 				commandStatus = StepCommandStatus.SKIP_STEP;
-				break;
-			default:
-				break;
 			}
 		}
 		if (commandStatus == StepCommandStatus.EXECUTE_STEP) {
@@ -127,7 +130,9 @@ public final class StepEndKickTeamMate extends AbstractStep {
 			}
 		}
 		getGameState().cleanupStepStack(IStepLabel.END_MOVING);
-		SequenceGenerator.getInstance().pushEndPlayerActionSequence(getGameState(), true, true, fEndTurn);
+		SequenceGeneratorFactory factory = game.getFactory(FactoryType.Factory.SEQUENCE_GENERATOR);
+		((EndPlayerAction) factory.forName(SequenceGenerator.Type.EndPlayerAction.name()))
+			.pushSequence(new EndPlayerAction.SequenceParams(getGameState(), true, true, fEndTurn));
 		getResult().setNextAction(StepAction.NEXT_STEP);
 	}
 

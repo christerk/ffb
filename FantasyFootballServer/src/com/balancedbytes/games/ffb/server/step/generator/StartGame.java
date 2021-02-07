@@ -8,7 +8,7 @@ import com.balancedbytes.games.ffb.server.step.StepId;
 @RulesCollection(RulesCollection.Rules.COMMON)
 public class StartGame extends SequenceGenerator<SequenceGenerator.SequenceParams> {
 
-	protected StartGame() {
+	public StartGame() {
 		super(Type.StartGame);
 	}
 

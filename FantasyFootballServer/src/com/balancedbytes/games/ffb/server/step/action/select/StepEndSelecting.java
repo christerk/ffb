@@ -1,5 +1,6 @@
 package com.balancedbytes.games.ffb.server.step.action.select;
 
+import com.balancedbytes.games.ffb.FactoryType;
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.PlayerAction;
 import com.balancedbytes.games.ffb.factory.IFactorySource;
@@ -9,12 +10,21 @@ import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.IServerJsonOption;
+import com.balancedbytes.games.ffb.server.factory.SequenceGeneratorFactory;
 import com.balancedbytes.games.ffb.server.step.AbstractStep;
-import com.balancedbytes.games.ffb.server.step.SequenceGenerator;
 import com.balancedbytes.games.ffb.server.step.StepAction;
 import com.balancedbytes.games.ffb.server.step.StepId;
 import com.balancedbytes.games.ffb.server.step.StepParameter;
 import com.balancedbytes.games.ffb.server.step.UtilServerSteps;
+import com.balancedbytes.games.ffb.server.step.generator.Block;
+import com.balancedbytes.games.ffb.server.step.generator.EndPlayerAction;
+import com.balancedbytes.games.ffb.server.step.generator.Foul;
+import com.balancedbytes.games.ffb.server.step.generator.KickTeamMate;
+import com.balancedbytes.games.ffb.server.step.generator.Move;
+import com.balancedbytes.games.ffb.server.step.generator.Pass;
+import com.balancedbytes.games.ffb.server.step.generator.Select;
+import com.balancedbytes.games.ffb.server.step.generator.SequenceGenerator;
+import com.balancedbytes.games.ffb.server.step.generator.ThrowTeamMate;
 import com.balancedbytes.games.ffb.server.util.UtilServerDialog;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
@@ -140,7 +150,9 @@ public final class StepEndSelecting extends AbstractStep {
 		Game game = getGameState().getGame();
 		ActingPlayer actingPlayer = game.getActingPlayer();
 		if (fEndTurn || fEndPlayerAction) {
-			SequenceGenerator.getInstance().pushEndPlayerActionSequence(getGameState(), true, true, fEndTurn);
+			SequenceGeneratorFactory factory = game.getFactory(FactoryType.Factory.SEQUENCE_GENERATOR);
+			((EndPlayerAction)factory.forName(SequenceGenerator.Type.EndPlayerAction.name()))
+			.pushSequence(new EndPlayerAction.SequenceParams(getGameState(), true, true, fEndTurn));
 		} else if (actingPlayer.isSufferingBloodLust()) {
 			if (fDispatchPlayerAction != null) {
 				if (!fDispatchPlayerAction.isMoving()) {
@@ -163,11 +175,23 @@ public final class StepEndSelecting extends AbstractStep {
 	}
 
 	private void dispatchPlayerAction(PlayerAction pPlayerAction, boolean pWithParameter) {
+		Game game = getGameState().getGame();
+		SequenceGeneratorFactory factory = game.getFactory(FactoryType.Factory.SEQUENCE_GENERATOR);
+
 		if (pPlayerAction == null) {
-			SequenceGenerator.getInstance().pushSelectSequence(getGameState(), false);
+			((Select)factory.forName(SequenceGenerator.Type.Select.name()))
+				.pushSequence(new Select.SequenceParams(getGameState(), false));
 			return;
 		}
-		Game game = getGameState().getGame();
+		Pass passGenerator = (Pass)factory.forName(SequenceGenerator.Type.Pass.name());
+		ThrowTeamMate ttmGenerator = (ThrowTeamMate) factory.forName(SequenceGenerator.Type.ThrowTeamMate.name());
+		KickTeamMate ktmGenerator = (KickTeamMate) factory.forName(SequenceGenerator.Type.KickTeamMate.name());
+		Block blockGenerator = (Block)factory.forName(SequenceGenerator.Type.Block.name());
+		Foul foulGenerator = (Foul)factory.forName(SequenceGenerator.Type.Foul.name());
+		Move moveGenerator = (Move)factory.forName(SequenceGenerator.Type.Move.name());
+		EndPlayerAction endGenerator = (EndPlayerAction)factory.forName(SequenceGenerator.Type.EndPlayerAction.name());
+		EndPlayerAction.SequenceParams endParams = new EndPlayerAction.SequenceParams(getGameState(), true, true, false);
+
 		ActingPlayer actingPlayer = game.getActingPlayer();
 		switch (pPlayerAction) {
 		case PASS:
@@ -176,39 +200,39 @@ public final class StepEndSelecting extends AbstractStep {
 		case HAIL_MARY_BOMB:
 		case HAND_OVER:
 			if (pWithParameter) {
-				SequenceGenerator.getInstance().pushPassSequence(getGameState(), fTargetCoordinate);
+				passGenerator.pushSequence(new Pass.SequenceParams(getGameState(), fTargetCoordinate));
 			} else {
-				SequenceGenerator.getInstance().pushPassSequence(getGameState());
+				passGenerator.pushSequence(new Pass.SequenceParams(getGameState()));
 			}
 			break;
 		case THROW_TEAM_MATE:
 			if (pWithParameter) {
-				SequenceGenerator.getInstance().pushThrowTeamMateSequence(getGameState(), fThrownPlayerId, fTargetCoordinate);
+				ttmGenerator.pushSequence(new ThrowTeamMate.SequenceParams(getGameState(), fThrownPlayerId, fTargetCoordinate));
 			} else {
-				SequenceGenerator.getInstance().pushThrowTeamMateSequence(getGameState());
+				ttmGenerator.pushSequence(new ThrowTeamMate.SequenceParams(getGameState()));
 			}
 			break;
 		case KICK_TEAM_MATE:
 			if (pWithParameter) {
-				SequenceGenerator.getInstance().pushKickTeamMateSequence(getGameState(), fNumDice, fKickedPlayerId);
+				ktmGenerator.pushSequence(new KickTeamMate.SequenceParams(getGameState(), fNumDice, fKickedPlayerId));
 			} else {
-				SequenceGenerator.getInstance().pushKickTeamMateSequence(getGameState());
+				ktmGenerator.pushSequence(new KickTeamMate.SequenceParams(getGameState()));
 			}
 			break;
 		case BLITZ:
 		case BLOCK:
 		case MULTIPLE_BLOCK:
 			if (pWithParameter) {
-				SequenceGenerator.getInstance().pushBlockSequence(getGameState(), fBlockDefenderId, fUsingStab, null);
+				blockGenerator.pushSequence(new Block.SequenceParams(getGameState(), fBlockDefenderId, fUsingStab, null));
 			} else {
-				SequenceGenerator.getInstance().pushBlockSequence(getGameState());
+				blockGenerator.pushSequence(new Block.SequenceParams(getGameState()));
 			}
 			break;
 		case FOUL:
 			if (pWithParameter) {
-				SequenceGenerator.getInstance().pushFoulSequence(getGameState(), fFoulDefenderId);
+				foulGenerator.pushSequence(new Foul.SequenceParams(getGameState(), fFoulDefenderId));
 			} else {
-				SequenceGenerator.getInstance().pushFoulSequence(getGameState());
+				foulGenerator.pushSequence(new Foul.SequenceParams(getGameState()));
 			}
 			break;
 		case MOVE:
@@ -220,25 +244,25 @@ public final class StepEndSelecting extends AbstractStep {
 		case GAZE:
 		case BLITZ_MOVE:
 			if (pWithParameter) {
-				SequenceGenerator.getInstance().pushMoveSequence(getGameState(), fMoveStack, fGazeVictimId);
+				moveGenerator.pushSequence(new Move.SequenceParams(getGameState(), fMoveStack, fGazeVictimId));
 			} else {
-				SequenceGenerator.getInstance().pushMoveSequence(getGameState());
+				moveGenerator.pushSequence(new Move.SequenceParams(getGameState()));
 			}
 			break;
 		case REMOVE_CONFUSION:
 			actingPlayer.setHasMoved(true);
-			SequenceGenerator.getInstance().pushEndPlayerActionSequence(getGameState(), true, true, false);
+			endGenerator.pushSequence(endParams);
 			break;
 		case STAND_UP:
 			if (actingPlayer.getPlayer().hasSkillWithProperty(NamedProperties.inflictsConfusion)) {
-				SequenceGenerator.getInstance().pushMoveSequence(getGameState());
+				moveGenerator.pushSequence(new Move.SequenceParams(getGameState()));
 			} else {
-				SequenceGenerator.getInstance().pushEndPlayerActionSequence(getGameState(), true, true, false);
+				endGenerator.pushSequence(endParams);
 			}
 			break;
 		case STAND_UP_BLITZ:
 			game.getTurnData().setBlitzUsed(true);
-			SequenceGenerator.getInstance().pushEndPlayerActionSequence(getGameState(), true, true, false);
+			endGenerator.pushSequence(endParams);
 			break;
 		default:
 			throw new IllegalStateException("Unhandled player action " + pPlayerAction.getName() + ".");

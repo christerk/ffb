@@ -1,10 +1,6 @@
 package com.balancedbytes.games.ffb.server.step.game.start;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
+import com.balancedbytes.games.ffb.FactoryType;
 import com.balancedbytes.games.ffb.Inducement;
 import com.balancedbytes.games.ffb.InducementPhase;
 import com.balancedbytes.games.ffb.InducementType;
@@ -33,19 +29,27 @@ import com.balancedbytes.games.ffb.server.FantasyFootballServer;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.IServerJsonOption;
 import com.balancedbytes.games.ffb.server.db.DbTransaction;
+import com.balancedbytes.games.ffb.server.factory.SequenceGeneratorFactory;
 import com.balancedbytes.games.ffb.server.net.ReceivedCommand;
 import com.balancedbytes.games.ffb.server.step.AbstractStep;
-import com.balancedbytes.games.ffb.server.step.SequenceGenerator;
 import com.balancedbytes.games.ffb.server.step.StepAction;
 import com.balancedbytes.games.ffb.server.step.StepCommandStatus;
 import com.balancedbytes.games.ffb.server.step.StepId;
 import com.balancedbytes.games.ffb.server.step.StepParameter;
 import com.balancedbytes.games.ffb.server.step.UtilServerSteps;
+import com.balancedbytes.games.ffb.server.step.generator.Inducement.SequenceParams;
+import com.balancedbytes.games.ffb.server.step.generator.RiotousRookies;
+import com.balancedbytes.games.ffb.server.step.generator.SequenceGenerator;
 import com.balancedbytes.games.ffb.server.util.UtilServerDialog;
 import com.balancedbytes.games.ffb.util.ArrayTool;
 import com.balancedbytes.games.ffb.util.UtilBox;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Step in start game sequence to buy inducements.
@@ -231,18 +235,22 @@ public final class StepBuyInducements extends AbstractStep {
 	}
 
 	private void leaveStep(int pHomeTV, int pAwayTV) {
+		SequenceGeneratorFactory factory = getGameState().getGame().getFactory(FactoryType.Factory.SEQUENCE_GENERATOR);
+		com.balancedbytes.games.ffb.server.step.generator.Inducement generator =
+			((com.balancedbytes.games.ffb.server.step.generator.Inducement) factory.forName(SequenceGenerator.Type.Inducement.name()));
 		if (pHomeTV > pAwayTV) {
-			SequenceGenerator.getInstance().pushInducementSequence(getGameState(),
-					InducementPhase.AFTER_INDUCEMENTS_PURCHASED, true);
-			SequenceGenerator.getInstance().pushInducementSequence(getGameState(),
-					InducementPhase.AFTER_INDUCEMENTS_PURCHASED, false);
+			generator.pushSequence(new SequenceParams(getGameState(),
+					InducementPhase.AFTER_INDUCEMENTS_PURCHASED, true));
+			generator.pushSequence(new SequenceParams(getGameState(),
+					InducementPhase.AFTER_INDUCEMENTS_PURCHASED, false));
 		} else {
-			SequenceGenerator.getInstance().pushInducementSequence(getGameState(),
-					InducementPhase.AFTER_INDUCEMENTS_PURCHASED, false);
-			SequenceGenerator.getInstance().pushInducementSequence(getGameState(),
-					InducementPhase.AFTER_INDUCEMENTS_PURCHASED, true);
+			generator.pushSequence(new SequenceParams(getGameState(),
+					InducementPhase.AFTER_INDUCEMENTS_PURCHASED, false));
+			generator.pushSequence(new SequenceParams(getGameState(),
+					InducementPhase.AFTER_INDUCEMENTS_PURCHASED, true));
 		}
-		SequenceGenerator.getInstance().pushRiotousRookies(getGameState());
+		((RiotousRookies)factory.forName(SequenceGenerator.Type.RiotousRookies.name()))
+			.pushSequence(new SequenceGenerator.SequenceParams(getGameState()));
 		Game game = getGameState().getGame();
 		int restGoldHome = Math.max(0, fInducementGoldHome - fGoldUsedHome);
 		int maxInducementGoldHome = UtilInducementSequence.calculateInducementGold(game, true);

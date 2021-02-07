@@ -2,6 +2,7 @@ package com.balancedbytes.games.ffb.server.factory;
 
 import com.balancedbytes.games.ffb.FactoryType;
 import com.balancedbytes.games.ffb.FantasyFootballException;
+import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.factory.INamedObjectFactory;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.server.step.generator.SequenceGenerator;
@@ -11,6 +12,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @FactoryType(FactoryType.Factory.SEQUENCE_GENERATOR)
+@RulesCollection(RulesCollection.Rules.COMMON)
 public class SequenceGeneratorFactory implements INamedObjectFactory<SequenceGenerator<? extends SequenceGenerator.SequenceParams>> {
 
 	private final Map<String, SequenceGenerator<? extends SequenceGenerator.SequenceParams>> generators = new HashMap<>();

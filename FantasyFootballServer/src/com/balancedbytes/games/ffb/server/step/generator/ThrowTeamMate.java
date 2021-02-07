@@ -14,7 +14,7 @@ import static com.balancedbytes.games.ffb.server.step.StepParameter.from;
 @RulesCollection(RulesCollection.Rules.COMMON)
 public class ThrowTeamMate extends SequenceGenerator<ThrowTeamMate.SequenceParams> {
 
-	protected ThrowTeamMate() {
+	public ThrowTeamMate() {
 		super(Type.ThrowTeamMate);
 	}
 
@@ -61,6 +61,10 @@ public class ThrowTeamMate extends SequenceGenerator<ThrowTeamMate.SequenceParam
 			super(gameState);
 			this.thrownPlayerId = thrownPlayerId;
 			this.targetCoordinate = targetCoordinate;
+		}
+
+		public SequenceParams(GameState gameState) {
+			this(gameState, null, null);
 		}
 	}
 }

@@ -1,5 +1,6 @@
 package com.balancedbytes.games.ffb.server.step.action.end;
 
+import com.balancedbytes.games.ffb.FactoryType;
 import com.balancedbytes.games.ffb.InducementPhase;
 import com.balancedbytes.games.ffb.TurnMode;
 import com.balancedbytes.games.ffb.factory.IFactorySource;
@@ -7,13 +8,18 @@ import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.IServerJsonOption;
+import com.balancedbytes.games.ffb.server.factory.SequenceGeneratorFactory;
 import com.balancedbytes.games.ffb.server.step.AbstractStep;
-import com.balancedbytes.games.ffb.server.step.SequenceGenerator;
 import com.balancedbytes.games.ffb.server.step.StepAction;
 import com.balancedbytes.games.ffb.server.step.StepId;
 import com.balancedbytes.games.ffb.server.step.StepParameter;
 import com.balancedbytes.games.ffb.server.step.StepParameterKey;
 import com.balancedbytes.games.ffb.server.step.UtilServerSteps;
+import com.balancedbytes.games.ffb.server.step.generator.EndTurn;
+import com.balancedbytes.games.ffb.server.step.generator.Inducement;
+import com.balancedbytes.games.ffb.server.step.generator.Pass;
+import com.balancedbytes.games.ffb.server.step.generator.Select;
+import com.balancedbytes.games.ffb.server.step.generator.SequenceGenerator;
 import com.balancedbytes.games.ffb.server.util.UtilServerDialog;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
@@ -68,22 +74,28 @@ public class StepEndFeeding extends AbstractStep {
 		UtilServerDialog.hideDialog(getGameState());
 		Game game = getGameState().getGame();
 		fEndTurn |= UtilServerSteps.checkTouchdown(getGameState());
+		SequenceGeneratorFactory factory = game.getFactory(FactoryType.Factory.SEQUENCE_GENERATOR);
+
 		if (fEndTurn) {
 			if (game.getTurnMode() == TurnMode.PASS_BLOCK) {
-				SequenceGenerator.getInstance().pushEndTurnSequence(getGameState());
+				((EndTurn) factory.forName(SequenceGenerator.Type.EndTurn.name()))
+					.pushSequence(new SequenceGenerator.SequenceParams(getGameState()));
 			} else {
 				UtilServerSteps.changePlayerAction(this, null, null, false);
-				SequenceGenerator.getInstance().pushInducementSequence(getGameState(), InducementPhase.END_OF_OWN_TURN,
-						game.isHomePlaying());
+				((Inducement) factory.forName(SequenceGenerator.Type.Inducement.name()))
+					.pushSequence(new Inducement.SequenceParams(getGameState(), InducementPhase.END_OF_OWN_TURN,
+						game.isHomePlaying()));
 			}
 		} else if (!fEndPlayerAction && (game.getThrowerAction() != null) && game.getThrowerAction().isPassing()) {
-			SequenceGenerator.getInstance().pushPassSequence(getGameState(), game.getPassCoordinate());
+			((Pass) factory.forName(SequenceGenerator.Type.Pass.name()))
+				.pushSequence(new Pass.SequenceParams(getGameState(), game.getPassCoordinate()));
 		} else if ((game.getTurnMode() == TurnMode.KICKOFF_RETURN) || (game.getTurnMode() == TurnMode.PASS_BLOCK)) {
 			publishParameter(new StepParameter(StepParameterKey.END_PLAYER_ACTION, true));
 		} else {
 			game.setPassCoordinate(null);
 			UtilServerSteps.changePlayerAction(this, null, null, false);
-			SequenceGenerator.getInstance().pushSelectSequence(getGameState(), false);
+			((Select) factory.forName(SequenceGenerator.Type.Select.name()))
+				.pushSequence(new Select.SequenceParams(getGameState(), false));
 		}
 		getResult().setNextAction(StepAction.NEXT_STEP);
 	}

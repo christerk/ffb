@@ -1,5 +1,6 @@
 package com.balancedbytes.games.ffb.server.step.action.move;
 
+import com.balancedbytes.games.ffb.FactoryType;
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.FieldCoordinateBounds;
 import com.balancedbytes.games.ffb.MoveSquare;
@@ -19,9 +20,9 @@ import com.balancedbytes.games.ffb.net.commands.ClientCommandPass;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandThrowTeamMate;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.IServerJsonOption;
+import com.balancedbytes.games.ffb.server.factory.SequenceGeneratorFactory;
 import com.balancedbytes.games.ffb.server.net.ReceivedCommand;
 import com.balancedbytes.games.ffb.server.step.AbstractStep;
-import com.balancedbytes.games.ffb.server.step.SequenceGenerator;
 import com.balancedbytes.games.ffb.server.step.StepAction;
 import com.balancedbytes.games.ffb.server.step.StepCommandStatus;
 import com.balancedbytes.games.ffb.server.step.StepException;
@@ -30,6 +31,8 @@ import com.balancedbytes.games.ffb.server.step.StepParameter;
 import com.balancedbytes.games.ffb.server.step.StepParameterKey;
 import com.balancedbytes.games.ffb.server.step.StepParameterSet;
 import com.balancedbytes.games.ffb.server.step.UtilServerSteps;
+import com.balancedbytes.games.ffb.server.step.generator.KickTeamMate;
+import com.balancedbytes.games.ffb.server.step.generator.SequenceGenerator;
 import com.balancedbytes.games.ffb.server.util.UtilServerPlayerMove;
 import com.balancedbytes.games.ffb.util.ArrayTool;
 import com.balancedbytes.games.ffb.util.StringTool;
@@ -239,7 +242,9 @@ public class StepInitMoving extends AbstractStep {
 			actingPlayer.setPlayerAction(PlayerAction.GAZE);
 			getResult().setNextAction(StepAction.NEXT_STEP);
 		} else if (StringTool.isProvided(fKickedPlayerId)) {
-			SequenceGenerator.getInstance().pushKickTeamMateSequence(getGameState(), fNumDice, fKickedPlayerId);
+			SequenceGeneratorFactory factory = game.getFactory(FactoryType.Factory.SEQUENCE_GENERATOR);
+			((KickTeamMate)factory.forName(SequenceGenerator.Type.KickTeamMate.name()))
+				.pushSequence(new KickTeamMate.SequenceParams(getGameState(), fNumDice, fKickedPlayerId));
 			publishParameter(new StepParameter(StepParameterKey.KICKED_PLAYER_ID, fKickedPlayerId));
 			publishParameter(new StepParameter(StepParameterKey.NR_OF_DICE, fNumDice));
 			getResult().setNextAction(StepAction.NEXT_STEP);

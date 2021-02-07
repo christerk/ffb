@@ -1,5 +1,6 @@
 package com.balancedbytes.games.ffb.server.step.action.ttm;
 
+import com.balancedbytes.games.ffb.FactoryType;
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.PlayerState;
 import com.balancedbytes.games.ffb.factory.IFactorySource;
@@ -8,13 +9,16 @@ import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.IServerJsonOption;
+import com.balancedbytes.games.ffb.server.factory.SequenceGeneratorFactory;
 import com.balancedbytes.games.ffb.server.net.ReceivedCommand;
 import com.balancedbytes.games.ffb.server.step.AbstractStep;
-import com.balancedbytes.games.ffb.server.step.SequenceGenerator;
 import com.balancedbytes.games.ffb.server.step.StepAction;
 import com.balancedbytes.games.ffb.server.step.StepCommandStatus;
 import com.balancedbytes.games.ffb.server.step.StepId;
 import com.balancedbytes.games.ffb.server.step.StepParameter;
+import com.balancedbytes.games.ffb.server.step.generator.EndPlayerAction;
+import com.balancedbytes.games.ffb.server.step.generator.Select;
+import com.balancedbytes.games.ffb.server.step.generator.SequenceGenerator;
 import com.balancedbytes.games.ffb.server.util.UtilServerDialog;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
@@ -92,7 +96,9 @@ public final class StepEndThrowTeamMate extends AbstractStep {
 		if (commandStatus == StepCommandStatus.UNHANDLED_COMMAND) {
 			switch (pReceivedCommand.getId()) {
 			case CLIENT_ACTING_PLAYER:
-				SequenceGenerator.getInstance().pushSelectSequence(getGameState(), false);
+				SequenceGeneratorFactory factory = getGameState().getGame().getFactory(FactoryType.Factory.SEQUENCE_GENERATOR);
+				((Select)factory.forName(SequenceGenerator.Type.Select.name()))
+					.pushSequence(new Select.SequenceParams(getGameState(), false));
 				getResult().setNextAction(StepAction.NEXT_STEP_AND_REPEAT);
 				commandStatus = StepCommandStatus.SKIP_STEP;
 				break;
@@ -121,7 +127,9 @@ public final class StepEndThrowTeamMate extends AbstractStep {
 				game.getFieldModel().setBallCoordinate(fThrownPlayerCoordinate);
 			}
 		}
-		SequenceGenerator.getInstance().pushEndPlayerActionSequence(getGameState(), true, true, fEndTurn);
+		SequenceGeneratorFactory factory = getGameState().getGame().getFactory(FactoryType.Factory.SEQUENCE_GENERATOR);
+		((EndPlayerAction)factory.forName(SequenceGenerator.Type.EndPlayerAction.name()))
+			.pushSequence(new EndPlayerAction.SequenceParams(getGameState(), true, true, fEndTurn));
 		getResult().setNextAction(StepAction.NEXT_STEP);
 	}
 

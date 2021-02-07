@@ -11,7 +11,7 @@ import static com.balancedbytes.games.ffb.server.step.StepParameter.from;
 @RulesCollection(RulesCollection.Rules.COMMON)
 public class Card extends SequenceGenerator<Card.SequenceParams> {
 
-	protected Card() {
+	public Card() {
 		super(Type.Card);
 	}
 
