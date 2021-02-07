@@ -433,6 +433,7 @@ public class StepCatchScatterThrowIn extends AbstractStepWithReRoll {
 		Game game = getGameState().getGame();
 		setReRolledAction(null);
 		setReRollSource(null);
+		state = new StepState();
 
 		int roll = getGameState().getDiceRoller().rollScatterDirection();
 		Direction direction = DiceInterpreter.getInstance().interpretScatterDirectionRoll(game, roll);
