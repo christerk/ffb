@@ -10,7 +10,7 @@ import com.balancedbytes.games.ffb.server.factory.SequenceGeneratorFactory;
 import com.balancedbytes.games.ffb.server.net.ReceivedCommand;
 import com.balancedbytes.games.ffb.server.net.commands.InternalServerCommandUploadGame;
 import com.balancedbytes.games.ffb.server.request.ServerRequestLoadReplay;
-import com.balancedbytes.games.ffb.server.step.generator.EndGame;
+import com.balancedbytes.games.ffb.server.step.generator.common.EndGame;
 import com.balancedbytes.games.ffb.server.step.generator.SequenceGenerator;
 import com.balancedbytes.games.ffb.util.StringTool;
 

@@ -15,8 +15,8 @@ import com.balancedbytes.games.ffb.server.step.StepAction;
 import com.balancedbytes.games.ffb.server.step.StepId;
 import com.balancedbytes.games.ffb.server.step.StepParameter;
 import com.balancedbytes.games.ffb.server.step.UtilServerSteps;
-import com.balancedbytes.games.ffb.server.step.generator.EndPlayerAction;
 import com.balancedbytes.games.ffb.server.step.generator.Pass;
+import com.balancedbytes.games.ffb.server.step.generator.common.EndPlayerAction;
 import com.balancedbytes.games.ffb.server.step.generator.SequenceGenerator;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
@@ -91,7 +91,7 @@ public final class StepEndBomb extends AbstractStep {
 			Player<?> catcher = game.getPlayerById(fCatcherId);
 			game.setHomePlaying(game.getTeamHome().hasPlayer(catcher));
 			UtilServerSteps.changePlayerAction(this, fCatcherId, PlayerAction.THROW_BOMB, false);
-			((Pass)factory.forName(SequenceGenerator.Type.Pass.name()))
+			((com.balancedbytes.games.ffb.server.step.generator.Pass)factory.forName(SequenceGenerator.Type.Pass.name()))
 				.pushSequence(new Pass.SequenceParams(getGameState(), null));
 		}
 		// stop immediate re-throwing of the bomb

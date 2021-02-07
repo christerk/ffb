@@ -15,10 +15,10 @@ import com.balancedbytes.games.ffb.server.step.StepId;
 import com.balancedbytes.games.ffb.server.step.StepParameter;
 import com.balancedbytes.games.ffb.server.step.StepParameterKey;
 import com.balancedbytes.games.ffb.server.step.UtilServerSteps;
-import com.balancedbytes.games.ffb.server.step.generator.EndTurn;
-import com.balancedbytes.games.ffb.server.step.generator.Inducement;
 import com.balancedbytes.games.ffb.server.step.generator.Pass;
-import com.balancedbytes.games.ffb.server.step.generator.Select;
+import com.balancedbytes.games.ffb.server.step.generator.common.EndTurn;
+import com.balancedbytes.games.ffb.server.step.generator.common.Inducement;
+import com.balancedbytes.games.ffb.server.step.generator.common.Select;
 import com.balancedbytes.games.ffb.server.step.generator.SequenceGenerator;
 import com.balancedbytes.games.ffb.server.util.UtilServerDialog;
 import com.eclipsesource.json.JsonObject;
@@ -88,7 +88,7 @@ public class StepEndFeeding extends AbstractStep {
 			}
 		} else if (!fEndPlayerAction && (game.getThrowerAction() != null) && game.getThrowerAction().isPassing()) {
 			((Pass) factory.forName(SequenceGenerator.Type.Pass.name()))
-				.pushSequence(new Pass.SequenceParams(getGameState(), game.getPassCoordinate()));
+				.pushSequence(new com.balancedbytes.games.ffb.server.step.generator.Pass.SequenceParams(getGameState(), game.getPassCoordinate()));
 		} else if ((game.getTurnMode() == TurnMode.KICKOFF_RETURN) || (game.getTurnMode() == TurnMode.PASS_BLOCK)) {
 			publishParameter(new StepParameter(StepParameterKey.END_PLAYER_ACTION, true));
 		} else {

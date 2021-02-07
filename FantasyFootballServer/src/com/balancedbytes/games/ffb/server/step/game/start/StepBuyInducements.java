@@ -37,8 +37,8 @@ import com.balancedbytes.games.ffb.server.step.StepCommandStatus;
 import com.balancedbytes.games.ffb.server.step.StepId;
 import com.balancedbytes.games.ffb.server.step.StepParameter;
 import com.balancedbytes.games.ffb.server.step.UtilServerSteps;
-import com.balancedbytes.games.ffb.server.step.generator.Inducement.SequenceParams;
-import com.balancedbytes.games.ffb.server.step.generator.RiotousRookies;
+import com.balancedbytes.games.ffb.server.step.generator.common.Inducement.SequenceParams;
+import com.balancedbytes.games.ffb.server.step.generator.common.RiotousRookies;
 import com.balancedbytes.games.ffb.server.step.generator.SequenceGenerator;
 import com.balancedbytes.games.ffb.server.util.UtilServerDialog;
 import com.balancedbytes.games.ffb.util.ArrayTool;
@@ -236,8 +236,8 @@ public final class StepBuyInducements extends AbstractStep {
 
 	private void leaveStep(int pHomeTV, int pAwayTV) {
 		SequenceGeneratorFactory factory = getGameState().getGame().getFactory(FactoryType.Factory.SEQUENCE_GENERATOR);
-		com.balancedbytes.games.ffb.server.step.generator.Inducement generator =
-			((com.balancedbytes.games.ffb.server.step.generator.Inducement) factory.forName(SequenceGenerator.Type.Inducement.name()));
+		com.balancedbytes.games.ffb.server.step.generator.common.Inducement generator =
+			((com.balancedbytes.games.ffb.server.step.generator.common.Inducement) factory.forName(SequenceGenerator.Type.Inducement.name()));
 		if (pHomeTV > pAwayTV) {
 			generator.pushSequence(new SequenceParams(getGameState(),
 					InducementPhase.AFTER_INDUCEMENTS_PURCHASED, true));

@@ -21,7 +21,7 @@ import com.balancedbytes.games.ffb.server.IServerJsonOption;
 import com.balancedbytes.games.ffb.server.factory.SequenceGeneratorFactory;
 import com.balancedbytes.games.ffb.server.net.ReceivedCommand;
 import com.balancedbytes.games.ffb.server.step.AbstractStep;
-import com.balancedbytes.games.ffb.server.step.generator.SpecialEffect.SequenceParams;
+import com.balancedbytes.games.ffb.server.step.generator.common.SpecialEffect.SequenceParams;
 import com.balancedbytes.games.ffb.server.step.StepAction;
 import com.balancedbytes.games.ffb.server.step.StepCommandStatus;
 import com.balancedbytes.games.ffb.server.step.StepException;
@@ -155,8 +155,8 @@ public final class StepInitBomb extends AbstractStep {
 				}
 				if (affectedPlayers.size() > 0) {
 					SequenceGeneratorFactory factory = game.getFactory(FactoryType.Factory.SEQUENCE_GENERATOR);
-					com.balancedbytes.games.ffb.server.step.generator.SpecialEffect generator =
-						(com.balancedbytes.games.ffb.server.step.generator.SpecialEffect) factory.forName(SequenceGenerator.Type.SpecialEffect.name());
+					com.balancedbytes.games.ffb.server.step.generator.common.SpecialEffect generator =
+						(com.balancedbytes.games.ffb.server.step.generator.common.SpecialEffect) factory.forName(SequenceGenerator.Type.SpecialEffect.name());
 
 					affectedPlayers.stream().map(player -> {
 						boolean rollForEffect = !fBombCoordinate.equals(game.getFieldModel().getPlayerCoordinate(player));

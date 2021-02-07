@@ -19,9 +19,9 @@ import com.balancedbytes.games.ffb.server.step.StepId;
 import com.balancedbytes.games.ffb.server.step.StepParameter;
 import com.balancedbytes.games.ffb.server.step.StepParameterKey;
 import com.balancedbytes.games.ffb.server.step.UtilServerSteps;
-import com.balancedbytes.games.ffb.server.step.generator.Bomb;
-import com.balancedbytes.games.ffb.server.step.generator.EndPlayerAction;
 import com.balancedbytes.games.ffb.server.step.generator.Pass;
+import com.balancedbytes.games.ffb.server.step.generator.common.Bomb;
+import com.balancedbytes.games.ffb.server.step.generator.common.EndPlayerAction;
 import com.balancedbytes.games.ffb.server.step.generator.SequenceGenerator;
 import com.balancedbytes.games.ffb.server.util.UtilServerDialog;
 import com.balancedbytes.games.ffb.util.StringTool;
@@ -142,7 +142,7 @@ public final class StepEndPassing extends AbstractStep {
 		}
 		// failed animosity may try to choose a new target
 		if (actingPlayer.isSufferingAnimosity() && !fEndPlayerAction && (game.getPassCoordinate() == null)) {
-			((Pass)factory.forName(SequenceGenerator.Type.Pass.name())).pushSequence(new Pass.SequenceParams(getGameState()));
+			((Pass)factory.forName(SequenceGenerator.Type.Pass.name())).pushSequence(new com.balancedbytes.games.ffb.server.step.generator.Pass.SequenceParams(getGameState()));
 			getResult().setNextAction(StepAction.NEXT_STEP);
 			return;
 		}

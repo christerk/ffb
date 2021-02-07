@@ -51,9 +51,9 @@ import com.balancedbytes.games.ffb.server.step.StepId;
 import com.balancedbytes.games.ffb.server.step.StepParameter;
 import com.balancedbytes.games.ffb.server.step.StepParameterKey;
 import com.balancedbytes.games.ffb.server.step.UtilServerSteps;
-import com.balancedbytes.games.ffb.server.step.generator.EndGame;
-import com.balancedbytes.games.ffb.server.step.generator.Inducement.SequenceParams;
-import com.balancedbytes.games.ffb.server.step.generator.Kickoff;
+import com.balancedbytes.games.ffb.server.step.generator.common.EndGame;
+import com.balancedbytes.games.ffb.server.step.generator.common.Inducement.SequenceParams;
+import com.balancedbytes.games.ffb.server.step.generator.common.Kickoff;
 import com.balancedbytes.games.ffb.server.step.generator.SequenceGenerator;
 import com.balancedbytes.games.ffb.server.util.UtilServerCards;
 import com.balancedbytes.games.ffb.server.util.UtilServerDialog;
@@ -326,7 +326,7 @@ public class StepEndTurn extends AbstractStep {
 					fRemoveUsedSecretWeapons = true;
 				} else {
 					getResult().setSound(SoundId.DING);
-					((com.balancedbytes.games.ffb.server.step.generator.Inducement) factory.forName(SequenceGenerator.Type.Inducement.name()))
+					((com.balancedbytes.games.ffb.server.step.generator.common.Inducement) factory.forName(SequenceGenerator.Type.Inducement.name()))
 						.pushSequence(new SequenceParams(getGameState(), InducementPhase.START_OF_OWN_TURN,
 							game.isHomePlaying()));
 				}

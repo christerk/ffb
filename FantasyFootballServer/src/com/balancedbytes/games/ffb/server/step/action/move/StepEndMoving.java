@@ -17,14 +17,14 @@ import com.balancedbytes.games.ffb.server.step.StepCommandStatus;
 import com.balancedbytes.games.ffb.server.step.StepId;
 import com.balancedbytes.games.ffb.server.step.StepParameter;
 import com.balancedbytes.games.ffb.server.step.UtilServerSteps;
-import com.balancedbytes.games.ffb.server.step.generator.Block;
-import com.balancedbytes.games.ffb.server.step.generator.EndPlayerAction;
-import com.balancedbytes.games.ffb.server.step.generator.Foul;
-import com.balancedbytes.games.ffb.server.step.generator.KickTeamMate;
-import com.balancedbytes.games.ffb.server.step.generator.Move;
 import com.balancedbytes.games.ffb.server.step.generator.Pass;
+import com.balancedbytes.games.ffb.server.step.generator.common.Block;
+import com.balancedbytes.games.ffb.server.step.generator.common.EndPlayerAction;
+import com.balancedbytes.games.ffb.server.step.generator.common.Foul;
+import com.balancedbytes.games.ffb.server.step.generator.common.KickTeamMate;
+import com.balancedbytes.games.ffb.server.step.generator.common.Move;
 import com.balancedbytes.games.ffb.server.step.generator.SequenceGenerator;
-import com.balancedbytes.games.ffb.server.step.generator.ThrowTeamMate;
+import com.balancedbytes.games.ffb.server.step.generator.common.ThrowTeamMate;
 import com.balancedbytes.games.ffb.server.util.UtilServerDialog;
 import com.balancedbytes.games.ffb.server.util.UtilServerPlayerMove;
 import com.balancedbytes.games.ffb.util.ArrayTool;
@@ -216,7 +216,7 @@ public class StepEndMoving extends AbstractStep {
 				case PASS_MOVE:
 				case HAIL_MARY_PASS:
 					((Pass) factory.forName(SequenceGenerator.Type.Pass.name()))
-						.pushSequence(new Pass.SequenceParams(getGameState()));
+						.pushSequence(new com.balancedbytes.games.ffb.server.step.generator.Pass.SequenceParams(getGameState()));
 					return true;
 				case THROW_TEAM_MATE:
 				case THROW_TEAM_MATE_MOVE:

@@ -52,7 +52,7 @@ import com.balancedbytes.games.ffb.server.step.StepId;
 import com.balancedbytes.games.ffb.server.step.StepParameter;
 import com.balancedbytes.games.ffb.server.step.StepParameterKey;
 import com.balancedbytes.games.ffb.server.step.generator.SequenceGenerator;
-import com.balancedbytes.games.ffb.server.step.generator.SpikedBallApo;
+import com.balancedbytes.games.ffb.server.step.generator.common.SpikedBallApo;
 import com.balancedbytes.games.ffb.server.util.UtilServerCards;
 import com.balancedbytes.games.ffb.server.util.UtilServerCatchScatterThrowIn;
 import com.balancedbytes.games.ffb.server.util.UtilServerDialog;

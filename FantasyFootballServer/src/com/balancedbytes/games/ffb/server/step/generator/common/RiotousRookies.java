@@ -1,8 +1,9 @@
-package com.balancedbytes.games.ffb.server.step.generator;
+package com.balancedbytes.games.ffb.server.step.generator.common;
 
 import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.IServerLogLevel;
+import com.balancedbytes.games.ffb.server.step.generator.SequenceGenerator;
 import com.balancedbytes.games.ffb.server.step.phase.inducement.StepRiotousRookies;
 
 @RulesCollection(RulesCollection.Rules.COMMON)

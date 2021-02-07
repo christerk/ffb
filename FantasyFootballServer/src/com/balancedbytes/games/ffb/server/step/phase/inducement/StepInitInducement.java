@@ -24,9 +24,9 @@ import com.balancedbytes.games.ffb.server.step.StepParameter;
 import com.balancedbytes.games.ffb.server.step.StepParameterKey;
 import com.balancedbytes.games.ffb.server.step.StepParameterSet;
 import com.balancedbytes.games.ffb.server.step.UtilServerSteps;
-import com.balancedbytes.games.ffb.server.step.generator.Card.SequenceParams;
+import com.balancedbytes.games.ffb.server.step.generator.common.Card.SequenceParams;
 import com.balancedbytes.games.ffb.server.step.generator.SequenceGenerator;
-import com.balancedbytes.games.ffb.server.step.generator.Wizard;
+import com.balancedbytes.games.ffb.server.step.generator.common.Wizard;
 import com.balancedbytes.games.ffb.server.util.UtilServerCards;
 import com.balancedbytes.games.ffb.util.ArrayTool;
 import com.eclipsesource.json.JsonObject;
@@ -136,7 +136,7 @@ public final class StepInitInducement extends AbstractStep {
 				.pushSequence(new SequenceGenerator.SequenceParams(getGameState()));
 			leaveStep(false);
 		} else if (fCard != null) {
-			((com.balancedbytes.games.ffb.server.step.generator.Card)factory.forName(SequenceGenerator.Type.Card.name()))
+			((com.balancedbytes.games.ffb.server.step.generator.common.Card)factory.forName(SequenceGenerator.Type.Card.name()))
 				.pushSequence(new SequenceParams(getGameState(), fCard, fHomeTeam));
 			leaveStep(false);
 		} else {

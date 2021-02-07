@@ -1,4 +1,4 @@
-package com.balancedbytes.games.ffb.server.step.generator;
+package com.balancedbytes.games.ffb.server.step.generator.common;
 
 import com.balancedbytes.games.ffb.ApothecaryMode;
 import com.balancedbytes.games.ffb.FieldCoordinate;
@@ -8,6 +8,8 @@ import com.balancedbytes.games.ffb.server.IServerLogLevel;
 import com.balancedbytes.games.ffb.server.step.IStepLabel;
 import com.balancedbytes.games.ffb.server.step.StepId;
 import com.balancedbytes.games.ffb.server.step.StepParameterKey;
+import com.balancedbytes.games.ffb.server.step.generator.Sequence;
+import com.balancedbytes.games.ffb.server.step.generator.SequenceGenerator;
 
 import static com.balancedbytes.games.ffb.server.step.StepParameter.from;
 

@@ -29,7 +29,7 @@ import com.balancedbytes.games.ffb.server.step.StepId;
 import com.balancedbytes.games.ffb.server.step.StepParameter;
 import com.balancedbytes.games.ffb.server.step.StepParameterSet;
 import com.balancedbytes.games.ffb.server.step.generator.SequenceGenerator;
-import com.balancedbytes.games.ffb.server.step.generator.SpecialEffect.SequenceParams;
+import com.balancedbytes.games.ffb.server.step.generator.common.SpecialEffect.SequenceParams;
 import com.balancedbytes.games.ffb.server.util.UtilServerDialog;
 import com.balancedbytes.games.ffb.server.util.UtilServerGame;
 import com.balancedbytes.games.ffb.server.util.UtilServerInducementUse;
@@ -155,8 +155,8 @@ public final class StepWizard extends AbstractStep {
 					(fWizardSpell == SpecialEffect.FIREBALL) ? PlayerState.HIT_BY_FIREBALL : PlayerState.HIT_BY_LIGHTNING);
 			game.getFieldModel().add(new BloodSpot(fTargetCoordinate, bloodSpotInjury));
 			SequenceGeneratorFactory factory = game.getFactory(FactoryType.Factory.SEQUENCE_GENERATOR);
-			com.balancedbytes.games.ffb.server.step.generator.SpecialEffect generator =
-				(com.balancedbytes.games.ffb.server.step.generator.SpecialEffect) factory.forName(SequenceGenerator.Type.SpecialEffect.name());
+			com.balancedbytes.games.ffb.server.step.generator.common.SpecialEffect generator =
+				(com.balancedbytes.games.ffb.server.step.generator.common.SpecialEffect) factory.forName(SequenceGenerator.Type.SpecialEffect.name());
 			affectedPlayers.stream().map(affectedPlayer -> new SequenceParams(getGameState(), fWizardSpell, affectedPlayer.getId(),
 				true)).forEach(generator::pushSequence);
 			getResult().setNextAction(StepAction.NEXT_STEP);

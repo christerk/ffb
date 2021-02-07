@@ -16,15 +16,15 @@ import com.balancedbytes.games.ffb.server.step.StepAction;
 import com.balancedbytes.games.ffb.server.step.StepId;
 import com.balancedbytes.games.ffb.server.step.StepParameter;
 import com.balancedbytes.games.ffb.server.step.UtilServerSteps;
-import com.balancedbytes.games.ffb.server.step.generator.Block;
-import com.balancedbytes.games.ffb.server.step.generator.EndPlayerAction;
-import com.balancedbytes.games.ffb.server.step.generator.Foul;
-import com.balancedbytes.games.ffb.server.step.generator.KickTeamMate;
-import com.balancedbytes.games.ffb.server.step.generator.Move;
 import com.balancedbytes.games.ffb.server.step.generator.Pass;
-import com.balancedbytes.games.ffb.server.step.generator.Select;
+import com.balancedbytes.games.ffb.server.step.generator.common.Block;
+import com.balancedbytes.games.ffb.server.step.generator.common.EndPlayerAction;
+import com.balancedbytes.games.ffb.server.step.generator.common.Foul;
+import com.balancedbytes.games.ffb.server.step.generator.common.KickTeamMate;
+import com.balancedbytes.games.ffb.server.step.generator.common.Move;
+import com.balancedbytes.games.ffb.server.step.generator.common.Select;
 import com.balancedbytes.games.ffb.server.step.generator.SequenceGenerator;
-import com.balancedbytes.games.ffb.server.step.generator.ThrowTeamMate;
+import com.balancedbytes.games.ffb.server.step.generator.common.ThrowTeamMate;
 import com.balancedbytes.games.ffb.server.util.UtilServerDialog;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
@@ -183,7 +183,7 @@ public final class StepEndSelecting extends AbstractStep {
 				.pushSequence(new Select.SequenceParams(getGameState(), false));
 			return;
 		}
-		Pass passGenerator = (Pass)factory.forName(SequenceGenerator.Type.Pass.name());
+		com.balancedbytes.games.ffb.server.step.generator.Pass passGenerator = (com.balancedbytes.games.ffb.server.step.generator.Pass)factory.forName(SequenceGenerator.Type.Pass.name());
 		ThrowTeamMate ttmGenerator = (ThrowTeamMate) factory.forName(SequenceGenerator.Type.ThrowTeamMate.name());
 		KickTeamMate ktmGenerator = (KickTeamMate) factory.forName(SequenceGenerator.Type.KickTeamMate.name());
 		Block blockGenerator = (Block)factory.forName(SequenceGenerator.Type.Block.name());
@@ -200,7 +200,7 @@ public final class StepEndSelecting extends AbstractStep {
 		case HAIL_MARY_BOMB:
 		case HAND_OVER:
 			if (pWithParameter) {
-				passGenerator.pushSequence(new Pass.SequenceParams(getGameState(), fTargetCoordinate));
+				passGenerator.pushSequence(new com.balancedbytes.games.ffb.server.step.generator.Pass.SequenceParams(getGameState(), fTargetCoordinate));
 			} else {
 				passGenerator.pushSequence(new Pass.SequenceParams(getGameState()));
 			}

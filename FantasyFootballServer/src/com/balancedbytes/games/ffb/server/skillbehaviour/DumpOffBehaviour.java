@@ -69,7 +69,7 @@ public class DumpOffBehaviour extends SkillBehaviour<DumpOff> {
 					UtilServerDialog.showDialog(step.getGameState(), new DialogDefenderActionParameter(), true);
 					step.getGameState().pushCurrentStepOnStack();
 					SequenceGeneratorFactory factory = game.getFactory(FactoryType.Factory.SEQUENCE_GENERATOR);
-					((Pass) factory.forName(SequenceGenerator.Type.Pass.name()))
+					((com.balancedbytes.games.ffb.server.step.generator.Pass) factory.forName(SequenceGenerator.Type.Pass.name()))
 						.pushSequence(new Pass.SequenceParams(step.getGameState()));
 					step.getResult().setNextAction(StepAction.NEXT_STEP);
 
