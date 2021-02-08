@@ -1,6 +1,7 @@
 package com.balancedbytes.games.ffb.server.step.action.block;
 
 import com.balancedbytes.games.ffb.FieldCoordinate;
+import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.TurnMode;
 import com.balancedbytes.games.ffb.factory.IFactorySource;
 import com.balancedbytes.games.ffb.json.UtilJson;
@@ -25,6 +26,7 @@ import com.eclipsesource.json.JsonValue;
  * 
  * @author Kalimar
  */
+@RulesCollection(RulesCollection.Rules.COMMON)
 public class StepDumpOff extends AbstractStep {
 
 	public static class StepState {

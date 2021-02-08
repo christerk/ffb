@@ -5,6 +5,7 @@ import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.PathFinderWithPassBlockSupport;
 import com.balancedbytes.games.ffb.PlayerAction;
 import com.balancedbytes.games.ffb.PlayerState;
+import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.TurnMode;
 import com.balancedbytes.games.ffb.dialog.DialogPassBlockParameter;
 import com.balancedbytes.games.ffb.factory.IFactorySource;
@@ -49,6 +50,7 @@ import java.util.Set;
  *
  * @author Kalimar
  */
+@RulesCollection(RulesCollection.Rules.COMMON)
 public class StepPassBlock extends AbstractStep {
 
 	private String fGotoLabelOnEnd;

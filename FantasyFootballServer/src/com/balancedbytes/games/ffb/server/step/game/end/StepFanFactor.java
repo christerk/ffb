@@ -1,5 +1,6 @@
 package com.balancedbytes.games.ffb.server.step.game.end;
 
+import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.factory.IFactorySource;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.GameResult;
@@ -17,6 +18,7 @@ import com.eclipsesource.json.JsonValue;
  * 
  * @author Kalimar
  */
+@RulesCollection(RulesCollection.Rules.COMMON)
 public final class StepFanFactor extends AbstractStep {
 
 	public StepFanFactor(GameState pGameState) {

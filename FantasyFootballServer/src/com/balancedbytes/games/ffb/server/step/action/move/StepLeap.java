@@ -1,5 +1,6 @@
 package com.balancedbytes.games.ffb.server.step.action.move;
 
+import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.factory.IFactorySource;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.server.GameState;
@@ -24,6 +25,7 @@ import com.eclipsesource.json.JsonValue;
  * 
  * @author Kalimar
  */
+@RulesCollection(RulesCollection.Rules.COMMON)
 public class StepLeap extends AbstractStepWithReRoll {
 
 	public class StepState {

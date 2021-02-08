@@ -6,6 +6,7 @@ import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.FieldCoordinateBounds;
 import com.balancedbytes.games.ffb.InducementType;
 import com.balancedbytes.games.ffb.PlayerState;
+import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.SpecialEffect;
 import com.balancedbytes.games.ffb.TurnMode;
 import com.balancedbytes.games.ffb.dialog.DialogWizardSpellParameter;
@@ -48,6 +49,7 @@ import java.util.List;
  *
  * @author Kalimar
  */
+@RulesCollection(RulesCollection.Rules.COMMON)
 public final class StepWizard extends AbstractStep {
 
 	private SpecialEffect fWizardSpell;

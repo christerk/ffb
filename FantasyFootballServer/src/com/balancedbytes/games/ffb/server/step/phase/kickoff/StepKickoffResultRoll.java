@@ -1,6 +1,7 @@
 package com.balancedbytes.games.ffb.server.step.phase.kickoff;
 
 import com.balancedbytes.games.ffb.KickoffResult;
+import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.factory.IFactorySource;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.report.ReportKickoffResult;
@@ -25,6 +26,7 @@ import com.eclipsesource.json.JsonValue;
  * 
  * @author Kalimar
  */
+@RulesCollection(RulesCollection.Rules.COMMON)
 public final class StepKickoffResultRoll extends AbstractStep {
 
 	private KickoffResult fKickoffResult;

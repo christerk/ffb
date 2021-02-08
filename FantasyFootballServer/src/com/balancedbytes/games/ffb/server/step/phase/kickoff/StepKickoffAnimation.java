@@ -2,6 +2,7 @@ package com.balancedbytes.games.ffb.server.step.phase.kickoff;
 
 import com.balancedbytes.games.ffb.CatchScatterThrowInMode;
 import com.balancedbytes.games.ffb.FieldCoordinate;
+import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.factory.IFactorySource;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.Animation;
@@ -29,6 +30,7 @@ import com.eclipsesource.json.JsonValue;
  * 
  * @author Kalimar
  */
+@RulesCollection(RulesCollection.Rules.COMMON)
 public final class StepKickoffAnimation extends AbstractStep {
 
 	private FieldCoordinate fKickingPlayerCoordinate;

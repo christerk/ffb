@@ -3,6 +3,7 @@ package com.balancedbytes.games.ffb.server.step.game.end;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.factory.IFactorySource;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.GameResult;
@@ -25,6 +26,7 @@ import com.eclipsesource.json.JsonValue;
  *
  * @author Kalimar
  */
+@RulesCollection(RulesCollection.Rules.COMMON)
 public final class StepPlayerLoss extends AbstractStep {
 
 	public StepPlayerLoss(GameState pGameState) {

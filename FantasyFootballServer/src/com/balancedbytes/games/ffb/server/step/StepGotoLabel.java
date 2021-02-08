@@ -1,5 +1,6 @@
 package com.balancedbytes.games.ffb.server.step;
 
+import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.factory.IFactorySource;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.server.GameState;
@@ -15,6 +16,7 @@ import com.eclipsesource.json.JsonValue;
  * 
  * @author Kalimar
  */
+@RulesCollection(RulesCollection.Rules.COMMON)
 public class StepGotoLabel extends AbstractStep {
 
 	private String fGotoLabel;

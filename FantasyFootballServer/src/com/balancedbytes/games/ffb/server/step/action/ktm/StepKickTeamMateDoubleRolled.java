@@ -4,6 +4,7 @@ import com.balancedbytes.games.ffb.ApothecaryMode;
 import com.balancedbytes.games.ffb.CatchScatterThrowInMode;
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.PlayerState;
+import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.factory.IFactorySource;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.Game;
@@ -23,6 +24,7 @@ import com.balancedbytes.games.ffb.server.util.UtilServerInjury;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
+@RulesCollection(RulesCollection.Rules.COMMON)
 public class StepKickTeamMateDoubleRolled extends AbstractStep {
 	private String fKickedPlayerId;
 	private PlayerState fKickedPlayerState;

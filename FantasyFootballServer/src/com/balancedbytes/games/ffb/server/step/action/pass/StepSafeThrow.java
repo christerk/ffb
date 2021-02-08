@@ -4,6 +4,7 @@ import com.balancedbytes.games.ffb.FactoryType;
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.PlayerAction;
 import com.balancedbytes.games.ffb.ReRolledActions;
+import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.factory.IFactorySource;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.mechanics.AgilityMechanic;
@@ -48,6 +49,7 @@ import com.eclipsesource.json.JsonValue;
  * @author Kalimar
  */
 @StepHook(HookPoint.PASS_INTERCEPT)
+@RulesCollection(RulesCollection.Rules.COMMON)
 public class StepSafeThrow extends AbstractStepWithReRoll {
 
 	private String fGotoLabelOnFailure;

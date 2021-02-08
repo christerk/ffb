@@ -6,6 +6,7 @@ import com.balancedbytes.games.ffb.GoForItModifier;
 import com.balancedbytes.games.ffb.PlayerAction;
 import com.balancedbytes.games.ffb.ReRollSource;
 import com.balancedbytes.games.ffb.ReRolledActions;
+import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.factory.GoForItModifierFactory;
 import com.balancedbytes.games.ffb.factory.IFactorySource;
 import com.balancedbytes.games.ffb.json.UtilJson;
@@ -45,6 +46,7 @@ import com.eclipsesource.json.JsonValue;
  * 
  * @author Kalimar
  */
+@RulesCollection(RulesCollection.Rules.COMMON)
 public class StepGoForIt extends AbstractStepWithReRoll {
 	private boolean fBallandChainGfi;
 	private boolean fSecondGoForIt;

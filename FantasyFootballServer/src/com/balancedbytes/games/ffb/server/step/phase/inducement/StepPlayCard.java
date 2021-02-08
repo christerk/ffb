@@ -5,6 +5,7 @@ import com.balancedbytes.games.ffb.Card;
 import com.balancedbytes.games.ffb.CardEffect;
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.PlayerChoiceMode;
+import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.TurnMode;
 import com.balancedbytes.games.ffb.dialog.DialogPlayerChoiceParameter;
 import com.balancedbytes.games.ffb.factory.IFactorySource;
@@ -43,6 +44,7 @@ import com.eclipsesource.json.JsonValue;
  *
  * @author Kalimar
  */
+@RulesCollection(RulesCollection.Rules.COMMON)
 public final class StepPlayCard extends AbstractStep {
 
 	private Card fCard;

@@ -7,6 +7,7 @@ import com.balancedbytes.games.ffb.InterceptionModifier;
 import com.balancedbytes.games.ffb.PlayerAction;
 import com.balancedbytes.games.ffb.ReRollSource;
 import com.balancedbytes.games.ffb.ReRolledActions;
+import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.TurnMode;
 import com.balancedbytes.games.ffb.dialog.DialogInterceptionParameter;
 import com.balancedbytes.games.ffb.factory.IFactorySource;
@@ -49,6 +50,7 @@ import com.eclipsesource.json.JsonValue;
  *
  * @author Kalimar
  */
+@RulesCollection(RulesCollection.Rules.COMMON)
 public final class StepIntercept extends AbstractStepWithReRoll {
 
 	private String fGotoLabelOnFailure;

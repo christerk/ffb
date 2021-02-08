@@ -2,6 +2,7 @@ package com.balancedbytes.games.ffb.server.step.action.move;
 
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.PlayerState;
+import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.SoundId;
 import com.balancedbytes.games.ffb.TrackNumber;
 import com.balancedbytes.games.ffb.factory.IFactorySource;
@@ -32,6 +33,7 @@ import com.eclipsesource.json.JsonValue;
  * 
  * @author Kalimar
  */
+@RulesCollection(RulesCollection.Rules.COMMON)
 public class StepMove extends AbstractStep {
 
 	private FieldCoordinate fCoordinateFrom;

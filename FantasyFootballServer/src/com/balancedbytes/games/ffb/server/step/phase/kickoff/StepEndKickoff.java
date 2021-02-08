@@ -2,6 +2,7 @@ package com.balancedbytes.games.ffb.server.step.phase.kickoff;
 
 import com.balancedbytes.games.ffb.FactoryType;
 import com.balancedbytes.games.ffb.InducementPhase;
+import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.factory.IFactorySource;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.server.GameState;
@@ -24,6 +25,7 @@ import com.eclipsesource.json.JsonValue;
  * 
  * @author Kalimar
  */
+@RulesCollection(RulesCollection.Rules.COMMON)
 public final class StepEndKickoff extends AbstractStep {
 
 	public StepEndKickoff(GameState pGameState) {

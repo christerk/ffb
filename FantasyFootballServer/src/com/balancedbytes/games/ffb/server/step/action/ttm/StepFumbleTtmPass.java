@@ -2,6 +2,7 @@ package com.balancedbytes.games.ffb.server.step.action.ttm;
 
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.PlayerState;
+import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.factory.IFactorySource;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.Game;
@@ -27,6 +28,7 @@ import com.eclipsesource.json.JsonValue;
  *
  * @author Kalimar
  */
+@RulesCollection(RulesCollection.Rules.COMMON)
 public final class StepFumbleTtmPass extends AbstractStep {
 
 	private FieldCoordinate fThrownPlayerCoordinate;

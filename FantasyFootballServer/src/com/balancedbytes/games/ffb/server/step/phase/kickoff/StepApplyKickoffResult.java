@@ -11,6 +11,7 @@ import com.balancedbytes.games.ffb.Inducement;
 import com.balancedbytes.games.ffb.InducementType;
 import com.balancedbytes.games.ffb.KickoffResult;
 import com.balancedbytes.games.ffb.PlayerState;
+import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.TurnMode;
 import com.balancedbytes.games.ffb.Weather;
 import com.balancedbytes.games.ffb.factory.IFactorySource;
@@ -70,6 +71,7 @@ import com.eclipsesource.json.JsonValue;
  *
  * @author Kalimar
  */
+@RulesCollection(RulesCollection.Rules.COMMON)
 public final class StepApplyKickoffResult extends AbstractStep {
 
 	private String fGotoLabelOnEnd;

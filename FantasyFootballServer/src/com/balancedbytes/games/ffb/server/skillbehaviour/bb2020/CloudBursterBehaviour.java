@@ -47,6 +47,7 @@ public class CloudBursterBehaviour extends SkillBehaviour<CloudBurster> {
 	}
 
 	@StepHook(HookPoint.PASS_INTERCEPT)
+	@RulesCollection(Rules.BB2020)
 	public static class StepCloudBurster extends AbstractStep {
 		private String fGotoLabelOnFailure;
 		private String fInterceptorId;

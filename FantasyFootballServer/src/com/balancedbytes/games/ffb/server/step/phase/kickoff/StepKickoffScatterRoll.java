@@ -6,6 +6,7 @@ import java.util.List;
 import com.balancedbytes.games.ffb.Direction;
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.FieldCoordinateBounds;
+import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.SkillUse;
 import com.balancedbytes.games.ffb.dialog.DialogKickSkillParameter;
 import com.balancedbytes.games.ffb.factory.IFactorySource;
@@ -44,6 +45,7 @@ import com.eclipsesource.json.JsonValue;
  *
  * @author Kalimar
  */
+@RulesCollection(RulesCollection.Rules.COMMON)
 public final class StepKickoffScatterRoll extends AbstractStep {
 
 	private FieldCoordinate fKickoffStartCoordinate;

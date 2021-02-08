@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.balancedbytes.games.ffb.PlayerChoiceMode;
 import com.balancedbytes.games.ffb.PlayerState;
+import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.SendToBoxReason;
 import com.balancedbytes.games.ffb.dialog.DialogPlayerChoiceParameter;
 import com.balancedbytes.games.ffb.factory.IFactorySource;
@@ -38,6 +39,7 @@ import com.eclipsesource.json.JsonValue;
  *
  * @author Kalimar
  */
+@RulesCollection(RulesCollection.Rules.COMMON)
 public final class StepMvp extends AbstractStep {
 
 	private int fNrOfHomeMvps;

@@ -3,6 +3,7 @@ package com.balancedbytes.games.ffb.server.step.game.start;
 import java.util.Date;
 
 import com.balancedbytes.games.ffb.GameStatus;
+import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.factory.IFactorySource;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.Game;
@@ -30,6 +31,7 @@ import com.eclipsesource.json.JsonValue;
  * 
  * @author Kalimar
  */
+@RulesCollection(RulesCollection.Rules.COMMON)
 public final class StepInitStartGame extends AbstractStep {
 
 	private boolean fFumbblGameCreated;
@@ -129,8 +131,6 @@ public final class StepInitStartGame extends AbstractStep {
 					server.getDebugLog().log(IServerLogLevel.WARN, getGameState().getId(), "Default Options");
 				}
 			}
-			getGameState().getStepFactory().initialize();
-
 			// <-- log start game
 		}
 		getResult().setNextAction(StepAction.NEXT_STEP);

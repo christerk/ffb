@@ -5,6 +5,7 @@ import com.balancedbytes.games.ffb.CatchScatterThrowInMode;
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.PlayerChoiceMode;
 import com.balancedbytes.games.ffb.PlayerState;
+import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.SoundId;
 import com.balancedbytes.games.ffb.dialog.DialogPlayerChoiceParameter;
 import com.balancedbytes.games.ffb.factory.IFactorySource;
@@ -50,6 +51,7 @@ import com.eclipsesource.json.JsonValue;
  *
  * @author Kalimar
  */
+@RulesCollection(RulesCollection.Rules.COMMON)
 public class StepInitFeeding extends AbstractStep {
 
 	private String fGotoLabelOnEnd;

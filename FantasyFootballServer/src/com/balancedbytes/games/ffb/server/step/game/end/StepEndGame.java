@@ -4,6 +4,7 @@ import java.util.Date;
 
 import com.balancedbytes.games.ffb.GameStatus;
 import com.balancedbytes.games.ffb.IDialogParameter;
+import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.dialog.DialogId;
 import com.balancedbytes.games.ffb.dialog.DialogParameterFactory;
 import com.balancedbytes.games.ffb.factory.IFactorySource;
@@ -26,6 +27,7 @@ import com.eclipsesource.json.JsonValue;
  * 
  * @author Kalimar
  */
+@RulesCollection(RulesCollection.Rules.COMMON)
 public final class StepEndGame extends AbstractStep {
 
 	public StepEndGame(GameState pGameState) {

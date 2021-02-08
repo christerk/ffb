@@ -1,5 +1,6 @@
 package com.balancedbytes.games.ffb.server.step;
 
+import com.balancedbytes.games.ffb.INamedObject;
 import com.balancedbytes.games.ffb.factory.IFactorySource;
 import com.balancedbytes.games.ffb.json.IJsonSerializable;
 import com.balancedbytes.games.ffb.server.GameState;
@@ -11,7 +12,7 @@ import com.eclipsesource.json.JsonValue;
  * 
  * @author Kalimar
  */
-public interface IStep extends IJsonSerializable {
+public interface IStep extends IJsonSerializable, INamedObject {
 
 	public StepId getId();
 

@@ -5,6 +5,7 @@ import java.util.Map;
 
 import com.balancedbytes.games.ffb.Card;
 import com.balancedbytes.games.ffb.CardType;
+import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.dialog.DialogBuyCardsParameter;
 import com.balancedbytes.games.ffb.factory.IFactorySource;
 import com.balancedbytes.games.ffb.json.UtilJson;
@@ -39,6 +40,7 @@ import com.eclipsesource.json.JsonValue;
  *
  * @author Kalimar
  */
+@RulesCollection(RulesCollection.Rules.COMMON)
 public final class StepBuyCards extends AbstractStep {
 
 	private int fInducementGoldHome;

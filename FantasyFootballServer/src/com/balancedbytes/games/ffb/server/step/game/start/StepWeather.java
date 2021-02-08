@@ -1,5 +1,6 @@
 package com.balancedbytes.games.ffb.server.step.game.start;
 
+import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.Weather;
 import com.balancedbytes.games.ffb.factory.IFactorySource;
 import com.balancedbytes.games.ffb.report.ReportWeather;
@@ -18,6 +19,7 @@ import com.eclipsesource.json.JsonValue;
  * 
  * @author Kalimar
  */
+@RulesCollection(RulesCollection.Rules.COMMON)
 public final class StepWeather extends AbstractStep {
 
 	public StepWeather(GameState pGameState) {

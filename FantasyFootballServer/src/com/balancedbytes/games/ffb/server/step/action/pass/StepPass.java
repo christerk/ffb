@@ -9,6 +9,7 @@ import com.balancedbytes.games.ffb.PlayerAction;
 import com.balancedbytes.games.ffb.PlayerState;
 import com.balancedbytes.games.ffb.ReRollSource;
 import com.balancedbytes.games.ffb.ReRolledActions;
+import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.dialog.DialogSkillUseParameter;
 import com.balancedbytes.games.ffb.factory.IFactorySource;
 import com.balancedbytes.games.ffb.factory.PassModifierFactory;
@@ -60,6 +61,7 @@ import java.util.Set;
  * 
  * @author Kalimar
  */
+@RulesCollection(RulesCollection.Rules.COMMON)
 public class StepPass extends AbstractStepWithReRoll {
 
 	public static class StepState {

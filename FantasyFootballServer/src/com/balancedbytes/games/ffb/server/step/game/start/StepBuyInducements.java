@@ -6,6 +6,7 @@ import com.balancedbytes.games.ffb.InducementPhase;
 import com.balancedbytes.games.ffb.InducementType;
 import com.balancedbytes.games.ffb.PlayerState;
 import com.balancedbytes.games.ffb.PlayerType;
+import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.dialog.DialogBuyInducementsParameter;
 import com.balancedbytes.games.ffb.factory.IFactorySource;
 import com.balancedbytes.games.ffb.json.UtilJson;
@@ -61,6 +62,7 @@ import java.util.Map;
  *
  * @author Kalimar
  */
+@RulesCollection(RulesCollection.Rules.COMMON)
 public final class StepBuyInducements extends AbstractStep {
 
 	protected static final int MINIMUM_PETTY_CASH_FOR_INDUCEMENTS = 50000;

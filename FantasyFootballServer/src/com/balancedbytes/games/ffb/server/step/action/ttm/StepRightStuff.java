@@ -9,6 +9,7 @@ import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.PlayerState;
 import com.balancedbytes.games.ffb.ReRolledActions;
 import com.balancedbytes.games.ffb.RightStuffModifier;
+import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.factory.IFactorySource;
 import com.balancedbytes.games.ffb.factory.RightStuffModifierFactory;
 import com.balancedbytes.games.ffb.json.UtilJson;
@@ -50,6 +51,7 @@ import com.eclipsesource.json.JsonValue;
  *
  * @author Kalimar
  */
+@RulesCollection(RulesCollection.Rules.COMMON)
 public final class StepRightStuff extends AbstractStepWithReRoll {
 
 	private Boolean fThrownPlayerHasBall;

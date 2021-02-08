@@ -3,6 +3,7 @@ package com.balancedbytes.games.ffb.server.step.action.select;
 import com.balancedbytes.games.ffb.FactoryType;
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.PlayerAction;
+import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.factory.IFactorySource;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
@@ -48,6 +49,7 @@ import com.eclipsesource.json.JsonValue;
  *
  * @author Kalimar
  */
+@RulesCollection(RulesCollection.Rules.COMMON)
 public final class StepEndSelecting extends AbstractStep {
 
 	private boolean fEndTurn;

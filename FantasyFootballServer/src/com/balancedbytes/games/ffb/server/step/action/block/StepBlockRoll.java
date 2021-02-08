@@ -4,6 +4,7 @@ import com.balancedbytes.games.ffb.BlockResult;
 import com.balancedbytes.games.ffb.FactoryType.Factory;
 import com.balancedbytes.games.ffb.PlayerAction;
 import com.balancedbytes.games.ffb.ReRolledActions;
+import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.SoundId;
 import com.balancedbytes.games.ffb.dialog.DialogBlockRollParameter;
 import com.balancedbytes.games.ffb.factory.BlockResultFactory;
@@ -41,6 +42,7 @@ import com.eclipsesource.json.JsonValue;
  * 
  * @author Kalimar
  */
+@RulesCollection(RulesCollection.Rules.COMMON)
 public class StepBlockRoll extends AbstractStepWithReRoll {
 
 	private int fNrOfDice;

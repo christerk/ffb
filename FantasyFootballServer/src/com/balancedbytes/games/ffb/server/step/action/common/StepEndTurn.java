@@ -10,6 +10,7 @@ import com.balancedbytes.games.ffb.InducementPhase;
 import com.balancedbytes.games.ffb.InducementType;
 import com.balancedbytes.games.ffb.KnockoutRecovery;
 import com.balancedbytes.games.ffb.PlayerState;
+import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.SendToBoxReason;
 import com.balancedbytes.games.ffb.SoundId;
 import com.balancedbytes.games.ffb.TurnMode;
@@ -76,6 +77,7 @@ import java.util.List;
  *
  * @author Kalimar
  */
+@RulesCollection(RulesCollection.Rules.COMMON)
 public class StepEndTurn extends AbstractStep {
 
 	private Boolean fTouchdown;

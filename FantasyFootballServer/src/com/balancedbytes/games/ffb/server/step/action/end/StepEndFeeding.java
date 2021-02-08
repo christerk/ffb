@@ -2,6 +2,7 @@ package com.balancedbytes.games.ffb.server.step.action.end;
 
 import com.balancedbytes.games.ffb.FactoryType;
 import com.balancedbytes.games.ffb.InducementPhase;
+import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.TurnMode;
 import com.balancedbytes.games.ffb.factory.IFactorySource;
 import com.balancedbytes.games.ffb.json.UtilJson;
@@ -32,6 +33,7 @@ import com.eclipsesource.json.JsonValue;
  * 
  * @author Kalimar
  */
+@RulesCollection(RulesCollection.Rules.COMMON)
 public class StepEndFeeding extends AbstractStep {
 
 	private boolean fEndPlayerAction;

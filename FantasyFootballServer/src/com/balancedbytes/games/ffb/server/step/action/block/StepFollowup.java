@@ -3,6 +3,7 @@ package com.balancedbytes.games.ffb.server.step.action.block;
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.PlayerAction;
 import com.balancedbytes.games.ffb.PlayerState;
+import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.SkillUse;
 import com.balancedbytes.games.ffb.SoundId;
 import com.balancedbytes.games.ffb.TrackNumber;
@@ -44,6 +45,7 @@ import com.eclipsesource.json.JsonValue;
  * 
  * @author Kalimar
  */
+@RulesCollection(RulesCollection.Rules.COMMON)
 public class StepFollowup extends AbstractStep {
 
 	private FieldCoordinate coordinateFrom;

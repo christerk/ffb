@@ -7,6 +7,7 @@ import com.balancedbytes.games.ffb.InducementType;
 import com.balancedbytes.games.ffb.PlayerGender;
 import com.balancedbytes.games.ffb.PlayerState;
 import com.balancedbytes.games.ffb.PlayerType;
+import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.RosterPlayer;
 import com.balancedbytes.games.ffb.model.RosterPosition;
@@ -23,6 +24,7 @@ import com.balancedbytes.games.ffb.server.util.UtilServerHttpClient;
 import com.balancedbytes.games.ffb.util.StringTool;
 import com.balancedbytes.games.ffb.util.UtilBox;
 
+@RulesCollection(RulesCollection.Rules.COMMON)
 public class StepRiotousRookies extends AbstractStep {
 
 	public StepRiotousRookies(GameState pGameState) {

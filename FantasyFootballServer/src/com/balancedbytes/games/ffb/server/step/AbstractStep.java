@@ -35,7 +35,7 @@ import com.eclipsesource.json.JsonValue;
  */
 public abstract class AbstractStep implements IStep {
 
-	private GameState fGameState;
+	private final GameState fGameState;
 	private StepResult fStepResult;
 	private String fLabel;
 
@@ -47,6 +47,11 @@ public abstract class AbstractStep implements IStep {
 	protected AbstractStep(GameState pGameState, StepAction defaultStepResult) {
 		this(pGameState);
 		fStepResult.setNextAction(defaultStepResult);
+	}
+
+	@Override
+	public String getName() {
+		return getId().getName();
 	}
 
 	public void setLabel(String pLabel) {
@@ -124,10 +129,9 @@ public abstract class AbstractStep implements IStep {
 		if (pParameter != null) {
 			DebugLog debugLog = getGameState().getServer().getDebugLog();
 			if (debugLog.isLogging(IServerLogLevel.TRACE)) {
-				StringBuilder trace = new StringBuilder();
-				trace.append(getId()).append(" publishes ").append(pParameter.getKey()).append("=")
-						.append(pParameter.getValue());
-				debugLog.log(IServerLogLevel.TRACE, trace.toString());
+				String trace = getId() + " publishes " + pParameter.getKey() + "=" +
+					pParameter.getValue();
+				debugLog.log(IServerLogLevel.TRACE, trace);
 			}
 			setParameter(pParameter);
 			getGameState().getStepStack().publishStepParameter(pParameter);
@@ -145,9 +149,7 @@ public abstract class AbstractStep implements IStep {
 	public void consume(StepParameter pParameter) {
 		DebugLog debugLog = fGameState.getServer().getDebugLog();
 		if (debugLog.isLogging(IServerLogLevel.TRACE)) {
-			StringBuilder trace = new StringBuilder();
-			trace.append(getId()).append(" consumes ").append(pParameter.getKey()).append("=").append(pParameter.getValue());
-			debugLog.log(IServerLogLevel.TRACE, trace.toString());
+			debugLog.log(IServerLogLevel.TRACE, getId() + " consumes " + pParameter.getKey() + "=" + pParameter.getValue());
 		}
 		pParameter.consume();
 	}

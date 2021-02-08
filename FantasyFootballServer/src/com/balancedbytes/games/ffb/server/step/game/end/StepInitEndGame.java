@@ -1,6 +1,7 @@
 package com.balancedbytes.games.ffb.server.step.game.end;
 
 import com.balancedbytes.games.ffb.CardEffect;
+import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.SeriousInjury;
 import com.balancedbytes.games.ffb.TurnMode;
 import com.balancedbytes.games.ffb.factory.IFactorySource;
@@ -30,6 +31,7 @@ import com.eclipsesource.json.JsonValue;
  *
  * @author Kalimar
  */
+@RulesCollection(RulesCollection.Rules.COMMON)
 public final class StepInitEndGame extends AbstractStep {
 
 	private String fGotoLabelOnEnd;

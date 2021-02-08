@@ -1,5 +1,6 @@
 package com.balancedbytes.games.ffb.server.step.phase.kickoff;
 
+import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.dialog.DialogCoinChoiceParameter;
 import com.balancedbytes.games.ffb.dialog.DialogReceiveChoiceParameter;
 import com.balancedbytes.games.ffb.factory.IFactorySource;
@@ -28,6 +29,7 @@ import com.eclipsesource.json.JsonValue;
  * 
  * @author Kalimar
  */
+@RulesCollection(RulesCollection.Rules.COMMON)
 public final class StepCoinChoice extends AbstractStep {
 
 	protected Boolean fCoinChoiceHeads;

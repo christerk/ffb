@@ -1,6 +1,7 @@
 package com.balancedbytes.games.ffb.server.step.action.foul;
 
 import com.balancedbytes.games.ffb.InducementType;
+import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.dialog.DialogArgueTheCallParameter;
 import com.balancedbytes.games.ffb.dialog.DialogBribesParameter;
 import com.balancedbytes.games.ffb.factory.IFactorySource;
@@ -42,6 +43,7 @@ import com.eclipsesource.json.JsonValue;
  * 
  * @author Kalimar
  */
+@RulesCollection(RulesCollection.Rules.COMMON)
 public class StepBribes extends AbstractStep {
 
 	private String fGotoLabelOnEnd;

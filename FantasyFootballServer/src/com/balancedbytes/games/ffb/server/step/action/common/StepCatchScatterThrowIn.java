@@ -13,6 +13,7 @@ import com.balancedbytes.games.ffb.InducementDuration;
 import com.balancedbytes.games.ffb.PlayerChoiceMode;
 import com.balancedbytes.games.ffb.PlayerState;
 import com.balancedbytes.games.ffb.ReRolledActions;
+import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.SkillUse;
 import com.balancedbytes.games.ffb.SoundId;
 import com.balancedbytes.games.ffb.TurnMode;
@@ -80,6 +81,7 @@ import java.util.Set;
  *
  * @author Kalimar
  */
+@RulesCollection(RulesCollection.Rules.COMMON)
 public class StepCatchScatterThrowIn extends AbstractStepWithReRoll {
 
 	public static class StepState {

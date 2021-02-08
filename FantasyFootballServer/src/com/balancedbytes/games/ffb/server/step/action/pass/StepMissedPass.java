@@ -5,6 +5,7 @@ import com.balancedbytes.games.ffb.Direction;
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.FieldCoordinateBounds;
 import com.balancedbytes.games.ffb.PlayerAction;
+import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.factory.IFactorySource;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
@@ -38,6 +39,7 @@ import java.util.List;
  *
  * @author Kalimar
  */
+@RulesCollection(RulesCollection.Rules.COMMON)
 public class StepMissedPass extends AbstractStep {
 
 	private boolean passDeviates;

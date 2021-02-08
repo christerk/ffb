@@ -8,6 +8,7 @@ import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.PickupModifier;
 import com.balancedbytes.games.ffb.ReRollSource;
 import com.balancedbytes.games.ffb.ReRolledActions;
+import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.SoundId;
 import com.balancedbytes.games.ffb.factory.IFactorySource;
 import com.balancedbytes.games.ffb.factory.PickupModifierFactory;
@@ -47,6 +48,7 @@ import com.eclipsesource.json.JsonValue;
  * 
  * @author Kalimar
  */
+@RulesCollection(RulesCollection.Rules.COMMON)
 public class StepPickUp extends AbstractStepWithReRoll {
 
 	private String fGotoLabelOnFailure;

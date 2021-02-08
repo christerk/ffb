@@ -1,6 +1,7 @@
 package com.balancedbytes.games.ffb.server.step.action.foul;
 
 import com.balancedbytes.games.ffb.CatchScatterThrowInMode;
+import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.factory.IFactorySource;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
@@ -35,6 +36,7 @@ import com.eclipsesource.json.JsonValue;
  * 
  * @author Kalimar
  */
+@RulesCollection(RulesCollection.Rules.COMMON)
 public class StepEjectPlayer extends AbstractStep {
 
 	public class StepState {

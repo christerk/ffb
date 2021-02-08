@@ -4,6 +4,7 @@ import com.balancedbytes.games.ffb.Card;
 import com.balancedbytes.games.ffb.FactoryType;
 import com.balancedbytes.games.ffb.InducementPhase;
 import com.balancedbytes.games.ffb.InducementType;
+import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.dialog.DialogUseInducementParameter;
 import com.balancedbytes.games.ffb.factory.IFactorySource;
 import com.balancedbytes.games.ffb.json.UtilJson;
@@ -47,6 +48,7 @@ import java.util.Set;
  *
  * @author Kalimar
  */
+@RulesCollection(RulesCollection.Rules.COMMON)
 public final class StepInitInducement extends AbstractStep {
 
 	private InducementPhase fInducementPhase;

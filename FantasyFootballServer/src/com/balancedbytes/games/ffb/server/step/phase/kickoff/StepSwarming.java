@@ -1,5 +1,6 @@
 package com.balancedbytes.games.ffb.server.step.phase.kickoff;
 
+import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.factory.IFactorySource;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandSetupPlayer;
@@ -17,6 +18,7 @@ import com.balancedbytes.games.ffb.server.util.UtilServerSetup;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
+@RulesCollection(RulesCollection.Rules.COMMON)
 public class StepSwarming extends AbstractStep {
 
 	public class StepState {

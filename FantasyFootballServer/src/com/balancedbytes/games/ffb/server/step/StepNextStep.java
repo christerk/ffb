@@ -1,5 +1,6 @@
 package com.balancedbytes.games.ffb.server.step;
 
+import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.factory.IFactorySource;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.eclipsesource.json.JsonObject;
@@ -10,6 +11,7 @@ import com.eclipsesource.json.JsonValue;
  * 
  * @author Kalimar
  */
+@RulesCollection(RulesCollection.Rules.COMMON)
 public class StepNextStep extends AbstractStep {
 
 	public StepNextStep(GameState pGameState) {

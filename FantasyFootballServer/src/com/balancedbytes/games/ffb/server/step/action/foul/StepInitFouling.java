@@ -1,6 +1,7 @@
 package com.balancedbytes.games.ffb.server.step.action.foul;
 
 import com.balancedbytes.games.ffb.Card;
+import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.factory.IFactorySource;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
@@ -37,6 +38,7 @@ import com.eclipsesource.json.JsonValue;
  *
  * @author Kalimar
  */
+@RulesCollection(RulesCollection.Rules.COMMON)
 public class StepInitFouling extends AbstractStep {
 
 	private String fGotoLabelOnEnd;

@@ -6,6 +6,7 @@ import com.balancedbytes.games.ffb.CardEffect;
 import com.balancedbytes.games.ffb.InducementType;
 import com.balancedbytes.games.ffb.PlayerState;
 import com.balancedbytes.games.ffb.PlayerType;
+import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.SeriousInjury;
 import com.balancedbytes.games.ffb.dialog.DialogApothecaryChoiceParameter;
 import com.balancedbytes.games.ffb.dialog.DialogUseApothecaryParameter;
@@ -56,6 +57,7 @@ import com.eclipsesource.json.JsonValue;
  *
  * @author Kalimar
  */
+@RulesCollection(RulesCollection.Rules.COMMON)
 public class StepApothecary extends AbstractStep {
 
 	private ApothecaryMode fApothecaryMode;
