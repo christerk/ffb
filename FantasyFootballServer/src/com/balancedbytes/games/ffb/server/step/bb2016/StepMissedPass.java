@@ -1,4 +1,4 @@
-package com.balancedbytes.games.ffb.server.step.action.pass;
+package com.balancedbytes.games.ffb.server.step.bb2016;
 
 import com.balancedbytes.games.ffb.CatchScatterThrowInMode;
 import com.balancedbytes.games.ffb.Direction;
@@ -39,7 +39,7 @@ import java.util.List;
  *
  * @author Kalimar
  */
-@RulesCollection(RulesCollection.Rules.COMMON)
+@RulesCollection(RulesCollection.Rules.BB2016)
 public class StepMissedPass extends AbstractStep {
 
 	private boolean passDeviates;

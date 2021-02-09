@@ -49,6 +49,7 @@ public enum StepParameterKey {
 	GOTO_LABEL_ON_JUGGERNAUT, // String
 	GOTO_LABEL_ON_MISSED_PASS, // String
 	GOTO_LABEL_ON_PUSHBACK, // String
+	GOTO_LABEL_ON_SAVED_FUMBLE,
 	GOTO_LABEL_ON_SUCCESS, // String
 	HAIL_MARY_PASS, // Boolean
 	HANDLE_RECEIVING_TEAM, // Boolean
@@ -95,7 +96,7 @@ public enum StepParameterKey {
 	UPDATE_PERSISTENCE, // Boolean
 	USING_BREAK_TACKLE, // Boolean
 	USING_DIVING_TACKLE, // Boolean
-	USING_PILING_ON, // Boolean
+	USING_PILING_ON, // Boolean,
 	USING_STAB // Boolean
 
 }

@@ -1,10 +1,17 @@
 package com.balancedbytes.games.ffb;
 
+import com.balancedbytes.games.ffb.factory.IFactorySource;
+import com.balancedbytes.games.ffb.json.IJsonOption;
+import com.balancedbytes.games.ffb.json.IJsonSerializable;
+import com.balancedbytes.games.ffb.json.UtilJson;
+import com.eclipsesource.json.JsonObject;
+import com.eclipsesource.json.JsonValue;
+
 /**
  * 
  * @author Kalimar
  */
-public class FieldCoordinate {
+public class FieldCoordinate implements IJsonSerializable {
 
 	public static final int FIELD_WIDTH = 26;
 	public static final int FIELD_HEIGHT = 15;
@@ -252,4 +259,19 @@ public class FieldCoordinate {
 		return result;
 	}
 
+	@Override
+	public Object initFrom(IFactorySource game, JsonValue jsonValue) {
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
+		fX = IJsonOption.FIELD_COORDINATE_X.getFrom(game, jsonObject);
+		fY = IJsonOption.FIELD_COORDINATE_Y.getFrom(game, jsonObject);
+		return this;
+	}
+
+	@Override
+	public JsonObject toJsonValue() {
+		JsonObject jsonObject = new JsonObject();
+		IJsonOption.FIELD_COORDINATE_X.addTo(jsonObject, fX);
+		IJsonOption.FIELD_COORDINATE_Y.addTo(jsonObject, fY);
+		return jsonObject;
+	}
 }

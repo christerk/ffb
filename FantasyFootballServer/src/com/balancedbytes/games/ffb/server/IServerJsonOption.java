@@ -101,9 +101,11 @@ public interface IServerJsonOption extends IJsonOption {
 	JsonPlayerStateOption OLD_DEFENDER_STATE = new JsonPlayerStateOption("oldDefenderState");
 	JsonIntArrayOption OLD_PLAYER_STATES = new JsonIntArrayOption("oldPlayerStates");
 	JsonEnumWithNameOption OLD_TURN_MODE = new JsonEnumWithNameOption("oldTurnMode", Factory.TURN_MODE);
+	JsonBooleanOption OUT_OF_BOUNDS = new JsonBooleanOption("outOfBounds");
 	JsonBooleanOption PASS_ACCURATE = new JsonBooleanOption("passAccurate");
 	JsonBooleanOption PASS_FUMBLE = new JsonBooleanOption("passFumble");
 	JsonBooleanOption PASS_SKILL_USED = new JsonBooleanOption("passSkillUsed");
+	JsonObjectOption PASS_STATE = new JsonObjectOption("passState");
 	JsonBooleanOption PETTY_CASH_SELECTED_AWAY = new JsonBooleanOption("pettyCashSelectedAway");
 	JsonBooleanOption PETTY_CASH_SELECTED_HOME = new JsonBooleanOption("pettyCashSelectedHome");
 	JsonBooleanOption REMOVE_USED_SECRET_WEAPONS = new JsonBooleanOption("removeUsedSecretWeapons");

@@ -33,6 +33,7 @@ public interface IStepLabel {
 	String HAIL_MARY_PASS = "hailMaryPass";
 	String HAND_OVER = "handOver";
 	String HYPNOTIC_GAZE = "hypnoticGaze";
+	String INTERCEPT = "intercept";
 	String JUGGERNAUT = "juggernaut";
 	String KICKOFF_ANIMATION = "kickoffAnimation";
 	String KICK_TM_DOUBLE_ROLLED = "kickTeamMateDoubleRolled";

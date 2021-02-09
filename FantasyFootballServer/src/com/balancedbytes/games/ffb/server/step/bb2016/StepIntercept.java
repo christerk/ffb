@@ -1,4 +1,4 @@
-package com.balancedbytes.games.ffb.server.step.action.pass;
+package com.balancedbytes.games.ffb.server.step.bb2016;
 
 import java.util.Set;
 
@@ -50,7 +50,7 @@ import com.eclipsesource.json.JsonValue;
  *
  * @author Kalimar
  */
-@RulesCollection(RulesCollection.Rules.COMMON)
+@RulesCollection(RulesCollection.Rules.BB2016)
 public final class StepIntercept extends AbstractStepWithReRoll {
 
 	private String fGotoLabelOnFailure;

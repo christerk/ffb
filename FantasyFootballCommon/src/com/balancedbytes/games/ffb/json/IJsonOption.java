@@ -118,6 +118,10 @@ public interface IJsonOption {
 	JsonIntOption FAN_FACTOR_MODIFIER_HOME = new JsonIntOption("fanFactorModifierHome");
 	JsonIntArrayOption FAN_FACTOR_ROLL_AWAY = new JsonIntArrayOption("fanFactorRollAway");
 	JsonIntArrayOption FAN_FACTOR_ROLL_HOME = new JsonIntArrayOption("fanFactorRollHome");
+	JsonObjectOption FIELD_COORDINATE_LANDING = new JsonObjectOption("fieldCoordinateLanding");
+	JsonObjectOption FIELD_COORDINATE_THROWER = new JsonObjectOption("fieldCoordinateThrower");
+	JsonIntOption FIELD_COORDINATE_X = new JsonIntOption("x");
+	JsonIntOption FIELD_COORDINATE_Y = new JsonIntOption("y");
 	JsonArrayOption FIELD_MARKER_ARRAY = new JsonArrayOption("fieldMarkerArray");
 	JsonObjectOption FIELD_MODEL = new JsonObjectOption("fieldModel");
 	JsonDateOption FINISHED = new JsonDateOption("finished");

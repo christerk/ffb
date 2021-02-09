@@ -28,6 +28,7 @@ import com.balancedbytes.games.ffb.server.step.StepException;
 import com.balancedbytes.games.ffb.server.step.StepFactory;
 import com.balancedbytes.games.ffb.server.step.StepResult;
 import com.balancedbytes.games.ffb.server.step.StepStack;
+import com.balancedbytes.games.ffb.server.step.bb2020.state.PassState;
 import com.balancedbytes.games.ffb.server.util.UtilServerGame;
 import com.balancedbytes.games.ffb.util.StringTool;
 import com.eclipsesource.json.JsonObject;
@@ -40,20 +41,21 @@ import com.eclipsesource.json.JsonValue;
 public class GameState implements IModelChangeObserver, IJsonSerializable {
 
 	private Game fGame;
-	private GameLog fGameLog;
+	private final GameLog fGameLog;
 	private GameStatus fStatus;
-	private StepStack fStepStack;
+	private final StepStack fStepStack;
 	private IStep fCurrentStep;
-	private Set<String> zappedPlayerIds = new HashSet<>();
+	private final Set<String> zappedPlayerIds = new HashSet<>();
 	private int kickingSwarmers;
 
 	private transient FantasyFootballServer fServer;
-	private transient DiceRoller fDiceRoller;
+	private final transient DiceRoller fDiceRoller;
 	private transient IdGenerator fCommandNrGenerator;
 	private transient long fTurnTimeStarted;
 	private transient ModelChangeList fChangeList;
-	private transient Map<String, Long> fSpectatorCooldownTime;
-	private StepFactory stepFactory;
+	private final transient Map<String, Long> fSpectatorCooldownTime;
+	private final StepFactory stepFactory;
+	private PassState passState;
 
 	
 	private enum StepExecutionMode {
@@ -89,6 +91,14 @@ public class GameState implements IModelChangeObserver, IJsonSerializable {
 
 	public Game getGame() {
 		return fGame;
+	}
+
+	public PassState getPassState() {
+		return passState;
+	}
+
+	public void setPassState(PassState passState) {
+		this.passState = passState;
 	}
 
 	public long getId() {
@@ -305,6 +315,9 @@ public class GameState implements IModelChangeObserver, IJsonSerializable {
 		}
 		IServerJsonOption.PLAYER_IDS.addTo(jsonObject, zappedPlayerIds);
 		IServerJsonOption.SWARMING_PLAYER_ACTUAL.addTo(jsonObject, kickingSwarmers);
+		if (passState != null) {
+			IServerJsonOption.PASS_STATE.addTo(jsonObject, passState.toJsonValue());
+		}
 		return jsonObject;
 	}
 
@@ -340,6 +353,10 @@ public class GameState implements IModelChangeObserver, IJsonSerializable {
 
 		kickingSwarmers = IServerJsonOption.SWARMING_PLAYER_ACTUAL.getFrom(source, jsonObject);
 
+		JsonObject passStateObject = IServerJsonOption.PASS_STATE.getFrom(source, jsonObject);
+		if (passStateObject != null) {
+			passState = new PassState().initFrom(source, passStateObject);
+		}
 		return this;
 	}
 

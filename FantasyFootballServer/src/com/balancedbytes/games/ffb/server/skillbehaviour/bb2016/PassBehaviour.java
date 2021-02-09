@@ -1,4 +1,4 @@
-package com.balancedbytes.games.ffb.server.skillbehaviour;
+package com.balancedbytes.games.ffb.server.skillbehaviour.bb2016;
 
 import com.balancedbytes.games.ffb.CatchScatterThrowInMode;
 import com.balancedbytes.games.ffb.PlayerAction;
@@ -19,14 +19,14 @@ import com.balancedbytes.games.ffb.server.step.StepCommandStatus;
 import com.balancedbytes.games.ffb.server.step.StepParameter;
 import com.balancedbytes.games.ffb.server.step.StepParameterKey;
 import com.balancedbytes.games.ffb.server.step.action.pass.StepHailMaryPass;
-import com.balancedbytes.games.ffb.server.step.action.pass.StepPass;
-import com.balancedbytes.games.ffb.server.step.action.pass.StepPass.StepState;
+import com.balancedbytes.games.ffb.server.step.bb2016.StepPass;
+import com.balancedbytes.games.ffb.server.step.bb2016.StepPass.StepState;
 import com.balancedbytes.games.ffb.server.util.UtilServerDialog;
 import com.balancedbytes.games.ffb.server.util.UtilServerReRoll;
 import com.balancedbytes.games.ffb.skill.Pass;
 import com.balancedbytes.games.ffb.util.UtilCards;
 
-@RulesCollection(Rules.COMMON)
+@RulesCollection(Rules.BB2016)
 public class PassBehaviour extends SkillBehaviour<Pass> {
 	public PassBehaviour() {
 		super();
