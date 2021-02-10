@@ -10,7 +10,9 @@ import com.balancedbytes.games.ffb.ReRollSource;
 import com.balancedbytes.games.ffb.ReRolledActions;
 import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.dialog.DialogSkillUseParameter;
+import com.balancedbytes.games.ffb.factory.IFactorySource;
 import com.balancedbytes.games.ffb.factory.PassModifierFactory;
+import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.mechanics.Mechanic;
 import com.balancedbytes.games.ffb.mechanics.PassMechanic;
 import com.balancedbytes.games.ffb.mechanics.PassResult;
@@ -20,6 +22,7 @@ import com.balancedbytes.games.ffb.net.NetCommandId;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandUseSkill;
 import com.balancedbytes.games.ffb.report.ReportPassRoll;
 import com.balancedbytes.games.ffb.server.GameState;
+import com.balancedbytes.games.ffb.server.IServerJsonOption;
 import com.balancedbytes.games.ffb.server.net.ReceivedCommand;
 import com.balancedbytes.games.ffb.server.step.AbstractStepWithReRoll;
 import com.balancedbytes.games.ffb.server.step.StepAction;
@@ -34,6 +37,8 @@ import com.balancedbytes.games.ffb.server.util.UtilServerDialog;
 import com.balancedbytes.games.ffb.server.util.UtilServerReRoll;
 import com.balancedbytes.games.ffb.util.StringTool;
 import com.balancedbytes.games.ffb.util.UtilCards;
+import com.eclipsesource.json.JsonObject;
+import com.eclipsesource.json.JsonValue;
 
 import java.util.Optional;
 import java.util.Set;
@@ -64,6 +69,8 @@ public class StepPass extends AbstractStepWithReRoll {
 		return StepId.PASS;
 	}
 
+	private String goToLabelOnEnd, goToLabelOnSavedFumble, goToLabelOnMissedPass;
+
 	@Override
 	public void init(StepParameterSet pParameterSet) {
 		PassState state = getGameState().getPassState();
@@ -72,27 +79,27 @@ public class StepPass extends AbstractStepWithReRoll {
 				switch (parameter.getKey()) {
 					// mandatory
 					case GOTO_LABEL_ON_END:
-						state.setGoToLabelOnEnd((String) parameter.getValue());
+						goToLabelOnEnd = (String) parameter.getValue();
 						break;
 					// mandatory
 					case GOTO_LABEL_ON_MISSED_PASS:
-						state.setGoToLabelOnMissedPass((String) parameter.getValue());
+						goToLabelOnMissedPass = (String) parameter.getValue();
 						break;
 					case GOTO_LABEL_ON_SAVED_FUMBLE:
-						state.setGoToLabelOnSavedFumble((String) parameter.getValue());
+						goToLabelOnSavedFumble = (String) parameter.getValue();
 						break;
 					default:
 						break;
 				}
 			}
 		}
-		if (!StringTool.isProvided(state.getGoToLabelOnEnd())) {
+		if (!StringTool.isProvided(goToLabelOnEnd)) {
 			throw new StepException("StepParameter " + StepParameterKey.GOTO_LABEL_ON_END + " is not initialized.");
 		}
-		if (!StringTool.isProvided(state.getGoToLabelOnMissedPass())) {
+		if (!StringTool.isProvided(goToLabelOnMissedPass)) {
 			throw new StepException("StepParameter " + StepParameterKey.GOTO_LABEL_ON_MISSED_PASS + " is not initialized.");
 		}
-		if (!StringTool.isProvided(state.getGoToLabelOnSavedFumble())) {
+		if (!StringTool.isProvided(goToLabelOnSavedFumble)) {
 			throw new StepException("StepParameter " + StepParameterKey.GOTO_LABEL_ON_SAVED_FUMBLE + " is not initialized.");
 		}
 	}
@@ -168,7 +175,7 @@ public class StepPass extends AbstractStepWithReRoll {
 		getResult().addReport(new ReportPassRoll(game.getThrowerId(), roll, minimumRoll, reRolled,
 			passModifierArray, passingDistance, (state.isBombMode()), state.getResult()));
 		if (PassResult.ACCURATE == state.getResult()) {
-			getResult().setNextAction(StepAction.GOTO_LABEL, state.getGoToLabelOnEnd());
+			getResult().setNextAction(StepAction.GOTO_LABEL, goToLabelOnEnd);
 		} else {
 			boolean doNextStep = true;
 			if (mechanic.eligibleToReRoll(getReRolledAction(), game.getThrower())) {
@@ -202,7 +209,7 @@ public class StepPass extends AbstractStepWithReRoll {
 		if (PassResult.SAVED_FUMBLE == state.getResult()) {
 			game.getFieldModel().setBallCoordinate(throwerCoordinate);
 			game.getFieldModel().setBallMoving(false);
-			getResult().setNextAction(StepAction.GOTO_LABEL, state.getGoToLabelOnSavedFumble());
+			getResult().setNextAction(StepAction.GOTO_LABEL, goToLabelOnSavedFumble);
 		} else if (PassResult.FUMBLE == state.getResult()) {
 			if (state.isBombMode()) {
 				game.getFieldModel().setBombCoordinate(throwerCoordinate);
@@ -220,7 +227,26 @@ public class StepPass extends AbstractStepWithReRoll {
 				game.getFieldModel().setBallCoordinate(state.getLandingCoordinate());
 			}
 			publishParameter(new StepParameter(StepParameterKey.CATCHER_ID, null));
-			getResult().setNextAction(StepAction.GOTO_LABEL, state.getGoToLabelOnMissedPass());
+			getResult().setNextAction(StepAction.GOTO_LABEL, goToLabelOnMissedPass);
 		}
+	}
+
+	@Override
+	public JsonObject toJsonValue() {
+		JsonObject jsonObject = super.toJsonValue();
+		IServerJsonOption.GOTO_LABEL_ON_END.addTo(jsonObject, goToLabelOnEnd);
+		IServerJsonOption.GOTO_LABEL_ON_MISSED_PASS.addTo(jsonObject, goToLabelOnMissedPass);
+		IServerJsonOption.GOTO_LABEL_ON_SAVED_FUMBLE.addTo(jsonObject, goToLabelOnSavedFumble);
+		return jsonObject;
+	}
+
+	@Override
+	public StepPass initFrom(IFactorySource game, JsonValue pJsonValue) {
+		super.initFrom(game, pJsonValue);
+		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
+		goToLabelOnEnd = IServerJsonOption.GOTO_LABEL_ON_END.getFrom(game, jsonObject);
+		goToLabelOnMissedPass = IServerJsonOption.GOTO_LABEL_ON_MISSED_PASS.getFrom(game, jsonObject);
+		goToLabelOnSavedFumble = IServerJsonOption.GOTO_LABEL_ON_SAVED_FUMBLE.getFrom(game, jsonObject);
+		return this;
 	}
 }

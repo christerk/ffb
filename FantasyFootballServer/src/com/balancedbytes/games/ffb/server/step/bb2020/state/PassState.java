@@ -11,7 +11,7 @@ import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
 public class PassState implements IJsonSerializable {
-	private String goToLabelOnEnd, goToLabelOnSavedFumble, goToLabelOnMissedPass, catcherId, throwerId;
+	private String catcherId, throwerId;
 	private boolean passSkillUsed, bombMode, landingOutOfBounds;
 	private PassResult result;
 	private FieldCoordinate landingCoordinate, throwerCoordinate;
@@ -38,30 +38,6 @@ public class PassState implements IJsonSerializable {
 
 	public void setLandingCoordinate(FieldCoordinate landingCoordinate) {
 		this.landingCoordinate = landingCoordinate;
-	}
-
-	public String getGoToLabelOnEnd() {
-		return goToLabelOnEnd;
-	}
-
-	public void setGoToLabelOnEnd(String goToLabelOnEnd) {
-		this.goToLabelOnEnd = goToLabelOnEnd;
-	}
-
-	public String getGoToLabelOnSavedFumble() {
-		return goToLabelOnSavedFumble;
-	}
-
-	public void setGoToLabelOnSavedFumble(String goToLabelOnSavedFumble) {
-		this.goToLabelOnSavedFumble = goToLabelOnSavedFumble;
-	}
-
-	public String getGoToLabelOnMissedPass() {
-		return goToLabelOnMissedPass;
-	}
-
-	public void setGoToLabelOnMissedPass(String goToLabelOnMissedPass) {
-		this.goToLabelOnMissedPass = goToLabelOnMissedPass;
 	}
 
 	public String getCatcherId() {
@@ -107,8 +83,6 @@ public class PassState implements IJsonSerializable {
 	@Override
 	public JsonObject toJsonValue() {
 		JsonObject jsonObject = new JsonObject();
-		IServerJsonOption.GOTO_LABEL_ON_END.addTo(jsonObject, goToLabelOnEnd);
-		IServerJsonOption.GOTO_LABEL_ON_MISSED_PASS.addTo(jsonObject, goToLabelOnMissedPass);
 		IServerJsonOption.CATCHER_ID.addTo(jsonObject, catcherId);
 		IServerJsonOption.PASS_RESULT.addTo(jsonObject, result);
 		IServerJsonOption.PASS_SKILL_USED.addTo(jsonObject, passSkillUsed);
@@ -127,8 +101,6 @@ public class PassState implements IJsonSerializable {
 	@Override
 	public PassState initFrom(IFactorySource game, JsonValue pJsonValue) {
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		goToLabelOnEnd = IServerJsonOption.GOTO_LABEL_ON_END.getFrom(game, jsonObject);
-		goToLabelOnMissedPass = IServerJsonOption.GOTO_LABEL_ON_MISSED_PASS.getFrom(game, jsonObject);
 		catcherId = IServerJsonOption.CATCHER_ID.getFrom(game, jsonObject);
 		result = (PassResult) IServerJsonOption.PASS_RESULT.getFrom(game, jsonObject);
 		passSkillUsed = IServerJsonOption.PASS_SKILL_USED.getFrom(game, jsonObject);

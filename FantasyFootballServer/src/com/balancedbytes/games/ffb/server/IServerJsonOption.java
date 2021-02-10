@@ -72,6 +72,7 @@ public interface IServerJsonOption extends IJsonOption {
 	JsonStringOption GOTO_LABEL_ON_JUGGERNAUT = new JsonStringOption("gotoLabelOnJuggernaut");
 	JsonStringOption GOTO_LABEL_ON_MISSED_PASS = new JsonStringOption("gotoLabelOnMissedPass");
 	JsonStringOption GOTO_LABEL_ON_PUSHBACK = new JsonStringOption("gotoLabelOnPushback");
+	JsonStringOption GOTO_LABEL_ON_SAVED_FUMBLE = new JsonStringOption("gotoLabelOnSavedFumble");
 	JsonStringOption GOTO_LABEL_ON_SUCCESS = new JsonStringOption("gotoLabelOnSuccess");
 	JsonBooleanOption HANDLE_RECEIVING_TEAM = new JsonBooleanOption("handleReceivingTeam");
 	JsonBooleanOption HOLDING_SAFE_THROW = new JsonBooleanOption("holdingSafeThrow");
