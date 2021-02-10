@@ -48,12 +48,12 @@ public class Pass extends com.balancedbytes.games.ffb.server.step.generator.Pass
 		sequence.add(StepId.HAIL_MARY_PASS, IStepLabel.HAIL_MARY_PASS,
 			from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.SCATTER_BALL));
 		sequence.add(StepId.MISSED_PASS, IStepLabel.MISSED_PASS);
-		sequence.add(StepId.INTERCEPT, IStepLabel.INTERCEPT, from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.END_PASSING));
+		sequence.add(StepId.INTERCEPT, IStepLabel.INTERCEPT, from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.RESOLVE_PASS));
 
 		sequence.insertHooks(StepHook.HookPoint.PASS_INTERCEPT,
-			from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.END_PASSING));
+			from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.RESOLVE_PASS));
 
-		sequence.add(StepId.RESOLVE_PASS);
+		sequence.add(StepId.RESOLVE_PASS, IStepLabel.RESOLVE_PASS);
 
 		sequence.jump(IStepLabel.SCATTER_BALL);
 		sequence.add(StepId.HAND_OVER, IStepLabel.HAND_OVER);

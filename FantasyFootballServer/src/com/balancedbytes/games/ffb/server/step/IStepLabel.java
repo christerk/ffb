@@ -41,6 +41,7 @@ public interface IStepLabel {
 	String PASS = "pass";
 	String PUSHBACK = "pushback";
 	String RETRY_DODGE = "dodgeAgain";
+	String RESOLVE_PASS = "resolvePass";
 	String RIGHT_STUFF = "rightStuff";
 	String SCATTER_BALL = "scatterBall";
 	String SHADOWING = "shadowing";
