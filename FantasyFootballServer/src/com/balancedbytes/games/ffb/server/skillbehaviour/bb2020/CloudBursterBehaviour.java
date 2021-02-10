@@ -3,15 +3,12 @@ package com.balancedbytes.games.ffb.server.skillbehaviour.bb2020;
 import com.balancedbytes.games.ffb.FactoryType;
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.PassingDistance;
-import com.balancedbytes.games.ffb.PlayerAction;
 import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.RulesCollection.Rules;
 import com.balancedbytes.games.ffb.factory.IFactorySource;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.mechanics.Mechanic;
 import com.balancedbytes.games.ffb.mechanics.PassMechanic;
-import com.balancedbytes.games.ffb.model.Animation;
-import com.balancedbytes.games.ffb.model.AnimationType;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.model.Skill;
@@ -25,6 +22,7 @@ import com.balancedbytes.games.ffb.server.net.ReceivedCommand;
 import com.balancedbytes.games.ffb.server.skillbehaviour.StepHook;
 import com.balancedbytes.games.ffb.server.skillbehaviour.StepHook.HookPoint;
 import com.balancedbytes.games.ffb.server.step.AbstractStep;
+import com.balancedbytes.games.ffb.server.step.IStep;
 import com.balancedbytes.games.ffb.server.step.StepAction;
 import com.balancedbytes.games.ffb.server.step.StepCommandStatus;
 import com.balancedbytes.games.ffb.server.step.StepException;
@@ -32,7 +30,7 @@ import com.balancedbytes.games.ffb.server.step.StepId;
 import com.balancedbytes.games.ffb.server.step.StepParameter;
 import com.balancedbytes.games.ffb.server.step.StepParameterKey;
 import com.balancedbytes.games.ffb.server.step.StepParameterSet;
-import com.balancedbytes.games.ffb.server.util.UtilServerGame;
+import com.balancedbytes.games.ffb.server.step.bb2020.state.PassState;
 import com.balancedbytes.games.ffb.skill.bb2020.CloudBurster;
 import com.balancedbytes.games.ffb.util.UtilCards;
 import com.eclipsesource.json.JsonObject;
@@ -50,7 +48,6 @@ public class CloudBursterBehaviour extends SkillBehaviour<CloudBurster> {
 	@RulesCollection(Rules.BB2020)
 	public static class StepCloudBurster extends AbstractStep {
 		private String fGotoLabelOnFailure;
-		private String fInterceptorId;
 
 		public StepCloudBurster(GameState pGameState) {
 			super(pGameState, StepAction.NEXT_STEP);
@@ -65,33 +62,15 @@ public class CloudBursterBehaviour extends SkillBehaviour<CloudBurster> {
 		public void init(StepParameterSet pParameterSet) {
 			if (pParameterSet != null) {
 				for (StepParameter parameter : pParameterSet.values()) {
-					switch (parameter.getKey()) {
 					// mandatory
-					case GOTO_LABEL_ON_FAILURE:
+					if (parameter.getKey() == StepParameterKey.GOTO_LABEL_ON_FAILURE) {
 						fGotoLabelOnFailure = (String) parameter.getValue();
-						break;
-					default:
-						break;
 					}
 				}
 			}
 			if (fGotoLabelOnFailure == null) {
 				throw new StepException("StepParameter " + StepParameterKey.GOTO_LABEL_ON_FAILURE + " is not initialized.");
 			}
-		}
-
-		@Override
-		public boolean setParameter(StepParameter pParameter) {
-			if ((pParameter != null) && !super.setParameter(pParameter)) {
-				switch (pParameter.getKey()) {
-				case INTERCEPTOR_ID:
-					fInterceptorId = (String) pParameter.getValue();
-					return true;
-				default:
-					break;
-				}
-			}
-			return false;
 		}
 
 		@Override
@@ -111,8 +90,10 @@ public class CloudBursterBehaviour extends SkillBehaviour<CloudBurster> {
 
 		private void executeStep() {
 			Game game = getGameState().getGame();
-			Player<?> interceptor = game.getPlayerById(fInterceptorId);
-			if ((game.getThrower() == null) || (interceptor == null)) {
+			PassState state = getGameState().getPassState();
+			Player<?> interceptor = game.getPlayerById(state.getInterceptorId());
+			if (!state.isInterceptionSuccessful() || (game.getThrower() == null) || (interceptor == null)) {
+				getResult().setNextAction(StepAction.GOTO_LABEL, fGotoLabelOnFailure);
 				return;
 			}
 
@@ -128,8 +109,15 @@ public class CloudBursterBehaviour extends SkillBehaviour<CloudBurster> {
 			if (doSafeThrow) {
 				getResult().addReport(new ReportSkillRoll(ReportId.SAFE_THROW_ROLL, game.getThrowerId(), true,
 						7, 1, false));
-				publishParameter(new StepParameter(StepParameterKey.INTERCEPTOR_ID, null));
-			} else {
+
+				state.setInterceptionSuccessful(false);
+				StepParameterSet params = new StepParameterSet();
+				params.add(StepParameter.from(StepParameterKey.GOTO_LABEL_ON_FAILURE, fGotoLabelOnFailure));
+				IStep interceptStep = getGameState().getStepFactory().create(StepId.INTERCEPT, null, params);
+				getGameState().getStepStack().push(interceptStep);
+			}
+			getResult().setNextAction(StepAction.GOTO_LABEL, fGotoLabelOnFailure);
+			/* else {
 				game.getFieldModel().setRangeRuler(null);
 				FieldCoordinate startCoordinate = game.getFieldModel().getPlayerCoordinate(game.getThrower());
 				FieldCoordinate interceptorCoordinate = null;
@@ -152,7 +140,7 @@ public class CloudBursterBehaviour extends SkillBehaviour<CloudBurster> {
 					game.getFieldModel().setBallMoving(false);
 				}
 				getResult().setNextAction(StepAction.GOTO_LABEL, fGotoLabelOnFailure);
-			}
+			}*/
 		}
 
 		// JSON serialization
@@ -161,7 +149,6 @@ public class CloudBursterBehaviour extends SkillBehaviour<CloudBurster> {
 		public JsonObject toJsonValue() {
 			JsonObject jsonObject = super.toJsonValue();
 			IServerJsonOption.GOTO_LABEL_ON_FAILURE.addTo(jsonObject, fGotoLabelOnFailure);
-			IServerJsonOption.INTERCEPTOR_ID.addTo(jsonObject, fInterceptorId);
 			return jsonObject;
 		}
 
@@ -170,7 +157,6 @@ public class CloudBursterBehaviour extends SkillBehaviour<CloudBurster> {
 			super.initFrom(game, pJsonValue);
 			JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
 			fGotoLabelOnFailure = IServerJsonOption.GOTO_LABEL_ON_FAILURE.getFrom(game, jsonObject);
-			fInterceptorId = IServerJsonOption.INTERCEPTOR_ID.getFrom(game, jsonObject);
 			return this;
 		}
 	}

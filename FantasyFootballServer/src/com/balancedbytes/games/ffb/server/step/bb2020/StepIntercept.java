@@ -37,7 +37,6 @@ import com.balancedbytes.games.ffb.server.util.UtilServerDialog;
 import com.balancedbytes.games.ffb.server.util.UtilServerReRoll;
 import com.balancedbytes.games.ffb.util.UtilCards;
 import com.balancedbytes.games.ffb.util.UtilPassing;
-import com.balancedbytes.games.ffb.util.UtilRangeRuler;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
@@ -45,9 +44,9 @@ import java.util.Set;
 
 /**
  * Step in the pass sequence to handle interceptions.
- *
+ * <p>
  * Needs to be initialized with stepParameter GOTO_LABEL_ON_FAILURE.
- *
+ * <p>
  * Sets stepParameter INTERCEPTOR_ID for all steps on the stack.
  *
  * @author Kalimar
@@ -56,9 +55,6 @@ import java.util.Set;
 public final class StepIntercept extends AbstractStepWithReRoll {
 
 	private String fGotoLabelOnFailure;
-	private String fInterceptorId;
-	private boolean fInterceptorChosen;
-	private TurnMode fOldTurnMode;
 
 	public StepIntercept(GameState pGameState) {
 		super(pGameState);
@@ -96,8 +92,9 @@ public final class StepIntercept extends AbstractStepWithReRoll {
 			if (pReceivedCommand.getId() == NetCommandId.CLIENT_INTERCEPTOR_CHOICE) {
 				ClientCommandInterceptorChoice interceptorCommand = (ClientCommandInterceptorChoice) pReceivedCommand
 					.getCommand();
-				fInterceptorId = interceptorCommand.getInterceptorId();
-				fInterceptorChosen = true;
+				PassState state = getGameState().getPassState();
+				state.setInterceptorId(interceptorCommand.getInterceptorId());
+				state.setInterceptorChosen(true);
 				commandStatus = StepCommandStatus.EXECUTE_STEP;
 			}
 		}
@@ -116,35 +113,35 @@ public final class StepIntercept extends AbstractStepWithReRoll {
 		// reset range ruler after passBlock
 		if (game.getFieldModel().getRangeRuler() == null) {
 			game.getFieldModel()
-					.setRangeRuler(new RangeRuler(game.getThrowerId(), game.getPassCoordinate(), -1 , false));
+				.setRangeRuler(new RangeRuler(game.getThrowerId(), game.getPassCoordinate(), -1, false));
 		}
 		Player<?>[] possibleInterceptors = UtilPassing.findInterceptors(game, game.getPlayerById(game.getThrowerId()), game.getPassCoordinate());
 		boolean doNextStep = true;
 		boolean doIntercept = (possibleInterceptors.length > 0);
 		if (doIntercept) {
-			Player<?> interceptor = game.getPlayerById(fInterceptorId);
+			Player<?> interceptor = game.getPlayerById(state.getInterceptorId());
 			if (ReRolledActions.INTERCEPTION == getReRolledAction()) {
 				if ((getReRollSource() == null) || !UtilServerReRoll.useReRoll(this, getReRollSource(), interceptor)) {
 					doIntercept = false;
 				}
 			}
 			if (doIntercept) {
-				if (!fInterceptorChosen) {
+				if (!state.isInterceptorChosen()) {
 					UtilServerDialog.showDialog(getGameState(), new DialogInterceptionParameter(game.getThrowerId()), true);
-					fOldTurnMode = game.getTurnMode();
+					state.setOldTurnMode(game.getTurnMode());
 					game.setTurnMode(TurnMode.INTERCEPTION);
 					doNextStep = false;
 				} else if (interceptor != null) {
 					switch (intercept(interceptor)) {
-					case SUCCESS:
-						doIntercept = true;
-						break;
-					case FAILURE:
-						doIntercept = false;
-						break;
-					default:
-						doNextStep = false;
-						break;
+						case SUCCESS:
+							doIntercept = true;
+							break;
+						case FAILURE:
+							doIntercept = false;
+							break;
+						default:
+							doNextStep = false;
+							break;
 					}
 				} else {
 					doIntercept = false;
@@ -152,14 +149,12 @@ public final class StepIntercept extends AbstractStepWithReRoll {
 			}
 		}
 		if (doNextStep) {
-			if (fOldTurnMode != null) {
-				game.setTurnMode(fOldTurnMode);
+			if (state.getOldTurnMode() != null) {
+				game.setTurnMode(state.getOldTurnMode());
 			}
 			if (doIntercept) {
-				publishParameter(new StepParameter(StepParameterKey.INTERCEPTOR_ID, fInterceptorId));
 				getResult().setNextAction(StepAction.NEXT_STEP);
 			} else {
-				publishParameter(new StepParameter(StepParameterKey.INTERCEPTOR_ID, null));
 				getResult().setNextAction(StepAction.GOTO_LABEL, fGotoLabelOnFailure);
 			}
 		}
@@ -177,7 +172,7 @@ public final class StepIntercept extends AbstractStepWithReRoll {
 		InterceptionModifier[] interceptionModifierArray = modifierFactory.toArray(interceptionModifiers);
 		boolean reRolled = ((getReRolledAction() == ReRolledActions.CATCH) && (getReRollSource() != null));
 		getResult().addReport(new ReportInterceptionRoll(pInterceptor.getId(), successful, roll, minimumRoll, reRolled,
-				interceptionModifierArray, (PlayerAction.THROW_BOMB == game.getThrowerAction())));
+			interceptionModifierArray, (PlayerAction.THROW_BOMB == game.getThrowerAction())));
 		if (successful) {
 			status = ActionStatus.SUCCESS;
 		} else {
@@ -191,7 +186,7 @@ public final class StepIntercept extends AbstractStepWithReRoll {
 					status = intercept(pInterceptor);
 				} else {
 					if (UtilServerReRoll.askForReRollIfAvailable(getGameState(), pInterceptor, ReRolledActions.INTERCEPTION,
-							minimumRoll, false)) {
+						minimumRoll, false)) {
 						status = ActionStatus.WAITING_FOR_RE_ROLL;
 					}
 				}
@@ -206,9 +201,6 @@ public final class StepIntercept extends AbstractStepWithReRoll {
 	public JsonObject toJsonValue() {
 		JsonObject jsonObject = super.toJsonValue();
 		IServerJsonOption.GOTO_LABEL_ON_FAILURE.addTo(jsonObject, fGotoLabelOnFailure);
-		IServerJsonOption.INTERCEPTOR_ID.addTo(jsonObject, fInterceptorId);
-		IServerJsonOption.INTERCEPTOR_CHOSEN.addTo(jsonObject, fInterceptorChosen);
-		IServerJsonOption.OLD_TURN_MODE.addTo(jsonObject, fOldTurnMode);
 		return jsonObject;
 	}
 
@@ -217,9 +209,6 @@ public final class StepIntercept extends AbstractStepWithReRoll {
 		super.initFrom(game, pJsonValue);
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
 		fGotoLabelOnFailure = IServerJsonOption.GOTO_LABEL_ON_FAILURE.getFrom(game, jsonObject);
-		fInterceptorId = IServerJsonOption.INTERCEPTOR_ID.getFrom(game, jsonObject);
-		fInterceptorChosen = IServerJsonOption.INTERCEPTOR_CHOSEN.getFrom(game, jsonObject);
-		fOldTurnMode = (TurnMode) IServerJsonOption.OLD_TURN_MODE.getFrom(game, jsonObject);
 		return this;
 	}
 

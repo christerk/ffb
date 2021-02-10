@@ -35,8 +35,28 @@ public class StepResolvePass extends AbstractStep {
 		super.start();
 		Game game = getGameState().getGame();
 		PassState state = getGameState().getPassState();
-		game.getFieldModel().setRangeRuler(null);
-		if (state.getResult() == PassResult.ACCURATE) {
+		if (state.isInterceptionSuccessful()) {
+			FieldCoordinate interceptorCoordinate = null;
+			Player<?> interceptor = game.getPlayerById(state.getInterceptorId());
+			if (interceptor != null) {
+				interceptorCoordinate = game.getFieldModel().getPlayerCoordinate(interceptor);
+			}
+			if (PlayerAction.THROW_BOMB == game.getThrowerAction()) {
+				getResult().setAnimation(new Animation(AnimationType.THROW_BOMB, state.getThrowerCoordinate(), game.getPassCoordinate(),
+					interceptorCoordinate));
+			} else {
+				getResult().setAnimation(
+					new Animation(AnimationType.PASS, state.getThrowerCoordinate(), game.getPassCoordinate(), interceptorCoordinate));
+			}
+			UtilServerGame.syncGameModel(this);
+			if (PlayerAction.THROW_BOMB == game.getThrowerAction()) {
+				game.getFieldModel().setBombCoordinate(interceptorCoordinate);
+				game.getFieldModel().setBombMoving(false);
+			} else {
+				game.getFieldModel().setBallCoordinate(interceptorCoordinate);
+				game.getFieldModel().setBallMoving(false);
+			}
+		} else if (state.getResult() == PassResult.ACCURATE) {
 			getResult()
 				.setAnimation(new Animation(getAnimationType(game.getThrowerAction(), state.isBombMode()), state.getThrowerCoordinate(), game.getPassCoordinate(), null));
 
@@ -89,7 +109,6 @@ public class StepResolvePass extends AbstractStep {
 						state.getCatcherId() == null ? CatchScatterThrowInMode.CATCH_ACCURATE_PASS_EMPTY_SQUARE
 							: CatchScatterThrowInMode.CATCH_MISSED_PASS));
 				}
-				getResult().setNextAction(StepAction.NEXT_STEP);
 			} else {
 				if (PlayerAction.THROW_BOMB == game.getThrowerAction()) {
 					game.getFieldModel().setBombCoordinate(game.getPassCoordinate());
@@ -101,9 +120,9 @@ public class StepResolvePass extends AbstractStep {
 					publishParameter(new StepParameter(StepParameterKey.CATCH_SCATTER_THROW_IN_MODE,
 						CatchScatterThrowInMode.CATCH_ACCURATE_PASS));
 				}
-				getResult().setNextAction(StepAction.NEXT_STEP);
 			}
 		}
+		getResult().setNextAction(StepAction.NEXT_STEP);
 	}
 
 	private AnimationType getAnimationType(PlayerAction throwerAction, boolean isBombMode) {

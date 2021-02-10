@@ -1,6 +1,7 @@
 package com.balancedbytes.games.ffb.server.step.bb2020.state;
 
 import com.balancedbytes.games.ffb.FieldCoordinate;
+import com.balancedbytes.games.ffb.TurnMode;
 import com.balancedbytes.games.ffb.factory.IFactorySource;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.IJsonSerializable;
@@ -11,10 +12,43 @@ import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
 public class PassState implements IJsonSerializable {
-	private String catcherId;
-	private boolean passSkillUsed, bombMode, landingOutOfBounds;
+	private String catcherId, interceptorId;
+	private boolean passSkillUsed, bombMode, landingOutOfBounds, interceptorChosen, interceptionSuccessful;
 	private PassResult result;
 	private FieldCoordinate throwerCoordinate;
+	private TurnMode oldTurnMode;
+
+	public String getInterceptorId() {
+		return interceptorId;
+	}
+
+	public void setInterceptorId(String interceptorId) {
+		this.interceptorId = interceptorId;
+	}
+
+	public boolean isInterceptorChosen() {
+		return interceptorChosen;
+	}
+
+	public void setInterceptorChosen(boolean interceptorChosen) {
+		this.interceptorChosen = interceptorChosen;
+	}
+
+	public boolean isInterceptionSuccessful() {
+		return interceptionSuccessful;
+	}
+
+	public void setInterceptionSuccessful(boolean interceptionSuccessful) {
+		this.interceptionSuccessful = interceptionSuccessful;
+	}
+
+	public TurnMode getOldTurnMode() {
+		return oldTurnMode;
+	}
+
+	public void setOldTurnMode(TurnMode oldTurnMode) {
+		this.oldTurnMode = oldTurnMode;
+	}
 
 	public FieldCoordinate getThrowerCoordinate() {
 		return throwerCoordinate;
@@ -75,6 +109,10 @@ public class PassState implements IJsonSerializable {
 		}
 		IServerJsonOption.BOMB_MODE.addTo(jsonObject, bombMode);
 		IServerJsonOption.OUT_OF_BOUNDS.addTo(jsonObject, landingOutOfBounds);
+		IServerJsonOption.INTERCEPTOR_ID.addTo(jsonObject, interceptorId);
+		IServerJsonOption.INTERCEPTOR_CHOSEN.addTo(jsonObject, interceptorChosen);
+		IServerJsonOption.OLD_TURN_MODE.addTo(jsonObject, oldTurnMode);
+		IServerJsonOption.INTERCEPTION_SUCCESSFUL.addTo(jsonObject, interceptionSuccessful);
 		return jsonObject;
 	}
 
@@ -90,6 +128,10 @@ public class PassState implements IJsonSerializable {
 		}
 		bombMode = IServerJsonOption.BOMB_MODE.getFrom(game, jsonObject);
 		landingOutOfBounds = IServerJsonOption.OUT_OF_BOUNDS.getFrom(game, jsonObject);
+		interceptorId = IServerJsonOption.INTERCEPTOR_ID.getFrom(game, jsonObject);
+		interceptorChosen = IServerJsonOption.INTERCEPTOR_CHOSEN.getFrom(game, jsonObject);
+		oldTurnMode = (TurnMode) IServerJsonOption.OLD_TURN_MODE.getFrom(game, jsonObject);
+		interceptionSuccessful = IServerJsonOption.INTERCEPTION_SUCCESSFUL.getFrom(game, jsonObject);
 		return this;
 	}
 }
