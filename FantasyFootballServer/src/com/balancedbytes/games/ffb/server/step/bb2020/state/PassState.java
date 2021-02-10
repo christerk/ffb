@@ -11,18 +11,10 @@ import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
 public class PassState implements IJsonSerializable {
-	private String catcherId, throwerId;
+	private String catcherId;
 	private boolean passSkillUsed, bombMode, landingOutOfBounds;
 	private PassResult result;
-	private FieldCoordinate landingCoordinate, throwerCoordinate;
-
-	public String getThrowerId() {
-		return throwerId;
-	}
-
-	public void setThrowerId(String throwerId) {
-		this.throwerId = throwerId;
-	}
+	private FieldCoordinate throwerCoordinate;
 
 	public FieldCoordinate getThrowerCoordinate() {
 		return throwerCoordinate;
@@ -30,14 +22,6 @@ public class PassState implements IJsonSerializable {
 
 	public void setThrowerCoordinate(FieldCoordinate throwerCoordinate) {
 		this.throwerCoordinate = throwerCoordinate;
-	}
-
-	public FieldCoordinate getLandingCoordinate() {
-		return landingCoordinate;
-	}
-
-	public void setLandingCoordinate(FieldCoordinate landingCoordinate) {
-		this.landingCoordinate = landingCoordinate;
 	}
 
 	public String getCatcherId() {
@@ -86,10 +70,6 @@ public class PassState implements IJsonSerializable {
 		IServerJsonOption.CATCHER_ID.addTo(jsonObject, catcherId);
 		IServerJsonOption.PASS_RESULT.addTo(jsonObject, result);
 		IServerJsonOption.PASS_SKILL_USED.addTo(jsonObject, passSkillUsed);
-		IServerJsonOption.THROWER_ID.addTo(jsonObject, throwerId);
-		if (landingCoordinate != null) {
-			IJsonOption.FIELD_COORDINATE_LANDING.addTo(jsonObject, landingCoordinate.toJsonValue());
-		}
 		if (throwerCoordinate != null) {
 			IJsonOption.FIELD_COORDINATE_THROWER.addTo(jsonObject, throwerCoordinate.toJsonValue());
 		}
@@ -104,11 +84,6 @@ public class PassState implements IJsonSerializable {
 		catcherId = IServerJsonOption.CATCHER_ID.getFrom(game, jsonObject);
 		result = (PassResult) IServerJsonOption.PASS_RESULT.getFrom(game, jsonObject);
 		passSkillUsed = IServerJsonOption.PASS_SKILL_USED.getFrom(game, jsonObject);
-		throwerId = IServerJsonOption.THROWER_ID.getFrom(game, jsonObject);
-		JsonObject landingObject = IJsonOption.FIELD_COORDINATE_LANDING.getFrom(game, jsonObject);
-		if (landingObject != null) {
-			landingCoordinate = (FieldCoordinate) new FieldCoordinate(0).initFrom(game, landingObject);
-		}
 		JsonObject throwerObject = IJsonOption.FIELD_COORDINATE_THROWER.getFrom(game, jsonObject);
 		if (throwerObject != null) {
 			throwerCoordinate = (FieldCoordinate) new FieldCoordinate(0).initFrom(game, throwerObject);

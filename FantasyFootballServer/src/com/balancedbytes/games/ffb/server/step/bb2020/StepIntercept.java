@@ -110,15 +110,15 @@ public final class StepIntercept extends AbstractStepWithReRoll {
 	private void executeStep() {
 		Game game = getGameState().getGame();
 		PassState state = getGameState().getPassState();
-		if (state.getThrowerId() == null) {
+		if (game.getThrowerId() == null) {
 			return;
 		}
 		// reset range ruler after passBlock
 		if (game.getFieldModel().getRangeRuler() == null) {
 			game.getFieldModel()
-					.setRangeRuler(new RangeRuler(state.getThrowerId(), state.getLandingCoordinate(), -1 , false));
+					.setRangeRuler(new RangeRuler(game.getThrowerId(), game.getPassCoordinate(), -1 , false));
 		}
-		Player<?>[] possibleInterceptors = UtilPassing.findInterceptors(game, game.getPlayerById(state.getThrowerId()), state.getLandingCoordinate());
+		Player<?>[] possibleInterceptors = UtilPassing.findInterceptors(game, game.getPlayerById(game.getThrowerId()), game.getPassCoordinate());
 		boolean doNextStep = true;
 		boolean doIntercept = (possibleInterceptors.length > 0);
 		if (doIntercept) {

@@ -153,11 +153,10 @@ public class StepPass extends AbstractStepWithReRoll {
 				return;
 			}
 		}
-		state.setLandingCoordinate(game.getPassCoordinate());
-		state.setThrowerId(game.getThrowerId());
+
 		state.setThrowerCoordinate(throwerCoordinate);
 		PassMechanic mechanic = (PassMechanic) game.getRules().getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.PASS.name());
-		PassingDistance passingDistance = mechanic.findPassingDistance(game, throwerCoordinate, state.getLandingCoordinate(),
+		PassingDistance passingDistance = mechanic.findPassingDistance(game, throwerCoordinate, game.getPassCoordinate(),
 			false);
 		Set<PassModifier> passModifiers = new PassModifierFactory().findPassModifiers(game, game.getThrower(),
 			passingDistance, false);
@@ -222,9 +221,9 @@ public class StepPass extends AbstractStepWithReRoll {
 			getResult().setNextAction(StepAction.NEXT_STEP);
 		} else {
 			if (state.isBombMode()) {
-				game.getFieldModel().setBombCoordinate(state.getLandingCoordinate());
+				game.getFieldModel().setBombCoordinate(game.getPassCoordinate());
 			} else {
-				game.getFieldModel().setBallCoordinate(state.getLandingCoordinate());
+				game.getFieldModel().setBallCoordinate(game.getPassCoordinate());
 			}
 			publishParameter(new StepParameter(StepParameterKey.CATCHER_ID, null));
 			getResult().setNextAction(StepAction.GOTO_LABEL, goToLabelOnMissedPass);

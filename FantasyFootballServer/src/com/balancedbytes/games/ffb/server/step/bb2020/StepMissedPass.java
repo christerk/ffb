@@ -1,18 +1,11 @@
 package com.balancedbytes.games.ffb.server.step.bb2020;
 
-import com.balancedbytes.games.ffb.CatchScatterThrowInMode;
 import com.balancedbytes.games.ffb.Direction;
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.FieldCoordinateBounds;
-import com.balancedbytes.games.ffb.PlayerAction;
 import com.balancedbytes.games.ffb.RangeRuler;
 import com.balancedbytes.games.ffb.RulesCollection;
-import com.balancedbytes.games.ffb.factory.IFactorySource;
-import com.balancedbytes.games.ffb.json.IJsonOption;
-import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.mechanics.PassResult;
-import com.balancedbytes.games.ffb.model.Animation;
-import com.balancedbytes.games.ffb.model.AnimationType;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.report.ReportPassDeviate;
 import com.balancedbytes.games.ffb.report.ReportScatterBall;
@@ -23,14 +16,8 @@ import com.balancedbytes.games.ffb.server.step.AbstractStep;
 import com.balancedbytes.games.ffb.server.step.StepAction;
 import com.balancedbytes.games.ffb.server.step.StepCommandStatus;
 import com.balancedbytes.games.ffb.server.step.StepId;
-import com.balancedbytes.games.ffb.server.step.StepParameter;
-import com.balancedbytes.games.ffb.server.step.StepParameterKey;
 import com.balancedbytes.games.ffb.server.step.bb2020.state.PassState;
 import com.balancedbytes.games.ffb.server.util.UtilServerCatchScatterThrowIn;
-import com.balancedbytes.games.ffb.server.util.UtilServerGame;
-import com.balancedbytes.games.ffb.util.UtilRangeRuler;
-import com.eclipsesource.json.JsonObject;
-import com.eclipsesource.json.JsonValue;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -111,10 +98,9 @@ public class StepMissedPass extends AbstractStep {
 			Direction[] directions = directionList.toArray(new Direction[0]);
 			getResult().addReport(new ReportScatterBall(directions, rolls, false));
 		}
-		state.setLandingCoordinate(lastValidCoordinate);
 		game.setPassCoordinate(lastValidCoordinate);
 		state.setLandingOutOfBounds(lastValidCoordinate != coordinateEnd);
-		RangeRuler rangeRuler = new RangeRuler(state.getThrowerId(), state.getLandingCoordinate(), -1, false);
+		RangeRuler rangeRuler = new RangeRuler(game.getThrowerId(), lastValidCoordinate, -1, false);
 
 		game.getFieldModel().setRangeRuler(rangeRuler);
 

@@ -38,7 +38,7 @@ public class StepResolvePass extends AbstractStep {
 		game.getFieldModel().setRangeRuler(null);
 		if (state.getResult() == PassResult.ACCURATE) {
 			getResult()
-				.setAnimation(new Animation(getAnimationType(game.getThrowerAction(), state.isBombMode()), state.getThrowerCoordinate(), state.getLandingCoordinate(), null));
+				.setAnimation(new Animation(getAnimationType(game.getThrowerAction(), state.isBombMode()), state.getThrowerCoordinate(), game.getPassCoordinate(), null));
 
 			UtilServerGame.syncGameModel(this);
 			if (state.isLandingOutOfBounds()) {
@@ -49,7 +49,7 @@ public class StepResolvePass extends AbstractStep {
 				} else {
 					publishParameter(
 						new StepParameter(StepParameterKey.CATCH_SCATTER_THROW_IN_MODE, CatchScatterThrowInMode.THROW_IN));
-					publishParameter(new StepParameter(StepParameterKey.THROW_IN_COORDINATE, state.getLandingCoordinate()));
+					publishParameter(new StepParameter(StepParameterKey.THROW_IN_COORDINATE, game.getPassCoordinate()));
 					game.getFieldModel().setBallMoving(true);
 				}
 			} else {
@@ -57,12 +57,12 @@ public class StepResolvePass extends AbstractStep {
 					|| (PlayerAction.THROW_BOMB == game.getThrowerAction())) {
 					publishParameter(
 						new StepParameter(StepParameterKey.CATCH_SCATTER_THROW_IN_MODE, CatchScatterThrowInMode.CATCH_BOMB));
-					game.getFieldModel().setBombCoordinate(state.getLandingCoordinate());
+					game.getFieldModel().setBombCoordinate(game.getPassCoordinate());
 					game.getFieldModel().setBombMoving(true);
 				} else {
 					publishParameter(
 						new StepParameter(StepParameterKey.CATCH_SCATTER_THROW_IN_MODE, CatchScatterThrowInMode.CATCH_MISSED_PASS));
-					game.getFieldModel().setBallCoordinate(state.getLandingCoordinate());
+					game.getFieldModel().setBallCoordinate(game.getPassCoordinate());
 					game.getFieldModel().setBallMoving(true);
 				}
 			}
