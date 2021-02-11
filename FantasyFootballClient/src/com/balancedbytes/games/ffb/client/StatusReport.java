@@ -61,6 +61,7 @@ import com.balancedbytes.games.ffb.report.ReportCardDeactivated;
 import com.balancedbytes.games.ffb.report.ReportCardEffectRoll;
 import com.balancedbytes.games.ffb.report.ReportCardsBought;
 import com.balancedbytes.games.ffb.report.ReportCatchRoll;
+import com.balancedbytes.games.ffb.report.ReportCloudBurster;
 import com.balancedbytes.games.ffb.report.ReportCoinThrow;
 import com.balancedbytes.games.ffb.report.ReportConfusionRoll;
 import com.balancedbytes.games.ffb.report.ReportDauntlessRoll;
@@ -134,10 +135,10 @@ import java.util.List;
  */
 public class StatusReport {
 
-	private FantasyFootballClient fClient;
+	private final FantasyFootballClient fClient;
 	private int fIndent;
-	private boolean fShowModifiersOnSuccess;
-	private boolean fShowModifiersOnFailure;
+	private final boolean fShowModifiersOnSuccess;
+	private final boolean fShowModifiersOnFailure;
 
 	private boolean fPettyCashReportReceived;
 	private boolean fCardsBoughtReportReceived;
@@ -2805,6 +2806,23 @@ public class StatusReport {
 		println(1, TextStyle.NONE, " are allowed to place " + report.getAmount() + " swarming players.");
 	}
 
+	public void reportCloudBurster(ReportCloudBurster report) {
+		Game game = getClient().getGame();
+		Player<?> throwingPlayer = game.getPlayerById(report.getThrowerId());
+		Player<?> interceptingPlayer = game.getPlayerById(report.getInterceptorId());
+		String thrower = throwingPlayer.getName();
+		String interceptor = interceptingPlayer.getName();
+		String genitiv = interceptingPlayer.getPlayerGender().getGenitive();
+		boolean homeIsThrowing = game.getTeamHome().getId().equals(report.getThrowerTeamId());
+		TextStyle throwerStyle = homeIsThrowing ? TextStyle.HOME_BOLD : TextStyle.AWAY_BOLD;
+		TextStyle interceptorStyle = homeIsThrowing ? TextStyle.AWAY_BOLD : TextStyle.HOME_BOLD;
+
+		print(1, throwerStyle, thrower);
+		println(1, TextStyle.BOLD, " uses CloudBurster");
+		print(2, interceptorStyle, interceptor);
+		println(2, TextStyle.NONE, " has to reroll " + genitiv + " successful interception.");
+	}
+
 	public void report(ReportList pReportList) {
 		for (IReport report : pReportList.getReports()) {
 			switch (report.getId()) {
@@ -3068,6 +3086,9 @@ public class StatusReport {
 					break;
 				case PASS_DEVIATE:
 					reportPassDeviate((ReportPassDeviate) report);
+					break;
+				case CLOUD_BURSTER:
+					reportCloudBurster((ReportCloudBurster) report);
 					break;
 				default:
 					throw new IllegalStateException("Unhandled report id " + report.getId().getName() + ".");

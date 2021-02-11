@@ -7,7 +7,7 @@ import com.balancedbytes.games.ffb.INamedObject;
  */
 public enum ReportId implements INamedObject {
 
-	ALWAYS_HUNGRY_ROLL("alwaysHungryRoll"), ARGUE_THE_CALL("argueTheCall"), CATCH_ROLL("catchRoll"),
+	ALWAYS_HUNGRY_ROLL("alwaysHungryRoll"), ARGUE_THE_CALL("argueTheCall"), CATCH_ROLL("catchRoll"), CLOUD_BURSTER("cloudBurster"),
 	CONFUSION_ROLL("confusionRoll"), DAUNTLESS_ROLL("dauntlessRoll"), DODGE_ROLL("dodgeRoll"), ESCAPE_ROLL("escapeRoll"),
 	FOUL_APPEARANCE_ROLL("foulAppearanceRoll"), GO_FOR_IT_ROLL("goForItRoll"), INTERCEPTION_ROLL("interceptionRoll"),
 	LEAP_ROLL("leapRoll"), PASS_ROLL("passRoll"), PICK_UP_ROLL("pickUpRoll"), RIGHT_STUFF_ROLL("rightStuffRoll"),
@@ -58,6 +58,8 @@ public enum ReportId implements INamedObject {
 				return new ReportCardEffectRoll();
 			case CATCH_ROLL:
 				return new ReportCatchRoll();
+			case CLOUD_BURSTER:
+				return new ReportCloudBurster();
 			case CONFUSION_ROLL:
 				return new ReportConfusionRoll();
 			case DAUNTLESS_ROLL:

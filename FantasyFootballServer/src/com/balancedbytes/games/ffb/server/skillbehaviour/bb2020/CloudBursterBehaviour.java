@@ -13,8 +13,7 @@ import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.model.Skill;
 import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
-import com.balancedbytes.games.ffb.report.ReportId;
-import com.balancedbytes.games.ffb.report.ReportSkillRoll;
+import com.balancedbytes.games.ffb.report.ReportCloudBurster;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.IServerJsonOption;
 import com.balancedbytes.games.ffb.server.model.SkillBehaviour;
@@ -103,20 +102,21 @@ public class CloudBursterBehaviour extends SkillBehaviour<CloudBurster> {
 			PassMechanic mechanic = (PassMechanic) game.getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.PASS.name());
 			PassingDistance passingDistance = mechanic.findPassingDistance(game, throwerCoordinate, game.getPassCoordinate(), false);
 
-			boolean doSafeThrow = canForceInterceptionRerollSkill != null
+			boolean useCloudBurster = canForceInterceptionRerollSkill != null
 					&& !UtilCards.cancelsSkill(interceptor, canForceInterceptionRerollSkill)
 					&& (passingDistance == PassingDistance.LONG_PASS || passingDistance == PassingDistance.LONG_BOMB);
-			if (doSafeThrow) {
-				getResult().addReport(new ReportSkillRoll(ReportId.SAFE_THROW_ROLL, game.getThrowerId(), true,
-						7, 1, false));
+			if (useCloudBurster) {
+				getResult().addReport(new ReportCloudBurster(game.getThrowerId(), state.getInterceptorId(), game.getThrower().getTeam().getId()));
 
 				state.setInterceptionSuccessful(false);
 				StepParameterSet params = new StepParameterSet();
 				params.add(StepParameter.from(StepParameterKey.GOTO_LABEL_ON_FAILURE, fGotoLabelOnFailure));
 				IStep interceptStep = getGameState().getStepFactory().create(StepId.INTERCEPT, null, params);
 				getGameState().getStepStack().push(interceptStep);
+				getResult().setNextAction(StepAction.NEXT_STEP);
+			} else {
+				getResult().setNextAction(StepAction.GOTO_LABEL, fGotoLabelOnFailure);
 			}
-			getResult().setNextAction(StepAction.GOTO_LABEL, fGotoLabelOnFailure);
 		}
 
 		// JSON serialization
