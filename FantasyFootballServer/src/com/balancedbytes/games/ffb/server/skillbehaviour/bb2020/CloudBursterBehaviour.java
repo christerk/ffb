@@ -117,30 +117,6 @@ public class CloudBursterBehaviour extends SkillBehaviour<CloudBurster> {
 				getGameState().getStepStack().push(interceptStep);
 			}
 			getResult().setNextAction(StepAction.GOTO_LABEL, fGotoLabelOnFailure);
-			/* else {
-				game.getFieldModel().setRangeRuler(null);
-				FieldCoordinate startCoordinate = game.getFieldModel().getPlayerCoordinate(game.getThrower());
-				FieldCoordinate interceptorCoordinate = null;
-				if (interceptor != null) {
-					interceptorCoordinate = game.getFieldModel().getPlayerCoordinate(interceptor);
-				}
-				if (PlayerAction.THROW_BOMB == game.getThrowerAction()) {
-					getResult().setAnimation(new Animation(AnimationType.THROW_BOMB, startCoordinate, game.getPassCoordinate(),
-							interceptorCoordinate));
-				} else {
-					getResult().setAnimation(
-							new Animation(AnimationType.PASS, startCoordinate, game.getPassCoordinate(), interceptorCoordinate));
-				}
-				UtilServerGame.syncGameModel(this);
-				if (PlayerAction.THROW_BOMB == game.getThrowerAction()) {
-					game.getFieldModel().setBombCoordinate(interceptorCoordinate);
-					game.getFieldModel().setBombMoving(false);
-				} else {
-					game.getFieldModel().setBallCoordinate(interceptorCoordinate);
-					game.getFieldModel().setBallMoving(false);
-				}
-				getResult().setNextAction(StepAction.GOTO_LABEL, fGotoLabelOnFailure);
-			}*/
 		}
 
 		// JSON serialization
