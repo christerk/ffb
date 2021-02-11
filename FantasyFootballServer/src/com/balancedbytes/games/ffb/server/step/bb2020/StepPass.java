@@ -140,8 +140,7 @@ public class StepPass extends AbstractStepWithReRoll {
 		if ((game.getThrower() == null) || (game.getThrowerAction() == null)) {
 			return;
 		}
-		state.setBombMode(PlayerAction.THROW_BOMB == game.getThrowerAction());
-		if (state.isBombMode()) {
+		if (PlayerAction.THROW_BOMB == game.getThrowerAction()) {
 			game.getFieldModel().setBombMoving(true);
 		} else {
 			game.getFieldModel().setBallMoving(true);
@@ -163,7 +162,7 @@ public class StepPass extends AbstractStepWithReRoll {
 		Optional<Integer> minimumRollO = mechanic.minimumRoll(game.getThrower(), passingDistance, passModifiers);
 		int minimumRoll = minimumRollO.orElse(0);
 		int roll = minimumRollO.isPresent() ? getGameState().getDiceRoller().rollSkill() : 0;
-		state.setResult(mechanic.evaluatePass(game.getThrower(), roll, passingDistance, passModifiers, !state.isBombMode()));
+		state.setResult(mechanic.evaluatePass(game.getThrower(), roll, passingDistance, passModifiers, PlayerAction.THROW_BOMB != game.getThrowerAction()));
 		if (PassResult.FUMBLE == state.getResult()) {
 			publishParameter(new StepParameter(StepParameterKey.DONT_DROP_FUMBLE, false));
 		} else if (PassResult.SAVED_FUMBLE == state.getResult()) {
@@ -172,7 +171,7 @@ public class StepPass extends AbstractStepWithReRoll {
 		PassModifier[] passModifierArray = new PassModifierFactory().toArray(passModifiers);
 		boolean reRolled = ((getReRolledAction() == ReRolledActions.PASS) && (getReRollSource() != null));
 		getResult().addReport(new ReportPassRoll(game.getThrowerId(), roll, minimumRoll, reRolled,
-			passModifierArray, passingDistance, (state.isBombMode()), state.getResult()));
+			passModifierArray, passingDistance, (PlayerAction.THROW_BOMB == game.getThrowerAction()), state.getResult()));
 		if (PassResult.ACCURATE == state.getResult()) {
 			getResult().setNextAction(StepAction.GOTO_LABEL, goToLabelOnEnd);
 		} else {
@@ -210,7 +209,7 @@ public class StepPass extends AbstractStepWithReRoll {
 			game.getFieldModel().setBallMoving(false);
 			getResult().setNextAction(StepAction.GOTO_LABEL, goToLabelOnSavedFumble);
 		} else if (PassResult.FUMBLE == state.getResult()) {
-			if (state.isBombMode()) {
+			if (PlayerAction.THROW_BOMB == game.getThrowerAction()) {
 				game.getFieldModel().setBombCoordinate(throwerCoordinate);
 			} else {
 				game.getFieldModel().setBallCoordinate(throwerCoordinate);
@@ -220,7 +219,7 @@ public class StepPass extends AbstractStepWithReRoll {
 			publishParameter(new StepParameter(StepParameterKey.CATCHER_ID, null));
 			getResult().setNextAction(StepAction.NEXT_STEP);
 		} else {
-			if (state.isBombMode()) {
+			if (PlayerAction.THROW_BOMB == game.getThrowerAction()) {
 				game.getFieldModel().setBombCoordinate(game.getPassCoordinate());
 			} else {
 				game.getFieldModel().setBallCoordinate(game.getPassCoordinate());

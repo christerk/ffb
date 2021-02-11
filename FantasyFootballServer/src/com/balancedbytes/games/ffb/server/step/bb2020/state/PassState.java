@@ -13,7 +13,7 @@ import com.eclipsesource.json.JsonValue;
 
 public class PassState implements IJsonSerializable {
 	private String catcherId, interceptorId;
-	private boolean passSkillUsed, bombMode, landingOutOfBounds, interceptorChosen, interceptionSuccessful;
+	private boolean passSkillUsed, landingOutOfBounds, interceptorChosen, interceptionSuccessful;
 	private PassResult result;
 	private FieldCoordinate throwerCoordinate;
 	private TurnMode oldTurnMode;
@@ -82,14 +82,6 @@ public class PassState implements IJsonSerializable {
 		this.landingOutOfBounds = landingOutOfBounds;
 	}
 
-	public boolean isBombMode() {
-		return bombMode;
-	}
-
-	public void setBombMode(boolean bombMode) {
-		this.bombMode = bombMode;
-	}
-
 	public PassResult getResult() {
 		return result;
 	}
@@ -107,7 +99,6 @@ public class PassState implements IJsonSerializable {
 		if (throwerCoordinate != null) {
 			IJsonOption.FIELD_COORDINATE_THROWER.addTo(jsonObject, throwerCoordinate.toJsonValue());
 		}
-		IServerJsonOption.BOMB_MODE.addTo(jsonObject, bombMode);
 		IServerJsonOption.OUT_OF_BOUNDS.addTo(jsonObject, landingOutOfBounds);
 		IServerJsonOption.INTERCEPTOR_ID.addTo(jsonObject, interceptorId);
 		IServerJsonOption.INTERCEPTOR_CHOSEN.addTo(jsonObject, interceptorChosen);
@@ -126,7 +117,6 @@ public class PassState implements IJsonSerializable {
 		if (throwerObject != null) {
 			throwerCoordinate = (FieldCoordinate) new FieldCoordinate(0).initFrom(game, throwerObject);
 		}
-		bombMode = IServerJsonOption.BOMB_MODE.getFrom(game, jsonObject);
 		landingOutOfBounds = IServerJsonOption.OUT_OF_BOUNDS.getFrom(game, jsonObject);
 		interceptorId = IServerJsonOption.INTERCEPTOR_ID.getFrom(game, jsonObject);
 		interceptorChosen = IServerJsonOption.INTERCEPTOR_CHOSEN.getFrom(game, jsonObject);

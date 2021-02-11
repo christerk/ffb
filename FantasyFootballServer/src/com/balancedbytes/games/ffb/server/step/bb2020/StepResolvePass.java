@@ -35,20 +35,12 @@ public class StepResolvePass extends AbstractStep {
 		super.start();
 		Game game = getGameState().getGame();
 		PassState state = getGameState().getPassState();
+		AnimationType animationType = getAnimationType(game.getThrowerAction());
+		FieldCoordinate interceptorCoordinate = interceptorCoordinate(state, game);
+		getResult().setAnimation(new Animation(animationType, state.getThrowerCoordinate(), game.getPassCoordinate(), interceptorCoordinate));
+		UtilServerGame.syncGameModel(this);
+
 		if (state.isInterceptionSuccessful()) {
-			FieldCoordinate interceptorCoordinate = null;
-			Player<?> interceptor = game.getPlayerById(state.getInterceptorId());
-			if (interceptor != null) {
-				interceptorCoordinate = game.getFieldModel().getPlayerCoordinate(interceptor);
-			}
-			if (PlayerAction.THROW_BOMB == game.getThrowerAction()) {
-				getResult().setAnimation(new Animation(AnimationType.THROW_BOMB, state.getThrowerCoordinate(), game.getPassCoordinate(),
-					interceptorCoordinate));
-			} else {
-				getResult().setAnimation(
-					new Animation(AnimationType.PASS, state.getThrowerCoordinate(), game.getPassCoordinate(), interceptorCoordinate));
-			}
-			UtilServerGame.syncGameModel(this);
 			if (PlayerAction.THROW_BOMB == game.getThrowerAction()) {
 				game.getFieldModel().setBombCoordinate(interceptorCoordinate);
 				game.getFieldModel().setBombMoving(false);
@@ -57,10 +49,6 @@ public class StepResolvePass extends AbstractStep {
 				game.getFieldModel().setBallMoving(false);
 			}
 		} else if (state.getResult() == PassResult.ACCURATE) {
-			getResult()
-				.setAnimation(new Animation(getAnimationType(game.getThrowerAction(), state.isBombMode()), state.getThrowerCoordinate(), game.getPassCoordinate(), null));
-
-			UtilServerGame.syncGameModel(this);
 			if (state.isLandingOutOfBounds()) {
 				if ((PlayerAction.HAIL_MARY_BOMB == game.getThrowerAction())
 					|| (PlayerAction.THROW_BOMB == game.getThrowerAction())) {
@@ -87,14 +75,6 @@ public class StepResolvePass extends AbstractStep {
 				}
 			}
 		} else {
-			FieldCoordinate startCoordinate = game.getFieldModel().getPlayerCoordinate(game.getThrower());
-			if (PlayerAction.THROW_BOMB == game.getThrowerAction()) {
-				getResult()
-					.setAnimation(new Animation(AnimationType.THROW_BOMB, startCoordinate, game.getPassCoordinate(), null));
-			} else {
-				getResult().setAnimation(new Animation(AnimationType.PASS, startCoordinate, game.getPassCoordinate(), null));
-			}
-			UtilServerGame.syncGameModel(this);
 			Player<?> catcher = game.getPlayerById(state.getCatcherId());
 			PlayerState catcherState = game.getFieldModel().getPlayerState(catcher);
 			if ((catcher == null) || (catcherState == null) || !catcherState.hasTacklezones()) {
@@ -125,16 +105,25 @@ public class StepResolvePass extends AbstractStep {
 		getResult().setNextAction(StepAction.NEXT_STEP);
 	}
 
-	private AnimationType getAnimationType(PlayerAction throwerAction, boolean isBombMode) {
+	private AnimationType getAnimationType(PlayerAction throwerAction) {
 		if (PlayerAction.HAIL_MARY_PASS.equals(throwerAction)) {
 			return AnimationType.HAIL_MARY_PASS;
 		} else if (PlayerAction.HAIL_MARY_BOMB.equals(throwerAction)) {
 			return AnimationType.HAIL_MARY_BOMB;
-		} else if (isBombMode) {
+		} else if (PlayerAction.THROW_BOMB.equals(throwerAction)) {
 			return AnimationType.THROW_BOMB;
 		} else {
 			return AnimationType.PASS;
 		}
+	}
 
+	private FieldCoordinate interceptorCoordinate(PassState state, Game game){
+		if (state.isInterceptionSuccessful()) {
+			Player<?> interceptor = game.getPlayerById(state.getInterceptorId());
+			if (interceptor != null) {
+				return game.getFieldModel().getPlayerCoordinate(interceptor);
+			}
+		}
+		return null;
 	}
 }
