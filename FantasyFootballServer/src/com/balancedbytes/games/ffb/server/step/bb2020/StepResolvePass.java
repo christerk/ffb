@@ -49,32 +49,6 @@ public class StepResolvePass extends AbstractStep {
 				game.getFieldModel().setBallMoving(false);
 			}
 		} else if (state.getResult() == PassResult.ACCURATE) {
-			if (state.isLandingOutOfBounds()) {
-				if ((PlayerAction.HAIL_MARY_BOMB == game.getThrowerAction())
-					|| (PlayerAction.THROW_BOMB == game.getThrowerAction())) {
-					game.getFieldModel().setBombCoordinate(null);
-					publishParameter(new StepParameter(StepParameterKey.BOMB_OUT_OF_BOUNDS, true));
-				} else {
-					publishParameter(
-						new StepParameter(StepParameterKey.CATCH_SCATTER_THROW_IN_MODE, CatchScatterThrowInMode.THROW_IN));
-					publishParameter(new StepParameter(StepParameterKey.THROW_IN_COORDINATE, game.getPassCoordinate()));
-					game.getFieldModel().setBallMoving(true);
-				}
-			} else {
-				if ((PlayerAction.HAIL_MARY_BOMB == game.getThrowerAction())
-					|| (PlayerAction.THROW_BOMB == game.getThrowerAction())) {
-					publishParameter(
-						new StepParameter(StepParameterKey.CATCH_SCATTER_THROW_IN_MODE, CatchScatterThrowInMode.CATCH_BOMB));
-					game.getFieldModel().setBombCoordinate(game.getPassCoordinate());
-					game.getFieldModel().setBombMoving(true);
-				} else {
-					publishParameter(
-						new StepParameter(StepParameterKey.CATCH_SCATTER_THROW_IN_MODE, CatchScatterThrowInMode.CATCH_MISSED_PASS));
-					game.getFieldModel().setBallCoordinate(game.getPassCoordinate());
-					game.getFieldModel().setBallMoving(true);
-				}
-			}
-		} else {
 			Player<?> catcher = game.getPlayerById(state.getCatcherId());
 			PlayerState catcherState = game.getFieldModel().getPlayerState(catcher);
 			if ((catcher == null) || (catcherState == null) || !catcherState.hasTacklezones()) {
@@ -99,6 +73,32 @@ public class StepResolvePass extends AbstractStep {
 					publishParameter(new StepParameter(StepParameterKey.PASS_ACCURATE, true));
 					publishParameter(new StepParameter(StepParameterKey.CATCH_SCATTER_THROW_IN_MODE,
 						CatchScatterThrowInMode.CATCH_ACCURATE_PASS));
+				}
+			}
+		} else  {
+			if (state.isLandingOutOfBounds()) {
+				if ((PlayerAction.HAIL_MARY_BOMB == game.getThrowerAction())
+					|| (PlayerAction.THROW_BOMB == game.getThrowerAction())) {
+					game.getFieldModel().setBombCoordinate(null);
+					publishParameter(new StepParameter(StepParameterKey.BOMB_OUT_OF_BOUNDS, true));
+				} else {
+					publishParameter(
+						new StepParameter(StepParameterKey.CATCH_SCATTER_THROW_IN_MODE, CatchScatterThrowInMode.THROW_IN));
+					publishParameter(new StepParameter(StepParameterKey.THROW_IN_COORDINATE, game.getPassCoordinate()));
+					game.getFieldModel().setBallMoving(true);
+				}
+			} else {
+				if ((PlayerAction.HAIL_MARY_BOMB == game.getThrowerAction())
+					|| (PlayerAction.THROW_BOMB == game.getThrowerAction())) {
+					publishParameter(
+						new StepParameter(StepParameterKey.CATCH_SCATTER_THROW_IN_MODE, CatchScatterThrowInMode.CATCH_BOMB));
+					game.getFieldModel().setBombCoordinate(game.getPassCoordinate());
+					game.getFieldModel().setBombMoving(true);
+				} else {
+					publishParameter(
+						new StepParameter(StepParameterKey.CATCH_SCATTER_THROW_IN_MODE, CatchScatterThrowInMode.CATCH_MISSED_PASS));
+					game.getFieldModel().setBallCoordinate(game.getPassCoordinate());
+					game.getFieldModel().setBallMoving(true);
 				}
 			}
 		}
