@@ -43,10 +43,12 @@ public class StepResolvePass extends AbstractStep {
 		if (state.isInterceptionSuccessful()) {
 			if (PlayerAction.THROW_BOMB == game.getThrowerAction()) {
 				game.getFieldModel().setBombCoordinate(interceptorCoordinate);
-				game.getFieldModel().setBombMoving(false);
+				publishParameter(new StepParameter(StepParameterKey.CATCH_SCATTER_THROW_IN_MODE,
+					CatchScatterThrowInMode.DEFLECTED_BOMB));
 			} else {
 				game.getFieldModel().setBallCoordinate(interceptorCoordinate);
-				game.getFieldModel().setBallMoving(false);
+				publishParameter(new StepParameter(StepParameterKey.CATCH_SCATTER_THROW_IN_MODE,
+					CatchScatterThrowInMode.DEFLECTED));
 			}
 		} else if (state.getResult() == PassResult.ACCURATE) {
 			Player<?> catcher = game.getPlayerById(state.getCatcherId());

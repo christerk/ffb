@@ -174,6 +174,7 @@ public class StepCatchScatterThrowIn extends AbstractStepWithReRoll {
 		case CATCH_BOMB:
 		case CATCH_ACCURATE_BOMB_EMPTY_SQUARE:
 		case CATCH_ACCURATE_BOMB:
+		case DEFLECTED_BOMB:
 			fBombMode = true;
 			if (!StringTool.isProvided(fCatcherId)) {
 				Player<?> playerUnderBomb = game.getFieldModel().getPlayer(game.getFieldModel().getBombCoordinate());
@@ -201,6 +202,7 @@ public class StepCatchScatterThrowIn extends AbstractStepWithReRoll {
 		case CATCH_ACCURATE_PASS:
 		case CATCH_HAND_OFF:
 		case CATCH_SCATTER:
+		case DEFLECTED:
 			fBombMode = false;
 			if (!StringTool.isProvided(fCatcherId)) {
 				fCatcherId = (playerUnderBall != null) ? playerUnderBall.getId() : null;
