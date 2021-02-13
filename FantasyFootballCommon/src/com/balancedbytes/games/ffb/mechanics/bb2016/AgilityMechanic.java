@@ -4,8 +4,7 @@ import com.balancedbytes.games.ffb.CatchModifier;
 import com.balancedbytes.games.ffb.DodgeModifier;
 import com.balancedbytes.games.ffb.DodgeModifiers;
 import com.balancedbytes.games.ffb.GazeModifier;
-import com.balancedbytes.games.ffb.IRollModifier;
-import com.balancedbytes.games.ffb.InterceptionModifier;
+import com.balancedbytes.games.ffb.modifiers.InterceptionModifier;
 import com.balancedbytes.games.ffb.LeapModifier;
 import com.balancedbytes.games.ffb.PickupModifier;
 import com.balancedbytes.games.ffb.RightStuffModifier;
@@ -14,7 +13,6 @@ import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.report.ReportSkillRoll;
-import com.balancedbytes.games.ffb.util.ArrayTool;
 import com.balancedbytes.games.ffb.util.UtilCards;
 
 import java.util.Set;

@@ -15,7 +15,6 @@ import com.balancedbytes.games.ffb.HeatExhaustion;
 import com.balancedbytes.games.ffb.IRollModifier;
 import com.balancedbytes.games.ffb.InjuryModifier;
 import com.balancedbytes.games.ffb.InjuryModifiers;
-import com.balancedbytes.games.ffb.InterceptionModifiers;
 import com.balancedbytes.games.ffb.KickoffResult;
 import com.balancedbytes.games.ffb.KnockoutRecovery;
 import com.balancedbytes.games.ffb.LeaderState;
@@ -30,6 +29,7 @@ import com.balancedbytes.games.ffb.SpecialEffect;
 import com.balancedbytes.games.ffb.TurnMode;
 import com.balancedbytes.games.ffb.Weather;
 import com.balancedbytes.games.ffb.factory.BlockResultFactory;
+import com.balancedbytes.games.ffb.factory.InterceptionModifierFactory;
 import com.balancedbytes.games.ffb.factory.PassModifierFactory;
 import com.balancedbytes.games.ffb.mechanics.AgilityMechanic;
 import com.balancedbytes.games.ffb.mechanics.Mechanic;
@@ -44,6 +44,8 @@ import com.balancedbytes.games.ffb.model.SkillConstants;
 import com.balancedbytes.games.ffb.model.Team;
 import com.balancedbytes.games.ffb.model.ZappedPlayer;
 import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
+import com.balancedbytes.games.ffb.modifiers.InterceptionModifier;
+import com.balancedbytes.games.ffb.modifiers.InterceptionModifierKey;
 import com.balancedbytes.games.ffb.net.ServerStatus;
 import com.balancedbytes.games.ffb.net.commands.ServerCommandJoin;
 import com.balancedbytes.games.ffb.net.commands.ServerCommandLeave;
@@ -1704,7 +1706,9 @@ public class StatusReport {
 			} else {
 				println(getIndent(), TextStyle.BOLD, " tries to intercept the ball:");
 			}
-			if (pReport.hasRollModifier(InterceptionModifiers.NERVES_OF_STEEL)) {
+			InterceptionModifier modifier = ((InterceptionModifierFactory)getClient().getGame()
+				.getFactory(Factory.INTERCEPTION_MODIFIER)).forKey(InterceptionModifierKey.NERVES_OF_STEEL);
+			if (pReport.hasRollModifier(modifier)) {
 				reportNervesOfSteel(player, "intercept");
 			}
 		}

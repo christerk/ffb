@@ -4,7 +4,7 @@ import com.balancedbytes.games.ffb.CatchModifier;
 import com.balancedbytes.games.ffb.DodgeModifier;
 import com.balancedbytes.games.ffb.GazeModifier;
 import com.balancedbytes.games.ffb.IRollModifier;
-import com.balancedbytes.games.ffb.InterceptionModifier;
+import com.balancedbytes.games.ffb.modifiers.InterceptionModifier;
 import com.balancedbytes.games.ffb.LeapModifier;
 import com.balancedbytes.games.ffb.PickupModifier;
 import com.balancedbytes.games.ffb.RightStuffModifier;

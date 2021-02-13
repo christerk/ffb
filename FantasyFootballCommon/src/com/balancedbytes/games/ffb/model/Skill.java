@@ -1,16 +1,10 @@
 package com.balancedbytes.games.ffb.model;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.Hashtable;
-import java.util.List;
-
 import com.balancedbytes.games.ffb.ArmorModifier;
 import com.balancedbytes.games.ffb.CatchModifier;
 import com.balancedbytes.games.ffb.DodgeModifier;
 import com.balancedbytes.games.ffb.INamedObject;
 import com.balancedbytes.games.ffb.InjuryModifier;
-import com.balancedbytes.games.ffb.InterceptionModifier;
 import com.balancedbytes.games.ffb.LeapModifier;
 import com.balancedbytes.games.ffb.PassModifier;
 import com.balancedbytes.games.ffb.PickupModifier;
@@ -18,6 +12,13 @@ import com.balancedbytes.games.ffb.ReRollSource;
 import com.balancedbytes.games.ffb.ReRolledAction;
 import com.balancedbytes.games.ffb.SkillCategory;
 import com.balancedbytes.games.ffb.model.modifier.CancelSkillProperty;
+import com.balancedbytes.games.ffb.modifiers.InterceptionModifier;
+import com.balancedbytes.games.ffb.modifiers.InterceptionModifierKey;
+
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.Hashtable;
+import java.util.List;
 
 public abstract class Skill implements INamedObject {
 
@@ -28,7 +29,7 @@ public abstract class Skill implements INamedObject {
 	private List<PickupModifier> pickupModifiers = new ArrayList<>();
 	private List<DodgeModifier> dodgeModifiers = new ArrayList<>();
 	private List<LeapModifier> leapModifiers = new ArrayList<>();
-	private List<InterceptionModifier> interceptionModifiers = new ArrayList<>();
+	private List<InterceptionModifierKey> interceptionModifiers = new ArrayList<>();
 	private List<InjuryModifier> injuryModifiers = new ArrayList<>();
 	private List<ArmorModifier> armorModifiers = new ArrayList<>();
 	private List<CatchModifier> catchModifiers = new ArrayList<>();
@@ -80,7 +81,7 @@ public abstract class Skill implements INamedObject {
 		playerModifiers.add(modifier);
 	}
 
-	protected void registerModifier(InterceptionModifier modifier) {
+	protected void registerModifierKey(InterceptionModifierKey modifier) {
 		interceptionModifiers.add(modifier);
 	}
 
@@ -128,7 +129,7 @@ public abstract class Skill implements INamedObject {
 		return leapModifiers;
 	}
 
-	public List<InterceptionModifier> getInterceptionModifiers() {
+	public List<InterceptionModifierKey> getInterceptionModifiers() {
 		return interceptionModifiers;
 	}
 

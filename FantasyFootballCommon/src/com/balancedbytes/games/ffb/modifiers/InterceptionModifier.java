@@ -1,6 +1,6 @@
-package com.balancedbytes.games.ffb;
+package com.balancedbytes.games.ffb.modifiers;
 
-import com.balancedbytes.games.ffb.InterceptionModifiers.InterceptionContext;
+import com.balancedbytes.games.ffb.IRollModifier;
 import com.balancedbytes.games.ffb.model.Skill;
 
 /**
@@ -8,20 +8,24 @@ import com.balancedbytes.games.ffb.model.Skill;
  * @author Kalimar
  */
 public class InterceptionModifier implements IRollModifier {
-	private String fName;
-	private int fModifier;
-	private boolean fTacklezoneModifier;
-	private boolean fDisturbingPresenceModifier;
+	private final InterceptionModifierKey modifierKey;
+	private final int fModifier;
+	private final boolean fTacklezoneModifier;
+	private final boolean fDisturbingPresenceModifier;
 
-	InterceptionModifier(String pName, int pModifier, boolean pTacklezoneModifier, boolean pDisturbingPresenceModifier) {
-		fName = pName;
+	public InterceptionModifier(InterceptionModifierKey modifierKey, int pModifier, boolean pTacklezoneModifier, boolean pDisturbingPresenceModifier) {
+		this.modifierKey = modifierKey;
 		fModifier = pModifier;
 		fTacklezoneModifier = pTacklezoneModifier;
 		fDisturbingPresenceModifier = pDisturbingPresenceModifier;
 	}
 
+	public InterceptionModifierKey getModifierKey() {
+		return modifierKey;
+	}
+
 	public String getName() {
-		return fName;
+		return modifierKey.getName();
 	}
 
 	public int getModifier() {

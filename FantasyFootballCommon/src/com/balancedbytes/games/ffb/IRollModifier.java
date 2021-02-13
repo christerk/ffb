@@ -6,8 +6,9 @@ package com.balancedbytes.games.ffb;
  */
 public interface IRollModifier extends INamedObject {
 
-	public int getModifier();
+	int getModifier();
 
-	public boolean isModifierIncluded();
+	boolean isModifierIncluded();
+
 
 }
