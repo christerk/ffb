@@ -2,16 +2,13 @@ package com.balancedbytes.games.ffb.modifiers.bb2020;
 
 import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.modifiers.InterceptionModifier;
-import com.balancedbytes.games.ffb.modifiers.InterceptionModifierKey;
-
-import java.util.HashMap;
 
 import static com.balancedbytes.games.ffb.modifiers.InterceptionModifierKey.*;
 
 @RulesCollection(RulesCollection.Rules.BB2020)
-public class InterceptionModifierRegistry extends HashMap<InterceptionModifierKey, InterceptionModifier>
-	implements com.balancedbytes.games.ffb.modifiers.InterceptionModifierRegistry {
-	{
+public class InterceptionModifierRegistry extends com.balancedbytes.games.ffb.modifiers.InterceptionModifierRegistry {
+
+	public InterceptionModifierRegistry() {
 		add(new InterceptionModifier(NERVES_OF_STEEL, 0, false, false));
 		add(new InterceptionModifier(EXTRA_ARMS, -1, false, false));
 		add(new InterceptionModifier(VERY_LONG_LEGS, -1, false,
@@ -54,9 +51,5 @@ public class InterceptionModifierRegistry extends HashMap<InterceptionModifierKe
 		add(new InterceptionModifier(PASS_ACCURATE, 3, false, false));
 		add(new InterceptionModifier(PASS_INACCURATE, 2, false, false));
 		add(new InterceptionModifier(PASS_WILDLY_INACCURATE, 1, false, false));
-	}
-
-	private void add(InterceptionModifier modifier) {
-		put(modifier.getModifierKey(), modifier);
 	}
 }

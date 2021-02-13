@@ -2,16 +2,16 @@ package com.balancedbytes.games.ffb.factory;
 
 import com.balancedbytes.games.ffb.Card;
 import com.balancedbytes.games.ffb.FactoryType;
-import com.balancedbytes.games.ffb.mechanics.PassResult;
-import com.balancedbytes.games.ffb.model.Skill;
-import com.balancedbytes.games.ffb.modifiers.InterceptionModifier;
-import com.balancedbytes.games.ffb.modifiers.InterceptionModifierKey;
-import com.balancedbytes.games.ffb.modifiers.InterceptionContext;
 import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.RulesCollection.Rules;
+import com.balancedbytes.games.ffb.mechanics.PassResult;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
+import com.balancedbytes.games.ffb.model.Skill;
 import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
+import com.balancedbytes.games.ffb.modifiers.InterceptionContext;
+import com.balancedbytes.games.ffb.modifiers.InterceptionModifier;
+import com.balancedbytes.games.ffb.modifiers.InterceptionModifierKey;
 import com.balancedbytes.games.ffb.modifiers.InterceptionModifierRegistry;
 import com.balancedbytes.games.ffb.util.Scanner;
 import com.balancedbytes.games.ffb.util.UtilCards;
@@ -22,11 +22,10 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.HashSet;
-import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 
 /**
- * 
  * @author Kalimar
  */
 @FactoryType(FactoryType.Factory.INTERCEPTION_MODIFIER)
@@ -44,7 +43,7 @@ public class InterceptionModifierFactory implements IRollModifierFactory<Interce
 	}
 
 	public InterceptionModifier forKey(InterceptionModifierKey key) {
-		return interceptionModifiers.getOrDefault(key, dummy);
+		return interceptionModifiers.get(key).orElse(dummy);
 	}
 
 	public Set<InterceptionModifier> findInterceptionModifiers(Game pGame, Player<?> pPlayer, PassResult passResult) {
@@ -56,15 +55,11 @@ public class InterceptionModifierFactory implements IRollModifierFactory<Interce
 		interceptionModifiers.add(forPassResult(passResult));
 
 		if (!pPlayer.hasSkillWithProperty(NamedProperties.ignoreTacklezonesWhenCatching)) {
-			InterceptionModifier tacklezoneModifier = getTacklezoneModifier(pGame, pPlayer);
-			if (tacklezoneModifier != null) {
-				interceptionModifiers.add(tacklezoneModifier);
-			}
+			getTacklezoneModifier(pGame, pPlayer).ifPresent(interceptionModifiers::add);
 		}
-		InterceptionModifier disturbingPresenceModifier = getDisturbingPresenceModifier(pGame, pPlayer);
-		if (disturbingPresenceModifier != null) {
-			interceptionModifiers.add(disturbingPresenceModifier);
-		}
+
+		getDisturbingPresenceModifier(pGame, pPlayer).ifPresent(interceptionModifiers::add);
+
 		if (UtilCards.hasCard(pGame, pGame.getThrower(), Card.FAWNDOUGHS_HEADBAND)) {
 			interceptionModifiers.add(forKey(InterceptionModifierKey.FAWNDOUGHS_HEADBAND));
 		}
@@ -80,7 +75,7 @@ public class InterceptionModifierFactory implements IRollModifierFactory<Interce
 	public InterceptionModifier[] toArray(Set<InterceptionModifier> pInterceptionModifierSet) {
 		if (pInterceptionModifierSet != null) {
 			InterceptionModifier[] interceptionModifierArray = pInterceptionModifierSet
-					.toArray(new InterceptionModifier[0]);
+				.toArray(new InterceptionModifier[0]);
 			Arrays.sort(interceptionModifierArray, Comparator.comparing(InterceptionModifier::getName));
 			return interceptionModifierArray;
 		} else {
@@ -88,38 +83,29 @@ public class InterceptionModifierFactory implements IRollModifierFactory<Interce
 		}
 	}
 
-	private InterceptionModifier getTacklezoneModifier(Game pGame, Player<?> pPlayer) {
+	private Optional<InterceptionModifier> getTacklezoneModifier(Game pGame, Player<?> pPlayer) {
 		int tacklezones = UtilPlayer.findTacklezones(pGame, pPlayer);
-		for (Map.Entry<InterceptionModifierKey, InterceptionModifier> entry : interceptionModifiers.entrySet()) {
-			InterceptionModifier modifier = entry.getValue();
-			if (modifier.isTacklezoneModifier() && (modifier.getMultiplier() == tacklezones)) {
-				return modifier;
-			}
-		}
-		return null;
+		return interceptionModifiers.values().stream()
+			.filter(modifier -> modifier.isTacklezoneModifier() && (modifier.getMultiplier() == tacklezones))
+			.findFirst();
 	}
 
-	private InterceptionModifier getDisturbingPresenceModifier(Game pGame, Player<?> pPlayer) {
+	private Optional<InterceptionModifier> getDisturbingPresenceModifier(Game pGame, Player<?> pPlayer) {
 		int disturbingPresences = UtilDisturbingPresence.findOpposingDisturbingPresences(pGame, pPlayer);
-		for (Map.Entry<InterceptionModifierKey, InterceptionModifier> entry : interceptionModifiers.entrySet()) {
-			InterceptionModifier modifier = entry.getValue();
-			if (modifier.isDisturbingPresenceModifier() && (modifier.getMultiplier() == disturbingPresences)) {
-				return modifier;
-			}
-		}
-
-		return null;
+		return interceptionModifiers.values().stream()
+			.filter(modifier -> modifier.isDisturbingPresenceModifier() && (modifier.getMultiplier() == disturbingPresences))
+			.findFirst();
 	}
 
 	@Override
 	public void initialize(Game game) {
 		new Scanner<>(InterceptionModifierRegistry.class)
-			.getClassesImplementing(game.getOptions()).stream().findFirst()
+			.getSubclasses(game.getOptions()).stream().findFirst()
 			.ifPresent(registry -> interceptionModifiers = registry);
 	}
 
 	private Collection<InterceptionModifier> getInterceptionModifiers(Player<?> player,
-	                                                                        InterceptionContext context) {
+	                                                                  InterceptionContext context) {
 		Set<InterceptionModifier> result = new HashSet<>();
 
 		for (Skill skill : player.getSkills()) {
