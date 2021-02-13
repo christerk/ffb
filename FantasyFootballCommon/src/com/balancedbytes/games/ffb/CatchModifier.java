@@ -49,4 +49,9 @@ public class CatchModifier implements IRollModifier {
 		return true;
 	}
 
+	@Override
+	public String getReportString() {
+		return getName();
+	}
+
 }

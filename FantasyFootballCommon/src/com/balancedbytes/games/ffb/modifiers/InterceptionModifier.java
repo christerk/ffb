@@ -9,11 +9,18 @@ import com.balancedbytes.games.ffb.model.Skill;
  */
 public class InterceptionModifier implements IRollModifier {
 	private final InterceptionModifierKey modifierKey;
-	private final int fModifier;
+	private final int fModifier, multiplier;
 	private final boolean fTacklezoneModifier;
 	private final boolean fDisturbingPresenceModifier;
+	private final String reportString;
 
 	public InterceptionModifier(InterceptionModifierKey modifierKey, int pModifier, boolean pTacklezoneModifier, boolean pDisturbingPresenceModifier) {
+		this(modifierKey, modifierKey.getName(), pModifier, pModifier, pTacklezoneModifier, pDisturbingPresenceModifier);
+	}
+
+	public InterceptionModifier(InterceptionModifierKey modifierKey, String reportString, int pModifier, int multiplier, boolean pTacklezoneModifier, boolean pDisturbingPresenceModifier) {
+		this.reportString = reportString;
+		this.multiplier = multiplier;
 		this.modifierKey = modifierKey;
 		fModifier = pModifier;
 		fTacklezoneModifier = pTacklezoneModifier;
@@ -48,4 +55,11 @@ public class InterceptionModifier implements IRollModifier {
 		return true;
 	}
 
+	public int getMultiplier() {
+		return multiplier;
+	}
+
+	public String getReportString() {
+		return reportString;
+	}
 }

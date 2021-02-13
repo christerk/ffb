@@ -28,4 +28,9 @@ public enum GoForItModifier implements IRollModifier {
 		return false;
 	}
 
+	@Override
+	public String getReportString() {
+		return getName();
+	}
+
 }

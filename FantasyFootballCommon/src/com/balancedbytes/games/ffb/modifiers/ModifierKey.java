@@ -1,4 +1,6 @@
 package com.balancedbytes.games.ffb.modifiers;
 
-public interface ModifierKey {
+import com.balancedbytes.games.ffb.INamedObject;
+
+public interface ModifierKey extends INamedObject {
 }

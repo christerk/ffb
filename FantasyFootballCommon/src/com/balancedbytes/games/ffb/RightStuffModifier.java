@@ -38,4 +38,9 @@ public enum RightStuffModifier implements IRollModifier {
 		return isTacklezoneModifier();
 	}
 
+	@Override
+	public String getReportString() {
+		return getName();
+	}
+
 }

@@ -2,7 +2,7 @@ package com.balancedbytes.games.ffb.modifiers;
 
 import java.util.Arrays;
 
-public enum InterceptionModifierKey {
+public enum InterceptionModifierKey implements ModifierKey {
 	DUMMY("Dummy"),
 	DISTURBING_PRESENCES_1("1 Disturbing Presence"),
 	DISTURBING_PRESENCES_2("2 Disturbing Presences"),
@@ -36,6 +36,7 @@ public enum InterceptionModifierKey {
 		this.name = name;
 	}
 
+	@Override
 	public String getName() {
 		return name;
 	}

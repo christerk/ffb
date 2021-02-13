@@ -7,8 +7,6 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.function.Function;
-import java.util.stream.Stream;
 
 import com.balancedbytes.games.ffb.ArmorModifier;
 import com.balancedbytes.games.ffb.ArmorModifiers.ArmorModifierContext;
@@ -20,9 +18,6 @@ import com.balancedbytes.games.ffb.DodgeModifier;
 import com.balancedbytes.games.ffb.DodgeModifiers.DodgeContext;
 import com.balancedbytes.games.ffb.InjuryModifier;
 import com.balancedbytes.games.ffb.InjuryModifier.InjuryModifierContext;
-import com.balancedbytes.games.ffb.factory.InterceptionModifierFactory;
-import com.balancedbytes.games.ffb.modifiers.InterceptionModifier;
-import com.balancedbytes.games.ffb.modifiers.InterceptionContext;
 import com.balancedbytes.games.ffb.LeapModifier;
 import com.balancedbytes.games.ffb.LeapModifiers.LeapContext;
 import com.balancedbytes.games.ffb.PassModifier;
@@ -38,7 +33,6 @@ import com.balancedbytes.games.ffb.model.InducementSet;
 import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.model.Skill;
 import com.balancedbytes.games.ffb.model.SkillConstants;
-import com.balancedbytes.games.ffb.modifiers.InterceptionModifierRegistry;
 
 /**
  *

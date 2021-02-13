@@ -45,4 +45,9 @@ public class DodgeModifier implements IRollModifier {
 		return true;
 	}
 
+	@Override
+	public String getReportString() {
+		return getName();
+	}
+
 }

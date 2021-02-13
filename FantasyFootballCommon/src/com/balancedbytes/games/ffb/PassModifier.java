@@ -48,4 +48,9 @@ public class PassModifier implements IRollModifier {
 	public boolean appliesToContext(PassContext context) {
 		return true;
 	}
+
+	@Override
+	public String getReportString() {
+		return getName();
+	}
 }

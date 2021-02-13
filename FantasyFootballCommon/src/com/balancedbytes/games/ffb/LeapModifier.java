@@ -31,6 +31,11 @@ public class LeapModifier implements IRollModifier {
 		return false;
 	}
 
+	@Override
+	public String getReportString() {
+		return getName();
+	}
+
 	public boolean appliesToContext(Skill skill, LeapContext context) {
 		return true;
 	}

@@ -37,4 +37,8 @@ public class PickupModifier implements IRollModifier {
 		return true;
 	}
 
+	@Override
+	public String getReportString() {
+		return getName();
+	}
 }

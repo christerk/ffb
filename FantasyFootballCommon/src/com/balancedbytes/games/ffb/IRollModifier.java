@@ -10,5 +10,5 @@ public interface IRollModifier extends INamedObject {
 
 	boolean isModifierIncluded();
 
-
+	String getReportString();
 }

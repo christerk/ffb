@@ -71,7 +71,7 @@ public abstract class AgilityMechanic implements Mechanic{
 					if (!rollModifier.isModifierIncluded()) {
 						modifiers.append(Math.abs(rollModifier.getModifier())).append(" ");
 					}
-					modifiers.append(rollModifier.getName());
+					modifiers.append(rollModifier.getReportString());
 				}
 			}
 		}

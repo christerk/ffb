@@ -12,6 +12,7 @@ import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
 import com.balancedbytes.games.ffb.modifiers.InterceptionModifierRegistry;
+import com.balancedbytes.games.ffb.util.Scanner;
 import com.balancedbytes.games.ffb.util.UtilCards;
 import com.balancedbytes.games.ffb.util.UtilDisturbingPresence;
 import com.balancedbytes.games.ffb.util.UtilPlayer;
@@ -22,8 +23,6 @@ import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-import java.util.function.Function;
-import java.util.stream.Stream;
 
 /**
  * 
@@ -34,7 +33,7 @@ import java.util.stream.Stream;
 public class InterceptionModifierFactory implements IRollModifierFactory<InterceptionModifier> {
 
 	@SuppressWarnings("MismatchedQueryAndUpdateOfCollection")
-	private final InterceptionModifierRegistry interceptionModifiers = new InterceptionModifierRegistry();
+	private InterceptionModifierRegistry interceptionModifiers;
 
 	private final InterceptionModifier dummy = new InterceptionModifier(InterceptionModifierKey.DUMMY, 0, false, false);
 
@@ -90,7 +89,7 @@ public class InterceptionModifierFactory implements IRollModifierFactory<Interce
 		int tacklezones = UtilPlayer.findTacklezones(pGame, pPlayer);
 		for (Map.Entry<InterceptionModifierKey, InterceptionModifier> entry : interceptionModifiers.entrySet()) {
 			InterceptionModifier modifier = entry.getValue();
-			if (modifier.isTacklezoneModifier() && (modifier.getModifier() == tacklezones)) {
+			if (modifier.isTacklezoneModifier() && (modifier.getMultiplier() == tacklezones)) {
 				return modifier;
 			}
 		}
@@ -101,7 +100,7 @@ public class InterceptionModifierFactory implements IRollModifierFactory<Interce
 		int disturbingPresences = UtilDisturbingPresence.findOpposingDisturbingPresences(pGame, pPlayer);
 		for (Map.Entry<InterceptionModifierKey, InterceptionModifier> entry : interceptionModifiers.entrySet()) {
 			InterceptionModifier modifier = entry.getValue();
-			if (modifier.isDisturbingPresenceModifier() && (modifier.getModifier() == disturbingPresences)) {
+			if (modifier.isDisturbingPresenceModifier() && (modifier.getMultiplier() == disturbingPresences)) {
 				return modifier;
 			}
 		}
@@ -111,8 +110,9 @@ public class InterceptionModifierFactory implements IRollModifierFactory<Interce
 
 	@Override
 	public void initialize(Game game) {
-		// TODO Auto-generated method stub
-		
+		new Scanner<>(InterceptionModifierRegistry.class)
+			.getClassesImplementing(game.getOptions()).stream().findFirst()
+			.ifPresent(registry -> interceptionModifiers = registry);
 	}
 
 	private Collection<InterceptionModifier> getInterceptionModifiers(Player<?> player,
