@@ -12,8 +12,8 @@ import com.balancedbytes.games.ffb.ArmorModifier;
 import com.balancedbytes.games.ffb.ArmorModifiers.ArmorModifierContext;
 import com.balancedbytes.games.ffb.Card;
 import com.balancedbytes.games.ffb.CardEffect;
-import com.balancedbytes.games.ffb.CatchModifier;
-import com.balancedbytes.games.ffb.CatchModifiers.CatchContext;
+import com.balancedbytes.games.ffb.modifiers.CatchModifier;
+import com.balancedbytes.games.ffb.modifiers.CatchContext;
 import com.balancedbytes.games.ffb.DodgeModifier;
 import com.balancedbytes.games.ffb.DodgeModifiers.DodgeContext;
 import com.balancedbytes.games.ffb.InjuryModifier;
@@ -110,18 +110,6 @@ public final class UtilCards {
 		for (Skill skill : player.getPlayer().getSkills()) {
 			for (LeapModifier modifier : skill.getLeapModifiers()) {
 				if (modifier.appliesToContext(skill, context)) {
-					result.add(modifier);
-				}
-			}
-		}
-		return result;
-	}
-
-	public static Collection<CatchModifier> getCatchModifiers(Player<?> player, CatchContext context) {
-		Set<CatchModifier> result = new HashSet<>();
-		for (Skill skill : player.getSkills()) {
-			for (CatchModifier modifier : skill.getCatchModifiers()) {
-				if (modifier.appliesToContext(context)) {
 					result.add(modifier);
 				}
 			}

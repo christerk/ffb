@@ -1,6 +1,6 @@
 package com.balancedbytes.games.ffb.report;
 
-import com.balancedbytes.games.ffb.CatchModifier;
+import com.balancedbytes.games.ffb.modifiers.CatchModifier;
 import com.balancedbytes.games.ffb.factory.IFactorySource;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;

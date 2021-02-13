@@ -1,6 +1,6 @@
 package com.balancedbytes.games.ffb.mechanics.bb2016;
 
-import com.balancedbytes.games.ffb.CatchModifier;
+import com.balancedbytes.games.ffb.modifiers.CatchModifier;
 import com.balancedbytes.games.ffb.DodgeModifier;
 import com.balancedbytes.games.ffb.DodgeModifiers;
 import com.balancedbytes.games.ffb.GazeModifier;

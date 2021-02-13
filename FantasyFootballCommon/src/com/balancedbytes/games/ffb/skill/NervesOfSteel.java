@@ -1,6 +1,6 @@
 package com.balancedbytes.games.ffb.skill;
 
-import com.balancedbytes.games.ffb.CatchModifiers;
+import com.balancedbytes.games.ffb.modifiers.CatchModifierKey;
 import com.balancedbytes.games.ffb.modifiers.InterceptionModifierKey;
 import com.balancedbytes.games.ffb.PassModifier;
 import com.balancedbytes.games.ffb.RulesCollection;
@@ -24,7 +24,7 @@ public class NervesOfSteel extends Skill {
 	public void postConstruct() {
 		registerModifier(new PassModifier("Nerves of Steel", 0, false, false));
 		registerModifierKey(InterceptionModifierKey.NERVES_OF_STEEL);
-		registerModifier(CatchModifiers.NERVES_OF_STEEL);
+		registerModifierKey(CatchModifierKey.NERVES_OF_STEEL);
 
 		registerProperty(NamedProperties.ignoreTacklezonesWhenPassing);
 		registerProperty(NamedProperties.ignoreTacklezonesWhenCatching);

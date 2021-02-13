@@ -1,6 +1,6 @@
 package com.balancedbytes.games.ffb.mechanics.bb2020;
 
-import com.balancedbytes.games.ffb.CatchModifier;
+import com.balancedbytes.games.ffb.modifiers.CatchModifier;
 import com.balancedbytes.games.ffb.DodgeModifier;
 import com.balancedbytes.games.ffb.GazeModifier;
 import com.balancedbytes.games.ffb.IRollModifier;

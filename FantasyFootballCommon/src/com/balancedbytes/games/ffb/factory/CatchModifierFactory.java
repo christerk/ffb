@@ -1,73 +1,76 @@
 package com.balancedbytes.games.ffb.factory;
 
-import com.balancedbytes.games.ffb.CatchModifier;
-import com.balancedbytes.games.ffb.CatchModifiers;
-import com.balancedbytes.games.ffb.CatchModifiers.CatchContext;
 import com.balancedbytes.games.ffb.CatchScatterThrowInMode;
 import com.balancedbytes.games.ffb.FactoryType;
 import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.RulesCollection.Rules;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
+import com.balancedbytes.games.ffb.model.Skill;
 import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
+import com.balancedbytes.games.ffb.modifiers.CatchContext;
+import com.balancedbytes.games.ffb.modifiers.CatchModifier;
+import com.balancedbytes.games.ffb.modifiers.CatchModifierKey;
+import com.balancedbytes.games.ffb.modifiers.CatchModifierRegistry;
+import com.balancedbytes.games.ffb.util.Scanner;
 import com.balancedbytes.games.ffb.util.UtilCards;
 import com.balancedbytes.games.ffb.util.UtilDisturbingPresence;
 import com.balancedbytes.games.ffb.util.UtilPlayer;
 
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Comparator;
 import java.util.HashSet;
-import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 
 /**
- * 
  * @author Kalimar
  */
 @FactoryType(FactoryType.Factory.CATCH_MODIFIER)
 @RulesCollection(Rules.COMMON)
 public class CatchModifierFactory implements IRollModifierFactory<CatchModifier> {
 
-	static CatchModifiers catchModifiers;
+	private CatchModifierRegistry catchModifiers;
 
-	public CatchModifierFactory() {
-		catchModifiers = new CatchModifiers();
-	}
+	private final CatchModifier dummy = new CatchModifier(CatchModifierKey.DUMMY, 0, false, false);
 
 	public CatchModifier forName(String pName) {
-		return catchModifiers.values().get(pName.toLowerCase());
+		return forKey(CatchModifierKey.from(pName));
+	}
+
+	public CatchModifier forKey(CatchModifierKey key) {
+		return catchModifiers.get(key).orElse(dummy);
 	}
 
 	public Set<CatchModifier> findCatchModifiers(Game pGame, Player<?> pPlayer, CatchScatterThrowInMode pCatchMode) {
 
+		Set<CatchModifier> catchModifiers = new HashSet<>(pGame.activeModifiers(CatchModifier.class));
+
 		CatchContext context = new CatchContext(pPlayer, pCatchMode);
-		Set<CatchModifier> catchModifiers = new HashSet<>(UtilCards.getCatchModifiers(pPlayer, context));
+		catchModifiers.addAll(getCatchModifiers(pPlayer, context));
 
 		if ((CatchScatterThrowInMode.CATCH_ACCURATE_PASS == pCatchMode)
-				|| (CatchScatterThrowInMode.CATCH_ACCURATE_BOMB == pCatchMode)) {
-			catchModifiers.add(CatchModifiers.ACCURATE);
+			|| (CatchScatterThrowInMode.CATCH_ACCURATE_BOMB == pCatchMode)) {
+			catchModifiers.add(forKey(CatchModifierKey.ACCURATE));
 		}
 
 		if ((CatchScatterThrowInMode.CATCH_ACCURATE_PASS_EMPTY_SQUARE == pCatchMode
-				|| CatchScatterThrowInMode.CATCH_ACCURATE_BOMB_EMPTY_SQUARE == pCatchMode)
-				&& pPlayer.hasSkillWithProperty(NamedProperties.addBonusForAccuratePass)) {
-			catchModifiers.add(CatchModifiers.ACCURATE);
+			|| CatchScatterThrowInMode.CATCH_ACCURATE_BOMB_EMPTY_SQUARE == pCatchMode)
+			&& pPlayer.hasSkillWithProperty(NamedProperties.addBonusForAccuratePass)) {
+			catchModifiers.add(forKey(CatchModifierKey.ACCURATE));
 		}
 
 		if (CatchScatterThrowInMode.CATCH_HAND_OFF == pCatchMode) {
-			catchModifiers.add(CatchModifiers.HAND_OFF);
+			catchModifiers.add(forKey(CatchModifierKey.HAND_OFF));
 		}
 		catchModifiers.addAll(activeModifiers(pGame, CatchModifier.class));
 		if (!pPlayer.hasSkillWithProperty(NamedProperties.ignoreTacklezonesWhenCatching)) {
-			CatchModifier tacklezoneModifier = getTacklezoneModifier(pGame, pPlayer);
-			if (tacklezoneModifier != null) {
-				catchModifiers.add(tacklezoneModifier);
-			}
+			getTacklezoneModifier(pGame, pPlayer).ifPresent(catchModifiers::add);
 		}
-		CatchModifier disturbingPresenceModifier = getDisturbingPresenceModifier(pGame, pPlayer);
-		if (disturbingPresenceModifier != null) {
-			catchModifiers.add(disturbingPresenceModifier);
-		}
+
+		getDisturbingPresenceModifier(pGame, pPlayer).ifPresent(catchModifiers::add);
+
 		return catchModifiers;
 	}
 
@@ -81,36 +84,37 @@ public class CatchModifierFactory implements IRollModifierFactory<CatchModifier>
 		}
 	}
 
-	private CatchModifier getTacklezoneModifier(Game pGame, Player<?> pPlayer) {
+	private Optional<CatchModifier> getTacklezoneModifier(Game pGame, Player<?> pPlayer) {
 		int tacklezones = UtilPlayer.findTacklezones(pGame, pPlayer);
-		if (tacklezones > 0) {
-			for (Map.Entry<String, CatchModifier> entry : catchModifiers.values().entrySet()) {
-				CatchModifier modifier = entry.getValue();
-				if (modifier.isTacklezoneModifier() && (modifier.getModifier() == tacklezones)) {
-					return modifier;
-				}
-			}
-		}
-		return null;
+		return catchModifiers.values().stream()
+			.filter(modifier -> modifier.isTacklezoneModifier() && (modifier.getModifier() == tacklezones))
+			.findFirst();
 	}
 
-	private CatchModifier getDisturbingPresenceModifier(Game pGame, Player<?> pPlayer) {
+	private Optional<CatchModifier> getDisturbingPresenceModifier(Game pGame, Player<?> pPlayer) {
 		int disturbingPresences = UtilDisturbingPresence.findOpposingDisturbingPresences(pGame, pPlayer);
-		if (disturbingPresences > 0) {
-			for (Map.Entry<String, CatchModifier> entry : catchModifiers.values().entrySet()) {
-				CatchModifier modifier = entry.getValue();
-				if (modifier.isDisturbingPresenceModifier() && (modifier.getModifier() == disturbingPresences)) {
-					return modifier;
-				}
-			}
-		}
-		return null;
+		return catchModifiers.values().stream()
+			.filter(modifier ->modifier.isDisturbingPresenceModifier() && (modifier.getModifier() == disturbingPresences))
+			.findFirst();
 	}
 
 	@Override
 	public void initialize(Game game) {
-		// TODO Auto-generated method stub
-		
+		new Scanner<>(CatchModifierRegistry.class)
+			.getSubclasses(game.getOptions()).stream().findFirst()
+			.ifPresent(registry -> catchModifiers = registry);
 	}
 
+	private Collection<CatchModifier> getCatchModifiers(Player<?> player, CatchContext context) {
+		Set<CatchModifier> result = new HashSet<>();
+		for (Skill skill : player.getSkills()) {
+			for (CatchModifierKey modifierKey : skill.getCatchModifiers()) {
+				CatchModifier modifier = forKey(modifierKey);
+				if (modifier.appliesToContext(context)) {
+					result.add(modifier);
+				}
+			}
+		}
+		return result;
+	}
 }

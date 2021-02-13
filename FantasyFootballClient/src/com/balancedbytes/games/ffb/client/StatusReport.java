@@ -5,7 +5,6 @@ import com.balancedbytes.games.ffb.ArmorModifiers;
 import com.balancedbytes.games.ffb.BlockResult;
 import com.balancedbytes.games.ffb.Card;
 import com.balancedbytes.games.ffb.CardEffect;
-import com.balancedbytes.games.ffb.CatchModifiers;
 import com.balancedbytes.games.ffb.ClientMode;
 import com.balancedbytes.games.ffb.Direction;
 import com.balancedbytes.games.ffb.DodgeModifiers;
@@ -29,6 +28,7 @@ import com.balancedbytes.games.ffb.SpecialEffect;
 import com.balancedbytes.games.ffb.TurnMode;
 import com.balancedbytes.games.ffb.Weather;
 import com.balancedbytes.games.ffb.factory.BlockResultFactory;
+import com.balancedbytes.games.ffb.factory.CatchModifierFactory;
 import com.balancedbytes.games.ffb.factory.InterceptionModifierFactory;
 import com.balancedbytes.games.ffb.factory.PassModifierFactory;
 import com.balancedbytes.games.ffb.mechanics.AgilityMechanic;
@@ -44,6 +44,8 @@ import com.balancedbytes.games.ffb.model.SkillConstants;
 import com.balancedbytes.games.ffb.model.Team;
 import com.balancedbytes.games.ffb.model.ZappedPlayer;
 import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
+import com.balancedbytes.games.ffb.modifiers.CatchModifier;
+import com.balancedbytes.games.ffb.modifiers.CatchModifierKey;
 import com.balancedbytes.games.ffb.modifiers.InterceptionModifier;
 import com.balancedbytes.games.ffb.modifiers.InterceptionModifierKey;
 import com.balancedbytes.games.ffb.net.ServerStatus;
@@ -1661,7 +1663,8 @@ public class StatusReport {
 			} else {
 				println(getIndent(), TextStyle.BOLD, " tries to catch the ball:");
 			}
-			if (pReport.hasRollModifier(CatchModifiers.NERVES_OF_STEEL)) {
+			CatchModifier modifier = ((CatchModifierFactory)game.getFactory(Factory.CATCH_MODIFIER)).forKey(CatchModifierKey.NERVES_OF_STEEL);
+			if (pReport.hasRollModifier(modifier)) {
 				reportNervesOfSteel(player, "catch");
 			}
 		}

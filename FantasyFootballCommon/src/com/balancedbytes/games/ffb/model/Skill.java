@@ -1,7 +1,7 @@
 package com.balancedbytes.games.ffb.model;
 
 import com.balancedbytes.games.ffb.ArmorModifier;
-import com.balancedbytes.games.ffb.CatchModifier;
+import com.balancedbytes.games.ffb.modifiers.CatchModifier;
 import com.balancedbytes.games.ffb.DodgeModifier;
 import com.balancedbytes.games.ffb.INamedObject;
 import com.balancedbytes.games.ffb.InjuryModifier;
@@ -12,7 +12,7 @@ import com.balancedbytes.games.ffb.ReRollSource;
 import com.balancedbytes.games.ffb.ReRolledAction;
 import com.balancedbytes.games.ffb.SkillCategory;
 import com.balancedbytes.games.ffb.model.modifier.CancelSkillProperty;
-import com.balancedbytes.games.ffb.modifiers.InterceptionModifier;
+import com.balancedbytes.games.ffb.modifiers.CatchModifierKey;
 import com.balancedbytes.games.ffb.modifiers.InterceptionModifierKey;
 
 import java.util.ArrayList;
@@ -32,7 +32,7 @@ public abstract class Skill implements INamedObject {
 	private List<InterceptionModifierKey> interceptionModifiers = new ArrayList<>();
 	private List<InjuryModifier> injuryModifiers = new ArrayList<>();
 	private List<ArmorModifier> armorModifiers = new ArrayList<>();
-	private List<CatchModifier> catchModifiers = new ArrayList<>();
+	private List<CatchModifierKey> catchModifiers = new ArrayList<>();
 	private ISkillBehaviour<? extends Skill> behaviour;
 	private List<ISkillProperty> skillProperties = new ArrayList<>();
 	private Hashtable<ReRolledAction, ReRollSource> rerollSources = new Hashtable<>();
@@ -93,7 +93,7 @@ public abstract class Skill implements INamedObject {
 		injuryModifiers.add(modifier);
 	}
 
-	protected void registerModifier(CatchModifier modifier) {
+	protected void registerModifierKey(CatchModifierKey modifier) {
 		catchModifiers.add(modifier);
 	}
 
@@ -133,7 +133,7 @@ public abstract class Skill implements INamedObject {
 		return interceptionModifiers;
 	}
 
-	public List<CatchModifier> getCatchModifiers() {
+	public List<CatchModifierKey> getCatchModifiers() {
 		return catchModifiers;
 	}
 

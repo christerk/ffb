@@ -1,7 +1,9 @@
 package com.balancedbytes.games.ffb;
 
+import com.balancedbytes.games.ffb.factory.CatchModifierFactory;
 import com.balancedbytes.games.ffb.factory.InterceptionModifierFactory;
 import com.balancedbytes.games.ffb.model.Game;
+import com.balancedbytes.games.ffb.modifiers.CatchModifierKey;
 import com.balancedbytes.games.ffb.modifiers.InterceptionModifierKey;
 import com.balancedbytes.games.ffb.modifiers.ModifierSource;
 
@@ -26,9 +28,10 @@ public enum Weather implements INamedObject, ModifierSource {
 		public Collection<IRollModifier> modifier(Game game) {
 
 			InterceptionModifierFactory interceptionModifierFactory = game.getFactory(FactoryType.Factory.INTERCEPTION_MODIFIER);
+			CatchModifierFactory catchModifierFactory = game.getFactory(FactoryType.Factory.CATCH_MODIFIER);
 
 			return new HashSet<IRollModifier>() {{
-					add(CatchModifiers.POURING_RAIN);
+					add(catchModifierFactory.forKey(CatchModifierKey.POURING_RAIN));
 					add(interceptionModifierFactory.forKey(InterceptionModifierKey.POURING_RAIN));
 					add(PickupModifiers.POURING_RAIN);
 				}};
