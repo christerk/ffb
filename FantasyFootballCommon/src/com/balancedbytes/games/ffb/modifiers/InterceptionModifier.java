@@ -18,6 +18,9 @@ public class InterceptionModifier implements IRollModifier {
 		this(modifierKey, modifierKey.getName(), pModifier, pModifier, pTacklezoneModifier, pDisturbingPresenceModifier);
 	}
 
+	public InterceptionModifier(InterceptionModifierKey modifierKey, String reportString, int pModifier, boolean pTacklezoneModifier, boolean pDisturbingPresenceModifier) {
+		this(modifierKey, reportString, pModifier, pModifier, pTacklezoneModifier, pDisturbingPresenceModifier);
+	}
 	public InterceptionModifier(InterceptionModifierKey modifierKey, String reportString, int pModifier, int multiplier, boolean pTacklezoneModifier, boolean pDisturbingPresenceModifier) {
 		this.reportString = reportString;
 		this.multiplier = multiplier;

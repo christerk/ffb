@@ -51,6 +51,9 @@ public class InterceptionModifierRegistry extends HashMap<InterceptionModifierKe
 			false, false));
 		add(new InterceptionModifier(
 			MAGIC_GLOVES_OF_JARK_LONGARM, -1, false, false));
+		add(new InterceptionModifier(PASS_ACCURATE, 3, false, false));
+		add(new InterceptionModifier(PASS_INACCURATE, 2, false, false));
+		add(new InterceptionModifier(PASS_WILDLY_INACCURATE, 1, false, false));
 	}
 
 	private void add(InterceptionModifier modifier) {

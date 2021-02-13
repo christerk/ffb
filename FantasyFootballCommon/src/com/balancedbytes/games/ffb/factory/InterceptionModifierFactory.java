@@ -2,6 +2,7 @@ package com.balancedbytes.games.ffb.factory;
 
 import com.balancedbytes.games.ffb.Card;
 import com.balancedbytes.games.ffb.FactoryType;
+import com.balancedbytes.games.ffb.mechanics.PassResult;
 import com.balancedbytes.games.ffb.model.Skill;
 import com.balancedbytes.games.ffb.modifiers.InterceptionModifier;
 import com.balancedbytes.games.ffb.modifiers.InterceptionModifierKey;
@@ -46,11 +47,13 @@ public class InterceptionModifierFactory implements IRollModifierFactory<Interce
 		return interceptionModifiers.getOrDefault(key, dummy);
 	}
 
-	public Set<InterceptionModifier> findInterceptionModifiers(Game pGame, Player<?> pPlayer) {
+	public Set<InterceptionModifier> findInterceptionModifiers(Game pGame, Player<?> pPlayer, PassResult passResult) {
 		Set<InterceptionModifier> interceptionModifiers = activeModifiers(pGame, InterceptionModifier.class);
 
 		InterceptionContext context = new InterceptionContext(pPlayer);
 		interceptionModifiers.addAll(getInterceptionModifiers(pPlayer, context));
+
+		interceptionModifiers.add(forPassResult(passResult));
 
 		if (!pPlayer.hasSkillWithProperty(NamedProperties.ignoreTacklezonesWhenCatching)) {
 			InterceptionModifier tacklezoneModifier = getTacklezoneModifier(pGame, pPlayer);
@@ -128,5 +131,18 @@ public class InterceptionModifierFactory implements IRollModifierFactory<Interce
 			}
 		}
 		return result;
+	}
+
+	private InterceptionModifier forPassResult(PassResult passResult) {
+		switch (passResult) {
+			case ACCURATE:
+				return forKey(InterceptionModifierKey.PASS_ACCURATE);
+			case INACCURATE:
+				return forKey(InterceptionModifierKey.PASS_INACCURATE);
+			case WILDLY_INACCURATE:
+				return forKey(InterceptionModifierKey.PASS_WILDLY_INACCURATE);
+			default:
+				return dummy;
+		}
 	}
 }
