@@ -5,6 +5,8 @@ import java.util.Arrays;
 public enum CatchModifierKey implements ModifierKey {
 	DUMMY("Dummy"),
 	ACCURATE("Accurate Pass"),
+	INACCURATE("no accurate Pass"),
+	DEFLECTED("Deflected Pass"),
 	NERVES_OF_STEEL("Nerves of Steel"),
 	EXTRA_ARMS("Extra Arms"),
 	POURING_RAIN("Pouring Rain"),
@@ -29,7 +31,7 @@ public enum CatchModifierKey implements ModifierKey {
 	DISTURBING_PRESENCES_11("11 Disturbing Presences"),
 	DIVING_CATCH("Divign Catch"),
 	HAND_OFF("Hand Off");
-	
+
 	private final String name;
 
 	CatchModifierKey(String name) {

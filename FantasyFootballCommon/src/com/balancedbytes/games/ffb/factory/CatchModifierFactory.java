@@ -50,27 +50,38 @@ public class CatchModifierFactory implements IRollModifierFactory<CatchModifier>
 		CatchContext context = new CatchContext(pPlayer, pCatchMode);
 		catchModifiers.addAll(getCatchModifiers(pPlayer, context));
 
-		if ((CatchScatterThrowInMode.CATCH_ACCURATE_PASS == pCatchMode)
-			|| (CatchScatterThrowInMode.CATCH_ACCURATE_BOMB == pCatchMode)) {
-			catchModifiers.add(forKey(CatchModifierKey.ACCURATE));
+		switch (pCatchMode) {
+			case CATCH_ACCURATE_PASS:
+			case CATCH_ACCURATE_BOMB:
+				catchModifiers.add(forKey(CatchModifierKey.ACCURATE));
+				break;
+			case CATCH_ACCURATE_BOMB_EMPTY_SQUARE:
+			case CATCH_ACCURATE_PASS_EMPTY_SQUARE:
+				if (pPlayer.hasSkillWithProperty(NamedProperties.addBonusForAccuratePass)) {
+					catchModifiers.add(forKey(CatchModifierKey.ACCURATE));
+				}
+				break;
+			case CATCH_HAND_OFF:
+				catchModifiers.add(forKey(CatchModifierKey.HAND_OFF));
+				break;
+			case DEFLECTED:
+			case DEFLECTED_BOMB:
+				catchModifiers.add(forKey(CatchModifierKey.DEFLECTED));
+				break;
+			case CATCH_BOMB:
+			case CATCH_SCATTER:
+				catchModifiers.add(forKey(CatchModifierKey.INACCURATE));
+				break;
 		}
 
-		if ((CatchScatterThrowInMode.CATCH_ACCURATE_PASS_EMPTY_SQUARE == pCatchMode
-			|| CatchScatterThrowInMode.CATCH_ACCURATE_BOMB_EMPTY_SQUARE == pCatchMode)
-			&& pPlayer.hasSkillWithProperty(NamedProperties.addBonusForAccuratePass)) {
-			catchModifiers.add(forKey(CatchModifierKey.ACCURATE));
-		}
 
-		if (CatchScatterThrowInMode.CATCH_HAND_OFF == pCatchMode) {
-			catchModifiers.add(forKey(CatchModifierKey.HAND_OFF));
-		}
 		catchModifiers.addAll(activeModifiers(pGame, CatchModifier.class));
 		if (!pPlayer.hasSkillWithProperty(NamedProperties.ignoreTacklezonesWhenCatching)) {
 			getTacklezoneModifier(pGame, pPlayer).ifPresent(catchModifiers::add);
 		}
 
 		getDisturbingPresenceModifier(pGame, pPlayer).ifPresent(catchModifiers::add);
-
+		catchModifiers.remove(dummy);
 		return catchModifiers;
 	}
 
