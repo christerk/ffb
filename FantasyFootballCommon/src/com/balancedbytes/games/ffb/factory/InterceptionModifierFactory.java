@@ -30,7 +30,7 @@ import java.util.Set;
  */
 @FactoryType(FactoryType.Factory.INTERCEPTION_MODIFIER)
 @RulesCollection(Rules.COMMON)
-public class InterceptionModifierFactory implements IRollModifierFactory<InterceptionModifier> {
+public class InterceptionModifierFactory extends GenerifiedModifierFactory<InterceptionModifierKey, InterceptionModifier, InterceptionModifierRegistry> {
 
 	@SuppressWarnings("MismatchedQueryAndUpdateOfCollection")
 	private InterceptionModifierRegistry interceptionModifiers;
@@ -40,10 +40,6 @@ public class InterceptionModifierFactory implements IRollModifierFactory<Interce
 	@Override
 	public InterceptionModifier forName(String pName) {
 		return forKey(InterceptionModifierKey.from(pName));
-	}
-
-	public InterceptionModifier forKey(InterceptionModifierKey key) {
-		return interceptionModifiers.get(key).orElse(dummy);
 	}
 
 	public Set<InterceptionModifier> findInterceptionModifiers(Game pGame, Player<?> pPlayer, PassResult passResult) {
@@ -98,10 +94,23 @@ public class InterceptionModifierFactory implements IRollModifierFactory<Interce
 	}
 
 	@Override
-	public void initialize(Game game) {
-		new Scanner<>(InterceptionModifierRegistry.class)
-			.getSubclasses(game.getOptions()).stream().findFirst()
-			.ifPresent(registry -> interceptionModifiers = registry);
+	protected Scanner<InterceptionModifierRegistry> getScanner() {
+		return new Scanner<>(InterceptionModifierRegistry.class);
+	}
+
+	@Override
+	protected InterceptionModifierRegistry getRegistry() {
+		return interceptionModifiers;
+	}
+
+	@Override
+	protected void setRegistry(InterceptionModifierRegistry registry) {
+		interceptionModifiers = registry;
+	}
+
+	@Override
+	protected InterceptionModifier dummy() {
+		return dummy;
 	}
 
 	private Collection<InterceptionModifier> getInterceptionModifiers(Player<?> player,
