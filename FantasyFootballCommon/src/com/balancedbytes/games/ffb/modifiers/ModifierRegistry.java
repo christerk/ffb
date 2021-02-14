@@ -8,7 +8,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
-public abstract class ModifierRegistry<K extends ModifierKey, V extends IRollModifier<K>> implements IKeyedItem {
+public abstract class ModifierRegistry<K extends ModifierKey, C extends ModifierContext, V extends IRollModifier<K, C>> implements IKeyedItem {
 	protected final Map<K, V> values = new HashMap<>();
 
 	public Optional<V> get(K key) {

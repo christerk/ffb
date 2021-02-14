@@ -8,7 +8,7 @@ import com.balancedbytes.games.ffb.model.Skill;
  * 
  * @author Kalimar
  */
-public class CatchModifier implements IRollModifier<CatchModifierKey> {
+public class CatchModifier implements IRollModifier<CatchModifierKey, CatchContext> {
 
 	private CatchModifierKey modifierKey;
 	private int fModifier;

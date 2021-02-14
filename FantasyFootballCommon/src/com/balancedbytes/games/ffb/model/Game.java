@@ -516,7 +516,7 @@ public class Game extends ModelChangeObservable implements IJsonSerializable {
 	}
 
 	@SuppressWarnings("unchecked")
-	public <T extends IRollModifier>Set<T> activeModifiers(Class<T> clazz) {
+	public <T extends IRollModifier<?, ?>>Set<T> activeModifiers(Class<T> clazz) {
 		return fFieldModel.getWeather().modifier(this).stream()
 			.filter(modifier -> clazz.isAssignableFrom(modifier.getClass()))
 			.map(iRollModifier -> (T) iRollModifier)

@@ -369,13 +369,13 @@ public class StepCatchScatterThrowIn extends AbstractStepWithReRoll {
 		if (doRoll) {
 			AgilityMechanic mechanic = (AgilityMechanic) game.getRules().getFactory(Factory.MECHANIC).forName(Mechanic.Type.AGILITY.name());
 			CatchModifierFactory modifierFactory = game.getFactory(Factory.CATCH_MODIFIER);
-			Set<CatchModifier> catchModifiers = modifierFactory.findCatchModifiers(game, state.catcher, fCatchScatterThrowInMode);
+			Set<CatchModifier> catchModifiers = modifierFactory.findModifiers(new CatchModifierFactory.CatchModifierCalculationInput(game, state.catcher, fCatchScatterThrowInMode));
 			int minimumRoll = mechanic.minimumRollCatch(state.catcher, catchModifiers);
 			boolean reRolled = ((getReRolledAction() == ReRolledActions.CATCH) && (getReRollSource() != null));
 			int roll = getGameState().getDiceRoller().rollSkill();
 			boolean successful = DiceInterpreter.getInstance().isSkillRollSuccessful(roll, minimumRoll);
 			getResult().addReport(new ReportCatchRoll(state.catcher.getId(), successful, roll, minimumRoll, reRolled,
-					modifierFactory.toArray(catchModifiers), fCatchScatterThrowInMode.isBomb()));
+					modifierFactory.sort(catchModifiers).toArray(new CatchModifier[0]), fCatchScatterThrowInMode.isBomb()));
 
 			if (successful) {
 

@@ -1,15 +1,31 @@
 package com.balancedbytes.games.ffb.factory;
 
 import com.balancedbytes.games.ffb.IRollModifier;
+import com.balancedbytes.games.ffb.mechanics.PassResult;
 import com.balancedbytes.games.ffb.model.Game;
+import com.balancedbytes.games.ffb.model.Player;
+import com.balancedbytes.games.ffb.model.Skill;
+import com.balancedbytes.games.ffb.modifiers.ModifierContext;
 import com.balancedbytes.games.ffb.modifiers.ModifierKey;
 import com.balancedbytes.games.ffb.modifiers.ModifierRegistry;
 import com.balancedbytes.games.ffb.util.Scanner;
+import com.balancedbytes.games.ffb.util.UtilDisturbingPresence;
+import com.balancedbytes.games.ffb.util.UtilPlayer;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Comparator;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 
 public abstract class GenerifiedModifierFactory<
 	K extends ModifierKey,
-	V extends IRollModifier<K>,
-	R extends ModifierRegistry<K, V>
+	C extends ModifierContext,
+	I extends GenerifiedModifierFactory.ModifierCalculationInput<C>,
+	V extends IRollModifier<K, C>,
+	R extends ModifierRegistry<K, C, V>
 	> implements IRollModifierFactory<V> {
 
 	@Override
@@ -25,10 +41,81 @@ public abstract class GenerifiedModifierFactory<
 
 	protected abstract void setRegistry(R registry);
 
-	protected abstract V dummy();
+	protected abstract V getDummy();
 
 	public V forKey(K key) {
-		return getRegistry().get(key).orElse(dummy());
+		return getRegistry().get(key).orElse(getDummy());
 	}
 
+	protected Optional<V> getDisturbingPresenceModifier(Game pGame, Player<?> pPlayer) {
+		int disturbingPresences = UtilDisturbingPresence.findOpposingDisturbingPresences(pGame, pPlayer);
+		return getRegistry().values().stream()
+			.filter(modifier -> modifier.isDisturbingPresenceModifier() && (modifier.getMultiplier() == disturbingPresences))
+			.findFirst();
+	}
+
+	protected Optional<V> getTacklezoneModifier(Game pGame, Player<?> pPlayer) {
+		int tacklezones = UtilPlayer.findTacklezones(pGame, pPlayer);
+		return getRegistry().values().stream()
+			.filter(modifier -> modifier.isTacklezoneModifier() && (modifier.getMultiplier() == tacklezones))
+			.findFirst();
+	}
+
+	public List<V> sort(Set<V> modifierSet) {
+		List<V> modifiers = new ArrayList<>(modifierSet);
+		modifiers.sort(Comparator.comparing(V::getName));
+		return modifiers;
+	}
+
+	protected Collection<V> getModifierKeys(Player<?> player, C context) {
+		Set<V> result = new HashSet<>();
+
+		for (Skill skill : player.getSkills()) {
+			for (K modifierKey : getModifierKeys(skill)) {
+				V modifier = forKey(modifierKey);
+				if (modifier.appliesToContext(skill, context)) {
+					result.add(modifier);
+				}
+			}
+		}
+		return result;
+	}
+
+	protected abstract Collection<K> getModifierKeys(Skill skill);
+
+	protected abstract Set<V> gameModifiers(Game game);
+
+	protected abstract Set<V> findModifiersInternal(I input);
+
+	public Set<V> findModifiers(I input) {
+		Set<V> modifiers = gameModifiers(input.getGame());
+
+		modifiers.addAll(getModifierKeys(input.getPlayer(), input.getContext()));
+
+		modifiers.addAll(findModifiersInternal(input));
+
+		modifiers.remove(getDummy());
+
+		return modifiers;
+	}
+
+	public abstract static class ModifierCalculationInput<C> {
+		private final Game game;
+		private final Player<?> player;
+
+		public ModifierCalculationInput(Game game, Player<?> player) {
+			this.game = game;
+			this.player = player;
+		}
+
+		public Game getGame() {
+			return game;
+		}
+
+		public Player<?> getPlayer() {
+			return player;
+		}
+
+		public abstract C getContext();
+	}
 }

@@ -3,7 +3,7 @@ package com.balancedbytes.games.ffb.modifiers;
 import com.balancedbytes.games.ffb.CatchScatterThrowInMode;
 import com.balancedbytes.games.ffb.model.Player;
 
-public class CatchContext {
+public class CatchContext implements ModifierContext {
 	public Player<?> player;
 	public CatchScatterThrowInMode catchMode;
 

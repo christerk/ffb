@@ -3,11 +3,7 @@ package com.balancedbytes.games.ffb.modifiers;
 import com.balancedbytes.games.ffb.IRollModifier;
 import com.balancedbytes.games.ffb.model.Skill;
 
-/**
- * 
- * @author Kalimar
- */
-public class InterceptionModifier implements IRollModifier<InterceptionModifierKey> {
+public class InterceptionModifier implements IRollModifier<InterceptionModifierKey, InterceptionContext> {
 	private final InterceptionModifierKey modifierKey;
 	private final int fModifier, multiplier;
 	private final boolean fTacklezoneModifier;
