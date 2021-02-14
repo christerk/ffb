@@ -1,5 +1,7 @@
 package com.balancedbytes.games.ffb;
 
+import com.balancedbytes.games.ffb.modifiers.ModifierKey;
+
 /**
  * 
  * @author Kalimar
@@ -41,6 +43,11 @@ public enum RightStuffModifier implements IRollModifier {
 	@Override
 	public String getReportString() {
 		return getName();
+	}
+
+	@Override
+	public ModifierKey getModifierKey() {
+		return null;
 	}
 
 }

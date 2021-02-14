@@ -1,6 +1,7 @@
 package com.balancedbytes.games.ffb;
 
 import com.balancedbytes.games.ffb.PickupModifiers.PickupContext;
+import com.balancedbytes.games.ffb.modifiers.ModifierKey;
 
 /**
  * 
@@ -40,5 +41,10 @@ public class PickupModifier implements IRollModifier {
 	@Override
 	public String getReportString() {
 		return getName();
+	}
+
+	@Override
+	public ModifierKey getModifierKey() {
+		return null;
 	}
 }

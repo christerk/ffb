@@ -2,6 +2,7 @@ package com.balancedbytes.games.ffb;
 
 import com.balancedbytes.games.ffb.LeapModifiers.LeapContext;
 import com.balancedbytes.games.ffb.model.Skill;
+import com.balancedbytes.games.ffb.modifiers.ModifierKey;
 
 /**
  * 
@@ -38,5 +39,10 @@ public class LeapModifier implements IRollModifier {
 
 	public boolean appliesToContext(Skill skill, LeapContext context) {
 		return true;
+	}
+
+	@Override
+	public ModifierKey getModifierKey() {
+		return null;
 	}
 }

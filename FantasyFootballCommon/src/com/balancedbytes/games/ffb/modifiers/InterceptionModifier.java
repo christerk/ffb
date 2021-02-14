@@ -7,7 +7,7 @@ import com.balancedbytes.games.ffb.model.Skill;
  * 
  * @author Kalimar
  */
-public class InterceptionModifier implements IRollModifier {
+public class InterceptionModifier implements IRollModifier<InterceptionModifierKey> {
 	private final InterceptionModifierKey modifierKey;
 	private final int fModifier, multiplier;
 	private final boolean fTacklezoneModifier;
