@@ -8,10 +8,10 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
-public abstract class ModifierRegistry<K extends ModifierKey, C extends ModifierContext, V extends IRollModifier<K, C>> implements IKeyedItem {
-	protected final Map<K, V> values = new HashMap<>();
+public abstract class ModifierRegistry<C extends ModifierContext, V extends IRollModifier<C>> implements IKeyedItem {
+	protected final Map<String, V> values = new HashMap<>();
 
-	public Optional<V> get(K key) {
+	public Optional<V> get(String key) {
 		return Optional.ofNullable(values.get(key));
 	}
 
@@ -20,6 +20,6 @@ public abstract class ModifierRegistry<K extends ModifierKey, C extends Modifier
 	};
 
 	protected void add(V modifier) {
-		values.put(modifier.getModifierKey(), modifier);
+		values.put(modifier.getName(), modifier);
 	}
 }

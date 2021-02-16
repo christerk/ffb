@@ -1,7 +1,5 @@
 package com.balancedbytes.games.ffb;
 
-import com.balancedbytes.games.ffb.modifiers.ModifierKey;
-
 /**
  * 
  * @author Kalimar
@@ -44,9 +42,5 @@ public enum GazeModifier implements IRollModifier {
 		return getName();
 	}
 
-	@Override
-	public ModifierKey getModifierKey() {
-		return null;
-	}
 
 }

@@ -3,35 +3,31 @@ package com.balancedbytes.games.ffb.modifiers;
 import com.balancedbytes.games.ffb.IRollModifier;
 import com.balancedbytes.games.ffb.model.Skill;
 
-public class InterceptionModifier implements IRollModifier<InterceptionModifierKey, InterceptionContext> {
-	private final InterceptionModifierKey modifierKey;
+public class InterceptionModifier implements IRollModifier<InterceptionContext> {
+	private final String name;
 	private final int fModifier, multiplier;
 	private final boolean fTacklezoneModifier;
 	private final boolean fDisturbingPresenceModifier;
 	private final String reportString;
 
-	public InterceptionModifier(InterceptionModifierKey modifierKey, int pModifier, boolean pTacklezoneModifier, boolean pDisturbingPresenceModifier) {
-		this(modifierKey, modifierKey.getName(), pModifier, pModifier, pTacklezoneModifier, pDisturbingPresenceModifier);
+	public InterceptionModifier(String name, int pModifier, boolean pTacklezoneModifier, boolean pDisturbingPresenceModifier) {
+		this(name, name, pModifier, pModifier, pTacklezoneModifier, pDisturbingPresenceModifier);
 	}
 
-	public InterceptionModifier(InterceptionModifierKey modifierKey, String reportString, int pModifier, boolean pTacklezoneModifier, boolean pDisturbingPresenceModifier) {
-		this(modifierKey, reportString, pModifier, pModifier, pTacklezoneModifier, pDisturbingPresenceModifier);
+	public InterceptionModifier(String name, String reportString, int pModifier, boolean pTacklezoneModifier, boolean pDisturbingPresenceModifier) {
+		this(name, reportString, pModifier, pModifier, pTacklezoneModifier, pDisturbingPresenceModifier);
 	}
-	public InterceptionModifier(InterceptionModifierKey modifierKey, String reportString, int pModifier, int multiplier, boolean pTacklezoneModifier, boolean pDisturbingPresenceModifier) {
+	public InterceptionModifier(String name, String reportString, int pModifier, int multiplier, boolean pTacklezoneModifier, boolean pDisturbingPresenceModifier) {
 		this.reportString = reportString;
 		this.multiplier = multiplier;
-		this.modifierKey = modifierKey;
+		this.name = name;
 		fModifier = pModifier;
 		fTacklezoneModifier = pTacklezoneModifier;
 		fDisturbingPresenceModifier = pDisturbingPresenceModifier;
 	}
 
-	public InterceptionModifierKey getModifierKey() {
-		return modifierKey;
-	}
-
 	public String getName() {
-		return modifierKey.getName();
+		return name;
 	}
 
 	public int getModifier() {

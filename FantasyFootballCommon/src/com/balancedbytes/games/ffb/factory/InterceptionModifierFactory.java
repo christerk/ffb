@@ -11,10 +11,10 @@ import com.balancedbytes.games.ffb.model.Skill;
 import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
 import com.balancedbytes.games.ffb.modifiers.InterceptionContext;
 import com.balancedbytes.games.ffb.modifiers.InterceptionModifier;
-import com.balancedbytes.games.ffb.modifiers.InterceptionModifierKey;
 import com.balancedbytes.games.ffb.modifiers.InterceptionModifierRegistry;
 import com.balancedbytes.games.ffb.util.Scanner;
 import com.balancedbytes.games.ffb.util.UtilCards;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -25,18 +25,16 @@ import java.util.Set;
  */
 @FactoryType(FactoryType.Factory.INTERCEPTION_MODIFIER)
 @RulesCollection(Rules.COMMON)
-public class InterceptionModifierFactory extends GenerifiedModifierFactory<InterceptionModifierKey,
+public class InterceptionModifierFactory extends GenerifiedModifierFactory<
 	InterceptionContext, InterceptionModifierFactory.InterceptionModifierCalculationInput,
 	InterceptionModifier, InterceptionModifierRegistry> {
 
 	@SuppressWarnings("MismatchedQueryAndUpdateOfCollection")
 	private InterceptionModifierRegistry interceptionModifiers;
 
-	private final InterceptionModifier dummy = new InterceptionModifier(InterceptionModifierKey.DUMMY, 0, false, false);
-
 	@Override
 	public InterceptionModifier forName(String pName) {
-		return forKey(InterceptionModifierKey.from(pName));
+		throw new NotImplementedException();
 	}
 
 	@Override
@@ -55,12 +53,7 @@ public class InterceptionModifierFactory extends GenerifiedModifierFactory<Inter
 	}
 
 	@Override
-	protected InterceptionModifier getDummy() {
-		return dummy;
-	}
-
-	@Override
-	protected Collection<InterceptionModifierKey> getModifierKeys(Skill skill) {
+	protected Collection<InterceptionModifier> getModifier(Skill skill) {
 		return skill.getInterceptionModifiers();
 	}
 

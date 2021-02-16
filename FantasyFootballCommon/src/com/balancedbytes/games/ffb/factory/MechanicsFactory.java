@@ -5,27 +5,25 @@ import com.balancedbytes.games.ffb.FantasyFootballException;
 import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.mechanics.Mechanic;
 import com.balancedbytes.games.ffb.model.Game;
-import com.balancedbytes.games.ffb.option.GameOptionId;
 import com.balancedbytes.games.ffb.util.Scanner;
 
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 @FactoryType(FactoryType.Factory.MECHANIC)
 @RulesCollection(RulesCollection.Rules.COMMON)
 public class MechanicsFactory implements INamedObjectFactory<Mechanic> {
 
-	private Map<Mechanic.Type, Mechanic> mechanics = new HashMap<>();
+	private final Map<Mechanic.Type, Mechanic> mechanics = new HashMap<>();
 
 	@Override
 	public Mechanic forName(String pName) {
 		return Arrays.stream(Mechanic.Type.values())
 				.filter(type -> type.name().equals(pName))
 				.findFirst()
-				.map(type -> mechanics.get(type))
+				.map(mechanics::get)
 				.orElse(null);
 	}
 

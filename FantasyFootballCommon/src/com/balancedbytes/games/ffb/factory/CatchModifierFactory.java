@@ -10,9 +10,9 @@ import com.balancedbytes.games.ffb.model.Skill;
 import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
 import com.balancedbytes.games.ffb.modifiers.CatchContext;
 import com.balancedbytes.games.ffb.modifiers.CatchModifier;
-import com.balancedbytes.games.ffb.modifiers.CatchModifierKey;
 import com.balancedbytes.games.ffb.modifiers.CatchModifierRegistry;
 import com.balancedbytes.games.ffb.util.Scanner;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -23,19 +23,17 @@ import java.util.Set;
  */
 @FactoryType(FactoryType.Factory.CATCH_MODIFIER)
 @RulesCollection(Rules.COMMON)
-public class CatchModifierFactory extends GenerifiedModifierFactory<CatchModifierKey, CatchContext,
+public class CatchModifierFactory extends GenerifiedModifierFactory<CatchContext,
 	CatchModifierFactory.CatchModifierCalculationInput, CatchModifier, CatchModifierRegistry> {
 
 	private CatchModifierRegistry catchModifiers;
 
-	private final CatchModifier dummy = new CatchModifier(CatchModifierKey.DUMMY, 0, false, false);
-
 	public CatchModifier forName(String pName) {
-		return forKey(CatchModifierKey.from(pName));
+		throw new NotImplementedException();
 	}
 
 	@Override
-	protected Collection<CatchModifierKey> getModifierKeys(Skill skill) {
+	protected Collection<CatchModifier> getModifier(Skill skill) {
 		return skill.getCatchModifiers();
 	}
 
@@ -99,11 +97,6 @@ public class CatchModifierFactory extends GenerifiedModifierFactory<CatchModifie
 	@Override
 	protected void setRegistry(CatchModifierRegistry registry) {
 		catchModifiers = registry;
-	}
-
-	@Override
-	protected CatchModifier getDummy() {
-		return dummy;
 	}
 
 	public static class CatchModifierCalculationInput extends GenerifiedModifierFactory.ModifierCalculationInput<CatchContext> {

@@ -1,7 +1,6 @@
 package com.balancedbytes.games.ffb.model;
 
 import com.balancedbytes.games.ffb.ArmorModifier;
-import com.balancedbytes.games.ffb.modifiers.CatchModifier;
 import com.balancedbytes.games.ffb.DodgeModifier;
 import com.balancedbytes.games.ffb.INamedObject;
 import com.balancedbytes.games.ffb.InjuryModifier;
@@ -12,8 +11,8 @@ import com.balancedbytes.games.ffb.ReRollSource;
 import com.balancedbytes.games.ffb.ReRolledAction;
 import com.balancedbytes.games.ffb.SkillCategory;
 import com.balancedbytes.games.ffb.model.modifier.CancelSkillProperty;
-import com.balancedbytes.games.ffb.modifiers.CatchModifierKey;
-import com.balancedbytes.games.ffb.modifiers.InterceptionModifierKey;
+import com.balancedbytes.games.ffb.modifiers.CatchModifier;
+import com.balancedbytes.games.ffb.modifiers.InterceptionModifier;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -22,20 +21,20 @@ import java.util.List;
 
 public abstract class Skill implements INamedObject {
 
-	private String name;
-	private SkillCategory category;
-	private List<PlayerModifier> playerModifiers = new ArrayList<>();
-	private List<PassModifier> passModifiers = new ArrayList<>();
-	private List<PickupModifier> pickupModifiers = new ArrayList<>();
-	private List<DodgeModifier> dodgeModifiers = new ArrayList<>();
-	private List<LeapModifier> leapModifiers = new ArrayList<>();
-	private List<InterceptionModifierKey> interceptionModifiers = new ArrayList<>();
-	private List<InjuryModifier> injuryModifiers = new ArrayList<>();
-	private List<ArmorModifier> armorModifiers = new ArrayList<>();
-	private List<CatchModifierKey> catchModifiers = new ArrayList<>();
+	private final String name;
+	private final SkillCategory category;
+	private final List<PlayerModifier> playerModifiers = new ArrayList<>();
+	private final List<PassModifier> passModifiers = new ArrayList<>();
+	private final List<PickupModifier> pickupModifiers = new ArrayList<>();
+	private final List<DodgeModifier> dodgeModifiers = new ArrayList<>();
+	private final List<LeapModifier> leapModifiers = new ArrayList<>();
+	private final List<InterceptionModifier> interceptionModifiers = new ArrayList<>();
+	private final List<InjuryModifier> injuryModifiers = new ArrayList<>();
+	private final List<ArmorModifier> armorModifiers = new ArrayList<>();
+	private final List<CatchModifier> catchModifiers = new ArrayList<>();
 	private ISkillBehaviour<? extends Skill> behaviour;
-	private List<ISkillProperty> skillProperties = new ArrayList<>();
-	private Hashtable<ReRolledAction, ReRollSource> rerollSources = new Hashtable<>();
+	private final List<ISkillProperty> skillProperties = new ArrayList<>();
+	private final Hashtable<ReRolledAction, ReRollSource> rerollSources = new Hashtable<>();
 
 	public Skill(String name, SkillCategory category) {
 		this.name = name;
@@ -81,7 +80,7 @@ public abstract class Skill implements INamedObject {
 		playerModifiers.add(modifier);
 	}
 
-	protected void registerModifierKey(InterceptionModifierKey modifier) {
+	protected void registerModifier(InterceptionModifier modifier) {
 		interceptionModifiers.add(modifier);
 	}
 
@@ -93,7 +92,7 @@ public abstract class Skill implements INamedObject {
 		injuryModifiers.add(modifier);
 	}
 
-	protected void registerModifierKey(CatchModifierKey modifier) {
+	protected void registerModifier(CatchModifier modifier) {
 		catchModifiers.add(modifier);
 	}
 
@@ -129,11 +128,11 @@ public abstract class Skill implements INamedObject {
 		return leapModifiers;
 	}
 
-	public List<InterceptionModifierKey> getInterceptionModifiers() {
+	public List<InterceptionModifier> getInterceptionModifiers() {
 		return interceptionModifiers;
 	}
 
-	public List<CatchModifierKey> getCatchModifiers() {
+	public List<CatchModifier> getCatchModifiers() {
 		return catchModifiers;
 	}
 

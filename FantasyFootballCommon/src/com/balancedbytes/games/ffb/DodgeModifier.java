@@ -2,7 +2,6 @@ package com.balancedbytes.games.ffb;
 
 import com.balancedbytes.games.ffb.DodgeModifiers.DodgeContext;
 import com.balancedbytes.games.ffb.model.Skill;
-import com.balancedbytes.games.ffb.modifiers.ModifierKey;
 
 /**
  *
@@ -49,11 +48,6 @@ public class DodgeModifier implements IRollModifier {
 	@Override
 	public String getReportString() {
 		return getName();
-	}
-
-	@Override
-	public ModifierKey getModifierKey() {
-		return null;
 	}
 
 }

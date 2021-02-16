@@ -1,12 +1,10 @@
 package com.balancedbytes.games.ffb.factory;
 
 import com.balancedbytes.games.ffb.IRollModifier;
-import com.balancedbytes.games.ffb.mechanics.PassResult;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.model.Skill;
 import com.balancedbytes.games.ffb.modifiers.ModifierContext;
-import com.balancedbytes.games.ffb.modifiers.ModifierKey;
 import com.balancedbytes.games.ffb.modifiers.ModifierRegistry;
 import com.balancedbytes.games.ffb.util.Scanner;
 import com.balancedbytes.games.ffb.util.UtilDisturbingPresence;
@@ -21,11 +19,10 @@ import java.util.Optional;
 import java.util.Set;
 
 public abstract class GenerifiedModifierFactory<
-	K extends ModifierKey,
 	C extends ModifierContext,
 	I extends GenerifiedModifierFactory.ModifierCalculationInput<C>,
-	V extends IRollModifier<K, C>,
-	R extends ModifierRegistry<K, C, V>
+	V extends IRollModifier<C>,
+	R extends ModifierRegistry<C, V>
 	> implements IRollModifierFactory<V> {
 
 	@Override
@@ -40,12 +37,6 @@ public abstract class GenerifiedModifierFactory<
 	protected abstract R getRegistry();
 
 	protected abstract void setRegistry(R registry);
-
-	protected abstract V getDummy();
-
-	public V forKey(K key) {
-		return getRegistry().get(key).orElse(getDummy());
-	}
 
 	protected Optional<V> getDisturbingPresenceModifier(Game pGame, Player<?> pPlayer) {
 		int disturbingPresences = UtilDisturbingPresence.findOpposingDisturbingPresences(pGame, pPlayer);
@@ -71,8 +62,7 @@ public abstract class GenerifiedModifierFactory<
 		Set<V> result = new HashSet<>();
 
 		for (Skill skill : player.getSkills()) {
-			for (K modifierKey : getModifierKeys(skill)) {
-				V modifier = forKey(modifierKey);
+			for (V modifier : getModifier(skill)) {
 				if (modifier.appliesToContext(skill, context)) {
 					result.add(modifier);
 				}
@@ -81,7 +71,7 @@ public abstract class GenerifiedModifierFactory<
 		return result;
 	}
 
-	protected abstract Collection<K> getModifierKeys(Skill skill);
+	protected abstract Collection<V> getModifier(Skill skill);
 
 	protected abstract Set<V> gameModifiers(Game game);
 
@@ -93,8 +83,6 @@ public abstract class GenerifiedModifierFactory<
 		modifiers.addAll(getModifierKeys(input.getPlayer(), input.getContext()));
 
 		modifiers.addAll(findModifiersInternal(input));
-
-		modifiers.remove(getDummy());
 
 		return modifiers;
 	}

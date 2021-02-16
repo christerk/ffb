@@ -1,7 +1,6 @@
 package com.balancedbytes.games.ffb;
 
 import com.balancedbytes.games.ffb.PassingModifiers.PassContext;
-import com.balancedbytes.games.ffb.modifiers.ModifierKey;
 
 /**
  * 
@@ -55,8 +54,4 @@ public class PassModifier implements IRollModifier {
 		return getName();
 	}
 
-	@Override
-	public ModifierKey getModifierKey() {
-		return null;
-	}
 }

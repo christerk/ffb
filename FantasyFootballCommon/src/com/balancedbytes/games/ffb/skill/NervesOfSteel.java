@@ -1,13 +1,13 @@
 package com.balancedbytes.games.ffb.skill;
 
-import com.balancedbytes.games.ffb.modifiers.CatchModifierKey;
-import com.balancedbytes.games.ffb.modifiers.InterceptionModifierKey;
 import com.balancedbytes.games.ffb.PassModifier;
 import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.RulesCollection.Rules;
 import com.balancedbytes.games.ffb.SkillCategory;
 import com.balancedbytes.games.ffb.model.Skill;
 import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
+import com.balancedbytes.games.ffb.modifiers.CatchModifier;
+import com.balancedbytes.games.ffb.modifiers.InterceptionModifier;
 
 /**
  * The player ignores modifiers for enemy tackle zones when he attempts to pass,
@@ -23,8 +23,8 @@ public class NervesOfSteel extends Skill {
 	@Override
 	public void postConstruct() {
 		registerModifier(new PassModifier("Nerves of Steel", 0, false, false));
-		registerModifierKey(InterceptionModifierKey.NERVES_OF_STEEL);
-		registerModifierKey(CatchModifierKey.NERVES_OF_STEEL);
+		registerModifier(new InterceptionModifier("Nerves of Steel", 0, false, false));
+		registerModifier(new CatchModifier("Nerves of Steel", 0, false, false));
 
 		registerProperty(NamedProperties.ignoreTacklezonesWhenPassing);
 		registerProperty(NamedProperties.ignoreTacklezonesWhenCatching);

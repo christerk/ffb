@@ -1,23 +1,19 @@
 package com.balancedbytes.games.ffb;
 
 import com.balancedbytes.games.ffb.model.Skill;
-import com.balancedbytes.games.ffb.modifiers.InterceptionContext;
 import com.balancedbytes.games.ffb.modifiers.ModifierContext;
-import com.balancedbytes.games.ffb.modifiers.ModifierKey;
 
 /**
  * 
  * @author Kalimar
  */
-public interface IRollModifier<T extends ModifierKey, C extends ModifierContext> extends INamedObject {
+public interface IRollModifier<C extends ModifierContext> extends INamedObject {
 
 	int getModifier();
 
 	boolean isModifierIncluded();
 
 	String getReportString();
-
-	T getModifierKey();
 
 	default boolean isDisturbingPresenceModifier() {
 		return false;

@@ -1,29 +1,28 @@
 package com.balancedbytes.games.ffb.modifiers;
 
 import com.balancedbytes.games.ffb.IRollModifier;
-import com.balancedbytes.games.ffb.modifiers.CatchContext;
 import com.balancedbytes.games.ffb.model.Skill;
 
 /**
  * 
  * @author Kalimar
  */
-public class CatchModifier implements IRollModifier<CatchModifierKey, CatchContext> {
+public class CatchModifier implements IRollModifier<CatchContext> {
 
-	private CatchModifierKey modifierKey;
-	private int fModifier;
-	private boolean fTacklezoneModifier;
-	private boolean fDisturbingPresenceModifier;
+	private final String name;
+	private final int fModifier;
+	private final boolean fTacklezoneModifier;
+	private final boolean fDisturbingPresenceModifier;
 
-	public CatchModifier(CatchModifierKey modifierKey, int pModifier, boolean pTacklezoneModifier, boolean pDisturbingPresenceModifier) {
-		this.modifierKey = modifierKey;
+	public CatchModifier(String name, int pModifier, boolean pTacklezoneModifier, boolean pDisturbingPresenceModifier) {
+		this.name = name;
 		fModifier = pModifier;
 		fTacklezoneModifier = pTacklezoneModifier;
 		fDisturbingPresenceModifier = pDisturbingPresenceModifier;
 	}
 
 	public String getName() {
-		return modifierKey.getName();
+		return name;
 	}
 
 	public int getModifier() {
@@ -48,10 +47,6 @@ public class CatchModifier implements IRollModifier<CatchModifierKey, CatchConte
 
 	public boolean appliesToContext(Skill skill, CatchContext context) {
 		return true;
-	}
-
-	public CatchModifierKey getModifierKey() {
-		return modifierKey;
 	}
 
 	@Override
