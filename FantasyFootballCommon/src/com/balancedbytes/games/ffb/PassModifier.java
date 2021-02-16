@@ -7,13 +7,18 @@ import com.balancedbytes.games.ffb.PassingModifiers.PassContext;
  * @author Kalimar
  */
 public class PassModifier implements IRollModifier {
-	private String fName;
-	private int fModifier;
-	private boolean fTacklezoneModifier;
-	private boolean fDisturbingPresenceModifier;
+	private final String fName, reportingString;
+	private final int fModifier;
+	private final boolean fTacklezoneModifier;
+	private final boolean fDisturbingPresenceModifier;
 
 	public PassModifier(String pName, int pModifier, boolean pTacklezoneModifier, boolean pDisturbingPresenceModifier) {
+		this(pName, pName, pModifier, pTacklezoneModifier, pDisturbingPresenceModifier);
+	}
+
+	public PassModifier(String pName, String reportingString, int pModifier, boolean pTacklezoneModifier, boolean pDisturbingPresenceModifier) {
 		fName = pName;
+		this.reportingString = reportingString;
 		fModifier = pModifier;
 		fTacklezoneModifier = pTacklezoneModifier;
 		fDisturbingPresenceModifier = pDisturbingPresenceModifier;
@@ -51,7 +56,7 @@ public class PassModifier implements IRollModifier {
 
 	@Override
 	public String getReportString() {
-		return getName();
+		return reportingString;
 	}
 
 }

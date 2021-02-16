@@ -22,9 +22,24 @@ public class NervesOfSteel extends Skill {
 
 	@Override
 	public void postConstruct() {
-		registerModifier(new PassModifier("Nerves of Steel", 0, false, false));
-		registerModifier(new InterceptionModifier("Nerves of Steel", 0, false, false));
-		registerModifier(new CatchModifier("Nerves of Steel", 0, false, false));
+		registerModifier(new PassModifier("Nerves of Steel", " 0 tackle zones due to Nerves of Steel",0, false, false) {
+			@Override
+			public boolean isModifierIncluded() {
+				return true;
+			}
+		});
+		registerModifier(new InterceptionModifier("Nerves of Steel", " 0 tackle zones due to Nerves of Steel", 0, false, false) {
+			@Override
+			public boolean isModifierIncluded() {
+				return true;
+			}
+		});
+		registerModifier(new CatchModifier("Nerves of Steel"," 0 for tackle zones due to Nerves of Steel",0, false, false) {
+			@Override
+			public boolean isModifierIncluded() {
+				return true;
+			}
+		});
 
 		registerProperty(NamedProperties.ignoreTacklezonesWhenPassing);
 		registerProperty(NamedProperties.ignoreTacklezonesWhenCatching);

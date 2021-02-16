@@ -3,57 +3,44 @@ package com.balancedbytes.games.ffb.modifiers.bb2016;
 import com.balancedbytes.games.ffb.CatchScatterThrowInMode;
 import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.model.Skill;
+import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
 import com.balancedbytes.games.ffb.modifiers.CatchContext;
 import com.balancedbytes.games.ffb.modifiers.CatchModifier;
+
+import java.util.HashSet;
+import java.util.Set;
 
 @RulesCollection(RulesCollection.Rules.BB2016)
 public class CatchModifierRegistry extends com.balancedbytes.games.ffb.modifiers.CatchModifierRegistry {
 	public CatchModifierRegistry() {
+		super();
 
-		add(new CatchModifier("Accurate Pass", -1, false, false));
-		add(new CatchModifier("Nerves of Steel", 0, false, false));
-		add(new CatchModifier("Extra Arms", -1, false, false));
-		add(new CatchModifier("Pouring Rain", 1, false, false));
-		add(new CatchModifier("1 Tacklezone", 1, true, false));
-		add(new CatchModifier("2 Tacklezones", 2, true, false));
-		add(new CatchModifier("3 Tacklezones", 3, true, false));
-		add(new CatchModifier("4 Tacklezones", 4, true, false));
-		add(new CatchModifier("5 Tacklezones", 5, true, false));
-		add(new CatchModifier("6 Tacklezones", 6, true, false));
-		add(new CatchModifier("7 Tacklezones", 7, true, false));
-		add(new CatchModifier("8 Tacklezones", 8, true, false));
-		add(new CatchModifier("1 Disturbing Presence", 1, false, true));
-		add(new CatchModifier("2 Disturbing Presences", 2, false,
-			true));
-		add(new CatchModifier("3 Disturbing Presences", 3, false,
-			true));
-		add(new CatchModifier("4 Disturbing Presences", 4, false,
-			true));
-		add(new CatchModifier("5 Disturbing Presences", 5, false,
-			true));
-		add(new CatchModifier("6 Disturbing Presences", 6, false,
-			true));
-		add(new CatchModifier("7 Disturbing Presences", 7, false,
-			true));
-		add(new CatchModifier("8 Disturbing Presences", 8, false,
-			true));
-		add(new CatchModifier("9 Disturbing Presences", 9, false,
-			true));
-		add(new CatchModifier("10 Disturbing Presences", 10, false,
-			true));
-		add(new CatchModifier("11 Disturbing Presences", 11, false,
-			true));
-		add(new CatchModifier("Hand Off", -1, false, false));
+		add(new CatchModifier("Accurate Pass", -1, false, false) {
+			private final Set<CatchScatterThrowInMode> accurate = new HashSet<CatchScatterThrowInMode>() {{
+				add(CatchScatterThrowInMode.CATCH_ACCURATE_BOMB);
+				add(CatchScatterThrowInMode.CATCH_ACCURATE_PASS);
+			}};
 
+			private final Set<CatchScatterThrowInMode> accurateAdjacent = new HashSet<CatchScatterThrowInMode>() {{
+				add(CatchScatterThrowInMode.CATCH_ACCURATE_BOMB_EMPTY_SQUARE);
+				add(CatchScatterThrowInMode.CATCH_ACCURATE_PASS_EMPTY_SQUARE);
+			}};
 
-		add(new CatchModifier("Diving Catch", -1, false, false) {
 			@Override
 			public boolean appliesToContext(Skill skill, CatchContext context) {
-
-				return (CatchScatterThrowInMode.CATCH_ACCURATE_PASS == context.catchMode)
-					|| (CatchScatterThrowInMode.CATCH_ACCURATE_BOMB == context.catchMode);
-
+				return
+					super.appliesToContext(skill, context) &&
+						(accurate.contains(context.getCatchMode()) ||
+							(context.getPlayer() != null && context.getPlayer().hasSkillWithProperty(NamedProperties.addBonusForAccuratePass) &&
+								accurateAdjacent.contains(context.getCatchMode())));
 			}
 		});
+		add(new CatchModifier("Hand Off", -1, false, false) {
+			@Override
+			public boolean appliesToContext(Skill skill, CatchContext context) {
+				return super.appliesToContext(skill, context) && CatchScatterThrowInMode.CATCH_HAND_OFF == context.getCatchMode();
+			}
+		});
+
 	}
 }

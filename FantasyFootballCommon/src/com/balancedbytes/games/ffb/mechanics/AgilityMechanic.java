@@ -1,22 +1,22 @@
 package com.balancedbytes.games.ffb.mechanics;
 
-import com.balancedbytes.games.ffb.modifiers.CatchModifier;
 import com.balancedbytes.games.ffb.DodgeModifier;
 import com.balancedbytes.games.ffb.GazeModifier;
 import com.balancedbytes.games.ffb.IRollModifier;
-import com.balancedbytes.games.ffb.modifiers.InterceptionModifier;
 import com.balancedbytes.games.ffb.LeapModifier;
 import com.balancedbytes.games.ffb.PickupModifier;
 import com.balancedbytes.games.ffb.RightStuffModifier;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
+import com.balancedbytes.games.ffb.modifiers.CatchModifier;
+import com.balancedbytes.games.ffb.modifiers.InterceptionModifier;
 import com.balancedbytes.games.ffb.report.ReportSkillRoll;
 import com.balancedbytes.games.ffb.util.ArrayTool;
 
 import java.util.Set;
 
-public abstract class AgilityMechanic implements Mechanic{
+public abstract class AgilityMechanic implements Mechanic {
 	@Override
 	public Type getType() {
 		return Type.AGILITY;
@@ -62,17 +62,15 @@ public abstract class AgilityMechanic implements Mechanic{
 		StringBuilder modifiers = new StringBuilder();
 		if (ArrayTool.isProvided(pRollModifiers)) {
 			for (IRollModifier rollModifier : pRollModifiers) {
-				if (rollModifier.getModifier() != 0) {
-					if (rollModifier.getModifier() > 0) {
-						modifiers.append(" - ");
-					} else {
-						modifiers.append(" + ");
-					}
-					if (!rollModifier.isModifierIncluded()) {
-						modifiers.append(Math.abs(rollModifier.getModifier())).append(" ");
-					}
-					modifiers.append(rollModifier.getReportString());
+				if (rollModifier.getModifier() > 0) {
+					modifiers.append(" - ");
+				} else {
+					modifiers.append(" + ");
 				}
+				if (!rollModifier.isModifierIncluded()) {
+					modifiers.append(Math.abs(rollModifier.getModifier())).append(" ");
+				}
+				modifiers.append(rollModifier.getReportString());
 			}
 		}
 		return modifiers.toString();

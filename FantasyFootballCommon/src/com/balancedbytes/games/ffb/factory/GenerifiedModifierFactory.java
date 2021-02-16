@@ -40,15 +40,15 @@ public abstract class GenerifiedModifierFactory<
 
 	protected Optional<V> getDisturbingPresenceModifier(Game pGame, Player<?> pPlayer) {
 		int disturbingPresences = UtilDisturbingPresence.findOpposingDisturbingPresences(pGame, pPlayer);
-		return getRegistry().values().stream()
-			.filter(modifier -> modifier.isDisturbingPresenceModifier() && (modifier.getMultiplier() == disturbingPresences))
+		return getRegistry().getDisturbingPresenceModifiers().stream()
+			.filter(modifier -> modifier.getMultiplier() == disturbingPresences)
 			.findFirst();
 	}
 
 	protected Optional<V> getTacklezoneModifier(Game pGame, Player<?> pPlayer) {
 		int tacklezones = UtilPlayer.findTacklezones(pGame, pPlayer);
-		return getRegistry().values().stream()
-			.filter(modifier -> modifier.isTacklezoneModifier() && (modifier.getMultiplier() == tacklezones))
+		return getRegistry().getTacklezoneModifiers().stream()
+			.filter(modifier -> modifier.getMultiplier() == tacklezones)
 			.findFirst();
 	}
 

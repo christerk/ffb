@@ -66,10 +66,11 @@ public class InterceptionModifierFactory extends GenerifiedModifierFactory<
 	protected Set<InterceptionModifier> findModifiersInternal(InterceptionModifierCalculationInput input) {
 
 		Set<InterceptionModifier> interceptionModifiers = new HashSet<>();
-		interceptionModifiers.add(forPassResult(input.getPassResult()));
-
 		Game game = input.getGame();
 		Player<?> player = input.getPlayer();
+
+		getRegistry().getOtherModifiers().stream().filter(modifier -> modifier.appliesToContext(null, input.getContext()))
+			.forEach(interceptionModifiers::add);
 
 		if (!player.hasSkillWithProperty(NamedProperties.ignoreTacklezonesWhenCatching)) {
 			getTacklezoneModifier(game, player).ifPresent(interceptionModifiers::add);
@@ -77,26 +78,13 @@ public class InterceptionModifierFactory extends GenerifiedModifierFactory<
 
 		getDisturbingPresenceModifier(game, player).ifPresent(interceptionModifiers::add);
 
-		if (UtilCards.hasCard(game, game.getThrower(), Card.FAWNDOUGHS_HEADBAND)) {
+/*		if (UtilCards.hasCard(game, game.getThrower(), Card.FAWNDOUGHS_HEADBAND)) {
 			interceptionModifiers.add(forKey(InterceptionModifierKey.FAWNDOUGHS_HEADBAND));
 		}
 		if (UtilCards.hasCard(game, player, Card.MAGIC_GLOVES_OF_JARK_LONGARM)) {
 			interceptionModifiers.add(forKey(InterceptionModifierKey.MAGIC_GLOVES_OF_JARK_LONGARM));
-		}
+		}*/
 		return interceptionModifiers;
-	}
-
-	private InterceptionModifier forPassResult(PassResult passResult) {
-		switch (passResult) {
-			case ACCURATE:
-				return forKey(InterceptionModifierKey.PASS_ACCURATE);
-			case INACCURATE:
-				return forKey(InterceptionModifierKey.PASS_INACCURATE);
-			case WILDLY_INACCURATE:
-				return forKey(InterceptionModifierKey.PASS_WILDLY_INACCURATE);
-			default:
-				return dummy;
-		}
 	}
 
 	public static class InterceptionModifierCalculationInput extends GenerifiedModifierFactory.ModifierCalculationInput<InterceptionContext> {

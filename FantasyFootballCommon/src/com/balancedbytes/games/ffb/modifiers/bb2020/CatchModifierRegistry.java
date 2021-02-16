@@ -6,49 +6,33 @@ import com.balancedbytes.games.ffb.model.Skill;
 import com.balancedbytes.games.ffb.modifiers.CatchContext;
 import com.balancedbytes.games.ffb.modifiers.CatchModifier;
 
+import java.util.HashSet;
+import java.util.Set;
+
 @RulesCollection(RulesCollection.Rules.BB2020)
 public class CatchModifierRegistry extends com.balancedbytes.games.ffb.modifiers.CatchModifierRegistry {
 	public CatchModifierRegistry() {
+		super();
 
-		add(new CatchModifier("Inaccurate Pass", 1, false, false));
-		add(new CatchModifier("Deflected Pass", 1, false, false));
-		add(new CatchModifier("1 Tacklezone", 1, true, false));
-		add(new CatchModifier("2 Tacklezones", 2, true, false));
-		add(new CatchModifier("3 Tacklezones", 3, true, false));
-		add(new CatchModifier("4 Tacklezones", 4, true, false));
-		add(new CatchModifier("5 Tacklezones", 5, true, false));
-		add(new CatchModifier("6 Tacklezones", 6, true, false));
-		add(new CatchModifier("7 Tacklezones", 7, true, false));
-		add(new CatchModifier("8 Tacklezones", 8, true, false));
-		add(new CatchModifier("1 Disturbing Presence", 1, false, true));
-		add(new CatchModifier("2 Disturbing Presences", 2, false,
-			true));
-		add(new CatchModifier("3 Disturbing Presences", 3, false,
-			true));
-		add(new CatchModifier("4 Disturbing Presences", 4, false,
-			true));
-		add(new CatchModifier("5 Disturbing Presences", 5, false,
-			true));
-		add(new CatchModifier("6 Disturbing Presences", 6, false,
-			true));
-		add(new CatchModifier("7 Disturbing Presences", 7, false,
-			true));
-		add(new CatchModifier("8 Disturbing Presences", 8, false,
-			true));
-		add(new CatchModifier("9 Disturbing Presences", 9, false,
-			true));
-		add(new CatchModifier("10 Disturbing Presences", 10, false,
-			true));
-		add(new CatchModifier("11 Disturbing Presences", 11, false,
-			true));
-
-		add(new CatchModifier("Diving Catch", -1, false, false) {
+		add(new CatchModifier("Inaccurate Pass", 1, false, false) {
+			private final Set<CatchScatterThrowInMode> scatter = new HashSet<CatchScatterThrowInMode>() {{
+				add(CatchScatterThrowInMode.CATCH_BOMB);
+				add(CatchScatterThrowInMode.CATCH_SCATTER);
+			}};
 			@Override
 			public boolean appliesToContext(Skill skill, CatchContext context) {
+				return super.appliesToContext(skill, context) && scatter.contains(context.getCatchMode());
+			}
+		});
 
-				return (CatchScatterThrowInMode.CATCH_ACCURATE_PASS == context.catchMode)
-					|| (CatchScatterThrowInMode.CATCH_ACCURATE_BOMB == context.catchMode);
-
+		add(new CatchModifier("Deflected Pass", 1, false, false) {
+			private final Set<CatchScatterThrowInMode> deflected = new HashSet<CatchScatterThrowInMode>() {{
+				add(CatchScatterThrowInMode.DEFLECTED);
+				add(CatchScatterThrowInMode.DEFLECTED_BOMB);
+			}};
+			@Override
+			public boolean appliesToContext(Skill skill, CatchContext context) {
+				return super.appliesToContext(skill, context) && deflected.contains(context.getCatchMode());
 			}
 		});
 	}

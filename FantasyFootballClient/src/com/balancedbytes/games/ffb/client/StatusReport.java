@@ -466,17 +466,15 @@ public class StatusReport {
 		StringBuilder modifiers = new StringBuilder();
 		if (ArrayTool.isProvided(pRollModifiers)) {
 			for (IRollModifier rollModifier : pRollModifiers) {
-				if (rollModifier.getModifier() != 0) {
-					if (rollModifier.getModifier() > 0) {
-						modifiers.append(" - ");
-					} else {
-						modifiers.append(" + ");
-					}
-					if (!rollModifier.isModifierIncluded()) {
-						modifiers.append(Math.abs(rollModifier.getModifier())).append(" ");
-					}
-					modifiers.append(rollModifier.getName());
+				if (rollModifier.getModifier() > 0) {
+					modifiers.append(" - ");
+				} else {
+					modifiers.append(" + ");
 				}
+				if (!rollModifier.isModifierIncluded()) {
+					modifiers.append(Math.abs(rollModifier.getModifier())).append(" ");
+				}
+				modifiers.append(rollModifier.getName());
 			}
 		}
 		return modifiers.toString();
@@ -1661,10 +1659,6 @@ public class StatusReport {
 			} else {
 				println(getIndent(), TextStyle.BOLD, " tries to catch the ball:");
 			}
-			CatchModifier modifier = ((CatchModifierFactory)game.getFactory(Factory.CATCH_MODIFIER)).forKey(CatchModifierKey.NERVES_OF_STEEL);
-			if (pReport.hasRollModifier(modifier)) {
-				reportNervesOfSteel(player, "catch");
-			}
 		}
 		status.append("Catch Roll [ ").append(pReport.getRoll()).append(" ]");
 		println(getIndent() + 1, TextStyle.ROLL, status.toString());
@@ -1706,11 +1700,6 @@ public class StatusReport {
 				println(getIndent(), TextStyle.BOLD, " tries to intercept the bomb:");
 			} else {
 				println(getIndent(), TextStyle.BOLD, " tries to intercept the ball:");
-			}
-			InterceptionModifier modifier = ((InterceptionModifierFactory)getClient().getGame()
-				.getFactory(Factory.INTERCEPTION_MODIFIER)).forKey(InterceptionModifierKey.NERVES_OF_STEEL);
-			if (pReport.hasRollModifier(modifier)) {
-				reportNervesOfSteel(player, "intercept");
 			}
 		}
 		status.append("Interception Roll [ ").append(pReport.getRoll()).append(" ]");

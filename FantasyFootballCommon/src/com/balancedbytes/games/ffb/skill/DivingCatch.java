@@ -1,10 +1,13 @@
 package com.balancedbytes.games.ffb.skill;
 
+import com.balancedbytes.games.ffb.CatchScatterThrowInMode;
 import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.RulesCollection.Rules;
 import com.balancedbytes.games.ffb.SkillCategory;
 import com.balancedbytes.games.ffb.model.Skill;
 import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
+import com.balancedbytes.games.ffb.modifiers.CatchContext;
+import com.balancedbytes.games.ffb.modifiers.CatchModifier;
 
 /**
  * The player is superb at diving to catch balls others cannot reach and jumping
@@ -28,6 +31,15 @@ public class DivingCatch extends Skill {
 	public void postConstruct() {
 		registerProperty(NamedProperties.canAttemptCatchInAdjacentSquares);
 		registerProperty(NamedProperties.addBonusForAccuratePass);
+		registerModifier(new CatchModifier("Diving Catch", -1, false, false) {
+			@Override
+			public boolean appliesToContext(Skill skill, CatchContext context) {
+
+				return (CatchScatterThrowInMode.CATCH_ACCURATE_PASS == context.getCatchMode())
+					|| (CatchScatterThrowInMode.CATCH_ACCURATE_BOMB == context.getCatchMode());
+
+			}
+		});
 	}
 
 }

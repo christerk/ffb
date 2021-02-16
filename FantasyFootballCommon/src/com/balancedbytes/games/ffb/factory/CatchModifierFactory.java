@@ -49,32 +49,10 @@ public class CatchModifierFactory extends GenerifiedModifierFactory<CatchContext
 		Player<?> player = input.getPlayer();
 		Game game = input.getGame();
 
-		switch (input.getCatchScatterThrowInMode()) {
-			case CATCH_ACCURATE_PASS:
-			case CATCH_ACCURATE_BOMB:
-				catchModifiers.add(forKey(CatchModifierKey.ACCURATE));
-				break;
-			case CATCH_ACCURATE_BOMB_EMPTY_SQUARE:
-			case CATCH_ACCURATE_PASS_EMPTY_SQUARE:
-				if (player.hasSkillWithProperty(NamedProperties.addBonusForAccuratePass)) {
-					catchModifiers.add(forKey(CatchModifierKey.ACCURATE));
-				}
-				break;
-			case CATCH_HAND_OFF:
-				catchModifiers.add(forKey(CatchModifierKey.HAND_OFF));
-				break;
-			case DEFLECTED:
-			case DEFLECTED_BOMB:
-				catchModifiers.add(forKey(CatchModifierKey.DEFLECTED));
-				break;
-			case CATCH_BOMB:
-			case CATCH_SCATTER:
-				catchModifiers.add(forKey(CatchModifierKey.INACCURATE));
-				break;
-		}
+		getRegistry().getOtherModifiers().stream()
+			.filter(catchModifier -> catchModifier.appliesToContext(null, input.getContext()))
+					.forEach(catchModifiers::add);
 
-
-		catchModifiers.addAll(activeModifiers(game, CatchModifier.class));
 		if (!player.hasSkillWithProperty(NamedProperties.ignoreTacklezonesWhenCatching)) {
 			getTacklezoneModifier(game, player).ifPresent(catchModifiers::add);
 		}
