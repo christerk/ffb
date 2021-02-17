@@ -5,7 +5,7 @@ import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.model.Skill;
 import com.balancedbytes.games.ffb.modifiers.ModifierContext;
-import com.balancedbytes.games.ffb.modifiers.ModifierRegistry;
+import com.balancedbytes.games.ffb.modifiers.ModifierCollection;
 import com.balancedbytes.games.ffb.util.Scanner;
 import com.balancedbytes.games.ffb.util.UtilDisturbingPresence;
 import com.balancedbytes.games.ffb.util.UtilPlayer;
@@ -22,32 +22,32 @@ public abstract class GenerifiedModifierFactory<
 	C extends ModifierContext,
 	I extends GenerifiedModifierFactory.ModifierCalculationInput<C>,
 	V extends IRollModifier<C>,
-	R extends ModifierRegistry<C, V>
+	R extends ModifierCollection<C, V>
 	> implements IRollModifierFactory<V> {
 
 	@Override
 	public void initialize(Game game) {
 		getScanner()
 			.getSubclasses(game.getOptions()).stream().findFirst()
-			.ifPresent(this::setRegistry);
+			.ifPresent(this::setModifierCollection);
 	}
 
 	protected abstract Scanner<R> getScanner();
 
-	protected abstract R getRegistry();
+	protected abstract R getModifierCollection();
 
-	protected abstract void setRegistry(R registry);
+	protected abstract void setModifierCollection(R registry);
 
 	protected Optional<V> getDisturbingPresenceModifier(Game pGame, Player<?> pPlayer) {
 		int disturbingPresences = UtilDisturbingPresence.findOpposingDisturbingPresences(pGame, pPlayer);
-		return getRegistry().getDisturbingPresenceModifiers().stream()
+		return getModifierCollection().getDisturbingPresenceModifiers().stream()
 			.filter(modifier -> modifier.getMultiplier() == disturbingPresences)
 			.findFirst();
 	}
 
 	protected Optional<V> getTacklezoneModifier(Game pGame, Player<?> pPlayer) {
 		int tacklezones = UtilPlayer.findTacklezones(pGame, pPlayer);
-		return getRegistry().getTacklezoneModifiers().stream()
+		return getModifierCollection().getTacklezoneModifiers().stream()
 			.filter(modifier -> modifier.getMultiplier() == tacklezones)
 			.findFirst();
 	}

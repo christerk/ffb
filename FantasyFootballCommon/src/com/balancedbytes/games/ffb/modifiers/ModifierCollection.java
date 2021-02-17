@@ -10,7 +10,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
-public abstract class ModifierRegistry<C extends ModifierContext, V extends IRollModifier<C>> implements IKeyedItem {
+public abstract class ModifierCollection<C extends ModifierContext, V extends IRollModifier<C>> implements IKeyedItem {
 	private final Set<V> tacklezoneModifiers = new HashSet<>();
 	private final Set<V> disturbingPresenceModifiers = new HashSet<>();
 

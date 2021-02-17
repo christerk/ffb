@@ -10,7 +10,7 @@ import com.balancedbytes.games.ffb.model.Skill;
 import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
 import com.balancedbytes.games.ffb.modifiers.CatchContext;
 import com.balancedbytes.games.ffb.modifiers.CatchModifier;
-import com.balancedbytes.games.ffb.modifiers.CatchModifierRegistry;
+import com.balancedbytes.games.ffb.modifiers.CatchModifierCollection;
 import com.balancedbytes.games.ffb.util.Scanner;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
@@ -24,9 +24,9 @@ import java.util.Set;
 @FactoryType(FactoryType.Factory.CATCH_MODIFIER)
 @RulesCollection(Rules.COMMON)
 public class CatchModifierFactory extends GenerifiedModifierFactory<CatchContext,
-	CatchModifierFactory.CatchModifierCalculationInput, CatchModifier, CatchModifierRegistry> {
+	CatchModifierFactory.CatchModifierCalculationInput, CatchModifier, CatchModifierCollection> {
 
-	private CatchModifierRegistry catchModifiers;
+	private CatchModifierCollection catchModifiers;
 
 	public CatchModifier forName(String pName) {
 		throw new NotImplementedException();
@@ -49,7 +49,7 @@ public class CatchModifierFactory extends GenerifiedModifierFactory<CatchContext
 		Player<?> player = input.getPlayer();
 		Game game = input.getGame();
 
-		getRegistry().getOtherModifiers().stream()
+		getModifierCollection().getOtherModifiers().stream()
 			.filter(catchModifier -> catchModifier.appliesToContext(null, input.getContext()))
 					.forEach(catchModifiers::add);
 
@@ -63,17 +63,17 @@ public class CatchModifierFactory extends GenerifiedModifierFactory<CatchContext
 	}
 
 	@Override
-	protected Scanner<CatchModifierRegistry> getScanner() {
-		return new Scanner<>(CatchModifierRegistry.class);
+	protected Scanner<CatchModifierCollection> getScanner() {
+		return new Scanner<>(CatchModifierCollection.class);
 	}
 
 	@Override
-	protected CatchModifierRegistry getRegistry() {
+	protected CatchModifierCollection getModifierCollection() {
 		return catchModifiers;
 	}
 
 	@Override
-	protected void setRegistry(CatchModifierRegistry registry) {
+	protected void setModifierCollection(CatchModifierCollection registry) {
 		catchModifiers = registry;
 	}
 

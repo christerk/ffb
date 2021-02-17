@@ -1,8 +1,8 @@
 package com.balancedbytes.games.ffb.modifiers;
 
-public abstract class CatchModifierRegistry extends ModifierRegistry<CatchContext, CatchModifier> {
+public abstract class CatchModifierCollection extends ModifierCollection<CatchContext, CatchModifier> {
 
-	public CatchModifierRegistry() {
+	public CatchModifierCollection() {
 		add(new CatchModifier("1 Tacklezone", 1, true, false));
 		add(new CatchModifier("2 Tacklezones", 2, true, false));
 		add(new CatchModifier("3 Tacklezones", 3, true, false));

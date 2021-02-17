@@ -11,8 +11,8 @@ import java.util.HashSet;
 import java.util.Set;
 
 @RulesCollection(RulesCollection.Rules.BB2016)
-public class CatchModifierRegistry extends com.balancedbytes.games.ffb.modifiers.CatchModifierRegistry {
-	public CatchModifierRegistry() {
+public class CatchModifierCollection extends com.balancedbytes.games.ffb.modifiers.CatchModifierCollection {
+	public CatchModifierCollection() {
 		super();
 
 		add(new CatchModifier("Accurate Pass", -1, false, false) {

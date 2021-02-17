@@ -7,9 +7,9 @@ import com.balancedbytes.games.ffb.modifiers.InterceptionContext;
 import com.balancedbytes.games.ffb.modifiers.InterceptionModifier;
 
 @RulesCollection(RulesCollection.Rules.BB2020)
-public class InterceptionModifierRegistry extends com.balancedbytes.games.ffb.modifiers.InterceptionModifierRegistry {
+public class InterceptionModifierCollection extends com.balancedbytes.games.ffb.modifiers.InterceptionModifierCollection {
 
-	public InterceptionModifierRegistry() {
+	public InterceptionModifierCollection() {
 		super();
 		add(new InterceptionModifier("Accurate Pass", 3, false, false) {
 			@Override

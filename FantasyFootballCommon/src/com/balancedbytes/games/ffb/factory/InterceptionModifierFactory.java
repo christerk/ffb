@@ -1,6 +1,5 @@
 package com.balancedbytes.games.ffb.factory;
 
-import com.balancedbytes.games.ffb.Card;
 import com.balancedbytes.games.ffb.FactoryType;
 import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.RulesCollection.Rules;
@@ -11,9 +10,8 @@ import com.balancedbytes.games.ffb.model.Skill;
 import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
 import com.balancedbytes.games.ffb.modifiers.InterceptionContext;
 import com.balancedbytes.games.ffb.modifiers.InterceptionModifier;
-import com.balancedbytes.games.ffb.modifiers.InterceptionModifierRegistry;
+import com.balancedbytes.games.ffb.modifiers.InterceptionModifierCollection;
 import com.balancedbytes.games.ffb.util.Scanner;
-import com.balancedbytes.games.ffb.util.UtilCards;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.util.Collection;
@@ -27,10 +25,9 @@ import java.util.Set;
 @RulesCollection(Rules.COMMON)
 public class InterceptionModifierFactory extends GenerifiedModifierFactory<
 	InterceptionContext, InterceptionModifierFactory.InterceptionModifierCalculationInput,
-	InterceptionModifier, InterceptionModifierRegistry> {
+	InterceptionModifier, InterceptionModifierCollection> {
 
-	@SuppressWarnings("MismatchedQueryAndUpdateOfCollection")
-	private InterceptionModifierRegistry interceptionModifiers;
+	private InterceptionModifierCollection interceptionModifiers;
 
 	@Override
 	public InterceptionModifier forName(String pName) {
@@ -38,17 +35,17 @@ public class InterceptionModifierFactory extends GenerifiedModifierFactory<
 	}
 
 	@Override
-	protected Scanner<InterceptionModifierRegistry> getScanner() {
-		return new Scanner<>(InterceptionModifierRegistry.class);
+	protected Scanner<InterceptionModifierCollection> getScanner() {
+		return new Scanner<>(InterceptionModifierCollection.class);
 	}
 
 	@Override
-	protected InterceptionModifierRegistry getRegistry() {
+	protected InterceptionModifierCollection getModifierCollection() {
 		return interceptionModifiers;
 	}
 
 	@Override
-	protected void setRegistry(InterceptionModifierRegistry registry) {
+	protected void setModifierCollection(InterceptionModifierCollection registry) {
 		interceptionModifiers = registry;
 	}
 
@@ -69,7 +66,7 @@ public class InterceptionModifierFactory extends GenerifiedModifierFactory<
 		Game game = input.getGame();
 		Player<?> player = input.getPlayer();
 
-		getRegistry().getOtherModifiers().stream().filter(modifier -> modifier.appliesToContext(null, input.getContext()))
+		getModifierCollection().getOtherModifiers().stream().filter(modifier -> modifier.appliesToContext(null, input.getContext()))
 			.forEach(interceptionModifiers::add);
 
 		if (!player.hasSkillWithProperty(NamedProperties.ignoreTacklezonesWhenCatching)) {

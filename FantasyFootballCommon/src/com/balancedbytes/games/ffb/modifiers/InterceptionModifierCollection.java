@@ -1,8 +1,8 @@
 package com.balancedbytes.games.ffb.modifiers;
 
-public abstract class InterceptionModifierRegistry extends ModifierRegistry<InterceptionContext, InterceptionModifier> {
+public abstract class InterceptionModifierCollection extends ModifierCollection<InterceptionContext, InterceptionModifier> {
 
-	public InterceptionModifierRegistry() {
+	public InterceptionModifierCollection() {
 		add(new InterceptionModifier("1 Disturbing Presence", 1,
 			false, true));
 		add(new InterceptionModifier("2 Disturbing Presences",

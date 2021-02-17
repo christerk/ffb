@@ -4,9 +4,9 @@ import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.modifiers.InterceptionModifier;
 
 @RulesCollection(RulesCollection.Rules.BB2016)
-public class InterceptionModifierRegistry extends com.balancedbytes.games.ffb.modifiers.InterceptionModifierRegistry {
+public class InterceptionModifierCollection extends com.balancedbytes.games.ffb.modifiers.InterceptionModifierCollection {
 
-	public InterceptionModifierRegistry() {
+	public InterceptionModifierCollection() {
 		super();
 		add(new InterceptionModifier("Fawndough's Headband", -1,
 			false, false));
