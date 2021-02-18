@@ -1,8 +1,6 @@
 package com.balancedbytes.games.ffb;
 
 import com.balancedbytes.games.ffb.model.Game;
-import com.balancedbytes.games.ffb.modifiers.CatchModifier;
-import com.balancedbytes.games.ffb.modifiers.InterceptionModifier;
 import com.balancedbytes.games.ffb.modifiers.ModifierSource;
 
 import java.util.Collection;
@@ -25,19 +23,26 @@ public enum Weather implements INamedObject, ModifierSource {
 		@Override
 		public Collection<IRollModifier> modifier(Game game) {
 
-			return new HashSet<IRollModifier>() {{
+			return new HashSet<IRollModifier>() {
+				private static final long serialVersionUID = 199665269425305196L;
+	
+				{
 					add(PickupModifiers.POURING_RAIN);
-				}};
+				}
+			};
 		}
 	},
 	BLIZZARD("Blizzard", "blizzard",
 			"Going For It fails on a roll of 1 or 2 and only quick or short passes can be attempted.") {
 		@Override
 		public Collection<IRollModifier> modifier(Game game) {
-			return new HashSet<IRollModifier>() {{
-				add(GoForItModifier.BLIZZARD);
-				add(PassingModifiers.BLIZZARD);
-			}};
+			return new HashSet<IRollModifier>() {
+				private static final long serialVersionUID = -6560479669198677254L;
+				{
+					add(GoForItModifier.BLIZZARD);
+					add(PassingModifiers.BLIZZARD);
+				}
+			};
 		}
 	},
 	INTRO("Intro", "intro", "No weather at all, but the intro screen shown by the client.");

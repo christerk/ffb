@@ -7,10 +7,8 @@ import java.util.Set;
 
 import com.balancedbytes.games.ffb.factory.InducementPhaseFactory;
 import com.balancedbytes.games.ffb.model.ModifierDictionary;
-import com.balancedbytes.games.ffb.model.Skill;
 import com.balancedbytes.games.ffb.modifiers.InterceptionContext;
 import com.balancedbytes.games.ffb.modifiers.InterceptionModifier;
-import com.balancedbytes.games.ffb.skill.PassBlock;
 import com.balancedbytes.games.ffb.util.UtilCards;
 
 /**
@@ -71,10 +69,13 @@ public enum Card implements INamedObject {
 
 		@Override
 		public Set<String> grantedSkills() {
-			return new HashSet<String>() {{
-				add("Pass");
-				add("Accurate");
-			}};
+			return new HashSet<String>() {
+				private static final long serialVersionUID = 641368470326607756L;
+				{
+					add("Pass");
+					add("Accurate");
+				}
+			};
 		}
 	},
 	// Description:

@@ -1,6 +1,5 @@
 package com.balancedbytes.games.ffb.server.step.generator.bb2020;
 
-import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.IServerLogLevel;
@@ -9,8 +8,6 @@ import com.balancedbytes.games.ffb.server.step.IStepLabel;
 import com.balancedbytes.games.ffb.server.step.StepId;
 import com.balancedbytes.games.ffb.server.step.StepParameterKey;
 import com.balancedbytes.games.ffb.server.step.generator.Sequence;
-import com.balancedbytes.games.ffb.server.step.generator.SequenceGenerator;
-
 import static com.balancedbytes.games.ffb.server.step.StepParameter.from;
 
 @RulesCollection(RulesCollection.Rules.BB2020)

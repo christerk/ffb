@@ -16,15 +16,21 @@ public class CatchModifierCollection extends com.balancedbytes.games.ffb.modifie
 		super.postConstruct(dictionary);
 
 		add(new CatchModifier("Accurate Pass", -1, false, false, dictionary) {
-			private final Set<CatchScatterThrowInMode> accurate = new HashSet<CatchScatterThrowInMode>() {{
-				add(CatchScatterThrowInMode.CATCH_ACCURATE_BOMB);
-				add(CatchScatterThrowInMode.CATCH_ACCURATE_PASS);
-			}};
+			private final Set<CatchScatterThrowInMode> accurate = new HashSet<CatchScatterThrowInMode>() {
+				private static final long serialVersionUID = -9147805080834490230L;
+				{
+					add(CatchScatterThrowInMode.CATCH_ACCURATE_BOMB);
+					add(CatchScatterThrowInMode.CATCH_ACCURATE_PASS);
+				}
+			};
 
-			private final Set<CatchScatterThrowInMode> accurateAdjacent = new HashSet<CatchScatterThrowInMode>() {{
-				add(CatchScatterThrowInMode.CATCH_ACCURATE_BOMB_EMPTY_SQUARE);
-				add(CatchScatterThrowInMode.CATCH_ACCURATE_PASS_EMPTY_SQUARE);
-			}};
+			private final Set<CatchScatterThrowInMode> accurateAdjacent = new HashSet<CatchScatterThrowInMode>() {
+				private static final long serialVersionUID = 3746699772690521692L;
+				{
+					add(CatchScatterThrowInMode.CATCH_ACCURATE_BOMB_EMPTY_SQUARE);
+					add(CatchScatterThrowInMode.CATCH_ACCURATE_PASS_EMPTY_SQUARE);
+				}
+			};
 
 			@Override
 			public boolean appliesToContext(CatchContext context) {

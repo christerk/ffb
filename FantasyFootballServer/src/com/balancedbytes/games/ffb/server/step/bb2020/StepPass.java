@@ -73,7 +73,7 @@ public class StepPass extends AbstractStepWithReRoll {
 
 	@Override
 	public void init(StepParameterSet pParameterSet) {
-		PassState state = getGameState().getPassState();
+		//PassState state = getGameState().getPassState();
 		if (pParameterSet != null) {
 			for (StepParameter parameter : pParameterSet.values()) {
 				switch (parameter.getKey()) {

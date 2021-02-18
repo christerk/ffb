@@ -3,8 +3,6 @@ package com.balancedbytes.games.ffb.model;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
-
 import javax.xml.transform.sax.TransformerHandler;
 
 import org.xml.sax.Attributes;

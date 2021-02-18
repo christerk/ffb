@@ -16,10 +16,13 @@ public class CatchModifierCollection extends com.balancedbytes.games.ffb.modifie
 		super.postConstruct(dictionary);
 
 		add(new CatchModifier("Inaccurate Pass", 1, false, false, dictionary) {
-			private final Set<CatchScatterThrowInMode> scatter = new HashSet<CatchScatterThrowInMode>() {{
-				add(CatchScatterThrowInMode.CATCH_BOMB);
-				add(CatchScatterThrowInMode.CATCH_SCATTER);
-			}};
+			private final Set<CatchScatterThrowInMode> scatter = new HashSet<CatchScatterThrowInMode>() {
+				private static final long serialVersionUID = 6752365907656902172L;
+				{
+					add(CatchScatterThrowInMode.CATCH_BOMB);
+					add(CatchScatterThrowInMode.CATCH_SCATTER);
+				}
+			};
 			@Override
 			public boolean appliesToContext(CatchContext context) {
 				return super.appliesToContext(context) && scatter.contains(context.getCatchMode());
@@ -27,10 +30,13 @@ public class CatchModifierCollection extends com.balancedbytes.games.ffb.modifie
 		});
 
 		add(new CatchModifier("Deflected Pass", 1, false, false, dictionary) {
-			private final Set<CatchScatterThrowInMode> deflected = new HashSet<CatchScatterThrowInMode>() {{
-				add(CatchScatterThrowInMode.DEFLECTED);
-				add(CatchScatterThrowInMode.DEFLECTED_BOMB);
-			}};
+			private final Set<CatchScatterThrowInMode> deflected = new HashSet<CatchScatterThrowInMode>() {
+				private static final long serialVersionUID = 5356216477217665429L;
+				{
+					add(CatchScatterThrowInMode.DEFLECTED);
+					add(CatchScatterThrowInMode.DEFLECTED_BOMB);
+				}
+			};
 			@Override
 			public boolean appliesToContext(CatchContext context) {
 				return super.appliesToContext(context) && deflected.contains(context.getCatchMode());

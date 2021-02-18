@@ -6,7 +6,6 @@ import com.balancedbytes.games.ffb.modifiers.InterceptionModifier;
 
 import java.util.HashSet;
 import java.util.Set;
-import java.util.function.Supplier;
 
 public class ModifierDictionary {
 	private final Set<IRollModifier<?>> dictionary = new HashSet<>();

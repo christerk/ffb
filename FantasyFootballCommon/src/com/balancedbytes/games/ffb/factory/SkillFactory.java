@@ -20,7 +20,7 @@ import com.balancedbytes.games.ffb.util.Scanner;
  */
 @FactoryType(FactoryType.Factory.SKILL)
 @RulesCollection(Rules.COMMON)
-public class SkillFactory implements INamedObjectFactory {
+public class SkillFactory implements INamedObjectFactory<Skill> {
 	private Map<String, Skill> skills;
 	private Map<Class<? extends Skill>, Skill> skillMap;
 
