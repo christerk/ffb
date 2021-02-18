@@ -1,17 +1,5 @@
 package com.balancedbytes.games.ffb.model;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import javax.xml.transform.sax.TransformerHandler;
-
-import org.xml.sax.Attributes;
-import org.xml.sax.helpers.AttributesImpl;
-
 import com.balancedbytes.games.ffb.Card;
 import com.balancedbytes.games.ffb.FactoryType.Factory;
 import com.balancedbytes.games.ffb.Inducement;
@@ -30,6 +18,16 @@ import com.balancedbytes.games.ffb.xml.UtilXml;
 import com.eclipsesource.json.JsonArray;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
+import org.xml.sax.Attributes;
+import org.xml.sax.helpers.AttributesImpl;
+
+import javax.xml.transform.sax.TransformerHandler;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  *
@@ -131,13 +129,14 @@ public class InducementSet implements IXmlSerializable, IJsonSerializable {
 		return fCardsAvailable.contains(pCard);
 	}
 
-	public boolean activateCard(Card pCard) {
+	public boolean activateCard(Card pCard, ModifierDictionary dictionary) {
 		if (pCard == null) {
 			return false;
 		}
 		boolean removed = fCardsAvailable.remove(pCard);
 		if (removed) {
 			fCardsActive.add(pCard);
+			pCard.modifiers(dictionary); // register modifiers in dictionary on client side
 		}
 		notifyObservers(ModelChangeId.INDUCEMENT_SET_ACTIVATE_CARD, pCard);
 		return removed;
@@ -186,7 +185,7 @@ public class InducementSet implements IXmlSerializable, IJsonSerializable {
 	}
 
 	// add cards and standard inducements from given inducementSet
-	public void add(InducementSet pInducementSet) {
+	public void add(InducementSet pInducementSet, ModifierDictionary dictionary) {
 		if (pInducementSet != null) {
 			for (Inducement inducement : pInducementSet.getInducements()) {
 				Inducement initInducement = new Inducement(inducement.getType(), inducement.getValue());
@@ -196,7 +195,7 @@ public class InducementSet implements IXmlSerializable, IJsonSerializable {
 			for (Card card : pInducementSet.getAllCards()) {
 				addAvailableCard(card);
 				if (pInducementSet.isActive(card) || pInducementSet.isDeactivated(card)) {
-					activateCard(card);
+					activateCard(card, dictionary);
 					if (pInducementSet.isDeactivated(card)) {
 						deactivateCard(card);
 					}

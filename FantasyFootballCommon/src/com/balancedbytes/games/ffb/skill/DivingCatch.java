@@ -34,7 +34,7 @@ public class DivingCatch extends Skill {
 		registerProperty(NamedProperties.addBonusForAccuratePass);
 		registerModifier(new CatchModifier("Diving Catch", -1, false, false, dictionary) {
 			@Override
-			public boolean appliesToContext(Skill skill, CatchContext context) {
+			public boolean appliesToContext(CatchContext context) {
 
 				return (CatchScatterThrowInMode.CATCH_ACCURATE_PASS == context.getCatchMode())
 					|| (CatchScatterThrowInMode.CATCH_ACCURATE_BOMB == context.getCatchMode());

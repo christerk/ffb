@@ -3,7 +3,6 @@ package com.balancedbytes.games.ffb.modifiers.bb2020;
 import com.balancedbytes.games.ffb.CatchScatterThrowInMode;
 import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.model.ModifierDictionary;
-import com.balancedbytes.games.ffb.model.Skill;
 import com.balancedbytes.games.ffb.modifiers.CatchContext;
 import com.balancedbytes.games.ffb.modifiers.CatchModifier;
 
@@ -22,8 +21,8 @@ public class CatchModifierCollection extends com.balancedbytes.games.ffb.modifie
 				add(CatchScatterThrowInMode.CATCH_SCATTER);
 			}};
 			@Override
-			public boolean appliesToContext(Skill skill, CatchContext context) {
-				return super.appliesToContext(skill, context) && scatter.contains(context.getCatchMode());
+			public boolean appliesToContext(CatchContext context) {
+				return super.appliesToContext(context) && scatter.contains(context.getCatchMode());
 			}
 		});
 
@@ -33,8 +32,8 @@ public class CatchModifierCollection extends com.balancedbytes.games.ffb.modifie
 				add(CatchScatterThrowInMode.DEFLECTED_BOMB);
 			}};
 			@Override
-			public boolean appliesToContext(Skill skill, CatchContext context) {
-				return super.appliesToContext(skill, context) && deflected.contains(context.getCatchMode());
+			public boolean appliesToContext(CatchContext context) {
+				return super.appliesToContext(context) && deflected.contains(context.getCatchMode());
 			}
 		});
 	}

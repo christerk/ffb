@@ -1,5 +1,6 @@
 package com.balancedbytes.games.ffb.modifiers;
 
+import com.balancedbytes.games.ffb.Weather;
 import com.balancedbytes.games.ffb.model.ModifierDictionary;
 
 public abstract class CatchModifierCollection extends ModifierCollection<CatchContext, CatchModifier> {
@@ -30,6 +31,11 @@ public abstract class CatchModifierCollection extends ModifierCollection<CatchCo
 		add(new CatchModifier("9 Disturbing Presences", 9, false, true, dictionary));
 		add(new CatchModifier("10 Disturbing Presences", 10, false, true, dictionary));
 		add(new CatchModifier("11 Disturbing Presences", 11, false, true, dictionary));
-
+		add(new CatchModifier("Pouring Rain", 1, false, false, dictionary) {
+			@Override
+			public boolean appliesToContext(CatchContext context) {
+				return super.appliesToContext(context) && context.getGame().getFieldModel().getWeather().equals(Weather.POURING_RAIN);
+			}
+		});
 	}
 }

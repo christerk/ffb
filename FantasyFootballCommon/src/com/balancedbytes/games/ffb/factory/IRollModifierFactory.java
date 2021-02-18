@@ -3,6 +3,8 @@ package com.balancedbytes.games.ffb.factory;
 import com.balancedbytes.games.ffb.IRollModifier;
 import com.balancedbytes.games.ffb.model.Game;
 
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -13,7 +15,8 @@ public interface IRollModifierFactory<T extends IRollModifier> extends INamedObj
 
 	IRollModifier forName(String pName);
 
+	//TODO delete
 	default Set<T> activeModifiers(Game game, Class<T> clazz) {
-		return game.activeModifiers(clazz);
+		return new HashSet<>();
 	}
 }

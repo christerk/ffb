@@ -13,11 +13,10 @@ import com.balancedbytes.games.ffb.modifiers.CatchContext;
 import com.balancedbytes.games.ffb.modifiers.CatchModifier;
 import com.balancedbytes.games.ffb.modifiers.CatchModifierCollection;
 import com.balancedbytes.games.ffb.util.Scanner;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 
 /**
@@ -36,11 +35,6 @@ public class CatchModifierFactory extends GenerifiedModifierFactory<CatchContext
 	}
 
 	@Override
-	protected Set<CatchModifier> gameModifiers(Game game) {
-		return game.activeModifiers(CatchModifier.class);
-	}
-
-	@Override
 	protected Set<CatchModifier> findModifiersInternal(CatchModifierCalculationInput input) {
 
 		Set<CatchModifier> catchModifiers = new HashSet<>();
@@ -48,7 +42,7 @@ public class CatchModifierFactory extends GenerifiedModifierFactory<CatchContext
 		Game game = input.getGame();
 
 		getModifierCollection().getOtherModifiers().stream()
-			.filter(catchModifier -> catchModifier.appliesToContext(null, input.getContext()))
+			.filter(catchModifier -> catchModifier.appliesToContext(input.getContext()))
 					.forEach(catchModifiers::add);
 
 		if (!player.hasSkillWithProperty(NamedProperties.ignoreTacklezonesWhenCatching)) {
@@ -58,6 +52,11 @@ public class CatchModifierFactory extends GenerifiedModifierFactory<CatchContext
 		getDisturbingPresenceModifier(game, player).ifPresent(catchModifiers::add);
 
 		return catchModifiers;
+	}
+
+	@Override
+	protected Optional<CatchModifier> checkClass(IRollModifier<?> modifier) {
+		return modifier instanceof  CatchModifier ? Optional.of((CatchModifier) modifier) : Optional.empty();
 	}
 
 	@Override
@@ -71,8 +70,8 @@ public class CatchModifierFactory extends GenerifiedModifierFactory<CatchContext
 	}
 
 	@Override
-	protected void setModifierCollection(CatchModifierCollection registry) {
-		catchModifiers = registry;
+	protected void setModifierCollection(CatchModifierCollection modifierCollection) {
+		catchModifiers = modifierCollection;
 	}
 
 	@Override
@@ -94,7 +93,7 @@ public class CatchModifierFactory extends GenerifiedModifierFactory<CatchContext
 
 		@Override
 		public CatchContext getContext() {
-			return new CatchContext(getPlayer(), catchScatterThrowInMode);
+			return new CatchContext(getPlayer(), catchScatterThrowInMode, getGame());
 		}
 	}
 }

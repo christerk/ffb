@@ -1,10 +1,9 @@
 package com.balancedbytes.games.ffb.modifiers;
 
-import com.balancedbytes.games.ffb.IRollModifier;
+import com.balancedbytes.games.ffb.RollModifier;
 import com.balancedbytes.games.ffb.model.ModifierDictionary;
-import com.balancedbytes.games.ffb.model.Skill;
 
-public class InterceptionModifier implements IRollModifier<InterceptionContext> {
+public class InterceptionModifier extends RollModifier<InterceptionContext> {
 	private final String name;
 	private final int fModifier, multiplier;
 	private final boolean fTacklezoneModifier;
@@ -48,7 +47,7 @@ public class InterceptionModifier implements IRollModifier<InterceptionContext> 
 		return (isTacklezoneModifier() || isDisturbingPresenceModifier());
 	}
 
-	public boolean appliesToContext(Skill skill, InterceptionContext context) {
+	public boolean appliesToContext(InterceptionContext context) {
 		return true;
 	}
 

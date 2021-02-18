@@ -1,8 +1,5 @@
 package com.balancedbytes.games.ffb.server.step.game.start;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import com.balancedbytes.games.ffb.Card;
 import com.balancedbytes.games.ffb.CardType;
 import com.balancedbytes.games.ffb.RulesCollection;
@@ -31,6 +28,9 @@ import com.balancedbytes.games.ffb.server.util.UtilServerDialog;
 import com.balancedbytes.games.ffb.util.ArrayTool;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Step in start game sequence to buy cards.

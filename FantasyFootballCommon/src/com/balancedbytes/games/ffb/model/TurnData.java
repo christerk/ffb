@@ -214,7 +214,7 @@ public class TurnData implements IJsonSerializable {
 		setReRollUsed(false);
 	}
 
-	public void init(TurnData pTurnData) {
+	public void init(TurnData pTurnData, ModifierDictionary dictionary) {
 		if (pTurnData != null) {
 			fTurnNr = pTurnData.getTurnNr();
 			fReRolls = pTurnData.getReRolls();
@@ -225,7 +225,7 @@ public class TurnData implements IJsonSerializable {
 			fHandOverUsed = pTurnData.isHandOverUsed();
 			fPassUsed = pTurnData.isPassUsed();
 			fInducementSet.clear();
-			fInducementSet.add(pTurnData.getInducementSet());
+			fInducementSet.add(pTurnData.getInducementSet(), dictionary);
 			fLeaderState = pTurnData.getLeaderState();
 			fFirstTurnAfterKickoff = pTurnData.isFirstTurnAfterKickoff();
 			fTurnStarted = pTurnData.isTurnStarted();

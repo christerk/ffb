@@ -119,14 +119,14 @@ public final class StepBuyInducements extends AbstractStep {
 			case CLIENT_BUY_INDUCEMENTS:
 				ClientCommandBuyInducements buyInducementsCommand = (ClientCommandBuyInducements) pReceivedCommand.getCommand();
 				if (game.getTeamHome().getId().equals(buyInducementsCommand.getTeamId())) {
-					game.getTurnDataHome().getInducementSet().add(buyInducementsCommand.getInducementSet());
+					game.getTurnDataHome().getInducementSet().add(buyInducementsCommand.getInducementSet(), game.getDictionary());
 					addStarPlayers(game.getTeamHome(), buyInducementsCommand.getStarPlayerPositionIds());
 					addMercenaries(game.getTeamHome(), buyInducementsCommand.getMercenaryPositionIds(),
 							buyInducementsCommand.getMercenarySkills());
 					fGoldUsedHome = fInducementGoldHome - buyInducementsCommand.getAvailableGold();
 					fInducementsSelectedHome = true;
 				} else {
-					game.getTurnDataAway().getInducementSet().add(buyInducementsCommand.getInducementSet());
+					game.getTurnDataAway().getInducementSet().add(buyInducementsCommand.getInducementSet(), game.getDictionary());
 					addStarPlayers(game.getTeamAway(), buyInducementsCommand.getStarPlayerPositionIds());
 					addMercenaries(game.getTeamAway(), buyInducementsCommand.getMercenaryPositionIds(),
 							buyInducementsCommand.getMercenarySkills());
@@ -156,7 +156,7 @@ public final class StepBuyInducements extends AbstractStep {
 		if (UtilGameOption.isOptionEnabled(game, GameOptionId.INDUCEMENTS)) {
 			if (UtilGameOption.isOptionEnabled(game, GameOptionId.USE_PREDEFINED_INDUCEMENTS)) {
 				if (game.getTeamHome().getInducementSet() != null) {
-					game.getTurnDataHome().getInducementSet().add(game.getTeamHome().getInducementSet());
+					game.getTurnDataHome().getInducementSet().add(game.getTeamHome().getInducementSet(), game.getDictionary());
 					String[] starPlayerPositionIds = game.getTeamHome().getInducementSet().getStarPlayerPositionIds();
 					if (ArrayTool.isProvided(starPlayerPositionIds)) {
 						game.getTurnDataHome().getInducementSet()
@@ -166,7 +166,7 @@ public final class StepBuyInducements extends AbstractStep {
 					fGoldUsedHome = fInducementGoldHome;
 				}
 				if (game.getTeamAway().getInducementSet() != null) {
-					game.getTurnDataAway().getInducementSet().add(game.getTeamAway().getInducementSet());
+					game.getTurnDataAway().getInducementSet().add(game.getTeamAway().getInducementSet(), game.getDictionary());
 					String[] starPlayerPositionIds = game.getTeamAway().getInducementSet().getStarPlayerPositionIds();
 					if (ArrayTool.isProvided(starPlayerPositionIds)) {
 						game.getTurnDataAway().getInducementSet()

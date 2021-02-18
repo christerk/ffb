@@ -1,6 +1,7 @@
 package com.balancedbytes.games.ffb.factory;
 
 import com.balancedbytes.games.ffb.FactoryType;
+import com.balancedbytes.games.ffb.IRollModifier;
 import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.RulesCollection.Rules;
 import com.balancedbytes.games.ffb.mechanics.PassResult;
@@ -12,10 +13,10 @@ import com.balancedbytes.games.ffb.modifiers.InterceptionContext;
 import com.balancedbytes.games.ffb.modifiers.InterceptionModifier;
 import com.balancedbytes.games.ffb.modifiers.InterceptionModifierCollection;
 import com.balancedbytes.games.ffb.util.Scanner;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 
 /**
@@ -45,18 +46,13 @@ public class InterceptionModifierFactory extends GenerifiedModifierFactory<
 	}
 
 	@Override
-	protected void setModifierCollection(InterceptionModifierCollection registry) {
-		interceptionModifiers = registry;
+	protected void setModifierCollection(InterceptionModifierCollection modifierCollection) {
+		interceptionModifiers = modifierCollection;
 	}
 
 	@Override
 	protected Collection<InterceptionModifier> getModifier(Skill skill) {
 		return skill.getInterceptionModifiers();
-	}
-
-	@Override
-	protected Set<InterceptionModifier> gameModifiers(Game game) {
-		return activeModifiers(game, InterceptionModifier.class);
 	}
 
 	@Override
@@ -66,7 +62,7 @@ public class InterceptionModifierFactory extends GenerifiedModifierFactory<
 		Game game = input.getGame();
 		Player<?> player = input.getPlayer();
 
-		getModifierCollection().getOtherModifiers().stream().filter(modifier -> modifier.appliesToContext(null, input.getContext()))
+		getModifierCollection().getOtherModifiers().stream().filter(modifier -> modifier.appliesToContext(input.getContext()))
 			.forEach(interceptionModifiers::add);
 
 		if (!player.hasSkillWithProperty(NamedProperties.ignoreTacklezonesWhenCatching)) {
@@ -76,12 +72,17 @@ public class InterceptionModifierFactory extends GenerifiedModifierFactory<
 		getDisturbingPresenceModifier(game, player).ifPresent(interceptionModifiers::add);
 
 /*		if (UtilCards.hasCard(game, game.getThrower(), Card.FAWNDOUGHS_HEADBAND)) {
-			interceptionModifiers.add(forKey(InterceptionModifierKey.FAWNDOUGHS_HEADBAND));
+			interceptionModifiers.add(forKey(InterceptionModifier.FAWNDOUGHS_HEADBAND));
 		}
 		if (UtilCards.hasCard(game, player, Card.MAGIC_GLOVES_OF_JARK_LONGARM)) {
 			interceptionModifiers.add(forKey(InterceptionModifierKey.MAGIC_GLOVES_OF_JARK_LONGARM));
 		}*/
 		return interceptionModifiers;
+	}
+
+	@Override
+	protected Optional<InterceptionModifier> checkClass(IRollModifier<?> modifier) {
+		return modifier instanceof  InterceptionModifier ? Optional.of((InterceptionModifier) modifier) : Optional.empty();
 	}
 
 	public static class InterceptionModifierCalculationInput extends GenerifiedModifierFactory.ModifierCalculationInput<InterceptionContext> {
@@ -98,7 +99,7 @@ public class InterceptionModifierFactory extends GenerifiedModifierFactory<
 
 		@Override
 		public InterceptionContext getContext() {
-			return new InterceptionContext(getPlayer());
+			return new InterceptionContext(getPlayer(), passResult, getGame());
 		}
 	}
 }

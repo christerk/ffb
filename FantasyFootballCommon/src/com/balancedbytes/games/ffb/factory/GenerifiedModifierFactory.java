@@ -1,5 +1,6 @@
 package com.balancedbytes.games.ffb.factory;
 
+import com.balancedbytes.games.ffb.Card;
 import com.balancedbytes.games.ffb.IRollModifier;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.ModifierDictionary;
@@ -8,17 +9,20 @@ import com.balancedbytes.games.ffb.model.Skill;
 import com.balancedbytes.games.ffb.modifiers.ModifierContext;
 import com.balancedbytes.games.ffb.modifiers.ModifierCollection;
 import com.balancedbytes.games.ffb.util.Scanner;
+import com.balancedbytes.games.ffb.util.UtilCards;
 import com.balancedbytes.games.ffb.util.UtilDisturbingPresence;
 import com.balancedbytes.games.ffb.util.UtilPlayer;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.Function;
+import java.util.stream.Stream;
 
 public abstract class GenerifiedModifierFactory<
 	C extends ModifierContext,
@@ -63,12 +67,12 @@ public abstract class GenerifiedModifierFactory<
 		return modifiers;
 	}
 
-	protected Collection<V> getModifierKeys(Player<?> player, C context) {
+	protected Collection<V> getModifiers(Player<?> player, C context) {
 		Set<V> result = new HashSet<>();
 
 		for (Skill skill : player.getSkills()) {
 			for (V modifier : getModifier(skill)) {
-				if (modifier.appliesToContext(skill, context)) {
+				if (modifier.appliesToContext(context)) {
 					result.add(modifier);
 				}
 			}
@@ -78,16 +82,20 @@ public abstract class GenerifiedModifierFactory<
 
 	protected abstract Collection<V> getModifier(Skill skill);
 
-	protected abstract Set<V> gameModifiers(Game game);
-
 	protected abstract Set<V> findModifiersInternal(I input);
 
+	protected abstract Optional<V> checkClass(IRollModifier<?> modifier);
+
 	public Set<V> findModifiers(I input) {
-		Set<V> modifiers = gameModifiers(input.getGame());
-
-		modifiers.addAll(getModifierKeys(input.getPlayer(), input.getContext()));
-
-		modifiers.addAll(findModifiersInternal(input));
+		Set<V> modifiers = findModifiersInternal(input);
+		Arrays.stream(UtilCards.findAllActiveCards(input.getGame()))
+			.flatMap((Function<Card, Stream<IRollModifier<?>>>) card -> card.modifiers(dictionary).stream())
+			.map(this::checkClass)
+			.filter(Optional::isPresent)
+			.map(Optional::get)
+			.filter(modifier -> modifier.appliesToContext(input.getContext()))
+			.forEach(modifiers::add);
+		modifiers.addAll(getModifiers(input.getPlayer(), input.getContext()));
 
 		return modifiers;
 	}

@@ -1,14 +1,13 @@
 package com.balancedbytes.games.ffb.modifiers;
 
-import com.balancedbytes.games.ffb.IRollModifier;
+import com.balancedbytes.games.ffb.RollModifier;
 import com.balancedbytes.games.ffb.model.ModifierDictionary;
-import com.balancedbytes.games.ffb.model.Skill;
 
 /**
  * 
  * @author Kalimar
  */
-public class CatchModifier implements IRollModifier<CatchContext> {
+public class CatchModifier extends RollModifier<CatchContext> {
 
 	private final String name, reportingString;
 	private final int fModifier;
@@ -48,7 +47,7 @@ public class CatchModifier implements IRollModifier<CatchContext> {
 		return (isTacklezoneModifier() || isDisturbingPresenceModifier());
 	}
 
-	public boolean appliesToContext(Skill skill, CatchContext context) {
+	public boolean appliesToContext(CatchContext context) {
 		return true;
 	}
 
@@ -56,5 +55,4 @@ public class CatchModifier implements IRollModifier<CatchContext> {
 	public String getReportString() {
 		return reportingString;
 	}
-
 }

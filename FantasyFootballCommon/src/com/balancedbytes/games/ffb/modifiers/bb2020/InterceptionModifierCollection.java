@@ -3,7 +3,6 @@ package com.balancedbytes.games.ffb.modifiers.bb2020;
 import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.mechanics.PassResult;
 import com.balancedbytes.games.ffb.model.ModifierDictionary;
-import com.balancedbytes.games.ffb.model.Skill;
 import com.balancedbytes.games.ffb.modifiers.InterceptionContext;
 import com.balancedbytes.games.ffb.modifiers.InterceptionModifier;
 
@@ -15,20 +14,20 @@ public class InterceptionModifierCollection extends com.balancedbytes.games.ffb.
 		super.postConstruct(dictionary);
 		add(new InterceptionModifier("Accurate Pass", 3, false, false, dictionary) {
 			@Override
-			public boolean appliesToContext(Skill skill, InterceptionContext context) {
-				return super.appliesToContext(skill, context) && context.getPassResult() == PassResult.ACCURATE;
+			public boolean appliesToContext(InterceptionContext context) {
+				return super.appliesToContext(context) && context.getPassResult() == PassResult.ACCURATE;
 			}
 		});
 		add(new InterceptionModifier("Inaccurate Pass", 2, false, false, dictionary) {
 			@Override
-			public boolean appliesToContext(Skill skill, InterceptionContext context) {
-				return super.appliesToContext(skill, context) && context.getPassResult() == PassResult.INACCURATE;
+			public boolean appliesToContext(InterceptionContext context) {
+				return super.appliesToContext(context) && context.getPassResult() == PassResult.INACCURATE;
 			}
 		});
 		add(new InterceptionModifier("Wildly Inaccurate Pass", 1, false, false, dictionary) {
 			@Override
-			public boolean appliesToContext(Skill skill, InterceptionContext context) {
-				return super.appliesToContext(skill, context) && context.getPassResult() == PassResult.WILDLY_INACCURATE;
+			public boolean appliesToContext(InterceptionContext context) {
+				return super.appliesToContext(context) && context.getPassResult() == PassResult.WILDLY_INACCURATE;
 			}
 		});
 		add(new InterceptionModifier("1 Tacklezone", "1 for 1+ Tacklezones", 1, 1, true, false, dictionary));

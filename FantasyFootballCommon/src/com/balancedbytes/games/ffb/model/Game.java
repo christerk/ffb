@@ -19,6 +19,7 @@ import com.balancedbytes.games.ffb.model.change.ModelChangeObservable;
 import com.balancedbytes.games.ffb.util.DateTool;
 import com.balancedbytes.games.ffb.util.StringTool;
 import com.balancedbytes.games.ffb.util.UtilActingPlayer;
+import com.balancedbytes.games.ffb.util.UtilCards;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
@@ -519,14 +520,6 @@ public class Game extends ModelChangeObservable implements IJsonSerializable {
 		return null;
 	}
 
-	@SuppressWarnings("unchecked")
-	public <T extends IRollModifier<?>>Set<T> activeModifiers(Class<T> clazz) {
-		return fFieldModel.getWeather().modifier(this).stream()
-			.filter(modifier -> clazz.isAssignableFrom(modifier.getClass()))
-			.map(iRollModifier -> (T) iRollModifier)
-			.collect(Collectors.toSet());
-	}
-
 	// change tracking
 
 	private void notifyObservers(ModelChangeId pChangeId, String pKey, Object pValue) {
@@ -575,10 +568,10 @@ public class Game extends ModelChangeObservable implements IJsonSerializable {
 		transformedGame.fFieldModel = getFieldModel().transform();
 
 		transformedGame.setTeamHome(getTeamAway());
-		transformedGame.getTurnDataHome().init(getTurnDataAway());
+		transformedGame.getTurnDataHome().init(getTurnDataAway(), transformedGame.dictionary);
 
 		transformedGame.setTeamAway(getTeamHome());
-		transformedGame.getTurnDataAway().init(getTurnDataHome());
+		transformedGame.getTurnDataAway().init(getTurnDataHome(), transformedGame.dictionary);
 
 		if (getPassCoordinate() != null) {
 			transformedGame.setPassCoordinate(getPassCoordinate().transform());
@@ -682,6 +675,9 @@ public class Game extends ModelChangeObservable implements IJsonSerializable {
 		if (dialogParameterObject != null) {
 			fDialogParameter = new DialogParameterFactory().forJsonValue(source, dialogParameterObject);
 		}
+
+		// Make sure all active IRollModifiers from cards are available in the dictionary after a reload
+		Arrays.stream(UtilCards.findAllActiveCards(this)).forEach(card -> card.modifiers(dictionary));
 
 		return this;
 

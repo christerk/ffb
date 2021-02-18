@@ -27,7 +27,7 @@ public interface IRollModifier<C extends ModifierContext> extends INamedObject {
 		return false;
 	}
 
-	default boolean appliesToContext(Skill skill, C context) {
+	default boolean appliesToContext(C context) {
 		return true;
 	}
 

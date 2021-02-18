@@ -10,8 +10,6 @@ public class InterceptionModifierCollection extends com.balancedbytes.games.ffb.
 	@Override
 	public void postConstruct(ModifierDictionary dictionary) {
 		super.postConstruct(dictionary);
-		add(new InterceptionModifier("Fawndough's Headband", -1, false, false, dictionary));
-		add(new InterceptionModifier("Magic Gloves of Jark Longarm", -1, false, false, dictionary));
 		add(new InterceptionModifier("1 Tacklezone", 1, true, false, dictionary));
 		add(new InterceptionModifier("2 Tacklezones", 2, true, false, dictionary));
 		add(new InterceptionModifier("3 Tacklezones", 3, true, false, dictionary));

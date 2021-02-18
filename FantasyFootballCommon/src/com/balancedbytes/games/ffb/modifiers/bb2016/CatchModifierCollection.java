@@ -3,7 +3,6 @@ package com.balancedbytes.games.ffb.modifiers.bb2016;
 import com.balancedbytes.games.ffb.CatchScatterThrowInMode;
 import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.model.ModifierDictionary;
-import com.balancedbytes.games.ffb.model.Skill;
 import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
 import com.balancedbytes.games.ffb.modifiers.CatchContext;
 import com.balancedbytes.games.ffb.modifiers.CatchModifier;
@@ -28,9 +27,9 @@ public class CatchModifierCollection extends com.balancedbytes.games.ffb.modifie
 			}};
 
 			@Override
-			public boolean appliesToContext(Skill skill, CatchContext context) {
+			public boolean appliesToContext(CatchContext context) {
 				return
-					super.appliesToContext(skill, context) &&
+					super.appliesToContext(context) &&
 						(accurate.contains(context.getCatchMode()) ||
 							(context.getPlayer() != null && context.getPlayer().hasSkillWithProperty(NamedProperties.addBonusForAccuratePass) &&
 								accurateAdjacent.contains(context.getCatchMode())));
@@ -38,8 +37,8 @@ public class CatchModifierCollection extends com.balancedbytes.games.ffb.modifie
 		});
 		add(new CatchModifier("Hand Off", -1, false, false, dictionary) {
 			@Override
-			public boolean appliesToContext(Skill skill, CatchContext context) {
-				return super.appliesToContext(skill, context) && CatchScatterThrowInMode.CATCH_HAND_OFF == context.getCatchMode();
+			public boolean appliesToContext(CatchContext context) {
+				return super.appliesToContext(context) && CatchScatterThrowInMode.CATCH_HAND_OFF == context.getCatchMode();
 			}
 		});
 

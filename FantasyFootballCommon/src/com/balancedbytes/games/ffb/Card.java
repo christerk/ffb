@@ -1,8 +1,15 @@
 package com.balancedbytes.games.ffb;
 
+import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashSet;
+import java.util.Set;
 
 import com.balancedbytes.games.ffb.factory.InducementPhaseFactory;
+import com.balancedbytes.games.ffb.model.ModifierDictionary;
+import com.balancedbytes.games.ffb.modifiers.InterceptionContext;
+import com.balancedbytes.games.ffb.modifiers.InterceptionModifier;
+import com.balancedbytes.games.ffb.util.UtilCards;
 
 /**
  * 
@@ -50,7 +57,16 @@ public enum Card implements INamedObject {
 
 	FAWNDOUGHS_HEADBAND("Fawndough's Headband", "Fawndough's Headband", CardType.MAGIC_ITEM, CardTarget.OWN_PLAYER, false,
 			new InducementPhase[] { InducementPhase.START_OF_OWN_TURN }, InducementDuration.UNTIL_END_OF_TURN,
-			"Player gets Pass & Accurate, opponents get +1 to intercept"),
+			"Player gets Pass & Accurate, opponents get +1 to intercept") {
+		@Override
+		public Set<IRollModifier<?>> modifiers(ModifierDictionary dictionary) {
+			return Collections.singleton(new InterceptionModifier("Fawndough's Headband", -1, false, false, dictionary) {
+					@Override
+					public boolean appliesToContext(InterceptionContext context) {
+						return super.appliesToContext(context) && UtilCards.hasCard(context.getGame(), context.getGame().getThrower(), Card.FAWNDOUGHS_HEADBAND);
+					}});
+			}
+	},
 	// Description:
 	// One of the great passers of all time has loaned your player his
 	// headband for this game, but you had better make sure you get it
@@ -134,7 +150,17 @@ public enum Card implements INamedObject {
 	MAGIC_GLOVES_OF_JARK_LONGARM("Magic Gloves of Jark Longarm", "Magic Gloves", CardType.MAGIC_ITEM,
 			CardTarget.OWN_PLAYER, false,
 			new InducementPhase[] { InducementPhase.END_OF_OWN_TURN, InducementPhase.AFTER_KICKOFF_TO_OPPONENT },
-			InducementDuration.UNTIL_END_OF_DRIVE, "Player gets Pass Block & +1 to interception"),
+			InducementDuration.UNTIL_END_OF_DRIVE, "Player gets Pass Block & +1 to interception") {
+		@Override
+		public Set<IRollModifier<?>> modifiers(ModifierDictionary dictionary) {
+			return Collections.singleton(new InterceptionModifier("Magic Gloves of Jark Longarm", -1, false, false, dictionary) {
+				@Override
+				public boolean appliesToContext(InterceptionContext context) {
+					return super.appliesToContext(context) && UtilCards.hasCard(context.getGame(), context.getPlayer(), Card.MAGIC_GLOVES_OF_JARK_LONGARM);
+				}
+			});
+		}
+	},
 	// Description:
 	// Your team is featured in Spike! magazine and the magazine gives you
 	// these gloves for your upcoming game.
@@ -393,17 +419,17 @@ public enum Card implements INamedObject {
 	// 8x Desperate Measure
 	// --------------------
 
-	private String fName;
-	private String fShortName;
-	private CardType fType;
-	private CardTarget fTarget;
-	private boolean fRemainsInPlay;
-	private InducementPhase[] fPhases;
-	private InducementDuration fDuration;
-	private String fDescription;
+	private final String fName;
+	private final String fShortName;
+	private final CardType fType;
+	private final CardTarget fTarget;
+	private final boolean fRemainsInPlay;
+	private final InducementPhase[] fPhases;
+	private final InducementDuration fDuration;
+	private final String fDescription;
 
-	private Card(String pName, String pShortName, CardType pType, CardTarget pTarget, boolean pRemainsInPlay,
-			InducementPhase[] pPhases, InducementDuration pDuration, String pDescription) {
+	Card(String pName, String pShortName, CardType pType, CardTarget pTarget, boolean pRemainsInPlay,
+	     InducementPhase[] pPhases, InducementDuration pDuration, String pDescription) {
 		fName = pName;
 		fShortName = pShortName;
 		fType = pType;
@@ -447,27 +473,23 @@ public enum Card implements INamedObject {
 	}
 
 	public String getHtmlDescription() {
-		StringBuilder description = new StringBuilder();
-		description.append(getDescription());
-		description.append("<br>");
-		description.append(getDuration().getDescription());
-		return description.toString();
+		return getDescription() +
+			"<br>" +
+			getDuration().getDescription();
 	}
 
 	public String getHtmlDescriptionWithPhases() {
-		StringBuilder description = new StringBuilder();
-		description.append(getHtmlDescription());
-		description.append("<br>");
-		description.append(new InducementPhaseFactory().getDescription(getPhases()));
-		return description.toString();
+		return getHtmlDescription() +
+			"<br>" +
+			new InducementPhaseFactory().getDescription(getPhases());
+	}
+
+	public Set<IRollModifier<?>> modifiers(ModifierDictionary dictionary) {
+		return Collections.emptySet();
 	}
 
 	public static Comparator<Card> createComparator() {
-		return new Comparator<Card>() {
-			public int compare(Card pCard1, Card pCard2) {
-				return pCard1.getName().compareTo(pCard2.getName());
-			}
-		};
+		return Comparator.comparing(Card::getName);
 	}
 
 }

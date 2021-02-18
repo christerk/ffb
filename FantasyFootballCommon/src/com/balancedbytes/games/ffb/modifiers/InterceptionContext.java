@@ -1,14 +1,18 @@
 package com.balancedbytes.games.ffb.modifiers;
 
 import com.balancedbytes.games.ffb.mechanics.PassResult;
+import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
 
 public class InterceptionContext implements ModifierContext {
-	private Player<?> player;
-	private PassResult passResult;
+	private final Player<?> player;
+	private final PassResult passResult;
+	private final Game game;
 
-	public InterceptionContext(Player<?> player) {
+	public InterceptionContext(Player<?> player, PassResult passResult, Game game) {
 		this.player = player;
+		this.passResult = passResult;
+		this.game = game;
 	}
 
 	public Player<?> getPlayer() {
@@ -17,5 +21,9 @@ public class InterceptionContext implements ModifierContext {
 
 	public PassResult getPassResult() {
 		return passResult;
+	}
+
+	public Game getGame() {
+		return game;
 	}
 }

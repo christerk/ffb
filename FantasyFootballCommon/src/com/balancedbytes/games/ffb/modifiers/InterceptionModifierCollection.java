@@ -1,5 +1,6 @@
 package com.balancedbytes.games.ffb.modifiers;
 
+import com.balancedbytes.games.ffb.Weather;
 import com.balancedbytes.games.ffb.model.ModifierDictionary;
 
 public abstract class InterceptionModifierCollection extends ModifierCollection<InterceptionContext, InterceptionModifier> {
@@ -16,6 +17,12 @@ public abstract class InterceptionModifierCollection extends ModifierCollection<
 		add(new InterceptionModifier("9 Disturbing Presences", 9, false, true, dictionary));
 		add(new InterceptionModifier("10 Disturbing Presences", 10, false, true, dictionary));
 		add(new InterceptionModifier("11 Disturbing Presences", 11, false, true, dictionary));
+		add(new InterceptionModifier("Pouring Rain", 1, false, false, dictionary) {
+			@Override
+			public boolean appliesToContext(InterceptionContext context) {
+				return super.appliesToContext(context) && context.getGame().getFieldModel().getWeather().equals(Weather.POURING_RAIN);
+			}
+		});
 	}
 
 	@Override
