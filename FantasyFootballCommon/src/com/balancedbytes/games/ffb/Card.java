@@ -7,8 +7,10 @@ import java.util.Set;
 
 import com.balancedbytes.games.ffb.factory.InducementPhaseFactory;
 import com.balancedbytes.games.ffb.model.ModifierDictionary;
+import com.balancedbytes.games.ffb.model.Skill;
 import com.balancedbytes.games.ffb.modifiers.InterceptionContext;
 import com.balancedbytes.games.ffb.modifiers.InterceptionModifier;
+import com.balancedbytes.games.ffb.skill.PassBlock;
 import com.balancedbytes.games.ffb.util.UtilCards;
 
 /**
@@ -66,6 +68,14 @@ public enum Card implements INamedObject {
 						return super.appliesToContext(context) && UtilCards.hasCard(context.getGame(), context.getGame().getThrower(), Card.FAWNDOUGHS_HEADBAND);
 					}});
 			}
+
+		@Override
+		public Set<String> grantedSkills() {
+			return new HashSet<String>() {{
+				add("Pass");
+				add("Accurate");
+			}};
+		}
 	},
 	// Description:
 	// One of the great passers of all time has loaned your player his
@@ -159,6 +169,11 @@ public enum Card implements INamedObject {
 					return super.appliesToContext(context) && UtilCards.hasCard(context.getGame(), context.getPlayer(), Card.MAGIC_GLOVES_OF_JARK_LONGARM);
 				}
 			});
+		}
+
+		@Override
+		public Set<String> grantedSkills() {
+			return Collections.singleton("Pass Block");
 		}
 	},
 	// Description:
@@ -485,6 +500,10 @@ public enum Card implements INamedObject {
 	}
 
 	public Set<IRollModifier<?>> modifiers(ModifierDictionary dictionary) {
+		return Collections.emptySet();
+	}
+
+	public Set<String> grantedSkills() {
 		return Collections.emptySet();
 	}
 

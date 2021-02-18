@@ -180,7 +180,7 @@ public final class StepIntercept extends AbstractStepWithReRoll {
 			status = ActionStatus.FAILURE;
 			if (getReRolledAction() != ReRolledActions.CATCH) {
 				setReRolledAction(ReRolledActions.CATCH);
-				ReRollSource catchRerollSource = UtilCards.getRerollSource(pInterceptor, ReRolledActions.CATCH);
+				ReRollSource catchRerollSource = UtilCards.getRerollSource(game, pInterceptor, ReRolledActions.CATCH);
 				if (catchRerollSource != null) {
 					setReRollSource(catchRerollSource);
 					UtilServerReRoll.useReRoll(this, getReRollSource(), pInterceptor);

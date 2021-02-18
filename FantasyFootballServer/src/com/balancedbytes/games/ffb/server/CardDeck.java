@@ -40,6 +40,14 @@ public class CardDeck {
 	}
 
 	public Card draw(int pIndex) {
+		int newIndex = fCards.indexOf(Card.FAWNDOUGHS_HEADBAND);
+		if (newIndex >= 0) {
+			return fCards.remove(newIndex);
+		}
+		newIndex = fCards.indexOf(Card.MAGIC_GLOVES_OF_JARK_LONGARM);
+		if (newIndex >= 0) {
+			return fCards.remove(newIndex);
+		}
 		return fCards.remove(pIndex);
 	}
 

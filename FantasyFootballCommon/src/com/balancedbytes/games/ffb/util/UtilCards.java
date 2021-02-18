@@ -1,21 +1,12 @@
 package com.balancedbytes.games.ffb.util;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
 import com.balancedbytes.games.ffb.ArmorModifier;
 import com.balancedbytes.games.ffb.ArmorModifiers.ArmorModifierContext;
 import com.balancedbytes.games.ffb.Card;
 import com.balancedbytes.games.ffb.CardEffect;
-import com.balancedbytes.games.ffb.modifiers.CatchModifier;
-import com.balancedbytes.games.ffb.modifiers.CatchContext;
 import com.balancedbytes.games.ffb.DodgeModifier;
 import com.balancedbytes.games.ffb.DodgeModifiers.DodgeContext;
+import com.balancedbytes.games.ffb.FactoryType;
 import com.balancedbytes.games.ffb.InjuryModifier;
 import com.balancedbytes.games.ffb.InjuryModifier.InjuryModifierContext;
 import com.balancedbytes.games.ffb.LeapModifier;
@@ -26,6 +17,7 @@ import com.balancedbytes.games.ffb.PickupModifier;
 import com.balancedbytes.games.ffb.PickupModifiers.PickupContext;
 import com.balancedbytes.games.ffb.ReRollSource;
 import com.balancedbytes.games.ffb.ReRolledAction;
+import com.balancedbytes.games.ffb.factory.SkillFactory;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.ISkillProperty;
@@ -33,6 +25,14 @@ import com.balancedbytes.games.ffb.model.InducementSet;
 import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.model.Skill;
 import com.balancedbytes.games.ffb.model.SkillConstants;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
  *
@@ -154,10 +154,6 @@ public final class UtilCards {
 				cardSkills.add(SkillConstants.HYPNOTIC_GAZE);
 				cardSkills.add(SkillConstants.SIDE_STEP);
 				break;
-			case FAWNDOUGHS_HEADBAND:
-				//cardSkills.add(SkillConstants.ACCURATE);
-				cardSkills.add(SkillConstants.PASS);
-				break;
 			case FORCE_SHIELD:
 				cardSkills.add(SkillConstants.FEND);
 				cardSkills.add(SkillConstants.SURE_HANDS);
@@ -165,9 +161,6 @@ public final class UtilCards {
 			case GLOVES_OF_HOLDING:
 				cardSkills.add(SkillConstants.CATCH);
 				cardSkills.add(SkillConstants.SURE_HANDS);
-				break;
-			case MAGIC_GLOVES_OF_JARK_LONGARM:
-				cardSkills.add(SkillConstants.PASS_BLOCK);
 				break;
 			case RABBITS_FOOT:
 				cardSkills.add(SkillConstants.PRO);
@@ -194,6 +187,10 @@ public final class UtilCards {
 				break;
 			}
 		}
+
+		SkillFactory skillFactory = pGame.getFactory(FactoryType.Factory.SKILL);
+		Arrays.stream(cards).flatMap(card -> card.grantedSkills().stream()).map(skillFactory::forName).forEach(cardSkills::add);
+
 		CardEffect[] cardEffects = pGame.getFieldModel().getCardEffects(pPlayer);
 		for (CardEffect cardEffect : cardEffects) {
 			switch (cardEffect) {
@@ -324,8 +321,8 @@ public final class UtilCards {
 		return false;
 	}
 
-	public static ReRollSource getRerollSource(Player<?> player, ReRolledAction action) {
-		for (Skill playerSkill : player.getSkills()) {
+	public static ReRollSource getRerollSource(Game game, Player<?> player, ReRolledAction action) {
+		for (Skill playerSkill : UtilCards.findAllSkills(game, player)) {
 			ReRollSource source = playerSkill.getRerollSource(action);
 			if (source != null) {
 				return source;
