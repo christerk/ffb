@@ -2,7 +2,6 @@ package com.balancedbytes.games.ffb.model;
 
 import com.balancedbytes.games.ffb.FactoryManager;
 import com.balancedbytes.games.ffb.FactoryType.Factory;
-import com.balancedbytes.games.ffb.FactoryType.FactoryContext;
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.IDialogParameter;
 import com.balancedbytes.games.ffb.IRollModifier;
@@ -73,6 +72,7 @@ public class Game extends ModelChangeObservable implements IJsonSerializable {
 	private GameRules rules;
 	private FactoryManager factoryManager;
 	private IFactorySource applicationSource;
+	private ModifierDictionary dictionary = new ModifierDictionary();
 
 	public Game(IFactorySource applicationSource, FactoryManager manager) {
 		this.applicationSource = applicationSource;
@@ -117,6 +117,10 @@ public class Game extends ModelChangeObservable implements IJsonSerializable {
 
 	public void setRules(GameRules rules) {
 		this.rules = rules;
+	}
+
+	public ModifierDictionary getDictionary() {
+		return dictionary;
 	}
 
 	public GameResult getGameResult() {

@@ -1,6 +1,7 @@
 package com.balancedbytes.games.ffb.modifiers;
 
 import com.balancedbytes.games.ffb.IRollModifier;
+import com.balancedbytes.games.ffb.model.ModifierDictionary;
 import com.balancedbytes.games.ffb.model.Skill;
 
 public class InterceptionModifier implements IRollModifier<InterceptionContext> {
@@ -10,20 +11,21 @@ public class InterceptionModifier implements IRollModifier<InterceptionContext> 
 	private final boolean fDisturbingPresenceModifier;
 	private final String reportString;
 
-	public InterceptionModifier(String name, int pModifier, boolean pTacklezoneModifier, boolean pDisturbingPresenceModifier) {
-		this(name, name, pModifier, pModifier, pTacklezoneModifier, pDisturbingPresenceModifier);
+	public InterceptionModifier(String name, int pModifier, boolean pTacklezoneModifier, boolean pDisturbingPresenceModifier, ModifierDictionary dictionary) {
+		this(name, name, pModifier, pModifier, pTacklezoneModifier, pDisturbingPresenceModifier, dictionary);
 	}
 
-	public InterceptionModifier(String name, String reportString, int pModifier, boolean pTacklezoneModifier, boolean pDisturbingPresenceModifier) {
-		this(name, reportString, pModifier, pModifier, pTacklezoneModifier, pDisturbingPresenceModifier);
+	public InterceptionModifier(String name, String reportString, int pModifier, boolean pTacklezoneModifier, boolean pDisturbingPresenceModifier, ModifierDictionary dictionary) {
+		this(name, reportString, pModifier, pModifier, pTacklezoneModifier, pDisturbingPresenceModifier, dictionary);
 	}
-	public InterceptionModifier(String name, String reportString, int pModifier, int multiplier, boolean pTacklezoneModifier, boolean pDisturbingPresenceModifier) {
+	public InterceptionModifier(String name, String reportString, int pModifier, int multiplier, boolean pTacklezoneModifier, boolean pDisturbingPresenceModifier, ModifierDictionary dictionary) {
 		this.reportString = reportString;
 		this.multiplier = multiplier;
 		this.name = name;
 		fModifier = pModifier;
 		fTacklezoneModifier = pTacklezoneModifier;
 		fDisturbingPresenceModifier = pDisturbingPresenceModifier;
+		dictionary.add(this);
 	}
 
 	public String getName() {

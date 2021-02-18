@@ -26,8 +26,8 @@ public enum Weather implements INamedObject, ModifierSource {
 		public Collection<IRollModifier> modifier(Game game) {
 
 			return new HashSet<IRollModifier>() {{
-					add(new CatchModifier("Pouring Rain", 1, false, false));
-					add(new InterceptionModifier("Pouring Rain", 1, false, false));
+					add(new CatchModifier("Pouring Rain", 1, false, false, game.getDictionary()));
+					add(new InterceptionModifier("Pouring Rain", 1, false, false, game.getDictionary()));
 					add(PickupModifiers.POURING_RAIN);
 				}};
 		}

@@ -2,6 +2,7 @@ package com.balancedbytes.games.ffb.factory;
 
 import com.balancedbytes.games.ffb.CatchScatterThrowInMode;
 import com.balancedbytes.games.ffb.FactoryType;
+import com.balancedbytes.games.ffb.IRollModifier;
 import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.RulesCollection.Rules;
 import com.balancedbytes.games.ffb.model.Game;
@@ -16,6 +17,7 @@ import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -27,10 +29,6 @@ public class CatchModifierFactory extends GenerifiedModifierFactory<CatchContext
 	CatchModifierFactory.CatchModifierCalculationInput, CatchModifier, CatchModifierCollection> {
 
 	private CatchModifierCollection catchModifiers;
-
-	public CatchModifier forName(String pName) {
-		throw new NotImplementedException();
-	}
 
 	@Override
 	protected Collection<CatchModifier> getModifier(Skill skill) {
@@ -75,6 +73,11 @@ public class CatchModifierFactory extends GenerifiedModifierFactory<CatchContext
 	@Override
 	protected void setModifierCollection(CatchModifierCollection registry) {
 		catchModifiers = registry;
+	}
+
+	@Override
+	public CatchModifier forName(String name) {
+		return dictionary.catchModifier(name);
 	}
 
 	public static class CatchModifierCalculationInput extends GenerifiedModifierFactory.ModifierCalculationInput<CatchContext> {

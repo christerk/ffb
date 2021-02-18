@@ -30,8 +30,8 @@ public class InterceptionModifierFactory extends GenerifiedModifierFactory<
 	private InterceptionModifierCollection interceptionModifiers;
 
 	@Override
-	public InterceptionModifier forName(String pName) {
-		throw new NotImplementedException();
+	public InterceptionModifier forName(String name) {
+		return dictionary.interceptionModifier(name);
 	}
 
 	@Override

@@ -5,6 +5,7 @@ import com.balancedbytes.games.ffb.InjuryModifiers;
 import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.RulesCollection.Rules;
 import com.balancedbytes.games.ffb.SkillCategory;
+import com.balancedbytes.games.ffb.model.ModifierDictionary;
 import com.balancedbytes.games.ffb.model.Skill;
 
 /**
@@ -22,7 +23,7 @@ public class MightyBlow extends Skill {
 	}
 
 	@Override
-	public void postConstruct() {
+	public void postConstruct(ModifierDictionary dictionary) {
 		registerModifier(ArmorModifiers.MIGHTY_BLOW);
 		registerModifier(InjuryModifiers.MIGHTY_BLOW);
 	}

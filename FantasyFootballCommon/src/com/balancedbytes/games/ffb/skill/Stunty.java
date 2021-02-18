@@ -5,6 +5,7 @@ import com.balancedbytes.games.ffb.PassModifier;
 import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.RulesCollection.Rules;
 import com.balancedbytes.games.ffb.SkillCategory;
+import com.balancedbytes.games.ffb.model.ModifierDictionary;
 import com.balancedbytes.games.ffb.model.Skill;
 import com.balancedbytes.games.ffb.model.SkillConstants;
 import com.balancedbytes.games.ffb.model.modifier.CancelSkillProperty;
@@ -32,7 +33,7 @@ public class Stunty extends Skill {
 	}
 
 	@Override
-	public void postConstruct() {
+	public void postConstruct(ModifierDictionary dictionary) {
 		registerModifier(new PassModifier("Stunty", 1, false, false));
 		registerModifier(InjuryModifiers.STUNTY);
 

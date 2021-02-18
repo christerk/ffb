@@ -2,6 +2,7 @@ package com.balancedbytes.games.ffb.modifiers.bb2020;
 
 import com.balancedbytes.games.ffb.CatchScatterThrowInMode;
 import com.balancedbytes.games.ffb.RulesCollection;
+import com.balancedbytes.games.ffb.model.ModifierDictionary;
 import com.balancedbytes.games.ffb.model.Skill;
 import com.balancedbytes.games.ffb.modifiers.CatchContext;
 import com.balancedbytes.games.ffb.modifiers.CatchModifier;
@@ -11,10 +12,11 @@ import java.util.Set;
 
 @RulesCollection(RulesCollection.Rules.BB2020)
 public class CatchModifierCollection extends com.balancedbytes.games.ffb.modifiers.CatchModifierCollection {
-	public CatchModifierCollection() {
-		super();
 
-		add(new CatchModifier("Inaccurate Pass", 1, false, false) {
+	public void postConstruct(ModifierDictionary dictionary) {
+		super.postConstruct(dictionary);
+
+		add(new CatchModifier("Inaccurate Pass", 1, false, false, dictionary) {
 			private final Set<CatchScatterThrowInMode> scatter = new HashSet<CatchScatterThrowInMode>() {{
 				add(CatchScatterThrowInMode.CATCH_BOMB);
 				add(CatchScatterThrowInMode.CATCH_SCATTER);
@@ -25,7 +27,7 @@ public class CatchModifierCollection extends com.balancedbytes.games.ffb.modifie
 			}
 		});
 
-		add(new CatchModifier("Deflected Pass", 1, false, false) {
+		add(new CatchModifier("Deflected Pass", 1, false, false, dictionary) {
 			private final Set<CatchScatterThrowInMode> deflected = new HashSet<CatchScatterThrowInMode>() {{
 				add(CatchScatterThrowInMode.DEFLECTED);
 				add(CatchScatterThrowInMode.DEFLECTED_BOMB);

@@ -2,6 +2,7 @@ package com.balancedbytes.games.ffb.modifiers;
 
 import com.balancedbytes.games.ffb.IKeyedItem;
 import com.balancedbytes.games.ffb.IRollModifier;
+import com.balancedbytes.games.ffb.model.ModifierDictionary;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -41,4 +42,6 @@ public abstract class ModifierCollection<C extends ModifierContext, V extends IR
 	public Set<V> getDisturbingPresenceModifiers() {
 		return disturbingPresenceModifiers;
 	}
+
+	public abstract void postConstruct(ModifierDictionary dictionary);
 }

@@ -4,6 +4,7 @@ import com.balancedbytes.games.ffb.LeapModifiers;
 import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.RulesCollection.Rules;
 import com.balancedbytes.games.ffb.SkillCategory;
+import com.balancedbytes.games.ffb.model.ModifierDictionary;
 import com.balancedbytes.games.ffb.model.Skill;
 import com.balancedbytes.games.ffb.model.SkillConstants;
 import com.balancedbytes.games.ffb.model.modifier.CancelSkillProperty;
@@ -22,12 +23,11 @@ public class VeryLongLegs extends Skill {
 	}
 
 	@Override
-	public void postConstruct() {
+	public void postConstruct(ModifierDictionary dictionary) {
 		registerProperty(new CancelSkillProperty(SkillConstants.SAFE_THROW));
 
 		registerModifier(LeapModifiers.VERY_LONG_LEGS);
-		registerModifier(new InterceptionModifier("Very Long Legs", -1, false,
-			false));
+		registerModifier(new InterceptionModifier("Very Long Legs", -1, false, false, dictionary));
 	}
 
 }

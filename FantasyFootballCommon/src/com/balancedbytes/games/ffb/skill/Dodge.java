@@ -5,6 +5,7 @@ import com.balancedbytes.games.ffb.ReRolledActions;
 import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.RulesCollection.Rules;
 import com.balancedbytes.games.ffb.SkillCategory;
+import com.balancedbytes.games.ffb.model.ModifierDictionary;
 import com.balancedbytes.games.ffb.model.Skill;
 import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
 
@@ -24,7 +25,7 @@ public class Dodge extends Skill {
 	}
 
 	@Override
-	public void postConstruct() {
+	public void postConstruct(ModifierDictionary dictionary) {
 		registerProperty(NamedProperties.ignoreDefenderStumblesResult);
 
 		registerRerollSource(ReRolledActions.DODGE, ReRollSources.DODGE);

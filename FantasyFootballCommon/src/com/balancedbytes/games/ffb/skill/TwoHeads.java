@@ -4,6 +4,7 @@ import com.balancedbytes.games.ffb.DodgeModifiers;
 import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.RulesCollection.Rules;
 import com.balancedbytes.games.ffb.SkillCategory;
+import com.balancedbytes.games.ffb.model.ModifierDictionary;
 import com.balancedbytes.games.ffb.model.Skill;
 
 /**
@@ -19,7 +20,7 @@ public class TwoHeads extends Skill {
 	}
 
 	@Override
-	public void postConstruct() {
+	public void postConstruct(ModifierDictionary dictionary) {
 		registerModifier(DodgeModifiers.TWO_HEADS);
 	}
 }

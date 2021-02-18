@@ -2,6 +2,7 @@ package com.balancedbytes.games.ffb.factory;
 
 import com.balancedbytes.games.ffb.IRollModifier;
 import com.balancedbytes.games.ffb.model.Game;
+import com.balancedbytes.games.ffb.model.ModifierDictionary;
 import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.model.Skill;
 import com.balancedbytes.games.ffb.modifiers.ModifierContext;
@@ -15,6 +16,7 @@ import java.util.Collection;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
@@ -30,7 +32,10 @@ public abstract class GenerifiedModifierFactory<
 		getScanner()
 			.getSubclasses(game.getOptions()).stream().findFirst()
 			.ifPresent(this::setModifierCollection);
+		getModifierCollection().postConstruct(game.getDictionary());
+		dictionary = game.getDictionary();
 	}
+	protected ModifierDictionary dictionary;
 
 	protected abstract Scanner<R> getScanner();
 
