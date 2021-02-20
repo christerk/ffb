@@ -92,7 +92,7 @@ public class CloudBursterBehaviour extends SkillBehaviour<CloudBurster> {
 			Game game = getGameState().getGame();
 			PassState state = getGameState().getPassState();
 			Player<?> interceptor = game.getPlayerById(state.getInterceptorId());
-			if (!state.isInterceptionSuccessful() || (game.getThrower() == null) || (interceptor == null)) {
+			if (!state.isDeflectionSuccessful() || (game.getThrower() == null) || (interceptor == null)) {
 				getResult().setNextAction(StepAction.GOTO_LABEL, fGotoLabelOnFailure);
 				return;
 			}
@@ -109,7 +109,7 @@ public class CloudBursterBehaviour extends SkillBehaviour<CloudBurster> {
 			if (useCloudBurster) {
 				getResult().addReport(new ReportCloudBurster(game.getThrowerId(), state.getInterceptorId(), game.getThrower().getTeam().getId()));
 
-				state.setInterceptionSuccessful(false);
+				state.setDeflectionSuccessful(false);
 				StepParameterSet params = new StepParameterSet();
 				params.add(StepParameter.from(StepParameterKey.GOTO_LABEL_ON_FAILURE, fGotoLabelOnFailure));
 				IStep interceptStep = getGameState().getStepFactory().create(StepId.INTERCEPT, null, params);

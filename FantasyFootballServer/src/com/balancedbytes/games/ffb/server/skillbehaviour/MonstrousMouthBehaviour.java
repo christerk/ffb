@@ -8,8 +8,8 @@ import com.balancedbytes.games.ffb.net.commands.ClientCommandUseSkill;
 import com.balancedbytes.games.ffb.server.model.SkillBehaviour;
 import com.balancedbytes.games.ffb.server.model.StepModifier;
 import com.balancedbytes.games.ffb.server.step.StepCommandStatus;
-import com.balancedbytes.games.ffb.server.step.action.common.StepCatchScatterThrowIn;
-import com.balancedbytes.games.ffb.server.step.action.common.StepCatchScatterThrowIn.StepState;
+import com.balancedbytes.games.ffb.server.step.bb2016.StepCatchScatterThrowIn;
+import com.balancedbytes.games.ffb.server.step.bb2016.StepCatchScatterThrowIn.StepState;
 import com.balancedbytes.games.ffb.skill.MonstrousMouth;
 import com.balancedbytes.games.ffb.util.UtilCards;
 

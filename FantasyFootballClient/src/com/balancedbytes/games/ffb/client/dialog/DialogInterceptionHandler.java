@@ -1,11 +1,15 @@
 package com.balancedbytes.games.ffb.client.dialog;
 
 import com.balancedbytes.games.ffb.ClientMode;
+import com.balancedbytes.games.ffb.FactoryType;
 import com.balancedbytes.games.ffb.SoundId;
 import com.balancedbytes.games.ffb.StatusType;
 import com.balancedbytes.games.ffb.client.FantasyFootballClient;
 import com.balancedbytes.games.ffb.dialog.DialogId;
 import com.balancedbytes.games.ffb.dialog.DialogInterceptionParameter;
+import com.balancedbytes.games.ffb.mechanics.AgilityMechanic;
+import com.balancedbytes.games.ffb.mechanics.Mechanic;
+import com.balancedbytes.games.ffb.mechanics.Wording;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.util.UtilPassing;
@@ -27,7 +31,9 @@ public class DialogInterceptionHandler extends DialogHandler {
 		Player<?> thrower = game.getPlayerById(dialogParameter.getThrowerId());
 
 		if ((ClientMode.PLAYER != getClient().getMode()) || game.getTeamHome().hasPlayer(thrower)) {
-			showStatus("Interception", "Waiting for coach to choose an interceptor.", StatusType.WAITING);
+			Wording wording = ((AgilityMechanic) game.getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.AGILITY.name())).interceptionWording();
+
+			showStatus(wording.getNoun(), "Waiting for coach to choose an " + wording.getPlayerCharacterization() + ".", StatusType.WAITING);
 
 		} else {
 			setDialog(new DialogInterception(getClient()));
@@ -49,7 +55,7 @@ public class DialogInterceptionHandler extends DialogHandler {
 			} else {
 				// auto-choose lone interceptor
 				Player<?>[] interceptors = UtilPassing.findInterceptors(game, game.getThrower(), game.getPassCoordinate());
-				if ((interceptors != null) && (interceptors.length == 1)) {
+				if (interceptors.length == 1) {
 					getClient().getCommunication().sendInterceptorChoice(interceptors[0]);
 				}
 			}

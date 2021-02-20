@@ -29,6 +29,7 @@ public class PlayerResult implements IJsonSerializable {
 	private int fPassing;
 	private int fTurnsPlayed;
 	private int fCurrentSpps;
+	private int deflections;
 
 	private boolean fDefecting;
 	private SeriousInjury fSeriousInjury;
@@ -195,6 +196,18 @@ public class PlayerResult implements IJsonSerializable {
 		notifyObservers(ModelChangeId.PLAYER_RESULT_SET_INTERCEPTIONS, fInterceptions);
 	}
 
+	public int getDeflections() {
+		return deflections;
+	}
+
+	public void setDeflections(int deflections) {
+		if (this.deflections == deflections) {
+			return;
+		}
+		this.deflections = deflections;
+		notifyObservers(ModelChangeId.PLAYER_RESULT_SET_DEFLECTIONS, deflections);
+	}
+
 	public int getCasualties() {
 		return fCasualties;
 	}
@@ -293,7 +306,7 @@ public class PlayerResult implements IJsonSerializable {
 
 	public int totalEarnedSpps() {
 		return ((getPlayerAwards() * 5) + (getTouchdowns() * 3) + (getCasualties() * 2) + (getInterceptions() * 2)
-				+ getCompletions());
+				+ getCompletions() + getDeflections());
 	}
 
 	public Game getGame() {
@@ -306,6 +319,7 @@ public class PlayerResult implements IJsonSerializable {
 			fCompletions = pPlayerResult.getCompletions();
 			fTouchdowns = pPlayerResult.getTouchdowns();
 			fInterceptions = pPlayerResult.getInterceptions();
+			deflections = pPlayerResult.getDeflections();
 			fCasualties = pPlayerResult.getCasualties();
 			fPlayerAwards = pPlayerResult.getPlayerAwards();
 			fBlocks = pPlayerResult.getBlocks();

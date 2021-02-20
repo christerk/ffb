@@ -95,6 +95,7 @@ public enum ModelChangeId implements INamedObject {
 	PLAYER_RESULT_SET_FOULS("playerResultSetFouls", ModelChangeDataType.INTEGER),
 	PLAYER_RESULT_SET_HAS_USED_SECRET_WEAPON("playerResultSetHasUsedSecretWeapon", ModelChangeDataType.BOOLEAN),
 	PLAYER_RESULT_SET_INTERCEPTIONS("playerResultSetInterceptions", ModelChangeDataType.INTEGER),
+	PLAYER_RESULT_SET_DEFLECTIONS("playerResultSetDeflections", ModelChangeDataType.INTEGER),
 	PLAYER_RESULT_SET_PASSING("playerResultSetPassing", ModelChangeDataType.INTEGER),
 	PLAYER_RESULT_SET_PLAYER_AWARDS("playerResultSetPlayerAwards", ModelChangeDataType.INTEGER),
 	PLAYER_RESULT_SET_RUSHING("playerResultSetRushing", ModelChangeDataType.INTEGER),

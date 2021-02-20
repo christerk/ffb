@@ -1,5 +1,6 @@
 package com.balancedbytes.games.ffb.mechanics.bb2020;
 
+import com.balancedbytes.games.ffb.mechanics.Wording;
 import com.balancedbytes.games.ffb.modifiers.CatchModifier;
 import com.balancedbytes.games.ffb.DodgeModifier;
 import com.balancedbytes.games.ffb.GazeModifier;
@@ -108,6 +109,11 @@ public class AgilityMechanic extends com.balancedbytes.games.ffb.mechanics.Agili
 	@Override
 	public String formatPickupResult(ReportSkillRoll report, Player<?> player) {
 		return formatResult(player.getAgility(), report.getRollModifiers());
+	}
+
+	@Override
+	public Wording interceptionWording() {
+		return new Wording("Interference", "deflect", "deflects", "interfering player");
 	}
 
 	private int minimumRoll(int agility, Set<? extends IRollModifier> modifiers) {

@@ -13,7 +13,7 @@ import com.eclipsesource.json.JsonValue;
 
 public class PassState implements IJsonSerializable {
 	private String catcherId, interceptorId;
-	private boolean passSkillUsed, landingOutOfBounds, interceptorChosen, interceptionSuccessful;
+	private boolean passSkillUsed, landingOutOfBounds, interceptorChosen, deflectionSuccessful, interceptionSuccessful;
 	private PassResult result;
 	private FieldCoordinate throwerCoordinate;
 	private TurnMode oldTurnMode;
@@ -32,6 +32,14 @@ public class PassState implements IJsonSerializable {
 
 	public void setInterceptorChosen(boolean interceptorChosen) {
 		this.interceptorChosen = interceptorChosen;
+	}
+
+	public boolean isDeflectionSuccessful() {
+		return deflectionSuccessful;
+	}
+
+	public void setDeflectionSuccessful(boolean deflectionSuccessful) {
+		this.deflectionSuccessful = deflectionSuccessful;
 	}
 
 	public boolean isInterceptionSuccessful() {
@@ -103,7 +111,7 @@ public class PassState implements IJsonSerializable {
 		IServerJsonOption.INTERCEPTOR_ID.addTo(jsonObject, interceptorId);
 		IServerJsonOption.INTERCEPTOR_CHOSEN.addTo(jsonObject, interceptorChosen);
 		IServerJsonOption.OLD_TURN_MODE.addTo(jsonObject, oldTurnMode);
-		IServerJsonOption.INTERCEPTION_SUCCESSFUL.addTo(jsonObject, interceptionSuccessful);
+		IServerJsonOption.INTERCEPTION_SUCCESSFUL.addTo(jsonObject, deflectionSuccessful);
 		return jsonObject;
 	}
 
@@ -121,7 +129,7 @@ public class PassState implements IJsonSerializable {
 		interceptorId = IServerJsonOption.INTERCEPTOR_ID.getFrom(game, jsonObject);
 		interceptorChosen = IServerJsonOption.INTERCEPTOR_CHOSEN.getFrom(game, jsonObject);
 		oldTurnMode = (TurnMode) IServerJsonOption.OLD_TURN_MODE.getFrom(game, jsonObject);
-		interceptionSuccessful = IServerJsonOption.INTERCEPTION_SUCCESSFUL.getFrom(game, jsonObject);
+		deflectionSuccessful = IServerJsonOption.INTERCEPTION_SUCCESSFUL.getFrom(game, jsonObject);
 		return this;
 	}
 }

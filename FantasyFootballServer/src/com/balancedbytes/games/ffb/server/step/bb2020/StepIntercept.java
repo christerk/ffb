@@ -153,7 +153,7 @@ public final class StepIntercept extends AbstractStepWithReRoll {
 			if (state.getOldTurnMode() != null) {
 				game.setTurnMode(state.getOldTurnMode());
 			}
-			state.setInterceptionSuccessful(doIntercept);
+			state.setDeflectionSuccessful(doIntercept);
 			if (doIntercept) {
 				getResult().setNextAction(StepAction.NEXT_STEP);
 			} else {

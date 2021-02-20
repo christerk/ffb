@@ -33,6 +33,7 @@ import com.balancedbytes.games.ffb.mechanics.AgilityMechanic;
 import com.balancedbytes.games.ffb.mechanics.Mechanic;
 import com.balancedbytes.games.ffb.mechanics.PassMechanic;
 import com.balancedbytes.games.ffb.mechanics.PassResult;
+import com.balancedbytes.games.ffb.mechanics.Wording;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.GameResult;
@@ -1690,31 +1691,32 @@ public class StatusReport {
 		StringBuilder neededRoll = null;
 		Game game = getClient().getGame();
 		Player<?> player = game.getPlayerById(pReport.getPlayerId());
+		Wording wording = ((AgilityMechanic)game.getFactory(Factory.MECHANIC).forName(Mechanic.Type.AGILITY.name())).interceptionWording();
 		if (!pReport.isReRolled()) {
 			print(getIndent(), true, player);
 			if (pReport.isBomb()) {
-				println(getIndent(), TextStyle.BOLD, " tries to intercept the bomb:");
+				println(getIndent(), TextStyle.BOLD, " tries to " + wording.getVerb() + " the bomb:");
 			} else {
-				println(getIndent(), TextStyle.BOLD, " tries to intercept the ball:");
+				println(getIndent(), TextStyle.BOLD, " tries to " + wording.getVerb() + " the ball:");
 			}
 		}
-		status.append("Interception Roll [ ").append(pReport.getRoll()).append(" ]");
+		status.append(wording.getNoun()).append(" Roll [ ").append(pReport.getRoll()).append(" ]");
 		println(getIndent() + 1, TextStyle.ROLL, status.toString());
 		print(getIndent() + 2, false, player);
 		if (pReport.isSuccessful()) {
 			if (pReport.isBomb()) {
-				println(getIndent() + 2, " intercepts the bomb.");
+				println(getIndent() + 2, " " + wording.getInflection() + " the bomb.");
 			} else {
-				println(getIndent() + 2, " intercepts the ball.");
+				println(getIndent() + 2, " " + wording.getInflection() + " the ball.");
 			}
 			if (!pReport.isReRolled() && fShowModifiersOnSuccess) {
 				neededRoll = new StringBuilder().append("Succeeded on a roll of ").append(pReport.getMinimumRoll()).append("+");
 			}
 		} else {
 			if (pReport.isBomb()) {
-				println(getIndent() + 2, " fails to intercept the bomb.");
+				println(getIndent() + 2, " fails to " + wording.getVerb() + " the bomb.");
 			} else {
-				println(getIndent() + 2, " fails to intercept the ball.");
+				println(getIndent() + 2, " fails to " + wording.getVerb() + " the ball.");
 			}
 			if (!pReport.isReRolled() && fShowModifiersOnFailure) {
 				neededRoll = new StringBuilder().append("Roll a ").append(pReport.getMinimumRoll()).append("+ to succeed");

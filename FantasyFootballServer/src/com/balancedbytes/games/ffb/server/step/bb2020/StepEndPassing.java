@@ -1,4 +1,4 @@
-package com.balancedbytes.games.ffb.server.step.action.pass;
+package com.balancedbytes.games.ffb.server.step.bb2020;
 
 import com.balancedbytes.games.ffb.FactoryType;
 import com.balancedbytes.games.ffb.FieldCoordinate;
@@ -20,10 +20,11 @@ import com.balancedbytes.games.ffb.server.step.StepId;
 import com.balancedbytes.games.ffb.server.step.StepParameter;
 import com.balancedbytes.games.ffb.server.step.StepParameterKey;
 import com.balancedbytes.games.ffb.server.step.UtilServerSteps;
+import com.balancedbytes.games.ffb.server.step.bb2020.state.PassState;
 import com.balancedbytes.games.ffb.server.step.generator.Pass;
+import com.balancedbytes.games.ffb.server.step.generator.SequenceGenerator;
 import com.balancedbytes.games.ffb.server.step.generator.common.Bomb;
 import com.balancedbytes.games.ffb.server.step.generator.common.EndPlayerAction;
-import com.balancedbytes.games.ffb.server.step.generator.SequenceGenerator;
 import com.balancedbytes.games.ffb.server.util.UtilServerDialog;
 import com.balancedbytes.games.ffb.util.StringTool;
 import com.balancedbytes.games.ffb.util.UtilPlayer;
@@ -43,7 +44,7 @@ import com.eclipsesource.json.JsonValue;
  *
  * @author Kalimar
  */
-@RulesCollection(RulesCollection.Rules.COMMON)
+@RulesCollection(RulesCollection.Rules.BB2020)
 public final class StepEndPassing extends AbstractStep {
 
 	private String fInterceptorId;
@@ -144,7 +145,7 @@ public final class StepEndPassing extends AbstractStep {
 		}
 		// failed animosity may try to choose a new target
 		if (actingPlayer.isSufferingAnimosity() && !fEndPlayerAction && (game.getPassCoordinate() == null)) {
-			((Pass)factory.forName(SequenceGenerator.Type.Pass.name())).pushSequence(new com.balancedbytes.games.ffb.server.step.generator.Pass.SequenceParams(getGameState()));
+			((Pass)factory.forName(SequenceGenerator.Type.Pass.name())).pushSequence(new Pass.SequenceParams(getGameState()));
 			getResult().setNextAction(StepAction.NEXT_STEP);
 			return;
 		}
@@ -173,14 +174,18 @@ public final class StepEndPassing extends AbstractStep {
 					|| UtilPlayer.findOtherTeam(game, game.getThrower()).hasPlayer(catcher) || fPassFumble);
 			endGenerator.pushSequence(new EndPlayerAction.SequenceParams(getGameState(), true, fEndPlayerAction, fEndTurn));
 		} else {
-			if (StringTool.isProvided(fInterceptorId)) {
-				catcher = game.getPlayerById(fInterceptorId);
+			PassState state = getGameState().getPassState();
+			if (state.isDeflectionSuccessful()) {
+				catcher = game.getPlayerById(state.getInterceptorId());
 				GameResult gameResult = game.getGameResult();
 				PlayerResult catcherResult = gameResult.getPlayerResult(catcher);
-				catcherResult.setInterceptions(catcherResult.getInterceptions() + 1);
-				FieldCoordinate interceptorCoordinate = game.getFieldModel().getPlayerCoordinate(catcher);
-				game.getFieldModel().setBallCoordinate(interceptorCoordinate);
-				game.getFieldModel().setBallMoving(false);
+				catcherResult.setDeflections(catcherResult.getDeflections() + 1);
+				if (state.isInterceptionSuccessful()) {
+					catcherResult.setInterceptions(catcherResult.getInterceptions() + 1);
+					FieldCoordinate interceptorCoordinate = game.getFieldModel().getPlayerCoordinate(catcher);
+					game.getFieldModel().setBallCoordinate(interceptorCoordinate);
+					game.getFieldModel().setBallMoving(false);
+				}
 			} else {
 				catcher = game.getFieldModel().getPlayer(game.getFieldModel().getBallCoordinate());
 			}

@@ -40,7 +40,7 @@ public class StepResolvePass extends AbstractStep {
 		getResult().setAnimation(new Animation(animationType, state.getThrowerCoordinate(), game.getPassCoordinate(), interceptorCoordinate));
 		UtilServerGame.syncGameModel(this);
 
-		if (state.isInterceptionSuccessful()) {
+		if (state.isDeflectionSuccessful()) {
 			if (PlayerAction.THROW_BOMB == game.getThrowerAction()) {
 				game.getFieldModel().setBombCoordinate(interceptorCoordinate);
 				publishParameter(new StepParameter(StepParameterKey.CATCH_SCATTER_THROW_IN_MODE,
@@ -120,7 +120,7 @@ public class StepResolvePass extends AbstractStep {
 	}
 
 	private FieldCoordinate interceptorCoordinate(PassState state, Game game){
-		if (state.isInterceptionSuccessful()) {
+		if (state.isDeflectionSuccessful()) {
 			Player<?> interceptor = game.getPlayerById(state.getInterceptorId());
 			if (interceptor != null) {
 				return game.getFieldModel().getPlayerCoordinate(interceptor);

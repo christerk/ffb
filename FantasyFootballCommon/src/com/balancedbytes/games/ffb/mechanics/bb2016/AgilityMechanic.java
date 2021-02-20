@@ -1,5 +1,6 @@
 package com.balancedbytes.games.ffb.mechanics.bb2016;
 
+import com.balancedbytes.games.ffb.mechanics.Wording;
 import com.balancedbytes.games.ffb.modifiers.CatchModifier;
 import com.balancedbytes.games.ffb.DodgeModifier;
 import com.balancedbytes.games.ffb.DodgeModifiers;
@@ -156,5 +157,10 @@ public class AgilityMechanic extends com.balancedbytes.games.ffb.mechanics.Agili
 	public String formatPickupResult(ReportSkillRoll report, Player<?> player) {
 		return " (AG " + Math.min(6, player.getAgility()) + " + 1 Pickup" +
 			formatRollModifiers(report.getRollModifiers()) + " + Roll > 6).";
+	}
+
+	@Override
+	public Wording interceptionWording() {
+		return new Wording("Interception", "intercept", "intercepts", "interceptor");
 	}
 }

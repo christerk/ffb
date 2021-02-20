@@ -27,7 +27,7 @@ import com.balancedbytes.games.ffb.server.step.StepId;
 import com.balancedbytes.games.ffb.server.step.StepParameter;
 import com.balancedbytes.games.ffb.server.step.StepParameterKey;
 import com.balancedbytes.games.ffb.server.step.StepParameterSet;
-import com.balancedbytes.games.ffb.server.step.action.common.StepCatchScatterThrowIn;
+import com.balancedbytes.games.ffb.server.step.bb2016.StepCatchScatterThrowIn;
 import com.balancedbytes.games.ffb.server.util.UtilServerInjury;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
