@@ -3,6 +3,7 @@ package com.balancedbytes.games.ffb.server.skillbehaviour.bb2020;
 import com.balancedbytes.games.ffb.FactoryType;
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.PassingDistance;
+import com.balancedbytes.games.ffb.PassingModifiers;
 import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.RulesCollection.Rules;
 import com.balancedbytes.games.ffb.factory.IFactorySource;
@@ -96,7 +97,7 @@ public class CloudBursterBehaviour extends SkillBehaviour<CloudBurster> {
 				return;
 			}
 
-			Skill canForceInterceptionRerollSkill = game.getThrower().getSkillWithProperty(NamedProperties.canForceInterceptionReroll);
+			Skill canForceInterceptionRerollSkill = game.getThrower().getSkillWithProperty(NamedProperties.canForceInterceptionRerollOfLongPasses);
 
 			FieldCoordinate throwerCoordinate = game.getFieldModel().getPlayerCoordinate(game.getThrower());
 			PassMechanic mechanic = (PassMechanic) game.getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.PASS.name());
@@ -104,7 +105,7 @@ public class CloudBursterBehaviour extends SkillBehaviour<CloudBurster> {
 
 			boolean useCloudBurster = canForceInterceptionRerollSkill != null
 					&& !UtilCards.cancelsSkill(interceptor, canForceInterceptionRerollSkill)
-					&& (passingDistance == PassingDistance.LONG_PASS || passingDistance == PassingDistance.LONG_BOMB);
+					&& NamedProperties.canForceInterceptionRerollOfLongPasses.appliesToContext(new PassingModifiers.PassContext(passingDistance, false));
 			if (useCloudBurster) {
 				getResult().addReport(new ReportCloudBurster(game.getThrowerId(), state.getInterceptorId(), game.getThrower().getTeam().getId()));
 

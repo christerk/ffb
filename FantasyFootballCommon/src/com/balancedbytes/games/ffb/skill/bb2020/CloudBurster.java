@@ -17,6 +17,6 @@ public class CloudBurster extends Skill {
 	public CloudBurster() {
 		super("Cloud Burster", SkillCategory.PASSING);
 		
-		registerProperty(NamedProperties.canForceInterceptionReroll);
+		registerProperty(NamedProperties.canForceInterceptionRerollOfLongPasses);
 	}
 }
