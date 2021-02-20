@@ -1,6 +1,7 @@
 package com.balancedbytes.games.ffb.server.step.bb2020;
 
 import com.balancedbytes.games.ffb.FactoryType;
+import com.balancedbytes.games.ffb.modifiers.InterceptionContext;
 import com.balancedbytes.games.ffb.modifiers.InterceptionModifier;
 import com.balancedbytes.games.ffb.PlayerAction;
 import com.balancedbytes.games.ffb.RangeRuler;
@@ -165,7 +166,7 @@ public final class StepIntercept extends AbstractStepWithReRoll {
 		ActionStatus status;
 		Game game = getGameState().getGame();
 		InterceptionModifierFactory modifierFactory = game.getFactory(FactoryType.Factory.INTERCEPTION_MODIFIER);
-		Set<InterceptionModifier> interceptionModifiers = modifierFactory.findModifiers(new InterceptionModifierFactory.InterceptionModifierCalculationInput(game, pInterceptor, getGameState().getPassState().getResult()));
+		Set<InterceptionModifier> interceptionModifiers = modifierFactory.findModifiers(new InterceptionContext(game, pInterceptor, getGameState().getPassState().getResult()));
 		AgilityMechanic mechanic = (AgilityMechanic) game.getRules().getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.AGILITY.name());
 		int minimumRoll = mechanic.minimumRollInterception(pInterceptor, interceptionModifiers);
 		int roll = getGameState().getDiceRoller().rollSkill();

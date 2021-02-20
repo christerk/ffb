@@ -2,6 +2,7 @@ package com.balancedbytes.games.ffb.server.step.action.common;
 
 import com.balancedbytes.games.ffb.ApothecaryMode;
 import com.balancedbytes.games.ffb.Card;
+import com.balancedbytes.games.ffb.modifiers.CatchContext;
 import com.balancedbytes.games.ffb.modifiers.CatchModifier;
 import com.balancedbytes.games.ffb.CatchScatterThrowInMode;
 import com.balancedbytes.games.ffb.Direction;
@@ -369,7 +370,7 @@ public class StepCatchScatterThrowIn extends AbstractStepWithReRoll {
 		if (doRoll) {
 			AgilityMechanic mechanic = (AgilityMechanic) game.getRules().getFactory(Factory.MECHANIC).forName(Mechanic.Type.AGILITY.name());
 			CatchModifierFactory modifierFactory = game.getFactory(Factory.CATCH_MODIFIER);
-			Set<CatchModifier> catchModifiers = modifierFactory.findModifiers(new CatchModifierFactory.CatchModifierCalculationInput(game, state.catcher, fCatchScatterThrowInMode));
+			Set<CatchModifier> catchModifiers = modifierFactory.findModifiers(new CatchContext(game, state.catcher, fCatchScatterThrowInMode));
 			int minimumRoll = mechanic.minimumRollCatch(state.catcher, catchModifiers);
 			boolean reRolled = ((getReRolledAction() == ReRolledActions.CATCH) && (getReRollSource() != null));
 			int roll = getGameState().getDiceRoller().rollSkill();

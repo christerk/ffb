@@ -26,7 +26,6 @@ import java.util.stream.Stream;
 
 public abstract class GenerifiedModifierFactory<
 	C extends ModifierContext,
-	I extends GenerifiedModifierFactory.ModifierCalculationInput<C>,
 	V extends IRollModifier<C>,
 	R extends ModifierCollection<C, V>
 	> implements IRollModifierFactory<V> {
@@ -67,10 +66,10 @@ public abstract class GenerifiedModifierFactory<
 		return modifiers;
 	}
 
-	protected Collection<V> getModifiers(Player<?> player, C context) {
+	protected Collection<V> getModifiers(C context) {
 		Set<V> result = new HashSet<>();
 
-		for (Skill skill : player.getSkills()) {
+		for (Skill skill : context.getPlayer().getSkills()) {
 			for (V modifier : getModifier(skill)) {
 				if (modifier.appliesToContext(context)) {
 					result.add(modifier);
@@ -82,41 +81,21 @@ public abstract class GenerifiedModifierFactory<
 
 	protected abstract Collection<V> getModifier(Skill skill);
 
-	protected abstract Set<V> findModifiersInternal(I input);
+	protected abstract Set<V> findModifiersInternal(C context);
 
 	protected abstract Optional<V> checkClass(IRollModifier<?> modifier);
 
-	public Set<V> findModifiers(I input) {
-		Set<V> modifiers = findModifiersInternal(input);
-		Arrays.stream(UtilCards.findAllActiveCards(input.getGame()))
+	public Set<V> findModifiers(C context) {
+		Set<V> modifiers = findModifiersInternal(context);
+		Arrays.stream(UtilCards.findAllActiveCards(context.getGame()))
 			.flatMap((Function<Card, Stream<IRollModifier<?>>>) card -> card.modifiers().stream())
 			.map(this::checkClass)
 			.filter(Optional::isPresent)
 			.map(Optional::get)
-			.filter(modifier -> modifier.appliesToContext(input.getContext()))
+			.filter(modifier -> modifier.appliesToContext(context))
 			.forEach(modifiers::add);
-		modifiers.addAll(getModifiers(input.getPlayer(), input.getContext()));
+		modifiers.addAll(getModifiers(context));
 
 		return modifiers;
-	}
-
-	public abstract static class ModifierCalculationInput<C> {
-		private final Game game;
-		private final Player<?> player;
-
-		public ModifierCalculationInput(Game game, Player<?> player) {
-			this.game = game;
-			this.player = player;
-		}
-
-		public Game getGame() {
-			return game;
-		}
-
-		public Player<?> getPlayer() {
-			return player;
-		}
-
-		public abstract C getContext();
 	}
 }

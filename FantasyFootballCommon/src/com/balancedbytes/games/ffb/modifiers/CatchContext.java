@@ -9,7 +9,7 @@ public class CatchContext implements ModifierContext {
 	private final CatchScatterThrowInMode catchMode;
 	private final Game game;
 
-	public CatchContext(Player<?> pPlayer, CatchScatterThrowInMode pCatchMode, Game game) {
+	public CatchContext(Game game, Player<?> pPlayer, CatchScatterThrowInMode pCatchMode) {
 		this.player = pPlayer;
 		this.catchMode = pCatchMode;
 		this.game = game;

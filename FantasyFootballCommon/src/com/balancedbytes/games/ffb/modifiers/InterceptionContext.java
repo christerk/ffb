@@ -9,7 +9,7 @@ public class InterceptionContext implements ModifierContext {
 	private final PassResult passResult;
 	private final Game game;
 
-	public InterceptionContext(Player<?> player, PassResult passResult, Game game) {
+	public InterceptionContext(Game game, Player<?> player, PassResult passResult) {
 		this.player = player;
 		this.passResult = passResult;
 		this.game = game;

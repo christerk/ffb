@@ -25,8 +25,7 @@ import java.util.stream.Stream;
  */
 @FactoryType(FactoryType.Factory.CATCH_MODIFIER)
 @RulesCollection(Rules.COMMON)
-public class CatchModifierFactory extends GenerifiedModifierFactory<CatchContext,
-	CatchModifierFactory.CatchModifierCalculationInput, CatchModifier, CatchModifierCollection> {
+public class CatchModifierFactory extends GenerifiedModifierFactory<CatchContext, CatchModifier, CatchModifierCollection> {
 
 	private CatchModifierCollection catchModifiers;
 
@@ -36,14 +35,14 @@ public class CatchModifierFactory extends GenerifiedModifierFactory<CatchContext
 	}
 
 	@Override
-	protected Set<CatchModifier> findModifiersInternal(CatchModifierCalculationInput input) {
+	protected Set<CatchModifier> findModifiersInternal(CatchContext context) {
 
 		Set<CatchModifier> catchModifiers = new HashSet<>();
-		Player<?> player = input.getPlayer();
-		Game game = input.getGame();
+		Player<?> player = context.getPlayer();
+		Game game = context.getGame();
 
 		getModifierCollection().getOtherModifiers().stream()
-			.filter(catchModifier -> catchModifier.appliesToContext(input.getContext()))
+			.filter(catchModifier -> catchModifier.appliesToContext(context))
 					.forEach(catchModifiers::add);
 
 		if (!player.hasSkillWithProperty(NamedProperties.ignoreTacklezonesWhenCatching)) {
@@ -83,23 +82,5 @@ public class CatchModifierFactory extends GenerifiedModifierFactory<CatchContext
 			.filter(modifier -> modifier.getName().equals(name))
 			.findFirst()
 			.orElse(null);
-	}
-
-	public static class CatchModifierCalculationInput extends GenerifiedModifierFactory.ModifierCalculationInput<CatchContext> {
-		private final CatchScatterThrowInMode catchScatterThrowInMode;
-
-		public CatchModifierCalculationInput(Game game, Player<?> player, CatchScatterThrowInMode catchScatterThrowInMode) {
-			super(game, player);
-			this.catchScatterThrowInMode = catchScatterThrowInMode;
-		}
-
-		public CatchScatterThrowInMode getCatchScatterThrowInMode() {
-			return catchScatterThrowInMode;
-		}
-
-		@Override
-		public CatchContext getContext() {
-			return new CatchContext(getPlayer(), catchScatterThrowInMode, getGame());
-		}
 	}
 }

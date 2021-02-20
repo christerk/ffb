@@ -25,9 +25,7 @@ import java.util.stream.Stream;
  */
 @FactoryType(FactoryType.Factory.INTERCEPTION_MODIFIER)
 @RulesCollection(Rules.COMMON)
-public class InterceptionModifierFactory extends GenerifiedModifierFactory<
-	InterceptionContext, InterceptionModifierFactory.InterceptionModifierCalculationInput,
-	InterceptionModifier, InterceptionModifierCollection> {
+public class InterceptionModifierFactory extends GenerifiedModifierFactory<InterceptionContext, InterceptionModifier, InterceptionModifierCollection> {
 
 	private InterceptionModifierCollection interceptionModifiers;
 
@@ -62,13 +60,13 @@ public class InterceptionModifierFactory extends GenerifiedModifierFactory<
 	}
 
 	@Override
-	protected Set<InterceptionModifier> findModifiersInternal(InterceptionModifierCalculationInput input) {
+	protected Set<InterceptionModifier> findModifiersInternal(InterceptionContext context) {
 
 		Set<InterceptionModifier> interceptionModifiers = new HashSet<>();
-		Game game = input.getGame();
-		Player<?> player = input.getPlayer();
+		Game game = context.getGame();
+		Player<?> player = context.getPlayer();
 
-		getModifierCollection().getOtherModifiers().stream().filter(modifier -> modifier.appliesToContext(input.getContext()))
+		getModifierCollection().getOtherModifiers().stream().filter(modifier -> modifier.appliesToContext(context))
 			.forEach(interceptionModifiers::add);
 
 		if (!player.hasSkillWithProperty(NamedProperties.ignoreTacklezonesWhenCatching)) {
@@ -91,21 +89,4 @@ public class InterceptionModifierFactory extends GenerifiedModifierFactory<
 		return modifier instanceof  InterceptionModifier ? Optional.of((InterceptionModifier) modifier) : Optional.empty();
 	}
 
-	public static class InterceptionModifierCalculationInput extends GenerifiedModifierFactory.ModifierCalculationInput<InterceptionContext> {
-		private final PassResult passResult;
-
-		public InterceptionModifierCalculationInput(Game game, Player<?> player, PassResult passResult) {
-			super(game, player);
-			this.passResult = passResult;
-		}
-
-		public PassResult getPassResult() {
-			return passResult;
-		}
-
-		@Override
-		public InterceptionContext getContext() {
-			return new InterceptionContext(getPlayer(), passResult, getGame());
-		}
-	}
 }
