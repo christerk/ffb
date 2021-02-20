@@ -4,7 +4,6 @@ import com.balancedbytes.games.ffb.PassModifier;
 import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.RulesCollection.Rules;
 import com.balancedbytes.games.ffb.SkillCategory;
-import com.balancedbytes.games.ffb.model.ModifierDictionary;
 import com.balancedbytes.games.ffb.model.Skill;
 
 /**
@@ -18,7 +17,7 @@ public class Accurate extends Skill {
 	}
 
 	@Override
-	public void postConstruct(ModifierDictionary dictionary){
+	public void postConstruct(){
 		registerModifier(new PassModifier("Accurate", -1, false, false));
 	}
 

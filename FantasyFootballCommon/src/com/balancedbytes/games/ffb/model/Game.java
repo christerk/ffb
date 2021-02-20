@@ -15,6 +15,7 @@ import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.change.ModelChange;
 import com.balancedbytes.games.ffb.model.change.ModelChangeId;
 import com.balancedbytes.games.ffb.model.change.ModelChangeObservable;
+import com.balancedbytes.games.ffb.modifiers.ModifierAggregator;
 import com.balancedbytes.games.ffb.util.DateTool;
 import com.balancedbytes.games.ffb.util.StringTool;
 import com.balancedbytes.games.ffb.util.UtilActingPlayer;
@@ -70,7 +71,7 @@ public class Game extends ModelChangeObservable implements IJsonSerializable {
 	private GameRules rules;
 	private FactoryManager factoryManager;
 	private IFactorySource applicationSource;
-	private ModifierDictionary dictionary = new ModifierDictionary();
+	private ModifierAggregator modifierAggregator;
 
 	public Game(IFactorySource applicationSource, FactoryManager manager) {
 		this.applicationSource = applicationSource;
@@ -106,7 +107,12 @@ public class Game extends ModelChangeObservable implements IJsonSerializable {
 	}
 
 	public void initializeRules() {
+		modifierAggregator = new ModifierAggregator(this);
 		rules.initialize(this);
+	}
+
+	public ModifierAggregator getModifierAggregator() {
+		return modifierAggregator;
 	}
 
 	public GameRules getRules() {
@@ -115,10 +121,6 @@ public class Game extends ModelChangeObservable implements IJsonSerializable {
 
 	public void setRules(GameRules rules) {
 		this.rules = rules;
-	}
-
-	public ModifierDictionary getDictionary() {
-		return dictionary;
 	}
 
 	public GameResult getGameResult() {
@@ -565,10 +567,10 @@ public class Game extends ModelChangeObservable implements IJsonSerializable {
 		transformedGame.fFieldModel = getFieldModel().transform();
 
 		transformedGame.setTeamHome(getTeamAway());
-		transformedGame.getTurnDataHome().init(getTurnDataAway(), transformedGame.dictionary);
+		transformedGame.getTurnDataHome().init(getTurnDataAway());
 
 		transformedGame.setTeamAway(getTeamHome());
-		transformedGame.getTurnDataAway().init(getTurnDataHome(), transformedGame.dictionary);
+		transformedGame.getTurnDataAway().init(getTurnDataHome());
 
 		if (getPassCoordinate() != null) {
 			transformedGame.setPassCoordinate(getPassCoordinate().transform());
@@ -672,9 +674,6 @@ public class Game extends ModelChangeObservable implements IJsonSerializable {
 		if (dialogParameterObject != null) {
 			fDialogParameter = new DialogParameterFactory().forJsonValue(source, dialogParameterObject);
 		}
-
-		// Make sure all active IRollModifiers from cards are available in the dictionary after a reload
-		Arrays.stream(UtilCards.findAllActiveCards(this)).forEach(card -> card.modifiers(dictionary));
 
 		return this;
 

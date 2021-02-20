@@ -4,7 +4,6 @@ import com.balancedbytes.games.ffb.PickupModifiers;
 import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.RulesCollection.Rules;
 import com.balancedbytes.games.ffb.SkillCategory;
-import com.balancedbytes.games.ffb.model.ModifierDictionary;
 import com.balancedbytes.games.ffb.model.Skill;
 import com.balancedbytes.games.ffb.modifiers.CatchModifier;
 import com.balancedbytes.games.ffb.modifiers.InterceptionModifier;
@@ -21,10 +20,10 @@ public class ExtraArms extends Skill {
 	}
 
 	@Override
-	public void postConstruct(ModifierDictionary dictionary) {
+	public void postConstruct() {
 		registerModifier(PickupModifiers.EXTRA_ARMS);
-		registerModifier(new InterceptionModifier("Extra Arms", -1, false, false, dictionary));
-		registerModifier(new CatchModifier("Extra Arms", -1, false, false, dictionary));
+		registerModifier(new InterceptionModifier("Extra Arms", -1, false, false));
+		registerModifier(new CatchModifier("Extra Arms", -1, false, false));
 	}
 
 }

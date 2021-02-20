@@ -18,6 +18,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Stream;
 
 /**
  * @author Kalimar
@@ -32,7 +33,12 @@ public class InterceptionModifierFactory extends GenerifiedModifierFactory<
 
 	@Override
 	public InterceptionModifier forName(String name) {
-		return dictionary.interceptionModifier(name);
+		return Stream.concat(
+			interceptionModifiers.getAllModifiers().stream(),
+			modifierAggregator.getInterceptionModifiers().stream())
+			.filter(modifier -> modifier.getName().equals(name))
+			.findFirst()
+			.orElse(null);
 	}
 
 	@Override

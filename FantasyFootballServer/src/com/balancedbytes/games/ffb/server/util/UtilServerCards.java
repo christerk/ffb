@@ -93,7 +93,7 @@ public class UtilServerCards {
 
 		InducementSet inducementSet = pHomeTeam ? game.getTurnDataHome().getInducementSet()
 				: game.getTurnDataAway().getInducementSet();
-		inducementSet.activateCard(pCard, game.getDictionary());
+		inducementSet.activateCard(pCard);
 		Player<?> player = game.getPlayerById(pPlayerId);
 		if (player != null) {
 			game.getFieldModel().addCard(player, pCard);

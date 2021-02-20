@@ -6,7 +6,6 @@ import com.balancedbytes.games.ffb.PassingModifiers.PassContext;
 import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.RulesCollection.Rules;
 import com.balancedbytes.games.ffb.SkillCategory;
-import com.balancedbytes.games.ffb.model.ModifierDictionary;
 import com.balancedbytes.games.ffb.model.Skill;
 
 /**
@@ -21,7 +20,7 @@ public class Cannoneer extends Skill {
 	}
 
 	@Override
-	public void postConstruct(ModifierDictionary dictionary){
+	public void postConstruct(){
 		registerModifier(new PassModifier("Cannoneer", -1, false, false) {
 			@Override
 			public boolean appliesToContext(PassContext context) {

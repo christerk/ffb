@@ -3,7 +3,6 @@ package com.balancedbytes.games.ffb.skill;
 import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.RulesCollection.Rules;
 import com.balancedbytes.games.ffb.SkillCategory;
-import com.balancedbytes.games.ffb.model.ModifierDictionary;
 import com.balancedbytes.games.ffb.model.Skill;
 import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
 
@@ -26,7 +25,7 @@ public class Stab extends Skill {
 	}
 
 	@Override
-	public void postConstruct(ModifierDictionary dictionary) {
+	public void postConstruct() {
 		registerProperty(NamedProperties.canPerformArmourRollInsteadOfBlock);
 	}
 

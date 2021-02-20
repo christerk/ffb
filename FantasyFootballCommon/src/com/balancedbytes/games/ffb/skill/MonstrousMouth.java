@@ -5,7 +5,6 @@ import com.balancedbytes.games.ffb.ReRolledActions;
 import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.RulesCollection.Rules;
 import com.balancedbytes.games.ffb.SkillCategory;
-import com.balancedbytes.games.ffb.model.ModifierDictionary;
 import com.balancedbytes.games.ffb.model.Skill;
 import com.balancedbytes.games.ffb.model.SkillConstants;
 import com.balancedbytes.games.ffb.model.modifier.CancelSkillProperty;
@@ -24,7 +23,7 @@ public class MonstrousMouth extends Skill {
 	}
 
 	@Override
-	public void postConstruct(ModifierDictionary dictionary) {
+	public void postConstruct() {
 		registerProperty(new CancelSkillProperty(SkillConstants.STRIP_BALL));
 		
 		registerRerollSource(ReRolledActions.CATCH, ReRollSources.MONSTROUS_MOUTH);

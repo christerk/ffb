@@ -1,26 +1,23 @@
 package com.balancedbytes.games.ffb;
 
 import com.balancedbytes.games.ffb.model.Game;
-import com.balancedbytes.games.ffb.modifiers.ModifierSource;
 
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
-public enum Weather implements INamedObject, ModifierSource {
+public enum Weather implements INamedObject {
 
 	SWELTERING_HEAT("Sweltering Heat", "heat",
 			"Each player on the pitch may suffer from heat exhaustion on a roll of 1 before the next kick-off."),
 	VERY_SUNNY("Very Sunny", "sunny", "A -1 modifier applies to all passing rolls.") {
-		@Override
 		public Set<IRollModifier> modifier(Game game) {
 			return Collections.singleton(PassingModifiers.VERY_SUNNY);
 		}
 	},
 	NICE("Nice Weather", "nice", "Perfect Fantasy Football weather."),
 	POURING_RAIN("Pouring Rain", "rain", "A -1 modifier applies to all catch, intercept, or pick-up rolls.") {
-		@Override
 		public Collection<IRollModifier> modifier(Game game) {
 
 			return new HashSet<IRollModifier>() {
@@ -34,7 +31,6 @@ public enum Weather implements INamedObject, ModifierSource {
 	},
 	BLIZZARD("Blizzard", "blizzard",
 			"Going For It fails on a roll of 1 or 2 and only quick or short passes can be attempted.") {
-		@Override
 		public Collection<IRollModifier> modifier(Game game) {
 			return new HashSet<IRollModifier>() {
 				private static final long serialVersionUID = -6560479669198677254L;
@@ -67,10 +63,5 @@ public enum Weather implements INamedObject, ModifierSource {
 
 	public String getDescription() {
 		return fDescription;
-	}
-
-	@Override
-	public Collection<IRollModifier> modifier(Game game) {
-		return Collections.emptySet();
 	}
 }

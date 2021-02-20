@@ -3,11 +3,11 @@ package com.balancedbytes.games.ffb.factory;
 import com.balancedbytes.games.ffb.Card;
 import com.balancedbytes.games.ffb.IRollModifier;
 import com.balancedbytes.games.ffb.model.Game;
-import com.balancedbytes.games.ffb.model.ModifierDictionary;
 import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.model.Skill;
-import com.balancedbytes.games.ffb.modifiers.ModifierContext;
+import com.balancedbytes.games.ffb.modifiers.ModifierAggregator;
 import com.balancedbytes.games.ffb.modifiers.ModifierCollection;
+import com.balancedbytes.games.ffb.modifiers.ModifierContext;
 import com.balancedbytes.games.ffb.util.Scanner;
 import com.balancedbytes.games.ffb.util.UtilCards;
 import com.balancedbytes.games.ffb.util.UtilDisturbingPresence;
@@ -36,10 +36,10 @@ public abstract class GenerifiedModifierFactory<
 		getScanner()
 			.getSubclasses(game.getOptions()).stream().findFirst()
 			.ifPresent(this::setModifierCollection);
-		getModifierCollection().postConstruct(game.getDictionary());
-		dictionary = game.getDictionary();
+		modifierAggregator = game.getModifierAggregator();
 	}
-	protected ModifierDictionary dictionary;
+
+	protected ModifierAggregator modifierAggregator;
 
 	protected abstract Scanner<R> getScanner();
 
@@ -89,7 +89,7 @@ public abstract class GenerifiedModifierFactory<
 	public Set<V> findModifiers(I input) {
 		Set<V> modifiers = findModifiersInternal(input);
 		Arrays.stream(UtilCards.findAllActiveCards(input.getGame()))
-			.flatMap((Function<Card, Stream<IRollModifier<?>>>) card -> card.modifiers(dictionary).stream())
+			.flatMap((Function<Card, Stream<IRollModifier<?>>>) card -> card.modifiers().stream())
 			.map(this::checkClass)
 			.filter(Optional::isPresent)
 			.map(Optional::get)

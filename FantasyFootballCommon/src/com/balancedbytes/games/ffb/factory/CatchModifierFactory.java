@@ -18,6 +18,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Stream;
 
 /**
  * @author Kalimar
@@ -76,7 +77,12 @@ public class CatchModifierFactory extends GenerifiedModifierFactory<CatchContext
 
 	@Override
 	public CatchModifier forName(String name) {
-		return dictionary.catchModifier(name);
+		return Stream.concat(
+			catchModifiers.getAllModifiers().stream(),
+			modifierAggregator.getCatchModifiers().stream())
+			.filter(modifier -> modifier.getName().equals(name))
+			.findFirst()
+			.orElse(null);
 	}
 
 	public static class CatchModifierCalculationInput extends GenerifiedModifierFactory.ModifierCalculationInput<CatchContext> {

@@ -41,7 +41,7 @@ public abstract class Skill implements INamedObject {
 		this.category = category;
 	}
 
-	public void postConstruct(ModifierDictionary dictionary) {}
+	public void postConstruct() {}
 
 	@Override
 	public String getName() {

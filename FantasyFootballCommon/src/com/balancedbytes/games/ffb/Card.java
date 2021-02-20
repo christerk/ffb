@@ -1,15 +1,14 @@
 package com.balancedbytes.games.ffb;
 
+import com.balancedbytes.games.ffb.factory.InducementPhaseFactory;
+import com.balancedbytes.games.ffb.modifiers.InterceptionContext;
+import com.balancedbytes.games.ffb.modifiers.InterceptionModifier;
+import com.balancedbytes.games.ffb.util.UtilCards;
+
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Set;
-
-import com.balancedbytes.games.ffb.factory.InducementPhaseFactory;
-import com.balancedbytes.games.ffb.model.ModifierDictionary;
-import com.balancedbytes.games.ffb.modifiers.InterceptionContext;
-import com.balancedbytes.games.ffb.modifiers.InterceptionModifier;
-import com.balancedbytes.games.ffb.util.UtilCards;
 
 /**
  * 
@@ -59,8 +58,8 @@ public enum Card implements INamedObject {
 			new InducementPhase[] { InducementPhase.START_OF_OWN_TURN }, InducementDuration.UNTIL_END_OF_TURN,
 			"Player gets Pass & Accurate, opponents get +1 to intercept") {
 		@Override
-		public Set<IRollModifier<?>> modifiers(ModifierDictionary dictionary) {
-			return Collections.singleton(new InterceptionModifier("Fawndough's Headband", -1, false, false, dictionary) {
+		public Set<IRollModifier<?>> modifiers() {
+			return Collections.singleton(new InterceptionModifier("Fawndough's Headband", -1, false, false) {
 					@Override
 					public boolean appliesToContext(InterceptionContext context) {
 						return super.appliesToContext(context) && UtilCards.hasCard(context.getGame(), context.getGame().getThrower(), Card.FAWNDOUGHS_HEADBAND);
@@ -163,8 +162,8 @@ public enum Card implements INamedObject {
 			new InducementPhase[] { InducementPhase.END_OF_OWN_TURN, InducementPhase.AFTER_KICKOFF_TO_OPPONENT },
 			InducementDuration.UNTIL_END_OF_DRIVE, "Player gets Pass Block & +1 to interception") {
 		@Override
-		public Set<IRollModifier<?>> modifiers(ModifierDictionary dictionary) {
-			return Collections.singleton(new InterceptionModifier("Magic Gloves of Jark Longarm", -1, false, false, dictionary) {
+		public Set<IRollModifier<?>> modifiers() {
+			return Collections.singleton(new InterceptionModifier("Magic Gloves of Jark Longarm", -1, false, false) {
 				@Override
 				public boolean appliesToContext(InterceptionContext context) {
 					return super.appliesToContext(context) && UtilCards.hasCard(context.getGame(), context.getPlayer(), Card.MAGIC_GLOVES_OF_JARK_LONGARM);
@@ -500,7 +499,7 @@ public enum Card implements INamedObject {
 			new InducementPhaseFactory().getDescription(getPhases());
 	}
 
-	public Set<IRollModifier<?>> modifiers(ModifierDictionary dictionary) {
+	public Set<IRollModifier<?>> modifiers() {
 		return Collections.emptySet();
 	}
 

@@ -251,7 +251,7 @@ public class ModelChangeProcessor {
 			return true;
 
 		case INDUCEMENT_SET_ACTIVATE_CARD:
-			getInducementSet(pGame, isHomeData(pModelChange)).activateCard((Card) pModelChange.getValue(), pGame.getDictionary());
+			getInducementSet(pGame, isHomeData(pModelChange)).activateCard((Card) pModelChange.getValue());
 			return true;
 		case INDUCEMENT_SET_ADD_AVAILABLE_CARD:
 			getInducementSet(pGame, isHomeData(pModelChange)).addAvailableCard((Card) pModelChange.getValue());

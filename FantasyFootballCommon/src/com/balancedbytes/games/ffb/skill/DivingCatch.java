@@ -4,7 +4,6 @@ import com.balancedbytes.games.ffb.CatchScatterThrowInMode;
 import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.RulesCollection.Rules;
 import com.balancedbytes.games.ffb.SkillCategory;
-import com.balancedbytes.games.ffb.model.ModifierDictionary;
 import com.balancedbytes.games.ffb.model.Skill;
 import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
 import com.balancedbytes.games.ffb.modifiers.CatchContext;
@@ -29,10 +28,10 @@ public class DivingCatch extends Skill {
 	}
 
 	@Override
-	public void postConstruct(ModifierDictionary dictionary) {
+	public void postConstruct() {
 		registerProperty(NamedProperties.canAttemptCatchInAdjacentSquares);
 		registerProperty(NamedProperties.addBonusForAccuratePass);
-		registerModifier(new CatchModifier("Diving Catch", -1, false, false, dictionary) {
+		registerModifier(new CatchModifier("Diving Catch", -1, false, false) {
 			@Override
 			public boolean appliesToContext(CatchContext context) {
 

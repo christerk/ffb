@@ -71,7 +71,7 @@ public class SkillFactory implements INamedObjectFactory<Skill> {
 
 		scanner.getSubclasses(game.getOptions()).forEach(this::addSkill);
 		skills.values().forEach(s -> {
-			s.postConstruct(game.getDictionary());
+			s.postConstruct();
 			if (game.getRules() != null) {
 				game.getRules().<PassModifierFactory>getFactory(Factory.PASS_MODIFIER).register(s.getPassModifiers());
 			}

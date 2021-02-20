@@ -3,7 +3,6 @@ package com.balancedbytes.games.ffb.skill;
 import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.RulesCollection.Rules;
 import com.balancedbytes.games.ffb.SkillCategory;
-import com.balancedbytes.games.ffb.model.ModifierDictionary;
 import com.balancedbytes.games.ffb.model.Skill;
 import com.balancedbytes.games.ffb.model.SkillConstants;
 import com.balancedbytes.games.ffb.model.modifier.CancelSkillProperty;
@@ -23,7 +22,7 @@ public class Juggernaut extends Skill {
 	}
 
 	@Override
-	public void postConstruct(ModifierDictionary dictionary) {
+	public void postConstruct() {
 		registerProperty(new CancelSkillProperty(SkillConstants.JUGGERNAUT));
 		registerProperty(new CancelSkillProperty(SkillConstants.WRESTLE));
 		registerProperty(new CancelSkillProperty(SkillConstants.STAND_FIRM));

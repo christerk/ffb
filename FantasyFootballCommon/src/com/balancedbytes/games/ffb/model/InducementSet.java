@@ -129,14 +129,13 @@ public class InducementSet implements IXmlSerializable, IJsonSerializable {
 		return fCardsAvailable.contains(pCard);
 	}
 
-	public boolean activateCard(Card pCard, ModifierDictionary dictionary) {
+	public boolean activateCard(Card pCard) {
 		if (pCard == null) {
 			return false;
 		}
 		boolean removed = fCardsAvailable.remove(pCard);
 		if (removed) {
 			fCardsActive.add(pCard);
-			pCard.modifiers(dictionary); // register modifiers in dictionary on client side
 		}
 		notifyObservers(ModelChangeId.INDUCEMENT_SET_ACTIVATE_CARD, pCard);
 		return removed;
@@ -185,7 +184,7 @@ public class InducementSet implements IXmlSerializable, IJsonSerializable {
 	}
 
 	// add cards and standard inducements from given inducementSet
-	public void add(InducementSet pInducementSet, ModifierDictionary dictionary) {
+	public void add(InducementSet pInducementSet) {
 		if (pInducementSet != null) {
 			for (Inducement inducement : pInducementSet.getInducements()) {
 				Inducement initInducement = new Inducement(inducement.getType(), inducement.getValue());
@@ -195,7 +194,7 @@ public class InducementSet implements IXmlSerializable, IJsonSerializable {
 			for (Card card : pInducementSet.getAllCards()) {
 				addAvailableCard(card);
 				if (pInducementSet.isActive(card) || pInducementSet.isDeactivated(card)) {
-					activateCard(card, dictionary);
+					activateCard(card);
 					if (pInducementSet.isDeactivated(card)) {
 						deactivateCard(card);
 					}

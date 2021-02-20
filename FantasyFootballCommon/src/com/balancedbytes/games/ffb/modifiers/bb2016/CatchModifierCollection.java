@@ -2,7 +2,6 @@ package com.balancedbytes.games.ffb.modifiers.bb2016;
 
 import com.balancedbytes.games.ffb.CatchScatterThrowInMode;
 import com.balancedbytes.games.ffb.RulesCollection;
-import com.balancedbytes.games.ffb.model.ModifierDictionary;
 import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
 import com.balancedbytes.games.ffb.modifiers.CatchContext;
 import com.balancedbytes.games.ffb.modifiers.CatchModifier;
@@ -12,10 +11,11 @@ import java.util.Set;
 
 @RulesCollection(RulesCollection.Rules.BB2016)
 public class CatchModifierCollection extends com.balancedbytes.games.ffb.modifiers.CatchModifierCollection {
-	public void postConstruct(ModifierDictionary dictionary) {
-		super.postConstruct(dictionary);
 
-		add(new CatchModifier("Accurate Pass", -1, false, false, dictionary) {
+	public CatchModifierCollection() {
+		super();
+
+		add(new CatchModifier("Accurate Pass", -1, false, false) {
 			private final Set<CatchScatterThrowInMode> accurate = new HashSet<CatchScatterThrowInMode>() {
 				private static final long serialVersionUID = -9147805080834490230L;
 				{
@@ -41,7 +41,7 @@ public class CatchModifierCollection extends com.balancedbytes.games.ffb.modifie
 								accurateAdjacent.contains(context.getCatchMode())));
 			}
 		});
-		add(new CatchModifier("Hand Off", -1, false, false, dictionary) {
+		add(new CatchModifier("Hand Off", -1, false, false) {
 			@Override
 			public boolean appliesToContext(CatchContext context) {
 				return super.appliesToContext(context) && CatchScatterThrowInMode.CATCH_HAND_OFF == context.getCatchMode();
