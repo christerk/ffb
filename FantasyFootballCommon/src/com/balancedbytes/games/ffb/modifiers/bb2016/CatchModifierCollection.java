@@ -2,9 +2,11 @@ package com.balancedbytes.games.ffb.modifiers.bb2016;
 
 import com.balancedbytes.games.ffb.CatchScatterThrowInMode;
 import com.balancedbytes.games.ffb.RulesCollection;
+import com.balancedbytes.games.ffb.model.Skill;
 import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
 import com.balancedbytes.games.ffb.modifiers.CatchContext;
 import com.balancedbytes.games.ffb.modifiers.CatchModifier;
+import com.balancedbytes.games.ffb.modifiers.ModifierType;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -15,7 +17,7 @@ public class CatchModifierCollection extends com.balancedbytes.games.ffb.modifie
 	public CatchModifierCollection() {
 		super();
 
-		add(new CatchModifier("Accurate Pass", -1, false, false) {
+		add(new CatchModifier("Accurate Pass", -1, ModifierType.REGULAR) {
 			private final Set<CatchScatterThrowInMode> accurate = new HashSet<CatchScatterThrowInMode>() {
 				private static final long serialVersionUID = -9147805080834490230L;
 				{
@@ -33,18 +35,18 @@ public class CatchModifierCollection extends com.balancedbytes.games.ffb.modifie
 			};
 
 			@Override
-			public boolean appliesToContext(CatchContext context) {
+			public boolean appliesToContext(Skill skill, CatchContext context) {
 				return
-					super.appliesToContext(context) &&
+					super.appliesToContext(skill, context) &&
 						(accurate.contains(context.getCatchMode()) ||
 							(context.getPlayer() != null && context.getPlayer().hasSkillWithProperty(NamedProperties.addBonusForAccuratePass) &&
 								accurateAdjacent.contains(context.getCatchMode())));
 			}
 		});
-		add(new CatchModifier("Hand Off", -1, false, false) {
+		add(new CatchModifier("Hand Off", -1, ModifierType.REGULAR) {
 			@Override
-			public boolean appliesToContext(CatchContext context) {
-				return super.appliesToContext(context) && CatchScatterThrowInMode.CATCH_HAND_OFF == context.getCatchMode();
+			public boolean appliesToContext(Skill skill, CatchContext context) {
+				return super.appliesToContext(skill, context) && CatchScatterThrowInMode.CATCH_HAND_OFF == context.getCatchMode();
 			}
 		});
 

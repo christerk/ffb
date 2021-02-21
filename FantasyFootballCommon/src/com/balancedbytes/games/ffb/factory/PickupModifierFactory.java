@@ -8,6 +8,7 @@ import com.balancedbytes.games.ffb.RulesCollection.Rules;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
+import com.balancedbytes.games.ffb.modifiers.ModifierType;
 import com.balancedbytes.games.ffb.util.UtilCards;
 import com.balancedbytes.games.ffb.util.UtilPlayer;
 
@@ -71,7 +72,7 @@ public class PickupModifierFactory implements IRollModifierFactory<PickupModifie
 		if (tacklezones > 0) {
 			for (Map.Entry<String, PickupModifier> entry : pickupModifiers.values().entrySet()) {
 				PickupModifier modifier = entry.getValue();
-				if (modifier.isTacklezoneModifier() && (modifier.getModifier() == tacklezones)) {
+				if (modifier.getType() == ModifierType.TACKLEZONE && (modifier.getModifier() == tacklezones)) {
 					return modifier;
 				}
 			}

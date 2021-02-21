@@ -1,5 +1,8 @@
 package com.balancedbytes.games.ffb;
 
+import com.balancedbytes.games.ffb.modifiers.IRollModifier;
+import com.balancedbytes.games.ffb.modifiers.ModifierType;
+
 /**
  * 
  * @author Kalimar
@@ -8,12 +11,19 @@ public enum GoForItModifier implements IRollModifier {
 
 	BLIZZARD("Blizzard", 1), GREASED_SHOES("Greased Shoes", 3);
 
-	private String fName;
-	private int fModifier;
+	private final String fName;
+	private final int fModifier;
+	private final ModifierType type;
 
-	private GoForItModifier(String pName, int pModifier) {
+	GoForItModifier(String pName, int pModifier) {
 		fName = pName;
 		fModifier = pModifier;
+		type = ModifierType.REGULAR;
+	}
+
+	@Override
+	public ModifierType getType() {
+		return type;
 	}
 
 	public int getModifier() {

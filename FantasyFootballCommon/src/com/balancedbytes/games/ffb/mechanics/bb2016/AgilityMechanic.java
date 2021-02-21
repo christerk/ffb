@@ -2,8 +2,7 @@ package com.balancedbytes.games.ffb.mechanics.bb2016;
 
 import com.balancedbytes.games.ffb.mechanics.Wording;
 import com.balancedbytes.games.ffb.modifiers.CatchModifier;
-import com.balancedbytes.games.ffb.DodgeModifier;
-import com.balancedbytes.games.ffb.DodgeModifiers;
+import com.balancedbytes.games.ffb.modifiers.DodgeModifier;
 import com.balancedbytes.games.ffb.GazeModifier;
 import com.balancedbytes.games.ffb.modifiers.InterceptionModifier;
 import com.balancedbytes.games.ffb.LeapModifier;
@@ -16,6 +15,7 @@ import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.report.ReportSkillRoll;
 import com.balancedbytes.games.ffb.util.UtilCards;
 
+import java.util.Arrays;
 import java.util.Set;
 
 @RulesCollection(RulesCollection.Rules.BB2016)
@@ -36,7 +36,7 @@ public class AgilityMechanic extends com.balancedbytes.games.ffb.mechanics.Agili
 		for (DodgeModifier dodgeModifier : pDodgeModifiers) {
 			modifierTotal += dodgeModifier.getModifier();
 		}
-		int statistic = pDodgeModifiers.contains(DodgeModifiers.BREAK_TACKLE) ? UtilCards.getPlayerStrength(pGame, pPlayer)
+		int statistic = pDodgeModifiers.stream().anyMatch(DodgeModifier::isUseStrength) ? UtilCards.getPlayerStrength(pGame, pPlayer)
 			: pPlayer.getAgility();
 		return Math.max(2, getAgilityRollBase(statistic) - 1 + modifierTotal);
 	}
@@ -100,10 +100,14 @@ public class AgilityMechanic extends com.balancedbytes.games.ffb.mechanics.Agili
 		return Math.max(2, getAgilityRollBase(pPlayer.getAgility()));
 	}
 
+	private boolean usedStrength(ReportSkillRoll report) {
+		return Arrays.stream(report.getRollModifiers()).anyMatch(modifier -> modifier instanceof  DodgeModifier && ((DodgeModifier)modifier).isUseStrength());
+	}
+
 	@Override
 	public String formatDodgeResult(ReportSkillRoll report, ActingPlayer player) {
 		StringBuilder neededRoll = new StringBuilder();
-		if (report.hasRollModifier(DodgeModifiers.BREAK_TACKLE)) {
+		if (usedStrength(report)) {
 			neededRoll.append(" using Break Tackle (ST ").append(Math.min(6, player.getStrength()));
 		} else {
 			neededRoll.append(" (AG ").append(Math.min(6, player.getPlayer().getAgility()));

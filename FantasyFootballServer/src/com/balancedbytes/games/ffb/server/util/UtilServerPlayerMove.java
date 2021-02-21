@@ -2,7 +2,8 @@ package com.balancedbytes.games.ffb.server.util;
 
 import java.util.Set;
 
-import com.balancedbytes.games.ffb.DodgeModifier;
+import com.balancedbytes.games.ffb.modifiers.DodgeContext;
+import com.balancedbytes.games.ffb.modifiers.DodgeModifier;
 import com.balancedbytes.games.ffb.FactoryType.Factory;
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.FieldCoordinateBounds;
@@ -134,7 +135,7 @@ public class UtilServerPlayerMove {
 			goForIt = UtilPlayer.isNextMoveGoingForIt(game);
 			if (dodging) {
 				DodgeModifierFactory modifierFactory = game.getFactory(Factory.DODGE_MODIFIER);
-				Set<DodgeModifier> dodgeModifiers = modifierFactory.findDodgeModifiers(game, playerCoordinate, pCoordinate, 0);
+				Set<DodgeModifier> dodgeModifiers = modifierFactory.findModifiers(new DodgeContext(game, actingPlayer, playerCoordinate, pCoordinate));
 				minimumRollDodge = mechanic.minimumRollDodge(game, actingPlayer.getPlayer(),
 						dodgeModifiers);
 			}

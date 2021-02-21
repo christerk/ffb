@@ -4,8 +4,8 @@ import com.balancedbytes.games.ffb.ArmorModifier;
 import com.balancedbytes.games.ffb.ArmorModifiers.ArmorModifierContext;
 import com.balancedbytes.games.ffb.Card;
 import com.balancedbytes.games.ffb.CardEffect;
-import com.balancedbytes.games.ffb.DodgeModifier;
-import com.balancedbytes.games.ffb.DodgeModifiers.DodgeContext;
+import com.balancedbytes.games.ffb.modifiers.DodgeModifier;
+import com.balancedbytes.games.ffb.modifiers.DodgeContext;
 import com.balancedbytes.games.ffb.FactoryType;
 import com.balancedbytes.games.ffb.InjuryModifier;
 import com.balancedbytes.games.ffb.InjuryModifier.InjuryModifierContext;
@@ -67,7 +67,7 @@ public final class UtilCards {
 
 		for (Skill skill : thrower.getSkills()) {
 			for (PassModifier modifier : skill.getPassModifiers()) {
-				if (modifier.appliesToContext(context)) {
+				if (modifier.appliesToContext(skill, context)) {
 					result.add(modifier);
 				}
 			}

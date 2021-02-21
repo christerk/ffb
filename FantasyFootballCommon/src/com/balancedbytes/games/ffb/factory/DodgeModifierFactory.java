@@ -1,8 +1,9 @@
 package com.balancedbytes.games.ffb.factory;
 
-import com.balancedbytes.games.ffb.DodgeModifier;
-import com.balancedbytes.games.ffb.DodgeModifiers;
-import com.balancedbytes.games.ffb.DodgeModifiers.DodgeContext;
+import com.balancedbytes.games.ffb.modifiers.IRollModifier;
+import com.balancedbytes.games.ffb.model.Skill;
+import com.balancedbytes.games.ffb.modifiers.DodgeModifier;
+import com.balancedbytes.games.ffb.modifiers.DodgeContext;
 import com.balancedbytes.games.ffb.FactoryType;
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.RulesCollection;
@@ -13,13 +14,16 @@ import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.model.SkillConstants;
 import com.balancedbytes.games.ffb.model.Team;
 import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
+import com.balancedbytes.games.ffb.modifiers.DodgeModifierCollection;
+import com.balancedbytes.games.ffb.modifiers.ModifierType;
+import com.balancedbytes.games.ffb.util.Scanner;
 import com.balancedbytes.games.ffb.util.UtilCards;
 import com.balancedbytes.games.ffb.util.UtilPlayer;
 
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.Map;
+import java.util.Collection;
+import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Stream;
 
 /**
  *
@@ -27,72 +31,27 @@ import java.util.Set;
  */
 @FactoryType(FactoryType.Factory.DODGE_MODIFIER)
 @RulesCollection(Rules.COMMON)
-public class DodgeModifierFactory implements IRollModifierFactory<DodgeModifier> {
+public class DodgeModifierFactory extends GenerifiedModifierFactory<DodgeContext, DodgeModifier, DodgeModifierCollection> {
 
-	static DodgeModifiers dodgeModifiers;
+	private DodgeModifierCollection dodgeModifierCollection = new DodgeModifierCollection();
 
-	public DodgeModifierFactory() {
-		dodgeModifiers = new DodgeModifiers();
+	public DodgeModifier forName(String name) {
+		return Stream.concat(
+			dodgeModifierCollection.getModifiers().stream(),
+			modifierAggregator.getDodgeModifiers().stream())
+			.filter(modifier -> modifier.getName().equals(name))
+			.findFirst()
+			.orElse(null);
 	}
 
-	public DodgeModifier forName(String pName) {
-		return dodgeModifiers.values().get(pName.toLowerCase());
-	}
+	@Override
+	public Set<DodgeModifier> findModifiers(DodgeContext context) {
+		Set<DodgeModifier> dodgeModifiers = super.findModifiers(context);
 
-	public Set<DodgeModifier> findDodgeModifiers(Game pGame, FieldCoordinate pCoordinateFrom,
-			FieldCoordinate pCoordinateTo, int pTacklezoneModifier) {
-		ActingPlayer actingPlayer = pGame.getActingPlayer();
+		prehensileTailModifier(findNumberOfPrehensileTails(context.getGame(), context.getTargetCoordinate()))
+			.ifPresent(dodgeModifiers::add);
 
-		DodgeContext context = new DodgeContext(actingPlayer, pCoordinateFrom);
-		Set<DodgeModifier> accumulatedModifiers = activeModifiers(pGame, DodgeModifier.class);
-
-		accumulatedModifiers.addAll(UtilCards.getDodgeModifiers(actingPlayer, context));
-
-		DodgeModifier tacklezoneModifier = findTacklezoneModifier(pGame, pCoordinateTo, pTacklezoneModifier);
-
-		int prehensileTails = findNumberOfPrehensileTails(pGame, pCoordinateFrom);
-
-		DodgeModifier prehensileTailModifier = dodgeModifiers.prehensileTailModifier(prehensileTails);
-
-		if (prehensileTailModifier != null) {
-			accumulatedModifiers.add(prehensileTailModifier);
-		}
-
-		boolean preventStunty = actingPlayer.getPlayer().hasSkillWithProperty(NamedProperties.preventStuntyDodgeModifier);
-		if (tacklezoneModifier != null && (context.addTackleZoneModifier || preventStunty)) {
-			accumulatedModifiers.add(tacklezoneModifier);
-		}
-
-		return accumulatedModifiers;
-	}
-
-	public DodgeModifier[] toArray(Set<DodgeModifier> pDodgeModifierSet) {
-		if (pDodgeModifierSet != null) {
-			DodgeModifier[] dodgeModifierArray = pDodgeModifierSet.toArray(new DodgeModifier[0]);
-			Arrays.sort(dodgeModifierArray, Comparator.comparing(DodgeModifier::getName));
-			return dodgeModifierArray;
-		} else {
-			return new DodgeModifier[0];
-		}
-	}
-
-	private DodgeModifier findTacklezoneModifier(Game pGame, FieldCoordinate pCoordinateTo, int pModifier) {
-		ActingPlayer actingPlayer = pGame.getActingPlayer();
-		Team otherTeam = UtilPlayer.findOtherTeam(pGame, actingPlayer.getPlayer());
-		int tacklezones = pModifier;
-		Player<?>[] adjacentPlayers = UtilPlayer.findAdjacentPlayersWithTacklezones(pGame, otherTeam, pCoordinateTo, false);
-		for (Player<?> player : adjacentPlayers) {
-			if (!player.hasSkillWithProperty(NamedProperties.hasNoTacklezone)) {
-				tacklezones++;
-			}
-		}
-		for (Map.Entry<String, DodgeModifier> entry : dodgeModifiers.values().entrySet()) {
-			DodgeModifier modifier = entry.getValue();
-			if (modifier.isTacklezoneModifier() && (modifier.getModifier() == tacklezones)) {
-				return modifier;
-			}
-		}
-		return null;
+		return dodgeModifiers;
 	}
 
 	private int findNumberOfPrehensileTails(Game pGame, FieldCoordinate pCoordinateFrom) {
@@ -108,7 +67,50 @@ public class DodgeModifierFactory implements IRollModifierFactory<DodgeModifier>
 		return nrOfPrehensileTails;
 	}
 
+	private Optional<DodgeModifier> prehensileTailModifier(int number) {
+		return dodgeModifierCollection.getModifiers(ModifierType.PREHENSILE_TAIL).stream()
+			.filter(modifier -> modifier.getModifier() == number)
+			.findFirst();
+	}
+
 	@Override
-	public void initialize(Game game) {
+	protected Scanner<DodgeModifierCollection> getScanner() {
+		return new Scanner<>(DodgeModifierCollection.class);
+	}
+
+	@Override
+	protected DodgeModifierCollection getModifierCollection() {
+		return dodgeModifierCollection;
+	}
+
+	@Override
+	protected void setModifierCollection(DodgeModifierCollection modifierCollection) {
+		dodgeModifierCollection = modifierCollection;
+	}
+
+	@Override
+	protected Collection<DodgeModifier> getModifier(Skill skill) {
+		return skill.getDodgeModifiers();
+	}
+
+	@Override
+	protected Optional<DodgeModifier> checkClass(IRollModifier<?> modifier) {
+		return modifier instanceof DodgeModifier ? Optional.of((DodgeModifier) modifier) : Optional.empty();
+	}
+
+	@Override
+	protected boolean isAffectedByDisturbingPresence(DodgeContext context) {
+		return false;
+	}
+
+	@Override
+	protected boolean isAffectedByTackleZones(DodgeContext context) {
+		return !context.getPlayer().hastActiveProperty(NamedProperties.ignoreTacklezonesWhenDodging);
+	}
+
+	@Override
+	protected int numberOfTacklzones(DodgeContext context) {
+		Team team = UtilPlayer.findOtherTeam(context.getGame(), context.getActingPlayer().getPlayer());
+		return UtilPlayer.findAdjacentPlayersWithTacklezones(context.getGame(), team, context.getTargetCoordinate(), false).length;
 	}
 }

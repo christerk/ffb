@@ -1,7 +1,6 @@
 package com.balancedbytes.games.ffb.modifiers;
 
 import com.balancedbytes.games.ffb.FactoryType;
-import com.balancedbytes.games.ffb.IRollModifier;
 import com.balancedbytes.games.ffb.factory.SkillFactory;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.util.UtilCards;
@@ -47,6 +46,16 @@ public class ModifierAggregator {
 				.flatMap(card -> card.modifiers().stream())
 				.filter(modifier -> modifier instanceof PassModifier)
 				.map(modifier -> (PassModifier)modifier))
+			.collect(Collectors.toSet());
+	}
+
+	public Set<DodgeModifier> getDodgeModifiers() {
+		return Stream.concat(
+			skillFactory.getSkills().stream().flatMap(skill -> skill.getDodgeModifiers().stream()),
+			Arrays.stream(UtilCards.findAllActiveCards(game))
+				.flatMap(card -> card.modifiers().stream())
+				.filter(modifier -> modifier instanceof DodgeModifier)
+				.map(modifier -> (DodgeModifier)modifier))
 			.collect(Collectors.toSet());
 	}
 }

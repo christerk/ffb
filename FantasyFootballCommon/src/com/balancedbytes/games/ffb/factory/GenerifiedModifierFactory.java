@@ -1,13 +1,14 @@
 package com.balancedbytes.games.ffb.factory;
 
 import com.balancedbytes.games.ffb.Card;
-import com.balancedbytes.games.ffb.IRollModifier;
+import com.balancedbytes.games.ffb.modifiers.IRollModifier;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.model.Skill;
 import com.balancedbytes.games.ffb.modifiers.ModifierAggregator;
 import com.balancedbytes.games.ffb.modifiers.ModifierCollection;
 import com.balancedbytes.games.ffb.modifiers.ModifierContext;
+import com.balancedbytes.games.ffb.modifiers.ModifierType;
 import com.balancedbytes.games.ffb.util.Scanner;
 import com.balancedbytes.games.ffb.util.UtilCards;
 import com.balancedbytes.games.ffb.util.UtilDisturbingPresence;
@@ -48,14 +49,18 @@ public abstract class GenerifiedModifierFactory<
 
 	private Optional<V> getDisturbingPresenceModifier(Game pGame, Player<?> pPlayer) {
 		int disturbingPresences = UtilDisturbingPresence.findOpposingDisturbingPresences(pGame, pPlayer);
-		return getModifierCollection().getDisturbingPresenceModifiers().stream()
+		return getModifierCollection().getModifiers(ModifierType.DISTURBING_PRESENCE).stream()
 			.filter(modifier -> modifier.getMultiplier() == disturbingPresences)
 			.findFirst();
 	}
 
-	private Optional<V> getTacklezoneModifier(Game pGame, Player<?> pPlayer) {
-		int tacklezones = UtilPlayer.findTacklezones(pGame, pPlayer);
-		return getModifierCollection().getTacklezoneModifiers().stream()
+	protected int numberOfTacklzones(C context) {
+		return UtilPlayer.findTacklezones(context.getGame(), context.getPlayer());
+	}
+
+	private Optional<V> getTacklezoneModifier(C context) {
+		int tacklezones = numberOfTacklzones(context);
+		return getModifierCollection().getModifiers(ModifierType.TACKLEZONE).stream()
 			.filter(modifier -> modifier.getMultiplier() == tacklezones)
 			.findFirst();
 	}
@@ -71,7 +76,7 @@ public abstract class GenerifiedModifierFactory<
 
 		for (Skill skill : context.getPlayer().getSkills()) {
 			for (V modifier : getModifier(skill)) {
-				if (modifier.appliesToContext(context)) {
+				if (modifier.appliesToContext(skill, context)) {
 					result.add(modifier);
 				}
 			}
@@ -90,15 +95,15 @@ public abstract class GenerifiedModifierFactory<
 			.map(this::checkClass)
 			.filter(Optional::isPresent)
 			.map(Optional::get)
-			.filter(modifier -> modifier.appliesToContext(context))
+			.filter(modifier -> modifier.appliesToContext(null, context))
 			.forEach(modifiers::add);
 
-		getModifierCollection().getOtherModifiers().stream()
-			.filter(passModifier -> passModifier.appliesToContext(context))
+		getModifierCollection().getModifiers(ModifierType.REGULAR).stream()
+			.filter(passModifier -> passModifier.appliesToContext(null, context))
 			.forEach(modifiers::add);
 
 		if (isAffectedByTackleZones(context)) {
-			getTacklezoneModifier(context.getGame(), context.getPlayer()).ifPresent(modifiers::add);
+			getTacklezoneModifier(context).ifPresent(modifiers::add);
 		}
 
 		if (isAffectedByDisturbingPresence(context)) {

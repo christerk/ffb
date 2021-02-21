@@ -1,7 +1,7 @@
 package com.balancedbytes.games.ffb.factory;
 
 import com.balancedbytes.games.ffb.FactoryType;
-import com.balancedbytes.games.ffb.IRollModifier;
+import com.balancedbytes.games.ffb.modifiers.IRollModifier;
 import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.RulesCollection.Rules;
 import com.balancedbytes.games.ffb.model.Skill;
@@ -27,7 +27,7 @@ public class InterceptionModifierFactory extends GenerifiedModifierFactory<Inter
 	@Override
 	public InterceptionModifier forName(String name) {
 		return Stream.concat(
-			interceptionModifiers.getAllModifiers().stream(),
+			interceptionModifiers.getModifiers().stream(),
 			modifierAggregator.getInterceptionModifiers().stream())
 			.filter(modifier -> modifier.getName().equals(name))
 			.findFirst()

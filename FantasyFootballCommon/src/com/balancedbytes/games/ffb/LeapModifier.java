@@ -2,6 +2,8 @@ package com.balancedbytes.games.ffb;
 
 import com.balancedbytes.games.ffb.LeapModifiers.LeapContext;
 import com.balancedbytes.games.ffb.model.Skill;
+import com.balancedbytes.games.ffb.modifiers.IRollModifier;
+import com.balancedbytes.games.ffb.modifiers.ModifierType;
 
 /**
  * 
@@ -11,12 +13,14 @@ public class LeapModifier implements IRollModifier {
 
 	// TODO: create factory for this
 
-	private String fName;
-	private int fModifier;
+	private final String fName;
+	private final int fModifier;
+	private final ModifierType type;
 
-	LeapModifier(String pName, int pModifier) {
+	LeapModifier(String pName, int pModifier, ModifierType type) {
 		fName = pName;
 		fModifier = pModifier;
+		this.type = type;
 	}
 
 	public int getModifier() {
@@ -25,6 +29,11 @@ public class LeapModifier implements IRollModifier {
 
 	public String getName() {
 		return fName;
+	}
+
+	@Override
+	public ModifierType getType() {
+		return type;
 	}
 
 	public boolean isModifierIncluded() {

@@ -1,24 +1,32 @@
 package com.balancedbytes.games.ffb;
 
+import com.balancedbytes.games.ffb.modifiers.IRollModifier;
+import com.balancedbytes.games.ffb.modifiers.ModifierType;
+
 /**
  * 
  * @author Kalimar
  */
 public enum GazeModifier implements IRollModifier {
 
-	TACKLEZONES_1("1 Tacklezone", 1, true), TACKLEZONES_2("2 Tacklezones", 2, true),
-	TACKLEZONES_3("3 Tacklezones", 3, true), TACKLEZONES_4("4 Tacklezones", 4, true),
-	TACKLEZONES_5("5 Tacklezones", 5, true), TACKLEZONES_6("6 Tacklezones", 6, true),
-	TACKLEZONES_7("7 Tacklezones", 7, true), TACKLEZONES_8("8 Tacklezones", 8, true);
+	TACKLEZONES_1("1 Tacklezone", 1, ModifierType.TACKLEZONE), TACKLEZONES_2("2 Tacklezones", 2, ModifierType.TACKLEZONE),
+	TACKLEZONES_3("3 Tacklezones", 3, ModifierType.TACKLEZONE), TACKLEZONES_4("4 Tacklezones", 4, ModifierType.TACKLEZONE),
+	TACKLEZONES_5("5 Tacklezones", 5, ModifierType.TACKLEZONE), TACKLEZONES_6("6 Tacklezones", 6, ModifierType.TACKLEZONE),
+	TACKLEZONES_7("7 Tacklezones", 7, ModifierType.TACKLEZONE), TACKLEZONES_8("8 Tacklezones", 8, ModifierType.TACKLEZONE);
 
-	private String fName;
-	private int fModifier;
-	private boolean fTacklezoneModifier;
+	private final String fName;
+	private final int fModifier;
+	private final ModifierType type;
 
-	private GazeModifier(String pName, int pModifier, boolean pTacklezoneModifier) {
+	GazeModifier(String pName, int pModifier, ModifierType type) {
 		fName = pName;
 		fModifier = pModifier;
-		fTacklezoneModifier = pTacklezoneModifier;
+		this.type = type;
+	}
+
+	@Override
+	public ModifierType getType() {
+		return type;
 	}
 
 	public int getModifier() {
@@ -29,12 +37,8 @@ public enum GazeModifier implements IRollModifier {
 		return fName;
 	}
 
-	public boolean isTacklezoneModifier() {
-		return fTacklezoneModifier;
-	}
-
 	public boolean isModifierIncluded() {
-		return isTacklezoneModifier();
+		return type == ModifierType.TACKLEZONE;
 	}
 
 	@Override

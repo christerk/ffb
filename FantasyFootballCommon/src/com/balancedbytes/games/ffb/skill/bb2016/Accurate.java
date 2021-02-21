@@ -1,5 +1,6 @@
 package com.balancedbytes.games.ffb.skill.bb2016;
 
+import com.balancedbytes.games.ffb.modifiers.ModifierType;
 import com.balancedbytes.games.ffb.modifiers.PassModifier;
 import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.RulesCollection.Rules;
@@ -18,7 +19,7 @@ public class Accurate extends Skill {
 
 	@Override
 	public void postConstruct(){
-		registerModifier(new PassModifier("Accurate", -1, false, false));
+		registerModifier(new PassModifier("Accurate", -1, ModifierType.REGULAR));
 	}
 
 }

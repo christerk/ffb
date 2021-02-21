@@ -1,5 +1,6 @@
 package com.balancedbytes.games.ffb.skill;
 
+import com.balancedbytes.games.ffb.modifiers.ModifierType;
 import com.balancedbytes.games.ffb.modifiers.PassModifier;
 import com.balancedbytes.games.ffb.PassingDistance;
 import com.balancedbytes.games.ffb.modifiers.PassContext;
@@ -21,9 +22,9 @@ public class StrongArm extends Skill {
 
 	@Override
 	public void postConstruct() {
-		registerModifier(new PassModifier("Strong Arm", -1, false, false) {
+		registerModifier(new PassModifier("Strong Arm", -1, ModifierType.REGULAR) {
 			@Override
-			public boolean appliesToContext(PassContext context) {
+			public boolean appliesToContext(Skill skill, PassContext context) {
 				return context.getDistance() != PassingDistance.QUICK_PASS;
 			}
 		});

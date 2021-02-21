@@ -7,11 +7,11 @@ import com.balancedbytes.games.ffb.Card;
 import com.balancedbytes.games.ffb.CardEffect;
 import com.balancedbytes.games.ffb.ClientMode;
 import com.balancedbytes.games.ffb.Direction;
-import com.balancedbytes.games.ffb.DodgeModifiers;
 import com.balancedbytes.games.ffb.FactoryType.Factory;
 import com.balancedbytes.games.ffb.FantasyFootballConstants;
 import com.balancedbytes.games.ffb.HeatExhaustion;
-import com.balancedbytes.games.ffb.IRollModifier;
+import com.balancedbytes.games.ffb.modifiers.DodgeModifier;
+import com.balancedbytes.games.ffb.modifiers.IRollModifier;
 import com.balancedbytes.games.ffb.InjuryModifier;
 import com.balancedbytes.games.ffb.InjuryModifiers;
 import com.balancedbytes.games.ffb.KickoffResult;
@@ -127,6 +127,7 @@ import com.balancedbytes.games.ffb.util.UtilPlayer;
 import java.net.InetAddress;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -1115,11 +1116,11 @@ public class StatusReport {
 		}
 		println(getIndent(), TextStyle.ROLL, status.toString());
 		if (!pReport.isReRolled()) {
-			if (pReport.hasRollModifier(DodgeModifiers.STUNTY)) {
+			if (actingPlayer.getPlayer().hastActiveProperty(NamedProperties.ignoreTacklezonesWhenDodging)) {
 				print(getIndent() + 1, false, actingPlayer.getPlayer());
 				println(getIndent() + 1, " is Stunty and ignores tacklezones.");
 			}
-			if (pReport.hasRollModifier(DodgeModifiers.BREAK_TACKLE)) {
+			if (Arrays.stream(pReport.getRollModifiers()).anyMatch(modifier -> modifier instanceof DodgeModifier && ((DodgeModifier) modifier).isUseStrength())) {
 				print(getIndent() + 1, false, actingPlayer.getPlayer());
 				println(getIndent() + 1, " uses Break Tackle to break free.");
 			}

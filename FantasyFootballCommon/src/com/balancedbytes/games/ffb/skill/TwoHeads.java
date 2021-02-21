@@ -1,10 +1,11 @@
 package com.balancedbytes.games.ffb.skill;
 
-import com.balancedbytes.games.ffb.DodgeModifiers;
 import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.RulesCollection.Rules;
 import com.balancedbytes.games.ffb.SkillCategory;
 import com.balancedbytes.games.ffb.model.Skill;
+import com.balancedbytes.games.ffb.modifiers.DodgeModifier;
+import com.balancedbytes.games.ffb.modifiers.ModifierType;
 
 /**
  * Having two heads enables this player to watch where he is going and the
@@ -20,6 +21,6 @@ public class TwoHeads extends Skill {
 
 	@Override
 	public void postConstruct() {
-		registerModifier(DodgeModifiers.TWO_HEADS);
+		registerModifier(new DodgeModifier("Two Heads", -1, ModifierType.REGULAR));
 	}
 }

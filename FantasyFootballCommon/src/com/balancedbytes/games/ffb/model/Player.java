@@ -10,6 +10,12 @@ import com.balancedbytes.games.ffb.xml.IXmlSerializable;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Set;
+import java.util.Stack;
+import java.util.stream.Collectors;
+
 /**
  * 
  * @author Kalimar
@@ -168,5 +174,33 @@ public abstract class Player<T extends Position> implements IXmlSerializable, IJ
 
 	public boolean hasSkillWithProperty(ISkillProperty property) {
 		return getSkillWithProperty(property) != null;
+	}
+
+	public boolean hastActiveProperty(ISkillProperty skillProperty) {
+
+		Set<ISkillProperty> properties = Arrays.stream(getSkills()).flatMap(skill -> skill.getSkillProperties().stream()).collect(Collectors.toSet());
+
+		while (properties.contains(skillProperty)) {
+
+			Set<ISkillProperty> propertiesToCheckForCancellation = Collections.singleton(skillProperty);
+
+			Set<ISkillProperty> lastCheckedProperties;
+
+			do {
+				Set<ISkillProperty> finalPropertiesToCheckForCancellation = propertiesToCheckForCancellation;
+				Set<ISkillProperty> cancellingProperties = properties.stream().filter(property -> !Collections.disjoint(property.cancelsProperties(), finalPropertiesToCheckForCancellation)).collect(Collectors.toSet());
+				lastCheckedProperties = propertiesToCheckForCancellation;
+				propertiesToCheckForCancellation = cancellingProperties;
+
+			} while (!propertiesToCheckForCancellation.isEmpty());
+
+			if (lastCheckedProperties.equals(Collections.singleton(skillProperty))) {
+				return true;
+			}
+
+			properties.removeAll(lastCheckedProperties.stream().flatMap(property -> property.cancelsProperties().stream()).collect(Collectors.toSet()));
+		}
+
+		return false;
 	}
 }

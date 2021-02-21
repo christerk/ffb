@@ -1,11 +1,12 @@
 package com.balancedbytes.games.ffb.skill;
 
-import com.balancedbytes.games.ffb.DodgeModifiers;
 import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.RulesCollection.Rules;
 import com.balancedbytes.games.ffb.SkillCategory;
 import com.balancedbytes.games.ffb.model.Skill;
 import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
+import com.balancedbytes.games.ffb.modifiers.DodgeModifier;
+import com.balancedbytes.games.ffb.modifiers.ModifierType;
 
 /**
  * Titchy players tend to be even smaller and more nimble than other Stunty
@@ -24,7 +25,7 @@ public class Titchy extends Skill {
 	@Override
 	public void postConstruct() {
 		registerProperty(NamedProperties.hasNoTacklezone);
-		registerModifier(DodgeModifiers.TITCHY);
+		registerModifier(new DodgeModifier("Titchy", -1, ModifierType.REGULAR));
 	}
 
 }

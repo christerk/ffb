@@ -1,6 +1,7 @@
 package com.balancedbytes.games.ffb.skill;
 
 import com.balancedbytes.games.ffb.InjuryModifiers;
+import com.balancedbytes.games.ffb.modifiers.ModifierType;
 import com.balancedbytes.games.ffb.modifiers.PassModifier;
 import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.RulesCollection.Rules;
@@ -33,12 +34,13 @@ public class Stunty extends Skill {
 
 	@Override
 	public void postConstruct() {
-		registerModifier(new PassModifier("Stunty", 1, false, false));
+		registerModifier(new PassModifier("Stunty", 1, ModifierType.REGULAR));
 		registerModifier(InjuryModifiers.STUNTY);
 
 		registerProperty(NamedProperties.smallIcon);
 		registerProperty(NamedProperties.preventRaiseFromDead);
 		registerProperty(new CancelSkillProperty(SkillConstants.NURGLES_ROT));
+		registerProperty(NamedProperties.ignoreTacklezonesWhenDodging);
 	}
 
 }

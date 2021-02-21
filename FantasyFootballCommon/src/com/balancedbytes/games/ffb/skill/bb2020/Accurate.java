@@ -1,5 +1,6 @@
 package com.balancedbytes.games.ffb.skill.bb2020;
 
+import com.balancedbytes.games.ffb.modifiers.ModifierType;
 import com.balancedbytes.games.ffb.modifiers.PassModifier;
 import com.balancedbytes.games.ffb.PassingDistance;
 import com.balancedbytes.games.ffb.modifiers.PassContext;
@@ -24,13 +25,13 @@ public class Accurate extends Skill {
 
 	@Override
 	public void postConstruct(){
-		registerModifier(new PassModifier("Accurate", -1, false, false) {
-			private Set<PassingDistance> shortDistances = new HashSet<PassingDistance>() {{
+		registerModifier(new PassModifier("Accurate", -1, ModifierType.REGULAR) {
+			private final Set<PassingDistance> shortDistances = new HashSet<PassingDistance>() {{
 				add(PassingDistance.SHORT_PASS);
 				add(PassingDistance.QUICK_PASS);
 			}};
 			@Override
-			public boolean appliesToContext(PassContext context) {
+			public boolean appliesToContext(Skill skill, PassContext context) {
 				return shortDistances.contains(context.getDistance());
 			}
 		});

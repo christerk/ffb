@@ -1,5 +1,6 @@
 package com.balancedbytes.games.ffb.skill.bb2020;
 
+import com.balancedbytes.games.ffb.modifiers.ModifierType;
 import com.balancedbytes.games.ffb.modifiers.PassModifier;
 import com.balancedbytes.games.ffb.PassingDistance;
 import com.balancedbytes.games.ffb.modifiers.PassContext;
@@ -24,13 +25,13 @@ public class Cannoneer extends Skill {
 
 	@Override
 	public void postConstruct(){
-		registerModifier(new PassModifier("Cannoneer", -1, false, false) {
-			Set<PassingDistance> longDistances = new HashSet<PassingDistance>() {{
+		registerModifier(new PassModifier("Cannoneer", -1, ModifierType.REGULAR) {
+			final Set<PassingDistance> longDistances = new HashSet<PassingDistance>() {{
 				add(PassingDistance.LONG_PASS);
 				add(PassingDistance.LONG_BOMB);
 			}};
 			@Override
-			public boolean appliesToContext(PassContext context) {
+			public boolean appliesToContext(Skill skill, PassContext context) {
 				return longDistances.contains(context.getDistance());
 			}
 		});

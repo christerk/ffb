@@ -1,20 +1,22 @@
 package com.balancedbytes.games.ffb;
 
 import com.balancedbytes.games.ffb.PickupModifiers.PickupContext;
+import com.balancedbytes.games.ffb.modifiers.IRollModifier;
+import com.balancedbytes.games.ffb.modifiers.ModifierType;
 
 /**
  * 
  * @author Kalimar
  */
 public class PickupModifier implements IRollModifier {
-	private String fName;
-	private int fModifier;
-	private boolean fTacklezoneModifier;
+	private final String fName;
+	private final int fModifier;
+	private final ModifierType type;
 
-	public PickupModifier(String pName, int pModifier, boolean pTacklezoneModifier) {
+	public PickupModifier(String pName, int pModifier, ModifierType type) {
 		fName = pName;
 		fModifier = pModifier;
-		fTacklezoneModifier = pTacklezoneModifier;
+		this.type = type;
 	}
 
 	public int getModifier() {
@@ -25,12 +27,13 @@ public class PickupModifier implements IRollModifier {
 		return fName;
 	}
 
-	public boolean isTacklezoneModifier() {
-		return fTacklezoneModifier;
+	@Override
+	public ModifierType getType() {
+		return type;
 	}
 
 	public boolean isModifierIncluded() {
-		return isTacklezoneModifier();
+		return type == ModifierType.TACKLEZONE;
 	}
 
 	public boolean appliesToContext(PickupContext context) {

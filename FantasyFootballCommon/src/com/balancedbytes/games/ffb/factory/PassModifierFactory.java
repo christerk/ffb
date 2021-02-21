@@ -1,7 +1,7 @@
 package com.balancedbytes.games.ffb.factory;
 
 import com.balancedbytes.games.ffb.FactoryType;
-import com.balancedbytes.games.ffb.IRollModifier;
+import com.balancedbytes.games.ffb.modifiers.IRollModifier;
 import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.RulesCollection.Rules;
 import com.balancedbytes.games.ffb.model.Skill;
@@ -26,7 +26,7 @@ public class PassModifierFactory extends GenerifiedModifierFactory<PassContext, 
 
 	public PassModifier forName(String name) {
 		return Stream.concat(
-			passModifierCollection.getAllModifiers().stream(),
+			passModifierCollection.getModifiers().stream(),
 			modifierAggregator.getPassModifiers().stream())
 			.filter(modifier -> modifier.getName().equals(name))
 			.findFirst()

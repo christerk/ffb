@@ -7,6 +7,7 @@ import com.balancedbytes.games.ffb.SkillCategory;
 import com.balancedbytes.games.ffb.model.Skill;
 import com.balancedbytes.games.ffb.modifiers.CatchModifier;
 import com.balancedbytes.games.ffb.modifiers.InterceptionModifier;
+import com.balancedbytes.games.ffb.modifiers.ModifierType;
 
 /**
  * A player with one or more extra arms may add 1 to any attempt to pick up,
@@ -22,8 +23,8 @@ public class ExtraArms extends Skill {
 	@Override
 	public void postConstruct() {
 		registerModifier(PickupModifiers.EXTRA_ARMS);
-		registerModifier(new InterceptionModifier("Extra Arms", -1, false, false));
-		registerModifier(new CatchModifier("Extra Arms", -1, false, false));
+		registerModifier(new InterceptionModifier("Extra Arms", -1, ModifierType.REGULAR));
+		registerModifier(new CatchModifier("Extra Arms", -1, ModifierType.REGULAR));
 	}
 
 }

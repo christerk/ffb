@@ -1,11 +1,10 @@
 package com.balancedbytes.games.ffb;
 
 import com.balancedbytes.games.ffb.model.Game;
+import com.balancedbytes.games.ffb.modifiers.IRollModifier;
 
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashSet;
-import java.util.Set;
 
 public enum Weather implements INamedObject {
 

@@ -5,6 +5,9 @@ import com.balancedbytes.games.ffb.RulesCollection.Rules;
 import com.balancedbytes.games.ffb.SkillCategory;
 import com.balancedbytes.games.ffb.model.Skill;
 import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
+import com.balancedbytes.games.ffb.modifiers.DodgeContext;
+import com.balancedbytes.games.ffb.modifiers.DodgeModifier;
+import com.balancedbytes.games.ffb.modifiers.ModifierType;
 
 /**
  * The player may use this skill after an opposing player attempts to dodge out
@@ -28,5 +31,11 @@ public class DivingTackle extends Skill {
 	@Override
 	public void postConstruct() {
 		registerProperty(NamedProperties.canAttemptToTackleDodgingPlayer);
+		registerModifier(new DodgeModifier("Diving Tackle", 2, ModifierType.REGULAR) {
+			@Override
+			public boolean appliesToContext(Skill skill, DodgeContext context) {
+				return context.isUseDivingTackle();
+			}
+		});
 	}
 }

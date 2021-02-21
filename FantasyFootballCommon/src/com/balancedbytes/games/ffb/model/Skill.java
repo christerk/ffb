@@ -1,7 +1,7 @@
 package com.balancedbytes.games.ffb.model;
 
 import com.balancedbytes.games.ffb.ArmorModifier;
-import com.balancedbytes.games.ffb.DodgeModifier;
+import com.balancedbytes.games.ffb.modifiers.DodgeModifier;
 import com.balancedbytes.games.ffb.INamedObject;
 import com.balancedbytes.games.ffb.InjuryModifier;
 import com.balancedbytes.games.ffb.LeapModifier;
@@ -192,5 +192,9 @@ public abstract class Skill implements INamedObject {
 			return rerollSources.get(action);
 		}
 		return null;
+	}
+
+	public List<ISkillProperty> getSkillProperties() {
+		return skillProperties;
 	}
 }

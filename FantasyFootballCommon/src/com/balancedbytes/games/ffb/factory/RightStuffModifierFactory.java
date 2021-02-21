@@ -7,6 +7,7 @@ import com.balancedbytes.games.ffb.RulesCollection.Rules;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
+import com.balancedbytes.games.ffb.modifiers.ModifierType;
 import com.balancedbytes.games.ffb.util.UtilPlayer;
 
 import java.util.Arrays;
@@ -56,7 +57,7 @@ public class RightStuffModifierFactory implements IRollModifierFactory<RightStuf
 	private RightStuffModifier getTacklezoneModifier(Game pGame, Player<?> pPlayer) {
 		int tacklezones = UtilPlayer.findTacklezones(pGame, pPlayer);
 		for (RightStuffModifier modifier : RightStuffModifier.values()) {
-			if (modifier.isTacklezoneModifier() && (modifier.getModifier() == tacklezones)) {
+			if (modifier.getType() == ModifierType.TACKLEZONE && (modifier.getModifier() == tacklezones)) {
 				return modifier;
 			}
 		}

@@ -4,6 +4,7 @@ import com.balancedbytes.games.ffb.PassingDistance;
 import com.balancedbytes.games.ffb.modifiers.PassContext;
 import com.balancedbytes.games.ffb.model.ISkillProperty;
 
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -28,14 +29,14 @@ public class NamedProperties {
 			"Can Choose Own Pushed Back Square");
 	public static final ISkillProperty canForceInterceptionReroll = new NamedProperty("Can Force Interception Reroll");
 	public static final PassingProperty canForceInterceptionRerollOfLongPasses = new PassingProperty("Can Force Interception Reroll of Long Passes") {
-		private Set<PassingDistance> longDistances = new HashSet<PassingDistance>() {{
+		private final Set<PassingDistance> longDistances = new HashSet<PassingDistance>() {{
 				add(PassingDistance.LONG_PASS);
 				add(PassingDistance.LONG_BOMB);
 			}};
 		@Override
 		public boolean appliesToContext(PassContext context) {
 			return longDistances.contains(context.getDistance());
-		};
+		}
 	};
 	public static final ISkillProperty canKickTeamMates = new NamedProperty("Can Kick Team Mates");
 	public static final ISkillProperty canLeap = new NamedProperty("Can Leap");
@@ -82,6 +83,7 @@ public class NamedProperties {
 	public static final ISkillProperty ignoreTackleWhenBlocked = new NamedProperty("Ignore Tackle When Blocked");
 	public static final ISkillProperty ignoreTacklezonesWhenCatching = new NamedProperty(
 			"Ignore Tacklezones when Catching");
+	public static final ISkillProperty ignoreTacklezonesWhenDodging = new NamedProperty("Ignore Tacklezones When Dodging");
 	public static final ISkillProperty ignoreTacklezonesWhenMoving = new NamedProperty("Ignore Tacklezones When Moving");
 	public static final ISkillProperty ignoreTacklezonesWhenPassing = new NamedProperty(
 			"Ignore Tacklezones when Passing");
@@ -112,7 +114,7 @@ public class NamedProperties {
 			"Prevent Regular Hand Over Action");
 	public static final ISkillProperty preventRegularPassAction = new NamedProperty("Prevent Regular Pass Action");
 	public static final ISkillProperty preventStandUpAction = new NamedProperty("Prevent Regular Stand Up Action");
-	public static final ISkillProperty preventStuntyDodgeModifier = new NamedProperty("Prevent Stunty Dodge Modifier");
+	public static final ISkillProperty preventStuntyDodgeModifier = new NamedProperty("Prevent Stunty Dodge Modifier", Collections.singleton(ignoreTacklezonesWhenDodging));
 	public static final ISkillProperty preventThrowTeamMateAction = new NamedProperty("Prevent Throw Team Mate Action");
 	public static final ISkillProperty requiresSecondCasualtyRoll = new NamedProperty("Requires Second Casualty Roll");
 	public static final ISkillProperty smallIcon = new NamedProperty("Display with a small icon");

@@ -10,19 +10,22 @@ public class CatchModifier extends RollModifier<CatchContext> {
 
 	private final String name, reportingString;
 	private final int fModifier;
-	private final boolean fTacklezoneModifier;
-	private final boolean fDisturbingPresenceModifier;
+	private final ModifierType type;
 
-	public CatchModifier(String pName, int pModifier, boolean pTacklezoneModifier, boolean pDisturbingPresenceModifier) {
-		this(pName, pName, pModifier, pTacklezoneModifier, pDisturbingPresenceModifier);
+	public CatchModifier(String pName, int pModifier, ModifierType type) {
+		this(pName, pName, pModifier, type);
 	}
 
-	public CatchModifier(String name, String reportingString, int pModifier, boolean pTacklezoneModifier, boolean pDisturbingPresenceModifier) {
+	public CatchModifier(String name, String reportingString, int pModifier, ModifierType type) {
 		this.name = name;
 		this.reportingString = reportingString;
 		fModifier = pModifier;
-		fTacklezoneModifier = pTacklezoneModifier;
-		fDisturbingPresenceModifier = pDisturbingPresenceModifier;
+		this.type = type;
+	}
+
+	@Override
+	public ModifierType getType() {
+		return type;
 	}
 
 	public String getName() {
@@ -33,20 +36,8 @@ public class CatchModifier extends RollModifier<CatchContext> {
 		return fModifier;
 	}
 
-	public boolean isTacklezoneModifier() {
-		return fTacklezoneModifier;
-	}
-
-	public boolean isDisturbingPresenceModifier() {
-		return fDisturbingPresenceModifier;
-	}
-
 	public boolean isModifierIncluded() {
-		return (isTacklezoneModifier() || isDisturbingPresenceModifier());
-	}
-
-	public boolean appliesToContext(CatchContext context) {
-		return true;
+		return type == ModifierType.DISTURBING_PRESENCE || type == ModifierType.TACKLEZONE;
 	}
 
 	@Override

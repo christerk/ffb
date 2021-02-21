@@ -1,7 +1,5 @@
 package com.balancedbytes.games.ffb.modifiers;
 
-import com.balancedbytes.games.ffb.IRollModifier;
-
 /**
  * 
  * @author Kalimar
@@ -9,19 +7,22 @@ import com.balancedbytes.games.ffb.IRollModifier;
 public class PassModifier implements IRollModifier<PassContext> {
 	private final String fName, reportingString;
 	private final int fModifier;
-	private final boolean fTacklezoneModifier;
-	private final boolean fDisturbingPresenceModifier;
+	private final ModifierType type;
 
-	public PassModifier(String pName, int pModifier, boolean pTacklezoneModifier, boolean pDisturbingPresenceModifier) {
-		this(pName, pName, pModifier, pTacklezoneModifier, pDisturbingPresenceModifier);
+	public PassModifier(String pName, int pModifier, ModifierType type) {
+		this(pName, pName, pModifier, type);
 	}
 
-	public PassModifier(String pName, String reportingString, int pModifier, boolean pTacklezoneModifier, boolean pDisturbingPresenceModifier) {
+	public PassModifier(String pName, String reportingString, int pModifier, ModifierType type) {
 		fName = pName;
 		this.reportingString = reportingString;
 		fModifier = pModifier;
-		fTacklezoneModifier = pTacklezoneModifier;
-		fDisturbingPresenceModifier = pDisturbingPresenceModifier;
+		this.type = type;
+	}
+
+	@Override
+	public ModifierType getType() {
+		return type;
 	}
 
 	public String getName() {
@@ -32,20 +33,8 @@ public class PassModifier implements IRollModifier<PassContext> {
 		return fModifier;
 	}
 
-	public boolean isTacklezoneModifier() {
-		return fTacklezoneModifier;
-	}
-
-	public boolean isDisturbingPresenceModifier() {
-		return fDisturbingPresenceModifier;
-	}
-
 	public boolean isModifierIncluded() {
-		return (isTacklezoneModifier() || isDisturbingPresenceModifier());
-	}
-
-	public boolean appliesToContext(PassContext context) {
-		return true;
+		return type == ModifierType.TACKLEZONE || type == ModifierType.DISTURBING_PRESENCE;
 	}
 
 	@Override

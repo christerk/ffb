@@ -5,10 +5,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.balancedbytes.games.ffb.model.ActingPlayer;
+import com.balancedbytes.games.ffb.modifiers.ModifierType;
 
 public class LeapModifiers {
 
-	public static final LeapModifier VERY_LONG_LEGS = new LeapModifier("Very Long Legs", -1);
+	public static final LeapModifier VERY_LONG_LEGS = new LeapModifier("Very Long Legs", -1, ModifierType.REGULAR);
 
 	private Map<String, LeapModifier> values;
 

@@ -1,6 +1,6 @@
 package com.balancedbytes.games.ffb.factory;
 
-import com.balancedbytes.games.ffb.IRollModifier;
+import com.balancedbytes.games.ffb.modifiers.IRollModifier;
 import com.balancedbytes.games.ffb.model.Game;
 
 import java.util.HashSet;

@@ -6,6 +6,7 @@ import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.RulesCollection.Rules;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
+import com.balancedbytes.games.ffb.modifiers.ModifierType;
 import com.balancedbytes.games.ffb.util.UtilPlayer;
 
 import java.util.Arrays;
@@ -55,7 +56,7 @@ public class GazeModifierFactory implements IRollModifierFactory<GazeModifier> {
 		int tacklezones = UtilPlayer.findTacklezones(pGame, pPlayer);
 		if (tacklezones > 1) {
 			for (GazeModifier modifier : GazeModifier.values()) {
-				if (modifier.isTacklezoneModifier() && (modifier.getModifier() == tacklezones - 1)) {
+				if (modifier.getType() == ModifierType.TACKLEZONE && (modifier.getModifier() == tacklezones - 1)) {
 					return modifier;
 				}
 			}
