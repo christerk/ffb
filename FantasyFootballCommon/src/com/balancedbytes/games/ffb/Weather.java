@@ -11,11 +11,7 @@ public enum Weather implements INamedObject {
 
 	SWELTERING_HEAT("Sweltering Heat", "heat",
 			"Each player on the pitch may suffer from heat exhaustion on a roll of 1 before the next kick-off."),
-	VERY_SUNNY("Very Sunny", "sunny", "A -1 modifier applies to all passing rolls.") {
-		public Set<IRollModifier> modifier(Game game) {
-			return Collections.singleton(PassingModifiers.VERY_SUNNY);
-		}
-	},
+	VERY_SUNNY("Very Sunny", "sunny", "A -1 modifier applies to all passing rolls."),
 	NICE("Nice Weather", "nice", "Perfect Fantasy Football weather."),
 	POURING_RAIN("Pouring Rain", "rain", "A -1 modifier applies to all catch, intercept, or pick-up rolls.") {
 		public Collection<IRollModifier> modifier(Game game) {
@@ -36,7 +32,6 @@ public enum Weather implements INamedObject {
 				private static final long serialVersionUID = -6560479669198677254L;
 				{
 					add(GoForItModifier.BLIZZARD);
-					add(PassingModifiers.BLIZZARD);
 				}
 			};
 		}

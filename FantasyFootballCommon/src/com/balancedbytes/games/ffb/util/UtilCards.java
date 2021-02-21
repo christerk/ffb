@@ -11,8 +11,8 @@ import com.balancedbytes.games.ffb.InjuryModifier;
 import com.balancedbytes.games.ffb.InjuryModifier.InjuryModifierContext;
 import com.balancedbytes.games.ffb.LeapModifier;
 import com.balancedbytes.games.ffb.LeapModifiers.LeapContext;
-import com.balancedbytes.games.ffb.PassModifier;
-import com.balancedbytes.games.ffb.PassingModifiers.PassContext;
+import com.balancedbytes.games.ffb.modifiers.PassModifier;
+import com.balancedbytes.games.ffb.modifiers.PassContext;
 import com.balancedbytes.games.ffb.PickupModifier;
 import com.balancedbytes.games.ffb.PickupModifiers.PickupContext;
 import com.balancedbytes.games.ffb.ReRollSource;
@@ -167,11 +167,6 @@ public final class UtilCards {
 				break;
 			case WAND_OF_SMASHING:
 				cardSkills.add(SkillConstants.MIGHTY_BLOW);
-				break;
-			case GROMSKULLS_EXPLODING_RUNES:
-				cardSkills.add(SkillConstants.BOMBARDIER);
-				cardSkills.add(SkillConstants.NO_HANDS);
-				cardSkills.add(SkillConstants.SECRET_WEAPON);
 				break;
 			case DISTRACT:
 				cardSkills.add(SkillConstants.DISTURBING_PRESENCE);

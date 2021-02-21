@@ -3,7 +3,8 @@ package com.balancedbytes.games.ffb.server.step.bb2020;
 import com.balancedbytes.games.ffb.CatchScatterThrowInMode;
 import com.balancedbytes.games.ffb.FactoryType;
 import com.balancedbytes.games.ffb.FieldCoordinate;
-import com.balancedbytes.games.ffb.PassModifier;
+import com.balancedbytes.games.ffb.modifiers.PassContext;
+import com.balancedbytes.games.ffb.modifiers.PassModifier;
 import com.balancedbytes.games.ffb.PassingDistance;
 import com.balancedbytes.games.ffb.PlayerAction;
 import com.balancedbytes.games.ffb.ReRollSource;
@@ -40,6 +41,7 @@ import com.balancedbytes.games.ffb.util.UtilCards;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -153,11 +155,12 @@ public class StepPass extends AbstractStepWithReRoll {
 		}
 
 		state.setThrowerCoordinate(throwerCoordinate);
+		PassModifierFactory factory = game.getFactory(FactoryType.Factory.PASS_MODIFIER);
 		PassMechanic mechanic = (PassMechanic) game.getRules().getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.PASS.name());
 		PassingDistance passingDistance = mechanic.findPassingDistance(game, throwerCoordinate, game.getPassCoordinate(),
 			false);
-		Set<PassModifier> passModifiers = new PassModifierFactory().findPassModifiers(game, game.getThrower(),
-			passingDistance, false);
+		Set<PassModifier> passModifiers = factory.findModifiers(new PassContext(game, game.getThrower(),
+			passingDistance, false));
 		Optional<Integer> minimumRollO = mechanic.minimumRoll(game.getThrower(), passingDistance, passModifiers);
 		int minimumRoll = minimumRollO.orElse(0);
 		int roll = minimumRollO.isPresent() ? getGameState().getDiceRoller().rollSkill() : 0;
@@ -167,10 +170,10 @@ public class StepPass extends AbstractStepWithReRoll {
 		} else if (PassResult.SAVED_FUMBLE == state.getResult()) {
 			publishParameter(new StepParameter(StepParameterKey.DONT_DROP_FUMBLE, true));
 		}
-		PassModifier[] passModifierArray = new PassModifierFactory().toArray(passModifiers);
+		List<PassModifier> sortedModifiers = factory.sort(passModifiers);
 		boolean reRolled = ((getReRolledAction() == ReRolledActions.PASS) && (getReRollSource() != null));
 		getResult().addReport(new ReportPassRoll(game.getThrowerId(), roll, minimumRoll, reRolled,
-			passModifierArray, passingDistance, (PlayerAction.THROW_BOMB == game.getThrowerAction()), state.getResult()));
+			sortedModifiers.toArray(new PassModifier[0]), passingDistance, (PlayerAction.THROW_BOMB == game.getThrowerAction()), state.getResult()));
 		if (PassResult.ACCURATE == state.getResult()) {
 			getResult().setNextAction(StepAction.GOTO_LABEL, goToLabelOnEnd);
 		} else {

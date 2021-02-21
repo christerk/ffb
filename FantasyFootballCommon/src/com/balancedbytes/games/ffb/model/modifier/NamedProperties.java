@@ -1,8 +1,11 @@
 package com.balancedbytes.games.ffb.model.modifier;
 
 import com.balancedbytes.games.ffb.PassingDistance;
-import com.balancedbytes.games.ffb.PassingModifiers.PassContext;
+import com.balancedbytes.games.ffb.modifiers.PassContext;
 import com.balancedbytes.games.ffb.model.ISkillProperty;
+
+import java.util.HashSet;
+import java.util.Set;
 
 public class NamedProperties {
 	public static final ISkillProperty addBonusForAccuratePass = new NamedProperty("Add Bonus For Accurate Pass");
@@ -25,10 +28,13 @@ public class NamedProperties {
 			"Can Choose Own Pushed Back Square");
 	public static final ISkillProperty canForceInterceptionReroll = new NamedProperty("Can Force Interception Reroll");
 	public static final PassingProperty canForceInterceptionRerollOfLongPasses = new PassingProperty("Can Force Interception Reroll of Long Passes") {
+		private Set<PassingDistance> longDistances = new HashSet<PassingDistance>() {{
+				add(PassingDistance.LONG_PASS);
+				add(PassingDistance.LONG_BOMB);
+			}};
 		@Override
 		public boolean appliesToContext(PassContext context) {
-			return context.distance == PassingDistance.LONG_PASS ||
-					context.distance == PassingDistance.LONG_BOMB;
+			return longDistances.contains(context.getDistance());
 		};
 	};
 	public static final ISkillProperty canKickTeamMates = new NamedProperty("Can Kick Team Mates");

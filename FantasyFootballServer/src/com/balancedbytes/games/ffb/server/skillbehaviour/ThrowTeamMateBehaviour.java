@@ -2,7 +2,8 @@ package com.balancedbytes.games.ffb.server.skillbehaviour;
 
 import com.balancedbytes.games.ffb.FactoryType;
 import com.balancedbytes.games.ffb.FieldCoordinate;
-import com.balancedbytes.games.ffb.PassModifier;
+import com.balancedbytes.games.ffb.modifiers.PassContext;
+import com.balancedbytes.games.ffb.modifiers.PassModifier;
 import com.balancedbytes.games.ffb.PassingDistance;
 import com.balancedbytes.games.ffb.ReRollSource;
 import com.balancedbytes.games.ffb.ReRolledActions;
@@ -33,6 +34,7 @@ import com.balancedbytes.games.ffb.server.util.UtilServerReRoll;
 import com.balancedbytes.games.ffb.skill.ThrowTeamMate;
 import com.balancedbytes.games.ffb.util.UtilCards;
 
+import java.util.List;
 import java.util.Set;
 
 @RulesCollection(Rules.COMMON)
@@ -65,21 +67,21 @@ public class ThrowTeamMateBehaviour extends SkillBehaviour<ThrowTeamMate> {
 					}
 				}
 				if (doRoll) {
-					PassModifierFactory passModifierFactory = new PassModifierFactory();
+					PassModifierFactory passModifierFactory = game.getFactory(FactoryType.Factory.PASS_MODIFIER);
 					FieldCoordinate throwerCoordinate = game.getFieldModel().getPlayerCoordinate(thrower);
 					PassMechanic mechanic = (PassMechanic) game.getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.PASS.name());
 					PassingDistance passingDistance = mechanic.findPassingDistance(game, throwerCoordinate,
 							game.getPassCoordinate(), true);
-					Set<PassModifier> passModifiers = passModifierFactory.findPassModifiers(game, thrower, passingDistance, true);
+					Set<PassModifier> passModifiers = passModifierFactory.findModifiers(new PassContext(game, thrower, passingDistance, true));
 					int minimumRoll = DiceInterpreter.getInstance().minimumRollThrowTeamMate(passingDistance,
 							passModifiers);
 					int roll = step.getGameState().getDiceRoller().rollSkill();
 					boolean successful = !DiceInterpreter.getInstance().isPassFumble(roll, passingDistance, passModifiers);
-					PassModifier[] passModifierArray = passModifierFactory.toArray(passModifiers);
+					List<PassModifier> sortedModifiers = passModifierFactory.sort(passModifiers);
 					boolean reRolled = ((step.getReRolledAction() == ReRolledActions.THROW_TEAM_MATE)
 							&& (step.getReRollSource() != null));
 					step.getResult().addReport(new ReportThrowTeamMateRoll(thrower.getId(), successful, roll, minimumRoll,
-							reRolled, passModifierArray, passingDistance, state.thrownPlayerId));
+							reRolled, sortedModifiers.toArray(new PassModifier[0]), passingDistance, state.thrownPlayerId));
 					if (successful) {
 						Player<?> thrownPlayer = game.getPlayerById(state.thrownPlayerId);
 						boolean scattersSingleDirection = thrownPlayer != null

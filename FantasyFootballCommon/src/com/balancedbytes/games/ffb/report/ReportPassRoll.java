@@ -1,6 +1,6 @@
 package com.balancedbytes.games.ffb.report;
 
-import com.balancedbytes.games.ffb.PassModifier;
+import com.balancedbytes.games.ffb.modifiers.PassModifier;
 import com.balancedbytes.games.ffb.PassingDistance;
 import com.balancedbytes.games.ffb.factory.IFactorySource;
 import com.balancedbytes.games.ffb.json.IJsonOption;

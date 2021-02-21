@@ -12,7 +12,7 @@ import com.balancedbytes.games.ffb.GoForItModifier;
 import com.balancedbytes.games.ffb.InjuryContext;
 import com.balancedbytes.games.ffb.InjuryModifiers;
 import com.balancedbytes.games.ffb.KickoffResult;
-import com.balancedbytes.games.ffb.PassModifier;
+import com.balancedbytes.games.ffb.modifiers.PassModifier;
 import com.balancedbytes.games.ffb.PassingDistance;
 import com.balancedbytes.games.ffb.PlayerState;
 import com.balancedbytes.games.ffb.SeriousInjury;

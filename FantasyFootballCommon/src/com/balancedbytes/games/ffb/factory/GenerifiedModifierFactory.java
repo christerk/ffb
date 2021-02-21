@@ -44,7 +44,7 @@ public abstract class GenerifiedModifierFactory<
 
 	protected abstract R getModifierCollection();
 
-	protected abstract void setModifierCollection(R registry);
+	protected abstract void setModifierCollection(R modifierCollection);
 
 	protected Optional<V> getDisturbingPresenceModifier(Game pGame, Player<?> pPlayer) {
 		int disturbingPresences = UtilDisturbingPresence.findOpposingDisturbingPresences(pGame, pPlayer);

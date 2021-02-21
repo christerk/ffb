@@ -1,17 +1,13 @@
 package com.balancedbytes.games.ffb.mechanics.bb2020;
 
-import com.balancedbytes.games.ffb.FieldCoordinate;
-import com.balancedbytes.games.ffb.PassModifier;
 import com.balancedbytes.games.ffb.PassingDistance;
-import com.balancedbytes.games.ffb.PassingModifiers;
 import com.balancedbytes.games.ffb.ReRolledAction;
 import com.balancedbytes.games.ffb.ReRolledActions;
 import com.balancedbytes.games.ffb.RulesCollection;
-import com.balancedbytes.games.ffb.factory.PassModifierFactory;
 import com.balancedbytes.games.ffb.mechanics.PassResult;
-import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
+import com.balancedbytes.games.ffb.modifiers.PassModifier;
 
 import java.util.Collection;
 import java.util.Optional;
@@ -103,21 +99,4 @@ public class PassMechanic extends com.balancedbytes.games.ffb.mechanics.PassMech
 		return "Pass fumbled automatically as " + thrower.getName() + " has no Passing Ability";
 	}
 
-	@Override
-	public PassingDistance findPassingDistance(Game pGame, FieldCoordinate pFromCoordinate,
-	                                           FieldCoordinate pToCoordinate, boolean pThrowTeamMate) {
-		PassingDistance passingDistance = null;
-		if ((pFromCoordinate != null) && (pToCoordinate != null)) {
-			int deltaY = Math.abs(pToCoordinate.getY() - pFromCoordinate.getY());
-			int deltaX = Math.abs(pToCoordinate.getX() - pFromCoordinate.getX());
-			if ((deltaY < 14) && (deltaX < 14)) {
-				passingDistance = PASSING_DISTANCES_TABLE[deltaY][deltaX];
-			}
-			if ((pThrowTeamMate || new PassModifierFactory().activeModifiers(pGame, PassModifier.class).contains(PassingModifiers.BLIZZARD))
-				&& ((passingDistance == PassingDistance.LONG_BOMB) || (passingDistance == PassingDistance.LONG_PASS))) {
-				passingDistance = null;
-			}
-		}
-		return passingDistance;
-	}
 }

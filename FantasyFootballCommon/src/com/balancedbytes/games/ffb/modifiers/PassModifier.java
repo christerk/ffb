@@ -1,12 +1,12 @@
-package com.balancedbytes.games.ffb;
+package com.balancedbytes.games.ffb.modifiers;
 
-import com.balancedbytes.games.ffb.PassingModifiers.PassContext;
+import com.balancedbytes.games.ffb.IRollModifier;
 
 /**
  * 
  * @author Kalimar
  */
-public class PassModifier implements IRollModifier {
+public class PassModifier implements IRollModifier<PassContext> {
 	private final String fName, reportingString;
 	private final int fModifier;
 	private final boolean fTacklezoneModifier;
@@ -22,12 +22,6 @@ public class PassModifier implements IRollModifier {
 		fModifier = pModifier;
 		fTacklezoneModifier = pTacklezoneModifier;
 		fDisturbingPresenceModifier = pDisturbingPresenceModifier;
-		if (pTacklezoneModifier) {
-			PassingModifiers.tackleZoneModifiers.add(this);
-		}
-		if (pDisturbingPresenceModifier) {
-			PassingModifiers.disturbingPresenceModifiers.add(this);
-		}
 	}
 
 	public String getName() {

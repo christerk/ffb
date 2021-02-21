@@ -1,7 +1,8 @@
 package com.balancedbytes.games.ffb.mechanics;
 
 import com.balancedbytes.games.ffb.FieldCoordinate;
-import com.balancedbytes.games.ffb.PassModifier;
+import com.balancedbytes.games.ffb.Weather;
+import com.balancedbytes.games.ffb.modifiers.PassModifier;
 import com.balancedbytes.games.ffb.PassingDistance;
 import com.balancedbytes.games.ffb.ReRolledAction;
 import com.balancedbytes.games.ffb.factory.PassingDistanceFactory;
@@ -50,6 +51,20 @@ public abstract class PassMechanic implements Mechanic {
 
 	public abstract boolean eligibleToReRoll(ReRolledAction reRolledAction, Player<?> thrower);
 
-	public abstract PassingDistance findPassingDistance(Game pGame, FieldCoordinate pFromCoordinate,
-	                                                    FieldCoordinate pToCoordinate, boolean pThrowTeamMate);
+	public PassingDistance findPassingDistance(Game pGame, FieldCoordinate pFromCoordinate,
+	                                           FieldCoordinate pToCoordinate, boolean pThrowTeamMate) {
+		PassingDistance passingDistance = null;
+		if ((pFromCoordinate != null) && (pToCoordinate != null)) {
+			int deltaY = Math.abs(pToCoordinate.getY() - pFromCoordinate.getY());
+			int deltaX = Math.abs(pToCoordinate.getX() - pFromCoordinate.getX());
+			if ((deltaY < 14) && (deltaX < 14)) {
+				passingDistance = PASSING_DISTANCES_TABLE[deltaY][deltaX];
+			}
+			if ((pThrowTeamMate || pGame.getFieldModel().getWeather().equals(Weather.BLIZZARD))
+				&& ((passingDistance == PassingDistance.LONG_BOMB) || (passingDistance == PassingDistance.LONG_PASS))) {
+				passingDistance = null;
+			}
+		}
+		return passingDistance;
+	}
 }

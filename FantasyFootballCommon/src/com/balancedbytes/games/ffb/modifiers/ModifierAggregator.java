@@ -39,4 +39,14 @@ public class ModifierAggregator {
 				.map(modifier -> (InterceptionModifier)modifier))
 			.collect(Collectors.toSet());
 	}
+
+	public Set<PassModifier> getPassModifiers() {
+		return Stream.concat(
+			skillFactory.getSkills().stream().flatMap(skill -> skill.getPassModifiers().stream()),
+			Arrays.stream(UtilCards.findAllActiveCards(game))
+				.flatMap(card -> card.modifiers().stream())
+				.filter(modifier -> modifier instanceof PassModifier)
+				.map(modifier -> (PassModifier)modifier))
+			.collect(Collectors.toSet());
+	}
 }

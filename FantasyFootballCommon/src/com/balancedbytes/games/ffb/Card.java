@@ -3,6 +3,7 @@ package com.balancedbytes.games.ffb;
 import com.balancedbytes.games.ffb.factory.InducementPhaseFactory;
 import com.balancedbytes.games.ffb.modifiers.InterceptionContext;
 import com.balancedbytes.games.ffb.modifiers.InterceptionModifier;
+import com.balancedbytes.games.ffb.modifiers.PassModifier;
 import com.balancedbytes.games.ffb.util.UtilCards;
 
 import java.util.Collections;
@@ -316,7 +317,22 @@ public enum Card implements INamedObject {
 
 	GROMSKULLS_EXPLODING_RUNES("Gromskull's Exploding Runes", "Exploding Runes", CardType.DIRTY_TRICK,
 			CardTarget.OWN_PLAYER, false, new InducementPhase[] { InducementPhase.BEFORE_SETUP },
-			InducementDuration.UNTIL_END_OF_GAME, "Player gets Bombardier, No Hands, Secret Weapon & -1 to pass"),
+			InducementDuration.UNTIL_END_OF_GAME, "Player gets Bombardier, No Hands, Secret Weapon & -1 to pass") {
+		@Override
+		public Set<IRollModifier<?>> modifiers() {
+			return Collections.singleton(new PassModifier("Gromskull's Exploding Runes", 1,
+				false, false));
+		}
+
+		@Override
+		public Set<String> grantedSkills() {
+			return new HashSet<String>() {{
+				add("No Hands");
+				add("Bombardier");
+				add("Secret Weapon");
+			}};
+		}
+	},
 	// Description:
 	// A player purchased some exploding runes from a dwarven runesmith
 	// before the game. Although they are illegal, they are highly effective.

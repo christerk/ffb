@@ -2,7 +2,8 @@ package com.balancedbytes.games.ffb.util;
 
 import com.balancedbytes.games.ffb.FactoryType;
 import com.balancedbytes.games.ffb.FieldCoordinate;
-import com.balancedbytes.games.ffb.PassModifier;
+import com.balancedbytes.games.ffb.modifiers.PassContext;
+import com.balancedbytes.games.ffb.modifiers.PassModifier;
 import com.balancedbytes.games.ffb.PassingDistance;
 import com.balancedbytes.games.ffb.RangeRuler;
 import com.balancedbytes.games.ffb.factory.PassModifierFactory;
@@ -30,8 +31,9 @@ public class UtilRangeRuler {
 					pThrowTeamMate);
 			if (passingDistance != null) {
 				Optional<Integer> minimumRoll;
-				Set<PassModifier> passModifiers = new PassModifierFactory().findPassModifiers(pGame, pThrower, passingDistance,
-					pThrowTeamMate);
+				PassModifierFactory factory = pGame.getFactory(FactoryType.Factory.PASS_MODIFIER);
+				Set<PassModifier> passModifiers = factory.findModifiers(new PassContext(pGame, pThrower, passingDistance,
+					pThrowTeamMate));
 				if (pThrowTeamMate) {
 					minimumRoll = Optional.of(minimumRollThrowTeamMate(passingDistance, passModifiers));
 				} else {
