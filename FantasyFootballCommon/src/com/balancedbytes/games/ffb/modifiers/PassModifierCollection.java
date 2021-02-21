@@ -2,7 +2,7 @@ package com.balancedbytes.games.ffb.modifiers;
 
 import com.balancedbytes.games.ffb.Weather;
 
-public abstract class PassModifierCollection extends ModifierCollection<PassContext, PassModifier> {
+public class PassModifierCollection extends ModifierCollection<PassContext, PassModifier> {
 	@Override
 	public String getKey() {
 		return "PassModifierCollection";

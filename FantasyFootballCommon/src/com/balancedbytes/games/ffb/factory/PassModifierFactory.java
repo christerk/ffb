@@ -22,7 +22,7 @@ import java.util.stream.Stream;
 @RulesCollection(Rules.COMMON)
 public class PassModifierFactory extends GenerifiedModifierFactory<PassContext, PassModifier, PassModifierCollection> {
 
-	private PassModifierCollection passModifierCollection;
+	private final PassModifierCollection passModifierCollection = new PassModifierCollection();
 
 	public PassModifier forName(String name) {
 		return Stream.concat(
@@ -65,7 +65,7 @@ public class PassModifierFactory extends GenerifiedModifierFactory<PassContext, 
 
 	@Override
 	protected void setModifierCollection(PassModifierCollection modifierCollection) {
-		passModifierCollection = modifierCollection;
+		// use hard coded instance as we can use the same class for 2016 and 2020 for now
 	}
 
 }
