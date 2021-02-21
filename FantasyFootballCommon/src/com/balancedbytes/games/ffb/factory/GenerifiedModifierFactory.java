@@ -46,14 +46,14 @@ public abstract class GenerifiedModifierFactory<
 
 	protected abstract void setModifierCollection(R modifierCollection);
 
-	protected Optional<V> getDisturbingPresenceModifier(Game pGame, Player<?> pPlayer) {
+	private Optional<V> getDisturbingPresenceModifier(Game pGame, Player<?> pPlayer) {
 		int disturbingPresences = UtilDisturbingPresence.findOpposingDisturbingPresences(pGame, pPlayer);
 		return getModifierCollection().getDisturbingPresenceModifiers().stream()
 			.filter(modifier -> modifier.getMultiplier() == disturbingPresences)
 			.findFirst();
 	}
 
-	protected Optional<V> getTacklezoneModifier(Game pGame, Player<?> pPlayer) {
+	private Optional<V> getTacklezoneModifier(Game pGame, Player<?> pPlayer) {
 		int tacklezones = UtilPlayer.findTacklezones(pGame, pPlayer);
 		return getModifierCollection().getTacklezoneModifiers().stream()
 			.filter(modifier -> modifier.getMultiplier() == tacklezones)
@@ -66,7 +66,7 @@ public abstract class GenerifiedModifierFactory<
 		return modifiers;
 	}
 
-	protected Collection<V> getModifiers(C context) {
+	private Set<V> getSkillModifiers(C context) {
 		Set<V> result = new HashSet<>();
 
 		for (Skill skill : context.getPlayer().getSkills()) {
@@ -81,12 +81,10 @@ public abstract class GenerifiedModifierFactory<
 
 	protected abstract Collection<V> getModifier(Skill skill);
 
-	protected abstract Set<V> findModifiersInternal(C context);
-
 	protected abstract Optional<V> checkClass(IRollModifier<?> modifier);
 
 	public Set<V> findModifiers(C context) {
-		Set<V> modifiers = findModifiersInternal(context);
+		Set<V> modifiers = getSkillModifiers(context);
 		Arrays.stream(UtilCards.findAllActiveCards(context.getGame()))
 			.flatMap((Function<Card, Stream<IRollModifier<?>>>) card -> card.modifiers().stream())
 			.map(this::checkClass)
@@ -94,8 +92,23 @@ public abstract class GenerifiedModifierFactory<
 			.map(Optional::get)
 			.filter(modifier -> modifier.appliesToContext(context))
 			.forEach(modifiers::add);
-		modifiers.addAll(getModifiers(context));
+
+		getModifierCollection().getOtherModifiers().stream()
+			.filter(passModifier -> passModifier.appliesToContext(context))
+			.forEach(modifiers::add);
+
+		if (isAffectedByTackleZones(context)) {
+			getTacklezoneModifier(context.getGame(), context.getPlayer()).ifPresent(modifiers::add);
+		}
+
+		if (isAffectedByDisturbingPresence(context)) {
+			getDisturbingPresenceModifier(context.getGame(), context.getPlayer()).ifPresent(modifiers::add);
+		}
 
 		return modifiers;
 	}
+
+	protected abstract boolean isAffectedByDisturbingPresence(C context);
+
+	protected abstract boolean isAffectedByTackleZones(C context);
 }

@@ -1,12 +1,9 @@
 package com.balancedbytes.games.ffb.factory;
 
-import com.balancedbytes.games.ffb.CatchScatterThrowInMode;
 import com.balancedbytes.games.ffb.FactoryType;
 import com.balancedbytes.games.ffb.IRollModifier;
 import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.RulesCollection.Rules;
-import com.balancedbytes.games.ffb.model.Game;
-import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.model.Skill;
 import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
 import com.balancedbytes.games.ffb.modifiers.CatchContext;
@@ -15,9 +12,7 @@ import com.balancedbytes.games.ffb.modifiers.CatchModifierCollection;
 import com.balancedbytes.games.ffb.util.Scanner;
 
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.Optional;
-import java.util.Set;
 import java.util.stream.Stream;
 
 /**
@@ -35,28 +30,18 @@ public class CatchModifierFactory extends GenerifiedModifierFactory<CatchContext
 	}
 
 	@Override
-	protected Set<CatchModifier> findModifiersInternal(CatchContext context) {
-
-		Set<CatchModifier> catchModifiers = new HashSet<>();
-		Player<?> player = context.getPlayer();
-		Game game = context.getGame();
-
-		getModifierCollection().getOtherModifiers().stream()
-			.filter(catchModifier -> catchModifier.appliesToContext(context))
-					.forEach(catchModifiers::add);
-
-		if (!player.hasSkillWithProperty(NamedProperties.ignoreTacklezonesWhenCatching)) {
-			getTacklezoneModifier(game, player).ifPresent(catchModifiers::add);
-		}
-
-		getDisturbingPresenceModifier(game, player).ifPresent(catchModifiers::add);
-
-		return catchModifiers;
+	protected Optional<CatchModifier> checkClass(IRollModifier<?> modifier) {
+		return modifier instanceof  CatchModifier ? Optional.of((CatchModifier) modifier) : Optional.empty();
 	}
 
 	@Override
-	protected Optional<CatchModifier> checkClass(IRollModifier<?> modifier) {
-		return modifier instanceof  CatchModifier ? Optional.of((CatchModifier) modifier) : Optional.empty();
+	protected boolean isAffectedByDisturbingPresence(CatchContext context) {
+		return true;
+	}
+
+	@Override
+	protected boolean isAffectedByTackleZones(CatchContext context) {
+		return !context.getPlayer().hasSkillWithProperty(NamedProperties.ignoreTacklezonesWhenCatching);
 	}
 
 	@Override
