@@ -1,22 +1,25 @@
-package com.balancedbytes.games.ffb;
+package com.balancedbytes.games.ffb.modifiers;
 
-import com.balancedbytes.games.ffb.PickupModifiers.PickupContext;
-import com.balancedbytes.games.ffb.modifiers.IRollModifier;
-import com.balancedbytes.games.ffb.modifiers.ModifierType;
+import com.balancedbytes.games.ffb.model.Skill;
 
 /**
  * 
  * @author Kalimar
  */
-public class PickupModifier implements IRollModifier {
-	private final String fName;
+public class PickupModifier implements IRollModifier<PickupContext> {
+	private final String fName, reportString;
 	private final int fModifier;
 	private final ModifierType type;
 
 	public PickupModifier(String pName, int pModifier, ModifierType type) {
+		this(pName, pName, pModifier, type);
+	}
+
+	public PickupModifier(String pName, String reportString, int pModifier, ModifierType type) {
 		fName = pName;
 		fModifier = pModifier;
 		this.type = type;
+		this.reportString = reportString;
 	}
 
 	public int getModifier() {
@@ -36,13 +39,13 @@ public class PickupModifier implements IRollModifier {
 		return type == ModifierType.TACKLEZONE;
 	}
 
-	public boolean appliesToContext(PickupContext context) {
+	public boolean appliesToContext(Skill skill, PickupContext context) {
 		return true;
 	}
 
 	@Override
 	public String getReportString() {
-		return getName();
+		return reportString;
 	}
 
 }

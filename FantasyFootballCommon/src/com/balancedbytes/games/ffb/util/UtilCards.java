@@ -4,17 +4,11 @@ import com.balancedbytes.games.ffb.ArmorModifier;
 import com.balancedbytes.games.ffb.ArmorModifiers.ArmorModifierContext;
 import com.balancedbytes.games.ffb.Card;
 import com.balancedbytes.games.ffb.CardEffect;
-import com.balancedbytes.games.ffb.modifiers.DodgeModifier;
-import com.balancedbytes.games.ffb.modifiers.DodgeContext;
 import com.balancedbytes.games.ffb.FactoryType;
 import com.balancedbytes.games.ffb.InjuryModifier;
 import com.balancedbytes.games.ffb.InjuryModifier.InjuryModifierContext;
 import com.balancedbytes.games.ffb.LeapModifier;
 import com.balancedbytes.games.ffb.LeapModifiers.LeapContext;
-import com.balancedbytes.games.ffb.modifiers.PassModifier;
-import com.balancedbytes.games.ffb.modifiers.PassContext;
-import com.balancedbytes.games.ffb.PickupModifier;
-import com.balancedbytes.games.ffb.PickupModifiers.PickupContext;
 import com.balancedbytes.games.ffb.ReRollSource;
 import com.balancedbytes.games.ffb.ReRolledAction;
 import com.balancedbytes.games.ffb.factory.SkillFactory;
@@ -25,6 +19,8 @@ import com.balancedbytes.games.ffb.model.InducementSet;
 import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.model.Skill;
 import com.balancedbytes.games.ffb.model.SkillConstants;
+import com.balancedbytes.games.ffb.modifiers.DodgeContext;
+import com.balancedbytes.games.ffb.modifiers.DodgeModifier;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -60,34 +56,6 @@ public final class UtilCards {
 			return false;
 		}
 		return (hasSkill(pGame, pActingPlayer.getPlayer(), pSkill) && !pActingPlayer.isSkillUsed(pSkill));
-	}
-
-	public static Collection<PassModifier> getPassModifiers(Player<?> thrower, PassContext context) {
-		Set<PassModifier> result = new HashSet<>();
-
-		for (Skill skill : thrower.getSkills()) {
-			for (PassModifier modifier : skill.getPassModifiers()) {
-				if (modifier.appliesToContext(skill, context)) {
-					result.add(modifier);
-				}
-			}
-		}
-
-		return result;
-	}
-
-	public static Collection<PickupModifier> getPickupModifiers(Player<?> player, PickupContext context) {
-		Set<PickupModifier> result = new HashSet<>();
-
-		for (Skill skill : player.getSkills()) {
-			for (PickupModifier modifier : skill.getPickupModifiers()) {
-				if (modifier.appliesToContext(context)) {
-					result.add(modifier);
-				}
-			}
-		}
-
-		return result;
 	}
 
 	public static Collection<DodgeModifier> getDodgeModifiers(ActingPlayer player, DodgeContext context) {

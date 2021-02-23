@@ -1,11 +1,11 @@
 package com.balancedbytes.games.ffb.factory;
 
 import com.balancedbytes.games.ffb.FactoryType;
-import com.balancedbytes.games.ffb.modifiers.IRollModifier;
 import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.RulesCollection.Rules;
 import com.balancedbytes.games.ffb.model.Skill;
 import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
+import com.balancedbytes.games.ffb.modifiers.IRollModifier;
 import com.balancedbytes.games.ffb.modifiers.PassContext;
 import com.balancedbytes.games.ffb.modifiers.PassModifier;
 import com.balancedbytes.games.ffb.modifiers.PassModifierCollection;
@@ -22,7 +22,7 @@ import java.util.stream.Stream;
 @RulesCollection(Rules.COMMON)
 public class PassModifierFactory extends GenerifiedModifierFactory<PassContext, PassModifier, PassModifierCollection> {
 
-	private final PassModifierCollection passModifierCollection = new PassModifierCollection();
+	private PassModifierCollection passModifierCollection = new PassModifierCollection();
 
 	public PassModifier forName(String name) {
 		return Stream.concat(
@@ -65,7 +65,7 @@ public class PassModifierFactory extends GenerifiedModifierFactory<PassContext, 
 
 	@Override
 	protected void setModifierCollection(PassModifierCollection modifierCollection) {
-		// use hard coded instance as we can use the same class for 2016 and 2020 for now
+		this.passModifierCollection = modifierCollection;
 	}
 
 }

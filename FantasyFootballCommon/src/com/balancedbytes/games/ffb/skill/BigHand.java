@@ -1,11 +1,12 @@
 package com.balancedbytes.games.ffb.skill;
 
-import com.balancedbytes.games.ffb.PickupModifiers;
 import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.RulesCollection.Rules;
 import com.balancedbytes.games.ffb.SkillCategory;
 import com.balancedbytes.games.ffb.model.Skill;
 import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
+import com.balancedbytes.games.ffb.modifiers.ModifierType;
+import com.balancedbytes.games.ffb.modifiers.PickupModifier;
 
 /**
  * One of the player's hands has grown monstrously large, yet remained
@@ -23,7 +24,12 @@ public class BigHand extends Skill {
 	public void postConstruct() {
 		registerProperty(NamedProperties.ignoreTacklezonesWhenPickingUp);
 		registerProperty(NamedProperties.ignoreWeatherWhenPickingUp);
-		registerModifier(PickupModifiers.BIG_HAND);
+		registerModifier(new PickupModifier("Big Hand", "0 ignoring all tackle zones and weather effects due to Big Hand", 0, ModifierType.REGULAR) {
+			@Override
+			public boolean isModifierIncluded() {
+				return true;
+			}
+		});
 	}
 
 }

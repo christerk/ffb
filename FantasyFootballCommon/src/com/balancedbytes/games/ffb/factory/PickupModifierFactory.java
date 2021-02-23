@@ -1,22 +1,19 @@
 package com.balancedbytes.games.ffb.factory;
 
 import com.balancedbytes.games.ffb.FactoryType;
-import com.balancedbytes.games.ffb.PickupModifier;
-import com.balancedbytes.games.ffb.PickupModifiers;
 import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.RulesCollection.Rules;
-import com.balancedbytes.games.ffb.model.Game;
-import com.balancedbytes.games.ffb.model.Player;
+import com.balancedbytes.games.ffb.model.Skill;
 import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
-import com.balancedbytes.games.ffb.modifiers.ModifierType;
-import com.balancedbytes.games.ffb.util.UtilCards;
-import com.balancedbytes.games.ffb.util.UtilPlayer;
+import com.balancedbytes.games.ffb.modifiers.IRollModifier;
+import com.balancedbytes.games.ffb.modifiers.PickupContext;
+import com.balancedbytes.games.ffb.modifiers.PickupModifier;
+import com.balancedbytes.games.ffb.modifiers.PickupModifierCollection;
+import com.balancedbytes.games.ffb.util.Scanner;
 
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.Collection;
+import java.util.Optional;
+import java.util.stream.Stream;
 
 /**
  * 
@@ -24,66 +21,52 @@ import java.util.Set;
  */
 @FactoryType(FactoryType.Factory.PICKUP_MODIFIER)
 @RulesCollection(Rules.COMMON)
-public class PickupModifierFactory implements IRollModifierFactory<PickupModifier> {
+public class PickupModifierFactory extends GenerifiedModifierFactory<PickupContext, PickupModifier, PickupModifierCollection> {
 
-	static PickupModifiers pickupModifiers;
+	private PickupModifierCollection pickupModifierCollection = new PickupModifierCollection();
 
-	public PickupModifierFactory() {
-		pickupModifiers = new PickupModifiers();
-	}
-
-	public PickupModifier forName(String pName) {
-		return pickupModifiers.values().get(pName.toLowerCase());
-	}
-
-	public Set<PickupModifier> findPickupModifiers(Game pGame) {
-		Set<PickupModifier> pickupModifiers = new HashSet<>();
-		Player<?> player = pGame.getActingPlayer().getPlayer();
-		if (player != null) {
-
-			pickupModifiers.addAll(UtilCards.getPickupModifiers(player, null));
-
-			if (!player.hasSkillWithProperty(NamedProperties.ignoreTacklezonesWhenPickingUp)) {
-				PickupModifier tacklezoneModifier = getTacklezoneModifier(pGame, player);
-				if (tacklezoneModifier != null) {
-					pickupModifiers.add(tacklezoneModifier);
-				}
-			}
-
-			if (!player.hasSkillWithProperty(NamedProperties.ignoreWeatherWhenPickingUp)) {
-				pickupModifiers.addAll(activeModifiers(pGame, PickupModifier.class));
-			}
-		}
-		return pickupModifiers;
-	}
-
-	public PickupModifier[] toArray(Set<PickupModifier> pPickupModifierSet) {
-		if (pPickupModifierSet != null) {
-			PickupModifier[] pickupModifierArray = pPickupModifierSet.toArray(new PickupModifier[0]);
-			Arrays.sort(pickupModifierArray, Comparator.comparing(PickupModifier::getName));
-			return pickupModifierArray;
-		} else {
-			return new PickupModifier[0];
-		}
-	}
-
-	private PickupModifier getTacklezoneModifier(Game pGame, Player<?> pPlayer) {
-		int tacklezones = UtilPlayer.findTacklezones(pGame, pPlayer);
-		if (tacklezones > 0) {
-			for (Map.Entry<String, PickupModifier> entry : pickupModifiers.values().entrySet()) {
-				PickupModifier modifier = entry.getValue();
-				if (modifier.getType() == ModifierType.TACKLEZONE && (modifier.getModifier() == tacklezones)) {
-					return modifier;
-				}
-			}
-		}
-		return null;
+	public PickupModifier forName(String name) {
+		return Stream.concat(
+			pickupModifierCollection.getModifiers().stream(),
+			modifierAggregator.getPickupModifiers().stream())
+			.filter(modifier -> modifier.getName().equals(name))
+			.findFirst()
+			.orElse(null);
 	}
 
 	@Override
-	public void initialize(Game game) {
-		// TODO Auto-generated method stub
-		
+	protected Scanner<PickupModifierCollection> getScanner() {
+		return new Scanner<>(PickupModifierCollection.class);
+	}
+
+	@Override
+	protected PickupModifierCollection getModifierCollection() {
+		return pickupModifierCollection;
+	}
+
+	@Override
+	protected void setModifierCollection(PickupModifierCollection modifierCollection) {
+		this.pickupModifierCollection = modifierCollection;
+	}
+
+	@Override
+	protected Collection<PickupModifier> getModifier(Skill skill) {
+		return skill.getPickupModifiers();
+	}
+
+	@Override
+	protected Optional<PickupModifier> checkClass(IRollModifier<?> modifier) {
+		return modifier instanceof PickupModifier ? Optional.of((PickupModifier) modifier) : Optional.empty();
+	}
+
+	@Override
+	protected boolean isAffectedByDisturbingPresence(PickupContext context) {
+		return false;
+	}
+
+	@Override
+	protected boolean isAffectedByTackleZones(PickupContext context) {
+		return !context.getPlayer().hasSkillWithProperty(NamedProperties.ignoreTacklezonesWhenPickingUp);
 	}
 
 }

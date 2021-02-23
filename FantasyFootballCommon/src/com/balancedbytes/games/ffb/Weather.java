@@ -12,18 +12,7 @@ public enum Weather implements INamedObject {
 			"Each player on the pitch may suffer from heat exhaustion on a roll of 1 before the next kick-off."),
 	VERY_SUNNY("Very Sunny", "sunny", "A -1 modifier applies to all passing rolls."),
 	NICE("Nice Weather", "nice", "Perfect Fantasy Football weather."),
-	POURING_RAIN("Pouring Rain", "rain", "A -1 modifier applies to all catch, intercept, or pick-up rolls.") {
-		public Collection<IRollModifier> modifier(Game game) {
-
-			return new HashSet<IRollModifier>() {
-				private static final long serialVersionUID = 199665269425305196L;
-	
-				{
-					add(PickupModifiers.POURING_RAIN);
-				}
-			};
-		}
-	},
+	POURING_RAIN("Pouring Rain", "rain", "A -1 modifier applies to all catch, intercept, or pick-up rolls."),
 	BLIZZARD("Blizzard", "blizzard",
 			"Going For It fails on a roll of 1 or 2 and only quick or short passes can be attempted.") {
 		public Collection<IRollModifier> modifier(Game game) {

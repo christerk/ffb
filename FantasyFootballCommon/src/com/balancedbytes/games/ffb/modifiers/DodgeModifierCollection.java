@@ -1,8 +1,5 @@
 package com.balancedbytes.games.ffb.modifiers;
 
-import com.balancedbytes.games.ffb.model.Skill;
-import com.balancedbytes.games.ffb.util.UtilCards;
-
 public class DodgeModifierCollection extends ModifierCollection<DodgeContext, DodgeModifier>{
 	@Override
 	public String getKey() {

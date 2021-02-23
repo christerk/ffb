@@ -1,11 +1,8 @@
 package com.balancedbytes.games.ffb.server.step.action.common;
 
-import java.util.Set;
-
 import com.balancedbytes.games.ffb.CatchScatterThrowInMode;
 import com.balancedbytes.games.ffb.FactoryType;
 import com.balancedbytes.games.ffb.FieldCoordinate;
-import com.balancedbytes.games.ffb.PickupModifier;
 import com.balancedbytes.games.ffb.ReRollSource;
 import com.balancedbytes.games.ffb.ReRolledActions;
 import com.balancedbytes.games.ffb.RulesCollection;
@@ -18,6 +15,8 @@ import com.balancedbytes.games.ffb.mechanics.Mechanic;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
+import com.balancedbytes.games.ffb.modifiers.PickupContext;
+import com.balancedbytes.games.ffb.modifiers.PickupModifier;
 import com.balancedbytes.games.ffb.report.ReportId;
 import com.balancedbytes.games.ffb.report.ReportSkillRoll;
 import com.balancedbytes.games.ffb.server.ActionStatus;
@@ -37,6 +36,9 @@ import com.balancedbytes.games.ffb.server.util.UtilServerReRoll;
 import com.balancedbytes.games.ffb.util.UtilCards;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
+
+import java.util.List;
+import java.util.Set;
 
 /**
  * Step in block sequence to handle picking up the ball.
@@ -142,16 +144,16 @@ public class StepPickUp extends AbstractStepWithReRoll {
 		if (actingPlayer.getPlayer().hasSkillWithProperty(NamedProperties.preventHoldBall)) {
 			return ActionStatus.FAILURE;
 		} else {
-			PickupModifierFactory modifierFactory = new PickupModifierFactory();
-			Set<PickupModifier> pickupModifiers = modifierFactory.findPickupModifiers(game);
+			PickupModifierFactory modifierFactory = game.getFactory(FactoryType.Factory.PICKUP_MODIFIER);
+			Set<PickupModifier> pickupModifiers = modifierFactory.findModifiers(new PickupContext(game, actingPlayer.getPlayer()));
 			AgilityMechanic mechanic = (AgilityMechanic) game.getRules().getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.AGILITY.name());
 			int minimumRoll = mechanic.minimumRollPickup(actingPlayer.getPlayer(), pickupModifiers);
 			int roll = getGameState().getDiceRoller().rollSkill();
 			boolean successful = DiceInterpreter.getInstance().isSkillRollSuccessful(roll, minimumRoll);
-			PickupModifier[] pickupModifierArray = modifierFactory.toArray(pickupModifiers);
+			List<PickupModifier> sortedModifiers = modifierFactory.sort(pickupModifiers);
 			boolean reRolled = ((getReRolledAction() == ReRolledActions.PICK_UP) && (getReRollSource() != null));
 			getResult().addReport(new ReportSkillRoll(ReportId.PICK_UP_ROLL, actingPlayer.getPlayerId(), successful, roll,
-					minimumRoll, reRolled, pickupModifierArray));
+					minimumRoll, reRolled, sortedModifiers.toArray(new PickupModifier[0])));
 			if (successful) {
 				return ActionStatus.SUCCESS;
 			} else {

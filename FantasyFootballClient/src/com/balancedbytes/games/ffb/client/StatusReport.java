@@ -10,15 +10,12 @@ import com.balancedbytes.games.ffb.Direction;
 import com.balancedbytes.games.ffb.FactoryType.Factory;
 import com.balancedbytes.games.ffb.FantasyFootballConstants;
 import com.balancedbytes.games.ffb.HeatExhaustion;
-import com.balancedbytes.games.ffb.modifiers.DodgeModifier;
-import com.balancedbytes.games.ffb.modifiers.IRollModifier;
 import com.balancedbytes.games.ffb.InjuryModifier;
 import com.balancedbytes.games.ffb.InjuryModifiers;
 import com.balancedbytes.games.ffb.KickoffResult;
 import com.balancedbytes.games.ffb.KnockoutRecovery;
 import com.balancedbytes.games.ffb.LeaderState;
 import com.balancedbytes.games.ffb.PassingDistance;
-import com.balancedbytes.games.ffb.PickupModifiers;
 import com.balancedbytes.games.ffb.PlayerAction;
 import com.balancedbytes.games.ffb.PlayerState;
 import com.balancedbytes.games.ffb.PushbackMode;
@@ -43,6 +40,8 @@ import com.balancedbytes.games.ffb.model.SkillConstants;
 import com.balancedbytes.games.ffb.model.Team;
 import com.balancedbytes.games.ffb.model.ZappedPlayer;
 import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
+import com.balancedbytes.games.ffb.modifiers.DodgeModifier;
+import com.balancedbytes.games.ffb.modifiers.IRollModifier;
 import com.balancedbytes.games.ffb.net.ServerStatus;
 import com.balancedbytes.games.ffb.net.commands.ServerCommandJoin;
 import com.balancedbytes.games.ffb.net.commands.ServerCommandLeave;
@@ -1773,10 +1772,6 @@ public class StatusReport {
 		if (!pReport.isReRolled()) {
 			print(getIndent(), true, player);
 			println(getIndent(), TextStyle.BOLD, " tries to pick up the ball:");
-			if (pReport.hasRollModifier(PickupModifiers.BIG_HAND)) {
-				print(getIndent() + 1, false, player);
-				println(getIndent() + 1, " is using Big Hand to ignore any tacklezones on the ball.");
-			}
 		}
 		status.append("Pickup Roll [ ").append(pReport.getRoll()).append(" ]");
 		println(getIndent() + 1, TextStyle.ROLL, status.toString());

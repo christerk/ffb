@@ -1,18 +1,18 @@
 package com.balancedbytes.games.ffb.model;
 
 import com.balancedbytes.games.ffb.ArmorModifier;
-import com.balancedbytes.games.ffb.modifiers.DodgeModifier;
 import com.balancedbytes.games.ffb.INamedObject;
 import com.balancedbytes.games.ffb.InjuryModifier;
 import com.balancedbytes.games.ffb.LeapModifier;
-import com.balancedbytes.games.ffb.modifiers.PassModifier;
-import com.balancedbytes.games.ffb.PickupModifier;
 import com.balancedbytes.games.ffb.ReRollSource;
 import com.balancedbytes.games.ffb.ReRolledAction;
 import com.balancedbytes.games.ffb.SkillCategory;
 import com.balancedbytes.games.ffb.model.modifier.CancelSkillProperty;
 import com.balancedbytes.games.ffb.modifiers.CatchModifier;
+import com.balancedbytes.games.ffb.modifiers.DodgeModifier;
 import com.balancedbytes.games.ffb.modifiers.InterceptionModifier;
+import com.balancedbytes.games.ffb.modifiers.PassModifier;
+import com.balancedbytes.games.ffb.modifiers.PickupModifier;
 
 import java.util.ArrayList;
 import java.util.Comparator;

@@ -58,4 +58,14 @@ public class ModifierAggregator {
 				.map(modifier -> (DodgeModifier)modifier))
 			.collect(Collectors.toSet());
 	}
+
+	public Set<PickupModifier> getPickupModifiers() {
+		return Stream.concat(
+			skillFactory.getSkills().stream().flatMap(skill -> skill.getPickupModifiers().stream()),
+			Arrays.stream(UtilCards.findAllActiveCards(game))
+				.flatMap(card -> card.modifiers().stream())
+				.filter(modifier -> modifier instanceof PickupModifier)
+				.map(modifier -> (PickupModifier)modifier))
+			.collect(Collectors.toSet());
+	}
 }
