@@ -1,9 +1,5 @@
 package com.balancedbytes.games.ffb.server.skillbehaviour;
 
-import java.util.Set;
-
-import com.balancedbytes.games.ffb.modifiers.DodgeContext;
-import com.balancedbytes.games.ffb.modifiers.DodgeModifier;
 import com.balancedbytes.games.ffb.FactoryType.Factory;
 import com.balancedbytes.games.ffb.PlayerChoiceMode;
 import com.balancedbytes.games.ffb.RulesCollection;
@@ -19,6 +15,9 @@ import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.model.SkillConstants;
 import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
+import com.balancedbytes.games.ffb.modifiers.DodgeContext;
+import com.balancedbytes.games.ffb.modifiers.DodgeModifier;
+import com.balancedbytes.games.ffb.modifiers.ModifierType;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandUseSkill;
 import com.balancedbytes.games.ffb.report.ReportSkillUse;
 import com.balancedbytes.games.ffb.server.DiceInterpreter;
@@ -34,6 +33,9 @@ import com.balancedbytes.games.ffb.server.util.UtilServerDialog;
 import com.balancedbytes.games.ffb.skill.DivingTackle;
 import com.balancedbytes.games.ffb.util.ArrayTool;
 import com.balancedbytes.games.ffb.util.UtilPlayer;
+
+import java.util.Optional;
+import java.util.Set;
 
 @RulesCollection(Rules.COMMON)
 public class DivingTackleBehaviour extends SkillBehaviour<DivingTackle> {
@@ -66,15 +68,16 @@ public class DivingTackleBehaviour extends SkillBehaviour<DivingTackle> {
 						if (ArrayTool.isProvided(divingTacklers) && (state.dodgeRoll > 0)) {
 							DodgeModifierFactory modifierFactory = game.getFactory(Factory.DODGE_MODIFIER);
 							Set<DodgeModifier> dodgeModifiers = modifierFactory.findModifiers(new DodgeContext(game, actingPlayer, state.coordinateFrom,
-									state.coordinateTo, state.usingBreakTackle, true));
+									state.coordinateTo, state.usingBreakTackle));
+							dodgeModifiers.addAll(modifierFactory.forType(ModifierType.DIVING_TACKLE));
 							int minimumRoll = mechanic.minimumRollDodge(game, actingPlayer.getPlayer(),
 									dodgeModifiers);
 							int minimumRollWithoutBreakTackle = minimumRoll;
-							if (dodgeModifiers.stream().anyMatch(DodgeModifier::isUseStrength)) {
-								Set<DodgeModifier> dodgeModifiersWOBt = modifierFactory.findModifiers(new DodgeContext(game, actingPlayer, state.coordinateFrom,
-									state.coordinateTo, false, true));
+							Optional<DodgeModifier> strengthModifier = dodgeModifiers.stream().filter(DodgeModifier::isUseStrength).findFirst();
+							if (strengthModifier.isPresent() && dodgeModifiers.remove(strengthModifier.get())) {
 								minimumRollWithoutBreakTackle = mechanic.minimumRollDodge(game,
-										actingPlayer.getPlayer(), dodgeModifiersWOBt);
+										actingPlayer.getPlayer(), dodgeModifiers);
+								dodgeModifiers.add(strengthModifier.get());
 							}
 							if (!DiceInterpreter.getInstance().isSkillRollSuccessful(state.dodgeRoll, minimumRoll)) {
 								String teamId = game.isHomePlaying() ? game.getTeamAway().getId() : game.getTeamHome().getId();
@@ -106,10 +109,11 @@ public class DivingTackleBehaviour extends SkillBehaviour<DivingTackle> {
 						// Check if the dodge is successful with BT (ie. DT was used only to trigger BT)
 						DodgeModifierFactory modifierFactory = new DodgeModifierFactory();
 						Set<DodgeModifier> dodgeModifiers = modifierFactory.findModifiers(new DodgeContext(game, actingPlayer, state.coordinateFrom,
-								state.coordinateTo, true, true));
+								state.coordinateTo, false));
 						int minimumRoll = mechanic.minimumRollDodge(game, actingPlayer.getPlayer(),
 								dodgeModifiers);
-						if (DiceInterpreter.getInstance().isSkillRollSuccessful(state.dodgeRoll, minimumRoll)) {
+						if (dodgeModifiers.stream().anyMatch(DodgeModifier::isUseStrength)
+							&& DiceInterpreter.getInstance().isSkillRollSuccessful(state.dodgeRoll, minimumRoll)) {
 							// This dodge will be successful with Break Tackle triggered, so mark it as
 							// used.
 							state.usingBreakTackle = true;

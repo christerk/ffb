@@ -31,10 +31,10 @@ public class DivingTackle extends Skill {
 	@Override
 	public void postConstruct() {
 		registerProperty(NamedProperties.canAttemptToTackleDodgingPlayer);
-		registerModifier(new DodgeModifier("Diving Tackle", 2, ModifierType.REGULAR) {
+		registerModifier(new DodgeModifier("Diving Tackle", 2, ModifierType.DIVING_TACKLE) {
 			@Override
 			public boolean appliesToContext(Skill skill, DodgeContext context) {
-				return context.isUseDivingTackle();
+				return false;
 			}
 		});
 	}

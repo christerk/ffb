@@ -1,9 +1,5 @@
 package com.balancedbytes.games.ffb.factory;
 
-import com.balancedbytes.games.ffb.modifiers.IRollModifier;
-import com.balancedbytes.games.ffb.model.Skill;
-import com.balancedbytes.games.ffb.modifiers.DodgeModifier;
-import com.balancedbytes.games.ffb.modifiers.DodgeContext;
 import com.balancedbytes.games.ffb.FactoryType;
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.RulesCollection;
@@ -11,10 +7,14 @@ import com.balancedbytes.games.ffb.RulesCollection.Rules;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
+import com.balancedbytes.games.ffb.model.Skill;
 import com.balancedbytes.games.ffb.model.SkillConstants;
 import com.balancedbytes.games.ffb.model.Team;
 import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
+import com.balancedbytes.games.ffb.modifiers.DodgeContext;
+import com.balancedbytes.games.ffb.modifiers.DodgeModifier;
 import com.balancedbytes.games.ffb.modifiers.DodgeModifierCollection;
+import com.balancedbytes.games.ffb.modifiers.IRollModifier;
 import com.balancedbytes.games.ffb.modifiers.ModifierType;
 import com.balancedbytes.games.ffb.util.Scanner;
 import com.balancedbytes.games.ffb.util.UtilCards;
@@ -23,6 +23,7 @@ import com.balancedbytes.games.ffb.util.UtilPlayer;
 import java.util.Collection;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
@@ -42,6 +43,13 @@ public class DodgeModifierFactory extends GenerifiedModifierFactory<DodgeContext
 			.filter(modifier -> modifier.getName().equals(name))
 			.findFirst()
 			.orElse(null);
+	}
+
+	public Set<DodgeModifier> forType(ModifierType type) {
+		return Stream.concat(
+			modifierAggregator.getDodgeModifiers().stream().filter(dodgeModifier -> dodgeModifier.getType() == type),
+			dodgeModifierCollection.getModifiers(type).stream())
+			.collect(Collectors.toSet());
 	}
 
 	@Override

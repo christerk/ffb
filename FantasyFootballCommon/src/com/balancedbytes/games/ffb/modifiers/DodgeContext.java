@@ -9,19 +9,18 @@ public class DodgeContext implements ModifierContext {
 	private final ActingPlayer actingPlayer;
 	private final FieldCoordinate sourceCoordinate, targetCoordinate;
 	private final Game game;
-	private final boolean useBreakTackle, useDivingTackle;
+	private final boolean useBreakTackle;
 
 	public DodgeContext(Game game, ActingPlayer actingPlayer, FieldCoordinate sourceCoordinate, FieldCoordinate targetCoordinate) {
-		this(game, actingPlayer, sourceCoordinate, targetCoordinate, false, false);
+		this(game, actingPlayer, sourceCoordinate, targetCoordinate, false);
 	}
 
-	public DodgeContext(Game game, ActingPlayer actingPlayer, FieldCoordinate sourceCoordinate, FieldCoordinate targetCoordinate, boolean useBreakTackle, boolean useDivingTackle) {
+	public DodgeContext(Game game, ActingPlayer actingPlayer, FieldCoordinate sourceCoordinate, FieldCoordinate targetCoordinate, boolean useBreakTackle) {
 		this.sourceCoordinate = sourceCoordinate;
 		this.actingPlayer = actingPlayer;
 		this.targetCoordinate = targetCoordinate;
 		this.game = game;
 		this.useBreakTackle = useBreakTackle;
-		this.useDivingTackle = useDivingTackle;
 	}
 
 	public ActingPlayer getActingPlayer() {
@@ -38,10 +37,6 @@ public class DodgeContext implements ModifierContext {
 
 	public boolean isUseBreakTackle() {
 		return useBreakTackle;
-	}
-
-	public boolean isUseDivingTackle() {
-		return useDivingTackle;
 	}
 
 	@Override

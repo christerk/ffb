@@ -18,6 +18,7 @@ import com.balancedbytes.games.ffb.model.Skill;
 import com.balancedbytes.games.ffb.model.Team;
 import com.balancedbytes.games.ffb.modifiers.DodgeContext;
 import com.balancedbytes.games.ffb.modifiers.DodgeModifier;
+import com.balancedbytes.games.ffb.modifiers.ModifierType;
 import com.balancedbytes.games.ffb.option.GameOptionId;
 import com.balancedbytes.games.ffb.option.UtilGameOption;
 import com.balancedbytes.games.ffb.report.ReportId;
@@ -196,7 +197,11 @@ public class StepMoveDodge extends AbstractStepWithReRoll {
 			publishParameter(new StepParameter(StepParameterKey.DODGE_ROLL, getGameState().getDiceRoller().rollSkill()));
 		}
 		DodgeModifierFactory modifierFactory = game.getFactory(Factory.DODGE_MODIFIER);
-		Set<DodgeModifier> dodgeModifiers = modifierFactory.findModifiers(new DodgeContext(game, actingPlayer, fCoordinateFrom, fCoordinateTo, fUsingBreakTackle, (fUsingDivingTackle != null) && fUsingDivingTackle));
+		Set<DodgeModifier> dodgeModifiers = modifierFactory.findModifiers(new DodgeContext(game, actingPlayer, fCoordinateFrom, fCoordinateTo, fUsingBreakTackle));
+		if ((fUsingDivingTackle != null) && fUsingDivingTackle) {
+			dodgeModifiers.addAll(modifierFactory.forType(ModifierType.DIVING_TACKLE));
+		}
+
 		AgilityMechanic mechanic = (AgilityMechanic) game.getRules().getFactory(Factory.MECHANIC).forName(Mechanic.Type.AGILITY.name());
 
 		int minimumRoll = mechanic.minimumRollDodge(game, actingPlayer.getPlayer(), dodgeModifiers);
