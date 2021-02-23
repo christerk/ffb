@@ -13,7 +13,7 @@ import com.balancedbytes.games.ffb.mechanics.Mechanic;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
-import com.balancedbytes.games.ffb.model.SkillConstants;
+import com.balancedbytes.games.ffb.model.Skill;
 import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
 import com.balancedbytes.games.ffb.modifiers.DodgeContext;
 import com.balancedbytes.games.ffb.modifiers.DodgeModifier;
@@ -34,6 +34,7 @@ import com.balancedbytes.games.ffb.skill.DivingTackle;
 import com.balancedbytes.games.ffb.util.ArrayTool;
 import com.balancedbytes.games.ffb.util.UtilPlayer;
 
+import java.util.Arrays;
 import java.util.Optional;
 import java.util.Set;
 
@@ -112,12 +113,18 @@ public class DivingTackleBehaviour extends SkillBehaviour<DivingTackle> {
 								state.coordinateTo, false));
 						int minimumRoll = mechanic.minimumRollDodge(game, actingPlayer.getPlayer(),
 								dodgeModifiers);
-						if (dodgeModifiers.stream().anyMatch(DodgeModifier::isUseStrength)
+
+						Optional<DodgeModifier> strengthModifier = dodgeModifiers.stream().filter(DodgeModifier::isUseStrength).findFirst();
+
+						Optional<Skill> strengthSkill = Arrays.stream(actingPlayer.getPlayer().getSkills()).filter(skill -> strengthModifier.isPresent() && skill.getDodgeModifiers().contains(strengthModifier.get())).findFirst();
+
+						if (strengthModifier.isPresent()
+							&& strengthSkill.isPresent()
 							&& DiceInterpreter.getInstance().isSkillRollSuccessful(state.dodgeRoll, minimumRoll)) {
 							// This dodge will be successful with Break Tackle triggered, so mark it as
 							// used.
 							state.usingBreakTackle = true;
-							actingPlayer.markSkillUsed(SkillConstants.BREAK_TACKLE);
+							actingPlayer.markSkillUsed(strengthSkill.get());
 							step.publishParameter(new StepParameter(StepParameterKey.USING_BREAK_TACKLE, state.usingBreakTackle));
 						}
 
