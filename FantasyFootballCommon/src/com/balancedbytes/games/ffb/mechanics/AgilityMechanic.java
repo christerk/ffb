@@ -1,7 +1,7 @@
 package com.balancedbytes.games.ffb.mechanics;
 
 import com.balancedbytes.games.ffb.GazeModifier;
-import com.balancedbytes.games.ffb.LeapModifier;
+import com.balancedbytes.games.ffb.modifiers.LeapModifier;
 import com.balancedbytes.games.ffb.RightStuffModifier;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.Game;

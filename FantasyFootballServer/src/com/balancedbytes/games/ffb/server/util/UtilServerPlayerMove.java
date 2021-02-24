@@ -8,7 +8,8 @@ import com.balancedbytes.games.ffb.FactoryType.Factory;
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.FieldCoordinateBounds;
 import com.balancedbytes.games.ffb.GoForItModifier;
-import com.balancedbytes.games.ffb.LeapModifier;
+import com.balancedbytes.games.ffb.modifiers.LeapContext;
+import com.balancedbytes.games.ffb.modifiers.LeapModifier;
 import com.balancedbytes.games.ffb.MoveSquare;
 import com.balancedbytes.games.ffb.PathFinderWithPassBlockSupport;
 import com.balancedbytes.games.ffb.TurnMode;
@@ -32,7 +33,7 @@ import com.balancedbytes.games.ffb.util.UtilPassing;
 import com.balancedbytes.games.ffb.util.UtilPlayer;
 
 /**
- * 
+ *
  * @author Kalimar
  */
 public class UtilServerPlayerMove {
@@ -121,7 +122,7 @@ public class UtilServerPlayerMove {
 		AgilityMechanic mechanic = (AgilityMechanic) game.getRules().getFactory(Factory.MECHANIC).forName(Mechanic.Type.AGILITY.name());
 		if (pLeaping) {
 			LeapModifierFactory modifierFactory = new LeapModifierFactory();
-			Set<LeapModifier> leapModifiers = modifierFactory.findLeapModifiers(game, playerCoordinate);
+			Set<LeapModifier> leapModifiers = modifierFactory.findModifiers(new LeapContext(game, actingPlayer.getPlayer()));
 			minimumRollDodge = mechanic.minimumRollLeap(actingPlayer.getPlayer(), leapModifiers);
 			if (actingPlayer.isStandingUp() && !actingPlayer.hasActed()
 					&& !actingPlayer.getPlayer().hasSkillWithProperty(NamedProperties.canStandUpForFree)) {

@@ -1,10 +1,12 @@
 package com.balancedbytes.games.ffb.server.skillbehaviour;
 
+import java.util.List;
 import java.util.Set;
 
 import com.balancedbytes.games.ffb.FactoryType;
 import com.balancedbytes.games.ffb.FieldCoordinate;
-import com.balancedbytes.games.ffb.LeapModifier;
+import com.balancedbytes.games.ffb.modifiers.LeapContext;
+import com.balancedbytes.games.ffb.modifiers.LeapModifier;
 import com.balancedbytes.games.ffb.ReRolledActions;
 import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.RulesCollection.Rules;
@@ -95,15 +97,15 @@ public class LeapBehaviour extends SkillBehaviour<Leap> {
 		FieldCoordinate playerCoordinate = fieldModel.getPlayerCoordinate(actingPlayer.getPlayer());
 
 		LeapModifierFactory modifierFactory = new LeapModifierFactory();
-		Set<LeapModifier> leapModifiers = modifierFactory.findLeapModifiers(game, playerCoordinate);
+		Set<LeapModifier> leapModifiers = modifierFactory.findModifiers(new LeapContext(game, actingPlayer.getPlayer()));
 		AgilityMechanic mechanic = (AgilityMechanic) game.getRules().getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.AGILITY.name());
 		int minimumRoll = mechanic.minimumRollLeap(actingPlayer.getPlayer(), leapModifiers);
 		int roll = step.getGameState().getDiceRoller().rollSkill();
 		boolean successful = DiceInterpreter.getInstance().isSkillRollSuccessful(roll, minimumRoll);
-		LeapModifier[] leapModifierArray = modifierFactory.toArray(leapModifiers);
+		List<LeapModifier> sortedModifiers = modifierFactory.sort(leapModifiers);
 		boolean reRolled = ((step.getReRolledAction() == ReRolledActions.LEAP) && (step.getReRollSource() != null));
 		step.getResult().addReport(new ReportSkillRoll(ReportId.LEAP_ROLL, actingPlayer.getPlayerId(), successful, roll,
-				minimumRoll, reRolled, leapModifierArray));
+				minimumRoll, reRolled, sortedModifiers.toArray(new LeapModifier[0])));
 		if (successful) {
 			status = ActionStatus.SUCCESS;
 		} else {

@@ -7,8 +7,8 @@ import com.balancedbytes.games.ffb.CardEffect;
 import com.balancedbytes.games.ffb.FactoryType;
 import com.balancedbytes.games.ffb.InjuryModifier;
 import com.balancedbytes.games.ffb.InjuryModifier.InjuryModifierContext;
-import com.balancedbytes.games.ffb.LeapModifier;
-import com.balancedbytes.games.ffb.LeapModifiers.LeapContext;
+import com.balancedbytes.games.ffb.modifiers.LeapModifier;
+import com.balancedbytes.games.ffb.modifiers.LeapContext;
 import com.balancedbytes.games.ffb.ReRollSource;
 import com.balancedbytes.games.ffb.ReRolledAction;
 import com.balancedbytes.games.ffb.factory.SkillFactory;
@@ -69,19 +69,6 @@ public final class UtilCards {
 			}
 		}
 
-		return result;
-	}
-
-	public static Collection<LeapModifier> getLeapModifiers(ActingPlayer player, LeapContext context) {
-		Set<LeapModifier> result = new HashSet<>();
-
-		for (Skill skill : player.getPlayer().getSkills()) {
-			for (LeapModifier modifier : skill.getLeapModifiers()) {
-				if (modifier.appliesToContext(skill, context)) {
-					result.add(modifier);
-				}
-			}
-		}
 		return result;
 	}
 
