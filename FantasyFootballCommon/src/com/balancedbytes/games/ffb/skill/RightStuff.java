@@ -5,6 +5,8 @@ import com.balancedbytes.games.ffb.RulesCollection.Rules;
 import com.balancedbytes.games.ffb.SkillCategory;
 import com.balancedbytes.games.ffb.model.Skill;
 import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
+import com.balancedbytes.games.ffb.modifiers.ModifierType;
+import com.balancedbytes.games.ffb.modifiers.RightStuffModifier;
 
 /**
  * A player with the Right Stuff skill can be thrown by another player from his
@@ -32,6 +34,7 @@ public class RightStuff extends Skill {
 		registerProperty(NamedProperties.canBeThrown);
 		registerProperty(NamedProperties.canBeKicked);
 		registerProperty(NamedProperties.ignoreTackleWhenBlocked);
+		registerModifer(new RightStuffModifier("Swoop", -1, ModifierType.REGULAR));
 	}
 
 }

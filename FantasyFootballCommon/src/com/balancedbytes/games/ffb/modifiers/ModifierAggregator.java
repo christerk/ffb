@@ -98,4 +98,14 @@ public class ModifierAggregator {
 				.map(modifier -> (GoForItModifier)modifier))
 			.collect(Collectors.toSet());
 	}
+
+	public Set<RightStuffModifier> getRightStuffModifiers() {
+		return Stream.concat(
+			skillFactory.getSkills().stream().flatMap(skill -> skill.getRightStuffModifiers().stream()),
+			Arrays.stream(UtilCards.findAllActiveCards(game))
+				.flatMap(card -> card.modifiers().stream())
+				.filter(modifier -> modifier instanceof RightStuffModifier)
+				.map(modifier -> (RightStuffModifier)modifier))
+			.collect(Collectors.toSet());
+	}
 }

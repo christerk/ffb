@@ -42,6 +42,7 @@ public interface IServerJsonOption extends IJsonOption {
 	JsonEnumWithNameOption DISPATCH_PLAYER_ACTION = new JsonEnumWithNameOption("dispatchPlayerAction",
 			Factory.PLAYER_ACTION);
 	JsonBooleanOption DIVING_CATCH_CHOICE = new JsonBooleanOption("divingCatchChoice");
+	JsonBooleanOption DROP_THROWN_PLAYER = new JsonBooleanOption("dropThrownPlayer");
 	JsonIntOption DODGE_ROLL = new JsonIntOption("dodgeRoll");
 	JsonBooleanOption DONT_DROP_FUMBLE = new JsonBooleanOption("dontDropFumble");
 	JsonBooleanOption END_PLAYER_ACTION = new JsonBooleanOption("endPlayerAction");
@@ -86,6 +87,7 @@ public interface IServerJsonOption extends IJsonOption {
 	JsonObjectOption INJURY_RESULT_DEFENDER = new JsonObjectOption("injuryResultDefender");
 	JsonBooleanOption INTERCEPTION_SUCCESSFUL = new JsonBooleanOption("interceptionSuccessfull");
 	JsonBooleanOption INTERCEPTOR_CHOSEN = new JsonBooleanOption("interceptorChosen");
+	JsonStringOption KICK_TEAM_MATE_RANGE = new JsonStringOption("kickTeamMateOption");
 	JsonPlayerStateOption KICKED_PLAYER_STATE = new JsonPlayerStateOption("kickedPlayerState");
 	JsonBooleanOption KICKED_PLAYER_HAS_BALL = new JsonBooleanOption("kickedPlayerHasBall");
 	JsonFieldCoordinateOption KICKING_PLAYER_COORDINATE = new JsonFieldCoordinateOption("kickingPlayerCoordinate");

@@ -1,18 +1,18 @@
 package com.balancedbytes.games.ffb.factory;
 
 import com.balancedbytes.games.ffb.FactoryType;
-import com.balancedbytes.games.ffb.RightStuffModifier;
 import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.RulesCollection.Rules;
-import com.balancedbytes.games.ffb.model.Game;
-import com.balancedbytes.games.ffb.model.Player;
-import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
-import com.balancedbytes.games.ffb.modifiers.ModifierType;
-import com.balancedbytes.games.ffb.util.UtilPlayer;
+import com.balancedbytes.games.ffb.model.Skill;
+import com.balancedbytes.games.ffb.modifiers.IRollModifier;
+import com.balancedbytes.games.ffb.modifiers.RightStuffContext;
+import com.balancedbytes.games.ffb.modifiers.RightStuffModifier;
+import com.balancedbytes.games.ffb.modifiers.RightStuffModifierCollection;
+import com.balancedbytes.games.ffb.util.Scanner;
 
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.Set;
+import java.util.Collection;
+import java.util.Optional;
+import java.util.stream.Stream;
 
 /**
  * 
@@ -20,52 +20,51 @@ import java.util.Set;
  */
 @FactoryType(FactoryType.Factory.RIGHT_STUFF_MODIFIER)
 @RulesCollection(Rules.COMMON)
-public class RightStuffModifierFactory implements IRollModifierFactory<RightStuffModifier> {
+public class RightStuffModifierFactory extends GenerifiedModifierFactory<RightStuffContext, RightStuffModifier, RightStuffModifierCollection> {
 
-	public RightStuffModifier forName(String pName) {
-		for (RightStuffModifier modifier : RightStuffModifier.values()) {
-			if (modifier.getName().equalsIgnoreCase(pName)) {
-				return modifier;
-			}
-		}
-		return null;
-	}
+	private RightStuffModifierCollection rightStuffModifierCollection = new RightStuffModifierCollection();
 
-	public Set<RightStuffModifier> findRightStuffModifiers(Game pGame, Player<?> pPlayer) {
-		Set<RightStuffModifier> rightStuffModifiers = activeModifiers(pGame, RightStuffModifier.class);
-		RightStuffModifier tacklezoneModifier = getTacklezoneModifier(pGame, pPlayer);
-		if (tacklezoneModifier != null) {
-			rightStuffModifiers.add(tacklezoneModifier);
-		}
-		if (pPlayer.hasSkillWithProperty(NamedProperties.ttmScattersInSingleDirection)) {
-			rightStuffModifiers.add(RightStuffModifier.SWOOP);
-		}
-		return rightStuffModifiers;
-	}
-
-	public RightStuffModifier[] toArray(Set<RightStuffModifier> pRightStuffModifierSet) {
-		if (pRightStuffModifierSet != null) {
-			RightStuffModifier[] rightStuffModifierArray = pRightStuffModifierSet
-					.toArray(new RightStuffModifier[0]);
-			Arrays.sort(rightStuffModifierArray, Comparator.comparing(RightStuffModifier::getName));
-			return rightStuffModifierArray;
-		} else {
-			return new RightStuffModifier[0];
-		}
-	}
-
-	private RightStuffModifier getTacklezoneModifier(Game pGame, Player<?> pPlayer) {
-		int tacklezones = UtilPlayer.findTacklezones(pGame, pPlayer);
-		for (RightStuffModifier modifier : RightStuffModifier.values()) {
-			if (modifier.getType() == ModifierType.TACKLEZONE && (modifier.getModifier() == tacklezones)) {
-				return modifier;
-			}
-		}
-		return null;
+	public RightStuffModifier forName(String name) {
+		return Stream.concat(
+			rightStuffModifierCollection.getModifiers().stream(),
+			modifierAggregator.getRightStuffModifiers().stream())
+			.filter(modifier -> modifier.getName().equals(name))
+			.findFirst()
+			.orElse(null);
 	}
 
 	@Override
-	public void initialize(Game game) {
+	protected Scanner<RightStuffModifierCollection> getScanner() {
+		return new Scanner<>(RightStuffModifierCollection.class);
 	}
 
+	@Override
+	protected RightStuffModifierCollection getModifierCollection() {
+		return rightStuffModifierCollection;
+	}
+
+	@Override
+	protected void setModifierCollection(RightStuffModifierCollection modifierCollection) {
+		this.rightStuffModifierCollection = modifierCollection;
+	}
+
+	@Override
+	protected Collection<RightStuffModifier> getModifier(Skill skill) {
+		return skill.getRightStuffModifiers();
+	}
+
+	@Override
+	protected Optional<RightStuffModifier> checkClass(IRollModifier<?> modifier) {
+		return modifier instanceof RightStuffModifier ? Optional.of((RightStuffModifier) modifier) : Optional.empty();
+	}
+
+	@Override
+	protected boolean isAffectedByDisturbingPresence(RightStuffContext context) {
+		return false;
+	}
+
+	@Override
+	protected boolean isAffectedByTackleZones(RightStuffContext context) {
+		return true;
+	}
 }

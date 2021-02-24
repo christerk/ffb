@@ -10,6 +10,7 @@ import com.balancedbytes.games.ffb.factory.IFactorySource;
 import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.Game;
+import com.balancedbytes.games.ffb.model.KickTeamMateRange;
 import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
 import com.balancedbytes.games.ffb.option.GameOptionId;
@@ -198,9 +199,9 @@ public final class StepKickTeamMate extends AbstractStepWithReRoll {
 					fKickedPlayerHasBall, kickerCoordinate, hasSwoop, true));
 			publishParameter(new StepParameter(StepParameterKey.IS_KICKED_PLAYER, true));
 			if (fDistance >= 9) {
-				publishParameter(new StepParameter(StepParameterKey.KTM_MODIFIER, -2));
+				publishParameter(new StepParameter(StepParameterKey.KTM_MODIFIER, KickTeamMateRange.LONG));
 			} else if (fDistance >= 6) {
-				publishParameter(new StepParameter(StepParameterKey.KTM_MODIFIER, -1));
+				publishParameter(new StepParameter(StepParameterKey.KTM_MODIFIER, KickTeamMateRange.MEDIUM));
 			}
 			getResult().setNextAction(StepAction.NEXT_STEP);
 		} else {

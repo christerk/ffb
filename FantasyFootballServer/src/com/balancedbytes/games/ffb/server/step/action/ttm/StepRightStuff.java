@@ -1,14 +1,11 @@
 package com.balancedbytes.games.ffb.server.step.action.ttm;
 
-import java.util.Set;
-
 import com.balancedbytes.games.ffb.ApothecaryMode;
 import com.balancedbytes.games.ffb.CatchScatterThrowInMode;
 import com.balancedbytes.games.ffb.FactoryType;
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.PlayerState;
 import com.balancedbytes.games.ffb.ReRolledActions;
-import com.balancedbytes.games.ffb.RightStuffModifier;
 import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.factory.IFactorySource;
 import com.balancedbytes.games.ffb.factory.RightStuffModifierFactory;
@@ -16,7 +13,10 @@ import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.mechanics.AgilityMechanic;
 import com.balancedbytes.games.ffb.mechanics.Mechanic;
 import com.balancedbytes.games.ffb.model.Game;
+import com.balancedbytes.games.ffb.model.KickTeamMateRange;
 import com.balancedbytes.games.ffb.model.Player;
+import com.balancedbytes.games.ffb.modifiers.RightStuffContext;
+import com.balancedbytes.games.ffb.modifiers.RightStuffModifier;
 import com.balancedbytes.games.ffb.report.ReportId;
 import com.balancedbytes.games.ffb.report.ReportSkillRoll;
 import com.balancedbytes.games.ffb.server.DiceInterpreter;
@@ -38,6 +38,9 @@ import com.balancedbytes.games.ffb.server.util.UtilServerReRoll;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
+import java.util.List;
+import java.util.Set;
+
 /**
  * Step in ttm sequence to handle skill RIGHT_STUFF (landing roll).
  *
@@ -57,7 +60,7 @@ public final class StepRightStuff extends AbstractStepWithReRoll {
 	private Boolean fThrownPlayerHasBall;
 	private String fThrownPlayerId;
 	private boolean fDropThrownPlayer;
-	private int fKtmModifier;
+	private KickTeamMateRange ktmRange;
 
 	public StepRightStuff(GameState pGameState) {
 		super(pGameState);
@@ -83,7 +86,7 @@ public final class StepRightStuff extends AbstractStepWithReRoll {
 				fDropThrownPlayer = (pParameter.getValue() != null) ? (Boolean) pParameter.getValue() : false;
 				return true;
 			case KTM_MODIFIER:
-				fKtmModifier = (pParameter.getValue() != null) ? (Integer) pParameter.getValue() : 0;
+				ktmRange = (pParameter.getValue() != null) ? (KickTeamMateRange) pParameter.getValue() : KickTeamMateRange.SHORT;
 				return true;
 			default:
 				break;
@@ -131,20 +134,15 @@ public final class StepRightStuff extends AbstractStepWithReRoll {
 		}
 		if (doRoll) {
 			RightStuffModifierFactory modifierFactory = new RightStuffModifierFactory();
-			Set<RightStuffModifier> rightStuffModifiers = modifierFactory.findRightStuffModifiers(game, thrownPlayer);
-			if (fKtmModifier == -1) {
-				rightStuffModifiers.add(RightStuffModifier.KTM_MEDIUM);
-			} else if (fKtmModifier == -2) {
-				rightStuffModifiers.add(RightStuffModifier.KTM_LONG);
-			}
+			Set<RightStuffModifier> rightStuffModifiers = modifierFactory.findModifiers(new RightStuffContext(game, thrownPlayer, ktmRange));
 			AgilityMechanic mechanic = (AgilityMechanic) game.getRules().getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.AGILITY.name());
 			int minimumRoll = mechanic.minimumRollRightStuff(thrownPlayer, rightStuffModifiers);
 			int roll = getGameState().getDiceRoller().rollSkill();
 			boolean successful = DiceInterpreter.getInstance().isSkillRollSuccessful(roll, minimumRoll);
-			RightStuffModifier[] rightStuffModifiersArray = modifierFactory.toArray(rightStuffModifiers);
+			List<RightStuffModifier> sortedModifiers = modifierFactory.sort(rightStuffModifiers);
 			boolean reRolled = ((getReRolledAction() == ReRolledActions.RIGHT_STUFF) && (getReRollSource() != null));
 			getResult().addReport(new ReportSkillRoll(ReportId.RIGHT_STUFF_ROLL, fThrownPlayerId, successful, roll,
-					minimumRoll, reRolled, rightStuffModifiersArray));
+					minimumRoll, reRolled, sortedModifiers.toArray(new RightStuffModifier[0])));
 			if (successful) {
 				if (fThrownPlayerHasBall) {
 					if (UtilServerSteps.checkTouchdown(getGameState())) {
@@ -194,6 +192,8 @@ public final class StepRightStuff extends AbstractStepWithReRoll {
 		JsonObject jsonObject = super.toJsonValue();
 		IServerJsonOption.THROWN_PLAYER_HAS_BALL.addTo(jsonObject, fThrownPlayerHasBall);
 		IServerJsonOption.THROWN_PLAYER_ID.addTo(jsonObject, fThrownPlayerId);
+		IServerJsonOption.DROP_THROWN_PLAYER.addTo(jsonObject, fDropThrownPlayer);
+		IServerJsonOption.KICK_TEAM_MATE_RANGE.addTo(jsonObject, ktmRange.name());
 		return jsonObject;
 	}
 
@@ -203,6 +203,10 @@ public final class StepRightStuff extends AbstractStepWithReRoll {
 		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
 		fThrownPlayerHasBall = IServerJsonOption.THROWN_PLAYER_HAS_BALL.getFrom(game, jsonObject);
 		fThrownPlayerId = IServerJsonOption.THROWN_PLAYER_ID.getFrom(game, jsonObject);
+		String storedKtmRange = IServerJsonOption.KICK_TEAM_MATE_RANGE.getFrom(game, jsonObject);
+		if (storedKtmRange != null) {
+			ktmRange = KickTeamMateRange.valueOf(storedKtmRange);
+		}
 		return this;
 	}
 
