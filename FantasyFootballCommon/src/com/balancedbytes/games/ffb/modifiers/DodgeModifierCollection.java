@@ -1,10 +1,6 @@
 package com.balancedbytes.games.ffb.modifiers;
 
 public class DodgeModifierCollection extends ModifierCollection<DodgeContext, DodgeModifier>{
-	@Override
-	public String getKey() {
-		return "DodgeModifierCollection";
-	}
 
 	public DodgeModifierCollection() {
 		add(new DodgeModifier("1 Tacklezone", 1, ModifierType.TACKLEZONE));

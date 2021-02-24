@@ -5,11 +5,6 @@ import com.balancedbytes.games.ffb.model.Skill;
 
 public abstract class CatchModifierCollection extends ModifierCollection<CatchContext, CatchModifier> {
 
-	@Override
-	public String getKey() {
-		return "CatchModifierRegistry";
-	}
-
 	public CatchModifierCollection() {
 		add(new CatchModifier("1 Tacklezone", 1, ModifierType.TACKLEZONE));
 		add(new CatchModifier("2 Tacklezones", 2, ModifierType.TACKLEZONE));

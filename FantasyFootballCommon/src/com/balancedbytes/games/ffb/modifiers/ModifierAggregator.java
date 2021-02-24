@@ -78,4 +78,13 @@ public class ModifierAggregator {
 						.map(modifier -> (LeapModifier)modifier))
 				.collect(Collectors.toSet());
 	}
-}
+
+	public Set<GazeModifier> getGazeModifiers() {
+		return Stream.concat(
+			skillFactory.getSkills().stream().flatMap(skill -> skill.getGazeModifiers().stream()),
+			Arrays.stream(UtilCards.findAllActiveCards(game))
+				.flatMap(card -> card.modifiers().stream())
+				.filter(modifier -> modifier instanceof GazeModifier)
+				.map(modifier -> (GazeModifier)modifier))
+			.collect(Collectors.toSet());
+	}}

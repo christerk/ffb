@@ -1,9 +1,6 @@
 package com.balancedbytes.games.ffb.server.step.action.move;
 
-import java.util.Set;
-
 import com.balancedbytes.games.ffb.FactoryType;
-import com.balancedbytes.games.ffb.GazeModifier;
 import com.balancedbytes.games.ffb.PlayerAction;
 import com.balancedbytes.games.ffb.PlayerState;
 import com.balancedbytes.games.ffb.ReRolledActions;
@@ -19,6 +16,8 @@ import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Skill;
 import com.balancedbytes.games.ffb.model.SkillConstants;
 import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
+import com.balancedbytes.games.ffb.modifiers.GazeModifier;
+import com.balancedbytes.games.ffb.modifiers.GazeModifierContext;
 import com.balancedbytes.games.ffb.report.ReportId;
 import com.balancedbytes.games.ffb.report.ReportSkillRoll;
 import com.balancedbytes.games.ffb.server.DiceInterpreter;
@@ -38,6 +37,9 @@ import com.balancedbytes.games.ffb.util.StringTool;
 import com.balancedbytes.games.ffb.util.UtilCards;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
+
+import java.util.List;
+import java.util.Set;
 
 /**
  * Step in move sequence to handle skill HYPNOTIC_GAZE.
@@ -114,7 +116,7 @@ public class StepHypnoticGaze extends AbstractStepWithReRoll {
 			actingPlayer.markSkillUsed(gazeSkill);
 			int roll = getGameState().getDiceRoller().rollSkill();
 			GazeModifierFactory modifierFactory = new GazeModifierFactory();
-			Set<GazeModifier> gazeModifiers = modifierFactory.findGazeModifiers(game);
+			Set<GazeModifier> gazeModifiers = modifierFactory.findModifiers(new GazeModifierContext(game, actingPlayer.getPlayer()));
 			AgilityMechanic mechanic = (AgilityMechanic) game.getRules().getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.AGILITY.name());
 			int minimumRoll = mechanic.minimumRollHypnoticGaze(actingPlayer.getPlayer(), gazeModifiers);
 			boolean successful = DiceInterpreter.getInstance().isSkillRollSuccessful(roll, minimumRoll);
@@ -122,8 +124,9 @@ public class StepHypnoticGaze extends AbstractStepWithReRoll {
 			if (!reRolled) {
 				getResult().setSound(SoundId.HYPNO);
 			}
+			List<GazeModifier> sortedModifiers = modifierFactory.sort(gazeModifiers);
 			getResult().addReport(new ReportSkillRoll(ReportId.HYPNOTIC_GAZE_ROLL, actingPlayer.getPlayerId(), successful,
-					roll, minimumRoll, reRolled, modifierFactory.toArray(gazeModifiers)));
+					roll, minimumRoll, reRolled, sortedModifiers.toArray(new GazeModifier[0])));
 			if (successful) {
 				PlayerState oldVictimState = game.getFieldModel().getPlayerState(game.getDefender());
 				if (!oldVictimState.isConfused() && !oldVictimState.isHypnotized()) {

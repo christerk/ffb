@@ -4,10 +4,6 @@ import com.balancedbytes.games.ffb.Weather;
 import com.balancedbytes.games.ffb.model.Skill;
 
 public class PassModifierCollection extends ModifierCollection<PassContext, PassModifier> {
-	@Override
-	public String getKey() {
-		return "PassModifierCollection";
-	}
 
 	public PassModifierCollection() {
 		add(new PassModifier("Very Sunny", 1, ModifierType.REGULAR) {

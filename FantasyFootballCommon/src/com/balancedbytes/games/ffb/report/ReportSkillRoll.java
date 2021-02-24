@@ -1,10 +1,6 @@
 package com.balancedbytes.games.ffb.report;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.balancedbytes.games.ffb.FactoryType.Factory;
-import com.balancedbytes.games.ffb.modifiers.IRollModifier;
 import com.balancedbytes.games.ffb.factory.CatchModifierFactory;
 import com.balancedbytes.games.ffb.factory.DodgeModifierFactory;
 import com.balancedbytes.games.ffb.factory.GazeModifierFactory;
@@ -18,10 +14,14 @@ import com.balancedbytes.games.ffb.factory.PickupModifierFactory;
 import com.balancedbytes.games.ffb.factory.RightStuffModifierFactory;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
+import com.balancedbytes.games.ffb.modifiers.IRollModifier;
 import com.balancedbytes.games.ffb.util.ArrayTool;
 import com.eclipsesource.json.JsonArray;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 
@@ -29,7 +29,7 @@ import com.eclipsesource.json.JsonValue;
  */
 public class ReportSkillRoll implements IReport {
 
-	private ReportId fId;
+	private final ReportId fId;
 	private String fPlayerId;
 	private boolean fSuccessful;
 	private int fRoll;

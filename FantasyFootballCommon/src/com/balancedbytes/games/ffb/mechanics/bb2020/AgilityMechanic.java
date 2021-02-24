@@ -1,6 +1,6 @@
 package com.balancedbytes.games.ffb.mechanics.bb2020;
 
-import com.balancedbytes.games.ffb.GazeModifier;
+import com.balancedbytes.games.ffb.modifiers.GazeModifier;
 import com.balancedbytes.games.ffb.modifiers.LeapModifier;
 import com.balancedbytes.games.ffb.RightStuffModifier;
 import com.balancedbytes.games.ffb.RulesCollection;

@@ -1,17 +1,18 @@
 package com.balancedbytes.games.ffb.factory;
 
 import com.balancedbytes.games.ffb.FactoryType;
-import com.balancedbytes.games.ffb.GazeModifier;
 import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.RulesCollection.Rules;
-import com.balancedbytes.games.ffb.model.Game;
-import com.balancedbytes.games.ffb.model.Player;
-import com.balancedbytes.games.ffb.modifiers.ModifierType;
-import com.balancedbytes.games.ffb.util.UtilPlayer;
+import com.balancedbytes.games.ffb.model.Skill;
+import com.balancedbytes.games.ffb.modifiers.GazeModifier;
+import com.balancedbytes.games.ffb.modifiers.GazeModifierCollection;
+import com.balancedbytes.games.ffb.modifiers.GazeModifierContext;
+import com.balancedbytes.games.ffb.modifiers.IRollModifier;
+import com.balancedbytes.games.ffb.util.Scanner;
 
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.Set;
+import java.util.Collection;
+import java.util.Optional;
+import java.util.stream.Stream;
 
 /**
  * 
@@ -19,53 +20,51 @@ import java.util.Set;
  */
 @FactoryType(FactoryType.Factory.GAZE_MODIFIER)
 @RulesCollection(Rules.COMMON)
-public class GazeModifierFactory implements IRollModifierFactory<GazeModifier> {
+public class GazeModifierFactory extends GenerifiedModifierFactory<GazeModifierContext, GazeModifier, GazeModifierCollection> {
+	private GazeModifierCollection gazeModifierCollection;
 
-	public GazeModifier forName(String pName) {
-		for (GazeModifier modifier : GazeModifier.values()) {
-			if (modifier.getName().equalsIgnoreCase(pName)) {
-				return modifier;
-			}
-		}
-		return null;
-	}
-
-	public Set<GazeModifier> findGazeModifiers(Game pGame) {
-		Set<GazeModifier> gazeModifiers = activeModifiers(pGame, GazeModifier.class);
-		Player<?> player = pGame.getActingPlayer().getPlayer();
-		if (player != null) {
-			GazeModifier tacklezoneModifier = getTacklezoneModifier(pGame, player);
-			if (tacklezoneModifier != null) {
-				gazeModifiers.add(tacklezoneModifier);
-			}
-		}
-		return gazeModifiers;
-	}
-
-	public GazeModifier[] toArray(Set<GazeModifier> pGazeModifierSet) {
-		if (pGazeModifierSet != null) {
-			GazeModifier[] gazeModifierArray = pGazeModifierSet.toArray(new GazeModifier[0]);
-			Arrays.sort(gazeModifierArray, Comparator.comparing(GazeModifier::getName));
-			return gazeModifierArray;
-		} else {
-			return new GazeModifier[0];
-		}
-	}
-
-	private GazeModifier getTacklezoneModifier(Game pGame, Player<?> pPlayer) {
-		int tacklezones = UtilPlayer.findTacklezones(pGame, pPlayer);
-		if (tacklezones > 1) {
-			for (GazeModifier modifier : GazeModifier.values()) {
-				if (modifier.getType() == ModifierType.TACKLEZONE && (modifier.getModifier() == tacklezones - 1)) {
-					return modifier;
-				}
-			}
-		}
-		return null;
+	@Override
+	protected Scanner<GazeModifierCollection> getScanner() {
+		return new Scanner<>(GazeModifierCollection.class);
 	}
 
 	@Override
-	public void initialize(Game game) {
+	protected GazeModifierCollection getModifierCollection() {
+		return gazeModifierCollection;
 	}
 
+	@Override
+	protected void setModifierCollection(GazeModifierCollection modifierCollection) {
+		this.gazeModifierCollection = modifierCollection;
+	}
+
+	@Override
+	protected Collection<GazeModifier> getModifier(Skill skill) {
+		return skill.getGazeModifiers();
+	}
+
+	@Override
+	protected Optional<GazeModifier> checkClass(IRollModifier<?> modifier) {
+		return modifier instanceof GazeModifier ? Optional.of((GazeModifier) modifier) : Optional.empty();
+	}
+
+	@Override
+	protected boolean isAffectedByDisturbingPresence(GazeModifierContext context) {
+		return false;
+	}
+
+	@Override
+	protected boolean isAffectedByTackleZones(GazeModifierContext context) {
+		return true;
+	}
+
+	@Override
+	public GazeModifier forName(String name) {
+		return Stream.concat(
+			gazeModifierCollection.getModifiers().stream(),
+			modifierAggregator.getGazeModifiers().stream())
+			.filter(modifier -> modifier.getName().equals(name))
+			.findFirst()
+			.orElse(null);
+	}
 }

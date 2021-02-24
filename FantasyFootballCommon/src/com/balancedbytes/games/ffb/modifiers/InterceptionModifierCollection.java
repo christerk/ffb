@@ -25,9 +25,4 @@ public abstract class InterceptionModifierCollection extends ModifierCollection<
 			}
 		});
 	}
-
-	@Override
-	public String getKey() {
-		return "InterceptionModifierRegistry";
-	}
 }

@@ -3,21 +3,23 @@ package com.balancedbytes.games.ffb.model;
 import com.balancedbytes.games.ffb.ArmorModifier;
 import com.balancedbytes.games.ffb.INamedObject;
 import com.balancedbytes.games.ffb.InjuryModifier;
-import com.balancedbytes.games.ffb.modifiers.LeapModifier;
 import com.balancedbytes.games.ffb.ReRollSource;
 import com.balancedbytes.games.ffb.ReRolledAction;
 import com.balancedbytes.games.ffb.SkillCategory;
 import com.balancedbytes.games.ffb.model.modifier.CancelSkillProperty;
 import com.balancedbytes.games.ffb.modifiers.CatchModifier;
 import com.balancedbytes.games.ffb.modifiers.DodgeModifier;
+import com.balancedbytes.games.ffb.modifiers.GazeModifier;
 import com.balancedbytes.games.ffb.modifiers.InterceptionModifier;
+import com.balancedbytes.games.ffb.modifiers.LeapModifier;
 import com.balancedbytes.games.ffb.modifiers.PassModifier;
 import com.balancedbytes.games.ffb.modifiers.PickupModifier;
 
 import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.Hashtable;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public abstract class Skill implements INamedObject {
 
@@ -32,9 +34,10 @@ public abstract class Skill implements INamedObject {
 	private final List<InjuryModifier> injuryModifiers = new ArrayList<>();
 	private final List<ArmorModifier> armorModifiers = new ArrayList<>();
 	private final List<CatchModifier> catchModifiers = new ArrayList<>();
+	private final List<GazeModifier> gazeModifiers = new ArrayList<>();
 	private ISkillBehaviour<? extends Skill> behaviour;
 	private final List<ISkillProperty> skillProperties = new ArrayList<>();
-	private final Hashtable<ReRolledAction, ReRollSource> rerollSources = new Hashtable<>();
+	private final Map<ReRolledAction, ReRollSource> rerollSources = new HashMap<>();
 
 	public Skill(String name, SkillCategory category) {
 		this.name = name;
@@ -96,6 +99,8 @@ public abstract class Skill implements INamedObject {
 		catchModifiers.add(modifier);
 	}
 
+	protected void registerModifer(GazeModifier modifier) { gazeModifiers.add(modifier); }
+
 	protected void registerProperty(ISkillProperty property) {
 		skillProperties.add(property);
 	}
@@ -142,6 +147,10 @@ public abstract class Skill implements INamedObject {
 
 	public List<InjuryModifier> getInjuryModifiers() {
 		return injuryModifiers;
+	}
+
+	public List<GazeModifier> getGazeModifiers() {
+		return gazeModifiers;
 	}
 
 	public void setBehaviour(ISkillBehaviour<? extends Skill> behaviour) {

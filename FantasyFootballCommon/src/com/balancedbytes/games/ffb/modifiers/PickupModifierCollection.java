@@ -5,10 +5,6 @@ import com.balancedbytes.games.ffb.model.Skill;
 import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
 
 public class PickupModifierCollection extends ModifierCollection<PickupContext, PickupModifier> {
-	@Override
-	public String getKey() {
-		return "PickupModifierCollection";
-	}
 	
 	public PickupModifierCollection() {
 		add(new PickupModifier("Pouring Rain", 1, ModifierType.REGULAR) {
