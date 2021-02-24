@@ -1,7 +1,5 @@
 package com.balancedbytes.games.ffb.modifiers;
 
-import com.balancedbytes.games.ffb.RollModifier;
-
 /**
  * 
  * @author Kalimar

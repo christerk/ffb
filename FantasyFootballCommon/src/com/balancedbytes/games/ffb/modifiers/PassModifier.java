@@ -4,7 +4,7 @@ package com.balancedbytes.games.ffb.modifiers;
  * 
  * @author Kalimar
  */
-public class PassModifier implements IRollModifier<PassContext> {
+public class PassModifier extends RollModifier<PassContext> {
 	private final String fName, reportingString;
 	private final int fModifier;
 	private final ModifierType type;

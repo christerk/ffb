@@ -193,7 +193,7 @@ public class PilingOnBehaviour extends SkillBehaviour<PilingOn> {
 			game.getFieldModel().addCardEffect(target, CardEffect.POISONED);
 		}
 		step.getResult().addReport(
-				new ReportSkillRoll(ReportId.WEEPING_DAGGER_ROLL, source.getId(), successful, roll, minimumRoll, false, null));
+				new ReportSkillRoll(ReportId.WEEPING_DAGGER_ROLL, source.getId(), successful, roll, minimumRoll, false));
 		return successful;
 	}
 }

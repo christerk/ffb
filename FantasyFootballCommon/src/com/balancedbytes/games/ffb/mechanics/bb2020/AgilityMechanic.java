@@ -10,7 +10,7 @@ import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.modifiers.CatchModifier;
 import com.balancedbytes.games.ffb.modifiers.DodgeModifier;
-import com.balancedbytes.games.ffb.modifiers.IRollModifier;
+import com.balancedbytes.games.ffb.modifiers.RollModifier;
 import com.balancedbytes.games.ffb.modifiers.InterceptionModifier;
 import com.balancedbytes.games.ffb.modifiers.PickupModifier;
 import com.balancedbytes.games.ffb.report.ReportSkillRoll;
@@ -83,7 +83,7 @@ public class AgilityMechanic extends com.balancedbytes.games.ffb.mechanics.Agili
 
 	@Override
 	public String formatSafeThrowResult(Player<?> player) {
-		return formatResult(player.getAgility(), new IRollModifier[0]);
+		return formatResult(player.getAgility(), new RollModifier[0]);
 	}
 
 	@Override
@@ -116,11 +116,11 @@ public class AgilityMechanic extends com.balancedbytes.games.ffb.mechanics.Agili
 		return new Wording("Interference", "deflect", "deflects", "interfering player");
 	}
 
-	private int minimumRoll(int agility, Set<? extends IRollModifier> modifiers) {
-		return agility + modifiers.stream().mapToInt(IRollModifier::getModifier).sum();
+	private int minimumRoll(int agility, Set<? extends RollModifier> modifiers) {
+		return agility + modifiers.stream().mapToInt(RollModifier::getModifier).sum();
 	}
 
-	private String formatResult(int agility, IRollModifier[] modifiers) {
+	private String formatResult(int agility, RollModifier[] modifiers) {
 		return " (Roll" + formatRollModifiers(modifiers) + " >= " + Math.max(2, agility) + "+)";
 	}
 }

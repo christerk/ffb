@@ -7,7 +7,7 @@ import com.balancedbytes.games.ffb.model.Skill;
 import com.balancedbytes.games.ffb.modifiers.GazeModifier;
 import com.balancedbytes.games.ffb.modifiers.GazeModifierCollection;
 import com.balancedbytes.games.ffb.modifiers.GazeModifierContext;
-import com.balancedbytes.games.ffb.modifiers.IRollModifier;
+import com.balancedbytes.games.ffb.modifiers.RollModifier;
 import com.balancedbytes.games.ffb.util.Scanner;
 
 import java.util.Collection;
@@ -44,7 +44,7 @@ public class GazeModifierFactory extends GenerifiedModifierFactory<GazeModifierC
 	}
 
 	@Override
-	protected Optional<GazeModifier> checkClass(IRollModifier<?> modifier) {
+	protected Optional<GazeModifier> checkClass(RollModifier<?> modifier) {
 		return modifier instanceof GazeModifier ? Optional.of((GazeModifier) modifier) : Optional.empty();
 	}
 

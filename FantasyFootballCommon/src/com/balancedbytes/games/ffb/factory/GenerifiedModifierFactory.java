@@ -1,7 +1,6 @@
 package com.balancedbytes.games.ffb.factory;
 
 import com.balancedbytes.games.ffb.Card;
-import com.balancedbytes.games.ffb.modifiers.IRollModifier;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.model.Skill;
@@ -9,17 +8,15 @@ import com.balancedbytes.games.ffb.modifiers.ModifierAggregator;
 import com.balancedbytes.games.ffb.modifiers.ModifierCollection;
 import com.balancedbytes.games.ffb.modifiers.ModifierContext;
 import com.balancedbytes.games.ffb.modifiers.ModifierType;
+import com.balancedbytes.games.ffb.modifiers.RollModifier;
 import com.balancedbytes.games.ffb.util.Scanner;
 import com.balancedbytes.games.ffb.util.UtilCards;
 import com.balancedbytes.games.ffb.util.UtilDisturbingPresence;
 import com.balancedbytes.games.ffb.util.UtilPlayer;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Comparator;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.Function;
@@ -27,7 +24,7 @@ import java.util.stream.Stream;
 
 public abstract class GenerifiedModifierFactory<
 	C extends ModifierContext,
-	V extends IRollModifier<C>,
+	V extends RollModifier<C>,
 	R extends ModifierCollection<C, V>
 	> implements IRollModifierFactory<V> {
 
@@ -65,12 +62,6 @@ public abstract class GenerifiedModifierFactory<
 			.findFirst();
 	}
 
-	public List<V> sort(Set<V> modifierSet) {
-		List<V> modifiers = new ArrayList<>(modifierSet);
-		modifiers.sort(Comparator.comparing(V::getName));
-		return modifiers;
-	}
-
 	private Set<V> getSkillModifiers(C context) {
 		Set<V> result = new HashSet<>();
 
@@ -86,12 +77,12 @@ public abstract class GenerifiedModifierFactory<
 
 	protected abstract Collection<V> getModifier(Skill skill);
 
-	protected abstract Optional<V> checkClass(IRollModifier<?> modifier);
+	protected abstract Optional<V> checkClass(RollModifier<?> modifier);
 
 	public Set<V> findModifiers(C context) {
 		Set<V> modifiers = getSkillModifiers(context);
 		Arrays.stream(UtilCards.findAllActiveCards(context.getGame()))
-			.flatMap((Function<Card, Stream<IRollModifier<?>>>) card -> card.modifiers().stream())
+			.flatMap((Function<Card, Stream<RollModifier<?>>>) card -> card.modifiers().stream())
 			.map(this::checkClass)
 			.filter(Optional::isPresent)
 			.map(Optional::get)

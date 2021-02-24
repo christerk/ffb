@@ -1,7 +1,7 @@
 package com.balancedbytes.games.ffb.factory;
 
 import com.balancedbytes.games.ffb.FactoryType;
-import com.balancedbytes.games.ffb.modifiers.IRollModifier;
+import com.balancedbytes.games.ffb.modifiers.RollModifier;
 import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.RulesCollection.Rules;
 import com.balancedbytes.games.ffb.model.Skill;
@@ -30,7 +30,7 @@ public class CatchModifierFactory extends GenerifiedModifierFactory<CatchContext
 	}
 
 	@Override
-	protected Optional<CatchModifier> checkClass(IRollModifier<?> modifier) {
+	protected Optional<CatchModifier> checkClass(RollModifier<?> modifier) {
 		return modifier instanceof  CatchModifier ? Optional.of((CatchModifier) modifier) : Optional.empty();
 	}
 

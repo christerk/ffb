@@ -4,7 +4,7 @@ package com.balancedbytes.games.ffb.modifiers;
  * 
  * @author Kalimar
  */
-public class RightStuffModifier implements IRollModifier<RightStuffContext> {
+public class RightStuffModifier extends RollModifier<RightStuffContext> {
 
 	private final String fName;
 	private final int fModifier;

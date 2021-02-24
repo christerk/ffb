@@ -45,7 +45,6 @@ import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
 import java.util.Arrays;
-import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -232,10 +231,9 @@ public class StepMoveDodge extends AbstractStepWithReRoll {
 			}
 		}
 
-		List<DodgeModifier> dodgeModifierArray = modifierFactory.sort(dodgeModifiers);
 		boolean reRolled = ((getReRolledAction() == ReRolledActions.DODGE) && (getReRollSource() != null));
 		getResult().addReport(new ReportSkillRoll(ReportId.DODGE_ROLL, actingPlayer.getPlayerId(), successful,
-				(pDoRoll ? fDodgeRoll : 0), minimumRoll, reRolled, dodgeModifierArray.toArray(new DodgeModifier[0])));
+				(pDoRoll ? fDodgeRoll : 0), minimumRoll, reRolled, dodgeModifiers.toArray(new DodgeModifier[0])));
 
 		if (successful) {
 			status = ActionStatus.SUCCESS;

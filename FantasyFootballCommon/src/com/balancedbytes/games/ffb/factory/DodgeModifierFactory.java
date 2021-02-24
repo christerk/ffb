@@ -14,7 +14,7 @@ import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
 import com.balancedbytes.games.ffb.modifiers.DodgeContext;
 import com.balancedbytes.games.ffb.modifiers.DodgeModifier;
 import com.balancedbytes.games.ffb.modifiers.DodgeModifierCollection;
-import com.balancedbytes.games.ffb.modifiers.IRollModifier;
+import com.balancedbytes.games.ffb.modifiers.RollModifier;
 import com.balancedbytes.games.ffb.modifiers.ModifierType;
 import com.balancedbytes.games.ffb.util.Scanner;
 import com.balancedbytes.games.ffb.util.UtilCards;
@@ -102,7 +102,7 @@ public class DodgeModifierFactory extends GenerifiedModifierFactory<DodgeContext
 	}
 
 	@Override
-	protected Optional<DodgeModifier> checkClass(IRollModifier<?> modifier) {
+	protected Optional<DodgeModifier> checkClass(RollModifier<?> modifier) {
 		return modifier instanceof DodgeModifier ? Optional.of((DodgeModifier) modifier) : Optional.empty();
 	}
 

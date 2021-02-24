@@ -14,13 +14,14 @@ import com.balancedbytes.games.ffb.factory.PickupModifierFactory;
 import com.balancedbytes.games.ffb.factory.RightStuffModifierFactory;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
-import com.balancedbytes.games.ffb.modifiers.IRollModifier;
+import com.balancedbytes.games.ffb.modifiers.RollModifier;
 import com.balancedbytes.games.ffb.util.ArrayTool;
 import com.eclipsesource.json.JsonArray;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -35,7 +36,7 @@ public class ReportSkillRoll implements IReport {
 	private int fRoll;
 	private int fMinimumRoll;
 	private boolean fReRolled;
-	private List<IRollModifier> fRollModifierList;
+	private List<RollModifier<?>> fRollModifierList;
 
 	public ReportSkillRoll(ReportId pId) {
 		fId = pId;
@@ -48,7 +49,7 @@ public class ReportSkillRoll implements IReport {
 	}
 
 	public ReportSkillRoll(ReportId pId, String pPlayerId, boolean pSuccessful, int pRoll, int pMinimumRoll,
-			boolean pReRolled, IRollModifier[] pRollModifiers) {
+			boolean pReRolled, RollModifier<?>[] pRollModifiers) {
 		fId = pId;
 		fPlayerId = pPlayerId;
 		fSuccessful = pSuccessful;
@@ -58,30 +59,31 @@ public class ReportSkillRoll implements IReport {
 		initRollModifiers(pRollModifiers);
 	}
 
-	private void initRollModifiers(IRollModifier[] pRollModifiers) {
+	private void initRollModifiers(RollModifier<?>[] pRollModifiers) {
 		fRollModifierList = new ArrayList<>();
 		if (ArrayTool.isProvided(pRollModifiers)) {
-			for (IRollModifier rollModifier : pRollModifiers) {
+			for (RollModifier<?> rollModifier : pRollModifiers) {
 				addRollModifier(rollModifier);
 			}
 		}
+		fRollModifierList.sort(Comparator.comparing(RollModifier::getName));
 	}
 
-	public void addRollModifier(IRollModifier pRollModifier) {
+	public void addRollModifier(RollModifier<?> pRollModifier) {
 		if (pRollModifier != null) {
 			fRollModifierList.add(pRollModifier);
 		}
 	}
 
-	public IRollModifier[] getRollModifiers() {
-		return fRollModifierList.toArray(new IRollModifier[fRollModifierList.size()]);
+	public RollModifier<?>[] getRollModifiers() {
+		return fRollModifierList.toArray(new RollModifier[0]);
 	}
 
-	public boolean hasRollModifier(IRollModifier pRollModifier) {
+	public boolean hasRollModifier(RollModifier<?> pRollModifier) {
 		return fRollModifierList.contains(pRollModifier);
 	}
 
-	protected List<IRollModifier> getRollModifierList() {
+	protected List<RollModifier<?>> getRollModifierList() {
 		return fRollModifierList;
 	}
 
@@ -128,7 +130,7 @@ public class ReportSkillRoll implements IReport {
 		IJsonOption.RE_ROLLED.addTo(jsonObject, fReRolled);
 		if (fRollModifierList.size() > 0) {
 			JsonArray modifierArray = new JsonArray();
-			for (IRollModifier modifier : fRollModifierList) {
+			for (RollModifier<?> modifier : fRollModifierList) {
 				modifierArray.add(UtilJson.toJsonValue(modifier));
 			}
 			IJsonOption.ROLL_MODIFIERS.addTo(jsonObject, modifierArray);
@@ -146,17 +148,17 @@ public class ReportSkillRoll implements IReport {
 		fReRolled = IJsonOption.RE_ROLLED.getFrom(source, jsonObject);
 		JsonArray modifierArray = IJsonOption.ROLL_MODIFIERS.getFrom(source, jsonObject);
 		if (modifierArray != null) {
-			IRollModifierFactory modifierFactory = createRollModifierFactory(source);
+			IRollModifierFactory<?> modifierFactory = createRollModifierFactory(source);
 			if (modifierFactory != null) {
 				for (int i = 0; i < modifierArray.size(); i++) {
-					fRollModifierList.add((IRollModifier) UtilJson.toEnumWithName(modifierFactory, modifierArray.get(i)));
+					fRollModifierList.add((RollModifier<?>) UtilJson.toEnumWithName(modifierFactory, modifierArray.get(i)));
 				}
 			}
 		}
 		return this;
 	}
 
-	private IRollModifierFactory createRollModifierFactory(IFactorySource source) {
+	private IRollModifierFactory<?> createRollModifierFactory(IFactorySource source) {
 		switch (getId()) {
 		case CATCH_ROLL:
 			return source.<CatchModifierFactory>getFactory(Factory.CATCH_MODIFIER);

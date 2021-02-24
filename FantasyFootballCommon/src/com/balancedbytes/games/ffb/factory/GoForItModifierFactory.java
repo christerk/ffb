@@ -7,7 +7,7 @@ import com.balancedbytes.games.ffb.model.Skill;
 import com.balancedbytes.games.ffb.modifiers.GoForItContext;
 import com.balancedbytes.games.ffb.modifiers.GoForItModifier;
 import com.balancedbytes.games.ffb.modifiers.GoForItModifierCollection;
-import com.balancedbytes.games.ffb.modifiers.IRollModifier;
+import com.balancedbytes.games.ffb.modifiers.RollModifier;
 import com.balancedbytes.games.ffb.util.Scanner;
 
 import java.util.Collection;
@@ -55,7 +55,7 @@ public class GoForItModifierFactory extends GenerifiedModifierFactory<GoForItCon
 	}
 
 	@Override
-	protected Optional<GoForItModifier> checkClass(IRollModifier<?> modifier) {
+	protected Optional<GoForItModifier> checkClass(RollModifier<?> modifier) {
 		return modifier instanceof GoForItModifier ? Optional.of((GoForItModifier) modifier) : Optional.empty();
 	}
 

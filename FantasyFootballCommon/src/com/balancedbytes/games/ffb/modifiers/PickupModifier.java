@@ -6,7 +6,7 @@ import com.balancedbytes.games.ffb.model.Skill;
  * 
  * @author Kalimar
  */
-public class PickupModifier implements IRollModifier<PickupContext> {
+public class PickupModifier extends RollModifier<PickupContext> {
 	private final String fName, reportString;
 	private final int fModifier;
 	private final ModifierType type;

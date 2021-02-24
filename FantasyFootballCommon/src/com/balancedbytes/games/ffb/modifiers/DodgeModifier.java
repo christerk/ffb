@@ -1,12 +1,10 @@
 package com.balancedbytes.games.ffb.modifiers;
 
-import com.balancedbytes.games.ffb.model.Skill;
-
 /**
  *
  * @author Kalimar
  */
-public class DodgeModifier implements IRollModifier<DodgeContext> {
+public class DodgeModifier extends RollModifier<DodgeContext> {
 
 	private final String fName;
 	private final int fModifier;

@@ -41,7 +41,7 @@ import com.balancedbytes.games.ffb.model.Team;
 import com.balancedbytes.games.ffb.model.ZappedPlayer;
 import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
 import com.balancedbytes.games.ffb.modifiers.DodgeModifier;
-import com.balancedbytes.games.ffb.modifiers.IRollModifier;
+import com.balancedbytes.games.ffb.modifiers.RollModifier;
 import com.balancedbytes.games.ffb.net.ServerStatus;
 import com.balancedbytes.games.ffb.net.commands.ServerCommandJoin;
 import com.balancedbytes.games.ffb.net.commands.ServerCommandLeave;
@@ -459,10 +459,10 @@ public class StatusReport {
 		}
 	}
 
-	private String formatRollModifiers(IRollModifier[] pRollModifiers) {
+	private String formatRollModifiers(RollModifier[] pRollModifiers) {
 		StringBuilder modifiers = new StringBuilder();
 		if (ArrayTool.isProvided(pRollModifiers)) {
-			for (IRollModifier rollModifier : pRollModifiers) {
+			for (RollModifier rollModifier : pRollModifiers) {
 				if (rollModifier.getModifier() > 0) {
 					modifiers.append(" - ");
 				} else {

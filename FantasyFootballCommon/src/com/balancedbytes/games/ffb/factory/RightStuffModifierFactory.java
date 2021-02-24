@@ -4,7 +4,7 @@ import com.balancedbytes.games.ffb.FactoryType;
 import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.RulesCollection.Rules;
 import com.balancedbytes.games.ffb.model.Skill;
-import com.balancedbytes.games.ffb.modifiers.IRollModifier;
+import com.balancedbytes.games.ffb.modifiers.RollModifier;
 import com.balancedbytes.games.ffb.modifiers.RightStuffContext;
 import com.balancedbytes.games.ffb.modifiers.RightStuffModifier;
 import com.balancedbytes.games.ffb.modifiers.RightStuffModifierCollection;
@@ -54,7 +54,7 @@ public class RightStuffModifierFactory extends GenerifiedModifierFactory<RightSt
 	}
 
 	@Override
-	protected Optional<RightStuffModifier> checkClass(IRollModifier<?> modifier) {
+	protected Optional<RightStuffModifier> checkClass(RollModifier<?> modifier) {
 		return modifier instanceof RightStuffModifier ? Optional.of((RightStuffModifier) modifier) : Optional.empty();
 	}
 

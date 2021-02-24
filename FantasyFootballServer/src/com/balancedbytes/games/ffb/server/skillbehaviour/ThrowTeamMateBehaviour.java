@@ -2,8 +2,6 @@ package com.balancedbytes.games.ffb.server.skillbehaviour;
 
 import com.balancedbytes.games.ffb.FactoryType;
 import com.balancedbytes.games.ffb.FieldCoordinate;
-import com.balancedbytes.games.ffb.modifiers.PassContext;
-import com.balancedbytes.games.ffb.modifiers.PassModifier;
 import com.balancedbytes.games.ffb.PassingDistance;
 import com.balancedbytes.games.ffb.ReRollSource;
 import com.balancedbytes.games.ffb.ReRolledActions;
@@ -17,6 +15,8 @@ import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
+import com.balancedbytes.games.ffb.modifiers.PassContext;
+import com.balancedbytes.games.ffb.modifiers.PassModifier;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandUseSkill;
 import com.balancedbytes.games.ffb.report.ReportThrowTeamMateRoll;
 import com.balancedbytes.games.ffb.server.DiceInterpreter;
@@ -27,14 +27,13 @@ import com.balancedbytes.games.ffb.server.step.StepAction;
 import com.balancedbytes.games.ffb.server.step.StepCommandStatus;
 import com.balancedbytes.games.ffb.server.step.action.ttm.StepThrowTeamMate;
 import com.balancedbytes.games.ffb.server.step.action.ttm.StepThrowTeamMate.StepState;
-import com.balancedbytes.games.ffb.server.step.generator.common.ScatterPlayer;
 import com.balancedbytes.games.ffb.server.step.generator.SequenceGenerator;
+import com.balancedbytes.games.ffb.server.step.generator.common.ScatterPlayer;
 import com.balancedbytes.games.ffb.server.util.UtilServerDialog;
 import com.balancedbytes.games.ffb.server.util.UtilServerReRoll;
 import com.balancedbytes.games.ffb.skill.ThrowTeamMate;
 import com.balancedbytes.games.ffb.util.UtilCards;
 
-import java.util.List;
 import java.util.Set;
 
 @RulesCollection(Rules.COMMON)
@@ -77,11 +76,10 @@ public class ThrowTeamMateBehaviour extends SkillBehaviour<ThrowTeamMate> {
 							passModifiers);
 					int roll = step.getGameState().getDiceRoller().rollSkill();
 					boolean successful = !DiceInterpreter.getInstance().isPassFumble(roll, passingDistance, passModifiers);
-					List<PassModifier> sortedModifiers = passModifierFactory.sort(passModifiers);
 					boolean reRolled = ((step.getReRolledAction() == ReRolledActions.THROW_TEAM_MATE)
 							&& (step.getReRollSource() != null));
 					step.getResult().addReport(new ReportThrowTeamMateRoll(thrower.getId(), successful, roll, minimumRoll,
-							reRolled, sortedModifiers.toArray(new PassModifier[0]), passingDistance, state.thrownPlayerId));
+							reRolled, passModifiers.toArray(new PassModifier[0]), passingDistance, state.thrownPlayerId));
 					if (successful) {
 						Player<?> thrownPlayer = game.getPlayerById(state.thrownPlayerId);
 						boolean scattersSingleDirection = thrownPlayer != null

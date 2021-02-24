@@ -38,7 +38,6 @@ import com.balancedbytes.games.ffb.server.util.UtilServerReRoll;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
-import java.util.List;
 import java.util.Set;
 
 /**
@@ -139,10 +138,9 @@ public final class StepRightStuff extends AbstractStepWithReRoll {
 			int minimumRoll = mechanic.minimumRollRightStuff(thrownPlayer, rightStuffModifiers);
 			int roll = getGameState().getDiceRoller().rollSkill();
 			boolean successful = DiceInterpreter.getInstance().isSkillRollSuccessful(roll, minimumRoll);
-			List<RightStuffModifier> sortedModifiers = modifierFactory.sort(rightStuffModifiers);
 			boolean reRolled = ((getReRolledAction() == ReRolledActions.RIGHT_STUFF) && (getReRollSource() != null));
 			getResult().addReport(new ReportSkillRoll(ReportId.RIGHT_STUFF_ROLL, fThrownPlayerId, successful, roll,
-					minimumRoll, reRolled, sortedModifiers.toArray(new RightStuffModifier[0])));
+					minimumRoll, reRolled, rightStuffModifiers.toArray(new RightStuffModifier[0])));
 			if (successful) {
 				if (fThrownPlayerHasBall) {
 					if (UtilServerSteps.checkTouchdown(getGameState())) {

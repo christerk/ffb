@@ -1,7 +1,7 @@
 package com.balancedbytes.games.ffb.factory;
 
 import com.balancedbytes.games.ffb.FactoryType;
-import com.balancedbytes.games.ffb.modifiers.IRollModifier;
+import com.balancedbytes.games.ffb.modifiers.RollModifier;
 import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.RulesCollection.Rules;
 import com.balancedbytes.games.ffb.model.Skill;
@@ -55,7 +55,7 @@ public class InterceptionModifierFactory extends GenerifiedModifierFactory<Inter
 	}
 
 	@Override
-	protected Optional<InterceptionModifier> checkClass(IRollModifier<?> modifier) {
+	protected Optional<InterceptionModifier> checkClass(RollModifier<?> modifier) {
 		return modifier instanceof  InterceptionModifier ? Optional.of((InterceptionModifier) modifier) : Optional.empty();
 	}
 

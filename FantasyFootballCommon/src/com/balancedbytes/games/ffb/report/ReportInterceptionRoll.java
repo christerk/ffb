@@ -31,7 +31,7 @@ public class ReportInterceptionRoll extends ReportSkillRoll {
 
 	@Override
 	public InterceptionModifier[] getRollModifiers() {
-		return getRollModifierList().toArray(new InterceptionModifier[getRollModifierList().size()]);
+		return getRollModifierList().toArray(new InterceptionModifier[0]);
 	}
 
 	public boolean isBomb() {

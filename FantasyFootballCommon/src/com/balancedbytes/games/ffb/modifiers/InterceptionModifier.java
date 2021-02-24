@@ -1,7 +1,5 @@
 package com.balancedbytes.games.ffb.modifiers;
 
-import com.balancedbytes.games.ffb.RollModifier;
-
 public class InterceptionModifier extends RollModifier<InterceptionContext> {
 	private final String name;
 	private final int fModifier, multiplier;

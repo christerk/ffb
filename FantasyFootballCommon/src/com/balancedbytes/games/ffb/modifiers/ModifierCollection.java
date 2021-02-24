@@ -6,7 +6,7 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public abstract class ModifierCollection<C extends ModifierContext, V extends IRollModifier<C>> implements IKeyedItem {
+public abstract class ModifierCollection<C extends ModifierContext, V extends RollModifier<C>> implements IKeyedItem {
 	private final Set<V> modifiers = new HashSet<>();
 
 	@Override

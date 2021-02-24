@@ -6,7 +6,7 @@ import com.balancedbytes.games.ffb.model.Skill;
  *
  * @author Kalimar
  */
-public class LeapModifier implements IRollModifier<LeapContext> {
+public class LeapModifier extends RollModifier<LeapContext> {
 
 	// TODO: create factory for this
 

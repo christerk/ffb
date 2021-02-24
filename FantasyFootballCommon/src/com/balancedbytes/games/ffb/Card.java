@@ -2,7 +2,7 @@ package com.balancedbytes.games.ffb;
 
 import com.balancedbytes.games.ffb.factory.InducementPhaseFactory;
 import com.balancedbytes.games.ffb.model.Skill;
-import com.balancedbytes.games.ffb.modifiers.IRollModifier;
+import com.balancedbytes.games.ffb.modifiers.RollModifier;
 import com.balancedbytes.games.ffb.modifiers.InterceptionContext;
 import com.balancedbytes.games.ffb.modifiers.InterceptionModifier;
 import com.balancedbytes.games.ffb.modifiers.ModifierType;
@@ -62,7 +62,7 @@ public enum Card implements INamedObject {
 			new InducementPhase[] { InducementPhase.START_OF_OWN_TURN }, InducementDuration.UNTIL_END_OF_TURN,
 			"Player gets Pass & Accurate, opponents get +1 to intercept") {
 		@Override
-		public Set<IRollModifier<?>> modifiers() {
+		public Set<RollModifier<?>> modifiers() {
 			return Collections.singleton(new InterceptionModifier("Fawndough's Headband", -1, ModifierType.REGULAR) {
 					@Override
 					public boolean appliesToContext(Skill skill, InterceptionContext context) {
@@ -166,7 +166,7 @@ public enum Card implements INamedObject {
 			new InducementPhase[] { InducementPhase.END_OF_OWN_TURN, InducementPhase.AFTER_KICKOFF_TO_OPPONENT },
 			InducementDuration.UNTIL_END_OF_DRIVE, "Player gets Pass Block & +1 to interception") {
 		@Override
-		public Set<IRollModifier<?>> modifiers() {
+		public Set<RollModifier<?>> modifiers() {
 			return Collections.singleton(new InterceptionModifier("Magic Gloves of Jark Longarm", -1, ModifierType.REGULAR) {
 				@Override
 				public boolean appliesToContext(Skill skill, InterceptionContext context) {
@@ -322,7 +322,7 @@ public enum Card implements INamedObject {
 			CardTarget.OWN_PLAYER, false, new InducementPhase[] { InducementPhase.BEFORE_SETUP },
 			InducementDuration.UNTIL_END_OF_GAME, "Player gets Bombardier, No Hands, Secret Weapon & -1 to pass") {
 		@Override
-		public Set<IRollModifier<?>> modifiers() {
+		public Set<RollModifier<?>> modifiers() {
 			return Collections.singleton(new PassModifier("Gromskull's Exploding Runes", 1,
 				ModifierType.REGULAR));
 		}
@@ -518,7 +518,7 @@ public enum Card implements INamedObject {
 			new InducementPhaseFactory().getDescription(getPhases());
 	}
 
-	public Set<IRollModifier<?>> modifiers() {
+	public Set<RollModifier<?>> modifiers() {
 		return Collections.emptySet();
 	}
 

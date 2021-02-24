@@ -38,7 +38,6 @@ import com.balancedbytes.games.ffb.util.UtilCards;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
-import java.util.List;
 import java.util.Set;
 
 /**
@@ -124,9 +123,8 @@ public class StepHypnoticGaze extends AbstractStepWithReRoll {
 			if (!reRolled) {
 				getResult().setSound(SoundId.HYPNO);
 			}
-			List<GazeModifier> sortedModifiers = modifierFactory.sort(gazeModifiers);
 			getResult().addReport(new ReportSkillRoll(ReportId.HYPNOTIC_GAZE_ROLL, actingPlayer.getPlayerId(), successful,
-					roll, minimumRoll, reRolled, sortedModifiers.toArray(new GazeModifier[0])));
+					roll, minimumRoll, reRolled, gazeModifiers.toArray(new GazeModifier[0])));
 			if (successful) {
 				PlayerState oldVictimState = game.getFieldModel().getPlayerState(game.getDefender());
 				if (!oldVictimState.isConfused() && !oldVictimState.isHypnotized()) {

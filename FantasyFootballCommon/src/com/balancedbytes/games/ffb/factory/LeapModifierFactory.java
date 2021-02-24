@@ -4,7 +4,7 @@ import com.balancedbytes.games.ffb.FactoryType;
 import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.RulesCollection.Rules;
 import com.balancedbytes.games.ffb.model.Skill;
-import com.balancedbytes.games.ffb.modifiers.IRollModifier;
+import com.balancedbytes.games.ffb.modifiers.RollModifier;
 import com.balancedbytes.games.ffb.modifiers.LeapContext;
 import com.balancedbytes.games.ffb.modifiers.LeapModifier;
 import com.balancedbytes.games.ffb.modifiers.LeapModifierCollection;
@@ -54,7 +54,7 @@ public class LeapModifierFactory extends GenerifiedModifierFactory<LeapContext, 
 	}
 
 	@Override
-	protected Optional<LeapModifier> checkClass(IRollModifier<?> modifier) {
+	protected Optional<LeapModifier> checkClass(RollModifier<?> modifier) {
 		return modifier instanceof LeapModifier ? Optional.of((LeapModifier) modifier) : Optional.empty();
 	}
 

@@ -8,7 +8,7 @@ import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.modifiers.CatchModifier;
 import com.balancedbytes.games.ffb.modifiers.DodgeModifier;
-import com.balancedbytes.games.ffb.modifiers.IRollModifier;
+import com.balancedbytes.games.ffb.modifiers.RollModifier;
 import com.balancedbytes.games.ffb.modifiers.InterceptionModifier;
 import com.balancedbytes.games.ffb.modifiers.PickupModifier;
 import com.balancedbytes.games.ffb.report.ReportSkillRoll;
@@ -60,10 +60,10 @@ public abstract class AgilityMechanic implements Mechanic {
 
 	public abstract Wording interceptionWording();
 
-	protected String formatRollModifiers(IRollModifier[] pRollModifiers) {
+	protected String formatRollModifiers(RollModifier[] pRollModifiers) {
 		StringBuilder modifiers = new StringBuilder();
 		if (ArrayTool.isProvided(pRollModifiers)) {
-			for (IRollModifier rollModifier : pRollModifiers) {
+			for (RollModifier rollModifier : pRollModifiers) {
 				if (rollModifier.getModifier() > 0) {
 					modifiers.append(" - ");
 				} else {

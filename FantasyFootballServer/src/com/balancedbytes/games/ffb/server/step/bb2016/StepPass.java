@@ -3,8 +3,6 @@ package com.balancedbytes.games.ffb.server.step.bb2016;
 import com.balancedbytes.games.ffb.CatchScatterThrowInMode;
 import com.balancedbytes.games.ffb.FactoryType;
 import com.balancedbytes.games.ffb.FieldCoordinate;
-import com.balancedbytes.games.ffb.modifiers.PassContext;
-import com.balancedbytes.games.ffb.modifiers.PassModifier;
 import com.balancedbytes.games.ffb.PassingDistance;
 import com.balancedbytes.games.ffb.PlayerAction;
 import com.balancedbytes.games.ffb.PlayerState;
@@ -23,6 +21,8 @@ import com.balancedbytes.games.ffb.model.AnimationType;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.model.Team;
+import com.balancedbytes.games.ffb.modifiers.PassContext;
+import com.balancedbytes.games.ffb.modifiers.PassModifier;
 import com.balancedbytes.games.ffb.net.NetCommandId;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandUseSkill;
 import com.balancedbytes.games.ffb.report.ReportPassRoll;
@@ -45,7 +45,6 @@ import com.balancedbytes.games.ffb.util.UtilCards;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -174,10 +173,9 @@ public class StepPass extends AbstractStepWithReRoll {
 		} else if (PassResult.SAVED_FUMBLE == state.result) {
 			publishParameter(new StepParameter(StepParameterKey.DONT_DROP_FUMBLE, true));
 		}
-		List<PassModifier> passModifierArray = factory.sort(passModifiers);
 		boolean reRolled = ((getReRolledAction() == ReRolledActions.PASS) && (getReRollSource() != null));
 		getResult().addReport(new ReportPassRoll(game.getThrowerId(), roll, minimumRoll, reRolled,
-			passModifierArray.toArray(new PassModifier[0]), passingDistance,
+			passModifiers.toArray(new PassModifier[0]), passingDistance,
 			(PlayerAction.THROW_BOMB == game.getThrowerAction()), state.result));
 		if (PassResult.ACCURATE == state.result) {
 			game.getFieldModel().setRangeRuler(null);

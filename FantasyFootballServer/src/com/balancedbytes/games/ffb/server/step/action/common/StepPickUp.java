@@ -37,7 +37,6 @@ import com.balancedbytes.games.ffb.util.UtilCards;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
-import java.util.List;
 import java.util.Set;
 
 /**
@@ -150,10 +149,9 @@ public class StepPickUp extends AbstractStepWithReRoll {
 			int minimumRoll = mechanic.minimumRollPickup(actingPlayer.getPlayer(), pickupModifiers);
 			int roll = getGameState().getDiceRoller().rollSkill();
 			boolean successful = DiceInterpreter.getInstance().isSkillRollSuccessful(roll, minimumRoll);
-			List<PickupModifier> sortedModifiers = modifierFactory.sort(pickupModifiers);
 			boolean reRolled = ((getReRolledAction() == ReRolledActions.PICK_UP) && (getReRollSource() != null));
 			getResult().addReport(new ReportSkillRoll(ReportId.PICK_UP_ROLL, actingPlayer.getPlayerId(), successful, roll,
-					minimumRoll, reRolled, sortedModifiers.toArray(new PickupModifier[0])));
+					minimumRoll, reRolled, pickupModifiers.toArray(new PickupModifier[0])));
 			if (successful) {
 				return ActionStatus.SUCCESS;
 			} else {

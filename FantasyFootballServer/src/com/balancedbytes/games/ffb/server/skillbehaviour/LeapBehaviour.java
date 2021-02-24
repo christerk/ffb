@@ -1,12 +1,7 @@
 package com.balancedbytes.games.ffb.server.skillbehaviour;
 
-import java.util.List;
-import java.util.Set;
-
 import com.balancedbytes.games.ffb.FactoryType;
 import com.balancedbytes.games.ffb.FieldCoordinate;
-import com.balancedbytes.games.ffb.modifiers.LeapContext;
-import com.balancedbytes.games.ffb.modifiers.LeapModifier;
 import com.balancedbytes.games.ffb.ReRolledActions;
 import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.RulesCollection.Rules;
@@ -16,6 +11,8 @@ import com.balancedbytes.games.ffb.mechanics.Mechanic;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.FieldModel;
 import com.balancedbytes.games.ffb.model.Game;
+import com.balancedbytes.games.ffb.modifiers.LeapContext;
+import com.balancedbytes.games.ffb.modifiers.LeapModifier;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandUseSkill;
 import com.balancedbytes.games.ffb.report.ReportId;
 import com.balancedbytes.games.ffb.report.ReportSkillRoll;
@@ -32,6 +29,8 @@ import com.balancedbytes.games.ffb.server.step.action.move.StepLeap;
 import com.balancedbytes.games.ffb.server.util.UtilServerReRoll;
 import com.balancedbytes.games.ffb.skill.Leap;
 import com.balancedbytes.games.ffb.util.UtilCards;
+
+import java.util.Set;
 
 @RulesCollection(Rules.COMMON)
 public class LeapBehaviour extends SkillBehaviour<Leap> {
@@ -102,10 +101,9 @@ public class LeapBehaviour extends SkillBehaviour<Leap> {
 		int minimumRoll = mechanic.minimumRollLeap(actingPlayer.getPlayer(), leapModifiers);
 		int roll = step.getGameState().getDiceRoller().rollSkill();
 		boolean successful = DiceInterpreter.getInstance().isSkillRollSuccessful(roll, minimumRoll);
-		List<LeapModifier> sortedModifiers = modifierFactory.sort(leapModifiers);
 		boolean reRolled = ((step.getReRolledAction() == ReRolledActions.LEAP) && (step.getReRollSource() != null));
 		step.getResult().addReport(new ReportSkillRoll(ReportId.LEAP_ROLL, actingPlayer.getPlayerId(), successful, roll,
-				minimumRoll, reRolled, sortedModifiers.toArray(new LeapModifier[0])));
+				minimumRoll, reRolled, leapModifiers.toArray(new LeapModifier[0])));
 		if (successful) {
 			status = ActionStatus.SUCCESS;
 		} else {

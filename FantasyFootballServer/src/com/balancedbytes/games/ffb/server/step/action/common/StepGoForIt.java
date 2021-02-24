@@ -36,7 +36,6 @@ import com.balancedbytes.games.ffb.util.UtilPlayer;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
-import java.util.List;
 import java.util.Set;
 
 /**
@@ -164,10 +163,9 @@ public class StepGoForIt extends AbstractStepWithReRoll {
 		int minimumRoll = DiceInterpreter.getInstance().minimumRollGoingForIt(goForItModifiers);
 		int roll = getGameState().getDiceRoller().rollGoingForIt();
 		boolean successful = DiceInterpreter.getInstance().isSkillRollSuccessful(roll, minimumRoll);
-		List<GoForItModifier> sortedModifiers = modifierFactory.sort(goForItModifiers);
 		boolean reRolled = ((getReRolledAction() == ReRolledActions.GO_FOR_IT) && (getReRollSource() != null));
 		getResult().addReport(new ReportSkillRoll(ReportId.GO_FOR_IT_ROLL, actingPlayer.getPlayerId(), successful, roll,
-				minimumRoll, reRolled, sortedModifiers.toArray(new GoForItModifier[0])));
+				minimumRoll, reRolled, goForItModifiers.toArray(new GoForItModifier[0])));
 		if (successful) {
 			return ActionStatus.SUCCESS;
 		} else {
