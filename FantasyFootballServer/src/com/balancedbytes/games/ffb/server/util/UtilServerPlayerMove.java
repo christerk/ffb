@@ -1,15 +1,8 @@
 package com.balancedbytes.games.ffb.server.util;
 
-import java.util.Set;
-
-import com.balancedbytes.games.ffb.modifiers.DodgeContext;
-import com.balancedbytes.games.ffb.modifiers.DodgeModifier;
 import com.balancedbytes.games.ffb.FactoryType.Factory;
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.FieldCoordinateBounds;
-import com.balancedbytes.games.ffb.GoForItModifier;
-import com.balancedbytes.games.ffb.modifiers.LeapContext;
-import com.balancedbytes.games.ffb.modifiers.LeapModifier;
 import com.balancedbytes.games.ffb.MoveSquare;
 import com.balancedbytes.games.ffb.PathFinderWithPassBlockSupport;
 import com.balancedbytes.games.ffb.TurnMode;
@@ -22,6 +15,12 @@ import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.FieldModel;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
+import com.balancedbytes.games.ffb.modifiers.DodgeContext;
+import com.balancedbytes.games.ffb.modifiers.DodgeModifier;
+import com.balancedbytes.games.ffb.modifiers.GoForItContext;
+import com.balancedbytes.games.ffb.modifiers.GoForItModifier;
+import com.balancedbytes.games.ffb.modifiers.LeapContext;
+import com.balancedbytes.games.ffb.modifiers.LeapModifier;
 import com.balancedbytes.games.ffb.net.commands.ClientCommandMove;
 import com.balancedbytes.games.ffb.server.DebugLog;
 import com.balancedbytes.games.ffb.server.DiceInterpreter;
@@ -31,6 +30,8 @@ import com.balancedbytes.games.ffb.util.ArrayTool;
 import com.balancedbytes.games.ffb.util.UtilCards;
 import com.balancedbytes.games.ffb.util.UtilPassing;
 import com.balancedbytes.games.ffb.util.UtilPlayer;
+
+import java.util.Set;
 
 /**
  *
@@ -143,7 +144,8 @@ public class UtilServerPlayerMove {
 		}
 		int minimumRollGoForIt = 0;
 		if (goForIt) {
-			Set<GoForItModifier> goForItModifiers = new GoForItModifierFactory().findGoForItModifiers(game);
+			GoForItModifierFactory factory = game.getFactory(Factory.GO_FOR_IT_MODIFIER);
+			Set<GoForItModifier> goForItModifiers = factory.findModifiers(new GoForItContext(game, actingPlayer.getPlayer()));
 			minimumRollGoForIt = DiceInterpreter.getInstance().minimumRollGoingForIt(goForItModifiers);
 		}
 		MoveSquare moveSquare = new MoveSquare(pCoordinate, minimumRollDodge, minimumRollGoForIt);

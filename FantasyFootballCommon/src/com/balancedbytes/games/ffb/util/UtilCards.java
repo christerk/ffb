@@ -7,8 +7,6 @@ import com.balancedbytes.games.ffb.CardEffect;
 import com.balancedbytes.games.ffb.FactoryType;
 import com.balancedbytes.games.ffb.InjuryModifier;
 import com.balancedbytes.games.ffb.InjuryModifier.InjuryModifierContext;
-import com.balancedbytes.games.ffb.modifiers.LeapModifier;
-import com.balancedbytes.games.ffb.modifiers.LeapContext;
 import com.balancedbytes.games.ffb.ReRollSource;
 import com.balancedbytes.games.ffb.ReRolledAction;
 import com.balancedbytes.games.ffb.factory.SkillFactory;

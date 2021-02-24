@@ -1,18 +1,14 @@
 package com.balancedbytes.games.ffb.server;
 
-import java.util.Set;
-
 import com.balancedbytes.games.ffb.ArmorModifiers;
 import com.balancedbytes.games.ffb.Card;
 import com.balancedbytes.games.ffb.CardEffect;
 import com.balancedbytes.games.ffb.Direction;
 import com.balancedbytes.games.ffb.FactoryType.Factory;
 import com.balancedbytes.games.ffb.FieldCoordinate;
-import com.balancedbytes.games.ffb.GoForItModifier;
 import com.balancedbytes.games.ffb.InjuryContext;
 import com.balancedbytes.games.ffb.InjuryModifiers;
 import com.balancedbytes.games.ffb.KickoffResult;
-import com.balancedbytes.games.ffb.modifiers.PassModifier;
 import com.balancedbytes.games.ffb.PassingDistance;
 import com.balancedbytes.games.ffb.PlayerState;
 import com.balancedbytes.games.ffb.SeriousInjury;
@@ -25,9 +21,13 @@ import com.balancedbytes.games.ffb.mechanics.StatsMechanic;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
+import com.balancedbytes.games.ffb.modifiers.GoForItModifier;
+import com.balancedbytes.games.ffb.modifiers.PassModifier;
 import com.balancedbytes.games.ffb.util.ArrayTool;
 import com.balancedbytes.games.ffb.util.UtilCards;
 import com.balancedbytes.games.ffb.util.UtilRangeRuler;
+
+import java.util.Set;
 
 /**
  *
@@ -35,7 +35,7 @@ import com.balancedbytes.games.ffb.util.UtilRangeRuler;
  */
 public class DiceInterpreter {
 
-	private static DiceInterpreter _INSTANCE = new DiceInterpreter();
+	private static final DiceInterpreter _INSTANCE = new DiceInterpreter();
 
 	/**
 	 * @return the only instance of this class.

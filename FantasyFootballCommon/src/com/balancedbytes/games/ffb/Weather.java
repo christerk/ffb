@@ -1,11 +1,5 @@
 package com.balancedbytes.games.ffb;
 
-import com.balancedbytes.games.ffb.model.Game;
-import com.balancedbytes.games.ffb.modifiers.IRollModifier;
-
-import java.util.Collection;
-import java.util.HashSet;
-
 public enum Weather implements INamedObject {
 
 	SWELTERING_HEAT("Sweltering Heat", "heat",
@@ -14,21 +8,12 @@ public enum Weather implements INamedObject {
 	NICE("Nice Weather", "nice", "Perfect Fantasy Football weather."),
 	POURING_RAIN("Pouring Rain", "rain", "A -1 modifier applies to all catch, intercept, or pick-up rolls."),
 	BLIZZARD("Blizzard", "blizzard",
-			"Going For It fails on a roll of 1 or 2 and only quick or short passes can be attempted.") {
-		public Collection<IRollModifier> modifier(Game game) {
-			return new HashSet<IRollModifier>() {
-				private static final long serialVersionUID = -6560479669198677254L;
-				{
-					add(GoForItModifier.BLIZZARD);
-				}
-			};
-		}
-	},
+			"Going For It fails on a roll of 1 or 2 and only quick or short passes can be attempted."),
 	INTRO("Intro", "intro", "No weather at all, but the intro screen shown by the client.");
 
-	private String fName;
-	private String fShortName;
-	private String fDescription;
+	private final String fName;
+	private final String fShortName;
+	private final String fDescription;
 
 	Weather(String pName, String pShortName, String pDescription) {
 		fName = pName;

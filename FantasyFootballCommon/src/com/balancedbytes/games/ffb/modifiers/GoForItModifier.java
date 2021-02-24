@@ -1,15 +1,12 @@
-package com.balancedbytes.games.ffb;
+package com.balancedbytes.games.ffb.modifiers;
 
-import com.balancedbytes.games.ffb.modifiers.IRollModifier;
-import com.balancedbytes.games.ffb.modifiers.ModifierType;
+import com.balancedbytes.games.ffb.RollModifier;
 
 /**
  * 
  * @author Kalimar
  */
-public enum GoForItModifier implements IRollModifier {
-
-	BLIZZARD("Blizzard", 1), GREASED_SHOES("Greased Shoes", 3);
+public class GoForItModifier extends RollModifier<GoForItContext> {
 
 	private final String fName;
 	private final int fModifier;

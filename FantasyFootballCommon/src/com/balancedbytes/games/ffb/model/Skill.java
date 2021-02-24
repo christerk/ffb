@@ -10,6 +10,7 @@ import com.balancedbytes.games.ffb.model.modifier.CancelSkillProperty;
 import com.balancedbytes.games.ffb.modifiers.CatchModifier;
 import com.balancedbytes.games.ffb.modifiers.DodgeModifier;
 import com.balancedbytes.games.ffb.modifiers.GazeModifier;
+import com.balancedbytes.games.ffb.modifiers.GoForItModifier;
 import com.balancedbytes.games.ffb.modifiers.InterceptionModifier;
 import com.balancedbytes.games.ffb.modifiers.LeapModifier;
 import com.balancedbytes.games.ffb.modifiers.PassModifier;
@@ -35,6 +36,7 @@ public abstract class Skill implements INamedObject {
 	private final List<ArmorModifier> armorModifiers = new ArrayList<>();
 	private final List<CatchModifier> catchModifiers = new ArrayList<>();
 	private final List<GazeModifier> gazeModifiers = new ArrayList<>();
+	private final List<GoForItModifier> goForItModifiers = new ArrayList<>();
 	private ISkillBehaviour<? extends Skill> behaviour;
 	private final List<ISkillProperty> skillProperties = new ArrayList<>();
 	private final Map<ReRolledAction, ReRollSource> rerollSources = new HashMap<>();
@@ -101,6 +103,8 @@ public abstract class Skill implements INamedObject {
 
 	protected void registerModifer(GazeModifier modifier) { gazeModifiers.add(modifier); }
 
+	protected void registerModifer(GoForItModifier modifier) { goForItModifiers.add(modifier); }
+
 	protected void registerProperty(ISkillProperty property) {
 		skillProperties.add(property);
 	}
@@ -151,6 +155,10 @@ public abstract class Skill implements INamedObject {
 
 	public List<GazeModifier> getGazeModifiers() {
 		return gazeModifiers;
+	}
+
+	public List<GoForItModifier> getGoForItModifiers() {
+		return goForItModifiers;
 	}
 
 	public void setBehaviour(ISkillBehaviour<? extends Skill> behaviour) {

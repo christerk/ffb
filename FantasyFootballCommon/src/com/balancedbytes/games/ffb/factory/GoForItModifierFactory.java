@@ -1,16 +1,18 @@
 package com.balancedbytes.games.ffb.factory;
 
-import com.balancedbytes.games.ffb.Card;
 import com.balancedbytes.games.ffb.FactoryType;
-import com.balancedbytes.games.ffb.GoForItModifier;
 import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.RulesCollection.Rules;
-import com.balancedbytes.games.ffb.model.Game;
-import com.balancedbytes.games.ffb.util.UtilCards;
+import com.balancedbytes.games.ffb.model.Skill;
+import com.balancedbytes.games.ffb.modifiers.GoForItContext;
+import com.balancedbytes.games.ffb.modifiers.GoForItModifier;
+import com.balancedbytes.games.ffb.modifiers.GoForItModifierCollection;
+import com.balancedbytes.games.ffb.modifiers.IRollModifier;
+import com.balancedbytes.games.ffb.util.Scanner;
 
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.Set;
+import java.util.Collection;
+import java.util.Optional;
+import java.util.stream.Stream;
 
 /**
  * 
@@ -18,39 +20,52 @@ import java.util.Set;
  */
 @FactoryType(FactoryType.Factory.GO_FOR_IT_MODIFIER)
 @RulesCollection(Rules.COMMON)
-public class GoForItModifierFactory implements IRollModifierFactory<GoForItModifier> {
+public class GoForItModifierFactory extends GenerifiedModifierFactory<GoForItContext, GoForItModifier, GoForItModifierCollection> {
 
-	public GoForItModifier forName(String pName) {
-		for (GoForItModifier modifier : GoForItModifier.values()) {
-			if (modifier.getName().equalsIgnoreCase(pName)) {
-				return modifier;
-			}
-		}
-		return null;
+	private GoForItModifierCollection goForItModifierCollection = new GoForItModifierCollection();
+
+	public GoForItModifier forName(String name) {
+		return Stream.concat(
+			goForItModifierCollection.getModifiers().stream(),
+			modifierAggregator.getGoForItModifiers().stream())
+			.filter(modifier -> modifier.getName().equals(name))
+			.findFirst()
+			.orElse(null);
 	}
 
-	public Set<GoForItModifier> findGoForItModifiers(Game pGame) {
-		Set<GoForItModifier> goForItModifiers = activeModifiers(pGame, GoForItModifier.class);
 
-		if (UtilCards.isCardActive(pGame, Card.GREASED_SHOES)) {
-			goForItModifiers.add(GoForItModifier.GREASED_SHOES);
-		}
-		return goForItModifiers;
-	}
-
-	public GoForItModifier[] toArray(Set<GoForItModifier> pGoForItModifierSet) {
-		if (pGoForItModifierSet != null) {
-			GoForItModifier[] goForItModifierArray = pGoForItModifierSet
-					.toArray(new GoForItModifier[0]);
-			Arrays.sort(goForItModifierArray, Comparator.comparing(GoForItModifier::getName));
-			return goForItModifierArray;
-		} else {
-			return new GoForItModifier[0];
-		}
+	@Override
+	protected Scanner<GoForItModifierCollection> getScanner() {
+		return new Scanner<>(GoForItModifierCollection.class);
 	}
 
 	@Override
-	public void initialize(Game game) {
+	protected GoForItModifierCollection getModifierCollection() {
+		return goForItModifierCollection;
 	}
 
+	@Override
+	protected void setModifierCollection(GoForItModifierCollection modifierCollection) {
+		this.goForItModifierCollection = modifierCollection;
+	}
+
+	@Override
+	protected Collection<GoForItModifier> getModifier(Skill skill) {
+		return skill.getGoForItModifiers();
+	}
+
+	@Override
+	protected Optional<GoForItModifier> checkClass(IRollModifier<?> modifier) {
+		return modifier instanceof GoForItModifier ? Optional.of((GoForItModifier) modifier) : Optional.empty();
+	}
+
+	@Override
+	protected boolean isAffectedByDisturbingPresence(GoForItContext context) {
+		return false;
+	}
+
+	@Override
+	protected boolean isAffectedByTackleZones(GoForItContext context) {
+		return false;
+	}
 }

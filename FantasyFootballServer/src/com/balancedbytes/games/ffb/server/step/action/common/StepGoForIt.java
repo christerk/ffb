@@ -1,8 +1,6 @@
 package com.balancedbytes.games.ffb.server.step.action.common;
 
-import java.util.Set;
-
-import com.balancedbytes.games.ffb.GoForItModifier;
+import com.balancedbytes.games.ffb.FactoryType;
 import com.balancedbytes.games.ffb.PlayerAction;
 import com.balancedbytes.games.ffb.ReRollSource;
 import com.balancedbytes.games.ffb.ReRolledActions;
@@ -13,6 +11,8 @@ import com.balancedbytes.games.ffb.json.UtilJson;
 import com.balancedbytes.games.ffb.model.ActingPlayer;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
+import com.balancedbytes.games.ffb.modifiers.GoForItContext;
+import com.balancedbytes.games.ffb.modifiers.GoForItModifier;
 import com.balancedbytes.games.ffb.report.ReportId;
 import com.balancedbytes.games.ffb.report.ReportSkillRoll;
 import com.balancedbytes.games.ffb.server.ActionStatus;
@@ -35,6 +35,9 @@ import com.balancedbytes.games.ffb.util.UtilCards;
 import com.balancedbytes.games.ffb.util.UtilPlayer;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
+
+import java.util.List;
+import java.util.Set;
 
 /**
  * Step in block sequence to handle go for it on blitz.
@@ -156,15 +159,15 @@ public class StepGoForIt extends AbstractStepWithReRoll {
 	private ActionStatus goForIt() {
 		Game game = getGameState().getGame();
 		ActingPlayer actingPlayer = game.getActingPlayer();
-		GoForItModifierFactory modifierFactory = new GoForItModifierFactory();
-		Set<GoForItModifier> goForItModifiers = modifierFactory.findGoForItModifiers(game);
+		GoForItModifierFactory modifierFactory = game.getFactory(FactoryType.Factory.GO_FOR_IT_MODIFIER);
+		Set<GoForItModifier> goForItModifiers = modifierFactory.findModifiers(new GoForItContext(game, actingPlayer.getPlayer()));
 		int minimumRoll = DiceInterpreter.getInstance().minimumRollGoingForIt(goForItModifiers);
 		int roll = getGameState().getDiceRoller().rollGoingForIt();
 		boolean successful = DiceInterpreter.getInstance().isSkillRollSuccessful(roll, minimumRoll);
-		GoForItModifier[] goForItModifierArray = modifierFactory.toArray(goForItModifiers);
+		List<GoForItModifier> sortedModifiers = modifierFactory.sort(goForItModifiers);
 		boolean reRolled = ((getReRolledAction() == ReRolledActions.GO_FOR_IT) && (getReRollSource() != null));
 		getResult().addReport(new ReportSkillRoll(ReportId.GO_FOR_IT_ROLL, actingPlayer.getPlayerId(), successful, roll,
-				minimumRoll, reRolled, goForItModifierArray));
+				minimumRoll, reRolled, sortedModifiers.toArray(new GoForItModifier[0])));
 		if (successful) {
 			return ActionStatus.SUCCESS;
 		} else {
