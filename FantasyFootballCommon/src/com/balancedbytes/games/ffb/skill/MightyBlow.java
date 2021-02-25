@@ -1,11 +1,12 @@
 package com.balancedbytes.games.ffb.skill;
 
-import com.balancedbytes.games.ffb.ArmorModifiers;
+import com.balancedbytes.games.ffb.modifiers.ArmorModifier;
 import com.balancedbytes.games.ffb.InjuryModifiers;
 import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.RulesCollection.Rules;
 import com.balancedbytes.games.ffb.SkillCategory;
 import com.balancedbytes.games.ffb.model.Skill;
+import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
 
 /**
  * Add 1 to any Armour or Injury roll made by a player with this skill when an
@@ -23,8 +24,9 @@ public class MightyBlow extends Skill {
 
 	@Override
 	public void postConstruct() {
-		registerModifier(ArmorModifiers.MIGHTY_BLOW);
+		registerModifier(new ArmorModifier("Mighty Blow", 1, false));
 		registerModifier(InjuryModifiers.MIGHTY_BLOW);
+		registerProperty(NamedProperties.affectsEitherArmourOrInjuryOnBlock);
 	}
 
 }

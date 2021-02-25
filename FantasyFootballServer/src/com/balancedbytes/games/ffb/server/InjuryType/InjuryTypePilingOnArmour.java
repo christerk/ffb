@@ -1,10 +1,7 @@
 package com.balancedbytes.games.ffb.server.InjuryType;
 
-import java.util.Set;
-
 import com.balancedbytes.games.ffb.ApothecaryMode;
-import com.balancedbytes.games.ffb.ArmorModifier;
-import com.balancedbytes.games.ffb.ArmorModifierFactory;
+import com.balancedbytes.games.ffb.FactoryType;
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.InjuryContext;
 import com.balancedbytes.games.ffb.InjuryModifier;
@@ -13,12 +10,16 @@ import com.balancedbytes.games.ffb.factory.InjuryModifierFactory;
 import com.balancedbytes.games.ffb.injury.PilingOnArmour;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
+import com.balancedbytes.games.ffb.modifiers.ArmorModifier;
+import com.balancedbytes.games.ffb.modifiers.ArmorModifierFactory;
 import com.balancedbytes.games.ffb.option.GameOptionId;
 import com.balancedbytes.games.ffb.option.UtilGameOption;
 import com.balancedbytes.games.ffb.server.DiceInterpreter;
 import com.balancedbytes.games.ffb.server.DiceRoller;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.step.IStep;
+
+import java.util.Set;
 
 public class InjuryTypePilingOnArmour extends InjuryTypeServer<PilingOnArmour> {
 	public InjuryTypePilingOnArmour() {
@@ -36,8 +37,8 @@ public class InjuryTypePilingOnArmour extends InjuryTypeServer<PilingOnArmour> {
 			injuryContext.setArmorRoll(diceRoller.rollArmour());
 			injuryContext.setArmorBroken(diceInterpreter.isArmourBroken(gameState, injuryContext));
 			if (!UtilGameOption.isOptionEnabled(game, GameOptionId.PILING_ON_DOES_NOT_STACK)) {
-				ArmorModifierFactory modifierFactory = new ArmorModifierFactory();
-				Set<ArmorModifier> armorModifiers = modifierFactory.findArmorModifiers(game, pAttacker, pDefender, isStab(),
+				ArmorModifierFactory armorModifierFactory = game.getFactory(FactoryType.Factory.ARMOUR_MODIFIER);
+				Set<ArmorModifier> armorModifiers = armorModifierFactory.findArmorModifiers(game, pAttacker, pDefender, isStab(),
 						isFoul());
 				injuryContext.addArmorModifiers(armorModifiers);
 			}

@@ -1,10 +1,6 @@
 package com.balancedbytes.games.ffb.report;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import com.balancedbytes.games.ffb.ArmorModifier;
-import com.balancedbytes.games.ffb.ArmorModifierFactory;
+import com.balancedbytes.games.ffb.FactoryType;
 import com.balancedbytes.games.ffb.InjuryModifier;
 import com.balancedbytes.games.ffb.InjuryType;
 import com.balancedbytes.games.ffb.PlayerState;
@@ -13,10 +9,15 @@ import com.balancedbytes.games.ffb.factory.IFactorySource;
 import com.balancedbytes.games.ffb.factory.InjuryModifierFactory;
 import com.balancedbytes.games.ffb.json.IJsonOption;
 import com.balancedbytes.games.ffb.json.UtilJson;
+import com.balancedbytes.games.ffb.modifiers.ArmorModifier;
+import com.balancedbytes.games.ffb.modifiers.ArmorModifierFactory;
 import com.balancedbytes.games.ffb.util.ArrayTool;
 import com.eclipsesource.json.JsonArray;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 
@@ -216,7 +217,7 @@ public class ReportInjury implements IReport {
 		fAttackerId = IJsonOption.ATTACKER_ID.getFrom(game, jsonObject);
 
 		fArmorModifiers.clear();
-		ArmorModifierFactory armorModifierFactory = new ArmorModifierFactory();
+		ArmorModifierFactory armorModifierFactory = game.getFactory(FactoryType.Factory.ARMOUR_MODIFIER);
 		JsonArray armorModifiers = IJsonOption.ARMOR_MODIFIERS.getFrom(game, jsonObject);
 		for (int i = 0; i < armorModifiers.size(); i++) {
 			fArmorModifiers.add((ArmorModifier) UtilJson.toEnumWithName(armorModifierFactory, armorModifiers.get(i)));

@@ -1,6 +1,6 @@
 package com.balancedbytes.games.ffb.client;
 
-import com.balancedbytes.games.ffb.ArmorModifier;
+import com.balancedbytes.games.ffb.modifiers.ArmorModifier;
 import com.balancedbytes.games.ffb.ArmorModifiers;
 import com.balancedbytes.games.ffb.BlockResult;
 import com.balancedbytes.games.ffb.Card;

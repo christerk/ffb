@@ -11,9 +11,11 @@ import java.util.Set;
 public class NamedProperties {
 	public static final ISkillProperty addBonusForAccuratePass = new NamedProperty("Add Bonus For Accurate Pass");
 	public static final ISkillProperty addStrengthOnBlitz = new NamedProperty("Add Strength on Blitz");
+	public static final ISkillProperty affectsEitherArmourOrInjuryOnBlock = new NamedProperty("Affects Either Armour Or Injury On Block");
 	public static final ISkillProperty allowStandupAssists = new NamedProperty("Allow Stand Up Assists");
 	public static final ISkillProperty appliesConfusion = new NamedProperty("Applies Confusion");
 	public static final ISkillProperty appliesPoisonOnBadlyHurt = new NamedProperty("Applies Poison on Badly Hurt");
+	public static final ISkillProperty armourRollWithoutBlockHasIncreasedEffectOnUndead = new NamedProperty("Armour Roll Without Block Has Increased Effect On Undead");
 	public static final ISkillProperty assistInTacklezones = new NamedProperty("Assist in Tacklezones");
 	public static final ISkillProperty blocksLikeChainsaw = new NamedProperty("Blocks Like Chainsaw");
 	public static final ISkillProperty canAlwaysAssistFouls = new NamedProperty("Can Always Assist Fouls");
@@ -116,6 +118,7 @@ public class NamedProperties {
 	public static final ISkillProperty preventStandUpAction = new NamedProperty("Prevent Regular Stand Up Action");
 	public static final ISkillProperty preventStuntyDodgeModifier = new NamedProperty("Prevent Stunty Dodge Modifier", Collections.singleton(ignoreTacklezonesWhenDodging));
 	public static final ISkillProperty preventThrowTeamMateAction = new NamedProperty("Prevent Throw Team Mate Action");
+	public static final ISkillProperty reducesArmourToFixedValue = new NamedProperty("Reduces Armour To Fixed Value");
 	public static final ISkillProperty requiresSecondCasualtyRoll = new NamedProperty("Requires Second Casualty Roll");
 	public static final ISkillProperty smallIcon = new NamedProperty("Display with a small icon");
 	public static final ISkillProperty ttmScattersInSingleDirection = new NamedProperty(

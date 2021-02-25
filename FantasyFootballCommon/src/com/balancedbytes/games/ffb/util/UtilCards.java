@@ -1,7 +1,5 @@
 package com.balancedbytes.games.ffb.util;
 
-import com.balancedbytes.games.ffb.ArmorModifier;
-import com.balancedbytes.games.ffb.ArmorModifiers.ArmorModifierContext;
 import com.balancedbytes.games.ffb.Card;
 import com.balancedbytes.games.ffb.CardEffect;
 import com.balancedbytes.games.ffb.FactoryType;
@@ -67,18 +65,6 @@ public final class UtilCards {
 			}
 		}
 
-		return result;
-	}
-
-	public static Collection<ArmorModifier> getArmorModifiers(Player<?> player, ArmorModifierContext context) {
-		Set<ArmorModifier> result = new HashSet<>();
-		for (Skill skill : player.getSkills()) {
-			for (ArmorModifier modifier : skill.getArmorModifiers()) {
-				if (modifier.appliesToContext(context)) {
-					result.add(modifier);
-				}
-			}
-		}
 		return result;
 	}
 

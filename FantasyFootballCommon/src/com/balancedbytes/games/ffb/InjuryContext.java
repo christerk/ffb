@@ -1,9 +1,10 @@
 package com.balancedbytes.games.ffb;
 
+import com.balancedbytes.games.ffb.factory.InjuryModifierFactory;
+import com.balancedbytes.games.ffb.modifiers.ArmorModifier;
+
 import java.util.HashSet;
 import java.util.Set;
-
-import com.balancedbytes.games.ffb.factory.InjuryModifierFactory;
 
 public class InjuryContext {
 	public InjuryType fInjuryType;
@@ -89,7 +90,7 @@ public class InjuryContext {
 	}
 
 	public ArmorModifier[] getArmorModifiers() {
-		return new ArmorModifierFactory().toArray(fArmorModifiers);
+		return fArmorModifiers.toArray(new ArmorModifier[0]);
 	}
 
 	public void clearArmorModifiers() {

@@ -1,11 +1,8 @@
 package com.balancedbytes.games.ffb.server.InjuryType;
 
-import java.util.Set;
-
 import com.balancedbytes.games.ffb.ApothecaryMode;
-import com.balancedbytes.games.ffb.ArmorModifier;
-import com.balancedbytes.games.ffb.ArmorModifierFactory;
 import com.balancedbytes.games.ffb.ArmorModifiers;
+import com.balancedbytes.games.ffb.FactoryType;
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.InjuryContext;
 import com.balancedbytes.games.ffb.InjuryModifier;
@@ -15,10 +12,14 @@ import com.balancedbytes.games.ffb.injury.Block;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
+import com.balancedbytes.games.ffb.modifiers.ArmorModifier;
+import com.balancedbytes.games.ffb.modifiers.ArmorModifierFactory;
 import com.balancedbytes.games.ffb.server.DiceInterpreter;
 import com.balancedbytes.games.ffb.server.DiceRoller;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.step.IStep;
+
+import java.util.Set;
 
 public class InjuryTypeBlock extends InjuryTypeServer<Block> {
 	public InjuryTypeBlock() {
@@ -34,7 +35,7 @@ public class InjuryTypeBlock extends InjuryTypeServer<Block> {
 
 		if (!injuryContext.isArmorBroken()) {
 
-			ArmorModifierFactory modifierFactory = new ArmorModifierFactory();
+			ArmorModifierFactory armorModifierFactory = game.getFactory(FactoryType.Factory.ARMOUR_MODIFIER);
 
 			boolean attackerHasChainsaw = pAttacker.hasSkillWithProperty(NamedProperties.blocksLikeChainsaw);
 			boolean defenderHasChainsaw = pDefender.hasSkillWithProperty(NamedProperties.blocksLikeChainsaw);
@@ -51,7 +52,7 @@ public class InjuryTypeBlock extends InjuryTypeServer<Block> {
 				injuryContext.setArmorBroken(diceInterpreter.isArmourBroken(gameState, injuryContext));
 
 				if (!injuryContext.isArmorBroken()) {
-					Set<ArmorModifier> armorModifiers = modifierFactory.findArmorModifiers(game, pAttacker, pDefender, isStab(),
+					Set<ArmorModifier> armorModifiers = armorModifierFactory.findArmorModifiers(game, pAttacker, pDefender, isStab(),
 							isFoul());
 					injuryContext.addArmorModifiers(armorModifiers);
 					injuryContext.setArmorBroken(diceInterpreter.isArmourBroken(gameState, injuryContext));

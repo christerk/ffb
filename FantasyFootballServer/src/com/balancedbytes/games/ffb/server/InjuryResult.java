@@ -2,9 +2,8 @@ package com.balancedbytes.games.ffb.server;
 
 import com.balancedbytes.games.ffb.ApothecaryMode;
 import com.balancedbytes.games.ffb.ApothecaryStatus;
-import com.balancedbytes.games.ffb.ArmorModifier;
-import com.balancedbytes.games.ffb.ArmorModifierFactory;
 import com.balancedbytes.games.ffb.BloodSpot;
+import com.balancedbytes.games.ffb.FactoryType;
 import com.balancedbytes.games.ffb.InjuryContext;
 import com.balancedbytes.games.ffb.InjuryModifier;
 import com.balancedbytes.games.ffb.InjuryType;
@@ -21,6 +20,8 @@ import com.balancedbytes.games.ffb.model.GameResult;
 import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.model.PlayerResult;
 import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
+import com.balancedbytes.games.ffb.modifiers.ArmorModifier;
+import com.balancedbytes.games.ffb.modifiers.ArmorModifierFactory;
 import com.balancedbytes.games.ffb.report.ReportInjury;
 import com.balancedbytes.games.ffb.server.step.IStep;
 import com.balancedbytes.games.ffb.server.util.UtilServerGame;
@@ -198,7 +199,7 @@ public class InjuryResult implements IJsonSerializable {
 		injuryContext.fApothecaryMode = (ApothecaryMode) IServerJsonOption.APOTHECARY_MODE.getFrom(source, jsonObject);
 
 		injuryContext.fArmorModifiers.clear();
-		ArmorModifierFactory armorModifierFactory = new ArmorModifierFactory();
+		ArmorModifierFactory armorModifierFactory = source.getFactory(FactoryType.Factory.ARMOUR_MODIFIER);
 		JsonArray armorModifiers = IServerJsonOption.ARMOR_MODIFIERS.getFrom(source, jsonObject);
 		for (int i = 0; i < armorModifiers.size(); i++) {
 			injuryContext.fArmorModifiers

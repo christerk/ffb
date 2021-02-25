@@ -1,6 +1,6 @@
 package com.balancedbytes.games.ffb.model;
 
-import com.balancedbytes.games.ffb.ArmorModifier;
+import com.balancedbytes.games.ffb.modifiers.ArmorModifier;
 import com.balancedbytes.games.ffb.INamedObject;
 import com.balancedbytes.games.ffb.InjuryModifier;
 import com.balancedbytes.games.ffb.ReRollSource;

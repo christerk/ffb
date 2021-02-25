@@ -1,12 +1,13 @@
 package com.balancedbytes.games.ffb.server.InjuryType;
 
 import com.balancedbytes.games.ffb.ApothecaryMode;
-import com.balancedbytes.games.ffb.ArmorModifierFactory;
+import com.balancedbytes.games.ffb.FactoryType;
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.InjuryContext;
 import com.balancedbytes.games.ffb.injury.Stab;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
+import com.balancedbytes.games.ffb.modifiers.ArmorModifierFactory;
 import com.balancedbytes.games.ffb.server.DiceInterpreter;
 import com.balancedbytes.games.ffb.server.DiceRoller;
 import com.balancedbytes.games.ffb.server.GameState;
@@ -26,8 +27,8 @@ public class InjuryTypeStab extends InjuryTypeServer<Stab> {
 
 		if (!injuryContext.isArmorBroken()) {
 
-			ArmorModifierFactory modifierFactory = new ArmorModifierFactory();
-			modifierFactory.findArmorModifiers(game, pAttacker, pDefender, isStab(), isFoul());
+			ArmorModifierFactory armorModifierFactory = game.getFactory(FactoryType.Factory.ARMOUR_MODIFIER);
+			armorModifierFactory.findArmorModifiers(game, pAttacker, pDefender, isStab(), isFoul());
 
 			injuryContext.setArmorRoll(diceRoller.rollArmour());
 			injuryContext.setArmorBroken(diceInterpreter.isArmourBroken(gameState, injuryContext));

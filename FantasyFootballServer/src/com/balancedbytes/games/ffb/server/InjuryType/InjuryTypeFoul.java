@@ -1,12 +1,9 @@
 package com.balancedbytes.games.ffb.server.InjuryType;
 
-import java.util.Set;
-
 import com.balancedbytes.games.ffb.ApothecaryMode;
-import com.balancedbytes.games.ffb.ArmorModifier;
-import com.balancedbytes.games.ffb.ArmorModifierFactory;
 import com.balancedbytes.games.ffb.ArmorModifiers;
 import com.balancedbytes.games.ffb.Card;
+import com.balancedbytes.games.ffb.FactoryType;
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.InjuryContext;
 import com.balancedbytes.games.ffb.InjuryModifier;
@@ -16,6 +13,8 @@ import com.balancedbytes.games.ffb.injury.Foul;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
 import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
+import com.balancedbytes.games.ffb.modifiers.ArmorModifier;
+import com.balancedbytes.games.ffb.modifiers.ArmorModifierFactory;
 import com.balancedbytes.games.ffb.option.GameOptionId;
 import com.balancedbytes.games.ffb.option.UtilGameOption;
 import com.balancedbytes.games.ffb.server.DiceInterpreter;
@@ -24,6 +23,8 @@ import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.step.IStep;
 import com.balancedbytes.games.ffb.util.UtilCards;
 import com.balancedbytes.games.ffb.util.UtilPlayer;
+
+import java.util.Set;
 
 public class InjuryTypeFoul extends InjuryTypeServer<Foul> {
 	public InjuryTypeFoul() {
@@ -59,16 +60,17 @@ public class InjuryTypeFoul extends InjuryTypeServer<Foul> {
 							&& (UtilPlayer.findTacklezones(game, pAttacker) < 1))) {
 				injuryContext.addArmorModifier(ArmorModifiers.FOUL);
 			}
+			ArmorModifierFactory armorModifierFactory = game.getFactory(FactoryType.Factory.ARMOUR_MODIFIER);
+
 			int foulAssists = UtilPlayer.findFoulAssists(game, pAttacker, pDefender);
 			if (foulAssists != 0) {
-				ArmorModifier assistModifier = new ArmorModifierFactory().getFoulAssist(foulAssists);
+				ArmorModifier assistModifier = armorModifierFactory.getFoulAssist(foulAssists);
 				injuryContext.addArmorModifier(assistModifier);
 			}
 			injuryContext.setArmorBroken(diceInterpreter.isArmourBroken(gameState, injuryContext));
 
 			if (!injuryContext.isArmorBroken()) {
-				ArmorModifierFactory modifierFactory = new ArmorModifierFactory();
-				Set<ArmorModifier> armorModifiers = modifierFactory.findArmorModifiers(game, pAttacker, pDefender, isStab(),
+				Set<ArmorModifier> armorModifiers = armorModifierFactory.findArmorModifiers(game, pAttacker, pDefender, isStab(),
 						isFoul());
 				injuryContext.addArmorModifiers(armorModifiers);
 				injuryContext.setArmorBroken(diceInterpreter.isArmourBroken(gameState, injuryContext));

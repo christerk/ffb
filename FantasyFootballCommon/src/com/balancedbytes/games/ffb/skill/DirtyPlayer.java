@@ -1,11 +1,12 @@
 package com.balancedbytes.games.ffb.skill;
 
-import com.balancedbytes.games.ffb.ArmorModifiers;
+import com.balancedbytes.games.ffb.modifiers.ArmorModifier;
 import com.balancedbytes.games.ffb.InjuryModifiers;
 import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.RulesCollection.Rules;
 import com.balancedbytes.games.ffb.SkillCategory;
 import com.balancedbytes.games.ffb.model.Skill;
+import com.balancedbytes.games.ffb.modifiers.ArmorModifierContext;
 
 /**
  * A player with this skill has trained long and hard to learn every dirty trick
@@ -23,7 +24,12 @@ public class DirtyPlayer extends Skill {
 
 	@Override
 	public void postConstruct() {
-		registerModifier(ArmorModifiers.DIRTY_PLAYER);
+		registerModifier(new ArmorModifier("Dirty Player", 1, false) {
+			@Override
+			public boolean appliesToContext(ArmorModifierContext context) {
+				return context.isFoul;
+			}
+		});
 		registerModifier(InjuryModifiers.DIRTY_PLAYER);
 
 	}

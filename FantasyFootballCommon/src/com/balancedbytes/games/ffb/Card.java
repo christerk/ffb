@@ -2,6 +2,7 @@ package com.balancedbytes.games.ffb;
 
 import com.balancedbytes.games.ffb.factory.InducementPhaseFactory;
 import com.balancedbytes.games.ffb.model.Skill;
+import com.balancedbytes.games.ffb.modifiers.ArmorModifier;
 import com.balancedbytes.games.ffb.modifiers.RollModifier;
 import com.balancedbytes.games.ffb.modifiers.InterceptionContext;
 import com.balancedbytes.games.ffb.modifiers.InterceptionModifier;
@@ -519,6 +520,10 @@ public enum Card implements INamedObject {
 	}
 
 	public Set<RollModifier<?>> modifiers() {
+		return Collections.emptySet();
+	}
+
+	public Set<ArmorModifier> armourModifiers() {
 		return Collections.emptySet();
 	}
 

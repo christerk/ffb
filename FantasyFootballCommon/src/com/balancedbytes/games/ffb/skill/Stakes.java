@@ -1,10 +1,13 @@
 package com.balancedbytes.games.ffb.skill;
 
-import com.balancedbytes.games.ffb.ArmorModifiers;
+import com.balancedbytes.games.ffb.modifiers.ArmorModifier;
 import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.RulesCollection.Rules;
 import com.balancedbytes.games.ffb.SkillCategory;
 import com.balancedbytes.games.ffb.model.Skill;
+import com.balancedbytes.games.ffb.model.Team;
+import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
+import com.balancedbytes.games.ffb.modifiers.ArmorModifierContext;
 
 /**
  * This player is armed with special stakes that are blessed to cause extra
@@ -21,8 +24,22 @@ public class Stakes extends Skill {
 
 	@Override
 	public void postConstruct() {
-		registerModifier(ArmorModifiers.STAKES);
+		registerModifier(new ArmorModifier("Stakes", 1, false) {
+			@Override
+			public boolean appliesToContext(ArmorModifierContext context) {
+				boolean applies = false;
 
+				Team otherTeam = context.game.getTeamHome().hasPlayer(context.defender) ? context.game.getTeamHome()
+					: context.game.getTeamAway();
+				if (context.isStab && (context.attacker != null) && (otherTeam.getRoster().isUndead()
+					|| ((context.defender != null) && context.defender.getPosition().isUndead()))) {
+					applies = true;
+				}
+				return applies;
+			}
+		});
+		registerProperty(NamedProperties.canPerformArmourRollInsteadOfBlock);
+		registerProperty(NamedProperties.armourRollWithoutBlockHasIncreasedEffectOnUndead);
 	}
 
 }

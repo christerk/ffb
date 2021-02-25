@@ -1,6 +1,6 @@
 package com.balancedbytes.games.ffb.skill;
 
-import com.balancedbytes.games.ffb.ArmorModifiers;
+import com.balancedbytes.games.ffb.modifiers.ArmorModifier;
 import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.RulesCollection.Rules;
 import com.balancedbytes.games.ffb.SkillCategory;
@@ -40,7 +40,7 @@ public class Chainsaw extends Skill {
 		registerProperty(NamedProperties.useSpecialBlockRules);
 		registerProperty(NamedProperties.blocksLikeChainsaw);
 
-		registerModifier(ArmorModifiers.CHAINSAW);
+		registerModifier(new ArmorModifier("Chainsaw", 3, false));
 	}
 
 }
