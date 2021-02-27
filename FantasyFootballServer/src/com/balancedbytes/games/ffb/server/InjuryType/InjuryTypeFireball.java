@@ -1,19 +1,25 @@
 package com.balancedbytes.games.ffb.server.InjuryType;
 
 import com.balancedbytes.games.ffb.ApothecaryMode;
-import com.balancedbytes.games.ffb.ArmorModifiers;
+import com.balancedbytes.games.ffb.FactoryType;
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.InjuryContext;
 import com.balancedbytes.games.ffb.InjuryModifiers;
 import com.balancedbytes.games.ffb.PlayerState;
 import com.balancedbytes.games.ffb.factory.InjuryModifierFactory;
+import com.balancedbytes.games.ffb.factory.SkillFactory;
 import com.balancedbytes.games.ffb.injury.Fireball;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
+import com.balancedbytes.games.ffb.model.Skill;
+import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
 import com.balancedbytes.games.ffb.server.DiceInterpreter;
 import com.balancedbytes.games.ffb.server.DiceRoller;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.step.IStep;
+
+import java.util.Arrays;
+import java.util.Optional;
 
 public class InjuryTypeFireball extends InjuryTypeServer<Fireball> {
 	public InjuryTypeFireball() {
@@ -26,11 +32,13 @@ public class InjuryTypeFireball extends InjuryTypeServer<Fireball> {
 			ApothecaryMode pApothecaryMode) {
 
 		DiceInterpreter diceInterpreter = DiceInterpreter.getInstance();
+		SkillFactory factory = game.getFactory(FactoryType.Factory.SKILL);
+		Optional<Skill> foundSkill = factory.getSkills().stream().filter(skill -> skill.hasSkillProperty(NamedProperties.affectsEitherArmourOrInjuryOnBlock)).findFirst();
 		if (!injuryContext.isArmorBroken()) {
 			injuryContext.setArmorRoll(diceRoller.rollArmour());
 			injuryContext.setArmorBroken(diceInterpreter.isArmourBroken(gameState, injuryContext));
 			if (!injuryContext.isArmorBroken()) {
-				injuryContext.addArmorModifier(ArmorModifiers.MIGHTY_BLOW);
+				foundSkill.ifPresent(skill -> skill.getArmorModifiers().forEach(injuryContext::addArmorModifier));
 				injuryContext.setArmorBroken(diceInterpreter.isArmourBroken(gameState, injuryContext));
 			}
 		}
@@ -39,7 +47,9 @@ public class InjuryTypeFireball extends InjuryTypeServer<Fireball> {
 			injuryContext.setInjuryRoll(diceRoller.rollInjury());
 			injuryContext.addInjuryModifier(new InjuryModifierFactory().getNigglingInjuryModifier(pDefender));
 
-			if (!injuryContext.hasArmorModifier(ArmorModifiers.MIGHTY_BLOW)) {
+			if (Arrays.stream(injuryContext.getArmorModifiers())
+				.noneMatch(modifier -> modifier.getRegisteredTo().isPresent()
+					&& modifier.getRegisteredTo().get().hasSkillProperty(NamedProperties.affectsEitherArmourOrInjuryOnBlock))) {
 				injuryContext.addInjuryModifier(InjuryModifiers.MIGHTY_BLOW);
 			}
 

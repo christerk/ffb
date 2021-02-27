@@ -1,7 +1,6 @@
 package com.balancedbytes.games.ffb.client;
 
 import com.balancedbytes.games.ffb.modifiers.ArmorModifier;
-import com.balancedbytes.games.ffb.ArmorModifiers;
 import com.balancedbytes.games.ffb.BlockResult;
 import com.balancedbytes.games.ffb.Card;
 import com.balancedbytes.games.ffb.CardEffect;
@@ -2458,9 +2457,10 @@ public class StatusReport {
 			int rolledTotal = armorRoll[0] + armorRoll[1];
 			status.append("Rolled Total of ").append(rolledTotal);
 			int armorModifierTotal = 0;
-			boolean usingClaws = false;
+			boolean usingClaws = Arrays.stream(pReport.getArmorModifiers())
+				.anyMatch(modifier -> modifier.getRegisteredTo().isPresent()
+					&& modifier.getRegisteredTo().get().hasSkillProperty(NamedProperties.reducesArmourToFixedValue));
 			for (ArmorModifier armorModifier : pReport.getArmorModifiers()) {
-				usingClaws |= (armorModifier == ArmorModifiers.CLAWS);
 				if (armorModifier.getModifier() != 0) {
 					armorModifierTotal += armorModifier.getModifier();
 					if (armorModifier.getModifier() > 0) {

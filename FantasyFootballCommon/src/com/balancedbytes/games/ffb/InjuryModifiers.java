@@ -1,11 +1,13 @@
 package com.balancedbytes.games.ffb;
 
+import com.balancedbytes.games.ffb.model.SkillConstants;
+import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
+import com.balancedbytes.games.ffb.util.UtilCards;
+
 import java.lang.reflect.Field;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
-
-import com.balancedbytes.games.ffb.model.SkillConstants;
-import com.balancedbytes.games.ffb.util.UtilCards;
 
 public class InjuryModifiers {
 
@@ -19,14 +21,20 @@ public class InjuryModifiers {
 	public static final InjuryModifier DIRTY_PLAYER = new InjuryModifier("Dirty Player", 1, false) {
 		@Override
 		public boolean appliesToContext(InjuryModifierContext context) {
-			return (context.isFoul && !context.injuryContext.hasArmorModifier(ArmorModifiers.DIRTY_PLAYER));
+			return (context.isFoul
+				&& Arrays.stream(context.injuryContext.getArmorModifiers())
+				.noneMatch(modifier -> modifier.getRegisteredTo().isPresent()
+					&& modifier.getRegisteredTo().get().hasSkillProperty(NamedProperties.affectsEitherArmourOrInjuryOnFoul)));
 		}
 	};
 
 	public static final InjuryModifier MIGHTY_BLOW = new InjuryModifier("Mighty Blow", 1, false) {
 		@Override
 		public boolean appliesToContext(InjuryModifierContext context) {
-			return (!context.isFoul && !context.injuryContext.hasArmorModifier(ArmorModifiers.MIGHTY_BLOW));
+			return (!context.isFoul
+				&& Arrays.stream(context.injuryContext.getArmorModifiers())
+				.noneMatch(modifier -> modifier.getRegisteredTo().isPresent()
+					&& modifier.getRegisteredTo().get().hasSkillProperty(NamedProperties.affectsEitherArmourOrInjuryOnBlock)));
 		}
 	};
 

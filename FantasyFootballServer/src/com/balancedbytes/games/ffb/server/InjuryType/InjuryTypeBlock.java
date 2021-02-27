@@ -1,7 +1,6 @@
 package com.balancedbytes.games.ffb.server.InjuryType;
 
 import com.balancedbytes.games.ffb.ApothecaryMode;
-import com.balancedbytes.games.ffb.ArmorModifiers;
 import com.balancedbytes.games.ffb.FactoryType;
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.InjuryContext;
@@ -11,6 +10,7 @@ import com.balancedbytes.games.ffb.factory.InjuryModifierFactory;
 import com.balancedbytes.games.ffb.injury.Block;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
+import com.balancedbytes.games.ffb.model.Skill;
 import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
 import com.balancedbytes.games.ffb.modifiers.ArmorModifier;
 import com.balancedbytes.games.ffb.modifiers.ArmorModifierFactory;
@@ -19,6 +19,7 @@ import com.balancedbytes.games.ffb.server.DiceRoller;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.step.IStep;
 
+import java.util.Optional;
 import java.util.Set;
 
 public class InjuryTypeBlock extends InjuryTypeServer<Block> {
@@ -37,13 +38,14 @@ public class InjuryTypeBlock extends InjuryTypeServer<Block> {
 
 			ArmorModifierFactory armorModifierFactory = game.getFactory(FactoryType.Factory.ARMOUR_MODIFIER);
 
-			boolean attackerHasChainsaw = pAttacker.hasSkillWithProperty(NamedProperties.blocksLikeChainsaw);
-			boolean defenderHasChainsaw = pDefender.hasSkillWithProperty(NamedProperties.blocksLikeChainsaw);
-			boolean chainsawIsInvolved = (attackerHasChainsaw || defenderHasChainsaw);
+			Skill chainsaw = Optional.ofNullable(pAttacker.getSkillWithProperty(NamedProperties.blocksLikeChainsaw))
+				.orElseGet(() ->
+					pDefender.getSkillWithProperty(NamedProperties.blocksLikeChainsaw)
+				);
 
 			injuryContext.setArmorRoll(diceRoller.rollArmour());
-			if (chainsawIsInvolved) {
-				injuryContext.addArmorModifier(ArmorModifiers.CHAINSAW);
+			if (chainsaw != null) {
+				chainsaw.getArmorModifiers().forEach(injuryContext::addArmorModifier);
 			}
 			injuryContext.setArmorBroken(diceInterpreter.isArmourBroken(gameState, injuryContext));
 			// do not use armorModifiers on blocking own team-mate

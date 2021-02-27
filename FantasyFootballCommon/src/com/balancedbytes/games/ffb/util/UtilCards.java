@@ -80,7 +80,7 @@ public final class UtilCards {
 		return result;
 	}
 
-	private static Set<Skill> findSkillsProvidedByCardsAndEffects(Game pGame, Player<?> pPlayer) {
+	public static Set<Skill> findSkillsProvidedByCardsAndEffects(Game pGame, Player<?> pPlayer) {
 		Set<Skill> cardSkills = new HashSet<>();
 		if ((pGame == null) || (pPlayer == null)) {
 			return cardSkills;

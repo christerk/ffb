@@ -1,7 +1,6 @@
 package com.balancedbytes.games.ffb.server.InjuryType;
 
 import com.balancedbytes.games.ffb.ApothecaryMode;
-import com.balancedbytes.games.ffb.ArmorModifiers;
 import com.balancedbytes.games.ffb.Card;
 import com.balancedbytes.games.ffb.FactoryType;
 import com.balancedbytes.games.ffb.FieldCoordinate;
@@ -12,11 +11,11 @@ import com.balancedbytes.games.ffb.factory.InjuryModifierFactory;
 import com.balancedbytes.games.ffb.injury.Foul;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
+import com.balancedbytes.games.ffb.model.Skill;
 import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
 import com.balancedbytes.games.ffb.modifiers.ArmorModifier;
+import com.balancedbytes.games.ffb.modifiers.ArmorModifierContext;
 import com.balancedbytes.games.ffb.modifiers.ArmorModifierFactory;
-import com.balancedbytes.games.ffb.option.GameOptionId;
-import com.balancedbytes.games.ffb.option.UtilGameOption;
 import com.balancedbytes.games.ffb.server.DiceInterpreter;
 import com.balancedbytes.games.ffb.server.DiceRoller;
 import com.balancedbytes.games.ffb.server.GameState;
@@ -24,15 +23,12 @@ import com.balancedbytes.games.ffb.server.step.IStep;
 import com.balancedbytes.games.ffb.util.UtilCards;
 import com.balancedbytes.games.ffb.util.UtilPlayer;
 
+import java.util.Optional;
 import java.util.Set;
 
 public class InjuryTypeFoul extends InjuryTypeServer<Foul> {
 	public InjuryTypeFoul() {
 		super(new Foul());
-	}
-
-	public boolean isCausedByOpponent() {
-		return true;
 	}
 
 	@Override
@@ -49,24 +45,16 @@ public class InjuryTypeFoul extends InjuryTypeServer<Foul> {
 
 		if (!injuryContext.isArmorBroken()) {
 
-			boolean attackerHasChainsaw = pAttacker.hasSkillWithProperty(NamedProperties.blocksLikeChainsaw);
+			Optional<Skill> attackerHasChainsaw = Optional.ofNullable(pAttacker.getSkillWithProperty(NamedProperties.blocksLikeChainsaw));
 
 			injuryContext.setArmorRoll(diceRoller.rollArmour());
-			if (attackerHasChainsaw) {
-				injuryContext.addArmorModifier(ArmorModifiers.CHAINSAW);
-			}
-			if (UtilGameOption.isOptionEnabled(game, GameOptionId.FOUL_BONUS)
-					|| (UtilGameOption.isOptionEnabled(game, GameOptionId.FOUL_BONUS_OUTSIDE_TACKLEZONE)
-							&& (UtilPlayer.findTacklezones(game, pAttacker) < 1))) {
-				injuryContext.addArmorModifier(ArmorModifiers.FOUL);
-			}
-			ArmorModifierFactory armorModifierFactory = game.getFactory(FactoryType.Factory.ARMOUR_MODIFIER);
+			attackerHasChainsaw.ifPresent(skill -> skill.getArmorModifiers().forEach(injuryContext::addArmorModifier));
 
-			int foulAssists = UtilPlayer.findFoulAssists(game, pAttacker, pDefender);
-			if (foulAssists != 0) {
-				ArmorModifier assistModifier = armorModifierFactory.getFoulAssist(foulAssists);
-				injuryContext.addArmorModifier(assistModifier);
-			}
+			ArmorModifierFactory armorModifierFactory = game.getFactory(FactoryType.Factory.ARMOUR_MODIFIER);
+			ArmorModifierContext context = new ArmorModifierContext(game, pAttacker, pDefender, false, true, UtilPlayer.findFoulAssists(game, pAttacker, pDefender));
+
+			armorModifierFactory.getFoulAssist(context).forEach(injuryContext::addArmorModifier);
+
 			injuryContext.setArmorBroken(diceInterpreter.isArmourBroken(gameState, injuryContext));
 
 			if (!injuryContext.isArmorBroken()) {

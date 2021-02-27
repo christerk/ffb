@@ -1,5 +1,6 @@
 package com.balancedbytes.games.ffb.skill;
 
+import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
 import com.balancedbytes.games.ffb.modifiers.ArmorModifier;
 import com.balancedbytes.games.ffb.InjuryModifiers;
 import com.balancedbytes.games.ffb.RulesCollection;
@@ -27,10 +28,11 @@ public class DirtyPlayer extends Skill {
 		registerModifier(new ArmorModifier("Dirty Player", 1, false) {
 			@Override
 			public boolean appliesToContext(ArmorModifierContext context) {
-				return context.isFoul;
+				return context.isFoul();
 			}
 		});
 		registerModifier(InjuryModifiers.DIRTY_PLAYER);
+		registerProperty(NamedProperties.affectsEitherArmourOrInjuryOnFoul);
 
 	}
 

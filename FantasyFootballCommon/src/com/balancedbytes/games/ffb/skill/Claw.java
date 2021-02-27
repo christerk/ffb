@@ -26,10 +26,10 @@ public class Claw extends Skill {
 		registerModifier(new ArmorModifier("Claws", 0, false) {
 			@Override
 			public boolean appliesToContext(ArmorModifierContext context) {
-				if (context.isStab || context.isFoul || context.attacker.hasSkillWithProperty(NamedProperties.blocksLikeChainsaw)) {
+				if (context.isStab() || context.isFoul() || context.getAttacker().hasSkillWithProperty(NamedProperties.blocksLikeChainsaw)) {
 					return false;
 				}
-				return context.defender.getArmour() > 7;
+				return context.getDefender().getArmour() > 7;
 			}
 		});
 		registerProperty(NamedProperties.reducesArmourToFixedValue);

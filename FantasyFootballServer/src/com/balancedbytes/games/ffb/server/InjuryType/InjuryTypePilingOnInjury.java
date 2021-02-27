@@ -1,8 +1,6 @@
 package com.balancedbytes.games.ffb.server.InjuryType;
 
 import com.balancedbytes.games.ffb.ApothecaryMode;
-import com.balancedbytes.games.ffb.modifiers.ArmorModifier;
-import com.balancedbytes.games.ffb.ArmorModifiers;
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.InjuryContext;
 import com.balancedbytes.games.ffb.InjuryModifiers;
@@ -11,13 +9,18 @@ import com.balancedbytes.games.ffb.factory.InjuryModifierFactory;
 import com.balancedbytes.games.ffb.injury.PilingOnInjury;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
-import com.balancedbytes.games.ffb.model.SkillConstants;
+import com.balancedbytes.games.ffb.model.Skill;
+import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
+import com.balancedbytes.games.ffb.modifiers.ArmorModifier;
 import com.balancedbytes.games.ffb.option.GameOptionId;
 import com.balancedbytes.games.ffb.option.UtilGameOption;
 import com.balancedbytes.games.ffb.server.DiceRoller;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.step.IStep;
 import com.balancedbytes.games.ffb.util.UtilCards;
+
+import java.util.Arrays;
+import java.util.Optional;
 
 public class InjuryTypePilingOnInjury extends InjuryTypeServer<PilingOnInjury> {
 	public InjuryTypePilingOnInjury() {
@@ -44,10 +47,15 @@ public class InjuryTypePilingOnInjury extends InjuryTypeServer<PilingOnInjury> {
 			injuryContext.addInjuryModifier(new InjuryModifierFactory().getNigglingInjuryModifier(pDefender));
 
 			if (!UtilGameOption.isOptionEnabled(game, GameOptionId.PILING_ON_DOES_NOT_STACK)) {
-				if (UtilCards.hasSkill(game, pAttacker, SkillConstants.MIGHTY_BLOW)
-						&& !injuryContext.hasArmorModifier(ArmorModifiers.MIGHTY_BLOW)) {
-					injuryContext.addInjuryModifier(InjuryModifiers.MIGHTY_BLOW);
-				}
+				Optional<Skill> availableSkill = UtilCards.findSkillsProvidedByCardsAndEffects(game, pAttacker).stream()
+					.filter(skill -> skill.hasSkillProperty(NamedProperties.affectsEitherArmourOrInjuryOnBlock)).findFirst();
+
+				availableSkill.ifPresent(skill -> {
+					if (Arrays.stream(injuryContext.getArmorModifiers())
+						.noneMatch(modifier -> modifier.getRegisteredTo().isPresent() && modifier.getRegisteredTo().get().equals(skill))) {
+						injuryContext.addInjuryModifier(InjuryModifiers.MIGHTY_BLOW);
+					}
+				});
 			}
 
 			setInjury(pDefender, gameState, diceRoller);

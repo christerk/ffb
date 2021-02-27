@@ -1,7 +1,6 @@
 package com.balancedbytes.games.ffb.server.InjuryType;
 
 import com.balancedbytes.games.ffb.ApothecaryMode;
-import com.balancedbytes.games.ffb.ArmorModifiers;
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.InjuryContext;
 import com.balancedbytes.games.ffb.PlayerState;
@@ -14,6 +13,8 @@ import com.balancedbytes.games.ffb.server.DiceInterpreter;
 import com.balancedbytes.games.ffb.server.DiceRoller;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.step.IStep;
+
+import java.util.Optional;
 
 public class InjuryTypeDropLeap extends InjuryTypeServer<DropLeap> {
 	public InjuryTypeDropLeap() {
@@ -29,9 +30,8 @@ public class InjuryTypeDropLeap extends InjuryTypeServer<DropLeap> {
 
 		if (!injuryContext.isArmorBroken()) {
 			injuryContext.setArmorRoll(diceRoller.rollArmour());
-			if (pDefender.hasSkillWithProperty(NamedProperties.blocksLikeChainsaw)) {
-				injuryContext.addArmorModifier(ArmorModifiers.CHAINSAW);
-			}
+			Optional.ofNullable(pDefender.getSkillWithProperty(NamedProperties.blocksLikeChainsaw))
+				.ifPresent(skill -> skill.getArmorModifiers().forEach(injuryContext::addArmorModifier));
 			injuryContext.setArmorBroken(diceInterpreter.isArmourBroken(gameState, injuryContext));
 		}
 

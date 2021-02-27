@@ -1,6 +1,5 @@
 package com.balancedbytes.games.ffb.server;
 
-import com.balancedbytes.games.ffb.ArmorModifiers;
 import com.balancedbytes.games.ffb.Card;
 import com.balancedbytes.games.ffb.CardEffect;
 import com.balancedbytes.games.ffb.Direction;
@@ -27,6 +26,7 @@ import com.balancedbytes.games.ffb.util.ArrayTool;
 import com.balancedbytes.games.ffb.util.UtilCards;
 import com.balancedbytes.games.ffb.util.UtilRangeRuler;
 
+import java.util.Arrays;
 import java.util.Set;
 
 /**
@@ -369,7 +369,10 @@ public class DiceInterpreter {
 		if (UtilCards.hasCard(game, defender, Card.BELT_OF_INVULNERABILITY)) {
 			pInjuryContext.clearArmorModifiers();
 		}
-		if ((armour > 7) && pInjuryContext.hasArmorModifier(ArmorModifiers.CLAWS)) {
+		if ((armour > 7) &&
+			Arrays.stream(pInjuryContext.getArmorModifiers())
+				.anyMatch(modifier -> modifier.getRegisteredTo().isPresent()
+					&& modifier.getRegisteredTo().get().hasSkillProperty(NamedProperties.reducesArmourToFixedValue))) {
 			armour = 7;
 		}
 		return mechanic.armourIsBroken(armour, armourRoll, pInjuryContext);

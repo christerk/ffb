@@ -1,18 +1,20 @@
 package com.balancedbytes.games.ffb.server.InjuryType;
 
 import com.balancedbytes.games.ffb.ApothecaryMode;
-import com.balancedbytes.games.ffb.ArmorModifiers;
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.InjuryContext;
 import com.balancedbytes.games.ffb.factory.InjuryModifierFactory;
 import com.balancedbytes.games.ffb.injury.Bomb;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
+import com.balancedbytes.games.ffb.model.Skill;
 import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
 import com.balancedbytes.games.ffb.server.DiceInterpreter;
 import com.balancedbytes.games.ffb.server.DiceRoller;
 import com.balancedbytes.games.ffb.server.GameState;
 import com.balancedbytes.games.ffb.server.step.IStep;
+
+import java.util.Optional;
 
 public class InjuryTypeBomb extends InjuryTypeServer<Bomb> {
 	public InjuryTypeBomb() {
@@ -27,12 +29,11 @@ public class InjuryTypeBomb extends InjuryTypeServer<Bomb> {
 		DiceInterpreter diceInterpreter = DiceInterpreter.getInstance();
 
 		if (!injuryContext.isArmorBroken()) {
-			boolean defenderHasChainsaw = pDefender.hasSkillWithProperty(NamedProperties.blocksLikeChainsaw);
+			Optional<Skill> chainsaw = Optional.ofNullable(pDefender.getSkillWithProperty(NamedProperties.blocksLikeChainsaw));
 
 			injuryContext.setArmorRoll(diceRoller.rollArmour());
-			if (defenderHasChainsaw) {
-				injuryContext.addArmorModifier(ArmorModifiers.CHAINSAW);
-			}
+			chainsaw.ifPresent(skill -> skill.getArmorModifiers().forEach(injuryContext::addArmorModifier));
+
 			injuryContext.setArmorBroken(diceInterpreter.isArmourBroken(gameState, injuryContext));
 		}
 		if (injuryContext.isArmorBroken()) {

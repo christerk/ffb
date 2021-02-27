@@ -93,6 +93,7 @@ public abstract class Skill implements INamedObject {
 
 	protected void registerModifier(ArmorModifier modifier) {
 		armorModifiers.add(modifier);
+		modifier.setRegisteredTo(this);
 	}
 
 	protected void registerModifier(InjuryModifier modifier) {

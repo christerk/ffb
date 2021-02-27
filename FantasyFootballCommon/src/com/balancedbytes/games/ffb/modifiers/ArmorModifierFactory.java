@@ -5,23 +5,20 @@ import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.factory.INamedObjectFactory;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
-import com.balancedbytes.games.ffb.model.Skill;
 import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
 import com.balancedbytes.games.ffb.option.GameOptionId;
 import com.balancedbytes.games.ffb.option.UtilGameOption;
+import com.balancedbytes.games.ffb.util.UtilCards;
+import com.balancedbytes.games.ffb.util.UtilPlayer;
 
 import java.util.Arrays;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map;
-import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
- *
  * @author Kalimar
  */
 @FactoryType(FactoryType.Factory.ARMOUR_MODIFIER)
@@ -31,19 +28,29 @@ public class ArmorModifierFactory implements INamedObjectFactory {
 	private ModifierAggregator modifierAggregator;
 
 	private final Set<ArmorModifier> foulAssists = new HashSet<ArmorModifier>() {{
-		add(new ArmorModifier("1 Offensive Assist", 1, true));
-		add(new ArmorModifier("2 Offensive Assists", 2, true));
-		add(new ArmorModifier("3 Offensive Assists", 3, true));
-		add(new ArmorModifier("4 Offensive Assists", 4, true));
-		add(new ArmorModifier("5 Offensive Assists", 5, true));
-		add(new ArmorModifier("6 Offensive Assists", 6, true));
-		add(new ArmorModifier("7 Offensive Assists", 7, true));
-		add(new ArmorModifier("1 Defensive Assist", -1, true));
-		add(new ArmorModifier("2 Defensive Assists", -2, true));
-		add(new ArmorModifier("3 Defensive Assists", -3, true));
-		add(new ArmorModifier("4 Defensive Assists", -4, true));
-		add(new ArmorModifier("5 Defensive Assists", -5, true));
-		add(new ArmorModifier("Foul", 1, false));
+		add(new FoulAssistArmorModifier("1 Offensive Assist", 1, true));
+		add(new FoulAssistArmorModifier("2 Offensive Assists", 2, true));
+		add(new FoulAssistArmorModifier("3 Offensive Assists", 3, true));
+		add(new FoulAssistArmorModifier("4 Offensive Assists", 4, true));
+		add(new FoulAssistArmorModifier("5 Offensive Assists", 5, true));
+		add(new FoulAssistArmorModifier("6 Offensive Assists", 6, true));
+		add(new FoulAssistArmorModifier("7 Offensive Assists", 7, true));
+		add(new FoulAssistArmorModifier("1 Defensive Assist", -1, true));
+		add(new FoulAssistArmorModifier("2 Defensive Assists", -2, true));
+		add(new FoulAssistArmorModifier("3 Defensive Assists", -3, true));
+		add(new FoulAssistArmorModifier("4 Defensive Assists", -4, true));
+		add(new FoulAssistArmorModifier("5 Defensive Assists", -5, true));
+		add(new ArmorModifier("Foul", 1, false) {
+			@Override
+			public boolean appliesToContext(ArmorModifierContext context) {
+				Game game = context.getGame();
+				return
+					context.isFoul()
+						&& (UtilGameOption.isOptionEnabled(game, GameOptionId.FOUL_BONUS)
+						|| (UtilGameOption.isOptionEnabled(game, GameOptionId.FOUL_BONUS_OUTSIDE_TACKLEZONE)
+						&& (UtilPlayer.findTacklezones(game, context.getAttacker()) < 1)));
+			}
+		});
 	}};
 
 	public ArmorModifier forName(String name) {
@@ -54,32 +61,27 @@ public class ArmorModifierFactory implements INamedObjectFactory {
 	}
 
 	public Set<ArmorModifier> findArmorModifiers(Game game, Player<?> attacker, Player<?> defender, boolean isStab,
-			boolean isFoul) {
+	                                             boolean isFoul) {
 
 		ArmorModifierContext context = new ArmorModifierContext(game, attacker, defender, isStab, isFoul);
-		Map<ArmorModifier, Skill> armorModifiers = getArmorModifiers(attacker, context);
+		Set<ArmorModifier> armorModifiers = getArmorModifiers(attacker, context);
 
 		if (UtilGameOption.isOptionEnabled(game, GameOptionId.CLAW_DOES_NOT_STACK)
-			&& armorModifiers.values().stream().anyMatch(skill ->
-			skill.hasSkillProperty(NamedProperties.reducesArmourToFixedValue))
+			&& armorModifiers.stream().anyMatch(modifier -> modifier.getRegisteredTo().isPresent()
+			&& modifier.getRegisteredTo().get().hasSkillProperty(NamedProperties.reducesArmourToFixedValue))
 		) {
-			Optional<Skill> suppressedSkill = armorModifiers.values().stream().filter(skill ->
-				skill.hasSkillProperty(NamedProperties.affectsEitherArmourOrInjuryOnBlock)).findFirst();
-			if (suppressedSkill.isPresent()) {
-				return armorModifiers.entrySet().stream().filter(entry -> entry.getValue() != suppressedSkill.get()).map(Map.Entry::getKey).collect(Collectors.toSet());
-			}
+			return armorModifiers.stream()
+				.filter(modifier ->
+					!(modifier.getRegisteredTo().isPresent()
+						&& modifier.getRegisteredTo().get().hasSkillProperty(NamedProperties.affectsEitherArmourOrInjuryOnBlock)))
+				.collect(Collectors.toSet());
 		}
 
-		return armorModifiers.keySet();
+		return armorModifiers;
 	}
 
-	public ArmorModifier getFoulAssist(int pModifier) {
-		for (ArmorModifier modifier : foulAssists) {
-			if (modifier.isFoulAssistModifier() && (modifier.getModifier() == pModifier)) {
-				return modifier;
-			}
-		}
-		return null;
+	public Set<ArmorModifier> getFoulAssist(ArmorModifierContext context) {
+		return foulAssists.stream().filter(modifier -> modifier.appliesToContext(context)).collect(Collectors.toSet());
 	}
 
 	public ArmorModifier[] toArray(Set<ArmorModifier> pArmorModifiers) {
@@ -97,15 +99,22 @@ public class ArmorModifierFactory implements INamedObjectFactory {
 		modifierAggregator = game.getModifierAggregator();
 	}
 
-	private Map<ArmorModifier, Skill> getArmorModifiers(Player<?> player, ArmorModifierContext context) {
-		Map<ArmorModifier, Skill> result = new HashMap<>();
-		for (Skill skill : player.getSkills()) {
-			for (ArmorModifier modifier : skill.getArmorModifiers()) {
-				if (modifier.appliesToContext(context)) {
-					result.put(modifier, skill);
-				}
-			}
+	private Set<ArmorModifier> getArmorModifiers(Player<?> player, ArmorModifierContext context) {
+		return UtilCards.findSkillsProvidedByCardsAndEffects(context.getGame(), player).stream()
+			.flatMap(skill -> skill.getArmorModifiers().stream())
+			.filter(modifier -> modifier.appliesToContext(context))
+			.collect(Collectors.toSet());
+	}
+
+	private static class FoulAssistArmorModifier extends ArmorModifier {
+
+		public FoulAssistArmorModifier(String pName, int pModifier, boolean pFoulAssistModifier) {
+			super(pName, pModifier, pFoulAssistModifier);
 		}
-		return result;
+
+		@Override
+		public boolean appliesToContext(ArmorModifierContext context) {
+			return context.isFoul() && context.getFoulAssists() == getModifier();
+		}
 	}
 }

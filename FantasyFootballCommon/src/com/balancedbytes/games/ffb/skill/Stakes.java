@@ -29,10 +29,10 @@ public class Stakes extends Skill {
 			public boolean appliesToContext(ArmorModifierContext context) {
 				boolean applies = false;
 
-				Team otherTeam = context.game.getTeamHome().hasPlayer(context.defender) ? context.game.getTeamHome()
-					: context.game.getTeamAway();
-				if (context.isStab && (context.attacker != null) && (otherTeam.getRoster().isUndead()
-					|| ((context.defender != null) && context.defender.getPosition().isUndead()))) {
+				Team otherTeam = context.getGame().getTeamHome().hasPlayer(context.getDefender()) ? context.getGame().getTeamHome()
+					: context.getGame().getTeamAway();
+				if (context.isStab() && (context.getAttacker() != null) && (otherTeam.getRoster().isUndead()
+					|| ((context.getDefender() != null) && context.getDefender().getPosition().isUndead()))) {
 					applies = true;
 				}
 				return applies;
