@@ -23,8 +23,7 @@ public class InjuryModifiers {
 		public boolean appliesToContext(InjuryModifierContext context) {
 			return (context.isFoul
 				&& Arrays.stream(context.injuryContext.getArmorModifiers())
-				.noneMatch(modifier -> modifier.getRegisteredTo().isPresent()
-					&& modifier.getRegisteredTo().get().hasSkillProperty(NamedProperties.affectsEitherArmourOrInjuryOnFoul)));
+				.noneMatch(modifier -> modifier.isRegisteredToSkillWithProperty(NamedProperties.affectsEitherArmourOrInjuryOnFoul)));
 		}
 	};
 
@@ -33,8 +32,7 @@ public class InjuryModifiers {
 		public boolean appliesToContext(InjuryModifierContext context) {
 			return (!context.isFoul
 				&& Arrays.stream(context.injuryContext.getArmorModifiers())
-				.noneMatch(modifier -> modifier.getRegisteredTo().isPresent()
-					&& modifier.getRegisteredTo().get().hasSkillProperty(NamedProperties.affectsEitherArmourOrInjuryOnBlock)));
+				.noneMatch(modifier -> modifier.isRegisteredToSkillWithProperty(NamedProperties.affectsEitherArmourOrInjuryOnBlock)));
 		}
 	};
 

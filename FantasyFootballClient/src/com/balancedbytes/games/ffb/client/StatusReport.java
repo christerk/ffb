@@ -2458,8 +2458,7 @@ public class StatusReport {
 			status.append("Rolled Total of ").append(rolledTotal);
 			int armorModifierTotal = 0;
 			boolean usingClaws = Arrays.stream(pReport.getArmorModifiers())
-				.anyMatch(modifier -> modifier.getRegisteredTo().isPresent()
-					&& modifier.getRegisteredTo().get().hasSkillProperty(NamedProperties.reducesArmourToFixedValue));
+				.anyMatch(modifier -> modifier.isRegisteredToSkillWithProperty(NamedProperties.reducesArmourToFixedValue));
 			for (ArmorModifier armorModifier : pReport.getArmorModifiers()) {
 				if (armorModifier.getModifier() != 0) {
 					armorModifierTotal += armorModifier.getModifier();

@@ -67,13 +67,10 @@ public class ArmorModifierFactory implements INamedObjectFactory {
 		Set<ArmorModifier> armorModifiers = getArmorModifiers(attacker, context);
 
 		if (UtilGameOption.isOptionEnabled(game, GameOptionId.CLAW_DOES_NOT_STACK)
-			&& armorModifiers.stream().anyMatch(modifier -> modifier.getRegisteredTo().isPresent()
-			&& modifier.getRegisteredTo().get().hasSkillProperty(NamedProperties.reducesArmourToFixedValue))
+			&& armorModifiers.stream().anyMatch(modifier -> modifier.isRegisteredToSkillWithProperty(NamedProperties.reducesArmourToFixedValue))
 		) {
 			return armorModifiers.stream()
-				.filter(modifier ->
-					!(modifier.getRegisteredTo().isPresent()
-						&& modifier.getRegisteredTo().get().hasSkillProperty(NamedProperties.affectsEitherArmourOrInjuryOnBlock)))
+				.filter(modifier -> !(modifier.isRegisteredToSkillWithProperty(NamedProperties.affectsEitherArmourOrInjuryOnBlock)))
 				.collect(Collectors.toSet());
 		}
 

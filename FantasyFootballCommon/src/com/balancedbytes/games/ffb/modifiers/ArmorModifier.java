@@ -1,9 +1,8 @@
 package com.balancedbytes.games.ffb.modifiers;
 
 import com.balancedbytes.games.ffb.INamedObject;
+import com.balancedbytes.games.ffb.model.ISkillProperty;
 import com.balancedbytes.games.ffb.model.Skill;
-
-import java.util.Optional;
 
 /**
  * 
@@ -38,11 +37,11 @@ public class ArmorModifier implements INamedObject {
 		return true;
 	}
 
-	public Optional<Skill> getRegisteredTo() {
-		return Optional.ofNullable(registeredTo);
-	}
-
 	public void setRegisteredTo(Skill registeredTo) {
 		this.registeredTo = registeredTo;
+	}
+
+	public boolean isRegisteredToSkillWithProperty(ISkillProperty property) {
+		return registeredTo != null && registeredTo.hasSkillProperty(property);
 	}
 }

@@ -49,8 +49,7 @@ public class InjuryTypeLightning extends InjuryTypeServer<Lightning> {
 			injuryContext.addInjuryModifier(new InjuryModifierFactory().getNigglingInjuryModifier(pDefender));
 
 			if (Arrays.stream(injuryContext.getArmorModifiers())
-				.noneMatch(modifier -> modifier.getRegisteredTo().isPresent()
-					&& modifier.getRegisteredTo().get().hasSkillProperty(NamedProperties.affectsEitherArmourOrInjuryOnBlock))) {
+				.noneMatch(modifier -> modifier.isRegisteredToSkillWithProperty(NamedProperties.affectsEitherArmourOrInjuryOnBlock))) {
 				injuryContext.addInjuryModifier(InjuryModifiers.MIGHTY_BLOW);
 			}
 

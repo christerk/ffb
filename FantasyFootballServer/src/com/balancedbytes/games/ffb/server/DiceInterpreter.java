@@ -371,8 +371,7 @@ public class DiceInterpreter {
 		}
 		if ((armour > 7) &&
 			Arrays.stream(pInjuryContext.getArmorModifiers())
-				.anyMatch(modifier -> modifier.getRegisteredTo().isPresent()
-					&& modifier.getRegisteredTo().get().hasSkillProperty(NamedProperties.reducesArmourToFixedValue))) {
+				.anyMatch(modifier -> modifier.isRegisteredToSkillWithProperty(NamedProperties.reducesArmourToFixedValue))) {
 			armour = 7;
 		}
 		return mechanic.armourIsBroken(armour, armourRoll, pInjuryContext);
