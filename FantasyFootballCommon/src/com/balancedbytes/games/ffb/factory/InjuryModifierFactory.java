@@ -14,7 +14,6 @@ import com.balancedbytes.games.ffb.modifiers.ModifierAggregator;
 import com.balancedbytes.games.ffb.util.UtilCards;
 
 import java.util.Arrays;
-import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Stream;
@@ -49,16 +48,6 @@ public class InjuryModifierFactory implements INamedObjectFactory {
 		InjuryModifierContext context = new InjuryModifierContext(game, injuryContext, attacker, defender, isStab, isFoul);
 
 		return getInjuryModifiers(attacker, context);
-	}
-
-	public InjuryModifier[] toArray(Set<InjuryModifier> pInjuryModifiers) {
-		if (pInjuryModifiers != null) {
-			InjuryModifier[] modifierArray = pInjuryModifiers.toArray(new InjuryModifier[0]);
-			Arrays.sort(modifierArray, Comparator.comparing(InjuryModifier::getName));
-			return modifierArray;
-		} else {
-			return new InjuryModifier[0];
-		}
 	}
 
 	public InjuryModifier getNigglingInjuryModifier(Player<?> pPlayer) {

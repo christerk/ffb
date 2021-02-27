@@ -67,11 +67,11 @@ public class InjuryTypeFoul extends InjuryTypeServer<Foul> {
 		}
 
 		if (injuryContext.isArmorBroken()) {
+			InjuryModifierFactory factory = game.getFactory(FactoryType.Factory.INJURY_MODIFIER);
 			injuryContext.setInjuryRoll(diceRoller.rollInjury());
-			injuryContext.addInjuryModifier(new InjuryModifierFactory().getNigglingInjuryModifier(pDefender));
+			injuryContext.addInjuryModifier(factory.getNigglingInjuryModifier(pDefender));
 
-			InjuryModifierFactory modifierFactory = new InjuryModifierFactory();
-			Set<InjuryModifier> armorModifiers = modifierFactory.findInjuryModifiers(game, injuryContext, pAttacker,
+			Set<InjuryModifier> armorModifiers = factory.findInjuryModifiers(game, injuryContext, pAttacker,
 					pDefender, isStab(), isFoul());
 			injuryContext.addInjuryModifiers(armorModifiers);
 

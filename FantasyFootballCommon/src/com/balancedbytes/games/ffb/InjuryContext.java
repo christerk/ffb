@@ -1,6 +1,5 @@
 package com.balancedbytes.games.ffb;
 
-import com.balancedbytes.games.ffb.factory.InjuryModifierFactory;
 import com.balancedbytes.games.ffb.modifiers.ArmorModifier;
 import com.balancedbytes.games.ffb.modifiers.InjuryModifier;
 
@@ -121,7 +120,7 @@ public class InjuryContext {
 	}
 
 	public InjuryModifier[] getInjuryModifiers() {
-		return new InjuryModifierFactory().toArray(fInjuryModifiers);
+		return fInjuryModifiers.toArray(new InjuryModifier[0]);
 	}
 
 	public void clearInjuryModifiers() {

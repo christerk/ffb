@@ -44,7 +44,7 @@ public class InjuryTypeFireball extends InjuryTypeServer<Fireball> {
 
 		if (injuryContext.isArmorBroken()) {
 			injuryContext.setInjuryRoll(diceRoller.rollInjury());
-			injuryContext.addInjuryModifier(new InjuryModifierFactory().getNigglingInjuryModifier(pDefender));
+			injuryContext.addInjuryModifier(((InjuryModifierFactory)game.getFactory(FactoryType.Factory.INJURY_MODIFIER)).getNigglingInjuryModifier(pDefender));
 
 			if (Arrays.stream(injuryContext.getArmorModifiers())
 				.noneMatch(modifier -> modifier.isRegisteredToSkillWithProperty(NamedProperties.affectsEitherArmourOrInjuryOnBlock))) {

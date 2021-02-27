@@ -45,12 +45,12 @@ public class InjuryTypePilingOnArmour extends InjuryTypeServer<PilingOnArmour> {
 		}
 
 		if (injuryContext.isArmorBroken()) {
+			InjuryModifierFactory factory = game.getFactory(FactoryType.Factory.INJURY_MODIFIER);
 			injuryContext.setInjuryRoll(diceRoller.rollInjury());
-			injuryContext.addInjuryModifier(new InjuryModifierFactory().getNigglingInjuryModifier(pDefender));
+			injuryContext.addInjuryModifier(factory.getNigglingInjuryModifier(pDefender));
 
 			if (!UtilGameOption.isOptionEnabled(game, GameOptionId.PILING_ON_DOES_NOT_STACK)) {
-				InjuryModifierFactory modifierFactory = new InjuryModifierFactory();
-				Set<InjuryModifier> armorModifiers = modifierFactory.findInjuryModifiers(game, injuryContext, pAttacker,
+				Set<InjuryModifier> armorModifiers = factory.findInjuryModifiers(game, injuryContext, pAttacker,
 						pDefender, isStab(), isFoul());
 				injuryContext.addInjuryModifiers(armorModifiers);
 			}

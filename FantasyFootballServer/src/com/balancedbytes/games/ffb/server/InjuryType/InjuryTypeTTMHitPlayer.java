@@ -1,6 +1,7 @@
 package com.balancedbytes.games.ffb.server.InjuryType;
 
 import com.balancedbytes.games.ffb.ApothecaryMode;
+import com.balancedbytes.games.ffb.FactoryType;
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.InjuryContext;
 import com.balancedbytes.games.ffb.PlayerState;
@@ -36,7 +37,7 @@ public class InjuryTypeTTMHitPlayer extends InjuryTypeServer<TTMHitPlayer> {
 
 		if (injuryContext.isArmorBroken()) {
 			injuryContext.setInjuryRoll(diceRoller.rollInjury());
-			injuryContext.addInjuryModifier(new InjuryModifierFactory().getNigglingInjuryModifier(pDefender));
+			injuryContext.addInjuryModifier(((InjuryModifierFactory)game.getFactory(FactoryType.Factory.INJURY_MODIFIER)).getNigglingInjuryModifier(pDefender));
 
 			setInjury(pDefender, gameState, diceRoller);
 

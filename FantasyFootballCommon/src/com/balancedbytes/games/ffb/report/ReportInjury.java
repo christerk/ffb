@@ -224,7 +224,7 @@ public class ReportInjury implements IReport {
 		}
 
 		fInjuryModifiers.clear();
-		InjuryModifierFactory injuryModifierFactory = new InjuryModifierFactory();
+		InjuryModifierFactory injuryModifierFactory = game.getFactory(FactoryType.Factory.INJURY_MODIFIER);
 		JsonArray injuryModifiers = IJsonOption.INJURY_MODIFIERS.getFrom(game, jsonObject);
 		for (int i = 0; i < injuryModifiers.size(); i++) {
 			fInjuryModifiers.add((InjuryModifier) UtilJson.toEnumWithName(injuryModifierFactory, injuryModifiers.get(i)));

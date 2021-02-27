@@ -207,7 +207,7 @@ public class InjuryResult implements IJsonSerializable {
 		}
 
 		injuryContext.fInjuryModifiers.clear();
-		InjuryModifierFactory injuryModifierFactory = new InjuryModifierFactory();
+		InjuryModifierFactory injuryModifierFactory = source.getFactory(FactoryType.Factory.INJURY_MODIFIER);
 		JsonArray injuryModifiers = IServerJsonOption.INJURY_MODIFIERS.getFrom(source, jsonObject);
 		for (int i = 0; i < injuryModifiers.size(); i++) {
 			injuryContext.fInjuryModifiers

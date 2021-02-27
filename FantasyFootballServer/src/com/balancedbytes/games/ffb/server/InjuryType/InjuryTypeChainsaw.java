@@ -39,7 +39,7 @@ public class InjuryTypeChainsaw extends InjuryTypeServer<Chainsaw> {
 
 		if (injuryContext.isArmorBroken()) {
 			injuryContext.setInjuryRoll(diceRoller.rollInjury());
-			injuryContext.addInjuryModifier(new InjuryModifierFactory().getNigglingInjuryModifier(pDefender));
+			injuryContext.addInjuryModifier(((InjuryModifierFactory)game.getFactory(FactoryType.Factory.INJURY_MODIFIER)).getNigglingInjuryModifier(pDefender));
 			setInjury(pDefender, gameState, diceRoller);
 		} else {
 			injuryContext.setInjury(null);
