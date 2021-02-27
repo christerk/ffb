@@ -96,6 +96,7 @@ public class NamedProperties {
 	public static final ISkillProperty increasesTeamsFame = new NamedProperty("Increases Teams Fame");
 	public static final ISkillProperty inflictsConfusion = new NamedProperty("Inflicts Confusion");
 	public static final ISkillProperty inflictsDisturbingPresence = new NamedProperty("Inflicts Disturbing Presence");
+	public static final ISkillProperty isHurtMoreEasily = new NamedProperty("Is Hurt More Easily");
 	public static final ISkillProperty movesRandomly = new NamedProperty("Moves Randomly");
 	public static final ISkillProperty placedProneCausesInjuryRoll = new NamedProperty("Placed Prone Causes Injury Roll");
 	public static final ISkillProperty preventAutoMove = new NamedProperty("Prevent AutoMove");

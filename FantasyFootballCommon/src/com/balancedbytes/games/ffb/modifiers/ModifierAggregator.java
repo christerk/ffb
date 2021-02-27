@@ -116,4 +116,12 @@ public class ModifierAggregator {
 				.flatMap(card -> card.armourModifiers().stream()))
 			.collect(Collectors.toSet());
 	}
+
+	public Set<InjuryModifier> getInjuryModifiers() {
+		return Stream.concat(
+			skillFactory.getSkills().stream().flatMap(skill -> skill.getInjuryModifiers().stream()),
+			Arrays.stream(UtilCards.findAllActiveCards(game))
+				.flatMap(card -> card.injuryModifiers().stream()))
+			.collect(Collectors.toSet());
+	}
 }

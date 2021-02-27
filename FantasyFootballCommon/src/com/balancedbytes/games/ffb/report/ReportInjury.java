@@ -1,7 +1,7 @@
 package com.balancedbytes.games.ffb.report;
 
 import com.balancedbytes.games.ffb.FactoryType;
-import com.balancedbytes.games.ffb.InjuryModifier;
+import com.balancedbytes.games.ffb.modifiers.InjuryModifier;
 import com.balancedbytes.games.ffb.InjuryType;
 import com.balancedbytes.games.ffb.PlayerState;
 import com.balancedbytes.games.ffb.SeriousInjury;

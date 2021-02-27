@@ -2,7 +2,7 @@ package com.balancedbytes.games.ffb.model;
 
 import com.balancedbytes.games.ffb.modifiers.ArmorModifier;
 import com.balancedbytes.games.ffb.INamedObject;
-import com.balancedbytes.games.ffb.InjuryModifier;
+import com.balancedbytes.games.ffb.modifiers.InjuryModifier;
 import com.balancedbytes.games.ffb.ReRollSource;
 import com.balancedbytes.games.ffb.ReRolledAction;
 import com.balancedbytes.games.ffb.SkillCategory;
@@ -98,17 +98,18 @@ public abstract class Skill implements INamedObject {
 
 	protected void registerModifier(InjuryModifier modifier) {
 		injuryModifiers.add(modifier);
+		modifier.setRegisteredTo(this);
 	}
 
 	protected void registerModifier(CatchModifier modifier) {
 		catchModifiers.add(modifier);
 	}
 
-	protected void registerModifer(GazeModifier modifier) { gazeModifiers.add(modifier); }
+	protected void registerModifier(GazeModifier modifier) { gazeModifiers.add(modifier); }
 
-	protected void registerModifer(GoForItModifier modifier) { goForItModifiers.add(modifier); }
+	protected void registerModifier(GoForItModifier modifier) { goForItModifiers.add(modifier); }
 
-	protected void registerModifer(RightStuffModifier modifier) { rightStuffModifiers.add(modifier); }
+	protected void registerModifier(RightStuffModifier modifier) { rightStuffModifiers.add(modifier); }
 
 	protected void registerProperty(ISkillProperty property) {
 		skillProperties.add(property);

@@ -1,13 +1,16 @@
 package com.balancedbytes.games.ffb.skill;
 
-import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
-import com.balancedbytes.games.ffb.modifiers.ArmorModifier;
-import com.balancedbytes.games.ffb.InjuryModifiers;
+import com.balancedbytes.games.ffb.modifiers.InjuryModifier;
 import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.RulesCollection.Rules;
 import com.balancedbytes.games.ffb.SkillCategory;
 import com.balancedbytes.games.ffb.model.Skill;
+import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
+import com.balancedbytes.games.ffb.modifiers.ArmorModifier;
 import com.balancedbytes.games.ffb.modifiers.ArmorModifierContext;
+import com.balancedbytes.games.ffb.modifiers.InjuryModifierContext;
+
+import java.util.Arrays;
 
 /**
  * A player with this skill has trained long and hard to learn every dirty trick
@@ -31,7 +34,14 @@ public class DirtyPlayer extends Skill {
 				return context.isFoul();
 			}
 		});
-		registerModifier(InjuryModifiers.DIRTY_PLAYER);
+		registerModifier(new InjuryModifier("Dirty Player", 1, false) {
+			@Override
+			public boolean appliesToContext(InjuryModifierContext context) {
+				return (context.isFoul()
+					&& Arrays.stream(context.getInjuryContext().getArmorModifiers())
+					.noneMatch(modifier -> modifier.isRegisteredToSkillWithProperty(NamedProperties.affectsEitherArmourOrInjuryOnFoul)));
+			}
+		});
 		registerProperty(NamedProperties.affectsEitherArmourOrInjuryOnFoul);
 
 	}

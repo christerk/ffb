@@ -5,7 +5,7 @@ import com.balancedbytes.games.ffb.ApothecaryStatus;
 import com.balancedbytes.games.ffb.BloodSpot;
 import com.balancedbytes.games.ffb.FactoryType;
 import com.balancedbytes.games.ffb.InjuryContext;
-import com.balancedbytes.games.ffb.InjuryModifier;
+import com.balancedbytes.games.ffb.modifiers.InjuryModifier;
 import com.balancedbytes.games.ffb.InjuryType;
 import com.balancedbytes.games.ffb.PlayerState;
 import com.balancedbytes.games.ffb.SendToBoxReason;

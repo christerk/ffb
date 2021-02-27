@@ -1,23 +1,23 @@
 package com.balancedbytes.games.ffb.factory;
 
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-
 import com.balancedbytes.games.ffb.FactoryType;
 import com.balancedbytes.games.ffb.InjuryAttribute;
 import com.balancedbytes.games.ffb.InjuryContext;
-import com.balancedbytes.games.ffb.InjuryModifier;
-import com.balancedbytes.games.ffb.InjuryModifier.InjuryModifierContext;
-import com.balancedbytes.games.ffb.InjuryModifiers;
 import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.RulesCollection.Rules;
-import com.balancedbytes.games.ffb.SeriousInjury;
 import com.balancedbytes.games.ffb.model.Game;
 import com.balancedbytes.games.ffb.model.Player;
+import com.balancedbytes.games.ffb.model.Skill;
+import com.balancedbytes.games.ffb.modifiers.InjuryModifier;
+import com.balancedbytes.games.ffb.modifiers.InjuryModifierContext;
+import com.balancedbytes.games.ffb.modifiers.ModifierAggregator;
 import com.balancedbytes.games.ffb.util.UtilCards;
+
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.stream.Stream;
 
 /**
  *
@@ -27,22 +27,28 @@ import com.balancedbytes.games.ffb.util.UtilCards;
 @RulesCollection(Rules.COMMON)
 public class InjuryModifierFactory implements INamedObjectFactory {
 
-	static InjuryModifiers injuryModifiers;
+	private ModifierAggregator modifierAggregator;
 
-	public InjuryModifierFactory() {
-		injuryModifiers = new InjuryModifiers();
-	}
+	private final Set<InjuryModifier> niggleModifiers = new HashSet<InjuryModifier>() {{
+		add(new InjuryModifier("1 Niggling Injury", 1, true));
+		add(new InjuryModifier("2 Niggling Injuries", 2, true));
+		add(new InjuryModifier("3 Niggling Injuries", 3, true));
+		add(new InjuryModifier("4 Niggling Injuries", 4, true));
+		add(new InjuryModifier("5 Niggling Injuries", 5, true));
+	}};
 
-	public InjuryModifier forName(String pName) {
-		return injuryModifiers.values().get(pName.toLowerCase());
-	}
+	public InjuryModifier forName(String name) {
+		return Stream.concat(niggleModifiers.stream(), modifierAggregator.getInjuryModifiers().stream())
+			.filter(modifier -> modifier.getName().equals(name))
+			.findFirst()
+			.orElse(null);	}
 
 	public Set<InjuryModifier> findInjuryModifiers(Game game, InjuryContext injuryContext, Player<?> attacker,
 			Player<?> defender, boolean isStab, boolean isFoul) {
 
 		InjuryModifierContext context = new InjuryModifierContext(game, injuryContext, attacker, defender, isStab, isFoul);
 
-		return new HashSet<>(UtilCards.getInjuryModifiers(attacker, context));
+		return getInjuryModifiers(attacker, context);
 	}
 
 	public InjuryModifier[] toArray(Set<InjuryModifier> pInjuryModifiers) {
@@ -57,14 +63,9 @@ public class InjuryModifierFactory implements INamedObjectFactory {
 
 	public InjuryModifier getNigglingInjuryModifier(Player<?> pPlayer) {
 		if (pPlayer != null) {
-			int nigglingInjuries = 0;
-			for (SeriousInjury injury : pPlayer.getLastingInjuries()) {
-				if (InjuryAttribute.NI == injury.getInjuryAttribute()) {
-					nigglingInjuries++;
-				}
-			}
-			for (Map.Entry<String, InjuryModifier> entry : injuryModifiers.values().entrySet()) {
-				InjuryModifier modifier = entry.getValue();
+			long nigglingInjuries = Arrays.stream(pPlayer.getLastingInjuries()).filter(seriousInjury -> seriousInjury.getInjuryAttribute() == InjuryAttribute.NI).count();
+
+			for (InjuryModifier modifier : niggleModifiers) {
 				if (modifier.isNigglingInjuryModifier() && (modifier.getModifier() == nigglingInjuries)) {
 					return modifier;
 				}
@@ -73,10 +74,22 @@ public class InjuryModifierFactory implements INamedObjectFactory {
 		return null;
 	}
 
+
+	public Set<InjuryModifier> getInjuryModifiers(Player<?> player, InjuryModifierContext context) {
+		Set<InjuryModifier> result = new HashSet<>();
+		for (Skill skill : UtilCards.findAllSkills(context.getGame(), player)) {
+			for (InjuryModifier modifier : skill.getInjuryModifiers()) {
+				if (modifier.appliesToContext(context)) {
+					result.add(modifier);
+				}
+			}
+		}
+		return result;
+	}
+
 	@Override
 	public void initialize(Game game) {
-		// TODO Auto-generated method stub
-		
+		this.modifierAggregator = game.getModifierAggregator();
 	}
 
 }

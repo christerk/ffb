@@ -1,6 +1,5 @@
 package com.balancedbytes.games.ffb.client;
 
-import com.balancedbytes.games.ffb.modifiers.ArmorModifier;
 import com.balancedbytes.games.ffb.BlockResult;
 import com.balancedbytes.games.ffb.Card;
 import com.balancedbytes.games.ffb.CardEffect;
@@ -9,8 +8,6 @@ import com.balancedbytes.games.ffb.Direction;
 import com.balancedbytes.games.ffb.FactoryType.Factory;
 import com.balancedbytes.games.ffb.FantasyFootballConstants;
 import com.balancedbytes.games.ffb.HeatExhaustion;
-import com.balancedbytes.games.ffb.InjuryModifier;
-import com.balancedbytes.games.ffb.InjuryModifiers;
 import com.balancedbytes.games.ffb.KickoffResult;
 import com.balancedbytes.games.ffb.KnockoutRecovery;
 import com.balancedbytes.games.ffb.LeaderState;
@@ -39,7 +36,9 @@ import com.balancedbytes.games.ffb.model.SkillConstants;
 import com.balancedbytes.games.ffb.model.Team;
 import com.balancedbytes.games.ffb.model.ZappedPlayer;
 import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
+import com.balancedbytes.games.ffb.modifiers.ArmorModifier;
 import com.balancedbytes.games.ffb.modifiers.DodgeModifier;
+import com.balancedbytes.games.ffb.modifiers.InjuryModifier;
 import com.balancedbytes.games.ffb.modifiers.RollModifier;
 import com.balancedbytes.games.ffb.net.ServerStatus;
 import com.balancedbytes.games.ffb.net.commands.ServerCommandJoin;
@@ -2514,12 +2513,8 @@ public class StatusReport {
 					for (InjuryModifier injuryModifier : pReport.getInjuryModifiers()) {
 						injuryModifierTotal += injuryModifier.getModifier();
 						if (injuryModifier.getModifier() == 0) {
-							if (injuryModifier == InjuryModifiers.THICK_SKULL) {
-								thickSkullUsed = true;
-							}
-							if (injuryModifier == InjuryModifiers.STUNTY) {
-								stuntyUsed = true;
-							}
+							thickSkullUsed = injuryModifier.isRegisteredToSkillWithProperty(NamedProperties.convertKOToStunOn8);
+							stuntyUsed = injuryModifier.isRegisteredToSkillWithProperty(NamedProperties.isHurtMoreEasily);
 						} else if (injuryModifier.isNigglingInjuryModifier()) {
 							status.append(" +").append(injuryModifier.getName());
 						} else if (injuryModifier.getModifier() > 0) {

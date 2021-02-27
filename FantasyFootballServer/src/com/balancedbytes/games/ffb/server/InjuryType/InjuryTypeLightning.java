@@ -4,7 +4,6 @@ import com.balancedbytes.games.ffb.ApothecaryMode;
 import com.balancedbytes.games.ffb.FactoryType;
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.InjuryContext;
-import com.balancedbytes.games.ffb.InjuryModifiers;
 import com.balancedbytes.games.ffb.PlayerState;
 import com.balancedbytes.games.ffb.factory.InjuryModifierFactory;
 import com.balancedbytes.games.ffb.factory.SkillFactory;
@@ -50,7 +49,7 @@ public class InjuryTypeLightning extends InjuryTypeServer<Lightning> {
 
 			if (Arrays.stream(injuryContext.getArmorModifiers())
 				.noneMatch(modifier -> modifier.isRegisteredToSkillWithProperty(NamedProperties.affectsEitherArmourOrInjuryOnBlock))) {
-				injuryContext.addInjuryModifier(InjuryModifiers.MIGHTY_BLOW);
+				foundSkill.ifPresent(skill -> skill.getInjuryModifiers().forEach(injuryContext::addInjuryModifier));
 			}
 
 			setInjury(pDefender, gameState, diceRoller);

@@ -1,19 +1,14 @@
 package com.balancedbytes.games.ffb.modifiers;
 
-import com.balancedbytes.games.ffb.INamedObject;
-import com.balancedbytes.games.ffb.model.ISkillProperty;
-import com.balancedbytes.games.ffb.model.Skill;
-
 /**
  * 
  * @author Kalimar
  */
-public class ArmorModifier implements INamedObject {
+public class ArmorModifier extends RegistrationAwareModifier {
 
 	private final String fName;
 	private final int fModifier;
 	private final boolean fFoulAssistModifier;
-	private Skill registeredTo;
 
 	public ArmorModifier(String pName, int pModifier, boolean pFoulAssistModifier) {
 		fName = pName;
@@ -37,11 +32,4 @@ public class ArmorModifier implements INamedObject {
 		return true;
 	}
 
-	public void setRegisteredTo(Skill registeredTo) {
-		this.registeredTo = registeredTo;
-	}
-
-	public boolean isRegisteredToSkillWithProperty(ISkillProperty property) {
-		return registeredTo != null && registeredTo.hasSkillProperty(property);
-	}
 }

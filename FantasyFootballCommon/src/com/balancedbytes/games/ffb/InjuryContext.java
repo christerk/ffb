@@ -2,6 +2,7 @@ package com.balancedbytes.games.ffb;
 
 import com.balancedbytes.games.ffb.factory.InjuryModifierFactory;
 import com.balancedbytes.games.ffb.modifiers.ArmorModifier;
+import com.balancedbytes.games.ffb.modifiers.InjuryModifier;
 
 import java.util.HashSet;
 import java.util.Set;

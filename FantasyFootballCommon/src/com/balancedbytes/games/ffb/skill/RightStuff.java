@@ -34,7 +34,7 @@ public class RightStuff extends Skill {
 		registerProperty(NamedProperties.canBeThrown);
 		registerProperty(NamedProperties.canBeKicked);
 		registerProperty(NamedProperties.ignoreTackleWhenBlocked);
-		registerModifer(new RightStuffModifier("Swoop", -1, ModifierType.REGULAR));
+		registerModifier(new RightStuffModifier("Swoop", -1, ModifierType.REGULAR));
 	}
 
 }

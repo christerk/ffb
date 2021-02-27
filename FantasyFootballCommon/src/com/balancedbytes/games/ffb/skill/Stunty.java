@@ -1,8 +1,6 @@
 package com.balancedbytes.games.ffb.skill;
 
-import com.balancedbytes.games.ffb.InjuryModifiers;
-import com.balancedbytes.games.ffb.modifiers.ModifierType;
-import com.balancedbytes.games.ffb.modifiers.PassModifier;
+import com.balancedbytes.games.ffb.Card;
 import com.balancedbytes.games.ffb.RulesCollection;
 import com.balancedbytes.games.ffb.RulesCollection.Rules;
 import com.balancedbytes.games.ffb.SkillCategory;
@@ -10,6 +8,11 @@ import com.balancedbytes.games.ffb.model.Skill;
 import com.balancedbytes.games.ffb.model.SkillConstants;
 import com.balancedbytes.games.ffb.model.modifier.CancelSkillProperty;
 import com.balancedbytes.games.ffb.model.modifier.NamedProperties;
+import com.balancedbytes.games.ffb.modifiers.InjuryModifier;
+import com.balancedbytes.games.ffb.modifiers.InjuryModifierContext;
+import com.balancedbytes.games.ffb.modifiers.ModifierType;
+import com.balancedbytes.games.ffb.modifiers.PassModifier;
+import com.balancedbytes.games.ffb.util.UtilCards;
 
 /**
  * The player is so small that they are very difficult to tackle because they
@@ -35,12 +38,26 @@ public class Stunty extends Skill {
 	@Override
 	public void postConstruct() {
 		registerModifier(new PassModifier("Stunty", 1, ModifierType.REGULAR));
-		registerModifier(InjuryModifiers.STUNTY);
+		registerModifier(new InjuryModifier("Stunty", 0, false) {
+			@Override
+			public boolean appliesToContext(InjuryModifierContext context) {
+				boolean applies = false;
+
+				if (!context.isStab() &&
+					!UtilCards.hasCard(context.getGame(), context.getDefender(), Card.GOOD_OLD_MAGIC_CODPIECE) &&
+					context.getDefender().hasSkill(SkillConstants.STUNTY)) {
+					applies = true;
+				}
+
+				return applies;
+			}
+		});
 
 		registerProperty(NamedProperties.smallIcon);
 		registerProperty(NamedProperties.preventRaiseFromDead);
 		registerProperty(new CancelSkillProperty(SkillConstants.NURGLES_ROT));
 		registerProperty(NamedProperties.ignoreTacklezonesWhenDodging);
+		registerProperty(NamedProperties.isHurtMoreEasily);
 	}
 
 }

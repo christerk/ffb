@@ -5,7 +5,7 @@ import com.balancedbytes.games.ffb.Card;
 import com.balancedbytes.games.ffb.FactoryType;
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.InjuryContext;
-import com.balancedbytes.games.ffb.InjuryModifier;
+import com.balancedbytes.games.ffb.modifiers.InjuryModifier;
 import com.balancedbytes.games.ffb.PlayerState;
 import com.balancedbytes.games.ffb.factory.InjuryModifierFactory;
 import com.balancedbytes.games.ffb.injury.Foul;

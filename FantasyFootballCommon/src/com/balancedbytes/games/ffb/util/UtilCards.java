@@ -3,8 +3,6 @@ package com.balancedbytes.games.ffb.util;
 import com.balancedbytes.games.ffb.Card;
 import com.balancedbytes.games.ffb.CardEffect;
 import com.balancedbytes.games.ffb.FactoryType;
-import com.balancedbytes.games.ffb.InjuryModifier;
-import com.balancedbytes.games.ffb.InjuryModifier.InjuryModifierContext;
 import com.balancedbytes.games.ffb.ReRollSource;
 import com.balancedbytes.games.ffb.ReRolledAction;
 import com.balancedbytes.games.ffb.factory.SkillFactory;
@@ -68,19 +66,7 @@ public final class UtilCards {
 		return result;
 	}
 
-	public static Collection<InjuryModifier> getInjuryModifiers(Player<?> player, InjuryModifierContext context) {
-		Set<InjuryModifier> result = new HashSet<>();
-		for (Skill skill : player.getSkills()) {
-			for (InjuryModifier modifier : skill.getInjuryModifiers()) {
-				if (modifier.appliesToContext(context)) {
-					result.add(modifier);
-				}
-			}
-		}
-		return result;
-	}
-
-	public static Set<Skill> findSkillsProvidedByCardsAndEffects(Game pGame, Player<?> pPlayer) {
+	private static Set<Skill> findSkillsProvidedByCardsAndEffects(Game pGame, Player<?> pPlayer) {
 		Set<Skill> cardSkills = new HashSet<>();
 		if ((pGame == null) || (pPlayer == null)) {
 			return cardSkills;

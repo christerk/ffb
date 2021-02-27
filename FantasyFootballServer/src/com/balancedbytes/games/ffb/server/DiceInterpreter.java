@@ -6,7 +6,6 @@ import com.balancedbytes.games.ffb.Direction;
 import com.balancedbytes.games.ffb.FactoryType.Factory;
 import com.balancedbytes.games.ffb.FieldCoordinate;
 import com.balancedbytes.games.ffb.InjuryContext;
-import com.balancedbytes.games.ffb.InjuryModifiers;
 import com.balancedbytes.games.ffb.KickoffResult;
 import com.balancedbytes.games.ffb.PassingDistance;
 import com.balancedbytes.games.ffb.PlayerState;
@@ -240,14 +239,16 @@ public class DiceInterpreter {
 				// We expect an injury being available in the injury context
 				playerState = pInjuryContext.getInjury();
 			} else {
+				boolean isStunty = Arrays.stream(pInjuryContext.getInjuryModifiers()).anyMatch(injuryModifier -> injuryModifier.isRegisteredToSkillWithProperty(NamedProperties.isHurtMoreEasily));
 				int total = injuryRoll[0] + injuryRoll[1] + pInjuryContext.getInjuryModifierTotal();
 				if ((total == 8) && (defender != null)
 						&& defender.hasSkillWithProperty(NamedProperties.convertKOToStunOn8)) {
 					playerState = new PlayerState(PlayerState.STUNNED);
-					pInjuryContext.addInjuryModifier(InjuryModifiers.THICK_SKULL);
-				} else if ((total == 7) && pInjuryContext.hasInjuryModifier(InjuryModifiers.STUNTY)) {
+					defender.getSkillWithProperty(NamedProperties.convertKOToStunOn8).getInjuryModifiers()
+						.forEach(pInjuryContext::addInjuryModifier);
+				} else if ((total == 7) && isStunty) {
 					playerState = new PlayerState(PlayerState.KNOCKED_OUT);
-				} else if ((total == 9) && (defender != null) && pInjuryContext.hasInjuryModifier(InjuryModifiers.STUNTY)) {
+				} else if ((total == 9) && (defender != null) && isStunty) {
 					playerState = new PlayerState(PlayerState.BADLY_HURT);
 				} else if (total > 9) {
 					playerState = null;
